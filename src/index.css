@@ -1,13 +1,466 @@
-body {
-  margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+body > #root > div {
+  height: 100vh;
+  font-family: "Roboto", sans-serif;
 }
 
-code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace;
+body {
+  background-color: #241c45;
+  align-content: space-between;
+  text-align: center;
+  color: white;
+  max-width: 100%;
+  margin: 0;
+  height: 100%;
+  font-size: 2vw;
+}
+
+h1 {
+  font-size: 5vw;
+  margin: 15px;
+}
+
+h2 {
+  font-size: 3vw;
+  font-weight: 500;
+  color: white;
+}
+
+.container{
+  padding: 0px;
+}
+
+.fixture {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  flex-direction: column;
+  flex-wrap: nowrap;
+  display: inline-block;
+  height: auto;
+  border: 0px;
+}
+
+.individualFixture {
+  display: flex;
+  height: auto;
+  flex-basis: 100%;
+  padding-top: 10px;
+  padding-bottom: 10px;
+  flex-direction: row;
+  align-items: center;
+}
+
+.HomeBadge {
+  border-color: #393d3f;
+  height: 3vw;
+  order: 0;
+  padding-right: 10px;
+  padding-left: 10px;
+}
+
+.AwayBadge {
+  border-color: #393d3f;
+  height: 3vw;
+  order: 6;
+  padding-right: 10px;
+  padding-left: 10px;
+}
+
+.homeTeam {
+  height: auto;
+  /* width:30%; */
+  order: 2;
+
+  flex-grow: 0;
+  font-size: 2vw;
+  flex-basis: 35%;
+  flex-shrink: 2;
+  display: inline-block;
+  text-align: right;
+}
+.divider, .score {
+  height: auto;
+  flex-basis: 10%;
+  order: 3;
+
+  font-size: 2vw;
+
+  flex-grow: 1000;
+  display: inline-block;
+}
+.awayTeam {
+  height: auto;
+  flex-basis: 35%;
+  order: 4;
+
+  flex-grow: 0;
+  font-size: 2vw;
+  flex-shrink: 2;
+  display: inline-block;
+  text-align: left;
+}
+
+.homeForm {
+  height: auto;
+  order: 1;
+  flex-basis: 5%;
+  flex-grow: 0;
+  font-size: 2vw;
+  flex-shrink: 2;
+  display: inline-block;
+  padding: 5px;
+  /* border: 0.16em solid rgba(255, 255, 255, 0); */
+  border-radius: 2em;
+  box-sizing: border-box;
+  text-decoration: none;
+  font-family: "Roboto", sans-serif;
+  font-weight: 500;
+  color: black;
+  text-align: center;
+
+  transition: all 0.2s;
+}
+
+.awayForm {
+  height: auto;
+  order: 5;
+  flex-basis: 5%;
+  flex-grow: 0;
+  font-size: 2vw;
+  flex-shrink: 2;
+  display: inline-block;
+  padding: 5px;
+  /* border: 0.16em solid rgba(255, 255, 255, 0); */
+  border-radius: 2em;
+  box-sizing: border-box;
+  text-decoration: none;
+  font-family: "Roboto", sans-serif;
+  font-weight: 500;
+  color: black;
+  text-align: center;
+
+  transition: all 0.2s;
+}
+
+.Collapsable {
+  font-size: 1vw;
+  flex-basis: 40%;
+  padding-top: 10px;
+  padding-bottom: 10px;
+  flex-wrap: wrap;
+}
+
+.LastXGames {
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  flex-basis: 50%;
+  font-size: 2vw;
+}
+
+
+
+section {
+  width: 50%;
+  min-height: inherit;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+
+  position: relative;
+}
+
+/* section::after {
+  width: 42px;
+  height: 42px;
+
+  border: 1px solid var(--primary);
+
+  top: 11px;
+  left: 11px;
+} */
+
+.dark {
+  display: flex;
+
+  --primary: hsl(1, 100%, 68%);
+  --other: hsl(0, 0%, 90%);
+
+
+}
+
+label {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  flex-wrap: nowrap;
+
+  margin: 12px 0;
+
+  cursor: pointer;
+  position: relative;
+}
+
+input {
+  opacity: 0;
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  z-index: -1;
+}
+
+.design {
+  width: 2vw;
+  height: 2vw;
+
+  border: 1px solid var(--other);
+  border-radius: 100%;
+  margin-right: 16px;
+
+  position: relative;
+}
+
+.design::before,
+.design::after {
+  content: "";
+  display: block;
+
+  width: inherit;
+  height: inherit;
+
+  border-radius: inherit;
+
+  position: absolute;
+  transform: scale(0);
+  transform-origin: center center;
+}
+
+.design:before {
+  background: var(--other);
+  opacity: 0;
+  transition: .3s;
+}
+
+.design::after {
+  background: var(--primary);
+  opacity: .4;
+  transition: .6s;
+}
+
+/* checked state */
+input:checked+.design::before {
+  opacity: 1;
+  transform: scale(.6);
+}
+
+
+/* other states */
+input:hover+.design,
+input:focus+.design {
+  border: 1px solid var(--primary);
+}
+
+input:hover+.design:before,
+input:focus+.design:before {
+  background: var(--primary);
+}
+
+input:hover~.text {
+  color: var(--primary);
+}
+
+input:focus+.design::after,
+input:active+.design::after {
+  opacity: .1;
+  transform: scale(2.6);
+}
+@media (max-width: 1800px) {
+  button {
+    display: inline-block;
+    padding: 1.2em;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    margin: 10px;
+    border: 0.16em solid rgba(255, 255, 255, 0);
+    border-radius: 2em;
+    box-sizing: border-box;
+    text-decoration: none;
+    font-family: "Roboto", sans-serif;
+    font-size: 16px;
+    font-weight: 500;
+    color: white;
+    background-color: #736d8f;
+    text-shadow: 0 0.04em 0.04em rgba(0, 0, 0, 0.35);
+    text-align: center;
+
+    transition: all 0.2s;
+  }
+
+  .lastXGames {
+    height: 100px;
+    font-size: 24px;
+    justify-content: center;
+    align-items: center;
+  }
+}
+
+@media (max-width: 800px) {
+  button {
+    display: inline-block;
+    padding: 1.2em;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    margin: 10px;
+    border: 0.16em solid rgba(255, 255, 255, 0);
+    border-radius: 2em;
+    box-sizing: border-box;
+    text-decoration: none;
+    font-family: "Roboto", sans-serif;
+    font-size: 14px;
+    font-weight: 500;
+    color: white;
+    background-color: #736d8f;
+    text-shadow: 0 0.04em 0.04em rgba(0, 0, 0, 0.35);
+    text-align: center;
+
+    transition: all 0.2s;
+  }
+
+  .lastXGames {
+    height: 100px;
+    font-size: 22px;
+    justify-content: center;
+    align-items: center;
+  }
+}
+
+@media (max-width: 600px) {
+  button {
+    display: inline-block;
+    padding: 1.2em;
+    padding-top: 8px;
+    padding-bottom: 8px;
+    margin: 8px;
+    border: 0.16em solid rgba(255, 255, 255, 0);
+    border-radius: 2em;
+    box-sizing: border-box;
+    text-decoration: none;
+    font-family: "Roboto", sans-serif;
+    font-size: 12px;
+    font-weight: 500;
+    color: white;
+    background-color: #736d8f;
+    text-shadow: 0 0.04em 0.04em rgba(0, 0, 0, 0.35);
+    text-align: center;
+
+    transition: all 0.2s;
+  }
+
+  .lastXGames {
+    height: 100px;
+    font-size: 20px;
+    justify-content: center;
+    align-items: center;
+  }
+}
+
+@media (max-width: 420px) {
+  button {
+    display: inline-block;
+    padding: 1.2em;
+    padding-top: 8px;
+    padding-bottom: 8px;
+    margin: 8px;
+    border: 0.16em solid rgba(255, 255, 255, 0);
+    border-radius: 2em;
+    box-sizing: border-box;
+    text-decoration: none;
+    font-family: "Roboto", sans-serif;
+    font-size: 10px;
+    font-weight: 500;
+    color: white;
+    background-color: #736d8f;
+    text-shadow: 0 0.04em 0.04em rgba(0, 0, 0, 0.35);
+    text-align: center;
+
+    transition: all 0.2s;
+  }
+
+  .lastXGames {
+    height: 100px;
+    font-size: 16px;
+    justify-content: center;
+    align-items: center;
+  }
+}
+
+.SubmitButton {
+  font-size: 50px;
+}
+
+.fact {
+  padding: 5px;
+}
+
+ul {
+  width: 100%;
+}
+
+table,
+th,
+td {
+  border-collapse: collapse;
+  border: 1px solid #736d8f;
+  padding: 10px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+button:hover {
+  border-color: #393d3f;
+}
+
+.content h3,
+.content p {
+  margin: 0;
+}
+
+#spinner {
+  visibility: visible;
+  width: 80px;
+  height: 80px;
+
+  border: 2px solid #e91515;
+  border-top: 3px solid #393d3f;
+  border-radius: 100%;
+
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  margin: auto;
+
+  animation: spin 1s infinite linear;
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+#spinner.hide {
+  visibility: hidden;
+}
+
+#cards {
+  margin: 10px;
 }
