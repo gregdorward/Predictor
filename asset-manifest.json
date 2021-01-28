@@ -1,22 +1,22 @@
 {
   "files": {
-    "main.css": "/football-predictions/static/css/main.ebd81052.chunk.css",
-    "main.js": "/football-predictions/static/js/main.08f7a824.chunk.js",
-    "main.js.map": "/football-predictions/static/js/main.08f7a824.chunk.js.map",
-    "runtime-main.js": "/football-predictions/static/js/runtime-main.1068100d.js",
-    "runtime-main.js.map": "/football-predictions/static/js/runtime-main.1068100d.js.map",
-    "static/js/2.c91d9622.chunk.js": "/football-predictions/static/js/2.c91d9622.chunk.js",
-    "static/js/2.c91d9622.chunk.js.map": "/football-predictions/static/js/2.c91d9622.chunk.js.map",
-    "static/js/3.1031996e.chunk.js": "/football-predictions/static/js/3.1031996e.chunk.js",
-    "static/js/3.1031996e.chunk.js.map": "/football-predictions/static/js/3.1031996e.chunk.js.map",
-    "index.html": "/football-predictions/index.html",
-    "static/css/main.ebd81052.chunk.css.map": "/football-predictions/static/css/main.ebd81052.chunk.css.map",
-    "static/js/2.c91d9622.chunk.js.LICENSE.txt": "/football-predictions/static/js/2.c91d9622.chunk.js.LICENSE.txt"
+    "main.css": "/predictor/static/css/main.ebd81052.chunk.css",
+    "main.js": "/predictor/static/js/main.83ef1f13.chunk.js",
+    "main.js.map": "/predictor/static/js/main.83ef1f13.chunk.js.map",
+    "runtime-main.js": "/predictor/static/js/runtime-main.1cb0853d.js",
+    "runtime-main.js.map": "/predictor/static/js/runtime-main.1cb0853d.js.map",
+    "static/js/2.a07d0f2a.chunk.js": "/predictor/static/js/2.a07d0f2a.chunk.js",
+    "static/js/2.a07d0f2a.chunk.js.map": "/predictor/static/js/2.a07d0f2a.chunk.js.map",
+    "static/js/3.2f26ea2b.chunk.js": "/predictor/static/js/3.2f26ea2b.chunk.js",
+    "static/js/3.2f26ea2b.chunk.js.map": "/predictor/static/js/3.2f26ea2b.chunk.js.map",
+    "index.html": "/predictor/index.html",
+    "static/css/main.ebd81052.chunk.css.map": "/predictor/static/css/main.ebd81052.chunk.css.map",
+    "static/js/2.a07d0f2a.chunk.js.LICENSE.txt": "/predictor/static/js/2.a07d0f2a.chunk.js.LICENSE.txt"
   },
   "entrypoints": [
-    "static/js/runtime-main.1068100d.js",
-    "static/js/2.c91d9622.chunk.js",
+    "static/js/runtime-main.1cb0853d.js",
+    "static/js/2.a07d0f2a.chunk.js",
     "static/css/main.ebd81052.chunk.css",
-    "static/js/main.08f7a824.chunk.js"
+    "static/js/main.83ef1f13.chunk.js"
   ]
 }
