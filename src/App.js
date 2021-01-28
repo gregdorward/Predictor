@@ -26,9 +26,6 @@ export var fixtureList = [];
 //   // spinner.hideSpinner();
 // })();
 
-console.log("KEY");
-console.log(process.env.REACT_APP_API_KEY);
-
 export const availableLeagues = [];
 
 (async function getLeagueList() {
