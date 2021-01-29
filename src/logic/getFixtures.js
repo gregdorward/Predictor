@@ -31,24 +31,7 @@ export function getRadioState(state) {
   return radioState;
 }
 
-export async function getMatchStats(id, item) {
-  let matchDetail = await fetch(
-    proxyurl +
-      `https://api.footystats.org/match?key=${process.env.REACT_APP_API_KEY}&match_id=` +
-      id
-  );
-
-  let stats;
-  await matchDetail.json().then((data) => {
-    let arr1 = data.data.trends.team_a;
-    let arr2 = data.data.trends.team_b;
-    stats = arr1.concat(arr2);
-  });
-  createStatsDiv(stats, item);
-}
-
 async function createFixture(match) {
-  console.log("3");
 
   match.game = match.homeTeam + " v " + match.awayTeam;
 
@@ -67,8 +50,6 @@ async function createFixture(match) {
   //   }
   // });
 
-  let matchId = match.id;
-
   //   item.onclick = await function () {
   //     getMatchStats(matchId, item);
   //   };
@@ -80,7 +61,6 @@ async function createFixture(match) {
 export async function generateFixtures(day, radioState) {
   radioValue = radioState;
 
-  console.log("This is the radio state " + radioValue);
   fixtureResponse = await fetch(proxyurl + day);
 
   await fixtureResponse.json().then((fixtures) => {
@@ -111,13 +91,10 @@ export async function generateFixtures(day, radioState) {
       match.awayXG = parseFloat(fixture.team_b_xg_prematch);
 
       match.homePpg = fixture.home_ppg.toFixed(2);
-      console.log("1");
       match.homeFormColour = await applyColour(match.homePpg);
 
       match.awayPpg = fixture.away_ppg.toFixed(2);
       match.awayFormColour = await applyColour(match.awayPpg);
-
-      console.log("2");
 
       match.status = fixture.status;
 

@@ -16,7 +16,7 @@ body {
 
 h1 {
   font-size: 6vw;
-  margin: 15px;
+  margin: 20px;
 }
 
 h2 {
@@ -78,11 +78,14 @@ h2 {
   flex-shrink: 2;
   display: inline-block;
   text-align: right;
+  padding-left: 5px;
 }
 .divider, .score {
   height: auto;
   flex-basis: 10%;
   order: 3;
+  padding-left: 3px;
+  padding-right: 3px;
 
   font-size: 3vw;
 
@@ -99,6 +102,7 @@ h2 {
   flex-shrink: 2;
   display: inline-block;
   text-align: left;
+  padding-right: 5px;
 }
 
 .homeForm {
@@ -151,133 +155,27 @@ h2 {
   flex-wrap: wrap;
 }
 
+.RadioContainer {
+  align-items: center;
+  flex-direction: row;
+}
+
 .LastXGames {
   display: flex;
   align-items: center;
-  flex-direction: column;
-  flex-basis: 50%;
+  flex-wrap: wrap;
+  justify-content: center;
+  /* flex-direction: column; */
+  /* flex-basis: 50%; */
   font-size: 3vw;
 }
 
 
 
-section {
-  width: 50%;
-  min-height: inherit;
-
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  flex-direction: column;
-
-  position: relative;
-}
-
-/* section::after {
-  width: 42px;
-  height: 42px;
-
-  border: 1px solid var(--primary);
-
-  top: 11px;
-  left: 11px;
-} */
-
-.dark {
-  display: flex;
-
-  --primary: hsl(1, 100%, 68%);
-  --other: hsl(0, 0%, 90%);
 
 
-}
-
-label {
-  display: flex;
-  justify-content: flex-start;
-  align-items: center;
-  flex-wrap: nowrap;
-
-  margin: 12px 0;
-
-  cursor: pointer;
-  position: relative;
-}
-
-input {
-  opacity: 0;
-  position: absolute;
-  left: 50%;
-  top: 50%;
-  transform: translate(-50%, -50%);
-  z-index: -1;
-}
-
-.design {
-  width: 3vw;
-  height: 3vw;
-
-  border: 1px solid var(--other);
-  border-radius: 100%;
-  margin-right: 16px;
-
-  position: relative;
-}
-
-.design::before,
-.design::after {
-  content: "";
-  display: block;
-
-  width: inherit;
-  height: inherit;
-
-  border-radius: inherit;
-
-  position: absolute;
-  transform: scale(0);
-  transform-origin: center center;
-}
-
-.design:before {
-  background: var(--other);
-  opacity: 0;
-  transition: .3s;
-}
-
-.design::after {
-  background: var(--primary);
-  opacity: .4;
-  transition: .6s;
-}
-
-/* checked state */
-input:checked+.design::before {
-  opacity: 1;
-  transform: scale(.6);
-}
 
 
-/* other states */
-input:hover+.design,
-input:focus+.design {
-  border: 1px solid var(--primary);
-}
-
-input:hover+.design:before,
-input:focus+.design:before {
-  background: var(--primary);
-}
-
-input:hover~.text {
-  color: var(--primary);
-}
-
-input:focus+.design::after,
-input:active+.design::after {
-  opacity: .1;
-  transform: scale(2.6);
-}
 @media (max-width: 1800px) {
   button {
     display: inline-block;
@@ -336,6 +234,43 @@ input:active+.design::after {
     justify-content: center;
     align-items: center;
   }
+}
+
+
+.Stat {
+  padding: 5px;
+}
+
+.StatsContainer {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  text-align: left;
+  font-size: 2vw;
+}
+
+.Home {
+  padding-left: 10px;
+  padding-right: 10px;
+  flex-basis: 30%;
+}
+
+.Home li {
+  padding: 2px;
+  list-style: none;
+}
+
+.Away {
+  padding-left: 10px;
+  padding-right: 10px;
+  flex-basis: 30%;
+
+}
+
+.Away li {
+  padding: 2px;
+  list-style: none;
+
 }
 
 @media (max-width: 600px) {
@@ -463,4 +398,125 @@ button:hover {
 
 #cards {
   margin: 10px;
+}
+
+
+
+
+section {
+  width: 50%;
+  min-height: inherit;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+
+  position: relative;
+}
+
+/* section::after {
+  width: 42px;
+  height: 42px;
+
+  border: 1px solid var(--primary);
+
+  top: 11px;
+  left: 11px;
+} */
+
+.dark {
+  /* display: flex; */
+  flex-basis: 30%;
+  --primary: hsl(1, 100%, 68%);
+  --other: hsl(0, 0%, 90%);
+
+
+}
+
+label {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  flex-wrap: nowrap;
+
+  margin: 12px 0;
+
+  cursor: pointer;
+  position: relative;
+}
+
+input {
+  opacity: 0;
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  z-index: -1;
+}
+
+.design {
+  width: 3vw;
+  height: 3vw;
+
+  border: 1px solid var(--other);
+  border-radius: 100%;
+  margin-right: 5px;
+
+  position: relative;
+}
+
+.design::before,
+.design::after {
+  content: "";
+  display: block;
+
+  width: inherit;
+  height: inherit;
+
+  border-radius: inherit;
+
+  position: absolute;
+  transform: scale(0);
+  transform-origin: center center;
+}
+
+.design:before {
+  background: var(--other);
+  opacity: 0;
+  transition: .3s;
+}
+
+.design::after {
+  background: var(--primary);
+  opacity: .4;
+  transition: .6s;
+}
+
+/* checked state */
+input:checked+.design::before {
+  opacity: 1;
+  transform: scale(.6);
+}
+
+
+/* other states */
+input:hover+.design,
+input:focus+.design {
+  border: 1px solid var(--primary);
+}
+
+input:hover+.design:before,
+input:focus+.design:before {
+  background: var(--primary);
+}
+
+input:hover~.text {
+  color: var(--primary);
+}
+
+input:focus+.design::after,
+input:active+.design::after {
+  opacity: .1;
+  transform: scale(2.6);
 }

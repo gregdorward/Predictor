@@ -15,6 +15,7 @@ export class Radio extends Component {
     this.setState({
       selectedOption: this.props.value,
     });
+    selectedOption = this.state.selectedOption;
   };
 
   render() {
