@@ -81,7 +81,7 @@ export const availableLeagues = [];
         }
       />
       <Button
-        text={"Get Tomorros's Fixtures"}
+        text={"Get Tomorrows's Fixtures"}
         onClickEvent={async () =>
           fixtureList.push(await generateFixtures(tomorrow, selectedOption))
         }

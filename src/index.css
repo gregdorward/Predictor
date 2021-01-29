@@ -15,12 +15,12 @@ body {
 }
 
 h1 {
-  font-size: 5vw;
+  font-size: 6vw;
   margin: 15px;
 }
 
 h2 {
-  font-size: 3vw;
+  font-size: 4vw;
   font-weight: 500;
   color: white;
 }
@@ -53,7 +53,7 @@ h2 {
 
 .HomeBadge {
   border-color: #393d3f;
-  height: 3vw;
+  height: 4vw;
   order: 0;
   padding-right: 10px;
   padding-left: 10px;
@@ -61,7 +61,7 @@ h2 {
 
 .AwayBadge {
   border-color: #393d3f;
-  height: 3vw;
+  height: 4vw;
   order: 6;
   padding-right: 10px;
   padding-left: 10px;
@@ -73,7 +73,7 @@ h2 {
   order: 2;
 
   flex-grow: 0;
-  font-size: 2vw;
+  font-size: 3vw;
   flex-basis: 35%;
   flex-shrink: 2;
   display: inline-block;
@@ -84,7 +84,7 @@ h2 {
   flex-basis: 10%;
   order: 3;
 
-  font-size: 2vw;
+  font-size: 3vw;
 
   flex-grow: 1000;
   display: inline-block;
@@ -95,7 +95,7 @@ h2 {
   order: 4;
 
   flex-grow: 0;
-  font-size: 2vw;
+  font-size: 3vw;
   flex-shrink: 2;
   display: inline-block;
   text-align: left;
@@ -106,7 +106,7 @@ h2 {
   order: 1;
   flex-basis: 5%;
   flex-grow: 0;
-  font-size: 2vw;
+  font-size: 3vw;
   flex-shrink: 2;
   display: inline-block;
   padding: 5px;
@@ -127,7 +127,7 @@ h2 {
   order: 5;
   flex-basis: 5%;
   flex-grow: 0;
-  font-size: 2vw;
+  font-size: 3vw;
   flex-shrink: 2;
   display: inline-block;
   padding: 5px;
@@ -144,7 +144,7 @@ h2 {
 }
 
 .Collapsable {
-  font-size: 1vw;
+  font-size: 2vw;
   flex-basis: 40%;
   padding-top: 10px;
   padding-bottom: 10px;
@@ -156,7 +156,7 @@ h2 {
   align-items: center;
   flex-direction: column;
   flex-basis: 50%;
-  font-size: 2vw;
+  font-size: 3vw;
 }
 
 
@@ -214,8 +214,8 @@ input {
 }
 
 .design {
-  width: 2vw;
-  height: 2vw;
+  width: 3vw;
+  height: 3vw;
 
   border: 1px solid var(--other);
   border-radius: 100%;
