@@ -5,6 +5,7 @@ import Radio from "./components/radio";
 import { Button } from "./components/Button";
 import { today, generateFixtures, tomorrow } from "./logic/getFixtures";
 import { selectedOption } from "./components/radio";
+import TextBlock from "./components/TextSection";
 require("dotenv").config();
 
 export const proxyurl = "https://safe-caverns-99679.herokuapp.com/";
@@ -72,6 +73,15 @@ export const availableLeagues = [];
     document.getElementById("RadioButtons")
   );
 
+
+  ReactDOM.render(
+    <TextBlock
+      text="Select how many games you would like to fetch form data for"
+      className="RadioText"
+    />,
+    document.getElementById("RadioText")
+  );
+
   ReactDOM.render(
     <div className="FixtureButtons">
       <Button
@@ -81,7 +91,7 @@ export const availableLeagues = [];
         }
       />
       <Button
-        text={"Get Tomorrows's Fixtures"}
+        text={"Get Tomorrow's Fixtures"}
         onClickEvent={async () =>
           fixtureList.push(await generateFixtures(tomorrow, selectedOption))
         }
@@ -95,7 +105,10 @@ function App() {
   return (
     <div className="App">
       <Header />
-      <div id="RadioButtons" />
+      <div id="RadioContainer" className="RadioContainer">
+        <div id="RadioText" />
+        <div id="RadioButtons" />
+      </div>
       <div id="Day" />
       <div id="Buttons" />
       <div id="homeBadge" />

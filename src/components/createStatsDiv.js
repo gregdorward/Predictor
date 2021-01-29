@@ -1,21 +1,23 @@
-// export async function createStatsDiv(stats, item) {
-//     let container;
-//     item.insertAdjacentElement("afterend", container);
+import React from "react";
 
-//     if (document.getElementById("container")) {
-//         container = document.getElementById("container");
-//         container.innerHTML = "";
-//     }
+function Stats(props) {
+  return (
+    <ul className={props.className}>
+      <li key={props.name}>{`Team name - ${props.name}`}</li>
+      <li key="TeamScored" className="TeamName">
+        {`Average goals scored - ${props.goals}`}
+      </li>
+      <li key="TeamConceeded" className="TeamName">
+        {`Average goals conceeded - ${props.conceeded}`}
+      </li>
+      <li key="TeamPossession" className="TeamName">
+        {`Average possession - ${props.possession}%`}
+      </li>
+      <li key="TeamXG" className="TeamName">
+        {`Average XG - ${props.XG}`}
+      </li>
+    </ul>
+  );
+}
 
-//     for (let i = 0; i < stats.length; i++) {
-//         let fact = document.createElement("div");
-
-//         fact.className = "fact";
-//         fact.id = `fact${i}`;
-
-//         const element = stats[i];
-//         console.log(element);
-//         fact.innerHTML = element;
-//         container.appendChild(fact);
-//     }
-// }
+export default Stats;

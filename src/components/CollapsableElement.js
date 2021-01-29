@@ -18,7 +18,7 @@ class Collapsable extends Component {
         {this.state.isOpen && (
           <EscapeOutside className="Collapsable">
             Fixtures including each team's points per game picked up at home or
-            away
+            away. Click on an individual feature for detailed stats. If no form radio button is chosen, the last 5 games will be used by default
           </EscapeOutside>
         )}
       </div>

@@ -1,6 +1,6 @@
 import { proxyurl } from "../App";
 var divider;
-const allForm = [];
+export const allForm = [];
 
 export async function diff(a, b) {
   return parseFloat(a - b).toFixed(2);
@@ -53,10 +53,6 @@ export async function getForm(teamId, homeOrAway, radio) {
     divider = 10;
   }
 
-  console.log("RADIO VALUE + " + radioValue);
-
-  console.log("INDEX VALUE = " + index);
-
   let response = await fetch(
     proxyurl +
       `https://api.footystats.org/lastx?key=${process.env.REACT_APP_API_KEY}&team_id=` +
@@ -64,7 +60,6 @@ export async function getForm(teamId, homeOrAway, radio) {
   );
   await response.json().then((data) => {
     let defenceScore;
-    console.log(data);
 
     form.averageXGConceded = data.data[index].stats.xg_against_avg_overall;
     form.name = data.data[index].name;
@@ -72,6 +67,8 @@ export async function getForm(teamId, homeOrAway, radio) {
       form.averageXG = data.data[index].stats.xg_for_avg_home;
       form.averageGoals = data.data[index].stats.seasonScoredAVG_home;
       form.bttsPercentage = data.data[index].stats.seasonBTTSPercentage_home;
+      form.possessionAVG = data.data[index].stats.possessionAVG_home;
+      form.shotsAVG = data.data[index].stats.shotsAVG_home;
 
       form.averageGoalsConceded =
         data.data[index].stats.seasonConceded_overall / divider;
@@ -81,6 +78,8 @@ export async function getForm(teamId, homeOrAway, radio) {
       form.averageXG = data.data[index].stats.xg_for_avg_away;
       form.averageGoals = data.data[index].stats.seasonScoredAVG_away;
       form.bttsPercentage = data.data[index].stats.seasonBTTSPercentage_away;
+      form.possessionAVG = data.data[index].stats.possessionAVG_away;
+      form.shotsAVG = data.data[index].stats.shotsAVG_away;
 
       form.averageGoalsConceded =
         data.data[index].stats.seasonConceded_overall / divider;
@@ -131,6 +130,5 @@ export async function getForm(teamId, homeOrAway, radio) {
   form.finalGoalieRating = parseFloat(await diff(form.goalieRating, 1));
 
   allForm.push(form);
-  console.log(form);
   return form;
 }
