@@ -171,7 +171,61 @@ h2 {
 }
 
 
+/* 
+.Stat {
+  padding: 5px;
+} */
 
+.StatsContainer {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  text-align: center;
+  font-size: 2.5vw;
+  align-items: center;
+}
+
+.HomeStats {
+  text-align: right;
+  width: 45%
+  /* padding-right: 20px; */
+}
+
+.AwayStats {
+  text-align: left;
+  width: 45%
+
+}
+
+.Home {
+  padding-left: 10px;
+  padding-right: 10px;
+  flex-basis: 50%;
+}
+
+.Home li {
+  padding: 2px;
+  list-style: none;
+}
+
+.Away {
+  padding-left: 10px;
+  padding-right: 10px;
+  flex-basis: 50%;
+}
+
+.Away li {
+  padding: 2px;
+  list-style: none;
+
+}
+
+.MatchTime {
+  padding: 5px;
+  /* width: 100%; */
+  text-align: center;
+  font-size: 2.5vw;
+}
 
 
 
@@ -237,41 +291,7 @@ h2 {
 }
 
 
-.Stat {
-  padding: 5px;
-}
 
-.StatsContainer {
-  display: flex;
-  flex-direction: row;
-  justify-content: center;
-  text-align: left;
-  font-size: 2vw;
-}
-
-.Home {
-  padding-left: 10px;
-  padding-right: 10px;
-  flex-basis: 30%;
-}
-
-.Home li {
-  padding: 2px;
-  list-style: none;
-}
-
-.Away {
-  padding-left: 10px;
-  padding-right: 10px;
-  flex-basis: 30%;
-
-}
-
-.Away li {
-  padding: 2px;
-  list-style: none;
-
-}
 
 @media (max-width: 600px) {
   button {
@@ -341,9 +361,9 @@ h2 {
   padding: 5px;
 }
 
-ul {
+/* ul {
   width: 100%;
-}
+} */
 
 table,
 th,

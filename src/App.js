@@ -27,7 +27,8 @@ export var fixtureList = [];
 //   // spinner.hideSpinner();
 // })();
 
-export const availableLeagues = [];
+const availableLeagues = [];
+export var orderedLeagues = [];
 
 (async function getLeagueList() {
   let leagueList = await fetch(
@@ -50,6 +51,53 @@ export const availableLeagues = [];
         availableLeagues.push({ name: name, element });
       }
     }
+
+    function mapOrder(array, order, key) {
+      array.sort(function (a, b) {
+        var A = a.element[key],
+          B = b.element[key];
+
+        if (order.indexOf(A) > order.indexOf(B)) {
+          return 1;
+        } else {
+          return -1;
+        }
+      });
+
+      return array;
+    }
+
+    //leagues ordered by id
+    var leagueOrder = [
+      4759,
+      4912,
+      4845,
+      4844,
+      5018,
+      4944,
+      4478,
+      4673,
+      4889,
+      4889,
+      4746,
+      4567,
+      4505,
+      4842,
+      4972,
+      4676,
+      4645,
+      4547,
+      4902,
+      4903,
+      4803,
+      5151,
+      4930,
+      4655,
+      4930,
+      4693,
+    ];
+
+    orderedLeagues = mapOrder(availableLeagues, leagueOrder, "id");
   }
 
   ReactDOM.render(
@@ -72,7 +120,6 @@ export const availableLeagues = [];
     </div>,
     document.getElementById("RadioButtons")
   );
-
 
   ReactDOM.render(
     <TextBlock

@@ -49,9 +49,12 @@ export function FixtureList(props) {
                   alt="Away team badge"
                 />
               </li>
-              <div className="StatsContainer">
+              <div>
+              <div id={"stats" + fixture.homeTeam}></div>
+              <div className="StatsContainer" >
                 <div className="HomeStats" id={"home" + fixture.homeTeam}></div>
                 <div className="AwayStats" id={"away" + fixture.awayTeam}></div>
+              </div>
               </div>
             </div>
           ))}
@@ -103,7 +106,7 @@ export function FixtureList(props) {
                   alt="Away team badge"
                 />
               </li>
-              <div className="StatsContainer">
+              <div className="StatsContainer" id={"stats" + match.homeTeam}>
                 <div className="HomeStats" id={"home" + match.homeTeam}></div>
                 <div className="AwayStats" id={"away" + match.awayTeam}></div>
               </div>
