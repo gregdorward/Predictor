@@ -1,7 +1,7 @@
 import React from "react";
 import ReactDOM from "react-dom";
 import createStatsDiv from "../components/createStatsDiv";
-import { availableLeagues, proxyurl } from "../App";
+import { orderedLeagues, proxyurl } from "../App";
 import { getForm, applyColour } from "./getForm";
 import { FixtureList } from "../components/FixtureList";
 import { Button } from "../components/Button";
@@ -32,7 +32,6 @@ export function getRadioState(state) {
 }
 
 async function createFixture(match) {
-
   match.game = match.homeTeam + " v " + match.awayTeam;
 
   //   ReactDOM.render(<CreateBadge image={match.homeBadge}/>, document.getElementById("homeBadge"));
@@ -67,15 +66,25 @@ export async function generateFixtures(day, radioState) {
     fixtureArray = Array.from(fixtures.data);
   });
 
-  for (let i = 0; i < availableLeagues.length; i++) {
+  for (let i = 0; i < orderedLeagues.length; i++) {
     leagueGames = fixtureArray.filter(
-      (game) => game.competition_id === availableLeagues[i].element.id
+      (game) => game.competition_id === orderedLeagues[i].element.id
     );
 
     for (const fixture of leagueGames) {
-      let match = {};
+      console.log(fixture);
 
+      const unixTimestamp = fixture.date_unix;
+
+      const milliseconds = unixTimestamp * 1000; 
+
+      const dateObject = new Date(milliseconds);
+
+      let match = {};
+      
       match.id = fixture.id;
+      match.time = dateObject.toLocaleString("en-US", { hour: "numeric" });
+      console.log(match.time)
       match.homeTeam = fixture.home_name;
       match.awayTeam = fixture.away_name;
       match.homeOdds = fixture.odds_ft_1;

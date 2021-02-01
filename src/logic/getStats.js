@@ -2,10 +2,12 @@ import { proxyurl } from "../App";
 import ReactDOM from "react-dom";
 import Stats from "../components/createStatsDiv";
 import { allForm } from "../logic/getForm";
+import Div from "../components/Div";
 
 export async function createStatsDiv(stats, game) {
   let homeTeam = game.homeTeam;
   let awayTeam = game.awayTeam;
+  let time = game.time;
 
   let val = homeTeam;
   let home = allForm.findIndex(function (item, i) {
@@ -28,8 +30,8 @@ export async function createStatsDiv(stats, game) {
     homeOrAway: "Home",
   });
 
-  console.log("FORM DATA HOME")
-  console.log(formDataHome)
+  console.log("FORM DATA HOME");
+  console.log(formDataHome);
 
   const formDataAway = [];
 
@@ -41,6 +43,11 @@ export async function createStatsDiv(stats, game) {
     AveragePossession: allForm[away].possessionAVG,
     homeOrAway: "Away",
   });
+
+  ReactDOM.render(
+    <Div className="MatchTime" text={"Kick off: " + time}></Div>,
+    document.getElementById("stats" + homeTeam)
+  );
 
   ReactDOM.render(
     <Stats
