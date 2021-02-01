@@ -106,6 +106,7 @@ export function FixtureList(props) {
                   alt="Away team badge"
                 />
               </li>
+              <div id={"stats" + match.homeTeam}></div>
               <div className="StatsContainer" id={"stats" + match.homeTeam}>
                 <div className="HomeStats" id={"home" + match.homeTeam}></div>
                 <div className="AwayStats" id={"away" + match.awayTeam}></div>
