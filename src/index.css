@@ -181,7 +181,7 @@ h2 {
   flex-direction: row;
   justify-content: center;
   text-align: center;
-  font-size: 2.5vw;
+  font-size: 2.3vw;
   align-items: center;
 }
 
@@ -199,29 +199,30 @@ h2 {
 
 .Home {
   padding-left: 10px;
-  padding-right: 10px;
+  padding-right: 20px;
   flex-basis: 50%;
 }
 
 .Home li {
-  padding: 2px;
+  padding: 3px;
   list-style: none;
 }
 
 .Away {
-  padding-left: 10px;
+  padding-left: 20px;
   padding-right: 10px;
   flex-basis: 50%;
 }
 
 .Away li {
-  padding: 2px;
+  padding: 3px;
   list-style: none;
 
 }
 
 .MatchTime {
-  padding: 5px;
+  padding-top: 10px;
+  padding-bottom: 10px;
   /* width: 100%; */
   text-align: center;
   font-size: 2.5vw;
