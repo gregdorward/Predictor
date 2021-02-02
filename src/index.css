@@ -25,7 +25,7 @@ h2 {
   color: white;
 }
 
-.container{
+.container {
   padding: 0px;
 }
 
@@ -49,6 +49,10 @@ h2 {
   padding-bottom: 10px;
   flex-direction: row;
   align-items: center;
+}
+
+#highlight {
+  font-size: 50px;
 }
 
 .HomeBadge {
@@ -80,18 +84,30 @@ h2 {
   text-align: right;
   padding-left: 5px;
 }
-.divider, .score {
+.divider,
+.score {
   height: auto;
   flex-basis: 10%;
   order: 3;
   padding-left: 3px;
   padding-right: 3px;
-
   font-size: 3vw;
-
   flex-grow: 1000;
   display: inline-block;
 }
+
+.Result {
+  height: auto;
+  flex-basis: 10%;
+  order: 3;
+  padding-left: 3px;
+  padding-right: 3px;
+  font-size: 3vw;
+  flex-grow: 1000;
+  display: inline-block;
+  color: #B8B8B8;
+}
+
 .awayTeam {
   height: auto;
   flex-basis: 35%;
@@ -170,7 +186,6 @@ h2 {
   font-size: 3vw;
 }
 
-
 /* 
 .Stat {
   padding: 5px;
@@ -185,16 +200,22 @@ h2 {
   align-items: center;
 }
 
+.BTTSPotential {
+  padding-top: 10px;
+  padding-bottom: 10px;
+  text-align: center;
+  font-size: 2.5vw;
+}
+
 .HomeStats {
   text-align: right;
-  width: 45%
+  width: 45%;
   /* padding-right: 20px; */
 }
 
 .AwayStats {
   text-align: left;
-  width: 45%
-
+  width: 45%;
 }
 
 .Home {
@@ -217,19 +238,14 @@ h2 {
 .Away li {
   padding: 3px;
   list-style: none;
-
 }
 
 .MatchTime {
   padding-top: 10px;
   padding-bottom: 10px;
-  /* width: 100%; */
   text-align: center;
   font-size: 2.5vw;
 }
-
-
-
 
 @media (max-width: 1800px) {
   button {
@@ -290,9 +306,6 @@ h2 {
     align-items: center;
   }
 }
-
-
-
 
 @media (max-width: 600px) {
   button {
@@ -421,9 +434,6 @@ button:hover {
   margin: 10px;
 }
 
-
-
-
 section {
   width: 50%;
   min-height: inherit;
@@ -451,8 +461,6 @@ section {
   flex-basis: 30%;
   --primary: hsl(1, 100%, 68%);
   --other: hsl(0, 0%, 90%);
-
-
 }
 
 label {
@@ -505,39 +513,38 @@ input {
 .design:before {
   background: var(--other);
   opacity: 0;
-  transition: .3s;
+  transition: 0.3s;
 }
 
 .design::after {
   background: var(--primary);
-  opacity: .4;
-  transition: .6s;
+  opacity: 0.4;
+  transition: 0.6s;
 }
 
 /* checked state */
-input:checked+.design::before {
+input:checked + .design::before {
   opacity: 1;
-  transform: scale(.6);
+  transform: scale(0.6);
 }
 
-
 /* other states */
-input:hover+.design,
-input:focus+.design {
+input:hover + .design,
+input:focus + .design {
   border: 1px solid var(--primary);
 }
 
-input:hover+.design:before,
-input:focus+.design:before {
+input:hover + .design:before,
+input:focus + .design:before {
   background: var(--primary);
 }
 
-input:hover~.text {
+input:hover ~ .text {
   color: var(--primary);
 }
 
-input:focus+.design::after,
-input:active+.design::after {
-  opacity: .1;
+input:focus + .design::after,
+input:active + .design::after {
+  opacity: 0.1;
   transform: scale(2.6);
 }

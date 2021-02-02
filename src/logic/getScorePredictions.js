@@ -19,24 +19,14 @@ export async function calculateScore(match) {
   let formHome = match.homeTeamForm;
   let formAway = match.awayTeamForm;
 
-  let accuracyHome = formHome.finalFinishingScore;
   let defenceHome = parseFloat(formHome.defenceRating);
   let goalieHome = formHome.finalGoalieRating;
-  let forecastedXGHome = formHome.forecastedXG;
   let defenceScoreHome = (defenceHome + goalieHome) / 2;
 
-  let accuracyAway = formAway.finalFinishingScore;
   let defenceAway = parseFloat(formAway.defenceRating);
   let goalieAway = formAway.finalGoalieRating;
-  let forecastedXGAway = formAway.forecastedXG;
 
   let defenceScoreAway = (defenceAway + goalieAway) / 2;
-
-  let expectedHomeGoals = parseFloat(match.homeXG);
-  let expectedAwayGoals = parseFloat(match.awayXG);
-
-  let calculatedXGHome = (forecastedXGHome + expectedHomeGoals) / 2;
-  let calculatedXGAway = (forecastedXGAway + expectedAwayGoals) / 2;
 
   let oddsWeightingHome = parseFloat(homeRaw);
   let oddsWeightingAway = parseFloat(awayRaw);
@@ -48,28 +38,48 @@ export async function calculateScore(match) {
     (await diff(oddsWeightingAway, oddsWeightingHome)) * 1
   ).toFixed(2);
 
-  let homeCalculation =
-    parseFloat(homeWeighting + accuracyHome) - defenceScoreAway;
-  let awayCalculation =
-    parseFloat(awayWeighting + accuracyAway) - defenceScoreHome;
+  let homeCalculation = parseFloat(homeWeighting) - defenceScoreAway;
+  let awayCalculation = parseFloat(awayWeighting) - defenceScoreHome;
 
   //if home calculation is less than 0 -> add this value to the away team goals and vice versa.
   //also set a baseline calculation score so it cannot go below 0
 
-  if (homeCalculation < -1) {
-    awayCalculation -= homeCalculation / 2;
-    homeCalculation = -1;
+  if (homeCalculation < 0) {
+    homeCalculation = 0;
   }
 
-  if (awayCalculation < -1) {
-    homeCalculation -= awayCalculation / 2;
-    awayCalculation = -1;
+  if (awayCalculation < 0) {
+    awayCalculation = 0;
   }
 
-  let homeGoals = Math.round(parseFloat(calculatedXGHome) + homeCalculation);
-  let awayGoals = Math.round(parseFloat(calculatedXGAway) + awayCalculation);
+  let homeGoals = Math.round(parseFloat(match.homeXG) + homeCalculation);
+  let awayGoals = Math.round(parseFloat(match.awayXG) + awayCalculation);
 
-  return [homeGoals, awayGoals];
+  let finalHomeGoals;
+  let finalAwayGoals;
+
+  // round the predicted goals up or down depending on the teams' finishing ability
+  if (formHome.finishingScore >= 1) {
+    finalHomeGoals = Math.ceil(
+      parseFloat(homeGoals + formHome.averageGoals) / 2
+    );
+  } else {
+    finalHomeGoals = Math.floor(
+      parseFloat(homeGoals + formHome.averageGoals) / 2
+    );
+  }
+
+  if (formAway.finishingScore >= 1) {
+    finalAwayGoals = Math.ceil(
+      parseFloat(awayGoals + formAway.averageGoals) / 2
+    );
+  } else {
+    finalAwayGoals = Math.floor(
+      parseFloat(awayGoals + formAway.averageGoals) / 2
+    );
+  }
+
+  return [finalHomeGoals, finalAwayGoals];
 }
 
 export async function getScorePrediction() {
@@ -79,12 +89,12 @@ export async function getScorePrediction() {
       match.goalsA = goalsA;
       match.goalsB = goalsB;
       if (match.status === "suspended") {
-        goalsA = "P";
-        goalsB = "P";
+        match.goalsA = "P";
+        match.goalsB = "P";
       }
 
       ReactDOM.render(
-        <FixtureList match={match} matches={matches} result={true} />,
+        <FixtureList fixture={match} fixtures={matches} result={true}/>,
         document.getElementById("FixtureContainer")
       );
     })

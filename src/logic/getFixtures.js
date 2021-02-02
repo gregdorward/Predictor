@@ -1,6 +1,5 @@
 import React from "react";
 import ReactDOM from "react-dom";
-import createStatsDiv from "../components/createStatsDiv";
 import { orderedLeagues, proxyurl } from "../App";
 import { getForm, applyColour } from "./getForm";
 import { FixtureList } from "../components/FixtureList";
@@ -33,28 +32,12 @@ export function getRadioState(state) {
 
 async function createFixture(match) {
   match.game = match.homeTeam + " v " + match.awayTeam;
+  console.log(match)
 
-  //   ReactDOM.render(<CreateBadge image={match.homeBadge}/>, document.getElementById("homeBadge"));
   ReactDOM.render(
-    <FixtureList fixtures={matches} result={false} />,
+    <FixtureList fixtures={matches} result={false} className={"individualFixture"}/>,
     document.getElementById("FixtureContainer")
   );
-
-  // item.addEventListener("mouseover", function (event) {
-  //   // highlight the mouseover target
-  //   event.target.style.color = "orange";
-  //   item.onmouseout = logMouseOut;
-  //   function logMouseOut() {
-  //     event.target.style.color = "";
-  //   }
-  // });
-
-  //   item.onclick = await function () {
-  //     getMatchStats(matchId, item);
-  //   };
-
-  //   let linebreak = document.createElement("br");
-  //   item.appendChild(linebreak);
 }
 
 export async function generateFixtures(day, radioState) {
@@ -72,7 +55,6 @@ export async function generateFixtures(day, radioState) {
     );
 
     for (const fixture of leagueGames) {
-      console.log(fixture);
 
       const unixTimestamp = fixture.date_unix;
 
@@ -84,7 +66,6 @@ export async function generateFixtures(day, radioState) {
       
       match.id = fixture.id;
       match.time = dateObject.toLocaleString("en-US", { hour: "numeric" });
-      console.log(match.time)
       match.homeTeam = fixture.home_name;
       match.awayTeam = fixture.away_name;
       match.homeOdds = fixture.odds_ft_1;
@@ -96,8 +77,8 @@ export async function generateFixtures(day, radioState) {
       match.homeBadge = fixture.home_image;
       match.awayBadge = fixture.away_image;
 
-      match.homeXG = parseFloat(fixture.team_a_xg_prematch);
-      match.awayXG = parseFloat(fixture.team_b_xg_prematch);
+      match.homeXG = parseFloat(match.homeTeamForm.averageXG);
+      match.awayXG = parseFloat(match.awayTeamForm.averageXG);
 
       match.homePpg = fixture.home_ppg.toFixed(2);
       match.homeFormColour = await applyColour(match.homePpg);
@@ -109,6 +90,9 @@ export async function generateFixtures(day, radioState) {
 
       match.btts_potential = fixture.btts_potential;
       match.game = match.homeTeam + " v " + match.awayTeam;
+
+      match.homeGoals = fixture.homeGoalCount;
+      match.awayGoals = fixture.awayGoalCount;
 
       matches.push(match);
 

@@ -19,6 +19,14 @@ export async function createStatsDiv(stats, game) {
     return item.name === val2;
   });
 
+
+  const formDataMatch = [];
+
+  formDataMatch.push({
+      btts: game.btts_potential,
+
+  })
+
   const formDataHome = [];
 
   formDataHome.push({
@@ -27,11 +35,9 @@ export async function createStatsDiv(stats, game) {
     AverageConceeded: allForm[home].averageGoalsConceded,
     AverageXG: allForm[home].averageXG,
     AveragePossession: allForm[home].possessionAVG,
+    AverageSOT: allForm[home].sot,
     homeOrAway: "Home",
   });
-
-  console.log("FORM DATA HOME");
-  console.log(formDataHome);
 
   const formDataAway = [];
 
@@ -41,12 +47,19 @@ export async function createStatsDiv(stats, game) {
     AverageConceeded: allForm[away].averageGoalsConceded,
     AverageXG: allForm[away].averageXG,
     AveragePossession: allForm[away].possessionAVG,
+    AverageSOT: allForm[away].sot,
     homeOrAway: "Away",
   });
 
   ReactDOM.render(
     <Div className="MatchTime" text={"Kick off: " + time}></Div>,
     document.getElementById("stats" + homeTeam)
+  );
+
+
+  ReactDOM.render(
+    <Div className="BTTSPotential" text={"BTTS Potential: " + game.btts_potential + "%"}></Div>,
+    document.getElementById("BTTSPotential" + game.id)
   );
 
   ReactDOM.render(
@@ -58,6 +71,7 @@ export async function createStatsDiv(stats, game) {
       conceeded={formDataHome[0].AverageConceeded}
       XG={formDataHome[0].AverageXG}
       possession={formDataHome[0].AveragePossession}
+      sot={formDataHome[0].AverageSOT}
     />,
     document.getElementById("home" + homeTeam)
   );
@@ -71,6 +85,7 @@ export async function createStatsDiv(stats, game) {
       conceeded={formDataAway[0].AverageConceeded}
       XG={formDataAway[0].AverageXG}
       possession={formDataAway[0].AveragePossession}
+      sot={formDataAway[0].AverageSOT}
     />,
     document.getElementById("away" + awayTeam)
   );

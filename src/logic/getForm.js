@@ -1,5 +1,4 @@
 import { proxyurl } from "../App";
-var divider;
 export const allForm = [];
 
 export async function diff(a, b) {
@@ -44,13 +43,10 @@ export async function getForm(teamId, homeOrAway, radio) {
   let index;
   if (radioValue === 5) {
     index = 0;
-    divider = 5;
   } else if (radioValue === 6) {
     index = 1;
-    divider = 6;
   } else if (radioValue === 10) {
     index = 2;
-    divider = 10;
   }
 
   let response = await fetch(
@@ -64,25 +60,25 @@ export async function getForm(teamId, homeOrAway, radio) {
     form.averageXGConceded = data.data[index].stats.xg_against_avg_overall;
     form.name = data.data[index].name;
     if (homeOrAway === "home") {
-      form.averageXG = data.data[index].stats.xg_for_avg_home;
+      form.averageXG = data.data[index].stats.xg_for_avg_overall;
       form.averageGoals = data.data[index].stats.seasonScoredAVG_home;
       form.bttsPercentage = data.data[index].stats.seasonBTTSPercentage_home;
       form.possessionAVG = data.data[index].stats.possessionAVG_home;
       form.shotsAVG = data.data[index].stats.shotsAVG_home;
+      form.sot = data.data[index].stats.shotsOnTargetAVG_home;
 
-      form.averageGoalsConceded =
-        data.data[index].stats.seasonConceded_overall / divider;
+      form.averageGoalsConceded = data.data[index].stats.seasonConcededAVG_home;
 
       defenceScore = parseInt(data.data[index].stats.seasonCSPercentage_home);
     } else if (homeOrAway === "away") {
-      form.averageXG = data.data[index].stats.xg_for_avg_away;
+      form.averageXG = data.data[index].stats.xg_for_avg_overall;
       form.averageGoals = data.data[index].stats.seasonScoredAVG_away;
       form.bttsPercentage = data.data[index].stats.seasonBTTSPercentage_away;
       form.possessionAVG = data.data[index].stats.possessionAVG_away;
       form.shotsAVG = data.data[index].stats.shotsAVG_away;
+      form.sot = data.data[index].stats.shotsOnTargetAVG_away;
 
-      form.averageGoalsConceded =
-        data.data[index].stats.seasonConceded_overall / divider;
+      form.averageGoalsConceded = data.data[index].stats.seasonConcededAVG_away;
 
       defenceScore = parseInt(data.data[index].stats.seasonCSPercentage_away);
     }
@@ -110,13 +106,13 @@ export async function getForm(teamId, homeOrAway, radio) {
         form.defenceRating = 0;
         break;
       case defenceScore >= 20 && defenceScore < 40:
-        form.defenceRating = 0.2;
+        form.defenceRating = 0.3;
         break;
       case defenceScore >= 40 && defenceScore < 60:
-        form.defenceRating = 0.4;
+        form.defenceRating = 0.6;
         break;
       case defenceScore >= 60 && defenceScore < 80:
-        form.defenceRating = 0.8;
+        form.defenceRating = 0.9;
         break;
       case defenceScore >= 80:
         form.defenceRating = 1;
