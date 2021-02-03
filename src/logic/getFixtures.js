@@ -5,6 +5,8 @@ import { getForm, applyColour } from "./getForm";
 import { FixtureList } from "../components/FixtureList";
 import { Button } from "../components/Button";
 import { getScorePrediction } from "../logic/getScorePredictions";
+import { selectedOption } from "../components/radio";
+
 var fixtureResponse;
 var fixtureArray;
 export const matches = [];
@@ -30,18 +32,36 @@ export function getRadioState(state) {
   return radioState;
 }
 
+export async function diff(a, b) {
+  return parseFloat(a - b).toFixed(2);
+}
+
+export const allForm = [];
+
 async function createFixture(match) {
   match.game = match.homeTeam + " v " + match.awayTeam;
-  console.log(match)
 
   ReactDOM.render(
-    <FixtureList fixtures={matches} result={false} className={"individualFixture"}/>,
+    <FixtureList
+      fixtures={matches}
+      result={false}
+      className={"individualFixture"}
+    />,
     document.getElementById("FixtureContainer")
   );
 }
 
 export async function generateFixtures(day, radioState) {
-  radioValue = radioState;
+  let radioValue = parseInt(radioState);
+
+  let index;
+  if (radioValue === 5) {
+    index = 0;
+  } else if (radioValue === 6) {
+    index = 1;
+  } else if (radioValue === 10) {
+    index = 2;
+  }
 
   fixtureResponse = await fetch(proxyurl + day);
 
@@ -55,15 +75,12 @@ export async function generateFixtures(day, radioState) {
     );
 
     for (const fixture of leagueGames) {
-
       const unixTimestamp = fixture.date_unix;
-
-      const milliseconds = unixTimestamp * 1000; 
-
+      const milliseconds = unixTimestamp * 1000;
       const dateObject = new Date(milliseconds);
 
       let match = {};
-      
+
       match.id = fixture.id;
       match.time = dateObject.toLocaleString("en-US", { hour: "numeric" });
       match.homeTeam = fixture.home_name;
@@ -72,13 +89,23 @@ export async function generateFixtures(day, radioState) {
       match.awayOdds = fixture.odds_ft_2;
       match.homeId = fixture.homeID;
       match.awayId = fixture.awayID;
-      match.homeTeamForm = await getForm(match.homeId, "home", radioValue);
-      match.awayTeamForm = await getForm(match.awayId, "away", radioValue);
-      match.homeBadge = fixture.home_image;
-      match.awayBadge = fixture.away_image;
+      match.form = [];
+      match.homeTeamInfo = [];
+      match.awayTeamInfo = [];
 
-      match.homeXG = parseFloat(match.homeTeamForm.averageXG);
-      match.awayXG = parseFloat(match.awayTeamForm.averageXG);
+      const form = await getForm(match);
+
+      match.form.allHomeForm = form[0].data;
+      match.form.allAwayForm = form[1].data;
+
+      match.form.homeTeam = form[0].data[index].stats;
+      match.form.awayTeam = form[1].data[index].stats;
+
+      match.homeTeamInfo.badge = fixture.home_image;
+      match.awayTeamInfo.badge = fixture.away_image;
+
+      match.homeXG = parseFloat(match.form.homeTeam.xg_for_avg_overall);
+      match.awayXG = parseFloat(match.form.awayTeam.xg_for_avg_overall);
 
       match.homePpg = fixture.home_ppg.toFixed(2);
       match.homeFormColour = await applyColour(match.homePpg);
@@ -93,6 +120,15 @@ export async function generateFixtures(day, radioState) {
 
       match.homeGoals = fixture.homeGoalCount;
       match.awayGoals = fixture.awayGoalCount;
+
+      let divider;
+      if (index === 0) {
+        divider = 5;
+      } else if (index === 1) {
+        divider = 6;
+      } else if (index === 2) {
+        divider = 10;
+      }
 
       matches.push(match);
 

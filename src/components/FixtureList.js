@@ -1,7 +1,7 @@
 import React, { Fragment } from "react";
 import { CreateBadge } from "./createBadge";
 import Collapsable from "../components/CollapsableElement";
-import { getMatchStats } from "../logic/getStats";
+import { createStatsDiv } from "../logic/getStats"
 
 function GetDivider(props) {
   const matchStatus = props.fixture.status;
@@ -47,7 +47,7 @@ export function FixtureList(props) {
               id={props.highlight}
               className="individualFixture"
               key={fixture.id}
-              onClick={() => getMatchStats(fixture)}
+              onClick={() => createStatsDiv(fixture)}
             >
               <div
                 className="homeForm"
@@ -74,13 +74,13 @@ export function FixtureList(props) {
                 {fixture.awayPpg}
               </div>
               <CreateBadge
-                image={fixture.homeBadge}
+                image={fixture.homeTeamInfo.badge}
                 ClassName="HomeBadge"
                 alt="Home team badge"
                 flexShrink={5}
               />
               <CreateBadge
-                image={fixture.awayBadge}
+                image={fixture.awayTeamInfo.badge}
                 ClassName="AwayBadge"
                 alt="Away team badge"
               />

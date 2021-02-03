@@ -166,9 +166,9 @@ h2 {
 .Collapsable {
   font-size: 2vw;
   flex-basis: 40%;
-  padding-top: 10px;
-  padding-bottom: 10px;
+  padding: 20px;
   flex-wrap: wrap;
+
 }
 
 .RadioContainer {

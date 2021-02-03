@@ -1,9 +1,4 @@
 import { proxyurl } from "../App";
-export const allForm = [];
-
-export async function diff(a, b) {
-  return parseFloat(a - b).toFixed(2);
-}
 
 export async function applyColour(value) {
   let colour;
@@ -36,95 +31,21 @@ export async function applyColour(value) {
   return colour;
 }
 
-export async function getForm(teamId, homeOrAway, radio) {
-  let form = {};
-  let radioValue = parseInt(radio);
+export async function getForm(match) {
+  const teams = [match.homeId, match.awayId];
+  const fixtureForm = [];
 
-  let index;
-  if (radioValue === 5) {
-    index = 0;
-  } else if (radioValue === 6) {
-    index = 1;
-  } else if (radioValue === 10) {
-    index = 2;
+  for (let i = 0; i < teams.length; i++) {
+    const team = teams[i];
+    let response = await fetch(
+      proxyurl +
+        `https://api.footystats.org/lastx?key=${process.env.REACT_APP_API_KEY}&team_id=` +
+        team
+    );
+    await response.json().then((formData) => {
+      fixtureForm[i] = formData;
+    });
   }
 
-  let response = await fetch(
-    proxyurl +
-      `https://api.footystats.org/lastx?key=${process.env.REACT_APP_API_KEY}&team_id=` +
-      teamId
-  );
-  await response.json().then((data) => {
-    let defenceScore;
-
-    form.averageXGConceded = data.data[index].stats.xg_against_avg_overall;
-    form.name = data.data[index].name;
-    if (homeOrAway === "home") {
-      form.averageXG = data.data[index].stats.xg_for_avg_overall;
-      form.averageGoals = data.data[index].stats.seasonScoredAVG_home;
-      form.bttsPercentage = data.data[index].stats.seasonBTTSPercentage_home;
-      form.possessionAVG = data.data[index].stats.possessionAVG_home;
-      form.shotsAVG = data.data[index].stats.shotsAVG_home;
-      form.sot = data.data[index].stats.shotsOnTargetAVG_home;
-
-      form.averageGoalsConceded = data.data[index].stats.seasonConcededAVG_home;
-
-      defenceScore = parseInt(data.data[index].stats.seasonCSPercentage_home);
-    } else if (homeOrAway === "away") {
-      form.averageXG = data.data[index].stats.xg_for_avg_overall;
-      form.averageGoals = data.data[index].stats.seasonScoredAVG_away;
-      form.bttsPercentage = data.data[index].stats.seasonBTTSPercentage_away;
-      form.possessionAVG = data.data[index].stats.possessionAVG_away;
-      form.shotsAVG = data.data[index].stats.shotsAVG_away;
-      form.sot = data.data[index].stats.shotsOnTargetAVG_away;
-
-      form.averageGoalsConceded = data.data[index].stats.seasonConcededAVG_away;
-
-      defenceScore = parseInt(data.data[index].stats.seasonCSPercentage_away);
-    }
-
-    if (parseFloat(form.averageXG).toFixed(2) != 0.0) {
-      form.finishingScore = parseFloat(
-        (form.averageGoals / form.averageXG).toFixed(2)
-      );
-    } else {
-      form.finishingScore = 0.0;
-    }
-
-    if (parseFloat(form.averageGoalsConceded).toFixed(2) != 0.0) {
-      form.goalieRating = parseFloat(
-        (form.averageXGConceded / form.averageGoalsConceded).toFixed(2)
-      );
-    } else {
-      form.goalieRating = 2;
-    }
-
-    form.forecastedXG = form.averageXG * form.finishingScore;
-
-    switch (true) {
-      case defenceScore < 20:
-        form.defenceRating = 0;
-        break;
-      case defenceScore >= 20 && defenceScore < 40:
-        form.defenceRating = 0.3;
-        break;
-      case defenceScore >= 40 && defenceScore < 60:
-        form.defenceRating = 0.6;
-        break;
-      case defenceScore >= 60 && defenceScore < 80:
-        form.defenceRating = 0.9;
-        break;
-      case defenceScore >= 80:
-        form.defenceRating = 1;
-        break;
-      default:
-        break;
-    }
-  });
-  form.finalFinishingScore = parseFloat(await diff(form.finishingScore, 1));
-
-  form.finalGoalieRating = parseFloat(await diff(form.goalieRating, 1));
-
-  allForm.push(form);
-  return form;
+  return fixtureForm;
 }

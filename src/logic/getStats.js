@@ -1,53 +1,63 @@
-import { proxyurl } from "../App";
 import ReactDOM from "react-dom";
 import Stats from "../components/createStatsDiv";
-import { allForm } from "../logic/getForm";
 import Div from "../components/Div";
+import { selectedOption } from "../components/radio";
 
-export async function createStatsDiv(stats, game) {
+export async function createStatsDiv(game) {
+  let radioSelected = parseInt(selectedOption);
+
+  let index;
+  let divider;
+  if (radioSelected === 5) {
+    index = 0;
+    divider = 5;
+  } else if (radioSelected === 6) {
+    index = 1;
+    divider = 6;
+  } else if (radioSelected === 10) {
+    index = 2;
+    divider = 10;
+  }
+
   let homeTeam = game.homeTeam;
   let awayTeam = game.awayTeam;
   let time = game.time;
 
-  let val = homeTeam;
-  let home = allForm.findIndex(function (item, i) {
-    return item.name === val;
-  });
-
-  let val2 = awayTeam;
-  let away = allForm.findIndex(function (item, i) {
-    return item.name === val2;
-  });
-
-
   const formDataMatch = [];
 
   formDataMatch.push({
-      btts: game.btts_potential,
-
-  })
+    btts: game.btts_potential,
+  });
 
   const formDataHome = [];
 
   formDataHome.push({
-    name: allForm[home].name,
-    AverageGoals: allForm[home].averageGoals,
-    AverageConceeded: allForm[home].averageGoalsConceded,
-    AverageXG: allForm[home].averageXG,
-    AveragePossession: allForm[home].possessionAVG,
-    AverageSOT: allForm[home].sot,
+    name: game.homeTeam,
+    AverageGoals: (
+      game.form.allHomeForm[index].stats.seasonScoredNum_overall / divider
+    ).toFixed(2),
+    AverageConceeded: (
+      game.form.allHomeForm[index].stats.seasonConcededNum_overall / divider
+    ).toFixed(2),
+    AverageXG: game.form.allHomeForm[index].stats.xg_for_avg_overall,
+    AveragePossession: game.form.allHomeForm[index].stats.possessionAVG_overall,
+    AverageSOT: game.form.allHomeForm[index].stats.shotsOnTargetAVG_overall,
     homeOrAway: "Home",
   });
 
   const formDataAway = [];
 
   formDataAway.push({
-    name: allForm[away].name,
-    AverageGoals: allForm[away].averageGoals,
-    AverageConceeded: allForm[away].averageGoalsConceded,
-    AverageXG: allForm[away].averageXG,
-    AveragePossession: allForm[away].possessionAVG,
-    AverageSOT: allForm[away].sot,
+    name: game.awayTeam,
+    AverageGoals: (
+      game.form.allAwayForm[index].stats.seasonScoredNum_overall / divider
+    ).toFixed(2),
+    AverageConceeded: (
+      game.form.allAwayForm[index].stats.seasonConcededNum_overall / divider
+    ).toFixed(2),
+    AverageXG: game.form.allAwayForm[index].stats.xg_for_avg_overall,
+    AveragePossession: game.form.allAwayForm[index].stats.possessionAVG_overall,
+    AverageSOT: game.form.allAwayForm[index].stats.shotsOnTargetAVG_overall,
     homeOrAway: "Away",
   });
 
@@ -56,9 +66,11 @@ export async function createStatsDiv(stats, game) {
     document.getElementById("stats" + homeTeam)
   );
 
-
   ReactDOM.render(
-    <Div className="BTTSPotential" text={"BTTS Potential: " + game.btts_potential + "%"}></Div>,
+    <Div
+      className="BTTSPotential"
+      text={"BTTS Potential: " + game.btts_potential + "%"}
+    ></Div>,
     document.getElementById("BTTSPotential" + game.id)
   );
 
@@ -89,20 +101,4 @@ export async function createStatsDiv(stats, game) {
     />,
     document.getElementById("away" + awayTeam)
   );
-}
-
-export async function getMatchStats(fixture) {
-  let matchDetail = await fetch(
-    proxyurl +
-      `https://api.footystats.org/match?key=${process.env.REACT_APP_API_KEY}&match_id=` +
-      fixture.id
-  );
-
-  let stats;
-  await matchDetail.json().then((data) => {
-    let arr1 = data.data.trends.team_a;
-    let arr2 = data.data.trends.team_b;
-    stats = arr1.concat(arr2);
-  });
-  createStatsDiv(stats, fixture);
 }
