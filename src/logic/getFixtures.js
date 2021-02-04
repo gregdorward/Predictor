@@ -2,15 +2,13 @@ import React from "react";
 import ReactDOM from "react-dom";
 import { orderedLeagues, proxyurl } from "../App";
 import { getForm, applyColour } from "./getForm";
-import { FixtureList } from "../components/FixtureList";
+import { Fixture } from "../components/Fixture"
 import { Button } from "../components/Button";
 import { getScorePrediction } from "../logic/getScorePredictions";
-import { selectedOption } from "../components/radio";
 
 var fixtureResponse;
 var fixtureArray;
 export const matches = [];
-var radioValue;
 var leagueGames = [];
 
 export const [day, month, year] = new Date()
@@ -24,6 +22,16 @@ let [
   tomorrowYear,
 ] = tomorrowsDate.toLocaleDateString("en-US").split("/");
 
+
+let yesterdaysDate = new Date();
+yesterdaysDate.setDate(new Date().getDate() - 1);
+let [
+  yesterdayDay,
+  yesterdayMonth,
+  yesterdayYear,
+] = yesterdaysDate.toLocaleDateString("en-US").split("/");
+
+export const yesterday = `https://api.footystats.org/todays-matches?key=${process.env.REACT_APP_API_KEY}&date=${yesterdayYear}-${yesterdayDay}-${yesterdayMonth}`;
 export const today = `https://api.footystats.org/todays-matches?key=${process.env.REACT_APP_API_KEY}&date=${year}-${day}-${month}`;
 export const tomorrow = `https://api.footystats.org/todays-matches?key=${process.env.REACT_APP_API_KEY}&date=${tomorrowYear}-${tomorrowDay}-${tomorrowMonth}`;
 
@@ -42,13 +50,13 @@ async function createFixture(match) {
   match.game = match.homeTeam + " v " + match.awayTeam;
 
   ReactDOM.render(
-    <FixtureList
+    <Fixture
       fixtures={matches}
       result={false}
       className={"individualFixture"}
     />,
-    document.getElementById("FixtureContainer")
-  );
+        document.getElementById("FixtureContainer")
+  )
 }
 
 export async function generateFixtures(day, radioState) {
@@ -68,6 +76,14 @@ export async function generateFixtures(day, radioState) {
   await fixtureResponse.json().then((fixtures) => {
     fixtureArray = Array.from(fixtures.data);
   });
+
+  ReactDOM.render(
+    <Button
+      text={"Get Predictions"}
+      onClickEvent={() => getScorePrediction()}
+    />,
+    document.getElementById("Buttons")
+  );
 
   for (let i = 0; i < orderedLeagues.length; i++) {
     leagueGames = fixtureArray.filter(
@@ -121,25 +137,10 @@ export async function generateFixtures(day, radioState) {
       match.homeGoals = fixture.homeGoalCount;
       match.awayGoals = fixture.awayGoalCount;
 
-      let divider;
-      if (index === 0) {
-        divider = 5;
-      } else if (index === 1) {
-        divider = 6;
-      } else if (index === 2) {
-        divider = 10;
-      }
-
       matches.push(match);
 
       await createFixture(match);
     }
   }
-  ReactDOM.render(
-    <Button
-      text={"Get Predictions"}
-      onClickEvent={() => getScorePrediction()}
-    />,
-    document.getElementById("Buttons")
-  );
+
 }

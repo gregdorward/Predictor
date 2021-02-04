@@ -3,9 +3,10 @@ import ReactDOM from "react-dom";
 import Header from "./components/Header";
 import Radio from "./components/radio";
 import { Button } from "./components/Button";
-import { today, generateFixtures, tomorrow } from "./logic/getFixtures";
+import { today, generateFixtures, tomorrow, yesterday } from "./logic/getFixtures";
 import { selectedOption } from "./components/radio";
 import TextBlock from "./components/TextSection";
+import { FixtureList } from "./components/FixtureList";
 require("dotenv").config();
 
 export const proxyurl = "https://safe-caverns-99679.herokuapp.com/";
@@ -131,6 +132,12 @@ export var orderedLeagues = [];
 
   ReactDOM.render(
     <div className="FixtureButtons">
+      <Button
+        text={"Get Yesterday's Fixtures"}
+        onClickEvent={async () =>
+          fixtureList.push(await generateFixtures(yesterday, selectedOption))
+        }
+      />
       <Button
         text={"Get Today's Fixtures"}
         onClickEvent={async () =>

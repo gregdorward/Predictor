@@ -51,8 +51,15 @@ h2 {
   align-items: center;
 }
 
-#highlight {
-  font-size: 50px;
+.highlight {
+  display: flex;
+  height: auto;
+  flex-basis: 100%;
+  padding-top: 10px;
+  padding-bottom: 10px;
+  flex-direction: row;
+  align-items: center;
+  color: yellow;
 }
 
 .HomeBadge {
@@ -66,7 +73,7 @@ h2 {
 .AwayBadge {
   border-color: #393d3f;
   height: 4vw;
-  order: 6;
+  order: 7;
   padding-right: 10px;
   padding-left: 10px;
 }
@@ -108,10 +115,22 @@ h2 {
   color: #B8B8B8;
 }
 
+.CorrectResult {
+  height: auto;
+  flex-basis: 10%;
+  order: 3;
+  padding-left: 3px;
+  padding-right: 3px;
+  font-size: 3vw;
+  flex-grow: 1000;
+  display: inline-block;
+  color: lawngreen;
+}
+
 .awayTeam {
   height: auto;
   flex-basis: 35%;
-  order: 4;
+  order: 5;
 
   flex-grow: 0;
   font-size: 3vw;
@@ -129,7 +148,7 @@ h2 {
   font-size: 3vw;
   flex-shrink: 2;
   display: inline-block;
-  padding: 5px;
+  padding: 10px;
   /* border: 0.16em solid rgba(255, 255, 255, 0); */
   border-radius: 2em;
   box-sizing: border-box;
@@ -150,7 +169,7 @@ h2 {
   font-size: 3vw;
   flex-shrink: 2;
   display: inline-block;
-  padding: 5px;
+  padding: 10px;
   /* border: 0.16em solid rgba(255, 255, 255, 0); */
   border-radius: 2em;
   box-sizing: border-box;
@@ -375,9 +394,9 @@ h2 {
   padding: 5px;
 }
 
-/* ul {
-  width: 100%;
-} */
+ul {
+  padding: 0px;
+}
 
 table,
 th,

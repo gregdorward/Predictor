@@ -2,6 +2,7 @@ import React from "react";
 import ReactDOM from "react-dom";
 import { matches, diff } from "./getFixtures";
 import { FixtureList } from "../components/FixtureList";
+import { Fixture } from "../components/Fixture";
 import { selectedOption } from "../components/radio";
 
 //Calculates scores based on prior XG figures, weighted by odds
@@ -130,21 +131,40 @@ export async function calculateScore(match, index, divider) {
 
   finalHomeGoals = Math.round(
     parseFloat(
-      homeGoals +
-        formHome.seasonScoredNum_overall / divider +
-        formHome.forecastedXG
-    ) / 3
+      (homeGoals * 3) +
+        (formHome.seasonScoredNum_overall / divider) +
+        formHome.forecastedXG + 
+        (formAway.seasonConcededNum_overall / divider)
+    ) / 6
   );
 
   finalAwayGoals = Math.round(
     parseFloat(
-      awayGoals +
-        formAway.seasonScoredNum_overall / divider +
-        formAway.forecastedXG
-    ) / 3
+      (awayGoals * 3) +
+        (formAway.seasonScoredNum_overall / divider) +
+        formAway.forecastedXG +
+        (formHome.seasonConcededNum_overall / divider)
+    ) / 6
   );
 
+
+  //     console.log("seasonScoredNum_overall")
+  //     console.log(formAway.seasonScoredNum_overall)
+  //     console.log("forecastedXG")
+  //     console.log(formAway.forecastedXG)
+  //     console.log("seasonConcededNum_overall")
+  //     console.log(formHome.seasonConcededNum_overall)
+  //     console.log("awayGoals")
+  //     console.log(awayGoals)
+
+
+
+  // console.log("FINAL HOME GOALS")
+  // console.log(finalHomeGoals)
+
   return [finalHomeGoals, finalAwayGoals];
+
+  
 }
 
 export async function getScorePrediction() {
@@ -172,11 +192,15 @@ export async function getScorePrediction() {
         match.goalsA = "P";
         match.goalsB = "P";
       }
-
       ReactDOM.render(
-        <FixtureList fixture={match} fixtures={matches} result={true} />,
+        <Fixture
+          fixtures={matches}
+          result={true}
+          className={"individualFixture"}
+        />,
         document.getElementById("FixtureContainer")
       );
+
     })
   );
 }

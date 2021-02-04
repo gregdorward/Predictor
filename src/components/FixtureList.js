@@ -1,7 +1,7 @@
 import React, { Fragment } from "react";
 import { CreateBadge } from "./createBadge";
 import Collapsable from "../components/CollapsableElement";
-import { createStatsDiv } from "../logic/getStats"
+import { createStatsDiv } from "../logic/getStats";
 
 function GetDivider(props) {
   const matchStatus = props.fixture.status;
@@ -20,19 +20,16 @@ function GetDivider(props) {
   }
 }
 
+let fixtureClassName;
 
-
-// let fixtureClassName;
-
-// function getStyle(fixture) {
-//   if (fixture.btts_potential >= 50) {
-//     fixtureClassName = "individualFixture";
-//   } else {
-//     fixtureClassName = "individualFixture"
-//   }
-//   return fixtureClassName;
-// }
-
+function getStyle(fixture) {
+  if (fixture.btts_potential >= 40) {
+    fixtureClassName = "highlight";
+  } else {
+    fixtureClassName = "individualFixture"
+  }
+  return fixtureClassName;
+}
 
 export function FixtureList(props) {
   return (
@@ -40,12 +37,15 @@ export function FixtureList(props) {
       <div className="fixture">
         <Collapsable />
         {props.fixtures.map((fixture) => (
-          <div>
+          <div
+            onMouseEnter={(event) =>
+              (event.target.style.color = "hsl(1, 100%, 68%)")
+            }
+            onMouseLeave={(event) => (event.target.style.color = "")}
+          >
             <li
-              onMouseEnter={(event) => (event.target.style.color = "orange")}
-              onMouseLeave={(event) => (event.target.style.color = "")}
               id={props.highlight}
-              className="individualFixture"
+              className={getStyle(fixture)}
               key={fixture.id}
               onClick={() => createStatsDiv(fixture)}
             >
@@ -88,11 +88,17 @@ export function FixtureList(props) {
             <div>
               <div id={"stats" + fixture.homeTeam}></div>
               <Fragment>
-              <div id={"BTTSPotential" + fixture.id}></div>
-              <div className="StatsContainer">
-                <div className="HomeStats" id={"home" + fixture.homeTeam}></div>
-                <div className="AwayStats" id={"away" + fixture.awayTeam}></div>
-              </div>
+                <div id={"BTTSPotential" + fixture.id}></div>
+                <div className="StatsContainer">
+                  <div
+                    className="HomeStats"
+                    id={"home" + fixture.homeTeam}
+                  ></div>
+                  <div
+                    className="AwayStats"
+                    id={"away" + fixture.awayTeam}
+                  ></div>
+                </div>
               </Fragment>
             </div>
           </div>
