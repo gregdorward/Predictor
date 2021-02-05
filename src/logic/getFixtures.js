@@ -24,7 +24,7 @@ let [
 
 
 let yesterdaysDate = new Date();
-yesterdaysDate.setDate(new Date().getDate() - 2);
+yesterdaysDate.setDate(new Date().getDate() - 1);
 let [
   yesterdayDay,
   yesterdayMonth,
