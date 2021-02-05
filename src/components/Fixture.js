@@ -4,6 +4,8 @@ import Collapsable from "../components/CollapsableElement";
 import { createStatsDiv } from "../logic/getStats";
 
 let resultValue;
+const text =
+  "Next to each badge is each team’s points per game picked up at home or away.\n Once the fixtures have loaded, click on “Get Predictions” to get predictions based on form data.\n Click on an individual fixture for detailed stats for both teams.\n If you change your form selection, re-tapping the fixture will fetch new form data.\n You can also fetch fresh predictions based on the newly selected option by re-tapping on “Get Predictions” at any time.\n If a match is resulted, tapping “Get Predictions” will show how accurate the prediction was.\n If no form radio button is chosen, the last 5 games will be used by default";
 
 function GetDivider(fixture) {
   const matchStatus = fixture.status;
@@ -11,7 +13,11 @@ function GetDivider(fixture) {
 
   if (isPrediction === false && matchStatus !== "complete") {
     return <div className="divider">{"V"}</div>;
-  } else if (matchStatus === "complete") {
+  } else if (isPrediction === false && matchStatus === "complete") {
+    return (
+      <div className="Result">{`${fixture.fixture.homeGoals} - ${fixture.fixture.awayGoals}`}</div>
+    );
+  } else if (isPrediction === true && matchStatus === "complete") {
     let outcome;
     let prediction;
 
@@ -45,11 +51,17 @@ function GetDivider(fixture) {
 
     if (outcome === prediction) {
       return (
-        <div className="CorrectResult">{`${fixture.fixture.homeGoals} - ${fixture.fixture.awayGoals}`}</div>
+        <Fragment>
+          <div className="CorrectResult">{`${fixture.fixture.homeGoals} - ${fixture.fixture.awayGoals}`}</div>
+          <div className="score">{`${fixture.fixture.goalsA} - ${fixture.fixture.goalsB}`}</div>
+        </Fragment>
       );
-    } else {
+    } else if (outcome !== prediction){
       return (
+        <Fragment>
         <div className="Result">{`${fixture.fixture.homeGoals} - ${fixture.fixture.awayGoals}`}</div>
+        <div className="score">{`${fixture.fixture.goalsA} - ${fixture.fixture.goalsB}`}</div>
+        </Fragment>
       );
     }
   } else {
@@ -73,7 +85,7 @@ function getStyle(fixture) {
 const SingleFixture = ({ fixture }) => (
   <div>
     <li
-      className={getStyle(fixture)}
+      className={"individualFixture"}
       key={fixture.id}
       onClick={() => createStatsDiv(fixture)}
     >
@@ -126,10 +138,14 @@ const SingleFixture = ({ fixture }) => (
   </div>
 );
 
+let newText = text.split("\n").map((i) => {
+  return <p>{i}</p>;
+});
+
 const List = ({ fixtures }) => (
   <div>
     <Fragment>
-      <Collapsable />
+      <Collapsable buttonText={"How do I use this?"} text={newText} />
     </Fragment>
     <ul>
       {fixtures.map((fixture, i) => (

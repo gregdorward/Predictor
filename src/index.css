@@ -29,6 +29,43 @@ h2 {
   padding: 0px;
 }
 
+/* .LeagueOption {
+  align-items: center;
+  justify-content: center;
+  display: inline-block;
+  height: auto;
+
+}
+
+.CheckboxDiv {
+  display: flex;
+  flex-flow: row wrap;
+  align-items: center;
+  align-self: center;
+} */
+
+/* .Checkbox {
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  width: 25%;
+  font-size: 1.5vw;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  display: inline-block;
+  height: auto;
+  border: 0px;
+  padding: 5px;
+  flex-shrink: inherit;
+}
+
+.LeagueOption{
+  padding: 2px;
+  align-self: flex-start;
+} */
+
+
+
 .fixture {
   display: flex;
   align-items: center;
@@ -96,8 +133,8 @@ h2 {
   height: auto;
   flex-basis: 10%;
   order: 3;
-  padding-left: 3px;
-  padding-right: 3px;
+  padding-left: 5px;
+  padding-right: 5px;
   font-size: 3vw;
   flex-grow: 1000;
   display: inline-block;
@@ -107,8 +144,8 @@ h2 {
   height: auto;
   flex-basis: 10%;
   order: 3;
-  padding-left: 3px;
-  padding-right: 3px;
+  padding-left: 5px;
+  padding-right: 5px;
   font-size: 3vw;
   flex-grow: 1000;
   display: inline-block;
@@ -270,8 +307,8 @@ h2 {
   button {
     display: inline-block;
     padding: 1.2em;
-    padding-top: 10px;
-    padding-bottom: 10px;
+    /* padding-top: 10px;
+    padding-bottom: 10px; */
     margin: 10px;
     border: 0.16em solid rgba(255, 255, 255, 0);
     border-radius: 2em;

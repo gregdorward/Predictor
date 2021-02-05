@@ -88,6 +88,8 @@ export async function calculateScore(match, index, divider) {
   let formHome = match.form.allHomeForm[index].stats;
   let formAway = match.form.allAwayForm[index].stats;
 
+  console.log(formHome)
+
   let defenceHome = parseFloat(formHome.defenceRating);
   let goalieHome = formHome.finalGoalieRating;
   let defenceScoreHome = (defenceHome + goalieHome) / 2;
@@ -107,13 +109,13 @@ export async function calculateScore(match, index, divider) {
     (await diff(oddsWeightingAway, oddsWeightingHome)) * 2
   ).toFixed(2);
 
-  let homeXGConceded = formHome.xg_against_avg_overall - 1;
-  let awayXGConceded = formAway.xg_against_avg_overall - 1;
+  let homeXGConceded = parseFloat(formHome.xg_against_avg_overall);
+  let awayXGConceded = parseFloat(formAway.xg_against_avg_overall);
 
   let homeCalculation =
-    parseFloat(homeWeighting) - (defenceScoreAway + awayXGConceded);
+    parseFloat(homeWeighting - defenceScoreAway) + awayXGConceded;
   let awayCalculation =
-    parseFloat(awayWeighting) - (defenceScoreHome + homeXGConceded);
+    parseFloat(awayWeighting - defenceScoreHome) + homeXGConceded;
 
   let homeGoals = Math.round(parseFloat(match.homeXG) + homeCalculation);
   let awayGoals = Math.round(parseFloat(match.awayXG) + awayCalculation);
@@ -135,7 +137,7 @@ export async function calculateScore(match, index, divider) {
         (formHome.seasonScoredNum_overall / divider) +
         formHome.forecastedXG + 
         (formAway.seasonConcededNum_overall / divider)
-    ) / 6
+    ) / 7
   );
 
   finalAwayGoals = Math.round(

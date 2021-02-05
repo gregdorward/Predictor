@@ -3,10 +3,16 @@ import ReactDOM from "react-dom";
 import Header from "./components/Header";
 import Radio from "./components/radio";
 import { Button } from "./components/Button";
-import { today, generateFixtures, tomorrow, yesterday } from "./logic/getFixtures";
+import {
+  today,
+  generateFixtures,
+  tomorrow,
+  yesterday,
+} from "./logic/getFixtures";
 import { selectedOption } from "./components/radio";
 import TextBlock from "./components/TextSection";
-import { FixtureList } from "./components/FixtureList";
+import Collapsable from "./components/CollapsableElement";
+import CheckBox from "./components/Checkbox";
 require("dotenv").config();
 
 export const proxyurl = "https://safe-caverns-99679.herokuapp.com/";
