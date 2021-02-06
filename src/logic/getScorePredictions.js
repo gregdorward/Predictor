@@ -1,7 +1,6 @@
 import React from "react";
 import ReactDOM from "react-dom";
 import { matches, diff } from "./getFixtures";
-import { FixtureList } from "../components/FixtureList";
 import { Fixture } from "../components/Fixture";
 import { selectedOption } from "../components/radio";
 
@@ -49,16 +48,16 @@ export async function calculateScore(match, index, divider) {
         teams[i].defenceRating = 0;
         break;
       case defenceScore >= 20 && defenceScore < 40:
-        teams[i].defenceRating = 0.4;
+        teams[i].defenceRating = 0.3;
         break;
       case defenceScore >= 40 && defenceScore < 60:
-        teams[i].defenceRating = 0.8;
+        teams[i].defenceRating = 0.7;
         break;
       case defenceScore >= 60 && defenceScore < 80:
-        teams[i].defenceRating = 1.2;
+        teams[i].defenceRating = 1.1;
         break;
       case defenceScore >= 80:
-        teams[i].defenceRating = 1.6;
+        teams[i].defenceRating = 1.5;
         break;
       default:
         break;
@@ -88,16 +87,17 @@ export async function calculateScore(match, index, divider) {
   let formHome = match.form.allHomeForm[index].stats;
   let formAway = match.form.allAwayForm[index].stats;
 
-  console.log(formHome)
+  console.log(formHome);
 
-  let defenceHome = parseFloat(formHome.defenceRating);
+  // let defenceHome = parseFloat(formHome.defenceRating);
   let goalieHome = formHome.finalGoalieRating;
-  let defenceScoreHome = (defenceHome + goalieHome) / 2;
 
-  let defenceAway = parseFloat(formAway.defenceRating);
+  let defenceScoreHome = (formHome.defenceScore + goalieHome) / 2;
+
+  // let defenceAway = parseFloat(formAway.defenceRating);
   let goalieAway = formAway.finalGoalieRating;
 
-  let defenceScoreAway = (defenceAway + goalieAway) / 2;
+  let defenceScoreAway = (formAway.defenceScore + goalieAway) / 2;
 
   let oddsWeightingHome = parseFloat(homeRaw);
   let oddsWeightingAway = parseFloat(awayRaw);
@@ -112,10 +112,22 @@ export async function calculateScore(match, index, divider) {
   let homeXGConceded = parseFloat(formHome.xg_against_avg_overall);
   let awayXGConceded = parseFloat(formAway.xg_against_avg_overall);
 
-  let homeCalculation =
-    parseFloat(homeWeighting - defenceScoreAway) + awayXGConceded;
-  let awayCalculation =
-    parseFloat(awayWeighting - defenceScoreHome) + homeXGConceded;
+  let homeCalculation;
+  let awayCalculation;
+  if (defenceScoreAway > 0) {
+    homeCalculation =
+      parseFloat((homeWeighting - (defenceScoreAway/10))+0.5) + awayXGConceded;
+  } else {
+    homeCalculation =
+      parseFloat((homeWeighting + (defenceScoreAway/10))+0.5) + awayXGConceded;
+  }
+  if (defenceScoreHome > 0) {
+    awayCalculation =
+      parseFloat((awayWeighting - (defenceScoreHome/10))+0.5) + homeXGConceded;
+  } else {
+    awayCalculation =
+      parseFloat((awayWeighting + (defenceScoreHome/10))+0.5) + homeXGConceded;
+  }
 
   let homeGoals = Math.round(parseFloat(match.homeXG) + homeCalculation);
   let awayGoals = Math.round(parseFloat(match.awayXG) + awayCalculation);
@@ -133,40 +145,69 @@ export async function calculateScore(match, index, divider) {
 
   finalHomeGoals = Math.round(
     parseFloat(
-      (homeGoals * 3) +
-        (formHome.seasonScoredNum_overall / divider) +
-        formHome.forecastedXG + 
-        (formAway.seasonConcededNum_overall / divider)
-    ) / 7
+      homeGoals * 3 +
+        formHome.seasonScoredNum_overall / divider +
+        formHome.forecastedXG +
+        formAway.seasonConcededNum_overall / divider
+    ) / 6
   );
 
   finalAwayGoals = Math.round(
     parseFloat(
-      (awayGoals * 3) +
-        (formAway.seasonScoredNum_overall / divider) +
+      awayGoals * 3 +
+        formAway.seasonScoredNum_overall / divider +
         formAway.forecastedXG +
-        (formHome.seasonConcededNum_overall / divider)
+        formHome.seasonConcededNum_overall / divider
     ) / 6
   );
 
+  // console.log("DIVIDER")
+  // console.log(divider)
 
-  //     console.log("seasonScoredNum_overall")
-  //     console.log(formAway.seasonScoredNum_overall)
-  //     console.log("forecastedXG")
-  //     console.log(formAway.forecastedXG)
-  //     console.log("seasonConcededNum_overall")
-  //     console.log(formHome.seasonConcededNum_overall)
-  //     console.log("awayGoals")
-  //     console.log(awayGoals)
+  // console.log(match.homeTeam);
+  // console.log("homeOdds")
+  // console.log(match.homeOdds)
 
+  // console.log("homeGoals");
+  // console.log(homeGoals);
+  // console.log("seasonScoredNum_overall");
+  // console.log(formHome.seasonScoredNum_overall);
+  // console.log("forecastedXG");
+  // console.log(formHome.forecastedXG);
+  // console.log("seasonConcededNum_overall");
+  // console.log(formAway.seasonConcededNum_overall);
+  // console.log("homeCalculation");
+  // console.log(homeCalculation);
+  // console.log("defenceScoreHome");
+  // console.log(defenceScoreHome);
+  // console.log("homeWeighting");
+  // console.log(homeWeighting);
 
+  // console.log(match.awayTeam);
+  // console.log("awayOdds")
+  // console.log(match.awayOdds)
+  // console.log("awayGoals");
+  // console.log(awayGoals);
+  // console.log("seasonScoredNum_overall");
+  // console.log(formAway.seasonScoredNum_overall);
+  // console.log("forecastedXG");
+  // console.log(formAway.forecastedXG);
+  // console.log("seasonConcededNum_overall");
+  // console.log(formHome.seasonConcededNum_overall);
+  // console.log("awayCalculation");
+  // console.log(awayCalculation);
+  // console.log("defenceScoreAway");
+  // console.log(defenceScoreAway);
+  // console.log("awayWeighting");
+  // console.log(awayWeighting);
 
-  // console.log("FINAL HOME GOALS")
-  // console.log(finalHomeGoals)
+  // console.log("FINAL HOME GOALS");
+  // console.log(finalHomeGoals);
+
+  // console.log("FINAL AWAY GOALS");
+  // console.log(finalAwayGoals);
 
   return [finalHomeGoals, finalAwayGoals];
-
-  
 }
 
 export async function getScorePrediction() {
@@ -202,7 +243,6 @@ export async function getScorePrediction() {
         />,
         document.getElementById("FixtureContainer")
       );
-
     })
   );
 }
