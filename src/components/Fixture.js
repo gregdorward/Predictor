@@ -85,7 +85,7 @@ function getStyle(fixture) {
 const SingleFixture = ({ fixture }) => (
   <div>
     <li
-      className={"individualFixture"}
+      className={getStyle(fixture)}
       key={fixture.id}
       onClick={() => createStatsDiv(fixture)}
     >
