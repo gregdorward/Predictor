@@ -25,12 +25,15 @@ function GetDivider(fixture) {
     switch (true) {
       case fixture.fixture.homeGoals > fixture.fixture.awayGoals:
         outcome = 0;
+        fixture.fixture.winner=fixture.fixture.homeTeam
         break;
       case fixture.fixture.homeGoals === fixture.fixture.awayGoals:
         outcome = 1;
+        fixture.fixture.winner="draw"
         break;
       case fixture.fixture.homeGoals < fixture.fixture.awayGoals:
         outcome = 2;
+        fixture.fixture.winner=fixture.fixture.awayTeam
         break;
       default:
         break;

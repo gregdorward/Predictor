@@ -4,7 +4,7 @@ import { matches, diff } from "./getFixtures";
 import { Fixture } from "../components/Fixture";
 import { selectedOption } from "../components/radio";
 import Div from "../components/Div";
-import { Button } from "../components/Button";
+import Collapsable from "../components/CollapsableElement";
 
 //Calculates scores based on prior XG figures, weighted by odds
 export async function calculateScore(match, index, divider) {
@@ -219,32 +219,35 @@ function getSuccessMeasure(fixtures) {
       const profit = parseFloat(fixtures[i].profit);
       sum = parseFloat(sum + profit);
       roundedFigure = sum.toFixed(2);
-      gameCount = gameCount + 1
+      gameCount = gameCount + 1;
     } else {
       sum = parseFloat(sum + 0);
       roundedFigure = sum.toFixed(2);
     }
   }
 
-  if(gameCount > 0) {
-  ReactDOM.render(
-    <Fragment>
-      <Div
-        className={"SuccessMeasure"}
-        text={
-          `accumulated profit/loss if £1 was staked on each of the  ${gameCount} games: £${roundedFigure}`
-        }
-      />
-    </Fragment>,
-    document.getElementById("successMeasure")
-  );
-} else {
-  return;
+  if (gameCount > 0) {
+    ReactDOM.render(
+      <Fragment>
+        <Div
+          className={"SuccessMeasure"}
+          text={`accumulated profit/loss if £1 was staked on each of the  ${gameCount} games: £${roundedFigure}`}
+        />
+      </Fragment>,
+      document.getElementById("successMeasure")
+    );
+  } else {
+    return;
+  }
 }
-}
+
+var tips = [];
+var accumulatedOdds = 1;
 
 export async function getScorePrediction() {
   let radioSelected = parseInt(selectedOption);
+  tips = [];
+  accumulatedOdds = 1;
 
   let index;
   let divider;
@@ -268,6 +271,46 @@ export async function getScorePrediction() {
         match.goalsA = "P";
         match.goalsB = "P";
       }
+
+      match.predictionOutcome = "unknown";
+      let predictionObject;
+
+      if (match.goalsA - 1 > match.goalsB && match.homeOdds !== 0) {
+        if (match.status === "complete" && match.homeTeam === match.winner) {
+          match.predictionOutcome = "Won";
+        } else if (
+          match.status === "complete" &&
+          match.homeTeam !== match.winner
+        ) {
+          match.predictionOutcome = "Lost";
+        }
+        accumulatedOdds =
+          parseFloat(accumulatedOdds) * parseFloat(match.homeOdds);
+        predictionObject = {
+          team: match.homeTeam,
+          odds: match.homeOdds,
+          outcome: match.predictionOutcome,
+        };
+        tips.push(predictionObject);
+      } else if (match.goalsB - 1 > match.goalsA && match.awayOdds !== 0) {
+        if (match.status === "complete" && match.awayTeam === match.winner) {
+          match.predictionOutcome = "Won";
+        } else if (
+          match.status === "complete" &&
+          match.awayTeam !== match.winner
+        ) {
+          match.predictionOutcome = "Lost";
+        }
+        accumulatedOdds =
+          parseFloat(accumulatedOdds) * parseFloat(match.awayOdds);
+        predictionObject = {
+          team: match.awayTeam,
+          odds: match.awayOdds,
+          outcome: match.predictionOutcome,
+        };
+        tips.push(predictionObject);
+      }
+
       ReactDOM.render(
         <Fixture
           fixtures={matches}
@@ -276,7 +319,34 @@ export async function getScorePrediction() {
         />,
         document.getElementById("FixtureContainer")
       );
+
+      if (tips.length > 0) {
+        ReactDOM.render(
+          <div>
+            <Fragment>
+              <Collapsable
+                buttonText={"Predictions of the day"}
+                text={
+                  <ul className="BestPredictions">
+                    <lh>To win</lh>
+                    {tips.map((tip) => (
+                      <li className={tip.outcome} key={tip.team}>
+                        {tip.team} odds: {tip.odds}
+                      </li>
+                    ))}
+                    <div className="AccumulatedOdds">{`Accumulator odds: ${accumulatedOdds.toFixed(
+                      2
+                    )} / 1`}</div>
+                  </ul>
+                }
+              />
+            </Fragment>
+          </div>,
+          document.getElementById("bestPredictions")
+        );
+      }
     })
   );
+
   await getSuccessMeasure(matches);
 }
