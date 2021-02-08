@@ -7,6 +7,7 @@ let resultValue;
 const text =
   "Next to each badge is each team’s points per game picked up at home or away.\n Once the fixtures have loaded, click on “Get Predictions” to get predictions based on form data.\n Click on an individual fixture for detailed stats for both teams.\n If you change your form selection, re-tapping the fixture will fetch new form data.\n You can also fetch fresh predictions based on the newly selected option by re-tapping on “Get Predictions” at any time.\n If a match is resulted, tapping “Get Predictions” will show how accurate the prediction was.\n If no form radio button is chosen, the last 5 games will be used by default";
 
+
 function GetDivider(fixture) {
   const matchStatus = fixture.status;
   const isPrediction = resultValue;
@@ -50,17 +51,34 @@ function GetDivider(fixture) {
     }
 
     if (outcome === prediction) {
+      switch (true) {
+        case outcome === 0:
+          fixture.fixture.profit = fixture.fixture.homeOdds
+          break;
+        case outcome === 1:
+          fixture.fixture.profit = fixture.fixture.drawOdds
+          break;
+        case outcome === 2:
+          fixture.fixture.profit = fixture.fixture.awayOdds
+          break;
+        default:
+          break;
+      }
+
+
       return (
         <Fragment>
           <div className="CorrectResult">{`${fixture.fixture.homeGoals} - ${fixture.fixture.awayGoals}`}</div>
           <div className="score">{`${fixture.fixture.goalsA} - ${fixture.fixture.goalsB}`}</div>
         </Fragment>
       );
-    } else if (outcome !== prediction){
+    } else if (outcome !== prediction) {
+      fixture.fixture.profit = -1
+
       return (
         <Fragment>
-        <div className="Result">{`${fixture.fixture.homeGoals} - ${fixture.fixture.awayGoals}`}</div>
-        <div className="score">{`${fixture.fixture.goalsA} - ${fixture.fixture.goalsB}`}</div>
+          <div className="Result">{`${fixture.fixture.homeGoals} - ${fixture.fixture.awayGoals}`}</div>
+          <div className="score">{`${fixture.fixture.goalsA} - ${fixture.fixture.goalsB}`}</div>
         </Fragment>
       );
     }
@@ -71,7 +89,7 @@ function GetDivider(fixture) {
   }
 }
 
-let fixtureClassName;
+var fixtureClassName;
 
 function getStyle(fixture) {
   if (fixture.btts_potential >= 60) {

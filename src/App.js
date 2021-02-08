@@ -171,6 +171,7 @@ function App() {
       </div>
       <div id="Day" />
       <div id="Buttons" />
+      <div id="successMeasure" />
       <div id="homeBadge" />
       <div id="FixtureContainer"></div>
     </div>

@@ -64,6 +64,16 @@ h2 {
   align-self: flex-start;
 } */
 
+.SuccessMeasure{
+  height: auto;
+  flex-basis: 10%;
+  padding: 15px;
+  font-size: 2.5vw;
+  flex-grow: 1000;
+  display: inline-block;
+  width: 40%;
+  line-height: auto;
+}
 
 
 .fixture {

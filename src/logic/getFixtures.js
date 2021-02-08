@@ -96,13 +96,13 @@ export async function generateFixtures(day, radioState) {
       const dateObject = new Date(milliseconds);
 
       let match = {};
-
       match.id = fixture.id;
       match.time = dateObject.toLocaleString("en-US", { hour: "numeric" });
       match.homeTeam = fixture.home_name;
       match.awayTeam = fixture.away_name;
       match.homeOdds = fixture.odds_ft_1;
       match.awayOdds = fixture.odds_ft_2;
+      match.drawOdds = fixture.odds_ft_x
       match.homeId = fixture.homeID;
       match.awayId = fixture.awayID;
       match.form = [];

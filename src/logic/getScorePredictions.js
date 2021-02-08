@@ -1,8 +1,10 @@
-import React from "react";
+import React, { Fragment } from "react";
 import ReactDOM from "react-dom";
 import { matches, diff } from "./getFixtures";
 import { Fixture } from "../components/Fixture";
 import { selectedOption } from "../components/radio";
+import Div from "../components/Div";
+import { Button } from "../components/Button";
 
 //Calculates scores based on prior XG figures, weighted by odds
 export async function calculateScore(match, index, divider) {
@@ -87,8 +89,6 @@ export async function calculateScore(match, index, divider) {
   let formHome = match.form.allHomeForm[index].stats;
   let formAway = match.form.allAwayForm[index].stats;
 
-  console.log(formHome);
-
   // let defenceHome = parseFloat(formHome.defenceRating);
   let goalieHome = formHome.finalGoalieRating;
 
@@ -116,17 +116,17 @@ export async function calculateScore(match, index, divider) {
   let awayCalculation;
   if (defenceScoreAway > 0) {
     homeCalculation =
-      parseFloat((homeWeighting - (defenceScoreAway/10))+0.5) + awayXGConceded;
+      parseFloat(homeWeighting - defenceScoreAway / 10 + 0.5) + awayXGConceded;
   } else {
     homeCalculation =
-      parseFloat((homeWeighting + (defenceScoreAway/10))+0.5) + awayXGConceded;
+      parseFloat(homeWeighting + defenceScoreAway / 10 + 0.5) + awayXGConceded;
   }
   if (defenceScoreHome > 0) {
     awayCalculation =
-      parseFloat((awayWeighting - (defenceScoreHome/10))+0.5) + homeXGConceded;
+      parseFloat(awayWeighting - defenceScoreHome / 10 + 0.5) + homeXGConceded;
   } else {
     awayCalculation =
-      parseFloat((awayWeighting + (defenceScoreHome/10))+0.5) + homeXGConceded;
+      parseFloat(awayWeighting + defenceScoreHome / 10 + 0.5) + homeXGConceded;
   }
 
   let homeGoals = Math.round(parseFloat(match.homeXG) + homeCalculation);
@@ -210,6 +210,39 @@ export async function calculateScore(match, index, divider) {
   return [finalHomeGoals, finalAwayGoals];
 }
 
+function getSuccessMeasure(fixtures) {
+  let sum = -1;
+  let roundedFigure = -1;
+  let gameCount = 0;
+  for (let i = 0; i < fixtures.length; i++) {
+    if (fixtures[i].profit) {
+      const profit = parseFloat(fixtures[i].profit);
+      sum = parseFloat(sum + profit);
+      roundedFigure = sum.toFixed(2);
+      gameCount = gameCount + 1
+    } else {
+      sum = parseFloat(sum + 0);
+      roundedFigure = sum.toFixed(2);
+    }
+  }
+
+  if(gameCount > 0) {
+  ReactDOM.render(
+    <Fragment>
+      <Div
+        className={"SuccessMeasure"}
+        text={
+          `accumulated profit/loss if £1 was staked on each of the  ${gameCount} games: £${roundedFigure}`
+        }
+      />
+    </Fragment>,
+    document.getElementById("successMeasure")
+  );
+} else {
+  return;
+}
+}
+
 export async function getScorePrediction() {
   let radioSelected = parseInt(selectedOption);
 
@@ -245,4 +278,5 @@ export async function getScorePrediction() {
       );
     })
   );
+  await getSuccessMeasure(matches);
 }
