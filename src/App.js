@@ -6,6 +6,7 @@ import { Button } from "./components/Button";
 import {
   today,
   generateFixtures,
+  generatePriorFixtures,
   tomorrow,
   yesterday,
 } from "./logic/getFixtures";
@@ -141,19 +142,19 @@ export var orderedLeagues = [];
       <Button
         text={"Get Yesterday's Fixtures"}
         onClickEvent={async () =>
-          fixtureList.push(await generateFixtures(yesterday, selectedOption))
+          fixtureList.push(await generateFixtures("yesterdaysFixtures", selectedOption))
         }
       />
       <Button
         text={"Get Today's Fixtures"}
         onClickEvent={async () =>
-          fixtureList.push(await generateFixtures(today, selectedOption))
+          fixtureList.push(await generateFixtures("todaysFixtures", selectedOption))
         }
       />
       <Button
         text={"Get Tomorrow's Fixtures"}
         onClickEvent={async () =>
-          fixtureList.push(await generateFixtures(tomorrow, selectedOption))
+          fixtureList.push(await generateFixtures("tomorrowsFixtures", selectedOption))
         }
       />
     </div>,

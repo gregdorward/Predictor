@@ -1,5 +1,7 @@
 import { proxyurl } from "../App";
 
+const allTeamForm = []
+
 export async function applyColour(value) {
   let colour;
   switch (true) {
@@ -46,6 +48,8 @@ export async function getForm(match) {
       fixtureForm[i] = formData;
     });
   }
-
   return fixtureForm;
 }
+
+
+

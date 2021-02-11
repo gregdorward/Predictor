@@ -135,13 +135,13 @@ const SingleFixture = ({ fixture }) => (
         {fixture.awayPpg}
       </div>
       <CreateBadge
-        image={fixture.homeTeamInfo.badge}
+        image={fixture.homeBadge}
         ClassName="HomeBadge"
         alt="Home team badge"
         flexShrink={5}
       />
       <CreateBadge
-        image={fixture.awayTeamInfo.badge}
+        image={fixture.awayBadge}
         ClassName="AwayBadge"
         alt="Away team badge"
       />

@@ -5,10 +5,15 @@ import { getForm, applyColour } from "./getForm";
 import { Fixture } from "../components/Fixture"
 import { Button } from "../components/Button";
 import { getScorePrediction } from "../logic/getScorePredictions";
+require("dotenv").config();
+
+console.log(process.env.REACT_APP_EXPRESS_SERVER)
+
 
 var fixtureResponse;
 var fixtureArray;
 export const matches = [];
+export const resultedMatches = [];
 var leagueGames = [];
 
 export const [day, month, year] = new Date()
@@ -46,18 +51,41 @@ export async function diff(a, b) {
 
 export const allForm = [];
 
-async function createFixture(match) {
+async function createFixture(match, result) {
   match.game = match.homeTeam + " v " + match.awayTeam;
 
   ReactDOM.render(
     <Fixture
       fixtures={matches}
-      result={false}
+      result={result}
       className={"individualFixture"}
     />,
         document.getElementById("FixtureContainer")
   )
 }
+
+// async function createResultedFixtures(match, result) {
+
+//   ReactDOM.render(
+//     <Fixture
+//       fixtures={resultedMatches}
+//       result={result}
+//       className={"individualFixture"}
+//     />,
+//         document.getElementById("FixtureContainer")
+//   )
+// }
+
+
+
+var myHeaders = new Headers();
+myHeaders.append("Origin", "https://gregdorward.github.io");
+
+var requestOptions = {
+  method: 'GET',
+  headers: myHeaders,
+  redirect: 'follow'
+};
 
 export async function generateFixtures(day, radioState) {
   let radioValue = parseInt(radioState);
@@ -71,16 +99,45 @@ export async function generateFixtures(day, radioState) {
     index = 2;
   }
 
-  fixtureResponse = await fetch(proxyurl + day);
+  let url;
+  switch (day) {
+    case "yesterdaysFixtures":
+      url =yesterday;
+      break;
+    case "todaysFixtures":
+      url = today
+      break;
+    case "tomorrowsFixtures":
+      url = tomorrow
+      break;
+    default:
+      break;
+  }
+  
 
-  await fixtureResponse.json().then((fixtures) => {
-    fixtureArray = Array.from(fixtures.data);
-  });
 
+// First try to get stored fixtures from proxy server
+// if no fixtures returned, try fetching live first
+//  fixtureResponse = await fetch(`${process.env.REACT_APP_EXPRESS_SERVER}/${day}`, requestOptions)
+
+//   await fixtureResponse.json().then((fixtures) => {
+//     console.log(fixtures)
+//     fixtureArray = Array.from(fixtures.fixtures);
+//   });
+
+//   var fixturesReturned = fixtureArray.length > 0
+
+    fixtureResponse = await fetch(proxyurl + url);
+
+    await fixtureResponse.json().then((fixtures) => {
+      console.log(fixtures)
+      fixtureArray = Array.from(fixtures.data);
+    });
+  
   ReactDOM.render(
     <Button
       text={"Get Predictions"}
-      onClickEvent={() => getScorePrediction()}
+      onClickEvent={() => getScorePrediction(day)}
     />,
     document.getElementById("Buttons")
   );
@@ -97,6 +154,7 @@ export async function generateFixtures(day, radioState) {
 
       let match = {};
       match.id = fixture.id;
+      match.competition_id = fixture.competition_id
       match.time = dateObject.toLocaleString("en-US", { hour: "numeric" });
       match.homeTeam = fixture.home_name;
       match.awayTeam = fixture.away_name;
@@ -117,8 +175,9 @@ export async function generateFixtures(day, radioState) {
       match.form.homeTeam = form[0].data[index].stats;
       match.form.awayTeam = form[1].data[index].stats;
 
-      match.homeTeamInfo.badge = fixture.home_image;
-      match.awayTeamInfo.badge = fixture.away_image;
+      match.homeBadge = fixture.home_image
+      match.awayBadge = fixture.away_image
+
 
       match.homeXG = parseFloat(match.form.homeTeam.xg_for_avg_overall);
       match.awayXG = parseFloat(match.form.awayTeam.xg_for_avg_overall);
@@ -139,8 +198,46 @@ export async function generateFixtures(day, radioState) {
 
       matches.push(match);
 
-      await createFixture(match);
+      await createFixture(match, false);
     }
   }
-
 }
+
+
+
+
+
+
+// export async function generatePriorFixtures(radioState) {
+//   console.log("CALLED")
+//   let radioValue = parseInt(radioState);
+
+//   let index;
+//   if (radioValue === 5) {
+//     index = 0;
+//   } else if (radioValue === 6) {
+//     index = 1;
+//   } else if (radioValue === 10) {
+//     index = 2;
+//   }
+
+//   fixtureResponse = await fetch("http://localhost:5000/allGames")
+
+//   await fixtureResponse.json().then((fixtures) => {
+//     console.log(fixtures.fixtures.matches)
+//     fixtureArray = fixtures.fixtures.matches;
+//   });
+
+
+//   for (let i = 0; i < orderedLeagues.length; i++) {
+//     leagueGames = fixtureArray.filter(
+//       (game) => game.competition_id === orderedLeagues[i].element.id
+//     );
+//     for (const fixture of leagueGames) {
+
+//       resultedMatches.push(fixture);
+
+//       await createResultedFixtures(fixture, true);
+//     }
+//   }
+// }

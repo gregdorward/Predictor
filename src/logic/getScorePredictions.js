@@ -8,6 +8,7 @@ import Collapsable from "../components/CollapsableElement";
 
 //Calculates scores based on prior XG figures, weighted by odds
 export async function calculateScore(match, index, divider) {
+  console.log("Calculate score called");
   let homeRaw;
   let awayRaw;
   let teams = [
@@ -206,6 +207,8 @@ export async function calculateScore(match, index, divider) {
 
   // console.log("FINAL AWAY GOALS");
   // console.log(finalAwayGoals);
+  match.homePrediction = finalHomeGoals;
+  match.awayPrediction = finalAwayGoals;
 
   return [finalHomeGoals, finalAwayGoals];
 }
@@ -243,8 +246,9 @@ function getSuccessMeasure(fixtures) {
 
 var tips = [];
 var accumulatedOdds = 1;
+const predictions = [];
 
-export async function getScorePrediction() {
+export async function getScorePrediction(day) {
   let radioSelected = parseInt(selectedOption);
   tips = [];
   accumulatedOdds = 1;
@@ -261,16 +265,47 @@ export async function getScorePrediction() {
     index = 2;
     divider = 10;
   }
+  let predictionArray;
+  let storedPredictions = await fetch(`${process.env.REACT_APP_EXPRESS_SERVER}/${day}Predictions${divider}`);
+
+  console.log(storedPredictions.status)
+  if(storedPredictions.status === 200){
+    await storedPredictions.json().then((predictions) => {
+      predictionArray = predictions.fixtures.predictions;
+    });
+  }
+  let i = 0
 
   await Promise.all(
     matches.map(async (match) => {
-      let [goalsA, goalsB] = await calculateScore(match, index, divider);
-      match.goalsA = goalsA;
-      match.goalsB = goalsB;
+      let goalsA;
+      let goalsB;
+      // if there are no stored predictions, calculate them based on live data
+      if (predictionArray.length > 0) {
+        console.log(match.game)
+
+        if(!predictionArray[i]){
+          [goalsA, goalsB] = await calculateScore(match, index, divider);
+          match.goalsA = goalsA;
+          match.goalsB = goalsB;
+        } else {
+          match.goalsA = predictionArray[i].match.goalsA
+          match.goalsB = predictionArray[i].match.goalsB
+        }
+
+
+      } else {
+        [goalsA, goalsB] = await calculateScore(match, index, divider);
+
+        match.goalsA = goalsA;
+        match.goalsB = goalsB;
+      }
+
       if (match.status === "suspended") {
         match.goalsA = "P";
         match.goalsB = "P";
       }
+
 
       match.predictionOutcome = "unknown";
       let predictionObject;
@@ -345,8 +380,33 @@ export async function getScorePrediction() {
           document.getElementById("bestPredictions")
         );
       }
+      predictions.push({
+        match: match,
+      });
+      i = i+1
     })
   );
 
+  if(day !== "yesterdaysFixtures"){
+    postFixedPredictions(predictions, divider, day);
+  }
+
   await getSuccessMeasure(matches);
 }
+
+async function postFixedPredictions(predictions, divider, day) {
+  await fetch(`${process.env.REACT_APP_EXPRESS_SERVER}/postPredictions${divider}${day}`, {
+    method: "POST",
+    headers: {
+      Accept: "application/json",
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ predictions }),
+  });
+}
+
+var now = new Date();
+var hour = now.getHours();
+
+console.log("hour");
+console.log(hour);
