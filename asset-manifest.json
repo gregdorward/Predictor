@@ -1,8 +1,8 @@
 {
   "files": {
     "main.css": "/Predictor/static/css/main.a956b332.chunk.css",
-    "main.js": "/Predictor/static/js/main.01f35fe6.chunk.js",
-    "main.js.map": "/Predictor/static/js/main.01f35fe6.chunk.js.map",
+    "main.js": "/Predictor/static/js/main.f7fe2cd3.chunk.js",
+    "main.js.map": "/Predictor/static/js/main.f7fe2cd3.chunk.js.map",
     "runtime-main.js": "/Predictor/static/js/runtime-main.90dff1b6.js",
     "runtime-main.js.map": "/Predictor/static/js/runtime-main.90dff1b6.js.map",
     "static/js/2.41f89f03.chunk.js": "/Predictor/static/js/2.41f89f03.chunk.js",
@@ -17,6 +17,6 @@
     "static/js/runtime-main.90dff1b6.js",
     "static/js/2.41f89f03.chunk.js",
     "static/css/main.a956b332.chunk.css",
-    "static/js/main.01f35fe6.chunk.js"
+    "static/js/main.f7fe2cd3.chunk.js"
   ]
 }
