@@ -395,7 +395,7 @@ export async function getScorePrediction(day) {
 }
 
 async function postFixedPredictions(predictions, divider, day) {
-  await fetch(`${process.env.REACT_APP_EXPRESS_SERVER}/postPredictions${divider}${day}`, {
+  await fetch(`${process.env.REACT_APP_EXPRESS_SERVER}postPredictions${divider}${day}`, {
     method: "POST",
     headers: {
       Accept: "application/json",
