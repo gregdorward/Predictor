@@ -265,10 +265,11 @@ export async function getScorePrediction(day) {
     index = 2;
     divider = 10;
   }
-  let predictionArray;
+  let predictionArray = []
   let storedPredictions = await fetch(`${process.env.REACT_APP_EXPRESS_SERVER}${day}Predictions${divider}`);
 
 
+  console.log(predictionArray.length)
   console.log(storedPredictions.status)
   if(storedPredictions.status === 200){
     await storedPredictions.json().then((predictions) => {
