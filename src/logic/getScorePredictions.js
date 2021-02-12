@@ -162,51 +162,51 @@ export async function calculateScore(match, index, divider) {
     ) / 6
   );
 
-  // console.log("DIVIDER")
-  // console.log(divider)
+  console.log("DIVIDER")
+  console.log(divider)
 
-  // console.log(match.homeTeam);
-  // console.log("homeOdds")
-  // console.log(match.homeOdds)
+  console.log(match.homeTeam);
+  console.log("homeOdds")
+  console.log(match.homeOdds)
 
-  // console.log("homeGoals");
-  // console.log(homeGoals);
-  // console.log("seasonScoredNum_overall");
-  // console.log(formHome.seasonScoredNum_overall);
-  // console.log("forecastedXG");
-  // console.log(formHome.forecastedXG);
-  // console.log("seasonConcededNum_overall");
-  // console.log(formAway.seasonConcededNum_overall);
-  // console.log("homeCalculation");
-  // console.log(homeCalculation);
-  // console.log("defenceScoreHome");
-  // console.log(defenceScoreHome);
-  // console.log("homeWeighting");
-  // console.log(homeWeighting);
+  console.log("homeGoals");
+  console.log(homeGoals);
+  console.log("seasonScoredNum_overall");
+  console.log(formHome.seasonScoredNum_overall);
+  console.log("forecastedXG");
+  console.log(formHome.forecastedXG);
+  console.log("seasonConcededNum_overall");
+  console.log(formAway.seasonConcededNum_overall);
+  console.log("homeCalculation");
+  console.log(homeCalculation);
+  console.log("defenceScoreHome");
+  console.log(defenceScoreHome);
+  console.log("homeWeighting");
+  console.log(homeWeighting);
 
-  // console.log(match.awayTeam);
-  // console.log("awayOdds")
-  // console.log(match.awayOdds)
-  // console.log("awayGoals");
-  // console.log(awayGoals);
-  // console.log("seasonScoredNum_overall");
-  // console.log(formAway.seasonScoredNum_overall);
-  // console.log("forecastedXG");
-  // console.log(formAway.forecastedXG);
-  // console.log("seasonConcededNum_overall");
-  // console.log(formHome.seasonConcededNum_overall);
-  // console.log("awayCalculation");
-  // console.log(awayCalculation);
-  // console.log("defenceScoreAway");
-  // console.log(defenceScoreAway);
-  // console.log("awayWeighting");
-  // console.log(awayWeighting);
+  console.log(match.awayTeam);
+  console.log("awayOdds")
+  console.log(match.awayOdds)
+  console.log("awayGoals");
+  console.log(awayGoals);
+  console.log("seasonScoredNum_overall");
+  console.log(formAway.seasonScoredNum_overall);
+  console.log("forecastedXG");
+  console.log(formAway.forecastedXG);
+  console.log("seasonConcededNum_overall");
+  console.log(formHome.seasonConcededNum_overall);
+  console.log("awayCalculation");
+  console.log(awayCalculation);
+  console.log("defenceScoreAway");
+  console.log(defenceScoreAway);
+  console.log("awayWeighting");
+  console.log(awayWeighting);
 
-  // console.log("FINAL HOME GOALS");
-  // console.log(finalHomeGoals);
+  console.log("FINAL HOME GOALS");
+  console.log(finalHomeGoals);
 
-  // console.log("FINAL AWAY GOALS");
-  // console.log(finalAwayGoals);
+  console.log("FINAL AWAY GOALS");
+  console.log(finalAwayGoals);
   match.homePrediction = finalHomeGoals;
   match.awayPrediction = finalAwayGoals;
 
@@ -268,6 +268,7 @@ export async function getScorePrediction(day) {
   let predictionArray;
   let storedPredictions = await fetch(`${process.env.REACT_APP_EXPRESS_SERVER}${day}Predictions${divider}`);
 
+
   console.log(storedPredictions.status)
   if(storedPredictions.status === 200){
     await storedPredictions.json().then((predictions) => {
@@ -286,6 +287,7 @@ export async function getScorePrediction(day) {
 
         if(!predictionArray[i]){
           [goalsA, goalsB] = await calculateScore(match, index, divider);
+          console.log("no prediction")
           match.goalsA = goalsA;
           match.goalsB = goalsB;
         } else {
