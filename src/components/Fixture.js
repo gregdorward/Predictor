@@ -92,21 +92,21 @@ function GetDivider(fixture) {
   }
 }
 
-var fixtureClassName;
+// var fixtureClassName;
 
-function getStyle(fixture) {
-  if (fixture.btts_potential >= 60) {
-    fixtureClassName = "highlight";
-  } else {
-    fixtureClassName = "individualFixture";
-  }
-  return fixtureClassName;
-}
+// function getStyle(fixture) {
+//   if (fixture.btts_potential >= 60) {
+//     fixtureClassName = "highlight";
+//   } else {
+//     fixtureClassName = "individualFixture";
+//   }
+//   return fixtureClassName;
+// }
 
 const SingleFixture = ({ fixture }) => (
   <div>
     <li
-      className={getStyle(fixture)}
+      className="individualFixture"
       key={fixture.id}
       onClick={() => createStatsDiv(fixture)}
     >
