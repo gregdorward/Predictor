@@ -285,7 +285,7 @@ export async function getScorePrediction(day) {
       // if there are no stored predictions, calculate them based on live data
       if (predictionArray.length > 0) {
         console.log(match.game)
-        stored = true
+        stored = true;
 
         if(!predictionArray[i]){
           [goalsA, goalsB] = await calculateScore(match, index, divider);
@@ -299,8 +299,8 @@ export async function getScorePrediction(day) {
 
 
       } else {
-        stored = false
         [goalsA, goalsB] = await calculateScore(match, index, divider);
+        stored = false;
 
         match.goalsA = goalsA;
         match.goalsB = goalsB;
