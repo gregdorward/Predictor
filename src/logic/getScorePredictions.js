@@ -276,6 +276,7 @@ export async function getScorePrediction(day) {
     });
   }
   let i = 0
+  let stored;
 
   await Promise.all(
     matches.map(async (match) => {
@@ -284,6 +285,7 @@ export async function getScorePrediction(day) {
       // if there are no stored predictions, calculate them based on live data
       if (predictionArray.length > 0) {
         console.log(match.game)
+        stored = true
 
         if(!predictionArray[i]){
           [goalsA, goalsB] = await calculateScore(match, index, divider);
@@ -297,6 +299,7 @@ export async function getScorePrediction(day) {
 
 
       } else {
+        stored = false
         [goalsA, goalsB] = await calculateScore(match, index, divider);
 
         match.goalsA = goalsA;
@@ -389,7 +392,7 @@ export async function getScorePrediction(day) {
     })
   );
 
-  if(day !== "yesterdaysFixtures"){
+  if(day !== "yesterdaysFixtures" && stored === false){
     postFixedPredictions(predictions, divider, day);
   }
 
