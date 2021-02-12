@@ -4,7 +4,7 @@ body > #root > div {
 }
 
 body {
-  background-color: #241c45;
+  background-color: #01183d;
   align-content: space-between;
   text-align: center;
   color: white;
@@ -111,18 +111,16 @@ h2 {
 
 .HomeBadge {
   border-color: #393d3f;
-  height: 4vw;
+  height: 6vw;
   order: 0;
-  padding-right: 10px;
-  padding-left: 10px;
+  padding: 10px;
 }
 
 .AwayBadge {
   border-color: #393d3f;
-  height: 4vw;
+  height: 6vw;
   order: 7;
-  padding-right: 10px;
-  padding-left: 10px;
+  padding: 10px;
 }
 
 .homeTeam {
@@ -327,8 +325,8 @@ h2 {
     font-family: "Roboto", sans-serif;
     font-size: 16px;
     font-weight: 500;
-    color: white;
-    background-color: #736d8f;
+    color: #01183d;
+    background-color:white;
     text-shadow: 0 0.04em 0.04em rgba(0, 0, 0, 0.35);
     text-align: center;
 
@@ -357,8 +355,8 @@ h2 {
     font-family: "Roboto", sans-serif;
     font-size: 14px;
     font-weight: 500;
-    color: white;
-    background-color: #736d8f;
+    color: #01183d;
+    background-color:white;
     text-shadow: 0 0.04em 0.04em rgba(0, 0, 0, 0.35);
     text-align: center;
 
@@ -387,8 +385,8 @@ h2 {
     font-family: "Roboto", sans-serif;
     font-size: 12px;
     font-weight: 500;
-    color: white;
-    background-color: #736d8f;
+    color: #01183d;
+    background-color:white;
     text-shadow: 0 0.04em 0.04em rgba(0, 0, 0, 0.35);
     text-align: center;
 
@@ -417,8 +415,8 @@ h2 {
     font-family: "Roboto", sans-serif;
     font-size: 10px;
     font-weight: 500;
-    color: white;
-    background-color: #736d8f;
+    color: #01183d;
+    background-color: white;
     text-shadow: 0 0.04em 0.04em rgba(0, 0, 0, 0.35);
     text-align: center;
 
