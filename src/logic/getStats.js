@@ -29,6 +29,7 @@ export async function createStatsDiv(game) {
     btts: game.btts_potential,
   });
 
+
   const formDataHome = [];
 
   formDataHome.push({
@@ -42,6 +43,7 @@ export async function createStatsDiv(game) {
     AverageXG: game.form.allHomeForm[index].stats.xg_for_avg_overall,
     AveragePossession: game.form.allHomeForm[index].stats.possessionAVG_overall,
     AverageSOT: game.form.allHomeForm[index].stats.shotsOnTargetAVG_overall,
+    AverageDangerousAttacks: game.form.allHomeForm[index].stats.dangerous_attacks_avg_overall,
     homeOrAway: "Home",
   });
 
@@ -58,6 +60,7 @@ export async function createStatsDiv(game) {
     AverageXG: game.form.allAwayForm[index].stats.xg_for_avg_overall,
     AveragePossession: game.form.allAwayForm[index].stats.possessionAVG_overall,
     AverageSOT: game.form.allAwayForm[index].stats.shotsOnTargetAVG_overall,
+    AverageDangerousAttacks: game.form.allAwayForm[index].stats.dangerous_attacks_avg_overall,
     homeOrAway: "Away",
   });
 
@@ -84,6 +87,7 @@ export async function createStatsDiv(game) {
       XG={formDataHome[0].AverageXG}
       possession={formDataHome[0].AveragePossession}
       sot={formDataHome[0].AverageSOT}
+      dangerousAttacks={formDataHome[0].AverageDangerousAttacks}
     />,
     document.getElementById("home" + homeTeam)
   );
@@ -98,6 +102,7 @@ export async function createStatsDiv(game) {
       XG={formDataAway[0].AverageXG}
       possession={formDataAway[0].AveragePossession}
       sot={formDataAway[0].AverageSOT}
+      dangerousAttacks={formDataAway[0].AverageDangerousAttacks}
     />,
     document.getElementById("away" + awayTeam)
   );
