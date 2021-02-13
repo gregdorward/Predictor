@@ -291,9 +291,15 @@ export async function getScorePrediction(day) {
         stored = true;
 
         if(!predictionArray[i] || (hour < 13 && day !== "yesterdaysFixtures")){
-          [goalsA, goalsB] = await calculateScore(match, index, divider);
-          match.goalsA = goalsA;
-          match.goalsB = goalsB;
+          if (match.status === "suspended") {
+
+            match.goalsA = "P";
+            match.goalsB = "P";
+          } else {
+            [goalsA, goalsB] = await calculateScore(match, index, divider);
+            match.goalsA = goalsA;
+            match.goalsB = goalsB;
+          }
         } else {
           match.goalsA = predictionArray[i].match.goalsA
           match.goalsB = predictionArray[i].match.goalsB
@@ -301,12 +307,14 @@ export async function getScorePrediction(day) {
 
 
       } else if(match.status !== "suspended"){
+
         [goalsA, goalsB] = await calculateScore(match, index, divider);
         stored = false;
 
         match.goalsA = goalsA;
         match.goalsB = goalsB;
       } else if (match.status === "suspended") {
+
         match.goalsA = "P";
         match.goalsB = "P";
       }
