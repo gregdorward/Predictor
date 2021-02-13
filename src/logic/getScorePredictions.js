@@ -278,6 +278,8 @@ export async function getScorePrediction(day) {
   }
   let i = 0
   let stored;
+    var now = new Date();
+  var hour = now.getHours();
 
   await Promise.all(
     matches.map(async (match) => {
@@ -288,9 +290,8 @@ export async function getScorePrediction(day) {
         console.log(match.game)
         stored = true;
 
-        if(!predictionArray[i]){
+        if(!predictionArray[i] || (hour < 13 && day !== "yesterdaysFixtures")){
           [goalsA, goalsB] = await calculateScore(match, index, divider);
-          console.log("no prediction")
           match.goalsA = goalsA;
           match.goalsB = goalsB;
         } else {
@@ -299,15 +300,13 @@ export async function getScorePrediction(day) {
         }
 
 
-      } else {
+      } else if(match.status !== "suspended"){
         [goalsA, goalsB] = await calculateScore(match, index, divider);
         stored = false;
 
         match.goalsA = goalsA;
         match.goalsB = goalsB;
-      }
-
-      if (match.status === "suspended") {
+      } else if (match.status === "suspended") {
         match.goalsA = "P";
         match.goalsB = "P";
       }
