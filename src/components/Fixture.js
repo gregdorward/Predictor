@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from "react";
+import React, { Fragment } from "react";
 import { CreateBadge } from "./createBadge";
 import Collapsable from "../components/CollapsableElement";
 import { createStatsDiv } from "../logic/getStats";
@@ -91,17 +91,6 @@ function GetDivider(fixture) {
     );
   }
 }
-
-// var fixtureClassName;
-
-// function getStyle(fixture) {
-//   if (fixture.btts_potential >= 60) {
-//     fixtureClassName = "highlight";
-//   } else {
-//     fixtureClassName = "individualFixture";
-//   }
-//   return fixtureClassName;
-// }
 
 const SingleFixture = ({ fixture }) => (
   <div>

@@ -2,13 +2,12 @@ import React from "react";
 import ReactDOM from "react-dom";
 import { orderedLeagues, proxyurl } from "../App";
 import { getForm, applyColour } from "./getForm";
-import { Fixture } from "../components/Fixture"
+import { Fixture } from "../components/Fixture";
 import { Button } from "../components/Button";
 import { getScorePrediction } from "../logic/getScorePredictions";
 require("dotenv").config();
 
-console.log(process.env.REACT_APP_EXPRESS_SERVER)
-
+console.log(process.env.REACT_APP_EXPRESS_SERVER);
 
 var fixtureResponse;
 var fixtureArray;
@@ -26,7 +25,6 @@ let [
   tomorrowMonth,
   tomorrowYear,
 ] = tomorrowsDate.toLocaleDateString("en-US").split("/");
-
 
 let yesterdaysDate = new Date();
 yesterdaysDate.setDate(new Date().getDate() - 1);
@@ -60,31 +58,17 @@ async function createFixture(match, result) {
       result={result}
       className={"individualFixture"}
     />,
-        document.getElementById("FixtureContainer")
-  )
+    document.getElementById("FixtureContainer")
+  );
 }
-
-// async function createResultedFixtures(match, result) {
-
-//   ReactDOM.render(
-//     <Fixture
-//       fixtures={resultedMatches}
-//       result={result}
-//       className={"individualFixture"}
-//     />,
-//         document.getElementById("FixtureContainer")
-//   )
-// }
-
-
 
 var myHeaders = new Headers();
 myHeaders.append("Origin", "https://gregdorward.github.io");
 
 var requestOptions = {
-  method: 'GET',
+  method: "GET",
   headers: myHeaders,
-  redirect: 'follow'
+  redirect: "follow",
 };
 
 export async function generateFixtures(day, radioState) {
@@ -102,38 +86,24 @@ export async function generateFixtures(day, radioState) {
   let url;
   switch (day) {
     case "yesterdaysFixtures":
-      url =yesterday;
+      url = yesterday;
       break;
     case "todaysFixtures":
-      url = today
+      url = today;
       break;
     case "tomorrowsFixtures":
-      url = tomorrow
+      url = tomorrow;
       break;
     default:
       break;
   }
-  
 
+  fixtureResponse = await fetch(proxyurl + url);
 
-// First try to get stored fixtures from proxy server
-// if no fixtures returned, try fetching live first
-//  fixtureResponse = await fetch(`${process.env.REACT_APP_EXPRESS_SERVER}/${day}`, requestOptions)
+  await fixtureResponse.json().then((fixtures) => {
+    fixtureArray = Array.from(fixtures.data);
+  });
 
-//   await fixtureResponse.json().then((fixtures) => {
-//     console.log(fixtures)
-//     fixtureArray = Array.from(fixtures.fixtures);
-//   });
-
-//   var fixturesReturned = fixtureArray.length > 0
-
-    fixtureResponse = await fetch(proxyurl + url);
-
-    await fixtureResponse.json().then((fixtures) => {
-      console.log(fixtures)
-      fixtureArray = Array.from(fixtures.data);
-    });
-  
   ReactDOM.render(
     <Button
       text={"Get Predictions"}
@@ -154,13 +124,13 @@ export async function generateFixtures(day, radioState) {
 
       let match = {};
       match.id = fixture.id;
-      match.competition_id = fixture.competition_id
+      match.competition_id = fixture.competition_id;
       match.time = dateObject.toLocaleString("en-US", { hour: "numeric" });
       match.homeTeam = fixture.home_name;
       match.awayTeam = fixture.away_name;
       match.homeOdds = fixture.odds_ft_1;
       match.awayOdds = fixture.odds_ft_2;
-      match.drawOdds = fixture.odds_ft_x
+      match.drawOdds = fixture.odds_ft_x;
       match.homeId = fixture.homeID;
       match.awayId = fixture.awayID;
       match.form = [];
@@ -175,9 +145,8 @@ export async function generateFixtures(day, radioState) {
       match.form.homeTeam = form[0].data[index].stats;
       match.form.awayTeam = form[1].data[index].stats;
 
-      match.homeBadge = fixture.home_image
-      match.awayBadge = fixture.away_image
-
+      match.homeBadge = fixture.home_image;
+      match.awayBadge = fixture.away_image;
 
       match.homeXG = parseFloat(match.form.homeTeam.xg_for_avg_overall);
       match.awayXG = parseFloat(match.form.awayTeam.xg_for_avg_overall);
@@ -196,17 +165,78 @@ export async function generateFixtures(day, radioState) {
       match.homeGoals = fixture.homeGoalCount;
       match.awayGoals = fixture.awayGoalCount;
 
+      allForm.push({
+        matchId: match.id,
+        home: {
+          last5: {
+            homeXG: form[0].data[0].stats.xg_for_avg_overall,
+            homeScoredOverall: form[0].data[0].stats.seasonScoredNum_overall,
+            homeConcededOverall: form[0].data[0].stats.seasonConcededNum_overall,
+            homeXGAgainstAvg: form[0].data[0].stats.xg_against_avg_overall,
+            homeCleanSheetPercentage: form[0].data[0].stats.seasonCSPercentage_overall
+          },
+          last6: {
+            homeXG: form[0].data[1].stats.xg_for_avg_overall,
+            homeScoredOverall: form[0].data[1].stats.seasonScoredNum_overall,
+            homeConcededOverall: form[0].data[1].stats.seasonConcededNum_overall,
+            homeXGAgainstAvg: form[0].data[1].stats.xg_against_avg_overall,
+            homeCleanSheetPercentage: form[0].data[1].stats.seasonCSPercentage_overall
+
+          },
+          last10: {
+            homeXG: form[0].data[2].stats.xg_for_avg_overall,
+            homeScoredOverall: form[0].data[2].stats.seasonScoredNum_overall,
+            homeConcededOverall: form[0].data[2].stats.seasonConcededNum_overall,
+            homeXGAgainstAvg: form[0].data[2].stats.xg_against_avg_overall,
+            homeCleanSheetPercentage: form[0].data[2].stats.seasonCSPercentage_overall
+
+          },
+        },
+        away: {
+          last5: {
+            awayXG: form[1].data[0].stats.xg_for_avg_overall,
+            awayScoredOverall: form[1].data[0].stats.seasonScoredNum_overall,
+            awayConcededOverall: form[1].data[0].stats.seasonConcededNum_overall,
+            awayXGAgainstAvg: form[1].data[0].stats.xg_against_avg_overall,
+            awayCleanSheetPercentage: form[1].data[0].stats.seasonCSPercentage_overall
+
+          },
+          last6: {
+            awayXG: form[1].data[1].stats.xg_for_avg_overall,
+            awayScoredOverall: form[1].data[1].stats.seasonScoredNum_overall,
+            awayConcededOverall: form[1].data[1].stats.seasonConcededNum_overall,
+            awayXGAgainstAvg: form[1].data[1].stats.xg_against_avg_overall,
+            awayCleanSheetPercentage: form[1].data[1].stats.seasonCSPercentage_overall
+
+          },
+          last10: {
+            awayXG: form[1].data[2].stats.xg_for_avg_overall,
+            awayScoredOverall: form[1].data[2].stats.seasonScoredNum_overall,
+            awayConcededOverall: form[1].data[2].stats.seasonConcededNum_overall,
+            awayXGAgainstAvg: form[1].data[2].stats.xg_against_avg_overall,
+            awayCleanSheetPercentage: form[1].data[2].stats.seasonCSPercentage_overall
+
+          },
+        },
+      });
+
       matches.push(match);
 
       await createFixture(match, false);
     }
   }
+  await fetch(
+    `${process.env.REACT_APP_EXPRESS_SERVER}allForm`,
+    {
+      method: "POST",
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ allForm }),
+    }
+  );
 }
-
-
-
-
-
 
 // export async function generatePriorFixtures(radioState) {
 //   console.log("CALLED")
@@ -227,7 +257,6 @@ export async function generateFixtures(day, radioState) {
 //     console.log(fixtures.fixtures.matches)
 //     fixtureArray = fixtures.fixtures.matches;
 //   });
-
 
 //   for (let i = 0; i < orderedLeagues.length; i++) {
 //     leagueGames = fixtureArray.filter(

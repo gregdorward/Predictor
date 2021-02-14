@@ -5,10 +5,12 @@ import { Fixture } from "../components/Fixture";
 import { selectedOption } from "../components/radio";
 import Div from "../components/Div";
 import Collapsable from "../components/CollapsableElement";
+import { allForm } from "../logic/getFixtures"
 
 //Calculates scores based on prior XG figures, weighted by odds
 export async function calculateScore(match, index, divider) {
-  console.log("Calculate score called");
+
+
   let homeRaw;
   let awayRaw;
   let teams = [
@@ -162,53 +164,57 @@ export async function calculateScore(match, index, divider) {
     ) / 6
   );
 
-  console.log("DIVIDER")
-  console.log(divider)
+  // console.log("DIVIDER");
+  // console.log(divider);
 
-  console.log(match.homeTeam);
-  console.log("homeOdds")
-  console.log(match.homeOdds)
+  // console.log(match.homeTeam);
+  // console.log("homeOdds");
+  // console.log(match.homeOdds);
 
-  console.log("homeGoals");
-  console.log(homeGoals);
-  console.log("seasonScoredNum_overall");
-  console.log(formHome.seasonScoredNum_overall);
-  console.log("forecastedXG");
-  console.log(formHome.forecastedXG);
-  console.log("seasonConcededNum_overall");
-  console.log(formAway.seasonConcededNum_overall);
-  console.log("homeCalculation");
-  console.log(homeCalculation);
-  console.log("defenceScoreHome");
-  console.log(defenceScoreHome);
-  console.log("homeWeighting");
-  console.log(homeWeighting);
+  // console.log("homeGoals");
+  // console.log(homeGoals);
+  // console.log("seasonScoredNum_overall");
+  // console.log(formHome.seasonScoredNum_overall);
+  // console.log("forecastedXG");
+  // console.log(formHome.forecastedXG);
+  // console.log("seasonConcededNum_overall");
+  // console.log(formAway.seasonConcededNum_overall);
+  // console.log("homeCalculation");
+  // console.log(homeCalculation);
+  // console.log("defenceScoreHome");
+  // console.log(defenceScoreHome);
+  // console.log("homeWeighting");
+  // console.log(homeWeighting);
 
-  console.log(match.awayTeam);
-  console.log("awayOdds")
-  console.log(match.awayOdds)
-  console.log("awayGoals");
-  console.log(awayGoals);
-  console.log("seasonScoredNum_overall");
-  console.log(formAway.seasonScoredNum_overall);
-  console.log("forecastedXG");
-  console.log(formAway.forecastedXG);
-  console.log("seasonConcededNum_overall");
-  console.log(formHome.seasonConcededNum_overall);
-  console.log("awayCalculation");
-  console.log(awayCalculation);
-  console.log("defenceScoreAway");
-  console.log(defenceScoreAway);
-  console.log("awayWeighting");
-  console.log(awayWeighting);
+  // console.log(match.awayTeam);
+  // console.log("awayOdds");
+  // console.log(match.awayOdds);
+  // console.log("awayGoals");
+  // console.log(awayGoals);
+  // console.log("seasonScoredNum_overall");
+  // console.log(formAway.seasonScoredNum_overall);
+  // console.log("forecastedXG");
+  // console.log(formAway.forecastedXG);
+  // console.log("seasonConcededNum_overall");
+  // console.log(formHome.seasonConcededNum_overall);
+  // console.log("awayCalculation");
+  // console.log(awayCalculation);
+  // console.log("defenceScoreAway");
+  // console.log(defenceScoreAway);
+  // console.log("awayWeighting");
+  // console.log(awayWeighting);
 
-  console.log("FINAL HOME GOALS");
-  console.log(finalHomeGoals);
+  // console.log("FINAL HOME GOALS");
+  // console.log(finalHomeGoals);
 
-  console.log("FINAL AWAY GOALS");
-  console.log(finalAwayGoals);
+  // console.log("FINAL AWAY GOALS");
+  // console.log(finalAwayGoals);
   match.homePrediction = finalHomeGoals;
   match.awayPrediction = finalAwayGoals;
+  if(match.status === "suspended"){
+    finalHomeGoals = "P"
+    finalAwayGoals = "P"
+  }
 
   return [finalHomeGoals, finalAwayGoals];
 }
@@ -265,59 +271,63 @@ export async function getScorePrediction(day) {
     index = 2;
     divider = 10;
   }
-  let predictionArray = []
-  let storedPredictions = await fetch(`${process.env.REACT_APP_EXPRESS_SERVER}${day}Predictions${divider}`);
+  let predictionArray = [];
+  let storedPredictions = await fetch(
+    `${process.env.REACT_APP_EXPRESS_SERVER}${day}Predictions${divider}`
+  );
 
-
-  console.log(predictionArray.length)
-  console.log(storedPredictions.status)
-  if(storedPredictions.status === 200){
+  if (storedPredictions.status === 200) {
     await storedPredictions.json().then((predictions) => {
+      console.log(predictions)
       predictionArray = predictions.fixtures.predictions;
     });
   }
-  let i = 0
-  let stored;
-    var now = new Date();
-  var hour = now.getHours();
+  let i = 0;
+  let makePostRequest = false
 
   await Promise.all(
     matches.map(async (match) => {
-      let goalsA;
-      let goalsB;
       // if there are no stored predictions, calculate them based on live data
-      if (predictionArray.length > 0) {
-        console.log(match.game)
-        stored = true;
 
-        if(!predictionArray[i] || (hour < 13 && day !== "yesterdaysFixtures")){
-          if (match.status === "suspended") {
+      if(predictionArray[i]){
 
-            match.goalsA = "P";
-            match.goalsB = "P";
-          } else {
-            [goalsA, goalsB] = await calculateScore(match, index, divider);
-            match.goalsA = goalsA;
-            match.goalsB = goalsB;
-          }
-        } else {
-          match.goalsA = predictionArray[i].match.goalsA
-          match.goalsB = predictionArray[i].match.goalsB
-        }
-
-
-      } else if(match.status !== "suspended"){
-
-        [goalsA, goalsB] = await calculateScore(match, index, divider);
-        stored = false;
-
-        match.goalsA = goalsA;
-        match.goalsB = goalsB;
-      } else if (match.status === "suspended") {
-
-        match.goalsA = "P";
-        match.goalsB = "P";
+      switch (true) {
+        case match.status === "complete":
+          match.goalsA = predictionArray[i].match.goalsA;
+          match.goalsB = predictionArray[i].match.goalsB;
+          console.log("fetching stored prediction");
+          break;
+        case match.status === "incomplete":
+          [match.goalsA, match.goalsB] = await calculateScore(
+            match,
+            index,
+            divider
+          );
+          makePostRequest = true
+          console.log("fetching new prediction");
+          break;
+        case match.status === "suspended":
+          match.goalsA = "P";
+          match.goalsB = "P";
+          break;
+        default:
+          [match.goalsA, match.goalsB] = await calculateScore(
+            match,
+            index,
+            divider
+          );
+          makePostRequest = true
+          console.log("default - fetching stored prediction");
+          break;
       }
+
+    } else {
+      [match.goalsA, match.goalsB] = await calculateScore(
+        match,
+        index,
+        divider
+      );
+    }
 
 
       match.predictionOutcome = "unknown";
@@ -396,11 +406,11 @@ export async function getScorePrediction(day) {
       predictions.push({
         match: match,
       });
-      i = i+1
+      i = i + 1;
     })
   );
 
-  if(day !== "yesterdaysFixtures" && stored === false){
+  if (makePostRequest === true) {
     postFixedPredictions(predictions, divider, day);
   }
 
@@ -408,18 +418,15 @@ export async function getScorePrediction(day) {
 }
 
 async function postFixedPredictions(predictions, divider, day) {
-  await fetch(`${process.env.REACT_APP_EXPRESS_SERVER}postPredictions${divider}${day}`, {
-    method: "POST",
-    headers: {
-      Accept: "application/json",
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({ predictions }),
-  });
+  await fetch(
+    `${process.env.REACT_APP_EXPRESS_SERVER}postPredictions${divider}${day}`,
+    {
+      method: "POST",
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ predictions }),
+    }
+  );
 }
-
-var now = new Date();
-var hour = now.getHours();
-
-console.log("hour");
-console.log(hour);
