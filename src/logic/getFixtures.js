@@ -47,7 +47,7 @@ export async function diff(a, b) {
   return parseFloat(a - b).toFixed(2);
 }
 
-export const allForm = [];
+export let allForm = [];
 
 async function createFixture(match, result) {
   match.game = match.homeTeam + " v " + match.awayTeam;
@@ -111,6 +111,8 @@ export async function generateFixtures(day, radioState) {
     />,
     document.getElementById("Buttons")
   );
+
+  allForm = [];
 
   for (let i = 0; i < orderedLeagues.length; i++) {
     leagueGames = fixtureArray.filter(
