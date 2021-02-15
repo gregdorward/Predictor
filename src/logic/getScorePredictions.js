@@ -256,7 +256,7 @@ function getSuccessMeasure(fixtures) {
 
 var tips = [];
 var accumulatedOdds = 1;
-const predictions = [];
+let predictions = [];
 
 export async function getScorePrediction(day) {
   let radioSelected = parseInt(selectedOption);
@@ -281,6 +281,7 @@ export async function getScorePrediction(day) {
   );
 
   if (storedPredictions.status === 200) {
+    predictions = [];
     await storedPredictions.json().then((predictions) => {
       console.log(predictions);
       predictionArray = predictions.fixtures.predictions;
