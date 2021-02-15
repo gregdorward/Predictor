@@ -168,53 +168,53 @@ export async function generateFixtures(day, radioState) {
       allForm.push({
         matchId: match.id,
         home: {
-          last5: {
-            homeXG: form[0].data[0].stats.xg_for_avg_overall,
-            homeScoredOverall: form[0].data[0].stats.seasonScoredNum_overall,
-            homeConcededOverall: form[0].data[0].stats.seasonConcededNum_overall,
-            homeXGAgainstAvg: form[0].data[0].stats.xg_against_avg_overall,
-            homeCleanSheetPercentage: form[0].data[0].stats.seasonCSPercentage_overall
+          0: {
+            XG: form[0].data[0].stats.xg_for_avg_overall,
+            ScoredOverall: form[0].data[0].stats.seasonScoredNum_overall,
+            ConcededOverall: form[0].data[0].stats.seasonConcededNum_overall,
+            XGAgainstAvg: form[0].data[0].stats.xg_against_avg_overall,
+            CleanSheetPercentage: form[0].data[0].stats.seasonCSPercentage_overall
           },
-          last6: {
+          1: {
             homeXG: form[0].data[1].stats.xg_for_avg_overall,
-            homeScoredOverall: form[0].data[1].stats.seasonScoredNum_overall,
-            homeConcededOverall: form[0].data[1].stats.seasonConcededNum_overall,
-            homeXGAgainstAvg: form[0].data[1].stats.xg_against_avg_overall,
-            homeCleanSheetPercentage: form[0].data[1].stats.seasonCSPercentage_overall
+            ScoredOverall: form[0].data[1].stats.seasonScoredNum_overall,
+            ConcededOverall: form[0].data[1].stats.seasonConcededNum_overall,
+            XGAgainstAvg: form[0].data[1].stats.xg_against_avg_overall,
+            CleanSheetPercentage: form[0].data[1].stats.seasonCSPercentage_overall
 
           },
-          last10: {
-            homeXG: form[0].data[2].stats.xg_for_avg_overall,
-            homeScoredOverall: form[0].data[2].stats.seasonScoredNum_overall,
-            homeConcededOverall: form[0].data[2].stats.seasonConcededNum_overall,
-            homeXGAgainstAvg: form[0].data[2].stats.xg_against_avg_overall,
-            homeCleanSheetPercentage: form[0].data[2].stats.seasonCSPercentage_overall
+          2: {
+            XG: form[0].data[2].stats.xg_for_avg_overall,
+            ScoredOverall: form[0].data[2].stats.seasonScoredNum_overall,
+            ConcededOverall: form[0].data[2].stats.seasonConcededNum_overall,
+            XGAgainstAvg: form[0].data[2].stats.xg_against_avg_overall,
+            CleanSheetPercentage: form[0].data[2].stats.seasonCSPercentage_overall
 
           },
         },
         away: {
-          last5: {
-            awayXG: form[1].data[0].stats.xg_for_avg_overall,
-            awayScoredOverall: form[1].data[0].stats.seasonScoredNum_overall,
-            awayConcededOverall: form[1].data[0].stats.seasonConcededNum_overall,
-            awayXGAgainstAvg: form[1].data[0].stats.xg_against_avg_overall,
-            awayCleanSheetPercentage: form[1].data[0].stats.seasonCSPercentage_overall
+          0: {
+            XG: form[1].data[0].stats.xg_for_avg_overall,
+            ScoredOverall: form[1].data[0].stats.seasonScoredNum_overall,
+            ConcededOverall: form[1].data[0].stats.seasonConcededNum_overall,
+            XGAgainstAvg: form[1].data[0].stats.xg_against_avg_overall,
+            CleanSheetPercentage: form[1].data[0].stats.seasonCSPercentage_overall
 
           },
-          last6: {
-            awayXG: form[1].data[1].stats.xg_for_avg_overall,
-            awayScoredOverall: form[1].data[1].stats.seasonScoredNum_overall,
-            awayConcededOverall: form[1].data[1].stats.seasonConcededNum_overall,
-            awayXGAgainstAvg: form[1].data[1].stats.xg_against_avg_overall,
-            awayCleanSheetPercentage: form[1].data[1].stats.seasonCSPercentage_overall
+          1: {
+            XG: form[1].data[1].stats.xg_for_avg_overall,
+            ScoredOverall: form[1].data[1].stats.seasonScoredNum_overall,
+            ConcededOverall: form[1].data[1].stats.seasonConcededNum_overall,
+            XGAgainstAvg: form[1].data[1].stats.xg_against_avg_overall,
+            CleanSheetPercentage: form[1].data[1].stats.seasonCSPercentage_overall
 
           },
-          last10: {
-            awayXG: form[1].data[2].stats.xg_for_avg_overall,
-            awayScoredOverall: form[1].data[2].stats.seasonScoredNum_overall,
-            awayConcededOverall: form[1].data[2].stats.seasonConcededNum_overall,
-            awayXGAgainstAvg: form[1].data[2].stats.xg_against_avg_overall,
-            awayCleanSheetPercentage: form[1].data[2].stats.seasonCSPercentage_overall
+          2: {
+            XG: form[1].data[2].stats.xg_for_avg_overall,
+            ScoredOverall: form[1].data[2].stats.seasonScoredNum_overall,
+            ConcededOverall: form[1].data[2].stats.seasonConcededNum_overall,
+            XGAgainstAvg: form[1].data[2].stats.xg_against_avg_overall,
+            CleanSheetPercentage: form[1].data[2].stats.seasonCSPercentage_overall
 
           },
         },

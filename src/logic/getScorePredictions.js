@@ -10,6 +10,12 @@ import { allForm } from "../logic/getFixtures"
 //Calculates scores based on prior XG figures, weighted by odds
 export async function calculateScore(match, index, divider) {
 
+  // awayXG: form[1].data[0].stats.xg_for_avg_overall,
+  //           awayScoredOverall: form[1].data[0].stats.seasonScoredNum_overall,
+  //           awayConcededOverall: form[1].data[0].stats.seasonConcededNum_overall,
+  //           awayXGAgainstAvg: form[1].data[0].stats.xg_against_avg_overall,
+  //           awayCleanSheetPercentage: form[1].data[0].stats.seasonCSPercentage_overall
+
 
   let homeRaw;
   let awayRaw;
@@ -288,14 +294,15 @@ export async function getScorePrediction(day) {
   await Promise.all(
     matches.map(async (match) => {
       // if there are no stored predictions, calculate them based on live data
-
+      console.log(predictionArray)
       if(predictionArray[i]){
 
       switch (true) {
         case match.status === "complete":
           match.goalsA = predictionArray[i].match.goalsA;
           match.goalsB = predictionArray[i].match.goalsB;
-          console.log("fetching stored prediction");
+          console.log(match.game)
+          console.log("fetching stored prediction - complete");
           break;
         case match.status === "incomplete":
           [match.goalsA, match.goalsB] = await calculateScore(
@@ -304,11 +311,14 @@ export async function getScorePrediction(day) {
             divider
           );
           makePostRequest = true
-          console.log("fetching new prediction");
+          console.log(match.game)
+          console.log("fetching new prediction - incomplete");
           break;
         case match.status === "suspended":
           match.goalsA = "P";
           match.goalsB = "P";
+          console.log(match.game)
+          console.log("game postponed");
           break;
         default:
           [match.goalsA, match.goalsB] = await calculateScore(
@@ -317,6 +327,7 @@ export async function getScorePrediction(day) {
             divider
           );
           makePostRequest = true
+          console.log(match.game);
           console.log("default - fetching stored prediction");
           break;
       }
@@ -327,6 +338,9 @@ export async function getScorePrediction(day) {
         index,
         divider
       );
+      makePostRequest = true
+      console.log(match.game);
+      console.log("else clause triggered");
     }
 
 
@@ -409,7 +423,8 @@ export async function getScorePrediction(day) {
       i = i + 1;
     })
   );
-
+console.log("Node env")
+  console.log(process.env.NODE_ENV)
   if (makePostRequest === true) {
     postFixedPredictions(predictions, divider, day);
   }
