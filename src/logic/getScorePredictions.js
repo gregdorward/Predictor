@@ -5,17 +5,15 @@ import { Fixture } from "../components/Fixture";
 import { selectedOption } from "../components/radio";
 import Div from "../components/Div";
 import Collapsable from "../components/CollapsableElement";
-import { allForm } from "../logic/getFixtures"
+import { allForm } from "../logic/getFixtures";
 
 //Calculates scores based on prior XG figures, weighted by odds
 export async function calculateScore(match, index, divider) {
-
   // awayXG: form[1].data[0].stats.xg_for_avg_overall,
   //           awayScoredOverall: form[1].data[0].stats.seasonScoredNum_overall,
   //           awayConcededOverall: form[1].data[0].stats.seasonConcededNum_overall,
   //           awayXGAgainstAvg: form[1].data[0].stats.xg_against_avg_overall,
   //           awayCleanSheetPercentage: form[1].data[0].stats.seasonCSPercentage_overall
-
 
   let homeRaw;
   let awayRaw;
@@ -217,9 +215,9 @@ export async function calculateScore(match, index, divider) {
   // console.log(finalAwayGoals);
   match.homePrediction = finalHomeGoals;
   match.awayPrediction = finalAwayGoals;
-  if(match.status === "suspended"){
-    finalHomeGoals = "P"
-    finalAwayGoals = "P"
+  if (match.status === "suspended") {
+    finalHomeGoals = "P";
+    finalAwayGoals = "P";
   }
 
   return [finalHomeGoals, finalAwayGoals];
@@ -284,65 +282,62 @@ export async function getScorePrediction(day) {
 
   if (storedPredictions.status === 200) {
     await storedPredictions.json().then((predictions) => {
-      console.log(predictions)
+      console.log(predictions);
       predictionArray = predictions.fixtures.predictions;
     });
   }
   let i = 0;
-  let makePostRequest = false
+  let makePostRequest = false;
 
   await Promise.all(
     matches.map(async (match) => {
       // if there are no stored predictions, calculate them based on live data
-      console.log(predictionArray)
-      if(predictionArray[i]){
-
-      switch (true) {
-        case match.status === "complete":
-          match.goalsA = predictionArray[i].match.goalsA;
-          match.goalsB = predictionArray[i].match.goalsB;
-          console.log(match.game)
-          console.log("fetching stored prediction - complete");
-          break;
-        case match.status === "incomplete":
-          [match.goalsA, match.goalsB] = await calculateScore(
-            match,
-            index,
-            divider
-          );
-          makePostRequest = true
-          console.log(match.game)
-          console.log("fetching new prediction - incomplete");
-          break;
-        case match.status === "suspended":
-          match.goalsA = "P";
-          match.goalsB = "P";
-          console.log(match.game)
-          console.log("game postponed");
-          break;
-        default:
-          [match.goalsA, match.goalsB] = await calculateScore(
-            match,
-            index,
-            divider
-          );
-          makePostRequest = true
-          console.log(match.game);
-          console.log("default - fetching stored prediction");
-          break;
+      console.log(predictionArray);
+      if (predictionArray[i]) {
+        switch (true) {
+          case match.status === "complete":
+            match.goalsA = predictionArray[i].match.goalsA;
+            match.goalsB = predictionArray[i].match.goalsB;
+            console.log(match.game);
+            console.log("fetching stored prediction - complete");
+            break;
+          case match.status === "incomplete":
+            [match.goalsA, match.goalsB] = await calculateScore(
+              match,
+              index,
+              divider
+            );
+            makePostRequest = true;
+            console.log(match.game);
+            console.log("fetching new prediction - incomplete");
+            break;
+          case match.status === "suspended":
+            match.goalsA = "P";
+            match.goalsB = "P";
+            console.log(match.game);
+            console.log("game postponed");
+            break;
+          default:
+            [match.goalsA, match.goalsB] = await calculateScore(
+              match,
+              index,
+              divider
+            );
+            makePostRequest = true;
+            console.log(match.game);
+            console.log("default - fetching stored prediction");
+            break;
+        }
+      } else {
+        [match.goalsA, match.goalsB] = await calculateScore(
+          match,
+          index,
+          divider
+        );
+        makePostRequest = true;
+        console.log(match.game);
+        console.log("else clause triggered");
       }
-
-    } else {
-      [match.goalsA, match.goalsB] = await calculateScore(
-        match,
-        index,
-        divider
-      );
-      makePostRequest = true
-      console.log(match.game);
-      console.log("else clause triggered");
-    }
-
 
       match.predictionOutcome = "unknown";
       let predictionObject;
@@ -417,15 +412,19 @@ export async function getScorePrediction(day) {
           document.getElementById("bestPredictions")
         );
       }
-      predictions.push({
-        match: match,
-      });
+      console.log(match)
+      predictions.push(match);
+      console.log("pushed")
+      console.log("current state of predictions...")
+      console.log("TYPE")
+      console.log(typeof predictions)
+      console.log(predictions)
       i = i + 1;
     })
   );
-console.log("Node env")
-  console.log(process.env.NODE_ENV)
-  if (makePostRequest === true) {
+  console.log("Node env");
+  console.log(process.env.NODE_ENV);
+  if (makePostRequest === true && day !== "yesterdaysFixtures") {
     postFixedPredictions(predictions, divider, day);
   }
 
