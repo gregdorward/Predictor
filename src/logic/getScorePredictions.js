@@ -280,8 +280,9 @@ export async function getScorePrediction(day) {
     `${process.env.REACT_APP_EXPRESS_SERVER}${day}Predictions${divider}`
   );
 
+  predictions = [];
+
   if (storedPredictions.status === 200) {
-    predictions = [];
     await storedPredictions.json().then((predictions) => {
       console.log(predictions);
       predictionArray = predictions.fixtures.predictions;
