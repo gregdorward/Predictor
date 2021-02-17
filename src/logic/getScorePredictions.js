@@ -7,6 +7,16 @@ import Div from "../components/Div";
 import Collapsable from "../components/CollapsableElement";
 import { allForm } from "../logic/getFixtures";
 
+var myHeaders = new Headers();
+myHeaders.append("Origin", "https://gregdorward.github.io");
+myHeaders.append('Access-Control-Allow-Credentials', 'true');
+
+
+var requestOptions = {
+  headers: myHeaders,
+  redirect: "follow",
+};
+
 //Calculates scores based on prior XG figures, weighted by odds
 export async function calculateScore(match, index, divider, id) {
   let homeRaw;
@@ -446,6 +456,7 @@ async function postFixedPredictions(predictions, divider, day) {
       headers: {
         Accept: "application/json",
         "Content-Type": "application/json",
+        "Access-Control-Allow-Credentials": "true"
       },
       body: JSON.stringify({ predictions }),
     }
