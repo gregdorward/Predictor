@@ -8,84 +8,82 @@ import Collapsable from "../components/CollapsableElement";
 import { allForm } from "../logic/getFixtures";
 
 //Calculates scores based on prior XG figures, weighted by odds
-export async function calculateScore(match, index, divider) {
-  // awayXG: form[1].data[0].stats.xg_for_avg_overall,
-  //           awayScoredOverall: form[1].data[0].stats.seasonScoredNum_overall,
-  //           awayConcededOverall: form[1].data[0].stats.seasonConcededNum_overall,
-  //           awayXGAgainstAvg: form[1].data[0].stats.xg_against_avg_overall,
-  //           awayCleanSheetPercentage: form[1].data[0].stats.seasonCSPercentage_overall
-
+export async function calculateScore(match, index, divider, id) {
   let homeRaw;
   let awayRaw;
+  console.log("allForm");
+  console.log(typeof allForm);
+  console.log(allForm);
+
+  console.log(allForm.find((game) => game.id === id).home);
+
   let teams = [
-    match.form.allHomeForm[index].stats,
-    match.form.allAwayForm[index].stats,
+    allForm.find((game) => game.id === id).home,
+    allForm.find((game) => game.id === id).away,
   ];
   for (let i = 0; i < teams.length; i++) {
-    if (parseFloat(teams[i].xg_for_avg_overall).toFixed(2) != 0.0) {
-      teams[i].finishingScore = parseFloat(
+    if (parseFloat(teams[i][index].ScoredOverall) !== 0) {
+      teams[i][index].finishingScore = parseFloat(
+        (teams[i][index].ScoredOverall / divider / teams[i][index].XG).toFixed(
+          2
+        )
+      );
+    } else {
+      teams[i][index].finishingScore = 0.0;
+    }
+
+    if (parseFloat(teams[i][index].ConcededOverall) !== 0) {
+      teams[i][index].goalieRating = parseFloat(
         (
-          teams[i].seasonScoredNum_overall /
-          divider /
-          teams[i].xg_for_avg_overall
+          teams[i][index].XGAgainstAvg /
+          (teams[i][index].ConcededOverall / divider)
         ).toFixed(2)
       );
     } else {
-      teams[i].finishingScore = 0.0;
+      teams[i].goalieRating = 0;
     }
 
-    if (
-      parseFloat(teams[i].seasonConcededNum_overall / divider).toFixed(2) != 0.0
-    ) {
-      teams[i].goalieRating = parseFloat(
-        (
-          teams[i].xg_against_avg_overall /
-          (teams[i].seasonConcededNum_overall / divider)
-        ).toFixed(2)
-      );
-    } else {
-      teams[i].goalieRating = 2;
-    }
-
-    teams[i].defenceScore = parseInt(teams[i].seasonCSPercentage_overall);
+    teams[i][index].defenceScore = parseInt(
+      teams[i][index].CleanSheetPercentage
+    );
 
     let defenceScore;
-    defenceScore = teams[i].defenceScore;
+    defenceScore = teams[i][index].defenceScore;
 
     switch (true) {
       case defenceScore < 20:
-        teams[i].defenceRating = 0;
+        teams[i][index].defenceRating = 0;
         break;
       case defenceScore >= 20 && defenceScore < 40:
-        teams[i].defenceRating = 0.3;
+        teams[i][index].defenceRating = 0.3;
         break;
       case defenceScore >= 40 && defenceScore < 60:
-        teams[i].defenceRating = 0.7;
+        teams[i][index].defenceRating = 0.7;
         break;
       case defenceScore >= 60 && defenceScore < 80:
-        teams[i].defenceRating = 1.1;
+        teams[i][index].defenceRating = 1.1;
         break;
       case defenceScore >= 80:
-        teams[i].defenceRating = 1.5;
+        teams[i][index].defenceRating = 1.5;
         break;
       default:
         break;
     }
 
-    teams[i].finalFinishingScore = parseFloat(
-      await diff(teams[i].finishingScore, 1)
+    teams[i][index].finalFinishingScore = parseFloat(
+      await diff(teams[i][index].finishingScore, 1)
     );
 
-    teams[i].finalGoalieRating = parseFloat(
-      await diff(teams[i].goalieRating, 1)
+    teams[i][index].finalGoalieRating = parseFloat(
+      await diff(teams[i][index].goalieRating, 1)
     );
 
-    teams[i].forecastedXG = parseFloat(
-      teams[i].xg_for_avg_overall + teams[i].finalFinishingScore
+    teams[i][index].forecastedXG = parseFloat(
+      teams[i][index].XG + parseFloat(teams[i][index].finalFinishingScore)
     );
   }
 
-  if (match.homeOdds == 0 && match.awayOdds == 0) {
+  if (match.homeOdds.toFixed(1) === 0.0 && match.awayOdds.toFixed(1) === 0.0) {
     homeRaw = 0.0;
     awayRaw = 0.0;
   } else {
@@ -93,8 +91,8 @@ export async function calculateScore(match, index, divider) {
     awayRaw = (1 / match.awayOdds).toFixed(2);
   }
 
-  let formHome = match.form.allHomeForm[index].stats;
-  let formAway = match.form.allAwayForm[index].stats;
+  let formHome = teams[0][index];
+  let formAway = teams[1][index];
 
   // let defenceHome = parseFloat(formHome.defenceRating);
   let goalieHome = formHome.finalGoalieRating;
@@ -116,8 +114,8 @@ export async function calculateScore(match, index, divider) {
     (await diff(oddsWeightingAway, oddsWeightingHome)) * 2
   ).toFixed(2);
 
-  let homeXGConceded = parseFloat(formHome.xg_against_avg_overall);
-  let awayXGConceded = parseFloat(formAway.xg_against_avg_overall);
+  let homeXGConceded = parseFloat(formHome.XGAgainstAvg);
+  let awayXGConceded = parseFloat(formAway.XGAgainstAvg);
 
   let homeCalculation;
   let awayCalculation;
@@ -136,8 +134,9 @@ export async function calculateScore(match, index, divider) {
       parseFloat(awayWeighting + defenceScoreHome / 10 + 0.5) + homeXGConceded;
   }
 
-  let homeGoals = Math.round(parseFloat(match.homeXG) + homeCalculation);
-  let awayGoals = Math.round(parseFloat(match.awayXG) + awayCalculation);
+  //TODO try form.home.XG in place of this
+  let homeGoals = Math.round(parseFloat(formHome.XG) + homeCalculation);
+  let awayGoals = Math.round(parseFloat(formAway.XG) + awayCalculation);
 
   if (homeGoals < 0) {
     homeGoals = 0;
@@ -153,18 +152,18 @@ export async function calculateScore(match, index, divider) {
   finalHomeGoals = Math.round(
     parseFloat(
       homeGoals * 3 +
-        formHome.seasonScoredNum_overall / divider +
+        formHome.ScoredOverall / divider +
         formHome.forecastedXG +
-        formAway.seasonConcededNum_overall / divider
+        formAway.ConcededOverall / divider
     ) / 6
   );
 
   finalAwayGoals = Math.round(
     parseFloat(
       awayGoals * 3 +
-        formAway.seasonScoredNum_overall / divider +
+        formAway.ScoredOverall / divider +
         formAway.forecastedXG +
-        formHome.seasonConcededNum_overall / divider
+        formHome.ConcededOverall / divider
     ) / 6
   );
 
@@ -178,11 +177,11 @@ export async function calculateScore(match, index, divider) {
   // console.log("homeGoals");
   // console.log(homeGoals);
   // console.log("seasonScoredNum_overall");
-  // console.log(formHome.seasonScoredNum_overall);
+  // console.log(formHome.ScoredOverall);
   // console.log("forecastedXG");
   // console.log(formHome.forecastedXG);
   // console.log("seasonConcededNum_overall");
-  // console.log(formAway.seasonConcededNum_overall);
+  // console.log(formAway.ConcededOverall);
   // console.log("homeCalculation");
   // console.log(homeCalculation);
   // console.log("defenceScoreHome");
@@ -196,11 +195,11 @@ export async function calculateScore(match, index, divider) {
   // console.log("awayGoals");
   // console.log(awayGoals);
   // console.log("seasonScoredNum_overall");
-  // console.log(formAway.seasonScoredNum_overall);
+  // console.log(formAway.ScoredOverall);
   // console.log("forecastedXG");
   // console.log(formAway.forecastedXG);
   // console.log("seasonConcededNum_overall");
-  // console.log(formHome.seasonConcededNum_overall);
+  // console.log(formHome.ConcededOverall);
   // console.log("awayCalculation");
   // console.log(awayCalculation);
   // console.log("defenceScoreAway");
@@ -284,6 +283,7 @@ export async function getScorePrediction(day) {
 
   if (storedPredictions.status === 200) {
     await storedPredictions.json().then((predictions) => {
+      console.log("these are the predictions")
       console.log(predictions);
       predictionArray = predictions.fixtures.predictions;
     });
@@ -294,20 +294,23 @@ export async function getScorePrediction(day) {
   await Promise.all(
     matches.map(async (match) => {
       // if there are no stored predictions, calculate them based on live data
+      let thisPrediction = predictionArray.find((game) => game.id === match.id)
+      console.log(thisPrediction)
       console.log(predictionArray);
-      if (predictionArray[i]) {
+      if (thisPrediction) {
         switch (true) {
           case match.status === "complete":
-            match.goalsA = predictionArray[i].match.goalsA;
-            match.goalsB = predictionArray[i].match.goalsB;
-            console.log(match.game);
+            console.log(thisPrediction.game);
+            match.goalsA = thisPrediction.goalsA;
+            match.goalsB = thisPrediction.goalsB;
             console.log("fetching stored prediction - complete");
             break;
           case match.status === "incomplete":
             [match.goalsA, match.goalsB] = await calculateScore(
               match,
               index,
-              divider
+              divider,
+              match.id
             );
             makePostRequest = true;
             console.log(match.game);
@@ -323,7 +326,8 @@ export async function getScorePrediction(day) {
             [match.goalsA, match.goalsB] = await calculateScore(
               match,
               index,
-              divider
+              divider,
+              match.id
             );
             makePostRequest = true;
             console.log(match.game);
@@ -334,7 +338,8 @@ export async function getScorePrediction(day) {
         [match.goalsA, match.goalsB] = await calculateScore(
           match,
           index,
-          divider
+          divider,
+          match.id
         );
         makePostRequest = true;
         console.log(match.game);
@@ -414,13 +419,13 @@ export async function getScorePrediction(day) {
           document.getElementById("bestPredictions")
         );
       }
-      console.log(match)
+      console.log(match);
       predictions.push(match);
-      console.log("pushed")
-      console.log("current state of predictions...")
-      console.log("TYPE")
-      console.log(typeof predictions)
-      console.log(predictions)
+      console.log("pushed");
+      console.log("current state of predictions...");
+      console.log("TYPE");
+      console.log(typeof predictions);
+      console.log(predictions);
       i = i + 1;
     })
   );

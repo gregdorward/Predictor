@@ -2,6 +2,7 @@ import ReactDOM from "react-dom";
 import Stats from "../components/createStatsDiv";
 import Div from "../components/Div";
 import { selectedOption } from "../components/radio";
+import { allForm } from "../logic/getFixtures";
 
 export async function createStatsDiv(game) {
   let radioSelected = parseInt(selectedOption);
@@ -19,8 +20,15 @@ export async function createStatsDiv(game) {
     divider = 10;
   }
 
-  let homeTeam = game.homeTeam;
-  let awayTeam = game.awayTeam;
+  console.log(allForm)
+  let gameStats = allForm.find((match) => match.id === game.id)
+
+
+  let homeTeam = gameStats.home.teamName;
+  let awayTeam = gameStats.away.teamName;
+
+  // let homeTeam = game.homeTeam;
+  // let awayTeam = game.awayTeam;
   let time = game.time;
 
   const formDataMatch = [];
@@ -29,21 +37,18 @@ export async function createStatsDiv(game) {
     btts: game.btts_potential,
   });
 
-
   const formDataHome = [];
 
   formDataHome.push({
     name: game.homeTeam,
-    AverageGoals: (
-      game.form.allHomeForm[index].stats.seasonScoredNum_overall / divider
-    ).toFixed(2),
-    AverageConceeded: (
-      game.form.allHomeForm[index].stats.seasonConcededNum_overall / divider
-    ).toFixed(2),
-    AverageXG: game.form.allHomeForm[index].stats.xg_for_avg_overall,
-    AveragePossession: game.form.allHomeForm[index].stats.possessionAVG_overall,
-    AverageSOT: game.form.allHomeForm[index].stats.shotsOnTargetAVG_overall,
-    AverageDangerousAttacks: game.form.allHomeForm[index].stats.dangerous_attacks_avg_overall,
+    AverageGoals: (gameStats.home[index].ScoredOverall / divider).toFixed(2),
+    AverageConceeded: (gameStats.home[index].ConcededOverall / divider).toFixed(
+      2
+    ),
+    AverageXG: gameStats.home[index].XG,
+    AveragePossession: gameStats.home[index].AveragePossession,
+    AverageShotsOnTarget: gameStats.home[index].AverageShotsOnTarget,
+    AverageDangerousAttacks: gameStats.home[index].AverageDangerousAttacks,
     homeOrAway: "Home",
   });
 
@@ -51,16 +56,14 @@ export async function createStatsDiv(game) {
 
   formDataAway.push({
     name: game.awayTeam,
-    AverageGoals: (
-      game.form.allAwayForm[index].stats.seasonScoredNum_overall / divider
-    ).toFixed(2),
-    AverageConceeded: (
-      game.form.allAwayForm[index].stats.seasonConcededNum_overall / divider
-    ).toFixed(2),
-    AverageXG: game.form.allAwayForm[index].stats.xg_for_avg_overall,
-    AveragePossession: game.form.allAwayForm[index].stats.possessionAVG_overall,
-    AverageSOT: game.form.allAwayForm[index].stats.shotsOnTargetAVG_overall,
-    AverageDangerousAttacks: game.form.allAwayForm[index].stats.dangerous_attacks_avg_overall,
+    AverageGoals: (gameStats.away[index].ScoredOverall / divider).toFixed(2),
+    AverageConceeded: (gameStats.away[index].ConcededOverall / divider).toFixed(
+      2
+    ),
+    AverageXG: gameStats.away[index].XG,
+    AveragePossession: gameStats.away[index].AveragePossession,
+    AverageShotsOnTarget: gameStats.away[index].AverageShotsOnTarget,
+    AverageDangerousAttacks: gameStats.away[index].AverageDangerousAttacks,
     homeOrAway: "Away",
   });
 
@@ -86,7 +89,7 @@ export async function createStatsDiv(game) {
       conceeded={formDataHome[0].AverageConceeded}
       XG={formDataHome[0].AverageXG}
       possession={formDataHome[0].AveragePossession}
-      sot={formDataHome[0].AverageSOT}
+      sot={formDataHome[0].AverageShotsOnTarget}
       dangerousAttacks={formDataHome[0].AverageDangerousAttacks}
     />,
     document.getElementById("home" + homeTeam)
@@ -101,7 +104,7 @@ export async function createStatsDiv(game) {
       conceeded={formDataAway[0].AverageConceeded}
       XG={formDataAway[0].AverageXG}
       possession={formDataAway[0].AveragePossession}
-      sot={formDataAway[0].AverageSOT}
+      sot={formDataAway[0].AverageShotsOnTarget}
       dangerousAttacks={formDataAway[0].AverageDangerousAttacks}
     />,
     document.getElementById("away" + awayTeam)

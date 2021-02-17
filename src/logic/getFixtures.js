@@ -111,8 +111,22 @@ export async function generateFixtures(day, radioState) {
     />,
     document.getElementById("Buttons")
   );
-
-  allForm = [];
+  let form;
+  let formArray;
+  var isFormStored;
+  let storedForm = await fetch(
+    `${process.env.REACT_APP_EXPRESS_SERVER}form${day}`
+  );
+  if (storedForm.status === 200) {
+    await storedForm.json().then((form) => {
+      formArray = Array.from(form.form.allForm);
+      isFormStored = true;
+      allForm = formArray;
+    });
+  } else {
+    console.log("Stored form not fetched");
+    isFormStored = false;
+  }
 
   for (let i = 0; i < orderedLeagues.length; i++) {
     leagueGames = fixtureArray.filter(
@@ -139,19 +153,173 @@ export async function generateFixtures(day, radioState) {
       match.homeTeamInfo = [];
       match.awayTeamInfo = [];
 
-      const form = await getForm(match);
+      if (!isFormStored) {
+        form = await getForm(match);
+        console.log("Pusing match to form object");
 
-      match.form.allHomeForm = form[0].data;
-      match.form.allAwayForm = form[1].data;
+        allForm.push({
+          id: match.id,
+          home: {
+            teamName: match.homeTeam,
+            0: {
+              XG: parseFloat(form[0].data[0].stats.xg_for_avg_overall),
+              ScoredOverall: parseFloat(
+                form[0].data[0].stats.seasonScoredNum_overall
+              ),
+              ConcededOverall: parseFloat(
+                form[0].data[0].stats.seasonConcededNum_overall
+              ),
+              XGAgainstAvg: parseFloat(
+                form[0].data[0].stats.xg_against_avg_overall
+              ),
+              CleanSheetPercentage: parseFloat(
+                form[0].data[0].stats.seasonCSPercentage_overall
+              ),
+              AveragePossession: parseFloat(
+                form[0].data[0].stats.possessionAVG_overall
+              ),
+              AverageShotsOnTarget: parseFloat(
+                form[0].data[0].stats.shotsOnTargetAVG_overall
+              ),
+              AverageDangerousAttacks: parseFloat(
+                form[0].data[0].stats.dangerous_attacks_avg_overall
+              ),
+            },
+            1: {
+              XG: parseFloat(form[0].data[1].stats.xg_for_avg_overall),
+              ScoredOverall: parseFloat(
+                form[0].data[1].stats.seasonScoredNum_overall
+              ),
+              ConcededOverall: parseFloat(
+                form[0].data[1].stats.seasonConcededNum_overall
+              ),
+              XGAgainstAvg: parseFloat(
+                form[0].data[1].stats.xg_against_avg_overall
+              ),
+              CleanSheetPercentage: parseFloat(
+                form[0].data[1].stats.seasonCSPercentage_overall
+              ),
+              AveragePossession: parseFloat(
+                form[0].data[1].stats.possessionAVG_overall
+              ),
+              AverageShotsOnTarget: parseFloat(
+                form[0].data[1].stats.shotsOnTargetAVG_overall
+              ),
+              AverageDangerousAttacks: parseFloat(
+                form[0].data[1].stats.dangerous_attacks_avg_overall
+              ),
+            },
+            2: {
+              XG: parseFloat(form[0].data[2].stats.xg_for_avg_overall),
+              ScoredOverall: parseFloat(
+                form[0].data[2].stats.seasonScoredNum_overall
+              ),
+              ConcededOverall: parseFloat(
+                form[0].data[2].stats.seasonConcededNum_overall
+              ),
+              XGAgainstAvg: parseFloat(
+                form[0].data[2].stats.xg_against_avg_overall
+              ),
+              CleanSheetPercentage: parseFloat(
+                form[0].data[2].stats.seasonCSPercentage_overall
+              ),
+              AveragePossession: parseFloat(
+                form[0].data[2].stats.possessionAVG_overall
+              ),
+              AverageShotsOnTarget: parseFloat(
+                form[0].data[2].stats.shotsOnTargetAVG_overall
+              ),
+              AverageDangerousAttacks: parseFloat(
+                form[0].data[2].stats.dangerous_attacks_avg_overall
+              ),
+            },
+          },
+          away: {
+            teamName: match.awayTeam,
+            0: {
+              XG: parseFloat(form[1].data[0].stats.xg_for_avg_overall),
+              ScoredOverall: parseFloat(
+                form[1].data[0].stats.seasonScoredNum_overall
+              ),
+              ConcededOverall: parseFloat(
+                form[1].data[0].stats.seasonConcededNum_overall
+              ),
+              XGAgainstAvg: parseFloat(
+                form[1].data[0].stats.xg_against_avg_overall
+              ),
+              CleanSheetPercentage: parseFloat(
+                form[1].data[0].stats.seasonCSPercentage_overall
+              ),
+              AveragePossession: parseFloat(
+                form[1].data[0].stats.possessionAVG_overall
+              ),
+              AverageShotsOnTarget: parseFloat(
+                form[1].data[0].stats.shotsOnTargetAVG_overall
+              ),
+              AverageDangerousAttacks: parseFloat(
+                form[1].data[0].stats.dangerous_attacks_avg_overall
+              ),
+            },
+            1: {
+              XG: parseFloat(form[1].data[1].stats.xg_for_avg_overall),
+              ScoredOverall: parseFloat(
+                form[1].data[1].stats.seasonScoredNum_overall
+              ),
+              ConcededOverall: parseFloat(
+                form[1].data[1].stats.seasonConcededNum_overall
+              ),
+              XGAgainstAvg: parseFloat(
+                form[1].data[1].stats.xg_against_avg_overall
+              ),
+              CleanSheetPercentage: parseFloat(
+                form[1].data[1].stats.seasonCSPercentage_overall
+              ),
+              AveragePossession: parseFloat(
+                form[1].data[1].stats.possessionAVG_overall
+              ),
+              AverageShotsOnTarget: parseFloat(
+                form[1].data[1].stats.shotsOnTargetAVG_overall
+              ),
+              AverageDangerousAttacks: parseFloat(
+                form[1].data[1].stats.dangerous_attacks_avg_overall
+              ),
+            },
+            2: {
+              XG: parseFloat(form[1].data[2].stats.xg_for_avg_overall),
+              ScoredOverall: parseFloat(
+                form[1].data[2].stats.seasonScoredNum_overall
+              ),
+              ConcededOverall: parseFloat(
+                form[1].data[2].stats.seasonConcededNum_overall
+              ),
+              XGAgainstAvg: parseFloat(
+                form[1].data[2].stats.xg_against_avg_overall
+              ),
+              CleanSheetPercentage: parseFloat(
+                form[1].data[2].stats.seasonCSPercentage_overall
+              ),
+              AveragePossession: parseFloat(
+                form[1].data[2].stats.possessionAVG_overall
+              ),
+              AverageShotsOnTarget: parseFloat(
+                form[1].data[2].stats.shotsOnTargetAVG_overall
+              ),
+              AverageDangerousAttacks: parseFloat(
+                form[1].data[2].stats.dangerous_attacks_avg_overall
+              ),
+            },
+          },
+        });
+      }
 
-      match.form.homeTeam = form[0].data[index].stats;
-      match.form.awayTeam = form[1].data[index].stats;
+      // match.form.allHomeForm = form[0].data;
+      // match.form.allAwayForm = form[1].data;
+
+      // match.form.homeTeam = form[0].data[index].stats;
+      // match.form.awayTeam = form[1].data[index].stats;
 
       match.homeBadge = fixture.home_image;
       match.awayBadge = fixture.away_image;
-
-      match.homeXG = parseFloat(match.form.homeTeam.xg_for_avg_overall);
-      match.awayXG = parseFloat(match.form.awayTeam.xg_for_avg_overall);
 
       match.homePpg = fixture.home_ppg.toFixed(2);
       match.homeFormColour = await applyColour(match.homePpg);
@@ -167,77 +335,21 @@ export async function generateFixtures(day, radioState) {
       match.homeGoals = fixture.homeGoalCount;
       match.awayGoals = fixture.awayGoalCount;
 
-      allForm.push({
-        matchId: match.id,
-        home: {
-          0: {
-            XG: form[0].data[0].stats.xg_for_avg_overall,
-            ScoredOverall: form[0].data[0].stats.seasonScoredNum_overall,
-            ConcededOverall: form[0].data[0].stats.seasonConcededNum_overall,
-            XGAgainstAvg: form[0].data[0].stats.xg_against_avg_overall,
-            CleanSheetPercentage: form[0].data[0].stats.seasonCSPercentage_overall
-          },
-          1: {
-            homeXG: form[0].data[1].stats.xg_for_avg_overall,
-            ScoredOverall: form[0].data[1].stats.seasonScoredNum_overall,
-            ConcededOverall: form[0].data[1].stats.seasonConcededNum_overall,
-            XGAgainstAvg: form[0].data[1].stats.xg_against_avg_overall,
-            CleanSheetPercentage: form[0].data[1].stats.seasonCSPercentage_overall
-
-          },
-          2: {
-            XG: form[0].data[2].stats.xg_for_avg_overall,
-            ScoredOverall: form[0].data[2].stats.seasonScoredNum_overall,
-            ConcededOverall: form[0].data[2].stats.seasonConcededNum_overall,
-            XGAgainstAvg: form[0].data[2].stats.xg_against_avg_overall,
-            CleanSheetPercentage: form[0].data[2].stats.seasonCSPercentage_overall
-
-          },
-        },
-        away: {
-          0: {
-            XG: form[1].data[0].stats.xg_for_avg_overall,
-            ScoredOverall: form[1].data[0].stats.seasonScoredNum_overall,
-            ConcededOverall: form[1].data[0].stats.seasonConcededNum_overall,
-            XGAgainstAvg: form[1].data[0].stats.xg_against_avg_overall,
-            CleanSheetPercentage: form[1].data[0].stats.seasonCSPercentage_overall
-
-          },
-          1: {
-            XG: form[1].data[1].stats.xg_for_avg_overall,
-            ScoredOverall: form[1].data[1].stats.seasonScoredNum_overall,
-            ConcededOverall: form[1].data[1].stats.seasonConcededNum_overall,
-            XGAgainstAvg: form[1].data[1].stats.xg_against_avg_overall,
-            CleanSheetPercentage: form[1].data[1].stats.seasonCSPercentage_overall
-
-          },
-          2: {
-            XG: form[1].data[2].stats.xg_for_avg_overall,
-            ScoredOverall: form[1].data[2].stats.seasonScoredNum_overall,
-            ConcededOverall: form[1].data[2].stats.seasonConcededNum_overall,
-            XGAgainstAvg: form[1].data[2].stats.xg_against_avg_overall,
-            CleanSheetPercentage: form[1].data[2].stats.seasonCSPercentage_overall
-
-          },
-        },
-      });
-
       matches.push(match);
 
       await createFixture(match, false);
     }
   }
-  await fetch(
-    `${process.env.REACT_APP_EXPRESS_SERVER}allForm`,
-    {
+  if (!isFormStored) {
+    await fetch(`${process.env.REACT_APP_EXPRESS_SERVER}allForm${day}`, {
       method: "POST",
       headers: {
         Accept: "application/json",
         "Content-Type": "application/json",
       },
       body: JSON.stringify({ allForm }),
-    }
-  );
+    });
+  }
 }
 
 // export async function generatePriorFixtures(radioState) {

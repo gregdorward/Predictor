@@ -72,7 +72,7 @@ function GetDivider(fixture) {
       return (
         <Fragment>
           <div className="CorrectResult">{`${fixture.fixture.homeGoals} - ${fixture.fixture.awayGoals}`}</div>
-          <div className="score">{`${fixture.fixture.goalsA} - ${fixture.fixture.goalsB}`}</div>
+          <div className="score" key={fixture.fixture.homeTeam}>{`${fixture.fixture.goalsA} - ${fixture.fixture.goalsB}`}</div>
         </Fragment>
       );
     } else if (outcome !== prediction) {
@@ -81,13 +81,13 @@ function GetDivider(fixture) {
       return (
         <Fragment>
           <div className="Result">{`${fixture.fixture.homeGoals} - ${fixture.fixture.awayGoals}`}</div>
-          <div className="score">{`${fixture.fixture.goalsA} - ${fixture.fixture.goalsB}`}</div>
+          <div className="score" key={fixture.fixture.awayTeam}>{`${fixture.fixture.goalsA} - ${fixture.fixture.goalsB}`}</div>
         </Fragment>
       );
     }
   } else {
     return (
-      <div className="score">{`${fixture.fixture.goalsA} - ${fixture.fixture.goalsB}`}</div>
+      <div className="score" key={fixture.fixture.id}>{`${fixture.fixture.goalsA} - ${fixture.fixture.goalsB}`}</div>
     );
   }
 }
