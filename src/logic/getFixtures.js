@@ -119,7 +119,6 @@ export async function generateFixtures(day, radioState) {
       method: "GET",
       headers: {
         Accept: "application/json",
-        "Content-Type": "application/json",
       },
     });
   if (storedForm.status === 200) {
