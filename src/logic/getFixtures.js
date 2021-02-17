@@ -117,7 +117,13 @@ export async function generateFixtures(day, radioState) {
   let formArray;
   var isFormStored;
   let storedForm = await fetch(
-    `${process.env.REACT_APP_EXPRESS_SERVER}form${day}`
+    `${process.env.REACT_APP_EXPRESS_SERVER}form${day}`, {
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+        "Access-Control-Allow-Credentials": "true"
+      },
+    }
   );
   if (storedForm.status === 200) {
     await storedForm.json().then((form) => {
