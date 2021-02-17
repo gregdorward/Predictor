@@ -286,13 +286,7 @@ export async function getScorePrediction(day) {
   }
   let predictionArray = [];
   let storedPredictions = await fetch(
-    `${process.env.REACT_APP_EXPRESS_SERVER}${day}Predictions${divider}`, {
-      headers: {
-        Accept: "application/json",
-        "Content-Type": "application/json",
-        "Access-Control-Allow-Credentials": "true"
-      },
-    }
+    `${process.env.REACT_APP_EXPRESS_SERVER}${day}Predictions${divider}`
   );
 
   predictions = [];
@@ -462,7 +456,6 @@ async function postFixedPredictions(predictions, divider, day) {
       headers: {
         Accept: "application/json",
         "Content-Type": "application/json",
-        "Access-Control-Allow-Credentials": "true"
       },
       body: JSON.stringify({ predictions }),
     }

@@ -121,7 +121,6 @@ export async function generateFixtures(day, radioState) {
       headers: {
         Accept: "application/json",
         "Content-Type": "application/json",
-        "Access-Control-Allow-Credentials": "true"
       },
     }
   );
@@ -354,7 +353,6 @@ export async function generateFixtures(day, radioState) {
       headers: {
         Accept: "application/json",
         "Content-Type": "application/json",
-        "Access-Control-Allow-Credentials": "true"
       },
       body: JSON.stringify({ allForm }),
     });
