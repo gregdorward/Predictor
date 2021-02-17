@@ -286,7 +286,13 @@ export async function getScorePrediction(day) {
   }
   let predictionArray = [];
   let storedPredictions = await fetch(
-    `${process.env.REACT_APP_EXPRESS_SERVER}${day}Predictions${divider}`
+    `${process.env.REACT_APP_EXPRESS_SERVER}${day}Predictions${divider}`, {
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+        "Access-Control-Allow-Credentials": "true"
+      },
+    }
   );
 
   predictions = [];
