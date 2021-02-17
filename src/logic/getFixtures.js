@@ -64,6 +64,8 @@ async function createFixture(match, result) {
 
 var myHeaders = new Headers();
 myHeaders.append("Origin", "https://gregdorward.github.io");
+myHeaders.append('Access-Control-Allow-Credentials', 'true');
+
 
 var requestOptions = {
   method: "GET",
@@ -346,6 +348,7 @@ export async function generateFixtures(day, radioState) {
       headers: {
         Accept: "application/json",
         "Content-Type": "application/json",
+        Access-Control-Allow-Origin
       },
       body: JSON.stringify({ allForm }),
     });
