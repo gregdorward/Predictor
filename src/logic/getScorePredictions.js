@@ -9,10 +9,9 @@ import { allForm } from "../logic/getFixtures";
 
 var myHeaders = new Headers();
 myHeaders.append("Origin", "https://gregdorward.github.io");
-myHeaders.append('Access-Control-Allow-Credentials', 'true');
-
 
 var requestOptions = {
+  method: "GET",
   headers: myHeaders,
   redirect: "follow",
 };
@@ -286,14 +285,21 @@ export async function getScorePrediction(day) {
   }
   let predictionArray = [];
   let storedPredictions = await fetch(
-    `${process.env.REACT_APP_EXPRESS_SERVER}${day}Predictions${divider}`
+    `${process.env.REACT_APP_EXPRESS_SERVER}${day}Predictions${divider}`,
+    {
+      method: "GET",
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+      },
+    }
   );
 
   predictions = [];
 
   if (storedPredictions.status === 200) {
     await storedPredictions.json().then((predictions) => {
-      console.log("these are the predictions")
+      console.log("these are the predictions");
       console.log(predictions);
       predictionArray = predictions.fixtures.predictions;
     });
@@ -304,8 +310,8 @@ export async function getScorePrediction(day) {
   await Promise.all(
     matches.map(async (match) => {
       // if there are no stored predictions, calculate them based on live data
-      let thisPrediction = predictionArray.find((game) => game.id === match.id)
-      console.log(thisPrediction)
+      let thisPrediction = predictionArray.find((game) => game.id === match.id);
+      console.log(thisPrediction);
       console.log(predictionArray);
       if (thisPrediction) {
         switch (true) {
@@ -450,14 +456,12 @@ export async function getScorePrediction(day) {
 
 async function postFixedPredictions(predictions, divider, day) {
   await fetch(
-    `${process.env.REACT_APP_EXPRESS_SERVER}postPredictions${divider}${day}`,
-    {
+    `${process.env.REACT_APP_EXPRESS_SERVER}postPredictions${divider}${day}`, {
       method: "POST",
       headers: {
         Accept: "application/json",
         "Content-Type": "application/json",
       },
       body: JSON.stringify({ predictions }),
-    }
-  );
+    });
 }

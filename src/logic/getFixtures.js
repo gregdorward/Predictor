@@ -64,8 +64,6 @@ async function createFixture(match, result) {
 
 var myHeaders = new Headers();
 myHeaders.append("Origin", "https://gregdorward.github.io");
-myHeaders.append('Access-Control-Allow-Credentials', 'true');
-
 
 var requestOptions = {
   method: "GET",
@@ -118,12 +116,12 @@ export async function generateFixtures(day, radioState) {
   var isFormStored;
   let storedForm = await fetch(
     `${process.env.REACT_APP_EXPRESS_SERVER}form${day}`, {
+      method: "GET",
       headers: {
         Accept: "application/json",
         "Content-Type": "application/json",
       },
-    }
-  );
+    });
   if (storedForm.status === 200) {
     await storedForm.json().then((form) => {
       formArray = Array.from(form.form.allForm);
@@ -358,36 +356,3 @@ export async function generateFixtures(day, radioState) {
     });
   }
 }
-
-// export async function generatePriorFixtures(radioState) {
-//   console.log("CALLED")
-//   let radioValue = parseInt(radioState);
-
-//   let index;
-//   if (radioValue === 5) {
-//     index = 0;
-//   } else if (radioValue === 6) {
-//     index = 1;
-//   } else if (radioValue === 10) {
-//     index = 2;
-//   }
-
-//   fixtureResponse = await fetch("http://localhost:5000/allGames")
-
-//   await fixtureResponse.json().then((fixtures) => {
-//     console.log(fixtures.fixtures.matches)
-//     fixtureArray = fixtures.fixtures.matches;
-//   });
-
-//   for (let i = 0; i < orderedLeagues.length; i++) {
-//     leagueGames = fixtureArray.filter(
-//       (game) => game.competition_id === orderedLeagues[i].element.id
-//     );
-//     for (const fixture of leagueGames) {
-
-//       resultedMatches.push(fixture);
-
-//       await createResultedFixtures(fixture, true);
-//     }
-//   }
-// }
