@@ -115,7 +115,7 @@ export async function generateFixtures(day, radioState) {
   let formArray;
   var isFormStored;
   let storedForm = await fetch(
-    `${proxyurl}${process.env.REACT_APP_EXPRESS_SERVER}form${day}`, {
+    `${process.env.REACT_APP_EXPRESS_SERVER}form${day}`, {
       method: "GET",
       headers: {
         Accept: "application/json",
