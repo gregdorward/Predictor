@@ -300,7 +300,7 @@ export async function getScorePrediction(day) {
     await storedPredictions.json().then((predictions) => {
       console.log("these are the predictions");
       console.log(predictions);
-      predictionArray = predictions.fixtures.predictions;
+      predictionArray = predictions.predictions;
     });
   }
   let i = 0;

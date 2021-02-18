@@ -123,7 +123,8 @@ export async function generateFixtures(day, radioState) {
     });
   if (storedForm.status === 200) {
     await storedForm.json().then((form) => {
-      formArray = Array.from(form.form.allForm);
+      console.log(form)
+      formArray = Array.from(form.allForm);
       isFormStored = true;
       allForm = formArray;
     });
