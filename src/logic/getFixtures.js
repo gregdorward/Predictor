@@ -49,6 +49,7 @@ export async function diff(a, b) {
 
 export let allForm = [];
 
+
 async function createFixture(match, result) {
   match.game = match.homeTeam + " v " + match.awayTeam;
 
@@ -98,6 +99,10 @@ export async function generateFixtures(day, radioState) {
       break;
   }
 
+
+
+
+
   fixtureResponse = await fetch(proxyurl + url);
 
   await fixtureResponse.json().then((fixtures) => {
@@ -123,7 +128,6 @@ export async function generateFixtures(day, radioState) {
     });
   if (storedForm.status === 200) {
     await storedForm.json().then((form) => {
-      console.log(form)
       formArray = Array.from(form.allForm);
       isFormStored = true;
       allForm = formArray;

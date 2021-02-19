@@ -263,12 +263,14 @@ function getSuccessMeasure(fixtures) {
 }
 
 var tips = [];
+var longShotTips = [];
 var accumulatedOdds = 1;
 let predictions = [];
 
 export async function getScorePrediction(day) {
   let radioSelected = parseInt(selectedOption);
   tips = [];
+  longShotTips = [];
   accumulatedOdds = 1;
 
   let index;
@@ -283,44 +285,36 @@ export async function getScorePrediction(day) {
     index = 2;
     divider = 10;
   }
-  let predictionArray = [];
-  let storedPredictions = await fetch(
-    `${process.env.REACT_APP_EXPRESS_SERVER}${day}Predictions${divider}`,
-    {
-      method: "GET",
-      headers: {
-        Accept: "application/json",
-      },
-    }
-  );
+  // let predictionArray = [];
+  // let storedPredictions = await fetch(
+  //   `${process.env.REACT_APP_EXPRESS_SERVER}${day}Predictions${divider}`,
+  //   {
+  //     method: "GET",
+  //     headers: {
+  //       Accept: "application/json",
+  //     },
+  //   }
+  // );
 
-  predictions = [];
+  // predictions = [];
 
-  if (storedPredictions.status === 200) {
-    await storedPredictions.json().then((predictions) => {
-      console.log("these are the predictions");
-      console.log(predictions);
-      predictionArray = predictions.predictions;
-    });
-  }
-  let i = 0;
+  // if (storedPredictions.status === 200) {
+  //   await storedPredictions.json().then((predictions) => {
+  //     console.log("these are the predictions");
+  //     console.log(predictions);
+  //     predictionArray = predictions.predictions;
+  //   });
+  // }
+  // let i = 0;
   let makePostRequest = false;
 
   await Promise.all(
     matches.map(async (match) => {
       // if there are no stored predictions, calculate them based on live data
-      let thisPrediction = predictionArray.find((game) => game.id === match.id);
-      console.log(thisPrediction);
-      console.log(predictionArray);
-      if (thisPrediction) {
+
+      if (match) {
         switch (true) {
-          case match.status === "complete":
-            console.log(thisPrediction.game);
-            match.goalsA = thisPrediction.goalsA;
-            match.goalsB = thisPrediction.goalsB;
-            console.log("fetching stored prediction - complete");
-            break;
-          case match.status === "incomplete":
+          case match.status === "!suspended":
             [match.goalsA, match.goalsB] = await calculateScore(
               match,
               index,
@@ -329,7 +323,7 @@ export async function getScorePrediction(day) {
             );
             makePostRequest = true;
             console.log(match.game);
-            console.log("fetching new prediction - incomplete");
+            console.log("fetching prediction");
             break;
           case match.status === "suspended":
             match.goalsA = "P";
@@ -356,13 +350,13 @@ export async function getScorePrediction(day) {
           divider,
           match.id
         );
-        makePostRequest = true;
         console.log(match.game);
         console.log("else clause triggered");
       }
 
       match.predictionOutcome = "unknown";
       let predictionObject;
+      let longShotPredictionObject;
 
       if (match.goalsA - 1 > match.goalsB && match.homeOdds !== 0) {
         if (match.status === "complete" && match.homeTeam === match.winner) {
@@ -400,6 +394,24 @@ export async function getScorePrediction(day) {
         tips.push(predictionObject);
       }
 
+      if (match.goalsA > match.goalsB && match.homeOdds >= 2.5) {
+        longShotPredictionObject = {
+          team: match.homeTeam,
+          odds: match.homeOdds,
+          outcome: match.predictionOutcome,
+        };
+        longShotTips.push(longShotPredictionObject);
+      } else if (match.goalsA < match.goalsB && match.awayOdds >= 2.5) {
+        console.log("printing game going into long shot predictions")
+        console.log(match)
+        longShotPredictionObject = {
+          team: match.awayTeam,
+          odds: match.awayOdds,
+          outcome: match.predictionOutcome,
+        };
+        longShotTips.push(longShotPredictionObject);
+      }
+
       ReactDOM.render(
         <Fixture
           fixtures={matches}
@@ -434,33 +446,47 @@ export async function getScorePrediction(day) {
           document.getElementById("bestPredictions")
         );
       }
+
+      if (longShotTips.length > 0) {
+        ReactDOM.render(
+          <div>
+            <Fragment>
+              <Collapsable
+                buttonText={"Longshot predictions"}
+                text={
+                  <ul className="LongshotPredictions">
+                    <lh>To win</lh>
+                    {longShotTips.map((tip) => (
+                      <li className={tip.outcome} key={tip.team}>
+                        {tip.team} odds: {tip.odds}
+                      </li>
+                    ))}
+                  </ul>
+                }
+              />
+            </Fragment>
+          </div>,
+          document.getElementById("longShots")
+        );
+      }
       console.log(match);
       predictions.push(match);
-      console.log("pushed");
-      console.log("current state of predictions...");
-      console.log("TYPE");
-      console.log(typeof predictions);
-      console.log(predictions);
-      i = i + 1;
     })
   );
   console.log("Node env");
   console.log(process.env.NODE_ENV);
-  if (makePostRequest === true && day !== "yesterdaysFixtures") {
-    postFixedPredictions(predictions, divider, day);
-  }
 
   await getSuccessMeasure(matches);
 }
 
-async function postFixedPredictions(predictions, divider, day) {
-  await fetch(
-    `${process.env.REACT_APP_EXPRESS_SERVER}postPredictions${divider}${day}`, {
-      method: "POST",
-      headers: {
-        Accept: "application/json",
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ predictions }),
-    });
-}
+// async function postFixedPredictions(predictions, divider, day) {
+//   await fetch(
+//     `${process.env.REACT_APP_EXPRESS_SERVER}postPredictions${divider}${day}`, {
+//       method: "POST",
+//       headers: {
+//         Accept: "application/json",
+//         "Content-Type": "application/json",
+//       },
+//       body: JSON.stringify({ predictions }),
+//     });
+// }

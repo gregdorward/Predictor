@@ -457,6 +457,20 @@ ul {
   font-size: 2.5vw;
 }
 
+.LongshotPredictions {
+  padding: 0px;
+}
+
+
+.LongshotPredictions li{
+  font-size: 2.5vw;
+  padding-top: 15px;
+}
+
+.LongshotPredictions lh{
+  font-size: 2.5vw;
+}
+
 .Won {
   color: #addfad
 }

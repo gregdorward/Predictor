@@ -35,6 +35,8 @@ export var fixtureList = [];
 //   // spinner.hideSpinner();
 // })();
 
+
+
 const availableLeagues = [];
 export var orderedLeagues = [];
 
@@ -174,6 +176,7 @@ function App() {
       <div id="Buttons" />
       <div id="successMeasure" />
       <div id="bestPredictions" />
+      <div id="longShots"/>
       <div id="homeBadge" />
       <div id="FixtureContainer"></div>
     </div>
