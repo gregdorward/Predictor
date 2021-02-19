@@ -112,9 +112,16 @@ export async function calculateScore(match, index, divider, id) {
   let goalieAway = formAway.finalGoalieRating;
 
   let defenceScoreAway = (formAway.defenceScore + goalieAway) / 2;
+  let oddsWeightingHome;
+  let oddsWeightingAway;
+  if(homeRaw !== 0) {
+    oddsWeightingHome = 0
+    oddsWeightingAway = 0
+  } else {
+    oddsWeightingHome = parseFloat(homeRaw);
+    oddsWeightingAway = parseFloat(awayRaw);
+  }
 
-  let oddsWeightingHome = parseFloat(homeRaw);
-  let oddsWeightingAway = parseFloat(awayRaw);
 
   let homeWeighting = (
     (await diff(oddsWeightingHome, oddsWeightingAway)) * 2

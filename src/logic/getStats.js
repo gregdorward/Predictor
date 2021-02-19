@@ -20,15 +20,13 @@ export async function createStatsDiv(game) {
     divider = 10;
   }
 
-  console.log(allForm)
   let gameStats = allForm.find((match) => match.id === game.id)
 
 
   let homeTeam = gameStats.home.teamName;
   let awayTeam = gameStats.away.teamName;
 
-  // let homeTeam = game.homeTeam;
-  // let awayTeam = game.awayTeam;
+
   let time = game.time;
 
   const formDataMatch = [];
