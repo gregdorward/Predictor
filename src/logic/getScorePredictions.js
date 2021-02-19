@@ -41,7 +41,7 @@ export async function calculateScore(match, index, divider, id) {
       teams[i][index].finishingScore = 0.0;
     }
 
-    if (parseFloat(teams[i][index].ConcededOverall) !== 0) {
+    if (teams[i][index].ConcededOverall !== 0) {
       teams[i][index].goalieRating = parseFloat(
         (
           teams[i][index].XGAgainstAvg /
@@ -49,7 +49,7 @@ export async function calculateScore(match, index, divider, id) {
         ).toFixed(2)
       );
     } else {
-      teams[i].goalieRating = 0;
+      teams[i][index].goalieRating = 2;
     }
 
     teams[i][index].defenceScore = parseInt(
@@ -91,8 +91,9 @@ export async function calculateScore(match, index, divider, id) {
       teams[i][index].XG + parseFloat(teams[i][index].finalFinishingScore)
     );
   }
-
-  if (match.homeOdds.toFixed(1) === 0.0 && match.awayOdds.toFixed(1) === 0.0) {
+  console.log("home odds");
+  console.log(match.homeOdds);
+  if (match.homeOdds === 0 && match.awayOdds === 0) {
     homeRaw = 0.0;
     awayRaw = 0.0;
   } else {
@@ -102,6 +103,11 @@ export async function calculateScore(match, index, divider, id) {
 
   let formHome = teams[0][index];
   let formAway = teams[1][index];
+
+  let finalFinishingScoreHome =
+    parseFloat(teams[0][index].finalFinishingScore) / 2;
+  let finalFinishingScoreAway =
+    parseFloat(teams[1][index].finalFinishingScore) / 2;
 
   // let defenceHome = parseFloat(formHome.defenceRating);
   let goalieHome = formHome.finalGoalieRating;
@@ -114,21 +120,33 @@ export async function calculateScore(match, index, divider, id) {
   let defenceScoreAway = (formAway.defenceScore + goalieAway) / 2;
   let oddsWeightingHome;
   let oddsWeightingAway;
-  if(homeRaw !== 0) {
-    oddsWeightingHome = 0
-    oddsWeightingAway = 0
+
+  console.log("home raw");
+  console.log(homeRaw);
+  console.log("away raw");
+  console.log(awayRaw);
+  if (homeRaw === 0.0) {
+    oddsWeightingHome = 0;
+    oddsWeightingAway = 0;
   } else {
     oddsWeightingHome = parseFloat(homeRaw);
     oddsWeightingAway = parseFloat(awayRaw);
   }
 
+  let homeWeighting = (await diff(oddsWeightingHome, oddsWeightingAway)) * 2;
 
-  let homeWeighting = (
-    (await diff(oddsWeightingHome, oddsWeightingAway)) * 2
-  ).toFixed(2);
+  console.log(match.homeTeam);
+  console.log("homeWeighting");
+  console.log(homeWeighting);
+
   let awayWeighting = (
     (await diff(oddsWeightingAway, oddsWeightingHome)) * 2
   ).toFixed(2);
+
+  console.log(match.awayTeam);
+  console.log("awayWeighting");
+  console.log(awayWeighting);
+
 
   let homeXGConceded = parseFloat(formHome.XGAgainstAvg);
   let awayXGConceded = parseFloat(formAway.XGAgainstAvg);
@@ -137,17 +155,17 @@ export async function calculateScore(match, index, divider, id) {
   let awayCalculation;
   if (defenceScoreAway > 0) {
     homeCalculation =
-      parseFloat(homeWeighting - defenceScoreAway / 10 + 0.5) + awayXGConceded;
+      parseFloat(homeWeighting - defenceScoreAway / 12 + 0.5) + awayXGConceded;
   } else {
     homeCalculation =
-      parseFloat(homeWeighting + defenceScoreAway / 10 + 0.5) + awayXGConceded;
+      parseFloat(homeWeighting + defenceScoreAway / 12 + 0.5) + awayXGConceded;
   }
   if (defenceScoreHome > 0) {
     awayCalculation =
-      parseFloat(awayWeighting - defenceScoreHome / 10 + 0.5) + homeXGConceded;
+      parseFloat(awayWeighting - defenceScoreHome / 12 + 0.5) + homeXGConceded;
   } else {
     awayCalculation =
-      parseFloat(awayWeighting + defenceScoreHome / 10 + 0.5) + homeXGConceded;
+      parseFloat(awayWeighting + defenceScoreHome / 12 + 0.5) + homeXGConceded;
   }
 
   //TODO try form.home.XG in place of this
@@ -167,21 +185,22 @@ export async function calculateScore(match, index, divider, id) {
 
   finalHomeGoals = Math.round(
     parseFloat(
-      homeGoals * 3 +
+      homeGoals * 4 +
         formHome.ScoredOverall / divider +
-        formHome.forecastedXG +
-        formAway.ConcededOverall / divider
-    ) / 6
+        (formHome.XG + finalFinishingScoreHome) / 2 +
+        (formAway.ConcededOverall / divider) * 2
+    ) / 8
   );
 
   finalAwayGoals = Math.round(
     parseFloat(
-      awayGoals * 3 +
+      awayGoals * 4 +
         formAway.ScoredOverall / divider +
-        formAway.forecastedXG +
-        formHome.ConcededOverall / divider
-    ) / 6
+        (formAway.XG + finalFinishingScoreAway) / 2 +
+        (formHome.ConcededOverall / divider) * 2
+    ) / 8
   );
+
 
   // console.log("DIVIDER");
   // console.log(divider);
@@ -197,13 +216,15 @@ export async function calculateScore(match, index, divider, id) {
   // console.log("forecastedXG");
   // console.log(formHome.forecastedXG);
   // console.log("seasonConcededNum_overall");
-  // console.log(formAway.ConcededOverall);
+  // console.log(formHome.ConcededOverall);
   // console.log("homeCalculation");
   // console.log(homeCalculation);
   // console.log("defenceScoreHome");
   // console.log(defenceScoreHome);
   // console.log("homeWeighting");
   // console.log(homeWeighting);
+  // console.log("finalFinishingScoreHome");
+  // console.log(finalFinishingScoreHome);
 
   // console.log(match.awayTeam);
   // console.log("awayOdds");
@@ -215,19 +236,22 @@ export async function calculateScore(match, index, divider, id) {
   // console.log("forecastedXG");
   // console.log(formAway.forecastedXG);
   // console.log("seasonConcededNum_overall");
-  // console.log(formHome.ConcededOverall);
+  // console.log(formAway.ConcededOverall);
   // console.log("awayCalculation");
   // console.log(awayCalculation);
   // console.log("defenceScoreAway");
   // console.log(defenceScoreAway);
   // console.log("awayWeighting");
   // console.log(awayWeighting);
+  // console.log("finalFinishingScoreAway");
+  // console.log(finalFinishingScoreAway);
 
   // console.log("FINAL HOME GOALS");
   // console.log(finalHomeGoals);
 
   // console.log("FINAL AWAY GOALS");
   // console.log(finalAwayGoals);
+  
   match.homePrediction = finalHomeGoals;
   match.awayPrediction = finalAwayGoals;
   if (match.status === "suspended") {
@@ -402,6 +426,14 @@ export async function getScorePrediction(day) {
       }
 
       if (match.goalsA > match.goalsB && match.homeOdds >= 2.5) {
+        if (match.status === "complete" && match.homeTeam === match.winner) {
+          match.predictionOutcome = "Won";
+        } else if (
+          match.status === "complete" &&
+          match.homeTeam !== match.winner
+        ) {
+          match.predictionOutcome = "Lost";
+        }
         longShotPredictionObject = {
           team: match.homeTeam,
           odds: match.homeOdds,
@@ -409,8 +441,16 @@ export async function getScorePrediction(day) {
         };
         longShotTips.push(longShotPredictionObject);
       } else if (match.goalsA < match.goalsB && match.awayOdds >= 2.5) {
-        console.log("printing game going into long shot predictions")
-        console.log(match)
+        if (match.status === "complete" && match.awayTeam === match.winner) {
+          match.predictionOutcome = "Won";
+        } else if (
+          match.status === "complete" &&
+          match.awayTeam !== match.winner
+        ) {
+          match.predictionOutcome = "Lost";
+        }
+        console.log("printing game going into long shot predictions");
+        console.log(match);
         longShotPredictionObject = {
           team: match.awayTeam,
           odds: match.awayOdds,
