@@ -56,13 +56,13 @@ function GetDivider(fixture) {
     if (outcome === prediction) {
       switch (true) {
         case outcome === 0:
-          fixture.fixture.profit = fixture.fixture.homeOdds
+          fixture.fixture.profit = (fixture.fixture.homeOdds -1)
           break;
         case outcome === 1:
-          fixture.fixture.profit = fixture.fixture.drawOdds
+          fixture.fixture.profit = (fixture.fixture.drawOdds -1)
           break;
         case outcome === 2:
-          fixture.fixture.profit = fixture.fixture.awayOdds
+          fixture.fixture.profit = (fixture.fixture.awayOdds -1)
           break;
         default:
           break;
