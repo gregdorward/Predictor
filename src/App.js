@@ -18,6 +18,8 @@ require("dotenv").config();
 
 export const proxyurl = "https://safe-caverns-99679.herokuapp.com/";
 export var fixtureList = [];
+export let allLeagueData = [];
+let leagueObject;
 
 // var slider = document.getElementById("myRange");
 
@@ -35,9 +37,7 @@ export var fixtureList = [];
 //   // spinner.hideSpinner();
 // })();
 
-
-
-const availableLeagues = [];
+export const availableLeagues = [];
 export var orderedLeagues = [];
 
 (async function getLeagueList() {
@@ -109,6 +109,58 @@ export var orderedLeagues = [];
 
     orderedLeagues = mapOrder(availableLeagues, leagueOrder, "id");
   }
+  console.log(process.env.REACT_APP_EXPRESS_SERVER);
+
+  let response;
+  let responseBody;
+
+  ReactDOM.render(
+    <div className="LoadingText">
+      Loading form data. This might take a while if you're the first user
+      today...
+    </div>,
+    document.getElementById("RadioButtons")
+  );
+
+  let leagueData = await fetch(
+    `${process.env.REACT_APP_EXPRESS_SERVER}leagueData`
+  );
+
+  if (leagueData.status === 200) {
+    allLeagueData = await leagueData.json();
+    // allLeagueData.push(response)
+  } else {
+    for (let x = 0; x < orderedLeagues.length; x++) {
+      response = await fetch(
+        `${proxyurl}https://api.footystats.org/league-season?key=${process.env.REACT_APP_API_KEY}&season_id=${orderedLeagues[x].element.id}`
+      );
+      responseBody = await response.json();
+
+      leagueObject = {
+        name: responseBody.data.english_name,
+        competitionId: responseBody.data.id,
+        homeWinPercentage: responseBody.data.homeWinPercentage,
+        awayWinPercentage: responseBody.data.awayWinPercentage,
+        drawPercentage: responseBody.data.drawPercentage,
+        image: responseBody.data.image,
+        averageGoals: responseBody.data.seasonAVG_overall,
+        homeAttackAdvantagePercentage:
+          responseBody.data.homeAttackAdvantagePercentage,
+        homeDefenceAdvantagePercentage:
+          responseBody.data.homeDefenceAdvantagePercentage,
+      };
+      allLeagueData.push(leagueObject);
+      JSON.stringify(allLeagueData);
+    }
+    await fetch(`${process.env.REACT_APP_EXPRESS_SERVER}leagueData`, {
+      method: "POST",
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify( allLeagueData ),
+    });
+  }
 
   ReactDOM.render(
     <div className="LastXGames">
@@ -144,19 +196,25 @@ export var orderedLeagues = [];
       <Button
         text={"Get Yesterday's Fixtures"}
         onClickEvent={async () =>
-          fixtureList.push(await generateFixtures("yesterdaysFixtures", selectedOption))
+          fixtureList.push(
+            await generateFixtures("yesterdaysFixtures", selectedOption)
+          )
         }
       />
       <Button
         text={"Get Today's Fixtures"}
         onClickEvent={async () =>
-          fixtureList.push(await generateFixtures("todaysFixtures", selectedOption))
+          fixtureList.push(
+            await generateFixtures("todaysFixtures", selectedOption)
+          )
         }
       />
       <Button
         text={"Get Tomorrow's Fixtures"}
         onClickEvent={async () =>
-          fixtureList.push(await generateFixtures("tomorrowsFixtures", selectedOption))
+          fixtureList.push(
+            await generateFixtures("tomorrowsFixtures", selectedOption)
+          )
         }
       />
     </div>,
@@ -168,6 +226,7 @@ function App() {
   return (
     <div className="App">
       <Header />
+      <div id="LoadingContainer" className="LoadingContainer" />
       <div id="RadioContainer" className="RadioContainer">
         <div id="RadioText" />
         <div id="RadioButtons" />
@@ -176,7 +235,7 @@ function App() {
       <div id="Buttons" />
       <div id="successMeasure" />
       <div id="bestPredictions" />
-      <div id="longShots"/>
+      <div id="longShots" />
       <div id="homeBadge" />
       <div id="FixtureContainer"></div>
     </div>

@@ -1,10 +1,11 @@
 import React from "react";
 import ReactDOM from "react-dom";
-import { orderedLeagues, proxyurl } from "../App";
+import { allLeagueData, orderedLeagues, proxyurl } from "../App";
 import { getForm, applyColour } from "./getForm";
 import { Fixture } from "../components/Fixture";
 import { Button } from "../components/Button";
 import { getScorePrediction } from "../logic/getScorePredictions";
+
 require("dotenv").config();
 
 console.log(process.env.REACT_APP_EXPRESS_SERVER);
@@ -48,7 +49,6 @@ export async function diff(a, b) {
 }
 
 export let allForm = [];
-
 
 async function createFixture(match, result) {
   match.game = match.homeTeam + " v " + match.awayTeam;
@@ -99,10 +99,6 @@ export async function generateFixtures(day, radioState) {
       break;
   }
 
-
-
-
-
   fixtureResponse = await fetch(proxyurl + url);
 
   await fixtureResponse.json().then((fixtures) => {
@@ -112,30 +108,44 @@ export async function generateFixtures(day, radioState) {
   ReactDOM.render(
     <Button
       text={"Get Predictions"}
-      onClickEvent={() => getScorePrediction(day)}
+      onClickEvent={() => getScorePrediction(day, allLeagueData)}
     />,
     document.getElementById("Buttons")
   );
   let form;
   let formArray;
   var isFormStored;
+  var isStoredLocally;
   let storedForm = await fetch(
-    `${process.env.REACT_APP_EXPRESS_SERVER}form${day}`, {
+    `${process.env.REACT_APP_EXPRESS_SERVER}form${day}`,
+    {
       method: "GET",
       headers: {
         Accept: "application/json",
       },
-    });
-  if (storedForm.status === 200) {
+    }
+  );
+  if (storedForm.status === 201) {
     await storedForm.json().then((form) => {
       formArray = Array.from(form.allForm);
       isFormStored = true;
+      isStoredLocally = false;
+      allForm = formArray;
+    });
+  } else if (storedForm.status === 200){
+    await storedForm.json().then((form) => {
+      formArray = Array.from(form.allForm);
+      isFormStored = true;
+      isStoredLocally = true;
       allForm = formArray;
     });
   } else {
     console.log("Stored form not fetched");
     isFormStored = false;
+    isStoredLocally = false
   }
+
+
 
   for (let i = 0; i < orderedLeagues.length; i++) {
     leagueGames = fixtureArray.filter(
@@ -349,7 +359,7 @@ export async function generateFixtures(day, radioState) {
       await createFixture(match, false);
     }
   }
-  if (!isFormStored) {
+  if (!isStoredLocally) {
     await fetch(`${process.env.REACT_APP_EXPRESS_SERVER}allForm${day}`, {
       method: "POST",
       headers: {
