@@ -35,7 +35,7 @@ let [
   yesterdayYear,
 ] = yesterdaysDate.toLocaleDateString("en-US").split("/");
 
-export const yesterday = `https://api.footystats.org/todays-matches?key=${process.env.REACT_APP_API_KEY}&date=${yesterdayYear}-${yesterdayDay}-${yesterdayMonth}`;
+export const yesterday = `https://api.footystats.org/todays-matches?key=${process.env.REACT_APP_API_KEY}&date=${yesterdayYear}-${yesterdayDay}-yesterdayMonth`;
 export const today = `https://api.footystats.org/todays-matches?key=${process.env.REACT_APP_API_KEY}&date=${year}-${day}-${month}`;
 export const tomorrow = `https://api.footystats.org/todays-matches?key=${process.env.REACT_APP_API_KEY}&date=${tomorrowYear}-${tomorrowDay}-${tomorrowMonth}`;
 
@@ -136,7 +136,7 @@ export async function generateFixtures(day, radioState) {
     await storedForm.json().then((form) => {
       formArray = Array.from(form.allForm);
       isFormStored = true;
-      isStoredLocally = true;
+      isStoredLocally = false;
       allForm = formArray;
     });
   } else {

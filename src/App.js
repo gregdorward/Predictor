@@ -126,9 +126,17 @@ export var orderedLeagues = [];
     `${process.env.REACT_APP_EXPRESS_SERVER}leagueData`
   );
 
-  if (leagueData.status === 200) {
+  if (leagueData.status === 200 || leagueData.status === 404) {
     allLeagueData = await leagueData.json();
-    // allLeagueData.push(response)
+    
+    await fetch(`${process.env.REACT_APP_EXPRESS_SERVER}leagueData`, {
+      method: "POST",
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify( allLeagueData ),
+    });
   } else {
     for (let x = 0; x < orderedLeagues.length; x++) {
       response = await fetch(
