@@ -91,14 +91,17 @@ export async function calculateScore(match, index, divider, id, allLeagueData) {
         teams[i][index].ConcededOverall / divider;
 
       switch (true) {
-        case defenceScore < 20:
-          teams[i][index].defenceRating = 1.45;
+        case defenceScore === 0:
+          teams[i][index].defenceRating = 3;
+          break;
+        case defenceScore > 0 && defenceScore < 20:
+          teams[i][index].defenceRating = 2;
           break;
         case defenceScore >= 20 && defenceScore < 30:
-          teams[i][index].defenceRating = 1.35;
+          teams[i][index].defenceRating = 1.6;
           break;
           case defenceScore >= 30 && defenceScore < 40:
-            teams[i][index].defenceRating = 1.25;
+            teams[i][index].defenceRating = 1.1;
             break;
         case defenceScore >= 40 && defenceScore < 50:
           teams[i][index].defenceRating = 1;
@@ -107,13 +110,13 @@ export async function calculateScore(match, index, divider, id, allLeagueData) {
           teams[i][index].defenceRating = 0.9;
           break;
         case defenceScore >= 60 && defenceScore < 70:
-          teams[i][index].defenceRating = 0.8;
-          break;
-        case defenceScore >= 70 && defenceScore < 80:
           teams[i][index].defenceRating = 0.7;
           break;
-        case defenceScore >= 80:
+        case defenceScore >= 70 && defenceScore < 80:
           teams[i][index].defenceRating = 0.5;
+          break;
+        case defenceScore >= 80:
+          teams[i][index].defenceRating = 0.4;
           break;
         default:
           break;
@@ -127,18 +130,13 @@ export async function calculateScore(match, index, divider, id, allLeagueData) {
         teams[i][index].goalieRating / gameTotalWeighting + 1
       );
 
-      // if (teams[i][index].XGConcededAdjustment < 0) {
-      //   //set a baseline for the goalie score
-      //   teams[i][index].XGConcededAdjustment = 0;
-      // }
-
       teams[i][index].forecastedXG = parseFloat(teams[i][index].scoredAverage);
 
       teams[i][index].forecastedXGConceded = parseFloat(
         teams[i][index].concededAverage
       );
 
-      teams[0][index].goalsBasedOnAverages = Math.floor(
+      teams[0][index].goalsBasedOnAverages = Math.round(
         parseFloat(
           (teams[0][index].forecastedXG +
             teams[1][index].forecastedXGConceded) /
@@ -146,7 +144,7 @@ export async function calculateScore(match, index, divider, id, allLeagueData) {
         )
       );
 
-      teams[1][index].goalsBasedOnAverages = Math.floor(
+      teams[1][index].goalsBasedOnAverages = Math.round(
         parseFloat(
           (teams[1][index].forecastedXG +
             teams[0][index].forecastedXGConceded) /
@@ -206,17 +204,6 @@ export async function calculateScore(match, index, divider, id, allLeagueData) {
     homeCalculation = parseFloat(homeWeighting);
     awayCalculation = parseFloat(awayWeighting);
 
-    // let leagueHomeWeighting = allLeagueData.find(
-    //   ({ competitionId }) => competitionId === match.competition_id
-    // ).homeWinPercentage;
-
-    // let leagueAwayWeighting = allLeagueData.find(
-    //   ({ competitionId }) => competitionId === match.competition_id
-    // ).awayWinPercentage;
-
-    // let leagueDrawWeighting = allLeagueData.find(
-    //   ({ competitionId }) => competitionId === match.competition_id
-    // ).drawPercentage;
 
     let averageLeageGoals = allLeagueData.find(
       ({ competitionId }) => competitionId === match.competition_id
@@ -233,11 +220,6 @@ export async function calculateScore(match, index, divider, id, allLeagueData) {
     let homeDefenceAdvantagePercentage = allLeagueData.find(
       ({ competitionId }) => competitionId === match.competition_id
     ).homeDefenceAdvantagePercentage;
-
-    // let homeAdvantage =
-    //   (await diff(leagueHomeWeighting, leagueAwayWeighting)) / 100;
-    // let awayAdvantage =
-    //   (await diff(leagueAwayWeighting, leagueHomeWeighting)) / 100;
 
     const homeGoalWeighting = homeAttackAdvantagePercentage / 100;
     const HomeDefenceWeighting = homeDefenceAdvantagePercentage / 100;
@@ -287,16 +269,6 @@ export async function calculateScore(match, index, divider, id, allLeagueData) {
     if (awayGoalswithAwayWeighting < 0) {
       awayGoalswithAwayWeighting = 0;
     }
-
-    // if (difference >= 2.5) {
-    //   homeGoalswithHomeWeighting = homeGoalswithHomeWeighting * 0.9;
-    //   awayGoalswithAwayWeighting = awayGoalswithAwayWeighting * 0.9;
-    // }
-
-    // if (difference < 2.5) {
-    //   homeGoalswithHomeWeighting = homeGoalswithHomeWeighting * 1.1;
-    //   awayGoalswithAwayWeighting = awayGoalswithAwayWeighting * 1.1;
-    // }
 
     let finalHomeGoals;
     let finalAwayGoals;
@@ -375,7 +347,7 @@ export async function calculateScore(match, index, divider, id, allLeagueData) {
       parseFloat(
         // XGAdjustedHomeGoals
         // formHome.goalsBasedOnAverages
-        (XGAdjustedHomeGoals * 8 + formHome.goalsBasedOnAverages * 2) / 10
+        (XGAdjustedHomeGoals * 5 + formHome.goalsBasedOnAverages * 5) / 10
       )
     );
 
@@ -383,7 +355,7 @@ export async function calculateScore(match, index, divider, id, allLeagueData) {
       parseFloat(
         // XGAdjustedAwayGoals
         // formAway.goalsBasedOnAverages
-        (XGAdjustedAwayGoals * 8 + formAway.goalsBasedOnAverages * 2) / 10
+        (XGAdjustedAwayGoals * 5 + formAway.goalsBasedOnAverages * 5) / 10
       )
     );
 

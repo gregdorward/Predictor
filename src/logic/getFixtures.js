@@ -15,6 +15,8 @@ var fixtureArray;
 export const matches = [];
 export const resultedMatches = [];
 var leagueGames = [];
+var lastFiveFormHome;
+var lastFiveFormAway;
 
 export const [day, month, year] = new Date()
   .toLocaleDateString("en-US")
@@ -132,7 +134,7 @@ export async function generateFixtures(day, radioState) {
       isStoredLocally = false;
       allForm = formArray;
     });
-  } else if (storedForm.status === 200){
+  } else if (storedForm.status === 200) {
     await storedForm.json().then((form) => {
       formArray = Array.from(form.allForm);
       isFormStored = true;
@@ -142,10 +144,8 @@ export async function generateFixtures(day, radioState) {
   } else {
     console.log("Stored form not fetched");
     isFormStored = false;
-    isStoredLocally = false
+    isStoredLocally = false;
   }
-
-
 
   for (let i = 0; i < orderedLeagues.length; i++) {
     leagueGames = fixtureArray.filter(
@@ -174,7 +174,24 @@ export async function generateFixtures(day, radioState) {
 
       if (!isFormStored) {
         form = await getForm(match);
+        console.log(form);
         console.log("Pusing match to form object");
+
+        var homeExtract = form[0].data[0].stats.additional_info.replace(
+          /["']/g,
+          ""
+        );
+
+        var slug = homeExtract.split(",53:").pop().toUpperCase();
+        lastFiveFormHome = [...slug.substring(0, 5)];
+
+        var awayExtract = form[1].data[0].stats.additional_info.replace(
+          /["']/g,
+          ""
+        );
+
+        var slug = awayExtract.split(",53:").pop().toUpperCase();
+        lastFiveFormAway = [...slug.substring(0, 5)];
 
         allForm.push({
           id: match.id,
@@ -203,6 +220,16 @@ export async function generateFixtures(day, radioState) {
               AverageDangerousAttacks: parseFloat(
                 form[0].data[0].stats.dangerous_attacks_avg_overall
               ),
+              PPG: parseFloat(form[0].data[0].stats.seasonPPG_overall),
+              AttacksHome: parseFloat(form[0].data[0].stats.attacks_avg_home),
+              AttacksAway: parseFloat(form[0].data[0].stats.attacks_avg_away),
+              DangerousAttacksHome: parseFloat(
+                form[0].data[0].stats.dangerous_attacks_avg_home
+              ),
+              DangerousAttacksAway: parseFloat(
+                form[0].data[0].stats.dangerous_attacks_avg_away
+              ),
+              LastFiveForm: lastFiveFormHome,
             },
             1: {
               XG: parseFloat(form[0].data[1].stats.xg_for_avg_overall),
@@ -227,6 +254,16 @@ export async function generateFixtures(day, radioState) {
               AverageDangerousAttacks: parseFloat(
                 form[0].data[1].stats.dangerous_attacks_avg_overall
               ),
+              PPG: parseFloat(form[0].data[1].stats.seasonPPG_overall),
+              AttacksHome: parseFloat(form[0].data[1].stats.attacks_avg_home),
+              AttacksAway: parseFloat(form[0].data[1].stats.attacks_avg_away),
+              DangerousAttacksHome: parseFloat(
+                form[0].data[1].stats.dangerous_attacks_avg_home
+              ),
+              DangerousAttacksAway: parseFloat(
+                form[0].data[1].stats.dangerous_attacks_avg_away
+              ),
+              LastFiveForm: lastFiveFormHome,
             },
             2: {
               XG: parseFloat(form[0].data[2].stats.xg_for_avg_overall),
@@ -251,6 +288,16 @@ export async function generateFixtures(day, radioState) {
               AverageDangerousAttacks: parseFloat(
                 form[0].data[2].stats.dangerous_attacks_avg_overall
               ),
+              PPG: parseFloat(form[0].data[2].stats.seasonPPG_overall),
+              AttacksHome: parseFloat(form[0].data[2].stats.attacks_avg_home),
+              AttacksAway: parseFloat(form[0].data[2].stats.attacks_avg_away),
+              DangerousAttacksHome: parseFloat(
+                form[0].data[2].stats.dangerous_attacks_avg_home
+              ),
+              DangerousAttacksAway: parseFloat(
+                form[0].data[2].stats.dangerous_attacks_avg_away
+              ),
+              LastFiveForm: lastFiveFormHome,
             },
           },
           away: {
@@ -278,6 +325,16 @@ export async function generateFixtures(day, radioState) {
               AverageDangerousAttacks: parseFloat(
                 form[1].data[0].stats.dangerous_attacks_avg_overall
               ),
+              PPG: parseFloat(form[1].data[0].stats.seasonPPG_overall),
+              AttacksHome: parseFloat(form[1].data[0].stats.attacks_avg_home),
+              AttacksAway: parseFloat(form[1].data[0].stats.attacks_avg_away),
+              DangerousAttacksHome: parseFloat(
+                form[1].data[0].stats.dangerous_attacks_avg_home
+              ),
+              DangerousAttacksAway: parseFloat(
+                form[1].data[0].stats.dangerous_attacks_avg_away
+              ),
+              LastFiveForm: lastFiveFormAway,
             },
             1: {
               XG: parseFloat(form[1].data[1].stats.xg_for_avg_overall),
@@ -302,6 +359,16 @@ export async function generateFixtures(day, radioState) {
               AverageDangerousAttacks: parseFloat(
                 form[1].data[1].stats.dangerous_attacks_avg_overall
               ),
+              PPG: parseFloat(form[1].data[1].stats.seasonPPG_overall),
+              AttacksHome: parseFloat(form[1].data[1].stats.attacks_avg_home),
+              AttacksAway: parseFloat(form[1].data[1].stats.attacks_avg_away),
+              DangerousAttacksHome: parseFloat(
+                form[1].data[1].stats.dangerous_attacks_avg_home
+              ),
+              DangerousAttacksAway: parseFloat(
+                form[1].data[1].stats.dangerous_attacks_avg_away
+              ),
+              LastFiveForm: lastFiveFormAway,
             },
             2: {
               XG: parseFloat(form[1].data[2].stats.xg_for_avg_overall),
@@ -326,16 +393,20 @@ export async function generateFixtures(day, radioState) {
               AverageDangerousAttacks: parseFloat(
                 form[1].data[2].stats.dangerous_attacks_avg_overall
               ),
+              PPG: parseFloat(form[1].data[2].stats.seasonPPG_overall),
+              AttacksHome: parseFloat(form[1].data[2].stats.attacks_avg_home),
+              AttacksAway: parseFloat(form[1].data[2].stats.attacks_avg_away),
+              DangerousAttacksHome: parseFloat(
+                form[1].data[2].stats.dangerous_attacks_avg_home
+              ),
+              DangerousAttacksAway: parseFloat(
+                form[1].data[2].stats.dangerous_attacks_avg_away
+              ),
+              LastFiveForm: lastFiveFormAway,
             },
           },
         });
       }
-
-      // match.form.allHomeForm = form[0].data;
-      // match.form.allAwayForm = form[1].data;
-
-      // match.form.homeTeam = form[0].data[index].stats;
-      // match.form.awayTeam = form[1].data[index].stats;
 
       match.homeBadge = fixture.home_image;
       match.awayBadge = fixture.away_image;
@@ -346,6 +417,9 @@ export async function generateFixtures(day, radioState) {
       match.awayPpg = fixture.away_ppg.toFixed(2);
       match.awayFormColour = await applyColour(match.awayPpg);
 
+      match.lastFiveFormHome = lastFiveFormHome;
+      match.lastFiveFormAway = lastFiveFormAway;
+
       match.status = fixture.status;
 
       match.btts_potential = fixture.btts_potential;
@@ -353,6 +427,8 @@ export async function generateFixtures(day, radioState) {
 
       match.homeGoals = fixture.homeGoalCount;
       match.awayGoals = fixture.awayGoalCount;
+
+      console.log(match);
 
       matches.push(match);
 

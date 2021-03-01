@@ -126,7 +126,7 @@ export var orderedLeagues = [];
     `${process.env.REACT_APP_EXPRESS_SERVER}leagueData`
   );
 
-  if (leagueData.status === 100) {
+  if (leagueData.status === 200 || leagueData.status === 404) {
     allLeagueData = await leagueData.json();
     
     await fetch(`${process.env.REACT_APP_EXPRESS_SERVER}leagueData`, {
