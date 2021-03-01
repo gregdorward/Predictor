@@ -17,7 +17,6 @@ function Stats(props) {
     <ul className={props.className}>
       <li key={props.name}>{`Team name - ${props.name}`}</li>
       <li key="last5">
-        {"Last 5: "}
         <span
           className={
             styleForm(props.last5[0])
