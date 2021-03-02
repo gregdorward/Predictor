@@ -35,7 +35,7 @@ let [
   yesterdayYear,
 ] = yesterdaysDate.toLocaleDateString("en-US").split("/");
 
-export const yesterday = `https://api.footystats.org/todays-matches?key=${process.env.REACT_APP_API_KEY}&date=${yesterdayYear}-${yesterdayDay}-${yesterdayMonth}`;
+export const yesterday = `https://api.footystats.org/todays-matches?key=${process.env.REACT_APP_API_KEY}&date=${yesterdayYear}-2-27`;
 export const today = `https://api.footystats.org/todays-matches?key=${process.env.REACT_APP_API_KEY}&date=${year}-${day}-${month}`;
 export const tomorrow = `https://api.footystats.org/todays-matches?key=${process.env.REACT_APP_API_KEY}&date=${tomorrowYear}-${tomorrowDay}-${tomorrowMonth}`;
 
@@ -182,14 +182,40 @@ export async function generateFixtures(day, radioState) {
             teamName: match.homeTeam,
             0: {
               XG: parseFloat(form[0].data[0].stats.xg_for_avg_overall),
+              XGHome: parseFloat(form[0].data[0].stats.xg_for_avg_home),
+              XGAway: parseFloat(form[0].data[0].stats.xg_for_avg_away),
               ScoredOverall: parseFloat(
                 form[0].data[0].stats.seasonScoredNum_overall
               ),
+              ScoredHome: parseFloat(
+                form[0].data[0].stats.seasonScoredNum_home
+              ),
+              ScoredAway: parseFloat(
+                form[0].data[0].stats.seasonScoredNum_away
+              ),
+              PlayedHome: parseFloat(
+               form[0].data[0].stats.seasonMatchesPlayed_home
+              ),
+              PlayedAway: parseFloat(
+                form[0].data[0].stats.seasonMatchesPlayed_away
+               ),
               ConcededOverall: parseFloat(
                 form[0].data[0].stats.seasonConcededNum_overall
               ),
+              ConcededHome: parseFloat(
+                form[0].data[0].stats.seasonConcededNum_home
+              ),
+              ConcededAway: parseFloat(
+                form[0].data[0].stats.seasonConcededNum_away
+              ),
               XGAgainstAvg: parseFloat(
                 form[0].data[0].stats.xg_against_avg_overall
+              ),
+              XGAgainstHome: parseFloat(
+                form[0].data[0].stats.xg_against_avg_home
+              ),
+              XGAgainstAway: parseFloat(
+                form[0].data[0].stats.xg_against_avg_away
               ),
               CleanSheetPercentage: parseFloat(
                 form[0].data[0].stats.seasonCSPercentage_overall
@@ -206,14 +232,40 @@ export async function generateFixtures(day, radioState) {
             },
             1: {
               XG: parseFloat(form[0].data[1].stats.xg_for_avg_overall),
+              XGHome: parseFloat(form[0].data[1].stats.xg_for_avg_home),
+              XGAway: parseFloat(form[0].data[1].stats.xg_for_avg_away),
               ScoredOverall: parseFloat(
                 form[0].data[1].stats.seasonScoredNum_overall
               ),
+              ScoredHome: parseFloat(
+                form[0].data[1].stats.seasonScoredNum_home
+              ),
+              ScoredAway: parseFloat(
+                form[0].data[1].stats.seasonScoredNum_away
+              ),
+              PlayedHome: parseFloat(
+               form[0].data[1].stats.seasonMatchesPlayed_home
+              ),
+              PlayedAway: parseFloat(
+                form[0].data[1].stats.seasonMatchesPlayed_away
+               ),
               ConcededOverall: parseFloat(
                 form[0].data[1].stats.seasonConcededNum_overall
               ),
+              ConcededHome: parseFloat(
+                form[0].data[1].stats.seasonConcededNum_home
+              ),
+              ConcededAway: parseFloat(
+                form[0].data[1].stats.seasonConcededNum_away
+              ),
               XGAgainstAvg: parseFloat(
                 form[0].data[1].stats.xg_against_avg_overall
+              ),
+              XGAgainstHome: parseFloat(
+                form[0].data[1].stats.xg_against_avg_home
+              ),
+              XGAgainstAway: parseFloat(
+                form[0].data[1].stats.xg_against_avg_away
               ),
               CleanSheetPercentage: parseFloat(
                 form[0].data[1].stats.seasonCSPercentage_overall
@@ -230,14 +282,40 @@ export async function generateFixtures(day, radioState) {
             },
             2: {
               XG: parseFloat(form[0].data[2].stats.xg_for_avg_overall),
+              XGHome: parseFloat(form[0].data[2].stats.xg_for_avg_home),
+              XGAway: parseFloat(form[0].data[2].stats.xg_for_avg_away),
               ScoredOverall: parseFloat(
                 form[0].data[2].stats.seasonScoredNum_overall
               ),
+              ScoredHome: parseFloat(
+                form[0].data[2].stats.seasonScoredNum_home
+              ),
+              ScoredAway: parseFloat(
+                form[0].data[2].stats.seasonScoredNum_away
+              ),
+              PlayedHome: parseFloat(
+               form[0].data[2].stats.seasonMatchesPlayed_home
+              ),
+              PlayedAway: parseFloat(
+                form[0].data[2].stats.seasonMatchesPlayed_away
+               ),
               ConcededOverall: parseFloat(
                 form[0].data[2].stats.seasonConcededNum_overall
               ),
+              ConcededHome: parseFloat(
+                form[0].data[2].stats.seasonConcededNum_home
+              ),
+              ConcededAway: parseFloat(
+                form[0].data[2].stats.seasonConcededNum_away
+              ),
               XGAgainstAvg: parseFloat(
                 form[0].data[2].stats.xg_against_avg_overall
+              ),
+              XGAgainstHome: parseFloat(
+                form[0].data[2].stats.xg_against_avg_home
+              ),
+              XGAgainstAway: parseFloat(
+                form[0].data[2].stats.xg_against_avg_away
               ),
               CleanSheetPercentage: parseFloat(
                 form[0].data[2].stats.seasonCSPercentage_overall
@@ -257,14 +335,40 @@ export async function generateFixtures(day, radioState) {
             teamName: match.awayTeam,
             0: {
               XG: parseFloat(form[1].data[0].stats.xg_for_avg_overall),
+              XGHome: parseFloat(form[1].data[0].stats.xg_for_avg_home),
+              XGAway: parseFloat(form[1].data[0].stats.xg_for_avg_away),
               ScoredOverall: parseFloat(
                 form[1].data[0].stats.seasonScoredNum_overall
               ),
+              ScoredHome: parseFloat(
+                form[1].data[0].stats.seasonScoredNum_home
+              ),
+              ScoredAway: parseFloat(
+                form[1].data[0].stats.seasonScoredNum_away
+              ),
+              PlayedHome: parseFloat(
+               form[1].data[0].stats.seasonMatchesPlayed_home
+              ),
+              PlayedAway: parseFloat(
+                form[1].data[0].stats.seasonMatchesPlayed_away
+               ),
               ConcededOverall: parseFloat(
                 form[1].data[0].stats.seasonConcededNum_overall
               ),
+              ConcededHome: parseFloat(
+                form[1].data[0].stats.seasonConcededNum_home
+              ),
+              ConcededAway: parseFloat(
+                form[1].data[0].stats.seasonConcededNum_away
+              ),
               XGAgainstAvg: parseFloat(
                 form[1].data[0].stats.xg_against_avg_overall
+              ),
+              XGAgainstHome: parseFloat(
+                form[1].data[0].stats.xg_against_avg_home
+              ),
+              XGAgainstAway: parseFloat(
+                form[1].data[0].stats.xg_against_avg_away
               ),
               CleanSheetPercentage: parseFloat(
                 form[1].data[0].stats.seasonCSPercentage_overall
@@ -281,14 +385,40 @@ export async function generateFixtures(day, radioState) {
             },
             1: {
               XG: parseFloat(form[1].data[1].stats.xg_for_avg_overall),
+              XGHome: parseFloat(form[1].data[1].stats.xg_for_avg_home),
+              XGAway: parseFloat(form[1].data[1].stats.xg_for_avg_away),
               ScoredOverall: parseFloat(
                 form[1].data[1].stats.seasonScoredNum_overall
               ),
+              ScoredHome: parseFloat(
+                form[1].data[1].stats.seasonScoredNum_home
+              ),
+              ScoredAway: parseFloat(
+                form[1].data[1].stats.seasonScoredNum_away
+              ),
+              PlayedHome: parseFloat(
+               form[1].data[1].stats.seasonMatchesPlayed_home
+              ),
+              PlayedAway: parseFloat(
+                form[1].data[1].stats.seasonMatchesPlayed_away
+               ),
               ConcededOverall: parseFloat(
                 form[1].data[1].stats.seasonConcededNum_overall
               ),
+              ConcededHome: parseFloat(
+                form[1].data[1].stats.seasonConcededNum_home
+              ),
+              ConcededAway: parseFloat(
+                form[1].data[1].stats.seasonConcededNum_away
+              ),
               XGAgainstAvg: parseFloat(
                 form[1].data[1].stats.xg_against_avg_overall
+              ),
+              XGAgainstHome: parseFloat(
+                form[1].data[1].stats.xg_against_avg_home
+              ),
+              XGAgainstAway: parseFloat(
+                form[1].data[1].stats.xg_against_avg_away
               ),
               CleanSheetPercentage: parseFloat(
                 form[1].data[1].stats.seasonCSPercentage_overall
@@ -305,14 +435,40 @@ export async function generateFixtures(day, radioState) {
             },
             2: {
               XG: parseFloat(form[1].data[2].stats.xg_for_avg_overall),
+              XGHome: parseFloat(form[1].data[2].stats.xg_for_avg_home),
+              XGAway: parseFloat(form[1].data[2].stats.xg_for_avg_away),
               ScoredOverall: parseFloat(
                 form[1].data[2].stats.seasonScoredNum_overall
               ),
+              ScoredHome: parseFloat(
+                form[1].data[2].stats.seasonScoredNum_home
+              ),
+              ScoredAway: parseFloat(
+                form[1].data[2].stats.seasonScoredNum_away
+              ),
+              PlayedHome: parseFloat(
+               form[1].data[2].stats.seasonMatchesPlayed_home
+              ),
+              PlayedAway: parseFloat(
+                form[1].data[2].stats.seasonMatchesPlayed_away
+               ),
               ConcededOverall: parseFloat(
                 form[1].data[2].stats.seasonConcededNum_overall
               ),
+              ConcededHome: parseFloat(
+                form[1].data[2].stats.seasonConcededNum_home
+              ),
+              ConcededAway: parseFloat(
+                form[1].data[2].stats.seasonConcededNum_away
+              ),
               XGAgainstAvg: parseFloat(
                 form[1].data[2].stats.xg_against_avg_overall
+              ),
+              XGAgainstHome: parseFloat(
+                form[1].data[2].stats.xg_against_avg_home
+              ),
+              XGAgainstAway: parseFloat(
+                form[1].data[2].stats.xg_against_avg_away
               ),
               CleanSheetPercentage: parseFloat(
                 form[1].data[2].stats.seasonCSPercentage_overall
@@ -331,11 +487,6 @@ export async function generateFixtures(day, radioState) {
         });
       }
 
-      // match.form.allHomeForm = form[0].data;
-      // match.form.allAwayForm = form[1].data;
-
-      // match.form.homeTeam = form[0].data[index].stats;
-      // match.form.awayTeam = form[1].data[index].stats;
 
       match.homeBadge = fixture.home_image;
       match.awayBadge = fixture.away_image;

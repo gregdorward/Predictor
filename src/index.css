@@ -64,7 +64,7 @@ h2 {
   align-self: flex-start;
 } */
 
-.SuccessMeasure{
+.SuccessMeasure {
   height: auto;
   flex-basis: 10%;
   padding: 15px;
@@ -74,7 +74,6 @@ h2 {
   width: 40%;
   line-height: auto;
 }
-
 
 .fixture {
   display: flex;
@@ -157,7 +156,7 @@ h2 {
   font-size: 3vw;
   flex-grow: 1000;
   display: inline-block;
-  color: #B8B8B8;
+  color: #b8b8b8;
 }
 
 .CorrectResult {
@@ -232,7 +231,6 @@ h2 {
   flex-basis: 40%;
   padding: 20px;
   flex-wrap: wrap;
-
 }
 
 .RadioContainer {
@@ -289,7 +287,7 @@ h2 {
 }
 
 .Home li {
-  padding: 3px;
+  padding: 5px;
   list-style: none;
 }
 
@@ -300,8 +298,38 @@ h2 {
 }
 
 .Away li {
-  padding: 3px;
+  padding: 5px;
   list-style: none;
+}
+
+.win {
+  background-color: rgb(22, 165, 22);
+  padding: 3px;
+  padding-left: 7px;
+  padding-right: 7px; 
+  margin: 1px;
+  color: white;
+  font-weight: 600;
+}
+
+.loss {
+  background-color: #970d00;
+  padding: 3px;
+  padding-left: 7px;
+  padding-right: 7px; 
+  margin: 1px;
+  color: white;
+  font-weight: 600;
+}
+
+.draw {
+  background-color: rgb(70, 70, 70);
+  padding: 3px;
+  padding-left: 7px;
+  padding-right: 7px;  
+  margin: 1px;
+  color: white;
+  font-weight: 600;
 }
 
 .MatchTime {
@@ -326,7 +354,7 @@ h2 {
     font-size: 16px;
     font-weight: 500;
     color: #01183d;
-    background-color:white;
+    background-color: white;
     text-shadow: 0 0.04em 0.04em rgba(0, 0, 0, 0.35);
     text-align: center;
 
@@ -356,7 +384,7 @@ h2 {
     font-size: 14px;
     font-weight: 500;
     color: #01183d;
-    background-color:white;
+    background-color: white;
     text-shadow: 0 0.04em 0.04em rgba(0, 0, 0, 0.35);
     text-align: center;
 
@@ -386,7 +414,7 @@ h2 {
     font-size: 12px;
     font-weight: 500;
     color: #01183d;
-    background-color:white;
+    background-color: white;
     text-shadow: 0 0.04em 0.04em rgba(0, 0, 0, 0.35);
     text-align: center;
 
@@ -447,13 +475,12 @@ ul {
   padding: 0px;
 }
 
-
-.BestPredictions li{
+.BestPredictions li {
   font-size: 2.5vw;
   padding-top: 15px;
 }
 
-.BestPredictions lh{
+.BestPredictions lh {
   font-size: 2.5vw;
 }
 
@@ -461,28 +488,26 @@ ul {
   padding: 0px;
 }
 
-
-.LongshotPredictions li{
+.LongshotPredictions li {
   font-size: 2.5vw;
   padding-top: 15px;
 }
 
-.LongshotPredictions lh{
+.LongshotPredictions lh {
   font-size: 2.5vw;
 }
 
 .Won {
-  color: #addfad
+  color: #addfad;
 }
 
 .Lost {
   color: #e34234;
 }
 
-.AccumulatedOdds{
+.AccumulatedOdds {
   padding: 20px;
   font-size: 2.5vw;
-
 }
 
 table,
