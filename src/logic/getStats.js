@@ -39,6 +39,7 @@ export async function createStatsDiv(game) {
 
   formDataHome.push({
     name: game.homeTeam,
+    Last5: gameStats.home[index].LastFiveForm,
     AverageGoals: (gameStats.home[index].ScoredOverall / divider).toFixed(2),
     AverageConceeded: (gameStats.home[index].ConcededOverall / divider).toFixed(
       2
@@ -54,6 +55,7 @@ export async function createStatsDiv(game) {
 
   formDataAway.push({
     name: game.awayTeam,
+    Last5: gameStats.away[index].LastFiveForm,
     AverageGoals: (gameStats.away[index].ScoredOverall / divider).toFixed(2),
     AverageConceeded: (gameStats.away[index].ConcededOverall / divider).toFixed(
       2
@@ -83,6 +85,7 @@ export async function createStatsDiv(game) {
       key={formDataHome[0].name}
       className={formDataHome[0].homeOrAway}
       name={formDataHome[0].name}
+      last5 = {formDataHome[0].Last5}
       goals={formDataHome[0].AverageGoals}
       conceeded={formDataHome[0].AverageConceeded}
       XG={formDataHome[0].AverageXG}
@@ -98,6 +101,7 @@ export async function createStatsDiv(game) {
       key={formDataAway[0].name}
       className={formDataAway[0].homeOrAway}
       name={formDataAway[0].name}
+      last5 = {formDataAway[0].Last5}
       goals={formDataAway[0].AverageGoals}
       conceeded={formDataAway[0].AverageConceeded}
       XG={formDataAway[0].AverageXG}
