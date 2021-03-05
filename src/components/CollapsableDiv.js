@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import EscapeOutside from "react-escape-outside";
 
 class CollapsableDiv extends Component {
-  state = { isOpen: false };
+  state = { isOpen: true };
 
   handleOnClick = () => {
     this.setState((prevState) => ({
@@ -12,7 +12,8 @@ class CollapsableDiv extends Component {
 
   render() {
     return (
-      <div style={{ fontFamily: "sans-serif" }} onClick={this.handleOnClick}>
+      <div style={{ fontFamily: "sans-serif" }} >
+        <div onClick={this.handleOnClick}>{this.props.text}</div>
         {this.state.isOpen && (
           <EscapeOutside className="CollapsableDiv">
           </EscapeOutside>

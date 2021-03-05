@@ -12,7 +12,7 @@ class Collapsable extends Component {
 
   render() {
     return (
-      <div style={{ fontFamily: "sans-serif" }}>
+      <div style={this.props.style}>
         <button onClick={this.handleOnClick}>{this.props.buttonText}</button>
         {this.state.isOpen && (
           <EscapeOutside className="Collapsable">

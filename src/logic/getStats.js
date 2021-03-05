@@ -4,8 +4,26 @@ import Div from "../components/Div";
 import { selectedOption } from "../components/radio";
 import { allForm } from "../logic/getFixtures";
 
+let testBool = false;
+
 export async function createStatsDiv(game) {
   let radioSelected = parseInt(selectedOption);
+
+  console.log(`state of testBool ${testBool}`)
+
+  function toggle() {
+    testBool = testBool ? false : true;
+    console.log("Toggled bool is", testBool);
+    if (testBool === true) {
+      // set stats element to display flex
+      return { display: 'block' };
+    } else {
+      // set stats element to display none
+      return { display: 'none' };
+    }
+  }
+
+  let style = toggle();
 
   let index;
   let divider;
@@ -20,12 +38,12 @@ export async function createStatsDiv(game) {
     divider = 10;
   }
 
-  let gameStats = allForm.find((match) => match.id === game.id)
+  let gameStats = allForm.find((match) => match.id === game.id);
 
+  console.log(gameStats);
 
   let homeTeam = gameStats.home.teamName;
   let awayTeam = gameStats.away.teamName;
-
 
   let time = game.time;
 
@@ -68,12 +86,13 @@ export async function createStatsDiv(game) {
   });
 
   ReactDOM.render(
-    <Div className="MatchTime" text={"Kick off: " + time}></Div>,
+    <Div style={style} className="MatchTime" text={"Kick off: " + time}></Div>,
     document.getElementById("stats" + homeTeam)
   );
 
   ReactDOM.render(
     <Div
+      style={style}
       className="BTTSPotential"
       text={"BTTS Potential: " + game.btts_potential + "%"}
     ></Div>,
@@ -82,10 +101,11 @@ export async function createStatsDiv(game) {
 
   ReactDOM.render(
     <Stats
+      style={style}
       key={formDataHome[0].name}
+      last5={formDataHome[0].Last5}
       className={formDataHome[0].homeOrAway}
       name={formDataHome[0].name}
-      last5 = {formDataHome[0].Last5}
       goals={formDataHome[0].AverageGoals}
       conceeded={formDataHome[0].AverageConceeded}
       XG={formDataHome[0].AverageXG}
@@ -98,10 +118,11 @@ export async function createStatsDiv(game) {
 
   ReactDOM.render(
     <Stats
+      style={style}
       key={formDataAway[0].name}
+      last5={formDataAway[0].Last5}
       className={formDataAway[0].homeOrAway}
       name={formDataAway[0].name}
-      last5 = {formDataAway[0].Last5}
       goals={formDataAway[0].AverageGoals}
       conceeded={formDataAway[0].AverageConceeded}
       XG={formDataAway[0].AverageXG}

@@ -99,14 +99,6 @@ const SingleFixture = ({ fixture }) => (
       key={fixture.id}
       onClick={() => createStatsDiv(fixture)}
     >
-      <div
-        className="homeForm"
-        style={{
-          backgroundColor: fixture.homeFormColour,
-        }}
-      >
-        {fixture.homePpg}
-      </div>
       <div className="homeTeam">{fixture.homeTeam}</div>
       <GetDivider
         result={resultValue}
@@ -115,14 +107,6 @@ const SingleFixture = ({ fixture }) => (
       />
       {/* <div className="divider">{"V"}</div> */}
       <div className="awayTeam">{fixture.awayTeam}</div>
-      <div
-        className="awayForm"
-        style={{
-          backgroundColor: fixture.awayFormColour,
-        }}
-      >
-        {fixture.awayPpg}
-      </div>
       <CreateBadge
         image={fixture.homeBadge}
         ClassName="HomeBadge"

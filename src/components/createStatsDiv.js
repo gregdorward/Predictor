@@ -12,10 +12,9 @@ function Stats(props) {
     }
     return className
   }
-  console.log(props.last5)
 
   return (
-    <ul className={props.className}>
+    <ul className={props.className} style={props.style}>
       <li key={props.name}>{`Team name - ${props.name}`}</li>
       <li key="last5">
         <span
