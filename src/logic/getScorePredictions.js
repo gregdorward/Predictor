@@ -35,7 +35,7 @@ export async function calculateScore(match, index, divider, id, allLeagueData) {
 
   switch (true) {
     case divider === 5:
-      gameTotalWeighting = 6;
+      gameTotalWeighting = 5;
       break;
     case divider === 6:
       gameTotalWeighting = 5;
@@ -571,8 +571,8 @@ export async function calculateScore(match, index, divider, id, allLeagueData) {
 }
 
 function getSuccessMeasure(fixtures) {
-  let sum = -1;
-  let roundedFigure = -1;
+  let sum = 0;
+  let roundedFigure;
   let gameCount = 0;
   for (let i = 0; i < fixtures.length; i++) {
     if (fixtures[i].profit) {
