@@ -339,12 +339,6 @@ export async function calculateScore(match, index, divider, id, allLeagueData) {
       formAway.averageConcededDifferential -
       formHome.averageConcededDifferential;
 
-    // console.log(match.game);
-    // console.log("gameHomeAttackAdvantage");
-    // console.log(gameHomeAttackAdvantage);
-    // console.log("gameHomeDefenceAdvantage");
-    // console.log(gameHomeDefenceAdvantage);
-
     let goalsDifferential = gameHomeAttackAdvantage + gameHomeDefenceAdvantage;
 
     const generalformHomeGoals =
@@ -399,35 +393,6 @@ export async function calculateScore(match, index, divider, id, allLeagueData) {
       formHome.defenceRating *
       formHome.XGConcededAdjustment *
       (1 - HomeDefenceWeighting);
-
-    console.log(match.game);
-    console.log(match.homeTeam);
-    console.log(`experimentalHomeGoals - ${experimentalHomeGoals}`);
-    console.log(`generalformHomeGoals - ${generalformHomeGoals}`);
-    console.log(`homeformHomeGoals - ${homeformHomeGoals}`);
-    console.log(
-      `formHome.goalsBasedOnAverages - ${formHome.goalsBasedOnAverages}`
-    );
-    console.log("XGAdjustedHomeGoals")
-    console.log(XGAdjustedHomeGoals)
-
-
-    console.log(match.awayTeam);
-    console.log(`experimentalAwayGoals - ${experimentalAwayGoals}`);
-    console.log(`generalformAwayGoals - ${generalformAwayGoals}`);
-    console.log(`awayformAwayGoals - ${awayformAwayGoals}`);
-    console.log(
-      `formAway.goalsBasedOnAverages - ${formAway.goalsBasedOnAverages}`
-    );
-    console.log("XGAdjustedAwayGoals")
-    console.log(XGAdjustedAwayGoals)
-
-
-    console.log("homeGoalWeighting")
-    console.log(homeGoalWeighting)
-
-    console.log("HomeDefenceWeighting")
-    console.log(HomeDefenceWeighting)
 
 
     finalHomeGoals = await roundCustom(

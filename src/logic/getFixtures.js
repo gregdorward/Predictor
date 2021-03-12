@@ -9,8 +9,6 @@ var oddslib = require("oddslib");
 
 require("dotenv").config();
 
-console.log(process.env.REACT_APP_EXPRESS_SERVER);
-
 var fixtureResponse;
 var fixtureArray;
 export const matches = [];
@@ -166,7 +164,6 @@ export async function generateFixtures(day, radioState) {
       allForm = formArray;
     });
   } else {
-    console.log("Stored form not fetched");
     isFormStored = false;
     isStoredLocally = false;
   }
@@ -198,8 +195,6 @@ export async function generateFixtures(day, radioState) {
 
       if (!isFormStored) {
         form = await getForm(match);
-        console.log(form);
-        console.log("Pusing match to form object");
 
         var homeExtract = form[0].data[0].stats.additional_info.replace(
           /["']/g,
@@ -643,8 +638,6 @@ export async function generateFixtures(day, radioState) {
 
       match.homeGoals = fixture.homeGoalCount;
       match.awayGoals = fixture.awayGoalCount;
-
-      console.log(match);
 
       matches.push(match);
 
