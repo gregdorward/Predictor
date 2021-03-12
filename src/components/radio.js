@@ -28,6 +28,7 @@ export class Radio extends Component {
               name="lastGames"
               checked={this.state.checked}
               onChange={this.handleOptionChange}
+              data-cy={this.props.value}
             />
             <span className="design"></span>
             <span className="text">Last {this.props.value} games</span>

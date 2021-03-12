@@ -255,6 +255,8 @@ export async function generateFixtures(day, radioState) {
               DangerousAttacksAway: parseFloat(
                 form[0].data[0].stats.dangerous_attacks_avg_away
               ),
+              homeAttackAdvantage: parseFloat(form[0].data[0].stats.homeAttackAdvantage),
+              homeDefenceAdvantage: parseFloat(form[0].data[0].stats.homeDefenceAdvantage),
               LastFiveForm: lastFiveFormHome,
             },
             1: {
@@ -315,6 +317,8 @@ export async function generateFixtures(day, radioState) {
               DangerousAttacksAway: parseFloat(
                 form[0].data[1].stats.dangerous_attacks_avg_away
               ),
+              homeAttackAdvantage: parseFloat(form[0].data[1].stats.homeAttackAdvantage),
+              homeDefenceAdvantage: parseFloat(form[0].data[1].stats.homeDefenceAdvantage),
               LastFiveForm: lastFiveFormHome,
             },
             2: {
@@ -375,6 +379,8 @@ export async function generateFixtures(day, radioState) {
               DangerousAttacksAway: parseFloat(
                 form[0].data[2].stats.dangerous_attacks_avg_away
               ),
+              homeAttackAdvantage: parseFloat(form[0].data[2].stats.homeAttackAdvantage),
+              homeDefenceAdvantage: parseFloat(form[0].data[2].stats.homeDefenceAdvantage),
               LastFiveForm: lastFiveFormHome,
             },
           },
@@ -438,6 +444,8 @@ export async function generateFixtures(day, radioState) {
               DangerousAttacksAway: parseFloat(
                 form[1].data[0].stats.dangerous_attacks_avg_away
               ),
+              homeAttackAdvantage: parseFloat(form[1].data[0].stats.homeAttackAdvantage),
+              homeDefenceAdvantage: parseFloat(form[1].data[0].stats.homeDefenceAdvantage),
               LastFiveForm: lastFiveFormAway,
             },
             1: {
@@ -498,6 +506,8 @@ export async function generateFixtures(day, radioState) {
               DangerousAttacksAway: parseFloat(
                 form[1].data[1].stats.dangerous_attacks_avg_away
               ),
+              homeAttackAdvantage: parseFloat(form[1].data[1].stats.homeAttackAdvantage),
+              homeDefenceAdvantage: parseFloat(form[1].data[1].stats.homeDefenceAdvantage),
               LastFiveForm: lastFiveFormAway,
             },
             2: {
@@ -558,6 +568,8 @@ export async function generateFixtures(day, radioState) {
               DangerousAttacksAway: parseFloat(
                 form[1].data[2].stats.dangerous_attacks_avg_away
               ),
+              homeAttackAdvantage: parseFloat(form[1].data[2].stats.homeAttackAdvantage),
+              homeDefenceAdvantage: parseFloat(form[1].data[2].stats.homeDefenceAdvantage),
               LastFiveForm: lastFiveFormAway,
             },
           },

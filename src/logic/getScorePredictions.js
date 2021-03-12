@@ -24,7 +24,6 @@ let averageGoals = totalGoals / numberOfGames;
 
 //Calculates scores based on prior XG figures, weighted by odds
 export async function calculateScore(match, index, divider, id, allLeagueData) {
-  
   let homeRaw;
   let awayRaw;
 
@@ -41,7 +40,7 @@ export async function calculateScore(match, index, divider, id, allLeagueData) {
       gameTotalWeighting = 5;
       break;
     case divider === 10:
-      gameTotalWeighting = 4;
+      gameTotalWeighting = 5;
       break;
     default:
       break;
@@ -57,11 +56,7 @@ export async function calculateScore(match, index, divider, id, allLeagueData) {
   }
 
   if (calculate) {
-
-
-
     for (let i = 0; i < teams.length; i++) {
-
       teams[i][index].lastGame = teams[i][index].LastFiveForm[4];
       teams[i][index].previousToLastGame = teams[i][index].LastFiveForm[3];
 
@@ -152,6 +147,11 @@ export async function calculateScore(match, index, divider, id, allLeagueData) {
           break;
       }
 
+
+      teams[0][index].homeAttackAdvantage = parseFloat(teams[0][index].homeAttackAdvantage) 
+      teams[0][index].homeDefenceAdvantage = parseFloat(teams[0][index].homeDefenceAdvantage) 
+
+
       teams[i][index].finalFinishingScore = parseFloat(
         teams[i][index].finishingScore / gameTotalWeighting + 1
       );
@@ -213,12 +213,12 @@ export async function calculateScore(match, index, divider, id, allLeagueData) {
       oddsWeightingHome = homeRaw - awayRaw;
       oddsWeightingAway = awayRaw - homeRaw;
 
-      let weighting = (await diff(oddsWeightingHome, oddsWeightingAway)) * 1.5;
+      let weighting = (await diff(oddsWeightingHome, oddsWeightingAway)) * 1;
       let weightingSplitHome;
       let weightingSplitAway;
 
       if (weighting >= 0) {
-        if (oddsWeightingHome > oddsWeightingAway) {
+        if (oddsWeightingHome >= oddsWeightingAway) {
           weightingSplitHome = Math.abs(weighting) / 2;
           weightingSplitAway = -Math.abs(weighting) / 2;
         } else {
@@ -244,24 +244,12 @@ export async function calculateScore(match, index, divider, id, allLeagueData) {
     homeCalculation = parseFloat(homeWeighting);
     awayCalculation = parseFloat(awayWeighting);
 
-    let averageLeageGoals = allLeagueData.find(
-      ({ competitionId }) => competitionId === match.competition_id
-    ).averageGoals;
-
     let leagueName = allLeagueData.find(
       ({ competitionId }) => competitionId === match.competition_id
     ).name;
 
-    let homeAttackAdvantagePercentage = allLeagueData.find(
-      ({ competitionId }) => competitionId === match.competition_id
-    ).homeAttackAdvantagePercentage;
-
-    let homeDefenceAdvantagePercentage = allLeagueData.find(
-      ({ competitionId }) => competitionId === match.competition_id
-    ).homeDefenceAdvantagePercentage;
-
-    const homeGoalWeighting = homeAttackAdvantagePercentage / 100;
-    const HomeDefenceWeighting = homeDefenceAdvantagePercentage / 100;
+    const homeGoalWeighting = formHome.homeAttackAdvantage / 100;
+    const HomeDefenceWeighting = formHome.homeDefenceAdvantage / 100;
 
     const homeGoalsUnweighted = parseFloat(
       (formHome.XG + formHome.scoredAverage) / 2
@@ -287,17 +275,28 @@ export async function calculateScore(match, index, divider, id, allLeagueData) {
       awayGoalsWithOddsWeighting * formHome.defenceRating
     );
 
-    let homeGoalswithHomeWeighting = parseFloat(
-      homeGoalsWithAwayDefenceWeighting * (1 + homeGoalWeighting)
+
+    let homeAdvantageAttackAdjustment = 1 + (homeGoalWeighting / 5);
+    let homeAdvantageDefenceAdjustment;
+
+    if(HomeDefenceWeighting >= 0){
+      homeAdvantageDefenceAdjustment = 1 - (HomeDefenceWeighting / 5)
+    } else if(HomeDefenceWeighting < 0){
+      homeAdvantageDefenceAdjustment = 1 + (HomeDefenceWeighting / 5)
+    }
+
+    let homeGoalswithHomeWeighting 
+    let awayGoalswithAwayWeighting
+
+
+
+    homeGoalswithHomeWeighting = parseFloat(
+      homeGoalsWithAwayDefenceWeighting 
     );
 
-    let awayGoalswithAwayWeighting = parseFloat(
-      awayGoalsWithHomeDefenceWeighting * (1 - HomeDefenceWeighting)
-    );
+      awayGoalswithAwayWeighting = parseFloat(
+        awayGoalsWithHomeDefenceWeighting );
 
-    let goalTotal = parseFloat(
-      homeGoalswithHomeWeighting + awayGoalswithAwayWeighting
-    );
 
     if (homeGoalswithHomeWeighting < 0) {
       homeGoalswithHomeWeighting = 0;
@@ -310,51 +309,6 @@ export async function calculateScore(match, index, divider, id, allLeagueData) {
     let finalHomeGoals;
     let finalAwayGoals;
 
-
-    // console.log("formHome.forecastedXG");
-    // console.log(formHome.forecastedXG);
-
-    // console.log("formAway.forecastedXG");
-    // console.log(formAway.forecastedXG);
-
-    // console.log("formHome.ConcededOverall")
-    // console.log(formHome.ConcededOverall)
-    // console.log("formAway.ConcededOverall")
-    // console.log(formAway.ConcededOverall)
-
-    // console.log("formHome.XGAgainstAvg")
-    // console.log(formHome.XGAgainstAvg)
-    // console.log("formAway.XGAgainstAvg")
-    // console.log(formAway.XGAgainstAvg)
-
-    // console.log("formHome.forecastedXGConceded")
-    // console.log(formHome.forecastedXGConceded)
-    // console.log("formAway.forecastedXGConceded")
-    // console.log(formAway.forecastedXGConceded)
-
-    // console.log("Finishing score experiment");
-    // console.log(match.game);
-    // console.log(formHome.finalFinishingScore);
-    // console.log(formAway.finalFinishingScore);
-
-    // console.log("XG Conceded experiment");
-    // console.log(match.game);
-    // console.log(formHome.XGConcededAdjustment);
-    // console.log(formAway.XGConcededAdjustment);
-
-    // console.log("Scores before adjusting");
-    // console.log("home");
-    // console.log(
-    //   Math.round(
-    //     parseFloat(homeGoals * 5 + formHome.goalsBasedOnAverages * 5) / 10
-    //   )
-    // );
-    // console.log("away");
-    // console.log(
-    //   Math.round(
-    //     parseFloat(awayGoalswithAwayWeighting* 5 + formAway.goalsBasedOnAverages * 5) / 10
-    //   )
-    // );
 
     async function roundCustom(num, form) {
       if (form.finalFinishingScore < 1) {
@@ -394,18 +348,17 @@ export async function calculateScore(match, index, divider, id, allLeagueData) {
     let goalsDifferential = gameHomeAttackAdvantage + gameHomeDefenceAdvantage;
 
     const generalformHomeGoals =
-      // (1.685 + oddsDiff) * 0.6375 + (1.2 * 0.875) + (1 + homeDefenceRating) / 2
-
-      ((formHome.generalOffensiveRating + homeCalculation) +
+      (formHome.generalOffensiveRating +
+        homeCalculation +
         formAway.defenceRating * formAway.generalDefensiveRating +
         1 +
         homeGoalWeighting) /
       2;
 
-      console.log(generalformHomeGoals)
 
     const generalformAwayGoals =
-      ((formAway.generalOffensiveRating + awayCalculation)  +
+      (formAway.generalOffensiveRating +
+        awayCalculation +
         formHome.defenceRating * formHome.generalDefensiveRating +
         1 -
         HomeDefenceWeighting) /
@@ -413,14 +366,10 @@ export async function calculateScore(match, index, divider, id, allLeagueData) {
 
     let calculatedDifferential = generalformHomeGoals - generalformAwayGoals;
 
-
     let differentialWeighting = await diff(
       goalsDifferential,
       calculatedDifferential
     );
-
-
-
 
     let homeGoalDifferentialWeighting;
     let awayGoalDifferentialWeighting;
@@ -433,12 +382,9 @@ export async function calculateScore(match, index, divider, id, allLeagueData) {
       awayGoalDifferentialWeighting = differentialWeighting / 2;
     }
 
-    console.log("EXPERIMENTAL SCORE...")
-    console.log(match.game)
-    let experimentalHomeGoals = formHome.XG + homeGoalDifferentialWeighting
-    let experimentalAwayGoals = formAway.XG + awayGoalDifferentialWeighting
-    // console.log(`Home - ${formHome.XG + homeGoalDifferentialWeighting}`)
-    // console.log(`Away - ${formAway.XG + awayGoalDifferentialWeighting}`)
+
+    let experimentalHomeGoals = (formHome.scoredAverage + formHome.XG) / 2 + homeGoalDifferentialWeighting;
+    let experimentalAwayGoals = (formAway.scoredAverage + formAway.XG) / 2 + awayGoalDifferentialWeighting;
 
 
     const homeformHomeGoals =
@@ -453,41 +399,57 @@ export async function calculateScore(match, index, divider, id, allLeagueData) {
       formHome.defenceRating *
       formHome.XGConcededAdjustment *
       (1 - HomeDefenceWeighting);
-    // console.log(`Home goals - ${generalformHomeGoals}`);
-    // console.log(`Away goals - ${generalformAwayGoals}`);
 
-    // console.log(`Home goals based on home form - ${homeformHomeGoals}`);
-    // console.log(`Away goals based on away form - ${awayformAwayGoals}`);
+    console.log(match.game);
+    console.log(match.homeTeam);
+    console.log(`experimentalHomeGoals - ${experimentalHomeGoals}`);
+    console.log(`generalformHomeGoals - ${generalformHomeGoals}`);
+    console.log(`homeformHomeGoals - ${homeformHomeGoals}`);
+    console.log(
+      `formHome.goalsBasedOnAverages - ${formHome.goalsBasedOnAverages}`
+    );
+    console.log("XGAdjustedHomeGoals")
+    console.log(XGAdjustedHomeGoals)
+
+
+    console.log(match.awayTeam);
+    console.log(`experimentalAwayGoals - ${experimentalAwayGoals}`);
+    console.log(`generalformAwayGoals - ${generalformAwayGoals}`);
+    console.log(`awayformAwayGoals - ${awayformAwayGoals}`);
+    console.log(
+      `formAway.goalsBasedOnAverages - ${formAway.goalsBasedOnAverages}`
+    );
+    console.log("XGAdjustedAwayGoals")
+    console.log(XGAdjustedAwayGoals)
+
+
+    console.log("homeGoalWeighting")
+    console.log(homeGoalWeighting)
+
+    console.log("HomeDefenceWeighting")
+    console.log(HomeDefenceWeighting)
+
 
     finalHomeGoals = await roundCustom(
       parseFloat(
-        // XGAdjustedHomeGoals
-        // formHome.goalsBasedOnAverages
-
-        (experimentalHomeGoals + generalformHomeGoals + homeformHomeGoals + formHome.goalsBasedOnAverages) / 4
-      
-
-        // (XGAdjustedHomeGoals * 0 +
-        //   formHome.goalsBasedOnAverages * 0 +
-        //   homeformHomeGoals * 0 +
-        //   generalformHomeGoals * 1) /
-        //   1
-      ), formHome
+        ((experimentalHomeGoals * 25 +
+          generalformHomeGoals * 25 +
+          homeformHomeGoals * 25 +
+          formHome.goalsBasedOnAverages * 25 + XGAdjustedHomeGoals * 5) /
+          105) * homeAdvantageAttackAdjustment
+      ),
+      formHome
     );
 
     finalAwayGoals = await roundCustom(
       parseFloat(
-        // XGAdjustedAwayGoals
-        // formAway.goalsBasedOnAverages
-
-        (experimentalAwayGoals + generalformAwayGoals + awayformAwayGoals + formAway.goalsBasedOnAverages) / 4
-
-        // (XGAdjustedAwayGoals * 0 +
-        //   formAway.goalsBasedOnAverages * 0 +
-        //   awayformAwayGoals * 0 +
-        //   generalformAwayGoals * 1) /
-        //   1
-      ), formAway
+        ((experimentalAwayGoals * 25 +
+          generalformAwayGoals * 25 +
+          awayformAwayGoals * 25 +
+          formAway.goalsBasedOnAverages * 25 + XGAdjustedAwayGoals *5) /
+          105) * homeAdvantageDefenceAdjustment
+      ),
+      formAway
     );
 
     let total = parseInt(finalHomeGoals + finalAwayGoals);
@@ -502,61 +464,7 @@ export async function calculateScore(match, index, divider, id, allLeagueData) {
     if (finalAwayGoals < 0) {
       finalAwayGoals = 0;
     }
-    // console.log("DIVIDER");
-    // console.log(divider);
 
-    // console.log(match.homeTeam);
-    // console.log("homeOdds");
-    // console.log(match.homeOdds);
-
-    // console.log("homeGoals");
-    // console.log(homeGoals);
-    // console.log("seasonScoredNum_overall");
-    // console.log(formHome.ScoredOverall);
-    // console.log("forecastedXG");
-    // console.log(formHome.forecastedXG);
-    // console.log("seasonConcededNum_overall");
-    // console.log(formHome.ConcededOverall);
-    // console.log("homeCalculation");
-    // console.log(homeCalculation);
-    // console.log("defenceHome");
-    // console.log("homeWeighting");
-    // console.log(homeWeighting);
-    // console.log("finalFinishingScoreHome");
-    // console.log(formHome.finalFinishingScore);
-    // console.log("XG conceded adjustment");
-    // console.log(formHome.XGConcededAdjustment);
-
-    // console.log(match.awayTeam);
-
-    // console.log("awayOdds");
-    // console.log(match.awayOdds);
-    // console.log("awayGoals");
-    // console.log(awayGoals);
-    // console.log("seasonScoredNum_overall");
-    // console.log(formAway.ScoredOverall);
-    // console.log("forecastedXG");
-    // console.log(formAway.forecastedXG);
-    // console.log("seasonConcededNum_overall");
-    // console.log(formAway.ConcededOverall);
-    // console.log("awayCalculation");
-    // console.log(awayCalculation);
-
-    // console.log("awayWeighting");
-    // console.log(awayWeighting);
-    // console.log("finalFinishingScoreAway");
-    // console.log(formAway.finalFinishingScore);
-    // console.log("XG conceded adjustment");
-    // console.log(formAway.XGConcededAdjustment);
-
-    // console.log("FINAL HOME GOALS");
-    // console.log(finalHomeGoals);
-
-    // console.log("FINAL AWAY GOALS");
-    // console.log(finalAwayGoals);
-
-    // match.homePrediction = finalHomeGoals;
-    // match.awayPrediction = finalAwayGoals;
     if (match.status === "suspended") {
       finalHomeGoals = "P";
       finalAwayGoals = "P";
@@ -630,7 +538,6 @@ export async function getScorePrediction(day, allLeagueData) {
   await Promise.all(
     matches.map(async (match) => {
       // if there are no stored predictions, calculate them based on live data
-
       if (match) {
         switch (true) {
           case match.status === "!suspended":
@@ -804,15 +711,3 @@ export async function getScorePrediction(day, allLeagueData) {
 
   await getSuccessMeasure(matches);
 }
-
-// async function postFixedPredictions(predictions, divider, day) {
-//   await fetch(
-//     `${process.env.REACT_APP_EXPRESS_SERVER}postPredictions${divider}${day}`, {
-//       method: "POST",
-//       headers: {
-//         Accept: "application/json",
-//         "Content-Type": "application/json",
-//       },
-//       body: JSON.stringify({ predictions }),
-//     });
-// }

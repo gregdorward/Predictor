@@ -38,22 +38,22 @@ function Stats(props) {
           }>{props.last5[4]}</span>
       </li>
 
-      <li key="TeamScored" className="TeamScored">
+      <li key="TeamScored" className="TeamScored" data-cy={props.name + "teamScored"}>
         {`Average goals scored - ${props.goals}`}
       </li>
-      <li key="TeamConceeded" className="TeamConceeded">
+      <li key="TeamConceeded" className="TeamConceeded" data-cy={props.name + "teamConceded"}>
         {`Average goals conceeded - ${props.conceeded}`}
       </li>
-      <li key="TeamPossession" className="TeamPossession">
+      <li key="TeamPossession" className="TeamPossession" data-cy={props.name + "teamPossession"}>
         {`Average possession - ${props.possession}%`}
       </li>
-      <li key="TeamXG" className="TeamXG">
+      <li key="TeamXG" className="TeamXG" data-cy={props.name + "teamXG"}>
         {`Average XG - ${props.XG}`}
       </li>
-      <li key="AverageSOT" className="AverageSOT">
+      <li key="AverageSOT" className="AverageSOT" data-cy={props.name + "averageSOT"}>
         {`Average shots on target - ${props.sot}`}
       </li>
-      <li key="DangerousAttacks" className="DangerousAttacks">
+      <li key="DangerousAttacks" className="DangerousAttacks" data-cy={props.name + "dangerousAttacks"}>
         {`Average dangerous attacks - ${props.dangerousAttacks}`}
       </li>
     </ul>
