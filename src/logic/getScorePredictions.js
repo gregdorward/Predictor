@@ -138,10 +138,10 @@ export async function calculateScore(match, index, divider, id, allLeagueData) {
           teams[i][index].defenceRating = 0.7;
           break;
         case defenceScore >= 70 && defenceScore < 80:
-          teams[i][index].defenceRating = 0.6;
+          teams[i][index].defenceRating = 0.5;
           break;
         case defenceScore >= 80:
-          teams[i][index].defenceRating = 0.5;
+          teams[i][index].defenceRating = 0.3;
           break;
         default:
           break;
@@ -434,9 +434,9 @@ export async function calculateScore(match, index, divider, id, allLeagueData) {
       parseFloat(
         ((experimentalHomeGoals * 25 +
           generalformHomeGoals * 25 +
-          homeformHomeGoals * 25 +
+          homeformHomeGoals * 10 +
           formHome.goalsBasedOnAverages * 25 + XGAdjustedHomeGoals * 5) /
-          105) * homeAdvantageAttackAdjustment
+          90) * homeAdvantageAttackAdjustment
       ),
       formHome
     );
@@ -445,9 +445,9 @@ export async function calculateScore(match, index, divider, id, allLeagueData) {
       parseFloat(
         ((experimentalAwayGoals * 25 +
           generalformAwayGoals * 25 +
-          awayformAwayGoals * 25 +
+          awayformAwayGoals * 10 +
           formAway.goalsBasedOnAverages * 25 + XGAdjustedAwayGoals *5) /
-          105) * homeAdvantageDefenceAdjustment
+          90) * homeAdvantageDefenceAdjustment
       ),
       formAway
     );
@@ -580,7 +580,7 @@ export async function getScorePrediction(day, allLeagueData) {
       let predictionObject;
       let longShotPredictionObject;
 
-      if (match.goalsA - 1 > match.goalsB && match.homeOdds !== 0) {
+      if (match.goalsA - 1 > match.goalsB && match.homeOdds !== 0 && match.fractionHome !== "N/A") {
         if (match.status === "complete" && match.homeTeam === match.winner) {
           match.predictionOutcome = "Won";
         } else if (
@@ -593,11 +593,11 @@ export async function getScorePrediction(day, allLeagueData) {
           parseFloat(accumulatedOdds) * parseFloat(match.homeOdds);
         predictionObject = {
           team: match.homeTeam,
-          odds: match.homeOdds,
+          odds: match.fractionHome,
           outcome: match.predictionOutcome,
         };
         tips.push(predictionObject);
-      } else if (match.goalsB - 1 > match.goalsA && match.awayOdds !== 0) {
+      } else if (match.goalsB - 1 > match.goalsA && match.awayOdds !== 0 && match.fractionAway !== "N/A") {
         if (match.status === "complete" && match.awayTeam === match.winner) {
           match.predictionOutcome = "Won";
         } else if (
@@ -610,7 +610,7 @@ export async function getScorePrediction(day, allLeagueData) {
           parseFloat(accumulatedOdds) * parseFloat(match.awayOdds);
         predictionObject = {
           team: match.awayTeam,
-          odds: match.awayOdds,
+          odds: match.fractionAway,
           outcome: match.predictionOutcome,
         };
         tips.push(predictionObject);
@@ -627,7 +627,7 @@ export async function getScorePrediction(day, allLeagueData) {
         }
         longShotPredictionObject = {
           team: match.homeTeam,
-          odds: match.homeOdds,
+          odds: match.fractionHome,
           outcome: match.predictionOutcome,
         };
         longShotTips.push(longShotPredictionObject);
@@ -642,7 +642,7 @@ export async function getScorePrediction(day, allLeagueData) {
         }
         longShotPredictionObject = {
           team: match.awayTeam,
-          odds: match.awayOdds,
+          odds: match.fractionAway,
           outcome: match.predictionOutcome,
         };
         longShotTips.push(longShotPredictionObject);
@@ -671,9 +671,7 @@ export async function getScorePrediction(day, allLeagueData) {
                         {tip.team} odds: {tip.odds}
                       </li>
                     ))}
-                    <div className="AccumulatedOdds">{`Accumulator odds: ${accumulatedOdds.toFixed(
-                      2
-                    )} / 1`}</div>
+                    <div className="AccumulatedOdds">{`Accumulator odds ~ : ${Math.round(accumulatedOdds) - 1}/1`}</div>
                   </ul>
                 }
               />

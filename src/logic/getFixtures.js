@@ -5,6 +5,7 @@ import { getForm, applyColour } from "./getForm";
 import { Fixture } from "../components/Fixture";
 import { Button } from "../components/Button";
 import { getScorePrediction } from "../logic/getScorePredictions";
+var oddslib = require("oddslib");
 
 require("dotenv").config();
 
@@ -53,6 +54,29 @@ export async function diff(a, b) {
 export let allForm = [];
 
 async function createFixture(match, result) {
+  let roundedHomeOdds;
+  let roundedAwayOdds;
+  let homeFraction;
+  let awayFraction;
+
+  if (match.homeOdds !== 0) {
+    roundedHomeOdds = (Math.round(match.homeOdds * 5) / 5).toFixed(2);
+    roundedAwayOdds = (Math.round(match.awayOdds * 5) / 5).toFixed(2);
+
+    homeFraction = oddslib
+      .from("decimal", roundedHomeOdds)
+      .to("fractional", { precision: 1 });
+    awayFraction = oddslib
+      .from("decimal", roundedAwayOdds)
+      .to("fractional", { precision: 1 });
+  } else{
+    homeFraction = "N/A"
+    awayFraction = "N/A"
+  }
+
+  match.fractionHome = homeFraction;
+  match.fractionAway = awayFraction;
+
   match.game = match.homeTeam + " v " + match.awayTeam;
 
   ReactDOM.render(
@@ -211,11 +235,11 @@ export async function generateFixtures(day, radioState) {
                 form[0].data[0].stats.seasonScoredNum_away
               ),
               PlayedHome: parseFloat(
-               form[0].data[0].stats.seasonMatchesPlayed_home
+                form[0].data[0].stats.seasonMatchesPlayed_home
               ),
               PlayedAway: parseFloat(
                 form[0].data[0].stats.seasonMatchesPlayed_away
-               ),
+              ),
               ConcededOverall: parseFloat(
                 form[0].data[0].stats.seasonConcededNum_overall
               ),
@@ -255,8 +279,12 @@ export async function generateFixtures(day, radioState) {
               DangerousAttacksAway: parseFloat(
                 form[0].data[0].stats.dangerous_attacks_avg_away
               ),
-              homeAttackAdvantage: parseFloat(form[0].data[0].stats.homeAttackAdvantage),
-              homeDefenceAdvantage: parseFloat(form[0].data[0].stats.homeDefenceAdvantage),
+              homeAttackAdvantage: parseFloat(
+                form[0].data[0].stats.homeAttackAdvantage
+              ),
+              homeDefenceAdvantage: parseFloat(
+                form[0].data[0].stats.homeDefenceAdvantage
+              ),
               LastFiveForm: lastFiveFormHome,
             },
             1: {
@@ -273,11 +301,11 @@ export async function generateFixtures(day, radioState) {
                 form[0].data[1].stats.seasonScoredNum_away
               ),
               PlayedHome: parseFloat(
-               form[0].data[1].stats.seasonMatchesPlayed_home
+                form[0].data[1].stats.seasonMatchesPlayed_home
               ),
               PlayedAway: parseFloat(
                 form[0].data[1].stats.seasonMatchesPlayed_away
-               ),
+              ),
               ConcededOverall: parseFloat(
                 form[0].data[1].stats.seasonConcededNum_overall
               ),
@@ -317,8 +345,12 @@ export async function generateFixtures(day, radioState) {
               DangerousAttacksAway: parseFloat(
                 form[0].data[1].stats.dangerous_attacks_avg_away
               ),
-              homeAttackAdvantage: parseFloat(form[0].data[1].stats.homeAttackAdvantage),
-              homeDefenceAdvantage: parseFloat(form[0].data[1].stats.homeDefenceAdvantage),
+              homeAttackAdvantage: parseFloat(
+                form[0].data[1].stats.homeAttackAdvantage
+              ),
+              homeDefenceAdvantage: parseFloat(
+                form[0].data[1].stats.homeDefenceAdvantage
+              ),
               LastFiveForm: lastFiveFormHome,
             },
             2: {
@@ -335,11 +367,11 @@ export async function generateFixtures(day, radioState) {
                 form[0].data[2].stats.seasonScoredNum_away
               ),
               PlayedHome: parseFloat(
-               form[0].data[2].stats.seasonMatchesPlayed_home
+                form[0].data[2].stats.seasonMatchesPlayed_home
               ),
               PlayedAway: parseFloat(
                 form[0].data[2].stats.seasonMatchesPlayed_away
-               ),
+              ),
               ConcededOverall: parseFloat(
                 form[0].data[2].stats.seasonConcededNum_overall
               ),
@@ -379,8 +411,12 @@ export async function generateFixtures(day, radioState) {
               DangerousAttacksAway: parseFloat(
                 form[0].data[2].stats.dangerous_attacks_avg_away
               ),
-              homeAttackAdvantage: parseFloat(form[0].data[2].stats.homeAttackAdvantage),
-              homeDefenceAdvantage: parseFloat(form[0].data[2].stats.homeDefenceAdvantage),
+              homeAttackAdvantage: parseFloat(
+                form[0].data[2].stats.homeAttackAdvantage
+              ),
+              homeDefenceAdvantage: parseFloat(
+                form[0].data[2].stats.homeDefenceAdvantage
+              ),
               LastFiveForm: lastFiveFormHome,
             },
           },
@@ -400,11 +436,11 @@ export async function generateFixtures(day, radioState) {
                 form[1].data[0].stats.seasonScoredNum_away
               ),
               PlayedHome: parseFloat(
-               form[1].data[0].stats.seasonMatchesPlayed_home
+                form[1].data[0].stats.seasonMatchesPlayed_home
               ),
               PlayedAway: parseFloat(
                 form[1].data[0].stats.seasonMatchesPlayed_away
-               ),
+              ),
               ConcededOverall: parseFloat(
                 form[1].data[0].stats.seasonConcededNum_overall
               ),
@@ -444,8 +480,12 @@ export async function generateFixtures(day, radioState) {
               DangerousAttacksAway: parseFloat(
                 form[1].data[0].stats.dangerous_attacks_avg_away
               ),
-              homeAttackAdvantage: parseFloat(form[1].data[0].stats.homeAttackAdvantage),
-              homeDefenceAdvantage: parseFloat(form[1].data[0].stats.homeDefenceAdvantage),
+              homeAttackAdvantage: parseFloat(
+                form[1].data[0].stats.homeAttackAdvantage
+              ),
+              homeDefenceAdvantage: parseFloat(
+                form[1].data[0].stats.homeDefenceAdvantage
+              ),
               LastFiveForm: lastFiveFormAway,
             },
             1: {
@@ -462,11 +502,11 @@ export async function generateFixtures(day, radioState) {
                 form[1].data[1].stats.seasonScoredNum_away
               ),
               PlayedHome: parseFloat(
-               form[1].data[1].stats.seasonMatchesPlayed_home
+                form[1].data[1].stats.seasonMatchesPlayed_home
               ),
               PlayedAway: parseFloat(
                 form[1].data[1].stats.seasonMatchesPlayed_away
-               ),
+              ),
               ConcededOverall: parseFloat(
                 form[1].data[1].stats.seasonConcededNum_overall
               ),
@@ -506,8 +546,12 @@ export async function generateFixtures(day, radioState) {
               DangerousAttacksAway: parseFloat(
                 form[1].data[1].stats.dangerous_attacks_avg_away
               ),
-              homeAttackAdvantage: parseFloat(form[1].data[1].stats.homeAttackAdvantage),
-              homeDefenceAdvantage: parseFloat(form[1].data[1].stats.homeDefenceAdvantage),
+              homeAttackAdvantage: parseFloat(
+                form[1].data[1].stats.homeAttackAdvantage
+              ),
+              homeDefenceAdvantage: parseFloat(
+                form[1].data[1].stats.homeDefenceAdvantage
+              ),
               LastFiveForm: lastFiveFormAway,
             },
             2: {
@@ -524,11 +568,11 @@ export async function generateFixtures(day, radioState) {
                 form[1].data[2].stats.seasonScoredNum_away
               ),
               PlayedHome: parseFloat(
-               form[1].data[2].stats.seasonMatchesPlayed_home
+                form[1].data[2].stats.seasonMatchesPlayed_home
               ),
               PlayedAway: parseFloat(
                 form[1].data[2].stats.seasonMatchesPlayed_away
-               ),
+              ),
               ConcededOverall: parseFloat(
                 form[1].data[2].stats.seasonConcededNum_overall
               ),
@@ -568,8 +612,12 @@ export async function generateFixtures(day, radioState) {
               DangerousAttacksAway: parseFloat(
                 form[1].data[2].stats.dangerous_attacks_avg_away
               ),
-              homeAttackAdvantage: parseFloat(form[1].data[2].stats.homeAttackAdvantage),
-              homeDefenceAdvantage: parseFloat(form[1].data[2].stats.homeDefenceAdvantage),
+              homeAttackAdvantage: parseFloat(
+                form[1].data[2].stats.homeAttackAdvantage
+              ),
+              homeDefenceAdvantage: parseFloat(
+                form[1].data[2].stats.homeDefenceAdvantage
+              ),
               LastFiveForm: lastFiveFormAway,
             },
           },

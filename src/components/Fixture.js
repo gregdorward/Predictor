@@ -12,7 +12,11 @@ function GetDivider(fixture) {
   const isPrediction = resultValue;
 
   if (isPrediction === false && matchStatus !== "complete") {
-    return <div className="divider" data-cy={"divider-" + fixture.fixture.id}>{"V"}</div>;
+    return (
+      <div className="divider" data-cy={"divider-" + fixture.fixture.id}>
+        {"V"}
+      </div>
+    );
   } else if (isPrediction === false && matchStatus === "complete") {
     return (
       <div
@@ -111,6 +115,7 @@ const SingleFixture = ({ fixture }) => (
       onClick={() => createStatsDiv(fixture)}
       data-cy={fixture.id}
     >
+      <div className="HomeOdds">{fixture.fractionHome}</div>
       <div className="homeTeam">{fixture.homeTeam}</div>
       <GetDivider
         result={resultValue}
@@ -130,12 +135,16 @@ const SingleFixture = ({ fixture }) => (
         ClassName="AwayBadge"
         alt="Away team badge"
       />
+      <div className="AwayOdds">{fixture.fractionAway}</div>
     </li>
     <div>
       <div id={"stats" + fixture.homeTeam}></div>
       <Fragment>
         <div id={"BTTSPotential" + fixture.id}></div>
-        <div className="StatsContainer" data-cy={"StatsContainer-" + fixture.id}>
+        <div
+          className="StatsContainer"
+          data-cy={"StatsContainer-" + fixture.id}
+        >
           <div className="HomeStats" id={"home" + fixture.homeTeam}></div>
           <div className="AwayStats" id={"away" + fixture.awayTeam}></div>
         </div>
