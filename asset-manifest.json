@@ -1,8 +1,8 @@
 {
   "files": {
-    "main.css": "/Predictor/static/css/main.82a82e09.chunk.css",
-    "main.js": "/Predictor/static/js/main.037032e6.chunk.js",
-    "main.js.map": "/Predictor/static/js/main.037032e6.chunk.js.map",
+    "main.css": "/Predictor/static/css/main.f159b6c1.chunk.css",
+    "main.js": "/Predictor/static/js/main.866fa9b4.chunk.js",
+    "main.js.map": "/Predictor/static/js/main.866fa9b4.chunk.js.map",
     "runtime-main.js": "/Predictor/static/js/runtime-main.f11bdb87.js",
     "runtime-main.js.map": "/Predictor/static/js/runtime-main.f11bdb87.js.map",
     "static/js/2.e872d1f5.chunk.js": "/Predictor/static/js/2.e872d1f5.chunk.js",
@@ -10,13 +10,13 @@
     "static/js/3.f392f759.chunk.js": "/Predictor/static/js/3.f392f759.chunk.js",
     "static/js/3.f392f759.chunk.js.map": "/Predictor/static/js/3.f392f759.chunk.js.map",
     "index.html": "/Predictor/index.html",
-    "static/css/main.82a82e09.chunk.css.map": "/Predictor/static/css/main.82a82e09.chunk.css.map",
+    "static/css/main.f159b6c1.chunk.css.map": "/Predictor/static/css/main.f159b6c1.chunk.css.map",
     "static/js/2.e872d1f5.chunk.js.LICENSE.txt": "/Predictor/static/js/2.e872d1f5.chunk.js.LICENSE.txt"
   },
   "entrypoints": [
     "static/js/runtime-main.f11bdb87.js",
     "static/js/2.e872d1f5.chunk.js",
-    "static/css/main.82a82e09.chunk.css",
-    "static/js/main.037032e6.chunk.js"
+    "static/css/main.f159b6c1.chunk.css",
+    "static/js/main.866fa9b4.chunk.js"
   ]
 }
