@@ -210,7 +210,7 @@
 }
 
 body {
-  background-color: #192F4D;
+  background-color: #001224;
   /* align-content: space-between; */
   text-align: center;
   color: white;
@@ -369,7 +369,7 @@ p {
   padding: 0.5em;
   background-color: white;
   color: #01183d;
-  flex-basis: 3%;
+  flex-basis: 5%;
   border-radius: 25px;
   font-weight: 2em;
   margin-left: 10px;
@@ -381,7 +381,7 @@ p {
   padding: 0.5em;
   background-color: white;
   color: #01183d;
-  flex-basis: 3%;
+  flex-basis: 5%;
   border-radius: 25px;
   font-weight: 2em;
   align-self: flex-end;
@@ -418,7 +418,7 @@ p {
   height: auto;
   flex-basis: 10%;
   order: 3;
-  padding: 0.2em;
+  padding: 0.4em;
   /* font-size: 0.7em; */
   /* flex-grow: 1000; */
   display: inline-block;
@@ -429,7 +429,7 @@ p {
   height: auto;
   flex-basis: 10%;
   order: 3;
-  padding: 0.2em;
+  padding: 0.4em;
 
   /* font-size: 0.7em; */
   /* flex-grow: 1000; */
@@ -443,7 +443,7 @@ p {
   height: auto;
   flex-basis: 10%;
   order: 3;
-  padding: 0.2em;
+  padding: 0.4em;
 
   /* font-size: 0.7em; */
   /* flex-grow: 1000; */
