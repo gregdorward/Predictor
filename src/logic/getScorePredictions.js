@@ -698,17 +698,17 @@ export async function calculateScore(match, index, divider, id) {
       // formAway.XGWeighting * 0.5 +
       last5WeightingAway * 1.4;
 
-    // console.log(match.game)
+    console.log(match.game)
 
-    // console.log("formHome");
-    // console.log(formHome);
+    console.log("formHome");
+    console.log(formHome);
     // console.log(`Goals home = ${experimentalHomeGoals}`)
     // console.log(`Weighted goals home =  ${formHome.AverageGoalsWeightedWithXG}`)
     // console.log(`Average goals conceeded weighted = ${formHome.AverageGoalsConceededWeightedWithXG}`)
     // // console.log(last5WeightingHome);
 
-    // console.log("formAway");
-    // console.log(formAway);
+    console.log("formAway");
+    console.log(formAway);
     // console.log(`Goals away = ${experimentalAwayGoals}`)
     // console.log(`Weighted goals away =  ${formAway.AverageGoalsWeightedWithXG}`)
     // console.log(`Average goals conceeded weighted = ${formAway.AverageGoalsConceededWeightedWithXG}`)
@@ -1000,7 +1000,34 @@ export async function getScorePrediction(day) {
           };
           tips.push(predictionObject);
         }  
-      } else if(match.bttsChosen === true){
+      } else if (
+        match.unroundedGoalsB - (incrementValue + 2.5) > match.unroundedGoalsA &&
+        match.awayOdds !== 0 &&
+        match.fractionAway !== "N/A"
+      ) {
+        if (
+          match.prediction !== "draw" &&
+          match.status !== "suspended" &&
+          match.status !== "canceled" &&
+          match.awayOdds < 3.5 &&
+          match.awayPpg > 1
+        ) {
+          accumulatedOdds =
+            parseFloat(accumulatedOdds) * parseFloat(match.awayOdds);
+
+          predictionObject = {
+            team: `${match.awayTeam} to win`,
+            odds: match.fractionAway,
+            outcome: match.predictionOutcome,
+            goalDifferential: parseFloat(
+              await diff(match.unroundedGoalsB, match.unroundedGoalsA)
+            ),
+          };
+          tips.push(predictionObject);
+        }
+      }
+      
+      if(match.bttsChosen === true){
         accumulatedOdds =
         parseFloat(accumulatedOdds) * parseFloat(match.bttsOdds);
 
@@ -1011,31 +1038,7 @@ export async function getScorePrediction(day) {
         }
         tips.push(predictionObject)
       }
-      // else if (
-      //   match.unroundedGoalsB - incrementValue > match.unroundedGoalsA &&
-      //   match.awayOdds !== 0 &&
-      //   match.fractionAway !== "N/A"
-      // ) {
-      //   if (
-      //     match.prediction !== "draw" &&
-      //     match.status !== "suspended" &&
-      //     match.status !== "canceled" &&
-      //     match.awayOdds < 3
-      //   ) {
-      //     accumulatedOdds =
-      //       parseFloat(accumulatedOdds) * parseFloat(match.awayOdds);
 
-      //     predictionObject = {
-      //       team: match.awayTeam,
-      //       odds: match.fractionAway,
-      //       outcome: match.predictionOutcome,
-      //       goalDifferential: parseFloat(
-      //         await diff(match.unroundedGoalsB, match.unroundedGoalsA)
-      //       ),
-      //     };
-      //     tips.push(predictionObject);
-      //   }
-      // }
 
       tips.sort(function (a, b) {
         return b.goalDifferential - a.goalDifferential;
@@ -1056,7 +1059,7 @@ export async function getScorePrediction(day) {
 
       if (
         match.unroundedGoalsA - 1 > match.unroundedGoalsB &&
-        match.homeOdds >= 2
+        match.homeOdds >= 2.5
       ) {
         longShotPredictionObject = {
           team: match.homeTeam,
@@ -1071,7 +1074,7 @@ export async function getScorePrediction(day) {
         }
       } else if (
         match.unroundedGoalsA < match.unroundedGoalsB - 1 &&
-        match.awayOdds >= 2
+        match.awayOdds >= 2.5
       ) {
         longShotPredictionObject = {
           team: match.awayTeam,
