@@ -893,7 +893,7 @@ async function getSuccessMeasure(fixtures) {
       <Fragment>
         <Div
           className={"SuccessMeasure"}
-          text={`accumulated profit/loss if £1 was staked on each of the  ${gameCount} games: £${profit}`}
+          text={`£1 staked on each ${gameCount} games returns: £${profit}`}
         />
       </Fragment>,
       document.getElementById("successMeasure")
@@ -1121,10 +1121,7 @@ async function renderTips() {
           text={
             <ul className="BestPredictions">
               <div className="BestPredictionsExplainer">
-                Change the size of the accumulator with the + and - buttons.
-                Games with smaller predicted winning margins will be added or
-                taken away with each tap. Multis are based on the form option
-                selected, above
+                Increase or decrease the size of the multi
               </div>
               {tips.map((tip) => (
                 <li className={tip.outcome} key={tip.team}>
