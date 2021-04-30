@@ -149,11 +149,18 @@ export async function calculateScore(match, index, divider, id) {
         game.home.teamName === match.homeTeam &&
         game.away.teamName === match.awayTeam
     )
-  ) {
+  ) 
+  {
     teams = [
       allForm.find((game) => game.home.teamName === match.homeTeam).home,
-      allForm.find((game) => game.home.teamName === match.homeTeam).away,
+      allForm.find((game) => game.away.teamName === match.awayTeam).away,
     ];
+    console.log(`teams:`)
+    console.log(teams[0])
+    console.log(teams[1])
+    console.log(match.homeTeam)
+    console.log(match.awayTeam)
+
   } else {
     calculate = false;
   }
@@ -862,10 +869,10 @@ export async function calculateScore(match, index, divider, id) {
       rawFinalAwayGoals,
     ];
   } else {
-    finalHomeGoals = "-";
-    finalAwayGoals = "-";
-    rawFinalHomeGoals = "-";
-    rawFinalAwayGoals = "-";
+    finalHomeGoals = 0;
+    finalAwayGoals = 0;
+    rawFinalHomeGoals = 0;
+    rawFinalAwayGoals = 0;
   }
 
   return [finalHomeGoals, finalAwayGoals, rawFinalHomeGoals, rawFinalAwayGoals];
@@ -938,7 +945,7 @@ export async function getScorePrediction(day) {
       // if there are no stored predictions, calculate them based on live data
       if (match) {
         switch (true) {
-          case match.status === "!suspended":
+          case match.status === "!suspended" || match.status !== "canceled":
             [
               match.goalsA,
               match.goalsB,

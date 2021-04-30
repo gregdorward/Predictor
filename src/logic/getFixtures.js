@@ -248,6 +248,9 @@ export async function generateFixtures(day, radioState) {
 
       console.log(fixture)
 
+      if(fixture.status !== "suspended" && fixture.status !== "canceled"){
+
+
       let match = {};
       match.id = fixture.id;
       match.competition_id = fixture.competition_id;
@@ -823,13 +826,13 @@ export async function generateFixtures(day, radioState) {
       match.expectedGoalsHomeToDate = fixture.team_a_xg_prematch
       match.expectedGoalsAwayToDate = fixture.team_b_xg_prematch
 
-
       matches.push(match);
 
       // console.log(allForm)
 
       await createFixture(match, false);
     }
+  }
     ReactDOM.render(
       <Button
         text={"Get Predictions"}

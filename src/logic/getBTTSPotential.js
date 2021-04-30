@@ -11,10 +11,15 @@ export async function getBTTSPotential(allForm, match, index) {
   let away = allForm.findIndex(function (item, i) {
     return item.away.teamName === awayTeam;
   });
+  if(home !== -1 && away !== -1){
+
 
   let homeBTTS = allForm[home].home[index].BTTSPercentage;
   let awayBTTS = allForm[away].away[index].BTTSPercentage;
   let awayPPG = allForm[away].away[index].PPG
+
+  console.log(homeBTTS)
+
 
   let homeAverageConceded = allForm[home].home[index].concededAverage;
   let awayAverageConceded = allForm[away].away[index].concededAverage;
@@ -57,7 +62,7 @@ if(match.bttsFraction !== "N/A" && match.status !== "suspended" && match.status 
   }
 }
   
-
+  }
   return match;
 }
 
