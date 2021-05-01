@@ -153,6 +153,7 @@ export async function generateFixtures(day, radioState) {
   fixtureResponse = await fetch(url);
 
   await fixtureResponse.json().then((fixtures) => {
+    console.log(fixtures)
     fixtureArray = Array.from(fixtures.data);
   });
 
@@ -248,7 +249,7 @@ export async function generateFixtures(day, radioState) {
 
       console.log(fixture)
 
-      if(fixture.status !== "suspended" && fixture.status !== "canceled"){
+      // if(fixture.status !== "suspended" && fixture.status !== "canceled"){
 
 
       let match = {};
@@ -832,7 +833,7 @@ export async function generateFixtures(day, radioState) {
 
       await createFixture(match, false);
     }
-  }
+  // }
     ReactDOM.render(
       <Button
         text={"Get Predictions"}

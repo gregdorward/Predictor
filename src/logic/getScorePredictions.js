@@ -945,7 +945,7 @@ export async function getScorePrediction(day) {
       // if there are no stored predictions, calculate them based on live data
       if (match) {
         switch (true) {
-          case match.status === "!suspended" || match.status !== "canceled":
+          case match.status === "!suspended":
             [
               match.goalsA,
               match.goalsB,
