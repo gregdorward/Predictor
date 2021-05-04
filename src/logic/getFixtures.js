@@ -24,7 +24,7 @@ export const [currentDay, month, year] = new Date()
   .toLocaleDateString("en-US")
   .split("/");
 let tomorrowsDate = new Date();
-tomorrowsDate.setDate(new Date().getDate() - 3);
+tomorrowsDate.setDate(new Date().getDate() + 1);
 let [
   tomorrowDay,
   tomorrowMonth,
@@ -32,7 +32,7 @@ let [
 ] = tomorrowsDate.toLocaleDateString("en-US").split("/");
 
 let yesterdaysDate = new Date();
-yesterdaysDate.setDate(new Date().getDate() - 2);
+yesterdaysDate.setDate(new Date().getDate() - 1);
 let [
   yesterdayDay,
   yesterdayMonth,
