@@ -20,18 +20,6 @@ export async function getBTTSPotential(allForm, match, index) {
 
   console.log(homeBTTS)
 
-
-  let homeAverageConceded = allForm[home].home[index].concededAverage;
-  let awayAverageConceded = allForm[away].away[index].concededAverage;
-
-  console.log(`homeAverageConceded ${homeAverageConceded}`)
-
-  let homeAverageScored = allForm[home].home[index].scoredAverage;
-  let awayAverageScored = allForm[away].away[index].scoredAverage;
-
-  let homeOdds = match.homeOdds;
-  let awayOdds = match.awayOdds;
-
   let dangerousAttacksHome = allForm[away].home[index].DangerousAttacksHome;
   let dangerousAttacksAway = allForm[away].away[index].DangerousAttacksAway;
 

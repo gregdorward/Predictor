@@ -403,6 +403,28 @@ export async function calculateScore(match, index, divider, id) {
           2
       );
 
+      let goalOverOrUnderAchieving = parseFloat(await diff(teams[i][index].finishingScore, 1))
+      let concededOverOrUnderAchieving = parseFloat(await diff(teams[i][index].goalieRating, 1))
+      let overUnderAchievingSum = goalOverOrUnderAchieving + concededOverOrUnderAchieving
+
+      console.log(`overUnderAchievingSum ${overUnderAchievingSum}`)
+  
+      let result
+
+      switch (true) {
+        case overUnderAchievingSum > 0:
+          result = "overachieving"
+          break;
+          case overUnderAchievingSum < 0:
+            result = "underachieving"
+            break;
+        default:
+          result = "onPar"
+          break;
+      }
+
+      teams[i][index].overOrUnder = result
+
       teams[i][index].XGdifferential =
         parseFloat(teams[i][index].expectedGoals) -
         parseFloat(teams[i][index].expectedGoalsConceeded);
@@ -656,6 +678,15 @@ export async function calculateScore(match, index, divider, id) {
       } else {
         return Math.round(num);
       }
+
+
+      // if(form.overOrUnder === "overachieving"){
+      //   return Math.floor(num)
+      // } else if (form.overOrUnder === "underachieving"){
+      //   return Math.ceil(num)
+      // } else {
+      //   return Math.round(num)
+      // }
     }
 
     const XGAgainstAdjustedHomeGoals =
@@ -675,6 +706,7 @@ export async function calculateScore(match, index, divider, id) {
       parseFloat(await diff(homeGoalDiff, awayGoalDiff)) / 2;
     formAway.goalsDifferential =
       parseFloat(await diff(awayGoalDiff, homeGoalDiff)) / 2;
+      
 
     // console.log(
     //   `${match.game} home goalsDifferential = ${formHome.goalsDifferential} away goalsDifferential = ${formAway.goalsDifferential}`
