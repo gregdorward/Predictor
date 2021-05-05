@@ -1419,7 +1419,7 @@ export async function getScorePrediction(day) {
           tips.push(predictionObject);
         }
       } else if (
-        match.unroundedGoalsB - (incrementValue + 1.5) >
+        match.unroundedGoalsB - incrementValue  >
           match.unroundedGoalsA &&
         match.awayOdds !== 0 &&
         match.fractionAway !== "N/A"
