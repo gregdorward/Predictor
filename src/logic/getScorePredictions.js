@@ -51,10 +51,10 @@ async function getOverOrUnderAchievingResult(index, overUnderAchievingSum) {
       switch (true) {
         case index === 0:
           switch (true) {
-            case overUnderAchievingSum < -0.25:
+            case overUnderAchievingSum < -0.35:
               result = "overachieving";
               break;
-            case overUnderAchievingSum > 0.25:
+            case overUnderAchievingSum > 0.35:
               result = "underachieving";
               break;
             default:
@@ -66,10 +66,10 @@ async function getOverOrUnderAchievingResult(index, overUnderAchievingSum) {
 
         case index === 1:
           switch (true) {
-            case overUnderAchievingSum < -0.15:
+            case overUnderAchievingSum < -0.25:
               result = "overachieving";
               break;
-            case overUnderAchievingSum > 0.15:
+            case overUnderAchievingSum > 0.25:
               result = "underachieving";
               break;
             default:
@@ -1169,24 +1169,24 @@ export async function calculateScore(match, index, divider, id) {
       // ((formAway.AverageGoalsWeightedWithXG + formHome.AverageGoalsConceededWeightedWithXG) / 2)
     );
 
-    // console.log(match.game);
-    // console.log(formHome)
-    // console.log(formAway)
+    console.log(match.game);
+    console.log(formHome)
+    console.log(formAway)
 
-    // console.log(`rawFinalHomeGoals: ${rawFinalHomeGoals}`)
-    // console.log(`rawFinalAwayGoals: ${rawFinalAwayGoals}`)
+    console.log(`rawFinalHomeGoals: ${rawFinalHomeGoals}`)
+    console.log(`rawFinalAwayGoals: ${rawFinalAwayGoals}`)
 
-    // console.log(`experimentalHomeGoals: ${experimentalHomeGoals}`)
+    console.log(`experimentalHomeGoals: ${experimentalHomeGoals}`)
 
-    // console.log(`experimentalAwayGoals: ${experimentalAwayGoals}`)
+    console.log(`experimentalAwayGoals: ${experimentalAwayGoals}`)
 
-    // console.log(`XGGoalsHome: ${XGGoalsHome}`)
+    console.log(`XGGoalsHome: ${XGGoalsHome}`)
 
-    // console.log(`XGGoalsAway: ${XGGoalsAway}`)
+    console.log(`XGGoalsAway: ${XGGoalsAway}`)
 
-    // console.log(`homeGoalsBasedOnDA: ${homeGoalsBasedOnDA}`)
+    console.log(`homeGoalsBasedOnDA: ${homeGoalsBasedOnDA}`)
 
-    // console.log(`awayGoalsBasedOnDA: ${awayGoalsBasedOnDA}`)
+    console.log(`awayGoalsBasedOnDA: ${awayGoalsBasedOnDA}`)
     
     // console.log(`homeAdvantageAttackAdjustment ${homeAdvantageAttackAdjustment}`)
     // console.log(`home homeDefenceAdvantageWeighted ${formHome.homeDefenceAdvantageWeighted}`)
@@ -1419,7 +1419,7 @@ export async function getScorePrediction(day) {
           tips.push(predictionObject);
         }
       } else if (
-        match.unroundedGoalsB - incrementValue  >
+        match.unroundedGoalsB - incrementValue >
           match.unroundedGoalsA &&
         match.awayOdds !== 0 &&
         match.fractionAway !== "N/A"
