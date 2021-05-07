@@ -16,6 +16,8 @@ export async function getBTTSPotential(allForm, match, index) {
 
   let homeBTTS = allForm[home].home[index].BTTSPercentage;
   let awayBTTS = allForm[away].away[index].BTTSPercentage;
+  let homePPG = allForm[home].home[index].PPG
+
   let awayPPG = allForm[away].away[index].PPG
 
   console.log(homeBTTS)
@@ -29,7 +31,8 @@ if(match.bttsFraction !== "N/A" && match.status !== "suspended" && match.status 
   if (
     match.combinedBTTS >= 70 &&
     match.btts_potential > 60 &&
-    awayPPG > 1.4 &&
+    awayPPG > 1.5 &&
+    homePPG > 1 &&
     dangerousAttacksHome >= 40 && 
     dangerousAttacksAway >= 40
   ) {
@@ -40,7 +43,8 @@ if(match.bttsFraction !== "N/A" && match.status !== "suspended" && match.status 
     match.btts_potential > 50 &&
     dangerousAttacksHome > 45 && 
     dangerousAttacksAway > 45 &&
-    awayPPG > 1.2
+    awayPPG > 1.5 &&
+    homePPG > 1
   ){
     match.btts = true;
     match.bttsChosen = false;

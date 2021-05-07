@@ -73,19 +73,21 @@ function GetDivider(fixture) {
     }
 
     if (outcome === prediction) {
+      // console.log(fixture.fixture.game);
       switch (true) {
         case outcome === 0:
-          fixture.fixture.profit = fixture.fixture.homeOdds - 1;
+          fixture.fixture.profit = fixture.fixture.homeOdds;
           break;
         case outcome === 1:
-          fixture.fixture.profit = fixture.fixture.drawOdds - 1;
+          fixture.fixture.profit = fixture.fixture.drawOdds;
           break;
         case outcome === 2:
-          fixture.fixture.profit = fixture.fixture.awayOdds - 1;
+          fixture.fixture.profit = fixture.fixture.awayOdds;
           break;
         default:
           break;
       }
+      // console.log(`profit ${fixture.fixture.profit}`);
 
       return (
         <Fragment>
@@ -98,7 +100,9 @@ function GetDivider(fixture) {
         </Fragment>
       );
     } else if (outcome !== prediction) {
-      fixture.fixture.profit = -1;
+      fixture.fixture.profit = 0;
+      // console.log(fixture.fixture.game);
+      // console.log(`profit ${fixture.fixture.profit}`);
 
       return (
         <Fragment>
@@ -113,12 +117,12 @@ function GetDivider(fixture) {
   } else {
     return (
       <Fragment>
-      <div className="Result">{`${fixture.fixture.time}`}</div>
-      <div
-        className="score"
-        key={fixture.fixture.awayTeam}
-      >{`${fixture.fixture.goalsA} - ${fixture.fixture.goalsB}`}</div>
-    </Fragment>
+        <div className="Result">{`${fixture.fixture.time}`}</div>
+        <div
+          className="score"
+          key={fixture.fixture.awayTeam}
+        >{`${fixture.fixture.goalsA} - ${fixture.fixture.goalsB}`}</div>
+      </Fragment>
     );
   }
 }
