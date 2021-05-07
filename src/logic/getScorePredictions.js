@@ -376,7 +376,7 @@ export async function calculateScore(match, index, divider, id) {
       gameTotalWeighting = 1.2;
       break;
     case divider === 10:
-      gameTotalWeighting = 2;
+      gameTotalWeighting = 1;
       break;
     default:
       break;
@@ -403,7 +403,13 @@ export async function calculateScore(match, index, divider, id) {
   }
 
   if (calculate) {
+
     for (let i = 0; i < teams.length; i++) {
+      if(teams[0][index].PlayedHome <= 1 || teams[1][index].PlayedAway <= 1){
+        index = 2
+        divider = 10
+      }
+
       teams[i][index].lastGame = teams[i][index].LastFiveForm[4];
       teams[i][index].previousToLastGame = teams[i][index].LastFiveForm[3];
 
@@ -515,22 +521,40 @@ export async function calculateScore(match, index, divider, id) {
         teams[i][index].ConcededAway / teams[i][index].PlayedAway +
         teams[i][index].XGAgainstAway / 2;
 
-      if (teams[i][index].ScoredOverall > 0) {
-        teams[i][index].finishingScore = parseFloat(
-          teams[i][index].expectedGoalsShortAndLongTerm /
-            teams[i][index].scoredAverageShortAndLongTerm
+      if (teams[0][index].ScoredHome > 0) {
+        teams[0][index].finishingScore = parseFloat(
+          teams[0][index].expectedGoalsShortAndLongTerm /
+            teams[0][index].scoredAverageShortAndLongTerm
         );
       } else {
-        teams[i][index].finishingScore = 1;
+        teams[0][index].finishingScore = teams[0][index].scoredAverage;
       }
 
-      if (teams[i][index].ConcededOverall > 0) {
-        teams[i][index].goalieRating = parseFloat(
-          teams[i][index].conceededAverageShortAndLongTerm /
-            teams[i][index].expectedConceededGoalsShortAndLongTerm
+      if (teams[1][index].ScoredAway > 0) {
+        teams[1][index].finishingScore = parseFloat(
+          teams[1][index].expectedGoalsShortAndLongTerm /
+            teams[1][index].scoredAverageShortAndLongTerm
         );
       } else {
-        teams[i][index].goalieRating = 2;
+        teams[1][index].finishingScore = teams[1][index].scoredAverage;
+      }
+
+      if (teams[0][index].ConcededHome > 0) {
+        teams[0][index].goalieRating = parseFloat(
+          teams[0][index].conceededAverageShortAndLongTerm /
+            teams[0][index].expectedConceededGoalsShortAndLongTerm
+        );
+      } else {
+        teams[0][index].goalieRating = 0;
+      }
+
+      if (teams[1][index].ConcededAway > 0) {
+        teams[1][index].goalieRating = parseFloat(
+          teams[1][index].conceededAverageShortAndLongTerm /
+            teams[1][index].expectedConceededGoalsShortAndLongTerm
+        );
+      } else {
+        teams[1][index].goalieRating = 0;
       }
 
       teams[i][index].defenceScore = parseInt(
@@ -1176,19 +1200,28 @@ export async function calculateScore(match, index, divider, id) {
         formHome.AverageGoalsConceededWeightedWithXG) /
       2;
 
-    // console.log(match.game);
+    console.log(match.game);
+    console.log(`index ${index}`)
     // console.log(`home goals: ${XGGoalsHome}`);
-    // console.log("formHome");
-    // console.log(formHome);
-    // console.log(`Goals home = ${experimentalHomeGoals}`)
+    console.log("formHome");
+    console.log(formHome);
+    console.log(`Goals home = ${experimentalHomeGoals}`)
+
+
     // console.log(`Weighted goals home =  ${formHome.AverageGoalsWeightedWithXG}`)
     // console.log(`Average goals conceeded weighted = ${formHome.AverageGoalsConceededWeightedWithXG}`)
     // // console.log(last5WeightingHome);
 
-    // console.log("formAway");
+    console.log("formAway");
     // console.log(`away goals: ${XGGoalsAway}`);
-    // console.log(formAway);
-    // console.log(`Goals away = ${experimentalAwayGoals}`)
+    console.log(formAway);
+    console.log(`Goals away = ${experimentalAwayGoals}`)
+    console.log(`awayCalculation ${awayCalculation}`)
+    console.log(`factorOneAway ${factorOneAway}`)
+    console.log(`factorTwoAway ${factorTwoAway}`)
+    console.log(`formAway.trueFormGoalsWeighting ${formAway.trueFormGoalsWeighting}`)
+    console.log(`formHome.trueFormConceededWeighting ${formHome.trueFormConceededWeighting}`)
+    
     // console.log(`Weighted goals away =  ${formAway.AverageGoalsWeightedWithXG}`)
     // console.log(`Average goals conceeded weighted = ${formAway.AverageGoalsConceededWeightedWithXG}`)
 
@@ -1344,12 +1377,12 @@ export async function calculateScore(match, index, divider, id) {
 
     finalAwayGoals = await roundCustom(rawFinalAwayGoals, formAway, formHome);
 
-    if(finalHomeGoals > 5){
-      finalHomeGoals = 5
+    if(finalHomeGoals > 7){
+      finalHomeGoals = 7
     }
 
-    if(finalAwayGoals > 5){
-      finalAwayGoals = 5
+    if(finalAwayGoals > 7){
+      finalAwayGoals = 7
     }
 
 
@@ -1357,9 +1390,6 @@ export async function calculateScore(match, index, divider, id) {
 
     // finalAwayGoals = rawFinalAwayGoals.toFixed(1)
 
-    console.log(match.game)
-    console.log(formHome)
-    console.log(formAway)
 
     if (finalHomeGoals > finalAwayGoals) {
       match.prediction = "homeWin";
