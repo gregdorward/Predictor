@@ -373,7 +373,7 @@ export async function calculateScore(match, index, divider, id) {
       gameTotalWeighting = 1;
       break;
     case divider === 6:
-      gameTotalWeighting = 1.2;
+      gameTotalWeighting = 1;
       break;
     case divider === 10:
       gameTotalWeighting = 1;
