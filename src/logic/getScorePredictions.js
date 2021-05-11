@@ -9,6 +9,7 @@ import { allForm } from "../logic/getFixtures";
 import Increment from "../components/Increment";
 import { incrementValue } from "../components/Increment";
 import { getBTTSPotential } from "../logic/getBTTSPotential";
+import { ThreeDots } from 'react-loading-icons'
 
 var myHeaders = new Headers();
 myHeaders.append("Origin", "https://gregdorward.github.io");
@@ -1200,27 +1201,27 @@ export async function calculateScore(match, index, divider, id) {
         formHome.AverageGoalsConceededWeightedWithXG) /
       2;
 
-    console.log(match.game);
-    console.log(`index ${index}`)
+    // console.log(match.game);
+    // console.log(`index ${index}`)
     // console.log(`home goals: ${XGGoalsHome}`);
-    console.log("formHome");
-    console.log(formHome);
-    console.log(`Goals home = ${experimentalHomeGoals}`)
+    // console.log("formHome");
+    // console.log(formHome);
+    // console.log(`Goals home = ${experimentalHomeGoals}`)
 
 
     // console.log(`Weighted goals home =  ${formHome.AverageGoalsWeightedWithXG}`)
     // console.log(`Average goals conceeded weighted = ${formHome.AverageGoalsConceededWeightedWithXG}`)
     // // console.log(last5WeightingHome);
 
-    console.log("formAway");
+    // console.log("formAway");
     // console.log(`away goals: ${XGGoalsAway}`);
-    console.log(formAway);
-    console.log(`Goals away = ${experimentalAwayGoals}`)
-    console.log(`awayCalculation ${awayCalculation}`)
-    console.log(`factorOneAway ${factorOneAway}`)
-    console.log(`factorTwoAway ${factorTwoAway}`)
-    console.log(`formAway.trueFormGoalsWeighting ${formAway.trueFormGoalsWeighting}`)
-    console.log(`formHome.trueFormConceededWeighting ${formHome.trueFormConceededWeighting}`)
+    // console.log(formAway);
+    // console.log(`Goals away = ${experimentalAwayGoals}`)
+    // console.log(`awayCalculation ${awayCalculation}`)
+    // console.log(`factorOneAway ${factorOneAway}`)
+    // console.log(`factorTwoAway ${factorTwoAway}`)
+    // console.log(`formAway.trueFormGoalsWeighting ${formAway.trueFormGoalsWeighting}`)
+    // console.log(`formHome.trueFormConceededWeighting ${formHome.trueFormConceededWeighting}`)
     
     // console.log(`Weighted goals away =  ${formAway.AverageGoalsWeightedWithXG}`)
     // console.log(`Average goals conceeded weighted = ${formAway.AverageGoalsConceededWeightedWithXG}`)
@@ -1469,32 +1470,41 @@ export async function calculateScore(match, index, divider, id) {
 }
 
 async function getSuccessMeasure(fixtures) {
-  let sum = 0;
-  let gameCount = 0;
-  let profit;
+  let sumProfit = 0;
+  let sumLoss = 0;
+  let investment = 0;
+  let netProfit;
 
   for (let i = 0; i < fixtures.length; i++) {
     if (fixtures[i].status === "complete") {
       // console.log(fixtures[i].game)
-      // console.log(fixtures[i].profit)
-      sum = sum + fixtures[i].profit;
+      // console.log(fixtures[i].netProfit)
+      sumProfit = sumProfit + fixtures[i].profit;
 
-      profit = sum.toFixed(2);
-      // console.log(profit);
+      // if(fixtures[i].profit === 0){
+      //   sumLoss = sumLoss - 1;
+      // }
 
-      gameCount = gameCount + 1;
-      // console.log(gameCount);
+      investment = investment + 1
+      console.log(`total investment ${investment}`)
+      netProfit = (sumProfit - investment).toFixed(2)
+      console.log(`netProfit ${netProfit}`)
+
     }
   }
 
-  let ROI = (profit / gameCount) * 100;
+  // let ROI = ((netProfit + stake) / stake) * 100;
 
-  if (gameCount > 0) {
+  let ROI = (netProfit / investment) * 100
+  var operand = ( ROI >= 0 ) ? "+" : "";
+
+
+  if (investment > 0) {
     ReactDOM.render(
       <Fragment>
         <Div
           className={"SuccessMeasure"}
-          text={`ROI for all W/D/W outcomes: ${ROI.toFixed(2)}%`}
+          text={`ROI for all ${investment} W/D/W outcomes: ${operand} ${ROI.toFixed(2)}%`}
         />
       </Fragment>,
       document.getElementById("successMeasure")
@@ -1511,6 +1521,7 @@ var accumulatedOdds = 1;
 let predictions = [];
 
 export async function getScorePrediction(day) {
+
   let radioSelected = parseInt(selectedOption);
   tips = [];
   bttsArray = [];

@@ -190,10 +190,6 @@ export async function generateFixtures(day, radioState) {
     isStoredLocally = false;
   }
 
-  league = await fetch(
-    `${process.env.REACT_APP_EXPRESS_SERVER}leagues/${currentDay}${month}${year}`
-  );
-
   ReactDOM.render(
     <div>
     <div className="LoadingText">Loading all league data</div>
@@ -202,12 +198,20 @@ export async function generateFixtures(day, radioState) {
     document.getElementById("Buttons")
   );
 
+  league = await fetch(
+    `${process.env.REACT_APP_EXPRESS_SERVER}leagues/${currentDay}${month}${year}`
+  );
+
+
+
 
   var leaguePositions = [];
 
   if (league.status === 200) {
     await league.json().then((leagues) => {
       leagueArray = Array.from(leagues.leagueArray);
+      console.log(leagueArray)
+
     });
   } else {
     for (let i = 0; i < orderedLeagues.length; i++) {
@@ -217,9 +221,13 @@ export async function generateFixtures(day, radioState) {
       // eslint-disable-next-line no-loop-func
       await league.json().then((table) => {
         leagueArray.push(table);
+
       });
+      console.log(leagueArray)
     }
   }
+
+
 
   for (let i = 0; i < 20; i++) {
     for (
@@ -228,6 +236,8 @@ export async function generateFixtures(day, radioState) {
       x++
     ) {
       let string = leagueArray[i].data.all_matches_table_overall[x];
+
+
       leaguePositions.push({
         name: string.cleanName,
         position: string.position,
@@ -247,7 +257,6 @@ export async function generateFixtures(day, radioState) {
       const milliseconds = unixTimestamp * 1000;
       const dateObject = new Date(milliseconds);
 
-      console.log(fixture)
 
       // if(fixture.status !== "suspended" && fixture.status !== "canceled"){
 

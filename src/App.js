@@ -57,7 +57,7 @@ export var orderedLeagues = [];
     for (let x = 0; x < league.season.length; x++) {
       const element = league.season[x];
 
-      if (element.year === 20202021) {
+      if (element.year === 20202021 || element.year === 2021) {
         availableLeagues.push({ name: name, element });
       }
     }

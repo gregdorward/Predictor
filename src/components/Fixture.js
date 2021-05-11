@@ -5,7 +5,7 @@ import { createStatsDiv } from "../logic/getStats";
 
 let resultValue;
 const text =
-  "Next to each badge is each team’s points per game picked up at home or away.\n Once the fixtures have loaded, click on “Get Predictions” to get predictions based on form data.\n Click on an individual fixture for detailed stats for both teams.\n If you change your form selection, re-tapping the fixture will fetch new form data.\n You can also fetch fresh predictions based on the newly selected option by re-tapping on “Get Predictions” at any time.\n If a match is resulted, tapping “Get Predictions” will show how accurate the prediction was.\n If no form radio button is chosen, the last 5 games will be used by default";
+  "XG Tipping formulates predictions based on recent form data ranging from points per game to each teams attacking potency\n Expected Goals in previous matches are used to determine whether teams might be over or underperforming and predictions are weighted as such\n Once all fixtures have loaded, click on “Get Predictions”\n Predictions are displayed on the right and the results on the left\n Click on an individual fixture for detailed stats for both teams.\n If you change your form selection, re-tapping the fixture will fetch new form data.\n You can also fetch fresh predictions based on the newly selected option by re-tapping on “Get Predictions” at any time.\n If no form radio button is chosen, the last 5 games will be used by default";
 
 function GetDivider(fixture) {
   const matchStatus = fixture.status;
@@ -188,7 +188,7 @@ let newText = text.split("\n").map((i) => {
 const List = ({ fixtures }) => (
   <div>
     <Fragment>
-      <Collapsable className={"HowToUse"} buttonText={"?"} text={newText} />
+      <Collapsable className={"HowToUse"} buttonText={"Show / Hide help"} text={newText} />
     </Fragment>
     <ul>
       {fixtures.map((fixture, i) => (
