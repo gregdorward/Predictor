@@ -320,6 +320,7 @@ p {
   /* align-content: center; */
 
   align-items: center;
+  align-content: center;
   /* flex-direction: row;
   
   font-size: 0.5em; */
@@ -549,30 +550,30 @@ p {
 
 .win {
   background-color: rgb(22, 165, 22);
-  padding: 0.75vw;
+  padding: 0.5em;
   /* padding-left: 7px;
   padding-right: 7px; */
-  margin: 1px;
+  margin: 0.2em;
   color: white;
   font-weight: 600;
 }
 
 .loss {
   background-color: #970d00;
-  padding: 0.75vw;
+  padding: 0.5em;
   /* padding-left: 7px;
   padding-right: 7px; */
-  margin: 1px;
+  margin: 0.2em;
   color: white;
   font-weight: 600;
 }
 
 .draw {
   background-color: rgb(70, 70, 70);
-  padding: 0.75vw;
+  padding: 0.5em;
   /* padding-left: 7px;
   padding-right: 7px; */
-  margin: 1px;
+  margin: 0.2em;
   color: white;
   font-weight: 600;
 }

@@ -1665,7 +1665,7 @@ export async function getScorePrediction(day) {
         });
       }
 
-      if (match.unroundedGoalsA - 0.5 > match.unroundedGoalsB && match.homeOdds >= 2.5) {
+      if ((match.unroundedGoalsA - 0.5 > match.unroundedGoalsB && match.homeOdds >= 2.5) && (match.goalsA > match.goalsB)) {
         longShotPredictionObject = {
           team: match.homeTeam,
           odds: match.fractionHome,
@@ -1677,7 +1677,7 @@ export async function getScorePrediction(day) {
         if (match.prediction !== "draw") {
           longShotTips.push(longShotPredictionObject);
         }
-      } else if (match.unroundedGoalsA < match.unroundedGoalsB - 0.5 && match.awayOdds >= 2.5) {
+      } else if ((match.unroundedGoalsA < match.unroundedGoalsB - 0.5 && match.awayOdds >= 2.5) && (match.goalsB > match.goalsA)) {
         longShotPredictionObject = {
           team: match.awayTeam,
           odds: match.fractionAway,

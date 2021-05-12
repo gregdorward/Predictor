@@ -128,11 +128,8 @@ function GetDivider(fixture) {
 }
 
 function getStyle(bool) {
-  if (bool === true) {
-    return "BTTSFixture";
-  } else {
+
     return "individualFixture";
-  }
 }
 
 const SingleFixture = ({ fixture }) => (
