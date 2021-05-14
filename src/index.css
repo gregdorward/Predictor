@@ -27,7 +27,7 @@
     font-weight: 500;
     color: #99261c;
     background-color: white;
-    text-shadow: 0 0.04em 0.04em rgba(0, 0, 0, 0.35);
+    /* text-shadow: 0 0.04em 0.04em rgba(0, 0, 0, 0.35); */
     text-align: center;
   
     transition: all 0.2s;
@@ -62,7 +62,7 @@
     font-weight: 500;
     color: #99261c;
     background-color: white;
-    text-shadow: 0 0.04em 0.04em rgba(0, 0, 0, 0.35);
+    /* text-shadow: 0 0.04em 0.04em rgba(0, 0, 0, 0.35); */
     text-align: center;
   
     transition: all 0.2s;
@@ -97,7 +97,7 @@
     font-weight: 500;
     color: #99261c;
     background-color: white;
-    text-shadow: 0 0.04em 0.04em rgba(0, 0, 0, 0.35);
+    /* text-shadow: 0 0.04em 0.04em rgba(0, 0, 0, 0.35); */
     text-align: center;
   
     transition: all 0.2s;
@@ -132,7 +132,7 @@
     font-weight: 500;
     color: #99261c;
     background-color: white;
-    text-shadow: 0 0.04em 0.04em rgba(0, 0, 0, 0.35);
+    /* text-shadow: 0 0.04em 0.04em rgba(0, 0, 0, 0.35); */
     text-align: center;
   
     transition: all 0.2s;
@@ -167,7 +167,7 @@
     font-weight: 500;
     color: #99261c;
     background-color: white;
-    text-shadow: 0 0.04em 0.04em rgba(0, 0, 0, 0.35);
+    /* text-shadow: 0 0.04em 0.04em rgba(0, 0, 0, 0.35); */
     text-align: center;
   
     transition: all 0.2s;
@@ -202,7 +202,7 @@
     font-weight: 500;
     color: #99261c;
     background-color: white;
-    text-shadow: 0 0.04em 0.04em rgba(0, 0, 0, 0.35);
+    /* text-shadow: 0 0.04em 0.04em rgba(0, 0, 0, 0.35); */
     text-align: center;
   
     transition: all 0.2s;
@@ -240,7 +240,7 @@ h3 {
 }
 
 .SocialLink{
-  font-size: 0.9em;
+  font-size: 1em;
   color: white;
 }
 
