@@ -190,6 +190,7 @@ function App() {
   return (
     <div className="App">
       <Header />
+      <a className="SocialLink" href="https://www.reddit.com/r/xgtipping/" target="_blank" rel="noreferrer">r/xgtipping</a>
       <div id="LoadingContainer" className="LoadingContainer" />
       <div id="RadioContainer" className="RadioContainer">
         <div id="RadioText" />

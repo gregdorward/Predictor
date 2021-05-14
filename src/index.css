@@ -23,7 +23,7 @@
     text-decoration: none;
     font-family: "Roboto", sans-serif;
     flex-basis: 20%;
-    font-size: 0.8em;
+    font-size: 1em;
     font-weight: 500;
     color: #99261c;
     background-color: white;
@@ -58,7 +58,7 @@
     text-decoration: none;
     font-family: "Roboto", sans-serif;
     flex-basis: 20%;
-    font-size: 0.8em;
+    font-size: 1em;
     font-weight: 500;
     color: #99261c;
     background-color: white;
@@ -93,7 +93,7 @@
     text-decoration: none;
     font-family: "Roboto", sans-serif;
     flex-basis: 20%;
-    font-size: 0.8em;
+    font-size: 1em;
     font-weight: 500;
     color: #99261c;
     background-color: white;
@@ -128,7 +128,7 @@
     text-decoration: none;
     font-family: "Roboto", sans-serif;
     flex-basis: 20%;
-    font-size: 0.8em;
+    font-size: 1em;
     font-weight: 500;
     color: #99261c;
     background-color: white;
@@ -143,7 +143,7 @@
   body > #root > div {
     height: 100vh;
     font-family: "Roboto", sans-serif;
-    font-size: 2.3vw;
+    font-size: 2.4vw;
     display: flex;
     flex-direction: column;
     flex-basis: 100%;
@@ -163,7 +163,7 @@
     text-decoration: none;
     font-family: "Roboto", sans-serif;
     flex-basis: 20%;
-    font-size: 0.8em;
+    font-size: 1em;
     font-weight: 500;
     color: #99261c;
     background-color: white;
@@ -178,7 +178,7 @@
   body > #root > div {
     height: 100vh;
     font-family: "Roboto", sans-serif;
-    font-size: 2.4vw;
+    font-size: 2.6vw;
     display: flex;
     flex-direction: column;
     flex-basis: 100%;
@@ -198,7 +198,7 @@
     text-decoration: none;
     font-family: "Roboto", sans-serif;
     flex-basis: 20%;
-    font-size: 0.8em;
+    font-size: 1em;
     font-weight: 500;
     color: #99261c;
     background-color: white;
@@ -236,6 +236,11 @@ h2 {
 h3 {
   /* font-size: 1.75em; */
   font-weight: 500;
+  color: white;
+}
+
+.SocialLink{
+  font-size: 0.9em;
   color: white;
 }
 
