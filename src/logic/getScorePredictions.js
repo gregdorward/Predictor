@@ -636,9 +636,18 @@ export async function calculateScore(match, index, divider, id) {
       let goalOverOrUnderAchieving = parseFloat(
         await diff(teams[i][index].finishingScore, 0)
       );
+
+      if(teams[i][index].scoredAverage < 0.5){
+        goalOverOrUnderAchieving = goalOverOrUnderAchieving / 4
+      }
+
       let concededOverOrUnderAchieving = parseFloat(
         await diff(teams[i][index].goalieRating, 0)
       );
+
+      if(teams[i][index].concededAverage < 0.5){
+        concededOverOrUnderAchieving = concededOverOrUnderAchieving / 4
+      }
 
       console.log(`Team ${teams[i].teamName}`);
       console.log(
