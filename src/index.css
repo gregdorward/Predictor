@@ -303,6 +303,26 @@ p {
   margin-left: 10px;
 }
 
+.WelcomeText{
+  padding: 0.75em;
+}
+
+.AllLeagues{
+  margin: 0;
+}
+
+.League{
+  padding: 0.75em;
+}
+
+.DataText{
+  padding: 0.25em;
+}
+
+.DataLink{
+  color: white;
+}
+
 .fixture {
   display: flex;
   align-items: center;

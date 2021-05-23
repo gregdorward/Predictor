@@ -12,44 +12,57 @@ import {
 } from "./logic/getFixtures";
 import { selectedOption } from "./components/radio";
 import TextBlock from "./components/TextSection";
-import Collapsable from "./components/CollapsableElement";
-import CheckBox from "./components/Checkbox";
 require("dotenv").config();
 
 export const proxyurl = "https://safe-caverns-99679.herokuapp.com/";
 export var fixtureList = [];
 export let allLeagueData = [];
-let leagueObject;
-
-// var slider = document.getElementById("myRange");
-
-// var output = document.getElementById("weight");
-// output.innerHTML = slider.value;
-
-// slider.oninput = function () {
-//   output.innerHTML = this.value;
-//   weighting = this.value / 100;
-// };
-
-// (async function populateContent() {
-//   // spinner.showSpinner();
-
-//   // spinner.hideSpinner();
-// })();
 
 export const availableLeagues = [];
 export var orderedLeagues = [];
 
 (async function getLeagueList() {
+
+
   let leagueList = await fetch(
     `${process.env.REACT_APP_EXPRESS_SERVER}leagueList`
+  );
+
+  ReactDOM.render(
+    <div>
+      <div className="WelcomeText">
+        Global fixtures and predictions from leagues including
+      </div>
+      <ul className="AllLeagues">
+        <li className="League">Premier League</li>
+        <li className="League">La Liga</li>
+        <li className="League">Serie A</li>
+        <li className="League">Bundesliga</li>
+        <li className="League">Ligue 1</li>
+        <li className="League">MLS</li>
+        <li className="League">Primeira Liga</li>
+        <li className="League">And 21 more...</li>
+      </ul>
+      <div className="DataText">
+        Powered by data from 
+        </div>
+        <a
+        className="DataLink"
+        href="https://www.footystats.org"
+        target="_blank"
+        rel="noreferrer"
+      >
+         footystats.org
+      </a>
+    </div>,
+    document.getElementById("FixtureContainer")
   );
   let leagueArray;
   await leagueList.json().then((leagues) => {
     leagueArray = Array.from(leagues.data);
   });
 
-  console.log(leagueArray)
+  console.log(leagueArray);
   for (let i = 0; i < leagueArray.length; i++) {
     const league = leagueArray[i];
     const name = leagueArray[i].name;
@@ -61,7 +74,6 @@ export var orderedLeagues = [];
         availableLeagues.push({ name: name, element });
       }
     }
-
 
     function mapOrder(array, order, key) {
       array.sort(function (a, b) {
@@ -80,8 +92,8 @@ export var orderedLeagues = [];
 
     //leagues ordered by id
     var leagueOrder = [
-      4759,
-      4912,
+      4759, //premier league
+      4912, //championship
       4845,
       4844,
       5018,
@@ -110,14 +122,17 @@ export var orderedLeagues = [];
       4930,
       4693,
       5713,
+      5505, //sweden
+      4642, //Denmark
+      4507, //Mexico
     ];
 
     orderedLeagues = mapOrder(availableLeagues, leagueOrder, "id");
   }
-  console.log(process.env.REACT_APP_EXPRESS_SERVER);
 
   let response;
   let responseBody;
+  
 
   ReactDOM.render(
     <div className="LoadingText">
@@ -191,7 +206,14 @@ function App() {
   return (
     <div className="App">
       <Header />
-      <a className="SocialLink" href="https://www.reddit.com/r/xgtipping/" target="_blank" rel="noreferrer">r/xgtipping</a>
+      <a
+        className="SocialLink"
+        href="https://www.reddit.com/r/xgtipping/"
+        target="_blank"
+        rel="noreferrer"
+      >
+        r/xgtipping
+      </a>
       <div id="LoadingContainer" className="LoadingContainer" />
       <div id="RadioContainer" className="RadioContainer">
         <div id="RadioText" />
