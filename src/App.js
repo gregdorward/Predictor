@@ -22,41 +22,10 @@ export const availableLeagues = [];
 export var orderedLeagues = [];
 
 (async function getLeagueList() {
-
-
   let leagueList = await fetch(
     `${process.env.REACT_APP_EXPRESS_SERVER}leagueList`
   );
 
-  ReactDOM.render(
-    <div>
-      <div className="WelcomeText">
-        Global fixtures and predictions from leagues including
-      </div>
-      <ul className="AllLeagues">
-        <li className="League">Premier League</li>
-        <li className="League">La Liga</li>
-        <li className="League">Serie A</li>
-        <li className="League">Bundesliga</li>
-        <li className="League">Ligue 1</li>
-        <li className="League">MLS</li>
-        <li className="League">Primeira Liga</li>
-        <li className="League">And 21 more...</li>
-      </ul>
-      <div className="DataText">
-        Powered by data from 
-        </div>
-        <a
-        className="DataLink"
-        href="https://www.footystats.org"
-        target="_blank"
-        rel="noreferrer"
-      >
-         footystats.org
-      </a>
-    </div>,
-    document.getElementById("FixtureContainer")
-  );
   let leagueArray;
   await leagueList.json().then((leagues) => {
     leagueArray = Array.from(leagues.data);
@@ -132,7 +101,6 @@ export var orderedLeagues = [];
 
   let response;
   let responseBody;
-  
 
   ReactDOM.render(
     <div className="LoadingText">
@@ -227,7 +195,32 @@ function App() {
       <div id="longShots" />
       <div id="homeBadge" />
       <div id="FixtureContainerHeaders"></div>
-      <div id="FixtureContainer"></div>
+      <div id="FixtureContainer">
+        <div>
+          <div className="WelcomeText">
+            Global fixtures and predictions from leagues including
+          </div>
+          <ul className="AllLeagues">
+            <li className="League">Premier League</li>
+            <li className="League">La Liga</li>
+            <li className="League">Serie A</li>
+            <li className="League">Bundesliga</li>
+            <li className="League">Ligue 1</li>
+            <li className="League">MLS</li>
+            <li className="League">Primeira Liga</li>
+            <li className="League">And 21 more...</li>
+          </ul>
+          <div className="DataText">Powered by data from</div>
+          <a
+            className="DataLink"
+            href="https://www.footystats.org"
+            target="_blank"
+            rel="noreferrer"
+          >
+            footystats.org
+          </a>
+        </div>
+      </div>
     </div>
   );
 }
