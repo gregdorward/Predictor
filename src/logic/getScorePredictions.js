@@ -1438,56 +1438,9 @@ export async function calculateScore(match, index, divider, id) {
         formHome.overOrUnder !== "overachievingDrastically":
         rawFinalAwayGoals = rawFinalAwayGoals + 0.2;
         break;
-
-      // case formHome.overOrUnder === "underachieving":
-      //   rawFinalHomeGoals = rawFinalHomeGoals + 0.1;
-      //   break;
-      // case formAway.overOrUnder === "underachieving":
-      //   rawFinalAwayGoals = rawFinalAwayGoals + 0.1;
-      //   break;
-      // case formHome.overOrUnder === "overachieving":
-      //   rawFinalHomeGoals = rawFinalHomeGoals - 0.1;
-      //   break;
-      // case formAway.overOrUnder === "overachieving":
-      //   rawFinalAwayGoals = rawFinalAwayGoals - 0.1;
-      //   break;
       default:
         break;
     }
-
-    // if (
-    //   formHome.overOrUnder === "overachievingDrastically" &&
-    //   formAway.overOrUnder === "underachievingDrastically"
-    // ) {
-    //   rawFinalHomeGoals = rawFinalHomeGoals - 1;
-    //   rawFinalAwayGoals = rawFinalAwayGoals + 1;
-    // } else if (
-    //   formAway.overOrUnder === "overachievingDrastically" &&
-    //   formHome.overOrUnder === "underachievingDrastically"
-    // ) {
-    //   rawFinalHomeGoals = rawFinalHomeGoals + 1;
-    //   rawFinalAwayGoals = rawFinalAwayGoals - 1;
-    // } else if (
-    //   formHome.overOrUnder === "overachievingDrastically" &&
-    //   formAway.overOrUnder !== "underachievingDrastically"
-    // ) {
-    //   rawFinalHomeGoals = rawFinalHomeGoals - 1;
-    // } else if (
-    //   formAway.overOrUnder === "overachievingDrastically" &&
-    //   formHome.overOrUnder !== "underachievingDrastically"
-    // ) {
-    // rawFinalAwayGoals = rawFinalAwayGoals - 1;
-    // } else if (
-    //   formHome.overOrUnder === "underachievingDrastically" &&
-    //   formAway.overOrUnder !== "overachievingDrastically"
-    // ) {
-    //   rawFinalHomeGoals = rawFinalHomeGoals + 1;
-    // } else if (
-    //   formAway.overOrUnder === "underachievingDrastically" &&
-    //   formHome.overOrUnder !== "overachievingDrastically"
-    // ) {
-    //   rawFinalAwayGoals = rawFinalAwayGoals + 1;
-    // }
 
     // console.log(match.game);
     // console.log(formHome);

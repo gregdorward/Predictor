@@ -149,7 +149,6 @@ export async function generateFixtures(day, radioState) {
   fixtureResponse = await fetch(url);
 
   await fixtureResponse.json().then((fixtures) => {
-    console.log(fixtures)
     fixtureArray = Array.from(fixtures.data);
   });
 
@@ -206,8 +205,6 @@ export async function generateFixtures(day, radioState) {
   if (league.status === 200) {
     await league.json().then((leagues) => {
       leagueArray = Array.from(leagues.leagueArray);
-      console.log(leagueArray)
-
     });
   } else {
     for (let i = 0; i < orderedLeagues.length; i++) {
@@ -219,7 +216,6 @@ export async function generateFixtures(day, radioState) {
         leagueArray.push(table);
 
       });
-      console.log(leagueArray)
     }
   }
 
@@ -233,15 +229,16 @@ export async function generateFixtures(day, radioState) {
     ) {
       let string = leagueArray[i].data.all_matches_table_overall[x];
 
-
       leaguePositions.push({
         name: string.cleanName,
         position: string.position,
         ppg: string.ppg_overall,
       });
+      
     }
   }
 
+  let previousLeagueName;
 
   for (let i = 0; i < orderedLeagues.length; i++) {
     leagueGames = fixtureArray.filter(
@@ -253,11 +250,10 @@ export async function generateFixtures(day, radioState) {
       const milliseconds = unixTimestamp * 1000;
       const dateObject = new Date(milliseconds);
 
-
-      // if(fixture.status !== "suspended" && fixture.status !== "canceled"){
-
-
       let match = {};
+      if(orderedLeagues[i].name !== previousLeagueName){
+        match.leagueName = orderedLeagues[i].name
+      } else {match.leagueName = ""}
       match.id = fixture.id;
       match.competition_id = fixture.competition_id;
       match.time = dateObject.toLocaleString("en-US", { hour: "numeric" });
@@ -273,6 +269,9 @@ export async function generateFixtures(day, radioState) {
       match.homeTeamInfo = [];
       match.awayTeamInfo = [];
       match.btts = false;
+
+
+      previousLeagueName = orderedLeagues[i].name
 
       let homeTeaminLeague;
       let awayTeaminLeague;

@@ -15,7 +15,7 @@ function Stats(props) {
 
   return (
     <ul className={props.className} style={props.style}>
-      <li key={props.name}>{`${props.name} form`}</li>
+      <li key={props.name}>{`${props.name} last ${props.gameCount} form`}</li>
       <li key="last5">
         <span
           className={
@@ -50,6 +50,9 @@ function Stats(props) {
       <li key="TeamXG" className="TeamXG" data-cy={props.name + "teamXG"}>
         {`Avg XG - ${props.XG}`}
       </li>
+      <li key="TeamXGConceded" className="TeamXGConceded" data-cy={props.name + "teamXGConceded"}>
+        {`Avg XG conceded - ${props.XGConceded}`}
+      </li>
       <li key="AverageSOT" className="AverageSOT" data-cy={props.name + "averageSOT"}>
         {`Avg shots on target - ${props.sot}`}
       </li>
@@ -58,6 +61,9 @@ function Stats(props) {
       </li>
       <li key="LeaguePosition" className="LeaguePosition" data-cy={props.name + "leaguePosition"}>
         {`League position - ${props.leaguePosition}`}
+      </li>
+      <li key="Last5PPG" className="Last5PPG" data-cy={props.name + "Last5PPG"}>
+        {`Last 5 PPG - ${props.last5PPG}`}
       </li>
       <li key="PPG" className="PPG" data-cy={props.name + "PPG"}>
         {`Season PPG - ${props.ppg}`}

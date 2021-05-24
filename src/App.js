@@ -31,8 +31,8 @@ export var orderedLeagues = [];
     leagueArray = Array.from(leagues.data);
   });
 
-  console.log(leagueArray);
   for (let i = 0; i < leagueArray.length; i++) {
+    console.log(leagueArray[i])
     const league = leagueArray[i];
     const name = leagueArray[i].name;
 

@@ -327,6 +327,14 @@ p {
   color: white;
 }
 
+.leagueName{
+  font-size: 0.9em;
+  font-weight: 550;
+  color: white;
+  padding-top: 1em;
+  padding-bottom: 1em;
+
+}
 .fixture {
   display: flex;
   align-items: center;
@@ -343,8 +351,8 @@ p {
 .individualFixture {
   display: flex;
   flex-basis: 100%;
-  padding-top: 10px;
-  padding-bottom: 10px;
+  /* padding-top: 10px;
+  padding-bottom: 10px; */
   /* font-size: 0.4em; */
   /* align-content: center; */
 
@@ -542,36 +550,36 @@ p {
 
 .HomeStats {
   text-align: right;
-  width: 45%;
+  width: 48%;
 
   /* padding-right: 20px; */
 }
 
 .AwayStats {
   text-align: left;
-  width: 45%;
+  width: 48%;
 }
 
 .Home {
   padding-left: 10px;
-  padding-right: 20px;
+  padding-right: 10px;
   flex-basis: 50%;
 }
 
 .Home li {
-  padding: 0.5vw;
+  padding: 0.35em;
   margin: 5px;
   list-style: none;
 }
 
 .Away {
-  padding-left: 20px;
+  padding-left: 10px;
   padding-right: 10px;
   flex-basis: 50%;
 }
 
 .Away li {
-  padding: 0.5vw;
+  padding: 0.35em;
   margin: 5px;
   list-style: none;
 }
@@ -579,6 +587,7 @@ p {
 .win {
   background-color: rgb(22, 165, 22);
   padding: 0.5em;
+  margin-top: 1.5em;
   /* padding-left: 7px;
   padding-right: 7px; */
   margin: 0.2em;
@@ -589,6 +598,7 @@ p {
 .loss {
   background-color: #970d00;
   padding: 0.5em;
+  margin-top: 1em;
   /* padding-left: 7px;
   padding-right: 7px; */
   margin: 0.2em;
@@ -599,6 +609,7 @@ p {
 .draw {
   background-color: rgb(70, 70, 70);
   padding: 0.5em;
+  margin-top: 1em;
   /* padding-left: 7px;
   padding-right: 7px; */
   margin: 0.2em;

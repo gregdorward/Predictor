@@ -65,11 +65,13 @@ export async function createStatsDiv(game) {
       2
     ),
     AverageXG: gameStats.home[index].XG,
+    AverageXGConceded: gameStats.home[index].XGAgainstAvg,
     AveragePossession: gameStats.home[index].AveragePossession,
     AverageShotsOnTarget: gameStats.home[index].AverageShotsOnTarget,
     AverageDangerousAttacks: gameStats.home[index].AverageDangerousAttacks,
     homeOrAway: "Home",
     leaguePosition: gameStats.home[index].LeaguePosition,
+    Last5PPG: gameStats.home[index].PPG,
     SeasonPPG: gameStats.home[index].SeasonPPG
   });
 
@@ -83,11 +85,13 @@ export async function createStatsDiv(game) {
       2
     ),
     AverageXG: gameStats.away[index].XG,
+    AverageXGConceded: gameStats.away[index].XGAgainstAvg,
     AveragePossession: gameStats.away[index].AveragePossession,
     AverageShotsOnTarget: gameStats.away[index].AverageShotsOnTarget,
     AverageDangerousAttacks: gameStats.away[index].AverageDangerousAttacks,
     homeOrAway: "Away",
     leaguePosition: gameStats.away[index].LeaguePosition,
+    Last5PPG: gameStats.away[index].PPG,
     SeasonPPG: gameStats.away[index].SeasonPPG
   });
 
@@ -108,6 +112,7 @@ export async function createStatsDiv(game) {
   ReactDOM.render(
     <Stats
       style={style}
+      gameCount={divider}
       key={formDataHome[0].name}
       last5={formDataHome[0].Last5}
       className={formDataHome[0].homeOrAway}
@@ -115,10 +120,12 @@ export async function createStatsDiv(game) {
       goals={formDataHome[0].AverageGoals}
       conceeded={formDataHome[0].AverageConceeded}
       XG={formDataHome[0].AverageXG}
+      XGConceded={formDataHome[0].AverageXGConceded}
       possession={formDataHome[0].AveragePossession}
       sot={formDataHome[0].AverageShotsOnTarget}
       dangerousAttacks={formDataHome[0].AverageDangerousAttacks}
       leaguePosition={formDataHome[0].leaguePosition}
+      last5PPG={formDataHome[0].Last5PPG}
       ppg={formDataHome[0].SeasonPPG}
     />,
     document.getElementById("home" + homeTeam)
@@ -127,6 +134,7 @@ export async function createStatsDiv(game) {
   ReactDOM.render(
     <Stats
       style={style}
+      gameCount={divider}
       key={formDataAway[0].name}
       last5={formDataAway[0].Last5}
       className={formDataAway[0].homeOrAway}
@@ -134,10 +142,12 @@ export async function createStatsDiv(game) {
       goals={formDataAway[0].AverageGoals}
       conceeded={formDataAway[0].AverageConceeded}
       XG={formDataAway[0].AverageXG}
+      XGConceded={formDataAway[0].AverageXGConceded}
       possession={formDataAway[0].AveragePossession}
       sot={formDataAway[0].AverageShotsOnTarget}
       dangerousAttacks={formDataAway[0].AverageDangerousAttacks}
       leaguePosition={formDataAway[0].leaguePosition}
+      last5PPG={formDataAway[0].Last5PPG}
       ppg={formDataAway[0].SeasonPPG}
     />,
     document.getElementById("away" + awayTeam)
