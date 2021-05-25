@@ -12,6 +12,7 @@ import {
 } from "./logic/getFixtures";
 import { selectedOption } from "./components/radio";
 import TextBlock from "./components/TextSection";
+import { ThreeDots } from 'react-loading-icons';
 require("dotenv").config();
 
 export const proxyurl = "https://safe-caverns-99679.herokuapp.com/";
@@ -22,9 +23,17 @@ export const availableLeagues = [];
 export var orderedLeagues = [];
 
 (async function getLeagueList() {
-  let leagueList = await fetch(
-    `${process.env.REACT_APP_EXPRESS_SERVER}leagueList`
-  );
+  let leagueList;
+
+  leagueList = await fetch(`${process.env.REACT_APP_EXPRESS_SERVER}leagueList`);
+
+  // ReactDOM.render(
+  //   <div className="LoadingText">
+  //     Loading form data. This might take a while if you're the first user
+  //     today...
+  //   </div>,
+  //   document.getElementById("RadioButtons")
+  // );
 
   let leagueArray;
   await leagueList.json().then((leagues) => {
@@ -32,7 +41,7 @@ export var orderedLeagues = [];
   });
 
   for (let i = 0; i < leagueArray.length; i++) {
-    console.log(leagueArray[i])
+    console.log(leagueArray[i]);
     const league = leagueArray[i];
     const name = leagueArray[i].name;
 
@@ -103,14 +112,6 @@ export var orderedLeagues = [];
   let responseBody;
 
   ReactDOM.render(
-    <div className="LoadingText">
-      Loading form data. This might take a while if you're the first user
-      today...
-    </div>,
-    document.getElementById("RadioButtons")
-  );
-
-  ReactDOM.render(
     <div className="LastXGames">
       <Radio
         value="5"
@@ -142,7 +143,7 @@ export var orderedLeagues = [];
   ReactDOM.render(
     <div className="FixtureButtons">
       <Button
-        text={"Get Yesterday's Fixtures"}
+        text={"Yesterday's Prediction outcomes"}
         onClickEvent={async () =>
           fixtureList.push(
             await generateFixtures("yesterdaysFixtures", selectedOption)
@@ -150,7 +151,7 @@ export var orderedLeagues = [];
         }
       />
       <Button
-        text={"Get Today's Fixtures"}
+        text={"Today's Fixtures"}
         onClickEvent={async () =>
           fixtureList.push(
             await generateFixtures("todaysFixtures", selectedOption)
@@ -158,7 +159,7 @@ export var orderedLeagues = [];
         }
       />
       <Button
-        text={"Get Tomorrow's Fixtures"}
+        text={"Tomorrow's Fixtures"}
         onClickEvent={async () =>
           fixtureList.push(
             await generateFixtures("tomorrowsFixtures", selectedOption)
@@ -188,7 +189,10 @@ function App() {
         <div id="RadioButtons" />
       </div>
       <div id="Day" />
-      <div id="Buttons" />
+      <div id="Buttons">
+      <ThreeDots height="3em"/>
+      <div>Loading all fixture and form data...</div>
+      </div>
       <div id="successMeasure" />
       <div id="bestPredictions" />
       <div id="BTTS" />
