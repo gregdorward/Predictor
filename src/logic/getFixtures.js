@@ -5,7 +5,8 @@ import { getForm, applyColour } from "./getForm";
 import { Fixture } from "../components/Fixture";
 import { Button } from "../components/Button";
 import { getScorePrediction } from "../logic/getScorePredictions";
-import { ThreeDots } from 'react-loading-icons'
+import { ThreeDots } from "react-loading-icons";
+import { selectedOdds } from "../components/OddsRadio";
 var oddslib = require("oddslib");
 
 require("dotenv").config();
@@ -54,7 +55,7 @@ export async function diff(a, b) {
 
 export let allForm = [];
 
-async function createFixture(match, result) {
+async function createFixture(match, result, mockBool) {
   let roundedHomeOdds;
   let roundedAwayOdds;
   let roundedBTTSOdds;
@@ -62,6 +63,7 @@ async function createFixture(match, result) {
   let awayFraction;
   let bttsFraction;
 
+  if(selectedOdds === "Fractional"){
   if (match.homeOdds !== 0 && match.awayOdds !== 0) {
     roundedHomeOdds = (Math.round(match.homeOdds * 5) / 5).toFixed(1);
     roundedAwayOdds = (Math.round(match.awayOdds * 5) / 5).toFixed(1);
@@ -83,18 +85,13 @@ async function createFixture(match, result) {
     } catch (error) {
       console.log(error);
     }
-  } else {
+  }   else {
     homeFraction = "N/A";
     awayFraction = "N/A";
   }
-
-  match.fractionHome = homeFraction;
-  match.fractionAway = awayFraction;
-
-
+  
   if (match.bttsOdds !== 0) {
     roundedBTTSOdds = (Math.round(match.bttsOdds * 5) / 5).toFixed(1);
-    
 
     if (roundedBTTSOdds < 1.1) {
       roundedBTTSOdds = 1.1;
@@ -110,26 +107,61 @@ async function createFixture(match, result) {
   } else {
     bttsFraction = "N/A";
   }
+  
+
+} else if (selectedOdds === "Decimal"){
+  if(match.homeOdds !== 0 && match.awayOdds !== 0){
+    homeFraction = match.homeOdds
+    awayFraction = match.awayOdds
+  } else {
+    homeFraction = "N/A";
+    awayFraction = "N/A";
+  }
+
+  if(match.bttsOdds !== 0){
+    bttsFraction = match.bttsOdds
+  } else {
+    bttsFraction = "N/A";
+  }
+}
+
+  match.fractionHome = homeFraction;
+  match.fractionAway = awayFraction;
+
+
 
   match.bttsFraction = bttsFraction;
 
   match.game = match.homeTeam + " v " + match.awayTeam;
 
-  ReactDOM.render(
-    
-    <Fixture
-      fixtures={matches}
-      result={result}
-      className={"individualFixture"}
-    />,
-    document.getElementById("FixtureContainer")
-  );
+  if(mockBool !== true){
+    ReactDOM.render(
+      <Fixture
+        fixtures={matches}
+        result={result}
+        mock={mockBool}
+        className={"individualFixture"}
+      />,
+      document.getElementById("FixtureContainer")
+    );
+  } else if(mockBool === true){
+    ReactDOM.render(
+      <Fixture
+        fixtures={matches}
+        result={result}
+        mock={mockBool}
+        className={"individualFixture"}
+      />,
+      document.getElementById("FixtureContainer")
+    );
+  }
+
 }
 
 var myHeaders = new Headers();
 myHeaders.append("Origin", "https://gregdorward.github.io");
 
-export async function generateFixtures(day, radioState) {
+export async function generateFixtures(day, radioState, selectedOdds) {
   let url;
   switch (day) {
     case "yesterdaysFixtures":
@@ -145,12 +177,14 @@ export async function generateFixtures(day, radioState) {
       break;
   }
 
-
   fixtureResponse = await fetch(url);
 
-  await fixtureResponse.json().then((fixtures) => {
-    fixtureArray = Array.from(fixtures.data);
-  });
+  console.log(selectedOdds)
+
+    await fixtureResponse.json().then((fixtures) => {
+      fixtureArray = Array.from(fixtures.data);
+      console.log(fixtureArray)
+    });
 
 
   let form;
@@ -187,8 +221,8 @@ export async function generateFixtures(day, radioState) {
 
   ReactDOM.render(
     <div>
-    <div className="LoadingText">Loading all league data</div>
-    <ThreeDots height="3em"/>
+      <div className="LoadingText">Loading all league data</div>
+      <ThreeDots height="3em" />
     </div>,
     document.getElementById("Buttons")
   );
@@ -196,9 +230,6 @@ export async function generateFixtures(day, radioState) {
   league = await fetch(
     `${process.env.REACT_APP_EXPRESS_SERVER}leagues/${currentDay}${month}${year}`
   );
-
-
-
 
   var leaguePositions = [];
 
@@ -214,12 +245,9 @@ export async function generateFixtures(day, radioState) {
       // eslint-disable-next-line no-loop-func
       await league.json().then((table) => {
         leagueArray.push(table);
-
       });
     }
   }
-
-
 
   for (let i = 0; i < 20; i++) {
     for (
@@ -234,7 +262,6 @@ export async function generateFixtures(day, radioState) {
         position: string.position,
         ppg: string.ppg_overall,
       });
-      
     }
   }
 
@@ -251,9 +278,11 @@ export async function generateFixtures(day, radioState) {
       const dateObject = new Date(milliseconds);
 
       let match = {};
-      if(orderedLeagues[i].name !== previousLeagueName){
-        match.leagueName = orderedLeagues[i].name
-      } else {match.leagueName = ""}
+      if (orderedLeagues[i].name !== previousLeagueName) {
+        match.leagueName = orderedLeagues[i].name;
+      } else {
+        match.leagueName = "";
+      }
       match.id = fixture.id;
       match.competition_id = fixture.competition_id;
       match.time = dateObject.toLocaleString("en-US", { hour: "numeric" });
@@ -270,8 +299,7 @@ export async function generateFixtures(day, radioState) {
       match.awayTeamInfo = [];
       match.btts = false;
 
-
-      previousLeagueName = orderedLeagues[i].name
+      previousLeagueName = orderedLeagues[i].name;
 
       let homeTeaminLeague;
       let awayTeaminLeague;
@@ -828,21 +856,21 @@ export async function generateFixtures(day, radioState) {
       match.homeGoals = fixture.homeGoalCount;
       match.awayGoals = fixture.awayGoalCount;
 
-      match.expectedGoalsHomeToDate = fixture.team_a_xg_prematch
-      match.expectedGoalsAwayToDate = fixture.team_b_xg_prematch
+      match.expectedGoalsHomeToDate = fixture.team_a_xg_prematch;
+      match.expectedGoalsAwayToDate = fixture.team_b_xg_prematch;
 
-      if(match.status !== "canceled" || match.status !== "suspended"){
+      if (match.status !== "canceled" || match.status !== "suspended") {
         matches.push(match);
         await createFixture(match, false);
       }
 
       // console.log(allForm)
-
     }
-  // }
+    // }
     ReactDOM.render(
       <Button
         text={"Get Predictions"}
+
         onClickEvent={() => getScorePrediction(day)}
       />,
       document.getElementById("Buttons")

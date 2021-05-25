@@ -262,6 +262,14 @@ p {
   /* font-size: 0.9em; */
 }
 
+.OddsRadios{
+  display: flex;
+  height: 30px;
+  /* font-size: 1em; */
+  justify-content: center;
+  align-items: center;
+}
+
 /* .container {
   padding: 0px;
 } */
@@ -830,6 +838,10 @@ section {
   position: relative;
 }
 
+.MainLoading{
+  padding: 1em;
+}
+
 /* section::after {
   width: 42px;
   height: 42px;
@@ -841,6 +853,14 @@ section {
 } */
 
 .dark {
+  /* display: flex; */
+  flex-basis: 30%;
+  /* font-size: 1.2em; */
+  --primary: hsl(1, 100%, 68%);
+  --other: hsl(0, 0%, 90%);
+}
+
+.dark2 {
   /* display: flex; */
   flex-basis: 30%;
   /* font-size: 1.2em; */

@@ -6,7 +6,11 @@ import { allForm, leagueArray } from "../logic/getFixtures";
 
 let testBool = false;
 
-export async function createStatsDiv(game) {
+export async function createStatsDiv(game, mock) {
+  let bool = mock
+
+  if(bool !== true){
+
   let radioSelected = parseInt(selectedOption);
 
   console.log(`state of testBool ${testBool}`)
@@ -152,4 +156,5 @@ export async function createStatsDiv(game) {
     />,
     document.getElementById("away" + awayTeam)
   );
+}
 }

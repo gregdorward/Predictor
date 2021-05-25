@@ -1627,8 +1627,10 @@ var bttsArray = [];
 var accumulatedOdds = 1;
 let predictions = [];
 
-export async function getScorePrediction(day) {
+export async function getScorePrediction(day, mocked) {
   let radioSelected = parseInt(selectedOption);
+  let mock = mocked
+  console.log(mock)
   tips = [];
   bttsArray = [];
   longShotTips = [];
@@ -1811,14 +1813,28 @@ export async function getScorePrediction(day) {
         return b.goalDifferential - a.goalDifferential;
       });
 
-      ReactDOM.render(
-        <Fixture
-          fixtures={matches}
-          result={true}
-          className={"individualFixture"}
-        />,
-        document.getElementById("FixtureContainer")
-      );
+      if(mock !== true){
+        ReactDOM.render(
+          <Fixture
+            fixtures={matches}
+            result={true}
+            mock={mock}
+            className={"individualFixture"}
+          />,
+          document.getElementById("FixtureContainer")
+        );
+      } else if(mock === true){
+        ReactDOM.render(
+          <Fixture
+            fixtures={matches}
+            result={true}
+            mock={mock}
+            className={"individualFixture"}
+          />,
+          document.getElementById("FixtureContainer")
+        );
+      }
+
 
       predictions.push(match);
     })

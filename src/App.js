@@ -3,6 +3,9 @@ import ReactDOM from "react-dom";
 import Header from "./components/Header";
 import Radio from "./components/radio";
 import { Button } from "./components/Button";
+import OddsRadio from "./components/OddsRadio";
+import {selectedOdds} from "./components/OddsRadio"
+
 import {
   today,
   generateFixtures,
@@ -12,7 +15,7 @@ import {
 } from "./logic/getFixtures";
 import { selectedOption } from "./components/radio";
 import TextBlock from "./components/TextSection";
-import { ThreeDots } from 'react-loading-icons';
+import { ThreeDots } from "react-loading-icons";
 require("dotenv").config();
 
 export const proxyurl = "https://safe-caverns-99679.herokuapp.com/";
@@ -146,7 +149,7 @@ export var orderedLeagues = [];
         text={"Yesterday's Prediction outcomes"}
         onClickEvent={async () =>
           fixtureList.push(
-            await generateFixtures("yesterdaysFixtures", selectedOption)
+            await generateFixtures("yesterdaysFixtures", selectedOption, selectedOdds)
           )
         }
       />
@@ -154,7 +157,7 @@ export var orderedLeagues = [];
         text={"Today's Fixtures"}
         onClickEvent={async () =>
           fixtureList.push(
-            await generateFixtures("todaysFixtures", selectedOption)
+            await generateFixtures("todaysFixtures", selectedOption, selectedOdds)
           )
         }
       />
@@ -162,12 +165,19 @@ export var orderedLeagues = [];
         text={"Tomorrow's Fixtures"}
         onClickEvent={async () =>
           fixtureList.push(
-            await generateFixtures("tomorrowsFixtures", selectedOption)
+            await generateFixtures("tomorrowsFixtures", selectedOption, selectedOdds)
           )
         }
       />
     </div>,
     document.getElementById("Buttons")
+  );
+  ReactDOM.render(
+    <div className="OddsRadios">
+      <OddsRadio value="Fractional"></OddsRadio>
+      <OddsRadio value="Decimal"></OddsRadio>
+    </div>,
+    document.getElementById("Checkbox")
   );
 })();
 
@@ -189,9 +199,10 @@ function App() {
         <div id="RadioButtons" />
       </div>
       <div id="Day" />
+      <div id="Checkbox" />
       <div id="Buttons">
-      <ThreeDots height="3em"/>
-      <div>Loading all fixture and form data...</div>
+      <ThreeDots className="MainLoading"/>
+        <div>Loading all fixture and form data...</div>
       </div>
       <div id="successMeasure" />
       <div id="bestPredictions" />

@@ -199,5 +199,6 @@ const List = ({ fixtures }) => (
 
 export function Fixture(props) {
   resultValue = props.result;
+
   return <List fixtures={props.fixtures} result={resultValue}/>;
 }
