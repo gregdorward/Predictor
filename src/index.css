@@ -3,7 +3,7 @@
     height: 100vh;
     /* font-family: 'Noto Sans', sans-serif; */
     font-family: 'Roboto', sans-serif;    
-    font-size: 1vw;
+    font-size: 0.9vw;
     display: flex;
     flex-direction: column;
     flex-basis: 100%;
@@ -23,7 +23,7 @@
     text-decoration: none;
     font-family: "Roboto", sans-serif;
     flex-basis: 20%;
-    font-size: 1em;
+    font-size: 0.9em;
     font-weight: 500;
     color: #99261c;
     background-color: white;
@@ -38,7 +38,7 @@
   body > #root > div {
     height: 100vh;
     font-family: "Roboto", sans-serif;
-    font-size: 1.4vw;
+    font-size: 1.2vw;
     display: flex;
     flex-direction: column;
     flex-basis: 100%;
@@ -58,7 +58,7 @@
     text-decoration: none;
     font-family: "Roboto", sans-serif;
     flex-basis: 20%;
-    font-size: 1em;
+    font-size: 0.8em;
     font-weight: 500;
     color: #99261c;
     background-color: white;
