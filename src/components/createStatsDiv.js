@@ -63,7 +63,7 @@ function Stats(props) {
         {`League position - ${props.leaguePosition}`}
       </li>
       <li key="Last5PPG" className="Last5PPG" data-cy={props.name + "Last5PPG"}>
-        {`Last 5 PPG - ${props.last5PPG}`}
+        {`Last ${props.gameCount} PPG - ${props.last5PPG}`}
       </li>
       <li key="PPG" className="PPG" data-cy={props.name + "PPG"}>
         {`Season PPG - ${props.ppg}`}

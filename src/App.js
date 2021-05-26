@@ -105,6 +105,8 @@ export var orderedLeagues = [];
       5713,
       5505, //sweden
       4642, //Denmark
+      5434, //Japan
+      5506, //S Korea
       4507, //Mexico
     ];
 
