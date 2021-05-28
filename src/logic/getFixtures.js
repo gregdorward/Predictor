@@ -63,78 +63,74 @@ async function createFixture(match, result, mockBool) {
   let awayFraction;
   let bttsFraction;
 
-  if(selectedOdds === "Fractional"){
-  if (match.homeOdds !== 0 && match.awayOdds !== 0) {
-    roundedHomeOdds = (Math.round(match.homeOdds * 5) / 5).toFixed(1);
-    roundedAwayOdds = (Math.round(match.awayOdds * 5) / 5).toFixed(1);
+  if (selectedOdds === "Fractional") {
+    if (match.homeOdds !== 0 && match.awayOdds !== 0) {
+      roundedHomeOdds = (Math.round(match.homeOdds * 5) / 5).toFixed(1);
+      roundedAwayOdds = (Math.round(match.awayOdds * 5) / 5).toFixed(1);
 
-    if (roundedHomeOdds < 1.1) {
-      roundedHomeOdds = 1.1;
-    }
-    if (roundedAwayOdds < 1.1) {
-      roundedAwayOdds = 1.1;
+      if (roundedHomeOdds < 1.1) {
+        roundedHomeOdds = 1.1;
+      }
+      if (roundedAwayOdds < 1.1) {
+        roundedAwayOdds = 1.1;
+      }
+
+      try {
+        homeFraction = oddslib
+          .from("decimal", roundedHomeOdds)
+          .to("fractional", { precision: 1 });
+        awayFraction = oddslib
+          .from("decimal", roundedAwayOdds)
+          .to("fractional", { precision: 1 });
+      } catch (error) {
+        console.log(error);
+      }
+    } else {
+      homeFraction = "N/A";
+      awayFraction = "N/A";
     }
 
-    try {
-      homeFraction = oddslib
-        .from("decimal", roundedHomeOdds)
-        .to("fractional", { precision: 1 });
-      awayFraction = oddslib
-        .from("decimal", roundedAwayOdds)
-        .to("fractional", { precision: 1 });
-    } catch (error) {
-      console.log(error);
+    if (match.bttsOdds !== 0) {
+      roundedBTTSOdds = (Math.round(match.bttsOdds * 5) / 5).toFixed(1);
+
+      if (roundedBTTSOdds < 1.1) {
+        roundedBTTSOdds = 1.1;
+      }
+
+      try {
+        bttsFraction = oddslib
+          .from("decimal", roundedBTTSOdds)
+          .to("fractional", { precision: 1 });
+      } catch (error) {
+        console.log(error);
+      }
+    } else {
+      bttsFraction = "N/A";
     }
-  }   else {
-    homeFraction = "N/A";
-    awayFraction = "N/A";
+  } else if (selectedOdds === "Decimal") {
+    if (match.homeOdds !== 0 && match.awayOdds !== 0) {
+      homeFraction = match.homeOdds;
+      awayFraction = match.awayOdds;
+    } else {
+      homeFraction = "N/A";
+      awayFraction = "N/A";
+    }
+
+    if (match.bttsOdds !== 0) {
+      bttsFraction = match.bttsOdds;
+    } else {
+      bttsFraction = "N/A";
+    }
   }
-  
-  if (match.bttsOdds !== 0) {
-    roundedBTTSOdds = (Math.round(match.bttsOdds * 5) / 5).toFixed(1);
-
-    if (roundedBTTSOdds < 1.1) {
-      roundedBTTSOdds = 1.1;
-    }
-
-    try {
-      bttsFraction = oddslib
-        .from("decimal", roundedBTTSOdds)
-        .to("fractional", { precision: 1 });
-    } catch (error) {
-      console.log(error);
-    }
-  } else {
-    bttsFraction = "N/A";
-  }
-  
-
-} else if (selectedOdds === "Decimal"){
-  if(match.homeOdds !== 0 && match.awayOdds !== 0){
-    homeFraction = match.homeOdds
-    awayFraction = match.awayOdds
-  } else {
-    homeFraction = "N/A";
-    awayFraction = "N/A";
-  }
-
-  if(match.bttsOdds !== 0){
-    bttsFraction = match.bttsOdds
-  } else {
-    bttsFraction = "N/A";
-  }
-}
 
   match.fractionHome = homeFraction;
   match.fractionAway = awayFraction;
-
-
 
   match.bttsFraction = bttsFraction;
 
   match.game = match.homeTeam + " v " + match.awayTeam;
 
-  if(mockBool !== true){
+  if (mockBool !== true) {
     ReactDOM.render(
       <Fixture
         fixtures={matches}
@@ -144,7 +140,7 @@ async function createFixture(match, result, mockBool) {
       />,
       document.getElementById("FixtureContainer")
     );
-  } else if(mockBool === true){
+  } else if (mockBool === true) {
     ReactDOM.render(
       <Fixture
         fixtures={matches}
@@ -155,7 +151,6 @@ async function createFixture(match, result, mockBool) {
       document.getElementById("FixtureContainer")
     );
   }
-
 }
 
 var myHeaders = new Headers();
@@ -179,13 +174,12 @@ export async function generateFixtures(day, radioState, selectedOdds) {
 
   fixtureResponse = await fetch(url);
 
-  console.log(selectedOdds)
+  console.log(selectedOdds);
 
-    await fixtureResponse.json().then((fixtures) => {
-      fixtureArray = Array.from(fixtures.data);
-      console.log(fixtureArray)
-    });
-
+  await fixtureResponse.json().then((fixtures) => {
+    fixtureArray = Array.from(fixtures.data);
+    console.log(fixtureArray);
+  });
 
   let form;
   let formArray;
@@ -382,22 +376,32 @@ export async function generateFixtures(day, radioState, selectedOdds) {
       if (!isFormStored) {
         form = await getForm(match);
 
-        //get the last 5 games stats from a big block of text
-        var homeExtract = form[0].data[0].stats.additional_info.replace(
-          /["']/g,
-          ""
-        );
+        // if (
+        //   form[0].data[0].stats.additional_info &&
+        //   form[1].data[0].stats.additional_info
+        // ) {
 
-        var slug = homeExtract.split(",53:").pop().toUpperCase();
-        lastFiveFormHome = [...slug.substring(0, 5)];
+        //   console.log(form[0].data[0].stats.additional_info)
+        //   //get the last 5 games stats from a big block of text
+        //   var homeExtract = form[0].data[0].stats.additional_info.replace(
+        //     /["']/g,
+        //     ""
+        //   );
 
-        var awayExtract = form[1].data[0].stats.additional_info.replace(
-          /["']/g,
-          ""
-        );
+        //   var slug = homeExtract.split(",53:").pop().toUpperCase();
+          lastFiveFormHome = Array.from(form[0].data[0].stats.additional_info.formRun_overall)
 
-        var slugAway = awayExtract.split(",53:").pop().toUpperCase();
-        lastFiveFormAway = [...slugAway.substring(0, 5)];
+          // var awayExtract = form[1].data[0].stats.additional_info.replace(
+          //   /["']/g,
+          //   ""
+          // );
+
+          // var slugAway = awayExtract.split(",53:").pop().toUpperCase();
+          lastFiveFormAway = Array.from(form[1].data[0].stats.additional_info.formRun_overall)
+        // } else {
+        //   lastFiveFormHome = "N/A"
+        //   lastFiveFormAway = "N/A"
+        // }
 
         allForm.push({
           id: match.id,
@@ -870,7 +874,6 @@ export async function generateFixtures(day, radioState, selectedOdds) {
     ReactDOM.render(
       <Button
         text={"Get Predictions"}
-
         onClickEvent={() => getScorePrediction(day)}
       />,
       document.getElementById("Buttons")
