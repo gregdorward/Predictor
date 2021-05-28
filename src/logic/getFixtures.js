@@ -20,6 +20,10 @@ var leagueGames = [];
 export var leagueArray = [];
 var lastFiveFormHome;
 var lastFiveFormAway;
+var lastSixFormHome;
+var lastSixFormAway;
+var lastTenFormHome;
+var lastTenFormAway;
 
 export const [currentDay, month, year] = new Date()
   .toLocaleDateString("en-US")
@@ -389,7 +393,16 @@ export async function generateFixtures(day, radioState, selectedOdds) {
         //   );
 
         //   var slug = homeExtract.split(",53:").pop().toUpperCase();
-          lastFiveFormHome = Array.from(form[0].data[0].stats.additional_info.formRun_overall)
+          let homeFormString5 = form[0].data[0].stats.additional_info.formRun_overall.toUpperCase()
+          let awayFormString5 = form[1].data[0].stats.additional_info.formRun_overall.toUpperCase()
+          let homeFormString6 = form[0].data[1].stats.additional_info.formRun_overall.toUpperCase()
+          let awayFormString6 = form[1].data[1].stats.additional_info.formRun_overall.toUpperCase()
+          let homeFormString10 = form[0].data[2].stats.additional_info.formRun_overall.toUpperCase()
+          let awayFormString10 = form[1].data[2].stats.additional_info.formRun_overall.toUpperCase()
+          lastFiveFormHome = Array.from(homeFormString5)
+          lastSixFormHome = Array.from(homeFormString6)
+          lastTenFormHome = Array.from(homeFormString10)
+
 
           // var awayExtract = form[1].data[0].stats.additional_info.replace(
           //   /["']/g,
@@ -397,7 +410,10 @@ export async function generateFixtures(day, radioState, selectedOdds) {
           // );
 
           // var slugAway = awayExtract.split(",53:").pop().toUpperCase();
-          lastFiveFormAway = Array.from(form[1].data[0].stats.additional_info.formRun_overall)
+          lastFiveFormAway = Array.from(awayFormString5)
+          lastSixFormAway = Array.from(awayFormString6)
+          lastTenFormAway = Array.from(awayFormString10)
+
         // } else {
         //   lastFiveFormHome = "N/A"
         //   lastFiveFormAway = "N/A"

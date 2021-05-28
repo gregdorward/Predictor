@@ -51,6 +51,8 @@ export async function createStatsDiv(game, mock) {
   let homeTeam = gameStats.home.teamName;
   let awayTeam = gameStats.away.teamName;
 
+  console.log(gameStats)
+
   let time = game.time;
 
   const formDataMatch = [];
