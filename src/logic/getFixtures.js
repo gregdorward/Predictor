@@ -377,7 +377,7 @@ export async function generateFixtures(day, radioState, selectedOdds) {
         awaySeasonPPG = "N/A";
       }
 
-      if (!isFormStored) {
+      if (isFormStored) {
         form = await getForm(match);
 
         // if (
@@ -385,7 +385,7 @@ export async function generateFixtures(day, radioState, selectedOdds) {
         //   form[1].data[0].stats.additional_info
         // ) {
 
-        //   console.log(form[0].data[0].stats.additional_info)
+          console.log(form[0].data[0].stats.additional_info)
         //   //get the last 5 games stats from a big block of text
         //   var homeExtract = form[0].data[0].stats.additional_info.replace(
         //     /["']/g,
@@ -402,6 +402,35 @@ export async function generateFixtures(day, radioState, selectedOdds) {
           lastFiveFormHome = Array.from(homeFormString5)
           lastSixFormHome = Array.from(homeFormString6)
           lastTenFormHome = Array.from(homeFormString10)
+
+
+
+          let conversionRateHome = form[0].data[2].stats.additional_info.shots_per_goals_scored_away
+          let shotsRecordedHome = form[0].data[2].stats.additional_info.shots_recorded_matches_num_away
+          let HomePredictionBasedOnShotConversion
+          let AwayPredictionBasedOnShotConversion
+
+          if(shotsRecordedHome || conversionRateHome === 0){
+            HomePredictionBasedOnShotConversion = 0
+          } else {
+            HomePredictionBasedOnShotConversion =  shotsRecordedHome / conversionRateHome
+          }
+
+        
+
+          let conversionRateAway = form[1].data[2].stats.additional_info.shots_per_goals_scored_away
+          let shotsRecordedAway = form[1].data[2].stats.additional_info.shots_recorded_matches_num_away
+         
+          if(shotsRecordedAway || conversionRateAway === 0){
+            AwayPredictionBasedOnShotConversion = 0
+          } else {
+            AwayPredictionBasedOnShotConversion =  shotsRecordedAway / conversionRateAway
+          }
+
+         
+
+          //shots_per_goals_scored_away
+          //shots_recorded_matches_num_away
 
 
           // var awayExtract = form[1].data[0].stats.additional_info.replace(
@@ -487,6 +516,7 @@ export async function generateFixtures(day, radioState, selectedOdds) {
               homeDefenceAdvantage: parseFloat(
                 form[0].data[0].stats.homeDefenceAdvantage
               ),
+              HomePredictionBasedOnShotConversion: parseFloat(HomePredictionBasedOnShotConversion),
               BTTSPercentage: parseInt(
                 form[0].data[0].stats.seasonBTTSPercentage_overall
               ),
@@ -558,6 +588,7 @@ export async function generateFixtures(day, radioState, selectedOdds) {
               homeDefenceAdvantage: parseFloat(
                 form[0].data[1].stats.homeDefenceAdvantage
               ),
+              HomePredictionBasedOnShotConversion: parseFloat(HomePredictionBasedOnShotConversion),
               BTTSPercentage: parseInt(
                 form[0].data[1].stats.seasonBTTSPercentage_overall
               ),
@@ -626,6 +657,7 @@ export async function generateFixtures(day, radioState, selectedOdds) {
               homeAttackAdvantage: parseFloat(
                 form[0].data[2].stats.homeAttackAdvantage
               ),
+              HomePredictionBasedOnShotConversion: parseFloat(HomePredictionBasedOnShotConversion),
               homeDefenceAdvantage: parseFloat(
                 form[0].data[2].stats.homeDefenceAdvantage
               ),
@@ -703,6 +735,7 @@ export async function generateFixtures(day, radioState, selectedOdds) {
               homeDefenceAdvantage: parseFloat(
                 form[1].data[0].stats.homeDefenceAdvantage
               ),
+              AwayPredictionBasedOnShotConversion: parseFloat(AwayPredictionBasedOnShotConversion),
               BTTSPercentage: parseInt(
                 form[1].data[0].stats.seasonBTTSPercentage_overall
               ),
@@ -774,6 +807,7 @@ export async function generateFixtures(day, radioState, selectedOdds) {
               homeDefenceAdvantage: parseFloat(
                 form[1].data[1].stats.homeDefenceAdvantage
               ),
+              AwayPredictionBasedOnShotConversion: parseFloat(AwayPredictionBasedOnShotConversion),
               BTTSPercentage: parseInt(
                 form[1].data[1].stats.seasonBTTSPercentage_overall
               ),
@@ -845,6 +879,7 @@ export async function generateFixtures(day, radioState, selectedOdds) {
               homeDefenceAdvantage: parseFloat(
                 form[1].data[2].stats.homeDefenceAdvantage
               ),
+              AwayPredictionBasedOnShotConversion: parseFloat(AwayPredictionBasedOnShotConversion),
               BTTSPercentage: parseInt(
                 form[0].data[2].stats.seasonBTTSPercentage_overall
               ),

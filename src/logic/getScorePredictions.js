@@ -1312,6 +1312,9 @@ export async function calculateScore(match, index, divider, id) {
         formHome.AverageGoalsConceededWeightedWithXG) /
       2;
 
+      let conversionPredictionHome = formHome.HomePredictionBasedOnShotConversion * oddsWeightingHome
+      let conversionPredictionAway = formAway.AwayPredictionBasedOnShotConversion * oddsWeightingAway
+
     // console.log(match.game);
     // console.log(`index ${index}`)
     // console.log(`home goals: ${XGGoalsHome}`);
@@ -1388,11 +1391,12 @@ export async function calculateScore(match, index, divider, id) {
     let rawFinalHomeGoals = parseFloat(
       // (experimentalHomeGoals + formHome.expectedGoals) / 2
 
-      (experimentalHomeGoals * 1 +
+      (experimentalHomeGoals * 2 +
         XGGoalsHome * 0 +
+        conversionPredictionHome +
         homeGoalsBasedOnDA * 0 +
         formHome.expectedGoals * 0) /
-        1
+        3
 
       // homeGoalsBasedOnDA
       // ((formHome.AverageGoalsWeightedWithXG + formAway.AverageGoalsConceededWeightedWithXG) / 2)
@@ -1401,11 +1405,12 @@ export async function calculateScore(match, index, divider, id) {
     let rawFinalAwayGoals = parseFloat(
       // (experimentalAwayGoals + formAway.expectedGoals) / 2
 
-      (experimentalAwayGoals * 1 +
+      (experimentalAwayGoals * 2 +
         XGGoalsAway * 0 +
+        conversionPredictionAway +
         awayGoalsBasedOnDA * 0 +
         formAway.expectedGoals * 0) /
-        1
+        3
 
       // awayGoalsBasedOnDA
       // ((formAway.AverageGoalsWeightedWithXG + formHome.AverageGoalsConceededWeightedWithXG) / 2)
