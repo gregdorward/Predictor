@@ -53,25 +53,25 @@ async function getOverOrUnderAchievingResult(index, overUnderAchievingSum) {
   switch (true) {
     case index === 0:
       switch (true) {
-        case overUnderAchievingSum <= -0.9:
+        case overUnderAchievingSum <= -0.5:
           result = "overachievingDrastically";
-          multiplier = 0.75
+          multiplier = -0.5
           break;
-        case overUnderAchievingSum < -0.2 && overUnderAchievingSum > -0.9:
+        case overUnderAchievingSum < -0.2 && overUnderAchievingSum > -0.5:
           result = "overachieving";
-          multiplier = 0.9
+          multiplier = -0.2
           break;
-        case overUnderAchievingSum > 0.2 && overUnderAchievingSum < 0.9:
+        case overUnderAchievingSum > 0.2 && overUnderAchievingSum < 0.5:
           result = "underachieving";
-          multiplier = 1.1
+          multiplier = 0.2
           break;
-        case overUnderAchievingSum > 0.9:
+        case overUnderAchievingSum > 0.5:
           result = "underachievingDrastically";
-          multiplier = 1.25
+          multiplier = 0.5
           break;
         default:
           result = "onPar";
-          multiplier = 1
+          multiplier = 0
           break;
       }
 
@@ -79,25 +79,25 @@ async function getOverOrUnderAchievingResult(index, overUnderAchievingSum) {
 
     case index === 1:
       switch (true) {
-        case overUnderAchievingSum <= -0.85:
+        case overUnderAchievingSum <= -0.45:
           result = "overachievingDrastically";
-          multiplier = 0.75
+          multiplier = -0.5
           break;
-        case overUnderAchievingSum < -0.2 && overUnderAchievingSum > -0.85:
+        case overUnderAchievingSum < -0.2 && overUnderAchievingSum > -0.45:
           result = "overachieving";
-          multiplier = 0.9
+          multiplier = -0.2
           break;
-        case overUnderAchievingSum > 0.2 && overUnderAchievingSum < 0.85:
+        case overUnderAchievingSum > 0.2 && overUnderAchievingSum < 0.45:
           result = "underachieving";
-          multiplier = 1.1
+          multiplier = 0.2
           break;
-        case overUnderAchievingSum > 0.85:
+        case overUnderAchievingSum > 0.45:
           result = "underachievingDrastically";
-          multiplier = 1.25
+          multiplier = 0.5
           break;
         default:
           result = "onPar";
-          multiplier = 1
+          multiplier = 0
           break;
       }
 
@@ -105,25 +105,25 @@ async function getOverOrUnderAchievingResult(index, overUnderAchievingSum) {
 
     case index === 2:
       switch (true) {
-        case overUnderAchievingSum <= -0.8:
+        case overUnderAchievingSum <= -0.3:
           result = "overachievingDrastically";
-          multiplier = 0.75
+          multiplier = -0.5
           break;
-        case overUnderAchievingSum < -0.1 && overUnderAchievingSum > -0.8:
+        case overUnderAchievingSum < -0.1 && overUnderAchievingSum > -0.3:
           result = "overachieving";
-          multiplier = 0.9
+          multiplier = -0.2
           break;
-        case overUnderAchievingSum > 0.1 && overUnderAchievingSum < 0.8:
+        case overUnderAchievingSum > 0.1 && overUnderAchievingSum < 0.3:
           result = "underachieving";
-          multiplier = 1.1
+          multiplier = 0.2
           break;
-        case overUnderAchievingSum > 0.8:
+        case overUnderAchievingSum > 0.3:
           result = "underachievingDrastically";
-          multiplier = 1.25
+          multiplier = 0.5
           break;
         default:
           result = "onPar";
-          multiplier = 1
+          multiplier = 0
           break;
       }
 
@@ -389,13 +389,13 @@ export async function calculateScore(match, index, divider, id) {
 
   switch (true) {
     case divider === 5:
-      gameTotalWeighting = 1.4;
+      gameTotalWeighting = 0.5;
       break;
     case divider === 6:
-      gameTotalWeighting = 2;
+      gameTotalWeighting = 1;
       break;
     case divider === 10:
-      gameTotalWeighting = 2;
+      gameTotalWeighting = 1;
       break;
     default:
       break;
@@ -676,10 +676,16 @@ export async function calculateScore(match, index, divider, id) {
         `concededOverOrUnderAchieving ${concededOverOrUnderAchieving}`
       );
 
-      teams[i][index].overUnderAchievingSum =
-        goalOverOrUnderAchieving + concededOverOrUnderAchieving;
+      teams[i][index].overUnderAchievingSumAttack =
+        goalOverOrUnderAchieving;
 
-      console.log(`SUM ${teams[i][index].overUnderAchievingSum}`);
+      
+        teams[i][index].overUnderAchievingSumDefence =
+        concededOverOrUnderAchieving;
+
+        teams[i][index].overUnderAchievingSum =
+        goalOverOrUnderAchieving + concededOverOrUnderAchieving
+
 
       if (
         teams[i][index].finishingScore !== "N/A" &&
@@ -842,13 +848,24 @@ export async function calculateScore(match, index, divider, id) {
     let formHome = teams[0][index];
     let formAway = teams[1][index];
 
-    [formHome.overOrUnder, formHome.trueFormMultiplier] = await getOverOrUnderAchievingResult(
+    [formHome.overOrUnder, formHome.trueFormAttack] = await getOverOrUnderAchievingResult(
       index,
-      formHome.overUnderAchievingSum
+      formHome.overUnderAchievingSumAttack
     );
-    [formAway.overOrUnder, formAway.trueFormMultiplier] = await getOverOrUnderAchievingResult(
+
+    [formHome.overOrUnder, formHome.trueFormDefence] = await getOverOrUnderAchievingResult(
       index,
-      formAway.overUnderAchievingSum
+      formHome.overUnderAchievingSumDefence
+    );
+
+    [formAway.overOrUnder, formAway.trueFormAttack] = await getOverOrUnderAchievingResult(
+      index,
+      formAway.overUnderAchievingSumAttack
+    );
+
+    [formAway.overOrUnder, formAway.trueFormDefence] = await getOverOrUnderAchievingResult(
+      index,
+      formAway.overUnderAchievingSumDefence
     );
 
     let pointsDiff = await getPointsDifferential(
@@ -1274,13 +1291,17 @@ export async function calculateScore(match, index, divider, id) {
       (formAway.trueFormGoalsWeighting + formHome.trueFormConceededWeighting) /
       2;
 
+      console.log(formAway.trueFormAttack)
+      console.log(formHome.trueFormDefence)
+
     let experimentalHomeGoals =
       ((factorOneHome + factorTwoHome) / 2 ) *
       homeCalculation *
       // formHome.clinicalScore *
       // formHome.attackQualityMultiplier *
-      formHome.homeGoalWeighting *
-      formHome.trueFormMultiplier;
+      formHome.homeGoalWeighting +
+      formHome.trueFormAttack +
+      formAway.trueFormDefence;
 
     // let experimentalHomeGoals =
     //   (factorTwoHome) *
@@ -1291,10 +1312,9 @@ export async function calculateScore(match, index, divider, id) {
 
     let experimentalAwayGoals =
       ((factorOneAway + factorTwoAway) / 2 ) *
-      awayCalculation *
-      // formAway.clinicalScore *
-      // formAway.attackQualityMultiplier *
-      formAway.trueFormMultiplier;
+      awayCalculation +
+      formAway.trueFormAttack +
+      formHome.trueFormDefence;
 
     // let experimentalAwayGoals =
     //   (factorTwoAway) *
@@ -1312,8 +1332,8 @@ export async function calculateScore(match, index, divider, id) {
         formHome.AverageGoalsConceededWeightedWithXG) /
       2;
 
-      let conversionPredictionHome = formHome.HomePredictionBasedOnShotConversion * oddsWeightingHome
-      let conversionPredictionAway = formAway.AwayPredictionBasedOnShotConversion * oddsWeightingAway
+      // let conversionPredictionHome = formHome.HomePredictionBasedOnShotConversion * oddsWeightingHome
+      // let conversionPredictionAway = formAway.AwayPredictionBasedOnShotConversion * oddsWeightingAway
 
     // console.log(match.game);
     // console.log(`index ${index}`)
@@ -1391,12 +1411,12 @@ export async function calculateScore(match, index, divider, id) {
     let rawFinalHomeGoals = parseFloat(
       // (experimentalHomeGoals + formHome.expectedGoals) / 2
 
-      (experimentalHomeGoals * 2 +
+      (experimentalHomeGoals * 1 +
         XGGoalsHome * 0 +
-        conversionPredictionHome +
+        // conversionPredictionHome +
         homeGoalsBasedOnDA * 0 +
         formHome.expectedGoals * 0) /
-        3
+        1
 
       // homeGoalsBasedOnDA
       // ((formHome.AverageGoalsWeightedWithXG + formAway.AverageGoalsConceededWeightedWithXG) / 2)
@@ -1405,43 +1425,29 @@ export async function calculateScore(match, index, divider, id) {
     let rawFinalAwayGoals = parseFloat(
       // (experimentalAwayGoals + formAway.expectedGoals) / 2
 
-      (experimentalAwayGoals * 2 +
+      (experimentalAwayGoals * 1 +
         XGGoalsAway * 0 +
-        conversionPredictionAway +
+        // conversionPredictionAway +
         awayGoalsBasedOnDA * 0 +
         formAway.expectedGoals * 0) /
-        3
+        1
 
       // awayGoalsBasedOnDA
       // ((formAway.AverageGoalsWeightedWithXG + formHome.AverageGoalsConceededWeightedWithXG) / 2)
     );
 
     switch (true) {
-      case formHome.overOrUnder === "overachievingDrastically" &&
-        formAway.overOrUnder === "underachievingDrastically":
-        rawFinalHomeGoals = rawFinalHomeGoals - 0.6;
-        rawFinalAwayGoals = rawFinalAwayGoals + 0.6;
+      case formHome.overOrUnder === "overachievingDrastically":
+        rawFinalHomeGoals = rawFinalHomeGoals - 0.5;
         break;
-      case formAway.overOrUnder === "overachievingDrastically" &&
-        formHome.overOrUnder === "underachievingDrastically":
-        rawFinalHomeGoals = rawFinalHomeGoals + 0.6;
-        rawFinalAwayGoals = rawFinalAwayGoals - 0.6;
+      case formAway.overOrUnder === "overachievingDrastically":
+        rawFinalAwayGoals = rawFinalAwayGoals - 0.5;
         break;
-      case formHome.overOrUnder === "overachievingDrastically" &&
-        formAway.overOrUnder !== "underachievingDrastically":
-        rawFinalHomeGoals = rawFinalHomeGoals - 0.2;
+      case formHome.overOrUnder === "underachievingDrastically":
+        rawFinalHomeGoals = rawFinalHomeGoals + 0.5;
         break;
-      case formAway.overOrUnder === "overachievingDrastically" &&
-        formHome.overOrUnder !== "underachievingDrastically":
-        rawFinalAwayGoals = rawFinalAwayGoals - 0.2;
-        break;
-      case formHome.overOrUnder === "underachievingDrastically" &&
-        formAway.overOrUnder !== "overachievingDrastically":
-        rawFinalHomeGoals = rawFinalHomeGoals + 0.2;
-        break;
-      case formAway.overOrUnder === "underachievingDrastically" &&
-        formHome.overOrUnder !== "overachievingDrastically":
-        rawFinalAwayGoals = rawFinalAwayGoals + 0.2;
+      case formAway.overOrUnder === "underachievingDrastically":
+        rawFinalAwayGoals = rawFinalAwayGoals + 0.5;
         break;
       default:
         break;
@@ -1489,6 +1495,8 @@ export async function calculateScore(match, index, divider, id) {
     // finalHomeGoals = Math.round(rawFinalHomeGoals);
 
     // finalHomeGoals = rawFinalHomeGoals.toFixed(1)
+
+    console.log(rawFinalAwayGoals)
 
     finalAwayGoals = await roundCustom(rawFinalAwayGoals, formAway, formHome);
 
