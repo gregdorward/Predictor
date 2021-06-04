@@ -37,7 +37,7 @@ let [
 ] = tomorrowsDate.toLocaleDateString("en-US").split("/");
 
 let yesterdaysDate = new Date();
-yesterdaysDate.setDate(new Date().getDate() - 1);
+yesterdaysDate.setDate(new Date().getDate() - 27);
 let [
   yesterdayDay,
   yesterdayMonth,

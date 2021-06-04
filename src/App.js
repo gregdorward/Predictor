@@ -51,7 +51,9 @@ export var orderedLeagues = [];
     for (let x = 0; x < league.season.length; x++) {
       const element = league.season[x];
 
-      if (element.year === 20202021 || element.year === 2021) {
+      console.log(element)
+
+      if (element.year === 20202021 || element.year === 2021 || element.id === 5635) {
         availableLeagues.push({ name: name, element });
       }
     }
@@ -73,6 +75,7 @@ export var orderedLeagues = [];
 
     //leagues ordered by id
     var leagueOrder = [
+      5635, //Euro 2020
       4759, //premier league
       4912, //championship
       4845,
