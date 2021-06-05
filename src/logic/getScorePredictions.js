@@ -1471,10 +1471,10 @@ export async function calculateScore(match, index, divider, id) {
 
     switch (true) {
       case formHome.overOrUnderAttack === "overachievingDrastically":
-        rawFinalHomeGoals = rawFinalHomeGoals - 0.4;
+        rawFinalHomeGoals = rawFinalHomeGoals - 0.3;
         break;
       case formAway.overOrUnderAttack === "overachievingDrastically":
-        rawFinalAwayGoals = rawFinalAwayGoals - 0.4;
+        rawFinalAwayGoals = rawFinalAwayGoals - 0.3;
         break;
       case formHome.overOrUnderAttack === "overachievingSlightly":
         rawFinalHomeGoals = rawFinalHomeGoals - 0.1;
@@ -1483,10 +1483,10 @@ export async function calculateScore(match, index, divider, id) {
         rawFinalAwayGoals = rawFinalAwayGoals - 0.1;
         break;
       case formHome.overOrUnderAttack === "underachievingDrastically":
-        rawFinalHomeGoals = rawFinalHomeGoals + 0.4;
+        rawFinalHomeGoals = rawFinalHomeGoals + 0.3;
         break;
       case formAway.overOrUnderAttack === "underachievingDrastically":
-        rawFinalAwayGoals = rawFinalAwayGoals + 0.4;
+        rawFinalAwayGoals = rawFinalAwayGoals + 0.3;
         break;
       case formHome.overOrUnderAttack === "underachievingSlightly":
         rawFinalHomeGoals = rawFinalHomeGoals + 0.1;
@@ -1500,10 +1500,10 @@ export async function calculateScore(match, index, divider, id) {
 
     switch (true) {
       case formHome.overOrUnderDefence === "overachievingDrastically":
-        rawFinalAwayGoals = rawFinalAwayGoals + 0.4;
+        rawFinalAwayGoals = rawFinalAwayGoals + 0.3;
         break;
       case formAway.overOrUnderDefence === "overachievingDrastically":
-        rawFinalHomeGoals = rawFinalHomeGoals + 0.4;
+        rawFinalHomeGoals = rawFinalHomeGoals + 0.3;
         break;
       case formHome.overOrUnderDefence === "overachievingSlightly":
         rawFinalAwayGoals = rawFinalAwayGoals + 0.1;
@@ -1512,10 +1512,10 @@ export async function calculateScore(match, index, divider, id) {
         rawFinalHomeGoals = rawFinalHomeGoals + 0.1;
         break;
       case formHome.overOrUnderDefence === "underachievingDrastically":
-        rawFinalAwayGoals = rawFinalAwayGoals - 0.4;
+        rawFinalAwayGoals = rawFinalAwayGoals - 0.3;
         break;
       case formAway.overOrUnderDefence === "underachievingDrastically":
-        rawFinalHomeGoals = rawFinalHomeGoals - 0.4;
+        rawFinalHomeGoals = rawFinalHomeGoals - 0.3;
         break;
       case formHome.overOrUnderDefence === "underachievingSlightly":
         rawFinalAwayGoals = rawFinalAwayGoals - 0.1;
