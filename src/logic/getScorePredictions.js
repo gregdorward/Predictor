@@ -409,8 +409,6 @@ export async function calculateScore(match, index, divider, id) {
 
   let gameTotalWeighting;
 
-  console.log(match);
-
   switch (true) {
     case divider === 5:
       gameTotalWeighting = 0.5;
@@ -673,32 +671,7 @@ export async function calculateScore(match, index, divider, id) {
         concededOverOrUnderAchieving = concededOverOrUnderAchieving / 4;
       }
 
-      console.log(`Team ${teams[i].teamName}`);
-      console.log(
-        `scoredAverage ${teams[i][index].scoredAverageShortAndLongTerm}`
-      );
-      console.log(
-        `xg short and long term ${teams[i][index].expectedGoalsShortAndLongTerm}`
-      );
-      console.log(
-        `teams[i][index].finishingScore ${teams[i][index].finishingScore}`
-      );
 
-      console.log(`goalOverOrUnderAchieving ${goalOverOrUnderAchieving}`);
-
-      console.log(
-        `conceded Average ${teams[i][index].conceededAverageShortAndLongTerm}`
-      );
-      console.log(
-        `xg conceded short and long term ${teams[i][index].expectedConceededGoalsShortAndLongTerm}`
-      );
-      console.log(
-        `teams[i][index].goalieRating ${teams[i][index].goalieRating}`
-      );
-
-      console.log(
-        `concededOverOrUnderAchieving ${concededOverOrUnderAchieving}`
-      );
 
       teams[i][index].overUnderAchievingSumAttack = goalOverOrUnderAchieving;
 
@@ -1159,12 +1132,7 @@ export async function calculateScore(match, index, divider, id) {
       //   return Math.round(num)
       // }
 
-      console.log(num);
-      console.log(wholeNumber);
-      console.log(remainder);
-
       if (wholeNumber === 0) {
-        console.log("triggered");
         if (
           form.overOrUnderAttack === "overachievingDrastically" ||
           form.overOrUnderAttack === "overachieving"
@@ -1272,9 +1240,9 @@ export async function calculateScore(match, index, divider, id) {
     const awayGoalDiff = formAway.scoredAverage - formAway.concededAverage;
 
     formHome.goalsDifferential =
-      parseFloat(await diff(homeGoalDiff, awayGoalDiff)) / 2;
+      parseFloat(await diff(homeGoalDiff, awayGoalDiff)) / 4;
     formAway.goalsDifferential =
-      parseFloat(await diff(awayGoalDiff, homeGoalDiff)) / 2;
+      parseFloat(await diff(awayGoalDiff, homeGoalDiff)) / 4;
 
     // console.log(
     //   `${match.game} home goalsDifferential = ${formHome.goalsDifferential} away goalsDifferential = ${formAway.goalsDifferential}`
@@ -1325,8 +1293,6 @@ export async function calculateScore(match, index, divider, id) {
       (formAway.trueFormGoalsWeighting + formHome.trueFormConceededWeighting) /
       2;
 
-    console.log(formAway.trueFormAttack);
-    console.log(formHome.trueFormDefence);
 
     let experimentalHomeGoals =
       ((factorOneHome + factorTwoHome) / 2) *
@@ -1437,9 +1403,6 @@ export async function calculateScore(match, index, divider, id) {
     //   `${match.awayTeam} AverageGoalsConceededWeightedWithXG ${formAway.AverageGoalsConceededWeightedWithXG}`
     // );
 
-    console.log(match.awayTeam);
-    console.log(formHome);
-    console.log(formAway);
 
     let rawFinalHomeGoals = parseFloat(
       // (experimentalHomeGoals + formHome.expectedGoals) / 2
@@ -1570,18 +1533,16 @@ export async function calculateScore(match, index, divider, id) {
 
     // finalHomeGoals = rawFinalHomeGoals.toFixed(1)
 
-    console.log(rawFinalAwayGoals);
-
     finalAwayGoals = await roundCustom(rawFinalAwayGoals, formAway, formHome);
 
     // finalAwayGoals = Math.round(rawFinalAwayGoals);
 
-    if (finalHomeGoals > 7) {
-      finalHomeGoals = 7;
+    if (finalHomeGoals > 5) {
+      finalHomeGoals = Math.round((finalHomeGoals + formHome.expectedGoals) / 2);
     }
 
-    if (finalAwayGoals > 7) {
-      finalAwayGoals = 7;
+    if (finalAwayGoals > 5) {
+      finalAwayGoals = Math.round((finalAwayGoals + formAway.expectedGoals) / 2);
     }
 
     // finalAwayGoals = rawFinalAwayGoals.toFixed(1)
@@ -1680,9 +1641,7 @@ async function getSuccessMeasure(fixtures) {
       // }
 
       investment = investment + 1;
-      console.log(`total investment ${investment}`);
       netProfit = (sumProfit - investment).toFixed(2);
-      console.log(`netProfit ${netProfit}`);
     }
   }
 
@@ -1717,7 +1676,6 @@ let predictions = [];
 export async function getScorePrediction(day, mocked) {
   let radioSelected = parseInt(selectedOption);
   let mock = mocked;
-  console.log(mock);
   tips = [];
   bttsArray = [];
   longShotTips = [];
