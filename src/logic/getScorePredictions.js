@@ -671,13 +671,10 @@ export async function calculateScore(match, index, divider, id) {
         concededOverOrUnderAchieving = concededOverOrUnderAchieving / 4;
       }
 
-
-
       teams[i][index].overUnderAchievingSumAttack = goalOverOrUnderAchieving;
 
-      teams[i][
-        index
-      ].overUnderAchievingSumDefence = concededOverOrUnderAchieving;
+      teams[i][index].overUnderAchievingSumDefence =
+        concededOverOrUnderAchieving;
 
       teams[i][index].overUnderAchievingSum =
         goalOverOrUnderAchieving + concededOverOrUnderAchieving;
@@ -843,37 +840,29 @@ export async function calculateScore(match, index, divider, id) {
     let formHome = teams[0][index];
     let formAway = teams[1][index];
 
-    [
-      formHome.overOrUnderAttack,
-      formHome.trueFormAttack,
-    ] = await getOverOrUnderAchievingResult(
-      index,
-      formHome.overUnderAchievingSumAttack
-    );
+    [formHome.overOrUnderAttack, formHome.trueFormAttack] =
+      await getOverOrUnderAchievingResult(
+        index,
+        formHome.overUnderAchievingSumAttack
+      );
 
-    [
-      formHome.overOrUnderDefence,
-      formHome.trueFormDefence,
-    ] = await getOverOrUnderAchievingResult(
-      index,
-      formHome.overUnderAchievingSumDefence
-    );
+    [formHome.overOrUnderDefence, formHome.trueFormDefence] =
+      await getOverOrUnderAchievingResult(
+        index,
+        formHome.overUnderAchievingSumDefence
+      );
 
-    [
-      formAway.overOrUnderAttack,
-      formAway.trueFormAttack,
-    ] = await getOverOrUnderAchievingResult(
-      index,
-      formAway.overUnderAchievingSumAttack
-    );
+    [formAway.overOrUnderAttack, formAway.trueFormAttack] =
+      await getOverOrUnderAchievingResult(
+        index,
+        formAway.overUnderAchievingSumAttack
+      );
 
-    [
-      formAway.overOrUnderDefence,
-      formAway.trueFormDefence,
-    ] = await getOverOrUnderAchievingResult(
-      index,
-      formAway.overUnderAchievingSumDefence
-    );
+    [formAway.overOrUnderDefence, formAway.trueFormDefence] =
+      await getOverOrUnderAchievingResult(
+        index,
+        formAway.overUnderAchievingSumDefence
+      );
 
     let pointsDiff = await getPointsDifferential(
       formHome.last5Points,
@@ -1293,7 +1282,6 @@ export async function calculateScore(match, index, divider, id) {
       (formAway.trueFormGoalsWeighting + formHome.trueFormConceededWeighting) /
       2;
 
-
     let experimentalHomeGoals =
       ((factorOneHome + factorTwoHome) / 2) *
         homeCalculation *
@@ -1402,7 +1390,6 @@ export async function calculateScore(match, index, divider, id) {
     // console.log(
     //   `${match.awayTeam} AverageGoalsConceededWeightedWithXG ${formAway.AverageGoalsConceededWeightedWithXG}`
     // );
-
 
     let rawFinalHomeGoals = parseFloat(
       // (experimentalHomeGoals + formHome.expectedGoals) / 2
@@ -1538,11 +1525,15 @@ export async function calculateScore(match, index, divider, id) {
     // finalAwayGoals = Math.round(rawFinalAwayGoals);
 
     if (finalHomeGoals > 5) {
-      finalHomeGoals = Math.round((finalHomeGoals + formHome.expectedGoals) / 2);
+      finalHomeGoals = Math.round(
+        (finalHomeGoals + formHome.expectedGoals) / 2
+      );
     }
 
     if (finalAwayGoals > 5) {
-      finalAwayGoals = Math.round((finalAwayGoals + formAway.expectedGoals) / 2);
+      finalAwayGoals = Math.round(
+        (finalAwayGoals + formAway.expectedGoals) / 2
+      );
     }
 
     // finalAwayGoals = rawFinalAwayGoals.toFixed(1)
@@ -1857,6 +1848,20 @@ export async function getScorePrediction(day, mocked) {
       longShotTips.sort(function (a, b) {
         return b.goalDifferential - a.goalDifferential;
       });
+
+      ReactDOM.render(
+        <div className="ExplainerHeaders">
+          <th className="ScoreHeader">
+            FT Results
+            <br></br><div className="ArrowOne">↓</div>
+          </th>
+          <th className="PredictionHeader">
+            Predictions
+            <br></br><div className="ArrowTwo">↓</div>
+          </th>
+        </div>,
+        document.getElementById("Headers")
+      );
 
       if (mock !== true) {
         ReactDOM.render(

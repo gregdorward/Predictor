@@ -92,9 +92,9 @@ function GetDivider(fixture) {
 
       return (
         <Fragment>
-          <div className="CorrectResult">{`${fixture.fixture.homeGoals} - ${fixture.fixture.awayGoals}`}</div>
+          <div className="Result">{`${fixture.fixture.homeGoals} - ${fixture.fixture.awayGoals}`}</div>
           <div
-            className="score"
+            className="CorrectScore"
             key={fixture.fixture.homeTeam}
             data-cy={"score-" + fixture.fixture.id}
           >{`${fixture.fixture.goalsA} - ${fixture.fixture.goalsB}`}</div>
@@ -109,7 +109,7 @@ function GetDivider(fixture) {
         <Fragment>
           <div className="Result">{`${fixture.fixture.homeGoals} - ${fixture.fixture.awayGoals}`}</div>
           <div
-            className="score"
+            className="IncorrectScore"
             key={fixture.fixture.awayTeam}
           >{`${fixture.fixture.goalsA} - ${fixture.fixture.goalsB}`}</div>
         </Fragment>
@@ -118,7 +118,7 @@ function GetDivider(fixture) {
   } else {
     return (
       <Fragment>
-        <div className="Result">{`${fixture.fixture.time}`}</div>
+        <div className="KOTime">{`${fixture.fixture.time}`}</div>
         <div
           className="score"
           key={fixture.fixture.awayTeam}
@@ -189,7 +189,8 @@ const List = ({ fixtures }) => (
     <Fragment>
       <Collapsable className={"HowToUse"} buttonText={"Show / Hide help"} text={newText} />
     </Fragment>
-    <ul>
+    <div id="Headers"></div>
+    <ul className="FixtureList" id="FixtureList">
       {fixtures.map((fixture, i) => (
         <SingleFixture fixture={fixture}/>
       ))}

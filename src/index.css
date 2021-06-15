@@ -2,12 +2,12 @@
   body > #root > div {
     height: 100vh;
     /* font-family: 'Noto Sans', sans-serif; */
-    font-family: 'Roboto', sans-serif;    
+    font-family: "Roboto", sans-serif;
     font-size: 0.9vw;
     display: flex;
     flex-direction: column;
     flex-basis: 100%;
-  
+
     align-content: center;
   }
 
@@ -29,7 +29,7 @@
     background-color: white;
     /* text-shadow: 0 0.04em 0.04em rgba(0, 0, 0, 0.35); */
     text-align: center;
-  
+
     transition: all 0.2s;
   }
 }
@@ -42,7 +42,7 @@
     display: flex;
     flex-direction: column;
     flex-basis: 100%;
-  
+
     align-content: center;
   }
 
@@ -64,7 +64,7 @@
     background-color: white;
     /* text-shadow: 0 0.04em 0.04em rgba(0, 0, 0, 0.35); */
     text-align: center;
-  
+
     transition: all 0.2s;
   }
 }
@@ -77,7 +77,7 @@
     display: flex;
     flex-direction: column;
     flex-basis: 100%;
-  
+
     align-content: center;
   }
 
@@ -99,7 +99,7 @@
     background-color: white;
     /* text-shadow: 0 0.04em 0.04em rgba(0, 0, 0, 0.35); */
     text-align: center;
-  
+
     transition: all 0.2s;
   }
 }
@@ -112,7 +112,7 @@
     display: flex;
     flex-direction: column;
     flex-basis: 100%;
-  
+
     align-content: center;
   }
 
@@ -134,7 +134,7 @@
     background-color: white;
     /* text-shadow: 0 0.04em 0.04em rgba(0, 0, 0, 0.35); */
     text-align: center;
-  
+
     transition: all 0.2s;
   }
 }
@@ -147,7 +147,7 @@
     display: flex;
     flex-direction: column;
     flex-basis: 100%;
-  
+
     align-content: center;
   }
 
@@ -169,7 +169,7 @@
     background-color: white;
     /* text-shadow: 0 0.04em 0.04em rgba(0, 0, 0, 0.35); */
     text-align: center;
-  
+
     transition: all 0.2s;
   }
 }
@@ -182,7 +182,7 @@
     display: flex;
     flex-direction: column;
     flex-basis: 100%;
-  
+
     align-content: center;
   }
 
@@ -204,7 +204,7 @@
     background-color: white;
     /* text-shadow: 0 0.04em 0.04em rgba(0, 0, 0, 0.35); */
     text-align: center;
-  
+
     transition: all 0.2s;
   }
 }
@@ -239,7 +239,7 @@ h3 {
   color: white;
 }
 
-.SocialLink{
+.SocialLink {
   font-size: 1em;
   color: white;
 }
@@ -252,17 +252,17 @@ p {
   /* font-size: 1em; */
 }
 
-.RadioText{
+.RadioText {
   padding: 1em;
   /* font-size: 0.5em; */
 }
 
-.FormRadio{
+.FormRadio {
   padding-bottom: 0.5em;
   /* font-size: 0.9em; */
 }
 
-.OddsRadios{
+.OddsRadios {
   display: flex;
   height: 30px;
   /* font-size: 1em; */
@@ -274,7 +274,7 @@ p {
   padding: 0px;
 } */
 
-.LoadingText{
+.LoadingText {
   padding: 10px;
 }
 
@@ -296,53 +296,52 @@ p {
   line-height: auto;
 }
 
-.HeaderContainer{
+.HeaderContainer {
   display: flex;
   flex-direction: row;
   flex-basis: 100%;
   /* align-content: center; */
 }
 
-.Span1{
+.Span1 {
   flex-basis: 50%;
   text-align: right;
   margin-right: 10px;
 }
 
-.Span2{
+.Span2 {
   flex-basis: 50%;
   text-align: left;
   margin-left: 10px;
 }
 
-.WelcomeText{
+.WelcomeText {
   padding: 0.75em;
   padding-top: 2em;
 }
 
-.AllLeagues{
+.AllLeagues {
   margin: 0;
 }
 
-.League{
+.League {
   padding: 0.75em;
 }
 
-.DataText{
+.DataText {
   padding: 0.75em;
 }
 
-.DataLink{
+.DataLink {
   color: white;
 }
 
-.leagueName{
+.leagueName {
   font-size: 0.9em;
   font-weight: 550;
   color: white;
   padding-top: 1em;
   padding-bottom: 1em;
-
 }
 .fixture {
   display: flex;
@@ -360,17 +359,9 @@ p {
 .individualFixture {
   display: flex;
   flex-basis: 100%;
-  /* padding-top: 10px;
-  padding-bottom: 10px; */
-  /* font-size: 0.4em; */
-  /* align-content: center; */
 
   align-items: center;
   align-content: center;
-  /* flex-direction: row;
-  
-  font-size: 0.5em; */
-  /* margin-left: auto; */
 }
 
 .BTTSFixture {
@@ -406,7 +397,6 @@ p {
   order: 5;
   padding: 1em;
   flex-basis: 1%;
-
 }
 
 .HomeOdds {
@@ -418,7 +408,7 @@ p {
   width: 3.5em;
   border-radius: 25px;
   font-weight: 500;
-  margin-left: 10px;
+  margin-left: 5px;
 }
 
 .AwayOdds {
@@ -430,7 +420,7 @@ p {
   width: 3.5em;
   border-radius: 25px;
   font-weight: 500;
-  margin-right: 10px;
+  margin-right: 5px;
 }
 
 .homeTeam {
@@ -443,7 +433,7 @@ p {
   flex-shrink: 2;
   display: inline-block;
   text-align: right;
-  padding-left: 1em;
+  padding-left: 0.5em;
 }
 
 .awayTeam {
@@ -455,7 +445,63 @@ p {
   flex-shrink: 2;
   display: inline-block;
   text-align: left;
-  padding-right: 1em;
+  padding-right: 0.5em;
+}
+
+.ExplainerHeaders {
+   display: flex;
+  /* align-items: center;
+  justify-content: center;
+  align-content: center;
+  flex-direction: row; */
+
+  justify-content: center;
+  padding-top: 2em;
+
+}
+
+.ScoreHeader {
+  flex-basis: 50%;
+  font-size: 0.9em;
+  /* margin: 0.1em;
+  flex-wrap: wrap;
+  padding: 0.5em; */
+  font-weight: 600;
+  /* background-color: white; */
+  color: lightgray;
+  text-align: right;
+  /* border-right: white;
+  border-style: solid;
+  border-right-width: 0.5px; */
+  border: none;
+  padding: 0.5em;
+}
+
+.PredictionHeader {
+  flex-basis: 50%;
+  font-size: 0.9em;
+
+  /* background-color: white; */
+  color: lightgray;
+  /* padding-left: 1em; */
+  font-weight: 600;
+  text-align: left;
+  border: none;
+  padding: 0.5em;
+
+}
+
+.ArrowOne{
+  text-align: right;
+  padding-right:  2em;
+  padding-top: 1em;
+}
+
+.ArrowTwo{
+  text-align: left;
+  padding-left: 2em;
+  padding-top: 1em;
+
 }
 
 .divider,
@@ -463,42 +509,56 @@ p {
   height: auto;
   flex-basis: 10%;
   order: 3;
-  padding: 1em;
-  /* font-size: 0.7em; */
-  /* flex-grow: 1000; */
+  padding: 0.5em;
   display: inline-block;
-  /* margin: 0.3em; */
+  color: black;
+  background-color: white;
+  margin: 0.2em;
+}
+
+.KOTime {
+  height: auto;
+  flex-basis: 10%;
+  order: 3;
+  padding: 0.5em;
+  display: inline-block;
+  color: white;
+  margin: 0.2em;
 }
 
 .Result {
   height: auto;
   flex-basis: 10%;
   order: 3;
-  padding: 1em;
-
-  /* font-size: 0.7em; */
-  /* flex-grow: 1000; */
+  padding: 0.5em;
   display: inline-block;
-  color: #b8b8b8;
-  /* margin: 0.3em; */
-
+  color: black;
+  background-color: white;
+  margin: 0.2em;
 }
 
-.CorrectResult {
+.IncorrectScore {
   height: auto;
   flex-basis: 10%;
-  order: 3;
-  padding: 1em;
-
-  /* font-size: 0.7em; */
-  /* flex-grow: 1000; */
+  order: 4;
+  padding: 0.5em;
   display: inline-block;
-  color: lawngreen;
-  /* margin: 0.3em; */
-
+  display: inline-block;
+  color: darkred;
+  background-color: white;
+  margin: 0.2em;
 }
 
-
+.CorrectScore {
+  height: auto;
+  flex-basis: 10%;
+  order: 4;
+  padding: 0.5em;
+  display: inline-block;
+  color: green;
+  background-color: white;
+  margin: 0.2em;
+}
 
 .hidden {
   display: none;
@@ -666,7 +726,6 @@ p {
   flex-direction: row;
 }
 
-
 .HowToUse {
   padding: 1.2em;
   padding-top: 6px;
@@ -710,7 +769,6 @@ lh {
   /* font-size: 1em; */
   padding-top: 0.5em;
 }
-
 
 .SubmitButton {
   /* font-size: 50px; */
@@ -838,7 +896,7 @@ section {
   position: relative;
 }
 
-.MainLoading{
+.MainLoading {
   padding: 1em;
 }
 

@@ -182,7 +182,6 @@ export async function generateFixtures(day, radioState, selectedOdds) {
 
   await fixtureResponse.json().then((fixtures) => {
     fixtureArray = Array.from(fixtures.data);
-    console.log(fixtureArray);
   });
 
   let form;
@@ -271,6 +270,7 @@ export async function generateFixtures(day, radioState, selectedOdds) {
     );
 
     for (const fixture of leagueGames) {
+      console.log(fixture)
       const unixTimestamp = fixture.date_unix;
       const milliseconds = unixTimestamp * 1000;
       const dateObject = new Date(milliseconds);
