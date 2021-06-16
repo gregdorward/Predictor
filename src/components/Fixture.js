@@ -164,7 +164,7 @@ const SingleFixture = ({ fixture }) => (
       />
       <div className="AwayOdds">{fixture.fractionAway}</div>
     </li>
-    <div>
+    <div className="StatsDiv">
       <div id={"stats" + fixture.homeTeam}></div>
       <Fragment>
         <div id={"BTTSPotential" + fixture.id}></div>

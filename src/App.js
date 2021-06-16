@@ -218,7 +218,7 @@ function App() {
       <div id="FixtureContainer">
         <div>
           <div className="WelcomeText">
-            Global fixtures and predictions from leagues including
+            Global fixtures and predictions from 34 leagues and cup competitions, including
           </div>
           <ul className="AllLeagues">
             <li className="League">Premier League</li>
@@ -228,7 +228,6 @@ function App() {
             <li className="League">Ligue 1</li>
             <li className="League">MLS</li>
             <li className="League">Primeira Liga</li>
-            <li className="League">And 21 more...</li>
           </ul>
           <div className="DataText">Powered by data from</div>
           <a
