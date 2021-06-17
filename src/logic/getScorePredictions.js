@@ -1849,20 +1849,6 @@ export async function getScorePrediction(day, mocked) {
         return b.goalDifferential - a.goalDifferential;
       });
 
-      ReactDOM.render(
-        <div className="ExplainerHeaders">
-          <th className="ScoreHeader">
-            FT Results
-            <br></br><div className="ArrowOne">↓</div>
-          </th>
-          <th className="PredictionHeader">
-            Predictions
-            <br></br><div className="ArrowTwo">↓</div>
-          </th>
-        </div>,
-        document.getElementById("Headers")
-      );
-
       if (mock !== true) {
         ReactDOM.render(
           <Fixture
