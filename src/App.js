@@ -151,7 +151,7 @@ export var orderedLeagues = [];
   ReactDOM.render(
     <div className="FixtureButtons">
       <Button
-        text={"Yesterday's Prediction outcomes"}
+        text={"Yesterday's prediction outcomes"}
         onClickEvent={async () =>
           fixtureList.push(
             await generateFixtures("yesterdaysFixtures", selectedOption, selectedOdds)
@@ -159,7 +159,7 @@ export var orderedLeagues = [];
         }
       />
       <Button
-        text={"Today's Fixtures"}
+        text={"Today's fixtures"}
         onClickEvent={async () =>
           fixtureList.push(
             await generateFixtures("todaysFixtures", selectedOption, selectedOdds)
@@ -167,7 +167,7 @@ export var orderedLeagues = [];
         }
       />
       <Button
-        text={"Tomorrow's Fixtures"}
+        text={"Tomorrow's fixtures"}
         onClickEvent={async () =>
           fixtureList.push(
             await generateFixtures("tomorrowsFixtures", selectedOption, selectedOdds)

@@ -918,7 +918,7 @@ export async function generateFixtures(day, radioState, selectedOdds) {
     // }
     ReactDOM.render(
       <Button
-        text={"Get Predictions"}
+        text={"Generate predictions"}
         onClickEvent={() => getScorePrediction(day)}
       />,
       document.getElementById("Buttons")

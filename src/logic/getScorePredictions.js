@@ -1322,12 +1322,9 @@ export async function calculateScore(match, index, divider, id) {
     // let conversionPredictionHome = formHome.HomePredictionBasedOnShotConversion * oddsWeightingHome
     // let conversionPredictionAway = formAway.AwayPredictionBasedOnShotConversion * oddsWeightingAway
 
-    // console.log(match.game);
-    // console.log(`index ${index}`)
-    // console.log(`home goals: ${XGGoalsHome}`);
-    // console.log("formHome");
-    // console.log(formHome);
-    // console.log(`Goals home = ${experimentalHomeGoals}`)
+    console.log(match.game);
+    console.log("formHome");
+    console.log(formHome);
 
     // console.log(`Weighted goals home =  ${formHome.AverageGoalsWeightedWithXG}`)
     // console.log(`Average goals conceeded weighted = ${formHome.AverageGoalsConceededWeightedWithXG}`)
