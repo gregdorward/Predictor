@@ -14,6 +14,7 @@ function Stats(props) {
   }
 
   return (
+    <Fragment>
     <ul className={props.className} style={props.style}>
       <li key={props.name}>{`${props.name} last ${props.gameCount} form`}</li>
       <li key="last5">
@@ -69,6 +70,8 @@ function Stats(props) {
         {`Season PPG - ${props.ppg}`}
       </li>
     </ul>
+    <div id="h2hStats"></div>
+    </Fragment>
   );
 }
 

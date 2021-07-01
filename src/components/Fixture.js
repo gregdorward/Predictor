@@ -14,7 +14,8 @@ function GetDivider(fixture) {
 
   if (isPrediction === false && matchStatus !== "complete") {
     return (
-      <div className="divider" data-cy={"divider-" + fixture.fixture.id}>
+      <div className="divider" data-cy={"divider-" + fixture.fixture.id}
+      >
         {"V"}
       </div>
     );
@@ -167,7 +168,6 @@ const SingleFixture = ({ fixture }) => (
     <div className="StatsDiv">
       <div id={"stats" + fixture.homeTeam}></div>
       <Fragment>
-        <div id={"BTTSPotential" + fixture.id}></div>
         <div
           className="StatsContainer"
           data-cy={"StatsContainer-" + fixture.id}
@@ -176,6 +176,7 @@ const SingleFixture = ({ fixture }) => (
           <div className="AwayStats" id={"away" + fixture.awayTeam}></div>
         </div>
       </Fragment>
+      <div className="MatchHistory" id={"history" + fixture.homeTeam}></div>
     </div>
   </div>
 );

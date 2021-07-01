@@ -908,6 +908,8 @@ export async function generateFixtures(day, radioState, selectedOdds) {
       match.expectedGoalsHomeToDate = fixture.team_a_xg_prematch;
       match.expectedGoalsAwayToDate = fixture.team_b_xg_prematch;
 
+      console.log(`match id = ${match.id}`)
+
       if (match.status !== "canceled" || match.status !== "suspended") {
         matches.push(match);
         await createFixture(match, false);

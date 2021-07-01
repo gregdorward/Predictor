@@ -251,9 +251,11 @@ h2 {
 }
 
 h3 {
-  /* font-size: 1.75em; */
-  font-weight: 500;
-  color: white;
+  font-size: 1.25em;
+  font-weight: 600;
+  color: black;
+  padding: 5px;
+  margin: 0%
 }
 
 .SocialLink {
@@ -892,6 +894,46 @@ button:hover {
   margin: auto;
 
   animation: spin 1s infinite linear;
+}
+
+.H2HStats{
+  margin: 10px;
+}
+
+.H2HStat{
+  padding: 5px;
+}
+
+.PreviousMatchStats{
+  display: flex;
+  flex-direction: column;
+  flex-wrap: wrap;
+  margin-left: 20%;
+  margin-right: 20%;
+}
+
+.PreviousMatchStats li{
+  text-align: center;
+  padding: 5px;
+}
+
+
+.TrendsHome{
+  margin-left: 5em;
+  margin-right: 5em;
+  padding-bottom: 5px;
+}
+
+.TrendsAway{
+  margin-left: 5em;
+  margin-right: 5em;
+  padding-top: 5px;
+  padding-bottom: 10px;
+
+}
+
+.MoreStats{
+  font-size: 0.8em;
 }
 
 @keyframes spin {
