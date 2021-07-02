@@ -36,6 +36,9 @@ export async function getTeamStats(id, home, away) {
           BTTSStat={match.data.h2h.betting_stats.bttsPercentage}
           BTTSForecast={match.data.btts_potential}
           BTTSOdds={match.data.odds_btts_yes}
+          CornersStat={"–"}
+          CornersForecast={match.data.corners_potential}
+          CornersOdds={match.data.odds_corners_over_105}
         />
       </Fragment>,
       document.getElementById(`H2HStats${identifier}`)

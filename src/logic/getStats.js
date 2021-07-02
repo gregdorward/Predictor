@@ -158,6 +158,7 @@ export async function createStatsDiv(game, mock) {
       document.getElementById("away" + awayTeam)
     );
 
+
     ReactDOM.render(
       <Button
         className="MoreStats"

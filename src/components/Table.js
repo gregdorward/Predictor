@@ -19,8 +19,8 @@ const StyledTableCell = withStyles((theme) => ({
   },
   body: {
     fontSize: "2em",
-    fontFamily: 'inherit'
-
+    fontFamily: 'inherit',
+    padding: 10,
   },
 }))(TableCell);
 
@@ -33,7 +33,17 @@ const StyledTableRow = withStyles((theme) => ({
   },
 }))(TableRow);
 
+function getCornerOverBoolean(stat){
+    if(stat > 10.5){
+        return "Yes"
+    } else if(stat <= 10.5){
+        return "No"
+    }
+}
+
 export default function CustomizedTables(props) {
+    let corners = getCornerOverBoolean(props.CornersForecast)
+    console.log(corners)
 
   return (
     <TableContainer component={Paper} className="StatsTable">
@@ -78,6 +88,17 @@ export default function CustomizedTables(props) {
             </StyledTableCell>
             <StyledTableCell align="center">{`${props.BTTSForecast}%`}</StyledTableCell>
             <StyledTableCell align="center">{props.BTTSOdds}</StyledTableCell>
+          </StyledTableRow>
+
+          <StyledTableRow key="Corners">
+            <StyledTableCell component="th" scope="row" align="center">
+              Over 10.5 Corners
+            </StyledTableCell>
+            <StyledTableCell component="th" scope="row" align="center">
+              {`${props.CornersStat}`}
+            </StyledTableCell>
+            <StyledTableCell align="center">{corners}</StyledTableCell>
+            <StyledTableCell align="center">{props.CornersOdds}</StyledTableCell>
           </StyledTableRow>
         </TableBody>
       </Table>
