@@ -897,7 +897,8 @@ button:hover {
 }
 
 .H2HStats{
-  margin: 10px;
+  margin: 25px;
+  text-align: center;
 }
 
 .H2HStat{
@@ -910,6 +911,7 @@ button:hover {
   flex-wrap: wrap;
   margin-left: 20%;
   margin-right: 20%;
+  padding-bottom: 10px;
 }
 
 .PreviousMatchStats li{
@@ -917,6 +919,13 @@ button:hover {
   padding: 5px;
 }
 
+
+.StatsTable{
+  width: 75%;
+  text-align: center;
+  font-family: 'Open Sans', sans-serif;
+  font-size: 0.5em;
+}
 
 .TrendsHome{
   margin-left: 5em;
