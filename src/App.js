@@ -75,42 +75,39 @@ export var orderedLeagues = [];
 
     //leagues ordered by id
     var leagueOrder = [
-      5635, //Euro 2020
-      4759, //premier league
-      4912, //championship
-      4845,
-      4844,
-      5018,
-      4944,
-      4478,
-      4673,
-      4889,
-      4889,
-      4746,
-      4567,
-      4505,
-      4842,
-      4972,
-      4676,
-      4645,
-      4547,
-      5674,
-      5361,
-      4885,
-      4902,
-      4903,
-      4803,
-      5151,
-      4930,
-      4655,
-      4930,
-      4693,
-      5713,
-      5505, //sweden
-      4642, //Denmark
-      5434, //Japan
-      5506, //S Korea
-      4507, //Mexico
+      6135, //premier league 21/22
+      5977, //Champions league 21/22
+      5784, //Europa league 21/22
+      6089, //championship
+      6017, //league 1 21/22
+      6015, //league 2 21/22
+      6088, //National league 21/22
+      4944, //TODO
+      5992, //Scottish Prem 21/22
+      4673, //TODO
+      4889, //TODO
+      5951, //Dutch Prem 21/22
+      6079, //Belgian Pro League 21/22
+      6019, //French Prem 21/22
+      6117, //Portagul Prem 21/22
+      5674, //MLS 21
+      6120, //Spanish secunda 21/22
+      4972, //TODO
+      6020, //Bundesliga 2 21/22
+      6018, //French League 2 21/22
+      5991, //Scottish Championship
+      5361, //TODO
+      5713, //Brazil prem 21
+      5505, //sweden 21/22
+      5434, //Japan 21
+      5506, //S Korea 21
+      6038, //Mexico prem 21/22
+      5976, //Scottish league 1 21/22
+      5974, //Scottish league 2 21/22
+      // 6068, //FA Cup 21/22
+      6083, //National league North and South 21/22 
+      // 4930, //Southern prem
+      // 6166, //Northern prem
     ];
 
     orderedLeagues = mapOrder(availableLeagues, leagueOrder, "id");
