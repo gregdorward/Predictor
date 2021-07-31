@@ -53,7 +53,7 @@ export var orderedLeagues = [];
 
       console.log(element)
 
-      if (element.year === 20202021 || element.year === 2021 || element.id === 5635) {
+      if (element.year === 20202021 || element.year === 20212022 || element.year === 2021) {
         availableLeagues.push({ name: name, element });
       }
     }
