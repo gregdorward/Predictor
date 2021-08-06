@@ -44,14 +44,11 @@ export var orderedLeagues = [];
   });
 
   for (let i = 0; i < leagueArray.length; i++) {
-    console.log(leagueArray[i]);
     const league = leagueArray[i];
     const name = leagueArray[i].name;
 
     for (let x = 0; x < league.season.length; x++) {
       const element = league.season[x];
-
-      console.log(element)
 
       if (element.year === 20202021 || element.year === 20212022 || element.year === 2021) {
         if(element.id !== 6068){

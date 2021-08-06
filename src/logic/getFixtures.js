@@ -178,8 +178,6 @@ export async function generateFixtures(day, radioState, selectedOdds) {
 
   fixtureResponse = await fetch(url);
 
-  console.log(selectedOdds);
-
   await fixtureResponse.json().then((fixtures) => {
     fixtureArray = Array.from(fixtures.data);
   });
@@ -235,7 +233,6 @@ export async function generateFixtures(day, radioState, selectedOdds) {
       leagueArray = Array.from(leagues.leagueArray);
     });
     //could possibly get league positions from here
-    console.log(leagueArray)
   } else {
     for (let i = 0; i < orderedLeagues.length; i++) {
       league = await fetch(
@@ -274,7 +271,6 @@ export async function generateFixtures(day, radioState, selectedOdds) {
     );
 
     for (const fixture of leagueGames) {
-      console.log(fixture)
       const unixTimestamp = fixture.date_unix;
       const milliseconds = unixTimestamp * 1000;
       const dateObject = new Date(milliseconds);
@@ -354,14 +350,11 @@ export async function generateFixtures(day, radioState, selectedOdds) {
       }
 
       try {
-        console.log(match.homeTeam)
-        console.log(leaguePositions)
 
         homeTeaminLeague = leaguePositions.find(
           (team) => team.name === match.homeTeam
         );
         teamPositionHome = homeTeaminLeague.position;
-        console.log(homeTeaminLeague)
         homePrefix = await getPrefix(teamPositionHome);
         homeSeasonPPG = homeTeaminLeague.ppg.toFixed(2);
       } catch (error) {
@@ -386,7 +379,7 @@ export async function generateFixtures(day, radioState, selectedOdds) {
       }
 
 
-      if (isFormStored) {
+      if (!isFormStored) {
         form = await getForm(match);
 
         // if (
@@ -394,7 +387,6 @@ export async function generateFixtures(day, radioState, selectedOdds) {
         //   form[1].data[0].stats.additional_info
         // ) {
 
-          console.log(form[0].data[0].stats.additional_info)
         //   //get the last 5 games stats from a big block of text
         //   var homeExtract = form[0].data[0].stats.additional_info.replace(
         //     /["']/g,
@@ -917,7 +909,6 @@ export async function generateFixtures(day, radioState, selectedOdds) {
       match.expectedGoalsHomeToDate = fixture.team_a_xg_prematch;
       match.expectedGoalsAwayToDate = fixture.team_b_xg_prematch;
 
-      console.log(`match id = ${match.id}`)
 
       if (match.status !== "canceled" || match.status !== "suspended") {
         matches.push(match);
