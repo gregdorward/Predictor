@@ -44,7 +44,9 @@ export async function getForm(match) {
       `${process.env.REACT_APP_EXPRESS_SERVER}form/${team}`
     );
     await response.json().then((formData) => {
+      console.log(formData.data[0].season_format)
       fixtureForm[i] = formData;
+      console.log(fixtureForm[i])
     });
   }
   return fixtureForm;

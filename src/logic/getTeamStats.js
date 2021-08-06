@@ -4,6 +4,7 @@ import BulletList from "../components/BulletList";
 import { Fragment } from "react";
 import Table from "@material-ui/core/Table";
 import CustomizedTables from "../components/Table";
+import { matches } from "./getFixtures";
 
 export async function getTeamStats(id, home, away) {
   console.log("EXECUTED");

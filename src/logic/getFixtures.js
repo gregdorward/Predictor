@@ -234,6 +234,8 @@ export async function generateFixtures(day, radioState, selectedOdds) {
     await league.json().then((leagues) => {
       leagueArray = Array.from(leagues.leagueArray);
     });
+    //could possibly get league positions from here
+    console.log(leagueArray)
   } else {
     for (let i = 0; i < orderedLeagues.length; i++) {
       league = await fetch(
@@ -243,8 +245,10 @@ export async function generateFixtures(day, radioState, selectedOdds) {
       await league.json().then((table) => {
         leagueArray.push(table);
       });
+
     }
   }
+
 
   for (let i = 0; i < 20; i++) {
     for (
@@ -350,10 +354,14 @@ export async function generateFixtures(day, radioState, selectedOdds) {
       }
 
       try {
+        console.log(match.homeTeam)
+        console.log(leaguePositions)
+
         homeTeaminLeague = leaguePositions.find(
           (team) => team.name === match.homeTeam
         );
         teamPositionHome = homeTeaminLeague.position;
+        console.log(homeTeaminLeague)
         homePrefix = await getPrefix(teamPositionHome);
         homeSeasonPPG = homeTeaminLeague.ppg.toFixed(2);
       } catch (error) {
@@ -377,7 +385,8 @@ export async function generateFixtures(day, radioState, selectedOdds) {
         awaySeasonPPG = "N/A";
       }
 
-      if (!isFormStored) {
+
+      if (isFormStored) {
         form = await getForm(match);
 
         // if (
@@ -948,3 +957,4 @@ export async function generateFixtures(day, radioState, selectedOdds) {
     }
   );
 }
+

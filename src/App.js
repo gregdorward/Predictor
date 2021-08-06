@@ -54,7 +54,9 @@ export var orderedLeagues = [];
       console.log(element)
 
       if (element.year === 20202021 || element.year === 20212022 || element.year === 2021) {
-        availableLeagues.push({ name: name, element });
+        if(element.id !== 6068){
+          availableLeagues.push({ name: name, element });
+        }
       }
     }
 
@@ -112,9 +114,6 @@ export var orderedLeagues = [];
 
     orderedLeagues = mapOrder(availableLeagues, leagueOrder, "id");
   }
-
-  let response;
-  let responseBody;
 
   ReactDOM.render(
     <div className="LastXGames">
