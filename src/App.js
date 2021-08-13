@@ -81,17 +81,17 @@ export var orderedLeagues = [];
       6017, //league 1 21/22
       6015, //league 2 21/22
       6088, //National league 21/22
-      4944, //TODO
+      6211, //
       5992, //Scottish Prem 21/22
-      4673, //TODO
-      4889, //TODO
+      6192, //
+      6198, //
       5951, //Dutch Prem 21/22
       6079, //Belgian Pro League 21/22
       6019, //French Prem 21/22
       6117, //Portagul Prem 21/22
       5674, //MLS 21
       6120, //Spanish secunda 21/22
-      4972, //TODO
+      6205, //
       6020, //Bundesliga 2 21/22
       6018, //French League 2 21/22
       5991, //Scottish Championship
@@ -105,8 +105,7 @@ export var orderedLeagues = [];
       5974, //Scottish league 2 21/22
       // 6068, //FA Cup 21/22
       6083, //National league North and South 21/22 
-      // 4930, //Southern prem
-      // 6166, //Northern prem
+      6166, //Southern prem
     ];
 
     orderedLeagues = mapOrder(availableLeagues, leagueOrder, "id");
