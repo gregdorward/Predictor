@@ -28,7 +28,7 @@ export async function getBTTSPotential(allForm, match, index) {
 
 if(match.bttsFraction !== "N/A" && match.status !== "suspended" && match.status !== "canceled"){
   if (
-    match.combinedBTTS >= 65 &&
+    match.combinedBTTS >= 60 &&
     match.btts_potential > 60 &&
     awayPPG > 1.4 &&
     homePPG > 1 &&
@@ -40,14 +40,14 @@ if(match.bttsFraction !== "N/A" && match.status !== "suspended" && match.status 
     match.btts = true;
     match.bttsChosen = true;
   } else if (
-    match.combinedBTTS >= 55 &&
+    match.combinedBTTS >= 50 &&
     match.btts_potential > 50 &&
-    dangerousAttacksHome > 40 && 
-    dangerousAttacksAway > 40 &&
-    awayPPG > 1.3 &&
-    homePPG > 1 &&
-    homeXG >= 0.9 && 
-    awayXG >= 0.9
+    dangerousAttacksHome > 30 && 
+    dangerousAttacksAway > 30 &&
+    awayPPG > 1
+    // homePPG > 1 
+    // homeXG >= 0.75 && 
+    // awayXG >= 0.75
   ){
     match.btts = true;
     match.bttsChosen = false;
