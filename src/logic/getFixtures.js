@@ -245,6 +245,7 @@ export async function generateFixtures(day, radioState, selectedOdds) {
 
     }
   }
+  console.log(leagueArray)
 
 
   for (let i = 0; i < 20; i++) {
@@ -254,6 +255,8 @@ export async function generateFixtures(day, radioState, selectedOdds) {
       x++
     ) {
       let string = leagueArray[i].data.all_matches_table_overall[x];
+
+      console.log(string)
 
       leaguePositions.push({
         name: string.cleanName,
