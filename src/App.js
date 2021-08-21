@@ -84,7 +84,7 @@ export var orderedLeagues = [];
       6211, //
       5992, //Scottish Prem 21/22
       6192, //
-      6198, //
+      6198, //Serie A
       5951, //Dutch Prem 21/22
       6079, //Belgian Pro League 21/22
       6019, //French Prem 21/22
@@ -100,7 +100,7 @@ export var orderedLeagues = [];
       5505, //sweden 21/22
       5434, //Japan 21
       5506, //S Korea 21
-      6038, //Mexico prem 21/22
+      6038, //Mexico prem 21/22`
       5976, //Scottish league 1 21/22
       5974, //Scottish league 2 21/22
       // 6068, //FA Cup 21/22
