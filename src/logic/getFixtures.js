@@ -524,6 +524,7 @@ export async function generateFixtures(day, radioState, selectedOdds) {
                 form[0].data[0].stats.seasonBTTSPercentage_overall
               ),
               LastFiveForm: lastFiveFormHome,
+              LastTenForm: lastTenFormHome,
               LeaguePosition: `${teamPositionHome}${homePrefix}`,
               SeasonPPG: homeSeasonPPG,
             },
@@ -595,6 +596,7 @@ export async function generateFixtures(day, radioState, selectedOdds) {
                 form[0].data[1].stats.seasonBTTSPercentage_overall
               ),
               LastFiveForm: lastFiveFormHome,
+              LastTenForm: lastTenFormHome,
               LeaguePosition: `${teamPositionHome}${homePrefix}`,
               SeasonPPG: homeSeasonPPG,
             },
@@ -666,6 +668,7 @@ export async function generateFixtures(day, radioState, selectedOdds) {
                 form[0].data[2].stats.seasonBTTSPercentage_overall
               ),
               LastFiveForm: lastFiveFormHome,
+              LastTenForm: lastTenFormHome,
               LeaguePosition: `${teamPositionHome}${homePrefix}`,
               SeasonPPG: homeSeasonPPG,
             },
@@ -740,6 +743,7 @@ export async function generateFixtures(day, radioState, selectedOdds) {
                 form[1].data[0].stats.seasonBTTSPercentage_overall
               ),
               LastFiveForm: lastFiveFormAway,
+              LastTenForm: lastTenFormAway,
               LeaguePosition: `${teamPositionAway}${awayPrefix}`,
               SeasonPPG: awaySeasonPPG,
             },
@@ -811,6 +815,7 @@ export async function generateFixtures(day, radioState, selectedOdds) {
                 form[1].data[1].stats.seasonBTTSPercentage_overall
               ),
               LastFiveForm: lastFiveFormAway,
+              LastTenForm: lastTenFormAway,
               LeaguePosition: `${teamPositionAway}${awayPrefix}`,
               SeasonPPG: awaySeasonPPG,
             },
@@ -882,6 +887,7 @@ export async function generateFixtures(day, radioState, selectedOdds) {
                 form[0].data[2].stats.seasonBTTSPercentage_overall
               ),
               LastFiveForm: lastFiveFormAway,
+              LastTenForm: lastTenFormAway,
               LeaguePosition: `${teamPositionAway}${awayPrefix}`,
               SeasonPPG: awaySeasonPPG,
             },
@@ -889,6 +895,7 @@ export async function generateFixtures(day, radioState, selectedOdds) {
         });
       }
 
+      console.log(allForm)
       match.homeBadge = fixture.home_image;
       match.awayBadge = fixture.away_image;
 
