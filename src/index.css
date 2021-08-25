@@ -905,6 +905,10 @@ button:hover {
   padding: 5px;
 }
 
+.FormTrend{
+  line-height: 2em;
+}
+
 .PreviousMatchStats{
   display: flex;
   flex-direction: column;

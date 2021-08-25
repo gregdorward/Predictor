@@ -316,14 +316,17 @@ export async function generateFixtures(day, radioState, selectedOdds) {
         switch (position) {
           case 1:
           case 21:
+          case 31:
             teamPositionPrefix = "st";
             break;
           case 2:
           case 22:
+          case 32:
             teamPositionPrefix = "nd";
             break;
           case 3:
           case 23:
+          case 33:
             teamPositionPrefix = "rd";
             break;
           case 4:
@@ -344,6 +347,19 @@ export async function generateFixtures(day, radioState, selectedOdds) {
           case 19:
           case 20:
           case 24:
+          case 25:
+          case 26:
+          case 27:
+          case 28:
+          case 29:
+          case 30:
+          case 34:
+          case 35:
+          case 36:
+          case 37:
+          case 38:
+          case 39:
+          case 40:
             teamPositionPrefix = "th";
             break;
           default:

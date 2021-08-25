@@ -57,12 +57,20 @@ export async function createStatsDiv(game, mock) {
       gameStats.home[index].LastFiveForm
     );
 
+    gameStats.home[index].last6Points = getPointsFromLastX(
+      gameStats.home[index].LastSixForm
+    );
+
     gameStats.home[index].last10Points = getPointsFromLastX(
       gameStats.home[index].LastTenForm
     );
 
     gameStats.away[index].last5Points = getPointsFromLastX(
       gameStats.away[index].LastFiveForm
+    );
+
+    gameStats.away[index].last6Points = getPointsFromLastX(
+      gameStats.away[index].LastSixForm
     );
 
     gameStats.away[index].last10Points = getPointsFromLastX(
@@ -74,9 +82,11 @@ export async function createStatsDiv(game, mock) {
     }
 
     let homeFiveGameAverage = await getPointAverage(gameStats.home[index].last5Points, 5)
+    let homeSixGameAverage = await getPointAverage(gameStats.home[index].last6Points, 6)
     let homeTenGameAverage = await getPointAverage(gameStats.home[index].last10Points, 10)
 
     let awayFiveGameAverage = await getPointAverage(gameStats.away[index].last5Points, 5)
+    let awaySixGameAverage = await getPointAverage(gameStats.away[index].last6Points, 6)
     let awayTenGameAverage = await getPointAverage(gameStats.away[index].last10Points, 10)
 
     console.log(homeFiveGameAverage)
@@ -84,91 +94,198 @@ export async function createStatsDiv(game, mock) {
     console.log(awayFiveGameAverage)
     console.log(awayTenGameAverage)
 
-
-    async function compareFormTrend(five, ten){
+    async function getLastGameResult(lastGame){
       let text;
+      switch (true) {
+        case lastGame === "L":
+          text = "Lost"
+          break;
+        case lastGame === "D":
+          text = "Drew"
+          break;
+        case lastGame === "W":
+          text = "Won"
+          break;
+        default:
+          break;
+      }
+      return text;
+    }
 
+    async function compareFormTrend(five, six, ten){
+      let text;
       if(five >= 2.5){
         switch (true) {
-          case five > ten:
-            text = "Outstanding and improving"
+          case five > six && six > ten:
+            text = "Outstanding recent form with solid improvement over last 10 games"
             break;
-            case five === ten:
-              text = "Outstanding and consistent"
+            case five > six && six < ten:
+              text = "Outstanding recent form which has improved with some inconsistency over last 10 games"
               break;
-              case five < ten:
-                text = "Consistently outstanding"
+            case five === six && six > ten:
+              text = "Outstanding recent form with most improvement in the last 6"
+              break;
+              case five === six && six < ten:
+                text = "Outstanding recent form with a slight dip in the last 6"
                 break;
+                case five === six && six === ten:
+                  text = "Consistently outstanding form over the last 10"
+                  break;
+                  case five < six && six === ten:
+                    text = "Outstanding recent form but slightly worsening in the last 5"
+                    break;
+                    case five < six && six > ten:
+                      text = "Outstanding recent form but slightly fluctuating over the last 10"
+                      break;
+                      case five < six && six < ten:
+                        text = "Outstanding recent form but beginning to worsen recently"
+                        break;
           default:
             break;
         }
       } else if (five < 2.5 && five >= 2){
         switch (true) {
-          case five > ten:
-            text = "Very good and improving"
+          case five > six && six > ten:
+            text = "Very good recent form with solid improvement over last 10 games"
             break;
-            case five === ten:
-              text = "Very good and consistent"
+            case five > six && six < ten:
+              text = "Very good recent form which has improved with some inconsistency over last 10 games"
               break;
-              case five < ten:
-                text = "Very good but slightly worsening"
+            case five === six && six > ten:
+              text = "Very good recent form with most improvement in the last 6"
+              break;
+              case five === six && six < ten:
+                text = "Very good recent form with a slight dip in the last 6"
                 break;
+                case five === six && six === ten:
+                  text = "Very good outstanding form over the last 10"
+                  break;
+                  case five < six && six === ten:
+                    text = "Very good recent form but slightly worsening in the last 5"
+                    break;
+                    case five < six && six > ten:
+                      text = "Very good recent form but slightly fluctuating over the last 10"
+                      break;
+                      case five < six && six < ten:
+                        text = "Very good recent form but beginning to worsen recently"
+                        break;
           default:
             break;
         }
       } else if (five < 2 && five >= 1.5){
         switch (true) {
-          case five > ten:
-            text = "Good and improving"
+          case five > six && six > ten:
+            text = "Good recent form with solid improvement over last 10 games"
             break;
-            case five === ten:
-              text = "Good and consistent"
+            case five > six && six < ten:
+              text = "Good recent form which has improved with some inconsistency over last 10 games"
               break;
-              case five < ten:
-                text = "Good but slightly worsening"
+            case five === six && six > ten:
+              text = "Good recent form with most improvement in the last 6"
+              break;
+              case five === six && six < ten:
+                text = "Good recent form with a slight dip in the last 6"
                 break;
+                case five === six && six === ten:
+                  text = "Good outstanding form over the last 10"
+                  break;
+                  case five < six && six === ten:
+                    text = "Good recent form but slightly worsening in the last 5"
+                    break;
+                    case five < six && six > ten:
+                      text = "Good recent form but slightly fluctuating over the last 10"
+                      break;
+                      case five < six && six < ten:
+                        text = "Good recent form but worsening consistently"
+                        break;
           default:
             break;
         }
       } else if (five < 1.5 && five >= 1){
         switch (true) {
-          case five > ten:
-            text = "Average and improving"
+          case five > six && six > ten:
+            text = "Average recent form with solid improvement over last 10 games"
             break;
-            case five === ten:
-              text = "Average and consistent"
+            case five > six && six < ten:
+              text = "Average recent form which has improved with some inconsistency over last 10 games"
               break;
-              case five < ten:
-                text = "Average but slightly worsening"
+            case five === six && six > ten:
+              text = "Average recent form with most improvement in the last 6"
+              break;
+              case five === six && six < ten:
+                text = "Average recent form with a slight dip in the last 6"
                 break;
+                case five === six && six === ten:
+                  text = "Consistently average form over the last 10"
+                  break;
+                  case five < six && six === ten:
+                    text = "Average recent form but slightly worsening in the last 5"
+                    break;
+                    case five < six && six > ten:
+                      text = "Average recent form, slightly fluctuating over the last 10"
+                      break;
+                      case five < six && six < ten:
+                        text = "Average recent form, declining consistently"
+                        break;
           default:
             break;
         }
       } else if (five < 1 && five >= 0.5){
         switch (true) {
-          case five > ten:
-            text = "Poor but improving"
+          case five > six && six > ten:
+            text = "Poor recent form with gradual improvement over last 10 games"
             break;
-            case five === ten:
-              text = "Poor and consistent"
+            case five > six && six < ten:
+              text = "Poor recent form but improving with some inconsistency over last 10 games"
               break;
-              case five < ten:
-                text = "Poor and slightly worsening"
+            case five === six && six > ten:
+              text = "Poor recent form with some improvement shown in the last 6"
+              break;
+              case five === six && six < ten:
+                text = "Poor recent form with a dip in the last 6"
                 break;
+                case five === six && six === ten:
+                  text = "Consistently poor form over the last 10"
+                  break;
+                  case five < six && six === ten:
+                    text = "Poor recent form, slightly worsening in the last 5"
+                    break;
+                    case five < six && six > ten:
+                      text = "Poor recent form, slightly fluctuating over the last 10"
+                      break;
+                      case five < six && six < ten:
+                        text = "Poor recent form, declining consistently"
+                        break;
           default:
+            text = "Poor recent form"
             break;
         }
       } else if (five < 0.5){
         switch (true) {
-          case five > ten:
-            text = "Terrible but slightly improving"
+          case five > six && six > ten:
+            text = "Terrible recent form with gradual improvement over last 10 games"
             break;
-            case five === ten:
-              text = "Consistently terrible"
+            case five > six && six < ten:
+              text = "Terrible recent form with a slight improvement in the last 5"
               break;
-              case five < ten:
-                text = "Terrible and worsening"
+            case five === six && six > ten:
+              text = "Terrible recent form but improving slightly in the last 6"
+              break;
+              case five === six && six < ten:
+                text = "Terrible recent form with a dip in the last 6"
                 break;
+                case five === six && six === ten:
+                  text = "Consistently terrible form over the last 10"
+                  break;
+                  case five < six && six === ten:
+                    text = "Terrible recent form, worsening further in the last 5"
+                    break;
+                    case five < six && six > ten:
+                      text = "Terrible recent form, slightly fluctuating over the last 10"
+                      break;
+                      case five < six && six < ten:
+                        text = "Terrible recent form, declining consistently"
+                        break;
           default:
             break;
         }
@@ -177,8 +294,13 @@ export async function createStatsDiv(game, mock) {
       return text
     }
 
-    let homeFormTrend = await compareFormTrend(homeFiveGameAverage, homeTenGameAverage)
-    let awayFormTrend = await compareFormTrend(awayFiveGameAverage, awayTenGameAverage)
+
+
+    let homeFormTrend = await compareFormTrend(homeFiveGameAverage, homeSixGameAverage, homeTenGameAverage)
+    let awayFormTrend = await compareFormTrend(awayFiveGameAverage, awaySixGameAverage, awayTenGameAverage)
+    let homeLastGame = await getLastGameResult(gameStats.home[index].LastFiveForm[4])
+    let awayLastGame = await getLastGameResult(gameStats.away[index].LastFiveForm[4])
+
 
     console.log(homeFormTrend)
     console.log(awayFormTrend)
@@ -208,7 +330,8 @@ export async function createStatsDiv(game, mock) {
       leaguePosition: gameStats.home[index].LeaguePosition,
       Last5PPG: gameStats.home[index].PPG,
       SeasonPPG: gameStats.home[index].SeasonPPG,
-      formTrend: homeFormTrend
+      formTrend: homeFormTrend,
+      lastGame: homeLastGame
     });
 
     const formDataAway = [];
@@ -229,7 +352,8 @@ export async function createStatsDiv(game, mock) {
       leaguePosition: gameStats.away[index].LeaguePosition,
       Last5PPG: gameStats.away[index].PPG,
       SeasonPPG: gameStats.away[index].SeasonPPG,
-      formTrend: awayFormTrend
+      formTrend: awayFormTrend,
+      lastGame: awayLastGame
     });
     ReactDOM.render(
       <div style={style}>
@@ -267,6 +391,7 @@ export async function createStatsDiv(game, mock) {
         last5PPG={formDataHome[0].Last5PPG}
         ppg={formDataHome[0].SeasonPPG}
         formTrend={homeFormTrend}
+        lastGame={homeLastGame}
       />,
       document.getElementById("home" + homeTeam)
     );
@@ -290,6 +415,7 @@ export async function createStatsDiv(game, mock) {
         last5PPG={formDataAway[0].Last5PPG}
         ppg={formDataAway[0].SeasonPPG}
         formTrend={awayFormTrend}
+        lastGame={awayLastGame}
       />,
       document.getElementById("away" + awayTeam)
     );
