@@ -77,18 +77,17 @@ function Stats(props) {
         >
           {`League position - ${props.leaguePosition}`}
         </li>
-        <li
-          key="Last5PPG"
-          className="Last5PPG"
-          data-cy={props.name + "Last5PPG"}
-        >
-          {`Last ${props.gameCount} PPG - ${props.last5PPG}`}
-        </li>
         <li key="PPG" className="PPG" data-cy={props.name + "PPG"}>
           {`Season PPG - ${props.ppg}`}
         </li>
-        <li key="FormTrend" className="FormTrend" data-cy={props.name + "FormTrend"}>
-          {`Summary: ${props.formTrend}. ${props.lastGame} their last game`}
+        <li key="FormTrend10" className="FormTrend" data-cy={props.name + "FormTrend10"}>
+          {`Last 10 PPG: ${props.formTrend[0]}`}
+        </li>
+        <li key="FormTrend10" className="FormTrend" data-cy={props.name + "FormTrend10"}>
+          {`Last 6 PPG: ${props.formTrend[1]}`}
+        </li>
+        <li key="FormTrend10" className="FormTrend" data-cy={props.name + "FormTrend10"}>
+          {`Last 5 PPG: ${props.formTrend[2]}.`}
         </li>
       </ul>
       <div id="h2hStats"></div>

@@ -290,7 +290,6 @@ export async function createStatsDiv(game, mock) {
             break;
         }
       } 
-
       return text
     }
 
@@ -388,9 +387,8 @@ export async function createStatsDiv(game, mock) {
         sot={formDataHome[0].AverageShotsOnTarget}
         dangerousAttacks={formDataHome[0].AverageDangerousAttacks}
         leaguePosition={formDataHome[0].leaguePosition}
-        last5PPG={formDataHome[0].Last5PPG}
         ppg={formDataHome[0].SeasonPPG}
-        formTrend={homeFormTrend}
+        formTrend={[homeTenGameAverage.toFixed(2), homeSixGameAverage.toFixed(2), homeFiveGameAverage.toFixed(2)]}
         lastGame={homeLastGame}
       />,
       document.getElementById("home" + homeTeam)
@@ -412,9 +410,8 @@ export async function createStatsDiv(game, mock) {
         sot={formDataAway[0].AverageShotsOnTarget}
         dangerousAttacks={formDataAway[0].AverageDangerousAttacks}
         leaguePosition={formDataAway[0].leaguePosition}
-        last5PPG={formDataAway[0].Last5PPG}
         ppg={formDataAway[0].SeasonPPG}
-        formTrend={awayFormTrend}
+        formTrend={[awayTenGameAverage.toFixed(2), awaySixGameAverage.toFixed(2), awayFiveGameAverage.toFixed(2)]}
         lastGame={awayLastGame}
       />,
       document.getElementById("away" + awayTeam)
