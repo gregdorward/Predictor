@@ -87,6 +87,9 @@ function Stats(props) {
         <li key="PPG" className="PPG" data-cy={props.name + "PPG"}>
           {`Season PPG - ${props.ppg}`}
         </li>
+        <li key="FormTrend" className="FormTrend" data-cy={props.name + "FormTrend"}>
+          {`Form comparison (last 10 and last 5) - ${props.formTrend}`}
+        </li>
       </ul>
       <div id="h2hStats"></div>
     </Fragment>

@@ -5,6 +5,7 @@ import Div from "../components/Div";
 import { selectedOption } from "../components/radio";
 import { allForm, leagueArray } from "../logic/getFixtures";
 import { getTeamStats } from "../logic/getTeamStats";
+import { getPointsFromLastX } from "../logic/getScorePredictions"
 
 let testBool;
 
@@ -52,6 +53,137 @@ export async function createStatsDiv(game, mock) {
 
     let time = game.time;
 
+    gameStats.home[index].last5Points = getPointsFromLastX(
+      gameStats.home[index].LastFiveForm
+    );
+
+    gameStats.home[index].last10Points = getPointsFromLastX(
+      gameStats.home[index].LastTenForm
+    );
+
+    gameStats.away[index].last5Points = getPointsFromLastX(
+      gameStats.away[index].LastFiveForm
+    );
+
+    gameStats.away[index].last10Points = getPointsFromLastX(
+      gameStats.away[index].LastTenForm
+    );
+
+    async function getPointAverage(pointTotal, games){
+      return pointTotal / games
+    }
+
+    let homeFiveGameAverage = await getPointAverage(gameStats.home[index].last5Points, 5)
+    let homeTenGameAverage = await getPointAverage(gameStats.home[index].last10Points, 10)
+
+    let awayFiveGameAverage = await getPointAverage(gameStats.away[index].last5Points, 5)
+    let awayTenGameAverage = await getPointAverage(gameStats.away[index].last10Points, 10)
+
+    console.log(homeFiveGameAverage)
+    console.log(homeTenGameAverage)
+    console.log(awayFiveGameAverage)
+    console.log(awayTenGameAverage)
+
+
+    async function compareFormTrend(five, ten){
+      let text;
+
+      if(five >= 2.5){
+        switch (true) {
+          case five > ten:
+            text = "Outstanding and improving"
+            break;
+            case five === ten:
+              text = "Outstanding and consistent"
+              break;
+              case five < ten:
+                text = "Consistently outstanding"
+                break;
+          default:
+            break;
+        }
+      } else if (five < 2.5 && five >= 2){
+        switch (true) {
+          case five > ten:
+            text = "Very good and improving"
+            break;
+            case five === ten:
+              text = "Very good and consistent"
+              break;
+              case five < ten:
+                text = "Very good but slightly worsening"
+                break;
+          default:
+            break;
+        }
+      } else if (five < 2 && five >= 1.5){
+        switch (true) {
+          case five > ten:
+            text = "Good and improving"
+            break;
+            case five === ten:
+              text = "Good and consistent"
+              break;
+              case five < ten:
+                text = "Good but slightly worsening"
+                break;
+          default:
+            break;
+        }
+      } else if (five < 1.5 && five >= 1){
+        switch (true) {
+          case five > ten:
+            text = "Average and improving"
+            break;
+            case five === ten:
+              text = "Average and consistent"
+              break;
+              case five < ten:
+                text = "Average but slightly worsening"
+                break;
+          default:
+            break;
+        }
+      } else if (five < 1 && five >= 0.5){
+        switch (true) {
+          case five > ten:
+            text = "Poor but improving"
+            break;
+            case five === ten:
+              text = "Poor and consistent"
+              break;
+              case five < ten:
+                text = "Poor and slightly worsening"
+                break;
+          default:
+            break;
+        }
+      } else if (five < 0.5){
+        switch (true) {
+          case five > ten:
+            text = "Terrible but slightly improving"
+            break;
+            case five === ten:
+              text = "Consistently terrible"
+              break;
+              case five < ten:
+                text = "Terrible and worsening"
+                break;
+          default:
+            break;
+        }
+      } 
+
+      return text
+    }
+
+    let homeFormTrend = await compareFormTrend(homeFiveGameAverage, homeTenGameAverage)
+    let awayFormTrend = await compareFormTrend(awayFiveGameAverage, awayTenGameAverage)
+
+    console.log(homeFormTrend)
+    console.log(awayFormTrend)
+
+
     const formDataMatch = [];
 
     formDataMatch.push({
@@ -76,6 +208,7 @@ export async function createStatsDiv(game, mock) {
       leaguePosition: gameStats.home[index].LeaguePosition,
       Last5PPG: gameStats.home[index].PPG,
       SeasonPPG: gameStats.home[index].SeasonPPG,
+      formTrend: homeFormTrend
     });
 
     const formDataAway = [];
@@ -96,6 +229,7 @@ export async function createStatsDiv(game, mock) {
       leaguePosition: gameStats.away[index].LeaguePosition,
       Last5PPG: gameStats.away[index].PPG,
       SeasonPPG: gameStats.away[index].SeasonPPG,
+      formTrend: awayFormTrend
     });
     ReactDOM.render(
       <div style={style}>
@@ -132,6 +266,7 @@ export async function createStatsDiv(game, mock) {
         leaguePosition={formDataHome[0].leaguePosition}
         last5PPG={formDataHome[0].Last5PPG}
         ppg={formDataHome[0].SeasonPPG}
+        formTrend={homeFormTrend}
       />,
       document.getElementById("home" + homeTeam)
     );
@@ -154,6 +289,7 @@ export async function createStatsDiv(game, mock) {
         leaguePosition={formDataAway[0].leaguePosition}
         last5PPG={formDataAway[0].Last5PPG}
         ppg={formDataAway[0].SeasonPPG}
+        formTrend={awayFormTrend}
       />,
       document.getElementById("away" + awayTeam)
     );

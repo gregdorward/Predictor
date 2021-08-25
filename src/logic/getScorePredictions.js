@@ -22,7 +22,7 @@ let totalGoals = 0;
 let numberOfGames = 0;
 export var renderPredictions;
 
-function getPointsFromLastX(lastX) {
+export function getPointsFromLastX(lastX) {
   let points = 0;
   let pointsAddition;
 
@@ -457,9 +457,121 @@ export async function calculateScore(match, index, divider, id) {
         teams[i][index].LastFiveForm
       );
 
-      // teams[i][index].last10Points = getPointsFromLastX(
-      //   teams[i][index].LastTenForm
-      // );
+      teams[i][index].last6Points = getPointsFromLastX(
+        teams[i][index].LastSixForm
+      );
+
+      teams[i][index].last10Points = getPointsFromLastX(
+        teams[i][index].LastTenForm
+      );
+
+      async function getPointAverage(pointTotal, games){
+        return pointTotal / games
+      }
+
+      let fiveGameAverage = await getPointAverage(teams[i][index].last5Points, 5)
+      let sixGameAverage = await getPointAverage(teams[i][index].last6Points, 6)
+      let tenGameAverage = await getPointAverage(teams[i][index].last10Points, 10)
+
+      console.log(fiveGameAverage)
+      console.log(sixGameAverage)
+      console.log(tenGameAverage)
+
+      async function compareFormTrend(five, six, ten){
+        let text;
+
+        if(five >= 2.5){
+          switch (true) {
+            case five > ten:
+              text = "Outstanding and improving"
+              break;
+              case five === ten:
+                text = "Outstanding and consistent"
+                break;
+                case five < ten:
+                  text = "Consistently outstanding"
+                  break;
+            default:
+              break;
+          }
+        } else if (five < 2.5 && five >= 2){
+          switch (true) {
+            case five > ten:
+              text = "Very good and improving"
+              break;
+              case five === ten:
+                text = "Very good and consistent"
+                break;
+                case five < ten:
+                  text = "Very good but slightly worsening"
+                  break;
+            default:
+              break;
+          }
+        } else if (five < 2 && five >= 1.5){
+          switch (true) {
+            case five > ten:
+              text = "Good and improving"
+              break;
+              case five === ten:
+                text = "Good and consistent"
+                break;
+                case five < ten:
+                  text = "Good but slightly worsening"
+                  break;
+            default:
+              break;
+          }
+        } else if (five < 1.5 && five >= 1){
+          switch (true) {
+            case five > ten:
+              text = "Average and improving"
+              break;
+              case five === ten:
+                text = "Average and consistent"
+                break;
+                case five < ten:
+                  text = "Average but slightly worsening"
+                  break;
+            default:
+              break;
+          }
+        } else if (five < 1 && five >= 0.5){
+          switch (true) {
+            case five > ten:
+              text = "Poor but improving"
+              break;
+              case five === ten:
+                text = "Poor and consistent"
+                break;
+                case five < ten:
+                  text = "Poor and slightly worsening"
+                  break;
+            default:
+              break;
+          }
+        } else if (five < 0.5){
+          switch (true) {
+            case five > ten:
+              text = "Terrible but slightly improving"
+              break;
+              case five === ten:
+                text = "Consistently terrible"
+                break;
+                case five < ten:
+                  text = "Terrible and worsening"
+                  break;
+            default:
+              break;
+          }
+        } 
+
+        return text
+      }
+
+      let formTrend = await compareFormTrend(fiveGameAverage, sixGameAverage, tenGameAverage)
+
+      console.log(formTrend)
 
       teams[i][index].scoredAverage = teams[i][index].ScoredOverall / divider;
       teams[i][index].concededAverage =

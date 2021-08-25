@@ -406,43 +406,6 @@ export async function generateFixtures(day, radioState, selectedOdds) {
           lastFiveFormHome = Array.from(homeFormString5)
           lastSixFormHome = Array.from(homeFormString6)
           lastTenFormHome = Array.from(homeFormString10)
-
-
-
-          // let conversionRateHome = form[0].data[2].stats.additional_info.shots_per_goals_scored_away
-          // let shotsRecordedHome = form[0].data[2].stats.additional_info.shots_recorded_matches_num_away
-          // let HomePredictionBasedOnShotConversion
-          // let AwayPredictionBasedOnShotConversion
-
-          // if(shotsRecordedHome || conversionRateHome === 0){
-          //   HomePredictionBasedOnShotConversion = 0
-          // } else {
-          //   HomePredictionBasedOnShotConversion =  shotsRecordedHome / conversionRateHome
-          // }
-
-        
-
-          // let conversionRateAway = form[1].data[2].stats.additional_info.shots_per_goals_scored_away
-          // let shotsRecordedAway = form[1].data[2].stats.additional_info.shots_recorded_matches_num_away
-         
-          // if(shotsRecordedAway || conversionRateAway === 0){
-          //   AwayPredictionBasedOnShotConversion = 0
-          // } else {
-          //   AwayPredictionBasedOnShotConversion =  shotsRecordedAway / conversionRateAway
-          // }
-
-         
-
-          //shots_per_goals_scored_away
-          //shots_recorded_matches_num_away
-
-
-          // var awayExtract = form[1].data[0].stats.additional_info.replace(
-          //   /["']/g,
-          //   ""
-          // );
-
-          // var slugAway = awayExtract.split(",53:").pop().toUpperCase();
           lastFiveFormAway = Array.from(awayFormString5)
           lastSixFormAway = Array.from(awayFormString6)
           lastTenFormAway = Array.from(awayFormString10)
@@ -524,6 +487,7 @@ export async function generateFixtures(day, radioState, selectedOdds) {
                 form[0].data[0].stats.seasonBTTSPercentage_overall
               ),
               LastFiveForm: lastFiveFormHome,
+              LastSixForm: lastSixFormHome,
               LastTenForm: lastTenFormHome,
               LeaguePosition: `${teamPositionHome}${homePrefix}`,
               SeasonPPG: homeSeasonPPG,
@@ -596,6 +560,7 @@ export async function generateFixtures(day, radioState, selectedOdds) {
                 form[0].data[1].stats.seasonBTTSPercentage_overall
               ),
               LastFiveForm: lastFiveFormHome,
+              LastSixForm: lastSixFormHome,
               LastTenForm: lastTenFormHome,
               LeaguePosition: `${teamPositionHome}${homePrefix}`,
               SeasonPPG: homeSeasonPPG,
@@ -668,6 +633,7 @@ export async function generateFixtures(day, radioState, selectedOdds) {
                 form[0].data[2].stats.seasonBTTSPercentage_overall
               ),
               LastFiveForm: lastFiveFormHome,
+              LastSixForm: lastSixFormHome,
               LastTenForm: lastTenFormHome,
               LeaguePosition: `${teamPositionHome}${homePrefix}`,
               SeasonPPG: homeSeasonPPG,
@@ -743,6 +709,7 @@ export async function generateFixtures(day, radioState, selectedOdds) {
                 form[1].data[0].stats.seasonBTTSPercentage_overall
               ),
               LastFiveForm: lastFiveFormAway,
+              LastSixForm: lastSixFormAway,
               LastTenForm: lastTenFormAway,
               LeaguePosition: `${teamPositionAway}${awayPrefix}`,
               SeasonPPG: awaySeasonPPG,
@@ -815,6 +782,7 @@ export async function generateFixtures(day, radioState, selectedOdds) {
                 form[1].data[1].stats.seasonBTTSPercentage_overall
               ),
               LastFiveForm: lastFiveFormAway,
+              LastSixForm: lastSixFormAway,
               LastTenForm: lastTenFormAway,
               LeaguePosition: `${teamPositionAway}${awayPrefix}`,
               SeasonPPG: awaySeasonPPG,
@@ -887,6 +855,7 @@ export async function generateFixtures(day, radioState, selectedOdds) {
                 form[0].data[2].stats.seasonBTTSPercentage_overall
               ),
               LastFiveForm: lastFiveFormAway,
+              LastSixForm: lastSixFormAway,
               LastTenForm: lastTenFormAway,
               LeaguePosition: `${teamPositionAway}${awayPrefix}`,
               SeasonPPG: awaySeasonPPG,
