@@ -29,7 +29,7 @@ export const [currentDay, month, year] = new Date()
   .toLocaleDateString("en-US")
   .split("/");
 let tomorrowsDate = new Date();
-tomorrowsDate.setDate(new Date().getDate() + 1);
+tomorrowsDate.setDate(new Date().getDate() - 4);
 let [
   tomorrowDay,
   tomorrowMonth,
@@ -37,7 +37,7 @@ let [
 ] = tomorrowsDate.toLocaleDateString("en-US").split("/");
 
 let yesterdaysDate = new Date();
-yesterdaysDate.setDate(new Date().getDate() - 1);
+yesterdaysDate.setDate(new Date().getDate() - 6);
 let [
   yesterdayDay,
   yesterdayMonth,
@@ -245,19 +245,14 @@ export async function generateFixtures(day, radioState, selectedOdds) {
 
     }
   }
-  console.log(leagueArray)
 
-
-  for (let i = 0; i < 20; i++) {
+  for (let i = 0; i < 30; i++) {
     for (
       let x = 0;
       x < leagueArray[i].data.all_matches_table_overall.length;
       x++
     ) {
       let string = leagueArray[i].data.all_matches_table_overall[x];
-
-      console.log(string)
-
       leaguePositions.push({
         name: string.cleanName,
         position: string.position,
@@ -373,6 +368,8 @@ export async function generateFixtures(day, radioState, selectedOdds) {
         homeTeaminLeague = leaguePositions.find(
           (team) => team.name === match.homeTeam
         );
+
+        console.log(homeTeaminLeague)
         teamPositionHome = homeTeaminLeague.position;
         homePrefix = await getPrefix(teamPositionHome);
         homeSeasonPPG = homeTeaminLeague.ppg.toFixed(2);

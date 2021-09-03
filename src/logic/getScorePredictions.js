@@ -1179,7 +1179,7 @@ export async function calculateScore(match, index, divider, id) {
       let wholeNumber = Math.floor(num);
       let remainder = num - wholeNumber;
 
-      if (wholeNumber !== 0 && remainder >= 0.60) {
+      if (wholeNumber !== 0 && remainder >= 0.75) {
         if (form.overOrUnderAttack === "overachievingDrastically" || form.overOrUnderAttack === "overachieving") {
           return Math.floor(num);
         } else if (form.overOrUnderAttack === "underachievingDrastically" || form.overOrUnderAttack === "underachieving") {
@@ -1205,7 +1205,7 @@ export async function calculateScore(match, index, divider, id) {
           // else if (remainder >= 0.65){
           //   return Math.ceil(num)
           // }
-        } else if (wholeNumber !== 0 && remainder < 0.60) {
+        } else if (wholeNumber !== 0 && remainder < 0.75) {
           if (form.overOrUnderAttack === "overachievingDrastically" || form.overOrUnderAttack === "overachieving" || form.overOrUnderAttack === "overachievingSlightly") {
 
             return Math.floor(num);
@@ -1231,8 +1231,35 @@ export async function calculateScore(match, index, divider, id) {
       ) {
 
         return Math.ceil(num);
+      }else if (
+        wholeNumber === 0 && form.overOrUnderAttack === "overachievingDrastically" 
+        // form.overOrUnderAttack === "overachieving"
+      ) {
+        return Math.floor(num);
+      } else if (
+        form.clinicalRating === "excellent" ||
+        form.clinicalRating === "great" ||
+        form.clinicalRating === "very good" 
+        // form.clinicalRating === "good"
+      ) {
+        console.log("rounding up")
+        return Math.ceil(num);
+      } else if (
+        form.clinicalRating === "awful" ||
+        form.clinicalRating === "terrible" ||
+        form.clinicalRating === "very poor" ||
+        form.clinicalRating === "poor"
+      ) {
+        console.log("rounding down")
+        return Math.floor(num);
+      } else if (wholeNumber === 0 && remainder < 0.75) {
+        console.log("rounding normally")
+        return Math.floor(num)
+      } else if (wholeNumber === 0 && remainder >= 0.75) {
+        console.log("rounding normally")
+        return Math.ceil(num)
       } else {
-        return "0";
+        return Math.round(num)
       }
     }
 
@@ -1346,8 +1373,8 @@ export async function calculateScore(match, index, divider, id) {
         awayComparisonWeighting = 0;
         break;
       case teamComparisonScore  > 1 && teamComparisonScore <= 3:
-        homeComparisonWeighting = Math.abs(split);
-        awayComparisonWeighting = -Math.abs(split); 
+        homeComparisonWeighting = 0;
+        awayComparisonWeighting = -0; 
         break;
       case teamComparisonScore > 3 && teamComparisonScore <= 6:
         homeComparisonWeighting = 0.4;
@@ -1367,8 +1394,8 @@ export async function calculateScore(match, index, divider, id) {
         break;  
       
       case teamComparisonScore  < 0 && teamComparisonScore >= -3:
-        homeComparisonWeighting = -Math.abs(split);
-        awayComparisonWeighting = Math.abs(split); 
+        homeComparisonWeighting = 0;
+        awayComparisonWeighting = 0; 
         break;
       case teamComparisonScore < -3 && teamComparisonScore >= -6:
         homeComparisonWeighting = -0.4;
