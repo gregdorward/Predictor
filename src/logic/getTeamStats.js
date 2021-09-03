@@ -13,6 +13,7 @@ export async function getTeamStats(id, home, away) {
     `${process.env.REACT_APP_EXPRESS_SERVER}match/${identifier}`
   );
   await match.json().then((match) => {
+    console.log(match.data)
     ReactDOM.render(
       <Fragment>
         <h3>Fixture history</h3>

@@ -287,6 +287,8 @@ export async function generateFixtures(day, radioState, selectedOdds) {
       match.homeOdds = fixture.odds_ft_1;
       match.awayOdds = fixture.odds_ft_2;
       match.drawOdds = fixture.odds_ft_x;
+      match.homeDoubleChance = fixture.odds_doublechance_1x;
+      match.awayDoubleChance = fixture.odds_doublechance_x2;
       match.bttsOdds = fixture.odds_btts_yes;
       match.homeId = fixture.homeID;
       match.awayId = fixture.awayID;

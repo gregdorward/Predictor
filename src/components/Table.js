@@ -33,24 +33,16 @@ const StyledTableRow = withStyles((theme) => ({
   },
 }))(TableRow);
 
-function getCornerOverBoolean(stat){
-    if(stat > 10.5){
-        return "Yes"
-    } else if(stat <= 10.5){
-        return "No"
-    }
-}
 
 export default function CustomizedTables(props) {
-    let corners = getCornerOverBoolean(props.CornersForecast)
-    console.log(corners)
+
 
   return (
     <TableContainer component={Paper} className="StatsTable">
       <Table aria-label="customized table">
         <TableHead>
           <TableRow>
-            <StyledTableCell>Stat</StyledTableCell>
+            <StyledTableCell>Stats (from footystats.org)</StyledTableCell>
             <StyledTableCell>H2H history</StyledTableCell>
             <StyledTableCell>Forecast</StyledTableCell>
             <StyledTableCell>Odds</StyledTableCell>
@@ -97,7 +89,7 @@ export default function CustomizedTables(props) {
             <StyledTableCell component="th" scope="row" align="center">
               {`${props.CornersStat}`}
             </StyledTableCell>
-            <StyledTableCell align="center">{corners}</StyledTableCell>
+            <StyledTableCell align="center">{props.CornersForecast}</StyledTableCell>
             <StyledTableCell align="center">{props.CornersOdds}</StyledTableCell>
           </StyledTableRow>
         </TableBody>

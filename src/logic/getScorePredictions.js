@@ -1611,6 +1611,14 @@ export async function calculateScore(match, index, divider, id) {
       }
     }
 
+    if (match.status === "complete") {
+      if (match.predictionOutcome === "Won" || match.outcome === "draw") {
+        match.doubleChancePredictionOutcome = "Won";
+      } else if (match.prediction !== "Won" && match.outcome !== "draw") {
+        match.doubleChancePredictionOutcome = "Lost";
+      }
+    }
+
     let total = parseInt(finalHomeGoals + finalAwayGoals);
     totalGoals = totalGoals + total;
 
@@ -1812,13 +1820,13 @@ export async function getScorePrediction(day, mocked) {
 
       if (
         match.unroundedGoalsA - 0.5 > match.unroundedGoalsB &&
-        match.homeOdds >= 2.5 &&
+        match.homeDoubleChance >= 1.4 &&
         match.goalsA > match.goalsB
       ) {
         longShotPredictionObject = {
           team: match.homeTeam,
-          odds: match.fractionHome,
-          outcome: match.predictionOutcome,
+          odds: match.homeDoubleChance,
+          outcome: match.doubleChancePredictionOutcome,
           goalDifferential: parseFloat(
             await diff(match.unroundedGoalsA, match.unroundedGoalsB)
           ),
@@ -1828,13 +1836,13 @@ export async function getScorePrediction(day, mocked) {
         }
       } else if (
         match.unroundedGoalsA < match.unroundedGoalsB - 0.5 &&
-        match.awayOdds >= 2.5 &&
+        match.awayDoubleChance >= 1.4 &&
         match.goalsB > match.goalsA
       ) {
         longShotPredictionObject = {
           team: match.awayTeam,
-          odds: match.fractionAway,
-          outcome: match.predictionOutcome,
+          odds: match.awayDoubleChance,
+          outcome: match.doubleChancePredictionOutcome,
           goalDifferential: parseFloat(
             await diff(match.unroundedGoalsB, match.unroundedGoalsA)
           ),
@@ -1913,13 +1921,13 @@ async function renderTips() {
     <div>
       <Fragment>
         <Collapsable
-          buttonText={"Longshot predictions"}
+          buttonText={"Double chance tips"}
           text={
             <ul className="LongshotPredictions">
-              <lh>To win</lh>
+              <lh>Double chance (Win or Draw - decimal odds only)</lh>
               {longShotTips.map((tip) => (
-                <li className={tip.outcome} key={tip.team}>
-                  {tip.team} odds: {tip.odds}
+                <li className={`${tip.outcome}1`} key={tip.team}>
+                  {tip.team} to win or draw: {tip.odds}
                 </li>
               ))}
             </ul>
