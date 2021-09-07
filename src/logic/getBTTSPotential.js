@@ -16,13 +16,13 @@ export async function getBTTSPotential(allForm, match, index) {
 
   let homeBTTS = allForm[home].home[index].BTTSPercentage;
   let awayBTTS = allForm[away].away[index].BTTSPercentage;
-  let homeXG = allForm[home].home[index].expectedGoals;
-  let awayXG = allForm[away].away[index].expectedGoals;
+  let homeXG = allForm[home].home[index].XG;
+  let awayXG = allForm[away].away[index].XG;
   let homePPG = allForm[home].home[index].PPG
   let awayPPG = allForm[away].away[index].PPG
 
-  let dangerousAttacksHome = allForm[away].home[index].DangerousAttacksHome;
-  let dangerousAttacksAway = allForm[away].away[index].DangerousAttacksAway;
+  let dangerousAttacksHome = allForm[away].home[index].AverageDangerousAttacks;
+  let dangerousAttacksAway = allForm[away].away[index].AverageDangerousAttacks;
 
   match.combinedBTTS = (homeBTTS + awayBTTS) / 2;
 
@@ -30,7 +30,7 @@ if(match.bttsFraction !== "N/A" && match.status !== "suspended" && match.status 
   if (
     match.combinedBTTS >= 60 &&
     match.btts_potential > 60 &&
-    awayPPG > 1.4 &&
+    awayPPG > 1.2 &&
     homePPG > 1 &&
     dangerousAttacksHome >= 40 && 
     dangerousAttacksAway >= 40 &&

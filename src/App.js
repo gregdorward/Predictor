@@ -111,34 +111,34 @@ export var orderedLeagues = [];
     orderedLeagues = mapOrder(availableLeagues, leagueOrder, "id");
   }
 
-  ReactDOM.render(
-    <div className="LastXGames">
-      <Radio
-        value="5"
-        label="form based on last 5 games"
-        className="FormRadio"
-      />
-      <Radio
-        value="6"
-        label="form based on last 6 games"
-        className="FormRadio"
-      />
-      <Radio
-        value="10"
-        label="form based on last 10 games"
-        className="FormRadio"
-      />
-    </div>,
-    document.getElementById("RadioButtons")
-  );
+  // ReactDOM.render(
+  //   <div className="LastXGames">
+  //     <Radio
+  //       value="5"
+  //       label="form based on last 5 games"
+  //       className="FormRadio"
+  //     />
+  //     <Radio
+  //       value="6"
+  //       label="form based on last 6 games"
+  //       className="FormRadio"
+  //     />
+  //     <Radio
+  //       value="10"
+  //       label="form based on last 10 games"
+  //       className="FormRadio"
+  //     />
+  //   </div>,
+  //   document.getElementById("RadioButtons")
+  // );
 
-  ReactDOM.render(
-    <TextBlock
-      text="Select how many games you would like to fetch form data for"
-      className="RadioText"
-    />,
-    document.getElementById("RadioText")
-  );
+  // ReactDOM.render(
+  //   <TextBlock
+  //     text="Select how many games you would like to fetch form data for"
+  //     className="RadioText"
+  //   />,
+  //   document.getElementById("RadioText")
+  // );
 
   ReactDOM.render(
     <div className="FixtureButtons">

@@ -13,7 +13,7 @@ export async function createStatsDiv(game, mock) {
   let bool = mock;
 
   if (bool !== true) {
-    let radioSelected = parseInt(selectedOption);
+    let radioSelected = 10
 
     function toggle() {
       testBool = testBool ? false : true;
@@ -316,12 +316,10 @@ export async function createStatsDiv(game, mock) {
     formDataHome.push({
       name: game.homeTeam,
       Last5: gameStats.home[index].LastFiveForm,
-      AverageGoals: (gameStats.home[index].ScoredOverall / divider).toFixed(2),
-      AverageConceeded: (
-        gameStats.home[index].ConcededOverall / divider
-      ).toFixed(2),
+      AverageGoals: gameStats.home[index].ScoredAverage,
+      AverageConceeded: gameStats.home[index].ConcededAverage,
       AverageXG: gameStats.home[index].XG,
-      AverageXGConceded: gameStats.home[index].XGAgainstAvg,
+      AverageXGConceded: gameStats.home[index].XGAgainstAverage,
       AveragePossession: gameStats.home[index].AveragePossession,
       AverageShotsOnTarget: gameStats.home[index].AverageShotsOnTarget,
       AverageDangerousAttacks: gameStats.home[index].AverageDangerousAttacks,
@@ -338,12 +336,10 @@ export async function createStatsDiv(game, mock) {
     formDataAway.push({
       name: game.awayTeam,
       Last5: gameStats.away[index].LastFiveForm,
-      AverageGoals: (gameStats.away[index].ScoredOverall / divider).toFixed(2),
-      AverageConceeded: (
-        gameStats.away[index].ConcededOverall / divider
-      ).toFixed(2),
+      AverageGoals: gameStats.away[index].ScoredAverage,
+      AverageConceeded: gameStats.away[index].ConcededAverage,
       AverageXG: gameStats.away[index].XG,
-      AverageXGConceded: gameStats.away[index].XGAgainstAvg,
+      AverageXGConceded: gameStats.away[index].XGAgainstAverage,
       AveragePossession: gameStats.away[index].AveragePossession,
       AverageShotsOnTarget: gameStats.away[index].AverageShotsOnTarget,
       AverageDangerousAttacks: gameStats.away[index].AverageDangerousAttacks,

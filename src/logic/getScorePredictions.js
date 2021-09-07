@@ -139,27 +139,27 @@ async function getOverOrUnderAchievingResult(index, overUnderAchievingSum) {
 
     case index === 2:
       switch (true) {
-        case overUnderAchievingSum <= -0.6:
+        case overUnderAchievingSum <= -1:
           result = "overachievingDrastically";
           correction = -0.4;
           break;
-        case overUnderAchievingSum < -0.25 && overUnderAchievingSum > -0.6:
+        case overUnderAchievingSum < -0.5 && overUnderAchievingSum > -1:
           result = "overachieving";
           correction = -0.2;
           break;
-        case overUnderAchievingSum < -0.1 && overUnderAchievingSum >= -0.25:
+        case overUnderAchievingSum < -0.1 && overUnderAchievingSum >= -0.5:
           result = "overachievingSlightly";
           correction = -0.1;
           break;
-        case overUnderAchievingSum > 0.1 && overUnderAchievingSum <= 0.25:
+        case overUnderAchievingSum > 0.1 && overUnderAchievingSum <= 0.5:
           result = "underachievingSlightly";
           correction = 0.1;
           break;
-        case overUnderAchievingSum > 0.25 && overUnderAchievingSum < 0.6:
+        case overUnderAchievingSum > 0.5 && overUnderAchievingSum < 1:
           result = "underachieving";
           correction = 0.2;
           break;
-        case overUnderAchievingSum >= 0.6:
+        case overUnderAchievingSum >= 1:
           result = "underachievingDrastically";
           correction = 0.4;
           break;
@@ -611,31 +611,24 @@ export async function calculateScore(match, index, divider, id) {
       // console.log(`${match.homeTeam} form score = ${teams[i][index].formTrendScore}`)
 
 
-      teams[i][index].scoredAverage = teams[i][index].ScoredOverall / divider;
+      teams[i][index].scoredAverage = teams[i][index].ScoredAverage;
+
       teams[i][index].concededAverage =
         teams[i][index].ConcededOverall / divider;
 
-      teams[0][index].expectedGoals = parseFloat(teams[0][index].XGHome);
-      teams[1][index].expectedGoals = parseFloat(teams[1][index].XGAway);
-      teams[0][index].expectedGoalsConceeded = parseFloat(
-        teams[0][index].XGAgainstHome
+      teams[i][index].expectedGoals = parseFloat(teams[i][index].XG);
+      teams[i][index].expectedGoalsConceeded = parseFloat(
+        teams[i][index].XGAgainstAverage
       );
-      teams[1][index].expectedGoalsConceeded = parseFloat(
-        teams[1][index].XGAgainstAway
-      );
-      teams[i][index].longTermAverageGoals = teams[i][2].ScoredOverall / 10;
-      teams[i][index].longTermAverageConceeded =
-        teams[i][2].ConcededOverall / 10;
+      teams[i][index].longTermAverageGoals = teams[i][index].ScoredAverage;
+      teams[i][index].longTermAverageConceeded = teams[i][index].ConcededAverage;
 
-      teams[0][index].expectedGoalsLongTerm = parseFloat(teams[0][2].XGHome);
-      teams[1][index].expectedGoalsLongTerm = parseFloat(teams[1][2].XGAway);
+      teams[i][index].expectedGoalsLongTerm = parseFloat(teams[0][2].XG);
 
-      teams[0][index].expectedConceededGoalsLongTerm = parseFloat(
-        teams[0][2].XGAgainstHome
+      teams[i][index].expectedConceededGoalsLongTerm = parseFloat(
+        teams[i][index].XGAgainstAverage
       );
-      teams[1][index].expectedConceededGoalsLongTerm = parseFloat(
-        teams[1][2].XGAgainstAway
-      );
+
 
       teams[i][index].scoredAverageShortAndLongTerm =
         (teams[i][index].longTermAverageGoals + teams[i][index].scoredAverage) /
@@ -651,43 +644,23 @@ export async function calculateScore(match, index, divider, id) {
           teams[i][index].concededAverage) /
         2;
 
-      teams[i][index].expectedConceededGoalsShortAndLongTerm =
-        (teams[i][index].expectedConceededGoalsLongTerm +
-          teams[i][index].expectedGoalsConceeded) /
-        2;
 
-      if (teams[0][index].ScoredHome > 0) {
-        teams[0][index].finishingScore = parseFloat(
-          teams[0][index].expectedGoals - teams[0][index].scoredAverage
+      if (teams[i][index].scoredAverage > 0) {
+        teams[i][index].finishingScore = parseFloat(
+          teams[i][index].XG - teams[i][index].ScoredAverage
         );
       } else {
-        teams[0][index].finishingScore = 0;
+        teams[i][index].finishingScore = 0;
       }
 
-      if (teams[1][index].ScoredAway > 0) {
-        teams[1][index].finishingScore = parseFloat(
-          teams[1][index].expectedGoals - teams[1][index].scoredAverage
-        );
-      } else {
-        teams[1][index].finishingScore = 0;
-      }
 
-      if (teams[0][index].ConcededHome > 0) {
-        teams[0][index].goalieRating = parseFloat(
-          teams[0][index].concededAverage -
-            teams[0][index].expectedGoalsConceeded
+      if (teams[i][index].ConcededAverage > 0) {
+        teams[i][index].goalieRating = parseFloat(
+          teams[i][index].ConcededAverage -
+            teams[i][index].XGAgainstAverage
         );
       } else {
-        teams[0][index].goalieRating = 0;
-      }
-
-      if (teams[1][index].ConcededAway > 0) {
-        teams[1][index].goalieRating = parseFloat(
-          teams[1][index].concededAverage -
-            teams[1][index].expectedGoalsConceeded
-        );
-      } else {
-        teams[1][index].goalieRating = 0;
+        teams[i][index].goalieRating = 0;
       }
 
       teams[i][index].defenceScore = parseInt(
@@ -752,99 +725,6 @@ export async function calculateScore(match, index, divider, id) {
 
       teams[i][index].overUnderAchievingSum =
         goalOverOrUnderAchieving + concededOverOrUnderAchieving;
-
-      if (
-        teams[i][index].finishingScore !== "N/A" &&
-        teams[i][index].scoredAverageShortAndLongTerm >= 1
-      ) {
-        teams[i][index].AverageGoalsWeightedWithXG =
-          (await diff(1, teams[i][index].finishingScore)) * gameTotalWeighting +
-          teams[i][index].scoredAverageShortAndLongTerm;
-
-        teams[i][index].trueFormGoalsWeighting =
-          (teams[i][index].expectedGoalsShortAndLongTerm -
-            teams[i][index].scoredAverageShortAndLongTerm) *
-          gameTotalWeighting;
-      } else if (
-        teams[i][index].scoredAverageShortAndLongTerm < 1 &&
-        teams[i][index].scoredAverageShortAndLongTerm >= 0.6
-      ) {
-        teams[i][index].AverageGoalsWeightedWithXG =
-          (await diff(1, teams[i][index].finishingScore)) *
-            (gameTotalWeighting / 1) +
-          teams[i][index].scoredAverageShortAndLongTerm;
-
-        teams[i][index].trueFormGoalsWeighting =
-          (teams[i][index].expectedGoalsShortAndLongTerm -
-            teams[i][index].scoredAverageShortAndLongTerm) *
-          gameTotalWeighting;
-      } else if (
-        teams[i][index].scoredAverageShortAndLongTerm < 0.6 &&
-        teams[i][index].scoredAverageShortAndLongTerm > 0.3
-      ) {
-        teams[i][index].AverageGoalsWeightedWithXG =
-          (await diff(1, teams[i][index].finishingScore)) *
-            (gameTotalWeighting / 2) +
-          teams[i][index].scoredAverageShortAndLongTerm;
-
-        teams[i][index].trueFormGoalsWeighting =
-          (teams[i][index].expectedGoalsShortAndLongTerm -
-            teams[i][index].scoredAverageShortAndLongTerm) *
-          gameTotalWeighting;
-      } else {
-        teams[i][index].AverageGoalsWeightedWithXG =
-          teams[i][index].scoredAverageShortAndLongTerm;
-
-        teams[i][index].trueFormGoalsWeighting = teams[i][index].scoredAverage;
-      }
-
-      if (
-        teams[i][index].conceededAverageShortAndLongTerm >= 1 &&
-        teams[i][index].concededAverage > 0
-      ) {
-        teams[i][index].AverageGoalsConceededWeightedWithXG =
-          (await diff(teams[i][index].goalieRating, 1)) * gameTotalWeighting +
-          teams[i][index].conceededAverageShortAndLongTerm;
-
-        teams[i][index].trueFormConceededWeighting =
-          (teams[i][index].conceededAverageShortAndLongTerm -
-            teams[i][index].expectedConceededGoalsShortAndLongTerm) *
-          gameTotalWeighting;
-      } else if (
-        teams[i][index].conceededAverageShortAndLongTerm < 1 &&
-        teams[i][index].conceededAverageShortAndLongTerm >= 0.6 &&
-        teams[i][index].concededAverage > 0
-      ) {
-        teams[i][index].AverageGoalsConceededWeightedWithXG =
-          (await diff(1, teams[i][index].goalieRating)) *
-            (gameTotalWeighting / 1) +
-          teams[i][index].conceededAverageShortAndLongTerm;
-
-        teams[i][index].trueFormConceededWeighting =
-          (teams[i][index].conceededAverageShortAndLongTerm -
-            teams[i][index].expectedConceededGoalsShortAndLongTerm) *
-          gameTotalWeighting;
-      } else if (
-        teams[i][index].conceededAverageShortAndLongTerm < 0.6 &&
-        teams[i][index].conceededAverageShortAndLongTerm >= 0.3 &&
-        teams[i][index].concededAverage > 0
-      ) {
-        teams[i][index].AverageGoalsConceededWeightedWithXG =
-          (await diff(1, teams[i][index].goalieRating)) *
-            (gameTotalWeighting / 2) +
-          teams[i][index].conceededAverageShortAndLongTerm;
-
-        teams[i][index].trueFormConceededWeighting =
-          (teams[i][index].conceededAverageShortAndLongTerm -
-            teams[i][index].expectedConceededGoalsShortAndLongTerm) *
-          gameTotalWeighting;
-      } else {
-        teams[i][index].AverageGoalsConceededWeightedWithXG =
-          teams[i][index].conceededAverageShortAndLongTerm;
-
-        teams[i][index].trueFormConceededWeighting =
-          teams[i][index].concededAverage;
-      }
 
       teams[i][index].forecastedXG = parseFloat(teams[i][index].scoredAverage);
 
@@ -1068,7 +948,7 @@ export async function calculateScore(match, index, divider, id) {
         let goalsForComparison = await compareStat(homeForm.scoredAverage, awayForm.scoredAverage)
         let goalsAgainstComparison = await compareStat(awayForm.concededAverage, homeForm.concededAverage)
         let XGForComparison = await compareStat(homeForm.XG, awayForm.XG)
-        let XGAgainstComparison = await compareStat(awayForm.XGAgainstAvg, homeForm.XGAgainstAvg)
+        let XGAgainstComparison = await compareStat(awayForm.XGAgainstAverage, homeForm.XGAgainstAverage)
         let dangerousAttacksComparison = await compareStat(homeForm.AverageDangerousAttacks, awayForm.AverageDangerousAttacks)
         let CleanSheetPercentageComparison = await compareStat(homeForm.CleanSheetPercentage, awayForm.CleanSheetPercentage)
         let clinicalRatingComparison = await compareStat(homeForm.clinicalRating, awayForm.clinicalRating)
@@ -1095,19 +975,15 @@ export async function calculateScore(match, index, divider, id) {
 
 
     teams[0][index].predictedDA =
-      teams[0][index].DangerousAttacksHome * homeCalculation;
+      teams[0][index].AverageDangerousAttacks * homeCalculation;
     teams[1][index].predictedDA =
-      teams[1][index].DangerousAttacksAway * awayCalculation;
+      teams[1][index].AverageDangerousAttacks * awayCalculation;
 
     formHome.homeGoalWeighting = parseFloat(
       1 + formHome.homeAttackAdvantage / 100
     );
     formHome.homeDefenceWeighting = parseFloat(
       1 + formHome.homeDefenceAdvantage / 100
-    );
-
-    formHome.homeAdv = parseFloat(
-      (formAway.homeGoalWeighting + formHome.homeDefenceWeighting) / 2
     );
 
     const homeGoalsUnweighted = parseFloat(
@@ -1150,17 +1026,17 @@ export async function calculateScore(match, index, divider, id) {
     }
 
     formHome.creationToConversionScore =
-      formHome.DangerousAttacksHome / formHome.expectedGoals;
+      formHome.AverageDangerousAttacks / formHome.expectedGoals;
     formAway.creationToConversionScore =
-      formAway.DangerousAttacksAway / formAway.expectedGoals;
+      formAway.AverageDangerousAttacks / formAway.expectedGoals;
 
     formHome.creationToConversionScoreV2 =
-      formHome.AttacksHome /
+      formHome.AttacksAverage /
       formHome.AverageDangerousAttacks /
       formHome.AverageShotsOnTarget /
       formHome.expectedGoals;
     formAway.creationToConversionScoreV2 =
-      formAway.AttacksAway /
+      formAway.AttacksAverage /
       formAway.AverageDangerousAttacks /
       formAway.AverageShotsOnTarget /
       formAway.expectedGoals;
@@ -1313,7 +1189,7 @@ export async function calculateScore(match, index, divider, id) {
     let factorOneHome =
       (goalCalcHome) +
       PPGweightingHome * 1 +
-      last5WeightingHome * 1;
+      last5WeightingHome * 2;
 
       // console.log(match.homeTeam)
       // console.log(`${goalCalcHome} * ${formAway.defenceRating} * ${formHome.attackQualityMultiplier} +
@@ -1330,7 +1206,7 @@ export async function calculateScore(match, index, divider, id) {
     let factorOneAway =
       (goalCalcAway) +
       PPGweightingAway * 1 +
-      last5WeightingAway * 1;
+      last5WeightingAway * 2;
 
       // console.log(match.awayTeam)
       // console.log(`${goalCalcAway} * ${formHome.defenceRating} * ${formAway.attackQualityMultiplier} +
@@ -1419,6 +1295,9 @@ export async function calculateScore(match, index, divider, id) {
         break;
     }
 
+    console.log(
+      `${factorOneHome} ${homeCalculation} ${homeComparisonWeighting}`
+    )
     let experimentalHomeGoals =
       factorOneHome * homeCalculation +
       homeComparisonWeighting;
@@ -1426,6 +1305,10 @@ export async function calculateScore(match, index, divider, id) {
     let experimentalAwayGoals =
       factorOneAway * awayCalculation +
       awayComparisonWeighting;
+
+      console.log(
+        `${experimentalHomeGoals} ${experimentalAwayGoals}`
+      )
 
     let XGGoalsHome =
       (formHome.AverageGoalsWeightedWithXG +
@@ -1441,28 +1324,18 @@ export async function calculateScore(match, index, divider, id) {
 
 
 
-    let rawFinalHomeGoals = parseFloat(
-      (experimentalHomeGoals * 1 +
-        XGGoalsHome * 0 +
-        homeGoalsBasedOnDA * 0 +
-        formHome.expectedGoals * 0) /
-        1
-    );
+    let rawFinalHomeGoals = experimentalHomeGoals
 
-    let rawFinalAwayGoals = parseFloat(
-      (experimentalAwayGoals * 1 +
-        XGGoalsAway * 0 +
-        awayGoalsBasedOnDA * 0 +
-        formAway.expectedGoals * 0) /
-        1
-    );
+
+    let rawFinalAwayGoals = experimentalAwayGoals
+ 
 
     switch (true) {
       case formHome.overOrUnderAttack === "overachievingDrastically":
-        rawFinalHomeGoals = rawFinalHomeGoals - 0.35;
+        rawFinalHomeGoals = rawFinalHomeGoals - 0.5;
         break;
       case formAway.overOrUnderAttack === "overachievingDrastically":
-        rawFinalAwayGoals = rawFinalAwayGoals - 0.35;
+        rawFinalAwayGoals = rawFinalAwayGoals - 0.5;
         break;
       // case formHome.overOrUnderAttack === "overachieving":
       //   rawFinalHomeGoals = rawFinalHomeGoals - 0.2;
@@ -1477,10 +1350,10 @@ export async function calculateScore(match, index, divider, id) {
       //   rawFinalAwayGoals = rawFinalAwayGoals - 0.1;
       //   break;
       case formHome.overOrUnderAttack === "underachievingDrastically":
-        rawFinalHomeGoals = rawFinalHomeGoals + 0.35;
+        rawFinalHomeGoals = rawFinalHomeGoals + 0.5;
         break;
       case formAway.overOrUnderAttack === "underachievingDrastically":
-        rawFinalAwayGoals = rawFinalAwayGoals + 0.35;
+        rawFinalAwayGoals = rawFinalAwayGoals + 0.5;
         break;
       // case formHome.overOrUnderAttack === "underachieving":
       //   rawFinalHomeGoals = rawFinalHomeGoals + 0.2;
@@ -1500,10 +1373,10 @@ export async function calculateScore(match, index, divider, id) {
 
     switch (true) {
       case formHome.overOrUnderDefence === "overachievingDrastically":
-        rawFinalAwayGoals = rawFinalAwayGoals + 0.35;
+        rawFinalAwayGoals = rawFinalAwayGoals + 0.5;
         break;
       case formAway.overOrUnderDefence === "overachievingDrastically":
-        rawFinalHomeGoals = rawFinalHomeGoals + 0.35;
+        rawFinalHomeGoals = rawFinalHomeGoals + 0.5;
         break;
       // case formHome.overOrUnderDefence === "overachieving":
       //   rawFinalAwayGoals = rawFinalAwayGoals + 0.2;
@@ -1518,10 +1391,10 @@ export async function calculateScore(match, index, divider, id) {
       //   rawFinalHomeGoals = rawFinalHomeGoals + 0.1;
       //   break;
       case formHome.overOrUnderDefence === "underachievingDrastically":
-        rawFinalAwayGoals = rawFinalAwayGoals - 0.35;
+        rawFinalAwayGoals = rawFinalAwayGoals - 0.5;
         break;
       case formAway.overOrUnderDefence === "underachievingDrastically":
-        rawFinalHomeGoals = rawFinalHomeGoals - 0.35;
+        rawFinalHomeGoals = rawFinalHomeGoals - 0.5;
         break;
       // case formHome.overOrUnderDefence === "underachieving":
       //   rawFinalAwayGoals = rawFinalAwayGoals - 0.2;
@@ -1544,6 +1417,7 @@ export async function calculateScore(match, index, divider, id) {
       rawFinalHomeGoals = rawFinalHomeGoals + difference;
       rawFinalAwayGoals = 0;
     }
+    console.log(rawFinalHomeGoals)
 
     if (rawFinalHomeGoals < 0) {
       let difference = parseFloat((await diff(0, rawFinalHomeGoals)) / 10);
@@ -1551,8 +1425,18 @@ export async function calculateScore(match, index, divider, id) {
       rawFinalHomeGoals = 0;
     }
 
+    console.log(match.game)
+    console.log(formHome)
+    console.log(formAway)
+    console.log("rawFinalHomeGoals")
+    console.log(rawFinalHomeGoals)
+
+
     finalHomeGoals = await roundCustom(rawFinalHomeGoals, formHome, formAway);
     finalAwayGoals = await roundCustom(rawFinalAwayGoals, formAway, formHome);
+
+    console.log("finalHomeGoals")
+    console.log(finalHomeGoals)
 
     if (finalHomeGoals > 5) {
       finalHomeGoals = Math.round(
@@ -1701,21 +1585,22 @@ export async function getScorePrediction(day, mocked) {
   longShotTips = [];
   accumulatedOdds = 1;
 
-  let index;
-  let divider;
-  if (radioSelected === 5) {
-    index = 0;
-    divider = 5;
-  } else if (radioSelected === 6) {
-    index = 1;
-    divider = 6;
-  } else if (radioSelected === 10) {
-    index = 2;
-    divider = 10;
-  } else if (radioSelected === 0) {
-    index = 2;
-    divider = 10;
-  }
+  let index = 2;
+  let divider = 10
+  
+  // if (radioSelected === 5) {
+  //   index = 0;
+  //   divider = 5;
+  // } else if (radioSelected === 6) {
+  //   index = 1;
+  //   divider = 6;
+  // } else if (radioSelected === 10) {
+  //   index = 2;
+  //   divider = 10;
+  // } else if (radioSelected === 0) {
+  //   index = 2;
+  //   divider = 10;
+  // }
 
   await Promise.all(
     matches.map(async (match) => {
