@@ -42,6 +42,7 @@ export var orderedLeagues = [];
   await leagueList.json().then((leagues) => {
     leagueArray = Array.from(leagues.data);
   });
+  console.log(leagueArray)
 
   for (let i = 0; i < leagueArray.length; i++) {
     const league = leagueArray[i];
@@ -49,9 +50,10 @@ export var orderedLeagues = [];
 
     for (let x = 0; x < league.season.length; x++) {
       const element = league.season[x];
+      console.log(element)
 
       if (element.year === 20212022 || element.year === 2021) {
-        if(element.id !== 6068){
+        if(element.id !== 5784){
           availableLeagues.push({ name: name, element });
         }
       }
@@ -75,8 +77,6 @@ export var orderedLeagues = [];
     //leagues ordered by id
     var leagueOrder = [
       6135, //premier league 21/22
-      // 5977, //Champions league 21/22
-      // 5784, //Europa league 21/22
       6089, //championship
       6017, //league 1 21/22
       6015, //league 2 21/22
@@ -103,9 +103,11 @@ export var orderedLeagues = [];
       6038, //Mexico prem 21/22`
       5976, //Scottish league 1 21/22
       5974, //Scottish league 2 21/22
-      // 6068, //FA Cup 21/22
       6083, //National league North and South 21/22 
       6166, //Southern prem
+      5977, //Champions league 21/22
+      5784, //Europa league 21/22
+      6068, //FA Cup 21/22
     ];
 
     orderedLeagues = await mapOrder(availableLeagues, leagueOrder, "id");

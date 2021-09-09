@@ -249,7 +249,7 @@ export async function generateFixtures(day, radioState, selectedOdds) {
     }
   }
 
-  for (let i = 0; i < 30; i++) {
+  for (let i = 0; i < 29; i++) {
     for (
       let x = 0;
       x < leagueArray[i].data.all_matches_table_overall.length;
@@ -263,8 +263,6 @@ export async function generateFixtures(day, radioState, selectedOdds) {
       });
     }
   }
-
-  console.log(leaguePositions)
 
   let previousLeagueName;
 
@@ -371,12 +369,10 @@ export async function generateFixtures(day, radioState, selectedOdds) {
       }
 
       try {
-        console.log(leaguePositions)
         homeTeaminLeague = leaguePositions.find(
           (team) => team.name === match.homeTeam
         );
 
-        console.log(homeTeaminLeague)
         teamPositionHome = homeTeaminLeague.position;
         homePrefix = await getPrefix(teamPositionHome);
         homeSeasonPPG = homeTeaminLeague.ppg.toFixed(2);
