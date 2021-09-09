@@ -18,6 +18,8 @@ export async function getBTTSPotential(allForm, match, index) {
   let awayBTTS = allForm[away].away[index].BTTSPercentage;
   let homeXG = allForm[home].home[index].XG;
   let awayXG = allForm[away].away[index].XG;
+  let homeXGAgainst = allForm[home].home[index].XGAgainstAverage;
+  let awayXGAgainst = allForm[away].away[index].XGAgainstAverage;
   let homePPG = allForm[home].home[index].PPG
   let awayPPG = allForm[away].away[index].PPG
 
@@ -29,28 +31,18 @@ export async function getBTTSPotential(allForm, match, index) {
 if(match.bttsFraction !== "N/A" && match.status !== "suspended" && match.status !== "canceled"){
   if (
     match.combinedBTTS >= 60 &&
-    match.btts_potential > 60 &&
-    awayPPG > 1.2 &&
+    // match.btts_potential >= 60 &&
+    awayPPG > 1.3 &&
     homePPG > 1 &&
     dangerousAttacksHome >= 40 && 
     dangerousAttacksAway >= 40 &&
     homeXG >= 1 && 
-    awayXG >= 1
+    awayXG >= 1 &&
+    homeXGAgainst > 1 &&
+    awayXGAgainst > 1
   ) {
     match.btts = true;
     match.bttsChosen = true;
-  } else if (
-    match.combinedBTTS >= 50 &&
-    match.btts_potential > 50 &&
-    dangerousAttacksHome > 30 && 
-    dangerousAttacksAway > 30 &&
-    awayPPG > 1
-    // homePPG > 1 
-    // homeXG >= 0.75 && 
-    // awayXG >= 0.75
-  ){
-    match.btts = true;
-    match.bttsChosen = false;
   } else {
     match.btts = false;
     match.bttsChosen = false;

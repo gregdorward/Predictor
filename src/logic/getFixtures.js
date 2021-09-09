@@ -264,6 +264,8 @@ export async function generateFixtures(day, radioState, selectedOdds) {
     }
   }
 
+  console.log(leaguePositions)
+
   let previousLeagueName;
 
   for (let i = 0; i < orderedLeagues.length; i++) {
@@ -448,17 +450,13 @@ export async function generateFixtures(day, radioState, selectedOdds) {
           home: {
             teamName: match.homeTeam,
             0: {
-              XG: parseFloat(form[0].data[0].stats.xg_for_avg_overall),
-              XGHome: parseFloat(form[0].data[0].stats.xg_for_avg_home),
-              XGAway: parseFloat(form[0].data[0].stats.xg_for_avg_away),
+              XGOverall: parseFloat(form[0].data[2].stats.xg_for_avg_overall),
+              XG: parseFloat(form[0].data[2].stats.xg_for_avg_home),
               ScoredOverall: parseFloat(
                 form[0].data[0].stats.seasonScoredNum_overall
               ),
-              ScoredHome: parseFloat(
-                form[0].data[0].stats.seasonScoredNum_home
-              ),
-              ScoredAway: parseFloat(
-                form[0].data[0].stats.seasonScoredNum_away
+              ScoredAverage: parseFloat(
+                form[0].data[0].stats.seasonScoredAVG_home
               ),
               PlayedHome: parseFloat(
                 form[0].data[0].stats.seasonMatchesPlayed_home
@@ -469,41 +467,38 @@ export async function generateFixtures(day, radioState, selectedOdds) {
               ConcededOverall: parseFloat(
                 form[0].data[0].stats.seasonConcededNum_overall
               ),
-              ConcededHome: parseFloat(
-                form[0].data[0].stats.seasonConcededNum_home
+              ConcededAverage: parseFloat(
+                form[0].data[0].stats.seasonConcededAVG_home
               ),
-              ConcededAway: parseFloat(
-                form[0].data[0].stats.seasonConcededNum_away
-              ),
-              XGAgainstAvg: parseFloat(
+              XGAgainstAvgOverall: parseFloat(
                 form[0].data[0].stats.xg_against_avg_overall
               ),
-              XGAgainstHome: parseFloat(
+              XGAgainstAverage: parseFloat(
                 form[0].data[0].stats.xg_against_avg_home
               ),
-              XGAgainstAway: parseFloat(
-                form[0].data[0].stats.xg_against_avg_away
-              ),
               CleanSheetPercentage: parseFloat(
-                form[0].data[0].stats.seasonCSPercentage_overall
+                form[0].data[0].stats.seasonCSPercentage_home
               ),
-              AveragePossession: parseFloat(
+              AveragePossessionOverall: parseFloat(
                 form[0].data[0].stats.possessionAVG_overall
               ),
-              AverageShotsOnTarget: parseFloat(
+              AveragePossession: parseFloat(
+                form[0].data[0].stats.possessionAVG_home
+              ),
+              AverageShotsOnTargetOverall: parseFloat(
                 form[0].data[0].stats.shotsOnTargetAVG_overall
               ),
-              AverageDangerousAttacks: parseFloat(
+              AverageShotsOnTarget: parseFloat(
+                form[0].data[0].stats.shotsOnTargetAVG_home
+              ),
+              AverageDangerousAttacksOverall: parseFloat(
                 form[0].data[0].stats.dangerous_attacks_avg_overall
               ),
-              PPG: parseFloat(form[0].data[0].stats.seasonPPG_overall),
+              PPG: parseFloat(form[0].data[0].stats.seasonPPG_home),
               AttacksHome: parseFloat(form[0].data[0].stats.attacks_avg_home),
               AttacksAway: parseFloat(form[0].data[0].stats.attacks_avg_away),
-              DangerousAttacksHome: parseFloat(
+              AverageDangerousAttacks: parseFloat(
                 form[0].data[0].stats.dangerous_attacks_avg_home
-              ),
-              DangerousAttacksAway: parseFloat(
-                form[0].data[0].stats.dangerous_attacks_avg_away
               ),
               homeAttackAdvantage: parseFloat(
                 form[0].data[0].stats.homeAttackAdvantage
@@ -512,7 +507,7 @@ export async function generateFixtures(day, radioState, selectedOdds) {
                 form[0].data[0].stats.homeDefenceAdvantage
               ),
               BTTSPercentage: parseInt(
-                form[0].data[0].stats.seasonBTTSPercentage_overall
+                form[0].data[0].stats.seasonBTTSPercentage_home
               ),
               LastFiveForm: lastFiveFormHome,
               LastSixForm: lastSixFormHome,
@@ -521,17 +516,13 @@ export async function generateFixtures(day, radioState, selectedOdds) {
               SeasonPPG: homeSeasonPPG,
             },
             1: {
-              XG: parseFloat(form[0].data[1].stats.xg_for_avg_overall),
-              XGHome: parseFloat(form[0].data[1].stats.xg_for_avg_home),
-              XGAway: parseFloat(form[0].data[1].stats.xg_for_avg_away),
+              XGOverall: parseFloat(form[0].data[1].stats.xg_for_avg_overall),
+              XG: parseFloat(form[0].data[1].stats.xg_for_avg_home),
               ScoredOverall: parseFloat(
                 form[0].data[1].stats.seasonScoredNum_overall
               ),
-              ScoredHome: parseFloat(
-                form[0].data[1].stats.seasonScoredNum_home
-              ),
-              ScoredAway: parseFloat(
-                form[0].data[1].stats.seasonScoredNum_away
+              ScoredAverage: parseFloat(
+                form[0].data[1].stats.seasonScoredAVG_home
               ),
               PlayedHome: parseFloat(
                 form[0].data[1].stats.seasonMatchesPlayed_home
@@ -542,41 +533,38 @@ export async function generateFixtures(day, radioState, selectedOdds) {
               ConcededOverall: parseFloat(
                 form[0].data[1].stats.seasonConcededNum_overall
               ),
-              ConcededHome: parseFloat(
-                form[0].data[1].stats.seasonConcededNum_home
+              ConcededAverage: parseFloat(
+                form[0].data[1].stats.seasonConcededAVG_home
               ),
-              ConcededAway: parseFloat(
-                form[0].data[1].stats.seasonConcededNum_away
-              ),
-              XGAgainstAvg: parseFloat(
+              XGAgainstAvgOverall: parseFloat(
                 form[0].data[1].stats.xg_against_avg_overall
               ),
-              XGAgainstHome: parseFloat(
+              XGAgainstAverage: parseFloat(
                 form[0].data[1].stats.xg_against_avg_home
               ),
-              XGAgainstAway: parseFloat(
-                form[0].data[1].stats.xg_against_avg_away
-              ),
               CleanSheetPercentage: parseFloat(
-                form[0].data[1].stats.seasonCSPercentage_overall
+                form[0].data[1].stats.seasonCSPercentage_home
               ),
-              AveragePossession: parseFloat(
+              AveragePossessionOverall: parseFloat(
                 form[0].data[1].stats.possessionAVG_overall
               ),
-              AverageShotsOnTarget: parseFloat(
+              AveragePossession: parseFloat(
+                form[0].data[1].stats.possessionAVG_home
+              ),
+              AverageShotsOnTargetOverall: parseFloat(
                 form[0].data[1].stats.shotsOnTargetAVG_overall
               ),
-              AverageDangerousAttacks: parseFloat(
+              AverageShotsOnTarget: parseFloat(
+                form[0].data[1].stats.shotsOnTargetAVG_home
+              ),
+              AverageDangerousAttacksOverall: parseFloat(
                 form[0].data[1].stats.dangerous_attacks_avg_overall
               ),
-              PPG: parseFloat(form[0].data[1].stats.seasonPPG_overall),
+              PPG: parseFloat(form[0].data[1].stats.seasonPPG_home),
               AttacksHome: parseFloat(form[0].data[1].stats.attacks_avg_home),
               AttacksAway: parseFloat(form[0].data[1].stats.attacks_avg_away),
-              DangerousAttacksHome: parseFloat(
+              AverageDangerousAttacks: parseFloat(
                 form[0].data[1].stats.dangerous_attacks_avg_home
-              ),
-              DangerousAttacksAway: parseFloat(
-                form[0].data[1].stats.dangerous_attacks_avg_away
               ),
               homeAttackAdvantage: parseFloat(
                 form[0].data[1].stats.homeAttackAdvantage
@@ -585,7 +573,7 @@ export async function generateFixtures(day, radioState, selectedOdds) {
                 form[0].data[1].stats.homeDefenceAdvantage
               ),
               BTTSPercentage: parseInt(
-                form[0].data[1].stats.seasonBTTSPercentage_overall
+                form[0].data[1].stats.seasonBTTSPercentage_home
               ),
               LastFiveForm: lastFiveFormHome,
               LastSixForm: lastSixFormHome,
@@ -663,17 +651,13 @@ export async function generateFixtures(day, radioState, selectedOdds) {
           away: {
             teamName: match.awayTeam,
             0: {
-              XG: parseFloat(form[1].data[0].stats.xg_for_avg_overall),
-              XGHome: parseFloat(form[1].data[0].stats.xg_for_avg_home),
-              XGAway: parseFloat(form[1].data[0].stats.xg_for_avg_away),
+              XGOverall: parseFloat(form[1].data[0].stats.xg_for_avg_overall),
+              XG: parseFloat(form[1].data[0].stats.xg_for_avg_away),
               ScoredOverall: parseFloat(
                 form[1].data[0].stats.seasonScoredNum_overall
               ),
-              ScoredHome: parseFloat(
-                form[1].data[0].stats.seasonScoredNum_home
-              ),
-              ScoredAway: parseFloat(
-                form[1].data[0].stats.seasonScoredNum_away
+              ScoredAverage: parseFloat(
+                form[1].data[0].stats.seasonScoredAVG_away
               ),
               PlayedHome: parseFloat(
                 form[1].data[0].stats.seasonMatchesPlayed_home
@@ -684,50 +668,40 @@ export async function generateFixtures(day, radioState, selectedOdds) {
               ConcededOverall: parseFloat(
                 form[1].data[0].stats.seasonConcededNum_overall
               ),
-              ConcededHome: parseFloat(
-                form[1].data[0].stats.seasonConcededNum_home
+              ConcededAverage: parseFloat(
+                form[1].data[0].stats.seasonConcededAVG_away
               ),
-              ConcededAway: parseFloat(
-                form[1].data[0].stats.seasonConcededNum_away
-              ),
-              XGAgainstAvg: parseFloat(
+              XGAgainstAvgOverall: parseFloat(
                 form[1].data[0].stats.xg_against_avg_overall
               ),
-              XGAgainstHome: parseFloat(
-                form[1].data[0].stats.xg_against_avg_home
-              ),
-              XGAgainstAway: parseFloat(
+              XGAgainstAverage: parseFloat(
                 form[1].data[0].stats.xg_against_avg_away
               ),
               CleanSheetPercentage: parseFloat(
-                form[1].data[0].stats.seasonCSPercentage_overall
+                form[1].data[0].stats.seasonCSPercentage_away
               ),
-              AveragePossession: parseFloat(
+              AveragePossessionOverall: parseFloat(
                 form[1].data[0].stats.possessionAVG_overall
               ),
-              AverageShotsOnTarget: parseFloat(
+              AveragePossession: parseFloat(
+                form[1].data[0].stats.possessionAVG_away
+              ),
+              AverageShotsOnTargetOverall: parseFloat(
                 form[1].data[0].stats.shotsOnTargetAVG_overall
               ),
-              AverageDangerousAttacks: parseFloat(
+              AverageShotsOnTarget: parseFloat(
+                form[1].data[0].stats.shotsOnTargetAVG_away
+              ),
+              AverageDangerousAttacksOverall: parseFloat(
                 form[1].data[0].stats.dangerous_attacks_avg_overall
               ),
-              PPG: parseFloat(form[1].data[0].stats.seasonPPG_overall),
-              AttacksHome: parseFloat(form[1].data[0].stats.attacks_avg_home),
-              AttacksAway: parseFloat(form[1].data[0].stats.attacks_avg_away),
-              DangerousAttacksHome: parseFloat(
-                form[1].data[0].stats.dangerous_attacks_avg_home
-              ),
-              DangerousAttacksAway: parseFloat(
+              PPG: parseFloat(form[1].data[0].stats.seasonPPG_away),
+              AttacksAverage: parseFloat(form[1].data[0].stats.attacks_avg_away),
+              AverageDangerousAttacks: parseFloat(
                 form[1].data[0].stats.dangerous_attacks_avg_away
               ),
-              homeAttackAdvantage: parseFloat(
-                form[1].data[0].stats.homeAttackAdvantage
-              ),
-              homeDefenceAdvantage: parseFloat(
-                form[1].data[0].stats.homeDefenceAdvantage
-              ),
               BTTSPercentage: parseInt(
-                form[1].data[0].stats.seasonBTTSPercentage_overall
+                form[0].data[0].stats.seasonBTTSPercentage_away
               ),
               LastFiveForm: lastFiveFormAway,
               LastSixForm: lastSixFormAway,
@@ -736,17 +710,13 @@ export async function generateFixtures(day, radioState, selectedOdds) {
               SeasonPPG: awaySeasonPPG,
             },
             1: {
-              XG: parseFloat(form[1].data[1].stats.xg_for_avg_overall),
-              XGHome: parseFloat(form[1].data[1].stats.xg_for_avg_home),
-              XGAway: parseFloat(form[1].data[1].stats.xg_for_avg_away),
+              XGOverall: parseFloat(form[1].data[1].stats.xg_for_avg_overall),
+              XG: parseFloat(form[1].data[1].stats.xg_for_avg_away),
               ScoredOverall: parseFloat(
                 form[1].data[1].stats.seasonScoredNum_overall
               ),
-              ScoredHome: parseFloat(
-                form[1].data[1].stats.seasonScoredNum_home
-              ),
-              ScoredAway: parseFloat(
-                form[1].data[1].stats.seasonScoredNum_away
+              ScoredAverage: parseFloat(
+                form[1].data[1].stats.seasonScoredAVG_away
               ),
               PlayedHome: parseFloat(
                 form[1].data[1].stats.seasonMatchesPlayed_home
@@ -757,50 +727,40 @@ export async function generateFixtures(day, radioState, selectedOdds) {
               ConcededOverall: parseFloat(
                 form[1].data[1].stats.seasonConcededNum_overall
               ),
-              ConcededHome: parseFloat(
-                form[1].data[1].stats.seasonConcededNum_home
+              ConcededAverage: parseFloat(
+                form[1].data[1].stats.seasonConcededAVG_away
               ),
-              ConcededAway: parseFloat(
-                form[1].data[1].stats.seasonConcededNum_away
-              ),
-              XGAgainstAvg: parseFloat(
+              XGAgainstAvgOverall: parseFloat(
                 form[1].data[1].stats.xg_against_avg_overall
               ),
-              XGAgainstHome: parseFloat(
-                form[1].data[1].stats.xg_against_avg_home
-              ),
-              XGAgainstAway: parseFloat(
+              XGAgainstAverage: parseFloat(
                 form[1].data[1].stats.xg_against_avg_away
               ),
               CleanSheetPercentage: parseFloat(
-                form[1].data[1].stats.seasonCSPercentage_overall
+                form[1].data[1].stats.seasonCSPercentage_away
               ),
-              AveragePossession: parseFloat(
+              AveragePossessionOverall: parseFloat(
                 form[1].data[1].stats.possessionAVG_overall
               ),
-              AverageShotsOnTarget: parseFloat(
+              AveragePossession: parseFloat(
+                form[1].data[1].stats.possessionAVG_away
+              ),
+              AverageShotsOnTargetOverall: parseFloat(
                 form[1].data[1].stats.shotsOnTargetAVG_overall
               ),
-              AverageDangerousAttacks: parseFloat(
+              AverageShotsOnTarget: parseFloat(
+                form[1].data[1].stats.shotsOnTargetAVG_away
+              ),
+              AverageDangerousAttacksOverall: parseFloat(
                 form[1].data[1].stats.dangerous_attacks_avg_overall
               ),
-              PPG: parseFloat(form[1].data[1].stats.seasonPPG_overall),
-              AttacksHome: parseFloat(form[1].data[1].stats.attacks_avg_home),
-              AttacksAway: parseFloat(form[1].data[1].stats.attacks_avg_away),
-              DangerousAttacksHome: parseFloat(
-                form[1].data[1].stats.dangerous_attacks_avg_home
-              ),
-              DangerousAttacksAway: parseFloat(
+              PPG: parseFloat(form[1].data[1].stats.seasonPPG_away),
+              AttacksAverage: parseFloat(form[1].data[1].stats.attacks_avg_away),
+              AverageDangerousAttacks: parseFloat(
                 form[1].data[1].stats.dangerous_attacks_avg_away
               ),
-              homeAttackAdvantage: parseFloat(
-                form[1].data[1].stats.homeAttackAdvantage
-              ),
-              homeDefenceAdvantage: parseFloat(
-                form[1].data[1].stats.homeDefenceAdvantage
-              ),
               BTTSPercentage: parseInt(
-                form[1].data[1].stats.seasonBTTSPercentage_overall
+                form[0].data[1].stats.seasonBTTSPercentage_away
               ),
               LastFiveForm: lastFiveFormAway,
               LastSixForm: lastSixFormAway,

@@ -57,7 +57,7 @@ export var orderedLeagues = [];
       }
     }
 
-    function mapOrder(array, order, key) {
+    async function mapOrder(array, order, key) {
       array.sort(function (a, b) {
         var A = a.element[key],
           B = b.element[key];
@@ -75,8 +75,8 @@ export var orderedLeagues = [];
     //leagues ordered by id
     var leagueOrder = [
       6135, //premier league 21/22
-      5977, //Champions league 21/22
-      5784, //Europa league 21/22
+      // 5977, //Champions league 21/22
+      // 5784, //Europa league 21/22
       6089, //championship
       6017, //league 1 21/22
       6015, //league 2 21/22
@@ -108,7 +108,7 @@ export var orderedLeagues = [];
       6166, //Southern prem
     ];
 
-    orderedLeagues = mapOrder(availableLeagues, leagueOrder, "id");
+    orderedLeagues = await mapOrder(availableLeagues, leagueOrder, "id");
   }
 
   // ReactDOM.render(

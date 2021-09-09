@@ -328,7 +328,7 @@ export async function createStatsDiv(game, mock) {
       Last5PPG: gameStats.home[index].PPG,
       SeasonPPG: gameStats.home[index].SeasonPPG,
       formTrend: homeFormTrend,
-      lastGame: homeLastGame
+      lastGame: homeLastGame,
     });
 
     const formDataAway = [];
@@ -348,7 +348,7 @@ export async function createStatsDiv(game, mock) {
       Last5PPG: gameStats.away[index].PPG,
       SeasonPPG: gameStats.away[index].SeasonPPG,
       formTrend: awayFormTrend,
-      lastGame: awayLastGame
+      lastGame: awayLastGame,
     });
     ReactDOM.render(
       <div style={style}>
