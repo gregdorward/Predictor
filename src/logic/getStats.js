@@ -359,7 +359,6 @@ export async function createStatsDiv(game, mock) {
 
     ReactDOM.render(
       <div style={style}>
-        <Div className="MatchTime" text={"Kick off: " + time}></Div>
         <div className="H2HStats" id={`H2HStats${game.id}`}></div>
         <div className="TrendsHome" id={`TrendsHome${game.id}`}></div>
         <div className="TrendsAway" id={`TrendsAway${game.id}`}></div>

@@ -142,6 +142,8 @@ export var orderedLeagues = [];
   //   document.getElementById("RadioText")
   // );
 
+
+
   ReactDOM.render(
     <div className="FixtureButtons">
       <Button
@@ -212,7 +214,7 @@ function App() {
       <div id="FixtureContainer">
         <div>
           <div className="WelcomeText">
-            Global fixtures and predictions from 34 leagues and cup competitions, including
+            Global fixtures and predictions from 30 league and cup competitions, including
           </div>
           <ul className="AllLeagues">
             <li className="League">Premier League</li>

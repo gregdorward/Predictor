@@ -351,7 +351,7 @@ p {
 }
 
 .leagueName {
-  font-size: 1em;
+  font-size: 1.1em;
   font-weight: 550;
   color: black;
   padding-top: 1em;
@@ -684,35 +684,44 @@ p {
 
 .win {
   background-color: rgb(22, 165, 22);
-  padding: 0.5em;
-  margin-top: 1.5em;
+  padding: 0.75em;
+  margin-top: 1em;
   /* padding-left: 7px;
   padding-right: 7px; */
   margin: 0.2em;
   color: white;
-  font-weight: 600;
+  font-weight: 700;
 }
 
 .loss {
   background-color: #970d00;
-  padding: 0.5em;
+  padding: 0.75em;
   margin-top: 1em;
   /* padding-left: 7px;
   padding-right: 7px; */
   margin: 0.2em;
   color: white;
-  font-weight: 600;
+  font-weight: 700;
 }
 
 .draw {
   background-color: rgb(70, 70, 70);
-  padding: 0.5em;
+  padding: 0.75em;
   margin-top: 1em;
   /* padding-left: 7px;
   padding-right: 7px; */
   margin: 0.2em;
   color: white;
-  font-weight: 600;
+  font-weight: 700;
+
+}
+
+li.TeamScored{
+  padding-top: 1em;
+}
+
+li.FormHeader{
+  padding-bottom: 1em;
 }
 
 .MatchTime {
