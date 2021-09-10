@@ -70,7 +70,7 @@ export var orderedLeagues = [];
           return -1;
         }
       });
-
+      console.log(array)
       return array;
     }
 
@@ -105,9 +105,9 @@ export var orderedLeagues = [];
       5974, //Scottish league 2 21/22
       6083, //National league North and South 21/22 
       6166, //Southern prem
-      5977, //Champions league 21/22
-      5784, //Europa league 21/22
       6068, //FA Cup 21/22
+      5977, //Champions league 21/22
+      6218, //Europa league 21/22
     ];
 
     orderedLeagues = await mapOrder(availableLeagues, leagueOrder, "id");
