@@ -29,6 +29,7 @@ export var orderedLeagues = [];
   let leagueList;
 
   leagueList = await fetch(`${process.env.REACT_APP_EXPRESS_SERVER}leagueList`);
+  console.log(leagueList)
 
   // ReactDOM.render(
   //   <div className="LoadingText">
@@ -85,29 +86,31 @@ export var orderedLeagues = [];
       5992, //Scottish Prem 21/22
       6192, //
       6198, //Serie A
-      5951, //Dutch Prem 21/22
-      6079, //Belgian Pro League 21/22
       6019, //French Prem 21/22
       6117, //Portagul Prem 21/22
-      5674, //MLS 21
+      5951, //Dutch Prem 21/22
+      6079, //Belgian Pro League 21/22
+      5505, //sweden 21/22
+      5961, //Danish Prem 21
+      5496, //Norway Prem 21
+      6008, //Austrian Prem 21
+      6282, //Greek Prem 21
+      5534, //Irish Prem 21
       6120, //Spanish secunda 21/22
       6205, //
       6020, //Bundesliga 2 21/22
       6018, //French League 2 21/22
       5991, //Scottish Championship
+      5976, //Scottish league 1 21/22
+      5974, //Scottish league 2 21/22
       5361, //TODO
+      5674, //MLS 21
       5713, //Brazil prem 21
-      5505, //sweden 21/22
       5434, //Japan 21
       5506, //S Korea 21
       6038, //Mexico prem 21/22`
-      5976, //Scottish league 1 21/22
-      5974, //Scottish league 2 21/22
+
       6083, //National league North and South 21/22 
-      6166, //Southern prem
-      6068, //FA Cup 21/22
-      5977, //Champions league 21/22
-      6218, //Europa league 21/22
     ];
 
     orderedLeagues = await mapOrder(availableLeagues, leagueOrder, "id");
