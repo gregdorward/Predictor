@@ -160,7 +160,7 @@ async function createFixture(match, result, mockBool) {
 var myHeaders = new Headers();
 myHeaders.append("Origin", "https://gregdorward.github.io");
 
-export async function generateFixtures(day, radioState, selectedOdds) {
+export async function generateFixtures(day, radioState, selectedOdds) {  
   let url;
   switch (day) {
     case "yesterdaysFixtures":
