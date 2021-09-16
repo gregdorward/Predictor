@@ -147,8 +147,19 @@ export var orderedLeagues = [];
 
 
 
+
+
   ReactDOM.render(
     <div className="FixtureButtons">
+          <Button
+        text={"Last Saturday's predictions"}
+        onClickEvent={async () =>
+          fixtureList.push(
+            await generateFixtures("lastSaturday", selectedOption, selectedOdds)
+          )
+        }
+      />
+      <div className="DisclaimerText">Disclaimer - Last saturdays' predictions based off newly fetched form (for now)</div>
       <Button
         text={"Yesterday's prediction outcomes"}
         onClickEvent={async () =>

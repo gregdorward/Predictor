@@ -68,6 +68,7 @@ function GetDivider(fixture) {
         break;
     }
 
+
     if (fixture.fixture.homeGoals > 0 && fixture.fixture.awayGoals > 0) {
       fixture.fixture.bttsOutcome = "bttsWon";
     } else {
@@ -89,18 +90,35 @@ function GetDivider(fixture) {
         default:
           break;
       }
+
+      let name = "CorrectScore"
+      
+        if(fixture.fixture.goalsA === fixture.fixture.homeGoals && fixture.fixture.goalsB === fixture.fixture.awayGoals) {
+          return (
+            <Fragment>
+              <div className="Result">{`${fixture.fixture.homeGoals} - ${fixture.fixture.awayGoals}`}</div>
+              <div
+                className="ExactScore"
+                key={fixture.fixture.homeTeam}
+                data-cy={"score-" + fixture.fixture.id}
+              >{`${fixture.fixture.goalsA} - ${fixture.fixture.goalsB}`}</div>
+            </Fragment>
+          );
+        } else {
+          return (
+            <Fragment>
+              <div className="Result">{`${fixture.fixture.homeGoals} - ${fixture.fixture.awayGoals}`}</div>
+              <div
+                className="CorrectScore"
+                key={fixture.fixture.homeTeam}
+                data-cy={"score-" + fixture.fixture.id}
+              >{`${fixture.fixture.goalsA} - ${fixture.fixture.goalsB}`}</div>
+            </Fragment>
+          );
+        }
       // console.log(`profit ${fixture.fixture.profit}`);
 
-      return (
-        <Fragment>
-          <div className="Result">{`${fixture.fixture.homeGoals} - ${fixture.fixture.awayGoals}`}</div>
-          <div
-            className="CorrectScore"
-            key={fixture.fixture.homeTeam}
-            data-cy={"score-" + fixture.fixture.id}
-          >{`${fixture.fixture.goalsA} - ${fixture.fixture.goalsB}`}</div>
-        </Fragment>
-      );
+
     } else if (outcome !== prediction) {
       fixture.fixture.profit = 0;
       // console.log(fixture.fixture.game);

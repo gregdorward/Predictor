@@ -38,12 +38,24 @@ let [
 
 let yesterdaysDate = new Date();
 yesterdaysDate.setDate(new Date().getDate() - 1);
+console.log(yesterdaysDate)
 let [
   yesterdayDay,
   yesterdayMonth,
   yesterdayYear,
 ] = yesterdaysDate.toLocaleDateString("en-US").split("/");
 
+let dateObj = new Date()
+dateObj.setDate(dateObj.getDate() - (9-dateObj.getDay()))
+console.log(dateObj)
+let [
+  saturdayDay,
+  saturdayMonth,
+  saturdayYear,
+] = dateObj.toLocaleDateString("en-US").split("/");
+
+
+export const saturday = `${process.env.REACT_APP_EXPRESS_SERVER}matches/${saturdayYear}-${saturdayDay}-${saturdayMonth}`;
 export const yesterday = `${process.env.REACT_APP_EXPRESS_SERVER}matches/${yesterdayYear}-${yesterdayDay}-${yesterdayMonth}`;
 export const today = `${process.env.REACT_APP_EXPRESS_SERVER}matches/${year}-${currentDay}-${month}`;
 export const tomorrow = `${process.env.REACT_APP_EXPRESS_SERVER}matches/${tomorrowYear}-${tomorrowDay}-${tomorrowMonth}`;
@@ -163,6 +175,9 @@ myHeaders.append("Origin", "https://gregdorward.github.io");
 export async function generateFixtures(day, radioState, selectedOdds) {  
   let url;
   switch (day) {
+    case "lastSaturday":
+      url = saturday
+      break;
     case "yesterdaysFixtures":
       url = yesterday;
       break;

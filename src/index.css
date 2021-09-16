@@ -333,6 +333,10 @@ p {
   padding-top: 2em;
 }
 
+.DisclaimerText{
+  font-size: 0.75em;
+}
+
 .AllLeagues {
   margin: 0;
 }
@@ -403,6 +407,7 @@ p {
   height: 1.7em;
   order: 1;
   padding: 1em;
+  padding-right: 0.5em;
   flex-basis: 1%;
 }
 
@@ -411,6 +416,7 @@ p {
   height: 1.7em;
   order: 5;
   padding: 1em;
+  padding-left: 0.5em;
   flex-basis: 1%;
 }
 
@@ -581,6 +587,20 @@ p {
   font-weight: 600;
 }
 
+.ExactScore {
+    height: auto;
+    flex-basis: 10%;
+    order: 4;
+    padding: 0.5em;
+    display: inline-block;
+    color: gold;
+    background-color:  darkgreen;
+    margin: 0.2em;
+    /* border: silver 3px solid; */
+    font-weight: 600;
+    /* box-shadow: 0 5px 12px 0 rgb(253, 228, 0), 0 6px 20px 0 rgba(0, 0, 0, 0.19); */
+
+}
 .hidden {
   display: none;
 }
