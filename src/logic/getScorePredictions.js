@@ -1605,7 +1605,7 @@ export async function getScorePrediction(day, mocked) {
         ] = await calculateScore(match, index, divider, match.id);
       }
 
-      await getBTTSPotential(allForm, match, index);
+      await getBTTSPotential(allForm, match, index, match.goalsA, match.goalsB);
 
       let predictionObject;
       let longShotPredictionObject;

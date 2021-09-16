@@ -1,4 +1,4 @@
-export async function getBTTSPotential(allForm, match, index) {
+export async function getBTTSPotential(allForm, match, index, homeGoals, awayGoals) {
 
   let homeTeam = match.homeTeam;
   let awayTeam = match.awayTeam;
@@ -16,6 +16,8 @@ export async function getBTTSPotential(allForm, match, index) {
 
   let homeBTTS = allForm[home].home[index].BTTSPercentage;
   let awayBTTS = allForm[away].away[index].BTTSPercentage;
+  let homeG = homeGoals;
+  let awayG = awayGoals;
   let homeXG = allForm[home].home[index].XG;
   let awayXG = allForm[away].away[index].XG;
   let homeXGAgainst = allForm[home].home[index].XGAgainstAverage;
@@ -30,16 +32,18 @@ export async function getBTTSPotential(allForm, match, index) {
 
 if(match.bttsFraction !== "N/A" && match.status !== "suspended" && match.status !== "canceled"){
   if (
-    match.combinedBTTS >= 60 &&
+    match.combinedBTTS >= 50 &&
     // match.btts_potential >= 60 &&
-    awayPPG > 1.3 &&
+    awayPPG > 1.2 &&
     homePPG > 1 &&
-    dangerousAttacksHome >= 40 && 
-    dangerousAttacksAway >= 40 &&
+    dangerousAttacksHome >= 35 && 
+    dangerousAttacksAway >= 35 &&
     homeXG >= 1 && 
     awayXG >= 1 &&
     homeXGAgainst > 1 &&
-    awayXGAgainst > 1
+    awayXGAgainst > 1 &&
+    homeG > 0 &&
+    awayG > 0
   ) {
     match.btts = true;
     match.bttsChosen = true;
