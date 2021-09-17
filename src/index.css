@@ -407,6 +407,7 @@ p {
   height: 1.7em;
   order: 1;
   padding: 1em;
+  padding-left: 0.5em;
   padding-right: 0.5em;
   flex-basis: 1%;
 }
@@ -417,6 +418,7 @@ p {
   order: 5;
   padding: 1em;
   padding-left: 0.5em;
+  padding-right: 0.5em;
   flex-basis: 1%;
 }
 
