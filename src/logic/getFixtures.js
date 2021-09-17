@@ -45,14 +45,28 @@ let [
   yesterdayYear,
 ] = yesterdaysDate.toLocaleDateString("en-US").split("/");
 
-let dateObj = new Date()
-dateObj.setDate(dateObj.getDate() - (9-dateObj.getDay()))
-console.log(dateObj)
+// var prevSat = new Date();
+
+// prevSat.setDate(prevSat.getDate() - (6-prevSat.getDay()))
+
+// console.log(prevSat)
+
+
+
+var d = new Date();
+
+// set to Monday of this week
+d.setDate(d.getDate() - (d.getDay() + 6) % 7);
+
+// set to Saturday just gone
+d.setDate(d.getDate() - 2);
+
+
 let [
   saturdayDay,
   saturdayMonth,
   saturdayYear,
-] = dateObj.toLocaleDateString("en-US").split("/");
+] = d.toLocaleDateString("en-US").split("/");
 
 
 export const saturday = `${process.env.REACT_APP_EXPRESS_SERVER}matches/${saturdayYear}-${saturdayDay}-${saturdayMonth}`;
