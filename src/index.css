@@ -550,6 +550,7 @@ p {
   padding: 0.5em;
   display: inline-block;
   color: black;
+  background-color: #e9e9e9;
   margin: 0.2em;
 }
 
@@ -957,13 +958,22 @@ button:hover {
   flex-wrap: wrap;
   margin-left: 20%;
   margin-right: 20%;
-  padding-bottom: 10px;
+  padding-bottom: 15px;
 }
 
 .PreviousMatchStats li{
   text-align: center;
-  padding: 5px;
+  padding: 7px;
 }
+
+.LastGameDetail{
+  padding-top: 2em;
+}
+
+.LastGame{
+  padding-bottom: 2em;
+}
+
 
 
 .StatsTable{

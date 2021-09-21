@@ -7,6 +7,12 @@ function HeadToHead(props) {
       <li key="Stadium" className="Stadium" data-cy={props.name + "Stadium"}>
         {`Venue - ${props.stadium}`}
       </li>
+      <li key="lastGameDetail" className="LastGameDetail" data-cy={props.name + "Last"}>
+        {`Last meeting - ${props.lastGameStadiumName} ${props.lastGameDate}`}
+      </li>
+      <li key="lastGame" className="LastGame" data-cy={props.name + "LastGame"}>
+        {`${props.lastGameHomeTeam} ${props.lastGameHomeGoals} - ${props.lastGameAwayGoals} ${props.lastGameAwayTeam}`}
+      </li>
       <li key="h2h" className="h2h" data-cy={props.name + "h2h"}>
         {`Matches played: ${props.matches}`}
       </li>

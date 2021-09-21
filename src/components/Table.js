@@ -45,7 +45,7 @@ export default function CustomizedTables(props) {
             <StyledTableCell>Stats (from footystats.org)</StyledTableCell>
             <StyledTableCell>H2H history</StyledTableCell>
             <StyledTableCell>Forecast</StyledTableCell>
-            <StyledTableCell>Odds</StyledTableCell>
+            <StyledTableCell>Odds (yes)</StyledTableCell>
           </TableRow>
         </TableHead>
         <TableBody>
