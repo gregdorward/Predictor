@@ -159,7 +159,7 @@ export var orderedLeagues = [];
           )
         }
       />
-      <div className="DisclaimerText">Disclaimer - Last saturdays' predictions based off newly fetched form (for now)</div>
+      <div className="DisclaimerText">Current calculations against historic data</div>
       <Button
         text={"Yesterday's prediction outcomes"}
         onClickEvent={async () =>
