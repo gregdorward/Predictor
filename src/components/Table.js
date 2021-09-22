@@ -42,13 +42,23 @@ export default function CustomizedTables(props) {
       <Table aria-label="customized table">
         <TableHead>
           <TableRow>
-            <StyledTableCell>Stats (from footystats.org)</StyledTableCell>
+            <StyledTableCell>Stat</StyledTableCell>
             <StyledTableCell>H2H history</StyledTableCell>
-            <StyledTableCell>Forecast</StyledTableCell>
             <StyledTableCell>Odds (yes)</StyledTableCell>
+            <StyledTableCell>Odds (no)</StyledTableCell>
           </TableRow>
         </TableHead>
         <TableBody>
+        <StyledTableRow key="O05">
+            <StyledTableCell component="th" scope="row" align="center" padding="5">
+              Over 0.5 Goals %
+            </StyledTableCell>
+            <StyledTableCell component="th" scope="row" align="center">
+              {`${props.o05Stat}%`}
+            </StyledTableCell>
+            <StyledTableCell align="center">{props.o05Odds}</StyledTableCell>
+            <StyledTableCell align="center">{props.u05Odds}</StyledTableCell>
+          </StyledTableRow>
           <StyledTableRow key="O15">
             <StyledTableCell component="th" scope="row" align="center" padding="5">
               Over 1.5 Goals %
@@ -56,10 +66,9 @@ export default function CustomizedTables(props) {
             <StyledTableCell component="th" scope="row" align="center">
               {`${props.o15Stat}%`}
             </StyledTableCell>
-            <StyledTableCell align="center">{`${props.o15Forecast}%`}</StyledTableCell>
             <StyledTableCell align="center">{props.o15Odds}</StyledTableCell>
+            <StyledTableCell align="center">{props.u15Odds}</StyledTableCell>
           </StyledTableRow>
-
           <StyledTableRow key="O25">
             <StyledTableCell component="th" scope="row" align="center">
               Over 2.5 Goals %
@@ -67,10 +76,19 @@ export default function CustomizedTables(props) {
             <StyledTableCell component="th" scope="row" align="center">
               {`${props.o25Stat}%`}
             </StyledTableCell>
-            <StyledTableCell align="center">{`${props.o25Forecast}%`}</StyledTableCell>
             <StyledTableCell align="center">{props.o25Odds}</StyledTableCell>
+            <StyledTableCell align="center">{props.u25Odds}</StyledTableCell>
           </StyledTableRow>
-
+          <StyledTableRow key="O35">
+            <StyledTableCell component="th" scope="row" align="center">
+              Over 3.5 Goals %
+            </StyledTableCell>
+            <StyledTableCell component="th" scope="row" align="center">
+              {`${props.o35Stat}%`}
+            </StyledTableCell>
+            <StyledTableCell align="center">{props.o35Odds}</StyledTableCell>
+            <StyledTableCell align="center">{props.u35Odds}</StyledTableCell>
+          </StyledTableRow>
           <StyledTableRow key="BTTS">
             <StyledTableCell component="th" scope="row" align="center">
               BTTS %
@@ -78,19 +96,8 @@ export default function CustomizedTables(props) {
             <StyledTableCell component="th" scope="row" align="center">
               {`${props.BTTSStat}%`}
             </StyledTableCell>
-            <StyledTableCell align="center">{`${props.BTTSForecast}%`}</StyledTableCell>
             <StyledTableCell align="center">{props.BTTSOdds}</StyledTableCell>
-          </StyledTableRow>
-
-          <StyledTableRow key="Corners">
-            <StyledTableCell component="th" scope="row" align="center">
-              Over 10.5 Corners
-            </StyledTableCell>
-            <StyledTableCell component="th" scope="row" align="center">
-              {`${props.CornersStat}`}
-            </StyledTableCell>
-            <StyledTableCell align="center">{props.CornersForecast}</StyledTableCell>
-            <StyledTableCell align="center">{props.CornersOdds}</StyledTableCell>
+            <StyledTableCell align="center">{props.BTTSOddsNo}</StyledTableCell>
           </StyledTableRow>
         </TableBody>
       </Table>
