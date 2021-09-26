@@ -32,18 +32,16 @@ export async function getBTTSPotential(allForm, match, index, homeGoals, awayGoa
 
 if(match.bttsFraction !== "N/A" && match.status !== "suspended" && match.status !== "canceled"){
   if (
-    match.combinedBTTS >= 50 &&
+    match.combinedBTTS >= 60 &&
     // match.btts_potential >= 60 &&
-    awayPPG > 1.2 &&
-    homePPG > 1 &&
-    dangerousAttacksHome >= 35 && 
-    dangerousAttacksAway >= 35 &&
-    homeXG >= 1 && 
-    awayXG >= 1 &&
-    homeXGAgainst > 1 &&
-    awayXGAgainst > 1 &&
-    homeG > 0 &&
-    awayG > 0
+    awayPPG > 1 &&
+    // homePPG > 1 &&
+    // homeXG >= 1.1 && 
+    // awayXG >= 1.1 &&
+    // homeXGAgainst > 1.1 &&
+    // awayXGAgainst > 1.1 &&
+    homeG >= 1 &&
+    awayG >= 2
   ) {
     match.btts = true;
     match.bttsChosen = true;

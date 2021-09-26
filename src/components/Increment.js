@@ -1,6 +1,8 @@
 import React, { Component, Fragment } from "react";
 import { getScorePrediction } from "../logic/getScorePredictions"
 export var incrementValue = 1.8;
+export var incrementValueTwo = 2.5;
+
 export var riskLevel = 10;
 
 class Increment extends Component {
