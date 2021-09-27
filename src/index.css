@@ -333,6 +333,26 @@ p {
   padding-top: 2em;
 }
 
+.bitcoin{
+  padding: 0.5em;
+  padding-bottom: 1em;
+  margin: 3em;
+  margin-top: 2em;
+  margin-bottom: 2em;
+  font-size: 1em;
+  line-height: 2em;
+  display: flex;
+  flex-direction: column;
+  flex-basis: 75%;
+  background-color: #424242;
+  color: rgb(233, 152, 1);
+}
+
+.bitcoinSymbol{
+  font-size: 1.2em;
+  font-weight: 2em;
+}
+
 .DisclaimerText{
   font-size: 0.75em;
   padding-bottom: 1em;

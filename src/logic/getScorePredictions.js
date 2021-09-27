@@ -53,6 +53,8 @@ export function getPointsFromLastX(lastX) {
 }
 
 async function compareStat(statOne, statTwo){
+  console.log(statOne)
+  console.log(statTwo)
   let stat1 = parseFloat(statOne)
   let stat2 = parseFloat(statTwo)
   let result;
@@ -953,24 +955,33 @@ export async function calculateScore(match, index, divider, id) {
 
 
     async function compareTeams(homeForm, awayForm, teamName){
-        let sotComparison = await compareStat(homeForm.AverageShotsOnTarget, awayForm.AverageShotsOnTarget)
-        let possessionComparison = await compareStat(homeForm.AveragePossession, awayForm.AveragePossession)
-        let goalsForComparison = await compareStat(homeForm.ScoredAverage, awayForm.ScoredAverage)
-        let goalsAgainstComparison = await compareStat(awayForm.ConcededAverage, homeForm.ConcededAverage)
-        let XGForComparison = await compareStat(homeForm.XG, awayForm.XG)
-        let XGAgainstComparison = await compareStat(awayForm.XGAgainstAverage, homeForm.XGAgainstAverage)
-        let dangerousAttacksComparison = await compareStat(homeForm.AverageDangerousAttacks, awayForm.AverageDangerousAttacks)
-        let CleanSheetPercentageComparison = await compareStat(homeForm.CleanSheetPercentage, awayForm.CleanSheetPercentage)
-        let clinicalScoreComparison = await compareStat(homeForm.clinicalScore, awayForm.clinicalScore)
-        let XGdifferentialComparison = await compareStat(homeForm.XGdifferential, awayForm.XGdifferential)
-        let overUnderAchievingSumComparison = await compareStat(homeForm.overUnderAchievingSum, awayForm.overUnderAchievingSum)
+        // let sotComparison = await compareStat(homeForm.AverageShotsOnTarget, awayForm.AverageShotsOnTarget)
+        // let possessionComparison = await compareStat(homeForm.AveragePossession, awayForm.AveragePossession)
+        // let goalsForComparison = await compareStat(homeForm.ScoredAverage, awayForm.ScoredAverage)
+        // let goalsAgainstComparison = await compareStat(awayForm.ConcededAverage, homeForm.ConcededAverage)
+        // let XGForComparison = await compareStat(homeForm.XG, awayForm.XG)
+        // let XGAgainstComparison = await compareStat(awayForm.XGAgainstAverage, homeForm.XGAgainstAverage)
+        // let dangerousAttacksComparison = await compareStat(homeForm.AverageDangerousAttacks, awayForm.AverageDangerousAttacks)
+        // let CleanSheetPercentageComparison = await compareStat(homeForm.CleanSheetPercentage, awayForm.CleanSheetPercentage)
+        // let clinicalScoreComparison = await compareStat(homeForm.clinicalScore, awayForm.clinicalScore)
+        // let XGdifferentialComparison = await compareStat(homeForm.XGdifferential, awayForm.XGdifferential)
+        // let overUnderAchievingSumComparison = await compareStat(homeForm.overUnderAchievingSum, awayForm.overUnderAchievingSum)
+                console.log("formTrendScoreComparison")
         let formTrendScoreComparison = await compareStat(homeForm.formTrendScore, awayForm.formTrendScore)
+                console.log("last5PointsComparison")
         let last5PointsComparison = await compareStat(homeForm.last5Points, awayForm.last5Points)
-        let last6PointsComparison = await compareStat(homeForm.last6Points, awayForm.last6Points)
+        // let last6PointsComparison = await compareStat(homeForm.last6Points, awayForm.last6Points)
+                console.log("last10PointsComparison")
         let last10PointsComparison = await compareStat(homeForm.last10Points, awayForm.last10Points)
+                console.log("last2PointsComparison")
         let last2PointsComparison = await compareStat(homeForm.last2Points, awayForm.last2Points)
-        let seasonPPGComparison = await compareStat(parseFloat(homeForm.SeasonPPG), parseFloat(awayForm.SeasonPPG))
-        let attackingPotencyComparison = await compareStat(homeForm.attackPotency, awayForm.attackPotency)
+                console.log("seasonPPGComparison")
+        let seasonPPGComparison
+        if(homeForm.SeasonPPG !== "N/A" || awayForm.SeasonPPG !== "N/A"){
+          seasonPPGComparison = await compareStat(parseFloat(homeForm.SeasonPPG), parseFloat(awayForm.SeasonPPG))
+        } else seasonPPGComparison = last10PointsComparison
+
+        // let attackingPotencyComparison = await compareStat(homeForm.attackPotency, awayForm.attackPotency)
 
         // console.log("sotComparison")
         // console.log(homeForm.AverageShotsOnTarget)
@@ -1417,10 +1428,10 @@ export async function calculateScore(match, index, divider, id) {
         rawFinalHomeGoals = ((rawFinalHomeGoals + formHome.ScoredAverage + formHome.XG) / 3) + 0.4;
         break;
       case formHome.overOrUnderAttack === "Overachieving":
-        rawFinalHomeGoals = ((rawFinalHomeGoals + formHome.ScoredAverage + formHome.XG) / 3.5);
+        rawFinalHomeGoals = ((rawFinalHomeGoals + formHome.ScoredAverage + formHome.XG) / 3);
         break;
       case formHome.overOrUnderAttack === "Underachieving":
-        rawFinalHomeGoals = ((rawFinalHomeGoals + formHome.ScoredAverage + formHome.XG) / 2.5);
+        rawFinalHomeGoals = ((rawFinalHomeGoals + formHome.ScoredAverage + formHome.XG) / 3);
         break;
       case formAway.overOrUnderAttack === "Overachieving drastically":
         rawFinalAwayGoals = ((rawFinalAwayGoals + formAway.ScoredAverage + formAway.XG) / 3) - 0.4
@@ -1429,10 +1440,10 @@ export async function calculateScore(match, index, divider, id) {
         rawFinalAwayGoals = ((rawFinalAwayGoals + formAway.ScoredAverage + formAway.XG) / 3) + 0.4
         break;
       case formAway.overOrUnderAttack === "Overachieving":
-        rawFinalAwayGoals = ((rawFinalAwayGoals + formAway.ScoredAverage + formAway.XG) / 3.5)
+        rawFinalAwayGoals = ((rawFinalAwayGoals + formAway.ScoredAverage + formAway.XG) / 3)
         break;
       case formAway.overOrUnderAttack === "Underachieving":
-        rawFinalAwayGoals = ((rawFinalAwayGoals + formAway.ScoredAverage + formAway.XG) / 2.5)
+        rawFinalAwayGoals = ((rawFinalAwayGoals + formAway.ScoredAverage + formAway.XG) / 3)
         break;
       case formHome.overOrUnderAttack === "Overachieving slightly":
         rawFinalHomeGoals = rawFinalHomeGoals - 0.1;
@@ -1850,7 +1861,7 @@ export async function getScorePrediction(day, mocked) {
       }
 
       if (
-        match.unroundedGoalsA - 0.75 > match.unroundedGoalsB &&
+        match.unroundedGoalsA - 0.85 > match.unroundedGoalsB &&
         match.homeDoubleChance >= 1.4 &&
         match.goalsA > match.goalsB
       ) {
@@ -1866,7 +1877,7 @@ export async function getScorePrediction(day, mocked) {
           longShotTips.push(longShotPredictionObject);
         }
       } else if (
-        match.unroundedGoalsA < match.unroundedGoalsB - 1.2 &&
+        match.unroundedGoalsA < match.unroundedGoalsB - 1.3 &&
         match.awayDoubleChance >= 1.4 &&
         match.goalsB > match.goalsA
       ) {

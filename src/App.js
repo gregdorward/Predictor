@@ -103,8 +103,8 @@ export var orderedLeagues = [];
       5991, //Scottish Championship
       5976, //Scottish league 1 21/22
       5974, //Scottish league 2 21/22
-      5361, //TODO
       5674, //MLS 21
+      6639, //Australian A league 21
       5713, //Brazil prem 21
       5434, //Japan 21
       5506, //S Korea 21

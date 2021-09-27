@@ -2,6 +2,7 @@ import React, { Fragment } from "react";
 import { CreateBadge } from "./createBadge";
 import Collapsable from "../components/CollapsableElement";
 import { createStatsDiv } from "../logic/getStats";
+import { Button } from "../components/Button";
 
 let resultValue;
 let leagueName;
@@ -209,11 +210,15 @@ const List = ({ fixtures }) => (
       <Collapsable className={"HowToUse"} buttonText={"Show / Hide help"} text={newText} />
     </Fragment>
     <div id="Headers"></div>
+    <p>
+      <a classId="DonationLink" href="#bitcoin" style={{fontSize: "1.2em", textDecoration: "none", color: "black", padding: "0.4em"}}>Donate &#8595;</a>
+    </p>
     <ul className="FixtureList" id="FixtureList">
       {fixtures.map((fixture, i) => (
         <SingleFixture fixture={fixture}/>
       ))}
     </ul>
+    <div className="bitcoin" id="bitcoin">Donations towards running costs welcome<span className="bitcoinSymbol">&#x20bf;itcoin address</span><span className="bitcoinAddress">bc1q7j62txkvhfu0dt3l0s07saze6pjnyzs26wfgp0</span></div>
   </div>
 );
 

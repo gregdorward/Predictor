@@ -256,7 +256,7 @@ export async function generateFixtures(day, radioState, selectedOdds) {
   );
 
   var leaguePositions = [];
-
+  console.log(league.status)
   if (league.status === 200) {
     await league.json().then((leagues) => {
       leagueArray = Array.from(leagues.leagueArray);
@@ -266,11 +266,13 @@ export async function generateFixtures(day, radioState, selectedOdds) {
     //could possibly get league positions from here
   } else {
     for (let i = 0; i < orderedLeagues.length; i++) {
+      console.log(orderedLeagues[i].element.id)
       league = await fetch(
         `${process.env.REACT_APP_EXPRESS_SERVER}tables/${orderedLeagues[i].element.id}/${currentDay}${month}${year}`
       );
       // eslint-disable-next-line no-loop-func
       await league.json().then((table) => {
+        console.log(table)
         leagueArray.push(table);
       });
 
