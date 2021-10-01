@@ -313,6 +313,8 @@ export async function createStatsDiv(game, mock) {
 
     const formDataHome = [];
 
+    console.log(gameStats)
+
     formDataHome.push({
       name: game.homeTeam,
       Last5: gameStats.home[index].LastFiveForm,

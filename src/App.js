@@ -54,7 +54,7 @@ export var orderedLeagues = [];
       console.log(element)
 
       if (element.year === 20212022 || element.year === 2021) {
-        if(element.id !== 5784){
+        if(element.id !== 5784 && element.id !== 6639){
           availableLeagues.push({ name: name, element });
         }
       }
@@ -104,7 +104,7 @@ export var orderedLeagues = [];
       5976, //Scottish league 1 21/22
       5974, //Scottish league 2 21/22
       5674, //MLS 21
-      6639, //Australian A league 21
+      // 6639, //Australian A league 21
       5713, //Brazil prem 21
       5434, //Japan 21
       5506, //S Korea 21

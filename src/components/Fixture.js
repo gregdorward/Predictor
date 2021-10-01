@@ -76,7 +76,7 @@ function GetDivider(fixture) {
       fixture.fixture.bttsOutcome = "bttsLost";
     }
 
-    if (outcome === prediction) {
+    if (outcome === prediction && fixture.fixture.homeOdds !== "N/A") {
       // console.log(fixture.fixture.game);
       switch (true) {
         case outcome === 0:
@@ -120,7 +120,7 @@ function GetDivider(fixture) {
       // console.log(`profit ${fixture.fixture.profit}`);
 
 
-    } else if (outcome !== prediction) {
+    } else if (outcome !== prediction && fixture.fixture.homeOdds !== "N/A") {
       fixture.fixture.profit = 0;
       // console.log(fixture.fixture.game);
       // console.log(`profit ${fixture.fixture.profit}`);

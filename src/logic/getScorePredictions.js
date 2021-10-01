@@ -75,7 +75,7 @@ async function compareStat(statOne, statTwo){
   console.log(stat2)
   console.log(`Gap = ${gap}`)
 
-  if(gap > 1.1){
+  if(gap > 1.2){
     switch (true) {
       case stat1 === stat2:
         result = 0
@@ -325,46 +325,65 @@ async function getQualityOfAttacksScore(score) {
   return creativityScore;
 }
 
-async function getPointsDifferential(pointsHome, pointsAway) {
-  const differential = await diff(pointsHome, pointsAway);
+async function getPointsDifferential(pointsHomeAvg, pointsAwayAvg) {
+  const differential = await diff(pointsHomeAvg, pointsAwayAvg);
   return differential;
 }
 
 async function getPointWeighting(pointsDiff) {
-  let last5WeightingHome;
-  let last5WeightingAway;
+  let pointsDiffWeightingHome;
+  let pointsDiffWeightingAway;
 
   switch (true) {
-    case pointsDiff >= 4 && pointsDiff <= 6:
-      last5WeightingHome = 0.3;
-      last5WeightingAway = -0.3;
+    case pointsDiff >= 2.5:
+      pointsDiffWeightingHome = 0.5;
+      pointsDiffWeightingAway = -0.5;
       break;
-    case pointsDiff >= 2 && pointsDiff < 4:
-      last5WeightingHome = 0.15;
-      last5WeightingAway = -0.15;
+    case pointsDiff >= 2 && pointsDiff < 2.5:
+      pointsDiffWeightingHome = 0.3;
+      pointsDiffWeightingAway = -0.3;
       break;
-    case pointsDiff > 0 && pointsDiff < 2:
-      last5WeightingHome = 0.05;
-      last5WeightingAway = -0.05;
+    case pointsDiff >= 1.5 && pointsDiff < 2:
+      pointsDiffWeightingHome = 0.15;
+      pointsDiffWeightingAway = -0.15;
       break;
-    case pointsDiff < 0 && pointsDiff > -2:
-      last5WeightingHome = -0.05;
-      last5WeightingAway = 0.05;
+    case pointsDiff >= 1 && pointsDiff < 1.5:
+      pointsDiffWeightingHome = 0.1;
+      pointsDiffWeightingAway = -0.1;
       break;
-    case pointsDiff <= -2 && pointsDiff > -4:
-      last5WeightingHome = -0.15;
-      last5WeightingAway = 0.15;
+    case pointsDiff >= 0.5 && pointsDiff < 1:
+      pointsDiffWeightingHome = 0.05;
+      pointsDiffWeightingAway = -0.05;
       break;
-    case pointsDiff <= -4 && pointsDiff >= -6:
-      last5WeightingHome = -0.3;
-      last5WeightingAway = 0.3;
+    case pointsDiff > -0.5 && pointsDiff < 0.5:
+      pointsDiffWeightingHome = 0;
+      pointsDiffWeightingAway = 0;
+      break;
+    case pointsDiff <= -0.5 && pointsDiff > -1:
+      pointsDiffWeightingHome = -0.05;
+      pointsDiffWeightingAway = 0.05;
+      break;
+    case pointsDiff <= -1 && pointsDiff > -1.5:
+      pointsDiffWeightingHome = -0.1;
+      pointsDiffWeightingAway = 0.1;
+      break;
+    case pointsDiff <= -1.5 && pointsDiff > -2:
+      pointsDiffWeightingHome = -0.15;
+      pointsDiffWeightingAway = 0.15;
+      break;
+    case pointsDiff <= -2 && pointsDiff > -2.5:
+      pointsDiffWeightingHome = -0.3;
+      pointsDiffWeightingAway = 0.3;
+      break;
+    case pointsDiff <= -2.5:
+      pointsDiffWeightingHome = -0.5;
+      pointsDiffWeightingAway = 0.5;
       break;
     default:
-      last5WeightingHome = 0;
-      last5WeightingAway = 0;
-      break;
+      pointsDiffWeightingHome = 0;
+      pointsDiffWeightingAway = -0; 
   }
-  return [last5WeightingHome, last5WeightingAway];
+  return [pointsDiffWeightingHome, pointsDiffWeightingAway];
 }
 
 async function getDAPrediction(odds) {
@@ -479,9 +498,9 @@ export async function calculateScore(match, index, divider, id) {
         teams[i][index].LastTenForm
       );
 
-      let last2 = [teams[i][index].lastGame, teams[i][index].previousToLastGame]
-      teams[i][index].last2Points = getPointsFromLastX(
-        last2
+      let last3 = [teams[i][index].lastGame, teams[i][index].previousToLastGame, teams[i][index].LastFiveForm[2]]
+      teams[i][index].last3Points = getPointsFromLastX(
+        last3
       );
 
       async function getPointAverage(pointTotal, games){
@@ -818,23 +837,32 @@ export async function calculateScore(match, index, divider, id) {
         formAway.overUnderAchievingSumDefence
       );
 
+      let homeFiveGameAvg = formHome.last5Points / 5
+      let awayFiveGameAvg = formAway.last5Points / 5
+  
+      let homeThreeGameAvg = formHome.last3Points / 3
+      let awayThreeGameAvg = formAway.last3Points / 3
+
       //can update this for last 10
     let pointsDiff = await getPointsDifferential(
-      formHome.last5Points,
-      formAway.last5Points
+      homeFiveGameAvg,
+      awayFiveGameAvg
     );
 
-    let pointsDiff2 = await getPointsDifferential(
-      formHome.last2Points,
-      formAway.last2Points
+    let pointsDiff3 = await getPointsDifferential(
+      homeThreeGameAvg,
+      awayThreeGameAvg
     );
+
+
+
 
     let [last5WeightingHome, last5WeightingAway] = await getPointWeighting(
-      pointsDiff2
+      pointsDiff
     );
 
-    let [last2WeightingHome, last2WeightingAway] = await getPointWeighting(
-      pointsDiff2
+    let [last3WeightingHome, last3WeightingAway] = await getPointWeighting(
+      pointsDiff3
     );
 
     let PPGweightingHome;
@@ -965,7 +993,7 @@ export async function calculateScore(match, index, divider, id) {
         // let CleanSheetPercentageComparison = await compareStat(homeForm.CleanSheetPercentage, awayForm.CleanSheetPercentage)
         // let clinicalScoreComparison = await compareStat(homeForm.clinicalScore, awayForm.clinicalScore)
         // let XGdifferentialComparison = await compareStat(homeForm.XGdifferential, awayForm.XGdifferential)
-        // let overUnderAchievingSumComparison = await compareStat(homeForm.overUnderAchievingSum, awayForm.overUnderAchievingSum)
+        let overUnderAchievingSumComparison = await compareStat(homeForm.overUnderAchievingSum, awayForm.overUnderAchievingSum)
                 console.log("formTrendScoreComparison")
         let formTrendScoreComparison = await compareStat(homeForm.formTrendScore, awayForm.formTrendScore)
                 console.log("last5PointsComparison")
@@ -974,7 +1002,7 @@ export async function calculateScore(match, index, divider, id) {
                 console.log("last10PointsComparison")
         let last10PointsComparison = await compareStat(homeForm.last10Points, awayForm.last10Points)
                 console.log("last2PointsComparison")
-        let last2PointsComparison = await compareStat(homeForm.last2Points, awayForm.last2Points)
+        let last3PointsComparison = await compareStat(homeForm.last3Points, awayForm.last3Points)
                 console.log("seasonPPGComparison")
         let seasonPPGComparison
         if(homeForm.SeasonPPG !== "N/A" || awayForm.SeasonPPG !== "N/A"){
@@ -1016,13 +1044,20 @@ export async function calculateScore(match, index, divider, id) {
         // console.log("attackingPotencyComparison")
         // console.log(homeForm.attackPotency)
 
-        const calculation = 
-        (formTrendScoreComparison * 2) +
-        (last2PointsComparison * 2) + 
+        let calculation = 
+        (formTrendScoreComparison * 3) +
+        (last3PointsComparison * 2) + 
         (last5PointsComparison * 1) + 
-        (last10PointsComparison * 1) + 
+        (last10PointsComparison * 0) + 
         (seasonPPGComparison * 1)
 
+        if(overUnderAchievingSumComparison < 0 && calculation > 0){
+          calculation = calculation / 4
+          console.log(`${match.game} calculation: ${calculation}`)
+        } else if(overUnderAchievingSumComparison > 0 && calculation < 0){
+          console.log(`${match.game} calculation: ${calculation}`)
+          calculation = calculation / 4
+        }
 
       return calculation
     }
@@ -1267,7 +1302,7 @@ export async function calculateScore(match, index, divider, id) {
     let factorOneHome =
       (goalCalcHome) +
       PPGweightingHome * 1.5 +
-      last2WeightingHome * 1 +
+      last3WeightingHome * 1 +
       formHome.goalsDifferential * 1
 
       // console.log(match.homeTeam)
@@ -1285,7 +1320,7 @@ export async function calculateScore(match, index, divider, id) {
     let factorOneAway =
       (goalCalcAway) +
       PPGweightingAway * 1.5 +
-      last2WeightingAway * 1 +
+      last3WeightingAway * 1 +
       formAway.goalsDifferential * 1
 
 
@@ -1332,45 +1367,45 @@ export async function calculateScore(match, index, divider, id) {
         break;
       case teamComparisonScore  > 1 && teamComparisonScore <= 2:
         homeComparisonWeighting = 0;
-        awayComparisonWeighting = -0.2; 
+        awayComparisonWeighting = -0.1; 
         break;
       case teamComparisonScore > 2 && teamComparisonScore <= 3:
-        homeComparisonWeighting = 0.2;
-        awayComparisonWeighting = -0.2; 
+        homeComparisonWeighting = 0.1;
+        awayComparisonWeighting = -0.1; 
         break;
       case teamComparisonScore > 3 && teamComparisonScore <= 4:
-        homeComparisonWeighting = 0.3;
-        awayComparisonWeighting = -0.3; 
+        homeComparisonWeighting = 0.15;
+        awayComparisonWeighting = -0.15; 
         break;  
       case teamComparisonScore > 4  && teamComparisonScore <= 5:
-        homeComparisonWeighting = 0.5;
-        awayComparisonWeighting = -0.5; 
+        homeComparisonWeighting = 0.4;
+        awayComparisonWeighting = -0.4; 
         break;    
         case teamComparisonScore > 5:
-          homeComparisonWeighting = 0.75;
-          awayComparisonWeighting = -0.75; 
+          homeComparisonWeighting = 0.8;
+          awayComparisonWeighting = -0.8; 
           break;    
 
       
       case teamComparisonScore  < -1 && teamComparisonScore >= -2:
-        homeComparisonWeighting = -0.2;
+        homeComparisonWeighting = -0.1;
         awayComparisonWeighting = 0; 
         break;
       case teamComparisonScore < -2 && teamComparisonScore >= -3:
-        homeComparisonWeighting = -0.2;
-        awayComparisonWeighting = 0.2; 
+        homeComparisonWeighting = -0.1;
+        awayComparisonWeighting = 0.1; 
         break;
       case teamComparisonScore < -3 && teamComparisonScore >= -4:
-        homeComparisonWeighting = -0.3;
-        awayComparisonWeighting = 0.3; 
+        homeComparisonWeighting = -0.15;
+        awayComparisonWeighting = 0.15; 
         break;  
       case teamComparisonScore < -4 && teamComparisonScore >= -5:
-        homeComparisonWeighting = -0.5;
-        awayComparisonWeighting = 0.5; 
+        homeComparisonWeighting = -0.4;
+        awayComparisonWeighting = 0.4; 
         break;
         case teamComparisonScore < -5:
-          homeComparisonWeighting = -0.75;
-          awayComparisonWeighting = 0.75 
+          homeComparisonWeighting = -0.8;
+          awayComparisonWeighting = 0.8 
           break;        
       default:
         homeComparisonWeighting = 0;
@@ -1564,13 +1599,13 @@ export async function calculateScore(match, index, divider, id) {
     }
 
     if (rawFinalAwayGoals < 0) {
-      let difference = parseFloat((await diff(0, rawFinalAwayGoals)) / 100);
+      let difference = parseFloat((await diff(0, rawFinalAwayGoals)) / 10);
       rawFinalHomeGoals = rawFinalHomeGoals + difference;
       rawFinalAwayGoals = 0;
     }
 
     if (rawFinalHomeGoals < 0) {
-      let difference = parseFloat((await diff(0, rawFinalHomeGoals)) / 100);
+      let difference = parseFloat((await diff(0, rawFinalHomeGoals)) / 10);
       rawFinalAwayGoals = rawFinalAwayGoals + difference;
       rawFinalHomeGoals = 0;
     }
@@ -1599,7 +1634,7 @@ export async function calculateScore(match, index, divider, id) {
       match.prediction = "homeWin";
       homePredictions = homePredictions + 1
       console.log(`homePredictions: ${homePredictions}`)
-      if (formHome.overUnderAchievingSum < -1 || homeComparisonWeighting !== 0.75) {
+      if (formHome.overUnderAchievingSum < -1.5) {
         match.includeInMultis = false;
       } else {
         match.includeInMultis = true;
@@ -1608,7 +1643,7 @@ export async function calculateScore(match, index, divider, id) {
       match.prediction = "awayWin";
       awayPredictions = awayPredictions + 1
       console.log(`awayPredictions: ${awayPredictions}`)
-      if (formAway.overUnderAchievingSum < -1 || awayComparisonWeighting !== 0.75) {
+      if (formAway.overUnderAchievingSum < -1.5) {
         match.includeInMultis = false;
       } else {
         match.includeInMultis = true;
