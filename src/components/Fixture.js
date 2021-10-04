@@ -76,8 +76,10 @@ function GetDivider(fixture) {
       fixture.fixture.bttsOutcome = "bttsLost";
     }
 
-    if (outcome === prediction && fixture.fixture.homeOdds !== "N/A") {
+    if (outcome === prediction) {
       // console.log(fixture.fixture.game);
+      if(fixture.fixture.homeOdds !== 0){
+
       switch (true) {
         case outcome === 0:
           fixture.fixture.profit = fixture.fixture.homeOdds;
@@ -91,6 +93,7 @@ function GetDivider(fixture) {
         default:
           break;
       }
+    } else fixture.fixture.profit = 1
 
       let name = "CorrectScore"
       
@@ -120,8 +123,12 @@ function GetDivider(fixture) {
       // console.log(`profit ${fixture.fixture.profit}`);
 
 
-    } else if (outcome !== prediction && fixture.fixture.homeOdds !== "N/A") {
+    } else if (outcome !== prediction) {
+      if(fixture.fixture.homeOdds !== 0){
       fixture.fixture.profit = 0;
+      } else {
+        fixture.fixture.profit = 1
+      }
       // console.log(fixture.fixture.game);
       // console.log(`profit ${fixture.fixture.profit}`);
 

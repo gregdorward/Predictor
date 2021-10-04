@@ -1,6 +1,6 @@
 import React, { Component, Fragment } from "react";
 import { getScorePrediction } from "../logic/getScorePredictions"
-export var incrementValue = 1.8;
+export var incrementValue = 1.5;
 export var incrementValueTwo = 2.5;
 
 export var riskLevel = 10;
@@ -17,7 +17,7 @@ class Increment extends Component {
 
   IncrementItem = () => {
     if(incrementValue > 1){
-    this.setState({ incrementValue: this.state.incrementValue + 0.2 });
+    this.setState({ incrementValue: this.state.incrementValue + 0.1 });
     this.setState({ riskLevel: this.state.riskLevel - 1 });
     incrementValue = (this.state.incrementValue + 0.1).toFixed(1);
     riskLevel = this.state.riskLevel - 1;
@@ -29,7 +29,7 @@ class Increment extends Component {
   };
   DecreaseItem = () => {
     if(incrementValue > 1){
-      this.setState({ incrementValue: this.state.incrementValue - 0.2 });
+      this.setState({ incrementValue: this.state.incrementValue - 0.1 });
       this.setState({ riskLevel: this.state.riskLevel + 1 });
       incrementValue = (this.state.incrementValue - 0.1).toFixed(1);
       riskLevel = this.state.riskLevel + 1;
