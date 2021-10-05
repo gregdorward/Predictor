@@ -886,6 +886,11 @@ ul {
   padding-top: 1em;
 }
 
+.DrawTips li {
+  /* font-size: 0.8em; */
+  padding-top: 1em;
+}
+
 .LongshotPredictions lh {
   /* font-size: 0.8em; */
 }

@@ -223,6 +223,7 @@ function App() {
       <div id="bestPredictions" />
       <div id="BTTS" />
       <div id="longShots" />
+      <div id="draws" />
       <div id="homeBadge" />
       <div id="FixtureContainerHeaders"></div>
       <div id="FixtureContainer">

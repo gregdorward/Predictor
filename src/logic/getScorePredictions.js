@@ -26,6 +26,7 @@ let drawOutcomes = 0;
 let homeOutcomes = 0;
 let awayOutcomes = 0;
 
+
 export var renderPredictions;
 
 export function getPointsFromLastX(lastX) {
@@ -53,8 +54,7 @@ export function getPointsFromLastX(lastX) {
 }
 
 async function compareStat(statOne, statTwo){
-  console.log(statOne)
-  console.log(statTwo)
+
   let stat1 = parseFloat(statOne)
   let stat2 = parseFloat(statTwo)
   let result;
@@ -64,18 +64,12 @@ async function compareStat(statOne, statTwo){
   let statTwoNotZero = stat2 + 0.1
 
   if(stat1 > stat2){
-    console.log(`${stat1} bigger than ${stat2}`)
     gap = statOneNotZero / statTwoNotZero
   } else if (stat1 < stat2) {
-    console.log(`${stat1} smaller than ${stat2}`)
     gap = statTwoNotZero / statOneNotZero
   } else{
     gap = 0
   }
-
-  console.log(stat1)
-  console.log(stat2)
-  console.log(`Gap = ${gap}`)
 
   if(gap > 1.5){
     switch (true) {
@@ -478,6 +472,9 @@ export async function calculateScore(match, index, divider, id) {
     calculate = false;
   }
 
+  let formHome;
+let formAway;
+
   if (calculate) {
     for (let i = 0; i < teams.length; i++) {
       if (teams[0][index].PlayedHome <= 1 || teams[1][index].PlayedAway <= 1) {
@@ -521,20 +518,23 @@ export async function calculateScore(match, index, divider, id) {
       async function compareFormTrend(five, six, ten, lastGame){
         let text;
         let score
+        let improving;
         if(five >= 2.5){
           switch (true) {
             case five > ten:
               text = "Outstanding and improving"
               score = 9.5
+              improving = true;
               break;
               case five === ten:
                 text = "Outstanding and consistent"
                 score = 10
-
+                improving = false;
                 break;
                 case five < ten:
                   text = "Consistently outstanding"
                   score = 9
+                  improving = false;
                   break;
             default:
               break;
@@ -544,14 +544,17 @@ export async function calculateScore(match, index, divider, id) {
             case five > ten:
               text = "Very good and improving"
               score = 8.5
+              improving = true;
               break;
               case five === ten:
                 text = "Very good and consistent"
                 score = 9
+                improving = false;
                 break;
                 case five < ten:
                   text = "Very good but slightly worsening"
                   score = 8
+                  improving = false;
                   break;
             default:
               break;
@@ -561,14 +564,17 @@ export async function calculateScore(match, index, divider, id) {
             case five > ten:
               text = "Good and improving"
               score = 7.5
+              improving = true;
               break;
               case five === ten:
                 text = "Good and consistent"
                 score = 8
+                improving = false;
                 break;
                 case five < ten:
                   text = "Good but slightly worsening"
                   score = 7
+                  improving = false;
                   break;
             default:
               break;
@@ -578,14 +584,17 @@ export async function calculateScore(match, index, divider, id) {
             case five > ten:
               text = "Average and improving"
               score = 6.5
+              improving = true;
               break;
               case five === ten:
                 text = "Average and consistent"
                 score = 7
+                improving = false;
                 break;
                 case five < ten:
                   text = "Average but slightly worsening"
                   score = 6
+                  improving = false;
                   break;
             default:
               break;
@@ -595,14 +604,17 @@ export async function calculateScore(match, index, divider, id) {
             case five > ten:
               text = "Poor but improving"
               score = 5.5
+              improving = true;
               break;
               case five === ten:
                 text = "Poor and consistent"
                 score = 6
+                improving = false;
                 break;
                 case five < ten:
                   text = "Poor and slightly worsening"
                   score = 5
+                  improving = false;
                   break;
             default:
               break;
@@ -612,14 +624,17 @@ export async function calculateScore(match, index, divider, id) {
             case five > ten:
               text = "Terrible but slightly improving"
               score = 4.5
+              improving = true;
               break;
               case five === ten:
                 text = "Consistently terrible"
                 score = 5
+                improving = false;
                 break;
                 case five < ten:
                   text = "Terrible and worsening"
                   score = 4
+                  improving = false;
                   break;
             default:
               break;
@@ -630,10 +645,10 @@ export async function calculateScore(match, index, divider, id) {
           score = score - 0
         }
        
-        return score
+        return [score, improving]
       }
 
-      teams[i][index].formTrendScore = await compareFormTrend(teams[i][index].fiveGameAverage, teams[i][index].sixGameAverage, teams[i][index].tenGameAverage, teams[i][index].lastGame)
+      [teams[i][index].formTrendScore, teams[i][index].improving]= await compareFormTrend(teams[i][index].fiveGameAverage, teams[i][index].sixGameAverage, teams[i][index].tenGameAverage, teams[i][index].lastGame)
 
       // console.log(`${match.homeTeam} form score = ${teams[i][index].formTrendScore}`)
 
@@ -816,8 +831,8 @@ export async function calculateScore(match, index, divider, id) {
       awayRaw = (1 / match.awayOdds).toFixed(2);
     }
 
-    let formHome = teams[0][index];
-    let formAway = teams[1][index];
+    formHome = teams[0][index];
+    formAway = teams[1][index];
 
     [formHome.overOrUnderAttack, formHome.trueFormAttack] =
       await getOverOrUnderAchievingResult(
@@ -1073,6 +1088,8 @@ export async function calculateScore(match, index, divider, id) {
 
 
   let teamComparisonScore = await compareTeams(formHome, formAway, match.homeTeam)
+  match.teamComparisonScore = teamComparisonScore
+
 
   // console.log(`${match.homeTeam} V ${match.awayTeam} ${teamComparisonScore}`)
 
@@ -1360,12 +1377,12 @@ export async function calculateScore(match, index, divider, id) {
 
     let homeComparisonWeighting;
     let awayComparisonWeighting;
-    let scoreDiff = await diff(factorOneHome, factorOneAway)
-    let split = scoreDiff / 2
+    match.scoreDiff = await diff(factorOneHome, factorOneAway)
+    let split = match.scoreDiff / 2
     console.log(`Team comparison score: ${teamComparisonScore}`)
 
     switch (true) {
-      case teamComparisonScore  === 0 && scoreDiff >= 0:
+      case teamComparisonScore  === 0 && match.scoreDiff >= 0:
           homeComparisonWeighting = -split
           awayComparisonWeighting = split
         break;
@@ -1452,13 +1469,6 @@ export async function calculateScore(match, index, divider, id) {
 
 
     let rawFinalAwayGoals = experimentalAwayGoals
-
-    console.log(match.game)
-    console.log(`formHome.overOrUnderAttack = ${formHome.overOrUnderAttack}`)
-    console.log(`formAway.overOrUnderAttack = ${formAway.overOrUnderAttack}`)
-
-    console.log(`formHome.overOrUnderDefence = ${formHome.overOrUnderDefence}`)
-    console.log(`formAway.overOrUnderDefence = ${formAway.overOrUnderDefence}`)
 
 
     switch (true) {
@@ -1695,7 +1705,7 @@ switch (true) {
       match.prediction = "homeWin";
       homePredictions = homePredictions + 1
       console.log(`homePredictions: ${homePredictions}`)
-      if (formHome.overUnderAchievingSum < -0.5) {
+      if (formHome.overUnderAchievingSum < -1.9) {
         match.includeInMultis = false;
       } else {
         match.includeInMultis = true;
@@ -1704,7 +1714,7 @@ switch (true) {
       match.prediction = "awayWin";
       awayPredictions = awayPredictions + 1
       console.log(`awayPredictions: ${awayPredictions}`)
-      if (formAway.overUnderAchievingSum < -0.5) {
+      if (formAway.overUnderAchievingSum < 1.9) {
         match.includeInMultis = false;
       } else {
         match.includeInMultis = true;
@@ -1713,6 +1723,7 @@ switch (true) {
       match.prediction = "draw";
       drawPredictions = drawPredictions + 1
       console.log(`drawPredictions: ${drawPredictions}`)
+      console.log(match)
     }
 
     switch (true) {
@@ -1759,6 +1770,11 @@ switch (true) {
         match.doubleChancePredictionOutcome = "Lost";
       }
     }
+
+    match.formHome = formHome
+    match.formAway = formAway
+
+
 
     let total = parseInt(finalHomeGoals + finalAwayGoals);
     totalGoals = totalGoals + total;
@@ -1832,6 +1848,7 @@ async function getSuccessMeasure(fixtures) {
 
 var tips = [];
 var longShotTips = [];
+var drawTips = [];
 var bttsArray = [];
 var accumulatedOdds = 1;
 let predictions = [];
@@ -1842,6 +1859,7 @@ export async function getScorePrediction(day, mocked) {
   tips = [];
   bttsArray = [];
   longShotTips = [];
+  drawTips = [];
   accumulatedOdds = 1;
 
   let index = 2;
@@ -1892,6 +1910,7 @@ export async function getScorePrediction(day, mocked) {
 
       let predictionObject;
       let longShotPredictionObject;
+      let drawPredictionObject;
 
       if (
         match.unroundedGoalsA - match.unroundedGoalsB > incrementValue &&
@@ -1912,12 +1931,17 @@ export async function getScorePrediction(day, mocked) {
           predictionObject = {
             team: `${match.homeTeam} to win`,
             odds: match.fractionHome,
+            rawOdds: match.homeOdds,
+            comparisonScore: Math.abs(match.teamComparisonScore),
+            formTrend: match.formHome.improving, 
             outcome: match.predictionOutcome,
             goalDifferential: parseFloat(
               await diff(match.unroundedGoalsA, match.unroundedGoalsB)
-            ),
+            ) + match.formHome.overUnderAchievingSum,
           };
-          tips.push(predictionObject);
+          if(!(predictionObject.rawOdds <= 1.4 && predictionObject.comparisonScore < 7)){
+            tips.push(predictionObject);
+          }       
         }
       } else if (
         (match.unroundedGoalsB - 1) - match.unroundedGoalsA > incrementValue &&
@@ -1937,18 +1961,36 @@ export async function getScorePrediction(day, mocked) {
 
           predictionObject = {
             team: `${match.awayTeam} to win`,
+            rawOdds: match.awayOdds,
             odds: match.fractionAway,
+            comparisonScore: Math.abs(match.teamComparisonScore),
+            formTrend: match.formAway.improving,
             outcome: match.predictionOutcome,
             goalDifferential: parseFloat(
               await diff((match.unroundedGoalsB - 1), match.unroundedGoalsA)
-            ),
+            ) + match.formAway.overUnderAchievingSum,
           };
           // console.log("predictionObjectAWAY");
           // console.log(predictionObject);
           // console.log(match);
-          tips.push(predictionObject);
+          if(!(predictionObject.rawOdds <= 1.4 && predictionObject.comparisonScore < 7)){
+            tips.push(predictionObject);
+          }     
         }
       }
+
+
+      tips.sort(
+        function(a, b) {          
+           if (a.comparisonScore === b.comparisonScore) {
+              // Price is only important when cities are the same
+              return b.goalDifferential - a.goalDifferential;
+           }
+           return b.comparisonScore > a.comparisonScore ? 1 : -1;
+        });
+
+
+      // tips.sort((a, b) => b.comparisonScore - a.comparisonScore);
 
       if (
         match.btts === true &&
@@ -2000,6 +2042,28 @@ export async function getScorePrediction(day, mocked) {
         return b.goalDifferential - a.goalDifferential;
       });
 
+
+      if (
+        match.prediction === "draw" && match.homeOdds > 1.8 && match.teamComparisonScore < 4 && match.teamComparisonScore > -4 && (match.formHome.XGdifferential / match.formAway.XGdifferential) < 2 && (match.formHome.XGdifferential / match.formAway.XGdifferential) > 0.5) {
+          drawPredictionObject = {
+          team: match.game,
+          odds: match.drawOdds,
+          outcome: match.predictionOutcome,
+          goalDifferential: Math.abs(parseFloat(
+            await diff(match.unroundedGoalsA, match.unroundedGoalsB))
+          ),
+        };
+        if (match.prediction === "draw" && drawPredictionObject.goalDifferential < 0.5) {
+          drawTips.push(drawPredictionObject);
+          console.log(drawPredictionObject.goalDifferential)
+        }
+      }
+
+      drawTips.sort(function (a, b) {
+        return a.goalDifferential - b.goalDifferential;
+      });
+
+
       if (mock !== true) {
         ReactDOM.render(
           <Fixture
@@ -2027,61 +2091,146 @@ export async function getScorePrediction(day, mocked) {
   );
   await getSuccessMeasure(matches);
 
-  tips.sort((a, b) => b.goalDifferential - a.goalDifferential);
   await renderTips();
 }
 
 async function renderTips() {
-  ReactDOM.render(
-    <div className="PredictionContainer">
-      <Fragment>
-        <Increment />
-        <Collapsable
-          buttonText={"Build a multi"}
-          className={"PredictionsOfTheDay"}
-          text={
-            <ul className="BestPredictions">
-              <div className="BestPredictionsExplainer">
-                Increase or decrease the size of the multi using the buttons
-                below. Predictions are ordered by confidence in the outcome.
-              </div>
-              {tips.map((tip) => (
-                <li className={tip.outcome} key={tip.team}>
-                  {tip.team}: {tip.odds}
-                </li>
-              ))}
-              <div className="AccumulatedOdds">{`Accumulator odds ~ : ${
-                Math.round(accumulatedOdds) - 1
-              }/1`}</div>
-            </ul>
-          }
-        />
-      </Fragment>
-    </div>,
-    document.getElementById("bestPredictions")
-  );
 
-  ReactDOM.render(
-    <div>
-      <Fragment>
-        <Collapsable
-          buttonText={"Double chance tips"}
-          text={
-            <ul className="LongshotPredictions">
-              <lh>Double chance (Win or Draw - decimal odds only)</lh>
-              {longShotTips.map((tip) => (
-                <li className={`${tip.outcome}1`} key={tip.team}>
-                  {tip.team} to win or draw: {tip.odds}
-                </li>
-              ))}
-            </ul>
-          }
-        />
-      </Fragment>
-    </div>,
-    document.getElementById("longShots")
-  );
+  if(tips.length > 0){
+    ReactDOM.render(
+      <div className="PredictionContainer">
+        <Fragment>
+          <Increment />
+          <Collapsable
+            buttonText={"Build a multi"}
+            className={"PredictionsOfTheDay"}
+            text={
+              <ul className="BestPredictions">
+                <div className="BestPredictionsExplainer">
+                  Increase or decrease the size of the multi using the buttons
+                  below. Predictions are ordered by confidence in the outcome.
+                </div>
+                {tips.map((tip) => (
+                  <li className={tip.outcome} key={tip.team}>
+                    {tip.team}: {tip.odds}
+                  </li>
+                ))}
+                <div className="AccumulatedOdds">{`Accumulator odds ~ : ${
+                  Math.round(accumulatedOdds) - 1
+                }/1`}</div>
+              </ul>
+            }
+          />
+        </Fragment>
+      </div>,
+      document.getElementById("bestPredictions")
+    );
+  } else {
+    ReactDOM.render(
+      <div className="PredictionContainer">
+        <Fragment>
+          <Increment />
+          <Collapsable
+            buttonText={"Build a multi"}
+            className={"PredictionsOfTheDay"}
+            text={
+              <ul className="BestPredictions">
+                <div className="BestPredictionsExplainer">
+                  No games fit the criteria (try tapping the + button)
+                </div>
+                <div className="AccumulatedOdds">{`Accumulator odds ~ : ${
+                  Math.round(accumulatedOdds) - 1
+                }/1`}</div>
+              </ul>
+            }
+          />
+        </Fragment>
+      </div>,
+      document.getElementById("bestPredictions")
+    );
+  }
 
+
+  if(longShotTips.length > 0){
+    ReactDOM.render(
+      <div>
+        <Fragment>
+          <Collapsable
+            buttonText={"Double chance tips"}
+            text={
+              <ul className="LongshotPredictions">
+                <lh>Double chance (Win or Draw - decimal odds only)</lh>
+                {longShotTips.map((tip) => (
+                  <li className={`${tip.outcome}1`} key={tip.team}>
+                    {tip.team} to win or draw: {tip.odds}
+                  </li>
+                ))}
+              </ul>
+            }
+          />
+        </Fragment>
+      </div>,
+      document.getElementById("longShots")
+    );
+  } else {
+    ReactDOM.render(
+      <div>
+        <Fragment>
+          <Collapsable
+            buttonText={"Double chance tips"}
+            text={
+              <ul className="LongshotPredictions">
+                <lh>No games fit the criteria</lh>
+              </ul>
+            }
+          />
+        </Fragment>
+      </div>,
+      document.getElementById("longShots")
+    );
+  }
+
+
+  if(drawTips.length > 0){
+    ReactDOM.render(
+      <div>
+        <Fragment>
+          <Collapsable
+            buttonText={"Draw tips"}
+            text={
+              <ul className="DrawTips">
+                <lh>Draw predictions</lh>
+                {drawTips.map((tip) => (
+                  <li className={`${tip.outcome}1`} key={tip.team}>
+                    {tip.team}
+                  </li>
+                ))}
+              </ul>
+            }
+          />
+        </Fragment>
+      </div>,
+      document.getElementById("draws")
+    );
+  } else {
+    ReactDOM.render(
+      <div>
+        <Fragment>
+          <Collapsable
+            buttonText={"Draw tips"}
+            text={
+              <ul className="DrawTips">
+                <lh>No games fit the criteria</lh>
+              </ul>
+            }
+          />
+        </Fragment>
+      </div>,
+      document.getElementById("draws")
+    );
+  }
+
+if(bttsArray.length > 0){
   ReactDOM.render(
     <div>
       <Fragment>
@@ -2103,4 +2252,23 @@ async function renderTips() {
     </div>,
     document.getElementById("BTTS")
   );
+} else {
+  ReactDOM.render(
+    <div>
+      <Fragment>
+        <Collapsable
+          className={"BTTSGames"}
+          buttonText={"BTTS games"}
+          text={
+            <ul className="BTTSGames">
+              <lh>No games fit the criteria</lh>
+            </ul>
+          }
+        />
+      </Fragment>
+    </div>,
+    document.getElementById("BTTS")
+  );
 }
+}
+
