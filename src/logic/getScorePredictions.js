@@ -1291,9 +1291,9 @@ let formAway;
     const awayGoalDiff = formAway.ScoredAverageShortAndLongTerm - formAway.conceededAverageShortAndLongTerm;
 
     formHome.goalsDifferential =
-      parseFloat(await diff(homeGoalDiff, awayGoalDiff)) / 10;
+      parseFloat(await diff(homeGoalDiff, awayGoalDiff)) / 1;
     formAway.goalsDifferential =
-      parseFloat(await diff(awayGoalDiff, homeGoalDiff)) / 10;
+      parseFloat(await diff(awayGoalDiff, homeGoalDiff)) / 1;
 
     // console.log(
     //   `${match.game} home goalsDifferential = ${formHome.goalsDifferential} away goalsDifferential = ${formAway.goalsDifferential}`
@@ -2042,9 +2042,12 @@ export async function getScorePrediction(day, mocked) {
         return b.goalDifferential - a.goalDifferential;
       });
 
+      let formTrendScoreComparison = match.formAway.formTrendScore - match.formHome.formTrendScore
+
 
       if (
-        match.prediction === "draw" && match.homeOdds > 1.8 && match.teamComparisonScore < 4 && match.teamComparisonScore > -4 && (match.formHome.XGdifferential / match.formAway.XGdifferential) < 2 && (match.formHome.XGdifferential / match.formAway.XGdifferential) > 0.5) {
+        match.prediction === "draw" && match.homeOdds > 1.8 && match.teamComparisonScore < 5 && match.teamComparisonScore > -5 && formTrendScoreComparison > 0 && formTrendScoreComparison < 3)
+          {
           drawPredictionObject = {
           team: match.game,
           odds: match.drawOdds,
@@ -2199,7 +2202,7 @@ async function renderTips() {
             buttonText={"Draw tips"}
             text={
               <ul className="DrawTips">
-                <lh>Draw predictions</lh>
+                <lh>Best draw predictions</lh>
                 {drawTips.map((tip) => (
                   <li className={`${tip.outcome}1`} key={tip.team}>
                     {tip.team}

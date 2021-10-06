@@ -69,7 +69,24 @@ let [
 ] = d.toLocaleDateString("en-US").split("/");
 
 
+var historicDate = new Date();
+
+// set to Monday of this week
+historicDate.setDate(historicDate.getDate() - (historicDate.getDay() + 6) % 7);
+
+// set to Saturday prior to last
+historicDate.setDate(historicDate.getDate() - 9);
+
+
+let [
+  historicDay,
+  historicMonth,
+  historicYear,
+] = historicDate.toLocaleDateString("en-US").split("/");
+
+
 export const saturday = `${process.env.REACT_APP_EXPRESS_SERVER}matches/${saturdayYear}-${saturdayDay}-${saturdayMonth}`;
+export const historic = `${process.env.REACT_APP_EXPRESS_SERVER}matches/${historicYear}-${historicDay}-${historicMonth}`;
 export const yesterday = `${process.env.REACT_APP_EXPRESS_SERVER}matches/${yesterdayYear}-${yesterdayDay}-${yesterdayMonth}`;
 export const today = `${process.env.REACT_APP_EXPRESS_SERVER}matches/${year}-${currentDay}-${month}`;
 export const tomorrow = `${process.env.REACT_APP_EXPRESS_SERVER}matches/${tomorrowYear}-${tomorrowDay}-${tomorrowMonth}`;
@@ -192,6 +209,9 @@ export async function generateFixtures(day, radioState, selectedOdds) {
     case "lastSaturday":
       url = saturday
       break;
+    case "historic":
+      url = historic
+      break;
     case "yesterdaysFixtures":
       url = yesterday;
       break;
@@ -215,6 +235,7 @@ export async function generateFixtures(day, radioState, selectedOdds) {
   let formArray;
   var isFormStored;
   var isStoredLocally;
+  console.log(day)
   let storedForm = await fetch(
     `${process.env.REACT_APP_EXPRESS_SERVER}form${day}`,
     {

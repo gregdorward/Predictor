@@ -4,7 +4,7 @@ import Header from "./components/Header";
 import Radio from "./components/radio";
 import { Button } from "./components/Button";
 import OddsRadio from "./components/OddsRadio";
-import {selectedOdds} from "./components/OddsRadio"
+import { selectedOdds } from "./components/OddsRadio";
 
 import {
   today,
@@ -29,7 +29,7 @@ export var orderedLeagues = [];
   let leagueList;
 
   leagueList = await fetch(`${process.env.REACT_APP_EXPRESS_SERVER}leagueList`);
-  console.log(leagueList)
+  console.log(leagueList);
 
   // ReactDOM.render(
   //   <div className="LoadingText">
@@ -43,7 +43,7 @@ export var orderedLeagues = [];
   await leagueList.json().then((leagues) => {
     leagueArray = Array.from(leagues.data);
   });
-  console.log(leagueArray)
+  console.log(leagueArray);
 
   for (let i = 0; i < leagueArray.length; i++) {
     const league = leagueArray[i];
@@ -51,10 +51,10 @@ export var orderedLeagues = [];
 
     for (let x = 0; x < league.season.length; x++) {
       const element = league.season[x];
-      console.log(element)
+      console.log(element);
 
       if (element.year === 20212022 || element.year === 2021) {
-        if(element.id !== 5784 && element.id !== 6639){
+        if (element.id !== 5784 && element.id !== 6639) {
           availableLeagues.push({ name: name, element });
         }
       }
@@ -71,7 +71,7 @@ export var orderedLeagues = [];
           return -1;
         }
       });
-      console.log(array)
+      console.log(array);
       return array;
     }
 
@@ -110,7 +110,7 @@ export var orderedLeagues = [];
       5506, //S Korea 21
       6038, //Mexico prem 21/22`
 
-      6083, //National league North and South 21/22 
+      6083, //National league North and South 21/22
     ];
 
     orderedLeagues = await mapOrder(availableLeagues, leagueOrder, "id");
@@ -145,42 +145,71 @@ export var orderedLeagues = [];
   //   document.getElementById("RadioText")
   // );
 
-
-
-
-
   ReactDOM.render(
     <div className="FixtureButtons">
-          <Button
-        text={"Last Saturday's predictions"}
-        onClickEvent={async () =>
-          fixtureList.push(
-            await generateFixtures("lastSaturday", selectedOption, selectedOdds)
-          )
-        }
-      />
-      <div className="DisclaimerText">Current calculations against historic data</div>
+      <div className="historicResults">
+        <Button
+          text={"Last Saturday's predictions"}
+          className="HistoricFixturesButton"
+          onClickEvent={async () =>
+            fixtureList.push(
+              await generateFixtures(
+                "lastSaturday",
+                selectedOption,
+                selectedOdds
+              )
+            )
+          }
+        />
+        <Button
+          text={"More historic predictions"}
+          className="HistoricFixturesButtonRight"
+          onClickEvent={async () =>
+            fixtureList.push(
+              await generateFixtures("historic", selectedOption, selectedOdds)
+            )
+          }
+        />
+      </div>
+      <div className="DisclaimerText">
+        Current calculations against historic data
+      </div>
       <Button
         text={"Yesterday's prediction outcomes"}
+        className="FixturesButton"
         onClickEvent={async () =>
           fixtureList.push(
-            await generateFixtures("yesterdaysFixtures", selectedOption, selectedOdds)
+            await generateFixtures(
+              "yesterdaysFixtures",
+              selectedOption,
+              selectedOdds
+            )
           )
         }
       />
       <Button
         text={"Today's fixtures"}
+        className="FixturesButton"
         onClickEvent={async () =>
           fixtureList.push(
-            await generateFixtures("todaysFixtures", selectedOption, selectedOdds)
+            await generateFixtures(
+              "todaysFixtures",
+              selectedOption,
+              selectedOdds
+            )
           )
         }
       />
       <Button
         text={"Tomorrow's fixtures"}
+        className="FixturesButton"
         onClickEvent={async () =>
           fixtureList.push(
-            await generateFixtures("tomorrowsFixtures", selectedOption, selectedOdds)
+            await generateFixtures(
+              "tomorrowsFixtures",
+              selectedOption,
+              selectedOdds
+            )
           )
         }
       />
@@ -216,7 +245,7 @@ function App() {
       <div id="Day" />
       <div id="Checkbox" />
       <div id="Buttons">
-      <ThreeDots className="MainLoading"/>
+        <ThreeDots className="MainLoading" />
         <div>Loading all fixture and form data...</div>
       </div>
       <div id="successMeasure" />
@@ -229,7 +258,8 @@ function App() {
       <div id="FixtureContainer">
         <div>
           <div className="WelcomeText">
-            Global fixtures and predictions from 30 league and cup competitions, including
+            Global fixtures and predictions from 30 league and cup competitions,
+            including
           </div>
           <ul className="AllLeagues">
             <li className="League">Premier League</li>

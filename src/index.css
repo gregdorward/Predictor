@@ -32,7 +32,54 @@
 
     transition: all 0.2s;
   }
+
+  button.HistoricFixturesButton {
+    display: flex;
+    padding: 0.5vw;
+    
+    /* padding-top: 8px;
+    padding-bottom: 8px; */
+    margin-top: 0.5vw;
+    border: 0.16em solid rgba(255, 255, 255, 0);
+    border-radius: 2em;
+    box-sizing: border-box;
+    text-decoration: none;
+    font-family: 'Open Sans', sans-serif;
+    flex-basis: 20%;
+    font-size: 0.9em;
+    font-weight: 500;
+    color: white;
+   background-color: #1a1919;
+    /* text-shadow: 0 0.04em 0.04em rgba(0, 0, 0, 0.35); */
+    text-align: center;
+
+    transition: all 0.2s;
+  }
 }
+
+.teamComparisonScore {
+  display: inline-block;
+  padding: 0.5vw;
+  /* padding-top: 8px;
+  padding-bottom: 8px; */
+  margin: 0.5vw;
+  border: 0.16em solid rgba(255, 255, 255, 0);
+  border-radius: 2em;
+  box-sizing: border-box;
+  text-decoration: none;
+  font-family: 'Open Sans', sans-serif;
+  flex-basis: 20%;
+  font-size: 0.9em;
+  font-weight: 500;
+  color: white;
+ background-color: grey;
+  /* text-shadow: 0 0.04em 0.04em rgba(0, 0, 0, 0.35); */
+  text-align: center;
+
+  transition: all 0.2s;
+}
+
+
 
 @media (max-width: 1800px) {
   body > #root {
@@ -58,6 +105,29 @@
     text-decoration: none;
     font-family: 'Open Sans', sans-serif;
     flex-basis: 20%;
+    font-size: 0.8em;
+    font-weight: 500;
+    color: white;
+   background-color: #1a1919;
+    /* text-shadow: 0 0.04em 0.04em rgba(0, 0, 0, 0.35); */
+    text-align: center;
+
+    transition: all 0.2s;
+  }
+
+  button.HistoricFixturesButton {
+    display: flex;
+    padding: 0.7vw;
+    
+    /* padding-top: 8px;
+    padding-bottom: 8px; */
+    margin-top: 0.7vw;
+    border: 0.16em solid rgba(255, 255, 255, 0);
+    border-radius: 2em;
+    box-sizing: border-box;
+    text-decoration: none;
+    font-family: 'Open Sans', sans-serif;
+    flex-basis: 10%;
     font-size: 0.8em;
     font-weight: 500;
     color: white;
@@ -102,6 +172,30 @@
 
     transition: all 0.2s;
   }
+
+  button.HistoricFixturesButton {
+    display: flex;
+    align-self: flex-start;
+    padding: 1.4vw;
+    
+    /* padding-top: 8px;
+    padding-bottom: 8px; */
+    margin-top: 1.4vw;
+    border: 0.16em solid rgba(255, 255, 255, 0);
+    border-radius: 2em;
+    box-sizing: border-box;
+    text-decoration: none;
+    font-family: 'Open Sans', sans-serif;
+    flex-basis: 20%;
+    font-size: 1em;
+    font-weight: 500;
+    color: white;
+   background-color: #1a1919;
+    /* text-shadow: 0 0.04em 0.04em rgba(0, 0, 0, 0.35); */
+    text-align: center;
+
+    transition: all 0.2s;
+  }
 }
 
 @media (max-width: 800px) {
@@ -116,7 +210,7 @@
     align-content: center;
   }
 
-  button {
+  button  {
     display: inline-block;
     padding: 1.7vw;
     /* padding-top: 8px;
@@ -137,7 +231,29 @@
 
     transition: all 0.2s;
     box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.2), 0 3px 10px 0 rgba(0, 0, 0, 0.19);
+  }
+  button.HistoricFixturesButton {
+    display: flex;
+    padding: 1.7vw;
+    
+    /* padding-top: 8px;
+    padding-bottom: 8px; */
+    margin-top: 1.7vw;
+    border: 0.16em solid rgba(255, 255, 255, 0);
+    border-radius: 2em;
+    box-sizing: border-box;
+    text-decoration: none;
+    font-family: 'Open Sans', sans-serif;
+    flex-basis: 20%;
+    font-size: 1em;
+    font-weight: 500;
+    color: white;
+   background-color: #1a1919;
+    /* text-shadow: 0 0.04em 0.04em rgba(0, 0, 0, 0.35); */
+    text-align: center;
 
+    transition: all 0.2s;
+    box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.2), 0 3px 10px 0 rgba(0, 0, 0, 0.19);
   }
 }
 
@@ -174,6 +290,29 @@
 
     transition: all 0.2s;
   }
+
+  button.HistoricFixturesButton {
+    display: flex;
+    padding: 2.2vw;
+    
+    /* padding-top: 8px;
+    padding-bottom: 8px; */
+    margin-top: 2.2vw;
+    border: 0.16em solid rgba(255, 255, 255, 0);
+    border-radius: 2em;
+    box-sizing: border-box;
+    text-decoration: none;
+    font-family: 'Open Sans', sans-serif;
+    flex-basis: 20%;
+    font-size: 1em;
+    font-weight: 500;
+    color: white;
+   background-color: #1a1919;
+    /* text-shadow: 0 0.04em 0.04em rgba(0, 0, 0, 0.35); */
+    text-align: center;
+
+    transition: all 0.2s;
+  }
 }
 
 @media (max-width: 460px) {
@@ -194,6 +333,29 @@
     /* padding-top: 8px;
     padding-bottom: 8px; */
     margin: 2.5vw;
+    border: 0.16em solid rgba(255, 255, 255, 0);
+    border-radius: 2em;
+    box-sizing: border-box;
+    text-decoration: none;
+    font-family: 'Open Sans', sans-serif;
+    flex-basis: 20%;
+    font-size: 1em;
+    font-weight: 500;
+    color: white;
+   background-color: #1a1919;
+    /* text-shadow: 0 0.04em 0.04em rgba(0, 0, 0, 0.35); */
+    text-align: center;
+
+    transition: all 0.2s;
+  }
+
+  button.HistoricFixturesButton {
+    display: flex;
+    padding: 2.5vw;
+    
+    /* padding-top: 8px;
+    padding-bottom: 8px; */
+    margin-top: 2.5vw;
     border: 0.16em solid rgba(255, 255, 255, 0);
     border-radius: 2em;
     box-sizing: border-box;
@@ -257,6 +419,14 @@ h3 {
   padding: 5px;
   margin: 0%
 }
+
+.historicResults{
+  display: flex;
+  height: 5em;
+  /* font-size: 1em; */
+  justify-content: center;
+  align-items: center;
+}  
 
 .SocialLink {
   font-size: 1.2em;
