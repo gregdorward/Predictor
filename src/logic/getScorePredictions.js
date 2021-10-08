@@ -25,6 +25,8 @@ let awayPredictions = 0;
 let drawOutcomes = 0;
 let homeOutcomes = 0;
 let awayOutcomes = 0;
+let winAmount = 0
+let lossAmount = 0
 
 
 export var renderPredictions;
@@ -1752,11 +1754,13 @@ switch (true) {
     if (match.status === "complete") {
       if (match.prediction === match.outcome) {
         match.predictionOutcome = "Won";
+        winAmount = winAmount + 1
         if(match.outcome === "draw"){
           console.log("DRAW WON")
         }
       } else if (match.prediction !== match.outcome) {
         match.predictionOutcome = "Lost";
+        lossAmount = lossAmount + 1
         if(match.outcome === "draw"){
           console.log("DRAW LOST")
         }
@@ -1817,6 +1821,7 @@ async function getSuccessMeasure(fixtures) {
   let sumLoss = 0;
   let investment = 0;
   let netProfit;
+
 
   for (let i = 0; i < fixtures.length; i++) {
     if (fixtures[i].status === "complete") {

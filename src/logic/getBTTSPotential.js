@@ -34,14 +34,14 @@ if(match.bttsFraction !== "N/A" && match.status !== "suspended" && match.status 
   if (
     match.combinedBTTS >= 60 &&
     // match.btts_potential >= 60 &&
-    awayPPG > 1 &&
+    awayPPG > 1.5 &&
     // homePPG > 1 &&
     // homeXG >= 1.1 && 
     // awayXG >= 1.1 &&
     // homeXGAgainst > 1.1 &&
     // awayXGAgainst > 1.1 &&
     homeG >= 1 &&
-    awayG >= 2
+    awayG >= 1
   ) {
     match.btts = true;
     match.bttsChosen = true;

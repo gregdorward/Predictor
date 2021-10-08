@@ -38,7 +38,6 @@ let [
 
 let yesterdaysDate = new Date();
 yesterdaysDate.setDate(new Date().getDate() - 1);
-console.log(yesterdaysDate)
 let [
   yesterdayDay,
   yesterdayMonth,
@@ -235,7 +234,6 @@ export async function generateFixtures(day, radioState, selectedOdds) {
   let formArray;
   var isFormStored;
   var isStoredLocally;
-  console.log(day)
   let storedForm = await fetch(
     `${process.env.REACT_APP_EXPRESS_SERVER}form${day}`,
     {
@@ -277,23 +275,18 @@ export async function generateFixtures(day, radioState, selectedOdds) {
   );
 
   var leaguePositions = [];
-  console.log(league.status)
   if (league.status === 200) {
     await league.json().then((leagues) => {
       leagueArray = Array.from(leagues.leagueArray);
-      console.log(leagueArray)
-
     });
     //could possibly get league positions from here
   } else {
     for (let i = 0; i < orderedLeagues.length; i++) {
-      console.log(orderedLeagues[i].element.id)
       league = await fetch(
         `${process.env.REACT_APP_EXPRESS_SERVER}tables/${orderedLeagues[i].element.id}/${currentDay}${month}${year}`
       );
       // eslint-disable-next-line no-loop-func
       await league.json().then((table) => {
-        console.log(table)
         leagueArray.push(table);
       });
 
@@ -492,7 +485,6 @@ export async function generateFixtures(day, radioState, selectedOdds) {
         //   lastFiveFormAway = "N/A"
         // }
 
-        console.log(form[0].data[0].stats)
         allForm.push({
           id: match.id,
           home: {
@@ -879,7 +871,6 @@ export async function generateFixtures(day, radioState, selectedOdds) {
         });
       }
 
-      console.log(allForm)
       match.homeBadge = fixture.home_image;
       match.awayBadge = fixture.away_image;
 

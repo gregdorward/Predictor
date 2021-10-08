@@ -24,7 +24,7 @@
     font-family: 'Open Sans', sans-serif;
     flex-basis: 20%;
     font-size: 0.9em;
-    font-weight: 500;
+    font-weight: 600;
     color: white;
    background-color: #1a1919;
     /* text-shadow: 0 0.04em 0.04em rgba(0, 0, 0, 0.35); */
@@ -47,7 +47,7 @@
     font-family: 'Open Sans', sans-serif;
     flex-basis: 20%;
     font-size: 0.9em;
-    font-weight: 500;
+    font-weight: 600;
     color: white;
    background-color: #1a1919;
     /* text-shadow: 0 0.04em 0.04em rgba(0, 0, 0, 0.35); */
@@ -106,7 +106,7 @@
     font-family: 'Open Sans', sans-serif;
     flex-basis: 20%;
     font-size: 0.8em;
-    font-weight: 500;
+    font-weight: 600;
     color: white;
    background-color: #1a1919;
     /* text-shadow: 0 0.04em 0.04em rgba(0, 0, 0, 0.35); */
@@ -129,7 +129,7 @@
     font-family: 'Open Sans', sans-serif;
     flex-basis: 10%;
     font-size: 0.8em;
-    font-weight: 500;
+    font-weight: 600;
     color: white;
    background-color: #1a1919;
     /* text-shadow: 0 0.04em 0.04em rgba(0, 0, 0, 0.35); */
@@ -164,7 +164,7 @@
     font-family: 'Open Sans', sans-serif;
     flex-basis: 20%;
     font-size: 1em;
-    font-weight: 500;
+    font-weight: 600;
     color: white;
    background-color: #1a1919;
     /* text-shadow: 0 0.04em 0.04em rgba(0, 0, 0, 0.35); */
@@ -188,7 +188,7 @@
     font-family: 'Open Sans', sans-serif;
     flex-basis: 20%;
     font-size: 1em;
-    font-weight: 500;
+    font-weight: 600;
     color: white;
    background-color: #1a1919;
     /* text-shadow: 0 0.04em 0.04em rgba(0, 0, 0, 0.35); */
@@ -223,7 +223,7 @@
     font-family: 'Open Sans', sans-serif;
     flex-basis: 20%;
     font-size: 1em;
-    font-weight: 500;
+    font-weight: 600;
     color: white;
    background-color: #1a1919;
     /* text-shadow: 0 0.04em 0.04em rgba(0, 0, 0, 0.35); */
@@ -246,7 +246,7 @@
     font-family: 'Open Sans', sans-serif;
     flex-basis: 20%;
     font-size: 1em;
-    font-weight: 500;
+    font-weight: 600;
     color: white;
    background-color: #1a1919;
     /* text-shadow: 0 0.04em 0.04em rgba(0, 0, 0, 0.35); */
@@ -282,7 +282,7 @@
     font-family: 'Open Sans', sans-serif;
     flex-basis: 20%;
     font-size: 1em;
-    font-weight: 500;
+    font-weight: 600;
     color: white;
    background-color: #1a1919;
     /* text-shadow: 0 0.04em 0.04em rgba(0, 0, 0, 0.35); */
@@ -305,7 +305,7 @@
     font-family: 'Open Sans', sans-serif;
     flex-basis: 20%;
     font-size: 1em;
-    font-weight: 500;
+    font-weight: 600;
     color: white;
    background-color: #1a1919;
     /* text-shadow: 0 0.04em 0.04em rgba(0, 0, 0, 0.35); */
@@ -340,7 +340,7 @@
     font-family: 'Open Sans', sans-serif;
     flex-basis: 20%;
     font-size: 1em;
-    font-weight: 500;
+    font-weight: 600;
     color: white;
    background-color: #1a1919;
     /* text-shadow: 0 0.04em 0.04em rgba(0, 0, 0, 0.35); */
@@ -363,7 +363,7 @@
     font-family: 'Open Sans', sans-serif;
     flex-basis: 20%;
     font-size: 1em;
-    font-weight: 500;
+    font-weight: 600;
     color: white;
    background-color: #1a1919;
     /* text-shadow: 0 0.04em 0.04em rgba(0, 0, 0, 0.35); */
@@ -509,7 +509,7 @@ p {
   margin: 3em;
   margin-top: 2em;
   margin-bottom: 2em;
-  font-size: 1em;
+  font-size: 1.1em;
   line-height: 2em;
   display: flex;
   flex-direction: column;
@@ -960,7 +960,8 @@ li.FormHeader{
 
 .DecrementButton {
   order: 2;
-  font-weight: 600;
+  font-weight: 700;
+  font-size: 1.1em;
   align-self: center;
   flex-basis: 1em;
   margin-right: 20px;
@@ -968,7 +969,8 @@ li.FormHeader{
 
 .IncrementButton {
   order: 0;
-  font-weight: 600;
+  font-weight: 700;
+  font-size: 1.1em;
   align-self: center;
   flex-basis: 1em;
   margin-left: 20px;
@@ -988,7 +990,7 @@ li.FormHeader{
   box-sizing: border-box;
   text-decoration: none;
   font-family: 'Open Sans', sans-serif;
-  font-size: 0.7em;
+  font-size: 0.8em;
   font-weight: 500;
   color: white;
  background-color: #1a1919;
@@ -1017,9 +1019,14 @@ lh {
   padding-top: 0.5em;
 }
 
+.BTTSGames lh {
+  /* font-size: 1em; */
+  font-size: 1.1em;
+}
+
 .BTTSGames li {
   /* font-size: 1em; */
-  padding-top: 0.5em;
+  padding-top: 1em;
 }
 
 .SubmitButton {
@@ -1056,13 +1063,17 @@ ul {
   padding-top: 1em;
 }
 
+.DrawTips lh {
+  font-size: 1.1em;
+}
+
 .DrawTips li {
   /* font-size: 0.8em; */
   padding-top: 1em;
 }
 
 .LongshotPredictions lh {
-  /* font-size: 0.8em; */
+  font-size: 1.1em;
 }
 
 .Won {
