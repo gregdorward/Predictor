@@ -224,6 +224,8 @@ export async function generateFixtures(day, radioState, selectedOdds) {
       break;
   }
 
+  console.log(day)
+
   fixtureResponse = await fetch(url);
 
   await fixtureResponse.json().then((fixtures) => {

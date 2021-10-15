@@ -218,7 +218,7 @@ const List = ({ fixtures }) => (
     </Fragment>
     <div id="Headers"></div>
     <p>
-      <a classId="DonationLink" href="#bitcoin" style={{fontSize: "1.2em", textDecoration: "none", color: "black", padding: "0.4em"}}>Donate &#8595;</a>
+      <a className="DonationLink" href="#bitcoin" style={{fontSize: "1.2em", textDecoration: "none", color: "black", padding: "0.4em"}}>Donate &#8595;</a>
     </p>
     <ul className="FixtureList" id="FixtureList">
       {fixtures.map((fixture, i) => (
