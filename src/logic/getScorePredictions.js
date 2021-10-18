@@ -504,10 +504,16 @@ let formAway;
         last3
       );
 
+      let last2 = [teams[i][index].lastGame, teams[i][index].previousToLastGame]
+      teams[i][index].last2Points = getPointsFromLastX(
+        last2
+      );
+
       async function getPointAverage(pointTotal, games){
         return pointTotal / games
       }
 
+      teams[i][index].twoGameAverage = await getPointAverage(teams[i][index].last2Points, 2)
       teams[i][index].threeGameAverage = await getPointAverage(teams[i][index].last3Points, 3)
       teams[i][index].fiveGameAverage = await getPointAverage(teams[i][index].last5Points, 5)
       teams[i][index].sixGameAverage = await getPointAverage(teams[i][index].last6Points, 6)
@@ -866,6 +872,9 @@ let formAway;
       let homeThreeGameAvg = formHome.last3Points / 3
       let awayThreeGameAvg = formAway.last3Points / 3
 
+      let homeTwoGameAvg = formHome.last2Points / 2
+      let awayTwoGameAvg = formAway.last2Points / 2
+
       //can update this for last 10
     let pointsDiff = await getPointsDifferential(
       homeFiveGameAvg,
@@ -877,6 +886,11 @@ let formAway;
       awayThreeGameAvg
     );
 
+    let pointsDiff2 = await getPointsDifferential(
+      homeTwoGameAvg,
+      awayTwoGameAvg
+    );
+
 
 
 
@@ -886,6 +900,10 @@ let formAway;
 
     let [last3WeightingHome, last3WeightingAway] = await getPointWeighting(
       pointsDiff3
+    );
+
+    let [last2WeightingHome, last2WeightingAway] = await getPointWeighting(
+      pointsDiff2
     );
 
     let PPGweightingHome;
@@ -995,8 +1013,8 @@ let formAway;
       weightingSplitAway = 1;
     }
 
-    homeWeighting = weightingSplitHome * 0.25;
-    awayWeighting = weightingSplitAway * 0.25;
+    homeWeighting = weightingSplitHome * 0.5;
+    awayWeighting = weightingSplitAway * 0.5;
 
     let homeCalculation;
     let awayCalculation;
@@ -1071,10 +1089,10 @@ let formAway;
         (formTrendScoreComparison * 3) +
         (threeGameAverageComparison * 2) + 
         (fiveGameAverageComparison * 1) + 
-        (overUnderAchievingSumComparison * 3) +
+        (overUnderAchievingSumComparison * 2) +
         (tenGameAverageComparison * 0) + 
-        (seasonPPGComparison * 1) +
-        (XGdifferentialComparison * 1) +
+        (seasonPPGComparison * 2) +
+        (XGdifferentialComparison * 0) +
         (goalsForComparison * 0) + 
         (goalsAgainstComparison * 0)
 
@@ -1190,17 +1208,11 @@ let formAway;
             form.clinicalRating === "excellent" ||
             form.clinicalRating === "great" ||
             form.clinicalRating === "very good" ||
-            form.clinicalRating === "good"
+            form.clinicalRating === "good" ||
+            form.clinicalRating === "above average"
           ) {
             console.log("rounding up")
             return Math.ceil(num);
-          } else if (
-            form.clinicalRating === "terrible" ||
-            form.clinicalRating === "very poor" ||
-            form.clinicalRating === "poor"
-          ) {
-            console.log("rounding down")
-            return Math.floor(num);
           } else {
             console.log("rounding down")
             return Math.floor(num)
@@ -1223,12 +1235,6 @@ let formAway;
             ) {
               console.log("rounding up")
               return Math.ceil(num);
-            } else if (
-              form.clinicalRating !== "excellent" ||
-              form.clinicalRating !== "great"
-            ) {
-              console.log("rounding down")
-              return Math.floor(num);
             } else {
               console.log("rounding down")
               return Math.floor(num);
@@ -1238,17 +1244,11 @@ let formAway;
           form.clinicalRating === "excellent" ||
           form.clinicalRating === "great" ||
           form.clinicalRating === "very good" ||
-          form.clinicalRating === "good"
+          form.clinicalRating === "good"||
+          form.clinicalRating === "above average"
         ) {
           console.log("rounding up")
           return Math.ceil(num);
-        } else if (
-          form.clinicalRating === "terrible" ||
-          form.clinicalRating === "very poor" ||
-          form.clinicalRating === "poor"
-        ) {
-          console.log("rounding down")
-          return Math.floor(num);
         } else {
           console.log("rounding down")
           return Math.floor(num);
@@ -1267,12 +1267,6 @@ let formAway;
           ) {
             console.log("rounding up")
             return Math.ceil(num);
-          } else if (
-            form.clinicalRating !== "excellent" ||
-            form.clinicalRating !== "great"
-          ) {
-            console.log("rounding down")
-            return Math.floor(num);
           } else {
             console.log("rounding down")
             return Math.floor(num);
@@ -1332,7 +1326,9 @@ let formAway;
     let factorOneHome =
       (goalCalcHome) +
       PPGweightingHome * 1 +
-      last3WeightingHome * 1 +
+      last2WeightingHome * 1 +
+      last3WeightingHome * 0.25 +
+      last5WeightingHome * 0.25 +
       formHome.goalsDifferential * 0
 
       // console.log(match.homeTeam)
@@ -1350,7 +1346,9 @@ let formAway;
     let factorOneAway =
       (goalCalcAway) +
       PPGweightingAway * 1 +
-      last3WeightingAway * 1 +
+      last2WeightingAway * 1 +
+      last3WeightingAway * 0.25 +
+      last5WeightingAway * 0.25 +
       formAway.goalsDifferential * 0
 
 
@@ -1448,12 +1446,12 @@ let formAway;
     }
 
     let experimentalHomeGoals =
-      factorOneHome * homeCalculation +
-      homeComparisonWeighting;
+      (factorOneHome * homeCalculation +
+      homeComparisonWeighting) * 1.05;
 
     let experimentalAwayGoals =
-      factorOneAway * awayCalculation +
-      awayComparisonWeighting;
+      (factorOneAway * awayCalculation +
+      awayComparisonWeighting) * 0.95;
 
 
     let XGGoalsHome =
@@ -1619,57 +1617,63 @@ let formAway;
     //     break;
     // }
 
-switch (true) {
-  case formHome.overUnderAchievingSum > 2 && formAway.overUnderAchievingSum < -2:
-    rawFinalHomeGoals = rawFinalHomeGoals * 2.5
-    rawFinalAwayGoals = rawFinalAwayGoals / 2.5
-    break;
-  case formHome.overUnderAchievingSum > 1.5 && formAway.overUnderAchievingSum < -1.5:
-    rawFinalHomeGoals = rawFinalHomeGoals * 1.5
-    rawFinalAwayGoals = rawFinalAwayGoals / 2
-    break;
-  case formHome.overUnderAchievingSum > 1 && formAway.overUnderAchievingSum < -1:
-    rawFinalHomeGoals = rawFinalHomeGoals * 1
-    rawFinalAwayGoals = rawFinalAwayGoals / 1.75
-    break;
-  case formHome.overUnderAchievingSum > 0.5 && formAway.overUnderAchievingSum < -0.5:
-    rawFinalHomeGoals = rawFinalHomeGoals * 1
-    rawFinalAwayGoals = rawFinalAwayGoals / 1.5
-    break;
-  case formHome.overUnderAchievingSum > 0.2 && formAway.overUnderAchievingSum < -0.2:
-    rawFinalHomeGoals = rawFinalHomeGoals * 1
-    rawFinalAwayGoals = rawFinalAwayGoals / 1.25
-  break;
+    let trueFormDiffHome = await diff(formHome.overUnderAchievingSum, formAway.overUnderAchievingSum)
+    let trueFormDiffAway = await diff(formAway.overUnderAchievingSum, formHome.overUnderAchievingSum)
 
-  case formHome.overUnderAchievingSum < -2 && formAway.overUnderAchievingSum > 2:
-    rawFinalHomeGoals = rawFinalHomeGoals / 2.5
-    rawFinalAwayGoals = rawFinalAwayGoals * 2.5
-    break;
-  case formHome.overUnderAchievingSum < -1.5 && formAway.overUnderAchievingSum > 1.5:
-    rawFinalHomeGoals = rawFinalHomeGoals / 2
-    rawFinalAwayGoals = rawFinalAwayGoals * 1.5
-    break;
-  case formHome.overUnderAchievingSum < -1 && formAway.overUnderAchievingSum > 1:
-    rawFinalHomeGoals = rawFinalHomeGoals / 1.75
-    rawFinalAwayGoals = rawFinalAwayGoals * 1
-    break;
-  case formHome.overUnderAchievingSum < -0.5 && formAway.overUnderAchievingSum > 0.5:
-    rawFinalHomeGoals = rawFinalHomeGoals / 1.5
-    rawFinalAwayGoals = rawFinalAwayGoals * 1
-    break;
-  case formHome.overUnderAchievingSum < -0.2 && formAway.overUnderAchievingSum > 0.2:
-    rawFinalHomeGoals = rawFinalHomeGoals / 1.25
-    rawFinalAwayGoals = rawFinalAwayGoals * 1
-  break;
+    rawFinalHomeGoals = rawFinalHomeGoals + (trueFormDiffHome / 5)
+    rawFinalAwayGoals = rawFinalAwayGoals + (trueFormDiffAway / 5)
+
+// switch (true) {
+//   case formHome.overUnderAchievingSum > 2 && formAway.overUnderAchievingSum < -2:
+//     rawFinalHomeGoals = rawFinalHomeGoals * 2.5
+//     rawFinalAwayGoals = rawFinalAwayGoals / 2.5
+//     break;
+//   case formHome.overUnderAchievingSum > 1.5 && formAway.overUnderAchievingSum < -1.5:
+//     rawFinalHomeGoals = rawFinalHomeGoals * 1.5
+//     rawFinalAwayGoals = rawFinalAwayGoals / 2
+//     break;
+//   case formHome.overUnderAchievingSum > 1 && formAway.overUnderAchievingSum < -1:
+//     rawFinalHomeGoals = rawFinalHomeGoals * 1
+//     rawFinalAwayGoals = rawFinalAwayGoals / 1.75
+//     break;
+//   case formHome.overUnderAchievingSum > 0.5 && formAway.overUnderAchievingSum < -0.5:
+//     rawFinalHomeGoals = rawFinalHomeGoals * 1
+//     rawFinalAwayGoals = rawFinalAwayGoals / 1.25
+//     break;
+//   case formHome.overUnderAchievingSum > 0.2 && formAway.overUnderAchievingSum < -0.2:
+//     rawFinalHomeGoals = rawFinalHomeGoals * 1
+//     rawFinalAwayGoals = rawFinalAwayGoals / 1.1
+//   break;
+
+//   case formHome.overUnderAchievingSum < -2 && formAway.overUnderAchievingSum > 2:
+//     rawFinalHomeGoals = rawFinalHomeGoals / 2.5
+//     rawFinalAwayGoals = rawFinalAwayGoals * 2.5
+//     break;
+//   case formHome.overUnderAchievingSum < -1.5 && formAway.overUnderAchievingSum > 1.5:
+//     rawFinalHomeGoals = rawFinalHomeGoals / 2
+//     rawFinalAwayGoals = rawFinalAwayGoals * 1.5
+//     break;
+//   case formHome.overUnderAchievingSum < -1 && formAway.overUnderAchievingSum > 1:
+//     rawFinalHomeGoals = rawFinalHomeGoals / 1.75
+//     rawFinalAwayGoals = rawFinalAwayGoals * 1
+//     break;
+//   case formHome.overUnderAchievingSum < -0.5 && formAway.overUnderAchievingSum > 0.5:
+//     rawFinalHomeGoals = rawFinalHomeGoals / 1.25
+//     rawFinalAwayGoals = rawFinalAwayGoals * 1
+//     break;
+//   case formHome.overUnderAchievingSum < -0.2 && formAway.overUnderAchievingSum > 0.2:
+//     rawFinalHomeGoals = rawFinalHomeGoals / 1.1
+//     rawFinalAwayGoals = rawFinalAwayGoals * 1
+//   break;
 
 
 
 
 
 
-  default:
-    break;
-}
+//   default:
+//     break;
+// }
 
 
 
@@ -1694,13 +1698,14 @@ switch (true) {
     if(formAway.clinicalRating === "awful"){
       rawFinalAwayGoals = rawFinalAwayGoals - 1
     }
+    
 
     if(formHome.improving === true){
-      rawFinalAwayGoals = rawFinalAwayGoals - 0.2
+      rawFinalAwayGoals = rawFinalAwayGoals - 0.1
     }
 
     if(formAway.improving === true){
-      rawFinalHomeGoals = rawFinalHomeGoals - 0.2
+      rawFinalHomeGoals = rawFinalHomeGoals - 0.1
     }
 
     finalHomeGoals = await roundCustom(rawFinalHomeGoals, formHome, formAway);
@@ -1964,7 +1969,7 @@ export async function getScorePrediction(day, mocked) {
               await diff(match.unroundedGoalsA, match.unroundedGoalsB)
             ) + match.formHome.overUnderAchievingSum,
           };
-          if(!(predictionObject.rawOdds <= 1.2)){
+          if(predictionObject.rawOdds >= 1.25 && match.formHome.clinicalRating !== "awful"){
             console.log(match.homeTeam)
             console.log(match)
             tips.push(predictionObject);
@@ -2000,7 +2005,7 @@ export async function getScorePrediction(day, mocked) {
           // console.log("predictionObjectAWAY");
           // console.log(predictionObject);
           // console.log(match);
-          if(!(predictionObject.rawOdds <= 1.2)){
+          if(predictionObject.rawOdds >= 1.25 && match.formAway.clinicalRating !== "awful"){
             console.log(match.awayTeam)
             console.log(match)
             tips.push(predictionObject);
@@ -2015,8 +2020,7 @@ export async function getScorePrediction(day, mocked) {
 
       tips.sort(
         function(a, b) {          
-           if (a.comparisonScore === b.comparisonScore) {
-              // Price is only important when cities are the same
+           if ( a.comparisonScore === b.comparisonScore) {
               return b.goalDifferential - a.goalDifferential;
            }
            return b.comparisonScore > a.comparisonScore ? 1 : -1;
