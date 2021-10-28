@@ -660,8 +660,8 @@ let formAway;
 
       // console.log(`${match.homeTeam} form score = ${teams[i][index].formTrendScore}`)
 
-      teams[i][index].ScoredAverageShortTerm = (teams[i][1].ScoredOverall / 6)
-      teams[i][index].ConcededAverageShortTerm = (teams[i][1].ConcededOverall / 6)
+      teams[i][index].ScoredAverageShortTerm = (teams[i][0].ScoredOverall / 5)
+      teams[i][index].ConcededAverageShortTerm = (teams[i][0].ConcededOverall / 5)
 
 
       teams[i][index].expectedGoals = parseFloat(teams[i][index].XG);
@@ -1024,8 +1024,8 @@ let formAway;
       weightingSplitAway = 1;
     }
 
-    homeWeighting = weightingSplitHome * 1.1;
-    awayWeighting = weightingSplitAway * 1.1;
+    homeWeighting = weightingSplitHome * 1;
+    awayWeighting = weightingSplitAway * 1;
 
     let homeCalculation;
     let awayCalculation;
@@ -1217,7 +1217,7 @@ let formAway;
         // } 
         if(
             form.clinicalScore > 1.05 &&
-            remainder > 0.5
+            remainder > 0.6
           ) {
             console.log("rounding up")
             return Math.ceil(num);
@@ -1232,7 +1232,7 @@ let formAway;
         } else if (wholeNumber === 0) {
         if (
           form.clinicalScore > 1.05 &&
-          remainder > 0.5
+          remainder > 0.6
         ) {
           console.log("rounding up")
           return Math.ceil(num);
@@ -1275,8 +1275,8 @@ let formAway;
       (formAway.expectedGoals + formHome.expectedGoalsConceeded) / 2 *
       1 + last5WeightingAway
 
-    let goalCalcHome = (formHome.ScoredAverageShortTerm + formAway.ConcededAverageShortTerm) / 2;
-    let goalCalcAway = (formAway.ScoredAverageShortTerm + formHome.ConcededAverageShortTerm) / 2;
+    let goalCalcHome = (formHome.ScoredAverage + formAway.ConcededAverage) / 2;
+    let goalCalcAway = (formAway.ScoredAverage + formHome.ConcededAverage) / 2;
 
     let XGgoalCalcHome = (formHome.XG + formAway.XGAgainstAverage) / 2;
     let XGgoalCalcAway = (formAway.XG + formHome.XGAgainstAverage) / 2;
@@ -1296,12 +1296,12 @@ let formAway;
     );
 
     let factorOneHome =
-      ((goalCalcHome * 3) +
-      XGgoalCalcHome +
+      ((goalCalcHome * 2) +
+      // XGgoalCalcHome +
       // PPGweightingHome * 1 +
-      last2WeightingHome * 0.2 +
+      last5WeightingHome * 1 +
       last10WeightingHome * 0.5 +
-      formHome.goalsDifferential * 0) / 4
+      formHome.goalsDifferential * 0) / 2
 
       // console.log(match.homeTeam)
       // console.log(`${goalCalcHome} * ${formAway.defenceRating} * ${formHome.attackQualityMultiplier} +
@@ -1316,12 +1316,12 @@ let formAway;
       1;
 
     let factorOneAway =
-      ((goalCalcAway * 3) +
-      XGgoalCalcAway +
+      ((goalCalcAway * 2) +
+      // XGgoalCalcAway +
       // PPGweightingAway * 1 +
-      last2WeightingAway * 0.2 +
+      last5WeightingAway * 1 +
       last10WeightingAway * 0.5 +
-      formAway.goalsDifferential * 0) / 4
+      formAway.goalsDifferential * 0) / 2
 
 
       // console.log(match.awayTeam)
@@ -1592,12 +1592,15 @@ let formAway;
     let trueFormDiffHome = await diff(formHome.overUnderAchievingSum, formAway.overUnderAchievingSum)
     let trueFormDiffAway = await diff(formAway.overUnderAchievingSum, formHome.overUnderAchievingSum)
 
-    if(trueFormDiffHome > 1.75 || trueFormDiffAway > 1.75){
+    if(trueFormDiffHome > 1.75){
       rawFinalHomeGoals = rawFinalHomeGoals + (trueFormDiffHome / 2)
-      rawFinalAwayGoals = rawFinalAwayGoals + (trueFormDiffAway / 2)
+      rawFinalAwayGoals = rawFinalAwayGoals + -Math.abs(trueFormDiffAway / 2)
     }
 
-
+    if(trueFormDiffAway > 1.75){
+      rawFinalHomeGoals = rawFinalHomeGoals + -Math.abs(trueFormDiffHome / 2)
+      rawFinalAwayGoals = rawFinalAwayGoals + (trueFormDiffAway / 2)
+    }
 
 // switch (true) {
 //   case formHome.overUnderAchievingSum > 2 && formAway.overUnderAchievingSum < -2:
