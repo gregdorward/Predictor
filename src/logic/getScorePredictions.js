@@ -2051,7 +2051,12 @@ export async function getScorePrediction(day, mocked) {
         return b.goalDifferential - a.goalDifferential;
       });
 
-      let formTrendScoreComparison = match.formAway.formTrendScore - match.formHome.formTrendScore
+      let formTrendScoreComparison
+      if(match.formAway){
+        formTrendScoreComparison = match.formAway.formTrendScore - match.formHome.formTrendScore
+      } else {
+        formTrendScoreComparison = 0
+      }
 
 
       if (
