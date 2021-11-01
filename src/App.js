@@ -249,6 +249,7 @@ function App() {
         <div>Loading all fixture and form data...</div>
       </div>
       <div id="successMeasure" />
+      <div id="bestBetsOfTheDay" />
       <div id="bestPredictions" />
       <div id="BTTS" />
       <div id="longShots" />

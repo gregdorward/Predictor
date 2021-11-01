@@ -1299,7 +1299,7 @@ let formAway;
       ((goalCalcHome * 2) +
       // XGgoalCalcHome +
       // PPGweightingHome * 1 +
-      last5WeightingHome * 1 +
+      last5WeightingHome * 1.5 +
       last10WeightingHome * 0.5 +
       formHome.goalsDifferential * 0) / 2
 
@@ -1319,7 +1319,7 @@ let formAway;
       ((goalCalcAway * 2) +
       // XGgoalCalcAway +
       // PPGweightingAway * 1 +
-      last5WeightingAway * 1 +
+      last5WeightingAway * 1.5 +
       last10WeightingAway * 0.5 +
       formAway.goalsDifferential * 0) / 2
 
@@ -1851,6 +1851,7 @@ async function getSuccessMeasure(fixtures) {
 }
 
 var tips = [];
+var bestBets = [];
 var longShotTips = [];
 var drawTips = [];
 var bttsArray = [];
@@ -1861,6 +1862,7 @@ export async function getScorePrediction(day, mocked) {
   let radioSelected = parseInt(selectedOption);
   let mock = mocked;
   tips = [];
+  bestBets = [];
   bttsArray = [];
   longShotTips = [];
   drawTips = [];
@@ -1947,6 +1949,9 @@ export async function getScorePrediction(day, mocked) {
             tips.push(predictionObject);
             accumulatedOdds =
             parseFloat(accumulatedOdds) * parseFloat(match.homeOdds);
+            if(match.formHome.improving === true && match.formAway.improving === false){
+              bestBets.push(predictionObject)
+            }
           }       
         }
       } else if (
@@ -1983,6 +1988,9 @@ export async function getScorePrediction(day, mocked) {
             tips.push(predictionObject);
             accumulatedOdds =
             parseFloat(accumulatedOdds) * parseFloat(match.awayOdds);
+            if(match.formHome.improving === false && match.formAway.improving === true){
+              bestBets.push(predictionObject)
+            }
           }     
         }
       }
@@ -1992,10 +2000,11 @@ export async function getScorePrediction(day, mocked) {
 
       tips.sort(
         function(a, b) {          
-          //  if ( a.comparisonScore === b.comparisonScore) {
-              return b.goalDifferential - a.goalDifferential;
-          //  }
-          //  return b.comparisonScore > a.comparisonScore ? 1 : -1;
+            if ( a.formTrend === b.formTrend) {
+              return b.comparisonScore - a.comparisonScore;
+            } else {
+              return b.formTrend > a.formTrend ? 1 : -1;
+            }
         });
 
 
@@ -2112,6 +2121,51 @@ export async function getScorePrediction(day, mocked) {
 }
 
 async function renderTips() {
+
+  if(bestBets.length > 0){
+    ReactDOM.render(
+      <div className="PredictionContainer">
+        <Fragment>
+          <Collapsable
+            buttonText={"Bets of the day"}
+            className={"PredictionsOfTheDay"}
+            text={
+              <ul className="BestPredictions">
+                <div className="BestPredictionsExplainer">
+                  Best single bets of the day
+                </div>
+                {bestBets.map((tip) => (
+                  <li className={tip.outcome} key={tip.team}>
+                    {tip.team}: {tip.odds}
+                  </li>
+                ))}
+              </ul>
+            }
+          />
+        </Fragment>
+      </div>,
+      document.getElementById("bestBetsOfTheDay")
+    );
+  } else {
+    ReactDOM.render(
+      <div className="PredictionContainer">
+        <Fragment>
+          <Collapsable
+            buttonText={"Bets of the day"}
+            className={"PredictionsOfTheDay"}
+            text={
+              <ul className="BestPredictions">
+                <div className="BestPredictionsExplainer">
+                  No games fit the criteria
+                </div>
+              </ul>
+            }
+          />
+        </Fragment>
+      </div>,
+      document.getElementById("bestBetsOfTheDay")
+    );
+  }
 
   if(tips.length > 0){
     ReactDOM.render(
