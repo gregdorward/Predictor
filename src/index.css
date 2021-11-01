@@ -1007,7 +1007,7 @@ li.FormHeader{
 
 .BestPredictionsExplainer {
   padding-bottom: 0.2em;
-  /* font-size: 0.7em; */
+  font-size: 1.1em;
 }
 
 lh {
@@ -1015,7 +1015,7 @@ lh {
 }
 
 .BestPredictions li {
-  /* font-size: 1em; */
+  font-size: 1.1em;
   padding-top: 0.5em;
 }
 
@@ -1027,6 +1027,8 @@ lh {
 .BTTSGames li {
   /* font-size: 1em; */
   padding-top: 1em;
+  font-size: 1.1em;
+
 }
 
 .SubmitButton {
@@ -1047,6 +1049,13 @@ ul {
 
 .BestPredictions li {
   /* font-size: 0.8em; */
+  font-size: 1.1em;
+  padding-top: 1em;
+}
+
+.PredictionsOfTheDay li {
+  /* font-size: 0.8em; */
+  font-size: 1.1em;
   padding-top: 1em;
 }
 
@@ -1061,6 +1070,8 @@ ul {
 .LongshotPredictions li {
   /* font-size: 0.8em; */
   padding-top: 1em;
+  font-size: 1.1em;
+
 }
 
 .DrawTips lh {
@@ -1070,6 +1081,7 @@ ul {
 .DrawTips li {
   /* font-size: 0.8em; */
   padding-top: 1em;
+  font-size: 1.1em;
 }
 
 .LongshotPredictions lh {
@@ -1077,15 +1089,12 @@ ul {
 }
 
 .Won {
-  color: #007000;
+  color: #016401;
 }
 
-.Won {
-  color: #007000;
-}
 
 .Won1 {
-  color: #007000;
+  color: #016401;
 }
 
 .Lost {
@@ -1097,7 +1106,7 @@ ul {
 }
 
 .bttsWon {
-  color: #007000;
+  color: #016401;
 }
 
 .bttsLost {
@@ -1106,7 +1115,7 @@ ul {
 
 .AccumulatedOdds {
   padding-top: 1em;
-  /* font-size: 1em; */
+  font-size: 1.2em;
 }
 
 table,
