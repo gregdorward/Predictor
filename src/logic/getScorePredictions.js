@@ -398,7 +398,7 @@ async function getAttackingIntent(possession, sot) {
     case score > 20:
       finalScore = "Very cautious";
       break;
-    case score > 10 && score < 20:
+    case score >= 10 && score <= 20:
       finalScore = "Cautious";
       break;
     case score < 10:
@@ -1030,6 +1030,7 @@ export async function calculateScore(match, index, divider, id) {
     let finalAwayGoals;
 
     async function roundCustom(num, form, otherTeamForm) {
+      num = num - 0.25
       let wholeNumber = Math.floor(num);
       let remainder = num - wholeNumber;
 
