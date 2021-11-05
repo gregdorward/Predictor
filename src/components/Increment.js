@@ -1,7 +1,7 @@
 import React, { Component, Fragment } from "react";
-import { getScorePrediction } from "../logic/getScorePredictions"
-export var incrementValue = 2;
-export var incrementValueTwo = 2.5;
+import { getNewTips } from "../logic/getScorePredictions"
+import {allTips} from "../logic/getScorePredictions"
+export var incrementValue = 2.1;
 
 export var riskLevel = 10;
 
@@ -22,10 +22,7 @@ class Increment extends Component {
     incrementValue = (this.state.incrementValue + 0.1).toFixed(1);
     riskLevel = this.state.riskLevel - 1;
     }
-
-    getScorePrediction("default", false);
-    console.log("incrementValue")
-    console.log(incrementValue)
+    getNewTips(allTips)
   };
   DecreaseItem = () => {
     if(incrementValue > 1){
@@ -34,13 +31,7 @@ class Increment extends Component {
       incrementValue = (this.state.incrementValue - 0.1).toFixed(1);
       riskLevel = this.state.riskLevel + 1;
     }
-
-
-    getScorePrediction("default", false);
-    console.log("incrementValue")
-    console.log(incrementValue)
-
-
+    getNewTips(allTips)
   };
 
   render() {

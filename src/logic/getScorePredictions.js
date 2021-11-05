@@ -767,9 +767,9 @@ export async function calculateScore(match, index, divider, id) {
       teams[i][index].XGdifferential =
         teams[i][index].XG - teams[i][index].XGAgainstAverage;
 
-      teams[i][index].attackPotency =
-        teams[i][index].AverageShotsOnTargetOverall /
-        teams[i][index].ScoredAverage;
+      // teams[i][index].attackPotency =
+      //   teams[i][index].AverageShotsOnTargetOverall /
+      //   teams[i][index].ScoredAverage;
 
       teams[0][index].DAmultiplier = await getDAPrediction(match.homeOdds);
       teams[1][index].DAmultiplier = await getDAPrediction(match.awayOdds);
@@ -937,8 +937,8 @@ export async function calculateScore(match, index, divider, id) {
       weightingSplitAway = 1;
     }
 
-    homeWeighting = weightingSplitHome * 1;
-    awayWeighting = weightingSplitAway * 1;
+    homeWeighting = weightingSplitHome * 0.75;
+    awayWeighting = weightingSplitAway * 0.75;
 
     let homeCalculation;
     let awayCalculation;
@@ -1008,11 +1008,11 @@ export async function calculateScore(match, index, divider, id) {
       );
 
       let calculation =
-        formTrendScoreComparison * 2 +
+        formTrendScoreComparison * 4 +
         threeGameAverageComparison * 2 +
         fiveGameAverageComparison * 2 +
         overUnderAchievingSumComparison * 1 +
-        seasonPPGComparison * 2 +
+        seasonPPGComparison * 0 +
         XGdifferentialComparison * 1;
 
       return calculation;
@@ -1287,9 +1287,16 @@ export async function calculateScore(match, index, divider, id) {
     }
 
     let formTrendScoreComparison;
+
+    console.log(match.homeTeam)
+    console.log(match)
+
     if (formAway) {
       formTrendScoreComparison =
         formAway.formTrendScore - formHome.formTrendScore;
+        console.log(match)
+        console.log(formAway)
+        console.log(formTrendScoreComparison)
     } else {
       formTrendScoreComparison = 0;
     }
@@ -1304,16 +1311,16 @@ export async function calculateScore(match, index, divider, id) {
     );
 
     if (trueFormDiffHome > 1.75) {
-      rawFinalHomeGoals = rawFinalHomeGoals + trueFormDiffHome / 2.5;
-      rawFinalAwayGoals = rawFinalAwayGoals + -Math.abs(trueFormDiffAway / 2.5);
+      rawFinalHomeGoals = rawFinalHomeGoals + trueFormDiffHome / 2.25;
+      rawFinalAwayGoals = rawFinalAwayGoals + -Math.abs(trueFormDiffAway / 2.25);
     } else if (trueFormDiffHome <= 1.75 && trueFormDiffHome > 1) {
       rawFinalHomeGoals = rawFinalHomeGoals + trueFormDiffHome / 5;
       rawFinalAwayGoals = rawFinalAwayGoals + -Math.abs(trueFormDiffAway / 5);
     }
 
     if (trueFormDiffAway > 1.75) {
-      rawFinalHomeGoals = rawFinalHomeGoals + -Math.abs(trueFormDiffHome / 2.5);
-      rawFinalAwayGoals = rawFinalAwayGoals + trueFormDiffAway / 2.5;
+      rawFinalHomeGoals = rawFinalHomeGoals + -Math.abs(trueFormDiffHome / 2.25);
+      rawFinalAwayGoals = rawFinalAwayGoals + trueFormDiffAway / 2.25;
     } else if (trueFormDiffAway <= 1.75 && trueFormDiffAway > 1) {
       rawFinalHomeGoals = rawFinalHomeGoals + -Math.abs(trueFormDiffHome / 5);
       rawFinalAwayGoals = rawFinalAwayGoals + trueFormDiffAway / 5;
@@ -1445,6 +1452,8 @@ export async function calculateScore(match, index, divider, id) {
     totalGoals2 = totalGoals2 + total2;
     console.log(`Actual goals: ${totalGoals2}`);
 
+    console.log(match)
+
     numberOfGames = numberOfGames + 1;
 
     if (finalHomeGoals < 0) {
@@ -1510,13 +1519,39 @@ async function getSuccessMeasure(fixtures) {
   }
 }
 
-var tips = [];
+export var tips = [];
+export var allTips = []
+var newArray = [];
 var bestBets = [];
 var longShotTips = [];
 var drawTips = [];
 var bttsArray = [];
 var accumulatedOdds = 1;
 let predictions = [];
+
+export async function getNewTips(array){
+  newArray = []
+  accumulatedOdds = 1
+  console.log(array)
+
+  array.forEach(tip => {
+    if(tip.goalDifferential >= incrementValue && tip.comparisonScore > 0){
+      console.log(tip.goalDifferential)
+      console.log(`increment value: ${incrementValue}`)
+
+      newArray.push(tip);
+      accumulatedOdds =
+      parseFloat(accumulatedOdds) * parseFloat(tip.rawOdds);
+    }
+  })
+
+
+  // if(incrementValue)
+  console.log(array)
+  console.log(newArray)
+  await renderTips(newArray)
+
+}
 
 export async function getScorePrediction(day, mocked) {
   let radioSelected = parseInt(selectedOption);
@@ -1526,10 +1561,11 @@ export async function getScorePrediction(day, mocked) {
   bttsArray = [];
   longShotTips = [];
   drawTips = [];
-  accumulatedOdds = 1;
 
   let index = 2;
   let divider = 10;
+
+
 
   // if (radioSelected === 5) {
   //   index = 0;
@@ -1579,7 +1615,7 @@ export async function getScorePrediction(day, mocked) {
       let drawPredictionObject;
 
       if (
-        match.unroundedGoalsA - match.unroundedGoalsB > incrementValue &&
+        match.unroundedGoalsA - match.unroundedGoalsB > 1 &&
         match.homeOdds !== 0 &&
         match.fractionHome !== "N/A"
       ) {
@@ -1588,7 +1624,7 @@ export async function getScorePrediction(day, mocked) {
           match.status !== "suspended" &&
           match.status !== "canceled" &&
           match.homeOdds < 3 &&
-          match.homePpg > 1 &&
+          // match.homePpg > 1 &&
           match.includeInMultis === true
         ) {
           predictionObject = {
@@ -1601,7 +1637,8 @@ export async function getScorePrediction(day, mocked) {
             goalDifferential:
               parseFloat(
                 await diff(match.unroundedGoalsA, match.unroundedGoalsB)
-              ) + match.formHome.overUnderAchievingSum,
+              ),
+            experimentalCalc: (match.unroundedGoalsA - match.unroundedGoalsB) * Math.abs(match.teamComparisonScore)
           };
           if (
             predictionObject.rawOdds >= 1.25 &&
@@ -1609,11 +1646,10 @@ export async function getScorePrediction(day, mocked) {
           ) {
             console.log(match.homeTeam);
             console.log(match);
-            tips.push(predictionObject);
-            accumulatedOdds =
-              parseFloat(accumulatedOdds) * parseFloat(match.homeOdds);
+            allTips.push(predictionObject);
+
             if (
-              match.unroundedGoalsA - match.unroundedGoalsB > 1.8 &&
+              match.unroundedGoalsA - match.unroundedGoalsB > incrementValue &&
               match.formHome.improving === true &&
               match.formAway.improving === false
             ) {
@@ -1622,7 +1658,7 @@ export async function getScorePrediction(day, mocked) {
           }
         }
       } else if (
-        match.unroundedGoalsB - match.unroundedGoalsA > incrementValue &&
+        match.unroundedGoalsB - match.unroundedGoalsA  > incrementValue &&
         match.awayOdds !== 0 &&
         match.fractionAway !== "N/A"
       ) {
@@ -1642,21 +1678,17 @@ export async function getScorePrediction(day, mocked) {
             outcome: match.predictionOutcome,
             goalDifferential:
               parseFloat(
-                await diff(match.unroundedGoalsB - 1, match.unroundedGoalsA)
-              ) + match.formAway.overUnderAchievingSum,
+                await diff(match.unroundedGoalsB, match.unroundedGoalsA)
+              ),
+              experimentalCalc: (match.unroundedGoalsB - match.unroundedGoalsA) * Math.abs(match.teamComparisonScore)
           };
-          // console.log("predictionObjectAWAY");
-          // console.log(predictionObject);
-          // console.log(match);
           if (
             predictionObject.rawOdds >= 1.25 &&
             match.formAway.clinicalRating !== "awful"
           ) {
             console.log(match.awayTeam);
             console.log(match);
-            tips.push(predictionObject);
-            accumulatedOdds =
-              parseFloat(accumulatedOdds) * parseFloat(match.awayOdds);
+            allTips.push(predictionObject);
             if (
               match.unroundedGoalsB - match.unroundedGoalsA > 1.8 &&
               match.formHome.improving === false &&
@@ -1670,11 +1702,11 @@ export async function getScorePrediction(day, mocked) {
 
       console.log(tips);
 
-      tips.sort(function (a, b) {
-        if (a.comparisonScore === b.comparisonScore) {
-          return b.goalDifferential - a.goalDifferential;
+      allTips.sort(function (a, b) {
+        if (b.experimentalCalc === a.experimentalCalc) {
+          return b.comparisonScore - a.comparisonScore;
         } else {
-          return b.comparisonScore > a.comparisonScore ? 1 : -1;
+          return b.experimentalCalc > a.experimentalCalc ? 1 : -1;
         }
       });
 
@@ -1701,8 +1733,8 @@ export async function getScorePrediction(day, mocked) {
       }
 
       if (
-        match.unroundedGoalsA - 0.85 > match.unroundedGoalsB &&
-        match.homeDoubleChance >= 1.4 &&
+        match.unroundedGoalsA - 0.25 > match.unroundedGoalsB &&
+        match.homeDoubleChance >= 1.5 &&
         match.goalsA > match.goalsB
       ) {
         longShotPredictionObject = {
@@ -1717,8 +1749,8 @@ export async function getScorePrediction(day, mocked) {
           longShotTips.push(longShotPredictionObject);
         }
       } else if (
-        match.unroundedGoalsA < match.unroundedGoalsB - 1.3 &&
-        match.awayDoubleChance >= 1.4 &&
+        match.unroundedGoalsA < match.unroundedGoalsB - 0.5 &&
+        match.awayDoubleChance >= 1.5 &&
         match.goalsB > match.goalsA
       ) {
         longShotPredictionObject = {
@@ -1804,7 +1836,8 @@ export async function getScorePrediction(day, mocked) {
   );
   await getSuccessMeasure(matches);
 
-  await renderTips();
+  await getNewTips(allTips);
+  // await renderTips();
 }
 
 async function renderTips() {
@@ -1853,7 +1886,7 @@ async function renderTips() {
     );
   }
 
-  if (tips.length > 0) {
+  if (newArray.length > 0) {
     ReactDOM.render(
       <div className="PredictionContainer">
         <Fragment>
@@ -1867,7 +1900,7 @@ async function renderTips() {
                   Increase or decrease the size of the multi using the buttons
                   below. Predictions are ordered by confidence in the outcome.
                 </div>
-                {tips.map((tip) => (
+                {newArray.map((tip) => (
                   <li className={tip.outcome} key={tip.team}>
                     {tip.team}: {tip.odds}
                   </li>
