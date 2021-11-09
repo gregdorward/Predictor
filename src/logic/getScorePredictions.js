@@ -679,8 +679,6 @@ export async function calculateScore(match, index, divider, id) {
           teams[i][index].expectedGoals) /
         2;
 
-      console.log(teams[i][index].declining);
-
       teams[i][index].conceededAverageShortAndLongTerm =
         (teams[i][index].ConcededOverall / 10 +
           teams[i][index].ConcededAverageShortTerm) /
