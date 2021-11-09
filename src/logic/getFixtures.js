@@ -492,8 +492,8 @@ export async function generateFixtures(day, radioState, selectedOdds) {
           home: {
             teamName: match.homeTeam,
             0: {
-              XGOverall: parseFloat(form[0].data[2].stats.xg_for_avg_overall),
-              XG: parseFloat(form[0].data[2].stats.xg_for_avg_home),
+              XGOverall: parseFloat(form[0].data[0].stats.xg_for_avg_overall),
+              XG: parseFloat(form[0].data[0].stats.xg_for_avg_home),
               ScoredOverall: parseFloat(
                 form[0].data[0].stats.seasonScoredNum_overall
               ),

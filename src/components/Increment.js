@@ -1,7 +1,7 @@
 import React, { Component, Fragment } from "react";
 import { getNewTips } from "../logic/getScorePredictions"
 import {allTips} from "../logic/getScorePredictions"
-export var incrementValue = 2.1;
+export var incrementValue = 2.5;
 
 export var riskLevel = 10;
 
