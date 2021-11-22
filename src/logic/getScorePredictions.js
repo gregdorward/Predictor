@@ -503,7 +503,7 @@ export async function calculateScore(match, index, divider, id) {
         teams[i][index].AverageShotsOnTarget
       );
 
-      async function compareFormTrend(three, five, six, ten, lastGame) {
+      async function compareFormTrend(three, five, six, ten, lastGame, recent, distant) {
         let text;
         let score;
         let improving;
@@ -627,12 +627,16 @@ export async function calculateScore(match, index, divider, id) {
         if (five > 1) {
           if (three >= six && six >= ten) {
             improving = true;
-          } else {
+          } else if(recent < distant){
             improving = false;
-          }
-        } else {
+          } else if ((recent -1) > distant){
+            improving = true;
+          } else {
           improving = false;
         }
+
+      }
+        
 
         // if (lastGame === "L") {
         //   score = score - 1;
@@ -642,6 +646,15 @@ export async function calculateScore(match, index, divider, id) {
 
         return [score, improving];
       }
+      teams[i][index].ScoredAverageShortTerm = teams[i][0].ScoredOverall / 5;
+      teams[i][index].ConcededAverageShortTerm =
+        teams[i][0].ConcededOverall / 5;
+
+      teams[i][index].longTermAverageGoals = teams[i][2].ScoredAverage;
+      teams[i][index].longTermAverageConceeded = teams[i][2].ConcededAverage;
+
+      let recentGoalDiff = teams[i][index].ScoredAverageShortTerm - teams[i][index].ConcededAverageShortTerm;
+      let distantGoalDiff = teams[i][index].longTermAverageGoals - teams[i][index].longTermAverageConceeded;
 
       [teams[i][index].formTrendScore, teams[i][index].improving] =
         await compareFormTrend(
@@ -649,19 +662,18 @@ export async function calculateScore(match, index, divider, id) {
           teams[i][index].fiveGameAverage,
           teams[i][index].sixGameAverage,
           teams[i][index].tenGameAverage,
-          teams[i][index].lastGame
+          teams[i][index].lastGame,
+          recentGoalDiff,
+          distantGoalDiff
         );
 
-      teams[i][index].ScoredAverageShortTerm = teams[i][0].ScoredOverall / 5;
-      teams[i][index].ConcededAverageShortTerm =
-        teams[i][0].ConcededOverall / 5;
+
 
       teams[i][index].expectedGoals = parseFloat(teams[i][index].XG);
       teams[i][index].expectedGoalsConceeded = parseFloat(
         teams[i][index].XGAgainstAverage
       );
-      teams[i][index].longTermAverageGoals = teams[i][2].ScoredAverage;
-      teams[i][index].longTermAverageConceeded = teams[i][2].ConcededAverage;
+
 
       teams[i][index].expectedGoalsLongTerm = parseFloat(teams[i][2].XG);
 
@@ -1094,8 +1106,12 @@ export async function calculateScore(match, index, divider, id) {
     formAway.goalsDifferential =
       parseFloat(await diff(awayGoalDiff, homeGoalDiff)) / 1;
 
-    let goalCalcHome = (formHome.ScoredAverage + formAway.ConcededAverage) / 2;
-    let goalCalcAway = (formAway.ScoredAverage + formHome.ConcededAverage) / 2;
+
+
+
+
+    let goalCalcHome = (formHome.ScoredAverageShortTerm + formAway.ConcededAverageShortTerm) / 2;
+    let goalCalcAway = (formAway.ScoredAverageShortTerm + formHome.ConcededAverageShortTerm) / 2;
 
     let goalCalcHomeShortAndLongTerm =
       (formHome.ScoredAverageShortAndLongTerm +
@@ -1109,7 +1125,7 @@ export async function calculateScore(match, index, divider, id) {
     let factorOneHome =
       (goalCalcHome * 2 +
         goalCalcHomeShortAndLongTerm +
-        last5WeightingHome * 2 +
+        last5WeightingHome * 1 +
         last2WeightingHome * 1 +
         last10WeightingHome * 1 +
         formHome.goalsDifferential * 0) /
@@ -1118,7 +1134,7 @@ export async function calculateScore(match, index, divider, id) {
     let factorOneAway =
       (goalCalcAway * 2 +
         goalCalcAwayShortAndLongTerm +
-        last5WeightingAway * 2 +
+        last5WeightingAway * 1 +
         last2WeightingAway * 1 +
         last10WeightingAway * 1 +
         formAway.goalsDifferential * 0) /
@@ -1339,13 +1355,13 @@ export async function calculateScore(match, index, divider, id) {
       rawFinalHomeGoals = 0;
     }
 
-    // if (formHome.improving === true) {
-    //   rawFinalAwayGoals = rawFinalAwayGoals - 0.1;
-    // }
+    if (formHome.improving === true) {
+      rawFinalHomeGoals = rawFinalHomeGoals + 0.1;
+    }
 
-    // if (formAway.improving === true) {
-    //   rawFinalHomeGoals = rawFinalHomeGoals - 0.1;
-    // }
+    if (formAway.improving === true) {
+      rawFinalAwayGoals = rawFinalAwayGoals + 0.1;
+    }
 
     finalHomeGoals = await roundCustom(rawFinalHomeGoals, formHome, formAway);
     finalAwayGoals = await roundCustom(rawFinalAwayGoals, formAway, formHome);
