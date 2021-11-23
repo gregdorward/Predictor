@@ -98,6 +98,7 @@ function GetDivider(fixture) {
       let name = "CorrectScore"
       
         if(fixture.fixture.goalsA === fixture.fixture.homeGoals && fixture.fixture.goalsB === fixture.fixture.awayGoals) {
+          fixture.fixture.exactScore = true
           return (
             <Fragment>
               <div className="Result">{`${fixture.fixture.homeGoals} - ${fixture.fixture.awayGoals}`}</div>
@@ -109,6 +110,7 @@ function GetDivider(fixture) {
             </Fragment>
           );
         } else {
+          fixture.fixture.exactScore = false
           return (
             <Fragment>
               <div className="Result">{`${fixture.fixture.homeGoals} - ${fixture.fixture.awayGoals}`}</div>
@@ -131,7 +133,7 @@ function GetDivider(fixture) {
       }
       // console.log(fixture.fixture.game);
       // console.log(`profit ${fixture.fixture.profit}`);
-
+      fixture.fixture.exactScore = false
       return (
         <Fragment>
           <div className="Result">{`${fixture.fixture.homeGoals} - ${fixture.fixture.awayGoals}`}</div>

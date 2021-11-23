@@ -503,7 +503,15 @@ export async function calculateScore(match, index, divider, id) {
         teams[i][index].AverageShotsOnTarget
       );
 
-      async function compareFormTrend(three, five, six, ten, lastGame, recent, distant) {
+      async function compareFormTrend(
+        three,
+        five,
+        six,
+        ten,
+        lastGame,
+        recent,
+        distant
+      ) {
         let text;
         let score;
         let improving;
@@ -627,16 +635,14 @@ export async function calculateScore(match, index, divider, id) {
         if (five > 1) {
           if (three >= six && six >= ten) {
             improving = true;
-          } else if(recent < distant){
+          } else if (recent < distant) {
             improving = false;
-          } else if ((recent -1) > distant){
+          } else if (recent - 1 > distant) {
             improving = true;
           } else {
-          improving = false;
+            improving = false;
+          }
         }
-
-      }
-        
 
         // if (lastGame === "L") {
         //   score = score - 1;
@@ -653,8 +659,12 @@ export async function calculateScore(match, index, divider, id) {
       teams[i][index].longTermAverageGoals = teams[i][2].ScoredAverage;
       teams[i][index].longTermAverageConceeded = teams[i][2].ConcededAverage;
 
-      let recentGoalDiff = teams[i][index].ScoredAverageShortTerm - teams[i][index].ConcededAverageShortTerm;
-      let distantGoalDiff = teams[i][index].longTermAverageGoals - teams[i][index].longTermAverageConceeded;
+      let recentGoalDiff =
+        teams[i][index].ScoredAverageShortTerm -
+        teams[i][index].ConcededAverageShortTerm;
+      let distantGoalDiff =
+        teams[i][index].longTermAverageGoals -
+        teams[i][index].longTermAverageConceeded;
 
       [teams[i][index].formTrendScore, teams[i][index].improving] =
         await compareFormTrend(
@@ -667,13 +677,10 @@ export async function calculateScore(match, index, divider, id) {
           distantGoalDiff
         );
 
-
-
       teams[i][index].expectedGoals = parseFloat(teams[i][index].XG);
       teams[i][index].expectedGoalsConceeded = parseFloat(
         teams[i][index].XGAgainstAverage
       );
-
 
       teams[i][index].expectedGoalsLongTerm = parseFloat(teams[i][2].XG);
 
@@ -1071,22 +1078,16 @@ export async function calculateScore(match, index, divider, id) {
         num = num + 0.5;
       }
 
-      console.log(`wholeNumber ${wholeNumber}`);
-      console.log(`remainder ${remainder}`);
       if (wholeNumber !== 0) {
         if (form.clinicalScore >= 1.0 && remainder > 0.6) {
-          console.log("rounding up");
           return Math.ceil(num);
         } else {
-          console.log("rounding down");
           return Math.floor(num);
         }
       } else if (wholeNumber === 0) {
         if (form.clinicalScore >= 1.0 && remainder > 0.6) {
-          console.log("rounding up");
           return Math.ceil(num);
         } else {
-          console.log("rounding down");
           return Math.floor(num);
         }
       } else {
@@ -1106,12 +1107,10 @@ export async function calculateScore(match, index, divider, id) {
     formAway.goalsDifferential =
       parseFloat(await diff(awayGoalDiff, homeGoalDiff)) / 1;
 
-
-
-
-
-    let goalCalcHome = (formHome.ScoredAverageShortTerm + formAway.ConcededAverageShortTerm) / 2;
-    let goalCalcAway = (formAway.ScoredAverageShortTerm + formHome.ConcededAverageShortTerm) / 2;
+    let goalCalcHome =
+      (formHome.ScoredAverageShortTerm + formAway.ConcededAverageShortTerm) / 2;
+    let goalCalcAway =
+      (formAway.ScoredAverageShortTerm + formHome.ConcededAverageShortTerm) / 2;
 
     let goalCalcHomeShortAndLongTerm =
       (formHome.ScoredAverageShortAndLongTerm +
@@ -1144,8 +1143,6 @@ export async function calculateScore(match, index, divider, id) {
     let awayComparisonWeighting;
     match.scoreDiff = await diff(factorOneHome, factorOneAway);
     let split = match.scoreDiff / 2;
-    console.log(`Team comparison score: ${teamComparisonScore}`);
-    console.log(`SPLIT: ${split}`);
 
     switch (true) {
       case teamComparisonScore === 0 && match.scoreDiff > 0:
@@ -1204,10 +1201,10 @@ export async function calculateScore(match, index, divider, id) {
         homeComparisonWeighting = -0.4;
         awayComparisonWeighting = 0.4;
         break;
-        case teamComparisonScore < -10 && teamComparisonScore >= -12:
-          homeComparisonWeighting = -0.45;
-          awayComparisonWeighting = 0.45;
-          break;
+      case teamComparisonScore < -10 && teamComparisonScore >= -12:
+        homeComparisonWeighting = -0.45;
+        awayComparisonWeighting = 0.45;
+        break;
       case teamComparisonScore < -12:
         homeComparisonWeighting = -0.5;
         awayComparisonWeighting = 0.5;
@@ -1311,15 +1308,9 @@ export async function calculateScore(match, index, divider, id) {
 
     let formTrendScoreComparison;
 
-    console.log(match.homeTeam);
-    console.log(match);
-
     if (formAway) {
       formTrendScoreComparison =
         formAway.formTrendScore - formHome.formTrendScore;
-      console.log(match);
-      console.log(formAway);
-      console.log(formTrendScoreComparison);
     } else {
       formTrendScoreComparison = 0;
     }
@@ -1378,12 +1369,10 @@ export async function calculateScore(match, index, divider, id) {
       );
     }
 
-    console.log(`${match.homeTeam} score ${formTrendScoreComparison}`);
 
     if (finalHomeGoals > finalAwayGoals) {
       match.prediction = "homeWin";
       homePredictions = homePredictions + 1;
-      console.log(`homePredictions: ${homePredictions}`);
       if (
         formHome.overUnderAchievingSum < -2.5 ||
         formTrendScoreComparison >= 0
@@ -1395,7 +1384,6 @@ export async function calculateScore(match, index, divider, id) {
     } else if (finalAwayGoals > finalHomeGoals) {
       match.prediction = "awayWin";
       awayPredictions = awayPredictions + 1;
-      console.log(`awayPredictions: ${awayPredictions}`);
       if (
         formAway.overUnderAchievingSum > 2.5 ||
         formTrendScoreComparison <= 0
@@ -1407,8 +1395,6 @@ export async function calculateScore(match, index, divider, id) {
     } else if (finalHomeGoals === finalAwayGoals) {
       match.prediction = "draw";
       drawPredictions = drawPredictions + 1;
-      console.log(`drawPredictions: ${drawPredictions}`);
-      console.log(match);
     }
 
     switch (true) {
@@ -1416,19 +1402,16 @@ export async function calculateScore(match, index, divider, id) {
         match.winner = match.homeTeam;
         match.outcome = "homeWin";
         homeOutcomes = homeOutcomes + 1;
-        console.log(`homeOutcomes: ${homeOutcomes}`);
         break;
       case match.homeGoals === match.awayGoals:
         match.winner = "draw";
         match.outcome = "draw";
         drawOutcomes = drawOutcomes + 1;
-        console.log(`drawOutcomes: ${drawOutcomes}`);
         break;
       case match.homeGoals < match.awayGoals:
         match.winner = match.awayTeam;
         match.outcome = "awayWin";
         awayOutcomes = awayOutcomes + 1;
-        console.log(`awayOutcomes: ${awayOutcomes}`);
         break;
       default:
         break;
@@ -1439,13 +1422,11 @@ export async function calculateScore(match, index, divider, id) {
         match.predictionOutcome = "Won";
         winAmount = winAmount + 1;
         if (match.outcome === "draw") {
-          console.log("DRAW WON");
         }
       } else if (match.prediction !== match.outcome) {
         match.predictionOutcome = "Lost";
         lossAmount = lossAmount + 1;
         if (match.outcome === "draw") {
-          console.log("DRAW LOST");
         }
       }
     }
@@ -1463,13 +1444,9 @@ export async function calculateScore(match, index, divider, id) {
 
     let total = parseInt(finalHomeGoals + finalAwayGoals);
     totalGoals = totalGoals + total;
-    console.log(`Predicted goals: ${totalGoals}`);
 
     let total2 = parseInt(match.homeGoals + match.awayGoals);
     totalGoals2 = totalGoals2 + total2;
-    console.log(`Actual goals: ${totalGoals2}`);
-
-    console.log(match);
 
     numberOfGames = numberOfGames + 1;
 
@@ -1504,8 +1481,9 @@ export async function calculateScore(match, index, divider, id) {
 
 async function getSuccessMeasure(fixtures) {
   let sumProfit = 0;
-  let sumLoss = 0;
   let investment = 0;
+  let exactScores = 0;
+  let successCount = 0;
   let netProfit;
 
   for (let i = 0; i < fixtures.length; i++) {
@@ -1513,21 +1491,31 @@ async function getSuccessMeasure(fixtures) {
       sumProfit = sumProfit + fixtures[i].profit;
       investment = investment + 1;
       netProfit = (sumProfit - investment).toFixed(2);
+      if (fixtures[i].exactScore === true) {
+        exactScores = exactScores + 1;
+      }
+      if (fixtures[i].predictionOutcome === "Won") {
+        successCount = successCount + 1;
+      }
     }
   }
 
   let ROI = (netProfit / investment) * 100;
   var operand = ROI >= 0 ? "+" : "";
+  let exactScoreHitRate = ((exactScores / investment) * 100).toFixed(1);
+  let successRate = ((successCount / investment) * 100).toFixed(1);
 
   if (investment > 0) {
     ReactDOM.render(
       <Fragment>
         <Div
           className={"SuccessMeasure"}
-          text={`ROI for all ${investment} W/D/W outcomes: ${operand} ${ROI.toFixed(
-            2
-          )}%`}
+          text={`ROI for 
+            all ${investment} W/D/W 
+            outcomes: ${operand} ${ROI.toFixed(2)}%`}
         />
+        <p>{`Correct W/D/W predictions: ${successCount} (${successRate}%)`}</p>
+        <p>{`Exact scores predicted: ${exactScores} (${exactScoreHitRate}%)`}</p>
       </Fragment>,
       document.getElementById("successMeasure")
     );
@@ -1540,8 +1528,15 @@ export var tips = [];
 export var allTips = [];
 var newArray = [];
 var bestBets = [];
+var price;
 var longShotTips = [];
 var drawTips = [];
+var combinations;
+var exoticArray = [];
+var gamesInExotic;
+var minimumExotic;
+var exoticStake;
+var exoticString;
 var bttsArray = [];
 var accumulatedOdds = 1;
 let predictions = [];
@@ -1549,21 +1544,14 @@ let predictions = [];
 export async function getNewTips(array) {
   newArray = [];
   accumulatedOdds = 1;
-  console.log(array);
 
   array.forEach((tip) => {
     if (tip.goalDifferential >= incrementValue && tip.comparisonScore > 0) {
-      console.log(tip.goalDifferential);
-      console.log(`increment value: ${incrementValue}`);
-
       newArray.push(tip);
       accumulatedOdds = parseFloat(accumulatedOdds) * parseFloat(tip.rawOdds);
     }
   });
 
-  // if(incrementValue)
-  console.log(array);
-  console.log(newArray);
   await renderTips(newArray);
 }
 
@@ -1572,6 +1560,7 @@ export async function getScorePrediction(day, mocked) {
   let mock = mocked;
   tips = [];
   bestBets = [];
+  // price = 0
   bttsArray = [];
   longShotTips = [];
   drawTips = [];
@@ -1658,8 +1647,6 @@ export async function getScorePrediction(day, mocked) {
             predictionObject.rawOdds >= 1.25 &&
             match.formHome.clinicalRating !== "awful"
           ) {
-            console.log(match.homeTeam);
-            console.log(match);
             allTips.push(predictionObject);
 
             if (
@@ -1703,8 +1690,6 @@ export async function getScorePrediction(day, mocked) {
             predictionObject.rawOdds >= 1.25 &&
             match.formAway.clinicalRating !== "awful"
           ) {
-            console.log(match.awayTeam);
-            console.log(match);
             allTips.push(predictionObject);
             if (
               match.unroundedGoalsB - match.unroundedGoalsA > 1.8 &&
@@ -1718,8 +1703,6 @@ export async function getScorePrediction(day, mocked) {
         }
       }
 
-      console.log(tips);
-
       allTips.sort(function (a, b) {
         if (b.experimentalCalc === a.experimentalCalc) {
           return b.comparisonScore - a.comparisonScore;
@@ -1727,6 +1710,122 @@ export async function getScorePrediction(day, mocked) {
           return b.experimentalCalc > a.experimentalCalc ? 1 : -1;
         }
       });
+
+      exoticArray = [];
+      gamesInExotic = 0;
+      exoticStake = 0;
+      exoticString = "";
+
+      switch (true) {
+        case allTips.length > 9:
+          for (let i = 0; i < 10; i++) {
+            let game = allTips[i];
+            exoticArray.push(game);
+          }
+          gamesInExotic = 10;
+          minimumExotic = 8;
+          exoticStake = 0.1;
+          exoticString = "45 8-folds, 10 9-folds and 1 10-fold";
+          price = getCoverBetMaxReturns(
+            exoticArray,
+            minimumExotic,
+            exoticStake
+          );
+          break;
+        case allTips.length === 9:
+          for (let i = 0; i < 9; i++) {
+            let game = allTips[i];
+            exoticArray.push(game);
+          }
+          gamesInExotic = 9;
+          minimumExotic = 7;
+          exoticStake = 0.1;
+          exoticString = "36 7-folds, 9 8-folds and 1 9-fold";
+          price = getCoverBetMaxReturns(
+            exoticArray,
+            minimumExotic,
+            exoticStake
+          );
+          break;
+        case allTips.length === 8:
+          for (let i = 0; i < 8; i++) {
+            let game = allTips[i];
+            exoticArray.push(game);
+          }
+          gamesInExotic = 8;
+          minimumExotic = 6;
+          exoticStake = 0.1;
+          exoticString = "28 6-folds, 8 7-folds and 1 8-fold";
+          price = getCoverBetMaxReturns(
+            exoticArray,
+            minimumExotic,
+            exoticStake
+          );
+          break;
+        case allTips.length === 7:
+          for (let i = 0; i < 7; i++) {
+            let game = allTips[i];
+            exoticArray.push(game);
+          }
+          gamesInExotic = 7;
+          minimumExotic = 6;
+          exoticStake = 1;
+          exoticString = "7 6-folds and 1 7-fold";
+          price = getCoverBetMaxReturns(
+            exoticArray,
+            minimumExotic,
+            exoticStake
+          );
+          break;
+        case allTips.length === 6:
+          for (let i = 0; i < 6; i++) {
+            let game = allTips[i];
+            exoticArray.push(game);
+          }
+          gamesInExotic = 6;
+          minimumExotic = 5;
+          exoticStake = 1;
+          exoticString = "6 5-folds and 1 6-fold";
+          price = getCoverBetMaxReturns(
+            exoticArray,
+            minimumExotic,
+            exoticStake
+          );
+          break;
+        case allTips.length === 5:
+          for (let i = 0; i < 5; i++) {
+            let game = allTips[i];
+            exoticArray.push(game);
+          }
+          gamesInExotic = 5;
+          minimumExotic = 4;
+          exoticStake = 1;
+          exoticString = "5 4-folds and 1 5-fold";
+          price = getCoverBetMaxReturns(
+            exoticArray,
+            minimumExotic,
+            exoticStake
+          );
+          break;
+        default:
+          break;
+      }
+
+      // if (allTips.length > 9) {
+      //   for (let i = 0; i < 10; i++) {
+      //     let game = allTips[i];
+      //     exoticArray.push(game);
+      //   }
+      //   price = getCoverBetMaxReturns(exoticArray, 8, 0.1);
+      //   console.log(price);
+      // } else if (allTips.length === 8) {
+      //   for (let i = 0; i < 10; i++) {
+      //     let game = allTips[i];
+      //     exoticArray.push(game);
+      //   }
+      //   price = getCoverBetMaxReturns(exoticArray, 8, 0.1);
+      //   console.log(price);
+      // }
 
       bestBets.sort(function (a, b) {
         if (a.comparisonScore === b.comparisonScore) {
@@ -1764,7 +1863,10 @@ export async function getScorePrediction(day, mocked) {
             await diff(match.unroundedGoalsA, match.unroundedGoalsB)
           ),
         };
-        if (match.prediction !== "draw" && longShotPredictionObject.comparisonScore > 3) {
+        if (
+          match.prediction !== "draw" &&
+          longShotPredictionObject.comparisonScore > 3
+        ) {
           longShotTips.push(longShotPredictionObject);
         }
       } else if (
@@ -1781,7 +1883,10 @@ export async function getScorePrediction(day, mocked) {
             await diff(match.unroundedGoalsB, match.unroundedGoalsA)
           ),
         };
-        if (match.prediction !== "draw" && longShotPredictionObject.comparisonScore < -3) {
+        if (
+          match.prediction !== "draw" &&
+          longShotPredictionObject.comparisonScore < -3
+        ) {
           longShotTips.push(longShotPredictionObject);
         }
       }
@@ -1797,8 +1902,6 @@ export async function getScorePrediction(day, mocked) {
       } else {
         formTrendScoreComparison = 0;
       }
-
-      console.log(`${match.homeTeam} score ${formTrendScoreComparison}`);
 
       if (
         match.prediction === "draw" &&
@@ -1821,7 +1924,6 @@ export async function getScorePrediction(day, mocked) {
           drawPredictionObject.goalDifferential < 0.5
         ) {
           drawTips.push(drawPredictionObject);
-          console.log(drawPredictionObject.goalDifferential);
         }
       }
 
@@ -1857,55 +1959,76 @@ export async function getScorePrediction(day, mocked) {
   await getSuccessMeasure(matches);
 
   await getNewTips(allTips);
+
   // await renderTips();
 }
 
-async function renderTips() {
-  if (bestBets.length > 0) {
-    ReactDOM.render(
-      <div className="PredictionContainer">
-        <Fragment>
-          <Collapsable
-            buttonText={"Bets of the day"}
-            className={"PredictionsOfTheDay"}
-            text={
-              <ul className="BestPredictions">
-                <div className="BestPredictionsExplainer">
-                  Best single bets of the day
-                </div>
-                {bestBets.map((tip) => (
-                  <li className={tip.outcome} key={tip.team}>
-                    {tip.team}: {tip.odds}
-                  </li>
-                ))}
-              </ul>
-            }
-          />
-        </Fragment>
-      </div>,
-      document.getElementById("bestBetsOfTheDay")
-    );
-  } else {
-    ReactDOM.render(
-      <div className="PredictionContainer">
-        <Fragment>
-          <Collapsable
-            buttonText={"Bets of the day"}
-            className={"PredictionsOfTheDay"}
-            text={
-              <ul className="BestPredictions">
-                <div className="BestPredictionsExplainer">
-                  No games fit the criteria
-                </div>
-              </ul>
-            }
-          />
-        </Fragment>
-      </div>,
-      document.getElementById("bestBetsOfTheDay")
+function getAccumulatorPrice(priceArray) {
+  var result = 1;
+
+  for (var i = 0; i < priceArray.length; i++)
+    result = result * priceArray[i].rawOdds;
+
+  return result;
+}
+
+function getCoverBetMaxReturns(priceArray, minAccSize, stake) {
+  var total = 0;
+  combinations = 0;
+
+  for (var i = minAccSize; i <= priceArray.length; i++) {
+    var perms = getUniquePermutations(priceArray, i);
+    combinations = combinations + perms.length;
+
+    for (var j = 0; j < perms.length; j++)
+      total += getAccumulatorPrice(perms[j]) * stake;
+  }
+  return total;
+}
+
+function getUniquePermutations(arr, permLength) {
+  if (arr.length <= permLength) return [arr];
+
+  var permutations = [];
+  var newArr = [];
+
+  newArr = arr.slice(0);
+
+  for (var i = 0; i < arr.length; i++) {
+    newArr = arr.slice(0);
+    newArr.splice(i, 1);
+    permutations = twoDimArrayUnion(
+      permutations,
+      getUniquePermutations(newArr, permLength)
     );
   }
+  return permutations;
+}
 
+function twoDimArrayUnion(arr1, arr2) {
+  for (var i = 0; i < arr2.length; i++) {
+    var duplicate = false;
+
+    for (var j = 0; j < arr1.length; j++)
+      if (arr1[j].length === arr2[i].length)
+        for (var k = 0; k < arr1[j].length; k++)
+          if (arr1[j][k] !== arr2[i][k]) break;
+          else if (k === arr1[j].length - 1) duplicate = true;
+
+    if (!duplicate) arr1.push(arr2[i]);
+  }
+
+  return arr1;
+}
+
+function NewlineText(props) {
+  const text = props.text;
+  const newText = text.split("\n").map((str) => <p>{str}</p>);
+
+  return newText;
+}
+
+async function renderTips() {
   if (newArray.length > 0) {
     ReactDOM.render(
       <div className="PredictionContainer">
@@ -1957,6 +2080,56 @@ async function renderTips() {
         </Fragment>
       </div>,
       document.getElementById("bestPredictions")
+    );
+  }
+
+  if (exoticArray.length > 4) {
+    ReactDOM.render(
+      <div className="PredictionContainer">
+        <Fragment>
+          <Collapsable
+            buttonText={"Build me an exotic bet"}
+            className={"PredictionsOfTheDay"}
+            text={
+              <ul className="BestPredictions">
+                <div className="BestPredictionsExplainer">
+                  <NewlineText
+                    text={`${gamesInExotic} games: ${exoticString}\nStake per multi: ${exoticStake} units - ${combinations} combinations\nTotal stake: ${(
+                      exoticStake * combinations
+                    ).toFixed(2)} unit(s)`}
+                  />
+                  {`Potential winnings: ${price.toFixed(2)} units`}
+                </div>
+                {exoticArray.map((tip) => (
+                  <li className={tip.outcome} key={tip.team}>
+                    {tip.team}: {tip.odds}
+                  </li>
+                ))}
+              </ul>
+            }
+          />
+        </Fragment>
+      </div>,
+      document.getElementById("exoticOfTheDay")
+    );
+  } else {
+    ReactDOM.render(
+      <div className="PredictionContainer">
+        <Fragment>
+          <Collapsable
+            buttonText={"Build me an exotic bet"}
+            className={"PredictionsOfTheDay"}
+            text={
+              <ul className="BestPredictions">
+                <div className="BestPredictionsExplainer">
+                  Not enough games for this feature
+                </div>
+              </ul>
+            }
+          />
+        </Fragment>
+      </div>,
+      document.getElementById("exoticOfTheDay")
     );
   }
 
