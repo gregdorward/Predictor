@@ -5,6 +5,18 @@ import Radio from "./components/radio";
 import { Button } from "./components/Button";
 import OddsRadio from "./components/OddsRadio";
 import { selectedOdds } from "./components/OddsRadio";
+import {
+  FacebookShareButton,
+  FacebookIcon,
+  RedditShareButton,
+  RedditIcon,
+  TelegramShareButton,
+  TelegramIcon,
+  TwitterShareButton,
+  TwitterIcon,
+  WhatsappShareButton,
+  WhatsappIcon,
+} from "react-share";
 
 import {
   today,
@@ -280,6 +292,49 @@ function App() {
             footystats.org
           </a>
         </div>
+      </div>
+      <div className="Social">
+        <TwitterShareButton
+          url={"www.xgtipping.com"}
+          title={"#XGTipping"}
+          className="ShareButton"
+          style={{ backgroundColor: "#f0f0f0", boxShadow: "none" }}
+        >
+          <TwitterIcon size={"3em"} round={true} />
+        </TwitterShareButton>
+        <FacebookShareButton
+          url={"www.xgtipping.com"}
+          quote={"XGTipping - data-driven football predictions"}
+          className="ShareButton"
+          style={{ backgroundColor: "#f0f0f0", boxShadow: "none" }}
+        >
+          <FacebookIcon size={"3em"} round={true} />
+        </FacebookShareButton>
+        <RedditShareButton
+          url={"www.xgtipping.com"}
+          title={"XGTipping"}
+          className="ShareButton"
+          style={{ backgroundColor: "#f0f0f0", boxShadow: "none" }}
+        >
+          <RedditIcon size={"3em"} round={true} />
+        </RedditShareButton>
+        <WhatsappShareButton
+          url={"www.xgtipping.com"}
+          title={"XGTipping"}
+          separator=": "
+          className="ShareButton"
+          style={{ backgroundColor: "#f0f0f0", boxShadow: "none" }}
+        >
+          <WhatsappIcon size={"3em"} round={true} />
+        </WhatsappShareButton>
+        <TelegramShareButton
+          url={"XGTipping"}
+          title={"XGTipping"}
+          className="ShareButton"
+          style={{ backgroundColor: "#f0f0f0", boxShadow: "none" }}
+        >
+          <TelegramIcon size={"3em"} round={true} />
+        </TelegramShareButton>
       </div>
     </div>
   );

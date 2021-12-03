@@ -16,6 +16,7 @@
     "react-escape-outside": "^0.1.2",
     "react-loading-icons": "^1.0.4",
     "react-scripts": "4.0.1",
+    "react-share": "^4.4.0",
     "styled-components": "^5.2.1",
     "web-vitals": "^0.2.4"
   },

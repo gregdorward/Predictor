@@ -542,9 +542,12 @@ p {
 
 .DataLink {
   color: black;
-  padding-bottom: 1em;
+  border-bottom: 1em;
 }
 
+.Social {
+  padding-top: 1em;
+}
 .leagueName {
   font-size: 1.1em;
   font-weight: 550;

@@ -1811,22 +1811,6 @@ export async function getScorePrediction(day, mocked) {
           break;
       }
 
-      // if (allTips.length > 9) {
-      //   for (let i = 0; i < 10; i++) {
-      //     let game = allTips[i];
-      //     exoticArray.push(game);
-      //   }
-      //   price = getCoverBetMaxReturns(exoticArray, 8, 0.1);
-      //   console.log(price);
-      // } else if (allTips.length === 8) {
-      //   for (let i = 0; i < 10; i++) {
-      //     let game = allTips[i];
-      //     exoticArray.push(game);
-      //   }
-      //   price = getCoverBetMaxReturns(exoticArray, 8, 0.1);
-      //   console.log(price);
-      // }
-
       bestBets.sort(function (a, b) {
         if (a.comparisonScore === b.comparisonScore) {
           return b.goalDifferential - a.goalDifferential;
@@ -1834,8 +1818,6 @@ export async function getScorePrediction(day, mocked) {
           return b.comparisonScore > a.comparisonScore ? 1 : -1;
         }
       });
-
-      // tips.sort((a, b) => b.comparisonScore - a.comparisonScore);
 
       if (
         match.btts === true &&
