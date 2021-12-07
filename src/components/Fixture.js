@@ -3,6 +3,7 @@ import { CreateBadge } from "./createBadge";
 import Collapsable from "../components/CollapsableElement";
 import { createStatsDiv } from "../logic/getStats";
 import { Button } from "../components/Button";
+import { renderTable, tableArray } from "../logic/getFixtures";
 
 let resultValue;
 let leagueName;
@@ -15,8 +16,7 @@ function GetDivider(fixture) {
 
   if (isPrediction === false && matchStatus !== "complete") {
     return (
-      <div className="divider" data-cy={"divider-" + fixture.fixture.id}
-      >
+      <div className="divider" data-cy={"divider-" + fixture.fixture.id}>
         {"V"}
       </div>
     );
@@ -53,8 +53,6 @@ function GetDivider(fixture) {
         break;
     }
 
-    // console.log(`match.status ${fixture.fixture.status} match.prediction ${fixture.fixture.prediction} match.outcome ${fixture.fixture.outcome}`)
-
     switch (true) {
       case fixture.fixture.goalsA > fixture.fixture.goalsB:
         prediction = 0;
@@ -69,7 +67,6 @@ function GetDivider(fixture) {
         break;
     }
 
-
     if (fixture.fixture.homeGoals > 0 && fixture.fixture.awayGoals > 0) {
       fixture.fixture.bttsOutcome = "bttsWon";
     } else {
@@ -78,62 +75,62 @@ function GetDivider(fixture) {
 
     if (outcome === prediction) {
       // console.log(fixture.fixture.game);
-      if(fixture.fixture.homeOdds !== 0){
-
-      switch (true) {
-        case outcome === 0:
-          fixture.fixture.profit = fixture.fixture.homeOdds;
-          break;
-        case outcome === 1:
-          fixture.fixture.profit = fixture.fixture.drawOdds;
-          break;
-        case outcome === 2:
-          fixture.fixture.profit = fixture.fixture.awayOdds;
-          break;
-        default:
-          break;
-      }
-    } else fixture.fixture.profit = 1
-
-      let name = "CorrectScore"
-      
-        if(fixture.fixture.goalsA === fixture.fixture.homeGoals && fixture.fixture.goalsB === fixture.fixture.awayGoals) {
-          fixture.fixture.exactScore = true
-          return (
-            <Fragment>
-              <div className="Result">{`${fixture.fixture.homeGoals} - ${fixture.fixture.awayGoals}`}</div>
-              <div
-                className="ExactScore"
-                key={fixture.fixture.homeTeam}
-                data-cy={"score-" + fixture.fixture.id}
-              >{`${fixture.fixture.goalsA} - ${fixture.fixture.goalsB}`}</div>
-            </Fragment>
-          );
-        } else {
-          fixture.fixture.exactScore = false
-          return (
-            <Fragment>
-              <div className="Result">{`${fixture.fixture.homeGoals} - ${fixture.fixture.awayGoals}`}</div>
-              <div
-                className="CorrectScore"
-                key={fixture.fixture.homeTeam}
-                data-cy={"score-" + fixture.fixture.id}
-              >{`${fixture.fixture.goalsA} - ${fixture.fixture.goalsB}`}</div>
-            </Fragment>
-          );
+      if (fixture.fixture.homeOdds !== 0) {
+        switch (true) {
+          case outcome === 0:
+            fixture.fixture.profit = fixture.fixture.homeOdds;
+            break;
+          case outcome === 1:
+            fixture.fixture.profit = fixture.fixture.drawOdds;
+            break;
+          case outcome === 2:
+            fixture.fixture.profit = fixture.fixture.awayOdds;
+            break;
+          default:
+            break;
         }
-      // console.log(`profit ${fixture.fixture.profit}`);
+      } else fixture.fixture.profit = 1;
 
+      let name = "CorrectScore";
 
-    } else if (outcome !== prediction) {
-      if(fixture.fixture.homeOdds !== 0){
-      fixture.fixture.profit = 0;
+      if (
+        fixture.fixture.goalsA === fixture.fixture.homeGoals &&
+        fixture.fixture.goalsB === fixture.fixture.awayGoals
+      ) {
+        fixture.fixture.exactScore = true;
+        return (
+          <Fragment>
+            <div className="Result">{`${fixture.fixture.homeGoals} - ${fixture.fixture.awayGoals}`}</div>
+            <div
+              className="ExactScore"
+              key={fixture.fixture.homeTeam}
+              data-cy={"score-" + fixture.fixture.id}
+            >{`${fixture.fixture.goalsA} - ${fixture.fixture.goalsB}`}</div>
+          </Fragment>
+        );
       } else {
-        fixture.fixture.profit = 1
+        fixture.fixture.exactScore = false;
+        return (
+          <Fragment>
+            <div className="Result">{`${fixture.fixture.homeGoals} - ${fixture.fixture.awayGoals}`}</div>
+            <div
+              className="CorrectScore"
+              key={fixture.fixture.homeTeam}
+              data-cy={"score-" + fixture.fixture.id}
+            >{`${fixture.fixture.goalsA} - ${fixture.fixture.goalsB}`}</div>
+          </Fragment>
+        );
+      }
+      // console.log(`profit ${fixture.fixture.profit}`);
+    } else if (outcome !== prediction) {
+      if (fixture.fixture.homeOdds !== 0) {
+        fixture.fixture.profit = 0;
+      } else {
+        fixture.fixture.profit = 1;
       }
       // console.log(fixture.fixture.game);
       // console.log(`profit ${fixture.fixture.profit}`);
-      fixture.fixture.exactScore = false
+      fixture.fixture.exactScore = false;
       return (
         <Fragment>
           <div className="Result">{`${fixture.fixture.homeGoals} - ${fixture.fixture.awayGoals}`}</div>
@@ -158,13 +155,18 @@ function GetDivider(fixture) {
 }
 
 function getStyle(bool) {
-
-    return "individualFixture";
+  return "individualFixture";
 }
 
 const SingleFixture = ({ fixture }) => (
   <div>
-  <div className="leagueName">{fixture.leagueName}</div>
+    <div
+      className="leagueName"
+      onClick={() => renderTable(fixture.leagueIndex)}
+    >
+      {fixture.leagueName}
+    </div>
+    <div className="LeagueTable" id={`leagueName${fixture.leagueIndex}`}></div>
     <li
       className={getStyle(fixture.btts)}
       key={fixture.id}
@@ -216,23 +218,44 @@ let newText = text.split("\n").map((i) => {
 const List = ({ fixtures }) => (
   <div>
     <Fragment>
-      <Collapsable className={"HowToUse"} buttonText={"Show / Hide help"} text={newText} />
+      <Collapsable
+        className={"HowToUse"}
+        buttonText={"Show / Hide help"}
+        text={newText}
+      />
     </Fragment>
     <div id="Headers"></div>
     <p>
-      <a className="DonationLink" href="#bitcoin" style={{fontSize: "1.2em", textDecoration: "none", color: "black", padding: "0.4em"}}>Donate &#8595;</a>
+      <a
+        className="DonationLink"
+        href="#bitcoin"
+        style={{
+          fontSize: "1.2em",
+          textDecoration: "none",
+          color: "black",
+          padding: "0.4em",
+        }}
+      >
+        Donate &#8595;
+      </a>
     </p>
     <ul className="FixtureList" id="FixtureList">
       {fixtures.map((fixture, i) => (
-        <SingleFixture fixture={fixture}/>
+        <SingleFixture fixture={fixture} />
       ))}
     </ul>
-    <div className="bitcoin" id="bitcoin">Donations towards running costs welcome<span className="bitcoinSymbol">&#x20bf;itcoin address</span><span className="bitcoinAddress">bc1q7j62txkvhfu0dt3l0s07saze6pjnyzs26wfgp0</span></div>
+    <div className="bitcoin" id="bitcoin">
+      Donations towards running costs welcome
+      <span className="bitcoinSymbol">&#x20bf;itcoin address</span>
+      <span className="bitcoinAddress">
+        bc1q7j62txkvhfu0dt3l0s07saze6pjnyzs26wfgp0
+      </span>
+    </div>
   </div>
 );
 
 export function Fixture(props) {
   resultValue = props.result;
 
-  return <List fixtures={props.fixtures} result={resultValue}/>;
+  return <List fixtures={props.fixtures} result={resultValue} />;
 }

@@ -55,6 +55,12 @@
 
     transition: all 0.2s;
   }
+
+  .LeagueTable {
+    padding-bottom: 0.5em;
+    padding-left: 15em;
+    padding-right: 15em;
+  }
 }
 
 .teamComparisonScore {
@@ -137,6 +143,12 @@
 
     transition: all 0.2s;
   }
+
+  .LeagueTable {
+    padding-bottom: 0.5em;
+    padding-left: 10em;
+    padding-right: 10em;
+  }
 }
 
 @media (max-width: 1200px) {
@@ -195,6 +207,12 @@
     text-align: center;
 
     transition: all 0.2s;
+  }
+
+  .LeagueTable {
+    padding-bottom: 0.5em;
+    padding-left: 7.5em;
+    padding-right: 7.5em;
   }
 }
 
@@ -255,6 +273,12 @@
     transition: all 0.2s;
     box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.2), 0 3px 10px 0 rgba(0, 0, 0, 0.19);
   }
+
+  .LeagueTable {
+    padding-bottom: 0.5em;
+    padding-left: 5em;
+    padding-right: 5em;
+  }
 }
 
 @media (max-width: 600px) {
@@ -313,6 +337,12 @@
 
     transition: all 0.2s;
   }
+
+  .LeagueTable {
+    padding-bottom: 0.5em;
+    padding-left: 3em;
+    padding-right: 3em;
+  }
 }
 
 @media (max-width: 460px) {
@@ -370,6 +400,12 @@
     text-align: center;
 
     transition: all 0.2s;
+  }
+
+  .LeagueTable {
+    padding-bottom: 0.5em;
+    padding-left: 1em;
+    padding-right: 1em;
   }
 }
 
@@ -553,8 +589,15 @@ p {
   font-weight: 550;
   color: black;
   padding-top: 1em;
-  padding-bottom: 1em;
+  padding-bottom: 0.5em;
 }
+
+/* .LeagueTable {
+  padding-bottom: 0.5em;
+  padding-left: 0.25em;
+  padding-right: 0.25em;
+} */
+
 .fixture {
   display: flex;
   align-items: center;

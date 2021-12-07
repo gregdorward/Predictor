@@ -7,6 +7,8 @@ import { Button } from "../components/Button";
 import { getScorePrediction } from "../logic/getScorePredictions";
 import { ThreeDots } from "react-loading-icons";
 import { selectedOdds } from "../components/OddsRadio";
+import LeagueTable from "../components/LeagueTable";
+
 var oddslib = require("oddslib");
 
 require("dotenv").config();
@@ -18,6 +20,7 @@ export const resultedMatches = [];
 var league;
 var leagueGames = [];
 export var leagueArray = [];
+export let leagueInstance;
 var lastFiveFormHome;
 var lastFiveFormAway;
 var lastSixFormHome;
@@ -29,20 +32,16 @@ export const [currentDay, month, year] = new Date()
   .toLocaleDateString("en-US")
   .split("/");
 let tomorrowsDate = new Date();
-tomorrowsDate.setDate(new Date().getDate() + 1);
-let [
-  tomorrowDay,
-  tomorrowMonth,
-  tomorrowYear,
-] = tomorrowsDate.toLocaleDateString("en-US").split("/");
+tomorrowsDate.setDate(new Date().getDate() + 3);
+let [tomorrowDay, tomorrowMonth, tomorrowYear] = tomorrowsDate
+  .toLocaleDateString("en-US")
+  .split("/");
 
 let yesterdaysDate = new Date();
 yesterdaysDate.setDate(new Date().getDate() - 1);
-let [
-  yesterdayDay,
-  yesterdayMonth,
-  yesterdayYear,
-] = yesterdaysDate.toLocaleDateString("en-US").split("/");
+let [yesterdayDay, yesterdayMonth, yesterdayYear] = yesterdaysDate
+  .toLocaleDateString("en-US")
+  .split("/");
 
 // var prevSat = new Date();
 
@@ -50,39 +49,31 @@ let [
 
 // console.log(prevSat)
 
-
-
 var d = new Date();
 
 // set to Monday of this week
-d.setDate(d.getDate() - (d.getDay() + 6) % 7);
+d.setDate(d.getDate() - ((d.getDay() + 6) % 7));
 
 // set to Saturday just gone
 d.setDate(d.getDate() - 2);
 
-
-let [
-  saturdayDay,
-  saturdayMonth,
-  saturdayYear,
-] = d.toLocaleDateString("en-US").split("/");
-
+let [saturdayDay, saturdayMonth, saturdayYear] = d
+  .toLocaleDateString("en-US")
+  .split("/");
 
 var historicDate = new Date();
 
 // set to Monday of this week
-historicDate.setDate(historicDate.getDate() - (historicDate.getDay() + 6) % 7);
+historicDate.setDate(
+  historicDate.getDate() - ((historicDate.getDay() + 6) % 7)
+);
 
 // set to Saturday prior to last
 historicDate.setDate(historicDate.getDate() - 9);
 
-
-let [
-  historicDay,
-  historicMonth,
-  historicYear,
-] = historicDate.toLocaleDateString("en-US").split("/");
-
+let [historicDay, historicMonth, historicYear] = historicDate
+  .toLocaleDateString("en-US")
+  .split("/");
 
 export const saturday = `${process.env.REACT_APP_EXPRESS_SERVER}matches/${saturdayYear}-${saturdayDay}-${saturdayMonth}`;
 export const historic = `${process.env.REACT_APP_EXPRESS_SERVER}matches/${historicYear}-${historicDay}-${historicMonth}`;
@@ -100,6 +91,49 @@ export async function diff(a, b) {
 }
 
 export let allForm = [];
+export let tableArray = [];
+leagueInstance = [];
+
+export async function generateTables(){
+  leagueArray.forEach(function (league) {
+    leagueInstance = [];
+    console.log(league.data)
+    if (league.data.all_matches_table_overall) {
+      console.log(league.data)
+      for (let index = 0; index < league.data.all_matches_table_overall.length; index++) {
+        let currentTeam = league.data.all_matches_table_overall[index];
+        const team = { 
+          leagueName: league.data,
+          Position: index + 1,
+          Name: currentTeam.cleanName,
+          Played: currentTeam.matchesPlayed,
+          Wins: currentTeam.seasonWins_overall,
+          Draws: currentTeam.seasonDraws_overall,
+          Losses: currentTeam.seasonLosses_overall,
+          For: currentTeam.seasonGoals,
+          Against: currentTeam.seasonConceded, 
+          GoalDifference: currentTeam.seasonGoalDifference,
+          Points: currentTeam.points,            
+        };
+        leagueInstance.push(team);
+      }
+      tableArray.push(leagueInstance);
+    }
+  });
+}
+
+export async function renderTable(index){
+  let league = tableArray[index]
+  
+  ReactDOM.render(
+    <LeagueTable
+      Teams={league}
+    />,
+    document.getElementById(`leagueName${index}`)
+  )
+  
+}
+
 
 async function createFixture(match, result, mockBool) {
   let roundedHomeOdds;
@@ -202,14 +236,14 @@ async function createFixture(match, result, mockBool) {
 var myHeaders = new Headers();
 myHeaders.append("Origin", "https://gregdorward.github.io");
 
-export async function generateFixtures(day, radioState, selectedOdds) {  
+export async function generateFixtures(day, radioState, selectedOdds) {
   let url;
   switch (day) {
     case "lastSaturday":
-      url = saturday
+      url = saturday;
       break;
     case "historic":
-      url = historic
+      url = historic;
       break;
     case "yesterdaysFixtures":
       url = yesterday;
@@ -224,13 +258,14 @@ export async function generateFixtures(day, radioState, selectedOdds) {
       break;
   }
 
-  console.log(day)
+  console.log(day);
 
   fixtureResponse = await fetch(url);
 
   await fixtureResponse.json().then((fixtures) => {
     fixtureArray = Array.from(fixtures.data);
   });
+  console.log(fixtureArray);
 
   let form;
   let formArray;
@@ -264,6 +299,8 @@ export async function generateFixtures(day, radioState, selectedOdds) {
     isStoredLocally = false;
   }
 
+ 
+
   ReactDOM.render(
     <div>
       <div className="LoadingText">Loading all league data</div>
@@ -281,6 +318,9 @@ export async function generateFixtures(day, radioState, selectedOdds) {
     await league.json().then((leagues) => {
       leagueArray = Array.from(leagues.leagueArray);
     });
+
+    generateTables(leagueArray)
+    // renderTable(tableArray[0])
     //could possibly get league positions from here
   } else {
     for (let i = 0; i < orderedLeagues.length; i++) {
@@ -291,7 +331,8 @@ export async function generateFixtures(day, radioState, selectedOdds) {
       await league.json().then((table) => {
         leagueArray.push(table);
       });
-
+      console.log(leagueArray);
+      generateTables(leagueArray)
 
     }
   }
@@ -326,6 +367,7 @@ export async function generateFixtures(day, radioState, selectedOdds) {
       let match = {};
       if (orderedLeagues[i].name !== previousLeagueName) {
         match.leagueName = orderedLeagues[i].name;
+        match.leagueIndex = i
       } else {
         match.leagueName = "";
       }
@@ -444,7 +486,6 @@ export async function generateFixtures(day, radioState, selectedOdds) {
         awaySeasonPPG = "N/A";
       }
 
-
       if (!isFormStored) {
         form = await getForm(match);
 
@@ -460,28 +501,34 @@ export async function generateFixtures(day, radioState, selectedOdds) {
         //   );
 
         //   var slug = homeExtract.split(",53:").pop().toUpperCase();
-          let homeFormString5 = form[0].data[0].stats.additional_info.formRun_overall.toUpperCase()
-          let awayFormString5 = form[1].data[0].stats.additional_info.formRun_overall.toUpperCase()
-          let homeFormString6 = form[0].data[1].stats.additional_info.formRun_overall.toUpperCase()
-          let awayFormString6 = form[1].data[1].stats.additional_info.formRun_overall.toUpperCase()
-          let homeFormString10 = form[0].data[2].stats.additional_info.formRun_overall.toUpperCase()
-          let awayFormString10 = form[1].data[2].stats.additional_info.formRun_overall.toUpperCase()
-          lastFiveFormHome = Array.from(homeFormString5)
-          lastSixFormHome = Array.from(homeFormString6)
-          lastTenFormHome = Array.from(homeFormString10)
-          lastFiveFormAway = Array.from(awayFormString5)
-          lastSixFormAway = Array.from(awayFormString6)
-          lastTenFormAway = Array.from(awayFormString10)
+        let homeFormString5 =
+          form[0].data[0].stats.additional_info.formRun_overall.toUpperCase();
+        let awayFormString5 =
+          form[1].data[0].stats.additional_info.formRun_overall.toUpperCase();
+        let homeFormString6 =
+          form[0].data[1].stats.additional_info.formRun_overall.toUpperCase();
+        let awayFormString6 =
+          form[1].data[1].stats.additional_info.formRun_overall.toUpperCase();
+        let homeFormString10 =
+          form[0].data[2].stats.additional_info.formRun_overall.toUpperCase();
+        let awayFormString10 =
+          form[1].data[2].stats.additional_info.formRun_overall.toUpperCase();
+        lastFiveFormHome = Array.from(homeFormString5);
+        lastSixFormHome = Array.from(homeFormString6);
+        lastTenFormHome = Array.from(homeFormString10);
+        lastFiveFormAway = Array.from(awayFormString5);
+        lastSixFormAway = Array.from(awayFormString6);
+        lastTenFormAway = Array.from(awayFormString10);
 
-          if(teamPositionHome === 0){
-            teamPositionHome = "N/A"
-            homePrefix = "";
-          }
+        if (teamPositionHome === 0) {
+          teamPositionHome = "N/A";
+          homePrefix = "";
+        }
 
-          if(teamPositionAway === 0){
-            teamPositionAway = "N/A"
-            awayPrefix = "";
-          }
+        if (teamPositionAway === 0) {
+          teamPositionAway = "N/A";
+          awayPrefix = "";
+        }
         // } else {
         //   lastFiveFormHome = "N/A"
         //   lastFiveFormAway = "N/A"
@@ -738,7 +785,9 @@ export async function generateFixtures(day, radioState, selectedOdds) {
                 form[1].data[0].stats.dangerous_attacks_avg_overall
               ),
               PPG: parseFloat(form[1].data[0].stats.seasonPPG_away),
-              AttacksAverage: parseFloat(form[1].data[0].stats.attacks_avg_away),
+              AttacksAverage: parseFloat(
+                form[1].data[0].stats.attacks_avg_away
+              ),
               AverageDangerousAttacks: parseFloat(
                 form[1].data[0].stats.dangerous_attacks_avg_away
               ),
@@ -797,7 +846,9 @@ export async function generateFixtures(day, radioState, selectedOdds) {
                 form[1].data[1].stats.dangerous_attacks_avg_overall
               ),
               PPG: parseFloat(form[1].data[1].stats.seasonPPG_away),
-              AttacksAverage: parseFloat(form[1].data[1].stats.attacks_avg_away),
+              AttacksAverage: parseFloat(
+                form[1].data[1].stats.attacks_avg_away
+              ),
               AverageDangerousAttacks: parseFloat(
                 form[1].data[1].stats.dangerous_attacks_avg_away
               ),
@@ -856,7 +907,9 @@ export async function generateFixtures(day, radioState, selectedOdds) {
                 form[1].data[2].stats.dangerous_attacks_avg_overall
               ),
               PPG: parseFloat(form[1].data[2].stats.seasonPPG_away),
-              AttacksAverage: parseFloat(form[1].data[2].stats.attacks_avg_away),
+              AttacksAverage: parseFloat(
+                form[1].data[2].stats.attacks_avg_away
+              ),
               AverageDangerousAttacks: parseFloat(
                 form[1].data[2].stats.dangerous_attacks_avg_away
               ),
@@ -896,7 +949,6 @@ export async function generateFixtures(day, radioState, selectedOdds) {
       match.expectedGoalsHomeToDate = fixture.team_a_xg_prematch;
       match.expectedGoalsAwayToDate = fixture.team_b_xg_prematch;
 
-
       if (match.status !== "canceled" || match.status !== "suspended") {
         matches.push(match);
         await createFixture(match, false);
@@ -935,4 +987,3 @@ export async function generateFixtures(day, radioState, selectedOdds) {
     }
   );
 }
-
