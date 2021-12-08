@@ -588,7 +588,7 @@ p {
   font-size: 1.2em;
   font-weight: 550;
   color: black;
-  padding-top: 2em;
+  padding-top: 1em;
   padding-bottom: 0.5em;
 }
 
@@ -618,6 +618,7 @@ p {
   align-items: center;
   align-content: center;
   box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.2), 0 3px 10px 0 rgba(0, 0, 0, 0.19);
+  margin: 0.5em;
 }
 
 .BTTSFixture {
