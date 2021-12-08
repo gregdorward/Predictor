@@ -158,15 +158,33 @@ function getStyle(bool) {
   return "individualFixture";
 }
 
+function renderLeagueName(fixture) {
+  let name = fixture.leagueName;
+  if (name === null) {
+    return <div></div>;
+  } else {
+    return (
+      <div>
+        <div
+          className="leagueName"
+          key={`leagueName${fixture.leagueIndex}div`}
+          onClick={() => renderTable(fixture.leagueIndex)}
+        >
+          {fixture.leagueName} &#9776;
+        </div>
+        <div
+          className="LeagueTable"
+          key={`leagueName${fixture.leagueIndex}`}
+          id={`leagueName${fixture.leagueIndex}`}
+        ></div>
+      </div>
+    );
+  }
+}
+
 const SingleFixture = ({ fixture }) => (
-  <div>
-    <div
-      className="leagueName"
-      onClick={() => renderTable(fixture.leagueIndex)}
-    >
-      {fixture.leagueName}
-    </div>
-    <div className="LeagueTable" id={`leagueName${fixture.leagueIndex}`}></div>
+  <div key={fixture.game}>
+    {renderLeagueName(fixture)}
     <li
       className={getStyle(fixture.btts)}
       key={fixture.id}
@@ -241,7 +259,7 @@ const List = ({ fixtures }) => (
     </p>
     <ul className="FixtureList" id="FixtureList">
       {fixtures.map((fixture, i) => (
-        <SingleFixture fixture={fixture} />
+        <SingleFixture fixture={fixture} key={fixture.game}/>
       ))}
     </ul>
     <div className="bitcoin" id="bitcoin">

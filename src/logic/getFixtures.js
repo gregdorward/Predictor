@@ -97,9 +97,7 @@ leagueInstance = [];
 export async function generateTables(){
   leagueArray.forEach(function (league) {
     leagueInstance = [];
-    console.log(league.data)
     if (league.data.all_matches_table_overall) {
-      console.log(league.data)
       for (let index = 0; index < league.data.all_matches_table_overall.length; index++) {
         let currentTeam = league.data.all_matches_table_overall[index];
         const team = { 
@@ -123,15 +121,18 @@ export async function generateTables(){
 }
 
 export async function renderTable(index){
+  console.log(index)
   let league = tableArray[index]
-
-  ReactDOM.render(
-    <LeagueTable
-      Teams={league}
-    />,
-    document.getElementById(`leagueName${index}`)
-  )
-  
+  console.log(league)
+  if(league !== undefined){
+    ReactDOM.render(
+      <LeagueTable
+        Teams={league}
+        Key={`League${index}`}
+      />,
+      document.getElementById(`leagueName${index}`)
+    )
+  }  
 }
 
 
@@ -319,6 +320,8 @@ export async function generateFixtures(day, radioState, selectedOdds) {
       leagueArray = Array.from(leagues.leagueArray);
     });
 
+    console.log(leagueArray)
+
     generateTables(leagueArray)
     // renderTable(tableArray[0])
     //could possibly get league positions from here
@@ -369,7 +372,7 @@ export async function generateFixtures(day, radioState, selectedOdds) {
         match.leagueName = orderedLeagues[i].name;
         match.leagueIndex = i
       } else {
-        match.leagueName = "";
+        match.leagueName = null;
       }
       match.id = fixture.id;
       match.competition_id = fixture.competition_id;

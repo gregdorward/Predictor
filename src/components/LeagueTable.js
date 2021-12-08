@@ -42,7 +42,7 @@ export default function LeagueTable(props) {
   console.log(props)
 
   let rows = props.Teams.map((team, i) => (
-    <StyledTableRow key={props.Name}>
+    <StyledTableRow key={`${props.Key}row${i}`}>
     <StyledTableCell component="th" scope="row" >
         {`${team.Position}`}
       </StyledTableCell>
@@ -80,7 +80,7 @@ export default function LeagueTable(props) {
   for (let i = 0; i < props.Teams.length; i++) {
     return (
       <TableContainer component={Paper} className="StatsTable">
-        <Table aria-label="customized table">
+        <Table aria-label="customized table" key={props.Key}>
           <TableHead>
             <TableRow>
               <StyledTableCell>P</StyledTableCell>
