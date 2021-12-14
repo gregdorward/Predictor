@@ -955,8 +955,8 @@ export async function calculateScore(match, index, divider, id) {
       weightingSplitAway = 1;
     }
 
-    homeWeighting = weightingSplitHome * 1;
-    awayWeighting = weightingSplitAway * 1;
+    homeWeighting = weightingSplitHome * 1.2;
+    awayWeighting = weightingSplitAway * 1.2;
 
     let homeCalculation;
     let awayCalculation;
@@ -1541,17 +1541,22 @@ var bttsArray = [];
 var accumulatedOdds = 1;
 let predictions = [];
 
+
 export async function getNewTips(array) {
   newArray = [];
   accumulatedOdds = 1;
 
-  array.forEach((tip) => {
-    if (tip.goalDifferential >= incrementValue && tip.comparisonScore > 0) {
-      newArray.push(tip);
-      accumulatedOdds = parseFloat(accumulatedOdds) * parseFloat(tip.rawOdds);
-    }
-  });
-
+  if(array.length > 1 && incrementValue > 0){
+    array.forEach((tip) => {
+      if ( 
+        array.indexOf(tip) < incrementValue
+        // tip.goalDifferential >= incrementValue && tip.comparisonScore > 0
+        ) {
+        newArray.push(tip);
+        accumulatedOdds = parseFloat(accumulatedOdds) * parseFloat(tip.rawOdds);
+      }
+    });
+  }
   await renderTips(newArray);
 }
 
