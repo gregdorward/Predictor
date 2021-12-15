@@ -1470,10 +1470,11 @@ export async function calculateScore(match, index, divider, id) {
       rawFinalAwayGoals,
     ];
   } else {
-    finalHomeGoals = 0;
-    finalAwayGoals = 0;
-    rawFinalHomeGoals = 0;
-    rawFinalAwayGoals = 0;
+    finalHomeGoals = "";
+    finalAwayGoals = "";
+    rawFinalHomeGoals = "";
+    rawFinalAwayGoals = "";
+    match.status = "void"
   }
 
   return [finalHomeGoals, finalAwayGoals, rawFinalHomeGoals, rawFinalAwayGoals];
@@ -1708,119 +1709,25 @@ export async function getScorePrediction(day, mocked) {
         }
       }
 
+      console.log(allTips)
+      console.log("TEST")
+
       allTips.sort(function (a, b) {
-        if (b.experimentalCalc === a.experimentalCalc) {
+        if (a.goalDifferential === b.goalDifferential) {
           return b.comparisonScore - a.comparisonScore;
         } else {
-          return b.experimentalCalc > a.experimentalCalc ? 1 : -1;
+          return b.goalDifferential > a.goalDifferential ? 1 : -1;
         }
       });
 
-      exoticArray = [];
-      gamesInExotic = 0;
-      exoticStake = 0;
-      exoticString = "";
+      console.log(allTips)
 
-      switch (true) {
-        case allTips.length > 9:
-          for (let i = 0; i < 10; i++) {
-            let game = allTips[i];
-            exoticArray.push(game);
-          }
-          gamesInExotic = 10;
-          minimumExotic = 8;
-          exoticStake = 0.1;
-          exoticString = "45 8-folds, 10 9-folds and 1 10-fold";
-          price = getCoverBetMaxReturns(
-            exoticArray,
-            minimumExotic,
-            exoticStake
-          );
-          break;
-        case allTips.length === 9:
-          for (let i = 0; i < 9; i++) {
-            let game = allTips[i];
-            exoticArray.push(game);
-          }
-          gamesInExotic = 9;
-          minimumExotic = 7;
-          exoticStake = 0.1;
-          exoticString = "36 7-folds, 9 8-folds and 1 9-fold";
-          price = getCoverBetMaxReturns(
-            exoticArray,
-            minimumExotic,
-            exoticStake
-          );
-          break;
-        case allTips.length === 8:
-          for (let i = 0; i < 8; i++) {
-            let game = allTips[i];
-            exoticArray.push(game);
-          }
-          gamesInExotic = 8;
-          minimumExotic = 6;
-          exoticStake = 0.1;
-          exoticString = "28 6-folds, 8 7-folds and 1 8-fold";
-          price = getCoverBetMaxReturns(
-            exoticArray,
-            minimumExotic,
-            exoticStake
-          );
-          break;
-        case allTips.length === 7:
-          for (let i = 0; i < 7; i++) {
-            let game = allTips[i];
-            exoticArray.push(game);
-          }
-          gamesInExotic = 7;
-          minimumExotic = 6;
-          exoticStake = 1;
-          exoticString = "7 6-folds and 1 7-fold";
-          price = getCoverBetMaxReturns(
-            exoticArray,
-            minimumExotic,
-            exoticStake
-          );
-          break;
-        case allTips.length === 6:
-          for (let i = 0; i < 6; i++) {
-            let game = allTips[i];
-            exoticArray.push(game);
-          }
-          gamesInExotic = 6;
-          minimumExotic = 5;
-          exoticStake = 1;
-          exoticString = "6 5-folds and 1 6-fold";
-          price = getCoverBetMaxReturns(
-            exoticArray,
-            minimumExotic,
-            exoticStake
-          );
-          break;
-        case allTips.length === 5:
-          for (let i = 0; i < 5; i++) {
-            let game = allTips[i];
-            exoticArray.push(game);
-          }
-          gamesInExotic = 5;
-          minimumExotic = 4;
-          exoticStake = 1;
-          exoticString = "5 4-folds and 1 5-fold";
-          price = getCoverBetMaxReturns(
-            exoticArray,
-            minimumExotic,
-            exoticStake
-          );
-          break;
-        default:
-          break;
-      }
-
+     
       bestBets.sort(function (a, b) {
-        if (a.comparisonScore === b.comparisonScore) {
-          return b.goalDifferential - a.goalDifferential;
+        if (a.goalDifferential === b.goalDifferential) {
+          return b.comparisonScore - a.comparisonScore;
         } else {
-          return b.comparisonScore > a.comparisonScore ? 1 : -1;
+          return b.goalDifferential > a.goalDifferential ? 1 : -1;
         }
       });
 
@@ -1843,9 +1750,12 @@ export async function getScorePrediction(day, mocked) {
       ) {
         longShotPredictionObject = {
           team: match.homeTeam,
-          odds: match.homeDoubleChance,
+          decimalOdds: match.homeDoubleChance,
+          rawOdds: match.homeOdds,
+          odds: match.fractionHome,
           comparisonScore: match.teamComparisonScore,
-          outcome: match.doubleChancePredictionOutcome,
+          outcome: match.predictionOutcome,
+          doubleChanceOutcome: match.doubleChancePredictionOutcome,
           goalDifferential: parseFloat(
             await diff(match.unroundedGoalsA, match.unroundedGoalsB)
           ),
@@ -1863,9 +1773,12 @@ export async function getScorePrediction(day, mocked) {
       ) {
         longShotPredictionObject = {
           team: match.awayTeam,
-          odds: match.awayDoubleChance,
+          decimalOdds: match.awayDoubleChance,
+          rawOdds: match.awayOdds,
+          odds: match.fractionAway,
           comparisonScore: match.teamComparisonScore,
-          outcome: match.doubleChancePredictionOutcome,
+          outcome: match.predictionOutcome,
+          doubleChanceOutcome: match.doubleChancePredictionOutcome,
           goalDifferential: parseFloat(
             await diff(match.unroundedGoalsB, match.unroundedGoalsA)
           ),
@@ -1881,6 +1794,148 @@ export async function getScorePrediction(day, mocked) {
       longShotTips.sort(function (a, b) {
         return b.goalDifferential - a.goalDifferential;
       });
+
+
+      exoticArray = [];
+      gamesInExotic = 0;
+      exoticStake = 0;
+      exoticString = "";
+
+      switch (true) {
+        case allTips.length > 8 && longShotTips.length > 3:
+          for (let i = 0; i < 8; i++) {
+            let game = allTips[i];
+            exoticArray.push(game);
+          }
+          for (let i = 0; i < 2; i++) {
+            let game = longShotTips[i];
+            exoticArray.push(game);
+          }
+          gamesInExotic = 10;
+          minimumExotic = 8;
+          exoticStake = 0.1;
+          exoticString = "45 8-folds, 10 9-folds and 1 10-fold";
+          price = getCoverBetMaxReturns(
+            exoticArray,
+            minimumExotic,
+            exoticStake
+          );
+          break;
+        case allTips.length > 7 && longShotTips.length > 2:
+          for (let i = 0; i < 7; i++) {
+            let game = allTips[i];
+            exoticArray.push(game);
+          }
+          for (let i = 0; i < 2; i++) {
+            let game = longShotTips[i];
+            exoticArray.push(game);
+          }
+          gamesInExotic = 9;
+          minimumExotic = 7;
+          exoticStake = 0.1;
+          exoticString = "36 7-folds, 9 8-folds and 1 9-fold";
+          price = getCoverBetMaxReturns(
+            exoticArray,
+            minimumExotic,
+            exoticStake
+          );
+          break;
+        case allTips.length > 6 && longShotTips.length > 0:
+          for (let i = 0; i < 7; i++) {
+            let game = allTips[i];
+            exoticArray.push(game);
+          }
+          for (let i = 0; i < 1; i++) {
+            let game = longShotTips[i];
+            exoticArray.push(game);
+          }
+          gamesInExotic = 8;
+          minimumExotic = 6;
+          exoticStake = 0.1;
+          exoticString = "28 6-folds, 8 7-folds and 1 8-fold";
+          price = getCoverBetMaxReturns(
+            exoticArray,
+            minimumExotic,
+            exoticStake
+          );
+          break;
+        case allTips.length > 5 && longShotTips.length > 0:
+          for (let i = 0; i < 6; i++) {
+            let game = allTips[i];
+            exoticArray.push(game);
+          }
+          for (let i = 0; i < 1; i++) {
+            let game = longShotTips[i];
+            exoticArray.push(game);
+          }
+          gamesInExotic = 7;
+          minimumExotic = 6;
+          exoticStake = 1;
+          exoticString = "7 6-folds and 1 7-fold";
+          price = getCoverBetMaxReturns(
+            exoticArray,
+            minimumExotic,
+            exoticStake
+          );
+          break;
+        case allTips.length > 4 && longShotTips.length > 0:
+          for (let i = 0; i < 5; i++) {
+            let game = allTips[i];
+            exoticArray.push(game);
+          }
+          for (let i = 0; i < 1; i++) {
+            let game = longShotTips[i];
+            exoticArray.push(game);
+          }
+          gamesInExotic = 6;
+          minimumExotic = 5;
+          exoticStake = 1;
+          exoticString = "6 5-folds and 1 6-fold";
+          price = getCoverBetMaxReturns(
+            exoticArray,
+            minimumExotic,
+            exoticStake
+          );
+          break;
+        case allTips.length > 3 && longShotTips.length > 0:
+          for (let i = 0; i < 4; i++) {
+            let game = allTips[i];
+            exoticArray.push(game);
+          }
+          for (let i = 0; i < 1; i++) {
+            let game = longShotTips[i];
+            exoticArray.push(game);
+          }
+          gamesInExotic = 5;
+          minimumExotic = 4;
+          exoticStake = 1;
+          exoticString = "5 4-folds and 1 5-fold";
+          price = getCoverBetMaxReturns(
+            exoticArray,
+            minimumExotic,
+            exoticStake
+          );
+          break;
+          case longShotTips.length > 3:
+            for (let i = 0; i < 4; i++) {
+              let game = longShotTips[i];
+              exoticArray.push(game);
+            }
+            gamesInExotic = 4;
+            minimumExotic = 3;
+            exoticStake = 1;
+            exoticString = "4 3-folds and 1 4-fold";
+            price = getCoverBetMaxReturns(
+              exoticArray,
+              minimumExotic,
+              exoticStake
+            );
+            break;
+        default:
+          break;
+      }
+
+
 
       let formTrendScoreComparison;
       if (match.formAway) {
@@ -2130,8 +2185,8 @@ async function renderTips() {
               <ul className="LongshotPredictions">
                 <lh>Double chance (Win or Draw - decimal odds only)</lh>
                 {longShotTips.map((tip) => (
-                  <li className={`${tip.outcome}1`} key={tip.team}>
-                    {tip.team} to win or draw: {tip.odds}
+                  <li className={`${tip.doubleChanceOutcome}1`} key={tip.team}>
+                    {tip.team} to win or draw: {tip.decimalOdds}
                   </li>
                 ))}
               </ul>
