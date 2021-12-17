@@ -183,9 +183,6 @@ export var orderedLeagues = [];
           }
         />
       </div>
-      <div className="DisclaimerText">
-        Current calculations against historic data
-      </div>
       <Button
         text={"Yesterday's prediction outcomes"}
         className="FixturesButton"
@@ -272,7 +269,7 @@ function App() {
       <div id="FixtureContainer">
         <div>
           <div className="WelcomeText">
-            Global fixtures and predictions from 30 league and cup competitions,
+            Global fixtures and predictions from 30+ league competitions,
             including
           </div>
           <ul className="AllLeagues">
@@ -284,7 +281,7 @@ function App() {
             <li className="League">MLS</li>
             <li className="League">Primeira Liga</li>
           </ul>
-          <div className="DataText">Powered by data from</div>
+          <div className="DataText">Raw data from</div>
           <a
             className="DataLink"
             href="https://www.footystats.org"
