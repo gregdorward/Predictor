@@ -250,7 +250,7 @@ const List = ({ fixtures }) => (
         style={{
           fontSize: "1.2em",
           textDecoration: "none",
-          color: "black",
+          color: "white",
           padding: "0.4em",
         }}
       >

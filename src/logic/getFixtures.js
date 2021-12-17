@@ -100,6 +100,7 @@ export async function generateTables(){
     if (league.data.all_matches_table_overall) {
       for (let index = 0; index < league.data.all_matches_table_overall.length; index++) {
         let currentTeam = league.data.all_matches_table_overall[index];
+        console.log(currentTeam)
         const team = { 
           leagueName: league.data,
           Position: index + 1,
@@ -109,7 +110,7 @@ export async function generateTables(){
           Draws: currentTeam.seasonDraws_overall,
           Losses: currentTeam.seasonLosses_overall,
           For: currentTeam.seasonGoals,
-          Against: currentTeam.seasonConceded, 
+          Against: (currentTeam.seasonConceded_home + currentTeam.seasonConceded_away), 
           GoalDifference: currentTeam.seasonGoalDifference,
           Points: currentTeam.points,            
         };
@@ -210,6 +211,7 @@ async function createFixture(match, result, mockBool) {
   match.bttsFraction = bttsFraction;
 
   match.game = match.homeTeam + " v " + match.awayTeam;
+  console.log(match)
 
   if (mockBool !== true) {
     ReactDOM.render(

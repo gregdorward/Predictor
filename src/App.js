@@ -106,6 +106,7 @@ export var orderedLeagues = [];
       5496, //Norway Prem 21
       6008, //Austrian Prem 21
       6282, //Greek Prem 21
+      5948, //Polish prem 21/22
       5534, //Irish Prem 21
       6120, //Spanish secunda 21/22
       6205, //
@@ -114,6 +115,7 @@ export var orderedLeagues = [];
       5991, //Scottish Championship
       5976, //Scottish league 1 21/22
       5974, //Scottish league 2 21/22
+      6173, //Women's prem 21/22
       5674, //MLS 21
       6639, //Australian A league 21
       5713, //Brazil prem 21
@@ -298,7 +300,7 @@ function App() {
           url={"www.xgtipping.com"}
           title={"#XGTipping"}
           className="ShareButton"
-          style={{ backgroundColor: "#f0f0f0", boxShadow: "none" }}
+          style={{ backgroundColor: "#294A66", boxShadow: "none" }}
         >
           <TwitterIcon size={"3em"} round={true} />
         </TwitterShareButton>
@@ -306,7 +308,7 @@ function App() {
           url={"www.xgtipping.com"}
           quote={"XGTipping - data-driven football predictions"}
           className="ShareButton"
-          style={{ backgroundColor: "#f0f0f0", boxShadow: "none" }}
+          style={{ backgroundColor: "#294A66", boxShadow: "none" }}
         >
           <FacebookIcon size={"3em"} round={true} />
         </FacebookShareButton>
@@ -314,7 +316,7 @@ function App() {
           url={"www.xgtipping.com"}
           title={"XGTipping"}
           className="ShareButton"
-          style={{ backgroundColor: "#f0f0f0", boxShadow: "none" }}
+          style={{ backgroundColor: "#294A66", boxShadow: "none" }}
         >
           <RedditIcon size={"3em"} round={true} />
         </RedditShareButton>
@@ -323,7 +325,7 @@ function App() {
           title={"XGTipping"}
           separator=": "
           className="ShareButton"
-          style={{ backgroundColor: "#f0f0f0", boxShadow: "none" }}
+          style={{ backgroundColor: "#294A66", boxShadow: "none" }}
         >
           <WhatsappIcon size={"3em"} round={true} />
         </WhatsappShareButton>
@@ -331,7 +333,7 @@ function App() {
           url={"XGTipping"}
           title={"XGTipping"}
           className="ShareButton"
-          style={{ backgroundColor: "#f0f0f0", boxShadow: "none" }}
+          style={{ backgroundColor: "#294A66", boxShadow: "none" }}
         >
           <TelegramIcon size={"3em"} round={true} />
         </TelegramShareButton>

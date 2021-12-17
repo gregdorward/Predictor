@@ -955,8 +955,8 @@ export async function calculateScore(match, index, divider, id) {
       weightingSplitAway = 1;
     }
 
-    homeWeighting = weightingSplitHome * 1.2;
-    awayWeighting = weightingSplitAway * 1.2;
+    homeWeighting = weightingSplitHome * 1.1;
+    awayWeighting = weightingSplitAway * 1.1;
 
     let homeCalculation;
     let awayCalculation;
@@ -2082,7 +2082,7 @@ async function renderTips() {
             text={
               <ul className="BestPredictions">
                 <div className="BestPredictionsExplainer">
-                  Increase or decrease the size of the multi using the buttons
+                  Add or remove a selection using the buttons
                   below. Predictions are ordered by confidence in the outcome.
                 </div>
                 {newArray.map((tip) => (
