@@ -344,8 +344,8 @@
 
   .LeagueTable {
     padding-bottom: 0.5em;
-    padding-left: 3em;
-    padding-right: 3em;
+    padding-left: 2em;
+    padding-right: 2em;
   }
 }
 
@@ -411,6 +411,7 @@
     padding-bottom: 0.5em;
     padding-left: 1em;
     padding-right: 1em;
+    
   }
 }
 
@@ -981,6 +982,44 @@ p {
   /* padding-left: 7px;
   padding-right: 7px; */
   margin: 0.2em;
+  color: white;
+  font-weight: 700;
+}
+
+
+.winLeague {
+  background-color: rgb(14, 143, 14);
+  padding: 0.3em;
+  margin-top: 0.3em;
+  /* padding-left: 7px;
+  padding-right: 7px; */
+  margin: 0.1em;
+  color: white;
+  font-weight: 700;
+}
+
+.lossLeague {
+  background-color: #970d00;
+  padding: 0.3em;
+  padding-left: 0.5em;
+  padding-right: 0.5em;
+  margin-top: 0.3em;
+  /* padding-left: 7px;
+  padding-right: 7px; */
+  margin: 0.1em;
+  color: white;
+  font-weight: 700;
+}
+
+.drawLeague {
+  background-color: rgb(85, 85, 85);
+  padding: 0.3em;
+  margin-top: 0.3em;
+  padding-left: 0.4em;
+  padding-right: 0.4em;
+  /* padding-left: 7px;
+  padding-right: 7px; */
+  margin: 0.1em;
   color: white;
   font-weight: 700;
 }

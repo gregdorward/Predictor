@@ -97,10 +97,12 @@ leagueInstance = [];
 export async function generateTables(){
   leagueArray.forEach(function (league) {
     leagueInstance = [];
-    if (league.data.all_matches_table_overall) {
-      for (let index = 0; index < league.data.all_matches_table_overall.length; index++) {
-        let currentTeam = league.data.all_matches_table_overall[index];
-        console.log(currentTeam)
+    if (!league.data.specific_tables[0].groups) {
+      for (let index = 0; index < league.data.specific_tables[0].table.length; index++) {
+        let currentTeam = league.data.specific_tables[0].table[index];
+        let last5 = currentTeam.wdl_record.slice(-5)
+        let rawForm = last5.replace(/,/g,'').toUpperCase()
+        let form = Array.from(rawForm)
         const team = { 
           leagueName: league.data,
           Position: index + 1,
@@ -112,6 +114,28 @@ export async function generateTables(){
           For: currentTeam.seasonGoals,
           Against: (currentTeam.seasonConceded_home + currentTeam.seasonConceded_away), 
           GoalDifference: currentTeam.seasonGoalDifference,
+          Form: `${form[0]}${form[1]}${form[2]}${form[3]}${form[4]}`,
+          Points: currentTeam.points,            
+        };
+        leagueInstance.push(team);
+      }
+      tableArray.push(leagueInstance);
+    } else if (league.data.league_table === null) {
+      for (let index = 0; index < league.data.all_matches_table_overall.length; index++) {
+        let currentTeam = league.data.all_matches_table_overall[index];
+        let last5 = "N/A"
+        const team = { 
+          leagueName: league.data,
+          Position: index + 1,
+          Name: currentTeam.cleanName,
+          Played: currentTeam.matchesPlayed,
+          Wins: currentTeam.seasonWins_overall,
+          Draws: currentTeam.seasonDraws_overall,
+          Losses: currentTeam.seasonLosses_overall,
+          For: currentTeam.seasonGoals,
+          Against: (currentTeam.seasonConceded_home + currentTeam.seasonConceded_away), 
+          GoalDifference: currentTeam.seasonGoalDifference,
+          Form:  last5,
           Points: currentTeam.points,            
         };
         leagueInstance.push(team);
@@ -122,9 +146,7 @@ export async function generateTables(){
 }
 
 export async function renderTable(index){
-  console.log(index)
   let league = tableArray[index]
-  console.log(league)
   if(league !== undefined){
     ReactDOM.render(
       <LeagueTable
@@ -211,7 +233,6 @@ async function createFixture(match, result, mockBool) {
   match.bttsFraction = bttsFraction;
 
   match.game = match.homeTeam + " v " + match.awayTeam;
-  console.log(match)
 
   if (mockBool !== true) {
     ReactDOM.render(
@@ -261,14 +282,12 @@ export async function generateFixtures(day, radioState, selectedOdds) {
       break;
   }
 
-  console.log(day);
 
   fixtureResponse = await fetch(url);
 
   await fixtureResponse.json().then((fixtures) => {
     fixtureArray = Array.from(fixtures.data);
   });
-  console.log(fixtureArray);
 
   let form;
   let formArray;
@@ -321,12 +340,8 @@ export async function generateFixtures(day, radioState, selectedOdds) {
     await league.json().then((leagues) => {
       leagueArray = Array.from(leagues.leagueArray);
     });
-
-    console.log(leagueArray)
-
     generateTables(leagueArray)
-    // renderTable(tableArray[0])
-    //could possibly get league positions from here
+
   } else {
     for (let i = 0; i < orderedLeagues.length; i++) {
       league = await fetch(
@@ -336,7 +351,6 @@ export async function generateFixtures(day, radioState, selectedOdds) {
       await league.json().then((table) => {
         leagueArray.push(table);
       });
-      console.log(leagueArray);
       generateTables(leagueArray)
 
     }
