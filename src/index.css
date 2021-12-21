@@ -26,7 +26,7 @@
     flex-basis: 20%;
     font-size: 0.9em;
     
-    color: white;
+    color: black;
    background-color: #E8E8E8;
     /* text-shadow: 0 0.04em 0.04em rgba(0, 0, 0, 0.35); */
     text-align: center;
@@ -50,7 +50,7 @@
     font-size: 0.9em;
     
     color: black;
-   background-color: #DAD6D6;
+    background-color: #E8E8E8;
     /* text-shadow: 0 0.04em 0.04em rgba(0, 0, 0, 0.35); */
     text-align: center;
 

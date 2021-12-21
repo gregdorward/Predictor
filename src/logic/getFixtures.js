@@ -104,7 +104,6 @@ export async function generateTables(){
         let rawForm = last5.replace(/,/g,'').toUpperCase()
         let form = Array.from(rawForm)
         const team = { 
-          leagueName: league.data,
           Position: index + 1,
           Name: currentTeam.cleanName,
           Played: currentTeam.matchesPlayed,
@@ -125,7 +124,6 @@ export async function generateTables(){
         let currentTeam = league.data.all_matches_table_overall[index];
         let last5 = "N/A"
         const team = { 
-          leagueName: league.data,
           Position: index + 1,
           Name: currentTeam.cleanName,
           Played: currentTeam.matchesPlayed,
