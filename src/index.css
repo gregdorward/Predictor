@@ -937,20 +937,20 @@ p {
   padding: 0.35em;
   margin: 5px;
   list-style: none;
-  
+  /* padding-left: 1em; */
 }
 
 .Away {
   padding-left: 10px;
   /* padding-right: 5px; */
   flex-basis: 50%;
-
 }
 
 .Away li {
   padding: 0.35em;
   margin: 5px;
   list-style: none;
+  /* padding-right: 1em; */
 }
 
 .win {

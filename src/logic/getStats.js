@@ -18,7 +18,6 @@ export async function createStatsDiv(game, mock) {
 
       function toggle() {
         testBool = testBool ? false : true;
-        console.log("Toggled bool is", testBool);
         if (testBool === true) {
           // set stats element to display flex
           return { display: "block" };
@@ -45,12 +44,8 @@ export async function createStatsDiv(game, mock) {
 
       let gameStats = allForm.find((match) => match.id === game.id);
 
-      console.log(gameStats);
-
       let homeTeam = gameStats.home.teamName;
       let awayTeam = gameStats.away.teamName;
-
-      console.log(gameStats);
 
       let time = game.time;
 
@@ -107,11 +102,6 @@ export async function createStatsDiv(game, mock) {
         gameStats.away[index].last10Points,
         10
       );
-
-      console.log(homeFiveGameAverage);
-      console.log(homeTenGameAverage);
-      console.log(awayFiveGameAverage);
-      console.log(awayTenGameAverage);
 
       async function getLastGameResult(lastGame) {
         let text;
@@ -352,9 +342,6 @@ export async function createStatsDiv(game, mock) {
         gameStats.away[index].LastFiveForm[4]
       );
 
-      console.log(homeFormTrend);
-      console.log(awayFormTrend);
-
       const formDataMatch = [];
 
       formDataMatch.push({
@@ -362,8 +349,6 @@ export async function createStatsDiv(game, mock) {
       });
 
       const formDataHome = [];
-
-      console.log(gameStats);
 
       formDataHome.push({
         name: game.homeTeam,
@@ -404,7 +389,7 @@ export async function createStatsDiv(game, mock) {
       });
       ReactDOM.render(
         <div style={style}>
-          <Div className="MatchTime" text={"Kick off: " + time}></Div>
+          <Div className="MatchTime" text={`Kick off: ${time} GMT`}></Div>
         </div>,
         document.getElementById("stats" + homeTeam)
       );
@@ -421,6 +406,7 @@ export async function createStatsDiv(game, mock) {
       ReactDOM.render(
         <Stats
           style={style}
+          homeOrAway="Home"
           gameCount={divider}
           key={formDataHome[0].name}
           last5={formDataHome[0].Last5}
@@ -434,6 +420,10 @@ export async function createStatsDiv(game, mock) {
           sot={formDataHome[0].AverageShotsOnTarget}
           dangerousAttacks={formDataHome[0].AverageDangerousAttacks}
           leaguePosition={formDataHome[0].leaguePosition}
+          homeOrAwayLeaguePosition={game.homeTeamHomePosition}
+          winPercentage={game.homeTeamWinPercentage}
+          lossPercentage={game.homeTeamLossPercentage}
+          drawPercentage={game.homeTeamDrawPercentage}
           ppg={formDataHome[0].SeasonPPG}
           formTrend={[
             homeTenGameAverage.toFixed(2),
@@ -448,6 +438,7 @@ export async function createStatsDiv(game, mock) {
       ReactDOM.render(
         <Stats
           style={style}
+          homeOrAway="Away"
           gameCount={divider}
           key={formDataAway[0].name}
           last5={formDataAway[0].Last5}
@@ -461,6 +452,10 @@ export async function createStatsDiv(game, mock) {
           sot={formDataAway[0].AverageShotsOnTarget}
           dangerousAttacks={formDataAway[0].AverageDangerousAttacks}
           leaguePosition={formDataAway[0].leaguePosition}
+          homeOrAwayLeaguePosition={game.awayTeamAwayPosition}
+          winPercentage={game.awayTeamWinPercentage}
+          lossPercentage={game.awayTeamLossPercentage}
+          drawPercentage={game.awayTeamDrawPercentage}
           ppg={formDataAway[0].SeasonPPG}
           formTrend={[
             awayTenGameAverage.toFixed(2),

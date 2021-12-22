@@ -955,8 +955,8 @@ export async function calculateScore(match, index, divider, id) {
       weightingSplitAway = 1;
     }
 
-    homeWeighting = weightingSplitHome * 1.1;
-    awayWeighting = weightingSplitAway * 1.1;
+    homeWeighting = weightingSplitHome * 1;
+    awayWeighting = weightingSplitAway * 1;
 
     let homeCalculation;
     let awayCalculation;
@@ -1121,23 +1121,40 @@ export async function calculateScore(match, index, divider, id) {
         formHome.conceededAverageShortAndLongTerm) /
       2;
 
+      console.log(match.game)
+
     let factorOneHome =
-      (goalCalcHome * 2 +
-        goalCalcHomeShortAndLongTerm +
+      (goalCalcHome * 1.5 +
+        goalCalcHomeShortAndLongTerm * 1.5 +
         last5WeightingHome * 1 +
         last2WeightingHome * 1 +
         last10WeightingHome * 1 +
         formHome.goalsDifferential * 0) /
       3;
 
+      console.log(
+        `${goalCalcHome} goalCalcHome 
+        ${goalCalcHomeShortAndLongTerm} goalCalcHomeShortAndLongTerm 
+        ${last5WeightingHome} last5WeightingHome 
+        ${last2WeightingHome} last2WeightingHome
+        ${last10WeightingHome} last10WeightingHome`
+      )
     let factorOneAway =
-      (goalCalcAway * 2 +
-        goalCalcAwayShortAndLongTerm +
+      (goalCalcAway * 1.5 +
+        goalCalcAwayShortAndLongTerm * 1.5 +
         last5WeightingAway * 1 +
         last2WeightingAway * 1 +
         last10WeightingAway * 1 +
         formAway.goalsDifferential * 0) /
       3;
+
+      console.log(
+        `${goalCalcAway} goalCalcAway 
+        ${goalCalcAwayShortAndLongTerm} goalCalcAwayShortAndLongTerm 
+        ${last5WeightingAway} last5WeightingAway 
+        ${last2WeightingAway} last2WeightingAway
+        ${last10WeightingAway} last10WeightingAway`
+      )
 
     let homeComparisonWeighting;
     let awayComparisonWeighting;
@@ -1159,15 +1176,15 @@ export async function calculateScore(match, index, divider, id) {
         break;
       case teamComparisonScore > 2 && teamComparisonScore <= 4:
         homeComparisonWeighting = 0.1;
-        awayComparisonWeighting = -0.1;
+        awayComparisonWeighting = -0.3;
         break;
       case teamComparisonScore > 4 && teamComparisonScore <= 6:
         homeComparisonWeighting = 0.2;
-        awayComparisonWeighting = -0.2;
+        awayComparisonWeighting = -0.4;
         break;
       case teamComparisonScore > 6 && teamComparisonScore <= 8:
         homeComparisonWeighting = 0.3;
-        awayComparisonWeighting = -0.3;
+        awayComparisonWeighting = -0.5;
         break;
       case teamComparisonScore > 8 && teamComparisonScore <= 10:
         homeComparisonWeighting = 0.4;
@@ -1250,16 +1267,16 @@ export async function calculateScore(match, index, divider, id) {
         rawFinalAwayGoals = rawFinalAwayGoals + 0.25;
         break;
       case formHome.overOrUnderAttack === "Overachieving slightly":
-        rawFinalHomeGoals = rawFinalHomeGoals - 0.15;
+        rawFinalHomeGoals = rawFinalHomeGoals - 0.1;
         break;
       case formAway.overOrUnderAttack === "Overachieving slightly":
-        rawFinalAwayGoals = rawFinalAwayGoals - 0.15;
+        rawFinalAwayGoals = rawFinalAwayGoals - 0.1;
         break;
       case formHome.overOrUnderAttack === "Underachieving slightly":
-        rawFinalHomeGoals = rawFinalHomeGoals + 0.15;
+        rawFinalHomeGoals = rawFinalHomeGoals + 0.1;
         break;
       case formAway.overOrUnderAttack === "Underachieving slightly":
-        rawFinalAwayGoals = rawFinalAwayGoals + 0.15;
+        rawFinalAwayGoals = rawFinalAwayGoals + 0.1;
         break;
       default:
         break;
@@ -1291,16 +1308,16 @@ export async function calculateScore(match, index, divider, id) {
         rawFinalHomeGoals = rawFinalHomeGoals - 0.25;
         break;
       case formHome.overOrUnderDefence === "Overachieving slightly":
-        rawFinalAwayGoals = rawFinalAwayGoals + 0.15;
+        rawFinalAwayGoals = rawFinalAwayGoals + 0.1;
         break;
       case formAway.overOrUnderDefence === "Overachieving slightly":
-        rawFinalHomeGoals = rawFinalHomeGoals + 0.15;
+        rawFinalHomeGoals = rawFinalHomeGoals + 0.1;
         break;
       case formHome.overOrUnderDefence === "Underachieving slightly":
-        rawFinalAwayGoals = rawFinalAwayGoals - 0.15;
+        rawFinalAwayGoals = rawFinalAwayGoals - 0.1;
         break;
       case formAway.overOrUnderDefence === "Underachieving slightly":
-        rawFinalHomeGoals = rawFinalHomeGoals - 0.15;
+        rawFinalHomeGoals = rawFinalHomeGoals - 0.1;
         break;
       default:
         break;
@@ -1369,12 +1386,12 @@ export async function calculateScore(match, index, divider, id) {
       );
     }
 
-
     if (finalHomeGoals > finalAwayGoals) {
       match.prediction = "homeWin";
       homePredictions = homePredictions + 1;
       if (
         formHome.overUnderAchievingSum < -2.5 ||
+        formHome.overUnderAchievingSum > 2.5 ||
         formTrendScoreComparison >= 0
       ) {
         match.includeInMultis = false;
@@ -1386,6 +1403,7 @@ export async function calculateScore(match, index, divider, id) {
       awayPredictions = awayPredictions + 1;
       if (
         formAway.overUnderAchievingSum > 2.5 ||
+        formAway.overUnderAchievingSum < -2.5 ||
         formTrendScoreComparison <= 0
       ) {
         match.includeInMultis = false;
@@ -1474,7 +1492,7 @@ export async function calculateScore(match, index, divider, id) {
     finalAwayGoals = "";
     rawFinalHomeGoals = "";
     rawFinalAwayGoals = "";
-    match.status = "void"
+    match.status = "void";
   }
 
   return [finalHomeGoals, finalAwayGoals, rawFinalHomeGoals, rawFinalAwayGoals];
@@ -1542,17 +1560,16 @@ var bttsArray = [];
 var accumulatedOdds = 1;
 let predictions = [];
 
-
 export async function getNewTips(array) {
   newArray = [];
   accumulatedOdds = 1;
 
-  if(array.length > 1 && incrementValue > 0){
+  if (array.length > 1 && incrementValue > 0) {
     array.forEach((tip) => {
-      if ( 
+      if (
         array.indexOf(tip) < incrementValue
         // tip.goalDifferential >= incrementValue && tip.comparisonScore > 0
-        ) {
+      ) {
         newArray.push(tip);
         accumulatedOdds = parseFloat(accumulatedOdds) * parseFloat(tip.rawOdds);
       }
@@ -1709,8 +1726,8 @@ export async function getScorePrediction(day, mocked) {
         }
       }
 
-      console.log(allTips)
-      console.log("TEST")
+      console.log(allTips);
+      console.log("TEST");
 
       allTips.sort(function (a, b) {
         if (a.goalDifferential === b.goalDifferential) {
@@ -1720,9 +1737,8 @@ export async function getScorePrediction(day, mocked) {
         }
       });
 
-      console.log(allTips)
+      console.log(allTips);
 
-     
       bestBets.sort(function (a, b) {
         if (a.goalDifferential === b.goalDifferential) {
           return b.comparisonScore - a.comparisonScore;
@@ -1794,7 +1810,6 @@ export async function getScorePrediction(day, mocked) {
       longShotTips.sort(function (a, b) {
         return b.goalDifferential - a.goalDifferential;
       });
-
 
       exoticArray = [];
       gamesInExotic = 0;
@@ -1916,26 +1931,24 @@ export async function getScorePrediction(day, mocked) {
             exoticStake
           );
           break;
-          case longShotTips.length > 3:
-            for (let i = 0; i < 4; i++) {
-              let game = longShotTips[i];
-              exoticArray.push(game);
-            }
-            gamesInExotic = 4;
-            minimumExotic = 3;
-            exoticStake = 1;
-            exoticString = "4 3-folds and 1 4-fold";
-            price = getCoverBetMaxReturns(
-              exoticArray,
-              minimumExotic,
-              exoticStake
-            );
-            break;
+        case longShotTips.length > 3:
+          for (let i = 0; i < 4; i++) {
+            let game = longShotTips[i];
+            exoticArray.push(game);
+          }
+          gamesInExotic = 4;
+          minimumExotic = 3;
+          exoticStake = 1;
+          exoticString = "4 3-folds and 1 4-fold";
+          price = getCoverBetMaxReturns(
+            exoticArray,
+            minimumExotic,
+            exoticStake
+          );
+          break;
         default:
           break;
       }
-
-
 
       let formTrendScoreComparison;
       if (match.formAway) {
@@ -2082,8 +2095,8 @@ async function renderTips() {
             text={
               <ul className="BestPredictions">
                 <div className="BestPredictionsExplainer">
-                  Add or remove a selection using the buttons
-                  below. Predictions are ordered by confidence in the outcome.
+                  Add or remove a selection using the buttons below. Predictions
+                  are ordered by confidence in the outcome.
                 </div>
                 {newArray.map((tip) => (
                   <li className={tip.outcome} key={tip.team}>

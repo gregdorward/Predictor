@@ -16,7 +16,7 @@ function Stats(props) {
   return (
     <Fragment>
       <ul className={props.className} style={props.style}>
-      <li className="FormHeader">Form (most recent on right)</li>
+        <li className="FormHeader">Form (most recent on right)</li>
         <li key="last5">
           <span className={styleForm(props.last5[0])}>{props.last5[0]}</span>
           <span className={styleForm(props.last5[1])}>{props.last5[1]}</span>
@@ -76,16 +76,57 @@ function Stats(props) {
         >
           {`League position - ${props.leaguePosition}`}
         </li>
+
+        <li
+          key="LeaguePositionHomeOrAway"
+          className="LeaguePositionHomeOrAway"
+          data-cy={props.name + "LeaguePositionHomeOrAway"}
+        >
+          {`Position (${props.homeOrAway} only) - ${props.homeOrAwayLeaguePosition}`}
+        </li>
+        <li
+          key="WinPercentage"
+          className="WinPercentage"
+          data-cy={props.name + "WinPercentage"}
+        >
+          {`${props.homeOrAway} wins - ${props.winPercentage.toFixed(1)}%`}
+        </li>
+        <li
+          key="DrawPercentage"
+          className="DrawPercentage"
+          data-cy={props.name + "DrawPercentage"}
+        >
+          {`${props.homeOrAway} draws - ${props.drawPercentage.toFixed(1)}%`}
+        </li>
+        <li
+          key="LossPercentage"
+          className="LossPercentage"
+          data-cy={props.name + "LossPercentage"}
+        >
+          {`${props.homeOrAway} losses - ${props.lossPercentage.toFixed(1)}%`}
+        </li>
         <li key="PPG" className="PPG" data-cy={props.name + "PPG"}>
           {`Season PPG - ${props.ppg}`}
         </li>
-        <li key="FormTrend10" className="FormTrend" data-cy={props.name + "FormTrend10"}>
+        <li
+          key="FormTrend10"
+          className="FormTrend"
+          data-cy={props.name + "FormTrend10"}
+        >
           {`Last 10 PPG: ${props.formTrend[0]}`}
         </li>
-        <li key="FormTrend10" className="FormTrend" data-cy={props.name + "FormTrend10"}>
+        <li
+          key="FormTrend10"
+          className="FormTrend"
+          data-cy={props.name + "FormTrend10"}
+        >
           {`Last 6 PPG: ${props.formTrend[1]}`}
         </li>
-        <li key="FormTrend10" className="FormTrend" data-cy={props.name + "FormTrend10"}>
+        <li
+          key="FormTrend10"
+          className="FormTrend"
+          data-cy={props.name + "FormTrend10"}
+        >
           {`Last 5 PPG: ${props.formTrend[2]}.`}
         </li>
       </ul>

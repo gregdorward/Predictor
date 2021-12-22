@@ -52,7 +52,7 @@ export async function getBTTSPotential(allForm, match, index, homeGoals, awayGoa
 
 if(match.bttsFraction !== "N/A" && match.status !== "suspended" && match.status !== "canceled"){
   if (
-    // match.combinedBTTS >= 60 &&
+    match.combinedBTTS >= 60 &&
     // match.btts_potential >= 60 &&
     match.awayOdds < 3 &&
     // homePPG > 1 &&
