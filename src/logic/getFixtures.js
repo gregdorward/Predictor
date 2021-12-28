@@ -355,7 +355,7 @@ export async function generateFixtures(day, radioState, selectedOdds) {
     }
   }
 
-  for (let i = 0; i < 34; i++) {
+  for (let i = 0; i < 35; i++) {
     for (
       let x = 0;
       x < leagueArray[i].data.all_matches_table_overall.length;
@@ -382,6 +382,7 @@ export async function generateFixtures(day, radioState, selectedOdds) {
       });
     }
   }
+  console.log(leaguePositions)
 
   let previousLeagueName;
 
@@ -510,6 +511,7 @@ export async function generateFixtures(day, radioState, selectedOdds) {
           (team) => team.homeFormName === match.homeTeam
         );
 
+        console.log(homeTeaminHomeLeague)
         teamPositionHome = homeTeaminLeague.position;
         teamPositionHomeTable = homeTeaminHomeLeague.position;
 
