@@ -109,21 +109,21 @@ function Stats(props) {
           {`Season PPG - ${props.ppg}`}
         </li>
         <li
-          key="FormTrend10"
+          key="FormTrend10a"
           className="FormTrend"
           data-cy={props.name + "FormTrend10"}
         >
           {`Last 10 PPG: ${props.formTrend[0]}`}
         </li>
         <li
-          key="FormTrend10"
+          key="FormTrend10b"
           className="FormTrend"
           data-cy={props.name + "FormTrend10"}
         >
           {`Last 6 PPG: ${props.formTrend[1]}`}
         </li>
         <li
-          key="FormTrend10"
+          key="FormTrend10c"
           className="FormTrend"
           data-cy={props.name + "FormTrend10"}
         >

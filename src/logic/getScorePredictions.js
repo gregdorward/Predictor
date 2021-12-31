@@ -653,8 +653,11 @@ export async function calculateScore(match, index, divider, id) {
         return [score, improving];
       }
       teams[i][index].ScoredAverageShortTerm = teams[i][0].ScoredOverall / 5;
+      teams[i][index].ScoredAverageShortTermHomeOrAway = teams[i][1].ScoredAverage
       teams[i][index].ConcededAverageShortTerm =
         teams[i][0].ConcededOverall / 5;
+        teams[i][index].ConcededAverageShortTermHomeOrAway =
+        teams[i][1].ConcededAverage
 
       teams[i][index].longTermAverageGoals = teams[i][2].ScoredAverage;
       teams[i][index].longTermAverageConceeded = teams[i][2].ConcededAverage;
@@ -834,6 +837,9 @@ export async function calculateScore(match, index, divider, id) {
 
     formHome = teams[0][index];
     formAway = teams[1][index];
+    let homePosition = match.homeRawPosition;
+    let awayPosition = match.awayRawPosition;
+
 
     [formHome.overOrUnderAttack, formHome.trueFormAttack] =
       await getOverOrUnderAchievingResult(
@@ -968,7 +974,7 @@ export async function calculateScore(match, index, divider, id) {
 
     formAway.AttackingPotency = (formAway.XG / formAway.AttacksAverage) * 100;
 
-    async function compareTeams(homeForm, awayForm, teamName) {
+    async function compareTeams(homeForm, awayForm, teamName, match) {
       let sotComparison = await compareStat(
         homeForm.AverageShotsOnTarget,
         awayForm.AverageShotsOnTarget
@@ -1038,25 +1044,40 @@ export async function calculateScore(match, index, divider, id) {
         formHome.clinicalScore,
         formAway.clinicalScore
       );
+      
+      let positionComparison = await compareStat(
+        awayPosition,
+        homePosition
+      )
+
+      let winPercentageComparison = await compareStat(
+        match.homeTeamWinPercentage,
+        match.awayTeamWinPercentage
+      )
+
+      console.log(positionComparison)
 
       let calculation =
-        formTrendScoreComparison * 3 +
-        threeGameAverageComparison * 2 +
-        sixGameAverageComparison * 3 +
-        overUnderAchievingSumComparison * 4 +
-        dangerousAttacksComparison * 1 +
-        XGdifferentialComparison * 1 +
-        sotComparison * 3 +
-        tenGameAverageComparison * 1 +
-        AveragePossessionComparison * 1 +
-        clinicalScoreComparison * 1;
+        formTrendScoreComparison * 5 +
+        threeGameAverageComparison * 0 +
+        sixGameAverageComparison * 5 +
+        overUnderAchievingSumComparison * 0 +
+        dangerousAttacksComparison * 0 +
+        XGdifferentialComparison * 0 +
+        sotComparison * 0 +
+        tenGameAverageComparison * 0 +
+        AveragePossessionComparison * 0 +
+        clinicalScoreComparison * 0 +
+        positionComparison * 10 +
+        winPercentageComparison * 5;
       return calculation;
     }
 
     let teamComparisonScore = await compareTeams(
       formHome,
       formAway,
-      match.homeTeam
+      match.homeTeam,
+      match
     );
     match.teamComparisonScore = teamComparisonScore;
 
@@ -1107,9 +1128,14 @@ export async function calculateScore(match, index, divider, id) {
     formAway.goalsDifferential =
       parseFloat(await diff(awayGoalDiff, homeGoalDiff)) / 1;
 
-    let goalCalcHome =
+    let goalCalcHomeOnly =
+      (formHome.ScoredAverageShortTermHomeOrAway + formAway.ConcededAverageShortTermHomeOrAway) / 2;
+    let goalCalcAwayOnly =
+      (formAway.ScoredAverageShortTermHomeOrAway + formHome.ConcededAverageShortTermHomeOrAway) / 2;
+
+    let goalCalcHomeShortTerm=
       (formHome.ScoredAverageShortTerm + formAway.ConcededAverageShortTerm) / 2;
-    let goalCalcAway =
+    let goalCalcAwayShortTerm=
       (formAway.ScoredAverageShortTerm + formHome.ConcededAverageShortTerm) / 2;
 
     let goalCalcHomeShortAndLongTerm =
@@ -1124,32 +1150,36 @@ export async function calculateScore(match, index, divider, id) {
       console.log(match.game)
 
     let factorOneHome =
-      (goalCalcHome * 1.5 +
-        goalCalcHomeShortAndLongTerm * 1.5 +
+      (
+        goalCalcHomeShortTerm * 1 +
+        goalCalcHomeShortAndLongTerm * 1 +
+        goalCalcHomeOnly * 1.5 +
         last5WeightingHome * 1 +
         last2WeightingHome * 1 +
-        last10WeightingHome * 1 +
+        last10WeightingHome * 0 +
         formHome.goalsDifferential * 0) /
-      3;
+      4;
 
       console.log(
-        `${goalCalcHome} goalCalcHome 
+        `${goalCalcHomeShortTerm} goalCalcHomeShortTerm
         ${goalCalcHomeShortAndLongTerm} goalCalcHomeShortAndLongTerm 
         ${last5WeightingHome} last5WeightingHome 
         ${last2WeightingHome} last2WeightingHome
         ${last10WeightingHome} last10WeightingHome`
       )
     let factorOneAway =
-      (goalCalcAway * 1.5 +
-        goalCalcAwayShortAndLongTerm * 1.5 +
+      (
+        goalCalcAwayShortTerm * 1 +
+        goalCalcAwayShortAndLongTerm * 1 +
+        goalCalcAwayOnly * 1.5 +
         last5WeightingAway * 1 +
         last2WeightingAway * 1 +
-        last10WeightingAway * 1 +
+        last10WeightingAway * 0 +
         formAway.goalsDifferential * 0) /
-      3;
+      4;
 
       console.log(
-        `${goalCalcAway} goalCalcAway 
+        `${goalCalcAwayShortTerm} goalCalcAwayShortTerm
         ${goalCalcAwayShortAndLongTerm} goalCalcAwayShortAndLongTerm 
         ${last5WeightingAway} last5WeightingAway 
         ${last2WeightingAway} last2WeightingAway
@@ -1176,55 +1206,55 @@ export async function calculateScore(match, index, divider, id) {
         break;
       case teamComparisonScore > 2 && teamComparisonScore <= 4:
         homeComparisonWeighting = 0.1;
-        awayComparisonWeighting = -0.3;
+        awayComparisonWeighting = -0.1;
         break;
       case teamComparisonScore > 4 && teamComparisonScore <= 6:
         homeComparisonWeighting = 0.2;
-        awayComparisonWeighting = -0.4;
+        awayComparisonWeighting = -0.1;
         break;
-      case teamComparisonScore > 6 && teamComparisonScore <= 8:
+      case teamComparisonScore > 6 && teamComparisonScore <= 9:
         homeComparisonWeighting = 0.3;
-        awayComparisonWeighting = -0.5;
+        awayComparisonWeighting = -0.1;
         break;
-      case teamComparisonScore > 8 && teamComparisonScore <= 10:
+      case teamComparisonScore > 9 && teamComparisonScore <= 12:
         homeComparisonWeighting = 0.4;
-        awayComparisonWeighting = -0.4;
+        awayComparisonWeighting = -0.1;
         break;
-      case teamComparisonScore > 10 && teamComparisonScore <= 12:
-        homeComparisonWeighting = 0.45;
-        awayComparisonWeighting = -0.45;
-        break;
-      case teamComparisonScore > 12:
+      case teamComparisonScore > 12 && teamComparisonScore <= 15:
         homeComparisonWeighting = 0.5;
-        awayComparisonWeighting = -0.5;
+        awayComparisonWeighting = -0.1;
+        break;
+      case teamComparisonScore > 15:
+        homeComparisonWeighting = 0.6;
+        awayComparisonWeighting = -0.1;
         break;
       case teamComparisonScore <= -1 && teamComparisonScore >= -2:
-        homeComparisonWeighting = 0;
-        awayComparisonWeighting = 0.1;
+        homeComparisonWeighting = split;
+        awayComparisonWeighting = -split;
         break;
       case teamComparisonScore < -2 && teamComparisonScore >= -4:
         homeComparisonWeighting = -0.1;
         awayComparisonWeighting = 0.1;
         break;
       case teamComparisonScore < -4 && teamComparisonScore >= -6:
-        homeComparisonWeighting = -0.2;
+        homeComparisonWeighting = -0.1;
         awayComparisonWeighting = 0.2;
         break;
-      case teamComparisonScore < -6 && teamComparisonScore >= -8:
-        homeComparisonWeighting = -0.3;
+      case teamComparisonScore < -6 && teamComparisonScore >= -9:
+        homeComparisonWeighting = -0.1;
         awayComparisonWeighting = 0.3;
         break;
-      case teamComparisonScore < -8 && teamComparisonScore >= -10:
-        homeComparisonWeighting = -0.4;
+      case teamComparisonScore < -9 && teamComparisonScore >= -12:
+        homeComparisonWeighting = -0.1;
         awayComparisonWeighting = 0.4;
         break;
-      case teamComparisonScore < -10 && teamComparisonScore >= -12:
-        homeComparisonWeighting = -0.45;
-        awayComparisonWeighting = 0.45;
-        break;
-      case teamComparisonScore < -12:
-        homeComparisonWeighting = -0.5;
+      case teamComparisonScore < -12 && teamComparisonScore >= -15:
+        homeComparisonWeighting = -0.1;
         awayComparisonWeighting = 0.5;
+        break;
+      case teamComparisonScore < -15:
+        homeComparisonWeighting = -0.1;
+        awayComparisonWeighting = 0.6;
         break;
       default:
         homeComparisonWeighting = 0;
@@ -1243,28 +1273,28 @@ export async function calculateScore(match, index, divider, id) {
 
     switch (true) {
       case formHome.overOrUnderAttack === "Overachieving drastically":
-        rawFinalHomeGoals = rawFinalHomeGoals - 0.5;
-        break;
-      case formHome.overOrUnderAttack === "Underachieving drastically":
-        rawFinalHomeGoals = rawFinalHomeGoals + 0.5;
-        break;
-      case formHome.overOrUnderAttack === "Overachieving":
         rawFinalHomeGoals = rawFinalHomeGoals - 0.25;
         break;
-      case formHome.overOrUnderAttack === "Underachieving":
+      case formHome.overOrUnderAttack === "Underachieving drastically":
         rawFinalHomeGoals = rawFinalHomeGoals + 0.25;
         break;
+      case formHome.overOrUnderAttack === "Overachieving":
+        rawFinalHomeGoals = rawFinalHomeGoals - 0.15;
+        break;
+      case formHome.overOrUnderAttack === "Underachieving":
+        rawFinalHomeGoals = rawFinalHomeGoals + 0.15;
+        break;
       case formAway.overOrUnderAttack === "Overachieving drastically":
-        rawFinalAwayGoals = rawFinalAwayGoals - 0.5;
-        break;
-      case formAway.overOrUnderAttack === "Underachieving drastically":
-        rawFinalAwayGoals = rawFinalAwayGoals + 0.5;
-        break;
-      case formAway.overOrUnderAttack === "Overachieving":
         rawFinalAwayGoals = rawFinalAwayGoals - 0.25;
         break;
-      case formAway.overOrUnderAttack === "Underachieving":
+      case formAway.overOrUnderAttack === "Underachieving drastically":
         rawFinalAwayGoals = rawFinalAwayGoals + 0.25;
+        break;
+      case formAway.overOrUnderAttack === "Overachieving":
+        rawFinalAwayGoals = rawFinalAwayGoals - 0.15;
+        break;
+      case formAway.overOrUnderAttack === "Underachieving":
+        rawFinalAwayGoals = rawFinalAwayGoals + 0.15;
         break;
       case formHome.overOrUnderAttack === "Overachieving slightly":
         rawFinalHomeGoals = rawFinalHomeGoals - 0.1;
@@ -1284,28 +1314,28 @@ export async function calculateScore(match, index, divider, id) {
 
     switch (true) {
       case formHome.overOrUnderDefence === "Overachieving drastically":
-        rawFinalAwayGoals = rawFinalAwayGoals + 0.5;
-        break;
-      case formHome.overOrUnderDefence === "Underachieving drastically":
-        rawFinalAwayGoals = rawFinalAwayGoals - 0.5;
-        break;
-      case formHome.overOrUnderDefence === "Overachieving":
         rawFinalAwayGoals = rawFinalAwayGoals + 0.25;
         break;
-      case formHome.overOrUnderDefence === "Underachieving":
+      case formHome.overOrUnderDefence === "Underachieving drastically":
         rawFinalAwayGoals = rawFinalAwayGoals - 0.25;
         break;
+      case formHome.overOrUnderDefence === "Overachieving":
+        rawFinalAwayGoals = rawFinalAwayGoals + 0.15;
+        break;
+      case formHome.overOrUnderDefence === "Underachieving":
+        rawFinalAwayGoals = rawFinalAwayGoals - 0.15;
+        break;
       case formAway.overOrUnderDefence === "Overachieving drastically":
-        rawFinalHomeGoals = rawFinalHomeGoals + 0.5;
-        break;
-      case formAway.overOrUnderDefence === "Underachieving drastically":
-        rawFinalHomeGoals = rawFinalHomeGoals - 0.5;
-        break;
-      case formAway.overOrUnderDefence === "Overachieving":
         rawFinalHomeGoals = rawFinalHomeGoals + 0.25;
         break;
-      case formAway.overOrUnderDefence === "Underachieving":
+      case formAway.overOrUnderDefence === "Underachieving drastically":
         rawFinalHomeGoals = rawFinalHomeGoals - 0.25;
+        break;
+      case formAway.overOrUnderDefence === "Overachieving":
+        rawFinalHomeGoals = rawFinalHomeGoals + 0.15;
+        break;
+      case formAway.overOrUnderDefence === "Underachieving":
+        rawFinalHomeGoals = rawFinalHomeGoals - 0.15;
         break;
       case formHome.overOrUnderDefence === "Overachieving slightly":
         rawFinalAwayGoals = rawFinalAwayGoals + 0.1;
@@ -1342,13 +1372,13 @@ export async function calculateScore(match, index, divider, id) {
     );
 
     if (trueFormDiffHome > 1) {
-      rawFinalHomeGoals = rawFinalHomeGoals + trueFormDiffHome / 3;
-      rawFinalAwayGoals = rawFinalAwayGoals + -Math.abs(trueFormDiffAway / 3);
+      rawFinalHomeGoals = rawFinalHomeGoals + trueFormDiffHome / 5;
+      rawFinalAwayGoals = rawFinalAwayGoals + -Math.abs(trueFormDiffAway / 5);
     }
 
     if (trueFormDiffAway > 1) {
-      rawFinalHomeGoals = rawFinalHomeGoals + -Math.abs(trueFormDiffHome / 3);
-      rawFinalAwayGoals = rawFinalAwayGoals + trueFormDiffAway / 3;
+      rawFinalHomeGoals = rawFinalHomeGoals + -Math.abs(trueFormDiffHome / 5);
+      rawFinalAwayGoals = rawFinalAwayGoals + trueFormDiffAway / 5;
     }
 
     if (rawFinalAwayGoals < 0) {

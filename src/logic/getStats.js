@@ -420,6 +420,7 @@ export async function createStatsDiv(game, mock) {
           sot={formDataHome[0].AverageShotsOnTarget}
           dangerousAttacks={formDataHome[0].AverageDangerousAttacks}
           leaguePosition={formDataHome[0].leaguePosition}
+          rawPosition = {game.homeRawPosition}
           homeOrAwayLeaguePosition={game.homeTeamHomePosition}
           winPercentage={game.homeTeamWinPercentage}
           lossPercentage={game.homeTeamLossPercentage}
@@ -449,6 +450,7 @@ export async function createStatsDiv(game, mock) {
           XG={formDataAway[0].AverageXG}
           XGConceded={formDataAway[0].AverageXGConceded}
           possession={formDataAway[0].AveragePossession}
+          rawPosition = {game.awayRawPosition}
           sot={formDataAway[0].AverageShotsOnTarget}
           dangerousAttacks={formDataAway[0].AverageDangerousAttacks}
           leaguePosition={formDataAway[0].leaguePosition}

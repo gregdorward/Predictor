@@ -74,6 +74,7 @@ historicDate.setDate(historicDate.getDate() - 9);
 let [historicDay, historicMonth, historicYear] = historicDate
   .toLocaleDateString("en-US")
   .split("/");
+let rawPosition;
 
 export const saturday = `${process.env.REACT_APP_EXPRESS_SERVER}matches/${saturdayYear}-${saturdayDay}-${saturdayMonth}`;
 export const historic = `${process.env.REACT_APP_EXPRESS_SERVER}matches/${historicYear}-${historicDay}-${historicMonth}`;
@@ -121,6 +122,7 @@ export async function generateTables() {
           Form: `${form[0]}${form[1]}${form[2]}${form[3]}${form[4]}`,
           Points: currentTeam.points,
         };
+        rawPosition = team.Position
         leagueInstance.push(team);
       }
       tableArray.push(leagueInstance);
@@ -146,6 +148,8 @@ export async function generateTables() {
           Form: last5,
           Points: currentTeam.points,
         };
+        rawPosition = team.Position
+
         leagueInstance.push(team);
       }
       tableArray.push(leagueInstance);
@@ -368,6 +372,7 @@ export async function generateFixtures(day, radioState, selectedOdds) {
       leaguePositions.push({
         name: string.cleanName,
         position: string.position,
+        rawPosition: x+1,
         homeFormName: stringHome.cleanName,
         awayFormName: stringAway.cleanName,
         homeSeasonWinPercentage: stringHome.seasonWins,
@@ -1029,6 +1034,8 @@ export async function generateFixtures(day, radioState, selectedOdds) {
       match.homeBadge = fixture.home_image;
       match.awayBadge = fixture.away_image;
 
+      
+
       match.homePpg = fixture.home_ppg.toFixed(2);
       match.homeFormColour = await applyColour(match.homePpg);
 
@@ -1037,6 +1044,8 @@ export async function generateFixtures(day, radioState, selectedOdds) {
 
       match.lastFiveFormHome = lastFiveFormHome;
       match.lastFiveFormAway = lastFiveFormAway;
+      match.homeRawPosition = homeTeaminLeague.rawPosition
+      match.awayRawPosition = awayTeaminLeague.rawPosition
 
       match.homeTeamHomePosition = `${teamPositionHomeTable}${homePrefixHomeTable}`;
       match.awayTeamAwayPosition = `${teamPositionAwayTable}${awayPrefixAwayTable}`;
