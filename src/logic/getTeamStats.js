@@ -9,6 +9,10 @@ import { matches } from "./getFixtures";
 export async function getTeamStats(id, home, away) {
   console.log("EXECUTED");
   let identifier = id;
+  let bestHomeOdds;
+  let bestHomeOddsProvider;
+  let bestAwayOdds;
+  let bestAwayOddsProvider
   
   let match = await fetch(
     `${process.env.REACT_APP_EXPRESS_SERVER}match/${identifier}`
@@ -18,6 +22,28 @@ export async function getTeamStats(id, home, away) {
     let matchArr = match.data.h2h.previous_matches_ids
     let previousMatchDetails;
     let secondToPreviousMatchDetails;
+
+    let oddsComparisonHomeArray = []
+    let oddsComparisonAwayArray = []
+
+    if(match.data.odds_comparison){
+    oddsComparisonHomeArray = match.data.odds_comparison["FT Result"][1];
+    oddsComparisonAwayArray = match.data.odds_comparison["FT Result"][2];
+
+    let sortedHomeOdds = Object.entries(oddsComparisonHomeArray).sort((a, b) => b[1] - a[1])
+    let sortedAwayOdds = Object.entries(oddsComparisonAwayArray).sort((a, b) => b[1] - a[1])
+
+    bestHomeOddsProvider = sortedHomeOdds[0][0]
+    bestHomeOdds = sortedHomeOdds[0][1]
+    bestAwayOddsProvider = sortedAwayOdds[0][0]
+    bestAwayOdds = sortedAwayOdds[0][1]
+    } else {
+      bestHomeOddsProvider = "N/A"
+      bestHomeOdds = "N/A"
+      bestAwayOddsProvider = "N/A"
+      bestAwayOdds = "N/A"
+    }
+
     if(match.data.h2h.previous_matches_results.totalMatches > 0){
       matchArr.sort((a, b) => b.date_unix - a.date_unix);
       let lastMatch = matchArr[0].id
@@ -65,6 +91,8 @@ export async function getTeamStats(id, home, away) {
             awayWins={match.data.h2h.previous_matches_results.team_b_wins}
             draws={match.data.h2h.previous_matches_results.draw}
             averageGoals={match.data.h2h.betting_stats.avg_goals}
+            bestHomeOdds = {`${bestHomeOddsProvider} - ${bestHomeOdds}`}
+            bestAwayOdds = {`${bestAwayOddsProvider} - ${bestAwayOdds}`}
             lastGameStadiumName={previousMatchDetails.stadium_name}
             lastGameHomeGoals={previousMatchDetails.homeGoalCount}
             lastGameAwayGoals={previousMatchDetails.awayGoalCount}

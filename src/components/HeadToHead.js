@@ -34,6 +34,12 @@ function HeadToHead(props) {
       <li key="averageGoals" className="averageGoals" data-cy={props.name + "averageGoals"}>
         {`Average goals in fixture: ${props.averageGoals}`}
       </li>
+      <li key="bestHomeOdds" className="bestHomeOdds" data-cy={props.name + "bestHomeOdds"}>
+        {`Best oods for home win @: ${props.bestHomeOdds}`}
+      </li>
+      <li key="bestAwayOdds" className="bestAwayOdds" data-cy={props.name + "bestAwayOdds"}>
+        {`Best oods for away win @: ${props.bestAwayOdds}`}
+      </li>
     </ul>
   );
 }
