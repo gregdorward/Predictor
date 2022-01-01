@@ -71,7 +71,7 @@ async function compareStat(statOne, statTwo) {
     gap = 0;
   }
 
-  if (gap > 1.2) {
+  if (gap > 1.5) {
     switch (true) {
       case stat1 === stat2:
         result = 0;
@@ -967,8 +967,16 @@ export async function calculateScore(match, index, divider, id) {
     let homeCalculation;
     let awayCalculation;
 
-    homeCalculation = parseFloat(1 + homeWeighting);
-    awayCalculation = parseFloat(1 + awayWeighting);
+    if(homeWeighting > 0.25){
+      homeCalculation = 1.15
+      awayCalculation = 0.85
+    } else if(homeWeighting < -0.25){
+      homeCalculation = 0.85
+      awayCalculation = 1.15
+    } else {
+      homeCalculation = parseFloat(1 + homeWeighting);
+      awayCalculation = parseFloat(1 + awayWeighting);
+    }
 
     formHome.AttackingPotency = (formHome.XG / formHome.AttacksHome) * 100;
 
@@ -1055,21 +1063,19 @@ export async function calculateScore(match, index, divider, id) {
         match.awayTeamWinPercentage
       )
 
-      console.log(positionComparison)
-
       let calculation =
-        formTrendScoreComparison * 5 +
-        threeGameAverageComparison * 0 +
-        sixGameAverageComparison * 5 +
-        overUnderAchievingSumComparison * 0 +
+        formTrendScoreComparison * 15 +
+        threeGameAverageComparison * 15 +
+        sixGameAverageComparison * 0 +
+        overUnderAchievingSumComparison * 5 +
         dangerousAttacksComparison * 0 +
         XGdifferentialComparison * 0 +
         sotComparison * 0 +
-        tenGameAverageComparison * 0 +
+        tenGameAverageComparison * 15 +
         AveragePossessionComparison * 0 +
         clinicalScoreComparison * 0 +
-        positionComparison * 10 +
-        winPercentageComparison * 5;
+        positionComparison * 15 +
+        winPercentageComparison * 0;
       return calculation;
     }
 
@@ -1100,13 +1106,13 @@ export async function calculateScore(match, index, divider, id) {
       }
 
       if (wholeNumber !== 0) {
-        if (form.clinicalScore >= 1.0 && remainder > 0.6) {
+        if (form.clinicalScore >= 1.0 && remainder > 0.7) {
           return Math.ceil(num);
         } else {
           return Math.floor(num);
         }
       } else if (wholeNumber === 0) {
-        if (form.clinicalScore >= 1.0 && remainder > 0.6) {
+        if (form.clinicalScore >= 1.0 && remainder > 0.7) {
           return Math.ceil(num);
         } else {
           return Math.floor(num);
@@ -1147,18 +1153,17 @@ export async function calculateScore(match, index, divider, id) {
         formHome.conceededAverageShortAndLongTerm) /
       2;
 
-      console.log(match.game)
 
     let factorOneHome =
       (
         goalCalcHomeShortTerm * 1 +
         goalCalcHomeShortAndLongTerm * 1 +
-        goalCalcHomeOnly * 1.5 +
+        goalCalcHomeOnly * 1 +
         last5WeightingHome * 1 +
         last2WeightingHome * 1 +
         last10WeightingHome * 0 +
         formHome.goalsDifferential * 0) /
-      4;
+      3;
 
       console.log(
         `${goalCalcHomeShortTerm} goalCalcHomeShortTerm
@@ -1171,12 +1176,12 @@ export async function calculateScore(match, index, divider, id) {
       (
         goalCalcAwayShortTerm * 1 +
         goalCalcAwayShortAndLongTerm * 1 +
-        goalCalcAwayOnly * 1.5 +
+        goalCalcAwayOnly * 1 +
         last5WeightingAway * 1 +
         last2WeightingAway * 1 +
         last10WeightingAway * 0 +
         formAway.goalsDifferential * 0) /
-      4;
+      3;
 
       console.log(
         `${goalCalcAwayShortTerm} goalCalcAwayShortTerm
@@ -1756,9 +1761,6 @@ export async function getScorePrediction(day, mocked) {
         }
       }
 
-      console.log(allTips);
-      console.log("TEST");
-
       allTips.sort(function (a, b) {
         if (a.goalDifferential === b.goalDifferential) {
           return b.comparisonScore - a.comparisonScore;
@@ -1767,7 +1769,6 @@ export async function getScorePrediction(day, mocked) {
         }
       });
 
-      console.log(allTips);
 
       bestBets.sort(function (a, b) {
         if (a.goalDifferential === b.goalDifferential) {

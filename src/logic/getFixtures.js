@@ -55,7 +55,7 @@ var d = new Date();
 d.setDate(d.getDate() - ((d.getDay() + 6) % 7));
 
 // set to Saturday just gone
-d.setDate(d.getDate() - 2);
+d.setDate(d.getDate() - 16);
 
 let [saturdayDay, saturdayMonth, saturdayYear] = d
   .toLocaleDateString("en-US")
