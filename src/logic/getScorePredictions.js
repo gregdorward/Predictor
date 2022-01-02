@@ -1106,13 +1106,13 @@ export async function calculateScore(match, index, divider, id) {
       }
 
       if (wholeNumber !== 0) {
-        if (form.clinicalScore >= 1.0 && remainder > 0.7) {
+        if (form.clinicalScore >= 1.0 && remainder > 0.75) {
           return Math.ceil(num);
         } else {
           return Math.floor(num);
         }
       } else if (wholeNumber === 0) {
-        if (form.clinicalScore >= 1.0 && remainder > 0.7) {
+        if (form.clinicalScore >= 1.0 && remainder > 0.75) {
           return Math.ceil(num);
         } else {
           return Math.floor(num);
