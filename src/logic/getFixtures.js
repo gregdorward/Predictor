@@ -55,7 +55,7 @@ var d = new Date();
 d.setDate(d.getDate() - ((d.getDay() + 6) % 7));
 
 // set to Saturday just gone
-d.setDate(d.getDate() - 16);
+d.setDate(d.getDate() - 2);
 
 let [saturdayDay, saturdayMonth, saturdayYear] = d
   .toLocaleDateString("en-US")
@@ -1050,6 +1050,10 @@ export async function generateFixtures(day, radioState, selectedOdds) {
       match.homeTeamHomePosition = `${teamPositionHomeTable}${homePrefixHomeTable}`;
       match.awayTeamAwayPosition = `${teamPositionAwayTable}${awayPrefixAwayTable}`;
 
+      match.homeTeamHomePositionRaw = teamPositionHomeTable
+      match.awayTeamAwayPositionRaw = teamPositionAwayTable
+
+
       match.homeTeamWinPercentage = homeTeamWinPercentageHome;
       match.awayTeamWinPercentage = awayTeamWinPercentageAway;
 
@@ -1079,7 +1083,7 @@ export async function generateFixtures(day, radioState, selectedOdds) {
         await createFixture(match, false);
       }
 
-      // console.log(allForm)
+      console.log(allForm)
     }
     // }
     ReactDOM.render(
