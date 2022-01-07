@@ -1073,7 +1073,7 @@ export async function calculateScore(match, index, divider, id) {
 
       let positionComparison
       if(awayPositionAwayOnly !== 0 && homePositionHomeOnly !== 0){
-        positionComparison = await compareStat((awayPositionAwayOnly / 2), (homePositionHomeOnly / 2));
+        positionComparison = await compareStat((awayPositionAwayOnly + awayPosition  / 4), (homePositionHomeOnly + homePosition / 4));
       } else {
         positionComparison = await compareStat(1, 1)
       }
@@ -1096,7 +1096,7 @@ export async function calculateScore(match, index, divider, id) {
         tenGameAverageComparison * 1 +
         AveragePossessionComparison * 0 +
         clinicalScoreComparison * 0 +
-        positionComparison * 4 +
+        positionComparison * 5 +
         winPercentageComparison * 1;
       return calculation;
     }
@@ -1122,7 +1122,7 @@ export async function calculateScore(match, index, divider, id) {
       let remainder = num - wholeNumber;
 
       if (form.clinicalScore === 0.7) {
-        num = num - 0.25;
+        num = num - 0.5;
       } else if (form.clinicalScore === 1.3) {
         num = num + 0.25;
       }
@@ -1181,14 +1181,16 @@ export async function calculateScore(match, index, divider, id) {
 
     let factorOneHome =
       (goalCalcHomeShortTerm * 1 +
-        goalCalcHomeShortAndLongTerm * 2 +
+        goalCalcHomeShortAndLongTerm * 1 +
         goalCalcHomeOnly * 1 +
         formAway.expectedConceededGoalsLongTerm * 2 +
+        formHome.expectedGoalsLongTerm * 2 + 
+
         // last5WeightingHome * 1 +
         // last2WeightingHome * 1 +
         last10WeightingHome * 0 +
         formHome.goalsDifferential * 0) /
-      6;
+      7;
 
     console.log(match.game)
     console.log(formHome)
@@ -1207,14 +1209,15 @@ export async function calculateScore(match, index, divider, id) {
     );
     let factorOneAway =
       (goalCalcAwayShortTerm * 1 +
-        goalCalcAwayShortAndLongTerm * 2 +
+        goalCalcAwayShortAndLongTerm * 1 +
         goalCalcAwayOnly * 1 +
         formHome.expectedConceededGoalsLongTerm * 2 +
+        formAway.expectedGoalsLongTerm * 2 + 
         // last5WeightingAway * 1 +
         // last2WeightingAway * 1 +
         last10WeightingAway * 0 +
         formAway.goalsDifferential * 0) /
-      6;
+      7;
 
     console.log(
       `${goalCalcAwayShortTerm} goalCalcAwayShortTerm
