@@ -707,6 +707,8 @@ export async function generateFixtures(day, radioState, selectedOdds) {
               LastSixForm: lastSixFormHome,
               LastTenForm: lastTenFormHome,
               LeaguePosition: `${teamPositionHome}${homePrefix}`,
+              homeRawPosition: homeTeaminLeague.rawPosition,
+              homeTeamHomePositionRaw: teamPositionHomeTable,
               SeasonPPG: homeSeasonPPG,
             },
             1: {
@@ -773,6 +775,8 @@ export async function generateFixtures(day, radioState, selectedOdds) {
               LastSixForm: lastSixFormHome,
               LastTenForm: lastTenFormHome,
               LeaguePosition: `${teamPositionHome}${homePrefix}`,
+              homeRawPosition: homeTeaminLeague.rawPosition,
+              homeTeamHomePositionRaw: teamPositionHomeTable,
               SeasonPPG: homeSeasonPPG,
             },
             2: {
@@ -839,6 +843,8 @@ export async function generateFixtures(day, radioState, selectedOdds) {
               LastSixForm: lastSixFormHome,
               LastTenForm: lastTenFormHome,
               LeaguePosition: `${teamPositionHome}${homePrefix}`,
+              homeRawPosition: homeTeaminLeague.rawPosition,
+              homeTeamHomePositionRaw: teamPositionHomeTable,
               SeasonPPG: homeSeasonPPG,
             },
           },
@@ -903,6 +909,8 @@ export async function generateFixtures(day, radioState, selectedOdds) {
               LastSixForm: lastSixFormAway,
               LastTenForm: lastTenFormAway,
               LeaguePosition: `${teamPositionAway}${awayPrefix}`,
+              awayRawPosition: awayTeaminLeague.rawPosition,
+              awayTeamAwayPositionRaw: teamPositionAwayTable,
               SeasonPPG: awaySeasonPPG,
             },
             1: {
@@ -964,6 +972,8 @@ export async function generateFixtures(day, radioState, selectedOdds) {
               LastSixForm: lastSixFormAway,
               LastTenForm: lastTenFormAway,
               LeaguePosition: `${teamPositionAway}${awayPrefix}`,
+              awayRawPosition: awayTeaminLeague.rawPosition,
+              awayTeamAwayPositionRaw: teamPositionAwayTable,
               SeasonPPG: awaySeasonPPG,
             },
             2: {
@@ -1025,6 +1035,8 @@ export async function generateFixtures(day, radioState, selectedOdds) {
               LastSixForm: lastSixFormAway,
               LastTenForm: lastTenFormAway,
               LeaguePosition: `${teamPositionAway}${awayPrefix}`,
+              awayRawPosition: awayTeaminLeague.rawPosition,
+              awayTeamAwayPositionRaw: teamPositionAwayTable,
               SeasonPPG: awaySeasonPPG,
             },
           },

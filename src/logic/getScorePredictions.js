@@ -838,10 +838,24 @@ export async function calculateScore(match, index, divider, id) {
 
     formHome = teams[0][index];
     formAway = teams[1][index];
-    let homePosition = match.homeRawPosition;
-    let awayPosition = match.awayRawPosition;
-    let homePositionHomeOnly = match.homeTeamHomePositionRaw;
-    let awayPositionAwayOnly = match.awayTeamAwayPositionRaw;
+    let homePosition;
+    let awayPosition;
+
+    let homePositionHomeOnly;
+    let awayPositionAwayOnly;
+
+    if(!formHome.homeTeamHomePositionRaw){
+      homePositionHomeOnly = match.homeTeamHomePositionRaw;
+      awayPositionAwayOnly = match.awayTeamAwayPositionRaw;
+      homePosition = match.homeRawPosition;
+      awayPosition = match.awayRawPosition;
+    } else {
+      homePositionHomeOnly = formHome.homeTeamHomePositionRaw
+      awayPositionAwayOnly = formAway.awayTeamAwayPositionRaw
+      homePosition = formHome.homeRawPosition
+      awayPosition = formAway.awayRawPosition
+    }
+
 
     [formHome.overOrUnderAttack, formHome.trueFormAttack] =
       await getOverOrUnderAchievingResult(
