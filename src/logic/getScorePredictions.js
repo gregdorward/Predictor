@@ -844,18 +844,6 @@ export async function calculateScore(match, index, divider, id) {
     let homePositionHomeOnly;
     let awayPositionAwayOnly;
 
-    if(!formHome.homeTeamHomePositionRaw){
-      homePositionHomeOnly = match.homeTeamHomePositionRaw;
-      awayPositionAwayOnly = match.awayTeamAwayPositionRaw;
-      homePosition = match.homeRawPosition;
-      awayPosition = match.awayRawPosition;
-    } else {
-      homePositionHomeOnly = formHome.homeTeamHomePositionRaw
-      awayPositionAwayOnly = formAway.awayTeamAwayPositionRaw
-      homePosition = formHome.homeRawPosition
-      awayPosition = formAway.awayRawPosition
-    }
-
 
     [formHome.overOrUnderAttack, formHome.trueFormAttack] =
       await getOverOrUnderAchievingResult(
@@ -983,7 +971,18 @@ export async function calculateScore(match, index, divider, id) {
     let homeCalculation;
     let awayCalculation;
 
-
+    if(typeof formHome.homeTeamHomePositionRaw === "number" && typeof formAway.awayTeamAwayPositionRaw === "number"){
+      homePositionHomeOnly = parseFloat(formHome.homeTeamHomePositionRaw)
+      awayPositionAwayOnly = parseFloat(formAway.awayTeamAwayPositionRaw)
+      homePosition = parseFloat(formHome.homeRawPosition)
+      awayPosition = parseFloat(formAway.awayRawPosition)
+    }
+    
+    console.log(match.game)
+    console.log(`homePositionHomeOnly ${homePositionHomeOnly}`)
+    console.log(`homePosition ${homePosition}`)
+    console.log(`awayPositionHomeOnly ${awayPositionAwayOnly}`)
+    console.log(`awayPosition ${awayPosition}`)
 
     if (homeWeighting > 0.25) {
       homeCalculation = 1.15;
@@ -1089,10 +1088,10 @@ export async function calculateScore(match, index, divider, id) {
       );
 
       let positionComparison
-      if(awayPositionAwayOnly !== 0 && homePositionHomeOnly !== 0){
+      if(awayPositionAwayOnly !== undefined && homePositionHomeOnly !== undefined){
         positionComparison = await compareStat((awayPositionAwayOnly + awayPosition) * 2, (homePositionHomeOnly + homePosition) * 2);
       } else {
-        positionComparison = await compareStat(1, 1)
+        positionComparison = await compareStat((homeForm.tenGameAverage * 5), (awayForm.tenGameAverage * 5))
       }
 
       let winPercentageComparison = await compareStat(
@@ -1111,7 +1110,7 @@ export async function calculateScore(match, index, divider, id) {
         attackingPotencyComparison * 0 +
         seasonPPGComparison * 0 +
         tenGameAverageComparison * 0 +
-        AveragePossessionComparison * 1 +
+        AveragePossessionComparison * 0 +
         positionComparison * 4 +
         winPercentageComparison * 3;
       return calculation;
@@ -1197,16 +1196,16 @@ export async function calculateScore(match, index, divider, id) {
 
     let factorOneHome =
       ((goalCalcHomeShortTerm * 0 +
-        goalCalcHomeShortAndLongTerm * 0 +
+        goalCalcHomeShortAndLongTerm * 2 +
         goalCalcHomeOnly * 0 +
         formAway.expectedConceededGoalsLongTerm +
         formHome.expectedGoalsLongTerm + 
         formAway.ConcededAverageShortTerm * 1 +
         // last5WeightingHome * 1 +
         // last2WeightingHome * 1 +
-        last10WeightingHome * 0 +
+        last10WeightingHome * 1 +
         formHome.goalsDifferential * 0) /
-      3);
+      5);
 
     console.log(match.game)
     console.log(formHome)
@@ -1225,16 +1224,16 @@ export async function calculateScore(match, index, divider, id) {
     );
     let factorOneAway =
       ((goalCalcAwayShortTerm * 0 +
-        goalCalcAwayShortAndLongTerm * 0 +
+        goalCalcAwayShortAndLongTerm * 2 +
         goalCalcAwayOnly * 0 +
         formHome.expectedConceededGoalsLongTerm +
         formAway.expectedGoalsLongTerm + 
         formHome.ConcededAverageShortTerm * 1 +
         // last5WeightingAway * 1 +
         // last2WeightingAway * 1 +
-        last10WeightingAway * 0 +
+        last10WeightingAway * 1 +
         formAway.goalsDifferential * 0) /
-      3);
+      5);
 
     console.log(
       `${goalCalcAwayShortTerm} goalCalcAwayShortTerm

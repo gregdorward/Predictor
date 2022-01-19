@@ -639,6 +639,8 @@ export async function generateFixtures(day, radioState, selectedOdds) {
         //   lastFiveFormAway = "N/A"
         // }
 
+        console.log(form[0].data[2].stats)
+
         allForm.push({
           id: match.id,
           home: {
