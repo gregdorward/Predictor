@@ -892,7 +892,6 @@ p {
   flex-direction: row;
   justify-content: center;
   text-align: center;
-  /* font-size: 2.3vw; */
   align-items: center;
 }
 
@@ -905,11 +904,72 @@ p {
   align-items: center;
 }
 
+.InsightsContainer {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  text-align: center;
+  align-items: top;
+}
+
 .BTTSPotential {
   padding-top: 5px;
   padding-bottom: 5px;
   text-align: center;
   /* font-size: 2.5vw; */
+}
+
+.InsightsExplainer{
+  display: block;
+  text-align: center;
+  padding-top: 1em;
+  padding-bottom: 1em;
+  font-size: 1.2em;
+}
+
+.InsightsHome {
+  text-align: right;
+  width: 45%;
+  padding-right: 1em;
+}
+
+.InsightsAway {
+  text-align: left;
+  width: 45%;
+  padding-left: 1em;
+
+}
+
+.InsightsHome li {
+  padding-top: 1em;
+  padding-right: 1em;
+}
+
+.InsightsAway li {
+  padding-top: 1em;
+  padding-left: 1em;
+}
+
+.InsightsHome lh {
+  padding: 0.25em;
+  margin-right: 0.5em;
+  font-size: 1.2em;
+}
+
+.InsightsAway lh {
+  padding: 0.25em;
+  margin-left: 0.5em;
+  font-size: 1.2em;
+}
+
+.WinningTeams {
+  background-color: rgba(0, 192, 0, 0.609);
+  color: white;
+}
+
+.LosingTeams {
+  background-color: rgba(224, 0, 0, 0.603);
+  color: white;
 }
 
 .HomeStats {
@@ -1103,10 +1163,6 @@ li.FormHeader{
 .BestPredictionsExplainer {
   padding-bottom: 0.2em;
   font-size: 1.1em;
-}
-
-lh {
-  /* font-size: 1em; */
 }
 
 .BestPredictions li {

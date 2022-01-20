@@ -263,6 +263,7 @@ function App() {
       <div id="BTTS" />
       <div id="longShots" />
       <div id="draws" />
+      <div id="insights" />
       <div id="tables" />
       <div id="homeBadge" />
       <div id="FixtureContainerHeaders"></div>
