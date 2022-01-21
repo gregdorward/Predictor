@@ -98,14 +98,14 @@ async function compareStat(statOne, statTwo) {
   let statTwoNotZero = stat2 + 0.1;
 
   if (stat1 > stat2) {
-    gap = await diff(statOneNotZero, statTwoNotZero);
+    gap = (statOneNotZero / statTwoNotZero);
   } else if (stat1 < stat2) {
-    gap = await diff(statTwoNotZero, statOneNotZero);
+    gap = (statTwoNotZero / statOneNotZero);
   } else {
     gap = 0;
   }
 
-  if (gap > 2.25) {
+  if (gap > 1.5) {
     switch (true) {
       case stat1 === stat2:
         result = 0;
@@ -1002,8 +1002,8 @@ export async function calculateScore(match, index, divider, id) {
       weightingSplitAway = 1;
     }
 
-    homeWeighting = weightingSplitHome * 0.5;
-    awayWeighting = weightingSplitAway * 0.5;
+    homeWeighting = weightingSplitHome * 1;
+    awayWeighting = weightingSplitAway * 1;
 
     let homeCalculation;
     let awayCalculation;
@@ -1147,10 +1147,10 @@ export async function calculateScore(match, index, divider, id) {
 
       let calculation =
         formTrendScoreComparison * 2 +
-        twoGameAverageComparison * 0 +
+        twoGameAverageComparison * 1 +
         sixGameAverageComparison * 0 +
         fiveGameAverageComparison * 0 +
-        dangerousAttacksComparison * 0 +
+        dangerousAttacksComparison * 1 +
         XGdifferentialComparison * 1 +
         sotComparison * 1 +
         attackingPotencyComparison * 0 +
@@ -1163,7 +1163,7 @@ export async function calculateScore(match, index, divider, id) {
     }
 
     let teamComparisonScore =
-      (await compareTeams(formHome, formAway, match.homeTeam, match)) / 18;
+      (await compareTeams(formHome, formAway, match.homeTeam, match)) / 15;
     match.teamComparisonScore = teamComparisonScore;
 
     let finalHomeGoals;
