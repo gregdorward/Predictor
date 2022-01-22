@@ -1194,10 +1194,10 @@ export async function calculateScore(match, index, divider, id) {
         positionComparison * 3 +
         winPercentageComparison * 5;
 
-      if (winPercentageComparison > 0 && match.awayTeamWinPercentage > 40) {
+      if (calculation > 0 && match.awayTeamWinPercentage > 40) {
         calculation = calculation / 2;
       } else if (
-        winPercentageComparison < 0 &&
+        calculation < 0 &&
         match.homeTeamWinPercentage > 40
       ) {
         calculation = calculation / 2;
