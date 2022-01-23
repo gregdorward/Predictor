@@ -1580,12 +1580,12 @@ export async function calculateScore(match, index, divider, id) {
       formHome.overUnderAchievingSum
     );
 
-    if (trueFormDiffHome > 1) {
+    if (trueFormDiffHome > 1.75) {
       rawFinalHomeGoals = rawFinalHomeGoals + trueFormDiffHome / 2;
       rawFinalAwayGoals = rawFinalAwayGoals + -Math.abs(trueFormDiffAway / 2);
     }
 
-    if (trueFormDiffAway > 1) {
+    if (trueFormDiffAway > 1.75) {
       rawFinalHomeGoals = rawFinalHomeGoals + -Math.abs(trueFormDiffHome / 2);
       rawFinalAwayGoals = rawFinalAwayGoals + trueFormDiffAway / 2;
     }
