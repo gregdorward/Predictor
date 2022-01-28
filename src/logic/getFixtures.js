@@ -1,6 +1,6 @@
 import React from "react";
 import ReactDOM from "react-dom";
-import { orderedLeagues, proxyurl } from "../App";
+import { orderedLeagues } from "../App";
 import { getForm, applyColour } from "./getForm";
 import { Fixture } from "../components/Fixture";
 import { Button } from "../components/Button";
@@ -74,7 +74,6 @@ historicDate.setDate(historicDate.getDate() - 9);
 let [historicDay, historicMonth, historicYear] = historicDate
   .toLocaleDateString("en-US")
   .split("/");
-let rawPosition;
 
 export const saturday = `${process.env.REACT_APP_EXPRESS_SERVER}matches/${saturdayYear}-${saturdayDay}-${saturdayMonth}`;
 export const historic = `${process.env.REACT_APP_EXPRESS_SERVER}matches/${historicYear}-${historicDay}-${historicMonth}`;
@@ -122,7 +121,6 @@ export async function generateTables() {
           Form: `${form[0]}${form[1]}${form[2]}${form[3]}${form[4]}`,
           Points: currentTeam.points,
         };
-        rawPosition = team.Position
         leagueInstance.push(team);
       }
       tableArray.push(leagueInstance);
@@ -148,8 +146,6 @@ export async function generateTables() {
           Form: last5,
           Points: currentTeam.points,
         };
-        rawPosition = team.Position
-
         leagueInstance.push(team);
       }
       tableArray.push(leagueInstance);

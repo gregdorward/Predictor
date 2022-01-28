@@ -2,8 +2,7 @@ import ReactDOM from "react-dom";
 import { Button } from "../components/Button";
 import Stats from "../components/createStatsDiv";
 import Div from "../components/Div";
-import { selectedOption } from "../components/radio";
-import { allForm, leagueArray } from "../logic/getFixtures";
+import { allForm } from "../logic/getFixtures";
 import { getTeamStats } from "../logic/getTeamStats";
 import { getPointsFromLastX } from "../logic/getScorePredictions";
 

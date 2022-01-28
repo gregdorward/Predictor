@@ -1,7 +1,6 @@
 import React from "react";
 import ReactDOM from "react-dom";
 import Header from "./components/Header";
-import Radio from "./components/radio";
 import { Button } from "./components/Button";
 import OddsRadio from "./components/OddsRadio";
 import { selectedOdds } from "./components/OddsRadio";
@@ -19,14 +18,9 @@ import {
 } from "react-share";
 
 import {
-  today,
   generateFixtures,
-  generatePriorFixtures,
-  tomorrow,
-  yesterday,
 } from "./logic/getFixtures";
 import { selectedOption } from "./components/radio";
-import TextBlock from "./components/TextSection";
 import { ThreeDots } from "react-loading-icons";
 require("dotenv").config();
 

@@ -1,7 +1,3 @@
-import { proxyurl } from "../App";
-
-const allTeamForm = [];
-
 export async function applyColour(value) {
   let colour;
   switch (true) {

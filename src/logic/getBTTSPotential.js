@@ -18,7 +18,6 @@ export async function getBTTSPotential(allForm, match, index, homeGoals, awayGoa
   let awayBTTS = allForm[away].away[index].BTTSPercentage;
   let homeG = homeGoals;
   let awayG = awayGoals;
-  let totalGoals = homeG + awayG
 
   let homeGoalsScoredAverage = allForm[home].home[index].ScoredAverage
   let awayGoalsScoredAverage = allForm[away].away[index].ScoredAverage
@@ -38,28 +37,12 @@ export async function getBTTSPotential(allForm, match, index, homeGoals, awayGoa
   let homeGoalsConceededAveragedOut = (homeGoalsConceededAverage + homeXGAgainst) / 2
   let awayGoalsConceededAveragedOut = (awayGoalsConceededAverage + awayXGAgainst) / 2
 
-
-  let homeCleansheets = allForm[home].home[index].CleanSheetPercentage
-  let awayCleansheets = allForm[away].away[index].CleanSheetPercentage
-
-  let homePPG = allForm[home].home[index].PPG
-  let awayPPG = allForm[away].away[index].PPG
-
-  let dangerousAttacksHome = allForm[away].home[index].AverageDangerousAttacks;
-  let dangerousAttacksAway = allForm[away].away[index].AverageDangerousAttacks;
-
   match.combinedBTTS = (homeBTTS + awayBTTS) / 2;
 
 if(match.bttsFraction !== "N/A" && match.status !== "suspended" && match.status !== "canceled"){
   if (
     match.combinedBTTS >= 60 &&
-    // match.btts_potential >= 60 &&
     match.awayOdds < 3 &&
-    // homePPG > 1 &&
-    // homeXG >= 1.1 && 
-    // awayXG >= 1.1 &&
-    // homeXGAgainst > 1.1 &&
-    // awayXGAgainst > 1.1 &&
     homeGoalsAveragedOut > 1 &&
     awayGoalsAveragedOut > 1 &&
     homeGoalsConceededAveragedOut > 1 &&

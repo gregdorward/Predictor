@@ -8,12 +8,9 @@ import {
   compareFormTrend,
   getPointAverage,
   compareTeams,
+  roundCustom,
+  getCoverBetMaxReturns,
 } from "./getScorePredictions";
-
-const homePositionHomeOnly = 3;
-const awayPositionAwayOnly = 10;
-const homePosition = 5;
-const awayPosition = 9;
 
 const homeForm = {
   AverageShotsOnTarget: 5,
@@ -36,6 +33,8 @@ const homeForm = {
   AttackingPotency: 3,
   AveragePossession: 52.1,
   AveragePossessionOverall: 51.8,
+  homePositionHomeOnly: 3,
+  homePosition: 5
 };
 
 const awayForm = {
@@ -59,6 +58,8 @@ const awayForm = {
     AttackingPotency: 3.5,
     AveragePossession: 47.1,
     AveragePossessionOverall: 45.8,
+    awayPositionAwayOnly: 2,
+    awayPosition: 7
   };
 
 const match = {
@@ -68,11 +69,11 @@ const match = {
 
 describe("compare stat tests", () => {
   test("a positve number is returned when the home team has the greater number", async () => {
-    expect(await compareStat(5, 2)).toBe(1);
+    expect(await compareStat(5, 2)).toBe(1.5);
   });
 
   test("a negative number is returned when the away team has the greater number", async () => {
-    expect(await compareStat(2, 5)).toBe(-1);
+    expect(await compareStat(2, 5)).toBe(-1.5);
   });
 
   test("a neutral number is returned when both teams have the same number", async () => {
@@ -208,7 +209,109 @@ describe("the point average function", () => {
 
 describe("the team comparison function", () => {
     test("teams are compared and the correct calculation is returned", async () => {
-      expect(await compareTeams(homeForm, awayForm, "test", match)).toBe(21);
+      expect(await compareTeams(homeForm, awayForm, match)).toBe(13);
+    });
+
+})
+
+describe("the custom round function", () => {
+    test("a number with a remainder of over 0.9 is rounded up", async () => {
+        expect(await roundCustom(1.91)).toBe(2);
+      });
+      test("a number with a remainder of under 0.9 is rounded down", async () => {
+        expect(await roundCustom(1.89)).toBe(1);
+      }); 
+      test("a number with a remainder of exactly 0.9 is rounded down", async () => {
+        expect(await roundCustom(2.90)).toBe(2);
+      }); 
+      test("a whole number under 1 with a remainder of under 0.9 is rounded down to 0", async () => {
+        expect(await roundCustom(0.89)).toBe(0);
+      }); 
+})
+
+const priceArray = [
+        {
+            "team": "Darmstadt 98 to win",
+            "rawOdds": 1.94,
+            "odds": "1/1",
+            "comparisonScore": 1.9,
+            "rawComparisonScore": -1.9,
+            "formTrend": false,
+            "outcome": "Won",
+            "goalDifferential": 3.85,
+            "experimentalCalc": 7.315319200000001
+        },
+        {
+            "team": "Falkirk to win",
+            "rawOdds": 1.98,
+            "odds": "1/1",
+            "comparisonScore": 1.5666666666666667,
+            "rawComparisonScore": -1.5666666666666667,
+            "outcome": "Won",
+            "goalDifferential": 3.84,
+            "experimentalCalc": 6.01112704
+        },
+        {
+            "team": "Wigan Athletic to win",
+            "odds": "2/5",
+            "rawOdds": 1.33,
+            "comparisonScore": 1.8,
+            "rawComparisonScore": 1.8,
+            "formTrend": true,
+            "outcome": "Won",
+            "goalDifferential": 3.66,
+            "experimentalCalc": 6.5885831999999995
+        },
+        {
+            "team": "Sochaux to win",
+            "rawOdds": 1.98,
+            "odds": "1/1",
+            "comparisonScore": 1.7666666666666666,
+            "rawComparisonScore": -1.7666666666666666,
+            "formTrend": true,
+            "outcome": "Lost",
+            "goalDifferential": 3.44,
+            "experimentalCalc": 6.086108248888888
+        },
+        {
+            "team": "Burton Albion to win",
+            "odds": "5/4",
+            "rawOdds": 2.1,
+            "comparisonScore": 1.6,
+            "rawComparisonScore": 1.6,
+            "formTrend": false,
+            "outcome": "Lost",
+            "goalDifferential": 3.39,
+            "experimentalCalc": 5.419448320000001
+        },
+        {
+            "team": "AFC Bournemouth to win",
+            "odds": "4/5",
+            "rawOdds": 1.72,
+            "comparisonScore": 1.5,
+            "rawComparisonScore": 1.5,
+            "formTrend": true,
+            "outcome": "Lost",
+            "goalDifferential": 3.27,
+            "experimentalCalc": 4.90242
+        },
+        {
+            "team": "Vitesse to win",
+            "odds": "3/5",
+            "rawOdds": 1.66,
+            "comparisonScore": 1.0666666666666667,
+            "rawComparisonScore": 1.0666666666666667,
+            "formTrend": true,
+            "outcome": "Lost",
+            "goalDifferential": 3.21,
+            "experimentalCalc": 3.419310079999999
+        },
+
+]
+
+describe("the accumulator calculator function", () => {
+    test("multi price is calculated correctly", async () => {
+      expect(getCoverBetMaxReturns(priceArray, 6, 1)).toBe(299.46);
     });
 
 })

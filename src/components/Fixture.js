@@ -2,11 +2,9 @@ import React, { Fragment } from "react";
 import { CreateBadge } from "./createBadge";
 import Collapsable from "../components/CollapsableElement";
 import { createStatsDiv } from "../logic/getStats";
-import { Button } from "../components/Button";
-import { renderTable, tableArray } from "../logic/getFixtures";
+import { renderTable } from "../logic/getFixtures";
 
 let resultValue;
-let leagueName;
 const text =
   "XG Tipping formulates predictions based on recent form data ranging from points per game to each teams attacking potency\n Expected Goals in previous matches are used to determine whether teams might be over or underperforming and predictions are weighted as such\n Once all fixtures have loaded, click on “Get Predictions”\n Predictions are displayed on the right and the results on the left\n Click on an individual fixture for detailed stats for both teams.";
 
@@ -90,8 +88,6 @@ function GetDivider(fixture) {
             break;
         }
       } else fixture.fixture.profit = 1;
-
-      let name = "CorrectScore";
 
       if (
         fixture.fixture.goalsA === fixture.fixture.homeGoals &&
