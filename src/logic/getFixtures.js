@@ -231,6 +231,13 @@ async function createFixture(match, result, mockBool) {
     }
   }
 
+  match.homeTeamWinsPercentage = match.homeTeamWinPercentage
+  match.homeTeamLossesPercentage = match.homeTeamLossPercentage
+  match.homeTeamDrawsPercentage = match.homeTeamDrawPercentage
+
+  match.awayTeamWinsPercentage = match.awayTeamWinPercentage
+  match.awayTeamLossesPercentage = match.awayTeamLossPercentage
+  match.awayTeamDrawsPercentage = match.awayTeamDrawPercentage
   match.fractionHome = homeFraction;
   match.fractionAway = awayFraction;
 
@@ -617,6 +624,8 @@ export async function generateFixtures(day, radioState, selectedOdds) {
         lastSixFormAway = Array.from(awayFormString6);
         lastTenFormAway = Array.from(awayFormString10);
 
+
+
         if (teamPositionHome === 0) {
           teamPositionHome = "N/A";
           teamPositionHomeTable = "N/A";
@@ -844,6 +853,9 @@ export async function generateFixtures(day, radioState, selectedOdds) {
               homeRawPosition: homeTeaminLeague.rawPosition,
               homeTeamHomePositionRaw: teamPositionHomeTable,
               SeasonPPG: homeSeasonPPG,
+              WinPercentage: homeTeamWinPercentageHome,
+              LossPercentage: homeTeamLossPercentageHome,
+              DrawPercentage: homeTeamDrawPercentageHome,
             },
           },
           away: {
@@ -1036,9 +1048,12 @@ export async function generateFixtures(day, radioState, selectedOdds) {
               awayRawPosition: awayTeaminLeague.rawPosition,
               awayTeamAwayPositionRaw: teamPositionAwayTable,
               SeasonPPG: awaySeasonPPG,
+              WinPercentage: awayTeamWinPercentageAway,
+              LossPercentage: awayTeamLossPercentageAway,
+              DrawPercentage: awayTeamDrawPercentageAway,
             },
           },
-        });
+        }); 
       }
 
       match.homeBadge = fixture.home_image;
@@ -1083,6 +1098,10 @@ export async function generateFixtures(day, radioState, selectedOdds) {
 
       match.expectedGoalsHomeToDate = fixture.team_a_xg_prematch;
       match.expectedGoalsAwayToDate = fixture.team_b_xg_prematch;
+
+
+
+
 
       console.log(match)
       console.log(fixture)

@@ -113,13 +113,13 @@ export async function compareStat(statOne, statTwo) {
         awayPoints = 0;
         break;
       case stat1 > stat2:
-        result = 1.5;
+        result = 1.25;
         homePoints = 2;
-        awayPoints = 0;
+        awayPoints = -0.2;
         break;
       case stat1 < stat2:
-        result = -1.5;
-        homePoints = 0;
+        result = -1.25;
+        homePoints = -0.2;
         awayPoints = 2;
         break;
       default:
@@ -145,7 +145,7 @@ export async function compareStat(statOne, statTwo) {
       default:
         break;
     }
-  } else if (gap > 1 && gap < 1.3) {
+  } else if (gap > 1.05 && gap < 1.3) {
     switch (true) {
       case stat1 === stat2:
         result = 0;
@@ -154,13 +154,13 @@ export async function compareStat(statOne, statTwo) {
         break;
       case stat1 > stat2:
         result = 0.5;
-        homePoints = 0.25;
-        awayPoints = 0;
+        homePoints = 0.2;
+        awayPoints = 0.1;
         break;
       case stat1 < stat2:
         result = -0.5;
-        homePoints = 0;
-        awayPoints = 0.25;
+        homePoints = 0.1;
+        awayPoints = 0.2;
         break;
       default:
         break;
@@ -576,6 +576,7 @@ export async function compareTeams(homeForm, awayForm, match) {
   let AveragePossessionComparison;
   let positionComparison;
   let winPercentageComparison;
+  let lossPercentageComparison;
 
   let homePoints = 0;
   let awayPoints = 0;
@@ -728,25 +729,66 @@ export async function compareTeams(homeForm, awayForm, match) {
   homePoints = homePoints + homePointsToAdd;
   awayPoints = awayPoints + awayPointsToAdd;
 
+  let winPercH;
+  let winPercA;
+  let drawPercH;
+  let drawPercA;
+
+if(homeForm.WinPercentage !== undefined){
   [winPercentageComparison, homePointsToAdd, awayPointsToAdd] =
     await compareStat(
-      match.homeTeamWinPercentage + 30,
-      match.awayTeamWinPercentage + 30
+      homeForm.WinPercentage + 20,
+      awayForm.WinPercentage + 20
     );
+    winPercH = homeForm.WinPercentage
+    winPercA = awayForm.WinPercentage
+    drawPercH = homeForm.DrawPercentage;
+    drawPercA = awayForm.DrawPercentage;
+} else {
+  [winPercentageComparison, homePointsToAdd, awayPointsToAdd] =
+  await compareStat(
+    match.homeTeamWinPercentage + 20,
+    match.awayTeamWinPercentage + 20
+  );
+  console.log(match)
+  winPercH = match.homeTeamWinPercentage;
+  winPercA = match.awayTeamWinPercentage;
+  drawPercH = match.homeTeamDrawPercentage;
+  drawPercA = match.awayTeamDrawPercentage;
+}
+
+if(homeForm.LossPercentage !== undefined){
+  [lossPercentageComparison, homePointsToAdd, awayPointsToAdd] =
+    await compareStat(
+      awayForm.LossPercentage + 20,
+      homeForm.LossPercentage + 20
+    );
+} else {
+  winPercH = match.homeTeamLossPercentage;
+  winPercA = match.awayTeamLossPercentage;
+
+  [lossPercentageComparison, homePointsToAdd, awayPointsToAdd] =
+  await compareStat(
+    match.awayTeamLossPercentage + 20,
+    match.homeTeamLossPercentage + 20
+  );
+}
+
+console.log(winPercH)
 
   homePoints = homePoints + homePointsToAdd;
   awayPoints = awayPoints + awayPointsToAdd;
 
   let calculation =
-    formTrendScoreComparison * 1 +
+    formTrendScoreComparison * 2 +
     twoGameAverageComparison * 1 +
     fiveGameAverageComparison * 1 +
     tenGameAverageComparison * 1 +
-    dangerousAttacksComparison * 1 +
+    dangerousAttacksComparison * 3 +
     XGdifferentialComparison * 1 +
     sotComparison * 1 +
     sotComparisonHOrA * 1 +
-    CleanSheetPercentageComparison * 2 +
+    CleanSheetPercentageComparison * 1 +
     dangerousAttackConversionComparison * 1 +
     goalsPerDangerousAttackComparison * 1 +
     dangerousAttacksComparisonHOrA * 1 +
@@ -754,12 +796,13 @@ export async function compareTeams(homeForm, awayForm, match) {
     seasonPPGComparison * 1 +
     AveragePossessionComparison * 1 +
     AveragePossessionComparisonHOrA * 1 +
-    positionComparison * 5 +
-    winPercentageComparison * 5;
+    positionComparison * 4 +
+    winPercentageComparison * 4 +
+    lossPercentageComparison * 4;
 
   if (
     calculation > 0 &&
-    match.awayTeamWinPercentage + match.awayTeamDrawPercentage >= 60
+    winPercA + drawPercA >= 60
   ) {
     calculation = calculation / 3;
   } else if (
@@ -767,12 +810,12 @@ export async function compareTeams(homeForm, awayForm, match) {
     homeForm.last2Points <= 3 &&
     homeForm.last2Points > 1
   ) {
-    calculation = calculation / 4;
+    calculation = calculation / 2;
   } else if (calculation > 0 && homeForm.last2Points <= 1) {
     calculation = calculation / 10;
   } else if (
     calculation < 0 &&
-    match.homeTeamWinPercentage + match.homeTeamDrawPercentage >= 60
+    winPercH + drawPercH >= 60
   ) {
     calculation = calculation / 3;
   } else if (
@@ -1187,7 +1230,7 @@ export async function calculateScore(match, index, divider, id) {
       formAway,
       match
     );
-    teamComparisonScore = teamComparisonScore / 15;
+    teamComparisonScore = teamComparisonScore / 17;
 
     match.teamComparisonScore = teamComparisonScore;
 
@@ -1275,6 +1318,11 @@ export async function calculateScore(match, index, divider, id) {
       awayComparisonWeighting = 1;
     }
 
+    if(formHome.CleanSheetPercentage && formAway.CleanSheetPercentage < 20){
+      homeComparisonWeighting = homeComparisonWeighting + 1;
+      awayComparisonWeighting = awayComparisonWeighting + 1;
+    }
+
     console.log(match.game);
     console.log(homeComparisonWeighting);
 
@@ -1339,13 +1387,13 @@ export async function calculateScore(match, index, divider, id) {
       formHome.overUnderAchievingSum
     );
 
-    if (trueFormDiffHome > 1.75) {
+    if (trueFormDiffHome > 2) {
       rawFinalHomeGoals =
         rawFinalHomeGoals + formHome.expectedGoalsShortAndLongTerm / 2;
       rawFinalAwayGoals = rawFinalAwayGoals + -Math.abs(trueFormDiffAway / 2);
     }
 
-    if (trueFormDiffAway > 1.75) {
+    if (trueFormDiffAway > 2) {
       rawFinalHomeGoals = rawFinalHomeGoals + -Math.abs(trueFormDiffHome / 2);
       rawFinalAwayGoals = rawFinalAwayGoals + trueFormDiffAway / 2;
     }
