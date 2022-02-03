@@ -744,13 +744,14 @@ if(homeForm.WinPercentage !== undefined){
     winPercA = awayForm.WinPercentage
     drawPercH = homeForm.DrawPercentage;
     drawPercA = awayForm.DrawPercentage;
+    console.log("fetching percentages from form")
 } else {
   [winPercentageComparison, homePointsToAdd, awayPointsToAdd] =
   await compareStat(
     match.homeTeamWinPercentage + 20,
     match.awayTeamWinPercentage + 20
   );
-  console.log(match)
+  console.log("fetching percentages from match data")
   winPercH = match.homeTeamWinPercentage;
   winPercA = match.awayTeamWinPercentage;
   drawPercH = match.homeTeamDrawPercentage;
@@ -797,8 +798,8 @@ console.log(winPercH)
     AveragePossessionComparison * 1 +
     AveragePossessionComparisonHOrA * 1 +
     positionComparison * 4 +
-    winPercentageComparison * 4 +
-    lossPercentageComparison * 4;
+    winPercentageComparison * 15 +
+    lossPercentageComparison * 15;
 
   if (
     calculation > 0 &&
@@ -836,7 +837,7 @@ export async function roundCustom(num, form) {
   let remainder = num - wholeNumber;
 
   if (wholeNumber !== 0) {
-    if (form.clinicalScore < 0.98) {
+    if (form.clinicalScore < 1) {
       return Math.round(num);
     } else if (remainder > 0.9) {
       return Math.ceil(num);
@@ -844,7 +845,7 @@ export async function roundCustom(num, form) {
       return Math.floor(num);
     }
   } else if (wholeNumber === 0) {
-    if (form.clinicalScore < 0.98) {
+    if (form.clinicalScore < 1) {
       return Math.round(num);
     } else if (remainder > 0.9) {
       return Math.ceil(num);
@@ -1230,7 +1231,7 @@ export async function calculateScore(match, index, divider, id) {
       formAway,
       match
     );
-    teamComparisonScore = teamComparisonScore / 17;
+    teamComparisonScore = teamComparisonScore / 25;
 
     match.teamComparisonScore = teamComparisonScore;
 
@@ -1318,10 +1319,7 @@ export async function calculateScore(match, index, divider, id) {
       awayComparisonWeighting = 1;
     }
 
-    if(formHome.CleanSheetPercentage && formAway.CleanSheetPercentage < 20){
-      homeComparisonWeighting = homeComparisonWeighting + 1;
-      awayComparisonWeighting = awayComparisonWeighting + 1;
-    }
+
 
     console.log(match.game);
     console.log(homeComparisonWeighting);
@@ -1369,6 +1367,11 @@ export async function calculateScore(match, index, divider, id) {
     let rawFinalHomeGoals = experimentalHomeGoals;
     let rawFinalAwayGoals = experimentalAwayGoals;
 
+    if(formHome.CleanSheetPercentage && formAway.CleanSheetPercentage < 20){
+      rawFinalHomeGoals = rawFinalHomeGoals + 0.5;
+      rawFinalAwayGoals = rawFinalAwayGoals + 0.5;
+    }
+
     let formTrendScoreComparison;
 
     if (formAway) {
@@ -1399,13 +1402,13 @@ export async function calculateScore(match, index, divider, id) {
     }
 
     if (rawFinalAwayGoals < 0) {
-      let difference = parseFloat((await diff(0, rawFinalAwayGoals)) / 10);
+      let difference = parseFloat((await diff(0, rawFinalAwayGoals)) / 4);
       rawFinalHomeGoals = rawFinalHomeGoals + difference;
       rawFinalAwayGoals = 0;
     }
 
     if (rawFinalHomeGoals < 0) {
-      let difference = parseFloat((await diff(0, rawFinalHomeGoals)) / 10);
+      let difference = parseFloat((await diff(0, rawFinalHomeGoals)) / 4);
       rawFinalAwayGoals = rawFinalAwayGoals + difference;
       rawFinalHomeGoals = 0;
     }
@@ -1418,11 +1421,11 @@ export async function calculateScore(match, index, divider, id) {
       rawFinalAwayGoals = rawFinalAwayGoals + 0.1;
     }
 
-    if (rawFinalHomeGoals / formHome.ScoredAverage > 2) {
+    if (rawFinalHomeGoals / formHome.ScoredAverage > 1.4) {
       rawFinalHomeGoals = (rawFinalHomeGoals + formHome.ScoredAverage) / 2;
     }
 
-    if (rawFinalAwayGoals / formAway.ScoredAverage > 2) {
+    if (rawFinalAwayGoals / formAway.ScoredAverage > 1.4) {
       rawFinalAwayGoals = (rawFinalAwayGoals + formAway.ScoredAverage) / 2;
     }
 
@@ -1582,8 +1585,13 @@ export async function calculateScore(match, index, divider, id) {
     let total = parseInt(finalHomeGoals + finalAwayGoals);
     totalGoals = totalGoals + total;
 
+    console.log(`Predicted: ${totalGoals}`)
+
     let total2 = parseInt(match.homeGoals + match.awayGoals);
     totalGoals2 = totalGoals2 + total2;
+
+    console.log(`Actual: ${totalGoals2}`)
+
 
     numberOfGames = numberOfGames + 1;
 
