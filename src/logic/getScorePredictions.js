@@ -1421,11 +1421,11 @@ export async function calculateScore(match, index, divider, id) {
       rawFinalAwayGoals = rawFinalAwayGoals + 0.1;
     }
 
-    if (rawFinalHomeGoals / formHome.ScoredAverage > 1.4) {
+    if (rawFinalHomeGoals / formHome.ScoredAverage > 1.5 && rawFinalHomeGoals / formAway.ConcededAverage > 1.5) {
       rawFinalHomeGoals = (rawFinalHomeGoals + formHome.ScoredAverage) / 2;
     }
 
-    if (rawFinalAwayGoals / formAway.ScoredAverage > 1.4) {
+    if (rawFinalAwayGoals / formAway.ScoredAverage > 1.5 && rawFinalAwayGoals / formHome.ConcededAverage > 1.5) {
       rawFinalAwayGoals = (rawFinalAwayGoals + formAway.ScoredAverage) / 2;
     }
 
