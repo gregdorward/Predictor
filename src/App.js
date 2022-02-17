@@ -228,6 +228,7 @@ export var orderedLeagues = [];
   );
 })();
 
+
 function App() {
   return (
     <div className="App">

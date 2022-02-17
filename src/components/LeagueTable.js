@@ -60,7 +60,6 @@ function styleForm(formIndicator) {
 }
 
 export default function LeagueTable(props) {
-
   let rows = props.Teams.map((team, i) => (
     <StyledTableRow key={`${props.Key}row${i}`}>
       <StyledTableCell component="th" scope="row">
@@ -107,30 +106,107 @@ export default function LeagueTable(props) {
     </StyledTableRow>
   ));
 
-  for (let i = 0; i < props.Teams.length; i++) {
-    return (
-      <TableContainer component={Paper} className="StatsTable">
-        <Table aria-label="customized table" key={props.Key}>
-          <TableHead>
-            <TableRow>
-              <StyledTableCell>P</StyledTableCell>
-              <StyledTableCell>Team</StyledTableCell>
-              <StyledTableCell>Pld</StyledTableCell>
-              <StyledTableCell>W</StyledTableCell>
-              <StyledTableCell>D</StyledTableCell>
-              <StyledTableCell>L</StyledTableCell>
-              <StyledTableCell>GF</StyledTableCell>
-              <StyledTableCell>GA</StyledTableCell>
-              <StyledTableCell>GD</StyledTableCell>
-              <StyledTableCell>Pts</StyledTableCell>
-              <StyledTableCell style={{ textAlign: "center" }}>
-                Form
-              </StyledTableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>{rows}</TableBody>
-        </Table>
-      </TableContainer>
-    );
+  function getTopScorersTeam(id){
+  let found = props.Teams.find(
+      (team) =>
+        team.ID === id
+    )
+    return found.Name;
   }
+
+  if(props.Teams[0].LeagueID !== 6083){
+    console.log(props.Teams.LeagueID)
+    for (let i = 0; i < props.Teams.length; i++) {
+      return (
+        <TableContainer component={Paper} className="StatsTable">
+          <Table className="Table" aria-label="customized table" key={props.Key}>
+            <TableHead>
+              <TableRow>
+                <StyledTableCell>P</StyledTableCell>
+                <StyledTableCell>Team</StyledTableCell>
+                <StyledTableCell>Pld</StyledTableCell>
+                <StyledTableCell>W</StyledTableCell>
+                <StyledTableCell>D</StyledTableCell>
+                <StyledTableCell>L</StyledTableCell>
+                <StyledTableCell>GF</StyledTableCell>
+                <StyledTableCell>GA</StyledTableCell>
+                <StyledTableCell>GD</StyledTableCell>
+                <StyledTableCell>Pts</StyledTableCell>
+                <StyledTableCell style={{ textAlign: "center" }}>
+                  Form
+                </StyledTableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>{rows}</TableBody>
+          </Table>
+          <div className="LeagueStatisticsHeader">League Statistics</div>
+          <div className="LeagueStatistics">
+          <ul className="LeagueStatsColumn">
+            <li>Average home goals: {props.Stats.seasonAVG_home}</li>
+            <li>Average away goals: {props.Stats.seasonAVG_away}</li>
+            <li>BTTS: {props.Stats.seasonBTTSPercentage}%</li>
+            <li>Over 0.5 goals: {props.Stats.seasonOver05Percentage_overall}%</li>
+            <li>Over 1.5 goals: {props.Stats.seasonOver15Percentage_overall}%</li>
+            <li>Over 2.5 goals: {props.Stats.seasonOver25Percentage_overall}%</li>
+            <li>Over 3.5 goals: {props.Stats.seasonOver35Percentage_overall}%</li>
+            <li>Over 4.5 goals: {props.Stats.seasonOver45Percentage_overall}%</li>
+            </ul>
+            <ul className="LeagueStatsColumn">
+            <li>Over 7.5 corners: {props.Stats.over75CornersPercentage_overall}%</li>
+            <li>Over 8.5 corners: {props.Stats.over85CornersPercentage_overall}%</li>
+            <li>Over 9.5 corners: {props.Stats.over95CornersPercentage_overall}%</li>
+            <li>Over 10.5 corners: {props.Stats.over105CornersPercentage_overall}%</li>
+            <li>Over 11.5 corners: {props.Stats.over115CornersPercentage_overall}%</li>
+            <li>Over 12.5 corners: {props.Stats.over125CornersPercentage_overall}%</li>
+            <li>Corners average: {props.Stats.cornersAVG_overall}</li>
+            <li>Cards average: {props.Stats.cardsAVG_overall}</li>
+
+            
+            </ul>
+            <ul className="TopScorersColumn">
+            <h4>Top scorers</h4>
+            <li>{props.Stats.top_scorers[0].known_as} ({getTopScorersTeam(props.Stats.top_scorers[0].club_team_id)}): {props.Stats.top_scorers[0].goals_overall}</li>
+            <li>{props.Stats.top_scorers[1].known_as} ({getTopScorersTeam(props.Stats.top_scorers[1].club_team_id)}): {props.Stats.top_scorers[1].goals_overall}</li>
+            <li>{props.Stats.top_scorers[2].known_as} ({getTopScorersTeam(props.Stats.top_scorers[2].club_team_id)}): {props.Stats.top_scorers[2].goals_overall}</li>
+            <li>{props.Stats.top_scorers[3].known_as} ({getTopScorersTeam(props.Stats.top_scorers[3].club_team_id)}): {props.Stats.top_scorers[3].goals_overall}</li>
+            <li>{props.Stats.top_scorers[4].known_as} ({getTopScorersTeam(props.Stats.top_scorers[4].club_team_id)}): {props.Stats.top_scorers[4].goals_overall}</li>
+            <li>{props.Stats.top_scorers[5].known_as} ({getTopScorersTeam(props.Stats.top_scorers[5].club_team_id)}): {props.Stats.top_scorers[5].goals_overall}</li>
+            <li>{props.Stats.top_scorers[6].known_as} ({getTopScorersTeam(props.Stats.top_scorers[6].club_team_id)}): {props.Stats.top_scorers[6].goals_overall}</li>
+            <li>{props.Stats.top_scorers[7].known_as} ({getTopScorersTeam(props.Stats.top_scorers[7].club_team_id)}): {props.Stats.top_scorers[7].goals_overall}</li>
+            <li>{props.Stats.top_scorers[8].known_as} ({getTopScorersTeam(props.Stats.top_scorers[8].club_team_id)}): {props.Stats.top_scorers[8].goals_overall}</li>
+            <li>{props.Stats.top_scorers[9].known_as} ({getTopScorersTeam(props.Stats.top_scorers[9].club_team_id)}): {props.Stats.top_scorers[9].goals_overall}</li>
+          </ul>
+        </div>
+        </TableContainer>
+      );
+    }
+  } else {
+    for (let i = 0; i < props.Teams.length; i++) {
+      return (
+        <TableContainer component={Paper} className="StatsTable">
+          <Table aria-label="customized table" key={props.Key}>
+            <TableHead>
+              <TableRow>
+                <StyledTableCell>P</StyledTableCell>
+                <StyledTableCell>Team</StyledTableCell>
+                <StyledTableCell>Pld</StyledTableCell>
+                <StyledTableCell>W</StyledTableCell>
+                <StyledTableCell>D</StyledTableCell>
+                <StyledTableCell>L</StyledTableCell>
+                <StyledTableCell>GF</StyledTableCell>
+                <StyledTableCell>GA</StyledTableCell>
+                <StyledTableCell>GD</StyledTableCell>
+                <StyledTableCell>Pts</StyledTableCell>
+                <StyledTableCell style={{ textAlign: "center" }}>
+                  Form
+                </StyledTableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>{rows}</TableBody>
+          </Table>
+        </TableContainer>
+      );
+    }
+  }
+ 
 }

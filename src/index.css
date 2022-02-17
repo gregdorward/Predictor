@@ -464,6 +464,14 @@ h3 {
   margin: 0%
 }
 
+h4 {
+  font-size: 1.25em;
+  
+  color: white;
+  padding: 5px;
+  margin: 0%
+}
+
 .historicResults{
   display: flex;
   height: 5em;
@@ -601,6 +609,10 @@ p {
   color: white;
   padding-top: 1em;
   padding-bottom: 0.25em;
+}
+
+.StatsTable {
+  background-color: cyan;
 }
 
 /* .LeagueTable {
@@ -886,6 +898,45 @@ p {
 .Stat {
   padding: 5px;
 } */
+/* .MuiPaper-root {
+  background-color: #294A66;
+} */
+
+.LeagueStatisticsHeader{
+  font-size: 2.25em;
+  background-color: #294A66;
+  color: white;
+  padding-top: 0.5em;
+  padding-bottom: 0.5em
+}
+
+.LeagueStatistics {
+  display: flex;
+  flex-wrap: wrap;
+  font-size: 2em;
+  align-items: center;
+  background-color: #294A66;
+  /* flex-direction: column;
+  align-items: center;
+  flex-basis: 100%; */
+}
+
+.LeagueStatsColumn {
+  padding-top: 1em;
+  flex: 40%;
+}
+
+.LeagueStatistics li {
+  color: white;
+  padding: 0.5em;  
+}
+
+.TopScorersColumn {
+  padding-top: 2em;
+  flex-direction: row;
+  flex: 50%; 
+}
+
 
 .StatsContainer {
   display: flex;

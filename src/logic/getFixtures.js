@@ -18,8 +18,11 @@ var fixtureArray;
 export const matches = [];
 export const resultedMatches = [];
 var league;
+var leagueID;
 var leagueGames = [];
 export var leagueArray = [];
+var leagueIdArray = [];
+export var leagueStatsArray = [];
 export let leagueInstance;
 var lastFiveFormHome;
 var lastFiveFormAway;
@@ -94,8 +97,13 @@ export let allForm = [];
 export let tableArray = [];
 leagueInstance = [];
 
-export async function generateTables() {
+export async function generateTables(a, leagueIdArray) {
+  let i = 0;
   leagueArray.forEach(function (league) {
+    let currentLeagueId = leagueIdArray[i];
+    console.log(currentLeagueId);
+    i++;
+
     leagueInstance = [];
     if (!league.data.specific_tables[0].groups) {
       for (
@@ -107,9 +115,12 @@ export async function generateTables() {
         let last5 = currentTeam.wdl_record.slice(-5);
         let rawForm = last5.replace(/,/g, "").toUpperCase();
         let form = Array.from(rawForm);
+
         const team = {
+          LeagueID: currentLeagueId,
           Position: index + 1,
           Name: currentTeam.cleanName,
+          ID: currentTeam.id,
           Played: currentTeam.matchesPlayed,
           Wins: currentTeam.seasonWins_overall,
           Draws: currentTeam.seasonDraws_overall,
@@ -133,8 +144,10 @@ export async function generateTables() {
         let currentTeam = league.data.all_matches_table_overall[index];
         let last5 = "N/A";
         const team = {
+          LeagueID: currentLeagueId,
           Position: index + 1,
           Name: currentTeam.cleanName,
+          ID: currentTeam.id,
           Played: currentTeam.matchesPlayed,
           Wins: currentTeam.seasonWins_overall,
           Draws: currentTeam.seasonDraws_overall,
@@ -153,11 +166,22 @@ export async function generateTables() {
   });
 }
 
+console.log(tableArray);
+
 export async function renderTable(index) {
   let league = tableArray[index];
+  let statistics;
+  console.log(league);
+ let leagueStatistics = await fetch(
+    `${process.env.REACT_APP_EXPRESS_SERVER}leagueStats/${league[0].LeagueID}`
+  )
+  await leagueStatistics.json().then((stats) => {
+    statistics = stats.data
+  });
+
   if (league !== undefined) {
     ReactDOM.render(
-      <LeagueTable Teams={league} Key={`League${index}`} />,
+      <LeagueTable Teams={league} Stats={statistics} Key={`League${index}`} />,
       document.getElementById(`leagueName${index}`)
     );
   }
@@ -231,13 +255,13 @@ async function createFixture(match, result, mockBool) {
     }
   }
 
-  match.homeTeamWinsPercentage = match.homeTeamWinPercentage
-  match.homeTeamLossesPercentage = match.homeTeamLossPercentage
-  match.homeTeamDrawsPercentage = match.homeTeamDrawPercentage
+  match.homeTeamWinsPercentage = match.homeTeamWinPercentage;
+  match.homeTeamLossesPercentage = match.homeTeamLossPercentage;
+  match.homeTeamDrawsPercentage = match.homeTeamDrawPercentage;
 
-  match.awayTeamWinsPercentage = match.awayTeamWinPercentage
-  match.awayTeamLossesPercentage = match.awayTeamLossPercentage
-  match.awayTeamDrawsPercentage = match.awayTeamDrawPercentage
+  match.awayTeamWinsPercentage = match.awayTeamWinPercentage;
+  match.awayTeamLossesPercentage = match.awayTeamLossPercentage;
+  match.awayTeamDrawsPercentage = match.awayTeamDrawPercentage;
   match.fractionHome = homeFraction;
   match.fractionAway = awayFraction;
 
@@ -339,6 +363,11 @@ export async function generateFixtures(day, radioState, selectedOdds) {
     document.getElementById("Buttons")
   );
 
+  for (let i = 0; i < orderedLeagues.length; i++) {
+    leagueID = orderedLeagues[i].element.id;
+    leagueIdArray.push(leagueID);
+  }
+
   league = await fetch(
     `${process.env.REACT_APP_EXPRESS_SERVER}leagues/${currentDay}${month}${year}`
   );
@@ -346,9 +375,11 @@ export async function generateFixtures(day, radioState, selectedOdds) {
   var leaguePositions = [];
   if (league.status === 200) {
     await league.json().then((leagues) => {
+      console.log(leagues);
       leagueArray = Array.from(leagues.leagueArray);
     });
-    generateTables(leagueArray);
+    console.log(leagueID);
+    generateTables(leagueArray, leagueIdArray);
   } else {
     for (let i = 0; i < orderedLeagues.length; i++) {
       league = await fetch(
@@ -358,7 +389,8 @@ export async function generateFixtures(day, radioState, selectedOdds) {
       await league.json().then((table) => {
         leagueArray.push(table);
       });
-      generateTables(leagueArray);
+      console.log(leagueID);
+      generateTables(leagueArray, leagueIdArray);
     }
   }
 
@@ -375,7 +407,7 @@ export async function generateFixtures(day, radioState, selectedOdds) {
       leaguePositions.push({
         name: string.cleanName,
         position: string.position,
-        rawPosition: x+1,
+        rawPosition: x + 1,
         homeFormName: stringHome.cleanName,
         awayFormName: stringAway.cleanName,
         homeSeasonWinPercentage: stringHome.seasonWins,
@@ -390,11 +422,12 @@ export async function generateFixtures(day, radioState, selectedOdds) {
       });
     }
   }
-  console.log(leaguePositions)
+  console.log(leaguePositions);
 
   let previousLeagueName;
 
   for (let i = 0; i < orderedLeagues.length; i++) {
+    leagueID = orderedLeagues[i].element.id;
     leagueGames = fixtureArray.filter(
       (game) => game.competition_id === orderedLeagues[i].element.id
     );
@@ -519,7 +552,7 @@ export async function generateFixtures(day, radioState, selectedOdds) {
           (team) => team.homeFormName === match.homeTeam
         );
 
-        console.log(homeTeaminHomeLeague)
+        console.log(homeTeaminHomeLeague);
         teamPositionHome = homeTeaminLeague.position;
         teamPositionHomeTable = homeTeaminHomeLeague.position;
 
@@ -624,8 +657,6 @@ export async function generateFixtures(day, radioState, selectedOdds) {
         lastSixFormAway = Array.from(awayFormString6);
         lastTenFormAway = Array.from(awayFormString10);
 
-
-
         if (teamPositionHome === 0) {
           teamPositionHome = "N/A";
           teamPositionHomeTable = "N/A";
@@ -644,7 +675,7 @@ export async function generateFixtures(day, radioState, selectedOdds) {
         //   lastFiveFormAway = "N/A"
         // }
 
-        console.log(form[0].data[2].stats)
+        console.log(form[0].data[2].stats);
 
         allForm.push({
           id: match.id,
@@ -1053,13 +1084,11 @@ export async function generateFixtures(day, radioState, selectedOdds) {
               DrawPercentage: awayTeamDrawPercentageAway,
             },
           },
-        }); 
+        });
       }
 
       match.homeBadge = fixture.home_image;
       match.awayBadge = fixture.away_image;
-
-      
 
       match.homePpg = fixture.home_ppg.toFixed(2);
       match.homeFormColour = await applyColour(match.homePpg);
@@ -1069,15 +1098,14 @@ export async function generateFixtures(day, radioState, selectedOdds) {
 
       match.lastFiveFormHome = lastFiveFormHome;
       match.lastFiveFormAway = lastFiveFormAway;
-      match.homeRawPosition = homeTeaminLeague.rawPosition
-      match.awayRawPosition = awayTeaminLeague.rawPosition
+      match.homeRawPosition = homeTeaminLeague.rawPosition;
+      match.awayRawPosition = awayTeaminLeague.rawPosition;
 
       match.homeTeamHomePosition = `${teamPositionHomeTable}${homePrefixHomeTable}`;
       match.awayTeamAwayPosition = `${teamPositionAwayTable}${awayPrefixAwayTable}`;
 
-      match.homeTeamHomePositionRaw = teamPositionHomeTable
-      match.awayTeamAwayPositionRaw = teamPositionAwayTable
-
+      match.homeTeamHomePositionRaw = teamPositionHomeTable;
+      match.awayTeamAwayPositionRaw = teamPositionAwayTable;
 
       match.homeTeamWinPercentage = homeTeamWinPercentageHome;
       match.awayTeamWinPercentage = awayTeamWinPercentageAway;
@@ -1099,20 +1127,15 @@ export async function generateFixtures(day, radioState, selectedOdds) {
       match.expectedGoalsHomeToDate = fixture.team_a_xg_prematch;
       match.expectedGoalsAwayToDate = fixture.team_b_xg_prematch;
 
-
-
-
-
-      console.log(match)
-      console.log(fixture)
-
+      console.log(match);
+      console.log(fixture);
 
       if (match.status !== "canceled" || match.status !== "suspended") {
         matches.push(match);
         await createFixture(match, false);
       }
 
-      console.log(allForm)
+      console.log(allForm);
     }
     // }
     ReactDOM.render(
@@ -1144,4 +1167,16 @@ export async function generateFixtures(day, radioState, selectedOdds) {
       body: JSON.stringify({ leagueArray }),
     }
   );
+
+  // await fetch(
+  //   `${process.env.REACT_APP_EXPRESS_SERVER}leagueStats/${currentDay}${month}${year}`,
+  //   {
+  //     method: "POST",
+  //     headers: {
+  //       Accept: "application/json",
+  //       "Content-Type": "application/json",
+  //     },
+  //     body: JSON.stringify({ leagueStatsArray }),
+  //   }
+  // );
 }
