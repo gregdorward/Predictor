@@ -853,35 +853,39 @@ export async function compareTeams(homeForm, awayForm, match) {
     attackingPotencyComparison * 0 +
     AveragePossessionComparison * 0 +
     AveragePossessionComparisonHOrA * 0 +
-    winPercentageComparison * 2 +
-    lossPercentageComparison * 2;
+    winPercentageComparison * 2.5 +
+    lossPercentageComparison * 2.5;
 
   if (calculation > 0 && winPercA + drawPercA > 60) {
     calculation = calculation / 2;
   } else if (
     calculation > 0 &&
-    homeForm.last2Points <= 3 &&
+    homeForm.last2Points < 3 &&
     homeForm.last2Points > 1
   ) {
     calculation = calculation / 2;
-  } else if (calculation < 0 && winPercA < 20) {
-    calculation = calculation / 5;
-  } else if (calculation > 0 && winPercH < 20) {
-    calculation = calculation / 5;
+  } else if (calculation > 0 && awayForm.lastGame === "W") {
+    calculation = calculation / 4;
+  } else if (calculation < 0 && homeForm.lastGame === "W") {
+    calculation = calculation / 4;
+  } else if (calculation < 0 && winPercA < 25) {
+    calculation = calculation / 4;
+  } else if (calculation > 0 && winPercH < 25) {
+    calculation = calculation / 4;
   } else if (calculation > 0 && homeForm.last2Points <= 1) {
-    calculation = calculation / 5;
+    calculation = calculation / 4;
   } else if (calculation > 0 && winPercA + drawPercA <= 30) {
     calculation = calculation + 0.3;
   } else if (calculation < 0 && winPercH + drawPercH > 60) {
     calculation = calculation / 2;
   } else if (
     calculation < 0 &&
-    awayForm.last2Points <= 3 &&
+    awayForm.last2Points < 3 &&
     awayForm.last2Points > 1
   ) {
     calculation = calculation / 2;
   } else if (calculation < 0 && awayForm.last2Points <= 1) {
-    calculation = calculation / 5;
+    calculation = calculation / 4;
   } else if (calculation < 0 && winPercH + drawPercH <= 30) {
     calculation = calculation - 0.3;
   }
@@ -1410,16 +1414,10 @@ export async function calculateScore(match, index, divider, id) {
     }
 
     let experimentalHomeGoals =
-      factorOneHome *
-      0.825 *
-      homeComparisonWeighting *
-      homeAdvantage;
+      factorOneHome * 0.825 * homeComparisonWeighting * homeAdvantage;
 
     let experimentalAwayGoals =
-      factorOneAway *
-      0.825 *
-      awayComparisonWeighting *
-      awayAdvantage;
+      factorOneAway * 0.825 * awayComparisonWeighting * awayAdvantage;
 
     let rawFinalHomeGoals = experimentalHomeGoals;
     let rawFinalAwayGoals = experimentalAwayGoals;
@@ -1544,7 +1542,8 @@ export async function calculateScore(match, index, divider, id) {
         formHome.overUnderAchievingSum < -2.5 ||
         formHome.overUnderAchievingSum > 2.5 ||
         formTrendScoreComparison >= 0 ||
-        formHome.last2Points < 3
+        formHome.last2Points < 3 ||
+        formAway.lastGame === "W"
       ) {
         match.includeInMultis = false;
       } else {
@@ -1557,7 +1556,8 @@ export async function calculateScore(match, index, divider, id) {
         formAway.overUnderAchievingSum > 2.5 ||
         formAway.overUnderAchievingSum < -2.5 ||
         formTrendScoreComparison <= 0 ||
-        formAway.last2Points < 3
+        formAway.last2Points < 3 ||
+        formHome.lastGame === "W"
       ) {
         match.includeInMultis = false;
       } else {
@@ -2133,7 +2133,7 @@ export async function getScorePrediction(day, mocked) {
 
       if (
         match.prediction === "draw" &&
-        match.homeOdds > 1.8 &&
+        match.homeOdds > 2 &&
         match.teamComparisonScore < 0.1 &&
         match.teamComparisonScore > -0.1
       ) {
