@@ -263,6 +263,7 @@ function App() {
       <div id="tables" />
       <div id="homeBadge" />
       <div id="FixtureContainerHeaders"></div>
+      <StyledKofiButton></StyledKofiButton>
       <div id="FixtureContainer">
         <div>
           <div className="WelcomeText">
@@ -289,7 +290,6 @@ function App() {
           </a>
         </div>
       </div>
-      <StyledKofiButton></StyledKofiButton>
       <div className="Social">
         <TwitterShareButton
           url={"www.xgtipping.com"}

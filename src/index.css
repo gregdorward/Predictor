@@ -602,7 +602,7 @@ p {
 }
 
 .btn-container{
-    padding: 2em;
+    padding: 1em;
 }
 
 .Social {
@@ -1323,6 +1323,27 @@ ul {
 .AccumulatedOdds {
   padding-top: 1em;
   font-size: 1.2em;
+}
+
+.kofitext{
+  font-size: 1em;
+  font-weight: bolder;
+
+}
+
+.kofi-button {
+  border: 0.1em solid #FE9000;
+  padding: 1em;
+  font-family: 'Open Sans', sans-serif;
+}  
+
+.kofi-button:hover {
+  border-color: #ff0000;
+  border-radius: 1em;
+}
+
+.Testing{
+  font-size: 40px;
 }
 
 table,
