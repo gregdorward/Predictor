@@ -4,6 +4,7 @@ import Header from "./components/Header";
 import { Button } from "./components/Button";
 import OddsRadio from "./components/OddsRadio";
 import { selectedOdds } from "./components/OddsRadio";
+import { StyledKofiButton } from "./components/KofiButton"
 import {
   FacebookShareButton,
   FacebookIcon,
@@ -288,6 +289,7 @@ function App() {
           </a>
         </div>
       </div>
+      <StyledKofiButton></StyledKofiButton>
       <div className="Social">
         <TwitterShareButton
           url={"www.xgtipping.com"}

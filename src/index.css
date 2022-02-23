@@ -598,6 +598,11 @@ p {
 .DataLink {
   color: white;
   border-bottom: 1em;
+  padding-bottom: 1em;
+}
+
+.btn-container{
+    padding: 2em;
 }
 
 .Social {
@@ -1460,6 +1465,8 @@ section {
 .MainLoading {
   padding: 1em;
 }
+
+
 
 /* section::after {
   width: 42px;

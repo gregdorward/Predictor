@@ -239,32 +239,11 @@ const List = ({ fixtures }) => (
       />
     </Fragment>
     <div id="Headers"></div>
-    <p>
-      <a
-        className="DonationLink"
-        href="#bitcoin"
-        style={{
-          fontSize: "1.2em",
-          textDecoration: "none",
-          color: "white",
-          padding: "0.4em",
-        }}
-      >
-        Donate &#8595;
-      </a>
-    </p>
     <ul className="FixtureList" id="FixtureList">
       {fixtures.map((fixture, i) => (
         <SingleFixture fixture={fixture} key={fixture.game}/>
       ))}
     </ul>
-    <div className="bitcoin" id="bitcoin">
-      Donations towards running costs welcome
-      <span className="bitcoinSymbol">&#x20bf;itcoin address</span>
-      <span className="bitcoinAddress">
-        bc1q7j62txkvhfu0dt3l0s07saze6pjnyzs26wfgp0
-      </span>
-    </div>
   </div>
 );
 

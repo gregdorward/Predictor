@@ -893,15 +893,22 @@ export async function compareTeams(homeForm, awayForm, match) {
   return [calculation, homePoints, awayPoints];
 }
 
-export async function roundCustom(num, form) {
+export async function roundCustom(num, form, otherForm) {
   let wholeNumber = Math.floor(num);
   let remainder = num - wholeNumber;
+
+
 
   if (wholeNumber !== 0) {
     // if (form.clinicalScore < 1) {
     //   return Math.round(num);
     // }
-    if (remainder > 0.75) {
+    if(form.overUnderAchievingSumAttack > 0.5 && otherForm.overUnderAchievingSumDefence < -0.5){
+      return (Math.ceil(num));
+    } else if(form.overUnderAchievingSumAttack < -0.5 && otherForm.overUnderAchievingSumDefence > 0.5){
+      return Math.floor(num);
+    } 
+    else if (remainder > 0.75) {
       return Math.ceil(num);
     } else {
       return Math.floor(num);
@@ -910,7 +917,11 @@ export async function roundCustom(num, form) {
     // if (form.clinicalScore < 1) {
     //   return Math.round(num);
     // }
-    if (remainder > 0.75) {
+    if(form.overUnderAchievingSumAttack > 0.5 && otherForm.overUnderAchievingSumDefence < -0.5){
+      return Math.ceil(num);
+    } else if(form.overUnderAchievingSumAttack < -0.5 && otherForm.overUnderAchievingSumDefence > 0.5){
+      return Math.floor(num);
+    } else if (remainder > 0.75) {
       return Math.ceil(num);
     } else {
       return Math.floor(num);
@@ -1451,16 +1462,16 @@ export async function calculateScore(match, index, divider, id) {
       formHome.overUnderAchievingSum
     );
 
-    if (trueFormDiffHome > 2) {
-      rawFinalHomeGoals =
-        rawFinalHomeGoals + formHome.expectedGoalsShortAndLongTerm / 4;
-      rawFinalAwayGoals = rawFinalAwayGoals + -Math.abs(trueFormDiffAway / 4);
-    }
+    // if (trueFormDiffHome > 2) {
+    //   rawFinalHomeGoals =
+    //     rawFinalHomeGoals + formHome.expectedGoalsShortAndLongTerm / 4;
+    //   rawFinalAwayGoals = rawFinalAwayGoals + -Math.abs(trueFormDiffAway / 4);
+    // }
 
-    if (trueFormDiffAway > 2) {
-      rawFinalHomeGoals = rawFinalHomeGoals + -Math.abs(trueFormDiffHome / 4);
-      rawFinalAwayGoals = rawFinalAwayGoals + trueFormDiffAway / 4;
-    }
+    // if (trueFormDiffAway > 2) {
+    //   rawFinalHomeGoals = rawFinalHomeGoals + -Math.abs(trueFormDiffHome / 4);
+    //   rawFinalAwayGoals = rawFinalAwayGoals + trueFormDiffAway / 4;
+    // }
 
     if (rawFinalAwayGoals < 0) {
       let difference = parseFloat((await diff(0, rawFinalAwayGoals)) / 4);
@@ -1506,8 +1517,8 @@ export async function calculateScore(match, index, divider, id) {
       rawFinalAwayGoals = rawFinalAwayGoals + 0.5;
     }
 
-    finalHomeGoals = await roundCustom(rawFinalHomeGoals, formHome);
-    finalAwayGoals = await roundCustom(rawFinalAwayGoals, formAway);
+    finalHomeGoals = await roundCustom(rawFinalHomeGoals, formHome, formAway);
+    finalAwayGoals = await roundCustom(rawFinalAwayGoals, formAway, formHome);
 
     // if ((finalHomeGoals + 1) / (formHome.ScoredAverage + 1) > 1.5 && (finalHomeGoals + 1) / (formAway.ConcededAverage + 1) > 1.5) {
     //   finalHomeGoals = finalHomeGoals - 1;
