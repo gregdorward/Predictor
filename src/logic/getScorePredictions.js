@@ -1827,6 +1827,11 @@ export async function getScorePrediction(day, mocked) {
   let index = 2;
   let divider = 10;
 
+  ReactDOM.render(
+    <div />,
+    document.getElementById("Buttons")
+  );
+
   await Promise.all(
     matches.map(async (match) => {
       // if there are no stored predictions, calculate them based on live data
@@ -2324,7 +2329,7 @@ async function renderTips() {
       <div className="PredictionContainer">
         <Fragment>
           <Collapsable
-            buttonText={"Build me an exotic bet"}
+            buttonText={"Exotic of the day"}
             className={"PredictionsOfTheDay"}
             text={
               <ul className="BestPredictions">
@@ -2353,7 +2358,7 @@ async function renderTips() {
       <div className="PredictionContainer">
         <Fragment>
           <Collapsable
-            buttonText={"Build me an exotic bet"}
+            buttonText={"Exotic of the day"}
             className={"PredictionsOfTheDay"}
             text={
               <ul className="BestPredictions">

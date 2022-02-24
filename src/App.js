@@ -4,7 +4,7 @@ import Header from "./components/Header";
 import { Button } from "./components/Button";
 import OddsRadio from "./components/OddsRadio";
 import { selectedOdds } from "./components/OddsRadio";
-import { StyledKofiButton } from "./components/KofiButton"
+import { StyledKofiButton } from "./components/KofiButton";
 import {
   FacebookShareButton,
   FacebookIcon,
@@ -18,9 +18,7 @@ import {
   WhatsappIcon,
 } from "react-share";
 
-import {
-  generateFixtures,
-} from "./logic/getFixtures";
+import { generateFixtures } from "./logic/getFixtures";
 import { selectedOption } from "./components/radio";
 import { ThreeDots } from "react-loading-icons";
 require("dotenv").config();
@@ -156,7 +154,7 @@ export var orderedLeagues = [];
     <div className="FixtureButtons">
       <div className="historicResults">
         <Button
-          text={"Last Saturday's predictions"}
+          text={"Last Saturday"}
           className="HistoricFixturesButton"
           onClickEvent={async () =>
             fixtureList.push(
@@ -169,7 +167,7 @@ export var orderedLeagues = [];
           }
         />
         <Button
-          text={"More historic predictions"}
+          text={"Historic predictions"}
           className="HistoricFixturesButtonRight"
           onClickEvent={async () =>
             fixtureList.push(
@@ -179,7 +177,7 @@ export var orderedLeagues = [];
         />
       </div>
       <Button
-        text={"Yesterday's prediction outcomes"}
+        text={"Yesterday"}
         className="FixturesButton"
         onClickEvent={async () =>
           fixtureList.push(
@@ -192,7 +190,7 @@ export var orderedLeagues = [];
         }
       />
       <Button
-        text={"Today's fixtures"}
+        text={"Today"}
         className="FixturesButton"
         onClickEvent={async () =>
           fixtureList.push(
@@ -205,7 +203,7 @@ export var orderedLeagues = [];
         }
       />
       <Button
-        text={"Tomorrow's fixtures"}
+        text={"Tomorrow"}
         className="FixturesButton"
         onClickEvent={async () =>
           fixtureList.push(
@@ -229,7 +227,6 @@ export var orderedLeagues = [];
   );
 })();
 
-
 function App() {
   return (
     <div className="App">
@@ -249,17 +246,19 @@ function App() {
       </div>
       <div id="Day" />
       <div id="Checkbox" />
-      <div id="Buttons">
+      <div id="Buttons" className="Buttons">
         <ThreeDots className="MainLoading" />
         <div>Loading all fixture and form data...</div>
       </div>
-      <div id="successMeasure" />
-      <div id="bestPredictions" />
-      <div id="exoticOfTheDay" />
-      <div id="BTTS" />
-      <div id="longShots" />
-      <div id="draws" />
+      <div id="bestPredictions" className="bestPredictions" />
+      <div id="RowOneContainer" className="RowOneContainer">
+        <div id="exoticOfTheDay" className="RowOne" />
+        <div id="BTTS" className="RowOne" />
+        <div id="longShots" className="RowOne" />
+        <div id="draws" className="RowOne" />
+      </div>
       <div id="insights" />
+      <div id="successMeasure" />
       <div id="tables" />
       <div id="homeBadge" />
       <div id="FixtureContainerHeaders"></div>
