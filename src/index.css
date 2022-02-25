@@ -683,8 +683,9 @@ p {
   background-color: #1D3549;
   margin-bottom: 0.5em;
   font-weight: bolder;
-
 }
+
+
 
 .RadioContainer {
   align-items: center;
@@ -870,6 +871,10 @@ p {
   margin: 5px;
   list-style: none;
   /* padding-right: 1em; */
+}
+
+li.FormHeader {
+  padding-top: 1em;
 }
 
 .win {
@@ -1147,6 +1152,31 @@ ul {
 
 .Testing{
   font-size: 40px;
+}
+
+.Over25Teams {
+  padding: 1em;
+  margin-left: 2em;
+  margin-right: 2em;
+}
+
+.Over25Games {
+  padding: 1em;
+  margin-left: 2em;
+  margin-right: 2em;
+}
+
+.GlobalStat {
+  border-bottom: #172A3A 1px solid;
+  border-width: 0.1px;
+  padding-bottom: 1em;
+}
+
+p.TeamName {
+  font-size: 1.1em;
+  font-weight: 900;
+  margin-top: 1em;
+  margin-bottom: 0.5em;
 }
 
 table,

@@ -30,6 +30,8 @@ var lastSixFormHome;
 var lastSixFormAway;
 var lastTenFormHome;
 var lastTenFormAway;
+var formRunHome;
+var formRunAway;
 
 export const [currentDay, month, year] = new Date()
   .toLocaleDateString("en-US")
@@ -101,7 +103,6 @@ export async function generateTables(a, leagueIdArray) {
   let i = 0;
   leagueArray.forEach(function (league) {
     let currentLeagueId = leagueIdArray[i];
-    console.log(currentLeagueId);
     i++;
 
     leagueInstance = [];
@@ -166,12 +167,10 @@ export async function generateTables(a, leagueIdArray) {
   });
 }
 
-console.log(tableArray);
 
 export async function renderTable(index) {
   let league = tableArray[index];
   let statistics;
-  console.log(league);
  let leagueStatistics = await fetch(
     `${process.env.REACT_APP_EXPRESS_SERVER}leagueStats/${league[0].LeagueID}`
   )
@@ -552,7 +551,6 @@ export async function generateFixtures(day, radioState, selectedOdds) {
           (team) => team.homeFormName === match.homeTeam
         );
 
-        console.log(homeTeaminHomeLeague);
         teamPositionHome = homeTeaminLeague.position;
         teamPositionHomeTable = homeTeaminHomeLeague.position;
 
@@ -610,7 +608,6 @@ export async function generateFixtures(day, radioState, selectedOdds) {
             awayTeaminAwayLeague.awaySeasonMatchesPlayed) *
           100;
 
-        console.log(teamPositionAwayTable);
 
         awayPrefix = await getPrefix(teamPositionAway);
         awayPrefixAwayTable = await getPrefix(teamPositionAwayTable);
@@ -650,12 +647,20 @@ export async function generateFixtures(day, radioState, selectedOdds) {
           form[0].data[2].stats.additional_info.formRun_overall.toUpperCase();
         let awayFormString10 =
           form[1].data[2].stats.additional_info.formRun_overall.toUpperCase();
+
+        let homeFormRun =
+          form[0].data[2].stats.additional_info.formRun_home.toUpperCase();
+        let awayFormRun =
+          form[1].data[2].stats.additional_info.formRun_away.toUpperCase();
+
         lastFiveFormHome = Array.from(homeFormString5);
         lastSixFormHome = Array.from(homeFormString6);
         lastTenFormHome = Array.from(homeFormString10);
         lastFiveFormAway = Array.from(awayFormString5);
         lastSixFormAway = Array.from(awayFormString6);
         lastTenFormAway = Array.from(awayFormString10);
+        formRunHome = Array.from(homeFormRun);
+        formRunAway = Array.from(awayFormRun);
 
         if (teamPositionHome === 0) {
           teamPositionHome = "N/A";
@@ -675,7 +680,6 @@ export async function generateFixtures(day, radioState, selectedOdds) {
         //   lastFiveFormAway = "N/A"
         // }
 
-        console.log(form[0].data[2].stats);
 
         allForm.push({
           id: match.id,
@@ -887,6 +891,7 @@ export async function generateFixtures(day, radioState, selectedOdds) {
               WinPercentage: homeTeamWinPercentageHome,
               LossPercentage: homeTeamLossPercentageHome,
               DrawPercentage: homeTeamDrawPercentageHome,
+              formRun: formRunHome
             },
           },
           away: {
@@ -1082,6 +1087,7 @@ export async function generateFixtures(day, radioState, selectedOdds) {
               WinPercentage: awayTeamWinPercentageAway,
               LossPercentage: awayTeamLossPercentageAway,
               DrawPercentage: awayTeamDrawPercentageAway,
+              formRun: formRunAway
             },
           },
         });
@@ -1127,15 +1133,10 @@ export async function generateFixtures(day, radioState, selectedOdds) {
       match.expectedGoalsHomeToDate = fixture.team_a_xg_prematch;
       match.expectedGoalsAwayToDate = fixture.team_b_xg_prematch;
 
-      console.log(match);
-      console.log(fixture);
-
       if (match.status !== "canceled" || match.status !== "suspended") {
         matches.push(match);
         await createFixture(match, false);
       }
-
-      console.log(allForm);
     }
     // }
     ReactDOM.render(

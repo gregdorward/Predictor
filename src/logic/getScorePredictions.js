@@ -1312,9 +1312,6 @@ export async function calculateScore(match, index, divider, id) {
 
     match.teamComparisonScore = teamComparisonScore;
 
-    console.log(match.game);
-    console.log(match.teamComparisonScore);
-
     let finalHomeGoals;
     let finalAwayGoals;
 
@@ -1364,11 +1361,6 @@ export async function calculateScore(match, index, divider, id) {
         formHome.goalsDifferential * 0) /
       4;
 
-    console.log(match.game);
-    console.log(formHome);
-    console.log(formAway);
-    console.log(match);
-
     let factorOneAway =
       (goalCalcAwayShortTerm * 0 +
         goalCalcAwayShortAndLongTerm * 2 +
@@ -1394,9 +1386,6 @@ export async function calculateScore(match, index, divider, id) {
       homeComparisonWeighting = 1;
       awayComparisonWeighting = 1;
     }
-
-    console.log(match.game);
-    console.log(homeComparisonWeighting);
 
     let isHomeTeamBetterHomeOrAway = await diff(
       formHome.homePosition,
