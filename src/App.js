@@ -124,7 +124,7 @@ async function getMatchTime(unixTime){
     for (let x = 0; x < league.season.length; x++) {
       const element = league.season[x];
 
-      if (element.year === 20212022 || element.year === 2021) {
+      if (element.year === 20212022 || element.year === 2022) {
         if (element.id !== 5784) {
           availableLeagues.push({ name: name, element });
         }
@@ -162,11 +162,11 @@ async function getMatchTime(unixTime){
       6079, //Belgian Pro League 21/22
       5505, //sweden 21/22
       5961, //Danish Prem 21
-      5496, //Norway Prem 21
+      7048, //Norway Prem 21
       6008, //Austrian Prem 21
       6282, //Greek Prem 21
       5948, //Polish prem 21/22
-      5534, //Irish Prem 21
+      6967, //Irish Prem 21
       6120, //Spanish secunda 21/22
       6205, //
       6020, //Bundesliga 2 21/22
@@ -175,11 +175,11 @@ async function getMatchTime(unixTime){
       5976, //Scottish league 1 21/22
       5974, //Scottish league 2 21/22
       6173, //Women's prem 21/22
-      5674, //MLS 21
-      6639, //Australian A league 21
-      5713, //Brazil prem 21
-      5434, //Japan 21
-      5506, //S Korea 21
+      6969, //MLS 22
+      6639, //Australian A league 21/22
+      7097, //Brazil prem 22
+      6935, //Japan 21
+      7061, //S Korea 22
       6038, //Mexico prem 21/22`
       6083, //National league North and South 21/22
     ];

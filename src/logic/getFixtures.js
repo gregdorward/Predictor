@@ -362,6 +362,8 @@ export async function generateFixtures(day, radioState, selectedOdds) {
     document.getElementById("Buttons")
   );
 
+  console.log(orderedLeagues)
+
   for (let i = 0; i < orderedLeagues.length; i++) {
     leagueID = orderedLeagues[i].element.id;
     leagueIdArray.push(leagueID);
