@@ -1386,9 +1386,6 @@ export async function calculateScore(match, index, divider, id) {
 
     match.teamComparisonScore = teamComparisonScore;
 
-    console.log(match.game);
-    console.log(teamComparisonScore);
-
     let finalHomeGoals;
     let finalAwayGoals;
 
@@ -2161,8 +2158,8 @@ export async function getScorePrediction(day, mocked) {
             exoticStake
           );
           break;
-        case allTips.length >= 5:
-          for (let i = 0; i < 5; i++) {
+        case allTips.length >= 6:
+          for (let i = 0; i < 6; i++) {
             let game = allTips[i];
             exoticArray.push(game);
           }
@@ -2176,8 +2173,8 @@ export async function getScorePrediction(day, mocked) {
             exoticStake
           );
           break;
-        case allTips.length >= 4:
-          for (let i = 0; i < 4; i++) {
+        case allTips.length >= 5:
+          for (let i = 0; i < 5; i++) {
             let game = allTips[i];
             exoticArray.push(game);
           }

@@ -31,72 +31,83 @@ export let allLeagueData = [];
 export const availableLeagues = [];
 export var orderedLeagues = [];
 
-async function getHighestScoringTeams(num) {
+async function getHighestScoringTeams() {
   let teamsList = await fetch(`${process.env.REACT_APP_EXPRESS_SERVER}over25`);
   let arr = [];
-  let arr2 = [];
+  let bestO25Bets;
   await teamsList.json().then(async (teams) => {
-    for (let index = 0; index < 10; index++) {
-      const team = {
-        teamName: teams.data.top_teams.data[index].name,
-        teamCountry: teams.data.top_teams.data[index].country,
-        played: teams.data.top_teams.data[index].seasonMatchesPlayed_overall,
-        averageGoals: teams.data.top_teams.data[index].seasonAVG_overall,
-        odds: teams.data.top_teams.data[index].odds_ft_over25,
-        teamNextMatch: teams.data.top_teams.data[index].next_match_team,
-        timestamp: await getMatchTime(teams.data.top_teams.data[index].next_match_date)
-      };
-
-      arr.push(team);
-
+    console.log(teams.data);
+    for (let index = 0; index < 50; index++) {
       const game = {
         game: teams.data.top_fixtures.data[index].name,
         teamCountry: teams.data.top_fixtures.data[index].country,
         odds: teams.data.top_fixtures.data[index].odds_ft_over25,
         averageGoals: teams.data.top_fixtures.data[index].avg_potential,
-        timestamp: await getMatchTime(teams.data.top_fixtures.data[index].date_unix)
+        timestamp: await getMatchTime(
+          teams.data.top_fixtures.data[index].date_unix
+        ),
       };
-      arr2.push(game);
-
+      arr.push(game);
     }
+
+    const finalArray = arr.filter(
+      (country) =>
+        country.teamCountry === "England" ||
+        country.teamCountry === "Germany" ||
+        country.teamCountry === "Italy" ||
+        country.teamCountry === "France" ||
+        country.teamCountry === "Spain"
+    );
+
+    bestO25Bets = finalArray.filter((game) => game.odds > 1.5);
   });
 
-  if (num === 1) {
-    return arr;
+  let sortedArray = bestO25Bets.sort((a, b) => b.averageGoals - a.averageGoals);
 
-  } else if (num === 2) {
-    return arr2
-  }
+  return sortedArray;
 }
 
-
-async function getHighestScoringGames() {
-  let teamsList = await fetch(`${process.env.REACT_APP_EXPRESS_SERVER}over25`);
+async function getLowestScoringTeams() {
+  let teamsList = await fetch(`${process.env.REACT_APP_EXPRESS_SERVER}under25`);
   let arr = [];
-
+  let bestU25Bets;
   await teamsList.json().then(async (teams) => {
-    for (let index = 0; index < 10; index++) {
-      const team = {
-        teamName: teams.data.top_teams.data[index].name,
-        teamCountry: teams.data.top_teams.data[index].country,
-        played: teams.data.top_teams.data[index].seasonMatchesPlayed_overall,
-        averageGoals: teams.data.top_teams.data[index].seasonAVG_overall,
-        odds: teams.data.top_teams.data[index].odds_ft_over25,
-        teamNextMatch: teams.data.top_teams.data[index].next_match_team,
-        timestamp: await getMatchTime(teams.data.top_teams.data[index].next_match_date)
+    console.log(teams.data);
+    for (let index = 0; index < 50; index++) {
+      const game = {
+        game: teams.data.top_fixtures.data[index].name,
+        teamCountry: teams.data.top_fixtures.data[index].country,
+        odds: teams.data.top_fixtures.data[index].odds_ft_under25,
+        averageGoals: teams.data.top_fixtures.data[index].avg_potential,
+        timestamp: await getMatchTime(
+          teams.data.top_fixtures.data[index].date_unix
+        ),
       };
-      arr.push(team);
+      arr.push(game);
     }
+
+    const finalArray = arr.filter(
+      (country) =>
+        country.teamCountry === "England" ||
+        country.teamCountry === "Germany" ||
+        country.teamCountry === "Italy" ||
+        country.teamCountry === "France" ||
+        country.teamCountry === "Spain"
+    );
+
+    bestU25Bets = finalArray.filter((game) => game.odds > 1.5);
   });
-  return arr;
+  let sortedArray = bestU25Bets.sort((a, b) => a.averageGoals - b.averageGoals);
+
+  return sortedArray;
 }
 
-async function getMatchTime(unixTime){
+async function getMatchTime(unixTime) {
   let milliseconds = unixTime * 1000;
   let dateObject = new Date(milliseconds);
 
   let time = dateObject.toLocaleString("en-GB");
-  return time
+  return time;
 }
 
 (async function getLeagueList() {
@@ -294,46 +305,43 @@ async function getMatchTime(unixTime){
 
   ReactDOM.render(
     <Button
-      text={"Best teams for over 2.5 goals"}
-      className={"Over25TeamsButton"}
+      text={"Best value for under 2.5 goals"}
+      className={"Under25TeamsButton"}
       onClickEvent={async () => {
-        let teams = await getHighestScoringTeams(1);
+        let games = await getLowestScoringTeams();
         const teamList = [];
 
-        teams.forEach(async (team) =>
+        games.forEach(async (game) =>
           teamList.push(
             <ul className="GlobalStat">
               <p className="TeamName">
-                {team.teamName} ({team.teamCountry})
+                {game.game} ({game.teamCountry})
               </p>
-              <li>Average scored: {team.averageGoals}</li>
-              <li>Next match vs {team.teamNextMatch} at {team.timestamp}</li>
-              <li>Odds over 2.5 goals this gameweek: {team.odds}</li>
+              <li>{game.timestamp}</li>
+              <li>Average combined goals: {game.averageGoals}</li>
+              <li>Odds under 2.5 goals: {game.odds}</li>
             </ul>
           )
         );
 
         reactDom.render(
           <div>
-            <h2>Highest scoring teams, globally</h2>
-            <ul>
-              {teamList}
-            </ul>
+            <h3>Games featuring low scoring teams with high value odds</h3>
+            <ul>{teamList}</ul>
           </div>,
-          document.getElementById("Over25Teams")
+          document.getElementById("Under25Games")
         );
       }}
     ></Button>,
-    document.getElementById("Over25Teams")
+    document.getElementById("Under25Games")
   );
-
 
   ReactDOM.render(
     <Button
-      text={"Best games for over 2.5 goals"}
+      text={"Best value for over 2.5 goals"}
       className={"Over25TeamsButton"}
       onClickEvent={async () => {
-        let games = await getHighestScoringTeams(2);
+        let games = await getHighestScoringTeams();
         const teamList = [];
 
         games.forEach(async (game) =>
@@ -351,10 +359,8 @@ async function getMatchTime(unixTime){
 
         reactDom.render(
           <div>
-            <h2>Games featuring high scoring teams, globally</h2>
-            <ul>
-              {teamList}
-            </ul>
+            <h3>Games featuring high scoring teams with high value odds</h3>
+            <ul>{teamList}</ul>
           </div>,
           document.getElementById("Over25Games")
         );
@@ -426,8 +432,8 @@ function App() {
           </a>
         </div>
       </div>
-      <div id="Over25Teams" className="Over25Teams"></div>
       <div id="Over25Games" className="Over25Games"></div>
+      <div id="Under25Games" className="Under25Games"></div>
       <div className="Social">
         <TwitterShareButton
           url={"www.xgtipping.com"}
