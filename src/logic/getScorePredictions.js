@@ -865,8 +865,8 @@ export async function compareTeams(homeForm, awayForm, match) {
     attackingPotencyComparison * 0 +
     AveragePossessionComparison * 0 +
     AveragePossessionComparisonHOrA * 0 +
-    winPercentageComparison * 2 +
-    lossPercentageComparison * 2 +
+    winPercentageComparison * 4 +
+    lossPercentageComparison * 4 +
     homeOrAwayAverageComparison * 5;
 
   if (calculation > 0) {
@@ -1377,7 +1377,7 @@ export async function calculateScore(match, index, divider, id) {
       formAway,
       match
     );
-    teamComparisonScore = teamComparisonScore / 1.25;
+    teamComparisonScore = teamComparisonScore / 1;
     if (teamComparisonScore > 1.5) {
       teamComparisonScore = 1.5;
     } else if (teamComparisonScore < -1.5) {
