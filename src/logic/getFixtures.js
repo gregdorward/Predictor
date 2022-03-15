@@ -37,7 +37,7 @@ export const [currentDay, month, year] = new Date()
   .toLocaleDateString("en-US")
   .split("/");
 let tomorrowsDate = new Date();
-tomorrowsDate.setDate(new Date().getDate() + 1);
+tomorrowsDate.setDate(new Date().getDate() - 17);
 let [tomorrowDay, tomorrowMonth, tomorrowYear] = tomorrowsDate
   .toLocaleDateString("en-US")
   .split("/");
@@ -104,7 +104,7 @@ export async function generateTables(a, leagueIdArray) {
   leagueArray.forEach(function (league) {
     let currentLeagueId = leagueIdArray[i];
     i++;
-
+    console.log(league)
     leagueInstance = [];
     if (!league.data.specific_tables[0].groups) {
       for (
@@ -113,6 +113,7 @@ export async function generateTables(a, leagueIdArray) {
         index++
       ) {
         let currentTeam = league.data.specific_tables[0].table[index];
+        console.log(currentTeam.wdl_record)
         let last5 = currentTeam.wdl_record.slice(-5);
         let rawForm = last5.replace(/,/g, "").toUpperCase();
         let form = Array.from(rawForm);
@@ -175,10 +176,12 @@ export async function renderTable(index) {
     `${process.env.REACT_APP_EXPRESS_SERVER}leagueStats/${league[0].LeagueID}`
   )
   await leagueStatistics.json().then((stats) => {
+    console.log(stats.data)
     statistics = stats.data
   });
 
   if (league !== undefined) {
+    console.log(league)
     ReactDOM.render(
       <LeagueTable Teams={league} Stats={statistics} Key={`League${index}`} />,
       document.getElementById(`leagueName${index}`)

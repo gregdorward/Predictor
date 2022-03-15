@@ -19,7 +19,7 @@ function Stats(props) {
       <Fragment>
         <ul className={props.className} style={props.style}>
           <li className="FormHeader">Form (most recent on right)</li>
-          <li key="last5">
+          <li key={`last5`}>
             <span className={styleForm(props.last5[0])}>{props.last5[0]}</span>
             <span className={styleForm(props.last5[1])}>{props.last5[1]}</span>
             <span className={styleForm(props.last5[2])}>{props.last5[2]}</span>
@@ -27,7 +27,7 @@ function Stats(props) {
             <span className={styleForm(props.last5[4])}>{props.last5[4]}</span>
           </li>
           <li className="FormHeader">{props.homeOrAway} form (most recent on right)</li>
-          <li key="last5">
+          <li key={`last5${props.homeOrAway}`}>
           <span className={styleForm(props.formRun[0])}>{props.formRun[0]}</span>
           <span className={styleForm(props.formRun[1])}>{props.formRun[1]}</span>
             <span className={styleForm(props.formRun[2])}>{props.formRun[2]}</span>
