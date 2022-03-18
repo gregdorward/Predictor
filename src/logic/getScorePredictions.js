@@ -627,10 +627,11 @@ export async function compareTeams(homeForm, awayForm, match) {
   let homePointsToAdd;
   let awayPointsToAdd;
 
-  [overUnderAchievingSumComparison, homePointsToAdd, awayPointsToAdd] = await compareStat(
-    parseFloat(homeForm.overUnderAchievingSum),
-    parseFloat(awayForm.overUnderAchievingSum),
-  );
+  [overUnderAchievingSumComparison, homePointsToAdd, awayPointsToAdd] =
+    await compareStat(
+      parseFloat(homeForm.overUnderAchievingSum),
+      parseFloat(awayForm.overUnderAchievingSum)
+    );
 
   homePoints = homePoints + homePointsToAdd;
   awayPoints = awayPoints + awayPointsToAdd;
@@ -865,7 +866,7 @@ export async function compareTeams(homeForm, awayForm, match) {
     tenGameAverageComparison * 1 +
     XGdifferentialComparison * 1 +
     seasonPPGComparison * 0 +
-    formTrendScoreComparison * 0 +
+    formTrendScoreComparison * 1 +
     fiveGameAverageComparison * 0 +
     dangerousAttacksComparisonHOrA * 1 +
     dangerousAttacksComparison * 0 +
@@ -880,17 +881,27 @@ export async function compareTeams(homeForm, awayForm, match) {
     winPercentageComparison * 3 +
     lossPercentageComparison * 3 +
     homeOrAwayAverageComparison * 4 +
-    overUnderAchievingSumComparison * 0;
+    overUnderAchievingSumComparison * 5;
 
   console.log(match.game);
   console.log(`winPercH ${winPercH}`);
   console.log(`drawPercH ${drawPercH}`);
 
+  // if ((calculation > 0) && homeForm.overUnderAchievingSum < 0) {
+  //   calculation = -Math.abs(calculation)
+  // } else if((calculation < 0) && awayForm.overUnderAchievingSum < 0){
+  //   calculation = Math.abs(calculation)
+  // }
+
   // adjust calculation based on worse team's win and draw percentages
   if (calculation > 0) {
     switch (true) {
       case winPercA + drawPercA === 100:
-        calculation = -Math.abs(calculation);
+        // console.log(match.game)
+        // console.log(match)
+        // console.log(homeForm)
+        // console.log(awayForm)
+        calculation = calculation / 9;
         break;
       case winPercA + drawPercA >= 90 && winPercA + drawPercA < 100:
         calculation = calculation / 8;
@@ -920,7 +931,7 @@ export async function compareTeams(homeForm, awayForm, match) {
         calculation = calculation * 1.5;
         break;
       case winPercA + drawPercA >= 0 && winPercA + drawPercA < 10:
-        calculation = calculation * 2;
+        calculation = calculation * 1.5;
         break;
       default:
         break;
@@ -928,7 +939,7 @@ export async function compareTeams(homeForm, awayForm, match) {
   } else if (calculation < 0) {
     switch (true) {
       case winPercH + drawPercH === 100:
-        calculation = Math.abs(calculation);
+        calculation = calculation / 9;
         break;
       case winPercH + drawPercH >= 90 && winPercH + drawPercH < 100:
         calculation = calculation / 8;
@@ -958,7 +969,7 @@ export async function compareTeams(homeForm, awayForm, match) {
         calculation = calculation * 1.5;
         break;
       case winPercH + drawPercH >= 0 && winPercH + drawPercH < 10:
-        calculation = calculation * 2;
+        calculation = calculation * 1.5;
         break;
       default:
         break;
@@ -968,7 +979,7 @@ export async function compareTeams(homeForm, awayForm, match) {
   // adjust calculation based on better team's win and draw percentages
   if (calculation > 0) {
     switch (true) {
-      case winPercH >= 90 && winPercH < 100:
+      case winPercH >= 90 && winPercH <= 100:
         calculation = calculation * 4;
         break;
       case winPercH >= 80 && winPercH < 90:
@@ -993,17 +1004,17 @@ export async function compareTeams(homeForm, awayForm, match) {
         calculation = calculation * 1;
         break;
       case winPercH >= 10 && winPercH < 20:
-        calculation = calculation * 1;
+        calculation = calculation * 0.75;
         break;
       case winPercH >= 0 && winPercH < 10:
-        calculation = calculation * 1.5;
+        calculation = calculation * 0.5;
         break;
       default:
         break;
     }
   } else if (calculation < 0) {
     switch (true) {
-      case winPercA >= 90 && winPercA < 100:
+      case winPercA >= 90 && winPercA <= 100:
         calculation = calculation * 4;
         break;
       case winPercA >= 80 && winPercA < 90:
@@ -1028,10 +1039,10 @@ export async function compareTeams(homeForm, awayForm, match) {
         calculation = calculation * 1;
         break;
       case winPercA >= 10 && winPercA < 20:
-        calculation = calculation * 1;
+        calculation = calculation * 0.75;
         break;
       case winPercA >= 0 && winPercA < 10:
-        calculation = calculation * 1.5;
+        calculation = calculation * 0.5;
         break;
       default:
         break;
@@ -1294,7 +1305,7 @@ export async function calculateScore(match, index, divider, id) {
       teams[i][index].overUnderAchievingSumDefence =
         concededOverOrUnderAchieving;
 
-      teams[i][index].overUnderAchievingSum = 
+      teams[i][index].overUnderAchievingSum =
         goalOverOrUnderAchieving + concededOverOrUnderAchieving;
 
       teams[i][index].forecastedXG = parseFloat(teams[i][index].ScoredAverage);
@@ -1429,11 +1440,6 @@ export async function calculateScore(match, index, divider, id) {
       formAway
     );
 
-    console.log(match.game)
-    console.log(formHome)
-    console.log(formAway)
-
-
     let oddsWeightingHome;
     let oddsWeightingAway;
     let homeWeighting;
@@ -1469,6 +1475,18 @@ export async function calculateScore(match, index, divider, id) {
 
     let homeCalculation;
     let awayCalculation;
+
+    let pointsAverageDiff = await diff(
+      formHome.XGdifferential,
+      formAway.XGdifferential
+    );
+
+    if (pointsAverageDiff > 1.5 || pointsAverageDiff < -1.5) {
+      match.pointsAverageDiff = true;
+      console.log(match);
+    } else {
+      match.pointsAverageDiff = false;
+    }
 
     if (
       typeof formHome.homeTeamHomePositionRaw === "number" &&
@@ -1628,10 +1646,20 @@ export async function calculateScore(match, index, divider, id) {
     let experimentalAwayGoals =
       factorOneAway * 0.825 * awayComparisonWeighting * awayAdvantage;
 
+    console.log(match.game);
+    console.log(match);
+    console.log(formHome);
+    console.log(homeComparisonWeighting);
+    console.log(formAway);
+    console.log(awayComparisonWeighting);
+
     let rawFinalHomeGoals = experimentalHomeGoals;
     let rawFinalAwayGoals = experimentalAwayGoals;
 
-    if (formHome.CleanSheetPercentage < 20 && formAway.CleanSheetPercentage < 20) {
+    if (
+      formHome.CleanSheetPercentage < 20 &&
+      formAway.CleanSheetPercentage < 20
+    ) {
       rawFinalHomeGoals = rawFinalHomeGoals + 0.5;
       rawFinalAwayGoals = rawFinalAwayGoals + 0.5;
     } else if (
@@ -1970,6 +1998,9 @@ async function getSuccessMeasure(fixtures) {
         />
         <p>{`Correct W/D/W predictions: ${successCount} (${successRate}%)`}</p>
         <p>{`Exact scores predicted: ${exactScores} (${exactScoreHitRate}%)`}</p>
+        <div className="pointsGapExplainer">
+          * games with greatest XG differential
+        </div>
       </Fragment>,
       document.getElementById("successMeasure")
     );
@@ -2374,7 +2405,7 @@ export async function getScorePrediction(day, mocked) {
             fixtures={matches}
             result={true}
             mock={mock}
-            className={"individualFixture"}
+            className={`individualFixture`}
           />,
           document.getElementById("FixtureContainer")
         );

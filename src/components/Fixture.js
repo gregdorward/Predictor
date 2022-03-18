@@ -150,8 +150,12 @@ function GetDivider(fixture) {
   }
 }
 
-function getStyle(bool) {
+function getStyle(pointsAverageDiffBool) {
+if(pointsAverageDiffBool === true){
+  return "individualFixtureGap"
+} else {
   return "individualFixture";
+}
 }
 
 function renderLeagueName(fixture) {
@@ -182,7 +186,7 @@ const SingleFixture = ({ fixture }) => (
   <div key={fixture.game}>
     {renderLeagueName(fixture)}
     <li
-      className={getStyle(fixture.btts)}
+      className={getStyle(fixture.pointsAverageDiff)}
       key={fixture.id}
       onClick={() => createStatsDiv(fixture)}
       data-cy={fixture.id}

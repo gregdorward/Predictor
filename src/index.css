@@ -429,6 +429,10 @@ p {
   /* border: 0px; */
 }
 
+.pointsGapExplainer{
+  color: #FE9000;
+}
+
 .individualFixture {
   display: flex;
   flex-basis: 100%;
@@ -438,6 +442,18 @@ p {
   box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 #294A66;
   margin-bottom: 0.5em;
   
+  /* border: 1em; */
+}
+
+.individualFixtureGap {
+  display: flex;
+  flex-basis: 100%;
+  background-color: #1D3549;
+  align-items: center;
+  align-content: center;
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 #294A66;
+  margin-bottom: 0.5em;
+  color: #FE9000;  
   /* border: 1em; */
 }
 
