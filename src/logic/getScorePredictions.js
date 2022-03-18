@@ -627,14 +627,18 @@ export async function compareTeams(homeForm, awayForm, match) {
   let homePointsToAdd;
   let awayPointsToAdd;
 
-  [overUnderAchievingSumComparison, homePointsToAdd, awayPointsToAdd] =
+  if((homeForm.overUnderAchievingSum < -0.5 || awayForm.overUnderAchievingSum < -0.5) || (homeForm.overUnderAchievingSum > 0.5 || awayForm.overUnderAchievingSum > 0.5)){
+    [overUnderAchievingSumComparison, homePointsToAdd, awayPointsToAdd] =
     await compareStat(
       parseFloat(homeForm.overUnderAchievingSum),
       parseFloat(awayForm.overUnderAchievingSum)
     );
+    homePoints = homePoints + homePointsToAdd;
+    awayPoints = awayPoints + awayPointsToAdd;
+  } else {
+    overUnderAchievingSumComparison = 0
+  }
 
-  homePoints = homePoints + homePointsToAdd;
-  awayPoints = awayPoints + awayPointsToAdd;
 
   [sotComparisonHOrA, homePointsToAdd, awayPointsToAdd] = await compareStat(
     homeForm.AverageShotsOnTarget,
@@ -866,7 +870,7 @@ export async function compareTeams(homeForm, awayForm, match) {
     tenGameAverageComparison * 1 +
     XGdifferentialComparison * 1 +
     seasonPPGComparison * 0 +
-    formTrendScoreComparison * 1 +
+    formTrendScoreComparison * 0 +
     fiveGameAverageComparison * 0 +
     dangerousAttacksComparisonHOrA * 1 +
     dangerousAttacksComparison * 0 +
@@ -880,8 +884,8 @@ export async function compareTeams(homeForm, awayForm, match) {
     AveragePossessionComparisonHOrA * 0 +
     winPercentageComparison * 3 +
     lossPercentageComparison * 3 +
-    homeOrAwayAverageComparison * 4 +
-    overUnderAchievingSumComparison * 5;
+    homeOrAwayAverageComparison * 3 +
+    overUnderAchievingSumComparison * 4;
 
   console.log(match.game);
   console.log(`winPercH ${winPercH}`);
@@ -931,7 +935,7 @@ export async function compareTeams(homeForm, awayForm, match) {
         calculation = calculation * 1.5;
         break;
       case winPercA + drawPercA >= 0 && winPercA + drawPercA < 10:
-        calculation = calculation * 1.5;
+        calculation = calculation * 2;
         break;
       default:
         break;
@@ -969,7 +973,7 @@ export async function compareTeams(homeForm, awayForm, match) {
         calculation = calculation * 1.5;
         break;
       case winPercH + drawPercH >= 0 && winPercH + drawPercH < 10:
-        calculation = calculation * 1.5;
+        calculation = calculation * 2;
         break;
       default:
         break;
@@ -1104,13 +1108,13 @@ export async function roundCustom(num, form, otherForm) {
     //   return Math.round(num);
     // }
     if (
-      form.overUnderAchievingSumAttack > 0.5 &&
-      otherForm.overUnderAchievingSumDefence < -0.5
+      form.overUnderAchievingSumAttack > 0.25 &&
+      otherForm.overUnderAchievingSumDefence < -0.25
     ) {
       return Math.ceil(num);
     } else if (
-      form.overUnderAchievingSumAttack < -0.5 &&
-      otherForm.overUnderAchievingSumDefence > 0.5
+      form.overUnderAchievingSumAttack < -0.25 &&
+      otherForm.overUnderAchievingSumDefence > 0.25
     ) {
       return Math.floor(num);
     } else if (remainder > 0.75) {
@@ -1999,7 +2003,7 @@ async function getSuccessMeasure(fixtures) {
         <p>{`Correct W/D/W predictions: ${successCount} (${successRate}%)`}</p>
         <p>{`Exact scores predicted: ${exactScores} (${exactScoreHitRate}%)`}</p>
         <div className="pointsGapExplainer">
-          * games with greatest XG differential
+          * games with greatest form disparity
         </div>
       </Fragment>,
       document.getElementById("successMeasure")
@@ -2389,7 +2393,7 @@ export async function getScorePrediction(day, mocked) {
         };
         if (
           match.prediction === "draw" &&
-          drawPredictionObject.goalDifferential < 0.2
+          drawPredictionObject.goalDifferential < 0.1
         ) {
           drawTips.push(drawPredictionObject);
         }
