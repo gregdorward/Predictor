@@ -2003,7 +2003,7 @@ async function getSuccessMeasure(fixtures) {
         <p>{`Correct W/D/W predictions: ${successCount} (${successRate}%)`}</p>
         <p>{`Exact scores predicted: ${exactScores} (${exactScoreHitRate}%)`}</p>
         <div className="pointsGapExplainer">
-          * games with greatest form disparity
+          * games with greatest XG differentials
         </div>
       </Fragment>,
       document.getElementById("successMeasure")
