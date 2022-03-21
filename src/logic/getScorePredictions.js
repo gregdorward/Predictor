@@ -627,18 +627,22 @@ export async function compareTeams(homeForm, awayForm, match) {
   let homePointsToAdd;
   let awayPointsToAdd;
 
-  if((homeForm.overUnderAchievingSum < -0.5 || awayForm.overUnderAchievingSum < -0.5) || (homeForm.overUnderAchievingSum > 0.5 || awayForm.overUnderAchievingSum > 0.5)){
+  if (
+    homeForm.overUnderAchievingSum < -0.5 ||
+    awayForm.overUnderAchievingSum < -0.5 ||
+    homeForm.overUnderAchievingSum > 0.5 ||
+    awayForm.overUnderAchievingSum > 0.5
+  ) {
     [overUnderAchievingSumComparison, homePointsToAdd, awayPointsToAdd] =
-    await compareStat(
-      parseFloat(homeForm.overUnderAchievingSum),
-      parseFloat(awayForm.overUnderAchievingSum)
-    );
+      await compareStat(
+        parseFloat(homeForm.overUnderAchievingSum),
+        parseFloat(awayForm.overUnderAchievingSum)
+      );
     homePoints = homePoints + homePointsToAdd;
     awayPoints = awayPoints + awayPointsToAdd;
   } else {
-    overUnderAchievingSumComparison = 0
+    overUnderAchievingSumComparison = 0;
   }
-
 
   [sotComparisonHOrA, homePointsToAdd, awayPointsToAdd] = await compareStat(
     homeForm.AverageShotsOnTarget,
@@ -2002,9 +2006,6 @@ async function getSuccessMeasure(fixtures) {
         />
         <p>{`Correct W/D/W predictions: ${successCount} (${successRate}%)`}</p>
         <p>{`Exact scores predicted: ${exactScores} (${exactScoreHitRate}%)`}</p>
-        <div className="pointsGapExplainer">
-          * games with greatest XG differentials
-        </div>
       </Fragment>,
       document.getElementById("successMeasure")
     );
@@ -2764,4 +2765,11 @@ async function renderTips() {
       document.getElementById("insights")
     );
   }
+
+  ReactDOM.render(
+    <div className="pointsGapExplainer">
+      * games with greatest XG differentials
+    </div>,
+    document.getElementById("XGDiff")
+  );
 }

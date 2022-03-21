@@ -406,6 +406,7 @@ function App() {
       <div id="homeBadge" />
       <div id="FixtureContainerHeaders"></div>
       <StyledKofiButton></StyledKofiButton>
+      <div id="XGDiff"/>
       <div id="FixtureContainer">
         <div>
           <div className="WelcomeText">
