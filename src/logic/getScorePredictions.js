@@ -1329,7 +1329,7 @@ export async function calculateScore(match, index, divider, id) {
       );
 
       teams[i][index].XGdifferential =
-        teams[i][index].XG - teams[i][index].XGAgainstAverage;
+        teams[i][index].XGOverall - teams[i][index].XGAgainstAvgOverall;
 
       switch (true) {
         case teams[i][index].XGdifferential > 1:
@@ -1485,7 +1485,7 @@ export async function calculateScore(match, index, divider, id) {
       formAway.XGdifferential
     );
 
-    if (pointsAverageDiff > 1.5 || pointsAverageDiff < -1.5) {
+    if (pointsAverageDiff > 1.2 || pointsAverageDiff < -1.2) {
       match.pointsAverageDiff = true;
       console.log(match);
     } else {
