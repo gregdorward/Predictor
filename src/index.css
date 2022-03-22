@@ -1105,11 +1105,11 @@ ul {
 
 }
 
-.DrawTips lh {
+.XGDiffTips lh {
   font-size: 1.1em;
 }
 
-.DrawTips li {
+.XGDiffTips li {
   /* font-size: 0.8em; */
   padding-top: 1em;
   font-size: 1.1em;
