@@ -2534,7 +2534,7 @@ async function renderTips() {
                 </div>
                 {newArray.map((tip) => (
                   <li className={tip.outcome} key={tip.team}>
-                    {tip.team}: {tip.odds} - {tip.XGdifferentialValue}
+                    {tip.team}: {tip.odds}
                   </li>
                 ))}
                 <div className="AccumulatedOdds">{`Accumulator odds ~ : ${
