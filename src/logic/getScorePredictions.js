@@ -706,7 +706,7 @@ export async function compareTeams(homeForm, awayForm, match) {
   awayPoints = awayPoints + awayPointsToAdd;
 
   [XGdifferentialComparison, homePointsToAdd, awayPointsToAdd] =
-    await compareStat(homeForm.XGWeighting, awayForm.XGWeighting);
+    await compareStat(homeForm.XGdifferential, awayForm.XGdifferential);
 
   homePoints = homePoints + homePointsToAdd;
   awayPoints = awayPoints + awayPointsToAdd;
@@ -868,11 +868,11 @@ export async function compareTeams(homeForm, awayForm, match) {
   }
 
   let calculation =
-    OddsComparison * 2 +
+    OddsComparison * 0 +
     positionComparison * 2 +
     twoGameAverageComparison * 0 +
     tenGameAverageComparison * 1 +
-    XGdifferentialComparison * 1 +
+    XGdifferentialComparison * 2 +
     seasonPPGComparison * 0 +
     formTrendScoreComparison * 0 +
     fiveGameAverageComparison * 0 +
@@ -1489,7 +1489,7 @@ export async function calculateScore(match, index, divider, id) {
       formAway.XGdifferential
     );
 
-    if (XGdifferential > 1.2 || XGdifferential < -1.2) {
+    if (XGdifferential > 1 || XGdifferential < -1.2) {
       match.XGdifferential = true;
       match.XGdifferentialValue = Math.abs(XGdifferential);
       match.XGdifferentialValueRaw = parseFloat(XGdifferential);
@@ -1790,7 +1790,8 @@ export async function calculateScore(match, index, divider, id) {
       homePredictions = homePredictions + 1;
       if (
         formHome.lastGame === "L" ||
-        formAway.lastGame === "W"
+        formAway.lastGame === "W" ||
+        match.XGdifferentialValueRaw < 0
       ) {
         match.includeInMultis = false;
       } else {
@@ -1801,7 +1802,8 @@ export async function calculateScore(match, index, divider, id) {
       awayPredictions = awayPredictions + 1;
       if (
         formAway.lastGame === "L" ||
-        formHome.lastGame === "W"
+        formHome.lastGame === "W" ||
+        match.XGdifferentialValueRaw > 0
       ) {
         match.includeInMultis = false;
       } else {
