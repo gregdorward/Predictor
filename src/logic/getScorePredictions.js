@@ -1136,6 +1136,7 @@ export async function calculateScore(match, index, divider, id) {
   let homeRaw;
   let awayRaw;
 
+
   let teams;
   let calculate = true;
 
@@ -2099,11 +2100,12 @@ export async function getScorePrediction(day, mocked) {
       let XGPredictionObject;
 
       if (
-        (match.unroundedGoalsA - match.unroundedGoalsB > 1 &&
+        (match.unroundedGoalsA - match.unroundedGoalsB > 0.75 &&
         match.homeOdds !== 0 &&
         match.fractionHome !== "N/A" &&
         match.includeInMultis !== false) || (match.teamWithHigherXG === "home" && 
-        match.XGdifferentialValueRaw > 1.2)
+        match.XGdifferentialValueRaw > 1.2 &&
+        match.includeInMultis !== false)
       ) {
         if (
           match.prediction !== "draw" &&
@@ -2144,11 +2146,12 @@ export async function getScorePrediction(day, mocked) {
           }
         }
       } else if (
-        (match.unroundedGoalsB - match.unroundedGoalsA > 2 &&
+        (match.unroundedGoalsB - match.unroundedGoalsA > 1.75 &&
         match.awayOdds !== 0 &&
         match.fractionAway !== "N/A" &&
         match.includeInMultis !== false) || (match.teamWithHigherXG === "away" && 
-        match.XGdifferentialValueRaw < -1.2)
+        match.XGdifferentialValueRaw < -1.2 &&
+        match.includeInMultis !== false)
       ) {
         if (
           match.prediction !== "draw" &&

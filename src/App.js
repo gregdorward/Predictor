@@ -171,7 +171,7 @@ async function getMatchTime(unixTime) {
       6117, //Portagul Prem 21/22
       5951, //Dutch Prem 21/22
       6079, //Belgian Pro League 21/22
-      5505, //sweden 21/22
+      7064, //sweden 22
       5961, //Danish Prem 21
       7048, //Norway Prem 21
       6008, //Austrian Prem 21

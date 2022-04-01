@@ -114,7 +114,7 @@ export default function LeagueTable(props) {
     return found.Name;
   }
 
-  if(props.Teams[0].LeagueID !== 6083 && props.Teams[0].LeagueID !== 6969){
+  if(props.Teams[0].LeagueID !== 6083 && props.Teams[0].LeagueID !== 6969 && props.Teams[0].LeagueID !== 7064){
     console.log(props.Teams.LeagueID)
     for (let i = 0; i < props.Teams.length; i++) {
       return (
