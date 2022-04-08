@@ -927,19 +927,19 @@ export async function compareTeams(homeForm, awayForm, match) {
         calculation = calculation / 4;
         break;
       case winPercA + drawPercA >= 40 && winPercA + drawPercA < 50:
-        calculation = calculation / 2;
+        calculation = calculation / 1.5;
         break;
       case winPercA + drawPercA >= 30 && winPercA + drawPercA < 40:
-        calculation = calculation / 1.5;
+        calculation = calculation / 1.25;
         break;
       case winPercA + drawPercA >= 20 && winPercA + drawPercA < 30:
         calculation = calculation / 1;
         break;
       case winPercA + drawPercA >= 10 && winPercA + drawPercA < 20:
-        calculation = calculation * 1.5;
+        calculation = calculation * 2;
         break;
       case winPercA + drawPercA >= 0 && winPercA + drawPercA < 10:
-        calculation = calculation * 2;
+        calculation = calculation * 2.5;
         break;
       default:
         break;
@@ -965,19 +965,19 @@ export async function compareTeams(homeForm, awayForm, match) {
         calculation = calculation / 4;
         break;
       case winPercH + drawPercH >= 40 && winPercH + drawPercH < 50:
-        calculation = calculation / 2;
+        calculation = calculation / 1.5;
         break;
       case winPercH + drawPercH >= 30 && winPercH + drawPercH < 40:
-        calculation = calculation / 1.5;
+        calculation = calculation / 1.25;
         break;
       case winPercH + drawPercH >= 20 && winPercH + drawPercH < 30:
         calculation = calculation * 1;
         break;
       case winPercH + drawPercH >= 10 && winPercH + drawPercH < 20:
-        calculation = calculation * 1.5;
+        calculation = calculation * 2;
         break;
       case winPercH + drawPercH >= 0 && winPercH + drawPercH < 10:
-        calculation = calculation * 2;
+        calculation = calculation * 2.5;
         break;
       default:
         break;
@@ -994,28 +994,28 @@ export async function compareTeams(homeForm, awayForm, match) {
         calculation = calculation * 3;
         break;
       case winPercH >= 70 && winPercH < 80:
-        calculation = calculation * 2;
+        calculation = calculation * 2.5;
         break;
       case winPercH >= 60 && winPercH < 70:
-        calculation = calculation * 1.75;
+        calculation = calculation * 2;
         break;
       case winPercH >= 50 && winPercH < 60:
-        calculation = calculation * 1.25;
+        calculation = calculation * 1.5;
         break;
       case winPercH >= 40 && winPercH < 50:
-        calculation = calculation * 1;
+        calculation = calculation * 1.25;
         break;
       case winPercH >= 30 && winPercH < 40:
-        calculation = calculation * 1;
+        calculation = calculation * 1.1;
         break;
       case winPercH >= 20 && winPercH < 30:
-        calculation = calculation * 1;
+        calculation = calculation * 0.9;
         break;
       case winPercH >= 10 && winPercH < 20:
-        calculation = calculation * 0.75;
+        calculation = calculation * 0.5;
         break;
       case winPercH >= 0 && winPercH < 10:
-        calculation = calculation * 0.5;
+        calculation = calculation * 0.25;
         break;
       default:
         break;
@@ -1029,28 +1029,28 @@ export async function compareTeams(homeForm, awayForm, match) {
         calculation = calculation * 3;
         break;
       case winPercA >= 70 && winPercA < 80:
-        calculation = calculation * 2;
+        calculation = calculation * 2.5;
         break;
       case winPercA >= 60 && winPercA < 70:
-        calculation = calculation * 1.75;
+        calculation = calculation * 2;
         break;
       case winPercA >= 50 && winPercA < 60:
-        calculation = calculation * 1.25;
+        calculation = calculation * 1.5;
         break;
       case winPercA >= 40 && winPercA < 50:
-        calculation = calculation * 1;
+        calculation = calculation * 1.25;
         break;
       case winPercA >= 30 && winPercA < 40:
-        calculation = calculation * 1;
+        calculation = calculation * 1.1;
         break;
       case winPercA >= 20 && winPercA < 30:
-        calculation = calculation * 1;
+        calculation = calculation * 0.9;
         break;
       case winPercA >= 10 && winPercA < 20:
-        calculation = calculation * 0.75;
+        calculation = calculation * 0.5;
         break;
       case winPercA >= 0 && winPercA < 10:
-        calculation = calculation * 0.5;
+        calculation = calculation * 0.25;
         break;
       default:
         break;
