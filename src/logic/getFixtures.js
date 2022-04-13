@@ -104,7 +104,6 @@ export async function generateTables(a, leagueIdArray) {
   leagueArray.forEach(function (league) {
     let currentLeagueId = leagueIdArray[i];
     i++;
-    console.log(league)
     leagueInstance = [];
     if (!league.data.specific_tables[0].groups) {
       for (
@@ -113,7 +112,6 @@ export async function generateTables(a, leagueIdArray) {
         index++
       ) {
         let currentTeam = league.data.specific_tables[0].table[index];
-        console.log(currentTeam.wdl_record)
         let last5 = currentTeam.wdl_record.slice(-5);
         let rawForm = last5.replace(/,/g, "").toUpperCase();
         let form = Array.from(rawForm);
@@ -176,12 +174,10 @@ export async function renderTable(index) {
     `${process.env.REACT_APP_EXPRESS_SERVER}leagueStats/${league[0].LeagueID}`
   )
   await leagueStatistics.json().then((stats) => {
-    console.log(stats.data)
     statistics = stats.data
   });
 
   if (league !== undefined) {
-    console.log(league)
     ReactDOM.render(
       <LeagueTable Teams={league} Stats={statistics} Key={`League${index}`} />,
       document.getElementById(`leagueName${index}`)
@@ -365,7 +361,6 @@ export async function generateFixtures(day, radioState, selectedOdds) {
     document.getElementById("Buttons")
   );
 
-  console.log(orderedLeagues)
 
   for (let i = 0; i < orderedLeagues.length; i++) {
     leagueID = orderedLeagues[i].element.id;
@@ -379,10 +374,8 @@ export async function generateFixtures(day, radioState, selectedOdds) {
   var leaguePositions = [];
   if (league.status === 200) {
     await league.json().then((leagues) => {
-      console.log(leagues);
       leagueArray = Array.from(leagues.leagueArray);
     });
-    console.log(leagueID);
     generateTables(leagueArray, leagueIdArray);
   } else {
     for (let i = 0; i < orderedLeagues.length; i++) {
@@ -393,7 +386,6 @@ export async function generateFixtures(day, radioState, selectedOdds) {
       await league.json().then((table) => {
         leagueArray.push(table);
       });
-      console.log(leagueID);
       generateTables(leagueArray, leagueIdArray);
     }
   }
@@ -426,7 +418,6 @@ export async function generateFixtures(day, radioState, selectedOdds) {
       });
     }
   }
-  console.log(leaguePositions);
 
   let previousLeagueName;
 
