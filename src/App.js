@@ -181,6 +181,7 @@ async function getMatchTime(unixTime) {
       6120, //Spanish secunda 21/22
       6205, //
       6020, //Bundesliga 2 21/22
+      6041, //German 3rd tier 21/22
       6018, //French League 2 21/22
       5991, //Scottish Championship
       5976, //Scottish league 1 21/22

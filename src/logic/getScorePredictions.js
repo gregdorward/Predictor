@@ -867,15 +867,15 @@ export async function compareTeams(homeForm, awayForm, match) {
 
   let calculation =
     OddsComparison * 0 +
-    positionComparison * 2 +
-    twoGameAverageComparison * 5 +
-    tenGameAverageComparison * 10 +
-    XGdifferentialComparison * 10 +
+    positionComparison * 5 +
+    twoGameAverageComparison * 3 +
+    tenGameAverageComparison * 7 +
+    XGdifferentialComparison * 7 +
     seasonPPGComparison * 0 +
     formTrendScoreComparison * 0 +
     fiveGameAverageComparison * 0 +
     dangerousAttacksComparisonHOrA * 0 +
-    dangerousAttacksComparison * 0 +
+    dangerousAttacksComparison * 1 +
     sotComparison * 0 +
     sotComparisonHOrA * 1 +
     CleanSheetPercentageComparison * 1 +
@@ -886,8 +886,11 @@ export async function compareTeams(homeForm, awayForm, match) {
     AveragePossessionComparisonHOrA * 0 +
     winPercentageComparison * 0 +
     lossPercentageComparison * 0 +
-    homeOrAwayAverageComparison * 3 +
+    homeOrAwayAverageComparison * 2 +
     overUnderAchievingSumComparison * 4;
+
+    match.homePoints = homePoints
+    match.awayPoints = awayPoints
 
 
   // if ((calculation > 0) && homeForm.overUnderAchievingSum < 0) {
@@ -1001,10 +1004,10 @@ export async function compareTeams(homeForm, awayForm, match) {
         calculation = calculation * 1.25;
         break;
       case winPercH >= 30 && winPercH < 40:
-        calculation = calculation * 1.1;
+        calculation = calculation * 1;
         break;
       case winPercH >= 20 && winPercH < 30:
-        calculation = calculation * 0.9;
+        calculation = calculation * 0.75;
         break;
       case winPercH >= 10 && winPercH < 20:
         calculation = calculation * 0.5;
@@ -1036,10 +1039,10 @@ export async function compareTeams(homeForm, awayForm, match) {
         calculation = calculation * 1.25;
         break;
       case winPercA >= 30 && winPercA < 40:
-        calculation = calculation * 1.1;
+        calculation = calculation * 1;
         break;
       case winPercA >= 20 && winPercA < 30:
-        calculation = calculation * 0.9;
+        calculation = calculation * 0.75;
         break;
       case winPercA >= 10 && winPercA < 20:
         calculation = calculation * 0.5;
@@ -1587,26 +1590,26 @@ export async function calculateScore(match, index, divider, id) {
       2;
 
     let factorOneHome =
-      (goalCalcHomeShortTerm * 0 +
+      (goalCalcHomeShortTerm * 1 +
         goalCalcHomeShortAndLongTerm * 1 +
         goalCalcHomeOnly * 1 +
-        formAway.expectedConceededGoalsLongTerm * 0 +
-        formHome.expectedGoalsLongTerm * 0 +
+        formAway.expectedConceededGoalsLongTerm * 0.5 +
+        formHome.expectedGoalsLongTerm * 0.5 +
         formAway.ConcededAverageShortTerm * 0 +
         last10WeightingHome * 0 +
         formHome.goalsDifferential * 0) /
-      2;
+      4;
 
     let factorOneAway =
-      (goalCalcAwayShortTerm * 0 +
+      (goalCalcAwayShortTerm * 1 +
         goalCalcAwayShortAndLongTerm * 1 +
         goalCalcAwayOnly * 1 +
-        formHome.expectedConceededGoalsLongTerm * 0 +
-        formAway.expectedGoalsLongTerm * 0 +
+        formHome.expectedConceededGoalsLongTerm * 0.5 +
+        formAway.expectedGoalsLongTerm * 0.5 +
         formHome.ConcededAverageShortTerm * 0 +
         last10WeightingAway * 0 +
         formAway.goalsDifferential * 0) /
-      2;
+      4;
 
     let homeComparisonWeighting;
     let awayComparisonWeighting;

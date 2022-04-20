@@ -37,7 +37,7 @@ export const [currentDay, month, year] = new Date()
   .toLocaleDateString("en-US")
   .split("/");
 let tomorrowsDate = new Date();
-tomorrowsDate.setDate(new Date().getDate() + 1);
+tomorrowsDate.setDate(new Date().getDate() + 3);
 let [tomorrowDay, tomorrowMonth, tomorrowYear] = tomorrowsDate
   .toLocaleDateString("en-US")
   .split("/");
@@ -390,7 +390,7 @@ export async function generateFixtures(day, radioState, selectedOdds) {
     }
   }
 
-  for (let i = 0; i < 35; i++) {
+  for (let i = 0; i < 36; i++) {
     for (
       let x = 0;
       x < leagueArray[i].data.all_matches_table_overall.length;
@@ -1100,6 +1100,9 @@ export async function generateFixtures(day, radioState, selectedOdds) {
 
       match.lastFiveFormHome = lastFiveFormHome;
       match.lastFiveFormAway = lastFiveFormAway;
+
+      console.log(match)
+      console.log(homeTeaminLeague)
       match.homeRawPosition = homeTeaminLeague.rawPosition;
       match.awayRawPosition = awayTeaminLeague.rawPosition;
 
