@@ -1092,9 +1092,9 @@ export async function generateFixtures(day, radioState, selectedOdds) {
               DrawPercentage: awayTeamDrawPercentageAway,
               formRun: formRunAway,
               goalDifference: form[1].data[2].stats.seasonGoalDifference_overall,
-              goalDifferenceHomeOrAway: form[1].data[2].stats.seasonGoalDifference_home,
+              goalDifferenceHomeOrAway: form[1].data[2].stats.seasonGoalDifference_away,
               BttsPercentage: form[1].data[2].stats.seasonBTTSPercentage_overall,
-              BttsPercentageHomeOrAway: form[1].data[2].stats.seasonBTTSPercentage_home,
+              BttsPercentageHomeOrAway: form[1].data[2].stats.seasonBTTSPercentage_away,
               CardsTotal: form[1].data[2].stats.cardsTotal_overall,
               CornersAverage: form[1].data[2].stats.cornersAVG_overall,
               ScoredBothHalvesPercentage: form[1].data[2].stats.scoredBothHalvesPercentage_overall

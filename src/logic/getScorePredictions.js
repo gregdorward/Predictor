@@ -1653,10 +1653,10 @@ export async function calculateScore(match, index, divider, id) {
     }
 
     let experimentalHomeGoals =
-      factorOneHome * 0.75 * homeComparisonWeighting * homeAdvantage;
+      factorOneHome * 0.7 * homeComparisonWeighting * homeAdvantage;
 
     let experimentalAwayGoals =
-      factorOneAway * 0.75 * awayComparisonWeighting * awayAdvantage;
+      factorOneAway * 0.7 * awayComparisonWeighting * awayAdvantage;
 
     let rawFinalHomeGoals = experimentalHomeGoals;
     let rawFinalAwayGoals = experimentalAwayGoals;
