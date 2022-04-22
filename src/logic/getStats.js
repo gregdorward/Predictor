@@ -352,13 +352,14 @@ export async function createStatsDiv(game, mock) {
       formDataHome.push({
         name: game.homeTeam,
         Last5: gameStats.home[index].LastFiveForm,
-        AverageGoals: (gameStats.home[index].ScoredOverall / 10),
-        AverageConceeded: (gameStats.home[index].ConcededOverall / 10),
+        AverageGoals: gameStats.home[index].ScoredOverall / 10,
+        AverageConceeded: gameStats.home[index].ConcededOverall / 10,
         AverageXG: gameStats.home[index].XGOverall,
         AverageXGConceded: gameStats.home[index].XGAgainstAvgOverall,
         AveragePossession: gameStats.home[index].AveragePossessionOverall,
         AverageShotsOnTarget: gameStats.home[index].AverageShotsOnTargetOverall,
-        AverageDangerousAttacks: gameStats.home[index].AverageDangerousAttacksOverall,
+        AverageDangerousAttacks:
+          gameStats.home[index].AverageDangerousAttacksOverall,
         homeOrAway: "Home",
         leaguePosition: gameStats.home[index].LeaguePosition,
         Last5PPG: gameStats.home[index].PPG,
@@ -366,6 +367,14 @@ export async function createStatsDiv(game, mock) {
         formTrend: homeFormTrend,
         lastGame: homeLastGame,
         formRun: gameStats.home[index].formRun,
+        goalDifference: gameStats.home[index].goalDifference,
+        goalDifferenceHomeOrAway: gameStats.home[index].goalDifferenceHomeOrAway,
+        BttsPercentage: gameStats.home[index].BttsPercentage,
+        BttsPercentageHomeOrAway: gameStats.home[index].BttsPercentageHomeOrAway,
+        CardsTotal: gameStats.home[index].CardsTotal,
+        CornersAverage: gameStats.home[index].CornersAverage,
+        ScoredBothHalvesPercentage:
+          gameStats.home[index].ScoredBothHalvesPercentage,
       });
 
       const formDataAway = [];
@@ -373,13 +382,14 @@ export async function createStatsDiv(game, mock) {
       formDataAway.push({
         name: game.awayTeam,
         Last5: gameStats.away[index].LastFiveForm,
-        AverageGoals: (gameStats.away[index].ScoredOverall / 10),
-        AverageConceeded: (gameStats.away[index].ConcededOverall / 10),
+        AverageGoals: gameStats.away[index].ScoredOverall / 10,
+        AverageConceeded: gameStats.away[index].ConcededOverall / 10,
         AverageXG: gameStats.away[index].XGOverall,
         AverageXGConceded: gameStats.away[index].XGAgainstAvgOverall,
         AveragePossession: gameStats.away[index].AveragePossessionOverall,
         AverageShotsOnTarget: gameStats.away[index].AverageShotsOnTargetOverall,
-        AverageDangerousAttacks: gameStats.away[index].AverageDangerousAttacksOverall,
+        AverageDangerousAttacks:
+          gameStats.away[index].AverageDangerousAttacksOverall,
         homeOrAway: "Away",
         leaguePosition: gameStats.away[index].LeaguePosition,
         Last5PPG: gameStats.away[index].PPG,
@@ -387,6 +397,14 @@ export async function createStatsDiv(game, mock) {
         formTrend: awayFormTrend,
         lastGame: awayLastGame,
         formRun: gameStats.away[index].formRun,
+        goalDifference: gameStats.away[index].goalDifference,
+        goalDifferenceHomeOrAway: gameStats.away[index].goalDifferenceHomeOrAway,
+        BttsPercentage: gameStats.away[index].BttsPercentage,
+        BttsPercentageHomeOrAway: gameStats.away[index].BttsPercentageHomeOrAway,
+        CardsTotal: gameStats.away[index].CardsTotal,
+        CornersAverage: gameStats.away[index].CornersAverage,
+        ScoredBothHalvesPercentage:
+          gameStats.away[index].ScoredBothHalvesPercentage,
       });
       ReactDOM.render(
         <div style={style}>
@@ -394,6 +412,8 @@ export async function createStatsDiv(game, mock) {
         </div>,
         document.getElementById("stats" + homeTeam)
       );
+
+      console.log(gameStats.home[index])
 
       ReactDOM.render(
         <div style={style}>
@@ -421,7 +441,7 @@ export async function createStatsDiv(game, mock) {
           sot={formDataHome[0].AverageShotsOnTarget}
           dangerousAttacks={formDataHome[0].AverageDangerousAttacks}
           leaguePosition={formDataHome[0].leaguePosition}
-          rawPosition = {game.homeRawPosition}
+          rawPosition={game.homeRawPosition}
           homeOrAwayLeaguePosition={game.homeTeamHomePosition}
           winPercentage={game.homeTeamWinPercentage}
           lossPercentage={game.homeTeamLossPercentage}
@@ -434,6 +454,15 @@ export async function createStatsDiv(game, mock) {
           ]}
           lastGame={homeLastGame}
           formRun={formDataHome[0].formRun}
+          goalDifference={formDataHome[0].goalDifference}
+          goalDifferenceHomeOrAway={formDataHome[0].goalDifferenceHomeOrAway}
+          BttsPercentage={formDataHome[0].BttsPercentage}
+          BttsPercentageHomeOrAway={formDataHome[0].BttsPercentageHomeOrAway}
+          CardsTotal={formDataHome[0].CardsTotal}
+          CornersAverage={formDataHome[0].CornersAverage}
+          ScoredBothHalvesPercentage={
+            formDataHome[0].ScoredBothHalvesPercentage
+          }
         />,
         document.getElementById("home" + homeTeam)
       );
@@ -451,8 +480,9 @@ export async function createStatsDiv(game, mock) {
           conceeded={formDataAway[0].AverageConceeded}
           XG={formDataAway[0].AverageXG}
           XGConceded={formDataAway[0].AverageXGConceded}
+          //todo add goal diff and btts percentages
           possession={formDataAway[0].AveragePossession}
-          rawPosition = {game.awayRawPosition}
+          rawPosition={game.awayRawPosition}
           sot={formDataAway[0].AverageShotsOnTarget}
           dangerousAttacks={formDataAway[0].AverageDangerousAttacks}
           leaguePosition={formDataAway[0].leaguePosition}
@@ -468,6 +498,15 @@ export async function createStatsDiv(game, mock) {
           ]}
           lastGame={awayLastGame}
           formRun={formDataAway[0].formRun}
+          goalDifference={formDataAway[0].goalDifference}
+          goalDifferenceHomeOrAway={formDataAway[0].goalDifferenceHomeOrAway}
+          BttsPercentage={formDataAway[0].BttsPercentage}
+          BttsPercentageHomeOrAway={formDataAway[0].BttsPercentageHomeOrAway}
+          CardsTotal={formDataAway[0].CardsTotal}
+          CornersAverage={formDataAway[0].CornersAverage}
+          ScoredBothHalvesPercentage={
+            formDataAway[0].ScoredBothHalvesPercentage
+          }
         />,
         document.getElementById("away" + awayTeam)
       );

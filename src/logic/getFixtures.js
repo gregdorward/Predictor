@@ -37,7 +37,7 @@ export const [currentDay, month, year] = new Date()
   .toLocaleDateString("en-US")
   .split("/");
 let tomorrowsDate = new Date();
-tomorrowsDate.setDate(new Date().getDate() + 3);
+tomorrowsDate.setDate(new Date().getDate() + 1);
 let [tomorrowDay, tomorrowMonth, tomorrowYear] = tomorrowsDate
   .toLocaleDateString("en-US")
   .split("/");
@@ -887,7 +887,14 @@ export async function generateFixtures(day, radioState, selectedOdds) {
               WinPercentage: homeTeamWinPercentageHome,
               LossPercentage: homeTeamLossPercentageHome,
               DrawPercentage: homeTeamDrawPercentageHome,
-              formRun: formRunHome
+              formRun: formRunHome,
+              goalDifference: form[0].data[2].stats.seasonGoalDifference_overall,
+              goalDifferenceHomeOrAway: form[0].data[2].stats.seasonGoalDifference_home,
+              BttsPercentage: form[0].data[2].stats.seasonBTTSPercentage_overall,
+              BttsPercentageHomeOrAway: form[0].data[2].stats.seasonBTTSPercentage_home,
+              CardsTotal: form[0].data[2].stats.cardsTotal_overall,
+              CornersAverage: form[0].data[2].stats.cornersAVG_overall,
+              ScoredBothHalvesPercentage: form[0].data[2].stats.scoredBothHalvesPercentage_overall
             },
           },
           away: {
@@ -945,7 +952,7 @@ export async function generateFixtures(day, radioState, selectedOdds) {
                 form[1].data[0].stats.dangerous_attacks_avg_away
               ),
               BTTSPercentage: parseInt(
-                form[0].data[0].stats.seasonBTTSPercentage_away
+                form[1].data[0].stats.seasonBTTSPercentage_away
               ),
               LastFiveForm: lastFiveFormAway,
               LastSixForm: lastSixFormAway,
@@ -1008,7 +1015,7 @@ export async function generateFixtures(day, radioState, selectedOdds) {
                 form[1].data[1].stats.dangerous_attacks_avg_away
               ),
               BTTSPercentage: parseInt(
-                form[0].data[1].stats.seasonBTTSPercentage_away
+                form[1].data[1].stats.seasonBTTSPercentage_away
               ),
               LastFiveForm: lastFiveFormAway,
               LastSixForm: lastSixFormAway,
@@ -1071,7 +1078,7 @@ export async function generateFixtures(day, radioState, selectedOdds) {
                 form[1].data[2].stats.dangerous_attacks_avg_away
               ),
               BTTSPercentage: parseInt(
-                form[0].data[2].stats.seasonBTTSPercentage_away
+                form[1].data[2].stats.seasonBTTSPercentage_away
               ),
               LastFiveForm: lastFiveFormAway,
               LastSixForm: lastSixFormAway,
@@ -1083,7 +1090,14 @@ export async function generateFixtures(day, radioState, selectedOdds) {
               WinPercentage: awayTeamWinPercentageAway,
               LossPercentage: awayTeamLossPercentageAway,
               DrawPercentage: awayTeamDrawPercentageAway,
-              formRun: formRunAway
+              formRun: formRunAway,
+              goalDifference: form[1].data[2].stats.seasonGoalDifference_overall,
+              goalDifferenceHomeOrAway: form[1].data[2].stats.seasonGoalDifference_home,
+              BttsPercentage: form[1].data[2].stats.seasonBTTSPercentage_overall,
+              BttsPercentageHomeOrAway: form[1].data[2].stats.seasonBTTSPercentage_home,
+              CardsTotal: form[1].data[2].stats.cardsTotal_overall,
+              CornersAverage: form[1].data[2].stats.cornersAVG_overall,
+              ScoredBothHalvesPercentage: form[1].data[2].stats.scoredBothHalvesPercentage_overall
             },
           },
         });

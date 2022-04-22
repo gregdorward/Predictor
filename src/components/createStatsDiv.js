@@ -13,8 +13,17 @@ function Stats(props) {
     return className;
   }
 
+  function getStyle(num) {
+    if(num >= 0){
+      return "#00ff00"
+    } else {
+      return "#ff1500";
+    }
+    }
+
 
   if(props.formRun){
+    console.log(props)
     return (
       <Fragment>
         <ul className={props.className} style={props.style}>
@@ -64,6 +73,22 @@ function Stats(props) {
             data-cy={props.name + "teamXGConceded"}
           >
             {`Avg XG conceded - ${props.XGConceded}`}
+          </li>
+          <li
+            key="goalDifference"
+            className="goalDifference"
+            data-cy={props.name + "goalDifference"}
+            
+          >
+            {`Goal difference : `}
+            <span>{props.goalDifference}</span>
+          </li>
+          <li
+            key="goalDifference"
+            className="goalDifference"
+            data-cy={props.name + "goalDifference"}
+          >
+            {`Goal difference ${props.homeOrAway} : ${props.goalDifferenceHomeOrAway}`}
           </li>
           <li
             key="AverageSOT"
@@ -138,6 +163,41 @@ function Stats(props) {
             data-cy={props.name + "FormTrend10"}
           >
             {`Last 5 PPG: ${props.formTrend[2]}.`}
+          </li>
+          <li
+            key="BttsPercentage"
+            className="BttsPercentage"
+            data-cy={props.name + "BttsPercentage"}
+          >
+            {`BTTS: ${props.BttsPercentage}%`}
+          </li>
+          <li
+            key="BttsPercentageHomeOrAway"
+            className="BttsPercentageHomeOrAway"
+            data-cy={props.name + "BttsPercentageHomeOrAway"}
+          >
+            {`BTTS ${props.homeOrAway}: ${props.BttsPercentageHomeOrAway}%`}
+          </li>
+          <li
+            key="CardsTotal"
+            className="CardsTotal"
+            data-cy={props.name + "CardsTotal"}
+          >
+            {`Cards total: ${props.CardsTotal}`}
+          </li>
+          <li
+            key="CornersAverage"
+            className="CornersAverage"
+            data-cy={props.name + "CornersAverage"}
+          >
+            {`Corners average: ${props.CornersAverage}`}
+          </li>
+          <li
+            key="ScoredBothHalvesPercentage"
+            className="ScoredBothHalvesPercentage"
+            data-cy={props.name + "ScoredBothHalvesPercentage"}
+          >
+            {`Scored both halves: ${props.ScoredBothHalvesPercentage}%`}
           </li>
         </ul>
         <div id="h2hStats"></div>
@@ -259,6 +319,41 @@ function Stats(props) {
             data-cy={props.name + "FormTrend10"}
           >
             {`Last 5 PPG: ${props.formTrend[2]}.`}
+          </li>
+          <li
+            key="BttsPercentage"
+            className="BttsPercentage"
+            data-cy={props.name + "BttsPercentage"}
+          >
+            {`BTTS: ${props.BttsPercentage}%`}
+          </li>
+          <li
+            key="BttsPercentageHomeOrAway"
+            className="BttsPercentageHomeOrAway"
+            data-cy={props.name + "BttsPercentageHomeOrAway"}
+          >
+            {`BTTS ${props.homeOrAway}: ${props.BttsPercentageHomeOrAway}%`}
+          </li>
+          <li
+            key="CardsTotal"
+            className="CardsTotal"
+            data-cy={props.name + "CardsTotal"}
+          >
+            {`Cards total: ${props.CardsTotal}`}
+          </li>
+          <li
+            key="CornersAverage"
+            className="CornersAverage"
+            data-cy={props.name + "CornersAverage"}
+          >
+            {`Corners average: ${props.CornersAverage}`}
+          </li>
+          <li
+            key="ScoredBothHalvesPercentage"
+            className="ScoredBothHalvesPercentage"
+            data-cy={props.name + "ScoredBothHalvesPercentage"}
+          >
+            {`Scored both halves: ${props.ScoredBothHalvesPercentage}%`}
           </li>
         </ul>
         <div id="h2hStats"></div>

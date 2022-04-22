@@ -866,7 +866,7 @@ export async function compareTeams(homeForm, awayForm, match) {
   }
 
   let calculation =
-    OddsComparison * 0 +
+    OddsComparison * 1 +
     positionComparison * 5 +
     twoGameAverageComparison * 3 +
     tenGameAverageComparison * 7 +
