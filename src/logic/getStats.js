@@ -409,6 +409,8 @@ export async function createStatsDiv(game, mock) {
       ReactDOM.render(
         <div style={style}>
           <Div className="MatchTime" text={`Kick off: ${time} GMT`}></Div>
+          <Div className="FormExplainer" text={`(Form stats based on last 10 games)`}></Div>
+
         </div>,
         document.getElementById("stats" + homeTeam)
       );

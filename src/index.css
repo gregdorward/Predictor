@@ -852,6 +852,7 @@ p {
   text-align: right;
   width: 50%;
   background-color: #1D3549;
+  padding-right: 0.2em;
   /* padding-right: 20px; */
 }
 
@@ -859,34 +860,54 @@ p {
   text-align: left;
   width: 50%;
   background-color: #1D3549;
+  padding-left: 0.2em;
 }
 
 .Home {
   /* padding-left: 5px; */
-  padding-right: 10px;
+
+  padding-right: 0px;
   flex-basis: 50%;
   border-right: 1px solid #172A3A;
 
 }
 
+
+
 .Home li {
-  padding: 0.35em;
-  margin: 5px;
+  padding: 0.8em;
+  margin: 0px;
   list-style: none;
+  background: #1D3549;
+  color: white;
   /* padding-left: 1em; */
 }
 
+.Home li:nth-child(odd) { 
+  background: #172B3A;
+  color: white;
+}
+
+
+
 .Away {
-  padding-left: 10px;
+  padding-left: 0px;
   /* padding-right: 5px; */
   flex-basis: 50%;
 }
 
 .Away li {
-  padding: 0.35em;
-  margin: 5px;
+  padding: 0.8em;
+  margin: 0px;
   list-style: none;
+  background: #1D3549;
+  color: white;
   /* padding-right: 1em; */
+}
+
+.Away li:nth-child(odd) { 
+  background: #172B3A;
+  color: white;
 }
 
 li.FormHeader {
@@ -895,7 +916,7 @@ li.FormHeader {
 
 .win {
   background-color: rgb(22, 165, 22);
-  padding: 0.75em;
+  padding: 0.7em;
   margin-top: 1em;
   /* padding-left: 7px;
   padding-right: 7px; */
@@ -906,7 +927,7 @@ li.FormHeader {
 
 .loss {
   background-color: #970d00;
-  padding: 0.75em;
+  padding: 0.7em;
   margin-top: 1em;
   /* padding-left: 7px;
   padding-right: 7px; */
@@ -917,7 +938,7 @@ li.FormHeader {
 
 .draw {
   background-color: rgb(85, 85, 85);
-  padding: 0.75em;
+  padding: 0.7em;
   margin-top: 1em;
   /* padding-left: 7px;
   padding-right: 7px; */
@@ -973,11 +994,15 @@ li.FormHeader{
 }
 
 .MatchTime {
-  padding-top: 5px;
-  padding-bottom: 5px;
+  padding: 1em;
   text-align: center;
   background-color: #1D3549;
-  /* font-size: 2.5vw; */
+}
+
+.FormExplainer {
+  padding-bottom: 1em;
+  text-align: center;
+  background-color: #1D3549;
 }
 
 .PredictionContainer {
