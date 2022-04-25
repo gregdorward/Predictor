@@ -1519,12 +1519,10 @@ export async function calculateScore(match, index, divider, id) {
       match.XGdifferential = true;
       match.XGdifferentialValue = Math.abs(XGdifferential);
       match.XGdifferentialValueRaw = parseFloat(XGdifferential);
-      match.teamWithHigherXG = "home";
     } else {
       match.XGdifferential = false;
       match.XGdifferentialValue = Math.abs(XGdifferential);
       match.XGdifferentialValueRaw =  parseFloat(XGdifferential);
-      match.teamWithHigherXG = "away";
     }
 
     if (
@@ -2117,7 +2115,7 @@ export async function getScorePrediction(day, mocked) {
         (match.unroundedGoalsA - match.unroundedGoalsB > 0.75 &&
         match.homeOdds !== 0 &&
         match.fractionHome !== "N/A" &&
-        match.includeInMultis !== false) || (match.teamWithHigherXG === "home" && 
+        match.includeInMultis !== false) || ( 
         match.XGdifferentialValueRaw > 1.2 &&
         match.includeInMultis !== false)
       ) {
@@ -2163,7 +2161,7 @@ export async function getScorePrediction(day, mocked) {
         (match.unroundedGoalsB - match.unroundedGoalsA > 1.75 &&
         match.awayOdds !== 0 &&
         match.fractionAway !== "N/A" &&
-        match.includeInMultis !== false) || (match.teamWithHigherXG === "away" && 
+        match.includeInMultis !== false) || ( 
         match.XGdifferentialValueRaw < -1.2 &&
         match.includeInMultis !== false)
       ) {
