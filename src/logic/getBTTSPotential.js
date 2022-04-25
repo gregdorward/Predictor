@@ -48,7 +48,9 @@ if(match.bttsFraction !== "N/A" && match.status !== "suspended" && match.status 
     // homeGoalsConceededAveragedOut > 1 &&
     // awayGoalsConceededAveragedOut > 1 &&
     homeXG >= 1.1 &&
-    awayXG >= 1.1
+    awayXG >= 1.1 &&
+    homeG >= 1 &&
+    awayG >= 1
   ) {
     match.btts = true;
     match.bttsChosen = true;

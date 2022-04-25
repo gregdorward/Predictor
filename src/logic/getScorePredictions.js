@@ -1515,7 +1515,7 @@ export async function calculateScore(match, index, divider, id) {
       formAway.XGdifferential
     );
 
-    if (XGdifferential > 1 || XGdifferential < -1.2) {
+    if (XGdifferential > 1 || XGdifferential < -1.5) {
       match.XGdifferential = true;
       match.XGdifferentialValue = Math.abs(XGdifferential);
       match.XGdifferentialValueRaw = parseFloat(XGdifferential);
