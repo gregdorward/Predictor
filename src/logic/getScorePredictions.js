@@ -624,7 +624,6 @@ export async function compareTeams(homeForm, awayForm, match) {
   let goalDiffComparison;
   let goalDiffHOrAComparison;
 
-
   let homePoints = 0;
   let awayPoints = 0;
   let homePointsToAdd;
@@ -771,15 +770,13 @@ export async function compareTeams(homeForm, awayForm, match) {
 
   console.log(homeForm.goalDifference + " & " + awayForm.goalDifference);
 
-  [goalDiffComparison, homePointsToAdd, awayPointsToAdd] =
-    await compareStat(
-      homeForm.goalDifference + 20,
-      awayForm.goalDifference + 20
-    );
+  [goalDiffComparison, homePointsToAdd, awayPointsToAdd] = await compareStat(
+    homeForm.goalDifference + 20,
+    awayForm.goalDifference + 20
+  );
 
   homePoints = homePoints + homePointsToAdd;
   awayPoints = awayPoints + awayPointsToAdd;
-
 
   [goalDiffHOrAComparison, homePointsToAdd, awayPointsToAdd] =
     await compareStat(
@@ -789,7 +786,6 @@ export async function compareTeams(homeForm, awayForm, match) {
 
   homePoints = homePoints + homePointsToAdd;
   awayPoints = awayPoints + awayPointsToAdd;
-
 
   [AveragePossessionComparison, homePointsToAdd, awayPointsToAdd] =
     await compareStat(
@@ -916,9 +912,8 @@ export async function compareTeams(homeForm, awayForm, match) {
     goalDiffComparison * 4 +
     goalDiffHOrAComparison * 3;
 
-    match.homePoints = homePoints
-    match.awayPoints = awayPoints
-
+  match.homePoints = homePoints;
+  match.awayPoints = awayPoints;
 
   // if ((calculation > 0) && homeForm.overUnderAchievingSum < 0) {
   //   calculation = -Math.abs(calculation)
@@ -1160,7 +1155,6 @@ export async function roundCustom(num, form, otherForm) {
 export async function calculateScore(match, index, divider, id) {
   let homeRaw;
   let awayRaw;
-
 
   let teams;
   let calculate = true;
@@ -1515,14 +1509,14 @@ export async function calculateScore(match, index, divider, id) {
       formAway.XGdifferential
     );
 
-    if (XGdifferential > 1 || XGdifferential < -1.5) {
+    if (XGdifferential > 0.8 || XGdifferential < -1.6) {
       match.XGdifferential = true;
       match.XGdifferentialValue = Math.abs(XGdifferential);
       match.XGdifferentialValueRaw = parseFloat(XGdifferential);
     } else {
       match.XGdifferential = false;
       match.XGdifferentialValue = Math.abs(XGdifferential);
-      match.XGdifferentialValueRaw =  parseFloat(XGdifferential);
+      match.XGdifferentialValueRaw = parseFloat(XGdifferential);
     }
 
     if (
@@ -1686,6 +1680,10 @@ export async function calculateScore(match, index, divider, id) {
     let rawFinalHomeGoals = experimentalHomeGoals;
     let rawFinalAwayGoals = experimentalAwayGoals;
 
+    match.rawFinalHomeGoals = rawFinalHomeGoals
+    match.rawFinalAwayGoals = rawFinalAwayGoals
+
+
     if (
       formHome.CleanSheetPercentage < 20 &&
       formAway.CleanSheetPercentage < 20
@@ -1807,7 +1805,7 @@ export async function calculateScore(match, index, divider, id) {
       homePredictions = homePredictions + 1;
       if (
         formHome.lastGame === "L" ||
-        formHome.last3Points  < 3 ||
+        formHome.last3Points < 3 ||
         formAway.lastGame === "W" ||
         match.XGdifferentialValueRaw < 0
       ) {
@@ -1820,7 +1818,7 @@ export async function calculateScore(match, index, divider, id) {
       awayPredictions = awayPredictions + 1;
       if (
         formAway.lastGame === "L" ||
-        formAway.last3Points  < 3 ||
+        formAway.last3Points < 3 ||
         formHome.lastGame === "W" ||
         match.XGdifferentialValueRaw > 0
       ) {
@@ -1897,7 +1895,6 @@ export async function calculateScore(match, index, divider, id) {
       default:
         break;
     }
-
 
     winDAAverage = (sumStatDAWin / allWinOutcomes).toFixed(2);
     lossDAAverage = (sumStatDALoss / allLossOutcomes).toFixed(2);
@@ -2113,17 +2110,16 @@ export async function getScorePrediction(day, mocked) {
 
       if (
         (match.unroundedGoalsA - match.unroundedGoalsB > 0.75 &&
-        match.homeOdds !== 0 &&
-        match.fractionHome !== "N/A" &&
-        match.includeInMultis !== false) || ( 
-        match.XGdifferentialValueRaw > 1.2 &&
-        match.includeInMultis !== false)
+          match.homeOdds !== 0 &&
+          match.fractionHome !== "N/A" &&
+          match.includeInMultis !== false) ||
+        (match.XGdifferentialValueRaw > 1.2 && match.includeInMultis !== false)
       ) {
         if (
           match.prediction !== "draw" &&
           match.status !== "suspended" &&
           match.status !== "canceled" &&
-          match.homeOdds < 3 
+          match.homeOdds < 3
         ) {
           predictionObject = {
             team: `${match.homeTeam} to win`,
@@ -2159,11 +2155,10 @@ export async function getScorePrediction(day, mocked) {
         }
       } else if (
         (match.unroundedGoalsB - match.unroundedGoalsA > 1.75 &&
-        match.awayOdds !== 0 &&
-        match.fractionAway !== "N/A" &&
-        match.includeInMultis !== false) || ( 
-        match.XGdifferentialValueRaw < -1.2 &&
-        match.includeInMultis !== false)
+          match.awayOdds !== 0 &&
+          match.fractionAway !== "N/A" &&
+          match.includeInMultis !== false) ||
+        (match.XGdifferentialValueRaw < -1.2 && match.includeInMultis !== false)
       ) {
         if (
           match.prediction !== "draw" &&
@@ -2185,8 +2180,8 @@ export async function getScorePrediction(day, mocked) {
             experimentalCalc:
               (match.unroundedGoalsB - match.unroundedGoalsA) *
               Math.abs(match.teamComparisonScore),
-              XGdifferentialValue: parseFloat(match.XGdifferentialValue),
-            };
+            XGdifferentialValue: parseFloat(match.XGdifferentialValue),
+          };
           if (
             predictionObject.rawOdds >= 1.25 &&
             match.formAway.clinicalRating !== "awful"
@@ -2204,11 +2199,9 @@ export async function getScorePrediction(day, mocked) {
         }
       }
 
-
-     allTipsSorted = allTips.sort(function (a, b) {
-      let sortByCalcA = a.comparisonScore * a.XGdifferentialValue
-      let sortByCalcB = b.comparisonScore * b.XGdifferentialValue
-
+      allTipsSorted = allTips.sort(function (a, b) {
+        let sortByCalcA = a.comparisonScore * a.XGdifferentialValue;
+        let sortByCalcB = b.comparisonScore * b.XGdifferentialValue;
 
         if (sortByCalcA === sortByCalcB) {
           return b.XGdifferentialValue - a.XGdifferentialValue;
@@ -2216,7 +2209,6 @@ export async function getScorePrediction(day, mocked) {
           return sortByCalcB > sortByCalcA ? 1 : -1;
         }
       });
-
 
       bestBets.sort(function (a, b) {
         if (a.goalDifferential === b.goalDifferential) {
@@ -2234,8 +2226,9 @@ export async function getScorePrediction(day, mocked) {
         bttsArray.push(match);
 
         bttsArray.sort(function (a, b) {
-          return b.combinedBTTS - a.combinedBTTS;
+          return b.totalGoals - a.totalGoals;
         });
+
       }
 
       if (
@@ -2296,6 +2289,67 @@ export async function getScorePrediction(day, mocked) {
       exoticString = "";
 
       switch (true) {
+        case XGDiffTips.length >= 10:
+          for (let i = 0; i < 10; i++) {
+            let game = XGDiffTips[i];
+            exoticArray.push(game);
+          }
+          gamesInExotic = 10;
+          minimumExotic = 8;
+          exoticStake = 0.1;
+          exoticString = "45 8-folds, 10 9-folds and 1 10-fold";
+          price = getCoverBetMaxReturns(
+            exoticArray,
+            minimumExotic,
+            exoticStake
+          );
+          break;
+        case XGDiffTips.length >= 9:
+          for (let i = 0; i < 9; i++) {
+            let game = XGDiffTips[i];
+            exoticArray.push(game);
+          }
+          gamesInExotic = 9;
+          minimumExotic = 7;
+          exoticStake = 0.1;
+          exoticString = "36 7-folds, 9 8-folds and 1 9-fold";
+          price = getCoverBetMaxReturns(
+            exoticArray,
+            minimumExotic,
+            exoticStake
+          );
+          break;
+
+        case XGDiffTips.length >= 8:
+          for (let i = 0; i < 8; i++) {
+            let game = XGDiffTips[i];
+            exoticArray.push(game);
+          }
+          gamesInExotic = 8;
+          minimumExotic = 6;
+          exoticStake = 0.1;
+          exoticString = "28 6-folds, 8 7-folds and 1 8-fold";
+          price = getCoverBetMaxReturns(
+            exoticArray,
+            minimumExotic,
+            exoticStake
+          );
+          break;
+        case XGDiffTips.length >= 7:
+          for (let i = 0; i < 7; i++) {
+            let game = XGDiffTips[i];
+            exoticArray.push(game);
+          }
+          gamesInExotic = 7;
+          minimumExotic = 6;
+          exoticStake = 1;
+          exoticString = "7 6-folds and 1 7-fold";
+          price = getCoverBetMaxReturns(
+            exoticArray,
+            minimumExotic,
+            exoticStake
+          );
+          break;
         case allTips.length >= 10:
           for (let i = 0; i < 10; i++) {
             let game = allTips[i];
@@ -2405,28 +2459,51 @@ export async function getScorePrediction(day, mocked) {
           break;
       }
 
-      if (
-        match.XGdifferential === true && match.prediction === "homeWin"
-      ) {
+      if (match.XGdifferential === true && match.prediction === "homeWin") {
         XGPredictionObject = {
           game: match.game,
+          team: `${match.homeTeam} to win`,
+          rawOdds: match.homeOdds,
+          comparisonScore: Math.abs(match.teamComparisonScore),
+          formTrend: match.formHome.improving,
+          rawComparisonScore: match.teamComparisonScore,
           outcome: match.predictionOutcome,
           prediction: `${match.homeTeam} to win`,
           odds: match.fractionHome,
           otherTeam: match.awayTeam,
-          XGdifferentialValue: match.XGdifferentialValue
+          XGdifferentialValue: match.XGdifferentialValue,
+          goalDifferential: parseFloat(
+            await diff(match.unroundedGoalsA, match.unroundedGoalsB)
+          ),
+          experimentalCalc:
+          (match.unroundedGoalsA - match.unroundedGoalsB) *
+          Math.abs(match.teamComparisonScore),
         };
-          XGDiffTips.push(XGPredictionObject);
-      } else if(match.XGdifferential === true && match.prediction === "awayWin"){
+        XGDiffTips.push(XGPredictionObject);
+      } else if (
+        match.XGdifferential === true &&
+        match.prediction === "awayWin"
+      ) {
         XGPredictionObject = {
           game: match.game,
+          team: `${match.awayTeam} to win`,
+          rawOdds: match.awayOdds,
+          comparisonScore: Math.abs(match.teamComparisonScore),
+          formTrend: match.formAway.improving,
+          rawComparisonScore: match.teamComparisonScore,
           outcome: match.predictionOutcome,
           prediction: `${match.awayTeam} to win`,
           odds: match.fractionAway,
           otherTeam: match.homeTeam,
-          XGdifferentialValue: match.XGdifferentialValue
+          XGdifferentialValue: match.XGdifferentialValue,
+          goalDifferential: parseFloat(
+            await diff(match.unroundedGoalsB, match.unroundedGoalsA)
+          ),
+          experimentalCalc:
+          (match.unroundedGoalsB - match.unroundedGoalsA) *
+          Math.abs(match.teamComparisonScore),
         };
-          XGDiffTips.push(XGPredictionObject);
+        XGDiffTips.push(XGPredictionObject);
       }
 
       XGDiffTips.sort(function (a, b) {

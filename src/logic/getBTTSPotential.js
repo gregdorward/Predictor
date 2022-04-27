@@ -43,6 +43,7 @@ if(match.bttsFraction !== "N/A" && match.status !== "suspended" && match.status 
   if (
     match.combinedBTTS > 60 &&
     match.awayOdds < 3.5 &&
+    match.awayOdds > 1.4 &&
     // homeGoalsAveragedOut > 1 &&
     // awayGoalsAveragedOut > 1 &&
     // homeGoalsConceededAveragedOut > 1 &&
@@ -54,6 +55,7 @@ if(match.bttsFraction !== "N/A" && match.status !== "suspended" && match.status 
   ) {
     match.btts = true;
     match.bttsChosen = true;
+    match.totalGoals = match.rawFinalHomeGoals + match.rawFinalAwayGoals
   } else {
     match.btts = false;
     match.bttsChosen = false;
