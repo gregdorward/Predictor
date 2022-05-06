@@ -356,7 +356,7 @@ export async function generateFixtures(day, radioState, selectedOdds) {
   ReactDOM.render(
     <div>
       <div className="LoadingText">Loading all league data</div>
-      <ThreeDots height="3em" />
+      <ThreeDots height="3em" fill="#030061"/>
     </div>,
     document.getElementById("Buttons")
   );

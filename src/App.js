@@ -391,7 +391,7 @@ function App() {
       <div id="Day" />
       <div id="Checkbox" />
       <div id="Buttons" className="Buttons">
-        <ThreeDots className="MainLoading" />
+        <ThreeDots className="MainLoading" fill= "#030061"/>
         <div>Loading all fixture and form data...</div>
       </div>
       <div id="bestPredictions" className="bestPredictions" />

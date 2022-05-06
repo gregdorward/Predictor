@@ -695,6 +695,8 @@ p {
   height: auto;
   /* border: #030061 0.1px dashed; */
   border-radius: 5px;
+  background-color: #f2f2f26c;
+  border: #030061 1px solid;
   /* box-shadow: 4px 4px 4px 4px rgba(0.2, 0.2, 0.2, 0.2), 0 6px 20px 0 #294A66; */
   box-shadow: rgba(0, 0, 0, 0.15) 0px 0px 0px 1px;
 }
@@ -1152,28 +1154,28 @@ ul {
 }
 
 .Won {
-  color: #014a01;
+  color: #005100;
 }
 
 
 .Won1 {
-  color: #014a01;
+  color: #005100;
 }
 
 .Lost {
-  color: #600800;
+  color: #720900;
 }
 
 .Lost1 {
-  color: #600800;
+  color: #720900;
 }
 
 .bttsWon {
-  color: #014a01;
+  color: #005100;
 }
 
 .bttsLost {
-  color: #600800;
+  color: #720900;
 }
 
 .AccumulatedOdds {
@@ -1369,7 +1371,7 @@ section {
 }
 
 .MainLoading {
-  padding: 1em;
+  padding: 2em;
 }
 
 

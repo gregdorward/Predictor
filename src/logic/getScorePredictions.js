@@ -887,7 +887,7 @@ export async function compareTeams(homeForm, awayForm, match) {
   }
 
   let calculation =
-    OddsComparison * 1 +
+    OddsComparison * 0 +
     positionComparison * 2 +
     twoGameAverageComparison * 3 +
     tenGameAverageComparison * 6 +
@@ -905,11 +905,11 @@ export async function compareTeams(homeForm, awayForm, match) {
     attackingPotencyComparison * 0 +
     AveragePossessionComparison * 0 +
     AveragePossessionComparisonHOrA * 0 +
-    winPercentageComparison * 1 +
-    lossPercentageComparison * 1 +
+    winPercentageComparison * 2 +
+    lossPercentageComparison * 2 +
     homeOrAwayAverageComparison * 1 +
     overUnderAchievingSumComparison * 4 +
-    goalDiffComparison * 4 +
+    goalDiffComparison * 5 +
     goalDiffHOrAComparison * 3;
 
   match.homePoints = homePoints;
@@ -1509,15 +1509,7 @@ export async function calculateScore(match, index, divider, id) {
       formAway.XGdifferential
     );
 
-    if (XGdifferential > 0.8 || XGdifferential < -1.6) {
-      match.XGdifferential = true;
-      match.XGdifferentialValue = Math.abs(XGdifferential);
-      match.XGdifferentialValueRaw = parseFloat(XGdifferential);
-    } else {
-      match.XGdifferential = false;
-      match.XGdifferentialValue = Math.abs(XGdifferential);
-      match.XGdifferentialValueRaw = parseFloat(XGdifferential);
-    }
+
 
     if (
       typeof formHome.homeTeamHomePositionRaw === "number" &&
@@ -1672,10 +1664,10 @@ export async function calculateScore(match, index, divider, id) {
     }
 
     let experimentalHomeGoals =
-      factorOneHome * 0.8 * homeComparisonWeighting * homeAdvantage;
+      factorOneHome * 0.9 * homeComparisonWeighting * homeAdvantage;
 
     let experimentalAwayGoals =
-      factorOneAway * 0.8 * awayComparisonWeighting * awayAdvantage;
+      factorOneAway * 0.9 * awayComparisonWeighting * awayAdvantage;
 
     let rawFinalHomeGoals = experimentalHomeGoals;
     let rawFinalAwayGoals = experimentalAwayGoals;
@@ -1685,14 +1677,14 @@ export async function calculateScore(match, index, divider, id) {
 
 
     if (
-      formHome.CleanSheetPercentage < 20 &&
-      formAway.CleanSheetPercentage < 20
+      formHome.CleanSheetPercentage < 30 &&
+      formAway.CleanSheetPercentage < 30
     ) {
       rawFinalHomeGoals = rawFinalHomeGoals + 0.5;
       rawFinalAwayGoals = rawFinalAwayGoals + 0.5;
     } else if (
-      formHome.CleanSheetPercentage > 65 &&
-      formAway.CleanSheetPercentage > 65
+      formHome.CleanSheetPercentage > 60 &&
+      formAway.CleanSheetPercentage > 60
     ) {
       rawFinalHomeGoals = rawFinalHomeGoals - 0.5;
       rawFinalAwayGoals = rawFinalAwayGoals - 0.5;
@@ -1829,6 +1821,16 @@ export async function calculateScore(match, index, divider, id) {
     } else if (finalHomeGoals === finalAwayGoals) {
       match.prediction = "draw";
       drawPredictions = drawPredictions + 1;
+    }
+
+    if ((XGdifferential > 0.8 && match.prediction === "homeWin") || (XGdifferential < -1.6 && match.prediction === "awayWin")) {
+      match.XGdifferential = true;
+      match.XGdifferentialValue = Math.abs(XGdifferential);
+      match.XGdifferentialValueRaw = parseFloat(XGdifferential);
+    } else {
+      match.XGdifferential = false;
+      match.XGdifferentialValue = Math.abs(XGdifferential);
+      match.XGdifferentialValueRaw = parseFloat(XGdifferential);
     }
 
     switch (true) {
