@@ -441,7 +441,7 @@ function App() {
           url={"www.xgtipping.com"}
           title={"#XGTipping"}
           className="ShareButton"
-          style={{ backgroundColor: "#294A66", boxShadow: "none" }}
+          style={{ backgroundColor: "#e2e2e26c", boxShadow: "none" }}
         >
           <TwitterIcon size={"3em"} round={true} />
         </TwitterShareButton>
@@ -449,7 +449,7 @@ function App() {
           url={"www.xgtipping.com"}
           quote={"XGTipping - data-driven football predictions"}
           className="ShareButton"
-          style={{ backgroundColor: "#294A66", boxShadow: "none" }}
+          style={{ backgroundColor: "#e2e2e26c", boxShadow: "none" }}
         >
           <FacebookIcon size={"3em"} round={true} />
         </FacebookShareButton>
@@ -457,7 +457,7 @@ function App() {
           url={"www.xgtipping.com"}
           title={"XGTipping"}
           className="ShareButton"
-          style={{ backgroundColor: "#294A66", boxShadow: "none" }}
+          style={{ backgroundColor: "#e2e2e26c", boxShadow: "none" }}
         >
           <RedditIcon size={"3em"} round={true} />
         </RedditShareButton>
@@ -466,7 +466,7 @@ function App() {
           title={"XGTipping"}
           separator=": "
           className="ShareButton"
-          style={{ backgroundColor: "#294A66", boxShadow: "none" }}
+          style={{ backgroundColor: "#e2e2e26c", boxShadow: "none" }}
         >
           <WhatsappIcon size={"3em"} round={true} />
         </WhatsappShareButton>
@@ -474,7 +474,7 @@ function App() {
           url={"XGTipping"}
           title={"XGTipping"}
           className="ShareButton"
-          style={{ backgroundColor: "#294A66", boxShadow: "none" }}
+          style={{ backgroundColor: "#e2e2e26c", boxShadow: "none" }}
         >
           <TelegramIcon size={"3em"} round={true} />
         </TelegramShareButton>

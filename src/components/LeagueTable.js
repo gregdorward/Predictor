@@ -8,17 +8,17 @@ import TableHead from "@material-ui/core/TableHead";
 import TableRow from "@material-ui/core/TableRow";
 import Paper from "@material-ui/core/Paper";
 
-const StyledTableCell = withStyles((theme) => ({
+const StyledTableCell2 = withStyles((theme) => ({
   head: {
-    backgroundColor: "#172A3A",
-    color: theme.palette.common.white,
+    backgroundColor: "#030061",
+    color: "white",
     padding: "0.35em",
-    paddingTop: "0.5em",
-    paddingBottom: "0.5em",
+    paddingTop: "0.75em",
+    paddingBottom: "0.75em",
     textAlign: "left",
     fontSize: "1.9em",
     fontFamily: "inherit",
-    border: "none",
+    // border: "none",
     margin: "none",
   },
   body: {
@@ -26,9 +26,36 @@ const StyledTableCell = withStyles((theme) => ({
     textAlign: "left",
     fontFamily: "inherit",
     padding: "0.35em",
-    paddingTop: "0.5em",
-    paddingBottom: "0.5em",
-    border: "none",
+    paddingTop: "0.75em",
+    paddingBottom: "0.75em",
+    // border: "none",
+    margin: "none",
+    color: "white",
+  },
+}))(TableCell);
+
+const StyledTableCell = withStyles((theme) => ({
+  head: {
+    backgroundColor: "#030061",
+    color: "white",
+    padding: "0.35em",
+    paddingTop: "0.75em",
+    paddingBottom: "0.75em",
+    textAlign: "center",
+    fontSize: "1.9em",
+    fontFamily: "inherit",
+    // border: "none",
+    margin: "none",
+  },
+  body: {
+    // backgroundColor: "#030061",
+    fontSize: "1.9em",
+    textAlign: "center",
+    fontFamily: "inherit",
+    padding: "0.35em",
+    paddingTop: "0.75em",
+    paddingBottom: "0.75em",
+    // border: "none",
     margin: "none",
     color: "white",
   },
@@ -37,11 +64,11 @@ const StyledTableCell = withStyles((theme) => ({
 const StyledTableRow = withStyles((theme) => ({
   root: {
     "&:nth-of-type(odd)": {
-      backgroundColor: "#1D3549",
+      backgroundColor: "#030061",
       textAlign: "center",
     },
     "&:nth-of-type(even)": {
-      backgroundColor: "#172B3A",
+      backgroundColor: "#030052",
       textAlign: "center",
     },
   },
@@ -65,9 +92,9 @@ export default function LeagueTable(props) {
       <StyledTableCell component="th" scope="row">
         {`${team.Position}`}
       </StyledTableCell>
-      <StyledTableCell component="th" scope="row">
+      <StyledTableCell2 component="th" scope="row">
         {`${team.Name}`}
-      </StyledTableCell>
+      </StyledTableCell2>
       <StyledTableCell component="th" scope="row">
         {`${team.Played}`}
       </StyledTableCell>
@@ -119,11 +146,11 @@ export default function LeagueTable(props) {
     for (let i = 0; i < props.Teams.length; i++) {
       return (
         <TableContainer component={Paper} className="StatsTable">
-          <Table className="Table" aria-label="customized table" key={props.Key}>
+          <Table className="Table" aria-label="customized table" key={props.Key} style={{marginTop: "2em", marginBottom: "1em"}}>
             <TableHead>
               <TableRow>
-                <StyledTableCell>P</StyledTableCell>
-                <StyledTableCell>Team</StyledTableCell>
+                <StyledTableCell></StyledTableCell>
+                <StyledTableCell></StyledTableCell>
                 <StyledTableCell>Pld</StyledTableCell>
                 <StyledTableCell>W</StyledTableCell>
                 <StyledTableCell>D</StyledTableCell>
@@ -133,7 +160,7 @@ export default function LeagueTable(props) {
                 <StyledTableCell>GD</StyledTableCell>
                 <StyledTableCell>Pts</StyledTableCell>
                 <StyledTableCell style={{ textAlign: "center" }}>
-                  Form
+                  Last 5
                 </StyledTableCell>
               </TableRow>
             </TableHead>
