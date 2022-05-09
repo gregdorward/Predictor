@@ -141,7 +141,7 @@ export default function LeagueTable(props) {
     return found.Name;
   }
 
-  if(props.Teams[0].LeagueID !== 6083 && props.Teams[0].LeagueID !== 6969 && props.Teams[0].LeagueID !== 7064){
+  // if(props.Teams[0].LeagueID !== 6083 && props.Teams[0].LeagueID !== 6969 && props.Teams[0].LeagueID !== 7064){
     console.log(props.Teams.LeagueID)
     for (let i = 0; i < props.Teams.length; i++) {
       return (
@@ -207,33 +207,33 @@ export default function LeagueTable(props) {
         </TableContainer>
       );
     }
-  } else {
-    for (let i = 0; i < props.Teams.length; i++) {
-      return (
-        <TableContainer component={Paper} className="StatsTable">
-          <Table aria-label="customized table" key={props.Key}>
-            <TableHead>
-              <TableRow>
-                <StyledTableCell>P</StyledTableCell>
-                <StyledTableCell>Team</StyledTableCell>
-                <StyledTableCell>Pld</StyledTableCell>
-                <StyledTableCell>W</StyledTableCell>
-                <StyledTableCell>D</StyledTableCell>
-                <StyledTableCell>L</StyledTableCell>
-                <StyledTableCell>GF</StyledTableCell>
-                <StyledTableCell>GA</StyledTableCell>
-                <StyledTableCell>GD</StyledTableCell>
-                <StyledTableCell>Pts</StyledTableCell>
-                <StyledTableCell style={{ textAlign: "center" }}>
-                  Form
-                </StyledTableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>{rows}</TableBody>
-          </Table>
-        </TableContainer>
-      );
-    }
-  }
+  // } else {
+  //   for (let i = 0; i < props.Teams.length; i++) {
+  //     return (
+  //       <TableContainer component={Paper} className="StatsTable">
+  //         <Table aria-label="customized table" key={props.Key}>
+  //           <TableHead>
+  //             <TableRow>
+  //               <StyledTableCell>P</StyledTableCell>
+  //               <StyledTableCell>Team</StyledTableCell>
+  //               <StyledTableCell>Pld</StyledTableCell>
+  //               <StyledTableCell>W</StyledTableCell>
+  //               <StyledTableCell>D</StyledTableCell>
+  //               <StyledTableCell>L</StyledTableCell>
+  //               <StyledTableCell>GF</StyledTableCell>
+  //               <StyledTableCell>GA</StyledTableCell>
+  //               <StyledTableCell>GD</StyledTableCell>
+  //               <StyledTableCell>Pts</StyledTableCell>
+  //               <StyledTableCell style={{ textAlign: "center" }}>
+  //                 Form
+  //               </StyledTableCell>
+  //             </TableRow>
+  //           </TableHead>
+  //           <TableBody>{rows}</TableBody>
+  //         </Table>
+  //       </TableContainer>
+  //     );
+  //   }
+  // }
  
 }
