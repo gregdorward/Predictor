@@ -111,11 +111,11 @@ export async function compareStat(statOne, statTwo) {
         tooCloseToCall = 1;
         break;
       case stat1 > stat2:
-        result = 0.25;
+        result = 0.5;
         tooCloseToCall = 0;
         break;
       case stat1 < stat2:
-        result = -0.25;
+        result = -0.5;
         tooCloseToCall = 0;
         break;
       default:
@@ -128,11 +128,11 @@ export async function compareStat(statOne, statTwo) {
         tooCloseToCall = 1;
         break;
       case stat1 > stat2:
-        result = 0.15;
+        result = 0.25;
         tooCloseToCall = 0;
         break;
       case stat1 < stat2:
-        result = -0.15;
+        result = -0.25;
         tooCloseToCall = 0;
         break;
       default:
@@ -145,11 +145,11 @@ export async function compareStat(statOne, statTwo) {
         tooCloseToCall = 1;
         break;
       case stat1 > stat2:
-        result = 0.1;
+        result = 0.15;
         tooCloseToCall = 0;
         break;
       case stat1 < stat2:
-        result = -0.1;
+        result = -0.15;
         tooCloseToCall = 0;
         break;
       default:
@@ -864,30 +864,30 @@ export async function compareTeams(homeForm, awayForm, match) {
   }
 
   let calculation =
-    OddsComparison * 0 +
+    OddsComparison * 4 +
     positionComparison * 2 +
-    twoGameAverageComparison * 3 +
-    tenGameAverageComparison * 4 +
-    XGdifferentialComparison * 8 +
-    seasonPPGComparison * 0 +
-    formTrendScoreComparison * 0 +
-    fiveGameAverageComparison * 3 +
-    dangerousAttacksComparisonHOrA * 0 +
+    twoGameAverageComparison * 1 +
+    tenGameAverageComparison * 1 +
+    XGdifferentialComparison * 2 +
+    seasonPPGComparison * 1 +
+    formTrendScoreComparison * 1 +
+    fiveGameAverageComparison * 1 +
+    dangerousAttacksComparisonHOrA * 1 +
     dangerousAttacksComparison * 1 +
-    sotComparison * 0 +
+    sotComparison * 1 +
     sotComparisonHOrA * 1 +
     CleanSheetPercentageComparison * 1 +
-    dangerousAttackConversionComparison * 0 +
-    goalsPerDangerousAttackComparison * 0 +
-    attackingPotencyComparison * 0 +
-    AveragePossessionComparison * 0 +
-    AveragePossessionComparisonHOrA * 0 +
-    winPercentageComparison * 2 +
-    lossPercentageComparison * 2 +
+    dangerousAttackConversionComparison * 1 +
+    goalsPerDangerousAttackComparison * 1 +
+    attackingPotencyComparison * 1 +
+    AveragePossessionComparison * 1 +
+    AveragePossessionComparisonHOrA * 1 +
+    winPercentageComparison * 1 +
+    lossPercentageComparison * 1 +
     homeOrAwayAverageComparison * 1 +
-    overUnderAchievingSumComparison * 4 +
-    goalDiffComparison * 5 +
-    goalDiffHOrAComparison * 3;
+    overUnderAchievingSumComparison * 5 +
+    goalDiffComparison * 2 +
+    goalDiffHOrAComparison * 1;
 
   match.tooCloseToCall = tooCloseToCall;
 
@@ -1548,11 +1548,11 @@ export async function calculateScore(match, index, divider, id) {
       formAway,
       match
     );
-    teamComparisonScore = teamComparisonScore * 1;
-    if (teamComparisonScore > 1.8) {
-      teamComparisonScore = 1.8;
-    } else if (teamComparisonScore < -1.8) {
-      teamComparisonScore = -1.8;
+    teamComparisonScore = teamComparisonScore * 0.75;
+    if (teamComparisonScore > 2) {
+      teamComparisonScore = 2;
+    } else if (teamComparisonScore < -2) {
+      teamComparisonScore = -2;
     }
 
     console.log(teamComparisonScore);
@@ -2836,6 +2836,7 @@ async function renderTips() {
         <Fragment>
           <Collapsable
             buttonText={"Insights"}
+            className="Insights"
             text={
               <div>
                 <lh className="InsightsExplainer">
