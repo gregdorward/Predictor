@@ -112,11 +112,11 @@ export async function compareStat(statOne, statTwo) {
         break;
       case stat1 > stat2:
         result = 0.5;
-        tooCloseToCall = 0;
+        tooCloseToCall = -0.4;
         break;
       case stat1 < stat2:
         result = -0.5;
-        tooCloseToCall = 0;
+        tooCloseToCall = -0.4;
         break;
       default:
         break;
@@ -129,11 +129,11 @@ export async function compareStat(statOne, statTwo) {
         break;
       case stat1 > stat2:
         result = 0.25;
-        tooCloseToCall = 0;
+        tooCloseToCall = -0.15;
         break;
       case stat1 < stat2:
         result = -0.25;
-        tooCloseToCall = 0;
+        tooCloseToCall = -0.15;
         break;
       default:
         break;
@@ -146,11 +146,11 @@ export async function compareStat(statOne, statTwo) {
         break;
       case stat1 > stat2:
         result = 0.15;
-        tooCloseToCall = 0;
+        tooCloseToCall = -0.1;
         break;
       case stat1 < stat2:
         result = -0.15;
-        tooCloseToCall = 0;
+        tooCloseToCall = -0.1;
         break;
       default:
         break;
@@ -163,11 +163,11 @@ export async function compareStat(statOne, statTwo) {
         break;
       case stat1 > stat2:
         result = 0.05;
-        tooCloseToCall = 0;
+        tooCloseToCall = 0.1;
         break;
       case stat1 < stat2:
         result = -0.05;
-        tooCloseToCall = 0;
+        tooCloseToCall = 0.1;
         break;
       default:
         break;
@@ -176,47 +176,46 @@ export async function compareStat(statOne, statTwo) {
     switch (true) {
       case stat1 === stat2:
         result = 0;
-        tooCloseToCall = 0.1;
+        tooCloseToCall = 0.5;
         break;
       case stat1 > stat2:
         result = 0.02;
-        tooCloseToCall = 0.1;
+        tooCloseToCall = 0.5;
         break;
       case stat1 < stat2:
         result = -0.02;
-        tooCloseToCall = 0.1;
+        tooCloseToCall = 0.5;
         break;
       default:
         break;
     }
-  }
-  // else if (gap > 1.2 && gap < 1.3) {
-  //   switch (true) {
-  //     case stat1 === stat2:
-  //       result = 0;
-  //       tooCloseToCall = 0;
-  //       awayPoints = 0;
-  //       break;
-  //     case stat1 > stat2:
-  //       result = 0.5;
-  //       tooCloseToCall = 0.2;
-  //       awayPoints = 0.1;
-  //       break;
-  //     case stat1 < stat2:
-  //       result = -0.5;
-  //       tooCloseToCall = 0.1;
-  //       awayPoints = 0.2;
-  //       break;
-  //     default:
-  //       break;
-  //   }
-  // }
-  else {
+  } else if (gap === 1) {
+    tooCloseToCall = 1;
+  } else {
     result = 0;
     tooCloseToCall = 0;
   }
 
   return [result, tooCloseToCall];
+}
+
+export async function compareDefenceStat(statOne, statTwo) {
+  let stat1 = parseFloat(statOne);
+  let stat2 = parseFloat(statTwo);
+  let result;
+
+  switch (true) {
+    case stat1 === stat2:
+      result = 0;
+      break;
+    case stat1 > stat2:
+      result = 5;
+      break;
+    default:
+      result = 0;
+  }
+
+  return result;
 }
 
 export async function getOverOrUnderAchievingResult(
@@ -629,7 +628,7 @@ export async function compareTeams(homeForm, awayForm, match) {
 
   let tooCloseToCall = 0;
   let awayPoints = 0;
-  let toCloseToCallCount;
+  let tooCloseToCallCount;
 
   if (
     homeForm.overUnderAchievingSum < -0.5 ||
@@ -637,168 +636,169 @@ export async function compareTeams(homeForm, awayForm, match) {
     homeForm.overUnderAchievingSum > 0.5 ||
     awayForm.overUnderAchievingSum > 0.5
   ) {
-    [overUnderAchievingSumComparison, toCloseToCallCount] = await compareStat(
+    [overUnderAchievingSumComparison, tooCloseToCallCount] = await compareStat(
       parseFloat(homeForm.overUnderAchievingSum),
       parseFloat(awayForm.overUnderAchievingSum)
     );
-    tooCloseToCall = tooCloseToCall + toCloseToCallCount;
+    tooCloseToCall = tooCloseToCall + tooCloseToCallCount;
   } else {
     overUnderAchievingSumComparison = 0;
   }
 
-  [sotComparisonHOrA, toCloseToCallCount] = await compareStat(
+  [sotComparisonHOrA, tooCloseToCallCount] = await compareStat(
     homeForm.AverageShotsOnTarget,
     awayForm.AverageShotsOnTarget
   );
 
-  tooCloseToCall = tooCloseToCall + toCloseToCallCount;
+  tooCloseToCall = tooCloseToCall + tooCloseToCallCount;
 
-  [sotComparison, toCloseToCallCount] = await compareStat(
+  [sotComparison, tooCloseToCallCount] = await compareStat(
     homeForm.AverageShotsOnTargetOverall,
     awayForm.AverageShotsOnTargetOverall
   );
 
-  tooCloseToCall = tooCloseToCall + toCloseToCallCount;
+  tooCloseToCall = tooCloseToCall + tooCloseToCallCount;
 
-  [CleanSheetPercentageComparison, toCloseToCallCount] = await compareStat(
+  [CleanSheetPercentageComparison, tooCloseToCallCount] = await compareStat(
     homeForm.CleanSheetPercentage,
     awayForm.CleanSheetPercentage
   );
 
-  tooCloseToCall = tooCloseToCall + toCloseToCallCount;
+  tooCloseToCall = tooCloseToCall + tooCloseToCallCount;
 
-  [dangerousAttackConversionComparison, toCloseToCallCount] = await compareStat(
-    awayForm.dangerousAttackConversion,
-    homeForm.dangerousAttackConversion
-  );
+  [dangerousAttackConversionComparison, tooCloseToCallCount] =
+    await compareStat(
+      awayForm.dangerousAttackConversion,
+      homeForm.dangerousAttackConversion
+    );
 
-  tooCloseToCall = tooCloseToCall + toCloseToCallCount;
+  tooCloseToCall = tooCloseToCall + tooCloseToCallCount;
 
-  [goalsPerDangerousAttackComparison, toCloseToCallCount] = await compareStat(
+  [goalsPerDangerousAttackComparison, tooCloseToCallCount] = await compareStat(
     homeForm.goalsPerDangerousAttack,
     awayForm.goalsPerDangerousAttack
   );
 
-  tooCloseToCall = tooCloseToCall + toCloseToCallCount;
+  tooCloseToCall = tooCloseToCall + tooCloseToCallCount;
 
-  [dangerousAttacksComparisonHOrA, toCloseToCallCount] = await compareStat(
+  [dangerousAttacksComparisonHOrA, tooCloseToCallCount] = await compareStat(
     homeForm.AverageDangerousAttacks,
     awayForm.AverageDangerousAttacks
   );
 
-  tooCloseToCall = tooCloseToCall + toCloseToCallCount;
+  tooCloseToCall = tooCloseToCall + tooCloseToCallCount;
 
-  [dangerousAttacksComparison, toCloseToCallCount] = await compareStat(
+  [dangerousAttacksComparison, tooCloseToCallCount] = await compareStat(
     homeForm.AverageDangerousAttacksOverall,
     awayForm.AverageDangerousAttacksOverall
   );
 
-  tooCloseToCall = tooCloseToCall + toCloseToCallCount;
+  tooCloseToCall = tooCloseToCall + tooCloseToCallCount;
 
-  [XGdifferentialComparison, toCloseToCallCount] = await compareStat(
+  [XGdifferentialComparison, tooCloseToCallCount] = await compareStat(
     homeForm.XGdifferential,
     awayForm.XGdifferential
   );
 
-  tooCloseToCall = tooCloseToCall + toCloseToCallCount;
+  tooCloseToCall = tooCloseToCall + tooCloseToCallCount;
 
-  [formTrendScoreComparison, toCloseToCallCount] = await compareStat(
+  [formTrendScoreComparison, tooCloseToCallCount] = await compareStat(
     homeForm.formTrendScore,
     awayForm.formTrendScore
   );
 
-  tooCloseToCall = tooCloseToCall + toCloseToCallCount;
+  tooCloseToCall = tooCloseToCall + tooCloseToCallCount;
 
-  [last10PointsComparison, toCloseToCallCount] = await compareStat(
+  [last10PointsComparison, tooCloseToCallCount] = await compareStat(
     homeForm.last10Points,
     awayForm.last10Points
   );
 
-  tooCloseToCall = tooCloseToCall + toCloseToCallCount;
+  tooCloseToCall = tooCloseToCall + tooCloseToCallCount;
 
-  [twoGameAverageComparison, toCloseToCallCount] = await compareStat(
+  [twoGameAverageComparison, tooCloseToCallCount] = await compareStat(
     homeForm.twoGameAverage,
     awayForm.twoGameAverage
   );
 
-  tooCloseToCall = tooCloseToCall + toCloseToCallCount;
+  tooCloseToCall = tooCloseToCall + tooCloseToCallCount;
 
-  [fiveGameAverageComparison, toCloseToCallCount] = await compareStat(
+  [fiveGameAverageComparison, tooCloseToCallCount] = await compareStat(
     homeForm.fiveGameAverage,
     awayForm.fiveGameAverage
   );
 
-  tooCloseToCall = tooCloseToCall + toCloseToCallCount;
+  tooCloseToCall = tooCloseToCall + tooCloseToCallCount;
 
-  [tenGameAverageComparison, toCloseToCallCount] = await compareStat(
+  [tenGameAverageComparison, tooCloseToCallCount] = await compareStat(
     homeForm.tenGameAverage,
     awayForm.tenGameAverage
   );
 
-  tooCloseToCall = tooCloseToCall + toCloseToCallCount;
+  tooCloseToCall = tooCloseToCall + tooCloseToCallCount;
 
   if (homeForm.SeasonPPG !== "N/A" && awayForm.SeasonPPG !== "N/A") {
-    [seasonPPGComparison, toCloseToCallCount] = await compareStat(
+    [seasonPPGComparison, tooCloseToCallCount] = await compareStat(
       parseFloat(homeForm.SeasonPPG),
       parseFloat(awayForm.SeasonPPG)
     );
   } else seasonPPGComparison = last10PointsComparison;
 
-  tooCloseToCall = tooCloseToCall + toCloseToCallCount;
+  tooCloseToCall = tooCloseToCall + tooCloseToCallCount;
 
-  [attackingPotencyComparison, toCloseToCallCount] = await compareStat(
+  [attackingPotencyComparison, tooCloseToCallCount] = await compareStat(
     homeForm.AttackingPotency,
     awayForm.AttackingPotency
   );
 
-  tooCloseToCall = tooCloseToCall + toCloseToCallCount;
+  tooCloseToCall = tooCloseToCall + tooCloseToCallCount;
 
-  [AveragePossessionComparisonHOrA, toCloseToCallCount] = await compareStat(
+  [AveragePossessionComparisonHOrA, tooCloseToCallCount] = await compareStat(
     homeForm.AveragePossession - 10,
     awayForm.AveragePossession - 10
   );
 
-  tooCloseToCall = tooCloseToCall + toCloseToCallCount;
+  tooCloseToCall = tooCloseToCall + tooCloseToCallCount;
 
   console.log(homeForm.goalDifference + " & " + awayForm.goalDifference);
 
-  [goalDiffComparison, toCloseToCallCount] = await compareStat(
+  [goalDiffComparison, tooCloseToCallCount] = await compareStat(
     homeForm.goalDifference + 20,
     awayForm.goalDifference + 20
   );
 
-  tooCloseToCall = tooCloseToCall + toCloseToCallCount;
+  tooCloseToCall = tooCloseToCall + tooCloseToCallCount;
 
-  [goalDiffHOrAComparison, toCloseToCallCount] = await compareStat(
+  [goalDiffHOrAComparison, tooCloseToCallCount] = await compareStat(
     homeForm.goalDifferenceHomeOrAway + 20,
     awayForm.goalDifferenceHomeOrAway + 20
   );
 
-  tooCloseToCall = tooCloseToCall + toCloseToCallCount;
+  tooCloseToCall = tooCloseToCall + tooCloseToCallCount;
 
-  [AveragePossessionComparison, toCloseToCallCount] = await compareStat(
+  [AveragePossessionComparison, tooCloseToCallCount] = await compareStat(
     homeForm.AveragePossessionOverall - 10,
     awayForm.AveragePossessionOverall - 10
   );
 
-  tooCloseToCall = tooCloseToCall + toCloseToCallCount;
+  tooCloseToCall = tooCloseToCall + tooCloseToCallCount;
 
   if (
     typeof awayForm.awayPositionAwayOnly === "number" &&
     typeof homeForm.homePositionHomeOnly === "number"
   ) {
-    [positionComparison, toCloseToCallCount] = await compareStat(
+    [positionComparison, tooCloseToCallCount] = await compareStat(
       awayForm.awayPositionAwayOnly + awayForm.awayPosition + 10,
       homeForm.homePositionHomeOnly + homeForm.homePosition + 10
     );
   } else {
-    [positionComparison, toCloseToCallCount] = await compareStat(
+    [positionComparison, tooCloseToCallCount] = await compareStat(
       homeForm.tenGameAverage,
       awayForm.tenGameAverage
     );
   }
 
-  tooCloseToCall = tooCloseToCall + toCloseToCallCount;
+  tooCloseToCall = tooCloseToCall + tooCloseToCallCount;
 
   let winPercH;
   let winPercA;
@@ -808,7 +808,7 @@ export async function compareTeams(homeForm, awayForm, match) {
   let lossPercA;
 
   if (homeForm.WinPercentage !== undefined) {
-    [winPercentageComparison, toCloseToCallCount] = await compareStat(
+    [winPercentageComparison, tooCloseToCallCount] = await compareStat(
       homeForm.WinPercentage + 40,
       awayForm.WinPercentage + 40
     );
@@ -817,7 +817,7 @@ export async function compareTeams(homeForm, awayForm, match) {
     drawPercH = homeForm.DrawPercentage;
     drawPercA = awayForm.DrawPercentage;
   } else {
-    [winPercentageComparison, toCloseToCallCount] = await compareStat(
+    [winPercentageComparison, tooCloseToCallCount] = await compareStat(
       match.homeTeamWinPercentage + 40,
       match.awayTeamWinPercentage + 40
     );
@@ -828,14 +828,14 @@ export async function compareTeams(homeForm, awayForm, match) {
   }
 
   if (homeForm.LossPercentage !== undefined) {
-    [lossPercentageComparison, toCloseToCallCount] = await compareStat(
+    [lossPercentageComparison, tooCloseToCallCount] = await compareStat(
       awayForm.LossPercentage + 40,
       homeForm.LossPercentage + 40
     );
     lossPercA = awayForm.LossPercentage;
     lossPercH = homeForm.LossPercentage;
   } else {
-    [lossPercentageComparison, toCloseToCallCount] = await compareStat(
+    [lossPercentageComparison, tooCloseToCallCount] = await compareStat(
       match.awayTeamLossPercentage + 40,
       match.homeTeamLossPercentage + 40
     );
@@ -843,32 +843,35 @@ export async function compareTeams(homeForm, awayForm, match) {
     lossPercH = match.homeTeamLossPercentage;
   }
 
-  [OddsComparison, toCloseToCallCount] = await compareStat(
+  [OddsComparison, tooCloseToCallCount] = await compareStat(
     match.awayOdds,
     match.homeOdds
   );
 
-  tooCloseToCall = tooCloseToCall + toCloseToCallCount;
+  tooCloseToCall = tooCloseToCall + tooCloseToCallCount;
 
   if (homeForm.homeOrAwayAverage) {
-    [homeOrAwayAverageComparison, toCloseToCallCount] = await compareStat(
+    [homeOrAwayAverageComparison, tooCloseToCallCount] = await compareStat(
       homeForm.homeOrAwayAverage + 1,
       awayForm.homeOrAwayAverage + 1
     );
 
-    tooCloseToCall = tooCloseToCall + toCloseToCallCount;
+    tooCloseToCall = tooCloseToCall + tooCloseToCallCount;
   } else {
-    [homeOrAwayAverageComparison, toCloseToCallCount] = await compareStat(1, 1);
+    [homeOrAwayAverageComparison, tooCloseToCallCount] = await compareStat(
+      1,
+      1
+    );
 
-    tooCloseToCall = tooCloseToCall + toCloseToCallCount;
+    tooCloseToCall = tooCloseToCall + tooCloseToCallCount;
   }
 
   let calculation =
-    OddsComparison * 4 +
+    OddsComparison * 3 +
     positionComparison * 2 +
     twoGameAverageComparison * 1 +
     tenGameAverageComparison * 1 +
-    XGdifferentialComparison * 2 +
+    XGdifferentialComparison * 3 +
     seasonPPGComparison * 1 +
     formTrendScoreComparison * 1 +
     fiveGameAverageComparison * 1 +
@@ -876,7 +879,7 @@ export async function compareTeams(homeForm, awayForm, match) {
     dangerousAttacksComparison * 1 +
     sotComparison * 1 +
     sotComparisonHOrA * 1 +
-    CleanSheetPercentageComparison * 1 +
+    CleanSheetPercentageComparison * 0 +
     dangerousAttackConversionComparison * 1 +
     goalsPerDangerousAttackComparison * 1 +
     attackingPotencyComparison * 1 +
@@ -885,28 +888,17 @@ export async function compareTeams(homeForm, awayForm, match) {
     winPercentageComparison * 1 +
     lossPercentageComparison * 1 +
     homeOrAwayAverageComparison * 1 +
-    overUnderAchievingSumComparison * 5 +
+    overUnderAchievingSumComparison * 4 +
     goalDiffComparison * 2 +
-    goalDiffHOrAComparison * 1;
+    goalDiffHOrAComparison * 2;
 
   match.tooCloseToCall = tooCloseToCall;
 
   console.log(tooCloseToCall);
 
-  // if ((calculation > 0) && homeForm.overUnderAchievingSum < 0) {
-  //   calculation = -Math.abs(calculation)
-  // } else if((calculation < 0) && awayForm.overUnderAchievingSum < 0){
-  //   calculation = Math.abs(calculation)
-  // }
-
-  // adjust calculation based on worse team's win and draw percentages
   if (calculation > 0) {
     switch (true) {
       case winPercA + drawPercA === 100:
-        // console.log(match.game)
-        // console.log(match)
-        // console.log(homeForm)
-        // console.log(awayForm)
         calculation = calculation / 9;
         break;
       case winPercA + drawPercA >= 90 && winPercA + drawPercA < 100:
@@ -1091,13 +1083,40 @@ export async function compareTeams(homeForm, awayForm, match) {
     }
   }
 
-  if (calculation > 0 && tooCloseToCall > 0.6) {
-    calculation = calculation / 2;
-  } else if (calculation < 0 && tooCloseToCall > 0.6) {
-    calculation = calculation / 2;
-  }
+  console.log(match.game)
+  console.log(`Too close to call count = ${tooCloseToCall}`)
+
+  if (tooCloseToCall > 0) {
+    calculation = calculation / (tooCloseToCall + 1);
+  } 
 
   return [calculation, tooCloseToCall, awayPoints];
+}
+
+export async function compareDefences(form, rawGoals, name) {
+  let CleanSheetPercentageComparison;
+  let GoalsConceededComparison;
+  let XGAgainstAvgOverallComparison;
+
+  CleanSheetPercentageComparison = await compareDefenceStat(
+    form.CleanSheetPercentage,
+    60
+  );
+
+  GoalsConceededComparison = await compareDefenceStat(
+    0.6,
+    form.ConcededAverage
+  );
+
+  let calculation =
+    CleanSheetPercentageComparison * 1 + GoalsConceededComparison * 1;
+
+  console.log(name);
+  console.log(form);
+  console.log(calculation);
+  let goals = rawGoals - calculation / 10;
+
+  return goals;
 }
 
 export async function roundCustom(num, form, otherForm) {
@@ -1759,8 +1778,31 @@ export async function calculateScore(match, index, divider, id) {
       rawFinalAwayGoals = rawFinalAwayGoals + 1;
     }
 
-    finalHomeGoals = await roundCustom(rawFinalHomeGoals, formHome, formAway);
-    finalAwayGoals = await roundCustom(rawFinalAwayGoals, formAway, formHome);
+    let rawFinalHomeGoalsAdjusted;
+    let rawFinalAwayGoalsAdjusted;
+
+    rawFinalHomeGoalsAdjusted = await compareDefences(
+      formAway,
+      rawFinalHomeGoals,
+      match.awayTeam
+    );
+
+    rawFinalAwayGoalsAdjusted = await compareDefences(
+      formHome,
+      rawFinalAwayGoals,
+      match.homeTeam
+    );
+
+    finalHomeGoals = await roundCustom(
+      rawFinalHomeGoalsAdjusted,
+      formHome,
+      formAway
+    );
+    finalAwayGoals = await roundCustom(
+      rawFinalAwayGoalsAdjusted,
+      formAway,
+      formHome
+    );
 
     // if ((finalHomeGoals + 1) / (formHome.ScoredAverage + 1) > 1.5 && (finalHomeGoals + 1) / (formAway.ConcededAverage + 1) > 1.5) {
     //   finalHomeGoals = finalHomeGoals - 1;
