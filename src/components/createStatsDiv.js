@@ -13,17 +13,8 @@ function Stats(props) {
     return className;
   }
 
-  function getStyle(num) {
-    if(num >= 0){
-      return "#00ff00"
-    } else {
-      return "#ff1500";
-    }
-    }
-
-
-  if(props.formRun){
-    console.log(props)
+  if (props.formRun) {
+    console.log(props);
     return (
       <Fragment>
         <ul className={props.className} style={props.style}>
@@ -35,13 +26,25 @@ function Stats(props) {
             <span className={styleForm(props.last5[3])}>{props.last5[3]}</span>
             <span className={styleForm(props.last5[4])}>{props.last5[4]}</span>
           </li>
-          <li className="FormHeader">{props.homeOrAway} form (most recent on right)</li>
+          <li className="FormHeader">
+            {props.homeOrAway} form (most recent on right)
+          </li>
           <li key={`last5${props.homeOrAway}`} className="FormHomeOrAway">
-          <span className={styleForm(props.formRun[0])}>{props.formRun[0]}</span>
-          <span className={styleForm(props.formRun[1])}>{props.formRun[1]}</span>
-            <span className={styleForm(props.formRun[2])}>{props.formRun[2]}</span>
-            <span className={styleForm(props.formRun[3])}>{props.formRun[3]}</span>
-            <span className={styleForm(props.formRun[4])}>{props.formRun[4]}</span>
+            <span className={styleForm(props.formRun[0])}>
+              {props.formRun[0]}
+            </span>
+            <span className={styleForm(props.formRun[1])}>
+              {props.formRun[1]}
+            </span>
+            <span className={styleForm(props.formRun[2])}>
+              {props.formRun[2]}
+            </span>
+            <span className={styleForm(props.formRun[3])}>
+              {props.formRun[3]}
+            </span>
+            <span className={styleForm(props.formRun[4])}>
+              {props.formRun[4]}
+            </span>
           </li>
           <li
             key="TeamScored"
@@ -78,7 +81,6 @@ function Stats(props) {
             key="goalDifference"
             className="goalDifference"
             data-cy={props.name + "goalDifference"}
-            
           >
             {`Goal difference : `}
             <span>{props.goalDifference}</span>
@@ -111,7 +113,7 @@ function Stats(props) {
           >
             {`League position - ${props.leaguePosition}`}
           </li>
-  
+
           <li
             key="LeaguePositionHomeOrAway"
             className="LeaguePositionHomeOrAway"
@@ -267,7 +269,7 @@ function Stats(props) {
           >
             {`League position - ${props.leaguePosition}`}
           </li>
-  
+
           <li
             key="LeaguePositionHomeOrAway"
             className="LeaguePositionHomeOrAway"
@@ -360,7 +362,6 @@ function Stats(props) {
       </Fragment>
     );
   }
- 
 }
 
 export default Stats;
