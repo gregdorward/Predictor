@@ -390,6 +390,7 @@ p {
 
 .btn-container{
     padding: 1em;
+    width: 1em;
 }
 
 .Social {
@@ -1193,6 +1194,9 @@ ul {
   border: 0.1em solid #030061;
   padding: 1em;
   font-family: 'Open Sans', sans-serif;
+  min-width: 30px !important;
+  line-height: 1em !important;
+
 }  
 
 a.kofi-button {
