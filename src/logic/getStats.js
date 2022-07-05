@@ -368,9 +368,11 @@ export async function createStatsDiv(game, mock) {
         lastGame: homeLastGame,
         formRun: gameStats.home[index].formRun,
         goalDifference: gameStats.home[index].goalDifference,
-        goalDifferenceHomeOrAway: gameStats.home[index].goalDifferenceHomeOrAway,
+        goalDifferenceHomeOrAway:
+          gameStats.home[index].goalDifferenceHomeOrAway,
         BttsPercentage: gameStats.home[index].BttsPercentage,
-        BttsPercentageHomeOrAway: gameStats.home[index].BttsPercentageHomeOrAway,
+        BttsPercentageHomeOrAway:
+          gameStats.home[index].BttsPercentageHomeOrAway,
         CardsTotal: gameStats.home[index].CardsTotal,
         CornersAverage: gameStats.home[index].CornersAverage,
         ScoredBothHalvesPercentage:
@@ -398,9 +400,11 @@ export async function createStatsDiv(game, mock) {
         lastGame: awayLastGame,
         formRun: gameStats.away[index].formRun,
         goalDifference: gameStats.away[index].goalDifference,
-        goalDifferenceHomeOrAway: gameStats.away[index].goalDifferenceHomeOrAway,
+        goalDifferenceHomeOrAway:
+          gameStats.away[index].goalDifferenceHomeOrAway,
         BttsPercentage: gameStats.away[index].BttsPercentage,
-        BttsPercentageHomeOrAway: gameStats.away[index].BttsPercentageHomeOrAway,
+        BttsPercentageHomeOrAway:
+          gameStats.away[index].BttsPercentageHomeOrAway,
         CardsTotal: gameStats.away[index].CardsTotal,
         CornersAverage: gameStats.away[index].CornersAverage,
         ScoredBothHalvesPercentage:
@@ -409,13 +413,13 @@ export async function createStatsDiv(game, mock) {
       ReactDOM.render(
         <div style={style}>
           <Div className="MatchTime" text={`Kick off: ${time} GMT`}></Div>
-          <Div className="FormExplainer" text={`(Form stats based on last 10 games)`}></Div>
-
+          <Div
+            className="FormExplainer"
+            text={`(Form stats based on last 10 games)`}
+          ></Div>
         </div>,
         document.getElementById("stats" + homeTeam)
       );
-
-      console.log(gameStats.home[index])
 
       ReactDOM.render(
         <div style={style}>
@@ -425,6 +429,12 @@ export async function createStatsDiv(game, mock) {
         </div>,
         document.getElementById("history" + homeTeam)
       );
+
+      //This tournament does not have league positions
+      if (game.leagueName === "Europe UEFA Women's Euro") {
+        game.homeTeamHomePosition = "N/A";
+        game.awayTeamAwayPosition = "N/A";
+      }
 
       ReactDOM.render(
         <Stats
@@ -442,12 +452,22 @@ export async function createStatsDiv(game, mock) {
           possession={formDataHome[0].AveragePossession}
           sot={formDataHome[0].AverageShotsOnTarget}
           dangerousAttacks={formDataHome[0].AverageDangerousAttacks}
-          leaguePosition={formDataHome[0].leaguePosition}
-          rawPosition={game.homeRawPosition}
-          homeOrAwayLeaguePosition={game.homeTeamHomePosition}
-          winPercentage={game.homeTeamWinPercentage}
-          lossPercentage={game.homeTeamLossPercentage}
-          drawPercentage={game.homeTeamDrawPercentage}
+          leaguePosition={
+            formDataHome[0].leaguePosition ? formDataHome[0].leaguePosition : 0
+          }
+          rawPosition={game.homeRawPosition ? game.homeRawPosition : 0}
+          homeOrAwayLeaguePosition={
+            game.homeTeamHomePosition ? game.homeTeamHomePosition : 0
+          }
+          winPercentage={
+            game.homeTeamWinPercentage ? game.homeTeamWinPercentage : 0
+          }
+          lossPercentage={
+            game.homeTeamLossPercentage ? game.homeTeamLossPercentage : 0
+          }
+          drawPercentage={
+            game.homeTeamDrawPercentage ? game.homeTeamDrawPercentage : 0
+          }
           ppg={formDataHome[0].SeasonPPG}
           formTrend={[
             homeTenGameAverage.toFixed(2),
@@ -484,14 +504,24 @@ export async function createStatsDiv(game, mock) {
           XGConceded={formDataAway[0].AverageXGConceded}
           //todo add goal diff and btts percentages
           possession={formDataAway[0].AveragePossession}
-          rawPosition={game.awayRawPosition}
+          rawPosition={game.awayRawPosition ? game.awayRawPosition : 0}
           sot={formDataAway[0].AverageShotsOnTarget}
           dangerousAttacks={formDataAway[0].AverageDangerousAttacks}
-          leaguePosition={formDataAway[0].leaguePosition}
-          homeOrAwayLeaguePosition={game.awayTeamAwayPosition}
-          winPercentage={game.awayTeamWinPercentage}
-          lossPercentage={game.awayTeamLossPercentage}
-          drawPercentage={game.awayTeamDrawPercentage}
+          leaguePosition={
+            formDataAway[0].leaguePosition ? formDataAway[0].leaguePosition : 0
+          }
+          homeOrAwayLeaguePosition={
+            game.awayTeamAwayPosition ? game.awayTeamAwayPosition : 0
+          }
+          winPercentage={
+            game.awayTeamWinPercentage ? game.awayTeamWinPercentage : 0
+          }
+          lossPercentage={
+            game.awayTeamLossPercentage ? game.awayTeamLossPercentage : 0
+          }
+          drawPercentage={
+            game.awayTeamDrawPercentage ? game.awayTeamDrawPercentage : 0
+          }
           ppg={formDataAway[0].SeasonPPG}
           formTrend={[
             awayTenGameAverage.toFixed(2),

@@ -14,7 +14,6 @@ function Stats(props) {
   }
 
   if (props.formRun) {
-    console.log(props);
     return (
       <Fragment>
         <ul className={props.className} style={props.style}>
@@ -86,8 +85,8 @@ function Stats(props) {
             <span>{props.goalDifference}</span>
           </li>
           <li
-            key="goalDifference"
-            className="goalDifference"
+            key="goalDifferenceHorA"
+            className="goalDifferenceHorA"
             data-cy={props.name + "goalDifference"}
           >
             {`Goal difference ${props.homeOrAway} : ${props.goalDifferenceHomeOrAway}`}

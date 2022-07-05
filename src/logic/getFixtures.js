@@ -48,12 +48,6 @@ let [yesterdayDay, yesterdayMonth, yesterdayYear] = yesterdaysDate
   .toLocaleDateString("en-US")
   .split("/");
 
-// var prevSat = new Date();
-
-// prevSat.setDate(prevSat.getDate() - (6-prevSat.getDay()))
-
-// console.log(prevSat)
-
 var d = new Date();
 
 // set to Monday of this week
@@ -166,20 +160,24 @@ export async function generateTables(a, leagueIdArray) {
   });
 }
 
-
 export async function renderTable(index) {
   let league = tableArray[index];
   let statistics;
- let leagueStatistics = await fetch(
+  let leagueStatistics = await fetch(
     `${process.env.REACT_APP_EXPRESS_SERVER}leagueStats/${league[0].LeagueID}`
-  )
+  );
   await leagueStatistics.json().then((stats) => {
-    statistics = stats.data
+    statistics = stats.data;
   });
 
   if (league !== undefined) {
     ReactDOM.render(
-      <LeagueTable Teams={league} Stats={statistics} Key={`League${index}`} />,
+      <LeagueTable
+        Teams={league}
+        Stats={statistics}
+        Key={`League${index}`}
+        GamesPlayed={statistics.game_week}
+      />,
       document.getElementById(`leagueName${index}`)
     );
   }
@@ -356,11 +354,10 @@ export async function generateFixtures(day, radioState, selectedOdds) {
   ReactDOM.render(
     <div>
       <div className="LoadingText">Loading all league data</div>
-      <ThreeDots height="3em" fill="#030061"/>
+      <ThreeDots height="3em" fill="#030061" />
     </div>,
     document.getElementById("Buttons")
   );
-
 
   for (let i = 0; i < orderedLeagues.length; i++) {
     leagueID = orderedLeagues[i].element.id;
@@ -390,7 +387,7 @@ export async function generateFixtures(day, radioState, selectedOdds) {
     }
   }
 
-  for (let i = 0; i < 36; i++) {
+  for (let i = 0; i < leagueArray.length; i++) {
     for (
       let x = 0;
       x < leagueArray[i].data.all_matches_table_overall.length;
@@ -404,16 +401,32 @@ export async function generateFixtures(day, radioState, selectedOdds) {
         name: string.cleanName,
         position: string.position,
         rawPosition: x + 1,
-        homeFormName: stringHome.cleanName,
-        awayFormName: stringAway.cleanName,
-        homeSeasonWinPercentage: stringHome.seasonWins,
-        awaySeasonWinPercentage: stringAway.seasonWins,
-        homeSeasonLossPercentage: stringHome.seasonLosses_home,
-        awaySeasonLossPercentage: stringAway.seasonLosses_away,
-        homeSeasonDrawPercentage: stringHome.seasonDraws,
-        awaySeasonDrawPercentage: stringAway.seasonDraws,
-        homeSeasonMatchesPlayed: stringHome.matchesPlayed,
-        awaySeasonMatchesPlayed: stringAway.matchesPlayed,
+        homeFormName: stringHome ? stringHome.cleanName : string.cleanName,
+        awayFormName: stringAway ? stringAway.cleanName : string.cleanName,
+        homeSeasonWinPercentage: stringHome
+          ? stringHome.seasonWins
+          : string.seasonWins,
+        awaySeasonWinPercentage: stringAway
+          ? stringAway.seasonWins
+          : string.seasonWins,
+        homeSeasonLossPercentage: stringHome
+          ? stringHome.seasonLosses_home
+          : string.seasonLosses_home,
+        awaySeasonLossPercentage: stringAway
+          ? stringAway.seasonLosses_away
+          : string.seasonLosses_away,
+        homeSeasonDrawPercentage: stringHome
+          ? stringHome.seasonDraws
+          : string.seasonDraws,
+        awaySeasonDrawPercentage: stringAway
+          ? stringAway.seasonDraws
+          : string.seasonDraws,
+        homeSeasonMatchesPlayed: stringHome
+          ? stringHome.matchesPlayed
+          : string.matchesPlayed,
+        awaySeasonMatchesPlayed: stringAway
+          ? stringAway.matchesPlayed
+          : string.matchesPlayed,
         ppg: string.ppg_overall,
       });
     }
@@ -575,6 +588,9 @@ export async function generateFixtures(day, radioState, selectedOdds) {
         homePrefix = "";
         homePrefixHomeTable = "";
         homeSeasonPPG = "N/A";
+        homeTeaminLeague = {
+          rawPosition: "N/A",
+        };
       }
 
       try {
@@ -604,7 +620,6 @@ export async function generateFixtures(day, radioState, selectedOdds) {
             awayTeaminAwayLeague.awaySeasonMatchesPlayed) *
           100;
 
-
         awayPrefix = await getPrefix(teamPositionAway);
         awayPrefixAwayTable = await getPrefix(teamPositionAwayTable);
 
@@ -614,6 +629,9 @@ export async function generateFixtures(day, radioState, selectedOdds) {
         teamPositionAway = "N/A";
         awayPrefix = "";
         awaySeasonPPG = "N/A";
+        awayTeaminLeague = {
+          rawPosition: "N/A",
+        };
       }
 
       if (!isFormStored) {
@@ -658,14 +676,20 @@ export async function generateFixtures(day, radioState, selectedOdds) {
         formRunHome = Array.from(homeFormRun);
         formRunAway = Array.from(awayFormRun);
 
-        if (teamPositionHome === 0) {
+        if (
+          teamPositionHome === 0 ||
+          form[0].data[0].season_format !== "Domestic League"
+        ) {
           teamPositionHome = "N/A";
           teamPositionHomeTable = "N/A";
           homePrefix = "";
           homePrefixHomeTable = "";
         }
 
-        if (teamPositionAway === 0) {
+        if (
+          teamPositionAway === 0 ||
+          form[0].data[0].season_format !== "Domestic League"
+        ) {
           teamPositionAway = "N/A";
           teamPositionAwayTable = "N/A";
           awayPrefix = "";
@@ -675,7 +699,6 @@ export async function generateFixtures(day, radioState, selectedOdds) {
         //   lastFiveFormHome = "N/A"
         //   lastFiveFormAway = "N/A"
         // }
-
 
         allForm.push({
           id: match.id,
@@ -745,7 +768,9 @@ export async function generateFixtures(day, radioState, selectedOdds) {
               LastSixForm: lastSixFormHome,
               LastTenForm: lastTenFormHome,
               LeaguePosition: `${teamPositionHome}${homePrefix}`,
-              homeRawPosition: homeTeaminLeague.rawPosition,
+              homeRawPosition: homeTeaminLeague.rawPosition
+                ? homeTeaminLeague.rawPosition
+                : 0,
               homeTeamHomePositionRaw: teamPositionHomeTable,
               SeasonPPG: homeSeasonPPG,
             },
@@ -813,7 +838,9 @@ export async function generateFixtures(day, radioState, selectedOdds) {
               LastSixForm: lastSixFormHome,
               LastTenForm: lastTenFormHome,
               LeaguePosition: `${teamPositionHome}${homePrefix}`,
-              homeRawPosition: homeTeaminLeague.rawPosition,
+              homeRawPosition: homeTeaminLeague.rawPosition
+                ? homeTeaminLeague.rawPosition
+                : 0,
               homeTeamHomePositionRaw: teamPositionHomeTable,
               SeasonPPG: homeSeasonPPG,
             },
@@ -881,20 +908,27 @@ export async function generateFixtures(day, radioState, selectedOdds) {
               LastSixForm: lastSixFormHome,
               LastTenForm: lastTenFormHome,
               LeaguePosition: `${teamPositionHome}${homePrefix}`,
-              homeRawPosition: homeTeaminLeague.rawPosition,
+              homeRawPosition: homeTeaminLeague.rawPosition
+                ? homeTeaminLeague.rawPosition
+                : 0,
               homeTeamHomePositionRaw: teamPositionHomeTable,
               SeasonPPG: homeSeasonPPG,
               WinPercentage: homeTeamWinPercentageHome,
               LossPercentage: homeTeamLossPercentageHome,
               DrawPercentage: homeTeamDrawPercentageHome,
               formRun: formRunHome,
-              goalDifference: form[0].data[2].stats.seasonGoalDifference_overall,
-              goalDifferenceHomeOrAway: form[0].data[2].stats.seasonGoalDifference_home,
-              BttsPercentage: form[0].data[2].stats.seasonBTTSPercentage_overall,
-              BttsPercentageHomeOrAway: form[0].data[2].stats.seasonBTTSPercentage_home,
+              goalDifference:
+                form[0].data[2].stats.seasonGoalDifference_overall,
+              goalDifferenceHomeOrAway:
+                form[0].data[2].stats.seasonGoalDifference_home,
+              BttsPercentage:
+                form[0].data[2].stats.seasonBTTSPercentage_overall,
+              BttsPercentageHomeOrAway:
+                form[0].data[2].stats.seasonBTTSPercentage_home,
               CardsTotal: form[0].data[2].stats.cardsTotal_overall,
               CornersAverage: form[0].data[2].stats.cornersAVG_overall,
-              ScoredBothHalvesPercentage: form[0].data[2].stats.scoredBothHalvesPercentage_overall
+              ScoredBothHalvesPercentage:
+                form[0].data[2].stats.scoredBothHalvesPercentage_overall,
             },
           },
           away: {
@@ -958,7 +992,9 @@ export async function generateFixtures(day, radioState, selectedOdds) {
               LastSixForm: lastSixFormAway,
               LastTenForm: lastTenFormAway,
               LeaguePosition: `${teamPositionAway}${awayPrefix}`,
-              awayRawPosition: awayTeaminLeague.rawPosition,
+              awayRawPosition: awayTeaminLeague.rawPosition
+                ? awayTeaminLeague.rawPosition
+                : 0,
               awayTeamAwayPositionRaw: teamPositionAwayTable,
               SeasonPPG: awaySeasonPPG,
             },
@@ -1021,7 +1057,9 @@ export async function generateFixtures(day, radioState, selectedOdds) {
               LastSixForm: lastSixFormAway,
               LastTenForm: lastTenFormAway,
               LeaguePosition: `${teamPositionAway}${awayPrefix}`,
-              awayRawPosition: awayTeaminLeague.rawPosition,
+              awayRawPosition: awayTeaminLeague.rawPosition
+                ? awayTeaminLeague.rawPosition
+                : 0,
               awayTeamAwayPositionRaw: teamPositionAwayTable,
               SeasonPPG: awaySeasonPPG,
             },
@@ -1084,20 +1122,27 @@ export async function generateFixtures(day, radioState, selectedOdds) {
               LastSixForm: lastSixFormAway,
               LastTenForm: lastTenFormAway,
               LeaguePosition: `${teamPositionAway}${awayPrefix}`,
-              awayRawPosition: awayTeaminLeague.rawPosition,
+              awayRawPosition: awayTeaminLeague.rawPosition
+                ? awayTeaminLeague.rawPosition
+                : 0,
               awayTeamAwayPositionRaw: teamPositionAwayTable,
               SeasonPPG: awaySeasonPPG,
               WinPercentage: awayTeamWinPercentageAway,
               LossPercentage: awayTeamLossPercentageAway,
               DrawPercentage: awayTeamDrawPercentageAway,
               formRun: formRunAway,
-              goalDifference: form[1].data[2].stats.seasonGoalDifference_overall,
-              goalDifferenceHomeOrAway: form[1].data[2].stats.seasonGoalDifference_away,
-              BttsPercentage: form[1].data[2].stats.seasonBTTSPercentage_overall,
-              BttsPercentageHomeOrAway: form[1].data[2].stats.seasonBTTSPercentage_away,
+              goalDifference:
+                form[1].data[2].stats.seasonGoalDifference_overall,
+              goalDifferenceHomeOrAway:
+                form[1].data[2].stats.seasonGoalDifference_away,
+              BttsPercentage:
+                form[1].data[2].stats.seasonBTTSPercentage_overall,
+              BttsPercentageHomeOrAway:
+                form[1].data[2].stats.seasonBTTSPercentage_away,
               CardsTotal: form[1].data[2].stats.cardsTotal_overall,
               CornersAverage: form[1].data[2].stats.cornersAVG_overall,
-              ScoredBothHalvesPercentage: form[1].data[2].stats.scoredBothHalvesPercentage_overall
+              ScoredBothHalvesPercentage:
+                form[1].data[2].stats.scoredBothHalvesPercentage_overall,
             },
           },
         });
@@ -1115,8 +1160,6 @@ export async function generateFixtures(day, radioState, selectedOdds) {
       match.lastFiveFormHome = lastFiveFormHome;
       match.lastFiveFormAway = lastFiveFormAway;
 
-      console.log(match)
-      console.log(homeTeaminLeague)
       match.homeRawPosition = homeTeaminLeague.rawPosition;
       match.awayRawPosition = awayTeaminLeague.rawPosition;
 

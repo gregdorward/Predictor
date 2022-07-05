@@ -135,7 +135,7 @@ async function getMatchTime(unixTime) {
     for (let x = 0; x < league.season.length; x++) {
       const element = league.season[x];
 
-      if (element.year === 20212022 || element.year === 2022) {
+      if (element.year === 2022 || element.year === 20222023) {
         if (element.id !== 5784) {
           availableLeagues.push({ name: name, element });
         }
@@ -166,33 +166,34 @@ async function getMatchTime(unixTime) {
       6211, //
       5992, //Scottish Prem 21/22
       6192, //
-      6198, //Serie A
-      6019, //French Prem 21/22
+      7608, //Serie A 22/23
+      7500, //French Prem 22/23
       6117, //Portagul Prem 21/22
-      5951, //Dutch Prem 21/22
-      6079, //Belgian Pro League 21/22
+      7482, //Dutch Prem 22/23
+      7544, //Belgian Pro League 22/23
       7064, //sweden 22
-      5961, //Danish Prem 21
+      7426, //Danish Prem 22/23
       7048, //Norway Prem 21
       6008, //Austrian Prem 21
       6282, //Greek Prem 21
-      5948, //Polish prem 21/22
-      6967, //Irish Prem 21
-      6120, //Spanish secunda 21/22
-      6205, //
-      6020, //Bundesliga 2 21/22
-      6041, //German 3rd tier 21/22
-      6018, //French League 2 21/22
-      5991, //Scottish Championship
-      5976, //Scottish league 1 21/22
-      5974, //Scottish league 2 21/22
+      7428, //Polish prem 22/23
+      6967, //Irish Prem 22
+      4340, //Womens Euros 22
+      7592, //Spanish secunda 22/23
+      6205, //Italy serie B 21/22
+      7499, //Bundesliga 2 22/23
+      7591, //German 3rd tier 22/23
+      7501, //French League 2 22/23
+      7498, //Scottish Championship 22/23
+      7505, //Scottish league 1 22/23
+      7506, //Scottish league 2 22/23
       6173, //Women's prem 21/22
       6969, //MLS 22
       6639, //Australian A league 21/22
       7097, //Brazil prem 22
-      6935, //Japan 21
+      6935, //Japan 22
       7061, //S Korea 22
-      6038, //Mexico prem 21/22`
+      7425, //Mexico prem 22/23
       6083, //National league North and South 21/22
     ];
 
