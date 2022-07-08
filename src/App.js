@@ -22,7 +22,7 @@ import { generateFixtures } from "./logic/getFixtures";
 import { selectedOption } from "./components/radio";
 import { ThreeDots } from "react-loading-icons";
 import reactDom from "react-dom";
-require("dotenv").config();
+// require("dotenv").config();
 
 export const proxyurl = "https://safe-caverns-99679.herokuapp.com/";
 export var fixtureList = [];

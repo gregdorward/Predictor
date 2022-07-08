@@ -11,7 +11,7 @@ import LeagueTable from "../components/LeagueTable";
 
 var oddslib = require("oddslib");
 
-require("dotenv").config();
+// require("dotenv").config();
 
 var fixtureResponse;
 var fixtureArray;
