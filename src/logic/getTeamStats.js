@@ -9,42 +9,50 @@ export async function getTeamStats(id, home, away) {
   let bestHomeOdds;
   let bestHomeOddsProvider;
   let bestAwayOdds;
-  let bestAwayOddsProvider
-  
+  let bestAwayOddsProvider;
+
   let match = await fetch(
     `${process.env.REACT_APP_EXPRESS_SERVER}match/${identifier}`
   );
-   await match.json().then(async (match) => {
-    console.log(match.data)
-    let matchArr = match.data.h2h.previous_matches_ids
+  await match.json().then(async (match) => {
+    console.log(match.data);
+    let matchArr = match.data.h2h.previous_matches_ids;
     let previousMatchDetails;
     let secondToPreviousMatchDetails;
 
-    let oddsComparisonHomeArray = []
-    let oddsComparisonAwayArray = []
+    let oddsComparisonHomeArray = [];
+    let oddsComparisonAwayArray = [];
 
-    if(match.data.odds_comparison){
-    oddsComparisonHomeArray = match.data.odds_comparison["FT Result"][1];
-    oddsComparisonAwayArray = match.data.odds_comparison["FT Result"][2];
 
-    let sortedHomeOdds = Object.entries(oddsComparisonHomeArray).sort((a, b) => b[1] - a[1])
-    let sortedAwayOdds = Object.entries(oddsComparisonAwayArray).sort((a, b) => b[1] - a[1])
+    console.log(match.data)
+    if (match.data.odds_comparison) {
+      oddsComparisonHomeArray = match.data.odds_comparison["FT Result"][1];
+      oddsComparisonAwayArray = match.data.odds_comparison["FT Result"][2];
 
-    bestHomeOddsProvider = sortedHomeOdds[0][0]
-    bestHomeOdds = sortedHomeOdds[0][1]
-    bestAwayOddsProvider = sortedAwayOdds[0][0]
-    bestAwayOdds = sortedAwayOdds[0][1]
+      let sortedHomeOdds = Object.entries(oddsComparisonHomeArray).sort(
+        (a, b) => b[1] - a[1]
+      );
+      let sortedAwayOdds = Object.entries(oddsComparisonAwayArray).sort(
+        (a, b) => b[1] - a[1]
+      );
+
+      bestHomeOddsProvider = sortedHomeOdds[0][0];
+      bestHomeOdds = sortedHomeOdds[0][1];
+      bestAwayOddsProvider = sortedAwayOdds[0][0];
+      bestAwayOdds = sortedAwayOdds[0][1];
     } else {
-      bestHomeOddsProvider = "N/A"
-      bestHomeOdds = "N/A"
-      bestAwayOddsProvider = "N/A"
-      bestAwayOdds = "N/A"
+      bestHomeOddsProvider = "N/A";
+      bestHomeOdds = "N/A";
+      bestAwayOddsProvider = "N/A";
+      bestAwayOdds = "N/A";
     }
 
-    if(match.data.h2h.previous_matches_results.totalMatches > 0){
+    if (match.data.h2h.previous_matches_results.totalMatches > 0) {
       matchArr.sort((a, b) => b.date_unix - a.date_unix);
-      let lastMatch = matchArr[0].id
-      let secondToLastMatch = matchArr[1].id
+      let lastMatch = matchArr[0].id;
+      let secondMatchExists = true;
+      let secondToLastMatch =
+        matchArr[1] !== undefined ? secondMatchExists : false;
 
       let previousMatch = await fetch(
         `${process.env.REACT_APP_EXPRESS_SERVER}match/${lastMatch}`
@@ -53,27 +61,34 @@ export async function getTeamStats(id, home, away) {
       let date;
       let date2;
       await previousMatch.json().then(async (game) => {
-        previousMatchDetails = game.data
-        console.log(previousMatchDetails)
+        previousMatchDetails = game.data;
+        console.log(previousMatchDetails);
         const unixTimestamp = previousMatchDetails.date_unix;
         const milliseconds = unixTimestamp * 1000;
         dateObject = new Date(milliseconds);
-         date = `${dateObject.getDate()}/${dateObject.getMonth()+1}/${dateObject.getFullYear()}`
+        date = `${dateObject.getDate()}/${
+          dateObject.getMonth() + 1
+        }/${dateObject.getFullYear()}`;
 
-         let secondToPreviousMatch = await fetch(
-          `${process.env.REACT_APP_EXPRESS_SERVER}match/${secondToLastMatch}`
-        );
+        let secondToPreviousMatch;
         let dateObject2;
-        await secondToPreviousMatch.json().then((game) => {
-          secondToPreviousMatchDetails = game.data
-          console.log(secondToPreviousMatchDetails)
-          const unixTimestamp = secondToPreviousMatchDetails.date_unix;
-          const milliseconds = unixTimestamp * 1000;
-          dateObject2 = new Date(milliseconds);
-          date2 = `${dateObject2.getDate()}/${dateObject2.getMonth()+1}/${dateObject2.getFullYear()}`
-        })
-  
-      })
+
+        if (secondMatchExists !== false) {
+          secondToPreviousMatch = await fetch(
+            `${process.env.REACT_APP_EXPRESS_SERVER}match/${secondToLastMatch}`
+          );
+          await secondToPreviousMatch.json().then((game) => {
+            secondToPreviousMatchDetails = game.data;
+            console.log(secondToPreviousMatchDetails);
+            const unixTimestamp = secondToPreviousMatchDetails.date_unix;
+            const milliseconds = unixTimestamp * 1000;
+            dateObject2 = new Date(milliseconds);
+            date2 = `${dateObject2.getDate()}/${
+              dateObject2.getMonth() + 1
+            }/${dateObject2.getFullYear()}`;
+          });
+        }
+      });
 
       ReactDOM.render(
         <Fragment>
@@ -88,20 +103,60 @@ export async function getTeamStats(id, home, away) {
             awayWins={match.data.h2h.previous_matches_results.team_b_wins}
             draws={match.data.h2h.previous_matches_results.draw}
             averageGoals={match.data.h2h.betting_stats.avg_goals}
-            bestHomeOdds = {`${bestHomeOddsProvider} - ${bestHomeOdds}`}
-            bestAwayOdds = {`${bestAwayOddsProvider} - ${bestAwayOdds}`}
-            lastGameStadiumName={previousMatchDetails.stadium_name}
-            lastGameHomeGoals={previousMatchDetails.homeGoalCount}
-            lastGameAwayGoals={previousMatchDetails.awayGoalCount}
-            lastGameHomeTeam={previousMatchDetails.home_name}
-            lastGameAwayTeam={previousMatchDetails.away_name}
-            lastGameDate={date}
-            secondToLastGameStadiumName={secondToPreviousMatchDetails.stadium_name}
-            secondToLastGameHomeGoals={secondToPreviousMatchDetails.homeGoalCount}
-            secondToLastGameAwayGoals={secondToPreviousMatchDetails.awayGoalCount}
-            secondToLastGameHomeTeam={secondToPreviousMatchDetails.home_name}
-            secondToLastGameAwayTeam={secondToPreviousMatchDetails.away_name}
-            secondToLastGameDate={date2}
+            bestHomeOdds={`${bestHomeOddsProvider} - ${bestHomeOdds}`}
+            bestAwayOdds={`${bestAwayOddsProvider} - ${bestAwayOdds}`}
+            lastGameStadiumName={
+              previousMatchDetails.stadium_name
+                ? previousMatchDetails.stadium_name
+                : "-"
+            }
+            lastGameHomeGoals={
+              previousMatchDetails.homeGoalCount
+                ? previousMatchDetails.homeGoalCount
+                : "-"
+            }
+            lastGameAwayGoals={
+              previousMatchDetails.awayGoalCount
+                ? previousMatchDetails.awayGoalCount
+                : "-"
+            }
+            lastGameHomeTeam={
+              previousMatchDetails.home_name
+                ? previousMatchDetails.home_name
+                : "-"
+            }
+            lastGameAwayTeam={
+              previousMatchDetails.away_name
+                ? previousMatchDetails.away_name
+                : "-"
+            }
+            lastGameDate={!isNaN(date) ? date : "-"}
+            secondToLastGameStadiumName={
+              secondToPreviousMatchDetails.stadium_name
+                ? secondToPreviousMatchDetails.stadium_name
+                : "-"
+            }
+            secondToLastGameHomeGoals={
+              secondToPreviousMatchDetails.homeGoalCount
+                ? secondToPreviousMatchDetails.homeGoalCount
+                : "-"
+            }
+            secondToLastGameAwayGoals={
+              secondToPreviousMatchDetails.awayGoalCount
+                ? secondToPreviousMatchDetails.awayGoalCount
+                : "-"
+            }
+            secondToLastGameHomeTeam={
+              secondToPreviousMatchDetails.home_name
+                ? secondToPreviousMatchDetails.home_name
+                : "-"
+            }
+            secondToLastGameAwayTeam={
+              secondToPreviousMatchDetails.away_name
+                ? secondToPreviousMatchDetails.away_name
+                : "-"
+            }
+            secondToLastGameDate={!isNaN(date2) ? date2 : "-"}
           ></HeadToHead>
           <CustomizedTables
             o05Stat={match.data.h2h.betting_stats.over05Percentage}
@@ -175,7 +230,5 @@ export async function getTeamStats(id, home, away) {
         document.getElementById(`H2HStats${identifier}`)
       );
     }
-
-
   });
 }

@@ -1185,7 +1185,7 @@ ul {
 }
 
 .kofitext{
-  font-size: 1em;
+  font-size: 0.75em;
   font-weight: bolder;
   color: black;
 }
@@ -1193,7 +1193,7 @@ ul {
 .kofi-button {
   border: 0.1em solid #030061;
   padding: 1em;
-  font-family: 'Open Sans', sans-serif;
+  font-family: 'Open Sans', sans-serif !important;
   min-width: 30px !important;
   line-height: 1em !important;
 
