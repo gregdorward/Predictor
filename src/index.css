@@ -781,6 +781,90 @@ p {
   align-items: center;
 }
 
+.HomeBadgePrevious {
+  border-color: #393d3f;
+  height: 2em;
+  order: 3;
+  padding: 1em;
+  padding-left: 0.5em;
+  padding-right: 0.5em;
+  flex-basis: 1%;
+}
+
+.AwayBadgePrevious {
+  border-color: #393d3f;
+  height: 2em;
+  padding: 1em;
+  padding-left: 0.5em;
+  padding-right: 0.5em;
+  flex-basis: 1%;
+  order: -2;
+}
+
+.HomeBadgePreviousAway {
+  border-color: #393d3f;
+  height: 2em;
+  order: -1;
+  padding: 1em;
+  padding-left: 0.5em;
+  padding-right: 0.5em;
+  flex-basis: 1%;
+}
+
+.AwayBadgePreviousAway {
+  border-color: #393d3f;
+  height: 2em;
+  padding: 1em;
+  padding-left: 0.5em;
+  padding-right: 0.5em;
+  flex-basis: 1%;
+  order: 2;
+}
+
+.PreviousResultHome {
+  display: flex;
+  flex-basis: 50%;
+  background-color: #e2e2e26c;
+  align-items: center;
+  align-content: center;
+  color: black;
+  flex-direction: row-reverse;
+}
+
+.PreviousResultAway {
+  display: flex;
+  flex-basis: 50%;
+  background-color: #e2e2e26c;
+  align-items: center;
+  align-content: center;
+  color: black;
+}
+
+.PreviousStadiumHome{
+  padding-right: 1em;
+  padding-top: 1em;
+  font-size: 0.85em;
+}
+
+.PreviousStadiumAway{
+  padding-left: 1em;
+  padding-top: 1em;
+  font-size: 0.85em;
+}
+
+.LastGameHeaderHome {
+  padding-top: 1em;
+  padding-right: 6.5em;
+  font-weight: bolder;
+}
+
+.LastGameHeaderAway {
+  padding-top: 1em;
+  padding-left: 6.5em;
+}
+
+
+
 .CollapsableDiv {
   display: flex;
   flex-direction: row;
@@ -858,6 +942,21 @@ p {
   color: white;
 }
 
+/* .PreviousResultHome {
+  text-align: right;
+  width: 50%;
+  background-color: #e2e2e26c;
+  padding-right: 0.2em;
+}
+
+.PreviousResultAway {
+  text-align: left;
+  width: 50%;
+  background-color: #e2e2e26c;
+  padding-left: 0.2em;
+} */
+
+
 .HomeStats {
   text-align: right;
   width: 50%;
@@ -871,6 +970,43 @@ p {
   width: 50%;
   background-color: #e2e2e26c;
   padding-left: 0.2em;
+}
+
+.LineupsContainer {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  text-align: center;
+  align-items: center;
+}
+
+.HomeLineup {
+  margin-right: 5px;
+  padding-top: 1em;
+  text-align: right;
+  width: 45%;
+  background-color: #e2e2e26c;
+  padding-right: 0.2em;
+  /* padding-right: 20px; */
+}
+
+.HomeLineup li {
+  padding-top: 0.25em;
+  padding-bottom: 0.25em;
+}
+
+.AwayLineup {
+  margin-left: 5px;
+  padding-top: 1em;
+  text-align: left;
+  width: 45%;
+  background-color: #e2e2e26c;
+  padding-left: 0.2em;
+}
+
+.AwayLineup li {
+  padding-top: 0.25em;
+  padding-bottom: 0.25em;
 }
 
 .Home {

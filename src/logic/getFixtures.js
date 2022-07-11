@@ -93,6 +93,17 @@ export let allForm = [];
 export let tableArray = [];
 leagueInstance = [];
 
+async function convertTimestamp(timestamp) {
+  let newDate = new Date(timestamp * 1000);
+  let [day, month, year] = newDate
+  .toLocaleDateString("en-US")
+  .split("/");
+
+  let converted = (`${year}-${day}-${month}`)
+
+  return converted;
+}
+
 export async function generateTables(a, leagueIdArray) {
   let i = 0;
   leagueArray.forEach(function (league) {
@@ -184,6 +195,7 @@ export async function renderTable(index) {
 }
 
 async function createFixture(match, result, mockBool) {
+  console.log(match);
   let roundedHomeOdds;
   let roundedAwayOdds;
   let roundedBTTSOdds;
@@ -702,6 +714,8 @@ export async function generateFixtures(day, radioState, selectedOdds) {
 
         allForm.push({
           id: match.id,
+          teamIDHome: match.homeId,
+          teamIDAway: match.awayId,
           home: {
             teamName: match.homeTeam,
             0: {
@@ -929,6 +943,9 @@ export async function generateFixtures(day, radioState, selectedOdds) {
               CornersAverage: form[0].data[2].stats.cornersAVG_overall,
               ScoredBothHalvesPercentage:
                 form[0].data[2].stats.scoredBothHalvesPercentage_overall,
+               LastMatch: await convertTimestamp(
+                  form[0].data[0].last_updated_match_timestamp
+                )
             },
           },
           away: {
@@ -1143,6 +1160,9 @@ export async function generateFixtures(day, radioState, selectedOdds) {
               CornersAverage: form[1].data[2].stats.cornersAVG_overall,
               ScoredBothHalvesPercentage:
                 form[1].data[2].stats.scoredBothHalvesPercentage_overall,
+              LastMatch: await convertTimestamp(
+                form[1].data[0].last_updated_match_timestamp
+              )
             },
           },
         });
@@ -1188,6 +1208,7 @@ export async function generateFixtures(day, radioState, selectedOdds) {
 
       match.expectedGoalsHomeToDate = fixture.team_a_xg_prematch;
       match.expectedGoalsAwayToDate = fixture.team_b_xg_prematch;
+
 
       if (match.status !== "canceled" || match.status !== "suspended") {
         matches.push(match);

@@ -5,6 +5,10 @@ import Div from "../components/Div";
 import { allForm } from "../logic/getFixtures";
 import { getTeamStats } from "../logic/getTeamStats";
 import { getPointsFromLastX } from "../logic/getScorePredictions";
+import Norway from "../data/Norway.json";
+import { CreateBadge } from "../components/createBadge";
+import { Badge } from "@material-ui/core";
+import { Fragment } from "react";
 
 let testBool;
 
@@ -16,12 +20,13 @@ export async function createStatsDiv(game, mock) {
       let radioSelected = 10;
 
       function toggle() {
-        testBool = testBool ? false : true;
+        testBool = testBool ? true : true;
         if (testBool === true) {
           // set stats element to display flex
           return { display: "block" };
         } else {
           // set stats element to display none
+
           return { display: "none" };
         }
       }
@@ -42,6 +47,78 @@ export async function createStatsDiv(game, mock) {
       }
 
       let gameStats = allForm.find((match) => match.id === game.id);
+
+      let homeLastMatch = await fetch(
+        `${process.env.REACT_APP_EXPRESS_SERVER}matches/${gameStats.home[2].LastMatch}`
+      );
+
+      let matchArray;
+      await homeLastMatch.json().then((matches) => {
+        matchArray = Array.from(matches.data);
+      });
+
+      let awayLastMatch = await fetch(
+        `${process.env.REACT_APP_EXPRESS_SERVER}matches/${gameStats.away[2].LastMatch}`
+      );
+
+      let matchArrayAway;
+      await awayLastMatch.json().then((matches) => {
+        matchArrayAway = Array.from(matches.data);
+      });
+
+      const lastGameHome = matchArray.find(
+        ({ homeID, awayID }) =>
+          homeID === gameStats.teamIDHome || awayID === gameStats.teamIDAway
+      )
+        ? matchArray.find(
+            ({ homeID, awayID }) =>
+              homeID === gameStats.teamIDHome || awayID === gameStats.teamIDHome
+          )
+        : "N/A";
+
+      const lastGameAway = matchArrayAway.find(
+        ({ homeID, awayID }) =>
+          homeID === gameStats.teamIDAway || awayID === gameStats.teamIDAway
+      )
+        ? matchArrayAway.find(
+            ({ homeID, awayID }) =>
+              homeID === gameStats.teamIDAway || awayID === gameStats.teamIDAway
+          )
+        : "N/A";
+
+      let lastGameHomeResult;
+      let lastGameAwayResult;
+      let homeStadium;
+      let awayStadium;
+
+      let lastGameHomeHomeBadge = lastGameHome.home_image
+        ? lastGameHome.home_image
+        : "-";
+      let lastGameHomeAwayBadge = lastGameHome.away_image
+        ? lastGameHome.away_image
+        : "-";
+      let lastGameAwayHomeBadge = lastGameAway.home_image
+        ? lastGameAway.home_image
+        : "-";
+      let lastGameAwayAwayBadge = lastGameAway.away_image
+        ? lastGameAway.away_image
+        : "-";
+
+      if (lastGameHome !== "N/A") {
+        lastGameHomeResult = `${lastGameHome.home_name} ${lastGameHome.homeGoalCount}  :  ${lastGameHome.awayGoalCount} ${lastGameHome.away_name}`;
+        homeStadium = lastGameHome.stadium_name
+      } else {
+        lastGameHomeResult = "Last game unavailable";
+        homeStadium = "-"
+      }
+
+      if (lastGameAway !== "N/A") {
+        lastGameAwayResult = `${lastGameAway.home_name} ${lastGameAway.homeGoalCount}  :  ${lastGameAway.awayGoalCount} ${lastGameAway.away_name}`;
+        awayStadium = lastGameAway.stadium_name
+      } else {
+        lastGameAwayResult = "Last game unavailable";
+        awayStadium = "-"
+      }
 
       let homeTeam = gameStats.home.teamName;
       let awayTeam = gameStats.away.teamName;
@@ -410,12 +487,16 @@ export async function createStatsDiv(game, mock) {
         ScoredBothHalvesPercentage:
           gameStats.away[index].ScoredBothHalvesPercentage,
       });
+
       ReactDOM.render(
         <div style={style}>
           <Div className="MatchTime" text={`Kick off: ${time} GMT`}></Div>
           <Div
             className="FormExplainer"
             text={`(Form stats based on last 10 games)`}
+          ></Div>
+                    <Div
+            text={`Last games`}
           ></Div>
         </div>,
         document.getElementById("stats" + homeTeam)
@@ -437,109 +518,147 @@ export async function createStatsDiv(game, mock) {
       }
 
       ReactDOM.render(
-        <Stats
-          style={style}
-          homeOrAway="Home"
-          gameCount={divider}
-          key={formDataHome[0].name}
-          last5={formDataHome[0].Last5}
-          className={formDataHome[0].homeOrAway}
-          name={formDataHome[0].name}
-          goals={formDataHome[0].AverageGoals}
-          conceeded={formDataHome[0].AverageConceeded}
-          XG={formDataHome[0].AverageXG}
-          XGConceded={formDataHome[0].AverageXGConceded}
-          possession={formDataHome[0].AveragePossession}
-          sot={formDataHome[0].AverageShotsOnTarget}
-          dangerousAttacks={formDataHome[0].AverageDangerousAttacks}
-          leaguePosition={
-            formDataHome[0].leaguePosition ? formDataHome[0].leaguePosition : 0
-          }
-          rawPosition={game.homeRawPosition ? game.homeRawPosition : 0}
-          homeOrAwayLeaguePosition={
-            game.homeTeamHomePosition ? game.homeTeamHomePosition : 0
-          }
-          winPercentage={
-            game.homeTeamWinPercentage ? game.homeTeamWinPercentage : 0
-          }
-          lossPercentage={
-            game.homeTeamLossPercentage ? game.homeTeamLossPercentage : 0
-          }
-          drawPercentage={
-            game.homeTeamDrawPercentage ? game.homeTeamDrawPercentage : 0
-          }
-          ppg={formDataHome[0].SeasonPPG}
-          formTrend={[
-            homeTenGameAverage.toFixed(2),
-            homeSixGameAverage.toFixed(2),
-            homeFiveGameAverage.toFixed(2),
-          ]}
-          lastGame={homeLastGame}
-          formRun={formDataHome[0].formRun}
-          goalDifference={formDataHome[0].goalDifference}
-          goalDifferenceHomeOrAway={formDataHome[0].goalDifferenceHomeOrAway}
-          BttsPercentage={formDataHome[0].BttsPercentage}
-          BttsPercentageHomeOrAway={formDataHome[0].BttsPercentageHomeOrAway}
-          CardsTotal={formDataHome[0].CardsTotal}
-          CornersAverage={formDataHome[0].CornersAverage}
-          ScoredBothHalvesPercentage={
-            formDataHome[0].ScoredBothHalvesPercentage
-          }
-        />,
+        <ul>
+          <div className="PreviousStadiumHome">{homeStadium}</div>
+          <div className="PreviousResultHome">
+            <CreateBadge
+              image={lastGameHomeHomeBadge}
+              ClassName="HomeBadgePrevious"
+              alt="Home team badge"
+              flexShrink={5}
+            />
+            {lastGameHomeResult}
+            <CreateBadge
+              image={lastGameHomeAwayBadge}
+              ClassName="AwayBadgePrevious"
+              alt="Away team badge"
+              flexShrink={5}
+            />
+          </div>
+          <Stats
+            style={style}
+            homeOrAway="Home"
+            gameCount={divider}
+            key={formDataHome[0].name}
+            last5={formDataHome[0].Last5}
+            className={formDataHome[0].homeOrAway}
+            name={formDataHome[0].name}
+            goals={formDataHome[0].AverageGoals}
+            conceeded={formDataHome[0].AverageConceeded}
+            XG={formDataHome[0].AverageXG}
+            XGConceded={formDataHome[0].AverageXGConceded}
+            possession={formDataHome[0].AveragePossession}
+            sot={formDataHome[0].AverageShotsOnTarget}
+            dangerousAttacks={formDataHome[0].AverageDangerousAttacks}
+            leaguePosition={
+              formDataHome[0].leaguePosition
+                ? formDataHome[0].leaguePosition
+                : 0
+            }
+            rawPosition={game.homeRawPosition ? game.homeRawPosition : 0}
+            homeOrAwayLeaguePosition={
+              game.homeTeamHomePosition ? game.homeTeamHomePosition : 0
+            }
+            winPercentage={
+              game.homeTeamWinPercentage ? game.homeTeamWinPercentage : 0
+            }
+            lossPercentage={
+              game.homeTeamLossPercentage ? game.homeTeamLossPercentage : 0
+            }
+            drawPercentage={
+              game.homeTeamDrawPercentage ? game.homeTeamDrawPercentage : 0
+            }
+            ppg={formDataHome[0].SeasonPPG}
+            formTrend={[
+              homeTenGameAverage.toFixed(2),
+              homeSixGameAverage.toFixed(2),
+              homeFiveGameAverage.toFixed(2),
+            ]}
+            lastGame={homeLastGame}
+            formRun={formDataHome[0].formRun}
+            goalDifference={formDataHome[0].goalDifference}
+            goalDifferenceHomeOrAway={formDataHome[0].goalDifferenceHomeOrAway}
+            BttsPercentage={formDataHome[0].BttsPercentage}
+            BttsPercentageHomeOrAway={formDataHome[0].BttsPercentageHomeOrAway}
+            CardsTotal={formDataHome[0].CardsTotal}
+            CornersAverage={formDataHome[0].CornersAverage}
+            ScoredBothHalvesPercentage={
+              formDataHome[0].ScoredBothHalvesPercentage
+            }
+          />
+        </ul>,
         document.getElementById("home" + homeTeam)
       );
 
       ReactDOM.render(
-        <Stats
-          style={style}
-          homeOrAway="Away"
-          gameCount={divider}
-          key={formDataAway[0].name}
-          last5={formDataAway[0].Last5}
-          className={formDataAway[0].homeOrAway}
-          name={formDataAway[0].name}
-          goals={formDataAway[0].AverageGoals}
-          conceeded={formDataAway[0].AverageConceeded}
-          XG={formDataAway[0].AverageXG}
-          XGConceded={formDataAway[0].AverageXGConceded}
-          //todo add goal diff and btts percentages
-          possession={formDataAway[0].AveragePossession}
-          rawPosition={game.awayRawPosition ? game.awayRawPosition : 0}
-          sot={formDataAway[0].AverageShotsOnTarget}
-          dangerousAttacks={formDataAway[0].AverageDangerousAttacks}
-          leaguePosition={
-            formDataAway[0].leaguePosition ? formDataAway[0].leaguePosition : 0
-          }
-          homeOrAwayLeaguePosition={
-            game.awayTeamAwayPosition ? game.awayTeamAwayPosition : 0
-          }
-          winPercentage={
-            game.awayTeamWinPercentage ? game.awayTeamWinPercentage : 0
-          }
-          lossPercentage={
-            game.awayTeamLossPercentage ? game.awayTeamLossPercentage : 0
-          }
-          drawPercentage={
-            game.awayTeamDrawPercentage ? game.awayTeamDrawPercentage : 0
-          }
-          ppg={formDataAway[0].SeasonPPG}
-          formTrend={[
-            awayTenGameAverage.toFixed(2),
-            awaySixGameAverage.toFixed(2),
-            awayFiveGameAverage.toFixed(2),
-          ]}
-          lastGame={awayLastGame}
-          formRun={formDataAway[0].formRun}
-          goalDifference={formDataAway[0].goalDifference}
-          goalDifferenceHomeOrAway={formDataAway[0].goalDifferenceHomeOrAway}
-          BttsPercentage={formDataAway[0].BttsPercentage}
-          BttsPercentageHomeOrAway={formDataAway[0].BttsPercentageHomeOrAway}
-          CardsTotal={formDataAway[0].CardsTotal}
-          CornersAverage={formDataAway[0].CornersAverage}
-          ScoredBothHalvesPercentage={
-            formDataAway[0].ScoredBothHalvesPercentage
-          }
-        />,
+        <ul>
+          <div className="PreviousStadiumAway">{awayStadium}</div>
+          <div className="PreviousResultAway">
+            <CreateBadge
+              image={lastGameAwayHomeBadge}
+              ClassName="HomeBadgePreviousAway"
+              alt="Home team badge"
+            />
+            {lastGameAwayResult}
+            <CreateBadge
+              image={lastGameAwayAwayBadge}
+              ClassName="AwayBadgePreviousAway"
+              alt="Away team badge"
+            />
+          </div>
+          <Stats
+            style={style}
+            homeOrAway="Away"
+            gameCount={divider}
+            key={formDataAway[0].name}
+            last5={formDataAway[0].Last5}
+            className={formDataAway[0].homeOrAway}
+            name={formDataAway[0].name}
+            goals={formDataAway[0].AverageGoals}
+            conceeded={formDataAway[0].AverageConceeded}
+            XG={formDataAway[0].AverageXG}
+            XGConceded={formDataAway[0].AverageXGConceded}
+            //todo add goal diff and btts percentages
+            possession={formDataAway[0].AveragePossession}
+            rawPosition={game.awayRawPosition ? game.awayRawPosition : 0}
+            sot={formDataAway[0].AverageShotsOnTarget}
+            dangerousAttacks={formDataAway[0].AverageDangerousAttacks}
+            leaguePosition={
+              formDataAway[0].leaguePosition
+                ? formDataAway[0].leaguePosition
+                : 0
+            }
+            homeOrAwayLeaguePosition={
+              game.awayTeamAwayPosition ? game.awayTeamAwayPosition : 0
+            }
+            winPercentage={
+              game.awayTeamWinPercentage ? game.awayTeamWinPercentage : 0
+            }
+            lossPercentage={
+              game.awayTeamLossPercentage ? game.awayTeamLossPercentage : 0
+            }
+            drawPercentage={
+              game.awayTeamDrawPercentage ? game.awayTeamDrawPercentage : 0
+            }
+            ppg={formDataAway[0].SeasonPPG}
+            formTrend={[
+              awayTenGameAverage.toFixed(2),
+              awaySixGameAverage.toFixed(2),
+              awayFiveGameAverage.toFixed(2),
+            ]}
+            lastGame={awayLastGame}
+            formRun={formDataAway[0].formRun}
+            goalDifference={formDataAway[0].goalDifference}
+            goalDifferenceHomeOrAway={formDataAway[0].goalDifferenceHomeOrAway}
+            BttsPercentage={formDataAway[0].BttsPercentage}
+            BttsPercentageHomeOrAway={formDataAway[0].BttsPercentageHomeOrAway}
+            CardsTotal={formDataAway[0].CardsTotal}
+            CornersAverage={formDataAway[0].CornersAverage}
+            ScoredBothHalvesPercentage={
+              formDataAway[0].ScoredBothHalvesPercentage
+            }
+          />
+        </ul>,
         document.getElementById("away" + awayTeam)
       );
 
@@ -550,7 +669,7 @@ export async function createStatsDiv(game, mock) {
           onClickEvent={() =>
             getTeamStats(game.id, game.homeTeam, game.awayTeam)
           }
-          text={"More detail"}
+          text={"Fixture trends"}
         ></Button>,
         document.getElementById(`H2HStats${game.id}`)
       );

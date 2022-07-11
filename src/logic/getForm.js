@@ -40,6 +40,7 @@ export async function getForm(match) {
       `${process.env.REACT_APP_EXPRESS_SERVER}form/${team}`
     );
     await response.json().then((formData) => {
+      formData.lastMatchTimestamp = formData.last_updated_match_timestamp
       console.log(formData.data[0].season_format)
       fixtureForm[i] = formData;
       console.log(fixtureForm[i])
