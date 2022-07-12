@@ -147,6 +147,7 @@ export async function generateTables(a, leagueIdArray) {
         index++
       ) {
         let currentTeam = league.data.all_matches_table_overall[index];
+        console.log(league.data)
         let last5 = "N/A";
         const team = {
           LeagueID: currentLeagueId,

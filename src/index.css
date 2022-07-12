@@ -443,6 +443,9 @@ p {
   align-items: center;
   align-content: center;
   color: black;
+  padding-top: 0.5em;
+  padding-bottom: 0.5em;
+
   /* box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 #294A66; */
   /* margin-bottom: 0.5em; */
   
@@ -509,7 +512,7 @@ p {
   width: 3.5em;
   border-radius: 25px;
   font-weight: bolder;
-  margin-left: 5px;
+  margin-left: 1em;
 }
 
 .AwayOdds {
@@ -521,7 +524,7 @@ p {
   width: 3.5em;
   border-radius: 25px;
   font-weight: 500;
-  margin-right: 5px;
+  margin-right: 1em;
 }
 
 .homeTeam {
@@ -783,40 +786,40 @@ p {
 
 .HomeBadgePrevious {
   border-color: #393d3f;
-  height: 2em;
+  height: 1.5em;
   order: 3;
   padding: 1em;
-  padding-left: 0.5em;
-  padding-right: 0.5em;
+  padding-left: 0.25em;
+  padding-right: 0.25em;
   flex-basis: 1%;
 }
 
 .AwayBadgePrevious {
   border-color: #393d3f;
-  height: 2em;
+  height: 1.5em;
   padding: 1em;
-  padding-left: 0.5em;
-  padding-right: 0.5em;
+  padding-left: 0.25em;
+  padding-right: 0.25em;
   flex-basis: 1%;
   order: -2;
 }
 
 .HomeBadgePreviousAway {
   border-color: #393d3f;
-  height: 2em;
+  height: 1.5em;
   order: -1;
   padding: 1em;
-  padding-left: 0.5em;
-  padding-right: 0.5em;
+  padding-left: 0.25em;
+  padding-right: 0.25em;
   flex-basis: 1%;
 }
 
 .AwayBadgePreviousAway {
   border-color: #393d3f;
-  height: 2em;
+  height: 1.5em;
   padding: 1em;
-  padding-left: 0.5em;
-  padding-right: 0.5em;
+  padding-left: 0.25em;
+  padding-right: 0.25em;
   flex-basis: 1%;
   order: 2;
 }
@@ -829,6 +832,7 @@ p {
   align-content: center;
   color: black;
   flex-direction: row-reverse;
+  padding-bottom: 1.5em;
 }
 
 .PreviousResultAway {
@@ -838,29 +842,37 @@ p {
   align-items: center;
   align-content: center;
   color: black;
+  padding-bottom: 1.5em;
+
 }
 
 .PreviousStadiumHome{
   padding-right: 1em;
   padding-top: 1em;
   font-size: 0.85em;
+  height: 3em;
+  display: flex;
+  align-items: center;
+  justify-content: right;
+  text-align: right;
 }
 
 .PreviousStadiumAway{
   padding-left: 1em;
   padding-top: 1em;
   font-size: 0.85em;
+  height: 3em;
+  display: flex;
+  align-items: center;
+  justify-content: left;
+  text-align: left;
 }
 
-.LastGameHeaderHome {
-  padding-top: 1em;
-  padding-right: 6.5em;
+.LastGameHeader {
+  padding-top: 1.5em !important;
   font-weight: bolder;
-}
-
-.LastGameHeaderAway {
-  padding-top: 1em;
-  padding-left: 6.5em;
+  font-size: 1.1em;
+  background-color: #e2e2e26c;
 }
 
 
@@ -1324,6 +1336,10 @@ ul {
   font-size: 0.75em;
   font-weight: bolder;
   color: black;
+}
+
+.kofitext img.kofiimg {
+  width: 10px !important;
 }
 
 .kofi-button {

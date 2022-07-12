@@ -87,6 +87,7 @@ function styleForm(formIndicator) {
 }
 
 export default function LeagueTable(props) {
+  console.log(props)
   let rows = props.Teams.map((team, i) => (
     <StyledTableRow key={`${props.Key}row${i}`}>
       <StyledTableCell component="th" scope="row">

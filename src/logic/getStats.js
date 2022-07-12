@@ -57,18 +57,28 @@ export async function createStatsDiv(game, mock) {
         matchArray = Array.from(matches.data);
       });
 
-      let awayLastMatch = await fetch(
-        `${process.env.REACT_APP_EXPRESS_SERVER}matches/${gameStats.away[2].LastMatch}`
-      );
-
+      let awayLastMatch;
       let matchArrayAway;
-      await awayLastMatch.json().then((matches) => {
-        matchArrayAway = Array.from(matches.data);
-      });
 
+      if (gameStats.home[2].LastMatch === gameStats.away[2].LastMatch) {
+        console.log("Don't need to fetch");
+        matchArrayAway = matchArray;
+        console.log(matchArrayAway);
+      } else {
+        console.log("Fetching");
+        awayLastMatch = await fetch(
+          `${process.env.REACT_APP_EXPRESS_SERVER}matches/${gameStats.away[2].LastMatch}`
+        );
+
+        await awayLastMatch.json().then((matches) => {
+          matchArrayAway = Array.from(matches.data);
+        });
+      }
+
+      
       const lastGameHome = matchArray.find(
         ({ homeID, awayID }) =>
-          homeID === gameStats.teamIDHome || awayID === gameStats.teamIDAway
+          homeID === gameStats.teamIDHome || awayID === gameStats.teamIDHome
       )
         ? matchArray.find(
             ({ homeID, awayID }) =>
@@ -86,8 +96,13 @@ export async function createStatsDiv(game, mock) {
           )
         : "N/A";
 
+        console.log(lastGameHome);
+
+
       let lastGameHomeResult;
+      let lastGameHomeLink;
       let lastGameAwayResult;
+      let lastGameAwayLink;
       let homeStadium;
       let awayStadium;
 
@@ -106,18 +121,20 @@ export async function createStatsDiv(game, mock) {
 
       if (lastGameHome !== "N/A") {
         lastGameHomeResult = `${lastGameHome.home_name} ${lastGameHome.homeGoalCount}  :  ${lastGameHome.awayGoalCount} ${lastGameHome.away_name}`;
-        homeStadium = lastGameHome.stadium_name
+        lastGameHomeLink = lastGameHome.match_url;
+        homeStadium = lastGameHome.stadium_name;
       } else {
         lastGameHomeResult = "Last game unavailable";
-        homeStadium = "-"
+        homeStadium = "-";
       }
 
       if (lastGameAway !== "N/A") {
         lastGameAwayResult = `${lastGameAway.home_name} ${lastGameAway.homeGoalCount}  :  ${lastGameAway.awayGoalCount} ${lastGameAway.away_name}`;
-        awayStadium = lastGameAway.stadium_name
+        lastGameAwayLink = lastGameAway.match_url;
+        awayStadium = lastGameAway.stadium_name;
       } else {
         lastGameAwayResult = "Last game unavailable";
-        awayStadium = "-"
+        awayStadium = "-";
       }
 
       let homeTeam = gameStats.home.teamName;
@@ -491,13 +508,7 @@ export async function createStatsDiv(game, mock) {
       ReactDOM.render(
         <div style={style}>
           <Div className="MatchTime" text={`Kick off: ${time} GMT`}></Div>
-          <Div
-            className="FormExplainer"
-            text={`(Form stats based on last 10 games)`}
-          ></Div>
-                    <Div
-            text={`Last games`}
-          ></Div>
+          <Div text={`Last game`} className={"LastGameHeader"}></Div>
         </div>,
         document.getElementById("stats" + homeTeam)
       );
@@ -520,7 +531,11 @@ export async function createStatsDiv(game, mock) {
       ReactDOM.render(
         <ul>
           <div className="PreviousStadiumHome">{homeStadium}</div>
-          <div className="PreviousResultHome">
+          <a
+            href={`https://footystats.org${lastGameHomeLink}`}
+            target="_blank"
+            className="PreviousResultHome"
+          >
             <CreateBadge
               image={lastGameHomeHomeBadge}
               ClassName="HomeBadgePrevious"
@@ -534,7 +549,7 @@ export async function createStatsDiv(game, mock) {
               alt="Away team badge"
               flexShrink={5}
             />
-          </div>
+          </a>
           <Stats
             style={style}
             homeOrAway="Home"
@@ -593,7 +608,11 @@ export async function createStatsDiv(game, mock) {
       ReactDOM.render(
         <ul>
           <div className="PreviousStadiumAway">{awayStadium}</div>
-          <div className="PreviousResultAway">
+          <a
+            href={`https://footystats.org${lastGameAwayLink}`}
+            target="_blank"
+            className="PreviousResultAway"
+          >
             <CreateBadge
               image={lastGameAwayHomeBadge}
               ClassName="HomeBadgePreviousAway"
@@ -605,7 +624,7 @@ export async function createStatsDiv(game, mock) {
               ClassName="AwayBadgePreviousAway"
               alt="Away team badge"
             />
-          </div>
+          </a>
           <Stats
             style={style}
             homeOrAway="Away"

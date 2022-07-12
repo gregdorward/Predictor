@@ -948,193 +948,43 @@ export async function compareTeams(homeForm, awayForm, match) {
     }
   }
 
-  // if (calculation > 0) {
-  //   switch (true) {
-  //     case winPercA + drawPercA === 100:
-  //       calculation = calculation / 8;
-  //       break;
-  //     case winPercA + drawPercA >= 90 && winPercA + drawPercA < 100:
-  //       calculation = calculation / 7;
-  //       break;
-  //     case winPercA + drawPercA >= 80 && winPercA + drawPercA < 90:
-  //       calculation = calculation / 6;
-  //       break;
-  //     case winPercA + drawPercA >= 70 && winPercA + drawPercA < 80:
-  //       calculation = calculation / 5;
-  //       break;
-  //     case winPercA + drawPercA >= 60 && winPercA + drawPercA < 70:
-  //       calculation = calculation / 3;
-  //       break;
-  //     case winPercA + drawPercA >= 50 && winPercA + drawPercA < 60:
-  //       calculation = calculation / 2;
-  //       break;
-  //     case winPercA + drawPercA >= 40 && winPercA + drawPercA < 50:
-  //       calculation = calculation / 1.5;
-  //       break;
-  //     case winPercA + drawPercA >= 30 && winPercA + drawPercA < 40:
-  //       calculation = calculation / 1.05;
-  //       break;
-  //     case winPercA + drawPercA >= 20 && winPercA + drawPercA < 30:
-  //       calculation = calculation / 1;
-  //       break;
-  //     case winPercA + drawPercA >= 10 && winPercA + drawPercA < 20:
-  //       calculation = calculation * 2;
-  //       break;
-  //     case winPercA + drawPercA >= 0 && winPercA + drawPercA < 10:
-  //       calculation = calculation * 3;
-  //       break;
-  //     default:
-  //       break;
-  //   }
-  // } else if (calculation < 0) {
-  //   switch (true) {
-  //     case winPercH + drawPercH === 100:
-  //       calculation = calculation / 8;
-  //       break;
-  //     case winPercH + drawPercH >= 90 && winPercH + drawPercH < 100:
-  //       calculation = calculation / 7;
-  //       break;
-  //     case winPercH + drawPercH >= 80 && winPercH + drawPercH < 90:
-  //       calculation = calculation / 6;
-  //       break;
-  //     case winPercH + drawPercH >= 70 && winPercH + drawPercH < 80:
-  //       calculation = calculation / 5;
-  //       break;
-  //     case winPercH + drawPercH >= 60 && winPercH + drawPercH < 70:
-  //       calculation = calculation / 3;
-  //       break;
-  //     case winPercH + drawPercH >= 50 && winPercH + drawPercH < 60:
-  //       calculation = calculation / 2;
-  //       break;
-  //     case winPercH + drawPercH >= 40 && winPercH + drawPercH < 50:
-  //       calculation = calculation / 1.5;
-  //       break;
-  //     case winPercH + drawPercH >= 30 && winPercH + drawPercH < 40:
-  //       calculation = calculation / 1.05;
-  //       break;
-  //     case winPercH + drawPercH >= 20 && winPercH + drawPercH < 30:
-  //       calculation = calculation * 1;
-  //       break;
-  //     case winPercH + drawPercH >= 10 && winPercH + drawPercH < 20:
-  //       calculation = calculation * 2;
-  //       break;
-  //     case winPercH + drawPercH >= 0 && winPercH + drawPercH < 10:
-  //       calculation = calculation * 3;
-  //       break;
-  //     default:
-  //       break;
-  //   }
-  // }
-
-  // // adjust calculation based on better team's win and draw percentages
-  // if (calculation > 0) {
-  //   switch (true) {
-  //     case winPercH >= 90 && winPercH <= 100:
-  //       calculation = calculation * 4;
-  //       break;
-  //     case winPercH >= 80 && winPercH < 90:
-  //       calculation = calculation * 3.5;
-  //       break;
-  //     case winPercH >= 70 && winPercH < 80:
-  //       calculation = calculation * 3;
-  //       break;
-  //     case homeForm.homeOrAwayAverage > 2.5:
-  //       calculation = calculation * 2.5;
-  //       break;
-  //     case winPercH >= 60 && winPercH < 70:
-  //       calculation = calculation * 2;
-  //       break;
-  //     case winPercH >= 50 && winPercH < 60:
-  //       calculation = calculation * 1.5;
-  //       break;
-  //     case winPercH >= 40 && winPercH < 50:
-  //       calculation = calculation * 1.25;
-  //       break;
-  //     case winPercH >= 30 && winPercH < 40:
-  //       calculation = calculation * 1;
-  //       break;
-  //     case winPercH >= 20 && winPercH < 30:
-  //       calculation = calculation * 0.75;
-  //       break;
-  //     case winPercH >= 10 && winPercH < 20:
-  //       calculation = calculation * 0.5;
-  //       break;
-  //     case winPercH >= 0 && winPercH < 10:
-  //       calculation = calculation * 0.25;
-  //       break;
-  //     default:
-  //       break;
-  //   }
-  // } else if (calculation < 0) {
-  //   switch (true) {
-  //     case winPercA >= 90 && winPercA <= 100:
-  //       calculation = calculation * 4;
-  //       break;
-  //     case winPercA >= 80 && winPercA < 90:
-  //       calculation = calculation * 3.5;
-  //       break;
-  //     case winPercA >= 70 && winPercA < 80:
-  //       calculation = calculation * 3;
-  //       break;
-  //     case awayForm.homeOrAwayAverage > 2.5:
-  //       calculation = calculation * 2.5;
-  //       break;
-  //     case winPercA >= 60 && winPercA < 70:
-  //       calculation = calculation * 2;
-  //       break;
-  //     case winPercA >= 50 && winPercA < 60:
-  //       calculation = calculation * 1.5;
-  //       break;
-  //     case winPercA >= 40 && winPercA < 50:
-  //       calculation = calculation * 1.25;
-  //       break;
-  //     case winPercA >= 30 && winPercA < 40:
-  //       calculation = calculation * 1;
-  //       break;
-  //     case winPercA >= 20 && winPercA < 30:
-  //       calculation = calculation * 0.75;
-  //       break;
-  //     case winPercA >= 10 && winPercA < 20:
-  //       calculation = calculation * 0.5;
-  //       break;
-  //     case winPercA >= 0 && winPercA < 10:
-  //       calculation = calculation * 0.25;
-  //       break;
-  //     default:
-  //       break;
-  //   }
-  // }
-
   if (calculation > 0) {
     switch (true) {
+
       case homeForm.last2Points <= 1:
-        calculation = calculation / 5;
+        calculation = calculation / 10;
         break;
       case homeForm.last2Points === 2:
-        calculation = calculation / 2.5;
+        calculation = calculation / 5;
         break;
       case homeForm.homeOrAwayAverage < 1:
-        calculation = calculation / 3;
+        calculation = calculation / 5;
         break;
       case awayForm.homeOrAwayAverage > 2.5:
-        calculation = calculation / 2;
+        calculation = calculation / 2.5;
         break;
+        case awayForm.lastGame === "W":
+          calculation = calculation / 5;
+          break;
       default:
         break;
     }
   } else if (calculation < 0) {
     switch (true) {
       case awayForm.last2Points <= 1:
-        calculation = calculation / 5;
+        calculation = calculation / 10;
         break;
       case awayForm.last2Points === 2:
-        calculation = calculation / 2.5;
+        calculation = calculation / 5;
         break;
       case awayForm.homeOrAwayAverage < 1:
-        calculation = calculation / 3;
+        calculation = calculation / 5;
         break;
       case homeForm.homeOrAwayAverage > 2.5:
-        calculation = calculation / 2;
+        calculation = calculation / 2.5;
+        break;
+      case homeForm.lastGame === "W":
+        calculation = calculation / 5;
         break;
       default:
         break;
@@ -1145,11 +995,9 @@ export async function compareTeams(homeForm, awayForm, match) {
     calculation = calculation / tooCloseToCall;
   }
 
-
-
-  if(tooCloseToCall < -1){
-    calculation = calculation * 2
-  }
+  // if (tooCloseToCall < -1) {
+  //   calculation = calculation * 2;
+  // }
 
   console.log(match.game);
   console.log(tooCloseToCall);
@@ -1210,15 +1058,14 @@ export async function compareDefences(form, rawGoals, name) {
     form.conceededAverageShortAndLongTerm
   );
 
-  console.log(name)
+  console.log(name);
 
   let calculation = CleanSheetPercentageComparison + GoalsConceededComparison;
   let goals = rawGoals - calculation;
 
-  console.log(form)
-  console.log(calculation)
-  console.log(goals)
-
+  console.log(form);
+  console.log(calculation);
+  console.log(goals);
 
   return goals;
 }
@@ -1692,8 +1539,8 @@ export async function calculateScore(match, index, divider) {
     let awayComparisonWeighting;
     match.scoreDiff = await diff(factorOneHome, factorOneAway);
 
-        console.log(match.game)
-        console.log(match.scoreDiff)
+    console.log(match.game);
+    console.log(match.scoreDiff);
 
     if (teamComparisonScore > 0) {
       homeComparisonWeighting = 1 + Math.abs(teamComparisonScore);
@@ -1720,8 +1567,8 @@ export async function calculateScore(match, index, divider) {
     match.rawFinalHomeGoals = rawFinalHomeGoals;
     match.rawFinalAwayGoals = rawFinalAwayGoals;
 
-    console.log(match.game)
-    console.log(match)
+    console.log(match.game);
+    console.log(match);
 
     if (
       formHome.CleanSheetPercentage < 30 &&
@@ -1756,9 +1603,9 @@ export async function calculateScore(match, index, divider) {
       rawFinalHomeGoals = rawFinalHomeGoals - 0.5;
       rawFinalAwayGoals = rawFinalAwayGoals + 0.5;
     }
-    console.log(match.game)
-    console.log(rawFinalHomeGoals)
-    console.log(rawFinalAwayGoals)
+    console.log(match.game);
+    console.log(rawFinalHomeGoals);
+    console.log(rawFinalAwayGoals);
 
     if (
       (rawFinalHomeGoals + 1) / (formHome.ScoredAverage + 1) > 1.2 &&
@@ -1784,9 +1631,9 @@ export async function calculateScore(match, index, divider) {
       rawFinalAwayGoals = rawFinalAwayGoals + 1;
     }
 
-    console.log(match.game)
-    console.log(rawFinalHomeGoals)
-    console.log(rawFinalAwayGoals)
+    console.log(match.game);
+    console.log(rawFinalHomeGoals);
+    console.log(rawFinalAwayGoals);
 
     let rawFinalHomeGoalsAdjusted;
     let rawFinalAwayGoalsAdjusted;
@@ -1803,9 +1650,9 @@ export async function calculateScore(match, index, divider) {
       match.homeTeam
     );
 
-    console.log(match.game)
-    console.log(rawFinalHomeGoalsAdjusted)
-    console.log(rawFinalAwayGoalsAdjusted)
+    console.log(match.game);
+    console.log(rawFinalHomeGoalsAdjusted);
+    console.log(rawFinalAwayGoalsAdjusted);
 
     finalHomeGoals = await roundCustom(
       rawFinalHomeGoalsAdjusted,
@@ -1818,24 +1665,6 @@ export async function calculateScore(match, index, divider) {
       formAway,
       formHome
     );
-
-    // finalHomeGoals =  Math.round(rawFinalHomeGoalsAdjusted)
-
-    // finalAwayGoals =  Math.round(rawFinalAwayGoalsAdjusted)
-
-    // if ((finalHomeGoals + 1) / (formHome.ScoredAverage + 1) > 1.5 && (finalHomeGoals + 1) / (formAway.ConcededAverage + 1) > 1.5) {
-    //   finalHomeGoals = finalHomeGoals - 1;
-    // }
-    // else if ((finalHomeGoals + 1) / (formHome.ScoredAverage + 1) < 0.25 && (finalHomeGoals + 1) / (formAway.ConcededAverage + 1) < 0.25){
-    //   finalHomeGoals = finalHomeGoals + 1;
-    // }
-
-    // if ((finalAwayGoals + 1) / (formAway.ScoredAverage + 1) > 1.5 && (finalAwayGoals + 1) / (formHome.ConcededAverage + 1) > 1.5) {
-    //   finalAwayGoals = finalAwayGoals - 1;
-    // }
-    // else if ((finalAwayGoals + 1) / (formAway.ScoredAverage + 1) < 0.25 && (finalAwayGoals + 1) / (formHome.ConcededAverage + 1) < 0.25){
-    //   finalAwayGoals = finalAwayGoals + 1;
-    // }
 
     if (finalHomeGoals > 5) {
       finalHomeGoals = Math.round(
