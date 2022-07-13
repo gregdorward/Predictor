@@ -869,7 +869,7 @@ p {
 }
 
 .LastGameHeader {
-  padding-top: 1.5em !important;
+  padding-top: 1em !important;
   font-weight: bolder;
   font-size: 1.1em;
   background-color: #e2e2e26c;
@@ -1034,7 +1034,6 @@ p {
 
 .Home li {
   padding: 0.8em;
-  margin: 0px;
   list-style: none;
   background: #e2e2e26c;
   color: black;
@@ -1050,7 +1049,6 @@ p {
 
 .Away {
   padding-left: 0px;
-  /* padding-right: 5px; */
   flex-basis: 50%;
 }
 
@@ -1060,8 +1058,26 @@ p {
   list-style: none;
   background: #e2e2e26c;
   color: black;
-  /* padding-right: 1em; */
 }
+
+.FormSummaryHome {
+  display: flex;
+  height: 12em;
+  max-width: 21em;
+  justify-content:flex-end;
+  align-items: flex-start;
+  background-color: #e2e2e26c !important;
+  padding-left: 1em !important;
+  padding-right: 1em !important;
+  padding-top: 1.5em !important;
+  padding-bottom: 1em !important;
+  line-height: 1.5em;
+  margin-left: auto;
+
+}
+
+
+
 
 .Away li:nth-child(odd) { 
   background: #dedddd;

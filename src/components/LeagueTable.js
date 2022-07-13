@@ -136,6 +136,7 @@ export default function LeagueTable(props) {
 
   function getTopScorersTeam(id) {
     let found = props.Teams.find((team) => team.ID === id);
+    console.log(props.Teams)
     return found.Name;
   }
 

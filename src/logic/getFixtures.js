@@ -24,6 +24,8 @@ export var leagueArray = [];
 var leagueIdArray = [];
 export var leagueStatsArray = [];
 export let leagueInstance;
+var lastThreeFormHome
+var lastThreeFormAway
 var lastFiveFormHome;
 var lastFiveFormAway;
 var lastSixFormHome;
@@ -173,7 +175,9 @@ export async function generateTables(a, leagueIdArray) {
 }
 
 export async function renderTable(index) {
+  console.log(index)
   let league = tableArray[index];
+  console.log(league)
   let statistics;
   let leagueStatistics = await fetch(
     `${process.env.REACT_APP_EXPRESS_SERVER}leagueStats/${league[0].LeagueID}`
@@ -371,6 +375,8 @@ export async function generateFixtures(day, radioState, selectedOdds) {
     </div>,
     document.getElementById("Buttons")
   );
+
+  console.log(orderedLeagues)
 
   for (let i = 0; i < orderedLeagues.length; i++) {
     leagueID = orderedLeagues[i].element.id;
@@ -689,6 +695,12 @@ export async function generateFixtures(day, radioState, selectedOdds) {
         formRunHome = Array.from(homeFormRun);
         formRunAway = Array.from(awayFormRun);
 
+        lastThreeFormHome = [homeFormString5[2], homeFormString5[3], homeFormString5[4]]
+        lastThreeFormAway = [awayFormString5[2], awayFormString5[3], awayFormString5[4]]
+
+
+        console.log(lastFiveFormHome)
+
         if (
           teamPositionHome === 0 ||
           form[0].data[0].season_format !== "Domestic League"
@@ -747,7 +759,7 @@ export async function generateFixtures(day, radioState, selectedOdds) {
                 form[0].data[0].stats.xg_against_avg_home
               ),
               CleanSheetPercentage: parseFloat(
-                form[0].data[0].stats.seasonCSPercentage_home
+                form[0].data[0].stats.seasonCSPercentage_overall
               ),
               AveragePossessionOverall: parseFloat(
                 form[0].data[0].stats.possessionAVG_overall
@@ -779,6 +791,7 @@ export async function generateFixtures(day, radioState, selectedOdds) {
               BTTSPercentage: parseInt(
                 form[0].data[0].stats.seasonBTTSPercentage_home
               ),
+              lastThreeForm: lastThreeFormHome,
               LastFiveForm: lastFiveFormHome,
               LastSixForm: lastSixFormHome,
               LastTenForm: lastTenFormHome,
@@ -817,7 +830,7 @@ export async function generateFixtures(day, radioState, selectedOdds) {
                 form[0].data[1].stats.xg_against_avg_home
               ),
               CleanSheetPercentage: parseFloat(
-                form[0].data[1].stats.seasonCSPercentage_home
+                form[0].data[1].stats.seasonCSPercentage_overall
               ),
               AveragePossessionOverall: parseFloat(
                 form[0].data[1].stats.possessionAVG_overall
@@ -849,6 +862,7 @@ export async function generateFixtures(day, radioState, selectedOdds) {
               BTTSPercentage: parseInt(
                 form[0].data[1].stats.seasonBTTSPercentage_home
               ),
+              lastThreeForm: lastThreeFormHome,
               LastFiveForm: lastFiveFormHome,
               LastSixForm: lastSixFormHome,
               LastTenForm: lastTenFormHome,
@@ -887,7 +901,7 @@ export async function generateFixtures(day, radioState, selectedOdds) {
                 form[0].data[2].stats.xg_against_avg_home
               ),
               CleanSheetPercentage: parseFloat(
-                form[0].data[2].stats.seasonCSPercentage_home
+                form[0].data[2].stats.seasonCSPercentage_overall
               ),
               AveragePossessionOverall: parseFloat(
                 form[0].data[2].stats.possessionAVG_overall
@@ -919,6 +933,7 @@ export async function generateFixtures(day, radioState, selectedOdds) {
               BTTSPercentage: parseInt(
                 form[0].data[2].stats.seasonBTTSPercentage_home
               ),
+              lastThreeForm: lastThreeFormHome,
               LastFiveForm: lastFiveFormHome,
               LastSixForm: lastSixFormHome,
               LastTenForm: lastTenFormHome,
@@ -979,7 +994,7 @@ export async function generateFixtures(day, radioState, selectedOdds) {
                 form[1].data[0].stats.xg_against_avg_away
               ),
               CleanSheetPercentage: parseFloat(
-                form[1].data[0].stats.seasonCSPercentage_away
+                form[1].data[0].stats.seasonCSPercentage_overall
               ),
               AveragePossessionOverall: parseFloat(
                 form[1].data[0].stats.possessionAVG_overall
@@ -1006,6 +1021,7 @@ export async function generateFixtures(day, radioState, selectedOdds) {
               BTTSPercentage: parseInt(
                 form[1].data[0].stats.seasonBTTSPercentage_away
               ),
+              lastThreeForm: lastThreeFormAway,
               LastFiveForm: lastFiveFormAway,
               LastSixForm: lastSixFormAway,
               LastTenForm: lastTenFormAway,
@@ -1044,7 +1060,7 @@ export async function generateFixtures(day, radioState, selectedOdds) {
                 form[1].data[1].stats.xg_against_avg_away
               ),
               CleanSheetPercentage: parseFloat(
-                form[1].data[1].stats.seasonCSPercentage_away
+                form[1].data[1].stats.seasonCSPercentage_overall
               ),
               AveragePossessionOverall: parseFloat(
                 form[1].data[1].stats.possessionAVG_overall
@@ -1071,6 +1087,7 @@ export async function generateFixtures(day, radioState, selectedOdds) {
               BTTSPercentage: parseInt(
                 form[1].data[1].stats.seasonBTTSPercentage_away
               ),
+              lastThreeForm: lastThreeFormAway,
               LastFiveForm: lastFiveFormAway,
               LastSixForm: lastSixFormAway,
               LastTenForm: lastTenFormAway,
@@ -1109,7 +1126,7 @@ export async function generateFixtures(day, radioState, selectedOdds) {
                 form[1].data[2].stats.xg_against_avg_away
               ),
               CleanSheetPercentage: parseFloat(
-                form[1].data[2].stats.seasonCSPercentage_away
+                form[1].data[2].stats.seasonCSPercentage_overall
               ),
               AveragePossessionOverall: parseFloat(
                 form[1].data[2].stats.possessionAVG_overall
@@ -1136,6 +1153,7 @@ export async function generateFixtures(day, radioState, selectedOdds) {
               BTTSPercentage: parseInt(
                 form[1].data[2].stats.seasonBTTSPercentage_away
               ),
+              lastThreeForm: lastThreeFormAway,
               LastFiveForm: lastFiveFormAway,
               LastSixForm: lastSixFormAway,
               LastTenForm: lastTenFormAway,

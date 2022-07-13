@@ -1161,12 +1161,6 @@ export async function calculateScore(match, index, divider) {
         teams[i][index].previousToLastGame,
       ];
 
-      let last3 = [
-        teams[i][index].lastGame,
-        teams[i][index].previousToLastGame,
-        teams[i][index].LastFiveForm[2],
-      ];
-
       teams[i][index].last5Points = getPointsFromLastX(
         teams[i][index].LastFiveForm
       );
@@ -1179,7 +1173,7 @@ export async function calculateScore(match, index, divider) {
         teams[i][index].LastTenForm
       );
 
-      teams[i][index].last3Points = getPointsFromLastX(last3);
+      teams[i][index].last3Points = getPointsFromLastX(teams[i][index].lastThreeForm);
 
       teams[i][index].last2Points = getPointsFromLastX(last2);
 

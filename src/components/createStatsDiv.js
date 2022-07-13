@@ -45,6 +45,7 @@ function Stats(props) {
               {props.formRun[4]}
             </span>
           </li>
+          <li className="FormSummaryHome">{props.FormTextString}</li>
           <li
             key="TeamScored"
             className="TeamScored"
@@ -216,6 +217,7 @@ function Stats(props) {
             <span className={styleForm(props.last5[3])}>{props.last5[3]}</span>
             <span className={styleForm(props.last5[4])}>{props.last5[4]}</span>
           </li>
+          <li className="FormSummaryHome">{props.FormTextString}</li>
           <li
             key="TeamScored"
             className="TeamScored"
