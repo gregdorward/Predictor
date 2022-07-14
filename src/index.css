@@ -832,6 +832,7 @@ p {
   align-content: center;
   color: black;
   flex-direction: row-reverse;
+  text-align: center;
   padding-bottom: 1.5em;
 }
 
@@ -841,6 +842,7 @@ p {
   background-color: #e2e2e26c;
   align-items: center;
   align-content: center;
+  text-align: center;
   color: black;
   padding-bottom: 1.5em;
 
