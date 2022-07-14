@@ -203,7 +203,7 @@ export async function getTeamStats(id, home, away) {
       let lastMatch = matchArr[0].id;
       let secondMatchExists = true;
       let secondToLastMatch =
-        matchArr[1] !== undefined ? secondMatchExists : false;
+        matchArr[1] !== undefined ? matchArr[1].id : false;
 
       let previousMatch = await fetch(
         `${process.env.REACT_APP_EXPRESS_SERVER}match/${lastMatch}`
@@ -237,6 +237,9 @@ export async function getTeamStats(id, home, away) {
             }/${dateObject2.getFullYear()}`;
           });
         }
+        console.log(previousMatchDetails)
+        console.log(secondToPreviousMatchDetails)
+
       });
 
       ReactDOM.render(
@@ -260,12 +263,12 @@ export async function getTeamStats(id, home, away) {
                 : "-"
             }
             lastGameHomeGoals={
-              previousMatchDetails.homeGoalCount
+              previousMatchDetails.homeGoalCount !== undefined
                 ? previousMatchDetails.homeGoalCount
                 : "-"
             }
             lastGameAwayGoals={
-              previousMatchDetails.awayGoalCount
+              previousMatchDetails.awayGoalCount !== undefined
                 ? previousMatchDetails.awayGoalCount
                 : "-"
             }
@@ -286,12 +289,12 @@ export async function getTeamStats(id, home, away) {
                 : "-"
             }
             secondToLastGameHomeGoals={
-              secondToPreviousMatchDetails.homeGoalCount
+              secondToPreviousMatchDetails.homeGoalCount !== undefined
                 ? secondToPreviousMatchDetails.homeGoalCount
                 : "-"
             }
             secondToLastGameAwayGoals={
-              secondToPreviousMatchDetails.awayGoalCount
+              secondToPreviousMatchDetails.awayGoalCount !== undefined
                 ? secondToPreviousMatchDetails.awayGoalCount
                 : "-"
             }

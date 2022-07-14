@@ -96,7 +96,11 @@ export async function createStatsDiv(game, mock) {
           )
         : "N/A";
 
-      console.log(lastGameHome);
+      console.log(gameStats.teamIDHome)
+      console.log(matchArray);
+      console.log(gameStats.teamIDAway)
+      console.log(matchArrayAway);
+
 
       let lastGameHomeResult;
       let lastGameHomeLink;

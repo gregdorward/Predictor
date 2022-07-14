@@ -1045,6 +1045,14 @@ p {
   color: black;
 }
 
+.Home li.Form {
+  padding-top: 1.5em;
+  padding-bottom: 1.5em;
+}
+
+.Home li.FormHomeOrAway {
+  padding-top: 1.5em;
+}
 
 
 .Away {
@@ -1060,6 +1068,15 @@ p {
   color: black;
 }
 
+.Away li.Form {
+  padding-top: 1.5em;
+  padding-bottom: 1.5em;
+}
+
+.Away li.FormHomeOrAway {
+  padding-top: 1.5em;
+}
+
 .FormSummaryHome {
   display: flex;
   height: 12em;
@@ -1069,7 +1086,7 @@ p {
   background-color: #e2e2e26c !important;
   padding-left: 1em !important;
   padding-right: 1em !important;
-  padding-top: 1.5em !important;
+  /* padding-top: 1.5em !important; */
   padding-bottom: 1em !important;
   line-height: 1.5em;
   margin-left: auto;
