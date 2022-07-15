@@ -158,22 +158,22 @@ async function getMatchTime(unixTime) {
 
     //leagues ordered by id
     var leagueOrder = [
-      6135, //premier league 21/22
-      6089, //championship
-      6017, //league 1 21/22
-      6015, //league 2 21/22
-      6088, //National league 21/22
-      6211, //
-      5992, //Scottish Prem 21/22
-      6192, //
+      7704, //premier league 22/23
+      7593, //championship 22/23
+      7570, //league 1 22/23
+      7574, //league 2 22/23
+      7729, //National league 22/23
+      7665, //La Liga 22/23
+      7494, //Scottish Prem 22/23
+      7664, //Bundesliga 22/23
       7608, //Serie A 22/23
       7500, //French Prem 22/23
-      6117, //Portagul Prem 21/22
+      7731, //Portagul Prem 22/23
       7482, //Dutch Prem 22/23
       7544, //Belgian Pro League 22/23
       7064, //sweden 22
       7426, //Danish Prem 22/23
-      7048, //Norway Prem 21
+      7048, //Norway Prem 22
       6008, //Austrian Prem 21
       6282, //Greek Prem 21
       7428, //Polish prem 22/23
@@ -187,7 +187,7 @@ async function getMatchTime(unixTime) {
       7498, //Scottish Championship 22/23
       7505, //Scottish league 1 22/23
       7506, //Scottish league 2 22/23
-      6173, //Women's prem 21/22
+      7821, //Women's prem 21/22
       6969, //MLS 22
       6639, //Australian A league 21/22
       7097, //Brazil prem 22

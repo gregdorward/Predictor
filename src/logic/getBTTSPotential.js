@@ -14,8 +14,10 @@ export async function getBTTSPotential(allForm, match, index, homeGoals, awayGoa
   if(home !== -1 && away !== -1){
 
 
-  let homeBTTS = allForm[home].home[index].BTTSPercentage;
-  let awayBTTS = allForm[away].away[index].BTTSPercentage;
+  let homeBTTS = allForm[home].home[index].BttsPercentage;
+  let awayBTTS = allForm[away].away[index].BttsPercentage;
+  let homeOnlyBTTS = allForm[home].home[index].BTTSPercentage;
+  let awayOnlyBTTS = allForm[away].away[index].BTTSPercentage;
   let homeG = homeGoals;
   let awayG = awayGoals;
 
@@ -25,11 +27,13 @@ export async function getBTTSPotential(allForm, match, index, homeGoals, awayGoa
 
 
   match.combinedBTTS = (homeBTTS + awayBTTS) / 2;
+  match.combinedBTTSHorA = (homeOnlyBTTS + awayOnlyBTTS) / 2;
 
 if(match.bttsFraction !== "N/A" && match.status !== "suspended" && match.status !== "canceled"){
   if (
-    match.combinedBTTS > 60 &&
-    match.awayOdds < 3.5 &&
+    match.combinedBTTS > 50 &&
+    match.combinedBTTSHorA > 50 &&
+    match.awayOdds < 4 &&
     match.awayOdds > 1.4 &&
     homeXG >= 1.1 &&
     awayXG >= 1.1 &&

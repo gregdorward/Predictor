@@ -146,6 +146,8 @@ export async function createStatsDiv(game, mock) {
       let time = game.time;
 
       console.log(gameStats.home[index])
+      console.log(gameStats.away[index])
+
       gameStats.home[index].last3Points = getPointsFromLastX(
         gameStats.home[index].lastThreeForm
       );

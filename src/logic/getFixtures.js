@@ -175,9 +175,7 @@ export async function generateTables(a, leagueIdArray) {
 }
 
 export async function renderTable(index) {
-  console.log(index)
   let league = tableArray[index];
-  console.log(league)
   let statistics;
   let leagueStatistics = await fetch(
     `${process.env.REACT_APP_EXPRESS_SERVER}leagueStats/${league[0].LeagueID}`
@@ -375,8 +373,7 @@ export async function generateFixtures(day, radioState, selectedOdds) {
     </div>,
     document.getElementById("Buttons")
   );
-
-  console.log(orderedLeagues)
+  
 
   for (let i = 0; i < orderedLeagues.length; i++) {
     leagueID = orderedLeagues[i].element.id;
@@ -1227,6 +1224,7 @@ export async function generateFixtures(day, radioState, selectedOdds) {
 
       match.expectedGoalsHomeToDate = fixture.team_a_xg_prematch;
       match.expectedGoalsAwayToDate = fixture.team_b_xg_prematch;
+      match.game_week = fixture.game_week
 
 
       if (match.status !== "canceled" || match.status !== "suspended") {
