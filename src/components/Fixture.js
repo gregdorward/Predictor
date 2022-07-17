@@ -159,9 +159,6 @@ if(pointsAverageDiffBool === true){
 }
 
 function renderLeagueName(fixture) {
-  console.log(fixture)
-  console.log(fixture.leagueIndex)
-  console.log(fixture.leagueName)
   let name = fixture.leagueName;
   if (name === null) {
     return <div></div>;

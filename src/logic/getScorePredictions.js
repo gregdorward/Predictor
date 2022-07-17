@@ -771,31 +771,31 @@ export async function compareTeams(homeForm, awayForm, match) {
   //   OddsComparison = OddsComparison * 10
   // }
   let calculation =
-  OddsComparison * 2 +
-  positionComparison * 2 +
-  positionComparisonHorA * 2 +
-  twoGameAverageComparison * 1 +
-  tenGameAverageComparison * 1 +
-  XGdifferentialComparison * 4 +
-  seasonPPGComparison * 0 +
-  formTrendScoreComparison * 0 +
-  fiveGameAverageComparison * 4 +
-  dangerousAttacksComparisonHOrA * 0 +
-  dangerousAttacksComparison * 2 +
-  sotComparison * 0 +
-  sotComparisonHOrA * 0 +
-  CleanSheetPercentageComparison * 0 +
-  dangerousAttackConversionComparison * 0 +
-  goalsPerDangerousAttackComparison * 0 +
-  attackingPotencyComparison * 0 +
-  AveragePossessionComparison * 0 +
-  AveragePossessionComparisonHOrA * 0 +
-  winPercentageComparison * 2 +
-  lossPercentageComparison * 2 +
-  homeOrAwayAverageComparison * 0 +
-  overUnderAchievingSumComparison * 0 +
-  goalDiffComparison * 4 +
-  goalDiffHOrAComparison * 1;
+    OddsComparison * 2 +
+    positionComparison * 2 +
+    positionComparisonHorA * 2 +
+    twoGameAverageComparison * 1 +
+    tenGameAverageComparison * 1 +
+    XGdifferentialComparison * 4 +
+    seasonPPGComparison * 0 +
+    formTrendScoreComparison * 0 +
+    fiveGameAverageComparison * 4 +
+    dangerousAttacksComparisonHOrA * 0 +
+    dangerousAttacksComparison * 2 +
+    sotComparison * 0 +
+    sotComparisonHOrA * 0 +
+    CleanSheetPercentageComparison * 0 +
+    dangerousAttackConversionComparison * 0 +
+    goalsPerDangerousAttackComparison * 0 +
+    attackingPotencyComparison * 0 +
+    AveragePossessionComparison * 0 +
+    AveragePossessionComparisonHOrA * 0 +
+    winPercentageComparison * 2 +
+    lossPercentageComparison * 2 +
+    homeOrAwayAverageComparison * 0 +
+    overUnderAchievingSumComparison * 0 +
+    goalDiffComparison * 4 +
+    goalDiffHOrAComparison * 1;
 
   match.tooCloseToCall = tooCloseToCall;
 
@@ -954,9 +954,9 @@ export async function adjustForDefenceForm(csPercentage, rawGoals, name) {
     case csPercentage < 40 && csPercentage >= 20:
       goals = rawGoals * 1;
       break;
-      case csPercentage < 20 && csPercentage >= 10:
-        goals = rawGoals * 1.2;
-        break;
+    case csPercentage < 20 && csPercentage >= 10:
+      goals = rawGoals * 1.2;
+      break;
     case csPercentage < 10 && csPercentage >= 0:
       goals = rawGoals * 1.4;
       break;
@@ -1046,6 +1046,7 @@ export async function calculateScore(match, index, divider) {
       allForm.find((game) => game.away.teamName === match.awayTeam).away,
     ];
   } else {
+    console.log(allForm);
     calculate = false;
   }
 
@@ -1432,8 +1433,6 @@ export async function calculateScore(match, index, divider) {
         formHome.goalsDifferential * 0) /
       1;
 
-
-
     let factorOneAway =
       (goalCalcAwayShortTerm * 0 +
         goalCalcAwayShortAndLongTerm * 1 +
@@ -1444,7 +1443,6 @@ export async function calculateScore(match, index, divider) {
         last10WeightingAway * 2 +
         formAway.goalsDifferential * 0) /
       1;
-
 
     let homeComparisonWeighting;
     let awayComparisonWeighting;
@@ -1472,7 +1470,6 @@ export async function calculateScore(match, index, divider) {
 
     match.rawFinalHomeGoals = rawFinalHomeGoals;
     match.rawFinalAwayGoals = rawFinalAwayGoals;
-
 
     if (rawFinalAwayGoals < 0) {
       let difference = parseFloat((await diff(0, rawFinalAwayGoals)) / 10);
@@ -1729,6 +1726,7 @@ export async function calculateScore(match, index, divider) {
       finalHomeGoals = "-";
       finalAwayGoals = "-";
       match.status = "notEnoughData";
+      console.log(match.game);
     }
 
     return [
@@ -1743,6 +1741,7 @@ export async function calculateScore(match, index, divider) {
     rawFinalHomeGoals = "";
     rawFinalAwayGoals = "";
     match.status = "void";
+    console.log(match.game);
   }
 
   return [finalHomeGoals, finalAwayGoals, rawFinalHomeGoals, rawFinalAwayGoals];
@@ -1847,7 +1846,6 @@ export async function getScorePrediction(day, mocked) {
     matches.map(async (match) => {
       // if there are no stored predictions, calculate them based on live data
       if (match) {
-
         switch (true) {
           case match.status === "canceled":
             match.goalsA = "P";
@@ -1887,6 +1885,7 @@ export async function getScorePrediction(day, mocked) {
           match.prediction !== "draw" &&
           match.status !== "suspended" &&
           match.status !== "canceled" &&
+          match.status !== "notEnoughData" &&
           match.homeOdds < 3
         ) {
           predictionObject = {
@@ -1931,6 +1930,7 @@ export async function getScorePrediction(day, mocked) {
           match.prediction !== "draw" &&
           match.status !== "suspended" &&
           match.status !== "canceled" &&
+          match.status !== "notEnoughData" &&
           match.awayOdds < 3.5
         ) {
           predictionObject = {
@@ -1981,7 +1981,8 @@ export async function getScorePrediction(day, mocked) {
       if (
         match.btts === true &&
         match.status !== "suspended" &&
-        match.status !== "canceled"
+        match.status !== "canceled" &&
+        match.status !== "notEnoughData"
       ) {
         bttsArray.push(match);
 
@@ -2218,7 +2219,13 @@ export async function getScorePrediction(day, mocked) {
           break;
       }
 
-      if (match.XGdifferential === true && match.prediction === "homeWin") {
+      if (
+        match.XGdifferential === true &&
+        match.prediction === "homeWin" &&
+        match.status !== "notEnoughData" &&
+        match.status !== "suspended" &&
+        match.status !== "canceled"
+      ) {
         XGPredictionObject = {
           game: match.game,
           team: `${match.homeTeam} to win`,
@@ -2241,7 +2248,10 @@ export async function getScorePrediction(day, mocked) {
         XGDiffTips.push(XGPredictionObject);
       } else if (
         match.XGdifferential === true &&
-        match.prediction === "awayWin"
+        match.prediction === "awayWin" &&
+        match.status !== "notEnoughData" &&
+        match.status !== "suspended" &&
+        match.status !== "canceled"
       ) {
         XGPredictionObject = {
           game: match.game,
