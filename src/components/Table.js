@@ -10,7 +10,7 @@ import Paper from "@material-ui/core/Paper";
 
 const StyledTableCell = withStyles((theme) => ({
   head: {
-    backgroundColor: "#e2e2e26c",
+    backgroundColor: "#dedddd",
     color: theme.palette.common.white,
     padding: 10,
     textAlign: "center",
@@ -18,7 +18,8 @@ const StyledTableCell = withStyles((theme) => ({
     fontFamily: 'inherit',
     border: "none",
     margin: "none",
-    color: 'black'
+    color: 'black',
+    lineHeight: '2em'
   },
   body: {
     fontSize: "2em",
@@ -55,6 +56,7 @@ export default function CustomizedTables(props) {
           <TableRow>
             <StyledTableCell>Stat</StyledTableCell>
             <StyledTableCell>H2H history</StyledTableCell>
+            <StyledTableCell>XGTipping forecast</StyledTableCell>
             <StyledTableCell>Odds (yes)</StyledTableCell>
             <StyledTableCell>Odds (no)</StyledTableCell>
           </TableRow>
@@ -67,6 +69,7 @@ export default function CustomizedTables(props) {
             <StyledTableCell component="th" scope="row" align="center">
               {`${props.o05Stat}%`}
             </StyledTableCell>
+            <StyledTableCell align="center">{"-"}</StyledTableCell>
             <StyledTableCell align="center">{props.o05Odds}</StyledTableCell>
             <StyledTableCell align="center">{props.u05Odds}</StyledTableCell>
           </StyledTableRow>
@@ -77,6 +80,7 @@ export default function CustomizedTables(props) {
             <StyledTableCell component="th" scope="row" align="center">
               {`${props.o15Stat}%`}
             </StyledTableCell>
+            <StyledTableCell align="center">{"-"}</StyledTableCell>
             <StyledTableCell align="center">{props.o15Odds}</StyledTableCell>
             <StyledTableCell align="center">{props.u15Odds}</StyledTableCell>
           </StyledTableRow>
@@ -87,6 +91,7 @@ export default function CustomizedTables(props) {
             <StyledTableCell component="th" scope="row" align="center">
               {`${props.o25Stat}%`}
             </StyledTableCell>
+            <StyledTableCell align="center">{"-"}</StyledTableCell>
             <StyledTableCell align="center">{props.o25Odds}</StyledTableCell>
             <StyledTableCell align="center">{props.u25Odds}</StyledTableCell>
           </StyledTableRow>
@@ -97,16 +102,18 @@ export default function CustomizedTables(props) {
             <StyledTableCell component="th" scope="row" align="center">
               {`${props.o35Stat}%`}
             </StyledTableCell>
+            <StyledTableCell align="center">{"-"}</StyledTableCell>
             <StyledTableCell align="center">{props.o35Odds}</StyledTableCell>
             <StyledTableCell align="center">{props.u35Odds}</StyledTableCell>
           </StyledTableRow>
-          <StyledTableRow key="BTTS">
+          <StyledTableRow key="BTTS" className="BTTSStats">
             <StyledTableCell component="th" scope="row" align="center">
               BTTS %
             </StyledTableCell>
             <StyledTableCell component="th" scope="row" align="center">
               {`${props.BTTSStat}%`}
             </StyledTableCell>
+            <StyledTableCell align="center">{props.BTTSForecast}</StyledTableCell>
             <StyledTableCell align="center">{props.BTTSOdds}</StyledTableCell>
             <StyledTableCell align="center">{props.BTTSOddsNo}</StyledTableCell>
           </StyledTableRow>

@@ -525,7 +525,7 @@ export async function createStatsDiv(game, mock) {
           className="MoreStats"
           style={style}
           onClickEvent={() =>
-            getTeamStats(game.id, game.homeTeam, game.awayTeam)
+            getTeamStats(game.id, game.homeTeam, game.awayTeam, formDataHome[0].BttsPercentage, formDataHome[0].BttsPercentageHomeOrAway, formDataAway[0].BttsPercentage, formDataAway[0].BttsPercentageHomeOrAway)
           }
           text={"Fixture trends"}
         ></Button>,
