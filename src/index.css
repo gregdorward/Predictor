@@ -1079,6 +1079,20 @@ p {
   padding-top: 1.5em;
 }
 
+.Chart {
+  padding-top: 1em;
+  padding-bottom: 1em;
+}
+
+canvas {
+  /* padding-top: 1em;
+  padding-bottom: 1em; */
+  max-height: 375px;
+  max-width: 450px;
+  display: inline !important;
+  
+}
+
 .FormSummaryHome {
   display: flex;
   height: 12em;

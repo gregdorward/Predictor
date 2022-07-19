@@ -10,6 +10,7 @@ import { CreateBadge } from "../components/createBadge";
 import { Badge } from "@material-ui/core";
 import { Fragment } from "react";
 import GenerateFormSummary from "../logic/compareFormTrend";
+import Chart from "../components/Chart";
 
 let testBool;
 
@@ -96,11 +97,10 @@ export async function createStatsDiv(game, mock) {
           )
         : "N/A";
 
-      console.log(gameStats.teamIDHome)
+      console.log(gameStats.teamIDHome);
       console.log(matchArray);
-      console.log(gameStats.teamIDAway)
+      console.log(gameStats.teamIDAway);
       console.log(matchArrayAway);
-
 
       let lastGameHomeResult;
       let lastGameHomeLink;
@@ -145,8 +145,8 @@ export async function createStatsDiv(game, mock) {
 
       let time = game.time;
 
-      console.log(gameStats.home[index])
-      console.log(gameStats.away[index])
+      console.log(gameStats.home[index]);
+      console.log(gameStats.away[index]);
 
       gameStats.home[index].last3Points = getPointsFromLastX(
         gameStats.home[index].lastThreeForm
@@ -257,12 +257,12 @@ export async function createStatsDiv(game, mock) {
       let formTextStringHome = await GenerateFormSummary(
         gameStats.home[2],
         homeFormTrend,
-        gameStats.home[0],
+        gameStats.home[0]
       );
       let formTextStringAway = await GenerateFormSummary(
         gameStats.away[2],
         awayFormTrend,
-        gameStats.away[0],
+        gameStats.away[0]
       );
 
       let homeLastGame = await getLastGameResult(
@@ -343,10 +343,15 @@ export async function createStatsDiv(game, mock) {
       });
 
       ReactDOM.render(
-        <div style={style}>
-          <Div className="MatchTime" text={`Kick off: ${time} GMT`}></Div>
-          <Div text={`Last game`} className={"LastGameHeader"}></Div>
-        </div>,
+        <Fragment>
+          <div className="Chart" id={`Chart${game.id}`}>
+            <Chart data1={[homeTenGameAverage, homeSixGameAverage, homeFiveGameAverage, homeThreeGameAverage]} data2={[awayTenGameAverage, awaySixGameAverage, awayFiveGameAverage, awayThreeGameAverage]} team1={game.homeTeam} team2={game.awayTeam}></Chart>
+          </div>
+          <div style={style}>
+            <Div className="MatchTime" text={`Kick off: ${time} GMT`}></Div>
+            <Div text={`Last game`} className={"LastGameHeader"}></Div>
+          </div>
+        </Fragment>,
         document.getElementById("stats" + homeTeam)
       );
 
@@ -372,6 +377,7 @@ export async function createStatsDiv(game, mock) {
             href={`https://footystats.org${lastGameHomeLink}`}
             target="_blank"
             className="PreviousResultHome"
+            rel="noreferrer"
           >
             <CreateBadge
               image={lastGameHomeHomeBadge}
@@ -525,7 +531,15 @@ export async function createStatsDiv(game, mock) {
           className="MoreStats"
           style={style}
           onClickEvent={() =>
-            getTeamStats(game.id, game.homeTeam, game.awayTeam, formDataHome[0].BttsPercentage, formDataHome[0].BttsPercentageHomeOrAway, formDataAway[0].BttsPercentage, formDataAway[0].BttsPercentageHomeOrAway)
+            getTeamStats(
+              game.id,
+              game.homeTeam,
+              game.awayTeam,
+              formDataHome[0].BttsPercentage,
+              formDataHome[0].BttsPercentageHomeOrAway,
+              formDataAway[0].BttsPercentage,
+              formDataAway[0].BttsPercentageHomeOrAway
+            )
           }
           text={"Fixture trends"}
         ></Button>,
