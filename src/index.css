@@ -1079,18 +1079,13 @@ p {
   padding-top: 1.5em;
 }
 
-.Chart {
-  padding-top: 1em;
-  padding-bottom: 1em;
-}
-
 canvas {
   /* padding-top: 1em;
   padding-bottom: 1em; */
   max-height: 375px;
   max-width: 450px;
   display: inline !important;
-  
+  margin: 1.5em; 
 }
 
 .FormSummaryHome {
@@ -1103,7 +1098,7 @@ canvas {
   padding-left: 1em !important;
   padding-right: 1em !important;
   /* padding-top: 1.5em !important; */
-  padding-bottom: 1em !important;
+  /* padding-bottom: 1em !important; */
   line-height: 1.5em;
   margin-left: auto;
 

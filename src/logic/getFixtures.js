@@ -773,7 +773,7 @@ export async function generateFixtures(day, radioState, selectedOdds) {
               AverageDangerousAttacksOverall: parseFloat(
                 form[0].data[0].stats.dangerous_attacks_avg_overall
               ),
-              PPG: parseFloat(form[0].data[0].stats.seasonPPG_home),
+              PPG: parseFloat(form[0].data[0].stats.seasonPPG_overall),
               AttacksHome: parseFloat(form[0].data[0].stats.attacks_avg_home),
               AttacksAway: parseFloat(form[0].data[0].stats.attacks_avg_away),
               AverageDangerousAttacks: parseFloat(
@@ -844,7 +844,7 @@ export async function generateFixtures(day, radioState, selectedOdds) {
               AverageDangerousAttacksOverall: parseFloat(
                 form[0].data[1].stats.dangerous_attacks_avg_overall
               ),
-              PPG: parseFloat(form[0].data[1].stats.seasonPPG_home),
+              PPG: parseFloat(form[0].data[1].stats.seasonPPG_overall),
               AttacksHome: parseFloat(form[0].data[1].stats.attacks_avg_home),
               AttacksAway: parseFloat(form[0].data[1].stats.attacks_avg_away),
               AverageDangerousAttacks: parseFloat(
@@ -915,7 +915,7 @@ export async function generateFixtures(day, radioState, selectedOdds) {
               AverageDangerousAttacksOverall: parseFloat(
                 form[0].data[2].stats.dangerous_attacks_avg_overall
               ),
-              PPG: parseFloat(form[0].data[2].stats.seasonPPG_home),
+              PPG: parseFloat(form[0].data[2].stats.seasonPPG_overall),
               AttacksHome: parseFloat(form[0].data[2].stats.attacks_avg_home),
               AttacksAway: parseFloat(form[0].data[2].stats.attacks_avg_away),
               AverageDangerousAttacks: parseFloat(
@@ -1008,7 +1008,7 @@ export async function generateFixtures(day, radioState, selectedOdds) {
               AverageDangerousAttacksOverall: parseFloat(
                 form[1].data[0].stats.dangerous_attacks_avg_overall
               ),
-              PPG: parseFloat(form[1].data[0].stats.seasonPPG_away),
+              PPG: parseFloat(form[1].data[0].stats.seasonPPG_overall),
               AttacksAverage: parseFloat(
                 form[1].data[0].stats.attacks_avg_away
               ),
@@ -1074,7 +1074,7 @@ export async function generateFixtures(day, radioState, selectedOdds) {
               AverageDangerousAttacksOverall: parseFloat(
                 form[1].data[1].stats.dangerous_attacks_avg_overall
               ),
-              PPG: parseFloat(form[1].data[1].stats.seasonPPG_away),
+              PPG: parseFloat(form[1].data[1].stats.seasonPPG_overall),
               AttacksAverage: parseFloat(
                 form[1].data[1].stats.attacks_avg_away
               ),
@@ -1140,7 +1140,7 @@ export async function generateFixtures(day, radioState, selectedOdds) {
               AverageDangerousAttacksOverall: parseFloat(
                 form[1].data[2].stats.dangerous_attacks_avg_overall
               ),
-              PPG: parseFloat(form[1].data[2].stats.seasonPPG_away),
+              PPG: parseFloat(form[1].data[2].stats.seasonPPG_overall),
               AttacksAverage: parseFloat(
                 form[1].data[2].stats.attacks_avg_away
               ),

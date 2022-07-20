@@ -19,16 +19,16 @@ async function getOverOrUnderText(xgSum) {
       text =
         "Underachieving to a small degree against their expected goal difference.";
       break;
-    case overUnderAchievingSum > 0.5 && overUnderAchievingSum <= 0.75:
+    case overUnderAchievingSum > 0.4 && overUnderAchievingSum <= 0.75:
       text =
         "Underachieving slighly against their expected goal difference.";
       break;
-    case overUnderAchievingSum > -0.5 && overUnderAchievingSum <= 0.5:
+    case overUnderAchievingSum > -0.4 && overUnderAchievingSum <= 0.4:
       text =
         "Roughly tracking on par with their expected goal difference.";
       break;
 
-    case overUnderAchievingSum < -0.5 && overUnderAchievingSum >= -0.75:
+    case overUnderAchievingSum < -0.4 && overUnderAchievingSum >= -0.75:
       text =
         "Overachieving slighly against their expected goal difference.";
       break;

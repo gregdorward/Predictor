@@ -5,12 +5,10 @@ import Div from "../components/Div";
 import { allForm } from "../logic/getFixtures";
 import { getTeamStats } from "../logic/getTeamStats";
 import { getPointsFromLastX } from "../logic/getScorePredictions";
-import Norway from "../data/Norway.json";
 import { CreateBadge } from "../components/createBadge";
-import { Badge } from "@material-ui/core";
 import { Fragment } from "react";
 import GenerateFormSummary from "../logic/compareFormTrend";
-import Chart from "../components/Chart";
+import { Chart, RadarChart } from "../components/Chart";
 
 let testBool;
 
@@ -224,6 +222,201 @@ export async function createStatsDiv(game, mock) {
         10
       );
 
+      async function getAttackStrength(goalsFor) {
+        let strength;
+        switch (true) {
+          case goalsFor >= 2.9:
+            strength = 10;
+            break;
+          case goalsFor >= 2.6 && goalsFor < 2.9:
+            strength = 9;
+            break;
+          case goalsFor >= 2.3 && goalsFor < 2.6:
+            strength = 8;
+            break;
+          case goalsFor >= 2 && goalsFor < 2.3:
+            strength = 7;
+            break;
+            case goalsFor >= 1.7 && goalsFor < 2:
+            strength = 6;
+            break;
+            case goalsFor >= 1.4 && goalsFor < 1.7:
+            strength = 5;
+            break;
+          case goalsFor >= 1.1 && goalsFor < 1.4:
+            strength = 4;
+            break;
+          case goalsFor >= 0.8 && goalsFor < 1.1:
+            strength = 3;
+            break;
+          case goalsFor >= 0.5 && goalsFor < 0.8:
+            strength = 2;
+            break;
+          case goalsFor < 0.5:
+            strength = 1;
+            break;
+          default:
+            break;
+        }
+        return strength;
+      }
+
+      async function getDefenceStrength(goalsAgainst) {
+        let strength;
+        switch (true) {
+          case goalsAgainst >= 2.9:
+            strength = 1;
+            break;
+          case goalsAgainst >= 2.6 && goalsAgainst < 2.9:
+            strength = 2;
+            break;
+          case goalsAgainst >= 2.3 && goalsAgainst < 2.6:
+            strength = 3;
+            break;
+          case goalsAgainst >= 2 && goalsAgainst < 2.3:
+            strength = 4;
+            break;
+            case goalsAgainst >= 1.7 && goalsAgainst < 2:
+            strength = 5;
+            break;
+            case goalsAgainst >= 1.4 && goalsAgainst < 1.7:
+            strength = 6;
+            break;
+          case goalsAgainst >= 1.1 && goalsAgainst < 1.4:
+            strength = 7;
+            break;
+          case goalsAgainst >= 0.8 && goalsAgainst < 1.1:
+            strength = 8;
+            break;
+          case goalsAgainst >= 0.5 && goalsAgainst < 0.8:
+            strength = 9;
+            break;
+          case goalsAgainst < 0.5:
+            strength = 10;
+            break;
+          default:
+            break;
+        }
+        return strength;
+      }
+
+      async function getPossessionStrength(possession) {
+        let strength;
+        switch (true) {
+          case possession >= 68:
+            strength = 10;
+            break;
+          case possession >= 64 && possession < 68:
+            strength = 9;
+            break;
+          case possession >= 60 && possession < 64:
+            strength = 8;
+            break;
+          case possession >= 56 && possession < 60:
+            strength = 7;
+            break;
+            case possession >= 52 && possession < 56:
+            strength = 6;
+            break;
+            case possession >= 48 && possession < 52:
+            strength = 5;
+            break;
+          case possession >= 43 && possession < 47:
+            strength = 4;
+            break;
+          case possession >= 39 && possession < 43:
+            strength = 3;
+            break;
+          case possession >= 35 && possession < 39:
+            strength = 2;
+            break;
+          case possession < 35:
+            strength = 1;
+            break;
+          default:
+            break;
+        }
+        return strength;
+      }
+
+      async function getXGForStrength(XG) {
+        let strength;
+        switch (true) {
+          case XG >= 2.9:
+            strength = 10;
+            break;
+          case XG >= 2.6 && XG < 2.9:
+            strength = 9;
+            break;
+          case XG >= 2.3 && XG < 2.6:
+            strength = 8;
+            break;
+          case XG >= 2 && XG < 2.3:
+            strength = 7;
+            break;
+            case XG >= 1.7 && XG < 2:
+            strength = 6;
+            break;
+            case XG >= 1.4 && XG < 1.7:
+            strength = 5;
+            break;
+          case XG >= 1.1 && XG < 1.4:
+            strength = 4;
+            break;
+          case XG >= 0.8 && XG < 1.1:
+            strength = 3;
+            break;
+          case XG >= 0.5 && XG < 0.8:
+            strength = 2;
+            break;
+          case XG < 0.5:
+            strength = 1;
+            break;
+          default:
+            break;
+        }
+        return strength;
+      }
+
+      async function getXGAgainstStrength(XGAgainst) {
+        let strength;
+        switch (true) {
+          case XGAgainst >= 2.9:
+            strength = 1;
+            break;
+          case XGAgainst >= 2.6 && XGAgainst < 2.9:
+            strength = 2;
+            break;
+          case XGAgainst >= 2.3 && XGAgainst < 2.6:
+            strength = 3;
+            break;
+          case XGAgainst >= 2 && XGAgainst < 2.3:
+            strength = 4;
+            break;
+            case XGAgainst >= 1.7 && XGAgainst < 2:
+            strength = 5;
+            break;
+            case XGAgainst >= 1.4 && XGAgainst < 1.7:
+            strength = 6;
+            break;
+          case XGAgainst >= 1.1 && XGAgainst < 1.4:
+            strength = 7;
+            break;
+          case XGAgainst >= 0.8 && XGAgainst < 1.1:
+            strength = 8;
+            break;
+          case XGAgainst >= 0.5 && XGAgainst < 0.8:
+            strength = 9;
+            break;
+          case XGAgainst < 0.5:
+            strength = 10;
+            break;
+          default:
+            break;
+        }
+        return strength;
+      }
+
       async function getLastGameResult(lastGame) {
         let text;
         switch (true) {
@@ -272,6 +465,37 @@ export async function createStatsDiv(game, mock) {
         gameStats.away[index].LastFiveForm[4]
       );
 
+      let homeAttackStrength = await getAttackStrength(
+        gameStats.home[index].ScoredOverall / 10
+      );
+      let homeDefenceStrength = await getDefenceStrength(
+        gameStats.home[index].ConcededOverall / 10
+      );
+      let homePossessionStrength = await getPossessionStrength(
+        gameStats.home[index].AveragePossessionOverall
+      );
+      let homeXGForStrength = await getXGForStrength(
+        gameStats.home[2].XGOverall
+      );
+      let homeXGAgainstStrength = await getXGAgainstStrength(
+        gameStats.home[2].XGAgainstAvgOverall
+      );
+
+      let awayAttackStrength = await getAttackStrength(
+        gameStats.away[index].ScoredOverall / 10
+      );
+      let awayDefenceStrength = await getDefenceStrength(
+        gameStats.away[index].ConcededOverall / 10
+      );
+      let awayPossessionStrength = await getPossessionStrength(
+        gameStats.away[index].AveragePossessionOverall
+      );
+      let awayXGForStrength = await getXGForStrength(
+        gameStats.away[2].XGOverall
+      );
+      let awayXGAgainstStrength = await getXGAgainstStrength(
+        gameStats.away[2].XGAgainstAvgOverall
+      );
       const formDataMatch = [];
 
       formDataMatch.push({
@@ -342,12 +566,47 @@ export async function createStatsDiv(game, mock) {
         FormTextStringAway: formTextStringAway,
       });
 
+      console.log(gameStats.home[index]);
+
       ReactDOM.render(
         <Fragment>
-          <div className="Chart" id={`Chart${game.id}`}>
-            <Chart data1={[homeTenGameAverage, homeSixGameAverage, homeFiveGameAverage, homeThreeGameAverage]} data2={[awayTenGameAverage, awaySixGameAverage, awayFiveGameAverage, awayThreeGameAverage]} team1={game.homeTeam} team2={game.awayTeam}></Chart>
-          </div>
-          <div style={style}>
+            <div className="Chart" id={`Chart${game.id}`}>
+              <Chart
+                data1={[
+                  homeTenGameAverage,
+                  homeSixGameAverage,
+                  homeFiveGameAverage,
+                  homeThreeGameAverage,
+                ]}
+                data2={[
+                  awayTenGameAverage,
+                  awaySixGameAverage,
+                  awayFiveGameAverage,
+                  awayThreeGameAverage,
+                ]}
+                team1={game.homeTeam}
+                team2={game.awayTeam}
+              ></Chart>
+              <RadarChart
+                data={[
+                  homeAttackStrength,
+                  homeDefenceStrength,
+                  homePossessionStrength,
+                  homeXGForStrength,
+                  homeXGAgainstStrength,
+                ]}
+                data2={[
+                  awayAttackStrength,
+                  awayDefenceStrength,
+                  awayPossessionStrength,
+                  awayXGForStrength,
+                  awayXGAgainstStrength,
+                ]}
+                team1={game.homeTeam}
+                team2={game.awayTeam}
+              ></RadarChart>
+            </div>
+            <div style={style}>
             <Div className="MatchTime" text={`Kick off: ${time} GMT`}></Div>
             <Div text={`Last game`} className={"LastGameHeader"}></Div>
           </div>
