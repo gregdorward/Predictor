@@ -135,11 +135,11 @@ export function RadarChart(props) {
 
   let data = {
     labels: [
-      "Attack strength",
-      "Defence strength",
-      "Ball retention strength",
-      "XG For strength",
-      "XG Against strength",
+      "Attack",
+      "Defence",
+      "Ball retention",
+      "XG For",
+      "XG Against",
     ],
     datasets: [
       {
