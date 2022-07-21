@@ -174,20 +174,20 @@ async function getMatchTime(unixTime) {
       7064, //sweden 22
       7426, //Danish Prem 22/23
       7048, //Norway Prem 22
-      6008, //Austrian Prem 21
+      7890, //Austrian Prem 22/23
       6282, //Greek Prem 21
       7428, //Polish prem 22/23
       6967, //Irish Prem 22
       4340, //Womens Euros 22
       7592, //Spanish secunda 22/23
-      6205, //Italy serie B 21/22
+      7864, //Italy serie B 22/23
       7499, //Bundesliga 2 22/23
       7591, //German 3rd tier 22/23
       7501, //French League 2 22/23
       7498, //Scottish Championship 22/23
       7505, //Scottish league 1 22/23
       7506, //Scottish league 2 22/23
-      7821, //Women's prem 21/22
+      7821, //Women's prem 22/23
       6969, //MLS 22
       6639, //Australian A league 21/22
       7097, //Brazil prem 22

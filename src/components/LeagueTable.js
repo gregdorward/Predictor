@@ -125,11 +125,11 @@ export default function LeagueTable(props) {
         scope="row"
         style={{ textAlign: "center" }}
       >
-        <span className={styleForm(team.Form[0])}>{team.Form[0]}</span>
-        <span className={styleForm(team.Form[1])}>{team.Form[1]}</span>
-        <span className={styleForm(team.Form[2])}>{team.Form[2]}</span>
-        <span className={styleForm(team.Form[3])}>{team.Form[3]}</span>
-        <span className={styleForm(team.Form[4])}>{team.Form[4]}</span>
+        <span className={styleForm(team.Form[0])}>{team.Form[0] !== undefined ? team.Form[0] : ""}</span>
+        <span className={styleForm(team.Form[1])}>{team.Form[1] !== undefined ? team.Form[1] : ""}</span>
+        <span className={styleForm(team.Form[2])}>{team.Form[2] !== undefined ? team.Form[2] : ""}</span>
+        <span className={styleForm(team.Form[3])}>{team.Form[3] !== undefined ? team.Form[3] : ""}</span>
+        <span className={styleForm(team.Form[4])}>{team.Form[4] !== undefined ? team.Form[4] : ""}</span>
       </StyledTableCell>
     </StyledTableRow>
   ));

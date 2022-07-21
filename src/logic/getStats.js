@@ -100,9 +100,11 @@ export async function createStatsDiv(game, mock) {
       console.log(gameStats.teamIDAway);
       console.log(matchArrayAway);
 
-      let lastGameHomeResult;
+      let lastGameHomeResultPart1;
+      let lastGameHomeResultPart2;
       let lastGameHomeLink;
-      let lastGameAwayResult;
+      let lastGameAwayResultPart1;
+      let lastGameAwayResultPart2;
       let lastGameAwayLink;
       let homeStadium;
       let awayStadium;
@@ -121,20 +123,25 @@ export async function createStatsDiv(game, mock) {
         : "-";
 
       if (lastGameHome !== "N/A") {
-        lastGameHomeResult = `${lastGameHome.home_name} ${lastGameHome.homeGoalCount}  :  ${lastGameHome.awayGoalCount} ${lastGameHome.away_name}`;
+        lastGameHomeResultPart1 = `${lastGameHome.home_name}: ${lastGameHome.homeGoalCount}`;
+        lastGameHomeResultPart2 = `${lastGameHome.away_name}: ${lastGameHome.awayGoalCount}`;
         lastGameHomeLink = lastGameHome.match_url;
         homeStadium = lastGameHome.stadium_name;
       } else {
-        lastGameHomeResult = "Last game unavailable";
+        lastGameHomeResultPart1 = "Last game unavailable";
+        lastGameHomeResultPart2 = "";
         homeStadium = "-";
       }
 
       if (lastGameAway !== "N/A") {
-        lastGameAwayResult = `${lastGameAway.home_name} ${lastGameAway.homeGoalCount}  :  ${lastGameAway.awayGoalCount} ${lastGameAway.away_name}`;
+        lastGameAwayResultPart1 = `${lastGameAway.home_name}: ${lastGameAway.homeGoalCount}`;
+        lastGameAwayResultPart2 = `${lastGameAway.away_name}: ${lastGameAway.awayGoalCount}`;
+
         lastGameAwayLink = lastGameAway.match_url;
         awayStadium = lastGameAway.stadium_name;
       } else {
-        lastGameAwayResult = "Last game unavailable";
+        lastGameAwayResultPart1 = "Last game unavailable";
+        lastGameAwayResultPart2 = ""
         awayStadium = "-";
       }
 
@@ -237,10 +244,10 @@ export async function createStatsDiv(game, mock) {
           case goalsFor >= 2 && goalsFor < 2.3:
             strength = 7;
             break;
-            case goalsFor >= 1.7 && goalsFor < 2:
+          case goalsFor >= 1.7 && goalsFor < 2:
             strength = 6;
             break;
-            case goalsFor >= 1.4 && goalsFor < 1.7:
+          case goalsFor >= 1.4 && goalsFor < 1.7:
             strength = 5;
             break;
           case goalsFor >= 1.1 && goalsFor < 1.4:
@@ -276,10 +283,10 @@ export async function createStatsDiv(game, mock) {
           case goalsAgainst >= 2 && goalsAgainst < 2.3:
             strength = 4;
             break;
-            case goalsAgainst >= 1.7 && goalsAgainst < 2:
+          case goalsAgainst >= 1.7 && goalsAgainst < 2:
             strength = 5;
             break;
-            case goalsAgainst >= 1.4 && goalsAgainst < 1.7:
+          case goalsAgainst >= 1.4 && goalsAgainst < 1.7:
             strength = 6;
             break;
           case goalsAgainst >= 1.1 && goalsAgainst < 1.4:
@@ -315,19 +322,19 @@ export async function createStatsDiv(game, mock) {
           case possession >= 56 && possession < 60:
             strength = 7;
             break;
-            case possession >= 52 && possession < 56:
+          case possession >= 52 && possession < 56:
             strength = 6;
             break;
-            case possession >= 48 && possession < 52:
+          case possession >= 48 && possession < 52:
             strength = 5;
             break;
-          case possession >= 43 && possession < 47:
+          case possession >= 44 && possession < 48:
             strength = 4;
             break;
-          case possession >= 39 && possession < 43:
+          case possession >= 40 && possession < 44:
             strength = 3;
             break;
-          case possession >= 35 && possession < 39:
+          case possession >= 35 && possession < 40:
             strength = 2;
             break;
           case possession < 35:
@@ -354,10 +361,10 @@ export async function createStatsDiv(game, mock) {
           case XG >= 2 && XG < 2.3:
             strength = 7;
             break;
-            case XG >= 1.7 && XG < 2:
+          case XG >= 1.7 && XG < 2:
             strength = 6;
             break;
-            case XG >= 1.4 && XG < 1.7:
+          case XG >= 1.4 && XG < 1.7:
             strength = 5;
             break;
           case XG >= 1.1 && XG < 1.4:
@@ -393,10 +400,10 @@ export async function createStatsDiv(game, mock) {
           case XGAgainst >= 2 && XGAgainst < 2.3:
             strength = 4;
             break;
-            case XGAgainst >= 1.7 && XGAgainst < 2:
+          case XGAgainst >= 1.7 && XGAgainst < 2:
             strength = 5;
             break;
-            case XGAgainst >= 1.4 && XGAgainst < 1.7:
+          case XGAgainst >= 1.4 && XGAgainst < 1.7:
             strength = 6;
             break;
           case XGAgainst >= 1.1 && XGAgainst < 1.4:
@@ -416,6 +423,25 @@ export async function createStatsDiv(game, mock) {
         }
         return strength;
       }
+
+
+async function getPointsFromGames(formString){
+  const pairings = {
+    "w": 3,
+    "d": 1,
+    "l": 0
+  }
+  const arr = [...formString];
+  let newArr = []
+  let sum = 0
+
+  for (let i = 0; i < arr.length; i++) {
+    sum = sum + pairings[arr[i]]
+    newArr.push(sum)
+  }
+  return newArr
+}
+
 
       async function getLastGameResult(lastGame) {
         let text;
@@ -496,6 +522,11 @@ export async function createStatsDiv(game, mock) {
       let awayXGAgainstStrength = await getXGAgainstStrength(
         gameStats.away[2].XGAgainstAvgOverall
       );
+
+      let formPointsHome = await getPointsFromGames(gameStats.home[2].WDLRecord)
+      let formPointsAway = await getPointsFromGames(gameStats.away[2].WDLRecord)
+
+      
       const formDataMatch = [];
 
       formDataMatch.push({
@@ -568,45 +599,65 @@ export async function createStatsDiv(game, mock) {
 
       console.log(gameStats.home[index]);
 
+      let formArrayHome
+      let formArrayAway
+      let chartType;
+
+      if(formPointsHome.length > 1){
+        formArrayHome = formPointsHome
+        formArrayAway = formPointsAway
+        chartType = "Season Performance"
+      } else {
+        formArrayHome = [
+          homeTenGameAverage,
+          homeSixGameAverage,
+          homeFiveGameAverage,
+          homeThreeGameAverage,
+        ]
+        formArrayAway = [
+          awayTenGameAverage,
+          awaySixGameAverage,
+          awayFiveGameAverage,
+          awayThreeGameAverage,
+        ]
+        chartType = "Rolling Average (last 10)"
+
+      }
+
       ReactDOM.render(
         <Fragment>
-            <div className="Chart" id={`Chart${game.id}`}>
-              <Chart
-                data1={[
-                  homeTenGameAverage,
-                  homeSixGameAverage,
-                  homeFiveGameAverage,
-                  homeThreeGameAverage,
-                ]}
-                data2={[
-                  awayTenGameAverage,
-                  awaySixGameAverage,
-                  awayFiveGameAverage,
-                  awayThreeGameAverage,
-                ]}
-                team1={game.homeTeam}
-                team2={game.awayTeam}
-              ></Chart>
-              <RadarChart
-                data={[
-                  homeAttackStrength,
-                  homeDefenceStrength,
-                  homePossessionStrength,
-                  homeXGForStrength,
-                  homeXGAgainstStrength,
-                ]}
-                data2={[
-                  awayAttackStrength,
-                  awayDefenceStrength,
-                  awayPossessionStrength,
-                  awayXGForStrength,
-                  awayXGAgainstStrength,
-                ]}
-                team1={game.homeTeam}
-                team2={game.awayTeam}
-              ></RadarChart>
-            </div>
-            <div style={style}>
+          <div className="Chart" id={`Chart${game.id}`}>
+            <Chart
+              data1={
+                formArrayHome
+              }
+              data2={
+                formArrayAway
+              }
+              team1={game.homeTeam}
+              team2={game.awayTeam}
+              type={chartType}
+            ></Chart>
+            <RadarChart
+              data={[
+                homeAttackStrength,
+                homeDefenceStrength,
+                homePossessionStrength,
+                homeXGForStrength,
+                homeXGAgainstStrength,
+              ]}
+              data2={[
+                awayAttackStrength,
+                awayDefenceStrength,
+                awayPossessionStrength,
+                awayXGForStrength,
+                awayXGAgainstStrength,
+              ]}
+              team1={game.homeTeam}
+              team2={game.awayTeam}
+            ></RadarChart>
+          </div>
+          <div style={style}>
             <Div className="MatchTime" text={`Kick off: ${time} GMT`}></Div>
             <Div text={`Last game`} className={"LastGameHeader"}></Div>
           </div>
@@ -635,22 +686,28 @@ export async function createStatsDiv(game, mock) {
           <a
             href={`https://footystats.org${lastGameHomeLink}`}
             target="_blank"
-            className="PreviousResultHome"
             rel="noreferrer"
+            className="PreviousMatchLink"
           >
-            <CreateBadge
-              image={lastGameHomeHomeBadge}
-              ClassName="HomeBadgePrevious"
-              alt="Home team badge"
-              flexShrink={5}
-            />
-            {lastGameHomeResult}
-            <CreateBadge
-              image={lastGameHomeAwayBadge}
-              ClassName="AwayBadgePrevious"
-              alt="Away team badge"
-              flexShrink={5}
-            />
+            <div className="HomePreviousGame">
+              <CreateBadge
+                image={lastGameHomeHomeBadge}
+                ClassName="BadgePrevious"
+                alt="Home team badge"
+                flexShrink={5}
+              />
+              {lastGameHomeResultPart1}
+            </div>
+
+            <div className="HomePreviousGame">
+              <CreateBadge
+                image={lastGameHomeAwayBadge}
+                ClassName="BadgePrevious"
+                alt="Away team badge"
+                flexShrink={5}
+              />
+              <div>{lastGameHomeResultPart2}</div>
+            </div>
           </a>
           <Stats
             style={style}
@@ -714,19 +771,28 @@ export async function createStatsDiv(game, mock) {
           <a
             href={`https://footystats.org${lastGameAwayLink}`}
             target="_blank"
-            className="PreviousResultAway"
+            rel="noreferrer"
+            className="PreviousMatchLink"
           >
-            <CreateBadge
-              image={lastGameAwayHomeBadge}
-              ClassName="HomeBadgePreviousAway"
-              alt="Home team badge"
-            />
-            {lastGameAwayResult}
-            <CreateBadge
-              image={lastGameAwayAwayBadge}
-              ClassName="AwayBadgePreviousAway"
-              alt="Away team badge"
-            />
+            <div className="AwayPreviousGame">
+              <CreateBadge
+                image={lastGameAwayHomeBadge}
+                ClassName="BadgePrevious"
+                alt="Home team badge"
+                flexShrink={5}
+              />
+              {lastGameAwayResultPart1}
+            </div>
+
+            <div className="AwayPreviousGame">
+              <CreateBadge
+                image={lastGameAwayAwayBadge}
+                ClassName="BadgePrevious"
+                alt="Away team badge"
+                flexShrink={5}
+              />
+              <div>{lastGameAwayResultPart2}</div>
+            </div>
           </a>
           <Stats
             style={style}

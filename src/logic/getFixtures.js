@@ -24,8 +24,8 @@ export var leagueArray = [];
 var leagueIdArray = [];
 export var leagueStatsArray = [];
 export let leagueInstance;
-var lastThreeFormHome
-var lastThreeFormAway
+var lastThreeFormHome;
+var lastThreeFormAway;
 var lastFiveFormHome;
 var lastFiveFormAway;
 var lastSixFormHome;
@@ -34,6 +34,8 @@ var lastTenFormHome;
 var lastTenFormAway;
 var formRunHome;
 var formRunAway;
+let WDLinLeagueHome;
+let WDLinLeagueAway;
 
 export const [currentDay, month, year] = new Date()
   .toLocaleDateString("en-US")
@@ -97,11 +99,9 @@ leagueInstance = [];
 
 async function convertTimestamp(timestamp) {
   let newDate = new Date(timestamp * 1000);
-  let [day, month, year] = newDate
-  .toLocaleDateString("en-US")
-  .split("/");
+  let [day, month, year] = newDate.toLocaleDateString("en-US").split("/");
 
-  let converted = (`${year}-${day}-${month}`)
+  let converted = `${year}-${day}-${month}`;
 
   return converted;
 }
@@ -112,16 +112,24 @@ export async function generateTables(a, leagueIdArray) {
     let currentLeagueId = leagueIdArray[i];
     i++;
     leagueInstance = [];
-    if (!league.data.specific_tables[0].groups) {
+    //Skip MLS which has a weird format
+    if (!league.data.specific_tables[0].groups && currentLeagueId !== 6969) {
       for (
         let index = 0;
         index < league.data.specific_tables[0].table.length;
         index++
       ) {
         let currentTeam = league.data.specific_tables[0].table[index];
-        let last5 = currentTeam.wdl_record.slice(-5);
-        let rawForm = last5.replace(/,/g, "").toUpperCase();
-        let form = Array.from(rawForm);
+        let last5;
+        if (currentTeam.wdl_record.length < 5) {
+          last5 = currentTeam.wdl_record
+            .slice(`-${currentTeam.wdl_record.length}`)
+            .toUpperCase();
+        } else {
+          last5 = currentTeam.wdl_record.slice(-5).toUpperCase();
+        }
+        // let rawForm = last5.replace(/,/g, "").toUpperCase();
+        // let form = Array.from(rawForm);
 
         const team = {
           LeagueID: currentLeagueId,
@@ -136,8 +144,9 @@ export async function generateTables(a, leagueIdArray) {
           Against:
             currentTeam.seasonConceded_home + currentTeam.seasonConceded_away,
           GoalDifference: currentTeam.seasonGoalDifference,
-          Form: `${form[0]}${form[1]}${form[2]}${form[3]}${form[4]}`,
+          Form: last5,
           Points: currentTeam.points,
+          wdl: currentTeam.wdl_record,
         };
         leagueInstance.push(team);
       }
@@ -149,7 +158,6 @@ export async function generateTables(a, leagueIdArray) {
         index++
       ) {
         let currentTeam = league.data.all_matches_table_overall[index];
-        console.log(league.data)
         let last5 = "N/A";
         const team = {
           LeagueID: currentLeagueId,
@@ -166,6 +174,7 @@ export async function generateTables(a, leagueIdArray) {
           GoalDifference: currentTeam.seasonGoalDifference,
           Form: last5,
           Points: currentTeam.points,
+          wdl: currentTeam.wdl_record,
         };
         leagueInstance.push(team);
       }
@@ -181,6 +190,7 @@ export async function renderTable(index) {
     `${process.env.REACT_APP_EXPRESS_SERVER}leagueStats/${league[0].LeagueID}`
   );
   await leagueStatistics.json().then((stats) => {
+    // console.log(stats)
     statistics = stats.data;
   });
 
@@ -198,7 +208,6 @@ export async function renderTable(index) {
 }
 
 async function createFixture(match, result, mockBool) {
-  console.log(match);
   let roundedHomeOdds;
   let roundedAwayOdds;
   let roundedBTTSOdds;
@@ -373,7 +382,6 @@ export async function generateFixtures(day, radioState, selectedOdds) {
     </div>,
     document.getElementById("Buttons")
   );
-  
 
   for (let i = 0; i < orderedLeagues.length; i++) {
     leagueID = orderedLeagues[i].element.id;
@@ -409,7 +417,18 @@ export async function generateFixtures(day, radioState, selectedOdds) {
       x < leagueArray[i].data.all_matches_table_overall.length;
       x++
     ) {
-      let string = leagueArray[i].data.all_matches_table_overall[x];
+      let regularSeason = leagueArray[i].data.specific_tables.find(
+        (season) => season.round === "Regular Season" || season.round === "2022" || season.round === "2022/2023" || season.round === "Apertura"
+      );
+      let string;
+
+      if (regularSeason !== undefined && regularSeason.table) {
+        string = regularSeason.table[x];
+      } else {
+        string = leagueArray[i].data.all_matches_table_overall[x];
+      }
+
+
       let stringHome = leagueArray[i].data.all_matches_table_home[x];
       let stringAway = leagueArray[i].data.all_matches_table_away[x];
 
@@ -444,6 +463,7 @@ export async function generateFixtures(day, radioState, selectedOdds) {
           ? stringAway.matchesPlayed
           : string.matchesPlayed,
         ppg: string.ppg_overall,
+        wdl: string.wdl_record ? string.wdl_record : "",
       });
     }
   }
@@ -572,12 +592,17 @@ export async function generateFixtures(day, radioState, selectedOdds) {
           (team) => team.name === match.homeTeam
         );
 
+        console.log(match.homeTeam)
+        console.log(leaguePositions);
+
         let homeTeaminHomeLeague = leaguePositions.find(
           (team) => team.homeFormName === match.homeTeam
         );
 
         teamPositionHome = homeTeaminLeague.position;
         teamPositionHomeTable = homeTeaminHomeLeague.position;
+
+        WDLinLeagueHome = homeTeaminLeague.wdl;
 
         homeTeamWinPercentageHome =
           (homeTeaminHomeLeague.homeSeasonWinPercentage /
@@ -620,6 +645,8 @@ export async function generateFixtures(day, radioState, selectedOdds) {
 
         teamPositionAway = awayTeaminLeague.position;
         teamPositionAwayTable = awayTeaminAwayLeague.position;
+
+        WDLinLeagueAway = awayTeaminLeague.wdl;
 
         awayTeamWinPercentageAway =
           (awayTeaminAwayLeague.awaySeasonWinPercentage /
@@ -692,11 +719,16 @@ export async function generateFixtures(day, radioState, selectedOdds) {
         formRunHome = Array.from(homeFormRun);
         formRunAway = Array.from(awayFormRun);
 
-        lastThreeFormHome = [homeFormString5[2], homeFormString5[3], homeFormString5[4]]
-        lastThreeFormAway = [awayFormString5[2], awayFormString5[3], awayFormString5[4]]
-
-
-        console.log(lastFiveFormHome)
+        lastThreeFormHome = [
+          homeFormString5[2],
+          homeFormString5[3],
+          homeFormString5[4],
+        ];
+        lastThreeFormAway = [
+          awayFormString5[2],
+          awayFormString5[3],
+          awayFormString5[4],
+        ];
 
         if (
           teamPositionHome === 0 ||
@@ -956,9 +988,10 @@ export async function generateFixtures(day, radioState, selectedOdds) {
               CornersAverage: form[0].data[2].stats.cornersAVG_overall,
               ScoredBothHalvesPercentage:
                 form[0].data[2].stats.scoredBothHalvesPercentage_overall,
-               LastMatch: await convertTimestamp(
-                  form[0].data[0].last_updated_match_timestamp
-                )
+              LastMatch: await convertTimestamp(
+                form[0].data[0].last_updated_match_timestamp
+              ),
+              WDLRecord: WDLinLeagueHome,
             },
           },
           away: {
@@ -1178,7 +1211,8 @@ export async function generateFixtures(day, radioState, selectedOdds) {
                 form[1].data[2].stats.scoredBothHalvesPercentage_overall,
               LastMatch: await convertTimestamp(
                 form[1].data[0].last_updated_match_timestamp
-              )
+              ),
+              WDLRecord: WDLinLeagueAway,
             },
           },
         });
@@ -1224,8 +1258,9 @@ export async function generateFixtures(day, radioState, selectedOdds) {
 
       match.expectedGoalsHomeToDate = fixture.team_a_xg_prematch;
       match.expectedGoalsAwayToDate = fixture.team_b_xg_prematch;
-      match.game_week = fixture.game_week
+      match.game_week = fixture.game_week;
 
+      console.log(allForm)
 
       if (match.status !== "canceled" || match.status !== "suspended") {
         matches.push(match);

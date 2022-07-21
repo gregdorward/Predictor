@@ -417,6 +417,9 @@ p {
   padding-bottom: 0.5em;
   padding-left: 0.25em;
   padding-right: 0.25em;
+  max-width: 1000px;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 .fixture {
@@ -824,7 +827,38 @@ p {
   order: 2;
 }
 
-.PreviousResultHome {
+.HomePreviousGame{
+  display: flex;
+  height: 1.5em;
+  line-height: 1.5em;
+  padding: 0.5em;
+  justify-content: center;
+  color: black;
+  max-width: 250px;
+  margin-left: auto;
+}
+
+.AwayPreviousGame{
+  display: flex;
+  height: 1.5em;
+  line-height: 1.5em;
+  padding: 0.5em;
+  justify-content: center;
+  color: black;
+  max-width: 250px;
+  margin-right: auto;
+
+}
+
+
+a.PreviousMatchLink{
+  text-decoration-thickness: 0;  
+  text-underline-offset: 0.2em;
+  text-decoration-color: #030061;
+  margin-bottom: 1em;
+}
+
+/* .PreviousResultHome {
   display: flex;
   flex-basis: 50%;
   background-color: #e2e2e26c;
@@ -846,28 +880,28 @@ p {
   color: black;
   padding-bottom: 1.5em;
 
-}
+} */
 
 .PreviousStadiumHome{
-  padding-right: 1em;
-  padding-top: 1em;
-  font-size: 0.85em;
+  padding-top: 2em;
+  padding-bottom: 0.5em;
+  text-align: center;
+  color: black;
+  max-width: 250px;
+  margin-left: auto;
+  font-size: 0.8em;
   height: 3em;
-  display: flex;
-  align-items: center;
-  justify-content: right;
-  text-align: right;
 }
 
 .PreviousStadiumAway{
-  padding-left: 1em;
-  padding-top: 1em;
-  font-size: 0.85em;
+  padding-top: 2em;
+  padding-bottom: 0.5em;
+  text-align: center;
+  color: black;
+  max-width: 250px;
+  margin-right: auto;
+  font-size: 0.8em;
   height: 3em;
-  display: flex;
-  align-items: center;
-  justify-content: left;
-  text-align: left;
 }
 
 .LastGameHeader {
@@ -1085,7 +1119,7 @@ canvas {
   max-height: 375px;
   max-width: 450px;
   display: inline !important;
-  margin: 1.5em; 
+  margin: 1em; 
 }
 
 .FormSummaryHome {
@@ -1095,10 +1129,6 @@ canvas {
   justify-content:flex-end;
   align-items: flex-start;
   background-color: #e2e2e26c !important;
-  padding-left: 1em !important;
-  padding-right: 1em !important;
-  /* padding-top: 1.5em !important; */
-  /* padding-bottom: 1em !important; */
   line-height: 1.5em;
   margin-left: auto;
 
@@ -1114,6 +1144,7 @@ canvas {
 
 li.FormHeader {
   padding-top: 1em;
+  margin-top: 1em;
 }
 
 .win {
@@ -1397,7 +1428,9 @@ ul {
   min-width: 30px !important;
   line-height: 1em !important;
 
-}  
+} 
+
+img.BadgePrevious {margin-right: 1em;}
 
 a.kofi-button {
   border: 0.1em solid #030061;

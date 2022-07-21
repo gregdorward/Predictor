@@ -39,22 +39,36 @@ export function Chart(props) {
     },
     scales: {
       y: {
-        beginAtZero: true,
-        max: 3,
+        suggestedMin: 0,
+        suggestedMax: Math.max(...props.data1) > 3 ? Math.max(...props.data1) : 3,
         grid: {
           borderWidth: 1,
           borderColor: "black",
         },
+        ticks: {
+            font: {
+                size: 12,
+            }
+        }
       },
       x: {
         title: {
-          display: true,
+          display: false,
           text: "Last X Games",
+          font: {
+            size: 10,
+        }
         },
         grid: {
           borderWidth: 1,
           borderColor: "black",
         },
+        ticks: {
+            display: false,
+            font: {
+                size: 12,
+            }
+        }
       },
     },
     plugins: {
@@ -62,17 +76,17 @@ export function Chart(props) {
         position: "top",
 
         labels: {
-          boxHeight: 10,
+          boxHeight: 5
         },
       },
       title: {
         display: true,
-        text: "Rolling Average Points",
+        text: props.type,
       },
     },
   };
 
-  const labels = ["10", "6", "5", "3"];
+  const labels = Array.from(props.data1.keys());
 
   let data = {
     labels,
