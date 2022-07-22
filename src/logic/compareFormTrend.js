@@ -191,6 +191,7 @@ async function GenerateFormSummary(form, lastx, recentForm) {
   let defenceString = await getDefenceSummary(form.CleanSheetPercentage);
   console.log(three);
   console.log(five);
+  console.log(ten)
   let pointsAverageTotal =
     (parseFloat(three) + parseFloat(five) + parseFloat(ten)) / 3;
 
@@ -199,7 +200,7 @@ async function GenerateFormSummary(form, lastx, recentForm) {
   if (pointsAverageTotal > 2.2 && three >= 2.5) {
     console.log(1);
     switch (true) {
-      case three > five && five > ten:
+      case three > five && five >= ten:
         text =
           "Outstanding recent form with solid improvement over last 10 games.";
         break;
@@ -233,7 +234,7 @@ async function GenerateFormSummary(form, lastx, recentForm) {
   } else if (pointsAverageTotal <= 2.2 && three >= 2.5) {
     console.log(2);
     switch (true) {
-      case three > five && five > ten:
+      case three > five && five >= ten:
         text =
           "Very good recent form with solid improvement over last 10 games.";
         break;
@@ -267,7 +268,7 @@ async function GenerateFormSummary(form, lastx, recentForm) {
   } else if (pointsAverageTotal > 2 && three < 2.5 && three >= 2) {
     console.log(3);
     switch (true) {
-      case three > five && five > ten:
+      case three > five && five >= ten:
         text =
           "Very good recent form with solid improvement over last 10 games.";
         break;
@@ -301,7 +302,7 @@ async function GenerateFormSummary(form, lastx, recentForm) {
   } else if (pointsAverageTotal <= 2 && three < 2.5 && three >= 2) {
     console.log(4);
     switch (true) {
-      case three > five && five > ten:
+      case three > five && five >= ten:
         text = "Good recent form with solid improvement over last 10 games.";
         break;
       case three > five && five < ten:
@@ -333,7 +334,7 @@ async function GenerateFormSummary(form, lastx, recentForm) {
   } else if (pointsAverageTotal > 2 && three < 2 && three >= 1.5) {
     console.log(5);
     switch (true) {
-      case three > five && five > ten:
+      case three > five && five >= ten:
         text = "Good recent form with solid improvement over last 10 games.";
         break;
       case three > five && five < ten:
@@ -365,7 +366,7 @@ async function GenerateFormSummary(form, lastx, recentForm) {
   } else if (pointsAverageTotal <= 2 && three < 2 && three >= 1.5) {
     console.log(6);
     switch (true) {
-      case three > five && five > ten:
+      case three > five && five >= ten:
         text = "Average recent form with solid improvement over last 10 games.";
         break;
       case three > five && five < ten:
@@ -397,7 +398,7 @@ async function GenerateFormSummary(form, lastx, recentForm) {
   } else if (three < 1.5 && three >= 1) {
     console.log(7);
     switch (true) {
-      case three > five && five > ten:
+      case three > five && five >= ten:
         text = "Average recent form with solid improvement over last 10 games.";
         break;
       case three > five && five < ten:
@@ -429,7 +430,7 @@ async function GenerateFormSummary(form, lastx, recentForm) {
   } else if (three < 1 && three >= 0.5) {
     console.log(8);
     switch (true) {
-      case three > five && five > ten:
+      case three > five && five >= ten:
         text = "Poor recent form with gradual improvement over last 10 games.";
         break;
       case three > five && five < ten:
@@ -461,7 +462,7 @@ async function GenerateFormSummary(form, lastx, recentForm) {
   } else if (pointsAverageTotal > 1 && three < 0.5) {
     console.log(9);
     switch (true) {
-      case three > five && five > ten:
+      case three > five && five >= ten:
         text = "Poor recent form with gradual improvement over last 10 games.";
         break;
       case three > five && five < ten:
@@ -491,7 +492,7 @@ async function GenerateFormSummary(form, lastx, recentForm) {
   } else if (pointsAverageTotal <= 1 && three < 0.5) {
     console.log(10);
     switch (true) {
-      case three > five && five > ten:
+      case three > five && five >= ten:
         text =
           "Terrible recent form with gradual improvement over last 10 games.";
         break;

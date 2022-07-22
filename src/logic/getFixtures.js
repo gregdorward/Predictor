@@ -32,6 +32,7 @@ var lastSixFormHome;
 var lastSixFormAway;
 var lastTenFormHome;
 var lastTenFormAway;
+var leagueOrAll;
 var formRunHome;
 var formRunAway;
 let WDLinLeagueHome;
@@ -418,7 +419,11 @@ export async function generateFixtures(day, radioState, selectedOdds) {
       x++
     ) {
       let regularSeason = leagueArray[i].data.specific_tables.find(
-        (season) => season.round === "Regular Season" || season.round === "2022" || season.round === "2022/2023" || season.round === "Apertura"
+        (season) =>
+          season.round === "Regular Season" ||
+          season.round === "2022" ||
+          season.round === "2022/2023" ||
+          season.round === "Apertura"
       );
       let string;
 
@@ -427,7 +432,6 @@ export async function generateFixtures(day, radioState, selectedOdds) {
       } else {
         string = leagueArray[i].data.all_matches_table_overall[x];
       }
-
 
       let stringHome = leagueArray[i].data.all_matches_table_home[x];
       let stringAway = leagueArray[i].data.all_matches_table_away[x];
@@ -592,9 +596,6 @@ export async function generateFixtures(day, radioState, selectedOdds) {
           (team) => team.name === match.homeTeam
         );
 
-        console.log(match.homeTeam)
-        console.log(leaguePositions);
-
         let homeTeaminHomeLeague = leaguePositions.find(
           (team) => team.homeFormName === match.homeTeam
         );
@@ -602,7 +603,7 @@ export async function generateFixtures(day, radioState, selectedOdds) {
         teamPositionHome = homeTeaminLeague.position;
         teamPositionHomeTable = homeTeaminHomeLeague.position;
 
-        WDLinLeagueHome = homeTeaminLeague.wdl;
+        WDLinLeagueHome = Array.from(homeTeaminLeague.wdl.toUpperCase());
 
         homeTeamWinPercentageHome =
           (homeTeaminHomeLeague.homeSeasonWinPercentage /
@@ -646,7 +647,7 @@ export async function generateFixtures(day, radioState, selectedOdds) {
         teamPositionAway = awayTeaminLeague.position;
         teamPositionAwayTable = awayTeaminAwayLeague.position;
 
-        WDLinLeagueAway = awayTeaminLeague.wdl;
+        WDLinLeagueAway = Array.from(awayTeaminLeague.wdl.toUpperCase());
 
         awayTeamWinPercentageAway =
           (awayTeaminAwayLeague.awaySeasonWinPercentage /
@@ -692,6 +693,7 @@ export async function generateFixtures(day, radioState, selectedOdds) {
         //   );
 
         //   var slug = homeExtract.split(",53:").pop().toUpperCase();
+
         let homeFormString5 =
           form[0].data[0].stats.additional_info.formRun_overall.toUpperCase();
         let awayFormString5 =
@@ -710,25 +712,49 @@ export async function generateFixtures(day, radioState, selectedOdds) {
         let awayFormRun =
           form[1].data[2].stats.additional_info.formRun_away.toUpperCase();
 
-        lastFiveFormHome = Array.from(homeFormString5);
-        lastSixFormHome = Array.from(homeFormString6);
-        lastTenFormHome = Array.from(homeFormString10);
-        lastFiveFormAway = Array.from(awayFormString5);
-        lastSixFormAway = Array.from(awayFormString6);
-        lastTenFormAway = Array.from(awayFormString10);
-        formRunHome = Array.from(homeFormRun);
-        formRunAway = Array.from(awayFormRun);
+        if (WDLinLeagueHome.length > 10) {
+          lastThreeFormHome = WDLinLeagueHome.slice(-3);
+          lastFiveFormHome = WDLinLeagueHome.slice(-5);
+          lastSixFormHome = WDLinLeagueHome.slice(-6);
+          lastTenFormHome = WDLinLeagueHome.slice(-10);
+          lastThreeFormAway = WDLinLeagueAway.slice(-3);
+          lastFiveFormAway = WDLinLeagueAway.slice(-5);
+          lastSixFormAway = WDLinLeagueAway.slice(-6);
+          lastTenFormAway = WDLinLeagueAway.slice(-10);
+          leagueOrAll = "League"
+        } else if (WDLinLeagueHome.length > 6) {
+          lastFiveFormHome = WDLinLeagueHome.slice(-5);
+          lastSixFormHome = WDLinLeagueHome.slice(-6);
+          lastFiveFormAway = WDLinLeagueAway.slice(-5);
+          lastSixFormAway = WDLinLeagueAway.slice(-6);
+          leagueOrAll = "League"
+        } else if (WDLinLeagueHome.length > 5) {
+          lastFiveFormHome = WDLinLeagueHome.slice(-5);
+          lastFiveFormAway = WDLinLeagueAway.slice(-5);
+          leagueOrAll = "League"
+        } else {
+          lastThreeFormHome = [
+            homeFormString5[2],
+            homeFormString5[3],
+            homeFormString5[4],
+          ];
+          lastFiveFormHome = Array.from(homeFormString5);
+          lastSixFormHome = Array.from(homeFormString6);
+          lastTenFormHome = Array.from(homeFormString10);
+          lastThreeFormAway = [
+            awayFormString5[2],
+            awayFormString5[3],
+            awayFormString5[4],
+          ];
 
-        lastThreeFormHome = [
-          homeFormString5[2],
-          homeFormString5[3],
-          homeFormString5[4],
-        ];
-        lastThreeFormAway = [
-          awayFormString5[2],
-          awayFormString5[3],
-          awayFormString5[4],
-        ];
+          lastFiveFormAway = Array.from(awayFormString5);
+          lastSixFormAway = Array.from(awayFormString6);
+          lastTenFormAway = Array.from(awayFormString10);
+          formRunHome = Array.from(homeFormRun);
+          formRunAway = Array.from(awayFormRun);
+          leagueOrAll = ""
+
+        }
 
         if (
           teamPositionHome === 0 ||
@@ -824,6 +850,7 @@ export async function generateFixtures(day, radioState, selectedOdds) {
               LastFiveForm: lastFiveFormHome,
               LastSixForm: lastSixFormHome,
               LastTenForm: lastTenFormHome,
+              LeagueOrAll: leagueOrAll,
               LeaguePosition: `${teamPositionHome}${homePrefix}`,
               homeRawPosition: homeTeaminLeague.rawPosition
                 ? homeTeaminLeague.rawPosition
@@ -895,6 +922,7 @@ export async function generateFixtures(day, radioState, selectedOdds) {
               LastFiveForm: lastFiveFormHome,
               LastSixForm: lastSixFormHome,
               LastTenForm: lastTenFormHome,
+              LeagueOrAll: leagueOrAll,
               LeaguePosition: `${teamPositionHome}${homePrefix}`,
               homeRawPosition: homeTeaminLeague.rawPosition
                 ? homeTeaminLeague.rawPosition
@@ -966,6 +994,7 @@ export async function generateFixtures(day, radioState, selectedOdds) {
               LastFiveForm: lastFiveFormHome,
               LastSixForm: lastSixFormHome,
               LastTenForm: lastTenFormHome,
+              LeagueOrAll: leagueOrAll,
               LeaguePosition: `${teamPositionHome}${homePrefix}`,
               homeRawPosition: homeTeaminLeague.rawPosition
                 ? homeTeaminLeague.rawPosition
@@ -1055,6 +1084,7 @@ export async function generateFixtures(day, radioState, selectedOdds) {
               LastFiveForm: lastFiveFormAway,
               LastSixForm: lastSixFormAway,
               LastTenForm: lastTenFormAway,
+              LeagueOrAll: leagueOrAll,
               LeaguePosition: `${teamPositionAway}${awayPrefix}`,
               awayRawPosition: awayTeaminLeague.rawPosition
                 ? awayTeaminLeague.rawPosition
@@ -1121,6 +1151,7 @@ export async function generateFixtures(day, radioState, selectedOdds) {
               LastFiveForm: lastFiveFormAway,
               LastSixForm: lastSixFormAway,
               LastTenForm: lastTenFormAway,
+              LeagueOrAll: leagueOrAll,
               LeaguePosition: `${teamPositionAway}${awayPrefix}`,
               awayRawPosition: awayTeaminLeague.rawPosition
                 ? awayTeaminLeague.rawPosition
@@ -1187,6 +1218,7 @@ export async function generateFixtures(day, radioState, selectedOdds) {
               LastFiveForm: lastFiveFormAway,
               LastSixForm: lastSixFormAway,
               LastTenForm: lastTenFormAway,
+              LeagueOrAll: leagueOrAll,
               LeaguePosition: `${teamPositionAway}${awayPrefix}`,
               awayRawPosition: awayTeaminLeague.rawPosition
                 ? awayTeaminLeague.rawPosition
@@ -1259,8 +1291,6 @@ export async function generateFixtures(day, radioState, selectedOdds) {
       match.expectedGoalsHomeToDate = fixture.team_a_xg_prematch;
       match.expectedGoalsAwayToDate = fixture.team_b_xg_prematch;
       match.game_week = fixture.game_week;
-
-      console.log(allForm)
 
       if (match.status !== "canceled" || match.status !== "suspended") {
         matches.push(match);

@@ -61,11 +61,8 @@ export async function createStatsDiv(game, mock) {
       let matchArrayAway;
 
       if (gameStats.home[2].LastMatch === gameStats.away[2].LastMatch) {
-        console.log("Don't need to fetch");
         matchArrayAway = matchArray;
-        console.log(matchArrayAway);
       } else {
-        console.log("Fetching");
         awayLastMatch = await fetch(
           `${process.env.REACT_APP_EXPRESS_SERVER}matches/${gameStats.away[2].LastMatch}`
         );
@@ -94,11 +91,6 @@ export async function createStatsDiv(game, mock) {
               homeID === gameStats.teamIDAway || awayID === gameStats.teamIDAway
           )
         : "N/A";
-
-      console.log(gameStats.teamIDHome);
-      console.log(matchArray);
-      console.log(gameStats.teamIDAway);
-      console.log(matchArrayAway);
 
       let lastGameHomeResultPart1;
       let lastGameHomeResultPart2;
@@ -149,9 +141,6 @@ export async function createStatsDiv(game, mock) {
       let awayTeam = gameStats.away.teamName;
 
       let time = game.time;
-
-      console.log(gameStats.home[index]);
-      console.log(gameStats.away[index]);
 
       gameStats.home[index].last3Points = getPointsFromLastX(
         gameStats.home[index].lastThreeForm
@@ -425,18 +414,17 @@ export async function createStatsDiv(game, mock) {
       }
 
 
-async function getPointsFromGames(formString){
+async function getPointsFromGames(formArr){
   const pairings = {
-    "w": 3,
-    "d": 1,
-    "l": 0
+    "W": 3,
+    "D": 1,
+    "L": 0
   }
-  const arr = [...formString];
   let newArr = []
   let sum = 0
 
-  for (let i = 0; i < arr.length; i++) {
-    sum = sum + pairings[arr[i]]
+  for (let i = 0; i < formArr.length; i++) {
+    sum = sum + pairings[formArr[i]]
     newArr.push(sum)
   }
   return newArr
@@ -537,7 +525,8 @@ async function getPointsFromGames(formString){
 
       formDataHome.push({
         name: game.homeTeam,
-        Last5: gameStats.home[index].LastFiveForm,
+        Last5: gameStats.home[2].LastFiveForm,
+        LeagueOrAll: gameStats.home[2].LeagueOrAll,
         AverageGoals: gameStats.home[index].ScoredOverall / 10,
         AverageConceeded: gameStats.home[index].ConcededOverall / 10,
         AverageXG: gameStats.home[index].XGOverall,
@@ -569,7 +558,8 @@ async function getPointsFromGames(formString){
 
       formDataAway.push({
         name: game.awayTeam,
-        Last5: gameStats.away[index].LastFiveForm,
+        Last5: gameStats.away[2].LastFiveForm,
+        LeagueOrAll: gameStats.away[2].LeagueOrAll,
         AverageGoals: gameStats.away[index].ScoredOverall / 10,
         AverageConceeded: gameStats.away[index].ConcededOverall / 10,
         AverageXG: gameStats.away[index].XGOverall,
@@ -596,8 +586,6 @@ async function getPointsFromGames(formString){
           gameStats.away[index].ScoredBothHalvesPercentage,
         FormTextStringAway: formTextStringAway,
       });
-
-      console.log(gameStats.home[index]);
 
       let formArrayHome
       let formArrayAway
@@ -715,6 +703,7 @@ async function getPointsFromGames(formString){
             gameCount={divider}
             key={formDataHome[0].name}
             last5={formDataHome[0].Last5}
+            LeagueOrAll={formDataHome[0].LeagueOrAll}
             className={formDataHome[0].homeOrAway}
             name={formDataHome[0].name}
             goals={formDataHome[0].AverageGoals}
@@ -800,6 +789,7 @@ async function getPointsFromGames(formString){
             gameCount={divider}
             key={formDataAway[0].name}
             last5={formDataAway[0].Last5}
+            LeagueOrAll={formDataAway[0].LeagueOrAll}
             className={formDataAway[0].homeOrAway}
             name={formDataAway[0].name}
             goals={formDataAway[0].AverageGoals}
