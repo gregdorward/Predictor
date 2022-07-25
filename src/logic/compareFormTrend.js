@@ -195,8 +195,6 @@ async function GenerateFormSummary(form, lastx, recentForm) {
   let pointsAverageTotal =
     (parseFloat(three) + parseFloat(five) + parseFloat(ten)) / 3;
 
-  console.log(`pointsAverageTotal ${pointsAverageTotal}`);
-
   if (pointsAverageTotal > 2.2 && three >= 2.5) {
     console.log(1);
     switch (true) {

@@ -37,6 +37,14 @@ var formRunHome;
 var formRunAway;
 let WDLinLeagueHome;
 let WDLinLeagueAway;
+let HomeAverageGoals;
+let homeAverageGoals;
+let HomeAverageConceded;
+let homeAverageConceded;
+let AwayAverageGoals;
+let awayAverageGoals;
+let AwayAverageConceded;
+let awayAverageConceded;
 
 export const [currentDay, month, year] = new Date()
   .toLocaleDateString("en-US")
@@ -148,6 +156,8 @@ export async function generateTables(a, leagueIdArray) {
           Form: last5,
           Points: currentTeam.points,
           wdl: currentTeam.wdl_record,
+          seasonGoals: currentTeam.seasonGoals,
+          seasonConceded: currentTeam.seasonConceded,
         };
         leagueInstance.push(team);
       }
@@ -176,6 +186,8 @@ export async function generateTables(a, leagueIdArray) {
           Form: last5,
           Points: currentTeam.points,
           wdl: currentTeam.wdl_record,
+          seasonGoals: currentTeam.seasonGoals,
+          seasonConceded: currentTeam.seasonConceded,
         };
         leagueInstance.push(team);
       }
@@ -466,8 +478,10 @@ export async function generateFixtures(day, radioState, selectedOdds) {
         awaySeasonMatchesPlayed: stringAway
           ? stringAway.matchesPlayed
           : string.matchesPlayed,
-        ppg: string.ppg_overall,
+        ppg: string.points / string.matchesPlayed,
         wdl: string.wdl_record ? string.wdl_record : "",
+        seasonGoals: string.seasonGoals,
+        seasonConceded: string.seasonConceded,
       });
     }
   }
@@ -604,6 +618,12 @@ export async function generateFixtures(day, radioState, selectedOdds) {
         teamPositionHomeTable = homeTeaminHomeLeague.position;
 
         WDLinLeagueHome = Array.from(homeTeaminLeague.wdl.toUpperCase());
+        HomeAverageGoals =
+          homeTeaminLeague.seasonGoals /
+          homeTeaminLeague.homeSeasonMatchesPlayed;
+        HomeAverageConceded =
+          homeTeaminLeague.seasonConceded /
+          homeTeaminLeague.homeSeasonMatchesPlayed;
 
         homeTeamWinPercentageHome =
           (homeTeaminHomeLeague.homeSeasonWinPercentage /
@@ -648,6 +668,12 @@ export async function generateFixtures(day, radioState, selectedOdds) {
         teamPositionAwayTable = awayTeaminAwayLeague.position;
 
         WDLinLeagueAway = Array.from(awayTeaminLeague.wdl.toUpperCase());
+        AwayAverageGoals =
+          awayTeaminLeague.seasonGoals /
+          awayTeaminLeague.awaySeasonMatchesPlayed;
+        AwayAverageConceded =
+          awayTeaminLeague.seasonConceded /
+          awayTeaminLeague.awaySeasonMatchesPlayed;
 
         awayTeamWinPercentageAway =
           (awayTeaminAwayLeague.awaySeasonWinPercentage /
@@ -721,17 +747,31 @@ export async function generateFixtures(day, radioState, selectedOdds) {
           lastFiveFormAway = WDLinLeagueAway.slice(-5);
           lastSixFormAway = WDLinLeagueAway.slice(-6);
           lastTenFormAway = WDLinLeagueAway.slice(-10);
-          leagueOrAll = "League"
+          leagueOrAll = "League";
+          homeAverageGoals = HomeAverageGoals;
+          homeAverageConceded = HomeAverageConceded;
+          awayAverageGoals = AwayAverageGoals;
+          awayAverageConceded = AwayAverageConceded;
         } else if (WDLinLeagueHome.length > 6) {
           lastFiveFormHome = WDLinLeagueHome.slice(-5);
           lastSixFormHome = WDLinLeagueHome.slice(-6);
           lastFiveFormAway = WDLinLeagueAway.slice(-5);
           lastSixFormAway = WDLinLeagueAway.slice(-6);
-          leagueOrAll = "League"
+          leagueOrAll = "League";
+
+          homeAverageGoals = HomeAverageGoals;
+          homeAverageConceded = HomeAverageConceded;
+          awayAverageGoals = AwayAverageGoals;
+          awayAverageConceded = AwayAverageConceded;
         } else if (WDLinLeagueHome.length > 5) {
           lastFiveFormHome = WDLinLeagueHome.slice(-5);
           lastFiveFormAway = WDLinLeagueAway.slice(-5);
-          leagueOrAll = "League"
+          leagueOrAll = "League";
+
+          homeAverageGoals = HomeAverageGoals;
+          homeAverageConceded = HomeAverageConceded;
+          awayAverageGoals = AwayAverageGoals;
+          awayAverageConceded = AwayAverageConceded;
         } else {
           lastThreeFormHome = [
             homeFormString5[2],
@@ -752,8 +792,12 @@ export async function generateFixtures(day, radioState, selectedOdds) {
           lastTenFormAway = Array.from(awayFormString10);
           formRunHome = Array.from(homeFormRun);
           formRunAway = Array.from(awayFormRun);
-          leagueOrAll = ""
+          leagueOrAll = "";
 
+          homeAverageGoals = undefined;
+          homeAverageConceded = undefined;
+          awayAverageGoals = undefined;
+          awayAverageConceded = undefined;
         }
 
         if (
@@ -857,6 +901,8 @@ export async function generateFixtures(day, radioState, selectedOdds) {
                 : 0,
               homeTeamHomePositionRaw: teamPositionHomeTable,
               SeasonPPG: homeSeasonPPG,
+              LeagueAverageGoals: homeAverageGoals,
+              LeagueAverageConceded: homeAverageConceded,
             },
             1: {
               XGOverall: parseFloat(form[0].data[1].stats.xg_for_avg_overall),
@@ -929,6 +975,8 @@ export async function generateFixtures(day, radioState, selectedOdds) {
                 : 0,
               homeTeamHomePositionRaw: teamPositionHomeTable,
               SeasonPPG: homeSeasonPPG,
+              LeagueAverageGoals: homeAverageGoals,
+              LeagueAverageConceded: homeAverageConceded,
             },
             2: {
               XGOverall: parseFloat(form[0].data[2].stats.xg_for_avg_overall),
@@ -1021,6 +1069,8 @@ export async function generateFixtures(day, radioState, selectedOdds) {
                 form[0].data[0].last_updated_match_timestamp
               ),
               WDLRecord: WDLinLeagueHome,
+              LeagueAverageGoals: homeAverageGoals,
+              LeagueAverageConceded: homeAverageConceded,
             },
           },
           away: {
@@ -1091,6 +1141,8 @@ export async function generateFixtures(day, radioState, selectedOdds) {
                 : 0,
               awayTeamAwayPositionRaw: teamPositionAwayTable,
               SeasonPPG: awaySeasonPPG,
+              LeagueAverageGoals: awayAverageGoals,
+              LeagueAverageConceded: awayAverageConceded,
             },
             1: {
               XGOverall: parseFloat(form[1].data[1].stats.xg_for_avg_overall),
@@ -1158,6 +1210,8 @@ export async function generateFixtures(day, radioState, selectedOdds) {
                 : 0,
               awayTeamAwayPositionRaw: teamPositionAwayTable,
               SeasonPPG: awaySeasonPPG,
+              LeagueAverageGoals: awayAverageGoals,
+              LeagueAverageConceded: awayAverageConceded,
             },
             2: {
               XGOverall: parseFloat(form[1].data[2].stats.xg_for_avg_overall),
@@ -1245,6 +1299,8 @@ export async function generateFixtures(day, radioState, selectedOdds) {
                 form[1].data[0].last_updated_match_timestamp
               ),
               WDLRecord: WDLinLeagueAway,
+              LeagueAverageGoals: awayAverageGoals,
+              LeagueAverageConceded: awayAverageConceded,
             },
           },
         });

@@ -1354,7 +1354,7 @@ export async function calculateScore(match, index, divider) {
     let teamComparisonScore;
 
     [teamComparisonScore] = await compareTeams(formHome, formAway, match);
-    teamComparisonScore = teamComparisonScore * 1;
+    teamComparisonScore = teamComparisonScore * 0.75;
     if (teamComparisonScore > 0.65) {
       teamComparisonScore = 0.65;
     } else if (teamComparisonScore < -0.65) {
@@ -1363,8 +1363,8 @@ export async function calculateScore(match, index, divider) {
 
     match.teamComparisonScore = teamComparisonScore;
 
-    let homeTeamWDLRecord = 1;
-    let awayTeamWDLRecord = 1;
+    // let homeTeamWDLRecord = 1;
+    // let awayTeamWDLRecord = 1;
 
     // if (
     //   formHome.WinPercentage !== null &&
@@ -1422,27 +1422,43 @@ export async function calculateScore(match, index, divider) {
         formHome.conceededAverageShortAndLongTerm) /
       2;
 
+    console.log(formHome.LeagueAverageGoals);
+
+    let homeLeagueOrAllFormAverageGoals =
+      formHome.LeagueAverageGoals !== undefined
+        ? (formHome.LeagueAverageGoals + formAway.LeagueAverageConceded) / 2
+        : goalCalcHomeShortAndLongTerm;
+    let awayLeagueOrAllFormAverageGoals =
+      formAway.LeagueAverageGoals !== undefined
+        ? (formAway.LeagueAverageGoals + formHome.LeagueAverageConceded) / 2
+        : goalCalcAwayShortAndLongTerm;
+
+    console.log(homeLeagueOrAllFormAverageGoals);
+    console.log(awayLeagueOrAllFormAverageGoals);
+
     let factorOneHome =
-      (goalCalcHomeShortTerm * 0 +
+      (homeLeagueOrAllFormAverageGoals * 1 +
+        goalCalcHomeShortTerm * 0 +
         goalCalcHomeShortAndLongTerm * 1 +
         goalCalcHomeOnly * 0 +
         formAway.XGAgainstAverage * 0 +
         formHome.XG * 0 +
         formAway.conceededAverageShortAndLongTerm * 0 +
-        last10WeightingHome * 2 +
+        last10WeightingHome * 0 +
         formHome.goalsDifferential * 0) /
-      1;
+      2;
 
     let factorOneAway =
-      (goalCalcAwayShortTerm * 0 +
+      (awayLeagueOrAllFormAverageGoals * 1 +
+        goalCalcAwayShortTerm * 0 +
         goalCalcAwayShortAndLongTerm * 1 +
         goalCalcAwayOnly * 0 +
         formHome.XGAgainstAverage * 0 +
         formAway.XG * 0 +
         formHome.conceededAverageShortAndLongTerm * 0 +
-        last10WeightingAway * 2 +
+        last10WeightingAway * 0 +
         formAway.goalsDifferential * 0) /
-      1;
+      2;
 
     let homeComparisonWeighting;
     let awayComparisonWeighting;
@@ -1720,7 +1736,7 @@ export async function calculateScore(match, index, divider) {
 
     if (
       match.game_week > 0 &&
-      match.game_week < 4 &&
+      match.game_week <= 2 &&
       match.competition_id !== 4340
     ) {
       finalHomeGoals = "-";
