@@ -432,22 +432,22 @@ export async function getPointWeighting(pointsDiff) {
       break;
     case pointsDiff >= 1 && pointsDiff < 1.5:
       pointsDiffWeightingHome = 0.2;
-      pointsDiffWeightingAway = 0;
+      pointsDiffWeightingAway = -0.1;
       break;
     case pointsDiff >= 0.5 && pointsDiff < 1:
       pointsDiffWeightingHome = 0.1;
-      pointsDiffWeightingAway = 0;
+      pointsDiffWeightingAway = -0.1;
       break;
     case pointsDiff > -0.5 && pointsDiff < 0.5:
       pointsDiffWeightingHome = 0;
       pointsDiffWeightingAway = 0;
       break;
     case pointsDiff <= -0.5 && pointsDiff > -1:
-      pointsDiffWeightingHome = 0;
+      pointsDiffWeightingHome = -0.1;
       pointsDiffWeightingAway = 0.1;
       break;
     case pointsDiff <= -1 && pointsDiff > -1.5:
-      pointsDiffWeightingHome = 0;
+      pointsDiffWeightingHome = -0.1;
       pointsDiffWeightingAway = 0.2;
       break;
     case pointsDiff <= -1.5 && pointsDiff > -2:
@@ -630,10 +630,10 @@ export async function compareTeams(homeForm, awayForm, match) {
 
   tooCloseToCall = tooCloseToCall + tooCloseToCallCount;
 
-  if (homeForm.SeasonPPG !== "N/A" && awayForm.SeasonPPG !== "N/A") {
+  if (homeForm.PPG !== "N/A" && awayForm.PPG !== "N/A") {
     [seasonPPGComparison, tooCloseToCallCount] = await compareStat(
-      parseFloat(homeForm.SeasonPPG),
-      parseFloat(awayForm.SeasonPPG)
+      parseFloat(homeForm.PPG),
+      parseFloat(awayForm.PPG)
     );
   } else seasonPPGComparison = last10PointsComparison;
 
@@ -777,7 +777,7 @@ export async function compareTeams(homeForm, awayForm, match) {
     twoGameAverageComparison * 1 +
     tenGameAverageComparison * 1 +
     XGdifferentialComparison * 4 +
-    seasonPPGComparison * 0 +
+    seasonPPGComparison * 1 +
     formTrendScoreComparison * 0 +
     fiveGameAverageComparison * 4 +
     dangerousAttacksComparisonHOrA * 0 +
@@ -794,7 +794,7 @@ export async function compareTeams(homeForm, awayForm, match) {
     lossPercentageComparison * 2 +
     homeOrAwayAverageComparison * 0 +
     overUnderAchievingSumComparison * 0 +
-    goalDiffComparison * 4 +
+    goalDiffComparison * 3 +
     goalDiffHOrAComparison * 1;
 
   match.tooCloseToCall = tooCloseToCall;
@@ -941,29 +941,34 @@ export async function wdlRecordComparison(win, loss, game) {
 
 export async function adjustForDefenceForm(csPercentage, rawGoals, name) {
   let goals;
-  switch (true) {
-    case csPercentage >= 80:
-      goals = rawGoals * 0.5;
-      break;
-    case csPercentage < 80 && csPercentage >= 60:
-      goals = rawGoals * 0.7;
-      break;
-    case csPercentage < 60 && csPercentage >= 40:
-      goals = rawGoals * 0.8;
-      break;
-    case csPercentage < 40 && csPercentage >= 20:
-      goals = rawGoals * 1;
-      break;
-    case csPercentage < 20 && csPercentage >= 10:
-      goals = rawGoals * 1.2;
-      break;
-    case csPercentage < 10 && csPercentage >= 0:
-      goals = rawGoals * 1.4;
-      break;
-    default:
-      goals = rawGoals;
-      break;
+  if(rawGoals < 2.5){
+    switch (true) {
+      case csPercentage >= 80:
+        goals = rawGoals * 0.7;
+        break;
+      case csPercentage < 80 && csPercentage >= 60:
+        goals = rawGoals * 0.8;
+        break;
+      case csPercentage < 60 && csPercentage >= 40:
+        goals = rawGoals * 0.8;
+        break;
+      case csPercentage < 40 && csPercentage >= 20:
+        goals = rawGoals * 1;
+        break;
+      case csPercentage < 20 && csPercentage >= 10:
+        goals = rawGoals * 1.1;
+        break;
+      case csPercentage < 10 && csPercentage >= 0:
+        goals = rawGoals * 1.2;
+        break;
+      default:
+        goals = rawGoals;
+        break;
+    }
+  } else {
+    goals = rawGoals
   }
+
 
   return goals;
 }
@@ -1116,18 +1121,32 @@ export async function calculateScore(match, index, divider) {
         );
       }
 
-      let scoredAverageNotZero = 0.01;
-      let conceededAverageNotZero = 0.01;
+      // let scoredAverageNotZero = 0.01;
+      // let conceededAverageNotZero = 0.01;
 
-      if (teams[i][index].ScoredAverage === 0) {
-        teams[i][index].ScoredAverage = scoredAverageNotZero;
-        teams[i][0].ScoredOverall = scoredAverageNotZero;
+      teams[i][0].ScoredAverage = teams[i][0].ScoredOverall / 5;
+      teams[i][1].ScoredAverage = teams[i][1].ScoredOverall / 6;
+      teams[i][2].ScoredAverage = teams[i][2].ScoredOverall / 10;
+
+
+      teams[i][0].ConcededAverage = teams[i][0].ConcededOverall / 5;
+      teams[i][1].ConcededAverage = teams[i][1].ConcededOverall / 6;
+      teams[i][2].ConcededAverage = teams[i][2].ConcededOverall / 10;
+
+
+      if (teams[i][1].ScoredAverage === 0) {
+        teams[i][1].ScoredAverage = teams[i][index].ScoredOverall / 10;
+        teams[i][1].ScoredOverall = teams[i][2].ScoredOverall / 2;
+        console.log(match.awayTeam)
       }
 
-      if (teams[i][index].ConcededAverage === 0) {
-        teams[i][index].ConcededAverage = conceededAverageNotZero;
-        teams[i][0].ConcededOverall = conceededAverageNotZero;
+      if (teams[i][1].ConcededAverage === 0) {
+        teams[i][1].ConcededAverage = teams[i][index].ConcededOverall / 10;
+        teams[i][1].ConcededOverall = teams[i][2].ConcededOverall / 2;
+        console.log(match.awayTeam)
       }
+
+      console.log(teams[i][0].ScoredOverall)
 
       teams[i][index].ScoredAverageShortTerm = teams[i][0].ScoredOverall / 5;
       teams[i][index].ScoredAverageLongTermHomeOrAway =
@@ -1354,7 +1373,7 @@ export async function calculateScore(match, index, divider) {
     let teamComparisonScore;
 
     [teamComparisonScore] = await compareTeams(formHome, formAway, match);
-    teamComparisonScore = teamComparisonScore * 0.75;
+    teamComparisonScore = teamComparisonScore * 0.85;
     if (teamComparisonScore > 0.65) {
       teamComparisonScore = 0.65;
     } else if (teamComparisonScore < -0.65) {
@@ -1444,7 +1463,7 @@ export async function calculateScore(match, index, divider) {
         formAway.XGAgainstAverage * 0 +
         formHome.XG * 0 +
         formAway.conceededAverageShortAndLongTerm * 0 +
-        last10WeightingHome * 0 +
+        last10WeightingHome * 1 +
         formHome.goalsDifferential * 0) /
       2;
 
@@ -1456,7 +1475,7 @@ export async function calculateScore(match, index, divider) {
         formHome.XGAgainstAverage * 0 +
         formAway.XG * 0 +
         formHome.conceededAverageShortAndLongTerm * 0 +
-        last10WeightingAway * 0 +
+        last10WeightingAway * 1 +
         formAway.goalsDifferential * 0) /
       2;
 
@@ -1487,44 +1506,54 @@ export async function calculateScore(match, index, divider) {
     match.rawFinalHomeGoals = rawFinalHomeGoals;
     match.rawFinalAwayGoals = rawFinalAwayGoals;
 
+    console.log(match)
+    console.log(formHome.ScoredAverage)
+    console.log(formAway.ConcededAverage)
+
+    console.log(formAway.ScoredAverage)
+    console.log(formHome.ConcededAverage)
+
     if (rawFinalAwayGoals < 0) {
-      let difference = parseFloat((await diff(0, rawFinalAwayGoals)) / 10);
+      let difference = parseFloat((await diff(0, rawFinalAwayGoals)) / 1);
       rawFinalHomeGoals = rawFinalHomeGoals + difference;
       rawFinalAwayGoals = 0;
     }
 
     if (rawFinalHomeGoals < 0) {
-      let difference = parseFloat((await diff(0, rawFinalHomeGoals)) / 10);
+      let difference = parseFloat((await diff(0, rawFinalHomeGoals)) / 1);
       rawFinalAwayGoals = rawFinalAwayGoals + difference;
       rawFinalHomeGoals = 0;
     }
 
     if (
-      (rawFinalHomeGoals + 1) / (formHome.ScoredAverage + 1) > 1.2 &&
-      (rawFinalHomeGoals + 1) / (formAway.ConcededAverage + 1) > 1.2
+      (rawFinalHomeGoals + 1) / (formHome.ScoredAverage + 1) > 1.25 &&
+      (rawFinalHomeGoals + 1) / (formAway.ConcededAverage + 1) > 1.25
     ) {
-      rawFinalHomeGoals = rawFinalHomeGoals - 1;
+      rawFinalHomeGoals = (rawFinalHomeGoals + formHome.ScoredAverage) / 2;
     } else if (
-      (rawFinalHomeGoals + 1) / (formHome.ScoredAverage + 1) < 0.833 &&
-      (rawFinalHomeGoals + 1) / (formAway.ConcededAverage + 1) < 0.833
+      (rawFinalHomeGoals + 1) / (formHome.ScoredAverage + 1) < 0.8 &&
+      (rawFinalHomeGoals + 1) / (formAway.ConcededAverage + 1) < 0.8
     ) {
-      rawFinalHomeGoals = rawFinalHomeGoals + 1;
+      rawFinalHomeGoals = (rawFinalHomeGoals + formHome.ScoredAverage) / 2;
     }
 
     if (
-      (rawFinalAwayGoals + 1) / (formAway.ScoredAverage + 1) > 1.2 &&
-      (rawFinalAwayGoals + 1) / (formHome.ConcededAverage + 1) > 1.2
+      (rawFinalAwayGoals + 1) / (formAway.ScoredAverage + 1) > 1.25 &&
+      (rawFinalAwayGoals + 1) / (formHome.ConcededAverage + 1) > 1.25
     ) {
-      rawFinalAwayGoals = rawFinalAwayGoals - 1;
+      rawFinalAwayGoals = (rawFinalAwayGoals + formAway.ScoredAverage) / 2
     } else if (
-      (finalAwayGoals + 1) / (formAway.ScoredAverage + 1) < 0.833 &&
-      (finalAwayGoals + 1) / (formHome.ConcededAverage + 1) < 0.833
+      (finalAwayGoals + 1) / (formAway.ScoredAverage + 1) < 0.8 &&
+      (finalAwayGoals + 1) / (formHome.ConcededAverage + 1) < 0.8
     ) {
-      rawFinalAwayGoals = rawFinalAwayGoals + 1;
+      rawFinalAwayGoals = (rawFinalAwayGoals + formAway.ScoredAverage) / 2
     }
 
     let rawFinalHomeGoalsAdjusted;
     let rawFinalAwayGoalsAdjusted;
+
+    console.log(rawFinalHomeGoals)
+    console.log(rawFinalAwayGoals)
 
     rawFinalHomeGoalsAdjusted = await adjustForDefenceForm(
       formAway.CleanSheetPercentage,

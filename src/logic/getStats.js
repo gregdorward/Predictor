@@ -594,7 +594,7 @@ async function getPointsFromGames(formArr){
       if(formPointsHome.length > 1){
         formArrayHome = formPointsHome
         formArrayAway = formPointsAway
-        chartType = "Season Performance"
+        chartType = "Points over time"
       } else {
         formArrayHome = [
           homeTenGameAverage,
@@ -608,7 +608,7 @@ async function getPointsFromGames(formArr){
           awayFiveGameAverage,
           awayThreeGameAverage,
         ]
-        chartType = "Rolling Average (last 10)"
+        chartType = "Rolling average points over last 10"
 
       }
 
