@@ -345,6 +345,12 @@ p {
   font-weight: bolder;
 }
 
+.Explainer{
+  padding: 1em;
+  padding-left: 3em;
+  padding-right: 3em;
+}
+
 .bitcoin{
   padding: 0.5em;
   padding-bottom: 1em;

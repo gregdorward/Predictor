@@ -30,7 +30,7 @@ export class OddsRadio extends Component {
               data-cy={this.props.value}
             />
             <span className="design"></span>
-            <span className="text">{this.props.value} odds</span>
+            <span className="text">{this.props.value}</span>
           </label>
         </div>
       </section>

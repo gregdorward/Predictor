@@ -941,16 +941,16 @@ export async function wdlRecordComparison(win, loss, game) {
 
 export async function adjustForDefenceForm(csPercentage, rawGoals, name) {
   let goals;
-  if(rawGoals < 2.5){
+  if (rawGoals < 2.5) {
     switch (true) {
       case csPercentage >= 80:
-        goals = rawGoals * 0.7;
+        goals = rawGoals * 0.6;
         break;
       case csPercentage < 80 && csPercentage >= 60:
         goals = rawGoals * 0.8;
         break;
       case csPercentage < 60 && csPercentage >= 40:
-        goals = rawGoals * 0.8;
+        goals = rawGoals * 0.9;
         break;
       case csPercentage < 40 && csPercentage >= 20:
         goals = rawGoals * 1;
@@ -959,16 +959,15 @@ export async function adjustForDefenceForm(csPercentage, rawGoals, name) {
         goals = rawGoals * 1.1;
         break;
       case csPercentage < 10 && csPercentage >= 0:
-        goals = rawGoals * 1.2;
+        goals = rawGoals * 1.3;
         break;
       default:
         goals = rawGoals;
         break;
     }
   } else {
-    goals = rawGoals
+    goals = rawGoals;
   }
-
 
   return goals;
 }
@@ -977,7 +976,7 @@ export async function roundCustom(num, form, otherForm) {
   let wholeNumber = Math.floor(num);
   let remainder = num - wholeNumber;
 
-  if (remainder > 0.6) {
+  if (remainder > 0.75) {
     if (form.formTrendScore === 1.2) {
       return Math.ceil(num);
     } else if (form.formTrendScore === 1.1) {
@@ -1128,25 +1127,23 @@ export async function calculateScore(match, index, divider) {
       teams[i][1].ScoredAverage = teams[i][1].ScoredOverall / 6;
       teams[i][2].ScoredAverage = teams[i][2].ScoredOverall / 10;
 
-
       teams[i][0].ConcededAverage = teams[i][0].ConcededOverall / 5;
       teams[i][1].ConcededAverage = teams[i][1].ConcededOverall / 6;
       teams[i][2].ConcededAverage = teams[i][2].ConcededOverall / 10;
 
-
       if (teams[i][1].ScoredAverage === 0) {
         teams[i][1].ScoredAverage = teams[i][index].ScoredOverall / 10;
         teams[i][1].ScoredOverall = teams[i][2].ScoredOverall / 2;
-        console.log(match.awayTeam)
+        console.log(match.awayTeam);
       }
 
       if (teams[i][1].ConcededAverage === 0) {
         teams[i][1].ConcededAverage = teams[i][index].ConcededOverall / 10;
         teams[i][1].ConcededOverall = teams[i][2].ConcededOverall / 2;
-        console.log(match.awayTeam)
+        console.log(match.awayTeam);
       }
 
-      console.log(teams[i][0].ScoredOverall)
+      console.log(teams[i][0].ScoredOverall);
 
       teams[i][index].ScoredAverageShortTerm = teams[i][0].ScoredOverall / 5;
       teams[i][index].ScoredAverageLongTermHomeOrAway =
@@ -1506,21 +1503,21 @@ export async function calculateScore(match, index, divider) {
     match.rawFinalHomeGoals = rawFinalHomeGoals;
     match.rawFinalAwayGoals = rawFinalAwayGoals;
 
-    console.log(match)
-    console.log(formHome.ScoredAverage)
-    console.log(formAway.ConcededAverage)
+    console.log(match);
+    console.log(formHome.ScoredAverage);
+    console.log(formAway.ConcededAverage);
 
-    console.log(formAway.ScoredAverage)
-    console.log(formHome.ConcededAverage)
+    console.log(formAway.ScoredAverage);
+    console.log(formHome.ConcededAverage);
 
     if (rawFinalAwayGoals < 0) {
-      let difference = parseFloat((await diff(0, rawFinalAwayGoals)) / 1);
+      let difference = parseFloat((await diff(0, rawFinalAwayGoals)) / 10);
       rawFinalHomeGoals = rawFinalHomeGoals + difference;
       rawFinalAwayGoals = 0;
     }
 
     if (rawFinalHomeGoals < 0) {
-      let difference = parseFloat((await diff(0, rawFinalHomeGoals)) / 1);
+      let difference = parseFloat((await diff(0, rawFinalHomeGoals)) / 10);
       rawFinalAwayGoals = rawFinalAwayGoals + difference;
       rawFinalHomeGoals = 0;
     }
@@ -1541,19 +1538,19 @@ export async function calculateScore(match, index, divider) {
       (rawFinalAwayGoals + 1) / (formAway.ScoredAverage + 1) > 1.25 &&
       (rawFinalAwayGoals + 1) / (formHome.ConcededAverage + 1) > 1.25
     ) {
-      rawFinalAwayGoals = (rawFinalAwayGoals + formAway.ScoredAverage) / 2
+      rawFinalAwayGoals = (rawFinalAwayGoals + formAway.ScoredAverage) / 2;
     } else if (
       (finalAwayGoals + 1) / (formAway.ScoredAverage + 1) < 0.8 &&
       (finalAwayGoals + 1) / (formHome.ConcededAverage + 1) < 0.8
     ) {
-      rawFinalAwayGoals = (rawFinalAwayGoals + formAway.ScoredAverage) / 2
+      rawFinalAwayGoals = (rawFinalAwayGoals + formAway.ScoredAverage) / 2;
     }
 
     let rawFinalHomeGoalsAdjusted;
     let rawFinalAwayGoalsAdjusted;
 
-    console.log(rawFinalHomeGoals)
-    console.log(rawFinalAwayGoals)
+    console.log(rawFinalHomeGoals);
+    console.log(rawFinalAwayGoals);
 
     rawFinalHomeGoalsAdjusted = await adjustForDefenceForm(
       formAway.CleanSheetPercentage,
@@ -1629,6 +1626,8 @@ export async function calculateScore(match, index, divider) {
       match.XGdifferential = true;
       match.XGdifferentialValue = Math.abs(XGdifferential);
       match.XGdifferentialValueRaw = parseFloat(XGdifferential);
+      console.log(match.game);
+      console.log(match);
     } else {
       match.XGdifferential = false;
       match.XGdifferentialValue = Math.abs(XGdifferential);
@@ -1765,7 +1764,7 @@ export async function calculateScore(match, index, divider) {
 
     if (
       match.game_week > 0 &&
-      match.game_week <= 2 &&
+      match.game_week < 4 &&
       match.competition_id !== 4340
     ) {
       finalHomeGoals = "-";
@@ -2088,10 +2087,72 @@ export async function getScorePrediction(day, mocked) {
         return b.goalDifferential - a.goalDifferential;
       });
 
+      if (
+        match.XGdifferential === true &&
+        match.prediction === "homeWin" &&
+        match.status !== "notEnoughData" &&
+        match.status !== "suspended" &&
+        match.status !== "canceled"
+      ) {
+        XGPredictionObject = {
+          game: match.game,
+          team: `${match.homeTeam} to win`,
+          rawOdds: match.homeOdds,
+          comparisonScore: Math.abs(match.teamComparisonScore),
+          formTrend: match.formHome.improving,
+          rawComparisonScore: match.teamComparisonScore,
+          outcome: match.predictionOutcome,
+          prediction: `${match.homeTeam} to win`,
+          odds: match.fractionHome,
+          otherTeam: match.awayTeam,
+          XGdifferentialValue: match.XGdifferentialValue,
+          goalDifferential: parseFloat(
+            await diff(match.unroundedGoalsA, match.unroundedGoalsB)
+          ),
+          experimentalCalc:
+            (match.unroundedGoalsA - match.unroundedGoalsB) *
+            Math.abs(match.teamComparisonScore),
+        };
+        XGDiffTips.push(XGPredictionObject);
+      } else if (
+        match.XGdifferential === true &&
+        match.prediction === "awayWin" &&
+        match.status !== "notEnoughData" &&
+        match.status !== "suspended" &&
+        match.status !== "canceled"
+      ) {
+        XGPredictionObject = {
+          game: match.game,
+          team: `${match.awayTeam} to win`,
+          rawOdds: match.awayOdds,
+          comparisonScore: Math.abs(match.teamComparisonScore),
+          formTrend: match.formAway.improving,
+          rawComparisonScore: match.teamComparisonScore,
+          outcome: match.predictionOutcome,
+          prediction: `${match.awayTeam} to win`,
+          odds: match.fractionAway,
+          otherTeam: match.homeTeam,
+          XGdifferentialValue: match.XGdifferentialValue,
+          goalDifferential: parseFloat(
+            await diff(match.unroundedGoalsB, match.unroundedGoalsA)
+          ),
+          experimentalCalc:
+            (match.unroundedGoalsB - match.unroundedGoalsA) *
+            Math.abs(match.teamComparisonScore),
+        };
+        XGDiffTips.push(XGPredictionObject);
+      }
+
+      XGDiffTips.sort(function (a, b) {
+        return b.XGdifferentialValue - a.XGdifferentialValue;
+      });
+
       exoticArray = [];
       gamesInExotic = 0;
       exoticStake = 0;
       exoticString = "";
+
+      console.log(XGDiffTips);
 
       switch (true) {
         case XGDiffTips.length >= 10:
@@ -2124,38 +2185,8 @@ export async function getScorePrediction(day, mocked) {
             exoticStake
           );
           break;
-
-        case XGDiffTips.length >= 8:
-          for (let i = 0; i < 8; i++) {
-            let game = XGDiffTips[i];
-            exoticArray.push(game);
-          }
-          gamesInExotic = 8;
-          minimumExotic = 6;
-          exoticStake = 0.1;
-          exoticString = "28 6-folds, 8 7-folds and 1 8-fold";
-          price = getCoverBetMaxReturns(
-            exoticArray,
-            minimumExotic,
-            exoticStake
-          );
-          break;
-        case XGDiffTips.length >= 7:
-          for (let i = 0; i < 7; i++) {
-            let game = XGDiffTips[i];
-            exoticArray.push(game);
-          }
-          gamesInExotic = 7;
-          minimumExotic = 6;
-          exoticStake = 1;
-          exoticString = "7 6-folds and 1 7-fold";
-          price = getCoverBetMaxReturns(
-            exoticArray,
-            minimumExotic,
-            exoticStake
-          );
-          break;
         case allTips.length >= 10:
+          console.log(XGDiffTips);
           for (let i = 0; i < 10; i++) {
             let game = allTips[i];
             exoticArray.push(game);
@@ -2263,66 +2294,6 @@ export async function getScorePrediction(day, mocked) {
         default:
           break;
       }
-
-      if (
-        match.XGdifferential === true &&
-        match.prediction === "homeWin" &&
-        match.status !== "notEnoughData" &&
-        match.status !== "suspended" &&
-        match.status !== "canceled"
-      ) {
-        XGPredictionObject = {
-          game: match.game,
-          team: `${match.homeTeam} to win`,
-          rawOdds: match.homeOdds,
-          comparisonScore: Math.abs(match.teamComparisonScore),
-          formTrend: match.formHome.improving,
-          rawComparisonScore: match.teamComparisonScore,
-          outcome: match.predictionOutcome,
-          prediction: `${match.homeTeam} to win`,
-          odds: match.fractionHome,
-          otherTeam: match.awayTeam,
-          XGdifferentialValue: match.XGdifferentialValue,
-          goalDifferential: parseFloat(
-            await diff(match.unroundedGoalsA, match.unroundedGoalsB)
-          ),
-          experimentalCalc:
-            (match.unroundedGoalsA - match.unroundedGoalsB) *
-            Math.abs(match.teamComparisonScore),
-        };
-        XGDiffTips.push(XGPredictionObject);
-      } else if (
-        match.XGdifferential === true &&
-        match.prediction === "awayWin" &&
-        match.status !== "notEnoughData" &&
-        match.status !== "suspended" &&
-        match.status !== "canceled"
-      ) {
-        XGPredictionObject = {
-          game: match.game,
-          team: `${match.awayTeam} to win`,
-          rawOdds: match.awayOdds,
-          comparisonScore: Math.abs(match.teamComparisonScore),
-          formTrend: match.formAway.improving,
-          rawComparisonScore: match.teamComparisonScore,
-          outcome: match.predictionOutcome,
-          prediction: `${match.awayTeam} to win`,
-          odds: match.fractionAway,
-          otherTeam: match.homeTeam,
-          XGdifferentialValue: match.XGdifferentialValue,
-          goalDifferential: parseFloat(
-            await diff(match.unroundedGoalsB, match.unroundedGoalsA)
-          ),
-          experimentalCalc:
-            (match.unroundedGoalsB - match.unroundedGoalsA) *
-            Math.abs(match.teamComparisonScore),
-        };
-        XGDiffTips.push(XGPredictionObject);
-      }
-
-      XGDiffTips.sort(function (a, b) {
-        return b.XGdifferentialValue - a.XGdifferentialValue;
-      });
 
       if (mock !== true) {
         ReactDOM.render(

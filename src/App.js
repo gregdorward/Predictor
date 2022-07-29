@@ -175,7 +175,7 @@ async function getMatchTime(unixTime) {
       7426, //Danish Prem 22/23
       7048, //Norway Prem 22
       7890, //Austrian Prem 22/23
-      6282, //Greek Prem 21
+      7954, //Greek Prem 22/23
       7428, //Polish prem 22/23
       6967, //Irish Prem 22
       4340, //Womens Euros 22
@@ -299,11 +299,19 @@ async function getMatchTime(unixTime) {
   );
   ReactDOM.render(
     <div className="OddsRadios">
-      <OddsRadio value="Fractional"></OddsRadio>
-      <OddsRadio value="Decimal"></OddsRadio>
+      <OddsRadio value="Fractional odds"></OddsRadio>
+      <OddsRadio value="Decimal odds"></OddsRadio>
     </div>,
     document.getElementById("Checkbox")
   );
+
+  ReactDOM.render(
+    <div className="Explainer">
+      <em>To discount pre-season form, only games taking place after the 3rd gameweek in their respective leagues are currently being predicted</em>
+    </div>,
+    document.getElementById("ExplainerText")
+  );
+  
 
   ReactDOM.render(
     <Button
@@ -391,6 +399,7 @@ function App() {
       </div>
       <div id="Day" />
       <div id="Checkbox" />
+      <div id="ExplainerText" />
       <div id="Buttons" className="Buttons">
         <ThreeDots className="MainLoading" fill= "#030061"/>
         <div>Loading all fixture and form data...</div>

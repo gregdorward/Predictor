@@ -792,7 +792,7 @@ export async function generateFixtures(day, radioState, selectedOdds) {
           lastTenFormAway = Array.from(awayFormString10);
           formRunHome = Array.from(homeFormRun);
           formRunAway = Array.from(awayFormRun);
-          leagueOrAll = "";
+          leagueOrAll = "All";
 
           homeAverageGoals = undefined;
           homeAverageConceded = undefined;
