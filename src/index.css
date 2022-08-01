@@ -461,6 +461,12 @@ p {
   /* border: 1em; */
 }
 
+.individualFixture:active, input:focus{
+  /* box-shadow:2px 2px 2px 2px grey; */
+  box-shadow: rgb(204, 219, 232) 3px 3px 6px 0px inset, rgba(255, 255, 255, 0.5) -3px -3px 6px 1px inset;
+}
+
+
 .individualFixtureGap {
   display: flex;
   flex-basis: 100%;

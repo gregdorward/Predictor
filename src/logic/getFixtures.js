@@ -123,7 +123,6 @@ export async function generateTables(a, leagueIdArray) {
     i++;
     leagueInstance = [];
     //Skip MLS which has a weird format
-    console.log(currentLeagueId)
     if (!league.data.specific_tables[0].groups && currentLeagueId !== 6969) {
       for (
         let index = 0;
@@ -230,7 +229,7 @@ async function createFixture(match, result, mockBool) {
   let awayFraction;
   let bttsFraction;
 
-  if (selectedOdds === "Fractional") {
+  if (selectedOdds === "Fractional odds") {
     if (match.homeOdds !== 0 && match.awayOdds !== 0) {
       roundedHomeOdds = (Math.round(match.homeOdds * 5) / 5).toFixed(1);
       roundedAwayOdds = (Math.round(match.awayOdds * 5) / 5).toFixed(1);
@@ -274,7 +273,7 @@ async function createFixture(match, result, mockBool) {
     } else {
       bttsFraction = "N/A";
     }
-  } else if (selectedOdds === "Decimal") {
+  } else if (selectedOdds === "Decimal odds") {
     if (match.homeOdds !== 0 && match.awayOdds !== 0) {
       homeFraction = match.homeOdds;
       awayFraction = match.awayOdds;

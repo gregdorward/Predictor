@@ -406,6 +406,7 @@ function App() {
       </div>
       <div id="bestPredictions" className="bestPredictions" />
       <div id="exoticOfTheDay" className="exoticOfTheDay" />
+      <div id="successMeasure2" />
       <div id="RowOneContainer" className="RowOneContainer">
         <div id="BTTS" className="RowOne" />
         <div id="longShots" className="RowOne" />
