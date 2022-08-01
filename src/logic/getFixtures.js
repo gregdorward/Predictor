@@ -116,12 +116,14 @@ async function convertTimestamp(timestamp) {
 }
 
 export async function generateTables(a, leagueIdArray) {
+  console.log(leagueIdArray)
   let i = 0;
   leagueArray.forEach(function (league) {
     let currentLeagueId = leagueIdArray[i];
     i++;
     leagueInstance = [];
     //Skip MLS which has a weird format
+    console.log(currentLeagueId)
     if (!league.data.specific_tables[0].groups && currentLeagueId !== 6969) {
       for (
         let index = 0;

@@ -136,7 +136,7 @@ async function getMatchTime(unixTime) {
       const element = league.season[x];
 
       if (element.year === 2022 || element.year === 20222023) {
-        if (element.id !== 5784) {
+        if (element.id !== 8008) {
           availableLeagues.push({ name: name, element });
         }
       }
@@ -189,12 +189,12 @@ async function getMatchTime(unixTime) {
       7506, //Scottish league 2 22/23
       7821, //Women's prem 22/23
       6969, //MLS 22
-      6639, //Australian A league 21/22
+      8008, //Australian A league 22/23
       7097, //Brazil prem 22
       6935, //Japan 22
       7061, //S Korea 22
       7425, //Mexico prem 22/23
-      6083, //National league North and South 21/22
+      7956, //National league North and South 22/23
     ];
 
     orderedLeagues = await mapOrder(availableLeagues, leagueOrder, "id");
