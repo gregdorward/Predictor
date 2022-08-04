@@ -31,73 +31,56 @@ export let allLeagueData = [];
 export const availableLeagues = [];
 export var orderedLeagues = [];
 
-async function getHighestScoringTeams() {
+async function getHighestScoringLeagues() {
   let teamsList = await fetch(`${process.env.REACT_APP_EXPRESS_SERVER}over25`);
   let arr = [];
-  let bestO25Bets;
-  await teamsList.json().then(async (teams) => {
-    console.log(teams.data);
-    for (let index = 0; index < 50; index++) {
-      const game = {
-        game: teams.data.top_fixtures.data[index].name,
-        teamCountry: teams.data.top_fixtures.data[index].country,
-        odds: teams.data.top_fixtures.data[index].odds_ft_over25,
-        averageGoals: teams.data.top_fixtures.data[index].avg_potential,
-        timestamp: await getMatchTime(
-          teams.data.top_fixtures.data[index].date_unix
-        ),
+  await teamsList.json().then(async (leagues) => {
+    console.log(leagues.data);
+    for (let index = 0; index < 30; index++) {
+      const league = {
+        league: leagues.data.top_leagues.data[index].name,
+        leagueCountry: leagues.data.top_leagues.data[index].country,
+        averageGoals: leagues.data.top_leagues.data[index].seasonAVG_overall,
+        over25Percentage: leagues.data.top_leagues.data[index].seasonOver25Percentage_overall,
+        division: leagues.data.top_leagues.data[index].division
       };
-      arr.push(game);
+      arr.push(league);
     }
 
-    const finalArray = arr.filter(
-      (country) =>
-        country.teamCountry === "England" ||
-        country.teamCountry === "Germany" ||
-        country.teamCountry === "Italy" ||
-        country.teamCountry === "France" ||
-        country.teamCountry === "Spain"
-    );
-
-    bestO25Bets = finalArray.filter((game) => game.odds > 1.5);
   });
 
-  let sortedArray = bestO25Bets.sort((a, b) => b.averageGoals - a.averageGoals);
+  const finalArray = arr.filter(
+    (league) =>
+    league.division !== -1
+  );
+
+  let sortedArray = finalArray.sort((a, b) => b.averageGoals - a.averageGoals);
 
   return sortedArray;
 }
 
-async function getLowestScoringTeams() {
+async function getLowestScoringLeagues() {
   let teamsList = await fetch(`${process.env.REACT_APP_EXPRESS_SERVER}under25`);
   let arr = [];
-  let bestU25Bets;
-  await teamsList.json().then(async (teams) => {
-    console.log(teams.data);
-    for (let index = 0; index < 50; index++) {
-      const game = {
-        game: teams.data.top_fixtures.data[index].name,
-        teamCountry: teams.data.top_fixtures.data[index].country,
-        odds: teams.data.top_fixtures.data[index].odds_ft_under25,
-        averageGoals: teams.data.top_fixtures.data[index].avg_potential,
-        timestamp: await getMatchTime(
-          teams.data.top_fixtures.data[index].date_unix
-        ),
+  await teamsList.json().then(async (leagues) => {
+    console.log(leagues.data);
+    for (let index = 0; index < 20; index++) {
+      const league = {
+        league: leagues.data.top_leagues.data[index].name,
+        leagueCountry: leagues.data.top_leagues.data[index].country,
+        averageGoals: leagues.data.top_leagues.data[index].seasonAVG_overall,
+        under25Percentage: leagues.data.top_leagues.data[index].seasonUnder25Percentage_overall
       };
-      arr.push(game);
+      arr.push(league);
     }
-
-    const finalArray = arr.filter(
-      (country) =>
-        country.teamCountry === "England" ||
-        country.teamCountry === "Germany" ||
-        country.teamCountry === "Italy" ||
-        country.teamCountry === "France" ||
-        country.teamCountry === "Spain"
-    );
-
-    bestU25Bets = finalArray.filter((game) => game.odds > 1.5);
   });
-  let sortedArray = bestU25Bets.sort((a, b) => a.averageGoals - b.averageGoals);
+
+  const finalArray = arr.filter(
+    (league) =>
+    league.division !== -1
+  );
+
+  let sortedArray = finalArray.sort((a, b) => a.averageGoals - b.averageGoals);
 
   return sortedArray;
 }
@@ -315,29 +298,28 @@ async function getMatchTime(unixTime) {
 
   ReactDOM.render(
     <Button
-      text={"Best value for under 2.5 goals"}
+      text={"Lowest scoring leagues"}
       className={"Under25TeamsButton"}
       onClickEvent={async () => {
-        let games = await getLowestScoringTeams();
-        const teamList = [];
+        let leagues = await getLowestScoringLeagues();
+        const leagueList = [];
 
-        games.forEach(async (game) =>
-          teamList.push(
+        leagues.forEach(async (league) =>
+        leagueList.push(
             <ul className="GlobalStat">
               <p className="TeamName">
-                {game.game} ({game.teamCountry})
+                {league.league} ({league.leagueCountry})
               </p>
-              <li>{game.timestamp}</li>
-              <li>Average combined goals: {game.averageGoals}</li>
-              <li>Odds under 2.5 goals: {game.odds}</li>
+              <li>Average goals: {league.averageGoals}</li>
+              <li>Under 2.5 goals %: {league.under25Percentage}%</li>
             </ul>
           )
         );
 
         reactDom.render(
           <div>
-            <h3>Games featuring low scoring teams with high value odds</h3>
-            <ul>{teamList}</ul>
+            <h3>Leagues with the lowest scoring games</h3>
+            <ul>{leagueList}</ul>
           </div>,
           document.getElementById("Under25Games")
         );
@@ -348,29 +330,28 @@ async function getMatchTime(unixTime) {
 
   ReactDOM.render(
     <Button
-      text={"Best value for over 2.5 goals"}
+      text={"Highest scoring leagues"}
       className={"Over25TeamsButton"}
       onClickEvent={async () => {
-        let games = await getHighestScoringTeams();
-        const teamList = [];
+        let leagues = await getHighestScoringLeagues();
+        const leagueList = [];
 
-        games.forEach(async (game) =>
-          teamList.push(
+        leagues.forEach(async (league) =>
+        leagueList.push(
             <ul className="GlobalStat">
               <p className="TeamName">
-                {game.game} ({game.teamCountry})
+                {league.league} ({league.leagueCountry})
               </p>
-              <li>{game.timestamp}</li>
-              <li>Average combined goals: {game.averageGoals}</li>
-              <li>Odds over 2.5 goals: {game.odds}</li>
+              <li>Average goals: {league.averageGoals}</li>
+              <li>Over 2.5 goals %: {league.over25Percentage}%</li>
             </ul>
           )
         );
 
         reactDom.render(
           <div>
-            <h3>Games featuring high scoring teams with high value odds</h3>
-            <ul>{teamList}</ul>
+            <h3>Leagues with the highest scoring games</h3>
+            <ul>{leagueList}</ul>
           </div>,
           document.getElementById("Over25Games")
         );

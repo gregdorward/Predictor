@@ -463,7 +463,8 @@ p {
 
 .individualFixture:active, input:focus{
   /* box-shadow:2px 2px 2px 2px grey; */
-  box-shadow: rgb(204, 219, 232) 3px 3px 6px 0px inset, rgba(255, 255, 255, 0.5) -3px -3px 6px 1px inset;
+  
+  box-shadow: 0 0px 0px 0 rgba(0, 0, 0, 0.2) inset, 0 1px 2px 0 #4e5e6c inset;
 }
 
 
@@ -1289,6 +1290,20 @@ li.FormHeader{
   flex-direction: row;
 }
 
+.Under25Games {
+  font-size: 0.8em;
+  max-width: 300px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.Over25Games {
+  font-size: 0.8em;
+  max-width: 300px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
 .HowToUse {
   padding: 1.2em;
   padding-top: 6px;
@@ -1458,12 +1473,6 @@ a.kofi-button {
 }
 
 .Over25Teams {
-  padding: 1em;
-  margin-left: 2em;
-  margin-right: 2em;
-}
-
-.Over25Games {
   padding: 1em;
   margin-left: 2em;
   margin-right: 2em;
