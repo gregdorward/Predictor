@@ -252,6 +252,14 @@ button {
 
   transition: all 0.2s;
 }
+
+.disclaimerButton {
+  background-color: #e2e2e26c;
+  color: black;
+  padding: 0.5em;
+  font-size: 0.8em;
+}
+
 .RowOneContainer{
   display: flex;
   flex-wrap: wrap
@@ -411,7 +419,7 @@ p {
   color: white;
   padding-top: 0.75em;
   padding-bottom: 0.75em;
-  margin-top: 1em;
+  margin-top: 1.5em;
   background-color: #030061;
 }
 
@@ -420,7 +428,8 @@ p {
 }
 
 .LeagueTable {
-  padding-bottom: 0.5em;
+  padding-bottom: 0.25em;
+  padding-top: 0.25em;
   padding-left: 0.25em;
   padding-right: 0.25em;
   max-width: 1000px;
@@ -553,7 +562,7 @@ p {
   flex-shrink: 2;
   display: inline-block;
   text-align: right;
-  padding-left: 0.5em;
+  padding-left: 0.25em;
   font-weight: bolder;
   color: black;
 }
@@ -567,7 +576,7 @@ p {
   flex-shrink: 2;
   display: inline-block;
   text-align: left;
-  padding-right: 0.5em;
+  padding-right: 0.25em;
   font-weight: bolder;
   color: black;
 }
@@ -1298,6 +1307,7 @@ li.FormHeader{
 }
 
 .Over25Games {
+  padding-top: 2em;
   font-size: 0.8em;
   max-width: 300px;
   margin-left: auto;
@@ -1472,11 +1482,6 @@ a.kofi-button {
   font-size: 40px;
 }
 
-.Over25Teams {
-  padding: 1em;
-  margin-left: 2em;
-  margin-right: 2em;
-}
 
 .GlobalStat {
   border-bottom: #172A3A 1px solid;
@@ -1507,6 +1512,11 @@ td {
 
 button:hover {
   border-color: #ff0000;
+  border-radius: 1em;
+}
+
+.disclaimerButton:hover {
+  border-color: #030061;
   border-radius: 1em;
 }
 
