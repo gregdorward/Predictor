@@ -1669,7 +1669,8 @@ var accumulatedOdds = 1;
 let predictions = [];
 
 export async function getNewTips(array) {
-  allTips = [];
+  console.log(array)
+  // allTips = [];
   newArray = [];
   accumulatedOdds = 1;
 
@@ -1695,6 +1696,8 @@ export async function getScorePrediction(day, mocked) {
   bttsArray = [];
   longShotTips = [];
   XGDiffTips = [];
+    allTips = [];
+
 
   let index = 2;
   let divider = 10;
@@ -1828,7 +1831,7 @@ export async function getScorePrediction(day, mocked) {
           }
         }
       }
-      allTipsSorted = []
+      // allTipsSorted = []
 
       allTipsSorted = allTips.sort(function (a, b) {
         return b.goalDifferential - a.goalDifferential;
