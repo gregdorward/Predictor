@@ -396,10 +396,12 @@ function App() {
       <div id="Day" />
       <div id="Checkbox" />
       <div id="ExplainerText" />
+      <div id="Loading" className="Loading"></div>
       <div id="Buttons" className="Buttons">
         <ThreeDots className="MainLoading" fill="#030061" />
         <div>Loading all fixture and form data...</div>
       </div>
+      <div id="GeneratePredictions" className="GeneratePredictions" />
       <div id="bestPredictions" className="bestPredictions" />
       <div id="exoticOfTheDay" className="exoticOfTheDay" />
       <div id="successMeasure2" />

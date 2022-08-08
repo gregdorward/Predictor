@@ -1247,6 +1247,7 @@ export async function calculateScore(match, index, divider) {
 
     [teamComparisonScore] = await compareTeams(formHome, formAway, match);
     teamComparisonScore = teamComparisonScore * 0.85;
+    
     if (teamComparisonScore > 0.65) {
       teamComparisonScore = 0.65;
     } else if (teamComparisonScore < -0.65) {
@@ -1604,6 +1605,7 @@ export async function calculateScore(match, index, divider) {
 }
 
 async function getSuccessMeasure(fixtures) {
+
   let sumProfit = 0;
   let investment = 0;
   let exactScores = 0;
@@ -1650,7 +1652,7 @@ async function getSuccessMeasure(fixtures) {
 
 export var tips = [];
 export var allTips = [];
-let allTipsSorted;
+let allTipsSorted = [];
 var newArray = [];
 var bestBets = [];
 var price;
@@ -1667,6 +1669,7 @@ var accumulatedOdds = 1;
 let predictions = [];
 
 export async function getNewTips(array) {
+  allTips = [];
   newArray = [];
   accumulatedOdds = 1;
 
@@ -1696,7 +1699,11 @@ export async function getScorePrediction(day, mocked) {
   let index = 2;
   let divider = 10;
 
-  ReactDOM.render(<div />, document.getElementById("Buttons"));
+  ReactDOM.render(
+    <div></div>,
+    document.getElementById("GeneratePredictions")
+  );
+  // ReactDOM.render(<div />, document.getElementById("Buttons"));
 
   await Promise.all(
     matches.map(async (match) => {
@@ -1821,6 +1828,7 @@ export async function getScorePrediction(day, mocked) {
           }
         }
       }
+      allTipsSorted = []
 
       allTipsSorted = allTips.sort(function (a, b) {
         return b.goalDifferential - a.goalDifferential;
@@ -2211,7 +2219,7 @@ async function renderTips() {
             buttonText={"Build a multi"}
             className={"PredictionsOfTheDay"}
             text={
-              <ul className="BestPredictions">
+              <ul className="BestPredictions" id="BestPredictions">
                 <div className="BestPredictionsExplainer">
                   Add or remove a selection using the buttons below. Predictions
                   are ordered by confidence in the outcome.
@@ -2240,7 +2248,7 @@ async function renderTips() {
             buttonText={"Build a multi"}
             className={"PredictionsOfTheDay"}
             text={
-              <ul className="BestPredictions">
+              <ul className="BestPredictions" id="BestPredictions">
                 <div className="BestPredictionsExplainer">
                   No games fit the criteria (try tapping the + button)
                 </div>
@@ -2264,7 +2272,7 @@ async function renderTips() {
             buttonText={"Exotic of the day"}
             className={"PredictionsOfTheDay"}
             text={
-              <ul className="BestPredictions">
+              <ul className="BestPredictions" id="BestPredictions">
                 <div className="BestPredictionsExplainer">
                   <NewlineText
                     text={`${gamesInExotic} games: ${exoticString}\nStake per multi: ${exoticStake} units - ${combinations} combinations\nTotal stake: ${(
@@ -2293,7 +2301,7 @@ async function renderTips() {
             buttonText={"Exotic of the day"}
             className={"PredictionsOfTheDay"}
             text={
-              <ul className="BestPredictions">
+              <ul className="BestPredictions" id="BestPredictions">
                 <div className="BestPredictionsExplainer">
                   Not enough games for this feature
                 </div>
@@ -2313,7 +2321,7 @@ async function renderTips() {
           <Collapsable
             buttonText={"Double chance tips"}
             text={
-              <ul className="LongshotPredictions">
+              <ul className="LongshotPredictions" id="LongshotPredictions">
                 <lh>Double chance (Win or Draw - decimal odds only)</lh>
                 {longShotTips.map((tip) => (
                   <li className={`${tip.doubleChanceOutcome}1`} key={tip.team}>
@@ -2334,7 +2342,7 @@ async function renderTips() {
           <Collapsable
             buttonText={"Double chance tips"}
             text={
-              <ul className="LongshotPredictions">
+              <ul className="LongshotPredictions" id="LongshotPredictions">
                 <lh>No games fit the criteria</lh>
               </ul>
             }
@@ -2352,7 +2360,7 @@ async function renderTips() {
           <Collapsable
             buttonText={"XG Tips"}
             text={
-              <ul className="XGDiffTips">
+              <ul className="XGDiffTips" id="XGDiffTips">
                 <lh>Games with greatest XG Differentials</lh>
                 {XGDiffTips.map((tip) => (
                   <li className={tip.outcome} key={tip.game}>
@@ -2373,7 +2381,7 @@ async function renderTips() {
           <Collapsable
             buttonText={"XG Tips"}
             text={
-              <ul className="XGDiffTips">
+              <ul className="XGDiffTips" id="XGDiffTips">
                 <lh>No games fit the criteria</lh>
               </ul>
             }
@@ -2392,7 +2400,7 @@ async function renderTips() {
             className={"BTTSGames"}
             buttonText={"BTTS games"}
             text={
-              <ul className="BTTSGames">
+              <ul className="BTTSGames" id="BTTSGames">
                 <lh>Games with highest chance of BTTS</lh>
                 {bttsArray.map((game) => (
                   <li className={game.bttsOutcome} key={game.game}>
@@ -2414,7 +2422,7 @@ async function renderTips() {
             className={"BTTSGames"}
             buttonText={"BTTS games"}
             text={
-              <ul className="BTTSGames">
+              <ul className="BTTSGames" id="BTTSGames">
                 <lh>No games fit the criteria</lh>
               </ul>
             }

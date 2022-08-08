@@ -221,13 +221,7 @@ h4 {
   flex-direction: row;
 }
 
-.FixtureButtons {
-  display: flex;
-  flex-direction: row;
-  flex-wrap: wrap;
-  flex-basis: 100%;
-  justify-content: center;
-}
+
 
 button {
   display: inline-block;
@@ -258,6 +252,21 @@ button {
   color: black;
   padding: 0.5em;
   font-size: 0.8em;
+}
+
+.FixtureButtons {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  flex-basis: 100%;
+  justify-content: center;
+  margin-bottom: 1em;
+}
+
+.FixtureButtons button {
+  background-color: #ffffff;
+  color: #030061;
+  margin: 0.2em;
 }
 
 .RowOneContainer{
@@ -314,7 +323,7 @@ p {
 } */
 
 .LoadingText {
-  padding: 10px;
+  padding-bottom: 0.2em;
 }
 
 .lastXGames {
@@ -354,7 +363,8 @@ p {
 }
 
 .Explainer{
-  padding: 1em;
+  padding-top: 1em;
+  padding-top: 0.2em;
   padding-left: 3em;
   padding-right: 3em;
 }

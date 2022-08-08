@@ -14,9 +14,9 @@ var oddslib = require("oddslib");
 // require("dotenv").config();
 
 var fixtureResponse;
-var fixtureArray;
-export const matches = [];
-export const resultedMatches = [];
+var fixtureArray = [];
+export var matches = [];
+export var resultedMatches = [];
 var league;
 var leagueID;
 var leagueGames = [];
@@ -116,7 +116,9 @@ async function convertTimestamp(timestamp) {
 }
 
 export async function generateTables(a, leagueIdArray) {
-  console.log(leagueIdArray)
+  leagueIdArray = [];
+  tableArray = [];
+  console.log(leagueIdArray);
   let i = 0;
   leagueArray.forEach(function (league) {
     let currentLeagueId = leagueIdArray[i];
@@ -330,6 +332,20 @@ var myHeaders = new Headers();
 myHeaders.append("Origin", "https://gregdorward.github.io");
 
 export async function generateFixtures(day, radioState, selectedOdds) {
+
+  //cleanup if different day is selected
+  ReactDOM.render(<div></div>, document.getElementById("GeneratePredictions"));
+  ReactDOM.render(<div></div>, document.getElementById("successMeasure2"));
+  ReactDOM.render(<div></div>, document.getElementById("bestPredictions"));
+  ReactDOM.render(<div></div>, document.getElementById("exoticOfTheDay"));  
+  ReactDOM.render(<div></div>, document.getElementById("insights"));
+  ReactDOM.render(<div></div>, document.getElementById("longShots"));
+  ReactDOM.render(<div></div>, document.getElementById("BTTS"));
+  ReactDOM.render(<div></div>, document.getElementById("draws"));
+
+  matches = [];
+  fixtureArray = [];
+
   let url;
   switch (day) {
     case "lastSaturday":
@@ -351,6 +367,8 @@ export async function generateFixtures(day, radioState, selectedOdds) {
       break;
   }
 
+  ReactDOM.render(<div></div>, document.getElementById("FixtureContainer"));
+
   fixtureResponse = await fetch(url);
 
   await fixtureResponse.json().then((fixtures) => {
@@ -358,7 +376,7 @@ export async function generateFixtures(day, radioState, selectedOdds) {
   });
 
   let form;
-  let formArray;
+  let formArray = [];
   var isFormStored;
   var isStoredLocally;
   let storedForm = await fetch(
@@ -394,7 +412,7 @@ export async function generateFixtures(day, radioState, selectedOdds) {
       <div className="LoadingText">Loading all league data</div>
       <ThreeDots height="3em" fill="#030061" />
     </div>,
-    document.getElementById("Buttons")
+    document.getElementById("Loading")
   );
 
   for (let i = 0; i < orderedLeagues.length; i++) {
@@ -1360,9 +1378,17 @@ export async function generateFixtures(day, radioState, selectedOdds) {
         text={"Generate predictions"}
         onClickEvent={() => getScorePrediction(day)}
       />,
-      document.getElementById("Buttons")
+      document.getElementById("GeneratePredictions")
     );
   }
+
+  ReactDOM.render(
+    <div>
+      <div className="LoadingText"></div>
+    </div>,
+    document.getElementById("Loading")
+  );
+
   if (!isStoredLocally) {
     await fetch(`${process.env.REACT_APP_EXPRESS_SERVER}allForm${day}`, {
       method: "POST",
