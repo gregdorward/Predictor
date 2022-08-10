@@ -1,12 +1,33 @@
-import React, { Fragment } from "react";
+import React, { Fragment, useState } from "react";
 import { CreateBadge } from "./createBadge";
 import Collapsable from "../components/CollapsableElement";
 import { createStatsDiv } from "../logic/getStats";
 import { renderTable } from "../logic/getFixtures";
 
 let resultValue;
+var count
+var setCount
+
 const text =
   "XG Tipping formulates predictions based on recent form data ranging from points per game to each teams attacking potency\n Expected Goals in previous matches are used to determine whether teams might be over or underperforming and predictions are weighted as such\n Once all fixtures have loaded, click on “Get Predictions”\n Predictions are displayed on the right and the results on the left\n Click on an individual fixture for detailed stats for both teams.";
+
+  function toggle(bool) {
+    count = !bool;
+    console.log(count)
+    return count
+  }
+
+  // function stylying(bool){
+  //   if (bool === true) {
+  //     // set stats element to display flex
+  //     return { display: "block" };
+  //   } else {
+  //     // set stats element to display none
+  //     return { display: "none" };
+  //   }
+  // }
+
+  
 
 function GetDivider(fixture) {
   const matchStatus = fixture.status;
@@ -182,15 +203,19 @@ function renderLeagueName(fixture) {
   }
 }
 
-const SingleFixture = ({ fixture }) => (
+const SingleFixture = ({ fixture, count }) => (
+
   <div key={fixture.game}>
     {renderLeagueName(fixture)}
     <li
       className={getStyle(fixture.pointsAverageDiff)}
       key={fixture.id}
-      onClick={() => createStatsDiv(fixture)}
+      onMouseDown={() => count = toggle(count)}
+      onClick={() => createStatsDiv(fixture, count)}
       data-cy={fixture.id}
     >
+        
+
       <div className="HomeOdds">{fixture.fractionHome}</div>
       <div className="homeTeam">{fixture.homeTeam}</div>
       <GetDivider
@@ -213,7 +238,7 @@ const SingleFixture = ({ fixture }) => (
       />
       <div className="AwayOdds">{fixture.fractionAway}</div>
     </li>
-    <div className="StatsDiv">
+    <div className={"StatsDiv"}>
       <div id={"stats" + fixture.homeTeam}></div>
       <Fragment>
         <div
@@ -245,14 +270,15 @@ const List = ({ fixtures }) => (
     <div id="Headers"></div>
     <ul className="FixtureList" id="FixtureList">
       {fixtures.map((fixture, i) => (
-        <SingleFixture fixture={fixture} key={fixture.game}/>
+        <SingleFixture fixture={fixture} key={fixture.game} count={count}/>
       ))}
     </ul>
   </div>
 );
 
 export function Fixture(props) {
+  [count, setCount] = useState(false);
+  console.log(count)
   resultValue = props.result;
-
-  return <List fixtures={props.fixtures} result={resultValue} />;
+  return <List fixtures={props.fixtures} result={resultValue} count={count}/>;
 }
