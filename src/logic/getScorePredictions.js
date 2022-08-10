@@ -1447,6 +1447,7 @@ export async function calculateScore(match, index, divider) {
       match.XGdifferentialValueRaw = parseFloat(XGdifferential);
     }
 
+    console.log(sumOddsWin)
     switch (true) {
       case match.homeGoals > match.awayGoals:
         match.winner = match.homeTeam;
@@ -1468,11 +1469,11 @@ export async function calculateScore(match, index, divider) {
         sumStatSOTLoss = sumStatSOTLoss += formAway.AverageShotsOnTargetOverall;
         sumOddsWin = sumOddsWin += homeOdds;
         sumOddsLoss = sumOddsLoss += awayOdds;
-
         sumXGForWin = sumXGForWin += formHome.XGOverall;
         sumXGForLoss = sumXGForLoss += formAway.XGOverall;
         sumXGAgainstWin = sumXGAgainstWin += formHome.XGAgainstAvgOverall;
         sumXGAgainstLoss = sumXGAgainstLoss += formAway.XGAgainstAvgOverall;
+        console.log(sumOddsWin)
 
         break;
       case match.homeGoals === match.awayGoals:
@@ -1500,13 +1501,13 @@ export async function calculateScore(match, index, divider) {
           formHome.last10Points / 10;
         sumStatSOTWin = sumStatSOTWin += formAway.AverageShotsOnTargetOverall;
         sumStatSOTLoss = sumStatSOTLoss += formHome.AverageShotsOnTargetOverall;
-        sumOddsWin = sumOddsWin += awayOdds;
+        sumOddsWin = sumOddsWin += 100;
         sumOddsLoss = sumOddsLoss += homeOdds;
-
         sumXGForWin = sumXGForWin += formAway.XGOverall;
         sumXGForLoss = sumXGForLoss += formHome.XGOverall;
         sumXGAgainstWin = sumXGAgainstWin += formAway.XGAgainstAvgOverall;
         sumXGAgainstLoss = sumXGAgainstLoss += formHome.XGAgainstAvgOverall;
+        console.log(sumOddsWin)
         break;
       default:
         break;
@@ -2478,11 +2479,4 @@ async function renderTips() {
       document.getElementById("insights")
     );
   }
-
-  // ReactDOM.render(
-  //   <div className="pointsGapExplainer">
-  //     * games with greatest XG differentials
-  //   </div>,
-  //   document.getElementById("XGDiff")
-  // );
 }

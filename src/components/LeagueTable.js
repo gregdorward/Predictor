@@ -286,8 +286,8 @@ export default function LeagueTable(props) {
           <Table aria-label="customized table" key={props.Key}>
             <TableHead>
               <TableRow>
-                <StyledTableCell>P</StyledTableCell>
-                <StyledTableCell>Team</StyledTableCell>
+                <StyledTableCell></StyledTableCell>
+                <StyledTableCell></StyledTableCell>
                 <StyledTableCell>Pld</StyledTableCell>
                 <StyledTableCell>W</StyledTableCell>
                 <StyledTableCell>D</StyledTableCell>

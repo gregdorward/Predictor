@@ -32,14 +32,6 @@ export let allLeagueData = [];
 export const availableLeagues = [];
 export var orderedLeagues = [];
 
-async function getMatchTime(unixTime) {
-  let milliseconds = unixTime * 1000;
-  let dateObject = new Date(milliseconds);
-
-  let time = dateObject.toLocaleString("en-GB");
-  return time;
-}
-
 const leagueOrder = [
   7704, //premier league 22/23
   7593, //championship 22/23

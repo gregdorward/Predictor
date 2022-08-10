@@ -1,7 +1,7 @@
 import React from "react";
 import ReactDOM from "react-dom";
 import { orderedLeagues } from "../App";
-import { getForm, applyColour } from "./getForm";
+import { getForm } from "./getForm";
 import { Fixture } from "../components/Fixture";
 import { Button } from "../components/Button";
 import { getScorePrediction } from "../logic/getScorePredictions";
@@ -93,11 +93,6 @@ export const yesterday = `${process.env.REACT_APP_EXPRESS_SERVER}matches/${yeste
 export const today = `${process.env.REACT_APP_EXPRESS_SERVER}matches/${year}-${currentDay}-${month}`;
 export const tomorrow = `${process.env.REACT_APP_EXPRESS_SERVER}matches/${tomorrowYear}-${tomorrowDay}-${tomorrowMonth}`;
 
-export function getRadioState(state) {
-  let radioState = state;
-  return radioState;
-}
-
 export async function diff(a, b) {
   return parseFloat(a - b).toFixed(2);
 }
@@ -140,8 +135,6 @@ export async function generateTables(a, leagueIdArray) {
         } else {
           last5 = currentTeam.wdl_record.slice(-5).toUpperCase();
         }
-        // let rawForm = last5.replace(/,/g, "").toUpperCase();
-        // let form = Array.from(rawForm);
 
         const team = {
           LeagueID: currentLeagueId,
@@ -305,27 +298,15 @@ async function createFixture(match, result, mockBool) {
 
   match.game = match.homeTeam + " v " + match.awayTeam;
 
-  if (mockBool !== true) {
-    ReactDOM.render(
-      <Fixture
-        fixtures={matches}
-        result={result}
-        mock={mockBool}
-        className={"individualFixture"}
-      />,
-      document.getElementById("FixtureContainer")
-    );
-  } else if (mockBool === true) {
-    ReactDOM.render(
-      <Fixture
-        fixtures={matches}
-        result={result}
-        mock={mockBool}
-        className={"individualFixture"}
-      />,
-      document.getElementById("FixtureContainer")
-    );
-  }
+  ReactDOM.render(
+    <Fixture
+      fixtures={matches}
+      result={result}
+      mock={mockBool}
+      className={"individualFixture"}
+    />,
+    document.getElementById("FixtureContainer")
+  );
 }
 
 var myHeaders = new Headers();
@@ -337,7 +318,7 @@ export async function generateFixtures(day, radioState, selectedOdds) {
   ReactDOM.render(<div></div>, document.getElementById("GeneratePredictions"));
   ReactDOM.render(<div></div>, document.getElementById("successMeasure2"));
   ReactDOM.render(<div></div>, document.getElementById("bestPredictions"));
-  ReactDOM.render(<div></div>, document.getElementById("exoticOfTheDay"));  
+  ReactDOM.render(<div></div>, document.getElementById("exoticOfTheDay"));
   ReactDOM.render(<div></div>, document.getElementById("insights"));
   ReactDOM.render(<div></div>, document.getElementById("longShots"));
   ReactDOM.render(<div></div>, document.getElementById("BTTS"));
@@ -388,14 +369,7 @@ export async function generateFixtures(day, radioState, selectedOdds) {
       },
     }
   );
-  if (storedForm.status === 201) {
-    await storedForm.json().then((form) => {
-      formArray = Array.from(form.allForm);
-      isFormStored = true;
-      isStoredLocally = false;
-      allForm = formArray;
-    });
-  } else if (storedForm.status === 200) {
+  if (storedForm.status === 201 || storedForm.status === 200) {
     await storedForm.json().then((form) => {
       formArray = Array.from(form.allForm);
       isFormStored = true;
@@ -726,19 +700,6 @@ export async function generateFixtures(day, radioState, selectedOdds) {
       if (!isFormStored) {
         form = await getForm(match);
 
-        // if (
-        //   form[0].data[0].stats.additional_info &&
-        //   form[1].data[0].stats.additional_info
-        // ) {
-
-        //   //get the last 5 games stats from a big block of text
-        //   var homeExtract = form[0].data[0].stats.additional_info.replace(
-        //     /["']/g,
-        //     ""
-        //   );
-
-        //   var slug = homeExtract.split(",53:").pop().toUpperCase();
-
         let homeFormString5 =
           form[0].data[0].stats.additional_info.formRun_overall.toUpperCase();
         let awayFormString5 =
@@ -838,10 +799,6 @@ export async function generateFixtures(day, radioState, selectedOdds) {
           awayPrefix = "";
           awayPrefixAwayTable = "";
         }
-        // } else {
-        //   lastFiveFormHome = "N/A"
-        //   lastFiveFormAway = "N/A"
-        // }
 
         allForm.push({
           id: match.id,
@@ -1329,10 +1286,7 @@ export async function generateFixtures(day, radioState, selectedOdds) {
       match.awayBadge = fixture.away_image;
 
       match.homePpg = fixture.home_ppg.toFixed(2);
-      match.homeFormColour = await applyColour(match.homePpg);
-
       match.awayPpg = fixture.away_ppg.toFixed(2);
-      match.awayFormColour = await applyColour(match.awayPpg);
 
       match.lastFiveFormHome = lastFiveFormHome;
       match.lastFiveFormAway = lastFiveFormAway;
@@ -1410,16 +1364,4 @@ export async function generateFixtures(day, radioState, selectedOdds) {
       body: JSON.stringify({ leagueArray }),
     }
   );
-
-  // await fetch(
-  //   `${process.env.REACT_APP_EXPRESS_SERVER}leagueStats/${currentDay}${month}${year}`,
-  //   {
-  //     method: "POST",
-  //     headers: {
-  //       Accept: "application/json",
-  //       "Content-Type": "application/json",
-  //     },
-  //     body: JSON.stringify({ leagueStatsArray }),
-  //   }
-  // );
 }
