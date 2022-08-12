@@ -41,31 +41,44 @@ export async function createStatsDiv(game, displayBool) {
       index = 2;
       divider = 10;
     }
-
-    let gameStats = allForm.find((match) => match.id === game.id);
-
-    let homeLastMatch = await fetch(
-      `${process.env.REACT_APP_EXPRESS_SERVER}matches/${gameStats.home[2].LastMatch}`
-    );
-
-    let matchArray;
-    await homeLastMatch.json().then((matches) => {
-      matchArray = Array.from(matches.data);
-    });
-
+    let homeLastMatch
     let awayLastMatch;
+    let gameStats = allForm.find((match) => match.id === game.id);
+    let matchArray;
     let matchArrayAway;
 
-    if (gameStats.home[2].LastMatch === gameStats.away[2].LastMatch) {
-      matchArrayAway = matchArray;
-    } else {
-      awayLastMatch = await fetch(
-        `${process.env.REACT_APP_EXPRESS_SERVER}matches/${gameStats.away[2].LastMatch}`
+    if( displayBool === true){
+      homeLastMatch = await fetch(
+        `${process.env.REACT_APP_EXPRESS_SERVER}matches/${gameStats.home[2].LastMatch}`
       );
+      await homeLastMatch.json().then((matches) => {
+        matchArray = Array.from(matches.data);
+      });
+
+      if (gameStats.home[2].LastMatch === gameStats.away[2].LastMatch) {
+        matchArrayAway = matchArray;
+      } else {
+        awayLastMatch = await fetch(
+          `${process.env.REACT_APP_EXPRESS_SERVER}matches/${gameStats.away[2].LastMatch}`
+        );
 
       await awayLastMatch.json().then((matches) => {
         matchArrayAway = Array.from(matches.data);
       });
+    }
+  } else {
+    matchArray = []
+    matchArrayAway = []
+  
+
+
+
+
+
+
+
+
+
     }
 
     const lastGameHome = matchArray.find(
@@ -455,16 +468,26 @@ export async function createStatsDiv(game, displayBool) {
       awayTenGameAverage.toFixed(2),
     ];
 
-    let formTextStringHome = await GenerateFormSummary(
-      gameStats.home[2],
-      homeFormTrend,
-      gameStats.home[0]
-    );
-    let formTextStringAway = await GenerateFormSummary(
-      gameStats.away[2],
-      awayFormTrend,
-      gameStats.away[0]
-    );
+    let formTextStringHome
+    let formTextStringAway
+
+    if(displayBool === true){
+      formTextStringHome = await GenerateFormSummary(
+        gameStats.home[2],
+        homeFormTrend,
+        gameStats.home[0]
+      );
+      formTextStringAway = await GenerateFormSummary(
+        gameStats.away[2],
+        awayFormTrend,
+        gameStats.away[0]
+      );
+    } else {
+      formTextStringHome = ""
+      formTextStringAway = ""
+    }
+
+
 
     let homeLastGame = await getLastGameResult(
       gameStats.home[index].LastFiveForm[4]

@@ -278,7 +278,6 @@ const List = ({ fixtures }) => (
 
 export function Fixture(props) {
   [count, setCount] = useState(false);
-  console.log(count)
   resultValue = props.result;
   return <List fixtures={props.fixtures} result={resultValue} count={count}/>;
 }

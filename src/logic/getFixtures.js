@@ -360,6 +360,7 @@ export async function generateFixtures(day, radioState, selectedOdds) {
   let formArray = [];
   var isFormStored;
   var isStoredLocally;
+  var leaguesStored = false;
   let storedForm = await fetch(
     `${process.env.REACT_APP_EXPRESS_SERVER}form${day}`,
     {
@@ -373,7 +374,7 @@ export async function generateFixtures(day, radioState, selectedOdds) {
     await storedForm.json().then((form) => {
       formArray = Array.from(form.allForm);
       isFormStored = true;
-      isStoredLocally = false;
+      isStoredLocally = true;
       allForm = formArray;
     });
   } else {
@@ -383,7 +384,7 @@ export async function generateFixtures(day, radioState, selectedOdds) {
 
   ReactDOM.render(
     <div>
-      <div className="LoadingText">Loading all league data</div>
+      <div className="LoadingText">Loading all league, fixture & form data</div>
       <ThreeDots height="3em" fill="#030061" />
     </div>,
     document.getElementById("Loading")
@@ -403,6 +404,7 @@ export async function generateFixtures(day, radioState, selectedOdds) {
     await league.json().then((leagues) => {
       leagueArray = Array.from(leagues.leagueArray);
     });
+    leaguesStored = true;
     generateTables(leagueArray, leagueIdArray);
   } else {
     for (let i = 0; i < orderedLeagues.length; i++) {
@@ -413,6 +415,7 @@ export async function generateFixtures(day, radioState, selectedOdds) {
       await league.json().then((table) => {
         leagueArray.push(table);
       });
+      leaguesStored = false;
       generateTables(leagueArray, leagueIdArray);
     }
   }
@@ -698,6 +701,7 @@ export async function generateFixtures(day, radioState, selectedOdds) {
       }
 
       if (!isFormStored) {
+        console.log("TRIGGERED")
         form = await getForm(match);
 
         let homeFormString5 =
@@ -1343,7 +1347,9 @@ export async function generateFixtures(day, radioState, selectedOdds) {
     document.getElementById("Loading")
   );
 
+  console.log(isStoredLocally)
   if (!isStoredLocally) {
+    console.log("FETCHING FORM")
     await fetch(`${process.env.REACT_APP_EXPRESS_SERVER}allForm${day}`, {
       method: "POST",
       headers: {
@@ -1353,15 +1359,21 @@ export async function generateFixtures(day, radioState, selectedOdds) {
       body: JSON.stringify({ allForm }),
     });
   }
-  await fetch(
-    `${process.env.REACT_APP_EXPRESS_SERVER}leagues/${currentDay}${month}${year}`,
-    {
-      method: "POST",
-      headers: {
-        Accept: "application/json",
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ leagueArray }),
-    }
-  );
+
+
+  if(!leaguesStored) {
+    console.log("POSTING LEAGUE ARRAY")
+    await fetch(
+      `${process.env.REACT_APP_EXPRESS_SERVER}leagues/${currentDay}${month}${year}`,
+      {
+        method: "POST",
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ leagueArray }),
+      }
+    );
+  }
+
 }
