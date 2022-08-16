@@ -1289,6 +1289,10 @@ export async function calculateScore(match, index, divider) {
         ? (formAway.LeagueAverageGoals + formHome.LeagueAverageConceded) / 2
         : goalCalcAwayShortAndLongTerm;
 
+    console.log(match.game)
+    console.log(formHome)
+    console.log(formAway)
+
     let factorOneHome =
       (homeLeagueOrAllFormAverageGoals * 1 +
         goalCalcHomeShortAndLongTerm * 1 +
@@ -1365,6 +1369,10 @@ export async function calculateScore(match, index, divider) {
     let rawFinalHomeGoalsAdjusted;
     let rawFinalAwayGoalsAdjusted;
 
+    console.log(rawFinalHomeGoals)
+    console.log(rawFinalAwayGoals)
+
+
     rawFinalHomeGoalsAdjusted = await adjustForDefenceForm(
       formAway.CleanSheetPercentage,
       rawFinalHomeGoals,
@@ -1376,6 +1384,8 @@ export async function calculateScore(match, index, divider) {
       rawFinalAwayGoals,
       match.homeTeam
     );
+
+
 
     finalHomeGoals = await roundCustom(
       rawFinalHomeGoalsAdjusted,

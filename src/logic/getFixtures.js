@@ -46,7 +46,7 @@ let awayAverageGoals;
 let AwayAverageConceded;
 let awayAverageConceded;
 
-export const [currentDay, month, year] = new Date()
+export var [currentDay, month, year] = new Date()
   .toLocaleDateString("en-US")
   .split("/");
 let tomorrowsDate = new Date();
@@ -327,22 +327,43 @@ export async function generateFixtures(day, radioState, selectedOdds) {
   matches = [];
   fixtureArray = [];
 
+  console.log(yesterdayDay)
+  console.log(yesterdayMonth)
+  console.log(yesterdayYear)
+
+
   let url;
   switch (day) {
     case "lastSaturday":
       url = saturday;
+      league = await fetch(
+        `${process.env.REACT_APP_EXPRESS_SERVER}leagues/${saturdayDay}${saturdayMonth}${saturdayYear}`
+      );
       break;
     case "historic":
       url = historic;
+      league = await fetch(
+        `${process.env.REACT_APP_EXPRESS_SERVER}leagues/${historicDay}${historicMonth}${historicYear}`
+      );
       break;
     case "yesterdaysFixtures":
       url = yesterday;
+      currentDay = yesterdayDay
+      league = await fetch(
+        `${process.env.REACT_APP_EXPRESS_SERVER}leagues/${yesterdayDay}${yesterdayMonth}${yesterdayYear}`
+      );
       break;
     case "todaysFixtures":
       url = today;
+      league = await fetch(
+        `${process.env.REACT_APP_EXPRESS_SERVER}leagues/${currentDay}${month}${year}`
+      );
       break;
     case "tomorrowsFixtures":
       url = tomorrow;
+      league = await fetch(
+        `${process.env.REACT_APP_EXPRESS_SERVER}leagues/${currentDay}${month}${year}`
+      );
       break;
     default:
       break;
@@ -395,9 +416,7 @@ export async function generateFixtures(day, radioState, selectedOdds) {
     leagueIdArray.push(leagueID);
   }
 
-  league = await fetch(
-    `${process.env.REACT_APP_EXPRESS_SERVER}leagues/${currentDay}${month}${year}`
-  );
+
 
   var leaguePositions = [];
   if (league.status === 200) {
