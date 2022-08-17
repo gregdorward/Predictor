@@ -47,31 +47,41 @@ let AwayAverageConceded;
 let awayAverageConceded;
 
 export var [currentDay, month, year] = new Date()
-  .toLocaleDateString("en-US")
+  .toLocaleDateString("en-US", { timeZone: "Europe/London" })
   .split("/");
 let tomorrowsDate = new Date();
 tomorrowsDate.setDate(new Date().getDate() + 1);
 let [tomorrowDay, tomorrowMonth, tomorrowYear] = tomorrowsDate
-  .toLocaleDateString("en-US")
+  .toLocaleDateString("en-US", { timeZone: "Europe/London" })
   .split("/");
 
 let yesterdaysDate = new Date();
 yesterdaysDate.setDate(new Date().getDate() - 1);
 let [yesterdayDay, yesterdayMonth, yesterdayYear] = yesterdaysDate
-  .toLocaleDateString("en-US")
+  .toLocaleDateString("en-US", { timeZone: "Europe/London" })
   .split("/");
 
-var d = new Date();
+console.log(yesterdayDay);
+console.log(yesterdayMonth);
+console.log(yesterdayYear);
 
+var d = new Date();
 // set to Monday of this week
 d.setDate(d.getDate() - ((d.getDay() + 6) % 7));
 
 // set to Saturday just gone
 d.setDate(d.getDate() - 2);
 
+d.toLocaleDateString("en-US", { timeZone: "Europe/London" });
+console.log(d);
+
 let [saturdayDay, saturdayMonth, saturdayYear] = d
-  .toLocaleDateString("en-US")
+  .toLocaleDateString("en-US", { timeZone: "Europe/London" })
   .split("/");
+
+console.log(saturdayDay);
+console.log(saturdayMonth);
+console.log(saturdayYear);
 
 var historicDate = new Date();
 
@@ -84,7 +94,7 @@ historicDate.setDate(
 historicDate.setDate(historicDate.getDate() - 9);
 
 let [historicDay, historicMonth, historicYear] = historicDate
-  .toLocaleDateString("en-US")
+  .toLocaleDateString("en-US", { timeZone: "Europe/London" })
   .split("/");
 
 export const saturday = `${process.env.REACT_APP_EXPRESS_SERVER}matches/${saturdayYear}-${saturdayDay}-${saturdayMonth}`;
@@ -313,7 +323,6 @@ var myHeaders = new Headers();
 myHeaders.append("Origin", "https://gregdorward.github.io");
 
 export async function generateFixtures(day, radioState, selectedOdds) {
-
   //cleanup if different day is selected
   ReactDOM.render(<div></div>, document.getElementById("GeneratePredictions"));
   ReactDOM.render(<div></div>, document.getElementById("successMeasure2"));
@@ -327,40 +336,55 @@ export async function generateFixtures(day, radioState, selectedOdds) {
   matches = [];
   fixtureArray = [];
 
-  console.log(yesterdayDay)
-  console.log(yesterdayMonth)
-  console.log(yesterdayYear)
-
-
   let url;
   switch (day) {
     case "lastSaturday":
       url = saturday;
+
+      console.log(saturdayDay);
+      console.log(saturdayMonth);
+      console.log(saturdayYear);
       league = await fetch(
         `${process.env.REACT_APP_EXPRESS_SERVER}leagues/${saturdayDay}${saturdayMonth}${saturdayYear}`
       );
       break;
     case "historic":
       url = historic;
+
+      console.log(historicDay);
+      console.log(historicMonth);
+      console.log(historicYear);
       league = await fetch(
         `${process.env.REACT_APP_EXPRESS_SERVER}leagues/${historicDay}${historicMonth}${historicYear}`
       );
       break;
     case "yesterdaysFixtures":
       url = yesterday;
-      currentDay = yesterdayDay
+
+      console.log(yesterdayDay);
+      console.log(yesterdayMonth);
+      console.log(yesterdayYear);
+      currentDay = yesterdayDay;
       league = await fetch(
         `${process.env.REACT_APP_EXPRESS_SERVER}leagues/${yesterdayDay}${yesterdayMonth}${yesterdayYear}`
       );
       break;
     case "todaysFixtures":
       url = today;
+
+      console.log(currentDay);
+      console.log(month);
+      console.log(year);
       league = await fetch(
         `${process.env.REACT_APP_EXPRESS_SERVER}leagues/${currentDay}${month}${year}`
       );
       break;
     case "tomorrowsFixtures":
       url = tomorrow;
+
+      console.log(currentDay);
+      console.log(month);
+      console.log(year);
       league = await fetch(
         `${process.env.REACT_APP_EXPRESS_SERVER}leagues/${currentDay}${month}${year}`
       );
@@ -382,6 +406,7 @@ export async function generateFixtures(day, radioState, selectedOdds) {
   var isFormStored;
   var isStoredLocally;
   var leaguesStored = false;
+  console.log(day)
   let storedForm = await fetch(
     `${process.env.REACT_APP_EXPRESS_SERVER}form${day}`,
     {
@@ -415,8 +440,6 @@ export async function generateFixtures(day, radioState, selectedOdds) {
     leagueID = orderedLeagues[i].element.id;
     leagueIdArray.push(leagueID);
   }
-
-
 
   var leaguePositions = [];
   if (league.status === 200) {
@@ -720,7 +743,7 @@ export async function generateFixtures(day, radioState, selectedOdds) {
       }
 
       if (!isFormStored) {
-        console.log("TRIGGERED")
+        console.log("TRIGGERED");
         form = await getForm(match);
 
         let homeFormString5 =
@@ -1366,9 +1389,10 @@ export async function generateFixtures(day, radioState, selectedOdds) {
     document.getElementById("Loading")
   );
 
-  console.log(isStoredLocally)
+  console.log(isStoredLocally);
   if (!isStoredLocally) {
-    console.log("FETCHING FORM")
+    console.log("FETCHING FORM");
+    console.log(day)
     await fetch(`${process.env.REACT_APP_EXPRESS_SERVER}allForm${day}`, {
       method: "POST",
       headers: {
@@ -1379,9 +1403,8 @@ export async function generateFixtures(day, radioState, selectedOdds) {
     });
   }
 
-
-  if(!leaguesStored) {
-    console.log("POSTING LEAGUE ARRAY")
+  if (!leaguesStored) {
+    console.log("POSTING LEAGUE ARRAY");
     await fetch(
       `${process.env.REACT_APP_EXPRESS_SERVER}leagues/${currentDay}${month}${year}`,
       {
@@ -1394,5 +1417,4 @@ export async function generateFixtures(day, radioState, selectedOdds) {
       }
     );
   }
-
 }
