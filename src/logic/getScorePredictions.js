@@ -91,6 +91,12 @@ export function getPointsFromLastX(lastX) {
 export async function compareStat(statOne, statTwo) {
   let stat1 = parseFloat(statOne);
   let stat2 = parseFloat(statTwo);
+  if(stat1 < 0) {
+    stat1 = 0
+  }
+  if(stat2 < 0) {
+    stat2 = 0
+  }
   let result;
   let tooCloseToCall;
   let gap;
@@ -105,18 +111,54 @@ export async function compareStat(statOne, statTwo) {
     gap = 0;
   }
 
-  if (gap >= 2) {
+  if (gap >= 4) {
     switch (true) {
       case stat1 === stat2:
         result = 0;
         tooCloseToCall = 1;
         break;
       case stat1 > stat2:
-        result = 0.5;
+        result = 0.6;
         tooCloseToCall = -0.3;
         break;
       case stat1 < stat2:
-        result = -0.5;
+        result = -0.6;
+        tooCloseToCall = -0.3;
+        break;
+      default:
+        break;
+    }
+  }
+  else if (gap >= 3 && gap < 4) {
+    switch (true) {
+      case stat1 === stat2:
+        result = 0;
+        tooCloseToCall = 1;
+        break;
+      case stat1 > stat2:
+        result = 0.4;
+        tooCloseToCall = -0.3;
+        break;
+      case stat1 < stat2:
+        result = -0.4;
+        tooCloseToCall = -0.3;
+        break;
+      default:
+        break;
+    }
+  }
+  else if (gap >= 2 && gap < 3) {
+    switch (true) {
+      case stat1 === stat2:
+        result = 0;
+        tooCloseToCall = 1;
+        break;
+      case stat1 > stat2:
+        result = 0.25;
+        tooCloseToCall = -0.3;
+        break;
+      case stat1 < stat2:
+        result = -0.25;
         tooCloseToCall = -0.3;
         break;
       default:
@@ -129,11 +171,11 @@ export async function compareStat(statOne, statTwo) {
         tooCloseToCall = 1;
         break;
       case stat1 > stat2:
-        result = 0.25;
+        result = 0.15;
         tooCloseToCall = 0;
         break;
       case stat1 < stat2:
-        result = -0.25;
+        result = -0.15;
         tooCloseToCall = 0;
         break;
       default:
@@ -984,7 +1026,11 @@ export async function roundCustom(num, form, otherForm) {
 }
 
 //Calculates scores based on prior XG figures, weighted by odds
+let i = 0
 export async function calculateScore(match, index, divider) {
+  i ++
+
+  console.log(i)
   let teams;
   let calculate = true;
 
@@ -1000,7 +1046,6 @@ export async function calculateScore(match, index, divider) {
       allForm.find((game) => game.away.teamName === match.awayTeam).away,
     ];
   } else {
-    console.log(allForm);
     calculate = false;
   }
 
@@ -1079,13 +1124,11 @@ export async function calculateScore(match, index, divider) {
       if (teams[i][1].ScoredAverage === 0) {
         teams[i][1].ScoredAverage = teams[i][index].ScoredOverall / 10;
         teams[i][1].ScoredOverall = teams[i][2].ScoredOverall / 2;
-        console.log(match.awayTeam);
       }
 
       if (teams[i][1].ConcededAverage === 0) {
         teams[i][1].ConcededAverage = teams[i][index].ConcededOverall / 10;
         teams[i][1].ConcededOverall = teams[i][2].ConcededOverall / 2;
-        console.log(match.awayTeam);
       }
 
       teams[i][index].ScoredAverageShortTerm = teams[i][0].ScoredOverall / 5;
@@ -1246,7 +1289,7 @@ export async function calculateScore(match, index, divider) {
     let teamComparisonScore;
 
     [teamComparisonScore] = await compareTeams(formHome, formAway, match);
-    teamComparisonScore = teamComparisonScore * 0.85;
+    teamComparisonScore = teamComparisonScore * 0.75;
 
     if (teamComparisonScore > 0.65) {
       teamComparisonScore = 0.65;
@@ -1289,21 +1332,21 @@ export async function calculateScore(match, index, divider) {
         ? (formAway.LeagueAverageGoals + formHome.LeagueAverageConceded) / 2
         : goalCalcAwayShortAndLongTerm;
 
-    console.log(match.game)
-    console.log(formHome)
-    console.log(formAway)
-
     let factorOneHome =
       (homeLeagueOrAllFormAverageGoals * 1 +
         goalCalcHomeShortAndLongTerm * 1 +
+        formHome.XGOverall * 0.25 +
+        formAway.XGAgainstAvgOverall * 0.25 +
         last10WeightingHome * 1) /
-      2;
+      2.5;
 
     let factorOneAway =
       (awayLeagueOrAllFormAverageGoals * 1 +
         goalCalcAwayShortAndLongTerm * 1 +
+        formAway.XGOverall * 0.25 +
+        formHome.XGAgainstAvgOverall * 0.25 +
         last10WeightingAway * 1) /
-      2;
+      2.5;
 
     let homeComparisonWeighting;
     let awayComparisonWeighting;
@@ -1322,7 +1365,7 @@ export async function calculateScore(match, index, divider) {
 
     let experimentalHomeGoals = factorOneHome * 0.85 * homeComparisonWeighting;
 
-    let experimentalAwayGoals = factorOneAway * 0.85 * awayComparisonWeighting;
+    let experimentalAwayGoals = (factorOneAway * 0.85 * awayComparisonWeighting) * 0.9;
 
     let rawFinalHomeGoals = experimentalHomeGoals;
     let rawFinalAwayGoals = experimentalAwayGoals;
@@ -1368,10 +1411,6 @@ export async function calculateScore(match, index, divider) {
 
     let rawFinalHomeGoalsAdjusted;
     let rawFinalAwayGoalsAdjusted;
-
-    console.log(rawFinalHomeGoals)
-    console.log(rawFinalAwayGoals)
-
 
     rawFinalHomeGoalsAdjusted = await adjustForDefenceForm(
       formAway.CleanSheetPercentage,
@@ -1603,7 +1642,6 @@ export async function calculateScore(match, index, divider) {
     rawFinalHomeGoals = "";
     rawFinalAwayGoals = "";
     match.status = "void";
-    console.log(match.game);
   }
 
   return [finalHomeGoals, finalAwayGoals, rawFinalHomeGoals, rawFinalAwayGoals];
@@ -1673,7 +1711,6 @@ var accumulatedOdds = 1;
 let predictions = [];
 
 export async function getNewTips(array) {
-  console.log(array);
   // allTips = [];
   newArray = [];
   accumulatedOdds = 1;
@@ -1706,7 +1743,6 @@ export async function getScorePrediction(day, mocked) {
   let divider = 10;
 
   ReactDOM.render(<div></div>, document.getElementById("GeneratePredictions"));
-  // ReactDOM.render(<div />, document.getElementById("Buttons"));
 
   await Promise.all(
     matches.map(async (match) => {
@@ -2003,8 +2039,6 @@ async function getMultis() {
   exoticStake = 0;
   exoticString = "";
 
-  console.log(XGDiffTips)
-
   switch (true) {
     case XGDiffTips.length >= 10:
       for (let i = 0; i < 10; i++) {
@@ -2029,7 +2063,6 @@ async function getMultis() {
       price = getCoverBetMaxReturns(exoticArray, minimumExotic, exoticStake);
       break;
     case allTips.length >= 10:
-      console.log(XGDiffTips);
       for (let i = 0; i < 10; i++) {
         let game = allTips[i];
         exoticArray.push(game);

@@ -61,10 +61,6 @@ let [yesterdayDay, yesterdayMonth, yesterdayYear] = yesterdaysDate
   .toLocaleDateString("en-US", { timeZone: "Europe/London" })
   .split("/");
 
-console.log(yesterdayDay);
-console.log(yesterdayMonth);
-console.log(yesterdayYear);
-
 var d = new Date();
 // set to Monday of this week
 d.setDate(d.getDate() - ((d.getDay() + 6) % 7));
@@ -73,15 +69,10 @@ d.setDate(d.getDate() - ((d.getDay() + 6) % 7));
 d.setDate(d.getDate() - 2);
 
 d.toLocaleDateString("en-US", { timeZone: "Europe/London" });
-console.log(d);
 
 let [saturdayDay, saturdayMonth, saturdayYear] = d
   .toLocaleDateString("en-US", { timeZone: "Europe/London" })
   .split("/");
-
-console.log(saturdayDay);
-console.log(saturdayMonth);
-console.log(saturdayYear);
 
 var historicDate = new Date();
 
@@ -121,13 +112,13 @@ async function convertTimestamp(timestamp) {
 }
 
 export async function generateTables(a, leagueIdArray) {
-  leagueIdArray = [];
+  // leagueIdArray = [];
   tableArray = [];
-  console.log(leagueIdArray);
   let i = 0;
   leagueArray.forEach(function (league) {
     let currentLeagueId = leagueIdArray[i];
     i++;
+    console.log(i)
     leagueInstance = [];
     //Skip MLS which has a weird format
     if (!league.data.specific_tables[0].groups && currentLeagueId !== 6969) {
@@ -209,9 +200,10 @@ export async function renderTable(index) {
     `${process.env.REACT_APP_EXPRESS_SERVER}leagueStats/${league[0].LeagueID}`
   );
   await leagueStatistics.json().then((stats) => {
-    // console.log(stats)
     statistics = stats.data;
   });
+
+  console.log(statistics)
 
   if (league !== undefined) {
     ReactDOM.render(
@@ -340,30 +332,18 @@ export async function generateFixtures(day, radioState, selectedOdds) {
   switch (day) {
     case "lastSaturday":
       url = saturday;
-
-      console.log(saturdayDay);
-      console.log(saturdayMonth);
-      console.log(saturdayYear);
       league = await fetch(
         `${process.env.REACT_APP_EXPRESS_SERVER}leagues/${saturdayDay}${saturdayMonth}${saturdayYear}`
       );
       break;
     case "historic":
       url = historic;
-
-      console.log(historicDay);
-      console.log(historicMonth);
-      console.log(historicYear);
       league = await fetch(
         `${process.env.REACT_APP_EXPRESS_SERVER}leagues/${historicDay}${historicMonth}${historicYear}`
       );
       break;
     case "yesterdaysFixtures":
       url = yesterday;
-
-      console.log(yesterdayDay);
-      console.log(yesterdayMonth);
-      console.log(yesterdayYear);
       currentDay = yesterdayDay;
       league = await fetch(
         `${process.env.REACT_APP_EXPRESS_SERVER}leagues/${yesterdayDay}${yesterdayMonth}${yesterdayYear}`
@@ -371,20 +351,12 @@ export async function generateFixtures(day, radioState, selectedOdds) {
       break;
     case "todaysFixtures":
       url = today;
-
-      console.log(currentDay);
-      console.log(month);
-      console.log(year);
       league = await fetch(
         `${process.env.REACT_APP_EXPRESS_SERVER}leagues/${currentDay}${month}${year}`
       );
       break;
     case "tomorrowsFixtures":
       url = tomorrow;
-
-      console.log(currentDay);
-      console.log(month);
-      console.log(year);
       league = await fetch(
         `${process.env.REACT_APP_EXPRESS_SERVER}leagues/${currentDay}${month}${year}`
       );
@@ -406,7 +378,6 @@ export async function generateFixtures(day, radioState, selectedOdds) {
   var isFormStored;
   var isStoredLocally;
   var leaguesStored = false;
-  console.log(day)
   let storedForm = await fetch(
     `${process.env.REACT_APP_EXPRESS_SERVER}form${day}`,
     {
@@ -436,6 +407,7 @@ export async function generateFixtures(day, radioState, selectedOdds) {
     document.getElementById("Loading")
   );
 
+  leagueIdArray = []
   for (let i = 0; i < orderedLeagues.length; i++) {
     leagueID = orderedLeagues[i].element.id;
     leagueIdArray.push(leagueID);
@@ -444,9 +416,11 @@ export async function generateFixtures(day, radioState, selectedOdds) {
   var leaguePositions = [];
   if (league.status === 200) {
     await league.json().then((leagues) => {
+      console.log(leagues)
       leagueArray = Array.from(leagues.leagueArray);
     });
     leaguesStored = true;
+    console.log("EXECUTING 1")
     generateTables(leagueArray, leagueIdArray);
   } else {
     for (let i = 0; i < orderedLeagues.length; i++) {
@@ -458,8 +432,68 @@ export async function generateFixtures(day, radioState, selectedOdds) {
         leagueArray.push(table);
       });
       leaguesStored = false;
-      generateTables(leagueArray, leagueIdArray);
+      console.log("EXECUTING 2")
     }
+    generateTables(leagueArray, leagueIdArray);
+  }
+
+  let teamPositionPrefix;
+
+  async function getPrefix(position) {
+    console.log("PREFIX FUNCTION")
+    switch (position) {
+      case 1:
+      case 21:
+      case 31:
+        teamPositionPrefix = "st";
+        break;
+      case 2:
+      case 22:
+      case 32:
+        teamPositionPrefix = "nd";
+        break;
+      case 3:
+      case 23:
+      case 33:
+        teamPositionPrefix = "rd";
+        break;
+      case 4:
+      case 5:
+      case 6:
+      case 7:
+      case 8:
+      case 9:
+      case 10:
+      case 11:
+      case 12:
+      case 13:
+      case 14:
+      case 15:
+      case 16:
+      case 17:
+      case 18:
+      case 19:
+      case 20:
+      case 24:
+      case 25:
+      case 26:
+      case 27:
+      case 28:
+      case 29:
+      case 30:
+      case 34:
+      case 35:
+      case 36:
+      case 37:
+      case 38:
+      case 39:
+      case 40:
+        teamPositionPrefix = "th";
+        break;
+      default:
+        break;
+    }
+    return teamPositionPrefix;
   }
 
   for (let i = 0; i < leagueArray.length; i++) {
@@ -579,7 +613,6 @@ export async function generateFixtures(day, radioState, selectedOdds) {
       let homeTeamDrawPercentageHome;
       let awayTeamDrawPercentageAway;
       let teamPositionAway;
-      let teamPositionPrefix;
       let homePrefix;
       let homePrefixHomeTable;
       let awayPrefix;
@@ -587,61 +620,7 @@ export async function generateFixtures(day, radioState, selectedOdds) {
       let homeSeasonPPG;
       let awaySeasonPPG;
 
-      async function getPrefix(position) {
-        switch (position) {
-          case 1:
-          case 21:
-          case 31:
-            teamPositionPrefix = "st";
-            break;
-          case 2:
-          case 22:
-          case 32:
-            teamPositionPrefix = "nd";
-            break;
-          case 3:
-          case 23:
-          case 33:
-            teamPositionPrefix = "rd";
-            break;
-          case 4:
-          case 5:
-          case 6:
-          case 7:
-          case 8:
-          case 9:
-          case 10:
-          case 11:
-          case 12:
-          case 13:
-          case 14:
-          case 15:
-          case 16:
-          case 17:
-          case 18:
-          case 19:
-          case 20:
-          case 24:
-          case 25:
-          case 26:
-          case 27:
-          case 28:
-          case 29:
-          case 30:
-          case 34:
-          case 35:
-          case 36:
-          case 37:
-          case 38:
-          case 39:
-          case 40:
-            teamPositionPrefix = "th";
-            break;
-          default:
-            break;
-        }
-        return teamPositionPrefix;
-      }
+  
 
       try {
         homeTeaminLeague = leaguePositions.find(
@@ -743,7 +722,6 @@ export async function generateFixtures(day, radioState, selectedOdds) {
       }
 
       if (!isFormStored) {
-        console.log("TRIGGERED");
         form = await getForm(match);
 
         let homeFormString5 =
@@ -1389,10 +1367,7 @@ export async function generateFixtures(day, radioState, selectedOdds) {
     document.getElementById("Loading")
   );
 
-  console.log(isStoredLocally);
   if (!isStoredLocally) {
-    console.log("FETCHING FORM");
-    console.log(day)
     await fetch(`${process.env.REACT_APP_EXPRESS_SERVER}allForm${day}`, {
       method: "POST",
       headers: {
@@ -1404,7 +1379,6 @@ export async function generateFixtures(day, radioState, selectedOdds) {
   }
 
   if (!leaguesStored) {
-    console.log("POSTING LEAGUE ARRAY");
     await fetch(
       `${process.env.REACT_APP_EXPRESS_SERVER}leagues/${currentDay}${month}${year}`,
       {
