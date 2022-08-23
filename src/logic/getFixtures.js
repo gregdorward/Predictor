@@ -438,7 +438,6 @@ export async function generateFixtures(day, radioState, selectedOdds) {
   let teamPositionPrefix;
 
   async function getPrefix(position) {
-    console.log("PREFIX FUNCTION");
     switch (position) {
       case 1:
       case 21:

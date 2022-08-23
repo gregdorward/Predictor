@@ -572,14 +572,14 @@ export async function compareTeams(homeForm, awayForm, match) {
   let tooCloseToCallCount;
 
   if (
-    homeForm.overUnderAchievingSum < -0.25 ||
-    awayForm.overUnderAchievingSum < -0.25 ||
-    homeForm.overUnderAchievingSum > 0.25 ||
-    awayForm.overUnderAchievingSum > 0.25
+    (homeForm.overUnderAchievingSum < -0.25 &&
+    awayForm.overUnderAchievingSum > 0.25) ||
+    (homeForm.overUnderAchievingSum > 0.25 &&
+    awayForm.overUnderAchievingSum > -0.25)
   ) {
     [overUnderAchievingSumComparison, tooCloseToCallCount] = await compareStat(
-      parseFloat(homeForm.overUnderAchievingSum),
-      parseFloat(awayForm.overUnderAchievingSum)
+      parseFloat(homeForm.overUnderAchievingSum + 2),
+      parseFloat(awayForm.overUnderAchievingSum + 2)
     );
     tooCloseToCall = tooCloseToCall + tooCloseToCallCount;
   } else {
@@ -812,17 +812,17 @@ export async function compareTeams(homeForm, awayForm, match) {
   //   OddsComparison = OddsComparison * 10
   // }
   let calculation =
-    OddsComparison * 2 +
+    OddsComparison * 5 +
     positionComparison * 2 +
-    positionComparisonHorA * 2 +
+    positionComparisonHorA * 1 +
     twoGameAverageComparison * 1 +
     tenGameAverageComparison * 1 +
-    XGdifferentialComparison * 4 +
+    XGdifferentialComparison * 3 +
     seasonPPGComparison * 1 +
     formTrendScoreComparison * 0 +
-    fiveGameAverageComparison * 4 +
+    fiveGameAverageComparison * 2 +
     dangerousAttacksComparisonHOrA * 0 +
-    dangerousAttacksComparison * 2 +
+    dangerousAttacksComparison * 1 +
     sotComparison * 0 +
     sotComparisonHOrA * 0 +
     CleanSheetPercentageComparison * 0 +
@@ -833,8 +833,8 @@ export async function compareTeams(homeForm, awayForm, match) {
     winPercentageComparison * 2 +
     lossPercentageComparison * 2 +
     homeOrAwayAverageComparison * 0 +
-    overUnderAchievingSumComparison * 0 +
-    goalDiffComparison * 3 +
+    overUnderAchievingSumComparison * 10 +
+    goalDiffComparison * 2 +
     goalDiffHOrAComparison * 1;
 
   match.tooCloseToCall = tooCloseToCall;
@@ -1494,7 +1494,7 @@ export async function calculateScore(match, index, divider) {
     }
 
     if (
-      (XGdifferential > 0.85 && match.prediction === "homeWin") ||
+      (XGdifferential > 1 && match.prediction === "homeWin") ||
       (XGdifferential < -1.6 && match.prediction === "awayWin")
     ) {
       match.XGdifferential = true;
