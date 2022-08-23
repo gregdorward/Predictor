@@ -49,50 +49,6 @@ let awayAverageConceded;
 export var [currentDay, month, year] = new Date()
   .toLocaleDateString("en-US", { timeZone: "Europe/London" })
   .split("/");
-let tomorrowsDate = new Date();
-tomorrowsDate.setDate(new Date().getDate() + 1);
-let [tomorrowDay, tomorrowMonth, tomorrowYear] = tomorrowsDate
-  .toLocaleDateString("en-US", { timeZone: "Europe/London" })
-  .split("/");
-
-let yesterdaysDate = new Date();
-yesterdaysDate.setDate(new Date().getDate() - 1);
-let [yesterdayDay, yesterdayMonth, yesterdayYear] = yesterdaysDate
-  .toLocaleDateString("en-US", { timeZone: "Europe/London" })
-  .split("/");
-
-var d = new Date();
-// set to Monday of this week
-d.setDate(d.getDate() - ((d.getDay() + 6) % 7));
-
-// set to Saturday just gone
-d.setDate(d.getDate() - 2);
-
-d.toLocaleDateString("en-US", { timeZone: "Europe/London" });
-
-let [saturdayDay, saturdayMonth, saturdayYear] = d
-  .toLocaleDateString("en-US", { timeZone: "Europe/London" })
-  .split("/");
-
-var historicDate = new Date();
-
-// set to Monday of this week
-historicDate.setDate(
-  historicDate.getDate() - ((historicDate.getDay() + 6) % 7)
-);
-
-// set to Saturday prior to last
-historicDate.setDate(historicDate.getDate() - 9);
-
-let [historicDay, historicMonth, historicYear] = historicDate
-  .toLocaleDateString("en-US", { timeZone: "Europe/London" })
-  .split("/");
-
-export const saturday = `${process.env.REACT_APP_EXPRESS_SERVER}matches/${saturdayYear}-${saturdayDay}-${saturdayMonth}`;
-export const historic = `${process.env.REACT_APP_EXPRESS_SERVER}matches/${historicYear}-${historicDay}-${historicMonth}`;
-export const yesterday = `${process.env.REACT_APP_EXPRESS_SERVER}matches/${yesterdayYear}-${yesterdayDay}-${yesterdayMonth}`;
-export const today = `${process.env.REACT_APP_EXPRESS_SERVER}matches/${year}-${currentDay}-${month}`;
-export const tomorrow = `${process.env.REACT_APP_EXPRESS_SERVER}matches/${tomorrowYear}-${tomorrowDay}-${tomorrowMonth}`;
 
 export async function diff(a, b) {
   return parseFloat(a - b).toFixed(2);
@@ -118,7 +74,7 @@ export async function generateTables(a, leagueIdArray) {
   leagueArray.forEach(function (league) {
     let currentLeagueId = leagueIdArray[i];
     i++;
-    console.log(i)
+    console.log(i);
     leagueInstance = [];
     //Skip MLS which has a weird format
     if (!league.data.specific_tables[0].groups && currentLeagueId !== 6969) {
@@ -203,7 +159,7 @@ export async function renderTable(index) {
     statistics = stats.data;
   });
 
-  console.log(statistics)
+  console.log(statistics);
 
   if (league !== undefined) {
     ReactDOM.render(
@@ -325,6 +281,48 @@ export async function generateFixtures(day, radioState, selectedOdds) {
   ReactDOM.render(<div></div>, document.getElementById("BTTS"));
   ReactDOM.render(<div></div>, document.getElementById("draws"));
 
+  [currentDay, month, year] = new Date()
+    .toLocaleDateString("en-US", { timeZone: "Europe/London" })
+    .split("/");
+
+  let tomorrowsDate = new Date();
+  tomorrowsDate.setDate(new Date().getDate() + 1);
+  let [tomorrowDay, tomorrowMonth, tomorrowYear] = tomorrowsDate
+    .toLocaleDateString("en-US", { timeZone: "Europe/London" })
+    .split("/");
+
+  console.log(tomorrowMonth);
+
+  let yesterdaysDate = new Date();
+  yesterdaysDate.setDate(new Date().getDate() - 1);
+  let [yesterdayDay, yesterdayMonth, yesterdayYear] = yesterdaysDate
+    .toLocaleDateString("en-US", { timeZone: "Europe/London" })
+    .split("/");
+
+  let d = new Date();
+  d.setDate(d.getDate() - ((d.getDay() + 6) % 7));
+  d.setDate(d.getDate() - 2);
+  d.toLocaleDateString("en-US", { timeZone: "Europe/London" });
+
+  let [saturdayDay, saturdayMonth, saturdayYear] = d
+    .toLocaleDateString("en-US", { timeZone: "Europe/London" })
+    .split("/");
+
+  let historicDate = new Date();
+  historicDate.setDate(
+    historicDate.getDate() - ((historicDate.getDay() + 6) % 7)
+  );
+  historicDate.setDate(historicDate.getDate() - 9);
+  let [historicDay, historicMonth, historicYear] = historicDate
+    .toLocaleDateString("en-US", { timeZone: "Europe/London" })
+    .split("/");
+
+  const saturday = `${process.env.REACT_APP_EXPRESS_SERVER}matches/${saturdayYear}-${saturdayDay}-${saturdayMonth}`;
+  const historic = `${process.env.REACT_APP_EXPRESS_SERVER}matches/${historicYear}-${historicDay}-${historicMonth}`;
+  const yesterday = `${process.env.REACT_APP_EXPRESS_SERVER}matches/${yesterdayYear}-${yesterdayDay}-${yesterdayMonth}`;
+  const today = `${process.env.REACT_APP_EXPRESS_SERVER}matches/${year}-${currentDay}-${month}`;
+  const tomorrow = `${process.env.REACT_APP_EXPRESS_SERVER}matches/${tomorrowYear}-${tomorrowDay}-${tomorrowMonth}`;
+
   matches = [];
   fixtureArray = [];
 
@@ -407,7 +405,7 @@ export async function generateFixtures(day, radioState, selectedOdds) {
     document.getElementById("Loading")
   );
 
-  leagueIdArray = []
+  leagueIdArray = [];
   for (let i = 0; i < orderedLeagues.length; i++) {
     leagueID = orderedLeagues[i].element.id;
     leagueIdArray.push(leagueID);
@@ -416,11 +414,11 @@ export async function generateFixtures(day, radioState, selectedOdds) {
   var leaguePositions = [];
   if (league.status === 200) {
     await league.json().then((leagues) => {
-      console.log(leagues)
+      console.log(leagues);
       leagueArray = Array.from(leagues.leagueArray);
     });
     leaguesStored = true;
-    console.log("EXECUTING 1")
+    console.log("EXECUTING 1");
     generateTables(leagueArray, leagueIdArray);
   } else {
     for (let i = 0; i < orderedLeagues.length; i++) {
@@ -432,7 +430,7 @@ export async function generateFixtures(day, radioState, selectedOdds) {
         leagueArray.push(table);
       });
       leaguesStored = false;
-      console.log("EXECUTING 2")
+      console.log("EXECUTING 2");
     }
     generateTables(leagueArray, leagueIdArray);
   }
@@ -440,7 +438,7 @@ export async function generateFixtures(day, radioState, selectedOdds) {
   let teamPositionPrefix;
 
   async function getPrefix(position) {
-    console.log("PREFIX FUNCTION")
+    console.log("PREFIX FUNCTION");
     switch (position) {
       case 1:
       case 21:
@@ -619,8 +617,6 @@ export async function generateFixtures(day, radioState, selectedOdds) {
       let awayPrefixAwayTable;
       let homeSeasonPPG;
       let awaySeasonPPG;
-
-  
 
       try {
         homeTeaminLeague = leaguePositions.find(

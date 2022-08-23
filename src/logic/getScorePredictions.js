@@ -68,24 +68,30 @@ export function getPointsFromLastX(lastX) {
   let points = 0;
   let pointsAddition;
 
-  lastX.forEach((game) => {
-    switch (true) {
-      case game === "W":
-        pointsAddition = 3;
-        break;
-      case game === "D":
-        pointsAddition = 1;
-        break;
-      case game === "L":
-        pointsAddition = 0;
-        break;
-      default:
-        break;
-    }
+  try {
+    lastX.forEach((game) => {
+      switch (true) {
+        case game === "W":
+          pointsAddition = 3;
+          break;
+        case game === "D":
+          pointsAddition = 1;
+          break;
+        case game === "L":
+          pointsAddition = 0;
+          break;
+        default:
+          break;
+      }
+  
+      points = points + pointsAddition;
+    });
+    return points;
+  } catch (error) {
+    return "N/A"
+  }
 
-    points = points + pointsAddition;
-  });
-  return points;
+
 }
 
 export async function compareStat(statOne, statTwo) {
@@ -1061,6 +1067,12 @@ export async function calculateScore(match, index, divider) {
 
       teams[i][index].lastGame = teams[i][index].LastFiveForm[4];
       teams[i][index].previousToLastGame = teams[i][index].LastFiveForm[3];
+
+      console.log(teams[i][index].LastFiveForm)
+      console.log(teams[i][index].LastSixForm)
+      console.log(teams[i][index].LastTenForm)
+      console.log(teams[i][index].previousToLastGame)
+
 
       let last2 = [
         teams[i][index].lastGame,
