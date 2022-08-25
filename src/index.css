@@ -1459,6 +1459,10 @@ ul {
   font-size: 1.1em;
 }
 
+.over25ActualOutcome{
+  padding: 0.5em;
+}
+
 .Won {
   color: #01a501;
 }

@@ -1600,10 +1600,10 @@ export async function calculateScore(match, index, divider) {
     }
 
     if (match.status === "complete") {
-      if (match.predictionOutcome === "Won" || match.outcome === "draw") {
-        match.doubleChancePredictionOutcome = "Won";
-      } else if (match.prediction !== "Won" && match.outcome !== "draw") {
-        match.doubleChancePredictionOutcome = "Lost";
+      if (match.homeGoals + match.awayGoals > 2) {
+        match.over25PredictionOutcome = "Won";
+      } else  {
+        match.over25PredictionOutcome = "Lost";
       }
     }
 
@@ -1710,7 +1710,7 @@ let allTipsSorted = [];
 var newArray = [];
 var bestBets = [];
 var price;
-var longShotTips = [];
+var Over25Tips = [];
 var XGDiffTips = [];
 var combinations;
 var exoticArray = [];
@@ -1747,7 +1747,7 @@ export async function getScorePrediction(day, mocked) {
   bestBets = [];
   // price = 0
   bttsArray = [];
-  longShotTips = [];
+  Over25Tips = [];
   XGDiffTips = [];
   allTips = [];
 
@@ -1786,7 +1786,7 @@ export async function getScorePrediction(day, mocked) {
       await getBTTSPotential(allForm, match, index, match.goalsA, match.goalsB);
 
       let predictionObject;
-      let longShotPredictionObject;
+      let Over25PredictionObject;
       let XGPredictionObject;
 
       if (
@@ -1886,54 +1886,25 @@ export async function getScorePrediction(day, mocked) {
       ) {
         bttsArray.push(match);
       }
-
       if (
-        match.unroundedGoalsA > match.unroundedGoalsB &&
-        match.homeDoubleChance >= 1.4 &&
-        match.goalsA > match.goalsB
+        (match.unroundedGoalsA + match.unroundedGoalsB) > 3.2 &&
+        (match.goalsA + match.goalsB) > 2
       ) {
-        longShotPredictionObject = {
+        console.log(match)
+        Over25PredictionObject = {
+          game: match.game,
           team: match.homeTeam,
           decimalOdds: match.homeDoubleChance,
-          rawOdds: match.homeOdds,
-          odds: match.fractionHome,
+          rawOdds: match.over25Odds,
+          odds: match.over25Odds,
           comparisonScore: match.teamComparisonScore,
           outcome: match.predictionOutcome,
-          doubleChanceOutcome: match.doubleChancePredictionOutcome,
-          goalDifferential: parseFloat(
-            await diff(match.unroundedGoalsA, match.unroundedGoalsB)
-          ),
+          doubleChanceOutcome: match.over25PredictionOutcome,
+          goalTotalUnrounded: (match.unroundedGoalsA + match.unroundedGoalsB),
+          actualTotalGoals: (match.homeGoals + match.awayGoals)? (match.homeGoals + match.awayGoals) : "TBC"
         };
-        if (
-          match.prediction !== "draw" &&
-          longShotPredictionObject.comparisonScore > 0.1
-        ) {
-          longShotTips.push(longShotPredictionObject);
-        }
-      } else if (
-        match.unroundedGoalsA < match.unroundedGoalsB &&
-        match.awayDoubleChance >= 1.4 &&
-        match.goalsB > match.goalsA
-      ) {
-        longShotPredictionObject = {
-          team: match.awayTeam,
-          decimalOdds: match.awayDoubleChance,
-          rawOdds: match.awayOdds,
-          odds: match.fractionAway,
-          comparisonScore: match.teamComparisonScore,
-          outcome: match.predictionOutcome,
-          doubleChanceOutcome: match.doubleChancePredictionOutcome,
-          goalDifferential: parseFloat(
-            await diff(match.unroundedGoalsB, match.unroundedGoalsA)
-          ),
-        };
-        if (
-          match.prediction !== "draw" &&
-          longShotPredictionObject.comparisonScore < -0.1
-        ) {
-          longShotTips.push(longShotPredictionObject);
-        }
-      }
+          Over25Tips.push(Over25PredictionObject);
+      } 
 
       if (
         match.XGdifferential === true &&
@@ -2038,8 +2009,8 @@ async function getMultis() {
     return b.totalGoals - a.totalGoals;
   });
 
-  longShotTips.sort(function (a, b) {
-    return b.goalDifferential - a.goalDifferential;
+  Over25Tips.sort(function (a, b) {
+    return b.goalTotalUnrounded - a.goalTotalUnrounded;
   });
 
   XGDiffTips.sort(function (a, b) {
@@ -2140,9 +2111,9 @@ async function getMultis() {
       exoticString = "5 4-folds and 1 5-fold";
       price = getCoverBetMaxReturns(exoticArray, minimumExotic, exoticStake);
       break;
-    case longShotTips.length >= 4:
+    case Over25Tips.length >= 4:
       for (let i = 0; i < 4; i++) {
-        let game = longShotTips[i];
+        let game = Over25Tips[i];
         exoticArray.push(game);
       }
       gamesInExotic = 4;
@@ -2325,18 +2296,19 @@ async function renderTips() {
     );
   }
 
-  if (longShotTips.length > 0) {
+  if (Over25Tips.length > 0) {
     ReactDOM.render(
       <div>
         <Fragment>
           <Collapsable
-            buttonText={"Double chance tips"}
+            buttonText={"Over 2.5 goals tips"}
             text={
               <ul className="LongshotPredictions" id="LongshotPredictions">
-                <lh>Double chance (Win or Draw - decimal odds only)</lh>
-                {longShotTips.map((tip) => (
+                <lh>Over 2.5 goals</lh>
+                {Over25Tips.map((tip) => (
                   <li className={`${tip.doubleChanceOutcome}1`} key={tip.team}>
-                    {tip.team} to win or draw: {tip.decimalOdds}
+                    {tip.game} - Odds: {tip.odds}
+                    <div className="over25ActualOutcome">Actual goals at FT: {tip.actualTotalGoals}</div>
                   </li>
                 ))}
               </ul>

@@ -414,7 +414,6 @@ export async function generateFixtures(day, radioState, selectedOdds) {
   var leaguePositions = [];
   if (league.status === 200) {
     await league.json().then((leagues) => {
-      console.log(leagues);
       leagueArray = Array.from(leagues.leagueArray);
     });
     leaguesStored = true;
@@ -1327,9 +1326,8 @@ export async function generateFixtures(day, radioState, selectedOdds) {
 
       match.homeTeamDrawPercentage = homeTeamDrawPercentageHome;
       match.awayTeamDrawPercentage = awayTeamDrawPercentageAway;
-
       match.status = fixture.status;
-
+      match.over25Odds = fixture.odds_ft_over25
       match.btts_potential = fixture.btts_potential;
       match.game = match.homeTeam + " v " + match.awayTeam;
 
@@ -1339,6 +1337,7 @@ export async function generateFixtures(day, radioState, selectedOdds) {
       match.expectedGoalsHomeToDate = fixture.team_a_xg_prematch;
       match.expectedGoalsAwayToDate = fixture.team_b_xg_prematch;
       match.game_week = fixture.game_week;
+
 
       if (match.status !== "canceled" || match.status !== "suspended") {
         matches.push(match);
