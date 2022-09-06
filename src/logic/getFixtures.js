@@ -736,7 +736,8 @@ export async function generateFixtures(day, radioState, selectedOdds) {
         let awayFormRun =
           form[1].data[2].stats.additional_info.formRun_away.toUpperCase();
 
-        if (WDLinLeagueHome.length > 10) {
+
+        if (WDLinLeagueHome.length >= 10) {
           lastThreeFormHome = WDLinLeagueHome.slice(-3);
           lastFiveFormHome = WDLinLeagueHome.slice(-5);
           lastSixFormHome = WDLinLeagueHome.slice(-6);
@@ -750,7 +751,7 @@ export async function generateFixtures(day, radioState, selectedOdds) {
           homeAverageConceded = HomeAverageConceded;
           awayAverageGoals = AwayAverageGoals;
           awayAverageConceded = AwayAverageConceded;
-        } else if (WDLinLeagueHome.length > 6) {
+        } else if (WDLinLeagueHome.length >= 6) {
           lastFiveFormHome = WDLinLeagueHome.slice(-5);
           lastSixFormHome = WDLinLeagueHome.slice(-6);
           lastFiveFormAway = WDLinLeagueAway.slice(-5);
@@ -761,7 +762,7 @@ export async function generateFixtures(day, radioState, selectedOdds) {
           homeAverageConceded = HomeAverageConceded;
           awayAverageGoals = AwayAverageGoals;
           awayAverageConceded = AwayAverageConceded;
-        } else if (WDLinLeagueHome.length > 5) {
+        } else if (WDLinLeagueHome.length >= 5) {
           lastFiveFormHome = WDLinLeagueHome.slice(-5);
           lastFiveFormAway = WDLinLeagueAway.slice(-5);
           leagueOrAll = "League";
