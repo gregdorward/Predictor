@@ -286,7 +286,7 @@ export async function generateFixtures(day, radioState, selectedOdds) {
     .split("/");
 
   let tomorrowsDate = new Date();
-  tomorrowsDate.setDate(new Date().getDate() + 2);
+  tomorrowsDate.setDate(new Date().getDate() + 1);
   let [tomorrowDay, tomorrowMonth, tomorrowYear] = tomorrowsDate
     .toLocaleDateString("en-US", { timeZone: "Europe/London" })
     .split("/");
