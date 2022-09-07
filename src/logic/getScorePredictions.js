@@ -47,20 +47,6 @@ let sumXGAgainstLoss = 0;
 let allWinOutcomes = 0;
 let allLossOutcomes = 0;
 let allDrawOutcomes = 0;
-let winDAAverage;
-let lossDAAverage;
-let winOddsAverage;
-let lossOddsAverage;
-let winPossessionAverage;
-let lossPossessionAverage;
-let winLast10PPGAverage;
-let lossLast10PPGAverage;
-let winSOTAverage;
-let lossSOTAverage;
-let winXGForAverage;
-let lossXGForAverage;
-let winXGAgainstAverage;
-let lossXGAgainstAverage;
 
 export var renderPredictions;
 
@@ -123,11 +109,11 @@ export async function compareStat(statOne, statTwo) {
         break;
       case stat1 > stat2:
         result = 0.6;
-        tooCloseToCall = -0.3;
+        tooCloseToCall = -0.25;
         break;
       case stat1 < stat2:
         result = -0.6;
-        tooCloseToCall = -0.3;
+        tooCloseToCall = -0.25;
         break;
       default:
         break;
@@ -140,11 +126,11 @@ export async function compareStat(statOne, statTwo) {
         break;
       case stat1 > stat2:
         result = 0.4;
-        tooCloseToCall = -0.3;
+        tooCloseToCall = -0.2;
         break;
       case stat1 < stat2:
         result = -0.4;
-        tooCloseToCall = -0.3;
+        tooCloseToCall = -0.2;
         break;
       default:
         break;
@@ -157,11 +143,11 @@ export async function compareStat(statOne, statTwo) {
         break;
       case stat1 > stat2:
         result = 0.25;
-        tooCloseToCall = -0.3;
+        tooCloseToCall = -0.15;
         break;
       case stat1 < stat2:
         result = -0.25;
-        tooCloseToCall = -0.3;
+        tooCloseToCall = -0.15;
         break;
       default:
         break;
@@ -208,11 +194,11 @@ export async function compareStat(statOne, statTwo) {
         break;
       case stat1 > stat2:
         result = 0.05;
-        tooCloseToCall = 0.2;
+        tooCloseToCall = 0.25;
         break;
       case stat1 < stat2:
         result = -0.05;
-        tooCloseToCall = 0.2;
+        tooCloseToCall = 0.25;
         break;
       default:
         break;
@@ -752,29 +738,16 @@ export async function compareTeams(homeForm, awayForm, match) {
     );
   }
 
-  let winPercH;
-  let winPercA;
-  let drawPercH;
-  let drawPercA;
-
   if (homeForm.WinPercentage !== undefined) {
     [winPercentageComparison, tooCloseToCallCount] = await compareStat(
       homeForm.WinPercentage + 40,
       awayForm.WinPercentage + 40
     );
-    winPercH = homeForm.WinPercentage;
-    winPercA = awayForm.WinPercentage;
-    drawPercH = homeForm.DrawPercentage;
-    drawPercA = awayForm.DrawPercentage;
   } else {
     [winPercentageComparison, tooCloseToCallCount] = await compareStat(
       match.homeTeamWinPercentage + 40,
       match.awayTeamWinPercentage + 40
     );
-    winPercH = match.homeTeamWinPercentage;
-    winPercA = match.awayTeamWinPercentage;
-    drawPercH = match.homeTeamDrawPercentage;
-    drawPercA = match.awayTeamDrawPercentage;
   }
 
   if (homeForm.LossPercentage !== undefined) {
@@ -817,7 +790,7 @@ export async function compareTeams(homeForm, awayForm, match) {
   //   OddsComparison = OddsComparison * 10
   // }
   let calculation =
-    OddsComparison * 15 +
+    OddsComparison * 12 +
     positionComparison * 2 +
     positionComparisonHorA * 1 +
     twoGameAverageComparison * 3 +
@@ -835,77 +808,38 @@ export async function compareTeams(homeForm, awayForm, match) {
     attackingPotencyComparison * 0 +
     AveragePossessionComparison * 0 +
     AveragePossessionComparisonHOrA * 0 +
-    winPercentageComparison * 2 +
-    lossPercentageComparison * 2 +
-    homeOrAwayAverageComparison * 0 +
+    winPercentageComparison * 1 +
+    lossPercentageComparison * 1 +
+    homeOrAwayAverageComparison * 1 +
     overUnderAchievingSumComparison * 10 +
     goalDiffComparison * 2 +
     goalDiffHOrAComparison * 1;
 
   match.tooCloseToCall = tooCloseToCall;
 
-  // let homeWinOutcomeProbability =
-  //   match.homeTeamWinPercentage + match.awayTeamLossPercentage;
-  // let awayWinOutcomeProbability =
-  //   match.homeTeamLossPercentage + match.awayTeamWinPercentage;
-  // let drawOutcomeProbability =
-  //   match.homeTeamDrawPercentage + match.awayTeamDrawPercentage;
+  let homeWinOutcomeProbability =
+    match.homeTeamWinPercentage + match.awayTeamLossPercentage;
+  let awayWinOutcomeProbability =
+    match.homeTeamLossPercentage + match.awayTeamWinPercentage;
+  let drawOutcomeProbability =
+    match.homeTeamDrawPercentage + match.awayTeamDrawPercentage;
 
-  // if (
-  //   homeWinOutcomeProbability > 0 ||
-  //   awayWinOutcomeProbability > 0 ||
-  //   drawOutcomeProbability > 0
-  // ) {
-  //   if (calculation > 0) {
-  //     switch (true) {
-  //       case homeWinOutcomeProbability - 25 > awayWinOutcomeProbability &&
-  //         homeWinOutcomeProbability - 25 > drawOutcomeProbability:
-  //         console.log(calculation);
-  //         calculation = calculation * 2;
-  //         console.log(match.game);
-  //         break;
-  //       case homeWinOutcomeProbability <= awayWinOutcomeProbability &&
-  //         homeWinOutcomeProbability <= drawOutcomeProbability:
-  //         console.log(calculation);
-  //         calculation = calculation / 2;
-  //         console.log(match.game);
-  //         break;
-  //       case drawOutcomeProbability - 20 > awayWinOutcomeProbability &&
-  //         drawOutcomeProbability - 20 > homeWinOutcomeProbability:
-  //         console.log(calculation);
-  //         calculation = calculation - 1;
-  //         console.log(match.game);
-  //         break;
-  //       default:
-  //         calculation = calculation * 1;
-  //         break;
-  //     }
-  //   } else if (calculation < 0) {
-  //     switch (true) {
-  //       case awayWinOutcomeProbability - 25 > homeWinOutcomeProbability &&
-  //         awayWinOutcomeProbability - 25 > drawOutcomeProbability:
-  //         console.log(calculation);
-  //         calculation = calculation * 2;
-  //         console.log(match.game);
-  //         break;
-  //       case awayWinOutcomeProbability <= homeWinOutcomeProbability &&
-  //         awayWinOutcomeProbability <= drawOutcomeProbability:
-  //         console.log(calculation);
-  //         calculation = calculation / 2;
-  //         console.log(match.game);
-  //         break;
-  //       case drawOutcomeProbability - 20 > awayWinOutcomeProbability &&
-  //         drawOutcomeProbability - 20 > homeWinOutcomeProbability:
-  //         console.log(calculation);
-  //         calculation = calculation + 1;
-  //         console.log(match.game);
-  //         break;
-  //       default:
-  //         calculation = calculation * 1;
-  //         break;
-  //     }
-  //   }
-  // }
+  if (drawOutcomeProbability > homeWinOutcomeProbability && drawOutcomeProbability > awayWinOutcomeProbability) {
+      switch (true) {
+        case drawOutcomeProbability > 100:
+          console.log(calculation);
+          calculation = calculation / (drawOutcomeProbability / 10);
+          console.log(match.game);
+          console.log(calculation);
+          break;
+        default:
+          calculation = calculation * 1;
+          break;
+      }
+    } else {
+      calculation = calculation * 2;
+    }
+  
 
   // if (calculation > 0) {
   //   switch (true) {
@@ -1033,7 +967,7 @@ export async function roundCustom(num, form, otherForm) {
   let wholeNumber = Math.floor(num);
   let remainder = num - wholeNumber;
 
-  if (remainder > 0.75) {
+  if (remainder > 0.8) {
     if (form.formTrendScore === 1.2) {
       return Math.ceil(num);
     } else if (form.formTrendScore === 1.1) {
@@ -1409,20 +1343,20 @@ export async function calculateScore(match, index, divider) {
     match.rawFinalAwayGoals = rawFinalAwayGoals;
 
     if (rawFinalAwayGoals < 0) {
-      let difference = parseFloat((await diff(0, rawFinalAwayGoals)) / 10);
+      let difference = parseFloat((await diff(0, rawFinalAwayGoals)) / 20);
       rawFinalHomeGoals = rawFinalHomeGoals + difference;
       rawFinalAwayGoals = 0;
     }
 
     if (rawFinalHomeGoals < 0) {
-      let difference = parseFloat((await diff(0, rawFinalHomeGoals)) / 10);
+      let difference = parseFloat((await diff(0, rawFinalHomeGoals)) / 20);
       rawFinalAwayGoals = rawFinalAwayGoals + difference;
       rawFinalHomeGoals = 0;
     }
 
     if (
-      (rawFinalHomeGoals + 1) / (formHome.ScoredAverage + 1) > 1.25 &&
-      (rawFinalHomeGoals + 1) / (formAway.ConcededAverage + 1) > 1.25
+      (rawFinalHomeGoals + 1) / (formHome.ScoredAverage + 1) > 1.2 &&
+      (rawFinalHomeGoals + 1) / (formAway.ConcededAverage + 1) > 1.2
     ) {
       rawFinalHomeGoals = (rawFinalHomeGoals + formHome.ScoredAverage) / 2;
     } else if (
@@ -1433,8 +1367,8 @@ export async function calculateScore(match, index, divider) {
     }
 
     if (
-      (rawFinalAwayGoals + 1) / (formAway.ScoredAverage + 1) > 1.25 &&
-      (rawFinalAwayGoals + 1) / (formHome.ConcededAverage + 1) > 1.25
+      (rawFinalAwayGoals + 1) / (formAway.ScoredAverage + 1) > 1.2 &&
+      (rawFinalAwayGoals + 1) / (formHome.ConcededAverage + 1) > 1.2
     ) {
       rawFinalAwayGoals = (rawFinalAwayGoals + formAway.ScoredAverage) / 2;
     } else if (
@@ -1488,8 +1422,8 @@ export async function calculateScore(match, index, divider) {
       homePredictions = homePredictions + 1;
       if (
         formHome.lastGame === "L" ||
-        formHome.last3Points < 3 ||
-        formAway.lastGame === "W" ||
+        formHome.last2Points < 3 ||
+        formAway.last2Points > 3 ||
         match.XGdifferentialValueRaw < 0
       ) {
         match.includeInMultis = false;
@@ -1501,8 +1435,8 @@ export async function calculateScore(match, index, divider) {
       awayPredictions = awayPredictions + 1;
       if (
         formAway.lastGame === "L" ||
-        formAway.last3Points < 3 ||
-        formHome.lastGame === "W" ||
+        formAway.last2Points < 3 ||
+        formHome.last2Points > 3 ||
         match.XGdifferentialValueRaw > 0
       ) {
         match.includeInMultis = false;
@@ -1513,6 +1447,12 @@ export async function calculateScore(match, index, divider) {
       match.prediction = "draw";
       drawPredictions = drawPredictions + 1;
     }
+
+    console.log(`Home wins predicted: ${homePredictions}`);
+
+    console.log(`Away wins predicted: ${awayPredictions}`);
+
+    console.log(`Draws predicted: ${drawPredictions}`);
 
     if (
       (XGdifferential > 1 && match.prediction === "homeWin") ||
@@ -1589,22 +1529,13 @@ export async function calculateScore(match, index, divider) {
         break;
     }
 
-    winDAAverage = (sumStatDAWin / allWinOutcomes).toFixed(2);
-    lossDAAverage = (sumStatDALoss / allLossOutcomes).toFixed(2);
-    winPossessionAverage = (sumStatPossessionWin / allWinOutcomes).toFixed(2);
-    lossPossessionAverage = (sumStatPossessionLoss / allLossOutcomes).toFixed(
-      2
-    );
-    winLast10PPGAverage = (sumStatPPGLast10Win / allWinOutcomes).toFixed(2);
-    lossLast10PPGAverage = (sumStatPPGLast10Loss / allLossOutcomes).toFixed(2);
-    winSOTAverage = (sumStatSOTWin / allWinOutcomes).toFixed(2);
-    lossSOTAverage = (sumStatSOTLoss / allLossOutcomes).toFixed(2);
-    winOddsAverage = (sumOddsWin / allWinOutcomes).toFixed(2);
-    lossOddsAverage = (sumOddsLoss / allLossOutcomes).toFixed(2);
-    winXGForAverage = (sumXGForWin / allWinOutcomes).toFixed(2);
-    lossXGForAverage = (sumXGForLoss / allLossOutcomes).toFixed(2);
-    winXGAgainstAverage = (sumXGAgainstWin / allWinOutcomes).toFixed(2);
-    lossXGAgainstAverage = (sumXGAgainstLoss / allLossOutcomes).toFixed(2);
+    console.log(`Home wins: ${homeOutcomes}`);
+
+    console.log(`Away wins: ${awayOutcomes}`);
+
+    console.log(`Draws: ${allDrawOutcomes}`);
+
+  
 
     if (match.status === "complete") {
       if (match.prediction === match.outcome) {
@@ -1810,6 +1741,9 @@ export async function getScorePrediction(day, mocked) {
       let Over25PredictionObject;
       let XGPredictionObject;
 
+      console.log(match);
+
+
       if (
         match.unroundedGoalsA - match.unroundedGoalsB > 0.75 &&
         match.homeOdds !== 0 &&
@@ -1927,7 +1861,7 @@ export async function getScorePrediction(day, mocked) {
           doubleChanceOutcome: match.over25PredictionOutcome,
           goalTotalUnrounded: match.unroundedGoalsA + match.unroundedGoalsB,
           actualTotalGoals:
-            match.homeGoals + match.awayGoals
+            match.status === "complete"
               ? match.homeGoals + match.awayGoals
               : "TBC",
         };
@@ -2423,49 +2357,6 @@ async function renderTips() {
         </Fragment>
       </div>,
       document.getElementById("BTTS")
-    );
-  }
-
-  if (allWinOutcomes > 0) {
-    ReactDOM.render(
-      <div>
-        <Fragment>
-          <Collapsable
-            buttonText={"Insights"}
-            className="Insights"
-            text={
-              <div>
-                <lh className="InsightsExplainer">
-                  Average stats for winning/losing teams prior to this gameweek
-                </lh>
-                <div className="InsightsContainer">
-                  <ul className="InsightsHome">
-                    <lh className="WinningTeams">Winning teams</lh>
-                    <li>{winOddsAverage} odds</li>
-                    <li>{winXGForAverage} XG For</li>
-                    <li>{winXGAgainstAverage} XG Against</li>
-                    <li>{winLast10PPGAverage} ppg (last 10)</li>
-                    <li>{winPossessionAverage}% possession</li>
-                    <li>{winSOTAverage} shots on target</li>
-                    <li>{winDAAverage} dangerous attacks</li>
-                  </ul>
-                  <ul className="InsightsAway">
-                    <lh className="LosingTeams">Losing teams</lh>
-                    <li>{lossOddsAverage} odds</li>
-                    <li>{lossXGForAverage} XG For</li>
-                    <li>{lossXGAgainstAverage} XG Against</li>
-                    <li>{lossLast10PPGAverage} ppg (last 10)</li>
-                    <li>{lossPossessionAverage}% possession</li>
-                    <li>{lossSOTAverage} shots on target</li>
-                    <li>{lossDAAverage} dangerous attacks</li>
-                  </ul>
-                </div>
-              </div>
-            }
-          />
-        </Fragment>
-      </div>,
-      document.getElementById("insights")
     );
   }
 }
