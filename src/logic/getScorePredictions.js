@@ -1745,8 +1745,12 @@ export async function getScorePrediction(day, mocked) {
 
       if(match.status === "complete"){
         match.outcomeSymbol = match.predictionOutcome === "Won"? "\u2714" : "\u2718"
+        match.over25PredictionOutcomeSymbol = match.over25PredictionOutcome === "Won"? "\u2714" : "\u2718"
+        match.bttsOutcomeSymbol = match.bttsOutcome === "bttsWon"? "\u2714" : "\u2718"
       } else {
         match.outcomeSymbol = ""
+        match.over25PredictionOutcomeSymbol = ""
+        match.bttsOutcomeSymbol = ""
       }
 
 
@@ -1873,6 +1877,7 @@ export async function getScorePrediction(day, mocked) {
           odds: match.over25Odds,
           comparisonScore: match.teamComparisonScore,
           outcome: match.predictionOutcome,
+          outcomeSymbol: match.over25PredictionOutcomeSymbol,
           doubleChanceOutcome: match.over25PredictionOutcome,
           goalTotalUnrounded: match.unroundedGoalsA + match.unroundedGoalsB,
           actualTotalGoals:
@@ -1897,6 +1902,7 @@ export async function getScorePrediction(day, mocked) {
           comparisonScore: Math.abs(match.teamComparisonScore),
           rawComparisonScore: match.teamComparisonScore,
           outcome: match.predictionOutcome,
+          outcomeSymbol: match.outcomeSymbol,
           prediction: `${match.homeTeam} to win`,
           odds: match.fractionHome,
           otherTeam: match.awayTeam,
@@ -1924,6 +1930,7 @@ export async function getScorePrediction(day, mocked) {
           comparisonScore: Math.abs(match.teamComparisonScore),
           rawComparisonScore: match.teamComparisonScore,
           outcome: match.predictionOutcome,
+          outcomeSymbol: match.outcomeSymbol,
           prediction: `${match.awayTeam} to win`,
           odds: match.fractionAway,
           otherTeam: match.homeTeam,
@@ -2164,8 +2171,8 @@ async function renderTips() {
                   are ordered by confidence in the outcome.
                 </div>
                 {newArray.map((tip) => (
-                  <li>
-                  <div>{tip.team}: {tip.odds} <span className={tip.outcome} key={tip.team}>{tip.outcomeSymbol}</span></div>
+                  <li key={`${tip.game}acca`}>
+                  <div>{tip.team}: {tip.odds} <span className={tip.outcome}>{tip.outcomeSymbol}</span></div>
                     <div className="TipGame">{tip.game}</div>
                   </li>
                 ))}
@@ -2222,8 +2229,8 @@ async function renderTips() {
                   {`Potential winnings: ${price.toFixed(2)} units`}
                 </div>
                 {exoticArray.map((tip) => (
-                  <li className={tip.outcome} key={tip.team}>
-                    {tip.team}: {tip.odds}
+                  <li key={tip.team}>
+                    {tip.team}: {tip.odds} <span className={tip.outcome}>{tip.outcomeSymbol}</span>
                   </li>
                 ))}
               </ul>
@@ -2264,8 +2271,8 @@ async function renderTips() {
               <ul className="LongshotPredictions" id="LongshotPredictions">
                 <lh>Over 2.5 goals</lh>
                 {Over25Tips.map((tip) => (
-                  <li className={`${tip.doubleChanceOutcome}1`} key={tip.team}>
-                    {tip.game} - Odds: {tip.odds}
+                  <li key={tip.team}>
+                    {tip.game} - Odds: {tip.odds} <span className={`${tip.doubleChanceOutcome}`}>{tip.outcomeSymbol}</span>
                     <div className="over25ActualOutcome">
                       Actual goals at FT: {tip.actualTotalGoals}
                     </div>
@@ -2306,8 +2313,8 @@ async function renderTips() {
               <ul className="XGDiffTips" id="XGDiffTips">
                 <lh>Games with greatest XG Differentials</lh>
                 {XGDiffTips.map((tip) => (
-                  <li className={tip.outcome} key={tip.game}>
-                    {tip.game} | {tip.prediction} {tip.odds}
+                  <li key={tip.game}>
+                    {tip.game} | {tip.prediction} {tip.odds} <span className={tip.outcome}>{tip.outcomeSymbol}</span>
                   </li>
                 ))}
               </ul>
@@ -2346,8 +2353,8 @@ async function renderTips() {
               <ul className="BTTSGames" id="BTTSGames">
                 <lh>Games with highest chance of BTTS</lh>
                 {bttsArray.map((game) => (
-                  <li className={game.bttsOutcome} key={game.game}>
-                    {`${game.game} odds: ${game.bttsFraction}`}
+                  <li key={game.game}>
+                    {`${game.game} odds: ${game.bttsFraction}`} <span className={game.bttsOutcome}>{game.bttsOutcomeSymbol}</span>
                   </li>
                 ))}
               </ul>
