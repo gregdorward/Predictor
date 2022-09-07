@@ -1743,6 +1743,13 @@ export async function getScorePrediction(day, mocked) {
 
       console.log(match);
 
+      if(match.status === "complete"){
+        match.outcomeSymbol = match.predictionOutcome === "Won"? "\u2714" : "\u2718"
+      } else {
+        match.outcomeSymbol = ""
+      }
+
+
 
       if (
         match.unroundedGoalsA - match.unroundedGoalsB > 0.75 &&
@@ -1759,11 +1766,15 @@ export async function getScorePrediction(day, mocked) {
         ) {
           predictionObject = {
             team: `${match.homeTeam} to win`,
+            game: match.status === "complete"
+              ? `${match.homeTeam} ${match.homeGoals} - ${match.awayGoals} ${match.awayTeam}`
+              : match.game,
             odds: match.fractionHome,
             rawOdds: match.homeOdds,
             comparisonScore: Math.abs(match.teamComparisonScore),
             rawComparisonScore: match.teamComparisonScore,
             outcome: match.predictionOutcome,
+            outcomeSymbol: match.outcomeSymbol,
             goalDifferential: parseFloat(
               await diff(match.unroundedGoalsA, match.unroundedGoalsB)
             ),
@@ -1804,11 +1815,15 @@ export async function getScorePrediction(day, mocked) {
         ) {
           predictionObject = {
             team: `${match.awayTeam} to win`,
+            game: match.status === "complete"
+              ? `${match.homeTeam} ${match.homeGoals} - ${match.awayGoals} ${match.awayTeam}`
+              : match.game,
             rawOdds: match.awayOdds,
             odds: match.fractionAway,
             comparisonScore: Math.abs(match.teamComparisonScore),
             rawComparisonScore: match.teamComparisonScore,
             outcome: match.predictionOutcome,
+            outcomeSymbol: match.outcomeSymbol,
             goalDifferential: parseFloat(
               await diff(match.unroundedGoalsB, match.unroundedGoalsA)
             ),
@@ -2149,8 +2164,9 @@ async function renderTips() {
                   are ordered by confidence in the outcome.
                 </div>
                 {newArray.map((tip) => (
-                  <li className={tip.outcome} key={tip.team}>
-                    {tip.team}: {tip.odds}
+                  <li>
+                  <div>{tip.team}: {tip.odds} <span className={tip.outcome} key={tip.team}>{tip.outcomeSymbol}</span></div>
+                    <div className="TipGame">{tip.game}</div>
                   </li>
                 ))}
                 <div className="AccumulatedOdds">{`Accumulator odds ~ : ${

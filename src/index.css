@@ -1465,6 +1465,7 @@ ul {
 
 .Won {
   color: #01a501;
+  font-size: 1.2em;
 }
 
 
@@ -1474,6 +1475,11 @@ ul {
 
 .Lost {
   color: #bf1000;
+  font-size: 1.2em;
+}
+
+.TipGame {
+  padding-top: 0.25em;
 }
 
 .Lost1 {
