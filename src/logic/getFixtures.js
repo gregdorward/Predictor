@@ -74,7 +74,6 @@ export async function generateTables(a, leagueIdArray) {
   leagueArray.forEach(function (league) {
     let currentLeagueId = leagueIdArray[i];
     i++;
-    console.log(i);
     leagueInstance = [];
     //Skip MLS which has a weird format
     if (!league.data.specific_tables[0].groups && currentLeagueId !== 6969) {
@@ -158,8 +157,6 @@ export async function renderTable(index) {
   await leagueStatistics.json().then((stats) => {
     statistics = stats.data;
   });
-
-  console.log(statistics);
 
   if (league !== undefined) {
     ReactDOM.render(
@@ -291,8 +288,6 @@ export async function generateFixtures(day, radioState, selectedOdds) {
     .toLocaleDateString("en-US", { timeZone: "Europe/London" })
     .split("/");
 
-  console.log(tomorrowMonth);
-
   let yesterdaysDate = new Date();
   yesterdaysDate.setDate(new Date().getDate() - 1);
   let [yesterdayDay, yesterdayMonth, yesterdayYear] = yesterdaysDate
@@ -417,7 +412,6 @@ export async function generateFixtures(day, radioState, selectedOdds) {
       leagueArray = Array.from(leagues.leagueArray);
     });
     leaguesStored = true;
-    console.log("EXECUTING 1");
     generateTables(leagueArray, leagueIdArray);
   } else {
     for (let i = 0; i < orderedLeagues.length; i++) {
@@ -429,7 +423,6 @@ export async function generateFixtures(day, radioState, selectedOdds) {
         leagueArray.push(table);
       });
       leaguesStored = false;
-      console.log("EXECUTING 2");
     }
     generateTables(leagueArray, leagueIdArray);
   }

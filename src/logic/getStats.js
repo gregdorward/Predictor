@@ -12,12 +12,10 @@ import { Chart, RadarChart } from "../components/Chart";
 
 export async function createStatsDiv(game, displayBool) {
   if (game.status !== "void") {
-    let radioSelected = 10;
 
     // takes the displayBool boolean from the fixture onClick and sets the styling of the stats div from there
     function styling(testBool) {
       let bool = testBool;
-      console.log(bool);
       if (bool === true) {
         // set stats element to display flex
         return { display: "block" };
@@ -30,17 +28,8 @@ export async function createStatsDiv(game, displayBool) {
     let style = styling(displayBool);
 
     let index;
-    let divider;
-    if (radioSelected === 5) {
-      index = 0;
-      divider = 5;
-    } else if (radioSelected === 6) {
-      index = 1;
-      divider = 6;
-    } else if (radioSelected === 10) {
-      index = 2;
-      divider = 10;
-    }
+    let divider = 10;
+
     let homeLastMatch
     let awayLastMatch;
     let gameStats = allForm.find((match) => match.id === game.id);
@@ -69,16 +58,6 @@ export async function createStatsDiv(game, displayBool) {
   } else {
     matchArray = []
     matchArrayAway = []
-  
-
-
-
-
-
-
-
-
-
     }
 
     const lastGameHome = matchArray.find(

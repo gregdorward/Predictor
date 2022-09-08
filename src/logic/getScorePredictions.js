@@ -824,22 +824,21 @@ export async function compareTeams(homeForm, awayForm, match) {
   let drawOutcomeProbability =
     match.homeTeamDrawPercentage + match.awayTeamDrawPercentage;
 
-  if (drawOutcomeProbability > homeWinOutcomeProbability && drawOutcomeProbability > awayWinOutcomeProbability) {
-      switch (true) {
-        case drawOutcomeProbability > 100:
-          console.log(calculation);
-          calculation = calculation / (drawOutcomeProbability / 10);
-          console.log(match.game);
-          console.log(calculation);
-          break;
-        default:
-          calculation = calculation * 1;
-          break;
-      }
-    } else {
-      calculation = calculation * 2;
+  if (
+    drawOutcomeProbability > homeWinOutcomeProbability &&
+    drawOutcomeProbability > awayWinOutcomeProbability
+  ) {
+    switch (true) {
+      case drawOutcomeProbability > 100:
+        calculation = calculation / (drawOutcomeProbability / 10);
+        break;
+      default:
+        calculation = calculation * 1;
+        break;
     }
-  
+  } else {
+    calculation = calculation * 2;
+  }
 
   // if (calculation > 0) {
   //   switch (true) {
@@ -987,7 +986,6 @@ let i = 0;
 export async function calculateScore(match, index, divider) {
   i++;
 
-  console.log(i);
   let teams;
   let calculate = true;
 
@@ -1018,11 +1016,6 @@ export async function calculateScore(match, index, divider) {
 
       teams[i][index].lastGame = teams[i][index].LastFiveForm[4];
       teams[i][index].previousToLastGame = teams[i][index].LastFiveForm[3];
-
-      console.log(teams[i][index].LastFiveForm);
-      console.log(teams[i][index].LastSixForm);
-      console.log(teams[i][index].LastTenForm);
-      console.log(teams[i][index].previousToLastGame);
 
       let last2 = [
         teams[i][index].lastGame,
@@ -1448,12 +1441,6 @@ export async function calculateScore(match, index, divider) {
       drawPredictions = drawPredictions + 1;
     }
 
-    console.log(`Home wins predicted: ${homePredictions}`);
-
-    console.log(`Away wins predicted: ${awayPredictions}`);
-
-    console.log(`Draws predicted: ${drawPredictions}`);
-
     if (
       (XGdifferential > 1 && match.prediction === "homeWin") ||
       (XGdifferential < -1.6 && match.prediction === "awayWin")
@@ -1528,14 +1515,6 @@ export async function calculateScore(match, index, divider) {
       default:
         break;
     }
-
-    console.log(`Home wins: ${homeOutcomes}`);
-
-    console.log(`Away wins: ${awayOutcomes}`);
-
-    console.log(`Draws: ${allDrawOutcomes}`);
-
-  
 
     if (match.status === "complete") {
       if (match.prediction === match.outcome) {
@@ -1741,19 +1720,18 @@ export async function getScorePrediction(day, mocked) {
       let Over25PredictionObject;
       let XGPredictionObject;
 
-      console.log(match);
-
-      if(match.status === "complete"){
-        match.outcomeSymbol = match.predictionOutcome === "Won"? "\u2714" : "\u2718"
-        match.over25PredictionOutcomeSymbol = match.over25PredictionOutcome === "Won"? "\u2714" : "\u2718"
-        match.bttsOutcomeSymbol = match.bttsOutcome === "bttsWon"? "\u2714" : "\u2718"
+      if (match.status === "complete") {
+        match.outcomeSymbol =
+          match.predictionOutcome === "Won" ? "\u2714" : "\u2718";
+        match.over25PredictionOutcomeSymbol =
+          match.over25PredictionOutcome === "Won" ? "\u2714" : "\u2718";
+        match.bttsOutcomeSymbol =
+          match.bttsOutcome === "bttsWon" ? "\u2714" : "\u2718";
       } else {
-        match.outcomeSymbol = ""
-        match.over25PredictionOutcomeSymbol = ""
-        match.bttsOutcomeSymbol = ""
+        match.outcomeSymbol = "";
+        match.over25PredictionOutcomeSymbol = "";
+        match.bttsOutcomeSymbol = "";
       }
-
-
 
       if (
         match.unroundedGoalsA - match.unroundedGoalsB > 0.75 &&
@@ -1770,9 +1748,10 @@ export async function getScorePrediction(day, mocked) {
         ) {
           predictionObject = {
             team: `${match.homeTeam} to win`,
-            game: match.status === "complete"
-              ? `${match.homeTeam} ${match.homeGoals} - ${match.awayGoals} ${match.awayTeam}`
-              : match.game,
+            game:
+              match.status === "complete"
+                ? `${match.homeTeam} ${match.homeGoals} - ${match.awayGoals} ${match.awayTeam}`
+                : match.game,
             odds: match.fractionHome,
             rawOdds: match.homeOdds,
             comparisonScore: Math.abs(match.teamComparisonScore),
@@ -1819,9 +1798,10 @@ export async function getScorePrediction(day, mocked) {
         ) {
           predictionObject = {
             team: `${match.awayTeam} to win`,
-            game: match.status === "complete"
-              ? `${match.homeTeam} ${match.homeGoals} - ${match.awayGoals} ${match.awayTeam}`
-              : match.game,
+            game:
+              match.status === "complete"
+                ? `${match.homeTeam} ${match.homeGoals} - ${match.awayGoals} ${match.awayTeam}`
+                : match.game,
             rawOdds: match.awayOdds,
             odds: match.fractionAway,
             comparisonScore: Math.abs(match.teamComparisonScore),
@@ -1868,9 +1848,11 @@ export async function getScorePrediction(day, mocked) {
         match.GoalsInGamesAverageHome > 2.5 &&
         match.GoalsInGamesAverageAway > 2.5
       ) {
-        console.log(match);
         Over25PredictionObject = {
-          game: match.game,
+          game:
+          match.status === "complete"
+            ? `${match.homeTeam} ${match.homeGoals} - ${match.awayGoals} ${match.awayTeam}`
+            : match.game,
           team: match.homeTeam,
           decimalOdds: match.homeDoubleChance,
           rawOdds: match.over25Odds,
@@ -1880,10 +1862,6 @@ export async function getScorePrediction(day, mocked) {
           outcomeSymbol: match.over25PredictionOutcomeSymbol,
           doubleChanceOutcome: match.over25PredictionOutcome,
           goalTotalUnrounded: match.unroundedGoalsA + match.unroundedGoalsB,
-          actualTotalGoals:
-            match.status === "complete"
-              ? match.homeGoals + match.awayGoals
-              : "TBC",
         };
         Over25Tips.push(Over25PredictionObject);
       }
@@ -1896,7 +1874,10 @@ export async function getScorePrediction(day, mocked) {
         match.status !== "canceled"
       ) {
         XGPredictionObject = {
-          game: match.game,
+          game:
+            match.status === "complete"
+              ? `${match.homeTeam} ${match.homeGoals} - ${match.awayGoals} ${match.awayTeam}`
+              : match.game,
           team: `${match.homeTeam} to win`,
           rawOdds: match.homeOdds,
           comparisonScore: Math.abs(match.teamComparisonScore),
@@ -1924,7 +1905,10 @@ export async function getScorePrediction(day, mocked) {
         match.status !== "canceled"
       ) {
         XGPredictionObject = {
-          game: match.game,
+          game:
+            match.status === "complete"
+              ? `${match.homeTeam} ${match.homeGoals} - ${match.awayGoals} ${match.awayTeam}`
+              : match.game,
           team: `${match.awayTeam} to win`,
           rawOdds: match.awayOdds,
           comparisonScore: Math.abs(match.teamComparisonScore),
@@ -2172,7 +2156,10 @@ async function renderTips() {
                 </div>
                 {newArray.map((tip) => (
                   <li key={`${tip.game}acca`}>
-                  <div>{tip.team}: {tip.odds} <span className={tip.outcome}>{tip.outcomeSymbol}</span></div>
+                    <div>
+                      {tip.team}: {tip.odds}{" "}
+                      <span className={tip.outcome}>{tip.outcomeSymbol}</span>
+                    </div>
                     <div className="TipGame">{tip.game}</div>
                   </li>
                 ))}
@@ -2230,7 +2217,9 @@ async function renderTips() {
                 </div>
                 {exoticArray.map((tip) => (
                   <li key={tip.team}>
-                    {tip.team}: {tip.odds} <span className={tip.outcome}>{tip.outcomeSymbol}</span>
+                    {tip.team}: {tip.odds}{" "}
+                    <span className={tip.outcome}>{tip.outcomeSymbol}</span>
+                    <div>{tip.game}</div>
                   </li>
                 ))}
               </ul>
@@ -2272,10 +2261,10 @@ async function renderTips() {
                 <lh>Over 2.5 goals</lh>
                 {Over25Tips.map((tip) => (
                   <li key={tip.team}>
-                    {tip.game} - Odds: {tip.odds} <span className={`${tip.doubleChanceOutcome}`}>{tip.outcomeSymbol}</span>
-                    <div className="over25ActualOutcome">
-                      Actual goals at FT: {tip.actualTotalGoals}
-                    </div>
+                    {tip.game} - Odds: {tip.odds}{" "}
+                    <span className={`${tip.doubleChanceOutcome}`}>
+                      {tip.outcomeSymbol}
+                    </span>
                   </li>
                 ))}
               </ul>
@@ -2314,7 +2303,8 @@ async function renderTips() {
                 <lh>Games with greatest XG Differentials</lh>
                 {XGDiffTips.map((tip) => (
                   <li key={tip.game}>
-                    {tip.game} | {tip.prediction} {tip.odds} <span className={tip.outcome}>{tip.outcomeSymbol}</span>
+                    {tip.game} | {tip.prediction} {tip.odds}{" "}
+                    <span className={tip.outcome}>{tip.outcomeSymbol}</span>
                   </li>
                 ))}
               </ul>
@@ -2354,7 +2344,10 @@ async function renderTips() {
                 <lh>Games with highest chance of BTTS</lh>
                 {bttsArray.map((game) => (
                   <li key={game.game}>
-                    {`${game.game} odds: ${game.bttsFraction}`} <span className={game.bttsOutcome}>{game.bttsOutcomeSymbol}</span>
+                    {`${game.game} odds: ${game.bttsFraction}`}{" "}
+                    <span className={game.bttsOutcome}>
+                      {game.bttsOutcomeSymbol}
+                    </span>
                   </li>
                 ))}
               </ul>
