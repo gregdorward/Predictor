@@ -1564,7 +1564,7 @@ export async function calculateScore(match, index, divider) {
 
     if (
       match.game_week > 0 &&
-      match.game_week < 4 &&
+      match.game_week < 3 &&
       match.competition_id !== 4340 &&
       buttonState === false
     ) {

@@ -27,7 +27,7 @@ export async function createStatsDiv(game, displayBool) {
 
     let style = styling(displayBool);
 
-    let index;
+    let index = 2;
     let divider = 10;
 
     let homeLastMatch
@@ -129,6 +129,8 @@ export async function createStatsDiv(game, displayBool) {
     let awayTeam = gameStats.away.teamName;
 
     let time = game.time;
+
+    console.log(gameStats)
 
     gameStats.home[index].last3Points = getPointsFromLastX(
       gameStats.home[index].lastThreeForm

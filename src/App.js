@@ -4,7 +4,6 @@ import Header from "./components/Header";
 import { Button } from "./components/Button";
 import OddsRadio from "./components/OddsRadio";
 import { selectedOdds } from "./components/OddsRadio";
-import { StyledKofiButton } from "./components/KofiButton";
 import {
   FacebookShareButton,
   FacebookIcon,
@@ -21,7 +20,7 @@ import {
 import { generateFixtures } from "./logic/getFixtures";
 import { selectedOption } from "./components/radio";
 import { ThreeDots } from "react-loading-icons";
-import { Toggles } from "./components/Toggle";
+// import { Toggles } from "./components/Toggle";
 import reactDom from "react-dom";
 // require("dotenv").config();
 
@@ -228,21 +227,21 @@ const leagueOrder = [
     document.getElementById("Checkbox")
   );
 
-  ReactDOM.render(
-    <div className="Explainer">
-      <em>
-        To discount pre-season form and last seasons' games, only matchs taking
-        place after the 3rd gameweek in their respective leagues are currently
-        being predicted by default. Click below if you want to see all
-        predictions (not recommended)
-      </em>
-      <div>
-        <Toggles />
-      </div>
-    </div>,
-    document.getElementById("ExplainerText")
-  );
-  console.log(Toggles.isOff);
+  // ReactDOM.render(
+  //   <div className="Explainer">
+  //     <em>
+  //       To discount pre-season form and last seasons' games, only matchs taking
+  //       place after the 3rd gameweek in their respective leagues are currently
+  //       being predicted by default. Click below if you want to see all
+  //       predictions (not recommended)
+  //     </em>
+  //     <div>
+  //       <Toggles />
+  //     </div>
+  //   </div>,
+  //   document.getElementById("ExplainerText")
+  // );
+  // console.log(Toggles.isOff);
 
   ReactDOM.render(
     <Button
@@ -407,7 +406,6 @@ function App() {
       <div id="tables" />
       <div id="homeBadge" />
       <div id="FixtureContainerHeaders"></div>
-      <StyledKofiButton></StyledKofiButton>
       <div id="XGDiff" />
       <div id="FixtureContainer">
         <div>
