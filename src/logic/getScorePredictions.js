@@ -2286,7 +2286,7 @@ async function renderTips() {
       <div>
         <Fragment>
           <Collapsable
-            buttonText={"Double chance tips"}
+            buttonText={"Over 2.5 goals tips"}
             text={
               <ul className="LongshotPredictions" id="LongshotPredictions">
                 <lh>No games fit the criteria</lh>
