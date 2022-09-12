@@ -440,13 +440,13 @@ export async function createStatsDiv(game, displayBool) {
     let homeFormTrend = [
       homeThreeGameAverage.toFixed(2),
       homeFiveGameAverage.toFixed(2),
-      homeTenGameAverage.toFixed(2),
+      homeSixGameAverage.toFixed(2),
     ];
 
     let awayFormTrend = [
       awayThreeGameAverage.toFixed(2),
       awayFiveGameAverage.toFixed(2),
-      awayTenGameAverage.toFixed(2),
+      homeSixGameAverage.toFixed(2),
     ];
 
     let formTextStringHome
@@ -515,6 +515,8 @@ export async function createStatsDiv(game, displayBool) {
     });
 
     const formDataHome = [];
+
+    console.log(gameStats)
 
     formDataHome.push({
       name: game.homeTeam,

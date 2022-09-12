@@ -97,7 +97,7 @@ const leagueOrder = [
       const element = league.season[x];
 
       if (element.year === 2022 || element.year === 20222023) {
-        if (element.id !== 8008) {
+        if (element.id !== 8008 && element.id !== 4340) {
           availableLeagues.push({ name: name, element });
         }
       }

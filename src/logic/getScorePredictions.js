@@ -1250,7 +1250,7 @@ export async function calculateScore(match, index, divider) {
     let teamComparisonScore;
 
     [teamComparisonScore] = await compareTeams(formHome, formAway, match);
-    teamComparisonScore = teamComparisonScore * 0.9;
+    teamComparisonScore = teamComparisonScore * 0.5;
 
     if (teamComparisonScore > 0.7) {
       teamComparisonScore = 0.7;
@@ -1259,6 +1259,9 @@ export async function calculateScore(match, index, divider) {
     }
 
     match.teamComparisonScore = teamComparisonScore.toFixed(2);
+
+    console.log(match.game)
+    console.log(match.teamComparisonScore)
 
     let finalHomeGoals;
     let finalAwayGoals;
@@ -1292,6 +1295,10 @@ export async function calculateScore(match, index, divider) {
       formAway.LeagueAverageGoals !== undefined
         ? (formAway.LeagueAverageGoals + formHome.LeagueAverageConceded) / 2
         : goalCalcAwayShortAndLongTerm;
+
+    console.log(match.game)
+    console.log(formHome)
+    console.log(formAway)
 
     let factorOneHome =
       (homeLeagueOrAllFormAverageGoals * 2 +

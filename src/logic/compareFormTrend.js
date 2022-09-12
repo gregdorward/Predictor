@@ -174,9 +174,13 @@ async function GenerateFormSummary(form, lastx, recentForm) {
   console.log(form);
   console.log(lastx);
   let text;
-  let ten = lastx[2];
+  let six = lastx[2];
   let five = lastx[1];
   let three = lastx[0];
+  console.log(three)
+  console.log(five)
+  console.log(six)
+
   let xgSum = await getXGDifferential(
     form.XGOverall,
     form.XGAgainstAvgOverall,
@@ -191,39 +195,39 @@ async function GenerateFormSummary(form, lastx, recentForm) {
   let defenceString = await getDefenceSummary(form.CleanSheetPercentage);
   console.log(three);
   console.log(five);
-  console.log(ten)
+  console.log(six)
   let pointsAverageTotal =
-    (parseFloat(three) + parseFloat(five) + parseFloat(ten)) / 3;
+    (parseFloat(three) + parseFloat(five) + parseFloat(six)) / 3;
 
   if (pointsAverageTotal > 2.2 && three >= 2.5) {
     console.log(1);
     switch (true) {
-      case three > five && five >= ten:
+      case three > five && five >= six:
         text =
-          "Outstanding recent form with solid improvement over last 10 games.";
+          "Outstanding recent form with solid improvement over last 6 games.";
         break;
-      case three > five && five < ten:
+      case three > five && five < six:
         text =
-          "Outstanding recent form which has improved with some inconsistency over last 10 games.";
+          "Outstanding recent form which has improved with some inconsistency over last 6 games.";
         break;
-      case three === five && five > ten:
+      case three === five && five > six:
         text = "Outstanding recent form with most improvement in the last 5.";
         break;
-      case three === five && five < ten:
+      case three === five && five < six:
         text = "Outstanding recent form with a slight dip in the last 5.";
         break;
-      case three === five && five === ten:
-        text = "Consistently outstanding form over the last 10.";
+      case three === five && five === six:
+        text = "Consistently outstanding form over the last 6.";
         break;
-      case three < five && five === ten:
+      case three < five && five === six:
         text =
           "Outstanding recent form but slightly worsening in most recent results.";
         break;
-      case three < five && five > ten:
+      case three < five && five > six:
         text =
-          "Outstanding recent form but slightly fluctuating over the last 10.";
+          "Outstanding recent form but slightly fluctuating over the last 6.";
         break;
-      case three < five && five < ten:
+      case three < five && five < six:
         text = "Outstanding recent form but beginning to worsen recently.";
         break;
       default:
@@ -232,32 +236,32 @@ async function GenerateFormSummary(form, lastx, recentForm) {
   } else if (pointsAverageTotal <= 2.2 && three >= 2.5) {
     console.log(2);
     switch (true) {
-      case three > five && five >= ten:
+      case three > five && five >= six:
         text =
-          "Very good recent form with solid improvement over last 10 games.";
+          "Very good recent form with solid improvement over last 6 games.";
         break;
-      case three > five && five < ten:
+      case three > five && five < six:
         text =
-          "Very good recent form which has improved with some inconsistency over last 10 games.";
+          "Very good recent form which has improved with some inconsistency over last 6 games.";
         break;
-      case three === five && five > ten:
+      case three === five && five > six:
         text = "Very good recent form with most improvement in the last 5.";
         break;
-      case three === five && five < ten:
+      case three === five && five < six:
         text = "Very good recent form with a slight dip in the last 5.";
         break;
-      case three === five && five === ten:
-        text = "Consistently very good form over the last 10.";
+      case three === five && five === six:
+        text = "Consistently very good form over the last 6.";
         break;
-      case three < five && five === ten:
+      case three < five && five === six:
         text =
           "Very good recent form but slightly worsening in most recent results.";
         break;
-      case three < five && five > ten:
+      case three < five && five > six:
         text =
-          "Very good recent form but slightly fluctuating over the last 10.";
+          "Very good recent form but slightly fluctuating over the last 6.";
         break;
-      case three < five && five < ten:
+      case three < five && five < six:
         text = "Very good recent form but beginning to worsen recently.";
         break;
       default:
@@ -266,32 +270,32 @@ async function GenerateFormSummary(form, lastx, recentForm) {
   } else if (pointsAverageTotal > 2 && three < 2.5 && three >= 2) {
     console.log(3);
     switch (true) {
-      case three > five && five >= ten:
+      case three > five && five >= six:
         text =
-          "Very good recent form with solid improvement over last 10 games.";
+          "Very good recent form with solid improvement over last 6 games.";
         break;
-      case three > five && five < ten:
+      case three > five && five < six:
         text =
-          "Very good recent form which has improved with some inconsistency over last 10 games.";
+          "Very good recent form which has improved with some inconsistency over last 6 games.";
         break;
-      case three === five && five > ten:
+      case three === five && five > six:
         text = "Very good recent form with most improvement in the last 5.";
         break;
-      case three === five && five < ten:
+      case three === five && five < six:
         text = "Very good recent form with a slight dip in the last 5.";
         break;
-      case three === five && five === ten:
-        text = "Very good form over the last 10.";
+      case three === five && five === six:
+        text = "Very good form over the last 6.";
         break;
-      case three < five && five === ten:
+      case three < five && five === six:
         text =
           "Very good recent form but slightly worsening in most recent results.";
         break;
-      case three < five && five > ten:
+      case three < five && five > six:
         text =
-          "Very good recent form but slightly fluctuating over the last 10.";
+          "Very good recent form but slightly fluctuating over the last 6.";
         break;
-      case three < five && five < ten:
+      case three < five && five < six:
         text = "Very good recent form but beginning to worsen recently.";
         break;
       default:
@@ -300,30 +304,30 @@ async function GenerateFormSummary(form, lastx, recentForm) {
   } else if (pointsAverageTotal <= 2 && three < 2.5 && three >= 2) {
     console.log(4);
     switch (true) {
-      case three > five && five >= ten:
-        text = "Good recent form with solid improvement over last 10 games.";
+      case three > five && five >= six:
+        text = "Good recent form with solid improvement over last 6 games.";
         break;
-      case three > five && five < ten:
+      case three > five && five < six:
         text =
-          "Good recent form which has improved with some inconsistency over last 10 games.";
+          "Good recent form which has improved with some inconsistency over last 6 games.";
         break;
-      case three === five && five > ten:
+      case three === five && five > six:
         text = "Good recent form with most improvement in the last 5.";
         break;
-      case three === five && five < ten:
+      case three === five && five < six:
         text = "Good recent form with a slight dip in the last 5.";
         break;
-      case three === five && five === ten:
-        text = "Good form over the last 10.";
+      case three === five && five === six:
+        text = "Good form over the last 6.";
         break;
-      case three < five && five === ten:
+      case three < five && five === six:
         text =
           "Good recent form but slightly worsening in most recent results.";
         break;
-      case three < five && five > ten:
-        text = "Good recent form but slightly fluctuating over the last 10.";
+      case three < five && five > six:
+        text = "Good recent form but slightly fluctuating over the last 6.";
         break;
-      case three < five && five < ten:
+      case three < five && five < six:
         text = "Good recent form but beginning to worsen recently.";
         break;
       default:
@@ -332,30 +336,30 @@ async function GenerateFormSummary(form, lastx, recentForm) {
   } else if (pointsAverageTotal > 2 && three < 2 && three >= 1.5) {
     console.log(5);
     switch (true) {
-      case three > five && five >= ten:
-        text = "Good recent form with solid improvement over last 10 games.";
+      case three > five && five >= six:
+        text = "Good recent form with solid improvement over last 6 games.";
         break;
-      case three > five && five < ten:
+      case three > five && five < six:
         text =
-          "Good recent form which has improved with some inconsistency over last 10 games.";
+          "Good recent form which has improved with some inconsistency over last 6 games.";
         break;
-      case three === five && five > ten:
+      case three === five && five > six:
         text = "Good recent form with most improvement in the last 5.";
         break;
-      case three === five && five < ten:
+      case three === five && five < six:
         text = "Good recent form with a slight dip in the last 5.";
         break;
-      case three === five && five === ten:
-        text = "Good form over the last 10.";
+      case three === five && five === six:
+        text = "Good form over the last 6.";
         break;
-      case three < five && five === ten:
+      case three < five && five === six:
         text =
           "Good recent form but slightly worsening in most recent results.";
         break;
-      case three < five && five > ten:
-        text = "Good recent form but slightly fluctuating over the last 10.";
+      case three < five && five > six:
+        text = "Good recent form but slightly fluctuating over the last 6.";
         break;
-      case three < five && five < ten:
+      case three < five && five < six:
         text = "Good recent form but worsening recently.";
         break;
       default:
@@ -364,30 +368,30 @@ async function GenerateFormSummary(form, lastx, recentForm) {
   } else if (pointsAverageTotal <= 2 && three < 2 && three >= 1.5) {
     console.log(6);
     switch (true) {
-      case three > five && five >= ten:
-        text = "Average recent form with solid improvement over last 10 games.";
+      case three > five && five >= six:
+        text = "Average recent form with solid improvement over last 6 games.";
         break;
-      case three > five && five < ten:
+      case three > five && five < six:
         text =
-          "Average recent form which has improved with some inconsistency over last 10 games.";
+          "Average recent form which has improved with some inconsistency over last 6 games.";
         break;
-      case three === five && five > ten:
+      case three === five && five > six:
         text = "Average recent form with some improvement in the last 5.";
         break;
-      case three === five && five < ten:
+      case three === five && five < six:
         text = "Average recent form with a slight dip in the last 5.";
         break;
-      case three === five && five === ten:
-        text = "Average form over the last 10.";
+      case three === five && five === six:
+        text = "Average form over the last 6.";
         break;
-      case three < five && five === ten:
+      case three < five && five === six:
         text =
           "Average recent form but slightly worsening in most recent results.";
         break;
-      case three < five && five > ten:
-        text = "Average recent form, slightly fluctuating over the last 10.";
+      case three < five && five > six:
+        text = "Average recent form, slightly fluctuating over the last 6.";
         break;
-      case three < five && five < ten:
+      case three < five && five < six:
         text = "Average form but on the decline recently.";
         break;
       default:
@@ -396,31 +400,31 @@ async function GenerateFormSummary(form, lastx, recentForm) {
   } else if (three < 1.5 && three >= 1) {
     console.log(7);
     switch (true) {
-      case three > five && five >= ten:
-        text = "Average recent form with solid improvement over last 10 games.";
+      case three > five && five >= six:
+        text = "Below average recent form with solid improvement over last 6 games.";
         break;
-      case three > five && five < ten:
+      case three > five && five < six:
         text =
-          "Average recent form which has improved with some inconsistency over last 10 games.";
+          "Below average recent form which has improved with some inconsistency over last 6 games.";
         break;
-      case three === five && five > ten:
-        text = "Average recent form with most improvement in the last 5.";
+      case three === five && five > six:
+        text = "Below average recent form with most improvement in the last 5.";
         break;
-      case three === five && five < ten:
-        text = "Average recent form with a slight dip in the last 5.";
+      case three === five && five < six:
+        text = "Below average recent form with a slight dip in the last 5.";
         break;
-      case three === five && five === ten:
-        text = "Consistently average form over the last 10.";
+      case three === five && five === six:
+        text = "Consistently below average form over the last 6.";
         break;
-      case three < five && five === ten:
+      case three < five && five === six:
         text =
-          "Average recent form but slightly worsening in most recent results.";
+          "Below average recent form but slightly worsening in most recent results.";
         break;
-      case three < five && five > ten:
-        text = "Average recent form, slightly fluctuating over the last 10.";
+      case three < five && five > six:
+        text = "Below average recent form, slightly fluctuating over the last 6.";
         break;
-      case three < five && five < ten:
-        text = "Average recent form, declining consistently.";
+      case three < five && five < six:
+        text = "Below average recent form, declining consistently.";
         break;
       default:
         break;
@@ -428,29 +432,29 @@ async function GenerateFormSummary(form, lastx, recentForm) {
   } else if (three < 1 && three >= 0.5) {
     console.log(8);
     switch (true) {
-      case three > five && five >= ten:
-        text = "Poor recent form with gradual improvement over last 10 games.";
+      case three > five && five >= six:
+        text = "Poor recent form with gradual improvement over last 6 games.";
         break;
-      case three > five && five < ten:
+      case three > five && five < six:
         text =
-          "Poor recent form but improving with some inconsistency over last 10 games.";
+          "Poor recent form but improving with some inconsistency over last 6 games.";
         break;
-      case three === five && five > ten:
+      case three === five && five > six:
         text = "Poor recent form with some improvement shown in the last 5.";
         break;
-      case three === five && five < ten:
+      case three === five && five < six:
         text = "Poor recent form with a dip in the last 5.";
         break;
-      case three === five && five === ten:
-        text = "Consistently poor form over the last 10.";
+      case three === five && five === six:
+        text = "Consistently poor form over the last 6.";
         break;
-      case three < five && five === ten:
+      case three < five && five === six:
         text = "Poor recent form, slightly worsening in most recent results.";
         break;
-      case three < five && five > ten:
-        text = "Poor recent form, slightly fluctuating over the last 10.";
+      case three < five && five > six:
+        text = "Poor recent form, slightly fluctuating over the last 6.";
         break;
-      case three < five && five < ten:
+      case three < five && five < six:
         text = "Poor recent form, declining consistently.";
         break;
       default:
@@ -460,28 +464,28 @@ async function GenerateFormSummary(form, lastx, recentForm) {
   } else if (pointsAverageTotal > 1 && three < 0.5) {
     console.log(9);
     switch (true) {
-      case three > five && five >= ten:
-        text = "Poor recent form with gradual improvement over last 10 games.";
+      case three > five && five >= six:
+        text = "Poor recent form with gradual improvement over last 6 games.";
         break;
-      case three > five && five < ten:
+      case three > five && five < six:
         text = "Poor recent form with a slight improvement in the last 5.";
         break;
-      case three === five && five > ten:
+      case three === five && five > six:
         text = "Poor recent form but improving slightly in the last 5.";
         break;
-      case three === five && five < ten:
+      case three === five && five < six:
         text = "Poor recent form with a dip in the last 5.";
         break;
-      case three === five && five === ten:
-        text = "Consistently poor form over the last 10.";
+      case three === five && five === six:
+        text = "Consistently poor form over the last 6.";
         break;
-      case three < five && five === ten:
+      case three < five && five === six:
         text = "Poor recent form, worsening further in the last 5.";
         break;
-      case three < five && five > ten:
-        text = "Poor recent form, slightly fluctuating over the last 10.";
+      case three < five && five > six:
+        text = "Poor recent form, slightly fluctuating over the last 6.";
         break;
-      case three < five && five < ten:
+      case three < five && five < six:
         text = "Poor recent form, declining consistently.";
         break;
       default:
@@ -490,29 +494,29 @@ async function GenerateFormSummary(form, lastx, recentForm) {
   } else if (pointsAverageTotal <= 1 && three < 0.5) {
     console.log(10);
     switch (true) {
-      case three > five && five >= ten:
+      case three > five && five >= six:
         text =
-          "Terrible recent form with gradual improvement over last 10 games.";
+          "Terrible recent form with gradual improvement over last 6 games.";
         break;
-      case three > five && five < ten:
+      case three > five && five < six:
         text = "Terrible recent form with a slight improvement in the last 5.";
         break;
-      case three === five && five > ten:
+      case three === five && five > six:
         text = "Terrible recent form but improving slightly in the last 5.";
         break;
-      case three === five && five < ten:
+      case three === five && five < six:
         text = "Terrible recent form with a dip in the last 5.";
         break;
-      case three === five && five === ten:
-        text = "Consistently terrible form over the last 10.";
+      case three === five && five === six:
+        text = "Consistently terrible form over the last 6.";
         break;
-      case three < five && five === ten:
+      case three < five && five === six:
         text = "Terrible recent form, worsening further in the last 5.";
         break;
-      case three < five && five > ten:
-        text = "Terrible recent form, slightly fluctuating over the last 10.";
+      case three < five && five > six:
+        text = "Terrible recent form, slightly fluctuating over the last 6.";
         break;
-      case three < five && five < ten:
+      case three < five && five < six:
         text = "Terrible recent form, declining consistently.";
         break;
       default:
@@ -524,7 +528,7 @@ async function GenerateFormSummary(form, lastx, recentForm) {
     console.log(pointsAverageTotal);
     console.log(three);
     console.log(five);
-    console.log(ten);
+    console.log(six);
   }
   return text + ` ${xgText} ${attackString} ${defenceString}`;
 }
