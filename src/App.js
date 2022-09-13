@@ -74,6 +74,9 @@ const leagueOrder = [
 (async function getLeagueList() {
   let leagueList;
 
+  console.log(process.env.REACT_APP_EXPRESS_SERVER)
+  
+
   leagueList = await fetch(`${process.env.REACT_APP_EXPRESS_SERVER}leagueList`);
 
   // ReactDOM.render(
