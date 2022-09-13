@@ -654,6 +654,8 @@ export async function createStatsDiv(game, displayBool) {
       game.awayTeamAwayPosition = "N/A";
     }
 
+    console.log(formDataHome)
+
     ReactDOM.render(
       <ul style={style}>
         <div className="PreviousStadiumHome">{homeStadium}</div>

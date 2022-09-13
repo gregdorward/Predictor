@@ -498,7 +498,7 @@ export async function generateFixtures(day, radioState, selectedOdds) {
     let homeLeague;
     let awayLeague;
 
-    console.log(leagueArray[i]);
+    console.log(leagueArray[i].data.league_table);
 
     if (leagueArray[i].data.league_table !== null) {
       leagueInstance = leagueArray[i].data.league_table;
@@ -510,37 +510,48 @@ export async function generateFixtures(day, radioState, selectedOdds) {
       awayLeague = leagueArray[i].data.all_matches_table_away;
     }
     console.log(leagueInstance);
-    console.log(homeLeague);
-    console.log(awayLeague);
+    console.log(leagueInstance.length);
+
 
     for (let x = 0; x < leagueInstance.length; x++) {
-      // let regularSeason = leagueArray[i].data.specific_tables.find(
-      //   (season) =>
-      //     season.round === "Regular Season" ||
-      //     season.round === "2022" ||
-      //     season.round === "2022/2023" ||
-      //     season.round === "Apertura" ||
-      //     season.round === "1st Phase" ||
-      //     season.round === "North" ||
-      //     season.round === "South"
-      // );
+      let regularSeason = leagueArray[i].data.specific_tables.find(
+        (season) =>
+          season.round === "Regular Season" ||
+          season.round === "2022" ||
+          season.round === "2022/2023" ||
+          season.round === "Apertura" ||
+          season.round === "1st Phase"
+          // season.round === "North" ||
+          // season.round === "South"
+      );
       let string;
 
-      // if (regularSeason !== undefined && regularSeason.table) {
-      //   string = regularSeason.table[x];
-      // } else {
-      //   string = leagueArray[i].data.all_matches_table_overall[x];
-      // }
+      console.log(regularSeason)
 
-      string = leagueInstance[x];
+      if (regularSeason !== undefined && regularSeason.table) {
+        console.log("TRUE")
+        string = regularSeason.table[x];
+        homeLeague = leagueArray[i].data.all_matches_table_home;
+        awayLeague = leagueArray[i].data.all_matches_table_away;
+      } else {
+        console.log("FALSE")
+        string = leagueArray[i].data.all_matches_table_overall[x];
+        homeLeague = leagueArray[i].data.all_matches_table_home;
+        awayLeague = leagueArray[i].data.all_matches_table_away;
+      }
 
-      console.log(string);
+
 
       let stringHome = homeLeague[x];
       let stringAway = awayLeague[x];
 
+      console.log(string);
       console.log(stringHome);
       console.log(stringAway);
+      console.log(leagueArray[i].data.specific_tables[0])
+      console.log(i)
+      console.log(x)
+      // console.log(string.wdl_record)
 
       leaguePositions.push({
         name: string.cleanName,
@@ -651,11 +662,8 @@ export async function generateFixtures(day, radioState, selectedOdds) {
         let homeTeaminHomeLeague = leaguePositions.find(
           (team) => team.homeFormName === match.homeTeam
         );
-        console.log(homeTeaminLeague)
         teamPositionHome = homeTeaminLeague.position;
-        console.log(teamPositionHome)
         teamPositionHomeTable = homeTeaminHomeLeague.position;
-        console.log(teamPositionHomeTable)
 
 
         WDLinLeagueHome = Array.from(homeTeaminLeague.wdl.toUpperCase());
@@ -680,7 +688,6 @@ export async function generateFixtures(day, radioState, selectedOdds) {
           100;
 
         homePrefix = await getPrefix(teamPositionHome);
-        console.log(homePrefix)
         homePrefixHomeTable = await getPrefix(teamPositionHomeTable);
 
         homeSeasonPPG = homeTeaminLeague.ppg.toFixed(2);
@@ -765,13 +772,8 @@ export async function generateFixtures(day, radioState, selectedOdds) {
           form[1].data[2].stats.additional_info.formRun_away.toUpperCase();
 
         console.log(homeTeaminLeague);
-        console.log(homeTeaminLeague.played);
-        console.log(HomeAverageGoals);
-        console.log(HomeAverageConceded);
-        console.log(awayTeaminLeague);
-        console.log(AwayAverageGoals);
-        console.log(AwayAverageConceded);
-        console.log(awayTeaminLeague.played);
+        console.log(homeFormRun);
+
 
         if (WDLinLeagueHome.length >= 10) {
           lastThreeFormHome = WDLinLeagueHome.slice(-3);
@@ -831,8 +833,7 @@ export async function generateFixtures(day, radioState, selectedOdds) {
           lastFiveFormAway = Array.from(awayFormString5);
           lastSixFormAway = Array.from(awayFormString6);
           lastTenFormAway = Array.from(awayFormString10);
-          formRunHome = Array.from(homeFormRun);
-          formRunAway = Array.from(awayFormRun);
+
           leagueOrAll = "All";
 
           homeAverageGoals = undefined;
@@ -840,6 +841,11 @@ export async function generateFixtures(day, radioState, selectedOdds) {
           awayAverageGoals = undefined;
           awayAverageConceded = undefined;
         }
+
+        formRunHome = Array.from(homeFormRun);
+        formRunAway = Array.from(awayFormRun);
+
+        console.log(formRunHome)
 
         if (
           teamPositionHome === 0 ||
