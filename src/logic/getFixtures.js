@@ -371,6 +371,7 @@ export async function generateFixtures(day, radioState, selectedOdds) {
 
   let form;
   let formArray = [];
+  allForm = [];
   var isFormStored;
   var isStoredLocally;
   var leaguesStored = false;
@@ -1396,6 +1397,7 @@ export async function generateFixtures(day, radioState, selectedOdds) {
 
   if (!isStoredLocally) {
     console.log(day)
+    console.log(allForm)
     await fetch(`${process.env.REACT_APP_EXPRESS_SERVER}allForm${day}`, {
       method: "POST",
       headers: {
