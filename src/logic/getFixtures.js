@@ -360,11 +360,14 @@ export async function generateFixtures(day, radioState, selectedOdds) {
 
   ReactDOM.render(<div></div>, document.getElementById("FixtureContainer"));
 
+  console.log(`url ${url}`)
   fixtureResponse = await fetch(url);
 
   await fixtureResponse.json().then((fixtures) => {
     fixtureArray = Array.from(fixtures.data);
   });
+
+  console.log(fixtureArray)
 
   let form;
   let formArray = [];
@@ -382,6 +385,7 @@ export async function generateFixtures(day, radioState, selectedOdds) {
   );
   if (storedForm.status === 201 || storedForm.status === 200) {
     await storedForm.json().then((form) => {
+      console.log(form)
       formArray = Array.from(form.allForm);
       isFormStored = true;
       isStoredLocally = true;
@@ -498,7 +502,6 @@ export async function generateFixtures(day, radioState, selectedOdds) {
     let homeLeague;
     let awayLeague;
 
-    console.log(leagueArray[i].data.league_table);
 
     if (leagueArray[i].data.league_table !== null) {
       leagueInstance = leagueArray[i].data.league_table;
@@ -509,8 +512,6 @@ export async function generateFixtures(day, radioState, selectedOdds) {
       homeLeague = leagueArray[i].data.all_matches_table_home;
       awayLeague = leagueArray[i].data.all_matches_table_away;
     }
-    console.log(leagueInstance);
-    console.log(leagueInstance.length);
 
 
     for (let x = 0; x < leagueInstance.length; x++) {
@@ -526,32 +527,20 @@ export async function generateFixtures(day, radioState, selectedOdds) {
       );
       let string;
 
-      console.log(regularSeason)
 
       if (regularSeason !== undefined && regularSeason.table) {
-        console.log("TRUE")
         string = regularSeason.table[x];
         homeLeague = leagueArray[i].data.all_matches_table_home;
         awayLeague = leagueArray[i].data.all_matches_table_away;
       } else {
-        console.log("FALSE")
         string = leagueArray[i].data.all_matches_table_overall[x];
         homeLeague = leagueArray[i].data.all_matches_table_home;
         awayLeague = leagueArray[i].data.all_matches_table_away;
       }
 
 
-
       let stringHome = homeLeague[x];
       let stringAway = awayLeague[x];
-
-      console.log(string);
-      console.log(stringHome);
-      console.log(stringAway);
-      console.log(leagueArray[i].data.specific_tables[0])
-      console.log(i)
-      console.log(x)
-      // console.log(string.wdl_record)
 
       leaguePositions.push({
         name: string.cleanName,
@@ -712,7 +701,6 @@ export async function generateFixtures(day, radioState, selectedOdds) {
         );
 
         teamPositionAway = awayTeaminLeague.position;
-        console.log(awayTeaminAwayLeague);
         teamPositionAwayTable = awayTeaminAwayLeague.position;
 
         WDLinLeagueAway = Array.from(awayTeaminLeague.wdl.toUpperCase());
@@ -752,6 +740,7 @@ export async function generateFixtures(day, radioState, selectedOdds) {
 
       if (!isFormStored) {
         form = await getForm(match);
+        console.log(form)
 
         let homeFormString5 =
           form[0].data[0].stats.additional_info.formRun_overall.toUpperCase();
@@ -770,9 +759,6 @@ export async function generateFixtures(day, radioState, selectedOdds) {
           form[0].data[2].stats.additional_info.formRun_home.toUpperCase();
         let awayFormRun =
           form[1].data[2].stats.additional_info.formRun_away.toUpperCase();
-
-        console.log(homeTeaminLeague);
-        console.log(homeFormRun);
 
 
         if (WDLinLeagueHome.length >= 10) {
@@ -844,8 +830,6 @@ export async function generateFixtures(day, radioState, selectedOdds) {
 
         formRunHome = Array.from(homeFormRun);
         formRunAway = Array.from(awayFormRun);
-
-        console.log(formRunHome)
 
         if (
           teamPositionHome === 0 ||
@@ -1391,6 +1375,7 @@ export async function generateFixtures(day, radioState, selectedOdds) {
         matches.push(match);
         await createFixture(match, false);
       }
+      console.log(matches)
     }
     // }
     ReactDOM.render(
@@ -1410,6 +1395,7 @@ export async function generateFixtures(day, radioState, selectedOdds) {
   );
 
   if (!isStoredLocally) {
+    console.log(day)
     await fetch(`${process.env.REACT_APP_EXPRESS_SERVER}allForm${day}`, {
       method: "POST",
       headers: {
