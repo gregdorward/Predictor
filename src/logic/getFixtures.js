@@ -46,9 +46,9 @@ let awayAverageGoals;
 let AwayAverageConceded;
 let awayAverageConceded;
 
-export var [currentDay, month, year] = new Date()
-  .toLocaleDateString("en-US", { timeZone: "Europe/London" })
-  .split("/");
+// export var [currentDay, month, year] = new Date()
+//   .toLocaleDateString("en-US", { timeZone: "Europe/London" })
+//   .split("/");
 
 export async function diff(a, b) {
   return parseFloat(a - b).toFixed(2);
@@ -267,7 +267,14 @@ async function createFixture(match, result, mockBool) {
 var myHeaders = new Headers();
 myHeaders.append("Origin", "https://gregdorward.github.io");
 
-export async function generateFixtures(day, radioState, selectedOdds) {
+export async function generateFixtures(
+  day,
+  date,
+  selectedOdds,
+  footyStatsFormattedDate
+) {
+  console.log(date);
+
   //cleanup if different day is selected
   ReactDOM.render(<div></div>, document.getElementById("GeneratePredictions"));
   ReactDOM.render(<div></div>, document.getElementById("successMeasure2"));
@@ -278,96 +285,24 @@ export async function generateFixtures(day, radioState, selectedOdds) {
   ReactDOM.render(<div></div>, document.getElementById("BTTS"));
   ReactDOM.render(<div></div>, document.getElementById("draws"));
 
-  [currentDay, month, year] = new Date()
-    .toLocaleDateString("en-US", { timeZone: "Europe/London" })
-    .split("/");
-
-  let tomorrowsDate = new Date();
-  tomorrowsDate.setDate(new Date().getDate() + 1);
-  let [tomorrowDay, tomorrowMonth, tomorrowYear] = tomorrowsDate
-    .toLocaleDateString("en-US", { timeZone: "Europe/London" })
-    .split("/");
-
-  let yesterdaysDate = new Date();
-  yesterdaysDate.setDate(new Date().getDate() - 1);
-  let [yesterdayDay, yesterdayMonth, yesterdayYear] = yesterdaysDate
-    .toLocaleDateString("en-US", { timeZone: "Europe/London" })
-    .split("/");
-
-  let d = new Date();
-  d.setDate(d.getDate() - ((d.getDay() + 6) % 7));
-  d.setDate(d.getDate() - 2);
-  d.toLocaleDateString("en-US", { timeZone: "Europe/London" });
-
-  let [saturdayDay, saturdayMonth, saturdayYear] = d
-    .toLocaleDateString("en-US", { timeZone: "Europe/London" })
-    .split("/");
-
-  let historicDate = new Date();
-  historicDate.setDate(
-    historicDate.getDate() - ((historicDate.getDay() + 6) % 7)
-  );
-  historicDate.setDate(historicDate.getDate() - 9);
-  let [historicDay, historicMonth, historicYear] = historicDate
-    .toLocaleDateString("en-US", { timeZone: "Europe/London" })
-    .split("/");
-
-  const saturday = `${process.env.REACT_APP_EXPRESS_SERVER}matches/${saturdayYear}-${saturdayDay}-${saturdayMonth}`;
-  const historic = `${process.env.REACT_APP_EXPRESS_SERVER}matches/${historicYear}-${historicDay}-${historicMonth}`;
-  const yesterday = `${process.env.REACT_APP_EXPRESS_SERVER}matches/${yesterdayYear}-${yesterdayDay}-${yesterdayMonth}`;
-  const today = `${process.env.REACT_APP_EXPRESS_SERVER}matches/${year}-${currentDay}-${month}`;
-  const tomorrow = `${process.env.REACT_APP_EXPRESS_SERVER}matches/${tomorrowYear}-${tomorrowDay}-${tomorrowMonth}`;
+  const url = `${process.env.REACT_APP_EXPRESS_SERVER}matches/${footyStatsFormattedDate}`;
+  const formUrl = `${process.env.REACT_APP_EXPRESS_SERVER}form/${date}`;
 
   matches = [];
   fixtureArray = [];
 
-  let url;
-  switch (day) {
-    case "lastSaturday":
-      url = saturday;
-      league = await fetch(
-        `${process.env.REACT_APP_EXPRESS_SERVER}leagues/${saturdayDay}${saturdayMonth}${saturdayYear}`
-      );
-      break;
-    case "historic":
-      url = historic;
-      league = await fetch(
-        `${process.env.REACT_APP_EXPRESS_SERVER}leagues/${historicDay}${historicMonth}${historicYear}`
-      );
-      break;
-    case "yesterdaysFixtures":
-      url = yesterday;
-      currentDay = yesterdayDay;
-      league = await fetch(
-        `${process.env.REACT_APP_EXPRESS_SERVER}leagues/${yesterdayDay}${yesterdayMonth}${yesterdayYear}`
-      );
-      break;
-    case "todaysFixtures":
-      url = today;
-      league = await fetch(
-        `${process.env.REACT_APP_EXPRESS_SERVER}leagues/${currentDay}${month}${year}`
-      );
-      break;
-    case "tomorrowsFixtures":
-      url = tomorrow;
-      league = await fetch(
-        `${process.env.REACT_APP_EXPRESS_SERVER}leagues/${currentDay}${month}${year}`
-      );
-      break;
-    default:
-      break;
-  }
+  league = await fetch(
+    `${process.env.REACT_APP_EXPRESS_SERVER}leagues/${date}`
+  );
 
   ReactDOM.render(<div></div>, document.getElementById("FixtureContainer"));
 
-  console.log(`url ${url}`)
+  console.log(`matches url: ${url}`);
   fixtureResponse = await fetch(url);
 
   await fixtureResponse.json().then((fixtures) => {
     fixtureArray = Array.from(fixtures.data);
   });
-
-  console.log(fixtureArray)
 
   let form;
   let formArray = [];
@@ -375,18 +310,10 @@ export async function generateFixtures(day, radioState, selectedOdds) {
   var isFormStored;
   var isStoredLocally;
   var leaguesStored = false;
-  let storedForm = await fetch(
-    `${process.env.REACT_APP_EXPRESS_SERVER}form${day}`,
-    {
-      method: "GET",
-      headers: {
-        Accept: "application/json",
-      },
-    }
-  );
+  console.log(`${process.env.REACT_APP_EXPRESS_SERVER}form/${date}`);
+  let storedForm = await fetch(formUrl);
   if (storedForm.status === 201 || storedForm.status === 200) {
     await storedForm.json().then((form) => {
-      console.log(form)
       formArray = Array.from(form.allForm);
       isFormStored = true;
       isStoredLocally = true;
@@ -421,7 +348,7 @@ export async function generateFixtures(day, radioState, selectedOdds) {
   } else {
     for (let i = 0; i < orderedLeagues.length; i++) {
       league = await fetch(
-        `${process.env.REACT_APP_EXPRESS_SERVER}tables/${orderedLeagues[i].element.id}/${currentDay}${month}${year}`
+        `${process.env.REACT_APP_EXPRESS_SERVER}tables/${orderedLeagues[i].element.id}/${date}`
       );
       // eslint-disable-next-line no-loop-func
       await league.json().then((table) => {
@@ -503,7 +430,6 @@ export async function generateFixtures(day, radioState, selectedOdds) {
     let homeLeague;
     let awayLeague;
 
-
     if (leagueArray[i].data.league_table !== null) {
       leagueInstance = leagueArray[i].data.league_table;
       homeLeague = leagueArray[i].data.all_matches_table_home;
@@ -514,7 +440,6 @@ export async function generateFixtures(day, radioState, selectedOdds) {
       awayLeague = leagueArray[i].data.all_matches_table_away;
     }
 
-
     for (let x = 0; x < leagueInstance.length; x++) {
       let regularSeason = leagueArray[i].data.specific_tables.find(
         (season) =>
@@ -523,11 +448,10 @@ export async function generateFixtures(day, radioState, selectedOdds) {
           season.round === "2022/2023" ||
           season.round === "Apertura" ||
           season.round === "1st Phase"
-          // season.round === "North" ||
-          // season.round === "South"
+        // season.round === "North" ||
+        // season.round === "South"
       );
       let string;
-
 
       if (regularSeason !== undefined && regularSeason.table) {
         string = regularSeason.table[x];
@@ -538,7 +462,6 @@ export async function generateFixtures(day, radioState, selectedOdds) {
         homeLeague = leagueArray[i].data.all_matches_table_home;
         awayLeague = leagueArray[i].data.all_matches_table_away;
       }
-
 
       let stringHome = homeLeague[x];
       let stringAway = awayLeague[x];
@@ -655,7 +578,6 @@ export async function generateFixtures(day, radioState, selectedOdds) {
         teamPositionHome = homeTeaminLeague.position;
         teamPositionHomeTable = homeTeaminHomeLeague.position;
 
-
         WDLinLeagueHome = Array.from(homeTeaminLeague.wdl.toUpperCase());
         HomeAverageGoals =
           homeTeaminLeague.seasonGoals / homeTeaminLeague.played;
@@ -741,7 +663,6 @@ export async function generateFixtures(day, radioState, selectedOdds) {
 
       if (!isFormStored) {
         form = await getForm(match);
-        console.log(form)
 
         let homeFormString5 =
           form[0].data[0].stats.additional_info.formRun_overall.toUpperCase();
@@ -760,7 +681,6 @@ export async function generateFixtures(day, radioState, selectedOdds) {
           form[0].data[2].stats.additional_info.formRun_home.toUpperCase();
         let awayFormRun =
           form[1].data[2].stats.additional_info.formRun_away.toUpperCase();
-
 
         if (WDLinLeagueHome.length >= 10) {
           lastThreeFormHome = WDLinLeagueHome.slice(-3);
@@ -1376,7 +1296,6 @@ export async function generateFixtures(day, radioState, selectedOdds) {
         matches.push(match);
         await createFixture(match, false);
       }
-      console.log(matches)
     }
     // }
     ReactDOM.render(
@@ -1388,6 +1307,8 @@ export async function generateFixtures(day, radioState, selectedOdds) {
     );
   }
 
+  console.log(matches);
+
   ReactDOM.render(
     <div>
       <div className="LoadingText"></div>
@@ -1396,9 +1317,7 @@ export async function generateFixtures(day, radioState, selectedOdds) {
   );
 
   if (!isStoredLocally) {
-    console.log(day)
-    console.log(allForm)
-    await fetch(`${process.env.REACT_APP_EXPRESS_SERVER}allForm${day}`, {
+    await fetch(`${process.env.REACT_APP_EXPRESS_SERVER}allForm/${date}`, {
       method: "POST",
       headers: {
         Accept: "application/json",
@@ -1409,16 +1328,13 @@ export async function generateFixtures(day, radioState, selectedOdds) {
   }
 
   if (!leaguesStored) {
-    await fetch(
-      `${process.env.REACT_APP_EXPRESS_SERVER}leagues/${currentDay}${month}${year}`,
-      {
-        method: "POST",
-        headers: {
-          Accept: "application/json",
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ leagueArray }),
-      }
-    );
+    await fetch(`${process.env.REACT_APP_EXPRESS_SERVER}leagues/${date}`, {
+      method: "POST",
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ leagueArray }),
+    });
   }
 }

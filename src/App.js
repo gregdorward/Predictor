@@ -71,11 +71,66 @@ const leagueOrder = [
   7956, //National league North and South 22/23
 ];
 
+let date = new Date();
+let today;
+let todayFootyStats;
+let tomorrow;
+let tomorrowFootyStats;
+let yesterday;
+let yesterdayFootyStats;
+let lastSaturday;
+let lastSaturdayFootyStats;
+let historic;
+let historicFootyStats;
+let tomorrowsDate;
+let yesterdaysDate;
+let saturdayDate;
+let historicDate;
+
 (async function getLeagueList() {
   let leagueList;
 
-  console.log(process.env.REACT_APP_EXPRESS_SERVER)
-  
+
+  async function calculateDate(dateString) {
+    const day = dateString.getDate();
+    const month = dateString.getMonth() + 1;
+    const year = dateString.getFullYear();
+
+    return [`${month}${day}${year}`, `${year}-${month}-${day}`];
+  }
+
+  [today, todayFootyStats] = await calculateDate(new Date());
+
+  tomorrowsDate = new Date();
+  tomorrowsDate.setDate(tomorrowsDate.getDate() + 1);
+  [tomorrow, tomorrowFootyStats] = await calculateDate(tomorrowsDate);
+
+  yesterdaysDate = new Date();
+  yesterdaysDate.setDate(yesterdaysDate.getDate() - 1);
+  [yesterday, yesterdayFootyStats] = await calculateDate(yesterdaysDate);
+
+  saturdayDate = new Date();
+  saturdayDate.setDate(
+    saturdayDate.getDate() - ((saturdayDate.getDay() + 6) % 7)
+  );
+  saturdayDate.setDate(saturdayDate.getDate() - 2);
+  [lastSaturday, lastSaturdayFootyStats] = await calculateDate(saturdayDate);
+
+  historicDate = new Date();
+  historicDate.setDate(
+    historicDate.getDate() - ((historicDate.getDay() + 6) % 7)
+  );
+  historicDate.setDate(historicDate.getDate() - 9);
+  [historic, historicFootyStats] = await calculateDate(historicDate);
+
+  console.log(today);
+  console.log(tomorrow);
+  console.log(yesterday);
+  console.log(lastSaturday);
+  console.log(historic);
+
+
+  console.log(process.env.REACT_APP_EXPRESS_SERVER);
 
   leagueList = await fetch(`${process.env.REACT_APP_EXPRESS_SERVER}leagueList`);
 
@@ -154,6 +209,8 @@ const leagueOrder = [
   //   document.getElementById("RadioText")
   // );
 
+  
+
   ReactDOM.render(
     <div className="FixtureButtons">
       <div className="historicResults">
@@ -164,8 +221,9 @@ const leagueOrder = [
             fixtureList.push(
               await generateFixtures(
                 "lastSaturday",
-                selectedOption,
-                selectedOdds
+                lastSaturday,
+                selectedOdds,
+                lastSaturdayFootyStats
               )
             )
           }
@@ -175,7 +233,7 @@ const leagueOrder = [
           className="HistoricFixturesButtonRight"
           onClickEvent={async () =>
             fixtureList.push(
-              await generateFixtures("historic", selectedOption, selectedOdds)
+              await generateFixtures("historic", historic, selectedOdds, historicFootyStats)
             )
           }
         />
@@ -187,8 +245,9 @@ const leagueOrder = [
           fixtureList.push(
             await generateFixtures(
               "yesterdaysFixtures",
-              selectedOption,
-              selectedOdds
+              yesterday,
+              selectedOdds,
+              yesterdayFootyStats
             )
           )
         }
@@ -200,8 +259,9 @@ const leagueOrder = [
           fixtureList.push(
             await generateFixtures(
               "todaysFixtures",
-              selectedOption,
-              selectedOdds
+              today,
+              selectedOdds,
+              todayFootyStats
             )
           )
         }
@@ -213,8 +273,9 @@ const leagueOrder = [
           fixtureList.push(
             await generateFixtures(
               "tomorrowsFixtures",
-              selectedOption,
-              selectedOdds
+              tomorrow,
+              selectedOdds,
+              tomorrowFootyStats
             )
           )
         }
