@@ -1328,6 +1328,7 @@ export async function generateFixtures(
   }
 
   if (!leaguesStored) {
+    console.log("POSTING LEAGUE")
     await fetch(`${process.env.REACT_APP_EXPRESS_SERVER}leagues/${date}`, {
       method: "POST",
       headers: {
