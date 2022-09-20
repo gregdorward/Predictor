@@ -1,4 +1,4 @@
-import React from "react";
+import React, { Fragment } from "react";
 import ReactDOM from "react-dom";
 import { orderedLeagues } from "../App";
 import { getForm } from "./getForm";
@@ -697,9 +697,11 @@ export async function generateFixtures(
           awayAverageGoals = AwayAverageGoals;
           awayAverageConceded = AwayAverageConceded;
         } else if (WDLinLeagueHome.length >= 6) {
+          lastThreeFormHome = WDLinLeagueHome.slice(-3);
           lastFiveFormHome = WDLinLeagueHome.slice(-5);
           lastSixFormHome = WDLinLeagueHome.slice(-6);
           lastTenFormHome = Array.from(homeFormString10);
+          lastThreeFormAway = WDLinLeagueAway.slice(-3);
           lastFiveFormAway = WDLinLeagueAway.slice(-5);
           lastSixFormAway = WDLinLeagueAway.slice(-6);
           lastTenFormAway = Array.from(awayFormString10);
@@ -710,9 +712,11 @@ export async function generateFixtures(
           awayAverageGoals = AwayAverageGoals;
           awayAverageConceded = AwayAverageConceded;
         } else if (WDLinLeagueHome.length >= 5) {
+          lastThreeFormHome = WDLinLeagueHome.slice(-3);
           lastFiveFormHome = WDLinLeagueHome.slice(-5);
           lastSixFormHome = Array.from(homeFormString6);
           lastTenFormHome = Array.from(homeFormString10);
+          lastThreeFormAway = WDLinLeagueAway.slice(-3);
           lastFiveFormAway = WDLinLeagueAway.slice(-5);
           lastSixFormAway = Array.from(awayFormString6);
           lastTenFormAway = Array.from(awayFormString10);
@@ -1299,10 +1303,13 @@ export async function generateFixtures(
     }
     // }
     ReactDOM.render(
-      <Button
-        text={"Generate predictions"}
-        onClickEvent={() => getScorePrediction(day)}
-      />,
+      <Fragment>
+        <Button
+          text={"Generate predictions"}
+          onClickEvent={() => getScorePrediction(day)}
+        />
+        <div className="Version">Prediction engine v1.01</div>
+      </Fragment>,
       document.getElementById("GeneratePredictions")
     );
   }
@@ -1328,7 +1335,7 @@ export async function generateFixtures(
   }
 
   if (!leaguesStored) {
-    console.log("POSTING LEAGUE")
+    console.log("POSTING LEAGUE");
     await fetch(`${process.env.REACT_APP_EXPRESS_SERVER}leagues/${date}`, {
       method: "POST",
       headers: {

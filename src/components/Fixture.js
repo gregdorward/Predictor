@@ -8,8 +8,6 @@ let resultValue;
 var count
 var setCount
 
-const text =
-  "XG Tipping formulates predictions based on recent form data ranging from points per game to each teams attacking potency\n Expected Goals in previous matches are used to determine whether teams might be over or underperforming and predictions are weighted as such\n Once all fixtures have loaded, click on “Get Predictions”\n Predictions are displayed on the right and the results on the left\n Click on an individual fixture for detailed stats for both teams.";
 
   function toggle(bool) {
     count = !bool;
@@ -254,19 +252,10 @@ const SingleFixture = ({ fixture, count }) => (
   </div>
 );
 
-let newText = text.split("\n").map((i) => {
-  return <p>{i}</p>;
-});
+
 
 const List = ({ fixtures }) => (
   <div>
-    <Fragment>
-      <Collapsable
-        className={"HowToUse"}
-        buttonText={"Show / Hide help"}
-        text={newText}
-      />
-    </Fragment>
     <div id="Headers"></div>
     <ul className="FixtureList" id="FixtureList">
       {fixtures.map((fixture, i) => (

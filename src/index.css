@@ -380,6 +380,10 @@ p {
   padding: 0.75em;
   padding-top: 2em;
   font-weight: bolder;
+  max-width: 60%;
+  margin-left: auto;
+  margin-right: auto;
+
 }
 
 .Explainer{
@@ -387,6 +391,10 @@ p {
   padding-top: 0.2em;
   padding-left: 3em;
   padding-right: 3em;
+}
+
+.Version {
+  font-size: 0.75em;
 }
 
 .bitcoin{

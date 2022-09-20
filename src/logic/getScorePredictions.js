@@ -553,17 +553,21 @@ export async function compareTeams(homeForm, awayForm, match) {
   let awayPoints = 0;
   let tooCloseToCallCount;
 
+
+  let overOrUnderperformingDiff = await diff(homeForm.overUnderAchievingSum, awayForm.overUnderAchievingSum)
+
+
   if (
-    homeForm.overUnderAchievingSum < -0.75 ||
-    awayForm.overUnderAchievingSum > 0.75 ||
-    homeForm.overUnderAchievingSum > 0.75 ||
-    awayForm.overUnderAchievingSum < -0.75
+    overOrUnderperformingDiff > 0.5 ||
+    overOrUnderperformingDiff < -0.5
   ) {
+
     [overUnderAchievingSumComparison, tooCloseToCallCount] = await compareStat(
       parseFloat(homeForm.overUnderAchievingSum + 3),
       parseFloat(awayForm.overUnderAchievingSum + 3)
     );
-    tooCloseToCall = tooCloseToCall + tooCloseToCallCount;
+    // tooCloseToCall = tooCloseToCall + tooCloseToCallCount;
+    
   } else {
     overUnderAchievingSumComparison = 0;
   }
@@ -611,19 +615,19 @@ export async function compareTeams(homeForm, awayForm, match) {
 
   tooCloseToCall = tooCloseToCall + tooCloseToCallCount;
 
-  if (
-    homeForm.overUnderAchievingSum < -0.5 ||
-    awayForm.overUnderAchievingSum > 0.5 ||
-    homeForm.overUnderAchievingSum > 0.5 ||
-    awayForm.overUnderAchievingSum < -0.5
-  ) {
-    XGdifferentialComparison = 0;
-  } else {
+  // if (
+  //   homeForm.overUnderAchievingSum < -0.5 ||
+  //   awayForm.overUnderAchievingSum > 0.5 ||
+  //   homeForm.overUnderAchievingSum > 0.5 ||
+  //   awayForm.overUnderAchievingSum < -0.5
+  // ) {
+  //   XGdifferentialComparison = 0;
+  // } else {
     [XGdifferentialComparison, tooCloseToCallCount] = await compareStat(
       homeForm.XGdifferential,
       awayForm.XGdifferential
     );
-  }
+  // }
 
   tooCloseToCall = tooCloseToCall + tooCloseToCallCount;
 
@@ -811,7 +815,7 @@ export async function compareTeams(homeForm, awayForm, match) {
     winPercentageComparison * 1 +
     lossPercentageComparison * 1 +
     homeOrAwayAverageComparison * 1 +
-    overUnderAchievingSumComparison * 10 +
+    overUnderAchievingSumComparison * Math.abs(overOrUnderperformingDiff * 25) +
     goalDiffComparison * 2 +
     goalDiffHOrAComparison * 1;
 
@@ -840,47 +844,29 @@ export async function compareTeams(homeForm, awayForm, match) {
     calculation = calculation * 2;
   }
 
-  // if (calculation > 0) {
-  //   switch (true) {
-  //     case homeForm.last2Points <= 1:
-  //       calculation = calculation / 10;
-  //       break;
-  //     case homeForm.last2Points === 2:
-  //       calculation = calculation / 5;
-  //       break;
-  //     case homeForm.homeOrAwayAverage < 1:
-  //       calculation = calculation / 5;
-  //       break;
-  //     case awayForm.homeOrAwayAverage > 2.5:
-  //       calculation = calculation / 2.5;
-  //       break;
-  //     case awayForm.lastGame === "W":
-  //       calculation = calculation / 5;
-  //       break;
-  //     default:
-  //       break;
-  //   }
-  // } else if (calculation < 0) {
-  //   switch (true) {
-  //     case awayForm.last2Points <= 1:
-  //       calculation = calculation / 10;
-  //       break;
-  //     case awayForm.last2Points === 2:
-  //       calculation = calculation / 5;
-  //       break;
-  //     case awayForm.homeOrAwayAverage < 1:
-  //       calculation = calculation / 5;
-  //       break;
-  //     case homeForm.homeOrAwayAverage > 2.5:
-  //       calculation = calculation / 2.5;
-  //       break;
-  //     case homeForm.lastGame === "W":
-  //       calculation = calculation / 5;
-  //       break;
-  //     default:
-  //       break;
-  //   }
-  // }
+ console.log(match.game)
+ console.log(`calculation original ${calculation}`)
+ console.log(`altered by ${Math.abs(overOrUnderperformingDiff * 25)} *`)
+
+  if (calculation > 0) {
+    if (
+      homeForm.lastGame === "L" ||
+      homeForm.last2Points < 3 ||
+      awayForm.last2Points > 3 ||
+      match.XGdifferentialValueRaw < 0
+    ) {
+      calculation = calculation / 2;
+    } 
+  } else if (calculation < 0) {
+    if (
+      awayForm.lastGame === "L" ||
+      awayForm.last2Points < 3 ||
+      homeForm.last2Points > 3 ||
+      match.XGdifferentialValueRaw > 0
+    ) {
+      calculation = calculation / 2;
+    } 
+  }
 
   if (tooCloseToCall >= 1) {
     calculation = calculation / tooCloseToCall;
@@ -2191,7 +2177,7 @@ async function renderTips() {
             text={
               <ul className="BestPredictions" id="BestPredictions">
                 <div className="BestPredictionsExplainer">
-                  No games fit the criteria (try tapping the + button)
+                  No games fit the criteria
                 </div>
                 <div className="AccumulatedOdds">{`Accumulator odds ~ : ${
                   Math.round(accumulatedOdds) - 1

@@ -1,9 +1,10 @@
-import React from "react";
+import React, {Fragment} from "react";
 import ReactDOM from "react-dom";
 import Header from "./components/Header";
 import { Button } from "./components/Button";
 import OddsRadio from "./components/OddsRadio";
 import { selectedOdds } from "./components/OddsRadio";
+import Collapsable from "./components/CollapsableElement";
 import {
   FacebookShareButton,
   FacebookIcon,
@@ -71,7 +72,6 @@ const leagueOrder = [
   7956, //National league North and South 22/23
 ];
 
-let date = new Date();
 let today;
 let todayFootyStats;
 let tomorrow;
@@ -134,14 +134,6 @@ let historicDate;
 
   leagueList = await fetch(`${process.env.REACT_APP_EXPRESS_SERVER}leagueList`);
 
-  // ReactDOM.render(
-  //   <div className="LoadingText">
-  //     Loading form data. This might take a while if you're the first user
-  //     today...
-  //   </div>,
-  //   document.getElementById("RadioButtons")
-  // );
-
   let leagueArray;
   await leagueList.json().then((leagues) => {
     leagueArray = Array.from(leagues.data);
@@ -176,40 +168,21 @@ let historicDate;
     }
 
     //leagues ordered by id
-
     orderedLeagues = await mapOrder(availableLeagues, leagueOrder, "id");
-  }
+  }  
 
-  // ReactDOM.render(
-  //   <div className="LastXGames">
-  //     <Radio
-  //       value="5"
-  //       label="form based on last 5 games"
-  //       className="FormRadio"
-  //     />
-  //     <Radio
-  //       value="6"
-  //       label="form based on last 6 games"
-  //       className="FormRadio"
-  //     />
-  //     <Radio
-  //       value="10"
-  //       label="form based on last 10 games"
-  //       className="FormRadio"
-  //     />
-  //   </div>,
-  //   document.getElementById("RadioButtons")
-  // );
+  const text =
+  "Select a day you would like to retrieve fixtures for from the options above\n A list of games will be returned once the data has loaded\n Once all fixtures have loaded, click on “Get Predictions” to see XGTipping's forecasted outcomes for every game\n If a game has completed, the predictions is displayed on the right and the actual result on the left\n Each individual fixture is tappable/clickable. By doing so, you can access a range of detailed stats, from comparative charts, granular performance measures to previous meetings.\n All games are subject to the same automated prediction algorithm with the outcome being a score prediction. Factors that determine the tip include the following, amongst others:\n - Goal differentials\n - Expected goal differentials \n - Attack/Defence performance\n - Form trends over time\n - Home/Away records\n - WDL records\n - Points per game \n - A range of other comparative factors\n  –\n";
 
-  // ReactDOM.render(
-  //   <TextBlock
-  //     text="Select how many games you would like to fetch form data for"
-  //     className="RadioText"
-  //   />,
-  //   document.getElementById("RadioText")
-  // );
+  const text2 = 
+  "A range of tools are available should you wish to use them\n Build a multi - Use the '+' or '-' buttons to add or remove a game deemed to be one of XGTIpping's highest confidence tips from the day\n Exotic of the day: A pre-built exotic multi comprising of XGTipping's highest confidence tips\n BTTS games: Games where both teams to score is deemed a likely outcome\n Over 2.5 goals tips: Games where over 2.5 goals are most likely to be scored\n XG tips: Comprises only games where the expected goal differentials between each team are at their greatest. We believe this shows a true disparity in the form of the two opposing teams\n Tap the 'How to use' option to hide this text"
 
-  
+
+  let textJoined = text.concat(text2)
+
+  let newText = textJoined.split("\n").map((i) => {
+    return <p>{i}</p>;
+  });
 
   ReactDOM.render(
     <div className="FixtureButtons">
@@ -290,6 +263,16 @@ let historicDate;
     </div>,
     document.getElementById("Checkbox")
   );
+  ReactDOM.render(
+  <Fragment>
+    <Collapsable
+      className={"HowToUse"}
+      buttonText={"How to use"}
+      text={newText}
+    />
+  </Fragment>,
+  document.getElementById("XGDiff")
+  )
 
   // ReactDOM.render(
   //   <div className="Explainer">
@@ -486,6 +469,9 @@ function App() {
             <li className="League">MLS</li>
             <li className="League">Primeira Liga</li>
           </ul>
+          <div className="WelcomeText">
+            Predictions are based off a range of comparison points, from XG differentials to more granular stats within a team's last 10 games. All tips are fully automated and are based the form at the time, using the latest prediction algorithm.
+          </div>
           <div className="DataText">Raw data from</div>
           <a
             className="DataLink"
