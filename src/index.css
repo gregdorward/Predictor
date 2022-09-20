@@ -529,10 +529,10 @@ p {
 .individualFixtureGap {
   display: flex;
   flex-basis: 100%;
-  background-color: #1D3549;
+  background-color: #ffffff;
   align-items: center;
   align-content: center;
-  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 #294A66;
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 2px 4px 0 #294A66;
   margin-bottom: 0.5em;
   color: #030061;  
   /* border: 1em; */

@@ -556,6 +556,11 @@ export async function compareTeams(homeForm, awayForm, match) {
 
   let overOrUnderperformingDiff = await diff(homeForm.overUnderAchievingSum, awayForm.overUnderAchievingSum)
 
+  if(overOrUnderperformingDiff < -0.5 || overOrUnderperformingDiff > 0.5){
+    match.overOrUnderperformingDiff = true
+  } else {
+    match.overOrUnderperformingDiff = false
+  }
 
   if (
     overOrUnderperformingDiff > 0.5 ||
@@ -843,10 +848,6 @@ export async function compareTeams(homeForm, awayForm, match) {
   } else {
     calculation = calculation * 2;
   }
-
- console.log(match.game)
- console.log(`calculation original ${calculation}`)
- console.log(`altered by ${Math.abs(overOrUnderperformingDiff * 25)} *`)
 
   if (calculation > 0) {
     if (
@@ -1237,6 +1238,8 @@ export async function calculateScore(match, index, divider) {
 
     [teamComparisonScore] = await compareTeams(formHome, formAway, match);
     teamComparisonScore = teamComparisonScore * 0.5;
+
+    console.log(match)
 
     if (teamComparisonScore > 0.7) {
       teamComparisonScore = 0.7;

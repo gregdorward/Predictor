@@ -169,13 +169,14 @@ function GetDivider(fixture) {
   }
 }
 
-function getStyle(pointsAverageDiffBool) {
-if(pointsAverageDiffBool === true){
-  return "individualFixtureGap"
-} else {
-  return "individualFixture";
-}
-}
+// function getStyle(overUnderAchievingGap) {
+//   console.log(overUnderAchievingGap)
+// if(overUnderAchievingGap === true){
+//   return "individualFixtureGap"
+// } else {
+//   return "individualFixture";
+// }
+// }
 
 function renderLeagueName(fixture) {
   let name = fixture.leagueName;
@@ -206,7 +207,7 @@ const SingleFixture = ({ fixture, count }) => (
   <div key={fixture.game}>
     {renderLeagueName(fixture)}
     <li
-      className={getStyle(fixture.pointsAverageDiff)}
+      className={"individualFixture"}
       key={fixture.id}
       onMouseDown={() => count = toggle(count)}
       onClick={() => createStatsDiv(fixture, count)}
