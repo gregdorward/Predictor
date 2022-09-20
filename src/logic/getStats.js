@@ -446,7 +446,7 @@ export async function createStatsDiv(game, displayBool) {
     let awayFormTrend = [
       awayThreeGameAverage.toFixed(2),
       awayFiveGameAverage.toFixed(2),
-      homeSixGameAverage.toFixed(2),
+      awaySixGameAverage.toFixed(2),
     ];
 
     let formTextStringHome
