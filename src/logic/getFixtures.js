@@ -71,8 +71,11 @@ export async function generateTables(a, leagueIdArray) {
   // leagueIdArray = [];
   tableArray = [];
   let i = 0;
+  console.log(leagueArray)
+
   leagueArray.forEach(function (league) {
     let currentLeagueId = leagueIdArray[i];
+    console.log(currentLeagueId)
     i++;
     leagueInstance = [];
     //Skip MLS which has a weird format
@@ -273,7 +276,6 @@ export async function generateFixtures(
   selectedOdds,
   footyStatsFormattedDate
 ) {
-  console.log(date);
 
   //cleanup if different day is selected
   ReactDOM.render(<div></div>, document.getElementById("GeneratePredictions"));
@@ -297,7 +299,6 @@ export async function generateFixtures(
 
   ReactDOM.render(<div></div>, document.getElementById("FixtureContainer"));
 
-  console.log(`matches url: ${url}`);
   fixtureResponse = await fetch(url);
 
   await fixtureResponse.json().then((fixtures) => {
@@ -310,7 +311,6 @@ export async function generateFixtures(
   var isFormStored;
   var isStoredLocally;
   var leaguesStored = false;
-  console.log(`${process.env.REACT_APP_EXPRESS_SERVER}form/${date}`);
   let storedForm = await fetch(formUrl);
   if (storedForm.status === 201 || storedForm.status === 200) {
     await storedForm.json().then((form) => {
@@ -1308,13 +1308,11 @@ export async function generateFixtures(
           text={"Generate predictions"}
           onClickEvent={() => getScorePrediction(day)}
         />
-        <div className="Version">Prediction engine v1.01</div>
+        <div className="Version">Prediction engine v2.00</div>
       </Fragment>,
       document.getElementById("GeneratePredictions")
     );
   }
-
-  console.log(matches);
 
   ReactDOM.render(
     <div>
