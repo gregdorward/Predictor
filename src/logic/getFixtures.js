@@ -158,6 +158,7 @@ export async function renderTable(index) {
     `${process.env.REACT_APP_EXPRESS_SERVER}leagueStats/${league[0].LeagueID}`
   );
   await leagueStatistics.json().then((stats) => {
+    console.log(stats)
     statistics = stats.data;
   });
 
@@ -339,6 +340,7 @@ export async function generateFixtures(
   }
 
   var leaguePositions = [];
+  leagueArray = []
   if (league.status === 200) {
     await league.json().then((leagues) => {
       leagueArray = Array.from(leagues.leagueArray);
@@ -522,8 +524,10 @@ export async function generateFixtures(
       if (orderedLeagues[i].name !== previousLeagueName) {
         match.leagueName = orderedLeagues[i].name;
         match.leagueIndex = i;
+        match.leagueID = leagueID
       } else {
         match.leagueName = null;
+        match.leagueID = leagueID
       }
       match.id = fixture.id;
       match.competition_id = fixture.competition_id;
@@ -776,10 +780,13 @@ export async function generateFixtures(
           awayPrefixAwayTable = "";
         }
 
+        console.log(match)
+
         allForm.push({
           id: match.id,
           teamIDHome: match.homeId,
           teamIDAway: match.awayId,
+          leagueId: leagueID,
           home: {
             teamName: match.homeTeam,
             0: {
@@ -842,17 +849,12 @@ export async function generateFixtures(
               BTTSPercentage: parseInt(
                 form[0].data[0].stats.seasonBTTSPercentage_home
               ),
-              lastThreeForm: lastThreeFormHome,
-              LastFiveForm: lastFiveFormHome,
-              LastSixForm: lastSixFormHome,
-              LastTenForm: lastTenFormHome,
               LeagueOrAll: leagueOrAll,
               LeaguePosition: `${teamPositionHome}${homePrefix}`,
               homeRawPosition: homeTeaminLeague.rawPosition
                 ? homeTeaminLeague.rawPosition
                 : 0,
               homeTeamHomePositionRaw: teamPositionHomeTable,
-              SeasonPPG: homeSeasonPPG,
               LeagueAverageGoals: homeAverageGoals,
               LeagueAverageConceded: homeAverageConceded,
             },
@@ -916,17 +918,12 @@ export async function generateFixtures(
               BTTSPercentage: parseInt(
                 form[0].data[1].stats.seasonBTTSPercentage_home
               ),
-              lastThreeForm: lastThreeFormHome,
-              LastFiveForm: lastFiveFormHome,
-              LastSixForm: lastSixFormHome,
-              LastTenForm: lastTenFormHome,
               LeagueOrAll: leagueOrAll,
               LeaguePosition: `${teamPositionHome}${homePrefix}`,
               homeRawPosition: homeTeaminLeague.rawPosition
                 ? homeTeaminLeague.rawPosition
                 : 0,
               homeTeamHomePositionRaw: teamPositionHomeTable,
-              SeasonPPG: homeSeasonPPG,
               LeagueAverageGoals: homeAverageGoals,
               LeagueAverageConceded: homeAverageConceded,
             },
@@ -1082,17 +1079,12 @@ export async function generateFixtures(
               BTTSPercentage: parseInt(
                 form[1].data[0].stats.seasonBTTSPercentage_away
               ),
-              lastThreeForm: lastThreeFormAway,
-              LastFiveForm: lastFiveFormAway,
-              LastSixForm: lastSixFormAway,
-              LastTenForm: lastTenFormAway,
               LeagueOrAll: leagueOrAll,
               LeaguePosition: `${teamPositionAway}${awayPrefix}`,
               awayRawPosition: awayTeaminLeague.rawPosition
                 ? awayTeaminLeague.rawPosition
                 : 0,
               awayTeamAwayPositionRaw: teamPositionAwayTable,
-              SeasonPPG: awaySeasonPPG,
               LeagueAverageGoals: awayAverageGoals,
               LeagueAverageConceded: awayAverageConceded,
             },
@@ -1151,17 +1143,12 @@ export async function generateFixtures(
               BTTSPercentage: parseInt(
                 form[1].data[1].stats.seasonBTTSPercentage_away
               ),
-              lastThreeForm: lastThreeFormAway,
-              LastFiveForm: lastFiveFormAway,
-              LastSixForm: lastSixFormAway,
-              LastTenForm: lastTenFormAway,
               LeagueOrAll: leagueOrAll,
               LeaguePosition: `${teamPositionAway}${awayPrefix}`,
               awayRawPosition: awayTeaminLeague.rawPosition
                 ? awayTeaminLeague.rawPosition
                 : 0,
               awayTeamAwayPositionRaw: teamPositionAwayTable,
-              SeasonPPG: awaySeasonPPG,
               LeagueAverageGoals: awayAverageGoals,
               LeagueAverageConceded: awayAverageConceded,
             },

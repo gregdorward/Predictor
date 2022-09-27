@@ -12,7 +12,6 @@ import { Chart, RadarChart } from "../components/Chart";
 
 export async function createStatsDiv(game, displayBool) {
   if (game.status !== "void") {
-
     // takes the displayBool boolean from the fixture onClick and sets the styling of the stats div from there
     function styling(testBool) {
       let bool = testBool;
@@ -30,13 +29,111 @@ export async function createStatsDiv(game, displayBool) {
     let index = 2;
     let divider = 10;
 
-    let homeLastMatch
+    let homeLastMatch;
     let awayLastMatch;
     let gameStats = allForm.find((match) => match.id === game.id);
+    console.log(gameStats);
+    const gameArrayHome = [];
+    const gameArrayAway = [];
+
+    console.log(displayBool);
+    if (displayBool === true) {
+      let fixtures = await fetch(
+        `${process.env.REACT_APP_EXPRESS_SERVER}leagueFixtures/${gameStats.leagueId}`
+      );
+
+      await fixtures.json().then((matches) => {
+        const resultHome = matches.data.filter(
+          (game) =>
+            (game.homeID === gameStats.teamIDHome ||
+              game.awayID === gameStats.teamIDHome) &&
+            game.status === "complete"
+        );
+
+        for (let i = 0; i < resultHome.length; i++) {
+          let unixTimestamp = resultHome[i].date_unix;
+          let milliseconds = unixTimestamp * 1000;
+          let dateObject = new Date(milliseconds).toLocaleString("en-GB", {
+            timeZone: "UTC",
+          });
+
+          let won;
+          console.log(resultHome[i].winningTeam);
+          console.log(gameStats.teamIDHome);
+
+          if (resultHome[i].winningTeam === gameStats.teamIDHome) {
+            won = "W";
+          } else if (resultHome[i].winningTeam === -1) {
+            won = "D";
+          } else {
+            won = "L";
+          }
+
+          gameArrayHome.push({
+            id: resultHome[i].id,
+            date: dateObject,
+            homeTeam: resultHome[i].home_name,
+            homeGoals: resultHome[i].homeGoalCount,
+            homeXG: resultHome[i].team_a_xg,
+            homeOdds: resultHome[i].odds_ft_1,
+            awayTeam: resultHome[i].away_name,
+            awayGoals: resultHome[i].awayGoalCount,
+            awayXG: resultHome[i].team_b_xg,
+            awayOdds: resultHome[i].odds_ft_2,
+            won: won,
+          });
+        }
+        gameArrayHome.reverse();
+
+        const resultAway = matches.data.filter(
+          (game) =>
+            (game.homeID === gameStats.teamIDAway ||
+              game.awayID === gameStats.teamIDAway) &&
+            game.status === "complete"
+        );
+
+        for (let i = 0; i < resultAway.length; i++) {
+          let unixTimestamp = resultAway[i].date_unix;
+          let milliseconds = unixTimestamp * 1000;
+          let dateObject = new Date(milliseconds).toLocaleString("en-GB", {
+            timeZone: "UTC",
+          });
+
+          let won;
+          if (resultAway[i].winningTeam === gameStats.teamIDAway) {
+            won = "W";
+          } else if (resultAway[i].winningTeam === -1) {
+            won = "D";
+          } else {
+            won = "L";
+          }
+
+          gameArrayAway.push({
+            id: resultAway[i].id,
+            date: dateObject,
+            homeTeam: resultAway[i].home_name,
+            homeGoals: resultAway[i].homeGoalCount,
+            homeXG: resultAway[i].team_a_xg,
+            homeOdds: resultAway[i].odds_ft_1,
+            awayTeam: resultAway[i].away_name,
+            awayGoals: resultAway[i].awayGoalCount,
+            awayXG: resultAway[i].team_b_xg,
+            awayOdds: resultAway[i].odds_ft_2,
+            won: won,
+          });
+        }
+        gameArrayAway.reverse();
+        // fixturesArray = Array.from(matches.data);
+        // console.log(fixturesArray);
+        console.log(gameArrayHome);
+        console.log(gameArrayAway);
+      });
+    }
+
     let matchArray;
     let matchArrayAway;
 
-    if( displayBool === true){
+    if (displayBool === true) {
       homeLastMatch = await fetch(
         `${process.env.REACT_APP_EXPRESS_SERVER}matches/${gameStats.home[2].LastMatch}`
       );
@@ -51,13 +148,13 @@ export async function createStatsDiv(game, displayBool) {
           `${process.env.REACT_APP_EXPRESS_SERVER}matches/${gameStats.away[2].LastMatch}`
         );
 
-      await awayLastMatch.json().then((matches) => {
-        matchArrayAway = Array.from(matches.data);
-      });
-    }
-  } else {
-    matchArray = []
-    matchArrayAway = []
+        await awayLastMatch.json().then((matches) => {
+          matchArrayAway = Array.from(matches.data);
+        });
+      }
+    } else {
+      matchArray = [];
+      matchArrayAway = [];
     }
 
     const lastGameHome = matchArray.find(
@@ -130,7 +227,7 @@ export async function createStatsDiv(game, displayBool) {
 
     let time = game.time;
 
-    console.log(gameStats)
+    console.log(gameStats);
 
     gameStats.home[index].last3Points = getPointsFromLastX(
       gameStats.home[index].lastThreeForm
@@ -449,10 +546,10 @@ export async function createStatsDiv(game, displayBool) {
       awaySixGameAverage.toFixed(2),
     ];
 
-    let formTextStringHome
-    let formTextStringAway
+    let formTextStringHome;
+    let formTextStringAway;
 
-    if(displayBool === true){
+    if (displayBool === true && gameStats.home[2].LeagueOrAll === "League") {
       formTextStringHome = await GenerateFormSummary(
         gameStats.home[2],
         homeFormTrend,
@@ -464,11 +561,9 @@ export async function createStatsDiv(game, displayBool) {
         gameStats.away[0]
       );
     } else {
-      formTextStringHome = ""
-      formTextStringAway = ""
+      formTextStringHome = "";
+      formTextStringAway = "";
     }
-
-
 
     let homeLastGame = await getLastGameResult(
       gameStats.home[index].LastFiveForm[4]
@@ -516,7 +611,7 @@ export async function createStatsDiv(game, displayBool) {
 
     const formDataHome = [];
 
-    console.log(gameStats)
+    console.log(gameStats);
 
     formDataHome.push({
       name: game.homeTeam,
@@ -633,7 +728,10 @@ export async function createStatsDiv(game, displayBool) {
         </div>
         <div style={style}>
           <Div className="MatchTime" text={`Kick off: ${time} GMT`}></Div>
-          <Div text={`Last game`} className={"LastGameHeader"}></Div>
+          <Div
+            text={`Last league games (most recent first)`}
+            className={"LastGameHeader"}
+          ></Div>
         </div>
       </Fragment>,
       document.getElementById("stats" + homeTeam)
@@ -654,37 +752,48 @@ export async function createStatsDiv(game, displayBool) {
       game.awayTeamAwayPosition = "N/A";
     }
 
-    console.log(formDataHome)
+    const contentHome = gameArrayHome.slice(0, 6).map((game) => (
+      <div className={game.won}>
+        <div className="IndividualPreviousResultHome">
+          <div className="PastGameDateHome">{game.date}</div>
+          <div key={game.id} className="IndividualPreviousResultGameHome">
+            <li>
+            (XG:{game.homeXG}) {game.homeTeam}{" "}
+              <span className="GoalTotal">{game.homeGoals}</span>
+            </li>
+            <li>
+            (XG:{game.awayXG}) {game.awayTeam}{" "}
+              <span className="GoalTotal">{game.awayGoals}</span>
+            </li>
+          </div>
+        </div>
+      </div>
+    ));
+
+    const contentAway = gameArrayAway.slice(0, 6).map((game) => (
+      <div className={game.won}>
+        <div className="IndividualPreviousResultAway">
+          <div className="PastGameDateAway">{game.date}</div>
+          <div
+            key={game.id + game.id}
+            className="IndividualPreviousResultGameAway"
+          >
+            <li>
+              <span className="GoalTotal">{game.homeGoals}</span>{" "}
+              {game.homeTeam} (XG:{game.homeXG})
+            </li>
+            <li>
+              <span className="GoalTotal">{game.awayGoals}</span>{" "}
+              {game.awayTeam} (XG:{game.awayXG})
+            </li>
+          </div>
+        </div>
+      </div>
+    ));
 
     ReactDOM.render(
       <ul style={style}>
-        <div className="PreviousStadiumHome">{homeStadium}</div>
-        <a
-          href={`https://footystats.org${lastGameHomeLink}`}
-          target="_blank"
-          rel="noreferrer"
-          className="PreviousMatchLink"
-        >
-          <div className="HomePreviousGame">
-            <CreateBadge
-              image={lastGameHomeHomeBadge}
-              ClassName="BadgePrevious"
-              alt="Home team badge"
-              flexShrink={5}
-            />
-            {lastGameHomeResultPart1}
-          </div>
-
-          <div className="HomePreviousGame">
-            <CreateBadge
-              image={lastGameHomeAwayBadge}
-              ClassName="BadgePrevious"
-              alt="Away team badge"
-              flexShrink={5}
-            />
-            <div>{lastGameHomeResultPart2}</div>
-          </div>
-        </a>
+        <ul className="PreviousResultsHome">{contentHome}</ul>
         <Stats
           style={style}
           homeOrAway="Home"
@@ -742,33 +851,7 @@ export async function createStatsDiv(game, displayBool) {
 
     ReactDOM.render(
       <ul style={style}>
-        <div className="PreviousStadiumAway">{awayStadium}</div>
-        <a
-          href={`https://footystats.org${lastGameAwayLink}`}
-          target="_blank"
-          rel="noreferrer"
-          className="PreviousMatchLink"
-        >
-          <div className="AwayPreviousGame">
-            <CreateBadge
-              image={lastGameAwayHomeBadge}
-              ClassName="BadgePrevious"
-              alt="Home team badge"
-              flexShrink={5}
-            />
-            {lastGameAwayResultPart1}
-          </div>
-
-          <div className="AwayPreviousGame">
-            <CreateBadge
-              image={lastGameAwayAwayBadge}
-              ClassName="BadgePrevious"
-              alt="Away team badge"
-              flexShrink={5}
-            />
-            <div>{lastGameAwayResultPart2}</div>
-          </div>
-        </a>
+        <ul className="PreviousResultsAway">{contentAway}</ul>
         <Stats
           style={style}
           homeOrAway="Away"

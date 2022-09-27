@@ -17,14 +17,14 @@ function Stats(props) {
     return (
       <Fragment>
         <ul className={props.className} style={props.style}>
-          <li className="FormHeader">{`${props.LeagueOrAll} Form (most recent on right)`}</li>
+          {/* <li className="FormHeader">{`${props.LeagueOrAll} Form (most recent on right)`}</li>
           <li key={`last5`} className="Form">
             <span className={styleForm(props.last5[0])}>{props.last5[0]}</span>
             <span className={styleForm(props.last5[1])}>{props.last5[1]}</span>
             <span className={styleForm(props.last5[2])}>{props.last5[2]}</span>
             <span className={styleForm(props.last5[3])}>{props.last5[3]}</span>
             <span className={styleForm(props.last5[4])}>{props.last5[4]}</span>
-          </li>
+          </li> */}
           <li className="FormSummaryHome">{props.FormTextString}</li>
           <li className="FormHeader">
             All {props.homeOrAway} form (most recent on right)
@@ -209,14 +209,14 @@ function Stats(props) {
     return (
       <Fragment>
         <ul className={props.className} style={props.style}>
-          <li className="FormHeader">{`${props.LeagueOrAll} Form (most recent on right)`}</li>
+          {/* <li className="FormHeader">{`${props.LeagueOrAll} Form (most recent on right)`}</li>
           <li key="last5">
             <span className={styleForm(props.last5[0])}>{props.last5[0]}</span>
             <span className={styleForm(props.last5[1])}>{props.last5[1]}</span>
             <span className={styleForm(props.last5[2])}>{props.last5[2]}</span>
             <span className={styleForm(props.last5[3])}>{props.last5[3]}</span>
             <span className={styleForm(props.last5[4])}>{props.last5[4]}</span>
-          </li>
+          </li> */}
           <li className="FormSummaryHome">{props.FormTextString}</li>
           <li
             key="TeamScored"

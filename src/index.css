@@ -130,7 +130,7 @@
     display: flex;
     flex-direction: column;
     flex-basis: 100%;
-    font-weight: 900;
+    /* font-weight: 900; */
 
     align-content: center;
   }
@@ -538,6 +538,11 @@ p {
   /* border: 1em; */
 }
 
+.FixtureSpacing {
+  padding-top: 0.5em;
+  padding-bottom: 0.5em;
+}
+
 .BTTSFixture {
   display: flex;
   height: 2em;
@@ -898,14 +903,105 @@ p {
   order: 2;
 }
 
+.IndividualPreviousResultHome{
+  padding-top: 0.5em;
+  padding-bottom: 0.5em;
+  height: 8em;
+}
+
+.IndividualPreviousResultGameHome{
+  align-items: center;
+  align-content: center;
+  color: black;
+  padding-top: 0.5em;
+  padding-bottom: 0.5em;
+  padding-right: 0.5em;
+  text-align: right;
+  justify-content: flex-end;
+  flex-wrap: wrap;
+}
+
+.IndividualPreviousResultAway{
+  padding-top: 0.5em;
+  padding-bottom: 0.5em;
+  height: 8em;
+}
+
+.IndividualPreviousResultGameAway{
+  align-items: center;
+  align-content: center;
+  color: black;
+  padding-top: 0.5em;
+  padding-bottom: 0.5em;
+  padding-left: 0.5em;
+  text-align: left;
+  justify-content: flex-start;
+  flex-wrap: wrap;
+}
+
+.PastGameDateHome{
+  text-align: right;
+  padding-right: 0.5em;
+  padding-top: 0.25em;
+}
+
+.PastGameDateAway{
+  text-align: left;
+  padding-left: 0.5em;
+  padding-top: 0.25em;
+}
+
+.GameWon{
+  color: #01a501;
+  padding-bottom: 1em;
+}
+
+.GameLost{
+  color: #bf1000;
+  padding-bottom: 1em;
+  font-weight: 200;
+}
+
+.GameDrawn{
+  padding-bottom: 1em;
+}
+
+.PreviousResultsHome{
+  display: flex;
+  flex-direction: column;
+  height: auto;
+  line-height: 2em;
+  padding: 1em;
+  padding-right: 0.25em;
+  padding-left: 0.25em;
+  justify-content: center;
+  color: black;
+  max-width: 20em;
+  margin-left: auto;
+}
+
+.PreviousResultsAway{
+  display: flex;
+  flex-direction: column;
+  height: auto;
+  line-height: 2em;
+  padding: 1em;
+  padding-left: 0.25em;
+  padding-right: 0.25em;
+  justify-content: center;
+  color: black;
+  max-width: 20em;
+  margin-right: auto;
+}
+
 .HomePreviousGame{
   display: flex;
   height: 1.5em;
   line-height: 1.5em;
   padding: 0.5em;
-  justify-content: center;
+  /* justify-content: center; */
   color: black;
-  max-width: 250px;
+  max-width: 45%;
   margin-left: auto;
 }
 
@@ -1252,6 +1348,31 @@ li.FormHeader {
   font-weight: 700;
 }
 
+.W {
+  background-color: rgba(22, 165, 22, 0.094);
+  /* padding-left: 7px;
+  padding-right: 7px; */
+}
+
+.L {
+  background-color: #970d001d;
+}
+
+.D {
+  background-color: rgba(85, 85, 85, 0.076);
+}
+
+.GoalTotal{
+  background-color: #030061;
+  color: white;
+  padding-left: 0.4em;
+  padding-right: 0.4em;
+  padding-top: 0.1em;
+  padding-bottom: 0.1em;
+  margin-left: 0.2em;
+  margin-right: 0.2em;
+
+}
 
 .winLeague {
   background-color: rgb(14, 143, 14);
