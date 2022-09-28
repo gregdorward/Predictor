@@ -89,6 +89,8 @@ export async function createStatsDiv(game, displayBool) {
             awayRed: resultHome[i].team_b_red_cards,
             homePossession: resultHome[i].team_a_possession,
             awayPossession: resultHome[i].team_b_possession,
+            homeDangerousAttacks: resultHome[i].team_a_dangerous_attacks,
+            awayDangerousAttacks: resultHome[i].team_b_dangerous_attacks
           });
         }
         gameArrayHome.reverse();
@@ -136,6 +138,8 @@ export async function createStatsDiv(game, displayBool) {
             awayRed: resultAway[i].team_b_red_cards,
             homePossession: resultAway[i].team_a_possession,
             awayPossession: resultAway[i].team_b_possession,
+            homeDangerousAttacks: resultAway[i].team_a_dangerous_attacks,
+            awayDangerousAttacks: resultAway[i].team_b_dangerous_attacks
           });
         }
         gameArrayAway.reverse();
@@ -146,52 +150,33 @@ export async function createStatsDiv(game, displayBool) {
       });
     }
 
-    let matchArray;
-    let matchArrayAway;
+    // let matchArray;
+    // let matchArrayAway;
 
-    if (displayBool === true) {
-      homeLastMatch = await fetch(
-        `${process.env.REACT_APP_EXPRESS_SERVER}matches/${gameStats.home[2].LastMatch}`
-      );
-      await homeLastMatch.json().then((matches) => {
-        matchArray = Array.from(matches.data);
-      });
+    // if (displayBool === true) {
+    //   homeLastMatch = await fetch(
+    //     `${process.env.REACT_APP_EXPRESS_SERVER}matches/${gameStats.home[2].LastMatch}`
+    //   );
+    //   await homeLastMatch.json().then((matches) => {
+    //     matchArray = Array.from(matches.data);
+    //   });
 
-      if (gameStats.home[2].LastMatch === gameStats.away[2].LastMatch) {
-        matchArrayAway = matchArray;
-      } else {
-        awayLastMatch = await fetch(
-          `${process.env.REACT_APP_EXPRESS_SERVER}matches/${gameStats.away[2].LastMatch}`
-        );
+    //   if (gameStats.home[2].LastMatch === gameStats.away[2].LastMatch) {
+    //     matchArrayAway = matchArray;
+    //   } else {
+    //     awayLastMatch = await fetch(
+    //       `${process.env.REACT_APP_EXPRESS_SERVER}matches/${gameStats.away[2].LastMatch}`
+    //     );
 
-        await awayLastMatch.json().then((matches) => {
-          matchArrayAway = Array.from(matches.data);
-        });
-      }
-    } else {
-      matchArray = [];
-      matchArrayAway = [];
-    }
+    //     await awayLastMatch.json().then((matches) => {
+    //       matchArrayAway = Array.from(matches.data);
+    //     });
+    //   }
+    // } else {
+    //   matchArray = [];
+    //   matchArrayAway = [];
+    // }
 
-    const lastGameHome = matchArray.find(
-      ({ homeID, awayID }) =>
-        homeID === gameStats.teamIDHome || awayID === gameStats.teamIDHome
-    )
-      ? matchArray.find(
-          ({ homeID, awayID }) =>
-            homeID === gameStats.teamIDHome || awayID === gameStats.teamIDHome
-        )
-      : "N/A";
-
-    const lastGameAway = matchArrayAway.find(
-      ({ homeID, awayID }) =>
-        homeID === gameStats.teamIDAway || awayID === gameStats.teamIDAway
-    )
-      ? matchArrayAway.find(
-          ({ homeID, awayID }) =>
-            homeID === gameStats.teamIDAway || awayID === gameStats.teamIDAway
-        )
-      : "N/A";
 
     let homeTeam = gameStats.home.teamName;
     let awayTeam = gameStats.away.teamName;
@@ -757,6 +742,11 @@ export async function createStatsDiv(game, displayBool) {
                   <td>{game.awaySot}</td>
                 </tr>
                 <tr>
+                  <td>D. Attacks</td>
+                  <td>{game.homeDangerousAttacks}</td>
+                  <td>{game.awayDangerousAttacks}</td>
+                </tr>
+                <tr>
                   <td>Possession</td>
                   <td>{game.homePossession}</td>
                   <td>{game.awayPossession}</td>
@@ -808,6 +798,11 @@ export async function createStatsDiv(game, displayBool) {
                   <td>SOT</td>
                   <td>{game.homeSot}</td>
                   <td>{game.awaySot}</td>
+                </tr>
+                <tr>
+                  <td>D. Attacks</td>
+                  <td>{game.homeDangerousAttacks}</td>
+                  <td>{game.awayDangerousAttacks}</td>
                 </tr>
                 <tr>
                   <td>Possession</td>
