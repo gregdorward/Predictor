@@ -193,51 +193,6 @@ export async function createStatsDiv(game, displayBool) {
         )
       : "N/A";
 
-    let lastGameHomeResultPart1;
-    let lastGameHomeResultPart2;
-    let lastGameHomeLink;
-    let lastGameAwayResultPart1;
-    let lastGameAwayResultPart2;
-    let lastGameAwayLink;
-    let homeStadium;
-    let awayStadium;
-
-    let lastGameHomeHomeBadge = lastGameHome.home_image
-      ? lastGameHome.home_image
-      : "-";
-    let lastGameHomeAwayBadge = lastGameHome.away_image
-      ? lastGameHome.away_image
-      : "-";
-    let lastGameAwayHomeBadge = lastGameAway.home_image
-      ? lastGameAway.home_image
-      : "-";
-    let lastGameAwayAwayBadge = lastGameAway.away_image
-      ? lastGameAway.away_image
-      : "-";
-
-    if (lastGameHome !== "N/A") {
-      lastGameHomeResultPart1 = `${lastGameHome.home_name}: ${lastGameHome.homeGoalCount}`;
-      lastGameHomeResultPart2 = `${lastGameHome.away_name}: ${lastGameHome.awayGoalCount}`;
-      lastGameHomeLink = lastGameHome.match_url;
-      homeStadium = lastGameHome.stadium_name;
-    } else {
-      lastGameHomeResultPart1 = "Last game unavailable";
-      lastGameHomeResultPart2 = "";
-      homeStadium = "-";
-    }
-
-    if (lastGameAway !== "N/A") {
-      lastGameAwayResultPart1 = `${lastGameAway.home_name}: ${lastGameAway.homeGoalCount}`;
-      lastGameAwayResultPart2 = `${lastGameAway.away_name}: ${lastGameAway.awayGoalCount}`;
-
-      lastGameAwayLink = lastGameAway.match_url;
-      awayStadium = lastGameAway.stadium_name;
-    } else {
-      lastGameAwayResultPart1 = "Last game unavailable";
-      lastGameAwayResultPart2 = "";
-      awayStadium = "-";
-    }
-
     let homeTeam = gameStats.home.teamName;
     let awayTeam = gameStats.away.teamName;
 
