@@ -8,7 +8,6 @@ import { allForm } from "../logic/getFixtures";
 import Increment from "../components/Increment";
 import { incrementValue } from "../components/Increment";
 import { getBTTSPotential } from "../logic/getBTTSPotential";
-import { buttonState } from "../components/Toggle";
 
 var myHeaders = new Headers();
 myHeaders.append("Origin", "https://gregdorward.github.io");
@@ -1644,8 +1643,7 @@ export async function calculateScore(match, index, divider) {
     if (
       match.game_week > 0 &&
       match.game_week < 3 &&
-      match.competition_id !== 4340 &&
-      buttonState === false
+      match.competition_id !== 4340
     ) {
       finalHomeGoals = "-";
       finalAwayGoals = "-";

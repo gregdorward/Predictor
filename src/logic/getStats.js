@@ -9,6 +9,7 @@ import { CreateBadge } from "../components/createBadge";
 import { Fragment } from "react";
 import GenerateFormSummary from "../logic/compareFormTrend";
 import { Chart, RadarChart } from "../components/Chart";
+import Collapsable from "../components/CollapsableElement";
 
 export async function createStatsDiv(game, displayBool) {
   if (game.status !== "void") {
@@ -90,7 +91,7 @@ export async function createStatsDiv(game, displayBool) {
             homePossession: resultHome[i].team_a_possession,
             awayPossession: resultHome[i].team_b_possession,
             homeDangerousAttacks: resultHome[i].team_a_dangerous_attacks,
-            awayDangerousAttacks: resultHome[i].team_b_dangerous_attacks
+            awayDangerousAttacks: resultHome[i].team_b_dangerous_attacks,
           });
         }
         gameArrayHome.reverse();
@@ -139,7 +140,7 @@ export async function createStatsDiv(game, displayBool) {
             homePossession: resultAway[i].team_a_possession,
             awayPossession: resultAway[i].team_b_possession,
             homeDangerousAttacks: resultAway[i].team_a_dangerous_attacks,
-            awayDangerousAttacks: resultAway[i].team_b_dangerous_attacks
+            awayDangerousAttacks: resultAway[i].team_b_dangerous_attacks,
           });
         }
         gameArrayAway.reverse();
@@ -176,7 +177,6 @@ export async function createStatsDiv(game, displayBool) {
     //   matchArray = [];
     //   matchArrayAway = [];
     // }
-
 
     let homeTeam = gameStats.home.teamName;
     let awayTeam = gameStats.away.teamName;
@@ -708,6 +708,27 @@ export async function createStatsDiv(game, displayBool) {
       game.awayTeamAwayPosition = "N/A";
     }
 
+    const overviewHome = gameArrayHome.slice(0, 6).map((game) => (
+      <div className={game.won}>
+        <div className="IndividualPreviousResultHome">
+          <div className="PastGameDateHome">{game.date}</div>
+          <div
+            key={game.id + game.id}
+            className="IndividualPreviousResultGameHome"
+          >
+            <li>
+              {game.homeTeam}{" "}
+              <span className="GoalTotal">{game.homeGoals}</span>
+            </li>
+            <li>
+              {game.awayTeam}{" "}
+              <span className="GoalTotal">{game.awayGoals}</span>
+            </li>
+          </div>
+        </div>
+      </div>
+    ));
+
     const contentHome = gameArrayHome.slice(0, 6).map((game) => (
       <div className={game.won}>
         <div className="IndividualPreviousResultHome">
@@ -763,6 +784,27 @@ export async function createStatsDiv(game, displayBool) {
       </div>
     ));
 
+    const overviewAway = gameArrayAway.slice(0, 6).map((game) => (
+      <div className={game.won}>
+        <div className="IndividualPreviousResultAway">
+          <div className="PastGameDateAway">{game.date}</div>
+          <div
+            key={game.id + game.id}
+            className="IndividualPreviousResultGameAway"
+          >
+            <li>
+              {game.homeTeam}{" "}
+              <span className="GoalTotal">{game.homeGoals}</span>
+            </li>
+            <li>
+              {game.awayTeam}{" "}
+              <span className="GoalTotal">{game.awayGoals}</span>
+            </li>
+          </div>
+        </div>
+      </div>
+    ));
+
     const contentAway = gameArrayAway.slice(0, 6).map((game) => (
       <div className={game.won}>
         <div className="IndividualPreviousResultAway">
@@ -776,7 +818,7 @@ export async function createStatsDiv(game, displayBool) {
               <span className="GoalTotal">{game.homeGoals}</span>
             </li>
             <li>
-            {game.awayTeam}{" "}
+              {game.awayTeam}{" "}
               <span className="GoalTotal">{game.awayGoals}</span>
               <table className="GameStatsTable">
                 <tr>
@@ -821,9 +863,20 @@ export async function createStatsDiv(game, displayBool) {
       </div>
     ));
 
+
     ReactDOM.render(
       <ul style={style}>
-        <ul className="PreviousResults">{contentHome}</ul>
+        <ul className="PreviousResults">
+        <Fragment>
+          <Collapsable
+            className={"Test"}
+            buttonText={"Toggle detail view"}
+            element = {overviewHome}
+            text={contentHome}
+            newText={"Less detail"}
+          />
+        </Fragment>
+        </ul>
         <Stats
           style={style}
           homeOrAway="Home"
@@ -881,7 +934,16 @@ export async function createStatsDiv(game, displayBool) {
 
     ReactDOM.render(
       <ul style={style}>
-        <ul className="PreviousResults">{contentAway}</ul>
+        <ul className="PreviousResults">
+        <Fragment>
+          <Collapsable
+            className={"Test"}
+            buttonText={"Toggle detail view"}
+            text={contentAway}
+            element = {overviewAway}
+          />
+        </Fragment>
+        </ul>
         <Stats
           style={style}
           homeOrAway="Away"

@@ -14,6 +14,12 @@ class Collapsable extends Component {
     return (
       <div style={this.props.style}>
         <button className={this.props.className} onClick={this.handleOnClick}>{this.props.buttonText}</button>
+        {/* <div>{this.props.element}</div> */}
+        {!this.state.isOpen && (
+          <EscapeOutside className="Collapsable">
+            {this.props.element}
+          </EscapeOutside>
+        )}
         {this.state.isOpen && (
           <EscapeOutside className="Collapsable">
             {this.props.text}
