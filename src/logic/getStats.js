@@ -81,6 +81,14 @@ export async function createStatsDiv(game, displayBool) {
             awayXG: resultHome[i].team_b_xg,
             awayOdds: resultHome[i].odds_ft_2,
             won: won,
+            homeShots: resultHome[i].team_a_shots,
+            awayShots: resultHome[i].team_b_shots,
+            homeSot: resultHome[i].team_a_shotsOnTarget,
+            awaySot: resultHome[i].team_b_shotsOnTarget,
+            homeRed: resultHome[i].team_a_red_cards,
+            awayRed: resultHome[i].team_b_red_cards,
+            homePossession: resultHome[i].team_a_possession,
+            awayPossession: resultHome[i].team_b_possession,
           });
         }
         gameArrayHome.reverse();
@@ -120,6 +128,14 @@ export async function createStatsDiv(game, displayBool) {
             awayXG: resultAway[i].team_b_xg,
             awayOdds: resultAway[i].odds_ft_2,
             won: won,
+            homeShots: resultAway[i].team_a_shots,
+            awayShots: resultAway[i].team_b_shots,
+            homeSot: resultAway[i].team_a_shotsOnTarget,
+            awaySot: resultAway[i].team_b_shotsOnTarget,
+            homeRed: resultAway[i].team_a_red_cards,
+            awayRed: resultAway[i].team_b_red_cards,
+            homePossession: resultAway[i].team_a_possession,
+            awayPossession: resultAway[i].team_b_possession,
           });
         }
         gameArrayAway.reverse();
@@ -758,12 +774,44 @@ export async function createStatsDiv(game, displayBool) {
           <div className="PastGameDateHome">{game.date}</div>
           <div key={game.id} className="IndividualPreviousResultGameHome">
             <li>
-            (XG:{game.homeXG}) {game.homeTeam}{" "}
+              {game.homeTeam}{" "}
               <span className="GoalTotal">{game.homeGoals}</span>
             </li>
             <li>
-            (XG:{game.awayXG}) {game.awayTeam}{" "}
+              {game.awayTeam}{" "}
               <span className="GoalTotal">{game.awayGoals}</span>
+              <table className="GameStatsTable">
+                <tr>
+                  <th>Stat</th>
+                  <th>Home</th>
+                  <th>Away</th>
+                </tr>
+                <tr>
+                  <td>XG</td>
+                  <td>{game.homeXG}</td>
+                  <td>{game.awayXG}</td>
+                </tr>
+                <tr>
+                  <td>Shots</td>
+                  <td>{game.homeShots}</td>
+                  <td>{game.awayShots}</td>
+                </tr>
+                <tr>
+                  <td>SOT</td>
+                  <td>{game.homeSot}</td>
+                  <td>{game.awaySot}</td>
+                </tr>
+                <tr>
+                  <td>Possession</td>
+                  <td>{game.homePossession}</td>
+                  <td>{game.awayPossession}</td>
+                </tr>
+                <tr>
+                  <td>Red cards</td>
+                  <td>{game.homeRed}</td>
+                  <td>{game.awayRed}</td>
+                </tr>
+              </table>
             </li>
           </div>
         </div>
@@ -779,12 +827,44 @@ export async function createStatsDiv(game, displayBool) {
             className="IndividualPreviousResultGameAway"
           >
             <li>
-              <span className="GoalTotal">{game.homeGoals}</span>{" "}
-              {game.homeTeam} (XG:{game.homeXG})
+              {game.homeTeam}{" "}
+              <span className="GoalTotal">{game.homeGoals}</span>
             </li>
             <li>
-              <span className="GoalTotal">{game.awayGoals}</span>{" "}
-              {game.awayTeam} (XG:{game.awayXG})
+            {game.awayTeam}{" "}
+              <span className="GoalTotal">{game.awayGoals}</span>
+              <table className="GameStatsTable">
+                <tr>
+                  <th>Stat</th>
+                  <th>Home</th>
+                  <th>Away</th>
+                </tr>
+                <tr>
+                  <td>XG</td>
+                  <td>{game.homeXG}</td>
+                  <td>{game.awayXG}</td>
+                </tr>
+                <tr>
+                  <td>Shots</td>
+                  <td>{game.homeShots}</td>
+                  <td>{game.awayShots}</td>
+                </tr>
+                <tr>
+                  <td>SOT</td>
+                  <td>{game.homeSot}</td>
+                  <td>{game.awaySot}</td>
+                </tr>
+                <tr>
+                  <td>Possession</td>
+                  <td>{game.homePossession}</td>
+                  <td>{game.awayPossession}</td>
+                </tr>
+                <tr>
+                  <td>Red cards</td>
+                  <td>{game.homeRed}</td>
+                  <td>{game.awayRed}</td>
+                </tr>
+              </table>
             </li>
           </div>
         </div>
@@ -793,7 +873,7 @@ export async function createStatsDiv(game, displayBool) {
 
     ReactDOM.render(
       <ul style={style}>
-        <ul className="PreviousResultsHome">{contentHome}</ul>
+        <ul className="PreviousResults">{contentHome}</ul>
         <Stats
           style={style}
           homeOrAway="Home"
@@ -851,7 +931,7 @@ export async function createStatsDiv(game, displayBool) {
 
     ReactDOM.render(
       <ul style={style}>
-        <ul className="PreviousResultsAway">{contentAway}</ul>
+        <ul className="PreviousResults">{contentAway}</ul>
         <Stats
           style={style}
           homeOrAway="Away"
