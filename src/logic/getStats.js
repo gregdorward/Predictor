@@ -778,13 +778,13 @@ export async function createStatsDiv(game, displayBool) {
               key={game.id + game.id}
               className="IndividualPreviousResultGameAway"
             >
-              <li key={game.awayTeam + 1}>
-                {game.homeTeam}{" "}
+              <li key={game.awayTeam + 1}>  
                 <span className="GoalTotal">{game.homeGoals}</span>
+                {" "}{game.homeTeam}
               </li>
               <li key={game.awayTeam + 2}>
-                {game.awayTeam}{" "}
                 <span className="GoalTotal">{game.awayGoals}</span>
+                {" "}{game.awayTeam}
                 <table className="GameStatsTable">
                   <tr>
                     <th>Stat</th>
