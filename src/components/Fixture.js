@@ -5,27 +5,24 @@ import { createStatsDiv } from "../logic/getStats";
 import { renderTable } from "../logic/getFixtures";
 
 let resultValue;
-var count
-var setCount
+var count;
+var setCount;
 
+function toggle(bool) {
+  count = !bool;
+  console.log(count);
+  return count;
+}
 
-  function toggle(bool) {
-    count = !bool;
-    console.log(count)
-    return count
-  }
-
-  // function stylying(bool){
-  //   if (bool === true) {
-  //     // set stats element to display flex
-  //     return { display: "block" };
-  //   } else {
-  //     // set stats element to display none
-  //     return { display: "none" };
-  //   }
-  // }
-
-  
+// function stylying(bool){
+//   if (bool === true) {
+//     // set stats element to display flex
+//     return { display: "block" };
+//   } else {
+//     // set stats element to display none
+//     return { display: "none" };
+//   }
+// }
 
 function GetDivider(fixture) {
   const matchStatus = fixture.status;
@@ -203,18 +200,15 @@ function renderLeagueName(fixture) {
 }
 
 const SingleFixture = ({ fixture, count }) => (
-
   <div key={fixture.game}>
     {renderLeagueName(fixture)}
     <li
       className={"individualFixture"}
       key={fixture.id}
-      onMouseDown={() => count = toggle(count)}
+      onMouseDown={() => (count = toggle(count))}
       onClick={() => createStatsDiv(fixture, count)}
       data-cy={fixture.id}
     >
-        
-
       <div className="HomeOdds">{fixture.fractionHome}</div>
       <div className="homeTeam">{fixture.homeTeam}</div>
       <GetDivider
@@ -237,30 +231,17 @@ const SingleFixture = ({ fixture, count }) => (
       />
       <div className="AwayOdds">{fixture.fractionAway}</div>
     </li>
-    <div className={"StatsDiv"}>
-      <div id={"stats" + fixture.homeTeam}></div>
-      <Fragment>
-        <div
-          className="StatsContainer"
-          data-cy={"StatsContainer-" + fixture.id}
-        >
-          <div className="HomeStats" id={"home" + fixture.homeTeam}></div>
-          <div className="AwayStats" id={"away" + fixture.awayTeam}></div>
-        </div>
-      </Fragment>
-      <div className="MatchHistory" id={"history" + fixture.homeTeam}></div>
-    </div>
+    <div id={"stats" + fixture.homeTeam}/>
+      <div className="MatchHistory" id={"history" + fixture.homeTeam}/>
   </div>
 );
-
-
 
 const List = ({ fixtures }) => (
   <div>
     <div id="Headers"></div>
     <ul className="FixtureList" id="FixtureList">
       {fixtures.map((fixture, i) => (
-        <SingleFixture fixture={fixture} key={fixture.game} count={count}/>
+        <SingleFixture fixture={fixture} key={fixture.game} count={count} />
       ))}
     </ul>
   </div>
@@ -269,5 +250,5 @@ const List = ({ fixtures }) => (
 export function Fixture(props) {
   [count, setCount] = useState(false);
   resultValue = props.result;
-  return <List fixtures={props.fixtures} result={resultValue} count={count}/>;
+  return <List fixtures={props.fixtures} result={resultValue} count={count} />;
 }

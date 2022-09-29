@@ -909,9 +909,9 @@ p {
   align-items: center;
   align-content: center;
   color: black;
-  padding-top: 0.5em;
+  /* padding-top: 0.5em;
   padding-bottom: 0.5em;
-  padding-right: 0.5em;
+  padding-right: 0.5em; */
   flex-wrap: wrap;
 }
 
@@ -920,32 +920,24 @@ p {
   align-items: center;
   align-content: center;
   color: black;
-  padding-top: 0.5em;
+  /* padding-top: 0.5em;
   padding-bottom: 0.5em;
-  padding-left: 0.5em;
+  padding-left: 0.5em; */
   flex-wrap: wrap;
 }
-
-/* .GameStatsTable{
-  text-align: center;
-  line-height: 1em;
-  border-collapse: collapse;
-  border: 1px solid #736d8f;
-  padding: 0.5em;
-} */
-
-
 
 .PastGameDateHome{
   text-align: right;
   padding-right: 0.5em;
   padding-top: 0.25em;
+  font-size: 0.9em;
 }
 
 .PastGameDateAway{
   text-align: left;
   padding-left: 0.5em;
   padding-top: 0.25em;
+  font-size: 0.9em;
 }
 
 .GameWon{
@@ -963,19 +955,7 @@ p {
   padding-bottom: 1em;
 }
 
-.PreviousResults{
-  display: flex;
-  flex-direction: column;
-  height: auto;
-  line-height: 2em;
-  padding: 1em;
-  padding-right: 0.25em;
-  padding-left: 0.25em;
-  justify-content: center;
-  text-align-last: center;
-  color: black;
-  margin-left: auto;
-}
+
 
 
 
@@ -1033,8 +1013,8 @@ a.PreviousMatchLink{
 }
 
 .LastGameHeader {
-  padding-top: 1em !important;
   font-weight: bolder;
+  padding-bottom: 1em;
   font-size: 1.1em;
   background-color: #e2e2e26c;
 }
@@ -1119,36 +1099,202 @@ a.PreviousMatchLink{
   color: white;
 }
 
-/* .PreviousResultHome {
-  text-align: right;
-  width: 50%;
-  background-color: #e2e2e26c;
-  padding-right: 0.2em;
-}
 
-.PreviousResultAway {
-  text-align: left;
-  width: 50%;
-  background-color: #e2e2e26c;
-  padding-left: 0.2em;
+
+
+/* .row {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  width: 100%;
 } */
 
-
-.HomeStats {
-  text-align: right;
-  width: 50%;
-  background-color: #e2e2e26c;
-  padding-right: 0.2em;
-  align-self: baseline;
-  /* padding-right: 20px; */
+.flex-container{
+  display: flex;
+  justify-content: center;
 }
 
-.AwayStats {
+.flex-childOne {
+  flex-direction: column;
+  text-align: right;
+  padding-right: 0.5em;
+} 
+
+.flex-childOneOverview {
+  flex-direction: column;
+  text-align: right;
+  padding-right: 1em;
+  width: auto;
+  max-width: 21em;
+} 
+
+.flex-childTwoOverview {
+  flex-direction: column;
   text-align: left;
-  width: 50%;
-  background-color: #e2e2e26c;
-  padding-left: 0.2em;
-  align-self: baseline;
+  padding-left: 1em;
+  width: auto;
+  max-width: 21em;
+} 
+
+.flex-childOneOverview .W {
+  padding: 1em;
+} 
+
+.flex-childOneOverview .D {
+  padding: 1em;
+} 
+
+.flex-childOneOverview .L {
+  padding: 1em;
+} 
+      
+
+.flex-childTwoOverview .W{
+  padding: 1em;
+} 
+
+.flex-childTwoOverview .D{
+  padding: 1em;
+} 
+
+.flex-childTwoOverview .L{
+  padding: 1em;
+} 
+
+.flex-childOne li:nth-child(odd){
+  background-color: #e2e2e26c
+}
+
+.flex-childTwo {
+  flex-direction: column;
+  text-align: left;
+  padding-left: 0.5em;
+} 
+
+.flex-childTwo li:nth-child(odd){
+  background-color: #e2e2e26c
+}
+
+.PreviousResults{
+  display: flex;
+  flex-direction: column;
+  height: auto;
+  line-height: 2em;
+  padding-top: 1em;
+  justify-content: center;
+  text-align-last: center;
+  color: black;
+  margin-left: auto;
+}
+
+.W {
+  background-color: rgba(22, 165, 22, 0.094);
+  padding: 1em;
+  margin-bottom: 0.5em;
+  /* padding-left: 7px;
+  padding-right: 7px; */
+}
+
+.L {
+  background-color: #970d001d;
+  padding: 1em;
+  margin-bottom: 0.5em;
+}
+
+.D {
+  background-color: rgba(85, 85, 85, 0.076);
+  padding: 1em;
+  margin-bottom: 0.5em;
+}
+
+
+.W li {
+  padding: 0.5em;
+}
+
+.D li {
+  padding: 0.5em;
+}
+
+.L li {
+  padding: 0.5em;
+}
+
+/* .column {
+  display: flex;
+  flex-direction: column;
+  flex-basis: 50%;
+  flex: 1;
+} */
+/* 
+.ColumnOne{
+  display: flex;
+  flex-direction: column;
+  flex-basis: 50%;
+  text-align: end;
+  padding-right: 0.25em;
+  padding-left: 0.5em;
+}
+
+.ColumnTwo{
+  display: flex;
+  flex-direction: column;
+  flex-basis: 50%;
+  text-align: start;
+  padding-right: 0.5em;
+  padding-left: 0.25em;
+} */
+
+.IndividualPastFixtureHome{
+  text-align: left;
+}
+
+.IndividualPastFixtureAway{
+  text-align: right;
+}
+
+.KeyStats{
+  padding-top: 0.5em;
+  padding-bottom: 0.5em;
+  padding-right: 0.25em;
+  padding-left: 0.5em;
+}
+
+.KeyStats li{
+  padding-top: 0.75em;
+  padding-bottom: 0.75em;
+}
+
+.TestingLayout{
+  flex-direction: row;
+}
+
+.IndividualPreviousResultHome{
+  display: flex;
+  text-align: end;
+  flex-basis: 100%;
+}
+
+.IndividualPreviousResultAway{
+  display: flex;
+  text-align: start;
+  flex-basis: 100%;
+}
+
+
+.PastFixtures{
+  display: flex;
+  flex-direction: column;
+}
+
+.PastResultsHome{
+  display: flex;
+  text-align: start;
+}
+
+.PastResultsAway{
+  display: flex;
+  text-align: end;
 }
 
 .LineupsContainer {
@@ -1310,23 +1456,6 @@ li.FormHeader {
   font-weight: 700;
 }
 
-.W {
-  background-color: rgba(22, 165, 22, 0.094);
-  margin-bottom: 0.5em;
-  /* padding-left: 7px;
-  padding-right: 7px; */
-}
-
-.L {
-  background-color: #970d001d;
-  margin-bottom: 0.5em;
-}
-
-.D {
-  background-color: rgba(85, 85, 85, 0.076);
-  margin-bottom: 0.5em;
-}
-
 .GoalTotal{
   background-color: #030061;
   color: white;
@@ -1460,7 +1589,7 @@ li.FormHeader{
   box-sizing: border-box;
   text-decoration: none;
   font-family: 'Open Sans', sans-serif;
-  font-size: 0.8em;
+  /* font-size: 0.8em; */
   font-weight: 500;
   color: white;
  background-color: #030061;
@@ -1561,6 +1690,7 @@ ul {
 .Won {
   color: #01a501;
   font-size: 1.2em;
+  /* display: flex; */
 }
 
 
@@ -1624,10 +1754,6 @@ a.kofi-button {
   border-radius: 1em;
 }
 
-.Testing{
-  font-size: 40px;
-}
-
 
 .GlobalStat {
   border-bottom: #172A3A 1px solid;
@@ -1652,9 +1778,10 @@ td {
   padding-right: 1em;
   margin-left: auto;
   margin-right: auto;
-  margin-top: 1em;
+  margin-top: 1.5em;
   text-align: center;
 }
+
 
 .MuiTable-root {
   border: none;

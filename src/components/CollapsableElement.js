@@ -8,23 +8,42 @@ class Collapsable extends Component {
     this.setState((prevState) => ({
       isOpen: !prevState.isOpen,
     }));
+    console.log(this.state.isOpen);
   };
 
   render() {
     return (
-      <div style={this.props.style}>
-        <button className={this.props.className} onClick={this.handleOnClick}>{this.props.buttonText}</button>
-        {/* <div>{this.props.element}</div> */}
-        {!this.state.isOpen && (
-          <EscapeOutside className="Collapsable">
-            {this.props.element}
-          </EscapeOutside>
-        )}
-        {this.state.isOpen && (
-          <EscapeOutside className="Collapsable">
-            {this.props.text}
-          </EscapeOutside>
-        )}
+      <div>
+        <div>
+          <button className={this.props.className} onClick={this.handleOnClick}>
+            {this.props.buttonText}
+          </button>
+        </div>
+        <div style={this.props.style}>
+          {/* <div>{this.props.element}</div> */}
+          {!this.state.isOpen && (
+            <EscapeOutside className="Collapsable">
+              <div className="flex-container">
+                <div className={this.props.classNameDiv}>{this.props.text}</div>
+                <div className={this.props.classNameDivTwo}>
+                  {this.props.textTwo}
+                </div>
+              </div>
+            </EscapeOutside>
+          )}
+          {this.state.isOpen && (
+            <EscapeOutside className="Collapsable">
+              <div className="flex-container">
+                <div className={this.props.classNameDiv}>
+                  {this.props.element}
+                </div>
+                <div className={this.props.classNameDivTwo}>
+                  {this.props.elementTwo}
+                </div>
+              </div>
+            </EscapeOutside>
+          )}
+        </div>
       </div>
     );
   }

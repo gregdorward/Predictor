@@ -654,7 +654,316 @@ export async function createStatsDiv(game, displayBool) {
     }
 
     ReactDOM.render(
-      <Fragment>
+      <div style={style}>
+        <div className="H2HStats" id={`H2HStats${game.id}`}></div>
+        <div className="TrendsHome" id={`TrendsHome${game.id}`}></div>
+        <div className="TrendsAway" id={`TrendsAway${game.id}`}></div>
+      </div>,
+      document.getElementById("history" + homeTeam)
+    );
+
+    //This tournament does not have league positions
+    if (game.leagueName === "Europe UEFA Women's Euro") {
+      game.homeTeamHomePosition = "N/A";
+      game.awayTeamAwayPosition = "N/A";
+    }
+
+    const overviewHome = gameArrayHome.slice(0, 6).map((game) => (
+      <div>
+        <div className={game.won}>
+          <div>
+            <div>{game.date}</div>
+            <div key={game.id} className="IndividualPreviousResultGameHome">
+              <li>
+                {game.homeTeam}{" "}
+                <span className="GoalTotal">{game.homeGoals}</span>
+              </li>
+              <li>
+                {game.awayTeam}{" "}
+                <span className="GoalTotal">{game.awayGoals}</span>
+              </li>
+            </div>
+          </div>
+        </div>
+      </div>
+    ));
+
+    const contentHome = gameArrayHome.slice(0, 6).map((game) => (
+      <div>
+        <div className={game.won}>
+          <div>
+            <div className="PastGameDateHome">{game.date}</div>
+            <div key={game.id} className="IndividualPreviousResultGameHome">
+              <li key={game.homeTeam + 1}>
+                {game.homeTeam}{" "}
+                <span className="GoalTotal">{game.homeGoals}</span>
+              </li>
+              <li key={game.homeTeam + 2}>
+                {game.awayTeam}{" "}
+                <span className="GoalTotal">{game.awayGoals}</span>
+                <table className="GameStatsTable">
+                  <tr>
+                    <th>Stat</th>
+                    <th>Home</th>
+                    <th>Away</th>
+                  </tr>
+                  <tr>
+                    <td>XG</td>
+                    <td>{game.homeXG}</td>
+                    <td>{game.awayXG}</td>
+                  </tr>
+                  <tr>
+                    <td>Shots</td>
+                    <td>{game.homeShots}</td>
+                    <td>{game.awayShots}</td>
+                  </tr>
+                  <tr>
+                    <td>SOT</td>
+                    <td>{game.homeSot}</td>
+                    <td>{game.awaySot}</td>
+                  </tr>
+                  <tr>
+                    <td>D. Attacks</td>
+                    <td>{game.homeDangerousAttacks}</td>
+                    <td>{game.awayDangerousAttacks}</td>
+                  </tr>
+                  <tr>
+                    <td>Possession</td>
+                    <td>{game.homePossession}</td>
+                    <td>{game.awayPossession}</td>
+                  </tr>
+                  <tr>
+                    <td>Red cards</td>
+                    <td>{game.homeRed}</td>
+                    <td>{game.awayRed}</td>
+                  </tr>
+                </table>
+              </li>
+            </div>
+          </div>
+        </div>
+      </div>
+    ));
+
+    const overviewAway = gameArrayAway.slice(0, 6).map((game) => (
+      <div>
+        <div className={game.won}>
+          <div>
+            <div>{game.date}</div>
+            <div
+              key={game.id + game.id}
+              className="IndividualPreviousResultGameAway"
+            >
+              {" "}
+              <li>
+              <span className="GoalTotal">{game.homeGoals}</span>
+              {" "}{game.homeTeam}
+              </li>
+              <li>
+              <span className="GoalTotal">{game.awayGoals}</span>
+              {" "}{game.awayTeam}
+              </li>
+            </div>
+          </div>
+        </div>
+      </div>
+    ));
+
+    const contentAway = gameArrayAway.slice(0, 6).map((game) => (
+      <div>
+        <div className={game.won}>
+          <div className="ColumnTwo">
+            <div className="PastGameDateAway">{game.date}</div>
+            <div
+              key={game.id + game.id}
+              className="IndividualPreviousResultGameAway"
+            >
+              <li key={game.awayTeam + 1}>
+                {game.homeTeam}{" "}
+                <span className="GoalTotal">{game.homeGoals}</span>
+              </li>
+              <li key={game.awayTeam + 2}>
+                {game.awayTeam}{" "}
+                <span className="GoalTotal">{game.awayGoals}</span>
+                <table className="GameStatsTable">
+                  <tr>
+                    <th>Stat</th>
+                    <th>Home</th>
+                    <th>Away</th>
+                  </tr>
+                  <tr>
+                    <td>XG</td>
+                    <td>{game.homeXG}</td>
+                    <td>{game.awayXG}</td>
+                  </tr>
+                  <tr>
+                    <td>Shots</td>
+                    <td>{game.homeShots}</td>
+                    <td>{game.awayShots}</td>
+                  </tr>
+                  <tr>
+                    <td>SOT</td>
+                    <td>{game.homeSot}</td>
+                    <td>{game.awaySot}</td>
+                  </tr>
+                  <tr>
+                    <td>D. Attacks</td>
+                    <td>{game.homeDangerousAttacks}</td>
+                    <td>{game.awayDangerousAttacks}</td>
+                  </tr>
+                  <tr>
+                    <td>Possession</td>
+                    <td>{game.homePossession}</td>
+                    <td>{game.awayPossession}</td>
+                  </tr>
+                  <tr>
+                    <td>Red cards</td>
+                    <td>{game.homeRed}</td>
+                    <td>{game.awayRed}</td>
+                  </tr>
+                </table>
+              </li>
+            </div>
+          </div>
+        </div>
+      </div>
+    ));
+
+    function StatsHome() {
+      return (
+        <div className="flex-childOne">
+          <ul style={style}>
+            <Stats
+              style={style}
+              homeOrAway="Home"
+              gameCount={divider}
+              key={formDataHome[0].name}
+              last5={formDataHome[0].Last5}
+              LeagueOrAll={formDataHome[0].LeagueOrAll}
+              className={"KeyStats"}
+              name={formDataHome[0].name}
+              goals={formDataHome[0].AverageGoals}
+              conceeded={formDataHome[0].AverageConceeded}
+              XG={formDataHome[0].AverageXG}
+              XGConceded={formDataHome[0].AverageXGConceded}
+              possession={formDataHome[0].AveragePossession}
+              sot={formDataHome[0].AverageShotsOnTarget}
+              dangerousAttacks={formDataHome[0].AverageDangerousAttacks}
+              leaguePosition={
+                formDataHome[0].leaguePosition
+                  ? formDataHome[0].leaguePosition
+                  : 0
+              }
+              rawPosition={game.homeRawPosition ? game.homeRawPosition : 0}
+              homeOrAwayLeaguePosition={
+                game.homeTeamHomePosition ? game.homeTeamHomePosition : 0
+              }
+              winPercentage={
+                game.homeTeamWinPercentage ? game.homeTeamWinPercentage : 0
+              }
+              lossPercentage={
+                game.homeTeamLossPercentage ? game.homeTeamLossPercentage : 0
+              }
+              drawPercentage={
+                game.homeTeamDrawPercentage ? game.homeTeamDrawPercentage : 0
+              }
+              ppg={formDataHome[0].SeasonPPG}
+              formTrend={[
+                homeTenGameAverage.toFixed(2),
+                homeSixGameAverage.toFixed(2),
+                homeFiveGameAverage.toFixed(2),
+              ]}
+              lastGame={homeLastGame}
+              formRun={formDataHome[0].formRun}
+              goalDifference={formDataHome[0].goalDifference}
+              goalDifferenceHomeOrAway={
+                formDataHome[0].goalDifferenceHomeOrAway
+              }
+              BttsPercentage={formDataHome[0].BttsPercentage}
+              BttsPercentageHomeOrAway={
+                formDataHome[0].BttsPercentageHomeOrAway
+              }
+              CardsTotal={formDataHome[0].CardsTotal}
+              CornersAverage={formDataHome[0].CornersAverage}
+              ScoredBothHalvesPercentage={
+                formDataHome[0].ScoredBothHalvesPercentage
+              }
+              FormTextString={formDataHome[0].FormTextStringHome}
+            />
+          </ul>
+        </div>
+      );
+    }
+
+    function StatsAway() {
+      return (
+        <div className="flex-childTwo">
+          <ul style={style}>
+            <Stats
+              style={style}
+              homeOrAway="Away"
+              gameCount={divider}
+              key={formDataAway[0].name}
+              last5={formDataAway[0].Last5}
+              LeagueOrAll={formDataAway[0].LeagueOrAll}
+              className={"KeyStats"}
+              name={formDataAway[0].name}
+              goals={formDataAway[0].AverageGoals}
+              conceeded={formDataAway[0].AverageConceeded}
+              XG={formDataAway[0].AverageXG}
+              XGConceded={formDataAway[0].AverageXGConceded}
+              //todo add goal diff and btts percentages
+              possession={formDataAway[0].AveragePossession}
+              rawPosition={game.awayRawPosition ? game.awayRawPosition : 0}
+              sot={formDataAway[0].AverageShotsOnTarget}
+              dangerousAttacks={formDataAway[0].AverageDangerousAttacks}
+              leaguePosition={
+                formDataAway[0].leaguePosition
+                  ? formDataAway[0].leaguePosition
+                  : 0
+              }
+              homeOrAwayLeaguePosition={
+                game.awayTeamAwayPosition ? game.awayTeamAwayPosition : 0
+              }
+              winPercentage={
+                game.awayTeamWinPercentage ? game.awayTeamWinPercentage : 0
+              }
+              lossPercentage={
+                game.awayTeamLossPercentage ? game.awayTeamLossPercentage : 0
+              }
+              drawPercentage={
+                game.awayTeamDrawPercentage ? game.awayTeamDrawPercentage : 0
+              }
+              ppg={formDataAway[0].SeasonPPG}
+              formTrend={[
+                awayTenGameAverage.toFixed(2),
+                awaySixGameAverage.toFixed(2),
+                awayFiveGameAverage.toFixed(2),
+              ]}
+              lastGame={awayLastGame}
+              formRun={formDataAway[0].formRun}
+              goalDifference={formDataAway[0].goalDifference}
+              goalDifferenceHomeOrAway={
+                formDataAway[0].goalDifferenceHomeOrAway
+              }
+              BttsPercentage={formDataAway[0].BttsPercentage}
+              BttsPercentageHomeOrAway={
+                formDataAway[0].BttsPercentageHomeOrAway
+              }
+              CardsTotal={formDataAway[0].CardsTotal}
+              CornersAverage={formDataAway[0].CornersAverage}
+              ScoredBothHalvesPercentage={
+                formDataAway[0].ScoredBothHalvesPercentage
+              }
+              FormTextString={formDataAway[0].FormTextStringAway}
+            />
+          </ul>
+        </div>
+      );
+    }
+
+    ReactDOM.render(
+      <div>
         <div className="Chart" id={`Chart${game.id}`} style={style}>
           <Chart
             data1={formArrayHome}
@@ -689,335 +998,59 @@ export async function createStatsDiv(game, displayBool) {
             className={"LastGameHeader"}
           ></Div>
         </div>
-      </Fragment>,
+        <Collapsable
+          classNameDiv={"flex-childOneOverview"}
+          classNameDivTwo={"flex-childTwoOverview"}
+          className={"MoreDetailsButton"}
+          buttonText={"Toggle detail view"}
+          newText={"Less detail"}
+          element={contentHome}
+          elementTwo={contentAway}
+          text={overviewHome}
+          textTwo={overviewAway}
+        />
+        <div className="flex-container">
+          <StatsHome />
+          <StatsAway />
+        </div>
+        <Button
+          className="MoreStats"
+          style={style}
+          onClickEvent={() =>
+            getTeamStats(
+              game.id,
+              game.homeTeam,
+              game.awayTeam,
+              formDataHome[0].BttsPercentage,
+              formDataHome[0].BttsPercentageHomeOrAway,
+              formDataAway[0].BttsPercentage,
+              formDataAway[0].BttsPercentageHomeOrAway
+            )
+          }
+          text={"Fixture trends"}
+        ></Button>
+      </div>,
       document.getElementById("stats" + homeTeam)
     );
 
-    ReactDOM.render(
-      <div style={style}>
-        <div className="H2HStats" id={`H2HStats${game.id}`}></div>
-        <div className="TrendsHome" id={`TrendsHome${game.id}`}></div>
-        <div className="TrendsAway" id={`TrendsAway${game.id}`}></div>
-      </div>,
-      document.getElementById("history" + homeTeam)
-    );
-
-    //This tournament does not have league positions
-    if (game.leagueName === "Europe UEFA Women's Euro") {
-      game.homeTeamHomePosition = "N/A";
-      game.awayTeamAwayPosition = "N/A";
-    }
-
-    const overviewHome = gameArrayHome.slice(0, 6).map((game) => (
-      <div className={game.won}>
-        <div className="IndividualPreviousResultHome">
-          <div className="PastGameDateHome">{game.date}</div>
-          <div
-            key={game.id + game.id}
-            className="IndividualPreviousResultGameHome"
-          >
-            <li>
-              {game.homeTeam}{" "}
-              <span className="GoalTotal">{game.homeGoals}</span>
-            </li>
-            <li>
-              {game.awayTeam}{" "}
-              <span className="GoalTotal">{game.awayGoals}</span>
-            </li>
-          </div>
-        </div>
-      </div>
-    ));
-
-    const contentHome = gameArrayHome.slice(0, 6).map((game) => (
-      <div className={game.won}>
-        <div className="IndividualPreviousResultHome">
-          <div className="PastGameDateHome">{game.date}</div>
-          <div key={game.id} className="IndividualPreviousResultGameHome">
-            <li>
-              {game.homeTeam}{" "}
-              <span className="GoalTotal">{game.homeGoals}</span>
-            </li>
-            <li>
-              {game.awayTeam}{" "}
-              <span className="GoalTotal">{game.awayGoals}</span>
-              <table className="GameStatsTable">
-                <tr>
-                  <th>Stat</th>
-                  <th>Home</th>
-                  <th>Away</th>
-                </tr>
-                <tr>
-                  <td>XG</td>
-                  <td>{game.homeXG}</td>
-                  <td>{game.awayXG}</td>
-                </tr>
-                <tr>
-                  <td>Shots</td>
-                  <td>{game.homeShots}</td>
-                  <td>{game.awayShots}</td>
-                </tr>
-                <tr>
-                  <td>SOT</td>
-                  <td>{game.homeSot}</td>
-                  <td>{game.awaySot}</td>
-                </tr>
-                <tr>
-                  <td>D. Attacks</td>
-                  <td>{game.homeDangerousAttacks}</td>
-                  <td>{game.awayDangerousAttacks}</td>
-                </tr>
-                <tr>
-                  <td>Possession</td>
-                  <td>{game.homePossession}</td>
-                  <td>{game.awayPossession}</td>
-                </tr>
-                <tr>
-                  <td>Red cards</td>
-                  <td>{game.homeRed}</td>
-                  <td>{game.awayRed}</td>
-                </tr>
-              </table>
-            </li>
-          </div>
-        </div>
-      </div>
-    ));
-
-    const overviewAway = gameArrayAway.slice(0, 6).map((game) => (
-      <div className={game.won}>
-        <div className="IndividualPreviousResultAway">
-          <div className="PastGameDateAway">{game.date}</div>
-          <div
-            key={game.id + game.id}
-            className="IndividualPreviousResultGameAway"
-          >
-            <li>
-              {game.homeTeam}{" "}
-              <span className="GoalTotal">{game.homeGoals}</span>
-            </li>
-            <li>
-              {game.awayTeam}{" "}
-              <span className="GoalTotal">{game.awayGoals}</span>
-            </li>
-          </div>
-        </div>
-      </div>
-    ));
-
-    const contentAway = gameArrayAway.slice(0, 6).map((game) => (
-      <div className={game.won}>
-        <div className="IndividualPreviousResultAway">
-          <div className="PastGameDateAway">{game.date}</div>
-          <div
-            key={game.id + game.id}
-            className="IndividualPreviousResultGameAway"
-          >
-            <li>
-              {game.homeTeam}{" "}
-              <span className="GoalTotal">{game.homeGoals}</span>
-            </li>
-            <li>
-              {game.awayTeam}{" "}
-              <span className="GoalTotal">{game.awayGoals}</span>
-              <table className="GameStatsTable">
-                <tr>
-                  <th>Stat</th>
-                  <th>Home</th>
-                  <th>Away</th>
-                </tr>
-                <tr>
-                  <td>XG</td>
-                  <td>{game.homeXG}</td>
-                  <td>{game.awayXG}</td>
-                </tr>
-                <tr>
-                  <td>Shots</td>
-                  <td>{game.homeShots}</td>
-                  <td>{game.awayShots}</td>
-                </tr>
-                <tr>
-                  <td>SOT</td>
-                  <td>{game.homeSot}</td>
-                  <td>{game.awaySot}</td>
-                </tr>
-                <tr>
-                  <td>D. Attacks</td>
-                  <td>{game.homeDangerousAttacks}</td>
-                  <td>{game.awayDangerousAttacks}</td>
-                </tr>
-                <tr>
-                  <td>Possession</td>
-                  <td>{game.homePossession}</td>
-                  <td>{game.awayPossession}</td>
-                </tr>
-                <tr>
-                  <td>Red cards</td>
-                  <td>{game.homeRed}</td>
-                  <td>{game.awayRed}</td>
-                </tr>
-              </table>
-            </li>
-          </div>
-        </div>
-      </div>
-    ));
-
-
-    ReactDOM.render(
-      <ul style={style}>
-        <ul className="PreviousResults">
-        <Fragment>
-          <Collapsable
-            className={"Test"}
-            buttonText={"Toggle detail view"}
-            element = {overviewHome}
-            text={contentHome}
-            newText={"Less detail"}
-          />
-        </Fragment>
-        </ul>
-        <Stats
-          style={style}
-          homeOrAway="Home"
-          gameCount={divider}
-          key={formDataHome[0].name}
-          last5={formDataHome[0].Last5}
-          LeagueOrAll={formDataHome[0].LeagueOrAll}
-          className={formDataHome[0].homeOrAway}
-          name={formDataHome[0].name}
-          goals={formDataHome[0].AverageGoals}
-          conceeded={formDataHome[0].AverageConceeded}
-          XG={formDataHome[0].AverageXG}
-          XGConceded={formDataHome[0].AverageXGConceded}
-          possession={formDataHome[0].AveragePossession}
-          sot={formDataHome[0].AverageShotsOnTarget}
-          dangerousAttacks={formDataHome[0].AverageDangerousAttacks}
-          leaguePosition={
-            formDataHome[0].leaguePosition ? formDataHome[0].leaguePosition : 0
-          }
-          rawPosition={game.homeRawPosition ? game.homeRawPosition : 0}
-          homeOrAwayLeaguePosition={
-            game.homeTeamHomePosition ? game.homeTeamHomePosition : 0
-          }
-          winPercentage={
-            game.homeTeamWinPercentage ? game.homeTeamWinPercentage : 0
-          }
-          lossPercentage={
-            game.homeTeamLossPercentage ? game.homeTeamLossPercentage : 0
-          }
-          drawPercentage={
-            game.homeTeamDrawPercentage ? game.homeTeamDrawPercentage : 0
-          }
-          ppg={formDataHome[0].SeasonPPG}
-          formTrend={[
-            homeTenGameAverage.toFixed(2),
-            homeSixGameAverage.toFixed(2),
-            homeFiveGameAverage.toFixed(2),
-          ]}
-          lastGame={homeLastGame}
-          formRun={formDataHome[0].formRun}
-          goalDifference={formDataHome[0].goalDifference}
-          goalDifferenceHomeOrAway={formDataHome[0].goalDifferenceHomeOrAway}
-          BttsPercentage={formDataHome[0].BttsPercentage}
-          BttsPercentageHomeOrAway={formDataHome[0].BttsPercentageHomeOrAway}
-          CardsTotal={formDataHome[0].CardsTotal}
-          CornersAverage={formDataHome[0].CornersAverage}
-          ScoredBothHalvesPercentage={
-            formDataHome[0].ScoredBothHalvesPercentage
-          }
-          FormTextString={formDataHome[0].FormTextStringHome}
-        />
-      </ul>,
-      document.getElementById("home" + homeTeam)
-    );
-
-    ReactDOM.render(
-      <ul style={style}>
-        <ul className="PreviousResults">
-        <Fragment>
-          <Collapsable
-            className={"Test"}
-            buttonText={"Toggle detail view"}
-            text={contentAway}
-            element = {overviewAway}
-          />
-        </Fragment>
-        </ul>
-        <Stats
-          style={style}
-          homeOrAway="Away"
-          gameCount={divider}
-          key={formDataAway[0].name}
-          last5={formDataAway[0].Last5}
-          LeagueOrAll={formDataAway[0].LeagueOrAll}
-          className={formDataAway[0].homeOrAway}
-          name={formDataAway[0].name}
-          goals={formDataAway[0].AverageGoals}
-          conceeded={formDataAway[0].AverageConceeded}
-          XG={formDataAway[0].AverageXG}
-          XGConceded={formDataAway[0].AverageXGConceded}
-          //todo add goal diff and btts percentages
-          possession={formDataAway[0].AveragePossession}
-          rawPosition={game.awayRawPosition ? game.awayRawPosition : 0}
-          sot={formDataAway[0].AverageShotsOnTarget}
-          dangerousAttacks={formDataAway[0].AverageDangerousAttacks}
-          leaguePosition={
-            formDataAway[0].leaguePosition ? formDataAway[0].leaguePosition : 0
-          }
-          homeOrAwayLeaguePosition={
-            game.awayTeamAwayPosition ? game.awayTeamAwayPosition : 0
-          }
-          winPercentage={
-            game.awayTeamWinPercentage ? game.awayTeamWinPercentage : 0
-          }
-          lossPercentage={
-            game.awayTeamLossPercentage ? game.awayTeamLossPercentage : 0
-          }
-          drawPercentage={
-            game.awayTeamDrawPercentage ? game.awayTeamDrawPercentage : 0
-          }
-          ppg={formDataAway[0].SeasonPPG}
-          formTrend={[
-            awayTenGameAverage.toFixed(2),
-            awaySixGameAverage.toFixed(2),
-            awayFiveGameAverage.toFixed(2),
-          ]}
-          lastGame={awayLastGame}
-          formRun={formDataAway[0].formRun}
-          goalDifference={formDataAway[0].goalDifference}
-          goalDifferenceHomeOrAway={formDataAway[0].goalDifferenceHomeOrAway}
-          BttsPercentage={formDataAway[0].BttsPercentage}
-          BttsPercentageHomeOrAway={formDataAway[0].BttsPercentageHomeOrAway}
-          CardsTotal={formDataAway[0].CardsTotal}
-          CornersAverage={formDataAway[0].CornersAverage}
-          ScoredBothHalvesPercentage={
-            formDataAway[0].ScoredBothHalvesPercentage
-          }
-          FormTextString={formDataAway[0].FormTextStringAway}
-        />
-      </ul>,
-      document.getElementById("away" + awayTeam)
-    );
-
-    ReactDOM.render(
-      <Button
-        className="MoreStats"
-        style={style}
-        onClickEvent={() =>
-          getTeamStats(
-            game.id,
-            game.homeTeam,
-            game.awayTeam,
-            formDataHome[0].BttsPercentage,
-            formDataHome[0].BttsPercentageHomeOrAway,
-            formDataAway[0].BttsPercentage,
-            formDataAway[0].BttsPercentageHomeOrAway
-          )
-        }
-        text={"Fixture trends"}
-      ></Button>,
-      document.getElementById(`H2HStats${game.id}`)
-    );
+    // ReactDOM.render(
+    //   <Button
+    //     className="MoreStats"
+    //     style={style}
+    //     onClickEvent={() =>
+    //       getTeamStats(
+    //         game.id,
+    //         game.homeTeam,
+    //         game.awayTeam,
+    //         formDataHome[0].BttsPercentage,
+    //         formDataHome[0].BttsPercentageHomeOrAway,
+    //         formDataAway[0].BttsPercentage,
+    //         formDataAway[0].BttsPercentageHomeOrAway
+    //       )
+    //     }
+    //     text={"Fixture trends"}
+    //   ></Button>,
+    //   document.getElementById(`H2HStats${game.id}`)
+    // );
   }
 }

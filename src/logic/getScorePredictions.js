@@ -2225,7 +2225,7 @@ async function renderTips() {
           <Collapsable
             buttonText={"Build a multi"}
             className={"PredictionsOfTheDay"}
-            text={
+            element={
               <ul className="BestPredictions" id="BestPredictions">
                 <div className="BestPredictionsExplainer">
                   Add or remove a selection using the buttons below. Predictions
@@ -2258,7 +2258,7 @@ async function renderTips() {
           <Collapsable
             buttonText={"Build a multi"}
             className={"PredictionsOfTheDay"}
-            text={
+            element={
               <ul className="BestPredictions" id="BestPredictions">
                 <div className="BestPredictionsExplainer">
                   No games fit the criteria
@@ -2282,7 +2282,7 @@ async function renderTips() {
           <Collapsable
             buttonText={"Exotic of the day"}
             className={"PredictionsOfTheDay"}
-            text={
+            element={
               <ul className="BestPredictions" id="BestPredictions">
                 <div className="BestPredictionsExplainer">
                   <NewlineText
@@ -2313,7 +2313,7 @@ async function renderTips() {
           <Collapsable
             buttonText={"Exotic of the day"}
             className={"PredictionsOfTheDay"}
-            text={
+            element={
               <ul className="BestPredictions" id="BestPredictions">
                 <div className="BestPredictionsExplainer">
                   Not enough games for this feature
@@ -2333,7 +2333,7 @@ async function renderTips() {
         <Fragment>
           <Collapsable
             buttonText={"Over 2.5 goals tips"}
-            text={
+            element={
               <ul className="LongshotPredictions" id="LongshotPredictions">
                 <lh>Over 2.5 goals</lh>
                 {Over25Tips.map((tip) => (
@@ -2357,7 +2357,7 @@ async function renderTips() {
         <Fragment>
           <Collapsable
             buttonText={"Over 2.5 goals tips"}
-            text={
+            element={
               <ul className="LongshotPredictions" id="LongshotPredictions">
                 <lh>No games fit the criteria</lh>
               </ul>
@@ -2375,7 +2375,7 @@ async function renderTips() {
         <Fragment>
           <Collapsable
             buttonText={"XG Tips"}
-            text={
+            element={
               <ul className="XGDiffTips" id="XGDiffTips">
                 <lh>Games with greatest XG Differentials</lh>
                 {XGDiffTips.map((tip) => (
@@ -2397,7 +2397,7 @@ async function renderTips() {
         <Fragment>
           <Collapsable
             buttonText={"XG Tips"}
-            text={
+            element={
               <ul className="XGDiffTips" id="XGDiffTips">
                 <lh>No games fit the criteria</lh>
               </ul>
@@ -2416,7 +2416,7 @@ async function renderTips() {
           <Collapsable
             className={"BTTSGames"}
             buttonText={"BTTS games"}
-            text={
+            element={
               <ul className="BTTSGames" id="BTTSGames">
                 <lh>Games with highest chance of BTTS</lh>
                 {bttsArray.map((game) => (
@@ -2441,7 +2441,7 @@ async function renderTips() {
           <Collapsable
             className={"BTTSGames"}
             buttonText={"BTTS games"}
-            text={
+            element={
               <ul className="BTTSGames" id="BTTSGames">
                 <lh>No games fit the criteria</lh>
               </ul>

@@ -268,7 +268,7 @@ let historicDate;
     <Collapsable
       className={"HowToUse"}
       buttonText={"How to use"}
-      text={newText}
+      element={newText}
     />
   </Fragment>,
   document.getElementById("XGDiff")
