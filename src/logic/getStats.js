@@ -92,9 +92,13 @@ export async function createStatsDiv(game, displayBool) {
             awayPossession: resultHome[i].team_b_possession,
             homeDangerousAttacks: resultHome[i].team_a_dangerous_attacks,
             awayDangerousAttacks: resultHome[i].team_b_dangerous_attacks,
+            homePPG: resultHome[i].pre_match_teamA_overall_ppg,
+            awayPPG: resultHome[i].pre_match_teamB_overall_ppg,
+            unixTimestamp: resultHome[i].date_unix,
           });
         }
-        gameArrayHome.reverse();
+        gameArrayHome.sort((a, b) => b.unixTimestamp - a.unixTimestamp)
+        // gameArrayHome.reverse();
 
         const resultAway = matches.data.filter(
           (game) =>
@@ -141,9 +145,12 @@ export async function createStatsDiv(game, displayBool) {
             awayPossession: resultAway[i].team_b_possession,
             homeDangerousAttacks: resultAway[i].team_a_dangerous_attacks,
             awayDangerousAttacks: resultAway[i].team_b_dangerous_attacks,
+            homePPG: resultAway[i].pre_match_teamA_overall_ppg,
+            awayPPG: resultAway[i].pre_match_teamB_overall_ppg,
+            unixTimestamp: resultAway[i].date_unix,
           });
         }
-        gameArrayAway.reverse();
+        gameArrayAway.sort((a, b) => b.unixTimestamp - a.unixTimestamp)
         // fixturesArray = Array.from(matches.data);
         // console.log(fixturesArray);
         console.log(gameArrayHome);
@@ -737,6 +744,11 @@ export async function createStatsDiv(game, displayBool) {
                     <td>{game.homeRed}</td>
                     <td>{game.awayRed}</td>
                   </tr>
+                  <tr>
+                    <td>PPG (pre-match)</td>
+                    <td>{game.homePPG}</td>
+                    <td>{game.awayPPG}</td>
+                  </tr>
                 </table>
               </li>
             </div>
@@ -756,12 +768,12 @@ export async function createStatsDiv(game, displayBool) {
             >
               {" "}
               <li>
-              <span className="GoalTotal">{game.homeGoals}</span>
-              {" "}{game.homeTeam}
+                <span className="GoalTotal">{game.homeGoals}</span>{" "}
+                {game.homeTeam}
               </li>
               <li>
-              <span className="GoalTotal">{game.awayGoals}</span>
-              {" "}{game.awayTeam}
+                <span className="GoalTotal">{game.awayGoals}</span>{" "}
+                {game.awayTeam}
               </li>
             </div>
           </div>
@@ -778,13 +790,13 @@ export async function createStatsDiv(game, displayBool) {
               key={game.id + game.id}
               className="IndividualPreviousResultGameAway"
             >
-              <li key={game.awayTeam + 1}>  
-                <span className="GoalTotal">{game.homeGoals}</span>
-                {" "}{game.homeTeam}
+              <li key={game.awayTeam + 1}>
+                <span className="GoalTotal">{game.homeGoals}</span>{" "}
+                {game.homeTeam}
               </li>
               <li key={game.awayTeam + 2}>
-                <span className="GoalTotal">{game.awayGoals}</span>
-                {" "}{game.awayTeam}
+                <span className="GoalTotal">{game.awayGoals}</span>{" "}
+                {game.awayTeam}
                 <table className="GameStatsTable">
                   <tr>
                     <th>Stat</th>
@@ -820,6 +832,11 @@ export async function createStatsDiv(game, displayBool) {
                     <td>Red cards</td>
                     <td>{game.homeRed}</td>
                     <td>{game.awayRed}</td>
+                  </tr>
+                  <tr>
+                    <td>PPG (pre-match)</td>
+                    <td>{game.homePPG}</td>
+                    <td>{game.awayPPG}</td>
                   </tr>
                 </table>
               </li>
@@ -963,7 +980,7 @@ export async function createStatsDiv(game, displayBool) {
     }
 
     ReactDOM.render(
-      <div>
+      <div style={style}>
         <div className="Chart" id={`Chart${game.id}`} style={style}>
           <Chart
             data1={formArrayHome}
@@ -1008,6 +1025,7 @@ export async function createStatsDiv(game, displayBool) {
           elementTwo={contentAway}
           text={overviewHome}
           textTwo={overviewAway}
+          // style={style}
         />
         <div className="flex-container">
           <StatsHome />
@@ -1015,7 +1033,6 @@ export async function createStatsDiv(game, displayBool) {
         </div>
         <Button
           className="MoreStats"
-          style={style}
           onClickEvent={() =>
             getTeamStats(
               game.id,

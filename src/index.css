@@ -1112,53 +1112,65 @@ a.PreviousMatchLink{
 .flex-container{
   display: flex;
   justify-content: center;
+  align-items: flex-end;
 }
 
 .flex-childOne {
   flex-direction: column;
   text-align: right;
   padding-right: 0.5em;
+  flex-basis: 45%;
 } 
 
 .flex-childOneOverview {
   flex-direction: column;
   text-align: right;
-  padding-right: 1em;
-  width: auto;
-  max-width: 21em;
+  padding-right: 0.5em;
+  flex-basis: 45%;
+  /* min-width: 16em;
+  max-width: 21em; */
 } 
 
 .flex-childTwoOverview {
   flex-direction: column;
   text-align: left;
-  padding-left: 1em;
-  width: auto;
-  max-width: 21em;
+  padding-left: 0.5em;
+  flex-basis: 45%;
+
+  /* width: auto;
+  min-width: 16em;
+  max-width: 21em; */
 } 
 
 .flex-childOneOverview .W {
-  padding: 1em;
+  border: solid 1px #030061;
+  padding: 0.5em;
 } 
 
 .flex-childOneOverview .D {
-  padding: 1em;
+  border: solid 1px #030061;
+  padding: 0.5em;
 } 
 
 .flex-childOneOverview .L {
-  padding: 1em;
+  border: solid 1px #030061;
+  padding: 0.5em;
 } 
       
 
 .flex-childTwoOverview .W{
-  padding: 1em;
+  border: solid 1px #030061;
+  padding: 0.5em;
 } 
 
 .flex-childTwoOverview .D{
-  padding: 1em;
+  border: solid 1px #030061;
+  padding: 0.5em;
 } 
 
 .flex-childTwoOverview .L{
-  padding: 1em;
+  border: solid 1px #030061;
+  padding: 0.5em;
 } 
 
 .flex-childOne li:nth-child(odd){
@@ -1168,12 +1180,15 @@ a.PreviousMatchLink{
 .flex-childTwo {
   flex-direction: column;
   text-align: left;
+  flex-basis: 45%;
+
   padding-left: 0.5em;
 } 
 
 .flex-childTwo li:nth-child(odd){
   background-color: #e2e2e26c
 }
+
 
 .PreviousResults{
   display: flex;
@@ -1191,6 +1206,7 @@ a.PreviousMatchLink{
   background-color: rgba(22, 165, 22, 0.094);
   padding: 1em;
   margin-bottom: 0.5em;
+  border: solid 1px #030061;
   /* padding-left: 7px;
   padding-right: 7px; */
 }
@@ -1199,12 +1215,14 @@ a.PreviousMatchLink{
   background-color: #970d001d;
   padding: 1em;
   margin-bottom: 0.5em;
+  border: solid 1px #030061;
 }
 
 .D {
   background-color: rgba(85, 85, 85, 0.076);
   padding: 1em;
   margin-bottom: 0.5em;
+  border: solid 1px #030061;
 }
 
 
@@ -1368,18 +1386,20 @@ a.PreviousMatchLink{
 }
 
 
+/* 
+
 .Away {
   padding-left: 0px;
   flex-basis: 50%;
-}
-
+} */
+/* 
 .Away li {
   padding: 0.8em;
   margin: 0px;
   list-style: none;
   background: #e2e2e26c;
   color: black;
-}
+} */
 
 .Away li.Form {
   padding-top: 1.5em;
@@ -1389,6 +1409,7 @@ a.PreviousMatchLink{
 .Away li.FormHomeOrAway {
   padding-top: 1.5em;
 }
+
 
 canvas {
   /* padding-top: 1em;
@@ -1400,14 +1421,16 @@ canvas {
 }
 
 .FormSummaryHome {
-  display: flex;
-  height: 10em;
-  max-width: 21em;
-  justify-content:flex-end;
+  /* display: flex; */
+  height: auto;
+  vertical-align: middle;
+  background-color: #e2e2e200 !important;
+  /* max-width: 21em; */
+  /* justify-content:flex-end;
   align-items: flex-start;
-  background-color: #e2e2e26c !important;
+  background-color: #e2e2e26c !important; */
   line-height: 1.5em;
-  margin-left: auto;
+  /* margin-left: auto; */
 }
 
 
@@ -1600,8 +1623,9 @@ li.FormHeader{
 }
 
 .BestPredictions {
-  padding: 0px;
-  flex-basis: 75%;
+  padding: 1em;
+  border: #030061 1px dashed;
+  margin: 0.5em;
 }
 
 .BestPredictionsExplainer {
@@ -1619,15 +1643,16 @@ li.FormHeader{
   font-size: 1.1em;
 }
 
+.BTTSGames {
+  border: #030061 1px dashed;
+  padding: 1em;
+  margin: 0.5em;
+}
+
 .BTTSGames li {
   /* font-size: 1em; */
   padding-top: 1em;
   font-size: 1.1em;
-
-}
-
-.SubmitButton {
-  /* font-size: 50px; */
 }
 
 .fact {
@@ -1638,9 +1663,7 @@ ul {
   padding: 0px;
   list-style: none;
 }
-.BestPredictions {
-  padding: 0px;
-}
+
 
 .BestPredictions li {
   /* font-size: 0.8em; */
@@ -1654,19 +1677,22 @@ ul {
   padding-top: 1em;
 }
 
-.BestPredictions lh {
-  /* font-size: 0.8em; */
-}
-
 .LongshotPredictions {
-  padding: 0px;
+  padding: 1em;
+  border: #030061 1px dashed;
+  margin: 0.5em;
 }
 
 .LongshotPredictions li {
   /* font-size: 0.8em; */
-  padding-top: 1em;
   font-size: 1.1em;
+  padding-top: 1em;
+}
 
+.XGDiffTips {
+  padding: 1em;
+  border: #030061 1px dashed;
+  margin: 0.5em;
 }
 
 .XGDiffTips lh {
@@ -1878,6 +1904,11 @@ button:hover {
   padding-top: 5px;
   padding-bottom: 10px;
 
+}
+
+.MoreDetailsButton{
+  font-size: 0.9em;
+  margin-bottom: 1em;
 }
 
 .MoreStats{

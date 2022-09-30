@@ -696,11 +696,12 @@ export async function compareTeams(homeForm, awayForm, match) {
 
   tooCloseToCall = tooCloseToCall + tooCloseToCallCount;
 
-
   if (
-    ((homeForm.actualToXGDifference > 0.25 && awayForm.actualToXGDifference < -0.25)) ||
-    ((awayForm.actualToXGDifference > 0.25 && homeForm.actualToXGDifference < -0.25))
-  ){
+    (homeForm.actualToXGDifference > 0.25 &&
+      awayForm.actualToXGDifference < -0.25) ||
+    (awayForm.actualToXGDifference > 0.25 &&
+      homeForm.actualToXGDifference < -0.25)
+  ) {
     [goalDiffComparison, tooCloseToCallCount] = await compareStat(
       (awayForm.actualToXGDifference + 1) * 5,
       (homeForm.actualToXGDifference + 1) * 5
@@ -711,8 +712,6 @@ export async function compareTeams(homeForm, awayForm, match) {
       awayForm.goalDifference + 10
     );
   }
-
-
 
   tooCloseToCall = tooCloseToCall + tooCloseToCallCount;
 
@@ -794,10 +793,11 @@ export async function compareTeams(homeForm, awayForm, match) {
   tooCloseToCall = tooCloseToCall + tooCloseToCallCount;
 
   if (
-    (homeForm.actualToXGDifference > 0.5 && awayForm.actualToXGDifference < -0.5) ||
-    (awayForm.actualToXGDifference > 0.5 && homeForm.actualToXGDifference < -0.5)
+    (homeForm.actualToXGDifference > 0.5 &&
+      awayForm.actualToXGDifference < -0.5) ||
+    (awayForm.actualToXGDifference > 0.5 &&
+      homeForm.actualToXGDifference < -0.5)
   ) {
-
     [actualToXGDifferenceComparison, tooCloseToCallCount] = await compareStat(
       awayForm.actualToXGDifference + 1,
       homeForm.actualToXGDifference + 1
@@ -868,7 +868,9 @@ export async function compareTeams(homeForm, awayForm, match) {
     homeOrAwayAverageComparison * 0 +
     // actualToXGDifferenceComparison * 20 +
     // actualToXGDifferenceRecentComparison * 20 +
-    overUnderAchievingSumComparison * Math.abs(overOrUnderperformingDiff * 10) * 0 +
+    overUnderAchievingSumComparison *
+      Math.abs(overOrUnderperformingDiff * 10) *
+      0 +
     goalDiffHOrAComparison * 0;
 
   match.tooCloseToCall = tooCloseToCall;
@@ -1220,14 +1222,25 @@ export async function calculateScore(match, index, divider) {
       teams[i][index].shortTermGoalDifference =
         teams[i][0].ScoredAverage - teams[i][0].ConcededAverage;
 
-      teams[i][index].XGdifferential = await diff(teams[i][index].XGOverall, teams[i][index].XGAgainstAvgOverall)
+      teams[i][index].XGdifferential = await diff(
+        teams[i][index].XGOverall,
+        teams[i][index].XGAgainstAvgOverall
+      );
 
-      teams[i][index].XGdifferentialRecent = await diff(teams[i][0].XGOverall, teams[i][0].XGAgainstAvgOverall)
+      teams[i][index].XGdifferentialRecent = await diff(
+        teams[i][0].XGOverall,
+        teams[i][0].XGAgainstAvgOverall
+      );
 
-      teams[i][index].actualToXGDifference = await diff(teams[i][index].longTermGoalDifference, teams[i][index].XGdifferential)
+      teams[i][index].actualToXGDifference = await diff(
+        teams[i][index].longTermGoalDifference,
+        teams[i][index].XGdifferential
+      );
 
-      teams[i][index].actualToXGDifferenceRecent = await diff(teams[i][index].shortTermGoalDifference, teams[i][index].XGdifferentialRecent)
-
+      teams[i][index].actualToXGDifferenceRecent = await diff(
+        teams[i][index].shortTermGoalDifference,
+        teams[i][index].XGdifferentialRecent
+      );
 
       if (
         teams[i][0].XGOverall > teams[i][2].XGOverall &&
@@ -1493,7 +1506,6 @@ export async function calculateScore(match, index, divider) {
         match.XGdifferentialValueRaw < 0 ||
         formAway.actualToXGDifference < -1 ||
         formHome.actualToXGDifference > 1
-
       ) {
         match.includeInMultis = false;
       } else {
@@ -1791,7 +1803,15 @@ export async function getScorePrediction(day, mocked) {
         ] = await calculateScore(match, index, divider, match.id);
       }
 
-      await getBTTSPotential(allForm, match, index, match.goalsA, match.goalsB, match.unroundedGoalsA, match.unroundedGoalsB);
+      await getBTTSPotential(
+        allForm,
+        match,
+        index,
+        match.goalsA,
+        match.goalsB,
+        match.unroundedGoalsA,
+        match.unroundedGoalsB
+      );
 
       let predictionObject;
       let Over25PredictionObject;
@@ -2224,7 +2244,6 @@ async function renderTips() {
           <Increment />
           <Collapsable
             buttonText={"Build a multi"}
-            className={"PredictionsOfTheDay"}
             element={
               <ul className="BestPredictions" id="BestPredictions">
                 <div className="BestPredictionsExplainer">
@@ -2257,7 +2276,6 @@ async function renderTips() {
           <Increment />
           <Collapsable
             buttonText={"Build a multi"}
-            className={"PredictionsOfTheDay"}
             element={
               <ul className="BestPredictions" id="BestPredictions">
                 <div className="BestPredictionsExplainer">
@@ -2281,7 +2299,6 @@ async function renderTips() {
         <Fragment>
           <Collapsable
             buttonText={"Exotic of the day"}
-            className={"PredictionsOfTheDay"}
             element={
               <ul className="BestPredictions" id="BestPredictions">
                 <div className="BestPredictionsExplainer">
@@ -2312,7 +2329,6 @@ async function renderTips() {
         <Fragment>
           <Collapsable
             buttonText={"Exotic of the day"}
-            className={"PredictionsOfTheDay"}
             element={
               <ul className="BestPredictions" id="BestPredictions">
                 <div className="BestPredictionsExplainer">
@@ -2414,7 +2430,6 @@ async function renderTips() {
       <div>
         <Fragment>
           <Collapsable
-            className={"BTTSGames"}
             buttonText={"BTTS games"}
             element={
               <ul className="BTTSGames" id="BTTSGames">
@@ -2439,7 +2454,6 @@ async function renderTips() {
       <div>
         <Fragment>
           <Collapsable
-            className={"BTTSGames"}
             buttonText={"BTTS games"}
             element={
               <ul className="BTTSGames" id="BTTSGames">
