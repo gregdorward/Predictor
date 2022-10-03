@@ -40,7 +40,8 @@ export function Chart(props) {
     scales: {
       y: {
         suggestedMin: 0,
-        suggestedMax: Math.max(...props.data1) > 3 ? Math.max(...props.data1) : 3,
+        suggestedMax: props.data1.length * 3,
+        // suggestedMax: Math.max(...props.data1) > 3 ? Math.max(...props.data1) : 3,
         grid: {
           borderWidth: 1,
           borderColor: "black",
