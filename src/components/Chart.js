@@ -29,6 +29,12 @@ ChartJS.register(
 );
 
 export function Chart(props) {
+  let length
+  if(props.type === "Points over time"){
+    length = props.data1.length * 3
+  } else {
+    length = props.height
+  }
   const options = {
     color: "black",
     responsive: true,
@@ -40,7 +46,7 @@ export function Chart(props) {
     scales: {
       y: {
         suggestedMin: 0,
-        suggestedMax: props.data1.length * 3,
+        suggestedMax: length,
         // suggestedMax: Math.max(...props.data1) > 3 ? Math.max(...props.data1) : 3,
         grid: {
           borderWidth: 1,
@@ -101,6 +107,7 @@ export function Chart(props) {
         borderColor: "#030061",
         borderWidth: 2,
         backgroundColor: "#030061",
+        tension: props.tension
       },
       {
         label: props.team2,
@@ -108,6 +115,7 @@ export function Chart(props) {
         borderColor: "#970d00",
         borderWidth: 2,
         backgroundColor: "#970d00",
+        tension: props.tension
       },
     ],
   };
