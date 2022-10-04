@@ -1040,11 +1040,15 @@ export async function createStatsDiv(game, displayBool) {
       );
     }
 
+    console.log(goalDiffHomeMovingAv)
+    console.log(goalDiffAwayMovingAv)
+
     ReactDOM.render(
       <div style={style}>
         <div className="Chart" id={`Chart${game.id}`} style={style}>
           <Chart
             height={3}
+            depth={0}
             data1={formArrayHome}
             data2={formArrayAway}
             team1={game.homeTeam}
@@ -1071,7 +1075,8 @@ export async function createStatsDiv(game, displayBool) {
             team2={game.awayTeam}
           ></RadarChart>
             <Chart
-            height = {Math.max(...goalDiffHomeMovingAv, ...goalDiffAwayMovingAv) > 1 ? Math.max(...goalDiffHomeMovingAv, ...goalDiffAwayMovingAv) : 1}
+            height = {Math.max(...goalDiffHomeMovingAv, ...goalDiffAwayMovingAv) > 2 ? Math.max(...goalDiffHomeMovingAv, ...goalDiffAwayMovingAv) : 2}
+            depth = {Math.min(...goalDiffHomeMovingAv, ...goalDiffAwayMovingAv) < -2 ? Math.min(...goalDiffHomeMovingAv, ...goalDiffAwayMovingAv) : -2}
             data1={goalDiffHomeMovingAv}
             data2={goalDiffAwayMovingAv}
             team1={game.homeTeam}

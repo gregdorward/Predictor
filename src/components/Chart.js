@@ -29,12 +29,38 @@ ChartJS.register(
 );
 
 export function Chart(props) {
-  let length
-  if(props.type === "Points over time"){
-    length = props.data1.length * 3
-  } else {
-    length = props.height
-  }
+
+let length;
+let depth;
+
+if(props.type === "Points over time"){
+  length = props.data1.length * 3
+  depth = 0
+  console.log(1)
+} else if(Math.abs(props.height) > Math.abs(props.depth)){
+  console.log(props.height)
+  console.log(props.depth)
+
+  length = Math.abs(props.height)
+  depth = -Math.abs(props.height)
+  console.log(2)
+} else if (Math.abs(props.height) < Math.abs(props.depth)){
+  console.log(props.height)
+  console.log(props.depth)
+
+  length = Math.abs(props.depth)
+  depth = -Math.abs(props.depth)
+  console.log(3)
+} else {
+  console.log(props.height)
+  console.log(props.depth)
+  
+  length = Math.abs(props.depth)
+  depth = -Math.abs(props.depth)
+  console.log(4)
+}
+
+
   const options = {
     color: "black",
     responsive: true,
@@ -45,7 +71,7 @@ export function Chart(props) {
     },
     scales: {
       y: {
-        suggestedMin: 0,
+        suggestedMin: depth,
         suggestedMax: length,
         // suggestedMax: Math.max(...props.data1) > 3 ? Math.max(...props.data1) : 3,
         grid: {
