@@ -726,6 +726,36 @@ p {
   
 }
 
+.HomeResults {
+  /* padding-right: 1em; */
+  font-size: 1em;
+  padding: 1em;
+  text-align: center;
+}
+
+.HomeResults li {
+  padding-bottom: 1em;
+  border-bottom: #030061 1px solid
+}
+
+.AwayResults {
+  /* padding-left: 1em; */
+  font-size: 1em;
+  padding: 1em;
+  text-align: center;
+}
+
+.AwayResults li {
+  padding-bottom: 1em;
+  border-bottom: #030061 1px solid
+}
+
+.GameDate {
+  padding-bottom: 0.25em;
+  padding-top: 0.5em;
+}
+
+
 .IncorrectScore {
   height: auto;
   flex-basis: 10%;
@@ -1207,6 +1237,7 @@ a.PreviousMatchLink{
   padding: 1em;
   margin-bottom: 0.5em;
   border: solid 1px #030061;
+  text-align: center;
   /* padding-left: 7px;
   padding-right: 7px; */
 }
@@ -1216,6 +1247,8 @@ a.PreviousMatchLink{
   padding: 1em;
   margin-bottom: 0.5em;
   border: solid 1px #030061;
+  text-align: center;
+
 }
 
 .D {
@@ -1223,19 +1256,24 @@ a.PreviousMatchLink{
   padding: 1em;
   margin-bottom: 0.5em;
   border: solid 1px #030061;
+  text-align: center;
+
 }
 
 
 .W li {
   padding: 0.5em;
+  text-align: center;
 }
 
 .D li {
   padding: 0.5em;
+  text-align: center;
 }
 
 .L li {
   padding: 0.5em;
+  text-align: center;
 }
 
 /* .column {

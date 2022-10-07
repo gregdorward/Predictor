@@ -24,6 +24,7 @@ export var leagueArray = [];
 var leagueIdArray = [];
 export var leagueStatsArray = [];
 export let leagueInstance;
+export let allLeagueResultsArrayOfObjects = []
 var lastThreeFormHome;
 var lastThreeFormAway;
 var lastFiveFormHome;
@@ -71,11 +72,9 @@ export async function generateTables(a, leagueIdArray) {
   // leagueIdArray = [];
   tableArray = [];
   let i = 0;
-  console.log(leagueArray)
 
   leagueArray.forEach(function (league) {
     let currentLeagueId = leagueIdArray[i];
-    console.log(currentLeagueId)
     i++;
     leagueInstance = [];
     //Skip MLS which has a weird format
@@ -158,7 +157,6 @@ export async function renderTable(index) {
     `${process.env.REACT_APP_EXPRESS_SERVER}leagueStats/${league[0].LeagueID}`
   );
   await leagueStatistics.json().then((stats) => {
-    console.log(stats)
     statistics = stats.data;
   });
 
@@ -277,7 +275,6 @@ export async function generateFixtures(
   selectedOdds,
   footyStatsFormattedDate
 ) {
-
   //cleanup if different day is selected
   ReactDOM.render(<div></div>, document.getElementById("GeneratePredictions"));
   ReactDOM.render(<div></div>, document.getElementById("successMeasure2"));
@@ -340,14 +337,23 @@ export async function generateFixtures(
   }
 
   var leaguePositions = [];
-  leagueArray = []
+  leagueArray = [];
   if (league.status === 200) {
     await league.json().then((leagues) => {
       leagueArray = Array.from(leagues.leagueArray);
     });
+
+    let allLeagueResults = await fetch(`${process.env.REACT_APP_EXPRESS_SERVER}results`)
+
+    allLeagueResultsArrayOfObjects = []
+    await allLeagueResults.json().then(( allGames => {
+      allLeagueResultsArrayOfObjects = allGames
+    }))
     leaguesStored = true;
+    console.log("Triggered")
     generateTables(leagueArray, leagueIdArray);
   } else {
+    allLeagueResultsArrayOfObjects = []
     for (let i = 0; i < orderedLeagues.length; i++) {
       league = await fetch(
         `${process.env.REACT_APP_EXPRESS_SERVER}tables/${orderedLeagues[i].element.id}/${date}`
@@ -357,6 +363,29 @@ export async function generateFixtures(
         leagueArray.push(table);
       });
       leaguesStored = false;
+    }
+
+
+    for (const orderedLeague of orderedLeagues) {
+
+      let fixtures = await fetch(
+        `${process.env.REACT_APP_EXPRESS_SERVER}leagueFixtures/${orderedLeague.element.id}`
+      );
+
+      let games = await fixtures.json();
+      let gamesFiltered = games.data.filter(
+        (game) => game.status === "complete"
+      );
+
+
+      let leagueObj = {
+      // leagueObject[orderedLeague] = {
+        name: orderedLeague.name,
+        id: orderedLeague.element.id,
+        fixtures: gamesFiltered,
+      };
+
+      allLeagueResultsArrayOfObjects.push(leagueObj)
     }
     generateTables(leagueArray, leagueIdArray);
   }
@@ -524,10 +553,11 @@ export async function generateFixtures(
       if (orderedLeagues[i].name !== previousLeagueName) {
         match.leagueName = orderedLeagues[i].name;
         match.leagueIndex = i;
-        match.leagueID = leagueID
+        match.leagueID = leagueID;
       } else {
         match.leagueName = null;
-        match.leagueID = leagueID
+        match.leagueIndex = i;
+        match.leagueID = leagueID;
       }
       match.id = fixture.id;
       match.competition_id = fixture.competition_id;
@@ -779,8 +809,6 @@ export async function generateFixtures(
           awayPrefix = "";
           awayPrefixAwayTable = "";
         }
-
-        console.log(match)
 
         allForm.push({
           id: match.id,
@@ -1329,5 +1357,15 @@ export async function generateFixtures(
       },
       body: JSON.stringify({ leagueArray }),
     });
+
+    await fetch(`${process.env.REACT_APP_EXPRESS_SERVER}results`, {
+      method: "PUT",
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(allLeagueResultsArrayOfObjects),
+    });
+    
   }
 }

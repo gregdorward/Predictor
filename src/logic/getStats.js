@@ -2,7 +2,7 @@ import ReactDOM from "react-dom";
 import { Button } from "../components/Button";
 import Stats from "../components/createStatsDiv";
 import Div from "../components/Div";
-import { allForm } from "../logic/getFixtures";
+import { allForm, allLeagueResultsArrayOfObjects } from "../logic/getFixtures";
 import { getTeamStats } from "../logic/getTeamStats";
 import { getPointsFromLastX } from "../logic/getScorePredictions";
 import { CreateBadge } from "../components/createBadge";
@@ -13,6 +13,15 @@ import Collapsable from "../components/CollapsableElement";
 
 async function diff(a, b) {
   return parseFloat(a - b).toFixed(2);
+}
+
+async function convertTimestamp(timestamp) {
+  let newDate = new Date(timestamp * 1000);
+  let [day, month, year] = newDate.toLocaleDateString("en-US").split("/");
+
+  let converted = `${year}-${day}-${month}`;
+
+  return converted;
 }
 
 export async function createStatsDiv(game, displayBool) {
@@ -41,9 +50,81 @@ export async function createStatsDiv(game, displayBool) {
     let goalDiffArrayAway;
     let goalDiffHomeMovingAv = [];
     let goalDiffAwayMovingAv = [];
-    let latestHomeGoalDiff
-    let latestAwayGoalDiff
+    let latestHomeGoalDiff;
+    let latestAwayGoalDiff;
 
+    let leagueResults = allLeagueResultsArrayOfObjects;
+    console.log(leagueResults);
+
+    let homeTeamsResults = leagueResults[game.leagueIndex].fixtures.filter(
+      (fixture) =>
+        fixture.home_name === game.homeTeam ||
+        fixture.away_name === game.homeTeam
+    );
+
+    let awayTeamsResults = leagueResults[game.leagueIndex].fixtures.filter(
+      (fixture) =>
+        fixture.home_name === game.awayTeam ||
+        fixture.away_name === game.awayTeam
+    );
+
+    let homeResults = [];
+    let awayResults = [];
+
+    for (let index = 0; index < homeTeamsResults.length; index++) {
+      const resultedGame = homeTeamsResults[index];
+      homeResults.push({
+        homeTeam: resultedGame.home_name,
+        homeGoals: resultedGame.homeGoalCount,
+        awayTeam: resultedGame.away_name,
+        awayGoals: resultedGame.awayGoalCount,
+        date: await convertTimestamp(resultedGame.date_unix),
+      });
+    }
+    for (let index = 0; index < awayTeamsResults.length; index++) {
+      const resultedGame = awayTeamsResults[index];
+      awayResults.push({
+        homeTeam: resultedGame.home_name,
+        homeGoals: resultedGame.homeGoalCount,
+        awayTeam: resultedGame.away_name,
+        awayGoals: resultedGame.awayGoalCount,
+        date: await convertTimestamp(resultedGame.date_unix),
+      });
+    }
+
+    homeResults.reverse();
+    awayResults.reverse();
+
+    const listOfResultsHome = homeResults.map((result) => (
+      <li key={`home${result.homeTeam}${result.date}`}>
+        <div className="GameDate">{result.date}</div>
+        <div>
+          {result.homeTeam}: {result.homeGoals}
+        </div>
+        <div>
+          {result.awayTeam}: {result.awayGoals}
+        </div>
+      </li>
+    ));
+
+    const listOfResultsAway = awayResults.map((result) => (
+      <li key={`away${result.awayTeam}${result.date}`}>
+        <div className="GameDate">{result.date}</div>
+        <div>
+          {result.homeTeam}: {result.homeGoals}
+        </div>
+        <div>
+          {result.awayTeam}: {result.awayGoals}
+        </div>
+      </li>
+    ));
+
+    const homeResultsUlElement = (
+      <ul className="HomeResults">{listOfResultsHome}</ul>
+    );
+    const awayResultsUlElement = (
+      <ul className="AwayResults">{listOfResultsAway}</ul>
+    );
 
     var getEMA = (a, r) =>
       a.reduce(
@@ -56,7 +137,6 @@ export async function createStatsDiv(game, displayBool) {
         [a[0]]
       );
 
-    console.log(displayBool);
     if (displayBool === true) {
       let fixtures = await fetch(
         `${process.env.REACT_APP_EXPRESS_SERVER}leagueFixtures/${gameStats.leagueId}`
@@ -80,32 +160,28 @@ export async function createStatsDiv(game, displayBool) {
           let won;
           let goalsScored;
           let goalsConceeded;
-          console.log(resultHome[i].winningTeam);
-          console.log(gameStats.teamIDHome);
-
-
 
           if (resultHome[i].winningTeam === gameStats.teamIDHome) {
             won = "W";
-            if(resultHome[i].homeGoalCount > resultHome[i].awayGoalCount){
-              goalsScored = resultHome[i].homeGoalCount
-              goalsConceeded = resultHome[i].awayGoalCount
+            if (resultHome[i].homeGoalCount > resultHome[i].awayGoalCount) {
+              goalsScored = resultHome[i].homeGoalCount;
+              goalsConceeded = resultHome[i].awayGoalCount;
             } else {
-              goalsScored = resultHome[i].awayGoalCount
-              goalsConceeded = resultHome[i].homeGoalCount
+              goalsScored = resultHome[i].awayGoalCount;
+              goalsConceeded = resultHome[i].homeGoalCount;
             }
           } else if (resultHome[i].winningTeam === -1) {
             won = "D";
-            goalsScored = resultHome[i].awayGoalCount
-            goalsConceeded = resultHome[i].awayGoalCount
+            goalsScored = resultHome[i].awayGoalCount;
+            goalsConceeded = resultHome[i].awayGoalCount;
           } else {
             won = "L";
-            if(resultHome[i].homeGoalCount > resultHome[i].awayGoalCount){
-              goalsScored = resultHome[i].awayGoalCount
-              goalsConceeded = resultHome[i].homeGoalCount
+            if (resultHome[i].homeGoalCount > resultHome[i].awayGoalCount) {
+              goalsScored = resultHome[i].awayGoalCount;
+              goalsConceeded = resultHome[i].homeGoalCount;
             } else {
-              goalsScored = resultHome[i].homeGoalCount
-              goalsConceeded = resultHome[i].awayGoalCount
+              goalsScored = resultHome[i].homeGoalCount;
+              goalsConceeded = resultHome[i].awayGoalCount;
             }
           }
 
@@ -135,17 +211,20 @@ export async function createStatsDiv(game, displayBool) {
             awayPPG: resultHome[i].pre_match_teamB_overall_ppg,
             unixTimestamp: resultHome[i].date_unix,
             goalsFor: goalsScored,
-            goalsAgainst: goalsConceeded
+            goalsAgainst: goalsConceeded,
           });
         }
-        console.log(gameArrayHome)
 
-        goalDiffArrayHome = gameArrayHome.map(a => a.goalsFor - a.goalsAgainst);
+        goalDiffArrayHome = gameArrayHome.map(
+          (a) => a.goalsFor - a.goalsAgainst
+        );
 
-        goalDiffHomeMovingAv = getEMA(goalDiffArrayHome, goalDiffArrayHome.length)
+        goalDiffHomeMovingAv = getEMA(
+          goalDiffArrayHome,
+          goalDiffArrayHome.length
+        );
 
         gameArrayHome.sort((a, b) => b.unixTimestamp - a.unixTimestamp);
-
 
         const resultAway = matches.data.filter(
           (game) =>
@@ -161,32 +240,31 @@ export async function createStatsDiv(game, displayBool) {
             timeZone: "UTC",
           });
 
-
           let won;
           let goalsScored;
           let goalsConceeded;
 
           if (resultAway[i].winningTeam === gameStats.teamIDAway) {
             won = "W";
-            if(resultAway[i].homeGoalCount > resultAway[i].awayGoalCount){
-              goalsScored = resultAway[i].homeGoalCount
-              goalsConceeded = resultAway[i].awayGoalCount
+            if (resultAway[i].homeGoalCount > resultAway[i].awayGoalCount) {
+              goalsScored = resultAway[i].homeGoalCount;
+              goalsConceeded = resultAway[i].awayGoalCount;
             } else {
-              goalsScored = resultAway[i].awayGoalCount
-              goalsConceeded = resultAway[i].homeGoalCount
+              goalsScored = resultAway[i].awayGoalCount;
+              goalsConceeded = resultAway[i].homeGoalCount;
             }
           } else if (resultAway[i].winningTeam === -1) {
             won = "D";
-            goalsScored = resultAway[i].awayGoalCount
-            goalsConceeded = resultAway[i].awayGoalCount
+            goalsScored = resultAway[i].awayGoalCount;
+            goalsConceeded = resultAway[i].awayGoalCount;
           } else {
             won = "L";
-            if(resultAway[i].homeGoalCount > resultAway[i].awayGoalCount){
-              goalsScored = resultAway[i].awayGoalCount
-              goalsConceeded = resultAway[i].homeGoalCount
+            if (resultAway[i].homeGoalCount > resultAway[i].awayGoalCount) {
+              goalsScored = resultAway[i].awayGoalCount;
+              goalsConceeded = resultAway[i].homeGoalCount;
             } else {
-              goalsScored = resultAway[i].homeGoalCount
-              goalsConceeded = resultAway[i].awayGoalCount
+              goalsScored = resultAway[i].homeGoalCount;
+              goalsConceeded = resultAway[i].awayGoalCount;
             }
           }
 
@@ -216,29 +294,26 @@ export async function createStatsDiv(game, displayBool) {
             awayPPG: resultAway[i].pre_match_teamB_overall_ppg,
             unixTimestamp: resultAway[i].date_unix,
             goalsFor: goalsScored,
-            goalsAgainst: goalsConceeded
+            goalsAgainst: goalsConceeded,
           });
         }
-        goalDiffArrayAway = gameArrayAway.map(a => a.goalsFor - a.goalsAgainst);
+        goalDiffArrayAway = gameArrayAway.map(
+          (a) => a.goalsFor - a.goalsAgainst
+        );
 
-        goalDiffAwayMovingAv = getEMA(goalDiffArrayAway, goalDiffArrayAway.length)
+        goalDiffAwayMovingAv = getEMA(
+          goalDiffArrayAway,
+          goalDiffArrayAway.length
+        );
 
         gameArrayAway.sort((a, b) => b.unixTimestamp - a.unixTimestamp);
 
-        console.log(game.game)
-        latestHomeGoalDiff = goalDiffHomeMovingAv[goalDiffHomeMovingAv.length - 1]
-        latestAwayGoalDiff = goalDiffAwayMovingAv[goalDiffAwayMovingAv.length - 1]
-    
-        console.log(latestHomeGoalDiff)
-        console.log(latestAwayGoalDiff)
-    
-
-        // fixturesArray = Array.from(matches.data);
-        // console.log(fixturesArray);
+        latestHomeGoalDiff =
+          goalDiffHomeMovingAv[goalDiffHomeMovingAv.length - 1];
+        latestAwayGoalDiff =
+          goalDiffAwayMovingAv[goalDiffAwayMovingAv.length - 1];
       });
-      console.log(await diff(latestHomeGoalDiff, latestAwayGoalDiff))
     }
-
 
     let homeTeam = gameStats.home.teamName;
     let awayTeam = gameStats.away.teamName;
@@ -625,9 +700,19 @@ export async function createStatsDiv(game, displayBool) {
       gameStats.away[2].WDLRecord
     );
 
-    let rollingGoalDiffHome = [(gameStats.home[0].ScoredOverall - gameStats.home[0].ConcededOverall) / 10, (gameStats.home[1].ScoredOverall - gameStats.home[1].ConcededOverall) / 6, (gameStats.home[2].ScoredOverall - gameStats.home[2].ConcededOverall) / 5]
+    let rollingGoalDiffHome = [
+      (gameStats.home[0].ScoredOverall - gameStats.home[0].ConcededOverall) /
+        10,
+      (gameStats.home[1].ScoredOverall - gameStats.home[1].ConcededOverall) / 6,
+      (gameStats.home[2].ScoredOverall - gameStats.home[2].ConcededOverall) / 5,
+    ];
 
-    let rollingGoalDiffAway = [(gameStats.away[0].ScoredOverall - gameStats.away[0].ConcededOverall) / 10, (gameStats.away[1].ScoredOverall - gameStats.away[1].ConcededOverall) / 6, (gameStats.away[2].ScoredOverall - gameStats.away[2].ConcededOverall) / 5]
+    let rollingGoalDiffAway = [
+      (gameStats.away[0].ScoredOverall - gameStats.away[0].ConcededOverall) /
+        10,
+      (gameStats.away[1].ScoredOverall - gameStats.away[1].ConcededOverall) / 6,
+      (gameStats.away[2].ScoredOverall - gameStats.away[2].ConcededOverall) / 5,
+    ];
 
     const formDataMatch = [];
 
@@ -1040,9 +1125,6 @@ export async function createStatsDiv(game, displayBool) {
       );
     }
 
-    console.log(goalDiffHomeMovingAv)
-    console.log(goalDiffAwayMovingAv)
-
     ReactDOM.render(
       <div style={style}>
         <div className="Chart" id={`Chart${game.id}`} style={style}>
@@ -1074,9 +1156,17 @@ export async function createStatsDiv(game, displayBool) {
             team1={game.homeTeam}
             team2={game.awayTeam}
           ></RadarChart>
-            <Chart
-            height = {Math.max(...goalDiffHomeMovingAv, ...goalDiffAwayMovingAv) > 2 ? Math.max(...goalDiffHomeMovingAv, ...goalDiffAwayMovingAv) : 2}
-            depth = {Math.min(...goalDiffHomeMovingAv, ...goalDiffAwayMovingAv) < -2 ? Math.min(...goalDiffHomeMovingAv, ...goalDiffAwayMovingAv) : -2}
+          <Chart
+            height={
+              Math.max(...goalDiffHomeMovingAv, ...goalDiffAwayMovingAv) > 2
+                ? Math.max(...goalDiffHomeMovingAv, ...goalDiffAwayMovingAv)
+                : 2
+            }
+            depth={
+              Math.min(...goalDiffHomeMovingAv, ...goalDiffAwayMovingAv) < -2
+                ? Math.min(...goalDiffHomeMovingAv, ...goalDiffAwayMovingAv)
+                : -2
+            }
             data1={goalDiffHomeMovingAv}
             data2={goalDiffAwayMovingAv}
             team1={game.homeTeam}
@@ -1096,12 +1186,24 @@ export async function createStatsDiv(game, displayBool) {
           classNameDiv={"flex-childOneOverview"}
           classNameDivTwo={"flex-childTwoOverview"}
           className={"MoreDetailsButton"}
-          buttonText={"Toggle detail view"}
-          newText={"Less detail"}
+          buttonText={"Detailed view"}
+          newText={"Detailed view"}
           element={contentHome}
           elementTwo={contentAway}
           text={overviewHome}
           textTwo={overviewAway}
+          // style={style}
+        />
+        <Collapsable
+          classNameDiv={"flex-childOneOverview"}
+          classNameDivTwo={"flex-childTwoOverview"}
+          className={"PastResultsButton"}
+          buttonText={"All league results"}
+          newText={"All league results"}
+          element={homeResultsUlElement}
+          elementTwo={awayResultsUlElement}
+          text={""}
+          textTwo={""}
           // style={style}
         />
         <div className="flex-container">

@@ -4,7 +4,7 @@ import { matches, diff } from "./getFixtures";
 import { Fixture } from "../components/Fixture";
 import Div from "../components/Div";
 import Collapsable from "../components/CollapsableElement";
-import { allForm } from "../logic/getFixtures";
+import { allForm, allLeagueResultsArrayOfObjects } from "../logic/getFixtures";
 import Increment from "../components/Increment";
 import { incrementValue } from "../components/Increment";
 import { getBTTSPotential } from "../logic/getBTTSPotential";
@@ -1047,6 +1047,9 @@ export async function calculateScore(match, index, divider) {
   } else {
     calculate = false;
   }
+
+  console.log(match.leagueIndex)
+  console.log(match)
 
   let formHome;
   let formAway;
