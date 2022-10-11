@@ -561,6 +561,7 @@ export async function generateFixtures(
       }
       match.id = fixture.id;
       match.competition_id = fixture.competition_id;
+      match.date = fixture.date_unix;
       match.time = dateObject.toLocaleString("en-GB", {
         hour: "2-digit",
         minute: "2-digit",
@@ -1323,7 +1324,7 @@ export async function generateFixtures(
           text={"Generate predictions"}
           onClickEvent={() => getScorePrediction(day)}
         />
-        <div className="Version">Prediction engine v2.0.1</div>
+        <div className="Version">Prediction engine v2.1.0</div>
       </Fragment>,
       document.getElementById("GeneratePredictions")
     );

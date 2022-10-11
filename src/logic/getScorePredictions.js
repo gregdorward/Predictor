@@ -4,10 +4,11 @@ import { matches, diff } from "./getFixtures";
 import { Fixture } from "../components/Fixture";
 import Div from "../components/Div";
 import Collapsable from "../components/CollapsableElement";
-import { allForm, allLeagueResultsArrayOfObjects } from "../logic/getFixtures";
+import { allForm } from "../logic/getFixtures";
 import Increment from "../components/Increment";
 import { incrementValue } from "../components/Increment";
 import { getBTTSPotential } from "../logic/getBTTSPotential";
+import { allLeagueResultsArrayOfObjects } from "../logic/getFixtures";
 
 var myHeaders = new Headers();
 myHeaders.append("Origin", "https://gregdorward.github.io");
@@ -49,6 +50,15 @@ let allDrawOutcomes = 0;
 
 export var renderPredictions;
 
+async function convertTimestamp(timestamp) {
+  let newDate = new Date(timestamp * 1000);
+  let [day, month, year] = newDate.toLocaleDateString("en-US").split("/");
+
+  let converted = `${year}-${day}-${month}`;
+
+  return converted;
+}
+
 export function getPointsFromLastX(lastX) {
   let points = 0;
   let pointsAddition;
@@ -75,6 +85,158 @@ export function getPointsFromLastX(lastX) {
   } catch (error) {
     return "N/A";
   }
+}
+
+async function getPastLeagueResults(team, game) {
+  let date = game.date;
+
+  if (allLeagueResultsArrayOfObjects.length > 4) {
+    let teamsHomeResults = allLeagueResultsArrayOfObjects[
+      game.leagueIndex
+    ].fixtures.filter((fixture) => fixture.home_name === team);
+
+    teamsHomeResults = teamsHomeResults
+      .filter(function (item) {
+        return item.date_unix < date;
+      })
+      .sort((a, b) => a.date_unix - b.date_unix);
+
+    let teamsAwayResults = allLeagueResultsArrayOfObjects[
+      game.leagueIndex
+    ].fixtures.filter((fixture) => fixture.away_name === team);
+
+    teamsAwayResults = teamsAwayResults
+      .filter(function (item) {
+        return item.date_unix < date;
+      })
+      .sort((a, b) => a.date_unix - b.date_unix);
+
+    let homeResults = [];
+    let awayResults = [];
+
+    for (let index = 0; index < teamsHomeResults.length; index++) {
+      const resultedGame = teamsHomeResults[index];
+      homeResults.push({
+        homeTeam: resultedGame.home_name,
+        homeGoals: resultedGame.homeGoalCount,
+        awayTeam: resultedGame.away_name,
+        awayGoals: resultedGame.awayGoalCount,
+        scored: resultedGame.homeGoalCount,
+        conceeded: resultedGame.awayGoalCount,
+        date: await convertTimestamp(resultedGame.date_unix),
+        dateRaw: resultedGame.date_unix,
+      });
+    }
+    for (let index = 0; index < teamsAwayResults.length; index++) {
+      const resultedGame = teamsAwayResults[index];
+      awayResults.push({
+        homeTeam: resultedGame.home_name,
+        homeGoals: resultedGame.homeGoalCount,
+        awayTeam: resultedGame.away_name,
+        awayGoals: resultedGame.awayGoalCount,
+        scored: resultedGame.awayGoalCount,
+        conceeded: resultedGame.homeGoalCount,
+        date: await convertTimestamp(resultedGame.date_unix),
+        dateRaw: resultedGame.date_unix,
+      });
+    }
+
+    homeResults.reverse();
+    awayResults.reverse();
+
+    const allTeamResults = homeResults
+      .concat(awayResults)
+      .sort((a, b) => b.dateRaw - a.dateRaw);
+
+    const teamGoalsHome = homeResults.map((res) => res.scored);
+    const teamGoalsAway = awayResults.map((res) => res.scored);
+    const teamGoalsAll = allTeamResults.map((res) => res.scored);
+
+    const teamConceededHome = homeResults.map((res) => res.conceeded);
+    const teamConceededAway = awayResults.map((res) => res.conceeded);
+    const teamConceededAll = allTeamResults.map((res) => res.conceeded);
+
+    const teamGoalsHomeRollingAverage = getEMA(
+      teamGoalsHome,
+      teamGoalsHome.length
+    );
+
+    const teamGoalsAwayRollingAverage = getEMA(
+      teamGoalsAway,
+      teamGoalsAway.length
+    );
+
+    const teamGoalsAllRollingAverage = getEMA(
+      teamGoalsAll,
+      teamGoalsAll.length
+    );
+
+    const teamConceededHomeRollingAverage = getEMA(
+      teamConceededHome,
+      teamConceededHome.length
+    );
+
+    const teamConceededAwayRollingAverage = getEMA(
+      teamConceededAway,
+      teamConceededAway.length
+    );
+
+    const teamGoalsConceededAllRollingAverage = getEMA(
+      teamConceededAll,
+      teamConceededAll.length
+    );
+
+    return [
+      teamGoalsHomeRollingAverage[1] !== undefined
+        ? teamGoalsHomeRollingAverage[1]
+        : teamGoalsHomeRollingAverage[0],
+      teamGoalsAwayRollingAverage[1] !== undefined
+        ? teamGoalsAwayRollingAverage[1]
+        : teamGoalsAwayRollingAverage[0],
+      teamGoalsAllRollingAverage[1] !== undefined
+        ? teamGoalsAllRollingAverage[1]
+        : teamGoalsAllRollingAverage[0],
+      teamConceededHomeRollingAverage[1] !== undefined
+        ? teamConceededHomeRollingAverage[1]
+        : teamConceededHomeRollingAverage[0],
+      teamConceededAwayRollingAverage[1] !== undefined
+        ? teamConceededAwayRollingAverage[1]
+        : teamConceededAwayRollingAverage[0],
+      teamGoalsConceededAllRollingAverage[1] !== undefined
+        ? teamGoalsConceededAllRollingAverage[1]
+        : teamGoalsConceededAllRollingAverage[0],
+    ];
+  } else {
+    return null;
+  }
+}
+
+const getEMA = (a, r) =>
+  a.reduce(
+    (p, n, i) =>
+      i
+        ? p.concat((2 * n) / (r + 1) + (p[p.length - 1] * (r - 1)) / (r + 1))
+        : p,
+    [a[0]]
+  );
+
+function simpleMovingAverage(goals, lengthOfArray) {
+  if (!goals || goals.length < lengthOfArray) {
+    return [];
+  }
+
+  let index = lengthOfArray - 1;
+  const length = goals.length + 1;
+
+  const simpleMovingAverages = [];
+
+  while (++index < length) {
+    const arraySlice = goals.slice(index - lengthOfArray, index);
+    const sum = arraySlice.reduce((prev, curr) => prev + curr, 0);
+    simpleMovingAverages.push(sum / lengthOfArray);
+  }
+
+  return simpleMovingAverages;
 }
 
 export async function compareStat(statOne, statTwo) {
@@ -536,6 +698,7 @@ export async function compareTeams(homeForm, awayForm, match) {
   let last10PointsComparison;
   let twoGameAverageComparison;
   let fiveGameAverageComparison;
+  let sixGameAverageComparison;
   let tenGameAverageComparison;
   let seasonPPGComparison;
   let attackingPotencyComparison;
@@ -662,6 +825,13 @@ export async function compareTeams(homeForm, awayForm, match) {
   [fiveGameAverageComparison, tooCloseToCallCount] = await compareStat(
     homeForm.fiveGameAverage,
     awayForm.fiveGameAverage
+  );
+
+  tooCloseToCall = tooCloseToCall + tooCloseToCallCount;
+
+  [sixGameAverageComparison, tooCloseToCallCount] = await compareStat(
+    homeForm.sixGameAverage,
+    awayForm.sixGameAverage
   );
 
   tooCloseToCall = tooCloseToCall + tooCloseToCallCount;
@@ -844,16 +1014,17 @@ export async function compareTeams(homeForm, awayForm, match) {
   //   OddsComparison = OddsComparison * 10
   // }
   let calculation =
-    OddsComparison * 10 +
+    OddsComparison * 6 +
     goalDiffComparison * 3 +
     positionComparison * 0 +
     positionComparisonHorA * 0 +
     twoGameAverageComparison * 0 +
-    tenGameAverageComparison * 0 +
+    tenGameAverageComparison * 5 +
     XGdifferentialComparison * 10 +
-    seasonPPGComparison * 0 +
+    seasonPPGComparison * 5 +
     formTrendScoreComparison * 0 +
     fiveGameAverageComparison * 0 +
+    sixGameAverageComparison * 5 +
     dangerousAttacksComparisonHOrA * 0 +
     dangerousAttacksComparison * 2 +
     sotComparison * 3 +
@@ -868,7 +1039,7 @@ export async function compareTeams(homeForm, awayForm, match) {
     homeOrAwayAverageComparison * 0 +
     // actualToXGDifferenceComparison * 20 +
     // actualToXGDifferenceRecentComparison * 20 +
-    overUnderAchievingSumComparison * 5  +
+    overUnderAchievingSumComparison * 5 +
     goalDiffHOrAComparison * 0;
 
   match.tooCloseToCall = tooCloseToCall;
@@ -1018,11 +1189,17 @@ export async function roundCustom(num, form, otherForm) {
   let wholeNumber = Math.floor(num);
   let remainder = num - wholeNumber;
 
-  if (remainder > 0.75) {
+  if (remainder > 0.675) {
     return Math.ceil(num);
   } else {
     return Math.floor(num);
   }
+
+  // if (remainder > 0.5) {
+  //   return Math.ceil(num);
+  // } else {
+  //   return Math.floor(num);
+  // }
 }
 
 //Calculates scores based on prior XG figures, weighted by odds
@@ -1047,9 +1224,6 @@ export async function calculateScore(match, index, divider) {
   } else {
     calculate = false;
   }
-
-  console.log(match.leagueIndex)
-  console.log(match)
 
   let formHome;
   let formAway;
@@ -1194,11 +1368,12 @@ export async function calculateScore(match, index, divider) {
         2;
 
       teams[i][index].finishingScore = parseFloat(
-        (teams[i][index].XG + 0.5) - teams[i][index].ScoredAverage
+        teams[i][index].XG + 0.5 - teams[i][index].ScoredAverage
       );
 
       teams[i][index].goalieRating = parseFloat(
-        teams[i][index].ConcededAverage - (teams[i][index].XGAgainstAverage + 0.5)
+        teams[i][index].ConcededAverage -
+          (teams[i][index].XGAgainstAverage + 0.5)
       );
 
       let goalOverOrUnderAchieving = parseFloat(
@@ -1317,6 +1492,42 @@ export async function calculateScore(match, index, divider) {
       formAway.XGdifferential
     );
 
+    console.log(formHome);
+
+    if (allLeagueResultsArrayOfObjects.length > 4) {
+      [
+        formHome.predictedGoalsBasedOnHomeAv,
+        formHome.predictedGoalsBasedOnAwayAv,
+        formHome.allTeamGoalsBasedOnAverages,
+        formHome.predictedGoalsConceededBasedOnHomeAv,
+        formHome.predictedGoalsConceededBasedOnAwayAv,
+        formHome.allTeamGoalsConceededBasedOnAverages,
+      ] = await getPastLeagueResults(match.homeTeam, match);
+
+      [
+        formAway.predictedGoalsBasedOnHomeAv,
+        formAway.predictedGoalsBasedOnAwayAv,
+        formAway.allTeamGoalsBasedOnAverages,
+        formAway.predictedGoalsConceededBasedOnHomeAv,
+        formAway.predictedGoalsConceededBasedOnAwayAv,
+        formAway.allTeamGoalsConceededBasedOnAverages,
+      ] = await getPastLeagueResults(match.awayTeam, match);
+    } else {
+      formHome.predictedGoalsBasedOnHomeAv = formHome.ScoredAverage;
+      formHome.predictedGoalsBasedOnAwayAv = formHome.ConcededAverage;
+      formHome.allTeamGoalsBasedOnAverages = formHome.ScoredAverage;
+      formHome.predictedGoalsConceededBasedOnHomeAv = formHome.ConcededAverage;
+      formHome.predictedGoalsConceededBasedOnAwayAv = formHome.ConcededAverage;
+      formHome.allTeamGoalsConceededBasedOnAverages = formHome.ConcededAverage;
+
+      formAway.predictedGoalsBasedOnHomeAv = formAway.ScoredAverage;
+      formAway.predictedGoalsBasedOnAwayAv = formAway.ConcededAverage;
+      formAway.allTeamGoalsBasedOnAverages = formAway.ScoredAverage;
+      formAway.predictedGoalsConceededBasedOnHomeAv = formAway.ConcededAverage;
+      formAway.predictedGoalsConceededBasedOnAwayAv = formAway.ConcededAverage;
+      formAway.allTeamGoalsConceededBasedOnAverages = formAway.ConcededAverage;
+    }
+
     if (
       typeof formHome.homeTeamHomePositionRaw === "number" &&
       typeof formAway.awayTeamAwayPositionRaw === "number"
@@ -1342,7 +1553,7 @@ export async function calculateScore(match, index, divider) {
     let teamComparisonScore;
 
     [teamComparisonScore] = await compareTeams(formHome, formAway, match);
-    teamComparisonScore = teamComparisonScore * 1;
+    teamComparisonScore = teamComparisonScore * 1.2;
 
     if (teamComparisonScore > 0.4) {
       teamComparisonScore = 0.4;
@@ -1381,19 +1592,49 @@ export async function calculateScore(match, index, divider) {
         ? (formAway.LeagueAverageGoals + formHome.LeagueAverageConceded) / 2
         : goalCalcAwayShortTerm;
 
+    // let factorOneHome =
+    //   (homeLeagueOrAllFormAverageGoals * 4 +
+    //     formHome.predictedGoalsBasedOnHomeAv  +
+    //     formAway.predictedGoalsConceededBasedOnAwayAv  +
+    //     formHome.allTeamGoalsBasedOnAverages +
+    //     formAway.allTeamGoalsConceededBasedOnAverages +
+    //     formHome.XGOverall * 0.5 +
+    //     formAway.XGAgainstAvgOverall * 0.5 +
+    //     last10WeightingHome * 2) /
+    //   9;
+
     let factorOneHome =
-      (homeLeagueOrAllFormAverageGoals * 2 +
-        formHome.XGOverall * 0.1 +
-        formAway.XGAgainstAvgOverall * 0.1 +
+      (homeLeagueOrAllFormAverageGoals * 0 +
+        formHome.predictedGoalsBasedOnHomeAv * 1.5 +
+        formAway.predictedGoalsConceededBasedOnAwayAv * 1.5 +
+        formHome.allTeamGoalsBasedOnAverages +
+        formAway.allTeamGoalsConceededBasedOnAverages +
+        // formHome.XGOverall * 0.1 +
+        // formAway.XGAgainstAvgOverall * 0.1 +
         last10WeightingHome * 2) /
-      2.2;
+      5;
+
+    // let factorOneAway =
+    //   (awayLeagueOrAllFormAverageGoals * 4 +
+    //     formAway.predictedGoalsBasedOnAwayAv +
+    //     formHome.predictedGoalsConceededBasedOnHomeAv +
+    //     formAway.allTeamGoalsBasedOnAverages +
+    //     formHome.allTeamGoalsConceededBasedOnAverages +
+    //     formAway.XGOverall * 0.5 +
+    //     formHome.XGAgainstAvgOverall * 0.5 +
+    //     last10WeightingAway * 2) /
+    //   9;
 
     let factorOneAway =
-      (awayLeagueOrAllFormAverageGoals * 2 +
-        formAway.XGOverall * 0.1 +
-        formHome.XGAgainstAvgOverall * 0.1 +
+      (awayLeagueOrAllFormAverageGoals * 0 +
+        formAway.predictedGoalsBasedOnAwayAv * 1.5 +
+        formHome.predictedGoalsConceededBasedOnHomeAv * 1.5 +
+        formAway.allTeamGoalsBasedOnAverages +
+        formHome.allTeamGoalsConceededBasedOnAverages +
+        // formAway.XGOverall * 0.1 +
+        // formHome.XGAgainstAvgOverall * 0.1 +
         last10WeightingAway * 2) /
-      2.2;
+      5;
 
     let homeComparisonWeighting;
     let awayComparisonWeighting;

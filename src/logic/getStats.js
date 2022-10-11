@@ -15,15 +15,6 @@ async function diff(a, b) {
   return parseFloat(a - b).toFixed(2);
 }
 
-async function convertTimestamp(timestamp) {
-  let newDate = new Date(timestamp * 1000);
-  let [day, month, year] = newDate.toLocaleDateString("en-US").split("/");
-
-  let converted = `${year}-${day}-${month}`;
-
-  return converted;
-}
-
 export async function createStatsDiv(game, displayBool) {
   if (game.status !== "void") {
     // takes the displayBool boolean from the fixture onClick and sets the styling of the stats div from there
@@ -52,79 +43,6 @@ export async function createStatsDiv(game, displayBool) {
     let goalDiffAwayMovingAv = [];
     let latestHomeGoalDiff;
     let latestAwayGoalDiff;
-
-    let leagueResults = allLeagueResultsArrayOfObjects;
-    console.log(leagueResults);
-
-    let homeTeamsResults = leagueResults[game.leagueIndex].fixtures.filter(
-      (fixture) =>
-        fixture.home_name === game.homeTeam ||
-        fixture.away_name === game.homeTeam
-    );
-
-    let awayTeamsResults = leagueResults[game.leagueIndex].fixtures.filter(
-      (fixture) =>
-        fixture.home_name === game.awayTeam ||
-        fixture.away_name === game.awayTeam
-    );
-
-    let homeResults = [];
-    let awayResults = [];
-
-    for (let index = 0; index < homeTeamsResults.length; index++) {
-      const resultedGame = homeTeamsResults[index];
-      homeResults.push({
-        homeTeam: resultedGame.home_name,
-        homeGoals: resultedGame.homeGoalCount,
-        awayTeam: resultedGame.away_name,
-        awayGoals: resultedGame.awayGoalCount,
-        date: await convertTimestamp(resultedGame.date_unix),
-      });
-    }
-    for (let index = 0; index < awayTeamsResults.length; index++) {
-      const resultedGame = awayTeamsResults[index];
-      awayResults.push({
-        homeTeam: resultedGame.home_name,
-        homeGoals: resultedGame.homeGoalCount,
-        awayTeam: resultedGame.away_name,
-        awayGoals: resultedGame.awayGoalCount,
-        date: await convertTimestamp(resultedGame.date_unix),
-      });
-    }
-
-    homeResults.reverse();
-    awayResults.reverse();
-
-    const listOfResultsHome = homeResults.map((result) => (
-      <li key={`home${result.homeTeam}${result.date}`}>
-        <div className="GameDate">{result.date}</div>
-        <div>
-          {result.homeTeam}: {result.homeGoals}
-        </div>
-        <div>
-          {result.awayTeam}: {result.awayGoals}
-        </div>
-      </li>
-    ));
-
-    const listOfResultsAway = awayResults.map((result) => (
-      <li key={`away${result.awayTeam}${result.date}`}>
-        <div className="GameDate">{result.date}</div>
-        <div>
-          {result.homeTeam}: {result.homeGoals}
-        </div>
-        <div>
-          {result.awayTeam}: {result.awayGoals}
-        </div>
-      </li>
-    ));
-
-    const homeResultsUlElement = (
-      <ul className="HomeResults">{listOfResultsHome}</ul>
-    );
-    const awayResultsUlElement = (
-      <ul className="AwayResults">{listOfResultsAway}</ul>
-    );
 
     var getEMA = (a, r) =>
       a.reduce(
@@ -1192,18 +1110,6 @@ export async function createStatsDiv(game, displayBool) {
           elementTwo={contentAway}
           text={overviewHome}
           textTwo={overviewAway}
-          // style={style}
-        />
-        <Collapsable
-          classNameDiv={"flex-childOneOverview"}
-          classNameDivTwo={"flex-childTwoOverview"}
-          className={"PastResultsButton"}
-          buttonText={"All league results"}
-          newText={"All league results"}
-          element={homeResultsUlElement}
-          elementTwo={awayResultsUlElement}
-          text={""}
-          textTwo={""}
           // style={style}
         />
         <div className="flex-container">
