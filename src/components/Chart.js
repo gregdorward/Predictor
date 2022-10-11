@@ -37,24 +37,18 @@ if(props.type === "Points over time"){
   length = props.data1.length * 3
   depth = 0
   console.log(1)
+} else if(props.type === "Rolling average points over last 10"){
+  length = Math.abs(props.height)
+  depth = 0
 } else if(Math.abs(props.height) > Math.abs(props.depth)){
-  console.log(props.height)
-  console.log(props.depth)
-
   length = Math.abs(props.height)
   depth = -Math.abs(props.height)
   console.log(2)
 } else if (Math.abs(props.height) < Math.abs(props.depth)){
-  console.log(props.height)
-  console.log(props.depth)
-
   length = Math.abs(props.depth)
   depth = -Math.abs(props.depth)
   console.log(3)
 } else {
-  console.log(props.height)
-  console.log(props.depth)
-  
   length = Math.abs(props.depth)
   depth = -Math.abs(props.depth)
   console.log(4)
