@@ -1789,9 +1789,8 @@ ul {
 }
 
 .kofitext{
-  font-size: 0.75em;
-  font-weight: bolder;
-  color: black;
+  font-size: 0.8em;
+  font-weight: bolder !important;
 }
 
 .kofitext img.kofiimg {
@@ -1800,17 +1799,17 @@ ul {
 
 .kofi-button {
   border: 0.1em solid #030061;
-  padding: 1em;
   font-family: 'Open Sans', sans-serif !important;
-  min-width: 30px !important;
+  min-width: 6em !important;
   line-height: 1em !important;
-
+  color: black !important;
 } 
 
 img.BadgePrevious {margin-right: 1em;}
 
 a.kofi-button {
   border: 0.1em solid #030061;
+
 }
 
 .kofi-button:hover {

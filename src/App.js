@@ -5,6 +5,7 @@ import { Button } from "./components/Button";
 import OddsRadio from "./components/OddsRadio";
 import { selectedOdds } from "./components/OddsRadio";
 import Collapsable from "./components/CollapsableElement";
+import { StyledKofiButton } from "./components/KofiButton";
 import {
   FacebookShareButton,
   FacebookIcon,
@@ -453,6 +454,7 @@ function App() {
       <div id="tables" />
       <div id="homeBadge" />
       <div id="FixtureContainerHeaders"></div>
+      <StyledKofiButton></StyledKofiButton>
       <div id="XGDiff" />
       <div id="FixtureContainer">
         <div>
