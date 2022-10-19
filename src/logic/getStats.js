@@ -1116,6 +1116,7 @@ export async function createStatsDiv(game, displayBool) {
           <StatsHome />
           <StatsAway />
         </div>
+        <input type="hidden" name="IL_IN_ARTICLE"/>
         <Button
           className="MoreStats"
           onClickEvent={() =>
