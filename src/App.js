@@ -267,7 +267,7 @@ let historicDate;
   ReactDOM.render(
   <Fragment>
     <Collapsable
-      className={"HowToUse"}
+      // className={"HowToUse"}
       buttonText={"How to use"}
       element={newText}
     />

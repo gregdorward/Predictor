@@ -813,6 +813,20 @@ p {
   /* box-shadow: 4px 4px 4px 4px rgba(0.2, 0.2, 0.2, 0.2), 0 6px 20px 0 #294A66; */
   /* box-shadow: rgba(0, 0, 0, 0.15) 0px 0px 0px 1px; */
 }
+.DetailedFixtures{
+  align-self: center;
+  justify-content: center;
+}
+
+.flex-element{
+  display: flex;
+  align-self: center;
+  justify-content: center;
+}
+
+.Collapsible{
+  display: block;
+}
 
 
 .StatsDiv{
@@ -882,6 +896,7 @@ p {
   padding-top: 2em;
   flex-direction: row;
   flex: 50%; 
+  padding-bottom: 1em;
 }
 
 
@@ -957,16 +972,18 @@ p {
 }
 
 .PastGameDateHome{
-  text-align: right;
+  text-align: center;
   padding-right: 0.5em;
   padding-top: 0.25em;
+  padding-bottom: 0.25em;
   font-size: 0.9em;
 }
 
 .PastGameDateAway{
-  text-align: left;
+  text-align: center;
   padding-left: 0.5em;
   padding-top: 0.25em;
+  padding-bottom: 0.25em;
   font-size: 0.9em;
 }
 
@@ -1927,6 +1944,8 @@ button:hover {
   font-family: 'Open Sans', sans-serif;
   font-size: .5em;
   align-items: stretch;
+  background-color: #030052;
+  margin: 1em;
 }
 
 .TrendsHome{

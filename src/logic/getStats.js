@@ -1100,23 +1100,27 @@ export async function createStatsDiv(game, displayBool) {
             className={"LastGameHeader"}
           ></Div>
         </div>
-        <Collapsable
-          classNameDiv={"flex-childOneOverview"}
-          classNameDivTwo={"flex-childTwoOverview"}
-          className={"MoreDetailsButton"}
-          buttonText={"Detailed view"}
-          newText={"Detailed view"}
-          element={contentHome}
-          elementTwo={contentAway}
-          text={overviewHome}
-          textTwo={overviewAway}
-          // style={style}
-        />
+        <div className="flex-container">
+          <div className="flex-childOneOverview">{overviewHome}</div>
+          <div className="flex-childTwoOverview">{overviewAway}</div>
+        </div>
+          <Collapsable
+            className={"Detail"}
+            classNameTwo={"flex-childOneOverview"}
+            classNameThree={"flex-childTwoOverview"}
+            classNameFlex={"flex-element"}
+            classNameButton={"DetailedFixtures"}
+            buttonText={"Detailed view"}
+            newText={"Detailed view"}
+            element={contentHome}
+            elementTwo={contentAway}
+            // style={style}
+          />
         <div className="flex-container">
           <StatsHome />
           <StatsAway />
         </div>
-        <input type="hidden" name="IL_IN_ARTICLE"/>
+        <input type="hidden" name="IL_IN_ARTICLE" />
         <Button
           className="MoreStats"
           onClickEvent={() =>

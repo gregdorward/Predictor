@@ -10,35 +10,35 @@ import Paper from "@material-ui/core/Paper";
 
 const StyledTableCell = withStyles((theme) => ({
   head: {
-    backgroundColor: "#dedddd",
+    // backgroundColor: "#dedddd",
     padding: 10,
     textAlign: "center",
     fontSize: "2em",
     fontFamily: 'inherit',
     border: "none",
     margin: "none",
-    color: 'black',
+    color: 'white',
     lineHeight: '2em'
   },
   body: {
     fontSize: "2em",
     fontFamily: 'inherit',
     padding: 10,
-    color: "black",
+    color: "white",
     border: "none",
     margin: "none",
-    backgroundColor: '#e2e2e26c'
+    // backgroundColor: '#e2e2e26c'
   },
 }))(TableCell);
 
 const StyledTableRow = withStyles((theme) => ({
   root: {
     "&:nth-of-type(odd)": {
-      backgroundColor: "#e2e2e26c",
+      backgroundColor: "#030061",
       textAlign: "center",
     },
     "&:nth-of-type(even)": {
-      backgroundColor: "#dedddd",
+      backgroundColor: "#030052",
       textAlign: "center",
     },
   },
@@ -49,7 +49,7 @@ export default function CustomizedTables(props) {
 
 
   return (
-    <TableContainer component={Paper} className="StatsTable">
+    <TableContainer className="StatsTable">
       <Table aria-label="customized table">
         <TableHead>
           <TableRow>
