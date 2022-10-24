@@ -39,8 +39,8 @@ const leagueOrder = [
   7570, //league 1 22/23
   7574, //league 2 22/23
   7729, //National league 22/23
-  7494, //Scottish Prem 22/23
   7665, //La Liga 22/23
+  7494, //Scottish Prem 22/23
   7664, //Bundesliga 22/23
   7608, //Serie A 22/23
   7500, //French Prem 22/23
@@ -65,12 +65,13 @@ const leagueOrder = [
   7506, //Scottish league 2 22/23
   7821, //Women's prem 22/23
   6969, //MLS 22
-  8008, //Australian A league 22/23
   7097, //Brazil prem 22
   6935, //Japan 22
   7061, //S Korea 22
   7425, //Mexico prem 22/23
   7956, //National league North and South 22/23
+  8008, //Australian A league 22/23
+
 ];
 
 let today;
