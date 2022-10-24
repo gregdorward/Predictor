@@ -39,8 +39,8 @@ const leagueOrder = [
   7570, //league 1 22/23
   7574, //league 2 22/23
   7729, //National league 22/23
-  7665, //La Liga 22/23
   7494, //Scottish Prem 22/23
+  7665, //La Liga 22/23
   7664, //Bundesliga 22/23
   7608, //Serie A 22/23
   7500, //French Prem 22/23
@@ -93,6 +93,7 @@ let historicDate;
 
 
   async function calculateDate(dateString) {
+    console.log("calculateDate")
     const day = dateString.getDate();
     const month = dateString.getMonth() + 1;
     const year = dateString.getFullYear();
@@ -148,7 +149,7 @@ let historicDate;
       const element = league.season[x];
 
       if (element.year === 2022 || element.year === 20222023) {
-        if (element.id !== 8008 && element.id !== 4340) {
+        if (element.id !== 4340) {
           availableLeagues.push({ name: name, element });
         }
       }
@@ -357,6 +358,7 @@ let historicDate;
 })();
 
 async function getHighestScoringLeagues() {
+  console.log("getHighestScoringLeagues")
   let teamsList = await fetch(`${process.env.REACT_APP_EXPRESS_SERVER}over25`);
   let arr = [];
   await teamsList.json().then(async (leagues) => {
@@ -387,6 +389,7 @@ async function getHighestScoringLeagues() {
 }
 
 async function getLowestScoringLeagues() {
+  console.log("getLowestScoringLeagues")
   let teamsList = await fetch(`${process.env.REACT_APP_EXPRESS_SERVER}under25`);
   let arr = [];
   await teamsList.json().then(async (leagues) => {
@@ -416,6 +419,7 @@ async function getLowestScoringLeagues() {
 }
 
 function App() {
+  console.log("App")
   return (
     <div className="App">
       <Header />

@@ -16,6 +16,7 @@ async function diff(a, b) {
 }
 
 export async function createStatsDiv(game, displayBool) {
+  console.log("createStatsDiv")
   if (game.status !== "void") {
     // takes the displayBool boolean from the fixture onClick and sets the styling of the stats div from there
     function styling(testBool) {

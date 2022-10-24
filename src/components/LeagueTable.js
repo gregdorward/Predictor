@@ -7,6 +7,7 @@ import TableContainer from "@material-ui/core/TableContainer";
 import TableHead from "@material-ui/core/TableHead";
 import TableRow from "@material-ui/core/TableRow";
 import Paper from "@material-ui/core/Paper";
+import Collapsable from "../components/CollapsableElement";
 
 const StyledTableCell2 = withStyles((theme) => ({
   head: {
@@ -87,7 +88,7 @@ function styleForm(formIndicator) {
 }
 
 export default function LeagueTable(props) {
-  console.log(props)
+  console.log(props);
   let rows = props.Teams.map((team, i) => (
     <StyledTableRow key={`${props.Key}row${i}`}>
       <StyledTableCell component="th" scope="row">
@@ -125,21 +126,144 @@ export default function LeagueTable(props) {
         scope="row"
         style={{ textAlign: "center" }}
       >
-        <span className={styleForm(team.Form[0])}>{team.Form[0] !== undefined ? team.Form[0] : ""}</span>
-        <span className={styleForm(team.Form[1])}>{team.Form[1] !== undefined ? team.Form[1] : ""}</span>
-        <span className={styleForm(team.Form[2])}>{team.Form[2] !== undefined ? team.Form[2] : ""}</span>
-        <span className={styleForm(team.Form[3])}>{team.Form[3] !== undefined ? team.Form[3] : ""}</span>
-        <span className={styleForm(team.Form[4])}>{team.Form[4] !== undefined ? team.Form[4] : ""}</span>
+        <span className={styleForm(team.Form[0])}>
+          {team.Form[0] !== undefined ? team.Form[0] : ""}
+        </span>
+        <span className={styleForm(team.Form[1])}>
+          {team.Form[1] !== undefined ? team.Form[1] : ""}
+        </span>
+        <span className={styleForm(team.Form[2])}>
+          {team.Form[2] !== undefined ? team.Form[2] : ""}
+        </span>
+        <span className={styleForm(team.Form[3])}>
+          {team.Form[3] !== undefined ? team.Form[3] : ""}
+        </span>
+        <span className={styleForm(team.Form[4])}>
+          {team.Form[4] !== undefined ? team.Form[4] : ""}
+        </span>
       </StyledTableCell>
     </StyledTableRow>
   ));
+
+  const leagueResults = [];
+  let table;
+  props.Results.forEach((result) => {
+    table = <table className="ResultsStatsTable">
+    <tr>
+      <th></th>
+      <th>Home</th>
+      <th>Away</th>
+    </tr>
+    <tr>
+      <td>XG</td>
+      <td>{result.team_a_xg}</td>
+      <td>{result.team_b_xg}</td>
+    </tr>
+    <tr>
+      <td>Shots</td>
+      <td>{result.team_a_shots}</td>
+      <td>{result.team_b_shots}</td>
+    </tr>
+    <tr>
+      <td>SOT</td>
+      <td>{result.team_a_shotsOnTarget}</td>
+      <td>{result.team_b_shotsOnTarget}</td>
+    </tr>
+    <tr>
+      <td>Dangerous Attacks</td>
+      <td>{result.team_a_dangerous_attacks}</td>
+      <td>{result.team_b_dangerous_attacks}</td>
+    </tr>
+    <tr>
+      <td>Possession</td>
+      <td>{result.team_a_possession}</td>
+      <td>{result.team_b_possession}</td>
+    </tr>
+    <tr>
+      <td>Red cards</td>
+      <td>{result.team_a_red_cards}</td>
+      <td>{result.team_b_red_cards}</td>
+    </tr>
+    <tr>
+      <td>Odds (pre-match)</td>
+      <td>{result.odds_ft_1}</td>
+      <td>{result.odds_ft_2}</td>
+    </tr>
+  </table>;
+
+    leagueResults.push(
+      <Collapsable classNameButton="ResultButton" buttonText={<li key={result.id}>
+      {result.home_name}
+      <span className="ResultGoals">{result.homeGoalCount}</span>
+      <span className="ResultGoals">{result.awayGoalCount}</span>
+      {result.away_name}
+    </li>} element={table}/>
+    );
+  });
+
+
+  const leagueResultsOlder = [];
+  props.LastWeeksResults.forEach((result) => {
+    table = <table className="ResultsStatsTable">
+    <tr>
+      <th></th>
+      <th>Home</th>
+      <th>Away</th>
+    </tr>
+    <tr>
+      <td>XG</td>
+      <td>{result.team_a_xg}</td>
+      <td>{result.team_b_xg}</td>
+    </tr>
+    <tr>
+      <td>Shots</td>
+      <td>{result.team_a_shots}</td>
+      <td>{result.team_b_shots}</td>
+    </tr>
+    <tr>
+      <td>SOT</td>
+      <td>{result.team_a_shotsOnTarget}</td>
+      <td>{result.team_b_shotsOnTarget}</td>
+    </tr>
+    <tr>
+      <td>D. Attacks</td>
+      <td>{result.team_a_dangerous_attacks}</td>
+      <td>{result.team_b_dangerous_attacks}</td>
+    </tr>
+    <tr>
+      <td>Possession</td>
+      <td>{result.team_a_possession}</td>
+      <td>{result.team_b_possession}</td>
+    </tr>
+    <tr>
+      <td>Red cards</td>
+      <td>{result.team_a_red_cards}</td>
+      <td>{result.team_b_red_cards}</td>
+    </tr>
+    <tr>
+      <td>Odds (pre-match)</td>
+      <td>{result.odds_ft_1}</td>
+      <td>{result.odds_ft_2}</td>
+    </tr>
+  </table>;
+
+    leagueResultsOlder.push(
+      <Collapsable classNameButton="ResultButton" buttonText={<li key={result.id}>
+      {result.home_name}
+      <span className="ResultGoals">{result.homeGoalCount}</span>
+      <span className="ResultGoals">{result.awayGoalCount}</span>
+      {result.away_name}
+    </li>} element={table}/>
+    );
+  });
+
 
   function getTopScorersTeam(id) {
     let found = props.Teams.find((team) => team.ID === id);
     return found.Name;
   }
 
-console.log(props)
+  console.log(props);
 
   if (
     props.GamesPlayed > 3 &&
@@ -174,6 +298,14 @@ console.log(props)
             </TableHead>
             <TableBody>{rows}</TableBody>
           </Table>
+          <h5>{`Gameweek ${props.mostRecentGameweek} results`}</h5>
+          <div className="ResultsList" id="ResultsList">
+            <ul>{leagueResults}</ul>
+          </div>
+          <h5>{`Gameweek ${props.mostRecentGameweek - 1} results`}</h5>
+          <div className="ResultsList" id="ResultsList">
+            <ul>{leagueResultsOlder}</ul>
+          </div>
           <div className="LeagueStatisticsHeader">League Statistics</div>
           <div className="LeagueStatistics">
             <ul className="LeagueStatsColumn">

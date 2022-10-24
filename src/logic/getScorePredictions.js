@@ -60,6 +60,7 @@ async function convertTimestamp(timestamp) {
 }
 
 export function getPointsFromLastX(lastX) {
+
   let points = 0;
   let pointsAddition;
 
@@ -88,6 +89,7 @@ export function getPointsFromLastX(lastX) {
 }
 
 async function getPastLeagueResults(team, game) {
+
   let date = game.date;
 
   if (allLeagueResultsArrayOfObjects.length > 4) {
@@ -414,6 +416,7 @@ export async function getOverOrUnderAchievingResult(
   index,
   overUnderAchievingSum
 ) {
+
   let result;
   let correction;
 
@@ -1510,7 +1513,6 @@ export async function calculateScore(match, index, divider) {
       formAway.XGdifferential
     );
 
-    console.log(formHome);
 
     if (allLeagueResultsArrayOfObjects.length > 4) {
       [
@@ -1938,6 +1940,7 @@ export async function calculateScore(match, index, divider) {
 }
 
 async function getSuccessMeasure(fixtures) {
+
   let sumProfit = 0;
   let investment = 0;
   let exactScores = 0;
@@ -2453,6 +2456,7 @@ export function getCoverBetMaxReturns(priceArray, minAccSize, stake) {
 }
 
 function getUniquePermutations(arr, permLength) {
+
   if (arr.length <= permLength) return [arr];
 
   var permutations = [];
@@ -2495,6 +2499,7 @@ function NewlineText(props) {
 }
 
 async function renderTips() {
+
   if (newArray.length > 0) {
     ReactDOM.render(
       <div className="PredictionContainer">

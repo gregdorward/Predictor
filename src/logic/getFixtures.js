@@ -24,7 +24,7 @@ export var leagueArray = [];
 var leagueIdArray = [];
 export var leagueStatsArray = [];
 export let leagueInstance;
-export let allLeagueResultsArrayOfObjects = []
+export let allLeagueResultsArrayOfObjects = [];
 var lastThreeFormHome;
 var lastThreeFormAway;
 var lastFiveFormHome;
@@ -68,11 +68,10 @@ async function convertTimestamp(timestamp) {
   return converted;
 }
 
-export async function generateTables(a, leagueIdArray) {
+export async function generateTables(a, leagueIdArray, allResults) {
   // leagueIdArray = [];
   tableArray = [];
   let i = 0;
-
   leagueArray.forEach(function (league) {
     let currentLeagueId = leagueIdArray[i];
     i++;
@@ -150,7 +149,19 @@ export async function generateTables(a, leagueIdArray) {
   });
 }
 
-export async function renderTable(index) {
+export async function renderTable(index, results) {
+  let mostRecentGame = results.fixtures.pop();
+  let mostRecentGameweek = mostRecentGame.game_week;
+
+  const gameweeksResults = results.fixtures.filter(
+    (games) => games.game_week === mostRecentGameweek
+  );
+
+  const lastGameweeksResults = results.fixtures.filter(
+    (games) => games.game_week === mostRecentGameweek -1
+  );
+
+
   let league = tableArray[index];
   let statistics;
   let leagueStatistics = await fetch(
@@ -167,6 +178,9 @@ export async function renderTable(index) {
         Stats={statistics}
         Key={`League${index}`}
         GamesPlayed={statistics.game_week}
+        Results={gameweeksResults}
+        LastWeeksResults={lastGameweeksResults}
+        mostRecentGameweek={mostRecentGameweek}
       />,
       document.getElementById(`leagueName${index}`)
     );
@@ -174,6 +188,7 @@ export async function renderTable(index) {
 }
 
 async function createFixture(match, result, mockBool) {
+
   let roundedHomeOdds;
   let roundedAwayOdds;
   let roundedBTTSOdds;
@@ -275,6 +290,7 @@ export async function generateFixtures(
   selectedOdds,
   footyStatsFormattedDate
 ) {
+
   //cleanup if different day is selected
   ReactDOM.render(<div></div>, document.getElementById("GeneratePredictions"));
   ReactDOM.render(<div></div>, document.getElementById("successMeasure2"));
@@ -343,17 +359,18 @@ export async function generateFixtures(
       leagueArray = Array.from(leagues.leagueArray);
     });
 
-    let allLeagueResults = await fetch(`${process.env.REACT_APP_EXPRESS_SERVER}results`)
+    let allLeagueResults = await fetch(
+      `${process.env.REACT_APP_EXPRESS_SERVER}results`
+    );
 
-    allLeagueResultsArrayOfObjects = []
-    await allLeagueResults.json().then(( allGames => {
-      allLeagueResultsArrayOfObjects = allGames
-    }))
+    allLeagueResultsArrayOfObjects = [];
+    await allLeagueResults.json().then((allGames) => {
+      allLeagueResultsArrayOfObjects = allGames;
+    });
     leaguesStored = true;
-    console.log("Triggered")
-    generateTables(leagueArray, leagueIdArray);
+    generateTables(leagueArray, leagueIdArray, allLeagueResultsArrayOfObjects);
   } else {
-    allLeagueResultsArrayOfObjects = []
+    allLeagueResultsArrayOfObjects = [];
     for (let i = 0; i < orderedLeagues.length; i++) {
       league = await fetch(
         `${process.env.REACT_APP_EXPRESS_SERVER}tables/${orderedLeagues[i].element.id}/${date}`
@@ -365,9 +382,7 @@ export async function generateFixtures(
       leaguesStored = false;
     }
 
-
     for (const orderedLeague of orderedLeagues) {
-
       let fixtures = await fetch(
         `${process.env.REACT_APP_EXPRESS_SERVER}leagueFixtures/${orderedLeague.element.id}`
       );
@@ -377,17 +392,16 @@ export async function generateFixtures(
         (game) => game.status === "complete"
       );
 
-
       let leagueObj = {
-      // leagueObject[orderedLeague] = {
+        // leagueObject[orderedLeague] = {
         name: orderedLeague.name,
         id: orderedLeague.element.id,
         fixtures: gamesFiltered,
       };
 
-      allLeagueResultsArrayOfObjects.push(leagueObj)
+      allLeagueResultsArrayOfObjects.push(leagueObj);
     }
-    generateTables(leagueArray, leagueIdArray);
+    generateTables(leagueArray, leagueIdArray, allLeagueResultsArrayOfObjects);
   }
 
   let teamPositionPrefix;
@@ -1349,7 +1363,6 @@ export async function generateFixtures(
   }
 
   if (!leaguesStored) {
-    console.log("POSTING LEAGUE");
     await fetch(`${process.env.REACT_APP_EXPRESS_SERVER}leagues/${date}`, {
       method: "POST",
       headers: {
@@ -1367,6 +1380,5 @@ export async function generateFixtures(
       },
       body: JSON.stringify(allLeagueResultsArrayOfObjects),
     });
-    
   }
 }

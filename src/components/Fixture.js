@@ -3,6 +3,7 @@ import { CreateBadge } from "./createBadge";
 import Collapsable from "../components/CollapsableElement";
 import { createStatsDiv } from "../logic/getStats";
 import { renderTable } from "../logic/getFixtures";
+import { allLeagueResultsArrayOfObjects } from "../logic/getFixtures"
 
 let resultValue;
 var count;
@@ -185,7 +186,7 @@ function renderLeagueName(fixture) {
         <div
           className="leagueName"
           key={`leagueName${fixture.leagueIndex}div`}
-          onClick={() => renderTable(fixture.leagueIndex)}
+          onClick={() => renderTable(fixture.leagueIndex, allLeagueResultsArrayOfObjects[fixture.leagueIndex])}
         >
           {fixture.leagueName} &#9776;
         </div>
