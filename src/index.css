@@ -220,7 +220,7 @@ h4 {
 
 h5 {
   font-size: 2.5em;
-  margin-bottom: 0;
+  margin-bottom: 1em;
 }
 
 .historicResults{
@@ -544,6 +544,45 @@ p {
   border: 0px;
   background-color: #030061;
   border-radius: 0px;
+}
+
+.ResultRowOverview {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  width: 100%;
+  padding: 0.5em;
+}
+
+.columnOverviewHome {
+  flex: 33.33%;
+  text-align: right;
+  padding-right: 2em;
+}
+
+.columnOverviewAway {
+  flex: 33.33%;
+  text-align: left;
+  padding-left: 2em;
+}
+
+.columnOverviewScore {
+  flex: 1em;
+  background-color: yellow;
+  color: black;
+}
+
+.ResultRow {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  width: 100%;
+  padding: 0.5em;
+  color: #030061;
+}
+
+.column {
+  flex: 33.33%;
 }
 
 .ResultGoals {

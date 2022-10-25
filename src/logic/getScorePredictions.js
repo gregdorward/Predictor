@@ -1637,8 +1637,8 @@ export async function calculateScore(match, index, divider) {
       (awayLeagueOrAllFormAverageGoals * 2 +
         formAway.predictedGoalsBasedOnAwayAv * 0.5 +
         formHome.predictedGoalsConceededBasedOnHomeAv * 0.5 +
-        formAway.XGOverall * 0.2 +
-        formHome.XGAgainstAvgOverall * 0.2 +
+        formAway.XGOverall * 0.1 +
+        formHome.XGAgainstAvgOverall * 0.1 +
         last10WeightingAway * 1 +
         last2WeightingAway * 1) /
       3.2;
