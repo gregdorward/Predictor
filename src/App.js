@@ -105,7 +105,7 @@ let historicDate;
   [today, todayFootyStats] = await calculateDate(new Date());
 
   tomorrowsDate = new Date();
-  tomorrowsDate.setDate(tomorrowsDate.getDate() + 1);
+  tomorrowsDate.setDate(tomorrowsDate.getDate() - 25);
   [tomorrow, tomorrowFootyStats] = await calculateDate(tomorrowsDate);
 
   yesterdaysDate = new Date();

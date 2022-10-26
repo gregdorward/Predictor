@@ -10,6 +10,200 @@ import { Fragment } from "react";
 import GenerateFormSummary from "../logic/compareFormTrend";
 import { Chart, RadarChart } from "../components/Chart";
 import Collapsable from "../components/CollapsableElement";
+export async function getAttackStrength(goalsFor) {
+  let strength;
+  switch (true) {
+    case goalsFor >= 2.9:
+      strength = 10;
+      break;
+    case goalsFor >= 2.6 && goalsFor < 2.9:
+      strength = 9;
+      break;
+    case goalsFor >= 2.3 && goalsFor < 2.6:
+      strength = 8;
+      break;
+    case goalsFor >= 2 && goalsFor < 2.3:
+      strength = 7;
+      break;
+    case goalsFor >= 1.7 && goalsFor < 2:
+      strength = 6;
+      break;
+    case goalsFor >= 1.4 && goalsFor < 1.7:
+      strength = 5;
+      break;
+    case goalsFor >= 1.1 && goalsFor < 1.4:
+      strength = 4;
+      break;
+    case goalsFor >= 0.8 && goalsFor < 1.1:
+      strength = 3;
+      break;
+    case goalsFor >= 0.5 && goalsFor < 0.8:
+      strength = 2;
+      break;
+    case goalsFor < 0.5:
+      strength = 1;
+      break;
+    default:
+      break;
+  }
+  return strength;
+}
+
+export async function getDefenceStrength(goalsAgainst) {
+  let strength;
+  switch (true) {
+    case goalsAgainst >= 2.9:
+      strength = 1;
+      break;
+    case goalsAgainst >= 2.6 && goalsAgainst < 2.9:
+      strength = 2;
+      break;
+    case goalsAgainst >= 2.3 && goalsAgainst < 2.6:
+      strength = 3;
+      break;
+    case goalsAgainst >= 2 && goalsAgainst < 2.3:
+      strength = 4;
+      break;
+    case goalsAgainst >= 1.7 && goalsAgainst < 2:
+      strength = 5;
+      break;
+    case goalsAgainst >= 1.4 && goalsAgainst < 1.7:
+      strength = 6;
+      break;
+    case goalsAgainst >= 1.1 && goalsAgainst < 1.4:
+      strength = 7;
+      break;
+    case goalsAgainst >= 0.8 && goalsAgainst < 1.1:
+      strength = 8;
+      break;
+    case goalsAgainst >= 0.5 && goalsAgainst < 0.8:
+      strength = 9;
+      break;
+    case goalsAgainst < 0.5:
+      strength = 10;
+      break;
+    default:
+      break;
+  }
+  return strength;
+}
+
+export async function getPossessionStrength(possession) {
+  let strength;
+  switch (true) {
+    case possession >= 68:
+      strength = 10;
+      break;
+    case possession >= 64 && possession < 68:
+      strength = 9;
+      break;
+    case possession >= 60 && possession < 64:
+      strength = 8;
+      break;
+    case possession >= 56 && possession < 60:
+      strength = 7;
+      break;
+    case possession >= 52 && possession < 56:
+      strength = 6;
+      break;
+    case possession >= 48 && possession < 52:
+      strength = 5;
+      break;
+    case possession >= 44 && possession < 48:
+      strength = 4;
+      break;
+    case possession >= 40 && possession < 44:
+      strength = 3;
+      break;
+    case possession >= 35 && possession < 40:
+      strength = 2;
+      break;
+    case possession < 35:
+      strength = 1;
+      break;
+    default:
+      break;
+  }
+  return strength;
+}
+
+export async function getXGForStrength(XG) {
+  let strength;
+  switch (true) {
+    case XG >= 2.9:
+      strength = 10;
+      break;
+    case XG >= 2.6 && XG < 2.9:
+      strength = 9;
+      break;
+    case XG >= 2.3 && XG < 2.6:
+      strength = 8;
+      break;
+    case XG >= 2 && XG < 2.3:
+      strength = 7;
+      break;
+    case XG >= 1.7 && XG < 2:
+      strength = 6;
+      break;
+    case XG >= 1.4 && XG < 1.7:
+      strength = 5;
+      break;
+    case XG >= 1.1 && XG < 1.4:
+      strength = 4;
+      break;
+    case XG >= 0.8 && XG < 1.1:
+      strength = 3;
+      break;
+    case XG >= 0.5 && XG < 0.8:
+      strength = 2;
+      break;
+    case XG < 0.5:
+      strength = 1;
+      break;
+    default:
+      break;
+  }
+  return strength;
+}
+
+export async function getXGAgainstStrength(XGAgainst) {
+  let strength;
+  switch (true) {
+    case XGAgainst >= 2.9:
+      strength = 1;
+      break;
+    case XGAgainst >= 2.6 && XGAgainst < 2.9:
+      strength = 2;
+      break;
+    case XGAgainst >= 2.3 && XGAgainst < 2.6:
+      strength = 3;
+      break;
+    case XGAgainst >= 2 && XGAgainst < 2.3:
+      strength = 4;
+      break;
+    case XGAgainst >= 1.7 && XGAgainst < 2:
+      strength = 5;
+      break;
+    case XGAgainst >= 1.4 && XGAgainst < 1.7:
+      strength = 6;
+      break;
+    case XGAgainst >= 1.1 && XGAgainst < 1.4:
+      strength = 7;
+      break;
+    case XGAgainst >= 0.8 && XGAgainst < 1.1:
+      strength = 8;
+      break;
+    case XGAgainst >= 0.5 && XGAgainst < 0.8:
+      strength = 9;
+      break;
+    case XGAgainst < 0.5:
+      strength = 10;
+      break;
+    default:
+      break;
+  }
+  return strength;
+}
 
 async function diff(a, b) {
   return parseFloat(a - b).toFixed(2);
@@ -315,200 +509,7 @@ export async function createStatsDiv(game, displayBool) {
       10
     );
 
-    async function getAttackStrength(goalsFor) {
-      let strength;
-      switch (true) {
-        case goalsFor >= 2.9:
-          strength = 10;
-          break;
-        case goalsFor >= 2.6 && goalsFor < 2.9:
-          strength = 9;
-          break;
-        case goalsFor >= 2.3 && goalsFor < 2.6:
-          strength = 8;
-          break;
-        case goalsFor >= 2 && goalsFor < 2.3:
-          strength = 7;
-          break;
-        case goalsFor >= 1.7 && goalsFor < 2:
-          strength = 6;
-          break;
-        case goalsFor >= 1.4 && goalsFor < 1.7:
-          strength = 5;
-          break;
-        case goalsFor >= 1.1 && goalsFor < 1.4:
-          strength = 4;
-          break;
-        case goalsFor >= 0.8 && goalsFor < 1.1:
-          strength = 3;
-          break;
-        case goalsFor >= 0.5 && goalsFor < 0.8:
-          strength = 2;
-          break;
-        case goalsFor < 0.5:
-          strength = 1;
-          break;
-        default:
-          break;
-      }
-      return strength;
-    }
-
-    async function getDefenceStrength(goalsAgainst) {
-      let strength;
-      switch (true) {
-        case goalsAgainst >= 2.9:
-          strength = 1;
-          break;
-        case goalsAgainst >= 2.6 && goalsAgainst < 2.9:
-          strength = 2;
-          break;
-        case goalsAgainst >= 2.3 && goalsAgainst < 2.6:
-          strength = 3;
-          break;
-        case goalsAgainst >= 2 && goalsAgainst < 2.3:
-          strength = 4;
-          break;
-        case goalsAgainst >= 1.7 && goalsAgainst < 2:
-          strength = 5;
-          break;
-        case goalsAgainst >= 1.4 && goalsAgainst < 1.7:
-          strength = 6;
-          break;
-        case goalsAgainst >= 1.1 && goalsAgainst < 1.4:
-          strength = 7;
-          break;
-        case goalsAgainst >= 0.8 && goalsAgainst < 1.1:
-          strength = 8;
-          break;
-        case goalsAgainst >= 0.5 && goalsAgainst < 0.8:
-          strength = 9;
-          break;
-        case goalsAgainst < 0.5:
-          strength = 10;
-          break;
-        default:
-          break;
-      }
-      return strength;
-    }
-
-    async function getPossessionStrength(possession) {
-      let strength;
-      switch (true) {
-        case possession >= 68:
-          strength = 10;
-          break;
-        case possession >= 64 && possession < 68:
-          strength = 9;
-          break;
-        case possession >= 60 && possession < 64:
-          strength = 8;
-          break;
-        case possession >= 56 && possession < 60:
-          strength = 7;
-          break;
-        case possession >= 52 && possession < 56:
-          strength = 6;
-          break;
-        case possession >= 48 && possession < 52:
-          strength = 5;
-          break;
-        case possession >= 44 && possession < 48:
-          strength = 4;
-          break;
-        case possession >= 40 && possession < 44:
-          strength = 3;
-          break;
-        case possession >= 35 && possession < 40:
-          strength = 2;
-          break;
-        case possession < 35:
-          strength = 1;
-          break;
-        default:
-          break;
-      }
-      return strength;
-    }
-
-    async function getXGForStrength(XG) {
-      let strength;
-      switch (true) {
-        case XG >= 2.9:
-          strength = 10;
-          break;
-        case XG >= 2.6 && XG < 2.9:
-          strength = 9;
-          break;
-        case XG >= 2.3 && XG < 2.6:
-          strength = 8;
-          break;
-        case XG >= 2 && XG < 2.3:
-          strength = 7;
-          break;
-        case XG >= 1.7 && XG < 2:
-          strength = 6;
-          break;
-        case XG >= 1.4 && XG < 1.7:
-          strength = 5;
-          break;
-        case XG >= 1.1 && XG < 1.4:
-          strength = 4;
-          break;
-        case XG >= 0.8 && XG < 1.1:
-          strength = 3;
-          break;
-        case XG >= 0.5 && XG < 0.8:
-          strength = 2;
-          break;
-        case XG < 0.5:
-          strength = 1;
-          break;
-        default:
-          break;
-      }
-      return strength;
-    }
-
-    async function getXGAgainstStrength(XGAgainst) {
-      let strength;
-      switch (true) {
-        case XGAgainst >= 2.9:
-          strength = 1;
-          break;
-        case XGAgainst >= 2.6 && XGAgainst < 2.9:
-          strength = 2;
-          break;
-        case XGAgainst >= 2.3 && XGAgainst < 2.6:
-          strength = 3;
-          break;
-        case XGAgainst >= 2 && XGAgainst < 2.3:
-          strength = 4;
-          break;
-        case XGAgainst >= 1.7 && XGAgainst < 2:
-          strength = 5;
-          break;
-        case XGAgainst >= 1.4 && XGAgainst < 1.7:
-          strength = 6;
-          break;
-        case XGAgainst >= 1.1 && XGAgainst < 1.4:
-          strength = 7;
-          break;
-        case XGAgainst >= 0.8 && XGAgainst < 1.1:
-          strength = 8;
-          break;
-        case XGAgainst >= 0.5 && XGAgainst < 0.8:
-          strength = 9;
-          break;
-        case XGAgainst < 0.5:
-          strength = 10;
-          break;
-        default:
-          break;
-      }
-      return strength;
-    }
+    
 
     async function getPointsFromGames(formArr) {
       const pairings = {
