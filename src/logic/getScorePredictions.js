@@ -1235,9 +1235,12 @@ export async function calculateScore(match, index, divider, calculate) {
     //   match.homeTeam
     // );
 
-    finalHomeGoals = await roundCustom(rawFinalHomeGoals, formHome, formAway);
+    finalHomeGoals = Math.floor(rawFinalHomeGoals)
+    finalAwayGoals = Math.floor(rawFinalAwayGoals);
 
-    finalAwayGoals = await roundCustom(rawFinalAwayGoals, formAway, formHome);
+    // finalHomeGoals = await roundCustom(rawFinalHomeGoals, formHome, formAway);
+
+    // finalAwayGoals = await roundCustom(rawFinalAwayGoals, formAway, formHome);
 
     if (finalHomeGoals > 5) {
       finalHomeGoals = Math.round(
