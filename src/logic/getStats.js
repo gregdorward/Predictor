@@ -205,12 +205,51 @@ export async function getXGAgainstStrength(XGAgainst) {
   return strength;
 }
 
+export async function getXGDifferentialStrength(XGDiff) {
+  let strength;
+  switch (true) {
+    case XGDiff >= 2:
+      strength = 10;
+      break;
+    case XGDiff >= 1 && XGDiff < 1.5:
+      strength = 9;
+      break;
+    case XGDiff >= 0.5 && XGDiff < 1:
+      strength = 8;
+      break;
+    case XGDiff >= 0.25 && XGDiff < 0.5:
+      strength = 7;
+      break;
+    case XGDiff > 0 && XGDiff < 0.25:
+      strength = 6;
+      break;
+    case XGDiff <= 0 && XGDiff > -0.25:
+      strength = 5;
+      break;
+    case XGDiff <= -0.25 && XGDiff > -1:
+      strength = 4;
+      break;
+    case XGDiff <= -1 && XGDiff > -1.5:
+      strength = 3;
+      break;
+    case XGDiff <= -1.5 && XGDiff > -2:
+      strength = 2;
+      break;
+    case XGDiff <= -2:
+      strength = 1;
+      break;
+    default:
+      break;
+  }
+  return strength;
+}
+
 async function diff(a, b) {
   return parseFloat(a - b).toFixed(2);
 }
 
 export async function createStatsDiv(game, displayBool) {
-  console.log("createStatsDiv")
+  console.log("createStatsDiv");
   if (game.status !== "void") {
     // takes the displayBool boolean from the fixture onClick and sets the styling of the stats div from there
     function styling(testBool) {
@@ -508,8 +547,6 @@ export async function createStatsDiv(game, displayBool) {
       gameStats.away[index].last10Points,
       10
     );
-
-    
 
     async function getPointsFromGames(formArr) {
       const pairings = {
@@ -1048,17 +1085,7 @@ export async function createStatsDiv(game, displayBool) {
     ReactDOM.render(
       <div style={style}>
         <div className="Chart" id={`Chart${game.id}`} style={style}>
-          <Chart
-            height={3}
-            depth={0}
-            data1={formArrayHome}
-            data2={formArrayAway}
-            team1={game.homeTeam}
-            team2={game.awayTeam}
-            type={chartType}
-            tension={0}
-          ></Chart>
-          <RadarChart
+        <RadarChart
             data={[
               homeAttackStrength,
               homeDefenceStrength,
@@ -1076,6 +1103,16 @@ export async function createStatsDiv(game, displayBool) {
             team1={game.homeTeam}
             team2={game.awayTeam}
           ></RadarChart>
+          <Chart
+            height={3}
+            depth={0}
+            data1={formArrayHome}
+            data2={formArrayAway}
+            team1={game.homeTeam}
+            team2={game.awayTeam}
+            type={chartType}
+            tension={0}
+          ></Chart>
           <Chart
             height={
               Math.max(...goalDiffHomeMovingAv, ...goalDiffAwayMovingAv) > 2
@@ -1106,18 +1143,18 @@ export async function createStatsDiv(game, displayBool) {
           <div className="flex-childOneOverview">{overviewHome}</div>
           <div className="flex-childTwoOverview">{overviewAway}</div>
         </div>
-          <Collapsable
-            className={"Detail"}
-            classNameTwo={"flex-childOneOverview"}
-            classNameThree={"flex-childTwoOverview"}
-            classNameFlex={"flex-element"}
-            classNameButton={"DetailedFixtures"}
-            buttonText={"Detailed view"}
-            newText={"Detailed view"}
-            element={contentHome}
-            elementTwo={contentAway}
-            // style={style}
-          />
+        <Collapsable
+          className={"Detail"}
+          classNameTwo={"flex-childOneOverview"}
+          classNameThree={"flex-childTwoOverview"}
+          classNameFlex={"flex-element"}
+          classNameButton={"DetailedFixtures"}
+          buttonText={"Detailed view"}
+          newText={"Detailed view"}
+          element={contentHome}
+          elementTwo={contentAway}
+          // style={style}
+        />
         <div className="flex-container">
           <StatsHome />
           <StatsAway />

@@ -109,6 +109,10 @@ if(props.type === "Points over time"){
       title: {
         display: true,
         text: props.type,
+        font: {
+          size: 14,
+          color: "black"
+        }
       },
     },
   };
@@ -172,6 +176,9 @@ export function RadarChart(props) {
       title: {
         display: true,
         text: "XG Tipping Strength Ratings",
+        font: {
+          size: 14
+        }
       },
     },
   };

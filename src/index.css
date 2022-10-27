@@ -551,7 +551,7 @@ p {
   flex-direction: row;
   flex-wrap: wrap;
   width: 100%;
-  padding: 0.5em;
+  padding: 0.75em;
 }
 
 .columnOverviewHome {
@@ -1639,6 +1639,9 @@ li.FormHeader {
   background-color: #970d00;
   padding: 0.7em;
   margin-top: 1em;
+  padding-left: 0.8em;
+  padding-right: 0.8em;
+
   /* padding-left: 7px;
   padding-right: 7px; */
   margin: 0.2em;
@@ -1650,6 +1653,8 @@ li.FormHeader {
   background-color: rgb(85, 85, 85);
   padding: 0.7em;
   margin-top: 1em;
+  padding-left: 0.8em;
+  padding-right: 0.8em;
   /* padding-left: 7px;
   padding-right: 7px; */
   margin: 0.2em;

@@ -5,6 +5,7 @@ import { createStatsDiv } from "../logic/getStats";
 import { renderTable } from "../logic/getFixtures";
 import { allLeagueResultsArrayOfObjects } from "../logic/getFixtures"
 
+
 let resultValue;
 var count;
 var setCount;

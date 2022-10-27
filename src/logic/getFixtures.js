@@ -150,6 +150,9 @@ export async function generateTables(a, leagueIdArray, allResults) {
 }
 
 export async function renderTable(index, results) {
+  console.log(index)
+  console.log(results)
+
   let mostRecentGame = results.fixtures.pop();
   let mostRecentGameweek = mostRecentGame.game_week;
 
@@ -161,6 +164,7 @@ export async function renderTable(index, results) {
     (games) => games.game_week === mostRecentGameweek -1
   );
 
+  console.log(tableArray)
 
   let league = tableArray[index];
   let statistics;
@@ -355,6 +359,7 @@ export async function generateFixtures(
   var leaguePositions = [];
   leagueArray = [];
   if (league.status === 200) {
+    console.log("A")
     await league.json().then((leagues) => {
       leagueArray = Array.from(leagues.leagueArray);
     });
@@ -365,11 +370,15 @@ export async function generateFixtures(
 
     allLeagueResultsArrayOfObjects = [];
     await allLeagueResults.json().then((allGames) => {
+      console.log(allGames)
       allLeagueResultsArrayOfObjects = allGames;
     });
+    // console.log(allLeagueResultsArrayOfObjects)
     leaguesStored = true;
     generateTables(leagueArray, leagueIdArray, allLeagueResultsArrayOfObjects);
   } else {
+    console.log("B")
+
     allLeagueResultsArrayOfObjects = [];
     for (let i = 0; i < orderedLeagues.length; i++) {
       league = await fetch(
@@ -1338,7 +1347,7 @@ export async function generateFixtures(
           text={"Generate predictions"}
           onClickEvent={() => getScorePrediction(day)}
         />
-        <div className="Version">Prediction engine v2.2.1 (26/10/2022)</div>
+        <div className="Version">Prediction engine v2.2.2 (27/10/2022)</div>
       </Fragment>,
       document.getElementById("GeneratePredictions")
     );

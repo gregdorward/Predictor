@@ -15,6 +15,7 @@ import {
   getPossessionStrength,
   getXGForStrength,
   getXGAgainstStrength,
+  getXGDifferentialStrength,
 } from "./getStats";
 
 var myHeaders = new Headers();
@@ -545,6 +546,7 @@ export async function compareTeams(homeForm, awayForm, match) {
   let homeXGAgainstStrength = await getXGAgainstStrength(
     homeForm.XGAgainstAvgOverall
   );
+  let homeXGDiffStrength = await getXGDifferentialStrength(parseFloat(homeForm.XGdifferential))
 
   let awayAttackStrength = await getAttackStrength(awayForm.ScoredOverall / 10);
   let awayDefenceStrength = await getDefenceStrength(
@@ -558,14 +560,17 @@ export async function compareTeams(homeForm, awayForm, match) {
     awayForm.XGAgainstAvgOverall
   );
 
+  let awayXGDiffStrength = await getXGDifferentialStrength(parseFloat(awayForm.XGdifferential))
+
+
   const attackStrengthComparison = await compareStat(
     homeAttackStrength,
-    awayAttackStrength
+    awayDefenceStrength
   );
 
   const defenceStrengthComparison = await compareStat(
     homeDefenceStrength,
-    awayDefenceStrength
+    awayAttackStrength
   );
 
   const possessiontrengthComparison = await compareStat(
@@ -575,22 +580,25 @@ export async function compareTeams(homeForm, awayForm, match) {
 
   const xgForStrengthComparison = await compareStat(
     homeXGForStrength,
-    awayXGForStrength
+    awayXGAgainstStrength
   );
 
   const xgAgainstStrengthComparison = await compareStat(
     homeXGAgainstStrength,
-    awayXGAgainstStrength
+    awayXGForStrength
   );
 
   const oddsComparison = await compareStat(match.awayOdds, match.homeOdds);
+
+  const xgDiffComparison = await compareStat(homeXGDiffStrength, awayXGDiffStrength)
 
   let calculation =
     attackStrengthComparison * 1 +
     defenceStrengthComparison * 1 +
     possessiontrengthComparison * 1 +
-    xgForStrengthComparison * 2 +
+    xgForStrengthComparison * 1.5 +
     xgAgainstStrengthComparison * 1 +
+    xgDiffComparison * 0.25 +
     oddsComparison * 1;
 
   let homeWinOutcomeProbability =
@@ -731,14 +739,14 @@ export async function roundCustom(num, form, otherForm) {
 
 //Calculates scores based on prior XG figures, weighted by odds
 let i = 0;
-export async function calculateScore(match, index, divider) {
+export async function calculateScore(match, index, divider, calculate) {
   i++;
 
   let teams;
-  let calculate = true;
+  console.log(calculate)
 
   if (
-    allForm.find(
+    calculate === true && allForm.find(
       (game) =>
         game.home.teamName === match.homeTeam &&
         game.away.teamName === match.awayTeam
@@ -1092,10 +1100,13 @@ export async function calculateScore(match, index, divider) {
     teamComparisonScore = await compareTeams(formHome, formAway, match);
     teamComparisonScore = teamComparisonScore * 0.09;
 
-    if (teamComparisonScore > 0.45) {
-      teamComparisonScore = 0.45;
-    } else if (teamComparisonScore < -0.45) {
-      teamComparisonScore = -0.45;
+    console.log(match.game)
+    console.log(teamComparisonScore)
+
+    if (teamComparisonScore > 0.5) {
+      teamComparisonScore = 0.5;
+    } else if (teamComparisonScore < -0.5) {
+      teamComparisonScore = -0.5;
     }
     match.teamComparisonScore = teamComparisonScore.toFixed(2);
 
@@ -1185,29 +1196,29 @@ export async function calculateScore(match, index, divider) {
       rawFinalHomeGoals = 0;
     }
 
-    if (
-      (rawFinalHomeGoals + 1) / (formHome.ScoredAverage + 1) > 1.5 &&
-      (rawFinalHomeGoals + 1) / (formAway.ConcededAverage + 1) > 1.5
-    ) {
-      rawFinalHomeGoals = (rawFinalHomeGoals + formHome.ScoredAverage) / 1.75;
-    } else if (
-      (rawFinalHomeGoals + 1) / (formHome.ScoredAverage + 1) < 0.66 &&
-      (rawFinalHomeGoals + 1) / (formAway.ConcededAverage + 1) < 0.66
-    ) {
-      rawFinalHomeGoals = (rawFinalHomeGoals + formHome.ScoredAverage) / 1.75;
-    }
+    // if (
+    //   (rawFinalHomeGoals + 1) / (formHome.ScoredAverage + 1) > 1.5 &&
+    //   (rawFinalHomeGoals + 1) / (formAway.ConcededAverage + 1) > 1.5
+    // ) {
+    //   rawFinalHomeGoals = (rawFinalHomeGoals + formHome.ScoredAverage) / 1.75;
+    // } else if (
+    //   (rawFinalHomeGoals + 1) / (formHome.ScoredAverage + 1) < 0.66 &&
+    //   (rawFinalHomeGoals + 1) / (formAway.ConcededAverage + 1) < 0.66
+    // ) {
+    //   rawFinalHomeGoals = (rawFinalHomeGoals + formHome.ScoredAverage) / 1.75;
+    // }
 
-    if (
-      (rawFinalAwayGoals + 1) / (formAway.ScoredAverage + 1) > 1.5 &&
-      (rawFinalAwayGoals + 1) / (formHome.ConcededAverage + 1) > 1.5
-    ) {
-      rawFinalAwayGoals = (rawFinalAwayGoals + formAway.ScoredAverage) / 1.75;
-    } else if (
-      (finalAwayGoals + 1) / (formAway.ScoredAverage + 1) < 0.66 &&
-      (finalAwayGoals + 1) / (formHome.ConcededAverage + 1) < 0.66
-    ) {
-      rawFinalAwayGoals = (rawFinalAwayGoals + formAway.ScoredAverage) / 1.75;
-    }
+    // if (
+    //   (rawFinalAwayGoals + 1) / (formAway.ScoredAverage + 1) > 1.5 &&
+    //   (rawFinalAwayGoals + 1) / (formHome.ConcededAverage + 1) > 1.5
+    // ) {
+    //   rawFinalAwayGoals = (rawFinalAwayGoals + formAway.ScoredAverage) / 1.75;
+    // } else if (
+    //   (finalAwayGoals + 1) / (formAway.ScoredAverage + 1) < 0.66 &&
+    //   (finalAwayGoals + 1) / (formHome.ConcededAverage + 1) < 0.66
+    // ) {
+    //   rawFinalAwayGoals = (rawFinalAwayGoals + formAway.ScoredAverage) / 1.75;
+    // }
 
     // let rawFinalHomeGoalsAdjusted;
     // let rawFinalAwayGoalsAdjusted;
@@ -1431,7 +1442,7 @@ async function getSuccessMeasure(fixtures) {
   let netProfit;
 
   for (let i = 0; i < fixtures.length; i++) {
-    if (fixtures[i].status === "complete") {
+    if (fixtures[i].status === "complete" && fixtures[i].prediction) {
       sumProfit = sumProfit + fixtures[i].profit;
       investment = investment + 1;
       netProfit = (sumProfit - investment).toFixed(2);
@@ -1524,10 +1535,17 @@ export async function getScorePrediction(day, mocked) {
     matches.map(async (match) => {
       // if there are no stored predictions, calculate them based on live data
       if (match) {
+        console.log(match)
         switch (true) {
           case match.status === "canceled":
             match.goalsA = "P";
             match.goalsB = "P";
+            await calculateScore(match, index, divider, false);
+            break;
+          case match.leagueID === 6935 || match.leagueID === 7061 || match.game_week < 5:
+            match.goalsA = "-";
+            match.goalsB = "-";
+            await calculateScore(match, index, divider, false);
             break;
           default:
             [
@@ -1535,7 +1553,7 @@ export async function getScorePrediction(day, mocked) {
               match.goalsB,
               match.unroundedGoalsA,
               match.unroundedGoalsB,
-            ] = await calculateScore(match, index, divider, match.id);
+            ] = await calculateScore(match, index, divider, true);
             break;
         }
       } else {
@@ -1544,7 +1562,7 @@ export async function getScorePrediction(day, mocked) {
           match.goalsB,
           match.unroundedGoalsA,
           match.unroundedGoalsB,
-        ] = await calculateScore(match, index, divider, match.id);
+        ] = await calculateScore(match, index, divider, true);
       }
 
       await getBTTSPotential(
@@ -1561,7 +1579,7 @@ export async function getScorePrediction(day, mocked) {
       let Over25PredictionObject;
       let XGPredictionObject;
 
-      if (match.status === "complete") {
+      if (match.status === "complete" && match.prediction) {
         match.outcomeSymbol =
           match.predictionOutcome === "Won" ? "\u2714" : "\u2718";
         match.over25PredictionOutcomeSymbol =

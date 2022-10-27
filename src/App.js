@@ -66,8 +66,8 @@ const leagueOrder = [
   7821, //Women's prem 22/23
   6969, //MLS 22
   7097, //Brazil prem 22
-  6935, //Japan 22
-  7061, //S Korea 22
+  // 6935, //Japan 22
+  // 7061, //S Korea 22
   7425, //Mexico prem 22/23
   7956, //National league North and South 22/23
   8008, //Australian A league 22/23
@@ -150,7 +150,7 @@ let historicDate;
       const element = league.season[x];
 
       if (element.year === 2022 || element.year === 20222023) {
-        if (element.id !== 4340) {
+        if (element.id !== 4340 && element.id !== 6935 && element.id !== 7061) {
           availableLeagues.push({ name: name, element });
         }
       }
@@ -169,7 +169,6 @@ let historicDate;
       });
       return array;
     }
-
     //leagues ordered by id
     orderedLeagues = await mapOrder(availableLeagues, leagueOrder, "id");
   }  
