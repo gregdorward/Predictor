@@ -254,7 +254,7 @@ button {
   padding-bottom: 8px; */
   margin: 1em;
   border: 0.1em solid #030061;
-  border-radius: 2em;
+  border-radius: 1em;
   box-sizing: border-box;
   text-decoration: none;
   font-family: 'Open Sans', sans-serif;
@@ -1071,7 +1071,7 @@ p {
   flex: 40%;
   background: white;
   color: #030061;
-  margin: 1em;
+  margin: 0.25em;
   padding: 1em;
 }
 
@@ -1086,7 +1086,7 @@ p {
   flex: 50%; 
   padding-bottom: 1em;
   padding: 1em;
-  margin: 1em;
+  margin: 0.25em;
   background: white;
   color: #030061
 }

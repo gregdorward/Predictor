@@ -743,6 +743,7 @@ export async function calculateScore(match, index, divider, calculate) {
   i++;
 
   let teams;
+  console.log(match)
   console.log(calculate)
 
   if (
@@ -1545,7 +1546,7 @@ export async function getScorePrediction(day, mocked) {
             match.goalsB = "P";
             await calculateScore(match, index, divider, false);
             break;
-          case match.leagueID === 6935 || match.leagueID === 7061 || match.game_week < 5:
+          case match.leagueID === 6935 || match.leagueID === 7061 || (match.game_week > 0 && match.game_week < 5):
             match.goalsA = "-";
             match.goalsB = "-";
             await calculateScore(match, index, divider, false);
