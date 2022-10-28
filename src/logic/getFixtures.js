@@ -1346,6 +1346,7 @@ export async function generateFixtures(
         <Button
           text={"Generate predictions"}
           onClickEvent={() => getScorePrediction(day)}
+          className={"GeneratePredictions"}
         />
         <div className="Version">Prediction engine v2.2.2 (27/10/2022)</div>
       </Fragment>,

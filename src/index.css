@@ -163,7 +163,7 @@
 }
 
 body {
-  background-color: #e2e2e26c;
+  background-color: rgba(226, 226, 226, 0.424);
   /* align-content: space-between; */
   text-align: center;
   color: rgb(0, 0, 0);
@@ -199,13 +199,13 @@ h1 {
 h2 {
   /* font-size: 2em; */
   font-weight: 500;
-  color: black;
+  color: #030061;
 }
 
 h3 {
   font-size: 1.25em;
   
-  color: black;
+  color: #030061;
   padding: 5px;
   margin: 0%
 }
@@ -213,7 +213,7 @@ h3 {
 h4 {
   font-size: 1.25em;
   
-  color: black;
+  color: #030061;
   padding: 5px;
   margin: 0%
 }
@@ -221,6 +221,7 @@ h4 {
 h5 {
   font-size: 2.5em;
   margin-bottom: 1em;
+  color: #030061;
 }
 
 .historicResults{
@@ -266,14 +267,30 @@ button {
  background-color: #030061;
   /* text-shadow: 0 0.04em 0.04em rgba(0, 0, 0, 0.35); */
   text-align: center;
-  box-shadow: 0 0px 0px 0 rgba(0, 0, 0, 0.2), 0 1px 2px 0 #3c4751;
+  box-shadow: 0 0px 0px 0 rgba(0, 0, 0, 0.2), 0 1px 2px 0 #030052;
 
   transition: all 0.2s;
 }
 
 button:active {
-  box-shadow: 0 0px 0px 0 rgba(0, 0, 0, 0.2), 0 1px 2px 0 #3c4751;
+  box-shadow: 0 0px 0px 0 rgba(0, 0, 0, 0.2), 0 1px 2px 0 #030052 inset;
 
+}
+
+button.GeneratePredictions{
+  padding-top: 1em;
+  padding-bottom: 1em;
+  background-color: white;
+  color: #030061;
+  box-shadow: 0 0px 0px 0 rgba(0, 0, 0, 0.2), 0 1px 2px 0 #030052
+}
+
+button.GeneratePredictions:active{
+  padding-top: 1em;
+  padding-bottom: 1em;
+  background-color: white;
+  color: #030061;
+  box-shadow: 0 0px 0px 0 rgba(0, 0, 0, 0.2), 0 1px 2px 0 #030052 inset;
 }
 
 .disclaimerButton {
@@ -281,11 +298,11 @@ button:active {
   color: #030061;
   padding: 0.5em;
   font-size: 0.8em;
-  box-shadow: 0 0px 0px 0 rgba(0, 0, 0, 0.2), 0 0.5px 1px 0 #4e6274;
+  box-shadow: 0 0px 0px 0 rgba(0, 0, 0, 0.2), 0 0.5px 1px 0 #030052;
 }
 
 .disclaimerButton:active {
-  box-shadow: 0 0px 0px 0 rgba(0, 0, 0, 0.2), 0 0.5px 1px 0 #4e6274 inset;
+  box-shadow: 0 0px 0px 0 rgba(0, 0, 0, 0.2), 0 0.5px 1px 0 #030052 inset;
 }
 
 .FixtureButtons {
@@ -301,12 +318,12 @@ button:active {
   background-color: #ffffff;
   color: #030061;
   margin: 0.2em;
-  box-shadow: 0 0px 0px 0 rgba(0, 0, 0, 0.2), 0 1px 2px 0 #4e6274;
+  box-shadow: 0 0px 0px 0 rgba(0, 0, 0, 0.2), 0 1px 2px 0 #030052;
 
 }
 
 .FixtureButtons button:active {
-  box-shadow: 0 0px 0px 0 rgba(0, 0, 0, 0.2), 0 1px 2px 0 #4e6274 inset;
+  box-shadow: 0 0px 0px 0 rgba(0, 0, 0, 0.2), 0 1px 2px 0 #030052 inset;
 
 }
 
@@ -483,13 +500,14 @@ p {
   padding-top: 0.75em;
   padding-bottom: 0.75em;
   margin-top: 1.5em;
-  background-color: #030061;
-  box-shadow: 0 1px 2px 0 #59586f inset, 0 2px 4px 0 #59586f;
+  background-color:#030061;
+  color: white;
+  /* box-shadow: 0 1px 2px 0 #59586f inset, 0 2px 4px 0 #59586f; */
 
 }
 
 .leagueName:active {
-  box-shadow: 0 1px 2px 0 #59586f inset, 0 2px 4px 0 #59586f inset;
+  box-shadow: 0 1px 2px 0 #030052 inset, 0 2px 4px 0 #030052 inset;
 
 }
 
@@ -552,6 +570,7 @@ p {
   flex-wrap: wrap;
   width: 100%;
   padding: 0.75em;
+  align-items: center;
 }
 
 .columnOverviewHome {
@@ -569,6 +588,8 @@ p {
 .columnOverviewScore {
   flex: 1em;
   background-color: yellow;
+  padding-top: 0.25em;
+  padding-bottom: 0.25em;
   color: black;
 }
 
@@ -611,16 +632,30 @@ p {
 }
 
 
-.individualFixture {
+*[class^='individualFixture'] {
   display: flex;
   flex-basis: 100%;
   background-color: #dad7d7a0;
   align-items: center;
   align-content: center;
   color: black;
-  padding-top: 0.5em;
-  padding-bottom: 0.5em;
-  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.2), 0 1px 2px 0 #294A66;
+  padding-top: 0.25em;
+  padding-bottom: 0.25em;
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.2), 0 1px 2px 0 #030052;
+  margin-bottom: 0.5em;
+  /* border: black 0.25px solid; */
+}
+
+.individualFixturecomplete {
+  display: flex;
+  flex-basis: 100%;
+  background-color: #dad7d7a0;
+  align-items: center;
+  align-content: center;
+  color: black;
+  padding-top: 0.25em;
+  padding-bottom: 0.25em;
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.2), 0 1px 2px 0 #030052;
   margin-bottom: 0.5em;
   
   /* border: 1em; */
@@ -634,7 +669,7 @@ p {
 .individualFixture:active, input:focus{
   /* box-shadow:2px 2px 2px 2px grey; */
   
-  box-shadow: 0 0px 0px 0 rgba(0, 0, 0, 0.2) inset, 0 1px 2px 0 #4e5e6c inset;
+  box-shadow: 0 0px 0px 0 rgba(0, 0, 0, 0.2) inset, 0 1px 2px 0 #030052 inset;
 }
 
 
@@ -644,7 +679,7 @@ p {
   background-color: #ffffff;
   align-items: center;
   align-content: center;
-  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 2px 4px 0 #294A66;
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 2px 4px 0 #030052;
   margin-bottom: 0.5em;
   color: #030061;  
   /* border: 1em; */
@@ -694,7 +729,7 @@ p {
   flex-basis: 1%;
 }
 
-.HomeOdds {
+*[class^='HomeOdds'] {
   order: 0;
   /* font-size: 0.5em; */
   padding: 0.5em;
@@ -706,7 +741,31 @@ p {
   margin-left: 1em;
 }
 
-.AwayOdds {
+.HomeOddscomplete {
+  order: 0;
+  /* font-size: 0.5em; */
+  padding: 0.5em;
+ background-color: #030061;
+  color:white;
+  width: 3.5em;
+  border-radius: 25px;
+  font-weight: bolder;
+  margin-left: 1em;
+}
+
+*[class^='AwayOdds']{
+  order: 7;
+  /* font-size: 0.5em; */
+  padding: 0.5em;
+ background-color: #030061;
+  color: white;
+  width: 3.5em;
+  border-radius: 25px;
+  font-weight: 500;
+  margin-right: 1em;
+}
+
+.AwayOddscomplete {
   order: 7;
   /* font-size: 0.5em; */
   padding: 0.5em;
@@ -730,7 +789,6 @@ p {
   text-align: right;
   padding-left: 0.25em;
   font-weight: bolder;
-  color: black;
 }
 
 .awayTeam {
@@ -744,7 +802,6 @@ p {
   text-align: left;
   padding-right: 0.25em;
   font-weight: bolder;
-  color: black;
 }
 
 .ExplainerHeaders {
@@ -813,6 +870,7 @@ p {
   display: inline-block;
   color: white;
   background-color: #030061;
+  border: black 0.25px solid;
   margin: 0.2em;
 }
 
@@ -835,10 +893,11 @@ p {
   order: 3;
   padding: 0.5em;
   display: inline-block;
-  color: white;
-  background-color: #030061;
+  color: black;
+  background-color: rgb(241, 241, 0);
   margin: 0.2em;
-  
+  border: black 0.25px solid;
+  box-shadow: #030052;
 }
 
 .HomeResults {
@@ -879,7 +938,8 @@ p {
   padding: 0.5em;
   display: inline-block;
   color: white;
-  background-color: #600800;
+  background-color: #730a00;
+  border: black 0.25px solid;
   margin: 0.2em;
 }
 
@@ -891,7 +951,8 @@ p {
   padding: 0.5em;
   display: inline-block;
   color: white;
-  background-color:  #014a01;
+  background-color:  #016001;
+  border: black 0.25px solid;
   margin: 0.2em;
   
 }
@@ -904,7 +965,8 @@ p {
     max-width: 5em;
     display: inline-block;
     color: gold;
-    background-color:  #014a01;
+    background-color:  #016001;
+    border: black 0.25px solid;
     margin: 0.2em;
 }
 .hidden {
@@ -987,8 +1049,8 @@ p {
 .LeagueStatisticsHeader{
   font-size: 2.5em;
   background-color: #e2e2e26c;
-  color: black;
-  padding-top: 0.5em;
+  color:#030061;
+  padding-top: 1em;
   padding-bottom: 0.5em
 }
 
@@ -1007,11 +1069,14 @@ p {
 .LeagueStatsColumn {
   padding-top: 1em;
   flex: 40%;
-  color: black;
+  background: white;
+  color: #030061;
+  margin: 1em;
+  padding: 1em;
 }
 
 .LeagueStatistics li {
-  color: black;
+  color: #030061;
   padding: 0.5em;  
 }
 
@@ -1020,6 +1085,10 @@ p {
   flex-direction: row;
   flex: 50%; 
   padding-bottom: 1em;
+  padding: 1em;
+  margin: 1em;
+  background: white;
+  color: #030061
 }
 
 
@@ -1681,7 +1750,7 @@ li.FormHeader {
   /* padding-left: 7px;
   padding-right: 7px; */
   width: 1.2vw;
-  margin: 0.1em;
+  margin: 0.25vw;
   color: white;
   font-weight: 700;
 }
@@ -1695,7 +1764,7 @@ li.FormHeader {
   /* padding-left: 7px;
   padding-right: 7px; */
   width: 1.2vw;
-  margin: 0.1em;
+  margin: 0.25vw;
   color: white;
   font-weight: 700;
 }
@@ -1709,7 +1778,7 @@ li.FormHeader {
   /* padding-left: 7px;
   padding-right: 7px; */
   width: 1.2vw;
-  margin: 0.1em;
+  margin: 0.25vw;
   color: white;
   font-weight: 700;
 }
@@ -1812,6 +1881,7 @@ li.FormHeader{
   padding: 1em;
   border: #030061 1px dashed;
   margin: 0.5em;
+  background-color: white;
 }
 
 .BestPredictionsExplainer {
@@ -1833,6 +1903,7 @@ li.FormHeader{
   border: #030061 1px dashed;
   padding: 1em;
   margin: 0.5em;
+  background-color: white;
 }
 
 .BTTSGames li {
@@ -1867,6 +1938,7 @@ ul {
   padding: 1em;
   border: #030061 1px dashed;
   margin: 0.5em;
+  background-color: white;
 }
 
 .LongshotPredictions li {
@@ -1879,6 +1951,7 @@ ul {
   padding: 1em;
   border: #030061 1px dashed;
   margin: 0.5em;
+  background-color: white;
 }
 
 .XGDiffTips lh {
@@ -2049,8 +2122,8 @@ button:hover {
   display: flex;
   flex-direction: column;
   flex-wrap: wrap;
-  margin-left: 20%;
-  margin-right: 20%;
+  /* margin-left: 20%;
+  margin-right: 20%; */
   padding-bottom: 15px;
 }
 
@@ -2063,9 +2136,42 @@ button:hover {
   padding-top: 2em;
 }
 
-.LastGame{
-  padding-bottom: 2em;
+.LastGameOverview{
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  width: 100%;
+  padding: 0.75em;
+  background-color: #030061;
+  padding-top: 1em;
+  padding-bottom: 1em;
+  align-items: center;
 }
+
+.LastGameHome {
+  flex: 33.33%;
+  text-align: right;
+  padding-right: 2em;
+  color: white;
+}
+
+.LastGameAway {
+  flex: 33.33%;
+  text-align: left;
+  padding-left: 2em;
+  color: white;
+}
+
+.LastGameScore {
+  flex: 1em;
+  background-color: yellow;
+  color: black;
+  padding: 0.25em;
+  margin-left: 0.25em;
+  margin-right: 0.25em;
+  /* margin: 0.5em; */
+}
+
 
 
 
@@ -2076,7 +2182,7 @@ button:hover {
   font-size: .5em;
   align-items: stretch;
   background-color: #030052;
-  margin: 1em;
+  /* margin: 1em; */
 }
 
 .ResultsStatsTable{
