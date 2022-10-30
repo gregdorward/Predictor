@@ -565,12 +565,12 @@ export async function compareTeams(homeForm, awayForm, match) {
 
   const attackStrengthComparison = await compareStat(
     homeAttackStrength,
-    awayDefenceStrength
+    awayAttackStrength
   );
 
   const defenceStrengthComparison = await compareStat(
     homeDefenceStrength,
-    awayAttackStrength
+    awayDefenceStrength
   );
 
   const possessiontrengthComparison = await compareStat(
@@ -596,7 +596,7 @@ export async function compareTeams(homeForm, awayForm, match) {
     attackStrengthComparison * 1 +
     defenceStrengthComparison * 1 +
     possessiontrengthComparison * 1 +
-    xgForStrengthComparison * 1.5 +
+    xgForStrengthComparison * 1 +
     xgAgainstStrengthComparison * 1 +
     xgDiffComparison * 0.25 +
     oddsComparison * 1;
@@ -1144,21 +1144,25 @@ export async function calculateScore(match, index, divider, calculate) {
       (homeLeagueOrAllFormAverageGoals * 2 +
         formHome.predictedGoalsBasedOnHomeAv * 0.5 +
         formAway.predictedGoalsConceededBasedOnAwayAv * 0.5 +
+        formHome.allTeamGoalsBasedOnAverages * 0.5 +
+        formAway.allTeamGoalsConceededBasedOnAverages * 0.5 +
         formHome.XGOverall * 0.1 +
         formAway.XGAgainstAvgOverall * 0.1 +
-        last10WeightingHome * 1 +
-        last2WeightingHome * 1) /
-      3.2;
+        last10WeightingHome * 2 +
+        last2WeightingHome * 2) /
+      4.2;
 
     let factorOneAway =
       (awayLeagueOrAllFormAverageGoals * 2 +
         formAway.predictedGoalsBasedOnAwayAv * 0.5 +
         formHome.predictedGoalsConceededBasedOnHomeAv * 0.5 +
+        formAway.allTeamGoalsBasedOnAverages * 0.5 +
+        formHome.allTeamGoalsConceededBasedOnAverages * 0.5 +
         formAway.XGOverall * 0.1 +
         formHome.XGAgainstAvgOverall * 0.1 +
-        last10WeightingAway * 1 +
-        last2WeightingAway * 1) /
-      3.2;
+        last10WeightingAway * 2 +
+        last2WeightingAway * 2) /
+      4.2;
 
     let homeComparisonWeighting;
     let awayComparisonWeighting;
@@ -1236,8 +1240,14 @@ export async function calculateScore(match, index, divider, calculate) {
     //   match.homeTeam
     // );
 
-    finalHomeGoals = Math.floor(rawFinalHomeGoals)
-    finalAwayGoals = Math.floor(rawFinalAwayGoals);
+    if(formHome.CleanSheetPercentage < 30 && formAway.CleanSheetPercentage < 30){
+      finalHomeGoals = Math.ceil(rawFinalHomeGoals)
+      finalAwayGoals = Math.ceil(rawFinalAwayGoals);
+    } else {
+      finalHomeGoals = Math.floor(rawFinalHomeGoals)
+      finalAwayGoals = Math.floor(rawFinalAwayGoals);
+    }
+ 
 
     // finalHomeGoals = await roundCustom(rawFinalHomeGoals, formHome, formAway);
 
