@@ -105,7 +105,7 @@ let historicDate;
   [today, todayFootyStats] = await calculateDate(new Date());
 
   tomorrowsDate = new Date();
-  tomorrowsDate.setDate(tomorrowsDate.getDate() - 24);
+  tomorrowsDate.setDate(tomorrowsDate.getDate() + 1);
   [tomorrow, tomorrowFootyStats] = await calculateDate(tomorrowsDate);
 
   yesterdaysDate = new Date();
@@ -458,7 +458,7 @@ function App() {
       <div id="tables" />
       <div id="homeBadge" />
       <div id="FixtureContainerHeaders"></div>
-      <StyledKofiButton></StyledKofiButton>
+      <StyledKofiButton buttonText="Donate"></StyledKofiButton>
       <div id="XGDiff" />
       <div id="FixtureContainer">
         <div>

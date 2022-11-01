@@ -10,6 +10,7 @@ import { incrementValue } from "../components/Increment";
 import { getBTTSPotential } from "../logic/getBTTSPotential";
 import { allLeagueResultsArrayOfObjects } from "../logic/getFixtures";
 import { Slider } from "../components/Carousel";
+import { StyledKofiButton } from "../components/KofiButton";
 import {
   getAttackStrength,
   getDefenceStrength,
@@ -177,7 +178,7 @@ async function getPastLeagueResults(team, game) {
 
     const teamGoalsAllRollingAverage = getEMA(
       teamGoalsAll,
-      teamGoalsAll.length,
+      teamGoalsAll.length
     );
 
     const teamConceededHomeRollingAverage = getEMA(
@@ -199,9 +200,15 @@ async function getPastLeagueResults(team, game) {
       teamGoalsHomeRollingAverage[teamGoalsHomeRollingAverage.length - 1],
       teamGoalsAwayRollingAverage[teamGoalsAwayRollingAverage.length - 1],
       teamGoalsAllRollingAverage[teamGoalsAllRollingAverage.length - 1],
-      teamConceededHomeRollingAverage[teamConceededHomeRollingAverage.length - 1],
-      teamConceededAwayRollingAverage[teamConceededAwayRollingAverage.length - 1],
-      teamGoalsConceededAllRollingAverage[teamGoalsConceededAllRollingAverage.length - 1],
+      teamConceededHomeRollingAverage[
+        teamConceededHomeRollingAverage.length - 1
+      ],
+      teamConceededAwayRollingAverage[
+        teamConceededAwayRollingAverage.length - 1
+      ],
+      teamGoalsConceededAllRollingAverage[
+        teamGoalsConceededAllRollingAverage.length - 1
+      ],
     ];
   } else {
     return null;
@@ -209,19 +216,17 @@ async function getPastLeagueResults(team, game) {
 }
 
 var getEMA = (a, r) =>
-a.reduce(
-  (p, n, i) =>
-    i
-      ? p.concat(
-          (2 * n) / (r + 1) + (p[p.length - 1] * (r - 1)) / (r + 1)
-        )
-      : p,
-  [a[0]]
-);
+  a.reduce(
+    (p, n, i) =>
+      i
+        ? p.concat((2 * n) / (r + 1) + (p[p.length - 1] * (r - 1)) / (r + 1))
+        : p,
+    [a[0]]
+  );
 
-async function EMACalc(mArray,mRange) {
+async function EMACalc(mArray, mRange) {
   let emaArray;
-  var k = 2/(mRange + 1);
+  var k = 2 / (mRange + 1);
   // first item is just the same as the first item in the input
   emaArray = [mArray[0]];
   // for the rest of the items, they are computed with the previous one
@@ -1266,8 +1271,6 @@ export async function calculateScore(match, index, divider, calculate) {
       finalHomeGoals = Math.floor(rawFinalHomeGoals);
       finalAwayGoals = Math.floor(rawFinalAwayGoals);
     }
-
-
 
     if (finalHomeGoals > 5) {
       finalHomeGoals = Math.round(
@@ -2437,39 +2440,78 @@ async function renderTips() {
       element={
         <Slider
           element={
-            <ul className="XGDiffTips" id="XGDiffTips">
-              <lh>Games with greatest XG Differentials</lh>
-              {XGDiffTips.map((tip) => (
-                <li key={tip.game}>
-                  {tip.game} | {tip.prediction} {tip.odds}{" "}
-                  <span className={tip.outcome}>{tip.outcomeSymbol}</span>
+            XGDiffTips.length > 0 ? (
+              <ul className="XGDiffTips" id="XGDiffTips">
+                <lh>Games with greatest XG Differentials</lh>
+                {XGDiffTips.map((tip) => (
+                  <li key={tip.game}>
+                    {tip.game} | {tip.prediction} {tip.odds}{" "}
+                    <span className={tip.outcome}>{tip.outcomeSymbol}</span>
+                  </li>
+                ))}
+              </ul>
+            ) : (
+              <ul className="XGDiffTips" id="XGDiffTips">
+                <lh>Games with greatest XG Differentials</lh>
+                <li key={"noPPGDiff"}>
+                  Sorry, no games fit this criteria today
                 </li>
-              ))}
-            </ul>
+              </ul>
+            )
           }
           element2={
-            <ul className="XGDiffTips" id="XGDiffTips">
-              <lh>
-                Games with greatest points per game differentials (last 10)
-              </lh>
-              {pointsDiffTips.map((game) => (
-                <li key={game.game}>
-                  {game.game} | {game.prediction} {game.odds}{" "}
-                  <span className={game.outcome}>{game.outcomeSymbol}</span>
+            pointsDiffTips.length > 0 ? (
+              <ul className="XGDiffTips" id="XGDiffTips">
+                <lh>
+                  Games with greatest points per game differentials (last 10)
+                </lh>
+                {pointsDiffTips.map((game) => (
+                  <li key={game.game}>
+                    {game.game} | {game.prediction} {game.odds}{" "}
+                    <span className={game.outcome}>{game.outcomeSymbol}</span>
+                  </li>
+                ))}
+              </ul>
+            ) : (
+              <ul className="XGDiffTips" id="XGDiffTips">
+                <lh>
+                  Games with greatest points per game differentials (last 10)
+                </lh>
+                <li key={"noPPGDiff"}>
+                  Sorry, no games fit this criteria today
                 </li>
-              ))}
-            </ul>
+              </ul>
+            )
           }
           element3={
-            <ul className="XGDiffTips" id="XGDiffTips">
-              <lh>Games with greatest rolling goal difference differentials</lh>
-              {rollingDiffTips.map((game) => (
-                <li key={game.game}>
-                  {game.game} | {game.prediction} {game.odds}{" "}
-                  <span className={game.outcome}>{game.outcomeSymbol}</span>
+            rollingDiffTips.length > 0 ? (
+              <ul className="XGDiffTips" id="XGDiffTips">
+                <lh>
+                  Games with greatest rolling goal difference differentials
+                </lh>
+                {rollingDiffTips.map((game) => (
+                  <li key={game.game}>
+                    {game.game} | {game.prediction} {game.odds}{" "}
+                    <span className={game.outcome}>{game.outcomeSymbol}</span>
+                  </li>
+                ))}
+              </ul>
+            ) : (
+              <ul className="XGDiffTips" id="XGDiffTips">
+                <lh>
+                  Games with greatest rolling goal difference differentials
+                </lh>
+                <li key={"noPPGDiff"}>
+                  Sorry, no games fit this criteria today
                 </li>
-              ))}
-            </ul>
+              </ul>
+            )
+          }
+          element4={
+            <div className="DonationButton">
+              <h3>Help with running costs</h3>
+              <StyledKofiButton buttonText="Fund" />
+            </div>
           }
         ></Slider>
       }

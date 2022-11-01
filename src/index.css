@@ -206,7 +206,7 @@ h3 {
   font-size: 1.25em;
   
   color: #030061;
-  padding: 5px;
+  padding: 1em;
   margin: 0%
 }
 
@@ -2405,14 +2405,24 @@ input:active + .design::after {
   width: 33%;
 }
 
+.swiper-pagination{
+  position:initial !important
+}
+
+
 
 
 .swiper-container-horizontal>.swiper-pagination-bullets, .swiper-pagination-custom, .swiper-pagination-fraction{
   bottom: 5px !important;
 }
 
-.swiper-pagination-bullet-active {
+.swiper-pagination-bullet {
   background-color:#030061 !important;
-  height: 1em !important;
-  width: 1em !important;
+  height: 1.5em !important;
+  width: 1.5em !important;
+
+}
+
+.DonationButton{
+  padding-bottom: 2em;
 }

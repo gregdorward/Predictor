@@ -21,7 +21,7 @@ export const Slider = (props) => {
         modifier: 1,
         slideShadows: false,
       }}
-      pagination={true}
+      pagination={{ clickable: true }}
       className="mySwiper"
     >
       <SwiperSlide>
@@ -32,6 +32,9 @@ export const Slider = (props) => {
       </SwiperSlide>
       <SwiperSlide>
       {props.element3}
+      </SwiperSlide>
+      <SwiperSlide>
+      {props.element4}
       </SwiperSlide>
     </Swiper>
   );
