@@ -368,50 +368,53 @@ export async function generateFixtures(
       `${process.env.REACT_APP_EXPRESS_SERVER}results`
     );
 
-    allLeagueResultsArrayOfObjects = [];
-    await allLeagueResults.json().then((allGames) => {
-      console.log(allGames)
-      allLeagueResultsArrayOfObjects = allGames;
-    });
-    // console.log(allLeagueResultsArrayOfObjects)
-    leaguesStored = true;
-    generateTables(leagueArray, leagueIdArray, allLeagueResultsArrayOfObjects);
-  } else {
-    console.log("B")
-
-    allLeagueResultsArrayOfObjects = [];
-    for (let i = 0; i < orderedLeagues.length; i++) {
-      league = await fetch(
-        `${process.env.REACT_APP_EXPRESS_SERVER}tables/${orderedLeagues[i].element.id}/${date}`
-      );
-      // eslint-disable-next-line no-loop-func
-      await league.json().then((table) => {
-        leagueArray.push(table);
+    console.log(allLeagueResults.status)
+    if(allLeagueResults.status !== 500){
+      await allLeagueResults.json().then((allGames) => {
+        allLeagueResultsArrayOfObjects = allGames;
       });
-      leaguesStored = false;
+
+      leaguesStored = true;
+      generateTables(leagueArray, leagueIdArray, allLeagueResultsArrayOfObjects);
+    }
+    else {
+      console.log("B")
+  
+      allLeagueResultsArrayOfObjects = [];
+      for (let i = 0; i < orderedLeagues.length; i++) {
+        league = await fetch(
+          `${process.env.REACT_APP_EXPRESS_SERVER}tables/${orderedLeagues[i].element.id}/${date}`
+        );
+        // eslint-disable-next-line no-loop-func
+        await league.json().then((table) => {
+          leagueArray.push(table);
+        });
+        leaguesStored = false;
+      }
+  
+      for (const orderedLeague of orderedLeagues) {
+        let fixtures = await fetch(
+          `${process.env.REACT_APP_EXPRESS_SERVER}leagueFixtures/${orderedLeague.element.id}`
+        );
+  
+        let games = await fixtures.json();
+        let gamesFiltered = games.data.filter(
+          (game) => game.status === "complete"
+        );
+  
+        let leagueObj = {
+          // leagueObject[orderedLeague] = {
+          name: orderedLeague.name,
+          id: orderedLeague.element.id,
+          fixtures: gamesFiltered,
+        };
+  
+        allLeagueResultsArrayOfObjects.push(leagueObj);
+      }
+      generateTables(leagueArray, leagueIdArray, allLeagueResultsArrayOfObjects);
     }
 
-    for (const orderedLeague of orderedLeagues) {
-      let fixtures = await fetch(
-        `${process.env.REACT_APP_EXPRESS_SERVER}leagueFixtures/${orderedLeague.element.id}`
-      );
-
-      let games = await fixtures.json();
-      let gamesFiltered = games.data.filter(
-        (game) => game.status === "complete"
-      );
-
-      let leagueObj = {
-        // leagueObject[orderedLeague] = {
-        name: orderedLeague.name,
-        id: orderedLeague.element.id,
-        fixtures: gamesFiltered,
-      };
-
-      allLeagueResultsArrayOfObjects.push(leagueObj);
-    }
-    generateTables(leagueArray, leagueIdArray, allLeagueResultsArrayOfObjects);
-  }
+  } 
 
   let teamPositionPrefix;
 

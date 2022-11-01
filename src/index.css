@@ -334,7 +334,7 @@ button.GeneratePredictions:active{
 
 .RowOne {
   flex: 1;
-  flex-basis: 20%;
+  flex-basis: 50%;
 
   /* display: inline-block;
   width: 20em;
@@ -1955,7 +1955,7 @@ ul {
 }
 
 .XGDiffTips lh {
-  font-size: 1.1em;
+  font-size: 1.2em;
 }
 
 .XGDiffTips li {
@@ -1965,7 +1965,7 @@ ul {
 }
 
 .LongshotPredictions lh {
-  font-size: 1.1em;
+  font-size: 1.2em;
 }
 
 .over25ActualOutcome{
@@ -2380,4 +2380,39 @@ input:focus + .design::after,
 input:active + .design::after {
   opacity: 0.1;
   transform: scale(2.6);
+}
+
+.swiper-wrapper{
+  padding-bottom: 30px;
+}
+
+.swiper {
+  width: 33%;
+  height: min-content;
+  padding-top: 50px;
+  padding-bottom: 50px;
+}
+
+.swiper-slide {
+  background-position: center;
+  background-size: cover;
+  width: 10em;
+  height: min-content;
+}
+
+.swiper-slide img {
+  display: flex;
+  width: 33%;
+}
+
+
+
+.swiper-container-horizontal>.swiper-pagination-bullets, .swiper-pagination-custom, .swiper-pagination-fraction{
+  bottom: 5px !important;
+}
+
+.swiper-pagination-bullet-active {
+  background-color:#030061 !important;
+  height: 1em !important;
+  width: 1em !important;
 }
