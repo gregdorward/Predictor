@@ -208,7 +208,7 @@ export async function getXGAgainstStrength(XGAgainst) {
 export async function getXGDifferentialStrength(XGDiff) {
   let strength;
   switch (true) {
-    case XGDiff >= 2:
+    case XGDiff >= 1.5:
       strength = 10;
       break;
     case XGDiff >= 1 && XGDiff < 1.5:
@@ -226,19 +226,20 @@ export async function getXGDifferentialStrength(XGDiff) {
     case XGDiff <= 0 && XGDiff > -0.25:
       strength = 5;
       break;
-    case XGDiff <= -0.25 && XGDiff > -1:
+    case XGDiff <= -0.25 && XGDiff > -0.5:
       strength = 4;
       break;
-    case XGDiff <= -1 && XGDiff > -1.5:
+    case XGDiff <= -0.5 && XGDiff > -1:
       strength = 3;
       break;
-    case XGDiff <= -1.5 && XGDiff > -2:
+    case XGDiff <= -1 && XGDiff > -1.5:
       strength = 2;
       break;
-    case XGDiff <= -2:
+    case XGDiff <= -1.5:
       strength = 1;
       break;
     default:
+      console.log("default clause triggered")
       break;
   }
   return strength;
