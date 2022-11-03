@@ -630,7 +630,7 @@ export async function compareTeams(homeForm, awayForm, match) {
   ) {
     switch (true) {
       case drawOutcomeProbability > 100:
-        calculation = calculation / 4;
+        calculation = calculation / 5;
         break;
       default:
         calculation = calculation * 1;
@@ -1163,27 +1163,27 @@ export async function calculateScore(match, index, divider, calculate) {
 
     let factorOneHome =
       (homeLeagueOrAllFormAverageGoals * 1 +
-        formHome.predictedGoalsBasedOnHomeAv * 0.25 +
-        formAway.predictedGoalsConceededBasedOnAwayAv * 0.25 +
+        // formHome.predictedGoalsBasedOnHomeAv * 0.25 +
+        // formAway.predictedGoalsConceededBasedOnAwayAv * 0.25 +
         formHome.allTeamGoalsBasedOnAverages * 1 +
         formAway.allTeamGoalsConceededBasedOnAverages * 1 +
-        formHome.XGOverall * 0.1 +
-        formAway.XGAgainstAvgOverall * 0.1 +
-        last10WeightingHome * 2 +
+        // formHome.XGOverall * 0.1 +
+        // formAway.XGAgainstAvgOverall * 0.1 +
+        last10WeightingHome * 3 +
         last2WeightingHome * 2) /
-      3.7;
+      3;
 
     let factorOneAway =
       (awayLeagueOrAllFormAverageGoals * 1 +
-        formAway.predictedGoalsBasedOnAwayAv * 0.25 +
-        formHome.predictedGoalsConceededBasedOnHomeAv * 0.25 +
+        // formAway.predictedGoalsBasedOnAwayAv * 0.25 +
+        // formHome.predictedGoalsConceededBasedOnHomeAv * 0.25 +
         formAway.allTeamGoalsBasedOnAverages * 1 +
         formHome.allTeamGoalsConceededBasedOnAverages * 1 +
-        formAway.XGOverall * 0.1 +
-        formHome.XGAgainstAvgOverall * 0.1 +
-        last10WeightingAway * 2 +
+        // formAway.XGOverall * 0.1 +
+        // formHome.XGAgainstAvgOverall * 0.1 +
+        last10WeightingAway * 3 +
         last2WeightingAway * 2) /
-      3.7;
+      3;
 
     let homeComparisonWeighting;
     let awayComparisonWeighting;
@@ -1200,9 +1200,9 @@ export async function calculateScore(match, index, divider, calculate) {
       awayComparisonWeighting = 1;
     }
 
-    let experimentalHomeGoals = factorOneHome * 0.925 * homeComparisonWeighting;
+    let experimentalHomeGoals = factorOneHome * 0.95 * homeComparisonWeighting;
 
-    let experimentalAwayGoals = factorOneAway * 0.925 * awayComparisonWeighting;
+    let experimentalAwayGoals = factorOneAway * 0.95 * awayComparisonWeighting;
 
     let rawFinalHomeGoals = experimentalHomeGoals;
     let rawFinalAwayGoals = experimentalAwayGoals;

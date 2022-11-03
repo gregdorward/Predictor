@@ -150,8 +150,8 @@ export async function generateTables(a, leagueIdArray, allResults) {
 }
 
 export async function renderTable(index, results) {
-  console.log(index)
-  console.log(results)
+  console.log(index);
+  console.log(results);
 
   let mostRecentGame = results.fixtures.pop();
   let mostRecentGameweek = mostRecentGame.game_week;
@@ -161,10 +161,10 @@ export async function renderTable(index, results) {
   );
 
   const lastGameweeksResults = results.fixtures.filter(
-    (games) => games.game_week === mostRecentGameweek -1
+    (games) => games.game_week === mostRecentGameweek - 1
   );
 
-  console.log(tableArray)
+  console.log(tableArray);
 
   let league = tableArray[index];
   let statistics;
@@ -192,7 +192,6 @@ export async function renderTable(index, results) {
 }
 
 async function createFixture(match, result, mockBool) {
-
   let roundedHomeOdds;
   let roundedAwayOdds;
   let roundedBTTSOdds;
@@ -294,7 +293,6 @@ export async function generateFixtures(
   selectedOdds,
   footyStatsFormattedDate
 ) {
-
   //cleanup if different day is selected
   ReactDOM.render(<div></div>, document.getElementById("GeneratePredictions"));
   ReactDOM.render(<div></div>, document.getElementById("successMeasure2"));
@@ -358,8 +356,13 @@ export async function generateFixtures(
 
   var leaguePositions = [];
   leagueArray = [];
+
   if (league.status === 200) {
-    console.log("A")
+  } else {
+  }
+
+  if (league.status === 200) {
+    console.log("A");
     await league.json().then((leagues) => {
       leagueArray = Array.from(leagues.leagueArray);
     });
@@ -368,53 +371,61 @@ export async function generateFixtures(
       `${process.env.REACT_APP_EXPRESS_SERVER}results`
     );
 
-    console.log(allLeagueResults.status)
-    if(allLeagueResults.status !== 500){
-      await allLeagueResults.json().then((allGames) => {
-        allLeagueResultsArrayOfObjects = allGames;
+    console.log(allLeagueResults.status);
+    await allLeagueResults.json().then((allGames) => {
+      allLeagueResultsArrayOfObjects = allGames;
+    });
+
+    leaguesStored = true;
+    generateTables(leagueArray, leagueIdArray, allLeagueResultsArrayOfObjects);
+  } else {
+    console.log("B");
+
+    allLeagueResultsArrayOfObjects = [];
+    for (let i = 0; i < orderedLeagues.length; i++) {
+      league = await fetch(
+        `${process.env.REACT_APP_EXPRESS_SERVER}tables/${orderedLeagues[i].element.id}/${date}`
+      );
+      // eslint-disable-next-line no-loop-func
+      await league.json().then((table) => {
+        leagueArray.push(table);
       });
-
-      leaguesStored = true;
-      generateTables(leagueArray, leagueIdArray, allLeagueResultsArrayOfObjects);
-    }
-    else {
-      console.log("B")
-  
-      allLeagueResultsArrayOfObjects = [];
-      for (let i = 0; i < orderedLeagues.length; i++) {
-        league = await fetch(
-          `${process.env.REACT_APP_EXPRESS_SERVER}tables/${orderedLeagues[i].element.id}/${date}`
-        );
-        // eslint-disable-next-line no-loop-func
-        await league.json().then((table) => {
-          leagueArray.push(table);
-        });
-        leaguesStored = false;
-      }
-  
-      for (const orderedLeague of orderedLeagues) {
-        let fixtures = await fetch(
-          `${process.env.REACT_APP_EXPRESS_SERVER}leagueFixtures/${orderedLeague.element.id}`
-        );
-  
-        let games = await fixtures.json();
-        let gamesFiltered = games.data.filter(
-          (game) => game.status === "complete"
-        );
-  
-        let leagueObj = {
-          // leagueObject[orderedLeague] = {
-          name: orderedLeague.name,
-          id: orderedLeague.element.id,
-          fixtures: gamesFiltered,
-        };
-  
-        allLeagueResultsArrayOfObjects.push(leagueObj);
-      }
-      generateTables(leagueArray, leagueIdArray, allLeagueResultsArrayOfObjects);
+      leaguesStored = false;
     }
 
-  } 
+    //set variable for date X amount of days in the past and use that to filter the results
+
+    let startDate = (new Date().getTime() / 1000).toFixed(0);
+    // deduct 3 months
+    let targetDate = startDate - 7889229;
+
+    for (const orderedLeague of orderedLeagues) {
+      let fixtures = await fetch(
+        `${process.env.REACT_APP_EXPRESS_SERVER}leagueFixtures/${orderedLeague.element.id}`
+      );
+
+      let games = await fixtures.json();
+      let gamesFiltered = games.data.filter(
+        (game) => game.status === "complete"
+      );
+
+      let mostRecentResults = gamesFiltered.filter(
+        (game) => game.date_unix > targetDate
+      );
+
+      console.log(mostRecentResults);
+
+      let leagueObj = {
+        // leagueObject[orderedLeague] = {
+        name: orderedLeague.name,
+        id: orderedLeague.element.id,
+        fixtures: mostRecentResults,
+      };
+
+      allLeagueResultsArrayOfObjects.push(leagueObj);
+    }
+    generateTables(leagueArray, leagueIdArray, allLeagueResultsArrayOfObjects);
+  }
 
   let teamPositionPrefix;
 
