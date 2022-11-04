@@ -36,6 +36,9 @@ export const Slider = (props) => {
       <SwiperSlide>
       {props.element4}
       </SwiperSlide>
+      <SwiperSlide>
+      {props.element5}
+      </SwiperSlide>
     </Swiper>
   );
 };
