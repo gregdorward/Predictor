@@ -998,7 +998,7 @@ export async function calculateScore(match, index, divider, calculate) {
     let teamComparisonScore;
 
     teamComparisonScore = await compareTeams(formHome, formAway, match);
-    teamComparisonScore = teamComparisonScore * 0.2;
+    teamComparisonScore = teamComparisonScore * 0.15;
 
     if (teamComparisonScore > 0.3) {
       teamComparisonScore = 0.3;
@@ -1046,7 +1046,7 @@ export async function calculateScore(match, index, divider, calculate) {
         : goalCalcAwayShortTerm;
 
     let factorOneHome =
-      (homeLeagueOrAllFormAverageGoals * 0 +
+      (homeLeagueOrAllFormAverageGoals * 1 +
         formHome.predictedGoalsBasedOnHomeAv * 0.25 +
         formAway.predictedGoalsConceededBasedOnAwayAv * 0.25 +
         formHome.allTeamGoalsBasedOnAverages * 1.5 +
@@ -1055,10 +1055,10 @@ export async function calculateScore(match, index, divider, calculate) {
         formAway.XGAgainstAvgOverall * 0.1 +
         last10WeightingHome * 2 +
         last2WeightingHome * 2) /
-      3.7;
+      4.7;
 
     let factorOneAway =
-      (awayLeagueOrAllFormAverageGoals * 0 +
+      (awayLeagueOrAllFormAverageGoals * 1 +
         formAway.predictedGoalsBasedOnAwayAv * 0.25 +
         formHome.predictedGoalsConceededBasedOnHomeAv * 0.25 +
         formAway.allTeamGoalsBasedOnAverages * 1.5 +
@@ -1067,7 +1067,7 @@ export async function calculateScore(match, index, divider, calculate) {
         formHome.XGAgainstAvgOverall * 0.1 +
         last10WeightingAway * 2 +
         last2WeightingAway * 2) /
-      3.7;
+      4.7;
 
     let homeComparisonWeighting;
     let awayComparisonWeighting;
@@ -2407,8 +2407,9 @@ async function renderTips() {
           }
           element5={
             <div className="DonationButton">
-              <h3>Help with running costs</h3>
-              <StyledKofiButton buttonText="Fund" />
+              <h2>Help with running costs</h2>
+              <h4>Monthly costs are rising and each donation helps keep XG Tipping free to use</h4>
+              <StyledKofiButton buttonText="No sign up donation" />
             </div>
           }
         ></Slider>

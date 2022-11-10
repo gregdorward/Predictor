@@ -105,7 +105,7 @@ let historicDate;
   [today, todayFootyStats] = await calculateDate(new Date());
 
   tomorrowsDate = new Date();
-  tomorrowsDate.setDate(tomorrowsDate.getDate() + 1);
+  tomorrowsDate.setDate(tomorrowsDate.getDate() - 4);
   [tomorrow, tomorrowFootyStats] = await calculateDate(tomorrowsDate);
 
   yesterdaysDate = new Date();
@@ -458,14 +458,14 @@ function App() {
       <div id="tables" />
       <div id="homeBadge" />
       <div id="FixtureContainerHeaders"></div>
-      <StyledKofiButton buttonText="Donate"></StyledKofiButton>
+      <StyledKofiButton buttonText="Donations"></StyledKofiButton>
       <div id="XGDiff" />
       <div id="FixtureContainer">
         <div>
-          <div className="WelcomeText">
+          <h4 className="WelcomeText">
             Global fixtures and predictions from 30+ league competitions,
             including
-          </div>
+          </h4>
           <ul className="AllLeagues">
             <li className="League">Premier League</li>
             <li className="League">La Liga</li>
