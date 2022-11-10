@@ -100,8 +100,6 @@ export function getPointsFromLastX(lastX) {
 async function getPastLeagueResults(team, game) {
   let date = game.date;
 
-  console.log(date)
-
   if (allLeagueResultsArrayOfObjects.length > 4) {
     let teamsHomeResults = allLeagueResultsArrayOfObjects[
       game.leagueIndex
@@ -112,7 +110,6 @@ async function getPastLeagueResults(team, game) {
         return item.date_unix < date;
       })
       .sort((a, b) => a.date_unix - b.date_unix);
-
 
     let teamsAwayResults = allLeagueResultsArrayOfObjects[
       game.leagueIndex
@@ -161,10 +158,6 @@ async function getPastLeagueResults(team, game) {
       .concat(reversedResultsAway)
       .sort((a, b) => a.dateRaw - b.dateRaw);
 
-    console.log(game.game)
-    console.log(allTeamResults)
-
-
     const teamGoalsHome = reversedResultsHome.map((res) => res.scored);
     const teamGoalsAway = reversedResultsAway.map((res) => res.scored);
     const teamGoalsAll = allTeamResults.map((res) => res.scored);
@@ -173,8 +166,8 @@ async function getPastLeagueResults(team, game) {
     const teamConceededAway = reversedResultsAway.map((res) => res.conceeded);
     const teamConceededAll = allTeamResults.map((res) => res.conceeded);
 
-    let r = 5
-    let x = 4
+    let r = 5;
+    let x = 4;
 
     const teamGoalsHomeRollingAverage = getEMA(
       teamGoalsHome,
@@ -233,7 +226,6 @@ var getEMA = (a, r) =>
         : p,
     [a[0]]
   );
-
 
 export async function compareStat(statOne, statTwo) {
   let stat1 = parseFloat(statOne);
@@ -411,38 +403,97 @@ export async function getPointAverage(pointTotal, games) {
   return pointTotal / games;
 }
 
+async function getOddsMultiplier(odds, team) {
+  let multiplier;
+  switch (true) {
+    case odds <= 1.2:
+      multiplier = 1.5;
+      break;
+    case odds <= 1.3:
+      multiplier = 1.45;
+      break;
+    case odds <= 1.4:
+      multiplier = 1.4;
+      break;
+    case odds <= 1.5:
+      multiplier = 1.35;
+      break;
+    case odds <= 1.6:
+      multiplier = 1.3;
+      break;
+    case odds <= 1.7:
+      multiplier = 1.25;
+      break;
+    case odds <= 1.8:
+      multiplier = 1.2;
+      break;
+    case odds <= 1.9:
+      multiplier = 1.15;
+      break;
+    case odds < 2:
+      multiplier = 1.1;
+      break;
+
+    case odds <= 4.2 && odds > 4:
+      multiplier = 0.95;
+      break;
+    case odds > 4.2 && odds <= 4.3:
+      multiplier = 0.9;
+      break;
+    case odds > 4.3 && odds <= 4.4:
+      multiplier = 0.85;
+      break;
+    case odds > 4.4 && odds <= 4.5:
+      multiplier = 0.8;
+      break;
+    case odds > 4.5:
+      multiplier = 0.75;
+      break;
+
+    default:
+      multiplier = 1;
+      break;
+  }
+
+  return multiplier;
+}
+
 export async function compareTeams(homeForm, awayForm, match) {
-  let homeAttackStrength = await getAttackStrength(homeForm.ScoredOverall / 10);
-  let homeDefenceStrength = await getDefenceStrength(
-    homeForm.ConcededOverall / 10
-  );
-  let homePossessionStrength = await getPossessionStrength(
-    homeForm.AveragePossessionOverall
-  );
-  let homeXGForStrength = await getXGForStrength(homeForm.XGOverall);
+  let homeMultiplier = await getOddsMultiplier(match.homeOdds, match.homeTeam);
+  let awayMultiplier = await getOddsMultiplier(match.awayOdds, match.awayTeam);
 
-  let homeXGAgainstStrength = await getXGAgainstStrength(
-    homeForm.XGAgainstAvgOverall
-  );
-  let homeXGDiffStrength = await getXGDifferentialStrength(
-    parseFloat(homeForm.XGdifferential)
-  );
+  let homeAttackStrength =
+    (await getAttackStrength(homeForm.ScoredOverall / 10)) * homeMultiplier;
+  let homeDefenceStrength =
+    (await getDefenceStrength(homeForm.ConcededOverall / 10)) * homeMultiplier;
+  let homePossessionStrength =
+    (await getPossessionStrength(homeForm.AveragePossessionOverall)) *
+    homeMultiplier;
+  let homeXGForStrength =
+    (await getXGForStrength(homeForm.XGOverall)) * homeMultiplier;
 
-  let awayAttackStrength = await getAttackStrength(awayForm.ScoredOverall / 10);
-  let awayDefenceStrength = await getDefenceStrength(
-    awayForm.ConcededOverall / 10
-  );
-  let awayPossessionStrength = await getPossessionStrength(
-    awayForm.AveragePossessionOverall
-  );
-  let awayXGForStrength = await getXGForStrength(awayForm.XGOverall);
-  let awayXGAgainstStrength = await getXGAgainstStrength(
-    awayForm.XGAgainstAvgOverall
-  );
+  let homeXGAgainstStrength =
+    (await getXGAgainstStrength(homeForm.XGAgainstAvgOverall)) * homeMultiplier;
+  let homeXGDiffStrength =
+    (await getXGDifferentialStrength(parseFloat(homeForm.XGdifferential))) *
+    homeMultiplier;
 
-  let awayXGDiffStrength = await getXGDifferentialStrength(
-    parseFloat(awayForm.XGdifferential)
-  );
+  let awayAttackStrength =
+    (await getAttackStrength(awayForm.ScoredOverall / 10)) * awayMultiplier;
+  let awayDefenceStrength =
+    (await getDefenceStrength(awayForm.ConcededOverall / 10)) * awayMultiplier;
+  let awayPossessionStrength =
+    (await getPossessionStrength(awayForm.AveragePossessionOverall)) *
+    awayMultiplier;
+  let awayXGForStrength =
+    (await getXGForStrength(awayForm.XGOverall)) * awayMultiplier;
+  let awayXGAgainstStrength =
+    (await getXGAgainstStrength(awayForm.XGAgainstAvgOverall)) * awayMultiplier;
+
+  let awayXGDiffStrength =
+    (await getXGDifferentialStrength(parseFloat(awayForm.XGdifferential))) *
+    awayMultiplier;
+
 
   const attackStrengthComparison = await compareStat(
     homeAttackStrength,
@@ -489,15 +540,15 @@ export async function compareTeams(homeForm, awayForm, match) {
   );
 
   let calculation =
-    attackStrengthComparison * 1 +
-    defenceStrengthComparison * 1 +
+    attackStrengthComparison * 2 +
+    defenceStrengthComparison * 2 +
     possessiontrengthComparison * 1 +
     xgForStrengthComparison * 1 +
     xgAgainstStrengthComparison * 1 +
     xgDiffComparison * 2 +
     // winComparison * 1 +
     // lossComparison * 0.5 +
-    oddsComparison * 1;
+    oddsComparison * 0;
 
   let homeWinOutcomeProbability =
     match.homeTeamWinPercentage + match.awayTeamLossPercentage;
@@ -888,8 +939,6 @@ export async function calculateScore(match, index, divider, calculate) {
       formAway.XGdifferential
     );
 
-    console.log(allLeagueResultsArrayOfObjects.length)
-
     if (allLeagueResultsArrayOfObjects.length > 4) {
       [
         formHome.predictedGoalsBasedOnHomeAv,
@@ -909,7 +958,6 @@ export async function calculateScore(match, index, divider, calculate) {
         formAway.allTeamGoalsConceededBasedOnAverages,
       ] = await getPastLeagueResults(match.awayTeam, match);
     } else {
-      console.log("ELSE TRIGGERED")
       formHome.predictedGoalsBasedOnHomeAv = formHome.ScoredAverage;
       formHome.predictedGoalsBasedOnAwayAv = formHome.ConcededAverage;
       formHome.allTeamGoalsBasedOnAverages = formHome.ScoredAverage;
@@ -950,7 +998,7 @@ export async function calculateScore(match, index, divider, calculate) {
     let teamComparisonScore;
 
     teamComparisonScore = await compareTeams(formHome, formAway, match);
-    teamComparisonScore = teamComparisonScore * 0.08;
+    teamComparisonScore = teamComparisonScore * 0.2;
 
     if (teamComparisonScore > 0.3) {
       teamComparisonScore = 0.3;
@@ -2111,9 +2159,9 @@ async function renderTips() {
             buttonText={"Build a multi"}
             element={
               <ul className="BestPredictions" id="BestPredictions">
-                <div className="BestPredictionsExplainer">
+                <h4 className="BestPredictionsExplainer">
                   No games fit the criteria
-                </div>
+                </h4>
                 <div className="AccumulatedOdds">{`Accumulator odds ~ : ${
                   Math.round(accumulatedOdds) - 1
                 }/1`}</div>
@@ -2134,14 +2182,14 @@ async function renderTips() {
             buttonText={"Exotic of the day"}
             element={
               <ul className="BestPredictions" id="BestPredictions">
-                <div className="BestPredictionsExplainer">
+                <h4 className="BestPredictionsExplainer">
                   <NewlineText
                     text={`${gamesInExotic} games: ${exoticString}\nStake per multi: ${exoticStake} units - ${combinations} combinations\nTotal stake: ${(
                       exoticStake * combinations
                     ).toFixed(2)} unit(s)`}
                   />
                   {`Potential winnings: ${price.toFixed(2)} units`}
-                </div>
+                </h4>
                 {exoticArray.map((tip) => (
                   <li key={tip.team}>
                     {tip.team}: {tip.odds}{" "}
@@ -2164,9 +2212,9 @@ async function renderTips() {
             buttonText={"Exotic of the day"}
             element={
               <ul className="BestPredictions" id="BestPredictions">
-                <div className="BestPredictionsExplainer">
+                <h4 className="BestPredictionsExplainer">
                   Not enough games for this feature
-                </div>
+                </h4>
               </ul>
             }
           />
@@ -2184,7 +2232,7 @@ async function renderTips() {
             buttonText={"Over 2.5 goals tips"}
             element={
               <ul className="LongshotPredictions" id="LongshotPredictions">
-                <lh>Over 2.5 goals</lh>
+                <h4>Over 2.5 goals</h4>
                 {Over25Tips.map((tip) => (
                   <li key={tip.team}>
                     {tip.game} - Odds: {tip.odds}{" "}
@@ -2208,7 +2256,7 @@ async function renderTips() {
             buttonText={"Over 2.5 goals tips"}
             element={
               <ul className="LongshotPredictions" id="LongshotPredictions">
-                <lh>No games fit the criteria</lh>
+                <h4>No games fit the criteria</h4>
               </ul>
             }
           />
@@ -2226,7 +2274,7 @@ async function renderTips() {
             buttonText={"BTTS games"}
             element={
               <ul className="BTTSGames" id="BTTSGames">
-                <lh>Games with highest chance of BTTS</lh>
+                <h4>Games with highest chance of BTTS</h4>
                 {bttsArray.map((game) => (
                   <li key={game.game}>
                     {`${game.game} odds: ${game.bttsFraction}`}{" "}
@@ -2250,7 +2298,7 @@ async function renderTips() {
             buttonText={"BTTS games"}
             element={
               <ul className="BTTSGames" id="BTTSGames">
-                <lh>No games fit the criteria</lh>
+                <h4>No games fit the criteria</h4>
               </ul>
             }
           />
@@ -2268,7 +2316,7 @@ async function renderTips() {
           element={
             XGDiffTips.length > 0 ? (
               <ul className="XGDiffTips" id="XGDiffTips">
-                <lh>Games with greatest XG Differentials</lh>
+                <h4>Games with greatest XG Differentials</h4>
                 {XGDiffTips.map((tip) => (
                   <li key={tip.game}>
                     {tip.game} | {tip.prediction} {tip.odds}{" "}
@@ -2278,7 +2326,7 @@ async function renderTips() {
               </ul>
             ) : (
               <ul className="XGDiffTips" id="XGDiffTips">
-                <lh>Games with greatest XG Differentials</lh>
+                <h4>Games with greatest XG Differentials</h4>
                 <li key={"noPPGDiff"}>
                   Sorry, no games fit this criteria today
                 </li>
@@ -2288,9 +2336,9 @@ async function renderTips() {
           element2={
             pointsDiffTips.length > 0 ? (
               <ul className="XGDiffTips" id="XGDiffTips">
-                <lh>
+                <h4>
                   Games with greatest points per game differentials (last 10)
-                </lh>
+                </h4>
                 {pointsDiffTips.map((game) => (
                   <li key={game.game}>
                     {game.game} | {game.prediction} {game.odds}{" "}
@@ -2300,9 +2348,9 @@ async function renderTips() {
               </ul>
             ) : (
               <ul className="XGDiffTips" id="XGDiffTips">
-                <lh>
+                <h4>
                   Games with greatest points per game differentials (last 10)
-                </lh>
+                </h4>
                 <li key={"noPPGDiff"}>
                   Sorry, no games fit this criteria today
                 </li>
@@ -2312,9 +2360,9 @@ async function renderTips() {
           element3={
             rollingDiffTips.length > 0 ? (
               <ul className="XGDiffTips" id="XGDiffTips">
-                <lh>
+                <h4>
                   Games with greatest rolling goal difference differentials
-                </lh>
+                </h4>
                 {rollingDiffTips.map((game) => (
                   <li key={game.game}>
                     {game.game} | {game.prediction} {game.odds}{" "}
@@ -2324,9 +2372,9 @@ async function renderTips() {
               </ul>
             ) : (
               <ul className="XGDiffTips" id="XGDiffTips">
-                <lh>
+                <h4>
                   Games with greatest rolling goal difference differentials
-                </lh>
+                </h4>
                 <li key={"noPPGDiff"}>
                   Sorry, no games fit this criteria today
                 </li>
@@ -2336,9 +2384,9 @@ async function renderTips() {
           element4={
             dangerousAttacksDiffTips.length > 0 ? (
               <ul className="XGDiffTips" id="XGDiffTips">
-                <lh>
+                <h4>
                   Games with greatest average dangerous attacks differentials
-                </lh>
+                </h4>
                 {dangerousAttacksDiffTips.map((game) => (
                   <li key={game.game}>
                     {game.game} | {game.prediction} {game.odds}{" "}
@@ -2348,9 +2396,9 @@ async function renderTips() {
               </ul>
             ) : (
               <ul className="XGDiffTips" id="XGDiffTips">
-                <lh>
+                <h4>
                   Games with greatest average dangerous attacks differentials
-                </lh>
+                </h4>
                 <li key={"noPPGDiff"}>
                   Sorry, no games fit this criteria today
                 </li>
