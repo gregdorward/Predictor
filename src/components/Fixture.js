@@ -178,7 +178,9 @@ function GetDivider(fixture) {
 // }
 
 function renderLeagueName(fixture) {
+  console.log(fixture)
   let name = fixture.leagueName;
+  let id = allLeagueResultsArrayOfObjects[fixture.leagueIndex].id
   if (name === null) {
     return <div></div>;
   } else {
@@ -186,15 +188,16 @@ function renderLeagueName(fixture) {
       <div>
         <div
           className="leagueName"
-          key={`leagueName${fixture.leagueIndex}div`}
-          onClick={() => renderTable(fixture.leagueIndex, allLeagueResultsArrayOfObjects[fixture.leagueIndex])}
+          id={`league${id}`}
+          key={`leagueName${id}div`}
+          onClick={() => renderTable(fixture.leagueIndex, allLeagueResultsArrayOfObjects[fixture.leagueIndex], id)}
         >
           {fixture.leagueName} &#9776;
         </div>
         <div
           className="LeagueTable"
-          key={`leagueName${fixture.leagueIndex}`}
-          id={`leagueName${fixture.leagueIndex}`}
+          key={`leagueName${id}`}
+          id={`leagueName${id}`}
         ></div>
       </div>
     );

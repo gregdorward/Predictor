@@ -34,6 +34,7 @@ export const availableLeagues = [];
 export var orderedLeagues = [];
 
 const leagueOrder = [
+  7432, //World Cup 22
   7704, //premier league 22/23
   7593, //championship 22/23
   7570, //league 1 22/23

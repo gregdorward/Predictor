@@ -506,9 +506,19 @@ p {
 
 }
 
+#league7432 {
+	background: linear-gradient(180deg, #FE0000 16.66%,
+		#FD8C00 16.66%, 33.32%,
+		#FFE500 33.32%, 49.98%,
+		#119F0B 49.98%, 66.64%,
+		#0644B3 66.64%, 83.3%,
+		#C22EDC 83.3%);  background-size: 50% auto;
+  color: black;
+}
+
+
 .leagueName:active {
   box-shadow: 0 1px 2px 0 #030052 inset, 0 2px 2px 0 #030052 inset;
-
 }
 
 

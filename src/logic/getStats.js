@@ -283,7 +283,7 @@ export async function createStatsDiv(game, displayBool) {
         (p, n, i) =>
           i
             ? p.concat(
-                (1.5 * n) / (r + 1) + (p[p.length - 1] * (r - 1)) / (r + 1)
+                (2 * n) / (r + 1) + (p[p.length - 1] * (r - 1)) / (r + 1)
               )
             : p,
         [a[0]]
@@ -372,9 +372,14 @@ export async function createStatsDiv(game, displayBool) {
         );
 
 
+
+
+        let r = 5;
+
+
         goalDiffHomeMovingAv = getEMA(
           goalDiffArrayHome,
-          goalDiffArrayHome.length
+          goalDiffArrayHome.length < 5 ? goalDiffArrayHome.length : r
         );
 
         gameArrayHome.sort((a, b) => b.unixTimestamp - a.unixTimestamp);
@@ -458,7 +463,7 @@ export async function createStatsDiv(game, displayBool) {
 
         goalDiffAwayMovingAv = getEMA(
           goalDiffArrayAway,
-          goalDiffArrayAway.length
+          goalDiffArrayAway.length < 5 ? goalDiffArrayAway.length : r
         );
 
         gameArrayAway.sort((a, b) => b.unixTimestamp - a.unixTimestamp);

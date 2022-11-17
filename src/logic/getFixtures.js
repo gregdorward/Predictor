@@ -24,6 +24,7 @@ export var leagueArray = [];
 var leagueIdArray = [];
 export var leagueStatsArray = [];
 export let leagueInstance;
+export let groupInstance;
 export let allLeagueResultsArrayOfObjects = [];
 var lastThreeFormHome;
 var lastThreeFormAway;
@@ -57,6 +58,8 @@ export async function diff(a, b) {
 
 export let allForm = [];
 export let tableArray = [];
+export let worldCupArray = [];
+groupInstance = [];
 leagueInstance = [];
 
 async function convertTimestamp(timestamp) {
@@ -69,16 +72,21 @@ async function convertTimestamp(timestamp) {
 }
 
 export async function generateTables(a, leagueIdArray, allResults) {
+  console.log(leagueIdArray);
   // leagueIdArray = [];
   tableArray = [];
+  worldCupArray = [];
   let i = 0;
   leagueArray.forEach(function (league) {
     let currentLeagueId = leagueIdArray[i];
     i++;
     leagueInstance = [];
     //Skip MLS which has a weird format
-    if (!league.data.specific_tables[0].groups && currentLeagueId !== 6969 && league.data.specific_tables[0].table) {
-      console.log(league.data.specific_tables[0])
+    if (
+      !league.data.specific_tables[0].groups &&
+      currentLeagueId !== 6969 &&
+      league.data.specific_tables[0].table
+    ) {
       for (
         let index = 0;
         index < league.data.specific_tables[0].table.length;
@@ -115,8 +123,54 @@ export async function generateTables(a, leagueIdArray, allResults) {
         };
         leagueInstance.push(team);
       }
-      tableArray.push(leagueInstance);
+      tableArray.push({ id: currentLeagueId, table: leagueInstance });
+    } else if (currentLeagueId === 7432) {
+      console.log(league.data);
+
+      // for (let x = 0; x < league.data.specific_tables[0].groups.length; x++) {
+      // for (
+      //   let index = 0;
+      //   index < league.data.specific_tables[0].groups[x].table.length;
+      //   index++
+      // )
+      league.data.specific_tables[0].groups.forEach((group) => {
+        console.log(group.name);
+        leagueInstance = [];
+        for (let index = 0; index < group.table.length; index++) {
+          console.log(group.table.length);
+          let currentTeam = group.table[index];
+          let last5 = "N/A";
+          const team = {
+            LeagueID: currentLeagueId,
+            Position: index + 1,
+            Name: currentTeam.cleanName,
+            ID: currentTeam.id,
+            Played: currentTeam.matchesPlayed,
+            Wins: currentTeam.seasonWins_overall,
+            Draws: currentTeam.seasonDraws_overall,
+            Losses: currentTeam.seasonLosses_overall,
+            For: currentTeam.seasonGoals,
+            Against:
+              currentTeam.seasonConceded_home + currentTeam.seasonConceded_away,
+            GoalDifference: currentTeam.seasonGoalDifference,
+            Form: last5,
+            Points: currentTeam.points,
+            wdl: currentTeam.wdl_record,
+            seasonGoals: currentTeam.seasonGoals,
+            seasonConceded: currentTeam.seasonConceded,
+          };
+          console.log(team);
+          leagueInstance.push(team);
+        }
+        worldCupArray.push({
+          group: group.name,
+          table: leagueInstance,
+        });
+      });
+
+      console.log(worldCupArray);
     } else if (league.data.league_table === null) {
+      console.log(league.data);
       for (
         let index = 0;
         index < league.data.all_matches_table_overall.length;
@@ -145,50 +199,92 @@ export async function generateTables(a, leagueIdArray, allResults) {
         };
         leagueInstance.push(team);
       }
-      tableArray.push(leagueInstance);
+
+      tableArray.push({ id: currentLeagueId, table: leagueInstance });
     }
   });
 }
 
-export async function renderTable(index, results) {
-  console.log(index);
-  console.log(results);
-
-  let mostRecentGame = results.fixtures.pop();
-  let mostRecentGameweek = mostRecentGame.game_week;
-
-  const gameweeksResults = results.fixtures.filter(
-    (games) => games.game_week === mostRecentGameweek
-  );
-
-  const lastGameweeksResults = results.fixtures.filter(
-    (games) => games.game_week === mostRecentGameweek - 1
-  );
-
-  console.log(tableArray);
-
-  let league = tableArray[index];
-  let statistics;
-  let leagueStatistics = await fetch(
-    `${process.env.REACT_APP_EXPRESS_SERVER}leagueStats/${league[0].LeagueID}`
-  );
-  await leagueStatistics.json().then((stats) => {
-    statistics = stats.data;
-  });
-
-  if (league !== undefined) {
-    ReactDOM.render(
+async function getTableLayout(arr, statistics) {
+  let tableArray = [];
+  for (let i = 0; i < arr.length; i++) {
+    tableArray.push(
       <LeagueTable
-        Teams={league}
+        Teams={arr[i].table}
+        Key={`Group${arr[i].group}`}
         Stats={statistics}
-        Key={`League${index}`}
         GamesPlayed={statistics.game_week}
-        Results={gameweeksResults}
-        LastWeeksResults={lastGameweeksResults}
-        mostRecentGameweek={mostRecentGameweek}
-      />,
-      document.getElementById(`leagueName${index}`)
+      />
     );
+  }
+  return tableArray;
+}
+
+export async function renderTable(index, results, id) {
+  let league;
+  //World cup table rendering
+  if (id === 7432) {
+      league = worldCupArray;
+      let statistics;
+      let leagueStatistics = await fetch(
+        `${process.env.REACT_APP_EXPRESS_SERVER}leagueStats/${id}`
+      );
+      await leagueStatistics.json().then((stats) => {
+        console.log(stats)
+        statistics = stats.data;
+      });
+
+      if (league !== undefined) {
+         const layout = await getTableLayout(worldCupArray, statistics);
+          ReactDOM.render(
+            <div>
+              {layout}
+            </div>,
+            document.getElementById(`leagueName${id}`)
+          );
+    }
+  } else {
+    let mostRecentGame = results.fixtures.pop();
+    let mostRecentGameweek = mostRecentGame.game_week;
+
+    const gameweeksResults = results.fixtures.filter(
+      (games) => games.game_week === mostRecentGameweek
+    );
+
+    const lastGameweeksResults = results.fixtures.filter(
+      (games) => games.game_week === mostRecentGameweek - 1
+    );
+
+    const leagueTable = tableArray.filter((table) => table.id === id);
+
+    console.log(leagueTable);
+
+    league = leagueTable[0].table;
+    console.log(league);
+    let statistics;
+    let leagueStatistics = await fetch(
+      `${process.env.REACT_APP_EXPRESS_SERVER}leagueStats/${id}`
+    );
+    await leagueStatistics.json().then((stats) => {
+      statistics = stats.data;
+    });
+
+    if (league !== undefined) {
+      console.log(league);
+
+      ReactDOM.render(
+        <LeagueTable
+          Teams={league}
+          Stats={statistics}
+          Key={`League${index}`}
+          GamesPlayed={statistics.game_week}
+          Results={gameweeksResults}
+          LastWeeksResults={lastGameweeksResults}
+          mostRecentGameweek={mostRecentGameweek}
+        />,
+        document.getElementById(`leagueName${id}`)
+      );
+    }
   }
 }
 

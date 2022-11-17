@@ -939,6 +939,9 @@ export async function calculateScore(match, index, divider, calculate) {
       formAway.XGdifferential
     );
 
+    console.log(match.game)
+    console.log(allLeagueResultsArrayOfObjects)
+
     if (allLeagueResultsArrayOfObjects.length > 4) {
       [
         formHome.predictedGoalsBasedOnHomeAv,
@@ -957,7 +960,8 @@ export async function calculateScore(match, index, divider, calculate) {
         formAway.predictedGoalsConceededBasedOnAwayAv,
         formAway.allTeamGoalsConceededBasedOnAverages,
       ] = await getPastLeagueResults(match.awayTeam, match);
-    } else {
+    }
+    if(formHome.predictedGoalsBasedOnHomeAv === undefined){
       formHome.predictedGoalsBasedOnHomeAv = formHome.ScoredAverage;
       formHome.predictedGoalsBasedOnAwayAv = formHome.ConcededAverage;
       formHome.allTeamGoalsBasedOnAverages = formHome.ScoredAverage;
@@ -1057,6 +1061,10 @@ export async function calculateScore(match, index, divider, calculate) {
         last2WeightingHome * 2) /
       4.7;
 
+      console.log(match.game)
+
+      console.log(formHome)
+
     let factorOneAway =
       (awayLeagueOrAllFormAverageGoals * 1 +
         formAway.predictedGoalsBasedOnAwayAv * 0.25 +
@@ -1068,6 +1076,9 @@ export async function calculateScore(match, index, divider, calculate) {
         last10WeightingAway * 2 +
         last2WeightingAway * 2) /
       4.7;
+
+    console.log(formAway)
+
 
     let homeComparisonWeighting;
     let awayComparisonWeighting;
@@ -1346,10 +1357,11 @@ export async function calculateScore(match, index, divider, calculate) {
       finalAwayGoals = "P";
     }
 
+    console.log(match.game)
+    console.log(match)
     if (
-      match.game_week > 0 &&
-      match.game_week < 3 &&
-      match.competition_id !== 4340
+      match.game_week < 0 
+      // match.game_week < 3 &&
     ) {
       finalHomeGoals = "-";
       finalAwayGoals = "-";
@@ -1487,8 +1499,7 @@ export async function getScorePrediction(day, mocked) {
             await calculateScore(match, index, divider, false);
             break;
           case match.leagueID === 6935 ||
-            match.leagueID === 7061 ||
-            (match.game_week > 0 && match.game_week < 5):
+            match.leagueID === 7061:
             match.goalsA = "-";
             match.goalsB = "-";
             await calculateScore(match, index, divider, false);

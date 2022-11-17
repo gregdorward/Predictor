@@ -95,7 +95,7 @@ export default function LeagueTable(props) {
       <StyledTableCell component="th" scope="row">
         {`${team.Position}`}
       </StyledTableCell>
-      <StyledTableCell2 component="th" scope="row">
+      <StyledTableCell2 component="th" scope="row"  style={{ width: "15em" }}>
         {`${team.Name}`}
       </StyledTableCell2>
       <StyledTableCell component="th" scope="row">
@@ -148,122 +148,128 @@ export default function LeagueTable(props) {
 
   const leagueResults = [];
   let singleResult;
-  props.Results.forEach((result) => {
-    singleResult = (
-      <div>
-        <div className="ResultRow">
-          <span className="column">{result.team_a_xg}</span>
-          <span className="column">XG</span>
-          <span className="column">{result.team_b_xg}</span>
-        </div>
-        <div className="ResultRow">
-          <span className="column">{result.team_a_shots}</span>
-          <span className="column">Shots</span>
-          <span className="column">{result.team_b_shots}</span>
-        </div>
-        <div className="ResultRow">
-          <span className="column">{result.team_a_shotsOnTarget}</span>
-          <span className="column">SOT</span>
-          <span className="column">{result.team_b_shotsOnTarget}</span>
-        </div>
-        <div className="ResultRow">
-          <span className="column">{result.team_a_dangerous_attacks}</span>
-          <span className="column">Dangerous Attacks</span>
-          <span className="column">{result.team_b_dangerous_attacks}</span>
-        </div>
-        <div className="ResultRow">
-          <span className="column">{result.team_a_possession}%</span>
-          <span className="column">Possession</span>
-          <span className="column">{result.team_b_possession}%</span>
-        </div>
-        <div className="ResultRow">
-          <span className="column">{result.team_a_red_cards}</span>
-          <span className="column">Red cards</span>
-          <span className="column">{result.team_b_red_cards}</span>
-        </div>
-        <div className="ResultRow">
-          <span className="column">{result.odds_ft_1}</span>
-          <span className="column">Odds (pre-match)</span>
-          <span className="column">{result.odds_ft_2}</span>
-        </div>
-      </div>
-    );
-
-    leagueResults.push(
-      <Collapsable
-        classNameButton="ResultButton"
-        buttonText={
-          <div className="ResultRowOverview">
-            <div className="columnOverviewHome">{result.home_name}</div>
-            <span className="columnOverviewScore">
-              {result.homeGoalCount} : {result.awayGoalCount}
-            </span>
-            <div className="columnOverviewAway">{result.away_name}</div>
+  if(props.Results){
+    props.Results.forEach((result) => {
+      singleResult = (
+        <div>
+          <div className="ResultRow">
+            <span className="column">{result.team_a_xg}</span>
+            <span className="column">XG</span>
+            <span className="column">{result.team_b_xg}</span>
           </div>
-        }
-        element={singleResult}
-      />
-    );
-  });
+          <div className="ResultRow">
+            <span className="column">{result.team_a_shots}</span>
+            <span className="column">Shots</span>
+            <span className="column">{result.team_b_shots}</span>
+          </div>
+          <div className="ResultRow">
+            <span className="column">{result.team_a_shotsOnTarget}</span>
+            <span className="column">SOT</span>
+            <span className="column">{result.team_b_shotsOnTarget}</span>
+          </div>
+          <div className="ResultRow">
+            <span className="column">{result.team_a_dangerous_attacks}</span>
+            <span className="column">Dangerous Attacks</span>
+            <span className="column">{result.team_b_dangerous_attacks}</span>
+          </div>
+          <div className="ResultRow">
+            <span className="column">{result.team_a_possession}%</span>
+            <span className="column">Possession</span>
+            <span className="column">{result.team_b_possession}%</span>
+          </div>
+          <div className="ResultRow">
+            <span className="column">{result.team_a_red_cards}</span>
+            <span className="column">Red cards</span>
+            <span className="column">{result.team_b_red_cards}</span>
+          </div>
+          <div className="ResultRow">
+            <span className="column">{result.odds_ft_1}</span>
+            <span className="column">Odds (pre-match)</span>
+            <span className="column">{result.odds_ft_2}</span>
+          </div>
+        </div>
+      );
+  
+      leagueResults.push(
+        <Collapsable
+          classNameButton="ResultButton"
+          buttonText={
+            <div className="ResultRowOverview">
+              <div className="columnOverviewHome">{result.home_name}</div>
+              <span className="columnOverviewScore">
+                {result.homeGoalCount} : {result.awayGoalCount}
+              </span>
+              <div className="columnOverviewAway">{result.away_name}</div>
+            </div>
+          }
+          element={singleResult}
+        />
+      );
+    });
+  }
+ 
 
   const leagueResultsOlder = [];
-  props.LastWeeksResults.forEach((result) => {
-    singleResult = (
-      <div>
-        <div className="ResultRow">
-          <span className="column">{result.team_a_xg}</span>
-          <span className="column">XG</span>
-          <span className="column">{result.team_b_xg}</span>
-        </div>
-        <div className="ResultRow">
-          <span className="column">{result.team_a_shots}</span>
-          <span className="column">Shots</span>
-          <span className="column">{result.team_b_shots}</span>
-        </div>
-        <div className="ResultRow">
-          <span className="column">{result.team_a_shotsOnTarget}</span>
-          <span className="column">SOT</span>
-          <span className="column">{result.team_b_shotsOnTarget}</span>
-        </div>
-        <div className="ResultRow">
-          <span className="column">{result.team_a_dangerous_attacks}</span>
-          <span className="column">Dangerous Attacks</span>
-          <span className="column">{result.team_b_dangerous_attacks}</span>
-        </div>
-        <div className="ResultRow">
-          <span className="column">{result.team_a_possession}</span>
-          <span className="column">Possession</span>
-          <span className="column">{result.team_b_possession}</span>
-        </div>
-        <div className="ResultRow">
-          <span className="column">{result.team_a_red_cards}</span>
-          <span className="column">Red cards</span>
-          <span className="column">{result.team_b_red_cards}</span>
-        </div>
-        <div className="ResultRow">
-          <span className="column">{result.odds_ft_1}</span>
-          <span className="column">Odds (pre-match)</span>
-          <span className="column">{result.odds_ft_2}</span>
-        </div>
-      </div>
-    );
-
-    leagueResultsOlder.push(
-      <Collapsable
-        classNameButton="ResultButton"
-        buttonText={
-          <div className="ResultRowOverview">
-            <div className="columnOverviewHome">{result.home_name}</div>
-            <span className="columnOverviewScore">
-              {result.homeGoalCount} : {result.awayGoalCount}
-            </span>
-            <div className="columnOverviewAway">{result.away_name}</div>
+  if(props.LastWeeksResults){
+    props.LastWeeksResults.forEach((result) => {
+      singleResult = (
+        <div>
+          <div className="ResultRow">
+            <span className="column">{result.team_a_xg}</span>
+            <span className="column">XG</span>
+            <span className="column">{result.team_b_xg}</span>
           </div>
-        }
-        element={singleResult}
-      />
-    );
-  });
+          <div className="ResultRow">
+            <span className="column">{result.team_a_shots}</span>
+            <span className="column">Shots</span>
+            <span className="column">{result.team_b_shots}</span>
+          </div>
+          <div className="ResultRow">
+            <span className="column">{result.team_a_shotsOnTarget}</span>
+            <span className="column">SOT</span>
+            <span className="column">{result.team_b_shotsOnTarget}</span>
+          </div>
+          <div className="ResultRow">
+            <span className="column">{result.team_a_dangerous_attacks}</span>
+            <span className="column">Dangerous Attacks</span>
+            <span className="column">{result.team_b_dangerous_attacks}</span>
+          </div>
+          <div className="ResultRow">
+            <span className="column">{result.team_a_possession}</span>
+            <span className="column">Possession</span>
+            <span className="column">{result.team_b_possession}</span>
+          </div>
+          <div className="ResultRow">
+            <span className="column">{result.team_a_red_cards}</span>
+            <span className="column">Red cards</span>
+            <span className="column">{result.team_b_red_cards}</span>
+          </div>
+          <div className="ResultRow">
+            <span className="column">{result.odds_ft_1}</span>
+            <span className="column">Odds (pre-match)</span>
+            <span className="column">{result.odds_ft_2}</span>
+          </div>
+        </div>
+      );
+  
+      leagueResultsOlder.push(
+        <Collapsable
+          classNameButton="ResultButton"
+          buttonText={
+            <div className="ResultRowOverview">
+              <div className="columnOverviewHome">{result.home_name}</div>
+              <span className="columnOverviewScore">
+                {result.homeGoalCount} : {result.awayGoalCount}
+              </span>
+              <div className="columnOverviewAway">{result.away_name}</div>
+            </div>
+          }
+          element={singleResult}
+        />
+      );
+    });
+  }
+  
 
   function getTopScorersTeam(id) {
     let found = props.Teams.find((team) => team.ID === id);
@@ -275,7 +281,8 @@ export default function LeagueTable(props) {
   if (
     props.GamesPlayed > 3 &&
     props.Teams[0].LeagueID !== 7956 &&
-    props.Teams[0].LeagueID !== 6969
+    props.Teams[0].LeagueID !== 6969 &&
+    props.Teams[0].LeagueID !== 7432
   ) {
     for (let i = 0; i < props.Teams.length; i++) {
       return (
