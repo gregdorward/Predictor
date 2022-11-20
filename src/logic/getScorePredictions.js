@@ -166,7 +166,7 @@ async function getPastLeagueResults(team, game) {
     const teamConceededAway = reversedResultsAway.map((res) => res.conceeded);
     const teamConceededAll = allTeamResults.map((res) => res.conceeded);
 
-    let r = 5;
+    let r = 6;
     let x = 4;
 
     const teamGoalsHomeRollingAverage = getEMA(
@@ -1004,10 +1004,10 @@ export async function calculateScore(match, index, divider, calculate) {
     teamComparisonScore = await compareTeams(formHome, formAway, match);
     teamComparisonScore = teamComparisonScore * 0.15;
 
-    if (teamComparisonScore > 0.3) {
-      teamComparisonScore = 0.3;
-    } else if (teamComparisonScore < -0.3) {
-      teamComparisonScore = -0.3;
+    if (teamComparisonScore > 0.35) {
+      teamComparisonScore = 0.35;
+    } else if (teamComparisonScore < -0.35) {
+      teamComparisonScore = -0.35;
     }
     match.teamComparisonScore = teamComparisonScore.toFixed(2);
 
@@ -1053,13 +1053,13 @@ export async function calculateScore(match, index, divider, calculate) {
       (homeLeagueOrAllFormAverageGoals * 1 +
         formHome.predictedGoalsBasedOnHomeAv * 0.25 +
         formAway.predictedGoalsConceededBasedOnAwayAv * 0.25 +
-        formHome.allTeamGoalsBasedOnAverages * 1.5 +
-        formAway.allTeamGoalsConceededBasedOnAverages * 1.5 +
+        formHome.allTeamGoalsBasedOnAverages * 1 +
+        formAway.allTeamGoalsConceededBasedOnAverages * 1 +
         formHome.XGOverall * 0.1 +
         formAway.XGAgainstAvgOverall * 0.1 +
         last10WeightingHome * 2 +
         last2WeightingHome * 2) /
-      4.7;
+      3.7;
 
       console.log(match.game)
 
@@ -1069,13 +1069,13 @@ export async function calculateScore(match, index, divider, calculate) {
       (awayLeagueOrAllFormAverageGoals * 1 +
         formAway.predictedGoalsBasedOnAwayAv * 0.25 +
         formHome.predictedGoalsConceededBasedOnHomeAv * 0.25 +
-        formAway.allTeamGoalsBasedOnAverages * 1.5 +
-        formHome.allTeamGoalsConceededBasedOnAverages * 1.5 +
+        formAway.allTeamGoalsBasedOnAverages * 1 +
+        formHome.allTeamGoalsConceededBasedOnAverages * 1 +
         formAway.XGOverall * 0.1 +
         formHome.XGAgainstAvgOverall * 0.1 +
         last10WeightingAway * 2 +
         last2WeightingAway * 2) /
-      4.7;
+      3.7;
 
     console.log(formAway)
 
