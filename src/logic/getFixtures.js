@@ -457,7 +457,7 @@ export async function generateFixtures(
   } else {
   }
 
-  if (league.status !== 200) {
+  if (league.status === 200) {
     console.log("A");
     await league.json().then((leagues) => {
       leagueArray = Array.from(leagues.leagueArray);
