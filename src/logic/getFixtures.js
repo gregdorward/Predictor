@@ -506,17 +506,19 @@ export async function generateFixtures(
         (game) => game.status === "complete"
       );
 
-      let mostRecentResults = gamesFiltered.filter(
-        (game) => game.date_unix > targetDate
-      );
+      // let mostRecentResults = gamesFiltered.filter(
+      //   (game) => game.date_unix > targetDate
+      // );
 
-      console.log(mostRecentResults);
+      const shortenedResults = gamesFiltered.map(({home_name, away_name, homeGoalCount, awayGoalCount, date_unix, team_a_xg, team_b_xg, odds_ft_1, odds_ft_2, team_a_shots, team_b_shots, team_a_shotsOnTarget, team_b_shotsOnTarget, team_a_red_cards, team_b_red_cards, team_a_possession, team_b_possession, team_a_dangerous_attacks, team_b_dangerous_attacks, pre_match_teamA_overall_ppg, pre_match_teamB_overall_ppg}) => ({home_name, away_name, homeGoalCount, awayGoalCount, date_unix, team_a_xg, team_b_xg, odds_ft_1, odds_ft_2, team_a_shots, team_b_shots, team_a_shotsOnTarget, team_b_shotsOnTarget, team_a_red_cards, team_b_red_cards, team_a_possession, team_b_possession, team_a_dangerous_attacks, team_b_dangerous_attacks, pre_match_teamA_overall_ppg, pre_match_teamB_overall_ppg}))
+
+      console.log(shortenedResults)
 
       let leagueObj = {
         // leagueObject[orderedLeague] = {
         name: orderedLeague.name,
         id: orderedLeague.element.id,
-        fixtures: mostRecentResults,
+        fixtures: shortenedResults,
       };
 
       allLeagueResultsArrayOfObjects.push(leagueObj);
