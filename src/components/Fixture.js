@@ -178,7 +178,6 @@ function GetDivider(fixture) {
 // }
 
 function renderLeagueName(fixture) {
-  console.log(fixture)
   let name = fixture.leagueName;
   let id = allLeagueResultsArrayOfObjects[fixture.leagueIndex].id
   if (name === null) {
