@@ -221,27 +221,26 @@ async function getTableLayout(arr, statistics) {
 }
 
 export async function renderTable(index, results, id) {
+  console.log(results);
   let league;
   //World cup table rendering
   if (id === 7432) {
-      league = worldCupArray;
-      let statistics;
-      let leagueStatistics = await fetch(
-        `${process.env.REACT_APP_EXPRESS_SERVER}leagueStats/${id}`
-      );
-      await leagueStatistics.json().then((stats) => {
-        console.log(stats)
-        statistics = stats.data;
-      });
+    league = worldCupArray;
+    let statistics;
+    let leagueStatistics = await fetch(
+      `${process.env.REACT_APP_EXPRESS_SERVER}leagueStats/${id}`
+    );
+    await leagueStatistics.json().then((stats) => {
+      console.log(stats);
+      statistics = stats.data;
+    });
 
-      if (league !== undefined) {
-         const layout = await getTableLayout(worldCupArray, statistics);
-          ReactDOM.render(
-            <div>
-              {layout}
-            </div>,
-            document.getElementById(`leagueName${id}`)
-          );
+    if (league !== undefined) {
+      const layout = await getTableLayout(worldCupArray, statistics);
+      ReactDOM.render(
+        <div>{layout}</div>,
+        document.getElementById(`leagueName${id}`)
+      );
     }
   } else {
     let mostRecentGame = results.fixtures.pop();
@@ -458,7 +457,7 @@ export async function generateFixtures(
   } else {
   }
 
-  if (league.status === 200) {
+  if (league.status !== 200) {
     console.log("A");
     await league.json().then((leagues) => {
       leagueArray = Array.from(leagues.leagueArray);
@@ -510,9 +509,57 @@ export async function generateFixtures(
       //   (game) => game.date_unix > targetDate
       // );
 
-      const shortenedResults = gamesFiltered.map(({home_name, away_name, homeGoalCount, awayGoalCount, date_unix, team_a_xg, team_b_xg, odds_ft_1, odds_ft_2, team_a_shots, team_b_shots, team_a_shotsOnTarget, team_b_shotsOnTarget, team_a_red_cards, team_b_red_cards, team_a_possession, team_b_possession, team_a_dangerous_attacks, team_b_dangerous_attacks, pre_match_teamA_overall_ppg, pre_match_teamB_overall_ppg}) => ({home_name, away_name, homeGoalCount, awayGoalCount, date_unix, team_a_xg, team_b_xg, odds_ft_1, odds_ft_2, team_a_shots, team_b_shots, team_a_shotsOnTarget, team_b_shotsOnTarget, team_a_red_cards, team_b_red_cards, team_a_possession, team_b_possession, team_a_dangerous_attacks, team_b_dangerous_attacks, pre_match_teamA_overall_ppg, pre_match_teamB_overall_ppg}))
+      const shortenedResults = gamesFiltered.map(
+        ({
+          home_name,
+          away_name,
+          homeGoalCount,
+          awayGoalCount,
+          date_unix,
+          team_a_xg,
+          team_b_xg,
+          odds_ft_1,
+          odds_ft_2,
+          team_a_shots,
+          team_b_shots,
+          team_a_shotsOnTarget,
+          team_b_shotsOnTarget,
+          team_a_red_cards,
+          team_b_red_cards,
+          team_a_possession,
+          team_b_possession,
+          team_a_dangerous_attacks,
+          team_b_dangerous_attacks,
+          pre_match_teamA_overall_ppg,
+          pre_match_teamB_overall_ppg,
+          game_week,
+        }) => ({
+          home_name,
+          away_name,
+          homeGoalCount,
+          awayGoalCount,
+          date_unix,
+          team_a_xg,
+          team_b_xg,
+          odds_ft_1,
+          odds_ft_2,
+          team_a_shots,
+          team_b_shots,
+          team_a_shotsOnTarget,
+          team_b_shotsOnTarget,
+          team_a_red_cards,
+          team_b_red_cards,
+          team_a_possession,
+          team_b_possession,
+          team_a_dangerous_attacks,
+          team_b_dangerous_attacks,
+          pre_match_teamA_overall_ppg,
+          pre_match_teamB_overall_ppg,
+          game_week,
+        })
+      );
 
-      console.log(shortenedResults)
+      console.log(shortenedResults);
 
       let leagueObj = {
         // leagueObject[orderedLeague] = {
