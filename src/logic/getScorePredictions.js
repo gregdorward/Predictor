@@ -100,7 +100,7 @@ export function getPointsFromLastX(lastX) {
 async function getPastLeagueResults(team, game) {
   let date = game.date;
 
-  if (allLeagueResultsArrayOfObjects.length > 4) {
+  if (allLeagueResultsArrayOfObjects[game.leagueIndex].fixtures.length > 4) {
     let teamsHomeResults = allLeagueResultsArrayOfObjects[
       game.leagueIndex
     ].fixtures.filter((fixture) => fixture.home_name === team);
@@ -123,9 +123,11 @@ async function getPastLeagueResults(team, game) {
 
     let homeResults = [];
     let awayResults = [];
-
+    let oddsSum = 0;
     for (let index = 0; index < teamsHomeResults.length; index++) {
       const resultedGame = teamsHomeResults[index];
+
+      console.log(resultedGame)
       homeResults.push({
         homeTeam: resultedGame.home_name,
         homeGoals: resultedGame.homeGoalCount,
@@ -135,7 +137,10 @@ async function getPastLeagueResults(team, game) {
         conceeded: resultedGame.awayGoalCount,
         date: await convertTimestamp(resultedGame.date_unix),
         dateRaw: resultedGame.date_unix,
+        oddsHome: resultedGame.odds_ft_1,
+        oddsAway: resultedGame.odds_ft_2,
       });
+      oddsSum = oddsSum + resultedGame.odds_ft_1
     }
     for (let index = 0; index < teamsAwayResults.length; index++) {
       const resultedGame = teamsAwayResults[index];
@@ -148,8 +153,13 @@ async function getPastLeagueResults(team, game) {
         conceeded: resultedGame.homeGoalCount,
         date: await convertTimestamp(resultedGame.date_unix),
         dateRaw: resultedGame.date_unix,
+        oddsHome: resultedGame.odds_ft_1,
+        oddsAway: resultedGame.odds_ft_2,
+
       });
+      oddsSum = oddsSum + resultedGame.odds_ft_2
     }
+
 
     let reversedResultsHome = homeResults.reverse();
     let reversedResultsAway = awayResults.reverse();
@@ -157,6 +167,10 @@ async function getPastLeagueResults(team, game) {
     const allTeamResults = reversedResultsHome
       .concat(reversedResultsAway)
       .sort((a, b) => a.dateRaw - b.dateRaw);
+
+      console.log(game.homeTeam)
+     const averageOdds = oddsSum / allTeamResults.length
+
 
     const teamGoalsHome = reversedResultsHome.map((res) => res.scored);
     const teamGoalsAway = reversedResultsAway.map((res) => res.scored);
@@ -212,6 +226,7 @@ async function getPastLeagueResults(team, game) {
       teamGoalsConceededAllRollingAverage[
         teamGoalsConceededAllRollingAverage.length - 1
       ],
+      averageOdds
     ];
   } else {
     return null;
@@ -578,6 +593,29 @@ export async function compareTeams(homeForm, awayForm, match) {
       calculation = calculation / 4;
     }
   }
+  console.log(match.game)
+  console.log(`AVERAGE HOME ODDS ${homeForm.averageOdds}`)
+  console.log(`HOME ODDS ${match.homeOdds}`)
+  console.log(`AVERAGE AWAY ODDS ${awayForm.averageOdds}`)
+  console.log(`AWAY ODDS ${match.awayOdds}`)
+
+
+  if(homeForm.averageOdds !== null || awayForm.averageOdds !== null){
+    if(calculation > 0 && homeForm.averageOdds < match.homeOdds){
+      calculation = calculation / 1.25
+    } else if(calculation > 0 && homeForm.averageOdds > match.homeOdds){
+      calculation = calculation * 1.25
+
+    }
+  
+    if(calculation < 0 && awayForm.averageOdds < match.awayOdds){
+      calculation = calculation / 1.25
+    }else if(calculation < 0 && awayForm.averageOdds > match.awayOdds){
+      calculation = calculation * 1.25
+    }
+  }
+
+
 
   return calculation;
 }
@@ -928,7 +966,7 @@ export async function calculateScore(match, index, divider, calculate) {
     console.log(match.game);
     console.log(allLeagueResultsArrayOfObjects);
 
-    if (allLeagueResultsArrayOfObjects.length > 4) {
+    if (allLeagueResultsArrayOfObjects[match.leagueIndex].fixtures.length > 25) {
       [
         formHome.predictedGoalsBasedOnHomeAv,
         formHome.predictedGoalsBasedOnAwayAv,
@@ -936,6 +974,7 @@ export async function calculateScore(match, index, divider, calculate) {
         formHome.predictedGoalsConceededBasedOnHomeAv,
         formHome.predictedGoalsConceededBasedOnAwayAv,
         formHome.allTeamGoalsConceededBasedOnAverages,
+        formHome.averageOdds
       ] = await getPastLeagueResults(match.homeTeam, match);
 
       [
@@ -945,6 +984,7 @@ export async function calculateScore(match, index, divider, calculate) {
         formAway.predictedGoalsConceededBasedOnHomeAv,
         formAway.predictedGoalsConceededBasedOnAwayAv,
         formAway.allTeamGoalsConceededBasedOnAverages,
+        formAway.averageOdds
       ] = await getPastLeagueResults(match.awayTeam, match);
     }
     if (formHome.predictedGoalsBasedOnHomeAv === undefined) {
@@ -954,6 +994,8 @@ export async function calculateScore(match, index, divider, calculate) {
       formHome.predictedGoalsConceededBasedOnHomeAv = formHome.ConcededAverage;
       formHome.predictedGoalsConceededBasedOnAwayAv = formHome.ConcededAverage;
       formHome.allTeamGoalsConceededBasedOnAverages = formHome.ConcededAverage;
+      formHome.averageOdds = null;
+
 
       formAway.predictedGoalsBasedOnHomeAv = formAway.ScoredAverage;
       formAway.predictedGoalsBasedOnAwayAv = formAway.ConcededAverage;
@@ -961,6 +1003,7 @@ export async function calculateScore(match, index, divider, calculate) {
       formAway.predictedGoalsConceededBasedOnHomeAv = formAway.ConcededAverage;
       formAway.predictedGoalsConceededBasedOnAwayAv = formAway.ConcededAverage;
       formAway.allTeamGoalsConceededBasedOnAverages = formAway.ConcededAverage;
+      formAway.averageOdds = null;
     }
 
     if (
