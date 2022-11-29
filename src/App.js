@@ -6,6 +6,7 @@ import OddsRadio from "./components/OddsRadio";
 import { selectedOdds } from "./components/OddsRadio";
 import Collapsable from "./components/CollapsableElement";
 import { StyledKofiButton } from "./components/KofiButton";
+import Example from "./components/DayPicker"
 import {
   FacebookShareButton,
   FacebookIcon,

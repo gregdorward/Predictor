@@ -521,6 +521,10 @@ p {
   box-shadow: 0 1px 2px 0 #030052 inset, 0 2px 2px 0 #030052 inset;
 }
 
+.DatePicker{
+  background-color: white;
+  opacity: 1;
+}
 
 
 .StatsTable {
