@@ -352,20 +352,6 @@ let dateString;
         onClickEvent={async () => await decrementDate(1, date)}
       />
       <Button
-          text={"Yesterday"}
-          className="FixturesButton"
-          onClickEvent={async () =>
-            fixtureList.push(
-              await generateFixtures(
-                "todaysFixtures",
-                yesterday,
-                selectedOdds,
-                yesterdayFootyStats
-              )
-            )
-          }
-        />
-      <Button
         text={`${string}`}
         className="FixturesButtonToday"
         onClickEvent={async () =>
