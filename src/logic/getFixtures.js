@@ -399,6 +399,9 @@ export async function generateFixtures(
   ReactDOM.render(<div></div>, document.getElementById("BTTS"));
   ReactDOM.render(<div></div>, document.getElementById("draws"));
 
+  console.log(date)
+  console.log(footyStatsFormattedDate)
+
   const url = `${process.env.REACT_APP_EXPRESS_SERVER}matches/${footyStatsFormattedDate}`;
   const formUrl = `${process.env.REACT_APP_EXPRESS_SERVER}form/${date}`;
 

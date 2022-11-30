@@ -327,6 +327,7 @@ button.GeneratePredictions:active{
 
 }
 
+
 .RowOneContainer{
   display: flex;
   flex-wrap: wrap
@@ -521,9 +522,26 @@ p {
   box-shadow: 0 1px 2px 0 #030052 inset, 0 2px 2px 0 #030052 inset;
 }
 
-.DatePicker{
+.DateForm{
+  display: flex;
+  position: inherit !important;
+
+  flex-direction: row;
+  padding: 2em;
+  /* background-color: white; */
+  opacity: 1;
+  width: 50%;
+  text-align: center;
+  height: 2em;
+  justify-content: center;
+}
+
+
+.DateForm input{
+  position: inherit !important;
   background-color: white;
   opacity: 1;
+
 }
 
 
