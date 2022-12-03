@@ -100,7 +100,7 @@ export function getPointsFromLastX(lastX) {
 async function getPastLeagueResults(team, game) {
   let date = game.date;
 
-  if (allLeagueResultsArrayOfObjects[game.leagueIndex].fixtures.length > 50) {
+  if (allLeagueResultsArrayOfObjects[game.leagueIndex].fixtures.length > 55) {
     let teamsHomeResults = allLeagueResultsArrayOfObjects[
       game.leagueIndex
     ].fixtures.filter((fixture) => fixture.home_name === team);
