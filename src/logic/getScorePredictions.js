@@ -100,7 +100,7 @@ export function getPointsFromLastX(lastX) {
 async function getPastLeagueResults(team, game) {
   let date = game.date;
 
-  if (allLeagueResultsArrayOfObjects[game.leagueIndex].fixtures.length > 55) {
+  if (allLeagueResultsArrayOfObjects[game.leagueIndex].fixtures.length > 50) {
     let teamsHomeResults = allLeagueResultsArrayOfObjects[
       game.leagueIndex
     ].fixtures.filter((fixture) => fixture.home_name === team);
@@ -115,6 +115,7 @@ async function getPastLeagueResults(team, game) {
       game.leagueIndex
     ].fixtures.filter((fixture) => fixture.away_name === team);
 
+
     teamsAwayResults = teamsAwayResults
       .filter(function (item) {
         return item.date_unix < date;
@@ -127,7 +128,6 @@ async function getPastLeagueResults(team, game) {
     for (let index = 0; index < teamsHomeResults.length; index++) {
       const resultedGame = teamsHomeResults[index];
 
-      console.log(resultedGame);
       homeResults.push({
         homeTeam: resultedGame.home_name,
         homeGoals: resultedGame.homeGoalCount,
@@ -166,7 +166,6 @@ async function getPastLeagueResults(team, game) {
       .concat(reversedResultsAway)
       .sort((a, b) => a.dateRaw - b.dateRaw);
 
-    console.log(allTeamResults);
     const averageOdds = oddsSum / allTeamResults.length;
 
     const teamGoalsHome = reversedResultsHome.map((res) => res.scored);
@@ -184,8 +183,6 @@ async function getPastLeagueResults(team, game) {
       teamGoalsHome,
       teamGoalsHome.length < 5 ? teamGoalsHome.length : x
     );
-
-    console.log(teamGoalsHomeRollingAverage);
 
     const teamGoalsAwayRollingAverage = getEMA(
       teamGoalsAway,
@@ -533,11 +530,7 @@ export async function compareTeams(homeForm, awayForm, match) {
   const fiveGameAverageComparison = await compareStat(
     homeForm.fiveGameAverage * 2,
     awayForm.fiveGameAverage * 2
-  )
-
-
-console.log(homeAwayPointAverageComparison)
-  
+  )  
 
   let calculation =
     attackStrengthComparison * 2 +
@@ -591,11 +584,6 @@ console.log(homeAwayPointAverageComparison)
       calculation = calculation / 4;
     }
   }
-  console.log(match.game);
-  console.log(`AVERAGE HOME ODDS ${homeForm.averageOdds}`);
-  console.log(`HOME ODDS ${match.homeOdds}`);
-  console.log(`AVERAGE AWAY ODDS ${awayForm.averageOdds}`);
-  console.log(`AWAY ODDS ${match.awayOdds}`);
 
   if (homeForm.averageOdds !== null || awayForm.averageOdds !== null) {
     if (calculation > 0 && homeForm.averageOdds < match.homeOdds) {
@@ -885,9 +873,6 @@ export async function calculateScore(match, index, divider, calculate) {
       formAway.XGdifferential
     );
 
-    console.log(match.game);
-    console.log(allLeagueResultsArrayOfObjects);
-
     if (
       allLeagueResultsArrayOfObjects[match.leagueIndex].fixtures.length > 50
     ) {
@@ -1122,10 +1107,6 @@ export async function calculateScore(match, index, divider, calculate) {
       finalHomeGoals = 0;
     }
 
-    console.log(match);
-    console.log(finalHomeGoals);
-    console.log(finalAwayGoals);
-
     if (finalHomeGoals > finalAwayGoals) {
       match.prediction = "homeWin";
       homePredictions = homePredictions + 1;
@@ -1327,8 +1308,6 @@ export async function calculateScore(match, index, divider, calculate) {
       finalAwayGoals = "P";
     }
 
-    console.log(match.game);
-    console.log(match);
     if (
       match.game_week < 0
       // match.game_week < 3 &&
@@ -1364,7 +1343,6 @@ async function getSuccessMeasure(fixtures) {
 
   for (let i = 0; i < fixtures.length; i++) {
     if (fixtures[i].status === "complete" && fixtures[i].prediction) {
-      console.log(fixtures[i]);
       sumProfit = sumProfit + fixtures[i].profit;
       investment = investment + 1;
       netProfit = (sumProfit - investment).toFixed(2);

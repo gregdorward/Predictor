@@ -799,6 +799,7 @@ export async function generateFixtures(
         teamPositionHome = homeTeaminLeague.position;
         teamPositionHomeTable = homeTeaminHomeLeague.position;
 
+        console.log(homeTeaminLeague)
         WDLinLeagueHome = Array.from(homeTeaminLeague.wdl.toUpperCase());
         HomeAverageGoals =
           homeTeaminLeague.seasonGoals / homeTeaminLeague.played;
@@ -833,6 +834,7 @@ export async function generateFixtures(
         homeTeaminLeague = {
           rawPosition: "N/A",
         };
+        WDLinLeagueHome = "N/A"
       }
 
       try {
@@ -880,6 +882,7 @@ export async function generateFixtures(
         awayTeaminLeague = {
           rawPosition: "N/A",
         };
+        WDLinLeagueAway = "N/A"
       }
 
       if (!isFormStored) {
@@ -902,6 +905,8 @@ export async function generateFixtures(
           form[0].data[2].stats.additional_info.formRun_home.toUpperCase();
         let awayFormRun =
           form[1].data[2].stats.additional_info.formRun_away.toUpperCase();
+
+        console.log(WDLinLeagueHome)
 
         if (WDLinLeagueHome.length >= 10) {
           lastThreeFormHome = WDLinLeagueHome.slice(-3);
