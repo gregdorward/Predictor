@@ -231,7 +231,6 @@ export async function renderTable(index, results, id) {
       `${process.env.REACT_APP_EXPRESS_SERVER}leagueStats/${id}`
     );
     await leagueStatistics.json().then((stats) => {
-      console.log(stats);
       statistics = stats.data;
     });
 
@@ -265,6 +264,7 @@ export async function renderTable(index, results, id) {
       `${process.env.REACT_APP_EXPRESS_SERVER}leagueStats/${id}`
     );
     await leagueStatistics.json().then((stats) => {
+      console.log(stats);
       statistics = stats.data;
     });
 
@@ -648,6 +648,7 @@ export async function generateFixtures(
     let awayLeague;
 
     if (leagueArray[i].data.league_table !== null) {
+      console.log(leagueArray[i])
       leagueInstance = leagueArray[i].data.league_table;
       homeLeague = leagueArray[i].data.all_matches_table_home;
       awayLeague = leagueArray[i].data.all_matches_table_away;
@@ -737,6 +738,7 @@ export async function generateFixtures(
 
       let match = {};
       if (orderedLeagues[i].name !== previousLeagueName) {
+        console.log(orderedLeagues[i])
         match.leagueName = orderedLeagues[i].name;
         match.leagueIndex = i;
         match.leagueID = leagueID;
@@ -1516,7 +1518,7 @@ export async function generateFixtures(
           onClickEvent={() => getScorePrediction(day)}
           className={"GeneratePredictions"}
         />
-        <div className="Version">Prediction engine v2.2.9 (27/10/2022)</div>
+        <div className="Version">Prediction engine v2.2.10</div>
       </Fragment>,
       document.getElementById("GeneratePredictions")
     );
