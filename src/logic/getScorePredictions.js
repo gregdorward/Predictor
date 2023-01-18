@@ -244,8 +244,12 @@ export async function compareStat(statOne, statTwo) {
   let result;
 
   let statDiff = await diff(stat1, stat2);
-  if (statDiff > 1 || statDiff < -1) {
+  if (statDiff > 6 || statDiff < -6) {
+    result = (stat1 - stat2) * 2;
+  } else if (statDiff > 3 || statDiff < -3) {
     result = stat1 - stat2;
+  } else if (statDiff > 2 || statDiff < -2) {
+    result = (stat1 - stat2) / 2;
   } else {
     result = 0;
   }
@@ -533,12 +537,12 @@ export async function compareTeams(homeForm, awayForm, match) {
   )  
 
   let calculation =
-    attackStrengthComparison * 2 +
-    defenceStrengthComparison * 2 +
+    attackStrengthComparison * 1 +
+    defenceStrengthComparison * 1 +
     possessiontrengthComparison * 1 +
     xgForStrengthComparison * 1 +
     xgAgainstStrengthComparison * 1 +
-    xgDiffComparison * 2 + 
+    xgDiffComparison * 1 + 
     homeAwayPointAverageComparison * 1 +
     fiveGameAverageComparison * 1
 
@@ -938,7 +942,7 @@ export async function calculateScore(match, index, divider, calculate) {
     let teamComparisonScore;
 
     teamComparisonScore = await compareTeams(formHome, formAway, match);
-    teamComparisonScore = teamComparisonScore * 0.15;
+    teamComparisonScore = teamComparisonScore * 0.35;
 
     if (teamComparisonScore > 0.45) {
       teamComparisonScore = 0.45;
@@ -1042,9 +1046,9 @@ export async function calculateScore(match, index, divider, calculate) {
       awayComparisonWeighting = 1;
     }
 
-    let experimentalHomeGoals = factorOneHome * 1 * homeComparisonWeighting;
+    let experimentalHomeGoals = factorOneHome * 0.75 * homeComparisonWeighting;
 
-    let experimentalAwayGoals = factorOneAway * 1 * awayComparisonWeighting;
+    let experimentalAwayGoals = factorOneAway * 0.75 * awayComparisonWeighting;
 
     let rawFinalHomeGoals = experimentalHomeGoals;
     let rawFinalAwayGoals = experimentalAwayGoals;
@@ -1107,40 +1111,46 @@ export async function calculateScore(match, index, divider, calculate) {
       finalHomeGoals = 0;
     }
 
-    if (finalHomeGoals > finalAwayGoals) {
-      match.prediction = "homeWin";
-      homePredictions = homePredictions + 1;
-      if (
-        formHome.lastGame === "L" ||
-        formHome.last2Points < 3 ||
-        formAway.last2Points > 3 ||
-        match.XGdifferentialValueRaw < 0 ||
-        formAway.actualToXGDifference < -1 ||
-        formHome.actualToXGDifference > 1
-      ) {
-        match.includeInMultis = false;
-      } else {
-        match.includeInMultis = true;
+    if(match.status !== "suspended"){
+      if (finalHomeGoals > finalAwayGoals) {
+        match.prediction = "homeWin";
+        homePredictions = homePredictions + 1;
+        if (
+          formHome.lastGame === "L" ||
+          formHome.last2Points < 3 ||
+          formAway.last2Points > 3 ||
+          match.XGdifferentialValueRaw < 0 ||
+          formAway.actualToXGDifference < -1 ||
+          formHome.actualToXGDifference > 1
+        ) {
+          match.includeInMultis = false;
+        } else {
+          match.includeInMultis = true;
+        }
+      } else if (finalAwayGoals > finalHomeGoals) {
+        match.prediction = "awayWin";
+        awayPredictions = awayPredictions + 1;
+        if (
+          formAway.lastGame === "L" ||
+          formAway.last2Points < 3 ||
+          formHome.last2Points > 3 ||
+          match.XGdifferentialValueRaw > 0 ||
+          formHome.actualToXGDifference < -1 ||
+          formAway.actualToXGDifference > 1
+        ) {
+          match.includeInMultis = false;
+        } else {
+          match.includeInMultis = true;
+        }
+      } else if (finalHomeGoals === finalAwayGoals) {
+        console.log(match)
+        match.prediction = "draw";
+        drawPredictions = drawPredictions + 1;
       }
-    } else if (finalAwayGoals > finalHomeGoals) {
-      match.prediction = "awayWin";
-      awayPredictions = awayPredictions + 1;
-      if (
-        formAway.lastGame === "L" ||
-        formAway.last2Points < 3 ||
-        formHome.last2Points > 3 ||
-        match.XGdifferentialValueRaw > 0 ||
-        formHome.actualToXGDifference < -1 ||
-        formAway.actualToXGDifference > 1
-      ) {
-        match.includeInMultis = false;
-      } else {
-        match.includeInMultis = true;
-      }
-    } else if (finalHomeGoals === finalAwayGoals) {
-      match.prediction = "draw";
-      drawPredictions = drawPredictions + 1;
     }
+   
+
+    console.log(`drawPredictions: ${drawPredictions}`)
 
     if (
       (XGdifferential > 1 && match.prediction === "homeWin") ||
@@ -1200,7 +1210,10 @@ export async function calculateScore(match, index, divider, calculate) {
       match.dangerousAttacksDiffValue = dangerousAttacksDifferential;
     }
 
+
     switch (true) {
+      case match.status !== "complete":
+        break;
       case match.homeGoals > match.awayGoals:
         match.winner = match.homeTeam;
         match.outcome = "homeWin";
@@ -1261,6 +1274,9 @@ export async function calculateScore(match, index, divider, calculate) {
       default:
         break;
     }
+
+    console.log(`allDrawOutcomes: ${allDrawOutcomes}`)
+
 
     if (match.status === "complete") {
       if (match.prediction === match.outcome) {
