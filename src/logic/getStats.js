@@ -13,34 +13,34 @@ import Collapsable from "../components/CollapsableElement";
 export async function getAttackStrength(goalsFor) {
   let strength;
   switch (true) {
-    case goalsFor >= 2.9:
+    case goalsFor >= 2.8:
       strength = 10;
       break;
-    case goalsFor >= 2.6 && goalsFor < 2.9:
+    case goalsFor >= 2.5 && goalsFor < 2.8:
       strength = 9;
       break;
-    case goalsFor >= 2.3 && goalsFor < 2.6:
+    case goalsFor >= 2.2 && goalsFor < 2.5:
       strength = 8;
       break;
-    case goalsFor >= 2 && goalsFor < 2.3:
+    case goalsFor >= 1.9 && goalsFor < 2.2:
       strength = 7;
       break;
-    case goalsFor >= 1.7 && goalsFor < 2:
+    case goalsFor >= 1.6 && goalsFor < 1.9:
       strength = 6;
       break;
-    case goalsFor >= 1.4 && goalsFor < 1.7:
+    case goalsFor >= 1.3 && goalsFor < 1.6:
       strength = 5;
       break;
-    case goalsFor >= 1.1 && goalsFor < 1.4:
+    case goalsFor >= 1 && goalsFor < 1.3:
       strength = 4;
       break;
-    case goalsFor >= 0.8 && goalsFor < 1.1:
+    case goalsFor >= 0.7 && goalsFor < 1:
       strength = 3;
       break;
-    case goalsFor >= 0.5 && goalsFor < 0.8:
+    case goalsFor >= 0.4 && goalsFor < 0.7:
       strength = 2;
       break;
-    case goalsFor < 0.5:
+    case goalsFor < 0.4:
       strength = 1;
       break;
     default:
@@ -52,34 +52,34 @@ export async function getAttackStrength(goalsFor) {
 export async function getDefenceStrength(goalsAgainst) {
   let strength;
   switch (true) {
-    case goalsAgainst >= 2.9:
+    case goalsAgainst >= 2.8:
       strength = 1;
       break;
-    case goalsAgainst >= 2.6 && goalsAgainst < 2.9:
+    case goalsAgainst >= 2.5 && goalsAgainst < 2.8:
       strength = 2;
       break;
-    case goalsAgainst >= 2.3 && goalsAgainst < 2.6:
+    case goalsAgainst >= 2.2 && goalsAgainst < 2.5:
       strength = 3;
       break;
-    case goalsAgainst >= 2 && goalsAgainst < 2.3:
+    case goalsAgainst >= 1.9 && goalsAgainst < 2.2:
       strength = 4;
       break;
-    case goalsAgainst >= 1.7 && goalsAgainst < 2:
+    case goalsAgainst >= 1.6 && goalsAgainst < 1.9:
       strength = 5;
       break;
-    case goalsAgainst >= 1.4 && goalsAgainst < 1.7:
+    case goalsAgainst >= 1.3 && goalsAgainst < 1.6:
       strength = 6;
       break;
-    case goalsAgainst >= 1.1 && goalsAgainst < 1.4:
+    case goalsAgainst >= 1 && goalsAgainst < 1.3:
       strength = 7;
       break;
-    case goalsAgainst >= 0.8 && goalsAgainst < 1.1:
+    case goalsAgainst >= 0.7 && goalsAgainst < 1:
       strength = 8;
       break;
-    case goalsAgainst >= 0.5 && goalsAgainst < 0.8:
+    case goalsAgainst >= 0.4 && goalsAgainst < 0.7:
       strength = 9;
       break;
-    case goalsAgainst < 0.5:
+    case goalsAgainst < 0.4:
       strength = 10;
       break;
     default:
