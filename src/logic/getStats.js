@@ -481,6 +481,7 @@ export async function createStatsDiv(game, displayBool) {
 
     let time = game.time;
 
+    console.log(gameStats.home[index])
     gameStats.home[index].last3Points = getPointsFromLastX(
       gameStats.home[index].lastThreeForm
     );
@@ -517,10 +518,10 @@ export async function createStatsDiv(game, displayBool) {
       return pointTotal / games;
     }
 
-    let homeThreeGameAverage = await getPointAverage(
-      gameStats.home[index].last3Points,
-      3
-    );
+    // let homeThreeGameAverage = await getPointAverage(
+    //   gameStats.home[index].last3Points,
+    //   3
+    // );
 
     let homeFiveGameAverage = await getPointAverage(
       gameStats.home[index].last5Points,
@@ -537,10 +538,10 @@ export async function createStatsDiv(game, displayBool) {
       10
     );
 
-    let awayThreeGameAverage = await getPointAverage(
-      gameStats.away[index].last3Points,
-      3
-    );
+    // let awayThreeGameAverage = await getPointAverage(
+    //   gameStats.away[index].last3Points,
+    //   3
+    // );
 
     let awayFiveGameAverage = await getPointAverage(
       gameStats.away[index].last5Points,
@@ -594,15 +595,13 @@ export async function createStatsDiv(game, displayBool) {
     }
 
     let homeFormTrend = [
-      homeThreeGameAverage.toFixed(2),
       homeFiveGameAverage.toFixed(2),
-      homeSixGameAverage.toFixed(2),
+      homeTenGameAverage.toFixed(2),
     ];
 
     let awayFormTrend = [
-      awayThreeGameAverage.toFixed(2),
       awayFiveGameAverage.toFixed(2),
-      awaySixGameAverage.toFixed(2),
+      awayTenGameAverage.toFixed(2),
     ];
 
     let formTextStringHome;
@@ -665,6 +664,10 @@ export async function createStatsDiv(game, displayBool) {
     let [formPointsAway, testArrayAway] = await getPointsFromGames(
       gameStats.away[2].WDLRecord
     );
+
+    console.log(game.game)
+    console.log(formPointsHome)
+    console.log(formPointsAway)
 
     let rollingGoalDiffHome = [
       (gameStats.home[0].ScoredOverall - gameStats.home[0].ConcededOverall) /
@@ -761,16 +764,19 @@ export async function createStatsDiv(game, displayBool) {
         homeTenGameAverage,
         homeSixGameAverage,
         homeFiveGameAverage,
-        homeThreeGameAverage,
       ];
       formArrayAway = [
         awayTenGameAverage,
         awaySixGameAverage,
         awayFiveGameAverage,
-        awayThreeGameAverage,
       ];
       chartType = "Rolling average points over last 10";
     }
+
+    console.log(homeTenGameAverage)
+    console.log(homeSixGameAverage)
+    console.log(homeFiveGameAverage)
+    console.log(gameStats.home[index].last3Points)
 
     ReactDOM.render(
       <div style={style}>
