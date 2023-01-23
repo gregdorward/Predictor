@@ -13,37 +13,81 @@ function Stats(props) {
     return className;
   }
 
+  function styleBTTS(BTTSBoolean) {
+    console.log(BTTSBoolean)
+    let className;
+    if (BTTSBoolean === "\u2714") {
+      className = "BTTSTrue";
+    } else if (BTTSBoolean === "\u2718") {
+      className = "BTTSFalse";
+    }
+    return className;
+  }
+
+  console.log(props)
+
   if (props.formRun) {
     return (
       <Fragment>
         <ul className={props.className} style={props.style}>
-          {/* <li className="FormHeader">{`${props.LeagueOrAll} Form (most recent on right)`}</li>
-          <li key={`last5`} className="Form">
-            <span className={styleForm(props.last5[0])}>{props.last5[0]}</span>
-            <span className={styleForm(props.last5[1])}>{props.last5[1]}</span>
-            <span className={styleForm(props.last5[2])}>{props.last5[2]}</span>
-            <span className={styleForm(props.last5[3])}>{props.last5[3]}</span>
-            <span className={styleForm(props.last5[4])}>{props.last5[4]}</span>
-          </li> */}
           <li className="FormSummaryHome">{props.FormTextString}</li>
           <li className="FormHeader">
-            All {props.homeOrAway} form (most recent on right)
+            League results (most recent on right)
           </li>
-          <li key={`last5${props.homeOrAway}`} className="FormHomeOrAway">
-            <span className={styleForm(props.formRun[0])}>
-              {props.formRun[0]}
+          <li key={`last5League`} className="last5League">
+          <span className={styleForm(props.Results[4])}>
+              {props.Results[5]}
             </span>
-            <span className={styleForm(props.formRun[1])}>
-              {props.formRun[1]}
+            <span className={styleForm(props.Results[4])}>
+              {props.Results[4]}
             </span>
-            <span className={styleForm(props.formRun[2])}>
-              {props.formRun[2]}
+            <span className={styleForm(props.Results[3])}>
+              {props.Results[3]}
             </span>
-            <span className={styleForm(props.formRun[3])}>
-              {props.formRun[3]}
+            <span className={styleForm(props.Results[2])}>
+              {props.Results[2]}
             </span>
-            <span className={styleForm(props.formRun[4])}>
-              {props.formRun[4]}
+            <span className={styleForm(props.Results[1])}>
+              {props.Results[1]}
+            </span>
+            <span className={styleForm(props.Results[0])}>
+              {props.Results[0]}
+            </span>
+          </li>
+          <li
+            key="BTTSArrayHomeOrAway"
+            className="BTTSArrayHomeOrAway"
+            data-cy={props.name + "BTTSArrayHomeOrAway"}
+          >
+            <div className="BTTSResults">BTTS</div>
+            <span className={styleBTTS(props.BTTSArray[5])}>{props.BTTSArray[4]}</span>
+            <span className={styleBTTS(props.BTTSArray[4])}>{props.BTTSArray[4]}</span>
+            <span className={styleBTTS(props.BTTSArray[3])}>{props.BTTSArray[3]}</span>
+            <span className={styleBTTS(props.BTTSArray[2])}>{props.BTTSArray[2]}</span>
+            <span className={styleBTTS(props.BTTSArray[1])}>{props.BTTSArray[1]}</span>
+            <span className={styleBTTS(props.BTTSArray[0])}>{props.BTTSArray[0]}</span>
+          </li>
+          <li className="FormHeader">
+            {props.homeOrAway} form (most recent on right)
+          </li>
+          <li key={`last5${props.homeOrAwayResults}`} className="FormHomeOrAway">
+          <span className={styleForm(props.homeOrAwayResults[4])}>
+              {props.homeOrAwayResults[5]}
+            </span>
+            <span className={styleForm(props.homeOrAwayResults[4])}>
+              {props.homeOrAwayResults[4]}
+            </span>
+            <span className={styleForm(props.homeOrAwayResults[3])}>
+              {props.homeOrAwayResults[3]}
+            </span>
+            <span className={styleForm(props.homeOrAwayResults[2])}>
+              {props.homeOrAwayResults[2]}
+            </span>
+            <span className={styleForm(props.homeOrAwayResults[1])}>
+              {props.homeOrAwayResults[1]}
+            </span>
+            <span className={styleForm(props.homeOrAwayResults[0])}>
+              {props.homeOrAwayResults[0]}
             </span>
           </li>
           <li

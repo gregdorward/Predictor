@@ -239,7 +239,7 @@ export async function getXGDifferentialStrength(XGDiff) {
       strength = 1;
       break;
     default:
-      console.log("default clause triggered")
+      console.log("default clause triggered");
       break;
   }
   return strength;
@@ -250,7 +250,7 @@ async function diff(a, b) {
 }
 
 export async function createStatsDiv(game, displayBool) {
-  console.log(game)
+  console.log(game);
   if (game.status !== "void") {
     // takes the displayBool boolean from the fixture onClick and sets the styling of the stats div from there
     function styling(testBool) {
@@ -272,6 +272,8 @@ export async function createStatsDiv(game, displayBool) {
     let gameStats = allForm.find((match) => match.id === game.id);
     const gameArrayHome = [];
     const gameArrayAway = [];
+    const gameArrayHomeTeamHomeGames = [];
+    const gameArrayAwayTeamAwayGames = [];
     let goalDiffArrayHome;
     let goalDiffArrayAway;
     let goalDiffHomeMovingAv = [];
@@ -302,6 +304,13 @@ export async function createStatsDiv(game, displayBool) {
               game.awayID === gameStats.teamIDHome) &&
             game.status === "complete"
         );
+
+        const resultHomeOnly = matches.data.filter(
+          (game) =>
+            game.homeID === gameStats.teamIDHome && game.status === "complete"
+        );
+
+        resultHomeOnly.sort((a, b) => b.date_unix - a.date_unix);
 
         for (let i = 0; i < resultHome.length; i++) {
           let unixTimestamp = resultHome[i].date_unix;
@@ -365,18 +374,30 @@ export async function createStatsDiv(game, displayBool) {
             unixTimestamp: resultHome[i].date_unix,
             goalsFor: goalsScored,
             goalsAgainst: goalsConceeded,
+            btts: resultHome[i].btts === true ? "\u2714" : "\u2718",
           });
+        }
+
+        for (let i = 0; i < resultHomeOnly.length; i++) {
+          let wonHomeOrAwayOnly;
+
+          if (resultHomeOnly[i].winningTeam === gameStats.teamIDHome) {
+            wonHomeOrAwayOnly = "W";
+            gameArrayHomeTeamHomeGames.push(wonHomeOrAwayOnly);
+          } else if (resultHomeOnly[i].winningTeam === -1) {
+            wonHomeOrAwayOnly = "D";
+            gameArrayHomeTeamHomeGames.push(wonHomeOrAwayOnly);
+          } else {
+            wonHomeOrAwayOnly = "L";
+            gameArrayHomeTeamHomeGames.push(wonHomeOrAwayOnly);
+          }
         }
 
         goalDiffArrayHome = gameArrayHome.map(
           (a) => a.goalsFor - a.goalsAgainst
         );
 
-
-
-
         let r = 5;
-
 
         goalDiffHomeMovingAv = getEMA(
           goalDiffArrayHome,
@@ -385,13 +406,19 @@ export async function createStatsDiv(game, displayBool) {
 
         gameArrayHome.sort((a, b) => b.unixTimestamp - a.unixTimestamp);
 
-
         const resultAway = matches.data.filter(
           (game) =>
             (game.homeID === gameStats.teamIDAway ||
               game.awayID === gameStats.teamIDAway) &&
             game.status === "complete"
         );
+
+        const resultAwayOnly = matches.data.filter(
+          (game) =>
+            game.awayID === gameStats.teamIDAway && game.status === "complete"
+        );
+
+        resultAwayOnly.sort((a, b) => b.date_unix - a.date_unix);
 
         for (let i = 0; i < resultAway.length; i++) {
           let unixTimestamp = resultAway[i].date_unix;
@@ -403,6 +430,9 @@ export async function createStatsDiv(game, displayBool) {
           let won;
           let goalsScored;
           let goalsConceeded;
+          let wonHomeOrAwayOnly;
+          let goalsScoredHomeOrAwayOnly;
+          let goalsConceededHomeOrAwayOnly;
 
           if (resultAway[i].winningTeam === gameStats.teamIDAway) {
             won = "W";
@@ -455,12 +485,28 @@ export async function createStatsDiv(game, displayBool) {
             unixTimestamp: resultAway[i].date_unix,
             goalsFor: goalsScored,
             goalsAgainst: goalsConceeded,
+            btts: resultAway[i].btts === true ? "\u2714" : "\u2718",
           });
         }
+
+        for (let i = 0; i < resultAwayOnly.length; i++) {
+          let wonHomeOrAwayOnly;
+
+          if (resultAwayOnly[i].winningTeam === gameStats.teamIDAway) {
+            wonHomeOrAwayOnly = "W";
+            gameArrayAwayTeamAwayGames.push(wonHomeOrAwayOnly);
+          } else if (resultAwayOnly[i].winningTeam === -1) {
+            wonHomeOrAwayOnly = "D";
+            gameArrayAwayTeamAwayGames.push(wonHomeOrAwayOnly);
+          } else {
+            wonHomeOrAwayOnly = "L";
+            gameArrayAwayTeamAwayGames.push(wonHomeOrAwayOnly);
+          }
+        }
+
         goalDiffArrayAway = gameArrayAway.map(
           (a) => a.goalsFor - a.goalsAgainst
         );
-        
 
         goalDiffAwayMovingAv = getEMA(
           goalDiffArrayAway,
@@ -476,12 +522,17 @@ export async function createStatsDiv(game, displayBool) {
       });
     }
 
+    const bttsArrayHome = Array.from(gameArrayHome, (x) => x.btts);
+    const bttsArrayAway = Array.from(gameArrayAway, (x) => x.btts);
+
+    const resultsArrayHome = Array.from(gameArrayHome, (x) => x.won);
+    const resultsArrayAway = Array.from(gameArrayAway, (x) => x.won);
+
     let homeTeam = gameStats.home.teamName;
     let awayTeam = gameStats.away.teamName;
 
     let time = game.time;
 
-    console.log(gameStats.home[index])
     gameStats.home[index].last3Points = getPointsFromLastX(
       gameStats.home[index].lastThreeForm
     );
@@ -665,10 +716,6 @@ export async function createStatsDiv(game, displayBool) {
       gameStats.away[2].WDLRecord
     );
 
-    console.log(game.game)
-    console.log(formPointsHome)
-    console.log(formPointsAway)
-
     let rollingGoalDiffHome = [
       (gameStats.home[0].ScoredOverall - gameStats.home[0].ConcededOverall) /
         10,
@@ -718,6 +765,8 @@ export async function createStatsDiv(game, displayBool) {
       ScoredBothHalvesPercentage:
         gameStats.home[index].ScoredBothHalvesPercentage,
       FormTextStringHome: formTextStringHome,
+      BTTSArray: bttsArrayHome,
+      Results: resultsArrayHome,
     });
 
     const formDataAway = [];
@@ -749,6 +798,9 @@ export async function createStatsDiv(game, displayBool) {
       ScoredBothHalvesPercentage:
         gameStats.away[index].ScoredBothHalvesPercentage,
       FormTextStringAway: formTextStringAway,
+      BTTSArray: bttsArrayAway,
+      Results: resultsArrayAway,
+      ResultsHomeOrAway: resultsArrayAway,
     });
 
     let formArrayHome;
@@ -772,11 +824,6 @@ export async function createStatsDiv(game, displayBool) {
       ];
       chartType = "Rolling average points over last 10";
     }
-
-    console.log(homeTenGameAverage)
-    console.log(homeSixGameAverage)
-    console.log(homeFiveGameAverage)
-    console.log(gameStats.home[index].last3Points)
 
     ReactDOM.render(
       <div style={style}>
@@ -974,6 +1021,7 @@ export async function createStatsDiv(game, displayBool) {
               gameCount={divider}
               key={formDataHome[0].name}
               last5={formDataHome[0].Last5}
+              homeOrAwayResults={gameArrayHomeTeamHomeGames}
               LeagueOrAll={formDataHome[0].LeagueOrAll}
               className={"KeyStats"}
               name={formDataHome[0].name}
@@ -1018,6 +1066,9 @@ export async function createStatsDiv(game, displayBool) {
               BttsPercentageHomeOrAway={
                 formDataHome[0].BttsPercentageHomeOrAway
               }
+              BTTSArray={formDataHome[0].BTTSArray}
+              Results={formDataHome[0].Results}
+              ResultsHomeOrAway={formDataHome[0].wonHomeOrAwayOnly}
               CardsTotal={formDataHome[0].CardsTotal}
               CornersAverage={formDataHome[0].CornersAverage}
               ScoredBothHalvesPercentage={
@@ -1040,6 +1091,7 @@ export async function createStatsDiv(game, displayBool) {
               gameCount={divider}
               key={formDataAway[0].name}
               last5={formDataAway[0].Last5}
+              homeOrAwayResults={gameArrayAwayTeamAwayGames}
               LeagueOrAll={formDataAway[0].LeagueOrAll}
               className={"KeyStats"}
               name={formDataAway[0].name}
@@ -1085,6 +1137,8 @@ export async function createStatsDiv(game, displayBool) {
               BttsPercentageHomeOrAway={
                 formDataAway[0].BttsPercentageHomeOrAway
               }
+              BTTSArray={formDataAway[0].BTTSArray}
+              Results={formDataAway[0].Results}
               CardsTotal={formDataAway[0].CardsTotal}
               CornersAverage={formDataAway[0].CornersAverage}
               ScoredBothHalvesPercentage={
@@ -1100,7 +1154,7 @@ export async function createStatsDiv(game, displayBool) {
     ReactDOM.render(
       <div style={style}>
         <div className="Chart" id={`Chart${game.id}`} style={style}>
-        <RadarChart
+          <RadarChart
             data={[
               homeAttackStrength,
               homeDefenceStrength,
