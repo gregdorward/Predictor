@@ -1024,6 +1024,10 @@ export async function calculateScore(match, index, divider, calculate) {
         last2WeightingAway * 1) /
       3.5;
 
+      console.log(match.game)
+      console.log(formHome.averageOdds)
+      console.log(formAway.averageOdds)
+
     let homeComparisonWeighting;
     let awayComparisonWeighting;
     match.scoreDiff = await diff(factorOneHome, factorOneAway);
@@ -1090,7 +1094,7 @@ export async function calculateScore(match, index, divider, calculate) {
 
     if (finalAwayGoals < 0) {
       let difference = Math.abs(
-        parseFloat((await diff(0, finalAwayGoals)) / 5)
+        parseFloat((await diff(0, finalAwayGoals)) / 2)
       );
       rawFinalHomeGoals = rawFinalHomeGoals + difference;
       finalAwayGoals = 0;
@@ -1098,7 +1102,7 @@ export async function calculateScore(match, index, divider, calculate) {
 
     if (finalHomeGoals < 0) {
       let difference = Math.abs(
-        parseFloat((await diff(0, finalHomeGoals)) / 5)
+        parseFloat((await diff(0, finalHomeGoals)) / 2)
       );
       rawFinalAwayGoals = rawFinalAwayGoals + difference;
       finalHomeGoals = 0;

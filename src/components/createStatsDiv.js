@@ -60,7 +60,7 @@ function Stats(props) {
             data-cy={props.name + "BTTSArrayHomeOrAway"}
           >
             <div className="BTTSResults">BTTS</div>
-            <span className={styleBTTS(props.BTTSArray[5])}>{props.BTTSArray[4]}</span>
+            <span className={styleBTTS(props.BTTSArray[5])}>{props.BTTSArray[5]}</span>
             <span className={styleBTTS(props.BTTSArray[4])}>{props.BTTSArray[4]}</span>
             <span className={styleBTTS(props.BTTSArray[3])}>{props.BTTSArray[3]}</span>
             <span className={styleBTTS(props.BTTSArray[2])}>{props.BTTSArray[2]}</span>

@@ -280,6 +280,8 @@ export async function createStatsDiv(game, displayBool) {
     let goalDiffAwayMovingAv = [];
     let latestHomeGoalDiff;
     let latestAwayGoalDiff;
+    let rollingGoalDiffTotalHome;
+    let rollingGoalDiffTotalAway; 
 
     var getEMA = (a, r) =>
       a.reduce(
@@ -393,6 +395,7 @@ export async function createStatsDiv(game, displayBool) {
           }
         }
 
+
         goalDiffArrayHome = gameArrayHome.map(
           (a) => a.goalsFor - a.goalsAgainst
         );
@@ -404,7 +407,17 @@ export async function createStatsDiv(game, displayBool) {
           goalDiffArrayHome.length < 5 ? goalDiffArrayHome.length : r
         );
 
+        const cumulativeSumHome = (
+          (sum) => (value) =>
+            (sum += value)
+        )(0);
+        console.log(game.game)
+
         gameArrayHome.sort((a, b) => b.unixTimestamp - a.unixTimestamp);
+
+
+        rollingGoalDiffTotalHome = goalDiffArrayHome.map(cumulativeSumHome);
+        console.log(rollingGoalDiffTotalHome)
 
         const resultAway = matches.data.filter(
           (game) =>
@@ -504,6 +517,7 @@ export async function createStatsDiv(game, displayBool) {
           }
         }
 
+
         goalDiffArrayAway = gameArrayAway.map(
           (a) => a.goalsFor - a.goalsAgainst
         );
@@ -513,7 +527,18 @@ export async function createStatsDiv(game, displayBool) {
           goalDiffArrayAway.length < 5 ? goalDiffArrayAway.length : r
         );
 
+        const cumulativeSumAway = (
+          (sum) => (value) =>
+            (sum += value)
+        )(0);
+        
         gameArrayAway.sort((a, b) => b.unixTimestamp - a.unixTimestamp);
+
+
+        rollingGoalDiffTotalAway = goalDiffArrayAway.map(cumulativeSumAway);
+        console.log(rollingGoalDiffTotalAway)
+
+
 
         latestHomeGoalDiff =
           goalDiffHomeMovingAv[goalDiffHomeMovingAv.length - 1];
@@ -1184,20 +1209,20 @@ export async function createStatsDiv(game, displayBool) {
           ></Chart>
           <Chart
             height={
-              Math.max(...goalDiffHomeMovingAv, ...goalDiffAwayMovingAv) > 2
-                ? Math.max(...goalDiffHomeMovingAv, ...goalDiffAwayMovingAv)
+              Math.max(rollingGoalDiffTotalHome[rollingGoalDiffTotalHome.length -1], rollingGoalDiffTotalAway[rollingGoalDiffTotalAway.length -1]) > 2
+                ? Math.max(rollingGoalDiffTotalHome[rollingGoalDiffTotalHome.length -1], rollingGoalDiffTotalAway[rollingGoalDiffTotalAway.length -1])
                 : 2
             }
             depth={
-              Math.min(...goalDiffHomeMovingAv, ...goalDiffAwayMovingAv) < -2
-                ? Math.min(...goalDiffHomeMovingAv, ...goalDiffAwayMovingAv)
+              Math.min(rollingGoalDiffTotalHome[rollingGoalDiffTotalHome.length -1], rollingGoalDiffTotalAway[rollingGoalDiffTotalAway.length -1]) < -2
+                ? Math.min(rollingGoalDiffTotalHome[rollingGoalDiffTotalHome.length -1], rollingGoalDiffTotalAway[rollingGoalDiffTotalAway.length -1])
                 : -2
             }
-            data1={goalDiffHomeMovingAv}
-            data2={goalDiffAwayMovingAv}
+            data1={rollingGoalDiffTotalHome}
+            data2={rollingGoalDiffTotalAway}
             team1={game.homeTeam}
             team2={game.awayTeam}
-            type={"Rolling goal difference (exponential moving average)"}
+            type={"Goal difference over time"}
             tension={0.3}
           ></Chart>
         </div>
