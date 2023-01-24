@@ -43,7 +43,6 @@ function getCornerOverBoolean(stat){
 
 export default function CustomizedTables(props) {
     let corners = getCornerOverBoolean(props.CornersForecast)
-    console.log(corners)
 
   return (
     <TableContainer component={Paper} className="StatsTable">

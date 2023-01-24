@@ -68,10 +68,6 @@ async function getXGDifferential(xgFor, xgAgainst, goalsFor, goalsAgainst) {
 
 async function getAttackingSummary(goalsRecent, goalsLongTerm) {
 
-console.log(goalsRecent)
-console.log(goalsLongTerm)
-
-
   let text;
   if (goalsRecent >= 3) {
     switch (true) {
@@ -171,14 +167,10 @@ async function getDefenceSummary(cleansheetStat) {
 }
 
 async function GenerateFormSummary(form, lastx, recentForm) {
-  console.log(form);
-  console.log(lastx);
   let text;
   // let six = lastx[2];
   let ten = lastx[1];
   let five = lastx[0];
-  console.log(ten)
-  console.log(five)
 
   let xgSum = await getXGDifferential(
     form.XGOverall,
@@ -196,7 +188,6 @@ async function GenerateFormSummary(form, lastx, recentForm) {
     (parseFloat(five) + parseFloat(ten)) / 2;
 
   if (pointsAverageTotal >= 2.6) {
-    console.log(1);
     switch (true) {
       case five > ten:
         text =
@@ -213,7 +204,6 @@ async function GenerateFormSummary(form, lastx, recentForm) {
         break;
     }
   } else if (pointsAverageTotal >= 2.3) {
-    console.log(2);
     switch (true) {
       case five > ten:
         text =
@@ -230,7 +220,6 @@ async function GenerateFormSummary(form, lastx, recentForm) {
         break;
     }
   } else if (pointsAverageTotal >= 2) {
-    console.log(2);
     switch (true) {
       case five > ten:
         text =
@@ -247,7 +236,6 @@ async function GenerateFormSummary(form, lastx, recentForm) {
         break;
     }
   } else if (pointsAverageTotal >= 1.7) {
-    console.log(2);
     switch (true) {
       case five > ten:
         text =
@@ -264,7 +252,6 @@ async function GenerateFormSummary(form, lastx, recentForm) {
         break;
     }
   } else if (pointsAverageTotal >= 1.4) {
-    console.log(2);
     switch (true) {
       case five > ten:
         text =
@@ -298,7 +285,6 @@ async function GenerateFormSummary(form, lastx, recentForm) {
         break;
     }
   } else if (pointsAverageTotal >= 0.8) {
-    console.log(2);
     switch (true) {
       case five > ten:
         text =
@@ -315,7 +301,6 @@ async function GenerateFormSummary(form, lastx, recentForm) {
         break;
     }
   } else if (pointsAverageTotal >= 0.5) {
-    console.log(2);
     switch (true) {
       case five > ten:
         text =
@@ -332,7 +317,6 @@ async function GenerateFormSummary(form, lastx, recentForm) {
         break;
     }
   } else if (pointsAverageTotal < 0.5) {
-    console.log(2);
     switch (true) {
       case five > ten:
         text =
@@ -349,7 +333,6 @@ async function GenerateFormSummary(form, lastx, recentForm) {
         break;
     }
   } else {
-    console.log(11);
     console.log(pointsAverageTotal);
   }
   return text + ` ${xgText} ${attackString} ${defenceString}`;

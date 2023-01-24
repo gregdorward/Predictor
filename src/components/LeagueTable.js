@@ -89,13 +89,12 @@ function styleForm(formIndicator) {
 }
 
 export default function LeagueTable(props) {
-  console.log(props);
   let rows = props.Teams.map((team, i) => (
     <StyledTableRow key={`${props.Key}row${i}`}>
       <StyledTableCell component="th" scope="row">
         {`${team.Position}`}
       </StyledTableCell>
-      <StyledTableCell2 component="th" scope="row"  style={{ width: "15em" }}>
+      <StyledTableCell2 component="th" scope="row" style={{ width: "15em" }}>
         {`${team.Name}`}
       </StyledTableCell2>
       <StyledTableCell component="th" scope="row">
@@ -148,7 +147,7 @@ export default function LeagueTable(props) {
 
   const leagueResults = [];
   let singleResult;
-  if(props.Results){
+  if (props.Results) {
     props.Results.forEach((result) => {
       singleResult = (
         <div>
@@ -189,7 +188,7 @@ export default function LeagueTable(props) {
           </div>
         </div>
       );
-  
+
       leagueResults.push(
         <Collapsable
           classNameButton="ResultButton"
@@ -207,10 +206,9 @@ export default function LeagueTable(props) {
       );
     });
   }
- 
 
   const leagueResultsOlder = [];
-  if(props.LastWeeksResults){
+  if (props.LastWeeksResults) {
     props.LastWeeksResults.forEach((result) => {
       singleResult = (
         <div>
@@ -251,7 +249,7 @@ export default function LeagueTable(props) {
           </div>
         </div>
       );
-  
+
       leagueResultsOlder.push(
         <Collapsable
           classNameButton="ResultButton"
@@ -269,14 +267,11 @@ export default function LeagueTable(props) {
       );
     });
   }
-  
 
   function getTopScorersTeam(id) {
     let found = props.Teams.find((team) => team.ID === id);
     return found.Name;
   }
-
-  console.log(props);
 
   if (
     props.GamesPlayed > 3 &&

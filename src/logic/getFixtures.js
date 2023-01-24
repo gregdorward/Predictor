@@ -72,7 +72,6 @@ async function convertTimestamp(timestamp) {
 }
 
 export async function generateTables(a, leagueIdArray, allResults) {
-  console.log(leagueIdArray);
   // leagueIdArray = [];
   tableArray = [];
   worldCupArray = [];
@@ -125,7 +124,6 @@ export async function generateTables(a, leagueIdArray, allResults) {
       }
       tableArray.push({ id: currentLeagueId, table: leagueInstance });
     } else if (currentLeagueId === 7432) {
-      console.log(league.data);
 
       // for (let x = 0; x < league.data.specific_tables[0].groups.length; x++) {
       // for (
@@ -134,10 +132,8 @@ export async function generateTables(a, leagueIdArray, allResults) {
       //   index++
       // )
       league.data.specific_tables[0].groups.forEach((group) => {
-        console.log(group.name);
         leagueInstance = [];
         for (let index = 0; index < group.table.length; index++) {
-          console.log(group.table.length);
           let currentTeam = group.table[index];
           let last5 = "N/A";
           const team = {
@@ -159,7 +155,6 @@ export async function generateTables(a, leagueIdArray, allResults) {
             seasonGoals: currentTeam.seasonGoals,
             seasonConceded: currentTeam.seasonConceded,
           };
-          console.log(team);
           leagueInstance.push(team);
         }
         worldCupArray.push({
@@ -168,9 +163,7 @@ export async function generateTables(a, leagueIdArray, allResults) {
         });
       });
 
-      console.log(worldCupArray);
     } else if (league.data.league_table === null) {
-      console.log(league.data);
       for (
         let index = 0;
         index < league.data.all_matches_table_overall.length;
@@ -221,69 +214,47 @@ async function getTableLayout(arr, statistics) {
 }
 
 export async function renderTable(index, results, id) {
-  console.log(results);
   let league;
   //World cup table rendering
-  if (id === 7432) {
-    league = worldCupArray;
-    let statistics;
-    let leagueStatistics = await fetch(
-      `${process.env.REACT_APP_EXPRESS_SERVER}leagueStats/${id}`
+
+  // let mostRecentGame = results.fixtures.pop();
+  let mostRecentGame = results.fixtures[results.fixtures.length - 4];
+
+  let mostRecentGameweek = mostRecentGame.game_week;
+
+  const gameweeksResults = results.fixtures.filter(
+    (games) => games.game_week === mostRecentGameweek
+  );
+
+  const lastGameweeksResults = results.fixtures.filter(
+    (games) => games.game_week === mostRecentGameweek - 1
+  );
+
+  const leagueTable = tableArray.filter((table) => table.id === id);
+
+  league = leagueTable[0].table;
+  let statistics;
+  let leagueStatistics = await fetch(
+    `${process.env.REACT_APP_EXPRESS_SERVER}leagueStats/${id}`
+  );
+  await leagueStatistics.json().then((stats) => {
+    statistics = stats.data;
+  });
+
+  if (league !== undefined) {
+
+    ReactDOM.render(
+      <LeagueTable
+        Teams={league}
+        Stats={statistics}
+        Key={`League${index}`}
+        GamesPlayed={statistics.game_week}
+        Results={gameweeksResults}
+        LastWeeksResults={lastGameweeksResults}
+        mostRecentGameweek={mostRecentGameweek}
+      />,
+      document.getElementById(`leagueName${id}`)
     );
-    await leagueStatistics.json().then((stats) => {
-      statistics = stats.data;
-    });
-
-    if (league !== undefined) {
-      const layout = await getTableLayout(worldCupArray, statistics);
-      ReactDOM.render(
-        <div>{layout}</div>,
-        document.getElementById(`leagueName${id}`)
-      );
-    }
-  } else {
-    let mostRecentGame = results.fixtures.pop();
-    let mostRecentGameweek = mostRecentGame.game_week;
-
-    const gameweeksResults = results.fixtures.filter(
-      (games) => games.game_week === mostRecentGameweek
-    );
-
-    const lastGameweeksResults = results.fixtures.filter(
-      (games) => games.game_week === mostRecentGameweek - 1
-    );
-
-    const leagueTable = tableArray.filter((table) => table.id === id);
-
-    console.log(leagueTable);
-
-    league = leagueTable[0].table;
-    console.log(league);
-    let statistics;
-    let leagueStatistics = await fetch(
-      `${process.env.REACT_APP_EXPRESS_SERVER}leagueStats/${id}`
-    );
-    await leagueStatistics.json().then((stats) => {
-      console.log(stats);
-      statistics = stats.data;
-    });
-
-    if (league !== undefined) {
-      console.log(league);
-
-      ReactDOM.render(
-        <LeagueTable
-          Teams={league}
-          Stats={statistics}
-          Key={`League${index}`}
-          GamesPlayed={statistics.game_week}
-          Results={gameweeksResults}
-          LastWeeksResults={lastGameweeksResults}
-          mostRecentGameweek={mostRecentGameweek}
-        />,
-        document.getElementById(`leagueName${id}`)
-      );
-    }
   }
 }
 
@@ -399,8 +370,8 @@ export async function generateFixtures(
   ReactDOM.render(<div></div>, document.getElementById("BTTS"));
   ReactDOM.render(<div></div>, document.getElementById("draws"));
 
-  console.log(date)
-  console.log(footyStatsFormattedDate)
+  console.log(date);
+  console.log(footyStatsFormattedDate);
 
   const url = `${process.env.REACT_APP_EXPRESS_SERVER}matches/${footyStatsFormattedDate}`;
   const formUrl = `${process.env.REACT_APP_EXPRESS_SERVER}form/${date}`;
@@ -648,7 +619,7 @@ export async function generateFixtures(
     let awayLeague;
 
     if (leagueArray[i].data.league_table !== null) {
-      console.log(leagueArray[i])
+      console.log(leagueArray[i]);
       leagueInstance = leagueArray[i].data.league_table;
       homeLeague = leagueArray[i].data.all_matches_table_home;
       awayLeague = leagueArray[i].data.all_matches_table_away;
@@ -738,7 +709,7 @@ export async function generateFixtures(
 
       let match = {};
       if (orderedLeagues[i].name !== previousLeagueName) {
-        console.log(orderedLeagues[i])
+        console.log(orderedLeagues[i]);
         match.leagueName = orderedLeagues[i].name;
         match.leagueIndex = i;
         match.leagueID = leagueID;
@@ -801,7 +772,7 @@ export async function generateFixtures(
         teamPositionHome = homeTeaminLeague.position;
         teamPositionHomeTable = homeTeaminHomeLeague.position;
 
-        console.log(homeTeaminLeague)
+        console.log(homeTeaminLeague);
         WDLinLeagueHome = Array.from(homeTeaminLeague.wdl.toUpperCase());
         HomeAverageGoals =
           homeTeaminLeague.seasonGoals / homeTeaminLeague.played;
@@ -836,7 +807,7 @@ export async function generateFixtures(
         homeTeaminLeague = {
           rawPosition: "N/A",
         };
-        WDLinLeagueHome = "N/A"
+        WDLinLeagueHome = "N/A";
       }
 
       try {
@@ -884,7 +855,7 @@ export async function generateFixtures(
         awayTeaminLeague = {
           rawPosition: "N/A",
         };
-        WDLinLeagueAway = "N/A"
+        WDLinLeagueAway = "N/A";
       }
 
       if (!isFormStored) {
@@ -908,7 +879,7 @@ export async function generateFixtures(
         let awayFormRun =
           form[1].data[2].stats.additional_info.formRun_away.toUpperCase();
 
-        console.log(WDLinLeagueHome)
+        console.log(WDLinLeagueHome);
 
         if (WDLinLeagueHome.length >= 10) {
           lastThreeFormHome = WDLinLeagueHome.slice(-3);

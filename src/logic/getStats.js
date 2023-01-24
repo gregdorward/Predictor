@@ -249,6 +249,9 @@ async function diff(a, b) {
   return parseFloat(a - b).toFixed(2);
 }
 
+let rollingGoalDiffTotalHome = [];
+let rollingGoalDiffTotalAway = [];
+
 export async function createStatsDiv(game, displayBool) {
   console.log(game);
   if (game.status !== "void") {
@@ -280,8 +283,7 @@ export async function createStatsDiv(game, displayBool) {
     let goalDiffAwayMovingAv = [];
     let latestHomeGoalDiff;
     let latestAwayGoalDiff;
-    let rollingGoalDiffTotalHome;
-    let rollingGoalDiffTotalAway; 
+
 
     var getEMA = (a, r) =>
       a.reduce(
@@ -865,176 +867,211 @@ export async function createStatsDiv(game, displayBool) {
       game.awayTeamAwayPosition = "N/A";
     }
 
-    const overviewHome = gameArrayHome.slice(0, 6).map((game) => (
+    
+   function singleResult(game) {
+    return (
       <div>
-        <div className={game.won}>
-          <div>
-            <div>{game.date}</div>
-            <div key={game.id} className="IndividualPreviousResultGameHome">
-              <li>
-                {game.homeTeam}{" "}
-                <span className="GoalTotal">{game.homeGoals}</span>
-              </li>
-              <li>
-                {game.awayTeam}{" "}
-                <span className="GoalTotal">{game.awayGoals}</span>
-              </li>
-            </div>
-          </div>
+        <div className="ResultRowSmall">
+          <span className="column">{game.homeXG}</span>
+          <span className="column">XG</span>
+          <span className="column">{game.awayXG}</span>
         </div>
+        <div className="ResultRowSmall">
+          <span className="column">{game.homeShots}</span>
+          <span className="column">Shots</span>
+          <span className="column">{game.awayShots}</span>
+        </div>
+        <div className="ResultRowSmall">
+          <span className="column">{game.homeSot}</span>
+          <span className="column">SOT</span>
+          <span className="column">{game.awaySot}</span>
+        </div>
+        <div className="ResultRowSmall">
+          <span className="column">{game.homeDangerousAttacks}</span>
+          <span className="column">Dangerous Attacks</span>
+          <span className="column">{game.awayDangerousAttacks}</span>
+        </div>
+        <div className="ResultRowSmall">
+          <span className="column">{game.homePossession}%</span>
+          <span className="column">Possession</span>
+          <span className="column">{game.awayPossession}%</span>
+        </div>
+        <div className="ResultRowSmall">
+          <span className="column">{game.homeRed}</span>
+          <span className="column">Red cards</span>
+          <span className="column">{game.awayRed}</span>
+        </div>
+        <div className="ResultRowSmall">
+          <span className="column">{game.homePPG}</span>
+          <span className="column">PPG (pre-match)</span>
+          <span className="column">{game.awayPPG}</span>
+        </div>
+      </div>
+    );
+   } 
+
+    const overviewHome = gameArrayHome.slice(0, 10).map((game) => (
+      <div>
+      <Collapsable
+          classNameButton="ResultButton"
+          buttonText={
+            <div className="ResultRowOverviewSmall">
+              <div className="columnOverviewHomeSmall">{game.homeTeam}</div>
+              <span className="columnOverviewScoreSmall">
+              {game.homeGoals} : {game.awayGoals}
+              </span>
+              <div className="columnOverviewAwaySmall">{game.awayTeam}</div>
+            </div>
+          }
+          element={singleResult(game)}
+        />
       </div>
     ));
 
-    const contentHome = gameArrayHome.slice(0, 6).map((game) => (
+    // const contentHome = gameArrayHome.slice(0, 6).map((game) => (
+    //   <div>
+    //     <div className={game.won}>
+    //       <div>
+    //         <div className="PastGameDateHome">{game.date}</div>
+    //         <div key={game.id} className="IndividualPreviousResultGameHome">
+    //           <li key={game.homeTeam + 1}>
+    //             {game.homeTeam}{" "}
+    //             <span className="GoalTotal">{game.homeGoals}</span>
+    //           </li>
+    //           <li key={game.homeTeam + 2}>
+    //             {game.awayTeam}{" "}
+    //             <span className="GoalTotal">{game.awayGoals}</span>
+    //             <table className="GameStatsTable">
+    //               <tr>
+    //                 <th>Stat</th>
+    //                 <th>Home</th>
+    //                 <th>Away</th>
+    //               </tr>
+    //               <tr>
+    //                 <td>XG</td>
+    //                 <td>{game.homeXG}</td>
+    //                 <td>{game.awayXG}</td>
+    //               </tr>
+    //               <tr>
+    //                 <td>Shots</td>
+    //                 <td>{game.homeShots}</td>
+    //                 <td>{game.awayShots}</td>
+    //               </tr>
+    //               <tr>
+    //                 <td>SOT</td>
+    //                 <td>{game.homeSot}</td>
+    //                 <td>{game.awaySot}</td>
+    //               </tr>
+    //               <tr>
+    //                 <td>D. Attacks</td>
+    //                 <td>{game.homeDangerousAttacks}</td>
+    //                 <td>{game.awayDangerousAttacks}</td>
+    //               </tr>
+    //               <tr>
+    //                 <td>Possession</td>
+    //                 <td>{game.homePossession}</td>
+    //                 <td>{game.awayPossession}</td>
+    //               </tr>
+    //               <tr>
+    //                 <td>Red cards</td>
+    //                 <td>{game.homeRed}</td>
+    //                 <td>{game.awayRed}</td>
+    //               </tr>
+    //               <tr>
+    //                 <td>PPG (pre-match)</td>
+    //                 <td>{game.homePPG}</td>
+    //                 <td>{game.awayPPG}</td>
+    //               </tr>
+    //             </table>
+    //           </li>
+    //         </div>
+    //       </div>
+    //     </div>
+    //   </div>
+    // ));
+
+    const overviewAway = gameArrayAway.slice(0, 10).map((game) => (
       <div>
-        <div className={game.won}>
-          <div>
-            <div className="PastGameDateHome">{game.date}</div>
-            <div key={game.id} className="IndividualPreviousResultGameHome">
-              <li key={game.homeTeam + 1}>
-                {game.homeTeam}{" "}
-                <span className="GoalTotal">{game.homeGoals}</span>
-              </li>
-              <li key={game.homeTeam + 2}>
-                {game.awayTeam}{" "}
-                <span className="GoalTotal">{game.awayGoals}</span>
-                <table className="GameStatsTable">
-                  <tr>
-                    <th>Stat</th>
-                    <th>Home</th>
-                    <th>Away</th>
-                  </tr>
-                  <tr>
-                    <td>XG</td>
-                    <td>{game.homeXG}</td>
-                    <td>{game.awayXG}</td>
-                  </tr>
-                  <tr>
-                    <td>Shots</td>
-                    <td>{game.homeShots}</td>
-                    <td>{game.awayShots}</td>
-                  </tr>
-                  <tr>
-                    <td>SOT</td>
-                    <td>{game.homeSot}</td>
-                    <td>{game.awaySot}</td>
-                  </tr>
-                  <tr>
-                    <td>D. Attacks</td>
-                    <td>{game.homeDangerousAttacks}</td>
-                    <td>{game.awayDangerousAttacks}</td>
-                  </tr>
-                  <tr>
-                    <td>Possession</td>
-                    <td>{game.homePossession}</td>
-                    <td>{game.awayPossession}</td>
-                  </tr>
-                  <tr>
-                    <td>Red cards</td>
-                    <td>{game.homeRed}</td>
-                    <td>{game.awayRed}</td>
-                  </tr>
-                  <tr>
-                    <td>PPG (pre-match)</td>
-                    <td>{game.homePPG}</td>
-                    <td>{game.awayPPG}</td>
-                  </tr>
-                </table>
-              </li>
+      <Collapsable
+          classNameButton="ResultButton"
+          buttonText={
+            <div className="ResultRowOverviewSmall">
+              <div className="columnOverviewHomeSmall">{game.homeTeam}</div>
+              <span className="columnOverviewScoreSmall">
+              {game.homeGoals} : {game.awayGoals}
+              </span>
+              <div className="columnOverviewAwaySmall">{game.awayTeam}</div>
             </div>
-          </div>
-        </div>
+          }
+          element={singleResult(game)}
+        />
       </div>
     ));
 
-    const overviewAway = gameArrayAway.slice(0, 6).map((game) => (
-      <div>
-        <div className={game.won}>
-          <div>
-            <div>{game.date}</div>
-            <div
-              key={game.id + game.id}
-              className="IndividualPreviousResultGameAway"
-            >
-              {" "}
-              <li>
-                <span className="GoalTotal">{game.homeGoals}</span>{" "}
-                {game.homeTeam}
-              </li>
-              <li>
-                <span className="GoalTotal">{game.awayGoals}</span>{" "}
-                {game.awayTeam}
-              </li>
-            </div>
-          </div>
-        </div>
-      </div>
-    ));
-
-    const contentAway = gameArrayAway.slice(0, 6).map((game) => (
-      <div>
-        <div className={game.won}>
-          <div className="ColumnTwo">
-            <div className="PastGameDateAway">{game.date}</div>
-            <div
-              key={game.id + game.id}
-              className="IndividualPreviousResultGameAway"
-            >
-              <li key={game.awayTeam + 1}>
-                <span className="GoalTotal">{game.homeGoals}</span>{" "}
-                {game.homeTeam}
-              </li>
-              <li key={game.awayTeam + 2}>
-                <span className="GoalTotal">{game.awayGoals}</span>{" "}
-                {game.awayTeam}
-                <table className="GameStatsTable">
-                  <tr>
-                    <th>Stat</th>
-                    <th>Home</th>
-                    <th>Away</th>
-                  </tr>
-                  <tr>
-                    <td>XG</td>
-                    <td>{game.homeXG}</td>
-                    <td>{game.awayXG}</td>
-                  </tr>
-                  <tr>
-                    <td>Shots</td>
-                    <td>{game.homeShots}</td>
-                    <td>{game.awayShots}</td>
-                  </tr>
-                  <tr>
-                    <td>SOT</td>
-                    <td>{game.homeSot}</td>
-                    <td>{game.awaySot}</td>
-                  </tr>
-                  <tr>
-                    <td>D. Attacks</td>
-                    <td>{game.homeDangerousAttacks}</td>
-                    <td>{game.awayDangerousAttacks}</td>
-                  </tr>
-                  <tr>
-                    <td>Possession</td>
-                    <td>{game.homePossession}</td>
-                    <td>{game.awayPossession}</td>
-                  </tr>
-                  <tr>
-                    <td>Red cards</td>
-                    <td>{game.homeRed}</td>
-                    <td>{game.awayRed}</td>
-                  </tr>
-                  <tr>
-                    <td>PPG (pre-match)</td>
-                    <td>{game.homePPG}</td>
-                    <td>{game.awayPPG}</td>
-                  </tr>
-                </table>
-              </li>
-            </div>
-          </div>
-        </div>
-      </div>
-    ));
+    // const contentAway = gameArrayAway.slice(0, 6).map((game) => (
+    //   <div>
+    //     <div className={game.won}>
+    //       <div className="ColumnTwo">
+    //         <div className="PastGameDateAway">{game.date}</div>
+    //         <div
+    //           key={game.id + game.id}
+    //           className="IndividualPreviousResultGameAway"
+    //         >
+    //           <li key={game.awayTeam + 1}>
+    //             <span className="GoalTotal">{game.homeGoals}</span>{" "}
+    //             {game.homeTeam}
+    //           </li>
+    //           <li key={game.awayTeam + 2}>
+    //             <span className="GoalTotal">{game.awayGoals}</span>{" "}
+    //             {game.awayTeam}
+    //             <table className="GameStatsTable">
+    //               <tr>
+    //                 <th>Stat</th>
+    //                 <th>Home</th>
+    //                 <th>Away</th>
+    //               </tr>
+    //               <tr>
+    //                 <td>XG</td>
+    //                 <td>{game.homeXG}</td>
+    //                 <td>{game.awayXG}</td>
+    //               </tr>
+    //               <tr>
+    //                 <td>Shots</td>
+    //                 <td>{game.homeShots}</td>
+    //                 <td>{game.awayShots}</td>
+    //               </tr>
+    //               <tr>
+    //                 <td>SOT</td>
+    //                 <td>{game.homeSot}</td>
+    //                 <td>{game.awaySot}</td>
+    //               </tr>
+    //               <tr>
+    //                 <td>D. Attacks</td>
+    //                 <td>{game.homeDangerousAttacks}</td>
+    //                 <td>{game.awayDangerousAttacks}</td>
+    //               </tr>
+    //               <tr>
+    //                 <td>Possession</td>
+    //                 <td>{game.homePossession}</td>
+    //                 <td>{game.awayPossession}</td>
+    //               </tr>
+    //               <tr>
+    //                 <td>Red cards</td>
+    //                 <td>{game.homeRed}</td>
+    //                 <td>{game.awayRed}</td>
+    //               </tr>
+    //               <tr>
+    //                 <td>PPG (pre-match)</td>
+    //                 <td>{game.homePPG}</td>
+    //                 <td>{game.awayPPG}</td>
+    //               </tr>
+    //             </table>
+    //           </li>
+    //         </div>
+    //       </div>
+    //     </div>
+    //   </div>
+    // ));
 
     function StatsHome() {
       return (
@@ -1234,21 +1271,21 @@ export async function createStatsDiv(game, displayBool) {
           ></Div>
         </div>
         <div className="flex-container">
-          <div className="flex-childOneOverview">{overviewHome}</div>
-          <div className="flex-childTwoOverview">{overviewAway}</div>
+          <div className="flex-childOneOverviewSmall">{overviewHome}</div>
+          <div className="flex-childTwoOverviewSmall">{overviewAway}</div>
         </div>
-        <Collapsable
+        {/* <Collapsable
           className={"Detail"}
           classNameTwo={"flex-childOneOverview"}
           classNameThree={"flex-childTwoOverview"}
           classNameFlex={"flex-element"}
           classNameButton={"DetailedFixtures"}
-          buttonText={"Detailed view"}
-          newText={"Detailed view"}
+          buttonText={"Detailed results"}
+          newText={"Detailed results"}
           element={contentHome}
           elementTwo={contentAway}
           // style={style}
-        />
+        /> */}
         <div className="flex-container">
           <StatsHome />
           <StatsAway />

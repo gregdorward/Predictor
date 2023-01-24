@@ -12,7 +12,6 @@ var setCount;
 
 function toggle(bool) {
   count = !bool;
-  console.log(count);
   return count;
 }
 
@@ -90,7 +89,6 @@ function GetDivider(fixture) {
     }
 
     if (outcome === prediction) {
-      // console.log(fixture.fixture.game);
       if (fixture.fixture.homeOdds !== 0) {
         switch (true) {
           case outcome === 0:
@@ -135,15 +133,12 @@ function GetDivider(fixture) {
           </Fragment>
         );
       }
-      // console.log(`profit ${fixture.fixture.profit}`);
     } else if (outcome !== prediction) {
       if (fixture.fixture.homeOdds !== 0) {
         fixture.fixture.profit = 0;
       } else {
         fixture.fixture.profit = 1;
       }
-      // console.log(fixture.fixture.game);
-      // console.log(`profit ${fixture.fixture.profit}`);
       fixture.fixture.exactScore = false;
       return (
         <Fragment>
@@ -167,15 +162,6 @@ function GetDivider(fixture) {
     );
   }
 }
-
-// function getStyle(overUnderAchievingGap) {
-//   console.log(overUnderAchievingGap)
-// if(overUnderAchievingGap === true){
-//   return "individualFixtureGap"
-// } else {
-//   return "individualFixture";
-// }
-// }
 
 function renderLeagueName(fixture) {
   let name = fixture.leagueName;

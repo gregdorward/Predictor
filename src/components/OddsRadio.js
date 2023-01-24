@@ -1,7 +1,6 @@
 import React, { Component } from "react";
 export var selectedOdds = "Fractional odds";
 
-
 export class OddsRadio extends Component {
   constructor(props) {
     super(props);
@@ -15,7 +14,6 @@ export class OddsRadio extends Component {
       selectedOdds: this.props.value,
     });
     selectedOdds = this.state.selectedOdds;
-    console.log(selectedOdds)
   };
 
   render() {

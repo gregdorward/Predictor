@@ -1024,10 +1024,6 @@ export async function calculateScore(match, index, divider, calculate) {
         last2WeightingAway * 1) /
       3.5;
 
-      console.log(match.game)
-      console.log(formHome.averageOdds)
-      console.log(formAway.averageOdds)
-
     let homeComparisonWeighting;
     let awayComparisonWeighting;
     match.scoreDiff = await diff(factorOneHome, factorOneAway);

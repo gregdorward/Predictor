@@ -14,7 +14,6 @@ function Stats(props) {
   }
 
   function styleBTTS(BTTSBoolean) {
-    console.log(BTTSBoolean)
     let className;
     if (BTTSBoolean === "\u2714") {
       className = "BTTSTrue";
@@ -23,8 +22,6 @@ function Stats(props) {
     }
     return className;
   }
-
-  console.log(props)
 
   if (props.formRun) {
     return (
@@ -71,7 +68,7 @@ function Stats(props) {
             {props.homeOrAway} form (most recent on right)
           </li>
           <li key={`last5${props.homeOrAwayResults}`} className="FormHomeOrAway">
-          <span className={styleForm(props.homeOrAwayResults[4])}>
+          <span className={styleForm(props.homeOrAwayResults[5])}>
               {props.homeOrAwayResults[5]}
             </span>
             <span className={styleForm(props.homeOrAwayResults[4])}>
@@ -253,14 +250,6 @@ function Stats(props) {
     return (
       <Fragment>
         <ul className={props.className} style={props.style}>
-          {/* <li className="FormHeader">{`${props.LeagueOrAll} Form (most recent on right)`}</li>
-          <li key="last5">
-            <span className={styleForm(props.last5[0])}>{props.last5[0]}</span>
-            <span className={styleForm(props.last5[1])}>{props.last5[1]}</span>
-            <span className={styleForm(props.last5[2])}>{props.last5[2]}</span>
-            <span className={styleForm(props.last5[3])}>{props.last5[3]}</span>
-            <span className={styleForm(props.last5[4])}>{props.last5[4]}</span>
-          </li> */}
           <li className="FormSummaryHome">{props.FormTextString}</li>
           <li
             key="TeamScored"

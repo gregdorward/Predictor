@@ -3,8 +3,15 @@ import HeadToHead from "../components/HeadToHead";
 import { Fragment } from "react";
 import CustomizedTables from "../components/Table";
 
-export async function getTeamStats(id, home, away, homeBTTS, homeOnlyBTTS, awayBTTS, awayOnlyBTTS) {
-  console.log("EXECUTED");
+export async function getTeamStats(
+  id,
+  home,
+  away,
+  homeBTTS,
+  homeOnlyBTTS,
+  awayBTTS,
+  awayOnlyBTTS
+) {
   let identifier = id;
   let bestHomeOdds;
   let bestHomeOddsProvider;
@@ -42,17 +49,22 @@ export async function getTeamStats(id, home, away, homeBTTS, homeOnlyBTTS, awayB
       bestHomeOdds = "N/A";
       bestAwayOddsProvider = "N/A";
       bestAwayOdds = "N/A";
-    }   
-
-    async function getBTTSPercentage(homeToal, home, awayTotal, away, fixtureHistory){
-
-      let total = homeToal + home + awayTotal + away + fixtureHistory
-      return total / 5
     }
 
-    async function getFairOdds(impliedProbability){
-      let impliedProbabilityDivided = impliedProbability / 100
-      return (1 / impliedProbabilityDivided).toFixed(2)
+    async function getBTTSPercentage(
+      homeToal,
+      home,
+      awayTotal,
+      away,
+      fixtureHistory
+    ) {
+      let total = homeToal + home + awayTotal + away + fixtureHistory;
+      return total / 5;
+    }
+
+    async function getFairOdds(impliedProbability) {
+      let impliedProbabilityDivided = impliedProbability / 100;
+      return (1 / impliedProbabilityDivided).toFixed(2);
     }
 
     if (match.data.h2h.previous_matches_results.totalMatches > 0) {
@@ -94,15 +106,17 @@ export async function getTeamStats(id, home, away, homeBTTS, homeOnlyBTTS, awayB
             }/${dateObject2.getFullYear()}`;
           });
         }
-        console.log(previousMatchDetails)
-        console.log(secondToPreviousMatchDetails)
-
       });
 
-      const BTTSForecast = await getBTTSPercentage(homeBTTS, homeOnlyBTTS, awayBTTS, awayOnlyBTTS, match.data.h2h.betting_stats.bttsPercentage)
-      const fairOddsBTTSYes = await getFairOdds(BTTSForecast)
-      const fairOddsBTTSNo = await getFairOdds(100 - BTTSForecast)
-
+      const BTTSForecast = await getBTTSPercentage(
+        homeBTTS,
+        homeOnlyBTTS,
+        awayBTTS,
+        awayOnlyBTTS,
+        match.data.h2h.betting_stats.bttsPercentage
+      );
+      const fairOddsBTTSYes = await getFairOdds(BTTSForecast);
+      const fairOddsBTTSNo = await getFairOdds(100 - BTTSForecast);
 
       ReactDOM.render(
         <Fragment>
@@ -201,9 +215,7 @@ export async function getTeamStats(id, home, away, homeBTTS, homeOnlyBTTS, awayB
       );
     } else {
       ReactDOM.render(
-        <div>
-        No fixture history found
-        </div>,
+        <div>No fixture history found</div>,
         document.getElementById(`H2HStats${identifier}`)
       );
     }
