@@ -8,7 +8,7 @@ import { getPointsFromLastX } from "../logic/getScorePredictions";
 import { CreateBadge } from "../components/createBadge";
 import { Fragment } from "react";
 import GenerateFormSummary from "../logic/compareFormTrend";
-import { Chart, RadarChart } from "../components/Chart";
+import { Chart, RadarChart, BarChart } from "../components/Chart";
 import Collapsable from "../components/CollapsableElement";
 export async function getAttackStrength(goalsFor) {
   let strength;
@@ -253,7 +253,6 @@ let rollingGoalDiffTotalHome = [];
 let rollingGoalDiffTotalAway = [];
 
 export async function createStatsDiv(game, displayBool) {
-  console.log(game);
   if (game.status !== "void") {
     // takes the displayBool boolean from the fixture onClick and sets the styling of the stats div from there
     function styling(testBool) {
@@ -413,13 +412,11 @@ export async function createStatsDiv(game, displayBool) {
           (sum) => (value) =>
             (sum += value)
         )(0);
-        console.log(game.game)
 
         gameArrayHome.sort((a, b) => b.unixTimestamp - a.unixTimestamp);
 
 
         rollingGoalDiffTotalHome = goalDiffArrayHome.map(cumulativeSumHome);
-        console.log(rollingGoalDiffTotalHome)
 
         const resultAway = matches.data.filter(
           (game) =>
@@ -538,7 +535,6 @@ export async function createStatsDiv(game, displayBool) {
 
 
         rollingGoalDiffTotalAway = goalDiffArrayAway.map(cumulativeSumAway);
-        console.log(rollingGoalDiffTotalAway)
 
 
 
@@ -797,6 +793,7 @@ export async function createStatsDiv(game, displayBool) {
     });
 
     const formDataAway = [];
+    console.log(gameStats)
 
     formDataAway.push({
       name: game.awayTeam,
@@ -1234,6 +1231,32 @@ export async function createStatsDiv(game, displayBool) {
             team1={game.homeTeam}
             team2={game.awayTeam}
           ></RadarChart>
+          <BarChart
+            data1={[
+              formDataHome[0].AverageGoals,
+              formDataAway[0].AverageConceeded,
+              gameStats.home[0].PPG,
+              formDataHome[0].AverageXG,
+              formDataAway[0].AverageXGConceded,
+              formDataHome[0].AverageShotsOnTarget,
+              formDataHome[0].AverageDangerousAttacks /7.5,
+              formDataHome[0].AveragePossession / 7.5,
+              formDataHome[0].goalDifferenceHomeOrAway / 5,
+              formDataHome[0].CornersAverage,
+            ]}
+            data2={[
+              formDataAway[0].AverageGoals,
+              formDataHome[0].AverageConceeded,
+              gameStats.away[0].PPG,
+              formDataAway[0].AverageXG,
+              formDataHome[0].AverageXGConceded,
+              formDataAway[0].AverageShotsOnTarget,
+              formDataAway[0].AverageDangerousAttacks / 7.5,
+              formDataAway[0].AveragePossession / 7.5,
+              formDataAway[0].goalDifferenceHomeOrAway / 5,
+              formDataAway[0].CornersAverage,
+            ]}
+          ></BarChart>
           <Chart
             height={3}
             depth={0}

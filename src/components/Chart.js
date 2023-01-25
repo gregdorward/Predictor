@@ -9,11 +9,12 @@ import {
   ArcElement,
   LineElement,
   Filler,
+  BarElement,
   Title,
   Tooltip,
   Legend,
 } from "chart.js";
-import { Line, Radar } from "react-chartjs-2";
+import { Line, Radar, Bar } from "react-chartjs-2";
 
 ChartJS.register(
   CategoryScale,
@@ -22,6 +23,7 @@ ChartJS.register(
   PointElement,
   ArcElement,
   Filler,
+  BarElement,
   LineElement,
   Title,
   Tooltip,
@@ -29,31 +31,25 @@ ChartJS.register(
 );
 
 export function Chart(props) {
+  let length;
+  let depth;
 
-let length;
-let depth;
-
-if(props.type === "Points over time"){
-  length = props.data1.length * 3
-  depth = 0
-  console.log(1)
-} else if(props.type === "Rolling average points over last 10"){
-  length = Math.abs(props.height)
-  depth = 0
-} else if(Math.abs(props.height) > Math.abs(props.depth)){
-  length = Math.abs(props.height)
-  depth = -Math.abs(props.height)
-  console.log(2)
-} else if (Math.abs(props.height) < Math.abs(props.depth)){
-  length = Math.abs(props.depth)
-  depth = -Math.abs(props.depth)
-  console.log(3)
-} else {
-  length = Math.abs(props.depth)
-  depth = -Math.abs(props.depth)
-  console.log(4)
-}
-
+  if (props.type === "Points over time") {
+    length = props.data1.length * 3;
+    depth = 0;
+  } else if (props.type === "Rolling average points over last 10") {
+    length = Math.abs(props.height);
+    depth = 0;
+  } else if (Math.abs(props.height) > Math.abs(props.depth)) {
+    length = Math.abs(props.height);
+    depth = -Math.abs(props.height);
+  } else if (Math.abs(props.height) < Math.abs(props.depth)) {
+    length = Math.abs(props.depth);
+    depth = -Math.abs(props.depth);
+  } else {
+    length = Math.abs(props.depth);
+    depth = -Math.abs(props.depth);
+  }
 
   const options = {
     color: "black",
@@ -73,10 +69,10 @@ if(props.type === "Points over time"){
           borderColor: "black",
         },
         ticks: {
-            font: {
-                size: 12,
-            }
-        }
+          font: {
+            size: 12,
+          },
+        },
       },
       x: {
         title: {
@@ -84,18 +80,18 @@ if(props.type === "Points over time"){
           text: "Last X Games",
           font: {
             size: 10,
-        }
+          },
         },
         grid: {
           borderWidth: 1,
           borderColor: "black",
         },
         ticks: {
-            display: false,
-            font: {
-                size: 12,
-            }
-        }
+          display: false,
+          font: {
+            size: 12,
+          },
+        },
       },
     },
     plugins: {
@@ -103,7 +99,7 @@ if(props.type === "Points over time"){
         position: "top",
 
         labels: {
-          boxHeight: 5
+          boxHeight: 5,
         },
       },
       title: {
@@ -111,8 +107,8 @@ if(props.type === "Points over time"){
         text: props.type,
         font: {
           size: 14,
-          color: "black"
-        }
+          color: "black",
+        },
       },
     },
   };
@@ -131,7 +127,7 @@ if(props.type === "Points over time"){
         borderColor: "#030061",
         borderWidth: 2,
         backgroundColor: "#030061",
-        tension: props.tension
+        tension: props.tension,
       },
       {
         label: props.team2,
@@ -139,7 +135,7 @@ if(props.type === "Points over time"){
         borderColor: "#970d00",
         borderWidth: 2,
         backgroundColor: "#970d00",
-        tension: props.tension
+        tension: props.tension,
       },
     ],
   };
@@ -177,20 +173,14 @@ export function RadarChart(props) {
         display: true,
         text: "XG Tipping Strength Ratings",
         font: {
-          size: 14
-        }
+          size: 14,
+        },
       },
     },
   };
 
   let data = {
-    labels: [
-      "Attack",
-      "Defence",
-      "Ball retention",
-      "XG For",
-      "XG Against",
-    ],
+    labels: ["Attack", "Defence", "Ball retention", "XG For", "XG Against"],
     datasets: [
       {
         label: props.team1,
@@ -220,4 +210,108 @@ export function RadarChart(props) {
   };
 
   return <Radar options={options} data={data} />;
+}
+
+export function BarChart(props) {
+  const datasetOne = props.data1;
+  const datasetTwo = props.data2;
+
+  console.log(datasetOne);
+  console.log(datasetTwo);
+
+  const sum = datasetTwo.map(function (num, idx) {
+    return num - datasetOne[idx];
+  });
+
+  const max = Math.max(...sum);
+  const min = Math.min(...sum);
+
+  const largest = findLargestNum(max, min);
+
+  console.log(`Largest: ${largest}`);
+
+  function findLargestNum(numOne, numTwo) {
+    const tempArr = [];
+    const firstNum = Math.abs(numOne);
+    const secondNum = Math.abs(numTwo);
+    tempArr.push(firstNum, secondNum);
+
+    return Math.max(...tempArr);
+  }
+
+  console.log(sum);
+
+  const options = {
+    indexAxis: "y",
+    // Elements options apply to all of the options unless overridden in a dataset
+    // In this case, we are setting the border of each horizontal bar to be 2px wide
+    aspectRatio: 1.3,
+    elements: {
+      bar: {
+        borderWidth: 2,
+      },
+    },
+    scales: {
+      x: {
+        min: -3,
+        max: 3,
+        ticks: {
+          display: false,
+        },
+      },
+      y: {
+        ticks: {
+          font: {
+            size: 10,
+          },
+        },
+      },
+    },
+    responsive: true,
+    plugins: {
+      legend: {
+        display: false,
+      },
+      tooltip: {
+        enabled: false,
+      },
+      title: {
+        display: true,
+        text: "Comparison - Home Team | Away Team ",
+      },
+    },
+  };
+
+  const labels = [
+    "Highest Goals",
+    "Fewest Conceeded",
+    "Last 5 PPG",
+    "Highest XG",
+    "Fewest XG Conceeded",
+    "Shots On Target",
+    "Dangerous Attacks",
+    "Av. Possession",
+    "Home/Away Goal Diff",
+    "Corners",
+  ];
+
+  const data = {
+    labels,
+    datasets: [
+      {
+        // label: 'Dataset 1',
+        legend: {
+          display: false,
+        },
+        data: sum,
+        backgroundColor(context) {
+          const index = context.dataIndex;
+          const value = context.dataset.data[index];
+          return value < 0 ? "#030061" : "#970d00";
+        },
+      },
+    ],
+  };
+
+  return <Bar options={options} data={data} />;
 }

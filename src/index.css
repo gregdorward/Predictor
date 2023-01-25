@@ -611,6 +611,7 @@ p {
   flex-wrap: wrap;
   padding: 1em;
   align-items: center;
+  font-size: 1.1em;
 }
 
 .columnOverviewHome {
@@ -628,7 +629,7 @@ p {
 .columnOverviewHomeSmall {
   flex: 33.33%;
   text-align: right;
-  padding-left: 0.5em;
+  /* padding-left: 0.5em; */
   padding-right: 0.75em;
   white-space: nowrap;
   overflow: hidden;
@@ -639,7 +640,7 @@ p {
   flex: 33.33%;
   text-align: left;
   padding-left: 0.75em;
-  padding-right: 0.5em;
+  /* padding-right: 0.5em; */
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -675,6 +676,7 @@ p {
   padding: 0.5em;
   color: #030061;
   text-align: center;
+  font-size: 1.1em;
 }
 
 .column {
