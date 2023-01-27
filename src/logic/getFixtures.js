@@ -370,9 +370,6 @@ export async function generateFixtures(
   ReactDOM.render(<div></div>, document.getElementById("BTTS"));
   ReactDOM.render(<div></div>, document.getElementById("draws"));
 
-  console.log(date);
-  console.log(footyStatsFormattedDate);
-
   const url = `${process.env.REACT_APP_EXPRESS_SERVER}matches/${footyStatsFormattedDate}`;
   const formUrl = `${process.env.REACT_APP_EXPRESS_SERVER}form/${date}`;
 
@@ -432,7 +429,6 @@ export async function generateFixtures(
   }
 
   if (league.status === 200) {
-    console.log("A");
     await league.json().then((leagues) => {
       leagueArray = Array.from(leagues.leagueArray);
     });
@@ -441,7 +437,6 @@ export async function generateFixtures(
       `${process.env.REACT_APP_EXPRESS_SERVER}results`
     );
 
-    console.log(allLeagueResults.status);
     await allLeagueResults.json().then((allGames) => {
       allLeagueResultsArrayOfObjects = allGames;
     });
@@ -449,7 +444,6 @@ export async function generateFixtures(
     leaguesStored = true;
     generateTables(leagueArray, leagueIdArray, allLeagueResultsArrayOfObjects);
   } else {
-    console.log("B");
 
     allLeagueResultsArrayOfObjects = [];
     for (let i = 0; i < orderedLeagues.length; i++) {
@@ -532,8 +526,6 @@ export async function generateFixtures(
           game_week,
         })
       );
-
-      console.log(shortenedResults);
 
       let leagueObj = {
         // leagueObject[orderedLeague] = {
@@ -619,7 +611,6 @@ export async function generateFixtures(
     let awayLeague;
 
     if (leagueArray[i].data.league_table !== null) {
-      console.log(leagueArray[i]);
       leagueInstance = leagueArray[i].data.league_table;
       homeLeague = leagueArray[i].data.all_matches_table_home;
       awayLeague = leagueArray[i].data.all_matches_table_away;
@@ -709,7 +700,6 @@ export async function generateFixtures(
 
       let match = {};
       if (orderedLeagues[i].name !== previousLeagueName) {
-        console.log(orderedLeagues[i]);
         match.leagueName = orderedLeagues[i].name;
         match.leagueIndex = i;
         match.leagueID = leagueID;
@@ -772,7 +762,6 @@ export async function generateFixtures(
         teamPositionHome = homeTeaminLeague.position;
         teamPositionHomeTable = homeTeaminHomeLeague.position;
 
-        console.log(homeTeaminLeague);
         WDLinLeagueHome = Array.from(homeTeaminLeague.wdl.toUpperCase());
         HomeAverageGoals =
           homeTeaminLeague.seasonGoals / homeTeaminLeague.played;
@@ -879,7 +868,6 @@ export async function generateFixtures(
         let awayFormRun =
           form[1].data[2].stats.additional_info.formRun_away.toUpperCase();
 
-        console.log(WDLinLeagueHome);
 
         if (WDLinLeagueHome.length >= 10) {
           lastThreeFormHome = WDLinLeagueHome.slice(-3);

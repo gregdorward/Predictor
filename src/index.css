@@ -2184,7 +2184,7 @@ table,
 th,
 td {
   border-collapse: collapse;
-  border-top: groove;
+  /* border-top: groove; */
   padding: 0.25em;
   padding-left: 1em;
   padding-right: 1em;
@@ -2197,6 +2197,10 @@ td {
 
 .MuiTable-root {
   border: none;
+}
+
+.MuiTable-root, Table{
+  margin-top: 0px !important;
 }
 
 button:hover {

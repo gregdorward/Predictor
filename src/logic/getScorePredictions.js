@@ -542,6 +542,24 @@ export async function compareTeams(homeForm, awayForm, match) {
     awayForm.last5Points
   );
 
+
+  // const cornerComparison = await compareStat(
+  //   homeForm.CornersAverage,
+  //   awayForm.CornersAverage
+  // ) * 5
+
+  // const cardsComparison = await compareStat(
+  //   homeForm.CardsTotal,
+  //   awayForm.CardsTotal
+  // ) * 5
+
+
+  // if(cornerComparison > 3){
+  //   console.log(`Home - ${match.game}`)
+  // } else if(cornerComparison < -3){
+  //   console.log(`Away - ${match.game}`)
+  // }
+
   let calculation =
     attackStrengthComparison * 1 +
     defenceStrengthComparison * 1 +
