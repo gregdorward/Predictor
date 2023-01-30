@@ -466,7 +466,7 @@ async function getOddsMultiplier(odds, team) {
   return multiplier;
 }
 
-export async function compareTeams(homeForm, awayForm, match) {
+export async function compareTeams(homeForm, awayForm, formHomeRecent, formAwayRecent, match) {
   let homeMultiplier = 1;
   let awayMultiplier = 1;
 
@@ -482,6 +482,16 @@ export async function compareTeams(homeForm, awayForm, match) {
 
   let homeXGAgainstStrength =
     (await getXGAgainstStrength(homeForm.XGAgainstAvgOverall)) * homeMultiplier;
+
+    let homeXGForStrengthRecent =
+    (await getXGForStrength(formHomeRecent.XGOverall)) * homeMultiplier;
+
+  let homeXGAgainstStrengthRecent =
+    (await getXGAgainstStrength(formHomeRecent.XGAgainstAvgOverall)) * homeMultiplier;
+
+
+
+
   let homeXGDiffStrength =
     (await getXGDifferentialStrength(parseFloat(homeForm.XGdifferential))) *
     homeMultiplier;
@@ -497,6 +507,15 @@ export async function compareTeams(homeForm, awayForm, match) {
     (await getXGForStrength(awayForm.XGOverall)) * awayMultiplier;
   let awayXGAgainstStrength =
     (await getXGAgainstStrength(awayForm.XGAgainstAvgOverall)) * awayMultiplier;
+
+    let awayXGForStrengthRecent =
+    (await getXGForStrength(formAwayRecent.XGOverall)) * homeMultiplier;
+
+  let awayXGAgainstStrengthRecent =
+    (await getXGAgainstStrength(formAwayRecent.XGAgainstAvgOverall)) * homeMultiplier;
+
+
+
 
   let awayXGDiffStrength =
     (await getXGDifferentialStrength(parseFloat(awayForm.XGdifferential))) *
@@ -527,6 +546,16 @@ export async function compareTeams(homeForm, awayForm, match) {
     awayXGForStrength
   );
 
+  const xgForStrengthRecentComparison = await compareStat(
+    homeXGForStrengthRecent,
+    awayXGAgainstStrengthRecent
+  );
+
+  const xgAgainstStrengthRecentComparison = await compareStat(
+    homeXGAgainstStrengthRecent,
+    awayXGForStrengthRecent
+  );
+
   const xgDiffComparison = await compareStat(
     homeXGDiffStrength,
     awayXGDiffStrength
@@ -541,6 +570,15 @@ export async function compareTeams(homeForm, awayForm, match) {
     homeForm.last5Points,
     awayForm.last5Points
   );
+
+  console.log(match.game)
+  console.log(match.homeOdds)
+  console.log(match.awayOdds)
+
+  const oddsComparison = await compareStat(
+    match.awayOdds,
+    match.homeOdds
+  )
 
 
   // const cornerComparison = await compareStat(
@@ -563,12 +601,15 @@ export async function compareTeams(homeForm, awayForm, match) {
   let calculation =
     attackStrengthComparison * 1 +
     defenceStrengthComparison * 1 +
-    possessiontrengthComparison * 1 +
-    xgForStrengthComparison * 1 +
-    xgAgainstStrengthComparison * 1 +
-    xgDiffComparison * 1 
+    // possessiontrengthComparison * 1 +
+    // xgForStrengthComparison * 1 +
+    // xgAgainstStrengthComparison * 1 +
+    xgDiffComparison * 1  + 
+    xgForStrengthRecentComparison * 1 +
+    xgAgainstStrengthRecentComparison * 1 + 
     // homeAwayPointAverageComparison * 1 +
-    // fiveGameAverageComparison * 1;
+    oddsComparison * 2 +
+    fiveGameComparison * 1;
 
   let homeWinOutcomeProbability =
     match.homeTeamWinPercentage + match.awayTeamLossPercentage;
@@ -583,7 +624,7 @@ export async function compareTeams(homeForm, awayForm, match) {
   ) {
     switch (true) {
       case drawOutcomeProbability > 100:
-        calculation = calculation / 2;
+        calculation = calculation / 4;
         break;
       default:
         calculation = calculation * 1;
@@ -859,6 +900,9 @@ export async function calculateScore(match, index, divider, calculate) {
     formHome = teams[0][index];
     formAway = teams[1][index];
 
+    let formHomeRecent = teams[0][1];
+    let formAwayRecent = teams[1][1];
+
     let homeTenGameAvg = formHome.last10Points / 10;
     let awayTenGameAvg = formAway.last10Points / 10;
 
@@ -971,8 +1015,8 @@ export async function calculateScore(match, index, divider, calculate) {
 
     let teamComparisonScore;
 
-    teamComparisonScore = await compareTeams(formHome, formAway, match);
-    teamComparisonScore = teamComparisonScore * 0.45;
+    teamComparisonScore = await compareTeams(formHome, formAway, formHomeRecent, formAwayRecent, match);
+    teamComparisonScore = teamComparisonScore * 0.4;
 
     if (teamComparisonScore > 0.75) {
       teamComparisonScore = 0.75;
@@ -1024,23 +1068,23 @@ export async function calculateScore(match, index, divider, calculate) {
 
     factorOneHome =
       (homeLeagueOrAllFormAverageGoals * 1 +
-        formHome.predictedGoalsBasedOnHomeAv * 0.25 +
-        formAway.predictedGoalsConceededBasedOnAwayAv * 0.25 +
+        formHome.predictedGoalsBasedOnHomeAv * 0.5 +
+        formAway.predictedGoalsConceededBasedOnAwayAv * 0.5 +
         formHome.allTeamGoalsBasedOnAverages * 1 +
         formAway.allTeamGoalsConceededBasedOnAverages * 1 +
         last10WeightingHome * 1 +
         last2WeightingHome * 1) /
-      3.5;
+      4;
 
     factorOneAway =
       (awayLeagueOrAllFormAverageGoals * 1 +
-        formAway.predictedGoalsBasedOnAwayAv * 0.25 +
-        formHome.predictedGoalsConceededBasedOnHomeAv * 0.25 +
+        formAway.predictedGoalsBasedOnAwayAv * 0.5 +
+        formHome.predictedGoalsConceededBasedOnHomeAv * 0.5 +
         formAway.allTeamGoalsBasedOnAverages * 1 +
         formHome.allTeamGoalsConceededBasedOnAverages * 1 +
         last10WeightingAway * 1 +
         last2WeightingAway * 1) /
-      3.5;
+      4;
 
     let homeComparisonWeighting;
     let awayComparisonWeighting;

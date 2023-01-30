@@ -1477,7 +1477,7 @@ export async function generateFixtures(
           onClickEvent={() => getScorePrediction(day)}
           className={"GeneratePredictions"}
         />
-        <div className="Version">Prediction engine v2.2.11</div>
+        <div className="Version">Prediction engine v2.2.12</div>
       </Fragment>,
       document.getElementById("GeneratePredictions")
     );
