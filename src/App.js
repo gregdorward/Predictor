@@ -49,14 +49,14 @@ const leagueOrder = [
   7731, //Portagul Prem 22/23
   7482, //Dutch Prem 22/23
   7544, //Belgian Pro League 22/23
-  7064, //sweden 22
+  8737, //sweden 23
   7426, //Danish Prem 22/23
-  7048, //Norway Prem 22
+  8739, //Norway Prem 23
   7890, //Austrian Prem 22/23
   7954, //Greek Prem 22/23
   7428, //Polish prem 22/23
-  6967, //Irish Prem 22
-  4340, //Womens Euros 22
+  7504, //Swiss prem 22/23
+  8741, //Irish Prem 23
   7592, //Spanish secunda 22/23
   7864, //Italy serie B 22/23
   7499, //Bundesliga 2 22/23
@@ -66,8 +66,9 @@ const leagueOrder = [
   7505, //Scottish league 1 22/23
   7506, //Scottish league 2 22/23
   7821, //Women's prem 22/23
-  6969, //MLS 22
+  8777, //MLS 23
   7097, //Brazil prem 22
+  8595, //Argentina prem 23
   // 6935, //Japan 22
   // 7061, //S Korea 22
   7425, //Mexico prem 22/23
@@ -103,7 +104,6 @@ let dateString;
   string = "Today";
 
   async function incrementDate(num, date) {
-    console.log(string);
     i = i + num;
     value = i + num;
     date.setDate(date.getDate() + num);
@@ -114,30 +114,24 @@ let dateString;
   }
 
   async function decrementDate(num, date) {
-    console.log(string);
     i = i - num;
     value = i - num;
     date.setDate(date.getDate() - num);
     [date, dateFootyStats] = await calculateDate(date);
     string = dateFootyStats;
     dateString = date;
-    console.log(date);
-    console.log(dateFootyStats);
     await renderButtons();
     // return date;
   }
 
   async function calculateDate(dateString) {
-    console.log("calculateDate");
     const day = dateString.getDate();
     const month = dateString.getMonth() + 1;
     const year = dateString.getFullYear();
-    console.log(string);
     return [`${month}${day}${year}`, `${year}-${month}-${day}`];
   }
 
   [today, todayFootyStats] = await calculateDate(new Date());
-  console.log(todayFootyStats);
 
   tomorrowsDate = new Date();
   tomorrowsDate.setDate(tomorrowsDate.getDate() + 1);
@@ -160,14 +154,6 @@ let dateString;
   );
   historicDate.setDate(historicDate.getDate() - 9);
   [historic, historicFootyStats] = await calculateDate(historicDate);
-
-  console.log(today);
-  console.log(tomorrow);
-  console.log(yesterday);
-  console.log(lastSaturday);
-  console.log(historic);
-
-  console.log(process.env.REACT_APP_EXPRESS_SERVER);
 
   leagueList = await fetch(`${process.env.REACT_APP_EXPRESS_SERVER}leagueList`);
 
@@ -400,21 +386,6 @@ let dateString;
     document.getElementById("XGDiff")
   );
 
-  // ReactDOM.render(
-  //   <div className="Explainer">
-  //     <em>
-  //       To discount pre-season form and last seasons' games, only matchs taking
-  //       place after the 3rd gameweek in their respective leagues are currently
-  //       being predicted by default. Click below if you want to see all
-  //       predictions (not recommended)
-  //     </em>
-  //     <div>
-  //       <Toggles />
-  //     </div>
-  //   </div>,
-  //   document.getElementById("ExplainerText")
-  // );
-  // console.log(Toggles.isOff);
 
   ReactDOM.render(
     <Button
@@ -482,11 +453,9 @@ let dateString;
 })();
 
 async function getHighestScoringLeagues() {
-  console.log("getHighestScoringLeagues");
   let teamsList = await fetch(`${process.env.REACT_APP_EXPRESS_SERVER}over25`);
   let arr = [];
   await teamsList.json().then(async (leagues) => {
-    console.log(leagues.data);
     for (let index = 0; index < 215; index++) {
       const league = {
         league: leagues.data.top_leagues.data[index].name,
@@ -513,11 +482,9 @@ async function getHighestScoringLeagues() {
 }
 
 async function getLowestScoringLeagues() {
-  console.log("getLowestScoringLeagues");
   let teamsList = await fetch(`${process.env.REACT_APP_EXPRESS_SERVER}under25`);
   let arr = [];
   await teamsList.json().then(async (leagues) => {
-    console.log(leagues.data);
     for (let index = 0; index < 215; index++) {
       const league = {
         league: leagues.data.top_leagues.data[index].name,
@@ -543,7 +510,6 @@ async function getLowestScoringLeagues() {
 }
 
 function App() {
-  console.log("App");
   return (
     <div className="App">
       <Header />
