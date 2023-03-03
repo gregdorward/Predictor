@@ -32,7 +32,7 @@ function Stats(props) {
             League results (most recent on right)
           </li>
           <li key={`last5League`} className="last5League">
-          <span className={styleForm(props.Results[4])}>
+          <span className={styleForm(props.Results[5])}>
               {props.Results[5]}
             </span>
             <span className={styleForm(props.Results[4])}>
