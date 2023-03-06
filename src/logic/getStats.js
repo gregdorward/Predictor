@@ -245,6 +245,47 @@ export async function getXGDifferentialStrength(XGDiff) {
   return strength;
 }
 
+
+export async function getXGtoActualDifferentialStrength(XGDiff) {
+  let strength;
+  switch (true) {
+    case XGDiff >= 1.5:
+      strength = 1;
+      break;
+    case XGDiff >= 1 && XGDiff < 1.5:
+      strength = 2;
+      break;
+    case XGDiff >= 0.5 && XGDiff < 1:
+      strength = 3;
+      break;
+    case XGDiff >= 0.25 && XGDiff < 0.5:
+      strength = 4;
+      break;
+    case XGDiff > 0 && XGDiff < 0.25:
+      strength = 5;
+      break;
+    case XGDiff <= 0 && XGDiff > -0.25:
+      strength = 6;
+      break;
+    case XGDiff <= -0.25 && XGDiff > -0.5:
+      strength = 7;
+      break;
+    case XGDiff <= -0.5 && XGDiff > -1:
+      strength = 8;
+      break;
+    case XGDiff <= -1 && XGDiff > -1.5:
+      strength = 9;
+      break;
+    case XGDiff <= -1.5:
+      strength = 10;
+      break;
+    default:
+      console.log("default clause triggered");
+      break;
+  }
+  return strength;
+}
+
 async function diff(a, b) {
   return parseFloat(a - b).toFixed(2);
 }
@@ -1252,7 +1293,7 @@ export async function createStatsDiv(game, displayBool) {
               formDataHome[0].AverageXGConceded,
               formDataAway[0].AverageShotsOnTarget,
               formDataAway[0].AverageDangerousAttacks / 7.5,
-              formDataAway[0].AveragePossession / 7.5,
+              formDataHome[0].AveragePossession / 7.5,
               formDataAway[0].goalDifferenceHomeOrAway / 5,
               formDataAway[0].CornersAverage,
             ]}
