@@ -139,6 +139,7 @@ async function getPastLeagueResults(team, game) {
         dateRaw: resultedGame.date_unix,
         oddsHome: resultedGame.odds_ft_1,
         oddsAway: resultedGame.odds_ft_2,
+        btts: (resultedGame.homeGoalCount > 0 && resultedGame.awayGoalCount > 0) ? true : false
       });
       oddsSum = oddsSum + resultedGame.odds_ft_1;
     }
@@ -155,6 +156,7 @@ async function getPastLeagueResults(team, game) {
         dateRaw: resultedGame.date_unix,
         oddsHome: resultedGame.odds_ft_1,
         oddsAway: resultedGame.odds_ft_2,
+        btts: (resultedGame.homeGoalCount > 0 && resultedGame.awayGoalCount > 0) ? true : false
       });
       oddsSum = oddsSum + resultedGame.odds_ft_2;
     }
@@ -175,6 +177,30 @@ async function getPastLeagueResults(team, game) {
     const teamConceededHome = reversedResultsHome.map((res) => res.conceeded);
     const teamConceededAway = reversedResultsAway.map((res) => res.conceeded);
     const teamConceededAll = allTeamResults.map((res) => res.conceeded);
+
+
+    let bttsHome = reversedResultsHome.map((res) => res.btts);
+    if(bttsHome.length > 10){
+      bttsHome = bttsHome.slice( - 10);
+    }
+
+    let bttsAway = reversedResultsAway.map((res) => res.btts);
+    if(bttsAway.length > 10){
+      bttsAway = bttsAway.slice( - 10);
+    }
+
+    let bttsAll = allTeamResults.map((res) => res.btts);
+    if(bttsAll.length > 10){
+      bttsAll = bttsAll.slice( - 10);
+    }
+
+    const bttsHomeCount = bttsHome.filter(btts => btts === true);
+    const bttsHomeString = `${bttsHomeCount.length}/${bttsHome.length}`
+    const bttsAwayCount = bttsAway.filter(btts => btts === true);
+    const bttsAwayString = `${bttsAwayCount.length}/${bttsAway.length}`
+    const bttsAllCount = bttsAll.filter(btts => btts === true);
+    const bttsAllString = `${bttsAllCount.length}/${bttsAll.length}`
+
 
     let r = 6;
     let x = 4;
@@ -249,6 +275,9 @@ async function getPastLeagueResults(team, game) {
       averageOdds,
       avgScored,
       avgConceeded,
+      bttsAllString,
+      bttsHomeString,
+      bttsAwayString
     ];
   } else {
     return null;
@@ -1009,6 +1038,9 @@ export async function calculateScore(match, index, divider, calculate) {
         formHome.averageOdds,
         formHome.averageScoredLeague,
         formHome.averageConceededLeague,
+        formHome.last10btts,
+        formHome.last10bttsHome,
+        formHome.last10bttsAway
       ] = await getPastLeagueResults(match.homeTeam, match);
 
       [
@@ -1021,6 +1053,9 @@ export async function calculateScore(match, index, divider, calculate) {
         formAway.averageOdds,
         formAway.averageScoredLeague,
         formAway.averageConceededLeague,
+        formAway.last10btts,
+        formAway.last10bttsHome,
+        formAway.last10bttsAway
       ] = await getPastLeagueResults(match.awayTeam, match);
     } else {
       formHome.predictedGoalsBasedOnHomeAv = formHome.ScoredAverage;
@@ -1032,6 +1067,9 @@ export async function calculateScore(match, index, divider, calculate) {
       formHome.averageOdds = null;
       formHome.averageScoredLeague = null;
       formHome.averageConceededLeague = null;
+      formHome.last10btts = null;
+      formHome.last10bttsHome = null;
+      formHome.last10bttsAway = null;
       formAway.predictedGoalsBasedOnHomeAv = formAway.ScoredAverage;
       formAway.predictedGoalsBasedOnAwayAv = formAway.ConcededAverage;
       formAway.allTeamGoalsBasedOnAverages = formAway.ScoredAverage;
@@ -1041,6 +1079,9 @@ export async function calculateScore(match, index, divider, calculate) {
       formAway.averageOdds = null;
       formAway.averageScoredLeague = null;
       formAway.averageConceededLeague = null;
+      formAway.last10btts = null;
+      formAway.last10bttsHome = null;
+      formAway.last10bttsAway = null;
     }
 
     if (
@@ -1319,8 +1360,8 @@ export async function calculateScore(match, index, divider, calculate) {
     );
 
     if (
-      rollingGoalDiffDifferential > 1.5 ||
-      rollingGoalDiffDifferential < -1.5
+      (rollingGoalDiffDifferential > 1.5 && match.prediction === "homeWin") ||
+      (rollingGoalDiffDifferential < -1.5 && match.prediction === "awayWin")
     ) {
       match.rollingGoalDiff = true;
       match.rollingGoalDiffValue = rollingGoalDiffDifferential;
@@ -1335,8 +1376,8 @@ export async function calculateScore(match, index, divider, calculate) {
     );
 
     if (
-      dangerousAttacksDifferential > 20 ||
-      dangerousAttacksDifferential < -20
+      (dangerousAttacksDifferential > 20 && match.prediction === "homeWin") ||
+      (dangerousAttacksDifferential < -20 && match.prediction === "awayWin")
     ) {
       match.dangerousAttacksDiff = true;
       match.dangerousAttacksDiffValue = dangerousAttacksDifferential;

@@ -831,10 +831,11 @@ export async function createStatsDiv(game, displayBool) {
       FormTextStringHome: formTextStringHome,
       BTTSArray: bttsArrayHome,
       Results: resultsArrayHome,
+      BTTSAll: gameStats.home[index].last10btts,
+      BTTSHorA: gameStats.home[index].last10bttsHome
     });
 
     const formDataAway = [];
-    console.log(gameStats)
 
     formDataAway.push({
       name: game.awayTeam,
@@ -866,6 +867,8 @@ export async function createStatsDiv(game, displayBool) {
       BTTSArray: bttsArrayAway,
       Results: resultsArrayAway,
       ResultsHomeOrAway: resultsArrayAway,
+      BTTSAll: gameStats.away[index].last10btts,
+      BTTSHorA: gameStats.away[index].last10bttsAway
     });
 
     let formArrayHome;
@@ -966,68 +969,6 @@ export async function createStatsDiv(game, displayBool) {
       </div>
     ));
 
-    // const contentHome = gameArrayHome.slice(0, 6).map((game) => (
-    //   <div>
-    //     <div className={game.won}>
-    //       <div>
-    //         <div className="PastGameDateHome">{game.date}</div>
-    //         <div key={game.id} className="IndividualPreviousResultGameHome">
-    //           <li key={game.homeTeam + 1}>
-    //             {game.homeTeam}{" "}
-    //             <span className="GoalTotal">{game.homeGoals}</span>
-    //           </li>
-    //           <li key={game.homeTeam + 2}>
-    //             {game.awayTeam}{" "}
-    //             <span className="GoalTotal">{game.awayGoals}</span>
-    //             <table className="GameStatsTable">
-    //               <tr>
-    //                 <th>Stat</th>
-    //                 <th>Home</th>
-    //                 <th>Away</th>
-    //               </tr>
-    //               <tr>
-    //                 <td>XG</td>
-    //                 <td>{game.homeXG}</td>
-    //                 <td>{game.awayXG}</td>
-    //               </tr>
-    //               <tr>
-    //                 <td>Shots</td>
-    //                 <td>{game.homeShots}</td>
-    //                 <td>{game.awayShots}</td>
-    //               </tr>
-    //               <tr>
-    //                 <td>SOT</td>
-    //                 <td>{game.homeSot}</td>
-    //                 <td>{game.awaySot}</td>
-    //               </tr>
-    //               <tr>
-    //                 <td>D. Attacks</td>
-    //                 <td>{game.homeDangerousAttacks}</td>
-    //                 <td>{game.awayDangerousAttacks}</td>
-    //               </tr>
-    //               <tr>
-    //                 <td>Possession</td>
-    //                 <td>{game.homePossession}</td>
-    //                 <td>{game.awayPossession}</td>
-    //               </tr>
-    //               <tr>
-    //                 <td>Red cards</td>
-    //                 <td>{game.homeRed}</td>
-    //                 <td>{game.awayRed}</td>
-    //               </tr>
-    //               <tr>
-    //                 <td>PPG (pre-match)</td>
-    //                 <td>{game.homePPG}</td>
-    //                 <td>{game.awayPPG}</td>
-    //               </tr>
-    //             </table>
-    //           </li>
-    //         </div>
-    //       </div>
-    //     </div>
-    //   </div>
-    // ));
-
     const overviewAway = gameArrayAway.slice(0, 10).map((game) => (
       <div>
       <Collapsable
@@ -1045,71 +986,6 @@ export async function createStatsDiv(game, displayBool) {
         />
       </div>
     ));
-
-    // const contentAway = gameArrayAway.slice(0, 6).map((game) => (
-    //   <div>
-    //     <div className={game.won}>
-    //       <div className="ColumnTwo">
-    //         <div className="PastGameDateAway">{game.date}</div>
-    //         <div
-    //           key={game.id + game.id}
-    //           className="IndividualPreviousResultGameAway"
-    //         >
-    //           <li key={game.awayTeam + 1}>
-    //             <span className="GoalTotal">{game.homeGoals}</span>{" "}
-    //             {game.homeTeam}
-    //           </li>
-    //           <li key={game.awayTeam + 2}>
-    //             <span className="GoalTotal">{game.awayGoals}</span>{" "}
-    //             {game.awayTeam}
-    //             <table className="GameStatsTable">
-    //               <tr>
-    //                 <th>Stat</th>
-    //                 <th>Home</th>
-    //                 <th>Away</th>
-    //               </tr>
-    //               <tr>
-    //                 <td>XG</td>
-    //                 <td>{game.homeXG}</td>
-    //                 <td>{game.awayXG}</td>
-    //               </tr>
-    //               <tr>
-    //                 <td>Shots</td>
-    //                 <td>{game.homeShots}</td>
-    //                 <td>{game.awayShots}</td>
-    //               </tr>
-    //               <tr>
-    //                 <td>SOT</td>
-    //                 <td>{game.homeSot}</td>
-    //                 <td>{game.awaySot}</td>
-    //               </tr>
-    //               <tr>
-    //                 <td>D. Attacks</td>
-    //                 <td>{game.homeDangerousAttacks}</td>
-    //                 <td>{game.awayDangerousAttacks}</td>
-    //               </tr>
-    //               <tr>
-    //                 <td>Possession</td>
-    //                 <td>{game.homePossession}</td>
-    //                 <td>{game.awayPossession}</td>
-    //               </tr>
-    //               <tr>
-    //                 <td>Red cards</td>
-    //                 <td>{game.homeRed}</td>
-    //                 <td>{game.awayRed}</td>
-    //               </tr>
-    //               <tr>
-    //                 <td>PPG (pre-match)</td>
-    //                 <td>{game.homePPG}</td>
-    //                 <td>{game.awayPPG}</td>
-    //               </tr>
-    //             </table>
-    //           </li>
-    //         </div>
-    //       </div>
-    //     </div>
-    //   </div>
-    // ));
 
     function StatsHome() {
       return (
@@ -1166,6 +1042,8 @@ export async function createStatsDiv(game, displayBool) {
               BttsPercentageHomeOrAway={
                 formDataHome[0].BttsPercentageHomeOrAway
               }
+              BTTSAll={formDataHome[0].BTTSAll ? formDataHome[0].BTTSAll : '"Get Predictions" first'}
+              BTTSHorA={formDataHome[0].BTTSHorA ? formDataHome[0].BTTSHorA : '"Get Predictions" first'}
               BTTSArray={formDataHome[0].BTTSArray}
               Results={formDataHome[0].Results}
               ResultsHomeOrAway={formDataHome[0].wonHomeOrAwayOnly}
@@ -1237,6 +1115,8 @@ export async function createStatsDiv(game, displayBool) {
               BttsPercentageHomeOrAway={
                 formDataAway[0].BttsPercentageHomeOrAway
               }
+              BTTSAll={formDataAway[0].BTTSAll ? formDataAway[0].BTTSAll : '"Get Predictions" first'}
+              BTTSHorA={formDataAway[0].BTTSHorA ? formDataAway[0].BTTSHorA : '"Get Predictions" first'}
               BTTSArray={formDataAway[0].BTTSArray}
               Results={formDataAway[0].Results}
               CardsTotal={formDataAway[0].CardsTotal}

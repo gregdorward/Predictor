@@ -212,14 +212,14 @@ function Stats(props) {
             className="BttsPercentage"
             data-cy={props.name + "BttsPercentage"}
           >
-            {`BTTS: ${props.BttsPercentage}%`}
+            {`BTTS: ${props.BTTSAll}`}
           </li>
           <li
             key="BttsPercentageHomeOrAway"
             className="BttsPercentageHomeOrAway"
             data-cy={props.name + "BttsPercentageHomeOrAway"}
           >
-            {`BTTS ${props.homeOrAway}: ${props.BttsPercentageHomeOrAway}%`}
+            {`BTTS ${props.homeOrAway}: ${props.BTTSHorA}`}
           </li>
           <li
             key="CardsTotal"
@@ -361,14 +361,14 @@ function Stats(props) {
             className="BttsPercentage"
             data-cy={props.name + "BttsPercentage"}
           >
-            {`BTTS: ${props.BttsPercentage}%`}
+            {`BTTS last 10: ${props.BTTSAll}`}
           </li>
           <li
             key="BttsPercentageHomeOrAway"
             className="BttsPercentageHomeOrAway"
             data-cy={props.name + "BttsPercentageHomeOrAway"}
           >
-            {`BTTS ${props.homeOrAway}: ${props.BttsPercentageHomeOrAway}%`}
+            {`BTTS last 10 ${props.homeOrAway}: ${props.BTTSHorA}`}
           </li>
           <li
             key="CardsTotal"

@@ -280,16 +280,16 @@ button:active {
 button.GeneratePredictions{
   padding-top: 1em;
   padding-bottom: 1em;
-  background-color: white;
-  color: #030061;
+  background-color: #016001;
+  color: white;
   box-shadow: 0 0px 0px 0 rgba(0, 0, 0, 0.2), 0 1px 2px 0 #030052
 }
 
 button.GeneratePredictions:active{
   padding-top: 1em;
   padding-bottom: 1em;
-  background-color: white;
-  color: #030061;
+  background-color: #004b00;
+  color: white;
   box-shadow: 0 0px 0px 0 rgba(0, 0, 0, 0.2), 0 1px 2px 0 #030052 inset;
 }
 
