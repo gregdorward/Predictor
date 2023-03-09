@@ -211,10 +211,10 @@ h3 {
 }
 
 h4 {
-  font-size: 1.25em;
-  
+  font-size: 1.2em;
   color: #030061;
-  padding: 5px;
+  padding-top: 2em;
+  padding: 1em;
   margin: 0%
 }
 
@@ -222,6 +222,19 @@ h5 {
   font-size: 2.5em;
   margin-bottom: 1em;
   color: #030061;
+}
+
+h6 {
+  font-size: 1.2em;
+  color: #030061;
+  padding: 1em;
+  padding-top: 2em;
+  line-height: 2em;
+  max-width: 600px;
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: 0px;
+  margin-bottom: 0px;
 }
 
 .historicResults{
@@ -235,7 +248,7 @@ h5 {
 
 .SocialLink {
   font-size: 1.2em;
-  color: black;
+  color: #030061;
   border: 1em;
   padding-bottom: 1em;
 }
@@ -417,16 +430,6 @@ p {
   margin-left: 10px;
 }
 
-.WelcomeText {
-  padding: 0.75em;
-  padding-top: 2em;
-  font-weight: bolder;
-  max-width: 60%;
-  margin-left: auto;
-  margin-right: auto;
-
-}
-
 .Explainer{
   padding-top: 1em;
   padding-top: 0.2em;
@@ -468,15 +471,16 @@ p {
 }
 
 .League {
-  padding: 0.75em;
+  padding: 0.5em;
 }
 
 .DataText {
   padding: 0.75em;
+  color: #030061;
 }
 
 .DataLink {
-  color: black;
+  color: #030061;
   border-bottom: 1em;
   padding-bottom: 1em;
 }
@@ -484,14 +488,15 @@ p {
 .btn-container{
     padding: 1em;
     width: 1em;
+    position: inherit;
 }
 
 .Social {
   padding-top: 2em;
-  padding-bottom: 6em;
-  display: flex;
-  margin-left: 5em;
-  margin-right: 5em;
+  padding-bottom: 2em;
+  display: block;
+  margin-left: 2em;
+  margin-right: 2em;
 }
 
 .leagueName {
@@ -1972,9 +1977,10 @@ li.FormHeader{
 
 .Under25Games {
   font-size: 0.8em;
-  max-width: 300px;
+  max-width: 75%;
   margin-left: auto;
   margin-right: auto;
+  color: #030061;
 }
 
 .Over25Games {
@@ -1983,6 +1989,7 @@ li.FormHeader{
   max-width: 300px;
   margin-left: auto;
   margin-right: auto;
+  color: #030061;
 }
 
 .HowToUse {
@@ -2138,7 +2145,7 @@ ul {
 }
 
 .kofitext{
-  font-size: 0.8em;
+  font-size: min(max(1em, 2vw), 0.8em);  
   font-weight: bolder !important;
 }
 
@@ -2150,7 +2157,7 @@ ul {
   border: 0.1em solid #030061;
   font-family: 'Open Sans', sans-serif !important;
   min-width: 6em !important;
-  line-height: 1em !important;
+  line-height: 2em !important;
   color: black !important;
 } 
 
@@ -2432,7 +2439,7 @@ label {
   justify-content: flex-start;
   align-items: center;
   flex-wrap: nowrap;
-
+  color: #030061;
   margin: 12px 0;
 
   cursor: pointer;

@@ -387,69 +387,69 @@ let dateString;
   );
 
 
-  ReactDOM.render(
-    <Button
-      text={"Lowest scoring leagues"}
-      className={"Under25TeamsButton"}
-      onClickEvent={async () => {
-        let leagues = await getLowestScoringLeagues();
-        const leagueList = [];
+  // ReactDOM.render(
+  //   <Button
+  //     text={"Lowest scoring leagues"}
+  //     className={"Under25TeamsButton"}
+  //     onClickEvent={async () => {
+  //       let leagues = await getLowestScoringLeagues();
+  //       const leagueList = [];
 
-        leagues.forEach(async (league) =>
-          leagueList.push(
-            <ul className="GlobalStat">
-              <p className="TeamName">
-                {league.league} ({league.leagueCountry})
-              </p>
-              <li>Average goals: {league.averageGoals}</li>
-              <li>Under 2.5 goals %: {league.under25Percentage}%</li>
-            </ul>
-          )
-        );
+  //       leagues.forEach(async (league) =>
+  //         leagueList.push(
+  //           <ul className="GlobalStat">
+  //             <p className="TeamName">
+  //               {league.league} ({league.leagueCountry})
+  //             </p>
+  //             <li>Average goals: {league.averageGoals}</li>
+  //             <li>Under 2.5 goals %: {league.under25Percentage}%</li>
+  //           </ul>
+  //         )
+  //       );
 
-        reactDom.render(
-          <div>
-            <h3>Leagues with the lowest scoring games</h3>
-            <ul>{leagueList}</ul>
-          </div>,
-          document.getElementById("Under25Games")
-        );
-      }}
-    ></Button>,
-    document.getElementById("Under25Games")
-  );
+  //       reactDom.render(
+  //         <div>
+  //           <h3>Leagues with the lowest scoring games</h3>
+  //           <ul>{leagueList}</ul>
+  //         </div>,
+  //         document.getElementById("Under25Games")
+  //       );
+  //     }}
+  //   ></Button>,
+  //   document.getElementById("Under25Games")
+  // );
 
-  ReactDOM.render(
-    <Button
-      text={"Highest scoring leagues"}
-      className={"Over25TeamsButton"}
-      onClickEvent={async () => {
-        let leagues = await getHighestScoringLeagues();
-        const leagueList = [];
+  // ReactDOM.render(
+  //   <Button
+  //     text={"Highest scoring leagues"}
+  //     className={"Over25TeamsButton"}
+  //     onClickEvent={async () => {
+  //       let leagues = await getHighestScoringLeagues();
+  //       const leagueList = [];
 
-        leagues.forEach(async (league) =>
-          leagueList.push(
-            <ul className="GlobalStat">
-              <p className="TeamName">
-                {league.league} ({league.leagueCountry})
-              </p>
-              <li>Average goals: {league.averageGoals}</li>
-              <li>Over 2.5 goals %: {league.over25Percentage}%</li>
-            </ul>
-          )
-        );
+  //       leagues.forEach(async (league) =>
+  //         leagueList.push(
+  //           <ul className="GlobalStat">
+  //             <p className="TeamName">
+  //               {league.league} ({league.leagueCountry})
+  //             </p>
+  //             <li>Average goals: {league.averageGoals}</li>
+  //             <li>Over 2.5 goals %: {league.over25Percentage}%</li>
+  //           </ul>
+  //         )
+  //       );
 
-        reactDom.render(
-          <div>
-            <h3>Leagues with the highest scoring games</h3>
-            <ul>{leagueList}</ul>
-          </div>,
-          document.getElementById("Over25Games")
-        );
-      }}
-    ></Button>,
-    document.getElementById("Over25Games")
-  );
+  //       reactDom.render(
+  //         <div>
+  //           <h3>Leagues with the highest scoring games</h3>
+  //           <ul>{leagueList}</ul>
+  //         </div>,
+  //         document.getElementById("Over25Games")
+  //       );
+  //     }}
+  //   ></Button>,
+  //   document.getElementById("Over25Games")
+  // );
 })();
 
 async function getHighestScoringLeagues() {
@@ -552,26 +552,26 @@ function App() {
       <div id="XGDiff" />
       <div id="FixtureContainer">
         <div>
-          <h4 className="WelcomeText">
-            Global fixtures and predictions from 30+ league competitions,
-            including
-          </h4>
+        <h6 className="WelcomeText">
+            Welcome to XGTipping. Your go-to resource for all things football, from comprehensive stats, odds, league tables, form, and bespoke multi-builders amongst other things. XGTipping is completely indendent and free to use, relying on a donation model to support running costs. I'm always looking for feedback or feature ideas, so please get in touch at @TippingXg.
+          </h6>
+          <h6 className="WelcomeText">
+            We cover a range of leagues, including
           <ul className="AllLeagues">
             <li className="League">Premier League</li>
+            <li className="League">English Football League</li>
             <li className="League">La Liga</li>
             <li className="League">Serie A</li>
             <li className="League">Bundesliga</li>
             <li className="League">Ligue 1</li>
             <li className="League">MLS</li>
             <li className="League">Primeira Liga</li>
+            <li className="League">Loads more...</li>
           </ul>
-          <div className="WelcomeText">
-            Predictions are based off a range of comparison points, from XG
-            differentials to more granular stats within a team's last 10 games.
-            All tips are fully automated and are based the form at the time,
-            using the latest prediction algorithm.
-          </div>
-          <div className="DataText">Raw data from</div>
+          </h6>
+        </div>
+        <div>
+        <div className="DataText">Raw data from</div>
           <a
             className="DataLink"
             href="https://www.footystats.org"
@@ -582,39 +582,37 @@ function App() {
           </a>
         </div>
       </div>
-      <div id="Over25Games" className="Over25Games"></div>
-      <div id="Under25Games" className="Under25Games"></div>
       <div className="Social">
         <TwitterShareButton
           url={"www.xgtipping.com"}
           title={"#XGTipping"}
           className="ShareButton"
-          style={{ backgroundColor: "#e2e2e26c", boxShadow: "none" }}
+          style={{ backgroundColor: "white", boxShadow: "none", padding: "1em" }}
         >
           <TwitterIcon size={"3em"} round={true} />
         </TwitterShareButton>
-        <FacebookShareButton
-          url={"www.xgtipping.com"}
-          quote={"XGTipping - data-driven football predictions"}
-          className="ShareButton"
-          style={{ backgroundColor: "#e2e2e26c", boxShadow: "none" }}
-        >
-          <FacebookIcon size={"3em"} round={true} />
-        </FacebookShareButton>
         <RedditShareButton
           url={"www.xgtipping.com"}
           title={"XGTipping"}
           className="ShareButton"
-          style={{ backgroundColor: "#e2e2e26c", boxShadow: "none" }}
+          style={{ backgroundColor: "white", boxShadow: "none", padding: "1em" }}
         >
           <RedditIcon size={"3em"} round={true} />
         </RedditShareButton>
+        <FacebookShareButton
+          url={"www.xgtipping.com"}
+          quote={"XGTipping - data-driven football predictions"}
+          className="ShareButton"
+          style={{ backgroundColor: "white", boxShadow: "none", padding: "1em"}}
+        >
+          <FacebookIcon size={"3em"} round={true} />
+        </FacebookShareButton>
         <WhatsappShareButton
           url={"www.xgtipping.com"}
           title={"XGTipping"}
           separator=": "
           className="ShareButton"
-          style={{ backgroundColor: "#e2e2e26c", boxShadow: "none" }}
+          style={{ backgroundColor: "white", boxShadow: "none", padding: "1em" }}
         >
           <WhatsappIcon size={"3em"} round={true} />
         </WhatsappShareButton>
@@ -622,7 +620,7 @@ function App() {
           url={"XGTipping"}
           title={"XGTipping"}
           className="ShareButton"
-          style={{ backgroundColor: "#e2e2e26c", boxShadow: "none" }}
+          style={{ backgroundColor: "white", boxShadow: "none", padding: "1em" }}
         >
           <TelegramIcon size={"3em"} round={true} />
         </TelegramShareButton>
