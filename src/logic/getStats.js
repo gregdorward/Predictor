@@ -999,7 +999,7 @@ export async function createStatsDiv(game, displayBool) {
               last5={formDataHome[0].Last5}
               homeOrAwayResults={gameArrayHomeTeamHomeGames}
               LeagueOrAll={formDataHome[0].LeagueOrAll}
-              className={"KeyStats"}
+              className={"KeyStatsHome"}
               name={formDataHome[0].name}
               goals={formDataHome[0].AverageGoals}
               conceeded={formDataHome[0].AverageConceeded}
@@ -1071,7 +1071,7 @@ export async function createStatsDiv(game, displayBool) {
               last5={formDataAway[0].Last5}
               homeOrAwayResults={gameArrayAwayTeamAwayGames}
               LeagueOrAll={formDataAway[0].LeagueOrAll}
-              className={"KeyStats"}
+              className={"KeyStatsAway"}
               name={formDataAway[0].name}
               goals={formDataAway[0].AverageGoals}
               conceeded={formDataAway[0].AverageConceeded}

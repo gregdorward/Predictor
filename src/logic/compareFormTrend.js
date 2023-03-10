@@ -93,6 +93,8 @@ async function getAttackingSummary(goalsRecent, goalsLongTerm) {
         text = "Impressive scoring stats and consistent in front of goal.";
         break;
       case goalsRecent < goalsLongTerm:
+        console.log(goalsRecent)
+        console.log(goalsLongTerm)
         text = "Impressive scoring stats but less so recently.";
         break;
       default:
@@ -180,8 +182,8 @@ async function GenerateFormSummary(form, lastx, recentForm) {
   );
   let xgText = await getOverOrUnderText(xgSum);
   let attackString = await getAttackingSummary(
-    form.ScoredOverall / 10,
-    recentForm.ScoredOverall / 5
+    recentForm.ScoredOverall / 5,
+    form.ScoredOverall / 10
   );
   let defenceString = await getDefenceSummary(form.CleanSheetPercentage);
   let pointsAverageTotal =

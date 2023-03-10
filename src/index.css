@@ -1651,16 +1651,30 @@ a.PreviousMatchLink{
   text-align: right;
 }
 
-.KeyStats{
+.KeyStatsHome{
   padding-top: 0.5em;
   padding-bottom: 0.5em;
-  padding-right: 0.25em;
+  /* padding-right: 0.25em; */
   padding-left: 0.5em;
 }
 
-.KeyStats li{
+.KeyStatsHome li{
   padding-top: 0.75em;
   padding-bottom: 0.75em;
+  padding-right: 0.5em;
+}
+
+.KeyStatsAway{
+  padding-top: 0.5em;
+  padding-bottom: 0.5em;
+  padding-right: 0.5em;
+  /* padding-left: 0.5em; */
+}
+
+.KeyStatsAway li{
+  padding-top: 0.75em;
+  padding-bottom: 0.75em;
+  padding-left: 0.5em;
 }
 
 .TestingLayout{
