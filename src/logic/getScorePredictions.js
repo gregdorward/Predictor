@@ -209,8 +209,8 @@ async function getPastLeagueResults(team, game) {
     const bttsAllString = `${bttsAllCount.length}/${bttsAll.length}`;
     const bttsAllPercentage = (bttsAllCount.length / bttsAll.length) * 100;
 
-    let r = 6;
-    let x = 4;
+    let r = 5;
+    let x = 3;
 
     const teamGoalsHomeRollingAverage = await predictNextWeightedMovingAverage(
       teamGoalsHome,
@@ -682,7 +682,7 @@ export async function compareTeams(
     possessiontrengthComparison * 1 +
     // xgForStrengthComparison * 1 +
     // xgAgainstStrengthComparison * 1 +
-    xgToActualDiffComparison * 4 +
+    xgToActualDiffComparison * 3 +
     xgDiffComparison * 3 +
     // xgForStrengthRecentComparison * 1 +
     // xgAgainstStrengthRecentComparison * 1 +
