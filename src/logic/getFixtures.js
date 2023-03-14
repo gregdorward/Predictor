@@ -8,6 +8,7 @@ import { getScorePrediction } from "../logic/getScorePredictions";
 import { ThreeDots } from "react-loading-icons";
 import { selectedOdds } from "../components/OddsRadio";
 import LeagueTable from "../components/LeagueTable";
+import { getPointsFromLastX } from "../logic/getScorePredictions";
 
 var oddslib = require("oddslib");
 
@@ -115,6 +116,7 @@ export async function generateTables(a, leagueIdArray, allResults) {
             currentTeam.seasonConceded_home + currentTeam.seasonConceded_away,
           GoalDifference: currentTeam.seasonGoalDifference,
           Form: last5,
+          LastXPoints: getPointsFromLastX(last5.split("")),
           Points: currentTeam.points,
           wdl: currentTeam.wdl_record,
           seasonGoals: currentTeam.seasonGoals,
@@ -150,6 +152,7 @@ export async function generateTables(a, leagueIdArray, allResults) {
               currentTeam.seasonConceded_home + currentTeam.seasonConceded_away,
             GoalDifference: currentTeam.seasonGoalDifference,
             Form: last5,
+            LastXPoints: getPointsFromLastX(last5.split("")),
             Points: currentTeam.points,
             wdl: currentTeam.wdl_record,
             seasonGoals: currentTeam.seasonGoals,
@@ -185,6 +188,7 @@ export async function generateTables(a, leagueIdArray, allResults) {
             currentTeam.seasonConceded_home + currentTeam.seasonConceded_away,
           GoalDifference: currentTeam.seasonGoalDifference,
           Form: last5,
+          LastXPoints: getPointsFromLastX(last5.split("")),
           Points: currentTeam.points,
           wdl: currentTeam.wdl_record,
           seasonGoals: currentTeam.seasonGoals,
@@ -213,6 +217,12 @@ async function getTableLayout(arr, statistics) {
   return tableArray;
 }
 
+async function sorted(league) {
+  const sortedByForm = league.sort((a,b) => b.LastXPoints - a.LastXPoints);
+  return sortedByForm;
+} 
+
+
 export async function renderTable(index, results, id) {
   let league;
   //World cup table rendering
@@ -233,6 +243,7 @@ export async function renderTable(index, results, id) {
   const leagueTable = tableArray.filter((table) => table.id === id);
 
   league = leagueTable[0].table;
+
   let statistics;
   let leagueStatistics = await fetch(
     `${process.env.REACT_APP_EXPRESS_SERVER}leagueStats/${id}`

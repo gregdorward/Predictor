@@ -565,9 +565,9 @@ p {
 }
 
 .LeagueTable th {
-  padding-left: 1vw;
-  padding-right: 1vw;
-
+  padding-left: 0.8vw;
+  padding-right: 0.8vw;
+  width: auto;
 }
 
 .ResultsList{
@@ -2213,6 +2213,22 @@ td {
   margin-right: auto;
   margin-top: 1.5em;
   text-align: center;
+}
+
+
+.SortedColumn{
+  background-color: #030061;
+  height: auto;
+  width: 6em;
+  vertical-align: middle;
+  text-align: center;
+  font-size: 1.8em;
+  line-height: 1.8em;
+  /* padding-left: 1em;
+  padding-right: 1em; */
+  margin: 0em;
+  padding-bottom: 0.25em;
+  padding-top: 0.25em;
 }
 
 

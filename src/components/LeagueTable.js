@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { withStyles } from "@material-ui/core/styles";
 import Table from "@material-ui/core/Table";
 import TableBody from "@material-ui/core/TableBody";
@@ -9,6 +9,11 @@ import TableRow from "@material-ui/core/TableRow";
 import Paper from "@material-ui/core/Paper";
 import Collapsable from "../components/CollapsableElement";
 import { CreateBadge } from "./createBadge";
+import { Button } from "./Button";
+export var toggleState = false;
+export var setIsOff = false;
+
+const upArrow = "\u{25B2}";
 
 const StyledTableCell2 = withStyles((theme) => ({
   head: {
@@ -89,10 +94,12 @@ function styleForm(formIndicator) {
 }
 
 export default function LeagueTable(props) {
+  [toggleState, setIsOff] = useState(false);
+
   let rows = props.Teams.map((team, i) => (
     <StyledTableRow key={`${props.Key}row${i}`}>
       <StyledTableCell component="th" scope="row">
-        {`${team.Position}`}
+        {`${i + 1}`}
       </StyledTableCell>
       <StyledTableCell2 component="th" scope="row" style={{ width: "15em" }}>
         {`${team.Name}`}
@@ -273,6 +280,17 @@ export default function LeagueTable(props) {
     return found.Name;
   }
 
+  async function sorted(league, value, order) {
+    let sortedByForm;
+    if (order === "desc") {
+      sortedByForm = league.sort((a, b) => b[value] - a[value]);
+    } else {
+      sortedByForm = league.sort((a, b) => a[value] - b[value]);
+    }
+    setIsOff(!toggleState);
+    return sortedByForm;
+  }
+
   if (
     props.GamesPlayed > 3 &&
     props.Teams[0].LeagueID !== 7956 &&
@@ -299,10 +317,24 @@ export default function LeagueTable(props) {
                 <StyledTableCell>GF</StyledTableCell>
                 <StyledTableCell>GA</StyledTableCell>
                 <StyledTableCell>GD</StyledTableCell>
-                <StyledTableCell>Pts</StyledTableCell>
-                <StyledTableCell style={{ textAlign: "center" }}>
-                  Last 5
-                </StyledTableCell>
+                <td>
+                  <button
+                    className="SortedColumn"
+                    style={{ textAlign: "center" }}
+                    onClick={() => sorted(props.Teams, "Points", "desc")}
+                  >
+                    Pts {upArrow}
+                  </button>
+                </td>
+                <td>
+                  <button
+                    className="SortedColumn"
+                    style={{ textAlign: "center" }}
+                    onClick={() => sorted(props.Teams, "LastXPoints", "desc")}
+                  >
+                    Last 5 {upArrow}
+                  </button>
+                </td>
               </TableRow>
             </TableHead>
             <TableBody>{rows}</TableBody>
@@ -428,7 +460,13 @@ export default function LeagueTable(props) {
           <Table aria-label="customized table" key={props.Key}>
             <TableHead>
               <TableRow>
-                <StyledTableCell></StyledTableCell>
+                <button
+                  className="SortedColumn"
+                  style={{ textAlign: "center" }}
+                  onClick={() => sorted(props.Teams, "Position")}
+                >
+                  {upArrow}
+                </button>{" "}
                 <StyledTableCell></StyledTableCell>
                 <StyledTableCell>Pld</StyledTableCell>
                 <StyledTableCell>W</StyledTableCell>
@@ -438,9 +476,15 @@ export default function LeagueTable(props) {
                 <StyledTableCell>GA</StyledTableCell>
                 <StyledTableCell>GD</StyledTableCell>
                 <StyledTableCell>Pts</StyledTableCell>
-                <StyledTableCell style={{ textAlign: "center" }}>
-                  Form
-                </StyledTableCell>
+                <td>
+                  <button
+                    className="SortedColumn"
+                    style={{ textAlign: "center" }}
+                    onClick={() => sorted(props.Teams, "LastXPoints", "desc")}
+                  >
+                    Last 5 {upArrow}
+                  </button>
+                </td>
               </TableRow>
             </TableHead>
             <TableBody>{rows}</TableBody>

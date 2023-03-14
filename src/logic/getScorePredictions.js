@@ -94,6 +94,7 @@ export function getPointsFromLastX(lastX) {
     });
     return points;
   } catch (error) {
+    console.log(error)
     return "N/A";
   }
 }
