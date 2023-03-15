@@ -23,11 +23,11 @@
     <title>XG Tipping</title>
     <meta
       name="description"
-      content="Free football tips, stats, analysis and bet builders"
+      content="Free football tips underpinned by XG data, stats, analysis and bet builders"
     />
     <meta
       name="keywords"
-      content="football tipping site, football tips, soccer tips, football predictions, predicted scores, expected goals, best football tipping site"
+      content="football tipping site, XG, XGA, free, expected goal predictions, football tips, soccer tips, football predictions, predicted scores, expected goals, best football tipping site"
     />
     <meta charset="utf-8" />
     <link rel="icon" href="%PUBLIC_URL%/favicon.ico" />
@@ -62,5 +62,14 @@
   <body>
     <noscript>You need to enable JavaScript to run this app.</noscript>
     <div id="root"></div>
+    <script src='https://storage.ko-fi.com/cdn/scripts/overlay-widget.js'></script>
+    <script>
+      kofiWidgetOverlay.draw('xgtipping', {
+        'type': 'floating-chat',
+        'floating-chat.donateButton.text': 'Support me',
+        'floating-chat.donateButton.background-color': '#fcbf47',
+        'floating-chat.donateButton.text-color': '#323842'
+      });
+    </script>
   </body>
 </html>

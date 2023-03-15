@@ -548,12 +548,12 @@ function App() {
       <div id="tables" />
       <div id="homeBadge" />
       <div id="FixtureContainerHeaders"></div>
-      <StyledKofiButton buttonText="Donations"></StyledKofiButton>
+      {/* <StyledKofiButton buttonText="Donations"></StyledKofiButton> */}
       <div id="XGDiff" />
       <div id="FixtureContainer">
         <div>
         <h6 className="WelcomeText">
-            Welcome to XGTipping. Your go-to resource for all things football, from comprehensive stats, odds, league tables, form, and bespoke multi-builders amongst other things. XGTipping is completely indendent and free to use, relying on a donation model to support running costs. I'm always looking for feedback or feature ideas, so please get in touch at @TippingXg.
+            Welcome to XGTipping. Your go-to resource for all things football, from comprehensive stats, predictions, odds, league tables, form, and bespoke multi-builders underpinned by expected goal (XG) data. XGTipping is completely indendent and free to use, relying on a donation model to support running costs. I'm always looking for feedback or feature ideas, so please get in touch at @TippingXg.
           </h6>
           <h6 className="WelcomeText">
             We cover a range of leagues, including
