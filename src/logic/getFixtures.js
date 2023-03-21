@@ -1484,7 +1484,7 @@ export async function generateFixtures(
     ReactDOM.render(
       <Fragment>
         <Button
-          text={"Generate predictions"}
+          text={"Get Predictions"}
           onClickEvent={() => getScorePrediction(day)}
           className={"GeneratePredictions"}
         />

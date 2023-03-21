@@ -17,17 +17,18 @@ const StyledTableCell = withStyles((theme) => ({
     fontFamily: 'inherit',
     border: "none",
     margin: "none",
-    color: 'white',
-    lineHeight: '2em'
+    color: '#030061',
+    lineHeight: '2em',
+    backgroundColor: 'white'
   },
   body: {
     fontSize: "2em",
     fontFamily: 'inherit',
     padding: 10,
-    color: "white",
+    color: "#030061",
     border: "none",
     margin: "none",
-    // backgroundColor: '#e2e2e26c'
+    backgroundColor: 'white'
   },
 }))(TableCell);
 

@@ -587,7 +587,7 @@ function App() {
           url={"www.xgtipping.com"}
           title={"#XGTipping"}
           className="ShareButton"
-          style={{ backgroundColor: "white", boxShadow: "none", padding: "1em" }}
+          style={{ backgroundColor: "white", boxShadow: "none", padding: "0.5em" }}
         >
           <TwitterIcon size={"3em"} round={true} />
         </TwitterShareButton>
@@ -595,7 +595,7 @@ function App() {
           url={"www.xgtipping.com"}
           title={"XGTipping"}
           className="ShareButton"
-          style={{ backgroundColor: "white", boxShadow: "none", padding: "1em" }}
+          style={{ backgroundColor: "white", boxShadow: "none", padding: "0.5em" }}
         >
           <RedditIcon size={"3em"} round={true} />
         </RedditShareButton>
@@ -603,7 +603,7 @@ function App() {
           url={"www.xgtipping.com"}
           quote={"XGTipping - data-driven football predictions"}
           className="ShareButton"
-          style={{ backgroundColor: "white", boxShadow: "none", padding: "1em"}}
+          style={{ backgroundColor: "white", boxShadow: "none", padding: "0.5em"}}
         >
           <FacebookIcon size={"3em"} round={true} />
         </FacebookShareButton>
@@ -612,7 +612,7 @@ function App() {
           title={"XGTipping"}
           separator=": "
           className="ShareButton"
-          style={{ backgroundColor: "white", boxShadow: "none", padding: "1em" }}
+          style={{ backgroundColor: "white", boxShadow: "none", padding: "0.5em" }}
         >
           <WhatsappIcon size={"3em"} round={true} />
         </WhatsappShareButton>
@@ -620,7 +620,7 @@ function App() {
           url={"XGTipping"}
           title={"XGTipping"}
           className="ShareButton"
-          style={{ backgroundColor: "white", boxShadow: "none", padding: "1em" }}
+          style={{ backgroundColor: "white", boxShadow: "none", padding: "0.5em" }}
         >
           <TelegramIcon size={"3em"} round={true} />
         </TelegramShareButton>

@@ -101,8 +101,8 @@
     flex-direction: column;
     flex-basis: 100%;
     font-weight: bolder;
-    margin-right: 0em;
-    margin-left: 0em;
+    margin-right: 1em;
+    margin-left: 1em;
     align-content: center;
   }
 
@@ -122,8 +122,8 @@
     font-size: 2.4vw;
     display: flex;
     flex-direction: column;
-    margin-right: 0em;
-    margin-left: 0em;
+    margin-right: 0.2em;
+    margin-left: 0.2em;
     flex-basis: 100%;
     font-weight: bolder;
     align-content: center;
@@ -147,8 +147,8 @@
     flex-direction: column;
     flex-basis: 100%;
     /* font-weight: 900; */
-    margin-right: 0em;
-    margin-left: 0em;
+    margin-right: 0.25em;
+    margin-left: 0.25em;
     align-content: center;
   }
 
@@ -163,7 +163,7 @@
 }
 
 body {
-  background-color: rgba(226, 226, 226, 0.424);
+  background-color: white;
   /* align-content: space-between; */
   text-align: center;
   color: rgb(0, 0, 0);
@@ -266,7 +266,7 @@ button {
   /* padding-top: 8px;
   padding-bottom: 8px; */
   margin: 1em;
-  border: 0.1em solid #030061;
+  border: 0.15em solid #030061;
   border-radius: 1em;
   box-sizing: border-box;
   text-decoration: none;
@@ -275,12 +275,12 @@ button {
   width: 12em;
   height: auto;
   font-size: 1em;
-  
+  cursor: pointer;
   color: white;
  background-color: #030061;
   /* text-shadow: 0 0.04em 0.04em rgba(0, 0, 0, 0.35); */
   text-align: center;
-  box-shadow: 0 0px 0px 0 rgba(0, 0, 0, 0.2), 0 1px 2px 0 #030052;
+  /* box-shadow: 0 0px 0px 0 rgba(0, 0, 0, 0.2), 0 1px 2px 0 #030052; */
 
   transition: all 0.2s;
 }
@@ -295,7 +295,7 @@ button.GeneratePredictions{
   padding-bottom: 1em;
   background-color: #016001;
   color: white;
-  box-shadow: 0 0px 0px 0 rgba(0, 0, 0, 0.2), 0 1px 2px 0 #030052
+  /* box-shadow: 0 0px 0px 0 rgba(0, 0, 0, 0.2), 0 1px 2px 0 #030052 */
 }
 
 button.GeneratePredictions:active{
@@ -331,7 +331,8 @@ button.GeneratePredictions:active{
   background-color: #ffffff;
   color: #030061;
   margin: 1em;
-  box-shadow: 0 0px 0px 0 rgba(0, 0, 0, 0.2), 0 1px 2px 0 #030052;
+  cursor: pointer;
+  /* box-shadow: 0 0px 0px 0 rgba(0, 0, 0, 0.2), 0 1px 2px 0 #030052; */
 
 }
 
@@ -510,7 +511,7 @@ p {
   background-color:#030061;
   color: white;
   box-shadow: 0 1px 2px 0 #03006175 inset, 0 2px 2px 0 #03006175;
-
+  cursor: pointer;
 }
 
 #league7432 {
@@ -591,7 +592,7 @@ p {
   margin-right: 0px;
 }
 
-.ResultButton:hover{
+/* .ResultButton:hover{
   width: 100%;
   padding: 0em;
   margin: 0.35em;
@@ -600,7 +601,7 @@ p {
   border: 0px;
   background-color: #030061;
   border-radius: 0px;
-}
+} */
 
 .ResultRowOverview {
   display: flex;
@@ -718,14 +719,16 @@ p {
 *[class^='individualFixture'] {
   display: flex;
   flex-basis: 100%;
-  background-color: #dad7d7a0;
+  background-color: white;
+  border: 0.1em solid #030061;
   align-items: center;
   align-content: center;
   color: black;
-  padding-top: 0.25em;
-  padding-bottom: 0.25em;
-  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.2), 0 1px 2px 0 #030052;
-  margin-bottom: 0.5em;
+  padding-top: 0.5em;
+  padding-bottom: 0.5em;
+  cursor: pointer;
+  /* box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.2), 0 1px 2px 0 #030052; */
+  margin-bottom: 1em;
   /* border: black 0.25px solid; */
 }
 
@@ -1071,11 +1074,17 @@ p {
   height: auto;
   /* border: #030061 0.1px dashed; */
   /* border-radius: 5px; */
-  background-color: #f2f2f26c;
+  background-color: white;
   /* border: #030061 1px dashed; */
   /* box-shadow: 4px 4px 4px 4px rgba(0.2, 0.2, 0.2, 0.2), 0 6px 20px 0 #294A66; */
   /* box-shadow: rgba(0, 0, 0, 0.15) 0px 0px 0px 1px; */
 }
+
+.Collapsible__contentOuter {
+  width: 90%;
+  margin: auto;
+}
+
 .DetailedFixtures{
   align-self: center;
   justify-content: center;
@@ -1337,33 +1346,10 @@ a.PreviousMatchLink{
 
 } */
 
-.PreviousStadiumHome{
-  padding-top: 2em;
-  padding-bottom: 0.5em;
-  text-align: center;
-  color: black;
-  max-width: 250px;
-  margin-left: auto;
-  font-size: 0.8em;
-  height: 3em;
-}
-
-.PreviousStadiumAway{
-  padding-top: 2em;
-  padding-bottom: 0.5em;
-  text-align: center;
-  color: black;
-  max-width: 250px;
-  margin-right: auto;
-  font-size: 0.8em;
-  height: 3em;
-}
-
 .LastGameHeader {
   font-weight: bolder;
   padding-bottom: 1em;
   font-size: 1.1em;
-  background-color: #e2e2e26c;
 }
 
 
@@ -1544,7 +1530,7 @@ a.PreviousMatchLink{
 } 
 
 .flex-childOne li:nth-child(odd){
-  background-color: #e2e2e26c
+  background-color: white
 }
 
 .flex-childTwo {
@@ -1556,7 +1542,7 @@ a.PreviousMatchLink{
 } 
 
 .flex-childTwo li:nth-child(odd){
-  background-color: #e2e2e26c
+  background-color: white
 }
 
 
@@ -1942,7 +1928,6 @@ li.FormHeader{
 .MatchTime {
   padding: 1em;
   text-align: center;
-  background-color: #e2e2e26c;
 }
 
 .FormExplainer {
@@ -2242,7 +2227,7 @@ td {
 }
 
 button:hover {
-  border-color: #ff0000;
+  border-color: #ff6f00;
   border-radius: 1em;
 }
 
@@ -2302,8 +2287,25 @@ button:hover {
   padding: 7px;
 }
 
+.Stadium{
+  padding-top: 2em;
+  padding-bottom: 0.5em;
+  text-align: center;
+  color: black;
+  margin: auto;
+  font-size: 1em;
+  height: 2em;
+}
+
+
 .LastGameDetail{
   padding-top: 2em;
+  padding-bottom: 0.5em;
+  text-align: center;
+  color: black;
+  margin: auto;
+  font-size: 1em;
+  height: 2em;
 }
 
 .LastGameOverview{
@@ -2311,12 +2313,21 @@ button:hover {
   flex-direction: row;
   flex-wrap: wrap;
   width: 100%;
-  padding: 0.75em;
+  padding: 0em;
   background-color: #030061;
   padding-top: 1em;
   padding-bottom: 1em;
   align-items: center;
 }
+
+.secondToLastGameDetail{
+  padding-top: 1em !important;
+  padding-bottom: 0.5em !important;
+  text-align: center;
+  color: black;
+  margin: auto;
+  font-size: 1em;
+  height: 2em;}
 
 .LastGameHome {
   flex: 33.33%;
@@ -2490,7 +2501,7 @@ input {
   width: 1em;
   height: 1em;
 
-  border: 1px solid var(--other);
+  border: 2px solid var(--other);
   border-radius: 100%;
   margin-right: 0.2em;
   border-color: black;
