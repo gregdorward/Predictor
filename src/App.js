@@ -169,7 +169,7 @@ let dateString;
     for (let x = 0; x < league.season.length; x++) {
       const element = league.season[x];
 
-      if (element.year === 2022 || element.year === 20222023) {
+      if (element.year === 2023 || element.year === 20222023) {
         if (element.id !== 4340 && element.id !== 6935 && element.id !== 7061) {
           availableLeagues.push({ name: name, element });
         }

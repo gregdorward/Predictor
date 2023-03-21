@@ -126,7 +126,6 @@ export async function generateTables(a, leagueIdArray, allResults) {
       }
       tableArray.push({ id: currentLeagueId, table: leagueInstance });
     } else if (currentLeagueId === 7432) {
-
       // for (let x = 0; x < league.data.specific_tables[0].groups.length; x++) {
       // for (
       //   let index = 0;
@@ -165,7 +164,6 @@ export async function generateTables(a, leagueIdArray, allResults) {
           table: leagueInstance,
         });
       });
-
     } else if (league.data.league_table === null) {
       for (
         let index = 0;
@@ -218,10 +216,9 @@ async function getTableLayout(arr, statistics) {
 }
 
 async function sorted(league) {
-  const sortedByForm = league.sort((a,b) => b.LastXPoints - a.LastXPoints);
+  const sortedByForm = league.sort((a, b) => b.LastXPoints - a.LastXPoints);
   return sortedByForm;
-} 
-
+}
 
 export async function renderTable(index, results, id) {
   let league;
@@ -253,7 +250,6 @@ export async function renderTable(index, results, id) {
   });
 
   if (league !== undefined) {
-
     ReactDOM.render(
       <LeagueTable
         Teams={league}
@@ -351,16 +347,29 @@ async function createFixture(match, result, mockBool) {
 
   match.game = match.homeTeam + " v " + match.awayTeam;
 
-  ReactDOM.render(
-    <Fixture
-      fixtures={matches}
-      result={result}
-      mock={mockBool}
-      className={"individualFixture"}
-    />,
-    document.getElementById("FixtureContainer")
+  // ReactDOM.render(
+  //   <Fixture
+  //     fixtures={matches}
+  //     result={result}
+  //     mock={mockBool}
+  //     className={"individualFixture"}
+  //   />,
+  //   document.getElementById("FixtureContainer")
+  // );
+}
+
+export function RenderAllFixtures(props) {
+  return (
+      <Fixture
+        fixtures={props.matches}
+        result={props.result}
+        mock={props.bool}
+        className={"individualFixture"}
+      />
   );
 }
+//     document.getElementById("FixtureContainer")
+
 
 var myHeaders = new Headers();
 myHeaders.append("Origin", "https://gregdorward.github.io");
@@ -399,6 +408,7 @@ export async function generateFixtures(
     fixtureArray = Array.from(fixtures.data);
   });
 
+  console.log(fixtureArray)
   let form;
   let formArray = [];
   allForm = [];
@@ -420,7 +430,7 @@ export async function generateFixtures(
 
   ReactDOM.render(
     <div>
-      <div className="LoadingText">Loading all league, fixture & form data</div>
+      <div className="LoadingText">Loading all league, fixture & form data, please be patient...</div>
       <ThreeDots height="3em" fill="#030061" />
     </div>,
     document.getElementById("Loading")
@@ -455,7 +465,6 @@ export async function generateFixtures(
     leaguesStored = true;
     generateTables(leagueArray, leagueIdArray, allLeagueResultsArrayOfObjects);
   } else {
-
     allLeagueResultsArrayOfObjects = [];
     for (let i = 0; i < orderedLeagues.length; i++) {
       league = await fetch(
@@ -635,7 +644,7 @@ export async function generateFixtures(
       let regularSeason = leagueArray[i].data.specific_tables.find(
         (season) =>
           season.round === "Regular Season" ||
-          season.round === "2022" ||
+          season.round === "2023" ||
           season.round === "2022/2023" ||
           season.round === "Apertura" ||
           season.round === "1st Phase"
@@ -878,7 +887,6 @@ export async function generateFixtures(
           form[0].data[2].stats.additional_info.formRun_home.toUpperCase();
         let awayFormRun =
           form[1].data[2].stats.additional_info.formRun_away.toUpperCase();
-
 
         if (WDLinLeagueHome.length >= 10) {
           lastThreeFormHome = WDLinLeagueHome.slice(-3);
@@ -1480,6 +1488,7 @@ export async function generateFixtures(
         await createFixture(match, false);
       }
     }
+
     // }
     ReactDOM.render(
       <Fragment>
@@ -1531,4 +1540,14 @@ export async function generateFixtures(
       body: JSON.stringify(allLeagueResultsArrayOfObjects),
     });
   }
+  // const allFixtures = await RenderAllFixtures(matches, false)
+  ReactDOM.render(
+      <RenderAllFixtures
+        matches={matches}
+        result={false}
+        bool={false}
+      />,
+    document.getElementById("FixtureContainer")
+  );
+  // ReactDOM.render(<RenderAllFixtures matches={matches} bool={false}/>),document.getElementById("FixtureContainer")
 }

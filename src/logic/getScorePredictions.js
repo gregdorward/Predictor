@@ -2,6 +2,7 @@ import React, { Fragment } from "react";
 import ReactDOM from "react-dom";
 import { matches, diff } from "./getFixtures";
 import { Fixture } from "../components/Fixture";
+import { RenderAllFixtures } from "../logic/getFixtures";
 import Div from "../components/Div";
 import Collapsable from "../components/CollapsableElement";
 import { allForm } from "../logic/getFixtures";
@@ -94,7 +95,7 @@ export function getPointsFromLastX(lastX) {
     });
     return points;
   } catch (error) {
-    console.log(error)
+    console.log(error);
     return "N/A";
   }
 }
@@ -228,22 +229,6 @@ async function getPastLeagueResults(team, game) {
       teamGoalsAll.length < r ? teamGoalsAll.length : r
     );
 
-    // console.log(game.game)
-    // console.log(reversedResultsHome)
-    // console.log(teamGoalsHome)
-    // console.log("teamGoalsHomeRollingAverage")
-    // console.log(teamGoalsHomeRollingAverage)
-
-    // console.log(reversedResultsAway)
-    // console.log(teamGoalsAway)
-    // console.log("teamGoalsAwayRollingAverage")
-    // console.log(teamGoalsAwayRollingAverage)
-
-    // console.log(allTeamResults)
-    // console.log(teamGoalsAll)
-    // console.log("teamGoalsAllRollingAverage")
-    // console.log(teamGoalsAllRollingAverage)
-
     const teamConceededHomeRollingAverage =
       await predictNextWeightedMovingAverage(
         teamConceededHome,
@@ -283,7 +268,7 @@ async function getPastLeagueResults(team, game) {
       bttsAwayString,
       bttsAllPercentage,
       bttsHomePercentage,
-      bttsAwayPercentage
+      bttsAwayPercentage,
     ];
   } else {
     return null;
@@ -660,22 +645,6 @@ export async function compareTeams(
   );
 
   const oddsComparison = await compareStat(match.awayOdds, match.homeOdds);
-
-  // const cornerComparison = await compareStat(
-  //   homeForm.CornersAverage,
-  //   awayForm.CornersAverage
-  // ) * 5
-
-  // const cardsComparison = await compareStat(
-  //   homeForm.CardsTotal,
-  //   awayForm.CardsTotal
-  // ) * 5
-
-  // if(cornerComparison > 3){
-  //   console.log(`Home - ${match.game}`)
-  // } else if(cornerComparison < -3){
-  //   console.log(`Away - ${match.game}`)
-  // }
 
   let calculation =
     attackStrengthComparison * 1.5 +
@@ -1474,6 +1443,12 @@ export async function calculateScore(match, index, divider, calculate) {
       }
     }
 
+    if (match.status === "complete" && match.homeGoals > 0 && match.awayGoals > 0) {
+      match.bttsOutcome = "bttsWon";
+    } else {
+      match.bttsOutcome = "bttsLost";
+    }
+
     match.formHome = formHome;
     match.formAway = formAway;
 
@@ -1680,8 +1655,7 @@ export async function getScorePrediction(day, mocked) {
           match.predictionOutcome === "Won" ? "\u2714" : "\u2718";
         match.over25PredictionOutcomeSymbol =
           match.over25PredictionOutcome === "Won" ? "\u2714" : "\u2718";
-        match.bttsOutcomeSymbol =
-          match.bttsOutcome === "bttsWon" ? "\u2714" : "\u2718";
+        match.bttsOutcomeSymbol = match.bttsOutcome === "bttsWon" ? "\u2714" : "\u2718";
       } else {
         match.outcomeSymbol = "";
         match.over25PredictionOutcomeSymbol = "";
@@ -2039,31 +2013,18 @@ export async function getScorePrediction(day, mocked) {
         dangerousAttacksDiffTips.push(dangerousAttacksDiffObject);
       }
 
-      if (mock !== true) {
-        ReactDOM.render(
-          <Fixture
-            fixtures={matches}
-            result={true}
-            mock={mock}
-            className={`individualFixture`}
-          />,
-          document.getElementById("FixtureContainer")
-        );
-      } else if (mock === true) {
-        ReactDOM.render(
-          <Fixture
-            fixtures={matches}
-            result={true}
-            mock={mock}
-            className={"individualFixture"}
-          />,
-          document.getElementById("FixtureContainer")
-        );
-      }
-
       predictions.push(match);
-    })
+    }),
+
   );
+  ReactDOM.render(
+    <RenderAllFixtures
+      matches={matches}
+      result={true}
+      bool={mock}
+    />,
+    document.getElementById("FixtureContainer")
+  )
   await getSuccessMeasure(matches);
   await getMultis();
   await getNewTips(allTipsSorted);

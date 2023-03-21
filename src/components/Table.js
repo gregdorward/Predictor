@@ -15,7 +15,7 @@ const StyledTableCell = withStyles((theme) => ({
     textAlign: "center",
     fontSize: "2em",
     fontFamily: 'inherit',
-    border: "none",
+    // border: "none",
     margin: "none",
     color: '#030061',
     lineHeight: '2em',
@@ -26,7 +26,7 @@ const StyledTableCell = withStyles((theme) => ({
     fontFamily: 'inherit',
     padding: 10,
     color: "#030061",
-    border: "none",
+    // border: "none",
     margin: "none",
     backgroundColor: 'white'
   },

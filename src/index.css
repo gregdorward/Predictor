@@ -267,7 +267,7 @@ button {
   padding-bottom: 8px; */
   margin: 1em;
   border: 0.15em solid #030061;
-  border-radius: 1em;
+  border-radius: 45px;
   box-sizing: border-box;
   text-decoration: none;
   font-family: 'Open Sans', sans-serif;
@@ -399,6 +399,7 @@ p {
   padding-top: 0.2em;
   padding-bottom: 0.2em;
   font-size: 1em;
+  color: #030052;
 }
 
 .lastXGames {
@@ -822,7 +823,7 @@ p {
  background-color: #030061;
   color: white;
   width: 3.5em;
-  border-radius: 25px;
+  border-radius: 45px;
   font-weight: bolder;
   margin-left: 1em;
 }
@@ -834,7 +835,7 @@ p {
  background-color: #030061;
   color:white;
   width: 3.5em;
-  border-radius: 25px;
+  border-radius: 45px;
   font-weight: bolder;
   margin-left: 1em;
 }
@@ -846,7 +847,7 @@ p {
  background-color: #030061;
   color: white;
   width: 3.5em;
-  border-radius: 25px;
+  border-radius: 45px;
   font-weight: 500;
   margin-right: 1em;
 }
@@ -858,7 +859,7 @@ p {
  background-color: #030061;
   color: white;
   width: 3.5em;
-  border-radius: 25px;
+  border-radius: 45px;
   font-weight: 500;
   margin-right: 1em;
 }
@@ -1099,6 +1100,7 @@ p {
 
 .Collapsible{
   display: block;
+  color: #030061;
 }
 
 
@@ -1998,7 +2000,7 @@ li.FormHeader{
   padding-bottom: 6px;
   margin: 1em;
   border: 0.1em solid #030061;
-  border-radius: 2em;
+  border-radius: 45px;
   box-sizing: border-box;
   text-decoration: none;
   font-family: 'Open Sans', sans-serif;
@@ -2228,12 +2230,12 @@ td {
 
 button:hover {
   border-color: #ff6f00;
-  border-radius: 1em;
+  border-radius: 45px;
 }
 
 .disclaimerButton:hover {
   border-color: #030061;
-  border-radius: 1em;
+  border-radius: 45px;
 }
 
 .content h3,
@@ -2446,6 +2448,7 @@ section {
 
 .MainLoading {
   padding: 2em;
+  color:#030061
 }
 
 

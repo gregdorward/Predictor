@@ -29,6 +29,9 @@ function GetDivider(fixture) {
   const matchStatus = fixture.status;
   const isPrediction = resultValue;
 
+  console.log(fixture)
+  console.log(isPrediction)
+
   if (isPrediction === false && matchStatus !== "complete") {
     return (
       <div className="divider" data-cy={"divider-" + fixture.fixture.id}>
@@ -42,7 +45,8 @@ function GetDivider(fixture) {
         data-cy={"result-" + fixture.fixture.id}
       >{`${fixture.fixture.homeGoals} - ${fixture.fixture.awayGoals}`}</div>
     );
-  } else if (isPrediction === true && matchStatus === "complete") {
+  } 
+  else if (isPrediction === true && matchStatus === "complete") {
     let outcome;
     let prediction;
 
@@ -80,12 +84,6 @@ function GetDivider(fixture) {
         break;
       default:
         break;
-    }
-
-    if (fixture.fixture.homeGoals > 0 && fixture.fixture.awayGoals > 0) {
-      fixture.fixture.bttsOutcome = "bttsWon";
-    } else {
-      fixture.fixture.bttsOutcome = "bttsLost";
     }
 
     if (outcome === prediction) {
