@@ -509,6 +509,10 @@ async function getLowestScoringLeagues() {
   return sortedArray;
 }
 
+const welcomeTextUnsplit = `Welcome to XGTipping. Your go-to resource for all things football, from comprehensive head to head stats, predictions, odds, league tables, form, and bespoke multi-builders underpinned by expected goal (XG) data.\n XGTipping is completely indendent and free to use, relying on a donation model to support running costs. I'm always looking for feedback or feature ideas, so please get in touch at @TippingXg.`
+let welcomeText = welcomeTextUnsplit.split("\n").map((i) => {
+  return <p>{i}</p>;
+});
 function App() {
   return (
     <div className="App">
@@ -553,7 +557,7 @@ function App() {
       <div id="FixtureContainer">
         <div>
         <h6 className="WelcomeText">
-            Welcome to XGTipping. Your go-to resource for all things football, from comprehensive stats, predictions, odds, league tables, form, and bespoke multi-builders underpinned by expected goal (XG) data. XGTipping is completely indendent and free to use, relying on a donation model to support running costs. I'm always looking for feedback or feature ideas, so please get in touch at @TippingXg.
+        {welcomeText}
           </h6>
           <h6 className="WelcomeText">
             We cover a range of leagues, including

@@ -29,9 +29,6 @@ function GetDivider(fixture) {
   const matchStatus = fixture.status;
   const isPrediction = resultValue;
 
-  console.log(fixture)
-  console.log(isPrediction)
-
   if (isPrediction === false && matchStatus !== "complete") {
     return (
       <div className="divider" data-cy={"divider-" + fixture.fixture.id}>
@@ -85,7 +82,6 @@ function GetDivider(fixture) {
       default:
         break;
     }
-
     if (outcome === prediction) {
       if (fixture.fixture.homeOdds !== 0) {
         switch (true) {

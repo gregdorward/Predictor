@@ -408,7 +408,6 @@ export async function generateFixtures(
     fixtureArray = Array.from(fixtures.data);
   });
 
-  console.log(fixtureArray)
   let form;
   let formArray = [];
   allForm = [];
@@ -737,9 +736,9 @@ export async function generateFixtures(
       });
       match.homeTeam = fixture.home_name;
       match.awayTeam = fixture.away_name;
-      match.homeOdds = fixture.odds_ft_1;
-      match.awayOdds = fixture.odds_ft_2;
-      match.drawOdds = fixture.odds_ft_x;
+      match.homeOdds = +(fixture.odds_ft_1 + 0.1).toFixed(2);
+      match.awayOdds = +(fixture.odds_ft_2 + 0.1).toFixed(2);
+      match.drawOdds = +(fixture.odds_ft_x + 0.1).toFixed(2);
       match.homeDoubleChance = fixture.odds_doublechance_1x;
       match.awayDoubleChance = fixture.odds_doublechance_x2;
       match.bttsOdds = fixture.odds_btts_yes;
