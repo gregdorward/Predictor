@@ -444,9 +444,9 @@ export async function generateFixtures(
   var leaguePositions = [];
   leagueArray = [];
 
-  if (league.status === 200) {
-  } else {
-  }
+  // if (league.status === 200) {
+  // } else {
+  // }
 
   if (league.status === 200) {
     await league.json().then((leagues) => {
@@ -478,9 +478,9 @@ export async function generateFixtures(
 
     //set variable for date X amount of days in the past and use that to filter the results
 
-    let startDate = (new Date().getTime() / 1000).toFixed(0);
-    // deduct 3 months
-    let targetDate = startDate - 7889229;
+    // let startDate = (new Date().getTime() / 1000).toFixed(0);
+    // // deduct 3 months
+    // let targetDate = startDate - 7889229;
 
     for (const orderedLeague of orderedLeagues) {
       let fixtures = await fetch(
@@ -717,6 +717,7 @@ export async function generateFixtures(
       const milliseconds = unixTimestamp * 1000;
       const dateObject = new Date(milliseconds);
 
+      console.log(fixture)
       let match = {};
       if (orderedLeagues[i].name !== previousLeagueName) {
         match.leagueName = orderedLeagues[i].name;
@@ -1496,7 +1497,7 @@ export async function generateFixtures(
           onClickEvent={() => getScorePrediction(day)}
           className={"GeneratePredictions"}
         />
-        <div className="Version">Prediction engine v2.3.3</div>
+        <div className="Version">Prediction engine v2.3.4</div>
       </Fragment>,
       document.getElementById("GeneratePredictions")
     );

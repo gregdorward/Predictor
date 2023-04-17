@@ -647,12 +647,12 @@ export async function compareTeams(
   const oddsComparison = await compareStat(match.awayOdds, match.homeOdds);
 
   let calculation =
-    attackStrengthComparison * 1.5 +
-    defenceStrengthComparison * 1.5 +
+    attackStrengthComparison * 2 +
+    defenceStrengthComparison * 2 +
     possessiontrengthComparison * 1 +
     // xgForStrengthComparison * 1 +
     // xgAgainstStrengthComparison * 1 +
-    xgToActualDiffComparison * 3 +
+    xgToActualDiffComparison * 2 +
     xgDiffComparison * 3 +
     // xgForStrengthRecentComparison * 1 +
     // xgAgainstStrengthRecentComparison * 1 +
@@ -1108,7 +1108,7 @@ export async function calculateScore(match, index, divider, calculate) {
       formAwayRecent,
       match
     );
-    teamComparisonScore = teamComparisonScore * 0.5;
+    teamComparisonScore = teamComparisonScore * 0.25;
 
     if (teamComparisonScore > 0.85) {
       teamComparisonScore = 0.85;
@@ -1157,6 +1157,9 @@ export async function calculateScore(match, index, divider, calculate) {
 
     let factorOneHome;
     let factorOneAway;
+    // console.log(match.game)
+    // console.log(formHome.predictedGoalsBasedOnHomeAv)
+    // console.log(formAway.predictedGoalsBasedOnAwayAv)
 
     factorOneHome =
       (homeLeagueOrAllFormAverageGoals * 1 +
@@ -1197,9 +1200,9 @@ export async function calculateScore(match, index, divider, calculate) {
       awayComparisonWeighting = 1;
     }
 
-    let experimentalHomeGoals = factorOneHome * 0.85 * homeComparisonWeighting;
+    let experimentalHomeGoals = factorOneHome * 0.825 * homeComparisonWeighting;
 
-    let experimentalAwayGoals = factorOneAway * 0.85 * awayComparisonWeighting;
+    let experimentalAwayGoals = factorOneAway * 0.825 * awayComparisonWeighting;
 
     let rawFinalHomeGoals = experimentalHomeGoals;
     let rawFinalAwayGoals = experimentalAwayGoals;
@@ -1443,7 +1446,11 @@ export async function calculateScore(match, index, divider, calculate) {
       }
     }
 
-    if (match.status === "complete" && match.homeGoals > 0 && match.awayGoals > 0) {
+    if (
+      match.status === "complete" &&
+      match.homeGoals > 0 &&
+      match.awayGoals > 0
+    ) {
       match.bttsOutcome = "bttsWon";
     } else {
       match.bttsOutcome = "bttsLost";
@@ -1655,7 +1662,8 @@ export async function getScorePrediction(day, mocked) {
           match.predictionOutcome === "Won" ? "\u2714" : "\u2718";
         match.over25PredictionOutcomeSymbol =
           match.over25PredictionOutcome === "Won" ? "\u2714" : "\u2718";
-        match.bttsOutcomeSymbol = match.bttsOutcome === "bttsWon" ? "\u2714" : "\u2718";
+        match.bttsOutcomeSymbol =
+          match.bttsOutcome === "bttsWon" ? "\u2714" : "\u2718";
       } else {
         match.outcomeSymbol = "";
         match.over25PredictionOutcomeSymbol = "";
@@ -2014,17 +2022,12 @@ export async function getScorePrediction(day, mocked) {
       }
 
       predictions.push(match);
-    }),
-
+    })
   );
   ReactDOM.render(
-    <RenderAllFixtures
-      matches={matches}
-      result={true}
-      bool={mock}
-    />,
+    <RenderAllFixtures matches={matches} result={true} bool={mock} />,
     document.getElementById("FixtureContainer")
-  )
+  );
   await getSuccessMeasure(matches);
   await getMultis();
   await getNewTips(allTipsSorted);
