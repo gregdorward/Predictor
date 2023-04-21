@@ -59,6 +59,11 @@ export function Chart(props) {
     layout: {
       padding: 3,
     },
+    elements: {
+      point: {
+        radius: 0,
+      },
+    },
     scales: {
       y: {
         suggestedMin: depth,
@@ -215,10 +220,6 @@ export function RadarChart(props) {
 export function BarChart(props) {
   const datasetOne = props.data1;
   const datasetTwo = props.data2;
-
-  console.log(datasetOne);
-  console.log(datasetTwo);
-
   const sum = datasetTwo.map(function (num, idx) {
     return num - datasetOne[idx];
   });
@@ -228,8 +229,6 @@ export function BarChart(props) {
 
   const largest = findLargestNum(max, min);
 
-  console.log(`Largest: ${largest}`);
-
   function findLargestNum(numOne, numTwo) {
     const tempArr = [];
     const firstNum = Math.abs(numOne);
@@ -238,8 +237,6 @@ export function BarChart(props) {
 
     return Math.max(...tempArr);
   }
-
-  console.log(sum);
 
   const options = {
     indexAxis: "y",
@@ -253,8 +250,8 @@ export function BarChart(props) {
     },
     scales: {
       x: {
-        min: -3,
-        max: 3,
+        min: -4,
+        max: 4,
         ticks: {
           display: false,
         },

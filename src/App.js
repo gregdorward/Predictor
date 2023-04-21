@@ -67,7 +67,7 @@ const leagueOrder = [
   7506, //Scottish league 2 22/23
   7821, //Women's prem 22/23
   8777, //MLS 23
-  7097, //Brazil prem 22
+  9035, //Brazil prem 22
   8595, //Argentina prem 23
   // 6935, //Japan 22
   7425, //Mexico prem 22/23
@@ -218,7 +218,9 @@ let dateString;
                   "lastSaturday",
                   lastSaturday,
                   selectedOdds,
-                  lastSaturdayFootyStats
+                  lastSaturdayFootyStats,
+                  false,
+                  today
                 )
               )
             }
@@ -262,7 +264,9 @@ let dateString;
                 "todaysFixtures",
                 dateString,
                 selectedOdds,
-                dateFootyStats
+                dateFootyStats,
+                false,
+                today
               )
             )
           }
@@ -276,7 +280,9 @@ let dateString;
                 "todaysFixtures",
                 today,
                 selectedOdds,
-                todayFootyStats
+                todayFootyStats,
+                true,
+                today
               )
             )
           }
@@ -290,7 +296,9 @@ let dateString;
                 "tomorrowsFixtures",
                 tomorrow,
                 selectedOdds,
-                tomorrowFootyStats
+                tomorrowFootyStats,
+                true,
+                today
               )
             )
           }
@@ -312,7 +320,9 @@ let dateString;
                 "lastSaturday",
                 lastSaturday,
                 selectedOdds,
-                lastSaturdayFootyStats
+                lastSaturdayFootyStats,
+                false,
+                today
               )
             )
           }
@@ -346,7 +356,9 @@ let dateString;
               "todaysFixtures",
               today,
               selectedOdds,
-              todayFootyStats
+              todayFootyStats,
+              true,
+              today
             )
           )
         }
@@ -360,7 +372,9 @@ let dateString;
               "tomorrowsFixtures",
               tomorrow,
               selectedOdds,
-              tomorrowFootyStats
+              tomorrowFootyStats,
+              true,
+              today
             )
           )
         }

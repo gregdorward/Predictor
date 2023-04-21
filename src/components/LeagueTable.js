@@ -339,13 +339,9 @@ export default function LeagueTable(props) {
             </TableHead>
             <TableBody>{rows}</TableBody>
           </Table>
-          <h5>{`Gameweek ${props.mostRecentGameweek} results`}</h5>
+          <h5>{`${props.mostRecentGameweek} results`}</h5>
           <div className="ResultsList" id="ResultsList">
             <ul>{leagueResults}</ul>
-          </div>
-          <h5>{`Gameweek ${props.mostRecentGameweek - 1} results`}</h5>
-          <div className="ResultsList" id="ResultsList">
-            <ul>{leagueResultsOlder}</ul>
           </div>
           <div className="LeagueStatisticsHeader">League Statistics</div>
           <div className="LeagueStatistics">

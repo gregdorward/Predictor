@@ -1007,7 +1007,7 @@ export async function calculateScore(match, index, divider, calculate) {
     match.XGdifferentialValueRaw = parseFloat(XGdifferential);
 
     if (
-      allLeagueResultsArrayOfObjects[match.leagueIndex].fixtures.length > 50
+      allLeagueResultsArrayOfObjects[match.leagueIndex].fixtures.length > 50 && match.leagueID !== 7956
     ) {
       [
         formHome.predictedGoalsBasedOnHomeAv,
@@ -1157,9 +1157,6 @@ export async function calculateScore(match, index, divider, calculate) {
 
     let factorOneHome;
     let factorOneAway;
-    // console.log(match.game)
-    // console.log(formHome.predictedGoalsBasedOnHomeAv)
-    // console.log(formAway.predictedGoalsBasedOnAwayAv)
 
     factorOneHome =
       (homeLeagueOrAllFormAverageGoals * 1 +

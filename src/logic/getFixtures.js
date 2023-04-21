@@ -225,17 +225,17 @@ export async function renderTable(index, results, id) {
   //World cup table rendering
 
   // let mostRecentGame = results.fixtures.pop();
-  let mostRecentGame = results.fixtures[results.fixtures.length - 4];
+  let mostRecentGame = results.fixtures.pop();
 
-  let mostRecentGameweek = mostRecentGame.game_week;
+  let mostRecentGameweek = 'Latest';
 
   const gameweeksResults = results.fixtures.filter(
-    (games) => games.game_week === mostRecentGameweek
+    (games) => games.game_week === mostRecentGame.game_week
   );
 
-  const lastGameweeksResults = results.fixtures.filter(
-    (games) => games.game_week === mostRecentGameweek - 1
-  );
+  // const lastGameweeksResults = results.fixtures.filter(
+  //   (games) => games.game_week === mostRecentGameweek - 1
+  // );
 
   const leagueTable = tableArray.filter((table) => table.id === id);
 
@@ -257,7 +257,6 @@ export async function renderTable(index, results, id) {
         Key={`League${index}`}
         GamesPlayed={statistics.game_week}
         Results={gameweeksResults}
-        LastWeeksResults={lastGameweeksResults}
         mostRecentGameweek={mostRecentGameweek}
       />,
       document.getElementById(`leagueName${id}`)
@@ -360,16 +359,15 @@ async function createFixture(match, result, mockBool) {
 
 export function RenderAllFixtures(props) {
   return (
-      <Fixture
-        fixtures={props.matches}
-        result={props.result}
-        mock={props.bool}
-        className={"individualFixture"}
-      />
+    <Fixture
+      fixtures={props.matches}
+      result={props.result}
+      mock={props.bool}
+      className={"individualFixture"}
+    />
   );
 }
 //     document.getElementById("FixtureContainer")
-
 
 var myHeaders = new Headers();
 myHeaders.append("Origin", "https://gregdorward.github.io");
@@ -378,7 +376,9 @@ export async function generateFixtures(
   day,
   date,
   selectedOdds,
-  footyStatsFormattedDate
+  footyStatsFormattedDate,
+  current,
+  todaysDate
 ) {
   //cleanup if different day is selected
   ReactDOM.render(<div></div>, document.getElementById("GeneratePredictions"));
@@ -397,7 +397,7 @@ export async function generateFixtures(
   fixtureArray = [];
 
   league = await fetch(
-    `${process.env.REACT_APP_EXPRESS_SERVER}leagues/${date}`
+    `${process.env.REACT_APP_EXPRESS_SERVER}leagues/${todaysDate}`
   );
 
   ReactDOM.render(<div></div>, document.getElementById("FixtureContainer"));
@@ -429,7 +429,9 @@ export async function generateFixtures(
 
   ReactDOM.render(
     <div>
-      <div className="LoadingText">Loading all league, fixture & form data, please be patient...</div>
+      <div className="LoadingText">
+        Loading all league, fixture & form data, please be patient...
+      </div>
       <ThreeDots height="3em" fill="#030061" />
     </div>,
     document.getElementById("Loading")
@@ -444,18 +446,22 @@ export async function generateFixtures(
   var leaguePositions = [];
   leagueArray = [];
 
-  // if (league.status === 200) {
-  // } else {
-  // }
-
   if (league.status === 200) {
     await league.json().then((leagues) => {
       leagueArray = Array.from(leagues.leagueArray);
     });
-
-    let allLeagueResults = await fetch(
-      `${process.env.REACT_APP_EXPRESS_SERVER}results`
-    );
+    let allLeagueResults;
+    if (current) {
+      console.log("RECENT")
+      allLeagueResults = await fetch(
+        `${process.env.REACT_APP_EXPRESS_SERVER}resultsRecent`
+      );
+    } else {
+      console.log("ALL")
+      allLeagueResults = await fetch(
+        `${process.env.REACT_APP_EXPRESS_SERVER}results`
+      );
+    }
 
     await allLeagueResults.json().then((allGames) => {
       allLeagueResultsArrayOfObjects = allGames;
@@ -478,9 +484,9 @@ export async function generateFixtures(
 
     //set variable for date X amount of days in the past and use that to filter the results
 
-    // let startDate = (new Date().getTime() / 1000).toFixed(0);
-    // // deduct 3 months
-    // let targetDate = startDate - 7889229;
+    let startDate = (new Date().getTime() / 1000).toFixed(0);
+    // deduct 3 months
+    let targetDate = startDate - 10518972;
 
     for (const orderedLeague of orderedLeagues) {
       let fixtures = await fetch(
@@ -491,6 +497,13 @@ export async function generateFixtures(
       let gamesFiltered = games.data.filter(
         (game) => game.status === "complete"
       );
+
+      if (current) {
+        let mostRecentResults = gamesFiltered.filter(
+          (game) => game.date_unix > targetDate
+        );
+        gamesFiltered = mostRecentResults;
+      }
 
       // let mostRecentResults = gamesFiltered.filter(
       //   (game) => game.date_unix > targetDate
@@ -717,7 +730,6 @@ export async function generateFixtures(
       const milliseconds = unixTimestamp * 1000;
       const dateObject = new Date(milliseconds);
 
-      console.log(fixture)
       let match = {};
       if (orderedLeagues[i].name !== previousLeagueName) {
         match.leagueName = orderedLeagues[i].name;
@@ -1497,7 +1509,7 @@ export async function generateFixtures(
           onClickEvent={() => getScorePrediction(day)}
           className={"GeneratePredictions"}
         />
-        <div className="Version">Prediction engine v2.3.4</div>
+        <div className="Version">Prediction engine v2.3.3</div>
       </Fragment>,
       document.getElementById("GeneratePredictions")
     );
@@ -1531,22 +1543,29 @@ export async function generateFixtures(
       body: JSON.stringify({ leagueArray }),
     });
 
-    await fetch(`${process.env.REACT_APP_EXPRESS_SERVER}results`, {
-      method: "PUT",
-      headers: {
-        Accept: "application/json",
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(allLeagueResultsArrayOfObjects),
-    });
+    if (current) {
+      await fetch(`${process.env.REACT_APP_EXPRESS_SERVER}resultsRecent`, {
+        method: "PUT",
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(allLeagueResultsArrayOfObjects),
+      });
+    } else {
+      await fetch(`${process.env.REACT_APP_EXPRESS_SERVER}results`, {
+        method: "PUT",
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(allLeagueResultsArrayOfObjects),
+      });
+    }
   }
   // const allFixtures = await RenderAllFixtures(matches, false)
   ReactDOM.render(
-      <RenderAllFixtures
-        matches={matches}
-        result={false}
-        bool={false}
-      />,
+    <RenderAllFixtures matches={matches} result={false} bool={false} />,
     document.getElementById("FixtureContainer")
   );
   // ReactDOM.render(<RenderAllFixtures matches={matches} bool={false}/>),document.getElementById("FixtureContainer")
