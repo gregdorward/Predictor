@@ -227,7 +227,7 @@ export async function renderTable(index, results, id) {
   // let mostRecentGame = results.fixtures.pop();
   let mostRecentGame = results.fixtures.pop();
 
-  let mostRecentGameweek = 'Latest';
+  let mostRecentGameweek = "Latest";
 
   const gameweeksResults = results.fixtures.filter(
     (games) => games.game_week === mostRecentGame.game_week
@@ -446,22 +446,16 @@ export async function generateFixtures(
   var leaguePositions = [];
   leagueArray = [];
 
+  console.log(league.status);
   if (league.status === 200) {
+    console.log("Not fetching leagues");
     await league.json().then((leagues) => {
       leagueArray = Array.from(leagues.leagueArray);
     });
     let allLeagueResults;
-    if (current) {
-      console.log("RECENT")
-      allLeagueResults = await fetch(
-        `${process.env.REACT_APP_EXPRESS_SERVER}resultsRecent`
-      );
-    } else {
-      console.log("ALL")
-      allLeagueResults = await fetch(
-        `${process.env.REACT_APP_EXPRESS_SERVER}results`
-      );
-    }
+    allLeagueResults = await fetch(
+      `${process.env.REACT_APP_EXPRESS_SERVER}results`
+    );
 
     await allLeagueResults.json().then((allGames) => {
       allLeagueResultsArrayOfObjects = allGames;
@@ -471,6 +465,7 @@ export async function generateFixtures(
     generateTables(leagueArray, leagueIdArray, allLeagueResultsArrayOfObjects);
   } else {
     allLeagueResultsArrayOfObjects = [];
+    console.log("Fetching leagues");
     for (let i = 0; i < orderedLeagues.length; i++) {
       league = await fetch(
         `${process.env.REACT_APP_EXPRESS_SERVER}tables/${orderedLeagues[i].element.id}/${date}`
@@ -486,7 +481,7 @@ export async function generateFixtures(
 
     let startDate = (new Date().getTime() / 1000).toFixed(0);
     // deduct 3 months
-    let targetDate = startDate - 10518972;
+    let targetDate = startDate - 15778463;
 
     for (const orderedLeague of orderedLeagues) {
       let fixtures = await fetch(
@@ -1509,7 +1504,7 @@ export async function generateFixtures(
           onClickEvent={() => getScorePrediction(day)}
           className={"GeneratePredictions"}
         />
-        <div className="Version">Prediction engine v2.3.3</div>
+        <div className="Version">Prediction engine v2.3.4</div>
       </Fragment>,
       document.getElementById("GeneratePredictions")
     );
@@ -1532,36 +1527,27 @@ export async function generateFixtures(
       body: JSON.stringify({ allForm }),
     });
   }
-
+  console.log(leaguesStored);
   if (!leaguesStored) {
-    await fetch(`${process.env.REACT_APP_EXPRESS_SERVER}leagues/${date}`, {
-      method: "POST",
+    await fetch(
+      `${process.env.REACT_APP_EXPRESS_SERVER}leagues/${todaysDate}`,
+      {
+        method: "POST",
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ leagueArray }),
+      }
+    );
+    await fetch(`${process.env.REACT_APP_EXPRESS_SERVER}results`, {
+      method: "PUT",
       headers: {
         Accept: "application/json",
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ leagueArray }),
+      body: JSON.stringify(allLeagueResultsArrayOfObjects),
     });
-
-    if (current) {
-      await fetch(`${process.env.REACT_APP_EXPRESS_SERVER}resultsRecent`, {
-        method: "PUT",
-        headers: {
-          Accept: "application/json",
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(allLeagueResultsArrayOfObjects),
-      });
-    } else {
-      await fetch(`${process.env.REACT_APP_EXPRESS_SERVER}results`, {
-        method: "PUT",
-        headers: {
-          Accept: "application/json",
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(allLeagueResultsArrayOfObjects),
-      });
-    }
   }
   // const allFixtures = await RenderAllFixtures(matches, false)
   ReactDOM.render(

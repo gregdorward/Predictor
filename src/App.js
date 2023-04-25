@@ -115,13 +115,15 @@ let dateString;
 
   async function decrementDate(num, date) {
     i = i - num;
-    value = i - num;
-    date.setDate(date.getDate() - num);
-    [date, dateFootyStats] = await calculateDate(date);
-    string = dateFootyStats;
-    dateString = date;
-    await renderButtons();
-    // return date;
+    console.log(i)
+    if(i > - 60){
+      value = i - num;
+      date.setDate(date.getDate() - num);
+      [date, dateFootyStats] = await calculateDate(date);
+      string = dateFootyStats;
+      dateString = date;
+      await renderButtons();
+    }
   }
 
   async function calculateDate(dateString) {

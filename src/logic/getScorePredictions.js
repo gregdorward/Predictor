@@ -102,7 +102,7 @@ export function getPointsFromLastX(lastX) {
 
 async function getPastLeagueResults(team, game) {
   let date = game.date;
-
+  console.log(allLeagueResultsArrayOfObjects)
   if (allLeagueResultsArrayOfObjects[game.leagueIndex].fixtures.length > 50) {
     let teamsHomeResults = allLeagueResultsArrayOfObjects[
       game.leagueIndex
@@ -646,18 +646,23 @@ export async function compareTeams(
 
   const oddsComparison = await compareStat(match.awayOdds, match.homeOdds);
 
+  const dangerousAttacksWithConverstionComparison = await compareStat((homeForm.AverageDangerousAttacksOverall * homeForm.dangerousAttackConversion), (awayForm.AverageDangerousAttacksOverall * awayForm.dangerousAttackConversion))
+  
+  console.log(dangerousAttacksWithConverstionComparison * 0.01)
+
   let calculation =
-    attackStrengthComparison * 2 +
-    defenceStrengthComparison * 2 +
+    attackStrengthComparison * 1 +
+    defenceStrengthComparison * 1 +
     possessiontrengthComparison * 1 +
     // xgForStrengthComparison * 1 +
     // xgAgainstStrengthComparison * 1 +
-    xgToActualDiffComparison * 2 +
+    xgToActualDiffComparison * 3 +
     xgDiffComparison * 3 +
     // xgForStrengthRecentComparison * 1 +
     // xgAgainstStrengthRecentComparison * 1 +
-    // homeAwayPointAverageComparison * 1 +
+    homeAwayPointAverageComparison * 1 +
     oddsComparison * 3 +
+    dangerousAttacksWithConverstionComparison * 0.005 +
     fiveGameComparison * 0;
 
   let homeWinOutcomeProbability =
@@ -673,7 +678,7 @@ export async function compareTeams(
   ) {
     switch (true) {
       case drawOutcomeProbability > 100:
-        calculation = calculation / 4;
+        calculation = calculation / 2;
         break;
       default:
         calculation = calculation * 1;
@@ -708,7 +713,7 @@ export async function compareTeams(
       calculation = calculation / 2;
     } else if (
       calculation > 0 &&
-      homeForm.averageOdds > match.homeOdds * 1.75
+      homeForm.averageOdds > match.homeOdds * 1.5
     ) {
       calculation = calculation * 1.5;
     } else {
@@ -719,14 +724,14 @@ export async function compareTeams(
       calculation = calculation / 2;
     } else if (
       calculation < 0 &&
-      awayForm.averageOdds > match.awayOdds * 1.75
+      awayForm.averageOdds > match.awayOdds * 1.5
     ) {
       calculation = calculation * 1.5;
     } else {
       calculation = calculation * 1;
     }
   }
-
+  console.log(calculation)
   return calculation;
 }
 
@@ -987,9 +992,9 @@ export async function calculateScore(match, index, divider, calculate) {
     );
 
     formHome.dangerousAttackConversion =
-      formHome.AverageDangerousAttacks / formHome.ScoredAverageShortAndLongTerm;
+      (formHome.ScoredAverageShortAndLongTerm / formHome.AverageDangerousAttacks) * 100;
     formAway.dangerousAttackConversion =
-      formAway.AverageDangerousAttacks / formAway.ScoredAverageShortAndLongTerm;
+       (formAway.ScoredAverageShortAndLongTerm / formAway.AverageDangerousAttacks) * 100;
 
     [formHome.clinicalRating, formHome.clinicalScore] = await getClinicalRating(
       formHome
@@ -1108,12 +1113,12 @@ export async function calculateScore(match, index, divider, calculate) {
       formAwayRecent,
       match
     );
-    teamComparisonScore = teamComparisonScore * 0.25;
+    teamComparisonScore = teamComparisonScore * 0.3;
 
-    if (teamComparisonScore > 0.85) {
-      teamComparisonScore = 0.85;
-    } else if (teamComparisonScore < -0.85) {
-      teamComparisonScore = -0.85;
+    if (teamComparisonScore > 1) {
+      teamComparisonScore = 1;
+    } else if (teamComparisonScore < -1) {
+      teamComparisonScore = -1;
     }
     match.teamComparisonScore = teamComparisonScore.toFixed(2);
 
