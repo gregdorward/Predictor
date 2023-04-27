@@ -576,8 +576,8 @@ function App() {
       <div id="FixtureContainerHeaders"></div>
       {/* <StyledKofiButton buttonText="Donations"></StyledKofiButton> */}
       <div id="XGDiff" />
-      <h6 className="WelcomeText">{welcomeTextOne}</h6>
       <div id="FixtureContainer">
+      <h6 className="WelcomeText">{welcomeTextOne}</h6>
         <h6 className="GetMatchStatText">
           Below is an example of our tips/results overview for you to familiarise yourself with. Get real fixtures using the date buttons, above. When loaded, tap on
           one to see full match stats
