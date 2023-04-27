@@ -259,20 +259,6 @@ const List = ({ fixtures, mock }) => (
         <SingleFixture fixture={fixture} key={fixture.game} count={count} mock={mock}/>
       ))}
     </ul>
-    <div className="bitcoin" id="bitcoin">
-      We aim to remain free to use, contributions are always appreciated though:
-      <a
-        href="https://www.ko-fi.com/xgtipping"
-        target="_blank"
-        rel="noreferrer"
-      >
-        Donations
-      </a>
-      <span className="bitcoinSymbol">&#x20bf;itcoin address</span>
-      <span className="bitcoinAddress">
-        bc1q7j62txkvhfu0dt3l0s07saze6pjnyzs26wfgp0
-      </span>
-    </div>
   </div>
 );
 

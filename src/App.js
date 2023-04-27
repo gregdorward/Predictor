@@ -36,8 +36,6 @@ export let allLeagueData = [];
 export const availableLeagues = [];
 export var orderedLeagues = [];
 
-console.log(mockedFixtures);
-
 const leagueOrder = [
   7432, //World Cup 22
   7704, //premier league 22/23
@@ -528,8 +526,13 @@ async function getLowestScoringLeagues() {
   return sortedArray;
 }
 
-const welcomeTextUnsplit = `Welcome to XGTipping. Your go-to resource for all things football, from comprehensive head to head stats, predictions, results, xg scores, odds, league tables, form, and bespoke multi-builders underpinned by expected goal (XG) data.\n XGTipping is completely indendent and free to use, relying on a donation model to support running costs. I'm always looking for feedback or feature ideas, so please get in touch at @TippingXg.`;
-let welcomeText = welcomeTextUnsplit.split("\n").map((i) => {
+const welcomeTextUnsplitOne = `Welcome to XGTipping. Your go-to resource for all things football, from predictions, comprehensive head to head stats, results, xg scores, odds, league tables, form, and bespoke multi-builders underpinned by expected goal (XG) data.\n `;
+let welcomeTextOne = welcomeTextUnsplitOne.split("\n").map((i) => {
+  return <p>{i}</p>;
+});
+
+const welcomeTextUnsplitTwo = `XGTipping is completely independent and free to use, relying on a donation model to support running costs. For feedback or feature ideas, get in touch at @TippingXg.`;
+let welcomeTextTwo = welcomeTextUnsplitTwo.split("\n").map((i) => {
   return <p>{i}</p>;
 });
 function App() {
@@ -573,11 +576,14 @@ function App() {
       <div id="FixtureContainerHeaders"></div>
       {/* <StyledKofiButton buttonText="Donations"></StyledKofiButton> */}
       <div id="XGDiff" />
+      <h6 className="WelcomeText">{welcomeTextOne}</h6>
       <div id="FixtureContainer">
-      <h2>Dummy Fixtures</h2>
-      <h3 className="GetMatchStatText">Get fixtures using the date buttons, above. When real fixtures are returned, tap on any to see full match stats</h3>
+        <h6 className="GetMatchStatText">
+          Below is an example of our tips/results overview for you to familiarise yourself with. Get real fixtures using the date buttons, above. When loaded, tap on
+          one to see full match stats
+        </h6>
         <div className="ExplainerContainer">
-        <span className="oddsHomeExplainer">Home odds</span>
+          <span className="oddsHomeExplainer">Home odds</span>
           <span className="emptyHomeTeam"></span>
           <span className="scoreExplainer">Result / KO Time</span>
           <span className="predictionExplainer">Our Prediction</span>
@@ -591,7 +597,7 @@ function App() {
           className={"individualFixture"}
         />
         <div>
-          <h6 className="WelcomeText">{welcomeText}</h6>
+          <h6 className="WelcomeText">{welcomeTextTwo}</h6>
           <h6 className="WelcomeText">
             We cover a range of leagues, including
             <ul className="AllLeagues">
@@ -617,6 +623,21 @@ function App() {
           >
             footystats.org
           </a>
+        </div>
+        <div className="bitcoin" id="bitcoin">
+          We aim to remain free to use, contributions are always appreciated
+          though:
+          <a
+            href="https://www.ko-fi.com/xgtipping"
+            target="_blank"
+            rel="noreferrer"
+          >
+            Donations
+          </a>
+          <span className="bitcoinSymbol">&#x20bf;itcoin address</span>
+          <span className="bitcoinAddress">
+            bc1q7j62txkvhfu0dt3l0s07saze6pjnyzs26wfgp0
+          </span>
         </div>
       </div>
       <div className="Social">
