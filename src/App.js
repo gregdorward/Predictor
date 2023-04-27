@@ -3,6 +3,8 @@ import ReactDOM from "react-dom";
 import Header from "./components/Header";
 import { Button } from "./components/Button";
 import OddsRadio from "./components/OddsRadio";
+import { Fixture } from "./components/Fixture";
+import mockedFixtures from "./data/mockedFixtures.json";
 import { selectedOdds } from "./components/OddsRadio";
 import Collapsable from "./components/CollapsableElement";
 import { StyledKofiButton } from "./components/KofiButton";
@@ -33,6 +35,8 @@ export let allLeagueData = [];
 
 export const availableLeagues = [];
 export var orderedLeagues = [];
+
+console.log(mockedFixtures);
 
 const leagueOrder = [
   7432, //World Cup 22
@@ -115,8 +119,8 @@ let dateString;
 
   async function decrementDate(num, date) {
     i = i - num;
-    console.log(i)
-    if(i > - 60){
+    console.log(i);
+    if (i > -60) {
       value = i - num;
       date.setDate(date.getDate() - num);
       [date, dateFootyStats] = await calculateDate(date);
@@ -402,7 +406,6 @@ let dateString;
     document.getElementById("XGDiff")
   );
 
-
   // ReactDOM.render(
   //   <Button
   //     text={"Lowest scoring leagues"}
@@ -525,7 +528,7 @@ async function getLowestScoringLeagues() {
   return sortedArray;
 }
 
-const welcomeTextUnsplit = `Welcome to XGTipping. Your go-to resource for all things football, from comprehensive head to head stats, predictions, odds, league tables, form, and bespoke multi-builders underpinned by expected goal (XG) data.\n XGTipping is completely indendent and free to use, relying on a donation model to support running costs. I'm always looking for feedback or feature ideas, so please get in touch at @TippingXg.`
+const welcomeTextUnsplit = `Welcome to XGTipping. Your go-to resource for all things football, from comprehensive head to head stats, predictions, results, xg scores, odds, league tables, form, and bespoke multi-builders underpinned by expected goal (XG) data.\n XGTipping is completely indendent and free to use, relying on a donation model to support running costs. I'm always looking for feedback or feature ideas, so please get in touch at @TippingXg.`;
 let welcomeText = welcomeTextUnsplit.split("\n").map((i) => {
   return <p>{i}</p>;
 });
@@ -571,27 +574,41 @@ function App() {
       {/* <StyledKofiButton buttonText="Donations"></StyledKofiButton> */}
       <div id="XGDiff" />
       <div id="FixtureContainer">
+      <h2>Dummy Fixtures</h2>
+      <h3 className="GetMatchStatText">Get fixtures using the date buttons, above. When real fixtures are returned, tap on any to see full match stats</h3>
+        <div className="ExplainerContainer">
+        <span className="oddsHomeExplainer">Home odds</span>
+          <span className="emptyHomeTeam"></span>
+          <span className="scoreExplainer">Result / KO Time</span>
+          <span className="predictionExplainer">Our Prediction</span>
+          <span className="emptyAwayTeam"></span>
+          <span className="oddsAwayExplainer">Away odds</span>
+        </div>
+        <Fixture
+          fixtures={mockedFixtures.matches}
+          // result={false}
+          mock={true}
+          className={"individualFixture"}
+        />
         <div>
-        <h6 className="WelcomeText">
-        {welcomeText}
-          </h6>
+          <h6 className="WelcomeText">{welcomeText}</h6>
           <h6 className="WelcomeText">
             We cover a range of leagues, including
-          <ul className="AllLeagues">
-            <li className="League">Premier League</li>
-            <li className="League">English Football League</li>
-            <li className="League">La Liga</li>
-            <li className="League">Serie A</li>
-            <li className="League">Bundesliga</li>
-            <li className="League">Ligue 1</li>
-            <li className="League">MLS</li>
-            <li className="League">Primeira Liga</li>
-            <li className="League">Loads more...</li>
-          </ul>
+            <ul className="AllLeagues">
+              <li className="League">Premier League</li>
+              <li className="League">English Football League</li>
+              <li className="League">La Liga</li>
+              <li className="League">Serie A</li>
+              <li className="League">Bundesliga</li>
+              <li className="League">Ligue 1</li>
+              <li className="League">MLS</li>
+              <li className="League">Primeira Liga</li>
+              <li className="League">Loads more...</li>
+            </ul>
           </h6>
         </div>
         <div>
-        <div className="DataText">Raw data from</div>
+          <div className="DataText">Raw data from</div>
           <a
             className="DataLink"
             href="https://www.footystats.org"
@@ -607,7 +624,11 @@ function App() {
           url={"www.xgtipping.com"}
           title={"#XGTipping"}
           className="ShareButton"
-          style={{ backgroundColor: "white", boxShadow: "none", padding: "0.5em" }}
+          style={{
+            backgroundColor: "white",
+            boxShadow: "none",
+            padding: "0.5em",
+          }}
         >
           <TwitterIcon size={"3em"} round={true} />
         </TwitterShareButton>
@@ -615,7 +636,11 @@ function App() {
           url={"www.xgtipping.com"}
           title={"XGTipping"}
           className="ShareButton"
-          style={{ backgroundColor: "white", boxShadow: "none", padding: "0.5em" }}
+          style={{
+            backgroundColor: "white",
+            boxShadow: "none",
+            padding: "0.5em",
+          }}
         >
           <RedditIcon size={"3em"} round={true} />
         </RedditShareButton>
@@ -623,7 +648,11 @@ function App() {
           url={"www.xgtipping.com"}
           quote={"XGTipping - data-driven football predictions"}
           className="ShareButton"
-          style={{ backgroundColor: "white", boxShadow: "none", padding: "0.5em"}}
+          style={{
+            backgroundColor: "white",
+            boxShadow: "none",
+            padding: "0.5em",
+          }}
         >
           <FacebookIcon size={"3em"} round={true} />
         </FacebookShareButton>
@@ -632,7 +661,11 @@ function App() {
           title={"XGTipping"}
           separator=": "
           className="ShareButton"
-          style={{ backgroundColor: "white", boxShadow: "none", padding: "0.5em" }}
+          style={{
+            backgroundColor: "white",
+            boxShadow: "none",
+            padding: "0.5em",
+          }}
         >
           <WhatsappIcon size={"3em"} round={true} />
         </WhatsappShareButton>
@@ -640,7 +673,11 @@ function App() {
           url={"XGTipping"}
           title={"XGTipping"}
           className="ShareButton"
-          style={{ backgroundColor: "white", boxShadow: "none", padding: "0.5em" }}
+          style={{
+            backgroundColor: "white",
+            boxShadow: "none",
+            padding: "0.5em",
+          }}
         >
           <TelegramIcon size={"3em"} round={true} />
         </TelegramShareButton>

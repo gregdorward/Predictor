@@ -142,7 +142,7 @@
   body > #root {
     height: 100vh;
     font-family: 'Open Sans', sans-serif;
-    font-size: 2.5vw;
+    font-size: 2.3vw;
     display: flex;
     flex-direction: column;
     flex-basis: 100%;
@@ -447,15 +447,15 @@ p {
   padding: 0.5em;
   padding-bottom: 1em;
   margin: 3em;
-  margin-top: 2em;
+  margin-top: 5em;
   margin-bottom: 2em;
-  font-size: 1.1em;
+  font-size: 1.2em;
   line-height: 2em;
   display: flex;
   flex-direction: column;
-  flex-basis: 75%;
-  background-color: #1D3549;
-  color: #030061;
+  flex-basis: 50%;
+  background-color: #030061;
+  color: white;
 }
 
 .bitcoinSymbol{
@@ -828,6 +828,45 @@ p {
   margin-left: 1em;
 }
 
+.oddsHomeExplainer {
+  order: 0;
+  /* font-size: 0.5em; */
+  padding: 0.5em;
+ background-color: #030061;
+  color: white;
+  width: 4.5em;
+  border-radius: 45px;
+  font-weight: bolder;
+  margin-left: 1em;
+}
+
+.emptyHomeTeam {
+  height: auto;
+  /* width:30%; */
+  order: 1;
+  /* font-size: 0.7em; */
+  flex-grow: 0;
+  flex-basis: 40%;
+  flex-shrink: 2;
+  display: inline-block;
+  text-align: right;
+  padding-left: 0.25em;
+  font-weight: bolder;
+}
+
+.emptyAwayTeam {
+  height: auto;
+  flex-basis: 40%;
+  order: 6;
+  /* font-size: 0.7em; */
+  flex-grow: 0;
+  flex-shrink: 2;
+  display: inline-block;
+  text-align: left;
+  padding-right: 0.25em;
+  font-weight: bolder;
+}
+
 .HomeOddscomplete {
   order: 0;
   /* font-size: 0.5em; */
@@ -840,6 +879,14 @@ p {
   margin-left: 1em;
 }
 
+.GetMatchStatText {
+  padding-bottom: 1em;
+  color: #030061;
+  max-width: 60%;
+  margin-left: auto;
+  margin-right: auto;
+}
+
 *[class^='AwayOdds']{
   order: 7;
   /* font-size: 0.5em; */
@@ -847,6 +894,18 @@ p {
  background-color: #030061;
   color: white;
   width: 3.5em;
+  border-radius: 45px;
+  font-weight: 500;
+  margin-right: 1em;
+}
+
+.oddsAwayExplainer {
+  order: 7;
+  /* font-size: 0.5em; */
+  padding: 0.5em;
+ background-color: #030061;
+  color: white;
+  width: 4.5em;
   border-radius: 45px;
   font-weight: 500;
   margin-right: 1em;
@@ -987,6 +1046,33 @@ p {
   box-shadow: #030052;
 }
 
+.ExplainerContainer {
+  display: flex;
+  /* border: 0.1em solid #030061; */
+  padding-top: 1em;
+  padding-bottom: 0.5em;
+  align-items: center;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  height: auto;
+  font-size: 0.9em;
+}
+
+.scoreExplainer {
+  height: auto;
+  flex-basis: 10%;
+  max-width: 5.2em;
+  min-width: 5.2em;
+  order: 3;
+  padding: 0.5em;
+  display: inline-block;
+  color: white;
+  background-color:#030061;
+  margin: 0.2em;
+  border: black 0.25px solid;
+  box-shadow: #030052;
+}
+
 .HomeResults {
   /* padding-right: 1em; */
   font-size: 1em;
@@ -1056,6 +1142,21 @@ p {
     border: black 0.25px solid;
     margin: 0.2em;
 }
+
+.predictionExplainer {
+  height: auto;
+  flex-basis: 10%;
+  max-width: 5.2em;
+  min-width: 5.2em;
+  order: 4;
+  padding: 0.5em;
+  display: inline-block;
+  color: white;
+  background-color:#030061;
+  border: black 0.25px solid;
+  margin: 0.2em;
+}
+
 .hidden {
   display: none;
 }
@@ -2168,6 +2269,12 @@ img.BadgePrevious {margin-right: 1em;}
 a.kofi-button {
   border: 0.1em solid #030061;
 
+}
+
+a {
+  color: white;
+  font-size: 1.2em;
+  padding: 0.5em;
 }
 
 .kofi-button:hover {

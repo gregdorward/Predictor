@@ -358,11 +358,12 @@ async function createFixture(match, result, mockBool) {
 }
 
 export function RenderAllFixtures(props) {
+  console.log(props)
   return (
     <Fixture
       fixtures={props.matches}
       result={props.result}
-      mock={props.bool}
+      mock={false}
       className={"individualFixture"}
     />
   );
