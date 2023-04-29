@@ -1518,6 +1518,20 @@ export async function generateFixtures(
     document.getElementById("Loading")
   );
 
+  async function updateResults(bool){
+    console.log("updating results")
+    if(bool === true){
+      await fetch(`${process.env.REACT_APP_EXPRESS_SERVER}results`, {
+        method: "PUT",
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(allLeagueResultsArrayOfObjects),
+      });
+    }
+  }
+
   if (!isStoredLocally) {
     await fetch(`${process.env.REACT_APP_EXPRESS_SERVER}allForm/${date}`, {
       method: "POST",
@@ -1527,6 +1541,7 @@ export async function generateFixtures(
       },
       body: JSON.stringify({ allForm }),
     });
+    await updateResults(true);
   }
   console.log(leaguesStored);
   if (!leaguesStored) {
@@ -1541,14 +1556,6 @@ export async function generateFixtures(
         body: JSON.stringify({ leagueArray }),
       }
     );
-    await fetch(`${process.env.REACT_APP_EXPRESS_SERVER}results`, {
-      method: "PUT",
-      headers: {
-        Accept: "application/json",
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(allLeagueResultsArrayOfObjects),
-    });
   }
   // const allFixtures = await RenderAllFixtures(matches, false)
   ReactDOM.render(
