@@ -662,7 +662,7 @@ export async function compareTeams(
     // xgForStrengthRecentComparison * 1 +
     // xgAgainstStrengthRecentComparison * 1 +
     homeAwayPointAverageComparison * 2 +
-    oddsComparison * 1 +
+    oddsComparison * 2 +
     dangerousAttacksWithConverstionComparison * 0.15 +
     fiveGameComparison * 0;
 
@@ -1211,9 +1211,9 @@ export async function calculateScore(match, index, divider, calculate) {
       awayComparisonWeighting = 1;
     }
 
-    let experimentalHomeGoals = factorOneHome * 0.825 * homeComparisonWeighting;
+    let experimentalHomeGoals = factorOneHome * 0.8 * homeComparisonWeighting;
 
-    let experimentalAwayGoals = factorOneAway * 0.825 * awayComparisonWeighting;
+    let experimentalAwayGoals = factorOneAway * 0.8 * awayComparisonWeighting;
 
     let rawFinalHomeGoals = experimentalHomeGoals;
     let rawFinalAwayGoals = experimentalAwayGoals;
