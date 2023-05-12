@@ -6,6 +6,43 @@ function HeadToHead(props) {
       <li key="Stadium" className="Stadium" data-cy={props.name + "Stadium"}>
         {`Venue - ${props.stadium}`}
       </li>
+      <div className="KeyStatsOne">
+      <li key="h2h" className="h2h" data-cy={props.name + "h2h"}>
+        {`Matches played: ${props.matches}`}
+      </li>
+      <li key="homeWins" className="homeWins" data-cy={props.name + "homeWins"}>
+        {`${props.homeTeam} wins: ${props.homeWins}`}
+      </li>
+      <li key="awayWins" className="awayWins" data-cy={props.name + "awayWins"}>
+        {`${props.awayTeam} wins: ${props.awayWins}`}
+      </li>
+      <li key="draws" className="draws" data-cy={props.name + "draws"}>
+        {`Draws: ${props.draws}`}
+      </li>
+      </div>
+      <div className="KeyStatsTwo">
+      <li
+        key="averageGoals"
+        className="averageGoals"
+        data-cy={props.name + "averageGoals"}
+      >
+        {`Average goals in fixture: ${props.averageGoals}`}
+      </li>
+      <li
+        key="bestHomeOdds"
+        className="bestHomeOdds"
+        data-cy={props.name + "bestHomeOdds"}
+      >
+        {`Best oods for home win @: ${props.bestHomeOdds}`}
+      </li>
+      <li
+        key="bestAwayOdds"
+        className="bestAwayOdds"
+        data-cy={props.name + "bestAwayOdds"}
+      >
+        {`Best oods for away win @: ${props.bestAwayOdds}`}
+      </li>
+      </div>
       <li
         key="lastGameDetail"
         className="LastGameDetail"
@@ -47,39 +84,6 @@ function HeadToHead(props) {
           {`${props.secondToLastGameAwayTeam}`}
         </div>
       </div>
-      <li key="h2h" className="h2h" data-cy={props.name + "h2h"}>
-        {`Matches played: ${props.matches}`}
-      </li>
-      <li key="homeWins" className="homeWins" data-cy={props.name + "homeWins"}>
-        {`${props.homeTeam} wins: ${props.homeWins}`}
-      </li>
-      <li key="awayWins" className="awayWins" data-cy={props.name + "awayWins"}>
-        {`${props.awayTeam} wins: ${props.awayWins}`}
-      </li>
-      <li key="draws" className="draws" data-cy={props.name + "draws"}>
-        {`Draws: ${props.draws}`}
-      </li>
-      <li
-        key="averageGoals"
-        className="averageGoals"
-        data-cy={props.name + "averageGoals"}
-      >
-        {`Average goals in fixture: ${props.averageGoals}`}
-      </li>
-      <li
-        key="bestHomeOdds"
-        className="bestHomeOdds"
-        data-cy={props.name + "bestHomeOdds"}
-      >
-        {`Best oods for home win @: ${props.bestHomeOdds}`}
-      </li>
-      <li
-        key="bestAwayOdds"
-        className="bestAwayOdds"
-        data-cy={props.name + "bestAwayOdds"}
-      >
-        {`Best oods for away win @: ${props.bestAwayOdds}`}
-      </li>
     </ul>
   );
 }

@@ -409,6 +409,8 @@ export async function generateFixtures(
     fixtureArray = Array.from(fixtures.data);
   });
 
+  console.log(fixtureArray);
+  
   let form;
   let formArray = [];
   allForm = [];

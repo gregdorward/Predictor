@@ -193,7 +193,7 @@ body {
 }
 
 h1 {
-  font-size: 3em;
+  font-size: 3.5em;
 }
 
 h2 {
@@ -274,7 +274,7 @@ button {
   flex-basis: 100%;
   width: 12em;
   height: auto;
-  font-size: 1em;
+  font-size: 1.2em;
   cursor: pointer;
   color: white;
  background-color: #030061;
@@ -1535,7 +1535,31 @@ a.PreviousMatchLink{
   color: white;
 }
 
+.KeyStatsOne {
+  flex-direction: column !important;
+  text-align: right;
+  margin-right: 0.5em;
+  flex-basis: 45%;
+  background-color:#030061;
+  color: white;
+  margin-left: auto;
+  margin-bottom: 2em;
+  padding-top: 1em;
+  padding-bottom: 1em;
+}
 
+.KeyStatsTwo {
+  flex-direction: column !important;
+  text-align: left;
+  flex-basis: 45%;
+  margin-left: 0.5em;
+  background-color:#030061;
+  color: white;
+  margin-right: auto;
+  margin-bottom: 2em;
+  padding-top: 1em;
+  padding-bottom: 1em;
+}
 
 
 /* .row {
@@ -2384,10 +2408,10 @@ button:hover {
 
 .PreviousMatchStats{
   display: flex;
-  flex-direction: column;
+  /* flex-direction: column; */
   flex-wrap: wrap;
-  /* margin-left: 20%;
-  margin-right: 20%; */
+  /* margin-left: 1em;
+  margin-right: 1em; */
   padding-bottom: 15px;
 }
 
@@ -2404,6 +2428,8 @@ button:hover {
   margin: auto;
   font-size: 1em;
   height: 2em;
+  flex-direction: row;
+  flex-basis: 90%;
 }
 
 
@@ -2426,6 +2452,7 @@ button:hover {
   background-color: #030061;
   padding-top: 1em;
   padding-bottom: 1em;
+  margin-bottom: 1em;
   align-items: center;
 }
 
@@ -2516,7 +2543,7 @@ button:hover {
 }
 
 .MoreStats{
-  font-size: 0.8em;
+  font-size: 1em;
 }
 
 .attackOoU{
@@ -2610,7 +2637,7 @@ input {
 .design {
   width: 1em;
   height: 1em;
-
+  /* padding: 0.5em; */
   border: 2px solid var(--other);
   border-radius: 100%;
   margin-right: 0.2em;
