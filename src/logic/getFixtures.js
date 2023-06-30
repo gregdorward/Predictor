@@ -456,13 +456,12 @@ export async function generateFixtures(
       leagueArray = Array.from(leagues.leagueArray);
     });
     let allLeagueResults;
-    allLeagueResults = await fetch(
-      `${process.env.REACT_APP_EXPRESS_SERVER}results`
-    );
+    updateResults(false);
 
-    await allLeagueResults.json().then((allGames) => {
-      allLeagueResultsArrayOfObjects = allGames;
-    });
+    // await allLeagueResults.json().then((allGames) => {
+    //   allLeagueResultsArrayOfObjects = Array.from(allGames); ;
+    // });
+    console.log(allLeagueResultsArrayOfObjects)
 
     leaguesStored = true;
     generateTables(leagueArray, leagueIdArray, allLeagueResultsArrayOfObjects);
@@ -566,6 +565,7 @@ export async function generateFixtures(
 
       allLeagueResultsArrayOfObjects.push(leagueObj);
     }
+    updateResults(true);
     generateTables(leagueArray, leagueIdArray, allLeagueResultsArrayOfObjects);
   }
 
@@ -1524,13 +1524,21 @@ export async function generateFixtures(
     console.log("updating results")
     if(bool === true){
       await fetch(`${process.env.REACT_APP_EXPRESS_SERVER}results`, {
-        method: "PUT",
+        method: "DELETE",
         headers: {
           Accept: "application/json",
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(allLeagueResultsArrayOfObjects),
-      });
+      }).then(async () => {
+        await fetch(`${process.env.REACT_APP_EXPRESS_SERVER}results`, {
+          method: "PUT",
+          headers: {
+            Accept: "application/json",
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(allLeagueResultsArrayOfObjects),
+        });
+      })
     }
   }
 

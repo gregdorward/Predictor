@@ -31,6 +31,7 @@ ChartJS.register(
 );
 
 export function Chart(props) {
+  console.log(props)
   let length;
   let depth;
 
