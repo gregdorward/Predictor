@@ -458,9 +458,13 @@ export async function generateFixtures(
     let allLeagueResults;
     updateResults(false);
 
-    // await allLeagueResults.json().then((allGames) => {
-    //   allLeagueResultsArrayOfObjects = Array.from(allGames); ;
-    // });
+    allLeagueResults = await fetch(
+      `${process.env.REACT_APP_EXPRESS_SERVER}results`
+    );
+
+    await allLeagueResults.json().then((allGames) => {
+      allLeagueResultsArrayOfObjects = Array.from(allGames); ;
+    });
     console.log(allLeagueResultsArrayOfObjects)
 
     leaguesStored = true;
@@ -1531,7 +1535,7 @@ export async function generateFixtures(
         },
       }).then(async () => {
         await fetch(`${process.env.REACT_APP_EXPRESS_SERVER}results`, {
-          method: "PUT",
+          method: "POST",
           headers: {
             Accept: "application/json",
             "Content-Type": "application/json",
