@@ -16,10 +16,12 @@ import {
   getAttackStrength,
   getDefenceStrength,
   getPossessionStrength,
-  getXGForStrength,
+  getShotsStrength,
   getXGAgainstStrength,
   getXGDifferentialStrength,
   getXGtoActualDifferentialStrength,
+  getShotsStrengthHorA,
+  getXGForStrength,
 } from "./getStats";
 
 var myHeaders = new Headers();
@@ -214,7 +216,7 @@ async function getPastLeagueResults(team, game) {
     const bttsAllPercentage = (bttsAllCount.length / bttsAll.length) * 100;
 
     let r = 6;
-    let x = 3;
+    let x = 4;
 
     const teamGoalsHomeRollingAverage = await predictNextWeightedMovingAverage(
       teamGoalsHome,
@@ -540,14 +542,11 @@ export async function compareTeams(
     (await getPossessionStrength(homeForm.AveragePossessionOverall)) *
     homeMultiplier;
 
-  let homeXGForStrength =
-    (await getXGForStrength(homeForm.XGOverall)) * homeMultiplier;
+  let homeShotsOverallStrength =
+    await getShotsStrength(homeForm.AverageShots);
 
-  let homeXGAgainstStrength =
-    (await getXGAgainstStrength(homeForm.XGAgainstAvgOverall)) * homeMultiplier;
-
-  let homeXGForStrengthRecent =
-    (await getXGForStrength(formHomeRecent.XGOverall)) * homeMultiplier;
+  let homeShotsHomeStrength = 
+    await getShotsStrengthHorA(homeForm.AverageShotsHomeOrAway);
 
   let homeXGAgainstStrengthRecent =
     (await getXGAgainstStrength(formHomeRecent.XGAgainstAvgOverall)) *
@@ -566,13 +565,12 @@ export async function compareTeams(
   let awayPossessionStrength =
     (await getPossessionStrength(awayForm.AveragePossessionOverall)) *
     awayMultiplier;
-  let awayXGForStrength =
-    (await getXGForStrength(awayForm.XGOverall)) * awayMultiplier;
-  let awayXGAgainstStrength =
-    (await getXGAgainstStrength(awayForm.XGAgainstAvgOverall)) * awayMultiplier;
 
-  let awayXGForStrengthRecent =
-    (await getXGForStrength(formAwayRecent.XGOverall)) * homeMultiplier;
+  let awayShotsOverallStrength =
+    await getShotsStrength(awayForm.AverageShots);
+
+  let awayShotsAwayStrength = 
+    await getShotsStrengthHorA(awayForm.AverageShotsHomeOrAway);
 
   let awayXGAgainstStrengthRecent =
     (await getXGAgainstStrength(formAwayRecent.XGAgainstAvgOverall)) *
@@ -607,24 +605,14 @@ export async function compareTeams(
     awayPossessionStrength
   );
 
-  const xgForStrengthComparison = await compareStat(
-    homeXGForStrength,
-    awayXGAgainstStrength
+  const shotsStrengthComparison = await compareStat(
+    homeShotsOverallStrength,
+    awayShotsOverallStrength
   );
 
-  const xgAgainstStrengthComparison = await compareStat(
-    homeXGAgainstStrength,
-    awayXGForStrength
-  );
-
-  const xgForStrengthRecentComparison = await compareStat(
-    homeXGForStrengthRecent,
-    awayXGAgainstStrengthRecent
-  );
-
-  const xgAgainstStrengthRecentComparison = await compareStat(
-    homeXGAgainstStrengthRecent,
-    awayXGForStrengthRecent
+  const shotsHorAStrengthComparison = await compareStat(
+    homeShotsHomeStrength,
+    awayShotsAwayStrength
   );
 
   const xgDiffComparison = await compareStat(
@@ -651,6 +639,16 @@ export async function compareTeams(
 
   const dangerousAttacksWithConverstionComparison = await compareStat((homeForm.AverageDangerousAttacksOverall * homeForm.dangerousAttackConversion), (awayForm.AverageDangerousAttacksOverall * awayForm.dangerousAttackConversion));
 
+  // console.log(attackStrengthComparison)
+  // console.log(defenceStrengthComparison)
+  // console.log(possessiontrengthComparison)
+  // console.log(xgToActualDiffComparison)
+  // console.log(xgDiffComparison)
+  // console.log(homeAwayPointAverageComparison)
+  // console.log(oddsComparison)
+  // console.log(dangerousAttacksWithConverstionComparison)
+  // console.log(fiveGameComparison)
+
   let calculation =
     attackStrengthComparison * 1 +
     defenceStrengthComparison * 1 +
@@ -659,11 +657,13 @@ export async function compareTeams(
     // xgAgainstStrengthComparison * 1 +
     xgToActualDiffComparison * 2 +
     xgDiffComparison * 2 +
+    shotsStrengthComparison * 1 +
+    shotsHorAStrengthComparison * 1 +
     // xgForStrengthRecentComparison * 1 +
     // xgAgainstStrengthRecentComparison * 1 +
-    homeAwayPointAverageComparison * 2 +
-    oddsComparison * 2 +
-    dangerousAttacksWithConverstionComparison * 0.15 +
+    homeAwayPointAverageComparison * 1 +
+    oddsComparison * 1 +
+    dangerousAttacksWithConverstionComparison * 0.02 +
     fiveGameComparison * 0;
 
   let homeWinOutcomeProbability =
@@ -736,7 +736,6 @@ export async function compareTeams(
       calculation = calculation * 1;
     }
   }
-  console.log(`${match.game} calculation: ${calculation}`)
   return calculation;
 }
 

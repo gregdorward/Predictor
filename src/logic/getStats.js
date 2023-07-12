@@ -127,6 +127,84 @@ export async function getPossessionStrength(possession) {
   return strength;
 }
 
+export async function getShotsStrength(Shots) {
+  let strength;
+  switch (true) {
+    case Shots >= 15:
+      strength = 10;
+      break;
+    case Shots >= 14.25 && Shots < 15:
+      strength = 9;
+      break;
+    case Shots >= 13.5 && Shots < 14.25:
+      strength = 8;
+      break;
+    case Shots >= 12.75 && Shots < 13.5:
+      strength = 7;
+      break;
+    case Shots >= 12 && Shots < 12.75:
+      strength = 6;
+      break;
+    case Shots >= 11.25 && Shots < 12:
+      strength = 5;
+      break;
+    case Shots >= 10.5 && Shots < 11.25:
+      strength = 4;
+      break;
+    case Shots >= 9.75 && Shots < 10.5:
+      strength = 3;
+      break;
+    case Shots >= 9 && Shots < 9.75:
+      strength = 2;
+      break;
+    case Shots < 9:
+      strength = 1;
+      break;
+    default:
+      break;
+  }
+  return strength;
+}
+
+export async function getShotsStrengthHorA(Shots) {
+  let strength;
+  switch (true) {
+    case Shots >= 19.5:
+      strength = 10;
+      break;
+    case Shots >= 18 && Shots < 19.5:
+      strength = 9;
+      break;
+    case Shots >= 17 && Shots < 18:
+      strength = 8;
+      break;
+    case Shots >= 15.5 && Shots < 17:
+      strength = 7;
+      break;
+    case Shots >= 14 && Shots < 15.5:
+      strength = 6;
+      break;
+    case Shots >= 12.5 && Shots < 14:
+      strength = 5;
+      break;
+    case Shots >= 11 && Shots < 12.5:
+      strength = 4;
+      break;
+    case Shots >= 9.5 && Shots < 11:
+      strength = 3;
+      break;
+    case Shots >= 8 && Shots < 9.5:
+      strength = 2;
+      break;
+    case Shots < 8:
+      strength = 1;
+      break;
+    default:
+      break;
+  }
+  return strength;
+}
+
 export async function getXGForStrength(XG) {
   let strength;
   switch (true) {

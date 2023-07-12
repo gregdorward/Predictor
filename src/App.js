@@ -38,44 +38,44 @@ export var orderedLeagues = [];
 
 const leagueOrder = [
   7432, //World Cup 22
-  7704, //premier league 22/23
-  7593, //championship 22/23
-  7570, //league 1 22/23
-  7574, //league 2 22/23
-  7729, //National league 22/23
-  7665, //La Liga 22/23
-  7494, //Scottish Prem 22/23
-  7664, //Bundesliga 22/23
-  7608, //Serie A 22/23
-  7500, //French Prem 22/23
+  9660, //premier league 22/23
+  9663, //championship 22/23
+  9582, //league 1 22/23
+  9581, //league 2 22/23
+  9700, //National league 22/23
+  9665, //La Liga 22/23
+  9636, //Scottish Prem 22/23
+  9655, //Bundesliga 22/23
+  9697, //Serie A 22/23
+  9674, //French Prem 22/23
   7731, //Portagul Prem 22/23
-  7482, //Dutch Prem 22/23
-  7544, //Belgian Pro League 22/23
+  9653, //Dutch Prem 22/23
+  9577, //Belgian Pro League 22/23
   8737, //sweden 23
-  7426, //Danish Prem 22/23
+  9545, //Danish Prem 22/23
   8739, //Norway Prem 23
   7890, //Austrian Prem 22/23
   7954, //Greek Prem 22/23
-  7428, //Polish prem 22/23
-  7504, //Swiss prem 22/23
+  9553, //Polish prem 22/23
+  9580, //Swiss prem 22/23
   8741, //Irish Prem 23
-  7592, //Spanish secunda 22/23
+  9675, //Spanish secunda 22/23
   7864, //Italy serie B 22/23
-  7499, //Bundesliga 2 22/23
-  7591, //German 3rd tier 22/23
-  7501, //French League 2 22/23
-  7498, //Scottish Championship 22/23
-  7505, //Scottish league 1 22/23
-  7506, //Scottish league 2 22/23
+  9656, //Bundesliga 2 22/23
+  9741, //German 3rd tier 22/23
+  9621, //French League 2 22/23
+  9637, //Scottish Championship 22/23
+  9639, //Scottish league 1 22/23
+  9638, //Scottish league 2 22/23
   7821, //Women's prem 22/23
   8777, //MLS 23
-  9035, //Brazil prem 22
+  9035, //Brazil prem 23
   8595, //Argentina prem 23
   // 6935, //Japan 22
-  7425, //Mexico prem 22/23
+  9525, //Mexico prem 23/24
   7956, //National league North and South 22/23
   8008, //Australian A league 22/23
-  8899, //S Korea 22
+  8899, //S Korea 23
 ];
 
 let today;
@@ -138,7 +138,7 @@ let dateString;
   [today, todayFootyStats] = await calculateDate(new Date());
 
   tomorrowsDate = new Date();
-  tomorrowsDate.setDate(tomorrowsDate.getDate() + 1);
+  tomorrowsDate.setDate(tomorrowsDate.getDate() + 24);
   [tomorrow, tomorrowFootyStats] = await calculateDate(tomorrowsDate);
 
   yesterdaysDate = new Date();
@@ -173,7 +173,7 @@ let dateString;
     for (let x = 0; x < league.season.length; x++) {
       const element = league.season[x];
 
-      if (element.year === 2023 || element.year === 20222023) {
+      if (element.year === 2023 || element.year === 20232024) {
         if (element.id !== 4340 && element.id !== 6935 && element.id !== 7061) {
           availableLeagues.push({ name: name, element });
         }
