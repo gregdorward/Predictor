@@ -138,7 +138,7 @@ let dateString;
   [today, todayFootyStats] = await calculateDate(new Date());
 
   tomorrowsDate = new Date();
-  tomorrowsDate.setDate(tomorrowsDate.getDate() + 24);
+  tomorrowsDate.setDate(tomorrowsDate.getDate() + 1);
   [tomorrow, tomorrowFootyStats] = await calculateDate(tomorrowsDate);
 
   yesterdaysDate = new Date();
