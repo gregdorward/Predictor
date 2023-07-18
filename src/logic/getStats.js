@@ -10,319 +10,390 @@ import { Fragment } from "react";
 import GenerateFormSummary from "../logic/compareFormTrend";
 import { Chart, RadarChart, BarChart } from "../components/Chart";
 import Collapsable from "../components/CollapsableElement";
-export async function getAttackStrength(goalsFor) {
-  let strength;
-  switch (true) {
-    case goalsFor >= 2.8:
-      strength = 10;
-      break;
-    case goalsFor >= 2.5 && goalsFor < 2.8:
-      strength = 9;
-      break;
-    case goalsFor >= 2.2 && goalsFor < 2.5:
-      strength = 8;
-      break;
-    case goalsFor >= 1.9 && goalsFor < 2.2:
-      strength = 7;
-      break;
-    case goalsFor >= 1.6 && goalsFor < 1.9:
-      strength = 6;
-      break;
-    case goalsFor >= 1.3 && goalsFor < 1.6:
-      strength = 5;
-      break;
-    case goalsFor >= 1 && goalsFor < 1.3:
-      strength = 4;
-      break;
-    case goalsFor >= 0.7 && goalsFor < 1:
-      strength = 3;
-      break;
-    case goalsFor >= 0.4 && goalsFor < 0.7:
-      strength = 2;
-      break;
-    case goalsFor < 0.4:
-      strength = 1;
-      break;
-    default:
-      break;
+
+export async function calculateAttackingStrength(stats) {
+  console.log("calculating");
+
+  // Define weights for each metric (you can adjust these based on your preference)
+  const weights = {
+    averagePossession: 0.15,
+    averageDangerousAttacks: 0.2,
+    averageShots: 0.1,
+    averageShotsOnTarget: 0.15,
+    averageExpectedGoals: 0.25,
+    averageGoals: 0.15,
+  };
+
+  // Define the ranges for normalization
+  const ranges = {
+    averagePossession: { min: 25, max: 75 },
+    averageDangerousAttacks: { min: 15, max: 90 }, // Adjust the max value as needed
+    averageShots: { min: 4, max: 30 }, // Adjust the max value as needed
+    averageShotsOnTarget: { min: 2, max: 14 }, // Adjust the max value as needed
+    averageExpectedGoals: { min: 0, max: 3 }, // Adjust the max value as needed
+    averageGoals: { min: 0, max: 3 }, // Adjust the max value as needed
+  };
+
+  // Normalize each metric value and calculate the weighted sum
+  let weightedSum = 0;
+  for (const metric in stats) {
+    if (
+      stats.hasOwnProperty(metric) &&
+      weights.hasOwnProperty(metric) &&
+      ranges.hasOwnProperty(metric)
+    ) {
+      const normalizedValue =
+        (stats[metric] - ranges[metric].min) /
+        (ranges[metric].max - ranges[metric].min);
+      weightedSum += normalizedValue * weights[metric];
+    }
   }
-  return strength;
+
+  return weightedSum.toFixed(2);
 }
 
-export async function getDefenceStrength(goalsAgainst) {
-  let strength;
-  switch (true) {
-    case goalsAgainst >= 2.8:
-      strength = 1;
-      break;
-    case goalsAgainst >= 2.5 && goalsAgainst < 2.8:
-      strength = 2;
-      break;
-    case goalsAgainst >= 2.2 && goalsAgainst < 2.5:
-      strength = 3;
-      break;
-    case goalsAgainst >= 1.9 && goalsAgainst < 2.2:
-      strength = 4;
-      break;
-    case goalsAgainst >= 1.6 && goalsAgainst < 1.9:
-      strength = 5;
-      break;
-    case goalsAgainst >= 1.3 && goalsAgainst < 1.6:
-      strength = 6;
-      break;
-    case goalsAgainst >= 1 && goalsAgainst < 1.3:
-      strength = 7;
-      break;
-    case goalsAgainst >= 0.7 && goalsAgainst < 1:
-      strength = 8;
-      break;
-    case goalsAgainst >= 0.4 && goalsAgainst < 0.7:
-      strength = 9;
-      break;
-    case goalsAgainst < 0.4:
-      strength = 10;
-      break;
-    default:
-      break;
+export async function calculateDefensiveStrength(stats) {
+  // Define weights for each metric (you can adjust these based on your preference)
+  const weights = {
+    CleanSheetPercentage: 0.2,
+    averageExpectedGoalsAgainst: 0.45,
+    averageGoalsAgainst: 0.35,
+  };
+
+  // Define the ranges for normalization
+  const ranges = {
+    CleanSheetPercentage: { min: 0, max: 100 },
+    averageExpectedGoalsAgainst: { min: 0, max: 3 }, // Adjust the max value as needed
+    averageGoalsAgainst: { min: 0, max: 3 }, // Adjust the max value as needed
+  };
+
+  // Normalize each metric value and calculate the weighted sum
+  let weightedSum = 0;
+  for (const metric in stats) {
+    if (
+      stats.hasOwnProperty(metric) &&
+      weights.hasOwnProperty(metric) &&
+      ranges.hasOwnProperty(metric)
+    ) {
+      const normalizedValue =
+        1 -
+        (stats[metric] - ranges[metric].min) /
+          (ranges[metric].max - ranges[metric].min);
+      weightedSum += normalizedValue * weights[metric];
+    }
   }
-  return strength;
+
+  return weightedSum.toFixed(2);
 }
 
-export async function getPossessionStrength(possession) {
-  let strength;
-  switch (true) {
-    case possession >= 68:
-      strength = 10;
-      break;
-    case possession >= 64 && possession < 68:
-      strength = 9;
-      break;
-    case possession >= 60 && possession < 64:
-      strength = 8;
-      break;
-    case possession >= 56 && possession < 60:
-      strength = 7;
-      break;
-    case possession >= 52 && possession < 56:
-      strength = 6;
-      break;
-    case possession >= 48 && possession < 52:
-      strength = 5;
-      break;
-    case possession >= 44 && possession < 48:
-      strength = 4;
-      break;
-    case possession >= 40 && possession < 44:
-      strength = 3;
-      break;
-    case possession >= 35 && possession < 40:
-      strength = 2;
-      break;
-    case possession < 35:
-      strength = 1;
-      break;
-    default:
-      break;
+export async function calculateMetricStrength(metricName, metricValue) {
+  console.log(metricValue);
+  // Define weights for each metric (you can adjust these based on your preference)
+  const weights = {
+    averagePossession: 1,
+    xgFor: 1,
+    xgAgainst: 1,
+  };
+
+  // Define the ranges for normalization
+  const ranges = {
+    averagePossession: { min: 20, max: 80 },
+    xgFor: { min: 0.1, max: 3 },
+    xgAgainst: { min: 0.1, max: 3 },
+  };
+
+  // Ensure the metric is valid and exists in the weights and ranges objects
+  if (
+    !weights.hasOwnProperty(metricName) ||
+    !ranges.hasOwnProperty(metricName)
+  ) {
+    throw new Error("Invalid metric name or missing normalization range.");
   }
-  return strength;
+
+  // Normalize the metric value
+  const normalizedValue =
+    (metricValue - ranges[metricName].min) /
+    (ranges[metricName].max - ranges[metricName].min);
+
+  // Calculate the weighted score
+  const weightedScore = normalizedValue * weights[metricName];
+
+  return parseFloat(weightedScore.toFixed(2));
 }
 
-export async function getShotsStrength(Shots) {
-  let strength;
-  switch (true) {
-    case Shots >= 15:
-      strength = 10;
-      break;
-    case Shots >= 14.25 && Shots < 15:
-      strength = 9;
-      break;
-    case Shots >= 13.5 && Shots < 14.25:
-      strength = 8;
-      break;
-    case Shots >= 12.75 && Shots < 13.5:
-      strength = 7;
-      break;
-    case Shots >= 12 && Shots < 12.75:
-      strength = 6;
-      break;
-    case Shots >= 11.25 && Shots < 12:
-      strength = 5;
-      break;
-    case Shots >= 10.5 && Shots < 11.25:
-      strength = 4;
-      break;
-    case Shots >= 9.75 && Shots < 10.5:
-      strength = 3;
-      break;
-    case Shots >= 9 && Shots < 9.75:
-      strength = 2;
-      break;
-    case Shots < 9:
-      strength = 1;
-      break;
-    default:
-      break;
-  }
-  return strength;
-}
+// export async function getDefenceStrength(goalsAgainst) {
+//   let strength;
+//   switch (true) {
+//     case goalsAgainst >= 2.8:
+//       strength = 1;
+//       break;
+//     case goalsAgainst >= 2.5 && goalsAgainst < 2.8:
+//       strength = 2;
+//       break;
+//     case goalsAgainst >= 2.2 && goalsAgainst < 2.5:
+//       strength = 3;
+//       break;
+//     case goalsAgainst >= 1.9 && goalsAgainst < 2.2:
+//       strength = 4;
+//       break;
+//     case goalsAgainst >= 1.6 && goalsAgainst < 1.9:
+//       strength = 5;
+//       break;
+//     case goalsAgainst >= 1.3 && goalsAgainst < 1.6:
+//       strength = 6;
+//       break;
+//     case goalsAgainst >= 1 && goalsAgainst < 1.3:
+//       strength = 7;
+//       break;
+//     case goalsAgainst >= 0.7 && goalsAgainst < 1:
+//       strength = 8;
+//       break;
+//     case goalsAgainst >= 0.4 && goalsAgainst < 0.7:
+//       strength = 9;
+//       break;
+//     case goalsAgainst < 0.4:
+//       strength = 10;
+//       break;
+//     default:
+//       break;
+//   }
+//   return strength;
+// }
 
-export async function getShotsStrengthHorA(Shots) {
-  let strength;
-  switch (true) {
-    case Shots >= 19.5:
-      strength = 10;
-      break;
-    case Shots >= 18 && Shots < 19.5:
-      strength = 9;
-      break;
-    case Shots >= 17 && Shots < 18:
-      strength = 8;
-      break;
-    case Shots >= 15.5 && Shots < 17:
-      strength = 7;
-      break;
-    case Shots >= 14 && Shots < 15.5:
-      strength = 6;
-      break;
-    case Shots >= 12.5 && Shots < 14:
-      strength = 5;
-      break;
-    case Shots >= 11 && Shots < 12.5:
-      strength = 4;
-      break;
-    case Shots >= 9.5 && Shots < 11:
-      strength = 3;
-      break;
-    case Shots >= 8 && Shots < 9.5:
-      strength = 2;
-      break;
-    case Shots < 8:
-      strength = 1;
-      break;
-    default:
-      break;
-  }
-  return strength;
-}
+// export async function getPossessionStrength(possession) {
+//   let strength;
+//   switch (true) {
+//     case possession >= 68:
+//       strength = 10;
+//       break;
+//     case possession >= 64 && possession < 68:
+//       strength = 9;
+//       break;
+//     case possession >= 60 && possession < 64:
+//       strength = 8;
+//       break;
+//     case possession >= 56 && possession < 60:
+//       strength = 7;
+//       break;
+//     case possession >= 52 && possession < 56:
+//       strength = 6;
+//       break;
+//     case possession >= 48 && possession < 52:
+//       strength = 5;
+//       break;
+//     case possession >= 44 && possession < 48:
+//       strength = 4;
+//       break;
+//     case possession >= 40 && possession < 44:
+//       strength = 3;
+//       break;
+//     case possession >= 35 && possession < 40:
+//       strength = 2;
+//       break;
+//     case possession < 35:
+//       strength = 1;
+//       break;
+//     default:
+//       break;
+//   }
+//   return strength;
+// }
 
-export async function getXGForStrength(XG) {
-  let strength;
-  switch (true) {
-    case XG >= 2.9:
-      strength = 10;
-      break;
-    case XG >= 2.6 && XG < 2.9:
-      strength = 9;
-      break;
-    case XG >= 2.3 && XG < 2.6:
-      strength = 8;
-      break;
-    case XG >= 2 && XG < 2.3:
-      strength = 7;
-      break;
-    case XG >= 1.7 && XG < 2:
-      strength = 6;
-      break;
-    case XG >= 1.4 && XG < 1.7:
-      strength = 5;
-      break;
-    case XG >= 1.1 && XG < 1.4:
-      strength = 4;
-      break;
-    case XG >= 0.8 && XG < 1.1:
-      strength = 3;
-      break;
-    case XG >= 0.5 && XG < 0.8:
-      strength = 2;
-      break;
-    case XG < 0.5:
-      strength = 1;
-      break;
-    default:
-      break;
-  }
-  return strength;
-}
+// export async function getShotsStrength(Shots) {
+//   let strength;
+//   switch (true) {
+//     case Shots >= 15:
+//       strength = 10;
+//       break;
+//     case Shots >= 14.25 && Shots < 15:
+//       strength = 9;
+//       break;
+//     case Shots >= 13.5 && Shots < 14.25:
+//       strength = 8;
+//       break;
+//     case Shots >= 12.75 && Shots < 13.5:
+//       strength = 7;
+//       break;
+//     case Shots >= 12 && Shots < 12.75:
+//       strength = 6;
+//       break;
+//     case Shots >= 11.25 && Shots < 12:
+//       strength = 5;
+//       break;
+//     case Shots >= 10.5 && Shots < 11.25:
+//       strength = 4;
+//       break;
+//     case Shots >= 9.75 && Shots < 10.5:
+//       strength = 3;
+//       break;
+//     case Shots >= 9 && Shots < 9.75:
+//       strength = 2;
+//       break;
+//     case Shots < 9:
+//       strength = 1;
+//       break;
+//     default:
+//       break;
+//   }
+//   return strength;
+// }
 
-export async function getXGAgainstStrength(XGAgainst) {
-  let strength;
-  switch (true) {
-    case XGAgainst >= 2.9:
-      strength = 1;
-      break;
-    case XGAgainst >= 2.6 && XGAgainst < 2.9:
-      strength = 2;
-      break;
-    case XGAgainst >= 2.3 && XGAgainst < 2.6:
-      strength = 3;
-      break;
-    case XGAgainst >= 2 && XGAgainst < 2.3:
-      strength = 4;
-      break;
-    case XGAgainst >= 1.7 && XGAgainst < 2:
-      strength = 5;
-      break;
-    case XGAgainst >= 1.4 && XGAgainst < 1.7:
-      strength = 6;
-      break;
-    case XGAgainst >= 1.1 && XGAgainst < 1.4:
-      strength = 7;
-      break;
-    case XGAgainst >= 0.8 && XGAgainst < 1.1:
-      strength = 8;
-      break;
-    case XGAgainst >= 0.5 && XGAgainst < 0.8:
-      strength = 9;
-      break;
-    case XGAgainst < 0.5:
-      strength = 10;
-      break;
-    default:
-      break;
-  }
-  return strength;
-}
+// export async function getShotsStrengthHorA(Shots) {
+//   let strength;
+//   switch (true) {
+//     case Shots >= 19.5:
+//       strength = 10;
+//       break;
+//     case Shots >= 18 && Shots < 19.5:
+//       strength = 9;
+//       break;
+//     case Shots >= 17 && Shots < 18:
+//       strength = 8;
+//       break;
+//     case Shots >= 15.5 && Shots < 17:
+//       strength = 7;
+//       break;
+//     case Shots >= 14 && Shots < 15.5:
+//       strength = 6;
+//       break;
+//     case Shots >= 12.5 && Shots < 14:
+//       strength = 5;
+//       break;
+//     case Shots >= 11 && Shots < 12.5:
+//       strength = 4;
+//       break;
+//     case Shots >= 9.5 && Shots < 11:
+//       strength = 3;
+//       break;
+//     case Shots >= 8 && Shots < 9.5:
+//       strength = 2;
+//       break;
+//     case Shots < 8:
+//       strength = 1;
+//       break;
+//     default:
+//       break;
+//   }
+//   return strength;
+// }
 
-export async function getXGDifferentialStrength(XGDiff) {
-  let strength;
-  switch (true) {
-    case XGDiff >= 1.5:
-      strength = 10;
-      break;
-    case XGDiff >= 1 && XGDiff < 1.5:
-      strength = 9;
-      break;
-    case XGDiff >= 0.5 && XGDiff < 1:
-      strength = 8;
-      break;
-    case XGDiff >= 0.25 && XGDiff < 0.5:
-      strength = 7;
-      break;
-    case XGDiff > 0 && XGDiff < 0.25:
-      strength = 6;
-      break;
-    case XGDiff <= 0 && XGDiff > -0.25:
-      strength = 5;
-      break;
-    case XGDiff <= -0.25 && XGDiff > -0.5:
-      strength = 4;
-      break;
-    case XGDiff <= -0.5 && XGDiff > -1:
-      strength = 3;
-      break;
-    case XGDiff <= -1 && XGDiff > -1.5:
-      strength = 2;
-      break;
-    case XGDiff <= -1.5:
-      strength = 1;
-      break;
-    default:
-      console.log("default clause triggered");
-      break;
-  }
-  return strength;
-}
+// export async function getXGForStrength(XG) {
+//   let strength;
+//   switch (true) {
+//     case XG >= 2.9:
+//       strength = 10;
+//       break;
+//     case XG >= 2.6 && XG < 2.9:
+//       strength = 9;
+//       break;
+//     case XG >= 2.3 && XG < 2.6:
+//       strength = 8;
+//       break;
+//     case XG >= 2 && XG < 2.3:
+//       strength = 7;
+//       break;
+//     case XG >= 1.7 && XG < 2:
+//       strength = 6;
+//       break;
+//     case XG >= 1.4 && XG < 1.7:
+//       strength = 5;
+//       break;
+//     case XG >= 1.1 && XG < 1.4:
+//       strength = 4;
+//       break;
+//     case XG >= 0.8 && XG < 1.1:
+//       strength = 3;
+//       break;
+//     case XG >= 0.5 && XG < 0.8:
+//       strength = 2;
+//       break;
+//     case XG < 0.5:
+//       strength = 1;
+//       break;
+//     default:
+//       break;
+//   }
+//   return strength;
+// }
 
+// export async function getXGAgainstStrength(XGAgainst) {
+//   let strength;
+//   switch (true) {
+//     case XGAgainst >= 2.9:
+//       strength = 1;
+//       break;
+//     case XGAgainst >= 2.6 && XGAgainst < 2.9:
+//       strength = 2;
+//       break;
+//     case XGAgainst >= 2.3 && XGAgainst < 2.6:
+//       strength = 3;
+//       break;
+//     case XGAgainst >= 2 && XGAgainst < 2.3:
+//       strength = 4;
+//       break;
+//     case XGAgainst >= 1.7 && XGAgainst < 2:
+//       strength = 5;
+//       break;
+//     case XGAgainst >= 1.4 && XGAgainst < 1.7:
+//       strength = 6;
+//       break;
+//     case XGAgainst >= 1.1 && XGAgainst < 1.4:
+//       strength = 7;
+//       break;
+//     case XGAgainst >= 0.8 && XGAgainst < 1.1:
+//       strength = 8;
+//       break;
+//     case XGAgainst >= 0.5 && XGAgainst < 0.8:
+//       strength = 9;
+//       break;
+//     case XGAgainst < 0.5:
+//       strength = 10;
+//       break;
+//     default:
+//       break;
+//   }
+//   return strength;
+// }
+
+// export async function getXGDifferentialStrength(XGDiff) {
+//   let strength;
+//   switch (true) {
+//     case XGDiff >= 1.5:
+//       strength = 10;
+//       break;
+//     case XGDiff >= 1 && XGDiff < 1.5:
+//       strength = 9;
+//       break;
+//     case XGDiff >= 0.5 && XGDiff < 1:
+//       strength = 8;
+//       break;
+//     case XGDiff >= 0.25 && XGDiff < 0.5:
+//       strength = 7;
+//       break;
+//     case XGDiff > 0 && XGDiff < 0.25:
+//       strength = 6;
+//       break;
+//     case XGDiff <= 0 && XGDiff > -0.25:
+//       strength = 5;
+//       break;
+//     case XGDiff <= -0.25 && XGDiff > -0.5:
+//       strength = 4;
+//       break;
+//     case XGDiff <= -0.5 && XGDiff > -1:
+//       strength = 3;
+//       break;
+//     case XGDiff <= -1 && XGDiff > -1.5:
+//       strength = 2;
+//       break;
+//     case XGDiff <= -1.5:
+//       strength = 1;
+//       break;
+//     default:
+//       console.log("default clause triggered");
+//       break;
+//   }
+//   return strength;
+// }
 
 export async function getXGtoActualDifferentialStrength(XGDiff) {
   let strength;
@@ -401,7 +472,6 @@ export async function createStatsDiv(game, displayBool) {
     let goalDiffAwayMovingAv = [];
     let latestHomeGoalDiff;
     let latestAwayGoalDiff;
-
 
     var getEMA = (a, r) =>
       a.reduce(
@@ -515,7 +585,6 @@ export async function createStatsDiv(game, displayBool) {
           }
         }
 
-
         goalDiffArrayHome = gameArrayHome.map(
           (a) => a.goalsFor - a.goalsAgainst
         );
@@ -533,7 +602,6 @@ export async function createStatsDiv(game, displayBool) {
         )(0);
 
         gameArrayHome.sort((a, b) => b.unixTimestamp - a.unixTimestamp);
-
 
         rollingGoalDiffTotalHome = goalDiffArrayHome.map(cumulativeSumHome);
 
@@ -635,7 +703,6 @@ export async function createStatsDiv(game, displayBool) {
           }
         }
 
-
         goalDiffArrayAway = gameArrayAway.map(
           (a) => a.goalsFor - a.goalsAgainst
         );
@@ -649,13 +716,10 @@ export async function createStatsDiv(game, displayBool) {
           (sum) => (value) =>
             (sum += value)
         )(0);
-        
+
         gameArrayAway.sort((a, b) => b.unixTimestamp - a.unixTimestamp);
 
-
         rollingGoalDiffTotalAway = goalDiffArrayAway.map(cumulativeSumAway);
-
-
 
         latestHomeGoalDiff =
           goalDiffHomeMovingAv[goalDiffHomeMovingAv.length - 1];
@@ -675,81 +739,50 @@ export async function createStatsDiv(game, displayBool) {
 
     let time = game.time;
 
-    gameStats.home[index].last3Points = getPointsFromLastX(
-      gameStats.home[index].lastThreeForm
-    );
+    const homeForm = gameStats.home[index];
+    const awayForm = gameStats.away[index];
 
-    gameStats.home[index].last5Points = getPointsFromLastX(
-      gameStats.home[index].LastFiveForm
-    );
+    homeForm.last3Points = getPointsFromLastX(homeForm.lastThreeForm);
 
-    gameStats.home[index].last6Points = getPointsFromLastX(
-      gameStats.home[index].LastSixForm
-    );
+    homeForm.last5Points = getPointsFromLastX(homeForm.LastFiveForm);
 
-    gameStats.home[index].last10Points = getPointsFromLastX(
-      gameStats.home[index].LastTenForm
-    );
+    homeForm.last6Points = getPointsFromLastX(homeForm.LastSixForm);
 
-    gameStats.away[index].last3Points = getPointsFromLastX(
-      gameStats.away[index].lastThreeForm
-    );
+    homeForm.last10Points = getPointsFromLastX(homeForm.LastTenForm);
 
-    gameStats.away[index].last5Points = getPointsFromLastX(
-      gameStats.away[index].LastFiveForm
-    );
+    awayForm.last3Points = getPointsFromLastX(awayForm.lastThreeForm);
 
-    gameStats.away[index].last6Points = getPointsFromLastX(
-      gameStats.away[index].LastSixForm
-    );
+    awayForm.last5Points = getPointsFromLastX(awayForm.LastFiveForm);
 
-    gameStats.away[index].last10Points = getPointsFromLastX(
-      gameStats.away[index].LastTenForm
-    );
+    awayForm.last6Points = getPointsFromLastX(awayForm.LastSixForm);
+
+    awayForm.last10Points = getPointsFromLastX(awayForm.LastTenForm);
 
     async function getPointAverage(pointTotal, games) {
       return pointTotal / games;
     }
 
     // let homeThreeGameAverage = await getPointAverage(
-    //   gameStats.home[index].last3Points,
+    //   homeForm.last3Points,
     //   3
     // );
 
-    let homeFiveGameAverage = await getPointAverage(
-      gameStats.home[index].last5Points,
-      5
-    );
+    let homeFiveGameAverage = await getPointAverage(homeForm.last5Points, 5);
 
-    let homeSixGameAverage = await getPointAverage(
-      gameStats.home[index].last6Points,
-      6
-    );
+    let homeSixGameAverage = await getPointAverage(homeForm.last6Points, 6);
 
-    let homeTenGameAverage = await getPointAverage(
-      gameStats.home[index].last10Points,
-      10
-    );
+    let homeTenGameAverage = await getPointAverage(homeForm.last10Points, 10);
 
     // let awayThreeGameAverage = await getPointAverage(
-    //   gameStats.away[index].last3Points,
+    //   awayForm.last3Points,
     //   3
     // );
 
-    let awayFiveGameAverage = await getPointAverage(
-      gameStats.away[index].last5Points,
-      5
-    );
+    let awayFiveGameAverage = await getPointAverage(awayForm.last5Points, 5);
 
-    let awaySixGameAverage = await getPointAverage(
-      gameStats.away[index].last6Points,
-      6
-    );
+    let awaySixGameAverage = await getPointAverage(awayForm.last6Points, 6);
 
-    let awayTenGameAverage = await getPointAverage(
-      gameStats.away[index].last10Points,
-      10
-    );
+    let awayTenGameAverage = await getPointAverage(awayForm.last10Points, 10);
 
     async function getPointsFromGames(formArr) {
       const pairings = {
@@ -816,40 +849,128 @@ export async function createStatsDiv(game, displayBool) {
       formTextStringAway = "";
     }
 
-    let homeLastGame = await getLastGameResult(
-      gameStats.home[index].LastFiveForm[4]
-    );
-    let awayLastGame = await getLastGameResult(
-      gameStats.away[index].LastFiveForm[4]
-    );
+    let homeLastGame = await getLastGameResult(homeForm.LastFiveForm[4]);
+    let awayLastGame = await getLastGameResult(awayForm.LastFiveForm[4]);
 
-    let homeAttackStrength = await getAttackStrength(
-      gameStats.home[index].ScoredOverall / 10
-    );
-    let homeDefenceStrength = await getDefenceStrength(
-      gameStats.home[index].ConcededOverall / 10
-    );
-    let homePossessionStrength = await getPossessionStrength(
-      gameStats.home[index].AveragePossessionOverall
-    );
-    let homeXGForStrength = await getXGForStrength(gameStats.home[2].XGOverall);
-    let homeXGAgainstStrength = await getXGAgainstStrength(
-      gameStats.home[2].XGAgainstAvgOverall
-    );
+    // let homeAttackStrength = await getAttackStrength(
+    //   homeForm.ScoredOverall / 10
+    // );
 
-    let awayAttackStrength = await getAttackStrength(
-      gameStats.away[index].ScoredOverall / 10
-    );
-    let awayDefenceStrength = await getDefenceStrength(
-      gameStats.away[index].ConcededOverall / 10
-    );
-    let awayPossessionStrength = await getPossessionStrength(
-      gameStats.away[index].AveragePossessionOverall
-    );
-    let awayXGForStrength = await getXGForStrength(gameStats.away[2].XGOverall);
-    let awayXGAgainstStrength = await getXGAgainstStrength(
-      gameStats.away[2].XGAgainstAvgOverall
-    );
+    const attackingMetricsHome = {
+      averagePossession: homeForm.AveragePossession,
+      averageDangerousAttacks: homeForm.AverageDangerousAttacksOverall,
+      averageShots: homeForm.AverageShots,
+      averageShotsOnTarget: homeForm.AverageShotsOnTarget,
+      averageExpectedGoals: homeForm.XGOverall,
+      averageGoals:
+        homeForm.averageScoredLeague !== undefined
+          ? homeForm.averageScoredLeague
+          : homeForm.ScoredOverall / 10,
+    };
+    const attackingMetricsAway = {
+      averagePossession: awayForm.AveragePossession,
+      averageDangerousAttacks: awayForm.AverageDangerousAttacksOverall,
+      averageShots: awayForm.AverageShots,
+      averageShotsOnTarget: awayForm.AverageShotsOnTarget,
+      averageExpectedGoals: awayForm.XGOverall,
+      averageGoals:
+        awayForm.averageScoredLeague !== undefined
+          ? awayForm.averageScoredLeague
+          : awayForm.ScoredOverall / 10,
+    };
+
+    const defensiveMetricsHome = {
+      CleanSheetPercentage: 100 - homeForm.CleanSheetPercentage,
+      averageExpectedGoalsAgainst: homeForm.XGAgainstAvgOverall,
+      averageGoalsAgainst:
+        homeForm.averageConceededLeague !== undefined
+          ? homeForm.averageConceededLeague
+          : homeForm.ConcededOverall / 10,
+    };
+
+    const defensiveMetricsAway = {
+      CleanSheetPercentage: 100 - awayForm.CleanSheetPercentage,
+      averageExpectedGoalsAgainst: awayForm.XGAgainstAvgOverall,
+      averageGoalsAgainst:
+        awayForm.averageConceededLeague !== undefined
+          ? awayForm.averageConceededLeague
+          : awayForm.ConcededOverall / 10,
+    };
+
+    console.log(attackingMetricsHome);
+    console.log(attackingMetricsAway);
+    console.log(defensiveMetricsHome);
+    console.log(defensiveMetricsAway);
+
+    let homeAttackStrength;
+    let homeDefenceStrength;
+    let homePossessionStrength;
+    let homeXGForStrength;
+    let homeXGAgainstStrength;
+    let awayAttackStrength;
+    let awayDefenceStrength;
+    let awayPossessionStrength;
+    let awayXGForStrength;
+    let awayXGAgainstStrength;
+
+    console.log(homeForm);
+    if (homeForm.xgForStrength) {
+      console.log("not calculating");
+      homeAttackStrength = homeForm.attackingStrength;
+      homeDefenceStrength = homeForm.defensiveStrength;
+      homePossessionStrength = homeForm.possessionStrength;
+      homeXGForStrength = homeForm.xgForStrength;
+      homeXGAgainstStrength = homeForm.xgAgainstStrength;
+
+      awayAttackStrength = awayForm.attackingStrength;
+      awayDefenceStrength = awayForm.defensiveStrength;
+      awayPossessionStrength = awayForm.possessionStrength;
+      awayXGForStrength = awayForm.xgForStrength;
+      awayXGAgainstStrength = awayForm.xgAgainstStrength;
+    } else {
+      homeAttackStrength = await calculateAttackingStrength(
+        attackingMetricsHome
+      );
+
+      homeDefenceStrength = await calculateDefensiveStrength(
+        defensiveMetricsHome
+      );
+
+      homePossessionStrength = await calculateMetricStrength(
+        "averagePossession",
+        homeForm.AveragePossessionOverall
+      );
+
+      homeXGForStrength = await calculateMetricStrength(
+        "xgFor",
+        gameStats.home[2].XGOverall
+      );
+
+      homeXGAgainstStrength = await calculateMetricStrength(
+        "xgAgainst",
+        3 - gameStats.home[2].XGAgainstAvgOverall
+      );
+
+      awayAttackStrength = await calculateAttackingStrength(
+        attackingMetricsAway
+      );
+      awayDefenceStrength = await calculateDefensiveStrength(
+        defensiveMetricsAway
+      );
+      awayPossessionStrength = await calculateMetricStrength(
+        "averagePossession",
+        awayForm.AveragePossessionOverall
+      );
+      awayXGForStrength = await calculateMetricStrength(
+        "xgFor",
+        gameStats.away[2].XGOverall
+      );
+
+      awayXGAgainstStrength = await calculateMetricStrength(
+        "xgAgainst",
+        3 - gameStats.away[2].XGAgainstAvgOverall
+      );
+    }
 
     let [formPointsHome, testArrayHome] = await getPointsFromGames(
       gameStats.home[2].WDLRecord
@@ -884,33 +1005,31 @@ export async function createStatsDiv(game, displayBool) {
       name: game.homeTeam,
       Last5: gameStats.home[2].LastFiveForm,
       LeagueOrAll: gameStats.home[2].LeagueOrAll,
-      AverageGoals: gameStats.home[index].ScoredOverall / 10,
-      AverageConceeded: gameStats.home[index].ConcededOverall / 10,
-      AverageXG: gameStats.home[index].XGOverall,
-      AverageXGConceded: gameStats.home[index].XGAgainstAvgOverall,
-      AveragePossession: gameStats.home[index].AveragePossessionOverall,
-      AverageShotsOnTarget: gameStats.home[index].AverageShotsOnTargetOverall,
-      AverageDangerousAttacks:
-        gameStats.home[index].AverageDangerousAttacksOverall,
+      AverageGoals: homeForm.ScoredOverall / 10,
+      AverageConceeded: homeForm.ConcededOverall / 10,
+      AverageXG: homeForm.XGOverall,
+      AverageXGConceded: homeForm.XGAgainstAvgOverall,
+      AveragePossession: homeForm.AveragePossessionOverall,
+      AverageShotsOnTarget: homeForm.AverageShotsOnTargetOverall,
+      AverageDangerousAttacks: homeForm.AverageDangerousAttacksOverall,
       homeOrAway: "Home",
-      leaguePosition: gameStats.home[index].LeaguePosition,
-      Last5PPG: gameStats.home[index].PPG,
-      SeasonPPG: gameStats.home[index].SeasonPPG,
+      leaguePosition: homeForm.LeaguePosition,
+      Last5PPG: homeForm.PPG,
+      SeasonPPG: homeForm.SeasonPPG,
       lastGame: homeLastGame,
-      formRun: gameStats.home[index].formRun,
-      goalDifference: gameStats.home[index].goalDifference,
-      goalDifferenceHomeOrAway: gameStats.home[index].goalDifferenceHomeOrAway,
-      BttsPercentage: gameStats.home[index].BttsPercentage,
-      BttsPercentageHomeOrAway: gameStats.home[index].BttsPercentageHomeOrAway,
-      CardsTotal: gameStats.home[index].CardsTotal,
-      CornersAverage: gameStats.home[index].CornersAverage,
-      ScoredBothHalvesPercentage:
-        gameStats.home[index].ScoredBothHalvesPercentage,
+      formRun: homeForm.formRun,
+      goalDifference: homeForm.goalDifference,
+      goalDifferenceHomeOrAway: homeForm.goalDifferenceHomeOrAway,
+      BttsPercentage: homeForm.BttsPercentage,
+      BttsPercentageHomeOrAway: homeForm.BttsPercentageHomeOrAway,
+      CardsTotal: homeForm.CardsTotal,
+      CornersAverage: homeForm.CornersAverage,
+      ScoredBothHalvesPercentage: homeForm.ScoredBothHalvesPercentage,
       FormTextStringHome: formTextStringHome,
       BTTSArray: bttsArrayHome,
       Results: resultsArrayHome,
-      BTTSAll: gameStats.home[index].last10btts,
-      BTTSHorA: gameStats.home[index].last10bttsHome
+      BTTSAll: homeForm.last10btts,
+      BTTSHorA: homeForm.last10bttsHome,
     });
 
     const formDataAway = [];
@@ -919,34 +1038,32 @@ export async function createStatsDiv(game, displayBool) {
       name: game.awayTeam,
       Last5: gameStats.away[2].LastFiveForm,
       LeagueOrAll: gameStats.away[2].LeagueOrAll,
-      AverageGoals: gameStats.away[index].ScoredOverall / 10,
-      AverageConceeded: gameStats.away[index].ConcededOverall / 10,
-      AverageXG: gameStats.away[index].XGOverall,
-      AverageXGConceded: gameStats.away[index].XGAgainstAvgOverall,
-      AveragePossession: gameStats.away[index].AveragePossessionOverall,
-      AverageShotsOnTarget: gameStats.away[index].AverageShotsOnTargetOverall,
-      AverageDangerousAttacks:
-        gameStats.away[index].AverageDangerousAttacksOverall,
+      AverageGoals: awayForm.ScoredOverall / 10,
+      AverageConceeded: awayForm.ConcededOverall / 10,
+      AverageXG: awayForm.XGOverall,
+      AverageXGConceded: awayForm.XGAgainstAvgOverall,
+      AveragePossession: awayForm.AveragePossessionOverall,
+      AverageShotsOnTarget: awayForm.AverageShotsOnTargetOverall,
+      AverageDangerousAttacks: awayForm.AverageDangerousAttacksOverall,
       homeOrAway: "Away",
-      leaguePosition: gameStats.away[index].LeaguePosition,
-      Last5PPG: gameStats.away[index].PPG,
-      SeasonPPG: gameStats.away[index].SeasonPPG,
+      leaguePosition: awayForm.LeaguePosition,
+      Last5PPG: awayForm.PPG,
+      SeasonPPG: awayForm.SeasonPPG,
       lastGame: awayLastGame,
-      formRun: gameStats.away[index].formRun,
-      goalDifference: gameStats.away[index].goalDifference,
-      goalDifferenceHomeOrAway: gameStats.away[index].goalDifferenceHomeOrAway,
-      BttsPercentage: gameStats.away[index].BttsPercentage,
-      BttsPercentageHomeOrAway: gameStats.away[index].BttsPercentageHomeOrAway,
-      CardsTotal: gameStats.away[index].CardsTotal,
-      CornersAverage: gameStats.away[index].CornersAverage,
-      ScoredBothHalvesPercentage:
-        gameStats.away[index].ScoredBothHalvesPercentage,
+      formRun: awayForm.formRun,
+      goalDifference: awayForm.goalDifference,
+      goalDifferenceHomeOrAway: awayForm.goalDifferenceHomeOrAway,
+      BttsPercentage: awayForm.BttsPercentage,
+      BttsPercentageHomeOrAway: awayForm.BttsPercentageHomeOrAway,
+      CardsTotal: awayForm.CardsTotal,
+      CornersAverage: awayForm.CornersAverage,
+      ScoredBothHalvesPercentage: awayForm.ScoredBothHalvesPercentage,
       FormTextStringAway: formTextStringAway,
       BTTSArray: bttsArrayAway,
       Results: resultsArrayAway,
       ResultsHomeOrAway: resultsArrayAway,
-      BTTSAll: gameStats.away[index].last10btts,
-      BTTSHorA: gameStats.away[index].last10bttsAway
+      BTTSAll: awayForm.last10btts,
+      BTTSHorA: awayForm.last10bttsAway,
     });
 
     let formArrayHome;
@@ -986,58 +1103,57 @@ export async function createStatsDiv(game, displayBool) {
       game.awayTeamAwayPosition = "N/A";
     }
 
-    
-   function singleResult(game) {
-    return (
-      <div>
-        <div className="ResultRowSmall">
-          <span className="column">{game.homeXG}</span>
-          <span className="column">XG</span>
-          <span className="column">{game.awayXG}</span>
+    function singleResult(game) {
+      return (
+        <div>
+          <div className="ResultRowSmall">
+            <span className="column">{game.homeXG}</span>
+            <span className="column">XG</span>
+            <span className="column">{game.awayXG}</span>
+          </div>
+          <div className="ResultRowSmall">
+            <span className="column">{game.homeShots}</span>
+            <span className="column">Shots</span>
+            <span className="column">{game.awayShots}</span>
+          </div>
+          <div className="ResultRowSmall">
+            <span className="column">{game.homeSot}</span>
+            <span className="column">SOT</span>
+            <span className="column">{game.awaySot}</span>
+          </div>
+          <div className="ResultRowSmall">
+            <span className="column">{game.homeDangerousAttacks}</span>
+            <span className="column">Dangerous Attacks</span>
+            <span className="column">{game.awayDangerousAttacks}</span>
+          </div>
+          <div className="ResultRowSmall">
+            <span className="column">{game.homePossession}%</span>
+            <span className="column">Possession</span>
+            <span className="column">{game.awayPossession}%</span>
+          </div>
+          <div className="ResultRowSmall">
+            <span className="column">{game.homeRed}</span>
+            <span className="column">Red cards</span>
+            <span className="column">{game.awayRed}</span>
+          </div>
+          <div className="ResultRowSmall">
+            <span className="column">{game.homePPG}</span>
+            <span className="column">PPG (pre-match)</span>
+            <span className="column">{game.awayPPG}</span>
+          </div>
         </div>
-        <div className="ResultRowSmall">
-          <span className="column">{game.homeShots}</span>
-          <span className="column">Shots</span>
-          <span className="column">{game.awayShots}</span>
-        </div>
-        <div className="ResultRowSmall">
-          <span className="column">{game.homeSot}</span>
-          <span className="column">SOT</span>
-          <span className="column">{game.awaySot}</span>
-        </div>
-        <div className="ResultRowSmall">
-          <span className="column">{game.homeDangerousAttacks}</span>
-          <span className="column">Dangerous Attacks</span>
-          <span className="column">{game.awayDangerousAttacks}</span>
-        </div>
-        <div className="ResultRowSmall">
-          <span className="column">{game.homePossession}%</span>
-          <span className="column">Possession</span>
-          <span className="column">{game.awayPossession}%</span>
-        </div>
-        <div className="ResultRowSmall">
-          <span className="column">{game.homeRed}</span>
-          <span className="column">Red cards</span>
-          <span className="column">{game.awayRed}</span>
-        </div>
-        <div className="ResultRowSmall">
-          <span className="column">{game.homePPG}</span>
-          <span className="column">PPG (pre-match)</span>
-          <span className="column">{game.awayPPG}</span>
-        </div>
-      </div>
-    );
-   } 
+      );
+    }
 
     const overviewHome = gameArrayHome.slice(0, 10).map((game) => (
       <div>
-      <Collapsable
+        <Collapsable
           classNameButton="ResultButton"
           buttonText={
             <div className="ResultRowOverviewSmall">
               <div className="columnOverviewHomeSmall">{game.homeTeam}</div>
               <span className="columnOverviewScoreSmall">
-              {game.homeGoals} : {game.awayGoals}
+                {game.homeGoals} : {game.awayGoals}
               </span>
               <div className="columnOverviewAwaySmall">{game.awayTeam}</div>
             </div>
@@ -1049,13 +1165,13 @@ export async function createStatsDiv(game, displayBool) {
 
     const overviewAway = gameArrayAway.slice(0, 10).map((game) => (
       <div>
-      <Collapsable
+        <Collapsable
           classNameButton="ResultButton"
           buttonText={
             <div className="ResultRowOverviewSmall">
               <div className="columnOverviewHomeSmall">{game.homeTeam}</div>
               <span className="columnOverviewScoreSmall">
-              {game.homeGoals} : {game.awayGoals}
+                {game.homeGoals} : {game.awayGoals}
               </span>
               <div className="columnOverviewAwaySmall">{game.awayTeam}</div>
             </div>
@@ -1079,8 +1195,16 @@ export async function createStatsDiv(game, displayBool) {
               LeagueOrAll={formDataHome[0].LeagueOrAll}
               className={"KeyStatsHome"}
               name={formDataHome[0].name}
-              goals={formDataHome[0].AverageGoals}
-              conceeded={formDataHome[0].AverageConceeded}
+              goals={
+                homeForm.averageScoredLeague !== undefined && homeForm.averageScoredLeague !== null
+                  ? homeForm.averageScoredLeague.toFixed(2)
+                  : formDataHome[0].AverageGoals
+              }
+              conceeded={
+                homeForm.averageConceededLeague !== undefined && homeForm.averageConceededLeague !== null
+                  ? homeForm.averageConceededLeague.toFixed(2)
+                  : formDataHome[0].AverageConceeded
+              }
               XG={formDataHome[0].AverageXG}
               XGConceded={formDataHome[0].AverageXGConceded}
               possession={formDataHome[0].AveragePossession}
@@ -1120,8 +1244,16 @@ export async function createStatsDiv(game, displayBool) {
               BttsPercentageHomeOrAway={
                 formDataHome[0].BttsPercentageHomeOrAway
               }
-              BTTSAll={formDataHome[0].BTTSAll ? formDataHome[0].BTTSAll : '"Get Predictions" first'}
-              BTTSHorA={formDataHome[0].BTTSHorA ? formDataHome[0].BTTSHorA : '"Get Predictions" first'}
+              BTTSAll={
+                formDataHome[0].BTTSAll
+                  ? formDataHome[0].BTTSAll
+                  : '"Get Predictions" first'
+              }
+              BTTSHorA={
+                formDataHome[0].BTTSHorA
+                  ? formDataHome[0].BTTSHorA
+                  : '"Get Predictions" first'
+              }
               BTTSArray={formDataHome[0].BTTSArray}
               Results={formDataHome[0].Results}
               ResultsHomeOrAway={formDataHome[0].wonHomeOrAwayOnly}
@@ -1151,8 +1283,16 @@ export async function createStatsDiv(game, displayBool) {
               LeagueOrAll={formDataAway[0].LeagueOrAll}
               className={"KeyStatsAway"}
               name={formDataAway[0].name}
-              goals={formDataAway[0].AverageGoals}
-              conceeded={formDataAway[0].AverageConceeded}
+              goals={
+                awayForm.averageScoredLeague !== undefined && awayForm.averageScoredLeague !== null
+                  ? awayForm.averageScoredLeague.toFixed(2)
+                  : formDataAway[0].AverageGoals
+              }
+              conceeded={
+                awayForm.averageConceededLeague !== undefined && awayForm.averageConceededLeague !== null
+                  ? awayForm.averageConceededLeague.toFixed(2)
+                  : formDataAway[0].AverageConceeded
+              }
               XG={formDataAway[0].AverageXG}
               XGConceded={formDataAway[0].AverageXGConceded}
               //todo add goal diff and btts percentages
@@ -1193,8 +1333,16 @@ export async function createStatsDiv(game, displayBool) {
               BttsPercentageHomeOrAway={
                 formDataAway[0].BttsPercentageHomeOrAway
               }
-              BTTSAll={formDataAway[0].BTTSAll ? formDataAway[0].BTTSAll : '"Get Predictions" first'}
-              BTTSHorA={formDataAway[0].BTTSHorA ? formDataAway[0].BTTSHorA : '"Get Predictions" first'}
+              BTTSAll={
+                formDataAway[0].BTTSAll
+                  ? formDataAway[0].BTTSAll
+                  : '"Get Predictions" first'
+              }
+              BTTSHorA={
+                formDataAway[0].BTTSHorA
+                  ? formDataAway[0].BTTSHorA
+                  : '"Get Predictions" first'
+              }
               BTTSArray={formDataAway[0].BTTSArray}
               Results={formDataAway[0].Results}
               CardsTotal={formDataAway[0].CardsTotal}
@@ -1238,7 +1386,7 @@ export async function createStatsDiv(game, displayBool) {
               formDataHome[0].AverageXG,
               formDataAway[0].AverageXGConceded,
               formDataHome[0].AverageShotsOnTarget,
-              formDataHome[0].AverageDangerousAttacks /7.5,
+              formDataHome[0].AverageDangerousAttacks / 7.5,
               formDataHome[0].AveragePossession / 7.5,
               formDataHome[0].goalDifferenceHomeOrAway / 5,
               formDataHome[0].CornersAverage,
@@ -1268,13 +1416,33 @@ export async function createStatsDiv(game, displayBool) {
           ></Chart>
           <Chart
             height={
-              Math.max(rollingGoalDiffTotalHome[rollingGoalDiffTotalHome.length -1], rollingGoalDiffTotalAway[rollingGoalDiffTotalAway.length -1]) > 2
-                ? Math.max(rollingGoalDiffTotalHome[rollingGoalDiffTotalHome.length -1], rollingGoalDiffTotalAway[rollingGoalDiffTotalAway.length -1])
+              Math.max(
+                rollingGoalDiffTotalHome[rollingGoalDiffTotalHome.length - 1],
+                rollingGoalDiffTotalAway[rollingGoalDiffTotalAway.length - 1]
+              ) > 2
+                ? Math.max(
+                    rollingGoalDiffTotalHome[
+                      rollingGoalDiffTotalHome.length - 1
+                    ],
+                    rollingGoalDiffTotalAway[
+                      rollingGoalDiffTotalAway.length - 1
+                    ]
+                  )
                 : 2
             }
             depth={
-              Math.min(rollingGoalDiffTotalHome[rollingGoalDiffTotalHome.length -1], rollingGoalDiffTotalAway[rollingGoalDiffTotalAway.length -1]) < -2
-                ? Math.min(rollingGoalDiffTotalHome[rollingGoalDiffTotalHome.length -1], rollingGoalDiffTotalAway[rollingGoalDiffTotalAway.length -1])
+              Math.min(
+                rollingGoalDiffTotalHome[rollingGoalDiffTotalHome.length - 1],
+                rollingGoalDiffTotalAway[rollingGoalDiffTotalAway.length - 1]
+              ) < -2
+                ? Math.min(
+                    rollingGoalDiffTotalHome[
+                      rollingGoalDiffTotalHome.length - 1
+                    ],
+                    rollingGoalDiffTotalAway[
+                      rollingGoalDiffTotalAway.length - 1
+                    ]
+                  )
                 : -2
             }
             data1={rollingGoalDiffTotalHome}

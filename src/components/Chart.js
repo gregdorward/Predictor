@@ -158,7 +158,7 @@ export function RadarChart(props) {
           display: false,
         },
         suggestedMin: 0,
-        suggestedMax: 10,
+        suggestedMax: 1,
         ticks: {
           precision: 0,
         },

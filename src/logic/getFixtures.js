@@ -262,7 +262,7 @@ export async function renderTable(index, results, id) {
       document.getElementById(`leagueName${id}`)
     );
   }
-}
+}&&
 
 async function createFixture(match, result, mockBool) {
   let roundedHomeOdds;
@@ -1540,7 +1540,7 @@ export async function generateFixtures(
             onClickEvent={() => getScorePrediction(day)}
             className={"GeneratePredictions"}
           />
-          <div className="Version">Prediction engine v2.3.5</div>
+          <div className="Version">Prediction engine v3.0.0</div>
         </Fragment>,
         document.getElementById("GeneratePredictions")
       );

@@ -13,15 +13,10 @@ import { allLeagueResultsArrayOfObjects } from "../logic/getFixtures";
 import { Slider } from "../components/Carousel";
 import { StyledKofiButton } from "../components/KofiButton";
 import {
-  getAttackStrength,
-  getDefenceStrength,
-  getPossessionStrength,
-  getShotsStrength,
-  getXGAgainstStrength,
-  getXGDifferentialStrength,
+  calculateAttackingStrength,
+  calculateDefensiveStrength,
+  calculateMetricStrength,
   getXGtoActualDifferentialStrength,
-  getShotsStrengthHorA,
-  getXGForStrength,
 } from "./getStats";
 
 var myHeaders = new Headers();
@@ -572,7 +567,6 @@ async function predictScore(
   let team1StrengthRatio = team1Metrics.weighting;
   let team2StrengthRatio = team2Metrics.weighting;
 
-
   let adjustedTeam1AverageGoals = await adjustGoalsAvg(
     team1AverageGoalsFor,
     team1StrengthRatio
@@ -626,7 +620,7 @@ async function predictScore(
   scores.sort((a, b) => b.probability - a.probability); // Sort scores in descending order by probability
   const top5Scores = scores.slice(0, 5); // Get the top 5 scores
 
-  console.log(game)
+  console.log(game);
   console.log("Top 5 Score Predictions:");
 
   for (const score of top5Scores) {
@@ -639,73 +633,22 @@ async function predictScore(
   return top5Scores;
 }
 
-export async function compareTeams(
-  homeForm,
-  awayForm,
-  formHomeRecent,
-  formAwayRecent,
-  match
-) {
-  let homeMultiplier = 1;
-  let awayMultiplier = 1;
+export async function compareTeams(homeForm, awayForm, match) {
+  console.log(match)
+  let homeAttackStrength = homeForm.attackingStrength;
+  let homeDefenceStrength = homeForm.defensiveStrength;
+  let homePossessionStrength = homeForm.possessionStrength;
+  let awayAttackStrength = awayForm.attackingStrength;
+  let awayDefenceStrength = awayForm.defensiveStrength;
+  let awayPossessionStrength = awayForm.possessionStrength;
 
-  let homeAttackStrength = await getAttackStrength(
-    homeForm.averageScoredLeague
-  );
-  let homeDefenceStrength = await getDefenceStrength(
-    homeForm.averageConceededLeague
-  );
-  let homePossessionStrength =
-    (await getPossessionStrength(homeForm.AveragePossessionOverall)) *
-    homeMultiplier;
-
-  let homeShotsOverallStrength = await getShotsStrength(homeForm.AverageShots);
-
-  let homeShotsHomeStrength = await getShotsStrengthHorA(
-    homeForm.AverageShotsHomeOrAway
+  let homeXGtoActualDiffStrength = await getXGtoActualDifferentialStrength(
+    parseFloat(homeForm.actualToXGDifference)
   );
 
-  let homeXGAgainstStrengthRecent =
-    (await getXGAgainstStrength(formHomeRecent.XGAgainstAvgOverall)) *
-    homeMultiplier;
-
-  let homeXGDiffStrength =
-    (await getXGDifferentialStrength(parseFloat(homeForm.XGdifferential))) *
-    homeMultiplier;
-
-  let awayAttackStrength = await getAttackStrength(
-    awayForm.averageScoredLeague
+  let awayXGtoActualDiffStrength = await getXGtoActualDifferentialStrength(
+    parseFloat(awayForm.actualToXGDifference)
   );
-  let awayDefenceStrength = await getDefenceStrength(
-    awayForm.averageConceededLeague
-  );
-  let awayPossessionStrength =
-    (await getPossessionStrength(awayForm.AveragePossessionOverall)) *
-    awayMultiplier;
-
-  let awayShotsOverallStrength = await getShotsStrength(awayForm.AverageShots);
-
-  let awayShotsAwayStrength = await getShotsStrengthHorA(
-    awayForm.AverageShotsHomeOrAway
-  );
-
-  let awayXGAgainstStrengthRecent =
-    (await getXGAgainstStrength(formAwayRecent.XGAgainstAvgOverall)) *
-    homeMultiplier;
-
-  let awayXGDiffStrength =
-    (await getXGDifferentialStrength(parseFloat(awayForm.XGdifferential))) *
-    awayMultiplier;
-
-  let homeXGtoActualDiffStrength =
-    (await getXGtoActualDifferentialStrength(
-      parseFloat(homeForm.actualToXGDifference)
-    )) * homeMultiplier;
-
-  let awayXGtoActualDiffStrength =
-    (await getXGtoActualDifferentialStrength(
-      parseFloat(awayForm.actualToXGDifference)
-    )) * awayMultiplier;
 
   const attackStrengthComparison = await compareStat(
     homeAttackStrength,
@@ -720,21 +663,6 @@ export async function compareTeams(
   const possessiontrengthComparison = await compareStat(
     homePossessionStrength,
     awayPossessionStrength
-  );
-
-  const shotsStrengthComparison = await compareStat(
-    homeShotsOverallStrength,
-    awayShotsOverallStrength
-  );
-
-  const shotsHorAStrengthComparison = await compareStat(
-    homeShotsHomeStrength,
-    awayShotsAwayStrength
-  );
-
-  const xgDiffComparison = await compareStat(
-    homeXGDiffStrength,
-    awayXGDiffStrength
   );
 
   const xgToActualDiffComparison = await compareStat(
@@ -754,31 +682,25 @@ export async function compareTeams(
 
   const oddsComparison = await compareStat(match.awayOdds, match.homeOdds);
 
+  console.log(match.awayOdds)
+
   const dangerousAttacksWithConverstionComparison = await compareStat(
     homeForm.AverageDangerousAttacksOverall *
       homeForm.dangerousAttackConversion,
     awayForm.AverageDangerousAttacksOverall * awayForm.dangerousAttackConversion
   );
 
-
-
   let calculation =
-    attackStrengthComparison * 1 +
-    defenceStrengthComparison * 1 +
-    possessiontrengthComparison * 1 +
-    // xgForStrengthComparison * 1 +
-    // xgAgainstStrengthComparison * 1 +
-    xgToActualDiffComparison * 2 +
-    xgDiffComparison * 2 +
-    shotsStrengthComparison * 1 +
-    shotsHorAStrengthComparison * 1 +
-    // xgForStrengthRecentComparison * 1 +
-    // xgAgainstStrengthRecentComparison * 1 +
-    homeAwayPointAverageComparison * 3 +
-    oddsComparison * 1 +
+    attackStrengthComparison * 3 +
+    defenceStrengthComparison * 3 +
+    // possessiontrengthComparison * 1 +
+    xgToActualDiffComparison * 0 +
+    // // xgForStrengthRecentComparison * 1 +
+    // // xgAgainstStrengthRecentComparison * 1 +
+    homeAwayPointAverageComparison * 1.5 +
+    oddsComparison * 0.2 +
     dangerousAttacksWithConverstionComparison * 0.01 +
     fiveGameComparison * 0;
-
 
   let homeWinOutcomeProbability =
     match.homeTeamWinPercentage + match.awayTeamLossPercentage;
@@ -825,7 +747,7 @@ export async function compareTeams(
 
   if (homeForm.averageOddsHome !== null || awayForm.averageOddsAway !== null) {
     if (calculation > 0 && homeForm.averageOddsHome < match.homeOdds) {
-      calculation = calculation / 1.5;
+      calculation = calculation / 2;
     }
     // else if (
     //   calculation > 0 &&
@@ -838,7 +760,7 @@ export async function compareTeams(
     }
 
     if (calculation < 0 && awayForm.averageOddsAway < match.awayOdds) {
-      calculation = calculation / 1.5;
+      calculation = calculation / 2;
     }
     // else if (
     //   calculation < 0 &&
@@ -1233,32 +1155,97 @@ export async function calculateScore(match, index, divider, calculate) {
 
     let teamComparisonScore;
 
+    const attackingMetricsHome = {
+      averagePossession: formHome.AveragePossession,
+      averageDangerousAttacks: formHome.AverageDangerousAttacksOverall,
+      averageShots: formHome.AverageShots,
+      averageShotsOnTarget: formHome.AverageShotsOnTarget,
+      averageExpectedGoals: formHome.XGOverall,
+      averageGoals: formHome.averageScoredLeague,
+    };
+    const attackingMetricsAway = {
+      averagePossession: formAway.AveragePossession,
+      averageDangerousAttacks: formAway.AverageDangerousAttacksOverall,
+      averageShots: formAway.AverageShots,
+      averageShotsOnTarget: formAway.AverageShotsOnTarget,
+      averageExpectedGoals: formAway.XGOverall,
+      averageGoals: formAway.averageScoredLeague,
+    };
+
+    const defensiveMetricsHome = {
+      CleanSheetPercentage: 100 - formHome.CleanSheetPercentage,
+      averageExpectedGoalsAgainst: formHome.XGAgainstAvgOverall,
+      averageGoalsAgainst: formHome.averageConceededLeague,
+    };
+
+    const defensiveMetricsAway = {
+      CleanSheetPercentage: 100 - formAway.CleanSheetPercentage,
+      averageExpectedGoalsAgainst: formAway.XGAgainstAvgOverall,
+      averageGoalsAgainst: formAway.averageConceededLeague,
+    };
+
+    formHome.attackingStrength = await calculateAttackingStrength(
+      attackingMetricsHome
+    );
+    formAway.attackingStrength = await calculateAttackingStrength(
+      attackingMetricsAway
+    );
+    formHome.defensiveStrength = await calculateDefensiveStrength(
+      defensiveMetricsHome
+    );
+    formAway.defensiveStrength = await calculateDefensiveStrength(
+      defensiveMetricsAway
+    );
+
+    formHome.possessionStrength = await calculateMetricStrength(
+      "averagePossession",
+      formHome.AveragePossessionOverall
+    );
+    formHome.xgForStrength = await calculateMetricStrength(
+      "xgFor",
+      formHome.XGOverall
+    );
+    formHome.xgAgainstStrength = await calculateMetricStrength(
+      "xgAgainst",
+      3 - formHome.XGAgainstAvgOverall
+    );
+
+    formAway.possessionStrength = await calculateMetricStrength(
+      "averagePossession",
+      formAway.AveragePossessionOverall
+    );
+    formAway.xgForStrength = await calculateMetricStrength(
+      "xgFor",
+      formAway.XGOverall
+    );
+    formAway.xgAgainstStrength = await calculateMetricStrength(
+      "xgAgainst",
+      3 - formAway.XGAgainstAvgOverall
+    );
+
     teamComparisonScore = await compareTeams(
       formHome,
       formAway,
-      formHomeRecent,
-      formAwayRecent,
       match
     );
 
+    console.log(match.game);
+    console.log(teamComparisonScore);
+
     if (teamComparisonScore < 0) {
-      // formHome.teamStrengthWeighting = 1 - teamComparisonScore / 10;
-      // formAway.teamStrengthWeighting = 1 + teamComparisonScore / 10;
-      formHome.teamStrengthWeighting = 1;
-      formAway.teamStrengthWeighting = 1;
+      formHome.teamStrengthWeighting = 1 - teamComparisonScore / 10;
+      formAway.teamStrengthWeighting = 1 + teamComparisonScore / 10;
     } else if (teamComparisonScore >= 0) {
-      // formHome.teamStrengthWeighting = 1 - teamComparisonScore / 10;
-      // formAway.teamStrengthWeighting = 1 + teamComparisonScore / 10;
-      formHome.teamStrengthWeighting = 1;
-      formAway.teamStrengthWeighting = 1;
+      formHome.teamStrengthWeighting = 1 - teamComparisonScore / 10;
+      formAway.teamStrengthWeighting = 1 + teamComparisonScore / 10;
     }
 
-    teamComparisonScore = teamComparisonScore * 0.125;
+    teamComparisonScore = teamComparisonScore * 1;
 
-    if (teamComparisonScore > 1.25) {
-      teamComparisonScore = 1.25;
-    } else if (teamComparisonScore < -1.25) {
-      teamComparisonScore = -1.25;
+    if (teamComparisonScore > 1) {
+      teamComparisonScore = 1;
+    } else if (teamComparisonScore < -1) {
+      teamComparisonScore = -1;
     }
     match.teamComparisonScore = teamComparisonScore.toFixed(2);
     // match.goalWeighting = 1 + parseFloat(match.teamComparisonScore)
@@ -1343,7 +1330,6 @@ export async function calculateScore(match, index, divider, calculate) {
         last2WeightingHome * 0) /
       3.4;
 
-
     factorOneAway =
       (awayLeagueOrAllFormAverageGoals * 1 +
         formAway.predictedGoalsBasedOnAwayAv * 0.2 +
@@ -1359,7 +1345,10 @@ export async function calculateScore(match, index, divider, calculate) {
     let factorTwoHome;
     let factorTwoAway;
 
-    if (scorePredictions !== undefined && scorePredictions[0].probability !== 1) {
+    if (
+      scorePredictions !== undefined &&
+      scorePredictions[0].probability !== 1
+    ) {
       factorTwoHome = scorePredictions[0].team1Score;
       factorTwoAway = scorePredictions[0].team2Score;
     } else {
@@ -1382,9 +1371,14 @@ export async function calculateScore(match, index, divider, calculate) {
       awayComparisonWeighting = 1;
     }
 
-    let experimentalHomeGoals = (((factorOneHome * 1) + factorTwoHome) / 2) * 1 * homeComparisonWeighting;
+    console.log(homeComparisonWeighting);
+    console.log(awayComparisonWeighting);
 
-    let experimentalAwayGoals = (((factorOneAway * 1) + factorTwoAway) / 2) * 1 * awayComparisonWeighting;
+    let experimentalHomeGoals =
+      ((factorOneHome * 1 + factorTwoHome) / 2) * 0.9 * homeComparisonWeighting;
+
+    let experimentalAwayGoals =
+      ((factorOneAway * 1 + factorTwoAway) / 2) * 0.9 * awayComparisonWeighting;
 
     let rawFinalHomeGoals = experimentalHomeGoals;
     let rawFinalAwayGoals = experimentalAwayGoals;
