@@ -262,7 +262,7 @@ export async function renderTable(index, results, id) {
       document.getElementById(`leagueName${id}`)
     );
   }
-}&&
+}
 
 async function createFixture(match, result, mockBool) {
   let roundedHomeOdds;
