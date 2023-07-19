@@ -863,7 +863,8 @@ export async function createStatsDiv(game, displayBool) {
       averageShotsOnTarget: homeForm.AverageShotsOnTarget,
       averageExpectedGoals: homeForm.XGOverall,
       averageGoals:
-        homeForm.averageScoredLeague !== undefined
+        homeForm.averageScoredLeague !== undefined &&
+        homeForm.averageScoredLeague !== null
           ? homeForm.averageScoredLeague
           : homeForm.ScoredOverall / 10,
     };
@@ -874,7 +875,8 @@ export async function createStatsDiv(game, displayBool) {
       averageShotsOnTarget: awayForm.AverageShotsOnTarget,
       averageExpectedGoals: awayForm.XGOverall,
       averageGoals:
-        awayForm.averageScoredLeague !== undefined
+        awayForm.averageScoredLeague !== undefined &&
+        awayForm.averageScoredLeague !== null
           ? awayForm.averageScoredLeague
           : awayForm.ScoredOverall / 10,
     };
@@ -883,7 +885,8 @@ export async function createStatsDiv(game, displayBool) {
       CleanSheetPercentage: 100 - homeForm.CleanSheetPercentage,
       averageExpectedGoalsAgainst: homeForm.XGAgainstAvgOverall,
       averageGoalsAgainst:
-        homeForm.averageConceededLeague !== undefined
+        homeForm.averageConceededLeague !== undefined &&
+        homeForm.averageConceededLeague !== null
           ? homeForm.averageConceededLeague
           : homeForm.ConcededOverall / 10,
     };
@@ -892,7 +895,8 @@ export async function createStatsDiv(game, displayBool) {
       CleanSheetPercentage: 100 - awayForm.CleanSheetPercentage,
       averageExpectedGoalsAgainst: awayForm.XGAgainstAvgOverall,
       averageGoalsAgainst:
-        awayForm.averageConceededLeague !== undefined
+        awayForm.averageConceededLeague !== undefined &&
+        awayForm.averageConceededLeague !== null
           ? awayForm.averageConceededLeague
           : awayForm.ConcededOverall / 10,
     };
@@ -1196,12 +1200,14 @@ export async function createStatsDiv(game, displayBool) {
               className={"KeyStatsHome"}
               name={formDataHome[0].name}
               goals={
-                homeForm.averageScoredLeague !== undefined && homeForm.averageScoredLeague !== null
+                homeForm.averageScoredLeague !== undefined &&
+                homeForm.averageScoredLeague !== null
                   ? homeForm.averageScoredLeague.toFixed(2)
                   : formDataHome[0].AverageGoals
               }
               conceeded={
-                homeForm.averageConceededLeague !== undefined && homeForm.averageConceededLeague !== null
+                homeForm.averageConceededLeague !== undefined &&
+                homeForm.averageConceededLeague !== null
                   ? homeForm.averageConceededLeague.toFixed(2)
                   : formDataHome[0].AverageConceeded
               }
@@ -1284,12 +1290,14 @@ export async function createStatsDiv(game, displayBool) {
               className={"KeyStatsAway"}
               name={formDataAway[0].name}
               goals={
-                awayForm.averageScoredLeague !== undefined && awayForm.averageScoredLeague !== null
+                awayForm.averageScoredLeague !== undefined &&
+                awayForm.averageScoredLeague !== null
                   ? awayForm.averageScoredLeague.toFixed(2)
                   : formDataAway[0].AverageGoals
               }
               conceeded={
-                awayForm.averageConceededLeague !== undefined && awayForm.averageConceededLeague !== null
+                awayForm.averageConceededLeague !== undefined &&
+                awayForm.averageConceededLeague !== null
                   ? awayForm.averageConceededLeague.toFixed(2)
                   : formDataAway[0].AverageConceeded
               }
@@ -1357,6 +1365,9 @@ export async function createStatsDiv(game, displayBool) {
       );
     }
 
+    console.log(homeForm.averageScoredLeague);
+    console.log(awayForm.averageScoredLeague);
+
     ReactDOM.render(
       <div style={style}>
         <div className="Chart" id={`Chart${game.id}`} style={style}>
@@ -1380,8 +1391,14 @@ export async function createStatsDiv(game, displayBool) {
           ></RadarChart>
           <BarChart
             data1={[
-              formDataHome[0].AverageGoals,
-              formDataAway[0].AverageConceeded,
+              homeForm.averageScoredLeague !== undefined &&
+              homeForm.averageScoredLeague !== null
+                ? homeForm.averageScoredLeague.toFixed(2)
+                : formDataHome[0].AverageGoals,
+              awayForm.averageConceededLeague !== undefined &&
+              awayForm.averageConceededLeague !== null
+                ? awayForm.averageConceededLeague.toFixed(2)
+                : formDataAway[0].AverageConceeded,
               gameStats.home[0].PPG,
               formDataHome[0].AverageXG,
               formDataAway[0].AverageXGConceded,
@@ -1392,14 +1409,20 @@ export async function createStatsDiv(game, displayBool) {
               formDataHome[0].CornersAverage,
             ]}
             data2={[
-              formDataAway[0].AverageGoals,
-              formDataHome[0].AverageConceeded,
+              awayForm.averageScoredLeague !== undefined &&
+              awayForm.averageScoredLeague !== null
+                ? awayForm.averageScoredLeague.toFixed(2)
+                : formDataAway[0].AverageGoals,
+              homeForm.averageConceededLeague !== undefined &&
+              homeForm.averageConceededLeague !== null
+                ? homeForm.averageConceededLeague.toFixed(2)
+                : formDataHome[0].AverageConceeded,
               gameStats.away[0].PPG,
               formDataAway[0].AverageXG,
               formDataHome[0].AverageXGConceded,
               formDataAway[0].AverageShotsOnTarget,
               formDataAway[0].AverageDangerousAttacks / 7.5,
-              formDataHome[0].AveragePossession / 7.5,
+              formDataAway[0].AveragePossession / 7.5,
               formDataAway[0].goalDifferenceHomeOrAway / 5,
               formDataAway[0].CornersAverage,
             ]}

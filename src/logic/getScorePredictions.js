@@ -185,11 +185,20 @@ async function getPastLeagueResults(team, game, hOrA, form) {
     const teamConceededAll = allTeamResults.map((res) => res.conceeded);
 
     if (hOrA === "home") {
-      form.allGoalsArrayHome = teamGoalsAll;
-      form.allConceededArrayHome = teamConceededAll;
+      form.allGoalsArrayHome = teamGoalsHome;
+      form.allConceededArrayHome = teamConceededHome;
+      const sum = teamGoalsHome.reduce((a, b) => a + b, 0);
+  
+      const sumTwo = teamConceededHome.reduce((a, b) => a + b, 0);
+      form.goalDifferenceHomeOrAway = sum - sumTwo
+      
     } else if (hOrA === "away") {
-      form.allGoalsArrayAway = teamGoalsAll;
-      form.allConceededArrayAway = teamConceededAll;
+      form.allGoalsArrayAway = teamGoalsAway;
+      form.allConceededArrayAway = teamConceededAway;
+      const sum = teamGoalsAway.reduce((a, b) => a + b, 0);
+  
+      const sumTwo = teamConceededAway.reduce((a, b) => a + b, 0);
+      form.goalDifferenceHomeOrAway = sum - sumTwo
     }
 
     let bttsHome = reversedResultsHome.map((res) => res.btts);
@@ -258,6 +267,9 @@ async function getPastLeagueResults(team, game, hOrA, form) {
 
     const sumTwo = teamConceededAll.reduce((a, b) => a + b, 0);
     const avgConceeded = sumTwo / teamConceededAll.length || 0;
+
+    form.allConceededArrayHome = teamConceededAll;
+    form.goalDifference = sum - sumTwo;
 
     return [
       teamGoalsHomeRollingAverage,
@@ -1055,6 +1067,8 @@ export async function calculateScore(match, index, divider, calculate) {
     match.XGdifferentialValue = Math.abs(XGdifferential);
     match.XGdifferentialValueRaw = parseFloat(XGdifferential);
 
+    console.log(match.leagueIndex)
+    console.log(allLeagueResultsArrayOfObjects)
     if (
       allLeagueResultsArrayOfObjects[match.leagueIndex].fixtures.length > 50 &&
       match.leagueID !== 7956
@@ -1371,8 +1385,9 @@ export async function calculateScore(match, index, divider, calculate) {
       awayComparisonWeighting = 1;
     }
 
-    console.log(homeComparisonWeighting);
-    console.log(awayComparisonWeighting);
+    console.log(match.game);
+    console.log(formHome);
+    console.log(formAway);
 
     let experimentalHomeGoals =
       ((factorOneHome * 1 + factorTwoHome) / 2) * 0.9 * homeComparisonWeighting;

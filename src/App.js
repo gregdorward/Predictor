@@ -67,7 +67,7 @@ const leagueOrder = [
   9637, //Scottish Championship 22/23
   9639, //Scottish league 1 22/23
   9638, //Scottish league 2 22/23
-  7821, //Women's prem 22/23
+  9890, //Women's prem 23/24
   8777, //MLS 23
   9035, //Brazil prem 23
   8595, //Argentina prem 23

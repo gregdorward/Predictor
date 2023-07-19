@@ -736,6 +736,7 @@ export async function generateFixtures(
 
     let previousLeagueName;
 
+    console.log(orderedLeagues)
     for (let i = 0; i < orderedLeagues.length; i++) {
       leagueID = orderedLeagues[i].element.id;
       leagueGames = fixtureArray.filter(
@@ -1536,7 +1537,7 @@ export async function generateFixtures(
       ReactDOM.render(
         <Fragment>
           <Button
-            text={"Get Predictions"}
+            text={"Get Predictions & League stats"}
             onClickEvent={() => getScorePrediction(day)}
             className={"GeneratePredictions"}
           />
