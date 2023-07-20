@@ -182,8 +182,8 @@ async function GenerateFormSummary(form, lastx, recentForm) {
   );
   let xgText = await getOverOrUnderText(xgSum);
   let attackString = await getAttackingSummary(
-    recentForm.ScoredOverall / 5,
-    form.ScoredOverall / 10
+    form.last5Goals,
+    form.last10Goals
   );
   let defenceString = await getDefenceSummary(form.CleanSheetPercentage);
   let pointsAverageTotal =

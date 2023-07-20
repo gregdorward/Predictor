@@ -16,21 +16,23 @@ export async function calculateAttackingStrength(stats) {
 
   // Define weights for each metric (you can adjust these based on your preference)
   const weights = {
-    averagePossession: 0.15,
-    averageDangerousAttacks: 0.2,
-    averageShots: 0.1,
-    averageShotsOnTarget: 0.15,
+    // averagePossession: 0.15,
+    averageDangerousAttacks: 0.15,
+    averageShots: 0.15,
+    averageShotsOnTarget: 0.2,
     averageExpectedGoals: 0.25,
-    averageGoals: 0.15,
+    // averageRecentXG: 0.15,
+    averageGoals: 0.25,
   };
 
   // Define the ranges for normalization
   const ranges = {
-    averagePossession: { min: 25, max: 75 },
-    averageDangerousAttacks: { min: 15, max: 90 }, // Adjust the max value as needed
-    averageShots: { min: 4, max: 30 }, // Adjust the max value as needed
-    averageShotsOnTarget: { min: 2, max: 14 }, // Adjust the max value as needed
+    // averagePossession: { min: 25, max: 75 },
+    averageDangerousAttacks: { min: 20, max: 90 }, // Adjust the max value as needed
+    averageShots: { min: 5, max: 30 }, // Adjust the max value as needed
+    averageShotsOnTarget: { min: 2, max: 13 }, // Adjust the max value as needed
     averageExpectedGoals: { min: 0, max: 3 }, // Adjust the max value as needed
+    // averageRecentXG: { min: 0, max: 3 }, // Adjust the max value as needed
     averageGoals: { min: 0, max: 3 }, // Adjust the max value as needed
   };
 
@@ -49,14 +51,15 @@ export async function calculateAttackingStrength(stats) {
     }
   }
 
-  return weightedSum.toFixed(2);
+  return parseFloat(weightedSum.toFixed(2));
 }
 
 export async function calculateDefensiveStrength(stats) {
   // Define weights for each metric (you can adjust these based on your preference)
   const weights = {
-    CleanSheetPercentage: 0.2,
-    averageExpectedGoalsAgainst: 0.45,
+    CleanSheetPercentage: 0.3,
+    averageExpectedGoalsAgainst: 0.35,
+    // averageRecentXGAgainst: 0.15,
     averageGoalsAgainst: 0.35,
   };
 
@@ -64,6 +67,7 @@ export async function calculateDefensiveStrength(stats) {
   const ranges = {
     CleanSheetPercentage: { min: 0, max: 100 },
     averageExpectedGoalsAgainst: { min: 0, max: 3 }, // Adjust the max value as needed
+    // averageRecentXGAgainst: { min: 0, max: 3 },
     averageGoalsAgainst: { min: 0, max: 3 }, // Adjust the max value as needed
   };
 
@@ -83,7 +87,7 @@ export async function calculateDefensiveStrength(stats) {
     }
   }
 
-  return weightedSum.toFixed(2);
+  return parseFloat(weightedSum.toFixed(2));
 }
 
 export async function calculateMetricStrength(metricName, metricValue) {
@@ -894,6 +898,7 @@ export async function createStatsDiv(game, displayBool) {
     const defensiveMetricsAway = {
       CleanSheetPercentage: 100 - awayForm.CleanSheetPercentage,
       averageExpectedGoalsAgainst: awayForm.XGAgainstAvgOverall,
+
       averageGoalsAgainst:
         awayForm.averageConceededLeague !== undefined &&
         awayForm.averageConceededLeague !== null
