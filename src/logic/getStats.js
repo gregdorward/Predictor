@@ -10,27 +10,28 @@ import { Fragment } from "react";
 import GenerateFormSummary from "../logic/compareFormTrend";
 import { Chart, RadarChart, BarChart } from "../components/Chart";
 import Collapsable from "../components/CollapsableElement";
+import { clicked } from "../logic/getScorePredictions";
 
 export async function calculateAttackingStrength(stats) {
-  console.log("calculating");
+  console.log(stats);
 
   // Define weights for each metric (you can adjust these based on your preference)
   const weights = {
     // averagePossession: 0.15,
     averageDangerousAttacks: 0.15,
-    averageShots: 0.15,
+    averageShots: 0.1,
     averageShotsOnTarget: 0.2,
     averageExpectedGoals: 0.25,
     // averageRecentXG: 0.15,
-    averageGoals: 0.25,
+    averageGoals: 0.3,
   };
 
   // Define the ranges for normalization
   const ranges = {
     // averagePossession: { min: 25, max: 75 },
-    averageDangerousAttacks: { min: 20, max: 90 }, // Adjust the max value as needed
-    averageShots: { min: 5, max: 30 }, // Adjust the max value as needed
-    averageShotsOnTarget: { min: 2, max: 13 }, // Adjust the max value as needed
+    averageDangerousAttacks: { min: 20, max: 80 }, // Adjust the max value as needed
+    averageShots: { min: 5, max: 14 }, // Adjust the max value as needed
+    averageShotsOnTarget: { min: 0, max: 90 }, // Adjust the max value as needed
     averageExpectedGoals: { min: 0, max: 3 }, // Adjust the max value as needed
     // averageRecentXG: { min: 0, max: 3 }, // Adjust the max value as needed
     averageGoals: { min: 0, max: 3 }, // Adjust the max value as needed
@@ -48,7 +49,10 @@ export async function calculateAttackingStrength(stats) {
         (stats[metric] - ranges[metric].min) /
         (ranges[metric].max - ranges[metric].min);
       weightedSum += normalizedValue * weights[metric];
+
+      console.log(normalizedValue)
     }
+    console.log("NOPE")
   }
 
   return parseFloat(weightedSum.toFixed(2));
@@ -58,9 +62,9 @@ export async function calculateDefensiveStrength(stats) {
   // Define weights for each metric (you can adjust these based on your preference)
   const weights = {
     CleanSheetPercentage: 0.3,
-    averageExpectedGoalsAgainst: 0.35,
+    averageExpectedGoalsAgainst: 0.3,
     // averageRecentXGAgainst: 0.15,
-    averageGoalsAgainst: 0.35,
+    averageGoalsAgainst: 0.4,
   };
 
   // Define the ranges for normalization
@@ -91,7 +95,6 @@ export async function calculateDefensiveStrength(stats) {
 }
 
 export async function calculateMetricStrength(metricName, metricValue) {
-  console.log(metricValue);
   // Define weights for each metric (you can adjust these based on your preference)
   const weights = {
     averagePossession: 1,
@@ -451,7 +454,7 @@ export async function createStatsDiv(game, displayBool) {
     // takes the displayBool boolean from the fixture onClick and sets the styling of the stats div from there
     function styling(testBool) {
       let bool = testBool;
-      if (bool === true) {
+      if (bool === true && clicked === true) {
         // set stats element to display flex
         return { display: "block" };
       } else {
@@ -723,6 +726,9 @@ export async function createStatsDiv(game, displayBool) {
 
         gameArrayAway.sort((a, b) => b.unixTimestamp - a.unixTimestamp);
 
+        console.log(gameStats.teamIDAway)
+        console.log(gameArrayAway)
+
         rollingGoalDiffTotalAway = goalDiffArrayAway.map(cumulativeSumAway);
 
         latestHomeGoalDiff =
@@ -906,11 +912,6 @@ export async function createStatsDiv(game, displayBool) {
           : awayForm.ConcededOverall / 10,
     };
 
-    console.log(attackingMetricsHome);
-    console.log(attackingMetricsAway);
-    console.log(defensiveMetricsHome);
-    console.log(defensiveMetricsAway);
-
     let homeAttackStrength;
     let homeDefenceStrength;
     let homePossessionStrength;
@@ -922,7 +923,6 @@ export async function createStatsDiv(game, displayBool) {
     let awayXGForStrength;
     let awayXGAgainstStrength;
 
-    console.log(homeForm);
     if (homeForm.xgForStrength) {
       console.log("not calculating");
       homeAttackStrength = homeForm.attackingStrength;
@@ -1369,9 +1369,6 @@ export async function createStatsDiv(game, displayBool) {
         </div>
       );
     }
-
-    console.log(homeForm.averageScoredLeague);
-    console.log(awayForm.averageScoredLeague);
 
     ReactDOM.render(
       <div style={style}>
