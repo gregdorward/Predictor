@@ -18,10 +18,10 @@ export async function calculateAttackingStrength(stats) {
   // Define weights for each metric (you can adjust these based on your preference)
   const weights = {
     // averagePossession: 0.15,
-    averageDangerousAttacks: 0.15,
+    averageDangerousAttacks: 0.2,
     averageShots: 0.1,
     averageShotsOnTarget: 0.2,
-    averageExpectedGoals: 0.25,
+    averageExpectedGoals: 0.2,
     // averageRecentXG: 0.15,
     averageGoals: 0.3,
   };
@@ -29,9 +29,9 @@ export async function calculateAttackingStrength(stats) {
   // Define the ranges for normalization
   const ranges = {
     // averagePossession: { min: 25, max: 75 },
-    averageDangerousAttacks: { min: 20, max: 80 }, // Adjust the max value as needed
-    averageShots: { min: 5, max: 14 }, // Adjust the max value as needed
-    averageShotsOnTarget: { min: 0, max: 90 }, // Adjust the max value as needed
+    averageDangerousAttacks: { min: 30, max: 80 }, // Adjust the max value as needed
+    averageShots: { min: 5, max: 18 }, // Adjust the max value as needed
+    averageShotsOnTarget: { min: 2, max: 9 }, // Adjust the max value as needed
     averageExpectedGoals: { min: 0, max: 3 }, // Adjust the max value as needed
     // averageRecentXG: { min: 0, max: 3 }, // Adjust the max value as needed
     averageGoals: { min: 0, max: 3 }, // Adjust the max value as needed
@@ -469,6 +469,7 @@ export async function createStatsDiv(game, displayBool) {
     let divider = 10;
 
     let gameStats = allForm.find((match) => match.id === game.id);
+    console.log(gameStats)
     const gameArrayHome = [];
     const gameArrayAway = [];
     const gameArrayHomeTeamHomeGames = [];

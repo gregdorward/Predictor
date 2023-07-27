@@ -242,7 +242,7 @@ async function getPastLeagueResults(team, game, hOrA, form) {
     );
     form.AverageShots = parseFloat(avgShots.toFixed(1));
     form.AverageShotsOnTargetOverall = parseFloat(avgShotsOnTarget.toFixed(1));
-    const alpha = 0.45;
+    const alpha = 0.6;
     let forAndAgainstRollingAv;
     let forAndAgainstRollingAvHomeOrAway;
     if (hOrA === "home") {
@@ -1411,7 +1411,7 @@ export async function calculateScore(match, index, divider, calculate) {
       averagePossession: formHome.AveragePossession,
       averageDangerousAttacks: formHome.AverageDangerousAttacksOverall,
       averageShots: formHome.AverageShots,
-      averageShotsOnTarget: formHome.AverageShotsOnTarget * 10,
+      averageShotsOnTarget: formHome.AverageShotsOnTarget,
       averageExpectedGoals: formHome.XGOverall,
       averageGoals:
         formHome.averageScoredLeague !== null
@@ -1422,7 +1422,7 @@ export async function calculateScore(match, index, divider, calculate) {
       averagePossession: formAway.AveragePossession,
       averageDangerousAttacks: formAway.AverageDangerousAttacksOverall,
       averageShots: formAway.AverageShots,
-      averageShotsOnTarget: formAway.AverageShotsOnTarget * 10,
+      averageShotsOnTarget: formAway.AverageShotsOnTarget,
       averageExpectedGoals: formAway.XGOverall,
       averageGoals:
         formAway.averageScoredLeague !== null
@@ -1642,11 +1642,11 @@ export async function calculateScore(match, index, divider, calculate) {
     }
 
     let experimentalHomeGoals =
-      ((factorOneHome * 2 + factorTwoHome) / 3) * 0.85 * homeComparisonWeighting;
+      ((factorOneHome * 3 + factorTwoHome) / 4) * 0.9 * homeComparisonWeighting;
     // (formHome.forAndAgainstRollingAvHomeOrAway.goalsFor + formAway.forAndAgainstRollingAvHomeOrAway.goalsAgainst) / 2
 
     let experimentalAwayGoals =
-      ((factorOneAway * 2 + factorTwoAway) / 3) * 0.85 * awayComparisonWeighting;
+      ((factorOneAway * 3 + factorTwoAway) / 4) * 0.9 * awayComparisonWeighting;
     // (formAway.forAndAgainstRollingAvHomeOrAway.goalsFor + formHome.forAndAgainstRollingAvHomeOrAway.goalsAgainst) / 2
 
     let rawFinalHomeGoals = experimentalHomeGoals;
@@ -2059,9 +2059,9 @@ export async function getScorePrediction(day, mocked) {
             match.goalsB = "P";
             await calculateScore(match, index, divider, false);
             break;
-          case match.leagueID === 6935 || match.leagueID === 7061:
-            match.goalsA = "-";
-            match.goalsB = "-";
+          case match.leagueID === 6935 || match.leagueID === 7061 || match.game_week < 3:
+            match.goalsA = "x";
+            match.goalsB = "x";
             await calculateScore(match, index, divider, false);
             break;
           default:
