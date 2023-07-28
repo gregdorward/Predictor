@@ -246,7 +246,7 @@ async function getPastLeagueResults(team, game, hOrA, form) {
     );
     form.AverageShots = parseFloat(avgShots.toFixed(1));
     form.AverageShotsOnTargetOverall = parseFloat(avgShotsOnTarget.toFixed(1));
-    const alpha = 0.5;
+    const alpha = 0.75;
     let forAndAgainstRollingAv;
     let forAndAgainstRollingAvHomeOrAway;
     if (hOrA === "home") {
@@ -473,7 +473,7 @@ async function predictGoalsWithExponentialSmoothing(
   };
 }
 
-export async function compareStat(statOne, statTwo) {
+export async function compareStat(statOne, statTwo, delta) {
   let stat1 = parseFloat(statOne);
   let stat2 = parseFloat(statTwo);
   let statDiff;
@@ -482,7 +482,7 @@ export async function compareStat(statOne, statTwo) {
       stat1,
       stat2,
       0,
-      1
+      delta
     );
 
     const finalValue1 = normalizedValue1 + 1;
@@ -862,52 +862,59 @@ export async function compareTeams(homeForm, awayForm, match) {
 
   const attackStrengthComparison = await compareStat(
     homeAttackStrength,
-    awayAttackStrength
+    awayAttackStrength, 
+    1
   );
 
   const defenceStrengthComparison = await compareStat(
     homeDefenceStrength,
-    awayDefenceStrength
+    awayDefenceStrength,
+    1
   );
 
   const possessiontrengthComparison = await compareStat(
     homePossessionStrength,
-    awayPossessionStrength
+    awayPossessionStrength,
+    1
   );
 
   const xgActualComparison = await compareStat(
     homeXGtoActualDiffStrength,
-    awayXGtoActualDiffStrength
+    awayXGtoActualDiffStrength,
+    1
   );
 
   const xgAgainstComparison = await compareStat(
     homeForm.xgAgainstStrength,
-    awayForm.xgAgainstStrength
+    awayForm.xgAgainstStrength,
+    1
   );
 
   const homeAwayPointAverageComparison = await compareStat(
     homeForm.homeOrAwayAverage,
-    awayForm.homeOrAwayAverage
+    awayForm.homeOrAwayAverage,
+    1
   );
 
   const fiveGameComparison = await compareStat(
     homeForm.last5Points,
-    awayForm.last5Points
+    awayForm.last5Points,
+    1
   );
 
-  const oddsComparison = await compareStat(match.awayOdds, match.homeOdds);
+  const oddsComparison = await compareStat(match.awayOdds, match.homeOdds, 1);
 
   console.log(match.awayOdds);
 
   const dangerousAttacksWithConverstionComparison = await compareStat(
     homeForm.AverageDangerousAttacksOverall *
       homeForm.dangerousAttackConversion,
-    awayForm.AverageDangerousAttacksOverall * awayForm.dangerousAttackConversion
+    awayForm.AverageDangerousAttacksOverall * awayForm.dangerousAttackConversion, 1
   );
 
   const goalDiffHomeOrAwayComparison = await compareStat(
     homeForm.goalDifferenceHomeOrAway,
-    awayForm.goalDifferenceHomeOrAway
+    awayForm.goalDifferenceHomeOrAway, 1
   );
 
   let calculation =
