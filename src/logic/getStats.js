@@ -20,9 +20,9 @@ export async function calculateAttackingStrength(stats) {
     // averagePossession: 0.15,
     averageDangerousAttacks: 0.2,
     averageShots: 0.1,
-    averageShotsOnTarget: 0.2,
-    averageExpectedGoals: 0.2,
-    // averageRecentXG: 0.15,
+    averageShotsOnTarget: 0.1,
+    averageExpectedGoals: 0.15,
+    recentXG: 0.15,
     averageGoals: 0.3,
   };
 
@@ -32,9 +32,9 @@ export async function calculateAttackingStrength(stats) {
     averageDangerousAttacks: { min: 30, max: 80 }, // Adjust the max value as needed
     averageShots: { min: 5, max: 18 }, // Adjust the max value as needed
     averageShotsOnTarget: { min: 2, max: 9 }, // Adjust the max value as needed
-    averageExpectedGoals: { min: 0, max: 3 }, // Adjust the max value as needed
-    // averageRecentXG: { min: 0, max: 3 }, // Adjust the max value as needed
-    averageGoals: { min: 0, max: 3 }, // Adjust the max value as needed
+    averageExpectedGoals: { min: 0, max: 3.5 }, // Adjust the max value as needed
+    recentXGA: { min: 0, max: 3.5 }, // Adjust the max value as needed
+    averageGoals: { min: 0, max: 3.5 }, // Adjust the max value as needed
   };
 
   // Normalize each metric value and calculate the weighted sum
@@ -62,17 +62,17 @@ export async function calculateDefensiveStrength(stats) {
   // Define weights for each metric (you can adjust these based on your preference)
   const weights = {
     CleanSheetPercentage: 0.3,
-    averageExpectedGoalsAgainst: 0.3,
-    // averageRecentXGAgainst: 0.15,
-    averageGoalsAgainst: 0.4,
+    averageExpectedGoalsAgainst: 0.2,
+    recentXGAgainst: 0.2,
+    averageGoalsAgainst: 0.3,
   };
 
   // Define the ranges for normalization
   const ranges = {
     CleanSheetPercentage: { min: 0, max: 100 },
-    averageExpectedGoalsAgainst: { min: 0, max: 3 }, // Adjust the max value as needed
-    // averageRecentXGAgainst: { min: 0, max: 3 },
-    averageGoalsAgainst: { min: 0, max: 3 }, // Adjust the max value as needed
+    averageExpectedGoalsAgainst: { min: 0, max: 3.5 }, // Adjust the max value as needed
+    recentXGAgainst: { min: 0, max: 3.5 },
+    averageGoalsAgainst: { min: 0, max: 3.5 }, // Adjust the max value as needed
   };
 
   // Normalize each metric value and calculate the weighted sum
