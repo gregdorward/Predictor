@@ -58,7 +58,6 @@ let allLossOutcomes = 0;
 let allDrawOutcomes = 0;
 let totalROI = 0;
 let totalInvestment = 0;
-let profit = 0;
 let totalProfit = 0;
 export let clicked = false;
 
@@ -936,7 +935,7 @@ export async function compareTeams(homeForm, awayForm, match) {
     // // xgForStrengthRecentComparison * 1 +
     // // xgAgainstStrengthRecentComparison * 1 +
     homeAwayPointAverageComparison * 1 +
-    goalDiffHomeOrAwayComparison * 2 +
+    goalDiffHomeOrAwayComparison * 1 +
     xgActualComparison * 1 +
     // xgForComparison * 1 +
     // xgAgainstComparison * 1 +
@@ -2025,6 +2024,7 @@ export async function calculateScore(match, index, divider, calculate) {
     rawFinalHomeGoals = "";
     rawFinalAwayGoals = "";
     match.status = "void";
+    match.profit = 0
   }
 
   return [finalHomeGoals, finalAwayGoals, rawFinalHomeGoals, rawFinalAwayGoals];
@@ -2035,9 +2035,11 @@ async function getSuccessMeasure(fixtures) {
   let investment = 0;
   let exactScores = 0;
   let successCount = 0;
+  let profit = 0;
   let netProfit = 0;
   for (let i = 0; i < fixtures.length; i++) {
-    if (fixtures[i].status === "complete" && fixtures[i].prediction) {
+    if (fixtures[i].status === "complete" && fixtures[i].hasOwnProperty('prediction')) {
+      console.log('called')
       sumProfit = sumProfit + fixtures[i].profit;
       investment = investment + 1;
       netProfit = (sumProfit - investment).toFixed(2);
@@ -2053,12 +2055,13 @@ async function getSuccessMeasure(fixtures) {
 
   totalInvestment = totalInvestment + investment
   totalProfit = totalProfit + profit;
-  let ROI = (netProfit / investment) * 100;
+  let ROI = (profit / investment) * 100;
   totalROI = (totalProfit / totalInvestment) * 100;
   console.log(`Total Profit : ${totalProfit}`)
   console.log(`Total Investment : ${totalInvestment}`)
   console.log(`Total ROI : ${totalROI}`)
   var operand = ROI >= 0 ? "+" : "";
+  var operandTwo = totalROI >= 0 ? "+" : "";
   let exactScoreHitRate = ((exactScores / investment) * 100).toFixed(1);
   let successRate = ((successCount / investment) * 100).toFixed(1);
 
@@ -2073,6 +2076,11 @@ async function getSuccessMeasure(fixtures) {
         />
         <p>{`Correct W/D/W predictions: ${successCount} (${successRate}%)`}</p>
         <p>{`Exact scores predicted: ${exactScores} (${exactScoreHitRate}%)`}</p>
+        <Div
+          className={"SuccessMeasure"}
+          text={`Cumalative ROI for 
+            all ${totalInvestment} match outcomes: ${operandTwo} ${totalROI.toFixed(2)}%`}
+        />
       </Fragment>,
       document.getElementById("successMeasure2")
     );
@@ -2562,6 +2570,7 @@ export async function getScorePrediction(day, mocked) {
     <RenderAllFixtures matches={matches} result={true} bool={mock} />,
     document.getElementById("FixtureContainer")
   );
+  console.log(matches)
   await getSuccessMeasure(matches);
   await getMultis();
   await getNewTips(allTipsSorted);

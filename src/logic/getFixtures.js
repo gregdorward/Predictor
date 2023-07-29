@@ -735,8 +735,13 @@ export async function generateFixtures(
     }
 
     let previousLeagueName;
+    const val = "prediction";
+    const exists =
+      matches.filter(function (o) {
+        return o.hasOwnProperty(val);
+      }).length > 0;
 
-    console.log(orderedLeagues)
+    console.log(orderedLeagues);
     for (let i = 0; i < orderedLeagues.length; i++) {
       leagueID = orderedLeagues[i].element.id;
       leagueGames = fixtureArray.filter(
@@ -1012,7 +1017,7 @@ export async function generateFixtures(
             awayPrefixAwayTable = "";
           }
 
-          console.log(form[0].data[2])
+          console.log(form[0].data[2]);
 
           allForm.push({
             id: match.id,
@@ -1533,18 +1538,22 @@ export async function generateFixtures(
         }
       }
 
+
+      if (matches.length > 0) {
+        ReactDOM.render(
+          <Fragment>
+            <Button
+              text={"Get Predictions & League stats"}
+              onClickEvent={() => getScorePrediction(day)}
+              className={"GeneratePredictions"}
+            />
+            <div className="Version">Prediction engine v3.0.3</div>
+          </Fragment>,
+          document.getElementById("GeneratePredictions")
+        );
+      }
+
       // }
-      ReactDOM.render(
-        <Fragment>
-          <Button
-            text={"Get Predictions & League stats"}
-            onClickEvent={() => getScorePrediction(day)}
-            className={"GeneratePredictions"}
-          />
-          <div className="Version">Prediction engine v3.0.2</div>
-        </Fragment>,
-        document.getElementById("GeneratePredictions")
-      );
     }
 
     ReactDOM.render(
