@@ -267,7 +267,7 @@ button {
   padding-bottom: 8px; */
   margin: 1em;
   border: 0.15em solid #030061;
-  border-radius: 45px;
+  border-radius: 10px;
   box-sizing: border-box;
   text-decoration: none;
   font-family: 'Open Sans', sans-serif;
@@ -721,7 +721,8 @@ p {
   display: flex;
   flex-basis: 100%;
   background-color: white;
-  border: 0.1em solid #030061;
+  border: 0.1em solid #0300617a;
+  border-width: 50%;
   align-items: center;
   align-content: center;
   color: black;
@@ -823,7 +824,7 @@ p {
  background-color: #030061;
   color: white;
   width: 3.5em;
-  border-radius: 45px;
+  border-radius: 10px;
   font-weight: bolder;
   margin-left: 1em;
 }
@@ -835,7 +836,7 @@ p {
  background-color: #030061;
   color: white;
   width: 4.5em;
-  border-radius: 45px;
+  border-radius: 10px;
   font-weight: bolder;
   margin-left: 1em;
 }
@@ -874,7 +875,7 @@ p {
  background-color: #030061;
   color:white;
   width: 3.5em;
-  border-radius: 45px;
+  border-radius: 10px;
   font-weight: bolder;
   margin-left: 1em;
 }
@@ -894,7 +895,7 @@ p {
  background-color: #030061;
   color: white;
   width: 3.5em;
-  border-radius: 45px;
+  border-radius: 10px;
   font-weight: 500;
   margin-right: 1em;
 }
@@ -906,7 +907,7 @@ p {
  background-color: #030061;
   color: white;
   width: 4.5em;
-  border-radius: 45px;
+  border-radius: 10px;
   font-weight: 500;
   margin-right: 1em;
 }
@@ -918,7 +919,7 @@ p {
  background-color: #030061;
   color: white;
   width: 3.5em;
-  border-radius: 45px;
+  border-radius: 10px;
   font-weight: 500;
   margin-right: 1em;
 }
@@ -1017,6 +1018,7 @@ p {
   color: white;
   background-color: #030061;
   border: black 0.25px solid;
+  border-radius: 10px;
   margin: 0.2em;
 }
 
@@ -1029,6 +1031,7 @@ p {
   display: inline-block;
   color: white;
   background-color: #030061;
+  border-radius: 10px;
   margin: 0.2em;
 }
 
@@ -1043,6 +1046,7 @@ p {
   background-color: rgb(242, 210, 1);
   margin: 0.2em;
   border: black 0.25px solid;
+  border-radius: 10px;
   box-shadow: #030052;
 }
 
@@ -1070,6 +1074,7 @@ p {
   background-color:#030061;
   margin: 0.2em;
   border: black 0.25px solid;
+  border-radius: 10px;
   box-shadow: #030052;
 }
 
@@ -1113,6 +1118,7 @@ p {
   color: white;
   background-color: #730a00;
   border: black 0.25px solid;
+  border-radius: 10px;
   margin: 0.2em;
 }
 
@@ -1126,6 +1132,7 @@ p {
   color: white;
   background-color:  #016001;
   border: black 0.25px solid;
+  border-radius: 10px;
   margin: 0.2em;
   
 }
@@ -1140,6 +1147,7 @@ p {
     color: gold;
     background-color:  #016001;
     border: black 0.25px solid;
+    border-radius: 10px;
     margin: 0.2em;
 }
 
@@ -1154,6 +1162,7 @@ p {
   color: white;
   background-color:#030061;
   border: black 0.25px solid;
+  border-radius: 10px;
   margin: 0.2em;
 }
 
@@ -2125,7 +2134,7 @@ li.FormHeader{
   padding-bottom: 6px;
   margin: 1em;
   border: 0.1em solid #030061;
-  border-radius: 45px;
+  border-radius: 10px;
   box-sizing: border-box;
   text-decoration: none;
   font-family: 'Open Sans', sans-serif;
@@ -2361,12 +2370,12 @@ td {
 
 button:hover {
   border-color: #ff6f00;
-  border-radius: 45px;
+  /* border-radius: 45px; */
 }
 
 .disclaimerButton:hover {
   border-color: #030061;
-  border-radius: 45px;
+  /* border-radius: 45px; */
 }
 
 .content h3,
