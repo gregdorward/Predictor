@@ -721,8 +721,7 @@ p {
   display: flex;
   flex-basis: 100%;
   background-color: white;
-  border: 0.1em solid #0300617a;
-  border-width: 50%;
+  border: 0.1em solid #030061;
   align-items: center;
   align-content: center;
   color: black;
