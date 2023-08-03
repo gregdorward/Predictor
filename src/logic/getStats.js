@@ -33,7 +33,7 @@ export async function calculateAttackingStrength(stats) {
     averageShots: { min: 5, max: 18 }, // Adjust the max value as needed
     averageShotsOnTarget: { min: 2, max: 9 }, // Adjust the max value as needed
     averageExpectedGoals: { min: 0, max: 3.5 }, // Adjust the max value as needed
-    recentXGA: { min: 0, max: 3.5 }, // Adjust the max value as needed
+    recentXG: { min: 0, max: 3.5 }, // Adjust the max value as needed
     averageGoals: { min: 0, max: 3.5 }, // Adjust the max value as needed
   };
 
@@ -45,14 +45,17 @@ export async function calculateAttackingStrength(stats) {
       weights.hasOwnProperty(metric) &&
       ranges.hasOwnProperty(metric)
     ) {
+      console.log(metric)
       const normalizedValue =
         (stats[metric] - ranges[metric].min) /
         (ranges[metric].max - ranges[metric].min);
       weightedSum += normalizedValue * weights[metric];
 
       console.log(normalizedValue)
+    } else {
+      console.log(metric)
+      console.log("NOPE")
     }
-    console.log("NOPE")
   }
 
   return parseFloat(weightedSum.toFixed(2));
@@ -450,6 +453,7 @@ let rollingGoalDiffTotalHome = [];
 let rollingGoalDiffTotalAway = [];
 
 export async function createStatsDiv(game, displayBool) {
+  console.log(displayBool)
   if (game.status !== "void") {
     // takes the displayBool boolean from the fixture onClick and sets the styling of the stats div from there
     function styling(testBool) {
@@ -868,11 +872,12 @@ export async function createStatsDiv(game, displayBool) {
     // );
 
     const attackingMetricsHome = {
-      averagePossession: homeForm.AveragePossession,
+      // averagePossession: homeForm.AveragePossessionOverall,
       averageDangerousAttacks: homeForm.AverageDangerousAttacksOverall,
       averageShots: homeForm.AverageShots,
       averageShotsOnTarget: homeForm.AverageShotsOnTarget,
       averageExpectedGoals: homeForm.XGOverall,
+      recentXG: homeForm.XGlast5 ? homeForm.XGlast5 : homeForm.XGOverall,
       averageGoals:
         homeForm.averageScoredLeague !== undefined &&
         homeForm.averageScoredLeague !== null
@@ -880,11 +885,12 @@ export async function createStatsDiv(game, displayBool) {
           : homeForm.ScoredOverall / 10,
     };
     const attackingMetricsAway = {
-      averagePossession: awayForm.AveragePossession,
+      // averagePossession: awayForm.AveragePossessionOverall,
       averageDangerousAttacks: awayForm.AverageDangerousAttacksOverall,
       averageShots: awayForm.AverageShots,
       averageShotsOnTarget: awayForm.AverageShotsOnTarget,
       averageExpectedGoals: awayForm.XGOverall,
+      recentXG: awayForm.XGlast5 ? awayForm.XGlast5 : awayForm.XGOverall,
       averageGoals:
         awayForm.averageScoredLeague !== undefined &&
         awayForm.averageScoredLeague !== null
@@ -895,6 +901,7 @@ export async function createStatsDiv(game, displayBool) {
     const defensiveMetricsHome = {
       CleanSheetPercentage: 100 - homeForm.CleanSheetPercentage,
       averageExpectedGoalsAgainst: homeForm.XGAgainstAvgOverall,
+      recentXGAgainst: homeForm.XGAgainstlast5 ? homeForm.XGAgainstlast5 : homeForm.XGAgainstAvgOverall,
       averageGoalsAgainst:
         homeForm.averageConceededLeague !== undefined &&
         homeForm.averageConceededLeague !== null
@@ -905,7 +912,7 @@ export async function createStatsDiv(game, displayBool) {
     const defensiveMetricsAway = {
       CleanSheetPercentage: 100 - awayForm.CleanSheetPercentage,
       averageExpectedGoalsAgainst: awayForm.XGAgainstAvgOverall,
-
+      recentXGAgainst: awayForm.XGAgainstlast5 ? awayForm.XGAgainstlast5 : awayForm.XGAgainstAvgOverall,
       averageGoalsAgainst:
         awayForm.averageConceededLeague !== undefined &&
         awayForm.averageConceededLeague !== null

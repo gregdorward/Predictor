@@ -1438,7 +1438,6 @@ export async function calculateScore(match, index, divider, calculate) {
     let teamComparisonScore;
 
     const attackingMetricsHome = {
-      averagePossession: formHome.AveragePossession,
       averageDangerousAttacks: formHome.AverageDangerousAttacksOverall,
       averageShots: formHome.AverageShots,
       averageShotsOnTarget: formHome.AverageShotsOnTarget,
@@ -1450,7 +1449,6 @@ export async function calculateScore(match, index, divider, calculate) {
           : formHome.ScoredAverage,
     };
     const attackingMetricsAway = {
-      averagePossession: formAway.AveragePossession,
       averageDangerousAttacks: formAway.AverageDangerousAttacksOverall,
       averageShots: formAway.AverageShots,
       averageShotsOnTarget: formAway.AverageShotsOnTarget,
@@ -2010,7 +2008,7 @@ export async function calculateScore(match, index, divider, calculate) {
     finalAwayGoals = "";
     rawFinalHomeGoals = "";
     rawFinalAwayGoals = "";
-    match.status = "void";
+    match.status = "notEnoughData";
     match.profit = 0
   }
 
