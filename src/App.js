@@ -48,19 +48,19 @@ const leagueOrder = [
   9655, //Bundesliga 22/23
   9697, //Serie A 22/23
   9674, //French Prem 22/23
-  7731, //Portagul Prem 22/23
+  9984, //Portagul Prem 22/23
   9653, //Dutch Prem 22/23
   9577, //Belgian Pro League 22/23
   8737, //sweden 23
   9545, //Danish Prem 22/23
   8739, //Norway Prem 23
-  7890, //Austrian Prem 22/23
-  7954, //Greek Prem 22/23
+  9954, //Austrian Prem 22/23
+  9889, //Greek Prem 22/23
   9553, //Polish prem 22/23
   9580, //Swiss prem 22/23
   8741, //Irish Prem 23
   9675, //Spanish secunda 22/23
-  7864, //Italy serie B 22/23
+  9808, //Italy serie B 22/23
   9656, //Bundesliga 2 22/23
   9741, //German 3rd tier 22/23
   9621, //French League 2 22/23
@@ -73,7 +73,7 @@ const leagueOrder = [
   8595, //Argentina prem 23
   // 6935, //Japan 22
   9525, //Mexico prem 23/24
-  7956, //National league North and South 22/23
+  9972, //National league North and South 22/23
   8008, //Australian A league 22/23
   8899, //S Korea 23
 ];
@@ -383,7 +383,9 @@ let dateString;
           )
         }
       />
-    </div>,
+      <span>*Not enough data to predict games in the first few gameweeks - predictions displayed as 'x - x'</span>
+    </div>
+    ,
     document.getElementById("Buttons")
   );
   ReactDOM.render(

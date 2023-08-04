@@ -267,10 +267,6 @@ async function getPastLeagueResults(team, game, hOrA, form) {
           teamConceededHome,
           beta
         );
-      console.log(team);
-      console.log(teamGoalsAll);
-      console.log(teamConceededAll);
-      console.log(forAndAgainstRollingAv);
     } else if (hOrA === "away") {
       form.allGoalsArrayAway = teamGoalsAway;
       form.allConceededArrayAway = teamConceededAway;
@@ -288,10 +284,6 @@ async function getPastLeagueResults(team, game, hOrA, form) {
           teamConceededAway,
           beta
         );
-      console.log(team);
-      console.log(teamGoalsAll);
-      console.log(teamConceededAll);
-      console.log(forAndAgainstRollingAv);
     }
 
     let bttsHome = reversedResultsHome.map((res) => res.btts);
@@ -366,8 +358,6 @@ async function getPastLeagueResults(team, game, hOrA, form) {
     const last10AvgScored = last10Sum / last10.length || 0;
     form.last5Goals = parseFloat(last5AvgScored.toFixed(2));
     form.last10Goals = parseFloat(last10AvgScored.toFixed(2));
-
-    console.log(last5Sum);
 
     const sumTwo = teamConceededAll.reduce((a, b) => a + b, 0);
     const avgConceeded = sumTwo / teamConceededAll.length || 0;
@@ -491,9 +481,6 @@ export async function compareStat(statOne, statTwo) {
 
     const finalValue1 = normalizedValue1 + 1;
     const finalValue2 = normalizedValue2 + 1;
-
-    console.log(`finalValue1 ${finalValue1}`);
-    console.log(`finalValue2 ${finalValue2}`);
 
     statDiff = await diff(finalValue1, finalValue2);
 
@@ -803,8 +790,6 @@ async function predictScore(
   scores.sort((a, b) => b.probability - a.probability); // Sort scores in descending order by probability
   const top5Scores = scores.slice(0, 5); // Get the top 5 scores
 
-  console.log(game);
-  console.log("Top 5 Score Predictions:");
 
   for (const score of top5Scores) {
     console.log(
@@ -1524,16 +1509,9 @@ export async function calculateScore(match, index, divider, calculate) {
     if (teamComparisonScore < 0) {
       formHome.teamStrengthWeighting = 1 + teamComparisonScore / 10;
       formAway.teamStrengthWeighting = 1 - teamComparisonScore / 10;
-      console.log(`teamComparisonScore : ${teamComparisonScore}`)
-      console.log(`formHome.teamStrengthWeighting : ${formHome.teamStrengthWeighting}`)
-      console.log(`formAway.teamStrengthWeighting : ${formAway.teamStrengthWeighting}`)
-
     } else if (teamComparisonScore >= 0) {
       formHome.teamStrengthWeighting = 1 + teamComparisonScore / 10;
       formAway.teamStrengthWeighting = 1 - teamComparisonScore / 10;
-      console.log(`teamComparisonScore : ${teamComparisonScore}`)
-      console.log(`formHome.teamStrengthWeighting : ${formHome.teamStrengthWeighting}`)
-      console.log(`formAway.teamStrengthWeighting : ${formAway.teamStrengthWeighting}`)
     }
 
     teamComparisonScore = teamComparisonScore * 0.4;
@@ -2136,9 +2114,6 @@ export async function getScorePrediction(day, mocked) {
     matches.map(async (match) => {
       // if there are no stored predictions, calculate them based on live data
       if (match) {
-        console.log(match.game)
-        console.log(match.game_week)
-        console.log(match)
         switch (true) {
           case match.status === "canceled":
             match.goalsA = "P";
@@ -2554,7 +2529,6 @@ export async function getScorePrediction(day, mocked) {
     <RenderAllFixtures matches={matches} result={true} bool={mock} />,
     document.getElementById("FixtureContainer")
   );
-  console.log(matches)
   await getSuccessMeasure(matches);
   await getMultis();
   await getNewTips(allTipsSorted);
