@@ -981,7 +981,7 @@ export async function compareTeams(homeForm, awayForm, match) {
       calculation > 0 &&
       homeForm.averageOddsHome > match.homeOdds * 1.5
     ) {
-      calculation = calculation * 2;
+      calculation = calculation * 2.5;
     }
     else {
       calculation = calculation * 1;
@@ -994,7 +994,7 @@ export async function compareTeams(homeForm, awayForm, match) {
       calculation < 0 &&
       awayForm.averageOddsAway > match.awayOdds * 1.5
     ) {
-      calculation = calculation * 2;
+      calculation = calculation * 2.5;
     }
     else {
       calculation = calculation * 1;
@@ -1516,10 +1516,10 @@ export async function calculateScore(match, index, divider, calculate) {
     teamComparisonScore = teamComparisonScore * 0.75;
     // teamComparisonScore = 0;
 
-    if (teamComparisonScore > 0.75) {
-      teamComparisonScore = 0.75;
-    } else if (teamComparisonScore < -0.75) {
-      teamComparisonScore = -0.75;
+    if (teamComparisonScore > 1) {
+      teamComparisonScore = 1;
+    } else if (teamComparisonScore < -1) {
+      teamComparisonScore = -1;
     }
     match.teamComparisonScore = teamComparisonScore.toFixed(2);
     // match.goalWeighting = 1 + parseFloat(match.teamComparisonScore)
@@ -1707,14 +1707,14 @@ export async function calculateScore(match, index, divider, calculate) {
     // }
 
     if (
-      formHome.CleanSheetPercentage < 30 &&
-      formAway.CleanSheetPercentage < 30
+      formHome.CleanSheetPercentage < 35 &&
+      formAway.CleanSheetPercentage < 35
     ) {
       finalHomeGoals = Math.ceil(rawFinalHomeGoals);
       finalAwayGoals = Math.ceil(rawFinalAwayGoals);
     } else if (
-      formHome.CleanSheetPercentage < 35 &&
-      formAway.CleanSheetPercentage < 35 &&
+      formHome.CleanSheetPercentage < 40 &&
+      formAway.CleanSheetPercentage < 40 &&
       rawFinalHomeGoals < 1 &&
       rawFinalAwayGoals < 1
     ) {
@@ -1728,13 +1728,13 @@ export async function calculateScore(match, index, divider, calculate) {
     // finalHomeGoals = await roundCustom(rawFinalHomeGoals, formHome)
     // finalAwayGoals = await roundCustom(rawFinalAwayGoals, formAway)
 
-    if (finalHomeGoals > formHome.averageScoredLeague + 1) {
+    if (finalHomeGoals > formHome.averageScoredLeague + 1.5) {
       finalHomeGoals = Math.round(
         (finalHomeGoals + formHome.averageScoredLeague) / 2
       );
     }
 
-    if (finalAwayGoals > formAway.averageScoredLeague + 1) {
+    if (finalAwayGoals > formAway.averageScoredLeague + 1.5) {
       finalAwayGoals = Math.round(
         (finalAwayGoals + formAway.averageScoredLeague) / 2
       );
