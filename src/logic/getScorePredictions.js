@@ -251,8 +251,8 @@ async function getPastLeagueResults(team, game, hOrA, form) {
     let forAndAgainstRollingAv;
     let forAndAgainstRollingAvHomeOrAway;
     if (hOrA === "home") {
-      form.allGoalsArrayHome = teamGoalsHome;
-      form.allConceededArrayHome = teamConceededHome;
+      form.allGoalsArrayHome = teamGoalsAll;
+      form.allConceededArrayHome = teamConceededAll;
       const sum = teamGoalsHome.reduce((a, b) => a + b, 0);
       const sumTwo = teamConceededHome.reduce((a, b) => a + b, 0);
       form.goalDifferenceHomeOrAway = sum - sumTwo;
@@ -268,8 +268,8 @@ async function getPastLeagueResults(team, game, hOrA, form) {
           beta
         );
     } else if (hOrA === "away") {
-      form.allGoalsArrayAway = teamGoalsAway;
-      form.allConceededArrayAway = teamConceededAway;
+      form.allGoalsArrayAway = teamGoalsAll;
+      form.allConceededArrayAway = teamConceededAll;
       const sum = teamGoalsAway.reduce((a, b) => a + b, 0);
       const sumTwo = teamConceededAway.reduce((a, b) => a + b, 0);
       form.goalDifferenceHomeOrAway = sum - sumTwo;
@@ -362,7 +362,6 @@ async function getPastLeagueResults(team, game, hOrA, form) {
     const sumTwo = teamConceededAll.reduce((a, b) => a + b, 0);
     const avgConceeded = sumTwo / teamConceededAll.length || 0;
 
-    form.allConceededArrayHome = teamConceededAll;
     form.goalDifference = sum - sumTwo;
 
 
@@ -921,11 +920,11 @@ export async function compareTeams(homeForm, awayForm, match) {
     // // xgAgainstStrengthRecentComparison * 1 +
     homeAwayPointAverageComparison * 1 +
     goalDiffHomeOrAwayComparison * 0.5 +
-    xgActualComparison * 1 +
+    xgActualComparison * 0 +
     // xgForComparison * 1 +
     // xgAgainstComparison * 1 +
     oddsComparison * 1 +
-    dangerousAttacksWithConverstionComparison * 1 +
+    dangerousAttacksWithConverstionComparison * 0 +
     homeAdvantage * 1 +
     fiveGameComparison * 0;
 
@@ -961,7 +960,7 @@ export async function compareTeams(homeForm, awayForm, match) {
       awayForm.last2Points >= 4 ||
       match.XGdifferentialValueRaw < 0
     ) {
-      calculation = calculation / 3;
+      calculation = calculation / 2;
     }
   } else if (calculation < 0) {
     if (
@@ -970,13 +969,13 @@ export async function compareTeams(homeForm, awayForm, match) {
       homeForm.last2Points >= 4 ||
       match.XGdifferentialValueRaw > 0
     ) {
-      calculation = calculation / 3;
+      calculation = calculation / 2;
     }
   }
 
   if (homeForm.averageOddsHome !== null || awayForm.averageOddsAway !== null) {
     if (calculation > 0 && homeForm.averageOddsHome < match.homeOdds) {
-      calculation = calculation / 1.5;
+      calculation = calculation / 1.25;
     }
     else if (
       calculation > 0 &&
@@ -989,7 +988,7 @@ export async function compareTeams(homeForm, awayForm, match) {
     }
 
     if (calculation < 0 && awayForm.averageOddsAway < match.awayOdds) {
-      calculation = calculation / 1.5;
+      calculation = calculation / 1.25;
     }
     else if (
       calculation < 0 &&
@@ -1514,13 +1513,13 @@ export async function calculateScore(match, index, divider, calculate) {
       formAway.teamStrengthWeighting = 1 - teamComparisonScore / 10;
     }
 
-    teamComparisonScore = teamComparisonScore * 0.4;
+    teamComparisonScore = teamComparisonScore * 0.5;
     // teamComparisonScore = 0;
 
-    if (teamComparisonScore > 0.5) {
-      teamComparisonScore = 0.5;
-    } else if (teamComparisonScore < -0.5) {
-      teamComparisonScore = -0.5;
+    if (teamComparisonScore > 0.75) {
+      teamComparisonScore = 0.75;
+    } else if (teamComparisonScore < -0.75) {
+      teamComparisonScore = -0.75;
     }
     match.teamComparisonScore = teamComparisonScore.toFixed(2);
     // match.goalWeighting = 1 + parseFloat(match.teamComparisonScore)
@@ -1596,32 +1595,32 @@ export async function calculateScore(match, index, divider, calculate) {
 
     factorOneHome =
       (homeLeagueOrAllFormAverageGoals * 1 +
-        formHome.forAndAgainstRollingAvHomeOrAway.goalsFor * 0.5 +
-        formAway.forAndAgainstRollingAvHomeOrAway.goalsAgainst * 0.5 +
-        formHome.forAndAgainstRollingAv.goalsFor * 0.5 +
-        formAway.forAndAgainstRollingAv.goalsAgainst * 0.5 +
+        formHome.forAndAgainstRollingAvHomeOrAway.goalsFor * 1 +
+        formAway.forAndAgainstRollingAvHomeOrAway.goalsAgainst * 1 +
+        formHome.forAndAgainstRollingAv.goalsFor * 0.75 +
+        formAway.forAndAgainstRollingAv.goalsAgainst * 0.75 +
         formHome.allTeamGoalsBasedOnAverages * 1 +
         formAway.allTeamGoalsConceededBasedOnAverages * 1 +
         // formHome.XGOverall * 0.5 +
         // formAway.XGAgainstAvgOverall * 0.5 +
         last10WeightingHome * 0 +
         last2WeightingHome * 0) /
-      5;
+      6.5;
 
 
     factorOneAway =
       (awayLeagueOrAllFormAverageGoals * 1 +
-        formAway.forAndAgainstRollingAvHomeOrAway.goalsFor * 0.5 +
-        formHome.forAndAgainstRollingAvHomeOrAway.goalsAgainst * 0.5 +
-        formAway.forAndAgainstRollingAv.goalsFor * 0.5 +
-        formHome.forAndAgainstRollingAv.goalsAgainst * 0.5 +
+        formAway.forAndAgainstRollingAvHomeOrAway.goalsFor * 1 +
+        formHome.forAndAgainstRollingAvHomeOrAway.goalsAgainst * 1 +
+        formAway.forAndAgainstRollingAv.goalsFor * 0.75 +
+        formHome.forAndAgainstRollingAv.goalsAgainst * 0.75 +
         formAway.allTeamGoalsBasedOnAverages * 1 +
         formHome.allTeamGoalsConceededBasedOnAverages * 1 +
         // formAway.XGOverall * 0.5 +
         // formHome.XGAgainstAvgOverall * 0.5 +
         last10WeightingAway * 0 +
         last2WeightingAway * 0) /
-      5;
+      6.5;
 
 
     // factorOneHome =
