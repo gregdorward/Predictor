@@ -1685,11 +1685,11 @@ export async function calculateScore(match, index, divider, calculate) {
     }
 
     let experimentalHomeGoals =
-      (((factorOneHome * homeComparisonWeighting) * 1.5 + factorTwoHome * 1) / 2.5) * 0.9;
+      (((factorOneHome * homeComparisonWeighting) * 1.5 + factorTwoHome * 1) / 2.5) * 0.85;
     // (formHome.forAndAgainstRollingAvHomeOrAway.goalsFor + formAway.forAndAgainstRollingAvHomeOrAway.goalsAgainst) / 2
 
     let experimentalAwayGoals =
-      (((factorOneAway * awayComparisonWeighting) * 1.5 + factorTwoAway * 1) / 2.5) * 0.9;
+      (((factorOneAway * awayComparisonWeighting) * 1.5 + factorTwoAway * 1) / 2.5) * 0.85;
     // (formAway.forAndAgainstRollingAvHomeOrAway.goalsFor + formHome.forAndAgainstRollingAvHomeOrAway.goalsAgainst) / 2
 
     let rawFinalHomeGoals = experimentalHomeGoals;
