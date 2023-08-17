@@ -365,7 +365,6 @@ async function createFixture(match, result, mockBool) {
 }
 
 export function RenderAllFixtures(props) {
-  console.log(props);
   return (
     <Fixture
       fixtures={props.matches}
@@ -423,8 +422,6 @@ export async function generateFixtures(
       fixtureArray = Array.from(fixtures.data);
     });
 
-    console.log(fixtureArray);
-
     let form;
     let formArray = [];
     allForm = [];
@@ -463,7 +460,6 @@ export async function generateFixtures(
     var leaguePositions = [];
     leagueArray = [];
 
-    console.log(league.status);
     if (league.status === 200) {
       console.log("Not fetching leagues");
       await league.json().then((leagues) => {
@@ -479,7 +475,6 @@ export async function generateFixtures(
       await allLeagueResults.json().then((allGames) => {
         allLeagueResultsArrayOfObjects = Array.from(allGames);
       });
-      console.log(allLeagueResultsArrayOfObjects);
 
       leaguesStored = true;
       generateTables(
@@ -541,6 +536,8 @@ export async function generateFixtures(
             odds_ft_2,
             team_a_shots,
             team_b_shots,
+            team_a_corners,
+            team_b_corners,
             team_a_shotsOnTarget,
             team_b_shotsOnTarget,
             team_a_red_cards,
@@ -564,6 +561,8 @@ export async function generateFixtures(
             odds_ft_2,
             team_a_shots,
             team_b_shots,
+            team_a_corners,
+            team_b_corners,
             team_a_shotsOnTarget,
             team_b_shotsOnTarget,
             team_a_red_cards,
@@ -576,7 +575,7 @@ export async function generateFixtures(
             pre_match_teamB_overall_ppg,
             game_week,
           })
-        );
+        );        
 
         let leagueObj = {
           // leagueObject[orderedLeague] = {
@@ -748,7 +747,6 @@ export async function generateFixtures(
         return o.hasOwnProperty(val);
       }).length > 0;
 
-    console.log(orderedLeagues);
     for (let i = 0; i < orderedLeagues.length; i++) {
       leagueID = orderedLeagues[i].element.id;
       leagueGames = fixtureArray.filter(
@@ -1023,8 +1021,6 @@ export async function generateFixtures(
             awayPrefix = "";
             awayPrefixAwayTable = "";
           }
-
-          console.log(form[0].data[2]);
 
           allForm.push({
             id: match.id,

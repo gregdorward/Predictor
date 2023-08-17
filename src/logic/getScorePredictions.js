@@ -149,6 +149,7 @@ async function getPastLeagueResults(team, game, hOrA, form) {
         shots: resultedGame.team_a_shots,
         sot: resultedGame.team_a_shotsOnTarget,
         dangerousAttacks: resultedGame.team_a_dangerous_attacks,
+        corners: resultedGame.team_a_corners,
         date: await convertTimestamp(resultedGame.date_unix),
         dateRaw: resultedGame.date_unix,
         oddsHome: resultedGame.odds_ft_1,
@@ -162,6 +163,7 @@ async function getPastLeagueResults(team, game, hOrA, form) {
     }
     for (let index = 0; index < teamsAwayResults.length; index++) {
       const resultedGame = teamsAwayResults[index];
+      console.log(resultedGame)
       awayResults.push({
         homeTeam: resultedGame.home_name,
         homeGoals: resultedGame.homeGoalCount,
@@ -175,6 +177,7 @@ async function getPastLeagueResults(team, game, hOrA, form) {
         shots: resultedGame.team_b_shots,
         sot: resultedGame.team_b_shotsOnTarget,
         dangerousAttacks: resultedGame.team_b_dangerous_attacks,
+        corners: resultedGame.team_b_corners,
         date: await convertTimestamp(resultedGame.date_unix),
         dateRaw: resultedGame.date_unix,
         oddsHome: resultedGame.odds_ft_1,
@@ -230,6 +233,13 @@ async function getPastLeagueResults(team, game, hOrA, form) {
     const shotsOnTargetSum = shotsOnTarget.reduce((a, b) => a + b, 0);
     const avgShotsOnTarget = shotsOnTargetSum / shotsOnTarget.length || 0;
 
+    const corners = allTeamResults.map((res) => res.corners);
+    const cornersSum = corners.reduce((a, b) => a + b, 0);
+    const cornersAv = cornersSum / corners.length || 0;
+    console.log(corners)
+    console.log(cornersSum)
+    console.log(cornersAv)
+
     const last5XG = teamXGForAll.slice(4);
     const last5XGSum = last5XG.reduce((a, b) => a + b, 0);
     const last5XGAvgFor = last5XGSum / last5XG.length || 0;
@@ -249,6 +259,7 @@ async function getPastLeagueResults(team, game, hOrA, form) {
       avgDangerousAttacks.toFixed(1)
     );
     form.AverageShots = parseFloat(avgShots.toFixed(1));
+    form.AverageCorners = parseFloat(cornersAv.toFixed(1));
     form.AverageShotsOnTargetOverall = parseFloat(avgShotsOnTarget.toFixed(1));
     const alpha = 0.3;
     const beta = 0.3;
@@ -308,13 +319,13 @@ async function getPastLeagueResults(team, game, hOrA, form) {
 
     const bttsHomeCount = bttsHome.filter((btts) => btts === true);
     const bttsHomeString = `${bttsHomeCount.length}/${bttsHome.length}`;
-    const bttsHomePercentage = (bttsHomeCount.length / bttsHome.length) * 100;
+    const bttsHomePercentage = ((bttsHomeCount.length / bttsHome.length) * 100).toFixed(0);
     const bttsAwayCount = bttsAway.filter((btts) => btts === true);
     const bttsAwayString = `${bttsAwayCount.length}/${bttsAway.length}`;
-    const bttsAwayPercentage = (bttsAwayCount.length / bttsAway.length) * 100;
+    const bttsAwayPercentage = ((bttsAwayCount.length / bttsAway.length) * 100).toFixed(0);
     const bttsAllCount = bttsAll.filter((btts) => btts === true);
     const bttsAllString = `${bttsAllCount.length}/${bttsAll.length}`;
-    const bttsAllPercentage = (bttsAllCount.length / bttsAll.length) * 100;
+    const bttsAllPercentage = ((bttsAllCount.length / bttsAll.length) * 100).toFixed(0);
 
     let r = 6;
     let x = 4;
@@ -1368,9 +1379,9 @@ export async function calculateScore(match, index, divider, calculate) {
       formHome.last10btts = null;
       formHome.last10bttsHome = null;
       formHome.last10bttsAway = null;
-      match.bttsAllPercentageHome = null;
-      match.bttsPercentageHomeHome = null;
-      match.bttsPercentageHomeAway = null;
+      match.bttsAllPercentageHome = '';
+      match.bttsPercentageHomeHome = '';
+      match.bttsPercentageHomeAway = '';
       formAway.predictedGoalsBasedOnHomeAv = formAway.ScoredAverage;
       formAway.predictedGoalsBasedOnAwayAv = formAway.ConcededAverage;
       formAway.allTeamGoalsBasedOnAverages = formAway.ScoredAverage;
@@ -1397,9 +1408,9 @@ export async function calculateScore(match, index, divider, calculate) {
       formAway.last10btts = null;
       formAway.last10bttsHome = null;
       formAway.last10bttsAway = null;
-      match.bttsAllPercentageAway = null;
-      match.bttsPercentageAwayHome = null;
-      match.bttsPercentageAwayAway = null;
+      match.bttsAllPercentageAway = '';
+      match.bttsPercentageAwayHome = '';
+      match.bttsPercentageAwayAway = '';
     }
 
     if (

@@ -13,7 +13,6 @@ import Collapsable from "../components/CollapsableElement";
 import { clicked } from "../logic/getScorePredictions";
 
 export async function calculateAttackingStrength(stats) {
-  console.log(stats);
 
   // Define weights for each metric (you can adjust these based on your preference)
   const weights = {
@@ -45,7 +44,6 @@ export async function calculateAttackingStrength(stats) {
       weights.hasOwnProperty(metric) &&
       ranges.hasOwnProperty(metric)
     ) {
-      console.log(metric)
       const normalizedValue =
         (stats[metric] - ranges[metric].min) /
         (ranges[metric].max - ranges[metric].min);
@@ -54,7 +52,6 @@ export async function calculateAttackingStrength(stats) {
       console.log(normalizedValue)
     } else {
       console.log(metric)
-      console.log("NOPE")
     }
   }
 
@@ -473,7 +470,6 @@ export async function createStatsDiv(game, displayBool) {
     let divider = 10;
 
     let gameStats = allForm.find((match) => match.id === game.id);
-    console.log(gameStats)
     const gameArrayHome = [];
     const gameArrayAway = [];
     const gameArrayHomeTeamHomeGames = [];
@@ -500,6 +496,7 @@ export async function createStatsDiv(game, displayBool) {
       let fixtures = await fetch(
         `${process.env.REACT_APP_EXPRESS_SERVER}leagueFixtures/${gameStats.leagueId}`
       );
+
 
       await fixtures.json().then((matches) => {
         const resultHome = matches.data.filter(
@@ -731,9 +728,6 @@ export async function createStatsDiv(game, displayBool) {
 
         gameArrayAway.sort((a, b) => b.unixTimestamp - a.unixTimestamp);
 
-        console.log(gameStats.teamIDAway)
-        console.log(gameArrayAway)
-
         rollingGoalDiffTotalAway = goalDiffArrayAway.map(cumulativeSumAway);
 
         latestHomeGoalDiff =
@@ -743,9 +737,10 @@ export async function createStatsDiv(game, displayBool) {
       });
     }
 
+
+
     const bttsArrayHome = Array.from(gameArrayHome, (x) => x.btts);
     const bttsArrayAway = Array.from(gameArrayAway, (x) => x.btts);
-
     const resultsArrayHome = Array.from(gameArrayHome, (x) => x.won);
     const resultsArrayAway = Array.from(gameArrayAway, (x) => x.won);
 
@@ -757,21 +752,24 @@ export async function createStatsDiv(game, displayBool) {
     const homeForm = gameStats.home[index];
     const awayForm = gameStats.away[index];
 
-    homeForm.last3Points = getPointsFromLastX(homeForm.lastThreeForm);
+    if(homeForm.last3Points === undefined){
+      homeForm.last3Points = getPointsFromLastX(homeForm.lastThreeForm);
 
-    homeForm.last5Points = getPointsFromLastX(homeForm.LastFiveForm);
+      homeForm.last5Points = getPointsFromLastX(homeForm.LastFiveForm);
+  
+      homeForm.last6Points = getPointsFromLastX(homeForm.LastSixForm);
+  
+      homeForm.last10Points = getPointsFromLastX(homeForm.LastTenForm);
+  
+      awayForm.last3Points = getPointsFromLastX(awayForm.lastThreeForm);
+  
+      awayForm.last5Points = getPointsFromLastX(awayForm.LastFiveForm);
+  
+      awayForm.last6Points = getPointsFromLastX(awayForm.LastSixForm);
+  
+      awayForm.last10Points = getPointsFromLastX(awayForm.LastTenForm);
+    }
 
-    homeForm.last6Points = getPointsFromLastX(homeForm.LastSixForm);
-
-    homeForm.last10Points = getPointsFromLastX(homeForm.LastTenForm);
-
-    awayForm.last3Points = getPointsFromLastX(awayForm.lastThreeForm);
-
-    awayForm.last5Points = getPointsFromLastX(awayForm.LastFiveForm);
-
-    awayForm.last6Points = getPointsFromLastX(awayForm.LastSixForm);
-
-    awayForm.last10Points = getPointsFromLastX(awayForm.LastTenForm);
 
     async function getPointAverage(pointTotal, games) {
       return pointTotal / games;
@@ -1037,16 +1035,15 @@ export async function createStatsDiv(game, displayBool) {
       formRun: homeForm.formRun,
       goalDifference: homeForm.goalDifference,
       goalDifferenceHomeOrAway: homeForm.goalDifferenceHomeOrAway,
-      BttsPercentage: homeForm.BttsPercentage,
-      BttsPercentageHomeOrAway: homeForm.BttsPercentageHomeOrAway,
+      BttsPercentage: game.bttsAllPercentageHome,
+      BttsPercentageHomeOrAway: game.bttsPercentageHomeHome,
       CardsTotal: homeForm.CardsTotal,
-      CornersAverage: homeForm.CornersAverage,
-      ScoredBothHalvesPercentage: homeForm.ScoredBothHalvesPercentage,
+      CornersAverage: homeForm.AverageCorners || '',
       FormTextStringHome: formTextStringHome,
       BTTSArray: bttsArrayHome,
       Results: resultsArrayHome,
-      BTTSAll: homeForm.last10btts,
-      BTTSHorA: homeForm.last10bttsHome,
+      // BTTSAll: homeForm.last10btts,
+      // BTTSHorA: homeForm.last10bttsHome,
     });
 
     const formDataAway = [];
@@ -1070,17 +1067,16 @@ export async function createStatsDiv(game, displayBool) {
       formRun: awayForm.formRun,
       goalDifference: awayForm.goalDifference,
       goalDifferenceHomeOrAway: awayForm.goalDifferenceHomeOrAway,
-      BttsPercentage: awayForm.BttsPercentage,
-      BttsPercentageHomeOrAway: awayForm.BttsPercentageHomeOrAway,
+      BttsPercentage: game.bttsAllPercentageAway,
+      BttsPercentageHomeOrAway: game.bttsPercentageAwayAway,
       CardsTotal: awayForm.CardsTotal,
-      CornersAverage: awayForm.CornersAverage,
-      ScoredBothHalvesPercentage: awayForm.ScoredBothHalvesPercentage,
+      CornersAverage: awayForm.AverageCorners || '',
       FormTextStringAway: formTextStringAway,
       BTTSArray: bttsArrayAway,
       Results: resultsArrayAway,
       ResultsHomeOrAway: resultsArrayAway,
-      BTTSAll: awayForm.last10btts,
-      BTTSHorA: awayForm.last10bttsAway,
+      // BTTSAll: awayForm.last10btts,
+      // BTTSHorA: awayForm.last10bttsAway,
     });
 
     let formArrayHome;
@@ -1263,16 +1259,16 @@ export async function createStatsDiv(game, displayBool) {
               BttsPercentageHomeOrAway={
                 formDataHome[0].BttsPercentageHomeOrAway
               }
-              BTTSAll={
-                formDataHome[0].BTTSAll
-                  ? formDataHome[0].BTTSAll
-                  : '"Get Predictions" first'
-              }
-              BTTSHorA={
-                formDataHome[0].BTTSHorA
-                  ? formDataHome[0].BTTSHorA
-                  : '"Get Predictions" first'
-              }
+              // BTTSAll={
+              //   formDataHome[0].BTTSAll
+              //     ? formDataHome[0].BTTSAll
+              //     : '"Get Predictions" first'
+              // }
+              // BTTSHorA={
+              //   formDataHome[0].BTTSHorA
+              //     ? formDataHome[0].BTTSHorA
+              //     : '"Get Predictions" first'
+              // }
               BTTSArray={formDataHome[0].BTTSArray}
               Results={formDataHome[0].Results}
               ResultsHomeOrAway={formDataHome[0].wonHomeOrAwayOnly}
@@ -1354,16 +1350,16 @@ export async function createStatsDiv(game, displayBool) {
               BttsPercentageHomeOrAway={
                 formDataAway[0].BttsPercentageHomeOrAway
               }
-              BTTSAll={
-                formDataAway[0].BTTSAll
-                  ? formDataAway[0].BTTSAll
-                  : '"Get Predictions" first'
-              }
-              BTTSHorA={
-                formDataAway[0].BTTSHorA
-                  ? formDataAway[0].BTTSHorA
-                  : '"Get Predictions" first'
-              }
+              // BTTSAll={
+              //   formDataAway[0].BTTSAll
+              //     ? formDataAway[0].BTTSAll
+              //     : '"Get Predictions" first'
+              // }
+              // BTTSHorA={
+              //   formDataAway[0].BTTSHorA
+              //     ? formDataAway[0].BTTSHorA
+              //     : '"Get Predictions" first'
+              // }
               BTTSArray={formDataAway[0].BTTSArray}
               Results={formDataAway[0].Results}
               CardsTotal={formDataAway[0].CardsTotal}

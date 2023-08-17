@@ -1,6 +1,7 @@
 import React, { Fragment } from "react";
 
 function Stats(props) {
+  let shouldOpen = props.clicked
   function styleForm(formIndicator) {
     let className;
     if (formIndicator === "W") {
@@ -51,19 +52,6 @@ function Stats(props) {
               {props.Results[0]}
             </span>
           </li>
-          <li
-            key="BTTSArrayHomeOrAway"
-            className="BTTSArrayHomeOrAway"
-            data-cy={props.name + "BTTSArrayHomeOrAway"}
-          >
-            <div className="BTTSResults">BTTS</div>
-            <span className={styleBTTS(props.BTTSArray[5])}>{props.BTTSArray[5]}</span>
-            <span className={styleBTTS(props.BTTSArray[4])}>{props.BTTSArray[4]}</span>
-            <span className={styleBTTS(props.BTTSArray[3])}>{props.BTTSArray[3]}</span>
-            <span className={styleBTTS(props.BTTSArray[2])}>{props.BTTSArray[2]}</span>
-            <span className={styleBTTS(props.BTTSArray[1])}>{props.BTTSArray[1]}</span>
-            <span className={styleBTTS(props.BTTSArray[0])}>{props.BTTSArray[0]}</span>
-          </li>
           <li className="FormHeader">
             {props.homeOrAway} form (most recent on right)
           </li>
@@ -86,6 +74,19 @@ function Stats(props) {
             <span className={styleForm(props.homeOrAwayResults[0])}>
               {props.homeOrAwayResults[0]}
             </span>
+          </li>
+          <li
+            key="BTTSArrayHomeOrAway"
+            className="BTTSArrayHomeOrAway"
+            data-cy={props.name + "BTTSArrayHomeOrAway"}
+          >
+            <div className="BTTSResults">BTTS</div>
+            <span className={styleBTTS(props.BTTSArray[5])}>{props.BTTSArray[5]}</span>
+            <span className={styleBTTS(props.BTTSArray[4])}>{props.BTTSArray[4]}</span>
+            <span className={styleBTTS(props.BTTSArray[3])}>{props.BTTSArray[3]}</span>
+            <span className={styleBTTS(props.BTTSArray[2])}>{props.BTTSArray[2]}</span>
+            <span className={styleBTTS(props.BTTSArray[1])}>{props.BTTSArray[1]}</span>
+            <span className={styleBTTS(props.BTTSArray[0])}>{props.BTTSArray[0]}</span>
           </li>
           <li
             key="TeamScored"
@@ -212,14 +213,14 @@ function Stats(props) {
             className="BttsPercentage"
             data-cy={props.name + "BttsPercentage"}
           >
-            {`BTTS: ${props.BTTSAll}`}
+            {`BTTS: ${props.BttsPercentage}%`}
           </li>
           <li
             key="BttsPercentageHomeOrAway"
             className="BttsPercentageHomeOrAway"
             data-cy={props.name + "BttsPercentageHomeOrAway"}
           >
-            {`BTTS ${props.homeOrAway}: ${props.BTTSHorA}`}
+            {`BTTS ${props.homeOrAway}: ${props.BttsPercentageHomeOrAway}%`}
           </li>
           <li
             key="CardsTotal"
@@ -234,13 +235,6 @@ function Stats(props) {
             data-cy={props.name + "CornersAverage"}
           >
             {`Corners average: ${props.CornersAverage}`}
-          </li>
-          <li
-            key="ScoredBothHalvesPercentage"
-            className="ScoredBothHalvesPercentage"
-            data-cy={props.name + "ScoredBothHalvesPercentage"}
-          >
-            {`Scored both halves: ${props.ScoredBothHalvesPercentage}%`}
           </li>
         </ul>
         <div id="h2hStats"></div>
@@ -357,20 +351,6 @@ function Stats(props) {
             {`Last 5 PPG: ${props.formTrend[2]}.`}
           </li>
           <li
-            key="BttsPercentage"
-            className="BttsPercentage"
-            data-cy={props.name + "BttsPercentage"}
-          >
-            {`BTTS last 10: ${props.BTTSAll}`}
-          </li>
-          <li
-            key="BttsPercentageHomeOrAway"
-            className="BttsPercentageHomeOrAway"
-            data-cy={props.name + "BttsPercentageHomeOrAway"}
-          >
-            {`BTTS last 10 ${props.homeOrAway}: ${props.BTTSHorA}`}
-          </li>
-          <li
             key="CardsTotal"
             className="CardsTotal"
             data-cy={props.name + "CardsTotal"}
@@ -383,13 +363,6 @@ function Stats(props) {
             data-cy={props.name + "CornersAverage"}
           >
             {`Corners average: ${props.CornersAverage}`}
-          </li>
-          <li
-            key="ScoredBothHalvesPercentage"
-            className="ScoredBothHalvesPercentage"
-            data-cy={props.name + "ScoredBothHalvesPercentage"}
-          >
-            {`Scored both halves: ${props.ScoredBothHalvesPercentage}%`}
           </li>
         </ul>
         <div id="h2hStats"></div>
