@@ -284,6 +284,13 @@ async function createFixture(match, result, mockBool) {
         roundedAwayOdds = 1.1;
       }
 
+      if (match.homeOdds === 0.1 && match.awayOdds === 0.1) {
+        match.homeOdds = 3;
+        roundedHomeOdds = 3;
+        match.awayOdds = 3;
+        roundedAwayOdds = 3;
+      }
+
       try {
         homeFraction = oddslib
           .from("decimal", roundedHomeOdds)
@@ -1537,7 +1544,6 @@ export async function generateFixtures(
           await createFixture(match, false);
         }
       }
-
 
       if (matches.length > 0) {
         ReactDOM.render(
