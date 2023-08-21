@@ -103,7 +103,7 @@ export function getPointsFromLastX(lastX) {
 
 async function getPastLeagueResults(team, game, hOrA, form) {
   let date = game.date;
-  if (allLeagueResultsArrayOfObjects[game.leagueIndex].fixtures.length > 50) {
+  if (allLeagueResultsArrayOfObjects[game.leagueIndex].fixtures.length > 35) {
     let teamsHomeResults = allLeagueResultsArrayOfObjects[
       game.leagueIndex
     ].fixtures.filter((fixture) => fixture.home_name === team);
@@ -1307,9 +1307,9 @@ export async function calculateScore(match, index, divider, calculate) {
 
     match.XGdifferentialValue = Math.abs(XGdifferential);
     match.XGdifferentialValueRaw = parseFloat(XGdifferential);
-
+    console.log(allLeagueResultsArrayOfObjects[match.leagueIndex].fixtures)
     if (
-      allLeagueResultsArrayOfObjects[match.leagueIndex].fixtures.length > 50 &&
+      allLeagueResultsArrayOfObjects[match.leagueIndex].fixtures.length > 35 &&
       match.leagueID !== 7956
     ) {
       [
@@ -1529,7 +1529,7 @@ export async function calculateScore(match, index, divider, calculate) {
       formAway.teamStrengthWeighting = 1 - teamComparisonScore / 10;
     }
 
-    teamComparisonScore = teamComparisonScore * 0.75;
+    teamComparisonScore = teamComparisonScore * 0.85;
     // teamComparisonScore = 0;
 
     if (teamComparisonScore > 1) {
