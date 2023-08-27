@@ -926,6 +926,13 @@ export async function compareTeams(homeForm, awayForm, match) {
   // console.log(oddsComparison)
   // console.log(dangerousAttacksWithConverstionComparison)
 
+  let oddsWeighting;
+
+  if(match.game_week > 0 && match.game_week < 5){
+    oddsWeighting = 5;
+  } else {
+    oddsWeighting = 1;
+  }
 
   let calculation =
     attackStrengthComparison * 2 +
@@ -939,7 +946,7 @@ export async function compareTeams(homeForm, awayForm, match) {
     xgActualComparison * 0 +
     // xgForComparison * 1 +
     // xgAgainstComparison * 1 +
-    oddsComparison * 1 +
+    oddsComparison * oddsWeighting +
     dangerousAttacksWithConverstionComparison * 0 +
     homeAdvantage * 1 +
     fiveGameComparison * 0;
@@ -1701,11 +1708,11 @@ export async function calculateScore(match, index, divider, calculate) {
     }
 
     let experimentalHomeGoals =
-      (((factorOneHome * homeComparisonWeighting) * 1.5 + factorTwoHome * 1) / 2.5) * 0.85;
+      (((factorOneHome * homeComparisonWeighting) * 2 + factorTwoHome * 1) / 3) * 0.85;
     // (formHome.forAndAgainstRollingAvHomeOrAway.goalsFor + formAway.forAndAgainstRollingAvHomeOrAway.goalsAgainst) / 2
 
     let experimentalAwayGoals =
-      (((factorOneAway * awayComparisonWeighting) * 1.5 + factorTwoAway * 1) / 2.5) * 0.85;
+      (((factorOneAway * awayComparisonWeighting) * 2 + factorTwoAway * 1) / 3) * 0.85;
     // (formAway.forAndAgainstRollingAvHomeOrAway.goalsFor + formHome.forAndAgainstRollingAvHomeOrAway.goalsAgainst) / 2
 
     let rawFinalHomeGoals = experimentalHomeGoals;
@@ -1744,13 +1751,13 @@ export async function calculateScore(match, index, divider, calculate) {
     // finalHomeGoals = await roundCustom(rawFinalHomeGoals, formHome)
     // finalAwayGoals = await roundCustom(rawFinalAwayGoals, formAway)
 
-    if (finalHomeGoals > formHome.averageScoredLeague + 1.5) {
+    if (finalHomeGoals > formHome.averageScoredLeague + 1) {
       finalHomeGoals = Math.round(
         (finalHomeGoals + formHome.averageScoredLeague) / 2
       );
     }
 
-    if (finalAwayGoals > formAway.averageScoredLeague + 1.5) {
+    if (finalAwayGoals > formAway.averageScoredLeague + 1) {
       finalAwayGoals = Math.round(
         (finalAwayGoals + formAway.averageScoredLeague) / 2
       );
