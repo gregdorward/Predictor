@@ -1,6 +1,6 @@
 import React from 'react';
 import { useSelector } from 'react-redux';
-import { CreateBadge } from './createBadge';
+import { CreateBadge } from '../components/createBadge';
 import {
   Chart as ChartJS,
   CategoryScale,
