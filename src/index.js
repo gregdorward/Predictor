@@ -16,7 +16,7 @@ ReactDOM.render(
         <Routes>
           <Route path="/fixture" element={<TeamPage />} />
           <Route path="/" exact element={<App />} />
-          <Route path="/" element={<Fixture />} />
+          {/* <Route path="/" element={<Fixture />} /> */}
         </Routes>
         </HashRouter>
     </Provider>
