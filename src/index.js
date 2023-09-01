@@ -4,7 +4,7 @@ import "./index.css";
 import App from "./App";
 import reportWebVitals from "./reportWebVitals";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
-import TeamPage from "./pages/Team";
+import TeamPage from "./fixture/Team";
 import {Fixture} from "./components/Fixture"
 import { Provider } from "react-redux";
 import store from "./logic/store"; // Import your Redux store

@@ -22,7 +22,7 @@ import {
   WhatsappIcon,
 } from "react-share";
 import { BrowserRouter as Router, Route, Routes, Link } from "react-router-dom";
-import TeamPage from "./pages/Team";
+import TeamPage from "./fixture/Team";
 import { generateFixtures } from "./logic/getFixtures";
 import { selectedOption } from "./components/radio";
 import { ThreeDots } from "react-loading-icons";
