@@ -12,15 +12,13 @@ import store from "./logic/store"; // Import your Redux store
 ReactDOM.render(
   <React.StrictMode>
     <Provider store={store}>
-    <HashRouter basename='/'>
-      <Router>
+    <HashRouter>
         <Routes>
           <Route path="/fixture" element={<TeamPage />} />
           <Route path="/" exact element={<App />} />
           <Route path="/" element={<Fixture />} />
         </Routes>
-      </Router>
-      </HashRouter>
+        </HashRouter>
     </Provider>
     ,
   </React.StrictMode>,
