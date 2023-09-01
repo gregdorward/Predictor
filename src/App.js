@@ -21,7 +21,8 @@ import {
   WhatsappShareButton,
   WhatsappIcon,
 } from "react-share";
-
+import { BrowserRouter as Router, Route, Routes, Link } from "react-router-dom";
+import TeamPage from "./components/Team";
 import { generateFixtures } from "./logic/getFixtures";
 import { selectedOption } from "./components/radio";
 import { ThreeDots } from "react-loading-icons";
@@ -98,9 +99,50 @@ let historicDate;
 let string;
 let dateString;
 
-(async function getLeagueList() {
+(async function fetchLeagueData(){
   let leagueList;
 
+  leagueList = await fetch(`${process.env.REACT_APP_EXPRESS_SERVER}leagueList`);
+
+  let leagueArray;
+  await leagueList.json().then((leagues) => {
+    leagueArray = Array.from(leagues.data);
+  });
+
+  for (let i = 0; i < leagueArray.length; i++) {
+    const league = leagueArray[i];
+    const name = leagueArray[i].name;
+
+    for (let x = 0; x < league.season.length; x++) {
+      const element = league.season[x];
+
+      if (element.year === 2023 || element.year === 20232024) {
+        if (element.id !== 4340 && element.id !== 6935 && element.id !== 7061) {
+          availableLeagues.push({ name: name, element });
+        }
+      }
+    }
+
+    async function mapOrder(array, order, key) {
+      array.sort(function (a, b) {
+        var A = a.element[key],
+          B = b.element[key];
+
+        if (order.indexOf(A) > order.indexOf(B)) {
+          return 1;
+        } else {
+          return -1;
+        }
+      });
+      return array;
+    }
+    //leagues ordered by id
+    orderedLeagues = await mapOrder(availableLeagues, leagueOrder, "id");
+  }
+  return orderedLeagues;
+})()
+
+export async function getLeagueList() {
   let i = 0;
   date = new Date();
   string = "Today";
@@ -158,44 +200,6 @@ let dateString;
   );
   historicDate.setDate(historicDate.getDate() - 9);
   [historic, historicFootyStats] = await calculateDate(historicDate);
-
-  leagueList = await fetch(`${process.env.REACT_APP_EXPRESS_SERVER}leagueList`);
-
-  let leagueArray;
-  await leagueList.json().then((leagues) => {
-    leagueArray = Array.from(leagues.data);
-  });
-
-  for (let i = 0; i < leagueArray.length; i++) {
-    const league = leagueArray[i];
-    const name = leagueArray[i].name;
-
-    for (let x = 0; x < league.season.length; x++) {
-      const element = league.season[x];
-
-      if (element.year === 2023 || element.year === 20232024) {
-        if (element.id !== 4340 && element.id !== 6935 && element.id !== 7061) {
-          availableLeagues.push({ name: name, element });
-        }
-      }
-    }
-
-    async function mapOrder(array, order, key) {
-      array.sort(function (a, b) {
-        var A = a.element[key],
-          B = b.element[key];
-
-        if (order.indexOf(A) > order.indexOf(B)) {
-          return 1;
-        } else {
-          return -1;
-        }
-      });
-      return array;
-    }
-    //leagues ordered by id
-    orderedLeagues = await mapOrder(availableLeagues, leagueOrder, "id");
-  }
 
   const text =
     "Select a day you would like to retrieve fixtures for from the options above\n A list of games will be returned once the data has loaded\n Once all fixtures have loaded, click on “Get Predictions” to see XGTipping's forecasted outcomes for every game\n If a game has completed, the predictions is displayed on the right and the actual result on the left\n Each individual fixture is tappable/clickable. By doing so, you can access a range of detailed stats, from comparative charts, granular performance measures to previous meetings.\n All games are subject to the same automated prediction algorithm with the outcome being a score prediction. Factors that determine the tip include the following, amongst others:\n - Goal differentials\n - Expected goal differentials \n - Attack/Defence performance\n - Form trends over time\n - Home/Away records\n - WDL records\n - Points per game \n - A range of other comparative factors\n  –\n";
@@ -383,9 +387,11 @@ let dateString;
           )
         }
       />
-      <span>*Not enough data to predict games in the first few gameweeks - predictions displayed as 'x - x'</span>
-    </div>
-    ,
+      <span>
+        *Not enough data to predict games in the first few gameweeks -
+        predictions displayed as 'x - x'
+      </span>
+    </div>,
     document.getElementById("Buttons")
   );
   ReactDOM.render(
@@ -469,7 +475,7 @@ let dateString;
   //   ></Button>,
   //   document.getElementById("Over25Games")
   // );
-})();
+};
 
 async function getHighestScoringLeagues() {
   let teamsList = await fetch(`${process.env.REACT_APP_EXPRESS_SERVER}over25`);
@@ -537,176 +543,201 @@ const welcomeTextUnsplitTwo = `XGTipping is completely independent and free to u
 let welcomeTextTwo = welcomeTextUnsplitTwo.split("\n").map((i) => {
   return <p>{i}</p>;
 });
+
+
 function App() {
+  getLeagueList();
   return (
-    <div className="App">
-      <Header />
-      <a
-        className="SocialLink"
-        href="https://www.reddit.com/r/xgtipping/"
-        target="_blank"
-        rel="noreferrer"
-      >
-        r/xgtipping
-      </a>
-      <div id="LoadingContainer" className="LoadingContainer" />
-      <div id="RadioContainer" className="RadioContainer">
-        <div id="RadioText" />
-        <div id="RadioButtons" />
-      </div>
-      <div id="Day" />
-      <div id="Checkbox" />
-      <div id="ExplainerText" />
-      <div id="Loading" className="Loading"></div>
-      <div id="Buttons" className="Buttons">
-        <ThreeDots className="MainLoading" fill="#030061" />
-        <div>Loading all fixture and form data...</div>
-      </div>
-      <div id="GeneratePredictions" className="GeneratePredictions" />
-      <div id="bestPredictions" className="bestPredictions" />
-      <div id="exoticOfTheDay" className="exoticOfTheDay" />
-      <div id="successMeasure2" />
-      <div id="RowOneContainer" className="RowOneContainer">
-        <div id="BTTS" className="RowOne" />
-        <div id="longShots" className="RowOne" />
-        <div id="draws" className="RowOne" />
-      </div>
-      <div id="insights" />
-      <div id="successMeasure" />
-      <div id="tables" />
-      <div id="homeBadge" />
-      <div id="FixtureContainerHeaders"></div>
-      {/* <StyledKofiButton buttonText="Donations"></StyledKofiButton> */}
-      <div id="XGDiff" />
-      <div id="FixtureContainer">
-      <h6 className="WelcomeText">{welcomeTextOne}</h6>
-        <h6 className="GetMatchStatText">
-          Below is an example of our tips/results overview for you to familiarise yourself with. Get real fixtures using the date buttons, above. When loaded, tap on
-          one to see full match stats
-        </h6>
-        <div className="ExplainerContainer">
-          <span className="oddsHomeExplainer">Home odds</span>
-          <span className="emptyHomeTeam"></span>
-          <span className="scoreExplainer">Result / KO Time</span>
-          <span className="predictionExplainer">Our Prediction</span>
-          <span className="emptyAwayTeam"></span>
-          <span className="oddsAwayExplainer">Away odds</span>
+    <>
+      <div className="App">
+        <Header />
+        <a
+          className="SocialLink"
+          href="https://www.reddit.com/r/xgtipping/"
+          target="_blank"
+          rel="noreferrer"
+        >
+          r/xgtipping
+        </a>
+        <div id="LoadingContainer" className="LoadingContainer" />
+        <div id="RadioContainer" className="RadioContainer">
+          <div id="RadioText" />
+          <div id="RadioButtons" />
         </div>
-        <Fixture
-          fixtures={mockedFixtures.matches}
-          // result={false}
-          mock={true}
-          className={"individualFixture"}
-        />
-        <div>
-          <h6 className="WelcomeText">{welcomeTextTwo}</h6>
-          <h6 className="WelcomeText">
-            We cover a range of leagues, including
-            <ul className="AllLeagues">
-              <li className="League">Premier League</li>
-              <li className="League">English Football League</li>
-              <li className="League">La Liga</li>
-              <li className="League">Serie A</li>
-              <li className="League">Bundesliga</li>
-              <li className="League">Ligue 1</li>
-              <li className="League">MLS</li>
-              <li className="League">Primeira Liga</li>
-              <li className="League">Loads more...</li>
-            </ul>
+        <div id="Day" />
+        <div id="Checkbox" />
+        <div id="ExplainerText" />
+        <div id="Loading" className="Loading"></div>
+        <div id="Buttons" className="Buttons">
+          <ThreeDots className="MainLoading" fill="#030061" />
+          <div>Loading all fixture and form data...</div>
+        </div>
+        <div id="GeneratePredictions" className="GeneratePredictions" />
+        <div id="bestPredictions" className="bestPredictions" />
+        <div id="exoticOfTheDay" className="exoticOfTheDay" />
+        <div id="successMeasure2" />
+        <div id="RowOneContainer" className="RowOneContainer">
+          <div id="BTTS" className="RowOne" />
+          <div id="longShots" className="RowOne" />
+          <div id="draws" className="RowOne" />
+        </div>
+        <div id="insights" />
+        <div id="successMeasure" />
+        <div id="tables" />
+        <div id="homeBadge" />
+        <div id="FixtureContainerHeaders"></div>
+        {/* <StyledKofiButton buttonText="Donations"></StyledKofiButton> */}
+        <div id="XGDiff" />
+        <div id="FixtureContainer">
+          <h6 className="WelcomeText">{welcomeTextOne}</h6>
+          <h6 className="GetMatchStatText">
+            Below is an example of our tips/results overview for you to
+            familiarise yourself with. Get real fixtures using the date buttons,
+            above. When loaded, tap on one to see full match stats
           </h6>
+          <div className="ExplainerContainer">
+            <span className="oddsHomeExplainer">Home odds</span>
+            <span className="emptyHomeTeam"></span>
+            <span className="scoreExplainer">Result / KO Time</span>
+            <span className="predictionExplainer">Our Prediction</span>
+            <span className="emptyAwayTeam"></span>
+            <span className="oddsAwayExplainer">Away odds</span>
+          </div>
+          <Fixture
+            fixtures={mockedFixtures.matches}
+            // result={false}
+            mock={true}
+            className={"individualFixture"}
+          />
+          <div>
+            <h6 className="WelcomeText">{welcomeTextTwo}</h6>
+            <h6 className="WelcomeText">
+              We cover a range of leagues, including
+              <ul className="AllLeagues">
+                <li className="League">Premier League</li>
+                <li className="League">English Football League</li>
+                <li className="League">La Liga</li>
+                <li className="League">Serie A</li>
+                <li className="League">Bundesliga</li>
+                <li className="League">Ligue 1</li>
+                <li className="League">MLS</li>
+                <li className="League">Primeira Liga</li>
+                <li className="League">Loads more...</li>
+              </ul>
+            </h6>
+          </div>
+          <div>
+            <div className="DataText">Raw data from</div>
+            <a
+              className="DataLink"
+              href="https://www.footystats.org"
+              target="_blank"
+              rel="noreferrer"
+            >
+              footystats.org
+            </a>
+          </div>
+          <div className="bitcoin" id="bitcoin">
+            We aim to remain free to use, contributions are always appreciated
+            though:
+            <a
+              href="https://www.ko-fi.com/xgtipping"
+              target="_blank"
+              rel="noreferrer"
+            >
+              Donations
+            </a>
+            <span className="bitcoinSymbol">&#x20bf;itcoin address</span>
+            <span className="bitcoinAddress">
+              bc1q7j62txkvhfu0dt3l0s07saze6pjnyzs26wfgp0
+            </span>
+          </div>
         </div>
-        <div>
-          <div className="DataText">Raw data from</div>
-          <a
-            className="DataLink"
-            href="https://www.footystats.org"
-            target="_blank"
-            rel="noreferrer"
+        <div className="Social">
+          <TwitterShareButton
+            url={"www.xgtipping.com"}
+            title={"#XGTipping"}
+            className="ShareButton"
+            style={{
+              backgroundColor: "white",
+              boxShadow: "none",
+              padding: "0.5em",
+            }}
           >
-            footystats.org
-          </a>
-        </div>
-        <div className="bitcoin" id="bitcoin">
-          We aim to remain free to use, contributions are always appreciated
-          though:
-          <a
-            href="https://www.ko-fi.com/xgtipping"
-            target="_blank"
-            rel="noreferrer"
+            <TwitterIcon size={"3em"} round={true} />
+          </TwitterShareButton>
+          <RedditShareButton
+            url={"www.xgtipping.com"}
+            title={"XGTipping"}
+            className="ShareButton"
+            style={{
+              backgroundColor: "white",
+              boxShadow: "none",
+              padding: "0.5em",
+            }}
           >
-            Donations
-          </a>
-          <span className="bitcoinSymbol">&#x20bf;itcoin address</span>
-          <span className="bitcoinAddress">
-            bc1q7j62txkvhfu0dt3l0s07saze6pjnyzs26wfgp0
-          </span>
+            <RedditIcon size={"3em"} round={true} />
+          </RedditShareButton>
+          <FacebookShareButton
+            url={"www.xgtipping.com"}
+            quote={"XGTipping - data-driven football predictions"}
+            className="ShareButton"
+            style={{
+              backgroundColor: "white",
+              boxShadow: "none",
+              padding: "0.5em",
+            }}
+          >
+            <FacebookIcon size={"3em"} round={true} />
+          </FacebookShareButton>
+          <WhatsappShareButton
+            url={"www.xgtipping.com"}
+            title={"XGTipping"}
+            separator=": "
+            className="ShareButton"
+            style={{
+              backgroundColor: "white",
+              boxShadow: "none",
+              padding: "0.5em",
+            }}
+          >
+            <WhatsappIcon size={"3em"} round={true} />
+          </WhatsappShareButton>
+          <TelegramShareButton
+            url={"XGTipping"}
+            title={"XGTipping"}
+            className="ShareButton"
+            style={{
+              backgroundColor: "white",
+              boxShadow: "none",
+              padding: "0.5em",
+            }}
+          >
+            <TelegramIcon size={"3em"} round={true} />
+          </TelegramShareButton>
         </div>
       </div>
-      <div className="Social">
-        <TwitterShareButton
-          url={"www.xgtipping.com"}
-          title={"#XGTipping"}
-          className="ShareButton"
-          style={{
-            backgroundColor: "white",
-            boxShadow: "none",
-            padding: "0.5em",
-          }}
-        >
-          <TwitterIcon size={"3em"} round={true} />
-        </TwitterShareButton>
-        <RedditShareButton
-          url={"www.xgtipping.com"}
-          title={"XGTipping"}
-          className="ShareButton"
-          style={{
-            backgroundColor: "white",
-            boxShadow: "none",
-            padding: "0.5em",
-          }}
-        >
-          <RedditIcon size={"3em"} round={true} />
-        </RedditShareButton>
-        <FacebookShareButton
-          url={"www.xgtipping.com"}
-          quote={"XGTipping - data-driven football predictions"}
-          className="ShareButton"
-          style={{
-            backgroundColor: "white",
-            boxShadow: "none",
-            padding: "0.5em",
-          }}
-        >
-          <FacebookIcon size={"3em"} round={true} />
-        </FacebookShareButton>
-        <WhatsappShareButton
-          url={"www.xgtipping.com"}
-          title={"XGTipping"}
-          separator=": "
-          className="ShareButton"
-          style={{
-            backgroundColor: "white",
-            boxShadow: "none",
-            padding: "0.5em",
-          }}
-        >
-          <WhatsappIcon size={"3em"} round={true} />
-        </WhatsappShareButton>
-        <TelegramShareButton
-          url={"XGTipping"}
-          title={"XGTipping"}
-          className="ShareButton"
-          style={{
-            backgroundColor: "white",
-            boxShadow: "none",
-            padding: "0.5em",
-          }}
-        >
-          <TelegramIcon size={"3em"} round={true} />
-        </TelegramShareButton>
-      </div>
-    </div>
+    </>
   );
 }
 
 export default App;
+
+// import React from "react";
+// import { BrowserRouter as Router, Route, Routes, Link } from "react-router-dom";
+// import HomePage from "./components/HomePage";
+// import TeamPage from "./components/Team";
+
+// const App = () => {
+//   return (
+//     <Router>
+//       <Routes>
+//       <Route path="/team" element={<TeamPage />} />
+//         <Route path="/" element={<HomePage />} />
+//         {/* Add more routes */}
+//       </Routes>
+//     </Router>
+//   );
+// };
+
+// export default App;

@@ -716,9 +716,9 @@ p {
   color: #030061;
 }
 
-
-*[class^='individualFixture'] {
+.individualFixtureContainer {
   display: flex;
+  flex-wrap: wrap;
   flex-basis: 100%;
   background-color: white;
   border: 0.1em solid #030061;
@@ -730,6 +730,45 @@ p {
   cursor: pointer;
   /* box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.2), 0 1px 2px 0 #030052; */
   margin-bottom: 1em;
+  box-shadow: 0 0px 0px 0 rgba(0, 0, 0, 0.2), 0 1px 2px 0 #030052;
+}
+
+.individualFixtureContainer:active, input:focus{
+  /* box-shadow:2px 2px 2px 2px grey; */
+  
+  box-shadow: 0 0px 0px 0 rgba(0, 0, 0, 0.2), 0 0px 0px 0 #030052 inset;
+}
+
+.GameStats {
+  flex-basis: 25%;
+  margin-top: 0.25em;
+  margin-bottom: 0.75em;
+  padding: 0.5em;
+  align-content: center;
+  align-items: center;
+  margin-left: auto;
+  margin-right: auto;
+  font-size: 0.9em;
+  /* font-size: 0.75em; */
+  background-color: white;
+  color: #030052;
+  border: #030052 1px solid
+  /* line-height: 1em; */
+}
+
+
+*[class^='individualFixture'] {
+  display: flex;
+  flex-basis: 100%;
+  background-color: white;
+  align-items: center;
+  align-content: center;
+  color: black;
+  padding-top: 0.5em;
+  /* padding-bottom: 0.5em; */
+  cursor: pointer;
+  /* box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.2), 0 1px 2px 0 #030052; */
+  /* margin-bottom: 1em; */
   /* border: black 0.25px solid; */
 }
 
@@ -741,9 +780,9 @@ p {
   align-content: center;
   color: black;
   padding-top: 0.25em;
-  padding-bottom: 0.25em;
-  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.2), 0 1px 2px 0 #030052;
-  margin-bottom: 0.5em;
+  /* padding-bottom: 0.25em; */
+  /* box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.2), 0 1px 2px 0 #030052; */
+  /* margin-bottom: 0.5em; */
   
   /* border: 1em; */
 }
@@ -752,13 +791,6 @@ p {
 .FixtureList{
   background-color: #030061, transparent;
 }
-
-.individualFixture:active, input:focus{
-  /* box-shadow:2px 2px 2px 2px grey; */
-  
-  box-shadow: 0 0px 0px 0 rgba(0, 0, 0, 0.2) inset, 0 1px 2px 0 #030052 inset;
-}
-
 
 .individualFixtureGap {
   display: flex;
@@ -815,6 +847,12 @@ p {
   padding-right: 0.5em;
   flex-basis: 1%;
 }
+
+.break {
+  flex-basis: 100%;
+  height: 0;
+}
+
 
 *[class^='HomeOdds'] {
   order: 0;
@@ -2751,4 +2789,129 @@ input:active + .design::after {
 
 .DonationButton{
   padding-bottom: 2em;
+}
+
+
+/* Team page */
+/* .TeamStatsContainer{
+  display: flex;
+  flex-direction: column;
+  width: 80%;
+  margin-left: auto;
+  margin-right: auto;
+} */
+
+.TeamStatsContainer h4{
+  font-size: 2vw;
+}
+
+
+
+.TeamStatsContainer canvas{
+  /* min-width: 35%; */
+  border: 1em;
+  flex-basis: 100%;
+}
+
+.FixtureHeadingContiner{
+  display: flex;
+  flex-direction: row;
+  font-size: 3vw;
+  padding-top: 2em;
+  padding-bottom: 0em;
+  line-height: 2em;
+  flex-wrap: wrap;
+  color: #030061;
+  align-items: center;
+  order: 1;
+  justify-content: center;
+  /* flex-basis: 100%;
+
+  background-color: white;
+  align-items: center;
+  align-content: center;
+  color: black;
+  padding-top: 0.5em; */
+}
+
+.FixtureHeading{
+
+}
+ .HomeTeamBadge {
+  order: 0;
+  border-color: #393d3f;
+  height: 3vw;
+  width: 3vw;
+  padding-right: 1em;
+  /* padding-left: 0.5em;
+  padding-right: 0.5em; */
+  flex-basis: 1%;
+  margin: 0px;
+  border: 0px;
+}
+
+.AwayTeamBadge {
+  order: 2;
+  border-color: #393d3f;
+  height: 3vw;
+  width: 3vw;
+  padding-left: 1em;
+  /* padding-left: 0.5em;
+  padding-right: 0.5em; */
+  flex-basis: 1%;
+  margin: 0px;
+  border: 0px;
+}
+
+.TeamStats{
+  display: flex;
+  font-size: 0.9em;
+  line-height: 2em;
+  flex-direction: row;
+  flex-wrap: wrap;
+  /* margin: 1em; */
+}
+
+.HomeTeamStats{
+  flex-basis: 50%;
+  /* padding: 2em; */
+  /* border-right: #030052 0.5px solid; */
+}
+.AwayTeamStats{
+  flex-basis: 50%;
+  /* padding: 2em; */
+  /* border-left: #030052 0.5px solid; */
+}
+
+.HomeTeamResults{
+  flex-basis: 50%;
+
+}
+
+.AwayTeamResults{
+  flex-basis: 50%;
+
+}
+
+.ResultedGame{
+  line-height: 1em;
+  padding: 1em;
+  border-bottom: #030052 1px solid;
+}
+
+.MatchDate{
+  padding-top: 1em;
+}
+
+.ComparisonBar{
+/* display: inline; */
+  margin-left: auto;
+  margin-right: auto;
+  flex-basis: 100%;
+}
+
+.ChartContainer{
+  display: flex;
+  flex-direction: row;
+  flex-basis: 100%;
 }

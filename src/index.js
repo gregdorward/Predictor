@@ -3,10 +3,24 @@ import ReactDOM from "react-dom";
 import "./index.css";
 import App from "./App";
 import reportWebVitals from "./reportWebVitals";
+import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+import TeamPage from "./components/Team";
+import {Fixture} from "./components/Fixture"
+import { Provider } from "react-redux";
+import store from "./logic/store"; // Import your Redux store
 
 ReactDOM.render(
   <React.StrictMode>
-    <App />
+    <Provider store={store}>
+      <Router>
+        <Routes>
+          <Route path="/fixture" element={<TeamPage />} />
+          <Route path="/" exact element={<App />} />
+          <Route path="/" element={<Fixture />} />
+        </Routes>
+      </Router>
+    </Provider>
+    ,
   </React.StrictMode>,
   document.getElementById("root")
 );

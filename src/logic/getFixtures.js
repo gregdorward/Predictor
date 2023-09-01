@@ -1527,7 +1527,7 @@ export async function generateFixtures(
         match.over25Odds = fixture.odds_ft_over25;
         match.btts_potential = fixture.btts_potential;
         match.game = match.homeTeam + " v " + match.awayTeam;
-
+        match.stadium = fixture.stadium_name;
         match.homeGoals = fixture.homeGoalCount;
         match.awayGoals = fixture.awayGoalCount;
 

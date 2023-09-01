@@ -4,6 +4,14 @@ import Collapsable from "../components/CollapsableElement";
 import { createStatsDiv } from "../logic/getStats";
 import { renderTable } from "../logic/getFixtures";
 import { allLeagueResultsArrayOfObjects } from "../logic/getFixtures";
+import { json, useNavigate } from "react-router-dom";
+import { Zoom } from "swiper";
+import { useDispatch } from "react-redux";
+import { setData } from "../logic/dataSlice";
+import { Provider } from "react-redux";
+import store from "../logic/store"; // Import your Redux store
+import { formObjectHome } from "../logic/getScorePredictions";
+import { clicked } from "../logic/getScorePredictions";
 
 let resultValue;
 var count;
@@ -15,22 +23,12 @@ function toggle(bool) {
   return count;
 }
 
-// function stylying(bool){
-//   if (bool === true) {
-//     // set stats element to display flex
-//     return { display: "block" };
-//   } else {
-//     // set stats element to display none
-//     return { display: "none" };
-//   }
-// }
-
 function GetDivider(fixture, mock) {
   const matchStatus = fixture.status;
   let isPrediction = resultValue;
 
-  if(mockValue === true && matchStatus === "complete"){
-    isPrediction = false
+  if (mockValue === true && matchStatus === "complete") {
+    isPrediction = false;
     return (
       <Fragment>
         <div className="Result">{`${fixture.fixture.homeGoals} - ${fixture.fixture.awayGoals}`}</div>
@@ -42,7 +40,7 @@ function GetDivider(fixture, mock) {
       </Fragment>
     );
   } else if (mockValue === true && matchStatus !== "complete") {
-    isPrediction = true
+    isPrediction = true;
     return (
       <Fragment>
         <div className="KOTime">{`${fixture.fixture.time}`}</div>
@@ -52,8 +50,7 @@ function GetDivider(fixture, mock) {
         >{`${fixture.fixture.goalsA} - ${fixture.fixture.goalsB}`}</div>
       </Fragment>
     );
-  }
-  else if (isPrediction === false && matchStatus !== "complete") {
+  } else if (isPrediction === false && matchStatus !== "complete") {
     return (
       <div className="divider" data-cy={"divider-" + fixture.fixture.id}>
         {"V"}
@@ -181,10 +178,13 @@ function GetDivider(fixture, mock) {
 }
 
 function renderLeagueName(fixture, mock) {
-  mockValue = mock
+  mockValue = mock;
 
   let name = fixture.leagueName;
-  let id = allLeagueResultsArrayOfObjects.length > 0 ? allLeagueResultsArrayOfObjects[fixture.leagueIndex].id : null
+  let id =
+    allLeagueResultsArrayOfObjects.length > 0
+      ? allLeagueResultsArrayOfObjects[fixture.leagueIndex].id
+      : null;
   if (name === null || mock === true) {
     return <div></div>;
   } else {
@@ -214,49 +214,126 @@ function renderLeagueName(fixture, mock) {
   }
 }
 
-const SingleFixture = ({ fixture, count, mock }) => (
-  <div key={fixture.game}>
-    {renderLeagueName(fixture, mock)}
-    <li
-      className={"individualFixture"}
-      key={fixture.id}
-      onMouseDown={() => (count = toggle(count))}
-      onClick={() => mock === false ? createStatsDiv(fixture, count) : null}
-      data-cy={fixture.id}
-    >
-      <div className="HomeOdds">{fixture.fractionHome}</div>
-      <div className="homeTeam">{fixture.homeTeam}</div>
-      <GetDivider
-        result={resultValue}
-        status={fixture.status}
-        fixture={fixture}
-      />
-      {/* <div className="divider">{"V"}</div> */}
-      <div className="awayTeam">{fixture.awayTeam}</div>
-      <CreateBadge
-        image={fixture.homeBadge}
-        ClassName="HomeBadge"
-        alt="Home team badge"
-        flexShrink={5}
-      />
-      <CreateBadge
-        image={fixture.awayBadge}
-        ClassName="AwayBadge"
-        alt="Away team badge"
-      />
-      <div className="AwayOdds">{fixture.fractionAway}</div>
-    </li>
-    <div id={"stats" + fixture.homeTeam} />
-    <div className="MatchHistory" id={"history" + fixture.homeTeam} />
-  </div>
-);
+const downArrow = "\u{2195}";
+export let testing;
+
+function SingleFixture({ fixture, count, mock }) {
+  const dispatch = useDispatch();
+  function StoreData(){
+
+    const fixtureDetails = {
+      homeTeamName: fixture.homeTeam,
+      homeTeamBadge: fixture.homeBadge,
+      awayTeamName: fixture.awayTeam,
+      awayTeamBadge: fixture.awayBadge,
+      stadium: fixture.stadium,
+      time: fixture.time,
+      homeGoals: fixture.goalsA,
+      awayGoals: fixture.goalsB
+    }
+
+    const homeDetails = {
+      "Attacking Strength": fixture.formHome.attackingStrength,
+      "Defensive Strength": fixture.formHome.defensiveStrength
+    }
+
+    const awayDetails = {
+      "Attacking Strength": fixture.formAway.attackingStrength,
+      "Defensive Strength": fixture.formAway.defensiveStrength
+    }
+
+    const dataToSend = {
+      key1: 'value1',
+      key2: 'value2',
+    };
+    fixture.formHome.defensiveMetrics["Clean Sheet Percentage"] = fixture.formHome.CleanSheetPercentage
+    fixture.formAway.defensiveMetrics["Clean Sheet Percentage"] = fixture.formAway.CleanSheetPercentage
+
+    localStorage.setItem('homeForm', JSON.stringify(fixture.formHome.attackingMetrics));
+    localStorage.setItem('homeFormDef', JSON.stringify(fixture.formHome.defensiveMetrics));
+    localStorage.setItem('allTeamResultsHome', JSON.stringify(fixture.formHome.allTeamResults));
+    localStorage.setItem('homeDetails', JSON.stringify(homeDetails));
+
+
+    localStorage.setItem('awayForm', JSON.stringify(fixture.formAway.attackingMetrics));
+    localStorage.setItem('awayFormDef', JSON.stringify(fixture.formAway.defensiveMetrics));
+    localStorage.setItem('allTeamResultsAway', JSON.stringify(fixture.formAway.allTeamResults));
+    localStorage.setItem('awayDetails', JSON.stringify(awayDetails));
+
+    localStorage.setItem('fixtureDetails', JSON.stringify(fixtureDetails))
+
+    dispatch(setData(dataToSend));
+  }
+
+
+  async function handleButtonClick(game) {
+    if(clicked === true){
+      StoreData(formObjectHome)
+      window.open("/fixture");
+    }
+    else return
+  }
+  return (
+    <div key={fixture.game}>
+      {renderLeagueName(fixture, mock)}
+      <div className="individualFixtureContainer">
+        <li
+          className={"individualFixture"}
+          key={fixture.id}
+          data-cy={fixture.id}
+          onClick={() => handleButtonClick(fixture)}
+        >
+          <div className="HomeOdds">{fixture.fractionHome}</div>
+          <div className="homeTeam">
+            {fixture.homeTeam}
+          </div>
+          <GetDivider
+            result={resultValue}
+            status={fixture.status}
+            fixture={fixture}
+          />
+          {/* <div className="divider">{"V"}</div> */}
+          <div className="awayTeam">{fixture.awayTeam}</div>
+          <CreateBadge
+            image={fixture.homeBadge}
+            ClassName="HomeBadge"
+            alt="Home team badge"
+            flexShrink={5}
+          />
+          <CreateBadge
+            image={fixture.awayBadge}
+            ClassName="AwayBadge"
+            alt="Away team badge"
+          />
+          <div className="AwayOdds">{fixture.fractionAway}</div>
+        </li>
+        <button
+          className="GameStats"
+          onClick={() =>
+            mock === false ? createStatsDiv(fixture, count) : null
+          }
+          onMouseDown={() => (count = toggle(count))}
+        >
+          Game stats {downArrow}
+        </button>
+      </div>
+      <div id={"stats" + fixture.homeTeam} />
+      <div className="MatchHistory" id={"history" + fixture.homeTeam} />
+    </div>
+  );
+}
 
 const List = ({ fixtures, mock }) => (
   <div>
     <div id="Headers"></div>
     <ul className="FixtureList" id="FixtureList">
       {fixtures.map((fixture, i) => (
-        <SingleFixture fixture={fixture} key={fixture.game} count={count} mock={mock}/>
+        <SingleFixture
+          fixture={fixture}
+          key={fixture.game}
+          count={count}
+          mock={mock}
+        />
       ))}
     </ul>
   </div>
@@ -265,5 +342,14 @@ const List = ({ fixtures, mock }) => (
 export function Fixture(props) {
   [count, setCount] = useState(false);
   resultValue = props.result;
-  return <List fixtures={props.fixtures} result={resultValue} count={count} mock={props.mock}/>;
+  return (
+    <Provider store={store}>
+      <List
+        fixtures={props.fixtures}
+        result={resultValue}
+        count={count}
+        mock={props.mock}
+      />
+    </Provider>
+  );
 }
