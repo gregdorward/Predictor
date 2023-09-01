@@ -13,7 +13,6 @@ ReactDOM.render(
   <React.StrictMode>
     <Provider store={store}>
     <HashRouter basename='/'>
-    <hr />
       <Router>
         <Routes>
           <Route path="/fixture" element={<TeamPage />} />
