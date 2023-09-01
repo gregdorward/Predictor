@@ -269,7 +269,7 @@ function SingleFixture({ fixture, count, mock }) {
   async function handleButtonClick(game) {
     if(clicked === true){
       StoreData(formObjectHome)
-      window.open("/fixture");
+      window.open("/#/fixture");
     }
     else return
   }
