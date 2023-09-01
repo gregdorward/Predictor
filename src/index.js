@@ -14,7 +14,7 @@ ReactDOM.render(
     <Provider store={store}>
       <Router>
         <Routes>
-          <Route path="/fixture" element={<TeamPage />} />
+          <Route path="/#/fixture" element={<TeamPage />} />
           <Route path="/" exact element={<App />} />
           <Route path="/" element={<Fixture />} />
         </Routes>
