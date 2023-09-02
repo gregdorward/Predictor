@@ -869,7 +869,7 @@ export async function createStatsDiv(game, displayBool) {
         // averagePossession: homeForm.AveragePossessionOverall,
         "Average Dangerous Attacks": homeForm.AverageDangerousAttacksOverall,
         "Average Shots": homeForm.AverageShots,
-        "Average Shots On Target": homeForm.AverageShotsOnTarget,
+        "Average Shots On Target": homeForm.AverageShotsOnTargetOverall,
         "Average Expected Goals": homeForm.XGOverall,
         "Recent XG": homeForm.XGlast5 ? homeForm.XGlast5 : homeForm.XGOverall,
         "Average Goals":
@@ -882,7 +882,7 @@ export async function createStatsDiv(game, displayBool) {
         // averagePossession: awayForm.AveragePossessionOverall,
         "Average Dangerous Attacks": awayForm.AverageDangerousAttacksOverall,
         "Average Shots": awayForm.AverageShots,
-        "Average Shots On Target": awayForm.AverageShotsOnTarget,
+        "Average Shots On Target": awayForm.AverageShotsOnTargetOverall,
         "Average Expected Goals": awayForm.XGOverall,
         "Recent XG": awayForm.XGlast5 ? awayForm.XGlast5 : awayForm.XGOverall,
         "Average Goals":

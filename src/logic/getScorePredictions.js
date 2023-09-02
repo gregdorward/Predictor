@@ -1444,7 +1444,7 @@ export async function calculateScore(match, index, divider, calculate) {
     const attackingMetricsHome = {
       "Average Dangerous Attacks": formHome.AverageDangerousAttacksOverall,
       "Average Shots": formHome.AverageShots,
-      "Average Shots On Target": formHome.AverageShotsOnTarget,
+      "Average Shots On Target": formHome.AverageShotsOnTargetOverall,
       "Average Expected Goals": formHome.XGOverall,
       "Recent XG": formHome.XGlast5 ? formHome.XGlast5 : formHome.XGOverall,
       "Average Goals":
@@ -1456,7 +1456,7 @@ export async function calculateScore(match, index, divider, calculate) {
     const attackingMetricsAway = {
       "Average Dangerous Attacks": formAway.AverageDangerousAttacksOverall,
       "Average Shots": formAway.AverageShots,
-      "Average Shots On Target": formAway.AverageShotsOnTarget,
+      "Average Shots On Target": formAway.AverageShotsOnTargetOverall,
       "Average Expected Goals": formAway.XGOverall,
       "Recent XG": formAway.XGlast5 ? formAway.XGlast5 : formAway.XGOverall,
       "Average Goals":
