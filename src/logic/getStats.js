@@ -16,9 +16,9 @@ export async function calculateAttackingStrength(stats) {
   // Define weights for each metric (you can adjust these based on your preference)
   const weights = {
     // averagePossession: 0.15,
-    "Average Dangerous Attacks": 0.2,
+    "Average Dangerous Attacks": 0.15,
     "Average Shots": 0.1,
-    "Average Shots On Target": 0.1,
+    "Average Shots On Target": 0.15,
     "Average Expected Goals": 0.15,
     "Recent XG": 0.15,
     "Average Goals": 0.3,
