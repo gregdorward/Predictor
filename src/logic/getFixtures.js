@@ -391,6 +391,17 @@ export async function generateFixtures(
 ) {
   if (!isFunctionRunning) {
     isFunctionRunning = true;
+
+    ReactDOM.render(
+      <div>
+        <div className="LoadingText">
+          Loading all league, fixture & form data, please be patient...
+        </div>
+        <ThreeDots height="3em" fill="#030061" />
+      </div>,
+      document.getElementById("Loading")
+    );
+
     //cleanup if different day is selected
     ReactDOM.render(
       <div></div>,
@@ -440,16 +451,6 @@ export async function generateFixtures(
       isFormStored = false;
       isStoredLocally = false;
     }
-
-    ReactDOM.render(
-      <div>
-        <div className="LoadingText">
-          Loading all league, fixture & form data, please be patient...
-        </div>
-        <ThreeDots height="3em" fill="#030061" />
-      </div>,
-      document.getElementById("Loading")
-    );
 
     leagueIdArray = [];
     for (let i = 0; i < orderedLeagues.length; i++) {
