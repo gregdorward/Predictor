@@ -31,7 +31,6 @@ ChartJS.register(
 );
 
 export function Chart(props) {
-  console.log(props)
   let length;
   let depth;
 
@@ -161,6 +160,7 @@ export function RadarChart(props) {
         suggestedMax: 1,
         ticks: {
           precision: 0,
+          display: false,
         },
         // grid: {
         //     circular: true,
@@ -186,7 +186,7 @@ export function RadarChart(props) {
   };
 
   let data = {
-    labels: ["Attack", "Defence", "Ball retention", "XG For", "XG Against"],
+    labels: ["Attack rating", "Defence rating", "Ball retention", "XG For", "XG Against", "Directness", "Attacking precision"],
     datasets: [
       {
         label: props.team1,

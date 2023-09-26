@@ -27,12 +27,12 @@ export async function calculateAttackingStrength(stats) {
   // Define the ranges for normalization
   const ranges = {
     // averagePossession: { min: 25, max: 75 },
-    "Average Dangerous Attacks": { min: 30, max: 80 }, // Adjust the max value as needed
-    "Average Shots": { min: 5, max: 18 }, // Adjust the max value as needed
+    "Average Dangerous Attacks": { min: 30, max: 75 }, // Adjust the max value as needed
+    "Average Shots": { min: 5, max: 17 }, // Adjust the max value as needed
     "Average Shots On Target": { min: 2, max: 9 }, // Adjust the max value as needed
-    "Average Expected Goals": { min: 0, max: 3.5 }, // Adjust the max value as needed
-    "Recent XG": { min: 0, max: 3.5 }, // Adjust the max value as needed
-    "Average Goals": { min: 0, max: 3.5 }, // Adjust the max value as needed
+    "Average Expected Goals": { min: 0, max: 3 }, // Adjust the max value as needed
+    "Recent XG": { min: 0, max: 3 }, // Adjust the max value as needed
+    "Average Goals": { min: 0, max: 3 }, // Adjust the max value as needed
   };
 
   // Normalize each metric value and calculate the weighted sum
@@ -47,7 +47,6 @@ export async function calculateAttackingStrength(stats) {
         (stats[metric] - ranges[metric].min) /
         (ranges[metric].max - ranges[metric].min);
       weightedSum += normalizedValue * weights[metric];
-
     } else {
       console.log(metric);
     }
@@ -68,9 +67,9 @@ export async function calculateDefensiveStrength(stats) {
   // Define the ranges for normalization
   const ranges = {
     "Clean Sheet Percentage": { min: 0, max: 100 },
-    "Average XG Against": { min: 0, max: 3.5 }, // Adjust the max value as needed
-    "Recent XG Against": { min: 0, max: 3.5 },
-    "Average Goals Against": { min: 0, max: 3.5 }, // Adjust the max value as needed
+    "Average XG Against": { min: 0, max: 3 }, // Adjust the max value as needed
+    "Recent XG Against": { min: 0, max: 3 },
+    "Average Goals Against": { min: 0, max: 3 }, // Adjust the max value as needed
   };
 
   // Normalize each metric value and calculate the weighted sum
@@ -98,6 +97,8 @@ export async function calculateMetricStrength(metricName, metricValue) {
     averagePossession: 1,
     xgFor: 1,
     xgAgainst: 1,
+    directnessOverall: 1,
+    accuracyOverall: 1,
   };
 
   // Define the ranges for normalization
@@ -105,7 +106,14 @@ export async function calculateMetricStrength(metricName, metricValue) {
     averagePossession: { min: 20, max: 80 },
     xgFor: { min: 0.1, max: 3 },
     xgAgainst: { min: 0.1, max: 3 },
+    directnessOverall: { min: 1, max: 4 },
+    accuracyOverall: {min: 2, max: 10},
   };
+
+  console.log(metricName);
+  console.log(metricValue)
+  console.log(weights);
+  console.log(ranges);
 
   // Ensure the metric is valid and exists in the weights and ranges objects
   if (
@@ -911,7 +919,7 @@ export async function createStatsDiv(game, displayBool) {
         "Recent XG Against": awayForm.XGAgainstlast5
           ? awayForm.XGAgainstlast5
           : awayForm.XGAgainstAvgOverall,
-          "Average Goals Against":
+        "Average Goals Against":
           awayForm.averageConceededLeague !== undefined &&
           awayForm.averageConceededLeague !== null
             ? awayForm.averageConceededLeague
@@ -928,6 +936,10 @@ export async function createStatsDiv(game, displayBool) {
       let awayPossessionStrength;
       let awayXGForStrength;
       let awayXGAgainstStrength;
+      let homeDirectnessStrength;
+      let awayDirectnessStrength;
+      let homeAccuracyOverallStrength;
+      let awayAccuracyOverallStrength;
 
       if (homeForm.xgForStrength) {
         console.log("not calculating");
@@ -936,12 +948,16 @@ export async function createStatsDiv(game, displayBool) {
         homePossessionStrength = homeForm.possessionStrength;
         homeXGForStrength = homeForm.xgForStrength;
         homeXGAgainstStrength = homeForm.xgAgainstStrength;
+        homeDirectnessStrength = homeForm.directnessOverallStrength;
+        homeAccuracyOverallStrength = homeForm.accuracyOverallStrength;
 
         awayAttackStrength = awayForm.attackingStrength;
         awayDefenceStrength = awayForm.defensiveStrength;
         awayPossessionStrength = awayForm.possessionStrength;
         awayXGForStrength = awayForm.xgForStrength;
         awayXGAgainstStrength = awayForm.xgAgainstStrength;
+        awayDirectnessStrength = awayForm.directnessOverallStrength;
+        awayAccuracyOverallStrength = awayForm.accuracyOverallStrength;
       } else {
         homeAttackStrength = await calculateAttackingStrength(
           attackingMetricsHome
@@ -965,6 +981,15 @@ export async function createStatsDiv(game, displayBool) {
           "xgAgainst",
           3 - gameStats.home[2].XGAgainstAvgOverall
         );
+        console.log(homeForm)
+        homeDirectnessStrength = await calculateMetricStrength(
+          "directnessOverall",
+          homeForm.directnessOverall
+        );
+        homeAccuracyOverallStrength = await calculateMetricStrength(
+          "accuracyOverall",
+          homeForm.shootingAccuracy
+        );
 
         awayAttackStrength = await calculateAttackingStrength(
           attackingMetricsAway
@@ -984,6 +1009,14 @@ export async function createStatsDiv(game, displayBool) {
         awayXGAgainstStrength = await calculateMetricStrength(
           "xgAgainst",
           3 - gameStats.away[2].XGAgainstAvgOverall
+        );
+        awayDirectnessStrength = await calculateMetricStrength(
+          "directnessOverall",
+          awayForm.directnessOverall
+        );
+        awayAccuracyOverallStrength = await calculateMetricStrength(
+          "accuracyOverall",
+          awayForm.shootingAccuracy
         );
       }
 
@@ -1388,6 +1421,8 @@ export async function createStatsDiv(game, displayBool) {
                 homePossessionStrength,
                 homeXGForStrength,
                 homeXGAgainstStrength,
+                homeDirectnessStrength,
+                homeAccuracyOverallStrength,
               ]}
               data2={[
                 awayAttackStrength,
@@ -1395,6 +1430,8 @@ export async function createStatsDiv(game, displayBool) {
                 awayPossessionStrength,
                 awayXGForStrength,
                 awayXGAgainstStrength,
+                awayDirectnessStrength,
+                awayAccuracyOverallStrength,
               ]}
               team1={game.homeTeam}
               team2={game.awayTeam}
