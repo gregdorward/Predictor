@@ -106,7 +106,7 @@ export async function calculateMetricStrength(metricName, metricValue) {
     averagePossession: { min: 20, max: 80 },
     xgFor: { min: 0.1, max: 3 },
     xgAgainst: { min: 0.1, max: 3 },
-    directnessOverall: { min: 1, max: 4 },
+    directnessOverall: { min: 0.5, max: 4 },
     accuracyOverall: {min: 2, max: 10},
   };
 

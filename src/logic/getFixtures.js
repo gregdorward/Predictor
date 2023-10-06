@@ -392,6 +392,12 @@ export async function generateFixtures(
   if (!isFunctionRunning) {
     isFunctionRunning = true;
 
+    const randomInt = Math.random() * 10
+
+    if(randomInt >= 8){
+      alert("XGTipping is now serving over 2000 users a month, relying on donations to cover increasing running costs. If you can afford to do so, please, help us stay subscription fee today by tapping to Donation button at the bottom of the page")
+    }
+
     ReactDOM.render(
       <div>
         <div className="LoadingText">
