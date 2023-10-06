@@ -394,7 +394,7 @@ export async function generateFixtures(
 
     const randomInt = Math.random() * 10
 
-    if(randomInt >= 8){
+    if(randomInt >= 7){
       alert("XGTipping is now serving over 2000 users a month, relying on donations to cover increasing running costs. If you can afford to do so and like what we do, please, help us stay subscription fee today by tapping to Donation button at the bottom of the page")
     }
 
