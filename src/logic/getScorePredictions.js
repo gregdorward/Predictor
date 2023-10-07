@@ -755,8 +755,8 @@ async function predictScore(
   let team2AverageGoalsFor = await calculateAverageGoals(goalsForTeam2);
   let team2AverageGoalsAgainst = await calculateAverageGoals(goalsAgainstTeam2);
 
-  let team1StrengthRatio = team1Metrics.weighting / 1.1;
-  let team2StrengthRatio = team2Metrics.weighting / 1.1;
+  let team1StrengthRatio = team1Metrics.weighting / 1.75;
+  let team2StrengthRatio = team2Metrics.weighting / 1.75;
 
   let adjustedTeam1AverageGoals = await adjustGoalsAvg(
     team1AverageGoalsFor,
@@ -1585,19 +1585,24 @@ export async function calculateScore(match, index, divider, calculate) {
     teamComparisonScore = await compareTeams(formHome, formAway, match);
     teamComparisonScore = teamComparisonScore * 0.15;
 
-    if (teamComparisonScore > 0.8) {
-      teamComparisonScore = 0.8;
-    } else if (teamComparisonScore < -0.8) {
-      teamComparisonScore = -0.8;
+    if (teamComparisonScore > 0.5) {
+      teamComparisonScore = 0.5;
+    } else if (teamComparisonScore < -0.5) {
+      teamComparisonScore = -0.5;
     }
 
     if (teamComparisonScore < 0) {
       formHome.teamStrengthWeighting = 1 + teamComparisonScore / 1;
       formAway.teamStrengthWeighting = 1 - teamComparisonScore / 1;
     } else if (teamComparisonScore >= 0) {
-      formHome.teamStrengthWeighting = 1 - teamComparisonScore / 1;
-      formAway.teamStrengthWeighting = 1 + teamComparisonScore / 1;
+      formHome.teamStrengthWeighting = 1 + teamComparisonScore / 1;
+      formAway.teamStrengthWeighting = 1 - teamComparisonScore / 1;
     }
+
+    console.log(teamComparisonScore)
+    console.log(formHome.teamStrengthWeighting)
+    console.log(formAway.teamStrengthWeighting)
+
     // teamComparisonScore = 0;
 
 
@@ -1674,8 +1679,8 @@ export async function calculateScore(match, index, divider, calculate) {
 
     factorOneHome =
       (homeLeagueOrAllFormAverageGoals * 1 +
-        formHome.forAndAgainstRollingAvHomeOrAway.goalsFor * 1.25 +
-        formAway.forAndAgainstRollingAvHomeOrAway.goalsAgainst * 1.25 +
+        formHome.forAndAgainstRollingAvHomeOrAway.goalsFor * 1 +
+        formAway.forAndAgainstRollingAvHomeOrAway.goalsAgainst * 1 +
         formHome.forAndAgainstRollingAv.goalsFor * 1 +
         formAway.forAndAgainstRollingAv.goalsAgainst * 1 +
         formHome.allTeamGoalsBasedOnAverages * 1 +
@@ -1684,12 +1689,12 @@ export async function calculateScore(match, index, divider, calculate) {
         formAway.XGAgainstAvgOverall * 0.25 +
         last10WeightingHome * 1 +
         last2WeightingHome * 1) /
-      8;
+      7.5;
 
     factorOneAway =
       (awayLeagueOrAllFormAverageGoals * 1 +
-        formAway.forAndAgainstRollingAvHomeOrAway.goalsFor * 1.25 +
-        formHome.forAndAgainstRollingAvHomeOrAway.goalsAgainst * 1.25 +
+        formAway.forAndAgainstRollingAvHomeOrAway.goalsFor * 1 +
+        formHome.forAndAgainstRollingAvHomeOrAway.goalsAgainst * 1 +
         formAway.forAndAgainstRollingAv.goalsFor * 1 +
         formHome.forAndAgainstRollingAv.goalsAgainst * 1 +
         formAway.allTeamGoalsBasedOnAverages * 1 +
@@ -1698,7 +1703,7 @@ export async function calculateScore(match, index, divider, calculate) {
         formHome.XGAgainstAvgOverall * 0.25 +
         last10WeightingAway * 1 +
         last2WeightingAway * 1) /
-      8;
+      7.5;
 
     let factorTwoHome;
     let factorTwoAway;
