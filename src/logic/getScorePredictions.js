@@ -1708,17 +1708,16 @@ export async function calculateScore(match, index, divider, calculate) {
     let factorTwoHome;
     let factorTwoAway;
 
-    // if (
-    //   scorePredictions !== undefined &&
-    //   scorePredictions[0].probability !== 1 &&
-    //   scorePredictions[0].probability > 0.2
-    // ) {
+    if (
+      scorePredictions !== undefined &&
+      scorePredictions[0].probability !== 1
+    ) {
       factorTwoHome = scorePredictions[0].team1Score;
       factorTwoAway = scorePredictions[0].team2Score;
-    // } else {
-    //   factorTwoHome = factorOneHome;
-    //   factorTwoAway = factorOneAway;
-    // }
+    } else {
+      factorTwoHome = factorOneHome;
+      factorTwoAway = factorOneAway;
+    }
 
     let homeComparisonWeighting;
     let awayComparisonWeighting;
