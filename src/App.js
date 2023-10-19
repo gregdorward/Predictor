@@ -75,7 +75,7 @@ const leagueOrder = [
   // 6935, //Japan 22
   9525, //Mexico prem 23/24
   9972, //National league North and South 22/23
-  8008, //Australian A league 22/23
+  10505, //Australian A league 23/24
   8899, //S Korea 23
 ];
 
