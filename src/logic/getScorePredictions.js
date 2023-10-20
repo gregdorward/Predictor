@@ -5,7 +5,7 @@ import { Fixture } from "../components/Fixture";
 import { RenderAllFixtures } from "../logic/getFixtures";
 import Div from "../components/Div";
 import Collapsable from "../components/CollapsableElement";
-import { allForm } from "../logic/getFixtures";
+import { allForm, dateStamp } from "../logic/getFixtures";
 import Increment from "../components/Increment";
 import { incrementValue } from "../components/Increment";
 import { getBTTSPotential } from "../logic/getBTTSPotential";
@@ -59,6 +59,7 @@ let allDrawOutcomes = 0;
 let totalROI = 0;
 let totalInvestment = 0;
 let totalProfit = 0;
+let userTips = [];
 export let formObjectHome;
 export let formObjectAway;
 export let clicked = false;
@@ -2060,6 +2061,17 @@ async function getSuccessMeasure(fixtures) {
   let successCount = 0;
   let profit = 0;
   let netProfit = 0;
+
+
+  // await fetch(`${process.env.REACT_APP_EXPRESS_SERVER}tips/${dateStamp}`, {
+  //   method: "PUT",
+  //   headers: {
+  //     Accept: "application/json",
+  //     "Content-Type": "application/json",
+  //   },
+  //   body: JSON.stringify(matches)
+  // })
+
   for (let i = 0; i < fixtures.length; i++) {
     if (
       fixtures[i].status === "complete" &&

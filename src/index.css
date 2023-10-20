@@ -2801,6 +2801,31 @@ input:active + .design::after {
   margin-right: auto;
 } */
 
+.custom-checkbox {
+  display: flex;
+  align-items: center;
+}
+
+.hidden-checkbox {
+  display: none;
+}
+
+.checkbox-wrapper {
+  width: 12px;
+  height: 12px;
+  border: 1px solid black;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 10px;
+}
+
+.custom-checkbox-box.checked::before {
+  content: '✔';
+  font-size: 18px;
+}
+
+
 .TeamStatsContainer h4{
   font-size: 2vw;
 }

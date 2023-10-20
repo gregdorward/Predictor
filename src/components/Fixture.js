@@ -1,6 +1,7 @@
 import React, { Fragment, useState } from "react";
 import { CreateBadge } from "./createBadge";
 import Collapsable from "../components/CollapsableElement";
+import { Checkbox } from "./Checkbox";
 import { createStatsDiv } from "../logic/getStats";
 import { renderTable } from "../logic/getFixtures";
 import { allLeagueResultsArrayOfObjects } from "../logic/getFixtures";
@@ -316,6 +317,7 @@ function SingleFixture({ fixture, count, mock }) {
         >
           Game stats {downArrow}
         </button>
+        {/* <Checkbox/> */}
       </div>
       <div id={"stats" + fixture.homeTeam} />
       <div className="MatchHistory" id={"history" + fixture.homeTeam} />
