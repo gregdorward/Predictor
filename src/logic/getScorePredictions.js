@@ -948,15 +948,15 @@ export async function compareTeams(homeForm, awayForm, match) {
   }
 
   let calculation =
-    attackStrengthComparison * 2 +
-    defenceStrengthComparison * 2 +
+    attackStrengthComparison * 1 +
+    defenceStrengthComparison * 1 +
     possessiontrengthComparison * 1 +
     // xgToActualDiffComparison * 1 +
     // xgForStrengthRecentComparison * 1 +
     // xgAgainstStrengthRecentComparison * 1 +
     homeAwayPointAverageComparison * 1 +
-    goalDiffHomeOrAwayComparison * 1 +
-    xgActualComparison * 3 +
+    goalDiffHomeOrAwayComparison * 2 +
+    xgActualComparison * 1 +
     // xgForComparison * 1 +
     // xgAgainstComparison * 1 +
     oddsComparison * oddsWeighting +
