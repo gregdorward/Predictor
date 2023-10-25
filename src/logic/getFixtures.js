@@ -1574,7 +1574,7 @@ export async function generateFixtures(
 
     async function updateResults(bool) {
       console.log("updating results");
-      if (bool === true) {
+      if (allLeagueResultsArrayOfObjects.length > 0 && bool === true) {
         await fetch(`${process.env.REACT_APP_EXPRESS_SERVER}results`, {
           method: "DELETE",
           headers: {
@@ -1592,6 +1592,10 @@ export async function generateFixtures(
           });
         });
       }
+      else {
+        console.log("EMPTY RESULTS");
+        console.log(allLeagueResultsArrayOfObjects)
+      }
     }
 
     if (!isStoredLocally) {
@@ -1606,6 +1610,7 @@ export async function generateFixtures(
       await updateResults(true);
     }
     console.log(leaguesStored);
+    console.log(leagueArray)
     if (!leaguesStored) {
       await fetch(
         `${process.env.REACT_APP_EXPRESS_SERVER}leagues/${todaysDate}`,
