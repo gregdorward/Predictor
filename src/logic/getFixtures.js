@@ -392,11 +392,11 @@ export async function generateFixtures(
   if (!isFunctionRunning) {
     isFunctionRunning = true;
 
-    const randomInt = Math.random() * 10
+    // const randomInt = Math.random() * 10
 
-    if(randomInt >= 7){
-      alert("XGTipping is now serving over 2000 users a month, relying on donations to cover increasing running costs. If you can afford to do so and like what we do, please, help us stay subscription fee today by tapping to Donation button at the bottom of the page")
-    }
+    // if(randomInt >= 7){
+    //   alert("XGTipping is now serving over 2000 users a month,1 relying on donations to cover increasing running costs. If you can afford to do so and like what we do, please, help us stay subscription fee today by tapping to Donation button at the bottom of the page")
+    // }
 
     ReactDOM.render(
       <div>
@@ -467,17 +467,18 @@ export async function generateFixtures(
     var leaguePositions = [];
     leagueArray = [];
 
-    if (league.status === 200) {
+    let allLeagueResults;
+
+    allLeagueResults = await fetch(
+      `${process.env.REACT_APP_EXPRESS_SERVER}results`
+    );
+
+    if (league.status === 200 && allLeagueResults.status === 201) {
       console.log("Not fetching leagues");
       await league.json().then((leagues) => {
         leagueArray = Array.from(leagues.leagueArray);
       });
-      let allLeagueResults;
       updateResults(false);
-
-      allLeagueResults = await fetch(
-        `${process.env.REACT_APP_EXPRESS_SERVER}results`
-      );
 
       await allLeagueResults.json().then((allGames) => {
         allLeagueResultsArrayOfObjects = Array.from(allGames);
@@ -1594,7 +1595,6 @@ export async function generateFixtures(
       }
       else {
         console.log("EMPTY RESULTS");
-        console.log(allLeagueResultsArrayOfObjects)
       }
     }
 
@@ -1609,8 +1609,6 @@ export async function generateFixtures(
       });
       await updateResults(true);
     }
-    console.log(leaguesStored);
-    console.log(leagueArray)
     if (!leaguesStored) {
       await fetch(
         `${process.env.REACT_APP_EXPRESS_SERVER}leagues/${todaysDate}`,

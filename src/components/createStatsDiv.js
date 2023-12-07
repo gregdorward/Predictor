@@ -209,20 +209,6 @@ function Stats(props) {
             {`Last 5 PPG: ${props.formTrend[2]}.`}
           </li>
           <li
-            key="BttsPercentage"
-            className="BttsPercentage"
-            data-cy={props.name + "BttsPercentage"}
-          >
-            {`BTTS: ${props.BttsPercentage}%`}
-          </li>
-          <li
-            key="BttsPercentageHomeOrAway"
-            className="BttsPercentageHomeOrAway"
-            data-cy={props.name + "BttsPercentageHomeOrAway"}
-          >
-            {`BTTS ${props.homeOrAway}: ${props.BttsPercentageHomeOrAway}%`}
-          </li>
-          <li
             key="CardsTotal"
             className="CardsTotal"
             data-cy={props.name + "CardsTotal"}

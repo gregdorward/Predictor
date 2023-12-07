@@ -2902,12 +2902,22 @@ input:active + .design::after {
   /* padding: 2em; */
   /* border-right: #030052 0.5px solid; */
 }
+
+.HomeTeamStats li{
+  padding: 0.5em;
+  border-bottom: #030052 0.25px solid;
+}
+
 .AwayTeamStats{
   flex-basis: 50%;
   /* padding: 2em; */
   /* border-left: #030052 0.5px solid; */
 }
 
+.AwayTeamStats li{
+  padding: 0.5em;
+  border-bottom: #030052 0.25px solid;
+}
 .HomeTeamResults{
   flex-basis: 50%;
 

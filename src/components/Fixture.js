@@ -223,9 +223,12 @@ function SingleFixture({ fixture, count, mock }) {
   function StoreData(){
 
     const fixtureDetails = {
+      id: fixture.id,
       homeTeamName: fixture.homeTeam,
+      homeId: fixture.homeId,
       homeTeamBadge: fixture.homeBadge,
       awayTeamName: fixture.awayTeam,
+      awayId: fixture.awayId,
       awayTeamBadge: fixture.awayBadge,
       stadium: fixture.stadium,
       time: fixture.time,

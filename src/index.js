@@ -10,7 +10,7 @@ import { Provider } from "react-redux";
 import store from "./logic/store"; // Import your Redux store
 
 ReactDOM.render(
-  <React.StrictMode>
+  // <React.StrictMode>
     <Provider store={store}>
     <HashRouter>
         <Routes>
@@ -21,7 +21,7 @@ ReactDOM.render(
         </HashRouter>
     </Provider>
     ,
-  </React.StrictMode>,
+  // </React.StrictMode>,
   document.getElementById("root")
 );
 

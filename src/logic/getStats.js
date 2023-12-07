@@ -1053,6 +1053,7 @@ export async function createStatsDiv(game, displayBool) {
 
       const formDataHome = [];
 
+      console.log(game)
       formDataHome.push({
         name: game.homeTeam,
         Last5: gameStats.home[2].LastFiveForm,
@@ -1072,8 +1073,8 @@ export async function createStatsDiv(game, displayBool) {
         formRun: homeForm.formRun,
         goalDifference: homeForm.goalDifference,
         goalDifferenceHomeOrAway: homeForm.goalDifferenceHomeOrAway,
-        BttsPercentage: game.bttsAllPercentageHome || "-",
-        BttsPercentageHomeOrAway: game.bttsPercentageHomeHome || "-",
+        // BttsPercentage: homeForm.BttsPercentage || "-",
+        // BttsPercentageHomeOrAway: homeForm.BttsPercentageHomeOrAway || "-",
         CardsTotal: homeForm.CardsTotal || "-",
         CornersAverage: homeForm.AverageCorners || "-",
         FormTextStringHome: formTextStringHome,
@@ -1104,8 +1105,8 @@ export async function createStatsDiv(game, displayBool) {
         formRun: awayForm.formRun,
         goalDifference: awayForm.goalDifference,
         goalDifferenceHomeOrAway: awayForm.goalDifferenceHomeOrAway,
-        BttsPercentage: game.bttsAllPercentageAway || "-",
-        BttsPercentageHomeOrAway: game.bttsPercentageAwayAway || "-",
+        // BttsPercentage: awayForm.BttsPercentage || "-",
+        // BttsPercentageHomeOrAway: awayForm.BttsPercentageHomeOrAway || "-",
         CardsTotal: awayForm.CardsTotal || "-",
         CornersAverage: awayForm.AverageCorners || "-",
         FormTextStringAway: formTextStringAway,
