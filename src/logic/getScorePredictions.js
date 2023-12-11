@@ -76,6 +76,7 @@ async function convertTimestamp(timestamp) {
 }
 
 export function getPointsFromLastX(lastX) {
+  console.log()
   let points = 0;
   let pointsAddition;
 
@@ -730,14 +731,11 @@ function factorial(n) {
 }
 
 async function calculateAverageGoals(goalsFor) {
-  console.log(goalsFor);
   const totalGoals = goalsFor.reduce((sum, goals) => sum + goals, 0);
-  console.log(totalGoals);
   return totalGoals / goalsFor.length;
 }
 
 async function adjustGoalsAvg(goalsAvg, strengthRatio) {
-  console.log(strengthRatio)
   return goalsAvg
    * strengthRatio;
 }
@@ -812,13 +810,13 @@ async function predictScore(
   scores.sort((a, b) => b.probability - a.probability); // Sort scores in descending order by probability
   const top5Scores = scores.slice(0, 5); // Get the top 5 scores
 
-  for (const score of top5Scores) {
-    console.log(
-      `Team 1: ${score.team1Score} - Team 2: ${score.team2Score} (${(
-        score.probability * 100
-      ).toFixed(2)}%)`
-    );
-  }
+  // for (const score of top5Scores) {
+  //   console.log(
+  //     `Team 1: ${score.team1Score} - Team 2: ${score.team2Score} (${(
+  //       score.probability * 100
+  //     ).toFixed(2)}%)`
+  //   );
+  // }
   return top5Scores;
 }
 
@@ -1616,10 +1614,6 @@ export async function calculateScore(match, index, divider, calculate) {
       formHome.teamStrengthWeighting = 1 + teamComparisonScore / 1;
       formAway.teamStrengthWeighting = 1 - teamComparisonScore / 1;
     }
-
-    console.log(teamComparisonScore)
-    console.log(formHome.teamStrengthWeighting)
-    console.log(formAway.teamStrengthWeighting)
 
     // teamComparisonScore = 0;
 

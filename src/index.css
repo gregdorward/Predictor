@@ -743,11 +743,11 @@ p {
   flex-basis: 25%;
   margin-top: 0.25em;
   margin-bottom: 0.75em;
-  padding: 0.5em;
-  align-content: center;
+  padding: 0.75em;
+  align-content: flex-end;
   align-items: center;
   margin-left: auto;
-  margin-right: auto;
+  /* margin-right: auto; */
   font-size: 0.9em;
   /* font-size: 0.75em; */
   background-color: white;
@@ -756,6 +756,22 @@ p {
   /* line-height: 1em; */
 }
 
+.GameStatsTwo {
+  flex-basis: 25%;
+  margin-top: 0.25em;
+  margin-bottom: 0.75em;
+  padding: 0.75em;
+  align-content: center;
+  align-items: center;
+  /* margin-left: auto; */
+  margin-right: auto;
+  font-size: 0.9em;
+  /* font-size: 0.75em; */
+  background-color: white;
+  color: #030052;
+  border: #030052 1px solid
+  /* line-height: 1em; */
+}
 
 *[class^='individualFixture'] {
   display: flex;

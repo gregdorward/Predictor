@@ -216,6 +216,8 @@ function renderLeagueName(fixture, mock) {
 }
 
 const downArrow = "\u{2195}";
+const rightArrow = "\u{29C9}";
+
 export let testing;
 
 function SingleFixture({ fixture, count, mock }) {
@@ -285,7 +287,6 @@ function SingleFixture({ fixture, count, mock }) {
           className={"individualFixture"}
           key={fixture.id}
           data-cy={fixture.id}
-          onClick={() => handleButtonClick(fixture)}
         >
           <div className="HomeOdds">{fixture.fractionHome}</div>
           <div className="homeTeam">
@@ -318,8 +319,9 @@ function SingleFixture({ fixture, count, mock }) {
           }
           onMouseDown={() => (count = toggle(count))}
         >
-          Game stats {downArrow}
+          Game overview {downArrow}
         </button>
+        <button className="GameStatsTwo" onClick={() => handleButtonClick(fixture)}>More detail {rightArrow}</button>
         {/* <Checkbox/> */}
       </div>
       <div id={"stats" + fixture.homeTeam} />

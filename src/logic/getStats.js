@@ -110,10 +110,6 @@ export async function calculateMetricStrength(metricName, metricValue) {
     accuracyOverall: {min: 2, max: 10},
   };
 
-  console.log(metricName);
-  console.log(metricValue)
-  console.log(weights);
-  console.log(ranges);
 
   // Ensure the metric is valid and exists in the weights and ranges objects
   if (
@@ -981,7 +977,6 @@ export async function createStatsDiv(game, displayBool) {
           "xgAgainst",
           3 - gameStats.home[2].XGAgainstAvgOverall
         );
-        console.log(homeForm)
         homeDirectnessStrength = await calculateMetricStrength(
           "directnessOverall",
           homeForm.directnessOverall
@@ -1053,7 +1048,6 @@ export async function createStatsDiv(game, displayBool) {
 
       const formDataHome = [];
 
-      console.log(game)
       formDataHome.push({
         name: game.homeTeam,
         Last5: gameStats.home[2].LastFiveForm,
@@ -1412,6 +1406,11 @@ export async function createStatsDiv(game, displayBool) {
         );
       }
 
+      const pointsHome = getPointsFromLastX(formDataHome[0].Last5)
+      const pointsHomeAv = await getPointAverage(pointsHome, 5)
+      const pointsAway = getPointsFromLastX(formDataAway[0].Last5)
+      const pointsAwayAv = await getPointAverage(pointsAway, 5)
+
       ReactDOM.render(
         <div style={style}>
           <div className="Chart" id={`Chart${game.id}`} style={style}>
@@ -1447,7 +1446,7 @@ export async function createStatsDiv(game, displayBool) {
                 awayForm.averageConceededLeague !== null
                   ? awayForm.averageConceededLeague.toFixed(2)
                   : formDataAway[0].AverageConceeded,
-                gameStats.home[0].PPG,
+                pointsHomeAv,
                 formDataHome[0].AverageXG,
                 formDataAway[0].AverageXGConceded,
                 formDataHome[0].AverageShotsOnTarget,
@@ -1465,7 +1464,7 @@ export async function createStatsDiv(game, displayBool) {
                 homeForm.averageConceededLeague !== null
                   ? homeForm.averageConceededLeague.toFixed(2)
                   : formDataHome[0].AverageConceeded,
-                gameStats.away[0].PPG,
+                pointsAwayAv,
                 formDataAway[0].AverageXG,
                 formDataHome[0].AverageXGConceded,
                 formDataAway[0].AverageShotsOnTarget,
