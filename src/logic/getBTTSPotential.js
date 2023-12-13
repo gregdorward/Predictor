@@ -20,11 +20,10 @@ export async function getBTTSPotential(
     match.status !== "canceled"
   ) {
     if (
-      match.combinedBTTS > 60 &&
-      homeBTTS > 45 &&
-      awayBTTS > 45 &&
-      homeOnlyBTTS > 40 &&
-      awayOnlyBTTS > 40 &&
+      homeBTTS > 55 &&
+      awayBTTS > 55 &&
+      homeOnlyBTTS > 55 &&
+      awayOnlyBTTS > 55 &&
       match.awayOdds < 4 &&
       match.awayOdds > 1.3 &&
       homeG >= 1 &&
