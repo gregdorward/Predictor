@@ -1008,7 +1008,7 @@ export async function compareTeams(homeForm, awayForm, match) {
   ) {
     switch (true) {
       case drawOutcomeProbability > 100:
-        calculation = calculation / 2;
+        calculation = calculation / 3;
         break;
       default:
         calculation = calculation * 1;
@@ -1040,7 +1040,7 @@ export async function compareTeams(homeForm, awayForm, match) {
 
   if (homeForm.averageOddsHome !== null || awayForm.averageOddsAway !== null) {
     if (calculation > 0 && homeForm.averageOddsHome < match.homeOdds && awayForm.averageOddsAway > match.awayOdds) {
-      calculation = calculation / 1.5;
+      calculation = calculation / 2;
     } else if (
       calculation > 0 &&
       homeForm.averageOddsHome > match.homeOdds && awayForm.averageOddsAway < match.awayOdds
@@ -1051,7 +1051,7 @@ export async function compareTeams(homeForm, awayForm, match) {
     }
 
     if (calculation < 0 && awayForm.averageOddsAway < match.awayOdds && homeForm.averageOddsHome > match.homeOdds) {
-      calculation = calculation / 1.5;
+      calculation = calculation / 2;
     } else if (
       calculation < 0 &&
       awayForm.averageOddsAway > match.awayOdds && homeForm.averageOddsHome < match.homeOdds
