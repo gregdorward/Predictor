@@ -785,9 +785,9 @@ export async function generateFixtures(
         });
         match.homeTeam = fixture.home_name;
         match.awayTeam = fixture.away_name;
-        match.homeOdds = +(fixture.odds_ft_1 + 0.1).toFixed(2);
-        match.awayOdds = +(fixture.odds_ft_2 + 0.1).toFixed(2);
-        match.drawOdds = +(fixture.odds_ft_x + 0.1).toFixed(2);
+        match.homeOdds = +(fixture.odds_ft_1).toFixed(2);
+        match.awayOdds = +(fixture.odds_ft_2).toFixed(2);
+        match.drawOdds = +(fixture.odds_ft_x).toFixed(2);
         match.homeDoubleChance = fixture.odds_doublechance_1x;
         match.awayDoubleChance = fixture.odds_doublechance_x2;
         match.bttsOdds = fixture.odds_btts_yes;
@@ -1557,7 +1557,7 @@ export async function generateFixtures(
               onClickEvent={() => getScorePrediction(day)}
               className={"GeneratePredictions"}
             />
-            <div className="Version">Prediction engine v3.0.11 (21/10/23)</div>
+            <div className="Version">Prediction engine v3.0.12 (15/12/23)</div>
           </Fragment>,
           document.getElementById("GeneratePredictions")
         );
