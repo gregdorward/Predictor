@@ -29,6 +29,7 @@ function Stats(props) {
       <Fragment>
         <ul className={props.className} style={props.style}>
           <li className="FormSummaryHome">{props.FormTextString}</li>
+          <li className="FavouriteSummaryHome">{props.FavouriteRecord}</li>
           <li className="FormHeader">
             League results (most recent on right)
           </li>
@@ -231,6 +232,7 @@ function Stats(props) {
       <Fragment>
         <ul className={props.className} style={props.style}>
           <li className="FormSummaryHome">{props.FormTextString}</li>
+          <li className="FavouriteSummaryAway">{props.FavouriteRecord}</li>
           <li
             key="TeamScored"
             className="TeamScored"

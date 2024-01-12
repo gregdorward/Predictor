@@ -76,7 +76,6 @@ async function convertTimestamp(timestamp) {
 }
 
 export function getPointsFromLastX(lastX) {
-  console.log()
   let points = 0;
   let pointsAddition;
 
@@ -118,9 +117,6 @@ async function getPastLeagueResults(team, game, hOrA, form) {
       })
       .sort((a, b) => a.date_unix - b.date_unix);
 
-      console.log(team)
-      console.log(teamsHomeResults)
-
     let teamsAwayResults = allLeagueResultsArrayOfObjects[
       game.leagueIndex
     ].fixtures.filter((fixture) => fixture.away_name === team);
@@ -135,6 +131,14 @@ async function getPastLeagueResults(team, game, hOrA, form) {
     let awayResults = [];
     let oddsSumHome = 0;
     let oddsSumAway = 0;
+    let favouriteCount = 0;
+    let underdogCount = 0;
+    let winningFavouriteCount = 0;
+    let drawingFavouriteCount = 0;
+    let beatenFavouriteCount = 0;
+    let winningUnderdogCount = 0;
+    let drawingUnderdogCount = 0;
+    let beatenUnderdogCount = 0;
     for (let index = 0; index < teamsHomeResults.length; index++) {
       const resultedGame = teamsHomeResults[index];
 
@@ -162,6 +166,15 @@ async function getPastLeagueResults(team, game, hOrA, form) {
             : false,
       });
       oddsSumHome = oddsSumHome + resultedGame.odds_ft_1;
+      favouriteCount = resultedGame.odds_ft_1 < resultedGame.odds_ft_2 ? favouriteCount +1 : favouriteCount + 0
+      winningFavouriteCount = (resultedGame.odds_ft_1 < resultedGame.odds_ft_2) && (resultedGame.homeGoalCount > resultedGame.awayGoalCount) ? winningFavouriteCount + 1 : winningFavouriteCount + 0
+      drawingFavouriteCount = (resultedGame.odds_ft_1 < resultedGame.odds_ft_2) && (resultedGame.homeGoalCount === resultedGame.awayGoalCount) ? drawingFavouriteCount + 1 : drawingFavouriteCount + 0
+      beatenFavouriteCount = (resultedGame.odds_ft_1 < resultedGame.odds_ft_2) && (resultedGame.homeGoalCount < resultedGame.awayGoalCount) ? beatenFavouriteCount + 1 : beatenFavouriteCount + 0
+
+      underdogCount = resultedGame.odds_ft_1 > resultedGame.odds_ft_2 ? underdogCount +1 : underdogCount + 0
+      winningUnderdogCount = (resultedGame.odds_ft_1 > resultedGame.odds_ft_2) && (resultedGame.homeGoalCount > resultedGame.awayGoalCount) ? winningUnderdogCount + 1 : winningUnderdogCount + 0
+      drawingUnderdogCount = (resultedGame.odds_ft_1 > resultedGame.odds_ft_2) && (resultedGame.homeGoalCount === resultedGame.awayGoalCount) ? drawingUnderdogCount + 1 : drawingUnderdogCount + 0
+      beatenUnderdogCount = (resultedGame.odds_ft_1 > resultedGame.odds_ft_2) && (resultedGame.homeGoalCount < resultedGame.awayGoalCount) ? beatenUnderdogCount + 1 : beatenUnderdogCount + 0
     }
     for (let index = 0; index < teamsAwayResults.length; index++) {
       const resultedGame = teamsAwayResults[index];
@@ -189,6 +202,15 @@ async function getPastLeagueResults(team, game, hOrA, form) {
             : false,
       });
       oddsSumAway = oddsSumAway + resultedGame.odds_ft_2;
+      favouriteCount = resultedGame.odds_ft_1 > resultedGame.odds_ft_2 ? favouriteCount +1 : favouriteCount + 0
+      winningFavouriteCount = (resultedGame.odds_ft_1 > resultedGame.odds_ft_2) && (resultedGame.homeGoalCount < resultedGame.awayGoalCount) ? winningFavouriteCount + 1 : winningFavouriteCount + 0
+      drawingFavouriteCount = (resultedGame.odds_ft_1 > resultedGame.odds_ft_2) && (resultedGame.homeGoalCount === resultedGame.awayGoalCount) ? drawingFavouriteCount + 1 : drawingFavouriteCount + 0
+      beatenFavouriteCount = (resultedGame.odds_ft_1 > resultedGame.odds_ft_2) && (resultedGame.homeGoalCount > resultedGame.awayGoalCount) ? beatenFavouriteCount + 1 : beatenFavouriteCount + 0
+
+      underdogCount = resultedGame.odds_ft_1 < resultedGame.odds_ft_2 ? underdogCount +1 : underdogCount + 0
+      winningUnderdogCount = (resultedGame.odds_ft_1 < resultedGame.odds_ft_2) && (resultedGame.homeGoalCount < resultedGame.awayGoalCount) ? winningUnderdogCount + 1 : winningUnderdogCount + 0
+      drawingUnderdogCount = (resultedGame.odds_ft_1 < resultedGame.odds_ft_2) && (resultedGame.homeGoalCount === resultedGame.awayGoalCount) ? drawingUnderdogCount + 1 : drawingUnderdogCount + 0
+      beatenUnderdogCount = (resultedGame.odds_ft_1 < resultedGame.odds_ft_2) && (resultedGame.homeGoalCount > resultedGame.awayGoalCount) ? beatenUnderdogCount + 1 : beatenUnderdogCount + 0
     }
 
     let reversedResultsHome = homeResults;
@@ -202,6 +224,23 @@ async function getPastLeagueResults(team, game, hOrA, form) {
 
     const averageOddsHome = oddsSumHome / teamsHomeResults.length;
     const averageOddsAway = oddsSumAway / teamsAwayResults.length;
+    form.favouriteCount = favouriteCount;
+    form.winningFavouriteCount = winningFavouriteCount;
+    form.drawingFavouriteCount = drawingFavouriteCount;
+    form.beatenFavouriteCount = beatenFavouriteCount;
+
+    form.underdogCount = underdogCount;
+    form.winningUnderdogCount = winningUnderdogCount;
+    form.drawingUnderdogCount = drawingUnderdogCount;
+    form.beatenUnderdogCount = beatenUnderdogCount;
+
+    form.oddsReliabilityWin = favouriteCount > 0 ? (form.winningFavouriteCount / form.favouriteCount) * 100 : 0
+    form.oddsReliabilityDraw = favouriteCount > 0 ? (form.drawingFavouriteCount / form.favouriteCount) * 100 : 0
+    form.oddsReliabilityLose = favouriteCount > 0 ? (form.beatenFavouriteCount / form.favouriteCount) * 100 : 0
+
+    form.oddsReliabilityWinAsUnderdog = underdogCount > 0 ? (form.winningUnderdogCount / form.underdogCount) * 100 : 0
+    form.oddsReliabilityDrawAsUnderdog = underdogCount > 0 ? (form.drawingUnderdogCount / form.underdogCount) * 100 : 0
+    form.oddsReliabilityLoseAsUnderdog = underdogCount > 0 ? (form.beatenUnderdogCount / form.underdogCount) * 100 : 0
 
     const teamGoalsHome = reversedResultsHome.map((res) => res.scored);
 
@@ -365,9 +404,6 @@ async function getPastLeagueResults(team, game, hOrA, form) {
     const avgScored = sum / teamGoalsAll.length || 0;
 
     const last5 = teamGoalsAll.slice(0, 5);
-    console.log(form.teamName)
-    console.log(allTeamResults)
-    console.log(last5)
     const last5Sum = last5.reduce((a, b) => a + b, 0);   
     const last5AvgScored = last5Sum / last5.length || 0;
 
@@ -384,7 +420,6 @@ async function getPastLeagueResults(team, game, hOrA, form) {
     const last10Conceeded = teamConceededAll.slice(0, 10);
     const last10ConceededSum = last10Conceeded.reduce((a, b) => a + b, 0);
     const last10AvgConceeded = last10ConceededSum / last10Conceeded.length || 0;
-    console.log(last5AvgScored)
 
     form.last5Goals = parseFloat(last5AvgScored.toFixed(2));
     form.last10Goals = parseFloat(last10AvgScored.toFixed(2));
@@ -1073,6 +1108,12 @@ export async function compareTeams(homeForm, awayForm, match) {
   } else if (calculation > 0 && homeForm.improving === false && awayForm.improving === true){
     calculation = calculation / 2
   } else if (calculation < 0 && awayForm.improving === false && homeForm.improving === true){
+    calculation = calculation / 2
+  }
+
+  if((calculation < 0 && homeForm.oddsReliabilityWin < 59) || (calculation < 0 && awayForm.oddsReliabilityWinAsUnderdog > 45)){
+    calculation = calculation / 2
+  } else if((calculation > 0 && awayForm.oddsReliabilityWin < 50) || (calculation > 0 && homeForm.oddsReliabilityWinAsUnderdog > 45)){
     calculation = calculation / 2
   }
 
@@ -1882,7 +1923,8 @@ export async function calculateScore(match, index, divider, calculate) {
         if (
           formHome.lastGame === "L" ||
           formHome.last2Points < 3 ||
-          formAway.last2Points > 3
+          formAway.last2Points > 3 ||
+          formHome.oddsReliabilityWin < 50
         ) {
           match.includeInMultis = false;
         } else {
@@ -1894,7 +1936,8 @@ export async function calculateScore(match, index, divider, calculate) {
         if (
           formAway.lastGame === "L" ||
           formAway.last2Points < 3 ||
-          formHome.last2Points > 3
+          formHome.last2Points > 3 ||
+          formAway.oddsReliabilityWin < 50
         ) {
           match.includeInMultis = false;
         } else {

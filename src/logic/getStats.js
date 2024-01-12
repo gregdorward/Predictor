@@ -107,9 +107,8 @@ export async function calculateMetricStrength(metricName, metricValue) {
     xgFor: { min: 0.1, max: 3 },
     xgAgainst: { min: 0.1, max: 3 },
     directnessOverall: { min: 0.5, max: 4 },
-    accuracyOverall: {min: 2, max: 10},
+    accuracyOverall: { min: 2, max: 10 },
   };
-
 
   // Ensure the metric is valid and exists in the weights and ranges objects
   if (
@@ -862,6 +861,40 @@ export async function createStatsDiv(game, displayBool) {
         formTextStringAway = "";
       }
 
+      console.log(game);
+      const favouriteRecordHome =
+        game.homeOdds < game.awayOdds || game.homeOdds === game.awayOdds
+          ? `${
+              homeForm.teamName
+            } have been favourites ${homeForm.favouriteCount} times. Of these games, they have Won: ${homeForm.oddsReliabilityWin.toFixed(
+              0
+            )}%, Drawn:  ${homeForm.oddsReliabilityDraw.toFixed(
+              0
+            )}%, Lost:  ${homeForm.oddsReliabilityLose.toFixed(0)}%`
+          : `${
+              homeForm.teamName
+            } have been underdogs ${homeForm.underdogCount} times. Of these games, they have Won: ${homeForm.oddsReliabilityWinAsUnderdog.toFixed(
+              0
+            )}%, Drawn:  ${homeForm.oddsReliabilityDrawAsUnderdog.toFixed(
+              0
+            )}%, Lost:  ${homeForm.oddsReliabilityLoseAsUnderdog.toFixed(0)}%`;
+      const favouriteRecordAway =
+        game.homeOdds > game.awayOdds || game.homeOdds === game.awayOdds
+          ? `${
+              awayForm.teamName
+            } have been favourites ${awayForm.favouriteCount} times. Of these games, they have Won: ${awayForm.oddsReliabilityWin.toFixed(
+              0
+            )}%, Drawn:  ${awayForm.oddsReliabilityDraw.toFixed(
+              0
+            )}%, Lost:  ${awayForm.oddsReliabilityLose.toFixed(0)}%`
+          : `${
+              awayForm.teamName
+            } have been underdogs ${awayForm.underdogCount} times. Of these games, they have Won: ${awayForm.oddsReliabilityWinAsUnderdog.toFixed(
+              0
+            )}%, Drawn:  ${awayForm.oddsReliabilityDrawAsUnderdog.toFixed(
+              0
+            )}%, Lost:  ${awayForm.oddsReliabilityLoseAsUnderdog.toFixed(0)}%`;
+
       let homeLastGame = await getLastGameResult(homeForm.LastFiveForm[4]);
       let awayLastGame = await getLastGameResult(awayForm.LastFiveForm[4]);
 
@@ -1072,6 +1105,7 @@ export async function createStatsDiv(game, displayBool) {
         CardsTotal: homeForm.CardsTotal || "-",
         CornersAverage: homeForm.AverageCorners || "-",
         FormTextStringHome: formTextStringHome,
+        FavouriteRecord: favouriteRecordHome,
         BTTSArray: bttsArrayHome,
         Results: resultsArrayHome,
         // BTTSAll: homeForm.last10btts,
@@ -1104,6 +1138,7 @@ export async function createStatsDiv(game, displayBool) {
         CardsTotal: awayForm.CardsTotal || "-",
         CornersAverage: awayForm.AverageCorners || "-",
         FormTextStringAway: formTextStringAway,
+        FavouriteRecord: favouriteRecordAway,
         BTTSArray: bttsArrayAway,
         Results: resultsArrayAway,
         ResultsHomeOrAway: resultsArrayAway,
@@ -1310,6 +1345,7 @@ export async function createStatsDiv(game, displayBool) {
                   formDataHome[0].ScoredBothHalvesPercentage
                 }
                 FormTextString={formDataHome[0].FormTextStringHome}
+                FavouriteRecord={formDataHome[0].FavouriteRecord}
               />
             </ul>
           </div>
@@ -1400,16 +1436,17 @@ export async function createStatsDiv(game, displayBool) {
                   formDataAway[0].ScoredBothHalvesPercentage
                 }
                 FormTextString={formDataAway[0].FormTextStringAway}
+                FavouriteRecord={formDataAway[0].FavouriteRecord}
               />
             </ul>
           </div>
         );
       }
 
-      const pointsHome = getPointsFromLastX(formDataHome[0].Last5)
-      const pointsHomeAv = await getPointAverage(pointsHome, 5)
-      const pointsAway = getPointsFromLastX(formDataAway[0].Last5)
-      const pointsAwayAv = await getPointAverage(pointsAway, 5)
+      const pointsHome = getPointsFromLastX(formDataHome[0].Last5);
+      const pointsHomeAv = await getPointAverage(pointsHome, 5);
+      const pointsAway = getPointsFromLastX(formDataAway[0].Last5);
+      const pointsAwayAv = await getPointAverage(pointsAway, 5);
 
       ReactDOM.render(
         <div style={style}>
