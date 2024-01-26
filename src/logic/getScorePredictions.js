@@ -677,8 +677,8 @@ export async function compareStat(statOne, statTwo) {
       1
     );
 
-    const finalValue1 = normalizedValue1 + 1;
-    const finalValue2 = normalizedValue2 + 1;
+    const finalValue1 = normalizedValue1;
+    const finalValue2 = normalizedValue2;
 
     statDiff = await diff(finalValue1, finalValue2);
   } else {
@@ -1263,7 +1263,7 @@ export async function compareTeams(homeForm, awayForm, match) {
   }
 
   if (
-    (calculation < 0 && homeForm.oddsReliabilityWin < 59) ||
+    (calculation < 0 && homeForm.oddsReliabilityWin < 50) ||
     (calculation < 0 && awayForm.oddsReliabilityWinAsUnderdog > 45)
   ) {
     calculation = calculation / 2;
@@ -1853,7 +1853,7 @@ export async function calculateScore(match, index, divider, calculate) {
     );
 
     teamComparisonScore = await compareTeams(formHome, formAway, match);
-    teamComparisonScore = teamComparisonScore * 1;
+    teamComparisonScore = teamComparisonScore * 0.75;
 
     if (teamComparisonScore > 0.5) {
       teamComparisonScore = 0.5;
@@ -1943,36 +1943,38 @@ export async function calculateScore(match, index, divider, calculate) {
     let factorOneAway;
 
     factorOneHome =
-      (homeLeagueOrAllFormAverageGoals * 1 +
-        formHome.last5Goals * 0.5 +
-        formAway.last5GoalsConceeded * 0.5 +
+      (
+        // homeLeagueOrAllFormAverageGoals * 1 +
+        // formHome.last5Goals * 0.5 +
+        // formAway.last5GoalsConceeded * 0.5 +
         formHome.forAndAgainstRollingAvHomeOrAway.goalsFor * 1 +
         formAway.forAndAgainstRollingAvHomeOrAway.goalsAgainst * 1 +
         formHome.forAndAgainstRollingAv.goalsFor * 0 +
         formAway.forAndAgainstRollingAv.goalsAgainst * 0 +
-        formHome.allTeamGoalsBasedOnAverages * 2 +
-        formAway.allTeamGoalsConceededBasedOnAverages * 2 +
-        formHome.XGOverall * 0.5 +
-        formAway.XGAgainstAvgOverall * 0.5 +
-        last10WeightingHome * 0 +
-        last2WeightingHome * 2) /
-      9;
+        formHome.allTeamGoalsBasedOnAverages * 1 +
+        formAway.allTeamGoalsConceededBasedOnAverages * 1 +
+        // formHome.XGOverall * 0.5 +
+        // formAway.XGAgainstAvgOverall * 0.5 +
+        last10WeightingHome * 1 +
+        last2WeightingHome * 1) /
+      4;
 
     factorOneAway =
-      (awayLeagueOrAllFormAverageGoals * 1 +
-        formAway.last5Goals * 0.5 +
-        formHome.last5GoalsConceeded * 0.5 +
+      (
+        // awayLeagueOrAllFormAverageGoals * 1 +
+        // formAway.last5Goals * 0.5 +
+        // formHome.last5GoalsConceeded * 0.5 +
         formAway.forAndAgainstRollingAvHomeOrAway.goalsFor * 1 +
         formHome.forAndAgainstRollingAvHomeOrAway.goalsAgainst * 1 +
         formAway.forAndAgainstRollingAv.goalsFor * 0 +
         formHome.forAndAgainstRollingAv.goalsAgainst * 0 +
-        formAway.allTeamGoalsBasedOnAverages * 2 +
-        formHome.allTeamGoalsConceededBasedOnAverages * 2 +
-        formAway.XGOverall * 0.5 +
-        formHome.XGAgainstAvgOverall * 0.5 +
-        last10WeightingAway * 0 +
-        last2WeightingAway * 2) /
-      9;
+        formAway.allTeamGoalsBasedOnAverages * 1 +
+        formHome.allTeamGoalsConceededBasedOnAverages * 1 +
+        // formAway.XGOverall * 0.5 +
+        // formHome.XGAgainstAvgOverall * 0.5 +
+        last10WeightingAway * 1 +
+        last2WeightingAway * 1) /
+      4;
 
     let factorTwoHome;
     let factorTwoAway;
@@ -2008,14 +2010,14 @@ export async function calculateScore(match, index, divider, calculate) {
     console.log(formHome.predictabilityScore);
 
     let experimentalHomeGoals =
-      (((factorOneHome * 1.5 + factorTwoHome * 1) * homeComparisonWeighting) /
-        2.5) *
+      (((factorOneHome * 1.25 + factorTwoHome * 1) * homeComparisonWeighting) /
+        2.25) *
       1;
     // (formHome.forAndAgainstRollingAvHomeOrAway.goalsFor + formAway.forAndAgainstRollingAvHomeOrAway.goalsAgainst) / 2
 
     let experimentalAwayGoals =
-      (((factorOneAway * 1.5 + factorTwoAway * 1) * awayComparisonWeighting) /
-        2.5) *
+      (((factorOneAway * 1.25 + factorTwoAway * 1) * awayComparisonWeighting) /
+        2.25) *
       1;
     // (formAway.forAndAgainstRollingAvHomeOrAway.goalsFor + formHome.forAndAgainstRollingAvHomeOrAway.goalsAgainst) / 2
 

@@ -862,6 +862,7 @@ export async function createStatsDiv(game, displayBool) {
       }
 
       console.log(game);
+      console.log(awayForm)
       const favouriteRecordHome =
         game.homeOdds < game.awayOdds || game.homeOdds === game.awayOdds
           ? `${
