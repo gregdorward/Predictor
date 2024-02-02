@@ -2010,14 +2010,14 @@ export async function calculateScore(match, index, divider, calculate) {
     console.log(formHome.predictabilityScore);
 
     let experimentalHomeGoals =
-      (((factorOneHome * 1.25 + factorTwoHome * 1) * homeComparisonWeighting) /
-        2.25) *
+      (((factorOneHome * 1 + factorTwoHome * 1) * homeComparisonWeighting) /
+        2) *
       1;
     // (formHome.forAndAgainstRollingAvHomeOrAway.goalsFor + formAway.forAndAgainstRollingAvHomeOrAway.goalsAgainst) / 2
 
     let experimentalAwayGoals =
-      (((factorOneAway * 1.25 + factorTwoAway * 1) * awayComparisonWeighting) /
-        2.25) *
+      (((factorOneAway * 1 + factorTwoAway * 1) * awayComparisonWeighting) /
+        2) *
       1;
     // (formAway.forAndAgainstRollingAvHomeOrAway.goalsFor + formHome.forAndAgainstRollingAvHomeOrAway.goalsAgainst) / 2
 
