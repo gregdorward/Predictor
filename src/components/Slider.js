@@ -44,8 +44,8 @@ export const Slide = (props) => {
         color: "#030061",
       }}
       onChange={handleChange}
-      valueLabelDisplay="on"
-      step={0.01}
+      valueLabelDisplay="auto"
+      step={0.1}
       min={1.1}
       max={10}
       valueLabelFormat={(value, index) =>

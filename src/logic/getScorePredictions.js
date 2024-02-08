@@ -2100,7 +2100,7 @@ export async function calculateScore(match, index, divider, calculate) {
         if (
           formHome.lastGame === "L" ||
           formHome.last2Points < 3 ||
-          formAway.last2Points > 3 ||
+          formAway.last2Points > 4 ||
           formHome.oddsReliabilityWin < 50
         ) {
           match.includeInMultis = false;
@@ -2113,7 +2113,7 @@ export async function calculateScore(match, index, divider, calculate) {
         if (
           formAway.lastGame === "L" ||
           formAway.last2Points < 3 ||
-          formHome.last2Points > 3 ||
+          formHome.last2Points > 4 ||
           formAway.oddsReliabilityWin < 50
         ) {
           match.includeInMultis = false;
@@ -2606,10 +2606,11 @@ export async function getScorePrediction(day, mocked) {
       }
 
       if (
-        match.unroundedGoalsA - match.unroundedGoalsB > 0.75 &&
+        match.unroundedGoalsA - match.unroundedGoalsB > 0.65 &&
         match.homeOdds !== 0 &&
         match.fractionHome !== "N/A" &&
-        match.includeInMultis !== false
+        match.includeInMultis !== false &&
+        match.omit !== true
       ) {
         if (
           match.prediction !== "draw" &&
@@ -2654,10 +2655,11 @@ export async function getScorePrediction(day, mocked) {
           }
         }
       } else if (
-        match.unroundedGoalsB - match.unroundedGoalsA > 2 &&
+        match.unroundedGoalsB - match.unroundedGoalsA > 1.75 &&
         match.awayOdds !== 0 &&
         match.fractionAway !== "N/A" &&
-        match.includeInMultis !== false
+        match.includeInMultis !== false &&
+        match.omit !== true
       ) {
         if (
           match.prediction !== "draw" &&

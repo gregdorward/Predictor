@@ -36,7 +36,7 @@ function SlideDiff(props) {
       onChange={handleChange}
       step={1}
       marks={props.marks}
-      valueLabelDisplay="on"
+      valueLabelDisplay="auto"
       min={parseFloat(props.lower)}
       max={parseFloat(props.upper)}
     />
