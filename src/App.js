@@ -99,7 +99,7 @@ let historicDate;
 let string;
 let dateString;
 
-(async function fetchLeagueData(){
+(async function fetchLeagueData() {
   let leagueList;
 
   leagueList = await fetch(`${process.env.REACT_APP_EXPRESS_SERVER}leagueList`);
@@ -140,7 +140,7 @@ let dateString;
     orderedLeagues = await mapOrder(availableLeagues, leagueOrder, "id");
   }
   return orderedLeagues;
-})()
+})();
 
 export async function getLeagueList() {
   let i = 0;
@@ -475,7 +475,7 @@ export async function getLeagueList() {
   //   ></Button>,
   //   document.getElementById("Over25Games")
   // );
-};
+}
 
 async function getHighestScoringLeagues() {
   let teamsList = await fetch(`${process.env.REACT_APP_EXPRESS_SERVER}over25`);
@@ -544,7 +544,6 @@ let welcomeTextTwo = welcomeTextUnsplitTwo.split("\n").map((i) => {
   return <p>{i}</p>;
 });
 
-
 function App() {
   getLeagueList();
   return (
@@ -582,6 +581,7 @@ function App() {
           <div id="draws" className="RowOne" />
         </div>
         <div id="insights" />
+        <div id="risk" />
         <div id="successMeasure" />
         <div id="tables" />
         <div id="homeBadge" />

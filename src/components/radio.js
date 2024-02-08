@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-export var selectedOption = "5";
+export var selectedOption = "all";
 
 export var fixtureList = [];
 
@@ -25,13 +25,13 @@ export class Radio extends Component {
           <label>
             <input
               type="radio"
-              name="lastGames"
+              name="riskProfile"
               checked={this.state.checked}
               onChange={this.handleOptionChange}
               data-cy={this.props.value}
             />
             <span className="design"></span>
-            <span className="text">Last {this.props.value} games</span>
+            <span className="riskText">Include {this.props.text}</span>
           </label>
         </div>
       </section>

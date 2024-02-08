@@ -18,6 +18,8 @@ import {
   calculateMetricStrength,
   getXGtoActualDifferentialStrength,
 } from "./getStats";
+import { rangeValue } from "../components/Slider";
+import { minimumGD, minimumXG, minimumLast10 } from "../components/SliderDiff";
 
 var myHeaders = new Headers();
 myHeaders.append("Origin", "https://gregdorward.github.io");
@@ -409,6 +411,8 @@ async function getPastLeagueResults(team, game, hOrA, form) {
     const last5XGAgainst = teamXGAgainstAll.slice(0, 5);
     const last5XGAgainstSum = last5XGAgainst.reduce((a, b) => a + b, 0);
     const last5XGAvgAgainst = last5XGAgainstSum / last5XGAgainst.length || 0;
+
+    form.XGDiffNonAverage = XGSum - XGAgainstSum;
 
     form.XGOverall = parseFloat(avgXGScored.toFixed(2));
     form.XGlast5 = parseFloat(last5XGAvgFor.toFixed(2));
@@ -1092,7 +1096,7 @@ export async function compareTeams(homeForm, awayForm, match) {
   );
 
   let oddsComparison;
-  if(homeForm.predictabilityScore > 1 && awayForm.predictabilityScore > 1){
+  if (homeForm.predictabilityScore > 1 && awayForm.predictabilityScore > 1) {
     oddsComparison = await compareStat(match.awayOdds, match.homeOdds);
   } else {
     oddsComparison = await compareStat(1, 1);
@@ -1108,6 +1112,9 @@ export async function compareTeams(homeForm, awayForm, match) {
       homeForm.dangerousAttackConversion,
     awayForm.AverageDangerousAttacksOverall * awayForm.dangerousAttackConversion
   );
+
+  match.goalDiffHomeOrAwayComparison =
+    homeForm.goalDifferenceHomeOrAway - awayForm.goalDifferenceHomeOrAway;
 
   const goalDiffHomeOrAwayComparison = await compareStat(
     homeForm.goalDifferenceHomeOrAway,
@@ -1274,7 +1281,7 @@ export async function compareTeams(homeForm, awayForm, match) {
     calculation = calculation / 2;
   }
 
-  if(calculation < 0 && homeForm.predictabilityScore < 0.3) {
+  if (calculation < 0 && homeForm.predictabilityScore < 0.3) {
     calculation = calculation / 2;
   } else if (calculation > 0 && awayForm.predictabilityScore < 0.3) {
     calculation = calculation / 2;
@@ -1571,6 +1578,7 @@ export async function calculateScore(match, index, divider, calculate) {
     formAway.teamName = match.awayTeam;
 
     match.XGdifferentialValue = Math.abs(XGdifferential);
+    console.log(match.XGdifferentialValue);
     match.XGdifferentialValueRaw = parseFloat(XGdifferential);
     if (
       allLeagueResultsArrayOfObjects[match.leagueIndex].fixtures.length > 35 &&
@@ -1943,11 +1951,10 @@ export async function calculateScore(match, index, divider, calculate) {
     let factorOneAway;
 
     factorOneHome =
-      (
-        // homeLeagueOrAllFormAverageGoals * 1 +
-        // formHome.last5Goals * 0.5 +
-        // formAway.last5GoalsConceeded * 0.5 +
-        formHome.forAndAgainstRollingAvHomeOrAway.goalsFor * 1 +
+      // homeLeagueOrAllFormAverageGoals * 1 +
+      // formHome.last5Goals * 0.5 +
+      // formAway.last5GoalsConceeded * 0.5 +
+      (formHome.forAndAgainstRollingAvHomeOrAway.goalsFor * 1 +
         formAway.forAndAgainstRollingAvHomeOrAway.goalsAgainst * 1 +
         formHome.forAndAgainstRollingAv.goalsFor * 0 +
         formAway.forAndAgainstRollingAv.goalsAgainst * 0 +
@@ -1960,11 +1967,10 @@ export async function calculateScore(match, index, divider, calculate) {
       4;
 
     factorOneAway =
-      (
-        // awayLeagueOrAllFormAverageGoals * 1 +
-        // formAway.last5Goals * 0.5 +
-        // formHome.last5GoalsConceeded * 0.5 +
-        formAway.forAndAgainstRollingAvHomeOrAway.goalsFor * 1 +
+      // awayLeagueOrAllFormAverageGoals * 1 +
+      // formAway.last5Goals * 0.5 +
+      // formHome.last5GoalsConceeded * 0.5 +
+      (formAway.forAndAgainstRollingAvHomeOrAway.goalsFor * 1 +
         formHome.forAndAgainstRollingAvHomeOrAway.goalsAgainst * 1 +
         formAway.forAndAgainstRollingAv.goalsFor * 0 +
         formHome.forAndAgainstRollingAv.goalsAgainst * 0 +
@@ -2084,6 +2090,8 @@ export async function calculateScore(match, index, divider, calculate) {
       rawFinalAwayGoals = rawFinalAwayGoals + difference;
       finalHomeGoals = 0;
     }
+
+    console.log(match.omit);
 
     if (match.status !== "suspended") {
       if (finalHomeGoals > finalAwayGoals) {
@@ -2303,13 +2311,85 @@ export async function calculateScore(match, index, divider, calculate) {
     }
 
     if (
+      finalHomeGoals > finalAwayGoals &&
+      (match.homeOdds < rangeValue[0] || match.homeOdds > rangeValue[1])
+    ) {
+      match.omit = true;
+    } else if (
+      finalAwayGoals > finalHomeGoals &&
+      (match.awayOdds < rangeValue[0] || match.awayOdds > rangeValue[1])
+    ) {
+      match.omit = true;
+    } else if (
+      finalHomeGoals === finalAwayGoals &&
+      (match.drawOdds < rangeValue[0] || match.drawOdds > rangeValue[1])
+    ) {
+      match.omit = true;
+    }
+
+    const last10PointDiffHomePerspective = Math.abs(
+      formHome.last10Points - formAway.last10Points
+    );
+
+    const last10PointDiffAwayPerspective = Math.abs(
+      formAway.last10Points - formHome.last10Points
+    );
+
+    const XGDiffBetweenTeamsHomePerspective = Math.abs(
+      formHome.XGDiffNonAverage - formAway.XGDiffNonAverage
+    );
+    const XGDiffBetweenTeamsAwayPerspective = Math.abs(
+      formAway.XGDiffNonAverage - formHome.XGDiffNonAverage
+    );
+
+    console.log(XGDiffBetweenTeamsHomePerspective);
+
+    switch (true) {
+      case finalHomeGoals > finalAwayGoals:
+        if (XGDiffBetweenTeamsHomePerspective < minimumXG) {
+          match.omit = true;
+        }
+        if (last10PointDiffHomePerspective < minimumLast10) {
+          match.omit = true;
+        }
+        break;
+      case finalHomeGoals < finalAwayGoals:
+        if (XGDiffBetweenTeamsAwayPerspective < minimumXG) {
+          match.omit = true;
+        }
+        if (last10PointDiffAwayPerspective < minimumLast10) {
+          match.omit = true;
+        }
+        break;
+      case finalHomeGoals === finalAwayGoals:
+        if (Math.abs(XGDiffBetweenTeamsHomePerspective) < minimumXG) {
+          match.omit = true;
+        }
+        if (last10PointDiffHomePerspective < minimumLast10) {
+          match.omit = true;
+        }
+        break;
+      default:
+        break;
+    }
+
+    if (Math.abs(match.goalDiffHomeOrAwayComparison) < minimumGD) {
+      match.omit = true;
+    }
+
+    if (
       match.game_week < 0
+      // match.omit === true
       // match.game_week < 3 &&
     ) {
       finalHomeGoals = "-";
       finalAwayGoals = "-";
       match.status = "notEnoughData";
     }
+    console.log(match.game);
+    console.log(match.omit);
+    console.log(finalHomeGoals);
+    console.log(finalAwayGoals);
 
     return [
       finalHomeGoals,
@@ -2349,7 +2429,8 @@ async function getSuccessMeasure(fixtures) {
   for (let i = 0; i < fixtures.length; i++) {
     if (
       fixtures[i].status === "complete" &&
-      fixtures[i].hasOwnProperty("prediction")
+      fixtures[i].hasOwnProperty("prediction") &&
+      fixtures[i].omit !== true
     ) {
       sumProfit = sumProfit + fixtures[i].profit;
       investment = investment + 1;
@@ -3275,115 +3356,125 @@ async function renderTips() {
   }
 
   ReactDOM.render(
-    <Collapsable
-      buttonText={"XG tips"}
-      element={
-        <Slider
-          element={
-            XGDiffTips.length > 0 ? (
-              <ul className="XGDiffTips" id="XGDiffTips">
-                <h4>Games with greatest XG Differentials</h4>
-                {XGDiffTips.map((tip) => (
-                  <li key={tip.game}>
-                    {tip.game} | {tip.prediction} {tip.odds}{" "}
-                    <span className={tip.outcome}>{tip.outcomeSymbol}</span>
+    <div>
+      <Collapsable
+        buttonText={"XG tips"}
+        element={
+          <Slider
+            element={
+              XGDiffTips.length > 0 ? (
+                <ul className="XGDiffTips" id="XGDiffTips">
+                  <h4>Games with greatest XG Differentials</h4>
+                  {XGDiffTips.map((tip) => (
+                    <li key={tip.game}>
+                      {tip.game} | {tip.prediction} {tip.odds}{" "}
+                      <span className={tip.outcome}>{tip.outcomeSymbol}</span>
+                    </li>
+                  ))}
+                </ul>
+              ) : (
+                <ul className="XGDiffTips" id="XGDiffTips">
+                  <h4>Games with greatest XG Differentials</h4>
+                  <li key={"noPPGDiff"}>
+                    Sorry, no games fit this criteria today
                   </li>
-                ))}
-              </ul>
-            ) : (
-              <ul className="XGDiffTips" id="XGDiffTips">
-                <h4>Games with greatest XG Differentials</h4>
-                <li key={"noPPGDiff"}>
-                  Sorry, no games fit this criteria today
-                </li>
-              </ul>
-            )
-          }
-          element2={
-            pointsDiffTips.length > 0 ? (
-              <ul className="XGDiffTips" id="XGDiffTips">
-                <h4>
-                  Games with greatest points per game differentials (last 10)
-                </h4>
-                {pointsDiffTips.map((game) => (
-                  <li key={game.game}>
-                    {game.game} | {game.prediction} {game.odds}{" "}
-                    <span className={game.outcome}>{game.outcomeSymbol}</span>
+                </ul>
+              )
+            }
+            element2={
+              pointsDiffTips.length > 0 ? (
+                <ul className="XGDiffTips" id="XGDiffTips">
+                  <h4>
+                    Games with greatest points per game differentials (last 10)
+                  </h4>
+                  {pointsDiffTips.map((game) => (
+                    <li key={game.game}>
+                      {game.game} | {game.prediction} {game.odds}{" "}
+                      <span className={game.outcome}>{game.outcomeSymbol}</span>
+                    </li>
+                  ))}
+                </ul>
+              ) : (
+                <ul className="XGDiffTips" id="XGDiffTips">
+                  <h4>
+                    Games with greatest points per game differentials (last 10)
+                  </h4>
+                  <li key={"noPPGDiff"}>
+                    Sorry, no games fit this criteria today
                   </li>
-                ))}
-              </ul>
-            ) : (
-              <ul className="XGDiffTips" id="XGDiffTips">
-                <h4>
-                  Games with greatest points per game differentials (last 10)
-                </h4>
-                <li key={"noPPGDiff"}>
-                  Sorry, no games fit this criteria today
-                </li>
-              </ul>
-            )
-          }
-          element3={
-            rollingDiffTips.length > 0 ? (
-              <ul className="XGDiffTips" id="XGDiffTips">
-                <h4>
-                  Games with greatest rolling goal difference differentials
-                </h4>
-                {rollingDiffTips.map((game) => (
-                  <li key={game.game}>
-                    {game.game} | {game.prediction} {game.odds}{" "}
-                    <span className={game.outcome}>{game.outcomeSymbol}</span>
+                </ul>
+              )
+            }
+            element3={
+              rollingDiffTips.length > 0 ? (
+                <ul className="XGDiffTips" id="XGDiffTips">
+                  <h4>
+                    Games with greatest rolling goal difference differentials
+                  </h4>
+                  {rollingDiffTips.map((game) => (
+                    <li key={game.game}>
+                      {game.game} | {game.prediction} {game.odds}{" "}
+                      <span className={game.outcome}>{game.outcomeSymbol}</span>
+                    </li>
+                  ))}
+                </ul>
+              ) : (
+                <ul className="XGDiffTips" id="XGDiffTips">
+                  <h4>
+                    Games with greatest rolling goal difference differentials
+                  </h4>
+                  <li key={"noPPGDiff"}>
+                    Sorry, no games fit this criteria today
                   </li>
-                ))}
-              </ul>
-            ) : (
-              <ul className="XGDiffTips" id="XGDiffTips">
-                <h4>
-                  Games with greatest rolling goal difference differentials
-                </h4>
-                <li key={"noPPGDiff"}>
-                  Sorry, no games fit this criteria today
-                </li>
-              </ul>
-            )
-          }
-          element4={
-            dangerousAttacksDiffTips.length > 0 ? (
-              <ul className="XGDiffTips" id="XGDiffTips">
-                <h4>
-                  Games with greatest average dangerous attacks differentials
-                </h4>
-                {dangerousAttacksDiffTips.map((game) => (
-                  <li key={game.game}>
-                    {game.game} | {game.prediction} {game.odds}{" "}
-                    <span className={game.outcome}>{game.outcomeSymbol}</span>
+                </ul>
+              )
+            }
+            element4={
+              dangerousAttacksDiffTips.length > 0 ? (
+                <ul className="XGDiffTips" id="XGDiffTips">
+                  <h4>
+                    Games with greatest average dangerous attacks differentials
+                  </h4>
+                  {dangerousAttacksDiffTips.map((game) => (
+                    <li key={game.game}>
+                      {game.game} | {game.prediction} {game.odds}{" "}
+                      <span className={game.outcome}>{game.outcomeSymbol}</span>
+                    </li>
+                  ))}
+                </ul>
+              ) : (
+                <ul className="XGDiffTips" id="XGDiffTips">
+                  <h4>
+                    Games with greatest average dangerous attacks differentials
+                  </h4>
+                  <li key={"noPPGDiff"}>
+                    Sorry, no games fit this criteria today
                   </li>
-                ))}
-              </ul>
-            ) : (
-              <ul className="XGDiffTips" id="XGDiffTips">
+                </ul>
+              )
+            }
+            element5={
+              <div className="DonationButton">
+                <h2>Help with running costs</h2>
                 <h4>
-                  Games with greatest average dangerous attacks differentials
+                  Monthly costs are rising and each donation helps keep XG
+                  Tipping free to use
                 </h4>
-                <li key={"noPPGDiff"}>
-                  Sorry, no games fit this criteria today
-                </li>
-              </ul>
-            )
-          }
-          element5={
-            <div className="DonationButton">
-              <h2>Help with running costs</h2>
-              <h4>
-                Monthly costs are rising and each donation helps keep XG Tipping
-                free to use
-              </h4>
-              <StyledKofiButton buttonText="No sign up donation" />
-            </div>
-          }
-        ></Slider>
-      }
-    ></Collapsable>,
+                <StyledKofiButton buttonText="No sign up donation" />
+              </div>
+            }
+          ></Slider>
+        }
+      ></Collapsable>
+      <div>
+        <h4>Filters selected:</h4>
+        <div>Minimum goal difference: {minimumGD}</div>
+        <div>Minimum XG difference: {minimumXG}</div>
+        <div>Minimum PPG difference: {minimumLast10}</div>
+        <div>Odds range: {rangeValue[0]} - {rangeValue[1]}</div>
+
+      </div>
+    </div>,
     document.getElementById("insights")
   );
 }

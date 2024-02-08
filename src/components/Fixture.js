@@ -28,7 +28,18 @@ function GetDivider(fixture, mock) {
   const matchStatus = fixture.status;
   let isPrediction = resultValue;
 
-  if (mockValue === true && matchStatus === "complete") {
+  if (fixture.fixture.omit === true && matchStatus !== "complete") {
+    isPrediction = true;
+    return (
+      <Fragment>
+        <div className="KOTime">{`${fixture.fixture.time}`}</div>
+        <div
+          className="Omitted"
+          key={fixture.fixture.awayTeam}
+        >{`${fixture.fixture.goalsA} - ${fixture.fixture.goalsB}`}</div>
+      </Fragment>
+    );
+  } else if (mockValue === true && matchStatus === "complete") {
     isPrediction = false;
     return (
       <Fragment>
@@ -103,7 +114,19 @@ function GetDivider(fixture, mock) {
       default:
         break;
     }
-    if (outcome === prediction) {
+
+    if (fixture.fixture.omit === true) {
+      return (
+        <Fragment>
+          <div className="Result">{`${fixture.fixture.homeGoals} - ${fixture.fixture.awayGoals}`}</div>
+          <div
+            className="Omitted"
+            key={fixture.fixture.homeTeam}
+            data-cy={"score-" + fixture.fixture.id}
+          >{`${fixture.fixture.goalsA} - ${fixture.fixture.goalsB}`}</div>
+        </Fragment>
+      );
+    } else if (outcome === prediction) {
       if (fixture.fixture.homeOdds !== 0) {
         switch (true) {
           case outcome === 0:
@@ -222,8 +245,7 @@ export let testing;
 
 function SingleFixture({ fixture, count, mock }) {
   const dispatch = useDispatch();
-  function StoreData(){
-
+  function StoreData() {
     const fixtureDetails = {
       id: fixture.id,
       homeTeamName: fixture.homeTeam,
@@ -235,63 +257,78 @@ function SingleFixture({ fixture, count, mock }) {
       stadium: fixture.stadium,
       time: fixture.time,
       homeGoals: fixture.goalsA,
-      awayGoals: fixture.goalsB
-    }
+      awayGoals: fixture.goalsB,
+    };
 
     const homeDetails = {
       "Attacking Strength": fixture.formHome.attackingStrength,
-      "Defensive Strength": fixture.formHome.defensiveStrength
-    }
+      "Defensive Strength": fixture.formHome.defensiveStrength,
+    };
 
     const awayDetails = {
       "Attacking Strength": fixture.formAway.attackingStrength,
-      "Defensive Strength": fixture.formAway.defensiveStrength
-    }
+      "Defensive Strength": fixture.formAway.defensiveStrength,
+    };
 
     const dataToSend = {
-      key1: 'value1',
-      key2: 'value2',
+      key1: "value1",
+      key2: "value2",
     };
-    fixture.formHome.defensiveMetrics["Clean Sheet Percentage"] = fixture.formHome.CleanSheetPercentage
-    fixture.formAway.defensiveMetrics["Clean Sheet Percentage"] = fixture.formAway.CleanSheetPercentage
+    fixture.formHome.defensiveMetrics["Clean Sheet Percentage"] =
+      fixture.formHome.CleanSheetPercentage;
+    fixture.formAway.defensiveMetrics["Clean Sheet Percentage"] =
+      fixture.formAway.CleanSheetPercentage;
 
-    localStorage.setItem('homeForm', JSON.stringify(fixture.formHome.attackingMetrics));
-    localStorage.setItem('homeFormDef', JSON.stringify(fixture.formHome.defensiveMetrics));
-    localStorage.setItem('allTeamResultsHome', JSON.stringify(fixture.formHome.allTeamResults));
-    localStorage.setItem('homeDetails', JSON.stringify(homeDetails));
+    localStorage.setItem(
+      "homeForm",
+      JSON.stringify(fixture.formHome.attackingMetrics)
+    );
+    localStorage.setItem(
+      "homeFormDef",
+      JSON.stringify(fixture.formHome.defensiveMetrics)
+    );
+    localStorage.setItem(
+      "allTeamResultsHome",
+      JSON.stringify(fixture.formHome.allTeamResults)
+    );
+    localStorage.setItem("homeDetails", JSON.stringify(homeDetails));
 
+    localStorage.setItem(
+      "awayForm",
+      JSON.stringify(fixture.formAway.attackingMetrics)
+    );
+    localStorage.setItem(
+      "awayFormDef",
+      JSON.stringify(fixture.formAway.defensiveMetrics)
+    );
+    localStorage.setItem(
+      "allTeamResultsAway",
+      JSON.stringify(fixture.formAway.allTeamResults)
+    );
+    localStorage.setItem("awayDetails", JSON.stringify(awayDetails));
 
-    localStorage.setItem('awayForm', JSON.stringify(fixture.formAway.attackingMetrics));
-    localStorage.setItem('awayFormDef', JSON.stringify(fixture.formAway.defensiveMetrics));
-    localStorage.setItem('allTeamResultsAway', JSON.stringify(fixture.formAway.allTeamResults));
-    localStorage.setItem('awayDetails', JSON.stringify(awayDetails));
-
-    localStorage.setItem('fixtureDetails', JSON.stringify(fixtureDetails))
+    localStorage.setItem("fixtureDetails", JSON.stringify(fixtureDetails));
 
     dispatch(setData(dataToSend));
   }
 
-
   async function handleButtonClick(game) {
-    if(clicked === true){
-      StoreData(formObjectHome)
+    if (clicked === true) {
+      StoreData(formObjectHome);
       window.open("/#/fixture");
-    }
-    else return
+    } else return;
   }
   return (
     <div key={fixture.game}>
       {renderLeagueName(fixture, mock)}
-      <div className="individualFixtureContainer">
+      <div className={`individualFixtureContainer${fixture.omit}`}>
         <li
-          className={"individualFixture"}
+          className={`individualFixture${fixture.omit}`}
           key={fixture.id}
           data-cy={fixture.id}
         >
           <div className="HomeOdds">{fixture.fractionHome}</div>
-          <div className="homeTeam">
-            {fixture.homeTeam}
-          </div>
+          <div className="homeTeam">{fixture.homeTeam}</div>
           <GetDivider
             result={resultValue}
             status={fixture.status}
@@ -321,7 +358,12 @@ function SingleFixture({ fixture, count, mock }) {
         >
           Game overview {downArrow}
         </button>
-        <button className="GameStatsTwo" onClick={() => handleButtonClick(fixture)}>More detail {rightArrow}</button>
+        <button
+          className="GameStatsTwo"
+          onClick={() => handleButtonClick(fixture)}
+        >
+          More detail {rightArrow}
+        </button>
         {/* <Checkbox/> */}
       </div>
       <div id={"stats" + fixture.homeTeam} />

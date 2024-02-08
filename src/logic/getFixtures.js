@@ -4,11 +4,14 @@ import { orderedLeagues } from "../App";
 import { getForm } from "./getForm";
 import { Fixture } from "../components/Fixture";
 import { Button } from "../components/Button";
+import { Slide } from "../components/Slider";
 import { getScorePrediction } from "../logic/getScorePredictions";
 import { ThreeDots } from "react-loading-icons";
 import { selectedOdds } from "../components/OddsRadio";
 import LeagueTable from "../components/LeagueTable";
 import { getPointsFromLastX } from "../logic/getScorePredictions";
+import SlideDiff from "../components/SliderDiff";
+import Collapsable from "../components/CollapsableElement";
 
 var oddslib = require("oddslib");
 
@@ -339,6 +342,7 @@ async function createFixture(match, result, mockBool) {
     }
   }
 
+  match.omit = false;
   match.homeTeamWinsPercentage = match.homeTeamWinPercentage;
   match.homeTeamLossesPercentage = match.homeTeamLossPercentage;
   match.homeTeamDrawsPercentage = match.homeTeamDrawPercentage;
@@ -583,7 +587,7 @@ export async function generateFixtures(
             pre_match_teamB_overall_ppg,
             game_week,
           })
-        );        
+        );
 
         let leagueObj = {
           // leagueObject[orderedLeague] = {
@@ -785,9 +789,9 @@ export async function generateFixtures(
         });
         match.homeTeam = fixture.home_name;
         match.awayTeam = fixture.away_name;
-        match.homeOdds = +(fixture.odds_ft_1).toFixed(2);
-        match.awayOdds = +(fixture.odds_ft_2).toFixed(2);
-        match.drawOdds = +(fixture.odds_ft_x).toFixed(2);
+        match.homeOdds = +fixture.odds_ft_1.toFixed(2);
+        match.awayOdds = +fixture.odds_ft_2.toFixed(2);
+        match.drawOdds = +fixture.odds_ft_x.toFixed(2);
         match.homeDoubleChance = fixture.odds_doublechance_1x;
         match.awayDoubleChance = fixture.odds_doublechance_x2;
         match.bttsOdds = fixture.odds_btts_yes;
@@ -1558,6 +1562,65 @@ export async function generateFixtures(
               className={"GeneratePredictions"}
             />
             <div className="Version">Prediction engine v3.0.15 (02/02/24)</div>
+            <Collapsable
+              buttonText={"Filters"}
+              element={
+                <div className="FilterContainer">
+                  <h6>
+                    Use the below filters to remove predictions that don't meet
+                    the set criteria. These will be greyed out and not included in multi-builders and ROI stats
+                  </h6>
+                  <h6>Goals for/against differential filter (BETA)</h6>
+                  <div>
+                    I'm looking for tips where the goal differential between
+                    teams is at least...
+                  </div>
+                  <SlideDiff
+                    value="0"
+                    text="all games"
+                    useCase="gd"
+                    lower="0"
+                    upper="30"
+                  ></SlideDiff>
+                  <Fragment>
+                    <h6>XG for/against differential filter (BETA)</h6>
+                    <div>
+                      I'm looking for tips where the XG differential between
+                      teams is at least...
+                    </div>
+                    <SlideDiff
+                      value="0"
+                      text="all games"
+                      useCase="xg"
+                      lower="0"
+                      upper="30"
+                    ></SlideDiff>
+                  </Fragment>
+                  <Fragment>
+                    <h6>Last 10 points differential filter (BETA)</h6>
+                    <div>
+                      I'm looking for tips where the points differential between
+                      teams is at least...
+                    </div>
+                    <SlideDiff
+                      value="0"
+                      text="all games"
+                      useCase="last10"
+                      lower="0"
+                      upper="30"
+                    ></SlideDiff>
+                  </Fragment>
+                  <Fragment>
+                    <h6>Choose your risk profile</h6>
+                    <div>
+                      I'm looking for tips where the odds are between...
+                    </div>
+                    <Slide value="1" text="all games"></Slide>
+                  </Fragment>
+                </div>
+              }
+            />
+            ,
           </Fragment>,
           document.getElementById("GeneratePredictions")
         );
@@ -1592,8 +1655,7 @@ export async function generateFixtures(
             body: JSON.stringify(allLeagueResultsArrayOfObjects),
           });
         });
-      }
-      else {
+      } else {
         console.log("EMPTY RESULTS");
       }
     }
