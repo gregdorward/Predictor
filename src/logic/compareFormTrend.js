@@ -1,5 +1,3 @@
-import { parse } from "dotenv";
-
 async function getOverOrUnderText(xgSum) {
   let overUnderAchievingSum = xgSum;
   let text;
@@ -93,8 +91,6 @@ async function getAttackingSummary(goalsRecent, goalsLongTerm) {
         text = "Impressive scoring stats and consistent in front of goal.";
         break;
       case goalsRecent < goalsLongTerm:
-        console.log(goalsRecent)
-        console.log(goalsLongTerm)
         text = "Impressive scoring stats but less so recently.";
         break;
       default:

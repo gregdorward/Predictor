@@ -203,25 +203,6 @@ export async function generateTables(a, leagueIdArray, allResults) {
   });
 }
 
-async function getTableLayout(arr, statistics) {
-  let tableArray = [];
-  for (let i = 0; i < arr.length; i++) {
-    tableArray.push(
-      <LeagueTable
-        Teams={arr[i].table}
-        Key={`Group${arr[i].group}`}
-        Stats={statistics}
-        GamesPlayed={statistics.game_week}
-      />
-    );
-  }
-  return tableArray;
-}
-
-async function sorted(league) {
-  const sortedByForm = league.sort((a, b) => b.LastXPoints - a.LastXPoints);
-  return sortedByForm;
-}
 
 export async function renderTable(index, results, id) {
   let league;
@@ -753,11 +734,6 @@ export async function generateFixtures(
     }
 
     let previousLeagueName;
-    const val = "prediction";
-    const exists =
-      matches.filter(function (o) {
-        return o.hasOwnProperty(val);
-      }).length > 0;
 
     for (let i = 0; i < orderedLeagues.length; i++) {
       leagueID = orderedLeagues[i].element.id;
@@ -1561,14 +1537,15 @@ export async function generateFixtures(
               onClickEvent={() => getScorePrediction(day)}
               className={"GeneratePredictions"}
             />
-            <div className="Version">Prediction engine v3.0.15 (02/02/24)</div>
+            <div className="Version">Prediction engine v3.0.16 (09/02/24)</div>
             <Collapsable
               buttonText={"Filters"}
               element={
                 <div className="FilterContainer">
                   <h6>
                     Use the below filters to remove predictions that don't meet
-                    the set criteria. These will be greyed out and not included in multi-builders and ROI stats
+                    the set criteria. These will be greyed out and not included
+                    in multi-builders and ROI stats
                   </h6>
                   <h6>Goals for/against differential filter (BETA)</h6>
                   <div>
@@ -1579,6 +1556,18 @@ export async function generateFixtures(
                     value="0"
                     text="all games"
                     useCase="gd"
+                    lower="0"
+                    upper="30"
+                  ></SlideDiff>
+                  <h6>Goals for/against home or away differential filter (BETA)</h6>
+                  <div>
+                    I'm looking for tips where the goal differential (home or away only) between
+                    teams is at least...
+                  </div>
+                  <SlideDiff
+                    value="0"
+                    text="all games"
+                    useCase="gdHorA"
                     lower="0"
                     upper="30"
                   ></SlideDiff>

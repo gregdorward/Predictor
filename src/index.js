@@ -5,7 +5,6 @@ import App from "./App";
 import reportWebVitals from "./reportWebVitals";
 import { BrowserRouter as Router, Route, Routes, HashRouter } from "react-router-dom";
 import TeamPage from "./components/Team";
-import {Fixture} from "./components/Fixture"
 import { Provider } from "react-redux";
 import store from "./logic/store"; // Import your Redux store
 

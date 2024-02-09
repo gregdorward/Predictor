@@ -1,11 +1,10 @@
 import React, { Fragment } from "react";
 import ReactDOM from "react-dom";
 import { matches, diff } from "./getFixtures";
-import { Fixture } from "../components/Fixture";
 import { RenderAllFixtures } from "../logic/getFixtures";
 import Div from "../components/Div";
 import Collapsable from "../components/CollapsableElement";
-import { allForm, dateStamp } from "../logic/getFixtures";
+import { allForm } from "../logic/getFixtures";
 import Increment from "../components/Increment";
 import { incrementValue } from "../components/Increment";
 import { getBTTSPotential } from "../logic/getBTTSPotential";
@@ -19,7 +18,12 @@ import {
   getXGtoActualDifferentialStrength,
 } from "./getStats";
 import { rangeValue } from "../components/Slider";
-import { minimumGD, minimumXG, minimumLast10 } from "../components/SliderDiff";
+import {
+  minimumGD,
+  minimumXG,
+  minimumLast10,
+  minimumGDHorA,
+} from "../components/SliderDiff";
 
 var myHeaders = new Headers();
 myHeaders.append("Origin", "https://gregdorward.github.io");
@@ -61,7 +65,6 @@ let allDrawOutcomes = 0;
 let totalROI = 0;
 let totalInvestment = 0;
 let totalProfit = 0;
-let userTips = [];
 export let formObjectHome;
 export let formObjectAway;
 export let clicked = false;
@@ -292,7 +295,6 @@ async function getPastLeagueResults(team, game, hOrA, form) {
     form.beatenFavouriteCount = beatenFavouriteCount;
 
     form.underdogCount = underdogCount;
-    const totalCount = favouriteCount + underdogCount;
     form.winningUnderdogCount = winningUnderdogCount;
     form.drawingUnderdogCount = drawingUnderdogCount;
     form.beatenUnderdogCount = beatenUnderdogCount;
@@ -413,6 +415,7 @@ async function getPastLeagueResults(team, game, hOrA, form) {
     const last5XGAvgAgainst = last5XGAgainstSum / last5XGAgainst.length || 0;
 
     form.XGDiffNonAverage = XGSum - XGAgainstSum;
+    form.XGDiffNonAverageLast5 = last5XGSum - last5XGAgainstSum;
 
     form.XGOverall = parseFloat(avgXGScored.toFixed(2));
     form.XGlast5 = parseFloat(last5XGAvgFor.toFixed(2));
@@ -548,8 +551,9 @@ async function getPastLeagueResults(team, game, hOrA, form) {
     const last10AvgConceeded = last10ConceededSum / last10Conceeded.length || 0;
 
     form.last5Goals = parseFloat(last5AvgScored.toFixed(2));
-    form.last10Goals = parseFloat(last10AvgScored.toFixed(2));
     form.last5GoalsConceeded = parseFloat(last5AvgConceeded.toFixed(2));
+    form.last5GoalDiff = form.last5Goals - form.last5GoalsConceeded;
+    form.last10Goals = parseFloat(last10AvgScored.toFixed(2));
     form.last10GoalsConceeded = parseFloat(last10AvgConceeded.toFixed(2));
 
     const teamGoalsAllRollingAverage = await predictNextWeightedMovingAverage(
@@ -611,15 +615,6 @@ async function getPastLeagueResults(team, game, hOrA, form) {
     return null;
   }
 }
-
-var getEMA = (a, r) =>
-  a.reduce(
-    (p, n, i) =>
-      i
-        ? p.concat((2 * n) / (r + 1) + (p[p.length - 1] * (r - 1)) / (r + 1))
-        : p,
-    [a[0]]
-  );
 
 async function predictNextWeightedMovingAverage(numbers, windowSize) {
   const startIndex = numbers.length - windowSize;
@@ -853,48 +848,6 @@ export async function getPointAverage(pointTotal, games) {
   return pointTotal / games;
 }
 
-async function getOddsMultiplier(odds, team) {
-  let multiplier;
-  switch (true) {
-    case odds <= 1.2:
-      multiplier = 1.4;
-      break;
-    case odds <= 1.4:
-      multiplier = 1.3;
-      break;
-    case odds <= 1.6:
-      multiplier = 1.2;
-      break;
-    case odds <= 1.8:
-      multiplier = 1.1;
-      break;
-    case odds < 2:
-      multiplier = 1.05;
-      break;
-
-    // case odds <= 3.5 && odds > 3:
-    //   multiplier = 0.975;
-    //   break;
-    // case odds > 3.5 && odds <= 4:
-    //   multiplier = 0.95;
-    //   break;
-    // case odds > 4 && odds <= 4.5:
-    //   multiplier = 0.9;
-    //   break;
-    // case odds > 4.5 && odds <= 5:
-    //   multiplier = 0.8;
-    //   break;
-    //   case odds > 5:
-    //     multiplier = 0.7;
-    //     break;
-    default:
-      multiplier = 1;
-      break;
-  }
-
-  return multiplier;
-}
-
 async function poissonDistribution(lambda, k) {
   const numerator = Math.exp(-lambda) * Math.pow(lambda, k);
   const denominator = factorial(k);
@@ -1070,20 +1023,15 @@ export async function compareTeams(homeForm, awayForm, match) {
     awayXGtoActualDiffStrength
   );
 
-  const xgForComparison = await compareStat(
-    homeForm.xgForStrength,
-    awayForm.xgForStrength
+  const XGComparison = await compareStat(
+    homeForm.XGDiffNonAverage,
+    awayForm.XGDiffNonAverage
   );
 
-  const xgAgainstComparison = await compareStat(
-    homeForm.xgAgainstStrength,
-    awayForm.xgAgainstStrength
-  );
-
-  const recentXGComparison = await compareStat(
-    homeForm.XGlast5 - homeForm.XGAgainstlast5,
-    awayForm.XGlast5 - awayForm.XGAgainstlast5
-  );
+  // const XGComparisonLast5 = await compareStat(
+  //   homeForm.XGDiffNonAverageLast5,
+  //   awayForm.XGDiffNonAverageLast5
+  // )
 
   const homeAwayPointAverageComparison = await compareStat(
     homeForm.homeOrAwayAverage,
@@ -1094,6 +1042,11 @@ export async function compareTeams(homeForm, awayForm, match) {
     homeForm.last5Points,
     awayForm.last5Points
   );
+
+  // const last5GDComparison = await compareStat(
+  //   homeForm.last5GoalDiff,
+  //   awayForm.last5GoalDiff
+  // )
 
   let oddsComparison;
   if (homeForm.predictabilityScore > 1 && awayForm.predictabilityScore > 1) {
@@ -1107,14 +1060,17 @@ export async function compareTeams(homeForm, awayForm, match) {
     1
   );
 
-  const dangerousAttacksWithConverstionComparison = await compareStat(
-    homeForm.AverageDangerousAttacksOverall *
-      homeForm.dangerousAttackConversion,
-    awayForm.AverageDangerousAttacksOverall * awayForm.dangerousAttackConversion
-  );
+  // const dangerousAttacksWithConverstionComparison = await compareStat(
+  //   homeForm.AverageDangerousAttacksOverall *
+  //     homeForm.dangerousAttackConversion,
+  //   awayForm.AverageDangerousAttacksOverall * awayForm.dangerousAttackConversion
+  // );
 
   match.goalDiffHomeOrAwayComparison =
     homeForm.goalDifferenceHomeOrAway - awayForm.goalDifferenceHomeOrAway;
+
+  match.goalDifferenceComparison =
+    homeForm.goalDifference - awayForm.goalDifference;
 
   const goalDiffHomeOrAwayComparison = await compareStat(
     homeForm.goalDifferenceHomeOrAway,
@@ -1136,34 +1092,48 @@ export async function compareTeams(homeForm, awayForm, match) {
     awayForm.accuracyOverallStrength
   );
 
-  let oddsWeighting;
-
-  if (match.game_week > 0 && match.game_week < 4) {
-    oddsWeighting = 1;
-  } else {
-    oddsWeighting = 1;
-  }
-
   let calculation =
-    attackStrengthComparison * 3 +
-    defenceStrengthComparison * 3 +
-    possessiontrengthComparison * 1 +
-    // xgToActualDiffComparison * 1 +
-    // xgForStrengthRecentComparison * 1 +
-    // xgAgainstStrengthRecentComparison * 1 +
-    homeAwayPointAverageComparison * 1 +
-    goalDiffHomeOrAwayComparison * 2 +
-    xgActualComparison * 1 +
-    // xgForComparison * 1 +
-    // xgAgainstComparison * 1 +
-    recentXGComparison * 2 +
-    oddsComparison * 1 +
-    // dangerousAttacksWithConverstionComparison * 0.05 +
-    homeAdvantage * 0 +
-    fiveGameComparison * 0 +
-    overallDirectnessComparison * 1.5 +
-    hOrADirectnessComparison * 1 +
-    accuracyComparison * 1.5;
+  attackStrengthComparison * 3 +
+  defenceStrengthComparison * 3 +
+  possessiontrengthComparison * 1 +
+  // xgToActualDiffComparison * 1 +
+  // xgForStrengthRecentComparison * 1 +
+  // xgAgainstStrengthRecentComparison * 1 +
+  homeAwayPointAverageComparison * 1 +
+  goalDiffHomeOrAwayComparison * 2 +
+  xgActualComparison * 1 +
+  // xgForComparison * 1 +
+  // xgAgainstComparison * 1 +
+  XGComparison * 3 +
+  oddsComparison * 1 +
+  // dangerousAttacksWithConverstionComparison * 0.05 +
+  homeAdvantage * 0 +
+  fiveGameComparison * 0 +
+  overallDirectnessComparison * 1.5 +
+  hOrADirectnessComparison * 1 +
+  accuracyComparison * 1.5;
+
+
+    // attackStrengthComparison * 3 +
+    // defenceStrengthComparison * 3 +
+    // possessiontrengthComparison * 1 +
+    // // xgToActualDiffComparison * 1 +
+    // // xgForStrengthRecentComparison * 1 +
+    // // xgAgainstStrengthRecentComparison * 1 +
+    // homeAwayPointAverageComparison * 1 +
+    // goalDiffHomeOrAwayComparison * 2 +
+    // xgActualComparison * 1 +
+    // // xgForComparison * 1 +
+    // // xgAgainstComparison * 1 +
+    // XGComparison * 1 +
+    // // XGComparisonLast5 * 0.5 +
+    // oddsComparison * 1 +
+    // // dangerousAttacksWithConverstionComparison * 0.05 +
+    // homeAdvantage * 0 +
+    // fiveGameComparison * 0 +
+    // overallDirectnessComparison * 1.5 +
+    // hOrADirectnessComparison * 1 +
+    // accuracyComparison * 1.5;
 
   let homeWinOutcomeProbability =
     match.homeTeamWinPercentage + match.awayTeamLossPercentage;
@@ -1291,8 +1261,6 @@ export async function compareTeams(homeForm, awayForm, match) {
 }
 
 export async function roundCustom(num, form, otherForm) {
-  let wholeNumber = Math.floor(num);
-  let remainder = num - wholeNumber;
   const DAConversion =
     form.AverageDangerousAttacksOverall * form.dangerousAttackConversion;
 
@@ -1861,7 +1829,7 @@ export async function calculateScore(match, index, divider, calculate) {
     );
 
     teamComparisonScore = await compareTeams(formHome, formAway, match);
-    teamComparisonScore = teamComparisonScore * 0.75;
+    teamComparisonScore = teamComparisonScore * 0.65;
 
     if (teamComparisonScore > 0.5) {
       teamComparisonScore = 0.5;
@@ -1932,20 +1900,6 @@ export async function calculateScore(match, index, divider, calculate) {
       formAway.allTeamGoalsBasedOnAverages -
         formAway.allTeamGoalsConceededBasedOnAverages
     );
-
-    let goalCalcHomeShortTerm =
-      (formHome.ScoredAverageShortTerm + formAway.ConcededAverageShortTerm) / 2;
-    let goalCalcAwayShortTerm =
-      (formAway.ScoredAverageShortTerm + formHome.ConcededAverageShortTerm) / 2;
-
-    let homeLeagueOrAllFormAverageGoals =
-      formHome.LeagueAverageGoals !== undefined
-        ? (formHome.LeagueAverageGoals + formAway.LeagueAverageConceded) / 2
-        : goalCalcHomeShortTerm;
-    let awayLeagueOrAllFormAverageGoals =
-      formAway.LeagueAverageGoals !== undefined
-        ? (formAway.LeagueAverageGoals + formHome.LeagueAverageConceded) / 2
-        : goalCalcAwayShortTerm;
 
     let factorOneHome;
     let factorOneAway;
@@ -2059,9 +2013,6 @@ export async function calculateScore(match, index, divider, calculate) {
       finalHomeGoals = Math.floor(rawFinalHomeGoals);
       finalAwayGoals = Math.floor(rawFinalAwayGoals);
     }
-
-    // finalHomeGoals = await roundCustom(rawFinalHomeGoals, formHome)
-    // finalAwayGoals = await roundCustom(rawFinalAwayGoals, formAway)
 
     if (finalHomeGoals > formHome.averageScoredLeague + 2) {
       finalHomeGoals = Math.round(
@@ -2346,35 +2297,49 @@ export async function calculateScore(match, index, divider, calculate) {
 
     switch (true) {
       case finalHomeGoals > finalAwayGoals:
-        if (XGDiffBetweenTeamsHomePerspective < minimumXG) {
+        if (minimumXG !== 0 && XGDiffBetweenTeamsHomePerspective < minimumXG) {
           match.omit = true;
         }
-        if (last10PointDiffHomePerspective < minimumLast10) {
+        if (minimumLast10 !== 0 && last10PointDiffHomePerspective < minimumLast10) {
+          match.omit = true;
+        }
+        if (minimumGDHorA !== 0 && match.goalDiffHomeOrAwayComparison < minimumGDHorA) {
+          match.omit = true;
+        }
+        if (minimumGD !== 0 && match.goalDifferenceComparison < minimumGD) {
           match.omit = true;
         }
         break;
       case finalHomeGoals < finalAwayGoals:
-        if (XGDiffBetweenTeamsAwayPerspective < minimumXG) {
+        if (minimumXG !== 0 && XGDiffBetweenTeamsAwayPerspective < minimumXG) {
           match.omit = true;
         }
-        if (last10PointDiffAwayPerspective < minimumLast10) {
+        if (minimumLast10 !== 0 && last10PointDiffAwayPerspective < minimumLast10) {
+          match.omit = true;
+        }
+        if (minimumGDHorA !== 0 && Math.abs(match.goalDiffHomeOrAwayComparison) < minimumGDHorA) {
+          match.omit = true;
+        }
+        if (minimumGD !== 0 && Math.abs(match.goalDifferenceComparison) < minimumGD) {
           match.omit = true;
         }
         break;
       case finalHomeGoals === finalAwayGoals:
-        if (Math.abs(XGDiffBetweenTeamsHomePerspective) < minimumXG) {
+        if (minimumXG !== 0 && Math.abs(XGDiffBetweenTeamsHomePerspective) < minimumXG) {
           match.omit = true;
         }
-        if (last10PointDiffHomePerspective < minimumLast10) {
+        if (minimumLast10 !== 0 && last10PointDiffHomePerspective < minimumLast10) {
+          match.omit = true;
+        }
+        if (minimumGDHorA !== 0 && Math.abs(match.goalDiffHomeOrAwayComparison) < minimumGDHorA) {
+          match.omit = true;
+        }
+        if (minimumGD !== 0 && Math.abs(match.goalDifferenceComparison) < minimumGD) {
           match.omit = true;
         }
         break;
       default:
         break;
-    }
-
-    if (Math.abs(match.goalDiffHomeOrAwayComparison) < minimumGD) {
-      match.omit = true;
     }
 
     if (
@@ -3468,13 +3433,17 @@ async function renderTips() {
           ></Slider>
         }
       ></Collapsable>
-      <div>
+      <div className="FiltersSelected">
         <h4>Filters selected:</h4>
-        <div>Minimum goal difference: {minimumGD}</div>
-        <div>Minimum XG difference: {minimumXG}</div>
-        <div>Minimum PPG difference: {minimumLast10}</div>
-        <div>Odds range: {rangeValue[0]} - {rangeValue[1]}</div>
-
+        <ul className="FiltersSelectedList">
+          <li>Minimum goal difference spread: {minimumGD}</li>
+          <li>Minimum goal difference spread (home or away only): {minimumGDHorA}</li>
+          <li>Minimum XG difference spread: {minimumXG}</li>
+          <li>Minimum PPG difference spread: {minimumLast10}</li>
+          <li>
+            Odds range: {rangeValue[0]} - {rangeValue[1]}
+          </li>
+        </ul>
       </div>
     </div>,
     document.getElementById("insights")

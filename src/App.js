@@ -7,8 +7,6 @@ import { Fixture } from "./components/Fixture";
 import mockedFixtures from "./data/mockedFixtures.json";
 import { selectedOdds } from "./components/OddsRadio";
 import Collapsable from "./components/CollapsableElement";
-import { StyledKofiButton } from "./components/KofiButton";
-import DateField from "./components/DateForm";
 import {
   FacebookShareButton,
   FacebookIcon,
@@ -21,14 +19,8 @@ import {
   WhatsappShareButton,
   WhatsappIcon,
 } from "react-share";
-import { BrowserRouter as Router, Route, Routes, Link } from "react-router-dom";
-import TeamPage from "./components/Team";
 import { generateFixtures } from "./logic/getFixtures";
-import { selectedOption } from "./components/radio";
 import { ThreeDots } from "react-loading-icons";
-// import { Toggles } from "./components/Toggle";
-import reactDom from "react-dom";
-// require("dotenv").config();
 
 export const proxyurl = "https://safe-caverns-99679.herokuapp.com/";
 export var fixtureList = [];
@@ -85,7 +77,6 @@ let tomorrow;
 let tomorrowFootyStats;
 let date;
 let dateFootyStats;
-let value;
 let yesterday;
 let yesterdayFootyStats;
 let lastSaturday;
@@ -149,19 +140,16 @@ export async function getLeagueList() {
 
   async function incrementDate(num, date) {
     i = i + num;
-    value = i + num;
     date.setDate(date.getDate() + num);
     [date, dateFootyStats] = await calculateDate(date);
     string = dateFootyStats;
     await renderButtons();
-    // return date;
   }
 
   async function decrementDate(num, date) {
     i = i - num;
     console.log(i);
     if (i > -60) {
-      value = i - num;
       date.setDate(date.getDate() - num);
       [date, dateFootyStats] = await calculateDate(date);
       string = dateFootyStats;
@@ -233,34 +221,10 @@ export async function getLeagueList() {
               )
             }
           />
-          {/* <Button
-            text={"Historic predictions"}
-            className="HistoricFixturesButtonRight"
-            onClickEvent={async () =>
-              fixtureList.push(
-                await generateFixtures(
-                  "historic",
-                  historic,
-                  selectedOdds,
-                  historicFootyStats
-                )
-              )
-            }
-          /> */}
         </div>
         <Button
           text={`<`}
           className="FixturesButton"
-          // onClickEvent={async () =>
-          //   fixtureList.push(
-          //     await generateFixtures(
-          //       "yesterdaysFixtures",
-          //       yesterday,
-          //       selectedOdds,
-          //       yesterdayFootyStats
-          //     )
-          //   )
-          // }
           onClickEvent={async () => await decrementDate(1, date)}
         />
         <Button

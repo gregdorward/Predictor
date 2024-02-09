@@ -1,12 +1,8 @@
 import React, { Fragment, useState } from "react";
 import { CreateBadge } from "./createBadge";
-import Collapsable from "../components/CollapsableElement";
-import { Checkbox } from "./Checkbox";
 import { createStatsDiv } from "../logic/getStats";
 import { renderTable } from "../logic/getFixtures";
 import { allLeagueResultsArrayOfObjects } from "../logic/getFixtures";
-import { json, useNavigate } from "react-router-dom";
-import { Zoom } from "swiper";
 import { useDispatch } from "react-redux";
 import { setData } from "../logic/dataSlice";
 import { Provider } from "react-redux";

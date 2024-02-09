@@ -2,11 +2,9 @@ import ReactDOM from "react-dom";
 import { Button } from "../components/Button";
 import Stats from "../components/createStatsDiv";
 import Div from "../components/Div";
-import { allForm, allLeagueResultsArrayOfObjects } from "../logic/getFixtures";
+import { allForm } from "../logic/getFixtures";
 import { getTeamStats } from "../logic/getTeamStats";
 import { getPointsFromLastX } from "../logic/getScorePredictions";
-import { CreateBadge } from "../components/createBadge";
-import { Fragment } from "react";
 import GenerateFormSummary from "../logic/compareFormTrend";
 import { Chart, RadarChart, BarChart } from "../components/Chart";
 import Collapsable from "../components/CollapsableElement";
@@ -443,10 +441,6 @@ export async function getXGtoActualDifferentialStrength(XGDiff) {
   return strength;
 }
 
-async function diff(a, b) {
-  return parseFloat(a - b).toFixed(2);
-}
-
 let rollingGoalDiffTotalHome = [];
 let rollingGoalDiffTotalAway = [];
 
@@ -640,9 +634,6 @@ export async function createStatsDiv(game, displayBool) {
             let won;
             let goalsScored;
             let goalsConceeded;
-            let wonHomeOrAwayOnly;
-            let goalsScoredHomeOrAwayOnly;
-            let goalsConceededHomeOrAwayOnly;
 
             if (resultAway[i].winningTeam === gameStats.teamIDAway) {
               won = "W";

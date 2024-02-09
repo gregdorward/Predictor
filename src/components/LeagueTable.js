@@ -8,8 +8,6 @@ import TableHead from "@material-ui/core/TableHead";
 import TableRow from "@material-ui/core/TableRow";
 import Paper from "@material-ui/core/Paper";
 import Collapsable from "../components/CollapsableElement";
-import { CreateBadge } from "./createBadge";
-import { Button } from "./Button";
 export var toggleState = false;
 export var setIsOff = false;
 

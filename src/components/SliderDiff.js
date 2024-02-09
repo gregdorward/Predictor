@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import Slider from "@mui/material/Slider";
 export let minimumXG = 0;
 export let minimumGD = 0;
+export let minimumGDHorA = 0;
 export let minimumLast10 = 0;
 
 function SlideDiff(props) {
@@ -17,9 +18,13 @@ function SlideDiff(props) {
       case props.useCase === "gd":
         minimumGD = newValue;
         break;
+      case props.useCase === "gdHorA":
+        minimumGDHorA = newValue;
+        break;
       case props.useCase === "last10":
         minimumLast10 = newValue;
         break;
+
       default:
         break;
     }

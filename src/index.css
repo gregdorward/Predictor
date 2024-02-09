@@ -1350,6 +1350,14 @@ p {
   color: #030061;
 }
 
+.FiltersSelected{
+  padding: 1em;
+  color: #030052;
+}
+
+.FiltersSelectedList li{
+  padding: 0.25em;
+}
 
 .StatsDiv{
   background-color: #e2e2e26c;

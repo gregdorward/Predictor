@@ -20,16 +20,6 @@ ChartJS.register(
   Legend
 );
 
-let stadium;
-
-// async function getGameDetails(id){
-// const gameDetails = await fetch(`${process.env.REACT_APP_EXPRESS_SERVER}match/${id}`)
-// await gameDetails.json().then((game) => {
-//   console.log(game.data)
-//   stadium = game.data.stadium_name
-// });
-// }
-
 function TeamPage() {
   const [dataState, setData] = useState([]);
 
@@ -174,18 +164,6 @@ function TeamPage() {
       console.error("Error fetching data:", error);
     }
   };
-
-  // useEffect(() => {
-  //   async function apiCall() {
-  //     const apiResponse = await fetch(`${process.env.REACT_APP_EXPRESS_SERVER}match/${storedFixtureDetailsJson.id}`);
-  //     await apiResponse.json().then((game) => {
-  //         console.log(game.data)
-  //         stadium = game.data.stadium_name
-  //         console.log(stadium)
-  //       });
-  //   }
-  //   apiCall();
-  // });
 
   const storedDataHome = useSelector((state) => state.data.dataHome);
   const jsonDataHome = JSON.parse(storedDataHome);

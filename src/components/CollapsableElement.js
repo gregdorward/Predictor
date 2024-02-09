@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React from "react";
 import Collapsible from "react-collapsible";
 
 const Collapsable = (props) => {
