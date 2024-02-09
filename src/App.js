@@ -21,6 +21,8 @@ import {
 } from "react-share";
 import { generateFixtures } from "./logic/getFixtures";
 import { ThreeDots } from "react-loading-icons";
+import reactDom from "react-dom";
+// require("dotenv").config();
 
 export const proxyurl = "https://safe-caverns-99679.herokuapp.com/";
 export var fixtureList = [];
