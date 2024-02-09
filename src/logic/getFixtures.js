@@ -1538,6 +1538,7 @@ export async function generateFixtures(
               className={"GeneratePredictions"}
             />
             <div className="Version">Prediction engine v3.0.16 (09/02/24)</div>
+            <h4>New beta feature, filters &#8595;</h4>
             <Collapsable
               buttonText={"Filters"}
               element={
