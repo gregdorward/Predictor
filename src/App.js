@@ -21,6 +21,7 @@ import {
 } from "react-share";
 import { generateFixtures } from "./logic/getFixtures";
 import { ThreeDots } from "react-loading-icons";
+import { BrowserRouter as Router, Route, Routes, Link } from "react-router-dom";
 import reactDom from "react-dom";
 // require("dotenv").config();
 
