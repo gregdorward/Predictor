@@ -2004,14 +2004,14 @@ export async function calculateScore(match, index, divider, calculate) {
     // }
 
     if (
-      formHome.CleanSheetPercentage < 35 &&
-      formAway.CleanSheetPercentage < 35
+      formHome.CleanSheetPercentage < 20 &&
+      formAway.CleanSheetPercentage < 20
     ) {
       finalHomeGoals = Math.ceil(rawFinalHomeGoals);
       finalAwayGoals = Math.ceil(rawFinalAwayGoals);
     } else if (
-      formHome.CleanSheetPercentage < 40 &&
-      formAway.CleanSheetPercentage < 40 &&
+      formHome.CleanSheetPercentage < 30 &&
+      formAway.CleanSheetPercentage < 30 &&
       rawFinalHomeGoals < 1 &&
       rawFinalAwayGoals < 1
     ) {
