@@ -5,6 +5,7 @@ import Div from "../components/Div";
 import { allForm } from "../logic/getFixtures";
 import { getTeamStats } from "../logic/getTeamStats";
 import { getPointsFromLastX } from "../logic/getScorePredictions";
+import { allLeagueResultsArrayOfObjects } from "../logic/getFixtures";
 import GenerateFormSummary from "../logic/compareFormTrend";
 import { Chart, RadarChart, BarChart } from "../components/Chart";
 import Collapsable from "../components/CollapsableElement";
@@ -490,244 +491,333 @@ export async function createStatsDiv(game, displayBool) {
         );
 
       if (displayBool === true) {
-        let fixtures = await fetch(
-          `${process.env.REACT_APP_EXPRESS_SERVER}leagueFixtures/${gameStats.leagueId}`
+        // let fixtures = await fetch(
+        //   `${process.env.REACT_APP_EXPRESS_SERVER}leagueFixtures/${gameStats.leagueId}`
+        // );
+
+        console.log(gameStats);
+        const pos = allLeagueResultsArrayOfObjects
+          .map((i) => i.id)
+          .indexOf(gameStats.leagueId);
+        let matches = allLeagueResultsArrayOfObjects[pos];
+        // await fixtures.json().then((matches) => {
+        console.log(matches);
+        const resultHome = matches.fixtures.filter(
+          (game) =>
+            game.home_name === gameStats.home.teamName ||
+            game.away_name === gameStats.home.teamName
         );
 
-        await fixtures.json().then((matches) => {
-          const resultHome = matches.data.filter(
-            (game) =>
-              (game.homeID === gameStats.teamIDHome ||
-                game.awayID === gameStats.teamIDHome) &&
-              game.status === "complete"
-          );
+        console.log(resultHome);
 
-          const resultHomeOnly = matches.data.filter(
-            (game) =>
-              game.homeID === gameStats.teamIDHome && game.status === "complete"
-          );
+        const resultHomeOnly = matches.fixtures.filter(
+          (game) => game.home_name === gameStats.home.teamName
+        );
 
-          resultHomeOnly.sort((a, b) => b.date_unix - a.date_unix);
+        resultHome.sort((a, b) => b.date_unix - a.date_unix);
+        resultHomeOnly.sort((a, b) => b.date_unix - a.date_unix);
 
-          for (let i = 0; i < resultHome.length; i++) {
-            let unixTimestamp = resultHome[i].date_unix;
-            let milliseconds = unixTimestamp * 1000;
-            let dateObject = new Date(milliseconds).toLocaleString("en-GB", {
-              timeZone: "UTC",
-            });
+        for (let i = 0; i < resultHome.length; i++) {
+          let unixTimestamp = resultHome[i].date_unix;
+          let milliseconds = unixTimestamp * 1000;
+          let dateObject = new Date(milliseconds).toLocaleString("en-GB", {
+            timeZone: "UTC",
+          });
 
-            let won;
-            let goalsScored;
-            let goalsConceeded;
+          let won;
+          let goalsScored;
+          let goalsConceeded;
 
-            if (resultHome[i].winningTeam === gameStats.teamIDHome) {
-              won = "W";
-              if (resultHome[i].homeGoalCount > resultHome[i].awayGoalCount) {
-                goalsScored = resultHome[i].homeGoalCount;
-                goalsConceeded = resultHome[i].awayGoalCount;
-              } else {
-                goalsScored = resultHome[i].awayGoalCount;
-                goalsConceeded = resultHome[i].homeGoalCount;
+          switch (true) {
+            case resultHome[i].home_name === gameStats.home.teamName:
+              switch (true) {
+                case resultHome[i].homeGoalCount > resultHome[i].awayGoalCount:
+                  won = "W";
+                  goalsScored = resultHome[i].homeGoalCount;
+                  goalsConceeded = resultHome[i].awayGoalCount;
+                  break;
+                case resultHome[i].homeGoalCount ===
+                  resultHome[i].awayGoalCount:
+                  won = "D";
+                  goalsScored = resultHome[i].homeGoalCount;
+                  goalsConceeded = resultHome[i].awayGoalCount;
+                  break;
+                case resultHome[i].homeGoalCount < resultHome[i].awayGoalCount:
+                  won = "L";
+                  goalsScored = resultHome[i].homeGoalCount;
+                  goalsConceeded = resultHome[i].awayGoalCount;
+                  break;
+                default:
+                  break;
               }
-            } else if (resultHome[i].winningTeam === -1) {
-              won = "D";
-              goalsScored = resultHome[i].awayGoalCount;
-              goalsConceeded = resultHome[i].awayGoalCount;
-            } else {
-              won = "L";
-              if (resultHome[i].homeGoalCount > resultHome[i].awayGoalCount) {
-                goalsScored = resultHome[i].awayGoalCount;
-                goalsConceeded = resultHome[i].homeGoalCount;
-              } else {
-                goalsScored = resultHome[i].homeGoalCount;
-                goalsConceeded = resultHome[i].awayGoalCount;
+              break;
+            case resultHome[i].away_name === gameStats.home.teamName:
+              switch (true) {
+                case resultHome[i].homeGoalCount > resultHome[i].awayGoalCount:
+                  won = "L";
+                  goalsScored = resultHome[i].homeGoalCount;
+                  goalsConceeded = resultHome[i].awayGoalCount;
+                  break;
+                case resultHome[i].homeGoalCount ===
+                  resultHome[i].awayGoalCount:
+                  won = "D";
+                  goalsScored = resultHome[i].homeGoalCount;
+                  goalsConceeded = resultHome[i].awayGoalCount;
+                  break;
+                case resultHome[i].homeGoalCount < resultHome[i].awayGoalCount:
+                  won = "W";
+                  goalsScored = resultHome[i].homeGoalCount;
+                  goalsConceeded = resultHome[i].awayGoalCount;
+                  break;
+                default:
+                  break;
               }
-            }
-
-            gameArrayHome.push({
-              id: resultHome[i].id,
-              date: dateObject,
-              homeTeam: resultHome[i].home_name,
-              homeGoals: resultHome[i].homeGoalCount,
-              homeXG: resultHome[i].team_a_xg,
-              homeOdds: resultHome[i].odds_ft_1,
-              awayTeam: resultHome[i].away_name,
-              awayGoals: resultHome[i].awayGoalCount,
-              awayXG: resultHome[i].team_b_xg,
-              awayOdds: resultHome[i].odds_ft_2,
-              won: won,
-              homeShots: resultHome[i].team_a_shots,
-              awayShots: resultHome[i].team_b_shots,
-              homeSot: resultHome[i].team_a_shotsOnTarget,
-              awaySot: resultHome[i].team_b_shotsOnTarget,
-              homeRed: resultHome[i].team_a_red_cards,
-              awayRed: resultHome[i].team_b_red_cards,
-              homePossession: resultHome[i].team_a_possession,
-              awayPossession: resultHome[i].team_b_possession,
-              homeDangerousAttacks: resultHome[i].team_a_dangerous_attacks,
-              awayDangerousAttacks: resultHome[i].team_b_dangerous_attacks,
-              homePPG: resultHome[i].pre_match_teamA_overall_ppg,
-              awayPPG: resultHome[i].pre_match_teamB_overall_ppg,
-              unixTimestamp: resultHome[i].date_unix,
-              goalsFor: goalsScored,
-              goalsAgainst: goalsConceeded,
-              btts: resultHome[i].btts === true ? "\u2714" : "\u2718",
-            });
+              break;
+            default:
+              break;
           }
 
-          for (let i = 0; i < resultHomeOnly.length; i++) {
-            let wonHomeOrAwayOnly;
+          gameArrayHome.push({
+            id: resultHome[i].id,
+            date: dateObject,
+            homeTeam: resultHome[i].home_name,
+            homeGoals: resultHome[i].homeGoalCount,
+            homeXG: resultHome[i].team_a_xg,
+            homeOdds: resultHome[i].odds_ft_1,
+            awayTeam: resultHome[i].away_name,
+            awayGoals: resultHome[i].awayGoalCount,
+            awayXG: resultHome[i].team_b_xg,
+            awayOdds: resultHome[i].odds_ft_2,
+            won: won,
+            homeShots: resultHome[i].team_a_shots,
+            awayShots: resultHome[i].team_b_shots,
+            homeSot: resultHome[i].team_a_shotsOnTarget,
+            awaySot: resultHome[i].team_b_shotsOnTarget,
+            homeRed: resultHome[i].team_a_red_cards,
+            awayRed: resultHome[i].team_b_red_cards,
+            homePossession: resultHome[i].team_a_possession,
+            awayPossession: resultHome[i].team_b_possession,
+            homeDangerousAttacks: resultHome[i].team_a_dangerous_attacks,
+            awayDangerousAttacks: resultHome[i].team_b_dangerous_attacks,
+            homePPG: resultHome[i].pre_match_teamA_overall_ppg,
+            awayPPG: resultHome[i].pre_match_teamB_overall_ppg,
+            unixTimestamp: resultHome[i].date_unix,
+            goalsFor: goalsScored,
+            goalsAgainst: goalsConceeded,
+            btts: resultHome[i].homeGoalCount > 0 && resultHome[i].awayGoalCount > 0 ? "\u2714" : "\u2718",
+          });
+        }
 
-            if (resultHomeOnly[i].winningTeam === gameStats.teamIDHome) {
-              wonHomeOrAwayOnly = "W";
-              gameArrayHomeTeamHomeGames.push(wonHomeOrAwayOnly);
-            } else if (resultHomeOnly[i].winningTeam === -1) {
-              wonHomeOrAwayOnly = "D";
-              gameArrayHomeTeamHomeGames.push(wonHomeOrAwayOnly);
-            } else {
-              wonHomeOrAwayOnly = "L";
-              gameArrayHomeTeamHomeGames.push(wonHomeOrAwayOnly);
-            }
-          }
+        for (let i = 0; i < resultHomeOnly.length; i++) {
+          let wonHomeOrAwayOnly;
 
-          goalDiffArrayHome = gameArrayHome.map(
-            (a) => a.goalsFor - a.goalsAgainst
-          );
+          switch (true) {
+            case resultHomeOnly[i].home_name === gameStats.home.teamName:
 
-          let r = 5;
-
-          goalDiffHomeMovingAv = getEMA(
-            goalDiffArrayHome,
-            goalDiffArrayHome.length < 5 ? goalDiffArrayHome.length : r
-          );
-
-          const cumulativeSumHome = (
-            (sum) => (value) =>
-              (sum += value)
-          )(0);
-
-          gameArrayHome.sort((a, b) => b.unixTimestamp - a.unixTimestamp);
-
-          rollingGoalDiffTotalHome = goalDiffArrayHome.map(cumulativeSumHome);
-
-          const resultAway = matches.data.filter(
-            (game) =>
-              (game.homeID === gameStats.teamIDAway ||
-                game.awayID === gameStats.teamIDAway) &&
-              game.status === "complete"
-          );
-
-          const resultAwayOnly = matches.data.filter(
-            (game) =>
-              game.awayID === gameStats.teamIDAway && game.status === "complete"
-          );
-
-          resultAwayOnly.sort((a, b) => b.date_unix - a.date_unix);
-
-          for (let i = 0; i < resultAway.length; i++) {
-            let unixTimestamp = resultAway[i].date_unix;
-            let milliseconds = unixTimestamp * 1000;
-            let dateObject = new Date(milliseconds).toLocaleString("en-GB", {
-              timeZone: "UTC",
-            });
-
-            let won;
-            let goalsScored;
-            let goalsConceeded;
-
-            if (resultAway[i].winningTeam === gameStats.teamIDAway) {
-              won = "W";
-              if (resultAway[i].homeGoalCount > resultAway[i].awayGoalCount) {
-                goalsScored = resultAway[i].homeGoalCount;
-                goalsConceeded = resultAway[i].awayGoalCount;
-              } else {
-                goalsScored = resultAway[i].awayGoalCount;
-                goalsConceeded = resultAway[i].homeGoalCount;
+              switch (true) {
+                case resultHomeOnly[i].homeGoalCount >
+                  resultHomeOnly[i].awayGoalCount:
+                  wonHomeOrAwayOnly = "W";
+                  gameArrayHomeTeamHomeGames.push(wonHomeOrAwayOnly);
+                  break;
+                case resultHomeOnly[i].homeGoalCount ===
+                  resultHomeOnly[i].awayGoalCount:
+                  wonHomeOrAwayOnly = "D";
+                  gameArrayHomeTeamHomeGames.push(wonHomeOrAwayOnly);
+                  break;
+                case resultHomeOnly[i].homeGoalCount <
+                  resultHomeOnly[i].awayGoalCount:
+                  wonHomeOrAwayOnly = "L";
+                  gameArrayHomeTeamHomeGames.push(wonHomeOrAwayOnly);
+                  break;
+                default:
+                  break;
               }
-            } else if (resultAway[i].winningTeam === -1) {
-              won = "D";
-              goalsScored = resultAway[i].awayGoalCount;
-              goalsConceeded = resultAway[i].awayGoalCount;
-            } else {
-              won = "L";
-              if (resultAway[i].homeGoalCount > resultAway[i].awayGoalCount) {
-                goalsScored = resultAway[i].awayGoalCount;
-                goalsConceeded = resultAway[i].homeGoalCount;
-              } else {
-                goalsScored = resultAway[i].homeGoalCount;
-                goalsConceeded = resultAway[i].awayGoalCount;
+              break;
+
+            default:
+              break;
+          }
+        }
+
+        goalDiffArrayHome = gameArrayHome.map(
+          (a) => a.goalsFor - a.goalsAgainst
+        );
+
+        let r = 5;
+
+        goalDiffHomeMovingAv = getEMA(
+          goalDiffArrayHome,
+          goalDiffArrayHome.length < 5 ? goalDiffArrayHome.length : r
+        );
+
+        const cumulativeSumHome = (
+          (sum) => (value) =>
+            (sum += value)
+        )(0);
+
+        gameArrayHome.sort((a, b) => b.unixTimestamp - a.unixTimestamp);
+
+        rollingGoalDiffTotalHome = goalDiffArrayHome.map(cumulativeSumHome);
+
+        const resultAway = matches.fixtures.filter(
+          (game) =>
+            game.away_name === gameStats.away.teamName ||
+            game.home_name === gameStats.away.teamName
+        );
+
+        const resultAwayOnly = matches.fixtures.filter(
+          (game) => game.away_name === gameStats.away.teamName
+        );
+
+
+        resultAway.sort((a, b) => b.date_unix - a.date_unix);
+        resultAwayOnly.sort((a, b) => b.date_unix - a.date_unix);
+
+        for (let i = 0; i < resultAway.length; i++) {
+          let unixTimestamp = resultAway[i].date_unix;
+          let milliseconds = unixTimestamp * 1000;
+          let dateObject = new Date(milliseconds).toLocaleString("en-GB", {
+            timeZone: "UTC",
+          });
+
+          let won;
+          let goalsScored;
+          let goalsConceeded;
+
+          switch (true) {
+            case resultAway[i].home_name === gameStats.away.teamName:
+              switch (true) {
+                case resultAway[i].homeGoalCount > resultAway[i].awayGoalCount:
+                  won = "W";
+                  goalsScored = resultAway[i].awayGoalCount;
+                  goalsConceeded = resultAway[i].homeGoalCount;
+                  break;
+                case resultAway[i].awayGoalCount ===
+                  resultAway[i].homeGoalCount:
+                  won = "D";
+                  goalsScored = resultAway[i].awayGoalCount;
+                  goalsConceeded = resultAway[i].homeGoalCount;
+                  break;
+                case resultAway[i].homeGoalCount < resultAway[i].awayGoalCount:
+                  won = "L";
+                  goalsScored = resultAway[i].awayGoalCount;
+                  goalsConceeded = resultAway[i].homeGoalCount;
+                  break;
+                default:
+                  break;
               }
-            }
+              break;
 
-            gameArrayAway.push({
-              id: resultAway[i].id,
-              date: dateObject,
-              homeTeam: resultAway[i].home_name,
-              homeGoals: resultAway[i].homeGoalCount,
-              homeXG: resultAway[i].team_a_xg,
-              homeOdds: resultAway[i].odds_ft_1,
-              awayTeam: resultAway[i].away_name,
-              awayGoals: resultAway[i].awayGoalCount,
-              awayXG: resultAway[i].team_b_xg,
-              awayOdds: resultAway[i].odds_ft_2,
-              won: won,
-              homeShots: resultAway[i].team_a_shots,
-              awayShots: resultAway[i].team_b_shots,
-              homeSot: resultAway[i].team_a_shotsOnTarget,
-              awaySot: resultAway[i].team_b_shotsOnTarget,
-              homeRed: resultAway[i].team_a_red_cards,
-              awayRed: resultAway[i].team_b_red_cards,
-              homePossession: resultAway[i].team_a_possession,
-              awayPossession: resultAway[i].team_b_possession,
-              homeDangerousAttacks: resultAway[i].team_a_dangerous_attacks,
-              awayDangerousAttacks: resultAway[i].team_b_dangerous_attacks,
-              homePPG: resultAway[i].pre_match_teamA_overall_ppg,
-              awayPPG: resultAway[i].pre_match_teamB_overall_ppg,
-              unixTimestamp: resultAway[i].date_unix,
-              goalsFor: goalsScored,
-              goalsAgainst: goalsConceeded,
-              btts: resultAway[i].btts === true ? "\u2714" : "\u2718",
-            });
+            case resultAway[i].away_name === gameStats.away.teamName:
+              switch (true) {
+                case resultAway[i].homeGoalCount > resultAway[i].awayGoalCount:
+                  won = "L";
+                  goalsScored = resultAway[i].awayGoalCount;
+                  goalsConceeded = resultAway[i].homeGoalCount;
+                  break;
+                case resultAway[i].homeGoalCount ===
+                  resultAway[i].awayGoalCount:
+                  won = "D";
+                  goalsScored = resultAway[i].awayGoalCount;
+                  goalsConceeded = resultAway[i].homeGoalCount;
+                  break;
+                case resultAway[i].homeGoalCount < resultAway[i].awayGoalCount:
+                  won = "W";
+                  goalsScored = resultAway[i].awayGoalCount;
+                  goalsConceeded = resultAway[i].homeGoalCount;
+                  break;
+                default:
+                  break;
+              }
+              break;
+            default:
+              break;
           }
 
-          for (let i = 0; i < resultAwayOnly.length; i++) {
-            let wonHomeOrAwayOnly;
+          gameArrayAway.push({
+            id: resultAway[i].id,
+            date: dateObject,
+            homeTeam: resultAway[i].home_name,
+            homeGoals: resultAway[i].homeGoalCount,
+            homeXG: resultAway[i].team_a_xg,
+            homeOdds: resultAway[i].odds_ft_1,
+            awayTeam: resultAway[i].away_name,
+            awayGoals: resultAway[i].awayGoalCount,
+            awayXG: resultAway[i].team_b_xg,
+            awayOdds: resultAway[i].odds_ft_2,
+            won: won,
+            homeShots: resultAway[i].team_a_shots,
+            awayShots: resultAway[i].team_b_shots,
+            homeSot: resultAway[i].team_a_shotsOnTarget,
+            awaySot: resultAway[i].team_b_shotsOnTarget,
+            homeRed: resultAway[i].team_a_red_cards,
+            awayRed: resultAway[i].team_b_red_cards,
+            homePossession: resultAway[i].team_a_possession,
+            awayPossession: resultAway[i].team_b_possession,
+            homeDangerousAttacks: resultAway[i].team_a_dangerous_attacks,
+            awayDangerousAttacks: resultAway[i].team_b_dangerous_attacks,
+            homePPG: resultAway[i].pre_match_teamA_overall_ppg,
+            awayPPG: resultAway[i].pre_match_teamB_overall_ppg,
+            unixTimestamp: resultAway[i].date_unix,
+            goalsFor: goalsScored,
+            goalsAgainst: goalsConceeded,
+            btts: resultAway[i].homeGoalCount > 0 && resultAway[i].awayGoalCount > 0 ? "\u2714" : "\u2718",
+          });
+        }
 
-            if (resultAwayOnly[i].winningTeam === gameStats.teamIDAway) {
-              wonHomeOrAwayOnly = "W";
-              gameArrayAwayTeamAwayGames.push(wonHomeOrAwayOnly);
-            } else if (resultAwayOnly[i].winningTeam === -1) {
-              wonHomeOrAwayOnly = "D";
-              gameArrayAwayTeamAwayGames.push(wonHomeOrAwayOnly);
-            } else {
-              wonHomeOrAwayOnly = "L";
-              gameArrayAwayTeamAwayGames.push(wonHomeOrAwayOnly);
-            }
+        for (let i = 0; i < resultAwayOnly.length; i++) {
+          let wonAwayOrAwayOnly;
+
+          switch (true) {
+            case resultAwayOnly[i].away_name === gameStats.away.teamName:
+
+              switch (true) {
+                case resultAwayOnly[i].awayGoalCount > resultAwayOnly[i].homeGoalCount:
+                  wonAwayOrAwayOnly = "W";
+                  gameArrayAwayTeamAwayGames.push(wonAwayOrAwayOnly);
+                  break;
+                case resultAwayOnly[i].awayGoalCount === resultAwayOnly[i].homeGoalCount:
+                  wonAwayOrAwayOnly = "D";
+                  gameArrayAwayTeamAwayGames.push(wonAwayOrAwayOnly);
+                  break;
+                case resultAwayOnly[i].awayGoalCount < resultAwayOnly[i].homeGoalCount:
+                  wonAwayOrAwayOnly = "L";
+                  gameArrayAwayTeamAwayGames.push(wonAwayOrAwayOnly);
+                  break;
+                default:
+                  break;
+              }
+              break;
+
+            default:
+              break;
           }
+        }
 
-          goalDiffArrayAway = gameArrayAway.map(
-            (a) => a.goalsFor - a.goalsAgainst
-          );
+        goalDiffArrayAway = gameArrayAway.map(
+          (a) => a.goalsFor - a.goalsAgainst
+        );
 
-          goalDiffAwayMovingAv = getEMA(
-            goalDiffArrayAway,
-            goalDiffArrayAway.length < 5 ? goalDiffArrayAway.length : r
-          );
+        goalDiffAwayMovingAv = getEMA(
+          goalDiffArrayAway,
+          goalDiffArrayAway.length < 5 ? goalDiffArrayAway.length : r
+        );
 
-          const cumulativeSumAway = (
-            (sum) => (value) =>
-              (sum += value)
-          )(0);
+        const cumulativeSumAway = (
+          (sum) => (value) =>
+            (sum += value)
+        )(0);
 
-          gameArrayAway.sort((a, b) => b.unixTimestamp - a.unixTimestamp);
+        gameArrayAway.sort((a, b) => b.unixTimestamp - a.unixTimestamp);
 
-          rollingGoalDiffTotalAway = goalDiffArrayAway.map(cumulativeSumAway);
+        rollingGoalDiffTotalAway = goalDiffArrayAway.map(cumulativeSumAway);
 
-          latestHomeGoalDiff =
-            goalDiffHomeMovingAv[goalDiffHomeMovingAv.length - 1];
-          latestAwayGoalDiff =
-            goalDiffAwayMovingAv[goalDiffAwayMovingAv.length - 1];
-        });
+        latestHomeGoalDiff =
+          goalDiffHomeMovingAv[goalDiffHomeMovingAv.length - 1];
+        latestAwayGoalDiff =
+          goalDiffAwayMovingAv[goalDiffAwayMovingAv.length - 1];
+        // });
       }
 
       const bttsArrayHome = Array.from(gameArrayHome, (x) => x.btts);
@@ -852,36 +942,34 @@ export async function createStatsDiv(game, displayBool) {
         formTextStringAway = "";
       }
 
-      console.log(game);
-      console.log(awayForm)
       const favouriteRecordHome =
         game.homeOdds < game.awayOdds || game.homeOdds === game.awayOdds
-          ? `${
-              homeForm.teamName
-            } have been favourites ${homeForm.favouriteCount} times. Of these games, they have Won: ${homeForm.oddsReliabilityWin.toFixed(
+          ? `${homeForm.teamName} have been favourites ${
+              homeForm.favouriteCount
+            } times. Of these games, they have Won: ${homeForm.oddsReliabilityWin.toFixed(
               0
             )}%, Drawn:  ${homeForm.oddsReliabilityDraw.toFixed(
               0
             )}%, Lost:  ${homeForm.oddsReliabilityLose.toFixed(0)}%`
-          : `${
-              homeForm.teamName
-            } have been underdogs ${homeForm.underdogCount} times. Of these games, they have Won: ${homeForm.oddsReliabilityWinAsUnderdog.toFixed(
+          : `${homeForm.teamName} have been underdogs ${
+              homeForm.underdogCount
+            } times. Of these games, they have Won: ${homeForm.oddsReliabilityWinAsUnderdog.toFixed(
               0
             )}%, Drawn:  ${homeForm.oddsReliabilityDrawAsUnderdog.toFixed(
               0
             )}%, Lost:  ${homeForm.oddsReliabilityLoseAsUnderdog.toFixed(0)}%`;
       const favouriteRecordAway =
         game.homeOdds > game.awayOdds || game.homeOdds === game.awayOdds
-          ? `${
-              awayForm.teamName
-            } have been favourites ${awayForm.favouriteCount} times. Of these games, they have Won: ${awayForm.oddsReliabilityWin.toFixed(
+          ? `${awayForm.teamName} have been favourites ${
+              awayForm.favouriteCount
+            } times. Of these games, they have Won: ${awayForm.oddsReliabilityWin.toFixed(
               0
             )}%, Drawn:  ${awayForm.oddsReliabilityDraw.toFixed(
               0
             )}%, Lost:  ${awayForm.oddsReliabilityLose.toFixed(0)}%`
-          : `${
-              awayForm.teamName
-            } have been underdogs ${awayForm.underdogCount} times. Of these games, they have Won: ${awayForm.oddsReliabilityWinAsUnderdog.toFixed(
+          : `${awayForm.teamName} have been underdogs ${
+              awayForm.underdogCount
+            } times. Of these games, they have Won: ${awayForm.oddsReliabilityWinAsUnderdog.toFixed(
               0
             )}%, Drawn:  ${awayForm.oddsReliabilityDrawAsUnderdog.toFixed(
               0
@@ -1097,7 +1185,8 @@ export async function createStatsDiv(game, displayBool) {
         CardsTotal: homeForm.CardsTotal || "-",
         CornersAverage: homeForm.AverageCorners || "-",
         FormTextStringHome: formTextStringHome,
-        FavouriteRecord: favouriteRecordHome + `. ${homeForm.reliabilityString}`,
+        FavouriteRecord:
+          favouriteRecordHome + `. ${homeForm.reliabilityString}`,
         BTTSArray: bttsArrayHome,
         Results: resultsArrayHome,
         // BTTSAll: homeForm.last10btts,
@@ -1130,7 +1219,8 @@ export async function createStatsDiv(game, displayBool) {
         CardsTotal: awayForm.CardsTotal || "-",
         CornersAverage: awayForm.AverageCorners || "-",
         FormTextStringAway: formTextStringAway,
-        FavouriteRecord: favouriteRecordAway + `. ${awayForm.reliabilityString}`,
+        FavouriteRecord:
+          favouriteRecordAway + `. ${awayForm.reliabilityString}`,
         BTTSArray: bttsArrayAway,
         Results: resultsArrayAway,
         ResultsHomeOrAway: resultsArrayAway,
@@ -1343,7 +1433,7 @@ export async function createStatsDiv(game, displayBool) {
           </div>
         );
       }
-
+      
       function StatsAway() {
         return (
           <div className="flex-childTwo">

@@ -203,7 +203,6 @@ export async function generateTables(a, leagueIdArray, allResults) {
   });
 }
 
-
 export async function renderTable(index, results, id) {
   let league;
   //World cup table rendering
@@ -501,15 +500,35 @@ export async function generateFixtures(
         );
 
         let games = await fixtures.json();
-        let gamesFiltered = games.data.filter(
-          (game) => game.status === "complete"
-        );
+        let gamesFiltered;
+        let gamesShortened;
+        if (games.pager.current_page < games.pager.max_page) {
+          const page2 = await fetch(
+            `${process.env.REACT_APP_EXPRESS_SERVER}leagueFixtures/${orderedLeague.element.id}&page=2`
+          );
+          let page2Data = await page2.json();
 
-        if (current) {
-          let mostRecentResults = gamesFiltered.filter(
+          const gamesConcat = games.data.concat(page2Data.data);
+          const gamesConcatFiltered = gamesConcat.filter((game) => game.status === "complete");
+
+          let mostRecentResults = gamesConcatFiltered.filter(
             (game) => game.date_unix > targetDate
           );
-          gamesFiltered = mostRecentResults;
+          let sorted = mostRecentResults.sort((a, b) => a.date_unix - b.date_unix);
+          gamesShortened = sorted.slice(-600);
+          gamesFiltered = gamesShortened;
+        } else {
+
+          gamesFiltered = games.data.filter(
+            (game) => game.status === "complete"
+          );
+
+          if (current) {
+            let mostRecentResults = gamesFiltered.filter(
+              (game) => game.date_unix > targetDate
+            );
+            gamesFiltered = mostRecentResults;
+          }
         }
 
         // let mostRecentResults = gamesFiltered.filter(
@@ -765,6 +784,7 @@ export async function generateFixtures(
         });
         match.homeTeam = fixture.home_name;
         match.awayTeam = fixture.away_name;
+
         match.homeOdds = +fixture.odds_ft_1.toFixed(2);
         match.awayOdds = +fixture.odds_ft_2.toFixed(2);
         match.drawOdds = +fixture.odds_ft_x.toFixed(2);
@@ -1560,10 +1580,12 @@ export async function generateFixtures(
                     lower="0"
                     upper="30"
                   ></SlideDiff>
-                  <h6>Goals for/against home or away differential filter (BETA)</h6>
+                  <h6>
+                    Goals for/against home or away differential filter (BETA)
+                  </h6>
                   <div>
-                    I'm looking for tips where the goal differential (home or away only) between
-                    teams is at least...
+                    I'm looking for tips where the goal differential (home or
+                    away only) between teams is at least...
                   </div>
                   <SlideDiff
                     value="0"
