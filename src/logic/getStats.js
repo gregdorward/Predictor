@@ -490,6 +490,9 @@ export async function createStatsDiv(game, displayBool) {
           [a[0]]
         );
 
+        const homeForm = gameStats.home[index];
+        const awayForm = gameStats.away[index];
+
       if (displayBool === true) {
         // let fixtures = await fetch(
         //   `${process.env.REACT_APP_EXPRESS_SERVER}leagueFixtures/${gameStats.leagueId}`
@@ -639,15 +642,21 @@ export async function createStatsDiv(game, displayBool) {
               break;
           }
         }
+        console.log(gameArrayHome)
 
-        goalDiffArrayHome = gameArrayHome.map(
-          (a) => a.goalsFor - a.goalsAgainst
+        goalDiffArrayHome = homeForm.allTeamResults.map(
+          (a) => a.scored - a.conceeded
         );
 
-        let r = 5;
 
+        // goalDiffArrayHome = gameArrayHome.map(
+        //   (a) => a.goalsFor - a.goalsAgainst
+        // );
+
+        let r = 5;
+          console.log(goalDiffArrayHome.reverse())
         goalDiffHomeMovingAv = getEMA(
-          goalDiffArrayHome,
+          goalDiffArrayHome.reverse(),
           goalDiffArrayHome.length < 5 ? goalDiffArrayHome.length : r
         );
 
@@ -795,12 +804,12 @@ export async function createStatsDiv(game, displayBool) {
           }
         }
 
-        goalDiffArrayAway = gameArrayAway.map(
-          (a) => a.goalsFor - a.goalsAgainst
+        goalDiffArrayAway = awayForm.allTeamResults.map(
+          (a) => a.scored - a.conceeded
         );
 
         goalDiffAwayMovingAv = getEMA(
-          goalDiffArrayAway,
+          goalDiffArrayAway.reverse(),
           goalDiffArrayAway.length < 5 ? goalDiffArrayAway.length : r
         );
 
@@ -829,9 +838,6 @@ export async function createStatsDiv(game, displayBool) {
       let awayTeam = gameStats.away.teamName;
 
       let time = game.time;
-
-      const homeForm = gameStats.home[index];
-      const awayForm = gameStats.away[index];
 
       if (homeForm.last3Points === undefined) {
         homeForm.last3Points = getPointsFromLastX(homeForm.lastThreeForm);

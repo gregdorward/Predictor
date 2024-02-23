@@ -493,7 +493,7 @@ export async function generateFixtures(
 
       let startDate = (new Date().getTime() / 1000).toFixed(0);
       // deduct 3 months
-      let targetDate = startDate - 15778463;
+      let targetDate = startDate - 23778463;
 
       for (const orderedLeague of orderedLeagues) {
         let fixtures = await fetch(

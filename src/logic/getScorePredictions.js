@@ -116,11 +116,7 @@ async function getPastLeagueResults(team, game, hOrA, form) {
       game.leagueIndex
     ].fixtures.filter((fixture) => fixture.home_name === team);
 
-    teamsHomeResults = teamsHomeResults
-      .filter(function (item) {
-        return item.date_unix < date;
-      })
-      .sort((a, b) => a.date_unix - b.date_unix);
+    teamsHomeResults = teamsHomeResults.sort((a, b) => a.date_unix - b.date_unix);
 
     let teamsAwayResults = allLeagueResultsArrayOfObjects[
       game.leagueIndex
