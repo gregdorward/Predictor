@@ -106,7 +106,7 @@ export async function calculateMetricStrength(metricName, metricValue) {
     xgFor: { min: 0.1, max: 3 },
     xgAgainst: { min: 0.1, max: 3 },
     directnessOverall: { min: 0.5, max: 4 },
-    accuracyOverall: { min: 2, max: 10 },
+    accuracyOverall: { min: 0.5, max: 5 },
   };
 
   // Ensure the metric is valid and exists in the weights and ranges objects
@@ -436,7 +436,7 @@ export async function getXGtoActualDifferentialStrength(XGDiff) {
       strength = 1;
       break;
     default:
-      console.log("default clause triggered");
+      strength = 1;
       break;
   }
   return strength;

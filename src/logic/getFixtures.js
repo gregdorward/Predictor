@@ -468,6 +468,7 @@ export async function generateFixtures(
         allLeagueResultsArrayOfObjects = Array.from(allGames);
       });
 
+      console.log(allLeagueResultsArrayOfObjects)
       leaguesStored = true;
       generateTables(
         leagueArray,
@@ -527,7 +528,7 @@ export async function generateFixtures(
             let mostRecentResults = gamesFiltered.filter(
               (game) => game.date_unix > targetDate
             );
-            gamesFiltered = mostRecentResults;
+            gamesFiltered = mostRecentResults.slice(-600);
           }
         }
 
@@ -1557,7 +1558,7 @@ export async function generateFixtures(
               onClickEvent={() => getScorePrediction(day)}
               className={"GeneratePredictions"}
             />
-            <div className="Version">Prediction engine v3.1.0 (18/02/24)</div>
+            <div className="Version">Prediction engine v3.2.0 (23/02/24)</div>
             <h4>New beta feature, filters &#8595;</h4>
             <Collapsable
               buttonText={"Filters"}
