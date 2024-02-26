@@ -20,18 +20,20 @@ export async function calculateAttackingStrength(stats) {
     "Average Shots On Target": 0.15,
     "Average Expected Goals": 0.15,
     "Recent XG": 0.15,
-    "Average Goals": 0.3,
+    "Average Goals": 0.2,
+    "Corners": 0.1
   };
 
   // Define the ranges for normalization
   const ranges = {
     // averagePossession: { min: 25, max: 75 },
-    "Average Dangerous Attacks": { min: 30, max: 75 }, // Adjust the max value as needed
+    "Average Dangerous Attacks": { min: 25, max: 75 }, // Adjust the max value as needed
     "Average Shots": { min: 5, max: 17 }, // Adjust the max value as needed
     "Average Shots On Target": { min: 2, max: 9 }, // Adjust the max value as needed
     "Average Expected Goals": { min: 0, max: 3 }, // Adjust the max value as needed
     "Recent XG": { min: 0, max: 3 }, // Adjust the max value as needed
     "Average Goals": { min: 0, max: 3 }, // Adjust the max value as needed
+    "Corners": { min: 2, max: 10 }
   };
 
   // Normalize each metric value and calculate the weighted sum
@@ -57,18 +59,20 @@ export async function calculateAttackingStrength(stats) {
 export async function calculateDefensiveStrength(stats) {
   // Define weights for each metric (you can adjust these based on your preference)
   const weights = {
-    "Clean Sheet Percentage": 0.3,
-    "Average XG Against": 0.2,
+    "Clean Sheet Percentage": 0.1,
+    "Average XG Against": 0.25,
     "Recent XG Against": 0.2,
-    "Average Goals Against": 0.3,
+    "Average Goals Against": 0.25,
+    "Average SOT Against": 0.2
   };
 
   // Define the ranges for normalization
   const ranges = {
     "Clean Sheet Percentage": { min: 0, max: 100 },
-    "Average XG Against": { min: 0, max: 3 }, // Adjust the max value as needed
-    "Recent XG Against": { min: 0, max: 3 },
+    "Average XG Against": { min: 0., max: 3 }, // Adjust the max value as needed
+    "Recent XG Against": { min: 0., max: 3 },
     "Average Goals Against": { min: 0, max: 3 }, // Adjust the max value as needed
+    "Average SOT Against": { min: 3, max: 10}
   };
 
   // Normalize each metric value and calculate the weighted sum
