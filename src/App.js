@@ -47,14 +47,14 @@ const leagueOrder = [
   9984, //Portagul Prem 22/23
   9653, //Dutch Prem 22/23
   9577, //Belgian Pro League 22/23
-  8737, //sweden 23
+  10969, //sweden 23
   9545, //Danish Prem 22/23
-  8739, //Norway Prem 23
+  10976, //Norway Prem 23
   9954, //Austrian Prem 22/23
   9889, //Greek Prem 22/23
   9553, //Polish prem 22/23
   9580, //Swiss prem 22/23
-  8741, //Irish Prem 23
+  10946, //Irish Prem 23
   9675, //Spanish secunda 22/23
   9808, //Italy serie B 22/23
   9656, //Bundesliga 2 22/23
@@ -64,14 +64,14 @@ const leagueOrder = [
   9639, //Scottish league 1 22/23
   9638, //Scottish league 2 22/23
   9890, //Women's prem 23/24
-  8777, //MLS 23
+  10977, //MLS 23
   9035, //Brazil prem 23
-  8595, //Argentina prem 23
-  // 6935, //Japan 22
+  11212, //Argentina prem 23
+  10994, //Japan 22
   9525, //Mexico prem 23/24
   9972, //National league North and South 22/23
   10505, //Australian A league 23/24
-  8899, //S Korea 23
+  11102, //S Korea 23
 ];
 
 let today;

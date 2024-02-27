@@ -2466,7 +2466,7 @@ export async function calculateScore(match, index, divider, calculate) {
     }
 
     if (
-      match.game_week < 0
+      match.game_week < 3
       // match.omit === true
       // match.game_week < 3 &&
     ) {
