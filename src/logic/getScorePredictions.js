@@ -409,18 +409,65 @@ async function getPastLeagueResults(team, game, hOrA, form) {
     const possessionSum = possession.reduce((a, b) => a + b, 0);
     const avgPossession = possessionSum / possession.length || 0;
 
+    const possessionHome = reversedResultsHome.map((res) => res.possession);
+    const possessionSumHome = possessionHome.reduce((a, b) => a + b, 0);
+    form.avgPossessionHome = possessionSumHome / possessionHome.length || 0;
+
+    const possessionAway = reversedResultsAway.map((res) => res.possession);
+    const possessionSumAway = possessionAway.reduce((a, b) => a + b, 0);
+    form.avgPossessionAway = possessionSumAway / possessionAway.length || 0;
+
     const dangerousAttacks = allTeamResults.map((res) => res.dangerousAttacks);
     const dangerousAttacksSum = dangerousAttacks.reduce((a, b) => a + b, 0);
     const avgDangerousAttacks =
       dangerousAttacksSum / dangerousAttacks.length || 0;
 
+    const dangerousAttacksHome = reversedResultsHome.map(
+      (res) => res.dangerousAttacks
+    );
+    const dangerousAttacksSumHome = dangerousAttacksHome.reduce(
+      (a, b) => a + b,
+      0
+    );
+    form.avgDangerousAttacksHome =
+      dangerousAttacksSumHome / dangerousAttacksHome.length || 0;
+
+    const dangerousAttacksAway = reversedResultsAway.map(
+      (res) => res.dangerousAttacks
+    );
+    const dangerousAttacksSumAway = dangerousAttacksAway.reduce(
+      (a, b) => a + b,
+      0
+    );
+    form.avgDangerousAttacksAway =
+      dangerousAttacksSumAway / dangerousAttacksAway.length || 0;
+
     const shots = allTeamResults.map((res) => res.shots);
     const shotsSum = shots.reduce((a, b) => a + b, 0);
     const avgShots = shotsSum / shots.length || 0;
+    form.avgShots = avgShots;
+
+    const shotsHome = reversedResultsHome.map((res) => res.shots);
+    const shotsSumHome = shotsHome.reduce((a, b) => a + b, 0);
+    form.avgShotsHome = shotsSumHome / shotsHome.length || 0;
+
+    const shotsAway = reversedResultsAway.map((res) => res.shots);
+    const shotsSumAway = shotsAway.reduce((a, b) => a + b, 0);
+    form.avgShotsAway = shotsSumAway / shotsAway.length || 0;
 
     const shotsOnTarget = allTeamResults.map((res) => res.sot);
     const shotsOnTargetSum = shotsOnTarget.reduce((a, b) => a + b, 0);
     const avgShotsOnTarget = shotsOnTargetSum / shotsOnTarget.length || 0;
+
+    const shotsOnTargetHome = reversedResultsHome.map((res) => res.sot);
+    const shotsOnTargetSumHome = shotsOnTargetHome.reduce((a, b) => a + b, 0);
+    form.avgShotsOnTargetHome =
+      shotsOnTargetSumHome / shotsOnTargetHome.length || 0;
+
+    const shotsOnTargetAway = reversedResultsAway.map((res) => res.sot);
+    const shotsOnTargetSumAway = shotsOnTargetAway.reduce((a, b) => a + b, 0);
+    form.avgShotsOnTargetAway =
+      shotsOnTargetSumAway / shotsOnTargetAway.length || 0;
 
     const shotsOnTargetAgainst = allTeamResults.map((res) => res.sotAgainst);
     const shotsOnTargetSumAgainst = shotsOnTargetAgainst.reduce(
@@ -430,17 +477,73 @@ async function getPastLeagueResults(team, game, hOrA, form) {
     const avgShotsOnTargetAgainst =
       shotsOnTargetSumAgainst / shotsOnTargetAgainst.length || 0;
 
+    const shotsOnTargetAgainstHome = reversedResultsHome.map(
+      (res) => res.sotAgainst
+    );
+    const shotsOnTargetSumAgainstHome = shotsOnTargetAgainstHome.reduce(
+      (a, b) => a + b,
+      0
+    );
+    form.avgShotsOnTargetAgainstHome =
+      shotsOnTargetSumAgainstHome / shotsOnTargetAgainstHome.length || 0;
+
+    const shotsOnTargetAgainstAway = reversedResultsAway.map(
+      (res) => res.sotAgainst
+    );
+    const shotsOnTargetSumAgainstAway = shotsOnTargetAgainstAway.reduce(
+      (a, b) => a + b,
+      0
+    );
+    form.avgShotsOnTargetAgainstAway =
+      shotsOnTargetSumAgainstAway / shotsOnTargetAgainstAway.length || 0;
+
     const corners = allTeamResults.map((res) => res.corners);
     const cornersSum = corners.reduce((a, b) => a + b, 0);
     const cornersAv = cornersSum / corners.length || 0;
+
+    const cornersHome = reversedResultsHome.map((res) => res.corners);
+    const cornersSumHome = cornersHome.reduce((a, b) => a + b, 0);
+    form.cornersAvHome = cornersSumHome / cornersHome.length || 0;
+
+    const cornersAway = reversedResultsAway.map((res) => res.corners);
+    const cornersSumAway = cornersAway.reduce((a, b) => a + b, 0);
+    form.cornersAvAway = cornersSumAway / cornersAway.length || 0;
 
     const last5XG = teamXGForAll.slice(0, 5);
     const last5XGSum = last5XG.reduce((a, b) => a + b, 0);
     const last5XGAvgFor = last5XGSum / last5XG.length || 0;
 
+    const last5XGHome = teamXGForHome.slice(0, 5);
+    const last5XGSumHome = last5XGHome.reduce((a, b) => a + b, 0);
+    form.last5XGAvgForHome = last5XGSumHome / last5XGHome.length || 0;
+
+    const last5XGAway = teamXGForAway.slice(0, 5);
+    const last5XGSumAway = last5XGAway.reduce((a, b) => a + b, 0);
+    form.last5XGAvgForAway = last5XGSumAway / last5XGAway.length || 0;
+
+    const XGSumHome = teamXGForHome.reduce((a, b) => a + b, 0);
+    form.avgXGScoredHome = XGSumHome / teamXGForHome.length || 0;
+
+    const XGSumAway = teamXGForAway.reduce((a, b) => a + b, 0);
+    form.avgXGScoredAway = XGSumAway / teamXGForAway.length || 0;
+
+    const XGAgainstSumHome = teamXGAgainstHome.reduce((a, b) => a + b, 0);
+    form.avgXGConceededHome = XGAgainstSumHome / teamXGAgainstHome.length || 0;
+
+    const XGAgainstSumAway = teamXGAgainstAway.reduce((a, b) => a + b, 0);
+    form.avgXGConceededAway = XGAgainstSumAway / teamXGAgainstAway.length || 0;
+
     const last5XGAgainst = teamXGAgainstAll.slice(0, 5);
     const last5XGAgainstSum = last5XGAgainst.reduce((a, b) => a + b, 0);
     const last5XGAvgAgainst = last5XGAgainstSum / last5XGAgainst.length || 0;
+
+    const last5XGAgainstHome = teamXGForHome.slice(0, 5);
+    const last5XGAgainstSumHome = last5XGAgainstHome.reduce((a, b) => a + b, 0);
+    form.last5XGAvgAgainstHome = last5XGAgainstSumHome / last5XGAgainstHome.length || 0;
+
+    const last5XGAgainstAway = teamXGForAway.slice(0, 5);
+    const last5XGAgainstSumAway = last5XGAgainstAway.reduce((a, b) => a + b, 0);
+    form.last5XGAvgAgainstAway = last5XGAgainstSumAway / last5XGAgainstAway.length || 0;
 
     form.XGDiffNonAverage = XGSum - XGAgainstSum;
     form.XGDiffNonAverageLast5 = last5XGSum - last5XGAgainstSum;
@@ -589,16 +692,40 @@ async function getPastLeagueResults(team, game, hOrA, form) {
 
     const sum = teamGoalsAll.reduce((a, b) => a + b, 0);
     const avgScored = sum / teamGoalsAll.length || 0;
-    form.avgScored = avgScored
+    form.avgScored = avgScored;
+
+    const sumHome = teamGoalsHome.reduce((a, b) => a + b, 0);
+    const avgScoredHome = sumHome / teamGoalsAll.length || 0;
+    form.avgScoredHome = avgScoredHome;
+
+    const sumAway = teamGoalsAway.reduce((a, b) => a + b, 0);
+    const avgScoredAway = sumAway / teamGoalsAway.length || 0;
+    form.avgScoredAway = avgScoredAway;
+
 
     const last5 = teamGoalsAll.slice(0, 5);
     const last5Sum = last5.reduce((a, b) => a + b, 0);
     const last5AvgScored = last5Sum / last5.length || 0;
 
-    //is this sorted backwards???
+    const last5Home = teamGoalsHome.slice(0, 5);
+    const last5SumHome = last5Home.reduce((a, b) => a + b, 0);
+    form.last5AvgScoredHome = last5SumHome / last5Home.length || 0;
+
+    const last5Away = teamGoalsAway.slice(0, 5);
+    const last5SumAway = last5Away.reduce((a, b) => a + b, 0);
+    form.last5AvgScoredAway = last5SumAway / last5Away.length || 0;
+
     const last5Conceeded = teamConceededAll.slice(0, 5);
     const last5ConceededSum = last5Conceeded.reduce((a, b) => a + b, 0);
     const last5AvgConceeded = last5ConceededSum / last5Conceeded.length || 0;
+
+    const last5ConceededHome = teamConceededHome.slice(0, 5);
+    const last5ConceededSumHome = last5ConceededHome.reduce((a, b) => a + b, 0);
+    form.last5AvgConceededHome = last5ConceededSumHome / last5ConceededHome.length || 0;
+
+    const last5ConceededAway = teamConceededAway.slice(0, 5);
+    const last5ConceededSumAway = last5ConceededAway.reduce((a, b) => a + b, 0);
+    form.last5AvgConceededAway = last5ConceededSumAway / last5ConceededAway.length || 0;
 
     const last10 = teamGoalsAll.slice(0, 10);
     const last10Sum = last10.reduce((a, b) => a + b, 0);
@@ -627,6 +754,18 @@ async function getPastLeagueResults(team, game, hOrA, form) {
 
     const sumTwo = teamConceededAll.reduce((a, b) => a + b, 0);
     const avgConceeded = sumTwo / teamConceededAll.length || 0;
+    form.avgConceeded = avgConceeded;
+
+
+    const teamConceededHomeOnlySum = teamConceededHome.reduce((a, b) => a + b, 0);
+    const teamConceededAvgHomeOnly = teamConceededHomeOnlySum / teamConceededHome.length || 0
+    form.teamConceededAvgHomeOnly = teamConceededAvgHomeOnly
+
+    const teamConceededAwayOnlySum = teamConceededAway.reduce((a, b) => a + b, 0);
+    const teamConceededAvgAwayOnly = teamConceededAwayOnlySum / teamConceededAway.length || 0
+    form.teamConceededAvgAwayOnly = teamConceededAvgAwayOnly
+
+    console.log(form)
 
     form.goalDifference = sum - sumTwo;
 
@@ -1129,8 +1268,8 @@ export async function compareTeams(homeForm, awayForm, match) {
   );
 
   const hOrADirectnessComparison = await compareStat(
-    homeForm.directnessHome,
-    awayForm.directnessAway
+    homeForm.directnessHomeOnly,
+    awayForm.directnessAwayOnly
   );
 
   const accuracyComparison = await compareStat(
@@ -1785,8 +1924,6 @@ export async function calculateScore(match, index, divider, calculate) {
 
     let teamComparisonScore;
 
-    console.log(formHome.avgScored);
-    console.log((formHome.ScoredOverall / 10).toFixed(2))
     const attackingMetricsHome = {
       "Average Dangerous Attacks": formHome.AverageDangerousAttacksOverall,
       "Average Shots": formHome.AverageShots,
@@ -1794,12 +1931,34 @@ export async function calculateScore(match, index, divider, calculate) {
       "Average Expected Goals": formHome.XGOverall,
       "Recent XG": formHome.XGlast5 ? formHome.XGlast5 : formHome.XGOverall,
       "Average Goals":
-        formHome.avgScored !== undefined &&
-        formHome.avgScored !== null
+        formHome.avgScored !== undefined && formHome.avgScored !== null
           ? formHome.avgScored
           : (formHome.ScoredOverall / 10).toFixed(2),
       Corners: formHome.AverageCorners,
     };
+
+    const attackingMetricsHomeOnly = {
+      "Average Dangerous Attacks": formHome.avgDangerousAttacksHome,
+      "Average Shots": formHome.avgShotsHome,
+      "Average Shots On Target": formHome.avgShotsOnTargetHome,
+      "Average Expected Goals": formHome.avgXGScoredHome,
+      "Recent XG": formHome.last5XGAvgForHome,
+      "Average Goals":
+        formHome.avgScoredHome,
+      Corners: formHome.cornersAvHome,
+    };
+
+    const attackingMetricsAwayOnly = {
+      "Average Dangerous Attacks": formAway.avgDangerousAttacksAway,
+      "Average Shots": formAway.avgShotsAway,
+      "Average Shots On Target": formAway.avgShotsOnTargetAway,
+      "Average Expected Goals": formAway.avgXGScoredAway,
+      "Recent XG": formAway.last5XGAvgForAway,
+      "Average Goals":
+      formAway.avgScoredAway,
+      Corners: formAway.cornersAvAway,
+    };
+
     const attackingMetricsAway = {
       "Average Dangerous Attacks": formAway.AverageDangerousAttacksOverall,
       "Average Shots": formAway.AverageShots,
@@ -1807,28 +1966,24 @@ export async function calculateScore(match, index, divider, calculate) {
       "Average Expected Goals": formAway.XGOverall,
       "Recent XG": formAway.XGlast5 ? formAway.XGlast5 : formAway.XGOverall,
       "Average Goals":
-        formAway.avgScored !== undefined &&
-        formAway.avgScored !== null
+        formAway.avgScored !== undefined && formAway.avgScored !== null
           ? formAway.avgScored
           : (formAway.ScoredOverall / 10).toFixed(2),
       Corners: formAway.AverageCorners,
     };
 
     const defensiveMetricsHome = {
-      "Clean Sheet Percentage": 100 - formHome.CleanSheetPercentage,
       "Average XG Against": formHome.XGAgainstAvgOverall,
       "Recent XG Against": formHome.XGAgainstlast5
         ? formHome.XGAgainstlast5
         : formHome.XGAgainstAvgOverall,
       "Average Goals Against":
-        formHome.averageConceededLeague !== null
-          ? formHome.averageConceededLeague
-          : formHome.ConcededAverage.toFixed(2),
+        formHome.avgConceeded,
       "Average SOT Against": formHome.AverageShotsOnTargetAgainstOverall,
     };
 
+
     const defensiveMetricsAway = {
-      "Clean Sheet Percentage": 100 - formAway.CleanSheetPercentage,
       "Average XG Against": formAway.XGAgainstAvgOverall,
       "Recent XG Against": formAway.XGAgainstlast5
         ? formAway.XGAgainstlast5
@@ -1840,28 +1995,59 @@ export async function calculateScore(match, index, divider, calculate) {
       "Average SOT Against": formAway.AverageShotsOnTargetAgainstOverall,
     };
 
+    const defensiveMetricsHomeOnly = {
+      "Average XG Against": formHome.avgXGConceededHome,
+      "Recent XG Against": formHome.last5XGAvgAgainstHome,
+      "Average Goals Against":
+        formHome.teamConceededAvgHomeOnly,
+      "Average SOT Against": formHome.avgShotsOnTargetAgainstHome,
+    };
+
+    const defensiveMetricsAwayOnly = {
+      "Average XG Against": formAway.avgXGConceededAway,
+      "Recent XG Against": formAway.last5XGAvgAgainstAway,
+      "Average Goals Against":
+        formAway.teamConceededAvgAwayOnly,
+      "Average SOT Against": formAway.avgShotsOnTargetAgainstAway,
+    };
+
     formHome.attackingMetrics = attackingMetricsHome;
     formHome.defensiveMetrics = defensiveMetricsHome;
     formAway.attackingMetrics = attackingMetricsAway;
     formAway.defensiveMetrics = defensiveMetricsAway;
 
-    console.log(match.game)
-    console.log(attackingMetricsHome)
-    console.log(defensiveMetricsHome)
-    console.log(attackingMetricsAway)
-    console.log(defensiveMetricsAway)
+    console.log(match.game);
+    console.log(attackingMetricsHome);
+    console.log(attackingMetricsHomeOnly);
 
     formHome.attackingStrength = await calculateAttackingStrength(
       attackingMetricsHome
     );
+    formHome.attackingStrengthHomeOnly = await calculateAttackingStrength(
+      attackingMetricsHomeOnly
+    );
+
     formAway.attackingStrength = await calculateAttackingStrength(
       attackingMetricsAway
     );
+    formAway.attackingStrengthAwayOnly = await calculateAttackingStrength(
+      attackingMetricsAwayOnly
+    );
+
     formHome.defensiveStrength = await calculateDefensiveStrength(
       defensiveMetricsHome
     );
+
+    formHome.defensiveStrengthHomeOnly = await calculateDefensiveStrength(
+      defensiveMetricsHomeOnly
+    );
+
     formAway.defensiveStrength = await calculateDefensiveStrength(
       defensiveMetricsAway
+    );
+
+    formAway.defensiveStrengthAwayOnly = await calculateDefensiveStrength(
+      defensiveMetricsAwayOnly
     );
 
     formHome.possessionStrength = await calculateMetricStrength(
@@ -1869,61 +2055,138 @@ export async function calculateScore(match, index, divider, calculate) {
       formHome.AveragePossessionOverall
     );
 
+    formHome.possessionStrengthHomeOnly = await calculateMetricStrength(
+      "averagePossession",
+      formHome.avgPossessionHome
+    );
+
     formHome.directnessOverall =
       (formHome.AverageShots / formHome.AveragePossessionOverall) * 10;
+
+      formHome.directnessHomeOnly =
+      (formHome.avgShotsHome / formHome.avgPossessionHome) * 10;
+
     formAway.directnessOverall =
       (formAway.AverageShots / formAway.AveragePossessionOverall) * 10;
+
+      formAway.directnessAwayOnly =
+      (formAway.avgShotsAway / formAway.avgPossessionAway) * 10;
 
     formHome.directnessOverallStrength = await calculateMetricStrength(
       "directnessOverall",
       formHome.directnessOverall
     );
+
+    formHome.directnessHomeStrength = await calculateMetricStrength(
+      "directnessOverall",
+      formHome.directnessHomeOnly
+    );
+
     formAway.directnessOverallStrength = await calculateMetricStrength(
       "directnessOverall",
       formAway.directnessOverall
     );
 
-    formHome.directnessHome =
-      (formHome.AverageShotsHomeOrAway / formHome.AveragePossession) * 10;
-    formAway.directnessAway =
-      (formAway.AverageShotsHomeOrAway / formAway.AveragePossession) * 10;
+    formAway.directnessAwayStrength = await calculateMetricStrength(
+      "directnessOverall",
+      formAway.directnessAwayOnly
+    );
 
     formHome.shootingAccuracy =
-      (formHome.AverageShotsOnTargetOverall / formHome.AverageShots) *
+      (formHome.AverageShotsOnTargetOverall / formHome.avgShots) *
       formHome.AverageShotsOnTargetOverall;
+
+      formHome.shootingAccuracyHomeOnly =
+      (formHome.avgShotsOnTargetHome / formHome.avgShotsHome) *
+      formHome.avgShotsOnTargetHome;
+
     formAway.shootingAccuracy =
-      (formAway.AverageShotsOnTargetOverall / formAway.AverageShots) *
+      (formAway.AverageShotsOnTargetOverall / formAway.avgShots) *
       formAway.AverageShotsOnTargetOverall;
+
+      console.log(match.game)
+      console.log(formAway.shootingAccuracy)
+      console.log(formAway.AverageShotsOnTargetOverall)
+      console.log(formAway.AverageShots)
+
+      console.log(match.game)
+      console.log(formHome.shootingAccuracy)
+      console.log(formHome.AverageShotsOnTargetOverall)
+      console.log(formHome.AverageShots)
+
+
+      formAway.shootingAccuracyAwayOnly =
+      (formAway.avgShotsOnTargetAway / formAway.avgShotsAway) *
+      formAway.avgShotsOnTargetAway;
 
     formHome.accuracyOverallStrength = await calculateMetricStrength(
       "accuracyOverall",
       formHome.shootingAccuracy
     );
+
+    formHome.accuracyHomeStrength = await calculateMetricStrength(
+      "accuracyOverall",
+      formHome.shootingAccuracyHomeOnly
+    );
+
     formAway.accuracyOverallStrength = await calculateMetricStrength(
       "accuracyOverall",
       formAway.shootingAccuracy
+    );
+
+    formAway.accuracyAwayStrength = await calculateMetricStrength(
+      "accuracyOverall",
+      formAway.shootingAccuracyAwayOnly
     );
 
     formHome.xgForStrength = await calculateMetricStrength(
       "xgFor",
       formHome.XGOverall
     );
+
+    formHome.xgForStrengthHomeOnly = await calculateMetricStrength(
+      "xgFor",
+      formHome.avgXGScoredHome
+    );
+
     formHome.xgAgainstStrength = await calculateMetricStrength(
       "xgAgainst",
       3 - formHome.XGAgainstAvgOverall
+    );
+
+    formHome.xgAgainstStrengthHomeOnly = await calculateMetricStrength(
+      "xgAgainst",
+      3 - formHome.avgXGConceededHome
     );
 
     formAway.possessionStrength = await calculateMetricStrength(
       "averagePossession",
       formAway.AveragePossessionOverall
     );
+
+    formAway.possessionStrengthAwayOnly = await calculateMetricStrength(
+      "averagePossession",
+      formAway.avgPossessionAway
+    );
+
     formAway.xgForStrength = await calculateMetricStrength(
       "xgFor",
       formAway.XGOverall
     );
+
+    formAway.xgForStrengthAwayOnly = await calculateMetricStrength(
+      "xgFor",
+      formAway.avgXGScoredAway
+    );
+
     formAway.xgAgainstStrength = await calculateMetricStrength(
       "xgAgainst",
       3 - formAway.XGAgainstAvgOverall
+    );
+
+    formAway.xgAgainstStrengthAwayOnly = await calculateMetricStrength(
+      "xgAgainst",
+      3 - formAway.avgXGConceededAway
     );
 
     formHome.actualToXGDifference = parseInt(
@@ -2079,6 +2342,10 @@ export async function calculateScore(match, index, divider, calculate) {
       homeComparisonWeighting = 1;
       awayComparisonWeighting = 1;
     }
+
+    console.log(match.game)
+    console.log(formHome);
+    console.log(formAway);
 
     let experimentalHomeGoals =
       (((factorOneHome * 1.25 + factorTwoHome * 0) * homeComparisonWeighting) /

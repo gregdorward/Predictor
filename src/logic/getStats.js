@@ -21,7 +21,7 @@ export async function calculateAttackingStrength(stats) {
     "Average Expected Goals": 0.15,
     "Recent XG": 0.15,
     "Average Goals": 0.2,
-    "Corners": 0.1
+    Corners: 0.1,
   };
 
   // Define the ranges for normalization
@@ -33,7 +33,7 @@ export async function calculateAttackingStrength(stats) {
     "Average Expected Goals": { min: 0, max: 3 }, // Adjust the max value as needed
     "Recent XG": { min: 0, max: 3 }, // Adjust the max value as needed
     "Average Goals": { min: 0, max: 3 }, // Adjust the max value as needed
-    "Corners": { min: 2, max: 10 }
+    Corners: { min: 2, max: 10 },
   };
 
   // Normalize each metric value and calculate the weighted sum
@@ -59,20 +59,18 @@ export async function calculateAttackingStrength(stats) {
 export async function calculateDefensiveStrength(stats) {
   // Define weights for each metric (you can adjust these based on your preference)
   const weights = {
-    "Clean Sheet Percentage": 0.1,
     "Average XG Against": 0.25,
-    "Recent XG Against": 0.2,
+    "Recent XG Against": 0.25,
     "Average Goals Against": 0.25,
-    "Average SOT Against": 0.2
+    "Average SOT Against": 0.25,
   };
 
   // Define the ranges for normalization
   const ranges = {
-    "Clean Sheet Percentage": { min: 0, max: 100 },
-    "Average XG Against": { min: 0., max: 3 }, // Adjust the max value as needed
-    "Recent XG Against": { min: 0., max: 3 },
+    "Average XG Against": { min: 0, max: 3 }, // Adjust the max value as needed
+    "Recent XG Against": { min: 0, max: 3 },
     "Average Goals Against": { min: 0, max: 3 }, // Adjust the max value as needed
-    "Average SOT Against": { min: 3, max: 10}
+    "Average SOT Against": { min: 3, max: 10 },
   };
 
   // Normalize each metric value and calculate the weighted sum
@@ -110,7 +108,7 @@ export async function calculateMetricStrength(metricName, metricValue) {
     xgFor: { min: 0.1, max: 3 },
     xgAgainst: { min: 0.1, max: 3 },
     directnessOverall: { min: 0.5, max: 4 },
-    accuracyOverall: { min: 0.5, max: 5 },
+    accuracyOverall: { min: 0.5, max: 6 },
   };
 
   // Ensure the metric is valid and exists in the weights and ranges objects
@@ -494,8 +492,8 @@ export async function createStatsDiv(game, displayBool) {
           [a[0]]
         );
 
-        const homeForm = gameStats.home[index];
-        const awayForm = gameStats.away[index];
+      const homeForm = gameStats.home[index];
+      const awayForm = gameStats.away[index];
 
       if (displayBool === true) {
         // let fixtures = await fetch(
@@ -611,7 +609,10 @@ export async function createStatsDiv(game, displayBool) {
             unixTimestamp: resultHome[i].date_unix,
             goalsFor: goalsScored,
             goalsAgainst: goalsConceeded,
-            btts: resultHome[i].homeGoalCount > 0 && resultHome[i].awayGoalCount > 0 ? "\u2714" : "\u2718",
+            btts:
+              resultHome[i].homeGoalCount > 0 && resultHome[i].awayGoalCount > 0
+                ? "\u2714"
+                : "\u2718",
           });
         }
 
@@ -620,7 +621,6 @@ export async function createStatsDiv(game, displayBool) {
 
           switch (true) {
             case resultHomeOnly[i].home_name === gameStats.home.teamName:
-
               switch (true) {
                 case resultHomeOnly[i].homeGoalCount >
                   resultHomeOnly[i].awayGoalCount:
@@ -646,19 +646,18 @@ export async function createStatsDiv(game, displayBool) {
               break;
           }
         }
-        console.log(gameArrayHome)
+        console.log(gameArrayHome);
 
         goalDiffArrayHome = homeForm.allTeamResults.map(
           (a) => a.scored - a.conceeded
         );
-
 
         // goalDiffArrayHome = gameArrayHome.map(
         //   (a) => a.goalsFor - a.goalsAgainst
         // );
 
         let r = 5;
-          console.log(goalDiffArrayHome.reverse())
+        console.log(goalDiffArrayHome.reverse());
         goalDiffHomeMovingAv = getEMA(
           goalDiffArrayHome.reverse(),
           goalDiffArrayHome.length < 5 ? goalDiffArrayHome.length : r
@@ -682,7 +681,6 @@ export async function createStatsDiv(game, displayBool) {
         const resultAwayOnly = matches.fixtures.filter(
           (game) => game.away_name === gameStats.away.teamName
         );
-
 
         resultAway.sort((a, b) => b.date_unix - a.date_unix);
         resultAwayOnly.sort((a, b) => b.date_unix - a.date_unix);
@@ -775,7 +773,10 @@ export async function createStatsDiv(game, displayBool) {
             unixTimestamp: resultAway[i].date_unix,
             goalsFor: goalsScored,
             goalsAgainst: goalsConceeded,
-            btts: resultAway[i].homeGoalCount > 0 && resultAway[i].awayGoalCount > 0 ? "\u2714" : "\u2718",
+            btts:
+              resultAway[i].homeGoalCount > 0 && resultAway[i].awayGoalCount > 0
+                ? "\u2714"
+                : "\u2718",
           });
         }
 
@@ -784,17 +785,19 @@ export async function createStatsDiv(game, displayBool) {
 
           switch (true) {
             case resultAwayOnly[i].away_name === gameStats.away.teamName:
-
               switch (true) {
-                case resultAwayOnly[i].awayGoalCount > resultAwayOnly[i].homeGoalCount:
+                case resultAwayOnly[i].awayGoalCount >
+                  resultAwayOnly[i].homeGoalCount:
                   wonAwayOrAwayOnly = "W";
                   gameArrayAwayTeamAwayGames.push(wonAwayOrAwayOnly);
                   break;
-                case resultAwayOnly[i].awayGoalCount === resultAwayOnly[i].homeGoalCount:
+                case resultAwayOnly[i].awayGoalCount ===
+                  resultAwayOnly[i].homeGoalCount:
                   wonAwayOrAwayOnly = "D";
                   gameArrayAwayTeamAwayGames.push(wonAwayOrAwayOnly);
                   break;
-                case resultAwayOnly[i].awayGoalCount < resultAwayOnly[i].homeGoalCount:
+                case resultAwayOnly[i].awayGoalCount <
+                  resultAwayOnly[i].homeGoalCount:
                   wonAwayOrAwayOnly = "L";
                   gameArrayAwayTeamAwayGames.push(wonAwayOrAwayOnly);
                   break;
@@ -1046,37 +1049,67 @@ export async function createStatsDiv(game, displayBool) {
       };
 
       let homeAttackStrength;
+      let homeOnlyAttackStrength;
       let homeDefenceStrength;
+      let homeOnlyDefenceStrength;
       let homePossessionStrength;
+      let homeOnlyPossessionStrength;
       let homeXGForStrength;
+      let homeOnlyXGForStrength;
       let homeXGAgainstStrength;
+      let homeOnlyXGAgainstStrength;
       let awayAttackStrength;
+      let awayOnlyAttackStrength;
       let awayDefenceStrength;
+      let awayOnlyDefenceStrength;
       let awayPossessionStrength;
+      let awayOnlyPossessionStrength;
       let awayXGForStrength;
+      let awayOnlyXGForStrength;
       let awayXGAgainstStrength;
+      let awayOnlyXGAgainstStrength;
       let homeDirectnessStrength;
+      let homeOnlyDirectnessStrength;
       let awayDirectnessStrength;
+      let awayOnlyDirectnessStrength;
       let homeAccuracyOverallStrength;
+      let homeOnlyAccuracyOverallStrength;
       let awayAccuracyOverallStrength;
+      let awayOnlyAccuracyOverallStrength;
 
       if (homeForm.xgForStrength) {
         console.log("not calculating");
         homeAttackStrength = homeForm.attackingStrength;
+        homeOnlyAttackStrength = homeForm.attackingStrengthHomeOnly;
         homeDefenceStrength = homeForm.defensiveStrength;
+        homeOnlyDefenceStrength = homeForm.defensiveStrengthHomeOnly;
         homePossessionStrength = homeForm.possessionStrength;
+        homeOnlyPossessionStrength = homeForm.possessionStrengthHomeOnly;
         homeXGForStrength = homeForm.xgForStrength;
+        homeOnlyXGForStrength = homeForm.xgForStrengthHomeOnly;
         homeXGAgainstStrength = homeForm.xgAgainstStrength;
+        homeOnlyXGAgainstStrength = homeForm.xgAgainstStrengthHomeOnly;
         homeDirectnessStrength = homeForm.directnessOverallStrength;
+        homeOnlyDirectnessStrength = homeForm.directnessHomeStrength;
         homeAccuracyOverallStrength = homeForm.accuracyOverallStrength;
+        homeOnlyAccuracyOverallStrength =
+          homeForm.accuracyHomeStrength;
 
         awayAttackStrength = awayForm.attackingStrength;
+        awayOnlyAttackStrength = awayForm.attackingStrengthAwayOnly;
         awayDefenceStrength = awayForm.defensiveStrength;
+        awayOnlyDefenceStrength = awayForm.defensiveStrengthAwayOnly;
         awayPossessionStrength = awayForm.possessionStrength;
+        awayOnlyPossessionStrength = awayForm.possessionStrengthAwayOnly;
         awayXGForStrength = awayForm.xgForStrength;
+        awayOnlyXGForStrength = awayForm.xgForStrengthAwayOnly;
         awayXGAgainstStrength = awayForm.xgAgainstStrength;
+        awayOnlyXGAgainstStrength = awayForm.xgAgainstStrengthAwayOnly;
         awayDirectnessStrength = awayForm.directnessOverallStrength;
+        awayOnlyDirectnessStrength = awayForm.directnessAwayStrength;
         awayAccuracyOverallStrength = awayForm.accuracyOverallStrength;
+        awayOnlyAccuracyOverallStrength =
+          awayForm.accuracyAwayStrength;
       } else {
         homeAttackStrength = await calculateAttackingStrength(
           attackingMetricsHome
@@ -1443,7 +1476,7 @@ export async function createStatsDiv(game, displayBool) {
           </div>
         );
       }
-      
+
       function StatsAway() {
         return (
           <div className="flex-childTwo">
@@ -1544,6 +1577,7 @@ export async function createStatsDiv(game, displayBool) {
         <div style={style}>
           <div className="Chart" id={`Chart${game.id}`} style={style}>
             <RadarChart
+            title = "XG Tipping Strength Ratings - All Games"
               data={[
                 homeAttackStrength,
                 homeDefenceStrength,
@@ -1561,6 +1595,30 @@ export async function createStatsDiv(game, displayBool) {
                 awayXGAgainstStrength,
                 awayDirectnessStrength,
                 awayAccuracyOverallStrength,
+              ]}
+              team1={game.homeTeam}
+              team2={game.awayTeam}
+            ></RadarChart>
+
+            <RadarChart
+            title = "XG Tipping Strength Ratings - Home/Away Games Only"
+              data={[
+                homeOnlyAttackStrength,
+                homeOnlyDefenceStrength,
+                homeOnlyPossessionStrength,
+                homeOnlyXGForStrength,
+                homeOnlyXGAgainstStrength,
+                homeOnlyDirectnessStrength,
+                homeOnlyAccuracyOverallStrength,
+              ]}
+              data2={[
+                awayOnlyAttackStrength,
+                awayOnlyDefenceStrength,
+                awayOnlyPossessionStrength,
+                awayOnlyXGForStrength,
+                awayOnlyXGAgainstStrength,
+                awayOnlyDirectnessStrength,
+                awayOnlyAccuracyOverallStrength,
               ]}
               team1={game.homeTeam}
               team2={game.awayTeam}

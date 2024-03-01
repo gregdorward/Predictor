@@ -177,7 +177,7 @@ export function RadarChart(props) {
       },
       title: {
         display: true,
-        text: "XG Tipping Strength Ratings",
+        text: props.title,
         font: {
           size: 14,
         },
