@@ -30,8 +30,8 @@ export async function calculateAttackingStrength(stats) {
     "Average Dangerous Attacks": { min: 25, max: 75 }, // Adjust the max value as needed
     "Average Shots": { min: 5, max: 17 }, // Adjust the max value as needed
     "Average Shots On Target": { min: 2, max: 9 }, // Adjust the max value as needed
-    "Average Expected Goals": { min: 0, max: 3 }, // Adjust the max value as needed
-    "Recent XG": { min: 0, max: 3 }, // Adjust the max value as needed
+    "Average Expected Goals": { min: 0.25, max: 2.75 }, // Adjust the max value as needed
+    "Recent XG": { min: 0.25, max: 2.75 }, // Adjust the max value as needed
     "Average Goals": { min: 0, max: 3 }, // Adjust the max value as needed
     Corners: { min: 2, max: 10 },
   };
