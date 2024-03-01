@@ -1212,15 +1212,31 @@ export async function compareTeams(homeForm, awayForm, match) {
     awayAttackStrength
   );
 
+  const attackStrengthHAComparison = await compareStat(
+    homeForm.attackingStrengthHomeOnly,
+    awayForm.attackingStrengthAwayOnly
+  );
+
   const defenceStrengthComparison = await compareStat(
     homeDefenceStrength,
     awayDefenceStrength
+  );
+
+  const defenceStrengthHAComparison = await compareStat(
+    homeForm.defensiveStrengthHomeOnly,
+    awayForm.defensiveStrengthAwayOnly
   );
 
   const possessiontrengthComparison = await compareStat(
     homePossessionStrength,
     awayPossessionStrength
   );
+
+  const possessionHAStrengthComparison = await compareStat(
+    homeForm.possessionStrengthHomeOnly,
+    awayForm.possessionStrengthAwayOnly
+  );
+
 
   // const xgActualComparison = await compareStat(
   //   homeForm.actualToXGDifference,
@@ -1308,8 +1324,8 @@ export async function compareTeams(homeForm, awayForm, match) {
     // xgToActualDiffComparison * 1 +
     // xgForStrengthRecentComparison * 1 +
     // xgAgainstStrengthRecentComparison * 1 +
-    homeAwayPointAverageComparison * 3 +
-    goalDiffHomeOrAwayComparison * 0 +
+    homeAwayPointAverageComparison * 0 +
+    goalDiffHomeOrAwayComparison * 0.5 +
     // xgActualComparison * 0 +
     // xgForComparison * 1 +
     // xgAgainstComparison * 1 +
@@ -1318,7 +1334,7 @@ export async function compareTeams(homeForm, awayForm, match) {
     // dangerousAttacksWithConverstionComparison * 0.05 +
     overallDirectnessComparison * 3 +
     // hOrADirectnessComparison * 0 +
-    accuracyComparison * 3;
+    accuracyComparison * 2;
 
   //LEAVE
 
@@ -2191,10 +2207,10 @@ export async function calculateScore(match, index, divider, calculate) {
     teamComparisonScore = teamComparisonScore * 0.14;
     // LEAVE
 
-    if (teamComparisonScore > 0.5) {
-      teamComparisonScore = 0.5;
-    } else if (teamComparisonScore < -0.5) {
-      teamComparisonScore = -0.5;
+    if (teamComparisonScore > 0.4) {
+      teamComparisonScore = 0.4;
+    } else if (teamComparisonScore < -0.4) {
+      teamComparisonScore = -0.4;
     }
 
     if (teamComparisonScore < 0) {
@@ -2283,7 +2299,7 @@ export async function calculateScore(match, index, divider, calculate) {
         // formHome.XGOverall * 0.5 +
         // formAway.XGAgainstAvgOverall * 0.5 +
         last10WeightingHome * 0 +
-        last2WeightingHome * 0) /
+        last2WeightingHome * 1) /
       11;
 
     factorOneAway =
@@ -2303,7 +2319,7 @@ export async function calculateScore(match, index, divider, calculate) {
         // formAway.XGOverall * 0.5 +
         // formHome.XGAgainstAvgOverall * 0.5 +
         last10WeightingAway * 0 +
-        last2WeightingAway * 0) /
+        last2WeightingAway * 1) /
       11;
 
     let factorTwoHome;
