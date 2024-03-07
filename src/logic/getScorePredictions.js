@@ -935,14 +935,14 @@ export async function comparison(metricOne, metricTwo) {
   // console.log( await normalizeValues(12, 2, 0, 1))
   // console.log(await diff(1.8571428571428571, 1.14285714285714285))
 
-  if (stat1 === 0) {
-    stat1 = stat1 + 1;
-    stat2 = stat2 + 1;
-  }
-  if (stat2 === 0) {
-    stat2 = stat2 + 1;
-    stat2 = stat2 + 1;
-  }
+  // if (stat1 === 0) {
+  //   stat1 = stat1 + 1;
+  //   stat2 = stat2 + 1;
+  // }
+  // if (stat2 === 0) {
+  //   stat2 = stat2 + 1;
+  //   stat2 = stat2 + 1;
+  // }
 
   statDiff = await diff(stat1, stat2);
 
