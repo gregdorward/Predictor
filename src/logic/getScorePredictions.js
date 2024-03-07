@@ -3095,7 +3095,6 @@ async function getSuccessMeasure(fixtures) {
       investment = investment + 1;
       netProfit = (sumProfit - investment).toFixed(2);
       profit = parseFloat(netProfit);
-      console.log(profit)
       if (fixtures[i].exactScore === true) {
         exactScores = exactScores + 1;
       }
