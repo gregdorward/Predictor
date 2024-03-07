@@ -1310,8 +1310,8 @@ export async function generateGoals(homeForm, awayForm, match) {
   console.log(homeAttackVsAwayDefenceComparison);
   console.log(awayAttackVsHomeDefenceComparison);
 
-  homeGoals = (homeGoals + homeAttackVsAwayDefenceComparison) * 5;
-  awayGoals = (awayGoals + awayAttackVsHomeDefenceComparison) * 5;
+  homeGoals = (homeGoals + homeAttackVsAwayDefenceComparison) * 5.1;
+  awayGoals = (awayGoals + awayAttackVsHomeDefenceComparison) * 5.1;
 
   console.log(match.game)
   console.log(homeForm.actualToXGDifference)
@@ -2677,37 +2677,43 @@ export async function calculateScore(match, index, divider, calculate) {
     // finalHomeGoals = await roundCustom(rawFinalHomeGoals, formHome);
     // finalAwayGoals = await roundCustom(rawFinalAwayGoals, formAway);
 
-    rawFinalHomeGoals = formHome.teamGoalsCalc -1;
-    rawFinalAwayGoals = formAway.teamGoalsCalc -1;
+    // if(rawFinalHomeGoals + rawFinalAwayGoals > (formHome.avScoredLast5 + formAway.avScoredLast5) * 1.5){
+    //   rawFinalHomeGoals = formHome.teamGoalsCalc -1;
+    //   rawFinalAwayGoals = formAway.teamGoalsCalc -1;
+    // } else {
+      rawFinalHomeGoals = formHome.teamGoalsCalc -1;
+      rawFinalAwayGoals = formAway.teamGoalsCalc -1;
+    // }
+
 
     // Cumalative ROI for all 1134 match outcomes: + 10.17%
     // Cumalative ROI for all 2191 match outcomes: + 4.36%
     finalHomeGoals = Math.round(rawFinalHomeGoals);
     finalAwayGoals = Math.round(rawFinalAwayGoals);
 
-    if (finalHomeGoals > formHome.avgScored + 2) {
-      finalHomeGoals = Math.round((finalHomeGoals + formHome.avgScored) / 2);
-    }
+    // if (finalHomeGoals > formHome.avgScored + 2) {
+    //   finalHomeGoals = Math.round((finalHomeGoals + formHome.avgScored) / 2);
+    // }
 
-    if (finalAwayGoals > formAway.avgScored + 2) {
-      finalAwayGoals = Math.round((finalAwayGoals + formAway.avgScored) / 2);
-    }
+    // if (finalAwayGoals > formAway.avgScored + 2) {
+    //   finalAwayGoals = Math.round((finalAwayGoals + formAway.avgScored) / 2);
+    // }
 
-    if (finalAwayGoals < 0) {
-      let difference = Math.abs(
-        parseFloat((await diff(0, finalAwayGoals)) / 2)
-      );
-      rawFinalHomeGoals = rawFinalHomeGoals + difference;
-      finalAwayGoals = 0;
-    }
+    // if (finalAwayGoals < 0) {
+    //   let difference = Math.abs(
+    //     parseFloat((await diff(0, finalAwayGoals)) / 2)
+    //   );
+    //   rawFinalHomeGoals = rawFinalHomeGoals + difference;
+    //   finalAwayGoals = 0;
+    // }
 
-    if (finalHomeGoals < 0) {
-      let difference = Math.abs(
-        parseFloat((await diff(0, finalHomeGoals)) / 2)
-      );
-      rawFinalAwayGoals = rawFinalAwayGoals + difference;
-      finalHomeGoals = 0;
-    }
+    // if (finalHomeGoals < 0) {
+    //   let difference = Math.abs(
+    //     parseFloat((await diff(0, finalHomeGoals)) / 2)
+    //   );
+    //   rawFinalAwayGoals = rawFinalAwayGoals + difference;
+    //   finalHomeGoals = 0;
+    // }
 
     console.log(match.omit);
 
@@ -3089,6 +3095,7 @@ async function getSuccessMeasure(fixtures) {
       investment = investment + 1;
       netProfit = (sumProfit - investment).toFixed(2);
       profit = parseFloat(netProfit);
+      console.log(profit)
       if (fixtures[i].exactScore === true) {
         exactScores = exactScores + 1;
       }
