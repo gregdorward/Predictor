@@ -17,9 +17,9 @@ export async function calculateAttackingStrength(stats) {
     // averagePossession: 0.15,
     "Average Dangerous Attacks": 0.15,
     "Average Shots": 0.1,
-    "Average Shots On Target": 0.15,
-    "Average Expected Goals": 0.15,
-    "Recent XG": 0.15,
+    "Average Shots On Target": 0.2,
+    "Average Expected Goals": 0.2,
+    "Recent XG": 0.05,
     "Average Goals": 0.2,
     Corners: 0.1,
   };
@@ -28,12 +28,12 @@ export async function calculateAttackingStrength(stats) {
   const ranges = {
     // averagePossession: { min: 25, max: 75 },
     "Average Dangerous Attacks": { min: 25, max: 75 }, // Adjust the max value as needed
-    "Average Shots": { min: 5, max: 17 }, // Adjust the max value as needed
-    "Average Shots On Target": { min: 2, max: 9 }, // Adjust the max value as needed
+    "Average Shots": { min: 4, max: 17 }, // Adjust the max value as needed
+    "Average Shots On Target": { min: 2, max: 10 }, // Adjust the max value as needed
     "Average Expected Goals": { min: 0.25, max: 2.75 }, // Adjust the max value as needed
     "Recent XG": { min: 0.25, max: 2.75 }, // Adjust the max value as needed
-    "Average Goals": { min: 0, max: 3 }, // Adjust the max value as needed
-    Corners: { min: 2, max: 10 },
+    "Average Goals": { min: 0.25, max: 2.75 }, // Adjust the max value as needed
+    Corners: { min: 2, max: 9 },
   };
 
   // Normalize each metric value and calculate the weighted sum
@@ -56,21 +56,22 @@ export async function calculateAttackingStrength(stats) {
   return parseFloat(weightedSum.toFixed(2));
 }
 
-export async function calculateDefensiveStrength(stats) {
+export async function calculateDefensiveStrength(stats, normalizedValue = 1) {
+  let normValue = normalizedValue
   // Define weights for each metric (you can adjust these based on your preference)
   const weights = {
-    "Average XG Against": 0.25,
-    "Recent XG Against": 0.25,
-    "Average Goals Against": 0.25,
-    "Average SOT Against": 0.25,
+    "Average XG Against": 0.3,
+    "Recent XG Against": 0.1,
+    "Average Goals Against": 0.3,
+    "Average SOT Against": 0.3,
   };
 
   // Define the ranges for normalization
   const ranges = {
-    "Average XG Against": { min: 0, max: 3 }, // Adjust the max value as needed
-    "Recent XG Against": { min: 0, max: 3 },
-    "Average Goals Against": { min: 0, max: 3 }, // Adjust the max value as needed
-    "Average SOT Against": { min: 3, max: 10 },
+    "Average XG Against": { min: 0.25, max: 2.75 }, // Adjust the max value as needed
+    "Recent XG Against": { min: 0.25, max: 2.75 },
+    "Average Goals Against": { min: 0.25, max: 2.75 }, // Adjust the max value as needed
+    "Average SOT Against": { min: 2, max: 10 },
   };
 
   // Normalize each metric value and calculate the weighted sum
@@ -81,11 +82,11 @@ export async function calculateDefensiveStrength(stats) {
       weights.hasOwnProperty(metric) &&
       ranges.hasOwnProperty(metric)
     ) {
-      const normalizedValue =
-        1 -
+      let val =
+      normValue -
         (stats[metric] - ranges[metric].min) /
           (ranges[metric].max - ranges[metric].min);
-      weightedSum += normalizedValue * weights[metric];
+      weightedSum += val * weights[metric];
     }
   }
 
