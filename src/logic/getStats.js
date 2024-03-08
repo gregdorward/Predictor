@@ -57,7 +57,7 @@ export async function calculateAttackingStrength(stats) {
 }
 
 export async function calculateDefensiveStrength(stats, normalizedValue = 1) {
-  let normValue = normalizedValue
+  let normValue = normalizedValue;
   // Define weights for each metric (you can adjust these based on your preference)
   const weights = {
     "Average XG Against": 0.3,
@@ -83,7 +83,7 @@ export async function calculateDefensiveStrength(stats, normalizedValue = 1) {
       ranges.hasOwnProperty(metric)
     ) {
       let val =
-      normValue -
+        normValue -
         (stats[metric] - ranges[metric].min) /
           (ranges[metric].max - ranges[metric].min);
       weightedSum += val * weights[metric];
@@ -1093,8 +1093,7 @@ export async function createStatsDiv(game, displayBool) {
         homeDirectnessStrength = homeForm.directnessOverallStrength;
         homeOnlyDirectnessStrength = homeForm.directnessHomeStrength;
         homeAccuracyOverallStrength = homeForm.accuracyOverallStrength;
-        homeOnlyAccuracyOverallStrength =
-          homeForm.accuracyHomeStrength;
+        homeOnlyAccuracyOverallStrength = homeForm.accuracyHomeStrength;
 
         awayAttackStrength = awayForm.attackingStrength;
         awayOnlyAttackStrength = awayForm.attackingStrengthAwayOnly;
@@ -1109,8 +1108,7 @@ export async function createStatsDiv(game, displayBool) {
         awayDirectnessStrength = awayForm.directnessOverallStrength;
         awayOnlyDirectnessStrength = awayForm.directnessAwayStrength;
         awayAccuracyOverallStrength = awayForm.accuracyOverallStrength;
-        awayOnlyAccuracyOverallStrength =
-          awayForm.accuracyAwayStrength;
+        awayOnlyAccuracyOverallStrength = awayForm.accuracyAwayStrength;
       } else {
         homeAttackStrength = await calculateAttackingStrength(
           attackingMetricsHome
@@ -1401,23 +1399,15 @@ export async function createStatsDiv(game, displayBool) {
                 LeagueOrAll={formDataHome[0].LeagueOrAll}
                 className={"KeyStatsHome"}
                 name={formDataHome[0].name}
-                goals={
-                  homeForm.averageScoredLeague !== undefined &&
-                  homeForm.averageScoredLeague !== null
-                    ? homeForm.averageScoredLeague.toFixed(2)
-                    : formDataHome[0].AverageGoals
-                }
-                conceeded={
-                  homeForm.averageConceededLeague !== undefined &&
-                  homeForm.averageConceededLeague !== null
-                    ? homeForm.averageConceededLeague.toFixed(2)
-                    : formDataHome[0].AverageConceeded
-                }
-                XG={formDataHome[0].AverageXG}
-                XGConceded={formDataHome[0].AverageXGConceded}
-                possession={formDataHome[0].AveragePossession}
-                sot={formDataHome[0].AverageShotsOnTarget}
-                dangerousAttacks={formDataHome[0].AverageDangerousAttacks}
+                goals={homeForm.avgScored}
+                conceeded={homeForm.avgConceeded}
+                XG={homeForm.XGOverall.toFixed(2)}
+                XGConceded={homeForm.XGAgainstAvgOverall.toFixed(2)}
+                possession={homeForm.AveragePossessionOverall.toFixed(2)}
+                sot={homeForm.AverageShotsOnTargetOverall.toFixed(2)}
+                dangerousAttacks={homeForm.AverageDangerousAttacksOverall !== 0 ? homeForm.AverageDangerousAttacksOverall.toFixed(
+                  2
+                ) : homeForm.AverageDangerousAttacks}
                 leaguePosition={
                   formDataHome[0].leaguePosition
                     ? formDataHome[0].leaguePosition
@@ -1443,7 +1433,7 @@ export async function createStatsDiv(game, displayBool) {
                   homeFiveGameAverage.toFixed(2),
                 ]}
                 lastGame={homeLastGame}
-                formRun={formDataHome[0].formRun}
+                formRun={homeForm.resultsAll.reverse()}
                 goalDifference={formDataHome[0].goalDifference}
                 goalDifferenceHomeOrAway={
                   formDataHome[0].goalDifferenceHomeOrAway
@@ -1466,7 +1456,7 @@ export async function createStatsDiv(game, displayBool) {
                 Results={formDataHome[0].Results}
                 ResultsHomeOrAway={formDataHome[0].wonHomeOrAwayOnly}
                 CardsTotal={formDataHome[0].CardsTotal}
-                CornersAverage={formDataHome[0].CornersAverage}
+                CornersAverage={homeForm.AverageCorners}
                 ScoredBothHalvesPercentage={
                   formDataHome[0].ScoredBothHalvesPercentage
                 }
@@ -1492,25 +1482,17 @@ export async function createStatsDiv(game, displayBool) {
                 LeagueOrAll={formDataAway[0].LeagueOrAll}
                 className={"KeyStatsAway"}
                 name={formDataAway[0].name}
-                goals={
-                  awayForm.averageScoredLeague !== undefined &&
-                  awayForm.averageScoredLeague !== null
-                    ? awayForm.averageScoredLeague.toFixed(2)
-                    : formDataAway[0].AverageGoals
-                }
-                conceeded={
-                  awayForm.averageConceededLeague !== undefined &&
-                  awayForm.averageConceededLeague !== null
-                    ? awayForm.averageConceededLeague.toFixed(2)
-                    : formDataAway[0].AverageConceeded
-                }
-                XG={formDataAway[0].AverageXG}
-                XGConceded={formDataAway[0].AverageXGConceded}
+                goals={awayForm.avgScored}
+                conceeded={awayForm.avgConceeded}
+                XG={awayForm.XGOverall.toFixed(2)}
+                XGConceded={awayForm.XGAgainstAvgOverall.toFixed(2)}
                 //todo add goal diff and btts percentages
-                possession={formDataAway[0].AveragePossession}
+                possession={awayForm.AveragePossessionOverall.toFixed(2)}
                 rawPosition={game.awayRawPosition ? game.awayRawPosition : 0}
-                sot={formDataAway[0].AverageShotsOnTarget}
-                dangerousAttacks={formDataAway[0].AverageDangerousAttacks}
+                sot={awayForm.AverageShotsOnTargetOverall.toFixed(2)}
+                dangerousAttacks={awayForm.AverageDangerousAttacksOverall !== 0 ? awayForm.AverageDangerousAttacksOverall.toFixed(
+                  2
+                ) : awayForm.AverageDangerousAttacks}
                 leaguePosition={
                   formDataAway[0].leaguePosition
                     ? formDataAway[0].leaguePosition
@@ -1535,7 +1517,7 @@ export async function createStatsDiv(game, displayBool) {
                   awayFiveGameAverage.toFixed(2),
                 ]}
                 lastGame={awayLastGame}
-                formRun={formDataAway[0].formRun}
+                formRun={awayForm.resultsAll.reverse()}
                 goalDifference={formDataAway[0].goalDifference}
                 goalDifferenceHomeOrAway={
                   formDataAway[0].goalDifferenceHomeOrAway
@@ -1557,7 +1539,7 @@ export async function createStatsDiv(game, displayBool) {
                 BTTSArray={formDataAway[0].BTTSArray}
                 Results={formDataAway[0].Results}
                 CardsTotal={formDataAway[0].CardsTotal}
-                CornersAverage={formDataAway[0].CornersAverage}
+                CornersAverage={awayForm.AverageCorners}
                 ScoredBothHalvesPercentage={
                   formDataAway[0].ScoredBothHalvesPercentage
                 }
@@ -1569,16 +1551,34 @@ export async function createStatsDiv(game, displayBool) {
         );
       }
 
-      const pointsHome = getPointsFromLastX(formDataHome[0].Last5);
-      const pointsHomeAv = await getPointAverage(pointsHome, 5);
-      const pointsAway = getPointsFromLastX(formDataAway[0].Last5);
-      const pointsAwayAv = await getPointAverage(pointsAway, 5);
+      // const allHomeGames = homeForm.WDLRecord.reverse();
+      // const allAwayGames = awayForm.WDLRecord.reverse();
+
+      // // const pointsHome = getPointsFromLastX(formDataHome[0].Last5);
+      // const pointsHome = getPointsFromLastX(allHomeGames);
+      // const pointsHomeAv = await getPointAverage(
+      //   pointsHome,
+      //   allHomeGames.length
+      // );
+      // const pointsHomeLast5 = getPointsFromLastX(allHomeGames.slice(0, 5));
+      // const pointsHomeAvLast5 = await getPointAverage(pointsHomeLast5, 5);
+      // const pointsAway = getPointsFromLastX(allAwayGames);
+      // const pointsAwayAv = await getPointAverage(
+      //   pointsAway,
+      //   allAwayGames.length
+      // );
+      // const pointsAwayLast5 = getPointsFromLastX(allAwayGames.slice(0, 5));
+      // const pointsAwayAvLast5 = await getPointAverage(pointsAwayLast5, 5);
+
+      // console.log(homeForm.WDLRecord.length);
+      // console.log(pointsHomeAvLast5);
+      // console.log(pointsAwayAvLast5);
 
       ReactDOM.render(
         <div style={style}>
           <div className="Chart" id={`Chart${game.id}`} style={style}>
             <RadarChart
-            title = "XG Tipping Strength Ratings - All Games"
+              title="XG Tipping Strength Ratings - All Games"
               data={[
                 homeAttackStrength,
                 homeDefenceStrength,
@@ -1602,7 +1602,7 @@ export async function createStatsDiv(game, displayBool) {
             ></RadarChart>
 
             <RadarChart
-            title = "XG Tipping Strength Ratings - Home/Away Games Only"
+              title="XG Tipping Strength Ratings - Home/Away Games Only"
               data={[
                 homeOnlyAttackStrength,
                 homeOnlyDefenceStrength,
@@ -1625,43 +1625,60 @@ export async function createStatsDiv(game, displayBool) {
               team2={game.awayTeam}
             ></RadarChart>
             <BarChart
+              text="H2H - Home Team | Away Team"
               data1={[
-                homeForm.averageScoredLeague !== undefined &&
-                homeForm.averageScoredLeague !== null
-                  ? homeForm.averageScoredLeague.toFixed(2)
-                  : formDataHome[0].AverageGoals,
-                awayForm.averageConceededLeague !== undefined &&
-                awayForm.averageConceededLeague !== null
-                  ? awayForm.averageConceededLeague.toFixed(2)
-                  : formDataAway[0].AverageConceeded,
-                pointsHomeAv,
-                formDataHome[0].AverageXG,
-                formDataAway[0].AverageXGConceded,
-                formDataHome[0].AverageShotsOnTarget,
-                formDataHome[0].AverageDangerousAttacks / 7.5,
-                formDataHome[0].AveragePossession / 7.5,
-                formDataHome[0].goalDifferenceHomeOrAway / 5,
-                formDataHome[0].CornersAverage,
+                homeForm.avgScored * 2,
+                awayForm.avgConceeded * 2,
+                homeForm.avPointsAll * 3,
+                homeForm.XGOverall * 2,
+                awayForm.XGAgainstAvgOverall * 2,
+                homeForm.AverageShotsOnTargetOverall,
+                homeForm.AverageDangerousAttacksOverall !== 0 ? homeForm.AverageDangerousAttacksOverall / 7.5 : homeForm.AverageDangerousAttacks / 7.5,
+                homeForm.AveragePossessionOverall / 7.5,
+                homeForm.goalDifferenceHomeOrAway / 10,
+                homeForm.AverageCorners,
               ]}
               data2={[
-                awayForm.averageScoredLeague !== undefined &&
-                awayForm.averageScoredLeague !== null
-                  ? awayForm.averageScoredLeague.toFixed(2)
-                  : formDataAway[0].AverageGoals,
-                homeForm.averageConceededLeague !== undefined &&
-                homeForm.averageConceededLeague !== null
-                  ? homeForm.averageConceededLeague.toFixed(2)
-                  : formDataHome[0].AverageConceeded,
-                pointsAwayAv,
-                formDataAway[0].AverageXG,
-                formDataHome[0].AverageXGConceded,
-                formDataAway[0].AverageShotsOnTarget,
-                formDataAway[0].AverageDangerousAttacks / 7.5,
-                formDataAway[0].AveragePossession / 7.5,
-                formDataAway[0].goalDifferenceHomeOrAway / 5,
-                formDataAway[0].CornersAverage,
+                awayForm.avgScored * 2,
+                homeForm.avgConceeded * 2,
+                awayForm.avPointsAll * 3,
+                awayForm.XGOverall * 2,
+                homeForm.XGAgainstAvgOverall * 2,
+                awayForm.AverageShotsOnTargetOverall,
+                awayForm.AverageDangerousAttacksOverall !== 0 ? awayForm.AverageDangerousAttacksOverall / 7.5 : awayForm.AverageDangerousAttacks / 7.5,                
+                awayForm.AveragePossessionOverall / 7.5,
+                awayForm.goalDifferenceHomeOrAway / 10,
+                awayForm.AverageCorners,
               ]}
             ></BarChart>
+            <BarChart
+              text="Last 5 Games - Home Team | Away Team"
+              data1={[
+                homeForm.last5Goals * 2,
+                awayForm.last5GoalsConceeded * 2,
+                homeForm.avPoints5 * 3,
+                homeForm.XGlast5 * 2,
+                awayForm.avXGAgainstLast5 * 2,
+                homeForm.avSOTLast5,
+                homeForm.avDALast5 / 7.5,
+                homeForm.avPosessionLast5 / 7.5,
+                homeForm.last5GoalDiff,
+                homeForm.avCornersLast5,
+              ]}
+              data2={[
+                awayForm.last5Goals * 2,
+                homeForm.last5GoalsConceeded * 2,
+                awayForm.avPoints5 * 3,
+                awayForm.XGlast5 * 2,
+                homeForm.avXGAgainstLast5 * 2,
+                awayForm.avSOTLast5,
+                awayForm.avDALast5 / 7.5,
+                awayForm.avPosessionLast5 / 7.5,
+                awayForm.last5GoalDiff,
+                awayForm.avCornersLast5,
+              ]}
+            ></BarChart>
+
             <Chart
               height={3}
               depth={0}

@@ -176,6 +176,12 @@ async function getPastLeagueResults(team, game, hOrA, form) {
             : resultedGame.homeGoalCount < resultedGame.awayGoalCount
             ? 0
             : 1,
+            result:
+            resultedGame.homeGoalCount > resultedGame.awayGoalCount
+              ? "W"
+              : resultedGame.homeGoalCount < resultedGame.awayGoalCount
+              ? "L"
+              : "D",
       });
       oddsSumHome = oddsSumHome + resultedGame.odds_ft_1;
       favouriteCount =
@@ -249,6 +255,12 @@ async function getPastLeagueResults(team, game, hOrA, form) {
             : resultedGame.homeGoalCount < resultedGame.awayGoalCount
             ? 3
             : 1,
+            result:
+            resultedGame.homeGoalCount > resultedGame.awayGoalCount
+              ? "L"
+              : resultedGame.homeGoalCount < resultedGame.awayGoalCount
+              ? "W"
+              : "D",
       });
       oddsSumAway = oddsSumAway + resultedGame.odds_ft_2;
       favouriteCount =
@@ -305,36 +317,43 @@ async function getPastLeagueResults(team, game, hOrA, form) {
     const pointsSum6 = points6.reduce((a, b) => a + b, 0);
     form.avPoints6 = pointsSum6 / points6.length;
 
+    const points5 = allTeamResults.map((res) => res.points).slice(0, 5);
+    const pointsSum5 = points5.reduce((a, b) => a + b, 0);
+    form.avPoints5 = pointsSum5 / points5.length;
 
     const pointsAll = allTeamResults.map((res) => res.points);
     const pointsSumAll = pointsAll.reduce((a, b) => a + b, 0);
     form.avPointsAll = pointsSumAll / pointsAll.length;
 
-    const avScoredLast5 = allTeamResults.map((res) => res.scored).slice(0, 6);
+    const resultsAll = allTeamResults.map((res) => res.result);
+    form.resultsAll = resultsAll.slice(0, 5);
+
+
+    const avScoredLast5 = allTeamResults.map((res) => res.scored).slice(0, 5);
     const avScoredLast5Sum = avScoredLast5.reduce((a, b) => a + b, 0);
     form.avScoredLast5 = avScoredLast5Sum / avScoredLast5.length;
     const avConceededLast5 = allTeamResults
       .map((res) => res.conceeded)
-      .slice(0, 6);
+      .slice(0, 5);
     const avConceededLast5Sum = avConceededLast5.reduce((a, b) => a + b, 0);
     form.avConceededLast5 = avConceededLast5Sum / avConceededLast5.length;
     const avDALast5 = allTeamResults
       .map((res) => res.dangerousAttacks)
-      .slice(0, 6);
+      .slice(0, 5);
     const avDALast5Sum = avDALast5.reduce((a, b) => a + b, 0);
     form.avDALast5 = avDALast5Sum / avDALast5.length;
-    const avSOTLast5 = allTeamResults.map((res) => res.sot).slice(0, 6);
+    const avSOTLast5 = allTeamResults.map((res) => res.sot).slice(0, 5);
     const avSOTLast5Sum = avSOTLast5.reduce((a, b) => a + b, 0);
     form.avSOTLast5 = avSOTLast5Sum / avSOTLast5.length;
     const avSOTAgainstLast5 = allTeamResults
       .map((res) => res.sotAgainst)
-      .slice(0, 6);
+      .slice(0, 5);
     const avSOTAgainstLast5Sum = avSOTAgainstLast5.reduce((a, b) => a + b, 0);
     form.avSOTAgainstLast5 = avSOTAgainstLast5Sum / avSOTAgainstLast5.length;
-    const avShotsLast5 = allTeamResults.map((res) => res.shots).slice(0, 6);
+    const avShotsLast5 = allTeamResults.map((res) => res.shots).slice(0, 5);
     const avShotsLast5Sum = avShotsLast5.reduce((a, b) => a + b, 0);
     form.avShotsLast5 = avShotsLast5Sum / avShotsLast5.length;
-    const avCornersLast5 = allTeamResults.map((res) => res.corners).slice(0, 6);
+    const avCornersLast5 = allTeamResults.map((res) => res.corners).slice(0, 5);
     const avCornersLast5Sum = avCornersLast5.reduce((a, b) => a + b, 0);
     form.avCornersLast5 = avCornersLast5Sum / avCornersLast5.length;
     const avPosessionLast5 = allTeamResults
@@ -342,12 +361,12 @@ async function getPastLeagueResults(team, game, hOrA, form) {
       .slice(0, 6);
     const avPosessionLast5Sum = avPosessionLast5.reduce((a, b) => a + b, 0);
     form.avPosessionLast5 = avPosessionLast5Sum / avPosessionLast5.length;
-    const avXGLast5 = allTeamResults.map((res) => res.XG).slice(0, 6);
+    const avXGLast5 = allTeamResults.map((res) => res.XG).slice(0, 5);
     const avXGLast5Sum = avXGLast5.reduce((a, b) => a + b, 0);
     form.avXGLast5 = avXGLast5Sum / avXGLast5.length;
     const avXGAgainstLast5 = allTeamResults
       .map((res) => res.XGAgainst)
-      .slice(0, 6);
+      .slice(0, 5);
 
     // console.log(form.teamName);
 
@@ -771,38 +790,38 @@ async function getPastLeagueResults(team, game, hOrA, form) {
 
     const sum = teamGoalsAll.reduce((a, b) => a + b, 0);
     const avgScored = sum / teamGoalsAll.length || 0;
-    form.avgScored = avgScored;
+    form.avgScored = avgScored.toFixed(2);
 
     const sumHome = teamGoalsHome.reduce((a, b) => a + b, 0);
     const avgScoredHome = sumHome / teamGoalsAll.length || 0;
-    form.avgScoredHome = avgScoredHome;
+    form.avgScoredHome = avgScoredHome.toFixed(2);
 
     const sumAway = teamGoalsAway.reduce((a, b) => a + b, 0);
     const avgScoredAway = sumAway / teamGoalsAway.length || 0;
-    form.avgScoredAway = avgScoredAway;
+    form.avgScoredAway = avgScoredAway.toFixed(2);
 
-    const last5 = teamGoalsAll.slice(0, 10);
+    const last5 = teamGoalsAll.slice(0, 5);
     const last5Sum = last5.reduce((a, b) => a + b, 0);
     const last5AvgScored = last5Sum / last5.length || 0;
 
-    const last5Home = teamGoalsHome.slice(0, 10);
+    const last5Home = teamGoalsHome.slice(0, 5);
     const last5SumHome = last5Home.reduce((a, b) => a + b, 0);
     form.last5AvgScoredHome = last5SumHome / last5Home.length || 0;
 
-    const last5Away = teamGoalsAway.slice(0, 10);
+    const last5Away = teamGoalsAway.slice(0, 5);
     const last5SumAway = last5Away.reduce((a, b) => a + b, 0);
     form.last5AvgScoredAway = last5SumAway / last5Away.length || 0;
 
-    const last5Conceeded = teamConceededAll.slice(0, 10);
+    const last5Conceeded = teamConceededAll.slice(0, 5);
     const last5ConceededSum = last5Conceeded.reduce((a, b) => a + b, 0);
     const last5AvgConceeded = last5ConceededSum / last5Conceeded.length || 0;
 
-    const last5ConceededHome = teamConceededHome.slice(0, 10);
+    const last5ConceededHome = teamConceededHome.slice(0, 5);
     const last5ConceededSumHome = last5ConceededHome.reduce((a, b) => a + b, 0);
     form.last5AvgConceededHome =
       last5ConceededSumHome / last5ConceededHome.length || 0;
 
-    const last5ConceededAway = teamConceededAway.slice(0, 10);
+    const last5ConceededAway = teamConceededAway.slice(0, 5);
     const last5ConceededSumAway = last5ConceededAway.reduce((a, b) => a + b, 0);
     form.last5AvgConceededAway =
       last5ConceededSumAway / last5ConceededAway.length || 0;
@@ -835,7 +854,7 @@ async function getPastLeagueResults(team, game, hOrA, form) {
 
     const sumTwo = teamConceededAll.reduce((a, b) => a + b, 0);
     const avgConceeded = sumTwo / teamConceededAll.length || 0;
-    form.avgConceeded = avgConceeded;
+    form.avgConceeded = avgConceeded.toFixed(2);;
 
     const teamConceededHomeOnlySum = teamConceededHome.reduce(
       (a, b) => a + b,

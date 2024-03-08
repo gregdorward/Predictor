@@ -620,6 +620,8 @@ p {
   padding: 1em;
   align-items: center;
   font-size: 1.1em;
+  background-color: #030061;
+  color: white;
 }
 
 .columnOverviewHome {

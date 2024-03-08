@@ -84,7 +84,7 @@ export function Chart(props) {
           display: false,
           text: "Last X Games",
           font: {
-            size: 10,
+            size: 14,
           },
         },
         grid: {
@@ -94,7 +94,7 @@ export function Chart(props) {
         ticks: {
           display: false,
           font: {
-            size: 12,
+            size: 14,
           },
         },
       },
@@ -275,7 +275,8 @@ export function BarChart(props) {
       },
       title: {
         display: true,
-        text: "Comparison - Home Team | Away Team ",
+        text: props.text,
+        size: 14
       },
     },
   };
@@ -283,7 +284,7 @@ export function BarChart(props) {
   const labels = [
     "Highest Goals",
     "Fewest Conceeded",
-    "Last 5 PPG",
+    "PPG",
     "Highest XG",
     "Fewest XG Conceeded",
     "Shots On Target",

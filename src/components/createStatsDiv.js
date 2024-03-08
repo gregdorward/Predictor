@@ -25,6 +25,7 @@ function Stats(props) {
   }
 
   if (props.formRun) {
+    console.log(props.formRun)
     return (
       <Fragment>
         <ul className={props.className} style={props.style}>
