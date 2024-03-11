@@ -65,7 +65,7 @@ const leagueOrder = [
   9638, //Scottish league 2 22/23
   9890, //Women's prem 23/24
   10977, //MLS 23
-  9035, //Brazil prem 23
+  11321, //Brazil prem 24
   11212, //Argentina prem 23
   10994, //Japan 22
   9525, //Mexico prem 23/24
@@ -110,7 +110,7 @@ let dateString;
     for (let x = 0; x < league.season.length; x++) {
       const element = league.season[x];
 
-      if (element.year === 2023 || element.year === 20232024) {
+      if (element.year === 2024 || element.year === 20232024) {
         if (element.id !== 4340 && element.id !== 6935 && element.id !== 7061) {
           availableLeagues.push({ name: name, element });
         }

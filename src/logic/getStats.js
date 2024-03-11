@@ -15,13 +15,13 @@ export async function calculateAttackingStrength(stats) {
   // Define weights for each metric (you can adjust these based on your preference)
   const weights = {
     // averagePossession: 0.15,
-    "Average Dangerous Attacks": 0.15,
-    "Average Shots": 0.1,
+    "Average Dangerous Attacks": 0.1,
+    "Average Shots": 0.05,
     "Average Shots On Target": 0.2,
     "Average Expected Goals": 0.2,
-    "Recent XG": 0.05,
-    "Average Goals": 0.2,
-    Corners: 0.1,
+    "Recent XG": 0.15,
+    "Average Goals": 0.25,
+    Corners: 0.05,
   };
 
   // Define the ranges for normalization
@@ -60,8 +60,8 @@ export async function calculateDefensiveStrength(stats, normalizedValue = 1) {
   let normValue = normalizedValue;
   // Define weights for each metric (you can adjust these based on your preference)
   const weights = {
-    "Average XG Against": 0.3,
-    "Recent XG Against": 0.1,
+    "Average XG Against": 0.25,
+    "Recent XG Against": 0.15,
     "Average Goals Against": 0.3,
     "Average SOT Against": 0.3,
   };
@@ -108,8 +108,8 @@ export async function calculateMetricStrength(metricName, metricValue) {
     averagePossession: { min: 20, max: 80 },
     xgFor: { min: 0.1, max: 3 },
     xgAgainst: { min: 0.1, max: 3 },
-    directnessOverall: { min: 0.5, max: 4 },
-    accuracyOverall: { min: 0.5, max: 6 },
+    directnessOverall: { min: 0.5, max: 5 },
+    accuracyOverall: { min: 0.5, max: 6.5 },
   };
 
   // Ensure the metric is valid and exists in the weights and ranges objects
