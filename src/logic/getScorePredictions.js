@@ -639,9 +639,6 @@ async function getPastLeagueResults(team, game, hOrA, form) {
     form.last5XGAvgAgainstHome =
       last5XGAgainstSumHome / last5XGAgainstHome.length || 0;
 
-    console.log(game.game)
-    console.log(teamXGForAway)
-    console.log(teamGoalsAway)
     const last5XGAgainstAway = teamXGForAway.slice(0, 10);
     const last5XGAgainstSumAway = last5XGAgainstAway.reduce((a, b) => a + b, 0);
     form.last5XGAvgAgainstAway =
@@ -805,11 +802,7 @@ async function getPastLeagueResults(team, game, hOrA, form) {
     const avgScoredAway = sumAway / teamGoalsAway.length || 0;
     form.avgScoredAway = avgScoredAway.toFixed(2);
 
-    console.log(game.game)
-    console.log(form)
-    console.log(teamGoalsAll)
     const last5 = teamGoalsAllRecentAtStart.slice(0, 5);
-    console.log(last5)
     const last5Sum = last5.reduce((a, b) => a + b, 0);
     const last5AvgScored = last5Sum / last5.length || 0;
 
@@ -1407,7 +1400,6 @@ export async function generateGoals(homeForm, awayForm, match) {
     console.log("increasing");
     homeGoals = homeGoals + 0.5;
   } else if (homeForm.actualToXGDifference < -15) {
-    console.log(homeForm.actualToXGDifference);
     console.log("decreasing");
     homeGoals = homeGoals - 0.5;
   }
@@ -1416,7 +1408,6 @@ export async function generateGoals(homeForm, awayForm, match) {
     console.log("increasing");
     awayGoals = awayGoals + 0.5;
   } else if (awayForm.actualToXGDifference < -15) {
-    console.log(homeForm.actualToXGDifference);
     console.log("decreasing");
     awayGoals = awayGoals - 0.5;
   }
