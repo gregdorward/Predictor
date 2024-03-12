@@ -1364,17 +1364,14 @@ export async function generateGoals(homeForm, awayForm, match) {
     homeForm.avPoints6,
   );
 
-  console.log(pointsComparisonHome);
-  console.log(pointsComparisonAway);
-
   homeGoals =
     (homeGoals + homeAttackVsAwayDefenceComparison) * 4.9 +
-    (homeAttackVsAwayDefenceComparisonLast5 * 1) +
-    (homeAttackVsAwayDefenceComparisonHomeOnly * 0.5);
+    (homeAttackVsAwayDefenceComparisonLast5 * 1.25) +
+    (homeAttackVsAwayDefenceComparisonHomeOnly * 0.75);
   awayGoals =
     (awayGoals + awayAttackVsHomeDefenceComparison) * 4.9 +
-    (awayAttackVsHomeDefenceComparisonLast5 * 1) +
-    (homeAttackVsAwayDefenceComparisonHomeOnly * 0.5);
+    (awayAttackVsHomeDefenceComparisonLast5 * 1.25) +
+    (homeAttackVsAwayDefenceComparisonHomeOnly * 0.75);
 
   //   if (pointsComparisonHome < -2) {
   //     homeGoals = homeGoals - 1;
@@ -1398,20 +1395,20 @@ export async function generateGoals(homeForm, awayForm, match) {
 
   if (homeForm.actualToXGDifference > 15) {
     console.log("increasing");
-    homeGoals = homeGoals + 0.25;
+    homeGoals = homeGoals + 0.5;
   } else if (homeForm.actualToXGDifference < -15) {
     console.log(homeForm.actualToXGDifference);
     console.log("decreasing");
-    homeGoals = homeGoals - 0.25;
+    homeGoals = homeGoals - 0.5;
   }
 
   if (awayForm.actualToXGDifference > 15) {
     console.log("increasing");
-    awayGoals = awayGoals + 0.25;
+    awayGoals = awayGoals + 0.5;
   } else if (awayForm.actualToXGDifference < -15) {
     console.log(homeForm.actualToXGDifference);
     console.log("decreasing");
-    awayGoals = awayGoals - 0.25;
+    awayGoals = awayGoals - 0.5;
   }
 
   // if(homeForm.last5Points > homeForm.last10Points){
@@ -1423,8 +1420,6 @@ export async function generateGoals(homeForm, awayForm, match) {
   //   homeGoals = homeGoals - 0.1;
   // }
 
-  console.log(homeGoals);
-  console.log(awayGoals);
   // Cumalative ROI for all 2193 match outcomes: + 4.18%
 
   return [homeGoals, awayGoals];
