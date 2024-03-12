@@ -479,20 +479,23 @@ async function getPastLeagueResults(team, game, hOrA, form) {
 
     const teamGoalsHome = reversedResultsHome.map((res) => res.scored);
 
-    const teamGoalsAway = reversedResultsAway.map((res) => res.scored);
+    const teamGoalsAway = awayResults.map((res) => res.scored);
     const teamGoalsAll = allTeamResults.map((res) => res.scored);
-
-    const teamConceededHome = reversedResultsHome.map((res) => res.conceeded);
-    const teamConceededAway = reversedResultsAway.map((res) => res.conceeded);
+    const teamGoalsAllRecentAtStart = teamGoalsAll.reverse();
+    const teamConceededHome = homeResults.map((res) => res.conceeded);
+    const teamConceededAway = awayResults.map((res) => res.conceeded);
     const teamConceededAll = allTeamResults.map((res) => res.conceeded);
+    const teamConceededAllRecentAtStart = teamConceededAll.reverse();
 
     const teamXGForAll = allTeamResults.map((res) => res.XG);
     const teamXGAgainstAll = allTeamResults.map((res) => res.XGAgainst);
+    const teamXGForAllRecentAtStart = teamXGForAll.reverse()
+    const teamXGAgainstAllRecentAtStart = teamXGAgainstAll.reverse();
 
-    const teamXGForHome = reversedResultsHome.map((res) => res.XG);
-    const teamXGAgainstHome = reversedResultsHome.map((res) => res.XGAgainst);
-    const teamXGForAway = reversedResultsAway.map((res) => res.XG);
-    const teamXGAgainstAway = reversedResultsAway.map((res) => res.XGAgainst);
+    const teamXGForHome = homeResults.map((res) => res.XG);
+    const teamXGAgainstHome = homeResults.map((res) => res.XGAgainst);
+    const teamXGForAway = awayResults.map((res) => res.XG);
+    const teamXGAgainstAway = awayResults.map((res) => res.XGAgainst);
 
     const XGSum = teamXGForAll.reduce((a, b) => a + b, 0);
     const avgXGScored = XGSum / teamXGForAll.length || 0;
@@ -503,11 +506,11 @@ async function getPastLeagueResults(team, game, hOrA, form) {
     const possessionSum = possession.reduce((a, b) => a + b, 0);
     const avgPossession = possessionSum / possession.length || 0;
 
-    const possessionHome = reversedResultsHome.map((res) => res.possession);
+    const possessionHome = homeResults.map((res) => res.possession);
     const possessionSumHome = possessionHome.reduce((a, b) => a + b, 0);
     form.avgPossessionHome = possessionSumHome / possessionHome.length || 0;
 
-    const possessionAway = reversedResultsAway.map((res) => res.possession);
+    const possessionAway = awayResults.map((res) => res.possession);
     const possessionSumAway = possessionAway.reduce((a, b) => a + b, 0);
     form.avgPossessionAway = possessionSumAway / possessionAway.length || 0;
 
@@ -516,7 +519,7 @@ async function getPastLeagueResults(team, game, hOrA, form) {
     const avgDangerousAttacks =
       dangerousAttacksSum / dangerousAttacks.length || 0;
 
-    const dangerousAttacksHome = reversedResultsHome.map(
+    const dangerousAttacksHome = homeResults.map(
       (res) => res.dangerousAttacks
     );
     const dangerousAttacksSumHome = dangerousAttacksHome.reduce(
@@ -526,7 +529,7 @@ async function getPastLeagueResults(team, game, hOrA, form) {
     form.avgDangerousAttacksHome =
       dangerousAttacksSumHome / dangerousAttacksHome.length || 0;
 
-    const dangerousAttacksAway = reversedResultsAway.map(
+    const dangerousAttacksAway = awayResults.map(
       (res) => res.dangerousAttacks
     );
     const dangerousAttacksSumAway = dangerousAttacksAway.reduce(
@@ -541,11 +544,11 @@ async function getPastLeagueResults(team, game, hOrA, form) {
     const avgShots = shotsSum / shots.length || 0;
     form.avgShots = avgShots;
 
-    const shotsHome = reversedResultsHome.map((res) => res.shots);
+    const shotsHome = homeResults.map((res) => res.shots);
     const shotsSumHome = shotsHome.reduce((a, b) => a + b, 0);
     form.avgShotsHome = shotsSumHome / shotsHome.length || 0;
 
-    const shotsAway = reversedResultsAway.map((res) => res.shots);
+    const shotsAway = awayResults.map((res) => res.shots);
     const shotsSumAway = shotsAway.reduce((a, b) => a + b, 0);
     form.avgShotsAway = shotsSumAway / shotsAway.length || 0;
 
@@ -553,12 +556,12 @@ async function getPastLeagueResults(team, game, hOrA, form) {
     const shotsOnTargetSum = shotsOnTarget.reduce((a, b) => a + b, 0);
     const avgShotsOnTarget = shotsOnTargetSum / shotsOnTarget.length || 0;
 
-    const shotsOnTargetHome = reversedResultsHome.map((res) => res.sot);
+    const shotsOnTargetHome = homeResults.map((res) => res.sot);
     const shotsOnTargetSumHome = shotsOnTargetHome.reduce((a, b) => a + b, 0);
     form.avgShotsOnTargetHome =
       shotsOnTargetSumHome / shotsOnTargetHome.length || 0;
 
-    const shotsOnTargetAway = reversedResultsAway.map((res) => res.sot);
+    const shotsOnTargetAway = awayResults.map((res) => res.sot);
     const shotsOnTargetSumAway = shotsOnTargetAway.reduce((a, b) => a + b, 0);
     form.avgShotsOnTargetAway =
       shotsOnTargetSumAway / shotsOnTargetAway.length || 0;
@@ -571,7 +574,7 @@ async function getPastLeagueResults(team, game, hOrA, form) {
     const avgShotsOnTargetAgainst =
       shotsOnTargetSumAgainst / shotsOnTargetAgainst.length || 0;
 
-    const shotsOnTargetAgainstHome = reversedResultsHome.map(
+    const shotsOnTargetAgainstHome = homeResults.map(
       (res) => res.sotAgainst
     );
     const shotsOnTargetSumAgainstHome = shotsOnTargetAgainstHome.reduce(
@@ -581,7 +584,7 @@ async function getPastLeagueResults(team, game, hOrA, form) {
     form.avgShotsOnTargetAgainstHome =
       shotsOnTargetSumAgainstHome / shotsOnTargetAgainstHome.length || 0;
 
-    const shotsOnTargetAgainstAway = reversedResultsAway.map(
+    const shotsOnTargetAgainstAway = awayResults.map(
       (res) => res.sotAgainst
     );
     const shotsOnTargetSumAgainstAway = shotsOnTargetAgainstAway.reduce(
@@ -595,15 +598,15 @@ async function getPastLeagueResults(team, game, hOrA, form) {
     const cornersSum = corners.reduce((a, b) => a + b, 0);
     const cornersAv = cornersSum / corners.length || 0;
 
-    const cornersHome = reversedResultsHome.map((res) => res.corners);
+    const cornersHome = homeResults.map((res) => res.corners);
     const cornersSumHome = cornersHome.reduce((a, b) => a + b, 0);
     form.cornersAvHome = cornersSumHome / cornersHome.length || 0;
 
-    const cornersAway = reversedResultsAway.map((res) => res.corners);
+    const cornersAway = awayResults.map((res) => res.corners);
     const cornersSumAway = cornersAway.reduce((a, b) => a + b, 0);
     form.cornersAvAway = cornersSumAway / cornersAway.length || 0;
 
-    const last5XG = teamXGForAll.slice(0, 10);
+    const last5XG = teamXGForAllRecentAtStart.slice(0, 10);
     const last5XGSum = last5XG.reduce((a, b) => a + b, 0);
     const last5XGAvgFor = last5XGSum / last5XG.length || 0;
 
@@ -627,7 +630,7 @@ async function getPastLeagueResults(team, game, hOrA, form) {
     const XGAgainstSumAway = teamXGAgainstAway.reduce((a, b) => a + b, 0);
     form.avgXGConceededAway = XGAgainstSumAway / teamXGAgainstAway.length || 0;
 
-    const last5XGAgainst = teamXGAgainstAll.slice(0, 10);
+    const last5XGAgainst = teamXGAgainstAllRecentAtStart.slice(0, 10);
     const last5XGAgainstSum = last5XGAgainst.reduce((a, b) => a + b, 0);
     const last5XGAvgAgainst = last5XGAgainstSum / last5XGAgainst.length || 0;
 
@@ -636,6 +639,9 @@ async function getPastLeagueResults(team, game, hOrA, form) {
     form.last5XGAvgAgainstHome =
       last5XGAgainstSumHome / last5XGAgainstHome.length || 0;
 
+    console.log(game.game)
+    console.log(teamXGForAway)
+    console.log(teamGoalsAway)
     const last5XGAgainstAway = teamXGForAway.slice(0, 10);
     const last5XGAgainstSumAway = last5XGAgainstAway.reduce((a, b) => a + b, 0);
     form.last5XGAvgAgainstAway =
@@ -703,12 +709,12 @@ async function getPastLeagueResults(team, game, hOrA, form) {
         );
     }
 
-    let bttsHome = reversedResultsHome.map((res) => res.btts);
+    let bttsHome = homeResults.map((res) => res.btts);
     if (bttsHome.length > 10) {
       bttsHome = bttsHome.slice(-10);
     }
 
-    let bttsAway = reversedResultsAway.map((res) => res.btts);
+    let bttsAway = awayResults.map((res) => res.btts);
     if (bttsAway.length > 10) {
       bttsAway = bttsAway.slice(-10);
     }
@@ -799,7 +805,11 @@ async function getPastLeagueResults(team, game, hOrA, form) {
     const avgScoredAway = sumAway / teamGoalsAway.length || 0;
     form.avgScoredAway = avgScoredAway.toFixed(2);
 
-    const last5 = teamGoalsAll.slice(0, 5);
+    console.log(game.game)
+    console.log(form)
+    console.log(teamGoalsAll)
+    const last5 = teamGoalsAllRecentAtStart.slice(0, 5);
+    console.log(last5)
     const last5Sum = last5.reduce((a, b) => a + b, 0);
     const last5AvgScored = last5Sum / last5.length || 0;
 
@@ -811,7 +821,7 @@ async function getPastLeagueResults(team, game, hOrA, form) {
     const last5SumAway = last5Away.reduce((a, b) => a + b, 0);
     form.last5AvgScoredAway = last5SumAway / last5Away.length || 0;
 
-    const last5Conceeded = teamConceededAll.slice(0, 5);
+    const last5Conceeded = teamConceededAllRecentAtStart.slice(0, 5);
     const last5ConceededSum = last5Conceeded.reduce((a, b) => a + b, 0);
     const last5AvgConceeded = last5ConceededSum / last5Conceeded.length || 0;
 
@@ -825,11 +835,11 @@ async function getPastLeagueResults(team, game, hOrA, form) {
     form.last5AvgConceededAway =
       last5ConceededSumAway / last5ConceededAway.length || 0;
 
-    const last10 = teamGoalsAll.slice(0, 10);
+    const last10 = teamGoalsAllRecentAtStart.slice(0, 10);
     const last10Sum = last10.reduce((a, b) => a + b, 0);
     const last10AvgScored = last10Sum / last10.length || 0;
 
-    const last10Conceeded = teamConceededAll.slice(0, 10);
+    const last10Conceeded = teamConceededAllRecentAtStart.slice(0, 10);
     const last10ConceededSum = last10Conceeded.reduce((a, b) => a + b, 0);
     const last10AvgConceeded = last10ConceededSum / last10Conceeded.length || 0;
 
@@ -1371,7 +1381,7 @@ export async function generateGoals(homeForm, awayForm, match) {
   awayGoals =
     (awayGoals + awayAttackVsHomeDefenceComparison) * 4.9 +
     (awayAttackVsHomeDefenceComparisonLast5 * 1.25) +
-    (homeAttackVsAwayDefenceComparisonHomeOnly * 0.75);
+    (awayAttackVsHomeDefenceComparisonAwayOnly * 0.75);
 
   //   if (pointsComparisonHome < -2) {
   //     homeGoals = homeGoals - 1;
