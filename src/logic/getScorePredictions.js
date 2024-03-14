@@ -111,7 +111,7 @@ export function getPointsFromLastX(lastX) {
 
 async function getPastLeagueResults(team, game, hOrA, form) {
   let date = game.date;
-  if (allLeagueResultsArrayOfObjects[game.leagueIndex].fixtures.length > 35) {
+  if (allLeagueResultsArrayOfObjects[game.leagueIndex].fixtures.length > 20) {
     let teamsHomeResults = allLeagueResultsArrayOfObjects[
       game.leagueIndex
     ].fixtures.filter((fixture) => fixture.home_name === team);
@@ -2071,7 +2071,7 @@ export async function calculateScore(match, index, divider, calculate) {
     match.XGdifferentialValue = Math.abs(XGdifferential);
     match.XGdifferentialValueRaw = parseFloat(XGdifferential);
     if (
-      allLeagueResultsArrayOfObjects[match.leagueIndex].fixtures.length > 35 &&
+      allLeagueResultsArrayOfObjects[match.leagueIndex].fixtures.length > 20 &&
       match.leagueID !== 7956
     ) {
       [

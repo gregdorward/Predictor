@@ -514,8 +514,6 @@ export async function createStatsDiv(game, displayBool) {
             game.away_name === gameStats.home.teamName
         );
 
-        console.log(resultHome);
-
         const resultHomeOnly = matches.fixtures.filter(
           (game) => game.home_name === gameStats.home.teamName
         );
@@ -647,7 +645,6 @@ export async function createStatsDiv(game, displayBool) {
               break;
           }
         }
-        console.log(gameArrayHome);
 
         goalDiffArrayHome = homeForm.allTeamResults.map(
           (a) => a.scored - a.conceeded
@@ -658,7 +655,6 @@ export async function createStatsDiv(game, displayBool) {
         // );
 
         let r = 5;
-        console.log(goalDiffArrayHome.reverse());
         goalDiffHomeMovingAv = getEMA(
           goalDiffArrayHome.reverse(),
           goalDiffArrayHome.length < 5 ? goalDiffArrayHome.length : r
