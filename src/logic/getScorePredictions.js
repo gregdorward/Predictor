@@ -1368,11 +1368,11 @@ export async function generateGoals(homeForm, awayForm, match) {
   );
 
   homeGoals =
-    (homeGoals + homeAttackVsAwayDefenceComparison) * 5 +
+    (homeGoals + homeAttackVsAwayDefenceComparison) * 4.9 +
     (homeAttackVsAwayDefenceComparisonLast5 * 1.25) +
     (homeAttackVsAwayDefenceComparisonHomeOnly * 0.75);
   awayGoals =
-    (awayGoals + awayAttackVsHomeDefenceComparison) * 5 +
+    (awayGoals + awayAttackVsHomeDefenceComparison) * 4.9 +
     (awayAttackVsHomeDefenceComparisonLast5 * 1.25) +
     (awayAttackVsHomeDefenceComparisonAwayOnly * 0.75);
 
