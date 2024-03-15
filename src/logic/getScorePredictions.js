@@ -111,7 +111,7 @@ export function getPointsFromLastX(lastX) {
 
 async function getPastLeagueResults(team, game, hOrA, form) {
   let date = game.date;
-  if (allLeagueResultsArrayOfObjects[game.leagueIndex].fixtures.length > 20) {
+  if (allLeagueResultsArrayOfObjects[game.leagueIndex].fixtures.length > 10) {
     let teamsHomeResults = allLeagueResultsArrayOfObjects[
       game.leagueIndex
     ].fixtures.filter((fixture) => fixture.home_name === team);
@@ -1368,12 +1368,12 @@ export async function generateGoals(homeForm, awayForm, match) {
   );
 
   homeGoals =
-    (homeGoals + homeAttackVsAwayDefenceComparison) * 4.9 +
-    (homeAttackVsAwayDefenceComparisonLast5 * 1.25) +
+    (homeGoals + homeAttackVsAwayDefenceComparison) * 5 +
+    (homeAttackVsAwayDefenceComparisonLast5 * 1.5) +
     (homeAttackVsAwayDefenceComparisonHomeOnly * 0.75);
   awayGoals =
-    (awayGoals + awayAttackVsHomeDefenceComparison) * 4.9 +
-    (awayAttackVsHomeDefenceComparisonLast5 * 1.25) +
+    (awayGoals + awayAttackVsHomeDefenceComparison) * 5 +
+    (awayAttackVsHomeDefenceComparisonLast5 * 1.5) +
     (awayAttackVsHomeDefenceComparisonAwayOnly * 0.75);
 
   //   if (pointsComparisonHome < -2) {
@@ -2071,7 +2071,7 @@ export async function calculateScore(match, index, divider, calculate) {
     match.XGdifferentialValue = Math.abs(XGdifferential);
     match.XGdifferentialValueRaw = parseFloat(XGdifferential);
     if (
-      allLeagueResultsArrayOfObjects[match.leagueIndex].fixtures.length > 20 &&
+      allLeagueResultsArrayOfObjects[match.leagueIndex].fixtures.length > 10 &&
       match.leagueID !== 7956
     ) {
       [
@@ -3127,7 +3127,7 @@ export async function calculateScore(match, index, divider, calculate) {
     }
 
     if (
-      match.game_week < 0
+      match.game_week < 4
       // match.omit === true
       // match.game_week < 3 &&
     ) {
