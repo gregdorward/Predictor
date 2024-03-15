@@ -1369,11 +1369,11 @@ export async function generateGoals(homeForm, awayForm, match) {
 
   homeGoals =
     (homeGoals + homeAttackVsAwayDefenceComparison) * 5 +
-    (homeAttackVsAwayDefenceComparisonLast5 * 1.5) +
+    (homeAttackVsAwayDefenceComparisonLast5 * 1.25) +
     (homeAttackVsAwayDefenceComparisonHomeOnly * 0.75);
   awayGoals =
     (awayGoals + awayAttackVsHomeDefenceComparison) * 5 +
-    (awayAttackVsHomeDefenceComparisonLast5 * 1.5) +
+    (awayAttackVsHomeDefenceComparisonLast5 * 1.25) +
     (awayAttackVsHomeDefenceComparisonAwayOnly * 0.75);
 
   //   if (pointsComparisonHome < -2) {
@@ -3127,7 +3127,7 @@ export async function calculateScore(match, index, divider, calculate) {
     }
 
     if (
-      match.game_week < 4
+      match.game_week < 5
       // match.omit === true
       // match.game_week < 3 &&
     ) {

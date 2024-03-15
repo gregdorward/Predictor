@@ -20,7 +20,6 @@ import {
   WhatsappIcon,
 } from "react-share";
 import { generateFixtures } from "./logic/getFixtures";
-import * as cron from 'node-cron';
 import { ThreeDots } from "react-loading-icons";
 import { BrowserRouter as Router, Route, Routes, Link } from "react-router-dom";
 import reactDom from "react-dom";
@@ -96,46 +95,6 @@ let string;
 let dateString;
 
 (async function fetchLeagueData() {
-
-
-
-
-  
-  // Function to get sunset time
-  async function getSunsetTime() {
-    try {
-        const response = await fetch('https://api.sunrise-sunset.org/json?lat=LATITUDE&lng=LONGITUDE&date=today');
-        const data = await response.json();
-        const sunsetTime = data.results.sunset;
-        return sunsetTime;
-    } catch (error) {
-        console.error('Error fetching sunset time:', error);
-        return null;
-    }
-}
-
-// Function for follow-up request
-async function followUpRequest() {
-    const sunsetTime = await getSunsetTime();
-    console.log('Sunset time:', sunsetTime);
-
-    // Use sunset time to schedule follow-up request
-    // Your code here to make the follow-up request
-
-    // For demonstration, scheduling the follow-up request after 2 minutes
-    setTimeout(followUpRequest, 1 * 60 * 1000); // 2 minutes in milliseconds
-}
-
-// Start the process
-followUpRequest();
-  
-
-
-
-
-
-
-
 
   let leagueList;
 
