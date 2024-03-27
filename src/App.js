@@ -154,7 +154,7 @@ export async function getLeagueList() {
   async function decrementDate(num, date) {
     i = i - num;
     console.log(i);
-    if (i > -60) {
+    if (i > -120) {
       date.setDate(date.getDate() - num);
       [date, dateFootyStats] = await calculateDate(date);
       string = dateFootyStats;
