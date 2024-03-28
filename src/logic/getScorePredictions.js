@@ -2703,8 +2703,35 @@ export async function calculateScore(match, index, divider, calculate) {
     // }
 
     // Cumalative ROI for all 1246 match outcomes: + 0.68%
-    finalHomeGoals = Math.floor(rawFinalHomeGoals);
-    finalAwayGoals = Math.floor(rawFinalAwayGoals);
+
+    if (rawFinalHomeGoals < 1 && rawFinalHomeGoals > 0 && rawFinalAwayGoals < 1 && rawFinalAwayGoals > 0) {
+      if (
+        formHome.CleanSheetPercentage < 45 &&
+        formAway.CleanSheetPercentage < 45
+      ) {
+        finalHomeGoals = Math.ceil(rawFinalHomeGoals);
+        finalAwayGoals = Math.ceil(rawFinalAwayGoals);
+      } else {
+        finalHomeGoals = Math.floor(rawFinalHomeGoals);
+        finalAwayGoals = Math.floor(rawFinalAwayGoals);
+      }
+    } 
+    else if (rawFinalHomeGoals < 0 && rawFinalAwayGoals < 0) {
+      if (
+        formHome.CleanSheetPercentage < 45 &&
+        formAway.CleanSheetPercentage < 45
+      ) {
+        finalHomeGoals = 1;
+        finalAwayGoals = 1;
+      } else {
+        finalHomeGoals = Math.floor(rawFinalHomeGoals);
+        finalAwayGoals = Math.floor(rawFinalAwayGoals);
+      }
+    } 
+    else {
+      finalHomeGoals = Math.floor(rawFinalHomeGoals);
+      finalAwayGoals = Math.floor(rawFinalAwayGoals);
+    }
 
     // if (finalHomeGoals > formHome.avgScored + 2) {
     //   finalHomeGoals = Math.round((finalHomeGoals + formHome.avgScored) / 2);
