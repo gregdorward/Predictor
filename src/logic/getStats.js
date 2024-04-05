@@ -29,7 +29,7 @@ export async function calculateAttackingStrength(stats) {
     // averagePossession: { min: 25, max: 75 },
     "Average Dangerous Attacks": { min: 25, max: 75 }, // Adjust the max value as needed
     "Average Shots": { min: 4, max: 17 }, // Adjust the max value as needed
-    "Average Shots On Target": { min: 2, max: 9 }, // Adjust the max value as needed
+    "Average Shots On Target": { min: 2, max: 10 }, // Adjust the max value as needed
     "Average Expected Goals": { min: 0.25, max: 2.75 }, // Adjust the max value as needed
     "Recent XG": { min: 0.25, max: 2.75 }, // Adjust the max value as needed
     "Average Goals": { min: 0.25, max: 2.75 }, // Adjust the max value as needed
@@ -71,7 +71,7 @@ export async function calculateDefensiveStrength(stats, normalizedValue = 1) {
     "Average XG Against": { min: 0.25, max: 2.75 }, // Adjust the max value as needed
     "Recent XG Against": { min: 0.25, max: 2.75 },
     "Average Goals Against": { min: 0.25, max: 2.75 }, // Adjust the max value as needed
-    "Average SOT Against": { min: 2, max: 9 },
+    "Average SOT Against": { min: 2, max: 10 },
   };
 
   // Normalize each metric value and calculate the weighted sum
@@ -1046,64 +1046,93 @@ export async function createStatsDiv(game, displayBool) {
       };
 
       let homeAttackStrength;
+      let homeAttackStrengthLast5;
       let homeOnlyAttackStrength;
       let homeDefenceStrength;
+      let homeDefenceStrengthLast5;
       let homeOnlyDefenceStrength;
       let homePossessionStrength;
+      let homePossessionStrengthLast5;
       let homeOnlyPossessionStrength;
       let homeXGForStrength;
+      let homeXGForStrengthLast5;
       let homeOnlyXGForStrength;
       let homeXGAgainstStrength;
+      let homeXGAgainstStrengthLast5;
       let homeOnlyXGAgainstStrength;
       let awayAttackStrength;
+      let awayAttackStrengthLast5;
       let awayOnlyAttackStrength;
       let awayDefenceStrength;
+      let awayDefenceStrengthLast5;
       let awayOnlyDefenceStrength;
       let awayPossessionStrength;
+      let awayPossessionStrengthLast5;
       let awayOnlyPossessionStrength;
       let awayXGForStrength;
+      let awayXGForStrengthLast5;
       let awayOnlyXGForStrength;
       let awayXGAgainstStrength;
+      let awayXGAgainstStrengthLast5;
       let awayOnlyXGAgainstStrength;
       let homeDirectnessStrength;
+      let homeDirectnessStrengthLast5;
       let homeOnlyDirectnessStrength;
       let awayDirectnessStrength;
+      let awayDirectnessStrengthLast5;
       let awayOnlyDirectnessStrength;
       let homeAccuracyOverallStrength;
+      let homeAccuracyOverallStrengthLast5;
       let homeOnlyAccuracyOverallStrength;
       let awayAccuracyOverallStrength;
+      let awayAccuracyOverallStrengthLast5;
       let awayOnlyAccuracyOverallStrength;
 
       if (homeForm.xgForStrength) {
         console.log("not calculating");
         homeAttackStrength = homeForm.attackingStrength;
+        homeAttackStrengthLast5 = homeForm.attackingStrengthLast5;
         homeOnlyAttackStrength = homeForm.attackingStrengthHomeOnly;
         homeDefenceStrength = homeForm.defensiveStrength;
+        homeDefenceStrengthLast5 = homeForm.defensiveStrengthLast5;
         homeOnlyDefenceStrength = homeForm.defensiveStrengthHomeOnly;
         homePossessionStrength = homeForm.possessionStrength;
+        homePossessionStrengthLast5 = homeForm.possessionStrengthLast5;
         homeOnlyPossessionStrength = homeForm.possessionStrengthHomeOnly;
         homeXGForStrength = homeForm.xgForStrength;
+        homeXGForStrengthLast5 = homeForm.xgForStrengthLast5;
         homeOnlyXGForStrength = homeForm.xgForStrengthHomeOnly;
         homeXGAgainstStrength = homeForm.xgAgainstStrength;
+        homeXGAgainstStrengthLast5 = homeForm.xgAgainstStrengthLast5;
         homeOnlyXGAgainstStrength = homeForm.xgAgainstStrengthHomeOnly;
         homeDirectnessStrength = homeForm.directnessOverallStrength;
+        homeDirectnessStrengthLast5 = homeForm.directnessOverallStrengthLast5;
         homeOnlyDirectnessStrength = homeForm.directnessHomeStrength;
         homeAccuracyOverallStrength = homeForm.accuracyOverallStrength;
+        homeAccuracyOverallStrengthLast5 =
+          homeForm.accuracyOverallStrengthLast5;
         homeOnlyAccuracyOverallStrength = homeForm.accuracyHomeStrength;
-
         awayAttackStrength = awayForm.attackingStrength;
+        awayAttackStrengthLast5 = awayForm.attackingStrengthLast5;
         awayOnlyAttackStrength = awayForm.attackingStrengthAwayOnly;
         awayDefenceStrength = awayForm.defensiveStrength;
+        awayDefenceStrengthLast5 = awayForm.defensiveStrengthLast5;
         awayOnlyDefenceStrength = awayForm.defensiveStrengthAwayOnly;
         awayPossessionStrength = awayForm.possessionStrength;
+        awayPossessionStrengthLast5 = awayForm.possessionStrengthLast5;
         awayOnlyPossessionStrength = awayForm.possessionStrengthAwayOnly;
         awayXGForStrength = awayForm.xgForStrength;
+        awayXGForStrengthLast5 = awayForm.xgForStrengthLast5;
         awayOnlyXGForStrength = awayForm.xgForStrengthAwayOnly;
         awayXGAgainstStrength = awayForm.xgAgainstStrength;
+        awayXGAgainstStrengthLast5 = awayForm.xgAgainstStrengthLast5;
         awayOnlyXGAgainstStrength = awayForm.xgAgainstStrengthAwayOnly;
         awayDirectnessStrength = awayForm.directnessOverallStrength;
+        awayDirectnessStrengthLast5 = awayForm.directnessOverallStrengthLast5;
         awayOnlyDirectnessStrength = awayForm.directnessAwayStrength;
         awayAccuracyOverallStrength = awayForm.accuracyOverallStrength;
+        awayAccuracyOverallStrengthLast5 =
+          awayForm.accuracyOverallStrengthLast5;
         awayOnlyAccuracyOverallStrength = awayForm.accuracyAwayStrength;
       } else {
         homeAttackStrength = await calculateAttackingStrength(
@@ -1401,9 +1430,11 @@ export async function createStatsDiv(game, displayBool) {
                 XGConceded={homeForm.XGAgainstAvgOverall.toFixed(2)}
                 possession={homeForm.AveragePossessionOverall.toFixed(2)}
                 sot={homeForm.AverageShotsOnTargetOverall.toFixed(2)}
-                dangerousAttacks={homeForm.AverageDangerousAttacksOverall !== 0 ? homeForm.AverageDangerousAttacksOverall.toFixed(
-                  2
-                ) : homeForm.AverageDangerousAttacks}
+                dangerousAttacks={
+                  homeForm.AverageDangerousAttacksOverall !== 0
+                    ? homeForm.AverageDangerousAttacksOverall.toFixed(2)
+                    : homeForm.AverageDangerousAttacks
+                }
                 leaguePosition={
                   formDataHome[0].leaguePosition
                     ? formDataHome[0].leaguePosition
@@ -1486,9 +1517,11 @@ export async function createStatsDiv(game, displayBool) {
                 possession={awayForm.AveragePossessionOverall.toFixed(2)}
                 rawPosition={game.awayRawPosition ? game.awayRawPosition : 0}
                 sot={awayForm.AverageShotsOnTargetOverall.toFixed(2)}
-                dangerousAttacks={awayForm.AverageDangerousAttacksOverall !== 0 ? awayForm.AverageDangerousAttacksOverall.toFixed(
-                  2
-                ) : awayForm.AverageDangerousAttacks}
+                dangerousAttacks={
+                  awayForm.AverageDangerousAttacksOverall !== 0
+                    ? awayForm.AverageDangerousAttacksOverall.toFixed(2)
+                    : awayForm.AverageDangerousAttacks
+                }
                 leaguePosition={
                   formDataAway[0].leaguePosition
                     ? formDataAway[0].leaguePosition
@@ -1596,7 +1629,29 @@ export async function createStatsDiv(game, displayBool) {
               team1={game.homeTeam}
               team2={game.awayTeam}
             ></RadarChart>
-
+            <RadarChart
+              title="XG Tipping Strength Ratings - Last 5 games"
+              data={[
+                homeAttackStrengthLast5,
+                homeDefenceStrengthLast5,
+                homePossessionStrengthLast5,
+                homeXGForStrengthLast5,
+                homeXGAgainstStrengthLast5,
+                homeDirectnessStrengthLast5,
+                homeAccuracyOverallStrengthLast5,
+              ]}
+              data2={[
+                awayAttackStrengthLast5,
+                awayDefenceStrengthLast5,
+                awayPossessionStrengthLast5,
+                awayXGForStrengthLast5,
+                awayXGAgainstStrengthLast5,
+                awayDirectnessStrengthLast5,
+                awayAccuracyOverallStrengthLast5,
+              ]}
+              team1={game.homeTeam}
+              team2={game.awayTeam}
+            ></RadarChart>
             <RadarChart
               title="XG Tipping Strength Ratings - Home/Away Games Only"
               data={[
@@ -1629,7 +1684,9 @@ export async function createStatsDiv(game, displayBool) {
                 homeForm.XGOverall * 2,
                 awayForm.XGAgainstAvgOverall * 2,
                 homeForm.AverageShotsOnTargetOverall,
-                homeForm.AverageDangerousAttacksOverall !== 0 ? homeForm.AverageDangerousAttacksOverall / 7.5 : homeForm.AverageDangerousAttacks / 7.5,
+                homeForm.AverageDangerousAttacksOverall !== 0
+                  ? homeForm.AverageDangerousAttacksOverall / 7.5
+                  : homeForm.AverageDangerousAttacks / 7.5,
                 homeForm.AveragePossessionOverall / 7.5,
                 homeForm.goalDifferenceHomeOrAway / 10,
                 homeForm.AverageCorners,
@@ -1641,40 +1698,14 @@ export async function createStatsDiv(game, displayBool) {
                 awayForm.XGOverall * 2,
                 homeForm.XGAgainstAvgOverall * 2,
                 awayForm.AverageShotsOnTargetOverall,
-                awayForm.AverageDangerousAttacksOverall !== 0 ? awayForm.AverageDangerousAttacksOverall / 7.5 : awayForm.AverageDangerousAttacks / 7.5,                
+                awayForm.AverageDangerousAttacksOverall !== 0
+                  ? awayForm.AverageDangerousAttacksOverall / 7.5
+                  : awayForm.AverageDangerousAttacks / 7.5,
                 awayForm.AveragePossessionOverall / 7.5,
                 awayForm.goalDifferenceHomeOrAway / 10,
                 awayForm.AverageCorners,
               ]}
             ></BarChart>
-            <BarChart
-              text="Last 5 Games - Home Team | Away Team"
-              data1={[
-                homeForm.last5Goals * 2,
-                awayForm.last5GoalsConceeded * 2,
-                homeForm.avPoints5 * 3,
-                homeForm.XGlast5 * 2,
-                awayForm.avXGAgainstLast5 * 2,
-                homeForm.avSOTLast5,
-                homeForm.avDALast5 / 7.5,
-                homeForm.avPosessionLast5 / 7.5,
-                homeForm.last5GoalDiff,
-                homeForm.avCornersLast5,
-              ]}
-              data2={[
-                awayForm.last5Goals * 2,
-                homeForm.last5GoalsConceeded * 2,
-                awayForm.avPoints5 * 3,
-                awayForm.XGlast5 * 2,
-                homeForm.avXGAgainstLast5 * 2,
-                awayForm.avSOTLast5,
-                awayForm.avDALast5 / 7.5,
-                awayForm.avPosessionLast5 / 7.5,
-                awayForm.last5GoalDiff,
-                awayForm.avCornersLast5,
-              ]}
-            ></BarChart>
-
             <Chart
               height={3}
               depth={0}

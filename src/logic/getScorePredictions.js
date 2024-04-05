@@ -598,15 +598,15 @@ async function getPastLeagueResults(team, game, hOrA, form) {
     const cornersSumAway = cornersAway.reduce((a, b) => a + b, 0);
     form.cornersAvAway = cornersSumAway / cornersAway.length || 0;
 
-    const last5XG = teamXGForAllRecentAtStart.slice(0, 10);
+    const last5XG = teamXGForAllRecentAtStart.slice(0, 5);
     const last5XGSum = last5XG.reduce((a, b) => a + b, 0);
     const last5XGAvgFor = last5XGSum / last5XG.length || 0;
 
-    const last5XGHome = teamXGForHome.slice(0, 10);
+    const last5XGHome = teamXGForHome.slice(0, 5);
     const last5XGSumHome = last5XGHome.reduce((a, b) => a + b, 0);
     form.last5XGAvgForHome = last5XGSumHome / last5XGHome.length || 0;
 
-    const last5XGAway = teamXGForAway.slice(0, 10);
+    const last5XGAway = teamXGForAway.slice(0, 5);
     const last5XGSumAway = last5XGAway.reduce((a, b) => a + b, 0);
     form.last5XGAvgForAway = last5XGSumAway / last5XGAway.length || 0;
 
@@ -622,16 +622,16 @@ async function getPastLeagueResults(team, game, hOrA, form) {
     const XGAgainstSumAway = teamXGAgainstAway.reduce((a, b) => a + b, 0);
     form.avgXGConceededAway = XGAgainstSumAway / teamXGAgainstAway.length || 0;
 
-    const last5XGAgainst = teamXGAgainstAllRecentAtStart.slice(0, 10);
+    const last5XGAgainst = teamXGAgainstAllRecentAtStart.slice(0, 5);
     const last5XGAgainstSum = last5XGAgainst.reduce((a, b) => a + b, 0);
     const last5XGAvgAgainst = last5XGAgainstSum / last5XGAgainst.length || 0;
 
-    const last5XGAgainstHome = teamXGForHome.slice(0, 10);
+    const last5XGAgainstHome = teamXGForHome.slice(0, 5);
     const last5XGAgainstSumHome = last5XGAgainstHome.reduce((a, b) => a + b, 0);
     form.last5XGAvgAgainstHome =
       last5XGAgainstSumHome / last5XGAgainstHome.length || 0;
 
-    const last5XGAgainstAway = teamXGForAway.slice(0, 10);
+    const last5XGAgainstAway = teamXGForAway.slice(0, 5);
     const last5XGAgainstSumAway = last5XGAgainstAway.reduce((a, b) => a + b, 0);
     form.last5XGAvgAgainstAway =
       last5XGAgainstSumAway / last5XGAgainstAway.length || 0;
@@ -2470,6 +2470,11 @@ export async function calculateScore(match, index, divider, calculate) {
       formHome.XGOverall
     );
 
+    formHome.xgForStrengthLast5 = await calculateMetricStrength(
+      "xgFor",
+      formHome.XGlast5
+    );
+
     formHome.xgForStrengthHomeOnly = await calculateMetricStrength(
       "xgFor",
       formHome.avgXGScoredHome
@@ -2478,6 +2483,11 @@ export async function calculateScore(match, index, divider, calculate) {
     formHome.xgAgainstStrength = await calculateMetricStrength(
       "xgAgainst",
       3 - formHome.XGAgainstAvgOverall
+    );
+
+    formHome.xgAgainstStrengthLast5 = await calculateMetricStrength(
+      "xgAgainst",
+      3 - formHome.XGAgainstlast5
     );
 
     formHome.xgAgainstStrengthHomeOnly = await calculateMetricStrength(
@@ -2500,6 +2510,16 @@ export async function calculateScore(match, index, divider, calculate) {
       formAway.XGOverall
     );
 
+    formAway.xgForStrengthLast5 = await calculateMetricStrength(
+      "xgFor",
+      formAway.last5XGAvgFor
+    );
+
+    formAway.xgForStrengthLast5 = await calculateMetricStrength(
+      "xgFor",
+      formAway.XGlast5
+    );
+
     formAway.xgForStrengthAwayOnly = await calculateMetricStrength(
       "xgFor",
       formAway.avgXGScoredAway
@@ -2508,6 +2528,11 @@ export async function calculateScore(match, index, divider, calculate) {
     formAway.xgAgainstStrength = await calculateMetricStrength(
       "xgAgainst",
       3 - formAway.XGAgainstAvgOverall
+    );
+
+    formAway.xgAgainstStrengthLast5 = await calculateMetricStrength(
+      "xgAgainst",
+      3 - formAway.XGAgainstlast5
     );
 
     formAway.xgAgainstStrengthAwayOnly = await calculateMetricStrength(
