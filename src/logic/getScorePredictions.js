@@ -2713,6 +2713,14 @@ export async function calculateScore(match, index, divider, calculate) {
     let rawFinalHomeGoals = experimentalHomeGoals;
     let rawFinalAwayGoals = experimentalAwayGoals;
 
+    if(rawFinalHomeGoals < 0){
+      rawFinalHomeGoals = 0
+    }
+
+    if(rawFinalAwayGoals < 0){
+      rawFinalAwayGoals = 0
+    }
+
     match.rawFinalHomeGoals = rawFinalHomeGoals;
     match.rawFinalAwayGoals = rawFinalAwayGoals;
 
@@ -2728,11 +2736,9 @@ export async function calculateScore(match, index, divider, calculate) {
     // }
 
     // Cumalative ROI for all 1246 match outcomes: + 0.68%
-
-    if (rawFinalHomeGoals < 1 && rawFinalHomeGoals > 0 && rawFinalAwayGoals < 1 && rawFinalAwayGoals > 0) {
       if (
-        formHome.CleanSheetPercentage < 45 &&
-        formAway.CleanSheetPercentage < 45
+        formHome.CleanSheetPercentage < 25 &&
+        formAway.CleanSheetPercentage < 25
       ) {
         finalHomeGoals = Math.ceil(rawFinalHomeGoals);
         finalAwayGoals = Math.ceil(rawFinalAwayGoals);
@@ -2740,23 +2746,8 @@ export async function calculateScore(match, index, divider, calculate) {
         finalHomeGoals = Math.floor(rawFinalHomeGoals);
         finalAwayGoals = Math.floor(rawFinalAwayGoals);
       }
-    } 
-    else if (rawFinalHomeGoals < 0 && rawFinalAwayGoals < 0) {
-      if (
-        formHome.CleanSheetPercentage < 45 &&
-        formAway.CleanSheetPercentage < 45
-      ) {
-        finalHomeGoals = 1;
-        finalAwayGoals = 1;
-      } else {
-        finalHomeGoals = Math.floor(rawFinalHomeGoals);
-        finalAwayGoals = Math.floor(rawFinalAwayGoals);
-      }
-    } 
-    else {
-      finalHomeGoals = Math.floor(rawFinalHomeGoals);
-      finalAwayGoals = Math.floor(rawFinalAwayGoals);
-    }
+   
+
 
     // if (finalHomeGoals > formHome.avgScored + 2) {
     //   finalHomeGoals = Math.round((finalHomeGoals + formHome.avgScored) / 2);
@@ -2816,6 +2807,12 @@ export async function calculateScore(match, index, divider, calculate) {
         drawPredictions = drawPredictions + 1;
       }
     }
+
+    console.log(match.game)
+    console.log(finalHomeGoals)
+    console.log(finalAwayGoals)
+    console.log(match.prediction)
+    console.log(match.outcome)
 
     console.log(`drawPredictions: ${drawPredictions}`);
 
