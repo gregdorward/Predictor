@@ -1357,42 +1357,42 @@ export async function generateGoals(homeForm, awayForm, match) {
     homeAttackVsAwayDefenceComparison * 1 +
     // (homeGoals + homeOverallVsAwayOverallComparison) * 0 +
     homeAttackVsAwayDefenceComparisonLast5 * 2 +
-    homeAttackVsAwayDefenceComparisonHomeOnly * 1 +
+    homeAttackVsAwayDefenceComparisonHomeOnly * 0.5 +
     pointsComparisonHome * 0.1;
   awayGoals =
     awayAttackVsHomeDefenceComparison * 1 +
     // (awayGoals + awayOverallVsHomeOverallComparison) * 0 +
     awayAttackVsHomeDefenceComparisonLast5 * 2 +
-    awayAttackVsHomeDefenceComparisonAwayOnly * 1 +
+    awayAttackVsHomeDefenceComparisonAwayOnly * 0.5 +
     pointsComparisonAway * 0.1;
 
-  if (homeForm.actualToXGDifference > 20) {
+  if (homeForm.actualToXGDifference > 25) {
     homeGoals = homeGoals + homeForm.actualToXGDifference / 100;
-  } else if (homeForm.actualToXGDifference < -20) {
+  } else if (homeForm.actualToXGDifference < -25) {
     homeGoals = homeGoals + homeForm.actualToXGDifference / 100;
   }
 
-  if (awayForm.actualToXGDifference > 20) {
+  if (awayForm.actualToXGDifference > 25) {
     awayGoals = awayGoals + awayForm.actualToXGDifference / 100;
-  } else if (awayForm.actualToXGDifference < -20) {
+  } else if (awayForm.actualToXGDifference < -25) {
     awayGoals = awayGoals + awayForm.actualToXGDifference / 100;
   }
 
-  if (
-    homeForm.lastGame === "L" ||
-    homeForm.last2Points < 2 ||
-    awayForm.last2Points >= 5 ||
-    match.XGdifferentialValueRaw < 0
-  ) {
-    homeGoals = homeGoals - 0.1;
-  } else if (
-    awayForm.lastGame === "L" ||
-    awayForm.last2Points < 2 ||
-    homeForm.last2Points >= 5 ||
-    match.XGdifferentialValueRaw > 0
-  ) {
-    awayGoals = awayGoals - 0.1;
-  }
+  // if (
+  //   homeForm.lastGame === "L" ||
+  //   homeForm.last2Points < 2 ||
+  //   awayForm.last2Points >= 5 ||
+  //   match.XGdifferentialValueRaw < 0
+  // ) {
+  //   homeGoals = homeGoals - 0.1;
+  // } else if (
+  //   awayForm.lastGame === "L" ||
+  //   awayForm.last2Points < 2 ||
+  //   homeForm.last2Points >= 5 ||
+  //   match.XGdifferentialValueRaw > 0
+  // ) {
+  //   awayGoals = awayGoals - 0.1;
+  // }
 
   // if(homeForm.last5Points > homeForm.last10Points){
   //   homeGoals = homeGoals + 0.1;
@@ -1404,6 +1404,16 @@ export async function generateGoals(homeForm, awayForm, match) {
   // }
 
   // Cumalative ROI for all 2193 match outcomes: + 4.18%
+
+  if(homeGoals < 0 && awayGoals < 0){
+    if(homeGoals < awayGoals){
+      homeGoals = homeGoals + (awayGoals / 5)
+      awayGoals = awayGoals - (homeGoals / 5)
+    } else if (homeGoals > awayGoals){
+      homeGoals = homeGoals - (awayGoals / 5)
+      awayGoals = awayGoals + (homeGoals / 5)
+    }
+  }
 
   return [homeGoals, awayGoals];
 }
@@ -2713,32 +2723,21 @@ export async function calculateScore(match, index, divider, calculate) {
     let rawFinalHomeGoals = experimentalHomeGoals;
     let rawFinalAwayGoals = experimentalAwayGoals;
 
-    if(rawFinalHomeGoals < 0){
-      rawFinalHomeGoals = 0
-    }
+    // if(rawFinalHomeGoals < 0){
+    //   rawFinalHomeGoals = 0
+    // }
 
-    if(rawFinalAwayGoals < 0){
-      rawFinalAwayGoals = 0
-    }
+    // if(rawFinalAwayGoals < 0){
+    //   rawFinalAwayGoals = 0
+    // }
 
     match.rawFinalHomeGoals = rawFinalHomeGoals;
     match.rawFinalAwayGoals = rawFinalAwayGoals;
 
-    // finalHomeGoals = await roundCustom(rawFinalHomeGoals, formHome);
-    // finalAwayGoals = await roundCustom(rawFinalAwayGoals, formAway);
-
-    // if(rawFinalHomeGoals + rawFinalAwayGoals > (formHome.avScoredLast5 + formAway.avScoredLast5) * 1.5){
-    //   rawFinalHomeGoals = formHome.teamGoalsCalc -1;
-    //   rawFinalAwayGoals = formAway.teamGoalsCalc -1;
-    // } else {
-    // rawFinalHomeGoals = formHome.teamGoalsCalc ;
-    // rawFinalAwayGoals = formAway.teamGoalsCalc ;
-    // }
-
-    // Cumalative ROI for all 1246 match outcomes: + 0.68%
+    if (rawFinalHomeGoals < 1 && rawFinalHomeGoals > 0 && rawFinalAwayGoals < 1 && rawFinalAwayGoals > 0) {
       if (
-        formHome.CleanSheetPercentage < 25 &&
-        formAway.CleanSheetPercentage < 25
+        formHome.CleanSheetPercentage < 45 &&
+        formAway.CleanSheetPercentage < 45
       ) {
         finalHomeGoals = Math.ceil(rawFinalHomeGoals);
         finalAwayGoals = Math.ceil(rawFinalAwayGoals);
@@ -2746,7 +2745,31 @@ export async function calculateScore(match, index, divider, calculate) {
         finalHomeGoals = Math.floor(rawFinalHomeGoals);
         finalAwayGoals = Math.floor(rawFinalAwayGoals);
       }
-   
+    } 
+    else if (rawFinalHomeGoals < 0 && rawFinalAwayGoals < 0) {
+      if (
+        formHome.CleanSheetPercentage < 45 &&
+        formAway.CleanSheetPercentage < 45
+      ) {
+        finalHomeGoals = 1;
+        finalAwayGoals = 1;
+      } else {
+        finalHomeGoals = Math.floor(rawFinalHomeGoals);
+        finalAwayGoals = Math.floor(rawFinalAwayGoals);
+      }
+    } 
+    else {
+      finalHomeGoals = Math.floor(rawFinalHomeGoals);
+      finalAwayGoals = Math.floor(rawFinalAwayGoals);
+    }
+
+    if(rawFinalHomeGoals < 0){
+      rawFinalHomeGoals = 0
+    }
+
+    if(rawFinalAwayGoals < 0){
+      rawFinalAwayGoals = 0
+    }
 
 
     // if (finalHomeGoals > formHome.avgScored + 2) {
