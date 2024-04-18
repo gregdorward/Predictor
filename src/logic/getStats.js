@@ -1255,7 +1255,8 @@ export async function createStatsDiv(game, displayBool) {
         FavouriteRecord:
           favouriteRecordHome + `. ${homeForm.reliabilityString}`,
         BTTSArray: bttsArrayHome,
-        Results: resultsArrayHome,
+        Results: homeForm.resultsAll,
+        ResultsHorA: homeForm.resultsHome.reverse(),
         // BTTSAll: homeForm.last10btts,
         // BTTSHorA: homeForm.last10bttsHome,
       });
@@ -1289,8 +1290,8 @@ export async function createStatsDiv(game, displayBool) {
         FavouriteRecord:
           favouriteRecordAway + `. ${awayForm.reliabilityString}`,
         BTTSArray: bttsArrayAway,
-        Results: resultsArrayAway,
-        ResultsHomeOrAway: resultsArrayAway,
+        Results: awayForm.resultsAll,
+        ResultsHorA: awayForm.resultsAway.reverse(),
         // BTTSAll: awayForm.last10btts,
         // BTTSHorA: awayForm.last10bttsAway,
       });
@@ -1410,6 +1411,8 @@ export async function createStatsDiv(game, displayBool) {
         </div>
       ));
 
+      console.log(formDataHome[0].Results)
+
       function StatsHome() {
         return (
           <div className="flex-childOne">
@@ -1481,7 +1484,7 @@ export async function createStatsDiv(game, displayBool) {
                 // }
                 BTTSArray={formDataHome[0].BTTSArray}
                 Results={formDataHome[0].Results}
-                ResultsHomeOrAway={formDataHome[0].wonHomeOrAwayOnly}
+                ResultsHorA={formDataHome[0].ResultsHorA}
                 CardsTotal={formDataHome[0].CardsTotal}
                 CornersAverage={homeForm.AverageCorners}
                 ScoredBothHalvesPercentage={
@@ -1567,6 +1570,7 @@ export async function createStatsDiv(game, displayBool) {
                 // }
                 BTTSArray={formDataAway[0].BTTSArray}
                 Results={formDataAway[0].Results}
+                ResultsHorA={formDataAway[0].ResultsHorA}
                 CardsTotal={formDataAway[0].CardsTotal}
                 CornersAverage={awayForm.AverageCorners}
                 ScoredBothHalvesPercentage={

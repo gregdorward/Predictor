@@ -35,46 +35,46 @@ function Stats(props) {
             League results (most recent on right)
           </li>
           <li key={`last5League`} className="last5League">
-          <span className={styleForm(props.Results[5])}>
-              {props.Results[5]}
-            </span>
-            <span className={styleForm(props.Results[4])}>
-              {props.Results[4]}
-            </span>
-            <span className={styleForm(props.Results[3])}>
-              {props.Results[3]}
-            </span>
-            <span className={styleForm(props.Results[2])}>
-              {props.Results[2]}
+          <span className={styleForm(props.Results[0])}>
+              {props.Results[0]}
             </span>
             <span className={styleForm(props.Results[1])}>
               {props.Results[1]}
             </span>
-            <span className={styleForm(props.Results[0])}>
-              {props.Results[0]}
+            <span className={styleForm(props.Results[2])}>
+              {props.Results[2]}
+            </span>
+            <span className={styleForm(props.Results[3])}>
+              {props.Results[3]}
+            </span>
+            <span className={styleForm(props.Results[4])}>
+              {props.Results[4]}
+            </span>
+            <span className={styleForm(props.Results[5])}>
+              {props.Results[5]}
             </span>
           </li>
           <li className="FormHeader">
             {props.homeOrAway} form (most recent on right)
           </li>
           <li key={`last5${props.homeOrAwayResults}`} className="FormHomeOrAway">
-          <span className={styleForm(props.homeOrAwayResults[5])}>
-              {props.homeOrAwayResults[5]}
+          <span className={styleForm(props.ResultsHorA[0])}>
+              {props.ResultsHorA[0]}
             </span>
-            <span className={styleForm(props.homeOrAwayResults[4])}>
-              {props.homeOrAwayResults[4]}
+            <span className={styleForm(props.ResultsHorA[1])}>
+              {props.ResultsHorA[1]}
             </span>
-            <span className={styleForm(props.homeOrAwayResults[3])}>
-              {props.homeOrAwayResults[3]}
+            <span className={styleForm(props.ResultsHorA[2])}>
+              {props.ResultsHorA[2]}
             </span>
-            <span className={styleForm(props.homeOrAwayResults[2])}>
-              {props.homeOrAwayResults[2]}
+            <span className={styleForm(props.ResultsHorA[3])}>
+              {props.ResultsHorA[3]}
             </span>
-            <span className={styleForm(props.homeOrAwayResults[1])}>
-              {props.homeOrAwayResults[1]}
+            <span className={styleForm(props.ResultsHorA[4])}>
+              {props.ResultsHorA[4]}
             </span>
-            <span className={styleForm(props.homeOrAwayResults[0])}>
-              {props.homeOrAwayResults[0]}
+            <span className={styleForm(props.ResultsHorA[5])}>
+              {props.ResultsHorA[5]}
             </span>
           </li>
           <li
