@@ -846,7 +846,7 @@ export async function createStatsDiv(game, displayBool) {
       if (homeForm.last3Points === undefined) {
         homeForm.last3Points = getPointsFromLastX(homeForm.lastThreeForm);
 
-        homeForm.last5Points = getPointsFromLastX(homeForm.LastFiveForm);
+        homeForm.last5Points = getPointsFromLastX(homeForm.LastFiveForm.reverse());
 
         homeForm.last6Points = getPointsFromLastX(homeForm.LastSixForm);
 
@@ -854,7 +854,7 @@ export async function createStatsDiv(game, displayBool) {
 
         awayForm.last3Points = getPointsFromLastX(awayForm.lastThreeForm);
 
-        awayForm.last5Points = getPointsFromLastX(awayForm.LastFiveForm);
+        awayForm.last5Points = getPointsFromLastX(awayForm.LastFiveForm.reverse());
 
         awayForm.last6Points = getPointsFromLastX(awayForm.LastSixForm);
 
@@ -1227,6 +1227,7 @@ export async function createStatsDiv(game, displayBool) {
       });
 
       const formDataHome = [];
+      console.log(gameStats.home[2].LastFiveForm)
 
       formDataHome.push({
         name: game.homeTeam,

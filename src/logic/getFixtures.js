@@ -1242,10 +1242,10 @@ export async function generateFixtures(
                 BTTSPercentage: parseInt(
                   form[0].data[2].stats.seasonBTTSPercentage_home
                 ),
-                lastThreeForm: lastThreeFormHome,
-                LastFiveForm: lastFiveFormHome,
-                LastSixForm: lastSixFormHome,
-                LastTenForm: lastTenFormHome,
+                lastThreeForm: lastThreeFormHome.reverse(),
+                LastFiveForm: lastFiveFormHome.reverse(),
+                LastSixForm: lastSixFormHome.reverse(),
+                LastTenForm: lastTenFormHome.reverse(),
                 LeagueOrAll: leagueOrAll,
                 LeaguePosition: `${teamPositionHome}${homePrefix}`,
                 homeRawPosition: homeTeaminLeague.rawPosition
@@ -1468,10 +1468,10 @@ export async function generateFixtures(
                 BTTSPercentage: parseInt(
                   form[1].data[2].stats.seasonBTTSPercentage_away
                 ),
-                lastThreeForm: lastThreeFormAway,
-                LastFiveForm: lastFiveFormAway,
-                LastSixForm: lastSixFormAway,
-                LastTenForm: lastTenFormAway,
+                lastThreeForm: lastThreeFormAway.reverse(),
+                LastFiveForm: lastFiveFormAway.reverse(),
+                LastSixForm: lastSixFormAway.reverse(),
+                LastTenForm: lastTenFormAway.reverse(),
                 LeagueOrAll: leagueOrAll,
                 LeaguePosition: `${teamPositionAway}${awayPrefix}`,
                 awayRawPosition: awayTeaminLeague.rawPosition
