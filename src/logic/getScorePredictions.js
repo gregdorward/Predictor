@@ -311,13 +311,16 @@ async function getPastLeagueResults(team, game, hOrA, form) {
       .concat(reversedResultsAway)
       .sort((a, b) => a.dateRaw - b.dateRaw);
 
-    const allTeamResultsHome = reversedResultsHome.sort((a, b) => b.dateRaw - a.dateRaw);
-    const allTeamResultsAway = reversedResultsAway.sort((a, b) => b.dateRaw - a.dateRaw);
+    const allTeamResultsHome = reversedResultsHome.sort(
+      (a, b) => b.dateRaw - a.dateRaw
+    );
+    const allTeamResultsAway = reversedResultsAway.sort(
+      (a, b) => b.dateRaw - a.dateRaw
+    );
 
-    console.log(game.game)
-    console.log(allTeamResults)
-    console.log(allTeamResultsHome)
-
+    console.log(game.game);
+    console.log(allTeamResults);
+    console.log(allTeamResultsHome);
 
     form.allTeamResults = allTeamResults.sort((b, a) => a.dateRaw - b.dateRaw);
 
@@ -745,6 +748,7 @@ async function getPastLeagueResults(team, game, hOrA, form) {
       (bttsHomeCount.length / bttsHome.length) *
       100
     ).toFixed(0);
+
     const bttsAwayCount = bttsAway.filter((btts) => btts === true);
     const bttsAwayString = `${bttsAwayCount.length}/${bttsAway.length}`;
     const bttsAwayPercentage = (
@@ -757,6 +761,10 @@ async function getPastLeagueResults(team, game, hOrA, form) {
       (bttsAllCount.length / bttsAll.length) *
       100
     ).toFixed(0);
+    form.bttsAllPercentage = bttsAllPercentage;
+    form.bttsHomePercentage = bttsHomePercentage;
+    form.bttsAwayPercentage = bttsAwayPercentage;
+
 
     let r = 10;
     let x = 10;
@@ -1906,12 +1914,6 @@ export async function calculateScore(match, index, divider, calculate) {
       teams[i][index].longTermAverageConceeded =
         teams[i][2].ConcededOverall / 10;
 
-      match.GoalsInGamesAverageHome =
-        teams[0][0].ScoredAverage + teams[0][0].ConcededAverage;
-
-      match.GoalsInGamesAverageAway =
-        teams[1][0].ScoredAverage + teams[1][0].ConcededAverage;
-
       let recentGoalDiff =
         teams[i][index].ScoredAverageShortTerm -
         teams[i][index].ConcededAverageShortTerm;
@@ -2691,6 +2693,14 @@ export async function calculateScore(match, index, divider, calculate) {
         formAway.allTeamGoalsConceededBasedOnAverages
     );
 
+    match.GoalsInGamesAverageHome =
+      formHome.avScoredLast5 +
+      formHome.avConceededLast5;
+
+    match.GoalsInGamesAverageAway =
+      formAway.avScoredLast5 +
+      formAway.avConceededLast5;
+
     let factorOneHome;
     let factorOneAway;
 
@@ -2824,9 +2834,6 @@ export async function calculateScore(match, index, divider, calculate) {
     //   finalAwayGoals = Math.floor(rawFinalAwayGoals);
     // }
 
-    finalHomeGoals = Math.floor(rawFinalHomeGoals);
-    finalAwayGoals = Math.floor(rawFinalAwayGoals);
-
     if (rawFinalHomeGoals < 0) {
       rawFinalHomeGoals = 0;
     }
@@ -2834,6 +2841,9 @@ export async function calculateScore(match, index, divider, calculate) {
     if (rawFinalAwayGoals < 0) {
       rawFinalAwayGoals = 0;
     }
+
+    finalHomeGoals = Math.floor(rawFinalHomeGoals);
+    finalAwayGoals = Math.floor(rawFinalAwayGoals);
 
     // if (finalHomeGoals > formHome.avgScored + 2) {
     //   finalHomeGoals = Math.round((finalHomeGoals + formHome.avgScored) / 2);
@@ -3527,10 +3537,10 @@ export async function getScorePrediction(day, mocked) {
         bttsArray.push(match);
       }
       if (
-        match.unroundedGoalsA + match.unroundedGoalsB > 3.35 &&
+        match.unroundedGoalsA + match.unroundedGoalsB > 4 &&
         match.goalsA + match.goalsB > 2 &&
-        match.GoalsInGamesAverageHome > 2.75 &&
-        match.GoalsInGamesAverageAway > 2.75
+        match.GoalsInGamesAverageHome > 3 &&
+        match.GoalsInGamesAverageAway > 3
       ) {
         Over25PredictionObject = {
           game:
