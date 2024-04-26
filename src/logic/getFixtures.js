@@ -1558,8 +1558,7 @@ export async function generateFixtures(
               onClickEvent={() => getScorePrediction(day)}
               className={"GeneratePredictions"}
             />
-            <div className="Version">Prediction engine v4.2.0 (18/04/24)</div>
-            <h4>New beta feature, filters &#8595;</h4>
+            <div className="Version">Prediction engine v4.2.1 (26/04/24)</div>
             <Collapsable
               buttonText={"Filters"}
               element={
