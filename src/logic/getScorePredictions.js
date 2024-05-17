@@ -307,6 +307,137 @@ async function getPastLeagueResults(team, game, hOrA, form) {
     let reversedResultsHome = homeResults;
     let reversedResultsAway = awayResults;
 
+    console.log(game.homeTeam)
+    console.log(team)
+
+    if (game.homeTeam === team) {
+      let y = game.homeOdds;
+      //Clear fav
+      if (y <= 1.5) {
+        const allClearFavouriteResultsHome = reversedResultsHome.filter(
+          (fixture) => fixture.oddsHome <= 1.45
+        );
+        const allClearFavouriteResultsAway = reversedResultsAway.filter(
+          (fixture) => fixture.oddsAway <= 1.45
+        );
+
+        form.simlarGameResultsHome = allClearFavouriteResultsHome
+          .concat(allClearFavouriteResultsAway)
+          .sort((a, b) => a.dateRaw - b.dateRaw);
+      }
+      //fav
+      else if (y <= 2.1) {
+        const allSlightFavouriteResultsHome = reversedResultsHome.filter(
+          (fixture) => fixture.oddsHome <= 2.1 && fixture.oddsHome > 1.45
+        );
+        const allSlightFavouriteResultsAway = reversedResultsAway.filter(
+          (fixture) => fixture.oddsAway <= 2.1 && fixture.oddsAway > 1.45
+        );
+        game.simlarGameResultsHome = allSlightFavouriteResultsHome
+          .concat(allSlightFavouriteResultsAway)
+          .sort((a, b) => a.dateRaw - b.dateRaw);
+      }
+      //Tossup
+      else if (y <= 2.75) {
+        const allTossupResultsHome = reversedResultsHome.filter(
+          (fixture) => fixture.oddsHome <= 2.75 && fixture.oddsHome > 2.1
+        );
+        const allTossupResultsAway = reversedResultsAway.filter(
+          (fixture) => fixture.oddsAway <= 2.75 && fixture.oddsAway > 2.1
+        );
+        game.simlarGameResultsHome = allTossupResultsHome
+          .concat(allTossupResultsAway)
+          .sort((a, b) => a.dateRaw - b.dateRaw);
+      }
+      //Underdog
+      else if (y <= 4) {
+        const allUnderdogResultsHome = reversedResultsHome.filter(
+          (fixture) => fixture.oddsHome <= 4 && fixture.oddsHome > 2.75
+        );
+        const allUnderdogResultsAway = reversedResultsAway.filter(
+          (fixture) => fixture.oddsAway <= 4 && fixture.oddsAway > 2.75
+        );
+        game.simlarGameResultsHome = allUnderdogResultsHome
+          .concat(allUnderdogResultsAway)
+          .sort((a, b) => a.dateRaw - b.dateRaw);
+      }
+      //MassiveUnderdog
+      else if (y > 4) {
+        const allMassiveUnderdogResultsHome = reversedResultsHome.filter(
+          (fixture) => fixture.oddsHome > 4
+        );
+        const allMassiveUnderdogResultsAway = reversedResultsAway.filter(
+          (fixture) => fixture.oddsAway > 4
+        );
+        game.simlarGameResultsHome = allMassiveUnderdogResultsHome
+          .concat(allMassiveUnderdogResultsAway)
+          .sort((a, b) => a.dateRaw - b.dateRaw);
+      }
+    } else if (game.awayTeam === team) {
+      let z = game.awayOdds;
+      //Clear fav
+      if (z <= 1.5) {
+        const allClearFavouriteResultsHome = reversedResultsHome.filter(
+          (fixture) => fixture.oddsHome <= 1.45
+        );
+        const allClearFavouriteResultsAway = reversedResultsAway.filter(
+          (fixture) => fixture.oddsAway <= 1.45
+        );
+
+        game.simlarGameResultsAway = allClearFavouriteResultsHome
+          .concat(allClearFavouriteResultsAway)
+          .sort((a, b) => a.dateRaw - b.dateRaw);
+      }
+      //fav
+      else if (z <= 2.1) {
+        const allSlightFavouriteResultsHome = reversedResultsHome.filter(
+          (fixture) => fixture.oddsHome <= 2.1 && fixture.oddsHome > 1.45
+        );
+        const allSlightFavouriteResultsAway = reversedResultsAway.filter(
+          (fixture) => fixture.oddsAway <= 2.1 && fixture.oddsAway > 1.45
+        );
+        game.simlarGameResultsAway = allSlightFavouriteResultsHome
+          .concat(allSlightFavouriteResultsAway)
+          .sort((a, b) => a.dateRaw - b.dateRaw);
+      }
+      //Tossup
+      else if (z <= 2.75) {
+        const allTossupResultsHome = reversedResultsHome.filter(
+          (fixture) => fixture.oddsHome <= 2.75 && fixture.oddsHome > 2.1
+        );
+        const allTossupResultsAway = reversedResultsAway.filter(
+          (fixture) => fixture.oddsAway <= 2.75 && fixture.oddsAway > 2.1
+        );
+        game.simlarGameResultsAway = allTossupResultsHome
+          .concat(allTossupResultsAway)
+          .sort((a, b) => a.dateRaw - b.dateRaw);
+      }
+      //Underdog
+      else if (z <= 4) {
+        const allUnderdogResultsHome = reversedResultsHome.filter(
+          (fixture) => fixture.oddsHome <= 4 && fixture.oddsHome > 2.75
+        );
+        const allUnderdogResultsAway = reversedResultsAway.filter(
+          (fixture) => fixture.oddsAway <= 4 && fixture.oddsAway > 2.75
+        );
+        game.simlarGameResultsAway = allUnderdogResultsHome
+          .concat(allUnderdogResultsAway)
+          .sort((a, b) => a.dateRaw - b.dateRaw);
+      }
+      //MassiveUnderdog
+      else if (z > 4) {
+        const allMassiveUnderdogResultsHome = reversedResultsHome.filter(
+          (fixture) => fixture.oddsHome > 4.5
+        );
+        const allMassiveUnderdogResultsAway = reversedResultsAway.filter(
+          (fixture) => fixture.oddsAway > 4.5
+        );
+        game.simlarGameResultsAway = allMassiveUnderdogResultsHome
+          .concat(allMassiveUnderdogResultsAway)
+          .sort((a, b) => a.dateRaw - b.dateRaw);
+      }
+    }
+
     const allTeamResults = reversedResultsHome
       .concat(reversedResultsAway)
       .sort((a, b) => a.dateRaw - b.dateRaw);
@@ -764,7 +895,6 @@ async function getPastLeagueResults(team, game, hOrA, form) {
     form.bttsAllPercentage = bttsAllPercentage;
     form.bttsHomePercentage = bttsHomePercentage;
     form.bttsAwayPercentage = bttsAwayPercentage;
-
 
     let r = 10;
     let x = 10;
@@ -2694,12 +2824,10 @@ export async function calculateScore(match, index, divider, calculate) {
     );
 
     match.GoalsInGamesAverageHome =
-      formHome.avScoredLast5 +
-      formHome.avConceededLast5;
+      formHome.avScoredLast5 + formHome.avConceededLast5;
 
     match.GoalsInGamesAverageAway =
-      formAway.avScoredLast5 +
-      formAway.avConceededLast5;
+      formAway.avScoredLast5 + formAway.avConceededLast5;
 
     let factorOneHome;
     let factorOneAway;
@@ -2772,6 +2900,10 @@ export async function calculateScore(match, index, divider, calculate) {
       homeComparisonWeighting = 1;
       awayComparisonWeighting = 1;
     }
+
+    console.log(match.game);
+    console.log(match.simlarGameResultsHome);
+    console.log(match.simlarGameResultsAway);
 
     // let experimentalHomeGoals = factorOneHome + formHome.teamGoalsCalc;
     let experimentalHomeGoals = factorTwoHome + formHome.teamGoalsCalc;

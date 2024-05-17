@@ -846,7 +846,7 @@ export async function createStatsDiv(game, displayBool) {
       if (homeForm.last3Points === undefined) {
         homeForm.last3Points = getPointsFromLastX(homeForm.lastThreeForm);
 
-        homeForm.last5Points = getPointsFromLastX(homeForm.LastFiveForm.reverse());
+        homeForm.last5Points = getPointsFromLastX(homeForm.LastFiveForm);
 
         homeForm.last6Points = getPointsFromLastX(homeForm.LastSixForm);
 
@@ -854,7 +854,7 @@ export async function createStatsDiv(game, displayBool) {
 
         awayForm.last3Points = getPointsFromLastX(awayForm.lastThreeForm);
 
-        awayForm.last5Points = getPointsFromLastX(awayForm.LastFiveForm.reverse());
+        awayForm.last5Points = getPointsFromLastX(awayForm.LastFiveForm);
 
         awayForm.last6Points = getPointsFromLastX(awayForm.LastSixForm);
 
@@ -1227,7 +1227,7 @@ export async function createStatsDiv(game, displayBool) {
       });
 
       const formDataHome = [];
-      console.log(gameStats.home[2].LastFiveForm)
+      console.log(gameStats.home[2].LastFiveForm);
 
       formDataHome.push({
         name: game.homeTeam,
@@ -1376,6 +1376,31 @@ export async function createStatsDiv(game, displayBool) {
         );
       }
 
+      function singleSimilarResult(game) {
+        return (
+          <div>
+            <div className="ResultRowSmallDate">
+              <span>{game.date}</span>
+            </div>
+            {/* <div className="ResultRowSmall">
+              <span className="column">{game.XG}</span>
+              <span className="column">XG</span>
+              <span className="column">{game.XGAgainst}</span>
+            </div>
+            <div className="ResultRowSmall">
+              <span className="column">{game.sot}</span>
+              <span className="column">SOT</span>
+              <span className="column">{game.sotAgainst}</span>
+            </div>
+            <div className="ResultRowSmall">
+              <span className="column">{game.possession}%</span>
+              <span className="column">Possession</span>
+              <span className="column">{100 - game.possession}%</span>
+            </div> */}
+          </div>
+        );
+      }
+
       const overviewHome = gameArrayHome.slice(0, 10).map((game) => (
         <div>
           <Collapsable
@@ -1412,7 +1437,64 @@ export async function createStatsDiv(game, displayBool) {
         </div>
       ));
 
-      console.log(formDataHome[0].Results)
+      let similarGamesHome;
+
+      if (game.simlarGameResultsHome) {
+        similarGamesHome = game.simlarGameResultsHome.reverse()
+          .map((game) => (
+            <div>
+              <Collapsable
+                classNameButton="ResultButton"
+                buttonText={
+                  <div className={`ResultRowOverviewSmall${game.result}`}>
+                    <div className="columnOverviewHomeSmall">
+                      {game.homeTeam}
+                    </div>
+                    <span className="columnOverviewScoreSmall">
+                      {game.homeGoals} : {game.awayGoals}
+                    </span>
+                    <div className="columnOverviewAwaySmall">
+                      {game.awayTeam}
+                    </div>
+                  </div>
+                }
+                element={singleSimilarResult(game)}
+              />
+            </div>
+          ));
+      } else {
+        similarGamesHome = <h4 className="NoGames">No previous games fit this profile</h4>
+      }
+
+      let similarGamesAway;
+      if (game.simlarGameResultsAway) {
+        similarGamesAway = game.simlarGameResultsAway.reverse()
+          .map((game) => (
+            <div>
+              <Collapsable
+                classNameButton="ResultButton"
+                buttonText={
+                  <div className={`ResultRowOverviewSmall${game.result}`}>
+                    <div className="columnOverviewHomeSmall">
+                      {game.homeTeam}
+                    </div>
+                    <span className="columnOverviewScoreSmall">
+                      {game.homeGoals} : {game.awayGoals}
+                    </span>
+                    <div className="columnOverviewAwaySmall">
+                      {game.awayTeam}
+                    </div>
+                  </div>
+                }
+                element={singleSimilarResult(game)}
+              />
+            </div>
+          ));
+      } else {
+        similarGamesAway = <h4>No previous games fit this profile</h4>
+      }
+
+      console.log(formDataHome[0].Results);
 
       function StatsHome() {
         return (
@@ -1786,6 +1868,13 @@ export async function createStatsDiv(game, displayBool) {
           <div className="flex-container">
             <StatsHome />
             <StatsAway />
+          </div>
+          <h2>Results from similar profile games</h2>
+          <span>(Games where each team had similar odds)</span>
+          <h3>Most recent first</h3>
+          <div className="flex-container-similar">
+            <div className="flex-childOneOverviewSmall">{similarGamesHome}</div>
+            <div className="flex-childTwoOverviewSmall">{similarGamesAway}</div>
           </div>
           <input type="hidden" name="IL_IN_ARTICLE" />
           <Button

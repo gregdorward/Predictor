@@ -624,6 +624,39 @@ p {
   color: white;
 }
 
+.ResultRowOverviewSmallW {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  padding: 1em;
+  align-items: center;
+  font-size: 1.1em;
+  background-color: #004b00;
+  color: white;
+}
+
+.ResultRowOverviewSmallD {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  padding: 1em;
+  align-items: center;
+  font-size: 1.1em;
+  background-color: #030061;
+  color: white;
+}
+
+.ResultRowOverviewSmallL {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  padding: 1em;
+  align-items: center;
+  font-size: 1.1em;
+  background-color: #730a00;
+  color: white;
+}
+
 .columnOverviewHome {
   flex: 33.33%;
   text-align: right;
@@ -687,6 +720,22 @@ p {
   color: #030061;
   text-align: center;
   font-size: 1.1em;
+}
+
+.NoGames{
+  align-self: flex-start;
+  font-size: 1.4em;
+  text-align: center;
+}
+
+.ResultRowSmallDate {
+  display: flex;
+  flex-direction: column;
+  flex-wrap: wrap;
+  padding: 0.5em;
+  color: #030061;
+  text-align: center;
+  font-size: 1.2em;
 }
 
 .column {
@@ -1731,6 +1780,12 @@ a.PreviousMatchLink{
   align-items: flex-end;
 }
 
+.flex-container-similar{
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+}
+
 .flex-childOne {
   flex-direction: column;
   text-align: right;
@@ -1924,7 +1979,7 @@ a.PreviousMatchLink{
 
 .KeyStatsHome{
   padding-top: 0.5em;
-  padding-bottom: 0.5em;
+  padding-bottom: 2em;
   /* padding-right: 0.25em; */
   padding-left: 0.5em;
 }
@@ -1937,7 +1992,7 @@ a.PreviousMatchLink{
 
 .KeyStatsAway{
   padding-top: 0.5em;
-  padding-bottom: 0.5em;
+  padding-bottom: 2em;
   padding-right: 0.5em;
   /* padding-left: 0.5em; */
 }
