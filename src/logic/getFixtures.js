@@ -21,6 +21,8 @@ var fixtureResponse;
 var fixtureArray = [];
 export var matches = [];
 export var resultedMatches = [];
+export const arrayOfGames = [];
+
 var league;
 var leagueID;
 var leagueGames = [];
@@ -67,13 +69,26 @@ groupInstance = [];
 leagueInstance = [];
 
 async function convertTimestamp(timestamp) {
-  let newDate = new Date(timestamp * 1000);
+  let newDate = new Date(timestamp);
+
+  let year = newDate.getFullYear();
+  let month = String(newDate.getMonth() + 1).padStart(2, '0'); // Adding 1 to month because it is zero-based
+  let day = String(newDate.getDate()).padStart(2, '0');
+  
+  let converted = `${year}-${month}-${day}`;
+
+  return converted;
+}
+
+async function convertTimestampForSofaScore(timestamp) {
+  let newDate = new Date(timestamp);
   let [day, month, year] = newDate.toLocaleDateString("en-US").split("/");
 
   let converted = `${year}-${day}-${month}`;
 
   return converted;
 }
+
 
 export async function generateTables(a, leagueIdArray, allResults) {
   // leagueIdArray = [];
@@ -475,6 +490,22 @@ export async function generateFixtures(
         leagueIdArray,
         allLeagueResultsArrayOfObjects
       );
+      const todaysDate = await convertTimestampForSofaScore(Date.now())
+      console.log(todaysDate)
+      const sofaScore = await fetch(`https://www.sofascore.com/api/v1/sport/football/scheduled-events/2024-05-20`)
+      await sofaScore.json().then((games) => {
+        games.events.forEach((game) => {
+          arrayOfGames.push({
+            homeTeam: game.homeTeam.name,
+            awayTeam: game.awayTeam.name,
+            id: game.id,
+            time: game.startTimestamp,
+            homeGoals: game.homeScore.display != undefined ? game.homeScore.display : "-",
+            awayGoals: game.awayScore.display != undefined ? game.awayScore.display : "-"
+          })
+        })
+      })
+      console.log(arrayOfGames)
     } else {
       allLeagueResultsArrayOfObjects = [];
       console.log("Fetching leagues");

@@ -32,7 +32,6 @@ export let allLeagueData = [];
 export const availableLeagues = [];
 export var orderedLeagues = [];
 
-
 const leagueOrder = [
   7432, //World Cup 22
   9660, //premier league 22/23
@@ -95,7 +94,6 @@ let string;
 let dateString;
 
 (async function fetchLeagueData() {
-
   let leagueList;
 
   leagueList = await fetch(`${process.env.REACT_APP_EXPRESS_SERVER}leagueList`);
@@ -622,6 +620,8 @@ function App() {
             </span>
           </div>
         </div>
+        <div>
+    </div>
         <div className="Social">
           <TwitterShareButton
             url={"www.xgtipping.com"}
