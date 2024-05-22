@@ -76,16 +76,22 @@ const leagueOrder = [
 
 let today;
 let todayFootyStats;
+let todaySS
 let tomorrow;
 let tomorrowFootyStats;
+let tomorrowSS;
 let date;
+let dateSS;
 let dateFootyStats;
 let yesterday;
 let yesterdayFootyStats;
+let yesterdaySS
 let lastSaturday;
 let lastSaturdayFootyStats;
+let lastSaturdaySS;
 let historic;
 let historicFootyStats;
+let historicSS;
 let tomorrowsDate;
 let yesterdaysDate;
 let saturdayDate;
@@ -144,6 +150,8 @@ export async function getLeagueList() {
   async function incrementDate(num, date) {
     i = i + num;
     date.setDate(date.getDate() + num);
+    dateSS = await convertTimestampForSofaScore(date);
+
     [date, dateFootyStats] = await calculateDate(date);
     string = dateFootyStats;
     await renderButtons();
@@ -154,6 +162,7 @@ export async function getLeagueList() {
     console.log(i);
     if (i > -120) {
       date.setDate(date.getDate() - num);
+      dateSS = await convertTimestampForSofaScore(date);
       [date, dateFootyStats] = await calculateDate(date);
       string = dateFootyStats;
       dateString = date;
@@ -192,6 +201,25 @@ export async function getLeagueList() {
   historicDate.setDate(historicDate.getDate() - 9);
   [historic, historicFootyStats] = await calculateDate(historicDate);
 
+
+  async function convertTimestampForSofaScore(timestamp) {
+    let newDate = new Date(timestamp);
+  
+    let year = newDate.getFullYear();
+    let month = String(newDate.getMonth() + 1).padStart(2, '0'); // Adding 1 to month because it is zero-based
+    let day = String(newDate.getDate()).padStart(2, '0');
+    
+    let converted = `${year}-${month}-${day}`;
+  
+    return converted;
+  }
+
+  todaySS = await convertTimestampForSofaScore(new Date());
+  tomorrowSS = await convertTimestampForSofaScore(tomorrowsDate);
+  yesterdaySS = await convertTimestampForSofaScore(yesterdaysDate);
+  lastSaturdaySS = await convertTimestampForSofaScore(saturdayDate);
+  historicSS = await convertTimestampForSofaScore(historicDate);
+
   const text =
     "Select a day you would like to retrieve fixtures for from the options above\n A list of games will be returned once the data has loaded\n Once all fixtures have loaded, click on “Get Predictions” to see XGTipping's forecasted outcomes for every game\n If a game has completed, the predictions is displayed on the right and the actual result on the left\n Each individual fixture is tappable/clickable. By doing so, you can access a range of detailed stats, from comparative charts, granular performance measures to previous meetings.\n All games are subject to the same automated prediction algorithm with the outcome being a score prediction. Factors that determine the tip include the following, amongst others:\n - Goal differentials\n - Expected goal differentials \n - Attack/Defence performance\n - Form trends over time\n - Home/Away records\n - WDL records\n - Points per game \n - A range of other comparative factors\n  –\n";
 
@@ -219,7 +247,8 @@ export async function getLeagueList() {
                   selectedOdds,
                   lastSaturdayFootyStats,
                   false,
-                  today
+                  today,
+                  lastSaturdaySS
                 )
               )
             }
@@ -241,7 +270,8 @@ export async function getLeagueList() {
                 selectedOdds,
                 dateFootyStats,
                 false,
-                today
+                today,
+                dateSS
               )
             )
           }
@@ -257,7 +287,8 @@ export async function getLeagueList() {
                 selectedOdds,
                 todayFootyStats,
                 true,
-                today
+                today,
+                todaySS
               )
             )
           }
@@ -273,7 +304,8 @@ export async function getLeagueList() {
                 selectedOdds,
                 tomorrowFootyStats,
                 true,
-                today
+                today,
+                tomorrowSS
               )
             )
           }
@@ -297,7 +329,8 @@ export async function getLeagueList() {
                 selectedOdds,
                 lastSaturdayFootyStats,
                 false,
-                today
+                today,
+                lastSaturdaySS
               )
             )
           }
@@ -333,7 +366,8 @@ export async function getLeagueList() {
               selectedOdds,
               todayFootyStats,
               true,
-              today
+              today,
+              todaySS
             )
           )
         }
@@ -349,7 +383,8 @@ export async function getLeagueList() {
               selectedOdds,
               tomorrowFootyStats,
               true,
-              today
+              today,
+              tomorrowSS
             )
           )
         }

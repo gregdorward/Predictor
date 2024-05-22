@@ -8,6 +8,9 @@ import TableHead from "@material-ui/core/TableHead";
 import TableRow from "@material-ui/core/TableRow";
 import Paper from "@material-ui/core/Paper";
 import Collapsable from "../components/CollapsableElement";
+// import TeamOfTheWeek from "../components/TeamOfTheWeek";
+// import TeamOfTheSeason from "../components/TeamOfTheSeason";
+
 export var toggleState = false;
 export var setIsOff = false;
 
@@ -342,6 +345,8 @@ export default function LeagueTable(props) {
             <ul>{leagueResults}</ul>
           </div>
           <div className="LeagueStatisticsHeader">League Statistics</div>
+          {/* <TeamOfTheWeek></TeamOfTheWeek>
+          <TeamOfTheSeason></TeamOfTheSeason> */}
           <div className="LeagueStatistics">
             <ul className="LeagueStatsColumn">
               <li>Average home goals: {props.Stats.seasonAVG_home}</li>

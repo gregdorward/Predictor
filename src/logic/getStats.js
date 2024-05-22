@@ -1703,6 +1703,7 @@ export async function createStatsDiv(game, displayBool) {
         game.homeTeam
       );
 
+      console.log(matchingGame)
       if (matchingGame) {
         id = matchingGame.id.toString();
         team1 = matchingGame.homeTeam;

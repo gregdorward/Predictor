@@ -21,7 +21,7 @@ var fixtureResponse;
 var fixtureArray = [];
 export var matches = [];
 export var resultedMatches = [];
-export const arrayOfGames = [];
+export let arrayOfGames = [];
 
 var league;
 var leagueID;
@@ -68,7 +68,7 @@ export let worldCupArray = [];
 groupInstance = [];
 leagueInstance = [];
 
-async function convertTimestamp(timestamp) {
+async function convertTimestampForSofaScore(timestamp) {
   let newDate = new Date(timestamp);
 
   let year = newDate.getFullYear();
@@ -80,7 +80,7 @@ async function convertTimestamp(timestamp) {
   return converted;
 }
 
-async function convertTimestampForSofaScore(timestamp) {
+async function convertTimestamp(timestamp) {
   let newDate = new Date(timestamp);
   let [day, month, year] = newDate.toLocaleDateString("en-US").split("/");
 
@@ -386,11 +386,11 @@ export async function generateFixtures(
   selectedOdds,
   footyStatsFormattedDate,
   current,
-  todaysDate
+  todaysDate,
+  dateSS
 ) {
   if (!isFunctionRunning) {
     isFunctionRunning = true;
-
     // const randomInt = Math.random() * 10
 
     // if(randomInt >= 7){
@@ -490,9 +490,9 @@ export async function generateFixtures(
         leagueIdArray,
         allLeagueResultsArrayOfObjects
       );
-      const todaysDate = await convertTimestampForSofaScore(Date.now())
-      console.log(todaysDate)
-      const sofaScore = await fetch(`https://www.sofascore.com/api/v1/sport/football/scheduled-events/2024-05-20`)
+      arrayOfGames = []
+
+      const sofaScore = await fetch(`https://www.sofascore.com/api/v1/sport/football/scheduled-events/${dateSS}`)
       await sofaScore.json().then((games) => {
         games.events.forEach((game) => {
           arrayOfGames.push({
@@ -505,13 +505,15 @@ export async function generateFixtures(
           })
         })
       })
+
+      const sofaScoreLeagues = await fetch('')
       console.log(arrayOfGames)
     } else {
       allLeagueResultsArrayOfObjects = [];
       console.log("Fetching leagues");
       for (let i = 0; i < orderedLeagues.length; i++) {
         league = await fetch(
-          `${process.env.REACT_APP_EXPRESS_SERVER}tables/${orderedLeagues[i].element.id}/${date}`
+          `${process.env.REACT_APP_EXPRESS_SERVER}tables/${orderedLeagues[i].element.id}/${todaysDate}`
         );
         // eslint-disable-next-line no-loop-func
         await league.json().then((table) => {

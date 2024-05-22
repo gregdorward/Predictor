@@ -18,8 +18,50 @@ const SofaLineupsWidget = ({ id, team1, team2, time, homeGoals, awayGoals }) => 
   console.log(team1);
 
   if(team1 === "N/A") {
-    return <h6>No lineups available for this match</h6>
-  } else if (minutes < 60 && minutes > -99999999) {
+    return <h6>No lineups available for this match yet</h6>
+  } else if (minutes > 60) {
+    return (
+      <div>
+        <h6>Predicted lineups</h6>
+        <iframe
+          id={`sofa-lineups-embed-${id}`}
+          src={iframeSrc}
+          style={{
+            height: "721px",
+            maxWidth: "800px",
+            width: "100%",
+            border: "0",
+          }}
+          scrolling="no"
+          title="SofaScore Lineups"
+        ></iframe>
+        <div
+          style={{ fontSize: "12px", fontFamily: "Open Sans, sans-serif" }}
+        ></div>
+      </div>
+    );
+  } else if (minutes < 60 && minutes > 0) {
+    return (
+      <div>
+        <h6>Lineups</h6>
+        <iframe
+          id={`sofa-lineups-embed-${id}`}
+          src={iframeSrc}
+          style={{
+            height: "721px",
+            maxWidth: "800px",
+            width: "100%",
+            border: "0",
+          }}
+          scrolling="no"
+          title="SofaScore Lineups"
+        ></iframe>
+        <div
+          style={{ fontSize: "12px", fontFamily: "Open Sans, sans-serif" }}
+        ></div>
+      </div>
+    );
+  } else if (minutes < 0) {
     return (
       <div>
         <div className="CurrentScore">Score: {`${team1}: ${homeGoals} - ${team2}: ${awayGoals}`}</div>
@@ -33,7 +75,7 @@ const SofaLineupsWidget = ({ id, team1, team2, time, homeGoals, awayGoals }) => 
           scrolling="no"
         ></iframe>
         <div
-          style={{ fontSize: "12px", fontFamily: "Arial, sans-serif" }}
+          style={{ fontSize: "12px", fontFamily: "Open Sans, sans-serif" }}
         ></div>
         <h6>Lineups and in-play ratings</h6>
         <iframe
@@ -49,14 +91,16 @@ const SofaLineupsWidget = ({ id, team1, team2, time, homeGoals, awayGoals }) => 
           title="SofaScore Lineups"
         ></iframe>
         <div
-          style={{ fontSize: "12px", fontFamily: "Arial, sans-serif" }}
+          style={{ fontSize: "12px", fontFamily: "Open Sans, sans-serif" }}
         ></div>
       </div>
     );
-  } else {
+  }
+  else {
     return <h6>{`Lineups coming in approximately ${minutes - 60} minutes`}</h6>;
   }
 };
+
 
 SofaLineupsWidget.propTypes = {
   id: PropTypes.string.isRequired,
