@@ -15,7 +15,6 @@ const SofaLineupsWidget = ({ id, team1, team2, time, homeGoals, awayGoals }) => 
     }
 
 
-  console.log(team1);
 
   if(team1 === "N/A") {
     return <h6>No lineups available for this match yet</h6>

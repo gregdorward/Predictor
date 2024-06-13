@@ -33,6 +33,7 @@ export const availableLeagues = [];
 export var orderedLeagues = [];
 
 const leagueOrder = [
+  11084, //Euro 2024
   7432, //World Cup 22
   9660, //premier league 22/23
   9663, //championship 22/23

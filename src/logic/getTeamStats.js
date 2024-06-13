@@ -58,6 +58,12 @@ export async function getTeamStats(
       away,
       fixtureHistory
     ) {
+      console.log(homeToal)
+      console.log(home)
+      console.log(awayTotal)
+      console.log(away)
+      console.log(fixtureHistory)
+
       let total = homeToal + home + awayTotal + away + fixtureHistory;
       return total / 5;
     }
@@ -117,6 +123,7 @@ export async function getTeamStats(
       );
       const fairOddsBTTSYes = await getFairOdds(BTTSForecast);
       const fairOddsBTTSNo = await getFairOdds(100 - BTTSForecast);
+      console.log(match.data)
 
       ReactDOM.render(
         <Fragment>

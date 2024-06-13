@@ -111,7 +111,7 @@ export async function calculateMetricStrength(metricName, metricValue) {
     xgFor: { min: 0.1, max: 3 },
     xgAgainst: { min: 0.1, max: 3 },
     directnessOverall: { min: 0.5, max: 5 },
-    accuracyOverall: { min: 0.5, max: 6.5 },
+    accuracyOverall: { min: 0.5, max: 7 },
   };
 
   // Ensure the metric is valid and exists in the weights and ranges objects
@@ -648,6 +648,8 @@ export async function createStatsDiv(game, displayBool) {
           }
         }
 
+        console.log(homeForm)
+
         goalDiffArrayHome = homeForm.allTeamResults.map(
           (a) => a.scored - a.conceeded
         );
@@ -954,7 +956,11 @@ export async function createStatsDiv(game, displayBool) {
         formTextStringAway = "";
       }
 
-      const favouriteRecordHome =
+      let favouriteRecordHome, favouriteRecordAway;
+
+
+      if(homeForm.oddsReliabilityWin){
+        favouriteRecordHome =
         game.homeOdds < game.awayOdds || game.homeOdds === game.awayOdds
           ? `${homeForm.teamName} have been favourites ${
               homeForm.favouriteCount
@@ -970,7 +976,7 @@ export async function createStatsDiv(game, displayBool) {
             )}%, Drawn:  ${homeForm.oddsReliabilityDrawAsUnderdog.toFixed(
               0
             )}%, Lost:  ${homeForm.oddsReliabilityLoseAsUnderdog.toFixed(0)}%`;
-      const favouriteRecordAway =
+      favouriteRecordAway =
         game.homeOdds > game.awayOdds || game.homeOdds === game.awayOdds
           ? `${awayForm.teamName} have been favourites ${
               awayForm.favouriteCount
@@ -986,6 +992,8 @@ export async function createStatsDiv(game, displayBool) {
             )}%, Drawn:  ${awayForm.oddsReliabilityDrawAsUnderdog.toFixed(
               0
             )}%, Lost:  ${awayForm.oddsReliabilityLoseAsUnderdog.toFixed(0)}%`;
+      }
+    
 
       let homeLastGame = await getLastGameResult(homeForm.LastFiveForm[4]);
       let awayLastGame = await getLastGameResult(awayForm.LastFiveForm[4]);
@@ -1720,242 +1728,324 @@ export async function createStatsDiv(game, displayBool) {
         awayGoals = "-";
       }
 
-      ReactDOM.render(
-        <>
-          <div style={style}>
-          <Collapsable
-            buttonText={"Lineups & match action"}
-            classNameButton="Lineups"
-            element={
-              <>
-                <SofaLineupsWidget
-                  id={id}
-                  team1={team1}
-                  team2={team2}
-                  time={timestamp}
-                  homeGoals={homeGoals}
-                  awayGoals={awayGoals}
-                ></SofaLineupsWidget>
-              </>
-            }
-          />
-            <div className="Chart" id={`Chart${game.id}`} style={style}>
-              <RadarChart
-                title="XG Tipping Strength Ratings - All Games"
-                data={[
-                  homeAttackStrength,
-                  homeDefenceStrength,
-                  homePossessionStrength,
-                  homeXGForStrength,
-                  homeXGAgainstStrength,
-                  homeDirectnessStrength,
-                  homeAccuracyOverallStrength,
-                ]}
-                data2={[
-                  awayAttackStrength,
-                  awayDefenceStrength,
-                  awayPossessionStrength,
-                  awayXGForStrength,
-                  awayXGAgainstStrength,
-                  awayDirectnessStrength,
-                  awayAccuracyOverallStrength,
-                ]}
-                team1={game.homeTeam}
-                team2={game.awayTeam}
-              ></RadarChart>
-              <RadarChart
-                title="XG Tipping Strength Ratings - Last 5 games"
-                data={[
-                  homeAttackStrengthLast5,
-                  homeDefenceStrengthLast5,
-                  homePossessionStrengthLast5,
-                  homeXGForStrengthLast5,
-                  homeXGAgainstStrengthLast5,
-                  homeDirectnessStrengthLast5,
-                  homeAccuracyOverallStrengthLast5,
-                ]}
-                data2={[
-                  awayAttackStrengthLast5,
-                  awayDefenceStrengthLast5,
-                  awayPossessionStrengthLast5,
-                  awayXGForStrengthLast5,
-                  awayXGAgainstStrengthLast5,
-                  awayDirectnessStrengthLast5,
-                  awayAccuracyOverallStrengthLast5,
-                ]}
-                team1={game.homeTeam}
-                team2={game.awayTeam}
-              ></RadarChart>
-              <RadarChart
-                title="XG Tipping Strength Ratings - Home/Away Games Only"
-                data={[
-                  homeOnlyAttackStrength,
-                  homeOnlyDefenceStrength,
-                  homeOnlyPossessionStrength,
-                  homeOnlyXGForStrength,
-                  homeOnlyXGAgainstStrength,
-                  homeOnlyDirectnessStrength,
-                  homeOnlyAccuracyOverallStrength,
-                ]}
-                data2={[
-                  awayOnlyAttackStrength,
-                  awayOnlyDefenceStrength,
-                  awayOnlyPossessionStrength,
-                  awayOnlyXGForStrength,
-                  awayOnlyXGAgainstStrength,
-                  awayOnlyDirectnessStrength,
-                  awayOnlyAccuracyOverallStrength,
-                ]}
-                team1={game.homeTeam}
-                team2={game.awayTeam}
-              ></RadarChart>
-              <BarChart
-                text="H2H - Home Team | Away Team"
-                data1={[
-                  homeForm.avgScored * 2,
-                  awayForm.avgConceeded * 2,
-                  homeForm.avPointsAll * 3,
-                  homeForm.XGOverall * 2,
-                  awayForm.XGAgainstAvgOverall * 2,
-                  homeForm.AverageShotsOnTargetOverall,
-                  homeForm.AverageDangerousAttacksOverall !== 0
-                    ? homeForm.AverageDangerousAttacksOverall / 7.5
-                    : homeForm.AverageDangerousAttacks / 7.5,
-                  homeForm.AveragePossessionOverall / 7.5,
-                  homeForm.goalDifferenceHomeOrAway / 10,
-                  homeForm.AverageCorners,
-                ]}
-                data2={[
-                  awayForm.avgScored * 2,
-                  homeForm.avgConceeded * 2,
-                  awayForm.avPointsAll * 3,
-                  awayForm.XGOverall * 2,
-                  homeForm.XGAgainstAvgOverall * 2,
-                  awayForm.AverageShotsOnTargetOverall,
-                  awayForm.AverageDangerousAttacksOverall !== 0
-                    ? awayForm.AverageDangerousAttacksOverall / 7.5
-                    : awayForm.AverageDangerousAttacks / 7.5,
-                  awayForm.AveragePossessionOverall / 7.5,
-                  awayForm.goalDifferenceHomeOrAway / 10,
-                  awayForm.AverageCorners,
-                ]}
-              ></BarChart>
-              <Chart
-                height={3}
-                depth={0}
-                data1={formArrayHome}
-                data2={formArrayAway}
-                team1={game.homeTeam}
-                team2={game.awayTeam}
-                type={chartType}
-                tension={0}
-              ></Chart>
-              <Chart
-                height={
-                  Math.max(
-                    rollingGoalDiffTotalHome[
-                      rollingGoalDiffTotalHome.length - 1
-                    ],
-                    rollingGoalDiffTotalAway[
-                      rollingGoalDiffTotalAway.length - 1
-                    ]
-                  ) > 2
-                    ? Math.max(
-                        rollingGoalDiffTotalHome[
-                          rollingGoalDiffTotalHome.length - 1
-                        ],
-                        rollingGoalDiffTotalAway[
-                          rollingGoalDiffTotalAway.length - 1
-                        ]
-                      )
-                    : 2
-                }
-                depth={
-                  Math.min(
-                    rollingGoalDiffTotalHome[
-                      rollingGoalDiffTotalHome.length - 1
-                    ],
-                    rollingGoalDiffTotalAway[
-                      rollingGoalDiffTotalAway.length - 1
-                    ]
-                  ) < -2
-                    ? Math.min(
-                        rollingGoalDiffTotalHome[
-                          rollingGoalDiffTotalHome.length - 1
-                        ],
-                        rollingGoalDiffTotalAway[
-                          rollingGoalDiffTotalAway.length - 1
-                        ]
-                      )
-                    : -2
-                }
-                data1={rollingGoalDiffTotalHome}
-                data2={rollingGoalDiffTotalAway}
-                team1={game.homeTeam}
-                team2={game.awayTeam}
-                type={"Goal difference over time"}
-                tension={0.3}
-              ></Chart>
-            </div>
+      if(homeForm.completeData == true && game.completeData == true){
+        ReactDOM.render(
+          <>
             <div style={style}>
-              <Div className="MatchTime" text={`Kick off: ${time} GMT`}></Div>
-              <Div
-                text={`Last league games (most recent first)`}
-                className={"LastGameHeader"}
-              ></Div>
-            </div>
-            <div className="flex-container">
-              <div className="flex-childOneOverviewSmall">{overviewHome}</div>
-              <div className="flex-childTwoOverviewSmall">{overviewAway}</div>
-            </div>
-            {/* <Collapsable
-      className={"Detail"}
-      classNameTwo={"flex-childOneOverview"}
-      classNameThree={"flex-childTwoOverview"}
-      classNameFlex={"flex-element"}
-      classNameButton={"DetailedFixtures"}
-      buttonText={"Detailed results"}
-      newText={"Detailed results"}
-      element={contentHome}
-      elementTwo={contentAway}
-      // style={style}
-    /> */}
-            <div className="flex-container">
-              <StatsHome />
-              <StatsAway />
-            </div>
-            <h2>Results from similar profile games</h2>
-            <span>(Games where each team had similar odds)</span>
-            <h3>Most recent first</h3>
-            <div className="flex-container-similar">
-              <div className="flex-childOneOverviewSmall">
-                {similarGamesHome}
-              </div>
-              <div className="flex-childTwoOverviewSmall">
-                {similarGamesAway}
-              </div>
-            </div>
-            <input type="hidden" name="IL_IN_ARTICLE" />
-            <Button
-              className="MoreStats"
-              onClickEvent={() =>
-                getTeamStats(
-                  game.id,
-                  game.homeTeam,
-                  game.awayTeam,
-                  formDataHome[0].BttsPercentage,
-                  formDataHome[0].BttsPercentageHomeOrAway,
-                  formDataAway[0].BttsPercentage,
-                  formDataAway[0].BttsPercentageHomeOrAway
-                )
+            <Collapsable
+              buttonText={"Lineups & match action"}
+              classNameButton="Lineups"
+              element={
+                <>
+                  <SofaLineupsWidget
+                    id={id}
+                    team1={team1}
+                    team2={team2}
+                    time={timestamp}
+                    homeGoals={homeGoals}
+                    awayGoals={awayGoals}
+                  ></SofaLineupsWidget>
+                </>
               }
-              text={"Fixture trends"}
-            ></Button>
-          </div>
-        </>,
-        document.getElementById("stats" + homeTeam)
-      );
-    }
+            />
+              <div className="Chart" id={`Chart${game.id}`} style={style}>
+                <RadarChart
+                  title="XG Tipping Strength Ratings - All Games"
+                  data={[
+                    homeAttackStrength,
+                    homeDefenceStrength,
+                    homePossessionStrength,
+                    homeXGForStrength,
+                    homeXGAgainstStrength,
+                    homeDirectnessStrength,
+                    homeAccuracyOverallStrength,
+                  ]}
+                  data2={[
+                    awayAttackStrength,
+                    awayDefenceStrength,
+                    awayPossessionStrength,
+                    awayXGForStrength,
+                    awayXGAgainstStrength,
+                    awayDirectnessStrength,
+                    awayAccuracyOverallStrength,
+                  ]}
+                  team1={game.homeTeam}
+                  team2={game.awayTeam}
+                ></RadarChart>
+                <RadarChart
+                  title="XG Tipping Strength Ratings - Last 5 games"
+                  data={[
+                    homeAttackStrengthLast5,
+                    homeDefenceStrengthLast5,
+                    homePossessionStrengthLast5,
+                    homeXGForStrengthLast5,
+                    homeXGAgainstStrengthLast5,
+                    homeDirectnessStrengthLast5,
+                    homeAccuracyOverallStrengthLast5,
+                  ]}
+                  data2={[
+                    awayAttackStrengthLast5,
+                    awayDefenceStrengthLast5,
+                    awayPossessionStrengthLast5,
+                    awayXGForStrengthLast5,
+                    awayXGAgainstStrengthLast5,
+                    awayDirectnessStrengthLast5,
+                    awayAccuracyOverallStrengthLast5,
+                  ]}
+                  team1={game.homeTeam}
+                  team2={game.awayTeam}
+                ></RadarChart>
+                <RadarChart
+                  title="XG Tipping Strength Ratings - Home/Away Games Only"
+                  data={[
+                    homeOnlyAttackStrength,
+                    homeOnlyDefenceStrength,
+                    homeOnlyPossessionStrength,
+                    homeOnlyXGForStrength,
+                    homeOnlyXGAgainstStrength,
+                    homeOnlyDirectnessStrength,
+                    homeOnlyAccuracyOverallStrength,
+                  ]}
+                  data2={[
+                    awayOnlyAttackStrength,
+                    awayOnlyDefenceStrength,
+                    awayOnlyPossessionStrength,
+                    awayOnlyXGForStrength,
+                    awayOnlyXGAgainstStrength,
+                    awayOnlyDirectnessStrength,
+                    awayOnlyAccuracyOverallStrength,
+                  ]}
+                  team1={game.homeTeam}
+                  team2={game.awayTeam}
+                ></RadarChart>
+                <BarChart
+                  text="H2H - Home Team | Away Team"
+                  data1={[
+                    homeForm.avgScored * 2,
+                    awayForm.avgConceeded * 2,
+                    homeForm.avPointsAll * 3,
+                    homeForm.XGOverall * 2,
+                    awayForm.XGAgainstAvgOverall * 2,
+                    homeForm.AverageShotsOnTargetOverall,
+                    homeForm.AverageDangerousAttacksOverall !== 0
+                      ? homeForm.AverageDangerousAttacksOverall / 7.5
+                      : homeForm.AverageDangerousAttacks / 7.5,
+                    homeForm.AveragePossessionOverall / 7.5,
+                    homeForm.goalDifferenceHomeOrAway / 10,
+                    homeForm.AverageCorners,
+                  ]}
+                  data2={[
+                    awayForm.avgScored * 2,
+                    homeForm.avgConceeded * 2,
+                    awayForm.avPointsAll * 3,
+                    awayForm.XGOverall * 2,
+                    homeForm.XGAgainstAvgOverall * 2,
+                    awayForm.AverageShotsOnTargetOverall,
+                    awayForm.AverageDangerousAttacksOverall !== 0
+                      ? awayForm.AverageDangerousAttacksOverall / 7.5
+                      : awayForm.AverageDangerousAttacks / 7.5,
+                    awayForm.AveragePossessionOverall / 7.5,
+                    awayForm.goalDifferenceHomeOrAway / 10,
+                    awayForm.AverageCorners,
+                  ]}
+                ></BarChart>
+                <Chart
+                  height={3}
+                  depth={0}
+                  data1={formArrayHome}
+                  data2={formArrayAway}
+                  team1={game.homeTeam}
+                  team2={game.awayTeam}
+                  type={chartType}
+                  tension={0}
+                ></Chart>
+                <Chart
+                  height={
+                    Math.max(
+                      rollingGoalDiffTotalHome[
+                        rollingGoalDiffTotalHome.length - 1
+                      ],
+                      rollingGoalDiffTotalAway[
+                        rollingGoalDiffTotalAway.length - 1
+                      ]
+                    ) > 2
+                      ? Math.max(
+                          rollingGoalDiffTotalHome[
+                            rollingGoalDiffTotalHome.length - 1
+                          ],
+                          rollingGoalDiffTotalAway[
+                            rollingGoalDiffTotalAway.length - 1
+                          ]
+                        )
+                      : 2
+                  }
+                  depth={
+                    Math.min(
+                      rollingGoalDiffTotalHome[
+                        rollingGoalDiffTotalHome.length - 1
+                      ],
+                      rollingGoalDiffTotalAway[
+                        rollingGoalDiffTotalAway.length - 1
+                      ]
+                    ) < -2
+                      ? Math.min(
+                          rollingGoalDiffTotalHome[
+                            rollingGoalDiffTotalHome.length - 1
+                          ],
+                          rollingGoalDiffTotalAway[
+                            rollingGoalDiffTotalAway.length - 1
+                          ]
+                        )
+                      : -2
+                  }
+                  data1={rollingGoalDiffTotalHome}
+                  data2={rollingGoalDiffTotalAway}
+                  team1={game.homeTeam}
+                  team2={game.awayTeam}
+                  type={"Goal difference over time"}
+                  tension={0.3}
+                ></Chart>
+              </div>
+              <div style={style}>
+                <Div className="MatchTime" text={`Kick off: ${time} GMT`}></Div>
+                <Div
+                  text={`Last league games (most recent first)`}
+                  className={"LastGameHeader"}
+                ></Div>
+              </div>
+              <div className="flex-container">
+                <div className="flex-childOneOverviewSmall">{overviewHome}</div>
+                <div className="flex-childTwoOverviewSmall">{overviewAway}</div>
+              </div>
+              <div className="flex-container">
+                <StatsHome />
+                <StatsAway />
+              </div>
+              <h2>Results from similar profile games</h2>
+              <span>(Games where each team had similar odds)</span>
+              <h3>Most recent first</h3>
+              <div className="flex-container-similar">
+                <div className="flex-childOneOverviewSmall">
+                  {similarGamesHome}
+                </div>
+                <div className="flex-childTwoOverviewSmall">
+                  {similarGamesAway}
+                </div>
+              </div>
+              <input type="hidden" name="IL_IN_ARTICLE" />
+              <Button
+                className="MoreStats"
+                onClickEvent={() =>
+                  getTeamStats(
+                    game.id,
+                    game.homeTeam,
+                    game.awayTeam,
+                    formDataHome[0].BttsPercentage,
+                    formDataHome[0].BttsPercentageHomeOrAway,
+                    formDataAway[0].BttsPercentage,
+                    formDataAway[0].BttsPercentageHomeOrAway
+                  )
+                }
+                text={"Fixture trends"}
+              ></Button>
+            </div>
+          </>,
+          document.getElementById("stats" + homeTeam)
+        );
+      } else if (homeForm.completeData = false || game.completeData == false){
+        ReactDOM.render(
+          <>
+            <div style={style}>
+            <Collapsable
+              buttonText={"Lineups & match action"}
+              classNameButton="Lineups"
+              element={
+                <>
+                  <SofaLineupsWidget
+                    id={id}
+                    team1={team1}
+                    team2={team2}
+                    time={timestamp}
+                    homeGoals={homeGoals}
+                    awayGoals={awayGoals}
+                  ></SofaLineupsWidget>
+                </>
+              }
+            />
+              <div className="Chart" id={`Chart${game.id}`} style={style}>
+                <RadarChart
+                  title="XG Tipping Strength Ratings - All Games"
+                  data={[
+                    homeAttackStrength,
+                    homeDefenceStrength,
+                    homePossessionStrength,
+                    homeXGForStrength,
+                    homeXGAgainstStrength,
+                    homeDirectnessStrength,
+                    homeAccuracyOverallStrength,
+                  ]}
+                  data2={[
+                    awayAttackStrength,
+                    awayDefenceStrength,
+                    awayPossessionStrength,
+                    awayXGForStrength,
+                    awayXGAgainstStrength,
+                    awayDirectnessStrength,
+                    awayAccuracyOverallStrength,
+                  ]}
+                  team1={game.homeTeam}
+                  team2={game.awayTeam}
+                ></RadarChart>
+              </div>
+              <div style={style}>
+                <Div className="MatchTime" text={`Kick off: ${time} GMT`}></Div>
+                {/* <Div
+                  text={`Last league games (most recent first)`}
+                  className={"LastGameHeader"}
+                ></Div> */}
+              </div>
+              {/* <div className="flex-container">
+                <div className="flex-childOneOverviewSmall">{overviewHome}</div>
+                <div className="flex-childTwoOverviewSmall">{overviewAway}</div>
+              </div>
+              <div className="flex-container">
+                <StatsHome />
+                <StatsAway />
+              </div> */}
+              <h2>Results from similar profile games</h2>
+              <span>(Games where each team had similar odds)</span>
+              <h3>Most recent first</h3>
+              <div className="flex-container-similar">
+                <div className="flex-childOneOverviewSmall">
+                  {similarGamesHome}
+                </div>
+                <div className="flex-childTwoOverviewSmall">
+                  {similarGamesAway}
+                </div>
+              </div>
+              <input type="hidden" name="IL_IN_ARTICLE" />
+              <Button
+                className="MoreStats"
+                onClickEvent={() =>
+                  getTeamStats(
+                    game.id,
+                    game.homeTeam,
+                    game.awayTeam,
+                    formDataHome[0].BttsPercentage,
+                    formDataHome[0].BttsPercentageHomeOrAway,
+                    formDataAway[0].BttsPercentage,
+                    formDataAway[0].BttsPercentageHomeOrAway
+                  )
+                }
+                text={"Fixture trends"}
+              ></Button>
+            </div>
+          </>,
+          document.getElementById("stats" + homeTeam)
+        );
+      }
+      }
+      
 
     // ReactDOM.render(
     //   <Button

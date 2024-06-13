@@ -52,7 +52,7 @@ export function Chart(props) {
   }
 
   const options = {
-    color: "black",
+    color: "#030061",
     responsive: true,
     aspectRatio: 1.2,
     maintainAspectRatio: true,
@@ -110,9 +110,9 @@ export function Chart(props) {
       title: {
         display: true,
         text: props.type,
+        color: '#030061',
         font: {
           size: 14,
-          color: "black",
         },
       },
     },
@@ -150,7 +150,7 @@ export function Chart(props) {
 
 export function RadarChart(props) {
   const options = {
-    color: "black",
+    color: "#030061",
     scales: {
       r: {
         angleLines: {
@@ -173,11 +173,13 @@ export function RadarChart(props) {
 
         labels: {
           boxHeight: 10,
+          color: '#030061'
         },
       },
       title: {
         display: true,
         text: props.title,
+        color: '#030061',
         font: {
           size: 14,
         },
@@ -240,6 +242,7 @@ export function BarChart(props) {
   }
 
   const options = {
+    color: "#030061",
     indexAxis: "y",
     // Elements options apply to all of the options unless overridden in a dataset
     // In this case, we are setting the border of each horizontal bar to be 2px wide
@@ -276,7 +279,10 @@ export function BarChart(props) {
       title: {
         display: true,
         text: props.text,
-        size: 14
+        color: '#030061',
+        font: {
+          size: 14,
+        },
       },
     },
   };

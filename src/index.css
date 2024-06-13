@@ -237,6 +237,7 @@ h6 {
   margin-bottom: 0px;
 }
 
+
 .historicResults{
   display: flex;
   height: 5em;
@@ -1778,6 +1779,7 @@ a.PreviousMatchLink{
   display: flex;
   justify-content: center;
   align-items: flex-end;
+  color: #030052;
 }
 
 .flex-container-similar{
@@ -2138,6 +2140,7 @@ canvas {
   max-width: 450px;
   display: inline !important;
   margin: 1em; 
+  color: #030052;
 }
 
 .FormSummaryHome {
@@ -3071,7 +3074,8 @@ input:active + .design::after {
 
 .HomeTeamStats li{
   padding: 0.5em;
-  border-bottom: #030052 0.25px solid;
+  border-bottom: #030061 0.25px solid;
+  color: #030061;
 }
 
 .AwayTeamStats{
@@ -3082,7 +3086,8 @@ input:active + .design::after {
 
 .AwayTeamStats li{
   padding: 0.5em;
-  border-bottom: #030052 0.25px solid;
+  border-bottom: #030061 0.25px solid;
+  color: #030061;
 }
 .HomeTeamResults{
   flex-basis: 50%;
@@ -3102,6 +3107,7 @@ input:active + .design::after {
 
 .MatchDate{
   padding-top: 1em;
+  color: #030061;
 }
 
 .ComparisonBar{

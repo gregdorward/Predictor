@@ -296,7 +296,7 @@ export default function LeagueTable(props) {
     props.GamesPlayed > 3 &&
     props.Teams[0].LeagueID !== 7956 &&
     props.Teams[0].LeagueID !== 6969 &&
-    props.Teams[0].LeagueID !== 7432
+    props.Teams[0].LeagueID !== 11084
   ) {
     for (let i = 0; i < props.Teams.length; i++) {
       return (

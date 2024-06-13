@@ -105,17 +105,6 @@ export default function CustomizedTables(props) {
             <StyledTableCell align="center">{props.o35Odds}</StyledTableCell>
             <StyledTableCell align="center">{props.u35Odds}</StyledTableCell>
           </StyledTableRow>
-          <StyledTableRow key="BTTS" className="BTTSStats">
-            <StyledTableCell component="th" scope="row" align="center">
-              BTTS %
-            </StyledTableCell>
-            <StyledTableCell component="th" scope="row" align="center">
-              {`${props.BTTSStat}%`}
-            </StyledTableCell>
-            <StyledTableCell align="center">{props.BTTSForecast}</StyledTableCell>
-            <StyledTableCell align="center">{props.BTTSOdds}</StyledTableCell>
-            <StyledTableCell align="center">{props.BTTSOddsNo}</StyledTableCell>
-          </StyledTableRow>
         </TableBody>
       </Table>
     </TableContainer>

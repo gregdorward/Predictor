@@ -143,7 +143,7 @@ export async function generateTables(a, leagueIdArray, allResults) {
         leagueInstance.push(team);
       }
       tableArray.push({ id: currentLeagueId, table: leagueInstance });
-    } else if (currentLeagueId === 7432) {
+    } else if (currentLeagueId === 11084) {
       // for (let x = 0; x < league.data.specific_tables[0].groups.length; x++) {
       // for (
       //   let index = 0;

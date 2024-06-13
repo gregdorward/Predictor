@@ -280,6 +280,7 @@ function TeamPage() {
       </h3>
       <div className="TeamStats">
         <ul className="HomeTeamStats">
+        <iframe src={`https://footystats.org/api/club?id=${storedFixtureDetailsJson.homeId}`} height="100%" width="100%" style={{height: '420px', width: '100%', border: '0.1em solid #030061'}}></iframe>
           <h3>{storedFixtureDetailsJson.homeTeamName}</h3>
           {propertyNamesHome.map(([key, value], index) => (
             <li key={index}>
@@ -362,6 +363,7 @@ function TeamPage() {
           </li>
         </ul>
         <ul className="AwayTeamStats">
+        <iframe src={`https://footystats.org/api/club?id=${storedFixtureDetailsJson.awayId}`} height="100%" width="100%" style={{height: '420px', width: '100%', color: '#030061', border: '0.1em solid #030061'}}></iframe>
           <h3>{storedFixtureDetailsJson.awayTeamName}</h3>
           {propertyNamesAway.map(([key, value], index) => (
             <li key={index}>
