@@ -47,119 +47,127 @@ function TeamPage() {
         (x) => x.season_format === "Domestic League"
       );
 
-      setData((test) => ({
-        ...test,
-        scoredOverallHome:
-          resultHome.data[indexHome].stats.seasonScoredNum_overall,
-        playedHomeOnly:
-          resultHome.data[indexHome].stats.seasonMatchesPlayed_home,
-        scoredOverallHomeOnly:
-          resultHome.data[indexHome].stats.seasonScoredNum_home,
-        conceededOverallHome:
-          resultHome.data[indexHome].stats.seasonConcededNum_overall,
-        conceededOverallHomeOnly:
-          resultHome.data[indexHome].stats.seasonConcededNum_home,
+      if (resultHome.data[indexHome].stats.seasonScoredNum_overall) {
+        setData((test) => ({
+          ...test,
+          scoredOverallHome:
+            resultHome.data[indexHome].stats.seasonScoredNum_overall,
+          playedHomeOnly:
+            resultHome.data[indexHome].stats.seasonMatchesPlayed_home,
+          scoredOverallHomeOnly:
+            resultHome.data[indexHome].stats.seasonScoredNum_home,
+          conceededOverallHome:
+            resultHome.data[indexHome].stats.seasonConcededNum_overall,
+          conceededOverallHomeOnly:
+            resultHome.data[indexHome].stats.seasonConcededNum_home,
 
-        PPGOverallHome: resultHome.data[indexHome].stats.seasonPPG_overall,
-        PPGOverallHomeOnly: resultHome.data[indexHome].stats.seasonPPG_home,
-        leaguePosition_overallHome:
-          resultHome.data[indexHome].stats.leaguePosition_overall,
-        leaguePosition_HomeOnly:
-          resultHome.data[indexHome].stats.leaguePosition_home,
-        averageAttendance:
-          resultHome.data[indexHome].stats.average_attendance_home,
-        BTTSPercentage_overallHome:
-          resultHome.data[indexHome].stats.seasonBTTSPercentage_overall,
-        BTTSAndWinPercentage_Home:
-          resultHome.data[indexHome].stats.BTTS_and_win_percentage_overall,
-        BTTSAndLosePercentage_Home:
-          resultHome.data[indexHome].stats.BTTS_and_lose_percentage_overall,
-        BTTSBothHalvesHome:
-          resultHome.data[indexHome].stats.BTTS_both_halves_percentage_overall,
-        GoalDifferenceHT_overall_Home:
-          resultHome.data[indexHome].stats.GoalDifferenceHT_overall,
-        GD_2hg_overall_Home: resultHome.data[indexHome].stats.gd_2hg_overall,
-        leadingAtHTPercentage_overallHome:
-          resultHome.data[indexHome].stats.leadingAtHTPercentage_overall,
-        seasonOver15Percentage_overallHome:
-          resultHome.data[indexHome].stats.seasonOver15Percentage_overall,
-        seasonOver25Percentage_overallHome:
-          resultHome.data[indexHome].stats.seasonOver25Percentage_overall,
-        seasonOver35Percentage_overallHome:
-          resultHome.data[indexHome].stats.seasonOver35Percentage_overall,
-        seasonOver45Percentage_overallHome:
-          resultHome.data[indexHome].stats.seasonOver45Percentage_overall,
-        scoredBothHalvesPercentage_overallHome:
-          resultHome.data[indexHome].stats.scoredBothHalvesPercentage_overall,
-        shots_on_target_per_goals_scored_overallHome:
-          resultHome.data[indexHome].stats.additional_info
-            .shots_on_target_per_goals_scored_overall,
-        cornersTotalAVG_overallHome:
-          resultHome.data[indexHome].stats.cornersTotalAVG_overall,
-        cardsAVG_overallHome: resultHome.data[indexHome].stats.cardsAVG_overall,
-        foulsAVG_overallHome: resultHome.data[indexHome].stats.foulsAVG_overall,
-        penalties_won_per_match_overallHome:
-          resultHome.data[indexHome].stats.additional_info
-            .penalties_won_per_match_overall,
-        penalty_in_a_match_percentage_overallHome:
-          resultHome.data[indexHome].stats.additional_info
-            .penalty_in_a_match_percentage_overall,
+          PPGOverallHome: resultHome.data[indexHome].stats.seasonPPG_overall,
+          PPGOverallHomeOnly: resultHome.data[indexHome].stats.seasonPPG_home,
+          leaguePosition_overallHome:
+            resultHome.data[indexHome].stats.leaguePosition_overall,
+          leaguePosition_HomeOnly:
+            resultHome.data[indexHome].stats.leaguePosition_home,
+          averageAttendance:
+            resultHome.data[indexHome].stats.average_attendance_home,
+          BTTSPercentage_overallHome:
+            resultHome.data[indexHome].stats.seasonBTTSPercentage_overall,
+          BTTSAndWinPercentage_Home:
+            resultHome.data[indexHome].stats.BTTS_and_win_percentage_overall,
+          BTTSAndLosePercentage_Home:
+            resultHome.data[indexHome].stats.BTTS_and_lose_percentage_overall,
+          BTTSBothHalvesHome:
+            resultHome.data[indexHome].stats
+              .BTTS_both_halves_percentage_overall,
+          GoalDifferenceHT_overall_Home:
+            resultHome.data[indexHome].stats.GoalDifferenceHT_overall,
+          GD_2hg_overall_Home: resultHome.data[indexHome].stats.gd_2hg_overall,
+          leadingAtHTPercentage_overallHome:
+            resultHome.data[indexHome].stats.leadingAtHTPercentage_overall,
+          seasonOver15Percentage_overallHome:
+            resultHome.data[indexHome].stats.seasonOver15Percentage_overall,
+          seasonOver25Percentage_overallHome:
+            resultHome.data[indexHome].stats.seasonOver25Percentage_overall,
+          seasonOver35Percentage_overallHome:
+            resultHome.data[indexHome].stats.seasonOver35Percentage_overall,
+          seasonOver45Percentage_overallHome:
+            resultHome.data[indexHome].stats.seasonOver45Percentage_overall,
+          scoredBothHalvesPercentage_overallHome:
+            resultHome.data[indexHome].stats.scoredBothHalvesPercentage_overall,
+          shots_on_target_per_goals_scored_overallHome:
+            resultHome.data[indexHome].stats.additional_info
+              .shots_on_target_per_goals_scored_overall,
+          cornersTotalAVG_overallHome:
+            resultHome.data[indexHome].stats.cornersTotalAVG_overall,
+          cardsAVG_overallHome:
+            resultHome.data[indexHome].stats.cardsAVG_overall,
+          foulsAVG_overallHome:
+            resultHome.data[indexHome].stats.foulsAVG_overall,
+          penalties_won_per_match_overallHome:
+            resultHome.data[indexHome].stats.additional_info
+              .penalties_won_per_match_overall,
+          penalty_in_a_match_percentage_overallHome:
+            resultHome.data[indexHome].stats.additional_info
+              .penalty_in_a_match_percentage_overall,
 
-        scoredOverallAway:
-          resultAway.data[indexAway].stats.seasonScoredNum_overall,
-        playedAwayOnly:
-          resultAway.data[indexAway].stats.seasonMatchesPlayed_away,
-        scoredOverallAwayOnly:
-          resultAway.data[indexAway].stats.seasonScoredNum_away,
-        conceededOverallAway:
-          resultAway.data[indexAway].stats.seasonConcededNum_overall,
-        conceededOverallAwayOnly:
-          resultAway.data[indexAway].stats.seasonConcededNum_away,
+          scoredOverallAway:
+            resultAway.data[indexAway].stats.seasonScoredNum_overall,
+          playedAwayOnly:
+            resultAway.data[indexAway].stats.seasonMatchesPlayed_away,
+          scoredOverallAwayOnly:
+            resultAway.data[indexAway].stats.seasonScoredNum_away,
+          conceededOverallAway:
+            resultAway.data[indexAway].stats.seasonConcededNum_overall,
+          conceededOverallAwayOnly:
+            resultAway.data[indexAway].stats.seasonConcededNum_away,
 
-        PPGOverallAway: resultAway.data[indexAway].stats.seasonPPG_overall,
-        PPGOverallAwayOnly: resultAway.data[indexAway].stats.seasonPPG_away,
-        leaguePosition_overallAway:
-          resultAway.data[indexAway].stats.leaguePosition_overall,
-        leaguePosition_AwayOnly:
-          resultAway.data[indexAway].stats.leaguePosition_away,
-        BTTSPercentage_overallAway:
-          resultAway.data[indexAway].stats.seasonBTTSPercentage_overall,
-        BTTSAndWinPercentage_Away:
-          resultAway.data[indexAway].stats.BTTS_and_win_percentage_overall,
-        BTTSAndLosePercentage_Away:
-          resultAway.data[indexAway].stats.BTTS_and_lose_percentage_overall,
-        BTTSBothHalvesAway:
-          resultAway.data[indexAway].stats.BTTS_both_halves_percentage_overall,
-        GoalDifferenceHT_overall_Away:
-          resultAway.data[indexAway].stats.GoalDifferenceHT_overall,
-        GD_2hg_overall_Away: resultAway.data[indexAway].stats.gd_2hg_overall,
-        leadingAtHTPercentage_overallAway:
-          resultAway.data[indexAway].stats.leadingAtHTPercentage_overall,
-        seasonOver15Percentage_overallAway:
-          resultAway.data[indexAway].stats.seasonOver15Percentage_overall,
-        seasonOver25Percentage_overallAway:
-          resultAway.data[indexAway].stats.seasonOver25Percentage_overall,
-        seasonOver35Percentage_overallAway:
-          resultAway.data[indexAway].stats.seasonOver35Percentage_overall,
-        seasonOver45Percentage_overallAway:
-          resultAway.data[indexAway].stats.seasonOver45Percentage_overall,
-        scoredBothHalvesPercentage_overallAway:
-          resultAway.data[indexAway].stats.scoredBothHalvesPercentage_overall,
-        shots_on_target_per_goals_scored_overallAway:
-          resultAway.data[indexAway].stats.additional_info
-            .shots_on_target_per_goals_scored_overall,
+          PPGOverallAway: resultAway.data[indexAway].stats.seasonPPG_overall,
+          PPGOverallAwayOnly: resultAway.data[indexAway].stats.seasonPPG_away,
+          leaguePosition_overallAway:
+            resultAway.data[indexAway].stats.leaguePosition_overall,
+          leaguePosition_AwayOnly:
+            resultAway.data[indexAway].stats.leaguePosition_away,
+          BTTSPercentage_overallAway:
+            resultAway.data[indexAway].stats.seasonBTTSPercentage_overall,
+          BTTSAndWinPercentage_Away:
+            resultAway.data[indexAway].stats.BTTS_and_win_percentage_overall,
+          BTTSAndLosePercentage_Away:
+            resultAway.data[indexAway].stats.BTTS_and_lose_percentage_overall,
+          BTTSBothHalvesAway:
+            resultAway.data[indexAway].stats
+              .BTTS_both_halves_percentage_overall,
+          GoalDifferenceHT_overall_Away:
+            resultAway.data[indexAway].stats.GoalDifferenceHT_overall,
+          GD_2hg_overall_Away: resultAway.data[indexAway].stats.gd_2hg_overall,
+          leadingAtHTPercentage_overallAway:
+            resultAway.data[indexAway].stats.leadingAtHTPercentage_overall,
+          seasonOver15Percentage_overallAway:
+            resultAway.data[indexAway].stats.seasonOver15Percentage_overall,
+          seasonOver25Percentage_overallAway:
+            resultAway.data[indexAway].stats.seasonOver25Percentage_overall,
+          seasonOver35Percentage_overallAway:
+            resultAway.data[indexAway].stats.seasonOver35Percentage_overall,
+          seasonOver45Percentage_overallAway:
+            resultAway.data[indexAway].stats.seasonOver45Percentage_overall,
+          scoredBothHalvesPercentage_overallAway:
+            resultAway.data[indexAway].stats.scoredBothHalvesPercentage_overall,
+          shots_on_target_per_goals_scored_overallAway:
+            resultAway.data[indexAway].stats.additional_info
+              .shots_on_target_per_goals_scored_overall,
 
-        cornersTotalAVG_overallAway:
-          resultAway.data[indexAway].stats.cornersTotalAVG_overall,
-        cardsAVG_overallAway: resultAway.data[indexAway].stats.cardsAVG_overall,
-        foulsAVG_overallAway: resultAway.data[indexAway].stats.foulsAVG_overall,
-        penalties_won_per_match_overallAway:
-          resultAway.data[indexAway].stats.additional_info
-            .penalties_won_per_match_overall,
-        penalty_in_a_match_percentage_overallAway:
-          resultAway.data[indexAway].stats.additional_info
-            .penalty_in_a_match_percentage_overall,
-      }));
+          cornersTotalAVG_overallAway:
+            resultAway.data[indexAway].stats.cornersTotalAVG_overall,
+          cardsAVG_overallAway:
+            resultAway.data[indexAway].stats.cardsAVG_overall,
+          foulsAVG_overallAway:
+            resultAway.data[indexAway].stats.foulsAVG_overall,
+          penalties_won_per_match_overallAway:
+            resultAway.data[indexAway].stats.additional_info
+              .penalties_won_per_match_overall,
+          penalty_in_a_match_percentage_overallAway:
+            resultAway.data[indexAway].stats.additional_info
+              .penalty_in_a_match_percentage_overall,
+        }));
+      }
     } catch (error) {
       console.error("Error fetching data:", error);
     }
@@ -280,7 +288,16 @@ function TeamPage() {
       </h3>
       <div className="TeamStats">
         <ul className="HomeTeamStats">
-        <iframe src={`https://footystats.org/api/club?id=${storedFixtureDetailsJson.homeId}`} height="100%" width="100%" style={{height: '420px', width: '100%', border: '0.1em solid #030061'}}></iframe>
+          <iframe
+            src={`https://footystats.org/api/club?id=${storedFixtureDetailsJson.homeId}`}
+            height="100%"
+            width="100%"
+            style={{
+              height: "420px",
+              width: "100%",
+              border: "0.1em solid #030061",
+            }}
+          ></iframe>
           <h3>{storedFixtureDetailsJson.homeTeamName}</h3>
           {propertyNamesHome.map(([key, value], index) => (
             <li key={index}>
@@ -363,7 +380,17 @@ function TeamPage() {
           </li>
         </ul>
         <ul className="AwayTeamStats">
-        <iframe src={`https://footystats.org/api/club?id=${storedFixtureDetailsJson.awayId}`} height="100%" width="100%" style={{height: '420px', width: '100%', color: '#030061', border: '0.1em solid #030061'}}></iframe>
+          <iframe
+            src={`https://footystats.org/api/club?id=${storedFixtureDetailsJson.awayId}`}
+            height="100%"
+            width="100%"
+            style={{
+              height: "420px",
+              width: "100%",
+              color: "#030061",
+              border: "0.1em solid #030061",
+            }}
+          ></iframe>
           <h3>{storedFixtureDetailsJson.awayTeamName}</h3>
           {propertyNamesAway.map(([key, value], index) => (
             <li key={index}>
