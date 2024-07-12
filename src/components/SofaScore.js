@@ -2,7 +2,7 @@ import React from "react";
 import PropTypes from "prop-types";
 
 const SofaLineupsWidget = ({ id, team1, team2, time, homeGoals, awayGoals }) => {
-  const iframeSrc = `https://widgets.sofascore.com/embed/lineups?id=${id}&widgetBackground=Gray&v=2`;
+  const iframeSrc = `https://widgets.sofascore.com/embed/lineups?id=${id}&widgetTheme=light`;
 
   let differenceInSeconds, minutes
   const currentTime = new Date().getTime() / 1000;
@@ -26,7 +26,7 @@ const SofaLineupsWidget = ({ id, team1, team2, time, homeGoals, awayGoals }) => 
           id={`sofa-lineups-embed-${id}`}
           src={iframeSrc}
           style={{
-            height: "721px",
+            height: "786px",
             maxWidth: "800px",
             width: "100%",
             border: "0",
@@ -47,7 +47,7 @@ const SofaLineupsWidget = ({ id, team1, team2, time, homeGoals, awayGoals }) => 
           id={`sofa-lineups-embed-${id}`}
           src={iframeSrc}
           style={{
-            height: "721px",
+            height: "786px",
             maxWidth: "800px",
             width: "100%",
             border: "0",
@@ -68,8 +68,8 @@ const SofaLineupsWidget = ({ id, team1, team2, time, homeGoals, awayGoals }) => 
         <h6 className="AttackingMomentum">Live attacking momentum and goals</h6>
         <iframe
           width="100%"
-          height="194"
-          src={`https://widgets.sofascore.com/embed/attackMomentum?id=${id}&widgetBackground=Gray&v=2`}
+          height="286"
+          src={`https://widgets.sofascore.com/embed/attackMomentum?id=${id}&widgetTheme=light`}
           frameborder="0"
           scrolling="no"
         ></iframe>
@@ -81,7 +81,7 @@ const SofaLineupsWidget = ({ id, team1, team2, time, homeGoals, awayGoals }) => 
           id={`sofa-lineups-embed-${id}`}
           src={iframeSrc}
           style={{
-            height: "721px",
+            height: "786px",
             maxWidth: "800px",
             width: "100%",
             border: "0",
