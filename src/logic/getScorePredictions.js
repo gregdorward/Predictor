@@ -1518,20 +1518,24 @@ export async function generateGoals(homeForm, awayForm, match) {
     homeForm.avPoints6
   );
 
+  const oddsComparisonHome = await comparison(match.awayOdds, match.homeOdds)
+  const oddsComparisonAway = await comparison(match.homeOdds, match.awayOdds)
+
   homeGoals =
     1 +
-    homeAttackVsAwayDefenceComparison * 1.75 +
+    homeAttackVsAwayDefenceComparison * 1.5 +
     // (homeGoals + homeOverallVsAwayOverallComparison) * 0.25 +
-    homeAttackVsAwayDefenceComparisonLast5 * 1.75 +
-    homeAttackVsAwayDefenceComparisonHomeOnly * 1;
-  // pointsComparisonHome * 0.1;
+    homeAttackVsAwayDefenceComparisonLast5 * 1.25 +
+    homeAttackVsAwayDefenceComparisonHomeOnly * 1.25 +
+    oddsComparisonHome * 0.025;
+
   awayGoals =
     1 +
-    awayAttackVsHomeDefenceComparison * 1.75 +
+    awayAttackVsHomeDefenceComparison * 1.5 +
     // (awayGoals + awayOverallVsHomeOverallComparison) * 0.25 +
-    awayAttackVsHomeDefenceComparisonLast5 * 1.75 +
-    awayAttackVsHomeDefenceComparisonAwayOnly * 1;
-  // pointsComparisonAway * 0.1;
+    awayAttackVsHomeDefenceComparisonLast5 * 1.25 +
+    awayAttackVsHomeDefenceComparisonAwayOnly * 1.25 +
+    oddsComparisonAway * 0.025;
 
   // if (homeForm.actualToXGDifference > 25) {
   //   homeGoals = homeGoals + homeForm.actualToXGDifference / 50;
@@ -3349,15 +3353,15 @@ export async function calculateScore(match, index, divider, calculate) {
         break;
     }
 
-    if (
-      match.game_week < 3
-      // match.omit === true
-      // match.game_week < 3 &&
-    ) {
-      finalHomeGoals = "-";
-      finalAwayGoals = "-";
-      match.status = "notEnoughData";
-    }
+    // if (
+    //   match.game_week < 3
+    //   // match.omit === true
+    //   // match.game_week < 3 &&
+    // ) {
+    //   finalHomeGoals = "-";
+    //   finalAwayGoals = "-";
+    //   match.status = "notEnoughData";
+    // }
 
     return [
       finalHomeGoals,
