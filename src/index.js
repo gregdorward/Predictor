@@ -7,6 +7,7 @@ import { BrowserRouter as Router, Route, Routes, HashRouter } from "react-router
 import TeamPage from "./components/Team";
 import { Provider } from "react-redux";
 import store from "./logic/store"; // Import your Redux store
+
 import {Fixture} from "./components/Fixture"
 
 ReactDOM.render(

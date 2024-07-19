@@ -175,7 +175,6 @@ body {
   height: 100%;
   font-weight: bolder;
   margin-top:0px;
-
 }
 
 .HeaderContainer{
@@ -190,6 +189,25 @@ body {
   margin: 0px;
   vertical-align: top;
   /* padding-bottom: 1em; */
+}
+
+.logo-container {
+  display: flex;
+  /* flex-basis: 50%; */
+  justify-content: center;
+  align-items: center;
+  height: auto; /* Adjust as necessary */
+  /* padding: 2em; */
+  /* margin-left: 3em;
+  margin-right: 3em; */
+  padding-top: 3em;
+  padding-bottom: 2em;
+}
+
+.responsive-logo {
+  max-width: 25em;
+  height: auto;
+  /* Optional: add padding or margin if needed */
 }
 
 h1 {

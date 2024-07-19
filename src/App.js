@@ -21,6 +21,7 @@ import {
 } from "react-share";
 import { generateFixtures } from "./logic/getFixtures";
 import { ThreeDots } from "react-loading-icons";
+import Logo from "./components/Logo";
 import { BrowserRouter as Router, Route, Routes, Link } from "react-router-dom";
 import reactDom from "react-dom";
 // require("dotenv").config();
@@ -389,10 +390,6 @@ export async function getLeagueList() {
           )
         }
       />
-      <span>
-        *Not enough data to predict games in the first few gameweeks -
-        predictions displayed as 'x - x'
-      </span>
     </div>,
     document.getElementById("Buttons")
   );
@@ -551,7 +548,7 @@ function App() {
   return (
     <>
       <div className="App">
-        <Header />
+        <Logo />
         <a
           className="SocialLink"
           href="https://www.reddit.com/r/xgtipping/"
