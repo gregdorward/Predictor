@@ -35,41 +35,40 @@ export var orderedLeagues = [];
 const leagueOrder = [
   11084, //Euro 2024
   7432, //World Cup 22
-  9660, //premier league 22/23
-  9663, //championship 22/23
-  9582, //league 1 22/23
-  9581, //league 2 22/23
-  9700, //National league 22/23
-  9665, //La Liga 22/23
-  9636, //Scottish Prem 22/23
-  9655, //Bundesliga 22/23
-  9697, //Serie A 22/23
-  9674, //French Prem 22/23
+  12325, //premier league 22/23
+  12451, //championship 22/23
+  12446, //league 1 22/23
+  12422, //league 2 22/23
+  12622, //National league 22/23
+  12316, //La Liga 22/23
+  12455, //Scottish Prem 22/23
+  12529, //Bundesliga 22/23
+  12530, //Serie A 22/23
+  12337, //French Prem 22/23
   9984, //Portagul Prem 22/23
-  9653, //Dutch Prem 22/23
-  9577, //Belgian Pro League 22/23
-  10969, //sweden 23
-  9545, //Danish Prem 22/23
+  12322, //Dutch Prem 22/23
+  12137, //Belgian Pro League 22/23
+  10969, //sweden 24
+  12132, //Danish Prem 24/25
   10976, //Norway Prem 23
-  9954, //Austrian Prem 22/23
-  9889, //Greek Prem 22/23
-  9553, //Polish prem 22/23
+  12472, //Austrian Prem 22/23
+  12734, //Greek Prem 22/23
+  12120, //Polish prem 22/23
   9580, //Swiss prem 22/23
   10946, //Irish Prem 23
-  9675, //Spanish secunda 22/23
-  9808, //Italy serie B 22/23
-  9656, //Bundesliga 2 22/23
-  9741, //German 3rd tier 22/23
-  9621, //French League 2 22/23
-  9637, //Scottish Championship 22/23
-  9639, //Scottish league 1 22/23
-  9638, //Scottish league 2 22/23
+  12467, //Spanish secunda 22/23
+  12621, //Italy serie B 22/23
+  12528, //Bundesliga 2 22/23
+  12623, //German 3rd tier 22/23
+  12338, //French League 2 22/23
+  12456, //Scottish Championship 22/23
+  12474, //Scottish league 1 22/23
+  12453, //Scottish league 2 22/23
   9890, //Women's prem 23/24
   10977, //MLS 23
   11321, //Brazil prem 24
   11212, //Argentina prem 23
-  10994, //Japan 22
-  9525, //Mexico prem 23/24
+  12136, //Mexico prem 23/24
   9972, //National league North and South 22/23
   10505, //Australian A league 23/24
   11102, //S Korea 23
@@ -117,7 +116,7 @@ let dateString;
     for (let x = 0; x < league.season.length; x++) {
       const element = league.season[x];
 
-      if (element.year === 2024 || element.year === 20232024) {
+      if (element.year === 2024 || element.year === 20242025) {
         if (element.id !== 4340 && element.id !== 6935 && element.id !== 7061) {
           availableLeagues.push({ name: name, element });
         }
