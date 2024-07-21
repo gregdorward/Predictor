@@ -275,6 +275,8 @@ function SingleFixture({ fixture, count, mock }) {
     fixture.formAway.defensiveMetrics["Clean Sheet Percentage"] =
       fixture.formAway.CleanSheetPercentage;
 
+    console.log(fixture.formHome)
+
     localStorage.setItem(
       "homeForm",
       JSON.stringify(fixture.formHome.attackingMetrics)

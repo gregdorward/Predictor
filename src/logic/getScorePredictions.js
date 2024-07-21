@@ -110,7 +110,7 @@ export function getPointsFromLastX(lastX) {
 }
 
 async function getPastLeagueResults(team, game, hOrA, form) {
-  form.completeData = true
+  form.completeData = true;
   let date = game.date;
   if (allLeagueResultsArrayOfObjects[game.leagueIndex].fixtures.length > 10) {
     let teamsHomeResults = allLeagueResultsArrayOfObjects[
@@ -308,8 +308,8 @@ async function getPastLeagueResults(team, game, hOrA, form) {
     let reversedResultsHome = homeResults;
     let reversedResultsAway = awayResults;
 
-    console.log(game.homeTeam)
-    console.log(team)
+    console.log(game.homeTeam);
+    console.log(team);
 
     if (game.homeTeam === team) {
       let y = game.homeOdds;
@@ -1518,8 +1518,8 @@ export async function generateGoals(homeForm, awayForm, match) {
     homeForm.avPoints6
   );
 
-  const oddsComparisonHome = await comparison(match.awayOdds, match.homeOdds)
-  const oddsComparisonAway = await comparison(match.homeOdds, match.awayOdds)
+  const oddsComparisonHome = await comparison(match.awayOdds, match.homeOdds);
+  const oddsComparisonAway = await comparison(match.homeOdds, match.awayOdds);
 
   homeGoals =
     1 +
@@ -1536,6 +1536,22 @@ export async function generateGoals(homeForm, awayForm, match) {
     awayAttackVsHomeDefenceComparisonLast5 * 1.25 +
     awayAttackVsHomeDefenceComparisonAwayOnly * 1.25 +
     oddsComparisonAway * 0.025;
+
+  homeForm.XGRating =
+    homeForm.attackingStrength +
+    homeForm.defensiveStrengthScoreGeneration +
+    homeForm.attackingStrengthLast5 +
+    homeForm.defensiveStrengthScoreGenerationLast5 +
+    homeForm.attackingStrengthHomeOnly +
+    homeForm.defensiveStrengthScoreGenerationHomeOnly;
+
+    awayForm.XGRating =
+    awayForm.attackingStrength +
+    awayForm.defensiveStrengthScoreGeneration +
+    awayForm.attackingStrengthLast5 +
+    awayForm.defensiveStrengthScoreGenerationLast5 +
+    awayForm.attackingStrengthAwayOnly +
+    awayForm.defensiveStrengthScoreGenerationAwayOnly;
 
   // if (homeForm.actualToXGDifference > 25) {
   //   homeGoals = homeGoals + homeForm.actualToXGDifference / 50;
@@ -2351,107 +2367,219 @@ export async function calculateScore(match, index, divider, calculate) {
     const attackingMetricsHome = {
       "Average Dangerous Attacks": formHome.AverageDangerousAttacksOverall,
       "Average Shots": formHome.AverageShots,
-      "Average Shots On Target": formHome.AverageShotsOnTargetOverall ? formHome.AverageShotsOnTargetOverall : formHome.AverageShotsOnTarget,
-      "Average Expected Goals": formHome.XGOverall ? formHome.XGOverall : formHome.expectedGoals,
+      "Average Shots On Target": formHome.AverageShotsOnTargetOverall
+        ? formHome.AverageShotsOnTargetOverall
+        : formHome.AverageShotsOnTarget,
+      "Average Expected Goals": formHome.XGOverall
+        ? formHome.XGOverall
+        : formHome.expectedGoals,
       "Recent XG": formHome.XGlast5 ? formHome.XGlast5 : formHome.XGOverall,
-      "Average Goals": formHome.avgScored ? formHome.avgScored : formHome.ScoredAverage,
-      Corners: formHome.AverageCorners ? formHome.AverageCorners : formHome.CornersAverage,
+      "Average Goals": formHome.avgScored
+        ? formHome.avgScored
+        : formHome.ScoredAverage,
+      Corners: formHome.AverageCorners
+        ? formHome.AverageCorners
+        : formHome.CornersAverage,
     };
 
     const attackingMetricsHomeLast5 = {
-      "Average Dangerous Attacks": formHome.avDALast5 ? formHome.avDALast5 : formHome.AverageDangerousAttacksOverall,
-      "Average Shots": formHome.avShotsLast5 ? formHome.avShotsLast5 : formHome.AverageShots,
-      "Average Shots On Target": formHome.avSOTLast5 ? formHome.avSOTLast5 : formHome.AverageShotsOnTarget,
-      "Average Expected Goals": formHome.XGlast5 ? formHome.XGlast5 : formHome.XGOverall,
+      "Average Dangerous Attacks": formHome.avDALast5
+        ? formHome.avDALast5
+        : formHome.AverageDangerousAttacksOverall,
+      "Average Shots": formHome.avShotsLast5
+        ? formHome.avShotsLast5
+        : formHome.AverageShots,
+      "Average Shots On Target": formHome.avSOTLast5
+        ? formHome.avSOTLast5
+        : formHome.AverageShotsOnTarget,
+      "Average Expected Goals": formHome.XGlast5
+        ? formHome.XGlast5
+        : formHome.XGOverall,
       "Recent XG": formHome.XGlast5 ? formHome.XGlast5 : formHome.XGOverall,
-      "Average Goals": formHome.avScoredLast5 ? formHome.avScoredLast5 : formHome.ScoredAverage,
-      Corners: formHome.avCornersLast5 ? formHome.avCornersLast5 : formHome.CornersAverage,
+      "Average Goals": formHome.avScoredLast5
+        ? formHome.avScoredLast5
+        : formHome.ScoredAverage,
+      Corners: formHome.avCornersLast5
+        ? formHome.avCornersLast5
+        : formHome.CornersAverage,
     };
 
     const attackingMetricsHomeOnly = {
-      "Average Dangerous Attacks": formHome.avgDangerousAttacksHome ? formHome.avgDangerousAttacksHome : formHome.AverageDangerousAttacksOverall,
-      "Average Shots": formHome.avgShotsHome ? formHome.avgShotsHome : formHome.AverageShots,
-      "Average Shots On Target": formHome.avgShotsOnTargetHome ? formHome.avgShotsOnTargetHome : formHome.AverageShotsOnTarget,
-      "Average Expected Goals": formHome.avgXGScoredHome ? formHome.avgXGScoredHome : formHome.XGOverall,
-      "Recent XG": formHome.last5XGAvgForHome ? formHome.last5XGAvgForHome : formHome.XGOverall,
-      "Average Goals": formHome.avgScoredHome ? formHome.avgScoredHome : formHome.ScoredAverage,
-      Corners: formHome.cornersAvHome ? formHome.cornersAvHome : formHome.CornersAverage,
+      "Average Dangerous Attacks": formHome.avgDangerousAttacksHome
+        ? formHome.avgDangerousAttacksHome
+        : formHome.AverageDangerousAttacksOverall,
+      "Average Shots": formHome.avgShotsHome
+        ? formHome.avgShotsHome
+        : formHome.AverageShots,
+      "Average Shots On Target": formHome.avgShotsOnTargetHome
+        ? formHome.avgShotsOnTargetHome
+        : formHome.AverageShotsOnTarget,
+      "Average Expected Goals": formHome.avgXGScoredHome
+        ? formHome.avgXGScoredHome
+        : formHome.XGOverall,
+      "Recent XG": formHome.last5XGAvgForHome
+        ? formHome.last5XGAvgForHome
+        : formHome.XGOverall,
+      "Average Goals": formHome.avgScoredHome
+        ? formHome.avgScoredHome
+        : formHome.ScoredAverage,
+      Corners: formHome.cornersAvHome
+        ? formHome.cornersAvHome
+        : formHome.CornersAverage,
     };
 
     const attackingMetricsAwayOnly = {
-      "Average Dangerous Attacks": formAway.avgDangerousAttacksAway ? formAway.avgDangerousAttacksAway : formAway.AverageDangerousAttacksOverall,
-      "Average Shots": formAway.avgShotsAway ? formAway.avgShotsAway : formAway.AverageShots,
-      "Average Shots On Target": formAway.avgShotsOnTargetAway ? formAway.avgShotsOnTargetAway : formAway.AverageShotsOnTarget,
-      "Average Expected Goals": formAway.avgXGScoredAway ? formAway.avgXGScoredAway : formAway.XGOverall,
-      "Recent XG": formAway.last5XGAvgForAway ? formAway.last5XGAvgForAway : formAway.XGOverall,
-      "Average Goals": formAway.avgScoredAway ? formAway.avgScoredAway : formAway.ScoredAverage,
-      Corners: formAway.cornersAvAway ? formAway.cornersAvAway : formAway.CornersAverage,
+      "Average Dangerous Attacks": formAway.avgDangerousAttacksAway
+        ? formAway.avgDangerousAttacksAway
+        : formAway.AverageDangerousAttacksOverall,
+      "Average Shots": formAway.avgShotsAway
+        ? formAway.avgShotsAway
+        : formAway.AverageShots,
+      "Average Shots On Target": formAway.avgShotsOnTargetAway
+        ? formAway.avgShotsOnTargetAway
+        : formAway.AverageShotsOnTarget,
+      "Average Expected Goals": formAway.avgXGScoredAway
+        ? formAway.avgXGScoredAway
+        : formAway.XGOverall,
+      "Recent XG": formAway.last5XGAvgForAway
+        ? formAway.last5XGAvgForAway
+        : formAway.XGOverall,
+      "Average Goals": formAway.avgScoredAway
+        ? formAway.avgScoredAway
+        : formAway.ScoredAverage,
+      Corners: formAway.cornersAvAway
+        ? formAway.cornersAvAway
+        : formAway.CornersAverage,
     };
 
     const attackingMetricsAway = {
       "Average Dangerous Attacks": formAway.AverageDangerousAttacksOverall,
       "Average Shots": formAway.AverageShots,
-      "Average Shots On Target": formAway.AverageShotsOnTargetOverall ? formAway.AverageShotsOnTargetOverall : formAway.AverageShotsOnTarget,
-      "Average Expected Goals": formAway.XGOverall ? formAway.XGOverall : formAway.expectedGoals,
+      "Average Shots On Target": formAway.AverageShotsOnTargetOverall
+        ? formAway.AverageShotsOnTargetOverall
+        : formAway.AverageShotsOnTarget,
+      "Average Expected Goals": formAway.XGOverall
+        ? formAway.XGOverall
+        : formAway.expectedGoals,
       "Recent XG": formAway.XGlast5 ? formAway.XGlast5 : formAway.XGOverall,
-      "Average Goals": formAway.avgScored ? formAway.avgScored : formAway.ScoredAverage,
-      Corners: formAway.AverageCorners ? formAway.AverageCorners : formAway.CornersAverage,
+      "Average Goals": formAway.avgScored
+        ? formAway.avgScored
+        : formAway.ScoredAverage,
+      Corners: formAway.AverageCorners
+        ? formAway.AverageCorners
+        : formAway.CornersAverage,
     };
 
     const attackingMetricsAwayLast5 = {
-      "Average Dangerous Attacks": formAway.avDALast5 ? formAway.avDALast5 : formAway.AverageDangerousAttacksOverall,
-      "Average Shots": formAway.avShotsLast5 ? formAway.avShotsLast5 : formAway.AverageShots,
-      "Average Shots On Target": formAway.avSOTLast5 ? formAway.avSOTLast5 : formAway.AverageShotsOnTarget,
-      "Average Expected Goals": formAway.XGlast5 ? formAway.XGlast5 : formAway.XGOverall,
+      "Average Dangerous Attacks": formAway.avDALast5
+        ? formAway.avDALast5
+        : formAway.AverageDangerousAttacksOverall,
+      "Average Shots": formAway.avShotsLast5
+        ? formAway.avShotsLast5
+        : formAway.AverageShots,
+      "Average Shots On Target": formAway.avSOTLast5
+        ? formAway.avSOTLast5
+        : formAway.AverageShotsOnTarget,
+      "Average Expected Goals": formAway.XGlast5
+        ? formAway.XGlast5
+        : formAway.XGOverall,
       "Recent XG": formAway.XGlast5 ? formAway.XGlast5 : formAway.XGOverall,
-      "Average Goals": formAway.avScoredLast5 ? formAway.avScoredLast5 : formAway.ScoredAverage,
-      Corners: formAway.avCornersLast5 ? formAway.avCornersLast5 : formAway.CornersAverage,
+      "Average Goals": formAway.avScoredLast5
+        ? formAway.avScoredLast5
+        : formAway.ScoredAverage,
+      Corners: formAway.avCornersLast5
+        ? formAway.avCornersLast5
+        : formAway.CornersAverage,
     };
 
     const defensiveMetricsHome = {
-      "Average XG Against": formHome.XGAgainstAvgOverall ? formHome.XGAgainstAvgOverall : formHome.XGAgainstAvgOverall,
+      "Average XG Against": formHome.XGAgainstAvgOverall
+        ? formHome.XGAgainstAvgOverall
+        : formHome.XGAgainstAvgOverall,
       "Recent XG Against": formHome.XGAgainstlast5
         ? formHome.XGAgainstlast5
         : formHome.XGAgainstAvgOverall,
-      "Average Goals Against": formHome.avgConceeded ? formHome.avgConceeded : formHome.ConcededAverage,
-      "Average SOT Against": formHome.AverageShotsOnTargetAgainstOverall ? formHome.AverageShotsOnTargetAgainstOverall : 5,
+      "Average Goals Against": formHome.avgConceeded
+        ? formHome.avgConceeded
+        : formHome.ConcededAverage,
+      "Average SOT Against": formHome.AverageShotsOnTargetAgainstOverall
+        ? formHome.AverageShotsOnTargetAgainstOverall
+        : 5,
     };
 
     const defensiveMetricsHomeLast5 = {
-      "Average XG Against": formHome.XGAgainstlast5 ? formHome.XGAgainstlast5 : formHome.XGAgainstAvgOverall,
-      "Recent XG Against": formHome.avXGAgainstLast5 ? formHome.avXGAgainstLast5 : formHome.XGAgainstAvgOverall,
-      "Average Goals Against": formHome.avConceededLast5 ? formHome.avConceededLast5 : formHome.ConcededAverage,
-      "Average SOT Against": formHome.avSOTAgainstLast5 ? formHome.avSOTAgainstLast5 : 5,
+      "Average XG Against": formHome.XGAgainstlast5
+        ? formHome.XGAgainstlast5
+        : formHome.XGAgainstAvgOverall,
+      "Recent XG Against": formHome.avXGAgainstLast5
+        ? formHome.avXGAgainstLast5
+        : formHome.XGAgainstAvgOverall,
+      "Average Goals Against": formHome.avConceededLast5
+        ? formHome.avConceededLast5
+        : formHome.ConcededAverage,
+      "Average SOT Against": formHome.avSOTAgainstLast5
+        ? formHome.avSOTAgainstLast5
+        : 5,
     };
 
     const defensiveMetricsAway = {
-      "Average XG Against": formAway.XGAgainstAvgOverall ? formAway.XGAgainstAvgOverall : formAway.XGAgainstAvgOverall,
+      "Average XG Against": formAway.XGAgainstAvgOverall
+        ? formAway.XGAgainstAvgOverall
+        : formAway.XGAgainstAvgOverall,
       "Recent XG Against": formAway.XGAgainstlast5
         ? formAway.XGAgainstlast5
         : formAway.XGAgainstAvgOverall,
-      "Average Goals Against": formAway.avgConceeded ? formAway.avgConceeded : formAway.ConcededAverage,
-      "Average SOT Against": formAway.AverageShotsOnTargetAgainstOverall ? formAway.AverageShotsOnTargetAgainstOverall : 5,
+      "Average Goals Against": formAway.avgConceeded
+        ? formAway.avgConceeded
+        : formAway.ConcededAverage,
+      "Average SOT Against": formAway.AverageShotsOnTargetAgainstOverall
+        ? formAway.AverageShotsOnTargetAgainstOverall
+        : 5,
     };
 
     const defensiveMetricsAwayLast5 = {
-      "Average XG Against": formAway.XGAgainstlast5 ? formAway.XGAgainstlast5 : formAway.XGAgainstAvgOverall,
-      "Recent XG Against": formAway.avXGAgainstLast5 ? formAway.avXGAgainstLast5 : formAway.XGAgainstAvgOverall,
-      "Average Goals Against": formAway.avConceededLast5 ? formAway.avConceededLast5 : formAway.ConcededAverage,
-      "Average SOT Against": formAway.avSOTAgainstLast5 ? formAway.avSOTAgainstLast5 : 5,
+      "Average XG Against": formAway.XGAgainstlast5
+        ? formAway.XGAgainstlast5
+        : formAway.XGAgainstAvgOverall,
+      "Recent XG Against": formAway.avXGAgainstLast5
+        ? formAway.avXGAgainstLast5
+        : formAway.XGAgainstAvgOverall,
+      "Average Goals Against": formAway.avConceededLast5
+        ? formAway.avConceededLast5
+        : formAway.ConcededAverage,
+      "Average SOT Against": formAway.avSOTAgainstLast5
+        ? formAway.avSOTAgainstLast5
+        : 5,
     };
 
     const defensiveMetricsHomeOnly = {
-      "Average XG Against": formHome.avgXGConceededHome ? formHome.avgXGConceededHome : formHome.XGAgainstAvgOverall,
-      "Recent XG Against": formHome.last5XGAvgAgainstHome ? formHome.last5XGAvgAgainstHome : formHome.XGAgainstAvgOverall,
-      "Average Goals Against": formHome.teamConceededAvgHomeOnly ? formHome.teamConceededAvgHomeOnly : formHome.ConcededAverage,
-      "Average SOT Against": formHome.avgShotsOnTargetAgainstHome ? formHome.avgShotsOnTargetAgainstHome : 5,
+      "Average XG Against": formHome.avgXGConceededHome
+        ? formHome.avgXGConceededHome
+        : formHome.XGAgainstAvgOverall,
+      "Recent XG Against": formHome.last5XGAvgAgainstHome
+        ? formHome.last5XGAvgAgainstHome
+        : formHome.XGAgainstAvgOverall,
+      "Average Goals Against": formHome.teamConceededAvgHomeOnly
+        ? formHome.teamConceededAvgHomeOnly
+        : formHome.ConcededAverage,
+      "Average SOT Against": formHome.avgShotsOnTargetAgainstHome
+        ? formHome.avgShotsOnTargetAgainstHome
+        : 5,
     };
 
     const defensiveMetricsAwayOnly = {
-      "Average XG Against": formAway.avgXGConceededAway ? formAway.avgXGConceededAway : formAway.XGAgainstAvgOverall,
-      "Recent XG Against": formAway.last5XGAvgAgainstAway ? formAway.last5XGAvgAgainstAway : formAway.XGAgainstAvgOverall,
-      "Average Goals Against": formAway.teamConceededAvgAwayOnly ? formAway.teamConceededAvgAwayOnly : formAway.ConcededAverage,
-      "Average SOT Against": formAway.avgShotsOnTargetAgainstAway ? formAway.avgShotsOnTargetAgainstAway : 5,
+      "Average XG Against": formAway.avgXGConceededAway
+        ? formAway.avgXGConceededAway
+        : formAway.XGAgainstAvgOverall,
+      "Recent XG Against": formAway.last5XGAvgAgainstAway
+        ? formAway.last5XGAvgAgainstAway
+        : formAway.XGAgainstAvgOverall,
+      "Average Goals Against": formAway.teamConceededAvgAwayOnly
+        ? formAway.teamConceededAvgAwayOnly
+        : formAway.ConcededAverage,
+      "Average SOT Against": formAway.avgShotsOnTargetAgainstAway
+        ? formAway.avgShotsOnTargetAgainstAway
+        : 5,
     };
 
     formHome.attackingMetrics = attackingMetricsHome;
@@ -2530,33 +2658,44 @@ export async function calculateScore(match, index, divider, calculate) {
 
     formHome.possessionStrength = await calculateMetricStrength(
       "averagePossession",
-      formHome.AveragePossessionOverall ? formHome.AveragePossessionOverall : formHome.AveragePossessionOverall
+      formHome.AveragePossessionOverall
+        ? formHome.AveragePossessionOverall
+        : formHome.AveragePossessionOverall
     );
 
     formHome.possessionStrengthLast5 = await calculateMetricStrength(
       "averagePossession",
-      formHome.avPosessionLast5 ? formHome.avPosessionLast5 : formHome.AveragePossessionOverall
+      formHome.avPosessionLast5
+        ? formHome.avPosessionLast5
+        : formHome.AveragePossessionOverall
     );
-
 
     formHome.possessionStrengthHomeOnly = await calculateMetricStrength(
       "averagePossession",
-      formHome.avgPossessionHome ? formHome.avgPossessionHome : formHome.AveragePossessionOverall
+      formHome.avgPossessionHome
+        ? formHome.avgPossessionHome
+        : formHome.AveragePossessionOverall
     );
 
     formAway.possessionStrengthLast5 = await calculateMetricStrength(
       "averagePossession",
-      formAway.avPosessionLast5 ? formAway.avPosessionLast5 : formAway.AveragePossessionOverall
+      formAway.avPosessionLast5
+        ? formAway.avPosessionLast5
+        : formAway.AveragePossessionOverall
     );
 
     formAway.possessionStrength = await calculateMetricStrength(
       "averagePossession",
-      formAway.AveragePossessionOverall ? formAway.AveragePossessionOverall : formAway.AveragePossessionOverall
+      formAway.AveragePossessionOverall
+        ? formAway.AveragePossessionOverall
+        : formAway.AveragePossessionOverall
     );
 
     formAway.possessionStrengthAwayOnly = await calculateMetricStrength(
       "averagePossession",
-      formAway.avgPossessionAway ? formAway.avgPossessionAway : formAway.AveragePossessionOverall
+      formAway.avgPossessionAway
+        ? formAway.avgPossessionAway
+        : formAway.AveragePossessionOverall
     );
 
     formHome.directnessOverall =
@@ -2566,7 +2705,7 @@ export async function calculateScore(match, index, divider, calculate) {
       (formHome.avShotsLast5 / formHome.avPosessionLast5) * 10;
 
     formAway.directnessOverallLast5 =
-    (formAway.avShotsLast5 / formAway.avPosessionLast5) * 10;
+      (formAway.avShotsLast5 / formAway.avPosessionLast5) * 10;
 
     formHome.directnessHomeOnly =
       (formHome.avgShotsHome / formHome.avgPossessionHome) * 10;
@@ -2575,7 +2714,7 @@ export async function calculateScore(match, index, divider, calculate) {
       (formAway.AverageShots / formAway.AveragePossessionOverall) * 10;
 
     formAway.directnessAwayOnly =
-    (formAway.avgShotsAway / formAway.avgPossessionAway) * 10;
+      (formAway.avgShotsAway / formAway.avgPossessionAway) * 10;
 
     formHome.directnessOverallStrength = await calculateMetricStrength(
       "directnessOverall",
@@ -2608,26 +2747,34 @@ export async function calculateScore(match, index, divider, calculate) {
     );
 
     formHome.shootingAccuracy =
-      (formHome.AverageShotsOnTargetOverall ? formHome.AverageShotsOnTargetOverall : formHome.AverageShotsOnTarget / formHome.avgShots) *
-      formHome.AverageShotsOnTargetOverall ? formHome.AverageShotsOnTargetOverall : formHome.AverageShotsOnTarget;
+      (formHome.AverageShotsOnTargetOverall
+        ? formHome.AverageShotsOnTargetOverall
+        : formHome.AverageShotsOnTarget / formHome.avgShots) *
+      formHome.AverageShotsOnTargetOverall
+        ? formHome.AverageShotsOnTargetOverall
+        : formHome.AverageShotsOnTarget;
 
     formHome.shootingAccuracyLast5 =
       (formHome.avSOTLast5 / formHome.avShotsLast5) * formHome.avSOTLast5;
 
     formAway.shootingAccuracyLast5 =
-    (formAway.avSOTLast5 / formAway.avShotsLast5) * formAway.avSOTLast5;
+      (formAway.avSOTLast5 / formAway.avShotsLast5) * formAway.avSOTLast5;
 
     formHome.shootingAccuracyHomeOnly =
       (formHome.avgShotsOnTargetHome / formHome.avgShotsHome) *
       formHome.avgShotsOnTargetHome;
 
-      formAway.shootingAccuracy =
-      (formAway.AverageShotsOnTargetOverall ? formAway.AverageShotsOnTargetOverall : formAway.AverageShotsOnTarget / formAway.avgShots) *
-      formAway.AverageShotsOnTargetOverall ? formAway.AverageShotsOnTargetOverall : formAway.AverageShotsOnTarget;
+    formAway.shootingAccuracy =
+      (formAway.AverageShotsOnTargetOverall
+        ? formAway.AverageShotsOnTargetOverall
+        : formAway.AverageShotsOnTarget / formAway.avgShots) *
+      formAway.AverageShotsOnTargetOverall
+        ? formAway.AverageShotsOnTargetOverall
+        : formAway.AverageShotsOnTarget;
 
     formAway.shootingAccuracyAwayOnly =
-    (formAway.avgShotsOnTargetAway / formAway.avgShotsAway) *
-    formAway.avgShotsOnTargetAway;
+      (formAway.avgShotsOnTargetAway / formAway.avgShotsAway) *
+      formAway.avgShotsOnTargetAway;
 
     formHome.accuracyOverallStrength = await calculateMetricStrength(
       "accuracyOverall",
@@ -3522,7 +3669,7 @@ export async function getScorePrediction(day, mocked) {
           case match.status === "canceled":
             match.goalsA = "P";
             match.goalsB = "P";
-            match.completeData = false
+            match.completeData = false;
             await calculateScore(match, index, divider, false);
             break;
           case match.leagueID === 6935 ||
@@ -3530,7 +3677,7 @@ export async function getScorePrediction(day, mocked) {
             (match.game_week < 3 && match.game_week !== 0):
             match.goalsA = "x";
             match.goalsB = "x";
-            match.completeData = false
+            match.completeData = false;
             await calculateScore(match, index, divider, true);
             break;
           default:
@@ -3539,7 +3686,7 @@ export async function getScorePrediction(day, mocked) {
               match.goalsB,
               match.unroundedGoalsA,
               match.unroundedGoalsB,
-              match.completeData = true
+              match.completeData = true,
             ] = await calculateScore(match, index, divider, true);
             break;
         }

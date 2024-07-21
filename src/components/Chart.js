@@ -14,7 +14,7 @@ import {
   Tooltip,
   Legend,
 } from "chart.js";
-import { Line, Radar, Bar } from "react-chartjs-2";
+import { Line, Radar, Bar, Doughnut } from "react-chartjs-2";
 
 ChartJS.register(
   CategoryScale,
@@ -146,6 +146,61 @@ export function Chart(props) {
   };
 
   return <Line options={options} data={data} />;
+}
+
+export function DoughnutChart(props) {
+  const options = {
+    color: "#030061",
+  
+    plugins: {
+      legend: {
+        position: "top",
+
+        labels: {
+          boxHeight: 10,
+          color: '#030061'
+        },
+      },
+      title: {
+        display: true,
+        text: 'XG Tipping Form Comparison',
+        color: '#030061',
+        font: {
+          size: 14,
+        },
+      },
+    },
+  };
+
+
+  const data = {
+    labels: [
+      props.homeTeam,
+      props.awayTeam,
+    ],
+    datasets: [{
+      data: props.data,
+      backgroundColor: [
+        '#030061',
+        '#970d00'
+      ],
+      rotation: 270,
+      hoverOffset: 4,
+      cutout: '75%',
+      circumference: 180,
+      
+    }],
+
+  };
+
+  const config = {
+    type: 'doughnut',
+    data: data,
+  };
+
+  return <Doughnut options={options} data={data} />
+
+
 }
 
 export function RadarChart(props) {
@@ -320,3 +375,5 @@ export function BarChart(props) {
 
   return <Bar options={options} data={data} />;
 }
+
+

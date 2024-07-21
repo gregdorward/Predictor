@@ -7,11 +7,17 @@ import { getTeamStats } from "../logic/getTeamStats";
 import { getPointsFromLastX } from "../logic/getScorePredictions";
 import { allLeagueResultsArrayOfObjects } from "../logic/getFixtures";
 import GenerateFormSummary from "../logic/compareFormTrend";
-import { Chart, RadarChart, BarChart } from "../components/Chart";
+import {
+  Chart,
+  RadarChart,
+  BarChart,
+  DoughnutChart,
+} from "../components/Chart";
 import Collapsable from "../components/CollapsableElement";
 import { clicked } from "../logic/getScorePredictions";
 import SofaLineupsWidget from "../components/SofaScore";
 import { arrayOfGames } from "../logic/getFixtures";
+import { Doughnut } from "react-chartjs-2";
 
 export async function calculateAttackingStrength(stats) {
   // Define weights for each metric (you can adjust these based on your preference)
@@ -648,7 +654,7 @@ export async function createStatsDiv(game, displayBool) {
           }
         }
 
-        console.log(homeForm)
+        console.log(homeForm);
 
         goalDiffArrayHome = homeForm.allTeamResults.map(
           (a) => a.scored - a.conceeded
@@ -958,42 +964,44 @@ export async function createStatsDiv(game, displayBool) {
 
       let favouriteRecordHome, favouriteRecordAway;
 
-
-      if(homeForm.oddsReliabilityWin){
+      if (homeForm.oddsReliabilityWin) {
         favouriteRecordHome =
-        game.homeOdds < game.awayOdds || game.homeOdds === game.awayOdds
-          ? `${homeForm.teamName} have been favourites ${
-              homeForm.favouriteCount
-            } times. Of these games, they have Won: ${homeForm.oddsReliabilityWin.toFixed(
-              0
-            )}%, Drawn:  ${homeForm.oddsReliabilityDraw.toFixed(
-              0
-            )}%, Lost:  ${homeForm.oddsReliabilityLose.toFixed(0)}%`
-          : `${homeForm.teamName} have been underdogs ${
-              homeForm.underdogCount
-            } times. Of these games, they have Won: ${homeForm.oddsReliabilityWinAsUnderdog.toFixed(
-              0
-            )}%, Drawn:  ${homeForm.oddsReliabilityDrawAsUnderdog.toFixed(
-              0
-            )}%, Lost:  ${homeForm.oddsReliabilityLoseAsUnderdog.toFixed(0)}%`;
-      favouriteRecordAway =
-        game.homeOdds > game.awayOdds || game.homeOdds === game.awayOdds
-          ? `${awayForm.teamName} have been favourites ${
-              awayForm.favouriteCount
-            } times. Of these games, they have Won: ${awayForm.oddsReliabilityWin.toFixed(
-              0
-            )}%, Drawn:  ${awayForm.oddsReliabilityDraw.toFixed(
-              0
-            )}%, Lost:  ${awayForm.oddsReliabilityLose.toFixed(0)}%`
-          : `${awayForm.teamName} have been underdogs ${
-              awayForm.underdogCount
-            } times. Of these games, they have Won: ${awayForm.oddsReliabilityWinAsUnderdog.toFixed(
-              0
-            )}%, Drawn:  ${awayForm.oddsReliabilityDrawAsUnderdog.toFixed(
-              0
-            )}%, Lost:  ${awayForm.oddsReliabilityLoseAsUnderdog.toFixed(0)}%`;
+          game.homeOdds < game.awayOdds || game.homeOdds === game.awayOdds
+            ? `${homeForm.teamName} have been favourites ${
+                homeForm.favouriteCount
+              } times. Of these games, they have Won: ${homeForm.oddsReliabilityWin.toFixed(
+                0
+              )}%, Drawn:  ${homeForm.oddsReliabilityDraw.toFixed(
+                0
+              )}%, Lost:  ${homeForm.oddsReliabilityLose.toFixed(0)}%`
+            : `${homeForm.teamName} have been underdogs ${
+                homeForm.underdogCount
+              } times. Of these games, they have Won: ${homeForm.oddsReliabilityWinAsUnderdog.toFixed(
+                0
+              )}%, Drawn:  ${homeForm.oddsReliabilityDrawAsUnderdog.toFixed(
+                0
+              )}%, Lost:  ${homeForm.oddsReliabilityLoseAsUnderdog.toFixed(
+                0
+              )}%`;
+        favouriteRecordAway =
+          game.homeOdds > game.awayOdds || game.homeOdds === game.awayOdds
+            ? `${awayForm.teamName} have been favourites ${
+                awayForm.favouriteCount
+              } times. Of these games, they have Won: ${awayForm.oddsReliabilityWin.toFixed(
+                0
+              )}%, Drawn:  ${awayForm.oddsReliabilityDraw.toFixed(
+                0
+              )}%, Lost:  ${awayForm.oddsReliabilityLose.toFixed(0)}%`
+            : `${awayForm.teamName} have been underdogs ${
+                awayForm.underdogCount
+              } times. Of these games, they have Won: ${awayForm.oddsReliabilityWinAsUnderdog.toFixed(
+                0
+              )}%, Drawn:  ${awayForm.oddsReliabilityDrawAsUnderdog.toFixed(
+                0
+              )}%, Lost:  ${awayForm.oddsReliabilityLoseAsUnderdog.toFixed(
+                0
+              )}%`;
       }
-    
 
       let homeLastGame = await getLastGameResult(homeForm.LastFiveForm[4]);
       let awayLastGame = await getLastGameResult(awayForm.LastFiveForm[4]);
@@ -1055,6 +1063,8 @@ export async function createStatsDiv(game, displayBool) {
             : awayForm.ConcededOverall / 10,
       };
 
+      let homeXGRating;
+      let awayXGRating;
       let homeAttackStrength;
       let homeAttackStrengthLast5;
       let homeOnlyAttackStrength;
@@ -1100,6 +1110,8 @@ export async function createStatsDiv(game, displayBool) {
 
       if (homeForm.xgForStrength) {
         console.log("not calculating");
+        homeXGRating = homeForm.XGRating;
+        awayXGRating = awayForm.XGRating;
         homeAttackStrength = homeForm.attackingStrength;
         homeAttackStrengthLast5 = homeForm.attackingStrengthLast5;
         homeOnlyAttackStrength = homeForm.attackingStrengthHomeOnly;
@@ -1694,7 +1706,6 @@ export async function createStatsDiv(game, displayBool) {
 
       let id, team1, team2, timestamp, homeGoals, awayGoals;
 
-
       async function getGameIdByHomeTeam(games, homeTeamName) {
         const matchingGames = games.filter((game) =>
           game.homeTeam.includes(homeTeamName)
@@ -1711,7 +1722,7 @@ export async function createStatsDiv(game, displayBool) {
         game.homeTeam
       );
 
-      console.log(matchingGame)
+      console.log(matchingGame);
       if (matchingGame) {
         id = matchingGame.id.toString();
         team1 = matchingGame.homeTeam;
@@ -1728,26 +1739,33 @@ export async function createStatsDiv(game, displayBool) {
         awayGoals = "-";
       }
 
-      if(homeForm.completeData == true && game.completeData == true){
+      if (homeForm.completeData == true && game.completeData == true) {
         ReactDOM.render(
           <>
             <div style={style}>
-            <Collapsable
-              buttonText={"Lineups & match action"}
-              classNameButton="Lineups"
-              element={
-                <>
-                  <SofaLineupsWidget
-                    id={id}
-                    team1={team1}
-                    team2={team2}
-                    time={timestamp}
-                    homeGoals={homeGoals}
-                    awayGoals={awayGoals}
-                  ></SofaLineupsWidget>
-                </>
-              }
-            />
+              <Collapsable
+                buttonText={"Lineups & match action"}
+                classNameButton="Lineups"
+                element={
+                  <>
+                    <SofaLineupsWidget
+                      id={id}
+                      team1={team1}
+                      team2={team2}
+                      time={timestamp}
+                      homeGoals={homeGoals}
+                      awayGoals={awayGoals}
+                    ></SofaLineupsWidget>
+                  </>
+                }
+              />
+              <div style={style}>
+                <Div className="MatchTime" text={`Kick off: ${time} GMT`}></Div>
+              </div>
+              <div className="flex-container">
+                <StatsHome />
+                <StatsAway />
+              </div>
               <div className="Chart" id={`Chart${game.id}`} style={style}>
                 <RadarChart
                   title="XG Tipping Strength Ratings - All Games"
@@ -1818,6 +1836,11 @@ export async function createStatsDiv(game, displayBool) {
                   team1={game.homeTeam}
                   team2={game.awayTeam}
                 ></RadarChart>
+                <DoughnutChart
+                  data={[homeXGRating, awayXGRating]}
+                  homeTeam={game.homeTeam}
+                  awayTeam={game.awayTeam}
+                ></DoughnutChart>
                 <BarChart
                   text="H2H - Home Team | Away Team"
                   data1={[
@@ -1906,20 +1929,13 @@ export async function createStatsDiv(game, displayBool) {
                   tension={0.3}
                 ></Chart>
               </div>
-              <div style={style}>
-                <Div className="MatchTime" text={`Kick off: ${time} GMT`}></Div>
-                <Div
+              <Div
                   text={`Last league games (most recent first)`}
                   className={"LastGameHeader"}
                 ></Div>
-              </div>
               <div className="flex-container">
                 <div className="flex-childOneOverviewSmall">{overviewHome}</div>
                 <div className="flex-childTwoOverviewSmall">{overviewAway}</div>
-              </div>
-              <div className="flex-container">
-                <StatsHome />
-                <StatsAway />
               </div>
               <h2>Results from similar profile games</h2>
               <span>(Games where each team had similar odds)</span>
@@ -1952,26 +1968,28 @@ export async function createStatsDiv(game, displayBool) {
           </>,
           document.getElementById("stats" + homeTeam)
         );
-      } else if (homeForm.completeData = false || game.completeData == false){
+      } else if (
+        (homeForm.completeData = false || game.completeData == false)
+      ) {
         ReactDOM.render(
           <>
             <div style={style}>
-            <Collapsable
-              buttonText={"Lineups & match action"}
-              classNameButton="Lineups"
-              element={
-                <>
-                  <SofaLineupsWidget
-                    id={id}
-                    team1={team1}
-                    team2={team2}
-                    time={timestamp}
-                    homeGoals={homeGoals}
-                    awayGoals={awayGoals}
-                  ></SofaLineupsWidget>
-                </>
-              }
-            />
+              <Collapsable
+                buttonText={"Lineups & match action"}
+                classNameButton="Lineups"
+                element={
+                  <>
+                    <SofaLineupsWidget
+                      id={id}
+                      team1={team1}
+                      team2={team2}
+                      time={timestamp}
+                      homeGoals={homeGoals}
+                      awayGoals={awayGoals}
+                    ></SofaLineupsWidget>
+                  </>
+                }
+              />
               <div className="Chart" id={`Chart${game.id}`} style={style}>
                 <RadarChart
                   title="XG Tipping Strength Ratings - All Games"
@@ -2044,8 +2062,7 @@ export async function createStatsDiv(game, displayBool) {
           document.getElementById("stats" + homeTeam)
         );
       }
-      }
-      
+    }
 
     // ReactDOM.render(
     //   <Button

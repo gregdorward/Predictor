@@ -29,8 +29,6 @@ function Stats(props) {
     return (
       <Fragment>
         <ul className={props.className} style={props.style}>
-          <li className="FormSummaryHome">{props.FormTextString}</li>
-          <li className="FavouriteSummaryHome">{props.FavouriteRecord}</li>
           <li className="FormHeader">
             League results (most recent on right)
           </li>
@@ -90,6 +88,8 @@ function Stats(props) {
             <span className={styleBTTS(props.BTTSArray[1])}>{props.BTTSArray[1]}</span>
             <span className={styleBTTS(props.BTTSArray[0])}>{props.BTTSArray[0]}</span>
           </li>
+          <li className="FormSummaryHome">{props.FormTextString}</li>
+          <li className="FavouriteSummaryHome">{props.FavouriteRecord}</li>
           <li
             key="TeamScored"
             className="TeamScored"
