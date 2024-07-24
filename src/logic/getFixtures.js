@@ -725,8 +725,8 @@ export async function generateFixtures(
         let regularSeason = leagueArray[i].data.specific_tables.find(
           (season) =>
             season.round === "Regular Season" ||
-            season.round === "2023" ||
-            season.round === "2023/2024" ||
+            season.round === "2024" ||
+            season.round === "2024/2025" ||
             season.round === "Apertura" ||
             season.round === "1st Phase"
           // season.round === "North" ||
@@ -747,42 +747,45 @@ export async function generateFixtures(
         let stringHome = homeLeague[x];
         let stringAway = awayLeague[x];
 
-        leaguePositions.push({
-          name: string.cleanName,
-          position: x + 1,
-          rawPosition: x + 1,
-          homeFormName: stringHome ? stringHome.cleanName : string.cleanName,
-          awayFormName: stringAway ? stringAway.cleanName : string.cleanName,
-          homeSeasonWinPercentage: stringHome
-            ? stringHome.seasonWins
-            : string.seasonWins,
-          awaySeasonWinPercentage: stringAway
-            ? stringAway.seasonWins
-            : string.seasonWins,
-          homeSeasonLossPercentage: stringHome
-            ? stringHome.seasonLosses_home
-            : string.seasonLosses_home,
-          awaySeasonLossPercentage: stringAway
-            ? stringAway.seasonLosses_away
-            : string.seasonLosses_away,
-          homeSeasonDrawPercentage: stringHome
-            ? stringHome.seasonDraws
-            : string.seasonDraws,
-          awaySeasonDrawPercentage: stringAway
-            ? stringAway.seasonDraws
-            : string.seasonDraws,
-          homeSeasonMatchesPlayed: stringHome
-            ? stringHome.matchesPlayed
-            : string.matchesPlayed,
-          awaySeasonMatchesPlayed: stringAway
-            ? stringAway.matchesPlayed
-            : string.matchesPlayed,
-          ppg: string.points / string.matchesPlayed,
-          wdl: string.wdl_record ? string.wdl_record : "",
-          played: string.matchesPlayed,
-          seasonGoals: string.seasonGoals,
-          seasonConceded: string.seasonConceded,
-        });
+
+        if(string){
+          leaguePositions.push({
+            name: string.cleanName,
+            position: x + 1,
+            rawPosition: x + 1,
+            homeFormName: stringHome ? stringHome.cleanName : string.cleanName,
+            awayFormName: stringAway ? stringAway.cleanName : string.cleanName,
+            homeSeasonWinPercentage: stringHome
+              ? stringHome.seasonWins
+              : string.seasonWins,
+            awaySeasonWinPercentage: stringAway
+              ? stringAway.seasonWins
+              : string.seasonWins,
+            homeSeasonLossPercentage: stringHome
+              ? stringHome.seasonLosses_home
+              : string.seasonLosses_home,
+            awaySeasonLossPercentage: stringAway
+              ? stringAway.seasonLosses_away
+              : string.seasonLosses_away,
+            homeSeasonDrawPercentage: stringHome
+              ? stringHome.seasonDraws
+              : string.seasonDraws,
+            awaySeasonDrawPercentage: stringAway
+              ? stringAway.seasonDraws
+              : string.seasonDraws,
+            homeSeasonMatchesPlayed: stringHome
+              ? stringHome.matchesPlayed
+              : string.matchesPlayed,
+            awaySeasonMatchesPlayed: stringAway
+              ? stringAway.matchesPlayed
+              : string.matchesPlayed,
+            ppg: string.points / string.matchesPlayed,
+            wdl: string.wdl_record ? string.wdl_record : "",
+            played: string.matchesPlayed,
+            seasonGoals: string.seasonGoals,
+            seasonConceded: string.seasonConceded,
+          });
+        }
       }
     }
 

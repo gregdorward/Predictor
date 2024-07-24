@@ -74,6 +74,7 @@ export async function getTeamStats(
     }
 
     if (match.data.h2h.previous_matches_results.totalMatches > 0) {
+      console.log(match.data.h2h.previous_matches_results)
       matchArr.sort((a, b) => b.date_unix - a.date_unix);
       let lastMatch = matchArr[0].id;
       let secondMatchExists = true;
