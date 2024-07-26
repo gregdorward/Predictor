@@ -1,4 +1,5 @@
 import React from "react";
+import PreviousGames from "../components/PreviousGames"
 
 function HeadToHead(props) {
   return (
@@ -43,14 +44,15 @@ function HeadToHead(props) {
         {`Best oods for away win @: ${props.bestAwayOdds}`}
       </li>
       </div>
-      <li
+      {/* <li
         key="lastGameDetail"
         className="LastGameDetail"
         data-cy={props.name + "Last"}
       >
         {`Last meeting - ${props.lastGameStadiumName} ${props.lastGameDate}`}
-      </li>
-      <div className="LastGameOverview">
+      </li> */}
+      <PreviousGames reducedArr={props.reducedArr} teamObject={props.teamObject}></PreviousGames>
+      {/* <div className="LastGameOverview">
         <div
           key="lastGame"
           className="LastGameHome"
@@ -61,9 +63,9 @@ function HeadToHead(props) {
         <span className="LastGameScore">{`${props.lastGameHomeGoals}`}</span>
         <span className="LastGameScore">{`${props.lastGameAwayGoals}`}</span>
         <div className="LastGameAway">{`${props.lastGameAwayTeam}`}</div>
-      </div>
+      </div> */}
 
-      <li
+      {/* <li
         key="secondToLastGameDetail"
         className="secondToLastGameDetail"
         data-cy={props.name + "secondToLast"}
@@ -83,7 +85,7 @@ function HeadToHead(props) {
         <div className="LastGameAway">
           {`${props.secondToLastGameAwayTeam}`}
         </div>
-      </div>
+      </div> */}
     </ul>
   );
 }

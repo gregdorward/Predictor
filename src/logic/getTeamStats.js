@@ -22,9 +22,10 @@ export async function getTeamStats(
     `${process.env.REACT_APP_EXPRESS_SERVER}match/${identifier}`
   );
   await match.json().then(async (match) => {
-    let matchArr = match.data.h2h.previous_matches_ids;
+    const matchArr = match.data.h2h.previous_matches_ids;
+    const reducedMatchArr = matchArr.slice(0, 10)
+    console.log(matchArr)
     let previousMatchDetails;
-    let secondToPreviousMatchDetails;
 
     let oddsComparisonHomeArray = [];
     let oddsComparisonAwayArray = [];
@@ -58,10 +59,6 @@ export async function getTeamStats(
       away,
       fixtureHistory
     ) {
-      console.log(homeToal)
-      console.log(home)
-      console.log(awayTotal)
-      console.log(away)
       console.log(fixtureHistory)
 
       let total = homeToal + home + awayTotal + away + fixtureHistory;
@@ -73,47 +70,51 @@ export async function getTeamStats(
       return (1 / impliedProbabilityDivided).toFixed(2);
     }
 
+    console.log(match.data.h2h.previous_matches_results)
+
+
     if (match.data.h2h.previous_matches_results.totalMatches > 0) {
-      console.log(match.data.h2h.previous_matches_results)
-      matchArr.sort((a, b) => b.date_unix - a.date_unix);
-      let lastMatch = matchArr[0].id;
-      let secondMatchExists = true;
-      let secondToLastMatch =
-        matchArr[1] !== undefined ? matchArr[1].id : false;
+      console.log(match.data)
 
-      let previousMatch = await fetch(
-        `${process.env.REACT_APP_EXPRESS_SERVER}match/${lastMatch}`
-      );
-      let dateObject;
+      let homeTeam = match.data.home_name;
+      let awayTeam = match.data.away_name;
+
+      let teamMappings = {
+        [homeTeam]: match.data.homeID,
+        [awayTeam]: match.data.awayID
+      };
+
+      reducedMatchArr.sort((a, b) => b.date_unix - a.date_unix);
+
       let date;
-      let date2;
-      await previousMatch.json().then(async (game) => {
-        previousMatchDetails = game.data;
-        const unixTimestamp = previousMatchDetails.date_unix;
-        const milliseconds = unixTimestamp * 1000;
-        dateObject = new Date(milliseconds);
-        date = `${dateObject.getDate()}/${
-          dateObject.getMonth() + 1
-        }/${dateObject.getFullYear()}`;
+      // await previousMatch.json().then(async (game) => {
+      //   previousMatchDetails = game.data;
+      //   const unixTimestamp = previousMatchDetails.date_unix;
+      //   const milliseconds = unixTimestamp * 1000;
+      //   dateObject = new Date(milliseconds);
+      //   date = `${dateObject.getDate()}/${
+      //     dateObject.getMonth() + 1
+      //   }/${dateObject.getFullYear()}`;
 
-        let secondToPreviousMatch;
-        let dateObject2;
+      //   let secondToPreviousMatch;
+      //   let dateObject2;
 
-        if (secondMatchExists !== false) {
-          secondToPreviousMatch = await fetch(
-            `${process.env.REACT_APP_EXPRESS_SERVER}match/${secondToLastMatch}`
-          );
-          await secondToPreviousMatch.json().then((game) => {
-            secondToPreviousMatchDetails = game.data;
-            const unixTimestamp = secondToPreviousMatchDetails.date_unix;
-            const milliseconds = unixTimestamp * 1000;
-            dateObject2 = new Date(milliseconds);
-            date2 = `${dateObject2.getDate()}/${
-              dateObject2.getMonth() + 1
-            }/${dateObject2.getFullYear()}`;
-          });
-        }
-      });
+      //   // if (secondMatchExists !== false) {
+      //   //   secondToPreviousMatch = await fetch(
+      //   //     `${process.env.REACT_APP_EXPRESS_SERVER}match/${secondToLastMatch}`
+      //   //   );
+      //   //   await secondToPreviousMatch.json().then((game) => {
+      //   //     secondToPreviousMatchDetails = game.data;
+      //   //     const unixTimestamp = secondToPreviousMatchDetails.date_unix;
+      //   //     const milliseconds = unixTimestamp * 1000;
+      //   //     dateObject2 = new Date(milliseconds);
+      //   //     date2 = `${dateObject2.getDate()}/${
+      //   //       dateObject2.getMonth() + 1
+      //   //     }/${dateObject2.getFullYear()}`;
+      //   //   });
+      //   // }
+      // });
+
 
       const BTTSForecast = await getBTTSPercentage(
         homeBTTS,
@@ -133,6 +134,8 @@ export async function getTeamStats(
             className={"PreviousMatchStats"}
             homeTeam={home}
             awayTeam={away}
+            reducedArr={reducedMatchArr}
+            teamObject={teamMappings}
             stadium={match.data.stadium_name}
             matches={match.data.h2h.previous_matches_results.totalMatches}
             homeWins={match.data.h2h.previous_matches_results.team_a_wins}
@@ -141,58 +144,58 @@ export async function getTeamStats(
             averageGoals={match.data.h2h.betting_stats.avg_goals}
             bestHomeOdds={`${bestHomeOddsProvider} - ${bestHomeOdds}`}
             bestAwayOdds={`${bestAwayOddsProvider} - ${bestAwayOdds}`}
-            lastGameStadiumName={
-              previousMatchDetails.stadium_name
-                ? previousMatchDetails.stadium_name
-                : "-"
-            }
-            lastGameHomeGoals={
-              previousMatchDetails.homeGoalCount !== undefined
-                ? previousMatchDetails.homeGoalCount
-                : "-"
-            }
-            lastGameAwayGoals={
-              previousMatchDetails.awayGoalCount !== undefined
-                ? previousMatchDetails.awayGoalCount
-                : "-"
-            }
-            lastGameHomeTeam={
-              previousMatchDetails.home_name
-                ? previousMatchDetails.home_name
-                : "-"
-            }
-            lastGameAwayTeam={
-              previousMatchDetails.away_name
-                ? previousMatchDetails.away_name
-                : "-"
-            }
-            lastGameDate={!isNaN(date) ? date : "-"}
-            secondToLastGameStadiumName={
-              secondToPreviousMatchDetails.stadium_name
-                ? secondToPreviousMatchDetails.stadium_name
-                : "-"
-            }
-            secondToLastGameHomeGoals={
-              secondToPreviousMatchDetails.homeGoalCount !== undefined
-                ? secondToPreviousMatchDetails.homeGoalCount
-                : "-"
-            }
-            secondToLastGameAwayGoals={
-              secondToPreviousMatchDetails.awayGoalCount !== undefined
-                ? secondToPreviousMatchDetails.awayGoalCount
-                : "-"
-            }
-            secondToLastGameHomeTeam={
-              secondToPreviousMatchDetails.home_name
-                ? secondToPreviousMatchDetails.home_name
-                : "-"
-            }
-            secondToLastGameAwayTeam={
-              secondToPreviousMatchDetails.away_name
-                ? secondToPreviousMatchDetails.away_name
-                : "-"
-            }
-            secondToLastGameDate={!isNaN(date2) ? date2 : "-"}
+            // lastGameStadiumName={
+            //   previousMatchDetails.stadium_name
+            //     ? previousMatchDetails.stadium_name
+            //     : "-"
+            // }
+            // lastGameHomeGoals={
+            //   previousMatchDetails.homeGoalCount !== undefined
+            //     ? previousMatchDetails.homeGoalCount
+            //     : "-"
+            // }
+            // lastGameAwayGoals={
+            //   previousMatchDetails.awayGoalCount !== undefined
+            //     ? previousMatchDetails.awayGoalCount
+            //     : "-"
+            // }
+            // lastGameHomeTeam={
+            //   previousMatchDetails.home_name
+            //     ? previousMatchDetails.home_name
+            //     : "-"
+            // }
+            // lastGameAwayTeam={
+            //   previousMatchDetails.away_name
+            //     ? previousMatchDetails.away_name
+            //     : "-"
+            // }
+            // lastGameDate={!isNaN(date) ? date : "-"}
+            // secondToLastGameStadiumName={
+            //   secondToPreviousMatchDetails.stadium_name
+            //     ? secondToPreviousMatchDetails.stadium_name
+            //     : "-"
+            // }
+            // secondToLastGameHomeGoals={
+            //   secondToPreviousMatchDetails.homeGoalCount !== undefined
+            //     ? secondToPreviousMatchDetails.homeGoalCount
+            //     : "-"
+            // }
+            // secondToLastGameAwayGoals={
+            //   secondToPreviousMatchDetails.awayGoalCount !== undefined
+            //     ? secondToPreviousMatchDetails.awayGoalCount
+            //     : "-"
+            // }
+            // secondToLastGameHomeTeam={
+            //   secondToPreviousMatchDetails.home_name
+            //     ? secondToPreviousMatchDetails.home_name
+            //     : "-"
+            // }
+            // secondToLastGameAwayTeam={
+            //   secondToPreviousMatchDetails.away_name
+            //     ? secondToPreviousMatchDetails.away_name
+            //     : "-"
+            // }
+            // secondToLastGameDate={!isNaN(date2) ? date2 : "-"}
           ></HeadToHead>
           <CustomizedTables
             o05Stat={match.data.h2h.betting_stats.over05Percentage}

@@ -472,6 +472,11 @@ export async function generateFixtures(
       `${process.env.REACT_APP_EXPRESS_SERVER}results`
     );
 
+    if(league.status === 200){
+      leaguesStored = true;
+      console.log("leagues fetched from s3")
+    }
+
     if (league.status === 200 && allLeagueResults.status === 201) {
       console.log("Not fetching leagues");
       await league.json().then((leagues) => {
