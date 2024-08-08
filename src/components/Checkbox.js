@@ -6,7 +6,6 @@ export const Checkbox = (props) => {
   const handleCheckboxChange = () => {
     setChecked(!isChecked);
     props.game.tipped = 1;
-    console.log(props.game)
   };
 
   return (

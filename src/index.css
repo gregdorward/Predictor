@@ -1435,9 +1435,16 @@ p {
   font-weight: bolder;
 }
 
-/* .BTTSArrayHomeOrAway{
-  align-items: center;
-} */
+.Aligned {
+  margin-top: 1em;
+  padding-top: 0.5em;
+  padding-bottom: 2em;
+}
+
+li .Aligned {
+  padding-top: 0.75em;
+  padding-bottom: 0.75em;
+}
 
 .BTTSResults{
   padding-top: 0.5em;
@@ -1798,6 +1805,10 @@ a.PreviousMatchLink{
   justify-content: center;
   align-items: flex-end;
   color: #030052;
+}
+
+.RecentResults{
+  align-items: flex-end;
 }
 
 .flex-container-similar{

@@ -488,7 +488,6 @@ export async function generateFixtures(
         allLeagueResultsArrayOfObjects = Array.from(allGames);
       });
 
-      console.log(allLeagueResultsArrayOfObjects)
       leaguesStored = true;
       generateTables(
         leagueArray,
@@ -512,7 +511,6 @@ export async function generateFixtures(
       })
 
       const sofaScoreLeagues = await fetch('')
-      console.log(arrayOfGames)
     } else {
       allLeagueResultsArrayOfObjects = [];
       console.log("Fetching leagues");
@@ -1141,7 +1139,7 @@ export async function generateFixtures(
                 ),
                 LeagueOrAll: leagueOrAll,
                 LeaguePosition: `${teamPositionHome}${homePrefix}`,
-                homeRawPosition: homeTeaminLeague.rawPosition
+                homeRawPosition: homeTeaminLeague.rawPosition !== undefined
                   ? homeTeaminLeague.rawPosition
                   : 0,
                 homeTeamHomePositionRaw: teamPositionHomeTable,
@@ -1210,7 +1208,7 @@ export async function generateFixtures(
                 ),
                 LeagueOrAll: leagueOrAll,
                 LeaguePosition: `${teamPositionHome}${homePrefix}`,
-                homeRawPosition: homeTeaminLeague.rawPosition
+                homeRawPosition: homeTeaminLeague.rawPosition !== undefined
                   ? homeTeaminLeague.rawPosition
                   : 0,
                 homeTeamHomePositionRaw: teamPositionHomeTable,
@@ -1289,7 +1287,7 @@ export async function generateFixtures(
                 LastTenForm: lastTenFormHome.reverse(),
                 LeagueOrAll: leagueOrAll,
                 LeaguePosition: `${teamPositionHome}${homePrefix}`,
-                homeRawPosition: homeTeaminLeague.rawPosition
+                homeRawPosition: homeTeaminLeague.rawPosition !== undefined
                   ? homeTeaminLeague.rawPosition
                   : 0,
                 homeTeamHomePositionRaw: teamPositionHomeTable,

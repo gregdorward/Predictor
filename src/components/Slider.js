@@ -20,8 +20,6 @@ export const Slide = (props) => {
         const fractionalTwo = oddslib
           .from("decimal", roundedValueTwo)
           .to("fractional", { precision: 1 });
-          console.log(fractionalOne);
-          console.log(fractionalTwo);
         setFractionalValue([fractionalOne, fractionalTwo]);
       } catch (error) {
         console.log(error);
@@ -31,7 +29,6 @@ export const Slide = (props) => {
 
   const handleChange = (event, newValue) => {
     setRange(newValue);
-    console.log(newValue);
     rangeValue = newValue;
   };
 

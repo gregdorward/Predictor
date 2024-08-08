@@ -457,7 +457,6 @@ let rollingGoalDiffTotalHome = [];
 let rollingGoalDiffTotalAway = [];
 
 export async function createStatsDiv(game, displayBool) {
-  console.log(displayBool);
   if (game.status !== "void") {
     // takes the displayBool boolean from the fixture onClick and sets the styling of the stats div from there
     function styling(testBool) {
@@ -509,13 +508,11 @@ export async function createStatsDiv(game, displayBool) {
         //   `${process.env.REACT_APP_EXPRESS_SERVER}leagueFixtures/${gameStats.leagueId}`
         // );
 
-        console.log(gameStats);
         const pos = allLeagueResultsArrayOfObjects
           .map((i) => i.id)
           .indexOf(gameStats.leagueId);
         let matches = allLeagueResultsArrayOfObjects[pos];
         // await fixtures.json().then((matches) => {
-        console.log(matches);
         const resultHome = matches.fixtures.filter(
           (game) =>
             game.home_name === gameStats.home.teamName ||
@@ -653,8 +650,6 @@ export async function createStatsDiv(game, displayBool) {
               break;
           }
         }
-
-        console.log(homeForm);
 
         goalDiffArrayHome = homeForm.allTeamResults.map(
           (a) => a.scored - a.conceeded
@@ -1249,7 +1244,6 @@ export async function createStatsDiv(game, displayBool) {
       });
 
       const formDataHome = [];
-      console.log(gameStats.home[2].LastFiveForm);
 
       formDataHome.push({
         name: game.homeTeam,
@@ -1508,8 +1502,6 @@ export async function createStatsDiv(game, displayBool) {
         similarGamesAway = <h4>No previous games fit this profile</h4>;
       }
 
-      console.log(formDataHome[0].Results);
-
       function StatsHome() {
         return (
           <div className="flex-childOne">
@@ -1536,13 +1528,13 @@ export async function createStatsDiv(game, displayBool) {
                     : homeForm.AverageDangerousAttacks
                 }
                 leaguePosition={
-                  formDataHome[0].leaguePosition
+                  formDataHome[0].leaguePosition !== undefined && formDataHome[0].leaguePosition !== "undefined" 
                     ? formDataHome[0].leaguePosition
                     : 0
                 }
-                rawPosition={game.homeRawPosition ? game.homeRawPosition : 0}
+                rawPosition={game.homeRawPosition !== undefined && game.homeRawPosition !== "undefined" ? game.homeRawPosition : 0}
                 homeOrAwayLeaguePosition={
-                  game.homeTeamHomePosition ? game.homeTeamHomePosition : 0
+                  game.homeTeamHomePosition !== undefined && game.homeTeamHomePosition !== "undefined" ? game.homeTeamHomePosition : 0
                 }
                 winPercentage={
                   game.homeTeamWinPercentage ? game.homeTeamWinPercentage : 0
@@ -1608,6 +1600,7 @@ export async function createStatsDiv(game, displayBool) {
                 homeOrAwayResults={gameArrayAwayTeamAwayGames}
                 LeagueOrAll={formDataAway[0].LeagueOrAll}
                 className={"KeyStatsAway"}
+                classNameTwo={"FormStatsAway"}
                 name={formDataAway[0].name}
                 goals={awayForm.avgScored}
                 conceeded={awayForm.avgConceeded}
@@ -1623,12 +1616,12 @@ export async function createStatsDiv(game, displayBool) {
                     : awayForm.AverageDangerousAttacks
                 }
                 leaguePosition={
-                  formDataAway[0].leaguePosition
+                  formDataAway[0].leaguePosition !== undefined && formDataAway[0].leaguePosition !== "undefined"
                     ? formDataAway[0].leaguePosition
                     : 0
                 }
                 homeOrAwayLeaguePosition={
-                  game.awayTeamAwayPosition ? game.awayTeamAwayPosition : 0
+                  game.awayTeamAwayPosition !== undefined && game.awayTeamAwayPosition !== "undefinedundefined" ? game.awayTeamAwayPosition : 0
                 }
                 winPercentage={
                   game.awayTeamWinPercentage ? game.awayTeamWinPercentage : 0

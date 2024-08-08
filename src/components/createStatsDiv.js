@@ -1,7 +1,7 @@
 import React, { Fragment } from "react";
 
 function Stats(props) {
-  let shouldOpen = props.clicked
+  let shouldOpen = props.clicked;
   function styleForm(formIndicator) {
     let className;
     if (formIndicator === "W") {
@@ -25,15 +25,12 @@ function Stats(props) {
   }
 
   if (props.formRun) {
-    console.log(props.formRun)
     return (
       <Fragment>
         <ul className={props.className} style={props.style}>
-          <li className="FormHeader">
-            League results (most recent on right)
-          </li>
+          <li className="FormHeader">League results (most recent on right)</li>
           <li key={`last5League`} className="last5League">
-          <span className={styleForm(props.Results[0])}>
+            <span className={styleForm(props.Results[0])}>
               {props.Results[0]}
             </span>
             <span className={styleForm(props.Results[1])}>
@@ -55,8 +52,11 @@ function Stats(props) {
           <li className="FormHeader">
             {props.homeOrAway} form (most recent on right)
           </li>
-          <li key={`last5${props.homeOrAwayResults}`} className="FormHomeOrAway">
-          <span className={styleForm(props.ResultsHorA[0])}>
+          <li
+            key={`last5${props.homeOrAwayResults}`}
+            className="FormHomeOrAway"
+          >
+            <span className={styleForm(props.ResultsHorA[0])}>
               {props.ResultsHorA[0]}
             </span>
             <span className={styleForm(props.ResultsHorA[1])}>
@@ -81,12 +81,24 @@ function Stats(props) {
             data-cy={props.name + "BTTSArrayHomeOrAway"}
           >
             <div className="BTTSResults">BTTS</div>
-            <span className={styleBTTS(props.BTTSArray[5])}>{props.BTTSArray[5]}</span>
-            <span className={styleBTTS(props.BTTSArray[4])}>{props.BTTSArray[4]}</span>
-            <span className={styleBTTS(props.BTTSArray[3])}>{props.BTTSArray[3]}</span>
-            <span className={styleBTTS(props.BTTSArray[2])}>{props.BTTSArray[2]}</span>
-            <span className={styleBTTS(props.BTTSArray[1])}>{props.BTTSArray[1]}</span>
-            <span className={styleBTTS(props.BTTSArray[0])}>{props.BTTSArray[0]}</span>
+            <span className={styleBTTS(props.BTTSArray[5])}>
+              {props.BTTSArray[5]}
+            </span>
+            <span className={styleBTTS(props.BTTSArray[4])}>
+              {props.BTTSArray[4]}
+            </span>
+            <span className={styleBTTS(props.BTTSArray[3])}>
+              {props.BTTSArray[3]}
+            </span>
+            <span className={styleBTTS(props.BTTSArray[2])}>
+              {props.BTTSArray[2]}
+            </span>
+            <span className={styleBTTS(props.BTTSArray[1])}>
+              {props.BTTSArray[1]}
+            </span>
+            <span className={styleBTTS(props.BTTSArray[0])}>
+              {props.BTTSArray[0]}
+            </span>
           </li>
           <li className="FormSummaryHome">{props.FormTextString}</li>
           <li className="FavouriteSummaryHome">{props.FavouriteRecord}</li>
@@ -155,15 +167,20 @@ function Stats(props) {
             className="LeaguePosition"
             data-cy={props.name + "leaguePosition"}
           >
-            {`League position - ${props.leaguePosition}`}
+            {`League position - ${
+              props.leaguePosition !== undefined ? props.leaguePosition : "N/A"
+            }`}
           </li>
-
           <li
             key="LeaguePositionHomeOrAway"
             className="LeaguePositionHomeOrAway"
-            data-cy={props.name + "LeaguePositionHomeOrAway"}
+            data-cy={`${props.name}LeaguePositionHomeOrAway`}
           >
-            {`Position (${props.homeOrAway} only) - ${props.homeOrAwayLeaguePosition}`}
+            {`Position (${props.homeOrAway} only) - ${
+              props.homeOrAwayLeaguePosition !== undefined
+                ? props.homeOrAwayLeaguePosition
+                : "N/A"
+            }`}
           </li>
           <li
             key="WinPercentage"

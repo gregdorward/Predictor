@@ -308,9 +308,6 @@ async function getPastLeagueResults(team, game, hOrA, form) {
     let reversedResultsHome = homeResults;
     let reversedResultsAway = awayResults;
 
-    console.log(game.homeTeam);
-    console.log(team);
-
     if (game.homeTeam === team) {
       let y = game.homeOdds;
       //Clear fav
@@ -449,10 +446,6 @@ async function getPastLeagueResults(team, game, hOrA, form) {
     const allTeamResultsAway = reversedResultsAway.sort(
       (a, b) => b.dateRaw - a.dateRaw
     );
-
-    console.log(game.game);
-    console.log(allTeamResults);
-    console.log(allTeamResultsHome);
 
     form.allTeamResults = allTeamResults.sort((b, a) => a.dateRaw - b.dateRaw);
 
@@ -2887,9 +2880,6 @@ export async function calculateScore(match, index, divider, calculate) {
       match
     );
 
-    console.log(formHome.teamGoalsCalc);
-    console.log(formAway.teamGoalsCalc);
-
     // teamComparisonScore = teamComparisonScore * 0.3;
     // LEAVE
 
@@ -3062,9 +3052,6 @@ export async function calculateScore(match, index, divider, calculate) {
       awayComparisonWeighting = 1;
     }
 
-    console.log(match.game);
-    console.log(match.simlarGameResultsHome);
-    console.log(match.simlarGameResultsAway);
 
     // let experimentalHomeGoals = factorOneHome + formHome.teamGoalsCalc;
     let experimentalHomeGoals = factorTwoHome + formHome.teamGoalsCalc;
@@ -3162,7 +3149,6 @@ export async function calculateScore(match, index, divider, calculate) {
     //   finalHomeGoals = 0;
     // }
 
-    console.log(match.omit);
 
     if (match.status !== "suspended") {
       if (finalHomeGoals > finalAwayGoals) {
@@ -3196,12 +3182,6 @@ export async function calculateScore(match, index, divider, calculate) {
         drawPredictions = drawPredictions + 1;
       }
     }
-
-    console.log(match.game);
-    console.log(finalHomeGoals);
-    console.log(finalAwayGoals);
-    console.log(match.prediction);
-    console.log(match.outcome);
 
     console.log(`drawPredictions: ${drawPredictions}`);
 
@@ -3501,7 +3481,7 @@ export async function calculateScore(match, index, divider, calculate) {
     }
 
     if (
-      match.game_week < 3
+      match.game_week < 4
       // match.omit === true
       // match.game_week < 3 &&
     ) {

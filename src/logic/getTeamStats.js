@@ -24,8 +24,6 @@ export async function getTeamStats(
   await match.json().then(async (match) => {
     const matchArr = match.data.h2h.previous_matches_ids;
     const reducedMatchArr = matchArr.slice(0, 10)
-    console.log(matchArr)
-    let previousMatchDetails;
 
     let oddsComparisonHomeArray = [];
     let oddsComparisonAwayArray = [];
@@ -59,7 +57,6 @@ export async function getTeamStats(
       away,
       fixtureHistory
     ) {
-      console.log(fixtureHistory)
 
       let total = homeToal + home + awayTotal + away + fixtureHistory;
       return total / 5;
@@ -70,11 +67,9 @@ export async function getTeamStats(
       return (1 / impliedProbabilityDivided).toFixed(2);
     }
 
-    console.log(match.data.h2h.previous_matches_results)
 
 
     if (match.data.h2h.previous_matches_results.totalMatches > 0) {
-      console.log(match.data)
 
       let homeTeam = match.data.home_name;
       let awayTeam = match.data.away_name;
@@ -125,7 +120,6 @@ export async function getTeamStats(
       );
       const fairOddsBTTSYes = await getFairOdds(BTTSForecast);
       const fairOddsBTTSNo = await getFairOdds(100 - BTTSForecast);
-      console.log(match.data)
 
       ReactDOM.render(
         <Fragment>
