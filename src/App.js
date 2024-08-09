@@ -46,7 +46,7 @@ const leagueOrder = [
   12529, //Bundesliga 22/23
   12530, //Serie A 22/23
   12337, //French Prem 22/23
-  9984, //Portagul Prem 22/23
+  12931, //Portagul Prem 22/23
   12322, //Dutch Prem 22/23
   12137, //Belgian Pro League 22/23
   10969, //sweden 24
@@ -55,7 +55,7 @@ const leagueOrder = [
   12472, //Austrian Prem 22/23
   12734, //Greek Prem 22/23
   12120, //Polish prem 22/23
-  9580, //Swiss prem 22/23
+  12326, //Swiss prem 22/23
   10946, //Irish Prem 23
   12467, //Spanish secunda 22/23
   12621, //Italy serie B 22/23
@@ -65,13 +65,13 @@ const leagueOrder = [
   12456, //Scottish Championship 22/23
   12474, //Scottish league 1 22/23
   12453, //Scottish league 2 22/23
-  9890, //Women's prem 23/24
+  12827, //Women's prem 23/24
   10977, //MLS 23
   11321, //Brazil prem 24
   11212, //Argentina prem 23
   12136, //Mexico prem 23/24
-  9972, //National league North and South 22/23
-  10505, //Australian A league 23/24
+  12933, //National league North and South 22/23
+  13102, //Australian A league 23/24
   11102, //S Korea 23
 ];
 
@@ -390,6 +390,10 @@ export async function getLeagueList() {
           )
         }
       />
+      <span>
+        *Games only predicted after gameweek 3 -
+        predictions displayed as 'x - x'
+      </span>
     </div>,
     document.getElementById("Buttons")
   );
