@@ -783,6 +783,8 @@ async function getPastLeagueResults(team, game, hOrA, form) {
     form.XGOverall = parseFloat(avgXGScored.toFixed(2));
     form.XGlast5 = parseFloat(last5XGAvgFor.toFixed(2));
 
+    form.avgShotValue = (form.XGOverall / form.avgShots) * 100;
+
     form.XGAgainstAvgOverall = parseFloat(avgXGConceeded.toFixed(2));
     form.XGAgainstlast5 = parseFloat(last5XGAvgAgainst.toFixed(2));
 
@@ -1538,7 +1540,7 @@ export async function generateGoals(homeForm, awayForm, match) {
     homeForm.attackingStrengthHomeOnly +
     homeForm.defensiveStrengthScoreGenerationHomeOnly;
 
-    awayForm.XGRating =
+  awayForm.XGRating =
     awayForm.attackingStrength +
     awayForm.defensiveStrengthScoreGeneration +
     awayForm.attackingStrengthLast5 +
@@ -2360,6 +2362,7 @@ export async function calculateScore(match, index, divider, calculate) {
     const attackingMetricsHome = {
       "Average Dangerous Attacks": formHome.AverageDangerousAttacksOverall,
       "Average Shots": formHome.AverageShots,
+      "Average Shot Value": formHome.avgShotValue,
       "Average Shots On Target": formHome.AverageShotsOnTargetOverall
         ? formHome.AverageShotsOnTargetOverall
         : formHome.AverageShotsOnTarget,
@@ -2382,6 +2385,7 @@ export async function calculateScore(match, index, divider, calculate) {
       "Average Shots": formHome.avShotsLast5
         ? formHome.avShotsLast5
         : formHome.AverageShots,
+      "Average Shot Value": formHome.avgShotValue,
       "Average Shots On Target": formHome.avSOTLast5
         ? formHome.avSOTLast5
         : formHome.AverageShotsOnTarget,
@@ -2404,6 +2408,7 @@ export async function calculateScore(match, index, divider, calculate) {
       "Average Shots": formHome.avgShotsHome
         ? formHome.avgShotsHome
         : formHome.AverageShots,
+      "Average Shot Value": formHome.avgShotValue,
       "Average Shots On Target": formHome.avgShotsOnTargetHome
         ? formHome.avgShotsOnTargetHome
         : formHome.AverageShotsOnTarget,
@@ -2428,6 +2433,7 @@ export async function calculateScore(match, index, divider, calculate) {
       "Average Shots": formAway.avgShotsAway
         ? formAway.avgShotsAway
         : formAway.AverageShots,
+      "Average Shot Value": formAway.avgShotValue,
       "Average Shots On Target": formAway.avgShotsOnTargetAway
         ? formAway.avgShotsOnTargetAway
         : formAway.AverageShotsOnTarget,
@@ -2448,6 +2454,7 @@ export async function calculateScore(match, index, divider, calculate) {
     const attackingMetricsAway = {
       "Average Dangerous Attacks": formAway.AverageDangerousAttacksOverall,
       "Average Shots": formAway.AverageShots,
+      "Average Shot Value": formAway.avgShotValue,
       "Average Shots On Target": formAway.AverageShotsOnTargetOverall
         ? formAway.AverageShotsOnTargetOverall
         : formAway.AverageShotsOnTarget,
@@ -2470,6 +2477,7 @@ export async function calculateScore(match, index, divider, calculate) {
       "Average Shots": formAway.avShotsLast5
         ? formAway.avShotsLast5
         : formAway.AverageShots,
+      "Average Shot Value": formAway.avgShotValue,
       "Average Shots On Target": formAway.avSOTLast5
         ? formAway.avSOTLast5
         : formAway.AverageShotsOnTarget,
@@ -3052,6 +3060,13 @@ export async function calculateScore(match, index, divider, calculate) {
       awayComparisonWeighting = 1;
     }
 
+    if(formHome.avgShotValue < 12){
+
+      console.log(match.game);
+      console.log(formHome.avgShotValue);
+      console.log(formAway.avgShotValue);
+    }
+
 
     // let experimentalHomeGoals = factorOneHome + formHome.teamGoalsCalc;
     let experimentalHomeGoals = factorTwoHome + formHome.teamGoalsCalc;
@@ -3148,7 +3163,6 @@ export async function calculateScore(match, index, divider, calculate) {
     //   rawFinalAwayGoals = rawFinalAwayGoals + difference;
     //   finalHomeGoals = 0;
     // }
-
 
     if (match.status !== "suspended") {
       if (finalHomeGoals > finalAwayGoals) {
