@@ -390,10 +390,6 @@ export async function getLeagueList() {
           )
         }
       />
-      <span>
-        *Games only predicted after gameweek 3 -
-        predictions displayed as 'x - x'
-      </span>
     </div>,
     document.getElementById("Buttons")
   );

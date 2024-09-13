@@ -590,7 +590,7 @@ async function getPastLeagueResults(team, game, hOrA, form) {
     switch (true) {
       case form.predictabilityScore < 0.3:
         reliabilityString =
-          "Odds have been an extremely unreliable indicator of actual performance so far this season. Maybe best avoided?";
+          "Odds have been an extremely unreliable indicator of actual performance so far this season";
         break;
       case form.predictabilityScore >= 0.3 && form.predictabilityScore < 0.8:
         reliabilityString =
@@ -610,7 +610,7 @@ async function getPastLeagueResults(team, game, hOrA, form) {
         break;
       case form.predictabilityScore >= 2.2:
         reliabilityString =
-          "Odds have been an excellent indicator of actual performance so far this season. One for the multi?";
+          "Odds have been an excellent indicator of actual performance so far this season";
         break;
       default:
         break;
@@ -1516,18 +1516,18 @@ export async function generateGoals(homeForm, awayForm, match) {
 
   homeGoals =
     1 +
-    homeAttackVsAwayDefenceComparison * 1.5 +
+    homeAttackVsAwayDefenceComparison * 2 +
     // (homeGoals + homeOverallVsAwayOverallComparison) * 0.25 +
     homeAttackVsAwayDefenceComparisonLast5 * 1.25 +
-    homeAttackVsAwayDefenceComparisonHomeOnly * 1.25 +
+    homeAttackVsAwayDefenceComparisonHomeOnly * 0.5 +
     oddsComparisonHome * 0.025;
 
   awayGoals =
     1 +
-    awayAttackVsHomeDefenceComparison * 1.5 +
+    awayAttackVsHomeDefenceComparison * 2 +
     // (awayGoals + awayOverallVsHomeOverallComparison) * 0.25 +
     awayAttackVsHomeDefenceComparisonLast5 * 1.25 +
-    awayAttackVsHomeDefenceComparisonAwayOnly * 1.25 +
+    awayAttackVsHomeDefenceComparisonAwayOnly * 0.5 +
     oddsComparisonAway * 0.025;
 
   homeForm.XGRating =
@@ -3026,12 +3026,12 @@ export async function calculateScore(match, index, divider, calculate) {
         (scorePredictions[0].team1Score +
           scorePredictionsRecent[0].team1Score +
           scorePredictionsHA[0].team1Score * 0.5) /
-        2.5;
+        3;
       factorTwoAway =
         (scorePredictions[0].team2Score +
           scorePredictionsRecent[0].team2Score +
           scorePredictionsHA[0].team2Score * 0.5) /
-        2.5;
+        3;
     } else {
       factorTwoHome = factorOneHome;
       factorTwoAway = factorOneAway;
