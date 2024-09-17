@@ -1520,7 +1520,7 @@ export async function generateGoals(homeForm, awayForm, match) {
     1 +
     homeAttackVsAwayDefenceComparison * 2 +
     // (homeGoals + homeOverallVsAwayOverallComparison) * 0.25 +
-    homeAttackVsAwayDefenceComparisonLast5 * 1.25 +
+    homeAttackVsAwayDefenceComparisonLast5 * 1 +
     homeAttackVsAwayDefenceComparisonHomeOnly * 0.5 +
     oddsComparisonHome * 0.025;
 
@@ -1528,7 +1528,7 @@ export async function generateGoals(homeForm, awayForm, match) {
     1 +
     awayAttackVsHomeDefenceComparison * 2 +
     // (awayGoals + awayOverallVsHomeOverallComparison) * 0.25 +
-    awayAttackVsHomeDefenceComparisonLast5 * 1.25 +
+    awayAttackVsHomeDefenceComparisonLast5 * 1 +
     awayAttackVsHomeDefenceComparisonAwayOnly * 0.5 +
     oddsComparisonAway * 0.025;
 
@@ -1566,14 +1566,14 @@ export async function generateGoals(homeForm, awayForm, match) {
     awayForm.last2Points >= 5 ||
     match.XGdifferentialValueRaw < 0
   ) {
-    awayGoals = awayGoals + 0.3;
+    awayGoals = awayGoals + 0.2;
   } else if (
     awayForm.lastGame === "L" ||
     awayForm.last2Points < 2 ||
     homeForm.last2Points >= 5 ||
     match.XGdifferentialValueRaw > 0
   ) {
-    homeGoals = homeGoals + 0.3;
+    homeGoals = homeGoals + 0.2;
   }
 
   // if(homeForm.last5Points > homeForm.last10Points){
@@ -2620,42 +2620,42 @@ export async function calculateScore(match, index, divider, calculate) {
     );
 
     formHome.defensiveStrengthScoreGeneration =
-      await calculateDefensiveStrength(defensiveMetricsHome, 1);
+      await calculateDefensiveStrength(defensiveMetricsHome, 0.75);
 
     formHome.defensiveStrengthLast5 = await calculateDefensiveStrength(
       defensiveMetricsHomeLast5
     );
 
     formHome.defensiveStrengthScoreGenerationLast5 =
-      await calculateDefensiveStrength(defensiveMetricsHomeLast5, 1);
+      await calculateDefensiveStrength(defensiveMetricsHomeLast5, 0.75);
 
     formHome.defensiveStrengthHomeOnly = await calculateDefensiveStrength(
       defensiveMetricsHomeOnly
     );
 
     formHome.defensiveStrengthScoreGenerationHomeOnly =
-      await calculateDefensiveStrength(defensiveMetricsHomeOnly, 1);
+      await calculateDefensiveStrength(defensiveMetricsHomeOnly, 0.75);
 
     formAway.defensiveStrength = await calculateDefensiveStrength(
       defensiveMetricsAway
     );
 
     formAway.defensiveStrengthScoreGeneration =
-      await calculateDefensiveStrength(defensiveMetricsAway, 1);
+      await calculateDefensiveStrength(defensiveMetricsAway, 0.75);
 
     formAway.defensiveStrengthLast5 = await calculateDefensiveStrength(
       defensiveMetricsAwayLast5
     );
 
     formAway.defensiveStrengthScoreGenerationLast5 =
-      await calculateDefensiveStrength(defensiveMetricsAwayLast5, 1);
+      await calculateDefensiveStrength(defensiveMetricsAwayLast5, 0.75);
 
     formAway.defensiveStrengthAwayOnly = await calculateDefensiveStrength(
       defensiveMetricsAwayOnly
     );
 
     formAway.defensiveStrengthScoreGenerationAwayOnly =
-      await calculateDefensiveStrength(defensiveMetricsAwayOnly, 1);
+      await calculateDefensiveStrength(defensiveMetricsAwayOnly, 0.75);
 
     formHome.possessionStrength = await calculateMetricStrength(
       "averagePossession",
@@ -3060,16 +3060,11 @@ export async function calculateScore(match, index, divider, calculate) {
       awayComparisonWeighting = 1;
     }
 
-    if(formHome.avgShotValue < 12){
-
-      console.log(match.game);
-      console.log(formHome.avgShotValue);
-      console.log(formAway.avgShotValue);
-    }
 
 
-    // let experimentalHomeGoals = factorOneHome + formHome.teamGoalsCalc;
-    let experimentalHomeGoals = factorTwoHome + formHome.teamGoalsCalc;
+
+    let experimentalHomeGoals = formHome.teamGoalsCalc;
+    // let experimentalHomeGoals = factorTwoHome + formHome.teamGoalsCalc;
 
     // (factorOneHome * homeComparisonWeighting +
     //   (formHome.teamGoalsCalc * 2) +
@@ -3077,8 +3072,8 @@ export async function calculateScore(match, index, divider, calculate) {
     // 4;
     // (formHome.forAndAgainstRollingAvHomeOrAway.goalsFor + formAway.forAndAgainstRollingAvHomeOrAway.goalsAgainst) / 2
 
-    // let experimentalAwayGoals = factorOneAway + formAway.teamGoalsCalc;
-    let experimentalAwayGoals = factorTwoAway + formAway.teamGoalsCalc;
+    let experimentalAwayGoals = formAway.teamGoalsCalc;
+    // let experimentalAwayGoals = factorTwoAway + formAway.teamGoalsCalc;
 
     // (factorOneAway * awayComparisonWeighting +
     //   (formAway.teamGoalsCalc * 2) +
