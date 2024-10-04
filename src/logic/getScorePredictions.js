@@ -1516,12 +1516,39 @@ export async function generateGoals(homeForm, awayForm, match) {
   const oddsComparisonHome = await comparison(match.awayOdds, match.homeOdds);
   const oddsComparisonAway = await comparison(match.homeOdds, match.awayOdds);
 
+  homeForm.XGRating =
+  homeForm.attackingStrength +
+  homeForm.defensiveStrengthScoreGeneration +
+  homeForm.attackingStrengthLast5 +
+  homeForm.defensiveStrengthScoreGenerationLast5 +
+  homeForm.attackingStrengthHomeOnly +
+  homeForm.defensiveStrengthScoreGenerationHomeOnly;
+
+awayForm.XGRating =
+  awayForm.attackingStrength +
+  awayForm.defensiveStrengthScoreGeneration +
+  awayForm.attackingStrengthLast5 +
+  awayForm.defensiveStrengthScoreGenerationLast5 +
+  awayForm.attackingStrengthAwayOnly +
+  awayForm.defensiveStrengthScoreGenerationAwayOnly;
+
+  const XGRatingHomeComparison = await comparison(
+    homeForm.XGRating,
+    awayForm.XGRating
+  );
+
+
+  const XGRatingAwayComparison = await comparison(
+    homeForm.XGRating,
+    awayForm.XGRating
+  );
+
   homeGoals =
     1 +
     homeAttackVsAwayDefenceComparison * 2 +
     // (homeGoals + homeOverallVsAwayOverallComparison) * 0.25 +
     homeAttackVsAwayDefenceComparisonLast5 * 1 +
-    homeAttackVsAwayDefenceComparisonHomeOnly * 0.5 +
+    homeAttackVsAwayDefenceComparisonHomeOnly * 1 +
     oddsComparisonHome * 0.025;
 
   awayGoals =
@@ -1529,24 +1556,9 @@ export async function generateGoals(homeForm, awayForm, match) {
     awayAttackVsHomeDefenceComparison * 2 +
     // (awayGoals + awayOverallVsHomeOverallComparison) * 0.25 +
     awayAttackVsHomeDefenceComparisonLast5 * 1 +
-    awayAttackVsHomeDefenceComparisonAwayOnly * 0.5 +
+    awayAttackVsHomeDefenceComparisonAwayOnly * 1 +
     oddsComparisonAway * 0.025;
 
-  homeForm.XGRating =
-    homeForm.attackingStrength +
-    homeForm.defensiveStrengthScoreGeneration +
-    homeForm.attackingStrengthLast5 +
-    homeForm.defensiveStrengthScoreGenerationLast5 +
-    homeForm.attackingStrengthHomeOnly +
-    homeForm.defensiveStrengthScoreGenerationHomeOnly;
-
-  awayForm.XGRating =
-    awayForm.attackingStrength +
-    awayForm.defensiveStrengthScoreGeneration +
-    awayForm.attackingStrengthLast5 +
-    awayForm.defensiveStrengthScoreGenerationLast5 +
-    awayForm.attackingStrengthAwayOnly +
-    awayForm.defensiveStrengthScoreGenerationAwayOnly;
 
   // if (homeForm.actualToXGDifference > 25) {
   //   homeGoals = homeGoals + homeForm.actualToXGDifference / 50;
@@ -3063,8 +3075,8 @@ export async function calculateScore(match, index, divider, calculate) {
 
 
 
-    let experimentalHomeGoals = formHome.teamGoalsCalc;
-    // let experimentalHomeGoals = factorTwoHome + formHome.teamGoalsCalc;
+    // let experimentalHomeGoals = formHome.teamGoalsCalc;
+    let experimentalHomeGoals = ((factorTwoHome * 0.5) + formHome.teamGoalsCalc) / 1.5;
 
     // (factorOneHome * homeComparisonWeighting +
     //   (formHome.teamGoalsCalc * 2) +
@@ -3072,8 +3084,8 @@ export async function calculateScore(match, index, divider, calculate) {
     // 4;
     // (formHome.forAndAgainstRollingAvHomeOrAway.goalsFor + formAway.forAndAgainstRollingAvHomeOrAway.goalsAgainst) / 2
 
-    let experimentalAwayGoals = formAway.teamGoalsCalc;
-    // let experimentalAwayGoals = factorTwoAway + formAway.teamGoalsCalc;
+    // let experimentalAwayGoals = formAway.teamGoalsCalc;
+    let experimentalAwayGoals = ((factorTwoAway * 0.5) + formAway.teamGoalsCalc) / 1.5;
 
     // (factorOneAway * awayComparisonWeighting +
     //   (formAway.teamGoalsCalc * 2) +

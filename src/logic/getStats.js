@@ -25,12 +25,12 @@ export async function calculateAttackingStrength(stats) {
     // averagePossession: 0.15,
     "Average Dangerous Attacks": 0.05,
     "Average Shots": 0.05,
-    "Average Shots On Target": 0.15,
+    "Average Shots On Target": 0.1,
     "Average Expected Goals": 0.15,
-    "Recent XG": 0.15,
-    "Average Goals": 0.25,
-    Corners: 0.05,
-    "Average Shot Value": 0.15
+    "Recent XG": 0.1,
+    "Average Goals": 0.4,
+    Corners: 0,
+    "Average Shot Value": 0.15,
   };
 
   // Define the ranges for normalization
@@ -43,7 +43,7 @@ export async function calculateAttackingStrength(stats) {
     "Recent XG": { min: 0.25, max: 2.75 }, // Adjust the max value as needed
     "Average Goals": { min: 0.25, max: 2.75 }, // Adjust the max value as needed
     Corners: { min: 2, max: 9 },
-    "Average Shot Value": { min: 10.5, max: 16}
+    "Average Shot Value": { min: 10, max: 16 },
   };
 
   // Normalize each metric value and calculate the weighted sum
@@ -54,9 +54,14 @@ export async function calculateAttackingStrength(stats) {
       weights.hasOwnProperty(metric) &&
       ranges.hasOwnProperty(metric)
     ) {
-      const normalizedValue =
-        (stats[metric] - ranges[metric].min) /
-        (ranges[metric].max - ranges[metric].min);
+      const normalizedValue = Math.max(
+        0,
+        Math.min(
+          1,
+          (stats[metric] - ranges[metric].min) /
+            (ranges[metric].max - ranges[metric].min)
+        )
+      );
       weightedSum += normalizedValue * weights[metric];
     } else {
       console.log(metric);
@@ -70,10 +75,10 @@ export async function calculateDefensiveStrength(stats, normalizedValue = 1) {
   let normValue = normalizedValue;
   // Define weights for each metric (you can adjust these based on your preference)
   const weights = {
-    "Average XG Against": 0.3,
-    "Recent XG Against": 0.15,
-    "Average Goals Against": 0.3,
-    "Average SOT Against": 0.25,
+    "Average XG Against": 0.2,
+    "Recent XG Against": 0.2,
+    "Average Goals Against": 0.4,
+    "Average SOT Against": 0.2,
   };
 
   // Define the ranges for normalization
@@ -81,7 +86,7 @@ export async function calculateDefensiveStrength(stats, normalizedValue = 1) {
     "Average XG Against": { min: 0.25, max: 2.75 }, // Adjust the max value as needed
     "Recent XG Against": { min: 0.25, max: 2.75 },
     "Average Goals Against": { min: 0.25, max: 2.75 }, // Adjust the max value as needed
-    "Average SOT Against": { min: 2, max: 10 },
+    "Average SOT Against": { min: 2, max: 9 },
   };
 
   // Normalize each metric value and calculate the weighted sum
@@ -92,11 +97,15 @@ export async function calculateDefensiveStrength(stats, normalizedValue = 1) {
       weights.hasOwnProperty(metric) &&
       ranges.hasOwnProperty(metric)
     ) {
-      let val =
-        normValue -
-        (stats[metric] - ranges[metric].min) /
-          (ranges[metric].max - ranges[metric].min);
-      weightedSum += val * weights[metric];
+     // Normalize the value and clamp it between 0 and 1
+     let normalizedValue = (stats[metric] - ranges[metric].min) / (ranges[metric].max - ranges[metric].min);
+     normalizedValue = Math.max(0, Math.min(1, normalizedValue));
+
+     // Reverse logic for defensive strength: better defense, lower metric value
+     let val = normValue - normalizedValue;
+     
+     // Add the weighted value to the weightedSum
+     weightedSum += val * weights[metric];
     }
   }
 
@@ -1530,13 +1539,22 @@ export async function createStatsDiv(game, displayBool) {
                     : homeForm.AverageDangerousAttacks
                 }
                 leaguePosition={
-                  formDataHome[0].leaguePosition !== undefined && formDataHome[0].leaguePosition !== "undefined" 
+                  formDataHome[0].leaguePosition !== undefined &&
+                  formDataHome[0].leaguePosition !== "undefined"
                     ? formDataHome[0].leaguePosition
                     : 0
                 }
-                rawPosition={game.homeRawPosition !== undefined && game.homeRawPosition !== "undefined" ? game.homeRawPosition : 0}
+                rawPosition={
+                  game.homeRawPosition !== undefined &&
+                  game.homeRawPosition !== "undefined"
+                    ? game.homeRawPosition
+                    : 0
+                }
                 homeOrAwayLeaguePosition={
-                  game.homeTeamHomePosition !== undefined && game.homeTeamHomePosition !== "undefined" ? game.homeTeamHomePosition : 0
+                  game.homeTeamHomePosition !== undefined &&
+                  game.homeTeamHomePosition !== "undefined"
+                    ? game.homeTeamHomePosition
+                    : 0
                 }
                 winPercentage={
                   game.homeTeamWinPercentage ? game.homeTeamWinPercentage : 0
@@ -1618,12 +1636,16 @@ export async function createStatsDiv(game, displayBool) {
                     : awayForm.AverageDangerousAttacks
                 }
                 leaguePosition={
-                  formDataAway[0].leaguePosition !== undefined && formDataAway[0].leaguePosition !== "undefined"
+                  formDataAway[0].leaguePosition !== undefined &&
+                  formDataAway[0].leaguePosition !== "undefined"
                     ? formDataAway[0].leaguePosition
                     : 0
                 }
                 homeOrAwayLeaguePosition={
-                  game.awayTeamAwayPosition !== undefined && game.awayTeamAwayPosition !== "undefinedundefined" ? game.awayTeamAwayPosition : 0
+                  game.awayTeamAwayPosition !== undefined &&
+                  game.awayTeamAwayPosition !== "undefinedundefined"
+                    ? game.awayTeamAwayPosition
+                    : 0
                 }
                 winPercentage={
                   game.awayTeamWinPercentage ? game.awayTeamWinPercentage : 0
@@ -1925,9 +1947,9 @@ export async function createStatsDiv(game, displayBool) {
                 ></Chart>
               </div>
               <Div
-                  text={`Last league games (most recent first)`}
-                  className={"LastGameHeader"}
-                ></Div>
+                text={`Last league games (most recent first)`}
+                className={"LastGameHeader"}
+              ></Div>
               <div className="flex-container">
                 <div className="flex-childOneOverviewSmall">{overviewHome}</div>
                 <div className="flex-childTwoOverviewSmall">{overviewAway}</div>
