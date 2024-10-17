@@ -247,7 +247,7 @@ function TeamPage() {
       {
         data: [
           jsonHomeDetails["Attacking Strength"],
-          [jsonAwayDetails["Attacking Strength"]],
+          jsonAwayDetails["Attacking Strength"],
         ],
         label: "Attacking Strength",
         backgroundColor: "#030061",
@@ -255,7 +255,7 @@ function TeamPage() {
       {
         data: [
           jsonHomeDetails["Defensive Strength"],
-          [jsonAwayDetails["Defensive Strength"]],
+          jsonAwayDetails["Defensive Strength"],
         ],
         label: "Defensive Strength",
         backgroundColor: "#CC3314",

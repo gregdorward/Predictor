@@ -13,6 +13,7 @@ import {
   Title,
   Tooltip,
   Legend,
+  SubTitle,
 } from "chart.js";
 import { Line, Radar, Bar, Doughnut } from "react-chartjs-2";
 
@@ -27,7 +28,8 @@ ChartJS.register(
   LineElement,
   Title,
   Tooltip,
-  Legend
+  Legend,
+  SubTitle
 );
 
 export function Chart(props) {
@@ -110,7 +112,7 @@ export function Chart(props) {
       title: {
         display: true,
         text: props.type,
-        color: '#030061',
+        color: "#030061",
         font: {
           size: 14,
         },
@@ -151,20 +153,20 @@ export function Chart(props) {
 export function DoughnutChart(props) {
   const options = {
     color: "#030061",
-  
+
     plugins: {
       legend: {
         position: "top",
 
         labels: {
           boxHeight: 10,
-          color: '#030061'
+          color: "#030061",
         },
       },
       title: {
         display: true,
-        text: 'XG Tipping Form Comparison',
-        color: '#030061',
+        text: "XG Tipping Form Comparison",
+        color: "#030061",
         font: {
           size: 14,
         },
@@ -172,35 +174,26 @@ export function DoughnutChart(props) {
     },
   };
 
-
   const data = {
-    labels: [
-      props.homeTeam,
-      props.awayTeam,
+    labels: [props.homeTeam, props.awayTeam],
+    datasets: [
+      {
+        data: props.data,
+        backgroundColor: ["#030061", "#970d00"],
+        rotation: 270,
+        hoverOffset: 4,
+        cutout: "75%",
+        circumference: 180,
+      },
     ],
-    datasets: [{
-      data: props.data,
-      backgroundColor: [
-        '#030061',
-        '#970d00'
-      ],
-      rotation: 270,
-      hoverOffset: 4,
-      cutout: '75%',
-      circumference: 180,
-      
-    }],
-
   };
 
   const config = {
-    type: 'doughnut',
+    type: "doughnut",
     data: data,
   };
 
-  return <Doughnut options={options} data={data} />
-
-
+  return <Doughnut options={options} data={data} />;
 }
 
 export function RadarChart(props) {
@@ -228,13 +221,13 @@ export function RadarChart(props) {
 
         labels: {
           boxHeight: 10,
-          color: '#030061'
+          color: "#030061",
         },
       },
       title: {
         display: true,
         text: props.title,
-        color: '#030061',
+        color: "#030061",
         font: {
           size: 14,
         },
@@ -243,7 +236,15 @@ export function RadarChart(props) {
   };
 
   let data = {
-    labels: ["Attack rating", "Defence rating", "Ball retention", "XG For", "XG Against", "Directness", "Attacking precision"],
+    labels: [
+      "Attack rating",
+      "Defence rating",
+      "Ball retention",
+      "XG For",
+      "XG Against",
+      "Directness",
+      "Attacking precision",
+    ],
     datasets: [
       {
         label: props.team1,
@@ -334,7 +335,7 @@ export function BarChart(props) {
       title: {
         display: true,
         text: props.text,
-        color: '#030061',
+        color: "#030061",
         font: {
           size: 14,
         },
@@ -376,4 +377,99 @@ export function BarChart(props) {
   return <Bar options={options} data={data} />;
 }
 
+export function BarChartTwo(props) {
+  const dataset = [props.data1, props.data2]
 
+  const options = {
+    color: "#030061",
+    indexAxis: "x",
+    // Elements options apply to all of the options unless overridden in a dataset
+    // In this case, we are setting the border of each horizontal bar to be 2px wide
+    aspectRatio: 1.3,
+    elements: {
+      bar: {
+        borderWidth: 2,
+      },
+    },
+    scales: {
+      y: {
+        min: -0.8,
+        max: 0.8,
+        ticks: {
+          display: true,
+          font: {
+            size: 10,
+          },
+        },
+      },
+      // y: {
+      //   suggestedMin: -0.8,
+      //   suggestedMax: 0.8,
+      //   ticks: {
+      //     font: {
+      //       size: 10,
+      //     },
+      //   },
+      // },
+    },
+    responsive: true,
+    plugins: {
+      legend: {
+        display: false,
+      },
+      tooltip: {
+        enabled: true,
+      },
+      title: {
+        display: true,
+        text: [props.text],
+        color: "#030061",
+        font: {
+          size: 14,
+        },
+      },
+      subtitle: {
+        display: true,
+        text: "Green - Improving | Red - Worsening",
+        color: "#030061",
+        font: {
+          size: 12,
+        },
+        padding: {
+          bottom: 10,
+        },
+      },
+    },
+  };
+
+  const labels = [
+    props.homeTeam,
+    props.awayTeam,
+  ];
+
+  const data = {
+    labels: labels,
+    datasets: [
+      {
+        legend: {
+          display: false,
+        },
+        // label: "XG Recent Swing",
+        data: dataset,
+        ticks: {
+          font: {
+            size: 12,
+          },
+        },
+        barThickness: 40,
+        backgroundColor(context) {
+          const index = context.dataIndex;
+          const value = context.dataset.data[index];
+          return value < 0 ? "#730a00" : "#016001";
+        },
+      },
+    ],
+  };
+
+  return <Bar options={options} data={data} />;
+}

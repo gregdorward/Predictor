@@ -11,6 +11,7 @@ import {
   Chart,
   RadarChart,
   BarChart,
+  BarChartTwo,
   DoughnutChart,
 } from "../components/Chart";
 import Collapsable from "../components/CollapsableElement";
@@ -26,9 +27,9 @@ export async function calculateAttackingStrength(stats) {
     "Average Dangerous Attacks": 0,
     "Average Shots": 0.05,
     "Average Shots On Target": 0.15,
-    "Average Expected Goals": 0.15,
-    "Recent XG": 0.1,
-    "Average Goals": 0.4,
+    "Average Expected Goals": 0.2,
+    "Recent XG": 0.25,
+    "Average Goals": 0.2,
     Corners: 0,
     "Average Shot Value": 0.15,
   };
@@ -75,16 +76,16 @@ export async function calculateDefensiveStrength(stats, normalizedValue = 1) {
   let normValue = normalizedValue;
   // Define weights for each metric (you can adjust these based on your preference)
   const weights = {
-    "Average XG Against": 0.2,
-    "Recent XG Against": 0.2,
-    "Average Goals Against": 0.4,
+    "Average XG Against": 0.3,
+    "Recent XG Against": 0.3,
+    "Average Goals Against": 0.2,
     "Average SOT Against": 0.2,
   };
 
   // Define the ranges for normalization
   const ranges = {
-    "Average XG Against": { min: 0, max: 3 }, // Adjust the max value as needed
-    "Recent XG Against": { min: 0, max: 3 },
+    "Average XG Against": { min: 0, max: 2.5 }, // Adjust the max value as needed
+    "Recent XG Against": { min: 0, max: 2.5 },
     "Average Goals Against": { min: 0, max: 3 }, // Adjust the max value as needed
     "Average SOT Against": { min: 2, max: 10 },
   };
@@ -970,7 +971,7 @@ export async function createStatsDiv(game, displayBool) {
 
       let favouriteRecordHome, favouriteRecordAway;
 
-      if (homeForm.oddsReliabilityWin) {
+      if (homeForm.oddsReliabilityWin && awayForm.oddsReliabilityWin) {
         favouriteRecordHome =
           game.homeOdds < game.awayOdds || game.homeOdds === game.awayOdds
             ? `${homeForm.teamName} have been favourites ${
@@ -1007,6 +1008,49 @@ export async function createStatsDiv(game, displayBool) {
               )}%, Lost:  ${awayForm.oddsReliabilityLoseAsUnderdog.toFixed(
                 0
               )}%`;
+      } else if (!homeForm.oddsReliabilityWin && awayForm.oddsReliabilityWin) {
+        favouriteRecordHome = 'No previous fixtures match the profile of this game.'
+        favouriteRecordAway =
+          game.homeOdds > game.awayOdds || game.homeOdds === game.awayOdds
+            ? `${awayForm.teamName} have been favourites ${
+                awayForm.favouriteCount
+              } times. Of these games, they have Won: ${awayForm.oddsReliabilityWin.toFixed(
+                0
+              )}%, Drawn:  ${awayForm.oddsReliabilityDraw.toFixed(
+                0
+              )}%, Lost:  ${awayForm.oddsReliabilityLose.toFixed(0)}%`
+            : `${awayForm.teamName} have been underdogs ${
+                awayForm.underdogCount
+              } times. Of these games, they have Won: ${awayForm.oddsReliabilityWinAsUnderdog.toFixed(
+                0
+              )}%, Drawn:  ${awayForm.oddsReliabilityDrawAsUnderdog.toFixed(
+                0
+              )}%, Lost:  ${awayForm.oddsReliabilityLoseAsUnderdog.toFixed(
+                0
+              )}%`;
+      } else if (homeForm.oddsReliabilityWin && !awayForm.oddsReliabilityWin){
+        favouriteRecordHome =
+          game.homeOdds < game.awayOdds || game.homeOdds === game.awayOdds
+            ? `${homeForm.teamName} have been favourites ${
+                homeForm.favouriteCount
+              } times. Of these games, they have Won: ${homeForm.oddsReliabilityWin.toFixed(
+                0
+              )}%, Drawn:  ${homeForm.oddsReliabilityDraw.toFixed(
+                0
+              )}%, Lost:  ${homeForm.oddsReliabilityLose.toFixed(0)}%`
+            : `${homeForm.teamName} have been underdogs ${
+                homeForm.underdogCount
+              } times. Of these games, they have Won: ${homeForm.oddsReliabilityWinAsUnderdog.toFixed(
+                0
+              )}%, Drawn:  ${homeForm.oddsReliabilityDrawAsUnderdog.toFixed(
+                0
+              )}%, Lost:  ${homeForm.oddsReliabilityLoseAsUnderdog.toFixed(
+                0
+              )}%`;
+        favouriteRecordAway = 'No previous fixtures match the profile of this game.'
+      } else if(!homeForm.oddsReliabilityWin && !awayForm.oddsReliabilityWin){
+        favouriteRecordHome = 'No previous fixtures match the profile of this game.'
+        favouriteRecordAway = 'No previous fixtures match the profile of this game.'
       }
 
       let homeLastGame = await getLastGameResult(homeForm.LastFiveForm[4]);
@@ -1285,6 +1329,7 @@ export async function createStatsDiv(game, displayBool) {
         BTTSArray: bttsArrayHome,
         Results: homeForm.resultsAll,
         ResultsHorA: homeForm.resultsHome.reverse(),
+        XGSwing: homeForm.XGChangeRecently
         // BTTSAll: homeForm.last10btts,
         // BTTSHorA: homeForm.last10bttsHome,
       });
@@ -1320,6 +1365,7 @@ export async function createStatsDiv(game, displayBool) {
         BTTSArray: bttsArrayAway,
         Results: awayForm.resultsAll,
         ResultsHorA: awayForm.resultsAway.reverse(),
+        XGSwing: awayForm.XGChangeRecently
         // BTTSAll: awayForm.last10btts,
         // BTTSHorA: awayForm.last10bttsAway,
       });
@@ -1531,6 +1577,7 @@ export async function createStatsDiv(game, displayBool) {
                 conceeded={homeForm.avgConceeded}
                 XG={homeForm.XGOverall.toFixed(2)}
                 XGConceded={homeForm.XGAgainstAvgOverall.toFixed(2)}
+                XGSwing={homeForm.XGChangeRecently}
                 possession={homeForm.AveragePossessionOverall.toFixed(2)}
                 sot={homeForm.AverageShotsOnTargetOverall.toFixed(2)}
                 dangerousAttacks={
@@ -1626,6 +1673,7 @@ export async function createStatsDiv(game, displayBool) {
                 conceeded={awayForm.avgConceeded}
                 XG={awayForm.XGOverall.toFixed(2)}
                 XGConceded={awayForm.XGAgainstAvgOverall.toFixed(2)}
+                XGSwing={awayForm.XGChangeRecently}
                 //todo add goal diff and btts percentages
                 possession={awayForm.AveragePossessionOverall.toFixed(2)}
                 rawPosition={game.awayRawPosition ? game.awayRawPosition : 0}
@@ -1756,7 +1804,7 @@ export async function createStatsDiv(game, displayBool) {
         awayGoals = "-";
       }
 
-      if (homeForm.completeData == true && game.completeData == true) {
+      if (homeForm.completeData === true && game.completeData === true) {
         ReactDOM.render(
           <>
             <div style={style}>
@@ -1858,6 +1906,17 @@ export async function createStatsDiv(game, displayBool) {
                   homeTeam={game.homeTeam}
                   awayTeam={game.awayTeam}
                 ></DoughnutChart>
+                <BarChartTwo
+                  text="Recent XG Differential Swing"
+                  homeTeam={homeForm.teamName}                  
+                  awayTeam={awayForm.teamName}
+                  data1={[
+                    homeForm.XGChangeRecently.toFixed(2)
+                  ]}
+                  data2={[
+                    awayForm.XGChangeRecently.toFixed(2)
+                  ]}
+                ></BarChartTwo>
                 <BarChart
                   text="H2H - Home Team | Away Team"
                   data1={[

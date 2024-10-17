@@ -100,8 +100,11 @@ function Stats(props) {
               {props.BTTSArray[0]}
             </span>
           </li>
+          <div className="FormSummaries">
           <li className="FormSummaryHome">{props.FormTextString}</li>
           <li className="FavouriteSummaryHome">{props.FavouriteRecord}</li>
+          </div>
+          <div className="AllStats">
           <li
             key="TeamScored"
             className="TeamScored"
@@ -132,6 +135,13 @@ function Stats(props) {
             data-cy={props.name + "teamXGConceded"}
           >
             {`Avg XG conceded - ${props.XGConceded}`}
+          </li>
+          <li
+            key="TeamXGSwing"
+            className="TeamXGSwing"
+            data-cy={props.name + "teamXGSwing"}
+          >
+            {`XG difference swing (last 5): ${props.XGSwing.toFixed(2)}`}
           </li>
           <li
             key="goalDifference"
@@ -241,6 +251,7 @@ function Stats(props) {
           >
             {`Corners average: ${props.CornersAverage}`}
           </li>
+          </div>
         </ul>
         <div id="h2hStats"></div>
       </Fragment>
@@ -249,8 +260,11 @@ function Stats(props) {
     return (
       <Fragment>
         <ul className={props.className} style={props.style}>
+        <div className="FormSummaries">
           <li className="FormSummaryHome">{props.FormTextString}</li>
           <li className="FavouriteSummaryAway">{props.FavouriteRecord}</li>
+          </div>
+          <div className="AllStats">
           <li
             key="TeamScored"
             className="TeamScored"
@@ -281,6 +295,13 @@ function Stats(props) {
             data-cy={props.name + "teamXGConceded"}
           >
             {`Avg XG conceded - ${props.XGConceded}`}
+          </li>
+          <li
+            key="TeamXGSwing"
+            className="TeamXGSwing"
+            data-cy={props.name + "teamXGSwing"}
+          >
+            {`XG difference swing (last 5): ${props.XGSwing.toFixed(2)}`}
           </li>
           <li
             key="AverageSOT"
@@ -370,6 +391,7 @@ function Stats(props) {
           >
             {`Corners average: ${props.CornersAverage}`}
           </li>
+          </div>
         </ul>
         <div id="h2hStats"></div>
       </Fragment>

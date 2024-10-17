@@ -20,6 +20,14 @@
     margin-left: auto;
     margin-right: auto;
   }
+  .FormSummaries{
+    /* align-items: flex-start; */
+    display: flex;
+    flex-direction: column;
+    flex: 1; /* Ensure both columns take equal width */
+    min-height: 15em; /* Set a predictable minimum height */
+    box-sizing: border-box; /* Include padding in the total height calculation */
+  }
 }
 
 .teamComparisonScore {
@@ -67,6 +75,14 @@
     margin-left: auto;
     margin-right: auto;
   }
+  .FormSummaries{
+    /* align-items: flex-start; */
+    display: flex;
+    flex-direction: column;
+    flex: 1; /* Ensure both columns take equal width */
+    min-height: 15em; /* Set a predictable minimum height */
+    box-sizing: border-box; /* Include padding in the total height calculation */
+  }
 }
 
 @media (max-width: 1200px) {
@@ -89,6 +105,14 @@
     padding-right: 7.5em;
     margin-left: auto;
     margin-right: auto;
+  }
+  .FormSummaries{
+    /* align-items: flex-start; */
+    display: flex;
+    flex-direction: column;
+    flex: 1; /* Ensure both columns take equal width */
+    min-height: 15em; /* Set a predictable minimum height */
+    box-sizing: border-box; /* Include padding in the total height calculation */
   }
 }
 
@@ -113,6 +137,14 @@
     margin-left: auto;
     margin-right: auto;
   }
+  .FormSummaries{
+    /* align-items: flex-start; */
+    display: flex;
+    flex-direction: column;
+    flex: 1; /* Ensure both columns take equal width */
+    min-height: 22em; /* Set a predictable minimum height */
+    box-sizing: border-box; /* Include padding in the total height calculation */
+  }
 }
 
 @media (max-width: 600px) {
@@ -135,6 +167,14 @@
     padding-right: 2em;
     margin-left: auto;
     margin-right: auto;
+  }
+  .FormSummaries{
+    /* align-items: flex-start; */
+    display: flex;
+    flex-direction: column;
+    flex: 1; /* Ensure both columns take equal width */
+    min-height: 22em; /* Set a predictable minimum height */
+    box-sizing: border-box; /* Include padding in the total height calculation */
   }
 }
 
@@ -159,6 +199,15 @@
     margin-left: auto;
     margin-right: auto;
     
+  }
+
+  .FormSummaries{
+    /* align-items: flex-start; */
+    display: flex;
+    flex-direction: column;
+    flex: 1; /* Ensure both columns take equal width */
+    min-height: 22em; /* Set a predictable minimum height */
+    box-sizing: border-box; /* Include padding in the total height calculation */
   }
 }
 
@@ -1546,9 +1595,9 @@ li .Aligned {
 .StatsContainer {
   display: flex;
   flex-direction: row;
-  justify-content: center;
+  /* justify-content: center; */
   text-align: center;
-  align-items: end;
+  /* align-items: end; */
 }
 
 .HomeBadgePrevious {
@@ -1802,19 +1851,23 @@ a.PreviousMatchLink{
 
 .flex-container{
   display: flex;
+  align-items: stretch;
   justify-content: center;
-  align-items: flex-end;
   color: #030052;
 }
 
+
+.AllStats{
+  /* align-items: flex-end; */
+}
 .RecentResults{
-  align-items: flex-end;
+  /* align-items: flex-end; */
 }
 
 .flex-container-similar{
   display: flex;
   justify-content: center;
-  align-items: flex-start;
+  /* align-items: flex-start; */
 }
 
 .flex-childOne {
@@ -2173,7 +2226,7 @@ canvas {
 .FormSummaryHome {
   /* display: flex; */
   height: auto;
-  vertical-align: middle;
+  /* vertical-align: middle; */
   background-color: #e2e2e200 !important;
   /* max-width: 21em; */
   /* justify-content:flex-end;

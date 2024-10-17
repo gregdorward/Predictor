@@ -643,6 +643,11 @@ async function getPastLeagueResults(team, game, hOrA, form) {
     const XGAgainstSum = teamXGAgainstAll.reduce((a, b) => a + b, 0);
     const avgXGConceeded = XGAgainstSum / teamXGAgainstAll.length || 0;
 
+    const shortTermXGDiff = form.avXGLast5 - form.avXGAgainstLast5
+    const longTermXGDiff = avgXGScored - avgXGConceeded
+
+    form.XGChangeRecently = shortTermXGDiff - longTermXGDiff
+
     const possession = allTeamResults.map((res) => res.possession);
     const possessionSum = possession.reduce((a, b) => a + b, 0);
     const avgPossession = possessionSum / possession.length || 0;
@@ -916,6 +921,7 @@ async function getPastLeagueResults(team, game, hOrA, form) {
     const RoundedXGForAway = teamXGForAway.map((xg) => xg);
     const RoundedXGAgainstAway = teamXGAgainstAway.map((xg) => xg);
 
+
     form.XGPrediction = await predictGoalsWithExponentialSmoothing(
       RoundedXGFor,
       RoundedXGAgainst,
@@ -1013,7 +1019,7 @@ async function getPastLeagueResults(team, game, hOrA, form) {
     const teamGoalsConceededAllRollingAverage =
       await predictNextWeightedMovingAverage(
         last10Conceeded,
-        last10Conceeded.length < r ? last10Conceeded.length : r
+        last10Conceeded.length < 10 ? last10Conceeded.length : 10
       );
 
     const sumTwo = teamConceededAll.reduce((a, b) => a + b, 0);
@@ -1594,18 +1600,18 @@ export async function generateGoals(homeForm, awayForm, match) {
     homeAttackVsAwayDefenceComparison * 2 +
     // XGRatingHomeComparison * 0.25 +
     homeAttackVsAwayDefenceComparisonLast5 * 1 +
-    homeAttackVsAwayDefenceComparisonHomeOnly * 2
+    homeAttackVsAwayDefenceComparisonHomeOnly * 1
    +
-  oddsComparisonHome * 0.1;
+  oddsComparisonHome * 0.125;
 
   awayGoals =
     0 +
     awayAttackVsHomeDefenceComparison * 2 +
     // XGRatingAwayComparison * 0.25 +
     awayAttackVsHomeDefenceComparisonLast5 * 1 +
-    awayAttackVsHomeDefenceComparisonAwayOnly * 2
+    awayAttackVsHomeDefenceComparisonAwayOnly * 1
    +
-  oddsComparisonAway * 0.1;
+  oddsComparisonAway * 0.125;
 
   // if (homeForm.actualToXGDifference > 0.5) {
   //   homeGoals = homeGoals + homeForm.actualToXGDifference / 10;
@@ -2186,8 +2192,8 @@ export async function calculateScore(match, index, divider, calculate) {
       );
 
       teams[i][index].actualToXGDifferenceRecent = await diff(
-        teams[i][index].shortTermGoalDifference,
-        teams[i][index].XGdifferentialRecent
+        teams[i][index].XGdifferentialRecent,
+        teams[i][index].shortTermGoalDifference
       );
     }
 
@@ -2683,42 +2689,42 @@ export async function calculateScore(match, index, divider, calculate) {
     );
 
     formHome.defensiveStrengthScoreGeneration =
-      await calculateDefensiveStrength(defensiveMetricsHome, 0.75);
+      await calculateDefensiveStrength(defensiveMetricsHome, 0.7);
 
     formHome.defensiveStrengthLast5 = await calculateDefensiveStrength(
       defensiveMetricsHomeLast5
     );
 
     formHome.defensiveStrengthScoreGenerationLast5 =
-      await calculateDefensiveStrength(defensiveMetricsHomeLast5, 0.75);
+      await calculateDefensiveStrength(defensiveMetricsHomeLast5, 0.7);
 
     formHome.defensiveStrengthHomeOnly = await calculateDefensiveStrength(
       defensiveMetricsHomeOnly
     );
 
     formHome.defensiveStrengthScoreGenerationHomeOnly =
-      await calculateDefensiveStrength(defensiveMetricsHomeOnly, 0.75);
+      await calculateDefensiveStrength(defensiveMetricsHomeOnly, 0.7);
 
     formAway.defensiveStrength = await calculateDefensiveStrength(
       defensiveMetricsAway
     );
 
     formAway.defensiveStrengthScoreGeneration =
-      await calculateDefensiveStrength(defensiveMetricsAway, 0.75);
+      await calculateDefensiveStrength(defensiveMetricsAway, 0.7);
 
     formAway.defensiveStrengthLast5 = await calculateDefensiveStrength(
       defensiveMetricsAwayLast5
     );
 
     formAway.defensiveStrengthScoreGenerationLast5 =
-      await calculateDefensiveStrength(defensiveMetricsAwayLast5, 0.75);
+      await calculateDefensiveStrength(defensiveMetricsAwayLast5, 0.7);
 
     formAway.defensiveStrengthAwayOnly = await calculateDefensiveStrength(
       defensiveMetricsAwayOnly
     );
 
     formAway.defensiveStrengthScoreGenerationAwayOnly =
-      await calculateDefensiveStrength(defensiveMetricsAwayOnly, 0.75);
+      await calculateDefensiveStrength(defensiveMetricsAwayOnly, 0.7);
 
     formHome.possessionStrength = await calculateMetricStrength(
       "averagePossession",
@@ -3066,8 +3072,8 @@ export async function calculateScore(match, index, divider, calculate) {
       // formAway.last5GoalsConceeded * 0.5 +
       (formHome.forAndAgainstRollingAvHomeOrAway.goalsFor * 2 +
         formAway.forAndAgainstRollingAvHomeOrAway.goalsAgainst * 2 +
-        formHome.forAndAgainstRollingAv.goalsFor * 2 +
-        formAway.forAndAgainstRollingAv.goalsAgainst * 2 +
+        formHome.forAndAgainstRollingAv.goalsFor * 0 +
+        formAway.forAndAgainstRollingAv.goalsAgainst * 0 +
         formHome.allTeamGoalsBasedOnAverages * 0 +
         formAway.allTeamGoalsConceededBasedOnAverages * 0 +
         // formHome.XGOverall * 1 +
@@ -3082,8 +3088,8 @@ export async function calculateScore(match, index, divider, calculate) {
       // formHome.last5GoalsConceeded * 0.5 +
       (formAway.forAndAgainstRollingAvHomeOrAway.goalsFor * 2 +
         formHome.forAndAgainstRollingAvHomeOrAway.goalsAgainst * 2 +
-        formAway.forAndAgainstRollingAv.goalsFor * 2 +
-        formHome.forAndAgainstRollingAv.goalsAgainst * 2 +
+        formAway.forAndAgainstRollingAv.goalsFor * 0 +
+        formHome.forAndAgainstRollingAv.goalsAgainst * 0 +
         formAway.allTeamGoalsBasedOnAverages * 0 +
         formHome.allTeamGoalsConceededBasedOnAverages * 0 +
         // formAway.XGOverall * 1 +
@@ -3127,21 +3133,30 @@ export async function calculateScore(match, index, divider, calculate) {
       awayComparisonWeighting = 1;
     }
 
-    console.log(match.game);
-    console.log("factorOne");
-    console.log(factorOneHome);
-    console.log(factorOneAway);
-    console.log("factorTwo");
-    console.log(formHome.teamGoalsCalc);
-    console.log(formAway.teamGoalsCalc);
+    console.log(match.game)
+    console.log(formHome)
+    console.log(formAway)
+
+    // ROI
+   // Cumalative ROI for all 1402 match outcomes: + 7.58%
+
 
     // let experimentalHomeGoals = formHome.teamGoalsCalc;
     let experimentalHomeGoals =
-      (factorOneHome * 1 +
-        formHome.predictedGoalsBasedOnHomeAv +
-        formAway.predictedGoalsConceededBasedOnAwayAv +
-        formHome.teamGoalsCalc) /
-      3.5;
+      (
+        // factorOneHome * 1 +
+        // formHome.allTeamGoalsBasedOnAverages +
+        // formAway.allTeamGoalsConceededBasedOnAverages +
+        // formHome.predictedGoalsBasedOnHomeAv + 
+        // formAway.predictedGoalsConceededBasedOnAwayAv +
+        // formHome.XGPredictionHome.goalsFor +
+        // formAway.XGPredictionAway.goalsAgainst +
+        formHome.teamGoalsCalc +
+        parseFloat(formHome.actualToXGDifferenceRecent) +
+        (formHome.XGChangeRecently * 2)
+      )
+        /
+      1;
 
     // (factorOneHome * homeComparisonWeighting +
     //   (formHome.teamGoalsCalc * 2) +
@@ -3151,11 +3166,19 @@ export async function calculateScore(match, index, divider, calculate) {
 
     // let experimentalAwayGoals = formAway.teamGoalsCalc;
     let experimentalAwayGoals =
-      (factorOneAway * 1 +
-        formAway.predictedGoalsBasedOnAwayAv +
-        formHome.predictedGoalsConceededBasedOnHomeAv +
-        formAway.teamGoalsCalc) /
-      3.5;
+      (
+        // factorOneAway * 1 +
+        // formAway.allTeamGoalsBasedOnAverages +
+        // formHome.allTeamGoalsConceededBasedOnAverages +
+        // formAway.predictedGoalsBasedOnAwayAv +
+        // formHome.predictedGoalsConceededBasedOnHomeAv +
+        // formAway.XGPredictionAway.goalsFor +
+        // formHome.XGPredictionHome.goalsAgainst +
+        formAway.teamGoalsCalc +
+        parseFloat(formAway.actualToXGDifferenceRecent) +
+        (formAway.XGChangeRecently * 2)
+      ) /
+      1;
 
     // (factorOneAway * awayComparisonWeighting +
     //   (formAway.teamGoalsCalc * 2) +
@@ -3214,8 +3237,12 @@ export async function calculateScore(match, index, divider, calculate) {
       rawFinalAwayGoals = 0;
     }
 
-    finalHomeGoals = await roundCustom(rawFinalHomeGoals);
-    finalAwayGoals = await roundCustom(rawFinalAwayGoals);
+
+    finalHomeGoals = Math.floor(rawFinalHomeGoals);
+    finalAwayGoals = Math.floor(rawFinalAwayGoals);
+
+    // finalHomeGoals = rawFinalHomeGoals;
+    // finalAwayGoals = rawFinalAwayGoals;
 
     // finalHomeGoals = Math.round(rawFinalHomeGoals);
     // finalAwayGoals = Math.round(rawFinalAwayGoals);
@@ -3574,15 +3601,15 @@ export async function calculateScore(match, index, divider, calculate) {
         break;
     }
 
-    if (
-      match.game_week < 4
-      // match.omit === true
-      // match.game_week < 3 &&
-    ) {
-      finalHomeGoals = "-";
-      finalAwayGoals = "-";
-      match.status = "notEnoughData";
-    }
+    // if (
+    //   match.game_week < 4
+    //   // match.omit === true
+    //   // match.game_week < 3 &&
+    // ) {
+    //   finalHomeGoals = "-";
+    //   finalAwayGoals = "-";
+    //   match.status = "notEnoughData";
+    // }
 
     return [
       finalHomeGoals,
