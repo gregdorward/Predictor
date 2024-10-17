@@ -458,10 +458,10 @@ export function BarChartTwo(props) {
         data: dataset,
         ticks: {
           font: {
-            size: 12,
+            size: 14,
           },
         },
-        barThickness: 40,
+        barThickness: 120,
         backgroundColor(context) {
           const index = context.dataIndex;
           const value = context.dataset.data[index];
