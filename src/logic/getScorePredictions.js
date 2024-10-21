@@ -1597,19 +1597,19 @@ export async function generateGoals(homeForm, awayForm, match) {
 
   homeGoals =
     0 +
-    homeAttackVsAwayDefenceComparison * 2 +
+    homeAttackVsAwayDefenceComparison * 1.5 +
     // XGRatingHomeComparison * 0.25 +
     homeAttackVsAwayDefenceComparisonLast5 * 1 +
-    homeAttackVsAwayDefenceComparisonHomeOnly * 1
+    homeAttackVsAwayDefenceComparisonHomeOnly * 0.5
    +
   oddsComparisonHome * 0.125;
 
   awayGoals =
     0 +
-    awayAttackVsHomeDefenceComparison * 2 +
+    awayAttackVsHomeDefenceComparison * 1.5 +
     // XGRatingAwayComparison * 0.25 +
     awayAttackVsHomeDefenceComparisonLast5 * 1 +
-    awayAttackVsHomeDefenceComparisonAwayOnly * 1
+    awayAttackVsHomeDefenceComparisonAwayOnly * 0.5
    +
   oddsComparisonAway * 0.125;
 
@@ -2689,42 +2689,42 @@ export async function calculateScore(match, index, divider, calculate) {
     );
 
     formHome.defensiveStrengthScoreGeneration =
-      await calculateDefensiveStrength(defensiveMetricsHome, 0.7);
+      await calculateDefensiveStrength(defensiveMetricsHome, 0.55);
 
     formHome.defensiveStrengthLast5 = await calculateDefensiveStrength(
       defensiveMetricsHomeLast5
     );
 
     formHome.defensiveStrengthScoreGenerationLast5 =
-      await calculateDefensiveStrength(defensiveMetricsHomeLast5, 0.7);
+      await calculateDefensiveStrength(defensiveMetricsHomeLast5, 0.55);
 
     formHome.defensiveStrengthHomeOnly = await calculateDefensiveStrength(
       defensiveMetricsHomeOnly
     );
 
     formHome.defensiveStrengthScoreGenerationHomeOnly =
-      await calculateDefensiveStrength(defensiveMetricsHomeOnly, 0.7);
+      await calculateDefensiveStrength(defensiveMetricsHomeOnly, 0.55);
 
     formAway.defensiveStrength = await calculateDefensiveStrength(
       defensiveMetricsAway
     );
 
     formAway.defensiveStrengthScoreGeneration =
-      await calculateDefensiveStrength(defensiveMetricsAway, 0.7);
+      await calculateDefensiveStrength(defensiveMetricsAway, 0.55);
 
     formAway.defensiveStrengthLast5 = await calculateDefensiveStrength(
       defensiveMetricsAwayLast5
     );
 
     formAway.defensiveStrengthScoreGenerationLast5 =
-      await calculateDefensiveStrength(defensiveMetricsAwayLast5, 0.7);
+      await calculateDefensiveStrength(defensiveMetricsAwayLast5, 0.55);
 
     formAway.defensiveStrengthAwayOnly = await calculateDefensiveStrength(
       defensiveMetricsAwayOnly
     );
 
     formAway.defensiveStrengthScoreGenerationAwayOnly =
-      await calculateDefensiveStrength(defensiveMetricsAwayOnly, 0.7);
+      await calculateDefensiveStrength(defensiveMetricsAwayOnly, 0.55);
 
     formHome.possessionStrength = await calculateMetricStrength(
       "averagePossession",
@@ -3152,8 +3152,8 @@ export async function calculateScore(match, index, divider, calculate) {
         // formHome.XGPredictionHome.goalsFor +
         // formAway.XGPredictionAway.goalsAgainst +
         formHome.teamGoalsCalc +
-        parseFloat(formHome.actualToXGDifferenceRecent) +
-        (formHome.XGChangeRecently * 2)
+        parseFloat(formHome.actualToXGDifferenceRecent * 0.85) +
+        (formHome.XGChangeRecently * 3)
       )
         /
       1;
@@ -3175,8 +3175,8 @@ export async function calculateScore(match, index, divider, calculate) {
         // formAway.XGPredictionAway.goalsFor +
         // formHome.XGPredictionHome.goalsAgainst +
         formAway.teamGoalsCalc +
-        parseFloat(formAway.actualToXGDifferenceRecent) +
-        (formAway.XGChangeRecently * 2)
+        parseFloat(formAway.actualToXGDifferenceRecent * 0.85) +
+        (formAway.XGChangeRecently * 3)
       ) /
       1;
 

@@ -71,7 +71,7 @@ const leagueOrder = [
   11212, //Argentina prem 23
   12136, //Mexico prem 23/24
   12933, //National league North and South 22/23
-  13102, //Australian A league 23/24
+  // 13703, //Australian A league 23/24
   11102, //S Korea 23
 ];
 
@@ -118,7 +118,7 @@ let dateString;
       const element = league.season[x];
 
       if (element.year === 2024 || element.year === 20242025) {
-        if (element.id !== 4340 && element.id !== 6935 && element.id !== 7061) {
+        if (element.id !== 13703 && element.id !== 6935 && element.id !== 7061) {
           availableLeagues.push({ name: name, element });
         }
       }
