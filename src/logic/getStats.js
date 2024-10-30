@@ -126,10 +126,10 @@ export async function calculateMetricStrength(metricName, metricValue) {
   // Define the ranges for normalization
   const ranges = {
     averagePossession: { min: 20, max: 80 },
-    xgFor: { min: 0.1, max: 3 },
-    xgAgainst: { min: 0.1, max: 3 },
+    xgFor: { min: 0.25, max: 2.75 },
+    xgAgainst: { min: 0.25, max: 2.75 },
     directnessOverall: { min: 0.5, max: 5 },
-    accuracyOverall: { min: 0.5, max: 7 },
+    accuracyOverall: { min: 8, max: 13 },
   };
 
   // Ensure the metric is valid and exists in the weights and ranges objects
@@ -1235,7 +1235,7 @@ export async function createStatsDiv(game, displayBool) {
         );
         homeAccuracyOverallStrength = await calculateMetricStrength(
           "accuracyOverall",
-          homeForm.shootingAccuracy
+          homeForm.avgShotValue
         );
 
         awayAttackStrength = await calculateAttackingStrength(
@@ -1263,7 +1263,7 @@ export async function createStatsDiv(game, displayBool) {
         );
         awayAccuracyOverallStrength = await calculateMetricStrength(
           "accuracyOverall",
-          awayForm.shootingAccuracy
+          awayForm.avgShotValue
         );
       }
 
