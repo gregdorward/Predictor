@@ -122,6 +122,9 @@ export function Chart(props) {
 
   const labels = Array.from(props.data1.keys());
 
+  console.log(props.data1)
+  console.log(props.data3)
+
   let data = {
     labels,
     datasets: [
@@ -132,7 +135,7 @@ export function Chart(props) {
         },
         data: props.data1,
         borderColor: "#030061",
-        borderWidth: 2,
+        borderWidth: 3,
         backgroundColor: "#030061",
         tension: props.tension,
       },
@@ -140,15 +143,185 @@ export function Chart(props) {
         label: props.team2,
         data: props.data2,
         borderColor: "#970d00",
-        borderWidth: 2,
+        borderWidth: 3,
         backgroundColor: "#970d00",
         tension: props.tension,
+      }
+    ],
+  };
+
+  return <Line options={options} data={data} />;
+}
+
+export function MultilineChart(props) {
+  let length;
+  let depth;
+
+  if (props.type === "Points over time") {
+    length = props.data1.length * 3;
+    depth = 0;
+  } else if (props.type === "Rolling average points over last 10") {
+    length = Math.abs(props.height);
+    depth = 0;
+  } else if (Math.abs(props.height) > Math.abs(props.depth)) {
+    length = Math.abs(props.height);
+    depth = -Math.abs(props.height);
+  } else if (Math.abs(props.height) < Math.abs(props.depth)) {
+    length = Math.abs(props.depth);
+    depth = -Math.abs(props.depth);
+  } else {
+    length = Math.abs(props.depth);
+    depth = -Math.abs(props.depth);
+  }
+
+  const options = {
+    color: "#030061",
+    responsive: true,
+    aspectRatio: 1.2,
+    maintainAspectRatio: true,
+    layout: {
+      padding: 3,
+    },
+    elements: {
+      point: {
+        radius: 0,
+      },
+    },
+    scales: {
+      y: {
+        suggestedMin: depth,
+        suggestedMax: length,
+        // suggestedMax: Math.max(...props.data1) > 3 ? Math.max(...props.data1) : 3,
+        grid: {
+          borderWidth: 1,
+          borderColor: "black",
+        },
+        ticks: {
+          font: {
+            size: 12,
+          },
+        },
+      },
+      x: {
+        title: {
+          display: false,
+          text: "Last X Games",
+          font: {
+            size: 14,
+          },
+        },
+        grid: {
+          borderWidth: 1,
+          borderColor: "black",
+        },
+        ticks: {
+          display: false,
+          font: {
+            size: 14,
+          },
+        },
+      },
+    },
+    plugins: {
+      legend: {
+        position: "top",
+
+        labels: {
+          boxHeight: 5,
+        },
+      },
+      title: {
+        display: true,
+        text: props.type,
+        color: "#030061",
+        font: {
+          size: 14,
+        },
+      },
+    },
+  };
+
+  const labels = Array.from(props.data1.keys());
+
+  console.log(props.data1)
+  console.log(props.data3)
+
+  let data = {
+    labels,
+    datasets: [
+      {
+        label: props.team1,
+        font: {
+          color: "black",
+        },
+        data: props.data1,
+        borderColor: "#030061",
+        borderWidth: 3,
+        backgroundColor: "#030061",
+        tension: props.tension,
+      },
+      {
+        label: props.team2,
+        data: props.data2,
+        borderColor: "#970d00",
+        borderWidth: 3,
+        backgroundColor: "#970d00",
+        tension: props.tension,
+      },
+      {
+        label: `${props.team1} XG Diff`,
+        font: {
+          color: "black",
+        },
+        data: props.data3,
+        borderColor: "#0600d6",
+        borderWidth: 3,
+        backgroundColor: "#0600d6",
+        tension: props.tension,
+        hidden: true,
+      },
+      {
+        label: `${props.team2} XG Diff`,
+        font: {
+          color: "black",
+        },
+        data: props.data4,
+        borderColor: "#be1000",
+        borderWidth: 3,
+        backgroundColor: "#be1000",
+        tension: props.tension,
+        hidden: true,
+      },
+      {
+        label: `${props.team1} SOT Diff`,
+        font: {
+          color: "black",
+        },
+        data: props.data5,
+        borderColor: "#0700ea",
+        borderWidth: 3,
+        backgroundColor: "#0700ea",
+        tension: props.tension,
+        hidden: true,
+      },
+      {
+        label: `${props.team2} SOT Diff`,
+        font: {
+          color: "black",
+        },
+        data: props.data6,
+        borderColor: "#e51300",
+        borderWidth: 3,
+        backgroundColor: "#e51300",
+        tension: props.tension,
+        hidden: true,
       },
     ],
   };
 
   return <Line options={options} data={data} />;
 }
+
 
 export function DoughnutChart(props) {
   const options = {

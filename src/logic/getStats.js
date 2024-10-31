@@ -9,6 +9,7 @@ import { allLeagueResultsArrayOfObjects } from "../logic/getFixtures";
 import GenerateFormSummary from "../logic/compareFormTrend";
 import {
   Chart,
+  MultilineChart,
   RadarChart,
   BarChart,
   BarChartTwo,
@@ -128,8 +129,8 @@ export async function calculateMetricStrength(metricName, metricValue) {
     averagePossession: { min: 20, max: 80 },
     xgFor: { min: 0.25, max: 2.75 },
     xgAgainst: { min: 0.25, max: 2.75 },
-    directnessOverall: { min: 0.5, max: 5 },
-    accuracyOverall: { min: 8, max: 13 },
+    directnessOverall: { min: 0.5, max: 7 },
+    accuracyOverall: { min: 6, max: 14 },
   };
 
   // Ensure the metric is valid and exists in the weights and ranges objects
@@ -467,6 +468,10 @@ export async function getXGtoActualDifferentialStrength(XGDiff) {
 
 let rollingGoalDiffTotalHome = [];
 let rollingGoalDiffTotalAway = [];
+let rollingXGDiffTotalHome = [];
+let rollingXGDiffTotalAway = [];
+let rollingSOTDiffTotalHome = [];
+let rollingSOTDiffTotalAway = [];
 
 export async function createStatsDiv(game, displayBool) {
   if (game.status !== "void") {
@@ -496,8 +501,10 @@ export async function createStatsDiv(game, displayBool) {
       const gameArrayAwayTeamAwayGames = [];
       let goalDiffArrayHome;
       let goalDiffArrayAway;
-      let goalDiffHomeMovingAv = [];
-      let goalDiffAwayMovingAv = [];
+      let xgDiffArrayHome;
+      let xgDiffArrayAway;
+      let sotDiffArrayHome;
+      let sotDiffArrayAway;
       let latestHomeGoalDiff;
       let latestAwayGoalDiff;
 
@@ -663,28 +670,32 @@ export async function createStatsDiv(game, displayBool) {
           }
         }
 
+        console.log(homeForm.allTeamResults)
+
         goalDiffArrayHome = homeForm.allTeamResults.map(
           (a) => a.scored - a.conceeded
         );
+        goalDiffArrayHome = goalDiffArrayHome.reverse()
+        xgDiffArrayHome = homeForm.allTeamResults.map(
+          (a) => a.XG - a.XGAgainst
+        );
+        xgDiffArrayHome = xgDiffArrayHome.reverse()
 
+        sotDiffArrayHome = homeForm.allTeamResults.map(
+          (a) => a.sot - a.sotAgainst
+        );
+        sotDiffArrayHome = sotDiffArrayHome.reverse()
+        
         // goalDiffArrayHome = gameArrayHome.map(
         //   (a) => a.goalsFor - a.goalsAgainst
         // );
 
-        let r = 5;
-        goalDiffHomeMovingAv = getEMA(
-          goalDiffArrayHome.reverse(),
-          goalDiffArrayHome.length < 5 ? goalDiffArrayHome.length : r
-        );
-
-        const cumulativeSumHome = (
-          (sum) => (value) =>
-            (sum += value)
-        )(0);
 
         gameArrayHome.sort((a, b) => b.unixTimestamp - a.unixTimestamp);
 
-        rollingGoalDiffTotalHome = goalDiffArrayHome.map(cumulativeSumHome);
+        rollingGoalDiffTotalHome = goalDiffArrayHome.map((sum => value => sum += value)(0));
+        rollingXGDiffTotalHome = xgDiffArrayHome.map((sum => value => sum += value)(0));;
+        rollingSOTDiffTotalHome = sotDiffArrayHome.map((sum => value => sum += value)(0));
 
         const resultAway = matches.fixtures.filter(
           (game) =>
@@ -828,25 +839,22 @@ export async function createStatsDiv(game, displayBool) {
         goalDiffArrayAway = awayForm.allTeamResults.map(
           (a) => a.scored - a.conceeded
         );
-
-        goalDiffAwayMovingAv = getEMA(
-          goalDiffArrayAway.reverse(),
-          goalDiffArrayAway.length < 5 ? goalDiffArrayAway.length : r
+        goalDiffArrayAway = goalDiffArrayAway.reverse()
+        xgDiffArrayAway = awayForm.allTeamResults.map(
+          (a) => a.XG - a.XGAgainst
         );
+        xgDiffArrayAway = xgDiffArrayAway.reverse()
 
-        const cumulativeSumAway = (
-          (sum) => (value) =>
-            (sum += value)
-        )(0);
+        sotDiffArrayAway = awayForm.allTeamResults.map(
+          (a) => a.sot - a.sotAgainst
+        );
+        sotDiffArrayAway = sotDiffArrayAway.reverse()
 
         gameArrayAway.sort((a, b) => b.unixTimestamp - a.unixTimestamp);
 
-        rollingGoalDiffTotalAway = goalDiffArrayAway.map(cumulativeSumAway);
-
-        latestHomeGoalDiff =
-          goalDiffHomeMovingAv[goalDiffHomeMovingAv.length - 1];
-        latestAwayGoalDiff =
-          goalDiffAwayMovingAv[goalDiffAwayMovingAv.length - 1];
+        rollingGoalDiffTotalAway = goalDiffArrayAway.map((sum => value => sum += value)(0));
+        rollingXGDiffTotalAway = xgDiffArrayAway.map((sum => value => sum += value)(0));
+        rollingSOTDiffTotalAway = sotDiffArrayAway.map((sum => value => sum += value)(0));
         // });
       }
 
@@ -1958,52 +1966,56 @@ export async function createStatsDiv(game, displayBool) {
                   type={chartType}
                   tension={0}
                 ></Chart>
-                <Chart
+                <MultilineChart
                   height={
                     Math.max(
-                      rollingGoalDiffTotalHome[
-                        rollingGoalDiffTotalHome.length - 1
+                      rollingSOTDiffTotalHome[
+                        rollingSOTDiffTotalHome.length - 1
                       ],
-                      rollingGoalDiffTotalAway[
-                        rollingGoalDiffTotalAway.length - 1
+                      rollingSOTDiffTotalAway[
+                        rollingSOTDiffTotalAway.length - 1
                       ]
                     ) > 2
                       ? Math.max(
-                          rollingGoalDiffTotalHome[
-                            rollingGoalDiffTotalHome.length - 1
+                        rollingSOTDiffTotalHome[
+                          rollingSOTDiffTotalHome.length - 1
                           ],
-                          rollingGoalDiffTotalAway[
-                            rollingGoalDiffTotalAway.length - 1
+                          rollingSOTDiffTotalAway[
+                            rollingSOTDiffTotalAway.length - 1
                           ]
                         )
                       : 2
                   }
                   depth={
                     Math.min(
-                      rollingGoalDiffTotalHome[
-                        rollingGoalDiffTotalHome.length - 1
+                      rollingSOTDiffTotalHome[
+                        rollingSOTDiffTotalHome.length - 1
                       ],
-                      rollingGoalDiffTotalAway[
-                        rollingGoalDiffTotalAway.length - 1
+                      rollingSOTDiffTotalAway[
+                        rollingSOTDiffTotalAway.length - 1
                       ]
                     ) < -2
                       ? Math.min(
-                          rollingGoalDiffTotalHome[
-                            rollingGoalDiffTotalHome.length - 1
+                        rollingSOTDiffTotalHome[
+                          rollingSOTDiffTotalHome.length - 1
                           ],
-                          rollingGoalDiffTotalAway[
-                            rollingGoalDiffTotalAway.length - 1
+                          rollingSOTDiffTotalAway[
+                            rollingSOTDiffTotalAway.length - 1
                           ]
                         )
                       : -2
                   }
                   data1={rollingGoalDiffTotalHome}
                   data2={rollingGoalDiffTotalAway}
+                  data3={rollingXGDiffTotalHome}
+                  data4={rollingXGDiffTotalAway}
+                  data5={rollingSOTDiffTotalHome}
+                  data6={rollingSOTDiffTotalAway}
                   team1={game.homeTeam}
                   team2={game.awayTeam}
-                  type={"Goal difference over time"}
-                  tension={0.3}
-                ></Chart>
+                  type={"Goal/XG/SOT difference over time"}
+                  tension={0.5}
+                ></MultilineChart>
               </div>
               <Div
                 text={`Last league games (most recent first)`}
