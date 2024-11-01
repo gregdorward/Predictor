@@ -670,8 +670,6 @@ export async function createStatsDiv(game, displayBool) {
           }
         }
 
-        console.log(homeForm.allTeamResults)
-
         goalDiffArrayHome = homeForm.allTeamResults.map(
           (a) => a.scored - a.conceeded
         );

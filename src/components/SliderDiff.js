@@ -3,7 +3,7 @@ import Slider from "@mui/material/Slider";
 export let minimumXG = 0;
 export let minimumGD = 0;
 export let minimumGDHorA = 0;
-export let minimumLast10 = 0;
+export let minimumLast6 = 0;
 
 function SlideDiff(props) {
   const [value, setValue] = useState(0);
@@ -22,7 +22,7 @@ function SlideDiff(props) {
         minimumGDHorA = newValue;
         break;
       case props.useCase === "last10":
-        minimumLast10 = newValue;
+        minimumLast6 = newValue;
         break;
 
       default:

@@ -1598,7 +1598,7 @@ export async function generateFixtures(
               onClickEvent={() => getScorePrediction(day)}
               className={"GeneratePredictions"}
             />
-            <div className="Version">Prediction engine v1.1.2 (29/10/24)</div>
+            <div className="Version">Prediction engine v1.1.3 (01/11/24)</div>
             <Collapsable
               buttonText={"Filters"}
               element={
@@ -1649,7 +1649,7 @@ export async function generateFixtures(
                     ></SlideDiff>
                   </Fragment>
                   <Fragment>
-                    <h6>Last 10 points differential filter (BETA)</h6>
+                    <h6>Last 6 points differential filter (BETA)</h6>
                     <div>
                       I'm looking for tips where the points differential between
                       teams is at least...
@@ -1659,7 +1659,7 @@ export async function generateFixtures(
                       text="all games"
                       useCase="last10"
                       lower="0"
-                      upper="30"
+                      upper="18"
                     ></SlideDiff>
                   </Fragment>
                   <Fragment>
