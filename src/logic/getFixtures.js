@@ -868,6 +868,8 @@ export async function generateFixtures(
           let homeTeaminHomeLeague = leaguePositions.find(
             (team) => team.homeFormName === match.homeTeam
           );
+
+          
           teamPositionHome = homeTeaminLeague.position;
           teamPositionHomeTable = homeTeaminHomeLeague.position;
 
@@ -1508,10 +1510,10 @@ export async function generateFixtures(
                 BTTSPercentage: parseInt(
                   form[1].data[2].stats.seasonBTTSPercentage_away
                 ),
-                lastThreeForm: lastThreeFormAway.reverse(),
-                LastFiveForm: lastFiveFormAway.reverse(),
-                LastSixForm: lastSixFormAway.reverse(),
-                LastTenForm: lastTenFormAway.reverse(),
+                // lastThreeForm: lastThreeFormAway.reverse(),
+                // LastFiveForm: lastFiveFormAway.reverse(),
+                // LastSixForm: lastSixFormAway.reverse(),
+                // LastTenForm: lastTenFormAway.reverse(),
                 LeagueOrAll: leagueOrAll,
                 LeaguePosition: `${teamPositionAway}${awayPrefix}`,
                 awayRawPosition: awayTeaminLeague.rawPosition
