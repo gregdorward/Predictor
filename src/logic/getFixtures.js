@@ -870,6 +870,7 @@ export async function generateFixtures(
           );
 
           
+          console.log(match.homeTeam)
           teamPositionHome = homeTeaminLeague.position;
           teamPositionHomeTable = homeTeaminHomeLeague.position;
 
@@ -907,7 +908,7 @@ export async function generateFixtures(
           homeTeaminLeague = {
             rawPosition: "N/A",
           };
-          WDLinLeagueHome = "N/A";
+          WDLinLeagueHome = [];
         }
 
         try {
@@ -955,7 +956,7 @@ export async function generateFixtures(
           awayTeaminLeague = {
             rawPosition: "N/A",
           };
-          WDLinLeagueAway = "N/A";
+          WDLinLeagueAway = [];
         }
 
         if (!isFormStored) {
@@ -1072,7 +1073,6 @@ export async function generateFixtures(
             awayPrefix = "";
             awayPrefixAwayTable = "";
           }
-
           allForm.push({
             id: match.id,
             teamIDHome: match.homeId,
@@ -1284,10 +1284,10 @@ export async function generateFixtures(
                 BTTSPercentage: parseInt(
                   form[0].data[2].stats.seasonBTTSPercentage_home
                 ),
-                lastThreeForm: lastThreeFormHome.reverse(),
-                LastFiveForm: lastFiveFormHome.reverse(),
-                LastSixForm: lastSixFormHome.reverse(),
-                LastTenForm: lastTenFormHome.reverse(),
+                lastThreeForm: lastThreeFormHome !== undefined ? lastThreeFormHome.reverse() : "N/A",
+                LastFiveForm: lastFiveFormHome !== undefined ? lastFiveFormHome.reverse() : "N/A", 
+                LastSixForm: lastSixFormHome !== undefined ? lastSixFormHome.reverse() : "N/A",
+                LastTenForm: lastTenFormHome !== undefined ? lastTenFormHome.reverse() : "N/A",
                 LeagueOrAll: leagueOrAll,
                 LeaguePosition: `${teamPositionHome}${homePrefix}`,
                 homeRawPosition: homeTeaminLeague.rawPosition !== undefined
@@ -1510,10 +1510,10 @@ export async function generateFixtures(
                 BTTSPercentage: parseInt(
                   form[1].data[2].stats.seasonBTTSPercentage_away
                 ),
-                // lastThreeForm: lastThreeFormAway.reverse(),
-                // LastFiveForm: lastFiveFormAway.reverse(),
-                // LastSixForm: lastSixFormAway.reverse(),
-                // LastTenForm: lastTenFormAway.reverse(),
+                lastThreeForm: lastThreeFormAway !== undefined ? lastThreeFormAway.reverse() : "N/A",
+                LastFiveForm: lastFiveFormAway !== undefined ? lastFiveFormAway.reverse() : "N/A", 
+                LastSixForm: lastSixFormAway !== undefined ? lastSixFormAway.reverse() : "N/A",
+                LastTenForm: lastTenFormAway !== undefined ? lastTenFormAway.reverse() : "N/A",
                 LeagueOrAll: leagueOrAll,
                 LeaguePosition: `${teamPositionAway}${awayPrefix}`,
                 awayRawPosition: awayTeaminLeague.rawPosition

@@ -1059,8 +1059,6 @@ export async function createStatsDiv(game, displayBool) {
         favouriteRecordAway = 'No previous fixtures match the profile of this game.'
       }
 
-      let homeLastGame = await getLastGameResult(homeForm.LastFiveForm[4]);
-      let awayLastGame = await getLastGameResult(awayForm.LastFiveForm[4]);
 
       // let homeAttackStrength = await getAttackStrength(
       //   homeForm.ScoredOverall / 10
@@ -1321,7 +1319,6 @@ export async function createStatsDiv(game, displayBool) {
         leaguePosition: homeForm.LeaguePosition,
         Last5PPG: homeForm.PPG,
         SeasonPPG: homeForm.SeasonPPG,
-        lastGame: homeLastGame,
         formRun: homeForm.formRun,
         goalDifference: homeForm.goalDifference,
         goalDifferenceHomeOrAway: homeForm.goalDifferenceHomeOrAway,
@@ -1357,7 +1354,6 @@ export async function createStatsDiv(game, displayBool) {
         leaguePosition: awayForm.LeaguePosition,
         Last5PPG: awayForm.PPG,
         SeasonPPG: awayForm.SeasonPPG,
-        lastGame: awayLastGame,
         formRun: awayForm.formRun,
         goalDifference: awayForm.goalDifference,
         goalDifferenceHomeOrAway: awayForm.goalDifferenceHomeOrAway,
@@ -1624,7 +1620,6 @@ export async function createStatsDiv(game, displayBool) {
                   homeSixGameAverage.toFixed(2),
                   homeFiveGameAverage.toFixed(2),
                 ]}
-                lastGame={homeLastGame}
                 formRun={homeForm.resultsAll.reverse()}
                 goalDifference={formDataHome[0].goalDifference}
                 goalDifferenceHomeOrAway={
@@ -1716,7 +1711,6 @@ export async function createStatsDiv(game, displayBool) {
                   awaySixGameAverage.toFixed(2),
                   awayFiveGameAverage.toFixed(2),
                 ]}
-                lastGame={awayLastGame}
                 formRun={awayForm.resultsAll.reverse()}
                 goalDifference={formDataAway[0].goalDifference}
                 goalDifferenceHomeOrAway={
