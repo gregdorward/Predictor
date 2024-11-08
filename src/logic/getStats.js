@@ -1961,38 +1961,38 @@ export async function createStatsDiv(game, displayBool) {
                 <MultilineChart
                   height={
                     Math.max(
-                      rollingSOTDiffTotalHome[
-                        rollingSOTDiffTotalHome.length - 1
+                      rollingGoalDiffTotalHome[
+                        rollingGoalDiffTotalHome.length - 1
                       ],
-                      rollingSOTDiffTotalAway[
-                        rollingSOTDiffTotalAway.length - 1
+                      rollingGoalDiffTotalAway[
+                        rollingGoalDiffTotalAway.length - 1
                       ]
                     ) > 2
                       ? Math.max(
-                        rollingSOTDiffTotalHome[
-                          rollingSOTDiffTotalHome.length - 1
+                        rollingGoalDiffTotalHome[
+                          rollingGoalDiffTotalHome.length - 1
                           ],
-                          rollingSOTDiffTotalAway[
-                            rollingSOTDiffTotalAway.length - 1
+                          rollingGoalDiffTotalAway[
+                            rollingGoalDiffTotalAway.length - 1
                           ]
                         )
                       : 2
                   }
                   depth={
                     Math.min(
-                      rollingSOTDiffTotalHome[
-                        rollingSOTDiffTotalHome.length - 1
+                      rollingGoalDiffTotalHome[
+                        rollingGoalDiffTotalHome.length - 1
                       ],
-                      rollingSOTDiffTotalAway[
-                        rollingSOTDiffTotalAway.length - 1
+                      rollingGoalDiffTotalAway[
+                        rollingGoalDiffTotalAway.length - 1
                       ]
                     ) < -2
                       ? Math.min(
-                        rollingSOTDiffTotalHome[
-                          rollingSOTDiffTotalHome.length - 1
+                        rollingGoalDiffTotalHome[
+                          rollingGoalDiffTotalHome.length - 1
                           ],
-                          rollingSOTDiffTotalAway[
-                            rollingSOTDiffTotalAway.length - 1
+                          rollingGoalDiffTotalAway[
+                            rollingGoalDiffTotalAway.length - 1
                           ]
                         )
                       : -2
@@ -2001,11 +2001,9 @@ export async function createStatsDiv(game, displayBool) {
                   data2={rollingGoalDiffTotalAway}
                   data3={rollingXGDiffTotalHome}
                   data4={rollingXGDiffTotalAway}
-                  data5={rollingSOTDiffTotalHome}
-                  data6={rollingSOTDiffTotalAway}
                   team1={game.homeTeam}
                   team2={game.awayTeam}
-                  type={"Goal/XG/SOT difference over time"}
+                  type={"Goal/XG difference over time"}
                   tension={0.5}
                 ></MultilineChart>
               </div>

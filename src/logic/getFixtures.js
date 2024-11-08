@@ -100,7 +100,6 @@ export async function generateTables(a, leagueIdArray, allResults) {
     i++;
     leagueInstance = [];
     //Skip MLS which has a weird format
-    console.log(league)
     if (
       !league.data.specific_tables[0].groups &&
       currentLeagueId !== 6969 &&
@@ -869,8 +868,6 @@ export async function generateFixtures(
             (team) => team.homeFormName === match.homeTeam
           );
 
-          
-          console.log(match.homeTeam)
           teamPositionHome = homeTeaminLeague.position;
           teamPositionHomeTable = homeTeaminHomeLeague.position;
 

@@ -3180,6 +3180,9 @@ export async function calculateScore(match, index, divider, calculate) {
       awayComparisonWeighting = 1;
     }
 
+    console.log(match.game)
+    console.log(match)
+
     // ROI
     // Cumalative ROI for all 1402 match outcomes: + 7.58%
 

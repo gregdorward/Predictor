@@ -243,9 +243,6 @@ export function MultilineChart(props) {
 
   const labels = Array.from(props.data1.keys());
 
-  console.log(props.data1)
-  console.log(props.data3)
-
   let data = {
     labels,
     datasets: [
@@ -289,30 +286,6 @@ export function MultilineChart(props) {
         borderColor: "#be1000",
         borderWidth: 3,
         backgroundColor: "#be1000",
-        tension: props.tension,
-        hidden: true,
-      },
-      {
-        label: `${props.team1} SOT Diff`,
-        font: {
-          color: "black",
-        },
-        data: props.data5,
-        borderColor: "#0700ea",
-        borderWidth: 3,
-        backgroundColor: "#0700ea",
-        tension: props.tension,
-        hidden: true,
-      },
-      {
-        label: `${props.team2} SOT Diff`,
-        font: {
-          color: "black",
-        },
-        data: props.data6,
-        borderColor: "#e51300",
-        borderWidth: 3,
-        backgroundColor: "#e51300",
         tension: props.tension,
         hidden: true,
       },
