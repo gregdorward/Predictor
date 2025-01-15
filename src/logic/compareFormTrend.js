@@ -18,7 +18,7 @@ async function getOverOrUnderText(xgSum) {
       text = "Underachieving very slightly against expected goals.";
       break;
     case overUnderAchievingSum > -0.4 && overUnderAchievingSum <= 0.4:
-      text = "Roughly matching the expected goal difference overall.";
+      text = "Roughly matching expected goal difference overall.";
       break;
     case overUnderAchievingSum < -0.4 && overUnderAchievingSum >= -0.75:
       text = "Overachieving very slightly against expected goals.";
@@ -81,7 +81,7 @@ async function getAttackingSummary(goalsRecent, goalsLongTerm) {
         text = "Impressive scoring; consistent recently in front of goal.";
         break;
       case goalsRecent < goalsLongTerm:
-        text = "Impressive scoring, but less so recently in games.";
+        text = "Impressive scoring, but less impressive in recent games.";
         break;
       default:
         break;
@@ -95,7 +95,7 @@ async function getAttackingSummary(goalsRecent, goalsLongTerm) {
         text = "Decent scoring; consistent recently in front of goal.";
         break;
       case goalsRecent < goalsLongTerm:
-        text = "Decent scoring, but less so recently in games.";
+        text = "Decent scoring, but less impressive in recent games.";
         break;
       default:
         break;
@@ -103,13 +103,13 @@ async function getAttackingSummary(goalsRecent, goalsLongTerm) {
   } else if (goalsRecent < 1 && goalsRecent > 0) {
     switch (true) {
       case goalsRecent > goalsLongTerm:
-        text = "Poor scoring, but improving recently in front of goal.";
+        text = "Poor scoring, but signs of improvement in recent games.";
         break;
       case goalsRecent === goalsLongTerm:
-        text = "Poor scoring, consistent in front of goal recently.";
+        text = "Poor scoring and consistently so in most recent games.";
         break;
       case goalsRecent < goalsLongTerm:
-        text = "Poor scoring, no signs of improvement recently.";
+        text = "Poor scoring with no improvement in most recent games.";
         break;
       default:
         break;
@@ -131,7 +131,7 @@ async function getDefenceSummary(cleansheetStat) {
   let text;
   switch (true) {
     case cleansheetStat > 80:
-      text = `Incredibly strong defensively; ${cleansheetStat}% of games end in a cleansheet.`;
+      text = `Rock solid at the back; ${cleansheetStat}% of games end in a cleansheet.`;
       break;
     case cleansheetStat > 60 && cleansheetStat <= 80:
       text = `Very strong defensively; ${cleansheetStat}% of games end in a cleansheet.`;
@@ -140,13 +140,13 @@ async function getDefenceSummary(cleansheetStat) {
       text = `Defensively impressive; ${cleansheetStat}% of games end in a cleansheet.`;
       break;
     case cleansheetStat > 20 && cleansheetStat <= 40:
-      text = `Defensively average; ${cleansheetStat}% of games end in a cleansheet.`;
+      text = `Average at the back; only ${cleansheetStat}% of games end in a cleansheet.`;
       break;
     case cleansheetStat > 1 && cleansheetStat <= 20:
       text = `Defensively frail; only ${cleansheetStat}% of games end in a cleansheet.`;
       break;
     case cleansheetStat === 0:
-      text = `Defensively weak; ${cleansheetStat}% of games end in a cleansheet.`;
+      text = `Defensively shambolic; ${cleansheetStat}% of games end in a cleansheet.`;
       break;
     default:
       break;
@@ -183,7 +183,7 @@ async function GenerateFormSummary(form, lastx, recentForm) {
           break;
         case five === ten:
           text =
-            "Outstanding recent form, steady over past 10 games.";
+            "Outstanding recent form, consistent over past 10 games.";
           break;
         case five < ten:
           text = 
@@ -200,7 +200,7 @@ async function GenerateFormSummary(form, lastx, recentForm) {
           break;
         case five === ten:
           text =
-            "Excellent recent form, steady over past 10 games.";
+            "Excellent recent form, consistent over past 10 games.";
           break;
         case five < ten:
           text = 
@@ -217,7 +217,7 @@ async function GenerateFormSummary(form, lastx, recentForm) {
           break;
         case five === ten:
           text =
-            "Very good recent form, steady over past 10 games.";
+            "Very good recent form, consistent over past 10 games.";
           break;
         case five < ten:
           text = 
@@ -234,7 +234,7 @@ async function GenerateFormSummary(form, lastx, recentForm) {
           break;
         case five === ten:
           text =
-            "Good recent form, steady over past 10 games.";
+            "Good recent form, consistent over past 10 games.";
           break;
         case five < ten:
           text = 
@@ -247,15 +247,15 @@ async function GenerateFormSummary(form, lastx, recentForm) {
       switch (true) {
         case five > ten:
           text =
-            "Fairly good recent form; improving over last 5 games.";
+            "Decent recent form; improving over last 5 games.";
           break;
         case five === ten:
           text =
-            "Fairly good recent form, steady over past 10 games.";
+            "Decent recent form, consistent over past 10 games.";
           break;
         case five < ten:
           text = 
-            "Fairly good recent form, worsened in last 5 games.";
+            "Decent recent form, worsened in last 5 fixtures.";
           break;
         default:
           break;
@@ -264,11 +264,11 @@ async function GenerateFormSummary(form, lastx, recentForm) {
       switch (true) {
         case five > ten:
           text =
-            "Average recent form; improving over last 5 games.";
+            "Average recent form; improving over last 5 fixtures.";
           break;
         case five === ten:
           text =
-            "Average recent form, steady over past 10 games.";
+            "Average recent form, consistent over past 10 games.";
           break;
         case five < ten:
           text = 
@@ -281,11 +281,11 @@ async function GenerateFormSummary(form, lastx, recentForm) {
       switch (true) {
         case five > ten:
           text =
-            "Poor recent form; improving over last 5 games.";
+            "Poor recent form; improving over last 5 fixtures.";
           break;
         case five === ten:
           text =
-            "Poor recent form, steady over past 10 games.";
+            "Poor recent form, consistent over past 10 games.";
           break;
         case five < ten:
           text = 
@@ -298,15 +298,15 @@ async function GenerateFormSummary(form, lastx, recentForm) {
       switch (true) {
         case five > ten:
           text =
-            "Very poor recent form; improving over last 5 games.";
+            "Very poor recent form; improving over last 5 fixtures.";
           break;
         case five === ten:
           text =
-            "Very poor recent form, steady over past 10 games.";
+            "Very poor recent form, consistent over past 10 games.";
           break;
         case five < ten:
           text = 
-            "Very poor recent form, worsened in last 5 games.";
+            "Very poor recent form, worsening still in last 5 games.";
           break;
         default:
           break;
@@ -315,15 +315,15 @@ async function GenerateFormSummary(form, lastx, recentForm) {
       switch (true) {
         case five > ten:
           text =
-            "Terrible recent form; improving over last 5 games.";
+            "Terrible recent form; improving over last 5 fixtures.";
           break;
         case five === ten:
           text =
-            "Terrible recent form, steady over past 10 games.";
+            "Terrible recent form, consistent over past 10 games.";
           break;
         case five < ten:
           text = 
-            "Terrible recent form, worsened in last 5 games.";
+            "Terrible recent form, worsening still in last 5 games.";
           break;
         default:
           break;

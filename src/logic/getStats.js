@@ -976,8 +976,12 @@ export async function createStatsDiv(game, displayBool) {
       }
 
       let favouriteRecordHome, favouriteRecordAway;
+      console.log(homeForm.teamName)
+      console.log(homeForm.oddsReliabilityWin)
 
-      if (homeForm.oddsReliabilityWin && awayForm.oddsReliabilityWin) {
+      console.log(awayForm.teamName)
+      console.log(awayForm.oddsReliabilityWin)
+      if (homeForm.underdogCount && awayForm.underdogCount && homeForm.favouriteCount && awayForm.favouriteCount) {
         favouriteRecordHome =
           game.homeOdds < game.awayOdds || game.homeOdds === game.awayOdds
             ? `${homeForm.teamName} have been favourites ${
@@ -1014,7 +1018,7 @@ export async function createStatsDiv(game, displayBool) {
               )}%, Lost:  ${awayForm.oddsReliabilityLoseAsUnderdog.toFixed(
                 0
               )}%`;
-      } else if (!homeForm.oddsReliabilityWin && awayForm.oddsReliabilityWin) {
+      } else if (!homeForm.favouriteCount && awayForm.favouriteCount && !homeForm.underdogCount && awayForm.underdogCount) {
         favouriteRecordHome = 'No previous fixtures match the profile of this game.'
         favouriteRecordAway =
           game.homeOdds > game.awayOdds || game.homeOdds === game.awayOdds
@@ -1332,7 +1336,9 @@ export async function createStatsDiv(game, displayBool) {
         BTTSArray: bttsArrayHome,
         Results: homeForm.resultsAll,
         ResultsHorA: homeForm.resultsHome.reverse(),
-        XGSwing: homeForm.XGChangeRecently
+        XGSwing: homeForm.XGChangeRecently,
+        styleOfPlayOverall: homeForm.styleOfPlayOverall,
+        styleOfPlayHome: homeForm.styleOfPlayHome
         // BTTSAll: homeForm.last10btts,
         // BTTSHorA: homeForm.last10bttsHome,
       });
@@ -1367,7 +1373,9 @@ export async function createStatsDiv(game, displayBool) {
         BTTSArray: bttsArrayAway,
         Results: awayForm.resultsAll,
         ResultsHorA: awayForm.resultsAway.reverse(),
-        XGSwing: awayForm.XGChangeRecently
+        XGSwing: awayForm.XGChangeRecently,
+        styleOfPlayOverall: awayForm.styleOfPlayOverall,
+        styleOfPlayAway: awayForm.styleOfPlayAway,
         // BTTSAll: awayForm.last10btts,
         // BTTSHorA: awayForm.last10bttsAway,
       });
@@ -1649,6 +1657,8 @@ export async function createStatsDiv(game, displayBool) {
                 }
                 FormTextString={formDataHome[0].FormTextStringHome}
                 FavouriteRecord={formDataHome[0].FavouriteRecord}
+                StyleOfPlay={formDataHome[0].styleOfPlayOverall}
+                StyleOfPlayHomeOrAway={formDataHome[0].styleOfPlayHome}
               />
             </ul>
           </div>
@@ -1740,6 +1750,8 @@ export async function createStatsDiv(game, displayBool) {
                 }
                 FormTextString={formDataAway[0].FormTextStringAway}
                 FavouriteRecord={formDataAway[0].FavouriteRecord}
+                StyleOfPlay={formDataAway[0].styleOfPlayOverall}
+                StyleOfPlayHomeOrAway={formDataAway[0].styleOfPlayAway}
               />
             </ul>
           </div>

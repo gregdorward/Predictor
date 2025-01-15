@@ -102,6 +102,8 @@ function Stats(props) {
           </li>
           <div className="FormSummaries">
           <li className="FormSummaryHome">{props.FormTextString}</li>
+          <li className="StyleOfPlay">{`Style - ${props.StyleOfPlay}`}</li>
+          <li className="StyleOfPlay">{`${props.homeOrAway} style - ${props.StyleOfPlayHomeOrAway}`}</li>
           <li className="FavouriteSummaryHome">{props.FavouriteRecord}</li>
           </div>
           <div className="AllStats">

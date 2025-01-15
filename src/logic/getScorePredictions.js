@@ -2126,20 +2126,20 @@ async function calculatePlayingStyle(points, possession) {
   switch (true) {
     case possession > 60:
       switch (true) {
-        case points > 11:
+        case points > 12:
           style = "Extremely controlling and patient";
           break;
-        case points > 9:
-          style = "Controlling and patient";
+        case points > 9.5:
+          style = "Highly controlling, slow and patient";
           break;
-        case points > 8:
-          style = "Controlling and balanced";
+        case points > 8.5:
+          style = "Balanced and controlling possession";
           break;
-        case points > 5:
-          style = "Controlling and attacking";
+        case points > 6:
+          style = "Attacking and controlling possession";
           break;
         case points > 3:
-          style = "Controlling and extremely attacking";
+          style = "Extremely attacking control approach";
           break;
         default:
           style = "N/A";
@@ -2150,19 +2150,19 @@ async function calculatePlayingStyle(points, possession) {
     case possession > 50:
       switch (true) {
         case points > 12:
-          style = "Extremely patient";
+          style = "Passive, inefficient possession play";
           break;
         case points > 9:
-          style = "Patient";
+          style = "Patient, possession-based approach";
           break;
         case points > 8:
-          style = "Balanced";
+          style = "Balanced with some possession focus";
           break;
         case points > 5:
-          style = "Direct and attacking";
+          style = "Direct control, effective possession";
           break;
         case points > 3:
-          style = "Extremely direct and attacking";
+          style = "Extremely direct attacking approach";
           break;
         default:
           style = "N/A";
@@ -2170,59 +2170,60 @@ async function calculatePlayingStyle(points, possession) {
       }
       break;
 
-      case possession > 40:
-        switch (true) {
-          case points > 11:
-            style = "Extremely defensive";
-            break;
-          case points > 8:
-            style = "Defensive and direct";
-            break;
-          case points > 5.5:
-            style = "Counter attacking";
-            break;
-          case points > 4:
-            style = "Direct";
-            break;
-          case points > 1:
-            style = "Extremely direct";
-            break;
-          default:
-            style = "N/A";
-            break;
-        }
-        break;
-
-        case possession > 20:
-          switch (true) {
-            case points > 11:
-              style = "Extremely defensive and inefficient";
-              break;
-            case points > 8:
-              style = "Defensive, direct and inefficient";
-              break;
-            case points > 5:
-              style = "Counter attacking";
-              break;
-            case points > 3:
-              style = "Direct";
-              break;
-            case points > 1:
-              style = "Extremely direct";
-              break;
-            default:
-              style = "N/A";
-              break;
-          }
+    case possession > 40:
+      switch (true) {
+        case points > 12:
+          style = "Low control with wasteful transitions";
           break;
+        case points > 10:
+          style = "Wasteful transitional countering play";
+          break;
+        case points > 7.5:
+          style = "Counter attacking and quick build up";
+          break;
+        case points > 5:
+          style = "Direct and precise transitional play";
+          break;
+        case points > 3:
+          style = "Extremely effective transition focus";
+          break;
+        default:
+          style = "N/A";
+          break;
+      }
+      break;
+
+    case possession > 20:
+      switch (true) {
+        case points > 13:
+          style = "Concede possession, highly inefficient";
+          break;
+        case points > 10:
+          style = "Defensive with inefficient transitions";
+          break;
+        case points > 7:
+          style = "Counter attacking and very direct play";
+          break;
+        case points > 4:
+          style = "Extremely counter attacking transitions";
+          break;
+        case points > 2:
+          style = "Extremely direct, efficient countering";
+          break;
+        default:
+          style = "N/A";
+          break;
+      }
+      break;
 
     default:
-      style = "N/A"; // Fallback if possession is 50 or less
+      style = "N/A";
       break;
   }
 
   return style;
 }
+
 
 
 export async function roundCustom(num, form, otherForm) {
