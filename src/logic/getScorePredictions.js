@@ -1662,6 +1662,25 @@ async function normalizeValues(value1, value2, minRange, maxRange) {
   return { normalizedValue1, normalizedValue2 };
 }
 
+
+async function findClosestProperty(obj, number) {
+
+
+  let closestProperty = null;
+  let smallestDifference = Infinity;
+
+  for (const [key, value] of Object.entries(obj)) {
+    const difference = Math.abs(number - value);
+    if (difference < smallestDifference) {
+      smallestDifference = difference;
+      closestProperty = key;
+    }
+  }
+
+  return closestProperty;
+}
+
+
 export async function generateGoals(homeForm, awayForm, match) {
   let homeGoals = 0;
   let awayGoals = 0;
@@ -1800,6 +1819,23 @@ export async function generateGoals(homeForm, awayForm, match) {
     awayGoals = awayGoals * 1.25;
   }
 
+
+  // const homeRecordAgainstSimilarStyles = await findClosestProperty(homeForm.recordAgainstIndividualStylesHome, awayForm.directnessRatingAway); // Outputs: "totalL"
+  // const awayRecordAgainstSimilarStyles = await findClosestProperty(awayForm.recordAgainstIndividualStylesAway, homeForm.directnessRating); // Outputs: "totalL"
+
+
+
+  // if(homeRecordAgainstSimilarStyles === "totalW" && awayRecordAgainstSimilarStyles === "totalL"){
+  //   homeGoals = homeGoals * 1.5;
+  //   awayGoals = awayGoals * 0.5;
+  // } else if(homeRecordAgainstSimilarStyles === "totalL" && awayRecordAgainstSimilarStyles === "totalW"){
+  //   homeGoals = homeGoals * 0.5;
+  //   awayGoals = awayGoals * 1.5;
+  // } 
+
+  // console.log(match.game)
+  // console.log(homeRecordAgainstSimilarStyles)
+  // console.log(awayRecordAgainstSimilarStyles)
   // if(homeForm.last5Points > homeForm.last10Points){
   //   homeGoals = homeGoals + 0.1;
   //   awayGoals = awayGoals - 0.1;
@@ -2594,6 +2630,10 @@ export async function calculateScore(match, index, divider, calculate) {
       match.bttsPercentageAwayHome = "";
       match.bttsPercentageAwayAway = "";
     }
+
+    match.directnessRatingHome = formHome.directnessRatingHome
+    match.directnessRatingAway = formAway.directnessRatingAway
+
 
     if (
       typeof formHome.homeTeamHomePositionRaw === "number" &&
@@ -3397,6 +3437,10 @@ export async function calculateScore(match, index, divider, calculate) {
 
     // let experimentalHomeGoals = formHome.teamGoalsCalc;
 
+    // console.log(match.game)
+    // console.log(formHome)
+    // console.log(formAway)
+
     let experimentalHomeGoals =
       // factorOneHome * 1 +
       // (formHome.allTeamGoalsBasedOnAverages +
@@ -3405,12 +3449,12 @@ export async function calculateScore(match, index, divider, calculate) {
       // formAway.predictedGoalsConceededBasedOnAwayAv +
       // formHome.XGPredictionHome.goalsFor +
       // formAway.XGPredictionAway.goalsAgainst +
-      (formHome.teamGoalsCalc * 1 +
+      (formHome.teamGoalsCalc * 2 +
         formHome.forAndAgainstRollingAvHomeOrAway.goalsFor * 1 +
         formAway.forAndAgainstRollingAvHomeOrAway.goalsAgainst * 1 +
         formHome.forAndAgainstRollingAv.goalsFor * 1 +
         formAway.forAndAgainstRollingAv.goalsAgainst * 1) /
-      5;
+      6;
     // + homeAdj;
 
     // (factorOneHome * homeComparisonWeighting +
@@ -3428,12 +3472,12 @@ export async function calculateScore(match, index, divider, calculate) {
       // formHome.predictedGoalsConceededBasedOnHomeAv +
       // formAway.XGPredictionAway.goalsFor +
       // formHome.XGPredictionHome.goalsAgainst +
-      (formAway.teamGoalsCalc * 1 +
+      (formAway.teamGoalsCalc * 2 +
         formAway.forAndAgainstRollingAvHomeOrAway.goalsFor * 1 +
         formHome.forAndAgainstRollingAvHomeOrAway.goalsAgainst * 1 +
         formAway.forAndAgainstRollingAv.goalsFor * 1 +
         formHome.forAndAgainstRollingAv.goalsAgainst * 1) /
-      5;
+      6;
     // + awayAdj;
 
     // console.log(experimentalHomeGoals);
@@ -4067,8 +4111,8 @@ export async function getScorePrediction(day, mocked) {
         match,
         match.goalsA,
         match.goalsB,
-        match.unroundedGoalsA,
-        match.unroundedGoalsB
+        match.directnessRatingHome,
+        match.directnessRatingAway,
       );
 
       let predictionObject;
