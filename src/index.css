@@ -438,7 +438,8 @@ button.GeneratePredictions:active{
 } */
 
 p {
-  /* font-size: 1em; */
+  font-size: 1em;
+  color: #030061;
 }
 
 .RadioText {
@@ -480,12 +481,13 @@ p {
 .SuccessMeasure {
   height: auto;
   flex-basis: 10%;
-  padding: 0.75em;
+  padding: 0.5em;
   /* font-size: 0.8em; */
   flex-grow: 1000;
   display: inline-block;
   width: 40%;
   line-height: auto;
+  border-bottom: #030052 solid 1px;
 }
 
 .Span1 {
@@ -581,6 +583,16 @@ p {
   color: white;
   box-shadow: 0 1px 2px 0 #03006175 inset, 0 2px 2px 0 #03006175;
   cursor: pointer;
+}
+
+.ProfitableLeague{
+  color: #01a501;
+  font-size: 1.2em;
+}
+
+.NonProfitableLeague{
+  color: #bf1000;
+  font-size: 1.2em;
 }
 
 #league7432 {

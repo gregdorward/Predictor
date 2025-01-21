@@ -4,6 +4,7 @@ import { matches, diff } from "./getFixtures";
 import { RenderAllFixtures } from "../logic/getFixtures";
 import Div from "../components/Div";
 import Collapsable from "../components/CollapsableElement";
+import CollapsableStats from "../components/CollapsableStats";
 import { allForm } from "../logic/getFixtures";
 import Increment from "../components/Increment";
 import { incrementValue } from "../components/Increment";
@@ -134,10 +135,13 @@ async function getPastLeagueResults(team, game, hOrA, form) {
 
     async function addTotalsToRecord(record) {
       // Calculate the total for each array and add as a new property
-      record.totalW = record.W.reduce((sum, value) => sum + value, 0) / record.W.length;
-      record.totalD = record.D.reduce((sum, value) => sum + value, 0) / record.D.length;
-      record.totalL = record.L.reduce((sum, value) => sum + value, 0) / record.L.length;
-    
+      record.totalW =
+        record.W.reduce((sum, value) => sum + value, 0) / record.W.length;
+      record.totalD =
+        record.D.reduce((sum, value) => sum + value, 0) / record.D.length;
+      record.totalL =
+        record.L.reduce((sum, value) => sum + value, 0) / record.L.length;
+
       return record; // Return the updated object
     }
 
@@ -158,7 +162,6 @@ async function getPastLeagueResults(team, game, hOrA, form) {
       D: [],
       L: [],
     };
-
 
     let homeResults = [];
     let awayResults = [];
@@ -236,9 +239,11 @@ async function getPastLeagueResults(team, game, hOrA, form) {
       const directnessHome =
         (resultedGame.team_a_possession === -1
           ? 50
-          : 100 - resultedGame.team_a_possession) / (resultedGame.team_b_shotsOnTarget === 0 || resultedGame.team_b_shotsOnTarget === -1
-        ? 5
-        : resultedGame.team_b_shotsOnTarget);
+          : 100 - resultedGame.team_a_possession) /
+        (resultedGame.team_b_shotsOnTarget === 0 ||
+        resultedGame.team_b_shotsOnTarget === -1
+          ? 5
+          : resultedGame.team_b_shotsOnTarget);
 
       switch (true) {
         case resultedGame.homeGoalCount > resultedGame.awayGoalCount:
@@ -362,26 +367,28 @@ async function getPastLeagueResults(team, game, hOrA, form) {
       const directnessAway =
         (resultedGame.team_b_possession === -1
           ? 50
-          : 100 - resultedGame.team_b_possession) / (resultedGame.team_a_shotsOnTarget === 0 || resultedGame.team_a_shotsOnTarget === -1
-        ? 5
-        : resultedGame.team_a_shotsOnTarget);
+          : 100 - resultedGame.team_b_possession) /
+        (resultedGame.team_a_shotsOnTarget === 0 ||
+        resultedGame.team_a_shotsOnTarget === -1
+          ? 5
+          : resultedGame.team_a_shotsOnTarget);
 
-        switch (true) {
-          case resultedGame.homeGoalCount > resultedGame.awayGoalCount:
-            form.recordAgainstIndividualStyles.L.push(directnessAway);
-            form.recordAgainstIndividualStylesAway.L.push(directnessAway);
-            break;
-          case resultedGame.homeGoalCount < resultedGame.awayGoalCount:
-            form.recordAgainstIndividualStyles.W.push(directnessAway);
-            form.recordAgainstIndividualStylesAway.W.push(directnessAway);
-            break;
-          case resultedGame.homeGoalCount === resultedGame.awayGoalCount:
-            form.recordAgainstIndividualStyles.D.push(directnessAway);
-            form.recordAgainstIndividualStylesAway.D.push(directnessAway);
-            break;
-          default:
-            break;
-        }
+      switch (true) {
+        case resultedGame.homeGoalCount > resultedGame.awayGoalCount:
+          form.recordAgainstIndividualStyles.L.push(directnessAway);
+          form.recordAgainstIndividualStylesAway.L.push(directnessAway);
+          break;
+        case resultedGame.homeGoalCount < resultedGame.awayGoalCount:
+          form.recordAgainstIndividualStyles.W.push(directnessAway);
+          form.recordAgainstIndividualStylesAway.W.push(directnessAway);
+          break;
+        case resultedGame.homeGoalCount === resultedGame.awayGoalCount:
+          form.recordAgainstIndividualStyles.D.push(directnessAway);
+          form.recordAgainstIndividualStylesAway.D.push(directnessAway);
+          break;
+        default:
+          break;
+      }
 
       oddsSumAway = oddsSumAway + resultedGame.odds_ft_2;
       favouriteCount =
@@ -425,7 +432,7 @@ async function getPastLeagueResults(team, game, hOrA, form) {
           : beatenUnderdogCount + 0;
     }
 
-   await addTotalsToRecord(form.recordAgainstIndividualStyles);
+    await addTotalsToRecord(form.recordAgainstIndividualStyles);
 
     let reversedResultsHome = homeResults;
     let reversedResultsAway = awayResults;
@@ -829,7 +836,6 @@ async function getPastLeagueResults(team, game, hOrA, form) {
     const shotsOnTargetSum = shotsOnTarget.reduce((a, b) => a + b, 0);
     const avgShotsOnTarget = shotsOnTargetSum / shotsOnTarget.length || 0;
 
-
     const shotsOnTargetHome = homeResults.map((res) => res.sot);
     const shotsOnTargetSumHome = shotsOnTargetHome.reduce((a, b) => a + b, 0);
     form.avgShotsOnTargetHome =
@@ -840,9 +846,11 @@ async function getPastLeagueResults(team, game, hOrA, form) {
     form.avgShotsOnTargetAway =
       shotsOnTargetSumAway / shotsOnTargetAway.length || 0;
 
-      form.directnessRating = avgPossession / avgShotsOnTarget
-      form.directnessRatingHome = form.avgPossessionHome / form.avgShotsOnTargetHome
-      form.directnessRatingAway = form.avgPossessionAway / form.avgShotsOnTargetAway
+    form.directnessRating = avgPossession / avgShotsOnTarget;
+    form.directnessRatingHome =
+      form.avgPossessionHome / form.avgShotsOnTargetHome;
+    form.directnessRatingAway =
+      form.avgPossessionAway / form.avgShotsOnTargetAway;
 
     const shotsOnTargetAgainst = allTeamResults.map((res) => res.sotAgainst);
     const shotsOnTargetSumAgainst = shotsOnTargetAgainst.reduce(
@@ -1662,10 +1670,7 @@ async function normalizeValues(value1, value2, minRange, maxRange) {
   return { normalizedValue1, normalizedValue2 };
 }
 
-
 async function findClosestProperty(obj, number) {
-
-
   let closestProperty = null;
   let smallestDifference = Infinity;
 
@@ -1679,7 +1684,6 @@ async function findClosestProperty(obj, number) {
 
   return closestProperty;
 }
-
 
 export async function generateGoals(homeForm, awayForm, match) {
   let homeGoals = 0;
@@ -1819,11 +1823,8 @@ export async function generateGoals(homeForm, awayForm, match) {
     awayGoals = awayGoals * 1.25;
   }
 
-
   // const homeRecordAgainstSimilarStyles = await findClosestProperty(homeForm.recordAgainstIndividualStylesHome, awayForm.directnessRatingAway); // Outputs: "totalL"
   // const awayRecordAgainstSimilarStyles = await findClosestProperty(awayForm.recordAgainstIndividualStylesAway, homeForm.directnessRating); // Outputs: "totalL"
-
-
 
   // if(homeRecordAgainstSimilarStyles === "totalW" && awayRecordAgainstSimilarStyles === "totalL"){
   //   homeGoals = homeGoals * 1.5;
@@ -1831,7 +1832,7 @@ export async function generateGoals(homeForm, awayForm, match) {
   // } else if(homeRecordAgainstSimilarStyles === "totalL" && awayRecordAgainstSimilarStyles === "totalW"){
   //   homeGoals = homeGoals * 0.5;
   //   awayGoals = awayGoals * 1.5;
-  // } 
+  // }
 
   // console.log(match.game)
   // console.log(homeRecordAgainstSimilarStyles)
@@ -2260,8 +2261,6 @@ async function calculatePlayingStyle(points, possession) {
   return style;
 }
 
-
-
 export async function roundCustom(num, form, otherForm) {
   let wholeNumber = Math.floor(num);
   let remainder = num - wholeNumber;
@@ -2631,9 +2630,8 @@ export async function calculateScore(match, index, divider, calculate) {
       match.bttsPercentageAwayAway = "";
     }
 
-    match.directnessRatingHome = formHome.directnessRatingHome
-    match.directnessRatingAway = formAway.directnessRatingAway
-
+    match.directnessRatingHome = formHome.directnessRatingHome;
+    match.directnessRatingAway = formAway.directnessRatingAway;
 
     if (
       typeof formHome.homeTeamHomePositionRaw === "number" &&
@@ -2922,7 +2920,6 @@ export async function calculateScore(match, index, divider, calculate) {
     formHome.attackingStrength = await calculateAttackingStrength(
       attackingMetricsHome
     );
-
 
     formHome.attackingStrengthScoreGeneration =
       await calculateAttackingStrength(attackingMetricsHome);
@@ -3224,11 +3221,23 @@ export async function calculateScore(match, index, divider, calculate) {
       3 - formAway.avgXGConceededAway
     );
 
-    formHome.styleOfPlayOverall = await calculatePlayingStyle(formHome.directnessRating, formHome.AveragePossessionOverall)
-    formHome.styleOfPlayHome = await calculatePlayingStyle(formHome.directnessRatingHome,formHome.avgPossessionHome)
+    formHome.styleOfPlayOverall = await calculatePlayingStyle(
+      formHome.directnessRating,
+      formHome.AveragePossessionOverall
+    );
+    formHome.styleOfPlayHome = await calculatePlayingStyle(
+      formHome.directnessRatingHome,
+      formHome.avgPossessionHome
+    );
 
-    formAway.styleOfPlayOverall = await calculatePlayingStyle(formAway.directnessRating, formAway.AveragePossessionOverall)
-    formAway.styleOfPlayAway = await calculatePlayingStyle(formAway.directnessRatingAway, formAway.avgPossessionAway)
+    formAway.styleOfPlayOverall = await calculatePlayingStyle(
+      formAway.directnessRating,
+      formAway.AveragePossessionOverall
+    );
+    formAway.styleOfPlayAway = await calculatePlayingStyle(
+      formAway.directnessRatingAway,
+      formAway.avgPossessionAway
+    );
 
     formHome.actualToXGDifference = parseInt(
       await diff(formHome.XGDiffNonAverage, formHome.goalDifference)
@@ -3418,7 +3427,6 @@ export async function calculateScore(match, index, divider, calculate) {
       homeComparisonWeighting = 1;
       awayComparisonWeighting = 1;
     }
-
 
     // ROI
     // Cumalative ROI for all 1402 match outcomes: + 7.58%
@@ -3936,6 +3944,8 @@ export async function calculateScore(match, index, divider, calculate) {
   return [finalHomeGoals, finalAwayGoals, rawFinalHomeGoals, rawFinalAwayGoals];
 }
 
+let specificLeagueResults = {}; // Initialize outside the function to persist data
+
 async function getSuccessMeasure(fixtures) {
   let sumProfit = 0;
   let investment = 0;
@@ -3944,64 +3954,124 @@ async function getSuccessMeasure(fixtures) {
   let profit = 0;
   let netProfit = 0;
 
-  // await fetch(`${process.env.REACT_APP_EXPRESS_SERVER}tips/${dateStamp}`, {
-  //   method: "PUT",
-  //   headers: {
-  //     Accept: "application/json",
-  //     "Content-Type": "application/json",
-  //   },
-  //   body: JSON.stringify(matches)
-  // })
-
   for (let i = 0; i < fixtures.length; i++) {
+    console.log(fixtures[i]);
+
     if (
       fixtures[i].status === "complete" &&
       fixtures[i].hasOwnProperty("prediction") &&
       fixtures[i].omit !== true
     ) {
-      sumProfit = sumProfit + fixtures[i].profit;
-      investment = investment + 1;
+      sumProfit += fixtures[i].profit;
+      investment += 1;
       netProfit = (sumProfit - investment).toFixed(2);
       profit = parseFloat(netProfit);
+
       if (fixtures[i].exactScore === true) {
-        exactScores = exactScores + 1;
+        exactScores += 1;
       }
       if (fixtures[i].predictionOutcome === "Won") {
-        successCount = successCount + 1;
+        successCount += 1;
       }
+
+      // Handle league-specific results
+      const leagueName = fixtures[i].leagueDesc || "Unknown League";
+
+      if (!specificLeagueResults[leagueName]) {
+        specificLeagueResults[leagueName] = {
+          totalProfit: 0,
+          totalInvestment: 0,
+          totalROI: 0,
+          exactScores: 0,
+          successCount: 0,
+        };
+      }
+
+      // Update the league-specific results
+      const league = specificLeagueResults[leagueName];
+      league.totalProfit += fixtures[i].profit;
+      league.totalInvestment += 1;
+      league.exactScores += fixtures[i].exactScore ? 1 : 0;
+      league.successCount += fixtures[i].predictionOutcome === "Won" ? 1 : 0;
+
+      // Calculate ROI for the league
+      const netLeagueProfit = league.totalProfit - league.totalInvestment;
+      league.totalROI = (
+        (netLeagueProfit / league.totalInvestment) *
+        100
+      ).toFixed(2);
     }
   }
 
-  totalInvestment = totalInvestment + investment;
-  totalProfit = totalProfit + profit;
-  let ROI = (profit / investment) * 100;
+  // Update cumulative totals
+  totalInvestment += investment;
+  totalProfit += profit;
+  const ROI = (profit / investment) * 100;
   totalROI = (totalProfit / totalInvestment) * 100;
-  console.log(`Total Profit : ${totalProfit}`);
-  console.log(`Total Investment : ${totalInvestment}`);
-  console.log(`Total ROI : ${totalROI}`);
-  var operand = ROI >= 0 ? "+" : "";
-  var operandTwo = totalROI >= 0 ? "+" : "";
-  let exactScoreHitRate = ((exactScores / investment) * 100).toFixed(1);
-  let successRate = ((successCount / investment) * 100).toFixed(1);
+
+  console.log(`Total Profit: ${totalProfit}`);
+  console.log(`Total Investment: ${totalInvestment}`);
+  console.log(`Total ROI: ${totalROI}`);
 
   if (investment > 0) {
     ReactDOM.render(
       <Fragment>
-        <Div
-          className={"SuccessMeasure"}
-          text={`ROI for 
-            all ${investment} W/D/W 
-            outcomes: ${operand} ${ROI.toFixed(2)}%`}
-        />
-        <p>{`Correct W/D/W predictions: ${successCount} (${successRate}%)`}</p>
-        <p>{`Exact scores predicted: ${exactScores} (${exactScoreHitRate}%)`}</p>
-        <Div
-          className={"SuccessMeasure"}
-          text={`Cumalative ROI for 
-            all ${totalInvestment} match outcomes: ${operandTwo} ${totalROI.toFixed(
-            2
-          )}%`}
-        />
+        <h3
+          className={"SuccessMeasureText"}>ROI for all {investment} W/D/W outcomes: {
+            ROI >= 0 ? "+" : " "
+          } {ROI.toFixed(2)}%</h3>
+        <p>{`Correct W/D/W predictions: ${successCount} (${(
+          (successCount / investment) *
+          100
+        ).toFixed(1)}%)`}</p>
+        <p>{`Exact scores predicted: ${exactScores} (${(
+          (exactScores / investment) *
+          100
+        ).toFixed(1)}%)`}</p>
+        <p
+          className={"SuccessMeasureText"}
+        >Cumulative ROI for all {totalInvestment} match outcomes: {
+            totalROI >= 0 ? "+" : ""
+          } {totalROI.toFixed(2)}%</p>
+        <CollapsableStats buttonText="ROI by League">
+          {Object.entries(specificLeagueResults)
+            .sort(([, a], [, b]) => b.totalROI - a.totalROI) // Sort by ROI in descending order
+            .map(([leagueName, league]) => {
+              return (
+                <div className="SuccessMeasure" key={leagueName}>
+                  <h3
+                    className={`${
+                      league.totalROI >= 0
+                        ? "ProfitableLeague"
+                        : "NonProfitableLeague"
+                    }`}
+                  >
+                    {leagueName}: ROI {league.totalROI >= 0 ? "+" : " "}
+                    {league.totalROI}%
+                  </h3>
+                  <p>
+                    Successful Predictions: {league.successCount} /{" "}
+                    {specificLeagueResults[leagueName].totalInvestment} :{" "}
+                    {(
+                      (league.successCount /
+                        specificLeagueResults[leagueName].totalInvestment) *
+                      100
+                    ).toFixed(2)}
+                    %
+                  </p>
+                  <p>
+                    Exact Scores: {league.exactScores} /{" "}
+                    {specificLeagueResults[leagueName].totalInvestment} :{" "}
+                    {(
+                      (league.exactScores /
+                        specificLeagueResults[leagueName].totalInvestment) *
+                      100
+                    ).toFixed(2)}
+                  </p>
+                </div>
+              );
+            })}
+        </CollapsableStats>
       </Fragment>,
       document.getElementById("successMeasure2")
     );
@@ -4112,7 +4182,7 @@ export async function getScorePrediction(day, mocked) {
         match.goalsA,
         match.goalsB,
         match.directnessRatingHome,
-        match.directnessRatingAway,
+        match.directnessRatingAway
       );
 
       let predictionObject;

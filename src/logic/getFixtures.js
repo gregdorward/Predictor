@@ -808,10 +808,12 @@ export async function generateFixtures(
         let match = {};
         if (orderedLeagues[i].name !== previousLeagueName) {
           match.leagueName = orderedLeagues[i].name;
+          match.leagueDesc = orderedLeagues[i].name;
           match.leagueIndex = i;
           match.leagueID = leagueID;
         } else {
           match.leagueName = null;
+          match.leagueDesc = orderedLeagues[i].name;
           match.leagueIndex = i;
           match.leagueID = leagueID;
         }
