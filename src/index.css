@@ -3239,3 +3239,19 @@ input:active + .design::after {
 h6.AttackingMomentum {
   padding: 1em;
 }
+
+.ContactText{
+  font-size: 0.8em;
+  margin-left: auto;
+  margin-right: auto;
+  width: 50%;
+  text-align: center;
+}
+
+.text-blue-500{
+  color: #030061;
+}
+
+.mb-6{
+  width: 100%;
+}

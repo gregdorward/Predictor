@@ -7,6 +7,7 @@ import { Fixture } from "./components/Fixture";
 import mockedFixtures from "./data/mockedFixtures.json";
 import { selectedOdds } from "./components/OddsRadio";
 import Collapsable from "./components/CollapsableElement";
+import StripePolicies from "./components/Contact"
 import {
   FacebookShareButton,
   FacebookIcon,
@@ -717,6 +718,8 @@ function App() {
             <TelegramIcon size={"3em"} round={true} />
           </TelegramShareButton>
         </div>
+        <Collapsable buttonText={"Contact"} element={<StripePolicies></StripePolicies>}>
+        </Collapsable>
       </div>
     </>
   );
