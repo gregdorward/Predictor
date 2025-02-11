@@ -17,7 +17,7 @@ const StripePolicies = () => {
         <h2 className="text-xl font-semibold">Refund and Dispute Policy</h2>
         <p>
           Due to the digital nature of our services, all payments are final, and we do not offer refunds. 
-          If you experience technical issues preventing access, please contact our support team.
+          If you experience technical issues preventing access, please contact our support team for resolution.
         </p>
         <p>
           If you believe you have been charged incorrectly, reach out to us before initiating a chargeback. 

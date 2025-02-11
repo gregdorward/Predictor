@@ -5,10 +5,12 @@ import App from "./App";
 import reportWebVitals from "./reportWebVitals";
 import { BrowserRouter as Router, Route, Routes, HashRouter } from "react-router-dom";
 import TeamPage from "./components/Team";
+import {SuccessPage} from "./components/Success"
+import {CancelPage} from "./components/Cancel"
+import PasswordReset from "./components/PasswordReset";
 import { Provider } from "react-redux";
 import store from "./logic/store"; // Import your Redux store
-
-import {Fixture} from "./components/Fixture"
+import CancelSubscription from "./components/CancelSubscription"
 
 ReactDOM.render(
   // <React.StrictMode>
@@ -16,6 +18,10 @@ ReactDOM.render(
     <HashRouter>
         <Routes>
           <Route path="/fixture" element={<TeamPage />} />
+          <Route path="/success" element={<SuccessPage />} />
+          <Route path="/cancel" element={<CancelPage />} />
+          <Route path="/reset" element={<PasswordReset />} />
+          <Route path="/cancelsubscription" element={<CancelSubscription/>} />
           <Route path="/" exact element={<App />} />
           {/* <Route path="/" element={<Fixture />} /> */}
         </Routes>

@@ -27,6 +27,7 @@ export class OddsRadio extends Component {
               checked={this.state.checked}
               onChange={this.handleOptionChange}
               data-cy={this.props.value}
+              className="Hidden"
             />
             <span className="design"></span>
             <span className="text">{this.props.value}</span>

@@ -7,7 +7,14 @@ import { Fixture } from "./components/Fixture";
 import mockedFixtures from "./data/mockedFixtures.json";
 import { selectedOdds } from "./components/OddsRadio";
 import Collapsable from "./components/CollapsableElement";
-import StripePolicies from "./components/Contact"
+import StripePolicies from "./components/Contact";
+import { loadStripe } from "@stripe/stripe-js";
+import { AuthProvider, useAuth } from "./logic/authProvider";
+import { getAuth } from "firebase/auth";
+import Login from "./components/Login";
+import { getCurrentUser } from "./components/ProtectedContent";
+import { userDetail } from "./logic/authProvider";
+import { checkUserPaidStatus } from "./logic/hasUserPaid";
 import {
   FacebookShareButton,
   FacebookIcon,
@@ -24,6 +31,7 @@ import { generateFixtures } from "./logic/getFixtures";
 import { ThreeDots } from "react-loading-icons";
 import Logo from "./components/Logo";
 import { BrowserRouter as Router, Route, Routes, Link } from "react-router-dom";
+
 import reactDom from "react-dom";
 // require("dotenv").config();
 
@@ -33,6 +41,9 @@ export let allLeagueData = [];
 
 export const availableLeagues = [];
 export var orderedLeagues = [];
+
+let loggedIn;
+let paid = false;
 
 const leagueOrder = [
   11084, //Euro 2024
@@ -78,7 +89,7 @@ const leagueOrder = [
 
 let today;
 let todayFootyStats;
-let todaySS
+let todaySS;
 let tomorrow;
 let tomorrowFootyStats;
 let tomorrowSS;
@@ -87,7 +98,7 @@ let dateSS;
 let dateFootyStats;
 let yesterday;
 let yesterdayFootyStats;
-let yesterdaySS
+let yesterdaySS;
 let lastSaturday;
 let lastSaturdayFootyStats;
 let lastSaturdaySS;
@@ -103,7 +114,11 @@ let dateString;
 
 (async function fetchLeagueData() {
   let leagueList;
-
+  if (userDetail) {
+    paid = await checkUserPaidStatus(userDetail.uid);
+  } else {
+    paid = false;
+  }
   leagueList = await fetch(`${process.env.REACT_APP_EXPRESS_SERVER}leagueList`);
 
   let leagueArray;
@@ -119,7 +134,11 @@ let dateString;
       const element = league.season[x];
 
       if (element.year === 2024 || element.year === 20242025) {
-        if (element.id !== 13703 && element.id !== 6935 && element.id !== 7061) {
+        if (
+          element.id !== 13703 &&
+          element.id !== 6935 &&
+          element.id !== 7061
+        ) {
           availableLeagues.push({ name: name, element });
         }
       }
@@ -145,6 +164,7 @@ let dateString;
 })();
 
 export async function getLeagueList() {
+  loggedIn = await getCurrentUser();
   let i = 0;
   date = new Date();
   string = "Today";
@@ -156,6 +176,7 @@ export async function getLeagueList() {
 
     [date, dateFootyStats] = await calculateDate(date);
     string = dateFootyStats;
+
     await renderButtons();
   }
 
@@ -203,16 +224,15 @@ export async function getLeagueList() {
   historicDate.setDate(historicDate.getDate() - 9);
   [historic, historicFootyStats] = await calculateDate(historicDate);
 
-
   async function convertTimestampForSofaScore(timestamp) {
     let newDate = new Date(timestamp);
-  
+
     let year = newDate.getFullYear();
-    let month = String(newDate.getMonth() + 1).padStart(2, '0'); // Adding 1 to month because it is zero-based
-    let day = String(newDate.getDate()).padStart(2, '0');
-    
+    let month = String(newDate.getMonth() + 1).padStart(2, "0"); // Adding 1 to month because it is zero-based
+    let day = String(newDate.getDate()).padStart(2, "0");
+
     let converted = `${year}-${month}-${day}`;
-  
+
     return converted;
   }
 
@@ -234,9 +254,10 @@ export async function getLeagueList() {
     return <p>{i}</p>;
   });
 
-  async function renderButtons() {
+  async function renderButtons(loginStatus) {
     ReactDOM.render(
       <div className="FixtureButtons">
+        <h6>{loginStatus}</h6>
         <div className="historicResults">
           <Button
             text={"Last Saturday"}
@@ -337,20 +358,6 @@ export async function getLeagueList() {
             )
           }
         />
-        {/* <Button
-          text={"Historic predictions"}
-          className="HistoricFixturesButtonRight"
-          onClickEvent={async () =>
-            fixtureList.push(
-              await generateFixtures(
-                "historic",
-                historic,
-                selectedOdds,
-                historicFootyStats
-              )
-            )
-          }
-        /> */}
       </div>
       <Button
         text={`<`}
@@ -412,70 +419,50 @@ export async function getLeagueList() {
     document.getElementById("XGDiff")
   );
 
-  // ReactDOM.render(
-  //   <Button
-  //     text={"Lowest scoring leagues"}
-  //     className={"Under25TeamsButton"}
-  //     onClickEvent={async () => {
-  //       let leagues = await getLowestScoringLeagues();
-  //       const leagueList = [];
-
-  //       leagues.forEach(async (league) =>
-  //         leagueList.push(
-  //           <ul className="GlobalStat">
-  //             <p className="TeamName">
-  //               {league.league} ({league.leagueCountry})
-  //             </p>
-  //             <li>Average goals: {league.averageGoals}</li>
-  //             <li>Under 2.5 goals %: {league.under25Percentage}%</li>
-  //           </ul>
-  //         )
-  //       );
-
-  //       reactDom.render(
-  //         <div>
-  //           <h3>Leagues with the lowest scoring games</h3>
-  //           <ul>{leagueList}</ul>
-  //         </div>,
-  //         document.getElementById("Under25Games")
-  //       );
-  //     }}
-  //   ></Button>,
-  //   document.getElementById("Under25Games")
-  // );
-
-  // ReactDOM.render(
-  //   <Button
-  //     text={"Highest scoring leagues"}
-  //     className={"Over25TeamsButton"}
-  //     onClickEvent={async () => {
-  //       let leagues = await getHighestScoringLeagues();
-  //       const leagueList = [];
-
-  //       leagues.forEach(async (league) =>
-  //         leagueList.push(
-  //           <ul className="GlobalStat">
-  //             <p className="TeamName">
-  //               {league.league} ({league.leagueCountry})
-  //             </p>
-  //             <li>Average goals: {league.averageGoals}</li>
-  //             <li>Over 2.5 goals %: {league.over25Percentage}%</li>
-  //           </ul>
-  //         )
-  //       );
-
-  //       reactDom.render(
-  //         <div>
-  //           <h3>Leagues with the highest scoring games</h3>
-  //           <ul>{leagueList}</ul>
-  //         </div>,
-  //         document.getElementById("Over25Games")
-  //       );
-  //     }}
-  //   ></Button>,
-  //   document.getElementById("Over25Games")
-  // );
+  if (loggedIn) {
+    ReactDOM.render(
+      <h6>Welcome back {loggedIn.email}</h6>,
+      document.getElementById("Email")
+    );
+  } else {
+    ReactDOM.render(<Login />, document.getElementById("Email"));
+  }
 }
+
+// Replace with your own Stripe public key
+const stripePromise = loadStripe(
+  "pk_live_51QojxLBrqiWlVPadBxhtoj499YzoC8YjFUIVQwCcTe8B7ZUG47NbYAam2wvNox2mUmzd0WgQh4PWKaIQaxKxubig00yEzjNuVQ"
+);
+
+const handleCheckout = async (priceId) => {
+  const stripe = await stripePromise;
+  const auth = getAuth();
+  const user = auth.currentUser;
+
+  if (!user) {
+    alert("Please sign-up or login before purchasing");
+    return;
+  }
+
+  const response = await fetch(
+    `${process.env.REACT_APP_EXPRESS_SERVER}create-checkout-session`,
+    {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ priceId, uid: user.uid }), // Send uid
+    }
+  );
+
+  const session = await response.json();
+
+  const result = await stripe.redirectToCheckout({ sessionId: session.id });
+
+  if (result.error) {
+    console.error("Checkout error:", result.error.message);
+  }
+};
 
 async function getHighestScoringLeagues() {
   let teamsList = await fetch(`${process.env.REACT_APP_EXPRESS_SERVER}over25`);
@@ -544,204 +531,235 @@ let welcomeTextTwo = welcomeTextUnsplitTwo.split("\n").map((i) => {
   return <p>{i}</p>;
 });
 
-function App() {
+function AppContent() {
+  const { user, isPaidUser } = useAuth();
   getLeagueList();
+
   return (
-    <>
-      <div className="App">
-        <Logo />
-        <a
-          className="SocialLink"
-          href="https://www.reddit.com/r/xgtipping/"
-          target="_blank"
-          rel="noreferrer"
-        >
-          r/xgtipping
-        </a>
-        <div id="LoadingContainer" className="LoadingContainer" />
-        <div id="RadioContainer" className="RadioContainer">
-          <div id="RadioText" />
-          <div id="RadioButtons" />
-        </div>
-        <div id="Day" />
-        <div id="Checkbox" />
-        <div id="ExplainerText" />
-        <div id="Loading" className="Loading"></div>
-        <div id="Buttons" className="Buttons">
-          <ThreeDots className="MainLoading" fill="#030061" />
-          <div>Loading all fixture and form data...</div>
-        </div>
-        <div id="GeneratePredictions" className="GeneratePredictions" />
-        <div id="bestPredictions" className="bestPredictions" />
-        <div id="exoticOfTheDay" className="exoticOfTheDay" />
-        <div id="successMeasure2" />
-        <div id="RowOneContainer" className="RowOneContainer">
-          <div id="BTTS" className="RowOne" />
-          <div id="longShots" className="RowOne" />
-          <div id="draws" className="RowOne" />
-        </div>
-        <div id="insights" />
-        <div id="risk" />
-        <div id="successMeasure" />
-        <div id="tables" />
-        <div id="homeBadge" />
-        <div id="FixtureContainerHeaders"></div>
-        {/* <StyledKofiButton buttonText="Donations"></StyledKofiButton> */}
-        <div id="XGDiff" />
-        <div id="FixtureContainer">
-          <h6 className="WelcomeText">{welcomeTextOne}</h6>
-          <h6 className="GetMatchStatText">
-            Below is an example of our tips/results overview for you to
-            familiarise yourself with. Get real fixtures using the date buttons,
-            above. When loaded, tap on one to see full match stats
-          </h6>
-          <div className="ExplainerContainer">
-            <span className="oddsHomeExplainer">Home odds</span>
-            <span className="emptyHomeTeam"></span>
-            <span className="scoreExplainer">Result / KO Time</span>
-            <span className="predictionExplainer">Our Prediction</span>
-            <span className="emptyAwayTeam"></span>
-            <span className="oddsAwayExplainer">Away odds</span>
-          </div>
-          <Fixture
-            fixtures={mockedFixtures.matches}
-            // result={false}
-            mock={true}
-            className={"individualFixture"}
-          />
-          <div>
-            <h6 className="WelcomeText">{welcomeTextTwo}</h6>
-            <h6 className="WelcomeText">
-              We cover a range of leagues, including
-              <ul className="AllLeagues">
-                <li className="League">Premier League</li>
-                <li className="League">English Football League</li>
-                <li className="League">La Liga</li>
-                <li className="League">Serie A</li>
-                <li className="League">Bundesliga</li>
-                <li className="League">Ligue 1</li>
-                <li className="League">MLS</li>
-                <li className="League">Primeira Liga</li>
-                <li className="League">Loads more...</li>
-              </ul>
-            </h6>
-          </div>
-          <div>
-            <div className="DataText">Raw data from</div>
-            <a
-              className="DataLink"
-              href="https://www.footystats.org"
-              target="_blank"
-              rel="noreferrer"
-            >
-              footystats.org
-            </a>
-          </div>
-          <div className="bitcoin" id="bitcoin">
-            We aim to remain free to use, contributions are always appreciated
-            though:
-            <a
-              href="https://www.ko-fi.com/xgtipping"
-              target="_blank"
-              rel="noreferrer"
-            >
-              Donations
-            </a>
-            <span className="bitcoinSymbol">&#x20bf;itcoin address</span>
-            <span className="bitcoinAddress">
-              bc1q7j62txkvhfu0dt3l0s07saze6pjnyzs26wfgp0
-            </span>
-          </div>
-        </div>
-        <div>
-    </div>
-        <div className="Social">
-          <TwitterShareButton
-            url={"www.xgtipping.com"}
-            title={"#XGTipping"}
-            className="ShareButton"
-            style={{
-              backgroundColor: "white",
-              boxShadow: "none",
-              padding: "0.5em",
-            }}
-          >
-            <TwitterIcon size={"3em"} round={true} />
-          </TwitterShareButton>
-          <RedditShareButton
-            url={"www.xgtipping.com"}
-            title={"XGTipping"}
-            className="ShareButton"
-            style={{
-              backgroundColor: "white",
-              boxShadow: "none",
-              padding: "0.5em",
-            }}
-          >
-            <RedditIcon size={"3em"} round={true} />
-          </RedditShareButton>
-          <FacebookShareButton
-            url={"www.xgtipping.com"}
-            quote={"XGTipping - data-driven football predictions"}
-            className="ShareButton"
-            style={{
-              backgroundColor: "white",
-              boxShadow: "none",
-              padding: "0.5em",
-            }}
-          >
-            <FacebookIcon size={"3em"} round={true} />
-          </FacebookShareButton>
-          <WhatsappShareButton
-            url={"www.xgtipping.com"}
-            title={"XGTipping"}
-            separator=": "
-            className="ShareButton"
-            style={{
-              backgroundColor: "white",
-              boxShadow: "none",
-              padding: "0.5em",
-            }}
-          >
-            <WhatsappIcon size={"3em"} round={true} />
-          </WhatsappShareButton>
-          <TelegramShareButton
-            url={"XGTipping"}
-            title={"XGTipping"}
-            className="ShareButton"
-            style={{
-              backgroundColor: "white",
-              boxShadow: "none",
-              padding: "0.5em",
-            }}
-          >
-            <TelegramIcon size={"3em"} round={true} />
-          </TelegramShareButton>
-        </div>
-        <Collapsable buttonText={"Contact"} element={<StripePolicies></StripePolicies>}>
-        </Collapsable>
+    <div className="App">
+      <Logo />
+      <a
+        className="SocialLink"
+        href="https://www.reddit.com/r/xgtipping/"
+        target="_blank"
+        rel="noreferrer"
+      >
+        r/xgtipping
+      </a>
+      <div id="LoadingContainer" className="LoadingContainer" />
+      <div id="RadioContainer" className="RadioContainer">
+        <div id="RadioText" />
+        <div id="RadioButtons" />
       </div>
-    </>
+      <div id="Email" className="Email"></div>
+      <div id="Day" />
+      <div id="Checkbox" />
+      <div id="ExplainerText" />
+      <div id="Loading" className="Loading"></div>
+      <div id="Buttons" className="Buttons">
+        <ThreeDots className="MainLoading" fill="#030061" />
+        <div>Loading all fixture and form data...</div>
+      </div>
+
+      {user ? (
+        isPaidUser ? (
+          // If the user is logged in and is a paying customer, show the cancel button
+          <button
+            onClick={() => {
+              window.location.href =
+                "https://www.xgtipping.com/#/cancelsubscription";
+            }}
+            className="CancelButton"
+          >
+            Cancel Subscription
+          </button>
+        ) : (
+          // If the user is logged in but is NOT a paying customer, show subscribe buttons
+          <div>
+            <span className="MembershipInfo">
+              Full form data and graphs are restricted to premium members.
+              Memberships can be cancelled at any time and prices will differ in currencies other than GBP
+            </span>
+            <button
+              onClick={() => handleCheckout("price_1QrQ4ZBrqiWlVPadCkhLhtiZ")}
+              className="SubscribeButton"
+            >
+              Subscribe for £1/week
+            </button>
+            <button
+              onClick={() => handleCheckout("price_1QrQ5NBrqiWlVPadFBuBKKSM")}
+              className="SubscribeButton"
+            >
+              Subscribe for £3/month
+            </button>
+            <button
+              onClick={() => handleCheckout("price_1QrQ75BrqiWlVPadEML30BoJ")}
+              className="SubscribeButton"
+            >
+              Subscribe for £30/year
+            </button>
+          </div>
+        )
+      ) : (
+        // If the user is not logged in, show nothing
+        <div></div>
+      )}
+
+      <div id="GeneratePredictions" className="GeneratePredictions" />
+      <div id="bestPredictions" className="bestPredictions" />
+      <div id="exoticOfTheDay" className="exoticOfTheDay" />
+      <div id="successMeasure2" />
+
+      <div id="RowOneContainer" className="RowOneContainer">
+        <div id="BTTS" className="RowOne" />
+        <div id="longShots" className="RowOne" />
+        <div id="draws" className="RowOne" />
+      </div>
+
+      <div id="insights" />
+      <div id="risk" />
+      <div id="successMeasure" />
+      <div id="tables" />
+      <div id="homeBadge" />
+      <div id="FixtureContainerHeaders"></div>
+
+      <div id="XGDiff" />
+      <div id="FixtureContainer">
+        <h6 className="WelcomeText">{welcomeTextOne}</h6>
+        <h6 className="GetMatchStatText">
+          Below is an example of our tips/results overview for you to
+          familiarise yourself with. Get real fixtures using the date buttons
+          above. When loaded, tap on one to see full match stats.
+        </h6>
+
+        <div className="ExplainerContainer">
+          <span className="oddsHomeExplainer">Home odds</span>
+          <span className="emptyHomeTeam"></span>
+          <span className="scoreExplainer">Result / KO Time</span>
+          <span className="predictionExplainer">Our Prediction</span>
+          <span className="emptyAwayTeam"></span>
+          <span className="oddsAwayExplainer">Away odds</span>
+        </div>
+
+        <Fixture
+          fixtures={mockedFixtures.matches}
+          mock={true}
+          className={"individualFixture"}
+        />
+
+        <div>
+          <h6 className="WelcomeText">{welcomeTextTwo}</h6>
+          <h6 className="WelcomeText">
+            We cover a range of leagues, including
+            <ul className="AllLeagues">
+              <li className="League" key="premier-league">
+                Premier League
+              </li>
+              <li className="League" key="english-football-league">
+                English Football League
+              </li>
+              <li className="League" key="la-liga">
+                La Liga
+              </li>
+              <li className="League" key="serie-a">
+                Serie A
+              </li>
+              <li className="League" key="bundesliga">
+                Bundesliga
+              </li>
+              <li className="League" key="ligue-1">
+                Ligue 1
+              </li>
+              <li className="League" key="mls">
+                MLS
+              </li>
+              <li className="League" key="primeira-liga">
+                Primeira Liga
+              </li>
+              <li className="League" key="loads-more">
+                Loads more...
+              </li>
+            </ul>
+          </h6>
+        </div>
+
+        <div>
+          <div className="DataText">Raw data from</div>
+          <a
+            className="DataLink"
+            href="https://www.footystats.org"
+            target="_blank"
+            rel="noreferrer"
+          >
+            footystats.org
+          </a>
+        </div>
+
+        <div className="bitcoin" id="bitcoin">
+          <a
+            href="https://www.ko-fi.com/xgtipping"
+            target="_blank"
+            rel="noreferrer"
+          >
+            Donations
+          </a>
+          <span className="bitcoinSymbol">&#x20bf;itcoin address</span>
+          <span className="bitcoinAddress">
+            bc1q7j62txkvhfu0dt3l0s07saze6pjnyzs26wfgp0
+          </span>
+        </div>
+      </div>
+
+      <div className="Social">
+        <TwitterShareButton
+          url={"www.xgtipping.com"}
+          title={"#XGTipping"}
+          className="ShareButton"
+        >
+          <TwitterIcon size={"3em"} round={true} />
+        </TwitterShareButton>
+        <RedditShareButton
+          url={"www.xgtipping.com"}
+          title={"XGTipping"}
+          className="ShareButton"
+        >
+          <RedditIcon size={"3em"} round={true} />
+        </RedditShareButton>
+        <FacebookShareButton
+          url={"www.xgtipping.com"}
+          quote={"XGTipping - data-driven football predictions"}
+          className="ShareButton"
+        >
+          <FacebookIcon size={"3em"} round={true} />
+        </FacebookShareButton>
+        <WhatsappShareButton
+          url={"www.xgtipping.com"}
+          title={"XGTipping"}
+          separator=": "
+          className="ShareButton"
+        >
+          <WhatsappIcon size={"3em"} round={true} />
+        </WhatsappShareButton>
+        <TelegramShareButton
+          url={"XGTipping"}
+          title={"XGTipping"}
+          className="ShareButton"
+        >
+          <TelegramIcon size={"3em"} round={true} />
+        </TelegramShareButton>
+      </div>
+
+      <Collapsable buttonText={"Contact"} element={<StripePolicies />} />
+    </div>
   );
 }
 
-export default App;
-
-// import React from "react";
-// import { BrowserRouter as Router, Route, Routes, Link } from "react-router-dom";
-// import HomePage from "./components/HomePage";
-// import TeamPage from "./components/Team";
-
-// const App = () => {
-//   return (
-//     <Router>
-//       <Routes>
-//       <Route path="/team" element={<TeamPage />} />
-//         <Route path="/" element={<HomePage />} />
-//         {/* Add more routes */}
-//       </Routes>
-//     </Router>
-//   );
-// };
-
-// export default App;
+export default function App() {
+  return (
+    <AuthProvider>
+      <Routes>
+        <Route path="/" element={<AppContent />} />
+      </Routes>
+    </AuthProvider>
+  );
+}

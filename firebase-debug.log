@@ -1,0 +1,30 @@
+[debug] [2025-02-11T20:48:43.175Z] ----------------------------------------------------------------------
+[debug] [2025-02-11T20:48:43.177Z] Command:       /Users/gregdorward/.nvm/versions/node/v20.18.2/bin/node /Users/gregdorward/.nvm/versions/node/v20.18.2/bin/firebase functions:config:set stripe.webhook_secret=whsec_eE3K6JlgdDQ2OVErAcmI4msiwH56HaWQ
+[debug] [2025-02-11T20:48:43.178Z] CLI Version:   13.30.0
+[debug] [2025-02-11T20:48:43.178Z] Platform:      darwin
+[debug] [2025-02-11T20:48:43.178Z] Node Version:  v20.18.2
+[debug] [2025-02-11T20:48:43.178Z] Time:          Tue Feb 11 2025 20:48:43 GMT+0000 (Greenwich Mean Time)
+[debug] [2025-02-11T20:48:43.178Z] ----------------------------------------------------------------------
+[debug] 
+[debug] [2025-02-11T20:48:43.182Z] >>> [apiv2][query] GET https://firebase-public.firebaseio.com/cli.json [none]
+[debug] [2025-02-11T20:48:43.382Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2025-02-11T20:48:43.382Z] > authorizing via signed-in user (gregdorward85@gmail.com)
+[debug] [2025-02-11T20:48:43.382Z] [iam] checking project xgtipping for permissions ["firebase.projects.get","runtimeconfig.configs.create","runtimeconfig.configs.delete","runtimeconfig.configs.get","runtimeconfig.configs.list","runtimeconfig.configs.update","runtimeconfig.variables.create","runtimeconfig.variables.delete","runtimeconfig.variables.get","runtimeconfig.variables.list","runtimeconfig.variables.update"]
+[debug] [2025-02-11T20:48:43.383Z] Checked if tokens are valid: false, expires at: 1739272813092
+[debug] [2025-02-11T20:48:43.383Z] Checked if tokens are valid: false, expires at: 1739272813092
+[debug] [2025-02-11T20:48:43.383Z] > refreshing access token with scopes: []
+[debug] [2025-02-11T20:48:43.384Z] >>> [apiv2][query] POST https://www.googleapis.com/oauth2/v3/token [none]
+[debug] [2025-02-11T20:48:43.384Z] >>> [apiv2][body] POST https://www.googleapis.com/oauth2/v3/token [omitted]
+[debug] [2025-02-11T20:48:43.529Z] <<< [apiv2][status] POST https://www.googleapis.com/oauth2/v3/token 200
+[debug] [2025-02-11T20:48:43.529Z] <<< [apiv2][body] POST https://www.googleapis.com/oauth2/v3/token [omitted]
+[debug] [2025-02-11T20:48:43.580Z] >>> [apiv2][query] POST https://cloudresourcemanager.googleapis.com/v1/projects/xgtipping:testIamPermissions [none]
+[debug] [2025-02-11T20:48:43.580Z] >>> [apiv2][(partial)header] POST https://cloudresourcemanager.googleapis.com/v1/projects/xgtipping:testIamPermissions x-goog-quota-user=projects/xgtipping
+[debug] [2025-02-11T20:48:43.580Z] >>> [apiv2][body] POST https://cloudresourcemanager.googleapis.com/v1/projects/xgtipping:testIamPermissions {"permissions":["firebase.projects.get","runtimeconfig.configs.create","runtimeconfig.configs.delete","runtimeconfig.configs.get","runtimeconfig.configs.list","runtimeconfig.configs.update","runtimeconfig.variables.create","runtimeconfig.variables.delete","runtimeconfig.variables.get","runtimeconfig.variables.list","runtimeconfig.variables.update"]}
+[debug] [2025-02-11T20:48:43.708Z] <<< [apiv2][status] GET https://firebase-public.firebaseio.com/cli.json 200
+[debug] [2025-02-11T20:48:43.708Z] <<< [apiv2][body] GET https://firebase-public.firebaseio.com/cli.json {"cloudBuildErrorAfter":1594252800000,"cloudBuildWarnAfter":1590019200000,"defaultNode10After":1594252800000,"minVersion":"3.0.5","node8DeploysDisabledAfter":1613390400000,"node8RuntimeDisabledAfter":1615809600000,"node8WarnAfter":1600128000000}
+[debug] [2025-02-11T20:48:44.310Z] <<< [apiv2][status] POST https://cloudresourcemanager.googleapis.com/v1/projects/xgtipping:testIamPermissions 200
+[debug] [2025-02-11T20:48:44.310Z] <<< [apiv2][body] POST https://cloudresourcemanager.googleapis.com/v1/projects/xgtipping:testIamPermissions {"permissions":["firebase.projects.get","runtimeconfig.configs.create","runtimeconfig.configs.delete","runtimeconfig.configs.get","runtimeconfig.configs.list","runtimeconfig.configs.update","runtimeconfig.variables.create","runtimeconfig.variables.delete","runtimeconfig.variables.get","runtimeconfig.variables.list","runtimeconfig.variables.update"]}
+[debug] [2025-02-11T20:48:44.311Z] Checked if tokens are valid: true, expires at: 1739310522529
+[debug] [2025-02-11T20:48:44.311Z] Checked if tokens are valid: true, expires at: 1739310522529
+[debug] [2025-02-11T20:48:44.311Z] >>> [apiv2][query] GET https://serviceusage.googleapis.com/v1/projects/xgtipping/services/runtimeconfig.googleapis.com [none]
+[debug] [2025-02-11T20:48:44.311Z] >>> [apiv2][(partial)header] GET https://serviceusage.googleapis.com/v1/projects/xgtipping/services/runtimeconfig.googleapis.com x-goog-quota-user=projects/xgtipping

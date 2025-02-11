@@ -2,7 +2,6 @@ import React, { Fragment } from "react";
 import ReactDOM from "react-dom";
 import { matches, diff } from "./getFixtures";
 import { RenderAllFixtures } from "../logic/getFixtures";
-import Div from "../components/Div";
 import Collapsable from "../components/CollapsableElement";
 import CollapsableStats from "../components/CollapsableStats";
 import { allForm } from "../logic/getFixtures";
@@ -24,6 +23,8 @@ import {
   minimumLast6,
   minimumGDHorA,
 } from "../components/SliderDiff";
+import {userDetail} from "./authProvider"
+
 
 var myHeaders = new Headers();
 myHeaders.append("Origin", "https://gregdorward.github.io");
@@ -70,6 +71,7 @@ export let formObjectAway;
 export let clicked = false;
 
 export var renderPredictions;
+
 
 async function convertTimestamp(timestamp) {
   let newDate = new Date(timestamp * 1000);
@@ -3955,8 +3957,6 @@ async function getSuccessMeasure(fixtures) {
   let netProfit = 0;
 
   for (let i = 0; i < fixtures.length; i++) {
-    console.log(fixtures[i]);
-
     if (
       fixtures[i].status === "complete" &&
       fixtures[i].hasOwnProperty("prediction") &&

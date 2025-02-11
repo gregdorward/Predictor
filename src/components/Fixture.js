@@ -9,12 +9,15 @@ import { Provider } from "react-redux";
 import store from "../logic/store"; // Import your Redux store
 import { formObjectHome } from "../logic/getScorePredictions";
 import { clicked } from "../logic/getScorePredictions";
+import {userDetail} from "../logic/authProvider";
+import { checkUserPaidStatus } from "../logic/hasUserPaid";
+
 
 let resultValue;
+let paid
 var count;
 let mockValue;
 var setCount;
-
 function toggle(bool) {
   count = !bool;
   return count;
@@ -311,11 +314,16 @@ function SingleFixture({ fixture, count, mock }) {
   }
 
   async function handleButtonClick(game) {
-    if (clicked === true) {
+    paid = await checkUserPaidStatus(userDetail.uid)
+    if (clicked === true && paid) {
       StoreData(formObjectHome);
       window.open("/#/fixture");
-    } else return;
+    } else {
+      alert("Premium feature only")
+      return;
+    } 
   }
+
   return (
     <div key={fixture.game}>
       {renderLeagueName(fixture, mock)}

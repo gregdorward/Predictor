@@ -10,12 +10,18 @@
     "@material-ui/pickers": "^3.3.10",
     "@mui/material": "^5.15.9",
     "@reduxjs/toolkit": "^1.9.5",
+    "@stripe/react-stripe-js": "^3.1.1",
+    "@stripe/stripe-js": "^5.6.0",
     "@testing-library/jest-dom": "^5.11.4",
     "@testing-library/react": "^11.1.0",
     "@testing-library/user-event": "^12.1.10",
     "chart.js": "^3.8.0",
     "dotenv": "^8.2.0",
+    "firebase": "^11.2.0",
+    "firebase-admin": "^13.0.2",
+    "firebase-functions": "^6.3.1",
     "kofi-button": "^1.1.1",
+    "lucide-react": "^0.475.0",
     "node-cron": "^3.0.3",
     "oddslib": "^1.0.3",
     "react": "^17.0.1",
@@ -62,7 +68,7 @@
       "last 1 safari version"
     ]
   },
-  "proxy": "http://localhost:5000",
+  "proxy": "https://api.xgtipping.com",
   "devDependencies": {
     "@types/react-slider": "^1.1.0",
     "cypress": "^9.6.1",

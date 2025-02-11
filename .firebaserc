@@ -1,0 +1,8 @@
+{
+  "projects": {
+    "default": "xgtipping",
+    "main": "xgtipping"
+  },
+  "targets": {},
+  "etags": {}
+}

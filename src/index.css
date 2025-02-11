@@ -502,6 +502,12 @@ p {
   margin-left: 10px;
 }
 
+span.MembershipInfo {
+  color: #030052;
+  display: block;
+  font-size: 1.2em;
+  padding: 1em;
+}
 .Explainer{
   padding-top: 1em;
   padding-top: 0.2em;
@@ -1747,6 +1753,7 @@ a.PreviousMatchLink{
 
 .LastGameHeader {
   font-weight: bolder;
+  color: #030052;
   padding-bottom: 1em;
   font-size: 1.1em;
 }
@@ -2368,6 +2375,7 @@ li.FormHeader{
   padding-bottom: 0.5em;
   text-align: center;
   font-size: 1.1em;
+  color: #030052;
 }
 
 .FormExplainer {
@@ -2596,8 +2604,8 @@ ul {
 .kofi-button {
   border: 0.1em solid #030061;
   font-family: 'Open Sans', sans-serif !important;
-  min-width: 6em !important;
-  line-height: 2em !important;
+  min-width: 5em !important;
+  line-height: 1.5em !important;
   color: black !important;
 } 
 
@@ -2939,7 +2947,7 @@ label {
   position: relative;
 }
 
-input {
+.Hidden {
   opacity: 0;
   position: absolute;
   left: 50%;
@@ -3248,10 +3256,130 @@ h6.AttackingMomentum {
   text-align: center;
 }
 
+.LoginForm{
+  font-size: 0.8em;
+  margin-left: auto;
+  margin-right: auto;
+  width: 50%;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  padding-top: 2em;
+  padding-bottom: 0em;
+}
+
+.LoginInput1 {
+  /* height: 2em; */
+  border: 1px solid #030052;
+  border-bottom: 1px solid #030052;
+  /* text-align: center;  */
+  padding-left: 1em;    
+  padding-right: 0; 
+  width: 100%;
+  color: #030052;
+  line-height: 2.5em;
+}
+.LoginInput2 {
+  /* height: 2em; */
+  border-bottom: 1px solid #030052;
+  border: 1px solid #030052;
+  border-top: 0px;
+  /* text-align: center;  */
+  padding-left: 1em;    
+  padding-right: 0; 
+  margin-bottom: 0.5em;
+  flex-basis: 90%;
+  margin-right: 0.5em;
+  color: #030052;
+  line-height: 2.5em;
+}
+
+.ResetPasswordLink {
+  background: none;
+  border: none;
+  color: #030052;
+  text-decoration: underline;
+  cursor: pointer;
+  padding: 0;
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: 1em;
+}
+
+.ResetPasswordLink:hover {
+  text-decoration: underline;
+}
+
+.LoginSignUp{
+  /* flex-direction: column; */
+  height: auto;
+  margin-left: auto;
+  margin-right: auto;
+  margin-bottom: 0em;
+}
+
+.CancelButton{
+  background: none;
+  border: none;
+  color: #030052;
+  text-decoration: underline;
+  cursor: pointer;
+  padding: 0;
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: 1em;
+}
+
+.CancelButton:hover {
+  text-decoration: underline;
+}
+.SignUp{
+  margin-top: 0em;
+  font-size: 0.9em;
+}
+
 .text-blue-500{
   color: #030061;
 }
 
 .mb-6{
   width: 100%;
+}
+
+form input{
+  display: block;
+  opacity: 1;
+  pointer-events: auto;
+
+}
+
+button.PaymentReturn{
+  flex-basis: auto;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.PasswordContainer{
+  display: flex;
+}
+
+button.TogglePasswordButton{
+  flex-basis: 10%;
+  margin: 0px;
+  padding: 0em;
+  margin-bottom: 0.5em;
+  background: none;
+  border: none;
+  color: #030052;
+  /* margin-left: auto;
+  margin-right: auto;
+  margin-top: 0em; */
+}
+
+.ResetPasswordField{
+  margin-left: auto;
+  margin-right: auto;
+  width: 50%;
+  line-height: 2em;
+  font-size: 1.2em;
 }
