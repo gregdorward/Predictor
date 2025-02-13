@@ -47,6 +47,8 @@ let paid = false;
 
 const leagueOrder = [
   11084, //Euro 2024
+  12327, //Europa
+  12321, // Champs league
   7432, //World Cup 22
   12325, //premier league 22/23
   12451, //championship 22/23
@@ -66,9 +68,10 @@ const leagueOrder = [
   10976, //Norway Prem 23
   12472, //Austrian Prem 22/23
   12734, //Greek Prem 22/23
+  12641, //turkey
   12120, //Polish prem 22/23
   12326, //Swiss prem 22/23
-  10946, //Irish Prem 23
+  13952, //Irish Prem 23
   12467, //Spanish secunda 22/23
   12621, //Italy serie B 22/23
   12528, //Bundesliga 2 22/23
@@ -78,13 +81,13 @@ const leagueOrder = [
   12474, //Scottish league 1 22/23
   12453, //Scottish league 2 22/23
   12827, //Women's prem 23/24
-  10977, //MLS 23
+  13973, //MLS 25
   11321, //Brazil prem 24
-  11212, //Argentina prem 23
+  14125, //Argentina prem 23
   12136, //Mexico prem 23/24
   12933, //National league North and South 22/23
   // 13703, //Australian A league 23/24
-  11102, //S Korea 23
+  14069, //S Korea 23
 ];
 
 let today;
