@@ -568,7 +568,9 @@ async function getPastLeagueResults(team, game, hOrA, form) {
     }
 
     const allTeamResults = reversedResultsHome.concat(reversedResultsAway);
-
+    const chatGPTPayload = allTeamResults.slice(0, 5)
+    console.log(form.teamName)
+    console.log(chatGPTPayload)
     let points = 0;
     let pointsWeighted = 0;
 

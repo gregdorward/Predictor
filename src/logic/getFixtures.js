@@ -247,6 +247,8 @@ export async function renderTable(index, results, id) {
     statistics = stats.data;
   });
 
+  console.log(statistics)
+
   if (league !== undefined) {
     ReactDOM.render(
       <LeagueTable
