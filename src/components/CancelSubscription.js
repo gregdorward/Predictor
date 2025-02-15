@@ -11,7 +11,6 @@ export default function CancelSubscription() {
   useEffect(() => {
     async function fetchSubscriptionStatus() {
       const user = getAuth().currentUser;
-      console.log(user)
       if (!user) return;
 
       try {
@@ -37,7 +36,6 @@ export default function CancelSubscription() {
     setMessage("");
 
     const user = getAuth().currentUser;
-    console.log(user)
 
     if (!user) {
       setMessage("User not authenticated.");

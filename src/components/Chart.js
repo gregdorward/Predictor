@@ -122,9 +122,6 @@ export function Chart(props) {
 
   const labels = Array.from(props.data1.keys());
 
-  console.log(props.data1)
-  console.log(props.data3)
-
   let data = {
     labels,
     datasets: [

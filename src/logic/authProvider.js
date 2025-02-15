@@ -23,10 +23,8 @@ export const AuthProvider = ({ children }) => {
         // (Adjust the document reference as needed)
         const userRef = doc(db, "users", currentUser.uid);
         const userSnap = await getDoc(userRef);
-        console.log(userSnap);
         if (userSnap.exists()) {
           const userData = userSnap.data();
-          console.log("Firestore Data:", userData);
 
           const isPaid = userData.isPaidUser;
           if (isPaid === true) {

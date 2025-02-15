@@ -202,21 +202,7 @@ function Stats(props) {
               className="WinPercentage"
               data-cy={props.name ? props.name + "WinPercentage" : "WinPercentage"}
             >
-              {props.homeOrAway && props.winPercentage !== undefined ? `${props.homeOrAway} wins - ${props.winPercentage.toFixed(1)}%` : "N/A"}
-            </li>
-            <li
-              key="DrawPercentage"
-              className="DrawPercentage"
-              data-cy={props.name ? props.name + "DrawPercentage" : "DrawPercentage"}
-            >
-              {props.homeOrAway && props.drawPercentage !== undefined ? `${props.homeOrAway} draws - ${props.drawPercentage.toFixed(1)}%` : "N/A"}
-            </li>
-            <li
-              key="LossPercentage"
-              className="LossPercentage"
-              data-cy={props.name ? props.name + "LossPercentage" : "LossPercentage"}
-            >
-              {props.homeOrAway && props.lossPercentage !== undefined ? `${props.homeOrAway} losses - ${props.lossPercentage.toFixed(1)}%` : "N/A"}
+              {props.homeOrAway && props.winPercentage !== undefined && props.winPercentage !== "N/A" ? `${props.homeOrAway} PPG - ${props.winPercentage.toFixed(2)}` : "N/A"}
             </li>
             <li key="PPG" className="PPG" data-cy={props.name ? props.name + "PPG" : "PPG"}>
               {`Season PPG - ${props.ppg !== undefined ? props.ppg : "N/A"}`}
@@ -348,25 +334,7 @@ function Stats(props) {
               data-cy={props.name ? props.name + "WinPercentage" : "WinPercentage"}
             >
               {props.homeOrAway && props.winPercentage !== undefined
-                ? `${props.homeOrAway} wins - ${props.winPercentage.toFixed(1)}%`
-                : "N/A"}
-            </li>
-            <li
-              key="DrawPercentage"
-              className="DrawPercentage"
-              data-cy={props.name ? props.name + "DrawPercentage" : "DrawPercentage"}
-            >
-              {props.homeOrAway && props.drawPercentage !== undefined
-                ? `${props.homeOrAway} draws - ${props.drawPercentage.toFixed(1)}%`
-                : "N/A"}
-            </li>
-            <li
-              key="LossPercentage"
-              className="LossPercentage"
-              data-cy={props.name ? props.name + "LossPercentage" : "LossPercentage"}
-            >
-              {props.homeOrAway && props.lossPercentage !== undefined
-                ? `${props.homeOrAway} losses - ${props.lossPercentage.toFixed(1)}%`
+                ? `${props.homeOrAway} PPG - ${props.winPercentage.toFixed(2)}`
                 : "N/A"}
             </li>
             <li key="PPG" className="PPG" data-cy={props.name ? props.name + "PPG" : "PPG"}>

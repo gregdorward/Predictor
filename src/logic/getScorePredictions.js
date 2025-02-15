@@ -569,8 +569,6 @@ async function getPastLeagueResults(team, game, hOrA, form) {
 
     const allTeamResults = reversedResultsHome.concat(reversedResultsAway);
     const chatGPTPayload = allTeamResults.slice(0, 5)
-    console.log(form.teamName)
-    console.log(chatGPTPayload)
     let points = 0;
     let pointsWeighted = 0;
 
@@ -609,9 +607,14 @@ async function getPastLeagueResults(team, game, hOrA, form) {
     const resultsHome = allTeamResultsHome.map((res) => res.result);
     const resultsAway = allTeamResultsAway.map((res) => res.result);
 
+    form.LastFiveForm = resultsAll.slice(0, 5)
+    form.LastSixForm = resultsAll.slice(0, 6)
+    form.LastTenForm = resultsAll.slice(0, 10)
+
     form.resultsAll = resultsAll.slice(0, 6);
-    form.resultsHome = resultsHome.slice(0, 6);
-    form.resultsAway = resultsAway.slice(0, 6);
+    form.resultsHome = resultsHome;
+    form.resultsAway = resultsAway;
+
 
     const avScoredLast5 = allTeamResults.map((res) => res.scored).slice(0, 5);
     const avScoredLast5Sum = avScoredLast5.reduce((a, b) => a + b, 0);

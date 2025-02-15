@@ -154,11 +154,13 @@ async function getDefenceSummary(cleansheetStat) {
   return text;
 }
 
-async function GenerateFormSummary(form, lastx, recentForm) {
+async function GenerateFormSummary(form, last10, last5) {
   let text;
   // let six = lastx[2];
-  let ten = lastx[1];
-  let five = lastx[0];
+  let ten = last10;
+  let five = last5;
+  // console.log(ten)
+  // console.log(five)
 
   let xgSum = await getXGDifferential(
     form.XGOverall,
