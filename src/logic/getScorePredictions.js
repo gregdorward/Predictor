@@ -23,8 +23,8 @@ import {
   minimumLast6,
   minimumGDHorA,
 } from "../components/SliderDiff";
-import {userDetail} from "./authProvider"
-
+import { checkUserPaidStatus } from "../logic/hasUserPaid";
+import { userDetail } from "../logic/authProvider";
 
 var myHeaders = new Headers();
 myHeaders.append("Origin", "https://gregdorward.github.io");
@@ -69,9 +69,9 @@ let totalProfit = 0;
 export let formObjectHome;
 export let formObjectAway;
 export let clicked = false;
+let paid;
 
 export var renderPredictions;
-
 
 async function convertTimestamp(timestamp) {
   let newDate = new Date(timestamp * 1000);
@@ -568,7 +568,7 @@ async function getPastLeagueResults(team, game, hOrA, form) {
     }
 
     const allTeamResults = reversedResultsHome.concat(reversedResultsAway);
-    const chatGPTPayload = allTeamResults.slice(0, 5)
+    const chatGPTPayload = allTeamResults.slice(0, 5);
     let points = 0;
     let pointsWeighted = 0;
 
@@ -607,14 +607,13 @@ async function getPastLeagueResults(team, game, hOrA, form) {
     const resultsHome = allTeamResultsHome.map((res) => res.result);
     const resultsAway = allTeamResultsAway.map((res) => res.result);
 
-    form.LastFiveForm = resultsAll.slice(0, 5)
-    form.LastSixForm = resultsAll.slice(0, 6)
-    form.LastTenForm = resultsAll.slice(0, 10)
+    form.LastFiveForm = resultsAll.slice(0, 5);
+    form.LastSixForm = resultsAll.slice(0, 6);
+    form.LastTenForm = resultsAll.slice(0, 10);
 
     form.resultsAll = resultsAll.slice(0, 6);
     form.resultsHome = resultsHome;
     form.resultsAway = resultsAway;
-
 
     const avScoredLast5 = allTeamResults.map((res) => res.scored).slice(0, 5);
     const avScoredLast5Sum = avScoredLast5.reduce((a, b) => a + b, 0);
@@ -4021,10 +4020,10 @@ async function getSuccessMeasure(fixtures) {
   if (investment > 0) {
     ReactDOM.render(
       <Fragment>
-        <h3
-          className={"SuccessMeasureText"}>ROI for all {investment} W/D/W outcomes: {
-            ROI >= 0 ? "+" : " "
-          } {ROI.toFixed(2)}%</h3>
+        <h3 className={"SuccessMeasureText"}>
+          ROI for all {investment} W/D/W outcomes: {ROI >= 0 ? "+" : " "}{" "}
+          {ROI.toFixed(2)}%
+        </h3>
         <p>{`Correct W/D/W predictions: ${successCount} (${(
           (successCount / investment) *
           100
@@ -4033,11 +4032,10 @@ async function getSuccessMeasure(fixtures) {
           (exactScores / investment) *
           100
         ).toFixed(1)}%)`}</p>
-        <p
-          className={"SuccessMeasureText"}
-        >Cumulative ROI for all {totalInvestment} match outcomes: {
-            totalROI >= 0 ? "+" : ""
-          } {totalROI.toFixed(2)}%</p>
+        <p className={"SuccessMeasureText"}>
+          Cumulative ROI for all {totalInvestment} match outcomes:{" "}
+          {totalROI >= 0 ? "+" : ""} {totalROI.toFixed(2)}%
+        </p>
         <CollapsableStats buttonText="ROI by League">
           {Object.entries(specificLeagueResults)
             .sort(([, a], [, b]) => b.totalROI - a.totalROI) // Sort by ROI in descending order
@@ -4774,6 +4772,13 @@ function NewlineText(props) {
 }
 
 async function renderTips() {
+  if (userDetail) {
+    paid = await checkUserPaidStatus(userDetail.uid);
+  } else {
+    paid = false;
+  }
+
+  console.log(paid);
   if (newArray.length > 0) {
     ReactDOM.render(
       <div className="PredictionContainer">
@@ -4971,106 +4976,100 @@ async function renderTips() {
         element={
           <Slider
             element={
-              XGDiffTips.length > 0 ? (
-                <ul className="XGDiffTips" id="XGDiffTips">
-                  <h4>Games with greatest XG Differentials</h4>
-                  {XGDiffTips.map((tip) => (
-                    <li key={tip.game}>
-                      {tip.game} | {tip.prediction} {tip.odds}{" "}
-                      <span className={tip.outcome}>{tip.outcomeSymbol}</span>
+              <ul className="XGDiffTips" id="XGDiffTips">
+                <h4>Games with greatest XG Differentials</h4>
+                {paid ? (
+                  XGDiffTips.length > 0 ? (
+                    XGDiffTips.map((tip) => (
+                      <li key={tip.game}>
+                        {tip.game} | {tip.prediction} {tip.odds}{" "}
+                        <span className={tip.outcome}>{tip.outcomeSymbol}</span>
+                      </li>
+                    ))
+                  ) : (
+                    <li key="noGames">
+                      Sorry, no games fit this criteria today
                     </li>
-                  ))}
-                </ul>
-              ) : (
-                <ul className="XGDiffTips" id="XGDiffTips">
-                  <h4>Games with greatest XG Differentials</h4>
-                  <li key={"noPPGDiff"}>
-                    Sorry, no games fit this criteria today
-                  </li>
-                </ul>
-              )
+                  )
+                ) : (
+                  <li key="premiumOnly">Premium members only</li>
+                )}
+              </ul>
             }
             element2={
-              pointsDiffTips.length > 0 ? (
-                <ul className="XGDiffTips" id="XGDiffTips">
-                  <h4>
-                    Games with greatest points per game differentials (last 6)
-                  </h4>
-                  {pointsDiffTips.map((game) => (
-                    <li key={game.game}>
-                      {game.game} | {game.prediction} {game.odds}{" "}
-                      <span className={game.outcome}>{game.outcomeSymbol}</span>
+              <ul className="XGDiffTips" id="XGDiffTips">
+                <h4>
+                  Games with greatest points per game differentials (last 6)
+                </h4>
+                {paid ? (
+                  pointsDiffTips.length > 0 ? (
+                    pointsDiffTips.map((game) => (
+                      <li key={game.game}>
+                        {game.game} | {game.prediction} {game.odds}{" "}
+                        <span className={game.outcome}>
+                          {game.outcomeSymbol}
+                        </span>
+                      </li>
+                    ))
+                  ) : (
+                    <li key="noGames">
+                      Sorry, no games fit this criteria today
                     </li>
-                  ))}
-                </ul>
-              ) : (
-                <ul className="XGDiffTips" id="XGDiffTips">
-                  <h4>
-                    Games with greatest points per game differentials (last 6)
-                  </h4>
-                  <li key={"noPPGDiff"}>
-                    Sorry, no games fit this criteria today
-                  </li>
-                </ul>
-              )
+                  )
+                ) : (
+                  <li key="premiumOnly">Premium members only</li>
+                )}
+              </ul>
             }
             element3={
-              rollingDiffTips.length > 0 ? (
-                <ul className="XGDiffTips" id="XGDiffTips">
-                  <h4>
-                    Games with greatest rolling goal difference differentials
-                  </h4>
-                  {rollingDiffTips.map((game) => (
-                    <li key={game.game}>
-                      {game.game} | {game.prediction} {game.odds}{" "}
-                      <span className={game.outcome}>{game.outcomeSymbol}</span>
+              <ul className="XGDiffTips" id="XGDiffTips">
+                <h4>
+                  Games with greatest rolling goal difference differentials
+                </h4>
+                {paid ? (
+                  rollingDiffTips.length > 0 ? (
+                    rollingDiffTips.map((game) => (
+                      <li key={game.game}>
+                        {game.game} | {game.prediction} {game.odds}{" "}
+                        <span className={game.outcome}>
+                          {game.outcomeSymbol}
+                        </span>
+                      </li>
+                    ))
+                  ) : (
+                    <li key="noGames">
+                      Sorry, no games fit this criteria today
                     </li>
-                  ))}
-                </ul>
-              ) : (
-                <ul className="XGDiffTips" id="XGDiffTips">
-                  <h4>
-                    Games with greatest rolling goal difference differentials
-                  </h4>
-                  <li key={"noPPGDiff"}>
-                    Sorry, no games fit this criteria today
-                  </li>
-                </ul>
-              )
+                  )
+                ) : (
+                  <li key="premiumOnly">Premium members only</li>
+                )}
+              </ul>
             }
             element4={
-              dangerousAttacksDiffTips.length > 0 ? (
-                <ul className="XGDiffTips" id="XGDiffTips">
-                  <h4>
-                    Games with greatest average dangerous attacks differentials
-                  </h4>
-                  {dangerousAttacksDiffTips.map((game) => (
-                    <li key={game.game}>
-                      {game.game} | {game.prediction} {game.odds}{" "}
-                      <span className={game.outcome}>{game.outcomeSymbol}</span>
-                    </li>
-                  ))}
-                </ul>
-              ) : (
-                <ul className="XGDiffTips" id="XGDiffTips">
-                  <h4>
-                    Games with greatest average dangerous attacks differentials
-                  </h4>
-                  <li key={"noPPGDiff"}>
-                    Sorry, no games fit this criteria today
-                  </li>
-                </ul>
-              )
-            }
-            element5={
-              <div className="DonationButton">
-                <h2>Help with running costs</h2>
+              <ul className="XGDiffTips" id="XGDiffTips">
                 <h4>
-                  Monthly costs are rising and each donation helps keep XG
-                  Tipping free to use
+                  Games with greatest average dangerous attacks differentials
                 </h4>
-                <StyledKofiButton buttonText="No sign up donation" />
-              </div>
+                {paid ? (
+                  dangerousAttacksDiffTips.length > 0 ? (
+                    dangerousAttacksDiffTips.map((game) => (
+                      <li key={game.game}>
+                        {game.game} | {game.prediction} {game.odds}{" "}
+                        <span className={game.outcome}>
+                          {game.outcomeSymbol}
+                        </span>
+                      </li>
+                    ))
+                  ) : (
+                    <li key="noGames">
+                      Sorry, no games fit this criteria today
+                    </li>
+                  )
+                ) : (
+                  <li key="premiumOnly">Premium members only</li>
+                )}
+              </ul>
             }
           ></Slider>
         }
