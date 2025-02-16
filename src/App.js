@@ -583,6 +583,7 @@ function AppContent() {
               Full form data and graphs are restricted to premium members.
               Memberships can be cancelled at any time and prices will differ in currencies other than GBP
             </span>
+            <h2>20% off for 3 months when code XG20 is used at checkout - for 1 week only</h2>
             <button
               onClick={() => handleCheckout("price_1QrQ4ZBrqiWlVPadCkhLhtiZ")}
               className="SubscribeButton"
