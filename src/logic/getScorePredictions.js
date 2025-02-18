@@ -1791,7 +1791,7 @@ export async function generateGoals(homeForm, awayForm, match) {
     +
     homeAttackVsAwayDefenceComparison * 1 +
     XGRatingHomeComparison * 0.15 +
-    homeAttackVsAwayDefenceComparisonLast5 * 1 +
+    homeAttackVsAwayDefenceComparisonLast5 * 0.75 +
     homeAttackVsAwayDefenceComparisonHomeOnly * 0 +
     // weighedPointsComparisonHome * 0.1 +
     oddsComparisonHome * 0;
@@ -1801,7 +1801,7 @@ export async function generateGoals(homeForm, awayForm, match) {
     +
     awayAttackVsHomeDefenceComparison * 1 +
     XGRatingAwayComparison * 0.15 +
-    awayAttackVsHomeDefenceComparisonLast5 * 1 +
+    awayAttackVsHomeDefenceComparisonLast5 * 0.75 +
     awayAttackVsHomeDefenceComparisonAwayOnly * 0 +
     // weighedPointsComparisonAway * 0.1 +
     oddsComparisonAway * 0;
@@ -5112,7 +5112,7 @@ async function renderTips() {
       <button
         className="SecondaryButtons"
         onClick={() => {
-          if (paid) window.open("http://localhost:3000/#/fixtureshigh");
+          if (paid) window.open("https://www.xgtipping.com/#/fixtureshigh");
         }}
         disabled={!paid}
       >
@@ -5121,7 +5121,7 @@ async function renderTips() {
       <button
         className="SecondaryButtons"
         onClick={() => {
-          if (paid) window.open("http://localhost:3000/#/o25");
+          if (paid) window.open("https://www.xgtipping.com/#/o25");
         }}
         disabled={!paid}
       >
@@ -5130,7 +5130,7 @@ async function renderTips() {
       <button
         className="SecondaryButtons"
         onClick={() => {
-          if (paid) window.open("http://localhost:3000/#/u25");
+          if (paid) window.open("https://www.xgtipping.com/#/u25");
         }}
         disabled={!paid}
       >
@@ -5139,7 +5139,7 @@ async function renderTips() {
       <button
         className="SecondaryButtons"
         onClick={() => {
-          if (paid) window.open("http://localhost:3000/#/teamshigh");
+          if (paid) window.open("https://www.xgtipping.com/#/teamshigh");
         }}
         disabled={!paid}
       >
