@@ -123,7 +123,8 @@ export async function getTeamStats(
 
       ReactDOM.render(
         <Fragment>
-          <h3>Fixture history</h3>
+          <h2>AI Preview</h2>
+          <div className="AIOverview">{match.data.gpt_en}</div>
           <HeadToHead
             className={"PreviousMatchStats"}
             homeTeam={home}

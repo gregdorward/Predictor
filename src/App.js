@@ -584,6 +584,7 @@ function AppContent() {
               Memberships can be cancelled at any time and prices will differ in currencies other than GBP
             </span>
             <h2>20% off for 3 months when code XG20 is used at checkout - for 1 week only</h2>
+            <h3>New premium features released this week includes AI previews, matches/leagues with the highest/lowest goals and more</h3>
             <button
               onClick={() => handleCheckout("price_1QrQ4ZBrqiWlVPadCkhLhtiZ")}
               className="SubscribeButton"
@@ -621,6 +622,7 @@ function AppContent() {
       </div>
 
       <div id="insights" />
+      <div id="highLowLeagues" />
       <div id="risk" />
       <div id="successMeasure" />
       <div id="tables" />

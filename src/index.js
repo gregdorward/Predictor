@@ -11,6 +11,11 @@ import PasswordReset from "./components/PasswordReset";
 import { Provider } from "react-redux";
 import store from "./logic/store"; // Import your Redux store
 import CancelSubscription from "./components/CancelSubscription"
+import Over25 from "./components/Over25"
+import Under25 from "./components/Under25"
+import HighestScoringTeams from "./components/HighestScoringTeams"
+import HighestScoringFixtures from "./components/HighestScoringFixtures";
+
 
 ReactDOM.render(
   // <React.StrictMode>
@@ -21,6 +26,10 @@ ReactDOM.render(
           <Route path="/success" element={<SuccessPage />} />
           <Route path="/cancel" element={<CancelPage />} />
           <Route path="/reset" element={<PasswordReset />} />
+          <Route path="/o25" element={<Over25 />} />
+          <Route path="/u25" element={<Under25 />} />
+          <Route path="/teamshigh" element={<HighestScoringTeams />} />
+          <Route path="/fixtureshigh" element={<HighestScoringFixtures />} />
           <Route path="/cancelsubscription" element={<CancelSubscription/>} />
           <Route path="/" exact element={<App />} />
           {/* <Route path="/" element={<Fixture />} /> */}

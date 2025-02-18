@@ -261,6 +261,7 @@ body {
 
 h1 {
   font-size: 3.5em;
+  color: #030052;
 }
 
 h2 {
@@ -2745,7 +2746,7 @@ button:hover {
   padding-top: 2em;
   padding-bottom: 0.5em;
   text-align: center;
-  color: black;
+  color:#030052;
   margin: auto;
   font-size: 1em;
   height: 2em;
@@ -2866,6 +2867,7 @@ button:hover {
 
 .MoreStats{
   font-size: 1em;
+  margin-top: 2em;
 }
 
 .attackOoU{
@@ -3386,4 +3388,25 @@ button.TogglePasswordButton{
 
 .TeamOfTheSeason {
   flex: none;
+}
+
+button.SecondaryButtons{
+  font-size: 0.9em;
+  color: #030052;
+  background-color: white;
+  border: none;
+}
+
+.LeagueList{
+  padding: 1em;
+  font-size: 1.1em;
+}
+
+.LeagueList li{
+  margin: 1em;
+}
+
+.AIOverview{
+  padding: 2em;
+  color: #030052;
 }

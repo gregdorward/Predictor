@@ -2180,7 +2180,7 @@ export async function createStatsDiv(game, displayBool) {
                     formDataAway[0].BttsPercentageHomeOrAway
                   )
                 }
-                text={"Fixture trends"}
+                text={"Fixture trends + AI Preview"}
               ></Button>
             </div>
           </>,
@@ -2274,7 +2274,7 @@ export async function createStatsDiv(game, displayBool) {
                     formDataAway[0].BttsPercentageHomeOrAway
                   )
                 }
-                text={"Fixture trends"}
+                text={"Fixture trends + AI Preview"}
               ></Button>
             </div>
           </>,
@@ -2308,7 +2308,7 @@ export async function createStatsDiv(game, displayBool) {
                 <StatsAway />
               </div>
               <Div
-                text={`Last league games & h2h records (paid feature only)`}
+                text={`AI Preview, last league games & h2h records (paid feature only)`}
                 className={"LastGameHeader"}
               ></Div>
             </div>
