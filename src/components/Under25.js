@@ -55,8 +55,8 @@ export default function Under25() {
   ];
 
   // Filter leagues based on allowed countries
-  const filteredLeagues = leagues.filter(league => allowedCountries.includes(league.leagueCountry));
-
+  const filteredLeagues = leagues.filter(league => allowedCountries.includes(league.leagueCountry) && league.division > 0 && league.division < 5);
+console.log(filteredLeagues)
 
   const headers = ["League", "Country", "Avg Goals", "Under 2.5%"];
 

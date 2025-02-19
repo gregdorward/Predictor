@@ -5090,6 +5090,14 @@ async function renderTips() {
 
   ReactDOM.render(
     <Fragment>
+          <button
+        className="SecondaryButtons"
+        onClick={() => {
+          window.open("https://www.xgtipping.com/#/bttsfixtures");
+        }}
+      >
+        Both teams to score fixtures
+      </button>
       <button
         className="SecondaryButtons"
         onClick={() => {

@@ -2,6 +2,8 @@ export async function getHighestScoringLeagues() {
   let teamsList = await fetch(`${process.env.REACT_APP_EXPRESS_SERVER}over25`);
   let arr = [];
   await teamsList.json().then(async (leagues) => {
+    console.log(leagues)
+
     for (let index = 0; index < leagues.data.top_leagues.data.length; index++) {
       const league = {
         league: leagues.data.top_leagues.data[index].name,
@@ -29,6 +31,7 @@ export async function getLowestScoringLeagues() {
         averageGoals: leagues.data.top_leagues.data[index].seasonAVG_overall,
         under25Percentage:
           leagues.data.top_leagues.data[index].seasonUnder25Percentage_overall,
+          division: leagues.data.top_leagues.data[index].division,
         leagueId: leagues.data.top_leagues.data[index].id,
       };
       arr.push(league);
@@ -95,6 +98,41 @@ export async function getHighestScoringFixtures() {
           : "N/A",
         country: fixtures[index].country,
         odds: fixtures[index].odds_ft_over25,
+        avgGoals: fixtures[index].avg_potential,
+        match: fixtures[index].name,
+        progress: fixtures[index].progress
+      };
+      arr.push(game);
+    }
+  });
+
+  return arr;
+}
+
+export async function getBTTSFixtures() {
+  let fixturesList = await fetch(
+    `${process.env.REACT_APP_EXPRESS_SERVER}btts`
+  );
+
+  let arr = [];
+  console.log("called")
+  
+  await fixturesList.json().then(async (fixture) => {
+    // Extract fixture data
+    let fixtures = fixture.data.top_fixtures.data;
+    console.log(fixtures)
+
+    // Sort fixtures by `date_unix` (soonest first)
+    fixtures.sort((a, b) => a.date_unix - b.date_unix);
+
+    // Process sorted fixtures
+    for (let index = 0; index < fixtures.length; index++) {
+      const game = {
+        date: fixtures[index].date_unix
+          ? await convertTimestamp(fixtures[index].date_unix)
+          : "N/A",
+        country: fixtures[index].country,
+        odds: fixtures[index].odds_btts_yes,
         avgGoals: fixtures[index].avg_potential,
         match: fixtures[index].name,
         progress: fixtures[index].progress
