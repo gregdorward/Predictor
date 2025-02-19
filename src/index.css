@@ -3391,10 +3391,10 @@ button.TogglePasswordButton{
 }
 
 button.SecondaryButtons{
-  font-size: 0.9em;
+  font-size: 1em;
   color: #030052;
   background-color: white;
-  border: none;
+  border: 1px solid #030052;
 }
 
 .LeagueList{

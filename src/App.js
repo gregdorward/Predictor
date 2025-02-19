@@ -622,7 +622,7 @@ function AppContent() {
       </div>
 
       <div id="insights" />
-      <div id="highLowLeagues" />
+      <div id="highLowLeagues" className="HighLowLeagues"/>
       <div id="risk" />
       <div id="successMeasure" />
       <div id="tables" />
