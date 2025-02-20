@@ -9,12 +9,11 @@ import { Provider } from "react-redux";
 import store from "../logic/store"; // Import your Redux store
 import { formObjectHome } from "../logic/getScorePredictions";
 import { clicked } from "../logic/getScorePredictions";
-import {userDetail} from "../logic/authProvider";
+import { userDetail } from "../logic/authProvider";
 import { checkUserPaidStatus } from "../logic/hasUserPaid";
 
-
 let resultValue;
-let paid
+let paid;
 var count;
 let mockValue;
 var setCount;
@@ -312,14 +311,14 @@ function SingleFixture({ fixture, count, mock }) {
   }
 
   async function handleButtonClick(game) {
-    paid = await checkUserPaidStatus(userDetail.uid)
+    paid = await checkUserPaidStatus(userDetail.uid);
     if (clicked === true && paid) {
       StoreData(formObjectHome);
       window.open("/#/fixture");
     } else {
-      alert("Premium feature only")
+      alert("Premium feature only");
       return;
-    } 
+    }
   }
 
   return (
@@ -403,6 +402,11 @@ export function Fixture(props) {
         count={count}
         mock={props.mock}
       />
+      {!props.paid && props.capped === true && (
+        <div>
+          {props.originalLength} games have been capped at 15 for free users with full stats available for those returned - sign up for access to 40+ leagues and cups
+        </div>
+      )}{" "}
     </Provider>
   );
 }

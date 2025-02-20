@@ -120,11 +120,20 @@ export async function getTeamStats(
       );
       const fairOddsBTTSYes = await getFairOdds(BTTSForecast);
       const fairOddsBTTSNo = await getFairOdds(100 - BTTSForecast);
+      console.log(match.data)
+      function stripLinks(htmlString) {
+        return htmlString.replace(/<a\b[^>]*>(.*?)<\/a>/gi, '$1');
+      }
+      
+      function MatchPreview({ content }) {
+        return <div className="AIOverview" dangerouslySetInnerHTML={{ __html: content }} />;
+      }
 
       ReactDOM.render(
         <Fragment>
           <h2>AI Preview</h2>
-          <div className="AIOverview">{match.data.gpt_en}</div>
+          <MatchPreview content={match.data.gpt_en} />
+          <span className="AIDisclaimer">Any predictions made by the AI do not reflect the opinion of XGTipping</span>
           <HeadToHead
             className={"PreviousMatchStats"}
             homeTeam={home}
@@ -139,58 +148,6 @@ export async function getTeamStats(
             averageGoals={match.data.h2h.betting_stats.avg_goals}
             bestHomeOdds={`${bestHomeOddsProvider} - ${bestHomeOdds}`}
             bestAwayOdds={`${bestAwayOddsProvider} - ${bestAwayOdds}`}
-            // lastGameStadiumName={
-            //   previousMatchDetails.stadium_name
-            //     ? previousMatchDetails.stadium_name
-            //     : "-"
-            // }
-            // lastGameHomeGoals={
-            //   previousMatchDetails.homeGoalCount !== undefined
-            //     ? previousMatchDetails.homeGoalCount
-            //     : "-"
-            // }
-            // lastGameAwayGoals={
-            //   previousMatchDetails.awayGoalCount !== undefined
-            //     ? previousMatchDetails.awayGoalCount
-            //     : "-"
-            // }
-            // lastGameHomeTeam={
-            //   previousMatchDetails.home_name
-            //     ? previousMatchDetails.home_name
-            //     : "-"
-            // }
-            // lastGameAwayTeam={
-            //   previousMatchDetails.away_name
-            //     ? previousMatchDetails.away_name
-            //     : "-"
-            // }
-            // lastGameDate={!isNaN(date) ? date : "-"}
-            // secondToLastGameStadiumName={
-            //   secondToPreviousMatchDetails.stadium_name
-            //     ? secondToPreviousMatchDetails.stadium_name
-            //     : "-"
-            // }
-            // secondToLastGameHomeGoals={
-            //   secondToPreviousMatchDetails.homeGoalCount !== undefined
-            //     ? secondToPreviousMatchDetails.homeGoalCount
-            //     : "-"
-            // }
-            // secondToLastGameAwayGoals={
-            //   secondToPreviousMatchDetails.awayGoalCount !== undefined
-            //     ? secondToPreviousMatchDetails.awayGoalCount
-            //     : "-"
-            // }
-            // secondToLastGameHomeTeam={
-            //   secondToPreviousMatchDetails.home_name
-            //     ? secondToPreviousMatchDetails.home_name
-            //     : "-"
-            // }
-            // secondToLastGameAwayTeam={
-            //   secondToPreviousMatchDetails.away_name
-            //     ? secondToPreviousMatchDetails.away_name
-            //     : "-"
-            // }
-            // secondToLastGameDate={!isNaN(date2) ? date2 : "-"}
           ></HeadToHead>
           <CustomizedTables
             o05Stat={match.data.h2h.betting_stats.over05Percentage}

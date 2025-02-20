@@ -43,7 +43,7 @@ export const availableLeagues = [];
 export var orderedLeagues = [];
 
 let loggedIn;
-let paid = false;
+export let paid = false;
 
 const leagueOrder = [
   11084, //Euro 2024
@@ -580,10 +580,11 @@ function AppContent() {
           // If the user is logged in but is NOT a paying customer, show subscribe buttons
           <div>
             <span className="MembershipInfo">
-              Full form data and graphs are restricted to premium members.
-              Memberships can be cancelled at any time and prices will differ in currencies other than GBP
+              Full fixtures from all 40+ leagues and cups are restricted to premium members.
+              Memberships can be cancelled at any time and prices will differ in currencies other than GBP. Payments are securely hosted by Stripe
             </span>
-            <h2>20% off for 3 months when code XG20 is used at checkout - for 1 week only</h2>
+            {/* <h2>1 week free trial with code XGFREETRIAL applicable to the £1/week subscription</h2>
+            <h3>Subscription will be charged to payment card from week 2 but can be cancelled at any time</h3> */}
             <h3>New premium features released this week includes AI previews, matches/leagues with the highest/lowest goals and more</h3>
             <button
               onClick={() => handleCheckout("price_1QrQ4ZBrqiWlVPadCkhLhtiZ")}

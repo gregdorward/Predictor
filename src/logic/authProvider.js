@@ -27,6 +27,7 @@ export const AuthProvider = ({ children }) => {
           const userData = userSnap.data();
 
           const isPaid = userData.isPaidUser;
+          currentUser.isPaid = isPaid
           if (isPaid === true) {
             setIsPaidUser(isPaid === true);
             console.log(isPaid)

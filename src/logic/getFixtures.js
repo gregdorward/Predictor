@@ -12,6 +12,8 @@ import LeagueTable from "../components/LeagueTable";
 import { getPointsFromLastX } from "../logic/getScorePredictions";
 import SlideDiff from "../components/SliderDiff";
 import Collapsable from "../components/CollapsableElement";
+import { userDetail } from "./authProvider";
+
 
 var oddslib = require("oddslib");
 
@@ -53,6 +55,7 @@ let AwayAverageGoals;
 let awayAverageGoals;
 let AwayAverageConceded;
 let awayAverageConceded;
+let paid = false;
 
 // export var [currentDay, month, year] = new Date()
 //   .toLocaleDateString("en-US", { timeZone: "Europe/London" })
@@ -67,18 +70,6 @@ export let tableArray = [];
 export let worldCupArray = [];
 groupInstance = [];
 leagueInstance = [];
-
-async function convertTimestampForSofaScore(timestamp) {
-  let newDate = new Date(timestamp);
-
-  let year = newDate.getFullYear();
-  let month = String(newDate.getMonth() + 1).padStart(2, '0'); // Adding 1 to month because it is zero-based
-  let day = String(newDate.getDate()).padStart(2, '0');
-  
-  let converted = `${year}-${month}-${day}`;
-
-  return converted;
-}
 
 async function convertTimestamp(timestamp) {
   let newDate = new Date(timestamp);
@@ -366,12 +357,31 @@ async function createFixture(match, result, mockBool) {
 }
 
 export function RenderAllFixtures(props) {
+  let matches;
+  let capped = false;
+  const paid = userDetail.isPaid
+  const originalLength = props.matches.length
+  if(paid === true){
+    matches = props.matches
+  } else {
+    if(originalLength > 15){
+      matches = props.matches.slice(0,15)
+      capped = true;
+    } else {
+      matches = props.matches
+    }
+  }
+  console.log(paid)
+
   return (
     <Fixture
-      fixtures={props.matches}
+      fixtures={matches}
       result={props.result}
       mock={false}
       className={"individualFixture"}
+      paid={paid}
+      capped={capped}
+      originalLength={originalLength}
     />
   );
 }
@@ -1739,6 +1749,7 @@ export async function generateFixtures(
         }
       );
     }
+
     // const allFixtures = await RenderAllFixtures(matches, false)
     ReactDOM.render(
       <RenderAllFixtures matches={matches} result={false} bool={false} />,

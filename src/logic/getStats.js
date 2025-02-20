@@ -907,7 +907,7 @@ export async function createStatsDiv(game, displayBool) {
 
         homeForm.last10Points = getPointsFromLastX(homeForm.LastTenForm);
 
-        homeForm.homePPGame = getPointsFromLastX(homeForm.resultsHome)
+        homeForm.homePPGame = getPointsFromLastX(homeForm.resultsHome);
 
         awayForm.last3Points = getPointsFromLastX(awayForm.lastThreeForm);
 
@@ -917,8 +917,7 @@ export async function createStatsDiv(game, displayBool) {
 
         awayForm.last10Points = getPointsFromLastX(awayForm.LastTenForm);
 
-        awayForm.awayPPGame = getPointsFromLastX(awayForm.resultsAway)
-
+        awayForm.awayPPGame = getPointsFromLastX(awayForm.resultsAway);
       }
 
       async function getPointAverage(pointTotal, games) {
@@ -936,9 +935,12 @@ export async function createStatsDiv(game, displayBool) {
 
       let homeTenGameAverage = await getPointAverage(homeForm.last10Points, 10);
 
-      homeForm.homePPGAv = await getPointAverage(homeForm.homePPGame, homeForm.resultsHome.length)
-      homeForm.tenGameAv = homeTenGameAverage
-      homeForm.fiveGameAv = homeFiveGameAverage
+      homeForm.homePPGAv = await getPointAverage(
+        homeForm.homePPGame,
+        homeForm.resultsHome.length
+      );
+      homeForm.tenGameAv = homeTenGameAverage;
+      homeForm.fiveGameAv = homeFiveGameAverage;
 
       // let awayThreeGameAverage = await getPointAverage(
       //   awayForm.last3Points,
@@ -951,10 +953,12 @@ export async function createStatsDiv(game, displayBool) {
 
       let awayTenGameAverage = await getPointAverage(awayForm.last10Points, 10);
 
-      awayForm.awayPPGAv = await getPointAverage(awayForm.awayPPGame, awayForm.resultsAway.length)
-      awayForm.tenGameAv = awayTenGameAverage
-      awayForm.fiveGameAv = awayFiveGameAverage
-
+      awayForm.awayPPGAv = await getPointAverage(
+        awayForm.awayPPGame,
+        awayForm.resultsAway.length
+      );
+      awayForm.tenGameAv = awayTenGameAverage;
+      awayForm.fiveGameAv = awayFiveGameAverage;
 
       let paid;
       if (userDetail) {
@@ -962,7 +966,6 @@ export async function createStatsDiv(game, displayBool) {
       } else {
         paid = false;
       }
-      console.log(paid);
 
       async function getPointsFromGames(formArr) {
         const pairings = {
@@ -1641,132 +1644,105 @@ export async function createStatsDiv(game, displayBool) {
       }
 
       function StatsHome() {
-        console.log(homeForm.homePPGAv)
-        if (paid) {
-          return (
-            <div className="flex-childOne">
-              <ul style={style}>
-                <Stats
-                  style={style}
-                  homeOrAway="Home"
-                  gameCount={divider}
-                  key={formDataHome[0].name}
-                  last5={formDataHome[0].Last5}
-                  homeOrAwayResults={gameArrayHomeTeamHomeGames}
-                  LeagueOrAll={formDataHome[0].LeagueOrAll}
-                  className={"KeyStatsHome"}
-                  name={formDataHome[0].name}
-                  goals={homeForm.avgScored}
-                  conceeded={homeForm.avgConceeded}
-                  XG={homeForm.XGOverall.toFixed(2)}
-                  XGConceded={homeForm.XGAgainstAvgOverall.toFixed(2)}
-                  XGSwing={homeForm.XGChangeRecently}
-                  possession={homeForm.AveragePossessionOverall.toFixed(2)}
-                  sot={homeForm.AverageShotsOnTargetOverall.toFixed(2)}
-                  dangerousAttacks={
-                    homeForm.AverageDangerousAttacksOverall !== 0
-                      ? homeForm.AverageDangerousAttacksOverall.toFixed(2)
-                      : homeForm.AverageDangerousAttacks
-                  }
-                  leaguePosition={
-                    formDataHome[0].leaguePosition !== undefined &&
-                    formDataHome[0].leaguePosition !== "undefined"
-                      ? formDataHome[0].leaguePosition
-                      : 0
-                  }
-                  rawPosition={
-                    game.homeRawPosition !== undefined &&
-                    game.homeRawPosition !== "undefined"
-                      ? game.homeRawPosition
-                      : 0
-                  }
-                  homeOrAwayLeaguePosition={
-                    game.homeTeamHomePosition !== undefined &&
-                    game.homeTeamHomePosition !== "undefined"
-                      ? game.homeTeamHomePosition
-                      : 0
-                  }
-                  winPercentage={
-                    homeForm.homePPGAv
-                      ? homeForm.homePPGAv
-                      : "N/A"
-                  }
-                  lossPercentage={
-                    game.homeTeamLossPercentage
-                      ? game.homeTeamLossPercentage
-                      : "N/A"
-                  }
-                  drawPercentage={
-                    game.homeTeamDrawPercentage
-                      ? game.homeTeamDrawPercentage
-                      : "N/A"
-                  }
-                  ppg={formDataHome[0].SeasonPPG}
-                  formTrend={[
-                    homeTenGameAverage.toFixed(2),
-                    homeSixGameAverage.toFixed(2),
-                    homeFiveGameAverage.toFixed(2),
-                  ]}
-                  formRun={homeForm.resultsAll.reverse()}
-                  goalDifference={formDataHome[0].goalDifference}
-                  goalDifferenceHomeOrAway={
-                    formDataHome[0].goalDifferenceHomeOrAway
-                  }
-                  BttsPercentage={formDataHome[0].BttsPercentage}
-                  BttsPercentageHomeOrAway={
-                    formDataHome[0].BttsPercentageHomeOrAway
-                  }
-                  // BTTSAll={
-                  //   formDataHome[0].BTTSAll
-                  //     ? formDataHome[0].BTTSAll
-                  //     : '"Get Predictions" first'
-                  // }
-                  // BTTSHorA={
-                  //   formDataHome[0].BTTSHorA
-                  //     ? formDataHome[0].BTTSHorA
-                  //     : '"Get Predictions" first'
-                  // }
-                  BTTSArray={formDataHome[0].BTTSArray}
-                  Results={formDataHome[0].Results}
-                  ResultsHorA={formDataHome[0].ResultsHorA}
-                  CardsTotal={formDataHome[0].CardsTotal}
-                  CornersAverage={homeForm.AverageCorners}
-                  ScoredBothHalvesPercentage={
-                    formDataHome[0].ScoredBothHalvesPercentage
-                  }
-                  FormTextString={formDataHome[0].FormTextStringHome}
-                  FavouriteRecord={formDataHome[0].FavouriteRecord}
-                  StyleOfPlay={formDataHome[0].styleOfPlayOverall}
-                  StyleOfPlayHomeOrAway={formDataHome[0].styleOfPlayHome}
-                />
-              </ul>
-            </div>
-          );
-        } else {
-          return (
-            <div className="flex-childOne">
-              <ul style={style}>
-                <Stats
-                  style={style}
-                  homeOrAway="Home"
-                  gameCount={divider}
-                  key={formDataHome[0].name}
-                  last5={formDataHome[0].Last5}
-                  homeOrAwayResults={gameArrayHomeTeamHomeGames}
-                  LeagueOrAll={formDataHome[0].LeagueOrAll}
-                  className={"KeyStatsHome"}
-                  name={formDataHome[0].name}
-                  formRun={homeForm.resultsAll.reverse()}
-                  Results={formDataHome[0].Results}
-                />
-              </ul>
-            </div>
-          );
-        }
+        console.log(homeForm.homePPGAv);
+        return (
+          <div className="flex-childOne">
+            <ul style={style}>
+              <Stats
+                style={style}
+                homeOrAway="Home"
+                gameCount={divider}
+                key={formDataHome[0].name}
+                last5={formDataHome[0].Last5}
+                homeOrAwayResults={gameArrayHomeTeamHomeGames}
+                LeagueOrAll={formDataHome[0].LeagueOrAll}
+                className={"KeyStatsHome"}
+                name={formDataHome[0].name}
+                goals={homeForm.avgScored}
+                conceeded={homeForm.avgConceeded}
+                XG={homeForm.XGOverall.toFixed(2)}
+                XGConceded={homeForm.XGAgainstAvgOverall.toFixed(2)}
+                XGSwing={homeForm.XGChangeRecently}
+                possession={homeForm.AveragePossessionOverall.toFixed(2)}
+                sot={homeForm.AverageShotsOnTargetOverall.toFixed(2)}
+                dangerousAttacks={
+                  homeForm.AverageDangerousAttacksOverall !== 0
+                    ? homeForm.AverageDangerousAttacksOverall.toFixed(2)
+                    : homeForm.AverageDangerousAttacks
+                }
+                leaguePosition={
+                  formDataHome[0].leaguePosition !== undefined &&
+                  formDataHome[0].leaguePosition !== "undefined"
+                    ? formDataHome[0].leaguePosition
+                    : 0
+                }
+                rawPosition={
+                  game.homeRawPosition !== undefined &&
+                  game.homeRawPosition !== "undefined"
+                    ? game.homeRawPosition
+                    : 0
+                }
+                homeOrAwayLeaguePosition={
+                  game.homeTeamHomePosition !== undefined &&
+                  game.homeTeamHomePosition !== "undefined"
+                    ? game.homeTeamHomePosition
+                    : 0
+                }
+                winPercentage={homeForm.homePPGAv ? homeForm.homePPGAv : "N/A"}
+                lossPercentage={
+                  game.homeTeamLossPercentage
+                    ? game.homeTeamLossPercentage
+                    : "N/A"
+                }
+                drawPercentage={
+                  game.homeTeamDrawPercentage
+                    ? game.homeTeamDrawPercentage
+                    : "N/A"
+                }
+                ppg={formDataHome[0].SeasonPPG}
+                formTrend={[
+                  homeTenGameAverage.toFixed(2),
+                  homeSixGameAverage.toFixed(2),
+                  homeFiveGameAverage.toFixed(2),
+                ]}
+                formRun={homeForm.resultsAll.reverse()}
+                goalDifference={formDataHome[0].goalDifference}
+                goalDifferenceHomeOrAway={
+                  formDataHome[0].goalDifferenceHomeOrAway
+                }
+                BttsPercentage={formDataHome[0].BttsPercentage}
+                BttsPercentageHomeOrAway={
+                  formDataHome[0].BttsPercentageHomeOrAway
+                }
+                // BTTSAll={
+                //   formDataHome[0].BTTSAll
+                //     ? formDataHome[0].BTTSAll
+                //     : '"Get Predictions" first'
+                // }
+                // BTTSHorA={
+                //   formDataHome[0].BTTSHorA
+                //     ? formDataHome[0].BTTSHorA
+                //     : '"Get Predictions" first'
+                // }
+                BTTSArray={formDataHome[0].BTTSArray}
+                Results={formDataHome[0].Results}
+                ResultsHorA={formDataHome[0].ResultsHorA}
+                CardsTotal={formDataHome[0].CardsTotal}
+                CornersAverage={homeForm.AverageCorners}
+                ScoredBothHalvesPercentage={
+                  formDataHome[0].ScoredBothHalvesPercentage
+                }
+                FormTextString={formDataHome[0].FormTextStringHome}
+                FavouriteRecord={formDataHome[0].FavouriteRecord}
+                StyleOfPlay={formDataHome[0].styleOfPlayOverall}
+                StyleOfPlayHomeOrAway={formDataHome[0].styleOfPlayHome}
+              />
+            </ul>
+          </div>
+        );
       }
 
       function StatsAway() {
-        if (paid) {
           return (
             <div className="flex-childTwo">
               <ul style={style}>
@@ -1808,9 +1784,7 @@ export async function createStatsDiv(game, displayBool) {
                       : 0
                   }
                   winPercentage={
-                    awayForm.awayPPGAv
-                      ? awayForm.awayPPGAv
-                      : "N/A"
+                    awayForm.awayPPGAv ? awayForm.awayPPGAv : "N/A"
                   }
                   lossPercentage={
                     game.awayTeamLossPercentage
@@ -1863,27 +1837,6 @@ export async function createStatsDiv(game, displayBool) {
               </ul>
             </div>
           );
-        } else {
-          return (
-            <div className="flex-childTwo">
-              <ul style={style}>
-                <Stats
-                  style={style}
-                  homeOrAway="Away"
-                  gameCount={divider}
-                  key={formDataAway[0].name}
-                  last5={formDataAway[0].Last5}
-                  homeOrAwayResults={gameArrayAwayTeamAwayGames}
-                  LeagueOrAll={formDataAway[0].LeagueOrAll}
-                  className={"KeyStatsAway"}
-                  name={formDataAway[0].name}
-                  formRun={awayForm.resultsAll.reverse()}
-                  Results={formDataAway[0].Results}
-                />
-              </ul>
-            </div>
-          );
-        }
       }
 
       // const allHomeGames = homeForm.WDLRecord.reverse();
@@ -1946,8 +1899,7 @@ export async function createStatsDiv(game, displayBool) {
 
       if (
         homeForm.completeData === true &&
-        game.completeData === true &&
-        paid
+        game.completeData === true
       ) {
         ReactDOM.render(
           <>
@@ -2187,8 +2139,7 @@ export async function createStatsDiv(game, displayBool) {
           document.getElementById("stats" + homeTeam)
         );
       } else if (
-        (homeForm.completeData === false || game.completeData === false) &&
-        paid
+        (homeForm.completeData === false || game.completeData === false)
       ) {
         ReactDOM.render(
           <>

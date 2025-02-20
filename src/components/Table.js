@@ -23,10 +23,10 @@ const StyledTableCell = withStyles((theme) => ({
   body: {
     fontSize: "2em",
     fontFamily: 'inherit',
-    padding: 10,
+    padding: "1em",
     color: 'white',
-    // border: "none",
-    margin: "none",
+    border: "none",
+    margin: "em",
     backgroundColor: '#030061',
   },
 }))(TableCell);

@@ -2754,6 +2754,10 @@ button:hover {
   flex-basis: 90%;
 }
 
+li .Stadium{
+  padding-top: 2em;
+}
+
 
 .LastGameDetail{
   /* padding-top: 0.5em; */
@@ -3407,6 +3411,11 @@ button.SecondaryButtons{
 }
 
 .AIOverview{
-  padding: 2em;
+  padding: 1em;
+  line-height: 2em;
+  color: #030052;
+}
+
+.AIDisclaimer{
   color: #030052;
 }

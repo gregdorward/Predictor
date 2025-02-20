@@ -4003,11 +4003,16 @@ async function getSuccessMeasure(fixtures) {
   const ROI = (profit / investment) * 100;
   totalROI = (totalProfit / totalInvestment) * 100;
 
+  console.log(`Total Investment: ${totalInvestment}`);
   console.log(`Total Profit: ${totalProfit}`);
+  console.log(typeof totalProfit);
   console.log(`Total Investment: ${totalInvestment}`);
   console.log(`Total ROI: ${totalROI}`);
+  console.log(typeof totalROI);
 
-  if (investment > 0) {
+  const isPaid = userDetail.isPaid;
+  console.log(isPaid)
+  if (investment > 0 && isPaid) {
     ReactDOM.render(
       <Fragment>
         <h3 className={"SuccessMeasureText"}>
@@ -4022,10 +4027,11 @@ async function getSuccessMeasure(fixtures) {
           (exactScores / investment) *
           100
         ).toFixed(1)}%)`}</p>
-        <p className={"SuccessMeasureText"}>
-          Cumulative ROI for all {totalInvestment} match outcomes:{" "}
-          {totalROI >= 0 ? "+" : ""} {totalROI.toFixed(2)}%
-        </p>
+          <p className="SuccessMeasureText">
+            Cumulative ROI for all {totalInvestment} match outcomes:{" "}
+            {totalROI >= 0 ? "+" : ""}
+            {totalROI.toFixed(2)}%
+          </p>
         <CollapsableStats buttonText="ROI by League">
           {Object.entries(specificLeagueResults)
             .sort(([, a], [, b]) => b.totalROI - a.totalROI) // Sort by ROI in descending order
@@ -4068,8 +4074,19 @@ async function getSuccessMeasure(fixtures) {
       </Fragment>,
       document.getElementById("successMeasure2")
     );
+  } else if (!isPaid) {
+    ReactDOM.render(
+      <Fragment>
+        <p>{`Correct W/D/W predictions: ${successCount} / ${investment} (${(
+          (successCount / investment) *
+          100
+        ).toFixed(1)}%)`}</p>
+        <p>Full ROI stats available when fixtures are uncapped</p>
+      </Fragment>,
+      document.getElementById("successMeasure2")
+    );
   } else {
-    return;
+    return
   }
 }
 
@@ -5090,7 +5107,7 @@ async function renderTips() {
 
   ReactDOM.render(
     <Fragment>
-          <button
+      <button
         className="SecondaryButtons"
         onClick={() => {
           window.open("https://www.xgtipping.com/#/bttsfixtures");
