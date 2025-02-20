@@ -583,8 +583,8 @@ function AppContent() {
               Full fixtures from all 40+ leagues and cups are restricted to premium members.
               Memberships can be cancelled at any time and prices will differ in currencies other than GBP. Payments are securely hosted by Stripe
             </span>
-            {/* <h2>1 week free trial with code XGFREETRIAL applicable to the £1/week subscription</h2>
-            <h3>Subscription will be charged to payment card from week 2 but can be cancelled at any time</h3> */}
+            <h2 className="MembershipHeader">1 week free trial with code XGFREETRIAL when applied to the £1/week subscription at the checkout</h2>
+            <h3>Subscription will be charged to payment card from week 2 but can be cancelled at any time. Code expires 19/03/2025</h3>
             <h3>New premium features released this week includes AI previews, matches/leagues with the highest/lowest goals and more</h3>
             <button
               onClick={() => handleCheckout("price_1QrQ4ZBrqiWlVPadCkhLhtiZ")}

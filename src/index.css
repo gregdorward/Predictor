@@ -3419,3 +3419,8 @@ button.SecondaryButtons{
 .AIDisclaimer{
   color: #030052;
 }
+
+.MembershipHeader{
+  margin-left: 4em;
+  margin-right: 4em;
+}
