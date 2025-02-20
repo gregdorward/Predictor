@@ -4010,7 +4010,10 @@ async function getSuccessMeasure(fixtures) {
   console.log(`Total ROI: ${totalROI}`);
   console.log(typeof totalROI);
 
-  const isPaid = userDetail.isPaid;
+  let isPaid;
+  if(userDetail){
+    isPaid = userDetail.isPaid;
+  }
   console.log(isPaid)
   if (investment > 0 && isPaid) {
     ReactDOM.render(

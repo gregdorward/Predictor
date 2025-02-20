@@ -359,7 +359,10 @@ async function createFixture(match, result, mockBool) {
 export function RenderAllFixtures(props) {
   let matches;
   let capped = false;
-  const paid = userDetail.isPaid
+  let paid = false;
+  if(userDetail){
+    paid = userDetail.isPaid
+  }
   const originalLength = props.matches.length
   if(paid === true){
     matches = props.matches
