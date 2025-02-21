@@ -629,8 +629,7 @@ function AppContent() {
           <Fragment>
             <div id="bestPredictions" className="bestPredictions" />
             <div id="exoticOfTheDay" className="exoticOfTheDay" />
-            <div id="successMeasure2" />
-
+            {/* <div id="successMeasure2" /> */}
             <div id="RowOneContainer" className="RowOneContainer">
               <div id="BTTS" className="RowOne" />
               <div id="longShots" className="RowOne" />
@@ -641,6 +640,7 @@ function AppContent() {
           </Fragment>
         }
       />
+      <div id="successMeasure2" />
       <div id="highLowLeagues" className="HighLowLeagues" />
       <div id="risk" />
       <div id="successMeasure" />
