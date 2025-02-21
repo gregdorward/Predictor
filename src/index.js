@@ -16,6 +16,7 @@ import Under25 from "./components/Under25"
 import HighestScoringTeams from "./components/HighestScoringTeams"
 import HighestScoringFixtures from "./components/HighestScoringFixtures";
 import BTTSFixtures from "./components/BTTSFixtures";
+import BTTSTeams from "./components/BTTSTeams";
 
 
 ReactDOM.render(
@@ -32,6 +33,7 @@ ReactDOM.render(
           <Route path="/teamshigh" element={<HighestScoringTeams />} />
           <Route path="/fixtureshigh" element={<HighestScoringFixtures />} />
           <Route path="/bttsfixtures" element={<BTTSFixtures />} />
+          <Route path="/bttsteams" element={<BTTSTeams />} />
           <Route path="/cancelsubscription" element={<CancelSubscription/>} />
           <Route path="/" exact element={<App />} />
           {/* <Route path="/" element={<Fixture />} /> */}

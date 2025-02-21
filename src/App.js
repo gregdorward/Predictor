@@ -580,12 +580,23 @@ function AppContent() {
           // If the user is logged in but is NOT a paying customer, show subscribe buttons
           <div>
             <span className="MembershipInfo">
-              Full fixtures from all 40+ leagues and cups are restricted to premium members.
-              Memberships can be cancelled at any time and prices will differ in currencies other than GBP. Payments are securely hosted by Stripe
+              Full fixtures from all 40+ leagues and cups are restricted to
+              premium members. Memberships can be cancelled at any time and
+              prices will differ in currencies other than GBP. Payments are
+              securely hosted by Stripe
             </span>
-            <h2 className="MembershipHeader">1 week free trial with code XGFREETRIAL when applied to the £1/week subscription at the checkout</h2>
-            <h3>Subscription will be charged to payment card from week 2 but can be cancelled at any time. Code expires 19/03/2025</h3>
-            <h3>New premium features released this week includes AI previews, matches/leagues with the highest/lowest goals and more</h3>
+            <h2 className="MembershipHeader">
+              1 week free trial with code XGFREETRIAL when applied to the
+              £1/week subscription at the checkout
+            </h2>
+            <h3>
+              Subscription will be charged to payment card from week 2 but can
+              be cancelled at any time. Code expires 19/03/2025
+            </h3>
+            <h3>
+              New premium features released this week includes AI previews,
+              matches/leagues with the highest/lowest goals and more
+            </h3>
             <button
               onClick={() => handleCheckout("price_1QrQ4ZBrqiWlVPadCkhLhtiZ")}
               className="SubscribeButton"
@@ -612,25 +623,31 @@ function AppContent() {
       )}
 
       <div id="GeneratePredictions" className="GeneratePredictions" />
-      <div id="bestPredictions" className="bestPredictions" />
-      <div id="exoticOfTheDay" className="exoticOfTheDay" />
-      <div id="successMeasure2" />
+      <Collapsable
+        buttonText={"Multis"}
+        element={
+          <Fragment>
+            <div id="bestPredictions" className="bestPredictions" />
+            <div id="exoticOfTheDay" className="exoticOfTheDay" />
+            <div id="successMeasure2" />
 
-      <div id="RowOneContainer" className="RowOneContainer">
-        <div id="BTTS" className="RowOne" />
-        <div id="longShots" className="RowOne" />
-        <div id="draws" className="RowOne" />
-      </div>
+            <div id="RowOneContainer" className="RowOneContainer">
+              <div id="BTTS" className="RowOne" />
+              <div id="longShots" className="RowOne" />
+              <div id="draws" className="RowOne" />
+            </div>
 
-      <div id="insights" />
-      <div id="highLowLeagues" className="HighLowLeagues"/>
+            <div id="insights" />
+          </Fragment>
+        }
+      />
+      <div id="highLowLeagues" className="HighLowLeagues" />
       <div id="risk" />
       <div id="successMeasure" />
       <div id="tables" />
       <div id="homeBadge" />
       <div id="FixtureContainerHeaders"></div>
 
-      <div id="XGDiff" />
       <div id="FixtureContainer">
         <h6 className="WelcomeText">{welcomeTextOne}</h6>
         <h6 className="GetMatchStatText">
@@ -716,6 +733,7 @@ function AppContent() {
           </span>
         </div>
       </div>
+      <div id="XGDiff" />
 
       <div className="Social">
         <TwitterShareButton

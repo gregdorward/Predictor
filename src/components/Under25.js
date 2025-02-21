@@ -9,6 +9,7 @@ import TableRow from "@material-ui/core/TableRow";
 import Paper from "@material-ui/core/Paper";
 import { useEffect, useState } from "react";
 import { getLowestScoringLeagues } from "../logic/getStatsInsights";
+import Logo from "../components/Logo"
 
 
 const StyledTableCell = withStyles((theme) => ({
@@ -62,6 +63,7 @@ console.log(filteredLeagues)
 
   return (
     <Fragment>
+    <Logo/>
       <h1>Lowest Scoring Leagues</h1>
     <TableContainer component={Paper} className="O25Table">
       <Table aria-label="Lowest scoring leagues">

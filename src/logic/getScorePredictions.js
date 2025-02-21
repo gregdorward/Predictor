@@ -10,7 +10,6 @@ import { incrementValue } from "../components/Increment";
 import { getBTTSPotential } from "../logic/getBTTSPotential";
 import { allLeagueResultsArrayOfObjects } from "../logic/getFixtures";
 import { Slider } from "../components/Carousel";
-import { StyledKofiButton } from "../components/KofiButton";
 import {
   calculateAttackingStrength,
   calculateDefensiveStrength,
@@ -653,31 +652,6 @@ async function getPastLeagueResults(team, game, hOrA, form) {
     const avXGAgainstLast5 = allTeamResults
       .map((res) => res.XGAgainst)
       .slice(0, 5);
-
-    // console.log(form.teamName);
-
-    // console.log("avConceededLast5")
-    // console.log(avConceededLast5)
-    // console.log("avSOTLast5")
-    // console.log(avSOTLast5)
-
-    // console.log("avSOTAgainstLast5")
-    // console.log(avSOTAgainstLast5)
-
-    // console.log("avShotsLast5")
-    // console.log(avShotsLast5)
-
-    // console.log("avCornersLast5")
-    // console.log(avCornersLast5)
-
-    // console.log("avPosessionLast5")
-    // console.log(avPosessionLast5)
-
-    // console.log("avXGLast5")
-    // console.log(avXGLast5)
-
-    // console.log("avXGAgainstLast5")
-    // console.log(avXGAgainstLast5)
 
     const avXGAgainstLast5Sum = avXGAgainstLast5.reduce((a, b) => a + b, 0);
     form.avXGAgainstLast5 = avXGAgainstLast5Sum / avXGAgainstLast5.length;
@@ -2470,6 +2444,7 @@ export async function calculateScore(match, index, divider, calculate) {
 
     homeOdds = match.homeOdds;
     awayOdds = match.awayOdds;
+    console.log(teams);
 
     formHome = teams[0][index];
     formAway = teams[1][index];
@@ -4011,10 +3986,10 @@ async function getSuccessMeasure(fixtures) {
   console.log(typeof totalROI);
 
   let isPaid;
-  if(userDetail){
+  if (userDetail) {
     isPaid = userDetail.isPaid;
   }
-  console.log(isPaid)
+  console.log(isPaid);
   if (investment > 0 && isPaid) {
     ReactDOM.render(
       <Fragment>
@@ -4030,11 +4005,11 @@ async function getSuccessMeasure(fixtures) {
           (exactScores / investment) *
           100
         ).toFixed(1)}%)`}</p>
-          <p className="SuccessMeasureText">
-            Cumulative ROI for all {totalInvestment} match outcomes:{" "}
-            {totalROI >= 0 ? "+" : ""}
-            {totalROI.toFixed(2)}%
-          </p>
+        <p className="SuccessMeasureText">
+          Cumulative ROI for all {totalInvestment} match outcomes:{" "}
+          {totalROI >= 0 ? "+" : ""}
+          {totalROI.toFixed(2)}%
+        </p>
         <CollapsableStats buttonText="ROI by League">
           {Object.entries(specificLeagueResults)
             .sort(([, a], [, b]) => b.totalROI - a.totalROI) // Sort by ROI in descending order
@@ -4089,7 +4064,7 @@ async function getSuccessMeasure(fixtures) {
       document.getElementById("successMeasure2")
     );
   } else {
-    return
+    return;
   }
 }
 
@@ -5110,50 +5085,67 @@ async function renderTips() {
 
   ReactDOM.render(
     <Fragment>
-      <button
-        className="SecondaryButtons"
-        onClick={() => {
-          window.open("https://www.xgtipping.com/#/bttsfixtures");
-        }}
-      >
-        Both teams to score fixtures
-      </button>
-      <button
-        className="SecondaryButtons"
-        onClick={() => {
-          if (paid) window.open("https://www.xgtipping.com/#/fixtureshigh");
-        }}
-        disabled={!paid}
-      >
-        Over 2.5 goals fixtures
-      </button>
-      <button
-        className="SecondaryButtons"
-        onClick={() => {
-          if (paid) window.open("https://www.xgtipping.com/#/o25");
-        }}
-        disabled={!paid}
-      >
-        Highest scoring leagues
-      </button>
-      <button
-        className="SecondaryButtons"
-        onClick={() => {
-          if (paid) window.open("https://www.xgtipping.com/#/u25");
-        }}
-        disabled={!paid}
-      >
-        Lowest scoring leagues
-      </button>
-      <button
-        className="SecondaryButtons"
-        onClick={() => {
-          if (paid) window.open("https://www.xgtipping.com/#/teamshigh");
-        }}
-        disabled={!paid}
-      >
-        Highest scoring teams
-      </button>
+      <Collapsable
+        buttonText={"Extras"}
+        element={
+          <div>
+            <button
+              className="SecondaryButtons"
+              onClick={() => {
+                window.open("https://www.xgtipping.com/#/bttsteams");
+              }}
+            >
+              Both teams to score teams
+            </button>
+            <button
+              className="SecondaryButtons"
+              onClick={() => {
+                window.open("https://www.xgtipping.com/#/bttsfixtures");
+              }}
+              disabled={!paid}
+            >
+              Both teams to score fixtures
+            </button>
+            <button
+              className="SecondaryButtons"
+              onClick={() => {
+                if (paid)
+                  window.open("https://www.xgtipping.com/#/fixtureshigh");
+              }}
+              disabled={!paid}
+            >
+              Over 2.5 goals fixtures
+            </button>
+            <button
+              className="SecondaryButtons"
+              onClick={() => {
+                if (paid) window.open("https://www.xgtipping.com/#/o25");
+              }}
+              disabled={!paid}
+            >
+              Highest scoring leagues
+            </button>
+            <button
+              className="SecondaryButtons"
+              onClick={() => {
+                if (paid) window.open("https://www.xgtipping.com/#/u25");
+              }}
+              disabled={!paid}
+            >
+              Lowest scoring leagues
+            </button>
+            <button
+              className="SecondaryButtons"
+              onClick={() => {
+                if (paid) window.open("https://www.xgtipping.com/#/teamshigh");
+              }}
+              disabled={!paid}
+            >
+              Highest scoring teams
+            </button>
+          </div>
+        }
+      />
     </Fragment>,
     document.getElementById("highLowLeagues")
   );

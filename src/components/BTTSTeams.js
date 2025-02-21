@@ -8,7 +8,7 @@ import TableHead from "@material-ui/core/TableHead";
 import TableRow from "@material-ui/core/TableRow";
 import Paper from "@material-ui/core/Paper";
 import { useEffect, useState } from "react";
-import { getBTTSFixtures } from "../logic/getStatsInsights";
+import { getBTTSTeams } from "../logic/getStatsInsights";
 import Logo from "../components/Logo"
 
 const StyledTableCell = withStyles((theme) => ({
@@ -24,7 +24,7 @@ const StyledTableCell = withStyles((theme) => ({
   body: {
     fontSize: "1em",
     fontFamily: "inherit",
-    padding: 5,
+    padding: 4,
     border: "1px, solid, black"
 
   },
@@ -39,12 +39,12 @@ const StyledTableRow = withStyles((theme) => ({
   },
 }))(TableRow);
 
-export default function BTTSFixtures() {
+export default function BTTSTeams() {
   const [games, setGames] = useState([]);
 
   useEffect(() => {
     async function fetchGames() {
-      const data = await getBTTSFixtures();
+      const data = await getBTTSTeams();
       setGames(data);
     }
     fetchGames();
@@ -78,15 +78,15 @@ export default function BTTSFixtures() {
 
   // Filter games based on allowed countries
   const filteredGames = games.filter((game) =>
-    allowedCountries.includes(game.country) && game.progress > 30 && game.avgGoals > 3
+    allowedCountries.includes(game.country) && game.played > 10
   ).slice(0,30);
 
-  const headers = ["Fixture", "Date", "Country", "Odds BTTS Yes", "Avg Combined Goals"];
+  const headers = ["Name", "Country", "BTTS %", "Played", "Next Opponent",  "Date", "Odds BTTS", ];
 
   return (
     <Fragment>
     <Logo/>
-      <h1>Fixtures With Highest BTTS Potential</h1>
+      <h1>Teams With Best BTTS Records</h1>
       <TableContainer component={Paper} className="O25Table">
         <Table aria-label="highest scoring games">
           <TableHead>
@@ -102,20 +102,27 @@ export default function BTTSFixtures() {
             {filteredGames.map((team, index) => (
               <StyledTableRow key={index}>
                 <StyledTableCell align="center">
-                  {team.match}
-                </StyledTableCell>
-                <StyledTableCell align="center">
-                  {team.date}
+                  {team.name}
                 </StyledTableCell>
                 <StyledTableCell align="center">
                   {team.country}
                 </StyledTableCell>
                 <StyledTableCell align="center">
-                  {team.odds}
+                  {team.bttsPercentage}
                 </StyledTableCell>
                 <StyledTableCell align="center">
-                  {team.avgGoals}
+                  {team.played}
                 </StyledTableCell>
+                <StyledTableCell align="center">
+                  {team.opponent}
+                </StyledTableCell>
+                <StyledTableCell align="center">
+                  {team.date}
+                </StyledTableCell>
+                <StyledTableCell align="center">
+                  {team.odds}
+                </StyledTableCell>
+
               </StyledTableRow>
             ))}
           </TableBody>

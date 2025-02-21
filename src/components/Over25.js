@@ -9,6 +9,7 @@ import TableRow from "@material-ui/core/TableRow";
 import Paper from "@material-ui/core/Paper";
 import { useEffect, useState } from "react";
 import { getHighestScoringLeagues } from "../logic/getStatsInsights";
+import Logo from "../components/Logo"
 
 
 const StyledTableCell = withStyles((theme) => ({
@@ -55,13 +56,14 @@ export default function Over25() {
   ];
 
   // Filter leagues based on allowed countries
-  const filteredLeagues = leagues.filter(league => allowedCountries.includes(league.leagueCountry) && league.division > 0 && league.division < 5);
+  const filteredLeagues = leagues.filter(league => allowedCountries.includes(league.leagueCountry) && league.division > 0 && league.domestic_scale < 6);
   console.log(filteredLeagues)
 
   const headers = ["League", "Country", "Avg Goals", "Over 2.5%"];
 
   return (
     <Fragment>
+    <Logo/>
       <h1>Highest Scoring Leagues</h1>
     <TableContainer component={Paper} className="O25Table">
       <Table aria-label="highest scoring leagues">

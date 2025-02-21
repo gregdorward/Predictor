@@ -13,6 +13,7 @@ export async function getHighestScoringLeagues() {
           leagues.data.top_leagues.data[index].seasonOver25Percentage_overall,
         division: leagues.data.top_leagues.data[index].division,
         leagueId: leagues.data.top_leagues.data[index].id,
+        domestic_scale: leagues.data.top_leagues.data[index].domestic_scale
       };
       arr.push(league);
     }
@@ -121,7 +122,7 @@ export async function getBTTSFixtures() {
     // Extract fixture data
     let fixtures = fixture.data.top_fixtures.data;
     console.log(fixtures)
-
+    console.log(fixture.data)
     // Sort fixtures by `date_unix` (soonest first)
     fixtures.sort((a, b) => a.date_unix - b.date_unix);
 
@@ -136,6 +137,42 @@ export async function getBTTSFixtures() {
         avgGoals: fixtures[index].avg_potential,
         match: fixtures[index].name,
         progress: fixtures[index].progress
+      };
+      arr.push(game);
+    }
+  });
+
+  return arr;
+}
+
+export async function getBTTSTeams() {
+  let fixturesList = await fetch(
+    `${process.env.REACT_APP_EXPRESS_SERVER}btts`
+  );
+
+  let arr = [];
+  console.log("called")
+  
+  await fixturesList.json().then(async (fixture) => {
+    // Extract fixture data
+    let teams = fixture.data.top_teams.data;
+    console.log(teams)
+    // Sort teams by `date_unix` (soonest first)
+    teams.sort((a, b) => b.seasonBTTSPercentage_overall - a.seasonBTTSPercentage_overall);
+
+    // Process sorted teams
+    for (let index = 0; index < teams.length; index++) {
+      const game = {
+        date: teams[index].next_match_date
+          ? await convertTimestamp(teams[index].next_match_date)
+          : "N/A",
+        country: teams[index].country,
+        odds: teams[index].odds_btts_yes,
+        played: teams[index].seasonMatchesPlayed_overall,
+        bttsPercentage: teams[index].seasonBTTSPercentage_overall,
+        name: teams[index].name,
+        opponent: teams[index].next_match_team,
+        progress: teams[index].progress
       };
       arr.push(game);
     }
