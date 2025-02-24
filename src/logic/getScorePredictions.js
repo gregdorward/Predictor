@@ -1764,6 +1764,7 @@ export async function generateGoals(homeForm, awayForm, match) {
     homeAttackVsAwayDefenceComparison * 1.5 +
     XGRatingHomeComparison * 0 +
     homeAttackVsAwayDefenceComparisonLast5 * 1.5 +
+    0.25 +
     homeAttackVsAwayDefenceComparisonHomeOnly * 0 +
     // weighedPointsComparisonHome * 0.005 +
     oddsComparisonHome * 0;
