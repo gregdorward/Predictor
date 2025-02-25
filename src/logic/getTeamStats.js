@@ -2,6 +2,8 @@ import ReactDOM from "react-dom";
 import HeadToHead from "../components/HeadToHead";
 import { Fragment } from "react";
 import CustomizedTables from "../components/Table";
+import { userDetail } from "./authProvider";
+
 
 export async function getTeamStats(
   id,
@@ -23,7 +25,7 @@ export async function getTeamStats(
   );
   await match.json().then(async (match) => {
     const matchArr = match.data.h2h.previous_matches_ids;
-    const reducedMatchArr = matchArr.slice(0, 10)
+    const reducedMatchArr = matchArr.slice(0, 10);
 
     let oddsComparisonHomeArray = [];
     let oddsComparisonAwayArray = [];
@@ -57,7 +59,6 @@ export async function getTeamStats(
       away,
       fixtureHistory
     ) {
-
       let total = homeToal + home + awayTotal + away + fixtureHistory;
       return total / 5;
     }
@@ -67,16 +68,13 @@ export async function getTeamStats(
       return (1 / impliedProbabilityDivided).toFixed(2);
     }
 
-
-
     if (match.data.h2h.previous_matches_results.totalMatches > 0) {
-
       let homeTeam = match.data.home_name;
       let awayTeam = match.data.away_name;
 
       let teamMappings = {
         [homeTeam]: match.data.homeID,
-        [awayTeam]: match.data.awayID
+        [awayTeam]: match.data.awayID,
       };
 
       reducedMatchArr.sort((a, b) => b.date_unix - a.date_unix);
@@ -110,7 +108,6 @@ export async function getTeamStats(
       //   // }
       // });
 
-
       const BTTSForecast = await getBTTSPercentage(
         homeBTTS,
         homeOnlyBTTS,
@@ -120,20 +117,41 @@ export async function getTeamStats(
       );
       const fairOddsBTTSYes = await getFairOdds(BTTSForecast);
       const fairOddsBTTSNo = await getFairOdds(100 - BTTSForecast);
-      console.log(match.data)
+      console.log(match.data);
       function stripLinks(htmlString) {
-        return htmlString.replace(/<a\b[^>]*>(.*?)<\/a>/gi, '$1');
+        return htmlString.replace(/<a\b[^>]*>(.*?)<\/a>/gi, "$1");
       }
-      
+
       function MatchPreview({ content }) {
-        return <div className="AIOverview" dangerouslySetInnerHTML={{ __html: content }} />;
+        return (
+          <div
+            className="AIOverview"
+            dangerouslySetInnerHTML={{ __html: content }}
+          />
+        );
       }
+
+      let paid
+      if (userDetail){
+        paid = userDetail.isPaid
+      } else {
+        paid = false;
+      }
+
 
       ReactDOM.render(
         <Fragment>
           <h2>AI Preview</h2>
-          <MatchPreview content={match.data.gpt_en} />
-          <span className="AIDisclaimer">Any predictions made by the AI do not reflect the opinion of XGTipping</span>
+          {paid ? (
+            <MatchPreview content={match.data.gpt_en} />
+          ) : (
+            // Move ':' to be inside the same parenthesis as '?'
+            <div>AI Previews are a paid feature</div>
+          )}
+          <span className="AIDisclaimer">
+            Any predictions made by the AI do not reflect the opinion of
+            XGTipping
+          </span>
           <HeadToHead
             className={"PreviousMatchStats"}
             homeTeam={home}
