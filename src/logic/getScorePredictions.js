@@ -179,9 +179,13 @@ async function getPastLeagueResults(team, game, hOrA, form) {
 
     for (let index = 0; index < teamsHomeResults.length; index++) {
       const resultedGame = teamsHomeResults[index];
+      console.log(resultedGame);
       homeResults.push({
         homeTeam: resultedGame.home_name,
+        gameweek: resultedGame.game_week,
         homeGoals: resultedGame.homeGoalCount,
+        homePPGPreMatch: resultedGame.pre_match_teamA_overall_ppg,
+        awayPPGPreMatch: resultedGame.pre_match_teamB_overall_ppg,
         XG:
           resultedGame.team_a_xg === -1 || resultedGame.team_a_xg > 7
             ? resultedGame.homeGoalCount
@@ -218,7 +222,6 @@ async function getPastLeagueResults(team, game, hOrA, form) {
         dateRaw: resultedGame.date_unix,
         oddsHome: resultedGame.odds_ft_1,
         oddsAway: resultedGame.odds_ft_2,
-        odds: resultedGame.odds_ft_1 < 999.99 ? resultedGame.odds_ft_1 / 2 : 1,
         btts:
           resultedGame.homeGoalCount > 0 && resultedGame.awayGoalCount > 0
             ? true
@@ -309,7 +312,10 @@ async function getPastLeagueResults(team, game, hOrA, form) {
       const resultedGame = teamsAwayResults[index];
       awayResults.push({
         homeTeam: resultedGame.home_name,
+        gameweek: resultedGame.game_week,
         homeGoals: resultedGame.homeGoalCount,
+        homePPGPreMatch: resultedGame.pre_match_teamA_overall_ppg,
+        awayPPGPreMatch: resultedGame.pre_match_teamB_overall_ppg,
         XG:
           resultedGame.team_b_xg === -1 || resultedGame.team_b_xg > 7
             ? resultedGame.awayGoalCount
@@ -346,7 +352,6 @@ async function getPastLeagueResults(team, game, hOrA, form) {
         dateRaw: resultedGame.date_unix,
         oddsHome: resultedGame.odds_ft_1,
         oddsAway: resultedGame.odds_ft_2,
-        odds: resultedGame.odds_ft_2 < 999.99 ? resultedGame.odds_ft_2 / 2 : 1,
         btts:
           resultedGame.homeGoalCount > 0 && resultedGame.awayGoalCount > 0
             ? true
@@ -566,8 +571,12 @@ async function getPastLeagueResults(team, game, hOrA, form) {
       }
     }
 
-    const allTeamResults = reversedResultsHome.concat(reversedResultsAway);
-    const chatGPTPayload = allTeamResults.slice(0, 5);
+    const allTeamResultsUnordered =
+      reversedResultsHome.concat(reversedResultsAway);
+    const allTeamResults = allTeamResultsUnordered.sort(
+      (a, b) => a.dateRaw - b.dateRaw
+    );
+
     let points = 0;
     let pointsWeighted = 0;
 
@@ -588,6 +597,7 @@ async function getPastLeagueResults(team, game, hOrA, form) {
     );
 
     form.allTeamResults = allTeamResults.sort((b, a) => a.dateRaw - b.dateRaw);
+    form.allTeamResultsLast6 = form.allTeamResults.slice(0, 6)
 
     const points6 = allTeamResults.map((res) => res.points).slice(0, 6);
     const pointsSum6 = points6.reduce((a, b) => a + b, 0);

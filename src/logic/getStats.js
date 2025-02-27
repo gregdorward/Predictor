@@ -21,6 +21,9 @@ import SofaLineupsWidget from "../components/SofaScore";
 import { arrayOfGames } from "../logic/getFixtures";
 import { userDetail } from "../logic/authProvider";
 import { checkUserPaidStatus } from "../logic/hasUserPaid";
+import { Fragment } from "react";
+
+let AIMatchPreview = null;
 
 export async function calculateAttackingStrength(stats) {
   // Define weights for each metric (you can adjust these based on your preference)
@@ -1035,11 +1038,6 @@ export async function createStatsDiv(game, displayBool) {
       // }
 
       let favouriteRecordHome, favouriteRecordAway;
-      console.log(homeForm.teamName);
-      console.log(homeForm.oddsReliabilityWin);
-
-      console.log(awayForm.teamName);
-      console.log(awayForm.oddsReliabilityWin);
       if (
         homeForm.underdogCount &&
         awayForm.underdogCount &&
@@ -1372,6 +1370,88 @@ export async function createStatsDiv(game, displayBool) {
           5,
       ];
 
+      const AIPayload = {
+        league: game.leagueDesc,
+        gameweek: game.game_week,
+        homeTeamName: homeForm.teamName,
+        homeLeaguePosition: homeForm.LeaguePosition,
+        homeTeamResults: homeForm.allTeamResults,
+        awayTeamName: awayForm.teamName,
+        awayLeaguePosition: awayForm.LeaguePosition,
+        awayTeamResults: awayForm.allTeamResults,
+      };
+
+      async function addNewlinesAfterPeriods(text) {
+        // Regular expression to match a full stop followed by no space
+        const regex = /\.(?=[^ \r\n])/g;
+      
+        // Replace the matched full stop with a full stop and a newline character
+        const newText = text.replace(regex, ".\n");
+      
+        return newText;
+      }
+
+      console.log("AIPayload before fetch:", AIPayload); // Inspect the payload
+      async function generateAIInsights(game) {
+        ReactDOM.render(
+          <Fragment>
+           <div>Loading...</div>
+          </Fragment>,
+          document.getElementById("AIInsightsContainer")
+        );
+
+        try {
+          const response = await fetch(
+            `${process.env.REACT_APP_EXPRESS_SERVER}gemini/${game}`,
+            {
+              method: "POST",
+              headers: {
+                Accept: "application/json",
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify(AIPayload),
+            }
+          );
+
+          console.log("Raw Response:", response); // See the raw response
+
+          if (!response.ok) {
+            // Check for HTTP errors
+            throw new Error(`HTTP error! Status: ${response.status}`);
+          }
+
+          const jsonData = await response.json(); // Parse the response body as JSON
+          AIMatchPreview = jsonData;
+          const formattedText = await addNewlinesAfterPeriods(AIMatchPreview.matchPreview)
+
+          ReactDOM.render(
+            <Fragment>
+              <h2>Preview</h2>
+              <div className="AIMatchPreview">
+                {formattedText}
+              </div>
+              <h2>AI Prediction</h2>
+              <div className="AIMatchPreview">{AIMatchPreview.prediction} <i>(may not reflect the view of XGTipping)</i></div>
+              <div className="AIContainer">
+                <div className="HomeAIInsights">
+                  <div>
+                  {AIMatchPreview.homeTeam.summary}
+                  </div>
+                </div>
+                <div className="AwayAIInsights">
+                  <div>
+                  {AIMatchPreview.awayTeam.summary}
+                  </div>
+                </div>
+              </div>
+            </Fragment>,
+            document.getElementById("AIInsightsContainer")
+          );
+        } catch (error) {
+          console.error("Fetch error:", error); // Handle fetch errors
+        }
+      }
+
       const formDataMatch = [];
 
       formDataMatch.push({
@@ -1379,8 +1459,6 @@ export async function createStatsDiv(game, displayBool) {
       });
 
       const formDataHome = [];
-      console.log(game.awayTeam);
-      console.log(gameStats.away[2].LastFiveForm);
 
       formDataHome.push({
         name: game.homeTeam,
@@ -1644,7 +1722,6 @@ export async function createStatsDiv(game, displayBool) {
       }
 
       function StatsHome() {
-        console.log(homeForm.homePPGAv);
         return (
           <div className="flex-childOne">
             <ul style={style}>
@@ -1714,16 +1791,6 @@ export async function createStatsDiv(game, displayBool) {
                 BttsPercentageHomeOrAway={
                   formDataHome[0].BttsPercentageHomeOrAway
                 }
-                // BTTSAll={
-                //   formDataHome[0].BTTSAll
-                //     ? formDataHome[0].BTTSAll
-                //     : '"Get Predictions" first'
-                // }
-                // BTTSHorA={
-                //   formDataHome[0].BTTSHorA
-                //     ? formDataHome[0].BTTSHorA
-                //     : '"Get Predictions" first'
-                // }
                 BTTSArray={formDataHome[0].BTTSArray}
                 Results={formDataHome[0].Results}
                 ResultsHorA={formDataHome[0].ResultsHorA}
@@ -1743,124 +1810,89 @@ export async function createStatsDiv(game, displayBool) {
       }
 
       function StatsAway() {
-          return (
-            <div className="flex-childTwo">
-              <ul style={style}>
-                <Stats
-                  style={style}
-                  homeOrAway="Away"
-                  gameCount={divider}
-                  key={formDataAway[0].name}
-                  last5={formDataAway[0].Last5}
-                  homeOrAwayResults={gameArrayAwayTeamAwayGames}
-                  LeagueOrAll={formDataAway[0].LeagueOrAll}
-                  className={"KeyStatsAway"}
-                  classNameTwo={"FormStatsAway"}
-                  name={formDataAway[0].name}
-                  goals={awayForm.avgScored}
-                  conceeded={awayForm.avgConceeded}
-                  XG={awayForm.XGOverall.toFixed(2)}
-                  XGConceded={awayForm.XGAgainstAvgOverall.toFixed(2)}
-                  XGSwing={awayForm.XGChangeRecently}
-                  //todo add goal diff and btts percentages
-                  possession={awayForm.AveragePossessionOverall.toFixed(2)}
-                  rawPosition={game.awayRawPosition ? game.awayRawPosition : 0}
-                  sot={awayForm.AverageShotsOnTargetOverall.toFixed(2)}
-                  dangerousAttacks={
-                    awayForm.AverageDangerousAttacksOverall !== 0
-                      ? awayForm.AverageDangerousAttacksOverall.toFixed(2)
-                      : awayForm.AverageDangerousAttacks
-                  }
-                  leaguePosition={
-                    formDataAway[0].leaguePosition !== undefined &&
-                    formDataAway[0].leaguePosition !== "undefined"
-                      ? formDataAway[0].leaguePosition
-                      : 0
-                  }
-                  homeOrAwayLeaguePosition={
-                    game.awayTeamAwayPosition !== undefined &&
-                    game.awayTeamAwayPosition !== "undefinedundefined"
-                      ? game.awayTeamAwayPosition
-                      : 0
-                  }
-                  winPercentage={
-                    awayForm.awayPPGAv ? awayForm.awayPPGAv : "N/A"
-                  }
-                  lossPercentage={
-                    game.awayTeamLossPercentage
-                      ? game.awayTeamLossPercentage
-                      : "N/A"
-                  }
-                  drawPercentage={
-                    game.awayTeamDrawPercentage
-                      ? game.awayTeamDrawPercentage
-                      : "N/A"
-                  }
-                  ppg={formDataAway[0].SeasonPPG}
-                  formTrend={[
-                    awayTenGameAverage.toFixed(2),
-                    awaySixGameAverage.toFixed(2),
-                    awayFiveGameAverage.toFixed(2),
-                  ]}
-                  formRun={awayForm.resultsAll.reverse()}
-                  goalDifference={formDataAway[0].goalDifference}
-                  goalDifferenceHomeOrAway={
-                    formDataAway[0].goalDifferenceHomeOrAway
-                  }
-                  BttsPercentage={formDataAway[0].BttsPercentage}
-                  BttsPercentageHomeOrAway={
-                    formDataAway[0].BttsPercentageHomeOrAway
-                  }
-                  // BTTSAll={
-                  //   formDataAway[0].BTTSAll
-                  //     ? formDataAway[0].BTTSAll
-                  //     : '"Get Predictions" first'
-                  // }
-                  // BTTSHorA={
-                  //   formDataAway[0].BTTSHorA
-                  //     ? formDataAway[0].BTTSHorA
-                  //     : '"Get Predictions" first'
-                  // }
-                  BTTSArray={formDataAway[0].BTTSArray}
-                  Results={formDataAway[0].Results}
-                  ResultsHorA={formDataAway[0].ResultsHorA}
-                  CardsTotal={formDataAway[0].CardsTotal}
-                  CornersAverage={awayForm.AverageCorners}
-                  ScoredBothHalvesPercentage={
-                    formDataAway[0].ScoredBothHalvesPercentage
-                  }
-                  FormTextString={formDataAway[0].FormTextStringAway}
-                  FavouriteRecord={formDataAway[0].FavouriteRecord}
-                  StyleOfPlay={formDataAway[0].styleOfPlayOverall}
-                  StyleOfPlayHomeOrAway={formDataAway[0].styleOfPlayAway}
-                />
-              </ul>
-            </div>
-          );
+        return (
+          <div className="flex-childTwo">
+            <ul style={style}>
+              <Stats
+                style={style}
+                homeOrAway="Away"
+                gameCount={divider}
+                key={formDataAway[0].name}
+                last5={formDataAway[0].Last5}
+                homeOrAwayResults={gameArrayAwayTeamAwayGames}
+                LeagueOrAll={formDataAway[0].LeagueOrAll}
+                className={"KeyStatsAway"}
+                classNameTwo={"FormStatsAway"}
+                name={formDataAway[0].name}
+                goals={awayForm.avgScored}
+                conceeded={awayForm.avgConceeded}
+                XG={awayForm.XGOverall.toFixed(2)}
+                XGConceded={awayForm.XGAgainstAvgOverall.toFixed(2)}
+                XGSwing={awayForm.XGChangeRecently}
+                //todo add goal diff and btts percentages
+                possession={awayForm.AveragePossessionOverall.toFixed(2)}
+                rawPosition={game.awayRawPosition ? game.awayRawPosition : 0}
+                sot={awayForm.AverageShotsOnTargetOverall.toFixed(2)}
+                dangerousAttacks={
+                  awayForm.AverageDangerousAttacksOverall !== 0
+                    ? awayForm.AverageDangerousAttacksOverall.toFixed(2)
+                    : awayForm.AverageDangerousAttacks
+                }
+                leaguePosition={
+                  formDataAway[0].leaguePosition !== undefined &&
+                  formDataAway[0].leaguePosition !== "undefined"
+                    ? formDataAway[0].leaguePosition
+                    : 0
+                }
+                homeOrAwayLeaguePosition={
+                  game.awayTeamAwayPosition !== undefined &&
+                  game.awayTeamAwayPosition !== "undefinedundefined"
+                    ? game.awayTeamAwayPosition
+                    : 0
+                }
+                winPercentage={awayForm.awayPPGAv ? awayForm.awayPPGAv : "N/A"}
+                lossPercentage={
+                  game.awayTeamLossPercentage
+                    ? game.awayTeamLossPercentage
+                    : "N/A"
+                }
+                drawPercentage={
+                  game.awayTeamDrawPercentage
+                    ? game.awayTeamDrawPercentage
+                    : "N/A"
+                }
+                ppg={formDataAway[0].SeasonPPG}
+                formTrend={[
+                  awayTenGameAverage.toFixed(2),
+                  awaySixGameAverage.toFixed(2),
+                  awayFiveGameAverage.toFixed(2),
+                ]}
+                formRun={awayForm.resultsAll.reverse()}
+                goalDifference={formDataAway[0].goalDifference}
+                goalDifferenceHomeOrAway={
+                  formDataAway[0].goalDifferenceHomeOrAway
+                }
+                BttsPercentage={formDataAway[0].BttsPercentage}
+                BttsPercentageHomeOrAway={
+                  formDataAway[0].BttsPercentageHomeOrAway
+                }
+                BTTSArray={formDataAway[0].BTTSArray}
+                Results={formDataAway[0].Results}
+                ResultsHorA={formDataAway[0].ResultsHorA}
+                CardsTotal={formDataAway[0].CardsTotal}
+                CornersAverage={awayForm.AverageCorners}
+                ScoredBothHalvesPercentage={
+                  formDataAway[0].ScoredBothHalvesPercentage
+                }
+                FormTextString={formDataAway[0].FormTextStringAway}
+                FavouriteRecord={formDataAway[0].FavouriteRecord}
+                StyleOfPlay={formDataAway[0].styleOfPlayOverall}
+                StyleOfPlayHomeOrAway={formDataAway[0].styleOfPlayAway}
+              />
+            </ul>
+          </div>
+        );
       }
-
-      // const allHomeGames = homeForm.WDLRecord.reverse();
-      // const allAwayGames = awayForm.WDLRecord.reverse();
-
-      // // const pointsHome = getPointsFromLastX(formDataHome[0].Last5);
-      // const pointsHome = getPointsFromLastX(allHomeGames);
-      // const pointsHomeAv = await getPointAverage(
-      //   pointsHome,
-      //   allHomeGames.length
-      // );
-      // const pointsHomeLast5 = getPointsFromLastX(allHomeGames.slice(0, 5));
-      // const pointsHomeAvLast5 = await getPointAverage(pointsHomeLast5, 5);
-      // const pointsAway = getPointsFromLastX(allAwayGames);
-      // const pointsAwayAv = await getPointAverage(
-      //   pointsAway,
-      //   allAwayGames.length
-      // );
-      // const pointsAwayLast5 = getPointsFromLastX(allAwayGames.slice(0, 5));
-      // const pointsAwayAvLast5 = await getPointAverage(pointsAwayLast5, 5);
-
-      // console.log(homeForm.WDLRecord.length);
-      // console.log(pointsHomeAvLast5);
-      // console.log(pointsAwayAvLast5);
 
       let id, team1, team2, timestamp, homeGoals, awayGoals;
 
@@ -1880,7 +1912,6 @@ export async function createStatsDiv(game, displayBool) {
         game.homeTeam
       );
 
-      console.log(matchingGame);
       if (matchingGame) {
         id = matchingGame.id.toString();
         team1 = matchingGame.homeTeam;
@@ -1897,10 +1928,7 @@ export async function createStatsDiv(game, displayBool) {
         awayGoals = "-";
       }
 
-      if (
-        homeForm.completeData === true &&
-        game.completeData === true
-      ) {
+      if (homeForm.completeData === true && game.completeData === true) {
         ReactDOM.render(
           <>
             <div style={style}>
@@ -1922,6 +1950,19 @@ export async function createStatsDiv(game, displayBool) {
               />
               <div style={style}>
                 <Div className="MatchTime" text={`Kick off: ${time} GMT`}></Div>
+              </div>
+              <div id="AIInsightsContainer" className="AIInsightsContainer">
+              {!paid ? (
+                <div>Paid feature</div>
+              ) : (
+                <div></div>
+              )}
+                <Button
+                  className="AIInsights"
+                  onClickEvent={() => generateAIInsights(game.id)}
+                  text={"Generate AI Insights"}
+                  disabled={!paid}
+                ></Button>
               </div>
               <div className="flex-container">
                 <StatsHome />
@@ -2139,7 +2180,8 @@ export async function createStatsDiv(game, displayBool) {
           document.getElementById("stats" + homeTeam)
         );
       } else if (
-        (homeForm.completeData === false || game.completeData === false)
+        homeForm.completeData === false ||
+        game.completeData === false
       ) {
         ReactDOM.render(
           <>

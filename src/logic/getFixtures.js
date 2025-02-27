@@ -238,7 +238,6 @@ export async function renderTable(index, results, id) {
     statistics = stats.data;
   });
 
-  console.log(statistics)
 
   if (league !== undefined) {
     ReactDOM.render(
@@ -593,6 +592,8 @@ export async function generateFixtures(
             away_name,
             homeGoalCount,
             awayGoalCount,
+            home_ppg,
+            away_ppg,
             date_unix,
             team_a_xg,
             team_b_xg,
@@ -618,6 +619,8 @@ export async function generateFixtures(
             away_name,
             homeGoalCount,
             awayGoalCount,
+            home_ppg,
+            away_ppg,
             date_unix,
             team_a_xg,
             team_b_xg,

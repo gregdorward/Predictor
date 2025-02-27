@@ -47,8 +47,6 @@ export let paid = false;
 
 const leagueOrder = [
   11084, //Euro 2024
-  12327, //Europa
-  12321, // Champs league
   7432, //World Cup 22
   12325, //premier league 22/23
   12451, //championship 22/23
@@ -63,6 +61,8 @@ const leagueOrder = [
   12931, //Portagul Prem 22/23
   12322, //Dutch Prem 22/23
   12137, //Belgian Pro League 22/23
+  12321, // Champs league
+  12327, //Europa
   10969, //sweden 24
   12132, //Danish Prem 24/25
   10976, //Norway Prem 23
@@ -136,7 +136,7 @@ let dateString;
     for (let x = 0; x < league.season.length; x++) {
       const element = league.season[x];
 
-      if (element.year === 2024 || element.year === 20242025) {
+      if (element.year === 2025 || element.year === 20242025) {
         if (
           element.id !== 13703 &&
           element.id !== 6935 &&
@@ -206,7 +206,7 @@ export async function getLeagueList() {
   [today, todayFootyStats] = await calculateDate(new Date());
 
   tomorrowsDate = new Date();
-  tomorrowsDate.setDate(tomorrowsDate.getDate() + 1);
+  tomorrowsDate.setDate(tomorrowsDate.getDate() + 2);
   [tomorrow, tomorrowFootyStats] = await calculateDate(tomorrowsDate);
 
   yesterdaysDate = new Date();
@@ -718,7 +718,6 @@ function AppContent() {
             footystats.org
           </a>
         </div>
-
         <div className="bitcoin" id="bitcoin">
           <a
             href="https://www.ko-fi.com/xgtipping"
