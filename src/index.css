@@ -25,7 +25,7 @@
     display: flex;
     flex-direction: column;
     flex: 1; /* Ensure both columns take equal width */
-    min-height: 18em; /* Set a predictable minimum height */
+    /* min-height: 18em; */
     box-sizing: border-box; /* Include padding in the total height calculation */
   }
 }
@@ -80,7 +80,6 @@
     display: flex;
     flex-direction: column;
     flex: 1; /* Ensure both columns take equal width */
-    min-height: 15em; /* Set a predictable minimum height */
     box-sizing: border-box; /* Include padding in the total height calculation */
   }
 }
@@ -111,7 +110,6 @@
     display: flex;
     flex-direction: column;
     flex: 1; /* Ensure both columns take equal width */
-    min-height: 16em; /* Set a predictable minimum height */
     box-sizing: border-box; /* Include padding in the total height calculation */
   }
 }
@@ -142,7 +140,6 @@
     display: flex;
     flex-direction: column;
     flex: 1; /* Ensure both columns take equal width */
-    min-height: 24em; /* Set a predictable minimum height */
     box-sizing: border-box; /* Include padding in the total height calculation */
   }
 }
@@ -173,7 +170,6 @@
     display: flex;
     flex-direction: column;
     flex: 1; /* Ensure both columns take equal width */
-    min-height: 24em; /* Set a predictable minimum height */
     box-sizing: border-box; /* Include padding in the total height calculation */
   }
 }
@@ -206,7 +202,6 @@
     display: flex;
     flex-direction: column;
     flex: 1; /* Ensure both columns take equal width */
-    min-height: 30em; /* Set a predictable minimum height */
     box-sizing: border-box; /* Include padding in the total height calculation */
   }
 }
@@ -3434,6 +3429,7 @@ button.SecondaryButtons{
 .AIMatchPreview{
   padding: 1em;
   padding-bottom: 2em;
+  line-height: 1.75em;
   color: #030052;
 }
 
@@ -3442,6 +3438,7 @@ button.SecondaryButtons{
   text-align: justify;
   padding-right: 1em;
   padding-left: 1em;
+  line-height: 1.75em;
   flex-basis: 50%;
 }
 
@@ -3455,6 +3452,7 @@ button.SecondaryButtons{
   text-align: justify;
   padding-left: 1em;
   padding-right: 1em;
+  line-height: 1.75em;
   flex-basis: 50%;
 }
 
