@@ -1393,12 +1393,13 @@ export async function createStatsDiv(game, displayBool) {
 
       console.log("AIPayload before fetch:", AIPayload); // Inspect the payload
       async function generateAIInsights(game) {
-        ReactDOM.render(
-          <Fragment>
-           <div>Loading...</div>
-          </Fragment>,
-          document.getElementById("AIInsightsContainer")
-        );
+        console.log("called")
+        // ReactDOM.render(
+        //   <Fragment>
+        //    <div>Loading...</div>
+        //   </Fragment>,
+        //   document.getElementById("AIInsightsContainer")
+        // );
 
         try {
           const response = await fetch(
@@ -1422,6 +1423,7 @@ export async function createStatsDiv(game, displayBool) {
 
           const jsonData = await response.json(); // Parse the response body as JSON
           AIMatchPreview = jsonData;
+          console.log(AIMatchPreview)
           const formattedText = await addNewlinesAfterPeriods(AIMatchPreview.matchPreview)
 
           ReactDOM.render(
