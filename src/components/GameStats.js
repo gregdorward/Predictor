@@ -647,7 +647,7 @@ function GameStats({ game, displayBool }) {
             gameCount={divider}
             key={formDataHome[0].name}
             last5={formDataHome[0].Last5}
-            homeOrAwayResults={gameArrayHomeTeamHomeGames}
+            // homeOrAwayResults={gameArrayHomeTeamHomeGames}
             LeagueOrAll={formDataHome[0].LeagueOrAll}
             className={"KeyStatsHome"}
             name={formDataHome[0].name}
@@ -701,7 +701,7 @@ function GameStats({ game, displayBool }) {
             BttsPercentageHomeOrAway={formDataHome[0].BttsPercentageHomeOrAway}
             BTTSArray={formDataHome[0].BTTSArray}
             Results={formDataHome[0].Results}
-            ResultsHorA={formDataHome[0].ResultsHorA}
+            ResultsHorA={formDataHome[0].ResultsHorA.reverse()}
             CardsTotal={formDataHome[0].CardsTotal}
             CornersAverage={homeForm.AverageCorners}
             ScoredBothHalvesPercentage={
@@ -729,7 +729,7 @@ function GameStats({ game, displayBool }) {
             gameCount={divider}
             key={formDataAway[0].name}
             last5={formDataAway[0].Last5}
-            homeOrAwayResults={gameArrayAwayTeamAwayGames}
+            // homeOrAwayResults={gameArrayAwayTeamAwayGames}
             LeagueOrAll={formDataAway[0].LeagueOrAll}
             className={"KeyStatsAway"}
             classNameTwo={"FormStatsAway"}
@@ -780,7 +780,7 @@ function GameStats({ game, displayBool }) {
             BttsPercentageHomeOrAway={formDataAway[0].BttsPercentageHomeOrAway}
             BTTSArray={formDataAway[0].BTTSArray}
             Results={formDataAway[0].Results}
-            ResultsHorA={formDataAway[0].ResultsHorA}
+            ResultsHorA={formDataAway[0].ResultsHorA.reverse()}
             CardsTotal={formDataAway[0].CardsTotal}
             CornersAverage={awayForm.AverageCorners}
             ScoredBothHalvesPercentage={
@@ -868,8 +868,8 @@ function GameStats({ game, displayBool }) {
     // FavouriteRecord:
     //   favouriteRecordHome + `. ${homeForm.reliabilityString}`,
     BTTSArray: bttsArrayHome,
-    Results: homeForm.resultsAll,
-    ResultsHorA: homeForm.resultsHome.reverse(),
+    Results: homeForm.resultsAll.reverse(),
+    ResultsHorA: homeForm.resultsHome,
     XGSwing: homeForm.XGChangeRecently,
     styleOfPlayOverall: homeForm.styleOfPlayOverall,
     styleOfPlayHome: homeForm.styleOfPlayHome,
@@ -905,8 +905,8 @@ function GameStats({ game, displayBool }) {
     // FavouriteRecord:
     //   favouriteRecordAway + `. ${awayForm.reliabilityString}`,
     BTTSArray: bttsArrayAway,
-    Results: awayForm.resultsAll,
-    ResultsHorA: awayForm.resultsAway.reverse(),
+    Results: awayForm.resultsAll.reverse(),
+    ResultsHorA: awayForm.resultsAway,
     XGSwing: awayForm.XGChangeRecently,
     styleOfPlayOverall: awayForm.styleOfPlayOverall,
     styleOfPlayAway: awayForm.styleOfPlayAway,

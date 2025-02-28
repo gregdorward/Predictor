@@ -179,7 +179,6 @@ async function getPastLeagueResults(team, game, hOrA, form) {
 
     for (let index = 0; index < teamsHomeResults.length; index++) {
       const resultedGame = teamsHomeResults[index];
-      console.log(resultedGame);
       homeResults.push({
         homeTeam: resultedGame.home_name,
         gameweek: resultedGame.game_week,
@@ -623,6 +622,10 @@ async function getPastLeagueResults(team, game, hOrA, form) {
     form.resultsAll = resultsAll.slice(0, 6);
     form.resultsHome = resultsHome;
     form.resultsAway = resultsAway;
+
+    // console.log(form.teamName)
+    // console.log(form)
+
 
     const avScoredLast5 = allTeamResults.map((res) => res.scored).slice(0, 5);
     const avScoredLast5Sum = avScoredLast5.reduce((a, b) => a + b, 0);
