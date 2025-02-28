@@ -21,9 +21,12 @@ import SofaLineupsWidget from "../components/SofaScore";
 import { arrayOfGames } from "../logic/getFixtures";
 import { userDetail } from "../logic/authProvider";
 import { checkUserPaidStatus } from "../logic/hasUserPaid";
-import { Fragment } from "react";
+import {generateAIInsights} from "../logic/getAIStats"
 
-let AIMatchPreview = null;
+export async function getPointAverage(pointTotal, games) {
+  return pointTotal / games;
+}
+
 
 export async function calculateAttackingStrength(stats) {
   // Define weights for each metric (you can adjust these based on your preference)
@@ -690,10 +693,6 @@ export async function createStatsDiv(game, displayBool) {
         );
         sotDiffArrayHome = sotDiffArrayHome.reverse();
 
-        // goalDiffArrayHome = gameArrayHome.map(
-        //   (a) => a.goalsFor - a.goalsAgainst
-        // );
-
         gameArrayHome.sort((a, b) => b.unixTimestamp - a.unixTimestamp);
 
         rollingGoalDiffTotalHome = goalDiffArrayHome.map(
@@ -921,10 +920,6 @@ export async function createStatsDiv(game, displayBool) {
         awayForm.last10Points = getPointsFromLastX(awayForm.LastTenForm);
 
         awayForm.awayPPGame = getPointsFromLastX(awayForm.resultsAway);
-      }
-
-      async function getPointAverage(pointTotal, games) {
-        return pointTotal / games;
       }
 
       // let homeThreeGameAverage = await getPointAverage(
@@ -1370,89 +1365,68 @@ export async function createStatsDiv(game, displayBool) {
           5,
       ];
 
-      const AIPayload = {
-        league: game.leagueDesc,
-        gameweek: game.game_week,
-        homeTeamName: homeForm.teamName,
-        homeLeaguePosition: homeForm.LeaguePosition,
-        homeTeamResults: homeForm.allTeamResults,
-        awayTeamName: awayForm.teamName,
-        awayLeaguePosition: awayForm.LeaguePosition,
-        awayTeamResults: awayForm.allTeamResults,
-      };
 
-      async function addNewlinesAfterPeriods(text) {
-        // Regular expression to match a full stop followed by no space
-        const regex = /\.(?=[^ \r\n])/g;
-      
-        // Replace the matched full stop with a full stop and a newline character
-        const newText = text.replace(regex, ".\n");
-      
-        return newText;
-      }
+      // async function generateAIInsights(game) {
+      //   console.log("called")
+      //   // ReactDOM.render(
+      //   //   <Fragment>
+      //   //    <div>Loading...</div>
+      //   //   </Fragment>,
+      //   //   document.getElementById("AIInsightsContainer")
+      //   // );
 
-      console.log("AIPayload before fetch:", AIPayload); // Inspect the payload
-      async function generateAIInsights(game) {
-        console.log("called")
-        // ReactDOM.render(
-        //   <Fragment>
-        //    <div>Loading...</div>
-        //   </Fragment>,
-        //   document.getElementById("AIInsightsContainer")
-        // );
+      //   try {
+      //     const response = await fetch(
+      //       `${process.env.REACT_APP_EXPRESS_SERVER}gemini/${game}`,
+      //       {
+      //         method: "POST",
+      //         headers: {
+      //           Accept: "application/json",
+      //           "Content-Type": "application/json",
+      //         },
+      //         body: JSON.stringify(AIPayload),
+      //       }
+      //     );
 
-        try {
-          const response = await fetch(
-            `${process.env.REACT_APP_EXPRESS_SERVER}gemini/${game}`,
-            {
-              method: "POST",
-              headers: {
-                Accept: "application/json",
-                "Content-Type": "application/json",
-              },
-              body: JSON.stringify(AIPayload),
-            }
-          );
+      //     console.log("Raw Response:", response); // See the raw response
 
-          console.log("Raw Response:", response); // See the raw response
+      //     if (!response.ok) {
+      //       // Check for HTTP errors
+      //       throw new Error(`HTTP error! Status: ${response.status}`);
+      //     }
 
-          if (!response.ok) {
-            // Check for HTTP errors
-            throw new Error(`HTTP error! Status: ${response.status}`);
-          }
+      //     const jsonData = await response.json(); // Parse the response body as JSON
+      //     AIMatchPreview = jsonData;
+      //     console.log(AIMatchPreview)
+      //     const formattedText = await addNewlinesAfterPeriods(AIMatchPreview.matchPreview)
 
-          const jsonData = await response.json(); // Parse the response body as JSON
-          AIMatchPreview = jsonData;
-          console.log(AIMatchPreview)
-          const formattedText = await addNewlinesAfterPeriods(AIMatchPreview.matchPreview)
-
-          ReactDOM.render(
-            <Fragment>
-              <h2>Preview</h2>
-              <div className="AIMatchPreview">
-                {formattedText}
-              </div>
-              <h2>AI Prediction</h2>
-              <div className="AIMatchPreview">{AIMatchPreview.prediction} <i>(may not reflect the view of XGTipping)</i></div>
-              <div className="AIContainer">
-                <div className="HomeAIInsights">
-                  <div>
-                  {AIMatchPreview.homeTeam.summary}
-                  </div>
-                </div>
-                <div className="AwayAIInsights">
-                  <div>
-                  {AIMatchPreview.awayTeam.summary}
-                  </div>
-                </div>
-              </div>
-            </Fragment>,
-            document.getElementById("AIInsightsContainer")
-          );
-        } catch (error) {
-          console.error("Fetch error:", error); // Handle fetch errors
-        }
-      }
+      //     ReactDOM.render(
+      //       <Fragment>
+      //         <h2>Preview</h2>
+      //         <div className="AIMatchPreview">
+      //           {formattedText}
+      //         </div>
+      //         <h2>AI Prediction</h2>
+      //         <div className="AIMatchPreview">{AIMatchPreview.prediction} <i>(may not reflect the view of XGTipping)</i></div>
+      //         <div className="AIContainer">
+      //           <div className="HomeAIInsights">
+      //             <div>
+      //             {AIMatchPreview.homeTeam.summary}
+      //             </div>
+      //           </div>
+      //           <div className="AwayAIInsights">
+      //             <div>
+      //             {AIMatchPreview.awayTeam.summary}
+      //             </div>
+      //           </div>
+      //         </div>
+      //       </Fragment>,
+      //       document.getElementById("AIInsightsContainer")
+      //     );
+      //   } catch (error) {
+      //     console.error("Fetch error:", error); // Handle fetch errors
+      //   }
+      // }
 
       const formDataMatch = [];
 
@@ -1961,7 +1935,7 @@ export async function createStatsDiv(game, displayBool) {
               )}
                 <Button
                   className="AIInsights"
-                  onClickEvent={() => generateAIInsights(game.id)}
+                  onClickEvent={() => generateAIInsights(game.id, homeForm, awayForm)}
                   text={"Generate AI Insights"}
                   disabled={!paid}
                 ></Button>
@@ -2041,7 +2015,7 @@ export async function createStatsDiv(game, displayBool) {
                   team2={game.awayTeam}
                 ></RadarChart>
                 <DoughnutChart
-                  data={[homeXGRating, awayXGRating]}
+                  data={[homeForm.XGRating, awayForm.XGRating]}
                   homeTeam={game.homeTeam}
                   awayTeam={game.awayTeam}
                 ></DoughnutChart>

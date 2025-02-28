@@ -3898,15 +3898,15 @@ export async function calculateScore(match, index, divider, calculate) {
         break;
     }
 
-    // if (
-    //   match.game_week < 4
-    //   // match.omit === true
-    //   // match.game_week < 3 &&
-    // ) {
-    //   finalHomeGoals = "-";
-    //   finalAwayGoals = "-";
-    //   match.status = "notEnoughData";
-    // }
+    if (
+      match.game_week < 4 ||
+      match.omit === true
+      // match.game_week < 3 &&
+    ) {
+      finalHomeGoals = "-";
+      finalAwayGoals = "-";
+      match.status = "notEnoughData";
+    }
 
     return [
       finalHomeGoals,

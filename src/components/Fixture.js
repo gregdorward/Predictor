@@ -11,6 +11,7 @@ import { formObjectHome } from "../logic/getScorePredictions";
 import { clicked } from "../logic/getScorePredictions";
 import { userDetail } from "../logic/authProvider";
 import { checkUserPaidStatus } from "../logic/hasUserPaid";
+import GameStats from "./GameStats";
 
 let resultValue;
 let paid;
@@ -243,6 +244,8 @@ export let testing;
 
 function SingleFixture({ fixture, count, mock }) {
   const dispatch = useDispatch();
+  const [showGameStats, setShowGameStats] = useState(false); // State to control GameStats visibility
+
   function StoreData() {
     const fixtureDetails = {
       id: fixture.id,
@@ -311,15 +314,24 @@ function SingleFixture({ fixture, count, mock }) {
   }
 
   async function handleButtonClick(game) {
-    paid = await checkUserPaidStatus(userDetail.uid);
-    if (clicked === true && paid) {
-      StoreData(formObjectHome);
-      window.open("/#/fixture");
-    } else {
-      alert("Premium feature only");
-      return;
-    }
+    if(userDetail){
+      paid = await checkUserPaidStatus(userDetail.uid);
+      if (clicked === true && paid) {
+        StoreData(formObjectHome);
+        window.open("/#/fixture");
+      } else {
+        alert("Premium feature only");
+        return;
+      }
+    } else paid = false;
+    
   }
+
+  const handleGameStatsClick = () => {
+    //Set show GameStats to true and set local storage
+    StoreData();
+    setShowGameStats(!showGameStats); // Toggle the GameStats visibility
+  };
 
   return (
     <div key={fixture.game}>
@@ -354,9 +366,7 @@ function SingleFixture({ fixture, count, mock }) {
         </li>
         <button
           className="GameStats"
-          onClick={() =>
-            mock === false ? createStatsDiv(fixture, count) : null
-          }
+          onClick={handleGameStatsClick} // Update onClick
           onMouseDown={() => (count = toggle(count))}
         >
           Game overview {downArrow}
@@ -369,6 +379,12 @@ function SingleFixture({ fixture, count, mock }) {
         </button>
         {/* <Checkbox/> */}
       </div>
+      {showGameStats && (
+        <GameStats
+          game={fixture}
+          displayBool={true}
+        />
+      )}{" "}
       <div id={"stats" + fixture.homeTeam} />
       <div className="MatchHistory" id={"history" + fixture.homeTeam} />
     </div>
@@ -404,7 +420,9 @@ export function Fixture(props) {
       />
       {!props.paid && props.capped === true && (
         <div>
-          {props.originalLength} games have been capped at 15 for free users with full stats available for those returned - sign up for access to 40+ leagues and cups
+          {props.originalLength} games have been capped at 15 for free users
+          with full stats available for those returned - sign up for access to
+          40+ leagues and cups
         </div>
       )}{" "}
     </Provider>

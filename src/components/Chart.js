@@ -35,6 +35,7 @@ ChartJS.register(
 export function Chart(props) {
   let length;
   let depth;
+  console.log(props)
 
   if (props.type === "Points over time") {
     length = props.data1.length * 3;
@@ -294,6 +295,7 @@ export function MultilineChart(props) {
 
 
 export function DoughnutChart(props) {
+  console.log(props)
   const options = {
     color: "#030061",
 
@@ -340,6 +342,7 @@ export function DoughnutChart(props) {
 }
 
 export function RadarChart(props) {
+  console.log(props)
   const options = {
     color: "#030061",
     scales: {

@@ -46,8 +46,8 @@ let loggedIn;
 export let paid = false;
 
 const leagueOrder = [
-  11084, //Euro 2024
-  7432, //World Cup 22
+  // 11084, //Euro 2024
+  // 7432, //World Cup 22
   12325, //premier league 22/23
   12451, //championship 22/23
   12446, //league 1 22/23

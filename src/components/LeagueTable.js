@@ -96,6 +96,7 @@ function styleForm(formIndicator) {
 
 export default function LeagueTable(props) {
   [toggleState, setIsOff] = useState(false);
+  console.log(props)
 
   let rows = props.Teams.map((team, i) => (
     <StyledTableRow key={`${props.Key}row${i}`}>
@@ -301,6 +302,7 @@ export default function LeagueTable(props) {
 
   ) {
     for (let i = 0; i < props.Teams.length; i++) {
+      console.log(rows)
       return (
         <TableContainer component={Paper} className="StatsTable">
           <Table
