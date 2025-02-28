@@ -1375,7 +1375,7 @@ function GameStats({ game, displayBool }) {
           ></Button>
           {showAIInsights && ( // Conditionally Render the AI Insights.
             <div className="AIOutputContainer">
-              {isLoading ? <p>Loading AI insights...</p> : AIOutput}
+              {isLoading ? <p>Loading AI data...</p> : AIOutput}
             </div>
           )}
         </div>
