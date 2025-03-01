@@ -58,23 +58,23 @@ function Stats(props) {
             {props.homeOrAway ? props.homeOrAway : "N/A"} form (most recent on right)
           </li>
           <li key={`last5${props.homeOrAwayResults ? props.homeOrAwayResults : "default"}`} className="FormHomeOrAway">
-            <span className={styleForm(props.ResultsHorA && props.ResultsHorA[0] ? props.ResultsHorA[0] : "")}>
-              {props.ResultsHorA && props.ResultsHorA[0] ? props.ResultsHorA[0] : ""}
-            </span>
-            <span className={styleForm(props.ResultsHorA && props.ResultsHorA[1] ? props.ResultsHorA[1] : "")}>
-              {props.ResultsHorA && props.ResultsHorA[1] ? props.ResultsHorA[1] : ""}
-            </span>
-            <span className={styleForm(props.ResultsHorA && props.ResultsHorA[2] ? props.ResultsHorA[2] : "")}>
-              {props.ResultsHorA && props.ResultsHorA[2] ? props.ResultsHorA[2] : ""}
-            </span>
-            <span className={styleForm(props.ResultsHorA && props.ResultsHorA[3] ? props.ResultsHorA[3] : "")}>
-              {props.ResultsHorA && props.ResultsHorA[3] ? props.ResultsHorA[3] : ""}
+            <span className={styleForm(props.ResultsHorA && props.ResultsHorA[5] ? props.ResultsHorA[5] : "")}>
+              {props.ResultsHorA && props.ResultsHorA[5] ? props.ResultsHorA[5] : ""}
             </span>
             <span className={styleForm(props.ResultsHorA && props.ResultsHorA[4] ? props.ResultsHorA[4] : "")}>
               {props.ResultsHorA && props.ResultsHorA[4] ? props.ResultsHorA[4] : ""}
             </span>
-            <span className={styleForm(props.ResultsHorA && props.ResultsHorA[5] ? props.ResultsHorA[5] : "")}>
-              {props.ResultsHorA && props.ResultsHorA[5] ? props.ResultsHorA[5] : ""}
+            <span className={styleForm(props.ResultsHorA && props.ResultsHorA[3] ? props.ResultsHorA[3] : "")}>
+              {props.ResultsHorA && props.ResultsHorA[3] ? props.ResultsHorA[3] : ""}
+            </span>
+            <span className={styleForm(props.ResultsHorA && props.ResultsHorA[2] ? props.ResultsHorA[2] : "")}>
+              {props.ResultsHorA && props.ResultsHorA[2] ? props.ResultsHorA[2] : ""}
+            </span>
+            <span className={styleForm(props.ResultsHorA && props.ResultsHorA[1] ? props.ResultsHorA[1] : "")}>
+              {props.ResultsHorA && props.ResultsHorA[1] ? props.ResultsHorA[4] : ""}
+            </span>
+            <span className={styleForm(props.ResultsHorA && props.ResultsHorA[0] ? props.ResultsHorA[0] : "")}>
+              {props.ResultsHorA && props.ResultsHorA[0] ? props.ResultsHorA[0] : ""}
             </span>
           </li>
           <li

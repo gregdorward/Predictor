@@ -701,7 +701,7 @@ function GameStats({ game, displayBool }) {
             BttsPercentageHomeOrAway={formDataHome[0].BttsPercentageHomeOrAway}
             BTTSArray={formDataHome[0].BTTSArray}
             Results={formDataHome[0].Results}
-            ResultsHorA={formDataHome[0].ResultsHorA.reverse()}
+            ResultsHorA={formDataHome[0].ResultsHorA}
             CardsTotal={formDataHome[0].CardsTotal}
             CornersAverage={homeForm.AverageCorners}
             ScoredBothHalvesPercentage={
@@ -780,7 +780,7 @@ function GameStats({ game, displayBool }) {
             BttsPercentageHomeOrAway={formDataAway[0].BttsPercentageHomeOrAway}
             BTTSArray={formDataAway[0].BTTSArray}
             Results={formDataAway[0].Results}
-            ResultsHorA={formDataAway[0].ResultsHorA.reverse()}
+            ResultsHorA={formDataAway[0].ResultsHorA}
             CardsTotal={formDataAway[0].CardsTotal}
             CornersAverage={awayForm.AverageCorners}
             ScoredBothHalvesPercentage={

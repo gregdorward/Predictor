@@ -589,10 +589,10 @@ async function getPastLeagueResults(team, game, hOrA, form) {
     form.gamesPlayed = allTeamResults.length;
 
     const allTeamResultsHome = reversedResultsHome.sort(
-      (a, b) => b.dateRaw - a.dateRaw
+      (b, a) => a.dateRaw - b.dateRaw
     );
     const allTeamResultsAway = reversedResultsAway.sort(
-      (a, b) => b.dateRaw - a.dateRaw
+      (b, a) => a.dateRaw - b.dateRaw
     );
 
     form.allTeamResults = allTeamResults.sort((b, a) => a.dateRaw - b.dateRaw);
@@ -620,8 +620,8 @@ async function getPastLeagueResults(team, game, hOrA, form) {
     form.LastTenForm = resultsAll.slice(0, 10);
 
     form.resultsAll = resultsAll.slice(0, 6);
-    form.resultsHome = resultsHome;
-    form.resultsAway = resultsAway;
+    form.resultsHome = resultsHome.slice(0, 6);
+    form.resultsAway = resultsAway.slice(0, 6);
 
     // console.log(form.teamName)
     // console.log(form)
