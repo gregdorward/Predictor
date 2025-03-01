@@ -1242,6 +1242,7 @@ function GameStats({ game, displayBool }) {
   }, [game, displayBool, allForm, allLeagueResultsArrayOfObjects, clicked]); // Dependencies for the useCallback
 
   // AI Insights Generation
+
   const generateAIInsights = useCallback(
     async (gameId) => {
       setIsLoading(true);
@@ -1252,9 +1253,18 @@ function GameStats({ game, displayBool }) {
           homeTeamName: game.homeTeam,
           homeLeaguePosition: homeForm?.LeaguePosition,
           homeTeamResults: homeForm?.allTeamResults,
+          homeAttackingStats: homeForm?.attackingMetrics,
+          homeAttackingStatsHomeOnly: homeForm?.attackingMetricsHome,
+          homeDefensiveStats: homeForm?.defensiveMetrics,
+          homeDefensiveStatsHomeOnly: homeForm?.defensiveMetricsHome,
+
           awayTeamName: game.awayTeam,
           awayLeaguePosition: awayForm?.LeaguePosition,
           awayTeamResults: awayForm?.allTeamResults,
+          awayAttackingStats: awayForm?.attackingMetrics,
+          awayAttackingStatsAwayOnly: awayForm?.attackingMetricsAway,
+          awayDefensiveStats: awayForm?.defensiveMetrics,
+          awayDefensiveStatsAwayOnly: homeForm?.defensiveMetricsAway
         };
         const response = await fetch(
           `${process.env.REACT_APP_EXPRESS_SERVER}gemini/${gameId}`,
@@ -1267,6 +1277,8 @@ function GameStats({ game, displayBool }) {
             body: JSON.stringify(AIPayload),
           }
         );
+        console.log(homeForm)
+
 
         if (!response.ok) {
           throw new Error(`HTTP error! Status: ${response.status}`);
