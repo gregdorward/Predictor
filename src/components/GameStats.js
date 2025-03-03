@@ -1368,9 +1368,6 @@ function GameStats({ game, displayBool }) {
           {aiMatchPreview.prediction}{" "}
           <i>(may not reflect the view of XGTipping)</i>
         </div>
-        <h3>
-          Opinion on XGTipping's {game.goalsA}-{game.goalsB} prediction
-        </h3>
         <div className="AIMatchPreview">
           {aiMatchPreview.opinionOnXGTippingPrediction}{" "}
         </div>
