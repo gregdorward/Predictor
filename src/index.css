@@ -3428,7 +3428,7 @@ button.SecondaryButtons{
 
 .AIMatchPreview{
   padding: 1em;
-  padding-bottom: 2em;
+  padding-bottom: 1em;
   line-height: 1.75em;
   color: #030052;
 }
@@ -3436,6 +3436,7 @@ button.SecondaryButtons{
 .HomeAIInsights{
   flex-direction: column;
   text-align: justify;
+  padding-top: 1em;
   padding-right: 1em;
   padding-left: 1em;
   line-height: 1.75em;
@@ -3450,6 +3451,7 @@ button.SecondaryButtons{
 .AwayAIInsights{
   flex-direction: column;
   text-align: justify;
+  padding-top: 1em;
   padding-left: 1em;
   padding-right: 1em;
   line-height: 1.75em;

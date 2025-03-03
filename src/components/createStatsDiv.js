@@ -1,7 +1,6 @@
 import React, { Fragment } from "react";
 
 function Stats(props) {
-  console.log(props)
   let shouldOpen = props.clicked;
 
   function styleForm(formIndicator) {
@@ -74,7 +73,7 @@ function Stats(props) {
               {props.ResultsHorA && props.ResultsHorA[1] ? props.ResultsHorA[4] : ""}
             </span>
             <span className={styleForm(props.ResultsHorA && props.ResultsHorA[0] ? props.ResultsHorA[0] : "")}>
-              {props.ResultsHorA && props.ResultsHorA[0] ? props.ResultsHorA[0] : ""}
+              {props.ResultsHorA && props.ResultsHorA[0] ? props.ResultsHorA[5] : ""}
             </span>
           </li>
           <li

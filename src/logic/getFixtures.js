@@ -844,7 +844,7 @@ export async function generateFixtures(
         });
         match.homeTeam = fixture.home_name;
         match.awayTeam = fixture.away_name;
-
+        match.refereeID = fixture.refereeID;
         match.homeOdds = +fixture.odds_ft_1.toFixed(2);
         match.awayOdds = +fixture.odds_ft_2.toFixed(2);
         match.drawOdds = +fixture.odds_ft_x.toFixed(2);

@@ -40,11 +40,16 @@ let numberOfGames = 0;
 let drawPredictions = 0;
 let homePredictions = 0;
 let awayPredictions = 0;
+let drawAIPredictions = 0;
+let homeAIPredictions = 0;
+let awayAIPredictions = 0;
 let allOutcomes = 0;
 let homeOutcomes = 0;
 let awayOutcomes = 0;
 let winAmount = 0;
 let lossAmount = 0;
+let AIwinAmount = 0;
+let AIlossAmount = 0;
 let sumStatDAWin = 0;
 let sumStatDALoss = 0;
 let sumStatPossessionWin = 0;
@@ -65,6 +70,9 @@ let allDrawOutcomes = 0;
 let totalROI = 0;
 let totalInvestment = 0;
 let totalProfit = 0;
+let totalAIROI = 0;
+let totalAIInvestment = 0;
+let totalAIProfit = 0;
 export let formObjectHome;
 export let formObjectAway;
 export let clicked = false;
@@ -596,7 +604,7 @@ async function getPastLeagueResults(team, game, hOrA, form) {
     );
 
     form.allTeamResults = allTeamResults.sort((b, a) => a.dateRaw - b.dateRaw);
-    form.allTeamResultsLast6 = form.allTeamResults.slice(0, 6)
+    form.allTeamResultsLast6 = form.allTeamResults.slice(0, 6);
 
     const points6 = allTeamResults.map((res) => res.points).slice(0, 6);
     const pointsSum6 = points6.reduce((a, b) => a + b, 0);
@@ -625,7 +633,6 @@ async function getPastLeagueResults(team, game, hOrA, form) {
 
     // console.log(form.teamName)
     // console.log(form)
-
 
     const avScoredLast5 = allTeamResults.map((res) => res.scored).slice(0, 5);
     const avScoredLast5Sum = avScoredLast5.reduce((a, b) => a + b, 0);
@@ -3604,7 +3611,22 @@ export async function calculateScore(match, index, divider, calculate) {
       }
     }
 
+    // console.log(match)
+    // if (match.status !== "suspended" && match.AIHomeGoals) {
+    //   if (match.AIHomeGoals > match.AIAwayGoals) {
+    //     match.AIprediction = "homeWin";
+    //     homeAIPredictions = homeAIPredictions + 1;
+    //   } else if (match.AIAwayGoals > match.AIHomeGoals) {
+    //     match.AIprediction = "awayWin";
+    //     awayAIPredictions = awayAIPredictions + 1;
+    //   } else if (finalHomeGoals === finalAwayGoals) {
+    //     match.prediction = "draw";
+    //     drawAIPredictions = drawAIPredictions + 1;
+    //   }
+    // }
+
     console.log(`drawPredictions: ${drawPredictions}`);
+    // console.log(`draw AI Predictions: ${drawAIPredictions}`);
 
     if (
       (XGdifferential > 1 && match.prediction === "homeWin") ||
@@ -3739,6 +3761,20 @@ export async function calculateScore(match, index, divider, calculate) {
         }
       }
     }
+
+    // if (match.status === "complete") {
+    //   if (match.AIprediction === match.outcome) {
+    //     match.predictionOutcome = "Won";
+    //     AIwinAmount = AIwinAmount + 1;
+    //     if (match.outcome === "draw") {
+    //     }
+    //   } else if (match.AIprediction !== match.outcome) {
+    //     match.predictionOutcome = "Lost";
+    //     AIlossAmount = AIlossAmount + 1;
+    //     if (match.outcome === "draw") {
+    //     }
+    //   }
+    // }
 
     if (match.status === "complete") {
       if (match.homeGoals + match.awayGoals > 2) {
@@ -3926,7 +3962,8 @@ export async function calculateScore(match, index, divider, calculate) {
     match.profit = 0;
   }
 
-  return [finalHomeGoals, finalAwayGoals, rawFinalHomeGoals, rawFinalAwayGoals];
+  return [finalHomeGoals, finalAwayGoals, rawFinalHomeGoals, rawFinalAwayGoals
+  ];
 }
 
 let specificLeagueResults = {}; // Initialize outside the function to persist data
@@ -4081,6 +4118,38 @@ async function getSuccessMeasure(fixtures) {
     return;
   }
 }
+
+// async function getAISuccessMeasure(fixtures) {
+//   let sumProfit = 0;
+//   let investment = 0;
+//   let exactScores = 0;
+//   let successCount = 0;
+//   let profit = 0;
+//   let netProfit = 0;
+
+//   for (let i = 0; i < fixtures.length; i++) {
+//     if (
+//       fixtures[i].status === "complete" &&
+//       fixtures[i].hasOwnProperty("AIprediction") &&
+//       fixtures[i].omit !== true
+//     ) {
+//       sumProfit += fixtures[i].profit;
+//       investment += 1;
+//       netProfit = (sumProfit - investment).toFixed(2);
+//       profit = parseFloat(netProfit);
+
+//       if (fixtures[i].exactScore === true) {
+//         exactScores += 1;
+//       }
+//       if (fixtures[i].predictionOutcome === "Won") {
+//         successCount += 1;
+//       }
+//     }
+//   }
+//   console.log(`AI Profit / loss = ${profit}`)
+//   console.log(`AI exact scores = ${exactScores}`)
+
+// }
 
 export var tips = [];
 export var allTips = [];

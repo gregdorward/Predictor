@@ -78,6 +78,9 @@ function AIInsights({ game, homeForm, awayForm }) {
     return null; // Or some placeholder content if no data yet
   }
 
+//   game.AIHomeGoals = aiMatchPreview.homeGoalsPrediction
+//   game.AIAwayGoals = aiMatchPreview.awayGoalsPrediction
+
   return (
     <Fragment>
       <h2>Preview</h2>

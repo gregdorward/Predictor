@@ -217,6 +217,7 @@ function GameStats({ game, displayBool }) {
   let rollingGoalDiffTotalAway = [];
   let rollingXGDiffTotalHome = [];
   let rollingXGDiffTotalAway = [];
+  let ref;
 
   const pos = allLeagueResultsArrayOfObjects
     .map((i) => i.id)
@@ -549,6 +550,55 @@ function GameStats({ game, displayBool }) {
       return matchingGames[0];
     } else {
       return null; // or any other value you prefer to return if no match is found
+    }
+  }
+
+  async function getRefStats(refId, compId) {
+    try {
+  
+      const response = await fetch(
+        `${process.env.REACT_APP_EXPRESS_SERVER}referee/${refId}`
+      );
+  
+      if (!response.ok) {
+        // Handle HTTP errors (e.g., 404, 500)
+        console.error(`HTTP error! Status: ${response.status}`);
+        return null; // Or throw an error to be caught later
+      }
+  
+      const refData = await response.json(); // Parse the JSON response
+  
+      // Access the array within the 'data' property
+      const dataArray = refData.data;
+  
+      if (!Array.isArray(dataArray)) {
+        console.error("Error: Expected 'data' property to be an array.");
+        return null;
+      }
+  
+      // Find the object with the matching competition_id
+      const filteredObject = dataArray.find(
+        (item) => item.competition_id === compId
+      );
+
+      const distilledRefData = {
+        appearances_overall: filteredObject.appearances_overall,
+        full_name: filteredObject.full_name,
+        cards_per_match_overall: filteredObject.cards_per_match_overall,
+        goals_per_match_overall: filteredObject.goals_per_match_overall,
+        min_per_card_overall: filteredObject.min_per_card_overall,
+        nationality: filteredObject.nationality,
+        over25_cards_percentage_overall: filteredObject.over25_cards_percentage_overall,
+        over35_cards_percentage_overall: filteredObject.over35_cards_percentage_overall,
+        penalties_given_per_match_overall: filteredObject.penalties_given_per_match_overall,
+        red_cards_overall: filteredObject.red_cards_overall
+        
+      }
+  
+      return distilledRefData; // Returns the found object, or undefined if not found
+    } catch (error) {
+      console.error("Error fetching or processing data:", error);
+      return null; // Or handle the error as appropriate for your application (e.g., display an error message to the user)
     }
   }
 
@@ -1250,6 +1300,7 @@ function GameStats({ game, displayBool }) {
         const AIPayload = {
           league: game.leagueDesc,
           gameweek: game.game_week,
+          referee: await getRefStats(game.refereeID, game.competition_id),
           homeTeamName: game.homeTeam,
           homeLeaguePosition: homeForm?.LeaguePosition,
           homeTeamResults: homeForm?.allTeamResults,
@@ -1257,15 +1308,15 @@ function GameStats({ game, displayBool }) {
           homeAttackingStatsHomeOnly: homeForm?.attackingMetricsHome,
           homeDefensiveStats: homeForm?.defensiveMetrics,
           homeDefensiveStatsHomeOnly: homeForm?.defensiveMetricsHome,
-
           awayTeamName: game.awayTeam,
           awayLeaguePosition: awayForm?.LeaguePosition,
           awayTeamResults: awayForm?.allTeamResults,
           awayAttackingStats: awayForm?.attackingMetrics,
           awayAttackingStatsAwayOnly: awayForm?.attackingMetricsAway,
           awayDefensiveStats: awayForm?.defensiveMetrics,
-          awayDefensiveStatsAwayOnly: homeForm?.defensiveMetricsAway
+          awayDefensiveStatsAwayOnly: homeForm?.defensiveMetricsAway,
         };
+        console.log(AIPayload)
         const response = await fetch(
           `${process.env.REACT_APP_EXPRESS_SERVER}gemini/${gameId}`,
           {
@@ -1277,8 +1328,6 @@ function GameStats({ game, displayBool }) {
             body: JSON.stringify(AIPayload),
           }
         );
-        console.log(homeForm)
-
 
         if (!response.ok) {
           throw new Error(`HTTP error! Status: ${response.status}`);
@@ -1306,15 +1355,24 @@ function GameStats({ game, displayBool }) {
   const AIOutput = useMemo(() => {
     if (!aiMatchPreview) return null;
 
-    const formattedText = formatAIPreview(aiMatchPreview.matchPreview);
+    const formattedText = formatAIPreview(aiMatchPreview.matchPreview1);
+    const formattedText2 = formatAIPreview(aiMatchPreview.matchPreview2);
+
     return (
       <>
         <h2>Preview</h2>
         <div className="AIMatchPreview">{formattedText}</div>
+        <div className="AIMatchPreview">{formattedText2}</div>
         <h2>AI Prediction</h2>
         <div className="AIMatchPreview">
           {aiMatchPreview.prediction}{" "}
           <i>(may not reflect the view of XGTipping)</i>
+        </div>
+        <h3>
+          Opinion on XGTipping's {game.goalsA}-{game.goalsB} prediction
+        </h3>
+        <div className="AIMatchPreview">
+          {aiMatchPreview.opinionOnXGTippingPrediction}{" "}
         </div>
         <div className="AIContainer">
           <div className="HomeAIInsights">
