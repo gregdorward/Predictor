@@ -754,7 +754,6 @@ export async function generateFixtures(
           // season.round === "South"
         );
         let string;
-        console.log(regularSeason)
 
         if (regularSeason !== undefined && regularSeason.table) {
           string = regularSeason.table[x];

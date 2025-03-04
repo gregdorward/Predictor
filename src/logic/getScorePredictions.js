@@ -2922,8 +2922,17 @@ export async function calculateScore(match, index, divider, calculate) {
 
     formHome.attackingMetrics = attackingMetricsHome;
     formHome.defensiveMetrics = defensiveMetricsHome;
+    formHome.attackingMetricsHomeLast5 = attackingMetricsHomeLast5
+    formHome.defensiveMetricsHomeLast5 = defensiveMetricsHomeLast5
+    formHome.attackingMetricsHomeOnly = attackingMetricsHomeOnly
+    formHome.defensiveMetricsHomeOnly = defensiveMetricsHomeOnly
+
     formAway.attackingMetrics = attackingMetricsAway;
     formAway.defensiveMetrics = defensiveMetricsAway;
+    formAway.attackingMetricsAwayLast5 = attackingMetricsAwayLast5
+    formAway.defensiveMetricsAwayLast5 = defensiveMetricsAwayLast5
+    formAway.attackingMetricsAwayOnly = attackingMetricsAwayOnly
+    formAway.defensiveMetricsAwayOnly = defensiveMetricsAwayOnly
 
     formHome.attackingStrength = await calculateAttackingStrength(
       attackingMetricsHome
