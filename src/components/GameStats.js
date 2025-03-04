@@ -687,6 +687,7 @@ function GameStats({ game, displayBool }) {
   }
 
   function StatsHomeComponent() {
+    console.log(formDataHome[0].ResultsHorA)
     if (!homeForm) return null;
     return (
       <div className="flex-childOne">
