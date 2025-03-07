@@ -60,6 +60,9 @@ function GameStats({ game, displayBool }) {
   let gameStats = allForm.find((match) => match.id === game.id);
   const homeForm = gameStats?.home[2];
   const awayForm = gameStats?.away[2];
+  console.log(homeForm.teamName)
+  console.log(homeForm)
+  console.log(awayForm)
 
   //   const [id, setId] = useState("0");
   //   const [team1, setTeam1] = useState("N/A");
@@ -496,16 +499,11 @@ function GameStats({ game, displayBool }) {
     }
   }
 
-  gameArrayHome.sort((a, b) => b.unixTimestamp - a.unixTimestamp);
 
   goalDiffArrayHome = homeForm.allTeamResults.map(
     (a) => a.scored - a.conceeded
   );
-  goalDiffArrayHome = goalDiffArrayHome.reverse();
   xgDiffArrayHome = homeForm.allTeamResults.map((a) => a.XG - a.XGAgainst);
-  xgDiffArrayHome = xgDiffArrayHome.reverse();
-
-  gameArrayHome.sort((a, b) => b.unixTimestamp - a.unixTimestamp);
 
   rollingGoalDiffTotalHome = goalDiffArrayHome.map(
     (
@@ -520,14 +518,12 @@ function GameStats({ game, displayBool }) {
     )(0)
   );
 
+
+
   goalDiffArrayAway = awayForm.allTeamResults.map(
     (a) => a.scored - a.conceeded
   );
-  goalDiffArrayAway = goalDiffArrayAway.reverse();
   xgDiffArrayAway = awayForm.allTeamResults.map((a) => a.XG - a.XGAgainst);
-  xgDiffArrayAway = xgDiffArrayAway.reverse();
-
-  gameArrayAway.sort((a, b) => b.unixTimestamp - a.unixTimestamp);
 
   rollingGoalDiffTotalAway = goalDiffArrayAway.map(
     (
@@ -745,7 +741,7 @@ function GameStats({ game, displayBool }) {
               homeSixGameAverage.toFixed(2),
               homeFiveGameAverage.toFixed(2),
             ]}
-            formRun={homeForm.resultsAll.reverse()}
+            formRun={homeForm.resultsAll}
             goalDifference={formDataHome[0].goalDifference}
             goalDifferenceHomeOrAway={formDataHome[0].goalDifferenceHomeOrAway}
             BttsPercentage={formDataHome[0].BttsPercentage}
@@ -824,7 +820,7 @@ function GameStats({ game, displayBool }) {
               awaySixGameAverage.toFixed(2),
               awayFiveGameAverage.toFixed(2),
             ]}
-            formRun={awayForm.resultsAll.reverse()}
+            formRun={awayForm.resultsAll}
             goalDifference={formDataAway[0].goalDifference}
             goalDifferenceHomeOrAway={formDataAway[0].goalDifferenceHomeOrAway}
             BttsPercentage={formDataAway[0].BttsPercentage}
@@ -846,8 +842,14 @@ function GameStats({ game, displayBool }) {
       </div>
     );
   }
+  gameArrayHome.sort((a, b) => b.unixTimestamp - a.unixTimestamp);
+  gameArrayAway.sort((a, b) => b.unixTimestamp - a.unixTimestamp);
+
+
   const bttsArrayHome = Array.from(gameArrayHome, (x) => x.btts);
   const bttsArrayAway = Array.from(gameArrayAway, (x) => x.btts);
+
+  console.log(gameArrayHome)
 
   const overviewHome = gameArrayHome.slice(0, 10).map((game) => (
     <div>
@@ -919,7 +921,7 @@ function GameStats({ game, displayBool }) {
     // FavouriteRecord:
     //   favouriteRecordHome + `. ${homeForm.reliabilityString}`,
     BTTSArray: bttsArrayHome,
-    Results: homeForm.resultsAll.reverse(),
+    Results: homeForm.resultsAll,
     ResultsHorA: homeForm.resultsHome,
     XGSwing: homeForm.XGChangeRecently,
     styleOfPlayOverall: homeForm.styleOfPlayOverall,
@@ -956,7 +958,7 @@ function GameStats({ game, displayBool }) {
     // FavouriteRecord:
     //   favouriteRecordAway + `. ${awayForm.reliabilityString}`,
     BTTSArray: bttsArrayAway,
-    Results: awayForm.resultsAll.reverse(),
+    Results: awayForm.resultsAll,
     ResultsHorA: awayForm.resultsAway,
     XGSwing: awayForm.XGChangeRecently,
     styleOfPlayOverall: awayForm.styleOfPlayOverall,
@@ -1435,7 +1437,7 @@ function GameStats({ game, displayBool }) {
           <Div className="MatchTime" text={`Kick off: ${time} GMT`}></Div>
         </div>
         <div id="AIInsightsContainer" className="AIInsightsContainer">
-          {!paid && game.leagueID !== 12451 && <div>Paid feature only</div>}
+          {!paid && game.leagueID !== 12325 && <div>Paid feature only</div>}
           <Button
             className="AIInsights"
             onClickEvent={() => {
@@ -1443,7 +1445,7 @@ function GameStats({ game, displayBool }) {
               setShowAIInsights(true);
             }}
             text={"XG AI"}
-            disabled={!paid && game.leagueID !== 12451}
+            disabled={!paid && game.leagueID !== 12325}
           ></Button>
           {showAIInsights && ( // Conditionally Render the AI Insights.
             <div className="AIOutputContainer">

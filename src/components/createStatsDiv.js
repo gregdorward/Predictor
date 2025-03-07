@@ -34,23 +34,23 @@ function Stats(props) {
         <ul className={props.className ? props.className : ""} style={props.style ? props.style : {}}>
           <li className="FormHeader">League results (most recent on right)</li>
           <li key={`last5League`} className="last5League">
-            <span className={styleForm(props.Results && props.Results[0] ? props.Results[0] : "")}>
-              {props.Results && props.Results[0] ? props.Results[0] : ""}
+            <span className={styleForm(props.Results && props.Results[5] ? props.Results[5] : "")}>
+              {props.Results && props.Results[5] ? props.Results[5] : ""}
             </span>
-            <span className={styleForm(props.Results && props.Results[1] ? props.Results[1] : "")}>
-              {props.Results && props.Results[1] ? props.Results[1] : ""}
-            </span>
-            <span className={styleForm(props.Results && props.Results[2] ? props.Results[2] : "")}>
-              {props.Results && props.Results[2] ? props.Results[2] : ""}
+            <span className={styleForm(props.Results && props.Results[5] ? props.Results[5] : "")}>
+              {props.Results && props.Results[4] ? props.Results[4] : ""}
             </span>
             <span className={styleForm(props.Results && props.Results[3] ? props.Results[3] : "")}>
               {props.Results && props.Results[3] ? props.Results[3] : ""}
             </span>
-            <span className={styleForm(props.Results && props.Results[4] ? props.Results[4] : "")}>
-              {props.Results && props.Results[4] ? props.Results[4] : ""}
+            <span className={styleForm(props.Results && props.Results[2] ? props.Results[2] : "")}>
+              {props.Results && props.Results[2] ? props.Results[2] : ""}
             </span>
-            <span className={styleForm(props.Results && props.Results[5] ? props.Results[5] : "")}>
-              {props.Results && props.Results[5] ? props.Results[5] : ""}
+            <span className={styleForm(props.Results && props.Results[1] ? props.Results[1] : "")}>
+              {props.Results && props.Results[1] ? props.Results[1] : ""}
+            </span>
+            <span className={styleForm(props.Results && props.Results[0] ? props.Results[0] : "")}>
+              {props.Results && props.Results[0] ? props.Results[0] : ""}
             </span>
           </li>
           <li className="FormHeader">

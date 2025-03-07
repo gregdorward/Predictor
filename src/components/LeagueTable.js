@@ -302,7 +302,6 @@ export default function LeagueTable(props) {
 
   ) {
     for (let i = 0; i < props.Teams.length; i++) {
-      console.log(rows)
       return (
         <TableContainer component={Paper} className="StatsTable">
           <Table
@@ -344,7 +343,7 @@ export default function LeagueTable(props) {
             </TableHead>
             <TableBody>{rows}</TableBody>
           </Table>
-          <h5>{`${props.mostRecentGameweek} results`}</h5>
+          <h5>{`Results from last 2 weeks`}</h5>
           <div className="ResultsList" id="ResultsList">
             <ul>{leagueResults}</ul>
           </div>

@@ -214,13 +214,18 @@ export async function renderTable(index, results, id) {
   //World cup table rendering
 
   // let mostRecentGame = results.fixtures.pop();
-  let mostRecentGame = results.fixtures.pop();
+  console.log(results.fixtures)
+  const nowInSeconds = Math.floor(Date.now() / 1000); // Current time in seconds
+  const twoWeeksAgo = nowInSeconds - 14 * 24 * 60 * 60; // Two week ago in seconds  console.log(oneWeekAgo)
+  // 1740576517073
+  // 1723230000
+  let mostRecentGames = results.fixtures.filter(result => result.date_unix >= twoWeeksAgo);
 
-  let mostRecentGameweek = "Latest";
+  // let mostRecentGameweek = "Latest";
 
-  const gameweeksResults = results.fixtures.filter(
-    (games) => games.game_week === mostRecentGame.game_week
-  );
+  // const gameweeksResults = results.fixtures.filter(
+  //   (games) => games.game_week === mostRecentGame.game_week
+  // );
 
   // const lastGameweeksResults = results.fixtures.filter(
   //   (games) => games.game_week === mostRecentGameweek - 1
@@ -246,8 +251,8 @@ export async function renderTable(index, results, id) {
         Stats={statistics}
         Key={`League${index}`}
         GamesPlayed={statistics.game_week}
-        Results={gameweeksResults}
-        mostRecentGameweek={mostRecentGameweek}
+        Results={mostRecentGames}
+        // mostRecentGameweek={mostRecentGameweek}
       />,
       document.getElementById(`leagueName${id}`)
     );
@@ -1617,7 +1622,7 @@ export async function generateFixtures(
               onClickEvent={() => getScorePrediction(day)}
               className={"GeneratePredictions"}
             />
-            <div className="Version">Prediction engine v1.2.1 (24/02/25)</div>
+            <div className="Version">Prediction engine v1.3.1 (07/03/25)</div>
             <Collapsable
               buttonText={"Filters"}
               element={
