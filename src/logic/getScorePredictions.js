@@ -1021,6 +1021,7 @@ async function getPastLeagueResults(team, game, hOrA, form) {
         alpha
       );
 
+
       forAndAgainstRollingAvHomeOrAway =
         await predictGoalsWithExponentialSmoothing(
           form.allGoalsArrayAwayOnly,
@@ -1029,6 +1030,15 @@ async function getPastLeagueResults(team, game, hOrA, form) {
         );
     }
 
+
+    async function create2DArray(arr1, arr2) {
+      if (arr1.length !== arr2.length) {
+        throw new Error("Arrays must have the same length.");
+      }
+    
+      return arr1.map((element, index) => [element, arr2[index]]);
+    }
+    
     let bttsHome = homeResults.map((res) => res.btts);
     if (bttsHome.length > 10) {
       bttsHome = bttsHome.slice(-10);
@@ -1142,12 +1152,19 @@ async function getPastLeagueResults(team, game, hOrA, form) {
       ({ XG }) => XG
       // roundXG(XG, conceeded, form)
     );
-    const RoundedXGFor = teamXGForAll.map((xg) => Math.round(xg));
-    const RoundedXGAgainst = teamXGAgainstAll.map((xg) => Math.round(xg));
-    const RoundedXGForHome = teamXGForHome.map((xg) => Math.round(xg));
-    const RoundedXGAgainstHome = teamXGAgainstHome.map((xg) => Math.round(xg));
-    const RoundedXGForAway = teamXGForAway.map((xg) => Math.round(xg));
-    const RoundedXGAgainstAway = teamXGAgainstAway.map((xg) => Math.round(xg));
+    const ArrXGFor = teamXGForAll.map((xg) => xg);
+    const ArrXGAgainst = teamXGAgainstAll.map((xg) => xg);
+    const ArrXGForHome = teamXGForHome.map((xg) => xg);
+    const ArrXGAgainstHome = teamXGAgainstHome.map((xg) => xg);
+    const ArrXGForAway = teamXGForAway.map((xg) => xg);
+    const ArrXGAgainstAway = teamXGAgainstAway.map((xg) => xg);
+
+
+
+    form.twoDGoalsArray = await create2DArray(ArrXGFor, ArrXGAgainst);
+    form.twoDGoalsArrayHome = await create2DArray(ArrXGForHome, ArrXGAgainstHome);
+    form.twoDGoalsArrayAway = await create2DArray(ArrXGForAway, ArrXGAgainstAway);
+
 
     RoundedXGForV2.reverse();
     RoundedXGAgainstV2.reverse();
@@ -1905,17 +1922,17 @@ export async function generateGoals(homeForm, awayForm, match) {
     // weighedPointsComparisonAway * 0.005 +
     oddsComparisonAway * 0.05;
 
-    // ROI for all 145 W/D/W outcomes: + 13.30%
-    // Correct W/D/W predictions: 75 (51.7%)
+    // ROI for all 145 W/D/W outcomes: + 12.21%
+    // Correct W/D/W predictions: 74 (51.0%)
     
-    // Exact scores predicted: 16 (11.0%)
+    // Exact scores predicted: 15 (10.3%)
     
-    // Cumulative ROI for all 1408 match outcomes: +3.69%
+    // Cumulative ROI for all 1408 match outcomes: +3.77%
 
-    if(finalScore > 0){
+    if(finalScore > 0 && await diff(homeGoals, awayGoals) < 1.25){
       homeGoals = homeGoals + 0.5
       awayGoals = awayGoals + -Math.abs(0.5)
-    } else if(finalScore < 0){
+    } else if(finalScore < 0 && await diff(awayGoals, homeGoals) < 1.25){
       awayGoals = awayGoals + -Math.abs(0.5)
       awayGoals = awayGoals + 0.5
     }

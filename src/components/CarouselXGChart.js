@@ -9,7 +9,7 @@ export const Slider = (props) => {
   return (
     <Swiper
       effect={"coverflow"}
-      autoHeight={true}
+      autoHeight={false}
       grabCursor={true}
       centeredSlides={true}
       slidesPerView={1}
@@ -21,19 +21,13 @@ export const Slider = (props) => {
         slideShadows: false,
       }}
       pagination={{ clickable: true }}
-      className="mySwiper"
+      className="XGSwiper"
     >
       <SwiperSlide>
        {props.element}
       </SwiperSlide>
       <SwiperSlide>
       {props.element2}
-      </SwiperSlide>
-      <SwiperSlide>
-      {props.element3}
-      </SwiperSlide>
-      <SwiperSlide>
-      {props.element4}
       </SwiperSlide>
     </Swiper>
   );

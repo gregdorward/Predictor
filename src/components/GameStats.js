@@ -17,6 +17,8 @@ import {
   BarChartTwo,
   DoughnutChart,
 } from "./Chart";
+import MultiTypeChart from "./MultitypeChart"; // Adjust the path if necessary
+import { Slider } from "../components/CarouselXGChart";
 import Collapsable from "../components/CollapsableElement";
 import Stats from "../components/createStatsDiv";
 import { allLeagueResultsArrayOfObjects } from "../logic/getFixtures";
@@ -60,9 +62,9 @@ function GameStats({ game, displayBool }) {
   let gameStats = allForm.find((match) => match.id === game.id);
   const homeForm = gameStats?.home[2];
   const awayForm = gameStats?.away[2];
-  console.log(homeForm.teamName)
-  console.log(homeForm)
-  console.log(awayForm)
+  console.log(homeForm.teamName);
+  console.log(homeForm);
+  console.log(awayForm);
 
   //   const [id, setId] = useState("0");
   //   const [team1, setTeam1] = useState("N/A");
@@ -499,7 +501,6 @@ function GameStats({ game, displayBool }) {
     }
   }
 
-
   goalDiffArrayHome = homeForm.allTeamResults.map(
     (a) => a.scored - a.conceeded
   );
@@ -517,8 +518,6 @@ function GameStats({ game, displayBool }) {
         (sum += value)
     )(0)
   );
-
-
 
   goalDiffArrayAway = awayForm.allTeamResults.map(
     (a) => a.scored - a.conceeded
@@ -551,27 +550,26 @@ function GameStats({ game, displayBool }) {
 
   async function getRefStats(refId, compId) {
     try {
-  
       const response = await fetch(
         `${process.env.REACT_APP_EXPRESS_SERVER}referee/${refId}`
       );
-  
+
       if (!response.ok) {
         // Handle HTTP errors (e.g., 404, 500)
         console.error(`HTTP error! Status: ${response.status}`);
         return null; // Or throw an error to be caught later
       }
-  
+
       const refData = await response.json(); // Parse the JSON response
-  
+
       // Access the array within the 'data' property
       const dataArray = refData.data;
-  
+
       if (!Array.isArray(dataArray)) {
         console.error("Error: Expected 'data' property to be an array.");
         return null;
       }
-  
+
       // Find the object with the matching competition_id
       const filteredObject = dataArray.find(
         (item) => item.competition_id === compId
@@ -584,13 +582,15 @@ function GameStats({ game, displayBool }) {
         goals_per_match_overall: filteredObject.goals_per_match_overall,
         min_per_card_overall: filteredObject.min_per_card_overall,
         nationality: filteredObject.nationality,
-        over25_cards_percentage_overall: filteredObject.over25_cards_percentage_overall,
-        over35_cards_percentage_overall: filteredObject.over35_cards_percentage_overall,
-        penalties_given_per_match_overall: filteredObject.penalties_given_per_match_overall,
-        red_cards_overall: filteredObject.red_cards_overall
-        
-      }
-  
+        over25_cards_percentage_overall:
+          filteredObject.over25_cards_percentage_overall,
+        over35_cards_percentage_overall:
+          filteredObject.over35_cards_percentage_overall,
+        penalties_given_per_match_overall:
+          filteredObject.penalties_given_per_match_overall,
+        red_cards_overall: filteredObject.red_cards_overall,
+      };
+
       return distilledRefData; // Returns the found object, or undefined if not found
     } catch (error) {
       console.error("Error fetching or processing data:", error);
@@ -683,7 +683,7 @@ function GameStats({ game, displayBool }) {
   }
 
   function StatsHomeComponent() {
-    console.log(formDataHome[0].ResultsHorA)
+    console.log(formDataHome[0].ResultsHorA);
     if (!homeForm) return null;
     return (
       <div className="flex-childOne">
@@ -845,11 +845,10 @@ function GameStats({ game, displayBool }) {
   gameArrayHome.sort((a, b) => b.unixTimestamp - a.unixTimestamp);
   gameArrayAway.sort((a, b) => b.unixTimestamp - a.unixTimestamp);
 
-
   const bttsArrayHome = Array.from(gameArrayHome, (x) => x.btts);
   const bttsArrayAway = Array.from(gameArrayAway, (x) => x.btts);
 
-  console.log(gameArrayHome)
+  console.log(gameArrayHome);
 
   const overviewHome = gameArrayHome.slice(0, 10).map((game) => (
     <div>
@@ -1323,7 +1322,7 @@ function GameStats({ game, displayBool }) {
           awayDefensiveStatsLast5: awayForm?.defensiveMetricsAwayLast5,
           awayDefensiveStatsAwayOnly: awayForm?.defensiveMetricsAwayOnly,
         };
-        console.log(AIPayload)
+        console.log(AIPayload);
         const response = await fetch(
           `${process.env.REACT_APP_EXPRESS_SERVER}gemini/${gameId}`,
           {
@@ -1620,6 +1619,20 @@ function GameStats({ game, displayBool }) {
             type={"Goal/XG difference over time"}
             tension={0.5}
           ></MultilineChart>
+          <Slider
+            element={
+              <>
+                <MultiTypeChart dataArray={homeForm.twoDGoalsArray} text={homeForm.teamName + " XG Diff (All)"}/>
+                <MultiTypeChart dataArray={awayForm.twoDGoalsArray} text={awayForm.teamName + " XG Diff (All)"}/>
+              </>
+            }
+            element2={
+              <>
+                <MultiTypeChart dataArray={homeForm.twoDGoalsArrayHome} text={homeForm.teamName + " XG Diff (Home)"}/>
+                <MultiTypeChart dataArray={awayForm.twoDGoalsArrayAway} text={awayForm.teamName + " XG Diff (Away)"}/>
+              </>
+            }
+          ></Slider>
         </div>
         <Div
           text={`Last league games (most recent first)`}
