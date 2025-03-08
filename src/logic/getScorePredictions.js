@@ -1161,9 +1161,9 @@ async function getPastLeagueResults(team, game, hOrA, form) {
 
 
 
-    form.twoDGoalsArray = await create2DArray(ArrXGFor, ArrXGAgainst);
-    form.twoDGoalsArrayHome = await create2DArray(ArrXGForHome, ArrXGAgainstHome);
-    form.twoDGoalsArrayAway = await create2DArray(ArrXGForAway, ArrXGAgainstAway);
+    form.twoDGoalsArray = await create2DArray(ArrXGFor.reverse(), ArrXGAgainst.reverse());
+    form.twoDGoalsArrayHome = await create2DArray(ArrXGForHome.reverse(), ArrXGAgainstHome.reverse());
+    form.twoDGoalsArrayAway = await create2DArray(ArrXGForAway.reverse(), ArrXGAgainstAway.reverse());
 
 
     RoundedXGForV2.reverse();
