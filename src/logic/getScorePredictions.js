@@ -194,33 +194,33 @@ async function getPastLeagueResults(team, game, hOrA, form) {
         homePPGPreMatch: resultedGame.pre_match_teamA_overall_ppg,
         awayPPGPreMatch: resultedGame.pre_match_teamB_overall_ppg,
         XG:
-          resultedGame.team_a_xg === -1 || resultedGame.team_a_xg > 7
+          resultedGame.team_a_xg <= 0 || resultedGame.team_a_xg > 7
             ? resultedGame.homeGoalCount
             : resultedGame.team_a_xg,
         awayTeam: resultedGame.away_name,
         awayGoals: resultedGame.awayGoalCount,
         XGAgainst:
-          resultedGame.team_b_xg === -1 || resultedGame.team_b_xg > 7
+          resultedGame.team_b_xg <= 0 || resultedGame.team_b_xg > 7
             ? resultedGame.awayGoalCount
             : resultedGame.team_b_xg,
         possession:
-          resultedGame.team_a_possession === -1
+          resultedGame.team_a_possession <= 0
             ? 50
             : resultedGame.team_a_possession,
         scored: resultedGame.homeGoalCount,
         conceeded: resultedGame.awayGoalCount,
         shots:
-          resultedGame.team_a_shots === -1 ? 12 : resultedGame.team_a_shots,
+          resultedGame.team_a_shots <= 0 ? 12 : resultedGame.team_a_shots,
         sot:
-          resultedGame.team_a_shotsOnTarget === -1
+          resultedGame.team_a_shotsOnTarget <= 0
             ? 5
             : resultedGame.team_a_shotsOnTarget,
         sotAgainst:
-          resultedGame.team_b_shotsOnTarget === -1
+          resultedGame.team_b_shotsOnTarget <= 0
             ? 5
             : resultedGame.team_b_shotsOnTarget,
         dangerousAttacks:
-          resultedGame.team_a_dangerous_attacks === -1
+          resultedGame.team_a_dangerous_attacks <= 0
             ? 50
             : resultedGame.team_a_dangerous_attacks,
         corners:
@@ -324,33 +324,33 @@ async function getPastLeagueResults(team, game, hOrA, form) {
         homePPGPreMatch: resultedGame.pre_match_teamA_overall_ppg,
         awayPPGPreMatch: resultedGame.pre_match_teamB_overall_ppg,
         XG:
-          resultedGame.team_b_xg === -1 || resultedGame.team_b_xg > 7
+          resultedGame.team_b_xg <= 0 || resultedGame.team_b_xg > 7
             ? resultedGame.awayGoalCount
             : resultedGame.team_b_xg,
         awayTeam: resultedGame.away_name,
         awayGoals: resultedGame.awayGoalCount,
         XGAgainst:
-          resultedGame.team_a_xg === -1 || resultedGame.team_a_xg > 7
+          resultedGame.team_a_xg <= 0 || resultedGame.team_a_xg > 7
             ? resultedGame.homeGoalCount
             : resultedGame.team_a_xg,
         possession:
-          resultedGame.team_b_possession === -1
+          resultedGame.team_b_possession <= 0
             ? 50
             : resultedGame.team_b_possession,
         scored: resultedGame.awayGoalCount,
         conceeded: resultedGame.homeGoalCount,
         shots:
-          resultedGame.team_b_shots === -1 ? 12 : resultedGame.team_b_shots,
+          resultedGame.team_b_shots <= 0 ? 12 : resultedGame.team_b_shots,
         sot:
-          resultedGame.team_b_shotsOnTarget === -1
+          resultedGame.team_b_shotsOnTarget <= 0
             ? 5
             : resultedGame.team_b_shotsOnTarget,
         sotAgainst:
-          resultedGame.team_a_shotsOnTarget === -1
+          resultedGame.team_a_shotsOnTarget <=0
             ? 5
             : resultedGame.team_a_shotsOnTarget,
         dangerousAttacks:
-          resultedGame.team_b_dangerous_attacks === -1
+          resultedGame.team_b_dangerous_attacks <=0
             ? 50
             : resultedGame.team_b_dangerous_attacks,
         corners:
@@ -615,6 +615,7 @@ async function getPastLeagueResults(team, game, hOrA, form) {
     );
 
     form.allTeamResults = allTeamResults.sort((b, a) => a.dateRaw - b.dateRaw);
+    allTeamResults.sort((b, a) => a.dateRaw - b.dateRaw);
     form.allTeamResultsLast6 = form.allTeamResults.slice(0, 6);
 
     const points6 = allTeamResults.map((res) => res.points).slice(0, 6);
@@ -808,19 +809,20 @@ async function getPastLeagueResults(team, game, hOrA, form) {
     const possessionAway = awayResults.map((res) => res.possession);
     const possessionSumAway = possessionAway.reduce((a, b) => a + b, 0);
     form.avgPossessionAway = possessionSumAway / possessionAway.length || 0;
-
+    console.log(form.teamName)
+    console.log(allTeamResults)
     const dangerousAttacks = allTeamResults.map((res) => res.dangerousAttacks);
     const dangerousAttacksSum = dangerousAttacks.reduce((a, b) => a + b, 0);
     const avgDangerousAttacks =
-      dangerousAttacksSum / dangerousAttacks.length || 0;
+      dangerousAttacksSum / dangerousAttacks.length || 40;
 
     const dangerousAttacksHome = homeResults.map((res) => res.dangerousAttacks);
     const dangerousAttacksSumHome = dangerousAttacksHome.reduce(
       (a, b) => a + b,
-      0
+      40
     );
     form.avgDangerousAttacksHome =
-      dangerousAttacksSumHome / dangerousAttacksHome.length || 0;
+      dangerousAttacksSumHome / dangerousAttacksHome.length || 40;
 
     const dangerousAttacksAway = awayResults.map((res) => res.dangerousAttacks);
     const dangerousAttacksSumAway = dangerousAttacksAway.reduce(
@@ -828,7 +830,7 @@ async function getPastLeagueResults(team, game, hOrA, form) {
       0
     );
     form.avgDangerousAttacksAway =
-      dangerousAttacksSumAway / dangerousAttacksAway.length || 0;
+      dangerousAttacksSumAway / dangerousAttacksAway.length || 40;
 
     const shots = allTeamResults.map((res) => res.shots);
     const shotsSum = shots.reduce((a, b) => a + b, 0);
@@ -1907,20 +1909,20 @@ export async function generateGoals(homeForm, awayForm, match) {
     homeGoals +
     homeAttackVsAwayDefenceComparison * 2.5 +
     XGRatingHomeComparison * 0 +
-    homeAttackVsAwayDefenceComparisonLast5 * 2 +
+    homeAttackVsAwayDefenceComparisonLast5 * 1.5 +
     0.25 +
     homeAttackVsAwayDefenceComparisonHomeOnly * 0 +
     // weighedPointsComparisonHome * 0.005 +
-    oddsComparisonHome * 0.05;
+    oddsComparisonHome * 0.025;
 
   awayGoals =
     awayGoals +
     awayAttackVsHomeDefenceComparison * 2.5 +
     XGRatingAwayComparison * 0 +
-    awayAttackVsHomeDefenceComparisonLast5 * 2 +
+    awayAttackVsHomeDefenceComparisonLast5 * 1.5 +
     awayAttackVsHomeDefenceComparisonAwayOnly * 0 +
     // weighedPointsComparisonAway * 0.005 +
-    oddsComparisonAway * 0.05;
+    oddsComparisonAway * 0.025;
 
     // ROI for all 145 W/D/W outcomes: + 12.21%
     // Correct W/D/W predictions: 74 (51.0%)
@@ -1936,6 +1938,7 @@ export async function generateGoals(homeForm, awayForm, match) {
       awayGoals = awayGoals + -Math.abs(0.5)
       awayGoals = awayGoals + 0.5
     }
+
 
   //PLACEHOLDER
 
@@ -1994,19 +1997,20 @@ export async function generateGoals(homeForm, awayForm, match) {
 
   // Cumalative ROI for all 2193 match outcomes: + 4.18%
 
-  // if (homeGoals < 0 && awayGoals < 0) {
-  //   if (homeGoals < awayGoals) {
-  //     homeGoals = homeGoals + awayGoals / 5;
-  //     awayGoals = awayGoals - homeGoals / 5;
-  //   } else if (homeGoals > awayGoals) {
-  //     homeGoals = homeGoals - awayGoals / 5;
-  //     awayGoals = awayGoals + homeGoals / 5;
-  //   }
-  // } else if (homeGoals < 0) {
-  //   awayGoals = awayGoals + Math.abs(homeGoals) / 2;
-  // } else if (awayGoals < 0) {
-  //   homeGoals = homeGoals + Math.abs(awayGoals) / 2;
-  // }
+  if (homeGoals < 0 && awayGoals < 0) {
+    if (homeGoals < awayGoals) {
+      homeGoals = homeGoals + awayGoals / 4;
+      awayGoals = awayGoals - homeGoals / 4;
+    } else if (homeGoals > awayGoals) {
+      homeGoals = homeGoals - awayGoals / 4;
+      awayGoals = awayGoals + homeGoals / 4;
+    }
+  } 
+  else if (homeGoals < -1 && awayGoals < 1) {
+    awayGoals = awayGoals + Math.abs(homeGoals) / 2;
+  } else if (awayGoals < -1 && homeGoals < 1) {
+    homeGoals = homeGoals + Math.abs(awayGoals) / 2;
+  }
 
   return [homeGoals, awayGoals];
 }
@@ -2604,7 +2608,6 @@ export async function calculateScore(match, index, divider, calculate) {
 
     homeOdds = match.homeOdds;
     awayOdds = match.awayOdds;
-    console.log(teams);
 
     formHome = teams[0][index];
     formAway = teams[1][index];
@@ -3972,17 +3975,17 @@ export async function calculateScore(match, index, divider, calculate) {
     }
 
     if (
-      finalHomeGoals > finalAwayGoals &&
+      finalHomeGoals > finalAwayGoals && match.homeOdds !== 0 &&
       (match.homeOdds < rangeValue[0] || match.homeOdds > rangeValue[1])
     ) {
       match.omit = true;
     } else if (
-      finalAwayGoals > finalHomeGoals &&
+      finalAwayGoals > finalHomeGoals && match.homeOdds !== 0 &&
       (match.awayOdds < rangeValue[0] || match.awayOdds > rangeValue[1])
     ) {
       match.omit = true;
     } else if (
-      finalHomeGoals === finalAwayGoals &&
+      finalHomeGoals === finalAwayGoals  && match.homeOdds !== 0 &&
       (match.drawOdds < rangeValue[0] || match.drawOdds > rangeValue[1])
     ) {
       match.omit = true;

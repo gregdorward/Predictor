@@ -89,7 +89,6 @@ export async function generateTables(a, leagueIdArray, allResults) {
     i++;
     leagueInstance = [];
     //Skip MLS which has a weird format
-    console.log(league.data);
     if (
       !league.data.specific_tables[0].groups &&
       currentLeagueId !== 13973 &&
@@ -135,7 +134,6 @@ export async function generateTables(a, leagueIdArray, allResults) {
       }
       tableArray.push({ id: currentLeagueId, table: leagueInstance });
     } else if (currentLeagueId === 13973 || currentLeagueId === 12933) {
-      console.log(league.data);
       // for (let x = 0; x < league.data.specific_tables[0].groups.length; x++) {
       // for (
       //   let index = 0;
@@ -152,7 +150,6 @@ export async function generateTables(a, leagueIdArray, allResults) {
           league.data.specific_tables[1],
         ];
       }
-      console.log(instances)
 
       instances.forEach((group) => {
         leagueInstance = [];
@@ -305,7 +302,7 @@ export async function renderTable(index, results, id) {
             Stats={statistics}
             Id={id}
             Division={divisionName1}
-            Key={`League${index}`}
+            Key={`League${index}${divisionName1}`}
             GamesPlayed={statistics.game_week}
             Results={mostRecentGames}
           />
@@ -314,7 +311,7 @@ export async function renderTable(index, results, id) {
             Division={divisionName2}
             Stats={statistics}
             Id={id}
-            Key={`League${index}`}
+            Key={`League${index}${divisionName1}`}
             GamesPlayed={statistics.game_week}
             Results={mostRecentGames}
           />
@@ -1723,7 +1720,7 @@ export async function generateFixtures(
               onClickEvent={() => getScorePrediction(day)}
               className={"GeneratePredictions"}
             />
-            <div className="Version">Prediction engine v1.3.1 (07/03/25)</div>
+            <div className="Version">Prediction engine v1.3.2 (10/03/25)</div>
             <Collapsable
               buttonText={"Filters"}
               element={

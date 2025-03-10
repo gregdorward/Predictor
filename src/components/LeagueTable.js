@@ -282,6 +282,10 @@ export default function LeagueTable(props) {
   }
 
   async function sorted(league, value, order) {
+    console.log(league)
+    console.log(value)
+    console.log(order)
+
     let sortedByForm;
     if (order === "desc") {
       sortedByForm = league.sort((a, b) => b[value] - a[value]);
@@ -289,6 +293,7 @@ export default function LeagueTable(props) {
       sortedByForm = league.sort((a, b) => a[value] - b[value]);
     }
     setIsOff(!toggleState);
+    console.log(sortedByForm)
     return sortedByForm;
   }
 
@@ -483,23 +488,23 @@ export default function LeagueTable(props) {
                   <StyledTableCell>GA</StyledTableCell>
                   <StyledTableCell>GD</StyledTableCell>
                   <td>
-                    <button
-                      className="SortedColumn"
-                      style={{ textAlign: "center" }}
-                      onClick={() => sorted(props.Teams, "Points", "desc")}
-                    >
-                      Pts {upArrow}
-                    </button>
-                  </td>
-                  <td>
-                    <button
-                      className="SortedColumn"
-                      style={{ textAlign: "center" }}
-                      onClick={() => sorted(props.Teams, "LastXPoints", "desc")}
-                    >
-                      Last 5 {upArrow}
-                    </button>
-                  </td>
+                  <button
+                    className="SortedColumn"
+                    style={{ textAlign: "center" }}
+                    onClick={() => sorted(props.Teams, "Points", "desc")}
+                  >
+                    Pts {upArrow}
+                  </button>
+                </td>
+                <td>
+                  <button
+                    className="SortedColumn"
+                    style={{ textAlign: "center" }}
+                    onClick={() => sorted(props.Teams, "LastXPoints", "desc")}
+                  >
+                    Last 5 {upArrow}
+                  </button>
+                </td>
                 </TableRow>
               </TableHead>
               <TableBody>{rows}</TableBody>
