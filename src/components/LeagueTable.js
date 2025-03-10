@@ -96,7 +96,6 @@ function styleForm(formIndicator) {
 
 export default function LeagueTable(props) {
   [toggleState, setIsOff] = useState(false);
-  console.log(props)
 
   let rows = props.Teams.map((team, i) => (
     <StyledTableRow key={`${props.Key}row${i}`}>
@@ -296,10 +295,9 @@ export default function LeagueTable(props) {
   if (
     // props.GamesPlayed > 3 &&
     props.Teams[0].LeagueID !== 13973 && //MLS
-    props.Teams[0].LeagueID !== 12933 &&//UKNorth&South
+    props.Teams[0].LeagueID !== 12933 && //UKNorth&South
     props.Teams[0].LeagueID !== 12327 && //Europa
     props.Teams[0].LeagueID !== 12321 //ChampionsLeague
-
   ) {
     for (let i = 0; i < props.Teams.length; i++) {
       return (
@@ -347,10 +345,11 @@ export default function LeagueTable(props) {
           <div className="ResultsList" id="ResultsList">
             <ul>{leagueResults}</ul>
           </div>
-          {props.Teams[0].LeagueID === 12325 && <TeamOfTheSeason />} {/* Conditional render */}
+          {props.Teams[0].LeagueID === 12325 && <TeamOfTheSeason />}{" "}
+          {/* Conditional render */}
           <div className="LeagueStatisticsHeader">League Statistics</div>
           <div className="LeagueStatistics">
-          <ul className="LeagueStatsColumn">
+            <ul className="LeagueStatsColumn">
               <li>Average home goals: {props.Stats.seasonAVG_home}</li>
               <li>Average away goals: {props.Stats.seasonAVG_away}</li>
               <li>BTTS: {props.Stats.seasonBTTSPercentage}%</li>
@@ -455,118 +454,58 @@ export default function LeagueTable(props) {
   } else if (props.Teams[0].LeagueID === 4340) {
     return null;
   } else if (
-    props.Teams[0].LeagueID === 13973 && //MLS
-    props.Teams[0].LeagueID === 12933 &&//UKNorth&South
-    props.Teams[0].LeagueID === 12327 && //Europa
+    props.Teams[0].LeagueID === 13973 || //MLS
+    props.Teams[0].LeagueID === 12933 || //UKNorth&South
+    props.Teams[0].LeagueID === 12327 || //Europa
     props.Teams[0].LeagueID === 12321 //ChampionsLeague
   ) {
+
     for (let i = 0; i < props.Teams.length; i++) {
       return (
-        <TableContainer component={Paper} className="StatsTable">
-          <div className="LeagueStatisticsHeader">League Statistics</div>
-          {/* <TeamOfTheWeek></TeamOfTheWeek>
-          <TeamOfTheSeason></TeamOfTheSeason> */}
-          <div className="LeagueStatistics">
-            <ul className="LeagueStatsColumn">
-              <li>Average home goals: {props.Stats.seasonAVG_home}</li>
-              <li>Average away goals: {props.Stats.seasonAVG_away}</li>
-              <li>BTTS: {props.Stats.seasonBTTSPercentage}%</li>
-              <li>
-                Over 0.5 goals: {props.Stats.seasonOver05Percentage_overall}%
-              </li>
-              <li>
-                Over 1.5 goals: {props.Stats.seasonOver15Percentage_overall}%
-              </li>
-              <li>
-                Over 2.5 goals: {props.Stats.seasonOver25Percentage_overall}%
-              </li>
-              <li>
-                Over 3.5 goals: {props.Stats.seasonOver35Percentage_overall}%
-              </li>
-              <li>
-                Over 4.5 goals: {props.Stats.seasonOver45Percentage_overall}%
-              </li>
-            </ul>
-            <ul className="LeagueStatsColumn">
-              <li>
-                Over 7.5 corners: {props.Stats.over75CornersPercentage_overall}%
-              </li>
-              <li>
-                Over 8.5 corners: {props.Stats.over85CornersPercentage_overall}%
-              </li>
-              <li>
-                Over 9.5 corners: {props.Stats.over95CornersPercentage_overall}%
-              </li>
-              <li>
-                Over 10.5 corners:{" "}
-                {props.Stats.over105CornersPercentage_overall}%
-              </li>
-              <li>
-                Over 11.5 corners:{" "}
-                {props.Stats.over115CornersPercentage_overall}%
-              </li>
-              <li>
-                Over 12.5 corners:{" "}
-                {props.Stats.over125CornersPercentage_overall}%
-              </li>
-              <li>Corners average: {props.Stats.cornersAVG_overall}</li>
-              <li>Cards average: {props.Stats.cardsAVG_overall}</li>
-            </ul>
-            <ul className="TopScorersColumn">
-              <h4>Top scorers</h4>
-              <li>
-                {props.Stats.top_scorers[0].known_as} (
-                {getTopScorersTeam(props.Stats.top_scorers[0].club_team_id)}):{" "}
-                {props.Stats.top_scorers[0].goals_overall}
-              </li>
-              <li>
-                {props.Stats.top_scorers[1].known_as} (
-                {getTopScorersTeam(props.Stats.top_scorers[1].club_team_id)}):{" "}
-                {props.Stats.top_scorers[1].goals_overall}
-              </li>
-              <li>
-                {props.Stats.top_scorers[2].known_as} (
-                {getTopScorersTeam(props.Stats.top_scorers[2].club_team_id)}):{" "}
-                {props.Stats.top_scorers[2].goals_overall}
-              </li>
-              <li>
-                {props.Stats.top_scorers[3].known_as} (
-                {getTopScorersTeam(props.Stats.top_scorers[3].club_team_id)}):{" "}
-                {props.Stats.top_scorers[3].goals_overall}
-              </li>
-              <li>
-                {props.Stats.top_scorers[4].known_as} (
-                {getTopScorersTeam(props.Stats.top_scorers[4].club_team_id)}):{" "}
-                {props.Stats.top_scorers[4].goals_overall}
-              </li>
-              <li>
-                {props.Stats.top_scorers[5].known_as} (
-                {getTopScorersTeam(props.Stats.top_scorers[5].club_team_id)}):{" "}
-                {props.Stats.top_scorers[5].goals_overall}
-              </li>
-              <li>
-                {props.Stats.top_scorers[6].known_as} (
-                {getTopScorersTeam(props.Stats.top_scorers[6].club_team_id)}):{" "}
-                {props.Stats.top_scorers[6].goals_overall}
-              </li>
-              <li>
-                {props.Stats.top_scorers[7].known_as} (
-                {getTopScorersTeam(props.Stats.top_scorers[7].club_team_id)}):{" "}
-                {props.Stats.top_scorers[7].goals_overall}
-              </li>
-              <li>
-                {props.Stats.top_scorers[8].known_as} (
-                {getTopScorersTeam(props.Stats.top_scorers[8].club_team_id)}):{" "}
-                {props.Stats.top_scorers[8].goals_overall}
-              </li>
-              <li>
-                {props.Stats.top_scorers[9].known_as} (
-                {getTopScorersTeam(props.Stats.top_scorers[9].club_team_id)}):{" "}
-                {props.Stats.top_scorers[9].goals_overall}
-              </li>
-            </ul>
-          </div>
-        </TableContainer>
+        <>
+          <h2 className="DivisionName">{props.Division}</h2>
+          <TableContainer component={Paper} className="StatsTable">
+            <Table
+              className="Table"
+              aria-label="customized table"
+              key={props.Key}
+              style={{ marginTop: "2em", marginBottom: "1em" }}
+            >
+              <TableHead>
+                <TableRow>
+                  <StyledTableCell></StyledTableCell>
+                  <StyledTableCell></StyledTableCell>
+                  <StyledTableCell>Pld</StyledTableCell>
+                  <StyledTableCell>W</StyledTableCell>
+                  <StyledTableCell>D</StyledTableCell>
+                  <StyledTableCell>L</StyledTableCell>
+                  <StyledTableCell>GF</StyledTableCell>
+                  <StyledTableCell>GA</StyledTableCell>
+                  <StyledTableCell>GD</StyledTableCell>
+                  <td>
+                    <button
+                      className="SortedColumn"
+                      style={{ textAlign: "center" }}
+                      onClick={() => sorted(props.Teams, "Points", "desc")}
+                    >
+                      Pts {upArrow}
+                    </button>
+                  </td>
+                  <td>
+                    <button
+                      className="SortedColumn"
+                      style={{ textAlign: "center" }}
+                      onClick={() => sorted(props.Teams, "LastXPoints", "desc")}
+                    >
+                      Last 5 {upArrow}
+                    </button>
+                  </td>
+                </TableRow>
+              </TableHead>
+              <TableBody>{rows}</TableBody>
+            </Table>
+          </TableContainer>
+        </>
       );
     }
   }

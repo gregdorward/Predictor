@@ -14,7 +14,6 @@ import SlideDiff from "../components/SliderDiff";
 import Collapsable from "../components/CollapsableElement";
 import { userDetail } from "./authProvider";
 
-
 var oddslib = require("oddslib");
 
 // require("dotenv").config();
@@ -67,7 +66,7 @@ export async function diff(a, b) {
 
 export let allForm = [];
 export let tableArray = [];
-export let worldCupArray = [];
+export let bespokeLeagueArray = [];
 groupInstance = [];
 leagueInstance = [];
 
@@ -80,20 +79,21 @@ async function convertTimestamp(timestamp) {
   return converted;
 }
 
-
 export async function generateTables(a, leagueIdArray, allResults) {
   // leagueIdArray = [];
   tableArray = [];
-  worldCupArray = [];
+  bespokeLeagueArray = [];
   let i = 0;
   leagueArray.forEach(function (league) {
     let currentLeagueId = leagueIdArray[i];
     i++;
     leagueInstance = [];
     //Skip MLS which has a weird format
+    console.log(league.data);
     if (
       !league.data.specific_tables[0].groups &&
-      currentLeagueId !== 6969 &&
+      currentLeagueId !== 13973 &&
+      currentLeagueId !== 12933 &&
       league.data.specific_tables[0].table
     ) {
       for (
@@ -134,18 +134,38 @@ export async function generateTables(a, leagueIdArray, allResults) {
         leagueInstance.push(team);
       }
       tableArray.push({ id: currentLeagueId, table: leagueInstance });
-    } else if (currentLeagueId === 11084) {
+    } else if (currentLeagueId === 13973 || currentLeagueId === 12933) {
+      console.log(league.data);
       // for (let x = 0; x < league.data.specific_tables[0].groups.length; x++) {
       // for (
       //   let index = 0;
       //   index < league.data.specific_tables[0].groups[x].table.length;
       //   index++
       // )
-      league.data.specific_tables[0].groups.forEach((group) => {
+      let instances;
+
+      if (currentLeagueId === 13973) {
+        instances = league.data.specific_tables[0].groups;
+      } else if (currentLeagueId === 12933) {
+        instances = [
+          league.data.specific_tables[0],
+          league.data.specific_tables[1],
+        ];
+      }
+      console.log(instances)
+
+      instances.forEach((group) => {
         leagueInstance = [];
         for (let index = 0; index < group.table.length; index++) {
           let currentTeam = group.table[index];
-          let last5 = "N/A";
+          let last5;
+          if (currentTeam.wdl_record.length < 5) {
+            last5 = currentTeam.wdl_record
+              .slice(`-${currentTeam.wdl_record.length}`)
+              .toUpperCase();
+          } else {
+            last5 = currentTeam.wdl_record.slice(-5).toUpperCase();
+          }
           const team = {
             LeagueID: currentLeagueId,
             Position: index + 1,
@@ -168,8 +188,9 @@ export async function generateTables(a, leagueIdArray, allResults) {
           };
           leagueInstance.push(team);
         }
-        worldCupArray.push({
-          group: group.name,
+        bespokeLeagueArray.push({
+          id: currentLeagueId,
+          group: group.name ? group.name : group.round,
           table: leagueInstance,
         });
       });
@@ -214,12 +235,13 @@ export async function renderTable(index, results, id) {
   //World cup table rendering
 
   // let mostRecentGame = results.fixtures.pop();
-  console.log(results.fixtures)
   const nowInSeconds = Math.floor(Date.now() / 1000); // Current time in seconds
   const twoWeeksAgo = nowInSeconds - 14 * 24 * 60 * 60; // Two week ago in seconds  console.log(oneWeekAgo)
   // 1740576517073
   // 1723230000
-  let mostRecentGames = results.fixtures.filter(result => result.date_unix >= twoWeeksAgo);
+  let mostRecentGames = results.fixtures.filter(
+    (result) => result.date_unix >= twoWeeksAgo
+  );
 
   // let mostRecentGameweek = "Latest";
 
@@ -230,32 +252,76 @@ export async function renderTable(index, results, id) {
   // const lastGameweeksResults = results.fixtures.filter(
   //   (games) => games.game_week === mostRecentGameweek - 1
   // );
+  // tableArray.concat(bespokeLeagueArray)
 
-  const leagueTable = tableArray.filter((table) => table.id === id);
+  if (id !== 13973 && id !== 12933) {
+    const leagueTable = tableArray.filter((table) => table.id === id);
 
-  league = leagueTable[0].table;
+    league = leagueTable[0].table;
 
-  let statistics;
-  let leagueStatistics = await fetch(
-    `${process.env.REACT_APP_EXPRESS_SERVER}leagueStats/${id}`
-  );
-  await leagueStatistics.json().then((stats) => {
-    statistics = stats.data;
-  });
-
-
-  if (league !== undefined) {
-    ReactDOM.render(
-      <LeagueTable
-        Teams={league}
-        Stats={statistics}
-        Key={`League${index}`}
-        GamesPlayed={statistics.game_week}
-        Results={mostRecentGames}
-        // mostRecentGameweek={mostRecentGameweek}
-      />,
-      document.getElementById(`leagueName${id}`)
+    let statistics;
+    let leagueStatistics = await fetch(
+      `${process.env.REACT_APP_EXPRESS_SERVER}leagueStats/${id}`
     );
+    await leagueStatistics.json().then((stats) => {
+      statistics = stats.data;
+    });
+
+    if (league !== undefined) {
+      ReactDOM.render(
+        <LeagueTable
+          Teams={league}
+          Id={id}
+          Stats={statistics}
+          Key={`League${index}`}
+          GamesPlayed={statistics.game_week}
+          Results={mostRecentGames}
+          // mostRecentGameweek={mostRecentGameweek}
+        />,
+        document.getElementById(`leagueName${id}`)
+      );
+    }
+  } else if (id === 13973 || id === 12933) {
+    const leagueTable = bespokeLeagueArray.filter((table) => table.id === id);
+
+    const leagueTable1 = leagueTable[0].table;
+    const leagueTable2 = leagueTable[1].table;
+    const divisionName1 = leagueTable[0].group;
+    const divisionName2 = leagueTable[1].group;
+
+    let statistics;
+    let leagueStatistics = await fetch(
+      `${process.env.REACT_APP_EXPRESS_SERVER}leagueStats/${id}`
+    );
+    await leagueStatistics.json().then((stats) => {
+      statistics = stats.data;
+    });
+
+    if (leagueTable1 !== undefined && leagueTable2 !== undefined) {
+      ReactDOM.render(
+        <>
+          <LeagueTable
+            Teams={leagueTable1}
+            Stats={statistics}
+            Id={id}
+            Division={divisionName1}
+            Key={`League${index}`}
+            GamesPlayed={statistics.game_week}
+            Results={mostRecentGames}
+          />
+          <LeagueTable
+            Teams={leagueTable2}
+            Division={divisionName2}
+            Stats={statistics}
+            Id={id}
+            Key={`League${index}`}
+            GamesPlayed={statistics.game_week}
+            Results={mostRecentGames}
+          />
+        </>,
+        document.getElementById(`leagueName${id}`)
+      );
+    }
   }
 }
 
@@ -364,21 +430,21 @@ export function RenderAllFixtures(props) {
   let matches;
   let capped = false;
   let paid = false;
-  if(userDetail){
-    paid = userDetail.isPaid
+  if (userDetail) {
+    paid = userDetail.isPaid;
   }
-  const originalLength = props.matches.length
-  if(paid === true){
-    matches = props.matches
+  const originalLength = props.matches.length;
+  if (paid === true) {
+    matches = props.matches;
   } else {
-    if(originalLength > 15){
-      matches = props.matches.slice(0,15)
+    if (originalLength > 15) {
+      matches = props.matches.slice(0, 15);
       capped = true;
     } else {
-      matches = props.matches
+      matches = props.matches;
     }
   }
-  console.log(paid)
+  console.log(paid);
 
   return (
     <Fixture
@@ -491,9 +557,9 @@ export async function generateFixtures(
       `${process.env.REACT_APP_EXPRESS_SERVER}results`
     );
 
-    if(league.status === 200){
+    if (league.status === 200) {
       leaguesStored = true;
-      console.log("leagues fetched from s3")
+      console.log("leagues fetched from s3");
     }
 
     if (league.status === 200 && allLeagueResults.status === 201) {
@@ -513,9 +579,11 @@ export async function generateFixtures(
         leagueIdArray,
         allLeagueResultsArrayOfObjects
       );
-      arrayOfGames = []
+      arrayOfGames = [];
 
-      const sofaScore = await fetch(`https://www.sofascore.com/api/v1/sport/football/scheduled-events/${dateSS}`)
+      const sofaScore = await fetch(
+        `https://www.sofascore.com/api/v1/sport/football/scheduled-events/${dateSS}`
+      );
       await sofaScore.json().then((games) => {
         games.events.forEach((game) => {
           arrayOfGames.push({
@@ -523,13 +591,19 @@ export async function generateFixtures(
             awayTeam: game.awayTeam.name,
             id: game.id,
             time: game.startTimestamp,
-            homeGoals: game.homeScore.display != undefined ? game.homeScore.display : "-",
-            awayGoals: game.awayScore.display != undefined ? game.awayScore.display : "-"
-          })
-        })
-      })
+            homeGoals:
+              game.homeScore.display != undefined
+                ? game.homeScore.display
+                : "-",
+            awayGoals:
+              game.awayScore.display != undefined
+                ? game.awayScore.display
+                : "-",
+          });
+        });
+      });
 
-      const sofaScoreLeagues = await fetch('')
+      const sofaScoreLeagues = await fetch("");
     } else {
       allLeagueResultsArrayOfObjects = [];
       console.log("Fetching leagues");
@@ -565,16 +639,19 @@ export async function generateFixtures(
           let page2Data = await page2.json();
 
           const gamesConcat = games.data.concat(page2Data.data);
-          const gamesConcatFiltered = gamesConcat.filter((game) => game.status === "complete");
+          const gamesConcatFiltered = gamesConcat.filter(
+            (game) => game.status === "complete"
+          );
 
           let mostRecentResults = gamesConcatFiltered.filter(
             (game) => game.date_unix > targetDate
           );
-          let sorted = mostRecentResults.sort((a, b) => a.date_unix - b.date_unix);
+          let sorted = mostRecentResults.sort(
+            (a, b) => a.date_unix - b.date_unix
+          );
           gamesShortened = sorted.slice(-600);
           gamesFiltered = gamesShortened;
         } else {
-
           gamesFiltered = games.data.filter(
             (game) => game.status === "complete"
           );
@@ -773,8 +850,7 @@ export async function generateFixtures(
         let stringHome = homeLeague[x];
         let stringAway = awayLeague[x];
 
-
-        if(string){
+        if (string) {
           leaguePositions.push({
             name: string.cleanName,
             position: x + 1,
@@ -1306,15 +1382,28 @@ export async function generateFixtures(
                 BTTSPercentage: parseInt(
                   form[0].data[2].stats.seasonBTTSPercentage_home
                 ),
-                lastThreeForm: lastThreeFormHome !== undefined ? lastThreeFormHome.reverse() : "N/A",
-                LastFiveForm: lastFiveFormHome !== undefined ? lastFiveFormHome.reverse() : "N/A", 
-                LastSixForm: lastSixFormHome !== undefined ? lastSixFormHome.reverse() : "N/A",
-                LastTenForm: lastTenFormHome !== undefined ? lastTenFormHome.reverse() : "N/A",
+                lastThreeForm:
+                  lastThreeFormHome !== undefined
+                    ? lastThreeFormHome.reverse()
+                    : "N/A",
+                LastFiveForm:
+                  lastFiveFormHome !== undefined
+                    ? lastFiveFormHome.reverse()
+                    : "N/A",
+                LastSixForm:
+                  lastSixFormHome !== undefined
+                    ? lastSixFormHome.reverse()
+                    : "N/A",
+                LastTenForm:
+                  lastTenFormHome !== undefined
+                    ? lastTenFormHome.reverse()
+                    : "N/A",
                 LeagueOrAll: leagueOrAll,
                 LeaguePosition: `${teamPositionHome}${homePrefix}`,
-                homeRawPosition: homeTeaminLeague.rawPosition !== undefined
-                  ? homeTeaminLeague.rawPosition
-                  : 0,
+                homeRawPosition:
+                  homeTeaminLeague.rawPosition !== undefined
+                    ? homeTeaminLeague.rawPosition
+                    : 0,
                 homeTeamHomePositionRaw: teamPositionHomeTable,
                 SeasonPPG: homeSeasonPPG,
                 WinPercentage: homeTeamWinPercentageHome,
@@ -1532,10 +1621,22 @@ export async function generateFixtures(
                 BTTSPercentage: parseInt(
                   form[1].data[2].stats.seasonBTTSPercentage_away
                 ),
-                lastThreeForm: lastThreeFormAway !== undefined ? lastThreeFormAway.reverse() : "N/A",
-                LastFiveForm: lastFiveFormAway !== undefined ? lastFiveFormAway.reverse() : "N/A", 
-                LastSixForm: lastSixFormAway !== undefined ? lastSixFormAway.reverse() : "N/A",
-                LastTenForm: lastTenFormAway !== undefined ? lastTenFormAway.reverse() : "N/A",
+                lastThreeForm:
+                  lastThreeFormAway !== undefined
+                    ? lastThreeFormAway.reverse()
+                    : "N/A",
+                LastFiveForm:
+                  lastFiveFormAway !== undefined
+                    ? lastFiveFormAway.reverse()
+                    : "N/A",
+                LastSixForm:
+                  lastSixFormAway !== undefined
+                    ? lastSixFormAway.reverse()
+                    : "N/A",
+                LastTenForm:
+                  lastTenFormAway !== undefined
+                    ? lastTenFormAway.reverse()
+                    : "N/A",
                 LeagueOrAll: leagueOrAll,
                 LeaguePosition: `${teamPositionAway}${awayPrefix}`,
                 awayRawPosition: awayTeaminLeague.rawPosition

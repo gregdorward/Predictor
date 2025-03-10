@@ -61,8 +61,6 @@ const leagueOrder = [
   12931, //Portagul Prem 22/23
   12322, //Dutch Prem 22/23
   12137, //Belgian Pro League 22/23
-  12321, // Champs league
-  12327, //Europa
   10969, //sweden 24
   12132, //Danish Prem 24/25
   10976, //Norway Prem 23
@@ -72,6 +70,8 @@ const leagueOrder = [
   12120, //Polish prem 22/23
   12326, //Swiss prem 22/23
   13952, //Irish Prem 23
+  12321, // Champs league
+  12327, //Europa
   12467, //Spanish secunda 22/23
   12621, //Italy serie B 22/23
   12528, //Bundesliga 2 22/23
