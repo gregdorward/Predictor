@@ -11,7 +11,6 @@ apiKey: process.env.REACT_APP_FIREBASE_API_KEY,
   appId: process.env.REACT_APP_FIREBASE_APP_ID,
   measurementId:process.env.REACT_APP_FIREBASE_MEASUREMENT_ID,
 };
-console.log(process.env.REACT_APP_FIREBASE_API_KEY);  // Add this to confirm it's available
 
 const app = initializeApp(firebaseConfig);
 
