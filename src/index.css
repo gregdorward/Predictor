@@ -1498,9 +1498,9 @@ span.MembershipInfo {
   font-weight: bolder;
 }
 
-/* .StyleOfPlay{
-  height: 4em;
-} */
+.StyleOfPlay{
+  margin-top: 0.5em;
+}
 
 .Aligned {
   margin-top: 1em;
@@ -3486,7 +3486,6 @@ button.AIInsights button:active {
 .BarChart{
   height: 1000;
 }
-
-/* .XGSwiper{
-  height: 50em;
-} */
+.XGSwiper{
+  height: 100%;
+}

@@ -6,15 +6,35 @@ import "swiper/swiper.min.css";
 SwiperCore.use([EffectCoverflow, Pagination]);
 
 export const Slider = (props) => {
+  const length = parseInt(props.length);
+
+  const generateElements = () => {
+    const slides = [];
+    for (let i = 1; i <= length; i++) {
+      const elementName = `element${i}`;
+      slides.push(
+        <>
+          <SwiperSlide key={i}>{props[elementName]}</SwiperSlide>
+          <div></div>
+        </>
+      );
+    }
+    return slides;
+  };
+
+  const slideElements = generateElements();
+
   return (
     <Swiper
       effect={"coverflow"}
-      autoHeight={false}
+      autoHeight={true}
       grabCursor={true}
+      observer={true}
+      observeParents={true}
       centeredSlides={true}
       slidesPerView={1}
       coverflowEffect={{
-        rotate: 50,
+        rotate: 10,
         stretch: 0,
         depth: 100,
         modifier: 1,
@@ -23,12 +43,7 @@ export const Slider = (props) => {
       pagination={{ clickable: true }}
       className="XGSwiper"
     >
-      <SwiperSlide>
-       {props.element}
-      </SwiperSlide>
-      <SwiperSlide>
-      {props.element2}
-      </SwiperSlide>
+      {slideElements}
     </Swiper>
   );
 };

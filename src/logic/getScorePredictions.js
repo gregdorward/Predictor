@@ -770,7 +770,7 @@ async function getPastLeagueResults(team, game, hOrA, form) {
 
     form.reliabilityString = reliabilityString;
 
-    const teamGoalsHome = reversedResultsHome.map((res) => res.scored);
+    const teamGoalsHome = homeResults.map((res) => res.scored);
 
     const teamGoalsAway = awayResults.map((res) => res.scored);
     const teamGoalsAll = allTeamResults.map((res) => res.scored);
@@ -809,8 +809,7 @@ async function getPastLeagueResults(team, game, hOrA, form) {
     const possessionAway = awayResults.map((res) => res.possession);
     const possessionSumAway = possessionAway.reduce((a, b) => a + b, 0);
     form.avgPossessionAway = possessionSumAway / possessionAway.length || 0;
-    console.log(form.teamName)
-    console.log(allTeamResults)
+
     const dangerousAttacks = allTeamResults.map((res) => res.dangerousAttacks);
     const dangerousAttacksSum = dangerousAttacks.reduce((a, b) => a + b, 0);
     const avgDangerousAttacks =
@@ -985,8 +984,7 @@ async function getPastLeagueResults(team, game, hOrA, form) {
     let forAndAgainstRollingAvHomeOrAway;
 
     if (hOrA === "home") {
-      form.allGoalsArrayHomeRecent = teamGoalsAll.slice(0, 20);
-      form.allConceededArrayHomeRecent = teamConceededAll.slice(0, 20);
+      form.homeResults = homeResults
       form.allGoalsArrayHome = teamGoalsAll;
       form.allConceededArrayHome = teamConceededAll;
       form.allGoalsArrayHomeOnly = teamGoalsHome;
@@ -1008,8 +1006,7 @@ async function getPastLeagueResults(team, game, hOrA, form) {
           beta
         );
     } else if (hOrA === "away") {
-      form.allGoalsArrayAwayRecent = teamGoalsAll.slice(0, 20);
-      form.allConceededArrayAwayRecent = teamConceededAll.slice(0, 20);
+      form.awayResults = awayResults
       form.allGoalsArrayAway = teamGoalsAll;
       form.allConceededArrayAway = teamConceededAll;
       form.allGoalsArrayAwayOnly = teamGoalsAway;
@@ -1112,7 +1109,6 @@ async function getPastLeagueResults(team, game, hOrA, form) {
       conceeded: res.conceeded,
     }));
 
-    console.log(homeResults);
     const xgAndScoredHome = homeResults.map((res) => ({
       XG: res.XG,
       scored: res.scored,

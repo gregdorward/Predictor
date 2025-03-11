@@ -25,10 +25,8 @@ function Stats(props) {
     return className;
   }
 
-
-
-
-  if (props.formRun) {
+  if (props.all === true) {
+    console.log(props.BTTSArray)
     return (
       <Fragment>
         <ul className={props.className ? props.className : ""} style={props.style ? props.style : {}}>
@@ -166,6 +164,13 @@ function Stats(props) {
               }`}
             </li>
             <li
+              key="AverageShots"
+              className="AverageShots"
+              data-cy={props.name ? props.name + "AverageShots" : "AverageShots"}
+            >
+              {`Avg shots - ${props.shots !== undefined ? props.shots : "N/A"}`}
+            </li>
+            <li
               key="AverageSOT"
               className="AverageSOT"
               data-cy={props.name ? props.name + "averageSOT" : "averageSOT"}
@@ -186,15 +191,6 @@ function Stats(props) {
             >
               {`League position - ${
                 props.leaguePosition !== undefined ? props.leaguePosition : "N/A"
-              }`}
-            </li>
-            <li
-              key="LeaguePositionHomeOrAway"
-              className="LeaguePositionHomeOrAway"
-              data-cy={props.name ? props.name + "LeaguePositionHomeOrAway" : "LeaguePositionHomeOrAway"}
-            >
-              {`Position (${props.homeOrAway ? props.homeOrAway : "N/A"} only) - ${
-                props.homeOrAwayLeaguePosition !== undefined ? props.homeOrAwayLeaguePosition : "N/A"
               }`}
             </li>
             <li
@@ -247,13 +243,35 @@ function Stats(props) {
         <div id="h2hStats"></div>
       </Fragment>
     );
-  } else {
+  } else if (props.all === false) {
     return (
       <Fragment>
         <ul className={props.className ? props.className : ""} style={props.style ? props.style : {}}>
+          <li className="FormHeader">
+            {props.homeOrAway ? props.homeOrAway : "N/A"} form (most recent on right)
+          </li>
+          <li key={`last5${props.homeOrAwayResults ? props.homeOrAwayResults : "default"}`} className="FormHomeOrAway">
+            <span className={styleForm(props.ResultsHorA && props.ResultsHorA[5] ? props.ResultsHorA[5] : "")}>
+              {props.ResultsHorA && props.ResultsHorA[5] ? props.ResultsHorA[5] : ""}
+            </span>
+            <span className={styleForm(props.ResultsHorA && props.ResultsHorA[4] ? props.ResultsHorA[4] : "")}>
+              {props.ResultsHorA && props.ResultsHorA[4] ? props.ResultsHorA[4] : ""}
+            </span>
+            <span className={styleForm(props.ResultsHorA && props.ResultsHorA[3] ? props.ResultsHorA[3] : "")}>
+              {props.ResultsHorA && props.ResultsHorA[3] ? props.ResultsHorA[3] : ""}
+            </span>
+            <span className={styleForm(props.ResultsHorA && props.ResultsHorA[2] ? props.ResultsHorA[2] : "")}>
+              {props.ResultsHorA && props.ResultsHorA[2] ? props.ResultsHorA[2] : ""}
+            </span>
+            <span className={styleForm(props.ResultsHorA && props.ResultsHorA[1] ? props.ResultsHorA[1] : "")}>
+              {props.ResultsHorA && props.ResultsHorA[1] ? props.ResultsHorA[1] : ""}
+            </span>
+            <span className={styleForm(props.ResultsHorA && props.ResultsHorA[0] ? props.ResultsHorA[0] : "")}>
+              {props.ResultsHorA && props.ResultsHorA[0] ? props.ResultsHorA[0] : ""}
+            </span>
+          </li>
           <div className="FormSummaries">
-            {/* <li className="FormSummaryHome">{props.FormTextString ? props.FormTextString : "The below stats are available to paying customers only"}</li> */}
-            {/* <li className="FavouriteSummaryAway">{props.FavouriteRecord ? props.FavouriteRecord : "Graphs also only available to paying customers"}</li> */}
+            <li className="StyleOfPlay">{`${props.homeOrAway ? props.homeOrAway : "N/A"} style - ${props.StyleOfPlayHomeOrAway ? props.StyleOfPlayHomeOrAway : "N/A"}`}</li>
           </div>
           <div className="AllStats">
             <li
@@ -288,13 +306,20 @@ function Stats(props) {
               {`Avg XG conceded - ${props.XGConceded !== undefined ? props.XGConceded : "N/A"}`}
             </li>
             <li
-              key="TeamXGSwing"
-              className="TeamXGSwing"
-              data-cy={props.name ? props.name + "teamXGSwing" : "teamXGSwing"}
+              key="goalDifferenceHorA"
+              className="goalDifferenceHorA"
+              data-cy={props.name ? props.name + "goalDifference" : "goalDifference"}
             >
-              {`XG difference swing (last 5): ${
-                props.XGSwing !== undefined ? props.XGSwing.toFixed(2) : "N/A"
+              {`Goal difference ${props.homeOrAway ? props.homeOrAway : "N/A"} : ${
+                props.goalDifferenceHomeOrAway !== undefined ? props.goalDifferenceHomeOrAway : "N/A"
               }`}
+            </li>
+            <li
+              key="AverageShots"
+              className="AverageShots"
+              data-cy={props.name ? props.name + "AverageShots" : "AverageShots"}
+            >
+              {`Avg shots - ${props.shots !== undefined ? props.shots : "N/A"}`}
             </li>
             <li
               key="AverageSOT"
@@ -311,62 +336,11 @@ function Stats(props) {
               {`Avg dangerous attacks - ${props.dangerousAttacks !== undefined ? props.dangerousAttacks : "N/A"}`}
             </li>
             <li
-              key="LeaguePosition"
-              className="LeaguePosition"
-              data-cy={props.name ? props.name + "leaguePosition" : "leaguePosition"}
-            >
-              {`League position - ${
-                props.leaguePosition !== undefined ? props.leaguePosition : "N/A"
-              }`}
-            </li>
-            <li
-              key="LeaguePositionHomeOrAway"
-              className="LeaguePositionHomeOrAway"
-              data-cy={props.name ? props.name + "LeaguePositionHomeOrAway" : "LeaguePositionHomeOrAway"}
-            >
-              {`Position (${props.homeOrAway ? props.homeOrAway : "N/A"} only) - ${
-                props.homeOrAwayLeaguePosition !== undefined ? props.homeOrAwayLeaguePosition : "N/A"
-              }`}
-            </li>
-            <li
               key="WinPercentage"
               className="WinPercentage"
               data-cy={props.name ? props.name + "WinPercentage" : "WinPercentage"}
             >
-              {props.homeOrAway && props.winPercentage !== undefined
-                ? `${props.homeOrAway} PPG - ${props.winPercentage.toFixed(2)}`
-                : "N/A"}
-            </li>
-            <li key="PPG" className="PPG" data-cy={props.name ? props.name + "PPG" : "PPG"}>
-              {`Season PPG - ${props.ppg !== undefined ? props.ppg : "N/A"}`}
-            </li>
-            <li
-              key="FormTrend10a"
-              className="FormTrend"
-              data-cy={props.name ? props.name + "FormTrend10" : "FormTrend10"}
-            >
-              {`Last 10 PPG: ${props.formTrend && props.formTrend[0] !== undefined ? props.formTrend[0] : "N/A"}`}
-            </li>
-            <li
-              key="FormTrend10b"
-              className="FormTrend"
-              data-cy={props.name ? props.name + "FormTrend10" : "FormTrend10"}
-            >
-              {`Last 6 PPG: ${props.formTrend && props.formTrend[1] !== undefined ? props.formTrend[1] : "N/A"}`}
-            </li>
-            <li
-              key="FormTrend10c"
-              className="FormTrend"
-              data-cy={props.name ? props.name + "FormTrend10" : "FormTrend10"}
-            >
-              {`Last 5 PPG: ${props.formTrend && props.formTrend[2] !== undefined ? props.formTrend[2] : "N/A"}.`}
-            </li>
-            <li
-              key="CardsTotal"
-              className="CardsTotal"
-              data-cy={props.name ? props.name + "CardsTotal" : "CardsTotal"}
-            >
-              {`Cards total: ${props.CardsTotal !== undefined ? props.CardsTotal : "N/A"}`}
+              {props.homeOrAway && props.winPercentage !== undefined && props.winPercentage !== "N/A" ? `${props.homeOrAway} PPG - ${props.winPercentage.toFixed(2)}` : "N/A"}
             </li>
             <li
               key="CornersAverage"

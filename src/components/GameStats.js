@@ -216,12 +216,18 @@ function GameStats({ game, displayBool }) {
   let goalDiffArrayAway;
   let xgDiffArrayHome;
   let xgDiffArrayAway;
-  let sotDiffArrayHome;
-  let sotDiffArrayAway;
+  let goalDiffArrayHomeOnly;
+  let goalDiffArrayAwayOnly;
+  let xgDiffArrayHomeOnly;
+  let xgDiffArrayAwayOnly;
   let rollingGoalDiffTotalHome = [];
   let rollingGoalDiffTotalAway = [];
   let rollingXGDiffTotalHome = [];
   let rollingXGDiffTotalAway = [];
+  let rollingGoalDiffTotalHomeOnly = [];
+  let rollingGoalDiffTotalAwayOnly = [];
+  let rollingXGDiffTotalHomeOnly = [];
+  let rollingXGDiffTotalAwayOnly = [];
   let ref;
 
   const pos = allLeagueResultsArrayOfObjects
@@ -506,6 +512,11 @@ function GameStats({ game, displayBool }) {
   );
   xgDiffArrayHome = homeForm.allTeamResults.map((a) => a.XG - a.XGAgainst);
 
+  goalDiffArrayHomeOnly = homeForm.homeResults.map(
+    (a) => a.scored - a.conceeded
+  );
+  xgDiffArrayHomeOnly = homeForm.homeResults.map((a) => a.XG - a.XGAgainst);
+
   rollingGoalDiffTotalHome = goalDiffArrayHome.map(
     (
       (sum) => (value) =>
@@ -522,7 +533,26 @@ function GameStats({ game, displayBool }) {
   goalDiffArrayAway = awayForm.allTeamResults.map(
     (a) => a.scored - a.conceeded
   );
+
+  rollingGoalDiffTotalHomeOnly = goalDiffArrayHomeOnly.map(
+    (
+      (sum) => (value) =>
+        (sum += value)
+    )(0)
+  );
+  rollingXGDiffTotalHomeOnly = xgDiffArrayHomeOnly.map(
+    (
+      (sum) => (value) =>
+        (sum += value)
+    )(0)
+  );
+
   xgDiffArrayAway = awayForm.allTeamResults.map((a) => a.XG - a.XGAgainst);
+
+  goalDiffArrayAwayOnly = awayForm.awayResults.map(
+    (a) => a.scored - a.conceeded
+  );
+  xgDiffArrayAwayOnly = awayForm.awayResults.map((a) => a.XG - a.XGAgainst);
 
   rollingGoalDiffTotalAway = goalDiffArrayAway.map(
     (
@@ -531,6 +561,19 @@ function GameStats({ game, displayBool }) {
     )(0)
   );
   rollingXGDiffTotalAway = xgDiffArrayAway.map(
+    (
+      (sum) => (value) =>
+        (sum += value)
+    )(0)
+  );
+
+  rollingGoalDiffTotalAwayOnly = goalDiffArrayAwayOnly.map(
+    (
+      (sum) => (value) =>
+        (sum += value)
+    )(0)
+  );
+  rollingXGDiffTotalAwayOnly = xgDiffArrayAwayOnly.map(
     (
       (sum) => (value) =>
         (sum += value)
@@ -682,6 +725,23 @@ function GameStats({ game, displayBool }) {
     );
   }
 
+  function styleProps(home, away) {
+    let classHome;
+    let classAway;
+
+    if (home > away) {
+      classHome = "bold";
+      classAway = "";
+    } else if (home < away) {
+      classHome = "";
+      classAway = "bold";
+    } else {
+      classHome = "";
+      classAway = "";
+    }
+    return [classHome, classAway];
+  }
+
   function StatsHomeComponent() {
     console.log(formDataHome[0].ResultsHorA);
     if (!homeForm) return null;
@@ -689,6 +749,7 @@ function GameStats({ game, displayBool }) {
       <div className="flex-childOne">
         <ul style={style}>
           <Stats
+            all={true}
             style={style}
             homeOrAway="Home"
             gameCount={divider}
@@ -704,6 +765,7 @@ function GameStats({ game, displayBool }) {
             XGConceded={homeForm.XGAgainstAvgOverall.toFixed(2)}
             XGSwing={homeForm.XGChangeRecently}
             possession={homeForm.AveragePossessionOverall.toFixed(2)}
+            shots={homeForm.avgShots.toFixed(2)}
             sot={homeForm.AverageShotsOnTargetOverall.toFixed(2)}
             dangerousAttacks={
               homeForm.AverageDangerousAttacksOverall !== 0
@@ -711,8 +773,8 @@ function GameStats({ game, displayBool }) {
                 : homeForm.AverageDangerousAttacks
             }
             leaguePosition={
-              formDataHome[0].leaguePosition !== undefined &&
-              formDataHome[0].leaguePosition !== "undefined"
+              homeForm.LeaguePosition !== undefined &&
+              homeForm.LeaguePosition !== "undefined"
                 ? formDataHome[0].leaguePosition
                 : 0
             }
@@ -723,9 +785,9 @@ function GameStats({ game, displayBool }) {
                 : 0
             }
             homeOrAwayLeaguePosition={
-              game.homeTeamHomePosition !== undefined &&
-              game.homeTeamHomePosition !== "undefined"
-                ? game.homeTeamHomePosition
+              homeForm.homePositionHomeOnly !== undefined &&
+              homeForm.homePositionHomeOnly !== "undefined"
+                ? homeForm.homePositionHomeOnly
                 : 0
             }
             winPercentage={homeForm.homePPGAv ? homeForm.homePPGAv : "N/A"}
@@ -771,6 +833,7 @@ function GameStats({ game, displayBool }) {
       <div className="flex-childTwo">
         <ul style={style}>
           <Stats
+            all={true}
             style={style}
             homeOrAway="Away"
             gameCount={divider}
@@ -790,21 +853,22 @@ function GameStats({ game, displayBool }) {
             possession={awayForm.AveragePossessionOverall.toFixed(2)}
             rawPosition={game.awayRawPosition ? game.awayRawPosition : 0}
             sot={awayForm.AverageShotsOnTargetOverall.toFixed(2)}
+            shots={awayForm.avgShots.toFixed(2)}
             dangerousAttacks={
               awayForm.AverageDangerousAttacksOverall !== 0
                 ? awayForm.AverageDangerousAttacksOverall.toFixed(2)
                 : awayForm.AverageDangerousAttacks
             }
             leaguePosition={
-              formDataAway[0].leaguePosition !== undefined &&
-              formDataAway[0].leaguePosition !== "undefined"
+              awayForm.LeaguePosition !== undefined &&
+              awayForm.LeaguePosition !== "undefined"
                 ? formDataAway[0].leaguePosition
                 : 0
             }
             homeOrAwayLeaguePosition={
-              game.awayTeamAwayPosition !== undefined &&
-              game.awayTeamAwayPosition !== "undefinedundefined"
-                ? game.awayTeamAwayPosition
+              awayForm.awayPositionAwayOnly !== undefined &&
+              awayForm.awayPositionAwayOnly !== "undefinedundefined"
+                ? awayForm.awayPositionAwayOnly
                 : 0
             }
             winPercentage={awayForm.awayPPGAv ? awayForm.awayPPGAv : "N/A"}
@@ -842,6 +906,154 @@ function GameStats({ game, displayBool }) {
       </div>
     );
   }
+
+  function StatsHomeOnlyComponent() {
+    console.log(formDataHome[0].ResultsHorA);
+    if (!homeForm) return null;
+    return (
+      <div className="flex-childOne">
+        <ul style={style}>
+          <Stats
+            all={false}
+            style={style}
+            homeOrAway="Home"
+            gameCount={divider}
+            key={formDataHome[0].name}
+            last5={formDataHome[0].Last5}
+            // homeOrAwayResults={gameArrayHomeTeamHomeGames}
+            LeagueOrAll={formDataHome[0].LeagueOrAll}
+            className={"KeyStatsHome"}
+            name={formDataHome[0].name}
+            goals={homeForm.avgScoredHome}
+            conceeded={homeForm.teamConceededAvgHomeOnly.toFixed(2)}
+            XG={homeForm.avgXGScoredHome.toFixed(2)}
+            XGConceded={homeForm.avgXGConceededHome.toFixed(2)}
+            possession={homeForm.avgPossessionHome.toFixed(2)}
+            sot={homeForm.avgShotsOnTargetHome.toFixed(2)}
+            shots={homeForm.avgShotsHome.toFixed(2)}
+            dangerousAttacks={
+              homeForm.avgDangerousAttacksHome !== 0
+                ? homeForm.avgDangerousAttacksHome.toFixed(2)
+                : homeForm.AverageDangerousAttacks
+            }
+            leaguePosition={
+              homeForm.homePositionHomeOnly !== undefined &&
+              homeForm.homePositionHomeOnly !== "undefined"
+                ? formDataHome[0].leaguePosition
+                : 0
+            }
+            rawPosition={
+              game.homeRawPosition !== undefined &&
+              game.homeRawPosition !== "undefined"
+                ? game.homeRawPosition
+                : 0
+            }
+            homeOrAwayLeaguePosition={
+              homeForm.homePositionHomeOnly !== undefined &&
+              homeForm.homePositionHomeOnly !== "undefined"
+                ? homeForm.homePositionHomeOnly
+                : 0
+            }
+            winPercentage={homeForm.homePPGAv ? homeForm.homePPGAv : "N/A"}
+            formTrend={[
+              homeTenGameAverage.toFixed(2),
+              homeSixGameAverage.toFixed(2),
+              homeFiveGameAverage.toFixed(2),
+            ]}
+            formRun={homeForm.resultsAll}
+            goalDifference={formDataHome[0].goalDifference}
+            goalDifferenceHomeOrAway={formDataHome[0].goalDifferenceHomeOrAway}
+            BttsPercentage={homeForm.bttsHomePercentage}
+            BTTSArray={formDataHome[0].BTTSArray}
+            // Results={formDataHome[0].Results}
+            ResultsHorA={formDataHome[0].ResultsHorA}
+            CardsTotal={formDataHome[0].CardsTotal}
+            CornersAverage={homeForm.cornersAvHome.toFixed()}
+            ScoredBothHalvesPercentage={
+              formDataHome[0].ScoredBothHalvesPercentage
+            }
+            // FormTextString={formDataHome[0].FormTextStringHome}
+            FavouriteRecord={formDataHome[0].FavouriteRecord}
+            StyleOfPlay={formDataHome[0].styleOfPlayOverall}
+            StyleOfPlayHomeOrAway={formDataHome[0].styleOfPlayHome}
+          />
+        </ul>
+      </div>
+    );
+  }
+
+  // Component: StatsAway (Render Away Team Stats)
+  function StatsAwayOnlyComponent() {
+    if (!awayForm) return null;
+    return (
+      <div className="flex-childTwo">
+        <ul style={style}>
+          <Stats
+            all={false}
+            style={style}
+            homeOrAway="Away"
+            gameCount={divider}
+            key={formDataAway[0].name}
+            last5={formDataAway[0].Last5}
+            // homeOrAwayResults={gameArrayAwayTeamAwayGames}
+            LeagueOrAll={formDataAway[0].LeagueOrAll}
+            className={"KeyStatsAway"}
+            classNameTwo={"FormStatsAway"}
+            name={formDataAway[0].name}
+            goals={awayForm.avgScoredAway}
+            conceeded={awayForm.teamConceededAvgAwayOnly.toFixed(2)}
+            XG={awayForm.avgXGScoredAway.toFixed(2)}
+            XGConceded={awayForm.avgXGConceededAway.toFixed(2)}
+            //todo add goal diff and btts percentages
+            possession={awayForm.avgPossessionAway.toFixed(2)}
+            rawPosition={game.awayRawPosition ? game.awayRawPosition : 0}
+            sot={awayForm.avgShotsOnTargetAway.toFixed(2)}
+            shots={awayForm.avgShotsAway.toFixed(2)}
+            dangerousAttacks={
+              awayForm.avgDangerousAttacksAway !== 0
+                ? awayForm.avgDangerousAttacksAway.toFixed(2)
+                : awayForm.AverageDangerousAttacks
+            }
+            leaguePosition={
+              awayForm.awayPosition !== undefined &&
+              awayForm.awayPosition !== "undefined"
+                ? formDataAway[0].leaguePosition
+                : 0
+            }
+            homeOrAwayLeaguePosition={
+              awayForm.awayPositionAwayOnly !== undefined &&
+              awayForm.awayPositionAwayOnly !== "undefinedundefined"
+                ? awayForm.awayPositionAwayOnly
+                : 0
+            }
+            winPercentage={awayForm.awayPPGAv ? awayForm.awayPPGAv : "N/A"}
+            formTrend={[
+              awayTenGameAverage.toFixed(2),
+              awaySixGameAverage.toFixed(2),
+              awayFiveGameAverage.toFixed(2),
+            ]}
+            formRun={awayForm.resultsAll}
+            goalDifference={formDataAway[0].goalDifference}
+            goalDifferenceHomeOrAway={formDataAway[0].goalDifferenceHomeOrAway}
+            BttsPercentage={awayForm.bttsHomePercentage}
+            BTTSArray={formDataAway[0].BTTSArray}
+            // Results={formDataAway[0].Results}
+            ResultsHorA={formDataAway[0].ResultsHorA}
+            CardsTotal={formDataAway[0].CardsTotal}
+            CornersAverage={awayForm.cornersAvAway.toFixed()}
+            ScoredBothHalvesPercentage={
+              formDataAway[0].ScoredBothHalvesPercentage
+            }
+            // FormTextString={formDataAway[0].FormTextStringAway}
+            FavouriteRecord={formDataAway[0].FavouriteRecord}
+            StyleOfPlay={formDataAway[0].styleOfPlayOverall}
+            StyleOfPlayHomeOrAway={formDataAway[0].styleOfPlayAway}
+          />
+        </ul>
+      </div>
+    );
+  }
+
   gameArrayHome.sort((a, b) => b.unixTimestamp - a.unixTimestamp);
   gameArrayAway.sort((a, b) => b.unixTimestamp - a.unixTimestamp);
 
@@ -1452,187 +1664,263 @@ function GameStats({ game, displayBool }) {
             </div>
           )}
         </div>
-        <div className="flex-container">
-          <StatsHomeComponent />
-          <StatsAwayComponent />
-        </div>
+        <Slider
+          length="2"
+          element1={
+            <>
+              <h2>All games</h2>
+              <div className="flex-container">
+                <StatsHomeComponent />
+                <StatsAwayComponent />
+              </div>
+              <div className="Chart" id={`Chart${game.id}`} style={style}>
+                <RadarChart
+                  style={{ height: "auto" }}
+                  title="XG Tipping Strength Ratings - All Games"
+                  data={[
+                    homeAttackStrength,
+                    homeDefenceStrength,
+                    homePossessionStrength,
+                    homeXGForStrength,
+                    homeXGAgainstStrength,
+                    homeDirectnessStrength,
+                    homeAccuracyOverallStrength,
+                  ]}
+                  data2={[
+                    awayAttackStrength,
+                    awayDefenceStrength,
+                    awayPossessionStrength,
+                    awayXGForStrength,
+                    awayXGAgainstStrength,
+                    awayDirectnessStrength,
+                    awayAccuracyOverallStrength,
+                  ]}
+                  team1={game.homeTeam}
+                  team2={game.awayTeam}
+                ></RadarChart>
+                <BarChart
+                  text="All games - Home Team | Away Team"
+                  data1={[
+                    homeForm.avgScored * 2,
+                    awayForm.avgConceeded * 2,
+                    homeForm.avPointsAll * 3,
+                    homeForm.XGOverall * 2,
+                    awayForm.XGAgainstAvgOverall * 2,
+                    homeForm.AverageShotsOnTargetOverall,
+                    homeForm.AverageDangerousAttacksOverall !== 0
+                      ? homeForm.AverageDangerousAttacksOverall / 7.5
+                      : homeForm.AverageDangerousAttacks / 7.5,
+                    homeForm.AveragePossessionOverall / 7.5,
+                    homeForm.goalDifference / 10,
+                    homeForm.AverageCorners,
+                  ]}
+                  data2={[
+                    awayForm.avgScored * 2,
+                    homeForm.avgConceeded * 2,
+                    awayForm.avPointsAll * 3,
+                    awayForm.XGOverall * 2,
+                    homeForm.XGAgainstAvgOverall * 2,
+                    awayForm.AverageShotsOnTargetOverall,
+                    awayForm.AverageDangerousAttacksOverall !== 0
+                      ? awayForm.AverageDangerousAttacksOverall / 7.5
+                      : awayForm.AverageDangerousAttacks / 7.5,
+                    awayForm.AveragePossessionOverall / 7.5,
+                    awayForm.goalDifference / 10,
+                    awayForm.AverageCorners,
+                  ]}
+                ></BarChart>
+                <MultiTypeChart
+                  dataArray={homeForm.twoDGoalsArray}
+                  text={homeForm.teamName + " XG Diff (All)"}
+                />
+                <MultiTypeChart
+                  dataArray={awayForm.twoDGoalsArray}
+                  text={awayForm.teamName + " XG Diff (All)"}
+                />
+                <Chart
+                  height={3}
+                  depth={0}
+                  data1={formArrayHome}
+                  data2={formArrayAway}
+                  team1={game.homeTeam}
+                  team2={game.awayTeam}
+                  type={chartType}
+                  tension={0}
+                ></Chart>
+                <MultilineChart
+                  height={
+                    Math.max(
+                      rollingGoalDiffTotalHome[
+                        rollingGoalDiffTotalHome.length - 1
+                      ],
+                      rollingGoalDiffTotalAway[
+                        rollingGoalDiffTotalAway.length - 1
+                      ]
+                    ) > 2
+                      ? Math.max(
+                          rollingGoalDiffTotalHome[
+                            rollingGoalDiffTotalHome.length - 1
+                          ],
+                          rollingGoalDiffTotalAway[
+                            rollingGoalDiffTotalAway.length - 1
+                          ]
+                        )
+                      : 2
+                  }
+                  depth={
+                    Math.min(
+                      rollingGoalDiffTotalHome[
+                        rollingGoalDiffTotalHome.length - 1
+                      ],
+                      rollingGoalDiffTotalAway[
+                        rollingGoalDiffTotalAway.length - 1
+                      ]
+                    ) < -2
+                      ? Math.min(
+                          rollingGoalDiffTotalHome[
+                            rollingGoalDiffTotalHome.length - 1
+                          ],
+                          rollingGoalDiffTotalAway[
+                            rollingGoalDiffTotalAway.length - 1
+                          ]
+                        )
+                      : -2
+                  }
+                  data1={rollingGoalDiffTotalHome}
+                  data2={rollingGoalDiffTotalAway}
+                  data3={rollingXGDiffTotalHome}
+                  data4={rollingXGDiffTotalAway}
+                  team1={game.homeTeam}
+                  team2={game.awayTeam}
+                  type={"Goal/XG difference over time"}
+                  tension={0.5}
+                ></MultilineChart>
+              </div>
+            </>
+          }
+          element2={
+            <>
+              <h2>Home/Away games only</h2>
+              <div className="flex-container">
+                <StatsHomeOnlyComponent />
+                <StatsAwayOnlyComponent />
+              </div>
+              <div className="Chart" id={`Chart${game.id}`} style={style}>
+                <RadarChart
+                  title="XG Tipping Strength Ratings - Home/Away Games Only"
+                  data={[
+                    homeOnlyAttackStrength,
+                    homeOnlyDefenceStrength,
+                    homeOnlyPossessionStrength,
+                    homeOnlyXGForStrength,
+                    homeOnlyXGAgainstStrength,
+                    homeOnlyDirectnessStrength,
+                    homeOnlyAccuracyOverallStrength,
+                  ]}
+                  data2={[
+                    awayOnlyAttackStrength,
+                    awayOnlyDefenceStrength,
+                    awayOnlyPossessionStrength,
+                    awayOnlyXGForStrength,
+                    awayOnlyXGAgainstStrength,
+                    awayOnlyDirectnessStrength,
+                    awayOnlyAccuracyOverallStrength,
+                  ]}
+                  team1={game.homeTeam}
+                  team2={game.awayTeam}
+                ></RadarChart>
+                 <BarChart
+                  text="Home/Away only - Home Team | Away Team"
+                  data1={[
+                    homeForm.avgScoredHome * 2,
+                    awayForm.teamConceededAvgAwayOnly * 2,
+                    homeForm.homePPGAv * 3,
+                    homeForm.avgXGScoredHome * 2,
+                    awayForm.avgXGConceededHome * 2,
+                    homeForm.avgShotsOnTargetHome,
+                    homeForm.avgDangerousAttacksHome !== 0
+                      ? homeForm.avgDangerousAttacksHome / 7.5
+                      : homeForm.AverageDangerousAttacks / 7.5,
+                    homeForm.avgPossessionHome / 7.5,
+                    homeForm.goalDifferenceHomeOrAway / 10,
+                    homeForm.cornersAvHome,
+                  ]}
+                  data2={[
+                    awayForm.avgScoredAway * 2,
+                    homeForm.teamConceededAvgAwayOnly * 2,
+                    awayForm.awayPPGAv * 3,
+                    awayForm.avgXGScoredAway * 2,
+                    homeForm.avgXGConceededAway * 2,
+                    awayForm.avgShotsOnTargetAway,
+                    awayForm.avgDangerousAttacksAway !== 0
+                      ? awayForm.avgDangerousAttacksAway / 7.5
+                      : awayForm.AverageDangerousAttacks / 7.5,
+                    awayForm.avgPossessionAway / 7.5,
+                    awayForm.goalDifferenceHomeOrAway / 10,
+                    awayForm.cornersAvAway,
+                  ]}
+                ></BarChart>
+                <MultiTypeChart
+                  dataArray={homeForm.twoDGoalsArrayHome}
+                  text={homeForm.teamName + " XG Diff (Home)"}
+                />
+                <MultiTypeChart
+                  dataArray={awayForm.twoDGoalsArrayAway}
+                  text={awayForm.teamName + " XG Diff (Away)"}
+                />
+                <MultilineChart
+                  height={
+                    Math.max(
+                      rollingGoalDiffTotalHomeOnly[
+                        rollingGoalDiffTotalHomeOnly.length - 1
+                      ],
+                      rollingGoalDiffTotalAwayOnly[
+                        rollingGoalDiffTotalAwayOnly.length - 1
+                      ]
+                    ) > 2
+                      ? Math.max(
+                          rollingGoalDiffTotalHomeOnly[
+                            rollingGoalDiffTotalHomeOnly.length - 1
+                          ],
+                          rollingGoalDiffTotalAwayOnly[
+                            rollingGoalDiffTotalAwayOnly.length - 1
+                          ]
+                        )
+                      : 2
+                  }
+                  depth={
+                    Math.min(
+                      rollingGoalDiffTotalHomeOnly[
+                        rollingGoalDiffTotalHomeOnly.length - 1
+                      ],
+                      rollingGoalDiffTotalAwayOnly[
+                        rollingGoalDiffTotalAwayOnly.length - 1
+                      ]
+                    ) < -2
+                      ? Math.min(
+                          rollingGoalDiffTotalHomeOnly[
+                            rollingGoalDiffTotalHomeOnly.length - 1
+                          ],
+                          rollingGoalDiffTotalAwayOnly[
+                            rollingGoalDiffTotalAwayOnly.length - 1
+                          ]
+                        )
+                      : -2
+                  }
+                  data1={rollingGoalDiffTotalHomeOnly}
+                  data2={rollingGoalDiffTotalAwayOnly}
+                  data3={rollingXGDiffTotalHomeOnly}
+                  data4={rollingXGDiffTotalAwayOnly}
+                  team1={game.homeTeam}
+                  team2={game.awayTeam}
+                  type={"Home/Away Goal/XG difference over time"}
+                  tension={0.5}
+                ></MultilineChart>
+              </div>
+            </>
+          }
+        />
         <div className="Chart" id={`Chart${game.id}`} style={style}>
-          <RadarChart
-            title="XG Tipping Strength Ratings - All Games"
-            data={[
-              homeAttackStrength,
-              homeDefenceStrength,
-              homePossessionStrength,
-              homeXGForStrength,
-              homeXGAgainstStrength,
-              homeDirectnessStrength,
-              homeAccuracyOverallStrength,
-            ]}
-            data2={[
-              awayAttackStrength,
-              awayDefenceStrength,
-              awayPossessionStrength,
-              awayXGForStrength,
-              awayXGAgainstStrength,
-              awayDirectnessStrength,
-              awayAccuracyOverallStrength,
-            ]}
-            team1={game.homeTeam}
-            team2={game.awayTeam}
-          ></RadarChart>
-          <RadarChart
-            title="XG Tipping Strength Ratings - Last 5 games"
-            data={[
-              homeAttackStrengthLast5,
-              homeDefenceStrengthLast5,
-              homePossessionStrengthLast5,
-              homeXGForStrengthLast5,
-              homeXGAgainstStrengthLast5,
-              homeDirectnessStrengthLast5,
-              homeAccuracyOverallStrengthLast5,
-            ]}
-            data2={[
-              awayAttackStrengthLast5,
-              awayDefenceStrengthLast5,
-              awayPossessionStrengthLast5,
-              awayXGForStrengthLast5,
-              awayXGAgainstStrengthLast5,
-              awayDirectnessStrengthLast5,
-              awayAccuracyOverallStrengthLast5,
-            ]}
-            team1={game.homeTeam}
-            team2={game.awayTeam}
-          ></RadarChart>
-          <RadarChart
-            title="XG Tipping Strength Ratings - Home/Away Games Only"
-            data={[
-              homeOnlyAttackStrength,
-              homeOnlyDefenceStrength,
-              homeOnlyPossessionStrength,
-              homeOnlyXGForStrength,
-              homeOnlyXGAgainstStrength,
-              homeOnlyDirectnessStrength,
-              homeOnlyAccuracyOverallStrength,
-            ]}
-            data2={[
-              awayOnlyAttackStrength,
-              awayOnlyDefenceStrength,
-              awayOnlyPossessionStrength,
-              awayOnlyXGForStrength,
-              awayOnlyXGAgainstStrength,
-              awayOnlyDirectnessStrength,
-              awayOnlyAccuracyOverallStrength,
-            ]}
-            team1={game.homeTeam}
-            team2={game.awayTeam}
-          ></RadarChart>
-          <DoughnutChart
-            data={[homeForm.XGRating, awayForm.XGRating]}
-            homeTeam={game.homeTeam}
-            awayTeam={game.awayTeam}
-          ></DoughnutChart>
-          <BarChartTwo
-            text="Recent XG Differential Swing"
-            homeTeam={homeForm.teamName}
-            awayTeam={awayForm.teamName}
-            data1={[homeForm.XGChangeRecently.toFixed(2)]}
-            data2={[awayForm.XGChangeRecently.toFixed(2)]}
-          ></BarChartTwo>
-          <BarChart
-            text="H2H - Home Team | Away Team"
-            data1={[
-              homeForm.avgScored * 2,
-              awayForm.avgConceeded * 2,
-              homeForm.avPointsAll * 3,
-              homeForm.XGOverall * 2,
-              awayForm.XGAgainstAvgOverall * 2,
-              homeForm.AverageShotsOnTargetOverall,
-              homeForm.AverageDangerousAttacksOverall !== 0
-                ? homeForm.AverageDangerousAttacksOverall / 7.5
-                : homeForm.AverageDangerousAttacks / 7.5,
-              homeForm.AveragePossessionOverall / 7.5,
-              homeForm.goalDifferenceHomeOrAway / 10,
-              homeForm.AverageCorners,
-            ]}
-            data2={[
-              awayForm.avgScored * 2,
-              homeForm.avgConceeded * 2,
-              awayForm.avPointsAll * 3,
-              awayForm.XGOverall * 2,
-              homeForm.XGAgainstAvgOverall * 2,
-              awayForm.AverageShotsOnTargetOverall,
-              awayForm.AverageDangerousAttacksOverall !== 0
-                ? awayForm.AverageDangerousAttacksOverall / 7.5
-                : awayForm.AverageDangerousAttacks / 7.5,
-              awayForm.AveragePossessionOverall / 7.5,
-              awayForm.goalDifferenceHomeOrAway / 10,
-              awayForm.AverageCorners,
-            ]}
-          ></BarChart>
-          <Chart
-            height={3}
-            depth={0}
-            data1={formArrayHome}
-            data2={formArrayAway}
-            team1={game.homeTeam}
-            team2={game.awayTeam}
-            type={chartType}
-            tension={0}
-          ></Chart>
-          <MultilineChart
-            height={
-              Math.max(
-                rollingGoalDiffTotalHome[rollingGoalDiffTotalHome.length - 1],
-                rollingGoalDiffTotalAway[rollingGoalDiffTotalAway.length - 1]
-              ) > 2
-                ? Math.max(
-                    rollingGoalDiffTotalHome[
-                      rollingGoalDiffTotalHome.length - 1
-                    ],
-                    rollingGoalDiffTotalAway[
-                      rollingGoalDiffTotalAway.length - 1
-                    ]
-                  )
-                : 2
-            }
-            depth={
-              Math.min(
-                rollingGoalDiffTotalHome[rollingGoalDiffTotalHome.length - 1],
-                rollingGoalDiffTotalAway[rollingGoalDiffTotalAway.length - 1]
-              ) < -2
-                ? Math.min(
-                    rollingGoalDiffTotalHome[
-                      rollingGoalDiffTotalHome.length - 1
-                    ],
-                    rollingGoalDiffTotalAway[
-                      rollingGoalDiffTotalAway.length - 1
-                    ]
-                  )
-                : -2
-            }
-            data1={rollingGoalDiffTotalHome}
-            data2={rollingGoalDiffTotalAway}
-            data3={rollingXGDiffTotalHome}
-            data4={rollingXGDiffTotalAway}
-            team1={game.homeTeam}
-            team2={game.awayTeam}
-            type={"Goal/XG difference over time"}
-            tension={0.5}
-          ></MultilineChart>
-          <Slider
-            element={
-              <>
-                <MultiTypeChart dataArray={homeForm.twoDGoalsArray} text={homeForm.teamName + " XG Diff (All)"}/>
-                <MultiTypeChart dataArray={awayForm.twoDGoalsArray} text={awayForm.teamName + " XG Diff (All)"}/>
-              </>
-            }
-            element2={
-              <>
-                <MultiTypeChart dataArray={homeForm.twoDGoalsArrayHome} text={homeForm.teamName + " XG Diff (Home)"}/>
-                <MultiTypeChart dataArray={awayForm.twoDGoalsArrayAway} text={awayForm.teamName + " XG Diff (Away)"}/>
-              </>
-            }
-          ></Slider>
         </div>
         <Div
           text={`Last league games (most recent first)`}
