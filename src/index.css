@@ -3438,9 +3438,7 @@ button.SecondaryButtons{
 .HomeAIInsights{
   flex-direction: column;
   text-align: justify;
-  padding-top: 1em;
-  padding-right: 1em;
-  padding-left: 1em;
+  padding: 1em;
   line-height: 1.75em;
   flex-basis: 50%;
 }
@@ -3453,9 +3451,7 @@ button.SecondaryButtons{
 .AwayAIInsights{
   flex-direction: column;
   text-align: justify;
-  padding-top: 1em;
-  padding-left: 1em;
-  padding-right: 1em;
+  padding: 1em;
   line-height: 1.75em;
   flex-basis: 50%;
 }

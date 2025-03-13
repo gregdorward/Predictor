@@ -139,7 +139,7 @@ export async function calculateMetricStrength(metricName, metricValue) {
     xgFor: { min: 0.25, max: 2.75 },
     xgAgainst: { min: 0.25, max: 2.75 },
     directnessOverall: { min: 0.5, max: 7 },
-    accuracyOverall: { min: 6, max: 14 },
+    accuracyOverall: { min: 3, max: 25 },
   };
 
   // Ensure the metric is valid and exists in the weights and ranges objects
@@ -891,7 +891,12 @@ export async function createStatsDiv(game, displayBool) {
       }
 
       const bttsArrayHome = Array.from(gameArrayHome, (x) => x.btts);
+      const bttsArrayHomeOnly = Array.from(gameArrayHomeTeamHomeGames, (x) => x.btts);
+
+      
       const bttsArrayAway = Array.from(gameArrayAway, (x) => x.btts);
+      const bttsArrayAwayOnly = Array.from(gameArrayAwayTeamAwayGames, (x) => x.btts);
+
       const resultsArrayHome = Array.from(gameArrayHome, (x) => x.won);
       const resultsArrayAway = Array.from(gameArrayAway, (x) => x.won);
 

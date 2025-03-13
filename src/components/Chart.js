@@ -437,7 +437,7 @@ export function BarChart(props) {
     const secondNum = Math.abs(numTwo);
     tempArr.push(firstNum, secondNum);
 
-    return Math.max(...tempArr);
+    return Math.max(...tempArr) + 1;
   }
 
   const options = {
@@ -453,8 +453,8 @@ export function BarChart(props) {
     },
     scales: {
       x: {
-        min: -4,
-        max: 4,
+        min: -8,
+        max: 8,
         ticks: {
           display: false,
         },

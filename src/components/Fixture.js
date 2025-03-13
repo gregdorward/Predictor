@@ -328,6 +328,10 @@ function SingleFixture({ fixture, count, mock }) {
   }
 
   const handleGameStatsClick = () => {
+    if (!clicked) {
+      alert("Tap Get Predictions to fetch all game stats first");
+      return;
+    }
     //Set show GameStats to true and set local storage
     StoreData();
     setShowGameStats(!showGameStats); // Toggle the GameStats visibility

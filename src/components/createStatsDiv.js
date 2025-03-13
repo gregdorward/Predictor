@@ -25,8 +25,7 @@ function Stats(props) {
     return className;
   }
 
-  if (props.all === true) {
-    console.log(props.BTTSArray)
+  if (props.games === "all") {
     return (
       <Fragment>
         <ul className={props.className ? props.className : ""} style={props.style ? props.style : {}}>
@@ -243,13 +242,11 @@ function Stats(props) {
         <div id="h2hStats"></div>
       </Fragment>
     );
-  } else if (props.all === false) {
+  } else if (props.games === "hOrA") {
     return (
       <Fragment>
         <ul className={props.className ? props.className : ""} style={props.style ? props.style : {}}>
-          <li className="FormHeader">
-            {props.homeOrAway ? props.homeOrAway : "N/A"} form (most recent on right)
-          </li>
+        <li className="FormHeader">League results (most recent on right)</li>
           <li key={`last5${props.homeOrAwayResults ? props.homeOrAwayResults : "default"}`} className="FormHomeOrAway">
             <span className={styleForm(props.ResultsHorA && props.ResultsHorA[5] ? props.ResultsHorA[5] : "")}>
               {props.ResultsHorA && props.ResultsHorA[5] ? props.ResultsHorA[5] : ""}
@@ -270,10 +267,10 @@ function Stats(props) {
               {props.ResultsHorA && props.ResultsHorA[0] ? props.ResultsHorA[0] : ""}
             </span>
           </li>
+          <div className="AllStats">
           <div className="FormSummaries">
             <li className="StyleOfPlay">{`${props.homeOrAway ? props.homeOrAway : "N/A"} style - ${props.StyleOfPlayHomeOrAway ? props.StyleOfPlayHomeOrAway : "N/A"}`}</li>
           </div>
-          <div className="AllStats">
             <li
               key="TeamScored"
               className="TeamScored"
@@ -341,6 +338,106 @@ function Stats(props) {
               data-cy={props.name ? props.name + "WinPercentage" : "WinPercentage"}
             >
               {props.homeOrAway && props.winPercentage !== undefined && props.winPercentage !== "N/A" ? `${props.homeOrAway} PPG - ${props.winPercentage.toFixed(2)}` : "N/A"}
+            </li>
+            <li
+              key="CornersAverage"
+              className="CornersAverage"
+              data-cy={props.name ? props.name + "CornersAverage" : "CornersAverage"}
+            >
+              {`Corners average: ${props.CornersAverage !== undefined ? props.CornersAverage : "N/A"}`}
+            </li>
+          </div>
+        </ul>
+        <div id="h2hStats"></div>
+      </Fragment>
+    );
+  } else if (props.games === "last5") {
+    return (
+      <Fragment>
+        <ul className={props.className ? props.className : ""} style={props.style ? props.style : {}}>
+          <li className="FormHeader">
+            Last 5 games (All)
+          </li>
+          <li key={`last5League`} className="last5League">
+            <span className={styleForm(props.Results && props.Results[5] ? props.Results[4] : "")}>
+              {props.Results && props.Results[4] ? props.Results[4] : ""}
+            </span>
+            <span className={styleForm(props.Results && props.Results[3] ? props.Results[3] : "")}>
+              {props.Results && props.Results[3] ? props.Results[3] : ""}
+            </span>
+            <span className={styleForm(props.Results && props.Results[2] ? props.Results[2] : "")}>
+              {props.Results && props.Results[2] ? props.Results[2] : ""}
+            </span>
+            <span className={styleForm(props.Results && props.Results[1] ? props.Results[1] : "")}>
+              {props.Results && props.Results[1] ? props.Results[1] : ""}
+            </span>
+            <span className={styleForm(props.Results && props.Results[0] ? props.Results[0] : "")}>
+              {props.Results && props.Results[0] ? props.Results[0] : ""}
+            </span>
+          </li>
+          <div className="AllStats">
+            <li
+              key="TeamScored"
+              className="TeamScored"
+              data-cy={props.name ? props.name + "teamScored" : "teamScored"}
+            >
+              {`Avg goals scored - ${props.goals !== undefined ? props.goals : "N/A"}`}
+            </li>
+            <li
+              key="TeamConceeded"
+              className="TeamConceeded"
+              data-cy={props.name ? props.name + "teamConceded" : "teamConceded"}
+            >
+              {`Avg goals conceeded - ${props.conceeded !== undefined ? props.conceeded : "N/A"}`}
+            </li>
+            <li
+              key="TeamPossession"
+              className="TeamPossession"
+              data-cy={props.name ? props.name + "teamPossession" : "teamPossession"}
+            >
+              {`Avg possession - ${props.possession !== undefined ? props.possession : "N/A"}%`}
+            </li>
+            <li key="TeamXG" className="TeamXG" data-cy={props.name ? props.name + "teamXG" : "teamXG"}>
+              {`Avg XG - ${props.XG !== undefined ? props.XG : "N/A"}`}
+            </li>
+            <li
+              key="TeamXGConceded"
+              className="TeamXGConceded"
+              data-cy={props.name ? props.name + "teamXGConceded" : "teamXGConceded"}
+            >
+              {`Avg XG conceded - ${props.XGConceded !== undefined ? props.XGConceded : "N/A"}`}
+            </li>
+            <li
+              key="goalDifference"
+              className="goalDifference"
+              data-cy={props.name ? props.name + "goalDifference" : "goalDifference"}
+            >
+              {`Goal difference : `}
+              <span>{props.goalDifference !== undefined ? props.goalDifference : "N/A"}</span>
+            </li>
+            <li
+              key="AverageShots"
+              className="AverageShots"
+              data-cy={props.name ? props.name + "AverageShots" : "AverageShots"}
+            >
+              {`Avg shots - ${props.shots !== undefined ? props.shots : "N/A"}`}
+            </li>
+            <li
+              key="AverageSOT"
+              className="AverageSOT"
+              data-cy={props.name ? props.name + "averageSOT" : "averageSOT"}
+            >
+              {`Avg shots on target - ${props.sot !== undefined ? props.sot : "N/A"}`}
+            </li>
+            <li
+              key="DangerousAttacks"
+              className="DangerousAttacks"
+              data-cy={props.name ? props.name + "dangerousAttacks" : "dangerousAttacks"}
+            >
+              {`Avg dangerous attacks - ${props.dangerousAttacks !== undefined ? props.dangerousAttacks : "N/A"}`}
+            </li>
+            <li key="PPG" className="PPG" data-cy={props.name ? props.name + "PPG" : "PPG"}>
+              {`Last 5 PPG - ${props.ppg !== undefined ? props.ppg : "N/A"}`}
             </li>
             <li
               key="CornersAverage"

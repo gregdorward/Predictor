@@ -72,6 +72,8 @@ const MultiTypeChart = ({ dataArray, text }) => {
     scales: {
       y: {
         beginAtZero: true, // Start y-axis at 0
+        suggestedMin: -1.5,
+        suggestedMax: 1.5,
       },
     },
   };

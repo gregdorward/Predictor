@@ -970,6 +970,7 @@ export async function generateFixtures(
           teamPositionHomeTable = homeTeaminHomeLeague.position;
 
           WDLinLeagueHome = Array.from(homeTeaminLeague.wdl.toUpperCase());
+          console.log(WDLinLeagueHome)
           HomeAverageGoals =
             homeTeaminLeague.seasonGoals / homeTeaminLeague.played;
           HomeAverageConceded =
@@ -1168,6 +1169,7 @@ export async function generateFixtures(
             awayPrefix = "";
             awayPrefixAwayTable = "";
           }
+          console.log(WDLinLeagueHome)
           allForm.push({
             id: match.id,
             teamIDHome: match.homeId,
