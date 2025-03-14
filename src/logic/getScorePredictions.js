@@ -1940,7 +1940,7 @@ export async function generateGoals(homeForm, awayForm, match) {
     homeAttackVsAwayDefenceComparison * 2.5 +
     XGRatingHomeComparison * 0 +
     homeAttackVsAwayDefenceComparisonLast5 * 1.5 +
-    0.25 +
+    0.2 +
     homeAttackVsAwayDefenceComparisonHomeOnly * 0 +
     // weighedPointsComparisonHome * 0.005 +
     oddsComparisonHome * 0.025;
@@ -3709,24 +3709,24 @@ export async function calculateScore(match, index, divider, calculate) {
       rawFinalAwayGoals = 0.01;
     }
 
-    // if (
-    //   formHome.CleanSheetPercentage < 30 &&
-    //   formAway.CleanSheetPercentage < 30
-    // ) {
-    //   finalHomeGoals = Math.ceil(rawFinalHomeGoals);
-    //   finalAwayGoals = Math.ceil(rawFinalAwayGoals);
-    // } else {
-    //   finalHomeGoals = Math.floor(rawFinalHomeGoals);
-    //   finalAwayGoals = Math.floor(rawFinalAwayGoals);
-    // }
+    if (
+      formHome.CleanSheetPercentage < 30 &&
+      formAway.CleanSheetPercentage < 30
+    ) {
+      finalHomeGoals = Math.ceil(rawFinalHomeGoals);
+      finalAwayGoals = Math.ceil(rawFinalAwayGoals);
+    } else {
+      finalHomeGoals = Math.floor(rawFinalHomeGoals);
+      finalAwayGoals = Math.floor(rawFinalAwayGoals);
+    }
 
     // if(rawFinalHomeGoals > formHome.avgScored && rawFinalAwayGoals > formAway.avgScored){
     //   rawFinalHomeGoals -= Math.abs(-1)
     //   rawFinalAwayGoals -= Math.abs(-1)
     // }
 
-    finalHomeGoals = Math.floor(rawFinalHomeGoals);
-    finalAwayGoals = Math.floor(rawFinalAwayGoals);
+    // finalHomeGoals = Math.floor(rawFinalHomeGoals);
+    // finalAwayGoals = Math.floor(rawFinalAwayGoals);
 
     // finalHomeGoals = rawFinalHomeGoals;
     // finalAwayGoals = rawFinalAwayGoals;

@@ -970,7 +970,6 @@ export async function generateFixtures(
           teamPositionHomeTable = homeTeaminHomeLeague.position;
 
           WDLinLeagueHome = Array.from(homeTeaminLeague.wdl.toUpperCase());
-          console.log(WDLinLeagueHome)
           HomeAverageGoals =
             homeTeaminLeague.seasonGoals / homeTeaminLeague.played;
           HomeAverageConceded =
@@ -1169,7 +1168,6 @@ export async function generateFixtures(
             awayPrefix = "";
             awayPrefixAwayTable = "";
           }
-          console.log(WDLinLeagueHome)
           allForm.push({
             id: match.id,
             teamIDHome: match.homeId,
@@ -1722,7 +1720,7 @@ export async function generateFixtures(
               onClickEvent={() => getScorePrediction(day)}
               className={"GeneratePredictions"}
             />
-            <div className="Version">Prediction engine v1.3.2 (10/03/25)</div>
+            <div className="Version">Prediction engine v1.3.3 (14/03/25)</div>
             <Collapsable
               buttonText={"Filters"}
               element={
@@ -1732,7 +1730,7 @@ export async function generateFixtures(
                     the set criteria. These will be greyed out and not included
                     in multi-builders and ROI stats
                   </h6>
-                  <h6>Goals for/against differential filter (BETA)</h6>
+                  <h6>Goals for/against differential filter</h6>
                   <div>
                     I'm looking for tips where the goal differential between
                     teams is at least...
@@ -1745,7 +1743,7 @@ export async function generateFixtures(
                     upper="30"
                   ></SlideDiff>
                   <h6>
-                    Goals for/against home or away differential filter (BETA)
+                    Goals for/against home or away differential filter
                   </h6>
                   <div>
                     I'm looking for tips where the goal differential (home or
@@ -1759,7 +1757,7 @@ export async function generateFixtures(
                     upper="30"
                   ></SlideDiff>
                   <Fragment>
-                    <h6>XG for/against differential filter (BETA)</h6>
+                    <h6>XG for/against differential filter</h6>
                     <div>
                       I'm looking for tips where the XG differential between
                       teams is at least...
@@ -1773,7 +1771,7 @@ export async function generateFixtures(
                     ></SlideDiff>
                   </Fragment>
                   <Fragment>
-                    <h6>Last 6 points differential filter (BETA)</h6>
+                    <h6>Last 6 points differential filter</h6>
                     <div>
                       I'm looking for tips where the points differential between
                       teams is at least...

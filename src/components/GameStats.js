@@ -1790,7 +1790,6 @@ function GameStats({ game, displayBool }) {
       } catch (e) {
         console.log(e);
       } finally {
-        console.log("TRIGGERED")
         setIsLoading(false);
         setHasCompleteData(
           game.completeData === true &&
