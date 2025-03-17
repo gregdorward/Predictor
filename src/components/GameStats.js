@@ -25,6 +25,7 @@ import { allLeagueResultsArrayOfObjects } from "../logic/getFixtures";
 import { userDetail } from "../logic/authProvider";
 import { clicked, getPointsFromLastX } from "../logic/getScorePredictions";
 import { arrayOfGames } from "../logic/getFixtures";
+import GenerateFormSummary from "../logic/compareFormTrend";
 
 import { getTeamStats } from "../logic/getTeamStats";
 import { checkUserPaidStatus } from "../logic/hasUserPaid";
@@ -36,6 +37,7 @@ import {
   calculateDefensiveStrength,
   calculateMetricStrength,
 } from "../logic/getStats";
+import finalPropsSelectorFactory from "react-redux/es/connect/selectorFactory";
 
 // let id, team1, team2, timestamp, homeGoals, awayGoals;
 
@@ -80,6 +82,7 @@ function GameStats({ game, displayBool }) {
   //   const [formDataHome, setFormDataHome] = useState([]);
   //   const [formDataAway, setFormDataAway] = useState([]);
   const [matchingGame, setMatchingGame] = useState(null); // State for the game
+  const [formSummaries, setFormSummary] = useState([]);
   const [id, setId] = useState("0");
   const [team1, setTeam1] = useState("N/A");
   const [team2, setTeam2] = useState("N/A");
@@ -393,6 +396,9 @@ function GameStats({ game, displayBool }) {
   const resultAwayOnly = matches.fixtures.filter(
     (game) => game.away_name === gameStats.away.teamName
   );
+
+  // let formTextStringHome
+  // let formTextStringAway
 
   resultAway.sort((a, b) => b.date_unix - a.date_unix);
   resultAwayOnly.sort((a, b) => b.date_unix - a.date_unix);
@@ -965,7 +971,7 @@ function GameStats({ game, displayBool }) {
             ScoredBothHalvesPercentage={
               formDataHome[0].ScoredBothHalvesPercentage
             }
-            // FormTextString={formDataHome[0].FormTextStringHome}
+            FormTextString={formDataHome[0].FormTextStringHome}
             FavouriteRecord={formDataHome[0].FavouriteRecord}
             StyleOfPlay={formDataHome[0].styleOfPlayOverall}
             StyleOfPlayHomeOrAway={formDataHome[0].styleOfPlayHome}
@@ -1046,7 +1052,7 @@ function GameStats({ game, displayBool }) {
             ScoredBothHalvesPercentage={
               formDataAway[0].ScoredBothHalvesPercentage
             }
-            // FormTextString={formDataAway[0].FormTextStringAway}
+            FormTextString={formDataAway[0].FormTextStringAway}
             FavouriteRecord={formDataAway[0].FavouriteRecord}
             StyleOfPlay={formDataAway[0].styleOfPlayOverall}
             StyleOfPlayHomeOrAway={formDataAway[0].styleOfPlayAway}
@@ -1122,7 +1128,7 @@ function GameStats({ game, displayBool }) {
             Results={formDataHome[0].Results}
             ResultsHorA={formDataHome[0].ResultsHorA}
             CornersAverage={homeForm.last5Corners}
-            // FormTextString={formDataHome[0].FormTextStringHome}
+            FormTextString={formDataHome[0].FormTextStringHome}
           />
         </ul>
       </div>
@@ -1263,7 +1269,7 @@ function GameStats({ game, displayBool }) {
             ScoredBothHalvesPercentage={
               formDataHome[0].ScoredBothHalvesPercentage
             }
-            // FormTextString={formDataHome[0].FormTextStringHome}
+            FormTextString={formDataHome[0].FormTextStringHome}
             FavouriteRecord={formDataHome[0].FavouriteRecord}
             StyleOfPlay={formDataHome[0].styleOfPlayOverall}
             StyleOfPlayHomeOrAway={formDataHome[0].styleOfPlayHome}
@@ -1335,7 +1341,7 @@ function GameStats({ game, displayBool }) {
             ScoredBothHalvesPercentage={
               formDataAway[0].ScoredBothHalvesPercentage
             }
-            // FormTextString={formDataAway[0].FormTextStringAway}
+            FormTextString={formDataAway[0].FormTextStringAway}
             FavouriteRecord={formDataAway[0].FavouriteRecord}
             StyleOfPlay={formDataAway[0].styleOfPlayOverall}
             StyleOfPlayHomeOrAway={formDataAway[0].styleOfPlayAway}
@@ -1395,77 +1401,7 @@ function GameStats({ game, displayBool }) {
 
   const formDataHome = [];
 
-  formDataHome.push({
-    name: game.homeTeam,
-    Last5: gameStats.home[2].LastFiveForm,
-    LeagueOrAll: gameStats.home[2].LeagueOrAll,
-    AverageGoals: homeForm.ScoredOverall / 10,
-    AverageConceeded: homeForm.ConcededOverall / 10,
-    AverageXG: homeForm.XGOverall,
-    AverageXGConceded: homeForm.XGAgainstAvgOverall,
-    AveragePossession: homeForm.AveragePossessionOverall,
-    AverageShotsOnTarget: homeForm.AverageShotsOnTargetOverall,
-    AverageDangerousAttacks: homeForm.AverageDangerousAttacksOverall,
-    homeOrAway: "Home",
-    leaguePosition: homeForm.LeaguePosition,
-    Last5PPG: homeForm.PPG,
-    SeasonPPG: homeForm.SeasonPPG,
-    formRun: homeForm.formRun,
-    goalDifference: homeForm.goalDifference,
-    goalDifferenceHomeOrAway: homeForm.goalDifferenceHomeOrAway,
-    // BttsPercentage: homeForm.BttsPercentage || "-",
-    // BttsPercentageHomeOrAway: homeForm.BttsPercentageHomeOrAway || "-",
-    CardsTotal: homeForm.CardsTotal || "-",
-    CornersAverage: homeForm.AverageCorners || "-",
-    // FormTextStringHome: formTextStringHome,
-    // FavouriteRecord:
-    //   favouriteRecordHome + `. ${homeForm.reliabilityString}`,
-    BTTSArray: bttsArrayHome,
-    Results: homeForm.resultsAll,
-    ResultsHorA: homeForm.resultsHome,
-    XGSwing: homeForm.XGChangeRecently,
-    styleOfPlayOverall: homeForm.styleOfPlayOverall,
-    styleOfPlayHome: homeForm.styleOfPlayHome,
-    // BTTSAll: homeForm.last10btts,
-    // BTTSHorA: homeForm.last10bttsHome,
-  });
-
-  const formDataAway = [];
-
-  formDataAway.push({
-    name: game.awayTeam,
-    Last5: gameStats.away[2].LastFiveForm,
-    LeagueOrAll: gameStats.away[2].LeagueOrAll,
-    AverageGoals: awayForm.ScoredOverall / 10,
-    AverageConceeded: awayForm.ConcededOverall / 10,
-    AverageXG: awayForm.XGOverall,
-    AverageXGConceded: awayForm.XGAgainstAvgOverall,
-    AveragePossession: awayForm.AveragePossessionOverall,
-    AverageShotsOnTarget: awayForm.AverageShotsOnTargetOverall,
-    AverageDangerousAttacks: awayForm.AverageDangerousAttacksOverall,
-    homeOrAway: "Away",
-    leaguePosition: awayForm.LeaguePosition,
-    Last5PPG: awayForm.PPG,
-    SeasonPPG: awayForm.SeasonPPG,
-    formRun: awayForm.formRun,
-    goalDifference: awayForm.goalDifference,
-    goalDifferenceHomeOrAway: awayForm.goalDifferenceHomeOrAway,
-    // BttsPercentage: awayForm.BttsPercentage || "-",
-    // BttsPercentageHomeOrAway: awayForm.BttsPercentageHomeOrAway || "-",
-    CardsTotal: awayForm.CardsTotal || "-",
-    CornersAverage: awayForm.AverageCorners || "-",
-    // FormTextStringAway: formTextStringAway,
-    // FavouriteRecord:
-    //   favouriteRecordAway + `. ${awayForm.reliabilityString}`,
-    BTTSArray: bttsArrayAway,
-    Results: awayForm.resultsAll,
-    ResultsHorA: awayForm.resultsAway,
-    XGSwing: awayForm.XGChangeRecently,
-    styleOfPlayOverall: awayForm.styleOfPlayOverall,
-    styleOfPlayAway: awayForm.styleOfPlayAway,
-    // BTTSAll: awayForm.last10btts,
-    // BTTSHorA: awayForm.last10bttsAway,
-  });
+  
 
   function getPointsFromGames(formArr) {
     const pairings = {
@@ -1645,6 +1581,7 @@ function GameStats({ game, displayBool }) {
               : gameStats?.away[index]?.ConcededOverall / 10,
         };
 
+
         const attackH = await calculateAttackingStrength(attackingMetricsHome);
 
         setHomeAttackStrength(attackH);
@@ -1775,6 +1712,20 @@ function GameStats({ game, displayBool }) {
         awayForm.tenGameAv = awayTenGameAverage;
         awayForm.fiveGameAv = awayFiveGameAverage;
 
+        if(homeForm.fiveGameAv){
+          const formTextStringHome = await GenerateFormSummary(
+            homeForm,
+            homeForm.tenGameAv,
+            homeForm.fiveGameAv
+          );
+          const formTextStringAway = await GenerateFormSummary(
+            awayForm,
+            awayForm.tenGameAv,
+            awayForm.fiveGameAv
+          );
+          setFormSummary([formTextStringHome, formTextStringAway]);
+        }
+
         // const homeTeam = game.homeTeam;
         // const awayTeam = game.awayTeam;
         // console.log(homeForm);
@@ -1802,7 +1753,79 @@ function GameStats({ game, displayBool }) {
     if (!firstRenderDone) {
       fetchData();
     }
-  }); // Dependencies for the useCallback
+  }, [awayFiveGameAverage, firstRenderDone, awayTenGameAverage, game.completeData, game.id, game.status, homeFiveGameAverage, homeTenGameAverage]); // Dependencies for the useCallback
+
+  formDataHome.push({
+    name: game.homeTeam,
+    Last5: gameStats.home[2].LastFiveForm,
+    LeagueOrAll: gameStats.home[2].LeagueOrAll,
+    AverageGoals: homeForm.ScoredOverall / 10,
+    AverageConceeded: homeForm.ConcededOverall / 10,
+    AverageXG: homeForm.XGOverall,
+    AverageXGConceded: homeForm.XGAgainstAvgOverall,
+    AveragePossession: homeForm.AveragePossessionOverall,
+    AverageShotsOnTarget: homeForm.AverageShotsOnTargetOverall,
+    AverageDangerousAttacks: homeForm.AverageDangerousAttacksOverall,
+    homeOrAway: "Home",
+    leaguePosition: homeForm.LeaguePosition,
+    Last5PPG: homeForm.PPG,
+    SeasonPPG: homeForm.SeasonPPG,
+    formRun: homeForm.formRun,
+    goalDifference: homeForm.goalDifference,
+    goalDifferenceHomeOrAway: homeForm.goalDifferenceHomeOrAway,
+    // BttsPercentage: homeForm.BttsPercentage || "-",
+    // BttsPercentageHomeOrAway: homeForm.BttsPercentageHomeOrAway || "-",
+    CardsTotal: homeForm.CardsTotal || "-",
+    CornersAverage: homeForm.AverageCorners || "-",
+    FormTextStringHome: formSummaries[0],
+    // FavouriteRecord:
+    //   favouriteRecordHome + `. ${homeForm.reliabilityString}`,
+    BTTSArray: bttsArrayHome,
+    Results: homeForm.resultsAll,
+    ResultsHorA: homeForm.resultsHome,
+    XGSwing: homeForm.XGChangeRecently,
+    styleOfPlayOverall: homeForm.styleOfPlayOverall,
+    styleOfPlayHome: homeForm.styleOfPlayHome,
+    // BTTSAll: homeForm.last10btts,
+    // BTTSHorA: homeForm.last10bttsHome,
+  });
+
+  const formDataAway = [];
+
+  formDataAway.push({
+    name: game.awayTeam,
+    Last5: gameStats.away[2].LastFiveForm,
+    LeagueOrAll: gameStats.away[2].LeagueOrAll,
+    AverageGoals: awayForm.ScoredOverall / 10,
+    AverageConceeded: awayForm.ConcededOverall / 10,
+    AverageXG: awayForm.XGOverall,
+    AverageXGConceded: awayForm.XGAgainstAvgOverall,
+    AveragePossession: awayForm.AveragePossessionOverall,
+    AverageShotsOnTarget: awayForm.AverageShotsOnTargetOverall,
+    AverageDangerousAttacks: awayForm.AverageDangerousAttacksOverall,
+    homeOrAway: "Away",
+    leaguePosition: awayForm.LeaguePosition,
+    Last5PPG: awayForm.PPG,
+    SeasonPPG: awayForm.SeasonPPG,
+    formRun: awayForm.formRun,
+    goalDifference: awayForm.goalDifference,
+    goalDifferenceHomeOrAway: awayForm.goalDifferenceHomeOrAway,
+    // BttsPercentage: awayForm.BttsPercentage || "-",
+    // BttsPercentageHomeOrAway: awayForm.BttsPercentageHomeOrAway || "-",
+    CardsTotal: awayForm.CardsTotal || "-",
+    CornersAverage: awayForm.AverageCorners || "-",
+    FormTextStringAway: formSummaries[1],
+    // FavouriteRecord:
+    //   favouriteRecordAway + `. ${awayForm.reliabilityString}`,
+    BTTSArray: bttsArrayAway,
+    Results: awayForm.resultsAll,
+    ResultsHorA: awayForm.resultsAway,
+    XGSwing: awayForm.XGChangeRecently,
+    styleOfPlayOverall: awayForm.styleOfPlayOverall,
+    styleOfPlayAway: awayForm.styleOfPlayAway,
+    // BTTSAll: awayForm.last10btts,
+    // BTTSHorA: awayForm.last10bttsAway,
+  });
 
   // AI Insights Generation
 

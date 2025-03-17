@@ -99,7 +99,7 @@ function Stats(props) {
             </span>
           </li>
           <div className="FormSummaries">
-            {/* <li className="FormSummaryHome">{props.FormTextString ? props.FormTextString : "The below stats are only available to paying customers"}</li> */}
+            <li className="FormSummaryHome">{props.FormTextString ? props.FormTextString : "The below stats are only available to paying customers"}</li>
             <li className="StyleOfPlay">{`Style - ${props.StyleOfPlay ? props.StyleOfPlay : "N/A"}`}</li>
             <li className="StyleOfPlay">{`${props.homeOrAway ? props.homeOrAway : "N/A"} style - ${props.StyleOfPlayHomeOrAway ? props.StyleOfPlayHomeOrAway : "N/A"}`}</li>
             {/* <li className="FavouriteSummaryHome">{props.FavouriteRecord ? props.FavouriteRecord : "Graphs also only available to paying customers"}</li> */}

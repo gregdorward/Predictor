@@ -48,6 +48,7 @@ export let paid = false;
 const leagueOrder = [
   // 11084, //Euro 2024
   // 7432, //World Cup 22
+  13734, //Nations league 24/25
   12325, //premier league 22/23
   12451, //championship 22/23
   12446, //league 1 22/23
@@ -86,8 +87,8 @@ const leagueOrder = [
   14125, //Argentina prem 23
   12136, //Mexico prem 23/24
   12933, //National league North and South 22/23
-  // 13703, //Australian A league 23/24
-  14069, //S Korea 23
+  13703, //Australian A league 24/25
+  14069, //S Korea 25
 ];
 
 let today;
