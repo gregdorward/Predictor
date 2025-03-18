@@ -1841,12 +1841,6 @@ export async function generateGoals(homeForm, awayForm, match) {
   let adjustToAway = Math.round(awayForm.CleanSheetPercentage / 50) * -1;
   let finalScore = goalDifference + adjustToHome + adjustToAway
 
-  console.log(match.game)
-  console.log(adjustToHome)
-  console.log(adjustToAway)
-  console.log(finalScore)
-
-
   const homeAttackVsAwayDefenceComparison = await comparison(
     homeForm.attackingStrength,
     awayForm.defensiveStrengthScoreGeneration
