@@ -901,6 +901,8 @@ export async function generateFixtures(
         const milliseconds = unixTimestamp * 1000;
         const dateObject = new Date(milliseconds);
 
+        console.log(fixture)
+
         let match = {};
         if (orderedLeagues[i].name !== previousLeagueName) {
           match.leagueName = orderedLeagues[i].name;

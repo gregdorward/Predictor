@@ -641,6 +641,7 @@ function AppContent() {
           </Fragment>
         }
       />
+      <div id="shortlistRender" />
       <div id="successMeasure2" />
       <div id="highLowLeagues" className="HighLowLeagues" />
       <div id="risk" />

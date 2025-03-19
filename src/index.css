@@ -845,6 +845,40 @@ span.MembershipInfo {
   /* border: 0px; */
 }
 
+.ShortlistedGameDiv{
+  display: flex;
+  flex-basis: 90%;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* Base styles for the checkbox */
+.star {
+  appearance: none; /* Remove default checkbox */
+  font-size: 1.5em;
+  width: 1.5em;
+  height: 1em;
+  cursor: pointer;
+  border: none;
+  background: none;
+  text-align: center;
+  margin-bottom: 1.5em;
+}
+
+/* Default empty star */
+.star:before {
+  content: "\2606"; /* Unicode for empty star */
+  color: gray;
+  font-size: 1.5em;
+  display: inline-block;
+}
+
+/* Change to filled star when checked */
+.star:checked:before {
+  content: "\2605"; /* Unicode for filled star */
+  color: gold;
+}
+
 .pointsGapExplainer{
   color: #030061;
 }

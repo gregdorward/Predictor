@@ -12,6 +12,7 @@ import { clicked } from "../logic/getScorePredictions";
 import { userDetail } from "../logic/authProvider";
 import { checkUserPaidStatus } from "../logic/hasUserPaid";
 import GameStats from "./GameStats";
+import { Button } from "./Button";
 
 let resultValue;
 let paid;
@@ -200,7 +201,7 @@ function GetDivider(fixture, mock) {
   }
 }
 
-function renderLeagueName(fixture, mock) {
+function renderLeagueName(fixture, mock, showShortlist) {
   mockValue = mock;
 
   let name = fixture.leagueName;
@@ -208,7 +209,31 @@ function renderLeagueName(fixture, mock) {
     allLeagueResultsArrayOfObjects.length > 0
       ? allLeagueResultsArrayOfObjects[fixture.leagueIndex].id
       : null;
-  if (name === null || mock === true) {
+  if (showShortlist === true) {
+    return (
+      <div>
+        <div
+          className="leagueName"
+          id={`league${id}`}
+          key={`leagueName${id}div`}
+          onClick={() =>
+            renderTable(
+              fixture.leagueIndex,
+              allLeagueResultsArrayOfObjects[fixture.leagueIndex],
+              id
+            )
+          }
+        >
+          {fixture.leagueDesc} &#9776;
+        </div>
+        <div
+          className="LeagueTable"
+          key={`leagueName${id}`}
+          id={`leagueName${id}`}
+        ></div>
+      </div>
+    );
+  } else if (name === null || mock === true) {
     return <div></div>;
   } else {
     return (
@@ -242,9 +267,16 @@ const rightArrow = "\u{29C9}";
 
 export let testing;
 
-function SingleFixture({ fixture, count, mock }) {
+function SingleFixture({
+  fixture,
+  count,
+  mock,
+  checked,
+  onToggle,
+  showShortlist,
+}) {
   const dispatch = useDispatch();
-  const [showGameStats, setShowGameStats] = useState(false); // State to control GameStats visibility
+  const [showGameStats, setShowGameStats] = useState(false);
 
   function StoreData() {
     const fixtureDetails = {
@@ -261,70 +293,22 @@ function SingleFixture({ fixture, count, mock }) {
       awayGoals: fixture.goalsB,
     };
 
-    const homeDetails = {
-      "Attacking Strength": fixture.formHome.attackingStrength,
-      "Defensive Strength": fixture.formHome.defensiveStrength,
-    };
-
-    const awayDetails = {
-      "Attacking Strength": fixture.formAway.attackingStrength,
-      "Defensive Strength": fixture.formAway.defensiveStrength,
-    };
-
-    const dataToSend = {
-      key1: "value1",
-      key2: "value2",
-    };
-    fixture.formHome.defensiveMetrics["Clean Sheet Percentage"] =
-      fixture.formHome.CleanSheetPercentage;
-    fixture.formAway.defensiveMetrics["Clean Sheet Percentage"] =
-      fixture.formAway.CleanSheetPercentage;
-
-    localStorage.setItem(
-      "homeForm",
-      JSON.stringify(fixture.formHome.attackingMetrics)
-    );
-    localStorage.setItem(
-      "homeFormDef",
-      JSON.stringify(fixture.formHome.defensiveMetrics)
-    );
-    localStorage.setItem(
-      "allTeamResultsHome",
-      JSON.stringify(fixture.formHome.allTeamResults)
-    );
-    localStorage.setItem("homeDetails", JSON.stringify(homeDetails));
-
-    localStorage.setItem(
-      "awayForm",
-      JSON.stringify(fixture.formAway.attackingMetrics)
-    );
-    localStorage.setItem(
-      "awayFormDef",
-      JSON.stringify(fixture.formAway.defensiveMetrics)
-    );
-    localStorage.setItem(
-      "allTeamResultsAway",
-      JSON.stringify(fixture.formAway.allTeamResults)
-    );
-    localStorage.setItem("awayDetails", JSON.stringify(awayDetails));
-
     localStorage.setItem("fixtureDetails", JSON.stringify(fixtureDetails));
-
-    dispatch(setData(dataToSend));
+    dispatch(setData({ key1: "value1", key2: "value2" }));
   }
 
-  async function handleButtonClick(game) {
-    if(userDetail){
+  async function handleButtonClick() {
+    if (userDetail) {
       paid = await checkUserPaidStatus(userDetail.uid);
       if (clicked === true && paid) {
-        StoreData(formObjectHome);
+        StoreData();
         window.open("/#/fixture");
       } else {
         alert("Premium feature only");
-        return;
       }
-    } else paid = false;
-    
+    } else {
+      paid = false;
+    }
   }
 
   const handleGameStatsClick = () => {
@@ -332,19 +316,20 @@ function SingleFixture({ fixture, count, mock }) {
       alert("Tap Get Predictions to fetch all game stats first");
       return;
     }
-    //Set show GameStats to true and set local storage
     StoreData();
-    setShowGameStats(!showGameStats); // Toggle the GameStats visibility
+    setShowGameStats(!showGameStats);
   };
 
   return (
     <div key={fixture.game}>
-      {renderLeagueName(fixture, mock)}
+      {renderLeagueName(fixture, mock, showShortlist)}
       <div className={`individualFixtureContainer${fixture.omit}`}>
         <li
           className={`individualFixture${fixture.omit}`}
           key={fixture.id}
           data-cy={fixture.id}
+          onClick={onToggle} // Toggle checked state on click
+          style={{ display: checked ? "lightblue" : "white" }} // Change background when checked
         >
           <div className="HomeOdds">{fixture.fractionHome}</div>
           <div className="homeTeam">{fixture.homeTeam}</div>
@@ -353,7 +338,6 @@ function SingleFixture({ fixture, count, mock }) {
             status={fixture.status}
             fixture={fixture}
           />
-          {/* <div className="divider">{"V"}</div> */}
           <div className="awayTeam">{fixture.awayTeam}</div>
           <CreateBadge
             image={fixture.homeBadge}
@@ -368,48 +352,77 @@ function SingleFixture({ fixture, count, mock }) {
           />
           <div className="AwayOdds">{fixture.fractionAway}</div>
         </li>
-        <button
-          className="GameStats"
-          onClick={handleGameStatsClick} // Update onClick
-          onMouseDown={() => (count = toggle(count))}
-        >
+        <button className="GameStats" onClick={handleGameStatsClick}>
           Game overview {downArrow}
         </button>
-        <button
-          className="GameStatsTwo"
-          onClick={() => handleButtonClick(fixture)}
-        >
+        <input
+          type="checkbox"
+          checked={checked}
+          onChange={onToggle}
+          className="star"
+          id={`shortlist-${fixture.id}`} // Unique ID for label association
+        />
+        <button className="GameStatsTwo" onClick={handleButtonClick}>
           More detail {rightArrow}
         </button>
-        {/* <Checkbox/> */}
+        {/* Checkbox for toggling */}
       </div>
-      {showGameStats && (
-        <GameStats
-          game={fixture}
-          displayBool={true}
-        />
-      )}{" "}
-      <div id={"stats" + fixture.homeTeam} />
-      <div className="MatchHistory" id={"history" + fixture.homeTeam} />
+      {showGameStats && <GameStats game={fixture} displayBool={true} />}
     </div>
   );
 }
 
-const List = ({ fixtures, mock }) => (
-  <div>
-    <div id="Headers"></div>
-    <ul className="FixtureList" id="FixtureList">
-      {fixtures.map((fixture, i) => (
-        <SingleFixture
-          fixture={fixture}
-          key={fixture.game}
-          count={count}
-          mock={mock}
-        />
-      ))}
-    </ul>
-  </div>
-);
+const List = ({ fixtures, mock }) => {
+  // State to track selected fixtures
+  const [selectedFixtures, setSelectedFixtures] = useState([]);
+  const [showShortlist, setShowShortlist] = useState(false); // Toggle between full list and shortlist
+
+  const handleToggle = (fixture) => {
+    setSelectedFixtures((prev) => {
+      const index = prev.findIndex((f) => f.id === fixture.id);
+      if (index !== -1) {
+        // Remove fixture if already selected
+        return prev.filter((_, i) => i !== index);
+      } else {
+        // Add fixture to the end of the array
+        return [...prev, fixture];
+      }
+    });
+  };
+
+  // Convert array into an indexed object
+  const shortlist = Object.fromEntries(
+    selectedFixtures.map((fixture, i) => [i, fixture])
+  );
+
+  return (
+    <>
+      <ShortlistButton
+        toggleShortlist={() => setShowShortlist(!showShortlist)}
+      />
+      <div>
+        <div id="Headers"></div>
+        <ul className="FixtureList" id="FixtureList">
+          {(showShortlist ? selectedFixtures : fixtures).map((fixture) => (
+            <SingleFixture
+              shortlist={shortlist}
+              showShortlist={showShortlist}
+              fixture={fixture}
+              key={fixture.id}
+              mock={mock}
+              checked={selectedFixtures.some((f) => f.id === fixture.id)}
+              onToggle={() => handleToggle(fixture)}
+            />
+          ))}
+        </ul>
+      </div>
+    </>
+  );
+};
+
+function ShortlistButton({ toggleShortlist }) {
+  return <button onClick={toggleShortlist}>Toggle Shortlist &#9733; </button>;
+}
 
 export function Fixture(props) {
   [count, setCount] = useState(false);
