@@ -881,6 +881,11 @@ span.MembershipInfo {
   padding-bottom: 0.5em;
   font-size: 1.1em;
 }
+
+strong {
+  font-weight: bold !important;
+}
+
 /* Base styles for the checkbox */
 .star {
   appearance: none; /* Remove default checkbox */

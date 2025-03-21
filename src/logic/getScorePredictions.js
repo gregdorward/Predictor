@@ -158,7 +158,13 @@ async function fetchUserTips() {
           game,
           tipString,
           count,
-          formatted: `${game} - ${tipString} - ${count} tip(s)`,
+          formatted: (
+            <>
+              {tipString} <br />
+              {game} <br />
+              Tips - {count}
+            </>
+          ),
         }))
     );
 
@@ -187,7 +193,7 @@ function UserTips() {
       <button onClick={fetchAndSetUserTips}>Get User Tips</button>
       <h4>Most Tipped Games by XGTipping Users</h4>
       <ul className="UserTipsList">
-        {tips.length > 0 ? (
+      {tips.length > 0 ? (
           tips.map((game, index) => (
             <li key={index} className="UserTipsListItems">
               {game.formatted}
