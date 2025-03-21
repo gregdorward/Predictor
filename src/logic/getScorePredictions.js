@@ -194,7 +194,7 @@ function UserTips() {
             </li>
           ))
         ) : (
-          <p></p>
+          <p>How do your tips line up?</p>
         )}
       </ul>
     </div>
