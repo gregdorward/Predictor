@@ -38,7 +38,9 @@ import {
   calculateMetricStrength,
 } from "../logic/getStats";
 import finalPropsSelectorFactory from "react-redux/es/connect/selectorFactory";
-
+import { dynamicDate } from "../logic/getFixtures";
+export let userTips;
+let setUserTips;
 // let id, team1, team2, timestamp, homeGoals, awayGoals;
 
 function GameStats({ game, displayBool }) {
@@ -55,6 +57,15 @@ function GameStats({ game, displayBool }) {
   let style = styling(displayBool);
 
   // State Variables
+  [userTips, setUserTips] = useState(() => {
+    const savedTips = localStorage.getItem("userTips");
+    return savedTips ? JSON.parse(savedTips) : [];
+  });
+  // Save to localStorage whenever userTips changes
+  useEffect(() => {
+    localStorage.setItem("userTips", JSON.stringify(userTips));
+  }, [userTips]);
+
   const [isLoading, setIsLoading] = useState(false);
   const [aiMatchPreview, setAiMatchPreview] = useState(null);
   const [paid, setPaid] = useState(false);
@@ -64,7 +75,6 @@ function GameStats({ game, displayBool }) {
   let gameStats = allForm.find((match) => match.id === game.id);
   const homeForm = gameStats?.home[2];
   const awayForm = gameStats?.away[2];
-
 
   //   const [id, setId] = useState("0");
   //   const [team1, setTeam1] = useState("N/A");
@@ -460,7 +470,7 @@ function GameStats({ game, displayBool }) {
       default:
         break;
     }
-    
+
     gameArrayHome.push({
       id: resultHome[i].id,
       date: dateObject,
@@ -775,6 +785,11 @@ function GameStats({ game, displayBool }) {
     }
   }
 
+  function isBeforeTimestamp(targetTimestamp) {
+    const currentTimestamp = Math.floor(Date.now() / 1000); // Get current time in seconds
+    return currentTimestamp < targetTimestamp;
+  }
+
   async function getRefStats(refId, compId) {
     try {
       const response = await fetch(
@@ -827,16 +842,16 @@ function GameStats({ game, displayBool }) {
 
   useEffect(() => {
     async function fetchMatchingGame() {
-    try {
-    const gameInfo = await getGameIdByHomeTeam(arrayOfGames, game.homeTeam);
-    setMatchingGame(gameInfo);
-    } catch (error) {
-    console.error("Error fetching game info:", error);
+      try {
+        const gameInfo = await getGameIdByHomeTeam(arrayOfGames, game.homeTeam);
+        setMatchingGame(gameInfo);
+      } catch (error) {
+        console.error("Error fetching game info:", error);
+      }
     }
-    }
-    
+
     fetchMatchingGame();
-    }, [game.homeTeam]);
+  }, [game.homeTeam]);
 
   useEffect(() => {
     if (matchingGame) {
@@ -1351,6 +1366,32 @@ function GameStats({ game, displayBool }) {
     );
   }
 
+  function handleSetUserTips(gameId, game, tipString, tip, date, uid) {
+    setUserTips((prevTips) => {
+      // Check if the tip for this gameId already exists
+      const existingTipIndex = prevTips.findIndex(
+        (tip) => tip.gameId === gameId
+      );
+
+      if (existingTipIndex !== -1) {
+        // If the tip already exists, update it
+        const updatedTips = [...prevTips];
+        updatedTips[existingTipIndex] = {
+          gameId,
+          game,
+          tipString,
+          tip,
+          date,
+          uid,
+        };
+        return updatedTips; // Return the updated list
+      } else {
+        // If the tip doesn't exist, add a new one
+        return [...prevTips, { gameId, game, tipString, tip, date, uid }];
+      }
+    });
+  }
+
   gameArrayHome.sort((a, b) => b.unixTimestamp - a.unixTimestamp);
   gameArrayAway.sort((a, b) => b.unixTimestamp - a.unixTimestamp);
 
@@ -1400,8 +1441,6 @@ function GameStats({ game, displayBool }) {
   });
 
   const formDataHome = [];
-
-  
 
   function getPointsFromGames(formArr) {
     const pairings = {
@@ -1475,7 +1514,6 @@ function GameStats({ game, displayBool }) {
   useEffect(() => {
     // useEffect to fetch and process game data based on props
     async function fetchData() {
-      
       if (game.status === "void") return; // Exit if game is void
 
       if (!allForm || !allLeagueResultsArrayOfObjects) {
@@ -1580,7 +1618,6 @@ function GameStats({ game, displayBool }) {
               ? gameStats?.away[index]?.averageConceededLeague
               : gameStats?.away[index]?.ConcededOverall / 10,
         };
-
 
         const attackH = await calculateAttackingStrength(attackingMetricsHome);
 
@@ -1712,7 +1749,7 @@ function GameStats({ game, displayBool }) {
         awayForm.tenGameAv = awayTenGameAverage;
         awayForm.fiveGameAv = awayFiveGameAverage;
 
-        if(homeForm.fiveGameAv){
+        if (homeForm.fiveGameAv) {
           const formTextStringHome = await GenerateFormSummary(
             homeForm,
             homeForm.tenGameAv,
@@ -1753,7 +1790,16 @@ function GameStats({ game, displayBool }) {
     if (!firstRenderDone) {
       fetchData();
     }
-  }, [awayFiveGameAverage, firstRenderDone, awayTenGameAverage, game.completeData, game.id, game.status, homeFiveGameAverage, homeTenGameAverage]); // Dependencies for the useCallback
+  }, [
+    awayFiveGameAverage,
+    firstRenderDone,
+    awayTenGameAverage,
+    game.completeData,
+    game.id,
+    game.status,
+    homeFiveGameAverage,
+    homeTenGameAverage,
+  ]); // Dependencies for the useCallback
 
   formDataHome.push({
     name: game.homeTeam,
@@ -1955,9 +2001,100 @@ function GameStats({ game, displayBool }) {
     ];
     chartType = "Rolling average points over last 10";
   }
+  console.log(game);
 
+  const UserTips = ({
+    game,
+    handleSetUserTips,
+    userDetail,
+    selectedTip,
+    handleTipSelect,
+  }) => {
+    const handleClick = (tipType, label) => {
+      if (selectedTip === tipType) {
+        return; // If the button clicked is already selected, do nothing
+      }
+
+      handleTipSelect(tipType); // Update parent state
+      handleSetUserTips(
+        game.id,
+        game.game,
+        label,
+        tipType,
+        game.date,
+        userDetail.uid
+      );
+    };
+
+    return (
+      <div className="UserTips">
+        <button
+          id="TipButtonHome"
+          className="TipButton"
+          style={{
+            backgroundColor: selectedTip === "homeTeam" ? "#fe8c00" : "white",
+            color: selectedTip === "homeTeam" ? "white" : "#030052",
+            border: `1px solid ${
+              selectedTip === "homeTeam" ? "#fe8c00" : "#030052"
+            }`,
+          }}
+          onClick={() => handleClick("homeTeam", `${game.homeTeam} to win`)}
+        >
+          Home
+        </button>
+
+        <button
+          id="TipButtonDraw"
+          className="TipButton"
+          style={{
+            backgroundColor: selectedTip === "draw" ? "#fe8c00" : "white",
+            color: selectedTip === "draw" ? "white" : "#030052",
+            border: `1px solid ${
+              selectedTip === "draw" ? "#fe8c00" : "#030052"
+            }`,
+          }}
+          onClick={() => handleClick("draw", "Draw")}
+        >
+          Draw
+        </button>
+
+        <button
+          id="TipButtonAway"
+          className="TipButton"
+          style={{
+            backgroundColor: selectedTip === "awayTeam" ? "#fe8c00" : "white",
+            color: selectedTip === "awayTeam" ? "white" : "#030052",
+            border: `1px solid ${
+              selectedTip === "awayTeam" ? "#fe8c00" : "#030052"
+            }`,
+          }}
+          onClick={() => handleClick("awayTeam", `${game.awayTeam} to win`)}
+        >
+          Away
+        </button>
+      </div>
+    );
+  };
+
+  const [selectedTip, setSelectedTip] = useState(null);
+
+  const handleTipSelect = (tipType) => {
+    setSelectedTip(tipType);
+  };
   return (
     <>
+      {isBeforeTimestamp(game.date) && (
+        <>
+          <h2>Your Prediction</h2>
+          <UserTips
+            game={game}
+            handleSetUserTips={handleSetUserTips}
+            userDetail={userDetail}
+            selectedTip={selectedTip} // Pass selectedTip down
+            handleTipSelect={handleTipSelect} // Pass handler down
+          />
+        </>
+      )}
       <div style={style}>
         <Collapsable
           buttonText={"Lineups & match action"}

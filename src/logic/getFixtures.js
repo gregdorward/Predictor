@@ -462,6 +462,8 @@ myHeaders.append("Origin", "https://gregdorward.github.io");
 
 let isFunctionRunning = false;
 
+export let dynamicDate;
+
 export async function generateFixtures(
   day,
   date,
@@ -488,6 +490,8 @@ export async function generateFixtures(
       </div>,
       document.getElementById("Loading")
     );
+
+    dynamicDate = todaysDate
 
     //cleanup if different day is selected
     ReactDOM.render(
@@ -900,8 +904,6 @@ export async function generateFixtures(
         const unixTimestamp = fixture.date_unix;
         const milliseconds = unixTimestamp * 1000;
         const dateObject = new Date(milliseconds);
-
-        console.log(fixture)
 
         let match = {};
         if (orderedLeagues[i].name !== previousLeagueName) {
@@ -1804,6 +1806,7 @@ export async function generateFixtures(
 
       // }
     }
+
 
     ReactDOM.render(
       <div>

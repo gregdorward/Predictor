@@ -24,6 +24,7 @@ import {
 } from "../components/SliderDiff";
 import { checkUserPaidStatus } from "../logic/hasUserPaid";
 import { userDetail } from "../logic/authProvider";
+import { dynamicDate } from "./getFixtures";
 
 var myHeaders = new Headers();
 myHeaders.append("Origin", "https://gregdorward.github.io");
@@ -73,6 +74,7 @@ let totalProfit = 0;
 let totalAIROI = 0;
 let totalAIInvestment = 0;
 let totalAIProfit = 0;
+let userTipList;
 export let formObjectHome;
 export let formObjectAway;
 export let clicked = false;
@@ -117,6 +119,58 @@ export function getPointsFromLastX(lastX) {
     return "N/A";
   }
 }
+function isBeforeTimestamp(targetTimestamp) {
+  const currentTimestamp = Math.floor(Date.now() / 1000); // Get current time in seconds
+  return currentTimestamp < targetTimestamp;
+}
+
+async function fetchUserTips() {
+  try {
+    const userGeneratedTips = await fetch(`${process.env.REACT_APP_EXPRESS_SERVER}tips`);
+    const tips = await userGeneratedTips.json();
+
+    const tipCounts = {};
+
+    // Process the tips
+    Object.values(tips).forEach(userTips => {
+      userTips.forEach(({ gameId, game, tip, tipString, date }) => {
+        if(isBeforeTimestamp(date))
+        {
+          if (!tipCounts[gameId]) {
+            tipCounts[gameId] = { game, tips: {} };
+          }
+  
+          if (!tipCounts[gameId].tips[tipString]) {
+            tipCounts[gameId].tips[tipString] = 0;
+          }
+  
+          // Increment the respective tip count
+          tipCounts[gameId].tips[tipString] += 1;
+        }
+      });
+    });
+
+    // Convert the object to an array and format output
+    const formattedTips = Object.entries(tipCounts).flatMap(([gameId, { game, tips }]) =>
+      Object.entries(tips).map(([tipString, count]) => ({
+        game,
+        tipString,
+        count,
+        formatted: `${game} - ${tipString} - ${count} tip(s)`,
+      }))
+    );
+
+    // Sort by count in descending order
+    formattedTips.sort((a, b) => b.count - a.count);
+
+    return formattedTips.slice(0,10); // ✅ Sorted list with game name, tipString, and count
+  } catch (error) {
+    console.error("Error fetching user tips:", error);
+    return null;
+  }
+}
+
+
 
 async function getPastLeagueResults(team, game, hOrA, form) {
   form.completeData = true;
@@ -1927,6 +1981,7 @@ export async function generateGoals(homeForm, awayForm, match) {
     awayForm.pointsWeighted,
     awayForm.points
   );
+
 
   homeGoals =
     homeGoals +
@@ -4824,6 +4879,10 @@ export async function getScorePrediction(day, mocked) {
 }
 
 async function getMultis() {
+
+  userTipList = await fetchUserTips()
+  console.log(userTipList)
+
   allTipsSorted = allTips.sort(function (a, b) {
     return b.goalDifferential - a.goalDifferential;
   });
@@ -5342,6 +5401,27 @@ async function renderTips() {
       )}
     </div>,
     document.getElementById("insights")
+  );
+
+  ReactDOM.render(
+    <div>
+      <Fragment>
+        <Collapsable
+          buttonText={"User Tips"}
+          element={
+            <ul className="UserTipsList" id="UserTipsList">
+              <h4>Most Tipped Games by Users</h4>
+              {userTipList.map((game) => (
+                <li key={game.game} className="UserTipsListItems">
+                  {game.formatted}
+                </li>
+              ))}
+            </ul>
+          }
+        />
+      </Fragment>
+    </div>,
+    document.getElementById("UserGeneratedTips")
   );
 
   ReactDOM.render(

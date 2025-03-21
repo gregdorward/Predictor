@@ -12,7 +12,8 @@ import { clicked } from "../logic/getScorePredictions";
 import { userDetail } from "../logic/authProvider";
 import { checkUserPaidStatus } from "../logic/hasUserPaid";
 import GameStats from "./GameStats";
-import { Button } from "./Button";
+import { userTips } from "./GameStats";
+import { dynamicDate } from "../logic/getFixtures";
 
 let resultValue;
 let paid;
@@ -328,7 +329,7 @@ function SingleFixture({
           className={`individualFixture${fixture.omit}`}
           key={fixture.id}
           data-cy={fixture.id}
-          onClick={onToggle} // Toggle checked state on click
+          // onClick={onToggle} // Toggle checked state on click
           style={{ display: checked ? "lightblue" : "white" }} // Change background when checked
         >
           <div className="HomeOdds">{fixture.fractionHome}</div>
@@ -372,12 +373,31 @@ function SingleFixture({
   );
 }
 
+async function submitTips() {
+  if (userDetail?.uid && userTips) {
+    await fetch(`${process.env.REACT_APP_EXPRESS_SERVER}tips`, {
+      method: "POST",
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(userTips),
+    });
+  } else {
+    return;
+  }
+
+  localStorage.removeItem("userTips");
+  userTips.length = 0;
+}
+
 const List = ({ fixtures, mock }) => {
   // State to track selected fixtures
   const [selectedFixtures, setSelectedFixtures] = useState([]);
   const [showShortlist, setShowShortlist] = useState(false); // Toggle between full list and shortlist
 
   const handleToggle = (fixture) => {
+
     setSelectedFixtures((prev) => {
       const index = prev.findIndex((f) => f.id === fixture.id);
       if (index !== -1) {
@@ -400,6 +420,7 @@ const List = ({ fixtures, mock }) => {
       <ShortlistButton
         toggleShortlist={() => setShowShortlist(!showShortlist)}
       />
+      <SubmitTipsButton submit={() => submitTips()} />
       <div>
         <div id="Headers"></div>
         <ul className="FixtureList" id="FixtureList">
@@ -422,6 +443,19 @@ const List = ({ fixtures, mock }) => {
 
 function ShortlistButton({ toggleShortlist }) {
   return <button onClick={toggleShortlist}>Toggle Shortlist &#9733; </button>;
+}
+
+function SubmitTipsButton({ submit }) {
+  return (
+    <button
+      onClick={submit}
+      style={{
+        border: "1px solid #fe8c00",
+      }}
+    >
+      Submit My Tips
+    </button>
+  );
 }
 
 export function Fixture(props) {

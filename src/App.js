@@ -97,7 +97,7 @@ let todaySS;
 let tomorrow;
 let tomorrowFootyStats;
 let tomorrowSS;
-let date;
+export let date;
 let dateSS;
 let dateFootyStats;
 let yesterday;
@@ -636,8 +636,9 @@ function AppContent() {
               <div id="longShots" className="RowOne" />
               <div id="draws" className="RowOne" />
             </div>
-
             <div id="insights" />
+            <div id="UserGeneratedTips"/>
+
           </Fragment>
         }
       />
