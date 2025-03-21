@@ -5409,14 +5409,13 @@ async function renderTips() {
         <Collapsable
           buttonText={"User Tips"}
           element={
-            <ul className="UserTipsList" id="UserTipsList">
-              <h4>Most Tipped Games by Users</h4>
+            <><h4>Most Tipped Games by Users</h4><ul className="UserTipsList" id="UserTipsList">
               {userTipList.map((game) => (
                 <li key={game.game} className="UserTipsListItems">
                   {game.formatted}
                 </li>
               ))}
-            </ul>
+            </ul></>
           }
         />
       </Fragment>

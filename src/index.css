@@ -869,10 +869,17 @@ span.MembershipInfo {
   border: #030052 1px solid
   /* line-height: 1em; */
 }
+.UserTipsList{
+  padding: 1em;
+  border: #030061 1px dashed;
+  margin: 0.5em;
+  background-color: white;
+}
 
 .UserTipsListItems{
   padding-top: 0.5em;
   padding-bottom: 0.5em;
+  font-size: 1.1em;
 }
 /* Base styles for the checkbox */
 .star {

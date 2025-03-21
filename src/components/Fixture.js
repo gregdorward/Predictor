@@ -383,6 +383,7 @@ async function submitTips() {
       },
       body: JSON.stringify(userTips),
     });
+    alert('Tips submitted. You may need to refresh your page to see them appear the list')
   } else {
     return;
   }
