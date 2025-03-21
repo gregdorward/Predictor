@@ -184,8 +184,8 @@ function UserTips() {
 
   return (
     <div>
-      <button onClick={fetchAndSetUserTips}>User Tips</button>
-      <h4>Most Tipped Games by Users</h4>
+      <button onClick={fetchAndSetUserTips}>Get User Tips</button>
+      <h4>Most Tipped Games by XGTipping Users</h4>
       <ul className="UserTipsList">
         {tips.length > 0 ? (
           tips.map((game, index) => (
@@ -194,7 +194,7 @@ function UserTips() {
             </li>
           ))
         ) : (
-          <p>No tips available</p>
+          <p></p>
         )}
       </ul>
     </div>
