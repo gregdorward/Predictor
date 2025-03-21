@@ -1,4 +1,4 @@
-import React, { Fragment } from "react";
+import React, { Fragment, useState } from "react";
 import ReactDOM from "react-dom";
 import { matches, diff } from "./getFixtures";
 import { RenderAllFixtures } from "../logic/getFixtures";
@@ -126,24 +126,25 @@ function isBeforeTimestamp(targetTimestamp) {
 
 async function fetchUserTips() {
   try {
-    const userGeneratedTips = await fetch(`${process.env.REACT_APP_EXPRESS_SERVER}tips`);
+    const userGeneratedTips = await fetch(
+      `${process.env.REACT_APP_EXPRESS_SERVER}tips`
+    );
     const tips = await userGeneratedTips.json();
 
     const tipCounts = {};
 
     // Process the tips
-    Object.values(tips).forEach(userTips => {
+    Object.values(tips).forEach((userTips) => {
       userTips.forEach(({ gameId, game, tip, tipString, date }) => {
-        if(isBeforeTimestamp(date))
-        {
+        if (isBeforeTimestamp(date)) {
           if (!tipCounts[gameId]) {
             tipCounts[gameId] = { game, tips: {} };
           }
-  
+
           if (!tipCounts[gameId].tips[tipString]) {
             tipCounts[gameId].tips[tipString] = 0;
           }
-  
+
           // Increment the respective tip count
           tipCounts[gameId].tips[tipString] += 1;
         }
@@ -151,26 +152,54 @@ async function fetchUserTips() {
     });
 
     // Convert the object to an array and format output
-    const formattedTips = Object.entries(tipCounts).flatMap(([gameId, { game, tips }]) =>
-      Object.entries(tips).map(([tipString, count]) => ({
-        game,
-        tipString,
-        count,
-        formatted: `${game} - ${tipString} - ${count} tip(s)`,
-      }))
+    const formattedTips = Object.entries(tipCounts).flatMap(
+      ([gameId, { game, tips }]) =>
+        Object.entries(tips).map(([tipString, count]) => ({
+          game,
+          tipString,
+          count,
+          formatted: `${game} - ${tipString} - ${count} tip(s)`,
+        }))
     );
 
     // Sort by count in descending order
     formattedTips.sort((a, b) => b.count - a.count);
 
-    return formattedTips.slice(0,10); // ✅ Sorted list with game name, tipString, and count
+    return formattedTips.slice(0, 10); // ✅ Sorted list with game name, tipString, and count
   } catch (error) {
     console.error("Error fetching user tips:", error);
     return null;
   }
 }
 
+function UserTips() {
+  const [tips, setTips] = useState([]);
 
+  const fetchAndSetUserTips = async () => {
+    const fetchedTips = await fetchUserTips();
+    if (fetchedTips) {
+      setTips(fetchedTips);
+    }
+  };
+
+  return (
+    <div>
+      <button onClick={fetchAndSetUserTips}>User Tips</button>
+      <h4>Most Tipped Games by Users</h4>
+      <ul className="UserTipsList">
+        {tips.length > 0 ? (
+          tips.map((game, index) => (
+            <li key={index} className="UserTipsListItems">
+              {game.formatted}
+            </li>
+          ))
+        ) : (
+          <p>No tips available</p>
+        )}
+      </ul>
+    </div>
+  );
+}
 
 async function getPastLeagueResults(team, game, hOrA, form) {
   form.completeData = true;
@@ -263,8 +292,7 @@ async function getPastLeagueResults(team, game, hOrA, form) {
             : resultedGame.team_a_possession,
         scored: resultedGame.homeGoalCount,
         conceeded: resultedGame.awayGoalCount,
-        shots:
-          resultedGame.team_a_shots <= 0 ? 12 : resultedGame.team_a_shots,
+        shots: resultedGame.team_a_shots <= 0 ? 12 : resultedGame.team_a_shots,
         sot:
           resultedGame.team_a_shotsOnTarget <= 0
             ? 5
@@ -393,18 +421,17 @@ async function getPastLeagueResults(team, game, hOrA, form) {
             : resultedGame.team_b_possession,
         scored: resultedGame.awayGoalCount,
         conceeded: resultedGame.homeGoalCount,
-        shots:
-          resultedGame.team_b_shots <= 0 ? 12 : resultedGame.team_b_shots,
+        shots: resultedGame.team_b_shots <= 0 ? 12 : resultedGame.team_b_shots,
         sot:
           resultedGame.team_b_shotsOnTarget <= 0
             ? 5
             : resultedGame.team_b_shotsOnTarget,
         sotAgainst:
-          resultedGame.team_a_shotsOnTarget <=0
+          resultedGame.team_a_shotsOnTarget <= 0
             ? 5
             : resultedGame.team_a_shotsOnTarget,
         dangerousAttacks:
-          resultedGame.team_b_dangerous_attacks <=0
+          resultedGame.team_b_dangerous_attacks <= 0
             ? 50
             : resultedGame.team_b_dangerous_attacks,
         corners:
@@ -851,8 +878,8 @@ async function getPastLeagueResults(team, game, hOrA, form) {
 
     const shortTermXGDiff = form.avXGLast5 - form.avXGAgainstLast5;
     const longTermXGDiff = avgXGScored - avgXGConceeded;
-    form.shortTermXGDiff = shortTermXGDiff.toFixed(2)
-    form.longTermXGDiff = longTermXGDiff.toFixed(2)
+    form.shortTermXGDiff = shortTermXGDiff.toFixed(2);
+    form.longTermXGDiff = longTermXGDiff.toFixed(2);
 
     form.XGChangeRecently = shortTermXGDiff - longTermXGDiff;
 
@@ -950,7 +977,7 @@ async function getPastLeagueResults(team, game, hOrA, form) {
     const cornersSum = corners.reduce((a, b) => a + b, 0);
     const cornersAv = cornersSum / corners.length || 0;
 
-    const cornersLast5 = corners.slice(0,5);
+    const cornersLast5 = corners.slice(0, 5);
     const cornersSumLast5 = cornersLast5.reduce((a, b) => a + b, 0);
     const cornersAvLast5 = cornersSumLast5 / cornersLast5.length || 0;
     form.last5Corners = cornersAvLast5;
@@ -1047,7 +1074,7 @@ async function getPastLeagueResults(team, game, hOrA, form) {
     let forAndAgainstRollingAvHomeOrAway;
 
     if (hOrA === "home") {
-      form.homeResults = homeResults
+      form.homeResults = homeResults;
       form.allGoalsArrayHome = teamGoalsAll;
       form.allConceededArrayHome = teamConceededAll;
       form.allGoalsArrayHomeOnly = teamGoalsHome;
@@ -1069,7 +1096,7 @@ async function getPastLeagueResults(team, game, hOrA, form) {
           beta
         );
     } else if (hOrA === "away") {
-      form.awayResults = awayResults
+      form.awayResults = awayResults;
       form.allGoalsArrayAway = teamGoalsAll;
       form.allConceededArrayAway = teamConceededAll;
       form.allGoalsArrayAwayOnly = teamGoalsAway;
@@ -1083,7 +1110,6 @@ async function getPastLeagueResults(team, game, hOrA, form) {
         alpha
       );
 
-
       forAndAgainstRollingAvHomeOrAway =
         await predictGoalsWithExponentialSmoothing(
           form.allGoalsArrayAwayOnly,
@@ -1092,15 +1118,14 @@ async function getPastLeagueResults(team, game, hOrA, form) {
         );
     }
 
-
     async function create2DArray(arr1, arr2) {
       if (arr1.length !== arr2.length) {
         throw new Error("Arrays must have the same length.");
       }
-    
+
       return arr1.map((element, index) => [element, arr2[index]]);
     }
-    
+
     let bttsHome = homeResults.map((res) => res.btts);
     if (bttsHome.length > 10) {
       bttsHome = bttsHome.slice(-10);
@@ -1112,7 +1137,7 @@ async function getPastLeagueResults(team, game, hOrA, form) {
     }
 
     let bttsAll = allTeamResults.map((res) => res.btts);
-    let last5BTTS = bttsAll.slice(0,5)
+    let last5BTTS = bttsAll.slice(0, 5);
     if (bttsAll.length > 10) {
       bttsAll = bttsAll.slice(-10);
     }
@@ -1230,13 +1255,18 @@ async function getPastLeagueResults(team, game, hOrA, form) {
     const ArrXGForAway = teamXGForAway.map((xg) => xg);
     const ArrXGAgainstAway = teamXGAgainstAway.map((xg) => xg);
 
-
-
-
-    form.twoDGoalsArray = await create2DArray(ArrXGFor.reverse(), ArrXGAgainst.reverse());
-    form.twoDGoalsArrayHome = await create2DArray(ArrXGForHome.reverse(), ArrXGAgainstHome.reverse());
-    form.twoDGoalsArrayAway = await create2DArray(ArrXGForAway.reverse(), ArrXGAgainstAway.reverse());
-
+    form.twoDGoalsArray = await create2DArray(
+      ArrXGFor.reverse(),
+      ArrXGAgainst.reverse()
+    );
+    form.twoDGoalsArrayHome = await create2DArray(
+      ArrXGForHome.reverse(),
+      ArrXGAgainstHome.reverse()
+    );
+    form.twoDGoalsArrayAway = await create2DArray(
+      ArrXGForAway.reverse(),
+      ArrXGAgainstAway.reverse()
+    );
 
     RoundedXGForV2.reverse();
     RoundedXGAgainstV2.reverse();
@@ -1306,7 +1336,7 @@ async function getPastLeagueResults(team, game, hOrA, form) {
     const last5AvgConceeded = parseFloat(
       last5ConceededSum / last5Conceeded.length || 0
     );
-    
+
     form.last5GoalDiff = last5Sum - last5ConceededSum;
 
     const last5ConceededHome = teamConceededHome.slice(0, 5);
@@ -1331,10 +1361,14 @@ async function getPastLeagueResults(team, game, hOrA, form) {
       last10ConceededSum / last10Conceeded.length || 0
     );
 
-    form.avgShotValueChart = ((form.XGOverall / form.avgShots) * 100) * form.ScoredAverage;
-    form.avgShotValueLast5Chart = ((form.XGlast5 / form.avgShotsLast5) * 100) * form.avScoredLast5;
-    form.avgShotValueHomeChart = ((form.avgXGScoredHome / form.avgShotsHome) * 100) * form.avgScoredHome;
-    form.avgShotValueAwayChart = ((form.avgXGScoredAway / form.avgShotsAway) * 100) * form.avgScoredAway;
+    form.avgShotValueChart =
+      (form.XGOverall / form.avgShots) * 100 * form.ScoredAverage;
+    form.avgShotValueLast5Chart =
+      (form.XGlast5 / form.avgShotsLast5) * 100 * form.avScoredLast5;
+    form.avgShotValueHomeChart =
+      (form.avgXGScoredHome / form.avgShotsHome) * 100 * form.avgScoredHome;
+    form.avgShotValueAwayChart =
+      (form.avgXGScoredAway / form.avgShotsAway) * 100 * form.avgScoredAway;
 
     form.last5Goals = parseFloat(last5AvgScored.toFixed(2));
     form.last5GoalsConceeded = parseFloat(last5AvgConceeded.toFixed(2));
@@ -1870,7 +1904,8 @@ async function findClosestProperty(obj, number) {
 export async function generateGoals(homeForm, awayForm, match) {
   const avgHomeXG = (homeForm.avXGLast5 + awayForm.avXGAgainstLast5) / 2;
   const avgHomeGoals = (homeForm.avScoredLast5 + awayForm.avConceededLast5) / 2;
-  const avgHomeGoalsLast10 = (homeForm.last10Goals + awayForm.last10GoalsConceeded) / 2
+  const avgHomeGoalsLast10 =
+    (homeForm.last10Goals + awayForm.last10GoalsConceeded) / 2;
   // const avgXGH = (homeForm.XGPrediction.goalsFor + awayForm.XGPrediction.goalsAgainst) / 2;
 
   let homeGoals = (avgHomeGoals + avgHomeXG + avgHomeGoalsLast10) / 3;
@@ -1882,18 +1917,23 @@ export async function generateGoals(homeForm, awayForm, match) {
   // 2;
   const avgAwayXG = (awayForm.avXGLast5 + homeForm.avXGAgainstLast5) / 2;
   const avgAwayGoals = (awayForm.avScoredLast5 + homeForm.avConceededLast5) / 2;
-  const avgAwayGoalsLast10 = (awayForm.last10Goals + homeForm.last10GoalsConceeded) / 2
+  const avgAwayGoalsLast10 =
+    (awayForm.last10Goals + homeForm.last10GoalsConceeded) / 2;
 
   // const avgXGA = (awayForm.XGPrediction.goalsFor + homeForm.XGPrediction.goalsAgainst) / 2;
 
   let awayGoals = (avgAwayGoals + avgAwayXG + avgAwayGoalsLast10) / 3;
 
-  let homeExpectedScore = homeForm.attackingMetrics["Average Expected Goals"] - awayForm.defensiveMetrics["Average XG Against"];
-  let awayExpectedScore = awayForm.attackingMetrics["Average Expected Goals"] - homeForm.defensiveMetrics["Average XG Against"];
-  let goalDifference = homeExpectedScore - awayExpectedScore
+  let homeExpectedScore =
+    homeForm.attackingMetrics["Average Expected Goals"] -
+    awayForm.defensiveMetrics["Average XG Against"];
+  let awayExpectedScore =
+    awayForm.attackingMetrics["Average Expected Goals"] -
+    homeForm.defensiveMetrics["Average XG Against"];
+  let goalDifference = homeExpectedScore - awayExpectedScore;
   let adjustToHome = Math.round(homeForm.CleanSheetPercentage / 50);
   let adjustToAway = Math.round(awayForm.CleanSheetPercentage / 50) * -1;
-  let finalScore = goalDifference + adjustToHome + adjustToAway
+  let finalScore = goalDifference + adjustToHome + adjustToAway;
 
   const homeAttackVsAwayDefenceComparison = await comparison(
     homeForm.attackingStrength,
@@ -1982,7 +2022,6 @@ export async function generateGoals(homeForm, awayForm, match) {
     awayForm.points
   );
 
-
   homeGoals =
     homeGoals +
     homeAttackVsAwayDefenceComparison * 2.5 +
@@ -2002,24 +2041,22 @@ export async function generateGoals(homeForm, awayForm, match) {
     // weighedPointsComparisonAway * 0.005 +
     oddsComparisonAway * 0.025;
 
-    // Cumulative ROI for all 2102 match outcomes: +3.30%
+  // Cumulative ROI for all 2102 match outcomes: +3.30%
 
+  // ROI for all 145 W/D/W outcomes: + 12.21%
+  // Correct W/D/W predictions: 74 (51.0%)
 
-    // ROI for all 145 W/D/W outcomes: + 12.21%
-    // Correct W/D/W predictions: 74 (51.0%)
-    
-    // Exact scores predicted: 15 (10.3%)
-    
-    // Cumulative ROI for all 1408 match outcomes: +3.77%
+  // Exact scores predicted: 15 (10.3%)
 
-    if(finalScore > 0 && await diff(homeGoals, awayGoals) < 1.25){
-      homeGoals = homeGoals + 0.5
-      awayGoals = awayGoals + -Math.abs(0.5)
-    } else if(finalScore < 0 && await diff(awayGoals, homeGoals) < 1.25){
-      homeGoals = homeGoals + -Math.abs(0.5)
-      awayGoals = awayGoals + 0.5
-    }
+  // Cumulative ROI for all 1408 match outcomes: +3.77%
 
+  if (finalScore > 0 && (await diff(homeGoals, awayGoals)) < 1.25) {
+    homeGoals = homeGoals + 0.5;
+    awayGoals = awayGoals + -Math.abs(0.5);
+  } else if (finalScore < 0 && (await diff(awayGoals, homeGoals)) < 1.25) {
+    homeGoals = homeGoals + -Math.abs(0.5);
+    awayGoals = awayGoals + 0.5;
+  }
 
   //PLACEHOLDER
 
@@ -2086,8 +2123,7 @@ export async function generateGoals(homeForm, awayForm, match) {
       homeGoals = homeGoals - awayGoals / 4;
       awayGoals = awayGoals + homeGoals / 4;
     }
-  } 
-  else if (homeGoals < -1 && awayGoals < 1) {
+  } else if (homeGoals < -1 && awayGoals < 1) {
     awayGoals = awayGoals + Math.abs(homeGoals) / 2;
   } else if (awayGoals < -1 && homeGoals < 1) {
     homeGoals = homeGoals + Math.abs(awayGoals) / 2;
@@ -3756,9 +3792,9 @@ export async function calculateScore(match, index, divider, calculate) {
       formHome.CleanSheetPercentage > 30 &&
       formAway.CleanSheetPercentage > 30
     ) {
-      finalHomeGoals = rawFinalHomeGoals -Math.abs(1);
-      finalAwayGoals = rawFinalAwayGoals -Math.abs(1);
-    } 
+      finalHomeGoals = rawFinalHomeGoals - Math.abs(1);
+      finalAwayGoals = rawFinalAwayGoals - Math.abs(1);
+    }
 
     if (rawFinalHomeGoals < 0) {
       rawFinalHomeGoals = 0.01;
@@ -3767,7 +3803,6 @@ export async function calculateScore(match, index, divider, calculate) {
     if (rawFinalAwayGoals < 0) {
       rawFinalAwayGoals = 0.01;
     }
-
 
     // else {
     //   finalHomeGoals = Math.floor(rawFinalHomeGoals);
@@ -4059,17 +4094,20 @@ export async function calculateScore(match, index, divider, calculate) {
     }
 
     if (
-      finalHomeGoals > finalAwayGoals && match.homeOdds !== 0 &&
+      finalHomeGoals > finalAwayGoals &&
+      match.homeOdds !== 0 &&
       (match.homeOdds < rangeValue[0] || match.homeOdds > rangeValue[1])
     ) {
       match.omit = true;
     } else if (
-      finalAwayGoals > finalHomeGoals && match.homeOdds !== 0 &&
+      finalAwayGoals > finalHomeGoals &&
+      match.homeOdds !== 0 &&
       (match.awayOdds < rangeValue[0] || match.awayOdds > rangeValue[1])
     ) {
       match.omit = true;
     } else if (
-      finalHomeGoals === finalAwayGoals  && match.homeOdds !== 0 &&
+      finalHomeGoals === finalAwayGoals &&
+      match.homeOdds !== 0 &&
       (match.drawOdds < rangeValue[0] || match.drawOdds > rangeValue[1])
     ) {
       match.omit = true;
@@ -4879,9 +4917,8 @@ export async function getScorePrediction(day, mocked) {
 }
 
 async function getMultis() {
-
-  userTipList = await fetchUserTips()
-  console.log(userTipList)
+  // userTipList = await fetchUserTips()
+  // console.log(userTipList)
 
   allTipsSorted = allTips.sort(function (a, b) {
     return b.goalDifferential - a.goalDifferential;
@@ -5090,7 +5127,7 @@ async function renderTips() {
         <Fragment>
           <Increment />
           <Collapsable
-            buttonText={"Build a multi"}
+            buttonText={"Build a Multi"}
             element={
               <ul className="BestPredictions" id="BestPredictions">
                 <div className="BestPredictionsExplainer">
@@ -5145,7 +5182,7 @@ async function renderTips() {
       <div className="PredictionContainer">
         <Fragment>
           <Collapsable
-            buttonText={"Exotic of the day"}
+            buttonText={"Exotic of the Day"}
             element={
               <ul className="BestPredictions" id="BestPredictions">
                 <h4 className="BestPredictionsExplainer">
@@ -5195,7 +5232,7 @@ async function renderTips() {
       <div>
         <Fragment>
           <Collapsable
-            buttonText={"Over 2.5 goals tips"}
+            buttonText={"Over 2.5 Goals Tips"}
             element={
               <ul className="LongshotPredictions" id="LongshotPredictions">
                 <h4>Over 2.5 goals</h4>
@@ -5237,7 +5274,7 @@ async function renderTips() {
       <div>
         <Fragment>
           <Collapsable
-            buttonText={"BTTS games"}
+            buttonText={"BTTS Games"}
             element={
               <ul className="BTTSGames" id="BTTSGames">
                 <h4>Games with highest chance of BTTS</h4>
@@ -5277,7 +5314,7 @@ async function renderTips() {
   ReactDOM.render(
     <div>
       <Collapsable
-        buttonText={"XG tips"}
+        buttonText={"XG Tips"}
         element={
           <Slider
             element={
@@ -5406,18 +5443,7 @@ async function renderTips() {
   ReactDOM.render(
     <div>
       <Fragment>
-        <Collapsable
-          buttonText={"User Tips"}
-          element={
-            <><h4>Most Tipped Games by Users</h4><ul className="UserTipsList" id="UserTipsList">
-              {userTipList.map((game) => (
-                <li key={game.game} className="UserTipsListItems">
-                  {game.formatted}
-                </li>
-              ))}
-            </ul></>
-          }
-        />
+        <UserTips />
       </Fragment>
     </div>,
     document.getElementById("UserGeneratedTips")
