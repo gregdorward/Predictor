@@ -124,6 +124,26 @@ function isBeforeTimestamp(targetTimestamp) {
   return currentTimestamp < targetTimestamp;
 }
 
+function isSameDayOrLater(targetTimestamp) {
+  console.log("Target timestamp:", targetTimestamp);
+
+  // Convert Unix timestamp (seconds) to a Date object
+  const targetDate = new Date(targetTimestamp * 1000);
+  const currentDate = dynamicDate; // Current date-time
+
+  console.log("Target date:", targetDate);
+  console.log("Current date:", currentDate);
+
+  // Reset both dates to UTC midnight for comparison
+  targetDate.setUTCHours(0, 0, 0, 0);
+  currentDate.setUTCHours(0, 0, 0, 0);
+
+  console.log("Target date (UTC midnight):", targetDate);
+  console.log("Current date (UTC midnight):", currentDate);
+
+  return targetDate >= currentDate;
+}
+
 async function fetchUserTips() {
   try {
     const userGeneratedTips = await fetch(
@@ -135,18 +155,18 @@ async function fetchUserTips() {
 
     // Process the tips
     Object.values(tips).forEach((userTips) => {
-      userTips.forEach(({ gameId, game, tip, tipString, date }) => {
-        if (isBeforeTimestamp(date)) {
+      userTips.forEach(({ gameId, game, tipString, date, odds }) => {
+        if (isSameDayOrLater(date)) {
           if (!tipCounts[gameId]) {
             tipCounts[gameId] = { game, tips: {} };
           }
 
           if (!tipCounts[gameId].tips[tipString]) {
-            tipCounts[gameId].tips[tipString] = 0;
+            tipCounts[gameId].tips[tipString] = { count: 0, odds };
           }
 
           // Increment the respective tip count
-          tipCounts[gameId].tips[tipString] += 1;
+          tipCounts[gameId].tips[tipString].count += 1;
         }
       });
     });
@@ -154,13 +174,13 @@ async function fetchUserTips() {
     // Convert the object to an array and format output
     const formattedTips = Object.entries(tipCounts).flatMap(
       ([gameId, { game, tips }]) =>
-        Object.entries(tips).map(([tipString, count]) => ({
+        Object.entries(tips).map(([tipString, { count, odds }]) => ({
           game,
           tipString,
           count,
           formatted: (
             <>
-              {tipString} <br />
+              {tipString} @ {odds} <br />
               {game} <br />
               Tips - {count}
             </>
@@ -177,6 +197,7 @@ async function fetchUserTips() {
     return null;
   }
 }
+
 
 function UserTips() {
   const [tips, setTips] = useState([]);
@@ -200,7 +221,7 @@ function UserTips() {
             </li>
           ))
         ) : (
-          <p>How do your tips line up?</p>
+          <p>Expand an individual ficture to make your prediction. Predictions will only be submitted when the 'Submit My Tips' button is clicked. All users tips will be displayed here with a tally against each, showing the most popular.</p>
         )}
       </ul>
     </div>

@@ -1366,7 +1366,8 @@ function GameStats({ game, displayBool }) {
     );
   }
 
-  function handleSetUserTips(gameId, game, tipString, tip, date, uid) {
+  function handleSetUserTips(gameId, game, tipString, tip, date, uid, odds) {
+
     setUserTips((prevTips) => {
       // Check if the tip for this gameId already exists
       const existingTipIndex = prevTips.findIndex(
@@ -1383,11 +1384,12 @@ function GameStats({ game, displayBool }) {
           tip,
           date,
           uid,
+          odds
         };
         return updatedTips; // Return the updated list
       } else {
         // If the tip doesn't exist, add a new one
-        return [...prevTips, { gameId, game, tipString, tip, date, uid }];
+        return [...prevTips, { gameId, game, tipString, tip, date, uid, odds }];
       }
     });
   }
@@ -2001,18 +2003,28 @@ function GameStats({ game, displayBool }) {
     ];
     chartType = "Rolling average points over last 10";
   }
-  console.log(game);
 
   const UserTips = ({
     game,
     handleSetUserTips,
     userDetail,
     selectedTip,
-    handleTipSelect,
+    handleTipSelect
   }) => {
     const handleClick = (tipType, label) => {
       if (selectedTip === tipType) {
         return; // If the button clicked is already selected, do nothing
+      }
+
+
+      let odds;
+
+      if (tipType === "homeTeam") {
+        odds = game.homeOdds;
+      } else if (tipType === "awayTeam") {
+        odds = game.awayOdds;
+      } else if (tipType === "draw") {
+        odds = game.drawOdds;
       }
 
       handleTipSelect(tipType); // Update parent state
@@ -2022,7 +2034,8 @@ function GameStats({ game, displayBool }) {
         label,
         tipType,
         game.date,
-        userDetail.uid
+        userDetail.uid,
+        odds
       );
     };
 

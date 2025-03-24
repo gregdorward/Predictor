@@ -471,7 +471,8 @@ export async function generateFixtures(
   footyStatsFormattedDate,
   current,
   todaysDate,
-  dateSS
+  dateSS,
+  unformattedDate
 ) {
   if (!isFunctionRunning) {
     isFunctionRunning = true;
@@ -491,7 +492,6 @@ export async function generateFixtures(
       document.getElementById("Loading")
     );
 
-    dynamicDate = todaysDate
 
     //cleanup if different day is selected
     ReactDOM.render(
@@ -508,6 +508,7 @@ export async function generateFixtures(
 
     const url = `${process.env.REACT_APP_EXPRESS_SERVER}matches/${footyStatsFormattedDate}`;
     const formUrl = `${process.env.REACT_APP_EXPRESS_SERVER}form/${date}`;
+    dynamicDate = unformattedDate
 
     matches = [];
     fixtureArray = [];

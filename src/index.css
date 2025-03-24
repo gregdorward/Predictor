@@ -1567,7 +1567,8 @@ strong {
 }
 
 .StyleOfPlay{
-  margin-top: 0.5em;
+  min-height: 3em;
+  margin-bottom: 0;
 }
 
 .Aligned {
@@ -1906,7 +1907,7 @@ a.PreviousMatchLink{
   flex-direction: column !important;
   text-align: right;
   margin-right: 0.5em;
-  flex-basis: 45%;
+  flex-basis: 49%;
   background-color:#030061;
   color: white;
   margin-left: auto;
@@ -1918,7 +1919,7 @@ a.PreviousMatchLink{
 .KeyStatsTwo {
   flex-direction: column !important;
   text-align: left;
-  flex-basis: 45%;
+  flex-basis: 49%;
   margin-left: 0.5em;
   background-color:#030061;
   color: white;
@@ -1942,6 +1943,8 @@ a.PreviousMatchLink{
   justify-content: center;
   color: #030052;
 }
+
+
 
 
 .AllStats{
@@ -2303,8 +2306,8 @@ a.PreviousMatchLink{
 canvas {
   /* padding-top: 1em;
   padding-bottom: 1em; */
-  max-height: 375px;
-  max-width: 450px;
+  max-height: 30em;
+  max-width: 36em;
   display: inline !important;
   margin: 1em; 
   color: #030052;
@@ -2312,7 +2315,8 @@ canvas {
 
 .FormSummaryHome {
   /* display: flex; */
-  height: auto;
+  /* height: auto; */
+  min-height: 9em;
   /* vertical-align: middle; */
   background-color: #e2e2e200 !important;
   /* max-width: 21em; */

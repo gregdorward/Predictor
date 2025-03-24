@@ -115,6 +115,11 @@ let saturdayDate;
 let historicDate;
 let string;
 let dateString;
+let dateUnformatted
+let todaysDateUnformatted
+let tomorrowsDateUnformatted
+let yesterdaysDateUnformatted
+let saturdayDateUnformatted;
 
 (async function fetchLeagueData() {
   let leagueList;
@@ -176,6 +181,8 @@ export async function getLeagueList() {
   async function incrementDate(num, date) {
     i = i + num;
     date.setDate(date.getDate() + num);
+    dateUnformatted = date;
+
     dateSS = await convertTimestampForSofaScore(date);
 
     [date, dateFootyStats] = await calculateDate(date);
@@ -189,6 +196,7 @@ export async function getLeagueList() {
     console.log(i);
     if (i > -120) {
       date.setDate(date.getDate() - num);
+      dateUnformatted = date;
       dateSS = await convertTimestampForSofaScore(date);
       [date, dateFootyStats] = await calculateDate(date);
       string = dateFootyStats;
@@ -205,13 +213,17 @@ export async function getLeagueList() {
   }
 
   [today, todayFootyStats] = await calculateDate(new Date());
-
+  let todayRaw = new Date();
+  todayRaw.setDate(todayRaw.getDate())
+  todaysDateUnformatted = todayRaw;
   tomorrowsDate = new Date();
   tomorrowsDate.setDate(tomorrowsDate.getDate() + 1);
+  tomorrowsDateUnformatted = tomorrowsDate;
   [tomorrow, tomorrowFootyStats] = await calculateDate(tomorrowsDate);
 
   yesterdaysDate = new Date();
   yesterdaysDate.setDate(yesterdaysDate.getDate() - 1);
+  yesterdaysDateUnformatted = yesterdaysDate;
   [yesterday, yesterdayFootyStats] = await calculateDate(yesterdaysDate);
 
   saturdayDate = new Date();
@@ -219,8 +231,8 @@ export async function getLeagueList() {
     saturdayDate.getDate() - ((saturdayDate.getDay() + 6) % 7)
   );
   saturdayDate.setDate(saturdayDate.getDate() - 2);
+  saturdayDateUnformatted = saturdayDate;
   [lastSaturday, lastSaturdayFootyStats] = await calculateDate(saturdayDate);
-
   historicDate = new Date();
   historicDate.setDate(
     historicDate.getDate() - ((historicDate.getDay() + 6) % 7)
@@ -275,7 +287,8 @@ export async function getLeagueList() {
                   lastSaturdayFootyStats,
                   false,
                   today,
-                  lastSaturdaySS
+                  lastSaturdaySS,
+                  saturdayDateUnformatted
                 )
               )
             }
@@ -298,7 +311,8 @@ export async function getLeagueList() {
                 dateFootyStats,
                 false,
                 today,
-                dateSS
+                dateSS,
+                dateUnformatted
               )
             )
           }
@@ -315,7 +329,8 @@ export async function getLeagueList() {
                 todayFootyStats,
                 true,
                 today,
-                todaySS
+                todaySS,
+                todaysDateUnformatted
               )
             )
           }
@@ -332,7 +347,8 @@ export async function getLeagueList() {
                 tomorrowFootyStats,
                 true,
                 today,
-                tomorrowSS
+                tomorrowSS,
+                tomorrowsDateUnformatted
               )
             )
           }
@@ -357,7 +373,8 @@ export async function getLeagueList() {
                 lastSaturdayFootyStats,
                 false,
                 today,
-                lastSaturdaySS
+                lastSaturdaySS,
+                saturdayDateUnformatted
               )
             )
           }
@@ -380,7 +397,8 @@ export async function getLeagueList() {
               todayFootyStats,
               true,
               today,
-              todaySS
+              todaySS,
+              todaysDateUnformatted
             )
           )
         }
@@ -397,7 +415,8 @@ export async function getLeagueList() {
               tomorrowFootyStats,
               true,
               today,
-              tomorrowSS
+              tomorrowSS,
+              tomorrowsDateUnformatted
             )
           )
         }
