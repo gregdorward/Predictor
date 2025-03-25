@@ -125,10 +125,11 @@ let saturdayDate;
 let historicDate;
 let string;
 let dateString;
-let dateUnformatted
-let todaysDateUnformatted
-let tomorrowsDateUnformatted
-let yesterdaysDateUnformatted
+let dateString2;
+let dateUnformatted;
+let todaysDateUnformatted;
+let tomorrowsDateUnformatted;
+let yesterdaysDateUnformatted;
 let saturdayDateUnformatted;
 
 (async function fetchLeagueData() {
@@ -152,7 +153,12 @@ let saturdayDateUnformatted;
     for (let x = 0; x < league.season.length; x++) {
       const element = league.season[x];
 
-      if (element.year === 2025 || element.year === 20242025 || element.year === 2026) {
+      if (
+        element.year === 2025 ||
+        element.year === 20242025 ||
+        element.year === 2026 ||
+        element.year === -1
+      ) {
         if (
           element.id !== 13703 &&
           element.id !== 6935 &&
@@ -215,6 +221,20 @@ export async function getLeagueList() {
     }
   }
 
+  async function incrementDateV2(num, date) {
+    i = i + num;
+    console.log(i);
+    if (i <= 5) {
+      date.setDate(date.getDate() + num);
+      dateUnformatted = date;
+      dateSS = await convertTimestampForSofaScore(date);
+      [date, dateFootyStats] = await calculateDate(date);
+      string = dateFootyStats;
+      dateString2 = date;
+      await renderButtons();
+    }
+  }
+
   async function calculateDate(dateString) {
     const day = dateString.getDate();
     const month = dateString.getMonth() + 1;
@@ -224,7 +244,7 @@ export async function getLeagueList() {
 
   [today, todayFootyStats] = await calculateDate(new Date());
   let todayRaw = new Date();
-  todayRaw.setDate(todayRaw.getDate())
+  todayRaw.setDate(todayRaw.getDate());
   todaysDateUnformatted = todayRaw;
   tomorrowsDate = new Date();
   tomorrowsDate.setDate(tomorrowsDate.getDate() + 1);
@@ -346,22 +366,9 @@ export async function getLeagueList() {
           }
         />
         <Button
-          text={"Tomorrow"}
+          text={`>`}
           className="FixturesButton"
-          onClickEvent={async () =>
-            fixtureList.push(
-              await generateFixtures(
-                "tomorrowsFixtures",
-                tomorrow,
-                selectedOdds,
-                tomorrowFootyStats,
-                true,
-                today,
-                tomorrowSS,
-                tomorrowsDateUnformatted
-              )
-            )
-          }
+          onClickEvent={async () => await incrementDateV2(1, date)}
         />
       </div>,
       document.getElementById("Buttons")
@@ -414,22 +421,9 @@ export async function getLeagueList() {
         }
       />
       <Button
-        text={"Tomorrow"}
+        text={`>`}
         className="FixturesButton"
-        onClickEvent={async () =>
-          fixtureList.push(
-            await generateFixtures(
-              "tomorrowsFixtures",
-              tomorrow,
-              selectedOdds,
-              tomorrowFootyStats,
-              true,
-              today,
-              tomorrowSS,
-              tomorrowsDateUnformatted
-            )
-          )
-        }
+        onClickEvent={async () => await incrementDateV2(1, date)}
       />
     </div>,
     document.getElementById("Buttons")
@@ -610,10 +604,10 @@ function AppContent() {
           // If the user is logged in but is NOT a paying customer, show subscribe buttons
           <div>
             <span className="MembershipInfo">
-              Full fixtures and AI predictions are restricted to
-              premium members. Memberships can be cancelled at any time and
-              prices will differ in currencies other than GBP. Payments are
-              securely hosted by Stripe.
+              Full fixtures and AI predictions are restricted to premium
+              members. Memberships can be cancelled at any time and prices will
+              differ in currencies other than GBP. Payments are securely hosted
+              by Stripe.
             </span>
             <button
               onClick={() => handleCheckout("price_1QrQ4ZBrqiWlVPadCkhLhtiZ")}
@@ -654,8 +648,7 @@ function AppContent() {
               <div id="draws" className="RowOne" />
             </div>
             <div id="insights" />
-            <div id="UserGeneratedTips"/>
-
+            <div id="UserGeneratedTips" />
           </Fragment>
         }
       />

@@ -227,6 +227,20 @@ export async function generateTables(a, leagueIdArray, allResults) {
   });
 }
 
+function isWithin48Hours(targetDate) {
+  const now = new Date(); // Current date and time
+  const timeDifference = targetDate.getTime() - now.getTime(); // Difference in milliseconds
+  const fortyEightHoursInMs = 48 * 60 * 60 * 1000; // 48 hours in milliseconds
+  console.log(targetDate)
+  console.log(now)
+  console.log(timeDifference)
+  console.log(fortyEightHoursInMs)
+
+  // Check if the target date is within the next 48 hours (positive difference)
+  // OR within the past 48 hours (negative difference, but absolute value less than 48 hours).
+  return Math.abs(timeDifference) <= fortyEightHoursInMs;
+}
+
 export async function renderTable(index, results, id) {
   let league;
   //World cup table rendering
@@ -464,6 +478,7 @@ let isFunctionRunning = false;
 
 export let dynamicDate;
 
+
 export async function generateFixtures(
   day,
   date,
@@ -491,6 +506,8 @@ export async function generateFixtures(
       </div>,
       document.getElementById("Loading")
     );
+
+    console.log(unformattedDate)
 
 
     //cleanup if different day is selected
@@ -1842,7 +1859,7 @@ export async function generateFixtures(
       }
     }
 
-    if (!isStoredLocally) {
+    if (!isStoredLocally && isWithin48Hours(unformattedDate)) {
       await fetch(`${process.env.REACT_APP_EXPRESS_SERVER}allForm/${date}`, {
         method: "POST",
         headers: {
