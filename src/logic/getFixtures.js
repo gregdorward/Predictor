@@ -833,7 +833,9 @@ export async function generateFixtures(
             season.round === "2025" ||
             season.round === "2024/2025" ||
             season.round === "Apertura" ||
-            season.round === "1st Phase"
+            season.round === "1st Phase" ||
+            season.round === "2026" ||
+            season.round === "-1"
           // season.round === "North" ||
           // season.round === "South"
         );

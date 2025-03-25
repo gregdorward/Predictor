@@ -82,13 +82,23 @@ const leagueOrder = [
   12474, //Scottish league 1 22/23
   12453, //Scottish league 2 22/23
   12827, //Women's prem 23/24
-  13973, //MLS 25
+  13973, //MLS 25,
+  14236, //Canada 25
   11321, //Brazil prem 24
   14125, //Argentina prem 23
   12136, //Mexico prem 23/24
   12933, //National league North and South 22/23
   13703, //Australian A league 24/25
-  14069, //S Korea 25
+  14069, //S Korea 25,
+  13960, //Japan 25
+  13964, // WC Qual Europe,
+  10121, // WC Qual SA,
+  11426, // WC Qual ConCaf
+  12801, // WC Qual Aus,
+  5874, // Esports eBattle
+
+  //Japan
+  //canada
 ];
 
 let today;
@@ -142,7 +152,7 @@ let saturdayDateUnformatted;
     for (let x = 0; x < league.season.length; x++) {
       const element = league.season[x];
 
-      if (element.year === 2025 || element.year === 20242025) {
+      if (element.year === 2025 || element.year === 20242025 || element.year === 2026) {
         if (
           element.id !== 13703 &&
           element.id !== 6935 &&

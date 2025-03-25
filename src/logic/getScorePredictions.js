@@ -229,6 +229,8 @@ function UserTips() {
 }
 
 async function getPastLeagueResults(team, game, hOrA, form) {
+  console.log(team)
+  console.log(allLeagueResultsArrayOfObjects[game.leagueIndex].fixtures)
   form.completeData = true;
   let date = game.date;
   if (allLeagueResultsArrayOfObjects[game.leagueIndex].fixtures.length > 10) {
