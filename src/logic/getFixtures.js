@@ -507,9 +507,6 @@ export async function generateFixtures(
       document.getElementById("Loading")
     );
 
-    console.log(unformattedDate)
-
-
     //cleanup if different day is selected
     ReactDOM.render(
       <div></div>,
@@ -1859,7 +1856,7 @@ export async function generateFixtures(
       }
     }
 
-    if (!isStoredLocally && isWithin48Hours(unformattedDate)) {
+    if (!isStoredLocally) {
       await fetch(`${process.env.REACT_APP_EXPRESS_SERVER}allForm/${date}`, {
         method: "POST",
         headers: {
