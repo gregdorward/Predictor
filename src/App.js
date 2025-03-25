@@ -230,7 +230,7 @@ export async function getLeagueList() {
       dateSS = await convertTimestampForSofaScore(date);
       [date, dateFootyStats] = await calculateDate(date);
       string = dateFootyStats;
-      dateString2 = date;
+      dateString = date;
       await renderButtons();
     }
   }
