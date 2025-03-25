@@ -2984,7 +2984,7 @@ export async function calculateScore(match, index, divider, calculate) {
 
     const attackingMetricsHome = {
       "Average Dangerous Attacks": formHome.AverageDangerousAttacksOverall,
-      "Average Shots": formHome.avgShots,
+      "Average Shots": formHome.avgShots.toFixed(2),
       "Average Shots On Target": formHome.AverageShotsOnTargetOverall
         ? formHome.AverageShotsOnTargetOverall
         : formHome.AverageShotsOnTarget,
@@ -3075,7 +3075,7 @@ export async function calculateScore(match, index, divider, calculate) {
 
     const attackingMetricsAway = {
       "Average Dangerous Attacks": formAway.AverageDangerousAttacksOverall,
-      "Average Shots": formAway.avgShots,
+      "Average Shots": formAway.avgShots.toFixed(2),
       "Average Shots On Target": formAway.AverageShotsOnTargetOverall
         ? formAway.AverageShotsOnTargetOverall
         : formAway.AverageShotsOnTarget,
