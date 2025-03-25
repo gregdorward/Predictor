@@ -89,7 +89,6 @@ export async function generateTables(a, leagueIdArray, allResults) {
     i++;
     leagueInstance = [];
     //Skip MLS which has a weird format
-    console.log(league.data)
     if (
       !league.data.specific_tables[0]?.groups &&
       currentLeagueId !== 13973 &&
