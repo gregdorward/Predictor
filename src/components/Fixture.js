@@ -294,7 +294,56 @@ function SingleFixture({
       awayGoals: fixture.goalsB,
     };
 
+    const homeDetails = {
+      "Attacking Strength": fixture.formHome.attackingStrength,
+      "Defensive Strength": fixture.formHome.defensiveStrength,
+    };
+
+    const awayDetails = {
+      "Attacking Strength": fixture.formAway.attackingStrength,
+      "Defensive Strength": fixture.formAway.defensiveStrength,
+    };
+
+    const dataToSend = {
+      key1: "value1",
+      key2: "value2",
+    };
+    fixture.formHome.defensiveMetrics["Clean Sheet Percentage"] =
+      fixture.formHome.CleanSheetPercentage;
+    fixture.formAway.defensiveMetrics["Clean Sheet Percentage"] =
+      fixture.formAway.CleanSheetPercentage;
+
+    localStorage.setItem(
+      "homeForm",
+      JSON.stringify(fixture.formHome.attackingMetrics)
+    );
+    localStorage.setItem(
+      "homeFormDef",
+      JSON.stringify(fixture.formHome.defensiveMetrics)
+    );
+    localStorage.setItem(
+      "allTeamResultsHome",
+      JSON.stringify(fixture.formHome.allTeamResults)
+    );
+    localStorage.setItem("homeDetails", JSON.stringify(homeDetails));
+
+    localStorage.setItem(
+      "awayForm",
+      JSON.stringify(fixture.formAway.attackingMetrics)
+    );
+    localStorage.setItem(
+      "awayFormDef",
+      JSON.stringify(fixture.formAway.defensiveMetrics)
+    );
+    localStorage.setItem(
+      "allTeamResultsAway",
+      JSON.stringify(fixture.formAway.allTeamResults)
+    );
+    localStorage.setItem("awayDetails", JSON.stringify(awayDetails));
+
     localStorage.setItem("fixtureDetails", JSON.stringify(fixtureDetails));
+
+    dispatch(setData(dataToSend));
     dispatch(setData({ key1: "value1", key2: "value2" }));
   }
 

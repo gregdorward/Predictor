@@ -215,6 +215,7 @@ function TeamPage() {
     (state) => state.data.fixtureDetails
   );
   const storedFixtureDetailsJson = JSON.parse(storedFixtureDetails);
+  console.log(jsonAwayDetails)
 
   const options = {
     plugins: {

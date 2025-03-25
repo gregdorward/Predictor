@@ -3076,7 +3076,6 @@ export async function calculateScore(match, index, divider, calculate) {
     const attackingMetricsAway = {
       "Average Dangerous Attacks": formAway.AverageDangerousAttacksOverall,
       "Average Shots": formAway.avgShots,
-      "Average Shot Value": formAway.avgShotValue,
       "Average Shots On Target": formAway.AverageShotsOnTargetOverall
         ? formAway.AverageShotsOnTargetOverall
         : formAway.AverageShotsOnTarget,
