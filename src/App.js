@@ -62,9 +62,9 @@ const leagueOrder = [
   12931, //Portagul Prem 22/23
   12322, //Dutch Prem 22/23
   12137, //Belgian Pro League 22/23
-  10969, //sweden 24
+  13963, //sweden 24
   12132, //Danish Prem 24/25
-  10976, //Norway Prem 23
+  13987, //Norway Prem 23
   12472, //Austrian Prem 22/23
   12734, //Greek Prem 22/23
   12641, //turkey
@@ -84,7 +84,7 @@ const leagueOrder = [
   12827, //Women's prem 23/24
   13973, //MLS 25,
   14236, //Canada 25
-  11321, //Brazil prem 24
+  14231, //Brazil prem 24
   14125, //Argentina prem 23
   12136, //Mexico prem 23/24
   12933, //National league North and South 22/23
