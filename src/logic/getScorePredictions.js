@@ -2043,7 +2043,7 @@ export async function generateGoals(homeForm, awayForm, match) {
 
   homeGoals =
     homeGoals +
-    homeAttackVsAwayDefenceComparison * 2 +
+    homeAttackVsAwayDefenceComparison * 2.5 +
     XGRatingHomeComparison * 0 +
     homeAttackVsAwayDefenceComparisonLast5 * 0 +
     0.2 +
@@ -2053,7 +2053,7 @@ export async function generateGoals(homeForm, awayForm, match) {
 
   awayGoals =
     awayGoals +
-    awayAttackVsHomeDefenceComparison * 2 +
+    awayAttackVsHomeDefenceComparison * 2.5 +
     XGRatingAwayComparison * 0 +
     awayAttackVsHomeDefenceComparisonLast5 * 0 +
     awayAttackVsHomeDefenceComparisonAwayOnly * 0 +
@@ -2091,15 +2091,15 @@ export async function generateGoals(homeForm, awayForm, match) {
   //   awayGoals = awayGoals + awayForm.actualToXGDifference / 20;
   // }
 
-  if (homeForm.lastGame === "L" && homeForm.previousToLastGame === "L") {
-    homeGoals = homeGoals * 0.5;
-  } else if (awayForm.lastGame === "L" && awayForm.previousToLastGame === "L") {
-    awayGoals = awayGoals * 0.5;
-  } else if (homeForm.lastGame === "L") {
-    homeGoals = homeGoals * 0.8;
-  } else if (awayForm.lastGame === "L") {
-    awayGoals = awayGoals * 0.8;
-  }
+  // if (homeForm.lastGame === "L" && homeForm.previousToLastGame === "L") {
+  //   homeGoals = homeGoals * 0.5;
+  // } else if (awayForm.lastGame === "L" && awayForm.previousToLastGame === "L") {
+  //   awayGoals = awayGoals * 0.5;
+  // } else if (homeForm.lastGame === "L") {
+  //   homeGoals = homeGoals * 0.8;
+  // } else if (awayForm.lastGame === "L") {
+  //   awayGoals = awayGoals * 0.8;
+  // }
 
   // if (homeForm.improving === true && awayForm.improving === false) {
   //   homeGoals = homeGoals * 1.25;
