@@ -455,7 +455,6 @@ export function RenderAllFixtures(props) {
       matches = props.matches;
     }
   }
-  console.log(paid);
 
   return (
     <Fixture
@@ -1688,7 +1687,7 @@ export async function generateFixtures(
             },
           });
         }
-
+        match.matches_completed_minimum = fixture.matches_completed_minimum;
         match.homeBadge = fixture.home_image;
         match.awayBadge = fixture.away_image;
 

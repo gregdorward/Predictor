@@ -91,6 +91,7 @@ const leagueOrder = [
   13703, //Australian A league 24/25
   14069, //S Korea 25,
   13960, //Japan 25
+  12772, //Saudi 24/25
   13964, // WC Qual Europe,
   10121, // WC Qual SA,
   11426, // WC Qual ConCaf

@@ -34,7 +34,7 @@ function Stats(props) {
             <span className={styleForm(props.Results && props.Results[5] ? props.Results[5] : "")}>
               {props.Results && props.Results[5] ? props.Results[5] : ""}
             </span>
-            <span className={styleForm(props.Results && props.Results[5] ? props.Results[4] : "")}>
+            <span className={styleForm(props.Results && props.Results[4] ? props.Results[4] : "")}>
               {props.Results && props.Results[4] ? props.Results[4] : ""}
             </span>
             <span className={styleForm(props.Results && props.Results[3] ? props.Results[3] : "")}>
@@ -359,7 +359,7 @@ function Stats(props) {
             Last 5 games (All)
           </li>
           <li key={`last5League`} className="last5League">
-            <span className={styleForm(props.Results && props.Results[5] ? props.Results[4] : "")}>
+            <span className={styleForm(props.Results && props.Results[4] ? props.Results[4] : "")}>
               {props.Results && props.Results[4] ? props.Results[4] : ""}
             </span>
             <span className={styleForm(props.Results && props.Results[3] ? props.Results[3] : "")}>

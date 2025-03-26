@@ -1875,8 +1875,6 @@ function GameStats({ game, displayBool }) {
     // BTTSHorA: awayForm.last10bttsAway,
   });
 
-  console.log(game)
-
   // AI Insights Generation
 
   const generateAIInsights = useCallback(
