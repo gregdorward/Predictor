@@ -1,6 +1,5 @@
 import React, { Fragment } from "react";
 import ReactDOM from "react-dom";
-import Header from "./components/Header";
 import { Button } from "./components/Button";
 import OddsRadio from "./components/OddsRadio";
 import { Fixture } from "./components/Fixture";
@@ -32,8 +31,6 @@ import { ThreeDots } from "react-loading-icons";
 import Logo from "./components/Logo";
 import { BrowserRouter as Router, Route, Routes, Link } from "react-router-dom";
 
-import reactDom from "react-dom";
-// require("dotenv").config();
 
 export const proxyurl = "https://safe-caverns-99679.herokuapp.com/";
 export var fixtureList = [];
@@ -492,70 +489,9 @@ const handleCheckout = async (priceId) => {
   }
 };
 
-async function getHighestScoringLeagues() {
-  let teamsList = await fetch(`${process.env.REACT_APP_EXPRESS_SERVER}over25`);
-  let arr = [];
-  await teamsList.json().then(async (leagues) => {
-    for (let index = 0; index < 215; index++) {
-      const league = {
-        league: leagues.data.top_leagues.data[index].name,
-        leagueCountry: leagues.data.top_leagues.data[index].country,
-        averageGoals: leagues.data.top_leagues.data[index].seasonAVG_overall,
-        over25Percentage:
-          leagues.data.top_leagues.data[index].seasonOver25Percentage_overall,
-        division: leagues.data.top_leagues.data[index].division,
-        leagueId: leagues.data.top_leagues.data[index].id,
-      };
-      arr.push(league);
-    }
-  });
 
-  const finalArray = arr.filter(
-    (league) =>
-      leagueOrder.find((element) => element === league.leagueId) &&
-      league.averageGoals >= 2.5
-  );
-
-  let sortedArray = finalArray.sort((a, b) => b.averageGoals - a.averageGoals);
-
-  return sortedArray;
-}
-
-async function getLowestScoringLeagues() {
-  let teamsList = await fetch(`${process.env.REACT_APP_EXPRESS_SERVER}under25`);
-  let arr = [];
-  await teamsList.json().then(async (leagues) => {
-    for (let index = 0; index < 215; index++) {
-      const league = {
-        league: leagues.data.top_leagues.data[index].name,
-        leagueCountry: leagues.data.top_leagues.data[index].country,
-        averageGoals: leagues.data.top_leagues.data[index].seasonAVG_overall,
-        under25Percentage:
-          leagues.data.top_leagues.data[index].seasonUnder25Percentage_overall,
-        leagueId: leagues.data.top_leagues.data[index].id,
-      };
-      arr.push(league);
-    }
-  });
-
-  const finalArray = arr.filter(
-    (league) =>
-      leagueOrder.find((element) => element === league.leagueId) &&
-      league.averageGoals < 2.5
-  );
-
-  let sortedArray = finalArray.sort((a, b) => a.averageGoals - b.averageGoals);
-
-  return sortedArray;
-}
-
-const welcomeTextUnsplitOne = `Welcome to XGTipping. Your go-to resource for all things football, from predictions, comprehensive head to head stats, results, xg scores, odds, league tables, form, and bespoke multi-builders underpinned by expected goal (XG) data.\n `;
+const welcomeTextUnsplitOne = `Welcome to XGTipping, specialists in comprehensive head to head stats, results, xg metrics, and bespoke multi-builders underpinned by expected goal (XG) data.\n `;
 let welcomeTextOne = welcomeTextUnsplitOne.split("\n").map((i) => {
-  return <p>{i}</p>;
-});
-
-const welcomeTextUnsplitTwo = `XGTipping is completely independent and free to use, relying on a donation model to support running costs. For feedback or feature ideas, get in touch at @TippingXg.`;
-let welcomeTextTwo = welcomeTextUnsplitTwo.split("\n").map((i) => {
   return <p>{i}</p>;
 });
 
@@ -665,9 +601,7 @@ function AppContent() {
       <div id="FixtureContainer">
         <h6 className="WelcomeText">{welcomeTextOne}</h6>
         <h6 className="GetMatchStatText">
-          Below is an example of our tips/results overview for you to
-          familiarise yourself with. Get real fixtures using the date buttons
-          above. When loaded, tap on one to see full match stats.
+          Games shown below for illustrative purposes only
         </h6>
 
         <div className="ExplainerContainer">
@@ -686,7 +620,6 @@ function AppContent() {
         />
 
         <div>
-          <h6 className="WelcomeText">{welcomeTextTwo}</h6>
           <h6 className="WelcomeText">
             We cover a range of leagues, including
             <ul className="AllLeagues">

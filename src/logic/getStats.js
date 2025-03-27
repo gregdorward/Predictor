@@ -1,27 +1,12 @@
 import ReactDOM from "react-dom";
-import { Button } from "../components/Button";
-import Stats from "../components/createStatsDiv";
-import Div from "../components/Div";
 import { allForm } from "../logic/getFixtures";
-import { getTeamStats } from "../logic/getTeamStats";
 import { getPointsFromLastX } from "../logic/getScorePredictions";
 import { allLeagueResultsArrayOfObjects } from "../logic/getFixtures";
 import GenerateFormSummary from "../logic/compareFormTrend";
-import {
-  Chart,
-  MultilineChart,
-  RadarChart,
-  BarChart,
-  BarChartTwo,
-  DoughnutChart,
-} from "../components/Chart";
 import Collapsable from "../components/CollapsableElement";
 import { clicked } from "../logic/getScorePredictions";
-import SofaLineupsWidget from "../components/SofaScore";
-import { arrayOfGames } from "../logic/getFixtures";
 import { userDetail } from "../logic/authProvider";
 import { checkUserPaidStatus } from "../logic/hasUserPaid";
-import {generateAIInsights} from "../logic/getAIStats"
 
 export async function getPointAverage(pointTotal, games) {
   return pointTotal / games;
@@ -1191,159 +1176,7 @@ export async function createStatsDiv(game, displayBool) {
             : awayForm.ConcededOverall / 10,
       };
 
-      let homeXGRating;
-      let awayXGRating;
-      let homeAttackStrength;
-      let homeAttackStrengthLast5;
-      let homeOnlyAttackStrength;
-      let homeDefenceStrength;
-      let homeDefenceStrengthLast5;
-      let homeOnlyDefenceStrength;
-      let homePossessionStrength;
-      let homePossessionStrengthLast5;
-      let homeOnlyPossessionStrength;
-      let homeXGForStrength;
-      let homeXGForStrengthLast5;
-      let homeOnlyXGForStrength;
-      let homeXGAgainstStrength;
-      let homeXGAgainstStrengthLast5;
-      let homeOnlyXGAgainstStrength;
-      let awayAttackStrength;
-      let awayAttackStrengthLast5;
-      let awayOnlyAttackStrength;
-      let awayDefenceStrength;
-      let awayDefenceStrengthLast5;
-      let awayOnlyDefenceStrength;
-      let awayPossessionStrength;
-      let awayPossessionStrengthLast5;
-      let awayOnlyPossessionStrength;
-      let awayXGForStrength;
-      let awayXGForStrengthLast5;
-      let awayOnlyXGForStrength;
-      let awayXGAgainstStrength;
-      let awayXGAgainstStrengthLast5;
-      let awayOnlyXGAgainstStrength;
-      let homeDirectnessStrength;
-      let homeDirectnessStrengthLast5;
-      let homeOnlyDirectnessStrength;
-      let awayDirectnessStrength;
-      let awayDirectnessStrengthLast5;
-      let awayOnlyDirectnessStrength;
-      let homeAccuracyOverallStrength;
-      let homeAccuracyOverallStrengthLast5;
-      let homeOnlyAccuracyOverallStrength;
-      let awayAccuracyOverallStrength;
-      let awayAccuracyOverallStrengthLast5;
-      let awayOnlyAccuracyOverallStrength;
-
-      if (homeForm.xgForStrength) {
-        console.log("not calculating");
-        homeXGRating = homeForm.XGRating;
-        awayXGRating = awayForm.XGRating;
-        homeAttackStrength = homeForm.attackingStrength;
-        homeAttackStrengthLast5 = homeForm.attackingStrengthLast5;
-        homeOnlyAttackStrength = homeForm.attackingStrengthHomeOnly;
-        homeDefenceStrength = homeForm.defensiveStrength;
-        homeDefenceStrengthLast5 = homeForm.defensiveStrengthLast5;
-        homeOnlyDefenceStrength = homeForm.defensiveStrengthHomeOnly;
-        homePossessionStrength = homeForm.possessionStrength;
-        homePossessionStrengthLast5 = homeForm.possessionStrengthLast5;
-        homeOnlyPossessionStrength = homeForm.possessionStrengthHomeOnly;
-        homeXGForStrength = homeForm.xgForStrength;
-        homeXGForStrengthLast5 = homeForm.xgForStrengthLast5;
-        homeOnlyXGForStrength = homeForm.xgForStrengthHomeOnly;
-        homeXGAgainstStrength = homeForm.xgAgainstStrength;
-        homeXGAgainstStrengthLast5 = homeForm.xgAgainstStrengthLast5;
-        homeOnlyXGAgainstStrength = homeForm.xgAgainstStrengthHomeOnly;
-        homeDirectnessStrength = homeForm.directnessOverallStrength;
-        homeDirectnessStrengthLast5 = homeForm.directnessOverallStrengthLast5;
-        homeOnlyDirectnessStrength = homeForm.directnessHomeStrength;
-        homeAccuracyOverallStrength = homeForm.accuracyOverallStrength;
-        homeAccuracyOverallStrengthLast5 =
-          homeForm.accuracyOverallStrengthLast5;
-        homeOnlyAccuracyOverallStrength = homeForm.accuracyHomeStrength;
-        awayAttackStrength = awayForm.attackingStrength;
-        awayAttackStrengthLast5 = awayForm.attackingStrengthLast5;
-        awayOnlyAttackStrength = awayForm.attackingStrengthAwayOnly;
-        awayDefenceStrength = awayForm.defensiveStrength;
-        awayDefenceStrengthLast5 = awayForm.defensiveStrengthLast5;
-        awayOnlyDefenceStrength = awayForm.defensiveStrengthAwayOnly;
-        awayPossessionStrength = awayForm.possessionStrength;
-        awayPossessionStrengthLast5 = awayForm.possessionStrengthLast5;
-        awayOnlyPossessionStrength = awayForm.possessionStrengthAwayOnly;
-        awayXGForStrength = awayForm.xgForStrength;
-        awayXGForStrengthLast5 = awayForm.xgForStrengthLast5;
-        awayOnlyXGForStrength = awayForm.xgForStrengthAwayOnly;
-        awayXGAgainstStrength = awayForm.xgAgainstStrength;
-        awayXGAgainstStrengthLast5 = awayForm.xgAgainstStrengthLast5;
-        awayOnlyXGAgainstStrength = awayForm.xgAgainstStrengthAwayOnly;
-        awayDirectnessStrength = awayForm.directnessOverallStrength;
-        awayDirectnessStrengthLast5 = awayForm.directnessOverallStrengthLast5;
-        awayOnlyDirectnessStrength = awayForm.directnessAwayStrength;
-        awayAccuracyOverallStrength = awayForm.accuracyOverallStrength;
-        awayAccuracyOverallStrengthLast5 =
-          awayForm.accuracyOverallStrengthLast5;
-        awayOnlyAccuracyOverallStrength = awayForm.accuracyAwayStrength;
-      } else {
-        homeAttackStrength = await calculateAttackingStrength(
-          attackingMetricsHome
-        );
-
-        homeDefenceStrength = await calculateDefensiveStrength(
-          defensiveMetricsHome
-        );
-
-        homePossessionStrength = await calculateMetricStrength(
-          "averagePossession",
-          homeForm.AveragePossessionOverall
-        );
-
-        homeXGForStrength = await calculateMetricStrength(
-          "xgFor",
-          gameStats.home[2].XGOverall
-        );
-
-        homeXGAgainstStrength = await calculateMetricStrength(
-          "xgAgainst",
-          3 - gameStats.home[2].XGAgainstAvgOverall
-        );
-        homeDirectnessStrength = await calculateMetricStrength(
-          "directnessOverall",
-          homeForm.directnessOverall
-        );
-        homeAccuracyOverallStrength = await calculateMetricStrength(
-          "accuracyOverall",
-          homeForm.avgShotValue
-        );
-
-        awayAttackStrength = await calculateAttackingStrength(
-          attackingMetricsAway
-        );
-        awayDefenceStrength = await calculateDefensiveStrength(
-          defensiveMetricsAway
-        );
-        awayPossessionStrength = await calculateMetricStrength(
-          "averagePossession",
-          awayForm.AveragePossessionOverall
-        );
-        awayXGForStrength = await calculateMetricStrength(
-          "xgFor",
-          gameStats.away[2].XGOverall
-        );
-
-        awayXGAgainstStrength = await calculateMetricStrength(
-          "xgAgainst",
-          3 - gameStats.away[2].XGAgainstAvgOverall
-        );
-        awayDirectnessStrength = await calculateMetricStrength(
-          "directnessOverall",
-          awayForm.directnessOverall
-        );
-        awayAccuracyOverallStrength = await calculateMetricStrength(
-          "accuracyOverall",
-          awayForm.avgShotValue
-        );
-      }
+   
 
       let [formPointsHome, testArrayHome] = await getPointsFromGames(
         gameStats.home[2].WDLRecord
@@ -1369,69 +1202,6 @@ export async function createStatsDiv(game, displayBool) {
         (gameStats.away[2].ScoredOverall - gameStats.away[2].ConcededOverall) /
           5,
       ];
-
-
-      // async function generateAIInsights(game) {
-      //   console.log("called")
-      //   // ReactDOM.render(
-      //   //   <Fragment>
-      //   //    <div>Loading...</div>
-      //   //   </Fragment>,
-      //   //   document.getElementById("AIInsightsContainer")
-      //   // );
-
-      //   try {
-      //     const response = await fetch(
-      //       `${process.env.REACT_APP_EXPRESS_SERVER}gemini/${game}`,
-      //       {
-      //         method: "POST",
-      //         headers: {
-      //           Accept: "application/json",
-      //           "Content-Type": "application/json",
-      //         },
-      //         body: JSON.stringify(AIPayload),
-      //       }
-      //     );
-
-      //     console.log("Raw Response:", response); // See the raw response
-
-      //     if (!response.ok) {
-      //       // Check for HTTP errors
-      //       throw new Error(`HTTP error! Status: ${response.status}`);
-      //     }
-
-      //     const jsonData = await response.json(); // Parse the response body as JSON
-      //     AIMatchPreview = jsonData;
-      //     console.log(AIMatchPreview)
-      //     const formattedText = await addNewlinesAfterPeriods(AIMatchPreview.matchPreview)
-
-      //     ReactDOM.render(
-      //       <Fragment>
-      //         <h2>Preview</h2>
-      //         <div className="AIMatchPreview">
-      //           {formattedText}
-      //         </div>
-      //         <h2>AI Prediction</h2>
-      //         <div className="AIMatchPreview">{AIMatchPreview.prediction} <i>(may not reflect the view of XGTipping)</i></div>
-      //         <div className="AIContainer">
-      //           <div className="HomeAIInsights">
-      //             <div>
-      //             {AIMatchPreview.homeTeam.summary}
-      //             </div>
-      //           </div>
-      //           <div className="AwayAIInsights">
-      //             <div>
-      //             {AIMatchPreview.awayTeam.summary}
-      //             </div>
-      //           </div>
-      //         </div>
-      //       </Fragment>,
-      //       document.getElementById("AIInsightsContainer")
-      //     );
-      //   } catch (error) {
-      //     console.error("Fetch error:", error); // Handle fetch errors
-      //   }
-      // }
 
       const formDataMatch = [];
 
@@ -1459,8 +1229,6 @@ export async function createStatsDiv(game, displayBool) {
         formRun: homeForm.formRun,
         goalDifference: homeForm.goalDifference,
         goalDifferenceHomeOrAway: homeForm.goalDifferenceHomeOrAway,
-        // BttsPercentage: homeForm.BttsPercentage || "-",
-        // BttsPercentageHomeOrAway: homeForm.BttsPercentageHomeOrAway || "-",
         CardsTotal: homeForm.CardsTotal || "-",
         CornersAverage: homeForm.AverageCorners || "-",
         FormTextStringHome: formTextStringHome,
@@ -1472,8 +1240,6 @@ export async function createStatsDiv(game, displayBool) {
         XGSwing: homeForm.XGChangeRecently,
         styleOfPlayOverall: homeForm.styleOfPlayOverall,
         styleOfPlayHome: homeForm.styleOfPlayHome,
-        // BTTSAll: homeForm.last10btts,
-        // BTTSHorA: homeForm.last10bttsHome,
       });
 
       const formDataAway = [];
@@ -1496,8 +1262,6 @@ export async function createStatsDiv(game, displayBool) {
         formRun: awayForm.formRun,
         goalDifference: awayForm.goalDifference,
         goalDifferenceHomeOrAway: awayForm.goalDifferenceHomeOrAway,
-        // BttsPercentage: awayForm.BttsPercentage || "-",
-        // BttsPercentageHomeOrAway: awayForm.BttsPercentageHomeOrAway || "-",
         CardsTotal: awayForm.CardsTotal || "-",
         CornersAverage: awayForm.AverageCorners || "-",
         FormTextStringAway: formTextStringAway,
@@ -1509,31 +1273,7 @@ export async function createStatsDiv(game, displayBool) {
         XGSwing: awayForm.XGChangeRecently,
         styleOfPlayOverall: awayForm.styleOfPlayOverall,
         styleOfPlayAway: awayForm.styleOfPlayAway,
-        // BTTSAll: awayForm.last10btts,
-        // BTTSHorA: awayForm.last10bttsAway,
       });
-
-      let formArrayHome;
-      let formArrayAway;
-      let chartType;
-
-      if (formPointsHome.length > 1) {
-        formArrayHome = formPointsHome;
-        formArrayAway = formPointsAway;
-        chartType = "Points over time";
-      } else {
-        formArrayHome = [
-          homeTenGameAverage,
-          homeSixGameAverage,
-          homeFiveGameAverage,
-        ];
-        formArrayAway = [
-          awayTenGameAverage,
-          awaySixGameAverage,
-          awayFiveGameAverage,
-        ];
-        chartType = "Rolling average points over last 10";
-      }
 
       ReactDOM.render(
         <div style={style}>
@@ -1544,752 +1284,596 @@ export async function createStatsDiv(game, displayBool) {
         document.getElementById("history" + homeTeam)
       );
 
-      //This tournament does not have league positions
-      if (game.leagueName === "Europe UEFA Women's Euro") {
-        game.homeTeamHomePosition = "N/A";
-        game.awayTeamAwayPosition = "N/A";
-      }
+   
 
-      function singleResult(game) {
-        return (
-          <div>
-            <div className="ResultRowSmall">
-              <span className="column">{game.homeXG}</span>
-              <span className="column">XG</span>
-              <span className="column">{game.awayXG}</span>
-            </div>
-            <div className="ResultRowSmall">
-              <span className="column">{game.homeShots}</span>
-              <span className="column">Shots</span>
-              <span className="column">{game.awayShots}</span>
-            </div>
-            <div className="ResultRowSmall">
-              <span className="column">{game.homeSot}</span>
-              <span className="column">SOT</span>
-              <span className="column">{game.awaySot}</span>
-            </div>
-            <div className="ResultRowSmall">
-              <span className="column">{game.homeDangerousAttacks}</span>
-              <span className="column">Dangerous Attacks</span>
-              <span className="column">{game.awayDangerousAttacks}</span>
-            </div>
-            <div className="ResultRowSmall">
-              <span className="column">{game.homePossession}%</span>
-              <span className="column">Possession</span>
-              <span className="column">{game.awayPossession}%</span>
-            </div>
-            <div className="ResultRowSmall">
-              <span className="column">{game.homeRed}</span>
-              <span className="column">Red cards</span>
-              <span className="column">{game.awayRed}</span>
-            </div>
-            <div className="ResultRowSmall">
-              <span className="column">{game.homePPG}</span>
-              <span className="column">PPG (pre-match)</span>
-              <span className="column">{game.awayPPG}</span>
-            </div>
-          </div>
-        );
-      }
+      // function StatsHome() {
+      //   return (
+      //     <div className="flex-childOne">
+      //       <ul style={style}>
+      //         <Stats
+      //           style={style}
+      //           homeOrAway="Home"
+      //           gameCount={divider}
+      //           key={formDataHome[0].name}
+      //           last5={formDataHome[0].Last5}
+      //           homeOrAwayResults={gameArrayHomeTeamHomeGames}
+      //           LeagueOrAll={formDataHome[0].LeagueOrAll}
+      //           className={"KeyStatsHome"}
+      //           name={formDataHome[0].name}
+      //           goals={homeForm.avgScored}
+      //           conceeded={homeForm.avgConceeded}
+      //           XG={homeForm.XGOverall.toFixed(2)}
+      //           XGConceded={homeForm.XGAgainstAvgOverall.toFixed(2)}
+      //           XGSwing={homeForm.XGChangeRecently}
+      //           possession={homeForm.AveragePossessionOverall.toFixed(2)}
+      //           sot={homeForm.AverageShotsOnTargetOverall.toFixed(2)}
+      //           dangerousAttacks={
+      //             homeForm.AverageDangerousAttacksOverall !== 0
+      //               ? homeForm.AverageDangerousAttacksOverall.toFixed(2)
+      //               : homeForm.AverageDangerousAttacks
+      //           }
+      //           leaguePosition={
+      //             formDataHome[0].leaguePosition !== undefined &&
+      //             formDataHome[0].leaguePosition !== "undefined"
+      //               ? formDataHome[0].leaguePosition
+      //               : 0
+      //           }
+      //           rawPosition={
+      //             game.homeRawPosition !== undefined &&
+      //             game.homeRawPosition !== "undefined"
+      //               ? game.homeRawPosition
+      //               : 0
+      //           }
+      //           homeOrAwayLeaguePosition={
+      //             game.homeTeamHomePosition !== undefined &&
+      //             game.homeTeamHomePosition !== "undefined"
+      //               ? game.homeTeamHomePosition
+      //               : 0
+      //           }
+      //           winPercentage={homeForm.homePPGAv ? homeForm.homePPGAv : "N/A"}
+      //           lossPercentage={
+      //             game.homeTeamLossPercentage
+      //               ? game.homeTeamLossPercentage
+      //               : "N/A"
+      //           }
+      //           drawPercentage={
+      //             game.homeTeamDrawPercentage
+      //               ? game.homeTeamDrawPercentage
+      //               : "N/A"
+      //           }
+      //           ppg={formDataHome[0].SeasonPPG}
+      //           formTrend={[
+      //             homeTenGameAverage.toFixed(2),
+      //             homeSixGameAverage.toFixed(2),
+      //             homeFiveGameAverage.toFixed(2),
+      //           ]}
+      //           formRun={homeForm.resultsAll.reverse()}
+      //           goalDifference={formDataHome[0].goalDifference}
+      //           goalDifferenceHomeOrAway={
+      //             formDataHome[0].goalDifferenceHomeOrAway
+      //           }
+      //           BttsPercentage={formDataHome[0].BttsPercentage}
+      //           BttsPercentageHomeOrAway={
+      //             formDataHome[0].BttsPercentageHomeOrAway
+      //           }
+      //           BTTSArray={formDataHome[0].BTTSArray}
+      //           Results={formDataHome[0].Results}
+      //           ResultsHorA={formDataHome[0].ResultsHorA}
+      //           CardsTotal={formDataHome[0].CardsTotal}
+      //           CornersAverage={homeForm.AverageCorners}
+      //           ScoredBothHalvesPercentage={
+      //             formDataHome[0].ScoredBothHalvesPercentage
+      //           }
+      //           FormTextString={formDataHome[0].FormTextStringHome}
+      //           FavouriteRecord={formDataHome[0].FavouriteRecord}
+      //           StyleOfPlay={formDataHome[0].styleOfPlayOverall}
+      //           StyleOfPlayHomeOrAway={formDataHome[0].styleOfPlayHome}
+      //         />
+      //       </ul>
+      //     </div>
+      //   );
+      // }
 
-      function singleSimilarResult(game) {
-        return (
-          <div>
-            <div className="ResultRowSmallDate">
-              <span>{game.date}</span>
-            </div>
-            {/* <div className="ResultRowSmall">
-              <span className="column">{game.XG}</span>
-              <span className="column">XG</span>
-              <span className="column">{game.XGAgainst}</span>
-            </div>
-            <div className="ResultRowSmall">
-              <span className="column">{game.sot}</span>
-              <span className="column">SOT</span>
-              <span className="column">{game.sotAgainst}</span>
-            </div>
-            <div className="ResultRowSmall">
-              <span className="column">{game.possession}%</span>
-              <span className="column">Possession</span>
-              <span className="column">{100 - game.possession}%</span>
-            </div> */}
-          </div>
-        );
-      }
+      // function StatsAway() {
+      //   return (
+      //     <div className="flex-childTwo">
+      //       <ul style={style}>
+      //         <Stats
+      //           style={style}
+      //           homeOrAway="Away"
+      //           gameCount={divider}
+      //           key={formDataAway[0].name}
+      //           last5={formDataAway[0].Last5}
+      //           homeOrAwayResults={gameArrayAwayTeamAwayGames}
+      //           LeagueOrAll={formDataAway[0].LeagueOrAll}
+      //           className={"KeyStatsAway"}
+      //           classNameTwo={"FormStatsAway"}
+      //           name={formDataAway[0].name}
+      //           goals={awayForm.avgScored}
+      //           conceeded={awayForm.avgConceeded}
+      //           XG={awayForm.XGOverall.toFixed(2)}
+      //           XGConceded={awayForm.XGAgainstAvgOverall.toFixed(2)}
+      //           XGSwing={awayForm.XGChangeRecently}
+      //           //todo add goal diff and btts percentages
+      //           possession={awayForm.AveragePossessionOverall.toFixed(2)}
+      //           rawPosition={game.awayRawPosition ? game.awayRawPosition : 0}
+      //           sot={awayForm.AverageShotsOnTargetOverall.toFixed(2)}
+      //           dangerousAttacks={
+      //             awayForm.AverageDangerousAttacksOverall !== 0
+      //               ? awayForm.AverageDangerousAttacksOverall.toFixed(2)
+      //               : awayForm.AverageDangerousAttacks
+      //           }
+      //           leaguePosition={
+      //             formDataAway[0].leaguePosition !== undefined &&
+      //             formDataAway[0].leaguePosition !== "undefined"
+      //               ? formDataAway[0].leaguePosition
+      //               : 0
+      //           }
+      //           homeOrAwayLeaguePosition={
+      //             game.awayTeamAwayPosition !== undefined &&
+      //             game.awayTeamAwayPosition !== "undefinedundefined"
+      //               ? game.awayTeamAwayPosition
+      //               : 0
+      //           }
+      //           winPercentage={awayForm.awayPPGAv ? awayForm.awayPPGAv : "N/A"}
+      //           lossPercentage={
+      //             game.awayTeamLossPercentage
+      //               ? game.awayTeamLossPercentage
+      //               : "N/A"
+      //           }
+      //           drawPercentage={
+      //             game.awayTeamDrawPercentage
+      //               ? game.awayTeamDrawPercentage
+      //               : "N/A"
+      //           }
+      //           ppg={formDataAway[0].SeasonPPG}
+      //           formTrend={[
+      //             awayTenGameAverage.toFixed(2),
+      //             awaySixGameAverage.toFixed(2),
+      //             awayFiveGameAverage.toFixed(2),
+      //           ]}
+      //           formRun={awayForm.resultsAll.reverse()}
+      //           goalDifference={formDataAway[0].goalDifference}
+      //           goalDifferenceHomeOrAway={
+      //             formDataAway[0].goalDifferenceHomeOrAway
+      //           }
+      //           BttsPercentage={formDataAway[0].BttsPercentage}
+      //           BttsPercentageHomeOrAway={
+      //             formDataAway[0].BttsPercentageHomeOrAway
+      //           }
+      //           BTTSArray={formDataAway[0].BTTSArray}
+      //           Results={formDataAway[0].Results}
+      //           ResultsHorA={formDataAway[0].ResultsHorA}
+      //           CardsTotal={formDataAway[0].CardsTotal}
+      //           CornersAverage={awayForm.AverageCorners}
+      //           ScoredBothHalvesPercentage={
+      //             formDataAway[0].ScoredBothHalvesPercentage
+      //           }
+      //           FormTextString={formDataAway[0].FormTextStringAway}
+      //           FavouriteRecord={formDataAway[0].FavouriteRecord}
+      //           StyleOfPlay={formDataAway[0].styleOfPlayOverall}
+      //           StyleOfPlayHomeOrAway={formDataAway[0].styleOfPlayAway}
+      //         />
+      //       </ul>
+      //     </div>
+      //   );
+      // }
 
-      const overviewHome = gameArrayHome.slice(0, 10).map((game) => (
-        <div>
-          <Collapsable
-            classNameButton="ResultButton"
-            buttonText={
-              <div className="ResultRowOverviewSmall">
-                <div className="columnOverviewHomeSmall">{game.homeTeam}</div>
-                <span className="columnOverviewScoreSmall">
-                  {game.homeGoals} : {game.awayGoals}
-                </span>
-                <div className="columnOverviewAwaySmall">{game.awayTeam}</div>
-              </div>
-            }
-            element={singleResult(game)}
-          />
-        </div>
-      ));
+      // let id, team1, team2, timestamp, homeGoals, awayGoals;
 
-      const overviewAway = gameArrayAway.slice(0, 10).map((game) => (
-        <div>
-          <Collapsable
-            classNameButton="ResultButton"
-            buttonText={
-              <div className="ResultRowOverviewSmall">
-                <div className="columnOverviewHomeSmall">{game.homeTeam}</div>
-                <span className="columnOverviewScoreSmall">
-                  {game.homeGoals} : {game.awayGoals}
-                </span>
-                <div className="columnOverviewAwaySmall">{game.awayTeam}</div>
-              </div>
-            }
-            element={singleResult(game)}
-          />
-        </div>
-      ));
+      // async function getGameIdByHomeTeam(games, homeTeamName) {
+      //   const matchingGames = games.filter((game) =>
+      //     game.homeTeam.includes(homeTeamName)
+      //   );
+      //   if (matchingGames.length > 0) {
+      //     return matchingGames[0];
+      //   } else {
+      //     return null; // or any other value you prefer to return if no match is found
+      //   }
+      // }
 
-      let similarGamesHome;
+      // const matchingGame = await getGameIdByHomeTeam(
+      //   arrayOfGames,
+      //   game.homeTeam
+      // );
 
-      if (game.simlarGameResultsHome) {
-        similarGamesHome = game.simlarGameResultsHome.reverse().map((game) => (
-          <div>
-            <Collapsable
-              classNameButton="ResultButton"
-              buttonText={
-                <div className={`ResultRowOverviewSmall${game.result}`}>
-                  <div className="columnOverviewHomeSmall">{game.homeTeam}</div>
-                  <span className="columnOverviewScoreSmall">
-                    {game.homeGoals} : {game.awayGoals}
-                  </span>
-                  <div className="columnOverviewAwaySmall">{game.awayTeam}</div>
-                </div>
-              }
-              element={singleSimilarResult(game)}
-            />
-          </div>
-        ));
-      } else {
-        similarGamesHome = (
-          <h4 className="NoGames">No previous games fit this profile</h4>
-        );
-      }
+      // if (matchingGame) {
+      //   id = matchingGame.id.toString();
+      //   team1 = matchingGame.homeTeam;
+      //   team2 = matchingGame.awayTeam;
+      //   timestamp = matchingGame.time;
+      //   homeGoals = matchingGame.homeGoals;
+      //   awayGoals = matchingGame.awayGoals;
+      // } else {
+      //   id = "0";
+      //   team1 = "N/A";
+      //   team2 = "N/A";
+      //   timestamp = 1;
+      //   homeGoals = "-";
+      //   awayGoals = "-";
+      // }
 
-      let similarGamesAway;
-      if (game.simlarGameResultsAway) {
-        similarGamesAway = game.simlarGameResultsAway.reverse().map((game) => (
-          <div>
-            <Collapsable
-              classNameButton="ResultButton"
-              buttonText={
-                <div className={`ResultRowOverviewSmall${game.result}`}>
-                  <div className="columnOverviewHomeSmall">{game.homeTeam}</div>
-                  <span className="columnOverviewScoreSmall">
-                    {game.homeGoals} : {game.awayGoals}
-                  </span>
-                  <div className="columnOverviewAwaySmall">{game.awayTeam}</div>
-                </div>
-              }
-              element={singleSimilarResult(game)}
-            />
-          </div>
-        ));
-      } else {
-        similarGamesAway = <h4>No previous games fit this profile</h4>;
-      }
-
-      function StatsHome() {
-        return (
-          <div className="flex-childOne">
-            <ul style={style}>
-              <Stats
-                style={style}
-                homeOrAway="Home"
-                gameCount={divider}
-                key={formDataHome[0].name}
-                last5={formDataHome[0].Last5}
-                homeOrAwayResults={gameArrayHomeTeamHomeGames}
-                LeagueOrAll={formDataHome[0].LeagueOrAll}
-                className={"KeyStatsHome"}
-                name={formDataHome[0].name}
-                goals={homeForm.avgScored}
-                conceeded={homeForm.avgConceeded}
-                XG={homeForm.XGOverall.toFixed(2)}
-                XGConceded={homeForm.XGAgainstAvgOverall.toFixed(2)}
-                XGSwing={homeForm.XGChangeRecently}
-                possession={homeForm.AveragePossessionOverall.toFixed(2)}
-                sot={homeForm.AverageShotsOnTargetOverall.toFixed(2)}
-                dangerousAttacks={
-                  homeForm.AverageDangerousAttacksOverall !== 0
-                    ? homeForm.AverageDangerousAttacksOverall.toFixed(2)
-                    : homeForm.AverageDangerousAttacks
-                }
-                leaguePosition={
-                  formDataHome[0].leaguePosition !== undefined &&
-                  formDataHome[0].leaguePosition !== "undefined"
-                    ? formDataHome[0].leaguePosition
-                    : 0
-                }
-                rawPosition={
-                  game.homeRawPosition !== undefined &&
-                  game.homeRawPosition !== "undefined"
-                    ? game.homeRawPosition
-                    : 0
-                }
-                homeOrAwayLeaguePosition={
-                  game.homeTeamHomePosition !== undefined &&
-                  game.homeTeamHomePosition !== "undefined"
-                    ? game.homeTeamHomePosition
-                    : 0
-                }
-                winPercentage={homeForm.homePPGAv ? homeForm.homePPGAv : "N/A"}
-                lossPercentage={
-                  game.homeTeamLossPercentage
-                    ? game.homeTeamLossPercentage
-                    : "N/A"
-                }
-                drawPercentage={
-                  game.homeTeamDrawPercentage
-                    ? game.homeTeamDrawPercentage
-                    : "N/A"
-                }
-                ppg={formDataHome[0].SeasonPPG}
-                formTrend={[
-                  homeTenGameAverage.toFixed(2),
-                  homeSixGameAverage.toFixed(2),
-                  homeFiveGameAverage.toFixed(2),
-                ]}
-                formRun={homeForm.resultsAll.reverse()}
-                goalDifference={formDataHome[0].goalDifference}
-                goalDifferenceHomeOrAway={
-                  formDataHome[0].goalDifferenceHomeOrAway
-                }
-                BttsPercentage={formDataHome[0].BttsPercentage}
-                BttsPercentageHomeOrAway={
-                  formDataHome[0].BttsPercentageHomeOrAway
-                }
-                BTTSArray={formDataHome[0].BTTSArray}
-                Results={formDataHome[0].Results}
-                ResultsHorA={formDataHome[0].ResultsHorA}
-                CardsTotal={formDataHome[0].CardsTotal}
-                CornersAverage={homeForm.AverageCorners}
-                ScoredBothHalvesPercentage={
-                  formDataHome[0].ScoredBothHalvesPercentage
-                }
-                FormTextString={formDataHome[0].FormTextStringHome}
-                FavouriteRecord={formDataHome[0].FavouriteRecord}
-                StyleOfPlay={formDataHome[0].styleOfPlayOverall}
-                StyleOfPlayHomeOrAway={formDataHome[0].styleOfPlayHome}
-              />
-            </ul>
-          </div>
-        );
-      }
-
-      function StatsAway() {
-        return (
-          <div className="flex-childTwo">
-            <ul style={style}>
-              <Stats
-                style={style}
-                homeOrAway="Away"
-                gameCount={divider}
-                key={formDataAway[0].name}
-                last5={formDataAway[0].Last5}
-                homeOrAwayResults={gameArrayAwayTeamAwayGames}
-                LeagueOrAll={formDataAway[0].LeagueOrAll}
-                className={"KeyStatsAway"}
-                classNameTwo={"FormStatsAway"}
-                name={formDataAway[0].name}
-                goals={awayForm.avgScored}
-                conceeded={awayForm.avgConceeded}
-                XG={awayForm.XGOverall.toFixed(2)}
-                XGConceded={awayForm.XGAgainstAvgOverall.toFixed(2)}
-                XGSwing={awayForm.XGChangeRecently}
-                //todo add goal diff and btts percentages
-                possession={awayForm.AveragePossessionOverall.toFixed(2)}
-                rawPosition={game.awayRawPosition ? game.awayRawPosition : 0}
-                sot={awayForm.AverageShotsOnTargetOverall.toFixed(2)}
-                dangerousAttacks={
-                  awayForm.AverageDangerousAttacksOverall !== 0
-                    ? awayForm.AverageDangerousAttacksOverall.toFixed(2)
-                    : awayForm.AverageDangerousAttacks
-                }
-                leaguePosition={
-                  formDataAway[0].leaguePosition !== undefined &&
-                  formDataAway[0].leaguePosition !== "undefined"
-                    ? formDataAway[0].leaguePosition
-                    : 0
-                }
-                homeOrAwayLeaguePosition={
-                  game.awayTeamAwayPosition !== undefined &&
-                  game.awayTeamAwayPosition !== "undefinedundefined"
-                    ? game.awayTeamAwayPosition
-                    : 0
-                }
-                winPercentage={awayForm.awayPPGAv ? awayForm.awayPPGAv : "N/A"}
-                lossPercentage={
-                  game.awayTeamLossPercentage
-                    ? game.awayTeamLossPercentage
-                    : "N/A"
-                }
-                drawPercentage={
-                  game.awayTeamDrawPercentage
-                    ? game.awayTeamDrawPercentage
-                    : "N/A"
-                }
-                ppg={formDataAway[0].SeasonPPG}
-                formTrend={[
-                  awayTenGameAverage.toFixed(2),
-                  awaySixGameAverage.toFixed(2),
-                  awayFiveGameAverage.toFixed(2),
-                ]}
-                formRun={awayForm.resultsAll.reverse()}
-                goalDifference={formDataAway[0].goalDifference}
-                goalDifferenceHomeOrAway={
-                  formDataAway[0].goalDifferenceHomeOrAway
-                }
-                BttsPercentage={formDataAway[0].BttsPercentage}
-                BttsPercentageHomeOrAway={
-                  formDataAway[0].BttsPercentageHomeOrAway
-                }
-                BTTSArray={formDataAway[0].BTTSArray}
-                Results={formDataAway[0].Results}
-                ResultsHorA={formDataAway[0].ResultsHorA}
-                CardsTotal={formDataAway[0].CardsTotal}
-                CornersAverage={awayForm.AverageCorners}
-                ScoredBothHalvesPercentage={
-                  formDataAway[0].ScoredBothHalvesPercentage
-                }
-                FormTextString={formDataAway[0].FormTextStringAway}
-                FavouriteRecord={formDataAway[0].FavouriteRecord}
-                StyleOfPlay={formDataAway[0].styleOfPlayOverall}
-                StyleOfPlayHomeOrAway={formDataAway[0].styleOfPlayAway}
-              />
-            </ul>
-          </div>
-        );
-      }
-
-      let id, team1, team2, timestamp, homeGoals, awayGoals;
-
-      async function getGameIdByHomeTeam(games, homeTeamName) {
-        const matchingGames = games.filter((game) =>
-          game.homeTeam.includes(homeTeamName)
-        );
-        if (matchingGames.length > 0) {
-          return matchingGames[0];
-        } else {
-          return null; // or any other value you prefer to return if no match is found
-        }
-      }
-
-      const matchingGame = await getGameIdByHomeTeam(
-        arrayOfGames,
-        game.homeTeam
-      );
-
-      if (matchingGame) {
-        id = matchingGame.id.toString();
-        team1 = matchingGame.homeTeam;
-        team2 = matchingGame.awayTeam;
-        timestamp = matchingGame.time;
-        homeGoals = matchingGame.homeGoals;
-        awayGoals = matchingGame.awayGoals;
-      } else {
-        id = "0";
-        team1 = "N/A";
-        team2 = "N/A";
-        timestamp = 1;
-        homeGoals = "-";
-        awayGoals = "-";
-      }
-
-      if (homeForm.completeData === true && game.completeData === true) {
-        ReactDOM.render(
-          <>
-            <div style={style}>
-              <Collapsable
-                buttonText={"Lineups & match action"}
-                classNameButton="Lineups"
-                element={
-                  <>
-                    <SofaLineupsWidget
-                      id={id}
-                      team1={team1}
-                      team2={team2}
-                      time={timestamp}
-                      homeGoals={homeGoals}
-                      awayGoals={awayGoals}
-                    ></SofaLineupsWidget>
-                  </>
-                }
-              />
-              <div style={style}>
-                <Div className="MatchTime" text={`Kick off: ${time} GMT`}></Div>
-              </div>
-              <div id="AIInsightsContainer" className="AIInsightsContainer">
-              {!paid ? (
-                <div>Paid feature</div>
-              ) : (
-                <div></div>
-              )}
-                <Button
-                  className="AIInsights"
-                  onClickEvent={() => generateAIInsights(game.id, homeForm, awayForm)}
-                  text={"Generate AI Insights"}
-                  disabled={!paid}
-                ></Button>
-              </div>
-              <div className="flex-container">
-                <StatsHome />
-                <StatsAway />
-              </div>
-              <div className="Chart" id={`Chart${game.id}`} style={style}>
-                <RadarChart
-                  title="XG Tipping Strength Ratings - All Games"
-                  data={[
-                    homeAttackStrength,
-                    homeDefenceStrength,
-                    homePossessionStrength,
-                    homeXGForStrength,
-                    homeXGAgainstStrength,
-                    homeDirectnessStrength,
-                    homeAccuracyOverallStrength,
-                  ]}
-                  data2={[
-                    awayAttackStrength,
-                    awayDefenceStrength,
-                    awayPossessionStrength,
-                    awayXGForStrength,
-                    awayXGAgainstStrength,
-                    awayDirectnessStrength,
-                    awayAccuracyOverallStrength,
-                  ]}
-                  team1={game.homeTeam}
-                  team2={game.awayTeam}
-                ></RadarChart>
-                <RadarChart
-                  title="XG Tipping Strength Ratings - Last 5 games"
-                  data={[
-                    homeAttackStrengthLast5,
-                    homeDefenceStrengthLast5,
-                    homePossessionStrengthLast5,
-                    homeXGForStrengthLast5,
-                    homeXGAgainstStrengthLast5,
-                    homeDirectnessStrengthLast5,
-                    homeAccuracyOverallStrengthLast5,
-                  ]}
-                  data2={[
-                    awayAttackStrengthLast5,
-                    awayDefenceStrengthLast5,
-                    awayPossessionStrengthLast5,
-                    awayXGForStrengthLast5,
-                    awayXGAgainstStrengthLast5,
-                    awayDirectnessStrengthLast5,
-                    awayAccuracyOverallStrengthLast5,
-                  ]}
-                  team1={game.homeTeam}
-                  team2={game.awayTeam}
-                ></RadarChart>
-                <RadarChart
-                  title="XG Tipping Strength Ratings - Home/Away Games Only"
-                  data={[
-                    homeOnlyAttackStrength,
-                    homeOnlyDefenceStrength,
-                    homeOnlyPossessionStrength,
-                    homeOnlyXGForStrength,
-                    homeOnlyXGAgainstStrength,
-                    homeOnlyDirectnessStrength,
-                    homeOnlyAccuracyOverallStrength,
-                  ]}
-                  data2={[
-                    awayOnlyAttackStrength,
-                    awayOnlyDefenceStrength,
-                    awayOnlyPossessionStrength,
-                    awayOnlyXGForStrength,
-                    awayOnlyXGAgainstStrength,
-                    awayOnlyDirectnessStrength,
-                    awayOnlyAccuracyOverallStrength,
-                  ]}
-                  team1={game.homeTeam}
-                  team2={game.awayTeam}
-                ></RadarChart>
-                <DoughnutChart
-                  data={[homeForm.XGRating, awayForm.XGRating]}
-                  homeTeam={game.homeTeam}
-                  awayTeam={game.awayTeam}
-                ></DoughnutChart>
-                <BarChartTwo
-                  text="Recent XG Differential Swing"
-                  homeTeam={homeForm.teamName}
-                  awayTeam={awayForm.teamName}
-                  data1={[homeForm.XGChangeRecently.toFixed(2)]}
-                  data2={[awayForm.XGChangeRecently.toFixed(2)]}
-                ></BarChartTwo>
-                <BarChart
-                  text="H2H - Home Team | Away Team"
-                  data1={[
-                    homeForm.avgScored * 2,
-                    awayForm.avgConceeded * 2,
-                    homeForm.avPointsAll * 3,
-                    homeForm.XGOverall * 2,
-                    awayForm.XGAgainstAvgOverall * 2,
-                    homeForm.AverageShotsOnTargetOverall,
-                    homeForm.AverageDangerousAttacksOverall !== 0
-                      ? homeForm.AverageDangerousAttacksOverall / 7.5
-                      : homeForm.AverageDangerousAttacks / 7.5,
-                    homeForm.AveragePossessionOverall / 7.5,
-                    homeForm.goalDifferenceHomeOrAway / 10,
-                    homeForm.AverageCorners,
-                  ]}
-                  data2={[
-                    awayForm.avgScored * 2,
-                    homeForm.avgConceeded * 2,
-                    awayForm.avPointsAll * 3,
-                    awayForm.XGOverall * 2,
-                    homeForm.XGAgainstAvgOverall * 2,
-                    awayForm.AverageShotsOnTargetOverall,
-                    awayForm.AverageDangerousAttacksOverall !== 0
-                      ? awayForm.AverageDangerousAttacksOverall / 7.5
-                      : awayForm.AverageDangerousAttacks / 7.5,
-                    awayForm.AveragePossessionOverall / 7.5,
-                    awayForm.goalDifferenceHomeOrAway / 10,
-                    awayForm.AverageCorners,
-                  ]}
-                ></BarChart>
-                <Chart
-                  height={3}
-                  depth={0}
-                  data1={formArrayHome}
-                  data2={formArrayAway}
-                  team1={game.homeTeam}
-                  team2={game.awayTeam}
-                  type={chartType}
-                  tension={0}
-                ></Chart>
-                <MultilineChart
-                  height={
-                    Math.max(
-                      rollingGoalDiffTotalHome[
-                        rollingGoalDiffTotalHome.length - 1
-                      ],
-                      rollingGoalDiffTotalAway[
-                        rollingGoalDiffTotalAway.length - 1
-                      ]
-                    ) > 2
-                      ? Math.max(
-                          rollingGoalDiffTotalHome[
-                            rollingGoalDiffTotalHome.length - 1
-                          ],
-                          rollingGoalDiffTotalAway[
-                            rollingGoalDiffTotalAway.length - 1
-                          ]
-                        )
-                      : 2
-                  }
-                  depth={
-                    Math.min(
-                      rollingGoalDiffTotalHome[
-                        rollingGoalDiffTotalHome.length - 1
-                      ],
-                      rollingGoalDiffTotalAway[
-                        rollingGoalDiffTotalAway.length - 1
-                      ]
-                    ) < -2
-                      ? Math.min(
-                          rollingGoalDiffTotalHome[
-                            rollingGoalDiffTotalHome.length - 1
-                          ],
-                          rollingGoalDiffTotalAway[
-                            rollingGoalDiffTotalAway.length - 1
-                          ]
-                        )
-                      : -2
-                  }
-                  data1={rollingGoalDiffTotalHome}
-                  data2={rollingGoalDiffTotalAway}
-                  data3={rollingXGDiffTotalHome}
-                  data4={rollingXGDiffTotalAway}
-                  team1={game.homeTeam}
-                  team2={game.awayTeam}
-                  type={"Goal/XG difference over time"}
-                  tension={0.5}
-                ></MultilineChart>
-              </div>
-              <Div
-                text={`Last league games (most recent first)`}
-                className={"LastGameHeader"}
-              ></Div>
-              <div className="flex-container">
-                <div className="flex-childOneOverviewSmall">{overviewHome}</div>
-                <div className="flex-childTwoOverviewSmall">{overviewAway}</div>
-              </div>
-              <h2>Results from similar profile games</h2>
-              <span>(Games where each team had similar odds)</span>
-              <h3>Most recent first</h3>
-              <div className="flex-container-similar">
-                <div className="flex-childOneOverviewSmall">
-                  {similarGamesHome}
-                </div>
-                <div className="flex-childTwoOverviewSmall">
-                  {similarGamesAway}
-                </div>
-              </div>
-              <input type="hidden" name="IL_IN_ARTICLE" />
-              <Button
-                className="MoreStats"
-                onClickEvent={() =>
-                  getTeamStats(
-                    game.id,
-                    game.homeTeam,
-                    game.awayTeam,
-                    formDataHome[0].BttsPercentage,
-                    formDataHome[0].BttsPercentageHomeOrAway,
-                    formDataAway[0].BttsPercentage,
-                    formDataAway[0].BttsPercentageHomeOrAway
-                  )
-                }
-                text={"Fixture trends + AI Preview"}
-              ></Button>
-            </div>
-          </>,
-          document.getElementById("stats" + homeTeam)
-        );
-      } else if (
-        homeForm.completeData === false ||
-        game.completeData === false
-      ) {
-        ReactDOM.render(
-          <>
-            <div style={style}>
-              <Collapsable
-                buttonText={"Lineups & match action"}
-                classNameButton="Lineups"
-                element={
-                  <>
-                    <SofaLineupsWidget
-                      id={id}
-                      team1={team1}
-                      team2={team2}
-                      time={timestamp}
-                      homeGoals={homeGoals}
-                      awayGoals={awayGoals}
-                    ></SofaLineupsWidget>
-                  </>
-                }
-              />
-              <div className="Chart" id={`Chart${game.id}`} style={style}>
-                <RadarChart
-                  title="XG Tipping Strength Ratings - All Games"
-                  data={[
-                    homeAttackStrength,
-                    homeDefenceStrength,
-                    homePossessionStrength,
-                    homeXGForStrength,
-                    homeXGAgainstStrength,
-                    homeDirectnessStrength,
-                    homeAccuracyOverallStrength,
-                  ]}
-                  data2={[
-                    awayAttackStrength,
-                    awayDefenceStrength,
-                    awayPossessionStrength,
-                    awayXGForStrength,
-                    awayXGAgainstStrength,
-                    awayDirectnessStrength,
-                    awayAccuracyOverallStrength,
-                  ]}
-                  team1={game.homeTeam}
-                  team2={game.awayTeam}
-                ></RadarChart>
-              </div>
-              <div style={style}>
-                <Div className="MatchTime" text={`Kick off: ${time} GMT`}></Div>
-                {/* <Div
-                  text={`Last league games (most recent first)`}
-                  className={"LastGameHeader"}
-                ></Div> */}
-              </div>
-              {/* <div className="flex-container">
-                <div className="flex-childOneOverviewSmall">{overviewHome}</div>
-                <div className="flex-childTwoOverviewSmall">{overviewAway}</div>
-              </div>
-              <div className="flex-container">
-                <StatsHome />
-                <StatsAway />
-              </div> */}
-              <h2>Results from similar profile games</h2>
-              <span>(Games where each team had similar odds)</span>
-              <h3>Most recent first</h3>
-              <div className="flex-container-similar">
-                <div className="flex-childOneOverviewSmall">
-                  {similarGamesHome}
-                </div>
-                <div className="flex-childTwoOverviewSmall">
-                  {similarGamesAway}
-                </div>
-              </div>
-              <input type="hidden" name="IL_IN_ARTICLE" />
-              <Button
-                className="MoreStats"
-                onClickEvent={() =>
-                  getTeamStats(
-                    game.id,
-                    game.homeTeam,
-                    game.awayTeam,
-                    formDataHome[0].BttsPercentage,
-                    formDataHome[0].BttsPercentageHomeOrAway,
-                    formDataAway[0].BttsPercentage,
-                    formDataAway[0].BttsPercentageHomeOrAway
-                  )
-                }
-                text={"Fixture trends + AI Preview"}
-              ></Button>
-            </div>
-          </>,
-          document.getElementById("stats" + homeTeam)
-        );
-      } else {
-        ReactDOM.render(
-          <>
-            <div style={style}>
-              <Collapsable
-                buttonText={"Lineups & match action"}
-                classNameButton="Lineups"
-                element={
-                  <>
-                    <SofaLineupsWidget
-                      id={id}
-                      team1={team1}
-                      team2={team2}
-                      time={timestamp}
-                      homeGoals={homeGoals}
-                      awayGoals={awayGoals}
-                    ></SofaLineupsWidget>
-                  </>
-                }
-              />
-              <div style={style}>
-                <Div className="MatchTime" text={`Kick off: ${time} GMT`}></Div>
-              </div>
-              <div className="flex-container">
-                <StatsHome />
-                <StatsAway />
-              </div>
-              <Div
-                text={`AI Preview, last league games & h2h records (paid feature only)`}
-                className={"LastGameHeader"}
-              ></Div>
-            </div>
-          </>,
-          document.getElementById("stats" + homeTeam)
-        );
-      }
+      // if (homeForm.completeData === true && game.completeData === true) {
+      //   ReactDOM.render(
+      //     <>
+      //       <div style={style}>
+      //         <Collapsable
+      //           buttonText={"Lineups & match action"}
+      //           classNameButton="Lineups"
+      //           element={
+      //             <>
+      //               <SofaLineupsWidget
+      //                 id={id}
+      //                 team1={team1}
+      //                 team2={team2}
+      //                 time={timestamp}
+      //                 homeGoals={homeGoals}
+      //                 awayGoals={awayGoals}
+      //               ></SofaLineupsWidget>
+      //             </>
+      //           }
+      //         />
+      //         <div style={style}>
+      //           <Div className="MatchTime" text={`Kick off: ${time} GMT`}></Div>
+      //         </div>
+      //         <div id="AIInsightsContainer" className="AIInsightsContainer">
+      //         {!paid ? (
+      //           <div>Paid feature</div>
+      //         ) : (
+      //           <div></div>
+      //         )}
+      //           <Button
+      //             className="AIInsights"
+      //             onClickEvent={() => generateAIInsights(game.id, homeForm, awayForm)}
+      //             text={"Generate AI Insights"}
+      //             disabled={!paid}
+      //           ></Button>
+      //         </div>
+      //         <div className="flex-container">
+      //           <StatsHome />
+      //           <StatsAway />
+      //         </div>
+      //         <div className="Chart" id={`Chart${game.id}`} style={style}>
+      //           <RadarChart
+      //             title="XG Tipping Strength Ratings - All Games"
+      //             data={[
+      //               homeAttackStrength,
+      //               homeDefenceStrength,
+      //               homePossessionStrength,
+      //               homeXGForStrength,
+      //               homeXGAgainstStrength,
+      //               homeDirectnessStrength,
+      //               homeAccuracyOverallStrength,
+      //             ]}
+      //             data2={[
+      //               awayAttackStrength,
+      //               awayDefenceStrength,
+      //               awayPossessionStrength,
+      //               awayXGForStrength,
+      //               awayXGAgainstStrength,
+      //               awayDirectnessStrength,
+      //               awayAccuracyOverallStrength,
+      //             ]}
+      //             team1={game.homeTeam}
+      //             team2={game.awayTeam}
+      //           ></RadarChart>
+      //           <RadarChart
+      //             title="XG Tipping Strength Ratings - Last 5 games"
+      //             data={[
+      //               homeAttackStrengthLast5,
+      //               homeDefenceStrengthLast5,
+      //               homePossessionStrengthLast5,
+      //               homeXGForStrengthLast5,
+      //               homeXGAgainstStrengthLast5,
+      //               homeDirectnessStrengthLast5,
+      //               homeAccuracyOverallStrengthLast5,
+      //             ]}
+      //             data2={[
+      //               awayAttackStrengthLast5,
+      //               awayDefenceStrengthLast5,
+      //               awayPossessionStrengthLast5,
+      //               awayXGForStrengthLast5,
+      //               awayXGAgainstStrengthLast5,
+      //               awayDirectnessStrengthLast5,
+      //               awayAccuracyOverallStrengthLast5,
+      //             ]}
+      //             team1={game.homeTeam}
+      //             team2={game.awayTeam}
+      //           ></RadarChart>
+      //           <RadarChart
+      //             title="XG Tipping Strength Ratings - Home/Away Games Only"
+      //             data={[
+      //               homeOnlyAttackStrength,
+      //               homeOnlyDefenceStrength,
+      //               homeOnlyPossessionStrength,
+      //               homeOnlyXGForStrength,
+      //               homeOnlyXGAgainstStrength,
+      //               homeOnlyDirectnessStrength,
+      //               homeOnlyAccuracyOverallStrength,
+      //             ]}
+      //             data2={[
+      //               awayOnlyAttackStrength,
+      //               awayOnlyDefenceStrength,
+      //               awayOnlyPossessionStrength,
+      //               awayOnlyXGForStrength,
+      //               awayOnlyXGAgainstStrength,
+      //               awayOnlyDirectnessStrength,
+      //               awayOnlyAccuracyOverallStrength,
+      //             ]}
+      //             team1={game.homeTeam}
+      //             team2={game.awayTeam}
+      //           ></RadarChart>
+      //           <DoughnutChart
+      //             data={[homeForm.XGRating, awayForm.XGRating]}
+      //             homeTeam={game.homeTeam}
+      //             awayTeam={game.awayTeam}
+      //           ></DoughnutChart>
+      //           <BarChartTwo
+      //             text="Recent XG Differential Swing"
+      //             homeTeam={homeForm.teamName}
+      //             awayTeam={awayForm.teamName}
+      //             data1={[homeForm.XGChangeRecently.toFixed(2)]}
+      //             data2={[awayForm.XGChangeRecently.toFixed(2)]}
+      //           ></BarChartTwo>
+      //           <BarChart
+      //             text="H2H - Home Team | Away Team"
+      //             data1={[
+      //               homeForm.avgScored * 2,
+      //               awayForm.avgConceeded * 2,
+      //               homeForm.avPointsAll * 3,
+      //               homeForm.XGOverall * 2,
+      //               awayForm.XGAgainstAvgOverall * 2,
+      //               homeForm.AverageShotsOnTargetOverall,
+      //               homeForm.AverageDangerousAttacksOverall !== 0
+      //                 ? homeForm.AverageDangerousAttacksOverall / 7.5
+      //                 : homeForm.AverageDangerousAttacks / 7.5,
+      //               homeForm.AveragePossessionOverall / 7.5,
+      //               homeForm.goalDifferenceHomeOrAway / 10,
+      //               homeForm.AverageCorners,
+      //             ]}
+      //             data2={[
+      //               awayForm.avgScored * 2,
+      //               homeForm.avgConceeded * 2,
+      //               awayForm.avPointsAll * 3,
+      //               awayForm.XGOverall * 2,
+      //               homeForm.XGAgainstAvgOverall * 2,
+      //               awayForm.AverageShotsOnTargetOverall,
+      //               awayForm.AverageDangerousAttacksOverall !== 0
+      //                 ? awayForm.AverageDangerousAttacksOverall / 7.5
+      //                 : awayForm.AverageDangerousAttacks / 7.5,
+      //               awayForm.AveragePossessionOverall / 7.5,
+      //               awayForm.goalDifferenceHomeOrAway / 10,
+      //               awayForm.AverageCorners,
+      //             ]}
+      //           ></BarChart>
+      //           <Chart
+      //             height={3}
+      //             depth={0}
+      //             data1={formArrayHome}
+      //             data2={formArrayAway}
+      //             team1={game.homeTeam}
+      //             team2={game.awayTeam}
+      //             type={chartType}
+      //             tension={0}
+      //           ></Chart>
+      //           <MultilineChart
+      //             height={
+      //               Math.max(
+      //                 rollingGoalDiffTotalHome[
+      //                   rollingGoalDiffTotalHome.length - 1
+      //                 ],
+      //                 rollingGoalDiffTotalAway[
+      //                   rollingGoalDiffTotalAway.length - 1
+      //                 ]
+      //               ) > 2
+      //                 ? Math.max(
+      //                     rollingGoalDiffTotalHome[
+      //                       rollingGoalDiffTotalHome.length - 1
+      //                     ],
+      //                     rollingGoalDiffTotalAway[
+      //                       rollingGoalDiffTotalAway.length - 1
+      //                     ]
+      //                   )
+      //                 : 2
+      //             }
+      //             depth={
+      //               Math.min(
+      //                 rollingGoalDiffTotalHome[
+      //                   rollingGoalDiffTotalHome.length - 1
+      //                 ],
+      //                 rollingGoalDiffTotalAway[
+      //                   rollingGoalDiffTotalAway.length - 1
+      //                 ]
+      //               ) < -2
+      //                 ? Math.min(
+      //                     rollingGoalDiffTotalHome[
+      //                       rollingGoalDiffTotalHome.length - 1
+      //                     ],
+      //                     rollingGoalDiffTotalAway[
+      //                       rollingGoalDiffTotalAway.length - 1
+      //                     ]
+      //                   )
+      //                 : -2
+      //             }
+      //             data1={rollingGoalDiffTotalHome}
+      //             data2={rollingGoalDiffTotalAway}
+      //             data3={rollingXGDiffTotalHome}
+      //             data4={rollingXGDiffTotalAway}
+      //             team1={game.homeTeam}
+      //             team2={game.awayTeam}
+      //             type={"Goal/XG difference over time"}
+      //             tension={0.5}
+      //           ></MultilineChart>
+      //         </div>
+      //         <Div
+      //           text={`Last league games (most recent first)`}
+      //           className={"LastGameHeader"}
+      //         ></Div>
+      //         <div className="flex-container">
+      //           <div className="flex-childOneOverviewSmall">{overviewHome}</div>
+      //           <div className="flex-childTwoOverviewSmall">{overviewAway}</div>
+      //         </div>
+      //         <h2>Results from similar profile games</h2>
+      //         <span>(Games where each team had similar odds)</span>
+      //         <h3>Most recent first</h3>
+      //         <div className="flex-container-similar">
+      //           <div className="flex-childOneOverviewSmall">
+      //             {similarGamesHome}
+      //           </div>
+      //           <div className="flex-childTwoOverviewSmall">
+      //             {similarGamesAway}
+      //           </div>
+      //         </div>
+      //         <input type="hidden" name="IL_IN_ARTICLE" />
+      //         <Button
+      //           className="MoreStats"
+      //           onClickEvent={() =>
+      //             getTeamStats(
+      //               game.id,
+      //               game.homeTeam,
+      //               game.awayTeam,
+      //               formDataHome[0].BttsPercentage,
+      //               formDataHome[0].BttsPercentageHomeOrAway,
+      //               formDataAway[0].BttsPercentage,
+      //               formDataAway[0].BttsPercentageHomeOrAway
+      //             )
+      //           }
+      //           text={"Fixture trends + AI Preview"}
+      //         ></Button>
+      //       </div>
+      //     </>,
+      //     document.getElementById("stats" + homeTeam)
+      //   );
+      // } else if (
+      //   homeForm.completeData === false ||
+      //   game.completeData === false
+      // ) {
+      //   ReactDOM.render(
+      //     <>
+      //       <div style={style}>
+      //         <Collapsable
+      //           buttonText={"Lineups & match action"}
+      //           classNameButton="Lineups"
+      //           element={
+      //             <>
+      //               <SofaLineupsWidget
+      //                 id={id}
+      //                 team1={team1}
+      //                 team2={team2}
+      //                 time={timestamp}
+      //                 homeGoals={homeGoals}
+      //                 awayGoals={awayGoals}
+      //               ></SofaLineupsWidget>
+      //             </>
+      //           }
+      //         />
+      //         <div className="Chart" id={`Chart${game.id}`} style={style}>
+      //           <RadarChart
+      //             title="XG Tipping Strength Ratings - All Games"
+      //             data={[
+      //               homeAttackStrength,
+      //               homeDefenceStrength,
+      //               homePossessionStrength,
+      //               homeXGForStrength,
+      //               homeXGAgainstStrength,
+      //               homeDirectnessStrength,
+      //               homeAccuracyOverallStrength,
+      //             ]}
+      //             data2={[
+      //               awayAttackStrength,
+      //               awayDefenceStrength,
+      //               awayPossessionStrength,
+      //               awayXGForStrength,
+      //               awayXGAgainstStrength,
+      //               awayDirectnessStrength,
+      //               awayAccuracyOverallStrength,
+      //             ]}
+      //             team1={game.homeTeam}
+      //             team2={game.awayTeam}
+      //           ></RadarChart>
+      //         </div>
+      //         <div style={style}>
+      //           <Div className="MatchTime" text={`Kick off: ${time} GMT`}></Div>
+      //           {/* <Div
+      //             text={`Last league games (most recent first)`}
+      //             className={"LastGameHeader"}
+      //           ></Div> */}
+      //         </div>
+      //         {/* <div className="flex-container">
+      //           <div className="flex-childOneOverviewSmall">{overviewHome}</div>
+      //           <div className="flex-childTwoOverviewSmall">{overviewAway}</div>
+      //         </div>
+      //         <div className="flex-container">
+      //           <StatsHome />
+      //           <StatsAway />
+      //         </div> */}
+      //         <h2>Results from similar profile games</h2>
+      //         <span>(Games where each team had similar odds)</span>
+      //         <h3>Most recent first</h3>
+      //         <div className="flex-container-similar">
+      //           <div className="flex-childOneOverviewSmall">
+      //             {similarGamesHome}
+      //           </div>
+      //           <div className="flex-childTwoOverviewSmall">
+      //             {similarGamesAway}
+      //           </div>
+      //         </div>
+      //         <input type="hidden" name="IL_IN_ARTICLE" />
+      //         <Button
+      //           className="MoreStats"
+      //           onClickEvent={() =>
+      //             getTeamStats(
+      //               game.id,
+      //               game.homeTeam,
+      //               game.awayTeam,
+      //               formDataHome[0].BttsPercentage,
+      //               formDataHome[0].BttsPercentageHomeOrAway,
+      //               formDataAway[0].BttsPercentage,
+      //               formDataAway[0].BttsPercentageHomeOrAway
+      //             )
+      //           }
+      //           text={"Fixture trends + AI Preview"}
+      //         ></Button>
+      //       </div>
+      //     </>,
+      //     document.getElementById("stats" + homeTeam)
+      //   );
+      // } else {
+      //   ReactDOM.render(
+      //     <>
+      //       <div style={style}>
+      //         <Collapsable
+      //           buttonText={"Lineups & match action"}
+      //           classNameButton="Lineups"
+      //           element={
+      //             <>
+      //               <SofaLineupsWidget
+      //                 id={id}
+      //                 team1={team1}
+      //                 team2={team2}
+      //                 time={timestamp}
+      //                 homeGoals={homeGoals}
+      //                 awayGoals={awayGoals}
+      //               ></SofaLineupsWidget>
+      //             </>
+      //           }
+      //         />
+      //         <div style={style}>
+      //           <Div className="MatchTime" text={`Kick off: ${time} GMT`}></Div>
+      //         </div>
+      //         <div className="flex-container">
+      //           <StatsHome />
+      //           <StatsAway />
+      //         </div>
+      //         <Div
+      //           text={`AI Preview, last league games & h2h records (paid feature only)`}
+      //           className={"LastGameHeader"}
+      //         ></Div>
+      //       </div>
+      //     </>,
+      //     document.getElementById("stats" + homeTeam)
+      //   );
+      // }
     }
 
     // ReactDOM.render(

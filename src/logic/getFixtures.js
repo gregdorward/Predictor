@@ -16,8 +16,6 @@ import { userDetail } from "./authProvider";
 
 var oddslib = require("oddslib");
 
-// require("dotenv").config();
-
 var fixtureResponse;
 var fixtureArray = [];
 export var matches = [];
@@ -56,9 +54,6 @@ let AwayAverageConceded;
 let awayAverageConceded;
 let paid = false;
 
-// export var [currentDay, month, year] = new Date()
-//   .toLocaleDateString("en-US", { timeZone: "Europe/London" })
-//   .split("/");
 
 export async function diff(a, b) {
   return parseFloat(a - b).toFixed(2);
@@ -80,7 +75,6 @@ async function convertTimestamp(timestamp) {
 }
 
 export async function generateTables(a, leagueIdArray, allResults) {
-  // leagueIdArray = [];
   tableArray = [];
   bespokeLeagueArray = [];
   let i = 0;
@@ -245,7 +239,6 @@ export async function renderTable(index, results, id) {
   let league;
   //World cup table rendering
 
-  // let mostRecentGame = results.fixtures.pop();
   const nowInSeconds = Math.floor(Date.now() / 1000); // Current time in seconds
   const twoWeeksAgo = nowInSeconds - 14 * 24 * 60 * 60; // Two week ago in seconds  console.log(oneWeekAgo)
   // 1740576517073
@@ -253,17 +246,6 @@ export async function renderTable(index, results, id) {
   let mostRecentGames = results.fixtures.filter(
     (result) => result.date_unix >= twoWeeksAgo
   );
-
-  // let mostRecentGameweek = "Latest";
-
-  // const gameweeksResults = results.fixtures.filter(
-  //   (games) => games.game_week === mostRecentGame.game_week
-  // );
-
-  // const lastGameweeksResults = results.fixtures.filter(
-  //   (games) => games.game_week === mostRecentGameweek - 1
-  // );
-  // tableArray.concat(bespokeLeagueArray)
 
   if (id !== 13973 && id !== 12933) {
     const leagueTable = tableArray.filter((table) => table.id === id);
@@ -425,16 +407,6 @@ async function createFixture(match, result, mockBool) {
   match.bttsFraction = bttsFraction;
 
   match.game = match.homeTeam + " v " + match.awayTeam;
-
-  // ReactDOM.render(
-  //   <Fixture
-  //     fixtures={matches}
-  //     result={result}
-  //     mock={mockBool}
-  //     className={"individualFixture"}
-  //   />,
-  //   document.getElementById("FixtureContainer")
-  // );
 }
 
 export function RenderAllFixtures(props) {
@@ -490,11 +462,6 @@ export async function generateFixtures(
 ) {
   if (!isFunctionRunning) {
     isFunctionRunning = true;
-    // const randomInt = Math.random() * 10
-
-    // if(randomInt >= 7){
-    //   alert("XGTipping is now serving over 2000 users a month,1 relying on donations to cover increasing running costs. If you can afford to do so and like what we do, please, help us stay subscription fee today by tapping to Donation button at the bottom of the page")
-    // }
 
     ReactDOM.render(
       <div>
@@ -577,7 +544,7 @@ export async function generateFixtures(
       console.log("leagues fetched from s3");
     }
 
-    if (league.status === 200 && allLeagueResults.status === 201) {
+    if (league.status === 200 && (allLeagueResults.status === 201 || allLeagueResults.status === 200)) {
       console.log("Not fetching leagues");
       await league.json().then((leagues) => {
         leagueArray = Array.from(leagues.leagueArray);
@@ -618,7 +585,6 @@ export async function generateFixtures(
         });
       });
 
-      const sofaScoreLeagues = await fetch("");
     } else {
       allLeagueResultsArrayOfObjects = [];
       console.log("Fetching leagues");
@@ -679,10 +645,6 @@ export async function generateFixtures(
           }
         }
 
-        // let mostRecentResults = gamesFiltered.filter(
-        //   (game) => game.date_unix > targetDate
-        // );
-
         const shortenedResults = gamesFiltered.map(
           ({
             home_name,
@@ -742,7 +704,6 @@ export async function generateFixtures(
         );
 
         let leagueObj = {
-          // leagueObject[orderedLeague] = {
           name: orderedLeague.name,
           id: orderedLeague.element.id,
           fixtures: shortenedResults,
@@ -849,8 +810,6 @@ export async function generateFixtures(
             season.round === "1st Phase" ||
             season.round === "2026" ||
             season.round === "-1"
-          // season.round === "North" ||
-          // season.round === "South"
         );
         let string;
 
@@ -1196,143 +1155,8 @@ export async function generateFixtures(
             home: {
               teamName: match.homeTeam,
               0: {
-                // XGOverall: parseFloat(form[0].data[0].stats.xg_for_avg_overall),
-                // XG: parseFloat(form[0].data[0].stats.xg_for_avg_home),
-                // ScoredOverall: parseFloat(
-                //   form[0].data[0].stats.seasonScoredNum_overall
-                // ),
-                // ScoredAverage: parseFloat(
-                //   form[0].data[0].stats.seasonScoredAVG_home
-                // ),
-                // PlayedHome: parseFloat(
-                //   form[0].data[0].stats.seasonMatchesPlayed_home
-                // ),
-                // PlayedAway: parseFloat(
-                //   form[0].data[0].stats.seasonMatchesPlayed_away
-                // ),
-                // ConcededOverall: parseFloat(
-                //   form[0].data[0].stats.seasonConcededNum_overall
-                // ),
-                // ConcededAverage: parseFloat(
-                //   form[0].data[0].stats.seasonConcededAVG_home
-                // ),
-                // XGAgainstAvgOverall: parseFloat(
-                //   form[0].data[0].stats.xg_against_avg_overall
-                // ),
-                // XGAgainstAverage: parseFloat(
-                //   form[0].data[0].stats.xg_against_avg_home
-                // ),
-                // CleanSheetPercentage: parseFloat(
-                //   form[0].data[0].stats.seasonCSPercentage_overall
-                // ),
-                // AveragePossessionOverall: parseFloat(
-                //   form[0].data[0].stats.possessionAVG_overall
-                // ),
-                // AveragePossession: parseFloat(
-                //   form[0].data[0].stats.possessionAVG_home
-                // ),
-                // AverageShotsOnTargetOverall: parseFloat(
-                //   form[0].data[0].stats.shotsOnTargetAVG_overall
-                // ),
-                // AverageShotsOnTarget: parseFloat(
-                //   form[0].data[0].stats.shotsOnTargetAVG_home
-                // ),
-                // AverageDangerousAttacksOverall: parseFloat(
-                //   form[0].data[0].stats.dangerous_attacks_avg_overall
-                // ),
-                // PPG: parseFloat(form[0].data[0].stats.seasonPPG_overall),
-                // AttacksHome: parseFloat(form[0].data[0].stats.attacks_avg_home),
-                // AttacksAway: parseFloat(form[0].data[0].stats.attacks_avg_away),
-                // AverageDangerousAttacks: parseFloat(
-                //   form[0].data[0].stats.dangerous_attacks_avg_home
-                // ),
-                // homeAttackAdvantage: parseFloat(
-                //   form[0].data[0].stats.homeAttackAdvantage
-                // ),
-                // homeDefenceAdvantage: parseFloat(
-                //   form[0].data[0].stats.homeDefenceAdvantage
-                // ),
-                // BTTSPercentage: parseInt(
-                //   form[0].data[0].stats.seasonBTTSPercentage_home
-                // ),
-                // LeagueOrAll: leagueOrAll,
-                // LeaguePosition: `${teamPositionHome}${homePrefix}`,
-                // homeRawPosition: homeTeaminLeague.rawPosition !== undefined
-                //   ? homeTeaminLeague.rawPosition
-                //   : 0,
-                // homeTeamHomePositionRaw: teamPositionHomeTable,
-                // LeagueAverageGoals: homeAverageGoals,
-                // LeagueAverageConceded: homeAverageConceded,
               },
-              1: {
-                // XGOverall: parseFloat(form[0].data[1].stats.xg_for_avg_overall),
-                // XG: parseFloat(form[0].data[1].stats.xg_for_avg_home),
-                // ScoredOverall: parseFloat(
-                //   form[0].data[1].stats.seasonScoredNum_overall
-                // ),
-                // ScoredAverage: parseFloat(
-                //   form[0].data[1].stats.seasonScoredAVG_home
-                // ),
-                // PlayedHome: parseFloat(
-                //   form[0].data[1].stats.seasonMatchesPlayed_home
-                // ),
-                // PlayedAway: parseFloat(
-                //   form[0].data[1].stats.seasonMatchesPlayed_away
-                // ),
-                // ConcededOverall: parseFloat(
-                //   form[0].data[1].stats.seasonConcededNum_overall
-                // ),
-                // ConcededAverage: parseFloat(
-                //   form[0].data[1].stats.seasonConcededAVG_home
-                // ),
-                // XGAgainstAvgOverall: parseFloat(
-                //   form[0].data[1].stats.xg_against_avg_overall
-                // ),
-                // XGAgainstAverage: parseFloat(
-                //   form[0].data[1].stats.xg_against_avg_home
-                // ),
-                // CleanSheetPercentage: parseFloat(
-                //   form[0].data[1].stats.seasonCSPercentage_overall
-                // ),
-                // AveragePossessionOverall: parseFloat(
-                //   form[0].data[1].stats.possessionAVG_overall
-                // ),
-                // AveragePossession: parseFloat(
-                //   form[0].data[1].stats.possessionAVG_home
-                // ),
-                // AverageShotsOnTargetOverall: parseFloat(
-                //   form[0].data[1].stats.shotsOnTargetAVG_overall
-                // ),
-                // AverageShotsOnTarget: parseFloat(
-                //   form[0].data[1].stats.shotsOnTargetAVG_home
-                // ),
-                // AverageDangerousAttacksOverall: parseFloat(
-                //   form[0].data[1].stats.dangerous_attacks_avg_overall
-                // ),
-                // PPG: parseFloat(form[0].data[1].stats.seasonPPG_overall),
-                // AttacksHome: parseFloat(form[0].data[1].stats.attacks_avg_home),
-                // AttacksAway: parseFloat(form[0].data[1].stats.attacks_avg_away),
-                // AverageDangerousAttacks: parseFloat(
-                //   form[0].data[1].stats.dangerous_attacks_avg_home
-                // ),
-                // homeAttackAdvantage: parseFloat(
-                //   form[0].data[1].stats.homeAttackAdvantage
-                // ),
-                // homeDefenceAdvantage: parseFloat(
-                //   form[0].data[1].stats.homeDefenceAdvantage
-                // ),
-                // BTTSPercentage: parseInt(
-                //   form[0].data[1].stats.seasonBTTSPercentage_home
-                // ),
-                // LeagueOrAll: leagueOrAll,
-                // LeaguePosition: `${teamPositionHome}${homePrefix}`,
-                // homeRawPosition: homeTeaminLeague.rawPosition !== undefined
-                //   ? homeTeaminLeague.rawPosition
-                //   : 0,
-                // homeTeamHomePositionRaw: teamPositionHomeTable,
-                // LeagueAverageGoals: homeAverageGoals,
-                // LeagueAverageConceded: homeAverageConceded,
-              },
+              1: {},
               2: {
                 XGOverall: parseFloat(form[0].data[2].stats.xg_for_avg_overall),
                 XG: parseFloat(form[0].data[2].stats.xg_for_avg_home),
@@ -1449,134 +1273,8 @@ export async function generateFixtures(
             },
             away: {
               teamName: match.awayTeam,
-              0: {
-                // XGOverall: parseFloat(form[1].data[0].stats.xg_for_avg_overall),
-                // XG: parseFloat(form[1].data[0].stats.xg_for_avg_away),
-                // ScoredOverall: parseFloat(
-                //   form[1].data[0].stats.seasonScoredNum_overall
-                // ),
-                // ScoredAverage: parseFloat(
-                //   form[1].data[0].stats.seasonScoredAVG_away
-                // ),
-                // PlayedHome: parseFloat(
-                //   form[1].data[0].stats.seasonMatchesPlayed_home
-                // ),
-                // PlayedAway: parseFloat(
-                //   form[1].data[0].stats.seasonMatchesPlayed_away
-                // ),
-                // ConcededOverall: parseFloat(
-                //   form[1].data[0].stats.seasonConcededNum_overall
-                // ),
-                // ConcededAverage: parseFloat(
-                //   form[1].data[0].stats.seasonConcededAVG_away
-                // ),
-                // XGAgainstAvgOverall: parseFloat(
-                //   form[1].data[0].stats.xg_against_avg_overall
-                // ),
-                // XGAgainstAverage: parseFloat(
-                //   form[1].data[0].stats.xg_against_avg_away
-                // ),
-                // CleanSheetPercentage: parseFloat(
-                //   form[1].data[0].stats.seasonCSPercentage_overall
-                // ),
-                // AveragePossessionOverall: parseFloat(
-                //   form[1].data[0].stats.possessionAVG_overall
-                // ),
-                // AveragePossession: parseFloat(
-                //   form[1].data[0].stats.possessionAVG_away
-                // ),
-                // AverageShotsOnTargetOverall: parseFloat(
-                //   form[1].data[0].stats.shotsOnTargetAVG_overall
-                // ),
-                // AverageShotsOnTarget: parseFloat(
-                //   form[1].data[0].stats.shotsOnTargetAVG_away
-                // ),
-                // AverageDangerousAttacksOverall: parseFloat(
-                //   form[1].data[0].stats.dangerous_attacks_avg_overall
-                // ),
-                // PPG: parseFloat(form[1].data[0].stats.seasonPPG_overall),
-                // AttacksAverage: parseFloat(
-                //   form[1].data[0].stats.attacks_avg_away
-                // ),
-                // AverageDangerousAttacks: parseFloat(
-                //   form[1].data[0].stats.dangerous_attacks_avg_away
-                // ),
-                // BTTSPercentage: parseInt(
-                //   form[1].data[0].stats.seasonBTTSPercentage_away
-                // ),
-                // LeagueOrAll: leagueOrAll,
-                // LeaguePosition: `${teamPositionAway}${awayPrefix}`,
-                // awayRawPosition: awayTeaminLeague.rawPosition
-                //   ? awayTeaminLeague.rawPosition
-                //   : 0,
-                // awayTeamAwayPositionRaw: teamPositionAwayTable,
-                // LeagueAverageGoals: awayAverageGoals,
-                // LeagueAverageConceded: awayAverageConceded,
-              },
-              1: {
-                // XGOverall: parseFloat(form[1].data[1].stats.xg_for_avg_overall),
-                // XG: parseFloat(form[1].data[1].stats.xg_for_avg_away),
-                // ScoredOverall: parseFloat(
-                //   form[1].data[1].stats.seasonScoredNum_overall
-                // ),
-                // ScoredAverage: parseFloat(
-                //   form[1].data[1].stats.seasonScoredAVG_away
-                // ),
-                // PlayedHome: parseFloat(
-                //   form[1].data[1].stats.seasonMatchesPlayed_home
-                // ),
-                // PlayedAway: parseFloat(
-                //   form[1].data[1].stats.seasonMatchesPlayed_away
-                // ),
-                // ConcededOverall: parseFloat(
-                //   form[1].data[1].stats.seasonConcededNum_overall
-                // ),
-                // ConcededAverage: parseFloat(
-                //   form[1].data[1].stats.seasonConcededAVG_away
-                // ),
-                // XGAgainstAvgOverall: parseFloat(
-                //   form[1].data[1].stats.xg_against_avg_overall
-                // ),
-                // XGAgainstAverage: parseFloat(
-                //   form[1].data[1].stats.xg_against_avg_away
-                // ),
-                // CleanSheetPercentage: parseFloat(
-                //   form[1].data[1].stats.seasonCSPercentage_overall
-                // ),
-                // AveragePossessionOverall: parseFloat(
-                //   form[1].data[1].stats.possessionAVG_overall
-                // ),
-                // AveragePossession: parseFloat(
-                //   form[1].data[1].stats.possessionAVG_away
-                // ),
-                // AverageShotsOnTargetOverall: parseFloat(
-                //   form[1].data[1].stats.shotsOnTargetAVG_overall
-                // ),
-                // AverageShotsOnTarget: parseFloat(
-                //   form[1].data[1].stats.shotsOnTargetAVG_away
-                // ),
-                // AverageDangerousAttacksOverall: parseFloat(
-                //   form[1].data[1].stats.dangerous_attacks_avg_overall
-                // ),
-                // PPG: parseFloat(form[1].data[1].stats.seasonPPG_overall),
-                // AttacksAverage: parseFloat(
-                //   form[1].data[1].stats.attacks_avg_away
-                // ),
-                // AverageDangerousAttacks: parseFloat(
-                //   form[1].data[1].stats.dangerous_attacks_avg_away
-                // ),
-                // BTTSPercentage: parseInt(
-                //   form[1].data[1].stats.seasonBTTSPercentage_away
-                // ),
-                // LeagueOrAll: leagueOrAll,
-                // LeaguePosition: `${teamPositionAway}${awayPrefix}`,
-                // awayRawPosition: awayTeaminLeague.rawPosition
-                //   ? awayTeaminLeague.rawPosition
-                //   : 0,
-                // awayTeamAwayPositionRaw: teamPositionAwayTable,
-                // LeagueAverageGoals: awayAverageGoals,
-                // LeagueAverageConceded: awayAverageConceded,
-              },
+              0: {},
+              1: {},
               2: {
                 XGOverall: parseFloat(form[1].data[2].stats.xg_for_avg_overall),
                 XG: parseFloat(form[1].data[2].stats.xg_for_avg_away),
