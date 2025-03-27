@@ -130,6 +130,13 @@ let tomorrowsDateUnformatted;
 let yesterdaysDateUnformatted;
 let saturdayDateUnformatted;
 
+async function calculateDate(dateString) {
+  const day = dateString.getDate();
+  const month = dateString.getMonth() + 1;
+  const year = dateString.getFullYear();
+  return [`${month}${day}${year}`, `${year}-${month}-${day}`];
+}
+
 (async function fetchLeagueData() {
   let leagueList;
   if (userDetail) {
@@ -137,7 +144,9 @@ let saturdayDateUnformatted;
   } else {
     paid = false;
   }
-  leagueList = await fetch(`${process.env.REACT_APP_EXPRESS_SERVER}leagueList`);
+  let now = new Date();
+  let dateNow = await calculateDate(now)
+  leagueList = await fetch(`${process.env.REACT_APP_EXPRESS_SERVER}leagueList/${dateNow[0]}`);
 
   let leagueArray;
   await leagueList.json().then((leagues) => {
@@ -231,13 +240,6 @@ export async function getLeagueList() {
       dateString = date;
       await renderButtons();
     }
-  }
-
-  async function calculateDate(dateString) {
-    const day = dateString.getDate();
-    const month = dateString.getMonth() + 1;
-    const year = dateString.getFullYear();
-    return [`${month}${day}${year}`, `${year}-${month}-${day}`];
   }
 
   [today, todayFootyStats] = await calculateDate(new Date());
