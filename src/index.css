@@ -30,14 +30,6 @@
   }
 }
 
-@font-face {
-  font-family: 'Open Sans';
-  font-style: normal;
-  font-weight: 600;
-  src: url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@600&display=swap');
-  font-display: swap;
-}
-
 .teamComparisonScore {
   display: inline-block;
   padding: 0.5vw;
