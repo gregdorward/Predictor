@@ -1,6 +1,6 @@
 {
   "files": {
-    "main.css": "/static/css/main.bde14665.chunk.css",
+    "main.css": "/static/css/main.18937ae1.chunk.css",
     "main.js": "/static/js/main.c2812fd9.chunk.js",
     "main.js.map": "/static/js/main.c2812fd9.chunk.js.map",
     "runtime-main.js": "/static/js/runtime-main.6c53275a.js",
@@ -12,7 +12,7 @@
     "static/js/3.06662526.chunk.js.map": "/static/js/3.06662526.chunk.js.map",
     "index.html": "/index.html",
     "static/css/2.33c847f3.chunk.css.map": "/static/css/2.33c847f3.chunk.css.map",
-    "static/css/main.bde14665.chunk.css.map": "/static/css/main.bde14665.chunk.css.map",
+    "static/css/main.18937ae1.chunk.css.map": "/static/css/main.18937ae1.chunk.css.map",
     "static/js/2.4580cb0d.chunk.js.LICENSE.txt": "/static/js/2.4580cb0d.chunk.js.LICENSE.txt",
     "static/media/xg-tipping-high-resolution-logo-transparent.90176ea6.png": "/static/media/xg-tipping-high-resolution-logo-transparent.90176ea6.png"
   },
@@ -20,7 +20,7 @@
     "static/js/runtime-main.6c53275a.js",
     "static/css/2.33c847f3.chunk.css",
     "static/js/2.4580cb0d.chunk.js",
-    "static/css/main.bde14665.chunk.css",
+    "static/css/main.18937ae1.chunk.css",
     "static/js/main.c2812fd9.chunk.js"
   ]
 }
