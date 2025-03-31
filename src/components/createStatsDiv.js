@@ -352,6 +352,8 @@ function Stats(props) {
       </Fragment>
     );
   } else if (props.games === "last5") {
+    console.log(props.name)
+    console.log(props.goals)
     return (
       <Fragment>
         <ul className={props.className ? props.className : ""} style={props.style ? props.style : {}}>

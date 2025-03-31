@@ -21,7 +21,7 @@ import MultiTypeChart from "./MultitypeChart"; // Adjust the path if necessary
 import { Slider } from "../components/CarouselXGChart";
 import Collapsable from "../components/CollapsableElement";
 import Stats from "../components/createStatsDiv";
-import { allLeagueResultsArrayOfObjects } from "../logic/getFixtures";
+import { allLeagueResultsArrayOfObjects, basicTableArray } from "../logic/getFixtures";
 import { userDetail } from "../logic/authProvider";
 import { clicked, getPointsFromLastX } from "../logic/getScorePredictions";
 import { arrayOfGames } from "../logic/getFixtures";
@@ -1153,6 +1153,7 @@ function GameStats({ game, displayBool }) {
   // Component: StatsAway (Render Away Team Stats)
   function StatsAwayLast5Component() {
     if (!awayForm) return null;
+    console.log(awayForm.last5Goals)
     return (
       <div className="flex-childTwo">
         <ul style={style}>
@@ -1701,6 +1702,9 @@ function GameStats({ game, displayBool }) {
         );
         setHomeAccuracyOverallStrength(accuracyHome);
 
+        const accuracyHomeLast5 = await calculateMetricStrength("accuracyOverall", homeForm.avgShotValueLast5Chart);
+        setHomeAccuracyOverallStrengthLast5(accuracyHomeLast5)
+
         const accuracyHomeOnly = await calculateMetricStrength(
           "accuracyOverall",
           homeForm.avgShotValueHomeChart
@@ -1713,9 +1717,13 @@ function GameStats({ game, displayBool }) {
         );
         setAwayAccuracyOverallStrength(accuracyAway);
 
+        const accuracyAwayLast5 = await calculateMetricStrength("accuracyOverall", awayForm.avgShotValueLast5Chart)
+        setAwayAccuracyOverallStrengthLast5(accuracyAwayLast5)
+
+
         const accuracyAwayOnly = await calculateMetricStrength(
           "accuracyOverall",
-          homeForm.avgShotValueAwayChart
+          awayForm.avgShotValueAwayChart
         );
         setAwayOnlyAccuracyOverallStrength(accuracyAwayOnly);
 
@@ -1877,14 +1885,38 @@ function GameStats({ game, displayBool }) {
 
   // AI Insights Generation
 
+  async function fetchBasicTable(id){
+    let basicTable
+    basicTable = basicTableArray[id -1]
+    return basicTable;
+  }
+
   const generateAIInsights = useCallback(
     async (gameId) => {
+      console.log(gameId)
       setIsLoading(true);
+      const table = await fetchBasicTable(game.leagueIndex)
+      console.log(table)
+      const leagueTable = table.table
+      let progress;
+
+      let statistics;
+      let leagueStatistics = await fetch(
+        `${process.env.REACT_APP_EXPRESS_SERVER}leagueStats/${leagueTable[0].LeagueID}`
+      );
+      await leagueStatistics.json().then((stats) => {
+        statistics = stats.data;
+        progress = statistics.progress
+        console.log(statistics)
+      });
+
       try {
         const AIPayload = {
           league: game.leagueDesc,
           gameweek: game.game_week,
           referee: await getRefStats(game.refereeID, game.competition_id),
+          leagueTable: leagueTable,
+          seasonProgressPercent: progress,
           homeTeam: {
             homeTeamName: game.homeTeam,
             homeLeaguePosition: homeForm?.LeaguePosition,

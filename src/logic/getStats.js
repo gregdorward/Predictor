@@ -17,7 +17,7 @@ export async function calculateAttackingStrength(stats) {
   // Define weights for each metric (you can adjust these based on your preference)
   const weights = {
     // averagePossession: 0.15,
-    "Average Dangerous Attacks": 0.05,
+    "Average Dangerous Attacks": 0.1,
     "Average Shots": 0.05,
     "Average Shots On Target": 0.15,
     "Average Expected Goals": 0.15,
@@ -37,7 +37,7 @@ export async function calculateAttackingStrength(stats) {
     "Recent XG": { min: 0.5, max: 2.25 }, // Adjust the max value as needed
     "Average Goals": { min: 0, max: 3 }, // Adjust the max value as needed
     Corners: { min: 2, max: 9 },
-    "Average Shot Value": { min: 8.5, max: 13 },
+    "Average Shot Value": { min: 3, max: 35 },
   };
 
   // Normalize each metric value and calculate the weighted sum
@@ -124,7 +124,7 @@ export async function calculateMetricStrength(metricName, metricValue) {
     xgFor: { min: 0.25, max: 2.75 },
     xgAgainst: { min: 0.25, max: 2.75 },
     directnessOverall: { min: 0.5, max: 7 },
-    accuracyOverall: { min: 3, max: 25 },
+    accuracyOverall: { min: 3, max: 35 },
   };
 
   // Ensure the metric is valid and exists in the weights and ranges objects

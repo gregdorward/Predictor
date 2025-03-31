@@ -61,6 +61,7 @@ export async function diff(a, b) {
 
 export let allForm = [];
 export let tableArray = [];
+export let basicTableArray = [];
 export let bespokeLeagueArray = [];
 groupInstance = [];
 leagueInstance = [];
@@ -76,6 +77,7 @@ async function convertTimestamp(timestamp) {
 
 export async function generateTables(a, leagueIdArray, allResults) {
   tableArray = [];
+  basicTableArray = [];
   bespokeLeagueArray = [];
   let i = 0;
   leagueArray.forEach(function (league) {
@@ -103,7 +105,7 @@ export async function generateTables(a, leagueIdArray, allResults) {
         } else {
           last5 = currentTeam.wdl_record.slice(-5).toUpperCase();
         }
-
+        console.log(currentTeam)
         const team = {
           LeagueID: currentLeagueId,
           Position: index + 1,
@@ -126,7 +128,18 @@ export async function generateTables(a, leagueIdArray, allResults) {
         };
         leagueInstance.push(team);
       }
+      console.log(leagueInstance)
+
       tableArray.push({ id: currentLeagueId, table: leagueInstance });
+      let basicElements = leagueInstance.map(item => ({
+        LeagueID: item.LeagueID,
+        Name: item.Name,
+        Position: item.Position,
+        GoalDifference: item.GoalDifference,
+        Played: item.Played,
+        Points: item.Points
+    }))
+      basicTableArray.push({id: currentLeagueId, table: basicElements})
     } else if (currentLeagueId === 13973 || currentLeagueId === 12933) {
       // for (let x = 0; x < league.data.specific_tables[0].groups.length; x++) {
       // for (
@@ -215,10 +228,10 @@ export async function generateTables(a, leagueIdArray, allResults) {
         };
         leagueInstance.push(team);
       }
-
       tableArray.push({ id: currentLeagueId, table: leagueInstance });
     }
   });
+  console.log(basicTableArray)
 }
 
 function isWithin48Hours(targetDate) {
@@ -258,6 +271,7 @@ export async function renderTable(index, results, id) {
     );
     await leagueStatistics.json().then((stats) => {
       statistics = stats.data;
+      console.log(statistics)
     });
 
     if (league !== undefined) {
@@ -539,7 +553,7 @@ export async function generateFixtures(
       `${process.env.REACT_APP_EXPRESS_SERVER}results`
     );
 
-    if (league.status === 200) {
+    if (league.status !== 200) {
       leaguesStored = true;
       console.log("leagues fetched from s3");
     }
@@ -550,6 +564,7 @@ export async function generateFixtures(
         leagueArray = Array.from(leagues.leagueArray);
       });
       updateResults(false);
+      console.log(leagueArray)
 
       await allLeagueResults.json().then((allGames) => {
         allLeagueResultsArrayOfObjects = Array.from(allGames);
@@ -596,6 +611,7 @@ export async function generateFixtures(
         await league.json().then((table) => {
           leagueArray.push(table);
         });
+        console.log(leagueArray)
         leaguesStored = false;
       }
 
@@ -1438,7 +1454,7 @@ export async function generateFixtures(
               onClickEvent={() => getScorePrediction(day)}
               className={"GeneratePredictions"}
             />
-            <div className="Version">Prediction engine v1.4.0 (18/03/25)</div>
+            <div className="Version">Prediction engine v1.5.0 (31/03/25)</div>
             <Collapsable
               buttonText={"Filters"}
               element={
