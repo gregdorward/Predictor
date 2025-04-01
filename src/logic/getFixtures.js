@@ -54,7 +54,6 @@ let AwayAverageConceded;
 let awayAverageConceded;
 let paid = false;
 
-
 export async function diff(a, b) {
   return parseFloat(a - b).toFixed(2);
 }
@@ -105,7 +104,6 @@ export async function generateTables(a, leagueIdArray, allResults) {
         } else {
           last5 = currentTeam.wdl_record.slice(-5).toUpperCase();
         }
-        console.log(currentTeam)
         const team = {
           LeagueID: currentLeagueId,
           Position: index + 1,
@@ -128,18 +126,17 @@ export async function generateTables(a, leagueIdArray, allResults) {
         };
         leagueInstance.push(team);
       }
-      console.log(leagueInstance)
 
       tableArray.push({ id: currentLeagueId, table: leagueInstance });
-      let basicElements = leagueInstance.map(item => ({
+      let basicElements = leagueInstance.map((item) => ({
         LeagueID: item.LeagueID,
         Name: item.Name,
         Position: item.Position,
         GoalDifference: item.GoalDifference,
         Played: item.Played,
-        Points: item.Points
-    }))
-      basicTableArray.push({id: currentLeagueId, table: basicElements})
+        Points: item.Points,
+      }));
+      basicTableArray.push({ id: currentLeagueId, table: basicElements });
     } else if (currentLeagueId === 13973 || currentLeagueId === 12933) {
       // for (let x = 0; x < league.data.specific_tables[0].groups.length; x++) {
       // for (
@@ -231,18 +228,12 @@ export async function generateTables(a, leagueIdArray, allResults) {
       tableArray.push({ id: currentLeagueId, table: leagueInstance });
     }
   });
-  console.log(basicTableArray)
 }
 
 function isWithin48Hours(targetDate) {
   const now = new Date(); // Current date and time
   const timeDifference = targetDate.getTime() - now.getTime(); // Difference in milliseconds
   const fortyEightHoursInMs = 48 * 60 * 60 * 1000; // 48 hours in milliseconds
-  console.log(targetDate)
-  console.log(now)
-  console.log(timeDifference)
-  console.log(fortyEightHoursInMs)
-
   // Check if the target date is within the next 48 hours (positive difference)
   // OR within the past 48 hours (negative difference, but absolute value less than 48 hours).
   return Math.abs(timeDifference) <= fortyEightHoursInMs;
@@ -271,7 +262,7 @@ export async function renderTable(index, results, id) {
     );
     await leagueStatistics.json().then((stats) => {
       statistics = stats.data;
-      console.log(statistics)
+      console.log(statistics);
     });
 
     if (league !== undefined) {
@@ -463,7 +454,6 @@ let isFunctionRunning = false;
 
 export let dynamicDate;
 
-
 export async function generateFixtures(
   day,
   date,
@@ -492,17 +482,17 @@ export async function generateFixtures(
       <div></div>,
       document.getElementById("GeneratePredictions")
     );
-    ReactDOM.render(<div></div>, document.getElementById("successMeasure2"));
-    ReactDOM.render(<div></div>, document.getElementById("bestPredictions"));
-    ReactDOM.render(<div></div>, document.getElementById("exoticOfTheDay"));
-    ReactDOM.render(<div></div>, document.getElementById("insights"));
-    ReactDOM.render(<div></div>, document.getElementById("longShots"));
-    ReactDOM.render(<div></div>, document.getElementById("BTTS"));
-    ReactDOM.render(<div></div>, document.getElementById("draws"));
+    ReactDOM.render(<div></div>, document.getElementById("MultiPlaceholder"));
+    // ReactDOM.render(<div></div>, document.getElementById("bestPredictions"));
+    // ReactDOM.render(<div></div>, document.getElementById("exoticOfTheDay"));
+    // ReactDOM.render(<div></div>, document.getElementById("insights"));
+    // ReactDOM.render(<div></div>, document.getElementById("longShots"));
+    // ReactDOM.render(<div></div>, document.getElementById("BTTS"));
+    // ReactDOM.render(<div></div>, document.getElementById("draws"));
 
     const url = `${process.env.REACT_APP_EXPRESS_SERVER}matches/${footyStatsFormattedDate}`;
     const formUrl = `${process.env.REACT_APP_EXPRESS_SERVER}form/${date}`;
-    dynamicDate = unformattedDate
+    dynamicDate = unformattedDate;
 
     matches = [];
     fixtureArray = [];
@@ -558,13 +548,15 @@ export async function generateFixtures(
       console.log("leagues fetched from s3");
     }
 
-    if (league.status === 200 && (allLeagueResults.status === 201 || allLeagueResults.status === 200)) {
+    if (
+      league.status === 200 &&
+      (allLeagueResults.status === 201 || allLeagueResults.status === 200)
+    ) {
       console.log("Not fetching leagues");
       await league.json().then((leagues) => {
         leagueArray = Array.from(leagues.leagueArray);
       });
       updateResults(false);
-      console.log(leagueArray)
 
       await allLeagueResults.json().then((allGames) => {
         allLeagueResultsArrayOfObjects = Array.from(allGames);
@@ -599,7 +591,6 @@ export async function generateFixtures(
           });
         });
       });
-
     } else {
       allLeagueResultsArrayOfObjects = [];
       console.log("Fetching leagues");
@@ -611,7 +602,7 @@ export async function generateFixtures(
         await league.json().then((table) => {
           leagueArray.push(table);
         });
-        console.log(leagueArray)
+        console.log(leagueArray);
         leaguesStored = false;
       }
 
@@ -1170,8 +1161,7 @@ export async function generateFixtures(
             leagueId: leagueID,
             home: {
               teamName: match.homeTeam,
-              0: {
-              },
+              0: {},
               1: {},
               2: {
                 XGOverall: parseFloat(form[0].data[2].stats.xg_for_avg_overall),
@@ -1476,9 +1466,7 @@ export async function generateFixtures(
                     lower="0"
                     upper="30"
                   ></SlideDiff>
-                  <h6>
-                    Goals for/against home or away differential filter
-                  </h6>
+                  <h6>Goals for/against home or away differential filter</h6>
                   <div>
                     I'm looking for tips where the goal differential (home or
                     away only) between teams is at least...
@@ -1528,7 +1516,6 @@ export async function generateFixtures(
                 </div>
               }
             />
-            ,
           </Fragment>,
           document.getElementById("GeneratePredictions")
         );
@@ -1536,7 +1523,6 @@ export async function generateFixtures(
 
       // }
     }
-
 
     ReactDOM.render(
       <div>
@@ -1595,6 +1581,27 @@ export async function generateFixtures(
     }
 
     // const allFixtures = await RenderAllFixtures(matches, false)
+    ReactDOM.render(
+      <Collapsable
+        buttonText={"Multis"}
+        // display={fixtureList.length > 0 ? "" : "none"}
+        element={
+          <Fragment>
+            <div id="bestPredictions" className="bestPredictions" />
+            <div id="exoticOfTheDay" className="exoticOfTheDay" />
+            {/* <div id="successMeasure2" /> */}
+            <div id="RowOneContainer" className="RowOneContainer">
+              <div id="BTTS" className="RowOne" />
+              <div id="longShots" className="RowOne" />
+              <div id="draws" className="RowOne" />
+            </div>
+            <div id="insights" />
+            <div id="UserGeneratedTips" />
+          </Fragment>
+        }
+      />,
+      document.getElementById("MultiPlaceholder")
+    )
     ReactDOM.render(
       <RenderAllFixtures matches={matches} result={false} bool={false} />,
       document.getElementById("FixtureContainer")

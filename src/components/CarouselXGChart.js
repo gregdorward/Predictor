@@ -32,7 +32,8 @@ export const Slider = (props) => {
       observer={true}
       observeParents={true}
       centeredSlides={true}
-      slidesPerView={1}
+      slidesPerView={"auto"}
+      spaceBetween={100}
       coverflowEffect={{
         rotate: 10,
         stretch: 0,

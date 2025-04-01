@@ -21,7 +21,10 @@ import MultiTypeChart from "./MultitypeChart"; // Adjust the path if necessary
 import { Slider } from "../components/CarouselXGChart";
 import Collapsable from "../components/CollapsableElement";
 import Stats from "../components/createStatsDiv";
-import { allLeagueResultsArrayOfObjects, basicTableArray } from "../logic/getFixtures";
+import {
+  allLeagueResultsArrayOfObjects,
+  basicTableArray,
+} from "../logic/getFixtures";
 import { userDetail } from "../logic/authProvider";
 import { clicked, getPointsFromLastX } from "../logic/getScorePredictions";
 import { arrayOfGames } from "../logic/getFixtures";
@@ -1153,7 +1156,6 @@ function GameStats({ game, displayBool }) {
   // Component: StatsAway (Render Away Team Stats)
   function StatsAwayLast5Component() {
     if (!awayForm) return null;
-    console.log(awayForm.last5Goals)
     return (
       <div className="flex-childTwo">
         <ul style={style}>
@@ -1368,7 +1370,6 @@ function GameStats({ game, displayBool }) {
   }
 
   function handleSetUserTips(gameId, game, tipString, tip, date, uid, odds) {
-
     setUserTips((prevTips) => {
       // Check if the tip for this gameId already exists
       const existingTipIndex = prevTips.findIndex(
@@ -1385,7 +1386,7 @@ function GameStats({ game, displayBool }) {
           tip,
           date,
           uid,
-          odds
+          odds,
         };
         return updatedTips; // Return the updated list
       } else {
@@ -1702,8 +1703,11 @@ function GameStats({ game, displayBool }) {
         );
         setHomeAccuracyOverallStrength(accuracyHome);
 
-        const accuracyHomeLast5 = await calculateMetricStrength("accuracyOverall", homeForm.avgShotValueLast5Chart);
-        setHomeAccuracyOverallStrengthLast5(accuracyHomeLast5)
+        const accuracyHomeLast5 = await calculateMetricStrength(
+          "accuracyOverall",
+          homeForm.avgShotValueLast5Chart
+        );
+        setHomeAccuracyOverallStrengthLast5(accuracyHomeLast5);
 
         const accuracyHomeOnly = await calculateMetricStrength(
           "accuracyOverall",
@@ -1717,9 +1721,11 @@ function GameStats({ game, displayBool }) {
         );
         setAwayAccuracyOverallStrength(accuracyAway);
 
-        const accuracyAwayLast5 = await calculateMetricStrength("accuracyOverall", awayForm.avgShotValueLast5Chart)
-        setAwayAccuracyOverallStrengthLast5(accuracyAwayLast5)
-
+        const accuracyAwayLast5 = await calculateMetricStrength(
+          "accuracyOverall",
+          awayForm.avgShotValueLast5Chart
+        );
+        setAwayAccuracyOverallStrengthLast5(accuracyAwayLast5);
 
         const accuracyAwayOnly = await calculateMetricStrength(
           "accuracyOverall",
@@ -1885,19 +1891,19 @@ function GameStats({ game, displayBool }) {
 
   // AI Insights Generation
 
-  async function fetchBasicTable(id){
-    let basicTable
-    basicTable = basicTableArray[id -1]
+  async function fetchBasicTable(id) {
+    let basicTable;
+    basicTable = basicTableArray[id - 1];
     return basicTable;
   }
 
   const generateAIInsights = useCallback(
     async (gameId) => {
-      console.log(gameId)
+      console.log(gameId);
       setIsLoading(true);
-      const table = await fetchBasicTable(game.leagueIndex)
-      console.log(table)
-      const leagueTable = table.table
+      const table = await fetchBasicTable(game.leagueIndex);
+      console.log(table);
+      const leagueTable = table.table;
       let progress;
 
       let statistics;
@@ -1906,8 +1912,8 @@ function GameStats({ game, displayBool }) {
       );
       await leagueStatistics.json().then((stats) => {
         statistics = stats.data;
-        progress = statistics.progress
-        console.log(statistics)
+        progress = statistics.progress;
+        console.log(statistics);
       });
 
       try {
@@ -2041,13 +2047,12 @@ function GameStats({ game, displayBool }) {
     handleSetUserTips,
     userDetail,
     selectedTip,
-    handleTipSelect
+    handleTipSelect,
   }) => {
     const handleClick = (tipType, label) => {
       if (selectedTip === tipType) {
         return; // If the button clicked is already selected, do nothing
       }
-
 
       let odds;
 
@@ -2161,16 +2166,24 @@ function GameStats({ game, displayBool }) {
           <Div className="MatchTime" text={`Kick off: ${time} GMT`}></Div>
         </div>
         <div id="AIInsightsContainer" className="AIInsightsContainer">
-          {!paid && game.leagueID !== 12325 && <div>Paid feature only</div>}
-          <Button
-            className="AIInsights"
-            onClickEvent={() => {
-              generateAIInsights(game.id);
-              setShowAIInsights(true);
-            }}
-            text={"XG AI"}
-            disabled={!paid && game.leagueID !== 12325}
-          ></Button>
+          {!paid && game.leagueID !== 12325 ? (
+            <Button
+              className="AIInsightsLocked"
+              text={"XG AI 🔒"}
+              disabled={!paid && game.leagueID !== 12325}
+            />
+          ) : (
+            <Button
+              className="AIInsights"
+              onClickEvent={() => {
+                generateAIInsights(game.id);
+                setShowAIInsights(true);
+              }}
+              text={"XG AI"}
+              disabled={!paid && game.leagueID !== 12325}
+            />
+          )}
+
           {showAIInsights && ( // Conditionally Render the AI Insights.
             <div className="AIOutputContainer">
               {isLoading ? <p>Loading AI data....</p> : AIOutput}

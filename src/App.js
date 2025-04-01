@@ -31,7 +31,6 @@ import { ThreeDots } from "react-loading-icons";
 import Logo from "./components/Logo";
 import { BrowserRouter as Router, Route, Routes, Link } from "react-router-dom";
 
-
 export const proxyurl = "https://safe-caverns-99679.herokuapp.com/";
 export var fixtureList = [];
 export let allLeagueData = [];
@@ -145,8 +144,10 @@ async function calculateDate(dateString) {
     paid = false;
   }
   let now = new Date();
-  let dateNow = await calculateDate(now)
-  leagueList = await fetch(`${process.env.REACT_APP_EXPRESS_SERVER}leagueList/${dateNow[0]}`);
+  let dateNow = await calculateDate(now);
+  leagueList = await fetch(
+    `${process.env.REACT_APP_EXPRESS_SERVER}leagueList/${dateNow[0]}`
+  );
 
   let leagueArray;
   await leagueList.json().then((leagues) => {
@@ -491,8 +492,7 @@ const handleCheckout = async (priceId) => {
   }
 };
 
-
-const welcomeTextUnsplitOne = `Welcome to XGTipping, specialists in comprehensive head to head stats, results, xg metrics, and bespoke multi-builders underpinned by expected goal (XG) data.\n `;
+const welcomeTextUnsplitOne = `Welcome to XGTipping, specialists in comprehensive head to head stats, xg metrics, AI previews, and bespoke multi-builders underpinned by expected goal (XG) data.\n `;
 let welcomeTextOne = welcomeTextUnsplitOne.split("\n").map((i) => {
   return <p>{i}</p>;
 });
@@ -519,7 +519,6 @@ function AppContent() {
       </div>
       <div id="Email" className="Email"></div>
       <div id="Day" />
-      <div id="Checkbox" />
       <div id="ExplainerText" />
       <div id="Loading" className="Loading"></div>
       <div id="Buttons" className="Buttons">
@@ -574,23 +573,7 @@ function AppContent() {
       )}
 
       <div id="GeneratePredictions" className="GeneratePredictions" />
-      <Collapsable
-        buttonText={"Multis"}
-        element={
-          <Fragment>
-            <div id="bestPredictions" className="bestPredictions" />
-            <div id="exoticOfTheDay" className="exoticOfTheDay" />
-            {/* <div id="successMeasure2" /> */}
-            <div id="RowOneContainer" className="RowOneContainer">
-              <div id="BTTS" className="RowOne" />
-              <div id="longShots" className="RowOne" />
-              <div id="draws" className="RowOne" />
-            </div>
-            <div id="insights" />
-            <div id="UserGeneratedTips" />
-          </Fragment>
-        }
-      />
+      <div id="MultiPlaceholder" className="MultiPlaceholder" />
       <div id="shortlistRender" />
       <div id="successMeasure2" />
       <div id="highLowLeagues" className="HighLowLeagues" />
@@ -602,29 +585,10 @@ function AppContent() {
 
       <div id="FixtureContainer">
         <h6 className="WelcomeText">{welcomeTextOne}</h6>
-        <h6 className="GetMatchStatText">
-          Games shown below for illustrative purposes only
-        </h6>
-
-        <div className="ExplainerContainer">
-          <span className="oddsHomeExplainer">Home odds</span>
-          <span className="emptyHomeTeam"></span>
-          <span className="scoreExplainer">Result / KO Time</span>
-          <span className="predictionExplainer">Our Prediction</span>
-          <span className="emptyAwayTeam"></span>
-          <span className="oddsAwayExplainer">Away odds</span>
-        </div>
-
-        <Fixture
-          fixtures={mockedFixtures.matches}
-          mock={true}
-          className={"individualFixture"}
-        />
-
         <div>
           <h6 className="WelcomeText">
-            We cover a range of leagues, including
-            <ul className="AllLeagues">
+            We cover 40+ leagues and cups, including
+            <ul className="AllLeagues" key="league-list">
               <li className="League" key="premier-league">
                 Premier League
               </li>
@@ -649,24 +613,34 @@ function AppContent() {
               <li className="League" key="primeira-liga">
                 Primeira Liga
               </li>
+              <li className="League" key="champions-league">
+                UEFA Champions League
+              </li>
               <li className="League" key="loads-more">
                 Loads more...
               </li>
             </ul>
           </h6>
         </div>
+        <h6 className="GetMatchStatText">
+          Games shown below for illustrative purposes only
+        </h6>
+        <div id="Checkbox" />
 
-        <div>
-          <div className="DataText">Raw data from</div>
-          <a
-            className="DataLink"
-            href="https://www.footystats.org"
-            target="_blank"
-            rel="noreferrer"
-          >
-            footystats.org
-          </a>
-        </div>
+        {/* <div className="ExplainerContainer">
+          <span className="oddsHomeExplainer">Home odds</span>
+          <span className="emptyHomeTeam"></span>
+          <span className="scoreExplainer">Result / KO Time</span>
+          <span className="predictionExplainer">Our Prediction</span>
+          <span className="emptyAwayTeam"></span>
+          <span className="oddsAwayExplainer">Away odds</span>
+        </div> */}
+
+        <Fixture
+          fixtures={mockedFixtures.matches}
+          mock={true}
+          className={"individualFixture"}
+        />
         <div className="bitcoin" id="bitcoin">
           <a
             href="https://www.ko-fi.com/xgtipping"

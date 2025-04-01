@@ -362,6 +362,7 @@ function SingleFixture({
   }
 
   const handleGameStatsClick = () => {
+    console.log(1)
     if (!clicked) {
       alert("Tap Get Predictions to fetch all game stats first");
       return;
@@ -465,8 +466,24 @@ const List = ({ fixtures, mock }) => {
     selectedFixtures.map((fixture, i) => [i, fixture])
   );
 
-  return (
-    <>
+  return ( mock === true ? <>
+    <div>
+      <div id="Headers"></div>
+      <ul className="FixtureList" id="FixtureList">
+        {(showShortlist ? selectedFixtures : fixtures).map((fixture) => (
+          <SingleFixture
+            shortlist={shortlist}
+            showShortlist={showShortlist}
+            fixture={fixture}
+            key={fixture.id}
+            mock={mock}
+            checked={selectedFixtures.some((f) => f.id === fixture.id)}
+            onToggle={() => handleToggle(fixture)}
+          />
+        ))}
+      </ul>
+    </div>
+  </> : <>
       <ShortlistButton
         toggleShortlist={() => setShowShortlist(!showShortlist)}
       />
@@ -520,11 +537,11 @@ export function Fixture(props) {
         mock={props.mock}
       />
       {!props.paid && props.capped === true && (
-        <div>
+        <><div className="LockIcon">🔒</div><div className="LockText">
           {props.originalLength} games have been capped at 15 for free users
           with full stats available for those returned - sign up for access to
           40+ leagues and cups
-        </div>
+        </div></>
       )}{" "}
     </Provider>
   );

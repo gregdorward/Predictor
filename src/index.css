@@ -1207,6 +1207,8 @@ strong {
   max-width: 60%;
   margin-left: auto;
   margin-right: auto;
+  padding-top: 1em;
+  font-size: 0.8em;
 }
 
 *[class^='AwayOdds']{
@@ -1567,7 +1569,7 @@ strong {
 }
 
 .StyleOfPlay{
-  min-height: 3em;
+  min-height: 2.5em;
   margin-bottom: 0;
 }
 
@@ -2316,7 +2318,7 @@ canvas {
 .FormSummaryHome {
   /* display: flex; */
   /* height: auto; */
-  min-height: 9em;
+  min-height: 11em;
   /* vertical-align: middle; */
   background-color: #e2e2e200 !important;
   /* max-width: 21em; */
@@ -3095,49 +3097,6 @@ input:active + .design::after {
   transform: scale(2.6);
 }
 
-.swiper-wrapper{
-  padding-bottom: 30px;
-  display: flex;
-  height: auto!;
-}
-
-.swiper {
-  width: 33%;
-  height: min-content;
-  padding-top: 50px;
-  padding-bottom: 50px;
-}
-
-.swiper-slide {
-  background-position: center;
-  background-size: cover;
-  width: 10em;
-  height: min-content;
-}
-
-.swiper-slide img {
-  display: flex;
-  width: 33%;
-}
-
-.swiper-pagination{
-  position:initial !important
-}
-
-
-
-
-.swiper-container-horizontal>.swiper-pagination-bullets, .swiper-pagination-custom, .swiper-pagination-fraction{
-  bottom: 5px !important;
-}
-
-.swiper-pagination-bullet {
-  background-color:#030061 !important;
-  height: 1.5em !important;
-  width: 1.5em !important;
-
-}
-
 .DonationButton{
   padding-bottom: 2em;
 }
@@ -3297,6 +3256,10 @@ input:active + .design::after {
   margin-left: auto;
   margin-right: auto;
   flex-basis: 100%;
+}
+
+.Chart{
+  width: fit-content;
 }
 
 .ChartContainer{
@@ -3546,6 +3509,15 @@ button.AIInsights {
 
 }
 
+button.AIInsightsLocked {
+  background-color: #eaeaea;
+  color:#030052;
+  margin: 1em;
+  cursor: pointer;
+  /* box-shadow: 0 0px 0px 0 rgba(0, 0, 0, 0.2), 0 1px 2px 0 #030052; */
+
+}
+
 button.AIInsights button:active {
   box-shadow: 0 0px 0px 0 rgba(0, 0, 0, 0.2), 0 1px 2px 0 #030052 inset;
 
@@ -3554,6 +3526,39 @@ button.AIInsights button:active {
 .BarChart{
   height: 1000;
 }
-.XGSwiper{
-  height: 100%;
+/* .XGSwiper{
+} */
+
+.swiper-wrapper{
+  padding-bottom: 30px;
+  display: flex;
+  height: auto!;
+  width: 100%;
+}
+
+
+
+.swiper-pagination{
+  position:initial !important
+}
+
+
+.swiper-container-horizontal>.swiper-pagination-bullets, .swiper-pagination-custom, .swiper-pagination-fraction{
+  bottom: 5px !important;
+}
+
+.swiper-pagination-bullet {
+  background-color:#030061 !important;
+  height: 1.5em !important;
+  width: 1.5em !important;
+
+}
+
+.LockIcon{
+  font-size: 2em;
+}
+
+.LockText{
+  font-size: 1em;
+  line-height: 1.5em;
 }
