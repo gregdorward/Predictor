@@ -194,6 +194,15 @@ export async function generateTables(a, leagueIdArray, allResults) {
           group: group.name ? group.name : group.round,
           table: leagueInstance,
         });
+        let basicElements = leagueInstance.map((item) => ({
+          LeagueID: item.LeagueID,
+          Name: item.Name,
+          Position: item.Position,
+          GoalDifference: item.GoalDifference,
+          Played: item.Played,
+          Points: item.Points,
+        }));
+        basicTableArray.push({ id: currentLeagueId, table: basicElements });
       });
     } else if (league.data.league_table === null) {
       for (
@@ -226,6 +235,15 @@ export async function generateTables(a, leagueIdArray, allResults) {
         leagueInstance.push(team);
       }
       tableArray.push({ id: currentLeagueId, table: leagueInstance });
+      let basicElements = leagueInstance.map((item) => ({
+        LeagueID: item.LeagueID,
+        Name: item.Name,
+        Position: item.Position,
+        GoalDifference: item.GoalDifference,
+        Played: item.Played,
+        Points: item.Points,
+      }));
+      basicTableArray.push({ id: currentLeagueId, table: basicElements });
     }
   });
 }

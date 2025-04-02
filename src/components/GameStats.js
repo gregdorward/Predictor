@@ -1892,16 +1892,15 @@ function GameStats({ game, displayBool }) {
   // AI Insights Generation
 
   async function fetchBasicTable(id) {
-    let basicTable;
-    basicTable = basicTableArray[id - 1];
-    return basicTable;
+    const foundItem = basicTableArray.find(item => item.id === id);
+    return foundItem;
   }
 
   const generateAIInsights = useCallback(
     async (gameId) => {
-      console.log(gameId);
+      console.log(game);
       setIsLoading(true);
-      const table = await fetchBasicTable(game.leagueIndex);
+      const table = await fetchBasicTable(game.leagueID);
       console.log(table);
       const leagueTable = table.table;
       let progress;
