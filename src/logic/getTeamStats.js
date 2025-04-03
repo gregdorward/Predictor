@@ -148,10 +148,6 @@ export async function getTeamStats(
             // Move ':' to be inside the same parenthesis as '?'
             <div>AI Previews are a paid feature</div>
           )}
-          <span className="AIDisclaimer">
-            Any predictions made by the AI do not reflect the opinion of
-            XGTipping
-          </span>
           <HeadToHead
             className={"PreviousMatchStats"}
             homeTeam={home}

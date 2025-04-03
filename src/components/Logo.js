@@ -1,10 +1,10 @@
 import React from 'react';
-import myImage from './images/xg-tipping-high-resolution-logo-transparent.png';
+import myImage from './images/SoccerStatsHub.png';
 
 const Logo = () => {
   return (
     <div className="logo-container">
-      <img src={myImage} alt="XG Tipping logo" className='responsive-logo'/>
+      <img src={myImage} alt="Soccer Stats Hub logo" className='responsive-logo'/>
     </div>
   );
 };

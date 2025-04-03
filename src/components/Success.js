@@ -7,10 +7,10 @@ export const SuccessPage = () => {
       <button
       className="PaymentReturn"
         onClick={() => {
-          window.location.href = "https://www.xgtipping.com/";
+          window.location.href = "https://www.soccerstatshub.com/";
         }}
       >
-        Return to XGTipping
+        Return to Soccer Stats Hub
       </button>
     </Fragment>
   );

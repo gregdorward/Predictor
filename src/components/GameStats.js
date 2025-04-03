@@ -1999,7 +1999,7 @@ function GameStats({ game, displayBool }) {
         <h2>AI Prediction</h2>
         <div className="AIMatchPreview">
           {aiMatchPreview.prediction}{" "}
-          <i>(may not reflect the view of XGTipping)</i>
+          <i>(may not reflect the view of Soccer Stats Hub)</i>
         </div>
         <div className="AIMatchPreview">
           {aiMatchPreview.opinionOnXGTippingPrediction}{" "}
@@ -2168,7 +2168,7 @@ function GameStats({ game, displayBool }) {
           {!paid && game.leagueID !== 12325 ? (
             <Button
               className="AIInsightsLocked"
-              text={"XG AI 🔒"}
+              text={"Soccer Stats Hub AI 🔒"}
               disabled={!paid && game.leagueID !== 12325}
             />
           ) : (
@@ -2178,7 +2178,7 @@ function GameStats({ game, displayBool }) {
                 generateAIInsights(game.id);
                 setShowAIInsights(true);
               }}
-              text={"XG AI"}
+              text={"Soccer Stats Hub AI"}
               disabled={!paid && game.leagueID !== 12325}
             />
           )}
@@ -2201,7 +2201,7 @@ function GameStats({ game, displayBool }) {
               <div className="Chart" id={`Chart${game.id}`} style={style}>
                 <RadarChart
                   style={{ height: "auto" }}
-                  title="XG Tipping Strength Ratings - All Games"
+                  title="Soccer Stats Hub Strength Ratings - All Games"
                   data={[
                     homeAttackStrength,
                     homeDefenceStrength,
@@ -2332,7 +2332,7 @@ function GameStats({ game, displayBool }) {
               </div>
               <div className="Chart" id={`Chart${game.id}`} style={style}>
                 <RadarChart
-                  title="XG Tipping Strength Ratings - Last 5 Games Only"
+                  title="Soccer Stats Hub Strength Ratings - Last 5 Games Only"
                   data={[
                     homeAttackStrengthLast5,
                     homeDefenceStrengthLast5,
@@ -2457,7 +2457,7 @@ function GameStats({ game, displayBool }) {
               </div>
               <div className="Chart" id={`Chart${game.id}`} style={style}>
                 <RadarChart
-                  title="XG Tipping Strength Ratings - Home/Away Games Only"
+                  title="Soccer Stats Hub Strength Ratings - Home/Away Games Only"
                   data={[
                     homeOnlyAttackStrength,
                     homeOnlyDefenceStrength,

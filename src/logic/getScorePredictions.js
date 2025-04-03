@@ -207,7 +207,7 @@ function UserTips() {
   return (
     <div>
       <button onClick={fetchAndSetUserTips}>Get User Tips</button>
-      <h4>Most Tipped Games by XGTipping Users</h4>
+      <h4>Most Tipped Games by Soccer Stats Hub Users</h4>
       <ul className="UserTipsList">
         {tips.length > 0 ? (
           tips.map((game, index) => (
@@ -4634,7 +4634,7 @@ async function renderTips() {
   ReactDOM.render(
     <div>
       <Collapsable
-        buttonText={"XG Tips"}
+        buttonText={"SSH Tips"}
         element={
           <Slider
             element={
@@ -4778,7 +4778,7 @@ async function renderTips() {
             <button
               className="SecondaryButtons"
               onClick={() => {
-                window.open("https://www.xgtipping.com/#/bttsteams");
+                window.open("https://www.soccerstatshub.com/#/bttsteams");
               }}
             >
               Both teams to score teams
@@ -4786,7 +4786,7 @@ async function renderTips() {
             <button
               className="SecondaryButtons"
               onClick={() => {
-                window.open("https://www.xgtipping.com/#/bttsfixtures");
+                window.open("https://www.soccerstatshub.com/#/bttsfixtures");
               }}
               disabled={!paid}
             >
@@ -4796,7 +4796,7 @@ async function renderTips() {
               className="SecondaryButtons"
               onClick={() => {
                 if (paid)
-                  window.open("https://www.xgtipping.com/#/fixtureshigh");
+                  window.open("https://www.soccerstatshub.com/#/fixtureshigh");
               }}
               disabled={!paid}
             >
@@ -4805,7 +4805,7 @@ async function renderTips() {
             <button
               className="SecondaryButtons"
               onClick={() => {
-                if (paid) window.open("https://www.xgtipping.com/#/o25");
+                if (paid) window.open("https://www.soccerstatshub.com/#/o25");
               }}
               disabled={!paid}
             >
@@ -4814,7 +4814,7 @@ async function renderTips() {
             <button
               className="SecondaryButtons"
               onClick={() => {
-                if (paid) window.open("https://www.xgtipping.com/#/u25");
+                if (paid) window.open("https://www.soccerstatshub.com/#/u25");
               }}
               disabled={!paid}
             >
@@ -4823,7 +4823,7 @@ async function renderTips() {
             <button
               className="SecondaryButtons"
               onClick={() => {
-                if (paid) window.open("https://www.xgtipping.com/#/teamshigh");
+                if (paid) window.open("https://www.soccerstatshub.com/#/teamshigh");
               }}
               disabled={!paid}
             >

@@ -215,7 +215,7 @@ function TeamPage() {
     (state) => state.data.fixtureDetails
   );
   const storedFixtureDetailsJson = JSON.parse(storedFixtureDetails);
-  console.log(jsonAwayDetails)
+  console.log(jsonAwayDetails);
 
   const options = {
     plugins: {
@@ -284,12 +284,13 @@ function TeamPage() {
         Average Attendance: {dataState.averageAttendance}
       </h3>
       <h3>
-        XGTipping Prediction: {storedFixtureDetailsJson.homeGoals} -{" "}
+        Soccer Stats Hub Prediction: {storedFixtureDetailsJson.homeGoals} -{" "}
         {storedFixtureDetailsJson.awayGoals}
       </h3>
       <div className="TeamStats">
         <ul className="HomeTeamStats">
           <iframe
+            title="HomeTeamStats"
             src={`https://footystats.org/api/club?id=${storedFixtureDetailsJson.homeId}`}
             height="100%"
             width="100%"
@@ -382,6 +383,7 @@ function TeamPage() {
         </ul>
         <ul className="AwayTeamStats">
           <iframe
+            title="AwayTeamStats"
             src={`https://footystats.org/api/club?id=${storedFixtureDetailsJson.awayId}`}
             height="100%"
             width="100%"

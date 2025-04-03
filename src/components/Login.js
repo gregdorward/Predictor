@@ -84,7 +84,7 @@ const Login = () => {
         <button
           className="ResetPasswordLink"
           onClick={() => {
-            window.location.href = "https://www.xgtipping.com/#/reset";
+            window.location.href = "https://www.soccerstatshub.com/#/reset";
           }}
         >
           Reset password

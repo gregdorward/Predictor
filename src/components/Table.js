@@ -55,7 +55,7 @@ export default function CustomizedTables(props) {
           <TableRow>
             <StyledTableCell>Stat</StyledTableCell>
             <StyledTableCell>H2H history</StyledTableCell>
-            <StyledTableCell>XGTipping forecast</StyledTableCell>
+            <StyledTableCell>SSH forecast</StyledTableCell>
             <StyledTableCell>Odds (yes)</StyledTableCell>
             <StyledTableCell>Odds (no)</StyledTableCell>
           </TableRow>

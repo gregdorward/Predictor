@@ -308,7 +308,7 @@ export function DoughnutChart(props) {
       },
       title: {
         display: true,
-        text: "XG Tipping Form Comparison",
+        text: "Soccer Stats Hub Form Comparison",
         color: "#030061",
         font: {
           size: 14,
