@@ -235,28 +235,34 @@ body {
   /* padding-bottom: 1em; */
 }
 
+h1 {
+  font-size: 3.5em;
+  color: #030052;
+}
+
+/* h1 .logo-container{
+  height: auto;
+} */
+
 .logo-container {
   display: flex;
   /* flex-basis: 50%; */
   justify-content: center;
   align-items: center;
+  max-width: 30em;
   height: auto; /* Adjust as necessary */
+  margin-bottom: 0em;
   /* padding: 2em; */
   /* margin-left: 3em;
   margin-right: 3em; */
-  padding-top: 3em;
-  padding-bottom: 2em;
+  /* padding-top: 1em;
+  padding-bottom: 1em; */
 }
 
 .responsive-logo {
-  max-width: 30em;
+  max-width: 9em;
   height: auto;
   /* Optional: add padding or margin if needed */
-}
-
-h1 {
-  font-size: 3.5em;
-  color: #030052;
 }
 
 h2 {

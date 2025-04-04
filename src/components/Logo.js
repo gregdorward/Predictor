@@ -3,9 +3,9 @@ import myImage from './images/SoccerStatsHub.jpeg';
 
 const Logo = () => {
   return (
-    <div className="logo-container">
+    <h1 className="logo-container">
       <img src={myImage} alt="Soccer Stats Hub logo" className='responsive-logo'/>
-    </div>
+    </h1>
   );
 };
 
