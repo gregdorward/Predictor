@@ -1574,11 +1574,6 @@ strong {
   font-weight: bolder;
 }
 
-.StyleOfPlay{
-  min-height: 2.5em;
-  margin-bottom: 0;
-}
-
 .Aligned {
   margin-top: 1em;
   padding-top: 0.5em;
@@ -1673,6 +1668,13 @@ li .Aligned {
 .LeagueStatistics li {
   color: #030061;
   padding: 0.5em;  
+}
+
+.TeamNameHeader{
+  padding-left: 3.5em;
+  padding-right: 3.5em;
+  padding-bottom: 0em;
+  padding-top: 0em;
 }
 
 .TopScorersColumn {
@@ -2534,6 +2536,14 @@ li.FormHeader{
   text-align: center;
 
   transition: all 0.2s;
+}
+
+.StyleOfPlay{
+  min-height: 2.5em;
+  margin-bottom: 0;
+  padding-top: 0em !important;
+  padding-bottom: 1em !important;
+
 }
 
 .BestPredictions {

@@ -1405,6 +1405,7 @@ function GameStats({ game, displayBool }) {
   const overviewHome = gameArrayHome.slice(0, 10).map((game) => (
     <div>
       <Collapsable
+        key={`${game.homeTeam}v${game.awayTeam}`}
         classNameButton="ResultButton"
         buttonText={
           <div className="ResultRowOverviewSmall">
@@ -1915,6 +1916,31 @@ function GameStats({ game, displayBool }) {
         console.log(statistics);
       });
 
+      let previousGameStats;
+      let previousGames = await fetch(
+        `${process.env.REACT_APP_EXPRESS_SERVER}match/${gameId}`
+      );
+      let odds;
+      await previousGames.json().then((data) => {
+        console.log(data.data)
+        odds = {
+          oddsHomeWin: data.data.odds_ft_1,
+          oddsAwayWin: data.data.odds_ft_2,
+          oddsBTTSYes: data.data.odds_btts_yes,
+          oddsBTTSNo: data.data.odds_btts_no,
+          oddsHomeMostCorners: data.data.odds_corners_1,
+          oddsAwayMostCorners: data.data.odds_corners_2,
+          "oddsOver10.5Corners" : data.data.odds_corners_over_105,
+          "oddsUnder10.5Corners" : data.data.odds_corners_under_105,
+          oddsDoubleChanceHomeOrDraw: data.data.odds_doublechance_1x,
+          oddsDoubleChanceAwayOrDraw: data.data.odds_doublechance_x2,
+          "oddsOver2.5Goals": data.data.odds_ft_over25,
+          "oddsUnder2.5Goals": data.data.odds_ft_under25
+        }
+        
+        // previousGameStats = data.data.h2h.previous_matches_results
+      })
+
       try {
         const AIPayload = {
           league: game.leagueDesc,
@@ -1922,6 +1948,7 @@ function GameStats({ game, displayBool }) {
           referee: await getRefStats(game.refereeID, game.competition_id),
           leagueTable: leagueTable,
           seasonProgressPercent: progress,
+          odds,
           homeTeam: {
             homeTeamName: game.homeTeam,
             homeLeaguePosition: homeForm?.LeaguePosition,

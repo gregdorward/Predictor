@@ -936,8 +936,6 @@ export async function generateFixtures(
         match.homeId = fixture.homeID;
         match.awayId = fixture.awayID;
         match.form = [];
-        match.homeTeamInfo = [];
-        match.awayTeamInfo = [];
         match.btts = false;
 
         previousLeagueName = orderedLeagues[i].name;

@@ -3822,9 +3822,6 @@ export async function getScorePrediction(day, mocked) {
             match.goalsA = "x";
             match.goalsB = "x";
             match.completeData = false;
-            console.log(match);
-            console.log(match.form);
-
             await calculateScore(match, index, divider, true);
             break;
           default:

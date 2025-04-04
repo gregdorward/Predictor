@@ -29,6 +29,7 @@ function Stats(props) {
     return (
       <Fragment>
         <ul className={props.className ? props.className : ""} style={props.style ? props.style : {}}>
+          <h6 className="TeamNameHeader">{props.homeOrAway} Team</h6>
           <li className="FormHeader">League results (most recent on right)</li>
           <li key={`last5League`} className="last5League">
             <span className={styleForm(props.Results && props.Results[5] ? props.Results[5] : "")}>
@@ -246,6 +247,7 @@ function Stats(props) {
     return (
       <Fragment>
         <ul className={props.className ? props.className : ""} style={props.style ? props.style : {}}>
+        <h6 className="TeamNameHeader">{props.homeOrAway} Team</h6>
         <li className="FormHeader">League results (most recent on right)</li>
           <li key={`last5${props.homeOrAwayResults ? props.homeOrAwayResults : "default"}`} className="FormHomeOrAway">
             <span className={styleForm(props.ResultsHorA && props.ResultsHorA[5] ? props.ResultsHorA[5] : "")}>
@@ -355,6 +357,7 @@ function Stats(props) {
     return (
       <Fragment>
         <ul className={props.className ? props.className : ""} style={props.style ? props.style : {}}>
+        <h6 className="TeamNameHeader">{props.homeOrAway} Team</h6>
           <li className="FormHeader">
             Last 5 games (All)
           </li>
