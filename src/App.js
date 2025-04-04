@@ -441,7 +441,7 @@ export async function getLeagueList() {
       <Collapsable
         // className={"HowToUse"}
         buttonText={"How to use"}
-        element={newText}
+        element={newText}         
       />
     </Fragment>,
     document.getElementById("XGDiff")
@@ -519,6 +519,7 @@ function AppContent() {
       </div>
       <div id="Email" className="Email"></div>
       <div id="Day" />
+      <div id="Checkbox" />
       <div id="ExplainerText" />
       <div id="Loading" className="Loading"></div>
       <div id="Buttons" className="Buttons">
