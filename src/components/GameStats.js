@@ -1905,18 +1905,30 @@ function GameStats({ game, displayBool }) {
       console.log(table);
       const leagueTable = table.table;
       let progress;
-
+      let type;
       let statistics;
       let leagueStatistics = await fetch(
         `${process.env.REACT_APP_EXPRESS_SERVER}leagueStats/${leagueTable[0].LeagueID}`
       );
       await leagueStatistics.json().then((stats) => {
         statistics = stats.data;
+        type = stats.data.round_format;
         progress = statistics.progress;
         console.log(statistics);
       });
+      let roundType;
+      switch (type) {
+        case 0: roundType = "League game"; 
+        break;
+        case 1: roundType = "Group game";
+        break
+        case 2: roundType = "Knockout round"
+        break;
+        default: roundType = undefined
+          break;
+      }
 
-      let previousGameStats;
+      // let previousGameStats;
       let previousGames = await fetch(
         `${process.env.REACT_APP_EXPRESS_SERVER}match/${gameId}`
       );
@@ -1941,13 +1953,17 @@ function GameStats({ game, displayBool }) {
         // previousGameStats = data.data.h2h.previous_matches_results
       })
 
+      console.log(game)
+
       try {
         const AIPayload = {
           league: game.leagueDesc,
-          gameweek: game.game_week,
+          gameType: roundType,
+          gameweek: game.matches_completed_minimum,
           referee: await getRefStats(game.refereeID, game.competition_id),
           leagueTable: leagueTable,
           seasonProgressPercent: progress,
+          
           odds,
           homeTeam: {
             homeTeamName: game.homeTeam,
