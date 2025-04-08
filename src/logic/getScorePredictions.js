@@ -1894,8 +1894,8 @@ export async function generateGoals(homeForm, awayForm, match) {
     awayGoals +
     awayAttackVsHomeDefenceComparison * 3 +
     XGRatingAwayComparison * 0 +
-    awayAttackVsHomeDefenceComparisonLast5 * 0 +
     -Math.abs(0.2) +
+    awayAttackVsHomeDefenceComparisonLast5 * 0 +
     awayAttackVsHomeDefenceComparisonAwayOnly * 0 +
     // weighedPointsComparisonAway * 0.005 +
     oddsComparisonAway * 0;
@@ -2126,8 +2126,6 @@ export async function calculateScore(match, index, divider, calculate) {
   } else {
     calculate = false;
   }
-
-  console.log(teams)
 
   let formHome;
   let formAway;
@@ -3573,7 +3571,7 @@ export async function calculateScore(match, index, divider, calculate) {
         break;
     }
 
-    if (match.matches_completed_minimum < 0 || match.omit === true) {
+    if (match.matches_completed_minimum < 5 || match.omit === true) {
       finalHomeGoals = "-";
       finalAwayGoals = "-";
       match.status = "notEnoughData";
@@ -3808,7 +3806,6 @@ export async function getScorePrediction(day, mocked) {
 
   await Promise.all(
     matches.map(async (match) => {
-      console.log(match)
       // if there are no stored predictions, calculate them based on live data
       if (match) {
         switch (true) {
@@ -3818,16 +3815,16 @@ export async function getScorePrediction(day, mocked) {
             match.completeData = false;
             await calculateScore(match, index, divider, false);
             break;
-          // case match.leagueID === 6935 ||
-          //   match.leagueID === 7061 ||
-          //   (match.game_week < 3 &&
-          //     match.game_week !== 0 &&
-          //     match.matches_completed_minimum < 0):
-          //   match.goalsA = "x";
-          //   match.goalsB = "x";
-          //   match.completeData = false;
-          //   await calculateScore(match, index, divider, true);
-          //   break;
+          case match.leagueID === 6935 ||
+            match.leagueID === 7061 ||
+            (match.game_week < 3 &&
+              match.game_week !== 0 &&
+              match.matches_completed_minimum < 5):
+            match.goalsA = "x";
+            match.goalsB = "x";
+            match.completeData = false;
+            await calculateScore(match, index, divider, true);
+            break;
           default:
             [
               match.goalsA,

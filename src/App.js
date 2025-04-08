@@ -44,7 +44,7 @@ export let paid = false;
 const leagueOrder = [
   // 11084, //Euro 2024
   // 7432, //World Cup 22
-  13734, //Nations league 24/25
+  // 13734, //Nations league 24/25
   12325, //premier league 22/23
   12451, //championship 22/23
   12446, //league 1 22/23
@@ -72,7 +72,7 @@ const leagueOrder = [
   12467, //Spanish secunda 22/23
   12621, //Italy serie B 22/23
   12528, //Bundesliga 2 22/23
-  12623, //German 3rd tier 22/23
+  // 12623, //German 3rd tier 22/23
   12338, //French League 2 22/23
   12456, //Scottish Championship 22/23
   12474, //Scottish league 1 22/23
@@ -169,8 +169,8 @@ async function calculateDate(dateString) {
       ) {
         if (
           element.id !== 5874 &&
-          element.id !== 6935 &&
-          element.id !== 7061
+          element.id !== 12623 &&
+          element.id !== 13734
         ) {
           availableLeagues.push({ name: name, element });
         }

@@ -363,7 +363,6 @@ function SingleFixture({
 
   const handleGameStatsClick = () => {
     console.log(1)
-    console.log(fixture)
     if (!clicked) {
       alert("Tap Get Predictions to fetch all game stats first");
       return;
