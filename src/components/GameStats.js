@@ -1900,13 +1900,8 @@ function GameStats({ game, displayBool }) {
   const generateAIInsights = useCallback(
     async (gameId) => {
       console.log(game);
-      let featured = false;
       setIsLoading(true);
       const table = await fetchBasicTable(game.leagueID);
-      // if Champions League
-      // if(game.leagueID === 12321){
-      //   featured = true;
-      // }
       console.log(table);
       const leagueTable = table.table;
       let progress;
@@ -1982,48 +1977,25 @@ function GameStats({ game, displayBool }) {
           },
         };
         console.log(AIPayload);
+        
+        const response = await fetch(
+          `${process.env.REACT_APP_EXPRESS_SERVER}gemini/${gameId}`,
+          {
+            method: "POST",
+            headers: {
+              Accept: "application/json",
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify(AIPayload),
+          }
+        );
 
-        if(featured = true){
-          const response = await fetch(
-            `${process.env.REACT_APP_EXPRESS_SERVER}gemini/featured/${gameId}`,
-            {
-              method: "POST",
-              headers: {
-                Accept: "application/json",
-                "Content-Type": "application/json",
-              },
-              body: JSON.stringify(AIPayload),
-            }
-          );
-  
-          if (!response.ok) {
-            throw new Error(`HTTP error! Status: ${response.status}`);
-          }
-  
-          const jsonData = await response.json();
-          setAiMatchPreview(jsonData);
-        } else {
-          const response = await fetch(
-            `${process.env.REACT_APP_EXPRESS_SERVER}gemini/${gameId}`,
-            {
-              method: "POST",
-              headers: {
-                Accept: "application/json",
-                "Content-Type": "application/json",
-              },
-              body: JSON.stringify(AIPayload),
-            }
-          );
-  
-          if (!response.ok) {
-            throw new Error(`HTTP error! Status: ${response.status}`);
-          }
-  
-          const jsonData = await response.json();
-          setAiMatchPreview(jsonData);
+        if (!response.ok) {
+          throw new Error(`HTTP error! Status: ${response.status}`);
         }
 
-
+        const jsonData = await response.json();
+        setAiMatchPreview(jsonData);
       } catch (error) {
         console.error("Fetch error:", error);
         // Handle the error
