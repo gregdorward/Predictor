@@ -492,7 +492,7 @@ const handleCheckout = async (priceId) => {
   }
 };
 
-const welcomeTextUnsplitOne = `Welcome to Soccer Stats Hub, specialists in comprehensive head to head stats, xg metrics, AI previews, and bespoke multi-builders underpinned by expected goal (XG) data.\n `;
+const welcomeTextUnsplitOne = `Your Ultimate Source for In-Depth Soccer Statistics, AI Analysis and Tips. At Soccer Stats Hub, we specialize in providing comprehensive head-to-head stats, cutting-edge XG metrics, and intelligent AI previews. Our unique bespoke multi-builder tips, powered by comparative data, offers unparalleled depth for serious soccer enthusiasts and analysts.\n `;
 let welcomeTextOne = welcomeTextUnsplitOne.split("\n").map((i) => {
   return <p>{i}</p>;
 });
@@ -588,7 +588,7 @@ function AppContent() {
         <h6 className="WelcomeText">{welcomeTextOne}</h6>
         <div>
           <h6 className="WelcomeText">
-            We cover 40+ leagues and cups, including
+            Stats and tips from 40+ leagues and cups, including
             <ul className="AllLeagues" key="league-list">
               <li className="League" key="premier-league">
                 Premier League
