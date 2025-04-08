@@ -88,6 +88,7 @@ export async function generateTables(a, leagueIdArray, allResults) {
       !league.data.specific_tables[0]?.groups &&
       currentLeagueId !== 13973 &&
       currentLeagueId !== 12933 &&
+      currentLeagueId !== 5874 &&
       league.data.specific_tables[0]?.table
     ) {
       for (
@@ -269,7 +270,7 @@ export async function renderTable(index, results, id) {
     (result) => result.date_unix >= twoWeeksAgo
   );
 
-  if (id !== 13973 && id !== 12933) {
+  if (id !== 13973 && id !== 12933 && id !== 5874) {
     const leagueTable = tableArray.filter((table) => table.id === id);
 
     league = leagueTable[0].table;
@@ -297,7 +298,7 @@ export async function renderTable(index, results, id) {
         document.getElementById(`leagueName${id}`)
       );
     }
-  } else if (id === 13973 || id === 12933) {
+  } else if (id === 13973 || id === 12933 || id === 5874) {
     const leagueTable = bespokeLeagueArray.filter((table) => table.id === id);
 
     const leagueTable1 = leagueTable[0].table;
@@ -1060,22 +1061,22 @@ export async function generateFixtures(
           form = await getForm(match);
 
           let homeFormString5 =
-            form[0].data[0].stats.additional_info.formRun_overall.toUpperCase();
+            form[0].data[0]?.stats.additional_info.formRun_overall.toUpperCase();
           let awayFormString5 =
-            form[1].data[0].stats.additional_info.formRun_overall.toUpperCase();
+            form[1].data[0]?.stats.additional_info.formRun_overall.toUpperCase();
           let homeFormString6 =
-            form[0].data[1].stats.additional_info.formRun_overall.toUpperCase();
+            form[0].data[1]?.stats.additional_info.formRun_overall.toUpperCase();
           let awayFormString6 =
-            form[1].data[1].stats.additional_info.formRun_overall.toUpperCase();
+            form[1].data[1]?.stats.additional_info.formRun_overall.toUpperCase();
           let homeFormString10 =
-            form[0].data[2].stats.additional_info.formRun_overall.toUpperCase();
+            form[0].data[2]?.stats.additional_info.formRun_overall.toUpperCase();
           let awayFormString10 =
-            form[1].data[2].stats.additional_info.formRun_overall.toUpperCase();
+            form[1].data[2]?.stats.additional_info.formRun_overall.toUpperCase();
 
           let homeFormRun =
-            form[0].data[2].stats.additional_info.formRun_home.toUpperCase();
+            form[0].data[2]?.stats.additional_info.formRun_home.toUpperCase();
           let awayFormRun =
-            form[1].data[2].stats.additional_info.formRun_away.toUpperCase();
+            form[1].data[2]?.stats.additional_info.formRun_away.toUpperCase();
 
           if (WDLinLeagueHome.length >= 10) {
             lastThreeFormHome = WDLinLeagueHome.slice(-3);

@@ -92,7 +92,7 @@ const leagueOrder = [
   10121, // WC Qual SA,
   11426, // WC Qual ConCaf
   12801, // WC Qual Aus,
-  5874, // Esports eBattle
+  // 5874, // Esports eBattle
 
   //Japan
   //canada
@@ -168,7 +168,7 @@ async function calculateDate(dateString) {
         element.year === -1
       ) {
         if (
-          element.id !== 13703 &&
+          element.id !== 5874 &&
           element.id !== 6935 &&
           element.id !== 7061
         ) {
