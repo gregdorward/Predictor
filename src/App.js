@@ -67,6 +67,7 @@ const leagueOrder = [
   12120, //Polish prem 22/23
   12326, //Swiss prem 22/23
   12121, //Croatia 24/25
+  12336, //Czecjh 24/25
   13952, //Irish Prem 23
   12321, // Champs league
   12327, //Europa
