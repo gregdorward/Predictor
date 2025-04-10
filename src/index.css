@@ -2316,7 +2316,7 @@ a.PreviousMatchLink{
 canvas {
   /* padding-top: 1em;
   padding-bottom: 1em; */
-  max-height: 30em;
+  max-height: 36em;
   max-width: 36em;
   display: inline !important;
   margin: 1em; 
@@ -2334,6 +2334,7 @@ canvas {
   align-items: flex-start;
   background-color: #e2e2e26c !important; */
   line-height: 1.5em;
+  padding-bottom: 0em;
   /* margin-left: auto; */
 }
 
@@ -2539,10 +2540,10 @@ li.FormHeader{
 }
 
 .StyleOfPlay{
-  min-height: 2.5em;
+  /* min-height: 2.5em; */
   margin-bottom: 0;
-  padding-top: 0em !important;
-  padding-bottom: 1em !important;
+  padding-top: 1em !important;
+  padding-bottom: 0.75em !important;
 
 }
 

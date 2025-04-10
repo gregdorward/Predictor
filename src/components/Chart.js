@@ -445,7 +445,7 @@ export function BarChart(props) {
     indexAxis: "y",
     // Elements options apply to all of the options unless overridden in a dataset
     // In this case, we are setting the border of each horizontal bar to be 2px wide
-    aspectRatio: 1.3,
+    aspectRatio: 1.2,
     elements: {
       bar: {
         borderWidth: 2,
@@ -528,7 +528,7 @@ export function BarChartTwo(props) {
     indexAxis: "x",
     // Elements options apply to all of the options unless overridden in a dataset
     // In this case, we are setting the border of each horizontal bar to be 2px wide
-    aspectRatio: 1.3,
+    aspectRatio: 1.2,
     elements: {
       bar: {
         borderWidth: 2,

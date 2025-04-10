@@ -124,7 +124,7 @@ export async function calculateMetricStrength(metricName, metricValue) {
     xgFor: { min: 0.25, max: 2.75 },
     xgAgainst: { min: 0.25, max: 2.75 },
     directnessOverall: { min: 0.5, max: 7 },
-    accuracyOverall: { min: 3, max: 35 },
+    accuracyOverall: { min: 3, max: 40 },
   };
 
   // Ensure the metric is valid and exists in the weights and ranges objects

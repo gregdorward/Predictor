@@ -443,7 +443,7 @@ export async function getLeagueList() {
       <Collapsable
         // className={"HowToUse"}
         buttonText={"How to use"}
-        element={newText}         
+        element={newText}
       />
     </Fragment>,
     document.getElementById("XGDiff")
@@ -532,15 +532,7 @@ function AppContent() {
       {user ? (
         isPaidUser ? (
           // If the user is logged in and is a paying customer, show the cancel button
-          <button
-            onClick={() => {
-              window.location.href =
-                "https://www.soccerstatshub.com/#/cancelsubscription";
-            }}
-            className="CancelButton"
-          >
-            Cancel Subscription
-          </button>
+          <div />
         ) : (
           // If the user is logged in but is NOT a paying customer, show subscribe buttons
           <div>
@@ -659,6 +651,26 @@ function AppContent() {
         </div>
       </div>
       <div id="XGDiff" />
+
+      {user ? (
+        isPaidUser ? (
+          // If the user is logged in and is a paying customer, show the cancel button
+          <button
+            onClick={() => {
+              window.location.href =
+                "https://www.soccerstatshub.com/#/cancelsubscription";
+            }}
+            className="CancelButton"
+          >
+            Cancel Subscription
+          </button>
+        ) : (
+          <div />
+        )
+      ) : (
+        // If the user is not logged in, show nothing
+        <div></div>
+      )}
 
       <div className="Social">
         <TwitterShareButton

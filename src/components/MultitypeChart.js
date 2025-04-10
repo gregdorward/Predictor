@@ -43,16 +43,7 @@ const MultiTypeChart = ({ dataArray, text }) => {
         data: barData,
         backgroundColor: backgroundColors, // Use the dynamic colors
         borderColor: backgroundColors,      // Match the border color
-        borderWidth: 1,
-      },
-      {
-        type: 'line',
-        label: 'Trend Line',
-        data: barData, // Use the same data for the line to create a trend
-        borderColor: 'rgba(255, 99, 132, 1)',   // Red line
-        backgroundColor: 'rgba(255, 99, 132, 0.2)',  // Pinkish fill
-        pointRadius: 3,                             // Make points visible
-        tension: 0.4,                               // Curve the line a bit
+        borderWidth: 0,
       },
     ],
   };
@@ -60,6 +51,8 @@ const MultiTypeChart = ({ dataArray, text }) => {
   // 3. Chart Options (customize as needed):
   const options = {
     responsive: true,
+    aspectRatio: 1.2,
+    maintainAspectRatio: true,
     plugins: {
       title: {
         display: true,
