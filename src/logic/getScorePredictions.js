@@ -1900,7 +1900,7 @@ export async function generateGoals(homeForm, awayForm, match) {
     // weighedPointsComparisonAway * 0.005 +
     oddsComparisonAway * 0;
 
-  // Cumulative ROI for all 2102 match outcomes: +3.30%
+  // Cumulative ROI for all 3157 match outcomes: +4.31%
 
 
   if (finalScore > 0 && (await diff(homeGoals, awayGoals)) < 1.25) {

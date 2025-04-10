@@ -531,9 +531,9 @@ export async function generateFixtures(
     let form;
     let formArray = [];
     allForm = [];
-    var isFormStored;
-    var isStoredLocally;
-    var leaguesStored = false;
+    let isFormStored;
+    let isStoredLocally;
+    let leaguesStored = false;
     let storedForm = await fetch(formUrl);
     if (storedForm.status === 201 || storedForm.status === 200) {
       await storedForm.json().then((form) => {
@@ -562,7 +562,7 @@ export async function generateFixtures(
       `${process.env.REACT_APP_EXPRESS_SERVER}results`
     );
 
-    if (league.status !== 200) {
+    if (league.status === 200) {
       leaguesStored = true;
       console.log("leagues fetched from s3");
     }
