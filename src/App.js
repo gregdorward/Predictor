@@ -234,7 +234,7 @@ export async function getLeagueList() {
   async function incrementDateV2(num, date) {
     i = i + num;
     console.log(i);
-    if (i <= 5) {
+    if (i <= 3) {
       date.setDate(date.getDate() + num);
       dateUnformatted = date;
       dateSS = await convertTimestampForSofaScore(date);
