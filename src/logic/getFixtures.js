@@ -589,27 +589,27 @@ export async function generateFixtures(
       );
       arrayOfGames = [];
 
-      const sofaScore = await fetch(
-        `https://www.sofascore.com/api/v1/sport/football/scheduled-events/${dateSS}`
-      );
-      await sofaScore.json().then((games) => {
-        games.events.forEach((game) => {
-          arrayOfGames.push({
-            homeTeam: game.homeTeam.name,
-            awayTeam: game.awayTeam.name,
-            id: game.id,
-            time: game.startTimestamp,
-            homeGoals:
-              game.homeScore.display != undefined
-                ? game.homeScore.display
-                : "-",
-            awayGoals:
-              game.awayScore.display != undefined
-                ? game.awayScore.display
-                : "-",
-          });
-        });
-      });
+      // const sofaScore = await fetch(
+      //   `https://www.sofascore.com/api/v1/sport/football/scheduled-events/${dateSS}`
+      // );
+      // await sofaScore.json().then((games) => {
+      //   games.events.forEach((game) => {
+      //     arrayOfGames.push({
+      //       homeTeam: game.homeTeam.name,
+      //       awayTeam: game.awayTeam.name,
+      //       id: game.id,
+      //       time: game.startTimestamp,
+      //       homeGoals:
+      //         game.homeScore.display != undefined
+      //           ? game.homeScore.display
+      //           : "-",
+      //       awayGoals:
+      //         game.awayScore.display != undefined
+      //           ? game.awayScore.display
+      //           : "-",
+      //     });
+      //   });
+      // });
     } else {
       allLeagueResultsArrayOfObjects = [];
       console.log("Fetching leagues");
