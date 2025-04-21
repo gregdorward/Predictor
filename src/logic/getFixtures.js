@@ -589,27 +589,33 @@ export async function generateFixtures(
       );
       arrayOfGames = [];
 
-      // const sofaScore = await fetch(
-      //   `https://www.sofascore.com/api/v1/sport/football/scheduled-events/${dateSS}`
-      // );
-      // await sofaScore.json().then((games) => {
-      //   games.events.forEach((game) => {
-      //     arrayOfGames.push({
-      //       homeTeam: game.homeTeam.name,
-      //       awayTeam: game.awayTeam.name,
-      //       id: game.id,
-      //       time: game.startTimestamp,
-      //       homeGoals:
-      //         game.homeScore.display != undefined
-      //           ? game.homeScore.display
-      //           : "-",
-      //       awayGoals:
-      //         game.awayScore.display != undefined
-      //           ? game.awayScore.display
-      //           : "-",
-      //     });
-      //   });
-      // });
+      try {
+        const sofaScore = await fetch(
+          `https://www.sofascore.com/api/v1/sport/football/scheduled-events/${dateSS}`
+        );
+        await sofaScore.json().then((games) => {
+          games.events.forEach((game) => {
+            arrayOfGames.push({
+              homeTeam: game.homeTeam.name,
+              awayTeam: game.awayTeam.name,
+              id: game.id,
+              time: game.startTimestamp,
+              homeGoals:
+                game.homeScore.display != undefined
+                  ? game.homeScore.display
+                  : "-",
+              awayGoals:
+                game.awayScore.display != undefined
+                  ? game.awayScore.display
+                  : "-",
+            });
+          });
+        });
+      } catch (error) {
+        console.error("An error occurred while fetching or processing data:", error);
+        // You might want to add more specific error handling here,
+        // such as setting a default value for arrayOfGames or logging the error to a server.
+      }
     } else {
       allLeagueResultsArrayOfObjects = [];
       console.log("Fetching leagues");
