@@ -895,7 +895,7 @@ strong {
 /* Base styles for the checkbox */
 .star {
   appearance: none; /* Remove default checkbox */
-  font-size: 1.2em;
+  font-size: 1.5em;
   width: 1.5em;
   height: 1em;
   cursor: pointer;
