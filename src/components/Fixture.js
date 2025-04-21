@@ -264,7 +264,7 @@ function renderLeagueName(fixture, mock, showShortlist) {
 }
 
 const downArrow = "\u{2195}";
-const rightArrow = "\u{29C9}";
+const rightArrow = "\u{2192}";
 
 export let testing;
 
@@ -379,6 +379,7 @@ function SingleFixture({
           className={`individualFixture${fixture.omit}`}
           key={fixture.id}
           data-cy={fixture.id}
+          // onClick={handleGameStatsClick}
           // onClick={onToggle} // Toggle checked state on click
           style={{ display: checked ? "lightblue" : "white" }} // Change background when checked
         >
@@ -404,7 +405,7 @@ function SingleFixture({
           <div className="AwayOdds">{fixture.fractionAway}</div>
         </li>
         <button className="GameStats" onClick={handleGameStatsClick}>
-          Game overview {downArrow}
+          {downArrow}
         </button>
         <input
           type="checkbox"
@@ -414,7 +415,7 @@ function SingleFixture({
           id={`shortlist-${fixture.id}`} // Unique ID for label association
         />
         <button className="GameStatsTwo" onClick={handleButtonClick}>
-          More detail {rightArrow}
+          {rightArrow}
         </button>
         {/* Checkbox for toggling */}
       </div>
