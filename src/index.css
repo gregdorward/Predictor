@@ -895,21 +895,25 @@ strong {
 /* Base styles for the checkbox */
 .star {
   appearance: none; /* Remove default checkbox */
-  font-size: 1.5em;
+  font-size: 1.2em;
   width: 1.5em;
   height: 1em;
   cursor: pointer;
   border: none;
   background: none;
   text-align: center;
-  margin-bottom: 1.5em;
+  margin: 0em;
+  margin-bottom: 0.5em;
+  flex-basis: 10%;
+  /* margin-left: auto; */
+  
 }
 
 /* Default empty star */
 .star:before {
   content: "\2606"; /* Unicode for empty star */
   color: gray;
-  font-size: 1.5em;
+  font-size: 1em;
   display: inline-block;
 }
 
@@ -947,36 +951,38 @@ strong {
 }
 
 .GameStats {
-  flex-basis: 25%;
-  margin-top: 0.25em;
-  margin-bottom: 0.75em;
+  flex-basis: 10%;
+  /* margin-top: 0.25em;
+  margin-bottom: 0.75em; */
   padding: 0.75em;
+  margin: 0em;
   align-content: flex-end;
   align-items: center;
   margin-left: auto;
   /* margin-right: auto; */
-  font-size: 0.9em;
+  font-size: 1.2em;
   /* font-size: 0.75em; */
   background-color: white;
   color: #030052;
-  border: #030052 1px solid
+  border: none
   /* line-height: 1em; */
 }
 
 .GameStatsTwo {
-  flex-basis: 25%;
-  margin-top: 0.25em;
-  margin-bottom: 0.75em;
+  flex-basis: 10%;
+  /* margin-top: 0.25em;
+  margin-bottom: 0.75em; */
   padding: 0.75em;
   align-content: center;
   align-items: center;
   /* margin-left: auto; */
+  margin: 0em;
   margin-right: auto;
-  font-size: 0.9em;
+  font-size: 1.2em;
   /* font-size: 0.75em; */
   background-color: white;
   color: #030052;
-  border: #030052 1px solid
+  border: none
   /* line-height: 1em; */
 }
 
@@ -1006,11 +1012,15 @@ strong {
   padding-top: 0.5em;
   /* padding-bottom: 0.5em; */
   cursor: pointer;
+  
   /* box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.2), 0 1px 2px 0 #030052; */
   /* margin-bottom: 1em; */
   /* border: black 0.25px solid; */
 }
 
+.individualFixturefalse:hover {
+  text-decoration: underline;
+}
 
 .individualFixturetrue {
   display: flex;
@@ -1032,16 +1042,16 @@ strong {
   flex-wrap: wrap;
   flex-basis: 100%;
   background-color: white;
-  border: 0.1em solid #030061;
+  /* border: 0.1em solid #030061; */
   align-items: center;
   align-content: center;
-  color: black;
+  /* color: black; */
   padding-top: 0.5em;
   padding-bottom: 0.5em;
   cursor: pointer;
   /* box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.2), 0 1px 2px 0 #030052; */
-  margin-bottom: 1em;
-  box-shadow: 0 0px 0px 0 rgba(0, 0, 0, 0.2), 0 1px 2px 0 #030052;
+  /* margin-bottom: 1em; */
+  /* box-shadow: 0 0px 0px 0 rgba(0, 0, 0, 0.2), 0 1px 2px 0 #030052; */
 }
 
 
@@ -1050,15 +1060,15 @@ strong {
   flex-wrap: wrap;
   flex-basis: 100%;
   background-color: rgb(212, 212, 212);
-  border: 0.1em dashed #030061;
+  /* border: 0.1em dashed #030061; */
   align-items: center;
   align-content: center;
-  color: black;
-  padding-top: 0.5em;
-  padding-bottom: 0.5em;
+  /* color: black; */
+  padding-top: 1em;
+  padding-bottom: 1em;
   cursor: pointer;
   /* box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.2), 0 1px 2px 0 #030052; */
-  margin-bottom: 1em;
+  /* margin-bottom: 1em; */
   /* box-shadow: 0 0px 0px 0 rgba(0, 0, 0, 0.2), 0 1px 2px 0 #030052; */
 }
 
