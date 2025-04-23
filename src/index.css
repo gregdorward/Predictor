@@ -341,7 +341,7 @@ button {
   box-sizing: border-box;
   text-decoration: none;
   font-family: 'Open Sans', sans-serif;
-  flex-basis: 100%;
+  /* flex-basis: 100%; */
   width: 12em;
   height: auto;
   font-size: 1.2em;
@@ -895,16 +895,17 @@ strong {
 /* Base styles for the checkbox */
 .star {
   appearance: none; /* Remove default checkbox */
-  font-size: 1.5em;
-  width: 1.5em;
+  font-size: 1.4em;
+  width: 3em;
   height: 1em;
   cursor: pointer;
   border: none;
   background: none;
   text-align: center;
-  margin: 0em;
+  margin-left: auto;
   margin-bottom: 0.5em;
-  flex-basis: 10%;
+  padding-left: 0.25em;
+  /* padding-right: 1.75em; */
   /* margin-left: auto; */
   
 }
@@ -912,7 +913,7 @@ strong {
 /* Default empty star */
 .star:before {
   content: "\2606"; /* Unicode for empty star */
-  color: gray;
+  color: #030061;
   font-size: 1em;
   display: inline-block;
 }
@@ -929,19 +930,14 @@ strong {
 
 .individualFixtureContainerundefined {
   display: flex;
-  flex-wrap: wrap;
-  flex-basis: 100%;
-  background-color: white;
-  border: 0.1em solid #030061;
-  align-items: center;
-  align-content: center;
-  color: black;
-  padding-top: 0.5em;
-  padding-bottom: 0.5em;
-  cursor: pointer;
-  /* box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.2), 0 1px 2px 0 #030052; */
-  margin-bottom: 1em;
-  box-shadow: 0 0px 0px 0 rgba(0, 0, 0, 0.2), 0 1px 2px 0 #030052;
+  padding-bottom: 2em;
+  padding-top: 1em;
+}
+
+.individualFixtureContainerfalse {
+  display: flex;
+  padding-bottom: 2em;
+  padding-top: 1em;
 }
 
 .individualFixtureContainer:active, input:focus{
@@ -950,47 +946,11 @@ strong {
   box-shadow: 0 0px 0px 0 rgba(0, 0, 0, 0.2), 0 0px 0px 0 #030052 inset;
 }
 
-.GameStats {
-  flex-basis: 10%;
-  /* margin-top: 0.25em;
-  margin-bottom: 0.75em; */
-  padding: 0.75em;
-  margin: 0em;
-  align-content: flex-end;
-  align-items: center;
-  margin-left: auto;
-  /* margin-right: auto; */
-  font-size: 1.5em;
-  /* font-size: 0.75em; */
-  background-color: white;
-  color: #030052;
-  border: none
-  /* line-height: 1em; */
-}
-
-.GameStatsTwo {
-  flex-basis: 10%;
-  /* margin-top: 0.25em;
-  margin-bottom: 0.75em; */
-  padding: 0.75em;
-  align-content: center;
-  align-items: center;
-  /* margin-left: auto; */
-  margin: 0em;
-  margin-right: auto;
-  font-size: 1.5em;
-  /* font-size: 0.75em; */
-  background-color: white;
-  color: #030052;
-  border: none
-  /* line-height: 1em; */
-}
-
 *[class^='individualFixture'] {
   display: flex;
   flex-basis: 100%;
   background-color: white;
-  align-items: center;
+  align-items: left;
   align-content: center;
   color: black;
   padding-top: 0.5em;
@@ -1004,12 +964,12 @@ strong {
 
 .individualFixturefalse {
   display: flex;
+  flex-direction: column;
   flex-basis: 100%;
   background-color: white;
-  align-items: center;
-  align-content: center;
-  color: black;
-  padding-top: 0.5em;
+  align-items: left;
+  align-content: left;
+  color: #030061;
   /* padding-bottom: 0.5em; */
   cursor: pointer;
   
@@ -1018,8 +978,64 @@ strong {
   /* border: black 0.25px solid; */
 }
 
-.individualFixturefalse:hover {
-  text-decoration: underline;
+.individualFixtureundefined {
+  display: flex;
+  flex-direction: column;
+  flex-basis: 100%;
+  background-color: white;
+  align-items: left;
+  align-content: left;
+  color: #030061;
+  /* padding-bottom: 0.5em; */
+  cursor: pointer;
+  
+  /* box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.2), 0 1px 2px 0 #030052; */
+  /* margin-bottom: 1em; */
+  /* border: black 0.25px solid; */
+}
+
+
+.MatchDetail {
+  display: inline-flex;
+  align-items: center;
+  font-size: 1.2em;
+  padding-bottom: 0.25em;
+}
+
+.HomeAndAwayContainerundefined{
+  display: flex;
+  flex-direction: column;
+}
+
+.HomeAndAwayContainerWon{
+  display: flex;
+  flex-direction: column;
+  border-left: #016001 solid 5px;
+}
+
+.HomeAndAwayContainerLost{
+  display: flex;
+  flex-direction: column;
+  border-left: #730a00 solid 5px;
+}
+
+.HomeContainer {
+  display: inline-flex;
+  align-items: center;
+  font-size: 1em;
+  flex-basis: 60%;
+}
+
+.AwayContainer {
+  display: inline-flex;
+  align-items: center;
+  font-size: 1em;
+  flex-basis: 60%;
+}
+
+.ActionButtons{
+  display: inline-flex;
+  width: 15%;
 }
 
 .individualFixturetrue {
@@ -1037,22 +1053,7 @@ strong {
   /* border: black 0.25px solid; */
 }
 
-.individualFixtureContainerfalse {
-  display: flex;
-  flex-wrap: wrap;
-  flex-basis: 100%;
-  background-color: white;
-  /* border: 0.1em solid #030061; */
-  align-items: center;
-  align-content: center;
-  /* color: black; */
-  padding-top: 0.5em;
-  padding-bottom: 0.5em;
-  cursor: pointer;
-  /* box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.2), 0 1px 2px 0 #030052; */
-  /* margin-bottom: 1em; */
-  /* box-shadow: 0 0px 0px 0 rgba(0, 0, 0, 0.2), 0 1px 2px 0 #030052; */
-}
+
 
 
 .individualFixtureContainertrue {
@@ -1131,9 +1132,9 @@ strong {
 .HomeBadge {
   border-color: #393d3f;
   height: 2em;
-  order: 1;
+  /* order: 1; */
   padding: 1em;
-  padding-left: 0.5em;
+  padding-left: 1.5em;
   padding-right: 0.5em;
   flex-basis: 1%;
 }
@@ -1141,9 +1142,9 @@ strong {
 .AwayBadge {
   border-color: #393d3f;
   height: 2em;
-  order: 5;
+  /* order: 5; */
   padding: 1em;
-  padding-left: 0.5em;
+  padding-left: 1.5em;
   padding-right: 0.5em;
   flex-basis: 1%;
 }
@@ -1155,15 +1156,16 @@ strong {
 
 
 *[class^='HomeOdds'] {
-  order: 0;
+  /* order: 0; */
   /* font-size: 0.5em; */
   padding: 0.5em;
+  margin-left: 2em;
  background-color: #030061;
   color: white;
-  width: 3.5em;
+  width: 2.5em;
   border-radius: 10px;
   font-weight: bolder;
-  margin-left: 1em;
+  /* margin-left: 1em; */
 }
 
 .oddsHomeExplainer {
@@ -1228,15 +1230,16 @@ strong {
 }
 
 *[class^='AwayOdds']{
-  order: 7;
+  /* order: 7; */
   /* font-size: 0.5em; */
   padding: 0.5em;
+  margin-left: 2em;
  background-color: #030061;
   color: white;
-  width: 3.5em;
+  width: 2.5em;
   border-radius: 10px;
   font-weight: 500;
-  margin-right: 1em;
+  /* margin-right: 1em; */
 }
 
 .oddsAwayExplainer {
@@ -1266,27 +1269,27 @@ strong {
 .homeTeam {
   height: auto;
   /* width:30%; */
-  order: 1;
+  /* order: 1; */
   /* font-size: 0.7em; */
   flex-grow: 0;
   flex-basis: 40%;
   flex-shrink: 2;
-  display: inline-block;
-  text-align: right;
-  padding-left: 0.25em;
+  /* display: inline-block; */
+  text-align: left;
+  /* padding-left: 1em; */
   font-weight: bolder;
 }
 
 .awayTeam {
   height: auto;
   flex-basis: 40%;
-  order: 6;
+  /* order: 6; */
   /* font-size: 0.7em; */
   flex-grow: 0;
   flex-shrink: 2;
-  display: inline-block;
+  /* display: inline-block; */
   text-align: left;
-  padding-right: 0.25em;
+  /* padding-left: 1em; */
   font-weight: bolder;
 }
 
@@ -1349,37 +1352,75 @@ strong {
 .divider,
 .score {
   height: auto;
-  flex-basis: 10%;
-  max-width: 5em;
-  order: 3;
+  flex-basis: 5%;
+  /* width: auto; */
+  /* max-width: 5em; */
+  /* order: 3; */
+  padding: 0.5em;
+  display: inline-block;
+  color: rgb(55, 55, 55);
+  background-color: white;
+  border: #fe8c00 1px dashed;
+  border-radius: 10px;
+  margin-right: 0.5em;
+  font-size: 1.1em;
+}
+
+.result{
+  height: auto;
+  flex-basis: 5%;
+  /* width: auto; */
+  /* max-width: 5em; */
+  /* order: 3; */
+  padding: 0.5em;
+  display: inline-block;
+  color: black;
+  background-color: #FFE500;
+  border: black 0.25px solid;
+  border-radius: 10px;
+  margin-right: 0.5em;
+  font-size: 1.1em;
+  /* font-family: 'Fira Sans'; */
+}
+
+.resultexact{
+  height: auto;
+  flex-basis: 5%;
+  /* width: auto; */
+  /* max-width: 5em; */
+  /* order: 3; */
   padding: 0.5em;
   display: inline-block;
   color: white;
-  background-color: #030061;
+  background-color: gold;
   border: black 0.25px solid;
   border-radius: 10px;
-  margin: 0.2em;
+  margin-right: 0.5em;
+  font-size: 1.1em;
 }
 
 .KOTime {
   height: auto;
   flex-basis: 10%;
-  max-width: 5em;
-  order: 3;
-  padding: 0.5em;
-  display: inline-block;
-  color: white;
-  background-color: #030061;
-  border-radius: 10px;
-  margin: 0.2em;
+  width: auto;
+  text-align: left;
+  font-size: 0.8em;
+  /* order: 3; */
+  /* padding: 0.5em; */
+  padding-left: 0.5em;
+  /* display: inline-block; */
+  color: #030061;
+  /* background-color: #030061;
+  border-radius: 10px; */
+  margin-left: 2em;
 }
 
 .Result {
   height: auto;
   flex-basis: 10%;
   max-width: 5em;
-  order: 3;
-  padding: 0.5em;
+  /* order: 3; */
+  padding: 0.25em;
   display: inline-block;
   color: black;
   background-color: rgb(242, 210, 1);
@@ -1387,6 +1428,12 @@ strong {
   border: black 0.25px solid;
   border-radius: 10px;
   box-shadow: #030052;
+}
+
+.KOAndPrediction{
+  /* margin-left: auto; */
+  align-self: left;
+  /* margin-left: 1em; */
 }
 
 .ExplainerContainer {
@@ -2399,6 +2446,37 @@ li.FormHeader {
   font-weight: 700;
 }
 
+
+.winSmall {
+  background-color: rgb(22, 165, 22);
+  width: 1em; /* Set width and height to create a circle */
+  height: 1em;
+  margin: 0.1em;
+  padding: 0; /* Reset padding */
+  border-radius: 50%; /* Make it a circle */
+  display: block;
+}
+
+.lossSmall {
+  background-color: #970d00;
+  width: 1em; /* Set width and height to create a circle */
+  height: 1em;
+  margin: 0.1em;
+  padding: 0; /* Reset padding */
+  border-radius: 50%; /* Make it a circle */
+  display: block;
+}
+
+.drawSmall {
+  background-color: #cc7a00;
+  width: 1em; /* Set width and height to create a circle */
+  height: 1em;
+  margin: 0.1em;
+  padding: 0; /* Reset padding */
+  border-radius: 50%; /* Make it a circle */
+  display: block;
+}
+
 .GoalTotal{
   background-color: #030061;
   color: white;
@@ -3167,7 +3245,54 @@ input:active + .design::after {
   font-size: 2vw;
 }
 
+.GameStats {
+  /* margin-top: 0.25em;
+  margin-bottom: 0.75em; */
+  /* padding: 0.75em;
+  margin: 0em;
+  align-content: flex-end;
+  align-items: center;
+  margin-left: auto; */
+  /* margin-right: auto; */
+  font-size: 1.75em;
+  width: 3em;
+  /* font-size: 0.75em; */
+  background-color: white;
+  color: #030052;
+  border: none;
+  margin: 0em;
+  margin-left: auto;
+  padding: 0.25em;
+  padding-left: 0em;
+  /* line-height: 1em; */
+}
 
+.GameStatsTwo {
+  /* margin-top: 0.25em;
+  margin-bottom: 0.75em; */
+  /* padding: 0.75em;
+  align-content: center;
+  align-items: center; */
+  /* margin-left: auto; */
+  /* margin: 0em; */
+  font-size: 1.75em;
+  width: 3em;
+  /* font-size: 0.75em; */
+  background-color: white;
+  color: #030052;
+  border: none;
+  margin: 0em;
+  margin-left: auto;
+  padding: 0.25em;
+  padding-left: 0em;
+  /* line-height: 1em; */
+}
+
+.Last5 {
+  display: flex;
+  padding-left: 0.2em;
+  min-width: 6em;
+}
 
 .TeamStatsContainer canvas{
   /* min-width: 35%; */

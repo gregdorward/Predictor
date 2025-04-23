@@ -281,7 +281,6 @@ export async function renderTable(index, results, id) {
     );
     await leagueStatistics.json().then((stats) => {
       statistics = stats.data;
-      console.log(statistics);
     });
 
     if (league !== undefined) {
@@ -933,6 +932,7 @@ export async function generateFixtures(
         });
         match.homeTeam = fixture.home_name;
         match.awayTeam = fixture.away_name;
+        match.stadium = fixture.stadium_name;
         match.refereeID = fixture.refereeID;
         match.homeOdds = +fixture.odds_ft_1.toFixed(2);
         match.awayOdds = +fixture.odds_ft_2.toFixed(2);
@@ -1159,7 +1159,8 @@ export async function generateFixtures(
           formRunAway = Array.from(awayFormRun);
 
           if (
-            teamPositionHome === 0 ||
+            teamPositionHome === 0 
+            ||
             form[0].data[0].season_format !== "Domestic League"
           ) {
             teamPositionHome = "N/A";
@@ -1414,6 +1415,7 @@ export async function generateFixtures(
             },
           });
         }
+
         match.matches_completed_minimum = fixture.matches_completed_minimum;
         match.homeBadge = fixture.home_image;
         match.awayBadge = fixture.away_image;
@@ -1445,7 +1447,6 @@ export async function generateFixtures(
         match.over25Odds = fixture.odds_ft_over25;
         match.btts_potential = fixture.btts_potential;
         match.game = match.homeTeam + " v " + match.awayTeam;
-        match.stadium = fixture.stadium_name;
         match.homeGoals = fixture.homeGoalCount;
         match.awayGoals = fixture.awayGoalCount;
 

@@ -25,6 +25,8 @@ function toggle(bool) {
   return count;
 }
 
+let tipOutcome = undefined;
+
 function GetDivider(fixture, mock) {
   const matchStatus = fixture.status;
   let isPrediction = resultValue;
@@ -32,49 +34,35 @@ function GetDivider(fixture, mock) {
   if (fixture.fixture.omit === true && matchStatus !== "complete") {
     isPrediction = true;
     return (
-      <Fragment>
+      <div className="KOAndPrediction">
         <div className="KOTime">{`${fixture.fixture.time}`}</div>
-        <div
-          className="Omitted"
-          key={fixture.fixture.awayTeam}
-        >{`${fixture.fixture.goalsA} - ${fixture.fixture.goalsB}`}</div>
-      </Fragment>
+      </div>
     );
   } else if (mockValue === true && matchStatus === "complete") {
     isPrediction = false;
     return (
-      <Fragment>
-        <div className="Result">{`${fixture.fixture.homeGoals} - ${fixture.fixture.awayGoals}`}</div>
-        <div
-          className="CorrectScore"
-          key={fixture.fixture.homeTeam}
-          data-cy={"score-" + fixture.fixture.id}
-        >{`${fixture.fixture.goalsA} - ${fixture.fixture.goalsB}`}</div>
-      </Fragment>
+      <div className="KOAndPrediction">
+        <div className="KOTime">{`${fixture.fixture.time}`}</div>
+      </div>
     );
   } else if (mockValue === true && matchStatus !== "complete") {
     isPrediction = true;
     return (
-      <Fragment>
+      <div className="KOAndPrediction">
         <div className="KOTime">{`${fixture.fixture.time}`}</div>
-        <div
-          className="score"
-          key={fixture.fixture.awayTeam}
-        >{`${fixture.fixture.goalsA} - ${fixture.fixture.goalsB}`}</div>
-      </Fragment>
+      </div>
     );
   } else if (isPrediction === false && matchStatus !== "complete") {
     return (
-      <div className="divider" data-cy={"divider-" + fixture.fixture.id}>
-        {"V"}
+      <div className="KOAndPrediction">
+        <div className="KOTime">{`${fixture.fixture.time}`}</div>
       </div>
     );
   } else if (isPrediction === false && matchStatus === "complete") {
     return (
-      <div
-        className="Result"
-        data-cy={"result-" + fixture.fixture.id}
-      >{`${fixture.fixture.homeGoals} - ${fixture.fixture.awayGoals}`}</div>
+      <div className="KOAndPrediction">
+        <div className="KOTime">{`${fixture.fixture.time}`}</div>
+      </div>
     );
   } else if (isPrediction === true && matchStatus === "complete") {
     let outcome;
@@ -119,12 +107,11 @@ function GetDivider(fixture, mock) {
     if (fixture.fixture.omit === true) {
       return (
         <Fragment>
-          <div className="Result">{`${fixture.fixture.homeGoals} - ${fixture.fixture.awayGoals}`}</div>
           <div
             className="Omitted"
             key={fixture.fixture.homeTeam}
             data-cy={"score-" + fixture.fixture.id}
-          >{`${fixture.fixture.goalsA} - ${fixture.fixture.goalsB}`}</div>
+          ></div>
         </Fragment>
       );
     } else if (outcome === prediction) {
@@ -149,28 +136,12 @@ function GetDivider(fixture, mock) {
         fixture.fixture.goalsB === fixture.fixture.awayGoals
       ) {
         fixture.fixture.exactScore = true;
-        return (
-          <Fragment>
-            <div className="Result">{`${fixture.fixture.homeGoals} - ${fixture.fixture.awayGoals}`}</div>
-            <div
-              className="ExactScore"
-              key={fixture.fixture.homeTeam}
-              data-cy={"score-" + fixture.fixture.id}
-            >{`${fixture.fixture.goalsA} - ${fixture.fixture.goalsB}`}</div>
-          </Fragment>
-        );
+        tipOutcome = "exact";
+        return null;
       } else {
         fixture.fixture.exactScore = false;
-        return (
-          <Fragment>
-            <div className="Result">{`${fixture.fixture.homeGoals} - ${fixture.fixture.awayGoals}`}</div>
-            <div
-              className="CorrectScore"
-              key={fixture.fixture.homeTeam}
-              data-cy={"score-" + fixture.fixture.id}
-            >{`${fixture.fixture.goalsA} - ${fixture.fixture.goalsB}`}</div>
-          </Fragment>
-        );
+        tipOutcome = "correct";
+        return null;
       }
     } else if (outcome !== prediction) {
       if (fixture.fixture.homeOdds !== 0) {
@@ -178,26 +149,15 @@ function GetDivider(fixture, mock) {
       } else {
         fixture.fixture.profit = 1;
       }
-      fixture.fixture.exactScore = false;
-      return (
-        <Fragment>
-          <div className="Result">{`${fixture.fixture.homeGoals} - ${fixture.fixture.awayGoals}`}</div>
-          <div
-            className="IncorrectScore"
-            key={fixture.fixture.awayTeam}
-          >{`${fixture.fixture.goalsA} - ${fixture.fixture.goalsB}`}</div>
-        </Fragment>
-      );
+      // fixture.fixture.exactScore = false;
+      tipOutcome = "incorrect";
+      return null;
     }
   } else {
     return (
-      <Fragment>
+      <div className="KOAndPrediction">
         <div className="KOTime">{`${fixture.fixture.time}`}</div>
-        <div
-          className="score"
-          key={fixture.fixture.awayTeam}
-        >{`${fixture.fixture.goalsA} - ${fixture.fixture.goalsB}`}</div>
-      </Fragment>
+      </div>
     );
   }
 }
@@ -263,8 +223,8 @@ function renderLeagueName(fixture, mock, showShortlist) {
   }
 }
 
-const downArrow = "\u{2195}";
-const rightArrow = "\u{2192}";
+const downArrow = "\u{2630}";
+const rightArrow = "\u{29C9}";
 
 export let testing;
 
@@ -278,6 +238,7 @@ function SingleFixture({
 }) {
   const dispatch = useDispatch();
   const [showGameStats, setShowGameStats] = useState(false);
+  const [isLoadingGameStats, setIsLoadingGameStats] = useState(false); // New loading state
 
   function StoreData() {
     const fixtureDetails = {
@@ -361,14 +322,29 @@ function SingleFixture({
     }
   }
 
+  function styleForm(formIndicator) {
+    let className;
+    if (formIndicator === "W") {
+      className = "winSmall";
+    } else if (formIndicator === "D") {
+      className = "drawSmall";
+    } else if (formIndicator === "L") {
+      className = "lossSmall";
+    }
+    return className;
+  }
+
   const handleGameStatsClick = () => {
-    console.log(1)
     if (!clicked) {
       alert("Tap Get Predictions to fetch all game stats first");
       return;
     }
+    setIsLoadingGameStats(true);
     StoreData();
-    setShowGameStats(!showGameStats);
+    setTimeout(() => {
+      setShowGameStats(!showGameStats);
+      setIsLoadingGameStats(false); // Set loading to false after "loading"
+    }, 1);
   };
 
   return (
@@ -381,45 +357,144 @@ function SingleFixture({
           data-cy={fixture.id}
           // onClick={handleGameStatsClick}
           // onClick={onToggle} // Toggle checked state on click
-          style={{ display: checked ? "lightblue" : "white" }} // Change background when checked
+          // style={{ display: checked ? "lightblue" : "white" }} // Change background when checked
         >
-          <div className="HomeOdds">{fixture.fractionHome}</div>
-          <div className="homeTeam">{fixture.homeTeam}</div>
-          <GetDivider
-            result={resultValue}
-            status={fixture.status}
-            fixture={fixture}
-          />
-          <div className="awayTeam">{fixture.awayTeam}</div>
-          <CreateBadge
-            image={fixture.homeBadge}
-            ClassName="HomeBadge"
-            alt="Home team badge"
-            flexShrink={5}
-          />
-          <CreateBadge
-            image={fixture.awayBadge}
-            ClassName="AwayBadge"
-            alt="Away team badge"
-          />
-          <div className="AwayOdds">{fixture.fractionAway}</div>
+          <div className="MatchDetail">
+            <GetDivider
+              result={resultValue}
+              status={fixture.status}
+              fixture={fixture}
+            />
+            <input
+              type="checkbox"
+              checked={checked}
+              onChange={onToggle}
+              className="star"
+              id={`shortlist-${fixture.id}`} // Unique ID for label association
+            />
+          </div>
+          <div className={`HomeAndAwayContainer${fixture.predictionOutcome}`}>
+            <div className="HomeContainer">
+              <div className="HomeOdds">{fixture.fractionHome}</div>
+              <CreateBadge
+                image={fixture.homeBadge}
+                ClassName="HomeBadge"
+                alt="Home team badge"
+                flexShrink={5}
+              />
+              <div className="homeTeam">{" "}
+                {fixture.homeTeam} {fixture.formHome ? `(${fixture.formHome.LeaguePosition})` : ""}
+              </div>
+              <div className="score" key={fixture.homeTeam}>
+                {fixture.goalsA !== undefined ? `${fixture.goalsA}` : `-`}
+              </div>
+              <div className={`result`}>
+                {fixture.status === "complete" ? `${fixture.homeGoals}` : `-`}
+              </div>
+              <div className={`Last5`}>
+                {fixture.formHome && (
+                  <>
+                    <span
+                      className={styleForm(
+                        fixture.formHome.resultsAll[4] || ""
+                      )}
+                    ></span>
+                    <span
+                      className={styleForm(
+                        fixture.formHome.resultsAll[3] || ""
+                      )}
+                    ></span>
+                    <span
+                      className={styleForm(
+                        fixture.formHome.resultsAll[2] || ""
+                      )}
+                    ></span>
+                    <span
+                      className={styleForm(
+                        fixture.formHome.resultsAll[1] || ""
+                      )}
+                    ></span>
+                    <span
+                      className={styleForm(
+                        fixture.formHome.resultsAll[0] || ""
+                      )}
+                    ></span>
+                  </>
+                )}
+              </div>
+              <button className="GameStatsTwo" onClick={handleButtonClick}>
+                {rightArrow}
+              </button>
+            </div>
+            <div className="AwayContainer">
+              <div className="AwayOdds">{fixture.fractionAway}</div>
+              <CreateBadge
+                image={fixture.awayBadge}
+                ClassName="AwayBadge"
+                alt="Away team badge"
+              />
+              <div className="awayTeam">
+                {fixture.awayTeam}{" "}
+                {fixture.formAway ? `(${fixture.formAway.LeaguePosition})` : ""}
+              </div>
+              <div className="score" key={fixture.awayTeam}>
+                {fixture.goalsB !== undefined ? `${fixture.goalsB}` : `-`}
+              </div>
+              <div className="result">
+                {fixture.status === "complete" ? `${fixture.awayGoals}` : `-`}
+              </div>
+              <div className={`Last5`}>
+                {fixture.formAway && (
+                  <>
+                    <span
+                      className={styleForm(
+                        fixture.formAway.resultsAll[4] || ""
+                      )}
+                    ></span>
+                    <span
+                      className={styleForm(
+                        fixture.formAway.resultsAll[3] || ""
+                      )}
+                    ></span>
+                    <span
+                      className={styleForm(
+                        fixture.formAway.resultsAll[2] || ""
+                      )}
+                    ></span>
+                    <span
+                      className={styleForm(
+                        fixture.formAway.resultsAll[1] || ""
+                      )}
+                    ></span>
+                    <span
+                      className={styleForm(
+                        fixture.formAway.resultsAll[0] || ""
+                      )}
+                    ></span>
+                  </>
+                )}
+              </div>
+              <button className="GameStats" onClick={handleGameStatsClick}>
+                {downArrow}
+              </button>
+            </div>
+            {/* <div className="ActionButtons">
+              <input
+                type="checkbox"
+                checked={checked}
+                onChange={onToggle}
+                className="star"
+                id={`shortlist-${fixture.id}`} // Unique ID for label association
+              />
+            </div> */}
+          </div>
         </li>
-        <button className="GameStats" onClick={handleGameStatsClick}>
-          {downArrow}
-        </button>
-        <input
-          type="checkbox"
-          checked={checked}
-          onChange={onToggle}
-          className="star"
-          id={`shortlist-${fixture.id}`} // Unique ID for label association
-        />
-        <button className="GameStatsTwo" onClick={handleButtonClick}>
-          {rightArrow}
-        </button>
-        {/* Checkbox for toggling */}
       </div>
-      {showGameStats && <GameStats game={fixture} displayBool={true} />}
+      {isLoadingGameStats && <div>Loading Game Stats...</div>}{" "}
+      {/* Show loading message */}
+      {showGameStats && !isLoadingGameStats && (
+        <GameStats game={fixture} displayBool={true} />
+      )}
     </div>
   );
 }
@@ -434,7 +509,7 @@ async function submitTips() {
       },
       body: JSON.stringify(userTips),
     });
-    alert('Tips submitted')
+    alert("Tips submitted");
   } else {
     return;
   }
@@ -449,7 +524,6 @@ const List = ({ fixtures, mock }) => {
   const [showShortlist, setShowShortlist] = useState(false); // Toggle between full list and shortlist
 
   const handleToggle = (fixture) => {
-
     setSelectedFixtures((prev) => {
       const index = prev.findIndex((f) => f.id === fixture.id);
       if (index !== -1) {
@@ -467,24 +541,27 @@ const List = ({ fixtures, mock }) => {
     selectedFixtures.map((fixture, i) => [i, fixture])
   );
 
-  return ( mock === true ? <>
-    <div>
-      <div id="Headers"></div>
-      <ul className="FixtureList" id="FixtureList">
-        {(showShortlist ? selectedFixtures : fixtures).map((fixture) => (
-          <SingleFixture
-            shortlist={shortlist}
-            showShortlist={showShortlist}
-            fixture={fixture}
-            key={fixture.id}
-            mock={mock}
-            checked={selectedFixtures.some((f) => f.id === fixture.id)}
-            onToggle={() => handleToggle(fixture)}
-          />
-        ))}
-      </ul>
-    </div>
-  </> : <>
+  return mock === true ? (
+    <>
+      <div>
+        <div id="Headers"></div>
+        <ul className="FixtureList" id="FixtureList">
+          {(showShortlist ? selectedFixtures : fixtures).map((fixture) => (
+            <SingleFixture
+              shortlist={shortlist}
+              showShortlist={showShortlist}
+              fixture={fixture}
+              key={fixture.id}
+              mock={mock}
+              checked={selectedFixtures.some((f) => f.id === fixture.id)}
+              onToggle={() => handleToggle(fixture)}
+            />
+          ))}
+        </ul>
+      </div>
+    </>
+  ) : (
+    <>
       <ShortlistButton
         toggleShortlist={() => setShowShortlist(!showShortlist)}
       />
@@ -538,11 +615,14 @@ export function Fixture(props) {
         mock={props.mock}
       />
       {!props.paid && props.capped === true && (
-        <><div className="LockIcon">🔒</div><div className="LockText">
-          {props.originalLength} games have been capped at 15 for free users
-          with full stats available for those returned - sign up for access to
-          40+ leagues and cups
-        </div></>
+        <>
+          <div className="LockIcon">🔒</div>
+          <div className="LockText">
+            {props.originalLength} games have been capped at 15 for free users
+            with full stats available for those returned - sign up for access to
+            40+ leagues and cups
+          </div>
+        </>
       )}{" "}
     </Provider>
   );
