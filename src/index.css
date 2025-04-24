@@ -20,6 +20,20 @@
     margin-left: auto;
     margin-right: auto;
   }
+
+  .MuiTable-root {
+    background-color: var(--background-color);
+    color: var(--text-color);
+  }
+
+  .MuiTableBody-root {
+    background-color: var(--background-color);
+    color: var(--text-color);
+  }
+
+  .LeagueTable th{
+    color: var(--text-color);
+  }
   .FormSummaries{
     /* align-items: flex-start; */
     display: flex;
@@ -36,7 +50,7 @@
   /* padding-top: 8px;
   padding-bottom: 8px; */
   margin: 0.5vw;
-  border: 0.1em solid #030061;
+  border: 0.1em solid white;
   border-radius: 2em;
   box-sizing: border-box;
   text-decoration: none;
@@ -44,7 +58,7 @@
   flex-basis: 20%;
   font-size: 0.9em;
   font-weight: 500;
-  color: white;
+  color: var(--text-color);
  background-color: grey;
   /* text-shadow: 0 0.04em 0.04em rgba(0, 0, 0, 0.35); */
   text-align: center;
@@ -206,11 +220,39 @@
   }
 }
 
+/* Default Light Mode Colors */
+:root {
+  --background-color: #ffffff; /* White */
+  --text-color: #020029; /* Dark Blue */
+  --button-color: #020029;
+  --button-text-color: #ffffff;
+  --secondary-button-text-color: #ffffff;
+  --primary-color: #fe8c00; /* Orange */
+  --secondary-color: #9b0000; /* Dark Red */
+  --accent-color: #030040; /* Light Gray */
+  --mid-grey: #030040;
+}
+
+/* Dark Mode Colors */
+.dark-mode {
+  --background-color: #020029; /* Dark Blue */
+  --text-color: #ffffff; /* White */
+  --button-color: whitesmoke;
+  --button-text-color: #020029;
+  --secondary-button-text-color: #020029;
+  --primary-color: #f57701; /* Orange */
+  --secondary-color: #860000; /* Dark Red */
+  --accent-color: whitesmoke; /* Dark Gray */
+  --mid-grey: #020029;
+}
+
 body {
-  background-color: white;
+  background-color: var(--background-color);
+  /* background: linear-gradient(to bottom, white 20%, #020029 40%,  #020029 100%); */
+
   /* align-content: space-between; */
   text-align: center;
-  color: rgb(0, 0, 0);
+  color: var(--text-color);
   /* max-width: 1240px; */
   margin-left: auto;
   /* flex-basis: 100%; */
@@ -219,19 +261,78 @@ body {
   height: 100%;
   font-weight: bolder;
   margin-top:0px;
+  color: var(--text-color);
+}
+
+.theme-switch {
+  position: relative;
+  display: inline-block;
+  width: 60px;
+  height: 34px;
+}
+
+.theme-switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #ccc;
+  transition: .4s;
+  border-radius: 34px;
+}
+
+.slider:before {
+  position: absolute;
+  content: "";
+  height: 26px;
+  width: 26px;
+  left: 4px;
+  bottom: 4px;
+  background-color: white;
+  transition: .4s;
+  border-radius: 50%;
+}
+
+input:checked + .slider {
+  background-color: var(--primary-color);
+}
+
+input:focus + .slider {
+  box-shadow: 0 0 1px #2d3033;
+}
+
+input:checked + .slider:before {
+  transform: translateX(26px);
+}
+
+.slider.round {
+  border-radius: 34px;
+}
+
+.slider.round:before {
+  border-radius: 50%;
 }
 
 .HeaderContainer{
   display: flex;
   flex-direction: column;
   flex-basis: 100%;
-  /* background-color: #030061; */
+  /* background-color: #020029; */
   /* background-image: linear-gradient( #000000, #404040); */
-  color: #030061;
+  color: var(--text-color);
   padding-top: 1em;
   padding-bottom: 1em;
   margin: 0px;
   vertical-align: top;
+  background-color: white;
   /* padding-bottom: 1em; */
 }
 
@@ -250,9 +351,13 @@ h1 {
   justify-content: center;
   align-items: center;
   max-width: 30em;
-  height: auto; /* Adjust as necessary */
-  margin-bottom: 0em;
-  /* padding: 2em; */
+  margin-left: auto;
+  margin-right: auto;
+  width: 90%;
+  height: 5em; /* Adjust as necessary */
+  margin-bottom: 1em;
+  background-color: whitesmoke;
+  border-radius: 30px
   /* margin-left: 3em;
   margin-right: 3em; */
   /* padding-top: 1em;
@@ -268,20 +373,20 @@ h1 {
 h2 {
   /* font-size: 2em; */
   font-weight: 500;
-  color: #030061;
+  color: var(--text-color);
 }
 
 h3 {
   font-size: 1.25em;
   
-  color: #030061;
+  color: var(--text-color);
   padding: 1em;
   margin: 0%
 }
 
 h4 {
   font-size: 1.2em;
-  color: #030061;
+  color: var(--text-color);
   padding-top: 2em;
   padding: 1em;
   margin: 0%
@@ -290,12 +395,12 @@ h4 {
 h5 {
   font-size: 2.5em;
   margin-bottom: 1em;
-  color: #030061;
+  color: #020029;
 }
 
 h6 {
   font-size: 1.2em;
-  color: #030061;
+  color: var(--text-color);
   padding: 1em;
   padding-top: 2em;
   line-height: 2em;
@@ -318,7 +423,7 @@ h6 {
 
 .SocialLink {
   font-size: 1.2em;
-  color: #030061;
+  color: var(--text-color);
   border: 1em;
   padding-bottom: 1em;
 }
@@ -336,7 +441,7 @@ button {
   /* padding-top: 8px;
   padding-bottom: 8px; */
   margin: 1em;
-  border: 0.2em solid #030061;
+  border: 0.2em solid white;
   border-radius: 10px;
   box-sizing: border-box;
   text-decoration: none;
@@ -346,8 +451,8 @@ button {
   height: auto;
   font-size: 1.2em;
   cursor: pointer;
-  color: white;
- background-color: #030061;
+  color: var(--secondary-button-text-color);
+ background-color: var(--button-color);
   /* text-shadow: 0 0.04em 0.04em rgba(0, 0, 0, 0.35); */
   text-align: center;
   /* box-shadow: 0 0px 0px 0 rgba(0, 0, 0, 0.2), 0 1px 2px 0 #030052; */
@@ -363,22 +468,29 @@ button:active {
 button.GeneratePredictions{
   padding-top: 1em;
   padding-bottom: 1em;
-  background-color: #016001;
-  color: white;
+  background-color: #fe8c00;
+  color: #020029;
+  border: var(--text-color), 1px, solid;
   /* box-shadow: 0 0px 0px 0 rgba(0, 0, 0, 0.2), 0 1px 2px 0 #030052 */
 }
+
+button.GeneratePredictions:hover{
+  border: var(--text-color), 2px, solid;
+  /* box-shadow: 0 0px 0px 0 rgba(0, 0, 0, 0.2), 0 1px 2px 0 #030052 */
+}
+
 
 button.GeneratePredictions:active{
   padding-top: 1em;
   padding-bottom: 1em;
-  background-color: #004b00;
-  color: white;
+  background-color: #ce7100;
+  color: var(--button-text-color);
   box-shadow: 0 0px 0px 0 rgba(0, 0, 0, 0.2), 0 1px 2px 0 #030052 inset;
 }
 
 .disclaimerButton {
   background-color: #ffffff;
-  color: #030061;
+  color: var(--button-text-color);
   padding: 0.5em;
   font-size: 0.8em;
   box-shadow: 0 0px 0px 0 rgba(0, 0, 0, 0.2), 0 0.5px 1px 0 #030052;
@@ -398,8 +510,8 @@ button.GeneratePredictions:active{
 }
 
 .FixtureButtons button {
-  background-color: #ffffff;
-  color: #030061;
+  background-color: var(--text-color);
+  color: var(--button-text-color);
   margin: 1em;
   cursor: pointer;
   /* box-shadow: 0 0px 0px 0 rgba(0, 0, 0, 0.2), 0 1px 2px 0 #030052; */
@@ -410,7 +522,6 @@ button.GeneratePredictions:active{
   box-shadow: 0 0px 0px 0 rgba(0, 0, 0, 0.2), 0 1px 2px 0 #030052 inset;
 
 }
-
 
 .RowOneContainer{
   display: flex;
@@ -441,7 +552,7 @@ button.GeneratePredictions:active{
 
 p {
   font-size: 1em;
-  color: #030061;
+  color: var(--text-color);
 }
 
 .RadioText {
@@ -470,7 +581,7 @@ p {
   padding-top: 0.2em;
   padding-bottom: 0.2em;
   font-size: 1em;
-  color: #030052;
+  color: var(--text-color);
 }
 
 .lastXGames {
@@ -524,16 +635,16 @@ span.MembershipInfo {
 .bitcoin{
   padding: 0.5em;
   padding-bottom: 1em;
-  margin: 3em;
-  margin-top: 5em;
+  margin: 2em;
+  margin-top: 2em;
   margin-bottom: 2em;
   font-size: 1.2em;
   line-height: 2em;
   display: flex;
   flex-direction: column;
   flex-basis: 50%;
-  background-color: #030061;
-  color: white;
+  background-color: var(--background-color);
+  color: var(--text-color);
 }
 
 .bitcoinSymbol{
@@ -556,11 +667,11 @@ span.MembershipInfo {
 
 .DataText {
   padding: 0.75em;
-  color: #030061;
+  color: var(--text-color);
 }
 
 .DataLink {
-  color: #030061;
+  color: var(--text-color);
   border-bottom: 1em;
   padding-bottom: 1em;
 }
@@ -583,23 +694,26 @@ span.MembershipInfo {
 .leagueName {
   font-size: 1.2em;
   font-weight: 550;
-  color: white;
+  color: var(--button-text-color);
   padding-top: 0.75em;
   padding-bottom: 0.75em;
   margin-top: 1.5em;
-  background-color:#030061;
-  color: white;
-  box-shadow: 0 1px 2px 0 #03006175 inset, 0 2px 2px 0 #03006175;
+  background-color: var(--accent-color);
+  box-shadow: 0 1px 2px 0 white75 inset, 0 2px 2px 0 white75;
   cursor: pointer;
 }
 
+.leagueName:hover {
+  color: var(--primary-color);
+}
+
 .ProfitableLeague{
-  color: #01a501;
+  color: rgb(23, 195, 23);
   font-size: 1.2em;
 }
 
 .NonProfitableLeague{
-  color: #bf1000;
+  color: #ca1100;
   font-size: 1.2em;
 }
 
@@ -624,7 +738,7 @@ span.MembershipInfo {
 
   flex-direction: row;
   padding: 2em;
-  /* background-color: white; */
+  /* background-color: #020029; */
   opacity: 1;
   width: 50%;
   text-align: center;
@@ -635,7 +749,7 @@ span.MembershipInfo {
 
 .DateForm input{
   position: inherit !important;
-  background-color: white;
+  background-color: #020029;
   opacity: 1;
 
 }
@@ -668,8 +782,8 @@ span.MembershipInfo {
 .ResultsList li{
   /* padding: 0.5em; */
   margin: 0.5em;
-  background-color: #030061;
-  color: white;
+  background-color: #020029;
+  color: var(--text-color);
 }
 
 .ResultButton{
@@ -688,7 +802,7 @@ span.MembershipInfo {
   margin-left: 0px;
   margin-right: 0px;
   border: 0px;
-  background-color: #030061;
+  background-color: #020029;
   border-radius: 0px;
 } */
 
@@ -708,8 +822,8 @@ span.MembershipInfo {
   padding: 1em;
   align-items: center;
   font-size: 1.1em;
-  background-color: #030061;
-  color: white;
+  background-color: var(--button-color);
+  color: var(--button-text-color);
 }
 
 .ResultRowOverviewSmallW {
@@ -720,7 +834,7 @@ span.MembershipInfo {
   align-items: center;
   font-size: 1.1em;
   background-color: #004b00;
-  color: white;
+  color: var(--text-color);
 }
 
 .ResultRowOverviewSmallD {
@@ -730,8 +844,8 @@ span.MembershipInfo {
   padding: 1em;
   align-items: center;
   font-size: 1.1em;
-  background-color: #030061;
-  color: white;
+  background-color: #020029;
+  color: var(--text-color);
 }
 
 .ResultRowOverviewSmallL {
@@ -742,7 +856,7 @@ span.MembershipInfo {
   align-items: center;
   font-size: 1.1em;
   background-color: #730a00;
-  color: white;
+  color: var(--text-color);
 }
 
 .columnOverviewHome {
@@ -797,7 +911,7 @@ span.MembershipInfo {
   flex-wrap: wrap;
   width: 100%;
   padding: 0.5em;
-  color: #030061;
+  color: var(--secondary-button-text-color);
 }
 
 .ResultRowSmall {
@@ -805,7 +919,7 @@ span.MembershipInfo {
   flex-direction: row;
   flex-wrap: wrap;
   padding: 0.5em;
-  color: #030061;
+  color: var(--text-color);
   text-align: center;
   font-size: 1.1em;
 }
@@ -821,7 +935,7 @@ span.MembershipInfo {
   flex-direction: column;
   flex-wrap: wrap;
   padding: 0.5em;
-  color: #030061;
+  color: var(--text-color);
   text-align: center;
   font-size: 1.2em;
 }
@@ -870,16 +984,16 @@ span.MembershipInfo {
   /* margin-right: auto; */
   font-size: 0.8em;
   /* font-size: 0.75em; */
-  /* background-color: white; */
+  /* background-color: #020029; */
   color: #030052;
   border: #030052 1px solid
   /* line-height: 1em; */
 }
 .UserTipsList{
   padding: 1em;
-  border: #030061 1px dashed;
+  border: white 1px dashed;
   margin: 0.5em;
-  background-color: white;
+  background-color: var(--background-color);
 }
 
 .UserTipsListItems{
@@ -913,7 +1027,7 @@ strong {
 /* Default empty star */
 .star:before {
   content: "\2606"; /* Unicode for empty star */
-  color: #030061;
+  color: var(--text-color);
   font-size: 1em;
   display: inline-block;
 }
@@ -925,7 +1039,7 @@ strong {
 }
 
 .pointsGapExplainer{
-  color: #030061;
+  color: var(--text-color);
 }
 
 .individualFixtureContainerundefined {
@@ -949,10 +1063,10 @@ strong {
 *[class^='individualFixture'] {
   display: flex;
   flex-basis: 100%;
-  background-color: white;
+  background-color: var(--background-color);
   align-items: left;
   align-content: center;
-  color: black;
+  color: var(--text-color);
   padding-top: 0.5em;
   /* padding-bottom: 0.5em; */
   cursor: pointer;
@@ -966,10 +1080,10 @@ strong {
   display: flex;
   flex-direction: column;
   flex-basis: 100%;
-  background-color: white;
+  background-color: var(--background-color);
   align-items: left;
   align-content: left;
-  color: #030061;
+  color: var(--text-color);
   /* padding-bottom: 0.5em; */
   cursor: pointer;
   
@@ -982,10 +1096,10 @@ strong {
   display: flex;
   flex-direction: column;
   flex-basis: 100%;
-  background-color: white;
+  background-color: var(--background-color);
   align-items: left;
   align-content: left;
-  color: #030061;
+  color: var(--text-color);
   /* padding-bottom: 0.5em; */
   cursor: pointer;
   
@@ -1010,13 +1124,13 @@ strong {
 .HomeAndAwayContainerWon{
   display: flex;
   flex-direction: column;
-  border-left: #016001 solid 5px;
+  border-left: #009700 solid 5px;
 }
 
 .HomeAndAwayContainerLost{
   display: flex;
   flex-direction: column;
-  border-left: #730a00 solid 5px;
+  border-left: #b10f00 solid 5px;
 }
 
 .HomeContainer {
@@ -1061,7 +1175,7 @@ strong {
   flex-wrap: wrap;
   flex-basis: 100%;
   background-color: rgb(212, 212, 212);
-  /* border: 0.1em dashed #030061; */
+  /* border: 0.1em dashed white; */
   align-items: center;
   align-content: center;
   /* color: black; */
@@ -1090,7 +1204,7 @@ strong {
 
 
 .FixtureList{
-  background-color: #030061, transparent;
+  background-color: white, transparent;
 }
 
 .individualFixtureGap {
@@ -1101,7 +1215,7 @@ strong {
   align-content: center;
   box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 2px 4px 0 #030052;
   margin-bottom: 0.5em;
-  color: #030061;  
+  color: var(--text-color);  
   /* border: 1em; */
 }
 
@@ -1131,21 +1245,21 @@ strong {
 
 .HomeBadge {
   border-color: #393d3f;
-  height: 2em;
+  height: 2.5em;
   /* order: 1; */
   padding: 1em;
   padding-left: 1.5em;
-  padding-right: 0.5em;
+  /* padding-right: 0.5em; */
   flex-basis: 1%;
 }
 
 .AwayBadge {
   border-color: #393d3f;
-  height: 2em;
+  height: 2.5em;
   /* order: 5; */
   padding: 1em;
   padding-left: 1.5em;
-  padding-right: 0.5em;
+  /* padding-right: 0.5em; */
   flex-basis: 1%;
 }
 
@@ -1160,10 +1274,10 @@ strong {
   /* font-size: 0.5em; */
   padding: 0.5em;
   margin-left: 2em;
- background-color: #030061;
-  color: white;
+ background-color: var(--button-color);
+  color: var(--button-text-color);
   width: 2.5em;
-  border-radius: 10px;
+  border-radius: 0px;
   font-weight: bolder;
   /* margin-left: 1em; */
 }
@@ -1172,8 +1286,8 @@ strong {
   order: 0;
   /* font-size: 0.5em; */
   padding: 0.5em;
- background-color: #030061;
-  color: white;
+ background-color: #020029;
+  color: var(--text-color);
   width: 4.5em;
   border-radius: 10px;
   font-weight: bolder;
@@ -1211,7 +1325,7 @@ strong {
   order: 0;
   /* font-size: 0.5em; */
   padding: 0.5em;
- background-color: #030061;
+ background-color: #020029;
   color:white;
   width: 3.5em;
   border-radius: 10px;
@@ -1221,7 +1335,7 @@ strong {
 
 .GetMatchStatText {
   padding-bottom: 1em;
-  color: #030061;
+  color: var(--text-color);
   max-width: 60%;
   margin-left: auto;
   margin-right: auto;
@@ -1234,10 +1348,10 @@ strong {
   /* font-size: 0.5em; */
   padding: 0.5em;
   margin-left: 2em;
- background-color: #030061;
-  color: white;
+ background-color: var(--button-color);
+  color: var(--button-text-color);
   width: 2.5em;
-  border-radius: 10px;
+  border-radius: 0px;
   font-weight: 500;
   /* margin-right: 1em; */
 }
@@ -1246,8 +1360,8 @@ strong {
   order: 7;
   /* font-size: 0.5em; */
   padding: 0.5em;
- background-color: #030061;
-  color: white;
+ background-color: #020029;
+  color: var(--text-color);
   width: 4.5em;
   border-radius: 10px;
   font-weight: 500;
@@ -1258,8 +1372,8 @@ strong {
   order: 7;
   /* font-size: 0.5em; */
   padding: 0.5em;
- background-color: #030061;
-  color: white;
+ background-color: #020029;
+  color: var(--text-color);
   width: 3.5em;
   border-radius: 10px;
   font-weight: 500;
@@ -1312,8 +1426,8 @@ strong {
   flex-wrap: wrap;
   padding: 0.5em; */
   
-  /* background-color: white; */
-  color: white;
+  /* background-color: #020029; */
+  color: var(--text-color);
   text-align: right;
   /* border-right: white;
   border-style: solid;
@@ -1326,8 +1440,8 @@ strong {
   flex-basis: 50%;
   font-size: 0.9em;
 
-  /* background-color: white; */
-  color: white;
+  /* background-color: #020029; */
+  color: var(--text-color);
   /* padding-left: 1em; */
   
   text-align: left;
@@ -1360,8 +1474,8 @@ strong {
   display: inline-block;
   color: rgb(55, 55, 55);
   background-color: white;
-  border: #fe8c00 1px dashed;
-  border-radius: 10px;
+  border: #fe8c00 1px, solid;
+  border-radius: 0px;
   margin-right: 0.5em;
   font-size: 1.1em;
 }
@@ -1376,8 +1490,8 @@ strong {
   display: inline-block;
   color: black;
   background-color: #FFE500;
-  border: black 0.25px solid;
-  border-radius: 10px;
+  border: black 1px solid;
+  border-radius: 0px;
   margin-right: 0.5em;
   font-size: 1.1em;
   /* font-family: 'Fira Sans'; */
@@ -1391,7 +1505,7 @@ strong {
   /* order: 3; */
   padding: 0.5em;
   display: inline-block;
-  color: white;
+  color: var(--text-color);
   background-color: gold;
   border: black 0.25px solid;
   border-radius: 10px;
@@ -1409,8 +1523,8 @@ strong {
   /* padding: 0.5em; */
   padding-left: 0.5em;
   /* display: inline-block; */
-  color: #030061;
-  /* background-color: #030061;
+  color: var(--text-color);
+  /* background-color: #020029;
   border-radius: 10px; */
   margin-left: 2em;
 }
@@ -1438,7 +1552,7 @@ strong {
 
 .ExplainerContainer {
   display: flex;
-  /* border: 0.1em solid #030061; */
+  /* border: 0.1em solid white; */
   padding-top: 1em;
   padding-bottom: 0.5em;
   align-items: center;
@@ -1456,8 +1570,8 @@ strong {
   order: 3;
   padding: 0.5em;
   display: inline-block;
-  color: white;
-  background-color:#030061;
+  color: var(--text-color);
+  background-color:white;
   margin: 0.2em;
   border: black 0.25px solid;
   border-radius: 10px;
@@ -1473,7 +1587,7 @@ strong {
 
 .HomeResults li {
   padding-bottom: 1em;
-  border-bottom: #030061 1px solid
+  border-bottom: white 1px solid
 }
 
 .AwayResults {
@@ -1485,7 +1599,7 @@ strong {
 
 .AwayResults li {
   padding-bottom: 1em;
-  border-bottom: #030061 1px solid
+  border-bottom: white 1px solid
 }
 
 .GameDate {
@@ -1514,7 +1628,7 @@ strong {
   order: 4;
   padding: 0.5em;
   display: inline-block;
-  color: white;
+  color: var(--text-color);
   background-color: #730a00;
   border: black 0.25px solid;
   border-radius: 10px;
@@ -1528,7 +1642,7 @@ strong {
   order: 4;
   padding: 0.5em;
   display: inline-block;
-  color: white;
+  color: var(--text-color);
   background-color:  #016001;
   border: black 0.25px solid;
   border-radius: 10px;
@@ -1558,8 +1672,8 @@ strong {
   order: 4;
   padding: 0.5em;
   display: inline-block;
-  color: white;
-  background-color:#030061;
+  color: var(--text-color);
+  background-color:white;
   border: black 0.25px solid;
   border-radius: 10px;
   margin: 0.2em;
@@ -1582,10 +1696,10 @@ strong {
   /* margin: 0.25em; */
   flex-wrap: wrap;
   height: auto;
-  /* border: #030061 0.1px dashed; */
+  /* border: white 0.1px dashed; */
   /* border-radius: 5px; */
-  background-color: white;
-  /* border: #030061 1px dashed; */
+  background-color: var(--background-color);
+  /* border: white 1px dashed; */
   /* box-shadow: 4px 4px 4px 4px rgba(0.2, 0.2, 0.2, 0.2), 0 6px 20px 0 #294A66; */
   /* box-shadow: rgba(0, 0, 0, 0.15) 0px 0px 0px 1px; */
 }
@@ -1613,7 +1727,7 @@ strong {
 
 .Collapsible{
   display: block;
-  color: #030061;
+  color: var(--text-color);
 }
 
 .FiltersSelected{
@@ -1695,10 +1809,10 @@ li .Aligned {
 
 .LeagueStatisticsHeader{
   font-size: 2.5em;
-  background-color: #e2e2e26c;
-  color:#030061;
+  background-color: var(--button-color);
+  color: var(--button-text-color);
   padding-top: 1em;
-  padding-bottom: 0.5em
+  padding-bottom: 1em
 }
 
 .LeagueStatistics {
@@ -1716,14 +1830,14 @@ li .Aligned {
 .LeagueStatsColumn {
   padding-top: 1em;
   flex: 40%;
-  background: white;
-  color: #030061;
+  background: var(--background-color);
+  color: var(--text-color);
   margin: 0.25em;
   padding: 1em;
 }
 
 .LeagueStatistics li {
-  color: #030061;
+  color: var(--text-color);
   padding: 0.5em;  
 }
 
@@ -1741,8 +1855,8 @@ li .Aligned {
   padding-bottom: 1em;
   padding: 1em;
   margin: 0.25em;
-  background: white;
-  color: #030061
+  background: var(--background-color);
+  color: var(--text-color);
 }
 
 
@@ -1855,7 +1969,7 @@ li .Aligned {
 a.PreviousMatchLink{
   text-decoration-thickness: 0;  
   text-underline-offset: 0.2em;
-  text-decoration-color: #030061;
+  text-decoration-color: white;
   margin-bottom: 1em;
 }
 
@@ -1961,13 +2075,13 @@ a.PreviousMatchLink{
 
 .WinningTeams {
   background-color: #01a501;
-  color: white;
+  color: var(--text-color);
 }
 
 .LosingTeams {
 
   background-color: #bf1000;
-  color: white;
+  color: var(--text-color);
 }
 
 .KeyStatsOne {
@@ -1975,8 +2089,8 @@ a.PreviousMatchLink{
   text-align: right;
   margin-right: 0.5em;
   flex-basis: 49%;
-  background-color:#030061;
-  color: white;
+  background-color:white;
+  color: var(--text-color);
   margin-left: auto;
   margin-bottom: 2em;
   padding-top: 1em;
@@ -1988,8 +2102,8 @@ a.PreviousMatchLink{
   text-align: left;
   flex-basis: 49%;
   margin-left: 0.5em;
-  background-color:#030061;
-  color: white;
+  background-color:white;
+  color: var(--text-color);
   margin-right: auto;
   margin-bottom: 2em;
   padding-top: 1em;
@@ -2008,7 +2122,7 @@ a.PreviousMatchLink{
   display: flex;
   align-items: stretch;
   justify-content: center;
-  color: #030052;
+  color: var(--text-color);
 }
 
 
@@ -2032,6 +2146,8 @@ a.PreviousMatchLink{
   text-align: right;
   padding-right: 0.5em;
   flex-basis: 45%;
+  background-color: var(--background-color);
+  color: var(--text-color);
 } 
 
 .flex-childOneOverview {
@@ -2039,6 +2155,8 @@ a.PreviousMatchLink{
   text-align: right;
   padding-right: 0.5em;
   flex-basis: 45%;
+  background-color: var(--background-color);
+  color: var(--text-color);
   /* min-width: 16em;
   max-width: 21em; */
 } 
@@ -2050,6 +2168,8 @@ a.PreviousMatchLink{
   padding-right: 0.25em;
   flex-basis: 50%;
   font-size: 0.75em;
+  background-color: var(--background-color);
+  color: var(--text-color);
   /* min-width: 16em;
   max-width: 21em; */
 } 
@@ -2059,7 +2179,8 @@ a.PreviousMatchLink{
   text-align: left;
   padding-left: 0.5em;
   flex-basis: 45%;
-
+  background-color: var(--background-color);
+  color: var(--text-color);
   /* width: auto;
   min-width: 16em;
   max-width: 21em; */
@@ -2072,56 +2193,61 @@ a.PreviousMatchLink{
   padding-right: 0.25em;
   flex-basis: 50%;
   font-size: 0.75em;
+  background-color: var(--background-color);
+  color: var(--text-color);
   /* width: auto;
   min-width: 16em;
   max-width: 21em; */
 } 
 
 .flex-childOneOverview .W {
-  border: solid 1px #030061;
+  border: solid 1px white;
   padding: 0.5em;
 } 
 
 .flex-childOneOverview .D {
-  border: solid 1px #030061;
+  border: solid 1px white;
   padding: 0.5em;
 } 
 
 .flex-childOneOverview .L {
-  border: solid 1px #030061;
+  border: solid 1px white;
   padding: 0.5em;
 } 
       
 
 .flex-childTwoOverview .W{
-  border: solid 1px #030061;
+  border: solid 1px white;
   padding: 0.5em;
 } 
 
 .flex-childTwoOverview .D{
-  border: solid 1px #030061;
+  border: solid 1px white;
   padding: 0.5em;
 } 
 
 .flex-childTwoOverview .L{
-  border: solid 1px #030061;
+  border: solid 1px white;
   padding: 0.5em;
 } 
 
 .flex-childOne li:nth-child(odd){
-  background-color: white
+  background-color: var(--background-color);
+  color: var(--text-color);
 }
 
 .flex-childTwo {
   flex-direction: column;
   text-align: left;
   flex-basis: 45%;
-
+  background-color: var(--background-color);
+  color: var(--text-color);
   padding-left: 0.5em;
 } 
 
 .flex-childTwo li:nth-child(odd){
-  background-color: white
+  background-color: var(--background-color);
+  color: var(--text-color);
 }
 
 
@@ -2141,7 +2267,7 @@ a.PreviousMatchLink{
   background-color: rgba(22, 165, 22, 0.094);
   padding: 1em;
   margin-bottom: 0.5em;
-  border: solid 1px #030061;
+  border: solid 1px white;
   text-align: center;
   /* padding-left: 7px;
   padding-right: 7px; */
@@ -2151,7 +2277,7 @@ a.PreviousMatchLink{
   background-color: #970d001d;
   padding: 1em;
   margin-bottom: 0.5em;
-  border: solid 1px #030061;
+  border: solid 1px white;
   text-align: center;
 
 }
@@ -2160,7 +2286,7 @@ a.PreviousMatchLink{
   background-color: #cc7a0028;
   padding: 1em;
   margin-bottom: 0.5em;
-  border: solid 1px #030061;
+  border: solid 1px white;
   text-align: center;
 
 }
@@ -2409,18 +2535,21 @@ li.FormHeader {
 }
 
 .win {
-  background-color: rgb(22, 165, 22);
+  background-color: #01a501;
   padding: 0.7em;
   margin-top: 1em;
+  padding-left: 0.8em;
+  padding-right: 0.8em;
+
   /* padding-left: 7px;
   padding-right: 7px; */
   margin: 0.2em;
-  color: white;
+  color: var(--secondary-button-text-color);
   font-weight: 700;
 }
 
 .loss {
-  background-color: #970d00;
+  background-color: #ca1100;
   padding: 0.7em;
   margin-top: 1em;
   padding-left: 0.8em;
@@ -2429,12 +2558,12 @@ li.FormHeader {
   /* padding-left: 7px;
   padding-right: 7px; */
   margin: 0.2em;
-  color: white;
+  color: var(--secondary-button-text-color);
   font-weight: 700;
 }
 
 .draw {
-  background-color: #cc7a00;
+  background-color: #f69300;
   padding: 0.7em;
   margin-top: 1em;
   padding-left: 0.8em;
@@ -2442,13 +2571,13 @@ li.FormHeader {
   /* padding-left: 7px;
   padding-right: 7px; */
   margin: 0.2em;
-  color: white;
+  color: var(--secondary-button-text-color);
   font-weight: 700;
 }
 
 
 .winSmall {
-  background-color: rgb(22, 165, 22);
+  background-color: #01a501;
   width: 1em; /* Set width and height to create a circle */
   height: 1em;
   margin: 0.1em;
@@ -2458,7 +2587,7 @@ li.FormHeader {
 }
 
 .lossSmall {
-  background-color: #970d00;
+  background-color: #ca1100;
   width: 1em; /* Set width and height to create a circle */
   height: 1em;
   margin: 0.1em;
@@ -2468,7 +2597,7 @@ li.FormHeader {
 }
 
 .drawSmall {
-  background-color: #cc7a00;
+  background-color: #f69300;
   width: 1em; /* Set width and height to create a circle */
   height: 1em;
   margin: 0.1em;
@@ -2478,8 +2607,8 @@ li.FormHeader {
 }
 
 .GoalTotal{
-  background-color: #030061;
-  color: white;
+  background-color: #020029;
+  color: var(--text-color);
   padding-left: 0.4em;
   padding-right: 0.4em;
   padding-top: 0.1em;
@@ -2490,19 +2619,19 @@ li.FormHeader {
 }
 
 .winLeague {
-  background-color: rgb(14, 143, 14);
+  background-color: rgb(0, 164, 0);
   padding: 0.3em;
   margin-top: 0em;
   /* padding-left: 7px;
   padding-right: 7px; */
   width: 1.2vw;
   margin: 0.25vw;
-  color: white;
+  color: var(--secondary-button-text-color);
   font-weight: 700;
 }
 
 .lossLeague {
-  background-color: #970d00;
+  background-color: #b90f00;
   padding: 0.3em;
   padding-left: 0.5em;
   padding-right: 0.5em;
@@ -2511,12 +2640,12 @@ li.FormHeader {
   padding-right: 7px; */
   width: 1.2vw;
   margin: 0.25vw;
-  color: white;
+  color: var(--secondary-button-text-color);
   font-weight: 700;
 }
 
 .drawLeague {
-  background-color: #cc7a00;
+  background-color: #e38800;
   padding: 0.3em;
   margin-top: 0em;
   padding-left: 0.4em;
@@ -2525,7 +2654,7 @@ li.FormHeader {
   padding-right: 7px; */
   width: 1.2vw;
   margin: 0.25vw;
-  color: white;
+  color: var(--secondary-button-text-color);
   font-weight: 700;
 }
 
@@ -2595,7 +2724,7 @@ li.FormHeader{
   max-width: 75%;
   margin-left: auto;
   margin-right: auto;
-  color: #030061;
+  color: var(--text-color);
 }
 
 .Over25Games {
@@ -2604,7 +2733,7 @@ li.FormHeader{
   max-width: 300px;
   margin-left: auto;
   margin-right: auto;
-  color: #030061;
+  color: var(--text-color);
 }
 
 .HowToUse {
@@ -2612,15 +2741,15 @@ li.FormHeader{
   padding-top: 6px;
   padding-bottom: 6px;
   margin: 1em;
-  border: 0.1em solid #030061;
+  border: 0.1em solid white;
   border-radius: 10px;
   box-sizing: border-box;
   text-decoration: none;
   font-family: 'Open Sans', sans-serif;
   /* font-size: 0.8em; */
   font-weight: 500;
-  color: white;
- background-color: #030061;
+  color: var(--text-color);
+ background-color: #020029;
   text-shadow: 0 0.04em 0.04em rgba(0, 0, 0, 0.35);
   text-align: center;
 
@@ -2637,9 +2766,9 @@ li.FormHeader{
 
 .BestPredictions {
   padding: 1em;
-  border: #030061 1px dashed;
+  border: var(--text-color) 1px dashed;
   margin: 0.5em;
-  background-color: white;
+  background-color: var(--background-color);
 }
 
 .BestPredictionsExplainer {
@@ -2658,10 +2787,10 @@ li.FormHeader{
 }
 
 .BTTSGames {
-  border: #030061 1px dashed;
+  border: var(--text-color) 1px dashed;
   padding: 1em;
   margin: 0.5em;
-  background-color: white;
+  background-color: var(--background-color);
 }
 
 .BTTSGames li {
@@ -2694,9 +2823,9 @@ ul {
 
 .LongshotPredictions {
   padding: 1em;
-  border: #030061 1px dashed;
+  border: var(--text-color) 1px dashed;
   margin: 0.5em;
-  background-color: white;
+  background-color: var(--background-color);
 }
 
 .LongshotPredictions li {
@@ -2707,9 +2836,9 @@ ul {
 
 .XGDiffTips {
   padding: 1em;
-  border: #030061 1px dashed;
+  border: var(--text-color) 1px dashed;
   margin: 0.5em;
-  background-color: white;
+  background-color: var(--background-color);
 }
 
 .XGDiffTips lh {
@@ -2777,7 +2906,7 @@ ul {
 }
 
 .kofi-button {
-  border: 0.1em solid #030061;
+  border: 0.1em solid white;
   font-family: 'Open Sans', sans-serif !important;
   min-width: 5em !important;
   line-height: 1.5em !important;
@@ -2787,12 +2916,12 @@ ul {
 img.BadgePrevious {margin-right: 1em;}
 
 a.kofi-button {
-  border: 0.1em solid #030061;
+  border: 0.1em solid white;
 
 }
 
 a {
-  color: white;
+  color: var(--text-color);
   font-size: 1.2em;
   padding: 0.5em;
 }
@@ -2832,7 +2961,8 @@ td {
 
 
 .SortedColumn{
-  background-color: #030061;
+  background-color: var(--background-color);
+  color: var(--text-color);
   height: auto;
   width: 6em;
   vertical-align: middle;
@@ -2861,7 +2991,7 @@ button:hover {
 }
 
 .disclaimerButton:hover {
-  border-color: #030061;
+  border-color: white;
   /* border-radius: 45px; */
 }
 
@@ -2950,7 +3080,7 @@ li .Stadium{
   flex-wrap: wrap;
   width: 100%;
   padding: 0em;
-  background-color: #030061;
+  background-color: #020029;
   padding-top: 1em;
   padding-bottom: 1em;
   margin-bottom: 0.5em;
@@ -2970,14 +3100,14 @@ li .Stadium{
   flex: 33.33%;
   text-align: right;
   padding-right: 2em;
-  color: white;
+  color: var(--text-color);
 }
 
 .LastGameAway {
   flex: 33.33%;
   text-align: left;
   padding-left: 2em;
-  color: white;
+  color: var(--text-color);
 }
 
 .LastGameScore {
@@ -3011,8 +3141,8 @@ li .Stadium{
   margin-bottom: 0.25em;
   justify-content: center;
   width: 100%;
-  background-color: #030061;
-  color: white;
+  background-color: #020029;
+  color: var(--text-color);
   border: white;
 }
 
@@ -3084,7 +3214,9 @@ section {
 
 .MainLoading {
   padding: 2em;
-  color:#030061
+  color:white;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 
@@ -3120,7 +3252,7 @@ label {
   justify-content: flex-start;
   align-items: center;
   flex-wrap: nowrap;
-  color: #030061;
+  color: var(--text-color);
   margin: 12px 0;
 
   cursor: pointer;
@@ -3136,6 +3268,12 @@ label {
   z-index: -1;
 }
 
+.DarkMode{
+  width: 2em;
+  margin-left: auto;
+  padding-right: 7em;
+}
+
 .design {
   width: 1em;
   height: 1em;
@@ -3143,8 +3281,8 @@ label {
   border: 2px solid var(--other);
   border-radius: 100%;
   margin-right: 0.2em;
-  border-color: black;
-  background-color: white;
+  border-color: var(--primary-color);
+  background-color: var(--background-color);
   position: relative;
 }
 
@@ -3257,14 +3395,18 @@ input:active + .design::after {
   font-size: 1.75em;
   width: 3em;
   /* font-size: 0.75em; */
-  background-color: white;
-  color: #030052;
+  background-color: var(--background-color);
+  color: var(--text-color);
   border: none;
   margin: 0em;
   margin-left: auto;
   padding: 0.25em;
   padding-left: 0em;
   /* line-height: 1em; */
+}
+
+.GameStats:hover {
+  color: var(--primary-color);
 }
 
 .GameStatsTwo {
@@ -3278,8 +3420,8 @@ input:active + .design::after {
   font-size: 1.75em;
   width: 3em;
   /* font-size: 0.75em; */
-  background-color: white;
-  color: #030052;
+  background-color: var(--background-color);
+  color: var(--text-color);
   border: none;
   margin: 0em;
   margin-left: auto;
@@ -3288,10 +3430,15 @@ input:active + .design::after {
   /* line-height: 1em; */
 }
 
+.GameStatsTwo:hover {
+  color: var(--primary-color);
+}
+
 .Last5 {
   display: flex;
   padding-left: 0.2em;
   min-width: 6em;
+  align-self: center;
 }
 
 .TeamStatsContainer canvas{
@@ -3308,13 +3455,13 @@ input:active + .design::after {
   padding-bottom: 0em;
   line-height: 2em;
   flex-wrap: wrap;
-  color: #030061;
+  color: var(--text-color);
   align-items: center;
   order: 1;
   justify-content: center;
   /* flex-basis: 100%;
 
-  background-color: white;
+  background-color: #020029;
   align-items: center;
   align-content: center;
   color: black;
@@ -3367,8 +3514,8 @@ input:active + .design::after {
 
 .HomeTeamStats li{
   padding: 0.5em;
-  border-bottom: #030061 0.25px solid;
-  color: #030061;
+  border-bottom: white 0.25px solid;
+  color: var(--text-color);
 }
 
 .AwayTeamStats{
@@ -3379,8 +3526,8 @@ input:active + .design::after {
 
 .AwayTeamStats li{
   padding: 0.5em;
-  border-bottom: #030061 0.25px solid;
-  color: #030061;
+  border-bottom: white 0.25px solid;
+  color: var(--text-color);
 }
 .HomeTeamResults{
   flex-basis: 50%;
@@ -3400,7 +3547,7 @@ input:active + .design::after {
 
 .MatchDate{
   padding-top: 1em;
-  color: #030061;
+  color: var(--text-color);
 }
 
 .ComparisonBar{
@@ -3412,6 +3559,7 @@ input:active + .design::after {
 
 .Chart{
   width: fit-content;
+  background-color: var(--mid-grey);
 }
 
 .ChartContainer{
@@ -3487,7 +3635,7 @@ h6.AttackingMomentum {
 .ResetPasswordLink {
   background: none;
   border: none;
-  color: #030052;
+  color: var(--text-color);
   text-decoration: underline;
   cursor: pointer;
   padding: 0;
@@ -3511,7 +3659,7 @@ h6.AttackingMomentum {
 .CancelButton{
   background: none;
   border: none;
-  color: #030052;
+  color: var(--text-color);
   text-decoration: underline;
   cursor: pointer;
   padding: 0;
@@ -3529,7 +3677,7 @@ h6.AttackingMomentum {
 }
 
 .text-blue-500{
-  color: #030061;
+  color: var(--text-color);
 }
 
 .mb-6{
@@ -3580,8 +3728,8 @@ button.TogglePasswordButton{
 
 button.SecondaryButtons{
   font-size: 1em;
-  color: #030052;
-  background-color: white;
+  color: var(--button-text-color);
+  background-color: var(--button-color);
   border: 1px solid #030052;
 }
 
@@ -3611,7 +3759,7 @@ button.SecondaryButtons{
 
 .AIContainer{
   display: flex;
-  color: #030052;
+  color: var(--text-color);
   font-size: 1em;
 }
 
@@ -3619,7 +3767,7 @@ button.SecondaryButtons{
   padding: 1em;
   padding-bottom: 1em;
   line-height: 1.75em;
-  color: #030052;
+  color: var(--text-color);
 }
 
 .HomeAIInsights{
@@ -3700,7 +3848,7 @@ button.AIInsights button:active {
 }
 
 .swiper-pagination-bullet {
-  background-color:#030061 !important;
+  background-color:white !important;
   height: 1.5em !important;
   width: 1.5em !important;
 

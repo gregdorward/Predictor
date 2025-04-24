@@ -4,6 +4,7 @@ import { Button } from "./components/Button";
 import OddsRadio from "./components/OddsRadio";
 import { Fixture } from "./components/Fixture";
 import mockedFixtures from "./data/mockedFixtures.json";
+import ThemeToggle from "./components/DarkModeToggle";
 import { selectedOdds } from "./components/OddsRadio";
 import Collapsable from "./components/CollapsableElement";
 import StripePolicies from "./components/Contact";
@@ -505,6 +506,9 @@ function AppContent() {
 
   return (
     <div className="App">
+      <div className="DarkMode">
+        <ThemeToggle />
+      </div>
       <Logo />
       <a
         className="SocialLink"
@@ -514,6 +518,7 @@ function AppContent() {
       >
         r/xgtipping
       </a>
+
       <div id="LoadingContainer" className="LoadingContainer" />
       <div id="RadioContainer" className="RadioContainer">
         <div id="RadioText" />
@@ -636,19 +641,6 @@ function AppContent() {
           mock={true}
           className={"individualFixture"}
         />
-        <div className="bitcoin" id="bitcoin">
-          <a
-            href="https://www.ko-fi.com/xgtipping"
-            target="_blank"
-            rel="noreferrer"
-          >
-            Donations
-          </a>
-          <span className="bitcoinSymbol">&#x20bf;itcoin address</span>
-          <span className="bitcoinAddress">
-            bc1q7j62txkvhfu0dt3l0s07saze6pjnyzs26wfgp0
-          </span>
-        </div>
       </div>
       <div id="XGDiff" />
 
@@ -671,7 +663,19 @@ function AppContent() {
         // If the user is not logged in, show nothing
         <div></div>
       )}
-
+      <div className="bitcoin" id="bitcoin">
+        <a
+          href="https://www.ko-fi.com/xgtipping"
+          target="_blank"
+          rel="noreferrer"
+        >
+          Donations
+        </a>
+        <span className="bitcoinSymbol">&#x20bf;itcoin address</span>
+        <span className="bitcoinAddress">
+          bc1q7j62txkvhfu0dt3l0s07saze6pjnyzs26wfgp0
+        </span>
+      </div>
       <div className="Social">
         <TwitterShareButton
           url={"www.soccerstatshub.com"}

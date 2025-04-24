@@ -48,7 +48,7 @@ export const AuthProvider = ({ children }) => {
 
   // Until loading is complete, return a loading indicator (or null)
   if (loading) {
-    return <ThreeDots />;
+    return <ThreeDots className="MainLoading"/>;
   }
 
   return (

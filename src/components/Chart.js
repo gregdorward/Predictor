@@ -54,7 +54,7 @@ export function Chart(props) {
   }
 
   const options = {
-    color: "#030061",
+    color: "white",
     responsive: true,
     aspectRatio: 1.2,
     maintainAspectRatio: true,
@@ -79,6 +79,7 @@ export function Chart(props) {
           font: {
             size: 12,
           },
+          color: "white"
         },
       },
       x: {
@@ -112,7 +113,7 @@ export function Chart(props) {
       title: {
         display: true,
         text: props.type,
-        color: "#030061",
+        color: "white",
         font: {
           size: 14,
         },
@@ -131,17 +132,17 @@ export function Chart(props) {
           color: "black",
         },
         data: props.data1,
-        borderColor: "#030061",
+        borderColor: "red",
         borderWidth: 3,
-        backgroundColor: "#030061",
+        backgroundColor: "red",
         tension: props.tension,
       },
       {
         label: props.team2,
         data: props.data2,
-        borderColor: "#970d00",
+        borderColor: "yellow",
         borderWidth: 3,
-        backgroundColor: "#970d00",
+        backgroundColor: "yellow",
         tension: props.tension,
       }
     ],
@@ -172,7 +173,7 @@ export function MultilineChart(props) {
   }
 
   const options = {
-    color: "#030061",
+    color: "white",
     responsive: true,
     aspectRatio: 1.2,
     maintainAspectRatio: true,
@@ -197,6 +198,7 @@ export function MultilineChart(props) {
           font: {
             size: 12,
           },
+          color: "white"
         },
       },
       x: {
@@ -230,7 +232,7 @@ export function MultilineChart(props) {
       title: {
         display: true,
         text: props.type,
-        color: "#030061",
+        color: "white",
         font: {
           size: 14,
         },
@@ -249,40 +251,40 @@ export function MultilineChart(props) {
           color: "black",
         },
         data: props.data1,
-        borderColor: "#030061",
+        borderColor: "red",
         borderWidth: 3,
-        backgroundColor: "#030061",
+        backgroundColor: "red",
         tension: props.tension,
       },
       {
         label: props.team2,
         data: props.data2,
-        borderColor: "#970d00",
+        borderColor: "yellow",
         borderWidth: 3,
-        backgroundColor: "#970d00",
+        backgroundColor: "yellow",
         tension: props.tension,
       },
       {
         label: `${props.team1} XG Diff`,
         font: {
-          color: "black",
+          color: "white",
         },
         data: props.data3,
-        borderColor: "#0600d6",
+        borderColor: "DarkRed",
         borderWidth: 3,
-        backgroundColor: "#0600d6",
+        backgroundColor: "DarkRed",
         tension: props.tension,
         hidden: true,
       },
       {
         label: `${props.team2} XG Diff`,
         font: {
-          color: "black",
+          color: "white",
         },
         data: props.data4,
-        borderColor: "#be1000",
+        borderColor: "orange",
         borderWidth: 3,
-        backgroundColor: "#be1000",
+        backgroundColor: "orange",
         tension: props.tension,
         hidden: true,
       },
@@ -295,7 +297,7 @@ export function MultilineChart(props) {
 
 export function DoughnutChart(props) {
   const options = {
-    color: "#030061",
+    color: "white",
 
     plugins: {
       legend: {
@@ -303,13 +305,13 @@ export function DoughnutChart(props) {
 
         labels: {
           boxHeight: 10,
-          color: "#030061",
+          color: "white",
         },
       },
       title: {
         display: true,
         text: "Soccer Stats Hub Form Comparison",
-        color: "#030061",
+        color: "white",
         font: {
           size: 14,
         },
@@ -322,7 +324,7 @@ export function DoughnutChart(props) {
     datasets: [
       {
         data: props.data,
-        backgroundColor: ["#030061", "#970d00"],
+        backgroundColor: ["white", "#970d00"],
         rotation: 270,
         hoverOffset: 4,
         cutout: "75%",
@@ -341,7 +343,7 @@ export function DoughnutChart(props) {
 
 export function RadarChart(props) {
   const options = {
-    color: "#030061",
+    color: "white",
     scales: {
       r: {
         angleLines: {
@@ -353,9 +355,12 @@ export function RadarChart(props) {
           precision: 0,
           display: false,
         },
-        // grid: {
-        //     circular: true,
-        //   }
+        pointLabels:{
+          color: "white"
+        },
+        grid: {
+            color: "white",
+          }
       },
     },
     plugins: {
@@ -364,13 +369,13 @@ export function RadarChart(props) {
 
         labels: {
           boxHeight: 10,
-          color: "#030061",
+          color: "white",
         },
       },
       title: {
         display: true,
         text: props.title,
-        color: "#030061",
+        color: "white",
         font: {
           size: 14,
         },
@@ -393,24 +398,24 @@ export function RadarChart(props) {
         label: props.team1,
         data: props.data,
         fill: true,
-        backgroundColor: "rgba(54, 162, 235, 0.2)",
-        borderColor: "#030061",
-        pointBackgroundColor: "#030061",
-        pointBorderColor: "#fff",
+        // backgroundColor: "rgba(255, 0, 0, 0.52)",
+        borderColor: "red",
+        pointBackgroundColor: "red",
+        pointBorderColor: "red",
         pointHoverBackgroundColor: "#fff",
-        pointHoverBorderColor: "rgb(255, 99, 132)",
+        pointHoverBorderColor: "rgba(255, 99, 133, 0)",
         borderWidth: 2,
       },
       {
         label: props.team2,
         data: props.data2,
         fill: true,
-        backgroundColor: "rgba(255, 99, 132, 0.2)",
-        borderColor: "#970d00",
-        pointBackgroundColor: "#970d00",
-        pointBorderColor: "#fff",
+        // backgroundColor: "rgba(253, 240, 0, 0.57)",
+        borderColor: "yellow",
+        pointBackgroundColor: "yellow",
+        pointBorderColor: "yellow",
         pointHoverBackgroundColor: "#fff",
-        pointHoverBorderColor: "rgb(54, 162, 235)",
+        pointHoverBorderColor: "yellow",
         borderWidth: 2,
       },
     ],
@@ -441,7 +446,7 @@ export function BarChart(props) {
   }
 
   const options = {
-    color: "#030061",
+    color: "white",
     indexAxis: "y",
     // Elements options apply to all of the options unless overridden in a dataset
     // In this case, we are setting the border of each horizontal bar to be 2px wide
@@ -464,6 +469,7 @@ export function BarChart(props) {
           font: {
             size: 10,
           },
+          color: "white"
         },
       },
     },
@@ -478,7 +484,7 @@ export function BarChart(props) {
       title: {
         display: true,
         text: props.text,
-        color: "#030061",
+        color: "white",
         font: {
           size: 14,
         },
@@ -511,7 +517,7 @@ export function BarChart(props) {
         backgroundColor(context) {
           const index = context.dataIndex;
           const value = context.dataset.data[index];
-          return value < 0 ? "#030061" : "#970d00";
+          return value < 0 ? "red" : "yellow";
         },
       },
     ],
@@ -524,7 +530,7 @@ export function BarChartTwo(props) {
   const dataset = [props.data1, props.data2]
 
   const options = {
-    color: "#030061",
+    color: "white",
     indexAxis: "x",
     // Elements options apply to all of the options unless overridden in a dataset
     // In this case, we are setting the border of each horizontal bar to be 2px wide
@@ -543,6 +549,7 @@ export function BarChartTwo(props) {
           font: {
             size: 10,
           },
+          color: "white"
         },
       },
       // y: {
@@ -566,7 +573,7 @@ export function BarChartTwo(props) {
       title: {
         display: true,
         text: [props.text],
-        color: "#030061",
+        color: "white",
         font: {
           size: 14,
         },
@@ -574,7 +581,7 @@ export function BarChartTwo(props) {
       subtitle: {
         display: true,
         text: "Green - Improving | Red - Worsening",
-        color: "#030061",
+        color: "white",
         font: {
           size: 12,
         },

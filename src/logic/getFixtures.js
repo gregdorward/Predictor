@@ -490,7 +490,7 @@ export async function generateFixtures(
         <div className="LoadingText">
           Loading all league, fixture & form data, please be patient...
         </div>
-        <ThreeDots height="3em" fill="#030061" />
+        <ThreeDots className="MainLoading" height="3em" fill="#fe8c00" />
       </div>,
       document.getElementById("Loading")
     );

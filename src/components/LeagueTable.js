@@ -18,8 +18,8 @@ const upArrow = "\u{25B2}";
 
 const StyledTableCell2 = withStyles((theme) => ({
   head: {
-    backgroundColor: "rgba(226, 226, 226, 1)",
-    color: "white",
+    // backgroundColor: "rgba(226, 226, 226, 1)",
+    // color: "white",
     padding: "0.35em",
     paddingTop: "0.75em",
     paddingBottom: "0.75em",
@@ -38,14 +38,14 @@ const StyledTableCell2 = withStyles((theme) => ({
     paddingBottom: "0.75em",
     // border: "none",
     margin: "none",
-    color: "#030061",
+    // color: "#030061",
   },
 }))(TableCell);
 
 const StyledTableCell = withStyles((theme) => ({
   head: {
-    backgroundColor: "white",
-    color: "#030061",
+    // backgroundColor: "white",
+    // color: "#030061",
     padding: "0.5em",
     paddingTop: "1em",
     paddingBottom: "1em",
@@ -65,18 +65,18 @@ const StyledTableCell = withStyles((theme) => ({
     paddingBottom: "1em",
     // border: "none",
     margin: "none",
-    color: "#030061",
+    // color: "#030061",
   },
 }))(TableCell);
 
 const StyledTableRow = withStyles((theme) => ({
   root: {
     "&:nth-of-type(odd)": {
-      backgroundColor: "#rgba(226, 226, 226, 0.424)",
+      // backgroundColor: "#rgba(226, 226, 226, 0.424)",
       textAlign: "center",
     },
     "&:nth-of-type(even)": {
-      backgroundColor: "#rgba(226, 226, 226, 1)",
+      // backgroundColor: "#rgba(226, 226, 226, 1)",
       textAlign: "center",
     },
   },
