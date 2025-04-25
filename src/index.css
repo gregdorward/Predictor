@@ -223,6 +223,7 @@
 /* Default Light Mode Colors */
 :root {
   --background-color: #ffffff; /* White */
+  --secondary-background-color: whitesmoke; /* White */
   --text-color: #020029; /* Dark Blue */
   --button-color: #020029;
   --button-text-color: #ffffff;
@@ -231,11 +232,13 @@
   --secondary-color: #9b0000; /* Dark Red */
   --accent-color: #030040; /* Light Gray */
   --mid-grey: #030040;
+  --disabled-div: #5d5d5d;
 }
 
 /* Dark Mode Colors */
 .dark-mode {
   --background-color: #020029; /* Dark Blue */
+  --secondary-background-color: #191928; /* White */
   --text-color: #ffffff; /* White */
   --button-color: whitesmoke;
   --button-text-color: #020029;
@@ -244,6 +247,7 @@
   --secondary-color: #860000; /* Dark Red */
   --accent-color: whitesmoke; /* Dark Gray */
   --mid-grey: #020029;
+  --disabled-div: #525151;
 }
 
 body {
@@ -822,8 +826,8 @@ span.MembershipInfo {
   padding: 1em;
   align-items: center;
   font-size: 1.1em;
-  background-color: var(--button-color);
-  color: var(--button-text-color);
+  background-color: var(--secondary-background-color);
+  color: var(--text-color);
 }
 
 .ResultRowOverviewSmallW {
@@ -1068,7 +1072,7 @@ strong {
   align-content: center;
   color: var(--text-color);
   padding-top: 0.5em;
-  /* padding-bottom: 0.5em; */
+  padding-bottom: 0.5em;
   cursor: pointer;
   /* box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.2), 0 1px 2px 0 #030052; */
   /* margin-bottom: 1em; */
@@ -1080,11 +1084,11 @@ strong {
   display: flex;
   flex-direction: column;
   flex-basis: 100%;
-  background-color: var(--background-color);
+  background-color: var(--secondary-background-color);
   align-items: left;
   align-content: left;
   color: var(--text-color);
-  /* padding-bottom: 0.5em; */
+  padding-bottom: 0.5em;
   cursor: pointer;
   
   /* box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.2), 0 1px 2px 0 #030052; */
@@ -1096,11 +1100,11 @@ strong {
   display: flex;
   flex-direction: column;
   flex-basis: 100%;
-  background-color: var(--background-color);
+  background-color: var(--secondary-background-color);
   align-items: left;
   align-content: left;
   color: var(--text-color);
-  /* padding-bottom: 0.5em; */
+  padding-bottom: 0.5em;
   cursor: pointer;
   
   /* box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.2), 0 1px 2px 0 #030052; */
@@ -1154,17 +1158,14 @@ strong {
 
 .individualFixturetrue {
   display: flex;
+  flex-direction: column;
   flex-basis: 100%;
-  background-color: rgb(212, 212, 212);
-  align-items: center;
-  align-content: center;
-  color: rgb(61, 61, 61);
-  padding-top: 0.5em;
-  /* padding-bottom: 0.5em; */
+  background-color: var(--disabled-div);
+  align-items: left;
+  align-content: left;
+  color: var(--text-color);
+  padding-bottom: 0.5em;
   cursor: pointer;
-  /* box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.2), 0 1px 2px 0 #030052; */
-  /* margin-bottom: 1em; */
-  /* border: black 0.25px solid; */
 }
 
 
@@ -1732,7 +1733,8 @@ strong {
 
 .FiltersSelected{
   padding: 1em;
-  color: #030052;
+  color: var(--text-color);
+  background-color: var(--background-color);
 }
 
 .FiltersSelectedList li{
@@ -3395,7 +3397,7 @@ input:active + .design::after {
   font-size: 1.75em;
   width: 3em;
   /* font-size: 0.75em; */
-  background-color: var(--background-color);
+  background-color: #ffffff00;
   color: var(--text-color);
   border: none;
   margin: 0em;
@@ -3420,7 +3422,7 @@ input:active + .design::after {
   font-size: 1.75em;
   width: 3em;
   /* font-size: 0.75em; */
-  background-color: var(--background-color);
+  background-color: #ffffff00;
   color: var(--text-color);
   border: none;
   margin: 0em;

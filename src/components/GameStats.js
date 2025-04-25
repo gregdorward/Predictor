@@ -1904,16 +1904,20 @@ function GameStats({ game, displayBool }) {
       const table = await fetchBasicTable(game.leagueID);
       console.log(table);
       const leagueTable = table.table;
+      console.log(leagueTable)
       let progress;
       let type;
       let statistics;
       let leagueStatistics = await fetch(
         `${process.env.REACT_APP_EXPRESS_SERVER}leagueStats/${leagueTable[0].LeagueID}`
       );
+      let totalGames;
+
       await leagueStatistics.json().then((stats) => {
         statistics = stats.data;
         type = stats.data.round_format;
         progress = statistics.progress;
+        totalGames = (statistics.totalMatches * 2) / statistics.clubNum
         console.log(statistics);
       });
       let roundType;
@@ -1958,8 +1962,9 @@ function GameStats({ game, displayBool }) {
       try {
         const AIPayload = {
           league: game.leagueDesc,
+          totalLeagueGames: totalGames,
+          gameweek: (game.matches_completed_minimum + 1),
           gameType: roundType,
-          gameweek: game.matches_completed_minimum,
           referee: await getRefStats(game.refereeID, game.competition_id),
           leagueTable: leagueTable,
           seasonProgressPercent: progress,
@@ -1969,8 +1974,8 @@ function GameStats({ game, displayBool }) {
             homeTeamName: game.homeTeam,
             homeLeaguePosition: homeForm?.LeaguePosition,
             homeTeamResults: homeForm?.allTeamResults,
-            homeXGDiffAll: homeForm?.longTermXGDiff,
-            homeXGDiffLast5: homeForm?.shortTermXGDiff,
+            "XG diff all games": homeForm?.longTermXGDiff,
+            "XG diff last 5 games": homeForm?.shortTermXGDiff,
             homeAttackingStats: homeForm?.attackingMetrics,
             homeAttackingStatsLast5: homeForm?.attackingMetricsHomeLast5,
             homeAttackingStatsHomeOnly: homeForm?.attackingMetricsHomeOnly,
@@ -1982,8 +1987,8 @@ function GameStats({ game, displayBool }) {
             awayTeamName: game.awayTeam,
             awayLeaguePosition: awayForm?.LeaguePosition,
             awayTeamResults: awayForm?.allTeamResults,
-            awayXGDiffAll: awayForm?.longTermXGDiff,
-            awayXGDiffLast5: awayForm?.shortTermXGDiff,
+            "XG diff all games": awayForm?.longTermXGDiff,
+            "XG diff last 5 games": awayForm?.shortTermXGDiff,
             awayAttackingStats: awayForm?.attackingMetrics,
             awayAttackingStatsLast5: awayForm?.attackingMetricsAwayLast5,
             awayAttackingStatsAwayOnly: awayForm?.attackingMetricsAwayOnly,

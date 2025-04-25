@@ -38,7 +38,7 @@ export const Slide = (props) => {
       value={range}
       sx={{
         width: "90%",
-        color: "#030061",
+        color: "#fe8c00",
       }}
       onChange={handleChange}
       valueLabelDisplay="auto"

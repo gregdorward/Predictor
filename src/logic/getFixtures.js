@@ -124,9 +124,12 @@ export async function generateTables(a, leagueIdArray, allResults) {
           wdl: currentTeam.wdl_record,
           seasonGoals: currentTeam.seasonGoals,
           seasonConceded: currentTeam.seasonConceded,
+          zone: currentTeam.zone.name !== null ? currentTeam.zone.name : "safe/mid-table"
         };
         leagueInstance.push(team);
       }
+
+
 
       tableArray.push({ id: currentLeagueId, table: leagueInstance });
       let basicElements = leagueInstance.map((item) => ({
@@ -136,6 +139,7 @@ export async function generateTables(a, leagueIdArray, allResults) {
         GoalDifference: item.GoalDifference,
         Played: item.Played,
         Points: item.Points,
+        Zone: item.zone,
       }));
       basicTableArray.push({ id: currentLeagueId, table: basicElements });
     } else if (currentLeagueId === 13973 || currentLeagueId === 12933) {
