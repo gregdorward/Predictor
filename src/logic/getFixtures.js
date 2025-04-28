@@ -124,7 +124,7 @@ export async function generateTables(a, leagueIdArray, allResults) {
           wdl: currentTeam.wdl_record,
           seasonGoals: currentTeam.seasonGoals,
           seasonConceded: currentTeam.seasonConceded,
-          zone: currentTeam.zone.name !== null ? currentTeam.zone.name : "safe/mid-table"
+          zone: currentTeam.zone.name !== null ? currentTeam.zone.name : "mid-table"
         };
         leagueInstance.push(team);
       }
@@ -594,26 +594,27 @@ export async function generateFixtures(
 
       try {
         const sofaScore = await fetch(
-          `https://www.sofascore.com/api/v1/sport/football/scheduled-events/${dateSS}`
+          `${process.env.REACT_APP_EXPRESS_SERVER}scheduledEvents/${dateSS}`
         );
         await sofaScore.json().then((games) => {
-          games.events.forEach((game) => {
+          games.forEach((game) => {
             arrayOfGames.push({
-              homeTeam: game.homeTeam.name,
-              awayTeam: game.awayTeam.name,
+              homeTeam: game.homeTeam,
+              awayTeam: game.awayTeam,
               id: game.id,
-              time: game.startTimestamp,
+              time: game.time,
               homeGoals:
-                game.homeScore.display != undefined
-                  ? game.homeScore.display
+                game.homeScore !== undefined
+                  ? game.homeScore
                   : "-",
               awayGoals:
-                game.awayScore.display != undefined
-                  ? game.awayScore.display
+                game.awayScore !== undefined
+                  ? game.awayScore
                   : "-",
             });
           });
         });
+        console.log(arrayOfGames)
       } catch (error) {
         console.error("An error occurred while fetching or processing data:", error);
         // You might want to add more specific error handling here,
@@ -911,10 +912,10 @@ export async function generateFixtures(
       );
 
       for (const fixture of leagueGames) {
+        console.log(fixture)
         const unixTimestamp = fixture.date_unix;
         const milliseconds = unixTimestamp * 1000;
         const dateObject = new Date(milliseconds);
-
         let match = {};
         if (orderedLeagues[i].name !== previousLeagueName) {
           match.leagueName = orderedLeagues[i].name;
@@ -1172,7 +1173,6 @@ export async function generateFixtures(
             homePrefix = "";
             homePrefixHomeTable = "";
           }
-
           if (
             teamPositionAway === 0 ||
             form[0].data[0].season_format !== "Domestic League"

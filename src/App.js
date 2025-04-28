@@ -101,6 +101,95 @@ const leagueOrder = [
   //canada
 ];
 
+// const sofaScoreIds = [
+//   {
+//     12325: 17, //EPL
+//   },
+//   {
+//     12451: 18 //Championship
+//   },
+//   {
+//     12446: 24 //League 1
+//   },
+//   {
+//     12422: 25 //League 2
+//   },
+//   {
+//     12622: 173 //Conference
+//   },
+//   {
+//     12316:
+//   },
+//   {},
+//   {},
+//   {},
+//   {},
+//   {},
+//   {},
+//   {},
+//   {},
+//   {},
+//   {},
+//   {},
+//   {},
+//   {},
+//   {},
+//   {},
+//   {},
+//   {},
+//   {},
+//   // 13734, //Nations league 24/25
+//   12325, //premier league 22/23
+//   12451, //championship 22/23
+//   12446, //league 1 22/23
+//   12422, //league 2 22/23
+//   12622, //National league 22/23
+//   12316, //La Liga 22/23
+//   12455, //Scottish Prem 22/23
+//   12529, //Bundesliga 22/23
+//   12530, //Serie A 22/23
+//   12337, //French Prem 22/23
+//   12931, //Portagul Prem 22/23
+//   12322, //Dutch Prem 22/23
+//   12137, //Belgian Pro League 22/23
+//   13963, //sweden 24
+//   12132, //Danish Prem 24/25
+//   13987, //Norway Prem 23
+//   12472, //Austrian Prem 22/23
+//   12734, //Greek Prem 22/23
+//   12641, //turkey
+//   12120, //Polish prem 22/23
+//   12326, //Swiss prem 22/23
+//   12121, //Croatia 24/25
+//   12336, //Czecjh 24/25
+//   13952, //Irish Prem 23
+//   12321, // Champs league
+//   12327, //Europa
+//   12467, //Spanish secunda 22/23
+//   12621, //Italy serie B 22/23
+//   12528, //Bundesliga 2 22/23
+//   // 12623, //German 3rd tier 22/23
+//   12338, //French League 2 22/23
+//   12456, //Scottish Championship 22/23
+//   12474, //Scottish league 1 22/23
+//   12453, //Scottish league 2 22/23
+//   12827, //Women's prem 23/24
+//   13973, //MLS 25,
+//   14236, //Canada 25
+//   14231, //Brazil prem 24
+//   14125, //Argentina prem 23
+//   12136, //Mexico prem 23/24
+//   12933, //National league North and South 22/23
+//   13703, //Australian A league 24/25
+//   14069, //S Korea 25,
+//   13960, //Japan 25
+//   12772, //Saudi 24/25
+//   13964, // WC Qual Europe,
+//   10121, // WC Qual SA,
+//   11426, // WC Qual ConCaf
+//   12801, // WC Qual Aus,
+// ];
+
 let today;
 let todayFootyStats;
 let todaySS;

@@ -1,23 +1,29 @@
 import React from "react";
 import PropTypes from "prop-types";
 
-const SofaLineupsWidget = ({ id, team1, team2, time, homeGoals, awayGoals }) => {
+const SofaLineupsWidget = ({
+  id,
+  team1,
+  team2,
+  time,
+  homeGoals,
+  awayGoals,
+}) => {
+  console.log(team1)
   const iframeSrc = `https://widgets.sofascore.com/embed/lineups?id=${id}&widgetTheme=light`;
 
-  let differenceInSeconds, minutes
+  let differenceInSeconds, minutes;
   const currentTime = new Date().getTime() / 1000;
   // Calculate the difference in seconds
-    if(time > 0){
-        differenceInSeconds = time - currentTime;
-        minutes = Math.floor(differenceInSeconds / 60);
-    } else {
-        minutes = -99999999
-    }
+  if (time > 0) {
+    differenceInSeconds = time - currentTime;
+    minutes = Math.floor(differenceInSeconds / 60);
+  } else {
+    minutes = -99999999;
+  }
 
-
-
-  if(team1 === "N/A") {
-    return <h6>No lineups available for this match yet</h6>
+  if (team1 === "N/A") {
+    return <h6>No lineups available for this match yet</h6>;
   } else if (minutes > 60) {
     return (
       <div>
@@ -63,7 +69,9 @@ const SofaLineupsWidget = ({ id, team1, team2, time, homeGoals, awayGoals }) => 
   } else if (minutes < 0) {
     return (
       <div>
-        <div className="CurrentScore">Score: {`${team1}: ${homeGoals} - ${team2}: ${awayGoals}`}</div>
+        <div className="CurrentScore">
+          Score: {`${team1}: ${homeGoals} - ${team2}: ${awayGoals}`}
+        </div>
         <span>Score not live updated</span>
         <h6 className="AttackingMomentum">Live attacking momentum and goals</h6>
         <iframe
@@ -94,12 +102,10 @@ const SofaLineupsWidget = ({ id, team1, team2, time, homeGoals, awayGoals }) => 
         ></div>
       </div>
     );
-  }
-  else {
+  } else {
     return <h6>{`Lineups coming in approximately ${minutes - 60} minutes`}</h6>;
   }
 };
-
 
 SofaLineupsWidget.propTypes = {
   id: PropTypes.string.isRequired,

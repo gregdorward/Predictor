@@ -788,6 +788,17 @@ function GameStats({ game, displayBool }) {
     }
   }
 
+  async function getGameIdByAwayTeam(games, awayTeamName) {
+    const matchingGames = games.filter((game) =>
+      game.awayTeam.includes(awayTeamName)
+    );
+    if (matchingGames.length > 0) {
+      return matchingGames[0];
+    } else {
+      return null; // or any other value you prefer to return if no match is found
+    }
+  }
+
   function isBeforeTimestamp(targetTimestamp) {
     const currentTimestamp = Math.floor(Date.now() / 1000); // Get current time in seconds
     return currentTimestamp < targetTimestamp;
@@ -846,15 +857,28 @@ function GameStats({ game, displayBool }) {
   useEffect(() => {
     async function fetchMatchingGame() {
       try {
-        const gameInfo = await getGameIdByHomeTeam(arrayOfGames, game.homeTeam);
-        setMatchingGame(gameInfo);
+        let matchingGameInfo = await getGameIdByHomeTeam(arrayOfGames, game.homeTeam);
+
+        if (!matchingGameInfo) {
+          console.log(`No match found for homeTeam: ${game.homeTeam}. Trying awayTeam: ${game.awayTeam}`);
+          matchingGameInfo = await getGameIdByAwayTeam(arrayOfGames, game.awayTeam);
+        }
+
+        setMatchingGame(matchingGameInfo);
+
+        if (!matchingGameInfo) {
+          console.warn(`No matching game found for either homeTeam "${game.homeTeam}" or awayTeam "${game.awayTeam}"`);
+          // Optionally set matchingGame to a default value (e.g., null) if needed
+          // setMatchingGame(null);
+        }
+
       } catch (error) {
         console.error("Error fetching game info:", error);
       }
     }
 
     fetchMatchingGame();
-  }, [game.homeTeam]);
+  }, [game.homeTeam, game.awayTeam]); // Add game.awayTeam to the dependency array
 
   useEffect(() => {
     if (matchingGame) {
@@ -1899,12 +1923,9 @@ function GameStats({ game, displayBool }) {
 
   const generateAIInsights = useCallback(
     async (gameId) => {
-      console.log(game);
       setIsLoading(true);
       const table = await fetchBasicTable(game.leagueID);
-      console.log(table);
       const leagueTable = table.table;
-      console.log(leagueTable)
       let progress;
       let type;
       let statistics;
@@ -1918,7 +1939,6 @@ function GameStats({ game, displayBool }) {
         type = stats.data.round_format;
         progress = statistics.progress;
         totalGames = (statistics.totalMatches * 2) / statistics.clubNum
-        console.log(statistics);
       });
       let roundType;
       switch (type) {
