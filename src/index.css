@@ -1741,6 +1741,76 @@ strong {
   padding: 0.25em;
 }
 
+.gallery-container {
+  display: inline-flex;
+  align-items: center;
+  flex-wrap: wrap;
+  justify-content: flex-start;
+  background-color: var(--background-color);
+  color: var(--text-color);
+}
+
+.gallery-item-wrapper {
+  /* Default for larger screens (4 per row) */
+  width: calc(25% - 10px); /* Roughly 1/4 width with some margin */
+  margin-right: 10px;
+  margin-bottom: 20px;
+  box-sizing: border-box;
+}
+
+/* Remove margin from the last item in each row for the 4-column layout */
+.gallery-item-wrapper:nth-child(4n) {
+  margin-right: 0;
+}
+
+/* Media query for mobile screens (show 2 images per row) */
+@media (max-width: 768px) {
+  .gallery-item-wrapper {
+    width: calc(50% - 10px); /* Roughly 1/2 width with some margin */
+  }
+
+  /* Remove margin from the last item in each row for the 2-column layout */
+  .gallery-item-wrapper:nth-child(2n) {
+    margin-right: 0;
+  }
+
+  /* Re-apply right margin to all other items in the row */
+  .gallery-item-wrapper:nth-child(4n) {
+    margin-right: 10px;
+  }
+}
+
+.gallery-item {
+  /* You might not need specific styling here anymore, or adjust as needed */
+}
+
+.gallery-item a {
+  display: block;
+}
+
+.gallery-item img {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.gallery-item img:hover {
+  transform: scale(1.15);
+}
+
+.gallery-item-wrapper h6 {
+  margin-top: 0; /* Remove default top margin of h6 */
+  margin-bottom: 5px; /* Add some bottom margin to separate from the image */
+  text-align: center; /* Optional: Center the title */
+}
+
+h6.MediaTitle{
+  font-size: 2em;
+  margin-bottom: 0em;
+}
+
+
+
 .StatsDiv{
   background-color: #e2e2e26c;
   margin-bottom: 0.5em;

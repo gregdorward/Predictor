@@ -296,6 +296,7 @@ export async function renderTable(index, results, id) {
           Key={`League${index}`}
           GamesPlayed={statistics.game_week}
           Results={mostRecentGames}
+          Date={todaysDateString}
           // mostRecentGameweek={mostRecentGameweek}
         />,
         document.getElementById(`leagueName${id}`)
@@ -475,6 +476,7 @@ myHeaders.append("Origin", "https://gregdorward.github.io");
 let isFunctionRunning = false;
 
 export let dynamicDate;
+let todaysDateString;
 
 export async function generateFixtures(
   day,
@@ -488,6 +490,7 @@ export async function generateFixtures(
 ) {
   if (!isFunctionRunning) {
     isFunctionRunning = true;
+    todaysDateString = todaysDate
 
     ReactDOM.render(
       <div>
@@ -912,7 +915,6 @@ export async function generateFixtures(
       );
 
       for (const fixture of leagueGames) {
-        console.log(fixture)
         const unixTimestamp = fixture.date_unix;
         const milliseconds = unixTimestamp * 1000;
         const dateObject = new Date(milliseconds);

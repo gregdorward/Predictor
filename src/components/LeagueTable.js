@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { withStyles } from "@material-ui/core/styles";
 import Table from "@material-ui/core/Table";
 import TableBody from "@material-ui/core/TableBody";
@@ -96,6 +96,69 @@ function styleForm(formIndicator) {
 
 export default function LeagueTable(props) {
   [toggleState, setIsOff] = useState(false);
+  const [mediaItems, setMediaItems] = useState([]);
+  const date = props.Date; // Ensure this is the correct format
+  const id = props.Id;
+
+  const sofaScoreIds = [
+    { 12325: 17 }, //EPL
+    { 12451: 18 }, //Championship
+    { 12446: 24 }, //League 1
+    { 12422: 25 }, //League 2
+    { 12529: 35 }, //Bundesliga
+    { 12316: 8 }, //La Liga
+    { 12321: 7 }, //Champions League
+    { 12530: 23 }, //Serie A
+    { 13973: 242 }, //MLS
+    { 12337: 34 }, //Ligue 1
+  ];
+
+  // Derive the mediaId outside of useEffect to make it stable
+  const derivedMediaId = (() => {
+    for (const mapping of sofaScoreIds) {
+      if (mapping.hasOwnProperty(id)) {
+        return mapping[id];
+      }
+    }
+    console.warn(`No matching media ID found for ID: ${id}`);
+    return null;
+  })();
+
+  useEffect(() => {
+    async function fetchMedia() {
+      if (derivedMediaId) {
+        try {
+          const response = await fetch(
+            `${process.env.REACT_APP_EXPRESS_SERVER}getMedia/${derivedMediaId}/${date}`
+          );
+          if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+          }
+          const data = await response.json();
+          console.log(data);
+
+          if (data.media && Array.isArray(data.media)) {
+            setMediaItems(
+              data.media.map((item) => ({
+                url: item.url,
+                thumbnailUrl: item.thumbnailUrl,
+                title: item.title,
+              }))
+            );
+          } else {
+            setMediaItems([]);
+          }
+        } catch (error) {
+          console.error("Error fetching media:", error);
+          setMediaItems([]);
+        }
+      } else {
+        setMediaItems([]);
+      }
+    }
+
+    fetchMedia();
+  }, [derivedMediaId, date]); // Re-fetch only if derivedMediaId or date changes
 
   let rows = props.Teams.map((team, i) => (
     <StyledTableRow key={`${props.Key}row${i}`}>
@@ -282,9 +345,9 @@ export default function LeagueTable(props) {
   }
 
   async function sorted(league, value, order) {
-    console.log(league)
-    console.log(value)
-    console.log(order)
+    console.log(league);
+    console.log(value);
+    console.log(order);
 
     let sortedByForm;
     if (order === "desc") {
@@ -293,7 +356,7 @@ export default function LeagueTable(props) {
       sortedByForm = league.sort((a, b) => a[value] - b[value]);
     }
     setIsOff(!toggleState);
-    console.log(sortedByForm)
+    console.log(sortedByForm);
     return sortedByForm;
   }
 
@@ -301,8 +364,8 @@ export default function LeagueTable(props) {
     // props.GamesPlayed > 3 &&
     props.Teams[0].LeagueID !== 13973 && //MLS
     props.Teams[0].LeagueID !== 12933 && //UKNorth&South
-    props.Teams[0].LeagueID !== 12327 && //Europa
-    props.Teams[0].LeagueID !== 12321 //ChampionsLeague
+    props.Teams[0].LeagueID !== 12327 //Europa
+    // props.Teams[0].LeagueID !== 12321 //ChampionsLeague
   ) {
     for (let i = 0; i < props.Teams.length; i++) {
       return (
@@ -311,7 +374,7 @@ export default function LeagueTable(props) {
             className="Table"
             aria-label="customized table"
             key={props.Key}
-            style={{ marginTop: "2em", marginBottom: "1em" }}
+            style={{ marginTop: "2em", marginBottom: "0em" }}
           >
             <TableHead>
               <TableRow>
@@ -346,6 +409,36 @@ export default function LeagueTable(props) {
             </TableHead>
             <TableBody>{rows}</TableBody>
           </Table>
+          <ul className="gallery-container">
+            {mediaItems.map((item, index) => (
+              <div key={`media-item-${index}`} className="gallery-item-wrapper">
+                <h6 className="MediaTitle">{item.title}</h6>
+                <li className="gallery-item MediaLinks">
+                  {item.thumbnailUrl ? (
+                    <a
+                      href={item.url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      <img
+                        src={item.thumbnailUrl}
+                        alt={`Media Thumbnail ${index + 1}`}
+                        className="MediaImage"
+                      />
+                    </a>
+                  ) : (
+                    <a
+                      href={item.url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      View Media {index + 1}
+                    </a>
+                  )}
+                </li>
+              </div>
+            ))}
+          </ul>
           <h5>{`Results from last 2 weeks`}</h5>
           <div className="ResultsList" id="ResultsList">
             <ul>{leagueResults}</ul>
@@ -464,7 +557,6 @@ export default function LeagueTable(props) {
     props.Teams[0].LeagueID === 12327 || //Europa
     props.Teams[0].LeagueID === 12321 //ChampionsLeague
   ) {
-
     for (let i = 0; i < props.Teams.length; i++) {
       return (
         <>
@@ -474,7 +566,7 @@ export default function LeagueTable(props) {
               className="Table"
               aria-label="customized table"
               key={props.Key}
-              style={{ marginTop: "2em", marginBottom: "1em" }}
+              style={{ marginTop: "2em", marginBottom: "0em" }}
             >
               <TableHead>
                 <TableRow>
@@ -488,23 +580,23 @@ export default function LeagueTable(props) {
                   <StyledTableCell>GA</StyledTableCell>
                   <StyledTableCell>GD</StyledTableCell>
                   <td>
-                  <button
-                    className="SortedColumn"
-                    style={{ textAlign: "center" }}
-                    onClick={() => sorted(props.Teams, "Points", "desc")}
-                  >
-                    Pts {upArrow}
-                  </button>
-                </td>
-                <td>
-                  <button
-                    className="SortedColumn"
-                    style={{ textAlign: "center" }}
-                    onClick={() => sorted(props.Teams, "LastXPoints", "desc")}
-                  >
-                    Last 5 {upArrow}
-                  </button>
-                </td>
+                    <button
+                      className="SortedColumn"
+                      style={{ textAlign: "center" }}
+                      onClick={() => sorted(props.Teams, "Points", "desc")}
+                    >
+                      Pts {upArrow}
+                    </button>
+                  </td>
+                  <td>
+                    <button
+                      className="SortedColumn"
+                      style={{ textAlign: "center" }}
+                      onClick={() => sorted(props.Teams, "LastXPoints", "desc")}
+                    >
+                      Last 5 {upArrow}
+                    </button>
+                  </td>
                 </TableRow>
               </TableHead>
               <TableBody>{rows}</TableBody>
