@@ -799,6 +799,19 @@ function GameStats({ game, displayBool }) {
     }
   }
 
+  async function findGameByPartialMatch(gamesArray, searchText, teamType) {
+    try {
+      const matchingGame = gamesArray.find(game => {
+        const teamNameInArray = teamType === 'homeTeam' ? game.homeTeam : game.awayTeam;
+        return searchText && searchText.toLowerCase().includes(teamNameInArray.toLowerCase());
+      });
+      return matchingGame ? matchingGame : null; // Return the first matching game object
+    } catch (error) {
+      console.error(`Error finding game by partial match (array value against search text) on ${teamType}:`, error);
+      return null;
+    }
+  }
+
   function isBeforeTimestamp(targetTimestamp) {
     const currentTimestamp = Math.floor(Date.now() / 1000); // Get current time in seconds
     return currentTimestamp < targetTimestamp;
@@ -858,10 +871,16 @@ function GameStats({ game, displayBool }) {
     async function fetchMatchingGame() {
       try {
         let matchingGameInfo = await getGameIdByHomeTeam(arrayOfGames, game.homeTeam);
-
+        console.log(matchingGameInfo)
         if (!matchingGameInfo) {
           console.log(`No match found for homeTeam: ${game.homeTeam}. Trying awayTeam: ${game.awayTeam}`);
           matchingGameInfo = await getGameIdByAwayTeam(arrayOfGames, game.awayTeam);
+        }
+
+        if (!matchingGameInfo) {
+          console.log(`No exact match found for homeTeam: ${game.homeTeam}. Trying partial match...`);
+          matchingGameInfo = await findGameByPartialMatch(arrayOfGames, game.homeTeam, 'homeTeam');
+          console.log(matchingGameInfo)
         }
 
         setMatchingGame(matchingGameInfo);
