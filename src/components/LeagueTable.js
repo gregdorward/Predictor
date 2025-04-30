@@ -443,7 +443,7 @@ export default function LeagueTable(props) {
           <div className="ResultsList" id="ResultsList">
             <ul>{leagueResults}</ul>
           </div>
-          {props.Teams[0].LeagueID === 12325 && <TeamOfTheSeason />}{" "}
+          {derivedMediaId && <TeamOfTheSeason id={derivedMediaId} />}{" "}
           {/* Conditional render */}
           <div className="LeagueStatisticsHeader">League Statistics</div>
           <div className="LeagueStatistics">
@@ -601,6 +601,36 @@ export default function LeagueTable(props) {
               </TableHead>
               <TableBody>{rows}</TableBody>
             </Table>
+            <ul className="gallery-container">
+            {mediaItems.map((item, index) => (
+              <div key={`media-item-${index}`} className="gallery-item-wrapper">
+                <h6 className="MediaTitle">{item.title}</h6>
+                <li className="gallery-item MediaLinks">
+                  {item.thumbnailUrl ? (
+                    <a
+                      href={item.url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      <img
+                        src={item.thumbnailUrl}
+                        alt={`Media Thumbnail ${index + 1}`}
+                        className="MediaImage"
+                      />
+                    </a>
+                  ) : (
+                    <a
+                      href={item.url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      View Media {index + 1}
+                    </a>
+                  )}
+                </li>
+              </div>
+            ))}
+          </ul>
           </TableContainer>
         </>
       );

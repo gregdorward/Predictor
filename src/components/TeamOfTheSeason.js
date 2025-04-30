@@ -1,17 +1,45 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from "react";
 
-const TeamOfTheSeason = () => {
+const TeamOfTheSeason = (props) => {
   const [roundId, setRoundId] = useState(null);
   const seasonId = 61627; // Update this dynamically if needed
-  const baseUrl = "https://widgets.sofascore.com/embed/unique-tournament/17";
+  const id = props.id
+  //WILL NEED TO BE UPDATED NEXT SEASON
+  const rounds = [
+    {
+      17: 61627,
+      18: 61961,
+      24: 61959,
+      25: 61960,
+      35: 63516,
+      8: 61643,
+      7: 61644,
+      23: 63515,
+      242: 70158,
+      34: 61736,
+    },
+  ];
+  const baseUrl = `https://widgets.sofascore.com/embed/unique-tournament/${id}`;
+
+  const derivedRoundId = (() => {
+    for (const mapping of rounds) {
+      if (mapping.hasOwnProperty(id)) {
+        return mapping[id];
+      }
+    }
+    console.warn(`No matching media ID found for ID: ${id}`);
+    return null;
+  })();
+
+  console.log(id)
+  console.log(derivedRoundId)
 
   useEffect(() => {
     const fetchRoundId = async () => {
       try {
-        
         // Fetch rounds data to get the correct round ID
         const roundsResponse = await fetch(
-          `https://www.sofascore.com/api/v1/unique-tournament/17/season/${seasonId}/team-of-the-week/rounds`
+          `https://www.sofascore.com/api/v1/unique-tournament/${id}/season/${derivedRoundId}/team-of-the-week/rounds`
         );
         const roundsData = await roundsResponse.json();
 
@@ -28,16 +56,16 @@ const TeamOfTheSeason = () => {
     };
 
     fetchRoundId();
-  }, [seasonId]);
+  }, [id, roundId]);
 
   return (
-    <div className='TeamOfTheSeason'>
+    <div className="TeamOfTheSeason">
       {roundId ? (
         <iframe
           width="100%"
           height="523"
           // style={{ display: 'block', maxWidth: '700px' }}
-          src={`${baseUrl}/season/${seasonId}/round/${roundId}/teamOfTheWeek?widgetBackground=Gray&showCompetitionLogo=true&widgetTitle=Premier%20League&v=2`}
+          src={`${baseUrl}/season/${derivedRoundId}/round/${roundId}/teamOfTheWeek?widgetBackground=Gray&showCompetitionLogo=true&v=2`}
           frameBorder="0"
           scrolling="no"
           title="SofaScore Team of the Week"
@@ -45,7 +73,13 @@ const TeamOfTheSeason = () => {
       ) : (
         <p>Loading Team of the Week...</p>
       )}
-      <div style={{ fontSize: '12px', fontFamily: 'Arial, sans-serif', textAlign: 'left' }}>
+      <div
+        style={{
+          fontSize: "12px",
+          fontFamily: "Arial, sans-serif",
+          textAlign: "left",
+        }}
+      >
         <a target="_blank" href="https://www.sofascore.com/" rel="noreferrer">
           Team of the Week provided by SofaScore
         </a>
