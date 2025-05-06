@@ -39,9 +39,9 @@ const TeamOfTheSeason = (props) => {
       try {
         // Fetch rounds data to get the correct round ID
         const roundsResponse = await fetch(
-          `https://www.sofascore.com/api/v1/unique-tournament/${id}/season/${derivedRoundId}/team-of-the-week/rounds`
+          `${process.env.REACT_APP_EXPRESS_SERVER}round/${id}/${derivedRoundId}`
         );
-        const roundsData = await roundsResponse.json();
+        let roundsData = await roundsResponse.json();
 
         // Get the round ID from the first round in the data
         if (roundsData.rounds?.length > 0) {

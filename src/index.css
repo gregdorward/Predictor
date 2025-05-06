@@ -2578,6 +2578,20 @@ canvas {
   color: #030052;
 }
 
+canvas.LeagueStatsRadar {
+  /* width: 70em !important;
+  height: 70em !important; */
+  display: flex !important;
+  max-width: 100%;
+}
+
+canvas.LeagueStatsRadar {
+  /* width: 70em !important;
+  height: 70em !important; */
+  max-width: 100%;
+  height: 70em;
+}
+
 .FormSummaryHome {
   /* display: flex; */
   /* height: auto; */
@@ -3632,6 +3646,7 @@ input:active + .design::after {
 .Chart{
   width: fit-content;
   background-color: var(--mid-grey);
+  margin-top: 2em;
 }
 
 .ChartContainer{

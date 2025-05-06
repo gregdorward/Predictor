@@ -465,6 +465,7 @@ export function RenderAllFixtures(props) {
       paid={paid}
       capped={capped}
       originalLength={originalLength}
+      stats={props.stats}
     />
   );
 }
@@ -617,7 +618,6 @@ export async function generateFixtures(
             });
           });
         });
-        console.log(arrayOfGames)
       } catch (error) {
         console.error("An error occurred while fetching or processing data:", error);
         // You might want to add more specific error handling here,
@@ -634,7 +634,6 @@ export async function generateFixtures(
         await league.json().then((table) => {
           leagueArray.push(table);
         });
-        console.log(leagueArray);
         leaguesStored = false;
       }
 
@@ -915,6 +914,7 @@ export async function generateFixtures(
       );
 
       for (const fixture of leagueGames) {
+        console.log(fixture)
         const unixTimestamp = fixture.date_unix;
         const milliseconds = unixTimestamp * 1000;
         const dateObject = new Date(milliseconds);

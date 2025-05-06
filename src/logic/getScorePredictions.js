@@ -1902,7 +1902,6 @@ export async function generateGoals(homeForm, awayForm, match) {
 
   // Cumulative ROI for all 3157 match outcomes: +4.31%
 
-
   if (finalScore > 0 && (await diff(homeGoals, awayGoals)) < 1.25) {
     homeGoals = homeGoals + 0.5;
     awayGoals = awayGoals + -Math.abs(0.5);
@@ -1912,8 +1911,6 @@ export async function generateGoals(homeForm, awayForm, match) {
   }
 
   //PLACEHOLDER
-
- 
 
   if (homeGoals < 0 && awayGoals < 0) {
     if (homeGoals < awayGoals) {
@@ -1931,7 +1928,6 @@ export async function generateGoals(homeForm, awayForm, match) {
 
   return [homeGoals, awayGoals];
 }
-
 
 async function calculatePlayingStyle(points, possession) {
   let style;
@@ -2457,7 +2453,7 @@ export async function calculateScore(match, index, divider, calculate) {
       "Average Shots": formHome.avgShots
         ? formHome.avgShots.toFixed(2)
         : formHome.avgShots,
-        "Average Shot Value": formHome.avgShotValueChart,
+      "Average Shot Value": formHome.avgShotValueChart,
       "Average Shots On Target": formHome.AverageShotsOnTargetOverall
         ? formHome.AverageShotsOnTargetOverall
         : formHome.AverageShotsOnTarget,
@@ -2551,7 +2547,7 @@ export async function calculateScore(match, index, divider, calculate) {
       "Average Shots": formAway.avgShots
         ? formAway.avgShots.toFixed(2)
         : formAway.avgShots,
-        "Average Shot Value": formAway.avgShotValueChart,
+      "Average Shot Value": formAway.avgShotValueChart,
       "Average Shots On Target": formAway.AverageShotsOnTargetOverall
         ? formAway.AverageShotsOnTargetOverall
         : formAway.AverageShotsOnTarget,
@@ -3785,6 +3781,99 @@ export async function getNewTips(array) {
   await renderTips(newArray);
 }
 
+const footyStatsToSofaScore = [
+  {
+    //Prem
+    12325: {
+      id: 17,
+      season: 61627,
+    },
+    12451: {
+      id: 18,
+      season: 61961,
+    },
+    12446: {
+      id: 24,
+      season: 61959,
+    },
+    12422: {
+      id: 25,
+      season: 61960,
+    },
+    //Bundesliga
+    12529: {
+      id: 35,
+      season: 63516,
+    },
+    //La Liga
+    12316: {
+      id: 8,
+      season: 61643,
+    },
+    //Champions league
+    12321: {
+      id: 7,
+      season: 61644,
+    },
+    //Serie A
+    12530: {
+      id: 23,
+      season: 63515,
+    },
+    //MLS
+    13973: {
+      id: 242,
+      season: 70158,
+    },
+    //Ligue 1
+    12337: {
+      id: 34,
+      season: 61736,
+    },
+  },
+];
+
+
+
+async function fetchLeagueStats() {
+
+  function getWeekOfYear(date) {
+    const target = new Date(date.valueOf());
+    const dayNumber = (date.getUTCDay() + 6) % 7;
+    target.setUTCDate(target.getUTCDate() - dayNumber + 3);
+    const firstThursday = new Date(Date.UTC(target.getUTCFullYear(), 0, 4));
+    const diff = target - firstThursday;
+    return 1 + Math.round(diff / (7 * 24 * 60 * 60 * 1000));
+  }
+  
+  const today = new Date(); // Or new Date()
+  const week = getWeekOfYear(today);
+
+  const allLeagueStats = {};
+
+  for (const leagueObject of footyStatsToSofaScore) {
+    for (const leagueId in leagueObject) {
+      const { id: sofaScoreId, season: sofaScoreSeason } = leagueObject[leagueId];
+
+      try {
+        const leagueTeamStatsResponse = await fetch(
+          `${process.env.REACT_APP_EXPRESS_SERVER}LeagueTeamStats/${sofaScoreId}/${sofaScoreSeason}/${week}`
+        );
+        const teamStats = await leagueTeamStatsResponse.json();
+        allLeagueStats[`leagueStats${leagueId}`] = teamStats;
+        console.log(`Fetched stats for league ${leagueId}`);
+      } catch (error) {
+        console.error(`Error fetching stats for league ${leagueId}:`, error);
+        allLeagueStats[`leagueStats${leagueId}`] = { error: error.message }; // Store error if fetch fails
+      }
+    }
+  }
+
+  return allLeagueStats;
+}
+
+export let leagueStatsArray;
+
 export async function getScorePrediction(day, mocked) {
   let mock = mocked;
   clicked = true;
@@ -3802,13 +3891,18 @@ export async function getScorePrediction(day, mocked) {
   let index = 2;
   let divider = 10;
 
+// Call the function to fetch and store the league stats
+leagueStatsArray = await fetchLeagueStats()
+  // You can now access the stats using the dynamically created object names
+  // e.g., leagueStats["leagueStats12325"], leagueStats["leagueStats12451"], etc.
+
   ReactDOM.render(<div></div>, document.getElementById("GeneratePredictions"));
 
   await Promise.all(
     matches.map(async (match) => {
       // if there are no stored predictions, calculate them based on live data
       if (match) {
-        console.log(match)
+        console.log(match);
         switch (true) {
           case match.status === "canceled":
             match.goalsA = "P";
@@ -4230,7 +4324,7 @@ export async function getScorePrediction(day, mocked) {
     })
   );
   ReactDOM.render(
-    <RenderAllFixtures matches={matches} result={true} bool={mock} />,
+    <RenderAllFixtures matches={matches} result={true} bool={mock} stats={leagueStatsArray}/>,
     document.getElementById("FixtureContainer")
   );
   await getSuccessMeasure(matches);
@@ -4822,7 +4916,8 @@ async function renderTips() {
             <button
               className="SecondaryButtons"
               onClick={() => {
-                if (paid) window.open("https://www.soccerstatshub.com/#/teamshigh");
+                if (paid)
+                  window.open("https://www.soccerstatshub.com/#/teamshigh");
               }}
               disabled={!paid}
             >

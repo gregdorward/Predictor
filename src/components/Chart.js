@@ -15,7 +15,7 @@ import {
   Legend,
   SubTitle,
 } from "chart.js";
-import { Line, Radar, Bar, Doughnut } from "react-chartjs-2";
+import { Line, Radar, Bar, Doughnut, PolarArea } from "react-chartjs-2";
 
 ChartJS.register(
   CategoryScale,
@@ -29,7 +29,8 @@ ChartJS.register(
   Title,
   Tooltip,
   Legend,
-  SubTitle
+  SubTitle,
+  
 );
 
 export function Chart(props) {
@@ -79,7 +80,7 @@ export function Chart(props) {
           font: {
             size: 12,
           },
-          color: "white"
+          color: "white",
         },
       },
       x: {
@@ -144,7 +145,7 @@ export function Chart(props) {
         borderWidth: 3,
         backgroundColor: "yellow",
         tension: props.tension,
-      }
+      },
     ],
   };
 
@@ -198,7 +199,7 @@ export function MultilineChart(props) {
           font: {
             size: 12,
           },
-          color: "white"
+          color: "white",
         },
       },
       x: {
@@ -294,52 +295,45 @@ export function MultilineChart(props) {
   return <Line options={options} data={data} />;
 }
 
+const createGaugeData = (rank, maxRank = 36) => {
+  const value = maxRank - rank + 1; // Invert so rank 1 = full gauge
+  return [value, maxRank - value];
+};
 
-export function DoughnutChart(props) {
-  const options = {
-    color: "white",
-
-    plugins: {
-      legend: {
-        position: "top",
-
-        labels: {
-          boxHeight: 10,
-          color: "white",
-        },
-      },
-      title: {
-        display: true,
-        text: "Soccer Stats Hub Form Comparison",
-        color: "white",
-        font: {
-          size: 14,
-        },
-      },
-    },
-  };
-
+export const StatGauge = ({ label, rank, maxRank = 36 }) => {
   const data = {
-    labels: [props.homeTeam, props.awayTeam],
+    labels: [],
     datasets: [
       {
-        data: props.data,
+        data: createGaugeData(rank, maxRank),
+        borderWidth: 0,
         backgroundColor: ["white", "#970d00"],
-        rotation: 270,
         hoverOffset: 4,
-        cutout: "75%",
-        circumference: 180,
       },
     ],
   };
 
-  const config = {
-    type: "doughnut",
-    data: data,
+  const options = {
+    rotation: 270,
+    circumference: 180,
+    cutout: '75%',
+    plugins: {
+      legend: { display: false },
+      tooltip: { enabled: false },
+    },
+    responsive: true,
+    maintainAspectRatio: false
   };
 
-  return <Doughnut options={options} data={data} />;
-}
+  return (
+    <div style={{ width: 100, height: 50, textAlign: 'center', margin: "1.2em"}}>
+      <Doughnut data={data} options={options} />
+      <div style={{ fontSize: '0.8rem', marginTop: '-10px' }}>
+        {label}<br />Rank {rank}
+      </div>
+    </div>
+  );
+};
 
 export function RadarChart(props) {
   const options = {
@@ -355,12 +349,12 @@ export function RadarChart(props) {
           precision: 0,
           display: false,
         },
-        pointLabels:{
-          color: "white"
+        pointLabels: {
+          color: "white",
         },
         grid: {
-            color: "white",
-          }
+          color: "white",
+        },
       },
     },
     plugins: {
@@ -424,6 +418,217 @@ export function RadarChart(props) {
   return <Radar options={options} data={data} />;
 }
 
+export function BarChartLeagueStats({
+  title,
+  teamAData,
+  teamBData,
+  teamALabel,
+  teamBLabel,
+  maxRank,
+}) {
+  const labels = [
+    "Avg Rating",
+    "Goals Scored",
+    "Goals Conceded",
+    "Big Chances",
+    "Big Chances Missed",
+    "Hit Woodwork",
+    "Yellow Cards",
+    "Red Cards",
+    "Possession",
+    "Accurate Passes",
+    "Long Balls",
+    "Crosses",
+    "Shots",
+    "Shots on Target",
+    "Dribbles",
+    "Tackles",
+    "Interceptions",
+    "Clearances",
+    "Corners",
+    "Fouls",
+    "Pen Goals",
+    "Pen Goals Conceded",
+    "Clean Sheets",
+  ];
+
+  const statKeys = Object.keys(teamAData);
+
+  // Invert rank so that a lower rank (1 = best) becomes a higher bar
+  const invertRank = (rank) => maxRank - rank + 1;
+
+  // Preprocess data
+  const teamAInverted = statKeys.map((key) => invertRank(teamAData[key]));
+  const teamBInverted = statKeys.map((key) => invertRank(teamBData[key]));
+
+  const data = {
+    labels: statKeys.map((key) =>
+      key.replace(/([A-Z])/g, " $1").replace(/^./, (str) => str.toUpperCase())
+    ),
+    datasets: [
+      {
+        label: teamALabel,
+        data: teamAInverted,
+        backgroundColor: "rgba(255, 99, 132, 0.7)",
+        borderRadius: 2,
+        barThickness: 6,             // Fixed thickness
+        categoryPercentage: 0.1,      // Reduce this for more space between rows
+        barPercentage: 1.0
+      },
+      {
+        label: teamBLabel,
+        data: teamBInverted,
+        backgroundColor: "rgba(255, 255, 102, 0.7)",
+        borderRadius: 2,
+        barThickness: 6,             // Fixed thickness
+        categoryPercentage: 0.1,      // Reduce this for more space between rows
+        barPercentage: 1.0
+      },
+    ],
+  };
+
+  const options = {
+    indexAxis: "y",
+    maintainAspectRatio: false,
+scales: {
+    x: {
+      reverse: true, // ⬅️ This flips the axis direction
+      beginAtZero: true,
+      title: {
+        display: true,
+        text: 'Relative Rank (Lower = Better)',
+      },
+      ticks: {
+        stepSize: 5,
+      },
+    },
+    y: {
+      ticks: {
+        autoSkip: false,
+      }
+    }
+  },
+    plugins: {
+      legend: {
+        position: "top",
+        labels: {
+          boxWidth: 20,
+        },
+      },
+    },
+    layout: {
+      padding: {
+        top: 10,
+        bottom: 10,
+      },
+    },
+  };
+
+  return <Bar data={data} options={options} className="LeagueStatsBar" />;
+}
+
+export function RadarChartLeagueStats({
+  title,
+  teamAData,
+  teamBData,
+  teamALabel = "Team A",
+  teamBLabel = "Team B",
+  maxRank = 30,
+}) {
+  const labels = Object.keys(teamAData).map((key) =>
+    key.replace(/([A-Z])/g, " $1").replace(/^./, (str) => str.toUpperCase())
+  );
+
+  const teamAValues = Object.values(teamAData).map(Number);
+  const teamBValues = Object.values(teamBData).map(Number);
+
+  const chartData = {
+    labels,
+    datasets: [
+      {
+        label: teamALabel,
+        data: teamAValues,
+        fill: true,
+        borderColor: "red",
+        pointBackgroundColor: "red",
+        pointBorderColor: "red",
+        pointHoverBackgroundColor: "#fff",
+        pointHoverBorderColor: "rgba(255, 99, 133, 0)",
+        borderWidth: 1,
+      },
+      // {
+      //   label: teamBLabel,
+      //   data: teamBValues,
+      //   fill: true,
+      //   borderColor: "yellow",
+      //   pointBackgroundColor: "yellow",
+      //   pointBorderColor: "yellow",
+      //   pointHoverBackgroundColor: "#fff",
+      //   pointHoverBorderColor: "yellow",
+      //   borderWidth: 2,
+      // },
+    ],
+  };
+
+  const options = {
+    responsive: true,
+    color: "white",
+    maintainAspectRatio: true,
+    scales: {
+      r: {
+        min: 1,
+        max: maxRank,
+        reverse: true,
+        angleLines: {
+          display: true,
+        },
+        grid: {
+          circular: true,
+          // color: "transparent", // or use a solid border color if you want the lines only
+        },
+        ticks: {
+          display: true,
+          backdropColor: "transparent",
+        },
+        pointLabels: {
+          color: "white",
+          font: {
+            size: 10,
+          },
+        },
+      },
+    },
+    plugins: {
+      legend: {
+        position: "top",
+        labels: {
+          boxHeight: 10,
+          color: "white",
+        },
+      },
+      title: {
+        display: true,
+        text: title || "Team Comparison by League Ranking",
+        color: "white",
+        font: {
+          size: 14,
+        },
+      },
+      tooltip: {
+        callbacks: {
+          label: function (context) {
+            return `${context.dataset.label}: Rank ${context.formattedValue}`;
+          },
+        },
+      },
+    },
+  };
+
+  return (
+    <PolarArea className="LeagueStatsRadar" data={chartData} options={options} />
+  );
+}
+
 export function BarChart(props) {
   const datasetOne = props.data1;
   const datasetTwo = props.data2;
@@ -469,7 +674,7 @@ export function BarChart(props) {
           font: {
             size: 10,
           },
-          color: "white"
+          color: "white",
         },
       },
     },
@@ -527,7 +732,7 @@ export function BarChart(props) {
 }
 
 export function BarChartTwo(props) {
-  const dataset = [props.data1, props.data2]
+  const dataset = [props.data1, props.data2];
 
   const options = {
     color: "white",
@@ -549,7 +754,7 @@ export function BarChartTwo(props) {
           font: {
             size: 10,
           },
-          color: "white"
+          color: "white",
         },
       },
       // y: {
@@ -592,10 +797,7 @@ export function BarChartTwo(props) {
     },
   };
 
-  const labels = [
-    props.homeTeam,
-    props.awayTeam,
-  ];
+  const labels = [props.homeTeam, props.awayTeam];
 
   const data = {
     labels: labels,

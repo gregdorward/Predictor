@@ -14,13 +14,13 @@ import {
   MultilineChart,
   RadarChart,
   BarChart,
-  BarChartTwo,
-  DoughnutChart,
+  BarChartLeagueStats,
 } from "./Chart";
 import MultiTypeChart from "./MultitypeChart"; // Adjust the path if necessary
 import { Slider } from "../components/CarouselXGChart";
 import Collapsable from "../components/CollapsableElement";
 import Stats from "../components/createStatsDiv";
+import TeamRankingsTable from "../components/TeamStatsRanking";
 import {
   allLeagueResultsArrayOfObjects,
   basicTableArray,
@@ -46,7 +46,7 @@ export let userTips;
 let setUserTips;
 // let id, team1, team2, timestamp, homeGoals, awayGoals;
 
-function GameStats({ game, displayBool }) {
+function GameStats({ game, displayBool, stats }) {
   function styling(testBool) {
     let bool = testBool;
     if (bool === true && clicked === true) {
@@ -58,7 +58,6 @@ function GameStats({ game, displayBool }) {
     }
   }
   let style = styling(displayBool);
-
   // State Variables
   [userTips, setUserTips] = useState(() => {
     const savedTips = localStorage.getItem("userTips");
@@ -381,7 +380,72 @@ function GameStats({ game, displayBool }) {
   // const homeResults = homeForm.homeResults.sort((b, a) => b.dateRaw - a.dateRaw);
   // const allResultsAway = awayForm.allTeamResults.sort((b, a) => a.dateRaw - b.dateRaw);
   // const awayResults = awayForm.awayResults.sort((b, a) => b.dateRaw - a.dateRaw);
-  let ref;
+
+  function formatValue(val) {
+    return typeof val === "number" && val % 1 !== 0
+      ? parseFloat(val.toFixed(2))
+      : val;
+  }
+
+  function getTeamRanksFromTopTeamsWithPartialMatch(
+    topTeamsData,
+    targetTeamName
+  ) {
+    if (topTeamsData) {
+      const teamRanks = {};
+      const topTeams = topTeamsData.topTeams;
+
+      for (const statistic in topTeams) {
+        if (Array.isArray(topTeams[statistic])) {
+          const teamArray = topTeams[statistic];
+          let targetTeamIndex = teamArray.findIndex(
+            (teamInfo) =>
+              teamInfo.team.name.toLowerCase() === targetTeamName.toLowerCase()
+          );
+
+          if (targetTeamIndex === -1) {
+            // Attempt partial match
+            const partialMatchTeam = teamArray.find((teamInfo) =>
+              targetTeamName
+                .toLowerCase()
+                .includes(teamInfo.team.name.toLowerCase())
+            );
+            if (partialMatchTeam) {
+              targetTeamIndex = teamArray.indexOf(partialMatchTeam);
+            }
+          }
+
+          if (targetTeamIndex !== -1) {
+            const teamInfo = teamArray[targetTeamIndex];
+            teamRanks[statistic] = {
+              name: teamInfo.team.name,
+              rank: targetTeamIndex + 1,
+              value: formatValue(teamInfo.statistics[statistic]),
+              games: teamInfo.statistics.matches,
+            };
+          } else {
+            teamRanks[statistic] = {
+              name: null,
+              rank: null,
+              error: "Team not found in this category",
+              value: null,
+              games: null,
+            };
+          }
+        }
+      }
+
+      return teamRanks;
+    } else return;
+  }
+  const ranksHome = getTeamRanksFromTopTeamsWithPartialMatch(
+    stats,
+    homeForm.teamName
+  );
+  const ranksAway = getTeamRanksFromTopTeamsWithPartialMatch(
+    stats,
+    awayForm.teamName
+  );
 
   const pos = allLeagueResultsArrayOfObjects
     .map((i) => i.id)
@@ -801,13 +865,20 @@ function GameStats({ game, displayBool }) {
 
   async function findGameByPartialMatch(gamesArray, searchText, teamType) {
     try {
-      const matchingGame = gamesArray.find(game => {
-        const teamNameInArray = teamType === 'homeTeam' ? game.homeTeam : game.awayTeam;
-        return searchText && searchText.toLowerCase().includes(teamNameInArray.toLowerCase());
+      const matchingGame = gamesArray.find((game) => {
+        const teamNameInArray =
+          teamType === "homeTeam" ? game.homeTeam : game.awayTeam;
+        return (
+          searchText &&
+          searchText.toLowerCase().includes(teamNameInArray.toLowerCase())
+        );
       });
       return matchingGame ? matchingGame : null; // Return the first matching game object
     } catch (error) {
-      console.error(`Error finding game by partial match (array value against search text) on ${teamType}:`, error);
+      console.error(
+        `Error finding game by partial match (array value against search text) on ${teamType}:`,
+        error
+      );
       return null;
     }
   }
@@ -870,27 +941,41 @@ function GameStats({ game, displayBool }) {
   useEffect(() => {
     async function fetchMatchingGame() {
       try {
-        let matchingGameInfo = await getGameIdByHomeTeam(arrayOfGames, game.homeTeam);
-        console.log(matchingGameInfo)
+        let matchingGameInfo = await getGameIdByHomeTeam(
+          arrayOfGames,
+          game.homeTeam
+        );
+        console.log(matchingGameInfo);
         if (!matchingGameInfo) {
-          console.log(`No match found for homeTeam: ${game.homeTeam}. Trying awayTeam: ${game.awayTeam}`);
-          matchingGameInfo = await getGameIdByAwayTeam(arrayOfGames, game.awayTeam);
+          console.log(
+            `No match found for homeTeam: ${game.homeTeam}. Trying awayTeam: ${game.awayTeam}`
+          );
+          matchingGameInfo = await getGameIdByAwayTeam(
+            arrayOfGames,
+            game.awayTeam
+          );
         }
 
         if (!matchingGameInfo) {
-          console.log(`No exact match found for homeTeam: ${game.homeTeam}. Trying partial match...`);
-          matchingGameInfo = await findGameByPartialMatch(arrayOfGames, game.homeTeam, 'homeTeam');
-          console.log(matchingGameInfo)
+          console.log(
+            `No exact match found for homeTeam: ${game.homeTeam}. Trying partial match...`
+          );
+          matchingGameInfo = await findGameByPartialMatch(
+            arrayOfGames,
+            game.homeTeam,
+            "homeTeam"
+          );
         }
 
         setMatchingGame(matchingGameInfo);
 
         if (!matchingGameInfo) {
-          console.warn(`No matching game found for either homeTeam "${game.homeTeam}" or awayTeam "${game.awayTeam}"`);
+          console.warn(
+            `No matching game found for either homeTeam "${game.homeTeam}" or awayTeam "${game.awayTeam}"`
+          );
           // Optionally set matchingGame to a default value (e.g., null) if needed
           // setMatchingGame(null);
         }
-
       } catch (error) {
         console.error("Error fetching game info:", error);
       }
@@ -958,6 +1043,8 @@ function GameStats({ game, displayBool }) {
       </div>
     );
   }
+
+  console.log(ranksHome);
 
   function StatsHomeComponent() {
     if (!homeForm) return null;
@@ -1936,7 +2023,7 @@ function GameStats({ game, displayBool }) {
   // AI Insights Generation
 
   async function fetchBasicTable(id) {
-    const foundItem = basicTableArray.find(item => item.id === id);
+    const foundItem = basicTableArray.find((item) => item.id === id);
     return foundItem;
   }
 
@@ -1957,17 +2044,21 @@ function GameStats({ game, displayBool }) {
         statistics = stats.data;
         type = stats.data.round_format;
         progress = statistics.progress;
-        totalGames = (statistics.totalMatches * 2) / statistics.clubNum
+        totalGames = (statistics.totalMatches * 2) / statistics.clubNum;
       });
       let roundType;
       switch (type) {
-        case 0: roundType = "League game"; 
-        break;
-        case 1: roundType = "Group game";
-        break
-        case 2: roundType = "Knockout round"
-        break;
-        default: roundType = undefined
+        case 0:
+          roundType = "League game";
+          break;
+        case 1:
+          roundType = "Group game";
+          break;
+        case 2:
+          roundType = "Knockout round";
+          break;
+        default:
+          roundType = undefined;
           break;
       }
 
@@ -1977,7 +2068,7 @@ function GameStats({ game, displayBool }) {
       );
       let odds;
       await previousGames.json().then((data) => {
-        console.log(data.data)
+        console.log(data.data);
         odds = {
           oddsHomeWin: data.data.odds_ft_1,
           oddsAwayWin: data.data.odds_ft_2,
@@ -1985,29 +2076,29 @@ function GameStats({ game, displayBool }) {
           oddsBTTSNo: data.data.odds_btts_no,
           oddsHomeMostCorners: data.data.odds_corners_1,
           oddsAwayMostCorners: data.data.odds_corners_2,
-          "oddsOver10.5Corners" : data.data.odds_corners_over_105,
-          "oddsUnder10.5Corners" : data.data.odds_corners_under_105,
+          "oddsOver10.5Corners": data.data.odds_corners_over_105,
+          "oddsUnder10.5Corners": data.data.odds_corners_under_105,
           oddsDoubleChanceHomeOrDraw: data.data.odds_doublechance_1x,
           oddsDoubleChanceAwayOrDraw: data.data.odds_doublechance_x2,
           "oddsOver2.5Goals": data.data.odds_ft_over25,
-          "oddsUnder2.5Goals": data.data.odds_ft_under25
-        }
-        
-        // previousGameStats = data.data.h2h.previous_matches_results
-      })
+          "oddsUnder2.5Goals": data.data.odds_ft_under25,
+        };
 
-      console.log(game)
+        // previousGameStats = data.data.h2h.previous_matches_results
+      });
+
+      console.log(game);
 
       try {
         const AIPayload = {
           league: game.leagueDesc,
           totalLeagueGames: totalGames,
-          gameweek: (game.matches_completed_minimum + 1),
+          gameweek: game.matches_completed_minimum + 1,
           gameType: roundType,
           referee: await getRefStats(game.refereeID, game.competition_id),
           leagueTable: leagueTable,
           seasonProgressPercent: progress,
-          
+
           odds,
           homeTeam: {
             homeTeamName: game.homeTeam,
@@ -2037,7 +2128,7 @@ function GameStats({ game, displayBool }) {
           },
         };
         console.log(AIPayload);
-        
+
         const response = await fetch(
           `${process.env.REACT_APP_EXPRESS_SERVER}gemini/${gameId}`,
           {
@@ -2286,6 +2377,15 @@ function GameStats({ game, displayBool }) {
                 <StatsHomeComponent />
                 <StatsAwayComponent />
               </div>
+              {ranksHome && ranksAway && (
+                <TeamRankingsTable
+                  title={`Rankings in ${game.leagueDesc} out of ${stats.topTeams.accurateCrosses.length} teams`}
+                  ranksHome={ranksHome}
+                  ranksAway={ranksAway}
+                  teamALabel={`${game.homeTeam}`}
+                  teamBLabel={`${game.awayTeam}`}
+                />
+              )}
               <div className="Chart" id={`Chart${game.id}`} style={style}>
                 <RadarChart
                   style={{ height: "auto" }}

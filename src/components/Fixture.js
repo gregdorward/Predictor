@@ -14,6 +14,7 @@ import { checkUserPaidStatus } from "../logic/hasUserPaid";
 import GameStats from "./GameStats";
 import { userTips } from "./GameStats";
 import { dynamicDate } from "../logic/getFixtures";
+import { leagueStatsArray } from "../logic/getScorePredictions";
 
 let resultValue;
 let paid;
@@ -234,7 +235,7 @@ function SingleFixture({
   mock,
   checked,
   onToggle,
-  showShortlist,
+  showShortlist
 }) {
   const dispatch = useDispatch();
   const [showGameStats, setShowGameStats] = useState(false);
@@ -346,6 +347,8 @@ function SingleFixture({
       setIsLoadingGameStats(false); // Set loading to false after "loading"
     }, 1);
   };
+
+  console.log(fixture)
 
   return (
     <div key={fixture.game}>
@@ -493,7 +496,7 @@ function SingleFixture({
       {isLoadingGameStats && <div>Loading Game Stats...</div>}{" "}
       {/* Show loading message */}
       {showGameStats && !isLoadingGameStats && (
-        <GameStats game={fixture} displayBool={true} />
+        <GameStats game={fixture} displayBool={true} stats={leagueStatsArray[`leagueStats${fixture.leagueID}`]}/>
       )}
     </div>
   );
@@ -518,7 +521,7 @@ async function submitTips() {
   userTips.length = 0;
 }
 
-const List = ({ fixtures, mock }) => {
+const List = ({ fixtures, mock, stats }) => {
   // State to track selected fixtures
   const [selectedFixtures, setSelectedFixtures] = useState([]);
   const [showShortlist, setShowShortlist] = useState(false); // Toggle between full list and shortlist
@@ -606,6 +609,7 @@ function SubmitTipsButton({ submit }) {
 export function Fixture(props) {
   [count, setCount] = useState(false);
   resultValue = props.result;
+  console.log(props.stats)
   return (
     <Provider store={store}>
       <List
