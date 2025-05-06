@@ -387,57 +387,72 @@ function GameStats({ game, displayBool, stats }) {
       : val;
   }
 
-  function getTeamRanksFromTopTeamsWithPartialMatch(
-    topTeamsData,
-    targetTeamName
-  ) {
-    if (topTeamsData) {
-      const teamRanks = {};
-      const topTeams = topTeamsData.topTeams;
-
-      for (const statistic in topTeams) {
-        if (Array.isArray(topTeams[statistic])) {
-          const teamArray = topTeams[statistic];
-          let targetTeamIndex = teamArray.findIndex(
-            (teamInfo) =>
-              teamInfo.team.name.toLowerCase() === targetTeamName.toLowerCase()
-          );
-
-          if (targetTeamIndex === -1) {
-            // Attempt partial match
-            const partialMatchTeam = teamArray.find((teamInfo) =>
-              targetTeamName
-                .toLowerCase()
-                .includes(teamInfo.team.name.toLowerCase())
-            );
-            if (partialMatchTeam) {
-              targetTeamIndex = teamArray.indexOf(partialMatchTeam);
-            }
-          }
-
-          if (targetTeamIndex !== -1) {
-            const teamInfo = teamArray[targetTeamIndex];
-            teamRanks[statistic] = {
-              name: teamInfo.team.name,
-              rank: targetTeamIndex + 1,
-              value: formatValue(teamInfo.statistics[statistic]),
-              games: teamInfo.statistics.matches,
-            };
-          } else {
-            teamRanks[statistic] = {
-              name: null,
-              rank: null,
-              error: "Team not found in this category",
-              value: null,
-              games: null,
-            };
-          }
+  function getTeamRanksFromTopTeamsWithPartialMatch(topTeamsData, targetTeamName) {
+    if (!topTeamsData) return;
+  
+    const teamRanks = {};
+    const topTeams = topTeamsData.topTeams;
+  
+    // Define known aliases for ambiguous or shortened names
+    const teamNameAliases = {
+      "inter milan": "inter",
+      "ac milan": "milan",
+      "man city": "manchester city",
+      "man united": "manchester united",
+      "psg": "paris saint-germain"
+    };
+  
+    const targetNameLower = targetTeamName.toLowerCase();
+    const normalizedTargetName = teamNameAliases[targetNameLower] || targetNameLower;
+  
+    for (const statistic in topTeams) {
+      if (!Array.isArray(topTeams[statistic])) continue;
+  
+      const teamArray = topTeams[statistic];
+  
+      // Step 1: Exact match
+      let targetTeamIndex = teamArray.findIndex(
+        (teamInfo) => teamInfo.team.name.toLowerCase() === normalizedTargetName
+      );
+  
+      // Step 2: Safe partial match if exact not found
+      if (targetTeamIndex === -1) {
+        const partialMatches = teamArray.filter((teamInfo) => {
+          const name = teamInfo.team.name.toLowerCase();
+          return name.includes(normalizedTargetName) || normalizedTargetName.includes(name);
+        });
+  
+        if (partialMatches.length === 1) {
+          targetTeamIndex = teamArray.indexOf(partialMatches[0]);
+        } else {
+          console.warn(`Ambiguous or missing match for "${targetTeamName}" — found:`, partialMatches.map(p => p.team.name));
         }
       }
-
-      return teamRanks;
-    } else return;
+  
+      // Step 3: Build the teamRanks object
+      if (targetTeamIndex !== -1) {
+        const teamInfo = teamArray[targetTeamIndex];
+        teamRanks[statistic] = {
+          name: teamInfo.team.name,
+          rank: targetTeamIndex + 1,
+          value: formatValue(teamInfo.statistics[statistic]),
+          games: teamInfo.statistics.matches,
+        };
+      } else {
+        teamRanks[statistic] = {
+          name: null,
+          rank: null,
+          error: "Team not found in this category",
+          value: null,
+          games: null,
+        };
+      }
+    }
+  
+    return teamRanks;
   }
+  
+  
   const ranksHome = getTeamRanksFromTopTeamsWithPartialMatch(
     stats,
     homeForm.teamName
