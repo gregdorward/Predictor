@@ -3949,3 +3949,90 @@ button.AIInsights button:active {
   font-size: 1em;
   line-height: 1.5em;
 }
+
+.rankings-container {
+  padding: 1rem;
+  max-width: 800px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.rankings-title {
+  font-size: 1.5em;
+  font-weight: bold;
+  margin-bottom: 0em;
+  padding-bottom: 0em;
+}
+
+.rankings-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1em;
+  border-bottom: 1px solid #ddd;
+}
+
+.rankings-row.header {
+  font-weight: bold;
+  border-bottom: 2px solid #000;
+}
+
+.metric {
+  flex: 2;
+  text-align: left;
+}
+
+.team {
+  flex: 1;
+  text-align: center;
+}
+
+.circle {
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  width: 2.5em;
+  height: 2.5em;
+  border-radius: 50%;
+  color: white;
+  font-weight: bold;
+  margin: 0 auto;
+}
+
+.circle.blue {
+  background-color: #fe8c00; /* blue-600 */
+  color: #020029;
+  font-size: 1.1em;
+  font-family: Arial, Helvetica, sans-serif;
+  font-weight: bolder;
+}
+
+.circle.red {
+  background-color: yellow; /* blue-600 */
+  color: #020029;
+  font-size: 1.1em;
+  font-family: Arial, Helvetica, sans-serif;
+  font-weight: bolder;
+}
+
+.placeholder {
+  color: #999;
+}
+
+.section-title{
+  padding-top: 2em;
+}
+
+.LeagueAndLogo{
+  margin-left: auto;
+  margin-right: auto;
+  line-height: 2em;
+  display: inline-flex;
+  align-items: center;
+}
+
+.LeagueLogo {
+  background-color: whitesmoke;
+  height: 2.5em;
+  margin-right: 0.5em;
+}

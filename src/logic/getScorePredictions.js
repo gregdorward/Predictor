@@ -3902,7 +3902,6 @@ leagueStatsArray = await fetchLeagueStats()
     matches.map(async (match) => {
       // if there are no stored predictions, calculate them based on live data
       if (match) {
-        console.log(match);
         switch (true) {
           case match.status === "canceled":
             match.goalsA = "P";

@@ -20,7 +20,7 @@ import MultiTypeChart from "./MultitypeChart"; // Adjust the path if necessary
 import { Slider } from "../components/CarouselXGChart";
 import Collapsable from "../components/CollapsableElement";
 import Stats from "../components/createStatsDiv";
-import TeamRankingsTable from "../components/TeamStatsRanking";
+import TeamRankingsFlexView from "./TeamRankingsFlexView";
 import {
   allLeagueResultsArrayOfObjects,
   basicTableArray,
@@ -387,48 +387,58 @@ function GameStats({ game, displayBool, stats }) {
       : val;
   }
 
-  function getTeamRanksFromTopTeamsWithPartialMatch(topTeamsData, targetTeamName) {
+  function getTeamRanksFromTopTeamsWithPartialMatch(
+    topTeamsData,
+    targetTeamName
+  ) {
     if (!topTeamsData) return;
-  
+
     const teamRanks = {};
     const topTeams = topTeamsData.topTeams;
-  
+
     // Define known aliases for ambiguous or shortened names
     const teamNameAliases = {
       "inter milan": "inter",
       "ac milan": "milan",
       "man city": "manchester city",
       "man united": "manchester united",
-      "psg": "paris saint-germain"
+      psg: "paris saint-germain",
     };
-  
+
     const targetNameLower = targetTeamName.toLowerCase();
-    const normalizedTargetName = teamNameAliases[targetNameLower] || targetNameLower;
-  
+    const normalizedTargetName =
+      teamNameAliases[targetNameLower] || targetNameLower;
+
     for (const statistic in topTeams) {
       if (!Array.isArray(topTeams[statistic])) continue;
-  
+
       const teamArray = topTeams[statistic];
-  
+
       // Step 1: Exact match
       let targetTeamIndex = teamArray.findIndex(
         (teamInfo) => teamInfo.team.name.toLowerCase() === normalizedTargetName
       );
-  
+
       // Step 2: Safe partial match if exact not found
       if (targetTeamIndex === -1) {
         const partialMatches = teamArray.filter((teamInfo) => {
           const name = teamInfo.team.name.toLowerCase();
-          return name.includes(normalizedTargetName) || normalizedTargetName.includes(name);
+          return (
+            name.includes(normalizedTargetName) ||
+            normalizedTargetName.includes(name)
+          );
         });
-  
+
         if (partialMatches.length === 1) {
           targetTeamIndex = teamArray.indexOf(partialMatches[0]);
         } else {
-          console.warn(`Ambiguous or missing match for "${targetTeamName}" — found:`, partialMatches.map(p => p.team.name));
+          console.warn(
+            `Ambiguous or missing match for "${targetTeamName}" — found:`,
+            partialMatches.map((p) => p.team.name)
+          );
         }
       }
-  
+
       // Step 3: Build the teamRanks object
       if (targetTeamIndex !== -1) {
         const teamInfo = teamArray[targetTeamIndex];
@@ -448,11 +458,10 @@ function GameStats({ game, displayBool, stats }) {
         };
       }
     }
-  
+
     return teamRanks;
   }
-  
-  
+
   const ranksHome = getTeamRanksFromTopTeamsWithPartialMatch(
     stats,
     homeForm.teamName
@@ -1058,8 +1067,6 @@ function GameStats({ game, displayBool, stats }) {
       </div>
     );
   }
-
-  console.log(ranksHome);
 
   function StatsHomeComponent() {
     if (!homeForm) return null;
@@ -2393,12 +2400,12 @@ function GameStats({ game, displayBool, stats }) {
                 <StatsAwayComponent />
               </div>
               {ranksHome && ranksAway && (
-                <TeamRankingsTable
+                <TeamRankingsFlexView
                   title={`Rankings in ${game.leagueDesc} out of ${stats.topTeams.accurateCrosses.length} teams`}
                   ranksHome={ranksHome}
                   ranksAway={ranksAway}
-                  teamALabel={`${game.homeTeam}`}
-                  teamBLabel={`${game.awayTeam}`}
+                  teamALabel={game.homeTeam}
+                  teamBLabel={game.awayTeam}
                 />
               )}
               <div className="Chart" id={`Chart${game.id}`} style={style}>

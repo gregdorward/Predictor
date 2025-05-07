@@ -94,24 +94,25 @@ function styleForm(formIndicator) {
   return className;
 }
 
+export const sofaScoreIds = [
+  { 12325: 17 }, //EPL
+  { 12451: 18 }, //Championship
+  { 12446: 24 }, //League 1
+  { 12422: 25 }, //League 2
+  { 12529: 35 }, //Bundesliga
+  { 12316: 8 }, //La Liga
+  { 12321: 7 }, //Champions League
+  { 12530: 23 }, //Serie A
+  { 13973: 242 }, //MLS
+  { 12337: 34 }, //Ligue 1
+];
+
+
 export default function LeagueTable(props) {
   [toggleState, setIsOff] = useState(false);
   const [mediaItems, setMediaItems] = useState([]);
   const date = props.Date; // Ensure this is the correct format
   const id = props.Id;
-
-  const sofaScoreIds = [
-    { 12325: 17 }, //EPL
-    { 12451: 18 }, //Championship
-    { 12446: 24 }, //League 1
-    { 12422: 25 }, //League 2
-    { 12529: 35 }, //Bundesliga
-    { 12316: 8 }, //La Liga
-    { 12321: 7 }, //Champions League
-    { 12530: 23 }, //Serie A
-    { 13973: 242 }, //MLS
-    { 12337: 34 }, //Ligue 1
-  ];
 
   // Derive the mediaId outside of useEffect to make it stable
   const derivedMediaId = (() => {
