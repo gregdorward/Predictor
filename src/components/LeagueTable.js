@@ -10,6 +10,7 @@ import Paper from "@material-ui/core/Paper";
 import Collapsable from "../components/CollapsableElement";
 import TeamOfTheWeek from "../components/TeamOfTheWeek";
 import TeamOfTheSeason from "../components/TeamOfTheSeason";
+import StatTable from "./StatTable";
 
 export var toggleState = false;
 export var setIsOff = false;
@@ -107,12 +108,12 @@ export const sofaScoreIds = [
   { 12337: 34 }, //Ligue 1
 ];
 
-
 export default function LeagueTable(props) {
   [toggleState, setIsOff] = useState(false);
   const [mediaItems, setMediaItems] = useState([]);
   const date = props.Date; // Ensure this is the correct format
   const id = props.Id;
+  console.log(props.RankingStats);
 
   // Derive the mediaId outside of useEffect to make it stable
   const derivedMediaId = (() => {
@@ -440,6 +441,15 @@ export default function LeagueTable(props) {
               </div>
             ))}
           </ul>
+          {props.RankingStats?.topTeams && (
+            <>
+              <h5>League Rankings by Metric</h5>
+              <StatTable
+                rankingStats={props.RankingStats.topTeams}
+                statKey="accurateCrosses"
+              />
+            </>
+          )}
           <h5>{`Results from last 2 weeks`}</h5>
           <div className="ResultsList" id="ResultsList">
             <ul>{leagueResults}</ul>
@@ -603,35 +613,38 @@ export default function LeagueTable(props) {
               <TableBody>{rows}</TableBody>
             </Table>
             <ul className="gallery-container">
-            {mediaItems.map((item, index) => (
-              <div key={`media-item-${index}`} className="gallery-item-wrapper">
-                <h6 className="MediaTitle">{item.title}</h6>
-                <li className="gallery-item MediaLinks">
-                  {item.thumbnailUrl ? (
-                    <a
-                      href={item.url}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                    >
-                      <img
-                        src={item.thumbnailUrl}
-                        alt={`Media Thumbnail ${index + 1}`}
-                        className="MediaImage"
-                      />
-                    </a>
-                  ) : (
-                    <a
-                      href={item.url}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                    >
-                      View Media {index + 1}
-                    </a>
-                  )}
-                </li>
-              </div>
-            ))}
-          </ul>
+              {mediaItems.map((item, index) => (
+                <div
+                  key={`media-item-${index}`}
+                  className="gallery-item-wrapper"
+                >
+                  <h6 className="MediaTitle">{item.title}</h6>
+                  <li className="gallery-item MediaLinks">
+                    {item.thumbnailUrl ? (
+                      <a
+                        href={item.url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        <img
+                          src={item.thumbnailUrl}
+                          alt={`Media Thumbnail ${index + 1}`}
+                          className="MediaImage"
+                        />
+                      </a>
+                    ) : (
+                      <a
+                        href={item.url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        View Media {index + 1}
+                      </a>
+                    )}
+                  </li>
+                </div>
+              ))}
+            </ul>
           </TableContainer>
         </>
       );

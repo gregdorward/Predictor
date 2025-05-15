@@ -13,6 +13,7 @@ import { getPointsFromLastX } from "../logic/getScorePredictions";
 import SlideDiff from "../components/SliderDiff";
 import Collapsable from "../components/CollapsableElement";
 import { userDetail } from "./authProvider";
+import {leagueStatsArray} from "../logic/getScorePredictions"
 
 var oddslib = require("oddslib");
 
@@ -27,7 +28,6 @@ var leagueID;
 var leagueGames = [];
 export var leagueArray = [];
 var leagueIdArray = [];
-export var leagueStatsArray = [];
 export let leagueInstance;
 export let groupInstance;
 export let allLeagueResultsArrayOfObjects = [];
@@ -297,6 +297,7 @@ export async function renderTable(index, results, id) {
           GamesPlayed={statistics.game_week}
           Results={mostRecentGames}
           Date={todaysDateString}
+          RankingStats={leagueStatsArray[`leagueStats${id}`]}
           // mostRecentGameweek={mostRecentGameweek}
         />,
         document.getElementById(`leagueName${id}`)
@@ -329,6 +330,7 @@ export async function renderTable(index, results, id) {
             Key={`League${index}${divisionName1}`}
             GamesPlayed={statistics.game_week}
             Results={mostRecentGames}
+            RankingStats={leagueStatsArray[`leagueStats${id}`]}
           />
           <LeagueTable
             Teams={leagueTable2}
@@ -338,6 +340,7 @@ export async function renderTable(index, results, id) {
             Key={`League${index}${divisionName1}`}
             GamesPlayed={statistics.game_week}
             Results={mostRecentGames}
+            RankingStats={leagueStatsArray[`leagueStats${id}`]}
           />
         </>,
         document.getElementById(`leagueName${id}`)

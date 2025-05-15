@@ -86,8 +86,6 @@ export default function LeagueName({ fixture, mock, showShortlist }) {
     fetchLogo();
   }, [id]);
 
-  console.log(logoUrl);
-
   if (mock === true || name === null) {
     return <div></div>;
   }

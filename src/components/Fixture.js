@@ -1,21 +1,15 @@
 import React, { Fragment, useState } from "react";
 import { CreateBadge } from "./createBadge";
-import { createStatsDiv } from "../logic/getStats";
-import { renderTable } from "../logic/getFixtures";
-import { allLeagueResultsArrayOfObjects } from "../logic/getFixtures";
 import { useDispatch } from "react-redux";
 import { setData } from "../logic/dataSlice";
 import { Provider } from "react-redux";
 import store from "../logic/store"; // Import your Redux store
-import { formObjectHome } from "../logic/getScorePredictions";
 import { clicked } from "../logic/getScorePredictions";
 import { userDetail } from "../logic/authProvider";
 import { checkUserPaidStatus } from "../logic/hasUserPaid";
 import GameStats from "./GameStats";
 import { userTips } from "./GameStats";
-import { dynamicDate } from "../logic/getFixtures";
 import { leagueStatsArray } from "../logic/getScorePredictions";
-import { sofaScoreIds } from "../components/LeagueTable";
 import LeagueName from './LeagueName';
 
 let resultValue;
@@ -164,101 +158,6 @@ function GetDivider(fixture, mock) {
     );
   }
 }
-
-
-
-
-
-
-// async function renderLeagueName(fixture, mock, showShortlist) {
-//   mockValue = mock;
-
-//   let name = fixture.leagueName;
-//   let id =
-//     allLeagueResultsArrayOfObjects.length > 0
-//       ? allLeagueResultsArrayOfObjects[fixture.leagueIndex].id
-//       : null;
-
-//   const sofaScoreLeagueId = sofaScoreIds[id];
-//   let logoUrl = null;
-
-//   if (sofaScoreLeagueId) {
-//     try {
-//       const response = await fetch(
-//         `${process.env.REACT_APP_EXPRESS_SERVER}/logo/${sofaScoreLeagueId}`
-//       );
-//       if (response.ok) {
-//         logoUrl = response.url; // Extract the URL from the response
-//       } else {
-//         console.error("Failed to fetch logo URL:", response.status);
-//         // Optionally set a default logo URL or handle the error
-//       }
-//     } catch (error) {
-//       console.error("Error fetching logo URL:", error);
-//       // Optionally set a default logo URL or handle the error
-//     }
-//   }
-
-//   if (showShortlist === true) {
-//     return (
-//       <div>
-//         <div
-//           className="leagueName"
-//           id={`league${id}`}
-//           key={`leagueName${id}div`}
-//           onClick={() =>
-//             renderTable(
-//               fixture.leagueIndex,
-//               allLeagueResultsArrayOfObjects[fixture.leagueIndex],
-//               id
-//             )
-//           }
-//           style={{ display: "flex", alignItems: "center" }}
-//         >
-//           {logoUrl && (
-//             <img
-//               src={logoUrl}
-//               alt={`${name} Logo`}
-//               style={{ height: "20px", marginRight: "8px" }}
-//             />
-//           )}
-//           {fixture.leagueDesc} &#9776;
-//         </div>
-//         <div
-//           className="LeagueTable"
-//           key={`leagueName${id}`}
-//           id={`leagueName${id}`}
-//         ></div>
-//       </div>
-//     );
-//   } else if (name === null || mock === true) {
-//     return <div></div>;
-//   } else {
-//     return (
-//       <div>
-//         <div
-//           className="leagueName"
-//           id={`league${id}`}
-//           key={`leagueName${id}div`}
-//           onClick={() =>
-//             renderTable(
-//               fixture.leagueIndex,
-//               allLeagueResultsArrayOfObjects[fixture.leagueIndex],
-//               id
-//             )
-//           }
-//         >
-//           {fixture.leagueName} &#9776;
-//         </div>
-//         <div
-//           className="LeagueTable"
-//           key={`leagueName${id}`}
-//           id={`leagueName${id}`}
-//         ></div>
-//       </div>
-//     );
-//   }
-// }
 
 const downArrow = "\u{2630}";
 const rightArrow = "\u{29C9}";
