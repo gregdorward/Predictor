@@ -25,6 +25,7 @@ import {
 import { checkUserPaidStatus } from "../logic/hasUserPaid";
 import { userDetail } from "../logic/authProvider";
 import { dynamicDate } from "./getFixtures";
+import { ThreeDots } from "react-loading-icons";
 
 var myHeaders = new Headers();
 myHeaders.append("Origin", "https://gregdorward.github.io");
@@ -3833,10 +3834,7 @@ const footyStatsToSofaScore = [
   },
 ];
 
-
-
 async function fetchLeagueStats() {
-
   function getWeekOfYear(date) {
     const target = new Date(date.valueOf());
     const dayNumber = (date.getUTCDay() + 6) % 7;
@@ -3845,7 +3843,7 @@ async function fetchLeagueStats() {
     const diff = target - firstThursday;
     return 1 + Math.round(diff / (7 * 24 * 60 * 60 * 1000));
   }
-  
+
   const today = new Date(); // Or new Date()
   const week = getWeekOfYear(today);
 
@@ -3853,7 +3851,8 @@ async function fetchLeagueStats() {
 
   for (const leagueObject of footyStatsToSofaScore) {
     for (const leagueId in leagueObject) {
-      const { id: sofaScoreId, season: sofaScoreSeason } = leagueObject[leagueId];
+      const { id: sofaScoreId, season: sofaScoreSeason } =
+        leagueObject[leagueId];
 
       try {
         const leagueTeamStatsResponse = await fetch(
@@ -3891,12 +3890,16 @@ export async function getScorePrediction(day, mocked) {
   let index = 2;
   let divider = 10;
 
-// Call the function to fetch and store the league stats
-leagueStatsArray = await fetchLeagueStats()
-  // You can now access the stats using the dynamically created object names
-  // e.g., leagueStats["leagueStats12325"], leagueStats["leagueStats12451"], etc.
+  // Call the function to fetch and store the league stats
+  const leagueStatsPromise = fetchLeagueStats();
 
-  ReactDOM.render(<div></div>, document.getElementById("GeneratePredictions"));
+  ReactDOM.render(
+    <div>
+      <ThreeDots className="MainLoading" fill="#030061" />
+      <div>Loading predictions...</div>
+    </div>,
+    document.getElementById("FixtureContainer")
+  );
 
   await Promise.all(
     matches.map(async (match) => {
@@ -4151,6 +4154,8 @@ leagueStatsArray = await fetchLeagueStats()
         XGDiffTips.push(XGPredictionObject);
       }
 
+      leagueStatsArray = await leagueStatsPromise;
+
       if (
         match.pointsDifferential === true &&
         match.prediction === "homeWin" &&
@@ -4323,7 +4328,12 @@ leagueStatsArray = await fetchLeagueStats()
     })
   );
   ReactDOM.render(
-    <RenderAllFixtures matches={matches} result={true} bool={mock} stats={leagueStatsArray}/>,
+    <RenderAllFixtures
+      matches={matches}
+      result={true}
+      bool={mock}
+      stats={leagueStatsArray}
+    />,
     document.getElementById("FixtureContainer")
   );
   await getSuccessMeasure(matches);
