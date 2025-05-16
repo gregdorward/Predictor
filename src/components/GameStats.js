@@ -34,7 +34,7 @@ import { getTeamStats } from "../logic/getTeamStats";
 import { checkUserPaidStatus } from "../logic/hasUserPaid";
 import { getPointAverage } from "../logic/getStats";
 import { allForm } from "../logic/getFixtures";
-// import MissingPlayersList from "../components/MissingPlayersList";
+import MissingPlayersList from "../components/MissingPlayersList";
 import {
   calculateAttackingStrength,
   calculateDefensiveStrength,
@@ -64,9 +64,9 @@ function GameStats({ game, displayBool, stats }) {
     const savedTips = localStorage.getItem("userTips");
     return savedTips ? JSON.parse(savedTips) : [];
   });
-  // const [homeMissingPlayersList, setHomeMissingPlayersList] = useState([]);
-  // const [awayMissingPlayersList, setAwayMissingPlayersList] = useState([]);
-  // const [loading, setLoading] = useState(true);
+  const [homeMissingPlayersList, setHomeMissingPlayersList] = useState([]);
+  const [awayMissingPlayersList, setAwayMissingPlayersList] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   // Save to localStorage whenever userTips changes
   useEffect(() => {
@@ -224,6 +224,8 @@ function GameStats({ game, displayBool, stats }) {
   const [gameArrayAwayTeamAwayGames, setGameArrayAwayTeamAwayGames] = useState(
     []
   );
+
+  let lineups = false;
 
   const allResultsHome = useMemo(() => {
     return [...homeForm.allTeamResults].sort((b, a) => b.dateRaw - a.dateRaw);
@@ -967,49 +969,60 @@ function GameStats({ game, displayBool, stats }) {
     }
   }
 
-  // const reasonCodeMap = {
-  //   1: "Injury",
-  //   2: "Unknown",
-  //   3: "Suspension",
-  //   4: "Personal Reasons",
-  //   5: "International Duty",
-  //   6: "Not in Squad",
-  //   7: "Rest",
-  //   8: "Unknown",
-  // };
+  const reasonCodeMap = {
+    1: "Injury",
+    2: "Unknown",
+    3: "Suspension",
+    4: "Personal Reasons",
+    5: "International Duty",
+    6: "Not in Squad",
+    7: "Rest",
+    8: "Unknown",
+  };
 
-  // function getReasonDescription(code) {
-  //   return reasonCodeMap[code] || "Unknown";
-  // }
+  function getReasonDescription(code) {
+    return reasonCodeMap[code] || "Unknown";
+  }
 
-  // const typeCodeMap = {
-  //   missing: "red",
-  //   doubtful: "orange",
-  // };
+  const typeCodeMap = {
+    missing: "red",
+    doubtful: "orange",
+  };
 
-  // function getTypeColour(code) {
-  //   return typeCodeMap[code] || "red";
-  // }
+  function getTypeColour(code) {
+    return typeCodeMap[code] || "red";
+  }
 
-  // async function extractMissingPlayers(data) {
-  //   const extract = (teamType) => {
-  //     const team = data?.[teamType];
-  //     if (!team || !Array.isArray(team.missingPlayers)) return [];
-  
-  //     return team.missingPlayers.map((mp) => ({
-  //       team: teamType,
-  //       name: mp.player?.name ?? "Unknown",
-  //       position: mp.player?.position ?? "N/A",
-  //       reason: getReasonDescription(mp.reason),
-  //       type: getTypeColour(mp.type),
-  //     }));
-  //   };
-  
-  //   return {
-  //     homeMissingPlayers: extract("home"),
-  //     awayMissingPlayers: extract("away"),
-  //   };
-  // }
+  const positionCodeMap = {
+    G: "Goalkeeper",
+    D: "Defender",
+    M: "Midfielder",
+    F: "Attacker",
+  };
+
+  function getPos(code) {
+    return positionCodeMap[code] || "";
+  }
+
+  async function extractMissingPlayers(data) {
+    const extract = (teamType) => {
+      const team = data?.[teamType];
+      if (!team || !Array.isArray(team.missingPlayers)) return [];
+
+      return team.missingPlayers.map((mp) => ({
+        team: teamType,
+        name: mp.player?.name ?? "Unknown",
+        position: getPos(mp.player?.position),
+        reason: getReasonDescription(mp.reason),
+        type: mp.type,
+      }));
+    };
+
+    return {
+      homeMissingPlayers: extract("home"),
+      awayMissingPlayers: extract("away"),
+    };
+  }
 
   useEffect(() => {
     async function fetchMatchingGame() {
@@ -1050,30 +1063,34 @@ function GameStats({ game, displayBool, stats }) {
           // setMatchingGame(null);
         }
 
-        // const lineupDetail = await fetch(
-        //   `https://sofascore.p.rapidapi.com/matches/get-lineups?matchId=${matchingGameInfo.id}`,
-        //   {
-        //     method: "GET",
-        //     headers: {
-        //       "x-rapidapi-host": "sofascore.p.rapidapi.com",
-        //       "x-rapidapi-key":
-        //         "c48f40f1f1msh541a96eddf55226p149506jsn505e94efcf35",
-        //       "Content-Type": "application/json",
-        //       Accept: "application/json",
-        //     },
-        //   }
-        // );
-        // setLoading(true);
+        if (game.leagueID === 12325) {
+          const lineupDetail = await fetch(
+            `${process.env.REACT_APP_EXPRESS_SERVER}lineups/${matchingGameInfo.id}`,
+            {
+              method: "GET",
+              headers: {
+                "x-rapidapi-host": "sofascore.p.rapidapi.com",
+                "x-rapidapi-key":
+                  "c48f40f1f1msh541a96eddf55226p149506jsn505e94efcf35",
+                "Content-Type": "application/json",
+                Accept: "application/json",
+              },
+            }
+          );
+          setLoading(true);
 
-        // const data = await lineupDetail.json();
-        // const { homeMissingPlayers, awayMissingPlayers } = await extractMissingPlayers(data);
+          const data = await lineupDetail.json();
+          const { homeMissingPlayers, awayMissingPlayers } =
+            await extractMissingPlayers(data);
 
-        // setHomeMissingPlayersList(homeMissingPlayers);
-        // setAwayMissingPlayersList(awayMissingPlayers);
-        // setLoading(false);
+          setHomeMissingPlayersList(homeMissingPlayers);
+          setAwayMissingPlayersList(awayMissingPlayers);
+          setLoading(false);
 
-        // console.log(homeMissingPlayersList);
-        // console.log(homeMissingPlayersList);
+          console.log(homeMissingPlayersList);
+          console.log(homeMissingPlayersList);
+          lineups = true;
+        }
       } catch (error) {
         console.error("Error fetching game info:", error);
       }
@@ -2402,7 +2419,7 @@ function GameStats({ game, displayBool, stats }) {
 
   const [selectedTip, setSelectedTip] = useState(null);
 
-  // console.log(homeMissingPlayersList);
+  console.log(homeMissingPlayersList);
 
   const handleTipSelect = (tipType) => {
     setSelectedTip(tipType);
@@ -2441,14 +2458,29 @@ function GameStats({ game, displayBool, stats }) {
         <div style={style}>
           <Div className="MatchTime" text={`Kick off: ${time} GMT`}></Div>
         </div>
-        {/* {loading ? (
-          <div>Loading missing players...</div>
-        ) : (
-          <div className="MissingPlayers">
-            <MissingPlayersList players={homeMissingPlayersList} />
-            <MissingPlayersList players={awayMissingPlayersList} />
-          </div>
-        )} */}
+        {game.leagueID ===  12325 &&
+          (loading ? (
+            <div>Loading missing players...</div>
+          ) : (
+            <Collapsable
+              buttonText={"Missing players"}
+              classNameButton="MissingPlayersButton"
+              element={
+                <div className="MissingPlayers">
+                  <MissingPlayersList
+                    team={game.homeTeam}
+                    className="HomeMissingPlayers"
+                    players={homeMissingPlayersList}
+                  />
+                  <MissingPlayersList
+                    team={game.awayTeam}
+                    className="AwayMissingPlayers"
+                    players={awayMissingPlayersList}
+                  />
+                </div>
+              }
+            />
+          ))}
         <div id="AIInsightsContainer" className="AIInsightsContainer">
           {!paid && game.leagueID !== 12325 ? (
             <Button

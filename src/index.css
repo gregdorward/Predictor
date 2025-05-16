@@ -2758,7 +2758,7 @@ li.FormHeader{
   padding-bottom: 0.5em;
   text-align: center;
   font-size: 1.1em;
-  color: #030052;
+  color: var(--text-color);
 }
 
 .FormExplainer {
@@ -4057,24 +4057,57 @@ button.AIInsights button:active {
   color: var(--text-color);
 }
 
-.MissingPlayersList{
+/* .MissingPlayersList{
   width: 75%;
   margin-left: auto;
   margin-right: auto;
-}
+} */
 
 .MissingPlayer{
-  display: flex;
   flex-direction: row;
   line-height: 2em;
   align-items: center;
-  padding: 0.5em;
-
+  padding-top: 0.5em;
 }
 
 .MissingCircle{
   width: 1em;
   height: 1em;
   border-radius: 50%;
-  margin-right: 1em;
+  margin-right: 0.5em;
+}
+
+.MissingPlayers{
+  display: flex;
+  gap: 2em; /* space between the two columns */
+  /* align-items: center; */
+}
+.HomeMissingPlayers{
+  flex: 1;
+  flex-direction: column;
+  gap: 1rem;
+  padding: 1rem;
+  background-color: var(--secondary-background-color);
+  color: var(--text-color);
+  border-radius: 0.5rem;
+  justify-content: center
+
+}
+.AwayMissingPlayers{
+  flex: 1;
+  flex-direction: column;
+  gap: 1rem;
+  padding: 1rem;
+  background-color: var(--secondary-background-color);
+  color: var(--text-color);
+  border-radius: 0.5rem;
+  justify-content: center
+}
+
+.MissingPlayersButton{
+  font-size: 1em;
+}
+
+.MissingPlayersTeamName {
+  text-align: center;
 }
