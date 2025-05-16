@@ -13,7 +13,7 @@ import { getPointsFromLastX } from "../logic/getScorePredictions";
 import SlideDiff from "../components/SliderDiff";
 import Collapsable from "../components/CollapsableElement";
 import { userDetail } from "./authProvider";
-import {leagueStatsArray} from "../logic/getScorePredictions"
+import { leagueStatsArray } from "../logic/getScorePredictions";
 
 var oddslib = require("oddslib");
 
@@ -73,6 +73,7 @@ async function convertTimestamp(timestamp) {
 
   return converted;
 }
+let groups = false;
 
 export async function generateTables(a, leagueIdArray, allResults) {
   tableArray = [];
@@ -124,12 +125,13 @@ export async function generateTables(a, leagueIdArray, allResults) {
           wdl: currentTeam.wdl_record,
           seasonGoals: currentTeam.seasonGoals,
           seasonConceded: currentTeam.seasonConceded,
-          zone: currentTeam.zone.name !== null ? currentTeam.zone.name : "mid-table"
+          zone:
+            currentTeam.zone.name !== null
+              ? currentTeam.zone.name
+              : "mid-table",
         };
         leagueInstance.push(team);
       }
-
-
 
       tableArray.push({ id: currentLeagueId, table: leagueInstance });
       let basicElements = leagueInstance.map((item) => ({
@@ -152,63 +154,76 @@ export async function generateTables(a, leagueIdArray, allResults) {
       let instances;
 
       if (currentLeagueId === 13973) {
-        instances = league.data.specific_tables[0].groups;
+        if(league.data.specific_tables[0].groups){
+          instances = league.data.specific_tables[0].groups;
+          groups = true
+        } else {
+          instances = null;
+          groups = false
+        }
+        console.log(league.data)
       } else if (currentLeagueId === 12933) {
+        groups = true
         instances = [
           league.data.specific_tables[0],
           league.data.specific_tables[1],
         ];
       }
+      console.log(instances);
 
-      instances.forEach((group) => {
-        leagueInstance = [];
-        for (let index = 0; index < group.table.length; index++) {
-          let currentTeam = group.table[index];
-          let last5;
-          if (currentTeam.wdl_record.length < 5) {
-            last5 = currentTeam.wdl_record
-              .slice(`-${currentTeam.wdl_record.length}`)
-              .toUpperCase();
-          } else {
-            last5 = currentTeam.wdl_record.slice(-5).toUpperCase();
+      if (groups) {
+        console.log("Called")
+        instances.forEach((group) => {
+          leagueInstance = [];
+          for (let index = 0; index < group.table.length; index++) {
+            let currentTeam = group.table[index];
+            let last5;
+            if (currentTeam.wdl_record.length < 5) {
+              last5 = currentTeam.wdl_record
+                .slice(`-${currentTeam.wdl_record.length}`)
+                .toUpperCase();
+            } else {
+              last5 = currentTeam.wdl_record.slice(-5).toUpperCase();
+            }
+            const team = {
+              LeagueID: currentLeagueId,
+              Position: index + 1,
+              Name: currentTeam.cleanName,
+              ID: currentTeam.id,
+              Played: currentTeam.matchesPlayed,
+              Wins: currentTeam.seasonWins_overall,
+              Draws: currentTeam.seasonDraws_overall,
+              Losses: currentTeam.seasonLosses_overall,
+              For: currentTeam.seasonGoals,
+              Against:
+                currentTeam.seasonConceded_home +
+                currentTeam.seasonConceded_away,
+              GoalDifference: currentTeam.seasonGoalDifference,
+              Form: last5,
+              LastXPoints: getPointsFromLastX(last5.split("")),
+              Points: currentTeam.points,
+              wdl: currentTeam.wdl_record,
+              seasonGoals: currentTeam.seasonGoals,
+              seasonConceded: currentTeam.seasonConceded,
+            };
+            leagueInstance.push(team);
           }
-          const team = {
-            LeagueID: currentLeagueId,
-            Position: index + 1,
-            Name: currentTeam.cleanName,
-            ID: currentTeam.id,
-            Played: currentTeam.matchesPlayed,
-            Wins: currentTeam.seasonWins_overall,
-            Draws: currentTeam.seasonDraws_overall,
-            Losses: currentTeam.seasonLosses_overall,
-            For: currentTeam.seasonGoals,
-            Against:
-              currentTeam.seasonConceded_home + currentTeam.seasonConceded_away,
-            GoalDifference: currentTeam.seasonGoalDifference,
-            Form: last5,
-            LastXPoints: getPointsFromLastX(last5.split("")),
-            Points: currentTeam.points,
-            wdl: currentTeam.wdl_record,
-            seasonGoals: currentTeam.seasonGoals,
-            seasonConceded: currentTeam.seasonConceded,
-          };
-          leagueInstance.push(team);
-        }
-        bespokeLeagueArray.push({
-          id: currentLeagueId,
-          group: group.name ? group.name : group.round,
-          table: leagueInstance,
+          bespokeLeagueArray.push({
+            id: currentLeagueId,
+            group: group.name ? group.name : group.round,
+            table: leagueInstance,
+          });
+          let basicElements = leagueInstance.map((item) => ({
+            LeagueID: item.LeagueID,
+            Name: item.Name,
+            Position: item.Position,
+            GoalDifference: item.GoalDifference,
+            Played: item.Played,
+            Points: item.Points,
+          }));
+          basicTableArray.push({ id: currentLeagueId, table: basicElements });
         });
-        let basicElements = leagueInstance.map((item) => ({
-          LeagueID: item.LeagueID,
-          Name: item.Name,
-          Position: item.Position,
-          GoalDifference: item.GoalDifference,
-          Played: item.Played,
-          Points: item.Points,
-        }));
-        basicTableArray.push({ id: currentLeagueId, table: basicElements });
-      });
+      }
     } else if (league.data.league_table === null) {
       for (
         let index = 0;
@@ -303,9 +318,11 @@ export async function renderTable(index, results, id) {
         document.getElementById(`leagueName${id}`)
       );
     }
-  } else if (id === 13973 || id === 12933) {
+  } else if (groups) {
+    console.log(groups)
+    console.log(bespokeLeagueArray)
     const leagueTable = bespokeLeagueArray.filter((table) => table.id === id);
-
+    console.log(leagueTable)
     const leagueTable1 = leagueTable[0].table;
     const leagueTable2 = leagueTable[1].table;
     const divisionName1 = leagueTable[0].group;
@@ -494,7 +511,7 @@ export async function generateFixtures(
 ) {
   if (!isFunctionRunning) {
     isFunctionRunning = true;
-    todaysDateString = todaysDate
+    todaysDateString = todaysDate;
 
     ReactDOM.render(
       <div>
@@ -610,19 +627,16 @@ export async function generateFixtures(
               awayTeam: game.awayTeam,
               id: game.id,
               time: game.time,
-              homeGoals:
-                game.homeScore !== undefined
-                  ? game.homeScore
-                  : "-",
-              awayGoals:
-                game.awayScore !== undefined
-                  ? game.awayScore
-                  : "-",
+              homeGoals: game.homeScore !== undefined ? game.homeScore : "-",
+              awayGoals: game.awayScore !== undefined ? game.awayScore : "-",
             });
           });
         });
       } catch (error) {
-        console.error("An error occurred while fetching or processing data:", error);
+        console.error(
+          "An error occurred while fetching or processing data:",
+          error
+        );
         // You might want to add more specific error handling here,
         // such as setting a default value for arrayOfGames or logging the error to a server.
       }
@@ -917,7 +931,7 @@ export async function generateFixtures(
       );
 
       for (const fixture of leagueGames) {
-        console.log(fixture)
+        console.log(fixture);
         const unixTimestamp = fixture.date_unix;
         const milliseconds = unixTimestamp * 1000;
         const dateObject = new Date(milliseconds);
@@ -1169,8 +1183,7 @@ export async function generateFixtures(
           formRunAway = Array.from(awayFormRun);
 
           if (
-            teamPositionHome === 0 
-            ||
+            teamPositionHome === 0 ||
             form[0].data[0].season_format !== "Domestic League"
           ) {
             teamPositionHome = "N/A";
@@ -1634,7 +1647,7 @@ export async function generateFixtures(
         }
       />,
       document.getElementById("MultiPlaceholder")
-    )
+    );
     ReactDOM.render(
       <RenderAllFixtures matches={matches} result={false} bool={false} />,
       document.getElementById("FixtureContainer")

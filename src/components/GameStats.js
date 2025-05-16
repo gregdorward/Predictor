@@ -34,7 +34,7 @@ import { getTeamStats } from "../logic/getTeamStats";
 import { checkUserPaidStatus } from "../logic/hasUserPaid";
 import { getPointAverage } from "../logic/getStats";
 import { allForm } from "../logic/getFixtures";
-
+// import MissingPlayersList from "../components/MissingPlayersList";
 import {
   calculateAttackingStrength,
   calculateDefensiveStrength,
@@ -44,6 +44,7 @@ import finalPropsSelectorFactory from "react-redux/es/connect/selectorFactory";
 import { dynamicDate } from "../logic/getFixtures";
 export let userTips;
 let setUserTips;
+
 // let id, team1, team2, timestamp, homeGoals, awayGoals;
 
 function GameStats({ game, displayBool, stats }) {
@@ -63,6 +64,10 @@ function GameStats({ game, displayBool, stats }) {
     const savedTips = localStorage.getItem("userTips");
     return savedTips ? JSON.parse(savedTips) : [];
   });
+  // const [homeMissingPlayersList, setHomeMissingPlayersList] = useState([]);
+  // const [awayMissingPlayersList, setAwayMissingPlayersList] = useState([]);
+  // const [loading, setLoading] = useState(true);
+
   // Save to localStorage whenever userTips changes
   useEffect(() => {
     localStorage.setItem("userTips", JSON.stringify(userTips));
@@ -962,6 +967,50 @@ function GameStats({ game, displayBool, stats }) {
     }
   }
 
+  // const reasonCodeMap = {
+  //   1: "Injury",
+  //   2: "Unknown",
+  //   3: "Suspension",
+  //   4: "Personal Reasons",
+  //   5: "International Duty",
+  //   6: "Not in Squad",
+  //   7: "Rest",
+  //   8: "Unknown",
+  // };
+
+  // function getReasonDescription(code) {
+  //   return reasonCodeMap[code] || "Unknown";
+  // }
+
+  // const typeCodeMap = {
+  //   missing: "red",
+  //   doubtful: "orange",
+  // };
+
+  // function getTypeColour(code) {
+  //   return typeCodeMap[code] || "red";
+  // }
+
+  // async function extractMissingPlayers(data) {
+  //   const extract = (teamType) => {
+  //     const team = data?.[teamType];
+  //     if (!team || !Array.isArray(team.missingPlayers)) return [];
+  
+  //     return team.missingPlayers.map((mp) => ({
+  //       team: teamType,
+  //       name: mp.player?.name ?? "Unknown",
+  //       position: mp.player?.position ?? "N/A",
+  //       reason: getReasonDescription(mp.reason),
+  //       type: getTypeColour(mp.type),
+  //     }));
+  //   };
+  
+  //   return {
+  //     homeMissingPlayers: extract("home"),
+  //     awayMissingPlayers: extract("away"),
+  //   };
+  // }
+
   useEffect(() => {
     async function fetchMatchingGame() {
       try {
@@ -1000,6 +1049,31 @@ function GameStats({ game, displayBool, stats }) {
           // Optionally set matchingGame to a default value (e.g., null) if needed
           // setMatchingGame(null);
         }
+
+        // const lineupDetail = await fetch(
+        //   `https://sofascore.p.rapidapi.com/matches/get-lineups?matchId=${matchingGameInfo.id}`,
+        //   {
+        //     method: "GET",
+        //     headers: {
+        //       "x-rapidapi-host": "sofascore.p.rapidapi.com",
+        //       "x-rapidapi-key":
+        //         "c48f40f1f1msh541a96eddf55226p149506jsn505e94efcf35",
+        //       "Content-Type": "application/json",
+        //       Accept: "application/json",
+        //     },
+        //   }
+        // );
+        // setLoading(true);
+
+        // const data = await lineupDetail.json();
+        // const { homeMissingPlayers, awayMissingPlayers } = await extractMissingPlayers(data);
+
+        // setHomeMissingPlayersList(homeMissingPlayers);
+        // setAwayMissingPlayersList(awayMissingPlayers);
+        // setLoading(false);
+
+        // console.log(homeMissingPlayersList);
+        // console.log(homeMissingPlayersList);
       } catch (error) {
         console.error("Error fetching game info:", error);
       }
@@ -2328,6 +2402,8 @@ function GameStats({ game, displayBool, stats }) {
 
   const [selectedTip, setSelectedTip] = useState(null);
 
+  // console.log(homeMissingPlayersList);
+
   const handleTipSelect = (tipType) => {
     setSelectedTip(tipType);
   };
@@ -2365,6 +2441,14 @@ function GameStats({ game, displayBool, stats }) {
         <div style={style}>
           <Div className="MatchTime" text={`Kick off: ${time} GMT`}></Div>
         </div>
+        {/* {loading ? (
+          <div>Loading missing players...</div>
+        ) : (
+          <div className="MissingPlayers">
+            <MissingPlayersList players={homeMissingPlayersList} />
+            <MissingPlayersList players={awayMissingPlayersList} />
+          </div>
+        )} */}
         <div id="AIInsightsContainer" className="AIInsightsContainer">
           {!paid && game.leagueID !== 12325 ? (
             <Button
