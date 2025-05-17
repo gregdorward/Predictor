@@ -1063,20 +1063,9 @@ function GameStats({ game, displayBool, stats }) {
           // setMatchingGame(null);
         }
 
-        if (game.leagueID === 12325) {
+        if (game.leagueID === 12325 || game.leagueID === 12451 || game.leagueID === 12446 || game.leagueID === 12422 || game.leagueID === 12529 || game.leagueID === 12337 || game.leagueID === 12931 || game.leagueID === 13973) {
           const lineupDetail = await fetch(
-            `${process.env.REACT_APP_EXPRESS_SERVER}lineups/${matchingGameInfo.id}`,
-            {
-              method: "GET",
-              headers: {
-                "x-rapidapi-host": "sofascore.p.rapidapi.com",
-                "x-rapidapi-key":
-                  "c48f40f1f1msh541a96eddf55226p149506jsn505e94efcf35",
-                "Content-Type": "application/json",
-                Accept: "application/json",
-              },
-            }
-          );
+            `${process.env.REACT_APP_EXPRESS_SERVER}lineups/${matchingGameInfo.id}`);
           setLoading(true);
 
           const data = await lineupDetail.json();
@@ -2458,7 +2447,7 @@ function GameStats({ game, displayBool, stats }) {
         <div style={style}>
           <Div className="MatchTime" text={`Kick off: ${time} GMT`}></Div>
         </div>
-        {game.leagueID ===  12325 &&
+        {(game.leagueID === 12325 || game.leagueID === 12451 || game.leagueID === 12446 || game.leagueID === 12422 || game.leagueID === 12529 || game.leagueID === 12337 || game.leagueID === 12931 || game.leagueID === 13973) &&
           (loading ? (
             <div>Loading missing players...</div>
           ) : (
