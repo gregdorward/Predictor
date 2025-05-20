@@ -1070,7 +1070,7 @@ function GameStats({ game, displayBool, stats }) {
 
         const now = Math.floor(Date.now() / 1000); // current Unix timestamp in seconds
         const isWithin24Hours =
-          game.date - now <= 86400 && game.date - now > 0;
+          game.date - now <= 86400 && game.date - now > 406400;
 
           console.log(now)
           console.log(game.date)
