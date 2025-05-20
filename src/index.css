@@ -3661,7 +3661,10 @@ input:active + .design::after {
 }
 
 .Lineups {
-  font-size: 1em;
+  font-size: 1.1em;
+  background-color: var(--secondary-background-color);
+  width: 100%;
+  color: var(--button-color);
 }
 
 .CurrentScore{
@@ -4105,9 +4108,78 @@ button.AIInsights button:active {
 }
 
 .MissingPlayersButton{
-  font-size: 1em;
+  font-size: 1.1em;
+  background-color: var(--secondary-background-color);
+  width: 100%;
+  color: var(--button-color);
 }
 
 .MissingPlayersTeamName {
   text-align: center;
+}
+
+.TeamStreaksButton{
+  font-size: 1.1em;
+  background-color: var(--secondary-background-color);
+  width: 100%;
+  color: var(--button-color);
+}
+/* .StreakList{
+  display: flex;
+  flex-direction: column;
+}
+
+.StreakList li {
+line-height: 2.5em;
+} */
+
+.StreakList {
+  list-style: none;
+  /* padding: 1em; */
+  margin: 0;
+  /* background-color: var(--secondary-background-color); */
+  border-radius: 0.5rem;
+
+}
+
+.StreakRow {
+  display: flex;
+  align-items: center;
+  background-color: var(--secondary-background-color);
+  margin: 1em;
+  /* justify-content: space-between; */
+
+}
+
+.StreakTeamIcon {
+  flex: 1;
+  padding: 0.5em;
+  margin-right: 0.25em;
+  margin-left: 0.25em;
+  /* gap: 0.25rem;
+  width: 3rem; */
+}
+
+.StreakTeamIcon img {
+  height: 2em;
+  width: 2em;
+  background-color: whitesmoke;
+  border-radius: 0.5rem;
+  /* object-fit: contain; */
+} 
+
+.StreakLabel {
+  /* flex-grow: 1; */
+  font-size: 1em;
+  flex: 1;
+
+}
+
+.StreakValue {
+  font-weight: bold;
+  font-size: 1em;
+  text-align: center;
+  white-space: nowrap;
+  flex: 1;
+
 }

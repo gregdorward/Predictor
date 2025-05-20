@@ -35,6 +35,7 @@ import { checkUserPaidStatus } from "../logic/hasUserPaid";
 import { getPointAverage } from "../logic/getStats";
 import { allForm } from "../logic/getFixtures";
 import MissingPlayersList from "../components/MissingPlayersList";
+import { StreakStats } from "../components/StreakStats";
 import {
   calculateAttackingStrength,
   calculateDefensiveStrength,
@@ -67,6 +68,9 @@ function GameStats({ game, displayBool, stats }) {
   const [homeMissingPlayersList, setHomeMissingPlayersList] = useState([]);
   const [awayMissingPlayersList, setAwayMissingPlayersList] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [loadingStreaks, setLoadingStreaks] = useState(true);
+
+  const [streakData, setStreakData] = useState([]);
 
   // Save to localStorage whenever userTips changes
   useEffect(() => {
@@ -224,8 +228,6 @@ function GameStats({ game, displayBool, stats }) {
   const [gameArrayAwayTeamAwayGames, setGameArrayAwayTeamAwayGames] = useState(
     []
   );
-
-  let lineups = false;
 
   const allResultsHome = useMemo(() => {
     return [...homeForm.allTeamResults].sort((b, a) => b.dateRaw - a.dateRaw);
@@ -896,15 +898,18 @@ function GameStats({ game, displayBool, stats }) {
 
   async function findGameByPartialMatch(gamesArray, searchText, teamType) {
     try {
+      const normalize = (str) => str.toLowerCase().replace(/-/g, " ").trim();
+
+      const normalizedSearch = normalize(searchText);
+
       const matchingGame = gamesArray.find((game) => {
         const teamNameInArray =
           teamType === "homeTeam" ? game.homeTeam : game.awayTeam;
-        return (
-          searchText &&
-          searchText.toLowerCase().includes(teamNameInArray.toLowerCase())
-        );
+
+        return normalizedSearch.includes(normalize(teamNameInArray));
       });
-      return matchingGame ? matchingGame : null; // Return the first matching game object
+
+      return matchingGame || null;
     } catch (error) {
       console.error(
         `Error finding game by partial match (array value against search text) on ${teamType}:`,
@@ -1063,10 +1068,31 @@ function GameStats({ game, displayBool, stats }) {
           // setMatchingGame(null);
         }
 
-        if (game.leagueID === 12325 || game.leagueID === 12451 || game.leagueID === 12446 || game.leagueID === 12422 || game.leagueID === 12529 || game.leagueID === 12337 || game.leagueID === 12931 || game.leagueID === 13973) {
+        const now = Math.floor(Date.now() / 1000); // current Unix timestamp in seconds
+        const isWithin24Hours =
+          game.date - now <= 86400 && game.date - now > 0;
+
+          console.log(now)
+          console.log(game.date)
+          console.log(isWithin24Hours)
+
+        setLoading(true);
+        if (
+          
+            // game.leagueID === 12325 ||
+            // game.leagueID === 12451 ||
+            // game.leagueID === 12446 ||
+            // game.leagueID === 12422 ||
+            // game.leagueID === 12529 ||
+            // game.leagueID === 12337 ||
+            // game.leagueID === 12931 ||
+            // game.leagueID === 12622 ||
+            // game.leagueID === 13973) &&
+          isWithin24Hours
+        ) {
           const lineupDetail = await fetch(
-            `${process.env.REACT_APP_EXPRESS_SERVER}lineups/${matchingGameInfo.id}`);
-          setLoading(true);
+            `${process.env.REACT_APP_EXPRESS_SERVER}lineups/${matchingGameInfo.id}`
+          );
 
           const data = await lineupDetail.json();
           const { homeMissingPlayers, awayMissingPlayers } =
@@ -1078,8 +1104,16 @@ function GameStats({ game, displayBool, stats }) {
 
           console.log(homeMissingPlayersList);
           console.log(homeMissingPlayersList);
-          lineups = true;
         }
+
+        const streaks = await fetch(
+          `${process.env.REACT_APP_EXPRESS_SERVER}streaks/${matchingGameInfo.id}`
+        );
+        setLoadingStreaks(true);
+
+        const streaksDataRaw = await streaks.json();
+        setStreakData(streaksDataRaw);
+        setLoadingStreaks(false);
       } catch (error) {
         console.error("Error fetching game info:", error);
       }
@@ -2130,7 +2164,7 @@ function GameStats({ game, displayBool, stats }) {
   }
 
   const generateAIInsights = useCallback(
-    async (gameId) => {
+    async (gameId, streak) => {
       setIsLoading(true);
       const table = await fetchBasicTable(game.leagueID);
       const leagueTable = table.table;
@@ -2172,40 +2206,59 @@ function GameStats({ game, displayBool, stats }) {
       await previousGames.json().then((data) => {
         console.log(data.data);
         odds = {
-          oddsHomeWin: data.data.odds_ft_1,
-          oddsAwayWin: data.data.odds_ft_2,
-          oddsBTTSYes: data.data.odds_btts_yes,
-          oddsBTTSNo: data.data.odds_btts_no,
-          oddsHomeMostCorners: data.data.odds_corners_1,
-          oddsAwayMostCorners: data.data.odds_corners_2,
-          "oddsOver10.5Corners": data.data.odds_corners_over_105,
-          "oddsUnder10.5Corners": data.data.odds_corners_under_105,
-          oddsDoubleChanceHomeOrDraw: data.data.odds_doublechance_1x,
-          oddsDoubleChanceAwayOrDraw: data.data.odds_doublechance_x2,
-          "oddsOver2.5Goals": data.data.odds_ft_over25,
-          "oddsUnder2.5Goals": data.data.odds_ft_under25,
+          HomeTeam: {
+            HomeWin: data.data.odds_ft_1,
+            MostCorners: data.data.odds_corners_1,
+            DoubleChanceHomeOrDraw: data.data.odds_doublechance_1x,
+            ToWinToNil: data.data.odds_win_to_nil_1,
+            ToScoreFirst: data.data.odds_team_to_score_first_1,
+            CleanSheetYes: data.data.odds_team_a_cs_yes,
+            CleanSheetNo: data.data.odds_team_a_cs_no,
+          },
+          AwayTeam: {
+            AwayWin: data.data.odds_ft_2,
+            MostCorners: data.data.odds_corners_2,
+            DoubleChanceAwayOrDraw: data.data.odds_doublechance_x2,
+            ToWinToNil: data.data.odds_win_to_nil_2,
+            ToScoreFirst: data.data.odds_team_to_score_first_2,
+            CleanSheetYes: data.data.odds_team_b_cs_yes,
+            CleanSheetNo: data.data.odds_team_b_cs_no,
+          },
+          GeneralMatchOdds: {
+            BTTSYes: data.data.odds_btts_yes,
+            BTTSNo: data.data.odds_btts_no,
+            "Over2.5Goals": data.data.odds_ft_over25,
+            "Under2.5Goals": data.data.odds_ft_under25,
+            "Over3.5Goals": data.data.odds_ft_over35,
+            "Under3.5Goals": data.data.odds_ft_under35,
+            "Over10.5Corners": data.data.odds_corners_over_105,
+            "Under10.5Corners": data.data.odds_corners_under_105,
+            "1stHalfResultHomeWinning": data.data.odds_1st_half_result_1,
+            "1stHalfResultAwayWinning": data.data.odds_1st_half_result_2,
+          },
         };
 
         // previousGameStats = data.data.h2h.previous_matches_results
       });
 
       console.log(game);
-
+      console.log(streak);
       try {
         const AIPayload = {
-          league: game.leagueDesc,
+          competition: game.leagueDesc,
           totalLeagueGames: totalGames,
           gameweek: game.matches_completed_minimum + 1,
           gameType: roundType,
-          referee: await getRefStats(game.refereeID, game.competition_id),
+          // referee: await getRefStats(game.refereeID, game.competition_id),
           leagueTable: leagueTable,
           seasonProgressPercent: progress,
-
+          venue: game.stadium,
           odds,
+          teamStreakData: streak,
           homeTeam: {
             homeTeamName: game.homeTeam,
             homeLeaguePosition: homeForm?.LeaguePosition,
-            homeTeamResults: homeForm?.allTeamResults,
+            // homeTeamResults: homeForm?.allTeamResults,
             "XG diff all games": homeForm?.longTermXGDiff,
             "XG diff last 5 games": homeForm?.shortTermXGDiff,
             homeAttackingStats: homeForm?.attackingMetrics,
@@ -2218,7 +2271,7 @@ function GameStats({ game, displayBool, stats }) {
           awayTeam: {
             awayTeamName: game.awayTeam,
             awayLeaguePosition: awayForm?.LeaguePosition,
-            awayTeamResults: awayForm?.allTeamResults,
+            // awayTeamResults: awayForm?.allTeamResults,
             "XG diff all games": awayForm?.longTermXGDiff,
             "XG diff last 5 games": awayForm?.shortTermXGDiff,
             awayAttackingStats: awayForm?.attackingMetrics,
@@ -2408,7 +2461,7 @@ function GameStats({ game, displayBool, stats }) {
 
   const [selectedTip, setSelectedTip] = useState(null);
 
-  console.log(homeMissingPlayersList);
+  console.log(streakData);
 
   const handleTipSelect = (tipType) => {
     setSelectedTip(tipType);
@@ -2428,8 +2481,11 @@ function GameStats({ game, displayBool, stats }) {
         </>
       )}
       <div style={style}>
+        <div style={style}>
+          <Div className="MatchTime" text={`Kick off: ${time} GMT`}></Div>
+        </div>
         <Collapsable
-          buttonText={"Lineups & match action"}
+          buttonText={`Lineups & match action \u{2630}`}
           classNameButton="Lineups"
           element={
             <>
@@ -2444,32 +2500,70 @@ function GameStats({ game, displayBool, stats }) {
             </>
           }
         />
-        <div style={style}>
-          <Div className="MatchTime" text={`Kick off: ${time} GMT`}></Div>
-        </div>
-        {(game.leagueID === 12325 || game.leagueID === 12451 || game.leagueID === 12446 || game.leagueID === 12422 || game.leagueID === 12529 || game.leagueID === 12337 || game.leagueID === 12931 || game.leagueID === 13973) &&
-          (loading ? (
-            <div>Loading missing players...</div>
-          ) : (
-            <Collapsable
-              buttonText={"Missing players"}
-              classNameButton="MissingPlayersButton"
-              element={
-                <div className="MissingPlayers">
-                  <MissingPlayersList
-                    team={game.homeTeam}
-                    className="HomeMissingPlayers"
-                    players={homeMissingPlayersList}
-                  />
-                  <MissingPlayersList
-                    team={game.awayTeam}
-                    className="AwayMissingPlayers"
-                    players={awayMissingPlayersList}
-                  />
-                </div>
-              }
-            />
-          ))}
+        {(game.leagueID === 12325 ||
+          game.leagueID === 12451 ||
+          game.leagueID === 12446 ||
+          game.leagueID === 12422 ||
+          game.leagueID === 12529 ||
+          game.leagueID === 12337 ||
+          game.leagueID === 12931 ||
+          game.leagueID === 12327 ||
+          game.leagueID === 13973) &&
+        loading ? (
+          <div>Loading missing players. Data may not be available until 24 hours before kick-off...</div>
+        ) : !paid ? (
+          <Button
+            className="MissingPlayersButton Locked"
+            text={"Missing players 🔒"}
+            disabled
+          />
+        ) : (
+          <Collapsable
+            buttonText={`Missing players \u{2630}`}
+            classNameButton="MissingPlayersButton"
+            element={
+              <div className="MissingPlayers">
+                <MissingPlayersList
+                  team={game.homeTeam}
+                  className="HomeMissingPlayers"
+                  players={homeMissingPlayersList}
+                />
+                <MissingPlayersList
+                  team={game.awayTeam}
+                  className="AwayMissingPlayers"
+                  players={awayMissingPlayersList}
+                />
+              </div>
+            }
+          />
+        )}
+
+        {loadingStreaks ? (
+          <div>Loading streak data...</div>
+        ) : !paid ? (
+          <Button
+            className="TeamStreaksButton Locked"
+            text={"Team Streaks (All comps) 🔒"}
+            disabled
+          />
+        ) : (
+          <Collapsable
+            buttonText={`Team Streaks (All comps) \u{2630}`}
+            classNameButton="TeamStreaksButton"
+            element={
+              <div className="TeamStreaks">
+                <StreakStats
+                  stats={streakData}
+                  home={game.homeTeam}
+                  away={game.awayTeam}
+                  homeLogo={game.homeBadge}
+                  awayLogo={game.awayBadge}
+                />
+              </div>
+            }
+          />
+        )}
+
         <div id="AIInsightsContainer" className="AIInsightsContainer">
           {!paid && game.leagueID !== 12325 ? (
             <Button
@@ -2481,7 +2575,7 @@ function GameStats({ game, displayBool, stats }) {
             <Button
               className="AIInsights"
               onClickEvent={() => {
-                generateAIInsights(game.id);
+                generateAIInsights(game.id, streakData);
                 setShowAIInsights(true);
               }}
               text={"Soccer Stats Hub AI"}
