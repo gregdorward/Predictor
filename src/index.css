@@ -1479,6 +1479,7 @@ strong {
   border: #fe8c00 1px, solid;
   border-radius: 0px;
   margin-right: 0.5em;
+  margin-left: 0.5em;
   font-size: 1.1em;
 }
 
@@ -3496,6 +3497,11 @@ input:active + .design::after {
   color: var(--primary-color);
 }
 
+.GameStats:active {
+  /* background-color: var(--secondary-color); */
+  box-shadow: 0 1px 1px 0 rgba(0.1, 0.1, 0.1, 0.1), 0 1px 1px 0 #626262 inset;
+}
+
 .GameStatsTwo {
   /* margin-top: 0.25em;
   margin-bottom: 0.75em; */
@@ -3519,6 +3525,11 @@ input:active + .design::after {
 
 .GameStatsTwo:hover {
   color: var(--primary-color);
+}
+
+.GameStatsTwo:active {
+  /* background-color: var(--secondary-color); */
+  box-shadow: 0 1px 1px 0 rgba(0.1, 0.1, 0.1, 0.1), 0 1px 1px 0 #626262 inset;
 }
 
 .Last5 {
@@ -3561,6 +3572,7 @@ input:active + .design::after {
  .HomeTeamBadge {
   order: 0;
   border-color: #393d3f;
+
   height: 3vw;
   width: 3vw;
   padding-right: 1em;
@@ -3569,6 +3581,11 @@ input:active + .design::after {
   flex-basis: 1%;
   margin: 0px;
   border: 0px;
+}
+
+.HomeTeamBadge img{
+  background-color: whitesmoke;
+  border-radius: 0.5rem;
 }
 
 .AwayTeamBadge {
