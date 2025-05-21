@@ -1,4 +1,4 @@
-import React, { Fragment } from "react";
+import React, { Fragment, useEffect } from "react";
 import ReactDOM from "react-dom";
 import { Button } from "./components/Button";
 import OddsRadio from "./components/OddsRadio";
@@ -204,13 +204,9 @@ let yesterdayFootyStats;
 let yesterdaySS;
 let lastSaturday;
 let lastSaturdayFootyStats;
-let lastSaturdaySS;
 let historic;
 let historicFootyStats;
 let historicSS;
-let tomorrowsDate;
-let yesterdaysDate;
-let saturdayDate;
 let historicDate;
 let string;
 let dateString;
@@ -231,7 +227,7 @@ async function calculateDate(dateString) {
 (async function fetchLeagueData() {
   let leagueList;
   if (userDetail) {
-    paid = await checkUserPaidStatus(userDetail.uid);
+    paid = checkUserPaidStatus(userDetail.uid);
   } else {
     paid = false;
   }
@@ -289,23 +285,9 @@ async function calculateDate(dateString) {
 })();
 
 export async function getLeagueList() {
-  loggedIn = await getCurrentUser();
   let i = 0;
   date = new Date();
   string = "Today";
-
-  async function incrementDate(num, date) {
-    i = i + num;
-    date.setDate(date.getDate() + num);
-    dateUnformatted = date;
-
-    dateSS = await convertTimestampForSofaScore(date);
-
-    [date, dateFootyStats] = await calculateDate(date);
-    string = dateFootyStats;
-
-    await renderButtons();
-  }
 
   async function decrementDate(num, date) {
     i = i - num;
@@ -335,33 +317,28 @@ export async function getLeagueList() {
     }
   }
 
-  [today, todayFootyStats] = await calculateDate(new Date());
-  let todayRaw = new Date();
-  todayRaw.setDate(todayRaw.getDate());
-  todaysDateUnformatted = todayRaw;
-  tomorrowsDate = new Date();
-  tomorrowsDate.setDate(tomorrowsDate.getDate() + 1);
-  tomorrowsDateUnformatted = tomorrowsDate;
-  [tomorrow, tomorrowFootyStats] = await calculateDate(tomorrowsDate);
-
-  yesterdaysDate = new Date();
-  yesterdaysDate.setDate(yesterdaysDate.getDate() - 1);
-  yesterdaysDateUnformatted = yesterdaysDate;
-  [yesterday, yesterdayFootyStats] = await calculateDate(yesterdaysDate);
-
-  saturdayDate = new Date();
-  saturdayDate.setDate(
-    saturdayDate.getDate() - ((saturdayDate.getDay() + 6) % 7)
-  );
-  saturdayDate.setDate(saturdayDate.getDate() - 2);
-  saturdayDateUnformatted = saturdayDate;
-  [lastSaturday, lastSaturdayFootyStats] = await calculateDate(saturdayDate);
-  historicDate = new Date();
-  historicDate.setDate(
-    historicDate.getDate() - ((historicDate.getDay() + 6) % 7)
-  );
-  historicDate.setDate(historicDate.getDate() - 9);
-  [historic, historicFootyStats] = await calculateDate(historicDate);
+  const todayRaw = new Date();
+  const tomorrowsDate = new Date(todayRaw);
+  tomorrowsDate.setDate(todayRaw.getDate() + 1);
+  
+  const yesterdaysDate = new Date(todayRaw);
+  yesterdaysDate.setDate(todayRaw.getDate() - 1);
+  
+  const saturdayDate = new Date(todayRaw);
+  saturdayDate.setDate(todayRaw.getDate() - ((saturdayDate.getDay() + 6) % 7) - 2);
+  
+  const historicDate = new Date(todayRaw);
+  historicDate.setDate(todayRaw.getDate() - ((historicDate.getDay() + 6) % 7) - 9);
+  
+  // Run calculateDate on all in parallel
+  const [ loggedIn,
+    [today, todayFootyStats],
+    [lastSaturday, lastSaturdayFootyStats],
+  ] = await Promise.all([
+    getCurrentUser(),
+    calculateDate(todayRaw),
+    calculateDate(saturdayDate),
+  ]);
 
   async function convertTimestampForSofaScore(timestamp) {
     let newDate = new Date(timestamp);
@@ -375,11 +352,13 @@ export async function getLeagueList() {
     return converted;
   }
 
-  todaySS = await convertTimestampForSofaScore(new Date());
-  tomorrowSS = await convertTimestampForSofaScore(tomorrowsDate);
-  yesterdaySS = await convertTimestampForSofaScore(yesterdaysDate);
-  lastSaturdaySS = await convertTimestampForSofaScore(saturdayDate);
-  historicSS = await convertTimestampForSofaScore(historicDate);
+  const [
+    todaySS,
+    lastSaturdaySS,
+  ] = await Promise.all([
+    convertTimestampForSofaScore(new Date()),
+    convertTimestampForSofaScore(saturdayDate),
+  ]);
 
   const text =
     "Select a day you would like to retrieve fixtures for from the options above\n A list of games will be returned once the data has loaded\n Once all fixtures have loaded, click on “Get Predictions” to see our forecasted outcomes for every game\n If a game has completed, the predictions is displayed on the right and the actual result on the left\n Each individual fixture is tappable/clickable. By doing so, you can access a range of detailed stats, from comparative charts, granular performance measures to previous meetings.\n All games are subject to the same automated prediction algorithm with the outcome being a score prediction. Factors that determine the tip include the following, amongst others:\n - Goal differentials\n - Expected goal differentials \n - Attack/Defence performance\n - Form trends over time\n - Home/Away records\n - WDL records\n - Points per game \n - A range of other comparative factors\n  –\n";
@@ -591,7 +570,10 @@ let welcomeTextOne = welcomeTextUnsplitOne.split("\n").map((i) => {
 
 function AppContent() {
   const { user, isPaidUser } = useAuth();
-  getLeagueList();
+
+  useEffect(() => {
+    getLeagueList();
+  }, []); // Empty dependency array = run once on mount
 
   return (
     <div className="App">

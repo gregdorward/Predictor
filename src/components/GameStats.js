@@ -29,8 +29,6 @@ import { userDetail } from "../logic/authProvider";
 import { clicked, getPointsFromLastX } from "../logic/getScorePredictions";
 import { arrayOfGames } from "../logic/getFixtures";
 import GenerateFormSummary from "../logic/compareFormTrend";
-
-import { getTeamStats } from "../logic/getTeamStats";
 import { checkUserPaidStatus } from "../logic/hasUserPaid";
 import { getPointAverage } from "../logic/getStats";
 import { allForm } from "../logic/getFixtures";
@@ -41,7 +39,6 @@ import {
   calculateDefensiveStrength,
   calculateMetricStrength,
 } from "../logic/getStats";
-import finalPropsSelectorFactory from "react-redux/es/connect/selectorFactory";
 import { dynamicDate } from "../logic/getFixtures";
 export let userTips;
 let setUserTips;
@@ -81,27 +78,11 @@ function GameStats({ game, displayBool, stats }) {
   const [aiMatchPreview, setAiMatchPreview] = useState(null);
   const [paid, setPaid] = useState(false);
   const [hasCompleteData, setHasCompleteData] = useState(false);
-  //   const [homeForm, setHomeForm] = useState(null);
-  //   const [awayForm, setAwayForm] = useState(null);
+
   let gameStats = allForm.find((match) => match.id === game.id);
   const homeForm = gameStats?.home[2];
   const awayForm = gameStats?.away[2];
 
-  //   const [id, setId] = useState("0");
-  //   const [team1, setTeam1] = useState("N/A");
-  //   const [team2, setTeam2] = useState("N/A");
-  //   const [time, setTime] = useState(1);
-  //   const [timestamp, setTimestamp] = useState(1);
-  //   const [homeGoals, setHomeGoals] = useState("-");
-  //   const [awayGoals, setAwayGoals] = useState("-");
-  //   const [rollingGoalDiffTotalHome, setRollingGoalDiffTotalHome] = useState([]);
-  //   const [rollingGoalDiffTotalAway, setRollingGoalDiffTotalAway] = useState([]);
-  //   const [rollingXGDiffTotalHome, setRollingXGDiffTotalHome] = useState([]);
-  //   const [rollingXGDiffTotalAway, setRollingXGDiffTotalAway] = useState([]);
-
-  // These need to be declared *outside* the `if` block
-  //   const [formDataHome, setFormDataHome] = useState([]);
-  //   const [formDataAway, setFormDataAway] = useState([]);
   const [matchingGame, setMatchingGame] = useState(null); // State for the game
   const [formSummaries, setFormSummary] = useState([]);
   const [id, setId] = useState("0");
@@ -385,10 +366,6 @@ function GameStats({ game, displayBool, stats }) {
   const [divider, setDivider] = useState(0);
   const gameArrayHome = [];
   const gameArrayAway = [];
-  // const allResultsHome = homeForm.allTeamResults.sort((b, a) => b.dateRaw - a.dateRaw);
-  // const homeResults = homeForm.homeResults.sort((b, a) => b.dateRaw - a.dateRaw);
-  // const allResultsAway = awayForm.allTeamResults.sort((b, a) => a.dateRaw - b.dateRaw);
-  // const awayResults = awayForm.awayResults.sort((b, a) => b.dateRaw - a.dateRaw);
 
   function formatValue(val) {
     return typeof val === "number" && val % 1 !== 0
@@ -506,9 +483,6 @@ function GameStats({ game, displayBool, stats }) {
   const resultAwayOnly = matches.fixtures.filter(
     (game) => game.away_name === gameStats.away.teamName
   );
-
-  // let formTextStringHome
-  // let formTextStringAway
 
   resultAway.sort((a, b) => b.date_unix - a.date_unix);
   resultAwayOnly.sort((a, b) => b.date_unix - a.date_unix);
@@ -760,120 +734,6 @@ function GameStats({ game, displayBool, stats }) {
     }
   }
 
-  // goalDiffArrayHome = allResultsHome.map(
-  //   (a) => a.scored - a.conceeded
-  // );
-  // xgDiffArrayHome = allResultsHome.map((a) => a.XG - a.XGAgainst);
-  // console.log(xgDiffArrayHome)
-
-  // goalDiffArrayHomeOnly = homeResults.map(
-  //   (a) => a.scored - a.conceeded
-  // );
-  // xgDiffArrayHomeOnly = homeResults.map((a) => a.XG - a.XGAgainst);
-
-  // rollingGoalDiffTotalHome = goalDiffArrayHome.map(
-  //   (
-  //     (sum) => (value) =>
-  //       (sum += value)
-  //   )(0)
-  // );
-
-  // rollingGoalDiffTotalHomeLast5 = goalDiffArrayHome.slice(0,5).map(
-  //     (
-  //       (sum) => (value) =>
-  //         (sum += value)
-  //     )(0)
-  //   );
-
-  // rollingXGDiffTotalHome = xgDiffArrayHome.slice(0,5).map(
-  //   (
-  //     (sum) => (value) =>
-  //       (sum += value)
-  //   )(0)
-  // );
-
-  // rollingXGDiffTotalHomeLast5 = xgDiffArrayHome.slice(0,5)
-  //   .map(
-  //     (
-  //       (sum) => (value) =>
-  //         (sum += value)
-  //     )(0)
-  //   );
-
-  //   console.log(xgDiffArrayHome)
-  //   console.log(rollingXGDiffTotalHomeLast5)
-
-  // goalDiffArrayAway = allResultsAway.map(
-  //   (a) => a.scored - a.conceeded
-  // );
-
-  // rollingGoalDiffTotalHomeOnly = goalDiffArrayHomeOnly.map(
-  //   (
-  //     (sum) => (value) =>
-  //       (sum += value)
-  //   )(0)
-  // );
-  // rollingXGDiffTotalHomeOnly = xgDiffArrayHomeOnly.map(
-  //   (
-  //     (sum) => (value) =>
-  //       (sum += value)
-  //   )(0)
-  // );
-
-  // xgDiffArrayAway = allResultsAway.map((a) => a.XG - a.XGAgainst);
-
-  // goalDiffArrayAwayOnly = awayResults.map(
-  //   (a) => a.scored - a.conceeded
-  // );
-  // xgDiffArrayAwayOnly = awayResults.map((a) => a.XG - a.XGAgainst);
-
-  // rollingGoalDiffTotalAway = goalDiffArrayAway.map(
-  //   (
-  //     (sum) => (value) =>
-  //       (sum += value)
-  //   )(0)
-  // );
-
-  // console.log(xgDiffArrayAway)
-
-  // rollingGoalDiffTotalAwayLast5 = goalDiffArrayAway
-  //   .slice(0, 5)
-  //   .map(
-  //     (
-  //       (sum) => (value) =>
-  //         (sum += value)
-  //     )(0)
-  //   );
-
-  // rollingXGDiffTotalAway = xgDiffArrayAway.map(
-  //   (
-  //     (sum) => (value) =>
-  //       (sum += value)
-  //   )(0)
-  // );
-
-  // rollingXGDiffTotalAwayLast5 = xgDiffArrayAway
-  //   .slice(0, 5)
-  //   .map(
-  //     (
-  //       (sum) => (value) =>
-  //         (sum += value)
-  //     )(0)
-  //   );
-
-  // rollingGoalDiffTotalAwayOnly = goalDiffArrayAwayOnly.map(
-  //   (
-  //     (sum) => (value) =>
-  //       (sum += value)
-  //   )(0)
-  // );
-  // rollingXGDiffTotalAwayOnly = xgDiffArrayAwayOnly.map(
-  //   (
-  //     (sum) => (value) =>
-  //       (sum += value)
-  //   )(0)
-  // );
-
   async function getGameIdByHomeTeam(games, homeTeamName) {
     const matchingGames = games.filter((game) =>
       game.homeTeam.includes(homeTeamName)
@@ -987,15 +847,6 @@ function GameStats({ game, displayBool, stats }) {
 
   function getReasonDescription(code) {
     return reasonCodeMap[code] || "Unknown";
-  }
-
-  const typeCodeMap = {
-    missing: "red",
-    doubtful: "orange",
-  };
-
-  function getTypeColour(code) {
-    return typeCodeMap[code] || "red";
   }
 
   const positionCodeMap = {
