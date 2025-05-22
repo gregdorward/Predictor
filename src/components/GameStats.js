@@ -65,9 +65,10 @@ function GameStats({ game, displayBool, stats }) {
   const [homeMissingPlayersList, setHomeMissingPlayersList] = useState([]);
   const [awayMissingPlayersList, setAwayMissingPlayersList] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [loadingStreaks, setLoadingStreaks] = useState(true);
-
   const [streakData, setStreakData] = useState([]);
+  const [loadingStreaks, setLoadingStreaks] = useState(true);
+  const [oddsData, setOddsData] = useState(null); // State to hold your odds object
+  const [loadingOdds, setLoadingOdds] = useState(false);
 
   // Save to localStorage whenever userTips changes
   useEffect(() => {
@@ -880,6 +881,48 @@ function GameStats({ game, displayBool, stats }) {
     };
   }
 
+  function mapOddsToStreaks(streaks, odds) {
+    const mappedStreaks = JSON.parse(JSON.stringify(streaks)); // Deep copy to avoid modifying original
+
+    const getOddsValue = (streakName, teamType) => {
+        let oddsCategory;
+        if (teamType === 'home') {
+            oddsCategory = odds.HomeTeam;
+        } else if (teamType === 'away') {
+            oddsCategory = odds.AwayTeam;
+        } else if (teamType === 'both') {
+            oddsCategory = odds.GeneralMatchOdds;
+        } else {
+            oddsCategory = odds.GeneralMatchOdds;
+        }
+
+        const mapping = oddsCategory ? oddsCategory._streakMapping : {};
+        const oddsKey = mapping[streakName];
+
+        if (oddsKey !== undefined && oddsKey !== null) {
+            return oddsCategory[oddsKey];
+        } else if (oddsKey === null) {
+            return undefined; // Explicitly mapped to null, means no odds available
+        }
+        // Fallback: if not in mapping, try direct key match (less reliable for streaks)
+        return oddsCategory ? oddsCategory[streakName] : undefined;
+    };
+
+    for (const category in mappedStreaks) {
+        if (Array.isArray(mappedStreaks[category])) {
+            mappedStreaks[category] = mappedStreaks[category].map(streak => {
+                const oddsValue = getOddsValue(streak.name, streak.team);
+                return {
+                    ...streak,
+                    odds: oddsValue !== undefined ? oddsValue : 'N/A'
+                };
+            });
+        }
+    }
+
+    return mappedStreaks;
+}
+
   useEffect(() => {
     async function fetchMatchingGame() {
       try {
@@ -920,21 +963,19 @@ function GameStats({ game, displayBool, stats }) {
         }
 
         const now = Math.floor(Date.now() / 1000); // current Unix timestamp in seconds
-        const isWithin24Hours =
-          game.date - now <= 86400;
+        const isWithin24Hours = game.date - now <= 86400;
 
         setLoading(true);
         if (
-          
-            // game.leagueID === 12325 ||
-            // game.leagueID === 12451 ||
-            // game.leagueID === 12446 ||
-            // game.leagueID === 12422 ||
-            // game.leagueID === 12529 ||
-            // game.leagueID === 12337 ||
-            // game.leagueID === 12931 ||
-            // game.leagueID === 12622 ||
-            // game.leagueID === 13973) &&
+          // game.leagueID === 12325 ||
+          // game.leagueID === 12451 ||
+          // game.leagueID === 12446 ||
+          // game.leagueID === 12422 ||
+          // game.leagueID === 12529 ||
+          // game.leagueID === 12337 ||
+          // game.leagueID === 12931 ||
+          // game.leagueID === 12622 ||
+          // game.leagueID === 13973) &&
           isWithin24Hours
         ) {
           const lineupDetail = await fetch(
@@ -953,16 +994,143 @@ function GameStats({ game, displayBool, stats }) {
           console.log(homeMissingPlayersList);
         }
 
+
+        let previousGames = await fetch(
+          `${process.env.REACT_APP_EXPRESS_SERVER}match/${game.id}`
+        );
+        let odds;
+        await previousGames.json().then((data) => {
+          console.log(data.data);
+          odds = {
+            HomeTeam: {
+              HomeWin: data.data.odds_ft_1,
+              MostCorners: data.data.odds_corners_1,
+              DoubleChanceHomeOrDraw: data.data.odds_doublechance_1x,
+              DoubleChanceAwayOrDraw: data.data.odds_doublechance_x2,
+              ToWinToNil: data.data.odds_win_to_nil_1,
+              ToScoreFirst: data.data.odds_team_to_score_first_1,
+              CleanSheetYes: data.data.odds_team_a_cs_yes,
+              CleanSheetNo: data.data.odds_team_a_cs_no,
+              "1stHalfResultHomeWinning": data.data.odds_1st_half_result_1,
+              "1stHalfResultAwayWinning": data.data.odds_1st_half_result_2,
+              "Over2.5GoalsInMatch": data.data.odds_ft_over25,
+              "Under2.5GoalsInMatch": data.data.odds_ft_under25,
+              "Over3.5GoalsInMatch": data.data.odds_ft_over35,
+              "Under3.5GoalsInMatch": data.data.odds_ft_under35,
+              "Over10.5CornersInMatch": data.data.odds_corners_over_105,
+              "Under10.5CornersInMatch": data.data.odds_corners_under_105,
+              BTTSInMatchYes: data.data.odds_btts_yes,
+              // --- NEW MAPPING KEYS FOR HOME TEAM ---
+              _streakMapping: {
+                Wins: "HomeWin",
+                "No wins": "DoubleChanceAwayOrDraw", 
+                "No losses": "DoubleChanceHomeOrDraw", 
+                "First to score": "ToScoreFirst",
+                "Without clean sheet": "CleanSheetNo",
+                "First half winner": "1stHalfResultHomeWinning",
+                "First half loser": "1stHalfResultAwayWinning",
+                "No goals conceded": "CleanSheetYes",
+                "More than 2.5 goals": "Over2.5GoalsInMatch",
+                "Less than 2.5 goals": "Under2.5GoalsInMatch",
+                "More than 3.5 goals": "Over3.5GoalsInMatch",
+                "Less than 3.5 goals": "Under3.5GoalsInMatch",
+                "Less than 10.5 corners": "Under10.5CornersInMatch",
+                "More than 10.5 corners": "Over10.5CornersInMatch",
+                "Both teams scoring": "BTTSInMatchYes",
+
+                // Add more specific mappings for home team streaks here
+              },
+            },
+            AwayTeam: {
+              AwayWin: data.data.odds_ft_2,
+              MostCorners: data.data.odds_corners_2,
+              DoubleChanceHomeOrDraw: data.data.odds_doublechance_1x,
+              DoubleChanceAwayOrDraw: data.data.odds_doublechance_x2,
+              ToWinToNil: data.data.odds_win_to_nil_2,
+              ToScoreFirst: data.data.odds_team_to_score_first_2,
+              CleanSheetYes: data.data.odds_team_b_cs_yes,
+              CleanSheetNo: data.data.odds_team_b_cs_no,
+              "1stHalfResultHomeWinning": data.data.odds_1st_half_result_1,
+              "1stHalfResultAwayWinning": data.data.odds_1st_half_result_2,
+              "Over2.5GoalsInMatch": data.data.odds_ft_over25,
+              "Under2.5GoalsInMatch": data.data.odds_ft_under25,
+              "Over3.5GoalsInMatch": data.data.odds_ft_over35,
+              "Under3.5GoalsInMatch": data.data.odds_ft_under35,
+              "Over10.5CornersInMatch": data.data.odds_corners_over_105,
+              "Under10.5CornersInMatch": data.data.odds_corners_under_105,
+              BTTSInMatchYes: data.data.odds_btts_yes,
+
+              // --- NEW MAPPING KEYS FOR AWAY TEAM ---
+              _streakMapping: {
+                Wins: "AwayWin",
+                "No wins": "DoubleChanceHomeOrDraw", 
+                "No losses": "DoubleChanceAwayOrDraw", // Assuming "No losses" for away means DoubleChanceAwayOrDraw
+                "First to score": "ToScoreFirst",
+                "Without clean sheet": "CleanSheetNo",
+                "First half winner": "1stHalfResultAwayWinning",
+                "First half loser": "1stHalfResultHomeWinning",
+                "No goals conceded": "CleanSheetYes",
+                "More than 2.5 goals": "Over2.5GoalsInMatch",
+                "Less than 2.5 goals": "Under2.5GoalsInMatch",
+                "More than 3.5 goals": "Over3.5GoalsInMatch",
+                "Less than 3.5 goals": "Under3.5GoalsInMatch",
+                "Less than 10.5 corners": "Under10.5CornersInMatch",
+                "More than 10.5 corners": "Over10.5CornersInMatch",
+                "Both teams scoring": "BTTSInMatchYes",
+
+                // Add more specific mappings for away team streaks here
+              },
+            },
+            GeneralMatchOdds: {
+              BTTSYes: data.data.odds_btts_yes,
+              BTTSNo: data.data.odds_btts_no,
+              "Over2.5Goals": data.data.odds_ft_over25,
+              "Under2.5Goals": data.data.odds_ft_under25,
+              "Over3.5Goals": data.data.odds_ft_over35,
+              "Under3.5Goals": data.data.odds_ft_under35,
+              "Over10.5Corners": data.data.odds_corners_over_105,
+              "Under10.5Corners": data.data.odds_corners_under_105,
+  
+              // --- NEW MAPPING KEYS FOR GENERAL MATCH ODDS ---
+              _streakMapping: {
+                "Both teams scoring": "BTTSYes",
+                "More than 2.5 goals": "Over2.5Goals",
+                "Less than 2.5 goals": "Under2.5Goals",
+                "Less than 4.5 cards": null, // Explicitly map to null if no odds exist
+                "Less than 10.5 corners": "Under10.5Corners",
+                "More than 10.5 corners": "Over10.5Corners",
+                // For "First to score" when team is "both", you might need to decide
+                // if it maps to a general odds or if it's always team-specific.
+                // Based on your previous example, "First to score" was team-specific.
+                // If it could be "both", you'd need a "FirstToScore" key here.
+              },
+            },
+          };
+  
+          // previousGameStats = data.data.h2h.previous_matches_results
+        });
+
+        setOddsData(odds)
+
+        console.log(matchingGameInfo.id);
         const streaks = await fetch(
           `${process.env.REACT_APP_EXPRESS_SERVER}streaks/${matchingGameInfo.id}`
         );
         setLoadingStreaks(true);
+        setLoadingOdds(true);
 
         const streaksDataRaw = await streaks.json();
-        setStreakData(streaksDataRaw);
-        setLoadingStreaks(false);
+
+        if (streaksDataRaw && odds) {
+          const mappedStreaks = mapOddsToStreaks(streaksDataRaw, odds);
+          setStreakData(mappedStreaks); // Update state with the mapped data
+        }
       } catch (error) {
-        console.error("Error fetching game info:", error);
+        console.error("Error fetching or processing data:", error);
+        // Handle errors (e.g., set error state, show error message)
+      } finally {
+        setLoadingStreaks(false);
+        setLoadingOdds(false);
       }
     }
 
@@ -2044,52 +2212,7 @@ function GameStats({ game, displayBool, stats }) {
           roundType = undefined;
           break;
       }
-
-      // let previousGameStats;
-      let previousGames = await fetch(
-        `${process.env.REACT_APP_EXPRESS_SERVER}match/${gameId}`
-      );
-      let odds;
-      await previousGames.json().then((data) => {
-        console.log(data.data);
-        odds = {
-          HomeTeam: {
-            HomeWin: data.data.odds_ft_1,
-            MostCorners: data.data.odds_corners_1,
-            DoubleChanceHomeOrDraw: data.data.odds_doublechance_1x,
-            ToWinToNil: data.data.odds_win_to_nil_1,
-            ToScoreFirst: data.data.odds_team_to_score_first_1,
-            CleanSheetYes: data.data.odds_team_a_cs_yes,
-            CleanSheetNo: data.data.odds_team_a_cs_no,
-          },
-          AwayTeam: {
-            AwayWin: data.data.odds_ft_2,
-            MostCorners: data.data.odds_corners_2,
-            DoubleChanceAwayOrDraw: data.data.odds_doublechance_x2,
-            ToWinToNil: data.data.odds_win_to_nil_2,
-            ToScoreFirst: data.data.odds_team_to_score_first_2,
-            CleanSheetYes: data.data.odds_team_b_cs_yes,
-            CleanSheetNo: data.data.odds_team_b_cs_no,
-          },
-          GeneralMatchOdds: {
-            BTTSYes: data.data.odds_btts_yes,
-            BTTSNo: data.data.odds_btts_no,
-            "Over2.5Goals": data.data.odds_ft_over25,
-            "Under2.5Goals": data.data.odds_ft_under25,
-            "Over3.5Goals": data.data.odds_ft_over35,
-            "Under3.5Goals": data.data.odds_ft_under35,
-            "Over10.5Corners": data.data.odds_corners_over_105,
-            "Under10.5Corners": data.data.odds_corners_under_105,
-            "1stHalfResultHomeWinning": data.data.odds_1st_half_result_1,
-            "1stHalfResultAwayWinning": data.data.odds_1st_half_result_2,
-          },
-        };
-
-        // previousGameStats = data.data.h2h.previous_matches_results
-      });
-
-      console.log(game);
-      console.log(streak);
+      
       try {
         const AIPayload = {
           competition: game.leagueDesc,
@@ -2100,8 +2223,8 @@ function GameStats({ game, displayBool, stats }) {
           leagueTable: leagueTable,
           seasonProgressPercent: progress,
           venue: game.stadium,
-          odds,
-          teamStreakData: streak,
+          odds: oddsData,
+          teamStreakDataFromAllCompetitions: streak,
           homeTeam: {
             homeTeamName: game.homeTeam,
             homeLeaguePosition: homeForm?.LeaguePosition,
@@ -2309,6 +2432,7 @@ function GameStats({ game, displayBool, stats }) {
   const [selectedTip, setSelectedTip] = useState(null);
 
   console.log(streakData);
+  console.log(oddsData)
 
   const handleTipSelect = (tipType) => {
     setSelectedTip(tipType);
@@ -2347,17 +2471,9 @@ function GameStats({ game, displayBool, stats }) {
             </>
           }
         />
-        {(game.leagueID === 12325 ||
-          game.leagueID === 12451 ||
-          game.leagueID === 12446 ||
-          game.leagueID === 12422 ||
-          game.leagueID === 12529 ||
-          game.leagueID === 12337 ||
-          game.leagueID === 12931 ||
-          game.leagueID === 12327 ||
-          game.leagueID === 13973) &&
-        loading ? (
-          <div>Loading missing players. Data may not be available until 24 hours before kick-off...</div>
+        {loading || (homeMissingPlayersList.length === 0 && awayMissingPlayersList.length === 0) ? (
+          <div>
+          </div>
         ) : !paid ? (
           <Button
             className="MissingPlayersButton Locked"
@@ -2385,8 +2501,8 @@ function GameStats({ game, displayBool, stats }) {
           />
         )}
 
-        {loadingStreaks ? (
-          <div>Loading streak data...</div>
+        {loadingStreaks || streakData.length === 0 ? (
+          <div></div>
         ) : !paid ? (
           <Button
             className="TeamStreaksButton Locked"

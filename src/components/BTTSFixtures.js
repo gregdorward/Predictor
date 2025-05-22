@@ -74,7 +74,6 @@ export default function BTTSFixtures() {
     "Belgium",
   ];
 
-  console.log(games)
 
   // Filter games based on allowed countries
   const filteredGames = games.filter((game) =>

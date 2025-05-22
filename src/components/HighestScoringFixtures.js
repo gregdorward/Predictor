@@ -78,7 +78,6 @@ export default function HighestScoringFixtures() {
   const filteredGames = games.filter((game) =>
     allowedCountries.includes(game.country) && game.progress > 50 && game.avgGoals > 2.5
   ).slice(0,30);
-  console.log(filteredGames)
 
   const headers = ["Fixture", "Date", "Country", "Odds Over 2.5", "Avg Combined Goals"];
 

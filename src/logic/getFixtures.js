@@ -161,7 +161,6 @@ export async function generateTables(a, leagueIdArray, allResults) {
           instances = null;
           groups = false
         }
-        console.log(league.data)
       } else if (currentLeagueId === 12933) {
         groups = true
         instances = [
@@ -169,7 +168,6 @@ export async function generateTables(a, leagueIdArray, allResults) {
           league.data.specific_tables[1],
         ];
       }
-      console.log(instances);
 
       if (groups) {
         console.log("Called")
@@ -319,10 +317,8 @@ export async function renderTable(index, results, id) {
       );
     }
   } else if (groups) {
-    console.log(groups)
-    console.log(bespokeLeagueArray)
+
     const leagueTable = bespokeLeagueArray.filter((table) => table.id === id);
-    console.log(leagueTable)
     const leagueTable1 = leagueTable[0].table;
     const leagueTable2 = leagueTable[1].table;
     const divisionName1 = leagueTable[0].group;
@@ -931,7 +927,6 @@ export async function generateFixtures(
       );
 
       for (const fixture of leagueGames) {
-        console.log(fixture);
         const unixTimestamp = fixture.date_unix;
         const milliseconds = unixTimestamp * 1000;
         const dateObject = new Date(milliseconds);

@@ -113,7 +113,6 @@ export default function LeagueTable(props) {
   const [mediaItems, setMediaItems] = useState([]);
   const date = props.Date; // Ensure this is the correct format
   const id = props.Id;
-  console.log(props.RankingStats);
 
   // Derive the mediaId outside of useEffect to make it stable
   const derivedMediaId = (() => {
@@ -137,7 +136,6 @@ export default function LeagueTable(props) {
             throw new Error(`HTTP error! status: ${response.status}`);
           }
           const data = await response.json();
-          console.log(data);
 
           if (data.media && Array.isArray(data.media)) {
             setMediaItems(
@@ -347,9 +345,6 @@ export default function LeagueTable(props) {
   }
 
   async function sorted(league, value, order) {
-    console.log(league);
-    console.log(value);
-    console.log(order);
 
     let sortedByForm;
     if (order === "desc") {
@@ -358,7 +353,6 @@ export default function LeagueTable(props) {
       sortedByForm = league.sort((a, b) => a[value] - b[value]);
     }
     setIsOff(!toggleState);
-    console.log(sortedByForm);
     return sortedByForm;
   }
 

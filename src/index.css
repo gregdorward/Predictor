@@ -224,6 +224,7 @@
 :root {
   --background-color: #ffffff; /* White */
   --secondary-background-color: whitesmoke; /* White */
+  --third-background-color: rgb(223, 220, 220); /* White */
   --text-color: #020029; /* Dark Blue */
   --button-color: #020029;
   --button-text-color: #ffffff;
@@ -233,12 +234,15 @@
   --accent-color: #030040; /* Light Gray */
   --mid-grey: #030040;
   --disabled-div: #5d5d5d;
+  --span-background: #FFE500;
+  --span-text-colour: #020029;
 }
 
 /* Dark Mode Colors */
 .dark-mode {
   --background-color: #020029; /* Dark Blue */
   --secondary-background-color: #191928; /* White */
+  --third-background-color: #302f2f; /* White */
   --text-color: #ffffff; /* White */
   --button-color: whitesmoke;
   --button-text-color: #020029;
@@ -248,6 +252,9 @@
   --accent-color: whitesmoke; /* Dark Gray */
   --mid-grey: #020029;
   --disabled-div: #525151;
+  --span-background: whitesmoke;
+  --span-text-colour: #020029;
+
 }
 
 body {
@@ -1695,6 +1702,8 @@ strong {
   /* font-size: 2vw; */
   /* flex-basis: 50%; */
   margin: 0em;
+  margin-left: auto;
+  margin-right: auto;
   padding: 0em;
   /* margin: 0.25em; */
   flex-wrap: wrap;
@@ -1708,8 +1717,10 @@ strong {
 }
 
 .Collapsible__contentOuter {
-  width: 90%;
+  /* width: 100%; */
   margin: auto;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 .FilterContainer {
@@ -3681,6 +3692,8 @@ input:active + .design::after {
   font-size: 1.1em;
   background-color: var(--secondary-background-color);
   width: 100%;
+  margin-left: auto;
+  margin-right: auto;
   color: var(--button-color);
 }
 
@@ -4128,6 +4141,8 @@ button.AIInsights button:active {
   font-size: 1.1em;
   background-color: var(--secondary-background-color);
   width: 100%;
+  margin-left: auto;
+  margin-right: auto;
   color: var(--button-color);
 }
 
@@ -4139,64 +4154,124 @@ button.AIInsights button:active {
   font-size: 1.1em;
   background-color: var(--secondary-background-color);
   width: 100%;
+  margin-left: auto;
+  margin-right: auto;
   color: var(--button-color);
 }
-/* .StreakList{
-  display: flex;
-  flex-direction: column;
+
+.StreakCategory {
+  margin-bottom: 2rem;
 }
 
-.StreakList li {
-line-height: 2.5em;
-} */
+.StreakTable {
+  width: 100%;
+  margin-left: auto;
+  margin-right: auto;
+  /* border-collapse: collapse; */
+  /* border-radius: 0.5rem; */
+  overflow: hidden;
+  background-color: var(--secondary-background-color);
+}
 
-.StreakList {
-  list-style: none;
-  /* padding: 1em; */
-  margin: 0;
-  /* background-color: var(--secondary-background-color); */
-  border-radius: 0.5rem;
+.StreakTable thead {
+  background-color: var(--background-color);
+  /* line-height: 4em; */
+  font-size: 1.1em;
+  text-align: left;
+}
 
+.StreakTable th, .StreakTable td {
+  padding: 0.75em 1em;
+  /* font-size: 0.95em; */
+  /* color: var(--text-color); */
+}
+
+.StreakTable thead .TableTeamName {
+  width: 4em; /* ensures some consistency */
+}
+
+.StreakTable td,
+.StreakTable th {
+  vertical-align: middle;
 }
 
 .StreakRow {
-  display: flex;
-  align-items: center;
-  background-color: var(--secondary-background-color);
-  margin: 1em;
-  /* justify-content: space-between; */
+  line-height: 3em;
+  /* border: 1px var(--text-color) solid; */
+  border-radius: 0.5rem;
+}
 
+.StreakRow:nth-child(even) {
+  background-color: var(--background-color);
 }
 
 .StreakTeamIcon {
-  flex: 1;
-  padding: 0.5em;
-  margin-right: 0.25em;
-  margin-left: 0.25em;
-  /* gap: 0.25rem;
-  width: 3rem; */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 4em; /* ensures some consistency */
+  vertical-align: middle;
+  margin: 0%;
+  padding: 1em;
+  min-width: 9em;
 }
 
 .StreakTeamIcon img {
-  height: 2em;
-  width: 2em;
+  height: 3em;
+  width: 3em;
   background-color: whitesmoke;
   border-radius: 0.5rem;
-  /* object-fit: contain; */
-} 
+  padding: 0.25em;
+}
+
+.StreakBothBadges {
+  display: flex;
+  gap: 0.5em;
+  align-items: center;
+  justify-content: center;
+  vertical-align: middle;
+  min-width: 9em;
+  /* padding: 2em;
+  margin: 1em; */
+}
+
+.StreakTable td {
+  vertical-align: middle; /* force center alignment */
+}
 
 .StreakLabel {
-  /* flex-grow: 1; */
-  font-size: 1em;
-  flex: 1;
-
+  font-weight: normal;
 }
 
 .StreakValue {
   font-weight: bold;
-  font-size: 1em;
   text-align: center;
   white-space: nowrap;
-  flex: 1;
+  width: 5em;
 
+}
+
+.StreakValueSpan {
+  background-color: var(--span-background); /* or any color */
+  min-width: 2.5em;
+  color: var(--span-text-colour);
+  padding: 0.25em 0.5em;
+  border-radius: 0.5em;
+  display: inline-block;
+}
+
+.StreakOdds {
+  font-weight: bold;
+  text-align: center;
+  white-space: nowrap;
+  width: 6em;
+}
+
+.StreakOddsSpan {
+  background-color: var(--span-background); /* or any color */
+  min-width: 2.5em;
+  color: var(--span-text-colour);
+  padding: 0.25em 0.5em;
+  border-radius: 0.5em;
+  display: inline-block;
 }

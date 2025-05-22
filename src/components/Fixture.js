@@ -548,7 +548,6 @@ function SubmitTipsButton({ submit }) {
 export function Fixture(props) {
   [count, setCount] = useState(false);
   resultValue = props.result;
-  console.log(props.stats);
   return (
     <Provider store={store}>
       <List

@@ -11,50 +11,45 @@ export const StreakStats = ({ stats, home, away, homeLogo, awayLogo }) => {
     <div className="StreakStats">
       {Object.entries(stats).map(([category, streakList]) => (
         <div className="StreakCategory" key={category}>
-          <h3>{categoryTitleMap[category] || category} Streaks</h3>
-
-          <ul className="StreakList">
-            {streakList.map((stat, index) => (
-              <li key={index} className="StreakRow">
-                <div className="StreakTeamIcon">
-                  {stat.team === "home" && (
-                    <CreateBadge
-                      image={homeLogo}
-                      ClassName="StreakTeamIcon"
-                      alt="Home team badge"
-                      flexShrink={5}
-                    />
-                  )}
-                  {stat.team === "away" && (
-                    <CreateBadge
-                      image={awayLogo}
-                      ClassName="StreakTeamIcon"
-                      alt="Away team badge"
-                    />
-                  )}
-                  {stat.team === "both" && (
-                    <>
-                      <CreateBadge
-                        image={homeLogo}
-                        ClassName="StreakTeamIcon"
-                        alt="Home team badge"
-                        flexShrink={5}
-                      />
-                      <CreateBadge
-                        image={awayLogo}
-                        ClassName="StreakTeamIcon"
-                        alt="Away team badge"
-                      />
-                    </>
-                  )}
-                </div>
-
-                <div className="StreakLabel">{stat.name}</div>
-
-                <div className="StreakValue">{stat.value}</div>
-              </li>
-            ))}
-          </ul>
+          <table className="StreakTable">
+            <thead>
+              <tr>
+                <th className="TableTeamName">Team</th>
+                <th>Streak</th>
+                <th>Games</th>
+                <th>Odds to continue streak</th>
+              </tr>
+            </thead>
+            <tbody>
+              {streakList.map((stat, index) => (
+                <tr key={index} className="StreakRow">
+                  <td className="StreakTeamIcon">
+                    {stat.team === "home" && (
+                      <CreateBadge image={homeLogo} alt="Home team badge" />
+                    )}
+                    {stat.team === "away" && (
+                      <CreateBadge image={awayLogo} alt="Away team badge" />
+                    )}
+                    {stat.team === "both" && (
+                      <div className="StreakBothBadges">
+                        <CreateBadge image={homeLogo} alt="Home team badge" />
+                        <CreateBadge image={awayLogo} alt="Away team badge" />
+                      </div>
+                    )}
+                  </td>
+                  <td className="StreakLabel">{stat.name}</td>
+                  <td className="StreakValue"><span className="StreakValueSpan">{stat.value}</span></td>
+                  <td className="StreakOdds">
+                  <span className="StreakOddsSpan"> {stat.odds !== undefined
+                      ? stat.odds === "N/A"
+                        ? "N/A"
+                        : `${stat.odds}`
+                      : "–"}</span>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
         </div>
       ))}
     </div>
