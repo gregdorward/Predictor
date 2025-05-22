@@ -10,7 +10,7 @@ const formatLabel = (key) =>
 const RankingTable = ({ rankingStats }) => {
   const statKeys = Object.keys(rankingStats);
   const [selectedStat, setSelectedStat] = useState(statKeys[0]);
-
+    console.log(rankingStats)
   const handleChange = (e) => {
     setSelectedStat(e.target.value);
   };
@@ -80,7 +80,7 @@ const RankingTable = ({ rankingStats }) => {
           {data.map(({ team, statistics }, index) => (
             <tr key={team.id}>
               <td>{index + 1}</td>
-              <td>{team.shortName}</td>
+              <td>{team.name}</td>
               <td>{statistics.matches}</td>
               <td>
                 {typeof statistics[selectedStat] === "number"

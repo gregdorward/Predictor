@@ -79,7 +79,7 @@ let userTipList;
 export let formObjectHome;
 export let formObjectAway;
 export let clicked = false;
-let paid;
+export let paid;
 
 export var renderPredictions;
 

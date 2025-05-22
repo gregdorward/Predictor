@@ -60,7 +60,7 @@ const TeamOfTheSeason = (props) => {
 
   return (
     <div className="TeamOfTheSeason">
-      {roundId ? (
+      {derivedRoundId ? (
         <iframe
           width="100%"
           height="523"
@@ -80,9 +80,6 @@ const TeamOfTheSeason = (props) => {
           textAlign: "left",
         }}
       >
-        <a target="_blank" href="https://www.sofascore.com/" rel="noreferrer">
-          Team of the Week provided by SofaScore
-        </a>
       </div>
     </div>
   );

@@ -11,6 +11,7 @@ import Collapsable from "../components/CollapsableElement";
 import TeamOfTheWeek from "../components/TeamOfTheWeek";
 import TeamOfTheSeason from "../components/TeamOfTheSeason";
 import StatTable from "./StatTable";
+import { paid } from "../logic/getScorePredictions";
 
 export var toggleState = false;
 export var setIsOff = false;
@@ -127,7 +128,7 @@ export default function LeagueTable(props) {
 
   useEffect(() => {
     async function fetchMedia() {
-      if (derivedMediaId) {
+      if (derivedMediaId && paid) {
         try {
           const response = await fetch(
             `${process.env.REACT_APP_EXPRESS_SERVER}getMedia/${derivedMediaId}/${date}`
@@ -448,7 +449,7 @@ export default function LeagueTable(props) {
           <div className="ResultsList" id="ResultsList">
             <ul>{leagueResults}</ul>
           </div>
-          {derivedMediaId && <TeamOfTheSeason id={derivedMediaId} />}{" "}
+          {derivedMediaId && paid && <TeamOfTheSeason id={derivedMediaId} />}{" "}
           {/* Conditional render */}
           <div className="LeagueStatisticsHeader">League Statistics</div>
           <div className="LeagueStatistics">
