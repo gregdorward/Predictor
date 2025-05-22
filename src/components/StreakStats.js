@@ -11,6 +11,8 @@ export const StreakStats = ({ stats, home, away, homeLogo, awayLogo }) => {
     <div className="StreakStats">
       {Object.entries(stats).map(([category, streakList]) => (
         <div className="StreakCategory" key={category}>
+          <h3>{categoryTitleMap[category] || category} Streaks</h3>
+
           <table className="StreakTable">
             <thead>
               <tr>
