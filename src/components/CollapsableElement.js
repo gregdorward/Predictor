@@ -1,16 +1,42 @@
 import React from "react";
 import Collapsible from "react-collapsible";
 
-const Collapsable = (props) => {
+const Collapsable = ({
+  buttonText,
+  classNameButton,
+  display,
+  className,
+  classNameFlex,
+  classNameTwo,
+  classNameThree,
+  style,
+  element,
+  elementTwo,
+  isOpen,
+  onTriggerOpening,
+  onTriggerClosing,
+}) => {
   return (
-    <Collapsible transitionTime={300} Key={props.buttonText} trigger={<button className={props.classNameButton} style={{ display: props.display }}>{props.buttonText}</button>} className={props.className? props.className: "Collapsable"}>
-      <div key={`123${props.buttonText}`} className={props.classNameFlex? props.classNameFlex: ""}>
-      <span className={props.classNameTwo? props.classNameTwo: props.buttonText} style={props.style} key={`123${props.buttonText}`}>{props.element}</span>
-      <span className={props.classNameThree? props.classNameTwo: props.buttonText} key={`456${props.buttonText}`}>{props.elementTwo}</span>
+    <Collapsible
+      transitionTime={300}
+      open={isOpen}
+      onOpening={onTriggerOpening}
+      onClosing={onTriggerClosing}
+      trigger={
+        <button className={classNameButton} style={{ display }}>
+          {buttonText}
+        </button>
+      }
+      className={className || "Collapsable"}
+    >
+      <div className={classNameFlex || ""}>
+        <span className={classNameTwo || buttonText} style={style}>
+          {element}
+        </span>
+        <span className={classNameThree || buttonText}>{elementTwo}</span>
       </div>
     </Collapsible>
   );
 };
-
 
 export default Collapsable;

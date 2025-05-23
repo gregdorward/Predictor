@@ -4275,3 +4275,168 @@ button.AIInsights button:active {
   border-radius: 0.5em;
   display: inline-block;
 }
+
+.PlayerStats{
+  display: flex;
+  width: 100%;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.PlayerStatsButton{
+  font-size: 1.1em;
+  background-color: var(--secondary-background-color);
+  width: 100%;
+  margin-left: auto;
+  margin-right: auto;
+  color: var(--button-color);
+}
+
+.HomePlayerStats {
+  flex: 1;
+  margin: 1em;
+}
+
+.AwayPlayerStats {
+  flex: 1;
+  margin: 1em;
+}
+
+.HomePlayerStats .StatLabel {
+  text-align: right;
+  flex: 1;
+}
+
+.AwayPlayerStats .StatLabel {
+  text-align: left;
+  flex: 1;
+}
+
+.SpanHome {
+  margin-left: 1em;
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  width: 2.5em;
+  height: 2.5em;
+  border-radius: 50%;
+  color: white;
+  font-weight: bold;
+  background-color: var(--button-color); /* blue-600 */
+  color: var(--button-text-color); 
+  font-size: 1.1em;
+  font-family: Arial, Helvetica, sans-serif;
+  font-weight: bolder;
+  margin-right: 3em;
+}
+
+.SpanAway {
+  margin-left: 1em;
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  width: 2.5em;
+  height: 2.5em;
+  border-radius: 50%;
+  color: white;
+  font-weight: bold;
+  background-color: var(--button-color); /* blue-600 */
+  color: var(--button-text-color); 
+  font-size: 1.1em;
+  font-family: Arial, Helvetica, sans-serif;
+  font-weight: bolder;
+  margin-left: 3em;
+}
+
+.PlayerToggleButton {
+  width: 100%;
+  /* text-align: left; */
+  padding: 0.75em 1em;
+  margin: 0em;
+  margin-bottom: 1em;
+  /* margin: 1em; */
+  font-size: 1em;
+  background-color: var(--secondary-background-color);
+  color: var(--text-color);
+  border: none;
+  cursor: pointer;
+  border-radius: 0.25rem;
+  /* text-align: center; */
+}
+
+.HomePlayerStats .PlayerToggleButton {
+  text-align: right;
+  padding-right: 2em;
+}
+
+.AwayPlayerStats .PlayerToggleButton {
+  text-align: left;
+  padding-left: 2em;
+}
+
+.ExpandCollapse {
+  background-color: var(--secondary-background-color);
+  color: var(--text-color);
+  font-size: 1em;
+  width: 8em;
+  padding: 0.5em;
+  margin: 0.25em;
+  margin-bottom: 2em;
+}
+
+.PlayerStatsList li{
+  padding-bottom: 1em;
+}
+
+
+.PlayerStatItem {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  margin: 0.5em 0;
+}
+
+.StatLabel {
+  font-size: 1em;
+  margin: 0 0.5em;
+}
+
+.StatBall {
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  width: 2.5em;
+  height: 2.5em;
+  border-radius: 50%;
+  background-color: var(--button-color);
+  color: var(--button-text-color);
+  font-weight: bolder;
+  font-size: 1.1em;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+
+
+/* Adjust positioning */
+.LeftBall {
+  margin-right: 0.75em;
+  margin-top: 0.25em;
+  margin-bottom: 0.25em;
+  /* margin-left: 3vw; */
+
+}
+
+.RightBall {
+  margin-left: 0.75em;
+  margin-top: 0.25em;
+  margin-bottom: 0.25em;
+
+  /* margin-right: 3vw; */
+}
+
+.StatBall.Gold {
+  background-color: gold;
+  color: #020029;
+  font-weight: bold;
+  text-shadow: 0 0 5px goldenrod;
+}

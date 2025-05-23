@@ -618,9 +618,12 @@ export async function generateFixtures(
         );
         await sofaScore.json().then((games) => {
           games.forEach((game) => {
+            console.log(game)
             arrayOfGames.push({
               homeTeam: game.homeTeam,
+              homeId: game.homeId !== undefined ? game.homeId : null,
               awayTeam: game.awayTeam,
+              awayId: game.awayId !== undefined ? game.awayId : null,
               id: game.id,
               time: game.time,
               homeGoals: game.homeScore !== undefined ? game.homeScore : "-",

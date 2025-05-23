@@ -81,6 +81,7 @@ export default function LeagueName({ fixture, mock, showShortlist }) {
       } catch (error) {
         console.error("Error fetching logo URL:", error);
       }
+      fixture.sofaScoreId = value
     }
 
     fetchLogo();

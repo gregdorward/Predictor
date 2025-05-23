@@ -33,6 +33,7 @@ import { checkUserPaidStatus } from "../logic/hasUserPaid";
 import { getPointAverage } from "../logic/getStats";
 import { allForm } from "../logic/getFixtures";
 import MissingPlayersList from "../components/MissingPlayersList";
+import PlayerStatsList from "../components/PlayerStatsList";
 import { StreakStats } from "../components/StreakStats";
 import {
   calculateAttackingStrength,
@@ -40,6 +41,7 @@ import {
   calculateMetricStrength,
 } from "../logic/getStats";
 import { dynamicDate } from "../logic/getFixtures";
+import { rounds } from "./TeamOfTheSeason";
 export let userTips;
 let setUserTips;
 
@@ -69,6 +71,9 @@ function GameStats({ game, displayBool, stats }) {
   const [loadingStreaks, setLoadingStreaks] = useState(true);
   const [oddsData, setOddsData] = useState(null); // State to hold your odds object
   const [loadingOdds, setLoadingOdds] = useState(false);
+  const [homePlayerData, setHomePlayerData] = useState([]);
+  const [awayPlayerData, setAwayPlayerData] = useState([]);
+  const [loadingPlayerData, setLoadingPlayerData] = useState(true);
 
   // Save to localStorage whenever userTips changes
   useEffect(() => {
@@ -885,43 +890,103 @@ function GameStats({ game, displayBool, stats }) {
     const mappedStreaks = JSON.parse(JSON.stringify(streaks)); // Deep copy to avoid modifying original
 
     const getOddsValue = (streakName, teamType) => {
-        let oddsCategory;
-        if (teamType === 'home') {
-            oddsCategory = odds.HomeTeam;
-        } else if (teamType === 'away') {
-            oddsCategory = odds.AwayTeam;
-        } else if (teamType === 'both') {
-            oddsCategory = odds.GeneralMatchOdds;
-        } else {
-            oddsCategory = odds.GeneralMatchOdds;
-        }
+      let oddsCategory;
+      if (teamType === "home") {
+        oddsCategory = odds.HomeTeam;
+      } else if (teamType === "away") {
+        oddsCategory = odds.AwayTeam;
+      } else if (teamType === "both") {
+        oddsCategory = odds.GeneralMatchOdds;
+      } else {
+        oddsCategory = odds.GeneralMatchOdds;
+      }
 
-        const mapping = oddsCategory ? oddsCategory._streakMapping : {};
-        const oddsKey = mapping[streakName];
+      const mapping = oddsCategory ? oddsCategory._streakMapping : {};
+      const oddsKey = mapping[streakName];
 
-        if (oddsKey !== undefined && oddsKey !== null) {
-            return oddsCategory[oddsKey];
-        } else if (oddsKey === null) {
-            return undefined; // Explicitly mapped to null, means no odds available
-        }
-        // Fallback: if not in mapping, try direct key match (less reliable for streaks)
-        return oddsCategory ? oddsCategory[streakName] : undefined;
+      if (oddsKey !== undefined && oddsKey !== null) {
+        return oddsCategory[oddsKey];
+      } else if (oddsKey === null) {
+        return undefined; // Explicitly mapped to null, means no odds available
+      }
+      // Fallback: if not in mapping, try direct key match (less reliable for streaks)
+      return oddsCategory ? oddsCategory[streakName] : undefined;
     };
 
     for (const category in mappedStreaks) {
-        if (Array.isArray(mappedStreaks[category])) {
-            mappedStreaks[category] = mappedStreaks[category].map(streak => {
-                const oddsValue = getOddsValue(streak.name, streak.team);
-                return {
-                    ...streak,
-                    odds: oddsValue !== undefined ? oddsValue : 'N/A'
-                };
-            });
-        }
+      if (Array.isArray(mappedStreaks[category])) {
+        mappedStreaks[category] = mappedStreaks[category].map((streak) => {
+          const oddsValue = getOddsValue(streak.name, streak.team);
+          return {
+            ...streak,
+            odds: oddsValue !== undefined ? oddsValue : "N/A",
+          };
+        });
+      }
     }
 
     return mappedStreaks;
-}
+  }
+
+  const derivedRoundId = (() => {
+    for (const mapping of rounds) {
+      if (mapping.hasOwnProperty(game.sofaScoreId)) {
+        return mapping[game.sofaScoreId];
+      }
+    }
+    console.warn(`No matching media ID found for ID: ${id}`);
+    return null;
+  })();
+
+  function getWeekOfYear(date) {
+    const target = new Date(date.valueOf());
+    const dayNumber = (date.getUTCDay() + 6) % 7;
+    target.setUTCDate(target.getUTCDate() - dayNumber + 3);
+    const firstThursday = new Date(Date.UTC(target.getUTCFullYear(), 0, 4));
+    const diff = target - firstThursday;
+    return 1 + Math.round(diff / (7 * 24 * 60 * 60 * 1000));
+  }
+
+  const today = new Date(); // Or new Date()
+  const week = getWeekOfYear(today);
+
+  function extractRankedPlayersByTeam(topPlayers, teamId) {
+    const result = [];
+
+    if (!topPlayers || typeof topPlayers !== "object") return result;
+
+    // Helper to find or create player entry
+    const getOrCreatePlayer = (players, playerName) => {
+      let playerEntry = players.find((p) => p.playerName === playerName);
+      if (!playerEntry) {
+        playerEntry = { playerName, rankings: [] };
+        players.push(playerEntry);
+      }
+      return playerEntry;
+    };
+
+    for (const [metric, playerArray] of Object.entries(topPlayers)) {
+      if (!Array.isArray(playerArray)) continue;
+
+      playerArray.forEach((playerData, index) => {
+        if (playerData?.team?.id === teamId) {
+          const playerName = playerData.player?.name;
+          if (!playerName) return;
+
+          const playerEntry = getOrCreatePlayer(result, playerName);
+          playerEntry.rankings.push({
+            metric,
+            rank: index + 1, // Rank is 1-based
+          });
+        }
+      });
+    }
+
+    // Sort players by number of rankings (descending)
+    result.sort((a, b) => b.rankings.length - a.rankings.length);
+
+    return result;
+  }
 
   useEffect(() => {
     async function fetchMatchingGame() {
@@ -930,7 +995,6 @@ function GameStats({ game, displayBool, stats }) {
           arrayOfGames,
           game.homeTeam
         );
-        console.log(matchingGameInfo);
         if (!matchingGameInfo) {
           console.log(
             `No match found for homeTeam: ${game.homeTeam}. Trying awayTeam: ${game.awayTeam}`
@@ -989,18 +1053,13 @@ function GameStats({ game, displayBool, stats }) {
           setHomeMissingPlayersList(homeMissingPlayers);
           setAwayMissingPlayersList(awayMissingPlayers);
           setLoading(false);
-
-          console.log(homeMissingPlayersList);
-          console.log(homeMissingPlayersList);
         }
-
 
         let previousGames = await fetch(
           `${process.env.REACT_APP_EXPRESS_SERVER}match/${game.id}`
         );
         let odds;
         await previousGames.json().then((data) => {
-          console.log(data.data);
           odds = {
             HomeTeam: {
               HomeWin: data.data.odds_ft_1,
@@ -1023,8 +1082,8 @@ function GameStats({ game, displayBool, stats }) {
               // --- NEW MAPPING KEYS FOR HOME TEAM ---
               _streakMapping: {
                 Wins: "HomeWin",
-                "No wins": "DoubleChanceAwayOrDraw", 
-                "No losses": "DoubleChanceHomeOrDraw", 
+                "No wins": "DoubleChanceAwayOrDraw",
+                "No losses": "DoubleChanceHomeOrDraw",
                 "First to score": "ToScoreFirst",
                 "Without clean sheet": "CleanSheetNo",
                 "First half winner": "1stHalfResultHomeWinning",
@@ -1063,7 +1122,7 @@ function GameStats({ game, displayBool, stats }) {
               // --- NEW MAPPING KEYS FOR AWAY TEAM ---
               _streakMapping: {
                 Wins: "AwayWin",
-                "No wins": "DoubleChanceHomeOrDraw", 
+                "No wins": "DoubleChanceHomeOrDraw",
                 "No losses": "DoubleChanceAwayOrDraw", // Assuming "No losses" for away means DoubleChanceAwayOrDraw
                 "First to score": "ToScoreFirst",
                 "Without clean sheet": "CleanSheetNo",
@@ -1090,7 +1149,7 @@ function GameStats({ game, displayBool, stats }) {
               "Under3.5Goals": data.data.odds_ft_under35,
               "Over10.5Corners": data.data.odds_corners_over_105,
               "Under10.5Corners": data.data.odds_corners_under_105,
-  
+
               // --- NEW MAPPING KEYS FOR GENERAL MATCH ODDS ---
               _streakMapping: {
                 "Both teams scoring": "BTTSYes",
@@ -1106,18 +1165,18 @@ function GameStats({ game, displayBool, stats }) {
               },
             },
           };
-  
+
           // previousGameStats = data.data.h2h.previous_matches_results
         });
 
-        setOddsData(odds)
+        setOddsData(odds);
 
-        console.log(matchingGameInfo.id);
         const streaks = await fetch(
           `${process.env.REACT_APP_EXPRESS_SERVER}streaks/${matchingGameInfo.id}`
         );
         setLoadingStreaks(true);
         setLoadingOdds(true);
+        setLoadingPlayerData(true);
 
         const streaksDataRaw = await streaks.json();
 
@@ -1125,12 +1184,42 @@ function GameStats({ game, displayBool, stats }) {
           const mappedStreaks = mapOddsToStreaks(streaksDataRaw, odds);
           setStreakData(mappedStreaks); // Update state with the mapped data
         }
+
+        if (derivedRoundId) {
+          try {
+            const leaguePlayerStatsResponse = await fetch(
+              `${process.env.REACT_APP_EXPRESS_SERVER}bestPlayers/${game.sofaScoreId}/${derivedRoundId}/${week}`
+            );
+            const playerStats = await leaguePlayerStatsResponse.json();
+
+            const playersHome = extractRankedPlayersByTeam(
+              playerStats.topPlayers,
+              matchingGameInfo.homeId
+            );
+            const playersAway = extractRankedPlayersByTeam(
+              playerStats.topPlayers,
+              matchingGameInfo.awayId
+            );
+            setHomePlayerData(playersHome);
+            setAwayPlayerData(playersAway);
+
+            // allPlayerStats[`leagueStats${game.sofaScoreId}`] = teamStats;
+            // console.log(`Fetched stats for league ${leagueId}`);
+          } catch (error) {
+            console.error(
+              `Error fetching player stats for league ${game.sofaScoreId}:`,
+              error
+            );
+            // allLeagueStats[`leagueStats${leagueId}`] = { error: error.message }; // Store error if fetch fails
+          }
+        }
       } catch (error) {
         console.error("Error fetching or processing data:", error);
         // Handle errors (e.g., set error state, show error message)
       } finally {
         setLoadingStreaks(false);
         setLoadingOdds(false);
+        setLoadingPlayerData(false);
       }
     }
 
@@ -2212,7 +2301,7 @@ function GameStats({ game, displayBool, stats }) {
           roundType = undefined;
           break;
       }
-      
+
       try {
         const AIPayload = {
           competition: game.leagueDesc,
@@ -2431,9 +2520,6 @@ function GameStats({ game, displayBool, stats }) {
 
   const [selectedTip, setSelectedTip] = useState(null);
 
-  console.log(streakData);
-  console.log(oddsData)
-
   const handleTipSelect = (tipType) => {
     setSelectedTip(tipType);
   };
@@ -2471,9 +2557,10 @@ function GameStats({ game, displayBool, stats }) {
             </>
           }
         />
-        {loading || (homeMissingPlayersList.length === 0 && awayMissingPlayersList.length === 0) ? (
-          <div>
-          </div>
+        {loading ||
+        (homeMissingPlayersList.length === 0 &&
+          awayMissingPlayersList.length === 0) ? (
+          <div></div>
         ) : !paid ? (
           <Button
             className="MissingPlayersButton Locked"
@@ -2525,6 +2612,37 @@ function GameStats({ game, displayBool, stats }) {
               </div>
             }
           />
+        )}
+
+        {loadingPlayerData || homePlayerData.length === 0 ? (
+          <div></div>
+        ) : !paid ? (
+          <Button
+            className="PlayerStatsButton Locked"
+            text={"Key Players (League Rankings by Metric) 🔒"}
+            disabled
+          />
+        ) : (
+          <>
+            <Collapsable
+              buttonText={`Key Players (League Rankings by Metric) \u{2630}`}
+              classNameButton="PlayerStatsButton"
+              element={
+                <div className="PlayerStats">
+                  <PlayerStatsList
+                    playerStats={homePlayerData}
+                    className="HomePlayerStats"
+                    spanClass="SpanHome"
+                  />
+                  <PlayerStatsList
+                    playerStats={awayPlayerData}
+                    className="AwayPlayerStats"
+                    spanClass="SpanAway"
+                  />
+                </div>
+              }
+            />
+          </>
         )}
 
         <div id="AIInsightsContainer" className="AIInsightsContainer">

@@ -1,24 +1,26 @@
 import React, { useState, useEffect } from "react";
+export const rounds = [
+  {
+    17: 61627,
+    18: 61961,
+    24: 61959,
+    25: 61960,
+    35: 63516,
+    8: 61643,
+    7: 61644,
+    23: 63515,
+    242: 70158,
+    34: 61736,
+  },
+];
+
 
 const TeamOfTheSeason = (props) => {
   const [roundId, setRoundId] = useState(null);
   const seasonId = 61627; // Update this dynamically if needed
   const id = props.id
   //WILL NEED TO BE UPDATED NEXT SEASON
-  const rounds = [
-    {
-      17: 61627,
-      18: 61961,
-      24: 61959,
-      25: 61960,
-      35: 63516,
-      8: 61643,
-      7: 61644,
-      23: 63515,
-      242: 70158,
-      34: 61736,
-    },
-  ];
+
   const baseUrl = `https://widgets.sofascore.com/embed/unique-tournament/${id}`;
 
   const derivedRoundId = (() => {
