@@ -2310,7 +2310,7 @@ function GameStats({ game, displayBool, stats }) {
           gameType: roundType,
           // referee: await getRefStats(game.refereeID, game.competition_id),
           leagueTable: leagueTable,
-          seasonProgressPercent: progress,
+          // seasonProgressPercent: progress,
           venue: game.stadium,
           odds: oddsData,
           teamStreakDataFromAllCompetitions: streak,

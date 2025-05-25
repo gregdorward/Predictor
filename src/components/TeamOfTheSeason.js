@@ -99,7 +99,7 @@ const TeamOfTheSeason = (props) => {
       {derivedRoundId ? (
         <iframe
           width="100%"
-          height="523"
+          height="700"
           // style={{ display: 'block', maxWidth: '700px' }}
           src={`${baseUrl}/season/${derivedRoundId}/round/${roundId}/teamOfTheWeek?widgetBackground=Gray&showCompetitionLogo=true&v=2`}
           frameBorder="0"
