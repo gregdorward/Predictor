@@ -146,279 +146,6 @@ export async function calculateMetricStrength(metricName, metricValue) {
   return parseFloat(weightedScore.toFixed(2));
 }
 
-// export async function getDefenceStrength(goalsAgainst) {
-//   let strength;
-//   switch (true) {
-//     case goalsAgainst >= 2.8:
-//       strength = 1;
-//       break;
-//     case goalsAgainst >= 2.5 && goalsAgainst < 2.8:
-//       strength = 2;
-//       break;
-//     case goalsAgainst >= 2.2 && goalsAgainst < 2.5:
-//       strength = 3;
-//       break;
-//     case goalsAgainst >= 1.9 && goalsAgainst < 2.2:
-//       strength = 4;
-//       break;
-//     case goalsAgainst >= 1.6 && goalsAgainst < 1.9:
-//       strength = 5;
-//       break;
-//     case goalsAgainst >= 1.3 && goalsAgainst < 1.6:
-//       strength = 6;
-//       break;
-//     case goalsAgainst >= 1 && goalsAgainst < 1.3:
-//       strength = 7;
-//       break;
-//     case goalsAgainst >= 0.7 && goalsAgainst < 1:
-//       strength = 8;
-//       break;
-//     case goalsAgainst >= 0.4 && goalsAgainst < 0.7:
-//       strength = 9;
-//       break;
-//     case goalsAgainst < 0.4:
-//       strength = 10;
-//       break;
-//     default:
-//       break;
-//   }
-//   return strength;
-// }
-
-// export async function getPossessionStrength(possession) {
-//   let strength;
-//   switch (true) {
-//     case possession >= 68:
-//       strength = 10;
-//       break;
-//     case possession >= 64 && possession < 68:
-//       strength = 9;
-//       break;
-//     case possession >= 60 && possession < 64:
-//       strength = 8;
-//       break;
-//     case possession >= 56 && possession < 60:
-//       strength = 7;
-//       break;
-//     case possession >= 52 && possession < 56:
-//       strength = 6;
-//       break;
-//     case possession >= 48 && possession < 52:
-//       strength = 5;
-//       break;
-//     case possession >= 44 && possession < 48:
-//       strength = 4;
-//       break;
-//     case possession >= 40 && possession < 44:
-//       strength = 3;
-//       break;
-//     case possession >= 35 && possession < 40:
-//       strength = 2;
-//       break;
-//     case possession < 35:
-//       strength = 1;
-//       break;
-//     default:
-//       break;
-//   }
-//   return strength;
-// }
-
-// export async function getShotsStrength(Shots) {
-//   let strength;
-//   switch (true) {
-//     case Shots >= 15:
-//       strength = 10;
-//       break;
-//     case Shots >= 14.25 && Shots < 15:
-//       strength = 9;
-//       break;
-//     case Shots >= 13.5 && Shots < 14.25:
-//       strength = 8;
-//       break;
-//     case Shots >= 12.75 && Shots < 13.5:
-//       strength = 7;
-//       break;
-//     case Shots >= 12 && Shots < 12.75:
-//       strength = 6;
-//       break;
-//     case Shots >= 11.25 && Shots < 12:
-//       strength = 5;
-//       break;
-//     case Shots >= 10.5 && Shots < 11.25:
-//       strength = 4;
-//       break;
-//     case Shots >= 9.75 && Shots < 10.5:
-//       strength = 3;
-//       break;
-//     case Shots >= 9 && Shots < 9.75:
-//       strength = 2;
-//       break;
-//     case Shots < 9:
-//       strength = 1;
-//       break;
-//     default:
-//       break;
-//   }
-//   return strength;
-// }
-
-// export async function getShotsStrengthHorA(Shots) {
-//   let strength;
-//   switch (true) {
-//     case Shots >= 19.5:
-//       strength = 10;
-//       break;
-//     case Shots >= 18 && Shots < 19.5:
-//       strength = 9;
-//       break;
-//     case Shots >= 17 && Shots < 18:
-//       strength = 8;
-//       break;
-//     case Shots >= 15.5 && Shots < 17:
-//       strength = 7;
-//       break;
-//     case Shots >= 14 && Shots < 15.5:
-//       strength = 6;
-//       break;
-//     case Shots >= 12.5 && Shots < 14:
-//       strength = 5;
-//       break;
-//     case Shots >= 11 && Shots < 12.5:
-//       strength = 4;
-//       break;
-//     case Shots >= 9.5 && Shots < 11:
-//       strength = 3;
-//       break;
-//     case Shots >= 8 && Shots < 9.5:
-//       strength = 2;
-//       break;
-//     case Shots < 8:
-//       strength = 1;
-//       break;
-//     default:
-//       break;
-//   }
-//   return strength;
-// }
-
-// export async function getXGForStrength(XG) {
-//   let strength;
-//   switch (true) {
-//     case XG >= 2.9:
-//       strength = 10;
-//       break;
-//     case XG >= 2.6 && XG < 2.9:
-//       strength = 9;
-//       break;
-//     case XG >= 2.3 && XG < 2.6:
-//       strength = 8;
-//       break;
-//     case XG >= 2 && XG < 2.3:
-//       strength = 7;
-//       break;
-//     case XG >= 1.7 && XG < 2:
-//       strength = 6;
-//       break;
-//     case XG >= 1.4 && XG < 1.7:
-//       strength = 5;
-//       break;
-//     case XG >= 1.1 && XG < 1.4:
-//       strength = 4;
-//       break;
-//     case XG >= 0.8 && XG < 1.1:
-//       strength = 3;
-//       break;
-//     case XG >= 0.5 && XG < 0.8:
-//       strength = 2;
-//       break;
-//     case XG < 0.5:
-//       strength = 1;
-//       break;
-//     default:
-//       break;
-//   }
-//   return strength;
-// }
-
-// export async function getXGAgainstStrength(XGAgainst) {
-//   let strength;
-//   switch (true) {
-//     case XGAgainst >= 2.9:
-//       strength = 1;
-//       break;
-//     case XGAgainst >= 2.6 && XGAgainst < 2.9:
-//       strength = 2;
-//       break;
-//     case XGAgainst >= 2.3 && XGAgainst < 2.6:
-//       strength = 3;
-//       break;
-//     case XGAgainst >= 2 && XGAgainst < 2.3:
-//       strength = 4;
-//       break;
-//     case XGAgainst >= 1.7 && XGAgainst < 2:
-//       strength = 5;
-//       break;
-//     case XGAgainst >= 1.4 && XGAgainst < 1.7:
-//       strength = 6;
-//       break;
-//     case XGAgainst >= 1.1 && XGAgainst < 1.4:
-//       strength = 7;
-//       break;
-//     case XGAgainst >= 0.8 && XGAgainst < 1.1:
-//       strength = 8;
-//       break;
-//     case XGAgainst >= 0.5 && XGAgainst < 0.8:
-//       strength = 9;
-//       break;
-//     case XGAgainst < 0.5:
-//       strength = 10;
-//       break;
-//     default:
-//       break;
-//   }
-//   return strength;
-// }
-
-// export async function getXGDifferentialStrength(XGDiff) {
-//   let strength;
-//   switch (true) {
-//     case XGDiff >= 1.5:
-//       strength = 10;
-//       break;
-//     case XGDiff >= 1 && XGDiff < 1.5:
-//       strength = 9;
-//       break;
-//     case XGDiff >= 0.5 && XGDiff < 1:
-//       strength = 8;
-//       break;
-//     case XGDiff >= 0.25 && XGDiff < 0.5:
-//       strength = 7;
-//       break;
-//     case XGDiff > 0 && XGDiff < 0.25:
-//       strength = 6;
-//       break;
-//     case XGDiff <= 0 && XGDiff > -0.25:
-//       strength = 5;
-//       break;
-//     case XGDiff <= -0.25 && XGDiff > -0.5:
-//       strength = 4;
-//       break;
-//     case XGDiff <= -0.5 && XGDiff > -1:
-//       strength = 3;
-//       break;
-//     case XGDiff <= -1 && XGDiff > -1.5:
-//       strength = 2;
-//       break;
-//     case XGDiff <= -1.5:
-//       strength = 1;
-//       break;
-//     default:
-//       console.log("default clause triggered");
-//       break;
-//   }
-//   return strength;
-// }
 
 export async function getXGtoActualDifferentialStrength(XGDiff) {
   let strength;
@@ -460,12 +187,6 @@ export async function getXGtoActualDifferentialStrength(XGDiff) {
   return strength;
 }
 
-let rollingGoalDiffTotalHome = [];
-let rollingGoalDiffTotalAway = [];
-let rollingXGDiffTotalHome = [];
-let rollingXGDiffTotalAway = [];
-let rollingSOTDiffTotalHome = [];
-let rollingSOTDiffTotalAway = [];
 
 export async function createStatsDiv(game, displayBool) {
   if (game.status !== "void") {
@@ -499,27 +220,11 @@ export async function createStatsDiv(game, displayBool) {
       let xgDiffArrayAway;
       let sotDiffArrayHome;
       let sotDiffArrayAway;
-      let latestHomeGoalDiff;
-      let latestAwayGoalDiff;
-
-      var getEMA = (a, r) =>
-        a.reduce(
-          (p, n, i) =>
-            i
-              ? p.concat(
-                  (2 * n) / (r + 1) + (p[p.length - 1] * (r - 1)) / (r + 1)
-                )
-              : p,
-          [a[0]]
-        );
 
       const homeForm = gameStats.home[index];
       const awayForm = gameStats.away[index];
 
       if (displayBool === true) {
-        // let fixtures = await fetch(
-        //   `${process.env.REACT_APP_EXPRESS_SERVER}leagueFixtures/${gameStats.leagueId}`
-        // );
 
         const pos = allLeagueResultsArrayOfObjects
           .map((i) => i.id)
@@ -663,41 +368,6 @@ export async function createStatsDiv(game, displayBool) {
               break;
           }
         }
-
-        goalDiffArrayHome = homeForm.allTeamResults.map(
-          (a) => a.scored - a.conceeded
-        );
-        goalDiffArrayHome = goalDiffArrayHome.reverse();
-        xgDiffArrayHome = homeForm.allTeamResults.map(
-          (a) => a.XG - a.XGAgainst
-        );
-        xgDiffArrayHome = xgDiffArrayHome.reverse();
-
-        sotDiffArrayHome = homeForm.allTeamResults.map(
-          (a) => a.sot - a.sotAgainst
-        );
-        sotDiffArrayHome = sotDiffArrayHome.reverse();
-
-        gameArrayHome.sort((a, b) => b.unixTimestamp - a.unixTimestamp);
-
-        rollingGoalDiffTotalHome = goalDiffArrayHome.map(
-          (
-            (sum) => (value) =>
-              (sum += value)
-          )(0)
-        );
-        rollingXGDiffTotalHome = xgDiffArrayHome.map(
-          (
-            (sum) => (value) =>
-              (sum += value)
-          )(0)
-        );
-        rollingSOTDiffTotalHome = sotDiffArrayHome.map(
-          (
-            (sum) => (value) =>
-              (sum += value)
-          )(0)
-        );
 
         const resultAway = matches.fixtures.filter(
           (game) =>
@@ -854,36 +524,13 @@ export async function createStatsDiv(game, displayBool) {
 
         gameArrayAway.sort((a, b) => b.unixTimestamp - a.unixTimestamp);
 
-        rollingGoalDiffTotalAway = goalDiffArrayAway.map(
-          (
-            (sum) => (value) =>
-              (sum += value)
-          )(0)
-        );
-        rollingXGDiffTotalAway = xgDiffArrayAway.map(
-          (
-            (sum) => (value) =>
-              (sum += value)
-          )(0)
-        );
-        rollingSOTDiffTotalAway = sotDiffArrayAway.map(
-          (
-            (sum) => (value) =>
-              (sum += value)
-          )(0)
-        );
         // });
       }
 
       const bttsArrayHome = Array.from(gameArrayHome, (x) => x.btts);
-      const bttsArrayHomeOnly = Array.from(gameArrayHomeTeamHomeGames, (x) => x.btts);
 
       
       const bttsArrayAway = Array.from(gameArrayAway, (x) => x.btts);
-      const bttsArrayAwayOnly = Array.from(gameArrayAwayTeamAwayGames, (x) => x.btts);
-
-      const resultsArrayHome = Array.from(gameArrayHome, (x) => x.won);
-      const resultsArrayAway = Array.from(gameArrayAway, (x) => x.won);
 
       let homeTeam = gameStats.home.teamName;
       let awayTeam = gameStats.away.teamName;

@@ -227,7 +227,7 @@ async function calculateDate(dateString) {
 (async function fetchLeagueData() {
   let leagueList;
   if (userDetail) {
-    paid = checkUserPaidStatus(userDetail.uid);
+    paid = await checkUserPaidStatus(userDetail.uid);
   } else {
     paid = false;
   }
@@ -288,6 +288,8 @@ export async function getLeagueList() {
   let i = 0;
   date = new Date();
   string = "Today";
+  loggedIn = await getCurrentUser();
+
 
   async function decrementDate(num, date) {
     i = i - num;
@@ -320,22 +322,21 @@ export async function getLeagueList() {
   const todayRaw = new Date();
   const tomorrowsDate = new Date(todayRaw);
   tomorrowsDate.setDate(todayRaw.getDate() + 1);
-  
+
   const yesterdaysDate = new Date(todayRaw);
   yesterdaysDate.setDate(todayRaw.getDate() - 1);
-  
+
   const saturdayDate = new Date(todayRaw);
   saturdayDate.setDate(todayRaw.getDate() - ((saturdayDate.getDay() + 6) % 7) - 2);
-  
+
   const historicDate = new Date(todayRaw);
   historicDate.setDate(todayRaw.getDate() - ((historicDate.getDay() + 6) % 7) - 9);
-  
+
   // Run calculateDate on all in parallel
-  const [ loggedIn,
+  const [
     [today, todayFootyStats],
     [lastSaturday, lastSaturdayFootyStats],
   ] = await Promise.all([
-    getCurrentUser(),
     calculateDate(todayRaw),
     calculateDate(saturdayDate),
   ]);
@@ -571,9 +572,7 @@ let welcomeTextOne = welcomeTextUnsplitOne.split("\n").map((i) => {
 function AppContent() {
   const { user, isPaidUser } = useAuth();
 
-  useEffect(() => {
-    getLeagueList();
-  }, []); // Empty dependency array = run once on mount
+  getLeagueList();
 
   return (
     <div className="App">

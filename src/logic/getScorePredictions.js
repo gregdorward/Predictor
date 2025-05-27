@@ -42,16 +42,11 @@ let numberOfGames = 0;
 let drawPredictions = 0;
 let homePredictions = 0;
 let awayPredictions = 0;
-let drawAIPredictions = 0;
-let homeAIPredictions = 0;
-let awayAIPredictions = 0;
 let allOutcomes = 0;
 let homeOutcomes = 0;
 let awayOutcomes = 0;
 let winAmount = 0;
 let lossAmount = 0;
-let AIwinAmount = 0;
-let AIlossAmount = 0;
 let sumStatDAWin = 0;
 let sumStatDALoss = 0;
 let sumStatPossessionWin = 0;
@@ -72,10 +67,6 @@ let allDrawOutcomes = 0;
 let totalROI = 0;
 let totalInvestment = 0;
 let totalProfit = 0;
-let totalAIROI = 0;
-let totalAIInvestment = 0;
-let totalAIProfit = 0;
-let userTipList;
 export let formObjectHome;
 export let formObjectAway;
 export let clicked = false;
@@ -1139,23 +1130,6 @@ async function getPastLeagueResults(team, game, hOrA, form) {
     // RoundedXGForAway.reverse()
     // RoundedXGAgainstAway.reverse()
 
-    form.XGPrediction = await predictGoalsWithExponentialSmoothing(
-      RoundedXGForV2,
-      RoundedXGAgainstV2,
-      alpha
-    );
-
-    form.XGPredictionHome = await predictGoalsWithExponentialSmoothing(
-      RoundedXGForHomeV2,
-      RoundedXGAgainstHomeV2,
-      beta
-    );
-
-    form.XGPredictionAway = await predictGoalsWithExponentialSmoothing(
-      RoundedXGForAwayV2,
-      RoundedXGAgainstAwayV2,
-      beta
-    );
 
     const teamConceededHomeRollingAverage =
       await predictNextWeightedMovingAverage(
@@ -1325,38 +1299,6 @@ async function predictNextWeightedMovingAverage(numbers, windowSize) {
 //   return Math.min(goals, maxGoals);
 // }
 
-// Function to calculate the weighted average using exponential smoothing
-async function calculateWeightedAverage(arr, alpha) {
-  let weightedSum = 0;
-  let totalWeight = 0;
-
-  for (let i = arr.length - 1; i >= 0; i--) {
-    const weight = Math.pow(1 - alpha, arr.length - 1 - i);
-    weightedSum += arr[i] * weight;
-    totalWeight += weight;
-  }
-
-  return weightedSum / totalWeight;
-}
-
-// Function to predict goals scored and conceded for a team with exponential smoothing
-async function predictGoalsWithExponentialSmoothing(
-  teamGoalsFor,
-  teamGoalsAgainst,
-  alpha
-) {
-  const lambdaFor = await calculateWeightedAverage(teamGoalsFor, alpha);
-  const lambdaAgainst = await calculateWeightedAverage(teamGoalsAgainst, alpha);
-
-  // You can fine-tune these values based on your model and data
-  const predictedGoalsFor = lambdaFor;
-  const predictedGoalsAgainst = lambdaAgainst;
-
-  return {
-    goalsFor: predictedGoalsFor,
-    goalsAgainst: predictedGoalsAgainst,
-  };
-}
 
 async function calculateDifference(num1, num2) {
   return num1 >= num2 ? num1 - num2 : -(num2 - num1);
