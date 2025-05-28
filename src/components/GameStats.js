@@ -2344,7 +2344,7 @@ function GameStats({ game, displayBool, stats }) {
   }
 
   const generateAIInsights = useCallback(
-    async (gameId, streak, oddsData, homeTeamStats, awayTeamStats, homePlayerData, awayPlayerData) => {
+    async (gameId, streak, oddsData, homeTeamStats, awayTeamStats, homePlayerData, awayPlayerData, homeMissingPlayersList, awayMissingPlayersList) => {
       setIsLoading(true);
       const table = await fetchBasicTable(game.leagueID);
       const leagueTable = table.table;
@@ -2396,28 +2396,22 @@ function GameStats({ game, displayBool, stats }) {
           homeTeam: {
             homeTeamName: game.homeTeam,
             homeLeaguePosition: homeForm?.LeaguePosition,
-            // homeTeamResults: homeForm?.allTeamResults,
+            homeTeamResults: homeForm?.allTeamResults,
             performanceStats: homeTeamStats,
-            keyPlayers: homePlayerData,
+            keyPlayers: homePlayerData.slice(0, 5),
+            missingPlayers: homeMissingPlayersList,
             homeAttackingStats: homeForm?.attackingMetrics,
-            homeAttackingStatsLast5: homeForm?.attackingMetricsHomeLast5,
-            homeAttackingStatsHomeOnly: homeForm?.attackingMetricsHomeOnly,
             homeDefensiveStats: homeForm?.defensiveMetrics,
-            homeDefensiveStatsLast5: homeForm?.defensiveMetricsHomeLast5,
-            homeDefensiveStatsHomeOnly: homeForm?.defensiveMetricsHomeOnly,
           },
           awayTeam: {
             awayTeamName: game.awayTeam,
             awayLeaguePosition: awayForm?.LeaguePosition,
-            // awayTeamResults: awayForm?.allTeamResults,
+            awayTeamResults: awayForm?.allTeamResults,
             performanceStats: awayTeamStats,
-            keyPlayers: awayPlayerData,
+            keyPlayers: awayPlayerData.slice(0, 5),
+            missingPlayers: awayMissingPlayersList,
             awayAttackingStats: awayForm?.attackingMetrics,
-            awayAttackingStatsLast5: awayForm?.attackingMetricsAwayLast5,
-            awayAttackingStatsAwayOnly: awayForm?.attackingMetricsAwayOnly,
             awayDefensiveStats: awayForm?.defensiveMetrics,
-            awayDefensiveStatsLast5: awayForm?.defensiveMetricsAwayLast5,
-            awayDefensiveStatsAwayOnly: awayForm?.defensiveMetricsAwayOnly,
           },
         };
         console.log(AIPayload);
@@ -2736,7 +2730,7 @@ function GameStats({ game, displayBool, stats }) {
             <Button
               className="AIInsights"
               onClickEvent={() => {
-                generateAIInsights(game.id, streakData, oddsData, homeTeamStats, awayTeamStats, homePlayerData, awayPlayerData);
+                generateAIInsights(game.id, streakData, oddsData, homeTeamStats, awayTeamStats, homePlayerData, awayPlayerData, homeMissingPlayersList, awayMissingPlayersList);
                 setShowAIInsights(true);
               }}
               text={"Soccer Stats Hub AI"}
