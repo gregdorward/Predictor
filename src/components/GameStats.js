@@ -68,6 +68,9 @@ function GameStats({ game, displayBool, stats }) {
   const [awayMissingPlayersList, setAwayMissingPlayersList] = useState([]);
   const [loading, setLoading] = useState(true);
   const [streakData, setStreakData] = useState([]);
+  const [homeTeamStats, setHomeTeamStats] = useState(null);
+  const [awayTeamStats, setAwayTeamStats] = useState(null);
+  const [loadingTeamStats, setLoadingTeamStats] = useState(true);
   const [loadingStreaks, setLoadingStreaks] = useState(true);
   const [oddsData, setOddsData] = useState(null); // State to hold your odds object
   const [loadingOdds, setLoadingOdds] = useState(false);
@@ -1051,6 +1054,8 @@ function GameStats({ game, displayBool, stats }) {
             await findGameByPartialMatch(arrayOfGames, mappedAway, "awayTeam");
         }
 
+        console.log(matchingGameInfo);
+
         setMatchingGame(matchingGameInfo);
 
         if (!matchingGameInfo) {
@@ -1212,6 +1217,7 @@ function GameStats({ game, displayBool, stats }) {
         setLoadingStreaks(true);
         setLoadingOdds(true);
         setLoadingPlayerData(true);
+        setLoadingTeamStats(true);
 
         const streaksDataRaw = await streaks.json();
 
@@ -1221,22 +1227,50 @@ function GameStats({ game, displayBool, stats }) {
         }
 
         if (derivedRoundId) {
+          // https://sofascore.p.rapidapi.com/teams/get-statistics?teamId=38&tournamentId=17015&seasonId=61648&type=overall
+
+          try {
+            const homeTeamStatsResponse = await fetch(
+              `${process.env.REACT_APP_EXPRESS_SERVER}teamStats/${matchingGameInfo.homeId}/${game.sofaScoreId}/${derivedRoundId}`
+            );
+            const homeTeam = await homeTeamStatsResponse.json();
+            let homeStats = homeTeam.statistics;
+            console.log(homeTeam.statistics)
+
+            const awayTeamStatsResponse = await fetch(
+              `${process.env.REACT_APP_EXPRESS_SERVER}teamStats/${matchingGameInfo.awayId}/${game.sofaScoreId}/${derivedRoundId}`
+            );
+            const awayTeam = await awayTeamStatsResponse.json();
+            let awayStats = awayTeam.statistics;
+
+            setHomeTeamStats(homeStats);
+            setAwayTeamStats(awayStats);
+          } catch (error) {
+            console.error(
+              `Error fetching team stats for league ${game.sofaScoreId}:`,
+              error
+            );
+          }
+
           try {
             const leaguePlayerStatsResponse = await fetch(
               `${process.env.REACT_APP_EXPRESS_SERVER}bestPlayers/${game.sofaScoreId}/${derivedRoundId}/${week}`
             );
             const playerStats = await leaguePlayerStatsResponse.json();
 
-            const playersHome = extractRankedPlayersByTeam(
+            let playersHome = extractRankedPlayersByTeam(
               playerStats.topPlayers,
               matchingGameInfo.homeId
             );
-            const playersAway = extractRankedPlayersByTeam(
+            let playersAway = extractRankedPlayersByTeam(
               playerStats.topPlayers,
               matchingGameInfo.awayId
             );
+
             setHomePlayerData(playersHome);
             setAwayPlayerData(playersAway);
+
+            console.log("Home Player Data:", playersHome);
 
             // allPlayerStats[`leagueStats${game.sofaScoreId}`] = teamStats;
             // console.log(`Fetched stats for league ${leagueId}`);
@@ -1253,6 +1287,7 @@ function GameStats({ game, displayBool, stats }) {
         // Handle errors (e.g., set error state, show error message)
       } finally {
         setLoadingStreaks(false);
+        setLoadingTeamStats(false);
         setLoadingOdds(false);
         setLoadingPlayerData(false);
       }
@@ -1260,6 +1295,12 @@ function GameStats({ game, displayBool, stats }) {
 
     fetchMatchingGame();
   }, [game.homeTeam, game.awayTeam]); // Add game.awayTeam to the dependency array
+
+  useEffect(() => {
+    if (homeTeamStats) {
+      console.log("Home team stats updated:", homeTeamStats);
+    }
+  }, [homeTeamStats]);
 
   useEffect(() => {
     if (matchingGame) {
@@ -2303,7 +2344,7 @@ function GameStats({ game, displayBool, stats }) {
   }
 
   const generateAIInsights = useCallback(
-    async (gameId, streak) => {
+    async (gameId, streak, oddsData, homeTeamStats, awayTeamStats, homePlayerData, awayPlayerData) => {
       setIsLoading(true);
       const table = await fetchBasicTable(game.leagueID);
       const leagueTable = table.table;
@@ -2314,6 +2355,7 @@ function GameStats({ game, displayBool, stats }) {
         `${process.env.REACT_APP_EXPRESS_SERVER}leagueStats/${leagueTable[0].LeagueID}`
       );
       let totalGames;
+      console.log(homePlayerData)
 
       await leagueStatistics.json().then((stats) => {
         statistics = stats.data;
@@ -2336,6 +2378,8 @@ function GameStats({ game, displayBool, stats }) {
           roundType = undefined;
           break;
       }
+      // console.log(homeTeamStats);
+      // console.log(oddsData);
 
       try {
         const AIPayload = {
@@ -2353,8 +2397,8 @@ function GameStats({ game, displayBool, stats }) {
             homeTeamName: game.homeTeam,
             homeLeaguePosition: homeForm?.LeaguePosition,
             // homeTeamResults: homeForm?.allTeamResults,
-            "XG diff all games": homeForm?.longTermXGDiff,
-            "XG diff last 5 games": homeForm?.shortTermXGDiff,
+            performanceStats: homeTeamStats,
+            keyPlayers: homePlayerData,
             homeAttackingStats: homeForm?.attackingMetrics,
             homeAttackingStatsLast5: homeForm?.attackingMetricsHomeLast5,
             homeAttackingStatsHomeOnly: homeForm?.attackingMetricsHomeOnly,
@@ -2366,8 +2410,8 @@ function GameStats({ game, displayBool, stats }) {
             awayTeamName: game.awayTeam,
             awayLeaguePosition: awayForm?.LeaguePosition,
             // awayTeamResults: awayForm?.allTeamResults,
-            "XG diff all games": awayForm?.longTermXGDiff,
-            "XG diff last 5 games": awayForm?.shortTermXGDiff,
+            performanceStats: awayTeamStats,
+            keyPlayers: awayPlayerData,
             awayAttackingStats: awayForm?.attackingMetrics,
             awayAttackingStatsLast5: awayForm?.attackingMetricsAwayLast5,
             awayAttackingStatsAwayOnly: awayForm?.attackingMetricsAwayOnly,
@@ -2377,6 +2421,7 @@ function GameStats({ game, displayBool, stats }) {
           },
         };
         console.log(AIPayload);
+        console.log(gameId)
 
         const response = await fetch(
           `${process.env.REACT_APP_EXPRESS_SERVER}gemini/${gameId}`,
@@ -2416,22 +2461,25 @@ function GameStats({ game, displayBool, stats }) {
   const AIOutput = useMemo(() => {
     if (!aiMatchPreview) return null;
 
-    const formattedText = formatAIPreview(aiMatchPreview.matchPreview1);
-    const formattedText2 = formatAIPreview(aiMatchPreview.matchPreview2);
-
     return (
       <>
         <h2>Preview</h2>
-        <div className="AIMatchPreview">{formattedText}</div>
-        <div className="AIMatchPreview">{formattedText2}</div>
+        {aiMatchPreview.matchPreview?.map((text, index) => (
+          <div key={index} className="AIMatchPreview">
+            {formatAIPreview(text)}
+          </div>
+        ))}
+
         <h2>AI Prediction</h2>
         <div className="AIMatchPreview">
           {aiMatchPreview.prediction}{" "}
           <i>(may not reflect the view of Soccer Stats Hub)</i>
         </div>
+
         <div className="AIMatchPreview">
-          {aiMatchPreview.opinionOnXGTippingPrediction}{" "}
+          {aiMatchPreview.opinionOnXGTippingPrediction}
         </div>
+
         <div className="AIContainer">
           <div className="HomeAIInsights">
             <div>{aiMatchPreview?.homeTeam?.summary}</div>
@@ -2688,7 +2736,7 @@ function GameStats({ game, displayBool, stats }) {
             <Button
               className="AIInsights"
               onClickEvent={() => {
-                generateAIInsights(game.id, streakData);
+                generateAIInsights(game.id, streakData, oddsData, homeTeamStats, awayTeamStats, homePlayerData, awayPlayerData);
                 setShowAIInsights(true);
               }}
               text={"Soccer Stats Hub AI"}
