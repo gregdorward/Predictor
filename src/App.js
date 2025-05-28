@@ -45,48 +45,64 @@ export let paid = false;
 const leagueOrder = [
   // 11084, //Euro 2024
   // 7432, //World Cup 22
-  // 13734, //Nations league 24/25
-  12325, //premier league 22/23
-  12451, //championship 22/23
-  12446, //league 1 22/23
-  12422, //league 2 22/23
-  12622, //National league 22/23
-  12316, //La Liga 22/23
-  12455, //Scottish Prem 22/23
-  12529, //Bundesliga 22/23
-  12530, //Serie A 22/23
-  12337, //French Prem 22/23
-  12931, //Portagul Prem 22/23
-  12322, //Dutch Prem 22/23
+  13734, //Nations league 24/25
+  12321, // Champs league
+  12327, //Europa 25
+  12278, //Europa Conference 25
+  13974, // Copa Libertadores 25
+  13878, // Club World Cup 25
+  // 12325, //premier league 22/23
+  // 12451, //championship 22/23
+  // 12446, //league 1 22/23
+  // 12422, //league 2 22/23
+  12622, //National league 24/25
+  // 12316, //La Liga 22/23
+  // 12455, //Scottish Prem 22/23
+  // 12529, //Bundesliga 22/23
+  // 12530, //Serie A 22/23
+  // 12337, //French Prem 22/23
+  // 12931, //Portagul Prem 22/23
+  // 12322, //Dutch Prem 22/23
   12137, //Belgian Pro League 22/23
   13963, //sweden 24
   12132, //Danish Prem 24/25
   13987, //Norway Prem 23
   12472, //Austrian Prem 22/23
-  12734, //Greek Prem 22/23
+  // 12734, //Greek Prem 22/23
   12641, //turkey
   12120, //Polish prem 22/23
   12326, //Swiss prem 22/23
   12121, //Croatia 24/25
   12336, //Czecjh 24/25
+  14089, // Finland 25
+  12483, // Ulraine 25
+  12138, // Serbia 25
+  12476, // Slovenia 25
+  12944, // Slovakia 25
+
+
   13952, //Irish Prem 23
-  12321, // Champs league
-  12327, //Europa
-  12467, //Spanish secunda 22/23
-  12621, //Italy serie B 22/23
-  12528, //Bundesliga 2 22/23
+  // 12467, //Spanish secunda 22/23
+  // 12621, //Italy serie B 22/23
+  // 12528, //Bundesliga 2 22/23
   // 12623, //German 3rd tier 22/23
-  12338, //French League 2 22/23
-  12456, //Scottish Championship 22/23
-  12474, //Scottish league 1 22/23
-  12453, //Scottish league 2 22/23
-  12827, //Women's prem 23/24
+  // 12338, //French League 2 22/23
+  // 12456, //Scottish Championship 22/23
+  // 12474, //Scottish league 1 22/23
+  // 12453, //Scottish league 2 22/23
+  // 12827, //Women's prem 23/24
   13973, //MLS 25,
+  13967, // USL Championship 25
+  14226, // US Open Cup 25
   14236, //Canada 25
-  14231, //Brazil prem 24
+  14231, //Brazil prem 25
+  14305, // Brazil Serie B 25
   14125, //Argentina prem 23
-  12136, //Mexico prem 23/24
-  12933, //National league North and South 22/23
+  14086, // Columbia 25
+  14116, // Chile 25
+  14626, // Uraguay 25
+  // 12136, //Mexico prem 23/24
+  // 12933, //National league North and South 22/23
   13703, //Australian A league 24/25
   14069, //S Korea 25,
   13960, //Japan 25
@@ -95,6 +111,7 @@ const leagueOrder = [
   10121, // WC Qual SA,
   11426, // WC Qual ConCaf
   12801, // WC Qual Aus,
+  14056, // Womens Euros 25
   // 5874, // Esports eBattle
 
   //Japan
@@ -233,6 +250,7 @@ async function calculateDate(dateString) {
   }
   let now = new Date();
   let dateNow = await calculateDate(now);
+  console.log(dateNow)
   leagueList = await fetch(
     `${process.env.REACT_APP_EXPRESS_SERVER}leagueList/${dateNow[0]}`
   );
@@ -242,6 +260,7 @@ async function calculateDate(dateString) {
     leagueArray = Array.from(leagues.data);
   });
 
+  console.log(leagueArray)
   for (let i = 0; i < leagueArray.length; i++) {
     const league = leagueArray[i];
     const name = leagueArray[i].name;
@@ -308,13 +327,14 @@ export async function getLeagueList() {
   async function incrementDateV2(num, date) {
     i = i + num;
     console.log(i);
-    if (i <= 3) {
+    if (i <= 5) {
       date.setDate(date.getDate() + num);
       dateUnformatted = date;
       dateSS = await convertTimestampForSofaScore(date);
       [date, dateFootyStats] = await calculateDate(date);
       string = dateFootyStats;
       dateString = date;
+      console.log(dateString);
       await renderButtons();
     }
   }

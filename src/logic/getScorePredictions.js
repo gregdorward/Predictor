@@ -1697,18 +1697,22 @@ async function findClosestProperty(obj, number) {
 
 export async function generateGoals(homeForm, awayForm, match) {
   const avgHomeXG = (homeForm.avXGLast5 + awayForm.avXGAgainstLast5) / 2;
-  const avgHomeGoals = (homeForm.avScoredLast5 + awayForm.avConceededLast5) / 2;
+  const avgHomeGoalsLast5 = (homeForm.avScoredLast5 + awayForm.avConceededLast5) / 2;
+    const avgHomeGoals = (homeForm.avgScoredHome + awayForm.teamConceededAvgAwayOnly) / 2;
+
   const avgHomeGoalsLast10 =
     (homeForm.last10Goals + awayForm.last10GoalsConceeded) / 2;
 
-  let homeGoals = (avgHomeGoals + avgHomeXG + avgHomeGoalsLast10) / 3;
+  let homeGoals = (avgHomeGoals + avgHomeXG + avgHomeGoalsLast10 + avgHomeGoalsLast5) / 4;
 
   const avgAwayXG = (awayForm.avXGLast5 + homeForm.avXGAgainstLast5) / 2;
-  const avgAwayGoals = (awayForm.avScoredLast5 + homeForm.avConceededLast5) / 2;
+  const avgAwayGoalsLast5 = (awayForm.avScoredLast5 + homeForm.avConceededLast5) / 2;
+  const avgAwayGoals = (awayForm.avgScoredAway + awayForm.teamConceededAvgHomeOnly) / 2;
+
   const avgAwayGoalsLast10 =
     (awayForm.last10Goals + homeForm.last10GoalsConceeded) / 2;
 
-  let awayGoals = (avgAwayGoals + avgAwayXG + avgAwayGoalsLast10) / 3;
+  let awayGoals = (avgAwayGoals + avgAwayXG + avgAwayGoalsLast10 + avgAwayGoalsLast5) / 4;
 
   let homeExpectedScore =
     homeForm.attackingMetrics["Average Expected Goals"] -
@@ -1813,7 +1817,7 @@ export async function generateGoals(homeForm, awayForm, match) {
     homeAttackVsAwayDefenceComparison * 3 +
     XGRatingHomeComparison * 0 +
     homeAttackVsAwayDefenceComparisonLast5 * 0 +
-    0.2 +
+    0.1 +
     homeAttackVsAwayDefenceComparisonHomeOnly * 0 +
     // weighedPointsComparisonHome * 0.005 +
     oddsComparisonHome * 0;
@@ -1822,7 +1826,7 @@ export async function generateGoals(homeForm, awayForm, match) {
     awayGoals +
     awayAttackVsHomeDefenceComparison * 3 +
     XGRatingAwayComparison * 0 +
-    -Math.abs(0.2) +
+    -Math.abs(0.1) +
     awayAttackVsHomeDefenceComparisonLast5 * 0 +
     awayAttackVsHomeDefenceComparisonAwayOnly * 0 +
     // weighedPointsComparisonAway * 0.005 +

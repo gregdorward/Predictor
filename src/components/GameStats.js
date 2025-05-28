@@ -740,6 +740,22 @@ function GameStats({ game, displayBool, stats }) {
     }
   }
 
+  function getMappedTeamName(name) {
+    const normalize = (str) =>
+      str.toLowerCase().replace(/-/g, " ").trim();
+
+    const customMappings = {
+      "psg": "paris saint germain",
+      "inter milan": "inter",
+      "man utd": "manchester united",
+      "bayern": "bayern munich",
+      // Add more as needed
+    };
+
+    const normalized = normalize(name);
+    return customMappings[normalized] || normalized;
+  }
+
   async function getGameIdByHomeTeam(games, homeTeamName) {
     const matchingGames = games.filter((game) =>
       game.homeTeam.includes(homeTeamName)
@@ -764,15 +780,28 @@ function GameStats({ game, displayBool, stats }) {
 
   async function findGameByPartialMatch(gamesArray, searchText, teamType) {
     try {
-      const normalize = (str) => str.toLowerCase().replace(/-/g, " ").trim();
+      const normalize = (str) =>
+        str.toLowerCase().replace(/-/g, " ").trim();
+
+      const customMappings = {
+        "psg": "paris saint germain",
+        "inter milan": "inter",
+        "man utd": "manchester united",
+        "bayern": "bayern munich",
+        // Add more as needed
+      };
 
       const normalizedSearch = normalize(searchText);
+
+      // Apply custom mapping if present
+      const mappedSearch =
+        customMappings[normalizedSearch] || normalizedSearch;
 
       const matchingGame = gamesArray.find((game) => {
         const teamNameInArray =
           teamType === "homeTeam" ? game.homeTeam : game.awayTeam;
 
-        return normalizedSearch.includes(normalize(teamNameInArray));
+        return mappedSearch.includes(normalize(teamNameInArray));
       });
 
       return matchingGame || null;
@@ -784,6 +813,7 @@ function GameStats({ game, displayBool, stats }) {
       return null;
     }
   }
+
 
   function isBeforeTimestamp(targetTimestamp) {
     const currentTimestamp = Math.floor(Date.now() / 1000); // Get current time in seconds
@@ -991,29 +1021,34 @@ function GameStats({ game, displayBool, stats }) {
   useEffect(() => {
     async function fetchMatchingGame() {
       try {
-        let matchingGameInfo = await getGameIdByHomeTeam(
-          arrayOfGames,
-          game.homeTeam
-        );
+        const mappedHome = getMappedTeamName(game.homeTeam);
+        const mappedAway = getMappedTeamName(game.awayTeam);
+
+        let matchingGameInfo =
+          await getGameIdByHomeTeam(arrayOfGames, mappedHome);
+
         if (!matchingGameInfo) {
           console.log(
-            `No match found for homeTeam: ${game.homeTeam}. Trying awayTeam: ${game.awayTeam}`
+            `No match found for homeTeam: ${mappedHome}. Trying awayTeam: ${mappedAway}`
           );
-          matchingGameInfo = await getGameIdByAwayTeam(
-            arrayOfGames,
-            game.awayTeam
-          );
+          matchingGameInfo =
+            await getGameIdByAwayTeam(arrayOfGames, mappedAway);
         }
 
         if (!matchingGameInfo) {
           console.log(
-            `No exact match found for homeTeam: ${game.homeTeam}. Trying partial match...`
+            `No exact match found. Trying partial match on homeTeam: ${mappedHome}`
           );
-          matchingGameInfo = await findGameByPartialMatch(
-            arrayOfGames,
-            game.homeTeam,
-            "homeTeam"
+          matchingGameInfo =
+            await findGameByPartialMatch(arrayOfGames, mappedHome, "homeTeam");
+        }
+
+        if (!matchingGameInfo) {
+          console.log(
+            `Still no match. Trying partial match on awayTeam: ${mappedAway}`
           );
+          matchingGameInfo =
+            await findGameByPartialMatch(arrayOfGames, mappedAway, "awayTeam");
         }
 
         setMatchingGame(matchingGameInfo);
@@ -1317,19 +1352,19 @@ function GameStats({ game, displayBool, stats }) {
             }
             leaguePosition={
               homeForm.LeaguePosition !== undefined &&
-              homeForm.LeaguePosition !== "undefined"
+                homeForm.LeaguePosition !== "undefined"
                 ? formDataHome[0].leaguePosition
                 : 0
             }
             rawPosition={
               game.homeRawPosition !== undefined &&
-              game.homeRawPosition !== "undefined"
+                game.homeRawPosition !== "undefined"
                 ? game.homeRawPosition
                 : 0
             }
             homeOrAwayLeaguePosition={
               homeForm.homePositionHomeOnly !== undefined &&
-              homeForm.homePositionHomeOnly !== "undefined"
+                homeForm.homePositionHomeOnly !== "undefined"
                 ? homeForm.homePositionHomeOnly
                 : 0
             }
@@ -1404,13 +1439,13 @@ function GameStats({ game, displayBool, stats }) {
             }
             leaguePosition={
               awayForm.LeaguePosition !== undefined &&
-              awayForm.LeaguePosition !== "undefined"
+                awayForm.LeaguePosition !== "undefined"
                 ? formDataAway[0].leaguePosition
                 : 0
             }
             homeOrAwayLeaguePosition={
               awayForm.awayPositionAwayOnly !== undefined &&
-              awayForm.awayPositionAwayOnly !== "undefinedundefined"
+                awayForm.awayPositionAwayOnly !== "undefinedundefined"
                 ? awayForm.awayPositionAwayOnly
                 : 0
             }
@@ -1480,19 +1515,19 @@ function GameStats({ game, displayBool, stats }) {
             }
             leaguePosition={
               homeForm.LeaguePosition !== undefined &&
-              homeForm.LeaguePosition !== "undefined"
+                homeForm.LeaguePosition !== "undefined"
                 ? formDataHome[0].leaguePosition
                 : 0
             }
             rawPosition={
               game.homeRawPosition !== undefined &&
-              game.homeRawPosition !== "undefined"
+                game.homeRawPosition !== "undefined"
                 ? game.homeRawPosition
                 : 0
             }
             homeOrAwayLeaguePosition={
               homeForm.homePositionHomeOnly !== undefined &&
-              homeForm.homePositionHomeOnly !== "undefined"
+                homeForm.homePositionHomeOnly !== "undefined"
                 ? homeForm.homePositionHomeOnly
                 : 0
             }
@@ -1557,13 +1592,13 @@ function GameStats({ game, displayBool, stats }) {
             }
             leaguePosition={
               awayForm.LeaguePosition !== undefined &&
-              awayForm.LeaguePosition !== "undefined"
+                awayForm.LeaguePosition !== "undefined"
                 ? formDataAway[0].leaguePosition
                 : 0
             }
             homeOrAwayLeaguePosition={
               awayForm.awayPositionAwayOnly !== undefined &&
-              awayForm.awayPositionAwayOnly !== "undefinedundefined"
+                awayForm.awayPositionAwayOnly !== "undefinedundefined"
                 ? awayForm.awayPositionAwayOnly
                 : 0
             }
@@ -1623,19 +1658,19 @@ function GameStats({ game, displayBool, stats }) {
             }
             leaguePosition={
               homeForm.homePositionHomeOnly !== undefined &&
-              homeForm.homePositionHomeOnly !== "undefined"
+                homeForm.homePositionHomeOnly !== "undefined"
                 ? formDataHome[0].leaguePosition
                 : 0
             }
             rawPosition={
               game.homeRawPosition !== undefined &&
-              game.homeRawPosition !== "undefined"
+                game.homeRawPosition !== "undefined"
                 ? game.homeRawPosition
                 : 0
             }
             homeOrAwayLeaguePosition={
               homeForm.homePositionHomeOnly !== undefined &&
-              homeForm.homePositionHomeOnly !== "undefined"
+                homeForm.homePositionHomeOnly !== "undefined"
                 ? homeForm.homePositionHomeOnly
                 : 0
             }
@@ -1701,13 +1736,13 @@ function GameStats({ game, displayBool, stats }) {
             }
             leaguePosition={
               awayForm.awayPosition !== undefined &&
-              awayForm.awayPosition !== "undefined"
+                awayForm.awayPosition !== "undefined"
                 ? formDataAway[0].leaguePosition
                 : 0
             }
             homeOrAwayLeaguePosition={
               awayForm.awayPositionAwayOnly !== undefined &&
-              awayForm.awayPositionAwayOnly !== "undefinedundefined"
+                awayForm.awayPositionAwayOnly !== "undefinedundefined"
                 ? awayForm.awayPositionAwayOnly
                 : 0
             }
@@ -1942,7 +1977,7 @@ function GameStats({ game, displayBool, stats }) {
             : gameStats?.home[index]?.XGOverall || 0,
           "Average Goals":
             gameStats?.home[index]?.averageScoredLeague !== undefined &&
-            gameStats?.home[index]?.averageScoredLeague !== null
+              gameStats?.home[index]?.averageScoredLeague !== null
               ? gameStats?.home[index]?.averageScoredLeague
               : gameStats?.home[index]?.ScoredOverall / 10,
         };
@@ -1959,7 +1994,7 @@ function GameStats({ game, displayBool, stats }) {
             : gameStats?.away[index]?.XGOverall || 0,
           "Average Goals":
             gameStats?.away[index]?.averageScoredLeague !== undefined &&
-            gameStats?.away[index]?.averageScoredLeague !== null
+              gameStats?.away[index]?.averageScoredLeague !== null
               ? gameStats?.away[index]?.averageScoredLeague
               : gameStats?.away[index]?.ScoredOverall / 10,
         };
@@ -1974,7 +2009,7 @@ function GameStats({ game, displayBool, stats }) {
             : gameStats?.home[index]?.XGAgainstAvgOverall || 0,
           "Average Goals Against":
             gameStats?.home[index]?.averageConceededLeague !== undefined &&
-            gameStats?.home[index]?.averageConceededLeague !== null
+              gameStats?.home[index]?.averageConceededLeague !== null
               ? gameStats?.home[index]?.averageConceededLeague
               : gameStats?.home[index]?.ConcededOverall / 10,
         };
@@ -1989,7 +2024,7 @@ function GameStats({ game, displayBool, stats }) {
             : gameStats?.away[index]?.XGAgainstAvgOverall || 0,
           "Average Goals Against":
             gameStats?.away[index]?.averageConceededLeague !== undefined &&
-            gameStats?.away[index]?.averageConceededLeague !== null
+              gameStats?.away[index]?.averageConceededLeague !== null
               ? gameStats?.away[index]?.averageConceededLeague
               : gameStats?.away[index]?.ConcededOverall / 10,
         };
@@ -2168,7 +2203,7 @@ function GameStats({ game, displayBool, stats }) {
         setIsLoading(false);
         setHasCompleteData(
           game.completeData === true &&
-            gameStats?.home[index].completeData === true
+          gameStats?.home[index].completeData === true
         );
 
         setFirstRenderDone(true);
@@ -2476,9 +2511,8 @@ function GameStats({ game, displayBool, stats }) {
           style={{
             backgroundColor: selectedTip === "homeTeam" ? "#fe8c00" : "white",
             color: selectedTip === "homeTeam" ? "white" : "#030052",
-            border: `1px solid ${
-              selectedTip === "homeTeam" ? "#fe8c00" : "#030052"
-            }`,
+            border: `1px solid ${selectedTip === "homeTeam" ? "#fe8c00" : "#030052"
+              }`,
           }}
           onClick={() => handleClick("homeTeam", `${game.homeTeam} to win`)}
         >
@@ -2491,9 +2525,8 @@ function GameStats({ game, displayBool, stats }) {
           style={{
             backgroundColor: selectedTip === "draw" ? "#fe8c00" : "white",
             color: selectedTip === "draw" ? "white" : "#030052",
-            border: `1px solid ${
-              selectedTip === "draw" ? "#fe8c00" : "#030052"
-            }`,
+            border: `1px solid ${selectedTip === "draw" ? "#fe8c00" : "#030052"
+              }`,
           }}
           onClick={() => handleClick("draw", "Draw")}
         >
@@ -2506,9 +2539,8 @@ function GameStats({ game, displayBool, stats }) {
           style={{
             backgroundColor: selectedTip === "awayTeam" ? "#fe8c00" : "white",
             color: selectedTip === "awayTeam" ? "white" : "#030052",
-            border: `1px solid ${
-              selectedTip === "awayTeam" ? "#fe8c00" : "#030052"
-            }`,
+            border: `1px solid ${selectedTip === "awayTeam" ? "#fe8c00" : "#030052"
+              }`,
           }}
           onClick={() => handleClick("awayTeam", `${game.awayTeam} to win`)}
         >
@@ -2558,8 +2590,8 @@ function GameStats({ game, displayBool, stats }) {
           }
         />
         {loading ||
-        (homeMissingPlayersList.length === 0 &&
-          awayMissingPlayersList.length === 0) ? (
+          (homeMissingPlayersList.length === 0 &&
+            awayMissingPlayersList.length === 0) ? (
           <div></div>
         ) : !paid ? (
           <Button
@@ -2766,39 +2798,39 @@ function GameStats({ game, displayBool, stats }) {
                   height={
                     Math.max(
                       rollingGoalDiffTotalHome[
-                        rollingGoalDiffTotalHome.length - 1
+                      rollingGoalDiffTotalHome.length - 1
                       ],
                       rollingGoalDiffTotalAway[
-                        rollingGoalDiffTotalAway.length - 1
+                      rollingGoalDiffTotalAway.length - 1
                       ]
                     ) > 2
                       ? Math.max(
-                          rollingGoalDiffTotalHome[
-                            rollingGoalDiffTotalHome.length - 1
-                          ],
-                          rollingGoalDiffTotalAway[
-                            rollingGoalDiffTotalAway.length - 1
-                          ]
-                        )
+                        rollingGoalDiffTotalHome[
+                        rollingGoalDiffTotalHome.length - 1
+                        ],
+                        rollingGoalDiffTotalAway[
+                        rollingGoalDiffTotalAway.length - 1
+                        ]
+                      )
                       : 2
                   }
                   depth={
                     Math.min(
                       rollingGoalDiffTotalHome[
-                        rollingGoalDiffTotalHome.length - 1
+                      rollingGoalDiffTotalHome.length - 1
                       ],
                       rollingGoalDiffTotalAway[
-                        rollingGoalDiffTotalAway.length - 1
+                      rollingGoalDiffTotalAway.length - 1
                       ]
                     ) < -2
                       ? Math.min(
-                          rollingGoalDiffTotalHome[
-                            rollingGoalDiffTotalHome.length - 1
-                          ],
-                          rollingGoalDiffTotalAway[
-                            rollingGoalDiffTotalAway.length - 1
-                          ]
-                        )
+                        rollingGoalDiffTotalHome[
+                        rollingGoalDiffTotalHome.length - 1
+                        ],
+                        rollingGoalDiffTotalAway[
+                        rollingGoalDiffTotalAway.length - 1
+                        ]
+                      )
                       : -2
                   }
                   data1={rollingGoalDiffTotalHome}
@@ -2891,39 +2923,39 @@ function GameStats({ game, displayBool, stats }) {
                   height={
                     Math.max(
                       rollingGoalDiffTotalHomeLast5[
-                        rollingGoalDiffTotalHomeLast5.length - 1
+                      rollingGoalDiffTotalHomeLast5.length - 1
                       ],
                       rollingGoalDiffTotalAwayLast5[
-                        rollingGoalDiffTotalAwayLast5.length - 1
+                      rollingGoalDiffTotalAwayLast5.length - 1
                       ]
                     ) > 2
                       ? Math.max(
-                          rollingGoalDiffTotalHomeLast5[
-                            rollingGoalDiffTotalHomeLast5.length - 1
-                          ],
-                          rollingGoalDiffTotalAwayLast5[
-                            rollingGoalDiffTotalAwayLast5.length - 1
-                          ]
-                        )
+                        rollingGoalDiffTotalHomeLast5[
+                        rollingGoalDiffTotalHomeLast5.length - 1
+                        ],
+                        rollingGoalDiffTotalAwayLast5[
+                        rollingGoalDiffTotalAwayLast5.length - 1
+                        ]
+                      )
                       : 2
                   }
                   depth={
                     Math.min(
                       rollingGoalDiffTotalHomeLast5[
-                        rollingGoalDiffTotalHomeLast5.length - 1
+                      rollingGoalDiffTotalHomeLast5.length - 1
                       ],
                       rollingGoalDiffTotalAwayLast5[
-                        rollingGoalDiffTotalAwayLast5.length - 1
+                      rollingGoalDiffTotalAwayLast5.length - 1
                       ]
                     ) < -2
                       ? Math.min(
-                          rollingGoalDiffTotalHomeLast5[
-                            rollingGoalDiffTotalHomeLast5.length - 1
-                          ],
-                          rollingGoalDiffTotalAwayLast5[
-                            rollingGoalDiffTotalAwayLast5.length - 1
-                          ]
-                        )
+                        rollingGoalDiffTotalHomeLast5[
+                        rollingGoalDiffTotalHomeLast5.length - 1
+                        ],
+                        rollingGoalDiffTotalAwayLast5[
+                        rollingGoalDiffTotalAwayLast5.length - 1
+                        ]
+                      )
                       : -2
                   }
                   data1={rollingGoalDiffTotalHomeLast5}
@@ -3012,39 +3044,39 @@ function GameStats({ game, displayBool, stats }) {
                   height={
                     Math.max(
                       rollingGoalDiffTotalHomeOnly[
-                        rollingGoalDiffTotalHomeOnly.length - 1
+                      rollingGoalDiffTotalHomeOnly.length - 1
                       ],
                       rollingGoalDiffTotalAwayOnly[
-                        rollingGoalDiffTotalAwayOnly.length - 1
+                      rollingGoalDiffTotalAwayOnly.length - 1
                       ]
                     ) > 2
                       ? Math.max(
-                          rollingGoalDiffTotalHomeOnly[
-                            rollingGoalDiffTotalHomeOnly.length - 1
-                          ],
-                          rollingGoalDiffTotalAwayOnly[
-                            rollingGoalDiffTotalAwayOnly.length - 1
-                          ]
-                        )
+                        rollingGoalDiffTotalHomeOnly[
+                        rollingGoalDiffTotalHomeOnly.length - 1
+                        ],
+                        rollingGoalDiffTotalAwayOnly[
+                        rollingGoalDiffTotalAwayOnly.length - 1
+                        ]
+                      )
                       : 2
                   }
                   depth={
                     Math.min(
                       rollingGoalDiffTotalHomeOnly[
-                        rollingGoalDiffTotalHomeOnly.length - 1
+                      rollingGoalDiffTotalHomeOnly.length - 1
                       ],
                       rollingGoalDiffTotalAwayOnly[
-                        rollingGoalDiffTotalAwayOnly.length - 1
+                      rollingGoalDiffTotalAwayOnly.length - 1
                       ]
                     ) < -2
                       ? Math.min(
-                          rollingGoalDiffTotalHomeOnly[
-                            rollingGoalDiffTotalHomeOnly.length - 1
-                          ],
-                          rollingGoalDiffTotalAwayOnly[
-                            rollingGoalDiffTotalAwayOnly.length - 1
-                          ]
-                        )
+                        rollingGoalDiffTotalHomeOnly[
+                        rollingGoalDiffTotalHomeOnly.length - 1
+                        ],
+                        rollingGoalDiffTotalAwayOnly[
+                        rollingGoalDiffTotalAwayOnly.length - 1
+                        ]
+                      )
                       : -2
                   }
                   data1={rollingGoalDiffTotalHomeOnly}

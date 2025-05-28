@@ -1,4 +1,6 @@
 import React, { useState, useEffect } from "react";
+//tournaments/search (Deprecated)
+//Use ID to call tournaments/get-seasons
 export const rounds = [
   {
     17: 61627,
@@ -9,7 +11,9 @@ export const rounds = [
     8: 61643,
     7: 61644,
     23: 63515,
-    242: 70158,
+    242: 70158, // MLS
+    17015: 61648, // Conference League
+    16940: 74657, // Copa Libertadores
     34: 61736, 
     37: 61666, // dutch
     9: 61412, // belgium

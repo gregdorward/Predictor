@@ -84,6 +84,8 @@ export async function generateTables(a, leagueIdArray, allResults) {
     let currentLeagueId = leagueIdArray[i];
     i++;
     leagueInstance = [];
+
+    console.log(currentLeagueId)
     //Skip MLS which has a weird format
     if (
       !league.data.specific_tables[0]?.groups &&
@@ -144,7 +146,9 @@ export async function generateTables(a, leagueIdArray, allResults) {
         Zone: item.zone,
       }));
       basicTableArray.push({ id: currentLeagueId, table: basicElements });
-    } else if (currentLeagueId === 13973 || currentLeagueId === 12933) {
+    } else if (currentLeagueId === 13973 
+      // || currentLeagueId === 12933
+    ) {
       // for (let x = 0; x < league.data.specific_tables[0].groups.length; x++) {
       // for (
       //   let index = 0;
@@ -161,13 +165,14 @@ export async function generateTables(a, leagueIdArray, allResults) {
           instances = null;
           groups = false
         }
-      } else if (currentLeagueId === 12933) {
-        groups = true
-        instances = [
-          league.data.specific_tables[0],
-          league.data.specific_tables[1],
-        ];
-      }
+      } 
+      // else if (currentLeagueId === 12933) {
+      //   groups = true
+      //   instances = [
+      //     league.data.specific_tables[0],
+      //     league.data.specific_tables[1],
+      //   ];
+      // }
 
       if (groups) {
         console.log("Called")
