@@ -13,9 +13,10 @@ const sofaScoreIds = [
   { 12321: 7 }, //Champions League
   { 13734: 10783 }, //Nations league 24/25
   { 13878: 357 }, // Club World Cup 25
+    { 13974: 384 }, // Copa Libertadores 25
+
   // { 12530: 23 }, //Serie A
-  // { 13973: 242 }, //MLS
-  // { 13967: 13363 }, // USL
+
   // { 12337: 34 }, //Ligue 1,
   // { 12455: 36 }, //Scottish Prem
   // { 12931: 44 }, //Portugal
@@ -49,6 +50,8 @@ const sofaScoreIds = [
   // { 12456: 206 }, //Scottish Championship 22/23
   // { 12474: 207 }, //Scottish league 1 22/23
   // { 12453: 209 }, //Scottish league 2 22/23
+    { 13973: 242 }, //MLS
+  { 13967: 13363 }, // USL
   { 14236: 13470 }, //Canada 25
   { 14231: 325 }, //Brazil prem 24
   { 14125: 155 }, //Argentina prem 23

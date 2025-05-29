@@ -382,80 +382,107 @@ function GameStats({ game, displayBool, stats }) {
       : val;
   }
 
-  function getTeamRanksFromTopTeamsWithPartialMatch(
-    topTeamsData,
-    targetTeamName
-  ) {
-    if (!topTeamsData) return;
+  const normalize = (str) =>
+  str
+    .toLowerCase()
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .replace(/\s+/g, "")
+    .replace(/[^a-z]/g, "");
 
-    const teamRanks = {};
-    const topTeams = topTeamsData.topTeams;
+const removeCommonSuffixes = (str) =>
+  str.replace(
+    /\b(fc|bk|sc|afc|cf|ac|cd|sv|ss|united|city|sporting|club|team)\b/g,
+    ""
+  );
 
-    // Define known aliases for ambiguous or shortened names
-    const teamNameAliases = {
-      "inter milan": "inter",
-      "ac milan": "milan",
-      "man city": "manchester city",
-      "man united": "manchester united",
-      psg: "paris saint-germain",
-    };
+const cleanTeamName = (str) => removeCommonSuffixes(normalize(str));
 
-    const targetNameLower = targetTeamName.toLowerCase();
-    const normalizedTargetName =
-      teamNameAliases[targetNameLower] || targetNameLower;
+// Centralized alias map
+const teamNameAliases = {
+  "psg": "paris saint-germain",
+  "inter milan": "inter",
+  "ac milan": "milan",
+  "man utd": "manchester united",
+  "man united": "manchester united",
+  "man city": "manchester city",
+  "bayern": "bayern munich",
+  "montreal impact": "cf montreal",
+  "botafogo": "botafogo",
+};
 
-    for (const statistic in topTeams) {
-      if (!Array.isArray(topTeams[statistic])) continue;
+  // const normalizedTargetName = cleanTeamName(
+  //   teamNameAliases[targetTeamName.toLowerCase()] || targetTeamName
+  // );
 
-      const teamArray = topTeams[statistic];
+  function getTeamRanksFromTopTeamsWithPartialMatch(topTeamsData, targetTeamName) {
+  if (!topTeamsData) return;
 
-      // Step 1: Exact match
-      let targetTeamIndex = teamArray.findIndex(
-        (teamInfo) => teamInfo.team.name.toLowerCase() === normalizedTargetName
-      );
+  const teamRanks = {};
+  const topTeams = topTeamsData.topTeams;
 
-      // Step 2: Safe partial match if exact not found
-      if (targetTeamIndex === -1) {
-        const partialMatches = teamArray.filter((teamInfo) => {
-          const name = teamInfo.team.name.toLowerCase();
-          return (
-            name.includes(normalizedTargetName) ||
-            normalizedTargetName.includes(name)
-          );
-        });
+  const targetNameLower = targetTeamName.toLowerCase();
+  const aliasName = teamNameAliases[targetNameLower] || targetTeamName;
+  const normalizedTarget = cleanTeamName(aliasName);
 
-        if (partialMatches.length === 1) {
-          targetTeamIndex = teamArray.indexOf(partialMatches[0]);
-        } else {
-          console.warn(
-            `Ambiguous or missing match for "${targetTeamName}" — found:`,
-            partialMatches.map((p) => p.team.name)
-          );
-        }
-      }
+  for (const statistic in topTeams) {
+    if (!Array.isArray(topTeams[statistic])) continue;
 
-      // Step 3: Build the teamRanks object
-      if (targetTeamIndex !== -1) {
-        const teamInfo = teamArray[targetTeamIndex];
-        teamRanks[statistic] = {
-          name: teamInfo.team.name,
-          rank: targetTeamIndex + 1,
-          value: formatValue(teamInfo.statistics[statistic]),
-          games: teamInfo.statistics.matches,
-        };
+    const teamArray = topTeams[statistic];
+
+    // Step 1: Exact normalized match
+    let targetTeamIndex = teamArray.findIndex(
+      (teamInfo) => cleanTeamName(teamInfo.team.name) === normalizedTarget
+    );
+
+    let partialMatches = [];
+
+    // Step 2: Safe partial match if exact not found
+    if (targetTeamIndex === -1) {
+      partialMatches = teamArray.filter((teamInfo) => {
+        const normalizedTeamName = cleanTeamName(teamInfo.team.name);
+        return (
+          normalizedTeamName.includes(normalizedTarget) ||
+          normalizedTarget.includes(normalizedTeamName)
+        );
+      });
+
+      if (partialMatches.length === 1) {
+        targetTeamIndex = teamArray.indexOf(partialMatches[0]);
+      } else if (partialMatches.length > 1) {
+        console.warn(
+          `Ambiguous match for "${targetTeamName}" — found:`,
+          partialMatches.map((p) => p.team.name)
+        );
+        targetTeamIndex = teamArray.indexOf(partialMatches[0]); // fallback to first match
       } else {
-        teamRanks[statistic] = {
-          name: null,
-          rank: null,
-          error: "Team not found in this category",
-          value: null,
-          games: null,
-        };
+        console.warn(`No match found for "${targetTeamName}" in statistic: ${statistic}`);
       }
     }
 
-    return teamRanks;
+    // Step 3: Build the teamRanks object
+    if (targetTeamIndex !== -1) {
+      const teamInfo = teamArray[targetTeamIndex];
+      teamRanks[statistic] = {
+        name: teamInfo.team.name,
+        rank: targetTeamIndex + 1,
+        value: formatValue(teamInfo.statistics[statistic]),
+        games: teamInfo.statistics.matches,
+        ambiguous: partialMatches.length > 1,
+      };
+    } else {
+      teamRanks[statistic] = {
+        name: null,
+        rank: null,
+        error: "Team not found in this category",
+        value: null,
+        games: null,
+      };
+    }
   }
+
+  return teamRanks;
+}
 
   const ranksHome = getTeamRanksFromTopTeamsWithPartialMatch(
     stats,
@@ -743,79 +770,54 @@ function GameStats({ game, displayBool, stats }) {
     }
   }
 
-  function getMappedTeamName(name) {
-    const normalize = (str) =>
-      str.toLowerCase().replace(/-/g, " ").trim();
+function getMappedTeamName(name) {
+  const normalized = cleanTeamName(name);
+  const aliasKey = normalize(name);
+  return cleanTeamName(teamNameAliases[aliasKey] || normalized);
+}
 
-    const customMappings = {
-      "psg": "paris saint germain",
-      "inter milan": "inter",
-      "man utd": "manchester united",
-      "bayern": "bayern munich",
-      // Add more as needed
-    };
+async function getGameIdByHomeTeam(games, homeTeamName) {
+  const normalizedSearch = getMappedTeamName(homeTeamName);
 
-    const normalized = normalize(name);
-    return customMappings[normalized] || normalized;
-  }
+  const matchingGames = games.filter((game) =>
+    getMappedTeamName(game.homeTeam).includes(normalizedSearch)
+  );
 
-  async function getGameIdByHomeTeam(games, homeTeamName) {
-    const matchingGames = games.filter((game) =>
-      game.homeTeam.includes(homeTeamName)
-    );
-    if (matchingGames.length > 0) {
-      return matchingGames[0];
-    } else {
-      return null; // or any other value you prefer to return if no match is found
-    }
-  }
+  return matchingGames[0] || null;
+}
 
-  async function getGameIdByAwayTeam(games, awayTeamName) {
-    const matchingGames = games.filter((game) =>
-      game.awayTeam.includes(awayTeamName)
-    );
-    if (matchingGames.length > 0) {
-      return matchingGames[0];
-    } else {
-      return null; // or any other value you prefer to return if no match is found
-    }
-  }
+async function getGameIdByAwayTeam(games, awayTeamName) {
+  const normalizedSearch = getMappedTeamName(awayTeamName);
 
-  async function findGameByPartialMatch(gamesArray, searchText, teamType) {
-    try {
-      const normalize = (str) =>
-        str.toLowerCase().replace(/-/g, " ").trim();
+  const matchingGames = games.filter((game) =>
+    getMappedTeamName(game.awayTeam).includes(normalizedSearch)
+  );
 
-      const customMappings = {
-        "psg": "paris saint germain",
-        "inter milan": "inter",
-        "man utd": "manchester united",
-        "bayern": "bayern munich",
-        // Add more as needed
-      };
+  return matchingGames[0] || null;
+}
 
-      const normalizedSearch = normalize(searchText);
+ async function findGameByPartialMatch(gamesArray, searchText, teamType) {
+  try {
+    const normalizedSearch = getMappedTeamName(searchText);
 
-      // Apply custom mapping if present
-      const mappedSearch =
-        customMappings[normalizedSearch] || normalizedSearch;
-
-      const matchingGame = gamesArray.find((game) => {
-        const teamNameInArray =
-          teamType === "homeTeam" ? game.homeTeam : game.awayTeam;
-
-        return mappedSearch.includes(normalize(teamNameInArray));
-      });
-
-      return matchingGame || null;
-    } catch (error) {
-      console.error(
-        `Error finding game by partial match (array value against search text) on ${teamType}:`,
-        error
+    const matchingGame = gamesArray.find((game) => {
+      const teamNameInArray = teamType === "homeTeam" ? game.homeTeam : game.awayTeam;
+      const normalizedArrayName = getMappedTeamName(teamNameInArray);
+      return (
+        normalizedArrayName.includes(normalizedSearch) ||
+        normalizedSearch.includes(normalizedArrayName)
       );
-      return null;
-    }
+    });
+
+    return matchingGame || null;
+  } catch (error) {
+    console.error(
+      `Error finding game by partial match (array value against search text) on ${teamType}:`,
+      error
+    );
+    return null;
   }
+}
 
 
   function isBeforeTimestamp(targetTimestamp) {
@@ -962,12 +964,16 @@ function GameStats({ game, displayBool, stats }) {
   }
 
   const derivedRoundId = (() => {
+    console.log(rounds)
+    console.log(game.sofaScoreId);
+
     for (const mapping of rounds) {
       if (mapping.hasOwnProperty(game.sofaScoreId)) {
+
         return mapping[game.sofaScoreId];
       }
     }
-    console.warn(`No matching media ID found for ID: ${id}`);
+    console.warn(`No matching ID found for ID: ${id}`);
     return null;
   })();
 
@@ -1054,8 +1060,7 @@ function GameStats({ game, displayBool, stats }) {
             await findGameByPartialMatch(arrayOfGames, mappedAway, "awayTeam");
         }
 
-        console.log(matchingGameInfo);
-
+        console.log(arrayOfGames)
         setMatchingGame(matchingGameInfo);
 
         if (!matchingGameInfo) {

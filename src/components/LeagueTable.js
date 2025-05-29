@@ -105,6 +105,7 @@ export const sofaScoreIds = [
   { 12321: 7 }, //Champions League
   { 13734: 10783 }, //Nations league 24/25
   { 13878: 357 }, // Club World Cup 25
+  { 13974: 384 }, // Copa Libertadores 25
   // { 12530: 23 }, //Serie A
   // { 13973: 242 }, //MLS
   // { 13967: 13363 }, // USL

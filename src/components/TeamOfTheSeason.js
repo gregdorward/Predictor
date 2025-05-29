@@ -13,7 +13,7 @@ export const rounds = [
     23: 63515,
     242: 70158, // MLS
     17015: 61648, // Conference League
-    16940: 74657, // Copa Libertadores
+    384: 70083, // Copa Libertadores
     34: 61736, 
     37: 61666, // dutch
     9: 61412, // belgium
