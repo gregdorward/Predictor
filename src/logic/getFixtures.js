@@ -85,7 +85,6 @@ export async function generateTables(a, leagueIdArray, allResults) {
     i++;
     leagueInstance = [];
 
-    console.log(currentLeagueId)
     //Skip MLS which has a weird format
     if (
       !league.data.specific_tables[0]?.groups &&
@@ -146,7 +145,7 @@ export async function generateTables(a, leagueIdArray, allResults) {
         Zone: item.zone,
       }));
       basicTableArray.push({ id: currentLeagueId, table: basicElements });
-    } else if (currentLeagueId === 13973 
+    } else if (currentLeagueId === 13973
       // || currentLeagueId === 12933
     ) {
       // for (let x = 0; x < league.data.specific_tables[0].groups.length; x++) {
@@ -158,14 +157,14 @@ export async function generateTables(a, leagueIdArray, allResults) {
       let instances;
 
       if (currentLeagueId === 13973) {
-        if(league.data.specific_tables[0].groups){
+        if (league.data.specific_tables[0].groups) {
           instances = league.data.specific_tables[0].groups;
           groups = true
         } else {
           instances = null;
           groups = false
         }
-      } 
+      }
       // else if (currentLeagueId === 12933) {
       //   groups = true
       //   instances = [
@@ -316,7 +315,7 @@ export async function renderTable(index, results, id) {
           Results={mostRecentGames}
           Date={todaysDateString}
           RankingStats={leagueStatsArray[`leagueStats${id}`]}
-          // mostRecentGameweek={mostRecentGameweek}
+        // mostRecentGameweek={mostRecentGameweek}
         />,
         document.getElementById(`leagueName${id}`)
       );
@@ -615,26 +614,54 @@ export async function generateFixtures(
         leagueIdArray,
         allLeagueResultsArrayOfObjects
       );
+
+
+      const isYouthOrReserveTeam = (name) => {
+        const lowered = name.toLowerCase().trim();
+        return (
+          lowered.includes("u17") ||
+          lowered.includes("u18") ||
+          lowered.includes("u19") ||
+          lowered.includes("u20") ||
+          lowered.includes("u21") ||
+          lowered.includes("reserves") ||
+          lowered.includes("reserve") ||
+          lowered.endsWith(" b") ||  // only match "Team B", not "FBK Balkan"
+          lowered.endsWith(" ii")    // match "Team II"
+        );
+      };
       arrayOfGames = [];
 
       try {
         const sofaScore = await fetch(
           `${process.env.REACT_APP_EXPRESS_SERVER}scheduledEvents/${dateSS}`
         );
-        await sofaScore.json().then((games) => {
-          games.forEach((game) => {
-            console.log(game)
-            arrayOfGames.push({
-              homeTeam: game.homeTeam,
-              homeId: game.homeId !== undefined ? game.homeId : null,
-              awayTeam: game.awayTeam,
-              awayId: game.awayId !== undefined ? game.awayId : null,
-              id: game.id,
-              time: game.time,
-              homeGoals: game.homeScore !== undefined ? game.homeScore : "-",
-              awayGoals: game.awayScore !== undefined ? game.awayScore : "-",
-            });
+
+        const games = await sofaScore.json();
+
+        games.forEach((game) => {
+          const homeName = game.homeTeam || "";
+          const awayName = game.awayTeam || "";
+
+          // if(homeName.contains("U17") || awayName.contains("U17")) {
+          // console.log(homeName, awayName);
+          // }
+
+          if (isYouthOrReserveTeam(homeName) || isYouthOrReserveTeam(awayName)) {
+            return;
+          }
+
+          arrayOfGames.push({
+            homeTeam: game.homeTeam,
+            homeId: game.homeId !== undefined ? game.homeId : null,
+            awayTeam: game.awayTeam,
+            awayId: game.awayId !== undefined ? game.awayId : null,
+            id: game.id,
+            time: game.time,
+            homeGoals: game.homeScore !== undefined ? game.homeScore : "-",
+            awayGoals: game.awayScore !== undefined ? game.awayScore : "-",
           });
+          // console.log(arrayOfGames)
         });
       } catch (error) {
         console.error(
@@ -844,6 +871,19 @@ export async function generateFixtures(
       return teamPositionPrefix;
     }
 
+    // Helper to get leagueInstance length
+    function getLeagueInstanceLength(data) {
+      if (data.league_table !== null) {
+        return data.league_table.length;
+      }
+      return data.all_matches_table_overall.length;
+    }
+
+    // Sort leagueArray based on leagueInstance length (ascending)
+    leagueArray.sort((a, b) => {
+      return getLeagueInstanceLength(a.data) - getLeagueInstanceLength(b.data);
+    });
+
     for (let i = 0; i < leagueArray.length; i++) {
       let leagueInstance;
       let homeLeague;
@@ -997,6 +1037,8 @@ export async function generateFixtures(
           homeTeaminLeague = leaguePositions.find(
             (team) => team.name === match.homeTeam
           );
+
+          // console.log(leaguePositions)
 
           let homeTeaminHomeLeague = leaguePositions.find(
             (team) => team.homeFormName === match.homeTeam

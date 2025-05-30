@@ -1,4 +1,5 @@
 import React, { Fragment } from "react";
+import { CreateBadge } from "./createBadge";
 
 function Stats(props) {
   let shouldOpen = props.clicked;
@@ -29,7 +30,7 @@ function Stats(props) {
     return (
       <Fragment>
         <ul className={props.className ? props.className : ""} style={props.style ? props.style : {}}>
-          <h6 className="TeamNameHeader">{props.homeOrAway} Team</h6>
+          <CreateBadge image={props.badge} alt="Team badge" ClassName={"ColumnBadge"} />
           <li className="FormHeader">League results (most recent on right)</li>
           <li key={`last5League`} className="last5League">
             <span className={styleForm(props.Results && props.Results[5] ? props.Results[5] : "")}>
@@ -142,9 +143,8 @@ function Stats(props) {
               className="TeamXGSwing"
               data-cy={props.name ? props.name + "teamXGSwing" : "teamXGSwing"}
             >
-              {`XG difference swing (last 5): ${
-                props.XGSwing !== undefined ? props.XGSwing.toFixed(2) : "N/A"
-              }`}
+              {`XG difference swing (last 5): ${props.XGSwing !== undefined ? props.XGSwing.toFixed(2) : "N/A"
+                }`}
             </li>
             <li
               key="goalDifference"
@@ -159,9 +159,8 @@ function Stats(props) {
               className="goalDifferenceHorA"
               data-cy={props.name ? props.name + "goalDifference" : "goalDifference"}
             >
-              {`Goal difference ${props.homeOrAway ? props.homeOrAway : "N/A"} : ${
-                props.goalDifferenceHomeOrAway !== undefined ? props.goalDifferenceHomeOrAway : "N/A"
-              }`}
+              {`Goal difference ${props.homeOrAway ? props.homeOrAway : "N/A"} : ${props.goalDifferenceHomeOrAway !== undefined ? props.goalDifferenceHomeOrAway : "N/A"
+                }`}
             </li>
             <li
               key="AverageShots"
@@ -189,9 +188,8 @@ function Stats(props) {
               className="LeaguePosition"
               data-cy={props.name ? props.name + "leaguePosition" : "leaguePosition"}
             >
-              {`League position - ${
-                props.leaguePosition !== undefined ? props.leaguePosition : "N/A"
-              }`}
+              {`League position - ${props.leaguePosition !== undefined ? props.leaguePosition : "N/A"
+                }`}
             </li>
             <li
               key="WinPercentage"
@@ -247,8 +245,9 @@ function Stats(props) {
     return (
       <Fragment>
         <ul className={props.className ? props.className : ""} style={props.style ? props.style : {}}>
-        <h6 className="TeamNameHeader">{props.homeOrAway} Team</h6>
-        <li className="FormHeader">League results (most recent on right)</li>
+          <CreateBadge image={props.badge} alt="Team badge" ClassName={"ColumnBadge"} />
+
+          <li className="FormHeader">League results (most recent on right)</li>
           <li key={`last5${props.homeOrAwayResults ? props.homeOrAwayResults : "default"}`} className="FormHomeOrAway">
             <span className={styleForm(props.ResultsHorA && props.ResultsHorA[5] ? props.ResultsHorA[5] : "")}>
               {props.ResultsHorA && props.ResultsHorA[5] ? props.ResultsHorA[5] : ""}
@@ -270,9 +269,9 @@ function Stats(props) {
             </span>
           </li>
           <div className="AllStats">
-          <div className="FormSummaries">
-            <li className="StyleOfPlay">{`${props.homeOrAway ? props.homeOrAway : "N/A"} style - ${props.StyleOfPlayHomeOrAway ? props.StyleOfPlayHomeOrAway : "N/A"}`}</li>
-          </div>
+            <div className="FormSummaries">
+              <li className="StyleOfPlay">{`${props.homeOrAway ? props.homeOrAway : "N/A"} style - ${props.StyleOfPlayHomeOrAway ? props.StyleOfPlayHomeOrAway : "N/A"}`}</li>
+            </div>
             <li
               key="TeamScored"
               className="TeamScored"
@@ -309,9 +308,8 @@ function Stats(props) {
               className="goalDifferenceHorA"
               data-cy={props.name ? props.name + "goalDifference" : "goalDifference"}
             >
-              {`Goal difference ${props.homeOrAway ? props.homeOrAway : "N/A"} : ${
-                props.goalDifferenceHomeOrAway !== undefined ? props.goalDifferenceHomeOrAway : "N/A"
-              }`}
+              {`Goal difference ${props.homeOrAway ? props.homeOrAway : "N/A"} : ${props.goalDifferenceHomeOrAway !== undefined ? props.goalDifferenceHomeOrAway : "N/A"
+                }`}
             </li>
             <li
               key="AverageShots"
@@ -357,7 +355,7 @@ function Stats(props) {
     return (
       <Fragment>
         <ul className={props.className ? props.className : ""} style={props.style ? props.style : {}}>
-        <h6 className="TeamNameHeader">{props.homeOrAway} Team</h6>
+          <CreateBadge image={props.badge} alt="Team badge" ClassName={"ColumnBadge"} />
           <li className="FormHeader">
             Last 5 games (All)
           </li>

@@ -383,106 +383,112 @@ function GameStats({ game, displayBool, stats }) {
   }
 
   const normalize = (str) =>
-  str
-    .toLowerCase()
-    .normalize("NFD")
-    .replace(/[\u0300-\u036f]/g, "")
-    .replace(/\s+/g, "")
-    .replace(/[^a-z]/g, "");
+    str
+      .toLowerCase()
+      .normalize("NFD")
+      .replace(/[\u0300-\u036f]/g, "")
+      .replace(/\s+/g, "")
+      .replace(/[^a-z]/g, "");
 
-const removeCommonSuffixes = (str) =>
-  str.replace(
-    /\b(fc|bk|sc|afc|cf|ac|cd|sv|ss|united|city|sporting|club|team)\b/g,
-    ""
-  );
+  const removeCommonSuffixes = (str) =>
+    str.replace(
+      /\b(fc|bk|sc|afc|cf|ac|cd|sv|ss|united|city|sporting|club|team|U 20| U 19)\b/g,
+      ""
+    );
 
-const cleanTeamName = (str) => removeCommonSuffixes(normalize(str));
+  const cleanTeamName = (str) => removeCommonSuffixes(normalize(str));
 
-// Centralized alias map
-const teamNameAliases = {
-  "psg": "paris saint-germain",
-  "inter milan": "inter",
-  "ac milan": "milan",
-  "man utd": "manchester united",
-  "man united": "manchester united",
-  "man city": "manchester city",
-  "bayern": "bayern munich",
-  "montreal impact": "cf montreal",
-  "botafogo": "botafogo",
-};
+  // Centralized alias map
+  const teamNameAliases = {
+    "psg": "Paris saint-germain",
+    "inter milan": "inter",
+    "ac milan": "milan",
+    "man utd": "manchester united",
+    "man united": "manchester united",
+    "man city": "manchester city",
+    "bayern": "bayern munich",
+    "montreal impact": "cf montreal",
+    "botafogo": "botafogo",
+  };
 
   // const normalizedTargetName = cleanTeamName(
   //   teamNameAliases[targetTeamName.toLowerCase()] || targetTeamName
   // );
 
-  function getTeamRanksFromTopTeamsWithPartialMatch(topTeamsData, targetTeamName) {
-  if (!topTeamsData) return;
+  function getTeamRanksFromTopTeamsWithPartialMatch(
+    topTeamsData,
+    targetTeamName
+  ) {
+    if (!topTeamsData) return;
 
-  const teamRanks = {};
-  const topTeams = topTeamsData.topTeams;
+    const teamRanks = {};
+    const topTeams = topTeamsData.topTeams;
 
-  const targetNameLower = targetTeamName.toLowerCase();
-  const aliasName = teamNameAliases[targetNameLower] || targetTeamName;
-  const normalizedTarget = cleanTeamName(aliasName);
+    // Define known aliases for ambiguous or shortened names
+    const teamNameAliases = {
+      "inter milan": "inter",
+      "ac milan": "milan",
+      "man city": "manchester city",
+      "man united": "manchester united",
+      psg: "paris saint-germain",
+    };
 
-  for (const statistic in topTeams) {
-    if (!Array.isArray(topTeams[statistic])) continue;
+    const targetNameLower = targetTeamName.toLowerCase();
+    const normalizedTargetName =
+      teamNameAliases[targetNameLower] || targetNameLower;
 
-    const teamArray = topTeams[statistic];
+    for (const statistic in topTeams) {
+      if (!Array.isArray(topTeams[statistic])) continue;
 
-    // Step 1: Exact normalized match
-    let targetTeamIndex = teamArray.findIndex(
-      (teamInfo) => cleanTeamName(teamInfo.team.name) === normalizedTarget
-    );
+      const teamArray = topTeams[statistic];
 
-    let partialMatches = [];
+      // Step 1: Exact match
+      let targetTeamIndex = teamArray.findIndex(
+        (teamInfo) => teamInfo.team.name.toLowerCase() === normalizedTargetName
+      );
 
-    // Step 2: Safe partial match if exact not found
-    if (targetTeamIndex === -1) {
-      partialMatches = teamArray.filter((teamInfo) => {
-        const normalizedTeamName = cleanTeamName(teamInfo.team.name);
-        return (
-          normalizedTeamName.includes(normalizedTarget) ||
-          normalizedTarget.includes(normalizedTeamName)
-        );
-      });
+      // Step 2: Safe partial match if exact not found
+      if (targetTeamIndex === -1) {
+        const partialMatches = teamArray.filter((teamInfo) => {
+          const name = teamInfo.team.name.toLowerCase();
+          return (
+            name.includes(normalizedTargetName) ||
+            normalizedTargetName.includes(name)
+          );
+        });
 
-      if (partialMatches.length === 1) {
-        targetTeamIndex = teamArray.indexOf(partialMatches[0]);
-      } else if (partialMatches.length > 1) {
-        console.warn(
-          `Ambiguous match for "${targetTeamName}" — found:`,
-          partialMatches.map((p) => p.team.name)
-        );
-        targetTeamIndex = teamArray.indexOf(partialMatches[0]); // fallback to first match
+        if (partialMatches.length === 1) {
+          targetTeamIndex = teamArray.indexOf(partialMatches[0]);
+        } else {
+          console.warn(
+            `Ambiguous or missing match for "${targetTeamName}" — found:`,
+            partialMatches.map((p) => p.team.name)
+          );
+        }
+      }
+
+      // Step 3: Build the teamRanks object
+      if (targetTeamIndex !== -1) {
+        const teamInfo = teamArray[targetTeamIndex];
+        teamRanks[statistic] = {
+          name: teamInfo.team.name,
+          rank: targetTeamIndex + 1,
+          value: formatValue(teamInfo.statistics[statistic]),
+          games: teamInfo.statistics.matches,
+        };
       } else {
-        console.warn(`No match found for "${targetTeamName}" in statistic: ${statistic}`);
+        teamRanks[statistic] = {
+          name: null,
+          rank: null,
+          error: "Team not found in this category",
+          value: null,
+          games: null,
+        };
       }
     }
 
-    // Step 3: Build the teamRanks object
-    if (targetTeamIndex !== -1) {
-      const teamInfo = teamArray[targetTeamIndex];
-      teamRanks[statistic] = {
-        name: teamInfo.team.name,
-        rank: targetTeamIndex + 1,
-        value: formatValue(teamInfo.statistics[statistic]),
-        games: teamInfo.statistics.matches,
-        ambiguous: partialMatches.length > 1,
-      };
-    } else {
-      teamRanks[statistic] = {
-        name: null,
-        rank: null,
-        error: "Team not found in this category",
-        value: null,
-        games: null,
-      };
-    }
+    return teamRanks;
   }
-
-  return teamRanks;
-}
 
   const ranksHome = getTeamRanksFromTopTeamsWithPartialMatch(
     stats,
@@ -770,54 +776,54 @@ const teamNameAliases = {
     }
   }
 
-function getMappedTeamName(name) {
-  const normalized = cleanTeamName(name);
-  const aliasKey = normalize(name);
-  return cleanTeamName(teamNameAliases[aliasKey] || normalized);
-}
-
-async function getGameIdByHomeTeam(games, homeTeamName) {
-  const normalizedSearch = getMappedTeamName(homeTeamName);
-
-  const matchingGames = games.filter((game) =>
-    getMappedTeamName(game.homeTeam).includes(normalizedSearch)
-  );
-
-  return matchingGames[0] || null;
-}
-
-async function getGameIdByAwayTeam(games, awayTeamName) {
-  const normalizedSearch = getMappedTeamName(awayTeamName);
-
-  const matchingGames = games.filter((game) =>
-    getMappedTeamName(game.awayTeam).includes(normalizedSearch)
-  );
-
-  return matchingGames[0] || null;
-}
-
- async function findGameByPartialMatch(gamesArray, searchText, teamType) {
-  try {
-    const normalizedSearch = getMappedTeamName(searchText);
-
-    const matchingGame = gamesArray.find((game) => {
-      const teamNameInArray = teamType === "homeTeam" ? game.homeTeam : game.awayTeam;
-      const normalizedArrayName = getMappedTeamName(teamNameInArray);
-      return (
-        normalizedArrayName.includes(normalizedSearch) ||
-        normalizedSearch.includes(normalizedArrayName)
-      );
-    });
-
-    return matchingGame || null;
-  } catch (error) {
-    console.error(
-      `Error finding game by partial match (array value against search text) on ${teamType}:`,
-      error
-    );
-    return null;
+  function getMappedTeamName(name) {
+    const normalized = cleanTeamName(name);
+    const aliasKey = normalize(name);
+    return cleanTeamName(teamNameAliases[aliasKey] || normalized);
   }
-}
+
+  async function getGameIdByHomeTeam(games, homeTeamName) {
+    const normalizedSearch = getMappedTeamName(homeTeamName);
+
+    const matchingGames = games.filter((game) =>
+      getMappedTeamName(game.homeTeam).includes(normalizedSearch)
+    );
+
+    return matchingGames[0] || null;
+  }
+
+  async function getGameIdByAwayTeam(games, awayTeamName) {
+    const normalizedSearch = getMappedTeamName(awayTeamName);
+
+    const matchingGames = games.filter((game) =>
+      getMappedTeamName(game.awayTeam).includes(normalizedSearch)
+    );
+
+    return matchingGames[0] || null;
+  }
+
+  async function findGameByPartialMatch(gamesArray, searchText, teamType) {
+    try {
+      const normalizedSearch = getMappedTeamName(searchText);
+
+      const matchingGame = gamesArray.find((game) => {
+        const teamNameInArray = teamType === "homeTeam" ? game.homeTeam : game.awayTeam;
+        const normalizedArrayName = getMappedTeamName(teamNameInArray);
+        return (
+          normalizedArrayName.includes(normalizedSearch) ||
+          normalizedSearch.includes(normalizedArrayName)
+        );
+      });
+
+      return matchingGame || null;
+    } catch (error) {
+      console.error(
+        `Error finding game by partial match (array value against search text) on ${teamType}:`,
+        error
+      );
+      return null;
+    }
+  }
 
 
   function isBeforeTimestamp(targetTimestamp) {
@@ -902,6 +908,7 @@ async function getGameIdByAwayTeam(games, awayTeamName) {
   }
 
   async function extractMissingPlayers(data) {
+    console.log(data);
     const extract = (teamType) => {
       const team = data?.[teamType];
       if (!team || !Array.isArray(team.missingPlayers)) return [];
@@ -964,8 +971,6 @@ async function getGameIdByAwayTeam(games, awayTeamName) {
   }
 
   const derivedRoundId = (() => {
-    console.log(rounds)
-    console.log(game.sofaScoreId);
 
     for (const mapping of rounds) {
       if (mapping.hasOwnProperty(game.sofaScoreId)) {
@@ -1060,7 +1065,6 @@ async function getGameIdByAwayTeam(games, awayTeamName) {
             await findGameByPartialMatch(arrayOfGames, mappedAway, "awayTeam");
         }
 
-        console.log(arrayOfGames)
         setMatchingGame(matchingGameInfo);
 
         if (!matchingGameInfo) {
@@ -1072,7 +1076,8 @@ async function getGameIdByAwayTeam(games, awayTeamName) {
         }
 
         const now = Math.floor(Date.now() / 1000); // current Unix timestamp in seconds
-        const isWithin24Hours = game.date - now <= 86400;
+        const isWithin48Hours = game.date - now <= 172800;
+
 
         setLoading(true);
         if (
@@ -1085,7 +1090,7 @@ async function getGameIdByAwayTeam(games, awayTeamName) {
           // game.leagueID === 12931 ||
           // game.leagueID === 12622 ||
           // game.leagueID === 13973) &&
-          isWithin24Hours
+          isWithin48Hours
         ) {
           const lineupDetail = await fetch(
             `${process.env.REACT_APP_EXPRESS_SERVER}lineups/${matchingGameInfo.id}`
@@ -1233,14 +1238,12 @@ async function getGameIdByAwayTeam(games, awayTeamName) {
 
         if (derivedRoundId) {
           // https://sofascore.p.rapidapi.com/teams/get-statistics?teamId=38&tournamentId=17015&seasonId=61648&type=overall
-
           try {
             const homeTeamStatsResponse = await fetch(
               `${process.env.REACT_APP_EXPRESS_SERVER}teamStats/${matchingGameInfo.homeId}/${game.sofaScoreId}/${derivedRoundId}`
             );
             const homeTeam = await homeTeamStatsResponse.json();
             let homeStats = homeTeam.statistics;
-            console.log(homeTeam.statistics)
 
             const awayTeamStatsResponse = await fetch(
               `${process.env.REACT_APP_EXPRESS_SERVER}teamStats/${matchingGameInfo.awayId}/${game.sofaScoreId}/${derivedRoundId}`
@@ -1274,8 +1277,6 @@ async function getGameIdByAwayTeam(games, awayTeamName) {
 
             setHomePlayerData(playersHome);
             setAwayPlayerData(playersAway);
-
-            console.log("Home Player Data:", playersHome);
 
             // allPlayerStats[`leagueStats${game.sofaScoreId}`] = teamStats;
             // console.log(`Fetched stats for league ${leagueId}`);
@@ -1376,6 +1377,7 @@ async function getGameIdByAwayTeam(games, awayTeamName) {
             games={"all"}
             style={style}
             homeOrAway="Home"
+            badge={game.homeBadge}
             gameCount={divider}
             key={formDataHome[0].name}
             last5={formDataHome[0].Last5}
@@ -1460,6 +1462,7 @@ async function getGameIdByAwayTeam(games, awayTeamName) {
             games={"all"}
             style={style}
             homeOrAway="Away"
+            badge={game.awayBadge}
             gameCount={divider}
             key={formDataAway[0].name}
             last5={formDataAway[0].Last5}
@@ -1540,6 +1543,7 @@ async function getGameIdByAwayTeam(games, awayTeamName) {
             games={"last5"}
             style={style}
             homeOrAway="Home"
+            badge={game.homeBadge}
             gameCount={divider}
             key={formDataHome[0].name}
             last5={formDataHome[0].Last5}
@@ -1614,6 +1618,7 @@ async function getGameIdByAwayTeam(games, awayTeamName) {
             games={"last5"}
             style={style}
             homeOrAway="Away"
+            badge={game.awayBadge}
             gameCount={divider}
             key={formDataAway[0].name}
             last5={formDataAway[0].Last5}
@@ -1683,6 +1688,7 @@ async function getGameIdByAwayTeam(games, awayTeamName) {
             games={"hOrA"}
             style={style}
             homeOrAway="Home"
+            badge={game.homeBadge}
             gameCount={divider}
             key={formDataHome[0].name}
             last5={formDataHome[0].Last5}
@@ -1758,6 +1764,7 @@ async function getGameIdByAwayTeam(games, awayTeamName) {
             games={"hOrA"}
             style={style}
             homeOrAway="Away"
+            badge={game.awayBadge}
             gameCount={divider}
             key={formDataAway[0].name}
             last5={formDataAway[0].Last5}
@@ -2728,7 +2735,7 @@ async function getGameIdByAwayTeam(games, awayTeamName) {
           {!paid && game.leagueID !== 12325 ? (
             <Button
               className="AIInsightsLocked"
-              text={"Soccer Stats Hub AI 🔒"}
+              text={"Match Preview 🔒"}
               disabled={!paid && game.leagueID !== 12325}
             />
           ) : (
@@ -2738,7 +2745,7 @@ async function getGameIdByAwayTeam(games, awayTeamName) {
                 generateAIInsights(game.id, streakData, oddsData, homeTeamStats, awayTeamStats, homePlayerData, awayPlayerData, homeMissingPlayersList, awayMissingPlayersList);
                 setShowAIInsights(true);
               }}
-              text={"Soccer Stats Hub AI"}
+              text={"Match Preview"}
               disabled={!paid && game.leagueID !== 12325}
             />
           )}

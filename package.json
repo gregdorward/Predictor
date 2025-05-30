@@ -37,6 +37,7 @@
     "react-share": "^4.4.0",
     "react-toggle-button": "^2.2.0",
     "redux": "^4.2.1",
+    "string-similarity": "^4.0.4",
     "styled-components": "^5.2.1",
     "swiper": "^6.8.4",
     "web-vitals": "^0.2.4"

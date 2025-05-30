@@ -3880,7 +3880,7 @@ export async function getScorePrediction(day, mocked) {
       }
 
       leagueStatsArray = await leagueStatsPromise;
-
+      
       if (
         match.pointsDifferential === true &&
         match.prediction === "homeWin" &&

@@ -1,5 +1,5 @@
 @media (max-width: 4000px) {
-  body > #root {
+  body>#root {
     height: 100vh;
     /* font-family: 'Noto Sans', regular; */
     font-family: 'Open Sans', sans-serif;
@@ -31,16 +31,19 @@
     color: var(--text-color);
   }
 
-  .LeagueTable th{
+  .LeagueTable th {
     color: var(--text-color);
   }
-  .FormSummaries{
+
+  .FormSummaries {
     /* align-items: flex-start; */
     display: flex;
     flex-direction: column;
-    flex: 1; /* Ensure both columns take equal width */
+    flex: 1;
+    /* Ensure both columns take equal width */
     /* min-height: 18em; */
-    box-sizing: border-box; /* Include padding in the total height calculation */
+    box-sizing: border-box;
+    /* Include padding in the total height calculation */
   }
 }
 
@@ -59,7 +62,7 @@
   font-size: 0.9em;
   font-weight: 500;
   color: var(--text-color);
- background-color: grey;
+  background-color: grey;
   /* text-shadow: 0 0.04em 0.04em rgba(0, 0, 0, 0.35); */
   text-align: center;
 
@@ -69,7 +72,7 @@
 
 
 @media (max-width: 1800px) {
-  body > #root {
+  body>#root {
     height: 100vh;
     font-family: 'Open Sans', sans-serif;
     font-size: 0.9em;
@@ -89,17 +92,20 @@
     margin-left: auto;
     margin-right: auto;
   }
-  .FormSummaries{
+
+  .FormSummaries {
     /* align-items: flex-start; */
     display: flex;
     flex-direction: column;
-    flex: 1; /* Ensure both columns take equal width */
-    box-sizing: border-box; /* Include padding in the total height calculation */
+    flex: 1;
+    /* Ensure both columns take equal width */
+    box-sizing: border-box;
+    /* Include padding in the total height calculation */
   }
 }
 
 @media (max-width: 1200px) {
-  body > #root {
+  body>#root {
     height: 100vh;
     font-family: 'Open Sans', sans-serif;
     font-size: 0.8em;
@@ -119,17 +125,20 @@
     margin-left: auto;
     margin-right: auto;
   }
-  .FormSummaries{
+
+  .FormSummaries {
     /* align-items: flex-start; */
     display: flex;
     flex-direction: column;
-    flex: 1; /* Ensure both columns take equal width */
-    box-sizing: border-box; /* Include padding in the total height calculation */
+    flex: 1;
+    /* Ensure both columns take equal width */
+    box-sizing: border-box;
+    /* Include padding in the total height calculation */
   }
 }
 
 @media (max-width: 800px) {
-  body > #root {
+  body>#root {
     height: 100vh;
     font-family: 'Open Sans', sans-serif;
     font-size: 0.8em;
@@ -149,17 +158,20 @@
     margin-left: auto;
     margin-right: auto;
   }
-  .FormSummaries{
+
+  .FormSummaries {
     /* align-items: flex-start; */
     display: flex;
     flex-direction: column;
-    flex: 1; /* Ensure both columns take equal width */
-    box-sizing: border-box; /* Include padding in the total height calculation */
+    flex: 1;
+    /* Ensure both columns take equal width */
+    box-sizing: border-box;
+    /* Include padding in the total height calculation */
   }
 }
 
 @media (max-width: 600px) {
-  body > #root {
+  body>#root {
     height: 100vh;
     font-family: 'Open Sans', sans-serif;
     font-size: 2.4vw;
@@ -179,17 +191,20 @@
     margin-left: auto;
     margin-right: auto;
   }
-  .FormSummaries{
+
+  .FormSummaries {
     /* align-items: flex-start; */
     display: flex;
     flex-direction: column;
-    flex: 1; /* Ensure both columns take equal width */
-    box-sizing: border-box; /* Include padding in the total height calculation */
+    flex: 1;
+    /* Ensure both columns take equal width */
+    box-sizing: border-box;
+    /* Include padding in the total height calculation */
   }
 }
 
 @media (max-width: 460px) {
-  body > #root {
+  body>#root {
     height: 100vh;
     font-family: 'Open Sans', sans-serif;
     font-size: 2.4vw;
@@ -208,30 +223,39 @@
     padding-right: 1em;
     margin-left: auto;
     margin-right: auto;
-    
+
   }
 
-  .FormSummaries{
+  .FormSummaries {
     /* align-items: flex-start; */
     display: flex;
     flex-direction: column;
-    flex: 1; /* Ensure both columns take equal width */
-    box-sizing: border-box; /* Include padding in the total height calculation */
+    flex: 1;
+    /* Ensure both columns take equal width */
+    box-sizing: border-box;
+    /* Include padding in the total height calculation */
   }
 }
 
 /* Default Light Mode Colors */
 :root {
-  --background-color: #ffffff; /* White */
-  --secondary-background-color: whitesmoke; /* White */
-  --third-background-color: rgb(223, 220, 220); /* White */
-  --text-color: #020029; /* Dark Blue */
+  --background-color: #ffffff;
+  /* White */
+  --secondary-background-color: whitesmoke;
+  /* White */
+  --third-background-color: rgb(223, 220, 220);
+  /* White */
+  --text-color: #020029;
+  /* Dark Blue */
   --button-color: #020029;
   --button-text-color: #ffffff;
   --secondary-button-text-color: #ffffff;
-  --primary-color: #fe8c00; /* Orange */
-  --secondary-color: #9b0000; /* Dark Red */
-  --accent-color: #030040; /* Light Gray */
+  --primary-color: #fe8c00;
+  /* Orange */
+  --secondary-color: #9b0000;
+  /* Dark Red */
+  --accent-color: #030040;
+  /* Light Gray */
   --mid-grey: #030040;
   --disabled-div: #5d5d5d;
   --span-background: #FFE500;
@@ -240,16 +264,23 @@
 
 /* Dark Mode Colors */
 .dark-mode {
-  --background-color: #020029; /* Dark Blue */
-  --secondary-background-color: #191928; /* White */
-  --third-background-color: #302f2f; /* White */
-  --text-color: #ffffff; /* White */
+  --background-color: #020029;
+  /* Dark Blue */
+  --secondary-background-color: #191928;
+  /* White */
+  --third-background-color: #302f2f;
+  /* White */
+  --text-color: #ffffff;
+  /* White */
   --button-color: whitesmoke;
   --button-text-color: #020029;
   --secondary-button-text-color: #020029;
-  --primary-color: #f57701; /* Orange */
-  --secondary-color: #860000; /* Dark Red */
-  --accent-color: whitesmoke; /* Dark Gray */
+  --primary-color: #f57701;
+  /* Orange */
+  --secondary-color: #860000;
+  /* Dark Red */
+  --accent-color: whitesmoke;
+  /* Dark Gray */
   --mid-grey: #020029;
   --disabled-div: #525151;
   --span-background: whitesmoke;
@@ -271,7 +302,7 @@ body {
   /* margin: 10px; */
   height: 100%;
   font-weight: bolder;
-  margin-top:0px;
+  margin-top: 0px;
   color: var(--text-color);
 }
 
@@ -312,15 +343,15 @@ body {
   border-radius: 50%;
 }
 
-input:checked + .slider {
+input:checked+.slider {
   background-color: var(--primary-color);
 }
 
-input:focus + .slider {
+input:focus+.slider {
   box-shadow: 0 0 1px #2d3033;
 }
 
-input:checked + .slider:before {
+input:checked+.slider:before {
   transform: translateX(26px);
 }
 
@@ -332,7 +363,7 @@ input:checked + .slider:before {
   border-radius: 50%;
 }
 
-.HeaderContainer{
+.HeaderContainer {
   display: flex;
   flex-direction: column;
   flex-basis: 100%;
@@ -365,13 +396,14 @@ h1 {
   margin-left: auto;
   margin-right: auto;
   width: 80%;
-  height: 5em; /* Adjust as necessary */
+  height: 5em;
+  /* Adjust as necessary */
   margin-bottom: 1em;
   background-color: whitesmoke;
   border-radius: 30px
-  /* margin-left: 3em;
+    /* margin-left: 3em;
   margin-right: 3em; */
-  /* padding-top: 1em;
+    /* padding-top: 1em;
   padding-bottom: 1em; */
 }
 
@@ -389,7 +421,7 @@ h2 {
 
 h3 {
   font-size: 1.25em;
-  
+
   color: var(--text-color);
   padding: 1em;
   margin: 0%
@@ -424,14 +456,14 @@ h6 {
 }
 
 
-.historicResults{
+.historicResults {
   display: flex;
   height: 5em;
   flex-basis: 100%;
   /* font-size: 1em; */
   justify-content: center;
   align-items: center;
-}  
+}
 
 .SocialLink {
   font-size: 1.2em;
@@ -464,7 +496,7 @@ button {
   font-size: 1.2em;
   cursor: pointer;
   color: var(--secondary-button-text-color);
- background-color: var(--button-color);
+  background-color: var(--button-color);
   /* text-shadow: 0 0.04em 0.04em rgba(0, 0, 0, 0.35); */
   text-align: center;
   /* box-shadow: 0 0px 0px 0 rgba(0, 0, 0, 0.2), 0 1px 2px 0 #030052; */
@@ -477,7 +509,7 @@ button:active {
 
 }
 
-button.GeneratePredictions{
+button.GeneratePredictions {
   padding-top: 1em;
   padding-bottom: 1em;
   background-color: #fe8c00;
@@ -486,13 +518,13 @@ button.GeneratePredictions{
   /* box-shadow: 0 0px 0px 0 rgba(0, 0, 0, 0.2), 0 1px 2px 0 #030052 */
 }
 
-button.GeneratePredictions:hover{
+button.GeneratePredictions:hover {
   border: var(--text-color), 2px, solid;
   /* box-shadow: 0 0px 0px 0 rgba(0, 0, 0, 0.2), 0 1px 2px 0 #030052 */
 }
 
 
-button.GeneratePredictions:active{
+button.GeneratePredictions:active {
   padding-top: 1em;
   padding-bottom: 1em;
   background-color: #ce7100;
@@ -535,7 +567,7 @@ button.GeneratePredictions:active{
 
 }
 
-.RowOneContainer{
+.RowOneContainer {
   display: flex;
   flex-wrap: wrap
 }
@@ -633,7 +665,8 @@ span.MembershipInfo {
   font-size: 1.2em;
   padding: 1em;
 }
-.Explainer{
+
+.Explainer {
   padding-top: 1em;
   padding-top: 0.2em;
   padding-left: 3em;
@@ -644,7 +677,7 @@ span.MembershipInfo {
   font-size: 0.75em;
 }
 
-.bitcoin{
+.bitcoin {
   padding: 0.5em;
   padding-bottom: 1em;
   margin: 2em;
@@ -659,12 +692,12 @@ span.MembershipInfo {
   color: var(--text-color);
 }
 
-.bitcoinSymbol{
+.bitcoinSymbol {
   font-size: 1.2em;
   font-weight: 2em;
 }
 
-.DisclaimerText{
+.DisclaimerText {
   font-size: 0.75em;
   padding-bottom: 1em;
 }
@@ -688,10 +721,10 @@ span.MembershipInfo {
   padding-bottom: 1em;
 }
 
-.btn-container{
-    padding: 1em;
-    width: 1em;
-    position: inherit;
+.btn-container {
+  padding: 1em;
+  width: 1em;
+  position: inherit;
 }
 
 .Social {
@@ -719,23 +752,24 @@ span.MembershipInfo {
   color: var(--primary-color);
 }
 
-.ProfitableLeague{
+.ProfitableLeague {
   color: rgb(23, 195, 23);
   font-size: 1.2em;
 }
 
-.NonProfitableLeague{
+.NonProfitableLeague {
   color: #ca1100;
   font-size: 1.2em;
 }
 
 #league7432 {
-	background: linear-gradient(180deg, #FE0000 16.66%,
-		#FD8C00 16.66%, 33.32%,
-		#FFE500 33.32%, 49.98%,
-		#119F0B 49.98%, 66.64%,
-		#0644B3 66.64%, 83.3%,
-		#C22EDC 83.3%);  background-size: 50% auto;
+  background: linear-gradient(180deg, #FE0000 16.66%,
+      #FD8C00 16.66%, 33.32%,
+      #FFE500 33.32%, 49.98%,
+      #119F0B 49.98%, 66.64%,
+      #0644B3 66.64%, 83.3%,
+      #C22EDC 83.3%);
+  background-size: 50% auto;
   color: black;
 }
 
@@ -744,7 +778,7 @@ span.MembershipInfo {
   box-shadow: 0 1px 2px 0 #030052 inset, 0 2px 2px 0 #030052 inset;
 }
 
-.DateForm{
+.DateForm {
   display: flex;
   position: inherit !important;
 
@@ -759,7 +793,7 @@ span.MembershipInfo {
 }
 
 
-.DateForm input{
+.DateForm input {
   position: inherit !important;
   background-color: #020029;
   opacity: 1;
@@ -787,18 +821,19 @@ span.MembershipInfo {
   width: auto;
 }
 
-.ResultsList{
+.ResultsList {
   font-size: 2em;
   /* padding: 1em; */
 }
-.ResultsList li{
+
+.ResultsList li {
   /* padding: 0.5em; */
   margin: 0.5em;
   background-color: #020029;
   color: var(--text-color);
 }
 
-.ResultButton{
+.ResultButton {
   width: 100%;
   padding: 0em;
   border-radius: 0;
@@ -910,6 +945,7 @@ span.MembershipInfo {
   padding-bottom: 0.25em;
   color: black;
 }
+
 .columnOverviewScoreSmall {
   flex: 1em;
   background-color: yellow;
@@ -936,7 +972,7 @@ span.MembershipInfo {
   font-size: 1.1em;
 }
 
-.NoGames{
+.NoGames {
   align-self: flex-start;
   font-size: 1.4em;
   text-align: center;
@@ -977,14 +1013,14 @@ span.MembershipInfo {
   /* border: 0px; */
 }
 
-.ShortlistedGameDiv{
+.ShortlistedGameDiv {
   display: flex;
   flex-basis: 90%;
   margin-left: auto;
   margin-right: auto;
 }
 
-.TipButton{
+.TipButton {
   /* flex-basis: 33%; */
   margin-top: 0.25em;
   margin-bottom: 0.75em;
@@ -999,16 +1035,17 @@ span.MembershipInfo {
   /* background-color: #020029; */
   color: #030052;
   border: #030052 1px solid
-  /* line-height: 1em; */
+    /* line-height: 1em; */
 }
-.UserTipsList{
+
+.UserTipsList {
   padding: 1em;
   border: white 1px dashed;
   margin: 0.5em;
   background-color: var(--background-color);
 }
 
-.UserTipsListItems{
+.UserTipsListItems {
   padding-top: 0.5em;
   padding-bottom: 0.5em;
   font-size: 1.1em;
@@ -1020,7 +1057,8 @@ strong {
 
 /* Base styles for the checkbox */
 .star {
-  appearance: none; /* Remove default checkbox */
+  appearance: none;
+  /* Remove default checkbox */
   font-size: 1.4em;
   width: 3em;
   height: 1em;
@@ -1033,12 +1071,13 @@ strong {
   padding-left: 0.25em;
   /* padding-right: 1.75em; */
   /* margin-left: auto; */
-  
+
 }
 
 /* Default empty star */
 .star:before {
-  content: "\2606"; /* Unicode for empty star */
+  content: "\2606";
+  /* Unicode for empty star */
   color: var(--text-color);
   font-size: 1em;
   display: inline-block;
@@ -1046,11 +1085,12 @@ strong {
 
 /* Change to filled star when checked */
 .star:checked:before {
-  content: "\2605"; /* Unicode for filled star */
+  content: "\2605";
+  /* Unicode for filled star */
   color: gold;
 }
 
-.pointsGapExplainer{
+.pointsGapExplainer {
   color: var(--text-color);
 }
 
@@ -1066,9 +1106,10 @@ strong {
   padding-top: 1em;
 }
 
-.individualFixtureContainer:active, input:focus{
+.individualFixtureContainer:active,
+input:focus {
   /* box-shadow:2px 2px 2px 2px grey; */
-  
+
   box-shadow: 0 0px 0px 0 rgba(0, 0, 0, 0.2), 0 0px 0px 0 #030052 inset;
 }
 
@@ -1098,7 +1139,7 @@ strong {
   color: var(--text-color);
   padding-bottom: 0.5em;
   cursor: pointer;
-  
+
   /* box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.2), 0 1px 2px 0 #030052; */
   /* margin-bottom: 1em; */
   /* border: black 0.25px solid; */
@@ -1114,7 +1155,7 @@ strong {
   color: var(--text-color);
   padding-bottom: 0.5em;
   cursor: pointer;
-  
+
   /* box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.2), 0 1px 2px 0 #030052; */
   /* margin-bottom: 1em; */
   /* border: black 0.25px solid; */
@@ -1128,18 +1169,18 @@ strong {
   padding-bottom: 0.25em;
 }
 
-.HomeAndAwayContainerundefined{
+.HomeAndAwayContainerundefined {
   display: flex;
   flex-direction: column;
 }
 
-.HomeAndAwayContainerWon{
+.HomeAndAwayContainerWon {
   display: flex;
   flex-direction: column;
   border-left: #009700 solid 5px;
 }
 
-.HomeAndAwayContainerLost{
+.HomeAndAwayContainerLost {
   display: flex;
   flex-direction: column;
   border-left: #b10f00 solid 5px;
@@ -1159,7 +1200,7 @@ strong {
   flex-basis: 60%;
 }
 
-.ActionButtons{
+.ActionButtons {
   display: inline-flex;
   width: 15%;
 }
@@ -1207,12 +1248,12 @@ strong {
   /* padding-bottom: 0.25em; */
   /* box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.2), 0 1px 2px 0 #030052; */
   /* margin-bottom: 0.5em; */
-  
+
   /* border: 1em; */
 }
 
 
-.FixtureList{
+.FixtureList {
   background-color: white, transparent;
 }
 
@@ -1224,7 +1265,7 @@ strong {
   align-content: center;
   box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 2px 4px 0 #030052;
   margin-bottom: 0.5em;
-  color: var(--text-color);  
+  color: var(--text-color);
   /* border: 1em; */
 }
 
@@ -1283,7 +1324,7 @@ strong {
   /* font-size: 0.5em; */
   padding: 0.5em;
   margin-left: 2em;
- background-color: var(--button-color);
+  background-color: var(--button-color);
   color: var(--button-text-color);
   width: 2.5em;
   border-radius: 0px;
@@ -1295,7 +1336,7 @@ strong {
   order: 0;
   /* font-size: 0.5em; */
   padding: 0.5em;
- background-color: #020029;
+  background-color: #020029;
   color: var(--text-color);
   width: 4.5em;
   border-radius: 10px;
@@ -1334,8 +1375,8 @@ strong {
   order: 0;
   /* font-size: 0.5em; */
   padding: 0.5em;
- background-color: #020029;
-  color:white;
+  background-color: #020029;
+  color: white;
   width: 3.5em;
   border-radius: 10px;
   font-weight: bolder;
@@ -1352,12 +1393,12 @@ strong {
   font-size: 0.8em;
 }
 
-*[class^='AwayOdds']{
+*[class^='AwayOdds'] {
   /* order: 7; */
   /* font-size: 0.5em; */
   padding: 0.5em;
   margin-left: 2em;
- background-color: var(--button-color);
+  background-color: var(--button-color);
   color: var(--button-text-color);
   width: 2.5em;
   border-radius: 0px;
@@ -1369,7 +1410,7 @@ strong {
   order: 7;
   /* font-size: 0.5em; */
   padding: 0.5em;
- background-color: #020029;
+  background-color: #020029;
   color: var(--text-color);
   width: 4.5em;
   border-radius: 10px;
@@ -1381,7 +1422,7 @@ strong {
   order: 7;
   /* font-size: 0.5em; */
   padding: 0.5em;
- background-color: #020029;
+  background-color: #020029;
   color: var(--text-color);
   width: 3.5em;
   border-radius: 10px;
@@ -1417,7 +1458,7 @@ strong {
 }
 
 .ExplainerHeaders {
-   display: flex;
+  display: flex;
   /* align-items: center;
   justify-content: center;
   align-content: center;
@@ -1434,7 +1475,7 @@ strong {
   /* margin: 0.1em;
   flex-wrap: wrap;
   padding: 0.5em; */
-  
+
   /* background-color: #020029; */
   color: var(--text-color);
   text-align: right;
@@ -1452,20 +1493,20 @@ strong {
   /* background-color: #020029; */
   color: var(--text-color);
   /* padding-left: 1em; */
-  
+
   text-align: left;
   border: none;
   padding: 0.5em;
 
 }
 
-.ArrowOne{
+.ArrowOne {
   text-align: right;
-  padding-right:  2em;
+  padding-right: 2em;
   padding-top: 1em;
 }
 
-.ArrowTwo{
+.ArrowTwo {
   text-align: left;
   padding-left: 2em;
   padding-top: 1em;
@@ -1490,7 +1531,7 @@ strong {
   font-size: 1.1em;
 }
 
-.result{
+.result {
   height: auto;
   flex-basis: 5%;
   /* width: auto; */
@@ -1507,7 +1548,7 @@ strong {
   /* font-family: 'Fira Sans'; */
 }
 
-.resultexact{
+.resultexact {
   height: auto;
   flex-basis: 5%;
   /* width: auto; */
@@ -1554,7 +1595,7 @@ strong {
   box-shadow: #030052;
 }
 
-.KOAndPrediction{
+.KOAndPrediction {
   /* margin-left: auto; */
   align-self: left;
   /* margin-left: 1em; */
@@ -1581,7 +1622,7 @@ strong {
   padding: 0.5em;
   display: inline-block;
   color: var(--text-color);
-  background-color:white;
+  background-color: white;
   margin: 0.2em;
   border: black 0.25px solid;
   border-radius: 10px;
@@ -1653,25 +1694,25 @@ strong {
   padding: 0.5em;
   display: inline-block;
   color: var(--text-color);
-  background-color:  #016001;
+  background-color: #016001;
   border: black 0.25px solid;
   border-radius: 10px;
   margin: 0.2em;
-  
+
 }
 
 .ExactScore {
-    height: auto;
-    flex-basis: 10%;
-    order: 4;
-    padding: 0.5em;
-    max-width: 5em;
-    display: inline-block;
-    color: gold;
-    background-color:  #016001;
-    border: black 0.25px solid;
-    border-radius: 10px;
-    margin: 0.2em;
+  height: auto;
+  flex-basis: 10%;
+  order: 4;
+  padding: 0.5em;
+  max-width: 5em;
+  display: inline-block;
+  color: gold;
+  background-color: #016001;
+  border: black 0.25px solid;
+  border-radius: 10px;
+  margin: 0.2em;
 }
 
 .predictionExplainer {
@@ -1683,7 +1724,7 @@ strong {
   padding: 0.5em;
   display: inline-block;
   color: var(--text-color);
-  background-color:white;
+  background-color: white;
   border: black 0.25px solid;
   border-radius: 10px;
   margin: 0.2em;
@@ -1727,30 +1768,30 @@ strong {
   width: 100%;
 }
 
-.DetailedFixtures{
+.DetailedFixtures {
   align-self: center;
   justify-content: center;
   font-size: 0.8em;
 }
 
-.flex-element{
+.flex-element {
   display: flex;
   align-self: center;
   justify-content: center;
 }
 
-.Collapsible{
+.Collapsible {
   display: block;
   color: var(--text-color);
 }
 
-.FiltersSelected{
+.FiltersSelected {
   padding: 1em;
   color: var(--text-color);
   background-color: var(--background-color);
 }
 
-.FiltersSelectedList li{
+.FiltersSelectedList li {
   padding: 0.25em;
 }
 
@@ -1765,7 +1806,8 @@ strong {
 
 .gallery-item-wrapper {
   /* Default for larger screens (4 per row) */
-  width: calc(25% - 10px); /* Roughly 1/4 width with some margin */
+  width: calc(25% - 10px);
+  /* Roughly 1/4 width with some margin */
   margin-right: 10px;
   margin-bottom: 20px;
   box-sizing: border-box;
@@ -1779,7 +1821,8 @@ strong {
 /* Media query for mobile screens (show 2 images per row) */
 @media (max-width: 768px) {
   .gallery-item-wrapper {
-    width: calc(50% - 10px); /* Roughly 1/2 width with some margin */
+    width: calc(50% - 10px);
+    /* Roughly 1/2 width with some margin */
   }
 
   /* Remove margin from the last item in each row for the 2-column layout */
@@ -1812,19 +1855,22 @@ strong {
 }
 
 .gallery-item-wrapper h6 {
-  margin-top: 0; /* Remove default top margin of h6 */
-  margin-bottom: 5px; /* Add some bottom margin to separate from the image */
-  text-align: center; /* Optional: Center the title */
+  margin-top: 0;
+  /* Remove default top margin of h6 */
+  margin-bottom: 5px;
+  /* Add some bottom margin to separate from the image */
+  text-align: center;
+  /* Optional: Center the title */
 }
 
-h6.MediaTitle{
+h6.MediaTitle {
   font-size: 2em;
   margin-bottom: 0em;
 }
 
 
 
-.StatsDiv{
+.StatsDiv {
   background-color: #e2e2e26c;
   margin-bottom: 0.5em;
   font-weight: bolder;
@@ -1841,7 +1887,7 @@ li .Aligned {
   padding-bottom: 0.75em;
 }
 
-.BTTSResults{
+.BTTSResults {
   padding-top: 0.5em;
   padding-bottom: 0.5em;
   padding-right: 6.5em;
@@ -1849,14 +1895,14 @@ li .Aligned {
 
 }
 
-.BTTSTrue{
+.BTTSTrue {
   color: #01a501;
   padding: 0.75em;
   padding-bottom: 0.5em;
   font-size: 1.2em;
 }
 
-.BTTSFalse{
+.BTTSFalse {
   color: #970d00;
   padding: 0.75em;
   padding-bottom: 0.5em;
@@ -1883,16 +1929,16 @@ li .Aligned {
 .Stat {
   padding: 5px;
 } */
-.MuiPaper-root{  
+.MuiPaper-root {
   margin: 0px !important;
   border: 0px !important;
 }
 
-.MuiPaper-elevation1{
+.MuiPaper-elevation1 {
   box-shadow: none !important;
 }
 
-.LeagueStatisticsHeader{
+.LeagueStatisticsHeader {
   font-size: 2.5em;
   background-color: var(--button-color);
   color: var(--button-text-color);
@@ -1923,10 +1969,10 @@ li .Aligned {
 
 .LeagueStatistics li {
   color: var(--text-color);
-  padding: 0.5em;  
+  padding: 0.5em;
 }
 
-.TeamNameHeader{
+.TeamNameHeader {
   padding-left: 3.5em;
   padding-right: 3.5em;
   padding-bottom: 0em;
@@ -1936,7 +1982,7 @@ li .Aligned {
 .TopScorersColumn {
   padding-top: 2em;
   flex-direction: row;
-  flex: 50%; 
+  flex: 50%;
   padding-bottom: 1em;
   padding: 1em;
   margin: 0.25em;
@@ -1995,7 +2041,7 @@ li .Aligned {
 
 
 
-.IndividualPreviousResultGameHome{
+.IndividualPreviousResultGameHome {
   align-items: center;
   align-content: center;
   color: black;
@@ -2006,7 +2052,7 @@ li .Aligned {
 }
 
 
-.IndividualPreviousResultGameAway{
+.IndividualPreviousResultGameAway {
   align-items: center;
   align-content: center;
   color: black;
@@ -2016,7 +2062,7 @@ li .Aligned {
   flex-wrap: wrap;
 }
 
-.PastGameDateHome{
+.PastGameDateHome {
   text-align: center;
   padding-right: 0.5em;
   padding-top: 0.25em;
@@ -2024,7 +2070,7 @@ li .Aligned {
   font-size: 0.9em;
 }
 
-.PastGameDateAway{
+.PastGameDateAway {
   text-align: center;
   padding-left: 0.5em;
   padding-top: 0.25em;
@@ -2032,18 +2078,18 @@ li .Aligned {
   font-size: 0.9em;
 }
 
-.GameWon{
+.GameWon {
   color: #01a501;
   padding-bottom: 1em;
 }
 
-.GameLost{
+.GameLost {
   color: #bf1000;
   padding-bottom: 1em;
   font-weight: 200;
 }
 
-.GameDrawn{
+.GameDrawn {
   padding-bottom: 1em;
 }
 
@@ -2051,8 +2097,8 @@ li .Aligned {
 
 
 
-a.PreviousMatchLink{
-  text-decoration-thickness: 0;  
+a.PreviousMatchLink {
+  text-decoration-thickness: 0;
   text-underline-offset: 0.2em;
   text-decoration-color: white;
   margin-bottom: 1em;
@@ -2115,7 +2161,7 @@ a.PreviousMatchLink{
   /* font-size: 2.5vw; */
 }
 
-.InsightsExplainer{
+.InsightsExplainer {
   display: block;
   text-align: center;
   padding-top: 1em;
@@ -2174,7 +2220,7 @@ a.PreviousMatchLink{
   text-align: right;
   margin-right: 0.5em;
   flex-basis: 49%;
-  background-color:white;
+  background-color: white;
   color: var(--text-color);
   margin-left: auto;
   margin-bottom: 2em;
@@ -2187,7 +2233,7 @@ a.PreviousMatchLink{
   text-align: left;
   flex-basis: 49%;
   margin-left: 0.5em;
-  background-color:white;
+  background-color: white;
   color: var(--text-color);
   margin-right: auto;
   margin-bottom: 2em;
@@ -2203,7 +2249,7 @@ a.PreviousMatchLink{
   width: 100%;
 } */
 
-.flex-container{
+.flex-container {
   display: flex;
   align-items: stretch;
   justify-content: center;
@@ -2213,14 +2259,15 @@ a.PreviousMatchLink{
 
 
 
-.AllStats{
-  /* align-items: flex-end; */
-}
-.RecentResults{
+.AllStats {
   /* align-items: flex-end; */
 }
 
-.flex-container-similar{
+.RecentResults {
+  /* align-items: flex-end; */
+}
+
+.flex-container-similar {
   display: flex;
   justify-content: center;
   /* align-items: flex-start; */
@@ -2233,7 +2280,7 @@ a.PreviousMatchLink{
   flex-basis: 45%;
   background-color: var(--background-color);
   color: var(--text-color);
-} 
+}
 
 .flex-childOneOverview {
   flex-direction: column;
@@ -2244,7 +2291,7 @@ a.PreviousMatchLink{
   color: var(--text-color);
   /* min-width: 16em;
   max-width: 21em; */
-} 
+}
 
 .flex-childOneOverviewSmall {
   flex-direction: column;
@@ -2257,7 +2304,7 @@ a.PreviousMatchLink{
   color: var(--text-color);
   /* min-width: 16em;
   max-width: 21em; */
-} 
+}
 
 .flex-childTwoOverview {
   flex-direction: column;
@@ -2269,7 +2316,7 @@ a.PreviousMatchLink{
   /* width: auto;
   min-width: 16em;
   max-width: 21em; */
-} 
+}
 
 .flex-childTwoOverviewSmall {
   flex-direction: column;
@@ -2283,40 +2330,40 @@ a.PreviousMatchLink{
   /* width: auto;
   min-width: 16em;
   max-width: 21em; */
-} 
+}
 
 .flex-childOneOverview .W {
   border: solid 1px white;
   padding: 0.5em;
-} 
+}
 
 .flex-childOneOverview .D {
   border: solid 1px white;
   padding: 0.5em;
-} 
+}
 
 .flex-childOneOverview .L {
   border: solid 1px white;
   padding: 0.5em;
-} 
-      
+}
 
-.flex-childTwoOverview .W{
+
+.flex-childTwoOverview .W {
   border: solid 1px white;
   padding: 0.5em;
-} 
+}
 
-.flex-childTwoOverview .D{
+.flex-childTwoOverview .D {
   border: solid 1px white;
   padding: 0.5em;
-} 
+}
 
-.flex-childTwoOverview .L{
+.flex-childTwoOverview .L {
   border: solid 1px white;
   padding: 0.5em;
-} 
+}
 
-.flex-childOne li:nth-child(odd){
+.flex-childOne li:nth-child(odd) {
   background-color: var(--background-color);
   color: var(--text-color);
 }
@@ -2328,15 +2375,15 @@ a.PreviousMatchLink{
   background-color: var(--background-color);
   color: var(--text-color);
   padding-left: 0.5em;
-} 
+}
 
-.flex-childTwo li:nth-child(odd){
+.flex-childTwo li:nth-child(odd) {
   background-color: var(--background-color);
   color: var(--text-color);
 }
 
 
-.PreviousResults{
+.PreviousResults {
   display: flex;
   flex-direction: column;
   height: auto;
@@ -2419,68 +2466,68 @@ a.PreviousMatchLink{
 } */
 
 
-.IndividualPastFixtureHome{
+.IndividualPastFixtureHome {
   text-align: left;
 }
 
-.IndividualPastFixtureAway{
+.IndividualPastFixtureAway {
   text-align: right;
 }
 
-.KeyStatsHome{
+.KeyStatsHome {
   padding-top: 0.5em;
   padding-bottom: 2em;
   /* padding-right: 0.25em; */
   padding-left: 0.5em;
 }
 
-.KeyStatsHome li{
+.KeyStatsHome li {
   padding-top: 0.75em;
   padding-bottom: 0.75em;
   padding-right: 0.5em;
 }
 
-.KeyStatsAway{
+.KeyStatsAway {
   padding-top: 0.5em;
   padding-bottom: 2em;
   padding-right: 0.5em;
   /* padding-left: 0.5em; */
 }
 
-.KeyStatsAway li{
+.KeyStatsAway li {
   padding-top: 0.75em;
   padding-bottom: 0.75em;
   padding-left: 0.5em;
 }
 
-.TestingLayout{
+.TestingLayout {
   flex-direction: row;
 }
 
-.IndividualPreviousResultHome{
+.IndividualPreviousResultHome {
   display: flex;
   text-align: end;
   flex-basis: 100%;
 }
 
-.IndividualPreviousResultAway{
+.IndividualPreviousResultAway {
   display: flex;
   text-align: start;
   flex-basis: 100%;
 }
 
 
-.PastFixtures{
+.PastFixtures {
   display: flex;
   flex-direction: column;
 }
 
-.PastResultsHome{
+.PastResultsHome {
   display: flex;
   text-align: start;
 }
 
-.PastResultsAway{
+.PastResultsAway {
   display: flex;
   text-align: end;
 }
@@ -2541,7 +2588,7 @@ a.PreviousMatchLink{
   /* padding-left: 1em; */
 }
 
-.Home li:nth-child(odd) { 
+.Home li:nth-child(odd) {
   background: #dedddd;
   color: black;
 }
@@ -2587,7 +2634,7 @@ canvas {
   max-height: 36em;
   max-width: 36em;
   display: inline !important;
-  margin: 1em; 
+  margin: 1em;
   color: #030052;
 }
 
@@ -2623,7 +2670,7 @@ canvas.LeagueStatsRadar {
 
 
 
-.Away li:nth-child(odd) { 
+.Away li:nth-child(odd) {
   background: #dedddd;
   color: black;
 }
@@ -2677,35 +2724,44 @@ li.FormHeader {
 
 .winSmall {
   background-color: #01a501;
-  width: 1em; /* Set width and height to create a circle */
+  width: 1em;
+  /* Set width and height to create a circle */
   height: 1em;
   margin: 0.1em;
-  padding: 0; /* Reset padding */
-  border-radius: 50%; /* Make it a circle */
+  padding: 0;
+  /* Reset padding */
+  border-radius: 50%;
+  /* Make it a circle */
   display: block;
 }
 
 .lossSmall {
   background-color: #ca1100;
-  width: 1em; /* Set width and height to create a circle */
+  width: 1em;
+  /* Set width and height to create a circle */
   height: 1em;
   margin: 0.1em;
-  padding: 0; /* Reset padding */
-  border-radius: 50%; /* Make it a circle */
+  padding: 0;
+  /* Reset padding */
+  border-radius: 50%;
+  /* Make it a circle */
   display: block;
 }
 
 .drawSmall {
   background-color: #f69300;
-  width: 1em; /* Set width and height to create a circle */
+  width: 1em;
+  /* Set width and height to create a circle */
   height: 1em;
   margin: 0.1em;
-  padding: 0; /* Reset padding */
-  border-radius: 50%; /* Make it a circle */
+  padding: 0;
+  /* Reset padding */
+  border-radius: 50%;
+  /* Make it a circle */
   display: block;
 }
 
-.GoalTotal{
+.GoalTotal {
   background-color: #020029;
   color: var(--text-color);
   padding-left: 0.4em;
@@ -2757,11 +2813,11 @@ li.FormHeader {
   font-weight: 700;
 }
 
-li.TeamScored{
+li.TeamScored {
   padding-top: 1em;
 }
 
-li.FormHeader{
+li.FormHeader {
   padding-bottom: 1em;
 }
 
@@ -2848,14 +2904,14 @@ li.FormHeader{
   /* font-size: 0.8em; */
   font-weight: 500;
   color: var(--text-color);
- background-color: #020029;
+  background-color: #020029;
   text-shadow: 0 0.04em 0.04em rgba(0, 0, 0, 0.35);
   text-align: center;
 
   transition: all 0.2s;
 }
 
-.StyleOfPlay{
+.StyleOfPlay {
   /* min-height: 2.5em; */
   margin-bottom: 0;
   padding-top: 1em !important;
@@ -2954,7 +3010,7 @@ ul {
   font-size: 1.2em;
 }
 
-.over25ActualOutcome{
+.over25ActualOutcome {
   padding: 0.5em;
 }
 
@@ -2995,8 +3051,8 @@ ul {
   font-size: 1.2em;
 }
 
-.kofitext{
-  font-size: min(max(1em, 2vw), 0.8em);  
+.kofitext {
+  font-size: min(max(1em, 2vw), 0.8em);
   font-weight: bolder !important;
 }
 
@@ -3010,9 +3066,11 @@ ul {
   min-width: 5em !important;
   line-height: 1.5em !important;
   color: black !important;
-} 
+}
 
-img.BadgePrevious {margin-right: 1em;}
+img.BadgePrevious {
+  margin-right: 1em;
+}
 
 a.kofi-button {
   border: 0.1em solid white;
@@ -3059,7 +3117,7 @@ td {
 }
 
 
-.SortedColumn{
+.SortedColumn {
   background-color: var(--background-color);
   color: var(--text-color);
   height: auto;
@@ -3080,7 +3138,8 @@ td {
   border: none;
 }
 
-.MuiTable-root, Table{
+.MuiTable-root,
+Table {
   margin-top: 0px !important;
 }
 
@@ -3118,12 +3177,12 @@ button:hover {
   animation: spin 1s infinite linear;
 }
 
-.H2HStats{
+.H2HStats {
   /* margin: 1em; */
   text-align: center;
 }
 
-.H2HStat{
+.H2HStat {
   padding: 5px;
 }
 
@@ -3131,7 +3190,7 @@ button:hover {
   white-space: pre;
 }
 
-.PreviousMatchStats{
+.PreviousMatchStats {
   display: flex;
   /* flex-direction: column; */
   flex-wrap: wrap;
@@ -3140,16 +3199,16 @@ button:hover {
   padding-bottom: 15px;
 }
 
-.PreviousMatchStats li{
+.PreviousMatchStats li {
   text-align: center;
   padding: 7px;
 }
 
-.Stadium{
+.Stadium {
   padding-top: 2em;
   padding-bottom: 0.5em;
   text-align: center;
-  color:#030052;
+  color: #030052;
   margin: auto;
   font-size: 1em;
   height: 2em;
@@ -3157,12 +3216,12 @@ button:hover {
   flex-basis: 90%;
 }
 
-li .Stadium{
+li .Stadium {
   padding-top: 2em;
 }
 
 
-.LastGameDetail{
+.LastGameDetail {
   /* padding-top: 0.5em; */
   padding-bottom: 0.5em;
   width: 100%;
@@ -3173,7 +3232,7 @@ li .Stadium{
   height: 1em;
 }
 
-.LastGameOverview{
+.LastGameOverview {
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
@@ -3186,14 +3245,15 @@ li .Stadium{
   align-items: center;
 }
 
-.secondToLastGameDetail{
+.secondToLastGameDetail {
   padding-top: 1em !important;
   padding-bottom: 0.5em !important;
   text-align: center;
   color: black;
   margin: auto;
   font-size: 1em;
-  height: 2em;}
+  height: 2em;
+}
 
 .LastGameHome {
   flex: 33.33%;
@@ -3222,7 +3282,7 @@ li .Stadium{
 
 
 
-.StatsTable{
+.StatsTable {
   /* width: 75%; */
   text-align: center;
   font-family: 'Open Sans', sans-serif;
@@ -3232,7 +3292,7 @@ li .Stadium{
   /* margin: 1em; */
 }
 
-.ResultsStatsTable{
+.ResultsStatsTable {
   padding: 1em;
   margin-left: auto;
   margin-right: auto;
@@ -3245,21 +3305,21 @@ li .Stadium{
   border: white;
 }
 
-.ResultsStatsTable th{
+.ResultsStatsTable th {
   padding: 1em;
 }
 
-.ResultsStatsTable td{
+.ResultsStatsTable td {
   padding: 0.75em;
 }
 
-.TrendsHome{
+.TrendsHome {
   margin-left: 5em;
   margin-right: 5em;
   padding-bottom: 5px;
 }
 
-.TrendsAway{
+.TrendsAway {
   margin-left: 5em;
   margin-right: 5em;
   padding-top: 5px;
@@ -3267,17 +3327,17 @@ li .Stadium{
 
 }
 
-.MoreDetailsButton{
+.MoreDetailsButton {
   font-size: 0.9em;
   margin-bottom: 1em;
 }
 
-.MoreStats{
+.MoreStats {
   font-size: 1em;
   margin-top: 2em;
 }
 
-.attackOoU{
+.attackOoU {
   line-height: 2em;
   width: 100%;
 }
@@ -3286,6 +3346,7 @@ li .Stadium{
   from {
     transform: rotate(0deg);
   }
+
   to {
     transform: rotate(360deg);
   }
@@ -3313,7 +3374,7 @@ section {
 
 .MainLoading {
   padding: 2em;
-  color:white;
+  color: white;
   margin-left: auto;
   margin-right: auto;
 }
@@ -3342,7 +3403,7 @@ section {
   /* display: flex; */
   flex-basis: 30%;
   /* font-size: 1.2em; */
-  --primary: #EC9A29;  
+  --primary: #EC9A29;
   --other: hsl(0, 0%, 90%);
 }
 
@@ -3367,7 +3428,7 @@ label {
   z-index: -1;
 }
 
-.DarkMode{
+.DarkMode {
   width: 2em;
   margin-left: auto;
   padding-right: 7em;
@@ -3413,33 +3474,33 @@ label {
 }
 
 /* checked state */
-input:checked + .design::before {
+input:checked+.design::before {
   opacity: 1;
   transform: scale(0.6);
 }
 
 /* other states */
-input:hover + .design,
-input:focus + .design {
+input:hover+.design,
+input:focus+.design {
   border: 1px solid var(--primary);
 }
 
-input:hover + .design:before,
-input:focus + .design:before {
+input:hover+.design:before,
+input:focus+.design:before {
   background: var(--primary);
 }
 
-input:hover ~ .text {
+input:hover~.text {
   color: var(--primary);
 }
 
-input:focus + .design::after,
-input:active + .design::after {
+input:focus+.design::after,
+input:active+.design::after {
   opacity: 0.1;
   transform: scale(2.6);
 }
 
-.DonationButton{
+.DonationButton {
   padding-bottom: 2em;
 }
 
@@ -3478,7 +3539,7 @@ input:active + .design::after {
 }
 
 
-.TeamStatsContainer h4{
+.TeamStatsContainer h4 {
   font-size: 2vw;
 }
 
@@ -3550,13 +3611,13 @@ input:active + .design::after {
   align-self: center;
 }
 
-.TeamStatsContainer canvas{
+.TeamStatsContainer canvas {
   /* min-width: 35%; */
   border: 1em;
   flex-basis: 100%;
 }
 
-.FixtureHeadingContiner{
+.FixtureHeadingContiner {
   display: flex;
   flex-direction: row;
   font-size: 3vw;
@@ -3577,10 +3638,9 @@ input:active + .design::after {
   padding-top: 0.5em; */
 }
 
-.FixtureHeading{
+.FixtureHeading {}
 
-}
- .HomeTeamBadge {
+.HomeTeamBadge {
   order: 0;
   border-color: #393d3f;
 
@@ -3594,7 +3654,7 @@ input:active + .design::after {
   border: 0px;
 }
 
-.HomeTeamBadge img{
+.HomeTeamBadge img {
   background-color: whitesmoke;
   border-radius: 0.5rem;
 }
@@ -3612,7 +3672,7 @@ input:active + .design::after {
   border: 0px;
 }
 
-.TeamStats{
+.TeamStats {
   display: flex;
   font-size: 0.9em;
   line-height: 2em;
@@ -3621,70 +3681,71 @@ input:active + .design::after {
   /* margin: 1em; */
 }
 
-.HomeTeamStats{
+.HomeTeamStats {
   flex-basis: 50%;
   /* padding: 2em; */
   /* border-right: #030052 0.5px solid; */
 }
 
-.HomeTeamStats li{
+.HomeTeamStats li {
   padding: 0.5em;
   border-bottom: white 0.25px solid;
   color: var(--text-color);
 }
 
-.AwayTeamStats{
+.AwayTeamStats {
   flex-basis: 50%;
   /* padding: 2em; */
   /* border-left: #030052 0.5px solid; */
 }
 
-.AwayTeamStats li{
+.AwayTeamStats li {
   padding: 0.5em;
   border-bottom: white 0.25px solid;
   color: var(--text-color);
 }
-.HomeTeamResults{
+
+.HomeTeamResults {
   flex-basis: 50%;
 
 }
 
-.AwayTeamResults{
+.AwayTeamResults {
   flex-basis: 50%;
 
 }
 
-.ResultedGame{
+.ResultedGame {
   line-height: 1em;
   padding: 1em;
   border-bottom: #030052 1px solid;
 }
 
-.MatchDate{
+.MatchDate {
   padding-top: 1em;
   color: var(--text-color);
 }
 
-.ComparisonBar{
-/* display: inline; */
+.ComparisonBar {
+  /* display: inline; */
   margin-left: auto;
   margin-right: auto;
   flex-basis: 100%;
 }
 
-.Chart{
+.Chart {
   width: fit-content;
   background-color: var(--mid-grey);
   margin-top: 2em;
 }
 
-.ChartContainer{
+.ChartContainer {
   display: flex;
   flex-direction: row;
   flex-basis: 100%;
 }
 
-.LiveScores{
+.LiveScores {
   padding-top: 2em;
 }
 
@@ -3697,7 +3758,7 @@ input:active + .design::after {
   color: var(--button-color);
 }
 
-.CurrentScore{
+.CurrentScore {
   font-size: 1.2em;
   padding-top: 1em;
   padding-bottom: 0.5em;
@@ -3707,7 +3768,7 @@ h6.AttackingMomentum {
   padding: 1em;
 }
 
-.ContactText{
+.ContactText {
   font-size: 0.8em;
   margin-left: auto;
   margin-right: auto;
@@ -3715,7 +3776,7 @@ h6.AttackingMomentum {
   text-align: center;
 }
 
-.LoginForm{
+.LoginForm {
   font-size: 0.8em;
   margin-left: auto;
   margin-right: auto;
@@ -3732,20 +3793,21 @@ h6.AttackingMomentum {
   border: 1px solid #030052;
   border-bottom: 1px solid #030052;
   /* text-align: center;  */
-  padding-left: 1em;    
-  padding-right: 0; 
+  padding-left: 1em;
+  padding-right: 0;
   width: 100%;
   color: #030052;
   line-height: 2.5em;
 }
+
 .LoginInput2 {
   /* height: 2em; */
   border-bottom: 1px solid #030052;
   border: 1px solid #030052;
   border-top: 0px;
   /* text-align: center;  */
-  padding-left: 1em;    
-  padding-right: 0; 
+  padding-left: 1em;
+  padding-right: 0;
   margin-bottom: 0.5em;
   flex-basis: 90%;
   margin-right: 0.5em;
@@ -3769,7 +3831,7 @@ h6.AttackingMomentum {
   text-decoration: underline;
 }
 
-.LoginSignUp{
+.LoginSignUp {
   /* flex-direction: column; */
   height: auto;
   margin-left: auto;
@@ -3777,7 +3839,7 @@ h6.AttackingMomentum {
   margin-bottom: 0em;
 }
 
-.CancelButton{
+.CancelButton {
   background: none;
   border: none;
   color: var(--text-color);
@@ -3792,37 +3854,38 @@ h6.AttackingMomentum {
 .CancelButton:hover {
   text-decoration: underline;
 }
-.SignUp{
+
+.SignUp {
   margin-top: 0em;
   font-size: 0.9em;
 }
 
-.text-blue-500{
+.text-blue-500 {
   color: var(--text-color);
 }
 
-.mb-6{
+.mb-6 {
   width: 100%;
 }
 
-form input{
+form input {
   display: block;
   opacity: 1;
   pointer-events: auto;
 
 }
 
-button.PaymentReturn{
+button.PaymentReturn {
   flex-basis: auto;
   margin-left: auto;
   margin-right: auto;
 }
 
-.PasswordContainer{
+.PasswordContainer {
   display: flex;
 }
 
-button.TogglePasswordButton{
+button.TogglePasswordButton {
   flex-basis: 10%;
   margin: 0px;
   padding: 0em;
@@ -3835,7 +3898,7 @@ button.TogglePasswordButton{
   margin-top: 0em; */
 }
 
-.ResetPasswordField{
+.ResetPasswordField {
   margin-left: auto;
   margin-right: auto;
   width: 50%;
@@ -3847,51 +3910,51 @@ button.TogglePasswordButton{
   flex: none;
 }
 
-button.SecondaryButtons{
+button.SecondaryButtons {
   font-size: 1em;
   color: var(--button-text-color);
   background-color: var(--button-color);
   border: 1px solid #030052;
 }
 
-.LeagueList{
+.LeagueList {
   padding: 1em;
   font-size: 1.1em;
 }
 
-.LeagueList li{
+.LeagueList li {
   margin: 1em;
 }
 
-.AIOverview{
+.AIOverview {
   padding: 1em;
   line-height: 2em;
   color: #030052;
 }
 
-.AIDisclaimer{
+.AIDisclaimer {
   color: #030052;
 }
 
-.MembershipHeader{
+.MembershipHeader {
   margin-left: 4em;
   margin-right: 4em;
 }
 
-.AIContainer{
+.AIContainer {
   display: flex;
   color: var(--text-color);
   font-size: 1em;
 }
 
-.AIMatchPreview{
+.AIMatchPreview {
   padding: 1em;
   padding-bottom: 1em;
   line-height: 1.75em;
   color: var(--text-color);
 }
 
-.HomeAIInsights{
+.HomeAIInsights {
   flex-direction: column;
   text-align: justify;
   padding: 1em;
@@ -3899,12 +3962,12 @@ button.SecondaryButtons{
   flex-basis: 50%;
 }
 
-.HomeAIInsights ul{
+.HomeAIInsights ul {
   padding-top: 1em;
   font-size: 1em;
 }
 
-.AwayAIInsights{
+.AwayAIInsights {
   flex-direction: column;
   text-align: justify;
   padding: 1em;
@@ -3912,12 +3975,12 @@ button.SecondaryButtons{
   flex-basis: 50%;
 }
 
-.AwayAIInsights ul{
+.AwayAIInsights ul {
   padding-top: 1em;
   font-size: 1em;
 }
 
-.IndividualAIComponent{
+.IndividualAIComponent {
   padding: 1em;
 }
 
@@ -3932,7 +3995,7 @@ button.AIInsights {
 
 button.AIInsightsLocked {
   background-color: #eaeaea;
-  color:#030052;
+  color: #030052;
   margin: 1em;
   cursor: pointer;
   /* box-shadow: 0 0px 0px 0 rgba(0, 0, 0, 0.2), 0 1px 2px 0 #030052; */
@@ -3944,42 +4007,45 @@ button.AIInsights button:active {
 
 }
 
-.BarChart{
+.BarChart {
   height: 1000;
 }
+
 /* .XGSwiper{
 } */
 
-.swiper-wrapper{
+.swiper-wrapper {
   padding-bottom: 30px;
   display: flex;
-  height: auto!;
+  height: auto !;
   width: 100%;
 }
 
 
 
-.swiper-pagination{
-  position:initial !important
+.swiper-pagination {
+  position: initial !important
 }
 
 
-.swiper-container-horizontal>.swiper-pagination-bullets, .swiper-pagination-custom, .swiper-pagination-fraction{
+.swiper-container-horizontal>.swiper-pagination-bullets,
+.swiper-pagination-custom,
+.swiper-pagination-fraction {
   bottom: 5px !important;
 }
 
 .swiper-pagination-bullet {
-  background-color:white !important;
+  background-color: white !important;
   height: 1.5em !important;
   width: 1.5em !important;
 
 }
 
-.LockIcon{
+.LockIcon {
   font-size: 2em;
 }
 
-.LockText{
+.LockText {
   font-size: 1em;
   line-height: 1.5em;
 }
@@ -4034,7 +4100,8 @@ button.AIInsights button:active {
 }
 
 .circle.blue {
-  background-color: #fe8c00; /* blue-600 */
+  background-color: #fe8c00;
+  /* blue-600 */
   color: #020029;
   font-size: 1.1em;
   font-family: Arial, Helvetica, sans-serif;
@@ -4042,7 +4109,8 @@ button.AIInsights button:active {
 }
 
 .circle.red {
-  background-color: yellow; /* blue-600 */
+  background-color: yellow;
+  /* blue-600 */
   color: #020029;
   font-size: 1.1em;
   font-family: Arial, Helvetica, sans-serif;
@@ -4053,11 +4121,11 @@ button.AIInsights button:active {
   color: #999;
 }
 
-.section-title{
+.section-title {
   padding-top: 2em;
 }
 
-.LeagueAndLogo{
+.LeagueAndLogo {
   margin-left: auto;
   margin-right: auto;
   line-height: 2em;
@@ -4071,7 +4139,7 @@ button.AIInsights button:active {
   margin-right: 0.5em;
 }
 
-.LeagueStatsTable{
+.LeagueStatsTable {
   line-height: 2.5em;
   padding: 1em;
   padding-bottom: 2em;
@@ -4081,11 +4149,11 @@ button.AIInsights button:active {
   color: var(--text-color);
 }
 
-.LeagueStatsTable tr{
+.LeagueStatsTable tr {
   border: var(--text-color), 1px, solid;
 }
 
-.DropdownControl{
+.DropdownControl {
   background-color: var(--background-color);
   color: var(--text-color);
 }
@@ -4096,37 +4164,28 @@ button.AIInsights button:active {
   margin-right: auto;
 } */
 
-.MissingPlayer{
+.MissingPlayer {
   flex-direction: row;
   line-height: 2em;
   align-items: center;
   padding-top: 0.5em;
 }
 
-.MissingCircle{
+.MissingCircle {
   width: 1em;
   height: 1em;
   border-radius: 50%;
   margin-right: 0.5em;
 }
 
-.MissingPlayers{
+.MissingPlayers {
   display: flex;
-  gap: 2em; /* space between the two columns */
+  gap: 2em;
+  /* space between the two columns */
   /* align-items: center; */
 }
-.HomeMissingPlayers{
-  flex: 1;
-  flex-direction: column;
-  gap: 1rem;
-  padding: 1rem;
-  background-color: var(--secondary-background-color);
-  color: var(--text-color);
-  border-radius: 0.5rem;
-  justify-content: center
 
-}
-.AwayMissingPlayers{
+.HomeMissingPlayers {
   flex: 1;
   flex-direction: column;
   gap: 1rem;
@@ -4137,7 +4196,18 @@ button.AIInsights button:active {
   justify-content: center
 }
 
-.MissingPlayersButton{
+.AwayMissingPlayers {
+  flex: 1;
+  flex-direction: column;
+  gap: 1rem;
+  padding: 1rem;
+  background-color: var(--secondary-background-color);
+  color: var(--text-color);
+  border-radius: 0.5rem;
+  justify-content: center
+}
+
+.MissingPlayersButton {
   font-size: 1.1em;
   background-color: var(--secondary-background-color);
   width: 100%;
@@ -4150,7 +4220,7 @@ button.AIInsights button:active {
   text-align: center;
 }
 
-.TeamStreaksButton{
+.TeamStreaksButton {
   font-size: 1.1em;
   background-color: var(--secondary-background-color);
   width: 100%;
@@ -4180,14 +4250,16 @@ button.AIInsights button:active {
   text-align: left;
 }
 
-.StreakTable th, .StreakTable td {
+.StreakTable th,
+.StreakTable td {
   padding: 0.75em 1em;
   /* font-size: 0.95em; */
   /* color: var(--text-color); */
 }
 
 .StreakTable thead .TableTeamName {
-  width: 4em; /* ensures some consistency */
+  width: 4em;
+  /* ensures some consistency */
 }
 
 .StreakTable td,
@@ -4209,7 +4281,8 @@ button.AIInsights button:active {
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 4em; /* ensures some consistency */
+  width: 4em;
+  /* ensures some consistency */
   vertical-align: middle;
   margin: 0%;
   padding: 1em;
@@ -4236,7 +4309,8 @@ button.AIInsights button:active {
 }
 
 .StreakTable td {
-  vertical-align: middle; /* force center alignment */
+  vertical-align: middle;
+  /* force center alignment */
 }
 
 .StreakLabel {
@@ -4252,7 +4326,8 @@ button.AIInsights button:active {
 }
 
 .StreakValueSpan {
-  background-color: var(--span-background); /* or any color */
+  background-color: var(--span-background);
+  /* or any color */
   min-width: 2.5em;
   color: var(--span-text-colour);
   padding: 0.25em 0.5em;
@@ -4268,7 +4343,8 @@ button.AIInsights button:active {
 }
 
 .StreakOddsSpan {
-  background-color: var(--span-background); /* or any color */
+  background-color: var(--span-background);
+  /* or any color */
   min-width: 2.5em;
   color: var(--span-text-colour);
   padding: 0.25em 0.5em;
@@ -4276,14 +4352,14 @@ button.AIInsights button:active {
   display: inline-block;
 }
 
-.PlayerStats{
+.PlayerStats {
   display: flex;
   width: 100%;
   margin-left: auto;
   margin-right: auto;
 }
 
-.PlayerStatsButton{
+.PlayerStatsButton {
   font-size: 1.1em;
   background-color: var(--secondary-background-color);
   width: 100%;
@@ -4322,8 +4398,9 @@ button.AIInsights button:active {
   border-radius: 50%;
   color: white;
   font-weight: bold;
-  background-color: var(--button-color); /* blue-600 */
-  color: var(--button-text-color); 
+  background-color: var(--button-color);
+  /* blue-600 */
+  color: var(--button-text-color);
   font-size: 1.1em;
   font-family: Arial, Helvetica, sans-serif;
   font-weight: bolder;
@@ -4340,8 +4417,9 @@ button.AIInsights button:active {
   border-radius: 50%;
   color: white;
   font-weight: bold;
-  background-color: var(--button-color); /* blue-600 */
-  color: var(--button-text-color); 
+  background-color: var(--button-color);
+  /* blue-600 */
+  color: var(--button-text-color);
   font-size: 1.1em;
   font-family: Arial, Helvetica, sans-serif;
   font-weight: bolder;
@@ -4384,7 +4462,7 @@ button.AIInsights button:active {
   margin-bottom: 2em;
 }
 
-.PlayerStatsList li{
+.PlayerStatsList li {
   padding-bottom: 1em;
 }
 
@@ -4439,4 +4517,15 @@ button.AIInsights button:active {
   color: #020029;
   font-weight: bold;
   text-shadow: 0 0 5px goldenrod;
+}
+
+.ColumnBadge {
+  height: 3em;
+  width: 3em;
+  padding: 1em;
+  margin-left: 5em;
+  margin-right: 5em;
+  align-self: center;
+  background-color: whitesmoke;
+  border-radius: 0.5rem;
 }
