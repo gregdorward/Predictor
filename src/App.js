@@ -276,8 +276,7 @@ async function calculateDate(dateString) {
       ) {
         if (
           element.id !== 5874 &&
-          element.id !== 12623 &&
-          element.id !== 13734
+          element.id !== 12623
         ) {
           availableLeagues.push({ name: name, element });
         }
@@ -620,8 +619,6 @@ function AppContent() {
       <div id="ExplainerText" />
       <div id="Loading" className="Loading"></div>
       <div id="Buttons" className="Buttons">
-        <ThreeDots className="MainLoading" fill="#030061" />
-        <div>Loading all fixture and form data...</div>
       </div>
 
       {user ? (

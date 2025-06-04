@@ -338,14 +338,14 @@ async function getPastLeagueResults(team, game, hOrA, form) {
           resultedGame.homeGoalCount > resultedGame.awayGoalCount
             ? 3
             : resultedGame.homeGoalCount < resultedGame.awayGoalCount
-            ? 0
-            : 1,
+              ? 0
+              : 1,
         result:
           resultedGame.homeGoalCount > resultedGame.awayGoalCount
             ? "W"
             : resultedGame.homeGoalCount < resultedGame.awayGoalCount
-            ? "L"
-            : "D",
+              ? "L"
+              : "D",
       });
 
       const directnessHome =
@@ -353,7 +353,7 @@ async function getPastLeagueResults(team, game, hOrA, form) {
           ? 50
           : 100 - resultedGame.team_a_possession) /
         (resultedGame.team_b_shotsOnTarget === 0 ||
-        resultedGame.team_b_shotsOnTarget === -1
+          resultedGame.team_b_shotsOnTarget === -1
           ? 5
           : resultedGame.team_b_shotsOnTarget);
 
@@ -382,17 +382,17 @@ async function getPastLeagueResults(team, game, hOrA, form) {
           : favouriteCount + 0;
       winningFavouriteCount =
         resultedGame.odds_ft_1 < resultedGame.odds_ft_2 &&
-        resultedGame.homeGoalCount > resultedGame.awayGoalCount
+          resultedGame.homeGoalCount > resultedGame.awayGoalCount
           ? winningFavouriteCount + 1
           : winningFavouriteCount + 0;
       drawingFavouriteCount =
         resultedGame.odds_ft_1 < resultedGame.odds_ft_2 &&
-        resultedGame.homeGoalCount === resultedGame.awayGoalCount
+          resultedGame.homeGoalCount === resultedGame.awayGoalCount
           ? drawingFavouriteCount + 1
           : drawingFavouriteCount + 0;
       beatenFavouriteCount =
         resultedGame.odds_ft_1 < resultedGame.odds_ft_2 &&
-        resultedGame.homeGoalCount < resultedGame.awayGoalCount
+          resultedGame.homeGoalCount < resultedGame.awayGoalCount
           ? beatenFavouriteCount + 1
           : beatenFavouriteCount + 0;
 
@@ -402,17 +402,17 @@ async function getPastLeagueResults(team, game, hOrA, form) {
           : underdogCount + 0;
       winningUnderdogCount =
         resultedGame.odds_ft_1 > resultedGame.odds_ft_2 &&
-        resultedGame.homeGoalCount > resultedGame.awayGoalCount
+          resultedGame.homeGoalCount > resultedGame.awayGoalCount
           ? winningUnderdogCount + 1
           : winningUnderdogCount + 0;
       drawingUnderdogCount =
         resultedGame.odds_ft_1 > resultedGame.odds_ft_2 &&
-        resultedGame.homeGoalCount === resultedGame.awayGoalCount
+          resultedGame.homeGoalCount === resultedGame.awayGoalCount
           ? drawingUnderdogCount + 1
           : drawingUnderdogCount + 0;
       beatenUnderdogCount =
         resultedGame.odds_ft_1 > resultedGame.odds_ft_2 &&
-        resultedGame.homeGoalCount < resultedGame.awayGoalCount
+          resultedGame.homeGoalCount < resultedGame.awayGoalCount
           ? beatenUnderdogCount + 1
           : beatenUnderdogCount + 0;
     }
@@ -467,14 +467,14 @@ async function getPastLeagueResults(team, game, hOrA, form) {
           resultedGame.homeGoalCount > resultedGame.awayGoalCount
             ? 0
             : resultedGame.homeGoalCount < resultedGame.awayGoalCount
-            ? 3
-            : 1,
+              ? 3
+              : 1,
         result:
           resultedGame.homeGoalCount > resultedGame.awayGoalCount
             ? "L"
             : resultedGame.homeGoalCount < resultedGame.awayGoalCount
-            ? "W"
-            : "D",
+              ? "W"
+              : "D",
       });
 
       const directnessAway =
@@ -482,7 +482,7 @@ async function getPastLeagueResults(team, game, hOrA, form) {
           ? 50
           : 100 - resultedGame.team_b_possession) /
         (resultedGame.team_a_shotsOnTarget === 0 ||
-        resultedGame.team_a_shotsOnTarget === -1
+          resultedGame.team_a_shotsOnTarget === -1
           ? 5
           : resultedGame.team_a_shotsOnTarget);
 
@@ -510,17 +510,17 @@ async function getPastLeagueResults(team, game, hOrA, form) {
           : favouriteCount + 0;
       winningFavouriteCount =
         resultedGame.odds_ft_1 > resultedGame.odds_ft_2 &&
-        resultedGame.homeGoalCount < resultedGame.awayGoalCount
+          resultedGame.homeGoalCount < resultedGame.awayGoalCount
           ? winningFavouriteCount + 1
           : winningFavouriteCount + 0;
       drawingFavouriteCount =
         resultedGame.odds_ft_1 > resultedGame.odds_ft_2 &&
-        resultedGame.homeGoalCount === resultedGame.awayGoalCount
+          resultedGame.homeGoalCount === resultedGame.awayGoalCount
           ? drawingFavouriteCount + 1
           : drawingFavouriteCount + 0;
       beatenFavouriteCount =
         resultedGame.odds_ft_1 > resultedGame.odds_ft_2 &&
-        resultedGame.homeGoalCount > resultedGame.awayGoalCount
+          resultedGame.homeGoalCount > resultedGame.awayGoalCount
           ? beatenFavouriteCount + 1
           : beatenFavouriteCount + 0;
 
@@ -530,17 +530,17 @@ async function getPastLeagueResults(team, game, hOrA, form) {
           : underdogCount + 0;
       winningUnderdogCount =
         resultedGame.odds_ft_1 < resultedGame.odds_ft_2 &&
-        resultedGame.homeGoalCount < resultedGame.awayGoalCount
+          resultedGame.homeGoalCount < resultedGame.awayGoalCount
           ? winningUnderdogCount + 1
           : winningUnderdogCount + 0;
       drawingUnderdogCount =
         resultedGame.odds_ft_1 < resultedGame.odds_ft_2 &&
-        resultedGame.homeGoalCount === resultedGame.awayGoalCount
+          resultedGame.homeGoalCount === resultedGame.awayGoalCount
           ? drawingUnderdogCount + 1
           : drawingUnderdogCount + 0;
       beatenUnderdogCount =
         resultedGame.odds_ft_1 < resultedGame.odds_ft_2 &&
-        resultedGame.homeGoalCount > resultedGame.awayGoalCount
+          resultedGame.homeGoalCount > resultedGame.awayGoalCount
           ? beatenUnderdogCount + 1
           : beatenUnderdogCount + 0;
     }
@@ -1698,7 +1698,7 @@ async function findClosestProperty(obj, number) {
 export async function generateGoals(homeForm, awayForm, match) {
   const avgHomeXG = (homeForm.avXGLast5 + awayForm.avXGAgainstLast5) / 2;
   const avgHomeGoalsLast5 = (homeForm.avScoredLast5 + awayForm.avConceededLast5) / 2;
-    const avgHomeGoals = (homeForm.avgScoredHome + awayForm.teamConceededAvgAwayOnly) / 2;
+  const avgHomeGoals = (homeForm.avgScoredHome + awayForm.teamConceededAvgAwayOnly) / 2;
 
   const avgHomeGoalsLast10 =
     (homeForm.last10Goals + awayForm.last10GoalsConceeded) / 2;
@@ -2726,7 +2726,7 @@ export async function calculateScore(match, index, divider, calculate) {
       (formHome.AverageShotsOnTargetOverall
         ? formHome.AverageShotsOnTargetOverall / formHome.avgShots
         : formHome.AverageShotsOnTarget / formHome.avgShots) *
-      formHome.AverageShotsOnTargetOverall
+        formHome.AverageShotsOnTargetOverall
         ? formHome.AverageShotsOnTargetOverall
         : formHome.AverageShotsOnTarget;
 
@@ -2744,7 +2744,7 @@ export async function calculateScore(match, index, divider, calculate) {
       (formAway.AverageShotsOnTargetOverall
         ? formAway.AverageShotsOnTargetOverall / formAway.avgShots
         : formAway.AverageShotsOnTarget / formAway.avgShots) *
-      formAway.AverageShotsOnTargetOverall
+        formAway.AverageShotsOnTargetOverall
         ? formAway.AverageShotsOnTargetOverall
         : formAway.AverageShotsOnTarget;
 
@@ -2896,11 +2896,11 @@ export async function calculateScore(match, index, divider, calculate) {
 
     formHome.rollingAverageGoalsDifferential = parseFloat(
       formHome.allTeamGoalsBasedOnAverages -
-        formHome.allTeamGoalsConceededBasedOnAverages
+      formHome.allTeamGoalsConceededBasedOnAverages
     );
     formAway.rollingAverageGoalsDifferential = parseFloat(
       formAway.allTeamGoalsBasedOnAverages -
-        formAway.allTeamGoalsConceededBasedOnAverages
+      formAway.allTeamGoalsConceededBasedOnAverages
     );
 
     match.GoalsInGamesAverageHome =
@@ -3416,11 +3416,10 @@ async function getSuccessMeasure(fixtures) {
               return (
                 <div className="SuccessMeasure" key={leagueName}>
                   <h3
-                    className={`${
-                      league.totalROI >= 0
-                        ? "ProfitableLeague"
-                        : "NonProfitableLeague"
-                    }`}
+                    className={`${league.totalROI >= 0
+                      ? "ProfitableLeague"
+                      : "NonProfitableLeague"
+                      }`}
                   >
                     {leagueName}: ROI {league.totalROI >= 0 ? "+" : " "}
                     {league.totalROI}%
@@ -3556,6 +3555,132 @@ const footyStatsToSofaScore = [
       id: 34,
       season: 61736,
     },
+    13974: {
+      id: 384,
+      season: 70083, // Copa Libertadores
+    },
+    12322: {
+      id: 37,
+      season: 61666, // Eredivisie
+    },
+    12137: {
+      id: 9,
+      season: 61412, // Belgian Pro League
+    },
+    13963: {
+      id: 40,
+      season: 69956, // Scottish Premiership
+    },
+    12132: {
+      id: 39,
+      season: 61326, // Danish Superliga
+    },
+    13987: {
+      id: 20,
+      season: 70174, // Norwegian Eliteserien
+    },
+    12472: {
+      id: 45,
+      season: 62629, // Austrian Bundesliga
+    },
+    // 12734: {
+    //   id: 185,
+    //   season: 64052, // Greek Super League
+    // },
+    // 12641: {
+    //   id: 52, // Turkish Super Lig
+    //   season: 63814,
+    // },
+    12120: {
+      id: 202,
+      season: 61236, // Ekstraklasa
+    },
+    12326: {
+      id: 215,
+      season: 61658, // Swiss Super League
+    },
+    12121: {
+      id: 170,
+      season: 61243, // Croatian First League
+    },
+    12336: {
+      id: 172,
+      season: 61716, // Czech First League
+    },
+    14089: {
+      id: 41,
+      season: 70853, // Finnish Veikkausliiga
+    },
+    12483: {
+      id: 218,
+      season: 62656, // Ukrainian Premier League
+    },
+    12476: {
+      id: 212,
+      season: 62660, // Slovenian Prva Liga
+    },
+    12944: {
+      id: 211,
+      season: 61728, // Slovak Super Liga
+    },
+    14231: {
+      id: 325,
+      season: 72034, // Brazil Serie A
+    },
+    14305: {
+      id: 390,
+      season: 72603, // Brazil Serie B
+    },
+    13878: {
+      id: 357,
+      season: 69619, // Club World Cup
+    },
+    13734: {
+      id: 10783,
+      season: 58337, // UEFA Nations League 25
+    },
+    14086: {
+      id: 11539,
+      season: 70681, // Colombian Liga BetPlay 25
+    },
+    14626: {
+      id: 278,
+      season: 71306, // Uruguayan Primera Division 25
+    },
+    14125: {
+      id: 155,
+      season: 70268, // Argentina Primera Division 25
+    },
+    13960: {
+      id: 196,
+      season: 69871, // J League 25
+    },
+    13967: {
+      id: 13363,
+      season: 70263 // USL 25
+    },
+    // 192: 69981, // Ireland
+    // 357: 69619, // Club World Cup
+    // 54: 62048, // Spanish Secunda
+    // 53: 63812, // Serie B
+    // 325: 72034, // Brazil
+    // 155: 70268, // Argentina
+    // 44 : 63514, // Bundesliga 2
+    // 182 : 61737, // Ligue 2
+    // 36 : 62408, // Scottish Prem
+    // 206 : 62411, // Scottish Champ
+    // 207 : 62416, // Scottish league one
+    // 209 : 62487, // Scottish league two
+    // 13470 : 72315, // Canada
+    // 11621 : 61419, // Liga MX
+    // 173 : 63807, // English National League
+    // 176 : 63806, // National League North
+    // 174 :63803, // National League South
+    // 136 : 64864, // A League
+    // 410 : 70830, // South korea
+    // 196 : 69871, // J League
+    // 955 : 63998, // Saudi Pro League
+    // 11 : 69427, // World cup EU
   },
 ];
 
@@ -3620,10 +3745,10 @@ export async function getScorePrediction(day, mocked) {
 
   ReactDOM.render(
     <div>
-      <ThreeDots className="MainLoading" fill="#030061" />
-      <div>Loading predictions...</div>
+      <ThreeDots className="MainLoading" fill="#fe8c00" />
+      <div>Collecting form data and calculating predictions...</div>
     </div>,
-    document.getElementById("FixtureContainer")
+    document.getElementById("Loading")
   );
 
   await Promise.all(
@@ -3880,7 +4005,7 @@ export async function getScorePrediction(day, mocked) {
       }
 
       leagueStatsArray = await leagueStatsPromise;
-      
+
       if (
         match.pointsDifferential === true &&
         match.prediction === "homeWin" &&
@@ -4051,6 +4176,10 @@ export async function getScorePrediction(day, mocked) {
 
       predictions.push(match);
     })
+  );
+  ReactDOM.render(
+    <div />,
+    document.getElementById("Loading")
   );
   ReactDOM.render(
     <RenderAllFixtures
@@ -4290,9 +4419,8 @@ async function renderTips() {
                     <div className="TipGame">{tip.game}</div>
                   </li>
                 ))}
-                <div className="AccumulatedOdds">{`Accumulator odds ~ : ${
-                  Math.round(accumulatedOdds) - 1
-                }/1`}</div>
+                <div className="AccumulatedOdds">{`Accumulator odds ~ : ${Math.round(accumulatedOdds) - 1
+                  }/1`}</div>
               </ul>
             }
           />
@@ -4312,9 +4440,8 @@ async function renderTips() {
                 <h4 className="BestPredictionsExplainer">
                   No games fit the criteria
                 </h4>
-                <div className="AccumulatedOdds">{`Accumulator odds ~ : ${
-                  Math.round(accumulatedOdds) - 1
-                }/1`}</div>
+                <div className="AccumulatedOdds">{`Accumulator odds ~ : ${Math.round(accumulatedOdds) - 1
+                  }/1`}</div>
               </ul>
             }
           />
@@ -4567,22 +4694,22 @@ async function renderTips() {
         minimumXG !== 0 ||
         minimumLast6 !== 0 ||
         minimumGDHorA !== 0) && (
-        <div className="FiltersSelected">
-          <h4>Filters selected:</h4>
-          <ul className="FiltersSelectedList">
-            <li>Minimum goal difference spread: {minimumGD}</li>
-            <li>
-              Minimum goal difference spread (home or away only):{" "}
-              {minimumGDHorA}
-            </li>
-            <li>Minimum XG difference spread: {minimumXG}</li>
-            <li>Minimum PPG difference spread: {minimumLast6}</li>
-            <li>
-              Odds range: {rangeValue[0]} - {rangeValue[1]}
-            </li>
-          </ul>
-        </div>
-      )}
+          <div className="FiltersSelected">
+            <h4>Filters selected:</h4>
+            <ul className="FiltersSelectedList">
+              <li>Minimum goal difference spread: {minimumGD}</li>
+              <li>
+                Minimum goal difference spread (home or away only):{" "}
+                {minimumGDHorA}
+              </li>
+              <li>Minimum XG difference spread: {minimumXG}</li>
+              <li>Minimum PPG difference spread: {minimumLast6}</li>
+              <li>
+                Odds range: {rangeValue[0]} - {rangeValue[1]}
+              </li>
+            </ul>
+          </div>
+        )}
     </div>,
     document.getElementById("insights")
   );

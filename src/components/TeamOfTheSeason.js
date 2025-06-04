@@ -33,6 +33,7 @@ export const rounds = [
     53: 63812, // Serie B
     325: 72034, // Brazil
     155: 70268, // Argentina
+    11539: 70681, // Colombia 25
     44 : 63514, // Bundesliga 2
     182 : 61737, // Ligue 2
     36 : 62408, // Scottish Prem
@@ -49,6 +50,13 @@ export const rounds = [
     196 : 69871, // J League
     955 : 63998, // Saudi Pro League
     11 : 69427, // World cup EU
+    10783: 58337, // Nations League 24/25
+    41: 70853, // Finnish Veikkausliiga
+    218: 62656, // Ukrainian Premier League
+    212: 62660, // Slovenian Prva Liga
+    211: 61728, // Slovak Super Liga
+    11: 69427, // World Cup 26 EU Qualifiers
+    295: 53820, // World Cup 26 SA Qualifiers
   },
 ];
 

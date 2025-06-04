@@ -84,13 +84,14 @@ export async function generateTables(a, leagueIdArray, allResults) {
     let currentLeagueId = leagueIdArray[i];
     i++;
     leagueInstance = [];
+    console.log(league.data.specific_tables[0])
 
     //Skip MLS which has a weird format
     if (
-      !league.data.specific_tables[0]?.groups &&
+      // !league.data.specific_tables[0]?.groups &&
       currentLeagueId !== 13973 &&
       currentLeagueId !== 12933 &&
-      currentLeagueId !== 13734 &&
+      // currentLeagueId !== 13734 &&
       league.data.specific_tables[0]?.table
     ) {
       for (
@@ -624,6 +625,7 @@ export async function generateFixtures(
           lowered.includes("u19") ||
           lowered.includes("u20") ||
           lowered.includes("u21") ||
+          lowered.includes("u23") ||
           lowered.includes("reserves") ||
           lowered.includes("reserve") ||
           lowered.endsWith(" b") ||  // only match "Team B", not "FBK Balkan"
@@ -880,9 +882,9 @@ export async function generateFixtures(
     }
 
     // Sort leagueArray based on leagueInstance length (ascending)
-    leagueArray.sort((a, b) => {
-      return getLeagueInstanceLength(a.data) - getLeagueInstanceLength(b.data);
-    });
+    // leagueArray.sort((a, b) => {
+    //   return getLeagueInstanceLength(a.data) - getLeagueInstanceLength(b.data);
+    // });
 
     for (let i = 0; i < leagueArray.length; i++) {
       let leagueInstance;

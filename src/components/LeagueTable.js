@@ -107,8 +107,8 @@ export const sofaScoreIds = [
   { 13878: 357 }, // Club World Cup 25
   { 13974: 384 }, // Copa Libertadores 25
   // { 12530: 23 }, //Serie A
-  // { 13973: 242 }, //MLS
-  // { 13967: 13363 }, // USL
+  { 13973: 242 }, //MLS
+  { 13967: 13363 }, // USL
   // { 12337: 34 }, //Ligue 1,
   // { 12455: 36 }, //Scottish Prem
   // { 12931: 44 }, //Portugal
@@ -151,8 +151,8 @@ export const sofaScoreIds = [
   { 14069: 410 }, //S Korea 25,
   { 13960: 196 }, //Japan 25
   { 12772: 955 }, //Saudi 24/25
-  // 13964, // WC Qual Europe,
-  // 10121, // WC Qual SA,
+  { 13964: 11 }, // WC Qual Europe,
+  { 10121: 295 }, // WC Qual SA,
   // 11426, // WC Qual ConCaf
   // 12801
 ];

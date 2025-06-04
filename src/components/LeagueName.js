@@ -61,8 +61,9 @@ const sofaScoreIds = [
   { 14069: 410 }, //S Korea 25,
   { 13960: 196 }, //Japan 25
   { 12772: 955 }, //Saudi 24/25
-  // 13964, // WC Qual Europe,
-  // 10121, // WC Qual SA,
+  { 13964: 11}, // World Cup 26 EU Qualifiers
+  { 10121: 295 }, // World Cup 26 SA Qualifiers
+
   // 11426, // WC Qual ConCaf
   // 12801
 ];;
