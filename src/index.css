@@ -2094,7 +2094,21 @@ li .Aligned {
 }
 
 
+.last5League {
+  min-height: 3em;
+}
 
+.FormHomeOrAway {
+   min-height: 3em;
+}
+
+.BTTSArrayHomeOrAway {
+  min-height: 4em;
+}
+
+.StyleOfPlay {
+  min-height: 3em;
+}
 
 
 a.PreviousMatchLink {
@@ -2663,7 +2677,7 @@ canvas.LeagueStatsRadar {
   align-items: flex-start;
   background-color: #e2e2e26c !important; */
   line-height: 1.5em;
-  padding-bottom: 0em;
+  padding-bottom: 0em !important;
   /* margin-left: auto; */
 }
 
