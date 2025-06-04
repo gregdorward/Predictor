@@ -55,6 +55,7 @@ const sofaScoreIds = [
   { 14236: 13470 }, //Canada 25
   { 14231: 325 }, //Brazil prem 24
   { 14125: 155 }, //Argentina prem 23
+  { 14086: 11539}, //Colombia 25
   // { 12136: 11621 }, //Mexico prem 23/24
   { 12622: 173 }, //National league
   // { 12933: 176 }, //National league North and South 22/23
@@ -66,7 +67,7 @@ const sofaScoreIds = [
 
   // 11426, // WC Qual ConCaf
   // 12801
-];;
+];
 
 
 export default function LeagueName({ fixture, mock, showShortlist }) {

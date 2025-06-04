@@ -620,6 +620,7 @@ export async function generateFixtures(
       const isYouthOrReserveTeam = (name) => {
         const lowered = name.toLowerCase().trim();
         return (
+          lowered.includes("u16") ||
           lowered.includes("u17") ||
           lowered.includes("u18") ||
           lowered.includes("u19") ||
@@ -663,7 +664,7 @@ export async function generateFixtures(
             homeGoals: game.homeScore !== undefined ? game.homeScore : "-",
             awayGoals: game.awayScore !== undefined ? game.awayScore : "-",
           });
-          // console.log(arrayOfGames)
+          console.log(arrayOfGames)
         });
       } catch (error) {
         console.error(

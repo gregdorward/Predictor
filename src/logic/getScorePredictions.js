@@ -3525,6 +3525,10 @@ const footyStatsToSofaScore = [
       id: 25,
       season: 61960,
     },
+    12622: { 
+      id: 173,
+      season: 63807, // Conference 24/25
+    },
     //Bundesliga
     12529: {
       id: 35,
@@ -3623,6 +3627,10 @@ const footyStatsToSofaScore = [
       id: 211,
       season: 61728, // Slovak Super Liga
     },
+    12138: {
+      id: 210,
+      season: 61448, // Serbian SuperLiga 
+    },
     14231: {
       id: 325,
       season: 72034, // Brazil Serie A
@@ -3655,32 +3663,65 @@ const footyStatsToSofaScore = [
       id: 196,
       season: 69871, // J League 25
     },
+    14069: {
+      id: 410,
+      season: 70830, // K League 25
+    },
+    12772: {
+      id: 955,
+      season: 63998, // Saudi Pro League 24/25
+    },
     13967: {
       id: 13363,
       season: 70263 // USL 25
     },
+    14236:{
+      id: 13470,
+      season: 72315 // Canadian Premier League 25
+    },
+    13964: {
+      id: 11,
+      season: 69427, // World Cup EU 2026
+    },
+    10121: {
+      id: 295,
+      season: 53820, // World Cup SA 2026
+    },
+    13952: {
+      id: 192,
+      season: 69981, // Ireland 24/25
+    },
+    13703 : {
+      id: 136,
+      season: 64864, // A League 24/25
+    },
+    12327: {
+      id: 679,
+      season: 61645, // UEFA Europa League 24/25
+    },
+    12278: {
+      id: 17015,
+      season: 61648, // UEFA Europa Conference League 24/25
+     },
+
+      // UEFA Europa Conference League 24/25
     // 192: 69981, // Ireland
     // 357: 69619, // Club World Cup
     // 54: 62048, // Spanish Secunda
     // 53: 63812, // Serie B
-    // 325: 72034, // Brazil
-    // 155: 70268, // Argentina
+
     // 44 : 63514, // Bundesliga 2
     // 182 : 61737, // Ligue 2
     // 36 : 62408, // Scottish Prem
     // 206 : 62411, // Scottish Champ
     // 207 : 62416, // Scottish league one
     // 209 : 62487, // Scottish league two
-    // 13470 : 72315, // Canada
     // 11621 : 61419, // Liga MX
     // 173 : 63807, // English National League
     // 176 : 63806, // National League North
     // 174 :63803, // National League South
     // 136 : 64864, // A League
-    // 410 : 70830, // South korea
-    // 196 : 69871, // J League
     // 955 : 63998, // Saudi Pro League
-    // 11 : 69427, // World cup EU
   },
 ];
 

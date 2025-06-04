@@ -785,21 +785,37 @@ function GameStats({ game, displayBool, stats }) {
   async function getGameIdByHomeTeam(games, homeTeamName) {
     const normalizedSearch = getMappedTeamName(homeTeamName);
 
-    const matchingGames = games.filter((game) =>
-      getMappedTeamName(game.homeTeam).includes(normalizedSearch)
+    // First try to find an exact match
+    const exactMatch = games.find(
+      (game) => getMappedTeamName(game.homeTeam) === normalizedSearch
     );
 
-    return matchingGames[0] || null;
+    if (exactMatch) return exactMatch;
+
+    // If no exact match, try partial match using includes
+    const partialMatch = games.find(
+      (game) => getMappedTeamName(game.homeTeam).includes(normalizedSearch)
+    );
+
+    return partialMatch || null;
   }
 
   async function getGameIdByAwayTeam(games, awayTeamName) {
     const normalizedSearch = getMappedTeamName(awayTeamName);
 
-    const matchingGames = games.filter((game) =>
-      getMappedTeamName(game.awayTeam).includes(normalizedSearch)
+    // First try to find an exact match
+    const exactMatch = games.find(
+      (game) => getMappedTeamName(game.awayTeam) === normalizedSearch
     );
 
-    return matchingGames[0] || null;
+    if (exactMatch) return exactMatch;
+
+    // If no exact match, try partial match using includes
+    const partialMatch = games.find(
+      (game) => getMappedTeamName(game.awayTeam).includes(normalizedSearch)
+    );
+
+    return partialMatch || null;
   }
 
   async function findGameByPartialMatch(gamesArray, searchText, teamType) {
@@ -972,6 +988,7 @@ function GameStats({ game, displayBool, stats }) {
   const derivedRoundId = (() => {
 
     for (const mapping of rounds) {
+      console.log(game.sofaScoreId)
       if (mapping.hasOwnProperty(game.sofaScoreId)) {
 
         return mapping[game.sofaScoreId];
@@ -1066,6 +1083,9 @@ function GameStats({ game, displayBool, stats }) {
             await findGameByPartialMatch(arrayOfGames, mappedAway, "awayTeam");
         }
 
+        console.log(
+          `Matching game found: ${matchingGameInfo ? matchingGameInfo.id : "None"}`
+        );
         setMatchingGame(matchingGameInfo);
 
         if (!matchingGameInfo) {
@@ -1077,26 +1097,17 @@ function GameStats({ game, displayBool, stats }) {
         }
 
         const now = Math.floor(Date.now() / 1000); // current Unix timestamp in seconds
-        const isWithin48Hours = game.date - now <= 172800;
+        const isWithin48Hours = game.date > now && game.date - now <= 172800;
 
-
+        // console.log("isWithin48Hours:", isWithin48Hours);
+        // console.log("game.date:", game.date, "| now:", now, "| diff:", game.date - now);
         setLoading(true);
         if (
-          // game.leagueID === 12325 ||
-          // game.leagueID === 12451 ||
-          // game.leagueID === 12446 ||
-          // game.leagueID === 12422 ||
-          // game.leagueID === 12529 ||
-          // game.leagueID === 12337 ||
-          // game.leagueID === 12931 ||
-          // game.leagueID === 12622 ||
-          // game.leagueID === 13973) &&
           isWithin48Hours
         ) {
           const lineupDetail = await fetch(
             `${process.env.REACT_APP_EXPRESS_SERVER}lineups/${matchingGameInfo.id}`
           );
-          console.log(matchingGameInfo.id)
 
           const data = await lineupDetail.json();
           const { homeMissingPlayers, awayMissingPlayers } =
@@ -1303,7 +1314,7 @@ function GameStats({ game, displayBool, stats }) {
     }
 
     fetchMatchingGame();
-  }, [game.id]); 
+  }, [game.id]);
 
   useEffect(() => {
     if (homeTeamStats) {
