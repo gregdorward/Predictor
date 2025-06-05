@@ -66,6 +66,8 @@ function GameStats({ game, displayBool, stats }) {
   });
   const [homeMissingPlayersList, setHomeMissingPlayersList] = useState([]);
   const [awayMissingPlayersList, setAwayMissingPlayersList] = useState([]);
+  const [homeLineupList, setHomeLineupList] = useState([]);
+  const [awayLineupList, setAwayLineupList] = useState([]);
   const [loading, setLoading] = useState(true);
   const [streakData, setStreakData] = useState([]);
   const [homeTeamStats, setHomeTeamStats] = useState(null);
@@ -943,6 +945,31 @@ function GameStats({ game, displayBool, stats }) {
     };
   }
 
+async function extractPlayerRatings(data) {
+  const extract = (teamType) => {
+    const team = data?.[teamType];
+    if (!team || !Array.isArray(team.players)) {
+      return { formation: null, lineup: [] };
+    }
+
+    return {
+      formation: team.formation ?? null,
+      lineup: team.players.map((p) => ({
+        team: teamType,
+        name: p.player?.name ?? "Unknown",
+        avgRating: p.avgRating ?? "N/A",
+        position: p.position ?? "Unknown",
+        valueEuros: p.player?.proposedMarketValueRaw?.value ?? "Unknown",
+      })),
+    };
+  };
+
+  return {
+    homeLineup: extract("home"),
+    awayLineup: extract("away"),
+  };
+}
+
   function mapOddsToStreaks(streaks, odds) {
     const mappedStreaks = JSON.parse(JSON.stringify(streaks)); // Deep copy to avoid modifying original
 
@@ -988,7 +1015,6 @@ function GameStats({ game, displayBool, stats }) {
   const derivedRoundId = (() => {
 
     for (const mapping of rounds) {
-      console.log(game.sofaScoreId)
       if (mapping.hasOwnProperty(game.sofaScoreId)) {
 
         return mapping[game.sofaScoreId];
@@ -1112,7 +1138,9 @@ function GameStats({ game, displayBool, stats }) {
           const data = await lineupDetail.json();
           const { homeMissingPlayers, awayMissingPlayers } =
             await extractMissingPlayers(data);
-
+          const { homeLineup, awayLineup } = await extractPlayerRatings(data);
+          setHomeLineupList(homeLineup);
+          setAwayLineupList(awayLineup);
           setHomeMissingPlayersList(homeMissingPlayers);
           setAwayMissingPlayersList(awayMissingPlayers);
           setLoading(false);
@@ -2371,7 +2399,7 @@ function GameStats({ game, displayBool, stats }) {
   }
 
   const generateAIInsights = useCallback(
-    async (gameId, streak, oddsData, homeTeamStats, awayTeamStats, homePlayerData, awayPlayerData, homeMissingPlayersList, awayMissingPlayersList) => {
+    async (gameId, streak, oddsData, homeTeamStats, awayTeamStats, homePlayerData, awayPlayerData, homeMissingPlayersList, awayMissingPlayersList, homeLineupList, awayLineupList) => {
       setIsLoading(true);
       console.log(game)
       const table = await fetchBasicTable(game.leagueID);
@@ -2413,22 +2441,24 @@ function GameStats({ game, displayBool, stats }) {
           homeTeam: {
             homeTeamName: game.homeTeam,
             homeLeaguePosition: homeForm?.LeaguePosition,
-            homeTeamResults: homeForm?.allTeamResults,
+            homeTeamResultsLast5: homeForm?.allTeamResults.slice(0, 5),
             performanceStats: homeTeamStats,
             keyPlayers: homePlayerData.slice(0, 5),
             competitionRankings: ranksHome,
             missingPlayers: homeMissingPlayersList,
+            predictedLineup: homeLineupList,
             homeAttackingStats: homeForm?.attackingMetrics,
             homeDefensiveStats: homeForm?.defensiveMetrics,
           },
           awayTeam: {
             awayTeamName: game.awayTeam,
             awayLeaguePosition: awayForm?.LeaguePosition,
-            awayTeamResults: awayForm?.allTeamResults,
+            awayTeamResultsLast5: awayForm?.allTeamResults.slice(0, 5),
             performanceStats: awayTeamStats,
             keyPlayers: awayPlayerData.slice(0, 5),
             competitionRankings: ranksAway,
             missingPlayers: awayMissingPlayersList,
+            predictedLineup: awayLineupList,
             awayAttackingStats: awayForm?.attackingMetrics,
             awayDefensiveStats: awayForm?.defensiveMetrics,
           },
@@ -2760,7 +2790,9 @@ function GameStats({ game, displayBool, stats }) {
                   homePlayerData,
                   awayPlayerData,
                   homeMissingPlayersList,
-                  awayMissingPlayersList
+                  awayMissingPlayersList,
+                  homeLineupList,
+                  awayLineupList,
                 );
                 setShowAIInsights(true);
               }}

@@ -84,7 +84,6 @@ export async function generateTables(a, leagueIdArray, allResults) {
     let currentLeagueId = leagueIdArray[i];
     i++;
     leagueInstance = [];
-    console.log(league.data.specific_tables[0])
 
     //Skip MLS which has a weird format
     if (
@@ -664,7 +663,6 @@ export async function generateFixtures(
             homeGoals: game.homeScore !== undefined ? game.homeScore : "-",
             awayGoals: game.awayScore !== undefined ? game.awayScore : "-",
           });
-          console.log(arrayOfGames)
         });
       } catch (error) {
         console.error(
