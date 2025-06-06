@@ -39,6 +39,7 @@ const PlayerStatsList = ({ playerStats, className, spanClass }) => {
         <Collapsable
           key={player.playerName}
           buttonText={player.playerName}
+          buttonImage={player.playerImage}
           classNameButton="PlayerToggleButton"
           isOpen={expandedPlayers.includes(player.playerName)}
           onTriggerOpening={() => togglePlayer(player.playerName, true)}

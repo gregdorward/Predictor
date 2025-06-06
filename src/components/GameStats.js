@@ -1,6 +1,7 @@
 import React, {
   useState,
   useEffect,
+  useRef,
   Fragment,
   useCallback,
   useMemo,
@@ -85,6 +86,8 @@ function GameStats({ game, displayBool, stats }) {
   const [homePlayerImage, setHomePlayerImage] = useState(null); // State to hold your odds object
   const [awayPlayerImage, setAwayPlayerImage] = useState(null); // State to hold your odds object
   const [loadingPlayerData, setLoadingPlayerData] = useState(true);
+  const [homePlayerDataWithImages, setHomePlayerDataWithImages] = useState([]);
+const [awayPlayerDataWithImages, setAwayPlayerDataWithImages] = useState([]);
 
   // Save to localStorage whenever userTips changes
   useEffect(() => {
@@ -1321,6 +1324,10 @@ function GameStats({ game, displayBool, stats }) {
               playerStats.topPlayers,
               matchingGameInfo.awayId
             );
+            const trimmedPlayersHome = playersHome.slice(0, 5); // Limit to top 3 players
+            const trimmedPlayersAway = playersAway.slice(0, 5); // Limit to top 3 players
+            console.log("Home Players:", playersHome);
+
 
             const homeKeyPlayerAttributes = await fetch(`${process.env.REACT_APP_EXPRESS_SERVER}playerAttributes/${playersHome[0].playerId}`);
             const awayKeyPlayerAttributes = await fetch(`${process.env.REACT_APP_EXPRESS_SERVER}playerAttributes/${playersAway[0].playerId}`);
@@ -1334,8 +1341,8 @@ function GameStats({ game, displayBool, stats }) {
             console.log("Home Key Player Attributes:", homeAttributes);
             console.log("Away Key Player Attributes:", awayAttributes);
 
-            setHomePlayerData(playersHome);
-            setAwayPlayerData(playersAway);
+            setHomePlayerData(trimmedPlayersHome);
+            setAwayPlayerData(trimmedPlayersAway);
 
             if (
               homeAttributes?.playerAttributeOverviews?.[0] &&
@@ -1392,6 +1399,45 @@ function GameStats({ game, displayBool, stats }) {
 
     fetchMatchingGame();
   }, [game.id]);
+
+const hasFetchedImages = useRef(false);
+
+ useEffect(() => {
+  if (!homePlayerData.length || !awayPlayerData.length) return;
+
+  if (hasFetchedImages.current) return;
+
+  hasFetchedImages.current = true;
+
+  const fetchImagesForPlayers = async (players, setFn) => {
+    const updatedPlayers = [];
+
+    for (const player of players) {
+      try {
+        const res = await fetch(`${process.env.REACT_APP_EXPRESS_SERVER}playerImage/${player.playerId}`);
+        if (res.ok) {
+          const blob = await res.blob();
+          const imageUrl = URL.createObjectURL(blob);
+          updatedPlayers.push({ ...player, playerImage: imageUrl });
+        } else {
+          console.warn(`Image fetch failed for ${player.playerName}`);
+          updatedPlayers.push({ ...player, playerImage: null });
+        }
+      } catch (error) {
+        console.error(`Error fetching image for ${player.playerName}`, error);
+        updatedPlayers.push({ ...player, playerImage: null });
+      }
+
+      await new Promise((resolve) => setTimeout(resolve, 250)); // 250ms delay
+    }
+
+    setFn(updatedPlayers);
+  };
+
+  fetchImagesForPlayers(homePlayerData, setHomePlayerDataWithImages);
+  fetchImagesForPlayers(awayPlayerData, setAwayPlayerDataWithImages);
+}, [homePlayerData, awayPlayerData]);
+
 
   useEffect(() => {
     if (homeTeamStats) {
@@ -2826,7 +2872,7 @@ function GameStats({ game, displayBool, stats }) {
           />
         )}
 
-        {loadingPlayerData || homePlayerData.length === 0 ? (
+        {loadingPlayerData || homePlayerDataWithImages.length === 0 ? (
           <div></div>
         ) : !paid ? (
           <Button
@@ -2842,12 +2888,12 @@ function GameStats({ game, displayBool, stats }) {
               element={
                 <div className="PlayerStats">
                   <PlayerStatsList
-                    playerStats={homePlayerData}
+                    playerStats={homePlayerDataWithImages}
                     className="HomePlayerStats"
                     spanClass="SpanHome"
                   />
                   <PlayerStatsList
-                    playerStats={awayPlayerData}
+                    playerStats={awayPlayerDataWithImages}
                     className="AwayPlayerStats"
                     spanClass="SpanAway"
                   />
@@ -2871,7 +2917,7 @@ function GameStats({ game, displayBool, stats }) {
                       )}
                       <RadarChart
                         style={{ height: "auto" }}
-                        title="Key Player Attributes"
+                        title={homePlayerData[0]?.playerName}
                         labels={labelsHome}
                         data={dataHome}
                         data2={data2Home}
@@ -2891,7 +2937,7 @@ function GameStats({ game, displayBool, stats }) {
                       )}
                       <RadarChart
                         style={{ height: "auto" }}
-                        title="Key Player Attributes"
+                        title={awayPlayerData[0]?.playerName}
                         labels={labelsAway}
                         data={dataAway}
                         data2={data2Away}
