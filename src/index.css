@@ -2099,7 +2099,7 @@ li .Aligned {
 }
 
 .FormHomeOrAway {
-   min-height: 3em;
+  min-height: 3em;
 }
 
 .BTTSArrayHomeOrAway {
@@ -4153,6 +4153,14 @@ button.AIInsights button:active {
   margin-right: 0.5em;
 }
 
+.player-image {
+  width: 6em;
+  height: 6em;
+  border-radius: 50%;
+  background-color: whitesmoke;
+  /* margin-right: 0.5em; */
+}
+
 .LeagueStatsTable {
   line-height: 2.5em;
   padding: 1em;
@@ -4400,6 +4408,38 @@ button.AIInsights button:active {
 .AwayPlayerStats .StatLabel {
   text-align: left;
   flex: 1;
+}
+
+.PlayerAttributes {
+  display: flex;
+  width: 100%;
+  margin-left: auto;
+  margin-right: auto;
+  background-color: var(--mid-grey);
+  flex-wrap: wrap;
+}
+
+.PlayerAttributesButton {
+  font-size: 1.1em;
+  background-color: var(--secondary-background-color);
+  width: 100%;
+  margin-left: auto;
+  margin-right: auto;
+  color: var(--button-color);
+}
+
+.HomePlayerAttributes {
+  flex: 1;
+  margin-top: 1em;
+  margin-bottom: 1em;
+  /* margin: 1em; */
+}
+
+.AwayPlayerAttributes {
+  flex: 1;
+  margin-top: 1em;
+  margin-bottom: 1em;
+  /* margin: 1em; */
 }
 
 .SpanHome {

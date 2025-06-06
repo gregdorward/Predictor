@@ -30,7 +30,7 @@ ChartJS.register(
   Tooltip,
   Legend,
   SubTitle,
-  
+
 );
 
 export function Chart(props) {
@@ -326,7 +326,7 @@ export const StatGauge = ({ label, rank, maxRank = 36 }) => {
   };
 
   return (
-    <div style={{ width: 100, height: 50, textAlign: 'center', margin: "1.2em"}}>
+    <div style={{ width: 100, height: 50, textAlign: 'center', margin: "1.2em" }}>
       <Doughnut data={data} options={options} />
       <div style={{ fontSize: '0.8rem', marginTop: '-10px' }}>
         {label}<br />Rank {rank}
@@ -340,22 +340,20 @@ export function RadarChart(props) {
     color: "white",
     scales: {
       r: {
-        angleLines: {
+        ticks: {
+          stepSize: 20, // Adjust this to space out ticks more (default is 10)
           display: false,
         },
-        suggestedMin: 0,
-        suggestedMax: 1,
-        ticks: {
-          precision: 0,
-          display: false,
+        grid: {
+          // circular: true,
+          color: "white",
         },
         pointLabels: {
           color: "white",
         },
-        grid: {
-          color: "white",
-        },
-      },
+        min: 0,
+        max: props.max, // Set this according to your chart's range
+      }
     },
     plugins: {
       legend: {
@@ -378,15 +376,7 @@ export function RadarChart(props) {
   };
 
   let data = {
-    labels: [
-      "Attack rating",
-      "Defence rating",
-      "Ball retention",
-      "XG For",
-      "XG Against",
-      "Directness",
-      "Attacking precision",
-    ],
+    labels: props.labels,
     datasets: [
       {
         label: props.team1,
@@ -490,24 +480,24 @@ export function BarChartLeagueStats({
   const options = {
     indexAxis: "y",
     maintainAspectRatio: false,
-scales: {
-    x: {
-      reverse: true, // ⬅️ This flips the axis direction
-      beginAtZero: true,
-      title: {
-        display: true,
-        text: 'Relative Rank (Lower = Better)',
+    scales: {
+      x: {
+        reverse: true, // ⬅️ This flips the axis direction
+        beginAtZero: true,
+        title: {
+          display: true,
+          text: 'Relative Rank (Lower = Better)',
+        },
+        ticks: {
+          stepSize: 5,
+        },
       },
-      ticks: {
-        stepSize: 5,
-      },
-    },
-    y: {
-      ticks: {
-        autoSkip: false,
+      y: {
+        ticks: {
+          autoSkip: false,
+        }
       }
-    }
-  },
+    },
     plugins: {
       legend: {
         position: "top",

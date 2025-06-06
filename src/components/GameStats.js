@@ -78,6 +78,12 @@ function GameStats({ game, displayBool, stats }) {
   const [loadingOdds, setLoadingOdds] = useState(false);
   const [homePlayerData, setHomePlayerData] = useState([]);
   const [awayPlayerData, setAwayPlayerData] = useState([]);
+  const [homePlayerAtttributes, setHomePlayerAttributes] = useState([]);
+  const [awayPlayerAtttributes, setAwayPlayerAttributes] = useState([]);
+  const [homePlayerAtttributesComparison, setHomePlayerAttributesComparison] = useState([]);
+  const [awayPlayerAtttributesComparison, setAwayPlayerAttributesComparison] = useState([]);
+  const [homePlayerImage, setHomePlayerImage] = useState(null); // State to hold your odds object
+  const [awayPlayerImage, setAwayPlayerImage] = useState(null); // State to hold your odds object
   const [loadingPlayerData, setLoadingPlayerData] = useState(true);
 
   // Save to localStorage whenever userTips changes
@@ -417,16 +423,14 @@ function GameStats({ game, displayBool, stats }) {
   //   teamNameAliases[targetTeamName.toLowerCase()] || targetTeamName
   // );
 
-  function getTeamRanksFromTopTeamsWithPartialMatch(
-    topTeamsData,
-    targetTeamName
-  ) {
+  const warnedTeams = new Set(); // Move this outside the function if reused
+
+  function getTeamRanksFromTopTeamsWithPartialMatch(topTeamsData, targetTeamName) {
     if (!topTeamsData) return;
 
     const teamRanks = {};
     const topTeams = topTeamsData.topTeams;
 
-    // Define known aliases for ambiguous or shortened names
     const teamNameAliases = {
       "inter milan": "inter",
       "ac milan": "milan",
@@ -436,20 +440,16 @@ function GameStats({ game, displayBool, stats }) {
     };
 
     const targetNameLower = targetTeamName.toLowerCase();
-    const normalizedTargetName =
-      teamNameAliases[targetNameLower] || targetNameLower;
+    const normalizedTargetName = teamNameAliases[targetNameLower] || targetNameLower;
 
     for (const statistic in topTeams) {
       if (!Array.isArray(topTeams[statistic])) continue;
 
       const teamArray = topTeams[statistic];
-
-      // Step 1: Exact match
       let targetTeamIndex = teamArray.findIndex(
         (teamInfo) => teamInfo.team.name.toLowerCase() === normalizedTargetName
       );
 
-      // Step 2: Safe partial match if exact not found
       if (targetTeamIndex === -1) {
         const partialMatches = teamArray.filter((teamInfo) => {
           const name = teamInfo.team.name.toLowerCase();
@@ -462,14 +462,17 @@ function GameStats({ game, displayBool, stats }) {
         if (partialMatches.length === 1) {
           targetTeamIndex = teamArray.indexOf(partialMatches[0]);
         } else {
-          console.warn(
-            `Ambiguous or missing match for "${targetTeamName}" — found:`,
-            partialMatches.map((p) => p.team.name)
-          );
+          const warningKey = `${targetTeamName}-${statistic}`;
+          if (!warnedTeams.has(warningKey)) {
+            console.warn(
+              `Ambiguous or missing match for "${targetTeamName}" in "${statistic}" — found:`,
+              partialMatches.map((p) => p.team.name)
+            );
+            warnedTeams.add(warningKey);
+          }
         }
       }
 
-      // Step 3: Build the teamRanks object
       if (targetTeamIndex !== -1) {
         const teamInfo = teamArray[targetTeamIndex];
         teamRanks[statistic] = {
@@ -945,30 +948,30 @@ function GameStats({ game, displayBool, stats }) {
     };
   }
 
-async function extractPlayerRatings(data) {
-  const extract = (teamType) => {
-    const team = data?.[teamType];
-    if (!team || !Array.isArray(team.players)) {
-      return { formation: null, lineup: [] };
-    }
+  async function extractPlayerRatings(data) {
+    const extract = (teamType) => {
+      const team = data?.[teamType];
+      if (!team || !Array.isArray(team.players)) {
+        return { formation: null, lineup: [] };
+      }
+
+      return {
+        formation: team.formation ?? null,
+        lineup: team.players.map((p) => ({
+          team: teamType,
+          name: p.player?.name ?? "Unknown",
+          avgRating: p.avgRating ?? "N/A",
+          position: p.position ?? "Unknown",
+          valueEuros: p.player?.proposedMarketValueRaw?.value ?? "Unknown",
+        })),
+      };
+    };
 
     return {
-      formation: team.formation ?? null,
-      lineup: team.players.map((p) => ({
-        team: teamType,
-        name: p.player?.name ?? "Unknown",
-        avgRating: p.avgRating ?? "N/A",
-        position: p.position ?? "Unknown",
-        valueEuros: p.player?.proposedMarketValueRaw?.value ?? "Unknown",
-      })),
+      homeLineup: extract("home"),
+      awayLineup: extract("away"),
     };
-  };
-
-  return {
-    homeLineup: extract("home"),
-    awayLineup: extract("away"),
-  };
-}
+  }
 
   function mapOddsToStreaks(streaks, odds) {
     const mappedStreaks = JSON.parse(JSON.stringify(streaks)); // Deep copy to avoid modifying original
@@ -1044,10 +1047,10 @@ async function extractPlayerRatings(data) {
     if (!topPlayers || typeof topPlayers !== "object") return result;
 
     // Helper to find or create player entry
-    const getOrCreatePlayer = (players, playerName) => {
+    const getOrCreatePlayer = (players, playerName, playerId) => {
       let playerEntry = players.find((p) => p.playerName === playerName);
       if (!playerEntry) {
-        playerEntry = { playerName, rankings: [] };
+        playerEntry = { playerName, playerId, rankings: [] };
         players.push(playerEntry);
       }
       return playerEntry;
@@ -1059,9 +1062,10 @@ async function extractPlayerRatings(data) {
       playerArray.forEach((playerData, index) => {
         if (playerData?.team?.id === teamId) {
           const playerName = playerData.player?.name;
-          if (!playerName) return;
+          const playerId = playerData.player?.id;
+          if (!playerName || !playerId) return;
 
-          const playerEntry = getOrCreatePlayer(result, playerName);
+          const playerEntry = getOrCreatePlayer(result, playerName, playerId);
           playerEntry.rankings.push({
             metric,
             rank: index + 1, // Rank is 1-based
@@ -1075,6 +1079,7 @@ async function extractPlayerRatings(data) {
 
     return result;
   }
+
 
   useEffect(() => {
     async function fetchMatchingGame() {
@@ -1317,8 +1322,52 @@ async function extractPlayerRatings(data) {
               matchingGameInfo.awayId
             );
 
+            const homeKeyPlayerAttributes = await fetch(`${process.env.REACT_APP_EXPRESS_SERVER}playerAttributes/${playersHome[0].playerId}`);
+            const awayKeyPlayerAttributes = await fetch(`${process.env.REACT_APP_EXPRESS_SERVER}playerAttributes/${playersAway[0].playerId}`);
+
+            const homeAttributes = await homeKeyPlayerAttributes.json();
+            const awayAttributes = await awayKeyPlayerAttributes.json();
+
+            // const homeImageData = await homeImage;
+            // const awayImageData = await awayImage;
+
+            console.log("Home Key Player Attributes:", homeAttributes);
+            console.log("Away Key Player Attributes:", awayAttributes);
+
             setHomePlayerData(playersHome);
             setAwayPlayerData(playersAway);
+
+            if (
+              homeAttributes?.playerAttributeOverviews?.[0] &&
+              homeAttributes?.averageAttributeOverviews?.[0] &&
+              awayAttributes?.playerAttributeOverviews?.[0] &&
+              awayAttributes?.averageAttributeOverviews?.[0]
+            ) {
+              setHomePlayerAttributes(homeAttributes.playerAttributeOverviews[0]);
+              setHomePlayerAttributesComparison(homeAttributes.averageAttributeOverviews[0]);
+              setAwayPlayerAttributes(awayAttributes.playerAttributeOverviews[0]);
+              setAwayPlayerAttributesComparison(awayAttributes.averageAttributeOverviews[0]);
+            }
+            try {
+              const homeImageResponse = await fetch(`${process.env.REACT_APP_EXPRESS_SERVER}playerImage/${playersHome[0].playerId}`);
+              const awayImageResponse = await fetch(`${process.env.REACT_APP_EXPRESS_SERVER}playerImage/${playersAway[0].playerId}`);
+
+              if (homeImageResponse.ok) {
+                const blob = await homeImageResponse.blob();
+                setHomePlayerImage(URL.createObjectURL(blob));
+              } else {
+                console.error("Failed to fetch home image:", homeImageResponse.status);
+              }
+
+              if (awayImageResponse.ok) {
+                const blob = await awayImageResponse.blob();
+                setAwayPlayerImage(URL.createObjectURL(blob));
+              } else {
+                console.error("Failed to fetch away image:", awayImageResponse.status);
+              }
+            } catch (err) {
+              console.error("Error fetching images:", err);
+            }
 
             // allPlayerStats[`leagueStats${game.sofaScoreId}`] = teamStats;
             // console.log(`Fetched stats for league ${leagueId}`);
@@ -2643,6 +2692,46 @@ async function extractPlayerRatings(data) {
 
   const [selectedTip, setSelectedTip] = useState(null);
 
+
+  // Home player
+  const attributesHome = homePlayerAtttributes;
+  const attributesHomeComparison = homePlayerAtttributesComparison;
+
+  const positionHome = attributesHome.position;
+
+  const filteredEntriesHome = Object.entries(attributesHome).filter(
+    ([key, value]) =>
+      typeof value === "number" && key !== "id" && key !== "yearShift"
+  );
+  const labelsHome = filteredEntriesHome.map(([key]) => key);
+  const dataHome = filteredEntriesHome.map(([, value]) => value);
+
+  const filteredEntries2Home = Object.entries(attributesHomeComparison).filter(
+    ([key, value]) =>
+      typeof value === "number" && key !== "id" && key !== "yearShift"
+  );
+  const data2Home = filteredEntries2Home.map(([, value]) => value);
+
+  // Away player
+  const attributesAway = awayPlayerAtttributes;
+  const attributesAwayComparison = awayPlayerAtttributesComparison;
+
+  const positionAway = attributesAway.position;
+
+  const filteredEntriesAway = Object.entries(attributesAway).filter(
+    ([key, value]) =>
+      typeof value === "number" && key !== "id" && key !== "yearShift"
+  );
+  const labelsAway = filteredEntriesAway.map(([key]) => key);
+  const dataAway = filteredEntriesAway.map(([, value]) => value);
+
+  const filteredEntries2Away = Object.entries(attributesAwayComparison).filter(
+    ([key, value]) =>
+      typeof value === "number" && key !== "id" && key !== "yearShift"
+  );
+  const data2Away = filteredEntries2Away.map(([, value]) => value);
+
+
   const handleTipSelect = (tipType) => {
     setSelectedTip(tipType);
   };
@@ -2765,6 +2854,60 @@ async function extractPlayerRatings(data) {
                 </div>
               }
             />
+            {dataHome.length !== 0 ||
+              dataAway.length !== 0 ? (
+              <Collapsable
+                buttonText={`Key Player Comparison \u{2630}`}
+                classNameButton="PlayerAttributesButton"
+                element={
+                  <div className="PlayerAttributes">
+                    <div className="HomePlayerAttributes">
+                      {homePlayerImage && (
+                        <img
+                          src={homePlayerImage}
+                          alt={homePlayerData[0]?.playerName || "Home Player"}
+                          className="player-image"
+                        />
+                      )}
+                      <RadarChart
+                        style={{ height: "auto" }}
+                        title="Key Player Attributes"
+                        labels={labelsHome}
+                        data={dataHome}
+                        data2={data2Home}
+                        team1={`${homePlayerData[0]?.playerName} (${positionHome})`}
+                        team2={"Competition Average"}
+                        max={100}
+                      />
+                    </div>
+
+                    <div className="AwayPlayerAttributes">
+                      {awayPlayerImage && (
+                        <img
+                          src={awayPlayerImage}
+                          alt={awayPlayerData[0]?.playerName || "Away Player"}
+                          className="player-image"
+                        />
+                      )}
+                      <RadarChart
+                        style={{ height: "auto" }}
+                        title="Key Player Attributes"
+                        labels={labelsAway}
+                        data={dataAway}
+                        data2={data2Away}
+                        team1={`${awayPlayerData[0]?.playerName} (${positionAway})`}
+                        team2={"Competition Average"}
+                        max={100}
+                      />
+                    </div>
+                  </div>
+                }
+              />
+            ) : (
+              <div></div>
+            )
+            }
+
           </>
         )}
 
@@ -2830,6 +2973,16 @@ async function extractPlayerRatings(data) {
               <RadarChart
                 style={{ height: "auto" }}
                 title="Soccer Stats Hub Strength Ratings - All Games"
+                max={1}
+                labels={[
+                  "Attack rating",
+                  "Defence rating",
+                  "Ball retention",
+                  "XG For",
+                  "XG Against",
+                  "Directness",
+                  "Attacking precision",
+                ]}
                 data={[
                   homeAttackStrength,
                   homeDefenceStrength,
