@@ -1,8 +1,8 @@
 {
   "files": {
-    "main.css": "/static/css/main.6632255e.chunk.css",
-    "main.js": "/static/js/main.5360222e.chunk.js",
-    "main.js.map": "/static/js/main.5360222e.chunk.js.map",
+    "main.css": "/static/css/main.3976bd6a.chunk.css",
+    "main.js": "/static/js/main.33042699.chunk.js",
+    "main.js.map": "/static/js/main.33042699.chunk.js.map",
     "runtime-main.js": "/static/js/runtime-main.e02fb83b.js",
     "runtime-main.js.map": "/static/js/runtime-main.e02fb83b.js.map",
     "static/css/2.33c847f3.chunk.css": "/static/css/2.33c847f3.chunk.css",
@@ -12,7 +12,7 @@
     "static/js/3.70577809.chunk.js.map": "/static/js/3.70577809.chunk.js.map",
     "index.html": "/index.html",
     "static/css/2.33c847f3.chunk.css.map": "/static/css/2.33c847f3.chunk.css.map",
-    "static/css/main.6632255e.chunk.css.map": "/static/css/main.6632255e.chunk.css.map",
+    "static/css/main.3976bd6a.chunk.css.map": "/static/css/main.3976bd6a.chunk.css.map",
     "static/js/2.ab3c28e4.chunk.js.LICENSE.txt": "/static/js/2.ab3c28e4.chunk.js.LICENSE.txt",
     "static/media/SoccerStatsHub Large.0c77cad3.png": "/static/media/SoccerStatsHub Large.0c77cad3.png"
   },
@@ -20,7 +20,7 @@
     "static/js/runtime-main.e02fb83b.js",
     "static/css/2.33c847f3.chunk.css",
     "static/js/2.ab3c28e4.chunk.js",
-    "static/css/main.6632255e.chunk.css",
-    "static/js/main.5360222e.chunk.js"
+    "static/css/main.3976bd6a.chunk.css",
+    "static/js/main.33042699.chunk.js"
   ]
 }
