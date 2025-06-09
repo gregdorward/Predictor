@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import Collapsable from "./CollapsableElement";
 
+
 const formatLabel = (key) =>
   key
     .replace(/([A-Z])/g, " $1") // Add space before capital letters
@@ -8,6 +9,8 @@ const formatLabel = (key) =>
 
 const PlayerStatsList = ({ playerStats, className, spanClass }) => {
   const [expandedPlayers, setExpandedPlayers] = useState([]);
+  const [activeIframePlayerId, setActiveIframePlayerId] = useState(null);
+
 
   const toggleAll = (expand) => {
     setExpandedPlayers(expand ? playerStats.map((p) => p.playerName) : []);
@@ -46,14 +49,20 @@ const PlayerStatsList = ({ playerStats, className, spanClass }) => {
           onTriggerClosing={() => togglePlayer(player.playerName, false)}
           element={
             <ul className={className}>
+              <button
+                className="OpenStatsButton"
+                onClick={() => setActiveIframePlayerId(player.playerId)}
+              >
+                View Attributes
+              </button>
+
               {player.rankings.map((ranking) => (
                 <li key={ranking.metric} className="PlayerStatItem">
                   {className === "AwayPlayerStats" ? (
                     <>
                       <span
-                        className={`StatBall LeftBall${
-                          ranking.rank === 1 ? " Gold" : ""
-                        }`}
+                        className={`StatBall LeftBall${ranking.rank === 1 ? " Gold" : ""
+                          }`}
                       >
                         {ranking.rank}
                       </span>
@@ -67,9 +76,8 @@ const PlayerStatsList = ({ playerStats, className, spanClass }) => {
                         {formatLabel(ranking.metric)}
                       </span>
                       <span
-                        className={`StatBall RightBall${
-                          ranking.rank === 1 ? " Gold" : ""
-                        }`}
+                        className={`StatBall RightBall${ranking.rank === 1 ? " Gold" : ""
+                          }`}
                       >
                         {ranking.rank}
                       </span>
@@ -81,7 +89,24 @@ const PlayerStatsList = ({ playerStats, className, spanClass }) => {
           }
         />
       ))}
+      {activeIframePlayerId && (
+        <div className="IframeModalOverlay" onClick={() => setActiveIframePlayerId(null)}>
+          <div className="IframeModalContent" onClick={(e) => e.stopPropagation()}>
+            <button className="CloseModalButton" onClick={() => setActiveIframePlayerId(null)}>
+              Close
+            </button>
+            <iframe
+              src={`https://widgets.sofascore.com/en/embed/player/${activeIframePlayerId}?widgetTheme=dark`}
+              className="SofaScoreIframe"
+              frameBorder="0"
+              scrolling="no"
+              title="SofaScore Player"
+            />
+          </div>
+        </div>
+      )}
     </div>
+
   );
 };
 

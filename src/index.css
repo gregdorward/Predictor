@@ -4178,6 +4178,7 @@ button.AIInsights button:active {
   margin-top: 0.5em;
   margin-bottom: 0.5em;
 }
+
 .LeagueStatsTable {
   line-height: 2.5em;
   padding: 1em;
@@ -4512,7 +4513,8 @@ button.AIInsights button:active {
   border-radius: 0.25rem;
   display: inline-flex;
   flex-direction: column;
-  align-items: center;  /* text-align: center; */
+  align-items: center;
+  /* text-align: center; */
 }
 
 .HomePlayerStats .PlayerToggleButton {
@@ -4601,4 +4603,127 @@ button.AIInsights button:active {
   align-self: center;
   background-color: whitesmoke;
   border-radius: 0.5rem;
+}
+
+.OpenStatsButton{
+  font-size: 1.1em;
+  background-color: var(--secondary-background-color);
+  width: 100%;
+  margin-left: auto;
+  margin-right: auto;
+  color: var(--button-color);
+  padding: 0.5em;
+}
+.SofaScoreIframe {
+  width: 100%;
+  height: 800px;
+  border: none;
+}
+
+.IframeModalOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100dvh;
+  background: rgba(0, 0, 0, 0.7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+}
+
+.IframeModalContent {
+  background: #fff;
+  width: 90vw;
+  height: 90dvh;
+  /* Ensure the modal has a height */
+  padding: 1rem;
+  position: relative;
+  border-radius: 8px;
+  overflow-y: auto;
+  /* Enable vertical scroll if needed */
+}
+
+.IframeModalContent iframe {
+  width: 100%;
+  /* height: auto; */
+  border: none;
+  display: block;
+}
+
+.CloseModalButton {
+  background-color: var(--primary-color);
+}
+
+@media (min-width: 760px) {
+  .SofaScoreIframe {
+    height: 800px;
+  }
+
+ .IframeModalOverlay {
+    position: fixed;
+    top: 0;
+    left: 50%; /* Center horizontally */
+    transform: translateX(-50%); /* Offset back by half the width */
+    width: 60vw;
+    height: 100dvh;
+    background: rgba(0, 0, 0, 0.7);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+  }
+
+  .IframeModalContent {
+    background: #fff;
+    width: 100%; /* Fill the overlay width */
+    height: 90dvh;
+    padding: 1rem;
+    position: relative;
+    border-radius: 8px;
+    overflow-y: auto;
+  }
+
+  .IframeModalContent iframe {
+    width: 100%;
+    border: none;
+    display: block;
+  }
+}
+
+@media (min-width: 1195px) {
+  .SofaScoreIframe {
+    height: 550px;
+  }
+
+  .IframeModalOverlay {
+    position: fixed;
+    top: 0;
+    left: 50%; /* Center horizontally */
+    transform: translateX(-50%); /* Offset back by half the width */
+    width: 60vw;
+    height: 100dvh;
+    background: rgb(25, 25, 40, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+  }
+
+  .IframeModalContent {
+    background: var(--secondary-background-color);
+    width: 100%; /* Fill the overlay width */
+    height: 80dvh;
+    padding: 1rem;
+    position: relative;
+    border-radius: 8px;
+    overflow-y: auto;
+  }
+
+  .IframeModalContent iframe {
+    width: 100%;
+    border: none;
+    display: block;
+  }
 }
