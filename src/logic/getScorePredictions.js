@@ -4046,6 +4046,7 @@ export async function getScorePrediction(day, mocked) {
       }
 
       leagueStatsArray = await leagueStatsPromise;
+      console.log("League stats fetched:", leagueStatsArray);
 
       if (
         match.pointsDifferential === true &&

@@ -8,6 +8,7 @@ import React, {
 } from "react";
 // import ReactDOM from "react-dom";
 import { Button } from "./Button";
+import { memo } from "react";
 import SofaLineupsWidget from "./SofaScore";
 import Div from "./Div";
 import {
@@ -45,6 +46,7 @@ import { dynamicDate } from "../logic/getFixtures";
 import { rounds } from "./TeamOfTheSeason";
 export let userTips;
 let setUserTips;
+const MemoizedSofaLineupsWidget = memo(SofaLineupsWidget);
 
 // let id, team1, team2, timestamp, homeGoals, awayGoals;
 
@@ -87,7 +89,7 @@ function GameStats({ game, displayBool, stats }) {
   const [awayPlayerImage, setAwayPlayerImage] = useState(null); // State to hold your odds object
   const [loadingPlayerData, setLoadingPlayerData] = useState(true);
   const [homePlayerDataWithImages, setHomePlayerDataWithImages] = useState([]);
-const [awayPlayerDataWithImages, setAwayPlayerDataWithImages] = useState([]);
+  const [awayPlayerDataWithImages, setAwayPlayerDataWithImages] = useState([]);
 
   // Save to localStorage whenever userTips changes
   useEffect(() => {
@@ -230,22 +232,28 @@ const [awayPlayerDataWithImages, setAwayPlayerDataWithImages] = useState([]);
     []
   );
 
+  const [ranksHome, setRanksHome] = useState([]);
+  const [ranksAway, setRanksAway] = useState([]);
+
   const allResultsHome = useMemo(() => {
-    return [...homeForm.allTeamResults].sort((b, a) => b.dateRaw - a.dateRaw);
-  }, [homeForm.allTeamResults]); // Only re-sort if homeForm.allTeamResults changes
+    const results = homeForm?.allTeamResults ?? [];
+    return [...results].sort((b, a) => b.dateRaw - a.dateRaw);
+  }, [homeForm?.allTeamResults]);
 
   const homeResults = useMemo(() => {
-    return [...homeForm.homeResults].sort((b, a) => b.dateRaw - a.dateRaw);
-  }, [homeForm.homeResults]); // Only re-sort if homeForm.homeResults changes
+    const results = homeForm?.homeResults ?? [];
+    return [...results].sort((b, a) => b.dateRaw - a.dateRaw);
+  }, [homeForm?.homeResults]);
 
   const allResultsAway = useMemo(() => {
-    // Assuming awayForm.allTeamResults is an array
-    return [...awayForm.allTeamResults].sort((b, a) => b.dateRaw - a.dateRaw);
-  }, [awayForm.allTeamResults]);
+    const results = awayForm?.allTeamResults ?? [];
+    return [...results].sort((b, a) => b.dateRaw - a.dateRaw);
+  }, [awayForm?.allTeamResults]);
 
   const awayResults = useMemo(() => {
-    return [...awayForm.awayResults].sort((b, a) => b.dateRaw - a.dateRaw);
-  }, [awayForm.awayResults]); // Only re-sort if awayForm.awayResults changes
+    const results = awayForm?.awayResults ?? [];
+    return [...results].sort((b, a) => b.dateRaw - a.dateRaw);
+  }, [awayForm?.awayResults]);
 
   // Memoize the derived arrays
   const goalDiffArrayHome = useMemo(() => {
@@ -498,14 +506,19 @@ const [awayPlayerDataWithImages, setAwayPlayerDataWithImages] = useState([]);
     return teamRanks;
   }
 
-  const ranksHome = getTeamRanksFromTopTeamsWithPartialMatch(
-    stats,
-    homeForm.teamName
-  );
-  const ranksAway = getTeamRanksFromTopTeamsWithPartialMatch(
-    stats,
-    awayForm.teamName
-  );
+  useEffect(() => {
+    if (stats && homeForm?.teamName) {
+      const ranks = getTeamRanksFromTopTeamsWithPartialMatch(stats, homeForm.teamName);
+      setRanksHome(ranks);
+    }
+  }, [stats, homeForm?.teamName]);
+
+  useEffect(() => {
+    if (stats && awayForm?.teamName) {
+      const ranks = getTeamRanksFromTopTeamsWithPartialMatch(stats, awayForm.teamName);
+      setRanksAway(ranks);
+    }
+  }, [stats, awayForm?.teamName]);
 
   const pos = allLeagueResultsArrayOfObjects
     .map((i) => i.id)
@@ -784,10 +797,17 @@ const [awayPlayerDataWithImages, setAwayPlayerDataWithImages] = useState([]);
     }
   }
 
+  // Helper: Memoized team name mapping to avoid repeated computation
+  const mappedTeamNameCache = new Map();
   function getMappedTeamName(name) {
+    if (mappedTeamNameCache.has(name)) {
+      return mappedTeamNameCache.get(name);
+    }
     const normalized = cleanTeamName(name);
     const aliasKey = normalize(name);
-    return cleanTeamName(teamNameAliases[aliasKey] || normalized);
+    const mapped = cleanTeamName(teamNameAliases[aliasKey] || normalized);
+    mappedTeamNameCache.set(name, mapped);
+    return mapped;
   }
 
   async function getGameIdByHomeTeam(games, homeTeamName) {
@@ -1018,19 +1038,18 @@ const [awayPlayerDataWithImages, setAwayPlayerDataWithImages] = useState([]);
     return mappedStreaks;
   }
 
-  const derivedRoundId = (() => {
-
+  // Memoize derivedRoundId so it's only recalculated when game.sofaScoreId or rounds changes
+  const derivedRoundId = useMemo(() => {
     for (const mapping of rounds) {
       if (mapping.hasOwnProperty(game.sofaScoreId)) {
-
         return mapping[game.sofaScoreId];
       }
     }
-    console.warn(`No matching ID found for ID: ${id}`);
+    console.warn(`No matching ID found for ID: ${game.sofaScoreId}`);
     return null;
-  })();
+  }, [game.sofaScoreId, rounds]);
 
-  console.log(derivedRoundId)
+  console.log(derivedRoundId);
 
   function getWeekOfYear(date) {
     const target = new Date(date.valueOf());
@@ -1326,7 +1345,6 @@ const [awayPlayerDataWithImages, setAwayPlayerDataWithImages] = useState([]);
             );
             const trimmedPlayersHome = playersHome.slice(0, 5); // Limit to top 3 players
             const trimmedPlayersAway = playersAway.slice(0, 5); // Limit to top 3 players
-            console.log("Home Players:", playersHome);
 
 
             const homeKeyPlayerAttributes = await fetch(`${process.env.REACT_APP_EXPRESS_SERVER}playerAttributes/${playersHome[0].playerId}`);
@@ -1337,9 +1355,6 @@ const [awayPlayerDataWithImages, setAwayPlayerDataWithImages] = useState([]);
 
             // const homeImageData = await homeImage;
             // const awayImageData = await awayImage;
-
-            console.log("Home Key Player Attributes:", homeAttributes);
-            console.log("Away Key Player Attributes:", awayAttributes);
 
             setHomePlayerData(trimmedPlayersHome);
             setAwayPlayerData(trimmedPlayersAway);
@@ -1400,43 +1415,43 @@ const [awayPlayerDataWithImages, setAwayPlayerDataWithImages] = useState([]);
     fetchMatchingGame();
   }, [game.id]);
 
-const hasFetchedImages = useRef(false);
+  const hasFetchedImages = useRef(false);
 
- useEffect(() => {
-  if (!homePlayerData.length || !awayPlayerData.length) return;
+  useEffect(() => {
+    if (!homePlayerData.length || !awayPlayerData.length) return;
 
-  if (hasFetchedImages.current) return;
+    if (hasFetchedImages.current) return;
 
-  hasFetchedImages.current = true;
+    hasFetchedImages.current = true;
 
-  const fetchImagesForPlayers = async (players, setFn) => {
-    const updatedPlayers = [];
+    const fetchImagesForPlayers = async (players, setFn) => {
+      const updatedPlayers = [];
 
-    for (const player of players) {
-      try {
-        const res = await fetch(`${process.env.REACT_APP_EXPRESS_SERVER}playerImage/${player.playerId}`);
-        if (res.ok) {
-          const blob = await res.blob();
-          const imageUrl = URL.createObjectURL(blob);
-          updatedPlayers.push({ ...player, playerImage: imageUrl });
-        } else {
-          console.warn(`Image fetch failed for ${player.playerName}`);
+      for (const player of players) {
+        try {
+          const res = await fetch(`${process.env.REACT_APP_EXPRESS_SERVER}playerImage/${player.playerId}`);
+          if (res.ok) {
+            const blob = await res.blob();
+            const imageUrl = URL.createObjectURL(blob);
+            updatedPlayers.push({ ...player, playerImage: imageUrl });
+          } else {
+            console.warn(`Image fetch failed for ${player.playerName}`);
+            updatedPlayers.push({ ...player, playerImage: null });
+          }
+        } catch (error) {
+          console.error(`Error fetching image for ${player.playerName}`, error);
           updatedPlayers.push({ ...player, playerImage: null });
         }
-      } catch (error) {
-        console.error(`Error fetching image for ${player.playerName}`, error);
-        updatedPlayers.push({ ...player, playerImage: null });
+
+        await new Promise((resolve) => setTimeout(resolve, 250)); // 250ms delay
       }
 
-      await new Promise((resolve) => setTimeout(resolve, 250)); // 250ms delay
-    }
+      setFn(updatedPlayers);
+    };
 
-    setFn(updatedPlayers);
-  };
-
-  fetchImagesForPlayers(homePlayerData, setHomePlayerDataWithImages);
-  fetchImagesForPlayers(awayPlayerData, setAwayPlayerDataWithImages);
-}, [homePlayerData, awayPlayerData]);
+    fetchImagesForPlayers(homePlayerData, setHomePlayerDataWithImages);
+    fetchImagesForPlayers(awayPlayerData, setAwayPlayerDataWithImages);
+  }, [homePlayerData, awayPlayerData]);
 
 
   useEffect(() => {
@@ -1524,15 +1539,15 @@ const hasFetchedImages = useRef(false);
             name={formDataHome[0].name}
             goals={homeForm.avgScored}
             conceeded={homeForm.avgConceeded}
-            XG={homeForm.XGOverall.toFixed(2)}
-            XGConceded={homeForm.XGAgainstAvgOverall.toFixed(2)}
+            XG={homeForm.XGOverall?.toFixed(2)}
+            XGConceded={homeForm.XGAgainstAvgOverall?.toFixed(2)}
             XGSwing={homeForm.XGChangeRecently}
-            possession={homeForm.AveragePossessionOverall.toFixed(2)}
-            shots={homeForm.avgShots.toFixed(2)}
-            sot={homeForm.AverageShotsOnTargetOverall.toFixed(2)}
+            possession={homeForm.AveragePossessionOverall?.toFixed(2)}
+            shots={homeForm.avgShots?.toFixed(2)}
+            sot={homeForm.AverageShotsOnTargetOverall?.toFixed(2)}
             dangerousAttacks={
               homeForm.AverageDangerousAttacksOverall !== 0
-                ? homeForm.AverageDangerousAttacksOverall.toFixed(2)
+                ? homeForm.AverageDangerousAttacksOverall?.toFixed(2)
                 : homeForm.AverageDangerousAttacks
             }
             leaguePosition={
@@ -1560,11 +1575,11 @@ const hasFetchedImages = useRef(false);
             drawPercentage={
               game.homeTeamDrawPercentage ? game.homeTeamDrawPercentage : "N/A"
             }
-            ppg={homeForm.avPointsAll.toFixed(2)}
+            ppg={homeForm.avPointsAll?.toFixed(2)}
             formTrend={[
-              homeTenGameAverage.toFixed(2),
-              homeSixGameAverage.toFixed(2),
-              homeFiveGameAverage.toFixed(2),
+              homeTenGameAverage?.toFixed(2),
+              homeSixGameAverage?.toFixed(2),
+              homeFiveGameAverage?.toFixed(2),
             ]}
             formRun={homeForm.resultsAll}
             goalDifference={formDataHome[0].goalDifference}
@@ -1614,13 +1629,13 @@ const hasFetchedImages = useRef(false);
             XGConceded={awayForm.XGAgainstAvgOverall.toFixed(2)}
             XGSwing={awayForm.XGChangeRecently}
             //todo add goal diff and btts percentages
-            possession={awayForm.AveragePossessionOverall.toFixed(2)}
+            possession={awayForm.AveragePossessionOverall?.toFixed(2)}
             rawPosition={game.awayRawPosition ? game.awayRawPosition : 0}
-            sot={awayForm.AverageShotsOnTargetOverall.toFixed(2)}
-            shots={awayForm.avgShots.toFixed(2)}
+            sot={awayForm.AverageShotsOnTargetOverall?.toFixed(2)}
+            shots={awayForm.avgShots?.toFixed(2)}
             dangerousAttacks={
               awayForm.AverageDangerousAttacksOverall !== 0
-                ? awayForm.AverageDangerousAttacksOverall.toFixed(2)
+                ? awayForm.AverageDangerousAttacksOverall?.toFixed(2)
                 : awayForm.AverageDangerousAttacks
             }
             leaguePosition={
@@ -1642,11 +1657,11 @@ const hasFetchedImages = useRef(false);
             drawPercentage={
               game.awayTeamDrawPercentage ? game.awayTeamDrawPercentage : "N/A"
             }
-            ppg={awayForm.avPointsAll.toFixed(2)}
+            ppg={awayForm.avPointsAll?.toFixed(2)}
             formTrend={[
-              awayTenGameAverage.toFixed(2),
-              awaySixGameAverage.toFixed(2),
-              awayFiveGameAverage.toFixed(2),
+              awayTenGameAverage?.toFixed(2),
+              awaySixGameAverage?.toFixed(2),
+              awayFiveGameAverage?.toFixed(2),
             ]}
             formRun={awayForm.resultsAll}
             goalDifference={formDataAway[0].goalDifference}
@@ -1834,15 +1849,15 @@ const hasFetchedImages = useRef(false);
             className={"KeyStatsHome"}
             name={formDataHome[0].name}
             goals={homeForm.avgScoredHome}
-            conceeded={homeForm.teamConceededAvgHomeOnly.toFixed(2)}
-            XG={homeForm.avgXGScoredHome.toFixed(2)}
-            XGConceded={homeForm.avgXGConceededHome.toFixed(2)}
-            possession={homeForm.avgPossessionHome.toFixed(2)}
-            sot={homeForm.avgShotsOnTargetHome.toFixed(2)}
-            shots={homeForm.avgShotsHome.toFixed(2)}
+            conceeded={homeForm.teamConceededAvgHomeOnly?.toFixed(2)}
+            XG={homeForm.avgXGScoredHome?.toFixed(2)}
+            XGConceded={homeForm.avgXGConceededHome?.toFixed(2)}
+            possession={homeForm.avgPossessionHome?.toFixed(2)}
+            sot={homeForm.avgShotsOnTargetHome?.toFixed(2)}
+            shots={homeForm.avgShotsHome?.toFixed(2)}
             dangerousAttacks={
               homeForm.avgDangerousAttacksHome !== 0
-                ? homeForm.avgDangerousAttacksHome.toFixed(2)
+                ? homeForm.avgDangerousAttacksHome?.toFixed(2)
                 : homeForm.AverageDangerousAttacks
             }
             leaguePosition={
@@ -1865,9 +1880,9 @@ const hasFetchedImages = useRef(false);
             }
             winPercentage={homeForm.homePPGAv ? homeForm.homePPGAv : "N/A"}
             formTrend={[
-              homeTenGameAverage.toFixed(2),
-              homeSixGameAverage.toFixed(2),
-              homeFiveGameAverage.toFixed(2),
+              homeTenGameAverage?.toFixed(2),
+              homeSixGameAverage?.toFixed(2),
+              homeFiveGameAverage?.toFixed(2),
             ]}
             formRun={homeForm.resultsAll}
             goalDifference={formDataHome[0].goalDifference}
@@ -1877,7 +1892,7 @@ const hasFetchedImages = useRef(false);
             // Results={formDataHome[0].Results}
             ResultsHorA={formDataHome[0].ResultsHorA}
             CardsTotal={formDataHome[0].CardsTotal}
-            CornersAverage={homeForm.cornersAvHome.toFixed()}
+            CornersAverage={homeForm.cornersAvHome?.toFixed(2)}
             ScoredBothHalvesPercentage={
               formDataHome[0].ScoredBothHalvesPercentage
             }
@@ -1911,17 +1926,17 @@ const hasFetchedImages = useRef(false);
             classNameTwo={"FormStatsAway"}
             name={formDataAway[0].name}
             goals={awayForm.avgScoredAway}
-            conceeded={awayForm.teamConceededAvgAwayOnly.toFixed(2)}
-            XG={awayForm.avgXGScoredAway.toFixed(2)}
-            XGConceded={awayForm.avgXGConceededAway.toFixed(2)}
+            conceeded={awayForm.teamConceededAvgAwayOnly?.toFixed(2)}
+            XG={awayForm.avgXGScoredAway?.toFixed(2)}
+            XGConceded={awayForm.avgXGConceededAway?.toFixed(2)}
             //todo add goal diff and btts percentages
-            possession={awayForm.avgPossessionAway.toFixed(2)}
+            possession={awayForm.avgPossessionAway?.toFixed(2)}
             rawPosition={game.awayRawPosition ? game.awayRawPosition : 0}
-            sot={awayForm.avgShotsOnTargetAway.toFixed(2)}
-            shots={awayForm.avgShotsAway.toFixed(2)}
+            sot={awayForm.avgShotsOnTargetAway?.toFixed(2)}
+            shots={awayForm.avgShotsAway?.toFixed(2)}
             dangerousAttacks={
               awayForm.avgDangerousAttacksAway !== 0
-                ? awayForm.avgDangerousAttacksAway.toFixed(2)
+                ? awayForm.avgDangerousAttacksAway?.toFixed(2)
                 : awayForm.AverageDangerousAttacks
             }
             leaguePosition={
@@ -1938,9 +1953,9 @@ const hasFetchedImages = useRef(false);
             }
             winPercentage={awayForm.awayPPGAv ? awayForm.awayPPGAv : "N/A"}
             formTrend={[
-              awayTenGameAverage.toFixed(2),
-              awaySixGameAverage.toFixed(2),
-              awayFiveGameAverage.toFixed(2),
+              awayTenGameAverage?.toFixed(2),
+              awaySixGameAverage?.toFixed(2),
+              awayFiveGameAverage?.toFixed(2),
             ]}
             formRun={awayForm.resultsAll}
             goalDifference={formDataAway[0].goalDifference}
@@ -1950,7 +1965,7 @@ const hasFetchedImages = useRef(false);
             // Results={formDataAway[0].Results}
             ResultsHorA={formDataAway[0].ResultsHorA}
             CardsTotal={formDataAway[0].CardsTotal}
-            CornersAverage={awayForm.cornersAvAway.toFixed()}
+            CornersAverage={awayForm.cornersAvAway?.toFixed(2)}
             ScoredBothHalvesPercentage={
               formDataAway[0].ScoredBothHalvesPercentage
             }
@@ -2171,6 +2186,55 @@ const hasFetchedImages = useRef(false);
               ? gameStats?.home[index]?.averageScoredLeague
               : gameStats?.home[index]?.ScoredOverall / 10,
         };
+
+        const attackingMetricsHomeLast5 = {
+          "Average Dangerous Attacks": gameStats?.home[index]?.avDALast5
+            ? gameStats?.home[index]?.avDALast5
+            : gameStats?.home[index]?.AverageDangerousAttacksOverall,
+          "Average Shots": gameStats?.home[index]?.avShotsLast5
+            ? gameStats?.home[index]?.avShotsLast5
+            : gameStats?.home[index]?.AverageShots,
+          "Average Shot Value": gameStats?.home[index]?.avgShotValueLast5Chart,
+          "Average Shots On Target": gameStats?.home[index]?.avSOTLast5
+            ? gameStats?.home[index]?.avSOTLast5
+            : gameStats?.home[index]?.AverageShotsOnTarget,
+          "Average Expected Goals": gameStats?.home[index]?.XGlast5
+            ? gameStats?.home[index]?.XGlast5
+            : gameStats?.home[index]?.XGOverall,
+          "Recent XG": gameStats?.home[index]?.XGlast5 ? gameStats?.home[index]?.XGlast5 : gameStats?.home[index]?.XGOverall,
+          "Average Goals": gameStats?.home[index]?.avScoredLast5
+            ? gameStats?.home[index]?.avScoredLast5
+            : gameStats?.home[index]?.ScoredAverage,
+          Corners: gameStats?.home[index]?.avCornersLast5
+            ? gameStats?.home[index]?.avCornersLast5
+            : gameStats?.home[index]?.CornersAverage,
+        };
+
+        const attackingMetricsHomeOnly = {
+          "Average Dangerous Attacks": gameStats?.home[index]?.avgDangerousAttacksHome
+            ? gameStats?.home[index]?.avgDangerousAttacksHome
+            : gameStats?.home[index]?.AverageDangerousAttacksOverall,
+          "Average Shots": gameStats?.home[index]?.avgShotsHome
+            ? gameStats?.home[index]?.avgShotsHome
+            : gameStats?.home[index]?.AverageShots,
+          "Average Shot Value": gameStats?.home[index]?.avgShotValueHomeChart,
+          "Average Shots On Target": gameStats?.home[index]?.avgShotsOnTargetHome
+            ? gameStats?.home[index]?.avgShotsOnTargetHome
+            : gameStats?.home[index]?.AverageShotsOnTarget,
+          "Average Expected Goals": gameStats?.home[index]?.avgXGScoredHome
+            ? gameStats?.home[index]?.avgXGScoredHome
+            : gameStats?.home[index]?.XGOverall,
+          "Recent XG": gameStats?.home[index]?.last5XGAvgForHome
+            ? gameStats?.home[index]?.last5XGAvgForHome
+            : gameStats?.home[index]?.XGOverall,
+          "Average Goals": gameStats?.home[index]?.avgScoredHome
+            ? gameStats?.home[index]?.avgScoredHome
+            : gameStats?.home[index]?.ScoredAverage,
+          Corners: gameStats?.home[index]?.cornersAvHome
+            ? gameStats?.home[index]?.cornersAvHome
+            : gameStats?.home[index]?.CornersAverage,
+        };
+
         const attackingMetricsAway = {
           // averagePossession: awayForm.AveragePossessionOverall,
           "Average Dangerous Attacks":
@@ -2189,6 +2253,54 @@ const hasFetchedImages = useRef(false);
               : gameStats?.away[index]?.ScoredOverall / 10,
         };
 
+        const attackingMetricsAwayOnly = {
+          "Average Dangerous Attacks": gameStats?.away[index]?.avgDangerousAttacksAway
+            ? gameStats?.away[index]?.avgDangerousAttacksAway
+            : gameStats?.away[index]?.AverageDangerousAttacksOverall,
+          "Average Shots": gameStats?.away[index]?.avgShotsAway
+            ? gameStats?.away[index]?.avgShotsAway
+            : gameStats?.away[index]?.AverageShots,
+          "Average Shot Value": gameStats?.away[index]?.avgShotValueAwayChart,
+          "Average Shots On Target": gameStats?.away[index]?.avgShotsOnTargetAway
+            ? gameStats?.away[index]?.avgShotsOnTargetAway
+            : gameStats?.away[index]?.AverageShotsOnTarget,
+          "Average Expected Goals": gameStats?.away[index]?.avgXGScoredAway
+            ? gameStats?.away[index]?.avgXGScoredAway
+            : gameStats?.away[index]?.XGOverall,
+          "Recent XG": gameStats?.away[index]?.last5XGAvgForAway
+            ? gameStats?.away[index]?.last5XGAvgForAway
+            : gameStats?.away[index]?.XGOverall,
+          "Average Goals": gameStats?.away[index]?.avgScoredAway
+            ? gameStats?.away[index]?.avgScoredAway
+            : gameStats?.away[index]?.ScoredAverage,
+          Corners: gameStats?.away[index]?.cornersAvAway
+            ? gameStats?.away[index]?.cornersAvAway
+            : gameStats?.away[index]?.CornersAverage,
+        };
+
+        const attackingMetricsAwayLast5 = {
+          "Average Dangerous Attacks": gameStats?.away[index]?.avDALast5
+            ? gameStats?.away[index]?.avDALast5
+            : gameStats?.away[index]?.AverageDangerousAttacksOverall,
+          "Average Shots": gameStats?.away[index]?.avShotsLast5
+            ? gameStats?.away[index]?.avShotsLast5
+            : gameStats?.away[index]?.AverageShots,
+          "Average Shot Value": gameStats?.away[index]?.avgShotValueLast5Chart,
+          "Average Shots On Target": gameStats?.away[index]?.avSOTLast5
+            ? gameStats?.away[index]?.avSOTLast5
+            : gameStats?.away[index]?.AverageShotsOnTarget,
+          "Average Expected Goals": gameStats?.away[index]?.XGlast5
+            ? gameStats?.away[index]?.XGlast5
+            : gameStats?.away[index]?.XGOverall,
+          "Recent XG": gameStats?.away[index]?.XGlast5 ? gameStats?.away[index]?.XGlast5 : gameStats?.away[index]?.XGOverall,
+          "Average Goals": gameStats?.away[index]?.avScoredLast5
+            ? gameStats?.away[index]?.avScoredLast5
+            : gameStats?.away[index]?.ScoredAverage,
+          Corners: gameStats?.away[index]?.avCornersLast5
+            ? gameStats?.away[index]?.avCornersLast5
+            : gameStats?.away[index]?.CornersAverage,
+        };
+
         const defensiveMetricsHome = {
           "Clean Sheet Percentage":
             100 - gameStats?.home[index]?.CleanSheetPercentage || 0,
@@ -2203,6 +2315,39 @@ const hasFetchedImages = useRef(false);
               ? gameStats?.home[index]?.averageConceededLeague
               : gameStats?.home[index]?.ConcededOverall / 10,
         };
+
+
+        const defensiveMetricsHomeLast5 = {
+          "Average XG Against": gameStats?.home[index]?.XGAgainstlast5
+            ? gameStats?.home[index]?.XGAgainstlast5
+            : gameStats?.home[index]?.XGAgainstAvgOverall,
+          "Recent XG Against": gameStats?.home[index]?.avXGAgainstLast5
+            ? gameStats?.home[index]?.avXGAgainstLast5
+            : gameStats?.home[index]?.XGAgainstAvgOverall,
+          "Average Goals Against": gameStats?.home[index]?.avConceededLast5
+            ? gameStats?.home[index]?.avConceededLast5
+            : gameStats?.home[index]?.ConcededAverage,
+          "Average SOT Against": gameStats?.home[index]?.avSOTAgainstLast5
+            ? gameStats?.home[index]?.avSOTAgainstLast5
+            : 5,
+        };
+
+
+        const defensiveMetricsHomeOnly = {
+          "Average XG Against": gameStats?.home[index]?.avgXGConceededHome
+            ? gameStats?.home[index]?.avgXGConceededHome
+            : gameStats?.home[index]?.XGAgainstAvgOverall,
+          "Recent XG Against": gameStats?.home[index]?.last5XGAvgAgainstHome
+            ? gameStats?.home[index]?.last5XGAvgAgainstHome
+            : gameStats?.home[index]?.XGAgainstAvgOverall,
+          "Average Goals Against": gameStats?.home[index]?.teamConceededAvgHomeOnly
+            ? gameStats?.home[index]?.teamConceededAvgHomeOnly
+            : gameStats?.home[index]?.ConcededAverage,
+          "Average SOT Against": gameStats?.home[index]?.avgShotsOnTargetAgainstHome
+            ? gameStats?.home[index]?.avgShotsOnTargetAgainstHome
+            : 5,
+        };
+
 
         const defensiveMetricsAway = {
           "Clean Sheet Percentage":
@@ -2219,35 +2364,102 @@ const hasFetchedImages = useRef(false);
               : gameStats?.away[index]?.ConcededOverall / 10,
         };
 
-        const attackH = await calculateAttackingStrength(attackingMetricsHome);
+        const defensiveMetricsAwayLast5 = {
+          "Average XG Against": gameStats?.away[index]?.XGAgainstlast5
+            ? gameStats?.away[index]?.XGAgainstlast5
+            : gameStats?.away[index]?.XGAgainstAvgOverall,
+          "Recent XG Against": gameStats?.away[index]?.avXGAgainstLast5
+            ? gameStats?.away[index]?.avXGAgainstLast5
+            : gameStats?.away[index]?.XGAgainstAvgOverall,
+          "Average Goals Against": gameStats?.away[index]?.avConceededLast5
+            ? gameStats?.away[index]?.avConceededLast5
+            : gameStats?.away[index]?.ConcededAverage,
+          "Average SOT Against": gameStats?.away[index]?.avSOTAgainstLast5
+            ? gameStats?.away[index]?.avSOTAgainstLast5
+            : 5,
+        };
 
-        setHomeAttackStrength(attackH);
+        const defensiveMetricsAwayOnly = {
+          "Average XG Against": gameStats?.away[index]?.avgXGConceededAway
+            ? gameStats?.away[index]?.avgXGConceededAway
+            : gameStats?.away[index]?.XGAgainstAvgOverall,
+          "Recent XG Against": gameStats?.away[index]?.last5XGAvgAgainstAway
+            ? gameStats?.away[index]?.last5XGAvgAgainstAway
+            : gameStats?.away[index]?.XGAgainstAvgOverall,
+          "Average Goals Against": gameStats?.away[index]?.teamConceededAvgAwayOnly
+            ? gameStats?.away[index]?.teamConceededAvgAwayOnly
+            : gameStats?.away[index]?.ConcededAverage,
+          "Average SOT Against": gameStats?.away[index]?.avgShotsOnTargetAgainstAway
+            ? gameStats?.away[index]?.avgShotsOnTargetAgainstAway
+            : 5,
+        };
+
+
+        const attackH = await calculateAttackingStrength(attackingMetricsHome);
+        const attackHLast5 = await calculateAttackingStrength(
+          attackingMetricsHomeLast5
+        );
+        const attackHOnly = await calculateAttackingStrength(
+          attackingMetricsHomeOnly
+        );
+
 
         const defenceH = await calculateDefensiveStrength(defensiveMetricsHome);
+        const defenceHLast5 = await calculateDefensiveStrength(
+          defensiveMetricsHomeLast5
+        );
+        const defenceHOnly = await calculateDefensiveStrength(
+          defensiveMetricsHomeOnly
+        );
 
-        setHomeDefenceStrength(defenceH);
+
+        console.log(attackingMetricsHomeLast5)
+        console.log(attackHLast5)
 
         const attackA = await calculateAttackingStrength(attackingMetricsAway);
-
-        setAwayAttackStrength(attackA);
+        const attackALast5 = await calculateAttackingStrength(
+          attackingMetricsAwayLast5
+        );
+        const attackAOnly = await calculateAttackingStrength(
+          attackingMetricsAwayOnly
+        );
 
         const defenceA = await calculateDefensiveStrength(defensiveMetricsAway);
-
-        setAwayDefenceStrength(defenceA);
+        const defenceALast5 = await calculateDefensiveStrength(
+          defensiveMetricsAwayLast5
+        );
+        const defenceAOnly = await calculateDefensiveStrength(
+          defensiveMetricsAwayOnly
+        );
 
         const possH = await calculateMetricStrength(
           "averagePossession",
           homeForm.AveragePossessionOverall
         );
-
-        setHomePossessionStrength(possH);
+        const possHLast5 = await calculateMetricStrength(
+          "averagePossession",
+          homeForm.avPosessionLast5
+        );
+        const possHOnly = await calculateMetricStrength(
+          "averagePossession",
+          homeForm.avgPossessionHome
+        );
 
         const possA = await calculateMetricStrength(
           "averagePossession",
           awayForm.AveragePossessionOverall
         );
+        const possALast5 = await calculateMetricStrength(
+          "averagePossession",
+          awayForm.avPosessionLast5
+        );
+        const possAOnly = await calculateMetricStrength(
+          "averagePossession",
+          awayForm.avgPossessionAway
+        );
 
-        setAwayPossessionStrength(possA);
+
+
 
         // "Directness",
         // "Attacking precision",
@@ -2256,96 +2468,78 @@ const hasFetchedImages = useRef(false);
           homeForm.XGOverall
         );
 
-        setHomeXGForStrength(XGForH);
 
         const XGForA = await calculateMetricStrength(
           "xgFor",
           awayForm.XGOverall
         );
 
-        setAwayXGForStrength(XGForA);
 
         const XGAgH = await calculateMetricStrength(
           "xgAgainst",
           3 - homeForm.XGAgainstAvgOverall
         );
 
-        setHomeXGAgainstStrength(XGAgH);
 
         const XGAgA = await calculateMetricStrength(
           "xgAgainst",
           3 - awayForm.XGAgainstAvgOverall
         );
 
-        setAwayXGAgainstStrength(XGAgA);
 
         const directnessHome = await calculateMetricStrength(
           "directnessOverall",
           homeForm.directnessOverall
         );
 
-        setHomeDirectnessStrength(directnessHome);
 
         const directnessAway = await calculateMetricStrength(
           "directnessOverall",
           awayForm.directnessOverall
         );
 
-        setAwayDirectnessStrength(directnessAway);
 
         const accuracyHome = await calculateMetricStrength(
           "accuracyOverall",
           homeForm.avgShotValueChart
         );
-        setHomeAccuracyOverallStrength(accuracyHome);
 
         const accuracyHomeLast5 = await calculateMetricStrength(
           "accuracyOverall",
           homeForm.avgShotValueLast5Chart
         );
-        setHomeAccuracyOverallStrengthLast5(accuracyHomeLast5);
 
         const accuracyHomeOnly = await calculateMetricStrength(
           "accuracyOverall",
           homeForm.avgShotValueHomeChart
         );
-        setHomeOnlyAccuracyOverallStrength(accuracyHomeOnly);
 
         const accuracyAway = await calculateMetricStrength(
           "accuracyOverall",
           awayForm.avgShotValueChart
         );
-        setAwayAccuracyOverallStrength(accuracyAway);
 
         const accuracyAwayLast5 = await calculateMetricStrength(
           "accuracyOverall",
           awayForm.avgShotValueLast5Chart
         );
-        setAwayAccuracyOverallStrengthLast5(accuracyAwayLast5);
 
         const accuracyAwayOnly = await calculateMetricStrength(
           "accuracyOverall",
           awayForm.avgShotValueAwayChart
         );
-        setAwayOnlyAccuracyOverallStrength(accuracyAwayOnly);
 
         const home5GA = await getPointAverage(homeForm.last5Points, 5);
-        setHomeFiveGameAverage(home5GA);
 
         const home6GA = await getPointAverage(homeForm.last6Points, 6);
-        setHomeSixGameAverage(home6GA);
 
         const home10GA = await getPointAverage(homeForm.last10Points, 10);
-        setHomeTenGameAverage(home10GA);
 
         const away5GA = await getPointAverage(awayForm.last5Points, 5);
-        setAwayFiveGameAverage(away5GA);
 
         const away6GA = await getPointAverage(awayForm.last6Points, 6);
-        setAwaySixGameAverage(away6GA);
 
         const away10GA = await getPointAverage(awayForm.last10Points, 10);
-        setAwayTenGameAverage(away10GA);
 
         homeForm.homePPGAv = await getPointAverage(
           homeForm.homePPGame,
@@ -2360,6 +2554,44 @@ const hasFetchedImages = useRef(false);
         );
         awayForm.tenGameAv = awayTenGameAverage;
         awayForm.fiveGameAv = awayFiveGameAverage;
+
+        // Set calculated strengths and averages directly, as hooks cannot be used here
+        setHomeAttackStrength(attackH);
+        setHomeAttackStrengthLast5(attackHLast5);
+        setHomeOnlyAttackStrength(attackHOnly);
+        setHomeDefenceStrength(defenceH);
+        setHomeDefenceStrengthLast5(defenceHLast5);
+        setHomeOnlyDefenceStrength(defenceHOnly);
+        setAwayAttackStrength(attackA);
+        setAwayAttackStrengthLast5(attackALast5);
+        setAwayOnlyAttackStrength(attackAOnly);
+        setAwayDefenceStrength(defenceA);
+        setAwayDefenceStrengthLast5(defenceALast5);
+        setAwayOnlyDefenceStrength(defenceAOnly);
+        setHomePossessionStrength(possH);
+        setHomePossessionStrengthLast5(possHLast5);
+        setHomeOnlyPossessionStrength(possHOnly);
+        setAwayPossessionStrength(possA);
+        setAwayPossessionStrengthLast5(possALast5);
+        setAwayOnlyPossessionStrength(possAOnly);
+        setHomeXGForStrength(XGForH);
+        setAwayXGForStrength(XGForA);
+        setHomeXGAgainstStrength(XGAgH);
+        setAwayXGAgainstStrength(XGAgA);
+        setHomeDirectnessStrength(directnessHome);
+        setAwayDirectnessStrength(directnessAway);
+        setHomeAccuracyOverallStrength(accuracyHome);
+        setHomeAccuracyOverallStrengthLast5(accuracyHomeLast5);
+        setHomeOnlyAccuracyOverallStrength(accuracyHomeOnly);
+        setAwayAccuracyOverallStrength(accuracyAway);
+        setAwayAccuracyOverallStrengthLast5(accuracyAwayLast5);
+        setAwayOnlyAccuracyOverallStrength(accuracyAwayOnly);
+        setHomeFiveGameAverage(home5GA);
+        setHomeSixGameAverage(home6GA);
+        setHomeTenGameAverage(home10GA);
+        setAwayFiveGameAverage(away5GA);
+        setAwaySixGameAverage(away6GA);
+        setAwayTenGameAverage(away10GA);
 
         if (homeForm.fiveGameAv) {
           const formTextStringHome = await GenerateFormSummary(
@@ -2494,7 +2726,7 @@ const hasFetchedImages = useRef(false);
   }
 
   const generateAIInsights = useCallback(
-    async (gameId, streak, oddsData, homeTeamStats, awayTeamStats, homePlayerData, awayPlayerData, homeMissingPlayersList, awayMissingPlayersList, homeLineupList, awayLineupList) => {
+    async (gameId, streak, oddsData, homeTeamStats, awayTeamStats, homePlayerData, awayPlayerData, homeMissingPlayersList, awayMissingPlayersList, homeLineupList, awayLineupList, ranksHome, ranksAway) => {
       setIsLoading(true);
       console.log(game)
       const table = await fetchBasicTable(game.leagueID);
@@ -2578,6 +2810,7 @@ const hasFetchedImages = useRef(false);
         }
 
         const jsonData = await response.json();
+        console.log("AI Match Preview Data:", jsonData);
         setAiMatchPreview(jsonData);
       } catch (error) {
         console.error("Fetch error:", error);
@@ -2777,6 +3010,7 @@ const hasFetchedImages = useRef(false);
   );
   const data2Away = filteredEntries2Away.map(([, value]) => value);
 
+  console.log(stats);
 
   const handleTipSelect = (tipType) => {
     setSelectedTip(tipType);
@@ -2797,24 +3031,24 @@ const hasFetchedImages = useRef(false);
       )}
       <div style={style}>
         <div style={style}>
-          <Div className="MatchTime" text={`Kick off: ${time} GMT`}></Div>
+          <Collapsable
+            buttonText={`Lineups & match action \u{2630}`}
+            classNameButton="Lineups"
+            element={
+              <>
+                <MemoizedSofaLineupsWidget
+                  id={id}
+                  team1={team1}
+                  team2={team2}
+                  time={timestamp}
+                  homeGoals={homeGoals}
+                  awayGoals={awayGoals}
+                />
+              </>
+            }
+          />
         </div>
-        <Collapsable
-          buttonText={`Lineups & match action \u{2630}`}
-          classNameButton="Lineups"
-          element={
-            <>
-              <SofaLineupsWidget
-                id={id}
-                team1={team1}
-                team2={team2}
-                time={timestamp}
-                homeGoals={homeGoals}
-                awayGoals={awayGoals}
-              ></SofaLineupsWidget>
-            </>
-          }
-        />
+
         {loading ||
           (homeMissingPlayersList.length === 0 &&
             awayMissingPlayersList.length === 0) ? (
@@ -3006,7 +3240,7 @@ const hasFetchedImages = useRef(false);
               <StatsHomeComponent />
               <StatsAwayComponent />
             </div>
-            {ranksHome && ranksAway && (
+            {stats && ranksHome && ranksAway && stats?.topTeams &&(
               <TeamRankingsFlexView
                 title={`Rankings in ${game.leagueDesc} out of ${stats.topTeams.accurateCrosses.length} teams`}
                 ranksHome={ranksHome}
@@ -3082,11 +3316,11 @@ const hasFetchedImages = useRef(false);
                 ]}
               ></BarChart>
               <MultiTypeChart
-                dataArray={homeForm.twoDGoalsArray}
+                dataArray={homeForm.twoDGoalsArray || []}
                 text={homeForm.teamName + " XG Diff (All)"}
               />
               <MultiTypeChart
-                dataArray={awayForm.twoDGoalsArray}
+                dataArray={awayForm.twoDGoalsArray || []}
                 text={awayForm.teamName + " XG Diff (All)"}
               />
               <Chart
@@ -3138,10 +3372,10 @@ const hasFetchedImages = useRef(false);
                     )
                     : -2
                 }
-                data1={rollingGoalDiffTotalHome}
-                data2={rollingGoalDiffTotalAway}
-                data3={rollingXGDiffTotalHome}
-                data4={rollingXGDiffTotalAway}
+                data1={rollingGoalDiffTotalHome || []}
+                data2={rollingGoalDiffTotalAway || []}
+                data3={rollingXGDiffTotalHome || []}
+                data4={rollingXGDiffTotalAway || []}
                 team1={game.homeTeam}
                 team2={game.awayTeam}
                 type={"Goal/XG difference over time"}
@@ -3151,250 +3385,261 @@ const hasFetchedImages = useRef(false);
           </>
         }
         element2={
-          <>
-            <h2>Last 5 games only</h2>
-            <div className="flex-container">
-              <StatsHomeLast5Component />
-              <StatsAwayLast5Component />
-            </div>
-            <div className="Chart" id={`Chart${game.id}`} style={style}>
-              <RadarChart
-                title="Soccer Stats Hub Strength Ratings - Last 5 Games Only"
-                data={[
-                  homeAttackStrengthLast5,
-                  homeDefenceStrengthLast5,
-                  homePossessionStrengthLast5,
-                  homeXGForStrengthLast5,
-                  homeXGAgainstStrengthLast5,
-                  homeDirectnessStrengthLast5,
-                  homeAccuracyOverallStrengthLast5,
-                ]}
-                data2={[
-                  awayAttackStrengthLast5,
-                  awayDefenceStrengthLast5,
-                  awayPossessionStrengthLast5,
-                  awayXGForStrengthLast5,
-                  awayXGAgainstStrengthLast5,
-                  awayDirectnessStrengthLast5,
-                  awayAccuracyOverallStrengthLast5,
-                ]}
-                team1={game.homeTeam}
-                team2={game.awayTeam}
-              ></RadarChart>
-              <BarChart
-                text="Last 5 only - Home Team | Away Team"
-                data1={[
-                  homeForm.last5Goals * 2,
-                  awayForm.last5GoalsConceeded * 2,
-                  homeForm.avPoints5 * 3,
-                  homeForm.avXGLast5 * 2,
-                  awayForm.avXGAgainstLast5 * 2,
-                  homeForm.avSOTLast5,
-                  homeForm.avDALast5 !== 0
-                    ? homeForm.avDALast5 / 7.5
-                    : homeForm.AverageDangerousAttacks / 7.5,
-                  homeForm.avPosessionLast5 / 7.5,
-                  homeForm.last5GoalDiff / 5,
-                  homeForm.last5Corners,
-                ]}
-                data2={[
-                  awayForm.last5Goals * 2,
-                  homeForm.last5GoalsConceeded * 2,
-                  awayForm.avPoints5 * 3,
-                  awayForm.avXGLast5 * 2,
-                  homeForm.avXGAgainstLast5 * 2,
-                  awayForm.avSOTLast5,
-                  awayForm.avDALast5 !== 0
-                    ? awayForm.avDALast5 / 7.5
-                    : awayForm.AverageDangerousAttacks / 7.5,
-                  awayForm.avPosessionLast5 / 7.5,
-                  awayForm.last5GoalDiff / 5,
-                  awayForm.last5Corners,
-                ]}
-              ></BarChart>
-              <MultiTypeChart
-                dataArray={homeForm.twoDGoalsArray.slice(
-                  Math.max(homeForm.twoDGoalsArray.length - 5, 0)
-                )}
-                text={homeForm.teamName + " XG Diff Last 5"}
-              />
-              <MultiTypeChart
-                dataArray={awayForm.twoDGoalsArray.slice(
-                  Math.max(awayForm.twoDGoalsArray.length - 5, 0)
-                )}
-                text={awayForm.teamName + " XG Diff Last 5"}
-              />
-              <MultilineChart
-                height={
-                  Math.max(
-                    rollingGoalDiffTotalHomeLast5[
-                    rollingGoalDiffTotalHomeLast5.length - 1
-                    ],
-                    rollingGoalDiffTotalAwayLast5[
-                    rollingGoalDiffTotalAwayLast5.length - 1
-                    ]
-                  ) > 2
-                    ? Math.max(
-                      rollingGoalDiffTotalHomeLast5[
-                      rollingGoalDiffTotalHomeLast5.length - 1
-                      ],
-                      rollingGoalDiffTotalAwayLast5[
-                      rollingGoalDiffTotalAwayLast5.length - 1
-                      ]
-                    )
-                    : 2
-                }
-                depth={
-                  Math.min(
-                    rollingGoalDiffTotalHomeLast5[
-                    rollingGoalDiffTotalHomeLast5.length - 1
-                    ],
-                    rollingGoalDiffTotalAwayLast5[
-                    rollingGoalDiffTotalAwayLast5.length - 1
-                    ]
-                  ) < -2
-                    ? Math.min(
-                      rollingGoalDiffTotalHomeLast5[
-                      rollingGoalDiffTotalHomeLast5.length - 1
-                      ],
-                      rollingGoalDiffTotalAwayLast5[
-                      rollingGoalDiffTotalAwayLast5.length - 1
-                      ]
-                    )
-                    : -2
-                }
-                data1={rollingGoalDiffTotalHomeLast5}
-                data2={rollingGoalDiffTotalAwayLast5}
-                data3={rollingXGDiffTotalHomeLast5}
-                data4={rollingXGDiffTotalAwayLast5}
-                team1={game.homeTeam}
-                team2={game.awayTeam}
-                type={"Goal/XG difference over last 5"}
-                tension={0.5}
-              ></MultilineChart>
-            </div>
-          </>
+          homeForm?.twoDGoalsArray ? (
+            <>
+              <h2>Last 5 games only</h2>
+              <div className="flex-container">
+                <StatsHomeLast5Component />
+                <StatsAwayLast5Component />
+              </div>
+              <div className="Chart" id={`Chart${game.id}`} style={style}>
+                <RadarChart
+                  title="Soccer Stats Hub Strength Ratings - Last 5 Games Only"
+                  max={1}
+                  labels={[
+                    "Attack rating",
+                    "Defence rating",
+                    "Ball retention",
+                    "XG For",
+                    "XG Against",
+                    "Directness",
+                    "Attacking precision",
+                  ]}
+                  data={[
+                    homeAttackStrengthLast5,
+                    homeDefenceStrengthLast5,
+                    homePossessionStrengthLast5,
+                    homeXGForStrengthLast5,
+                    homeXGAgainstStrengthLast5,
+                    homeDirectnessStrengthLast5,
+                    homeAccuracyOverallStrengthLast5,
+                  ]}
+                  data2={[
+                    awayAttackStrengthLast5,
+                    awayDefenceStrengthLast5,
+                    awayPossessionStrengthLast5,
+                    awayXGForStrengthLast5,
+                    awayXGAgainstStrengthLast5,
+                    awayDirectnessStrengthLast5,
+                    awayAccuracyOverallStrengthLast5,
+                  ]}
+                  team1={game.homeTeam}
+                  team2={game.awayTeam}
+                />
+
+                <BarChart
+                  text="Last 5 only - Home Team | Away Team"
+                  data1={[
+                    homeForm.last5Goals * 2,
+                    awayForm.last5GoalsConceeded * 2,
+                    homeForm.avPoints5 * 3,
+                    homeForm.avXGLast5 * 2,
+                    awayForm.avXGAgainstLast5 * 2,
+                    homeForm.avSOTLast5,
+                    homeForm.avDALast5 !== 0
+                      ? homeForm.avDALast5 / 7.5
+                      : homeForm.AverageDangerousAttacks / 7.5,
+                    homeForm.avPosessionLast5 / 7.5,
+                    homeForm.last5GoalDiff / 5,
+                    homeForm.last5Corners,
+                  ]}
+                  data2={[
+                    awayForm.last5Goals * 2,
+                    homeForm.last5GoalsConceeded * 2,
+                    awayForm.avPoints5 * 3,
+                    awayForm.avXGLast5 * 2,
+                    homeForm.avXGAgainstLast5 * 2,
+                    awayForm.avSOTLast5,
+                    awayForm.avDALast5 !== 0
+                      ? awayForm.avDALast5 / 7.5
+                      : awayForm.AverageDangerousAttacks / 7.5,
+                    awayForm.avPosessionLast5 / 7.5,
+                    awayForm.last5GoalDiff / 5,
+                    awayForm.last5Corners,
+                  ]}
+                />
+
+                <MultiTypeChart
+                  dataArray={homeForm.twoDGoalsArray.slice(
+                    Math.max(homeForm.twoDGoalsArray.length - 5, 0)
+                  )}
+                  text={homeForm.teamName + ' XG Diff Last 5'}
+                />
+                <MultiTypeChart
+                  dataArray={awayForm.twoDGoalsArray.slice(
+                    Math.max(awayForm.twoDGoalsArray.length - 5, 0)
+                  )}
+                  text={awayForm.teamName + ' XG Diff Last 5'}
+                />
+
+                <MultilineChart
+                  height={
+                    Math.max(
+                      rollingGoalDiffTotalHomeLast5.at(-1),
+                      rollingGoalDiffTotalAwayLast5.at(-1)
+                    ) > 2
+                      ? Math.max(
+                        rollingGoalDiffTotalHomeLast5.at(-1),
+                        rollingGoalDiffTotalAwayLast5.at(-1)
+                      )
+                      : 2
+                  }
+                  depth={
+                    Math.min(
+                      rollingGoalDiffTotalHomeLast5.at(-1),
+                      rollingGoalDiffTotalAwayLast5.at(-1)
+                    ) < -2
+                      ? Math.min(
+                        rollingGoalDiffTotalHomeLast5.at(-1),
+                        rollingGoalDiffTotalAwayLast5.at(-1)
+                      )
+                      : -2
+                  }
+                  data1={rollingGoalDiffTotalHomeLast5}
+                  data2={rollingGoalDiffTotalAwayLast5}
+                  data3={rollingXGDiffTotalHomeLast5}
+                  data4={rollingXGDiffTotalAwayLast5}
+                  team1={game.homeTeam}
+                  team2={game.awayTeam}
+                  type="Goal/XG difference over last 5"
+                  tension={0.5}
+                />
+              </div>
+            </>
+          ) : null
         }
         element3={
-          <>
-            <h2>Home/Away games only</h2>
-            <div className="flex-container">
-              <StatsHomeOnlyComponent />
-              <StatsAwayOnlyComponent />
-            </div>
-            <div className="Chart" id={`Chart${game.id}`} style={style}>
-              <RadarChart
-                title="Soccer Stats Hub Strength Ratings - Home/Away Games Only"
-                data={[
-                  homeOnlyAttackStrength,
-                  homeOnlyDefenceStrength,
-                  homeOnlyPossessionStrength,
-                  homeOnlyXGForStrength,
-                  homeOnlyXGAgainstStrength,
-                  homeOnlyDirectnessStrength,
-                  homeOnlyAccuracyOverallStrength,
-                ]}
-                data2={[
-                  awayOnlyAttackStrength,
-                  awayOnlyDefenceStrength,
-                  awayOnlyPossessionStrength,
-                  awayOnlyXGForStrength,
-                  awayOnlyXGAgainstStrength,
-                  awayOnlyDirectnessStrength,
-                  awayOnlyAccuracyOverallStrength,
-                ]}
-                team1={game.homeTeam}
-                team2={game.awayTeam}
-              ></RadarChart>
-              <BarChart
-                text="Home/Away only - Home Team | Away Team"
-                data1={[
-                  homeForm.avgScoredHome * 2,
-                  awayForm.teamConceededAvgAwayOnly * 2,
-                  homeForm.homePPGAv * 3,
-                  homeForm.avgXGScoredHome * 2,
-                  awayForm.avgXGConceededHome * 2,
-                  homeForm.avgShotsOnTargetHome,
-                  homeForm.avgDangerousAttacksHome !== 0
-                    ? homeForm.avgDangerousAttacksHome / 7.5
-                    : homeForm.AverageDangerousAttacks / 7.5,
-                  homeForm.avgPossessionHome / 7.5,
-                  homeForm.goalDifferenceHomeOrAway / 10,
-                  homeForm.cornersAvHome,
-                ]}
-                data2={[
-                  awayForm.avgScoredAway * 2,
-                  homeForm.teamConceededAvgAwayOnly * 2,
-                  awayForm.awayPPGAv * 3,
-                  awayForm.avgXGScoredAway * 2,
-                  homeForm.avgXGConceededAway * 2,
-                  awayForm.avgShotsOnTargetAway,
-                  awayForm.avgDangerousAttacksAway !== 0
-                    ? awayForm.avgDangerousAttacksAway / 7.5
-                    : awayForm.AverageDangerousAttacks / 7.5,
-                  awayForm.avgPossessionAway / 7.5,
-                  awayForm.goalDifferenceHomeOrAway / 10,
-                  awayForm.cornersAvAway,
-                ]}
-              ></BarChart>
-              <MultiTypeChart
-                dataArray={homeForm.twoDGoalsArrayHome}
-                text={homeForm.teamName + " XG Diff (Home)"}
-              />
-              <MultiTypeChart
-                dataArray={awayForm.twoDGoalsArrayAway}
-                text={awayForm.teamName + " XG Diff (Away)"}
-              />
-              <MultilineChart
-                height={
-                  Math.max(
-                    rollingGoalDiffTotalHomeOnly[
-                    rollingGoalDiffTotalHomeOnly.length - 1
-                    ],
-                    rollingGoalDiffTotalAwayOnly[
-                    rollingGoalDiffTotalAwayOnly.length - 1
-                    ]
-                  ) > 2
-                    ? Math.max(
+          homeForm?.twoDGoalsArray ? (
+            <>
+              <h2>Home/Away games only</h2>
+              <div className="flex-container">
+                <StatsHomeOnlyComponent />
+                <StatsAwayOnlyComponent />
+              </div>
+              <div className="Chart" id={`Chart${game.id}`} style={style}>
+                <RadarChart
+                  title="Soccer Stats Hub Strength Ratings - Home/Away Games Only"
+                  max={1}
+                  labels={[
+                    "Attack rating",
+                    "Defence rating",
+                    "Ball retention",
+                    "XG For",
+                    "XG Against",
+                    "Directness",
+                    "Attacking precision",
+                  ]}
+                  data={[
+                    homeOnlyAttackStrength,
+                    homeOnlyDefenceStrength,
+                    homeOnlyPossessionStrength,
+                    homeOnlyXGForStrength,
+                    homeOnlyXGAgainstStrength,
+                    homeOnlyDirectnessStrength,
+                    homeOnlyAccuracyOverallStrength,
+                  ]}
+                  data2={[
+                    awayOnlyAttackStrength,
+                    awayOnlyDefenceStrength,
+                    awayOnlyPossessionStrength,
+                    awayOnlyXGForStrength,
+                    awayOnlyXGAgainstStrength,
+                    awayOnlyDirectnessStrength,
+                    awayOnlyAccuracyOverallStrength,
+                  ]}
+                  team1={game.homeTeam}
+                  team2={game.awayTeam}
+                ></RadarChart>
+                <BarChart
+                  text="Home/Away only - Home Team | Away Team"
+                  data1={[
+                    homeForm.avgScoredHome * 2,
+                    awayForm.teamConceededAvgAwayOnly * 2,
+                    homeForm.homePPGAv * 3,
+                    homeForm.avgXGScoredHome * 2,
+                    awayForm.avgXGConceededHome * 2,
+                    homeForm.avgShotsOnTargetHome,
+                    homeForm.avgDangerousAttacksHome !== 0
+                      ? homeForm.avgDangerousAttacksHome / 7.5
+                      : homeForm.AverageDangerousAttacks / 7.5,
+                    homeForm.avgPossessionHome / 7.5,
+                    homeForm.goalDifferenceHomeOrAway / 10,
+                    homeForm.cornersAvHome,
+                  ]}
+                  data2={[
+                    awayForm.avgScoredAway * 2,
+                    homeForm.teamConceededAvgAwayOnly * 2,
+                    awayForm.awayPPGAv * 3,
+                    awayForm.avgXGScoredAway * 2,
+                    homeForm.avgXGConceededAway * 2,
+                    awayForm.avgShotsOnTargetAway,
+                    awayForm.avgDangerousAttacksAway !== 0
+                      ? awayForm.avgDangerousAttacksAway / 7.5
+                      : awayForm.AverageDangerousAttacks / 7.5,
+                    awayForm.avgPossessionAway / 7.5,
+                    awayForm.goalDifferenceHomeOrAway / 10,
+                    awayForm.cornersAvAway,
+                  ]}
+                ></BarChart>
+                <MultiTypeChart
+                  dataArray={homeForm.twoDGoalsArrayHome}
+                  text={homeForm.teamName + " XG Diff (Home)"}
+                />
+                <MultiTypeChart
+                  dataArray={awayForm.twoDGoalsArrayAway}
+                  text={awayForm.teamName + " XG Diff (Away)"}
+                />
+                <MultilineChart
+                  height={
+                    Math.max(
                       rollingGoalDiffTotalHomeOnly[
                       rollingGoalDiffTotalHomeOnly.length - 1
                       ],
                       rollingGoalDiffTotalAwayOnly[
                       rollingGoalDiffTotalAwayOnly.length - 1
                       ]
-                    )
-                    : 2
-                }
-                depth={
-                  Math.min(
-                    rollingGoalDiffTotalHomeOnly[
-                    rollingGoalDiffTotalHomeOnly.length - 1
-                    ],
-                    rollingGoalDiffTotalAwayOnly[
-                    rollingGoalDiffTotalAwayOnly.length - 1
-                    ]
-                  ) < -2
-                    ? Math.min(
+                    ) > 2
+                      ? Math.max(
+                        rollingGoalDiffTotalHomeOnly[
+                        rollingGoalDiffTotalHomeOnly.length - 1
+                        ],
+                        rollingGoalDiffTotalAwayOnly[
+                        rollingGoalDiffTotalAwayOnly.length - 1
+                        ]
+                      )
+                      : 2
+                  }
+                  depth={
+                    Math.min(
                       rollingGoalDiffTotalHomeOnly[
                       rollingGoalDiffTotalHomeOnly.length - 1
                       ],
                       rollingGoalDiffTotalAwayOnly[
                       rollingGoalDiffTotalAwayOnly.length - 1
                       ]
-                    )
-                    : -2
-                }
-                data1={rollingGoalDiffTotalHomeOnly}
-                data2={rollingGoalDiffTotalAwayOnly}
-                data3={rollingXGDiffTotalHomeOnly}
-                data4={rollingXGDiffTotalAwayOnly}
-                team1={game.homeTeam}
-                team2={game.awayTeam}
-                type={"Home/Away Goal/XG difference over time"}
-                tension={0.5}
-              ></MultilineChart>
-            </div>
-          </>
+                    ) < -2
+                      ? Math.min(
+                        rollingGoalDiffTotalHomeOnly[
+                        rollingGoalDiffTotalHomeOnly.length - 1
+                        ],
+                        rollingGoalDiffTotalAwayOnly[
+                        rollingGoalDiffTotalAwayOnly.length - 1
+                        ]
+                      )
+                      : -2
+                  }
+                  data1={rollingGoalDiffTotalHomeOnly}
+                  data2={rollingGoalDiffTotalAwayOnly}
+                  data3={rollingXGDiffTotalHomeOnly}
+                  data4={rollingXGDiffTotalAwayOnly}
+                  team1={game.homeTeam}
+                  team2={game.awayTeam}
+                  type={"Home/Away Goal/XG difference over time"}
+                  tension={0.5}
+                ></MultilineChart>
+              </div>
+            </>
+          ) : null
         }
       />
       <div className="Chart" id={`Chart${game.id}`} style={style}></div>
