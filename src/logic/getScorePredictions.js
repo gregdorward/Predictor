@@ -3290,7 +3290,7 @@ export async function calculateScore(match, index, divider, calculate) {
         break;
     }
 
-    if (match.matches_completed_minimum < 5 || match.omit === true) {
+    if (match.matches_completed_minimum < 4 || match.omit === true) {
       finalHomeGoals = "-";
       finalAwayGoals = "-";
       match.status = "notEnoughData";
@@ -3807,7 +3807,7 @@ export async function getScorePrediction(day, mocked) {
             match.leagueID === 7061 ||
             (match.game_week < 3 &&
               match.game_week !== 0 &&
-              match.matches_completed_minimum < 5):
+              match.matches_completed_minimum < 4):
             match.goalsA = "x";
             match.goalsB = "x";
             match.completeData = false;
