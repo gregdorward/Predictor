@@ -2828,6 +2828,31 @@ function GameStats({ game, displayBool, stats }) {
     return text.split(". ").join(".\n");
   };
 
+
+  //AI Match Preview Data Structure
+  //   {
+  //   "homeTeam": {
+  //     "teamName": "String (Team Name)",
+  //     "style": "String (Team's playing style, a concise description based on the performanceStats and competitionRankings.)",
+  //     "strengths": Array of strings (Team's strengths, qualitative analysis based on performanceStats and competitionRankings. Each strength should be a single string.)",
+  //     "weaknesses": Array of strings (Team's weaknesses, qualitative analysis based on performanceStats and competitionRankings. Each weakness should be a single string.)",
+  //   },
+  //   "awayTeam": {
+  //     "teamName": "String (Team Name)",
+  //     "style": "String (Team's playing style, a concise description based on the performanceStats and competitionRankings.)",
+  //     "strengths": Array of strings (Team's strengths, qualitative analysis based on performanceStats and competitionRankings. Each strength should be a single string.)",
+  //     "weaknesses": Array of strings (Team's weaknesses, qualitative analysis based on performanceStats and competitionRankings. Each weakness should be a single string.)",
+  //   },
+  //   "matchPreview": [
+  //     "A detailed, qualitative match preview, drawing on the wide range of stats available. Each paragraph should be its own string within this array.",
+  //     "The preview must convey the importance of the match, if any, and relevant context.",
+  //     "Previous head-to-head results can be mentioned here. Anything noteworthy from the predicted lineups should be included.",
+  //     "If a key player is missing or doubtful, this should be included."
+  //   ],
+  //   "prediction": "String (Match prediction, including likely occurrences/tips and a correct score prediction. Supply relevant odds where available.)"
+  //   "homeGoalsPrediction": "Int (Predicted number of goals for the home team. Must match the prediction in the 'prediction' field.)",
+  //   "awayGoalsPrediction": "Int (Predicted number of goals for the away team. Must match the prediction in the 'prediction' field.)",
+  // }
   //Render the AI data
   const AIOutput = useMemo(() => {
     if (!aiMatchPreview) return null;
@@ -2851,12 +2876,33 @@ function GameStats({ game, displayBool, stats }) {
           {aiMatchPreview.opinionOnXGTippingPrediction}
         </div>
 
+        <h2>Styles</h2>
         <div className="AIContainer">
           <div className="HomeAIInsights">
-            <div>{aiMatchPreview?.homeTeam?.summary}</div>
+            <div>{aiMatchPreview?.homeTeam?.style}</div>
+            <ul className="Strengths">
+              {aiMatchPreview?.homeTeam?.strengths?.map((strength, index) => (
+                <li key={index}>+ {strength}</li>
+              ))}
+            </ul>
+            <ul className="Weaknesses">
+              {aiMatchPreview?.homeTeam?.weaknesses?.map((weakness, index) => (
+                <li key={index}>− {weakness}</li>
+              ))}
+            </ul>
           </div>
           <div className="AwayAIInsights">
-            <div>{aiMatchPreview?.awayTeam?.summary}</div>
+            <div>{aiMatchPreview?.awayTeam?.style}</div>
+            <ul className="Strengths">
+              {aiMatchPreview?.awayTeam?.strengths?.map((strength, index) => (
+                <li key={index}>+ {strength}</li>
+              ))}
+            </ul>
+            <ul className="Weaknesses">
+              {aiMatchPreview?.awayTeam?.weaknesses?.map((weakness, index) => (
+                <li key={index}>− {weakness}</li>
+              ))}
+            </ul>
           </div>
         </div>
       </>
@@ -3240,7 +3286,7 @@ function GameStats({ game, displayBool, stats }) {
               <StatsHomeComponent />
               <StatsAwayComponent />
             </div>
-            {stats && ranksHome && ranksAway && stats?.topTeams &&(
+            {stats && ranksHome && ranksAway && stats?.topTeams && (
               <TeamRankingsFlexView
                 title={`Rankings in ${game.leagueDesc} out of ${stats.topTeams.accurateCrosses.length} teams`}
                 ranksHome={ranksHome}

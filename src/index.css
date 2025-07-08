@@ -3970,28 +3970,50 @@ button.SecondaryButtons {
 
 .HomeAIInsights {
   flex-direction: column;
-  text-align: justify;
+  text-align: center;
   padding: 1em;
+  padding-bottom: 2em;
   line-height: 1.75em;
   flex-basis: 50%;
 }
 
 .HomeAIInsights ul {
-  padding-top: 1em;
+  margin-top: 1em;
+    padding-top: 1em;
   font-size: 1em;
+}
+
+.HomeAIInsights li {
+  padding-bottom: 0.5em;
 }
 
 .AwayAIInsights {
   flex-direction: column;
-  text-align: justify;
+  text-align: center;
   padding: 1em;
+  padding-bottom: 2em;
   line-height: 1.75em;
   flex-basis: 50%;
 }
 
 .AwayAIInsights ul {
+  margin-top: 1em;
   padding-top: 1em;
   font-size: 1em;
+}
+
+.Strengths{
+  border: 1px solid #009c00;
+  background-color: #01950135;
+}
+
+.Weaknesses{
+  border: 1px solid #d70000;
+  background-color: #e000002e;
+}
+
+.AwayAIInsights li {
+  padding-bottom: 0.5em;
 }
 
 .IndividualAIComponent {
