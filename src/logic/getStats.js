@@ -14,7 +14,6 @@ export async function getPointAverage(pointTotal, games) {
 
 
 export async function calculateAttackingStrength(stats) {
-  console.log("CALLED")
   // Define weights for each metric (you can adjust these based on your preference)
   const weights = {
     // averagePossession: 0.15,

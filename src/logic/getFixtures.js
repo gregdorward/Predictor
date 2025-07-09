@@ -88,7 +88,7 @@ export async function generateTables(a, leagueIdArray, allResults) {
     //Skip MLS which has a weird format
     if (
       // !league.data.specific_tables[0]?.groups &&
-      currentLeagueId !== 13973 &&
+      // currentLeagueId !== 13973 &&
       currentLeagueId !== 12933 &&
       // currentLeagueId !== 13734 &&
       league.data.specific_tables[0]?.table
@@ -157,6 +157,7 @@ export async function generateTables(a, leagueIdArray, allResults) {
       let instances;
 
       if (currentLeagueId === 13973) {
+        console.log(league.data)
         if (league.data.specific_tables[0].groups) {
           instances = league.data.specific_tables[0].groups;
           groups = true
@@ -174,7 +175,6 @@ export async function generateTables(a, leagueIdArray, allResults) {
       // }
 
       if (groups) {
-        console.log("Called")
         instances.forEach((group) => {
           leagueInstance = [];
           for (let index = 0; index < group.table.length; index++) {
@@ -227,6 +227,7 @@ export async function generateTables(a, leagueIdArray, allResults) {
         });
       }
     } else if (league.data.league_table === null) {
+              console.log(currentLeagueId)
       for (
         let index = 0;
         index < league.data.all_matches_table_overall.length;

@@ -3758,6 +3758,7 @@ async function fetchLeagueStats() {
       }
     }
   }
+  console.log("CALLED LEAGUE STATS");
 
   return allLeagueStats;
 }
@@ -3789,7 +3790,7 @@ export async function getScorePrediction(day, mocked) {
       <ThreeDots className="MainLoading" fill="#fe8c00" />
       <div>Collecting form data and calculating predictions...</div>
     </div>,
-    document.getElementById("Loading")
+    document.getElementById("FixtureContainer")
   );
 
   await Promise.all(

@@ -71,11 +71,13 @@ function GameStats({ game, displayBool, stats }) {
   const [awayMissingPlayersList, setAwayMissingPlayersList] = useState([]);
   const [homeLineupList, setHomeLineupList] = useState([]);
   const [awayLineupList, setAwayLineupList] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(null);
   const [streakData, setStreakData] = useState([]);
   const [homeTeamStats, setHomeTeamStats] = useState(null);
   const [awayTeamStats, setAwayTeamStats] = useState(null);
   const [loadingTeamStats, setLoadingTeamStats] = useState(true);
+  const [loadingKeyPlayers, setLoadingKeyPlayers] = useState(true);
+  const [loadingKeyPlayerComparison, setLoadingKeyPlayerComparison] = useState(true);
   const [loadingStreaks, setLoadingStreaks] = useState(true);
   const [oddsData, setOddsData] = useState(null); // State to hold your odds object
   const [loadingOdds, setLoadingOdds] = useState(false);
@@ -1063,7 +1065,7 @@ function GameStats({ game, displayBool, stats }) {
   const today = new Date(); // Or new Date()
   const week = getWeekOfYear(today);
 
-  function extractRankedPlayersByTeam(topPlayers, teamId) {
+  async function extractRankedPlayersByTeam(topPlayers, teamId) {
     const result = [];
 
     if (!topPlayers || typeof topPlayers !== "object") return result;
@@ -1155,6 +1157,12 @@ function GameStats({ game, displayBool, stats }) {
         // console.log("isWithin48Hours:", isWithin48Hours);
         // console.log("game.date:", game.date, "| now:", now, "| diff:", game.date - now);
         setLoading(true);
+        setLoadingStreaks(true);
+        setLoadingOdds(true);
+        setLoadingPlayerData(true);
+        setLoadingTeamStats(true);
+        setLoadingKeyPlayers(true);
+        setLoadingKeyPlayerComparison(true);
         if (
           isWithin48Hours
         ) {
@@ -1170,7 +1178,6 @@ function GameStats({ game, displayBool, stats }) {
           setAwayLineupList(awayLineup);
           setHomeMissingPlayersList(homeMissingPlayers);
           setAwayMissingPlayersList(awayMissingPlayers);
-          setLoading(false);
         }
 
         let previousGames = await fetch(
@@ -1292,10 +1299,7 @@ function GameStats({ game, displayBool, stats }) {
         const streaks = await fetch(
           `${process.env.REACT_APP_EXPRESS_SERVER}streaks/${matchingGameInfo.id}`
         );
-        setLoadingStreaks(true);
-        setLoadingOdds(true);
-        setLoadingPlayerData(true);
-        setLoadingTeamStats(true);
+
 
         const streaksDataRaw = await streaks.json();
 
@@ -1335,11 +1339,11 @@ function GameStats({ game, displayBool, stats }) {
             );
             const playerStats = await leaguePlayerStatsResponse.json();
 
-            let playersHome = extractRankedPlayersByTeam(
+            let playersHome = await extractRankedPlayersByTeam(
               playerStats.topPlayers,
               matchingGameInfo.homeId
             );
-            let playersAway = extractRankedPlayersByTeam(
+            let playersAway = await extractRankedPlayersByTeam(
               playerStats.topPlayers,
               matchingGameInfo.awayId
             );
@@ -1353,11 +1357,9 @@ function GameStats({ game, displayBool, stats }) {
             const homeAttributes = await homeKeyPlayerAttributes.json();
             const awayAttributes = await awayKeyPlayerAttributes.json();
 
-            // const homeImageData = await homeImage;
-            // const awayImageData = await awayImage;
-
             setHomePlayerData(trimmedPlayersHome);
             setAwayPlayerData(trimmedPlayersAway);
+            console.log("Home Player Data:", trimmedPlayersHome);
 
             if (
               homeAttributes?.playerAttributeOverviews?.[0] &&
@@ -1405,10 +1407,16 @@ function GameStats({ game, displayBool, stats }) {
         console.error("Error fetching or processing data:", error);
         // Handle errors (e.g., set error state, show error message)
       } finally {
-        setLoadingStreaks(false);
+        console.log("Data fetching completed.");
         setLoadingTeamStats(false);
         setLoadingOdds(false);
         setLoadingPlayerData(false);
+        setLoadingStreaks(false);
+        setLoadingKeyPlayerComparison(false);
+        setLoadingKeyPlayers(false);
+        setLoading(false);
+        console.log("Loading states reset.");
+        console.log(homePlayerData);
       }
     }
 
@@ -3238,7 +3246,7 @@ function GameStats({ game, displayBool, stats }) {
         )}
 
         <div id="AIInsightsContainer" className="AIInsightsContainer">
-          {loadingPlayerData ? (
+          {loadingKeyPlayerComparison ? (
             <p>Loading data for Match Preview...</p>
           ) : !paid && game.leagueID !== 12325 ? (
             <Button

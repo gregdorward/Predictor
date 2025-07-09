@@ -336,7 +336,6 @@ export const StatGauge = ({ label, rank, maxRank = 36 }) => {
 };
 
 export function RadarChart(props) {
-  console.log(props.data)
   const options = {
     color: "white",
     scales: {
