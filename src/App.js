@@ -544,7 +544,11 @@ export async function getLeagueList() {
       document.getElementById("Email")
     );
   } else {
-    ReactDOM.render(<Login />, document.getElementById("Email"));
+    ReactDOM.render(
+      <><h3 className="MembersGetMore">Members get more</h3>
+      <div><p className="MembersGetMore">Unlock exclusive features and content by becoming a premium member</p></div>
+      <Login /></>
+    , document.getElementById("Email"));
   }
 }
 

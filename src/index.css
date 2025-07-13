@@ -260,6 +260,7 @@
   --disabled-div: #5d5d5d;
   --span-background: #FFE500;
   --span-text-colour: #020029;
+  --member-text-color: #020029;
 }
 
 /* Dark Mode Colors */
@@ -285,7 +286,7 @@
   --disabled-div: #525151;
   --span-background: whitesmoke;
   --span-text-colour: #020029;
-
+  --member-text-color: #fe8c00;
 }
 
 body {
@@ -421,9 +422,14 @@ h2 {
 
 h3 {
   font-size: 1.25em;
-
   color: var(--text-color);
   padding: 1em;
+  margin: 0%
+}
+
+.MembersGetMore {
+  font-size: 1.25em;
+  color: var(--member-text-color);
   margin: 0%
 }
 
@@ -660,7 +666,7 @@ p {
 }
 
 span.MembershipInfo {
-  color: #030052;
+  color: var(--text-color);
   display: block;
   font-size: 1.2em;
   padding: 1em;
