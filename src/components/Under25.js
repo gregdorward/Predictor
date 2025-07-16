@@ -10,32 +10,35 @@ import Paper from "@material-ui/core/Paper";
 import { useEffect, useState } from "react";
 import { getLowestScoringLeagues } from "../logic/getStatsInsights";
 import Logo from "../components/Logo"
+import HamburgerMenu from "./HamburgerMenu";
 
+const StyledTableCell = withStyles(() => ({
+  head: {
+    backgroundColor: "var(--accent-color)",
+    color: "var(--button-text-color)",
+    padding: 2,
+    textAlign: "center",
+    fontSize: "1em",
+    fontFamily: "inherit",
+    border: "1px solid black"
+  },
+  body: {
+    fontSize: "1em",
+    fontFamily: "inherit",
+    padding: 5,
+    border: "1px solid black",
+    color: "var(--text-color)",
+  },
+}))(TableCell);
 
-const StyledTableCell = withStyles((theme) => ({
-    head: {
-      backgroundColor: "#030052",
-      color: theme.palette.common.white,
-      padding: 2,
+const StyledTableRow = withStyles(() => ({
+  root: {
+    "&:nth-of-type(odd)": {
+      backgroundColor: "var(--secondary-background-color)",
       textAlign: "center",
-      fontSize: "1em",
-      fontFamily: "inherit",
     },
-    body: {
-      fontSize: "1em",
-      fontFamily: "inherit",
-      padding: 5,
-    },
-  }))(TableCell);
-  
-  const StyledTableRow = withStyles((theme) => ({
-    root: {
-      "&:nth-of-type(odd)": {
-        backgroundColor: theme.palette.action.hover,
-        textAlign: "center",
-      },
-    },
-  }))(TableRow);
+  },
+}))(TableRow);
 
 
 export default function Under25() {
@@ -57,43 +60,44 @@ export default function Under25() {
 
   // Filter leagues based on allowed countries
   const filteredLeagues = leagues.filter(league => allowedCountries.includes(league.leagueCountry) && league.division > 0 && league.division < 5);
-console.log(filteredLeagues)
+  console.log(filteredLeagues)
 
   const headers = ["League", "Country", "Avg Goals", "Under 2.5%"];
 
   return (
     <Fragment>
-    <Logo/>
+      <HamburgerMenu />
+      <Logo />
       <h1>Lowest Scoring Leagues</h1>
-    <TableContainer component={Paper} className="O25Table">
-      <Table aria-label="Lowest scoring leagues">
-        <TableHead>
-          <TableRow>
-            {headers.map((header, index) => (
-              <StyledTableCell key={index} align="center">
-                {header}
-              </StyledTableCell>
+      <TableContainer component={Paper} className="O25Table">
+        <Table aria-label="Lowest scoring leagues">
+          <TableHead>
+            <TableRow>
+              {headers.map((header, index) => (
+                <StyledTableCell key={index} align="center">
+                  {header}
+                </StyledTableCell>
+              ))}
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {filteredLeagues.map((league, index) => (
+              <StyledTableRow key={index}>
+                <StyledTableCell align="center">{league.league}</StyledTableCell>
+                <StyledTableCell align="center">
+                  {league.leagueCountry}
+                </StyledTableCell>
+                <StyledTableCell align="center">
+                  {league.averageGoals}
+                </StyledTableCell>
+                <StyledTableCell align="center">
+                  {league.under25Percentage}%
+                </StyledTableCell>
+              </StyledTableRow>
             ))}
-          </TableRow>
-        </TableHead>
-        <TableBody>
-          {filteredLeagues.map((league, index) => (
-            <StyledTableRow key={index}>
-              <StyledTableCell align="center">{league.league}</StyledTableCell>
-              <StyledTableCell align="center">
-                {league.leagueCountry}
-              </StyledTableCell>
-              <StyledTableCell align="center">
-                {league.averageGoals}
-              </StyledTableCell>
-              <StyledTableCell align="center">
-                {league.under25Percentage}%
-              </StyledTableCell>
-            </StyledTableRow>
-          ))}
-        </TableBody>
-      </Table>
-    </TableContainer>
+          </TableBody>
+        </Table>
+      </TableContainer>
     </Fragment>
   );
 }

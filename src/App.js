@@ -15,6 +15,7 @@ import Login from "./components/Login";
 import { getCurrentUser } from "./components/ProtectedContent";
 import { userDetail } from "./logic/authProvider";
 import { checkUserPaidStatus } from "./logic/hasUserPaid";
+import HamburgerMenu from "./components/HamburgerMenu";
 import {
   FacebookShareButton,
   FacebookIcon,
@@ -41,6 +42,8 @@ export var orderedLeagues = [];
 
 let loggedIn;
 export let paid = false;
+
+const menuItems = ['Home', 'bttsteams', 'Services', 'Contact'];
 
 const leagueOrder = [
   // 11084, //Euro 2024
@@ -546,9 +549,9 @@ export async function getLeagueList() {
   } else {
     ReactDOM.render(
       <><h3 className="MembersGetMore">Members get more</h3>
-      <div><p className="MembersGetMore">Unlock exclusive features and content by becoming a premium member</p></div>
-      <Login /></>
-    , document.getElementById("Email"));
+        <div><p className="MembersGetMore">Unlock exclusive features and content by becoming a premium member</p></div>
+        <Login /></>
+      , document.getElementById("Email"));
   }
 }
 
@@ -600,8 +603,20 @@ function AppContent() {
   return (
     <div className="App">
       <div className="DarkMode">
+        <HamburgerMenu />
         <ThemeToggle />
       </div>
+      <nav className="hidden md:flex gap-6">
+        {menuItems.map((item) => (
+          <a
+            key={item}
+            href={`#${item.toLowerCase()}`}
+            className="text-lg font-semibold hover:text-blue-500"
+          >
+            {item}
+          </a>
+        ))}
+      </nav>
       <Logo />
       <a
         className="SocialLink"

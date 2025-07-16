@@ -9,27 +9,32 @@ import TableRow from "@material-ui/core/TableRow";
 import Paper from "@material-ui/core/Paper";
 import { useEffect, useState } from "react";
 import { getHighestScoringTeams } from "../logic/getStatsInsights";
+import Logo from "../components/Logo";
+import HamburgerMenu from "./HamburgerMenu";
 
-const StyledTableCell = withStyles((theme) => ({
+const StyledTableCell = withStyles(() => ({
   head: {
-    backgroundColor: "#030052",
-    color: theme.palette.common.white,
+    backgroundColor: "var(--accent-color)",
+    color: "var(--button-text-color)",
     padding: 2,
     textAlign: "center",
     fontSize: "1em",
     fontFamily: "inherit",
+    border: "1px solid black"
   },
   body: {
     fontSize: "1em",
     fontFamily: "inherit",
     padding: 5,
+    border: "1px solid black",
+    color: "var(--text-color)",
   },
 }))(TableCell);
 
-const StyledTableRow = withStyles((theme) => ({
+const StyledTableRow = withStyles(() => ({
   root: {
     "&:nth-of-type(odd)": {
-      backgroundColor: theme.palette.action.hover,
+      backgroundColor: "var(--secondary-background-color)",
       textAlign: "center",
     },
   },
@@ -79,6 +84,8 @@ export default function HighestScoringTeams() {
 
   return (
     <Fragment>
+      <HamburgerMenu />
+      <Logo />
       <h1>Highest Scoring Teams</h1>
       <TableContainer component={Paper} className="O25Table">
         <Table aria-label="highest scoring teams">

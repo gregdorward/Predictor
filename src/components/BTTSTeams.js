@@ -10,30 +10,31 @@ import Paper from "@material-ui/core/Paper";
 import { useEffect, useState } from "react";
 import { getBTTSTeams } from "../logic/getStatsInsights";
 import Logo from "../components/Logo"
+import HamburgerMenu from "./HamburgerMenu";
 
-const StyledTableCell = withStyles((theme) => ({
+const StyledTableCell = withStyles(() => ({
   head: {
-    backgroundColor: "#030052",
-    color: theme.palette.common.white,
+    backgroundColor: "var(--accent-color)",
+    color: "var(--button-text-color)",
     padding: 2,
     textAlign: "center",
     fontSize: "1em",
     fontFamily: "inherit",
-    border: "1px, solid, black"
+    border: "1px solid black"
   },
   body: {
     fontSize: "1em",
     fontFamily: "inherit",
-    padding: 4,
-    border: "1px, solid, black"
-
+    padding: 5,
+    border: "1px solid black",
+    color: "var(--text-color)",
   },
 }))(TableCell);
 
-const StyledTableRow = withStyles((theme) => ({
+const StyledTableRow = withStyles(() => ({
   root: {
     "&:nth-of-type(odd)": {
-      backgroundColor: theme.palette.action.hover,
+      backgroundColor: "var(--secondary-background-color)",
       textAlign: "center",
     },
   },
@@ -79,13 +80,14 @@ export default function BTTSTeams() {
   // Filter games based on allowed countries
   const filteredGames = games.filter((game) =>
     allowedCountries.includes(game.country) && game.played > 10
-  ).slice(0,30);
+  ).slice(0, 30);
 
-  const headers = ["Name", "Country", "BTTS %", "Played", "Next Opponent",  "Date", "Odds BTTS", ];
+  const headers = ["Name", "Country", "BTTS %", "Played", "Next Opponent", "Date", "Odds BTTS",];
 
   return (
     <Fragment>
-    <Logo/>
+      <HamburgerMenu />
+      <Logo />
       <h1>Teams With Best BTTS Records</h1>
       <TableContainer component={Paper} className="O25Table">
         <Table aria-label="highest scoring games">

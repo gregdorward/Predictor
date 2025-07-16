@@ -17,6 +17,7 @@ import HighestScoringTeams from "./components/HighestScoringTeams"
 import HighestScoringFixtures from "./components/HighestScoringFixtures";
 import BTTSFixtures from "./components/BTTSFixtures";
 import BTTSTeams from "./components/BTTSTeams";
+import SeasonPreview from "./components/SeasonPreview";
 
 
 ReactDOM.render(
@@ -36,6 +37,7 @@ ReactDOM.render(
           <Route path="/bttsteams" element={<BTTSTeams />} />
           <Route path="/cancelsubscription" element={<CancelSubscription/>} />
           <Route path="/" exact element={<App />} />
+          <Route path="/seasonpreviews" element={<SeasonPreview />} />
           {/* <Route path="/" element={<Fixture />} /> */}
         </Routes>
         </HashRouter>

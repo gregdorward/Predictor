@@ -381,8 +381,10 @@ input:checked+.slider:before {
 
 h1 {
   font-size: 3.5em;
-  color: #030052;
+  color: var(--text-color);
 }
+
+
 
 /* h1 .logo-container{
   height: auto;
@@ -414,6 +416,25 @@ h1 {
   /* Optional: add padding or margin if needed */
 }
 
+.HamburgerMenuButton{
+  display: block;
+  width: 7em;
+}
+
+.NavItems{
+  display: flex;
+  flex-direction: column;
+  gap: 1em;
+  padding: 1em;
+  position: fixed;
+  width: auto;
+  align-items: flex-start;
+  background-color: var(--third-background-color);
+  color: var(--button-text-color);
+  margin-left: 1.3em;
+  /* background-color: var(--background-color); */
+}
+
 h2 {
   /* font-size: 2em; */
   font-weight: 500;
@@ -441,6 +462,23 @@ h4 {
   margin: 0%
 }
 
+.TeamPreview {
+  display: flex;
+  flex-direction: row;
+  padding: 1em;
+  align-items: center;
+}
+
+.TeamPreviewName {
+  flex: 1;
+}
+
+.TeamPreviewDescription {
+  flex: 2;
+  padding-left: 1em;
+  padding-right: 1em;
+  color: var(--text-color);
+}
 h5 {
   font-size: 2.5em;
   margin-bottom: 1em;
@@ -3449,9 +3487,13 @@ label {
 }
 
 .DarkMode {
-  width: 2em;
+  display: flex;
+  justify-content: space-between;
+  margin: 1em;
+  align-items: center;
+  /* width: 2em;
   margin-left: auto;
-  padding-right: 7em;
+  padding-right: 7em; */
 }
 
 .design {
