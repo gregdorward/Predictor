@@ -63,7 +63,7 @@ export default function SeasonPreview() {
                                             .sort((a, b) => a.predictedPosition - b.predictedPosition)
                                             .map((team, idx) => (
                                                 <li key={idx} className="TeamPreview">
-                                                    <h4 className="TeamPreviewName">{team.name}</h4>
+                                                    <h4 className="TeamPreviewName">P{team.predictedPosition}. {team.name}</h4>
                                                     <p className="TeamPreviewDescription">{team.preview}</p>
                                                 </li>
                                             ))}
