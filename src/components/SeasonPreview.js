@@ -4,7 +4,8 @@ import HamburgerMenu from "./HamburgerMenu";
 
 const leagues = [
     { name: "English Premier League 25/26", key: "English-Premier-League", season: "2025-2026" },
-    //   { name: "English Championship 25/26", key: "English-Championship", season: "2025-2026" },
+    { name: "English Championship 25/26", key: "English-Championship", season: "2025-2026" },
+    { name: "Spanish La Liga 25/26", key: "Spanish-La-Liga", season: "2025-2026" },
     // Add more leagues here
 ];
 
