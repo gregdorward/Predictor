@@ -419,6 +419,9 @@ h1 {
 .HamburgerMenuButton {
   display: block;
   width: 7em;
+  background-color: var(--background-color);
+  color: var(--text-color);
+  border: none;
 }
 
 .NavItems {
