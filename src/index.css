@@ -380,7 +380,7 @@ input:checked+.slider:before {
 }
 
 h1 {
-  font-size: 3.5em;
+  /* font-size: 3.5em; */
   color: var(--text-color);
 }
 
@@ -1227,7 +1227,7 @@ input:focus {
 .HomeAndAwayContainerWon {
   display: flex;
   flex-direction: column;
-  border-left: #009700 solid 5px;
+  border-left: #f30292 solid 5px;
 }
 
 .HomeAndAwayContainerLost {

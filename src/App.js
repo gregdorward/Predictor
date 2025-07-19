@@ -548,7 +548,9 @@ export async function getLeagueList() {
     );
   } else {
     ReactDOM.render(
-      <><h3 className="MembersGetMore">Members get more</h3>
+      <>
+        <h2>This week only - 1 week free trial with code SSHTRIAL applied at checkout - cancel anytime</h2>
+        <h3 className="MembersGetMore">Members get more</h3>
         <div><p className="MembersGetMore">Unlock exclusive features and content by becoming a premium member</p></div>
         <Login /></>
       , document.getElementById("Email"));

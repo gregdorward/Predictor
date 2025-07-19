@@ -3525,7 +3525,7 @@ const footyStatsToSofaScore = [
       id: 25,
       season: 61960,
     },
-    12622: { 
+    12622: {
       id: 173,
       season: 63807, // Conference 24/25
     },
@@ -3675,7 +3675,7 @@ const footyStatsToSofaScore = [
       id: 13363,
       season: 70263 // USL 25
     },
-    14236:{
+    14236: {
       id: 13470,
       season: 72315 // Canadian Premier League 25
     },
@@ -3691,7 +3691,7 @@ const footyStatsToSofaScore = [
       id: 192,
       season: 69981, // Ireland 24/25
     },
-    13703 : {
+    13703: {
       id: 136,
       season: 64864, // A League 24/25
     },
@@ -3702,9 +3702,9 @@ const footyStatsToSofaScore = [
     12278: {
       id: 17015,
       season: 61648, // UEFA Europa Conference League 24/25
-     },
+    },
 
-      // UEFA Europa Conference League 24/25
+    // UEFA Europa Conference League 24/25
     // 192: 69981, // Ireland
     // 357: 69619, // Club World Cup
     // 54: 62048, // Spanish Secunda
@@ -4766,71 +4766,4 @@ async function renderTips() {
     document.getElementById("UserGeneratedTips")
   );
 
-  ReactDOM.render(
-    <Fragment>
-      <Collapsable
-        buttonText={"Extras"}
-        element={
-          <div>
-            <button
-              className="SecondaryButtons"
-              onClick={() => {
-                window.open("https://www.soccerstatshub.com/#/bttsteams");
-              }}
-            >
-              Both teams to score teams
-            </button>
-            <button
-              className="SecondaryButtons"
-              onClick={() => {
-                window.open("https://www.soccerstatshub.com/#/bttsfixtures");
-              }}
-              disabled={!paid}
-            >
-              Both teams to score fixtures
-            </button>
-            <button
-              className="SecondaryButtons"
-              onClick={() => {
-                if (paid)
-                  window.open("https://www.soccerstatshub.com/#/fixtureshigh");
-              }}
-              disabled={!paid}
-            >
-              Over 2.5 goals fixtures
-            </button>
-            <button
-              className="SecondaryButtons"
-              onClick={() => {
-                if (paid) window.open("https://www.soccerstatshub.com/#/o25");
-              }}
-              disabled={!paid}
-            >
-              Highest scoring leagues
-            </button>
-            <button
-              className="SecondaryButtons"
-              onClick={() => {
-                if (paid) window.open("https://www.soccerstatshub.com/#/u25");
-              }}
-              disabled={!paid}
-            >
-              Lowest scoring leagues
-            </button>
-            <button
-              className="SecondaryButtons"
-              onClick={() => {
-                if (paid)
-                  window.open("https://www.soccerstatshub.com/#/teamshigh");
-              }}
-              disabled={!paid}
-            >
-              Highest scoring teams
-            </button>
-          </div>
-        }
-      />
-    </Fragment>,
-    document.getElementById("highLowLeagues")
-  );
 }
