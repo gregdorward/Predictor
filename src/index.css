@@ -1227,7 +1227,7 @@ input:focus {
 .HomeAndAwayContainerWon {
   display: flex;
   flex-direction: column;
-  border-left: #f30292 solid 5px;
+  border-left: #009700 solid 5px;
 }
 
 .HomeAndAwayContainerLost {
