@@ -20,6 +20,7 @@ const PrivacyPolicy = () => {
 
           Your privacy is important to us. This Privacy Policy explains how we collect, use, and protect your personal information when you use our website.
 
+
           1. Information We Collect
           a. Account Information
           Email address – collected when you register or log in.
@@ -36,6 +37,9 @@ const PrivacyPolicy = () => {
           c. Automatically Collected Data
           We may collect anonymized data such as IP address, browser type, and usage statistics to help improve our service.
 
+        </p>
+        <p>
+
           2. How We Use Your Information
           We use your personal information to:
 
@@ -51,6 +55,8 @@ const PrivacyPolicy = () => {
 
           We do not sell or rent your personal data to third parties.
 
+        </p>
+        <p>
           3. How We Share Your Information
           We may share your information with:
 
@@ -62,6 +68,8 @@ const PrivacyPolicy = () => {
 
           All third parties are bound by strict data protection obligations.
 
+        </p>
+        <p>
           4. Data Retention
           We retain your information:
 
@@ -73,6 +81,8 @@ const PrivacyPolicy = () => {
 
           You can request account deletion by contacting us (see Section 8).
 
+        </p>
+        <p>
           5. Your Rights
           Depending on your location, you may have the right to:
 
@@ -83,7 +93,8 @@ const PrivacyPolicy = () => {
           Withdraw consent or object to certain processing,
 
           File a complaint with a data protection authority.
-
+        </p>
+        <p>
           6. Data Security
           We take appropriate technical and organisational measures to protect your data, including:
 
@@ -92,15 +103,19 @@ const PrivacyPolicy = () => {
           Secure connections (HTTPS),
 
           Regular security reviews.
+        </p>
+        <p>
 
           7. Cookies & Tracking
           We may use cookies or similar technologies to improve your experience. You can manage your cookie preferences in your browser settings.
-
+        </p>
+        <p>
           8. Contact Us
           If you have questions or concerns about this Privacy Policy or your personal data, please contact us:
 
           Email: support@xgtipping.com
-
+        </p>
+        <p>
           9. Changes to This Policy
           We may update this Privacy Policy occasionally. We'll notify you of any material changes via email or website notice.
 
