@@ -32,6 +32,7 @@ import { generateFixtures } from "./logic/getFixtures";
 import { ThreeDots } from "react-loading-icons";
 import Logo from "./components/Logo";
 import { BrowserRouter as Router, Route, Routes, Link } from "react-router-dom";
+import PrivacyPolicy from "./components/PrivacyPolicy";
 
 export const proxyurl = "https://safe-caverns-99679.herokuapp.com/";
 export var fixtureList = [];
@@ -823,7 +824,8 @@ function AppContent() {
         </TelegramShareButton>
       </div>
 
-      <Collapsable buttonText={"Contact"} element={<StripePolicies />} />
+      <Collapsable buttonText={"Terms and Conditions + Contact"} element={<StripePolicies />} />
+      <Collapsable buttonText={"Privacy Policy"} element={<PrivacyPolicy />} />
     </div>
   );
 }
