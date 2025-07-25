@@ -226,7 +226,7 @@ export async function generateTables(a, leagueIdArray, allResults) {
         });
       }
     } else if (league.data.league_table === null) {
-              console.log(currentLeagueId)
+      console.log(currentLeagueId)
       for (
         let index = 0;
         index < league.data.all_matches_table_overall.length;
@@ -465,14 +465,21 @@ export function RenderAllFixtures(props) {
     paid = userDetail.isPaid;
   }
   const originalLength = props.matches.length;
+  let newLength;
   if (paid === true) {
     matches = props.matches;
+    newLength = matches.length;
   } else {
     if (originalLength > 15) {
       matches = props.matches.slice(0, 15);
       capped = true;
+      newLength = 15;
     } else {
-      matches = props.matches;
+      const slicePercent = 0.5; // 50%
+      const sliceCount = Math.ceil(props.matches.length * slicePercent);
+      matches = props.matches.slice(0, sliceCount);
+      capped = true;
+      newLength = sliceCount;
     }
   }
 
@@ -485,6 +492,7 @@ export function RenderAllFixtures(props) {
       paid={paid}
       capped={capped}
       originalLength={originalLength}
+      newLength={newLength}
       stats={props.stats}
     />
   );

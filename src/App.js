@@ -552,7 +552,7 @@ export async function getLeagueList() {
       <>
         <h2>This week only - 1 week free trial with code SSHTRIAL applied at checkout - cancel anytime</h2>
         <h3 className="MembersGetMore">Members get more</h3>
-        <div><p className="MembersGetMore">Unlock exclusive features and content by signing up and becoming a premium member</p></div>
+        <div><p className="MembersGetMore">Unlock all fixtures by signing up and becoming a premium member</p></div>
         <Login /></>
       , document.getElementById("Email"));
   }

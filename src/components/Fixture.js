@@ -560,7 +560,7 @@ export function Fixture(props) {
         <>
           <div className="LockIcon">🔒</div>
           <div className="LockText">
-            {props.originalLength} games have been capped at 15 for free users
+            {props.originalLength} games have been capped at {props.newLength} for free users
             with full stats available for those returned - sign up for access to
             40+ leagues and cups
           </div>
