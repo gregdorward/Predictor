@@ -4047,7 +4047,6 @@ export async function getScorePrediction(day, mocked) {
       }
 
       leagueStatsArray = await leagueStatsPromise;
-      console.log("League stats fetched:", leagueStatsArray);
 
       if (
         match.pointsDifferential === true &&
@@ -4223,6 +4222,27 @@ export async function getScorePrediction(day, mocked) {
   ReactDOM.render(
     <div />,
     document.getElementById("Loading")
+  );
+  ReactDOM.render(
+    <Collapsable
+      buttonText={"Multis"}
+      // display={fixtureList.length > 0 ? "" : "none"}
+      element={
+        <Fragment>
+          <div id="bestPredictions" className="bestPredictions" />
+          <div id="exoticOfTheDay" className="exoticOfTheDay" />
+          {/* <div id="successMeasure2" /> */}
+          <div id="RowOneContainer" className="RowOneContainer">
+            <div id="BTTS" className="RowOne" />
+            <div id="longShots" className="RowOne" />
+            <div id="draws" className="RowOne" />
+          </div>
+          <div id="insights" />
+          <div id="UserGeneratedTips" />
+        </Fragment>
+      }
+    />,
+    document.getElementById("MultiPlaceholder")
   );
   ReactDOM.render(
     <RenderAllFixtures
@@ -4481,7 +4501,7 @@ async function renderTips() {
             element={
               <ul className="BestPredictions" id="BestPredictions">
                 <h4 className="BestPredictionsExplainer">
-                  No games fit the criteria
+                  No games fit the criteria - try again on a day with more fixtures
                 </h4>
                 <div className="AccumulatedOdds">{`Accumulator odds ~ : ${Math.round(accumulatedOdds) - 1
                   }/1`}</div>
@@ -4576,7 +4596,7 @@ async function renderTips() {
             buttonText={"Over 2.5 goals tips"}
             element={
               <ul className="LongshotPredictions" id="LongshotPredictions">
-                <h4>No games fit the criteria</h4>
+                <h4>No games fit the criteria - try again on a day with more fixtures</h4>
               </ul>
             }
           />
@@ -4618,7 +4638,7 @@ async function renderTips() {
             buttonText={"BTTS games"}
             element={
               <ul className="BTTSGames" id="BTTSGames">
-                <h4>No games fit the criteria</h4>
+                <h4>No games fit the criteria - try again on a day with more fixtures</h4>
               </ul>
             }
           />

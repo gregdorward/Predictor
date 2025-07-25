@@ -55,7 +55,7 @@ export function Chart(props) {
   }
 
   const options = {
-    color: "white",
+    color: "#fe8c00",
     responsive: true,
     aspectRatio: 1.2,
     maintainAspectRatio: true,
@@ -80,7 +80,7 @@ export function Chart(props) {
           font: {
             size: 12,
           },
-          color: "white",
+          color: "#fe8c00",
         },
       },
       x: {
@@ -114,7 +114,7 @@ export function Chart(props) {
       title: {
         display: true,
         text: props.type,
-        color: "white",
+        color: "#fe8c00",
         font: {
           size: 14,
         },
@@ -130,20 +130,20 @@ export function Chart(props) {
       {
         label: props.team1,
         font: {
-          color: "black",
+          color: "#fe8c00",
         },
         data: props.data1,
-        borderColor: "red",
+        borderColor: "#01a501",
         borderWidth: 3,
-        backgroundColor: "red",
+        backgroundColor: "#01a501",
         tension: props.tension,
       },
       {
         label: props.team2,
         data: props.data2,
-        borderColor: "yellow",
+        borderColor: "#ae1001ff",
         borderWidth: 3,
-        backgroundColor: "yellow",
+        backgroundColor: "#ae1001ff",
         tension: props.tension,
       },
     ],
@@ -174,7 +174,7 @@ export function MultilineChart(props) {
   }
 
   const options = {
-    color: "white",
+    color: "#fe8c00",
     responsive: true,
     aspectRatio: 1.2,
     maintainAspectRatio: true,
@@ -199,7 +199,7 @@ export function MultilineChart(props) {
           font: {
             size: 12,
           },
-          color: "white",
+          color: "#fe8c00",
         },
       },
       x: {
@@ -233,7 +233,7 @@ export function MultilineChart(props) {
       title: {
         display: true,
         text: props.type,
-        color: "white",
+        color: "#fe8c00",
         font: {
           size: 14,
         },
@@ -249,20 +249,20 @@ export function MultilineChart(props) {
       {
         label: props.team1,
         font: {
-          color: "black",
+          color: "#fe8c00",
         },
         data: props.data1,
-        borderColor: "red",
+        borderColor: "#01a501",
         borderWidth: 3,
-        backgroundColor: "red",
+        backgroundColor: "#01a501",
         tension: props.tension,
       },
       {
         label: props.team2,
         data: props.data2,
-        borderColor: "yellow",
+        borderColor: "#ae1001ff",
         borderWidth: 3,
-        backgroundColor: "yellow",
+        backgroundColor: "#ae1001ff",
         tension: props.tension,
       },
       {
@@ -271,21 +271,21 @@ export function MultilineChart(props) {
           color: "white",
         },
         data: props.data3,
-        borderColor: "DarkRed",
+        borderColor: "#01a50182",
         borderWidth: 3,
-        backgroundColor: "DarkRed",
+        backgroundColor: "#01a50182",
         tension: props.tension,
         hidden: true,
       },
       {
         label: `${props.team2} XG Diff`,
         font: {
-          color: "white",
+          color: "#fe8c00",
         },
         data: props.data4,
-        borderColor: "orange",
+        borderColor: "#ae0f018d",
         borderWidth: 3,
-        backgroundColor: "orange",
+        backgroundColor: "#ae0f018d",
         tension: props.tension,
         hidden: true,
       },
@@ -346,10 +346,13 @@ export function RadarChart(props) {
         },
         grid: {
           // circular: true,
-          color: "white",
+          color: "#f57701",
         },
         pointLabels: {
-          color: "white",
+          color: "#f57701",
+          font: {
+            size: 12
+          },
         },
         min: 0,
         max: props.max, // Set this according to your chart's range
@@ -361,13 +364,17 @@ export function RadarChart(props) {
 
         labels: {
           boxHeight: 10,
-          color: "white",
+          color: "#f57701",
+          font: {
+            size: 14
+          },
         },
       },
       title: {
         display: true,
         text: props.title,
-        color: "white",
+        color: "#f57701",
+        backgroundColor: "black",
         font: {
           size: 14,
         },
@@ -382,24 +389,24 @@ export function RadarChart(props) {
         label: props.team1,
         data: props.data,
         fill: true,
-        // backgroundColor: "rgba(255, 0, 0, 0.52)",
-        borderColor: "red",
-        pointBackgroundColor: "red",
-        pointBorderColor: "red",
-        pointHoverBackgroundColor: "#fff",
-        pointHoverBorderColor: "rgba(255, 99, 133, 0)",
+        backgroundColor: "#01a50141",
+        borderColor: "#01a501",
+        pointBackgroundColor: "#01a501",
+        pointBorderColor: "#01a501",
+        pointHoverBackgroundColor: "#01a501",
+        pointHoverBorderColor: "#007900ff",
         borderWidth: 2,
       },
       {
         label: props.team2,
         data: props.data2,
         fill: true,
-        // backgroundColor: "rgba(253, 240, 0, 0.57)",
-        borderColor: "yellow",
-        pointBackgroundColor: "yellow",
-        pointBorderColor: "yellow",
-        pointHoverBackgroundColor: "#fff",
-        pointHoverBorderColor: "yellow",
+        backgroundColor: "#ae0f0141",
+        borderColor: "#ae1001ff",
+        pointBackgroundColor: "#ae1001ff",
+        pointBorderColor: "#ae1001ff",
+        pointHoverBackgroundColor: "#ae1001ff",
+        pointHoverBorderColor: "#ae1001ff",
         borderWidth: 2,
       },
     ],
@@ -562,7 +569,7 @@ export function RadarChartLeagueStats({
 
   const options = {
     responsive: true,
-    color: "white",
+    color: "#fe8c00",
     maintainAspectRatio: true,
     scales: {
       r: {
@@ -581,7 +588,7 @@ export function RadarChartLeagueStats({
           backdropColor: "transparent",
         },
         pointLabels: {
-          color: "white",
+          color: "#fe8c00",
           font: {
             size: 10,
           },
@@ -593,13 +600,13 @@ export function RadarChartLeagueStats({
         position: "top",
         labels: {
           boxHeight: 10,
-          color: "white",
+          color: "#fe8c00",
         },
       },
       title: {
         display: true,
         text: title || "Team Comparison by League Ranking",
-        color: "white",
+        color: "#fe8c00",
         font: {
           size: 14,
         },
@@ -641,7 +648,7 @@ export function BarChart(props) {
   }
 
   const options = {
-    color: "white",
+    color: "#fe8c00",
     indexAxis: "y",
     // Elements options apply to all of the options unless overridden in a dataset
     // In this case, we are setting the border of each horizontal bar to be 2px wide
@@ -662,9 +669,9 @@ export function BarChart(props) {
       y: {
         ticks: {
           font: {
-            size: 10,
+            size: 11,
           },
-          color: "white",
+          color: "#fe8c00",
         },
       },
     },
@@ -679,7 +686,7 @@ export function BarChart(props) {
       title: {
         display: true,
         text: props.text,
-        color: "white",
+        color: "#fe8c00",
         font: {
           size: 14,
         },
@@ -691,9 +698,9 @@ export function BarChart(props) {
     "Highest Goals",
     "Fewest Conceeded",
     "PPG",
-    "Highest XG",
-    "Fewest XG Conceeded",
-    "Shots On Target",
+    "Highest XGF",
+    "Fewest XGA",
+    "SoT",
     "Dangerous Attacks",
     "Av. Possession",
     "Home/Away Goal Diff",
@@ -712,7 +719,7 @@ export function BarChart(props) {
         backgroundColor(context) {
           const index = context.dataIndex;
           const value = context.dataset.data[index];
-          return value < 0 ? "red" : "yellow";
+          return value < 0 ? "#01a501" : "#ae1001ff";
         },
       },
     ],
@@ -725,7 +732,7 @@ export function BarChartTwo(props) {
   const dataset = [props.data1, props.data2];
 
   const options = {
-    color: "white",
+    color: "#fe8c00",
     indexAxis: "x",
     // Elements options apply to all of the options unless overridden in a dataset
     // In this case, we are setting the border of each horizontal bar to be 2px wide
@@ -744,7 +751,7 @@ export function BarChartTwo(props) {
           font: {
             size: 10,
           },
-          color: "white",
+          color: "#fe8c00",
         },
       },
       // y: {
@@ -768,7 +775,7 @@ export function BarChartTwo(props) {
       title: {
         display: true,
         text: [props.text],
-        color: "white",
+        color: "#fe8c00",
         font: {
           size: 14,
         },
@@ -776,7 +783,7 @@ export function BarChartTwo(props) {
       subtitle: {
         display: true,
         text: "Green - Improving | Red - Worsening",
-        color: "white",
+        color: "#fe8c00",
         font: {
           size: 12,
         },

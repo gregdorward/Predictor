@@ -30,7 +30,7 @@ const MultiTypeChart = ({ dataArray, text }) => {
 
   // Create an array of colors based on the sign of the bar data
   const backgroundColors = barData.map((value) =>
-    value >= 0 ? "ForestGreen" : "DarkOrange"
+    value >= 0 ? "#01a501" : "#ae1001ff"
   );
 
   // 2. Chart Data Structure:
@@ -57,7 +57,7 @@ const MultiTypeChart = ({ dataArray, text }) => {
       title: {
         display: true,
         text: text,
-        color: "white"
+        color: "#fe8c00"
       },
       legend: {
         // Add this legend configuration
@@ -70,12 +70,12 @@ const MultiTypeChart = ({ dataArray, text }) => {
         suggestedMin: -1.5,
         suggestedMax: 1.5,
         ticks: {
-          color: "white",
+          color: "#fe8c00",
         }
       },
       x: {
         ticks: {
-          color: "white",
+          color: "#fe8c00",
         }
       },
     },

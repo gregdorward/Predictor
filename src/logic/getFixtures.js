@@ -14,7 +14,6 @@ import SlideDiff from "../components/SliderDiff";
 import Collapsable from "../components/CollapsableElement";
 import { userDetail } from "./authProvider";
 import { leagueStatsArray } from "../logic/getScorePredictions";
-
 var oddslib = require("oddslib");
 
 var fixtureResponse;
@@ -1674,27 +1673,7 @@ export async function generateFixtures(
     }
 
     // const allFixtures = await RenderAllFixtures(matches, false)
-    ReactDOM.render(
-      <Collapsable
-        buttonText={"Multis"}
-        // display={fixtureList.length > 0 ? "" : "none"}
-        element={
-          <Fragment>
-            <div id="bestPredictions" className="bestPredictions" />
-            <div id="exoticOfTheDay" className="exoticOfTheDay" />
-            {/* <div id="successMeasure2" /> */}
-            <div id="RowOneContainer" className="RowOneContainer">
-              <div id="BTTS" className="RowOne" />
-              <div id="longShots" className="RowOne" />
-              <div id="draws" className="RowOne" />
-            </div>
-            <div id="insights" />
-            <div id="UserGeneratedTips" />
-          </Fragment>
-        }
-      />,
-      document.getElementById("MultiPlaceholder")
-    );
+
     ReactDOM.render(
       <RenderAllFixtures matches={matches} result={false} bool={false} />,
       document.getElementById("FixtureContainer")

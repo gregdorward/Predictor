@@ -265,17 +265,17 @@
 
 /* Dark Mode Colors */
 .dark-mode {
-  --background-color: #020029;
+  --background-color: black;
   /* Dark Blue */
-  --secondary-background-color: #191928;
+  --secondary-background-color: #191919;
   /* White */
   --third-background-color: #302f2f;
   /* White */
   --text-color: #ffffff;
   /* White */
   --button-color: whitesmoke;
-  --button-text-color: #020029;
-  --secondary-button-text-color: #020029;
+  --button-text-color: #191919;
+  --secondary-button-text-color: #191919;
   --primary-color: #f57701;
   /* Orange */
   --secondary-color: #860000;
@@ -2194,7 +2194,7 @@ a.PreviousMatchLink {
 
 .LastGameHeader {
   font-weight: bolder;
-  color: #030052;
+  color: var(--text-color);
   padding-bottom: 1em;
   font-size: 1.1em;
 }
@@ -3803,7 +3803,7 @@ input:active+.design::after {
 
 .Chart {
   width: fit-content;
-  background-color: var(--mid-grey);
+  background-color: var(--background-color);
   margin-top: 2em;
 }
 
@@ -4515,7 +4515,7 @@ button.AIInsights button:active {
   width: 100%;
   margin-left: auto;
   margin-right: auto;
-  background-color: var(--mid-grey);
+  background-color: var(--background-color);
   flex-wrap: wrap;
 }
 

@@ -3309,13 +3309,13 @@ function GameStats({ game, displayBool, stats }) {
                 title="Soccer Stats Hub Strength Ratings - All Games"
                 max={1}
                 labels={[
-                  "Attack rating",
-                  "Defence rating",
-                  "Ball retention",
-                  "XG For",
-                  "XG Against",
+                  "Attack",
+                  "Defence",
+                  "Possession",
+                  "XGF",
+                  "XGA",
                   "Directness",
-                  "Attacking precision",
+                  "Precision",
                 ]}
                 data={[
                   homeAttackStrength,
@@ -3339,7 +3339,7 @@ function GameStats({ game, displayBool, stats }) {
                 team2={game.awayTeam}
               ></RadarChart>
               <BarChart
-                text="All games - Home Team | Away Team"
+                text="All Games - Home Team | Away Team"
                 data1={[
                   homeForm.avgScored * 2,
                   awayForm.avgConceeded * 2,
