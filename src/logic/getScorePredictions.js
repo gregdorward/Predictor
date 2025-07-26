@@ -3457,6 +3457,10 @@ async function getSuccessMeasure(fixtures) {
           (successCount / investment) *
           100
         ).toFixed(1)}%)`}</p>
+        <p>{`Exact scores predicted: ${exactScores} (${(
+          (exactScores / investment) *
+          100
+        ).toFixed(1)}% of unlocked games)`}</p>
         <p>Full ROI stats available when fixtures are uncapped</p>
       </Fragment>,
       document.getElementById("successMeasure2")
