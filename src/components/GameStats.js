@@ -3251,7 +3251,7 @@ function GameStats({ game, displayBool, stats }) {
         <div id="AIInsightsContainer" className="AIInsightsContainer">
           {loadingKeyPlayerComparison ? (
             <p>Loading data for Match Preview...</p>
-          ) : !paid && game.leagueID !== 12325 ? (
+          ) : !paid && game.leagueID !== 15050 ? (
             <Button
               className="AIInsightsLocked"
               text={"Match Preview 🔒"}
@@ -3277,7 +3277,7 @@ function GameStats({ game, displayBool, stats }) {
                 setShowAIInsights(true);
               }}
               text={"Match Preview"}
-              disabled={!paid && game.leagueID !== 12325}
+              disabled={!paid && game.leagueID !== 15050}
             />
           )}
         </div>

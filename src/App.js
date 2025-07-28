@@ -47,54 +47,45 @@ export let paid = false;
 const menuItems = ['Home', 'bttsteams', 'Services', 'Contact'];
 
 const leagueOrder = [
-  // 11084, //Euro 2024
-  // 7432, //World Cup 22
-  13734, //Nations league 24/25
-  12321, // Champs league
-  12327, //Europa 25
-  12278, //Europa Conference 25
-  13974, // Copa Libertadores 25
-  13878, // Club World Cup 25
-  // 12325, //premier league 22/23
-  // 12451, //championship 22/23
-  // 12446, //league 1 22/23
-  // 12422, //league 2 22/23
-  12622, //National league 24/25
-  // 12316, //La Liga 22/23
-  // 12455, //Scottish Prem 22/23
-  // 12529, //Bundesliga 22/23
-  // 12530, //Serie A 22/23
-  // 12337, //French Prem 22/23
-  // 12931, //Portagul Prem 22/23
-  // 12322, //Dutch Prem 22/23
-  12137, //Belgian Pro League 22/23
-  13963, //sweden 24
-  12132, //Danish Prem 24/25
-  13987, //Norway Prem 23
-  12472, //Austrian Prem 22/23
-  // 12734, //Greek Prem 22/23
-  12641, //turkey
-  12120, //Polish prem 22/23
-  12326, //Swiss prem 22/23
-  12121, //Croatia 24/25
-  12336, //Czecjh 24/25
-  14089, // Finland 25
-  12483, // Ulraine 25
-  12138, // Serbia 25
-  12476, // Slovenia 25
-  12944, // Slovakia 25
+  // 15050, //premier league 25 12325
+  // 14930, //championship 25 12451
+  // 14934, //league 1 25 12446
+  // 14935, //league 2 25 12422
+  12622, //National league 24 12622
+  // 14956, //La Liga 25 12316
+  // 15000, //Scottish Prem 25 12455
+  // 14968, //Bundesliga 25 12529
+  // 15068, //Serie A 25 12530
+  // 14932, //French Prem 25 12337
+  // 15115, //Portagul Prem 25 12931
+  // 14936, //Dutch Prem 25 12322
+  14937, //Belgian Pro League 25 12137
+  13963, //sweden 25
+  15055, //Danish Prem 24/25 12132
+  13987, //Norway Prem 25
+  14923, //Austrian Prem 25 12472
+  // 15163, //Greek Prem 25 12734
+  14972, //turkey 25 12641
+  15031, //Polish prem 25 12120
+  15047, //Swiss prem 25 12326
+  15053, //Croatia 25 12121
+  14973, //Czecjh 25 12336
+  14089, // Finland 25 14089
+  14951, // Ulraine 25 12483
+  15065, // Serbia 25 12138
+  15063, // Slovenia 25 12476
+  14933, // Slovakia 25 12944
 
 
-  13952, //Irish Prem 23
-  // 12467, //Spanish secunda 22/23
-  // 12621, //Italy serie B 22/23
-  // 12528, //Bundesliga 2 22/23
-  // 12623, //German 3rd tier 22/23
-  // 12338, //French League 2 22/23
-  // 12456, //Scottish Championship 22/23
-  // 12474, //Scottish league 1 22/23
-  // 12453, //Scottish league 2 22/23
-  // 12827, //Women's prem 23/24
+  13952, //Irish Prem 25
+  // 15066, //Spanish secunda 25 12467
+  // 12621, //Italy serie B 24 12621
+  // 14931, //Bundesliga 2 25 12528
+  // 14954, //French League 2 25 12338
+  // 15061, //Scottish Championship 25 12456
+  // 14943, //Scottish league 1 25 12474
+  // 15209, //Scottish league 2 25 12453
+  // 12827, //Women's prem 24
   13973, //MLS 25,
   13967, // USL Championship 25
   14226, // US Open Cup 25
@@ -105,41 +96,42 @@ const leagueOrder = [
   14086, // Columbia 25
   14116, // Chile 25
   14626, // Uraguay 25
-  // 12136, //Mexico prem 23/24
-  // 12933, //National league North and South 22/23
+  // 15234, //Mexico prem 25 12136
+  // 12933, //National league North and South 24
   13703, //Australian A league 24/25
   14069, //S Korea 25,
   13960, //Japan 25
   12772, //Saudi 24/25
-  13964, // WC Qual Europe,
-  10121, // WC Qual SA,
-  11426, // WC Qual ConCaf
-  12801, // WC Qual Aus,
+  13964, // WC Qual Europe 26,
+  10121, // WC Qual SA 26,
+  11426, // WC Qual ConCaf 26
+  12801, // WC Qual Aus 26,
   14056, // Womens Euros 25
-  // 5874, // Esports eBattle
-
-  //Japan
-  //canada
+  13734, //Nations league 24
+  14924, // Champs league 25 12321
+  15002, //Europa 25 12327
+  14904, //Europa Conference 25 12278
+  13974, // Copa Libertadores 25
 ];
 
 // const sofaScoreIds = [
 //   {
-//     12325: 17, //EPL
+//     15050: 17, //EPL
 //   },
 //   {
-//     12451: 18 //Championship
+//     14930: 18 //Championship
 //   },
 //   {
-//     12446: 24 //League 1
+//     14934: 24 //League 1
 //   },
 //   {
-//     12422: 25 //League 2
+//     14935: 25 //League 2
 //   },
 //   {
 //     12622: 173 //Conference
 //   },
 //   {
-//     12316:
+//     14956:
 //   },
 //   {},
 //   {},
@@ -160,46 +152,46 @@ const leagueOrder = [
 //   {},
 //   {},
 //   // 13734, //Nations league 24/25
-//   12325, //premier league 22/23
-//   12451, //championship 22/23
-//   12446, //league 1 22/23
-//   12422, //league 2 22/23
+//   15050, //premier league 22/23
+//   14930, //championship 22/23
+//   14934, //league 1 22/23
+//   14935, //league 2 22/23
 //   12622, //National league 22/23
-//   12316, //La Liga 22/23
-//   12455, //Scottish Prem 22/23
-//   12529, //Bundesliga 22/23
-//   12530, //Serie A 22/23
-//   12337, //French Prem 22/23
-//   12931, //Portagul Prem 22/23
-//   12322, //Dutch Prem 22/23
-//   12137, //Belgian Pro League 22/23
+//   14956, //La Liga 22/23
+//   15000, //Scottish Prem 22/23
+//   14968, //Bundesliga 22/23
+//   15068, //Serie A 22/23
+//   14932, //French Prem 22/23
+//   15115, //Portagul Prem 22/23
+//   14936, //Dutch Prem 22/23
+//   14937, //Belgian Pro League 22/23
 //   13963, //sweden 24
-//   12132, //Danish Prem 24/25
+//   15055, //Danish Prem 24/25
 //   13987, //Norway Prem 23
-//   12472, //Austrian Prem 22/23
-//   12734, //Greek Prem 22/23
-//   12641, //turkey
-//   12120, //Polish prem 22/23
-//   12326, //Swiss prem 22/23
-//   12121, //Croatia 24/25
-//   12336, //Czecjh 24/25
+//   14923, //Austrian Prem 22/23
+//   15163, //Greek Prem 22/23
+//   14972, //turkey
+//   15031, //Polish prem 22/23
+//   15047, //Swiss prem 22/23
+//   15053, //Croatia 24/25
+//   14973, //Czecjh 24/25
 //   13952, //Irish Prem 23
-//   12321, // Champs league
-//   12327, //Europa
-//   12467, //Spanish secunda 22/23
+//   14924, // Champs league
+//   15002, //Europa
+//   15066, //Spanish secunda 22/23
 //   12621, //Italy serie B 22/23
-//   12528, //Bundesliga 2 22/23
+//   14931, //Bundesliga 2 22/23
 //   // 12623, //German 3rd tier 22/23
-//   12338, //French League 2 22/23
-//   12456, //Scottish Championship 22/23
-//   12474, //Scottish league 1 22/23
-//   12453, //Scottish league 2 22/23
+//   14954, //French League 2 22/23
+//   15061, //Scottish Championship 22/23
+//   14943, //Scottish league 1 22/23
+//   15209, //Scottish league 2 22/23
 //   12827, //Women's prem 23/24
 //   13973, //MLS 25,
 //   14236, //Canada 25
 //   14231, //Brazil prem 24
 //   14125, //Argentina prem 23
-//   12136, //Mexico prem 23/24
+//   15234, //Mexico prem 23/24
 //   12933, //National league North and South 22/23
 //   13703, //Australian A league 24/25
 //   14069, //S Korea 25,

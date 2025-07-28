@@ -30,6 +30,7 @@ var leagueIdArray = [];
 export let leagueInstance;
 export let groupInstance;
 export let allLeagueResultsArrayOfObjects = [];
+export let uniqueLeagueIDs = [];
 var lastThreeFormHome;
 var lastThreeFormAway;
 var lastFiveFormHome;
@@ -81,6 +82,7 @@ export async function generateTables(a, leagueIdArray, allResults) {
   let i = 0;
   leagueArray.forEach(function (league) {
     let currentLeagueId = leagueIdArray[i];
+    console.log(currentLeagueId);
     i++;
     leagueInstance = [];
 
@@ -226,7 +228,6 @@ export async function generateTables(a, leagueIdArray, allResults) {
         });
       }
     } else if (league.data.league_table === null) {
-      console.log(currentLeagueId)
       for (
         let index = 0;
         index < league.data.all_matches_table_overall.length;
@@ -483,6 +484,9 @@ export function RenderAllFixtures(props) {
     }
   }
 
+  uniqueLeagueIDs = [...new Set(matches.map(match => match.leagueID))];
+
+console.log(uniqueLeagueIDs);
   return (
     <Fixture
       fixtures={matches}

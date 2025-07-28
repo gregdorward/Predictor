@@ -26,6 +26,7 @@ import { checkUserPaidStatus } from "../logic/hasUserPaid";
 import { userDetail } from "../logic/authProvider";
 import { dynamicDate } from "./getFixtures";
 import { ThreeDots } from "react-loading-icons";
+import { uniqueLeagueIDs } from "./getFixtures";
 
 var myHeaders = new Headers();
 myHeaders.append("Origin", "https://gregdorward.github.io");
@@ -3509,131 +3510,167 @@ export async function getNewTips(array) {
 
 const footyStatsToSofaScore = [
   {
-    //Prem
-    12325: {
+    //Prem 25
+    15050: {
       id: 17,
-      season: 61627,
+      season: 76986,
     },
-    //Championship
-    12451: {
+    //Championship 25
+    14930: {
       id: 18,
-      season: 61961,
+      season: 77347,
     },
     //League 1
-    12446: {
+    14934: {
       id: 24,
-      season: 61959,
+      season: 77352,
     },
     //League 2
-    12422: {
+    14935: {
       id: 25,
-      season: 61960,
+      season: 77351,
     },
     12622: {
       id: 173,
       season: 63807, // Conference 24/25
     },
     //Bundesliga
-    12529: {
+    14968: {
       id: 35,
-      season: 63516,
+      season: 77333,
     },
-    //La Liga
-    12316: {
+    //La Liga 25
+    14956: {
       id: 8,
-      season: 61643,
+      season: 77559,
     },
-    //Champions league
-    12321: {
+    15000: {
+      id: 36,
+      season: 77128, // Scottish Premiership 25
+    },
+    //Champions league 25
+    14924: {
       id: 7,
-      season: 61644,
+      season: 76953,
     },
-    //Serie A
-    12530: {
+    //Serie A 25
+    15068: {
       id: 23,
-      season: 63515,
+      season: 76457,
     },
     //MLS
     13973: {
       id: 242,
       season: 70158,
     },
-    //Ligue 1
-    12337: {
+    //Ligue 1 25
+    14932: {
       id: 34,
-      season: 61736,
+      season: 77356,
+    },
+    15115: {
+      id: 238,
+      season: 77806, // Portuguese Primeira Liga 25
     },
     13974: {
       id: 384,
       season: 70083, // Copa Libertadores
     },
-    12322: {
+    14936: {
       id: 37,
-      season: 61666, // Eredivisie
+      season: 77012, // Eredivisie
     },
-    12137: {
+    14937: {
       id: 9,
-      season: 61412, // Belgian Pro League
+      season: 77849, // Belgian Pro League
     },
     13963: {
       id: 40,
       season: 69956, // Scottish Premiership
     },
-    12132: {
+    15055: {
       id: 39,
-      season: 61326, // Danish Superliga
+      season: 76491, // Danish Superliga
     },
     13987: {
       id: 20,
       season: 70174, // Norwegian Eliteserien
     },
-    12472: {
+    14923: {
       id: 45,
-      season: 62629, // Austrian Bundesliga
+      season: 77382, // Austrian Bundesliga
     },
-    // 12734: {
-    //   id: 185,
-    //   season: 64052, // Greek Super League
-    // },
-    // 12641: {
-    //   id: 52, // Turkish Super Lig
-    //   season: 63814,
-    // },
-    12120: {
+    15163: {
+      id: 185,
+      season: 78175, // Greek Super League
+    },
+    14972: {
+      id: 52, // Turkish Super Lig
+      season: 78175,
+    },
+    15031: {
       id: 202,
-      season: 61236, // Ekstraklasa
+      season: 76477, // Ekstraklasa
     },
-    12326: {
+    15066: {
+      id: 54,
+      season: 77558, // Spanish Segunda Division
+    },
+    14931: {
+      id: 44,
+      season: 77354, // Bundesliga 2
+    },
+    14954: {
+      id: 182,
+      season: 77357, // French Ligue 2
+    },
+    15061: {
+      id: 206,
+      season: 77037, // Scottish Championship 25
+    },
+    15062: {
+      id: 207,
+      season: 77037, // Scottish League One 25
+    },
+    15064: {
+      id: 209,
+      season: 77045, // Scottish League Two 25
+    },
+    15047: {
       id: 215,
-      season: 61658, // Swiss Super League
+      season: 77152, // Swiss Super League
     },
-    12121: {
+    15053: {
       id: 170,
-      season: 61243, // Croatian First League
+      season: 77152, // Croatian First League
     },
-    12336: {
+    14973: {
       id: 172,
-      season: 61716, // Czech First League
+      season: 77019, // Czech First League
     },
     14089: {
       id: 41,
       season: 70853, // Finnish Veikkausliiga
     },
-    12483: {
+    14951: {
       id: 218,
-      season: 62656, // Ukrainian Premier League
+      season: 77625, // Ukrainian Premier League
     },
-    12476: {
+    15063: {
       id: 212,
       season: 62660, // Slovenian Prva Liga
     },
-    12944: {
+    14933: {
       id: 211,
-      season: 61728, // Slovak Super Liga
+      season: 77154, // Slovak Super Liga
     },
-    12138: {
+    15065: {
       id: 210,
-      season: 61448, // Serbian SuperLiga 
+      season: 77625, // Serbian SuperLiga 
+    },
+    15234: {
+      id: 11621,
+      season: 76500, // Liga MX 25
     },
     14231: {
       id: 325,
@@ -3654,6 +3691,10 @@ const footyStatsToSofaScore = [
     14086: {
       id: 11539,
       season: 70681, // Colombian Liga BetPlay 25
+    },
+    14116: {
+      id: 11653,
+      season: 76986, // Chilean Primera Division 25
     },
     14626: {
       id: 278,
@@ -3699,33 +3740,14 @@ const footyStatsToSofaScore = [
       id: 136,
       season: 64864, // A League 24/25
     },
-    12327: {
+    15002: {
       id: 679,
-      season: 61645, // UEFA Europa League 24/25
+      season: 76984, // UEFA Europa League 25
     },
-    12278: {
+    14904: {
       id: 17015,
-      season: 61648, // UEFA Europa Conference League 24/25
+      season: 76960, // UEFA Europa Conference League 24/25
     },
-
-    // UEFA Europa Conference League 24/25
-    // 192: 69981, // Ireland
-    // 357: 69619, // Club World Cup
-    // 54: 62048, // Spanish Secunda
-    // 53: 63812, // Serie B
-
-    // 44 : 63514, // Bundesliga 2
-    // 182 : 61737, // Ligue 2
-    // 36 : 62408, // Scottish Prem
-    // 206 : 62411, // Scottish Champ
-    // 207 : 62416, // Scottish league one
-    // 209 : 62487, // Scottish league two
-    // 11621 : 61419, // Liga MX
-    // 173 : 63807, // English National League
-    // 176 : 63806, // National League North
-    // 174 :63803, // National League South
-    // 136 : 64864, // A League
-    // 955 : 63998, // Saudi Pro League
   },
 ];
 
@@ -3739,27 +3761,30 @@ async function fetchLeagueStats() {
     return 1 + Math.round(diff / (7 * 24 * 60 * 60 * 1000));
   }
 
-  const today = new Date(); // Or new Date()
+  const today = new Date();
   const week = getWeekOfYear(today);
 
   const allLeagueStats = {};
 
-  for (const leagueObject of footyStatsToSofaScore) {
-    for (const leagueId in leagueObject) {
-      const { id: sofaScoreId, season: sofaScoreSeason } =
-        leagueObject[leagueId];
+  // Use uniqueLeagueIDs array instead of iterating all keys in footyStatsToSofaScore
+  const leagueObject = footyStatsToSofaScore[0];
 
-      try {
-        const leagueTeamStatsResponse = await fetch(
-          `${process.env.REACT_APP_EXPRESS_SERVER}LeagueTeamStats/${sofaScoreId}/${sofaScoreSeason}/${week}`
-        );
-        const teamStats = await leagueTeamStatsResponse.json();
-        allLeagueStats[`leagueStats${leagueId}`] = teamStats;
-        console.log(`Fetched stats for league ${leagueId}`);
-      } catch (error) {
-        console.error(`Error fetching stats for league ${leagueId}:`, error);
-        allLeagueStats[`leagueStats${leagueId}`] = { error: error.message }; // Store error if fetch fails
-      }
+  for (const leagueId of uniqueLeagueIDs) {
+    const mapping = leagueObject[leagueId];
+    if (!mapping) continue; // skip if not found
+
+    const { id: sofaScoreId, season: sofaScoreSeason } = mapping;
+
+    try {
+      const leagueTeamStatsResponse = await fetch(
+        `${process.env.REACT_APP_EXPRESS_SERVER}LeagueTeamStats/${sofaScoreId}/${sofaScoreSeason}/${week}`
+      );
+      const teamStats = await leagueTeamStatsResponse.json();
+      allLeagueStats[`leagueStats${leagueId}`] = teamStats;
+      console.log(`Fetched stats for league ${leagueId}`);
+    } catch (error) {
+      console.error(`Error fetching stats for league ${leagueId}:`, error);
+      allLeagueStats[`leagueStats${leagueId}`] = { error: error.message };
     }
   }
   console.log("CALLED LEAGUE STATS");
