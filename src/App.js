@@ -64,7 +64,7 @@ const leagueOrder = [
   15055, //Danish Prem 24/25 12132
   13987, //Norway Prem 25
   14923, //Austrian Prem 25 12472
-  // 15163, //Greek Prem 25 12734
+  15163, //Greek Prem 25 12734
   14972, //turkey 25 12641
   15031, //Polish prem 25 12120
   15047, //Swiss prem 25 12326
@@ -96,7 +96,7 @@ const leagueOrder = [
   14086, // Columbia 25
   14116, // Chile 25
   14626, // Uraguay 25
-  // 15234, //Mexico prem 25 12136
+  15234, //Mexico prem 25 12136
   // 12933, //National league North and South 24
   13703, //Australian A league 24/25
   14069, //S Korea 25,
