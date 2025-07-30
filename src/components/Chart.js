@@ -295,45 +295,39 @@ export function MultilineChart(props) {
   return <Line options={options} data={data} />;
 }
 
-const createGaugeData = (rank, maxRank = 36) => {
-  const value = maxRank - rank + 1; // Invert so rank 1 = full gauge
-  return [value, maxRank - value];
-};
-
-export const StatGauge = ({ label, rank, maxRank = 36 }) => {
+export const DoughnutChart = ({ labels, values, colors, label = 'Dataset', chartTitle = ''
+}) => {
   const data = {
-    labels: [],
-    datasets: [
-      {
-        data: createGaugeData(rank, maxRank),
-        borderWidth: 0,
-        backgroundColor: ["white", "#970d00"],
-        hoverOffset: 4,
-      },
-    ],
+    labels,
+    datasets: [{
+      label,
+      data: values,
+      backgroundColor: colors,
+      hoverOffset: 4
+    }]
   };
 
   const options = {
     rotation: 270,
     circumference: 180,
-    cutout: '75%',
     plugins: {
-      legend: { display: false },
-      tooltip: { enabled: false },
-    },
-    responsive: true,
-    maintainAspectRatio: false
+      legend: {
+        position: 'top'
+      },
+      title: {
+        display: !!chartTitle,
+        text: chartTitle,
+        font: {
+          size: 12
+        }
+      }
+    }
   };
 
-  return (
-    <div style={{ width: 100, height: 50, textAlign: 'center', margin: "1.2em" }}>
-      <Doughnut data={data} options={options} />
-      <div style={{ fontSize: '0.8rem', marginTop: '-10px' }}>
-        {label}<br />Rank {rank}
-      </div>
-    </div>
-  );
+    return<Doughnut className="DoughnutChart" data = { data } options = { options } />;
 };
+
+
 
 export function RadarChart(props) {
   const options = {

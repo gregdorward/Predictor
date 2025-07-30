@@ -16,7 +16,7 @@ import {
   MultilineChart,
   RadarChart,
   BarChart,
-  BarChartLeagueStats,
+  DoughnutChart,
 } from "./Chart";
 import MultiTypeChart from "./MultitypeChart"; // Adjust the path if necessary
 import { Slider } from "../components/CarouselXGChart";
@@ -44,6 +44,8 @@ import {
 } from "../logic/getStats";
 import { dynamicDate } from "../logic/getFixtures";
 import { rounds } from "./TeamOfTheSeason";
+import { Doughnut } from "react-chartjs-2";
+import StarRating from "../components/StarRating";
 export let userTips;
 let setUserTips;
 const MemoizedSofaLineupsWidget = memo(SofaLineupsWidget);
@@ -2887,10 +2889,19 @@ function GameStats({ game, displayBool, stats }) {
           {aiMatchPreview.opinionOnXGTippingPrediction}
         </div>
 
-        <h2>Styles</h2>
+
+        <h2>Ratings and Styles</h2>
         <div className="AIContainer">
           <div className="HomeAIInsights">
-            <div>{aiMatchPreview?.homeTeam?.style}</div>
+            <div className="StarRating"><span className="StarRatingHeader">Attack <StarRating rating={aiMatchPreview?.homeTeam?.ratings?.Attack} /></span></div>
+            <div className="StarRating"><span className="StarRatingHeader">Defence <StarRating rating={aiMatchPreview?.homeTeam?.ratings?.Defence} /></span></div>
+            <div className="StarRating"><span className="StarRatingHeader">Directness <StarRating rating={aiMatchPreview?.homeTeam?.ratings?.Directness} /></span></div>
+            <div className="StarRating"><span className="StarRatingHeader">Possession <StarRating rating={aiMatchPreview?.homeTeam?.ratings?.Possession} /></span></div>
+            <div className="StarRating"><span className="StarRatingHeader">Pressing <StarRating rating={aiMatchPreview?.homeTeam?.ratings?.Pressing} /></span></div>
+            <div className="StarRating"><span className="StarRatingHeader">Accuracy <StarRating rating={aiMatchPreview?.homeTeam?.ratings?.Accuracy} /></span></div>
+            <div className="StarRating"><span className="StarRatingHeader">Set Pieces <StarRating rating={aiMatchPreview?.homeTeam?.ratings?.SetPieces} /></span></div>
+            <div className="StarRating"><span className="StarRatingHeader">Overall <StarRating rating={aiMatchPreview?.homeTeam?.ratings?.Overall} /></span></div>
+            <div className="TeamStyle">{aiMatchPreview?.homeTeam?.style}</div>
             <ul className="Strengths">
               {aiMatchPreview?.homeTeam?.strengths?.map((strength, index) => (
                 <li key={index}>+ {strength}</li>
@@ -2903,7 +2914,15 @@ function GameStats({ game, displayBool, stats }) {
             </ul>
           </div>
           <div className="AwayAIInsights">
-            <div>{aiMatchPreview?.awayTeam?.style}</div>
+            <div className="StarRating"><span className="StarRatingHeader">Attack <StarRating rating={aiMatchPreview?.awayTeam?.ratings?.Attack} /></span></div>
+            <div className="StarRating"><span className="StarRatingHeader">Defence <StarRating rating={aiMatchPreview?.awayTeam?.ratings?.Defence} /></span></div>
+            <div className="StarRating"><span className="StarRatingHeader">Directness <StarRating rating={aiMatchPreview?.awayTeam?.ratings?.Directness} /></span></div>
+            <div className="StarRating"><span className="StarRatingHeader">Possession <StarRating rating={aiMatchPreview?.awayTeam?.ratings?.Possession} /></span></div>
+            <div className="StarRating"><span className="StarRatingHeader">Pressing <StarRating rating={aiMatchPreview?.awayTeam?.ratings?.Pressing} /></span></div>
+            <div className="StarRating"><span className="StarRatingHeader">Accuracy <StarRating rating={aiMatchPreview?.awayTeam?.ratings?.Accuracy} /></span></div>
+            <div className="StarRating"><span className="StarRatingHeader">Set Pieces <StarRating rating={aiMatchPreview?.awayTeam?.ratings?.SetPieces} /></span></div>
+            <div className="StarRating"><span className="StarRatingHeader">Overall <StarRating rating={aiMatchPreview?.awayTeam?.ratings?.Overall} /></span></div>
+            <div className="TeamStyle">{aiMatchPreview?.awayTeam?.style}</div>
             <ul className="Strengths">
               {aiMatchPreview?.awayTeam?.strengths?.map((strength, index) => (
                 <li key={index}>+ {strength}</li>
@@ -3700,6 +3719,81 @@ function GameStats({ game, displayBool, stats }) {
         }
       />
       <div className="Chart" id={`Chart${game.id}`} style={style}></div>
+      {homeTeamStats && awayTeamStats && (
+        <Collapsable
+          buttonText="Additional Team Stats"
+          classNameButton="TeamStatsButton"
+          element={
+            <div className="TeamStats">
+              <DoughnutChart
+                chartTitle="SoT For vs Against"
+                // labels={['For', 'Against']}
+                values={[homeTeamStats.shotsOnTarget, homeTeamStats.shotsOnTargetAgainst]}
+                colors={[
+                  'rgba(49, 196, 0, 1)',
+                  'rgba(216, 0, 0, 1)',
+                ]}
+                label="SoT For vs Against"
+              />
+              <DoughnutChart
+                chartTitle="Big Chances For vs Against"
+                // labels={['For', 'Against']}
+                values={[homeTeamStats.bigChances, homeTeamStats.bigChancesAgainst]}
+                colors={[
+                  'rgba(49, 196, 0, 1)',
+                  'rgba(216, 0, 0, 1)',
+                ]}
+                label="SoT For vs Against"
+              />
+              <DoughnutChart
+                chartTitle="Accurate Passes in Opposition Half vs Own Half"
+                // labels={['For', 'Against']}
+                values={[homeTeamStats.accurateOppositionHalfPasses, homeTeamStats.accurateOwnHalfPasses]}
+                colors={[
+                  'rgba(49, 196, 0, 1)',
+                  'rgba(216, 0, 0, 1)',
+                ]}
+                label="SoT For vs Against"
+              />
+              <DoughnutChart
+                chartTitle="Corners For vs Against"
+                // labels={['For', 'Against']}
+                values={[homeTeamStats.corners, homeTeamStats.cornersAgainst]}
+                colors={[
+                  'rgba(49, 196, 0, 1)',
+                  'rgba(216, 0, 0, 1)',
+                ]}
+                label="SoT For vs Against"
+              />
+              <DoughnutChart
+                chartTitle="Penalties For vs Against"
+                // labels={['For', 'Against']}
+                values={[homeTeamStats.penaltiesTaken, homeTeamStats.penaltiesCommited]}
+                colors={[
+                  'rgba(49, 196, 0, 1)',
+                  'rgba(216, 0, 0, 1)',
+                ]}
+                label="SoT For vs Against"
+              />
+              <DoughnutChart
+                chartTitle="Accurate Passes vs Accurate Long Balls"
+                // labels={['For', 'Against']}
+                values={[homeTeamStats.accuratePasses, homeTeamStats.accurateLongBalls]}
+                colors={[
+                  'rgba(49, 196, 0, 1)',
+                  'rgba(216, 0, 0, 1)',
+                ]}
+                label="SoT For vs Against"
+              />
+              {/* <DoughnutChart
+                      teamStats={awayTeamStats}
+                      className="AwayPlayerStats"
+                      spanClass="SpanAway"
+                    /> */}
+            </div>
+          }
+        />
+      )}
       <Div
         text={`Last league games (most recent first)`}
         className={"LastGameHeader"}
