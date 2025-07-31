@@ -3719,81 +3719,7 @@ function GameStats({ game, displayBool, stats }) {
         }
       />
       <div className="Chart" id={`Chart${game.id}`} style={style}></div>
-      {homeTeamStats && awayTeamStats && (
-        <Collapsable
-          buttonText="Additional Team Stats"
-          classNameButton="TeamStatsButton"
-          element={
-            <div className="TeamStats">
-              <DoughnutChart
-                chartTitle="SoT For vs Against"
-                // labels={['For', 'Against']}
-                values={[homeTeamStats.shotsOnTarget, homeTeamStats.shotsOnTargetAgainst]}
-                colors={[
-                  'rgba(49, 196, 0, 1)',
-                  'rgba(216, 0, 0, 1)',
-                ]}
-                label="SoT For vs Against"
-              />
-              <DoughnutChart
-                chartTitle="Big Chances For vs Against"
-                // labels={['For', 'Against']}
-                values={[homeTeamStats.bigChances, homeTeamStats.bigChancesAgainst]}
-                colors={[
-                  'rgba(49, 196, 0, 1)',
-                  'rgba(216, 0, 0, 1)',
-                ]}
-                label="SoT For vs Against"
-              />
-              <DoughnutChart
-                chartTitle="Accurate Passes in Opposition Half vs Own Half"
-                // labels={['For', 'Against']}
-                values={[homeTeamStats.accurateOppositionHalfPasses, homeTeamStats.accurateOwnHalfPasses]}
-                colors={[
-                  'rgba(49, 196, 0, 1)',
-                  'rgba(216, 0, 0, 1)',
-                ]}
-                label="SoT For vs Against"
-              />
-              <DoughnutChart
-                chartTitle="Corners For vs Against"
-                // labels={['For', 'Against']}
-                values={[homeTeamStats.corners, homeTeamStats.cornersAgainst]}
-                colors={[
-                  'rgba(49, 196, 0, 1)',
-                  'rgba(216, 0, 0, 1)',
-                ]}
-                label="SoT For vs Against"
-              />
-              <DoughnutChart
-                chartTitle="Penalties For vs Against"
-                // labels={['For', 'Against']}
-                values={[homeTeamStats.penaltiesTaken, homeTeamStats.penaltiesCommited]}
-                colors={[
-                  'rgba(49, 196, 0, 1)',
-                  'rgba(216, 0, 0, 1)',
-                ]}
-                label="SoT For vs Against"
-              />
-              <DoughnutChart
-                chartTitle="Accurate Passes vs Accurate Long Balls"
-                // labels={['For', 'Against']}
-                values={[homeTeamStats.accuratePasses, homeTeamStats.accurateLongBalls]}
-                colors={[
-                  'rgba(49, 196, 0, 1)',
-                  'rgba(216, 0, 0, 1)',
-                ]}
-                label="SoT For vs Against"
-              />
-              {/* <DoughnutChart
-                      teamStats={awayTeamStats}
-                      className="AwayPlayerStats"
-                      spanClass="SpanAway"
-                    /> */}
-            </div>
-          }
-        />
-      )}
+     
       <Div
         text={`Last league games (most recent first)`}
         className={"LastGameHeader"}
@@ -3830,3 +3756,81 @@ function GameStats({ game, displayBool, stats }) {
 }
 
 export default GameStats;
+
+
+
+//  {homeTeamStats && awayTeamStats && (
+//         <Collapsable
+//           buttonText="Additional Team Stats"
+//           classNameButton="TeamStatsButton"
+//           element={
+//             <div className="TeamStats">
+//               <DoughnutChart
+//                 chartTitle="SoT For vs Against"
+//                 // labels={['For', 'Against']}
+//                 values={[homeTeamStats.shotsOnTarget, homeTeamStats.shotsOnTargetAgainst]}
+//                 colors={[
+//                   'rgba(49, 196, 0, 1)',
+//                   'rgba(216, 0, 0, 1)',
+//                 ]}
+//                 label="SoT For vs Against"
+//               />
+//               <DoughnutChart
+//                 chartTitle="Big Chances For vs Against"
+//                 // labels={['For', 'Against']}
+//                 values={[homeTeamStats.bigChances, homeTeamStats.bigChancesAgainst]}
+//                 colors={[
+//                   'rgba(49, 196, 0, 1)',
+//                   'rgba(216, 0, 0, 1)',
+//                 ]}
+//                 label="SoT For vs Against"
+//               />
+//               <DoughnutChart
+//                 chartTitle="Accurate Passes in Opposition Half vs Own Half"
+//                 // labels={['For', 'Against']}
+//                 values={[homeTeamStats.accurateOppositionHalfPasses, homeTeamStats.accurateOwnHalfPasses]}
+//                 colors={[
+//                   'rgba(49, 196, 0, 1)',
+//                   'rgba(216, 0, 0, 1)',
+//                 ]}
+//                 label="SoT For vs Against"
+//               />
+//               <DoughnutChart
+//                 chartTitle="Corners For vs Against"
+//                 // labels={['For', 'Against']}
+//                 values={[homeTeamStats.corners, homeTeamStats.cornersAgainst]}
+//                 colors={[
+//                   'rgba(49, 196, 0, 1)',
+//                   'rgba(216, 0, 0, 1)',
+//                 ]}
+//                 label="SoT For vs Against"
+//               />
+//               <DoughnutChart
+//                 chartTitle="Penalties For vs Against"
+//                 // labels={['For', 'Against']}
+//                 values={[homeTeamStats.penaltiesTaken, homeTeamStats.penaltiesCommited]}
+//                 colors={[
+//                   'rgba(49, 196, 0, 1)',
+//                   'rgba(216, 0, 0, 1)',
+//                 ]}
+//                 label="SoT For vs Against"
+//               />
+//               <DoughnutChart
+//                 chartTitle="Accurate Passes vs Accurate Long Balls"
+//                 // labels={['For', 'Against']}
+//                 values={[homeTeamStats.accuratePasses, homeTeamStats.accurateLongBalls]}
+//                 colors={[
+//                   'rgba(49, 196, 0, 1)',
+//                   'rgba(216, 0, 0, 1)',
+//                 ]}
+//                 label="SoT For vs Against"
+//               />
+//               {/* <DoughnutChart
+//                       teamStats={awayTeamStats}
+//                       className="AwayPlayerStats"
+//                       spanClass="SpanAway"
+//                     /> */}
+//             </div>
+//           }
+//         />
+//       )}
