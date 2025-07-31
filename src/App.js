@@ -47,18 +47,18 @@ export let paid = false;
 const menuItems = ['Home', 'bttsteams', 'Services', 'Contact'];
 
 const leagueOrder = [
-  // 15050, //premier league 25 12325
-  // 14930, //championship 25 12451
-  // 14934, //league 1 25 12446
-  // 14935, //league 2 25 12422
-  12622, //National league 24 12622
-  // 14956, //La Liga 25 12316
-  // 15000, //Scottish Prem 25 12455
-  // 14968, //Bundesliga 25 12529
-  // 15068, //Serie A 25 12530
-  // 14932, //French Prem 25 12337
-  // 15115, //Portagul Prem 25 12931
-  // 14936, //Dutch Prem 25 12322
+  15050, //premier league 25 12325
+  14930, //championship 25 12451
+  14934, //league 1 25 12446
+  14935, //league 2 25 12422
+  // 12622, //National league 24 12622
+  14956, //La Liga 25 12316
+  15000, //Scottish Prem 25 12455
+  14968, //Bundesliga 25 12529
+  15068, //Serie A 25 12530
+  14932, //French Prem 25 12337
+  15115, //Portagul Prem 25 12931
+  14936, //Dutch Prem 25 12322
   14937, //Belgian Pro League 25 12137
   13963, //sweden 25
   15055, //Danish Prem 24/25 12132
@@ -71,21 +71,19 @@ const leagueOrder = [
   15053, //Croatia 25 12121
   14973, //Czecjh 25 12336
   14089, // Finland 25 14089
-  14951, // Ulraine 25 12483
-  15065, // Serbia 25 12138
-  15063, // Slovenia 25 12476
-  14933, // Slovakia 25 12944
-
-
+  // 14951, // Ulraine 25 12483
+  // 15065, // Serbia 25 12138
+  // 15063, // Slovenia 25 12476
+  // 14933, // Slovakia 25 12944
   13952, //Irish Prem 25
-  // 15066, //Spanish secunda 25 12467
+  15066, //Spanish secunda 25 12467
   // 12621, //Italy serie B 24 12621
-  // 14931, //Bundesliga 2 25 12528
-  // 14954, //French League 2 25 12338
-  // 15061, //Scottish Championship 25 12456
-  // 14943, //Scottish league 1 25 12474
-  // 15209, //Scottish league 2 25 12453
-  // 12827, //Women's prem 24
+  14931, //Bundesliga 2 25 12528
+  14954, //French League 2 25 12338
+  15061, //Scottish Championship 25 12456
+  14943, //Scottish league 1 25 12474
+  15209, //Scottish league 2 25 12453
+  15478, //Women's prem 25 12827
   13973, //MLS 25,
   13967, // USL Championship 25
   14226, // US Open Cup 25
@@ -93,9 +91,9 @@ const leagueOrder = [
   14231, //Brazil prem 25
   14305, // Brazil Serie B 25
   14125, //Argentina prem 23
-  14086, // Columbia 25
-  14116, // Chile 25
-  14626, // Uraguay 25
+  // 14086, // Columbia 25
+  // 14116, // Chile 25
+  // 14626, // Uraguay 25
   15234, //Mexico prem 25 12136
   // 12933, //National league North and South 24
   13703, //Australian A league 24/25
@@ -104,8 +102,8 @@ const leagueOrder = [
   12772, //Saudi 24/25
   13964, // WC Qual Europe 26,
   10121, // WC Qual SA 26,
-  11426, // WC Qual ConCaf 26
-  12801, // WC Qual Aus 26,
+  // 11426, // WC Qual ConCaf 26
+  // 12801, // WC Qual Aus 26,
   14056, // Womens Euros 25
   13734, //Nations league 24
   14924, // Champs league 25 12321
@@ -266,7 +264,7 @@ async function calculateDate(dateString) {
 
       if (
         element.year === 2025 ||
-        element.year === 20242025 ||
+        element.year === 20252026 ||
         element.year === 2026 ||
         element.year === -1
       ) {
