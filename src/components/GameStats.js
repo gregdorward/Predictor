@@ -1046,6 +1046,9 @@ function GameStats({ game, displayBool, stats }) {
   // Memoize derivedRoundId so it's only recalculated when game.sofaScoreId or rounds changes
   const derivedRoundId = useMemo(() => {
     for (const mapping of rounds) {
+      console.log(mapping);
+      console.log(game.sofaScoreId);
+      console.log(rounds)
       if (mapping.hasOwnProperty(game.sofaScoreId)) {
         return mapping[game.sofaScoreId];
       }
@@ -3077,7 +3080,6 @@ function GameStats({ game, displayBool, stats }) {
   );
   const data2Away = filteredEntries2Away.map(([, value]) => value);
 
-  console.log(stats);
 
   const handleTipSelect = (tipType) => {
     setSelectedTip(tipType);
