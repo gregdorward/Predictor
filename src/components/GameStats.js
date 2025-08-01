@@ -1362,7 +1362,7 @@ function GameStats({ game, displayBool, stats }) {
 
             setHomePlayerData(trimmedPlayersHome);
             setAwayPlayerData(trimmedPlayersAway);
-            console.log("Home Player Data:", trimmedPlayersHome);
+            // console.log("Home Player Data:", trimmedPlayersHome);
 
             if (
               homeAttributes?.playerAttributeOverviews?.[0] &&
@@ -1419,7 +1419,7 @@ function GameStats({ game, displayBool, stats }) {
         setLoadingKeyPlayers(false);
         setLoading(false);
         console.log("Loading states reset.");
-        console.log(homePlayerData);
+        // console.log(homePlayerData);
       }
     }
 
@@ -2425,10 +2425,6 @@ function GameStats({ game, displayBool, stats }) {
           defensiveMetricsHomeOnly
         );
 
-
-        console.log(attackingMetricsHomeLast5)
-        console.log(attackHLast5)
-
         const attackA = await calculateAttackingStrength(attackingMetricsAway);
         const attackALast5 = await calculateAttackingStrength(
           attackingMetricsAwayLast5
@@ -2733,7 +2729,6 @@ function GameStats({ game, displayBool, stats }) {
   // AI Insights Generation
 
   async function fetchBasicTable(id) {
-    console.log(basicTableArray)
     const foundItem = basicTableArray.find((item) => item.id === id);
     return foundItem;
   }
@@ -2741,9 +2736,7 @@ function GameStats({ game, displayBool, stats }) {
   const generateAIInsights = useCallback(
     async (gameId, streak, oddsData, homeTeamStats, awayTeamStats, homePlayerData, awayPlayerData, homeMissingPlayersList, awayMissingPlayersList, homeLineupList, awayLineupList, ranksHome, ranksAway) => {
       setIsLoading(true);
-      console.log(game)
       const table = await fetchBasicTable(game.leagueID);
-      console.log(table);
       const leagueTable = table?.table || null;
       let progress;
       let type;
@@ -2752,11 +2745,9 @@ function GameStats({ game, displayBool, stats }) {
         `${process.env.REACT_APP_EXPRESS_SERVER}leagueStats/${leagueTable[0].LeagueID}`
       );
       let totalGames;
-      console.log(homePlayerData)
       let roundType;
 
       await leagueStatistics.json().then((stats) => {
-        console.log(stats.data);
         statistics = stats.data;
         roundType = stats.data.format;
         progress = statistics.progress;

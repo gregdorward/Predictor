@@ -3119,7 +3119,10 @@ export async function calculateScore(match, index, divider, calculate) {
 
     console.log(`allDrawOutcomes: ${allDrawOutcomes}`);
 
-    if (match.status === "complete") {
+    if (match.matches_completed_minimum < 4) {
+      match.omit = true;
+    }
+    if (match.status === "complete" && match.omit === false) {
       if (match.prediction === match.outcome) {
         match.predictionOutcome = "Won";
         winAmount = winAmount + 1;
@@ -3835,7 +3838,7 @@ export async function getScorePrediction(day, mocked) {
             break;
           case match.leagueID === 6935 ||
             match.leagueID === 7061 ||
-            (match.game_week < 3 &&
+            (match.game_week < 4 &&
               match.game_week !== 0 &&
               match.matches_completed_minimum < 4):
             match.goalsA = "x";

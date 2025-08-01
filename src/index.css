@@ -250,6 +250,7 @@
   --button-color: #020029;
   --button-text-color: #ffffff;
   --secondary-button-text-color: #ffffff;
+  --alternate-background-color: #dddcdc;
   --primary-color: #fe8c00;
   /* Orange */
   --secondary-color: #9b0000;
@@ -268,6 +269,7 @@
   --background-color: black;
   /* Dark Blue */
   --secondary-background-color: #191919;
+    --alternate-background-color: rgb(39, 39, 39);
   /* White */
   --third-background-color: #302f2f;
   /* White */
@@ -1227,13 +1229,19 @@ input:focus {
 .HomeAndAwayContainerWon {
   display: flex;
   flex-direction: column;
-  border-left: #009700 solid 5px;
+  border-left: #009700 solid 6px;
 }
 
 .HomeAndAwayContainerLost {
   display: flex;
   flex-direction: column;
-  border-left: #b10f00 solid 5px;
+  border-left: #b10f00 solid 6px;
+}
+
+.HomeAndAwayContainerExact {
+  display: flex;
+  flex-direction: column;
+  border-left: Gold solid 6px;
 }
 
 .HomeContainer {
@@ -1259,7 +1267,7 @@ input:focus {
   display: flex;
   flex-direction: column;
   flex-basis: 100%;
-  background-color: var(--disabled-div);
+  background-color: var(--alternate-background-color);
   align-items: left;
   align-content: left;
   color: var(--text-color);
@@ -1274,7 +1282,7 @@ input:focus {
   display: flex;
   flex-wrap: wrap;
   flex-basis: 100%;
-  background-color: rgb(212, 212, 212);
+  /* background-color: var(--alternate-background-color); */
   /* border: 0.1em dashed white; */
   align-items: center;
   align-content: center;
