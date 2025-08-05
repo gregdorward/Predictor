@@ -548,11 +548,11 @@ export async function getLeagueList() {
 }
 
 // Replace with your own Stripe public key
-const stripePromise = loadStripe(
+export const stripePromise = loadStripe(
   "pk_live_51QojxLBrqiWlVPadBxhtoj499YzoC8YjFUIVQwCcTe8B7ZUG47NbYAam2wvNox2mUmzd0WgQh4PWKaIQaxKxubig00yEzjNuVQ"
 );
 
-const handleCheckout = async (priceId) => {
+export const handleCheckout = async (priceId) => {
   const stripe = await stripePromise;
   const auth = getAuth();
   const user = auth.currentUser;

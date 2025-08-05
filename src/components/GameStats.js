@@ -46,6 +46,7 @@ import { dynamicDate } from "../logic/getFixtures";
 import { rounds } from "./TeamOfTheSeason";
 import { Doughnut } from "react-chartjs-2";
 import StarRating from "../components/StarRating";
+import { handleCheckout, stripePromise } from "../App"
 export let userTips;
 let setUserTips;
 const MemoizedSofaLineupsWidget = memo(SofaLineupsWidget);
@@ -102,8 +103,8 @@ function GameStats({ game, displayBool, stats }) {
 
   const [isLoading, setIsLoading] = useState(false);
   const [aiMatchPreview, setAiMatchPreview] = useState(null);
-  // const [paid, setPaid] = useState(false);
-  const paid = true;
+  const [paid, setPaid] = useState(false);
+  // const paid = true;
   const [hasCompleteData, setHasCompleteData] = useState(false);
 
   let gameStats = allForm.find((match) => match.id === game.id);
@@ -2127,13 +2128,13 @@ function GameStats({ game, displayBool, stats }) {
       if (userDetail?.uid) {
         try {
           const paymentStatus = await checkUserPaidStatus(userDetail.uid);
-          // setPaid(paymentStatus);
+          setPaid(paymentStatus);
         } catch (error) {
           console.error("Error checking payment status:", error);
-          // setPaid(false); // Set to false in case of an error
+          setPaid(false); // Set to false in case of an error
         }
       } else {
-        // setPaid(false); // Set to false if there's no user ID
+        setPaid(false); // Set to false if there's no user ID
       }
     }
 
@@ -3122,12 +3123,6 @@ function GameStats({ game, displayBool, stats }) {
           (homeMissingPlayersList.length === 0 &&
             awayMissingPlayersList.length === 0) ? (
           <div></div>
-        ) : !paid ? (
-          <Button
-            className="MissingPlayersButton Locked"
-            text={"Missing players 🔒"}
-            disabled
-          />
         ) : (
           <Collapsable
             buttonText={`Missing players \u{2630}`}
@@ -3151,12 +3146,6 @@ function GameStats({ game, displayBool, stats }) {
 
         {loadingStreaks || streakData.length === 0 ? (
           <div></div>
-        ) : !paid ? (
-          <Button
-            className="TeamStreaksButton Locked"
-            text={"Team Streaks (All comps) 🔒"}
-            disabled
-          />
         ) : (
           <Collapsable
             buttonText={`Team Streaks (All comps) \u{2630}`}
@@ -3177,12 +3166,6 @@ function GameStats({ game, displayBool, stats }) {
 
         {loadingPlayerData || homePlayerDataWithImages.length === 0 ? (
           <div></div>
-        ) : !paid ? (
-          <Button
-            className="PlayerStatsButton Locked"
-            text={"Key Players (League Rankings by Metric) 🔒"}
-            disabled
-          />
         ) : (
           <>
             <Collapsable
@@ -3264,11 +3247,33 @@ function GameStats({ game, displayBool, stats }) {
           {loadingKeyPlayerComparison ? (
             <p>Loading data for Match Preview...</p>
           ) : !paid && game.leagueID !== 15050 ? (
-            <Button
+            <><Button
               className="AIInsightsLocked"
               text={"Match Preview 🔒"}
-              disabled
+              onClickEvent={() => {
+                alert("Match Preview is locked. Please subscribe to access.");
+              }}
             />
+            <div className="SubscribeText">
+              Subscribe to unlock full match previews, team star ratings, styles and more
+            </div>
+            <button
+              onClick={() => handleCheckout("price_1QrQ4ZBrqiWlVPadCkhLhtiZ")}
+              className="SubscribeButton"
+            >
+                Subscribe for £1/week
+              </button><button
+                onClick={() => handleCheckout("price_1QqgbEBrqiWlVPadocMuIEeI")}
+                className="SubscribeButton"
+              >
+                Subscribe for £3/month
+              </button><button
+                onClick={() => handleCheckout("price_1QrQ75BrqiWlVPadEML30BoJ")}
+                className="SubscribeButton"
+              >
+                Subscribe for £30/year
+              </button>
+            </>
           ) : (
             <Button
               className="AIInsights"
@@ -3712,7 +3717,7 @@ function GameStats({ game, displayBool, stats }) {
         }
       />
       <div className="Chart" id={`Chart${game.id}`} style={style}></div>
-     
+
       <Div
         text={`Last league games (most recent first)`}
         className={"LastGameHeader"}
