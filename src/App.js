@@ -595,9 +595,10 @@ function AppContent() {
   return (
     <div className="App">
       <div className="DarkMode">
-        <HamburgerMenu />
+        <Logo />
         <ThemeToggle />
       </div>
+      <HamburgerMenu />
       <nav className="hidden md:flex gap-6">
         {menuItems.map((item) => (
           <a
@@ -609,7 +610,6 @@ function AppContent() {
           </a>
         ))}
       </nav>
-      <Logo />
       <a
         className="SocialLink"
         href="https://www.reddit.com/r/xgtipping/"

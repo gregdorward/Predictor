@@ -1,5 +1,5 @@
 import React from 'react';
-import myImage from './images/SoccerStatsHub Large.png';
+import myImage from './images/NewLogo.png';
 
 const Logo = () => {
   return (

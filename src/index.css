@@ -243,7 +243,7 @@
   /* White */
   --secondary-background-color: whitesmoke;
   /* White */
-  --third-background-color: rgb(223, 220, 220);
+  --third-background-color: rgb(225, 225, 225);
   /* White */
   --text-color: #020029;
   /* Dark Blue */
@@ -269,9 +269,9 @@
   --background-color: black;
   /* Dark Blue */
   --secondary-background-color: #191919;
-    --alternate-background-color: rgb(39, 39, 39);
+  --alternate-background-color: rgb(39, 39, 39);
   /* White */
-  --third-background-color: #302f2f;
+  --third-background-color: #1b1b1b;
   /* White */
   --text-color: #ffffff;
   /* White */
@@ -314,6 +314,7 @@ body {
   display: inline-block;
   width: 60px;
   height: 34px;
+  margin-right: 1em;
 }
 
 .theme-switch input {
@@ -400,20 +401,23 @@ h1 {
   max-width: 28em;
   margin-left: auto;
   margin-right: auto;
-  width: 80%;
-  height: 5em;
+  /* width: 100%; */
+  margin: 0em;
+  height: 6em;
   /* Adjust as necessary */
-  margin-bottom: 1em;
-  background-color: whitesmoke;
-  border-radius: 30px
-    /* margin-left: 3em;
+  /* margin-bottom: 1em; */
+  /* background-color: whitesmoke;
+  border-radius: 30px */
+  /* margin-left: 3em;
   margin-right: 3em; */
-    /* padding-top: 1em;
+  /* padding-top: 1em;
   padding-bottom: 1em; */
 }
 
 .responsive-logo {
-  max-width: 8em;
+  max-width: 7em;
+  margin-right: auto;
+  margin-left: none;
   height: auto;
   /* Optional: add padding or margin if needed */
 }
@@ -421,15 +425,18 @@ h1 {
 .HamburgerMenuButton {
   display: block;
   width: 7em;
+  margin-left: 1em;
+  margin-top: 0em;
   background-color: var(--background-color);
   color: var(--text-color);
   border: none;
+  padding-top: 9em;
 }
 
 .NavItems {
   display: flex;
   flex-direction: column;
-  gap: 1em;
+  gap: 2em;
   padding: 1em;
   position: fixed;
   width: auto;
@@ -437,6 +444,7 @@ h1 {
   background-color: var(--third-background-color);
   color: var(--button-text-color);
   margin-left: 1.3em;
+  z-index: 1;
   /* background-color: var(--background-color); */
 }
 
@@ -2734,7 +2742,7 @@ canvas.DoughnutChart {
   gap: 1em;
 }
 
-.TeamStyle{
+.TeamStyle {
   padding-top: 1em;
 }
 
@@ -3521,13 +3529,17 @@ label {
 }
 
 .DarkMode {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 9em;
   display: flex;
   justify-content: space-between;
-  margin: 1em;
   align-items: center;
-  /* width: 2em;
-  margin-left: auto;
-  padding-right: 7em; */
+  padding: 0 1em;
+  background-color: var(--background-color);
+  z-index: 1000;
 }
 
 .design {
