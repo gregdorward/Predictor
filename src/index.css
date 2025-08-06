@@ -315,6 +315,7 @@ body {
   width: 60px;
   height: 34px;
   margin-right: 1em;
+  flex: 1
 }
 
 .theme-switch input {
@@ -419,18 +420,27 @@ h1 {
   margin-right: auto;
   margin-left: none;
   height: auto;
+  flex: 1;
   /* Optional: add padding or margin if needed */
+}
+
+.HamburgerMenuDiv {
+  margin: 0em;
+  padding-top: 10em;
+  margin-right: auto;
 }
 
 .HamburgerMenuButton {
   display: block;
-  width: 7em;
-  margin-left: 1em;
-  margin-top: 0em;
+  width: 20%;
+  /* margin-left: 1em; */
+  /* margin-top: 0em; */
   background-color: var(--background-color);
   color: var(--text-color);
   border: none;
-  padding-top: 9em;
+  margin: 0em;
+  margin-right: auto;
+  /* padding-top: 9em; */
 }
 
 .NavItems {
@@ -653,6 +663,10 @@ button.GeneratePredictions:active {
 /* .FixtureContainer{
 
 } */
+
+.WelcomeBack{
+  padding-top: 1em;
+}
 
 p {
   font-size: 1em;
@@ -4178,12 +4192,16 @@ button.AIInsights button:active {
 }
 
 .LockIcon {
-  font-size: 2em;
+  font-size: 3em;
 }
 
 .LockText {
-  font-size: 1em;
+  font-size: 1.2em;
   line-height: 1.5em;
+}
+
+.WelcomeText{
+  padding-top: 1em;
 }
 
 .rankings-container {

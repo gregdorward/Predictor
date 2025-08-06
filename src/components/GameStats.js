@@ -1640,8 +1640,8 @@ function GameStats({ game, displayBool, stats }) {
             name={formDataAway[0].name}
             goals={awayForm.avgScored}
             conceeded={awayForm.avgConceeded}
-            XG={awayForm.XGOverall.toFixed(2)}
-            XGConceded={awayForm.XGAgainstAvgOverall.toFixed(2)}
+            XG={awayForm.XGOverall?.toFixed(2)}
+            XGConceded={awayForm.XGAgainstAvgOverall?.toFixed(2)}
             XGSwing={awayForm.XGChangeRecently}
             //todo add goal diff and btts percentages
             possession={awayForm.AveragePossessionOverall?.toFixed(2)}
@@ -2606,7 +2606,7 @@ function GameStats({ game, displayBool, stats }) {
         setAwaySixGameAverage(away6GA);
         setAwayTenGameAverage(away10GA);
 
-        if (homeForm.fiveGameAv) {
+        if (homeForm.fiveGameAv && game.matches_completed_minimum > 4) {
           const formTextStringHome = await GenerateFormSummary(
             homeForm,
             homeForm.tenGameAv,
@@ -2764,7 +2764,7 @@ function GameStats({ game, displayBool, stats }) {
       try {
         const AIPayload = {
           competition: game.leagueDesc,
-          totalLeagueGames: totalGames,
+          totalLeagueGames: totalGames?.toFixed(0),
           gameweek: game.matches_completed_minimum + 1,
           gameType: roundType,
           // referee: await getRefStats(game.refereeID, game.competition_id),
@@ -3290,6 +3290,8 @@ function GameStats({ game, displayBool, stats }) {
                   awayMissingPlayersList,
                   homeLineupList,
                   awayLineupList,
+                  ranksHome,
+                  ranksAway
                 );
                 setShowAIInsights(true);
               }}

@@ -80,6 +80,7 @@ const leagueOrder = [
   // 12621, //Italy serie B 24 12621
   14931, //Bundesliga 2 25 12528
   14954, //French League 2 25 12338
+  14987, //Dutch League 2 25
   15061, //Scottish Championship 25 12456
   14943, //Scottish league 1 25 12474
   15209, //Scottish league 2 25 12453
@@ -90,12 +91,12 @@ const leagueOrder = [
   14236, //Canada 25
   14231, //Brazil prem 25
   14305, // Brazil Serie B 25
-  14125, //Argentina prem 23
+  15310, //Argentina prem 23
   // 14086, // Columbia 25
   // 14116, // Chile 25
   // 14626, // Uraguay 25
   15234, //Mexico prem 25 12136
-  // 12933, //National league North and South 24
+  12933, //National league North and South 24
   13703, //Australian A league 24/25
   14069, //S Korea 25,
   13960, //Japan 25
@@ -188,7 +189,7 @@ const leagueOrder = [
 //   13973, //MLS 25,
 //   14236, //Canada 25
 //   14231, //Brazil prem 24
-//   14125, //Argentina prem 23
+//   15310, //Argentina prem 23
 //   15234, //Mexico prem 23/24
 //   12933, //National league North and South 22/23
 //   13703, //Australian A league 24/25
@@ -534,7 +535,7 @@ export async function getLeagueList() {
 
   if (loggedIn) {
     ReactDOM.render(
-      <h6>Welcome back {loggedIn.email}</h6>,
+      <h6 className="WelcomeBack">Welcome back {loggedIn.email}</h6>,
       document.getElementById("Email")
     );
   } else {
@@ -582,7 +583,7 @@ export const handleCheckout = async (priceId) => {
   }
 };
 
-const welcomeTextUnsplitOne = `Your Ultimate Source for In-Depth Soccer Statistics, AI Analysis and Tips. At Soccer Stats Hub, we specialize in providing comprehensive head-to-head stats, cutting-edge XG metrics, and intelligent AI previews. Our unique bespoke multi-builder tips, powered by comparative data, offers unparalleled depth for serious soccer enthusiasts and analysts.\n `;
+const welcomeTextUnsplitOne = `The ultimate football resource. Comprehensive stats, analysis and transparent tips for 40+ leagues and cups.\n `;
 let welcomeTextOne = welcomeTextUnsplitOne.split("\n").map((i) => {
   return <p>{i}</p>;
 });
@@ -610,15 +611,6 @@ function AppContent() {
           </a>
         ))}
       </nav>
-      <a
-        className="SocialLink"
-        href="https://www.reddit.com/r/xgtipping/"
-        target="_blank"
-        rel="noreferrer"
-      >
-        r/xgtipping
-      </a>
-
       <div id="LoadingContainer" className="LoadingContainer" />
       <div id="RadioContainer" className="RadioContainer">
         <div id="RadioText" />
@@ -685,7 +677,6 @@ function AppContent() {
         <h6 className="WelcomeText">{welcomeTextOne}</h6>
         <div>
           <h6 className="WelcomeText">
-            Stats and tips from 40+ leagues and cups, including
             <ul className="AllLeagues" key="league-list">
               <li className="League" key="premier-league">
                 Premier League
@@ -718,6 +709,14 @@ function AppContent() {
                 Loads more...
               </li>
             </ul>
+            <a
+              className="SocialLink"
+              href="https://www.reddit.com/r/xgtipping/"
+              target="_blank"
+              rel="noreferrer"
+            >
+              r/xgtipping
+            </a>
           </h6>
         </div>
         <h6 className="GetMatchStatText">

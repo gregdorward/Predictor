@@ -19,7 +19,7 @@ export default function HamburgerMenu() {
     const toggleMenu = () => setIsOpen((prev) => !prev);
 
     return (
-        <div className="relative z-50">
+        <div className="HamburgerMenuDiv">
             {/* Toggle Button */}
             <button
                 onClick={toggleMenu}

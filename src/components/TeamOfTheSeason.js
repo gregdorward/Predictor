@@ -190,7 +190,7 @@ import React, { useState, useEffect } from "react";
 //       id: 278,
 //       season: 71306, // Uruguayan Primera Division 25
 //     },
-//     14125: {
+//     15310: {
 //       id: 155,
 //       season: 70268, // Argentina Primera Division 25
 //     },
@@ -279,6 +279,7 @@ export const rounds = [
     41: 70853,
     218: 77625,
     212: 62660,
+    131: 77156,
     211: 77154,
     210: 77625,
     11621: 76500,
