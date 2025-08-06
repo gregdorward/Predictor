@@ -2888,6 +2888,7 @@ function GameStats({ game, displayBool, stats }) {
         <h2>Ratings and Styles</h2>
         <div className="AIContainer">
           <div className="HomeAIInsights">
+            <h6 className="TeamName">{aiMatchPreview?.homeTeam?.teamName}</h6>
             <div className="StarRating"><span className="StarRatingHeader">Attack <StarRating rating={aiMatchPreview?.homeTeam?.ratings?.Attack} /></span></div>
             <div className="StarRating"><span className="StarRatingHeader">Defence <StarRating rating={aiMatchPreview?.homeTeam?.ratings?.Defence} /></span></div>
             <div className="StarRating"><span className="StarRatingHeader">Directness <StarRating rating={aiMatchPreview?.homeTeam?.ratings?.Directness} /></span></div>
@@ -2895,6 +2896,8 @@ function GameStats({ game, displayBool, stats }) {
             <div className="StarRating"><span className="StarRatingHeader">Pressing <StarRating rating={aiMatchPreview?.homeTeam?.ratings?.Pressing} /></span></div>
             <div className="StarRating"><span className="StarRatingHeader">Accuracy <StarRating rating={aiMatchPreview?.homeTeam?.ratings?.Accuracy} /></span></div>
             <div className="StarRating"><span className="StarRatingHeader">Set Pieces <StarRating rating={aiMatchPreview?.homeTeam?.ratings?.SetPieces} /></span></div>
+            <div className="StarRating"><span className="StarRatingHeader">Discipline <StarRating rating={aiMatchPreview?.homeTeam?.ratings?.Discipline} /></span></div>
+            <div className="StarRating"><span className="StarRatingHeader">Last Game <StarRating rating={aiMatchPreview?.homeTeam?.ratings?.LastMatchPerformance} /></span></div>
             <div className="StarRating"><span className="StarRatingHeader">Overall <StarRating rating={aiMatchPreview?.homeTeam?.ratings?.Overall} /></span></div>
             <div className="TeamStyle">{aiMatchPreview?.homeTeam?.style}</div>
             <ul className="Strengths">
@@ -2909,6 +2912,7 @@ function GameStats({ game, displayBool, stats }) {
             </ul>
           </div>
           <div className="AwayAIInsights">
+            <h6 className="TeamName">{aiMatchPreview?.awayTeam?.teamName}</h6>
             <div className="StarRating"><span className="StarRatingHeader">Attack <StarRating rating={aiMatchPreview?.awayTeam?.ratings?.Attack} /></span></div>
             <div className="StarRating"><span className="StarRatingHeader">Defence <StarRating rating={aiMatchPreview?.awayTeam?.ratings?.Defence} /></span></div>
             <div className="StarRating"><span className="StarRatingHeader">Directness <StarRating rating={aiMatchPreview?.awayTeam?.ratings?.Directness} /></span></div>
@@ -2916,6 +2920,8 @@ function GameStats({ game, displayBool, stats }) {
             <div className="StarRating"><span className="StarRatingHeader">Pressing <StarRating rating={aiMatchPreview?.awayTeam?.ratings?.Pressing} /></span></div>
             <div className="StarRating"><span className="StarRatingHeader">Accuracy <StarRating rating={aiMatchPreview?.awayTeam?.ratings?.Accuracy} /></span></div>
             <div className="StarRating"><span className="StarRatingHeader">Set Pieces <StarRating rating={aiMatchPreview?.awayTeam?.ratings?.SetPieces} /></span></div>
+            <div className="StarRating"><span className="StarRatingHeader">Discipline <StarRating rating={aiMatchPreview?.awayTeam?.ratings?.Discipline} /></span></div>
+            <div className="StarRating"><span className="StarRatingHeader">Last Game <StarRating rating={aiMatchPreview?.awayTeam?.ratings?.LastMatchPerformance} /></span></div>
             <div className="StarRating"><span className="StarRatingHeader">Overall <StarRating rating={aiMatchPreview?.awayTeam?.ratings?.Overall} /></span></div>
             <div className="TeamStyle">{aiMatchPreview?.awayTeam?.style}</div>
             <ul className="Strengths">
