@@ -103,8 +103,8 @@ function GameStats({ game, displayBool, stats }) {
 
   const [isLoading, setIsLoading] = useState(false);
   const [aiMatchPreview, setAiMatchPreview] = useState(null);
-  const [paid, setPaid] = useState(false);
-  // const paid = true;
+  // const [paid, setPaid] = useState(false);
+  const paid = true;
   const [hasCompleteData, setHasCompleteData] = useState(false);
 
   let gameStats = allForm.find((match) => match.id === game.id);
@@ -2128,13 +2128,13 @@ function GameStats({ game, displayBool, stats }) {
       if (userDetail?.uid) {
         try {
           const paymentStatus = await checkUserPaidStatus(userDetail.uid);
-          setPaid(paymentStatus);
+          // setPaid(paymentStatus);
         } catch (error) {
           console.error("Error checking payment status:", error);
-          setPaid(false); // Set to false in case of an error
+          // setPaid(false); // Set to false in case of an error
         }
       } else {
-        setPaid(false); // Set to false if there's no user ID
+        // setPaid(false); // Set to false if there's no user ID
       }
     }
 
