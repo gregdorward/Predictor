@@ -107,6 +107,7 @@ function GameStats({ game, displayBool, stats }) {
   const paid = true;
   const [hasCompleteData, setHasCompleteData] = useState(false);
 
+
   let gameStats = allForm.find((match) => match.id === game.id);
   const homeForm = gameStats?.home[2];
   const awayForm = gameStats?.away[2];
@@ -2776,9 +2777,9 @@ function GameStats({ game, displayBool, stats }) {
           homeTeam: {
             homeTeamName: game.homeTeam,
             homeLeaguePosition: homeForm?.LeaguePosition,
-            homeTeamResultsLast5: homeForm?.allTeamResults.slice(0, 5),
+            homeTeamResultsLast5: homeForm?.allTeamResults?.slice(0, 5),
             performanceStats: homeTeamStats,
-            keyPlayers: homePlayerData.slice(0, 5),
+            keyPlayers: homePlayerData?.slice(0, 5),
             competitionRankings: ranksHome,
             missingPlayers: homeMissingPlayersList,
             predictedLineup: homeLineupList,
@@ -2788,9 +2789,9 @@ function GameStats({ game, displayBool, stats }) {
           awayTeam: {
             awayTeamName: game.awayTeam,
             awayLeaguePosition: awayForm?.LeaguePosition,
-            awayTeamResultsLast5: awayForm?.allTeamResults.slice(0, 5),
+            awayTeamResultsLast5: awayForm?.allTeamResults?.slice(0, 5),
             performanceStats: awayTeamStats,
-            keyPlayers: awayPlayerData.slice(0, 5),
+            keyPlayers: awayPlayerData?.slice(0, 5),
             competitionRankings: ranksAway,
             missingPlayers: awayMissingPlayersList,
             predictedLineup: awayLineupList,

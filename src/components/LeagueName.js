@@ -60,7 +60,7 @@ const sofaScoreIds = [
     { 14626: 278}, //Uraguay 25
 
   { 15234: 11621 }, //Mexico prem 23/24
-  { 12622: 173 }, //National league
+  { 15657: 173 }, //National league
   { 12933: 176 }, //National league North and South 22/23
   { 14069: 410 }, //S Korea 25,
   { 13960: 196 }, //Japan 25
