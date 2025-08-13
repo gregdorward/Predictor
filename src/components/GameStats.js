@@ -2875,14 +2875,31 @@ function GameStats({ game, displayBool, stats }) {
           </div>
         ))}
 
-        <h2>AI Prediction</h2>
-        <div className="AIMatchPreview">
-          {aiMatchPreview.prediction}{" "}
-          <i>(may not reflect the view of Soccer Stats Hub)</i>
-        </div>
+        {/* // Properties: "CorrectScore", "Over2.5Goals" (yes or no), "MostCards" (team name), "MostCorners" (team name), "MostShotsOnTarget" (team name), "AnytimeGoalscorer" (player name), "ToBeCarded" (player name) */}
 
-        <div className="AIMatchPreview">
-          {aiMatchPreview.opinionOnXGTippingPrediction}
+        <div className="AIMatchPreviewCard">
+          <h2>{`${aiMatchPreview?.homeTeam?.teamName} vs ${aiMatchPreview?.awayTeam?.teamName} AI Tips`}</h2>
+          <ul>
+            <li>
+              <strong>Correct Score:</strong> {aiMatchPreview.Guide.CorrectScore}
+            </li>
+            <li>
+              <strong>Anytime Goalscorer:</strong> {aiMatchPreview.Guide.AnytimeGoalscorer}
+            </li>
+            <li>
+              <strong>Most Cards:</strong> {aiMatchPreview.Guide.MostCards}
+            </li>
+            <li>
+              <strong>Most Corners:</strong> {aiMatchPreview.Guide.MostCorners}
+            </li>
+            <li>
+              <strong>Most Shots On Target:</strong> {aiMatchPreview.Guide.MostShotsOnTarget}
+            </li>
+            <li>
+              <strong>To Be Carded:</strong> {aiMatchPreview.Guide.ToBeCarded}
+            </li>
+          </ul>
+          <i>(may not reflect the view of Soccer Stats Hub)</i>
         </div>
 
 
@@ -3261,13 +3278,13 @@ function GameStats({ game, displayBool, stats }) {
                 alert("Match Preview is locked. Please subscribe to access.");
               }}
             />
-            <div className="SubscribeText">
-              Subscribe to unlock full match previews, team star ratings, styles and more
-            </div>
-            <button
-              onClick={() => handleCheckout("price_1QrQ4ZBrqiWlVPadCkhLhtiZ")}
-              className="SubscribeButton"
-            >
+              <div className="SubscribeText">
+                Subscribe to unlock full match previews, team star ratings, styles and more
+              </div>
+              <button
+                onClick={() => handleCheckout("price_1QrQ4ZBrqiWlVPadCkhLhtiZ")}
+                className="SubscribeButton"
+              >
                 Subscribe for £1/week
               </button><button
                 onClick={() => handleCheckout("price_1QqgbEBrqiWlVPadocMuIEeI")}
