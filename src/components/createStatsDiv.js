@@ -143,7 +143,7 @@ function Stats(props) {
               className="TeamXGSwing"
               data-cy={props.name ? props.name + "teamXGSwing" : "teamXGSwing"}
             >
-              {`XG difference swing (last 5): ${props.XGSwing !== undefined ? props.XGSwing.toFixed(2) : "N/A"
+              {`XG difference swing (last 5): ${props.XGSwing !== undefined ? props.XGSwing?.toFixed(2) : "N/A"
                 }`}
             </li>
             <li

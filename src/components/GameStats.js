@@ -1721,14 +1721,14 @@ function GameStats({ game, displayBool, stats }) {
             name={formDataHome[0].name}
             goals={homeForm.last5Goals}
             conceeded={homeForm.last5GoalsConceeded}
-            XG={homeForm.avXGLast5.toFixed(2)}
-            XGConceded={homeForm.avXGAgainstLast5.toFixed(2)}
-            possession={homeForm.avPosessionLast5.toFixed(2)}
-            shots={homeForm.avShotsLast5.toFixed(2)}
-            sot={homeForm.avSOTLast5.toFixed(2)}
+            XG={homeForm.avXGLast5?.toFixed(2)}
+            XGConceded={homeForm.avXGAgainstLast5?.toFixed(2)}
+            possession={homeForm.avPosessionLast5?.toFixed(2)}
+            shots={homeForm.avShotsLast5?.toFixed(2)}
+            sot={homeForm.avSOTLast5?.toFixed(2)}
             dangerousAttacks={
               homeForm.avDALast5 !== 0
-                ? homeForm.avDALast5.toFixed(2)
+                ? homeForm.avDALast5?.toFixed(2)
                 : homeForm.AverageDangerousAttacks
             }
             leaguePosition={
@@ -1756,11 +1756,11 @@ function GameStats({ game, displayBool, stats }) {
             drawPercentage={
               game.homeTeamDrawPercentage ? game.homeTeamDrawPercentage : "N/A"
             }
-            ppg={homeForm.avPoints5.toFixed(2)}
+            ppg={homeForm.avPoints5?.toFixed(2)}
             formTrend={[
-              homeTenGameAverage.toFixed(2),
-              homeSixGameAverage.toFixed(2),
-              homeFiveGameAverage.toFixed(2),
+              homeTenGameAverage?.toFixed(2),
+              homeSixGameAverage?.toFixed(2),
+              homeFiveGameAverage?.toFixed(2),
             ]}
             formRun={homeForm.resultsAll}
             goalDifference={homeForm.last5GoalDiff}
@@ -1797,16 +1797,16 @@ function GameStats({ game, displayBool, stats }) {
             name={formDataAway[0].name}
             goals={awayForm.last5Goals}
             conceeded={awayForm.last5GoalsConceeded}
-            XG={awayForm.avXGLast5.toFixed(2)}
-            XGConceded={awayForm.avXGAgainstLast5.toFixed(2)}
+            XG={awayForm.avXGLast5?.toFixed(2)}
+            XGConceded={awayForm.avXGAgainstLast5?.toFixed(2)}
             //todo add goal diff and btts percentages
-            possession={awayForm.avPosessionLast5.toFixed(2)}
+            possession={awayForm.avPosessionLast5?.toFixed(2)}
             rawPosition={game.awayRawPosition ? game.awayRawPosition : 0}
-            sot={awayForm.avSOTLast5.toFixed(2)}
-            shots={awayForm.avShotsLast5.toFixed(2)}
+            sot={awayForm.avSOTLast5?.toFixed(2)}
+            shots={awayForm.avShotsLast5?.toFixed(2)}
             dangerousAttacks={
               awayForm.avDALast5 !== 0
-                ? awayForm.avDALast5.toFixed(2)
+                ? awayForm.avDALast5?.toFixed(2)
                 : awayForm.AverageDangerousAttacks
             }
             leaguePosition={
@@ -1828,11 +1828,11 @@ function GameStats({ game, displayBool, stats }) {
             drawPercentage={
               game.awayTeamDrawPercentage ? game.awayTeamDrawPercentage : "N/A"
             }
-            ppg={awayForm.avPoints5.toFixed(2)}
+            ppg={awayForm.avPoints5?.toFixed(2)}
             formTrend={[
-              awayTenGameAverage.toFixed(2),
-              awaySixGameAverage.toFixed(2),
-              awayFiveGameAverage.toFixed(2),
+              awayTenGameAverage?.toFixed(2),
+              awaySixGameAverage?.toFixed(2),
+              awayFiveGameAverage?.toFixed(2),
             ]}
             formRun={awayForm.resultsAll}
             goalDifference={awayForm.last5GoalDiff}

@@ -2211,10 +2211,8 @@ export async function calculateScore(match, index, divider, calculate) {
       formHome.XGAgainstAvgOverall = null;
       formHome.XGOverall = null;
       formHome.XGlast5 = null;
-      formHome.goalDifference =
-        formHome.ScoredOverall - formHome.ConcededOverall;
-      formHome.goalDifferenceHomeOrAway =
-        formHome.ScoredOverall - formHome.ConcededOverall;
+      formHome.goalDifference = null;
+      formHome.goalDifferenceHomeOrAway = null;
       formHome.last10btts = null;
       formHome.last10bttsHome = null;
       formHome.last10bttsAway = null;
@@ -2251,11 +2249,8 @@ export async function calculateScore(match, index, divider, calculate) {
       formAway.XGlast5 = null;
       formAway.AverageXGOverall = null;
       formAway.XGAgainstAvgOverall = null;
-      formAway.goalDifference =
-        formAway.ScoredOverall - formAway.ConcededOverall;
-      formAway.goalDifferenceHomeOrAway =
-        formAway.ScoredOverall - formAway.ConcededOverall;
-
+      formAway.goalDifference = null;
+      formAway.goalDifferenceHomeOrAway = null;
       formAway.last10btts = null;
       formAway.last10bttsHome = null;
       formAway.last10bttsAway = null;
