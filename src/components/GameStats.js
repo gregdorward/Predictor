@@ -2821,6 +2821,21 @@ function GameStats({ game, displayBool, stats }) {
         const jsonData = await response.json();
         console.log("AI Match Preview Data:", jsonData);
         setAiMatchPreview(jsonData);
+
+        // Store predicted score in backend array
+        await fetch(`${process.env.REACT_APP_EXPRESS_SERVER}predictedScores`, {
+          method: "POST",
+          headers: {
+            Accept: "application/json",
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            gameId,
+            homeGoalsPrediction: parseInt(jsonData.Guide?.HomeGoalsPrediction, 10),
+            awayGoalsPrediction: parseInt(jsonData.Guide?.AwayGoalsPrediction, 10),
+          }),
+        });
+
       } catch (error) {
         console.error("Fetch error:", error);
         // Handle the error
@@ -2881,7 +2896,7 @@ function GameStats({ game, displayBool, stats }) {
           <h2>{`${aiMatchPreview?.homeTeam?.teamName} vs ${aiMatchPreview?.awayTeam?.teamName} AI Tips`}</h2>
           <ul>
             <li>
-              <strong>Correct Score:</strong> {aiMatchPreview.Guide.CorrectScore}
+              <strong>Correct Score:</strong> {aiMatchPreview.Guide.HomeGoalsPrediction} - {aiMatchPreview.Guide.AwayGoalsPrediction}
             </li>
             <li>
               <strong>Anytime Goalscorer:</strong> {aiMatchPreview.Guide.AnytimeGoalscorer}

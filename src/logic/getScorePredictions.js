@@ -222,10 +222,6 @@ function UserTips() {
 }
 
 async function getPastLeagueResults(team, game, hOrA, form) {
-  console.log(team);
-  console.log(game);
-  console.log(hOrA);
-  console.log(form);
   form.completeData = true;
   let date = game.date;
   if (allLeagueResultsArrayOfObjects[game.leagueIndex].fixtures.length > 10) {
@@ -1987,10 +1983,12 @@ export async function roundCustom(num, form, otherForm) {
 //Calculates scores based on prior XG figures, weighted by odds
 let i = 0;
 
-export async function calculateScore(match, index, divider, calculate) {
+export async function calculateScore(match, index, divider, calculate, AIPredictions) {
   i++;
 
   let teams;
+  let AIPredictionHome;
+  let AIPredictionAway;
 
   if (
     calculate === true &&
@@ -2000,10 +1998,23 @@ export async function calculateScore(match, index, divider, calculate) {
         game.away.teamName === match.awayTeam
     )
   ) {
+    // Find the teams and their indexes in allForm
+    const homeFormIndex = allForm.findIndex((game) => game.home.teamName === match.homeTeam);
+    const awayFormIndex = allForm.findIndex((game) => game.away.teamName === match.awayTeam);
+
     teams = [
-      allForm.find((game) => game.home.teamName === match.homeTeam).home,
-      allForm.find((game) => game.away.teamName === match.awayTeam).away,
+      allForm[homeFormIndex].home,
+      allForm[awayFormIndex].away,
     ];
+
+
+    const AIPrediction = AIPredictions.find(p => p.gameId === match.id);
+    AIPredictionHome = AIPrediction ? AIPrediction.homeGoalsPrediction : null;
+    AIPredictionAway = AIPrediction ? AIPrediction.awayGoalsPrediction : null;
+
+    // Store the indexes on the team objects for later use
+    teams[0].allFormIndex = homeFormIndex;
+    teams[1].allFormIndex = awayFormIndex;
   } else {
     calculate = false;
   }
@@ -2320,8 +2331,6 @@ export async function calculateScore(match, index, divider, calculate) {
     formAway.previousToLastGame = formAway.resultsAll[1];
 
     let teamComparisonScore;
-    console.log(`Calculating team comparison score for ${match.homeTeam} vs ${match.awayTeam}`);
-    console.log(formAway);
 
     const attackingMetricsHome = {
       "Average Dangerous Attacks": formHome.AverageDangerousAttacksOverall,
@@ -2945,13 +2954,23 @@ export async function calculateScore(match, index, divider, calculate) {
       rawFinalAwayGoals = 0.01;
     }
 
+
+    if (match.matches_completed_minimum < 4 && AIPredictionHome !== null && AIPredictionAway !== null) {
+      finalHomeGoals = AIPredictionHome;
+      finalAwayGoals = AIPredictionAway;
+    } else if (match.matches_completed_minimum >= 4 && AIPredictionHome !== null && AIPredictionAway !== null) {
+      finalHomeGoals = Math.floor((rawFinalHomeGoals + AIPredictionHome) / 2);
+      finalAwayGoals = Math.floor((rawFinalAwayGoals + AIPredictionAway) / 2);
+    } else {
+      finalHomeGoals = Math.floor(rawFinalHomeGoals);
+      finalAwayGoals = Math.floor(rawFinalAwayGoals);
+    }
+
     // if(rawFinalHomeGoals > formHome.avgScored && rawFinalAwayGoals > formAway.avgScored){
     //   rawFinalHomeGoals -= Math.abs(-1)
     //   rawFinalAwayGoals -= Math.abs(-1)
     // }
 
-    finalHomeGoals = Math.floor(rawFinalHomeGoals);
-    finalAwayGoals = Math.floor(rawFinalAwayGoals);
 
     if (match.status !== "suspended") {
       if (finalHomeGoals > finalAwayGoals) {
@@ -3108,7 +3127,7 @@ export async function calculateScore(match, index, divider, calculate) {
 
     console.log(`allDrawOutcomes: ${allDrawOutcomes}`);
 
-    if (match.matches_completed_minimum < 4) {
+    if (match.matches_completed_minimum < 2) {
       match.omit = true;
     }
     if (match.status === "complete" && match.omit === false) {
@@ -3283,7 +3302,7 @@ export async function calculateScore(match, index, divider, calculate) {
         break;
     }
 
-    if (match.matches_completed_minimum < 4 || match.omit === true) {
+    if ((match.matches_completed_minimum < 4 && AIPredictionHome === null) || match.omit === true) {
       finalHomeGoals = "-";
       finalAwayGoals = "-";
       match.status = "notEnoughData";
@@ -3809,6 +3828,8 @@ export async function getScorePrediction(day, mocked) {
 
   // Call the function to fetch and store the league stats
   const leagueStatsPromise = fetchLeagueStats();
+  const predictedScores = await fetch(`${process.env.REACT_APP_EXPRESS_SERVER}predictedScores`);
+  const predictedScoresData = await predictedScores.json();
 
   ReactDOM.render(
     <div>
@@ -3827,17 +3848,17 @@ export async function getScorePrediction(day, mocked) {
             match.goalsA = "P";
             match.goalsB = "P";
             match.completeData = false;
-            await calculateScore(match, index, divider, false);
+            await calculateScore(match, index, divider, false, predictedScoresData);
             break;
           case match.leagueID === 6935 ||
             match.leagueID === 7061 ||
-            (match.game_week < 4 &&
+            (match.game_week < 1 &&
               match.game_week !== 0 &&
-              match.matches_completed_minimum < 4):
+              match.matches_completed_minimum < 2):
             match.goalsA = "x";
             match.goalsB = "x";
             match.completeData = false;
-            await calculateScore(match, index, divider, true);
+            await calculateScore(match, index, divider, true, predictedScoresData);
             break;
           default:
             [
@@ -3846,7 +3867,7 @@ export async function getScorePrediction(day, mocked) {
               match.unroundedGoalsA,
               match.unroundedGoalsB,
               match.completeData = true,
-            ] = await calculateScore(match, index, divider, true);
+            ] = await calculateScore(match, index, divider, true, predictedScoresData);
             break;
         }
       } else {
@@ -3855,7 +3876,7 @@ export async function getScorePrediction(day, mocked) {
           match.goalsB,
           match.unroundedGoalsA,
           match.unroundedGoalsB,
-        ] = await calculateScore(match, index, divider, true);
+        ] = await calculateScore(match, index, divider, true, predictedScoresData);
       }
 
       await getBTTSPotential(
