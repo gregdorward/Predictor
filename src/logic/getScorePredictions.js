@@ -3142,7 +3142,7 @@ export async function calculateScore(match, index, divider, calculate, AIPredict
 
     console.log(`allDrawOutcomes: ${allDrawOutcomes}`);
 
-    if (match.matches_completed_minimum < 3) {
+    if (match.matches_completed_minimum < 4) {
       match.omit = true;
     }
     if (match.status === "complete" && match.omit === false) {
@@ -3317,7 +3317,7 @@ export async function calculateScore(match, index, divider, calculate, AIPredict
         break;
     }
 
-    if (match.matches_completed_minimum < 3 || match.omit === true) {
+    if (match.matches_completed_minimum < 4 || match.omit === true) {
       finalHomeGoals = "-";
       finalAwayGoals = "-";
       match.status = "notEnoughData";
