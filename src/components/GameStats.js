@@ -54,6 +54,8 @@ const MemoizedSofaLineupsWidget = memo(SofaLineupsWidget);
 // let id, team1, team2, timestamp, homeGoals, awayGoals;
 
 function GameStats({ game, displayBool, stats }) {
+
+  console.log(game);
   function styling(testBool) {
     let bool = testBool;
     if (bool === true && clicked === true) {
@@ -1317,7 +1319,7 @@ function GameStats({ game, displayBool, stats }) {
         }
 
         if (derivedRoundId) {
-          console.log("TRIGGERED")
+          console.log(matchingGameInfo)
           // https://sofascore.p.rapidapi.com/teams/get-statistics?teamId=38&tournamentId=17015&seasonId=61648&type=overall
           try {
             const homeTeamStatsResponse = await fetch(

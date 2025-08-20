@@ -691,6 +691,23 @@ p {
   align-items: center;
 }
 
+.CheckboxTwo {
+  background-color: var(--secondary-background-color);
+  padding: 1em;
+  border: var(--primary-color) solid 1px;
+}
+
+h6.PredictionTypeText{
+  padding-top: 0em;
+}
+
+.PredictionRadios {
+  display: flex;
+  height: 30px;
+  /* font-size: 1em; */
+  justify-content: center;
+  align-items: center;
+}
 /* .container {
   padding: 0px;
 } */

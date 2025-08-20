@@ -27,6 +27,8 @@ import { userDetail } from "../logic/authProvider";
 import { dynamicDate } from "./getFixtures";
 import { ThreeDots } from "react-loading-icons";
 import { uniqueLeagueIDs } from "./getFixtures";
+import { selectedTipType } from "../components/PredictionTypeRadio";
+
 
 var myHeaders = new Headers();
 myHeaders.append("Origin", "https://gregdorward.github.io");
@@ -2955,16 +2957,29 @@ export async function calculateScore(match, index, divider, calculate, AIPredict
     }
 
 
-    if (match.matches_completed_minimum < 4 && AIPredictionHome !== null && AIPredictionAway !== null) {
+    // if (match.matches_completed_minimum < 4 && AIPredictionHome !== null && AIPredictionAway !== null) {
+    //   finalHomeGoals = AIPredictionHome;
+    //   finalAwayGoals = AIPredictionAway;
+    // } else if (match.matches_completed_minimum >= 4 && AIPredictionHome !== null && AIPredictionAway !== null) {
+    //   finalHomeGoals = Math.floor((rawFinalHomeGoals + AIPredictionHome) / 2);
+    //   finalAwayGoals = Math.floor((rawFinalAwayGoals + AIPredictionAway) / 2);
+    // } else {
+    //   finalHomeGoals = Math.floor(rawFinalHomeGoals);
+    //   finalAwayGoals = Math.floor(rawFinalAwayGoals);
+    // }
+
+    if (selectedTipType === "SSH Tips") {
+      finalHomeGoals = Math.floor(rawFinalHomeGoals);
+      finalAwayGoals = Math.floor(rawFinalAwayGoals);
+    } else if (selectedTipType === "AI Tips" && AIPredictionHome !== null) {
       finalHomeGoals = AIPredictionHome;
       finalAwayGoals = AIPredictionAway;
-    } else if (match.matches_completed_minimum >= 4 && AIPredictionHome !== null && AIPredictionAway !== null) {
-      finalHomeGoals = Math.floor((rawFinalHomeGoals + AIPredictionHome) / 2);
-      finalAwayGoals = Math.floor((rawFinalAwayGoals + AIPredictionAway) / 2);
     } else {
       finalHomeGoals = Math.floor(rawFinalHomeGoals);
       finalAwayGoals = Math.floor(rawFinalAwayGoals);
     }
+
+
 
     // if(rawFinalHomeGoals > formHome.avgScored && rawFinalAwayGoals > formAway.avgScored){
     //   rawFinalHomeGoals -= Math.abs(-1)
@@ -3127,7 +3142,7 @@ export async function calculateScore(match, index, divider, calculate, AIPredict
 
     console.log(`allDrawOutcomes: ${allDrawOutcomes}`);
 
-    if (match.matches_completed_minimum < 2) {
+    if (match.matches_completed_minimum < 3) {
       match.omit = true;
     }
     if (match.status === "complete" && match.omit === false) {
@@ -3302,7 +3317,7 @@ export async function calculateScore(match, index, divider, calculate, AIPredict
         break;
     }
 
-    if ((match.matches_completed_minimum < 4 && AIPredictionHome === null) || match.omit === true) {
+    if (match.matches_completed_minimum < 3 || match.omit === true) {
       finalHomeGoals = "-";
       finalAwayGoals = "-";
       match.status = "notEnoughData";
@@ -3854,11 +3869,7 @@ export async function getScorePrediction(day, mocked) {
             match.completeData = false;
             await calculateScore(match, index, divider, false, predictedScoresData);
             break;
-          case match.leagueID === 6935 ||
-            match.leagueID === 7061 ||
-            (match.game_week < 1 &&
-              match.game_week !== 0 &&
-              match.matches_completed_minimum < 2):
+          case match.matches_completed_minimum < 4 :
             match.goalsA = "x";
             match.goalsB = "x";
             match.completeData = false;

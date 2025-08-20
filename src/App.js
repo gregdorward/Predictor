@@ -2,6 +2,7 @@ import React, { Fragment, useEffect } from "react";
 import ReactDOM from "react-dom";
 import { Button } from "./components/Button";
 import OddsRadio from "./components/OddsRadio";
+import PredictionTypeRadio from "./components/PredictionTypeRadio";
 import { Fixture } from "./components/Fixture";
 import mockedFixtures from "./data/mockedFixtures.json";
 import ThemeToggle from "./components/DarkModeToggle";
@@ -379,7 +380,7 @@ export async function getLeagueList() {
     "Select a day you would like to retrieve fixtures for from the options above\n A list of games will be returned once the data has loaded\n Once all fixtures have loaded, click on “Get Predictions” to see our forecasted outcomes for every game\n If a game has completed, the predictions is displayed on the right and the actual result on the left\n Each individual fixture is tappable/clickable. By doing so, you can access a range of detailed stats, from comparative charts, granular performance measures to previous meetings.\n All games are subject to the same automated prediction algorithm with the outcome being a score prediction. Factors that determine the tip include the following, amongst others:\n - Goal differentials\n - Expected goal differentials \n - Attack/Defence performance\n - Form trends over time\n - Home/Away records\n - WDL records\n - Points per game \n - A range of other comparative factors\n  –\n";
 
   const text2 =
-    "A range of tools are available should you wish to use them\n Build a multi - Use the '+' or '-' buttons to add or remove a game deemed to be one of our highest confidence tips from the day\n Exotic of the day: A pre-built exotic multi comprising of our highest confidence tips\n BTTS games: Games where both teams to score is deemed a likely outcome\n Over 2.5 goals tips: Games where over 2.5 goals are most likely to be scored\n SSH tips: Comprises only games where the expected goal differentials between each team are at their greatest. We believe this shows a true disparity in the form of the two opposing teams\n Tap the 'How to use' option to hide this text";
+    "A range of tools are available should you wish to use them\n Build a multi - Use the '+' or '-' buttons to add or remove a game deemed to be one of our highest confidence tips from the day\n Exotic of the day: A pre-built exotic multi comprising of our highest confidence tips\n BTTS games: Games where both teams to score is deemed a likely outcome\n Over 2.5 goals tips: Games where over 2.5 goals are most likely to be scored\n SSH Tips: Comprises only games where the expected goal differentials between each team are at their greatest. We believe this shows a true disparity in the form of the two opposing teams\n Tap the 'How to use' option to hide this text";
 
   let textJoined = text.concat(text2);
 
@@ -523,6 +524,14 @@ export async function getLeagueList() {
     document.getElementById("Checkbox")
   );
   ReactDOM.render(
+    <><h6 className="PredictionTypeText">Prediction algorithm type</h6>
+      <div className="PredictionRadios">
+        <PredictionTypeRadio value="SSH Tips"></PredictionTypeRadio>
+        <PredictionTypeRadio value="AI Tips"></PredictionTypeRadio>
+      </div></>,
+    document.getElementById("CheckboxTwo")
+  );
+  ReactDOM.render(
     <Fragment>
       <Collapsable
         // className={"HowToUse"}
@@ -619,6 +628,7 @@ function AppContent() {
       <div id="Email" className="Email"></div>
       <div id="Day" />
       <div id="Checkbox" />
+      <div id="CheckboxTwo" className="CheckboxTwo" />
       <div id="ExplainerText" />
       <div id="Loading" className="Loading"></div>
       <div id="Buttons" className="Buttons">
@@ -723,7 +733,7 @@ function AppContent() {
           Games shown below for illustrative purposes only
         </h6>
         <div id="Checkbox" />
-
+        <div id="CheckboxTwo" className="CheckboxTwo" />
         {/* <div className="ExplainerContainer">
           <span className="oddsHomeExplainer">Home odds</span>
           <span className="emptyHomeTeam"></span>
