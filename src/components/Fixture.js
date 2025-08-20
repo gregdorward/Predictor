@@ -286,9 +286,9 @@ function SingleFixture({
   return (
     <div key={fixture.game}>
 <LeagueName fixture={fixture} mock={mock} showShortlist={showShortlist} />
-<div className={`individualFixtureContainer${fixture.omit}`}>
+<div className={`individualFixtureContainerfalse`}>
         <li
-          className={`individualFixture${fixture.omit}`}
+          className={`individualFixturefalse`}
           key={fixture.id}
           data-cy={fixture.id}
           // onClick={handleGameStatsClick}

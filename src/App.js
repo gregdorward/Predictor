@@ -77,7 +77,7 @@ const leagueOrder = [
   // 14933, // Slovakia 25 12944
   13952, //Irish Prem 25
   15066, //Spanish secunda 25 12467
-  // 12621, //Italy serie B 24 12621
+  15632, //Italy serie B 24 12621
   14931, //Bundesliga 2 25 12528
   14954, //French League 2 25 12338
   14987, //Dutch League 2 25
@@ -91,7 +91,7 @@ const leagueOrder = [
   14236, //Canada 25
   14231, //Brazil prem 25
   14305, // Brazil Serie B 25
-  15310, //Argentina prem 23
+  15746, //Argentina prem 23 15310
   // 14086, // Columbia 25
   // 14116, // Chile 25
   // 14626, // Uraguay 25

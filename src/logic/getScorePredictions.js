@@ -3635,6 +3635,10 @@ const footyStatsToSofaScore = [
       id: 182,
       season: 77357, // French Ligue 2
     },
+    15632: {
+      id: 53,
+      season: 79502, // Italian Serie B 25/26
+    },
     14987: {
       id: 131,
       season: 14987, // Dutch Eerste Divisie 25
@@ -3715,7 +3719,7 @@ const footyStatsToSofaScore = [
       id: 278,
       season: 71306, // Uruguayan Primera Division 25
     },
-    15310: {
+    15746: {
       id: 155,
       season: 70268, // Argentina Primera Division 25
     },

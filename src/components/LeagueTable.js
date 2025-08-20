@@ -136,7 +136,7 @@ export const sofaScoreIds = [
   { 12327: 679 }, //Europa
   { 14904: 17015 }, //Europa Conference
   { 15066: 54 }, //Spanish secunda 22/23
-  { 12621: 53 }, //Italy serie B 22/23
+  { 15632: 53 }, //Italy serie B 22/23
   { 14931: 44 }, //Bundesliga 2 22/23
   { 14954: 182 }, //French League 2 22/23
   { 14987: 131 }, //Dutch League 2 25
@@ -145,7 +145,7 @@ export const sofaScoreIds = [
   { 15209: 209 }, //Scottish league 2 22/23
   { 14236: 13470 }, //Canada 25
   { 14231: 325 }, //Brazil prem 24
-  { 15310: 155 }, //Argentina prem 23
+  { 15746: 155 }, //Argentina prem 23
   { 15234: 11621 }, //Mexico prem 25
   { 15657: 173 }, //National league
   { 12933: 176 }, //National league North and South 22/23

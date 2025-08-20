@@ -44,7 +44,7 @@ const sofaScoreIds = [
   { 15002: 679 }, //Europa
   { 14904: 17015 }, //Europa Conference
   { 15066: 54 }, //Spanish secunda 22/23
-  { 12621: 53 }, //Italy serie B 22/23
+  { 15632: 53 }, //Italy serie B 22/23
   { 14931: 44 }, //Bundesliga 2 22/23
   { 14954: 182 }, //French League 2 22/23
   { 14987: 131 }, //Dutch League 2 25
