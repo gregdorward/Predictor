@@ -822,7 +822,7 @@ function AppContent() {
         </TelegramShareButton>
       </div>
 
-      <Collapsable buttonText={"Terms and Conditions + Contact"} element={<StripePolicies />} />
+      <Collapsable buttonText={"Terms and Conditions"} element={<StripePolicies />} />
       <Collapsable buttonText={"Privacy Policy"} element={<PrivacyPolicy />} />
     </div>
   );

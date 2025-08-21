@@ -55,7 +55,6 @@ const MemoizedSofaLineupsWidget = memo(SofaLineupsWidget);
 
 function GameStats({ game, displayBool, stats }) {
 
-  console.log(game);
   function styling(testBool) {
     let bool = testBool;
     if (bool === true && clicked === true) {
