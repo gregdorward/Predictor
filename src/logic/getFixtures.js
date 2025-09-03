@@ -1549,7 +1549,7 @@ export async function generateFixtures(
               className={"GeneratePredictions"}
             />
             <div className="Version">Prediction engine v1.5.1 (08/04/25)</div>
-            <div>Due to a lack of season data, games taking place in game week 4 and before will use AI tips as a default, regardless of the radio setting, above</div>
+            <div>Due to a lack of season data, only games where both teams have played 4 or more will be predicted</div>
             <Collapsable
               buttonText={"Filters"}
               element={
