@@ -1,10 +1,13 @@
-import React from 'react';
-import myImage from './images/NewLogo.png';
+import logoPng from './images/NewLogo.png';
+import logoWebp from './images/NewLogo.webp';
 
 const Logo = () => {
   return (
     <h1 className="logo-container">
-      <img src={myImage} alt="Soccer Stats Hub logo" className='responsive-logo'/>
+      <picture>
+        <source srcSet={logoWebp} type="image/webp" />
+        <img src={logoPng} alt="Soccer Stats Hub logo" className="responsive-logo" fetchpriority="high" />
+      </picture>
     </h1>
   );
 };
