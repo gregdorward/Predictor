@@ -3358,7 +3358,7 @@ function GameStats({ game, displayBool, stats }) {
             </div>
             {stats && ranksHome && ranksAway && stats?.topTeams && (
               <TeamRankingsFlexView
-                title={`Rankings in ${game.leagueDesc} out of ${stats.topTeams.accurateCrosses.length} teams`}
+                title={`Rankings in ${game.leagueDesc} out of ${stats.topTeams.accurateCrosses?.length} teams`}
                 ranksHome={ranksHome}
                 ranksAway={ranksAway}
                 teamALabel={game.homeTeam}

@@ -471,10 +471,10 @@ export function RenderAllFixtures(props) {
     matches = props.matches;
     newLength = matches.length;
   } else {
-    if (originalLength > 40) {
-      matches = props.matches.slice(0, 40);
+    if (originalLength > 20) {
+      matches = props.matches.slice(0, 20);
       capped = true;
-      newLength = 40;
+      newLength = 20;
     } else {
       const slicePercent = 0.5; // 50%
       const sliceCount = Math.ceil(props.matches.length * slicePercent);

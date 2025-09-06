@@ -3560,6 +3560,14 @@ const footyStatsToSofaScore = [
       id: 173,
       season: 78229, // Conference 25/26
     },
+    15845: {
+      id: 176,
+      season: 78282, //National league north 25/26
+    },
+    15844: {
+      id: 174,
+      season: 78227, //National league south 25/26
+    },
     //Bundesliga
     14968: {
       id: 35,

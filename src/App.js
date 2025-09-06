@@ -53,6 +53,8 @@ const leagueOrder = [
   14934, //league 1 25 12446
   14935, //league 2 25 12422
   15657, //National league 25 12622
+  15845, //National league north 25
+  15844, //National league south 25
   14956, //La Liga 25 12316
   15000, //Scottish Prem 25 12455
   14968, //Bundesliga 25 12529

@@ -148,8 +148,8 @@ export const sofaScoreIds = [
   { 15746: 155 }, //Argentina prem 23
   { 15234: 11621 }, //Mexico prem 25
   { 15657: 173 }, //National league
-  { 12933: 176 }, //National league North and South 22/23
-  { 14069: 410 }, //S Korea 25,
+  { 15845: 176 }, //National league north 25
+  { 15844: 174 }, //National league south 25  { 14069: 410 }, //S Korea 25,
   { 13960: 196 }, //Japan 25
   { 12772: 955 }, //Saudi 24/25
   { 13964: 11 }, // WC Qual Europe,

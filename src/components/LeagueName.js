@@ -55,13 +55,14 @@ const sofaScoreIds = [
   { 13967: 13363 }, // USL
   { 14236: 13470 }, //Canada 25
   { 14231: 325 }, //Brazil prem 24
-  { 15310: 155 }, //Argentina prem 23
+  { 15746: 155 }, //Argentina prem 23
   { 14086: 11539}, //Colombia 25
     { 14626: 278}, //Uraguay 25
 
   { 15234: 11621 }, //Mexico prem 23/24
   { 15657: 173 }, //National league
-  { 12933: 176 }, //National league North and South 22/23
+  { 15845: 176 }, //National league north 25
+  { 15844: 174 }, //National league south 25
   { 14069: 410 }, //S Korea 25,
   { 13960: 196 }, //Japan 25
   { 12772: 955 }, //Saudi 24/25
