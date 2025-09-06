@@ -4287,6 +4287,7 @@ export async function getScorePrediction(day, mocked) {
   ReactDOM.render(
     <Collapsable
       buttonText={"Multis"}
+      className={"MultisCollapsable"}
       // display={fixtureList.length > 0 ? "" : "none"}
       element={
         <Fragment>

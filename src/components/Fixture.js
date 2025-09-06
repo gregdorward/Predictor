@@ -529,16 +529,14 @@ const List = ({ fixtures, mock, stats }) => {
 };
 
 function ShortlistButton({ toggleShortlist }) {
-  return <button onClick={toggleShortlist}>Toggle Shortlist &#9733; </button>;
+  return <button onClick={toggleShortlist} className="ShortlistButton">Toggle Shortlist &#9733; </button>;
 }
 
 function SubmitTipsButton({ submit }) {
   return (
     <button
+      className="SubmitTipsButton"
       onClick={submit}
-      style={{
-        border: "1px solid #fe8c00",
-      }}
     >
       Submit My Tips
     </button>
@@ -562,7 +560,7 @@ export function Fixture(props) {
           <div className="LockText">
             {props.originalLength} games have been capped at {props.newLength} for free users
             with full stats available for those returned - sign up for access to
-            40+ leagues and cups
+            50 leagues and cups
           </div>
         </>
       )}{" "}

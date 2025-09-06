@@ -541,12 +541,7 @@ export async function generateFixtures(
       document.getElementById("GeneratePredictions")
     );
     ReactDOM.render(<div></div>, document.getElementById("MultiPlaceholder"));
-    // ReactDOM.render(<div></div>, document.getElementById("bestPredictions"));
-    // ReactDOM.render(<div></div>, document.getElementById("exoticOfTheDay"));
-    // ReactDOM.render(<div></div>, document.getElementById("insights"));
-    // ReactDOM.render(<div></div>, document.getElementById("longShots"));
-    // ReactDOM.render(<div></div>, document.getElementById("BTTS"));
-    // ReactDOM.render(<div></div>, document.getElementById("draws"));
+  
 
     const url = `${process.env.REACT_APP_EXPRESS_SERVER}matches/${footyStatsFormattedDate}`;
     const formUrl = `${process.env.REACT_APP_EXPRESS_SERVER}form/${date}`;
@@ -1544,7 +1539,7 @@ export async function generateFixtures(
         ReactDOM.render(
           <Fragment>
             <Button
-              text={"Get Predictions & League stats"}
+              text={"Get Predictions & Stats"}
               onClickEvent={() => getScorePrediction(day)}
               className={"GeneratePredictions"}
             />
@@ -1552,6 +1547,7 @@ export async function generateFixtures(
             <div>Due to a lack of season data, only games where both teams have played 4 or more will be predicted</div>
             <Collapsable
               buttonText={"Filters"}
+              className={"Filters2"}
               element={
                 <div className="FilterContainer">
                   <h6>

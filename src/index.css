@@ -467,7 +467,7 @@ h2 {
 h3 {
   font-size: 1.25em;
   color: var(--text-color);
-  padding: 1em;
+  padding: 0.5em;
   margin: 0%
 }
 
@@ -515,7 +515,7 @@ h5 {
 h6 {
   font-size: 1.2em;
   color: var(--text-color);
-  padding: 1em;
+  /* padding: 1em; */
   padding-top: 2em;
   line-height: 2em;
   max-width: 600px;
@@ -555,6 +555,8 @@ button {
   /* padding-top: 8px;
   padding-bottom: 8px; */
   margin: 1em;
+  margin-top: 0.25em;
+  margin-bottom: 0.5em;
   border: 0.2em solid white;
   border-radius: 10px;
   box-sizing: border-box;
@@ -580,6 +582,7 @@ button:active {
 }
 
 button.GeneratePredictions {
+  margin-top: 0.5em;
   padding-top: 1em;
   padding-bottom: 1em;
   background-color: #fe8c00;
@@ -602,6 +605,36 @@ button.GeneratePredictions:active {
   box-shadow: 0 0px 0px 0 rgba(0, 0, 0, 0.2), 0 1px 2px 0 #030052 inset;
 }
 
+/* .Filters2 button {
+  background-color: var(--background-color);
+  color: var(--text-color);
+  border: 1px solid var(--text-color);
+}
+
+.ROI button {
+  background-color: var(--background-color);
+  color: var(--text-color);
+  border: 1px solid var(--text-color);
+} */
+
+/* .MultisCollapsable button {
+  background-color: var(--primary-color);
+  color: var(--text-color);
+  border: 1px solid var(--text-color);
+}  */
+
+.ShortlistButton {
+  background-color: var(--background-color);
+  color: var(--text-color);
+  border: 1px solid var(--text-color);
+}
+
+.SubmitTipsButton {
+  background-color: var(--background-color);
+  color: var(--text-color);
+  border: 1px solid var(--text-color);
+}
+
 .disclaimerButton {
   background-color: #ffffff;
   color: var(--button-text-color);
@@ -615,12 +648,11 @@ button.GeneratePredictions:active {
 }
 
 .FixtureButtons {
-  display: flex;
+  display: inline-flex;
   flex-direction: row;
   flex-wrap: wrap;
   flex-basis: 100%;
   justify-content: center;
-  margin-bottom: 1em;
 }
 
 .FixtureButtons button {
@@ -628,12 +660,33 @@ button.GeneratePredictions:active {
   color: var(--button-text-color);
   margin: 1em;
   cursor: pointer;
-  /* box-shadow: 0 0px 0px 0 rgba(0, 0, 0, 0.2), 0 1px 2px 0 #030052; */
+  /* width: 8em; */
+  box-shadow: 0 0px 0px 0 rgba(0, 0, 0, 0.2), 0 1px 2px 0 var(--text-color);
+  flex: 1;
+  flex-basis: 100%;
+}
+
+.FixturesButtonToday {
+  background-color: var(--text-color);
+  color: var(--button-text-color);
+  margin: 0.5em;
+  cursor: pointer;
+  width: 10em;
+  box-shadow: 0 0px 0px 0 rgba(0, 0, 0, 0.2), 0 1px 2px 0 var(--text-color);
+}
+
+
+.FixturesButtonAmend {
+  background-color: var(--text-color);
+  color: var(--button-text-color);
+  cursor: pointer;
+  width: 5em;
+  box-shadow: 0 0px 0px 0 rgba(0, 0, 0, 0.2), 0 1px 2px 0 var(--text-color);
 
 }
 
 .FixtureButtons button:active {
-  box-shadow: 0 0px 0px 0 rgba(0, 0, 0, 0.2), 0 1px 2px 0 #030052 inset;
+  box-shadow: 0 0px 0px 0 rgba(0, 0, 0, 0.2), 0 1px 2px 0 var(--text-color) inset;
 
 }
 
@@ -664,8 +717,8 @@ button.GeneratePredictions:active {
 
 } */
 
-.WelcomeBack{
-  padding-top: 1em;
+.WelcomeBack {
+  font-size: 0.9em;
 }
 
 p {
@@ -683,6 +736,13 @@ p {
   /* font-size: 0.9em; */
 }
 
+.Options button {
+  background-color: var(--background-color);
+  color: var(--text-color);
+  border: none;
+  width: 8em;
+}
+
 .OddsRadios {
   display: flex;
   height: 30px;
@@ -697,7 +757,7 @@ p {
   border: var(--primary-color) solid 1px;
 }
 
-h6.PredictionTypeText{
+h6.PredictionTypeText {
   padding-top: 0em;
 }
 
@@ -708,13 +768,14 @@ h6.PredictionTypeText{
   justify-content: center;
   align-items: center;
 }
+
 /* .container {
   padding: 0px;
 } */
 
 .LoadingText {
-  padding-top: 0.2em;
-  padding-bottom: 0.2em;
+  padding-top: 2em;
+  padding-bottom: 0.5em;
   font-size: 1em;
   color: var(--text-color);
 }
@@ -799,7 +860,7 @@ span.MembershipInfo {
 }
 
 .League {
-  padding: 0.5em;
+  padding: 0.25em;
 }
 
 .DataText {
@@ -4127,7 +4188,7 @@ button.SecondaryButtons {
   display: flex;
   justify-content: space-between;
   padding: 1em 0;
-  border-bottom: 1px solid rgba(255,255,255,0.1);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
   font-size: 1em;
 }
 
@@ -4263,8 +4324,12 @@ button.AIInsights button:active {
   line-height: 1.5em;
 }
 
-.WelcomeText{
-  padding-top: 1em;
+.WelcomeText {
+  padding-top: 0em;
+}
+
+.WelcomeText p {
+  margin: 0.5em;
 }
 
 .rankings-container {

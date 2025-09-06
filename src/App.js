@@ -1,4 +1,4 @@
-import React, { Fragment, useEffect } from "react";
+import React, { Fragment, useEffect, useState } from "react";
 import ReactDOM from "react-dom";
 import { Button } from "./components/Button";
 import OddsRadio from "./components/OddsRadio";
@@ -230,11 +230,42 @@ let tomorrowsDateUnformatted;
 let yesterdaysDateUnformatted;
 let saturdayDateUnformatted;
 
+
+// let matches = [];
+// let fixtureArray = [];
+// let dynamicDate = unformattedDate;
+
+// // Fire all fetches at the same time
+// const [matchesRes, formRes, leagueRes] = await Promise.all([
+//   fetch(url),
+//   fetch(formUrl),
+//   fetch(leagueUrl),
+// ]);
+
+// // Parse JSON (in parallel too)
+// const [matchesData, formData, leagueData] = await Promise.all([
+//   matchesRes.json(),
+//   formRes.json(),
+//   leagueRes.json(),
+// ]);
+
 async function calculateDate(dateString) {
   const day = dateString.getDate();
   const month = dateString.getMonth() + 1;
   const year = dateString.getFullYear();
   return [`${month}${day}${year}`, `${year}-${month}-${day}`];
+}
+
+async function convertTimestampForSofaScore(timestamp) {
+  let newDate = new Date(timestamp);
+
+  let year = newDate.getFullYear();
+  let month = String(newDate.getMonth() + 1).padStart(2, "0"); // Adding 1 to month because it is zero-based
+  let day = String(newDate.getDate()).padStart(2, "0");
+
+  let converted = `${year}-${month}-${day}`;
+
+  return converted;
 }
 
 (async function fetchLeagueData() {
@@ -356,18 +387,6 @@ export async function getLeagueList() {
     calculateDate(saturdayDate),
   ]);
 
-  async function convertTimestampForSofaScore(timestamp) {
-    let newDate = new Date(timestamp);
-
-    let year = newDate.getFullYear();
-    let month = String(newDate.getMonth() + 1).padStart(2, "0"); // Adding 1 to month because it is zero-based
-    let day = String(newDate.getDate()).padStart(2, "0");
-
-    let converted = `${year}-${month}-${day}`;
-
-    return converted;
-  }
-
   const [
     todaySS,
     lastSaturdaySS,
@@ -377,7 +396,7 @@ export async function getLeagueList() {
   ]);
 
   const text =
-    "Select a day you would like to retrieve fixtures for from the options above\n A list of games will be returned once the data has loaded\n Once all fixtures have loaded, click on “Get Predictions” to see our forecasted outcomes for every game\n If a game has completed, the predictions is displayed on the right and the actual result on the left\n Each individual fixture is tappable/clickable. By doing so, you can access a range of detailed stats, from comparative charts, granular performance measures to previous meetings.\n All games are subject to the same automated prediction algorithm with the outcome being a score prediction. Factors that determine the tip include the following, amongst others:\n - Goal differentials\n - Expected goal differentials \n - Attack/Defence performance\n - Form trends over time\n - Home/Away records\n - WDL records\n - Points per game \n - A range of other comparative factors\n  –\n";
+    "Select a day you would like to retrieve fixtures for from the options above\n A list of games will be returned once the data has loaded\n Once all fixtures have loaded, click on “Get Predictions and Stats” to see our forecasted outcomes for every game\n If a game has completed, the predictions is displayed on the right and the actual result on the left\n Each individual fixture is tappable/clickable. By doing so, you can access a range of detailed stats, from comparative charts, granular performance measures to previous meetings.\n All games are subject to the same automated prediction algorithm with the outcome being a score prediction. Factors that determine the tip include the following, amongst others:\n - Goal differentials\n - Expected goal differentials \n - Attack/Defence performance\n - Form trends over time\n - Home/Away records\n - WDL records\n - Points per game \n - A range of other comparative factors\n  –\n";
 
   const text2 =
     "A range of tools are available should you wish to use them\n Build a multi - Use the '+' or '-' buttons to add or remove a game deemed to be one of our highest confidence tips from the day\n Exotic of the day: A pre-built exotic multi comprising of our highest confidence tips\n BTTS games: Games where both teams to score is deemed a likely outcome\n Over 2.5 goals tips: Games where over 2.5 goals are most likely to be scored\n SSH Tips: Comprises only games where the expected goal differentials between each team are at their greatest. We believe this shows a true disparity in the form of the two opposing teams\n Tap the 'How to use' option to hide this text";
@@ -392,34 +411,14 @@ export async function getLeagueList() {
     ReactDOM.render(
       <div className="FixtureButtons">
         <h6>{loginStatus}</h6>
-        <div className="historicResults">
-          <Button
-            text={"Last Saturday"}
-            className="HistoricFixturesButton"
-            onClickEvent={async () =>
-              fixtureList.push(
-                await generateFixtures(
-                  "lastSaturday",
-                  lastSaturday,
-                  selectedOdds,
-                  lastSaturdayFootyStats,
-                  false,
-                  today,
-                  lastSaturdaySS,
-                  saturdayDateUnformatted
-                )
-              )
-            }
-          />
-        </div>
         <Button
           text={`<`}
-          className="FixturesButton"
+          className="FixturesButtonAmend"
           onClickEvent={async () => await decrementDate(1, date)}
         />
         <Button
           text={dateFootyStats !== undefined ? dateFootyStats : date}
-          className="FixturesButton"
+          className="FixturesButtonToday"
           onClickEvent={async () =>
             fixtureList.push(
               await generateFixtures(
@@ -436,26 +435,8 @@ export async function getLeagueList() {
           }
         />
         <Button
-          text={`Today`}
-          className="FixturesButtonToday"
-          onClickEvent={async () =>
-            fixtureList.push(
-              await generateFixtures(
-                "todaysFixtures",
-                today,
-                selectedOdds,
-                todayFootyStats,
-                true,
-                today,
-                todaySS,
-                todaysDateUnformatted
-              )
-            )
-          }
-        />
-        <Button
           text={`>`}
-          className="FixturesButton"
+          className="FixturesButtonAmend"
           onClickEvent={async () => await incrementDateV2(1, date)}
         />
       </div>,
@@ -465,29 +446,9 @@ export async function getLeagueList() {
 
   ReactDOM.render(
     <div className="FixtureButtons">
-      <div className="historicResults">
-        <Button
-          text={"Last Saturday"}
-          className="HistoricFixturesButton"
-          onClickEvent={async () =>
-            fixtureList.push(
-              await generateFixtures(
-                "lastSaturday",
-                lastSaturday,
-                selectedOdds,
-                lastSaturdayFootyStats,
-                false,
-                today,
-                lastSaturdaySS,
-                saturdayDateUnformatted
-              )
-            )
-          }
-        />
-      </div>
       <Button
         text={`<`}
-        className="FixturesButton"
+        className="FixturesButtonAmend"
         onClickEvent={async () => await decrementDate(1, date)}
       />
       <Button
@@ -510,7 +471,7 @@ export async function getLeagueList() {
       />
       <Button
         text={`>`}
-        className="FixturesButton"
+        className="FixturesButtonAmend"
         onClickEvent={async () => await incrementDateV2(1, date)}
       />
     </div>,
@@ -544,7 +505,7 @@ export async function getLeagueList() {
 
   if (loggedIn) {
     ReactDOM.render(
-      <h6 className="WelcomeBack">Welcome back {loggedIn.email}</h6>,
+      <><div className="WelcomeBack">Welcome back {loggedIn.email}</div></>,
       document.getElementById("Email")
     );
   } else {
@@ -552,7 +513,8 @@ export async function getLeagueList() {
       <>
         <h3 className="MembersGetMore">Members get more</h3>
         <div><p className="MembersGetMore">Unlock all fixtures by signing up and becoming a premium member from as little as £1/week, cancel anytime</p></div>
-        <Login /></>
+        <Login />
+      </>
       , document.getElementById("Email"));
   }
 }
@@ -600,6 +562,42 @@ let welcomeTextOne = welcomeTextUnsplitOne.split("\n").map((i) => {
 function AppContent() {
   const { user, isPaidUser } = useAuth();
 
+  const [data, setData] = useState({
+    loading: true,
+  });
+
+  useEffect(() => {
+    async function fetchData() {
+      let now = new Date();
+      let dateNow = await calculateDate(now);
+      const [
+        todaySS,
+      ] = await Promise.all([
+        convertTimestampForSofaScore(new Date())]);
+
+
+      fixtureList.push(
+        await generateFixtures(
+          "todaysFixtures",
+          dateNow[0],
+          selectedOdds,
+          dateNow[1],
+          true,
+          dateNow[0],
+          todaySS,
+          dateNow[0]
+        ))
+
+
+      // Update the component state with the fetched data
+      setData({
+        loading: false,
+      });
+    }
+
+    fetchData();
+  }, []); // The empty dependency array ensures this runs only o
+
   getLeagueList();
 
   return (
@@ -627,12 +625,16 @@ function AppContent() {
       </div>
       <div id="Email" className="Email"></div>
       <div id="Day" />
-      <div id="Checkbox" />
-      <div id="CheckboxTwo" className="CheckboxTwo" />
+
+
       <div id="ExplainerText" />
       <div id="Loading" className="Loading"></div>
       <div id="Buttons" className="Buttons">
       </div>
+      <Collapsable buttonText={"Options \u{2630}"} className={"Options"} element={
+        <><div id="Checkbox" /><div id="CheckboxTwo" className="CheckboxTwo" /></>
+      }>
+      </Collapsable>
 
       {user ? (
         isPaidUser ? (
@@ -675,7 +677,7 @@ function AppContent() {
       <div id="GeneratePredictions" className="GeneratePredictions" />
       <div id="MultiPlaceholder" className="MultiPlaceholder" />
       <div id="shortlistRender" />
-      <div id="successMeasure2" />
+      <Collapsable buttonText={"ROI"} className={"ROI"} element={<div id="successMeasure2" />} />
       <div id="highLowLeagues" className="HighLowLeagues" />
       <div id="risk" />
       <div id="successMeasure" />
@@ -732,8 +734,8 @@ function AppContent() {
         <h6 className="GetMatchStatText">
           Games shown below for illustrative purposes only
         </h6>
-        <div id="Checkbox" />
-        <div id="CheckboxTwo" className="CheckboxTwo" />
+        {/* <div id="Checkbox" /> */}
+        {/* <div id="CheckboxTwo" className="CheckboxTwo" /> */}
         {/* <div className="ExplainerContainer">
           <span className="oddsHomeExplainer">Home odds</span>
           <span className="emptyHomeTeam"></span>
