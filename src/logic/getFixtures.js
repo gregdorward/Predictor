@@ -1544,7 +1544,7 @@ export async function generateFixtures(
               className={"GeneratePredictions"}
             />
             <div className="Version">Prediction engine v1.5.1 (08/04/25)</div>
-            <div>Due to a lack of season data, only games where both teams have played 4 or more will be predicted</div>
+            <div>If predictions are missing on games with little data, switch to AI tips in the options, above</div>
             <Collapsable
               buttonText={"Filters"}
               className={"Filters2"}
