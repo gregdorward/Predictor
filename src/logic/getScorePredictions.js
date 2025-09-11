@@ -2957,7 +2957,7 @@ export async function calculateScore(match, index, divider, calculate, AIPredict
     }
 
 
-    // if (match.matches_completed_minimum < 4 && AIPredictionHome !== null && AIPredictionAway !== null) {
+    // if (match.matches_completed_minimum < 3 && AIPredictionHome !== null && AIPredictionAway !== null) {
     //   finalHomeGoals = AIPredictionHome;
     //   finalAwayGoals = AIPredictionAway;
     // } else if (match.matches_completed_minimum >= 4 && AIPredictionHome !== null && AIPredictionAway !== null) {
@@ -3142,7 +3142,7 @@ export async function calculateScore(match, index, divider, calculate, AIPredict
 
     console.log(`allDrawOutcomes: ${allDrawOutcomes}`);
 
-    if (match.matches_completed_minimum < 4 && selectedTipType !== "AI Tips" ) {
+    if (match.matches_completed_minimum < 3 && selectedTipType !== "AI Tips" ) {
       match.omit = true;
     } else if (selectedTipType === "AI Tips" && (AIPredictionHome === null || AIPredictionAway === null)) {
       match.omit = true;
@@ -3879,7 +3879,7 @@ export async function getScorePrediction(day, mocked) {
             match.completeData = false;
             await calculateScore(match, index, divider, false, predictedScoresData);
             break;
-          case match.matches_completed_minimum < 4 && selectedTipType !== "AI Tips":
+          case match.matches_completed_minimum < 3 && selectedTipType !== "AI Tips":
             match.goalsA = "x";
             match.goalsB = "x";
             match.completeData = false;
