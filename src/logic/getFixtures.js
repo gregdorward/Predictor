@@ -545,6 +545,7 @@ export async function generateFixtures(
 
     const url = `${process.env.REACT_APP_EXPRESS_SERVER}matches/${footyStatsFormattedDate}`;
     const formUrl = `${process.env.REACT_APP_EXPRESS_SERVER}form/${date}`;
+    console.log(unformattedDate);
     dynamicDate = unformattedDate;
 
     matches = [];

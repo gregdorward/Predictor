@@ -587,7 +587,7 @@ function AppContent() {
           true,
           dateNow[0],
           todaySS,
-          dateNow[0]
+          new Date()
         ))
 
 
