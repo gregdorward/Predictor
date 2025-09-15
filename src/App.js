@@ -514,7 +514,7 @@ export async function getLeagueList() {
     ReactDOM.render(
       <>
         <h3 className="MembersGetMore">Members get more</h3>
-        <div><p className="MembersGetMore">Unlock all fixtures by signing up and becoming a premium member from as little as £1/week, cancel anytime</p></div>
+        <div><p className="MembersGetMore">Browse as a free user or unlock all fixtures by signing up and becoming a premium member from as little as £1/week, cancel anytime</p></div>
         <Login />
       </>
       , document.getElementById("Email"));
