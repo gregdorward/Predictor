@@ -1324,14 +1324,19 @@ function GameStats({ game, displayBool, stats }) {
             const homeTeamStatsResponse = await fetch(
               `${process.env.REACT_APP_EXPRESS_SERVER}teamStats/${matchingGameInfo.homeId}/${game.sofaScoreId}/${derivedRoundId}`
             );
+            console.log(`${process.env.REACT_APP_EXPRESS_SERVER}teamStats/${matchingGameInfo.homeId}/${game.sofaScoreId}/${derivedRoundId}`)
             const homeTeam = await homeTeamStatsResponse.json();
             let homeStats = homeTeam.statistics;
 
             const awayTeamStatsResponse = await fetch(
               `${process.env.REACT_APP_EXPRESS_SERVER}teamStats/${matchingGameInfo.awayId}/${game.sofaScoreId}/${derivedRoundId}`
             );
+            console.log(`${process.env.REACT_APP_EXPRESS_SERVER}teamStats/${matchingGameInfo.awayId}/${game.sofaScoreId}/${derivedRoundId}`)
             const awayTeam = await awayTeamStatsResponse.json();
             let awayStats = awayTeam.statistics;
+
+            console.log("Home Stats:", homeStats);
+            console.log("Away Stats:", awayStats);
 
             setHomeTeamStats(homeStats);
             setAwayTeamStats(awayStats);

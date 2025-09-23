@@ -481,7 +481,7 @@ h4 {
   font-size: 1.2em;
   color: var(--text-color);
   padding-top: 2em;
-  padding: 1em;
+  padding: 0.75em;
   margin: 0%
 }
 
@@ -3126,47 +3126,9 @@ li.FormHeader {
 
 .BestPredictions li {
   font-size: 1.1em;
-  padding-top: 0.5em;
-}
-
-.BTTSGames lh {
-  /* font-size: 1em; */
-  font-size: 1.1em;
-}
-
-.BTTSGames {
-  border: var(--text-color) 1px dashed;
-  padding: 1em;
   margin: 0.5em;
-  background-color: var(--background-color);
-}
-
-.BTTSGames li {
-  /* font-size: 1em; */
-  padding-top: 1em;
-  font-size: 1.1em;
-}
-
-.fact {
-  padding: 5px;
-}
-
-ul {
-  padding: 0px;
-  list-style: none;
-}
-
-
-.BestPredictions li {
-  /* font-size: 0.8em; */
-  font-size: 1.1em;
-  padding-top: 1em;
-}
-
-.PredictionsOfTheDay li {
-  /* font-size: 0.8em; */
-  font-size: 1.1em;
-  padding-top: 1em;
+  padding: 0.25em;
+  background-color: var(--secondary-background-color);
 }
 
 .LongshotPredictions {
@@ -3177,9 +3139,24 @@ ul {
 }
 
 .LongshotPredictions li {
-  /* font-size: 0.8em; */
   font-size: 1.1em;
-  padding-top: 1em;
+  margin: 0.5em;
+  padding: 0.25em;
+  background-color: var(--secondary-background-color);
+}
+
+.BTTSGames {
+  border: var(--text-color) 1px dashed;
+  padding: 1em;
+  margin: 0.5em;
+  background-color: var(--background-color);
+}
+
+.BTTSGames li {
+  font-size: 1.1em;
+  margin: 0.5em;
+  padding: 0.25em;
+  background-color: var(--secondary-background-color);
 }
 
 .XGDiffTips {
@@ -3194,10 +3171,36 @@ ul {
 }
 
 .XGDiffTips li {
-  /* font-size: 0.8em; */
-  padding-top: 1em;
+  font-size: 1.1em;
+  margin: 0.5em;
+  padding: 0.25em;
+  background-color: var(--secondary-background-color);
+}
+
+.BTTSGames lh {
+  /* font-size: 1em; */
   font-size: 1.1em;
 }
+
+
+.fact {
+  padding: 5px;
+}
+
+ul {
+  padding: 0px;
+  list-style: none;
+}
+
+.PredictionsOfTheDay li {
+  /* font-size: 0.8em; */
+  font-size: 1.1em;
+  padding-top: 1em;
+}
+
+
+
+
 
 .LongshotPredictions lh {
   font-size: 1.2em;
@@ -4498,10 +4501,15 @@ button.AIInsights button:active {
   flex-direction: column;
   gap: 1rem;
   padding: 1rem;
-  background-color: var(--secondary-background-color);
   color: var(--text-color);
   border-radius: 0.5rem;
   justify-content: center
+}
+
+.HomeMissingPlayers li {
+  margin: 0.5em;
+  padding: 0.25em;
+  background-color: var(--secondary-background-color);
 }
 
 .AwayMissingPlayers {
@@ -4509,10 +4517,15 @@ button.AIInsights button:active {
   flex-direction: column;
   gap: 1rem;
   padding: 1rem;
-  background-color: var(--secondary-background-color);
   color: var(--text-color);
   border-radius: 0.5rem;
   justify-content: center
+}
+
+.AwayMissingPlayers li {
+  margin: 0.5em;
+  padding: 0.25em;
+  background-color: var(--secondary-background-color);
 }
 
 .MissingPlayersButton {
