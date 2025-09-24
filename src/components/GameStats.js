@@ -2753,7 +2753,7 @@ function GameStats({ game, displayBool, stats }) {
       let type;
       let statistics;
       let leagueStatistics = await fetch(
-        `${process.env.REACT_APP_EXPRESS_SERVER}leagueStats/${leagueTable[0].LeagueID}`
+        `${process.env.REACT_APP_EXPRESS_SERVER}leagueStats/${table.id}`
       );
       let totalGames;
       let roundType;
