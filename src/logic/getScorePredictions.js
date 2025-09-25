@@ -3904,8 +3904,8 @@ export async function getScorePrediction(day, mocked) {
   let divider = 10;
 
   // Call the function to fetch and store the league stats
-  // const leagueStatsPromise = fetchLeagueStats();
-  // const playerStatsPromise = fetchPlayerStats();
+  const leagueStatsPromise = fetchLeagueStats();
+  const playerStatsPromise = fetchPlayerStats();
   const predictedScores = await fetch(`${process.env.REACT_APP_EXPRESS_SERVER}predictedScores`);
   const predictedScoresData = await predictedScores.json();
 
@@ -4166,8 +4166,8 @@ export async function getScorePrediction(day, mocked) {
         XGDiffTips.push(XGPredictionObject);
       }
 
-      // leagueStatsArray = await leagueStatsPromise;
-      // playerStatsArray = await playerStatsPromise;
+      leagueStatsArray = await leagueStatsPromise;
+      playerStatsArray = await playerStatsPromise;
 
       if (
         match.pointsDifferential === true &&
