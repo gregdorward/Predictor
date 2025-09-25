@@ -646,44 +646,44 @@ export async function generateFixtures(
       };
       arrayOfGames = [];
 
-      try {
-        const sofaScore = await fetch(
-          `${process.env.REACT_APP_EXPRESS_SERVER}scheduledEvents/${dateSS}`
-        );
+      // try {
+      //   const sofaScore = await fetch(
+      //     `${process.env.REACT_APP_EXPRESS_SERVER}scheduledEvents/${dateSS}`
+      //   );
 
-        const games = await sofaScore.json();
+      //   const games = await sofaScore.json();
 
-        games.forEach((game) => {
-          const homeName = game.homeTeam || "";
-          const awayName = game.awayTeam || "";
+      //   games.forEach((game) => {
+      //     const homeName = game.homeTeam || "";
+      //     const awayName = game.awayTeam || "";
 
-          // if(homeName.contains("U17") || awayName.contains("U17")) {
-          // console.log(homeName, awayName);
-          // }
+      //     // if(homeName.contains("U17") || awayName.contains("U17")) {
+      //     // console.log(homeName, awayName);
+      //     // }
 
-          if (isYouthOrReserveTeam(homeName) || isYouthOrReserveTeam(awayName)) {
-            return;
-          }
+      //     if (isYouthOrReserveTeam(homeName) || isYouthOrReserveTeam(awayName)) {
+      //       return;
+      //     }
 
-          arrayOfGames.push({
-            homeTeam: game.homeTeam,
-            homeId: game.homeId !== undefined ? game.homeId : null,
-            awayTeam: game.awayTeam,
-            awayId: game.awayId !== undefined ? game.awayId : null,
-            id: game.id,
-            time: game.time,
-            homeGoals: game.homeScore !== undefined ? game.homeScore : "-",
-            awayGoals: game.awayScore !== undefined ? game.awayScore : "-",
-          });
-        });
-      } catch (error) {
-        console.error(
-          "An error occurred while fetching or processing data:",
-          error
-        );
-        // You might want to add more specific error handling here,
-        // such as setting a default value for arrayOfGames or logging the error to a server.
-      }
+      //     arrayOfGames.push({
+      //       homeTeam: game.homeTeam,
+      //       homeId: game.homeId !== undefined ? game.homeId : null,
+      //       awayTeam: game.awayTeam,
+      //       awayId: game.awayId !== undefined ? game.awayId : null,
+      //       id: game.id,
+      //       time: game.time,
+      //       homeGoals: game.homeScore !== undefined ? game.homeScore : "-",
+      //       awayGoals: game.awayScore !== undefined ? game.awayScore : "-",
+      //     });
+      //   });
+      // } catch (error) {
+      //   console.error(
+      //     "An error occurred while fetching or processing data:",
+      //     error
+      //   );
+      //   // You might want to add more specific error handling here,
+      //   // such as setting a default value for arrayOfGames or logging the error to a server.
+      // }
     } else {
       allLeagueResultsArrayOfObjects = [];
       console.log("Fetching leagues");
@@ -1548,7 +1548,7 @@ export async function generateFixtures(
               onClickEvent={() => getScorePrediction(day)}
               className={"GeneratePredictions"}
             />
-            <div className="Version">Prediction engine v1.5.1 (08/04/25)</div>
+            <div className="Version">Prediction engine v1.5.2 (25/09/25)</div>
             <div>If predictions are missing on games with little data, switch to AI tips in the options, above</div>
             <Collapsable
               buttonText={"Filters"}

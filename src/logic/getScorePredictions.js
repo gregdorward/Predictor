@@ -1728,6 +1728,11 @@ export async function generateGoals(homeForm, awayForm, match) {
   let adjustToAway = Math.round(awayForm.CleanSheetPercentage / 50) * -1;
   let finalScore = goalDifference + adjustToHome + adjustToAway;
 
+  console.log(adjustToHome, adjustToAway);
+
+  console.log('Pre Adjustment', homeGoals, awayGoals)
+  console.log('Final Score', finalScore)
+
   const homeAttackVsAwayDefenceComparison = await comparison(
     homeForm.attackingStrength,
     awayForm.defensiveStrengthScoreGeneration
@@ -1817,9 +1822,9 @@ export async function generateGoals(homeForm, awayForm, match) {
 
   homeGoals =
     homeGoals +
-    homeAttackVsAwayDefenceComparison * 3 +
+    homeAttackVsAwayDefenceComparison * 2 +
     XGRatingHomeComparison * 0 +
-    homeAttackVsAwayDefenceComparisonLast5 * 0 +
+    homeAttackVsAwayDefenceComparisonLast5 * 0.5 +
     0.1 +
     homeAttackVsAwayDefenceComparisonHomeOnly * 0 +
     // weighedPointsComparisonHome * 0.005 +
@@ -1827,23 +1832,23 @@ export async function generateGoals(homeForm, awayForm, match) {
 
   awayGoals =
     awayGoals +
-    awayAttackVsHomeDefenceComparison * 3 +
+    awayAttackVsHomeDefenceComparison * 2 +
     XGRatingAwayComparison * 0 +
     -Math.abs(0.1) +
-    awayAttackVsHomeDefenceComparisonLast5 * 0 +
+    awayAttackVsHomeDefenceComparisonLast5 * 0.5 +
     awayAttackVsHomeDefenceComparisonAwayOnly * 0 +
     // weighedPointsComparisonAway * 0.005 +
     oddsComparisonAway * 0;
 
   // Cumulative ROI for all 3157 match outcomes: +4.31%
 
-  if (finalScore > 0 && (await diff(homeGoals, awayGoals)) < 1.25) {
-    homeGoals = homeGoals + 0.5;
-    awayGoals = awayGoals + -Math.abs(0.5);
-  } else if (finalScore < 0 && (await diff(awayGoals, homeGoals)) < 1.25) {
-    homeGoals = homeGoals + -Math.abs(0.5);
-    awayGoals = awayGoals + 0.5;
-  }
+  // if (finalScore > 0 && (await diff(homeGoals, awayGoals)) < 1.25) {
+  //   homeGoals = homeGoals + 0.35;
+  //   awayGoals = awayGoals + -Math.abs(0.35);
+  // } else if (finalScore < 0 && (await diff(awayGoals, homeGoals)) < 1.25) {
+  //   homeGoals = homeGoals + -Math.abs(0.35);
+  //   awayGoals = awayGoals + 0.35;
+  // }
 
   //PLACEHOLDER
 
@@ -3831,9 +3836,7 @@ async function fetchLeagueStats() {
       allLeagueStats[`leagueStats${leagueId}`] = { error: error.message };
     }
   }
-  console.log("CALLED LEAGUE STATS");
 
-  console.log(allLeagueStats);
   return allLeagueStats;
 }
 
@@ -3877,8 +3880,6 @@ async function fetchPlayerStats() {
       allLeagueStats[`playerStats${leagueId}`] = { error: error.message };
     }
   }
-  console.log("CALLED PLAYER STATS");
-  console.log(allLeagueStats);
 
   return allLeagueStats;
 }
@@ -3903,8 +3904,8 @@ export async function getScorePrediction(day, mocked) {
   let divider = 10;
 
   // Call the function to fetch and store the league stats
-  const leagueStatsPromise = fetchLeagueStats();
-  const playerStatsPromise = fetchPlayerStats();
+  // const leagueStatsPromise = fetchLeagueStats();
+  // const playerStatsPromise = fetchPlayerStats();
   const predictedScores = await fetch(`${process.env.REACT_APP_EXPRESS_SERVER}predictedScores`);
   const predictedScoresData = await predictedScores.json();
 
@@ -3981,7 +3982,7 @@ export async function getScorePrediction(day, mocked) {
       }
 
       if (
-        match.unroundedGoalsA - match.unroundedGoalsB > 0.65 &&
+        match.unroundedGoalsA - match.unroundedGoalsB > 0.6 &&
         match.homeOdds !== 0 &&
         match.fractionHome !== "N/A" &&
         match.includeInMultis !== false &&
@@ -4030,7 +4031,7 @@ export async function getScorePrediction(day, mocked) {
           }
         }
       } else if (
-        match.unroundedGoalsB - match.unroundedGoalsA > 1.75 &&
+        match.unroundedGoalsB - match.unroundedGoalsA > 1.5 &&
         match.awayOdds !== 0 &&
         match.fractionAway !== "N/A" &&
         match.includeInMultis !== false &&
@@ -4165,8 +4166,8 @@ export async function getScorePrediction(day, mocked) {
         XGDiffTips.push(XGPredictionObject);
       }
 
-      leagueStatsArray = await leagueStatsPromise;
-      playerStatsArray = await playerStatsPromise;
+      // leagueStatsArray = await leagueStatsPromise;
+      // playerStatsArray = await playerStatsPromise;
 
       if (
         match.pointsDifferential === true &&

@@ -10,7 +10,6 @@ const formatLabel = (key) =>
 const PlayerRankingTable = ({ rankingStats }) => {
   const statKeys = Object.keys(rankingStats);
   const [selectedStat, setSelectedStat] = useState(statKeys[0]);
-  console.log(rankingStats);
 
   // <-- Added mapping to handle aliases that point to the same statistics property
   const fieldMap = {
