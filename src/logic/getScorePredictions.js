@@ -3833,10 +3833,57 @@ async function fetchLeagueStats() {
   }
   console.log("CALLED LEAGUE STATS");
 
+  console.log(allLeagueStats);
   return allLeagueStats;
 }
 
 export let leagueStatsArray;
+
+
+
+async function fetchPlayerStats() {
+  function getWeekOfYear(date) {
+    const target = new Date(date.valueOf());
+    const dayNumber = (date.getUTCDay() + 6) % 7;
+    target.setUTCDate(target.getUTCDate() - dayNumber + 3);
+    const firstThursday = new Date(Date.UTC(target.getUTCFullYear(), 0, 4));
+    const diff = target - firstThursday;
+    return 1 + Math.round(diff / (7 * 24 * 60 * 60 * 1000));
+  }
+
+  const today = new Date();
+  const week = getWeekOfYear(today);
+
+  const allLeagueStats = {};
+
+  // Use uniqueLeagueIDs array instead of iterating all keys in footyStatsToSofaScore
+  const leagueObject = footyStatsToSofaScore[0];
+
+  for (const leagueId of uniqueLeagueIDs) {
+    const mapping = leagueObject[leagueId];
+    if (!mapping) continue; // skip if not found
+
+    const { id: sofaScoreId, season: sofaScoreSeason } = mapping;
+
+    try {
+      const leagueTeamStatsResponse = await fetch(
+        `${process.env.REACT_APP_EXPRESS_SERVER}bestPlayers/${sofaScoreId}/${sofaScoreSeason}/${week}`
+      );
+      const teamStats = await leagueTeamStatsResponse.json();
+      allLeagueStats[`playerStats${leagueId}`] = teamStats;
+      console.log(`Fetched player stats for league ${leagueId}`);
+    } catch (error) {
+      console.error(`Error fetching player stats for league ${leagueId}:`, error);
+      allLeagueStats[`playerStats${leagueId}`] = { error: error.message };
+    }
+  }
+  console.log("CALLED PLAYER STATS");
+  console.log(allLeagueStats);
+
+  return allLeagueStats;
+}
+
+export let playerStatsArray;
 
 export async function getScorePrediction(day, mocked) {
   let mock = mocked;
@@ -3857,6 +3904,7 @@ export async function getScorePrediction(day, mocked) {
 
   // Call the function to fetch and store the league stats
   const leagueStatsPromise = fetchLeagueStats();
+  const playerStatsPromise = fetchPlayerStats();
   const predictedScores = await fetch(`${process.env.REACT_APP_EXPRESS_SERVER}predictedScores`);
   const predictedScoresData = await predictedScores.json();
 
@@ -4118,6 +4166,7 @@ export async function getScorePrediction(day, mocked) {
       }
 
       leagueStatsArray = await leagueStatsPromise;
+      playerStatsArray = await playerStatsPromise;
 
       if (
         match.pointsDifferential === true &&

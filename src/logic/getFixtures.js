@@ -13,7 +13,7 @@ import { getPointsFromLastX } from "../logic/getScorePredictions";
 import SlideDiff from "../components/SliderDiff";
 import Collapsable from "../components/CollapsableElement";
 import { userDetail } from "./authProvider";
-import { leagueStatsArray } from "../logic/getScorePredictions";
+import { leagueStatsArray, playerStatsArray } from "../logic/getScorePredictions";
 var oddslib = require("oddslib");
 
 var fixtureResponse;
@@ -316,6 +316,7 @@ export async function renderTable(index, results, id) {
           Results={mostRecentGames}
           Date={todaysDateString}
           RankingStats={leagueStatsArray[`leagueStats${id}`]}
+          PlayerRankingStats={playerStatsArray[`playerStats${id}`]}
         // mostRecentGameweek={mostRecentGameweek}
         />,
         document.getElementById(`leagueName${id}`)
@@ -349,6 +350,7 @@ export async function renderTable(index, results, id) {
             GamesPlayed={statistics.game_week}
             Results={mostRecentGames}
             RankingStats={leagueStatsArray[`leagueStats${id}`]}
+            PlayerRankingStats={playerStatsArray[`playerStats${id}`]}
           />
           <LeagueTable
             Teams={leagueTable2}
@@ -359,6 +361,8 @@ export async function renderTable(index, results, id) {
             GamesPlayed={statistics.game_week}
             Results={mostRecentGames}
             RankingStats={leagueStatsArray[`leagueStats${id}`]}
+            PlayerRankingStats={playerStatsArray[`playerStats${id}`]}
+
           />
         </>,
         document.getElementById(`leagueName${id}`)
@@ -486,7 +490,7 @@ export function RenderAllFixtures(props) {
 
   uniqueLeagueIDs = [...new Set(matches.map(match => match.leagueID))];
 
-console.log(uniqueLeagueIDs);
+  console.log(uniqueLeagueIDs);
   return (
     <Fixture
       fixtures={matches}
@@ -541,7 +545,7 @@ export async function generateFixtures(
       document.getElementById("GeneratePredictions")
     );
     ReactDOM.render(<div></div>, document.getElementById("MultiPlaceholder"));
-  
+
 
     const url = `${process.env.REACT_APP_EXPRESS_SERVER}matches/${footyStatsFormattedDate}`;
     const formUrl = `${process.env.REACT_APP_EXPRESS_SERVER}form/${date}`;

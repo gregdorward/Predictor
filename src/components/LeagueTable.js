@@ -10,6 +10,7 @@ import Paper from "@material-ui/core/Paper";
 import Collapsable from "../components/CollapsableElement";
 import TeamOfTheSeason from "../components/TeamOfTheSeason";
 import StatTable from "./StatTable";
+import PlayerRankingTable from "./PlayerStatTable";
 import { paid } from "../logic/getScorePredictions";
 
 export var toggleState = false;
@@ -490,6 +491,15 @@ export default function LeagueTable(props) {
               <StatTable
                 rankingStats={props.RankingStats.topTeams}
                 statKey="accurateCrosses"
+              />
+            </>
+          )}
+          {props.PlayerRankingStats?.topPlayers && (
+            <>
+              <h5>Player Rankings by Metric</h5>
+              <PlayerRankingTable
+                rankingStats={props.PlayerRankingStats.topPlayers}
+                statKey="accurateLongBalls" 
               />
             </>
           )}

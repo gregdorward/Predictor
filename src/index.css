@@ -4452,8 +4452,10 @@ button.AIInsights button:active {
 
 .LeagueStatsTable {
   line-height: 2.5em;
-  padding: 1em;
+  padding-top: 1em;
   padding-bottom: 2em;
+  padding-left: 0.25em;
+  padding-right: 0.25em;
   font-size: 2em;
   border: var(--text-color), 1px, solid;
   background-color: var(--background-color);

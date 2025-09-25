@@ -1352,6 +1352,7 @@ function GameStats({ game, displayBool, stats }) {
               `${process.env.REACT_APP_EXPRESS_SERVER}bestPlayers/${game.sofaScoreId}/${derivedRoundId}/${week}`
             );
             const playerStats = await leaguePlayerStatsResponse.json();
+            console.log("Player Stats:", playerStats);
 
             let playersHome = await extractRankedPlayersByTeam(
               playerStats.topPlayers,
@@ -1365,27 +1366,27 @@ function GameStats({ game, displayBool, stats }) {
             const trimmedPlayersAway = playersAway.slice(0, 5); // Limit to top 3 players
 
 
-            const homeKeyPlayerAttributes = await fetch(`${process.env.REACT_APP_EXPRESS_SERVER}playerAttributes/${playersHome[0].playerId}`);
-            const awayKeyPlayerAttributes = await fetch(`${process.env.REACT_APP_EXPRESS_SERVER}playerAttributes/${playersAway[0].playerId}`);
+            // const homeKeyPlayerAttributes = await fetch(`${process.env.REACT_APP_EXPRESS_SERVER}playerAttributes/${playersHome[0].playerId}`);
+            // const awayKeyPlayerAttributes = await fetch(`${process.env.REACT_APP_EXPRESS_SERVER}playerAttributes/${playersAway[0].playerId}`);
 
-            const homeAttributes = await homeKeyPlayerAttributes.json();
-            const awayAttributes = await awayKeyPlayerAttributes.json();
+            // const homeAttributes = await homeKeyPlayerAttributes.json();
+            // const awayAttributes = await awayKeyPlayerAttributes.json();
 
             setHomePlayerData(trimmedPlayersHome);
             setAwayPlayerData(trimmedPlayersAway);
             // console.log("Home Player Data:", trimmedPlayersHome);
 
-            if (
-              homeAttributes?.playerAttributeOverviews?.[0] &&
-              homeAttributes?.averageAttributeOverviews?.[0] &&
-              awayAttributes?.playerAttributeOverviews?.[0] &&
-              awayAttributes?.averageAttributeOverviews?.[0]
-            ) {
-              setHomePlayerAttributes(homeAttributes.playerAttributeOverviews[0]);
-              setHomePlayerAttributesComparison(homeAttributes.averageAttributeOverviews[0]);
-              setAwayPlayerAttributes(awayAttributes.playerAttributeOverviews[0]);
-              setAwayPlayerAttributesComparison(awayAttributes.averageAttributeOverviews[0]);
-            }
+            // if (
+            //   homeAttributes?.playerAttributeOverviews?.[0] &&
+            //   homeAttributes?.averageAttributeOverviews?.[0] &&
+            //   awayAttributes?.playerAttributeOverviews?.[0] &&
+            //   awayAttributes?.averageAttributeOverviews?.[0]
+            // ) {
+            //   setHomePlayerAttributes(homeAttributes.playerAttributeOverviews[0]);
+            //   setHomePlayerAttributesComparison(homeAttributes.averageAttributeOverviews[0]);
+            //   setAwayPlayerAttributes(awayAttributes.playerAttributeOverviews[0]);
+            //   setAwayPlayerAttributesComparison(awayAttributes.averageAttributeOverviews[0]);
+            // }
             try {
               const homeImageResponse = await fetch(`${process.env.REACT_APP_EXPRESS_SERVER}playerImage/${playersHome[0].playerId}`);
               const awayImageResponse = await fetch(`${process.env.REACT_APP_EXPRESS_SERVER}playerImage/${playersAway[0].playerId}`);
