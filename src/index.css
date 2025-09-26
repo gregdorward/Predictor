@@ -4471,6 +4471,11 @@ button.AIInsights button:active {
   color: var(--text-color);
 }
 
+.FutureFixture {
+  display: flex;
+  flex-direction: row;
+}
+
 /* .MissingPlayersList{
   width: 75%;
   margin-left: auto;
@@ -4551,6 +4556,93 @@ button.AIInsights button:active {
   margin-right: auto;
   color: var(--button-color);
 }
+
+
+.FutureFixturesButton {
+  font-size: 1.1em;
+  background-color: var(--secondary-background-color);
+  width: 100%;
+  margin-left: auto;
+  margin-right: auto;
+  color: var(--button-color);
+}
+
+/* Each fixture "card" */
+.FutureFixture {
+  background: var(--secondary-background-color, #f9f9f9); /* fallback if var missing */
+  border-radius: 2px;
+  padding: 0.75rem 1rem;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+  width: 100%;
+  box-sizing: border-box;
+  display: block;
+    margin-top: 1.5em;
+  margin-bottom: 1.5em;
+}
+
+
+/* Inner list reset */
+.FutureFixture ul {
+  list-style: none;
+  padding: 0;
+}
+
+
+.FutureFixture ul li{
+  color: var(--text-color);
+  padding: 0.2em;
+}
+/* Date + time */
+.FutureFixture ul li:nth-child(3),
+.FutureFixture ul li:nth-child(4) {
+  padding-top: 0.6em;
+  font-size: 0.8em;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* Column headings */
+.FutureFixturesColumn h4 {
+  font-size: 1.1em;
+  font-weight: 600;
+  border-bottom: 2px solid var(--accent-color, #fe8c00);
+  padding-bottom: 0.25rem;
+  margin-bottom: 0.75rem;
+}
+
+.FutureFixturesSideBySide {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;  /* push columns apart */
+  align-items: flex-start;
+  flex-wrap: wrap;
+  gap: 2rem;                        /* space between */
+  /* width: 100%; */
+  box-sizing: border-box;
+}
+
+/* Left column aligned to the right */
+.FutureFixturesHome {
+  text-align: right;                /* align text right */
+  align-items: flex-end;            /* align fixtures inside */
+}
+
+/* Right column aligned to the left */
+.FutureFixturesAway {
+  text-align: left;                 /* default anyway */
+  align-items: flex-start;
+}
+
+/* Columns: share width */
+.FutureFixturesColumn {
+  flex: 1 1 45%;         /* take ~45% each */
+  box-sizing: border-box;
+}
+
+
+
+
 
 .StreakCategory {
   margin-bottom: 2rem;

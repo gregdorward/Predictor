@@ -47,6 +47,7 @@ import { rounds } from "./TeamOfTheSeason";
 import { Doughnut } from "react-chartjs-2";
 import StarRating from "../components/StarRating";
 import { handleCheckout, stripePromise } from "../App"
+import FutureFixturesSideBySide from "./FutureFixturesSideBySide";
 export let userTips;
 let setUserTips;
 const MemoizedSofaLineupsWidget = memo(SofaLineupsWidget);
@@ -79,10 +80,13 @@ function GameStats({ game, displayBool, stats }) {
   const [streakData, setStreakData] = useState([]);
   const [homeTeamStats, setHomeTeamStats] = useState(null);
   const [awayTeamStats, setAwayTeamStats] = useState(null);
+  const [futureFixturesHome, setFutureFixturesHome] = useState([]);
+  const [futureFixturesAway, setFutureFixturesAway] = useState([]);
   const [loadingTeamStats, setLoadingTeamStats] = useState(true);
   const [loadingKeyPlayers, setLoadingKeyPlayers] = useState(true);
   const [loadingKeyPlayerComparison, setLoadingKeyPlayerComparison] = useState(true);
   const [loadingStreaks, setLoadingStreaks] = useState(true);
+  const [loadingFutureFixtures, setLoadingFutureFixtures] = useState(true);
   const [oddsData, setOddsData] = useState(null); // State to hold your odds object
   const [loadingOdds, setLoadingOdds] = useState(false);
   const [homePlayerData, setHomePlayerData] = useState([]);
@@ -1171,7 +1175,7 @@ function GameStats({ game, displayBool, stats }) {
         setLoadingPlayerData(true);
         setLoadingTeamStats(true);
         setLoadingKeyPlayers(true);
-        setLoadingKeyPlayerComparison(true);
+        setLoadingFutureFixtures(true);
         if (
           isWithin48Hours
         ) {
@@ -1366,27 +1370,10 @@ function GameStats({ game, displayBool, stats }) {
             const trimmedPlayersAway = playersAway.slice(0, 5); // Limit to top 3 players
 
 
-            // const homeKeyPlayerAttributes = await fetch(`${process.env.REACT_APP_EXPRESS_SERVER}playerAttributes/${playersHome[0].playerId}`);
-            // const awayKeyPlayerAttributes = await fetch(`${process.env.REACT_APP_EXPRESS_SERVER}playerAttributes/${playersAway[0].playerId}`);
-
-            // const homeAttributes = await homeKeyPlayerAttributes.json();
-            // const awayAttributes = await awayKeyPlayerAttributes.json();
 
             setHomePlayerData(trimmedPlayersHome);
             setAwayPlayerData(trimmedPlayersAway);
-            // console.log("Home Player Data:", trimmedPlayersHome);
 
-            // if (
-            //   homeAttributes?.playerAttributeOverviews?.[0] &&
-            //   homeAttributes?.averageAttributeOverviews?.[0] &&
-            //   awayAttributes?.playerAttributeOverviews?.[0] &&
-            //   awayAttributes?.averageAttributeOverviews?.[0]
-            // ) {
-            //   setHomePlayerAttributes(homeAttributes.playerAttributeOverviews[0]);
-            //   setHomePlayerAttributesComparison(homeAttributes.averageAttributeOverviews[0]);
-            //   setAwayPlayerAttributes(awayAttributes.playerAttributeOverviews[0]);
-            //   setAwayPlayerAttributesComparison(awayAttributes.averageAttributeOverviews[0]);
-            // }
             try {
               const homeImageResponse = await fetch(`${process.env.REACT_APP_EXPRESS_SERVER}playerImage/${playersHome[0].playerId}`);
               const awayImageResponse = await fetch(`${process.env.REACT_APP_EXPRESS_SERVER}playerImage/${playersAway[0].playerId}`);
@@ -1417,6 +1404,44 @@ function GameStats({ game, displayBool, stats }) {
             );
             // allLeagueStats[`leagueStats${leagueId}`] = { error: error.message }; // Store error if fetch fails
           }
+
+          try {
+            const futureFixturesHomeResponse = await fetch(
+              `${process.env.REACT_APP_EXPRESS_SERVER}futureFixtures/${matchingGameInfo.homeId}/${week}`
+            );
+            const fixturesDataHome = await futureFixturesHomeResponse.json();
+
+            const reducedFixturesHome = fixturesDataHome.events.map(event => ({
+              tournamentName: event.tournament?.name || "",
+              homeTeam: event.homeTeam?.name || "",
+              awayTeam: event.awayTeam?.name || "",
+              date: event.startTimestamp ? new Date(event.startTimestamp * 1000).toLocaleDateString("en-GB") : "N/A",
+              colourOne: event.tournament?.uniqueTournament?.primaryColorHex || "",
+              colourTwo: event.tournament?.uniqueTournament?.secondaryColorHex || ""
+            }));
+
+            setFutureFixturesHome(reducedFixturesHome.slice(1, 6));
+
+            const futureFixturesAwayResponse = await fetch(
+              `${process.env.REACT_APP_EXPRESS_SERVER}futureFixtures/${matchingGameInfo.awayId}/${week}`
+            );
+            const fixturesDataAway = await futureFixturesAwayResponse.json();
+
+            const reducedFixturesAway = fixturesDataAway.events.map(event => ({
+              tournamentName: event.tournament?.name || "",
+              homeTeam: event.homeTeam?.name || "",
+              awayTeam: event.awayTeam?.name || "",
+              date: event.startTimestamp ? new Date(event.startTimestamp * 1000).toLocaleDateString("en-GB") : "N/A",
+              colourOne: event.tournament?.uniqueTournament?.primaryColorHex || "",
+              colourTwo: event.tournament?.uniqueTournament?.secondaryColorHex || ""
+            }));
+            setFutureFixturesAway(reducedFixturesAway.slice(1, 6));
+          } catch (error) {
+            console.error(
+              `Error fetching future fixtures for game ${game.sofaScoreId}:`,
+              error
+            );
+          }
         }
       } catch (error) {
         console.error("Error fetching or processing data:", error);
@@ -1427,7 +1452,7 @@ function GameStats({ game, displayBool, stats }) {
         setLoadingOdds(false);
         setLoadingPlayerData(false);
         setLoadingStreaks(false);
-        setLoadingKeyPlayerComparison(false);
+        setLoadingFutureFixtures(false);
         setLoadingKeyPlayers(false);
         setLoading(false);
         console.log("Loading states reset.");
@@ -3210,6 +3235,23 @@ function GameStats({ game, displayBool, stats }) {
           />
         )}
 
+        {loadingFutureFixtures || futureFixturesHome.length === 0 ? (
+          <div></div>
+        ) : (
+          <Collapsable
+            buttonText={`Upcoming Games`}
+            classNameButton="FutureFixturesButton"
+            element={
+              <FutureFixturesSideBySide
+                loadingFutureFixtures={loadingFutureFixtures}
+                futureFixturesHome={futureFixturesHome}
+                futureFixturesAway={futureFixturesAway}
+              />
+            }
+          />
+        )}
+
+
         {loadingPlayerData || homePlayerDataWithImages.length === 0 ? (
           <div></div>
         ) : (
@@ -3290,7 +3332,7 @@ function GameStats({ game, displayBool, stats }) {
         )}
 
         <div id="AIInsightsContainer" className="AIInsightsContainer">
-          {loadingKeyPlayerComparison ? (
+          {loadingKeyPlayers ? (
             <p>Loading data for Match Preview...</p>
           ) : !paid && game.leagueID !== 15050 ? (
             <><Button
