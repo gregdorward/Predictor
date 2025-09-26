@@ -3147,7 +3147,7 @@ export async function calculateScore(match, index, divider, calculate, AIPredict
 
     console.log(`allDrawOutcomes: ${allDrawOutcomes}`);
 
-    if (match.matches_completed_minimum < 3 && selectedTipType !== "AI Tips" ) {
+    if (match.matches_completed_minimum < 3 && selectedTipType !== "AI Tips") {
       match.omit = true;
     } else if (selectedTipType === "AI Tips" && (AIPredictionHome === null || AIPredictionAway === null)) {
       match.omit = true;
@@ -4582,7 +4582,7 @@ async function renderTips() {
   }
 
   console.log(paid);
-  if (newArray.length > 0) {
+  if (paid && newArray.length > 0) {
     ReactDOM.render(
       <div className="PredictionContainer">
         <Fragment>
@@ -4613,6 +4613,39 @@ async function renderTips() {
       </div>,
       document.getElementById("bestPredictions")
     );
+  } else if (paid !== true) {
+    newArray = newArray.slice(0, 6);
+    ReactDOM.render(
+      <div className="PredictionContainer">
+      <Fragment>
+        <Increment />
+        <Collapsable
+        buttonText={"Build a Multi"}
+        element={
+          <ul className="BestPredictions" id="BestPredictions">
+          <div className="BestPredictionsExplainer">
+            Multis limited to a maximum of 6 selections for free users.<br />
+            Add or remove a selection using the buttons below. Predictions
+            are ordered by confidence in the outcome.
+          </div>
+          {newArray.map((tip) => (
+            <li key={`${tip.game}acca`}>
+            <div>
+              {tip.team}: {tip.odds}{" "}
+              <span className={tip.outcome}>{tip.outcomeSymbol}</span>
+            </div>
+            <div className="TipGame">{tip.game}</div>
+            </li>
+          ))}
+          <div className="AccumulatedOdds">{`Accumulator odds ~ : ${Math.round(accumulatedOdds) - 1
+            }/1`}</div>
+          </ul>
+        }
+        />
+      </Fragment>
+      </div>,
+      document.getElementById("bestPredictions")
+    );
   } else {
     ReactDOM.render(
       <div className="PredictionContainer">
@@ -4636,7 +4669,7 @@ async function renderTips() {
     );
   }
 
-  if (exoticArray.length > 4) {
+  if (paid && exoticArray.length > 4) {
     ReactDOM.render(
       <div className="PredictionContainer">
         <Fragment>
@@ -4645,6 +4678,38 @@ async function renderTips() {
             element={
               <ul className="BestPredictions" id="BestPredictions">
                 <h4 className="BestPredictionsExplainer">
+                  <NewlineText
+                    text={`${gamesInExotic} games: ${exoticString}\nStake per multi: ${exoticStake} units - ${combinations} combinations\nTotal stake: ${(
+                      exoticStake * combinations
+                    ).toFixed(2)} unit(s)`}
+                  />
+                  {`Potential winnings: ${price.toFixed(2)} units`}
+                </h4>
+                {exoticArray.map((tip) => (
+                  <li key={tip.team}>
+                    {tip.team}: {tip.odds}{" "}
+                    <span className={tip.outcome}>{tip.outcomeSymbol}</span>
+                    <div>{tip.game}</div>
+                  </li>
+                ))}
+              </ul>
+            }
+          />
+        </Fragment>
+      </div>,
+      document.getElementById("exoticOfTheDay")
+    );
+  } else if (paid !== true) {
+    exoticArray = exoticArray.slice(0, 6);
+        ReactDOM.render(
+      <div className="PredictionContainer">
+        <Fragment>
+          <Collapsable
+            buttonText={"Exotic of the Day"}
+            element={
+              <ul className="BestPredictions" id="BestPredictions">
+                <h4 className="BestPredictionsExplainer">
+                  <div>Capped to a maximum of 6 selections for free users.</div>
                   <NewlineText
                     text={`${gamesInExotic} games: ${exoticString}\nStake per multi: ${exoticStake} units - ${combinations} combinations\nTotal stake: ${(
                       exoticStake * combinations

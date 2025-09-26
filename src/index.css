@@ -464,17 +464,23 @@ h2 {
   color: var(--text-color);
 }
 
-h3 {
-  font-size: 1.25em;
-  color: var(--text-color);
-  padding: 0.5em;
-  margin: 0%
-}
+
 
 .MembersGetMore {
-  font-size: 1.25em;
-  color: var(--member-text-color);
-  margin: 0%
+  font-size: 1.5em;
+  margin: 0%;
+  line-height: 1.5em;
+  padding-top: 1em;
+}
+
+h3 {
+  /* font-size: 1.75em; */
+  color: var(--text-color);
+  padding: 1em;
+  margin: 0%;
+    border: 1px solid var(--primary-color);
+    background-color: var(--button-color);
+    color: var(--primary-color);
 }
 
 h4 {
@@ -774,7 +780,7 @@ h6.PredictionTypeText {
 } */
 
 .LoadingText {
-  padding-top: 2em;
+  /* padding-top: 2em; */
   padding-bottom: 0.5em;
   font-size: 1em;
   color: var(--text-color);
@@ -4002,6 +4008,7 @@ h6.AttackingMomentum {
   width: 100%;
   color: #030052;
   line-height: 2.5em;
+  height: 3em;
 }
 
 .LoginInput2 {
@@ -4017,6 +4024,7 @@ h6.AttackingMomentum {
   margin-right: 0.5em;
   color: #030052;
   line-height: 2.5em;
+  height: 3em;
 }
 
 .ResetPasswordLink {
@@ -4037,10 +4045,11 @@ h6.AttackingMomentum {
 
 .LoginSignUp {
   /* flex-direction: column; */
-  height: auto;
+  height: 4em;
   margin-left: auto;
   margin-right: auto;
   margin-bottom: 0em;
+  margin-top: 1em;
 }
 
 .CancelButton {
@@ -4060,8 +4069,10 @@ h6.AttackingMomentum {
 }
 
 .SignUp {
-  margin-top: 0em;
-  font-size: 0.9em;
+  margin-top: 1em;
+  font-size: 1em;
+  width: 75%;
+  height: 5em;
 }
 
 .text-blue-500 {
@@ -4569,15 +4580,16 @@ button.AIInsights button:active {
 
 /* Each fixture "card" */
 .FutureFixture {
-  background: var(--secondary-background-color, #f9f9f9); /* fallback if var missing */
+  background: var(--secondary-background-color, #f9f9f9);
+  /* fallback if var missing */
   border-radius: 2px;
   padding: 0.75rem 1rem;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
   transition: transform 0.15s ease, box-shadow 0.15s ease;
   width: 100%;
   box-sizing: border-box;
   display: block;
-    margin-top: 1.5em;
+  margin-top: 1.5em;
   margin-bottom: 1.5em;
 }
 
@@ -4589,10 +4601,11 @@ button.AIInsights button:active {
 }
 
 
-.FutureFixture ul li{
+.FutureFixture ul li {
   color: var(--text-color);
   padding: 0.2em;
 }
+
 /* Date + time */
 .FutureFixture ul li:nth-child(3),
 .FutureFixture ul li:nth-child(4) {
@@ -4614,29 +4627,35 @@ button.AIInsights button:active {
 .FutureFixturesSideBySide {
   display: flex;
   flex-direction: row;
-  justify-content: space-between;  /* push columns apart */
+  justify-content: space-between;
+  /* push columns apart */
   align-items: flex-start;
   flex-wrap: wrap;
-  gap: 2rem;                        /* space between */
+  gap: 2rem;
+  /* space between */
   /* width: 100%; */
   box-sizing: border-box;
 }
 
 /* Left column aligned to the right */
 .FutureFixturesHome {
-  text-align: right;                /* align text right */
-  align-items: flex-end;            /* align fixtures inside */
+  text-align: right;
+  /* align text right */
+  align-items: flex-end;
+  /* align fixtures inside */
 }
 
 /* Right column aligned to the left */
 .FutureFixturesAway {
-  text-align: left;                 /* default anyway */
+  text-align: left;
+  /* default anyway */
   align-items: flex-start;
 }
 
 /* Columns: share width */
 .FutureFixturesColumn {
-  flex: 1 1 45%;         /* take ~45% each */
+  flex: 1 1 45%;
+  /* take ~45% each */
   box-sizing: border-box;
 }
 

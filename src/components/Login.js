@@ -48,6 +48,9 @@ const Login = () => {
 
   return (
     <div>
+      <button className="SignUp" onClick={() => setIsLogin(!isLogin)}>
+        {isLogin ? "Need an account? Sign up" : "Enter your details below. Already have an account? Switch to login"}
+      </button>
       {error && <p style={{ color: "red" }}>{error}</p>}
       <form onSubmit={handleAuth} className="LoginForm">
         <input
@@ -90,9 +93,6 @@ const Login = () => {
           Reset password
         </button>
       </form>
-      <button className="SignUp" onClick={() => setIsLogin(!isLogin)}>
-        {isLogin ? "Need an account? Sign up" : "Already have an account? Login"}
-      </button>
     </div>
   );
 };
