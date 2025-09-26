@@ -2771,7 +2771,7 @@ function GameStats({ game, displayBool, stats }) {
   }
 
   const generateAIInsights = useCallback(
-    async (gameId, streak, oddsData, homeTeamStats, awayTeamStats, homePlayerData, awayPlayerData, homeMissingPlayersList, awayMissingPlayersList, homeLineupList, awayLineupList, ranksHome, ranksAway) => {
+    async (gameId, streak, oddsData, homeTeamStats, awayTeamStats, homePlayerData, awayPlayerData, homeMissingPlayersList, awayMissingPlayersList, homeLineupList, awayLineupList, ranksHome, ranksAway, futureFixturesHome, futureFixturesAway) => {
       setIsLoading(true);
       const table = await fetchBasicTable(game.leagueID);
       const leagueTable = table?.table || null;
@@ -2817,6 +2817,7 @@ function GameStats({ game, displayBool, stats }) {
             predictedLineup: homeLineupList,
             homeAttackingStats: homeForm?.attackingMetrics,
             homeDefensiveStats: homeForm?.defensiveMetrics,
+            fixtures: futureFixturesHome,
           },
           awayTeam: {
             awayTeamName: game.awayTeam,
@@ -2829,6 +2830,7 @@ function GameStats({ game, displayBool, stats }) {
             predictedLineup: awayLineupList,
             awayAttackingStats: awayForm?.attackingMetrics,
             awayDefensiveStats: awayForm?.defensiveMetrics,
+            fixtures: futureFixturesAway,
           },
         };
         console.log(AIPayload);
@@ -3379,7 +3381,9 @@ function GameStats({ game, displayBool, stats }) {
                   homeLineupList,
                   awayLineupList,
                   ranksHome,
-                  ranksAway
+                  ranksAway,
+                  futureFixturesHome,
+                  futureFixturesAway
                 );
                 setShowAIInsights(true);
               }}
