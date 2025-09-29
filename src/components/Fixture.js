@@ -1,4 +1,4 @@
-import React, { Fragment, useState } from "react";
+import React, { Fragment, useState, useEffect, useRef } from "react";
 import { CreateBadge } from "./createBadge";
 import { useDispatch } from "react-redux";
 import { setData } from "../logic/dataSlice";
@@ -11,6 +11,7 @@ import GameStats from "./GameStats";
 import { userTips } from "./GameStats";
 import { leagueStatsArray } from "../logic/getScorePredictions";
 import LeagueName from './LeagueName';
+import ShareShortlistButton from "./ShareShortlistButton";
 
 let resultValue;
 let paid;
@@ -285,15 +286,15 @@ function SingleFixture({
 
   return (
     <div key={fixture.game}>
-<LeagueName fixture={fixture} mock={mock} showShortlist={showShortlist} />
-<div className={`individualFixtureContainerfalse`}>
+      <LeagueName fixture={fixture} mock={mock} showShortlist={showShortlist} />
+      <div className={`individualFixtureContainerfalse`}>
         <li
           className={`individualFixturefalse`}
           key={fixture.id}
           data-cy={fixture.id}
-          // onClick={handleGameStatsClick}
-          // onClick={onToggle} // Toggle checked state on click
-          // style={{ display: checked ? "lightblue" : "white" }} // Change background when checked
+        // onClick={handleGameStatsClick}
+        // onClick={onToggle} // Toggle checked state on click
+        // style={{ display: checked ? "lightblue" : "white" }} // Change background when checked
         >
           <div className="MatchDetail">
             <GetDivider
@@ -461,18 +462,130 @@ async function submitTips() {
 }
 
 const List = ({ fixtures, mock, stats }) => {
-  // State to track selected fixtures
   const [selectedFixtures, setSelectedFixtures] = useState([]);
-  const [showShortlist, setShowShortlist] = useState(false); // Toggle between full list and shortlist
+  const [showShortlist, setShowShortlist] = useState(false);
+
+  // ⭐️ NEW: Create a ref to track if this is the first render
+  const isInitialMount = useRef(true);
+
+  // 1. URL READING EFFECT (Loads shortlist from URL for persistence)
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const shortlistParam = params.get('shortlist');
+    const viewParam = params.get('view'); // ⭐️ NEW: Read the view parameter ⭐️
+
+    // Only proceed if fixtures are loaded
+    if (fixtures && fixtures.length > 0) {
+
+      if (shortlistParam) {
+        const sharedFixtureIds = shortlistParam.split(',').map(id => parseInt(id, 10));
+        const sharedShortlist = fixtures.filter(fixture =>
+          sharedFixtureIds.includes(fixture.id)
+        );
+
+        if (sharedShortlist.length > 0) {
+          setSelectedFixtures(sharedShortlist);
+
+          // ⭐️ FIX: Only set the view to true if the specific 'view' param is present ⭐️
+          if (viewParam === 'shortlist') {
+            setShowShortlist(true);
+          }
+
+          // Mark initial mount as complete
+          isInitialMount.current = false;
+          return;
+        }
+      }
+
+      // If no valid shortlistParam was found, ensure the writing effect is enabled
+      isInitialMount.current = false;
+    }
+
+  }, [fixtures, setSelectedFixtures, setShowShortlist]); // Add setShowShortlist to dependencies if necessary
+
+  // ----------------------------------------------------------------------
+
+// 2. URL WRITING EFFECT (Persists user changes to URL)
+useEffect(() => {
+    // Block ALL execution on the initial render cycle (from previous fix)
+    if (isInitialMount.current) {
+      return;
+    }
+
+    const pathname = window.location.pathname;
+    
+    // ⭐️ CRITICAL UPDATE: Start with the CURRENT parameters ⭐️
+    const params = new URLSearchParams(window.location.search);
+    
+    // Check if we are in the initial load period where state is still stabilizing.
+    const hasInitialShortlist = params.get('shortlist') !== null;
+    if (hasInitialShortlist && selectedFixtures.length === 0) {
+      return;
+    }
+    
+    // --- Logic for writing the 'shortlist' state ---
+    if (selectedFixtures.length > 0) {
+      const selectedFixtureIds = selectedFixtures.map(f => f.id).join(',');
+      
+      // Update the 'shortlist' parameter while keeping others (like 'view') intact
+      params.set('shortlist', selectedFixtureIds);
+
+    } else {
+      // If the user clears the shortlist, remove the 'shortlist' parameter
+      params.delete('shortlist');
+    }
+    
+    // --- Reconstruct URL ---
+    const newSearchParams = params.toString();
+    
+    if (newSearchParams === '') {
+      // If all parameters are cleared, set URL to just the pathname
+      window.history.replaceState(null, '', pathname);
+    } else {
+      // Write the new URL with ALL parameters preserved
+      const newUrl = `${pathname}?${newSearchParams}`;
+      window.history.replaceState(null, '', newUrl);
+    }
+
+}, [selectedFixtures]); 
+
+  // Function to handle the toggle button click
+  const handleToggleShortlistView = () => {
+
+    // Calculate the new state
+    const newState = !showShortlist;
+
+    // 1. Toggle the React state
+    setShowShortlist(newState);
+
+    // 2. Modify the URL parameters based on the new state
+    const params = new URLSearchParams(window.location.search);
+
+    if (newState === true) {
+      // If switching TO shortlist view, ADD the view=shortlist parameter
+      params.set('view', 'shortlist');
+    } else {
+      // If switching FROM shortlist view (back to full list), REMOVE the parameter
+      params.delete('view');
+    }
+
+    // 3. Reconstruct the full URL and update history
+    const newUrl = `${window.location.pathname}?${params.toString()}`;
+
+    // Clean up empty params string (e.g., if only 'shortlist' was removed)
+    if (params.toString() === '') {
+      window.history.replaceState(null, '', window.location.pathname);
+    } else {
+      window.history.replaceState(null, '', newUrl);
+    }
+  };
 
   const handleToggle = (fixture) => {
     setSelectedFixtures((prev) => {
       const index = prev.findIndex((f) => f.id === fixture.id);
       if (index !== -1) {
-        // Remove fixture if already selected
         return prev.filter((_, i) => i !== index);
       } else {
-        // Add fixture to the end of the array
         return [...prev, fixture];
       }
     });
@@ -482,6 +595,17 @@ const List = ({ fixtures, mock, stats }) => {
   const shortlist = Object.fromEntries(
     selectedFixtures.map((fixture, i) => [i, fixture])
   );
+
+
+  const selectedFixtureIds = selectedFixtures.map(fixture => fixture.id);
+  const baseUrl = window.location.origin + window.location.pathname;
+
+  // Assume fixtureIdsString is already defined (e.g., "101,205")
+  const fixtureIdsString = selectedFixtures.map(fixture => fixture.id).join(',');
+
+  // Append the 'view' parameter to indicate the shortlist view should be active
+  const shareableLink = `${baseUrl}?shortlist=${fixtureIdsString}&view=shortlist`;
+
 
   return mock === true ? (
     <>
@@ -505,8 +629,11 @@ const List = ({ fixtures, mock, stats }) => {
   ) : (
     <>
       <ShortlistButton
-        toggleShortlist={() => setShowShortlist(!showShortlist)}
+        // ⭐️ USE THE NEW TOGGLE HANDLER HERE ⭐️
+        toggleShortlist={handleToggleShortlistView}
+        showShortlist={showShortlist}
       />
+      <ShareShortlistButton selectedFixtures={selectedFixtures} />
       <SubmitTipsButton submit={() => submitTips()} />
       <div>
         <div id="Headers"></div>
@@ -528,8 +655,24 @@ const List = ({ fixtures, mock, stats }) => {
   );
 };
 
-function ShortlistButton({ toggleShortlist }) {
-  return <button onClick={toggleShortlist} className="ShortlistButton">Toggle Shortlist &#9733; </button>;
+function ShortlistButton({ toggleShortlist, showShortlist }) {
+  // Conditionally set the text and class based on the state
+  const buttonText = showShortlist
+    ? "Show All Fixtures"  // Unicode for up arrow
+    : "Show Shortlist \u272A"; // Unicode for star
+
+  const buttonClass = showShortlist
+    ? "ShortlistButton active"
+    : "ShortlistButton";
+
+  return (
+    <button
+      onClick={toggleShortlist}
+      className={buttonClass}
+    >
+      {buttonText}
+    </button>
+  );
 }
 
 function SubmitTipsButton({ submit }) {

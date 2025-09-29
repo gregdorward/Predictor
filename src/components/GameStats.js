@@ -3045,6 +3045,7 @@ function GameStats({ game, displayBool, stats }) {
       }
 
       let odds;
+      console.log(game)
 
       if (tipType === "homeTeam") {
         odds = game.homeOdds;
@@ -3052,6 +3053,10 @@ function GameStats({ game, displayBool, stats }) {
         odds = game.awayOdds;
       } else if (tipType === "draw") {
         odds = game.drawOdds;
+      } else if (tipType === "BTTS") {
+        odds = game.bttsOdds;
+      } else if (tipType === "over25") {
+        odds = game.over25Odds;
       }
 
       handleTipSelect(tipType); // Update parent state
@@ -3108,6 +3113,32 @@ function GameStats({ game, displayBool, stats }) {
           onClick={() => handleClick("awayTeam", `${game.awayTeam} to win`)}
         >
           Away
+        </button>
+        <button
+          id="TipButtonBTTS"
+          className="TipButton"
+          style={{
+            backgroundColor: selectedTip === "BTTS" ? "#fe8c00" : "white",
+            color: selectedTip === "BTTS" ? "white" : "#030052",
+            border: `1px solid ${selectedTip === "BTTS" ? "#fe8c00" : "#030052"
+              }`,
+          }}
+          onClick={() => handleClick("BTTS", "Both teams to score")}
+        >
+          BTTS
+        </button>
+        <button
+          id="TipButtonOver25"
+          className="TipButton"
+          style={{
+            backgroundColor: selectedTip === "over25" ? "#fe8c00" : "white",
+            color: selectedTip === "over25" ? "white" : "#030052",
+            border: `1px solid ${selectedTip === "over25" ? "#fe8c00" : "#030052"
+              }`,
+          }}
+          onClick={() => handleClick("over25", "Over 2.5 goals")}
+        >
+          Over 2.5
         </button>
       </div>
     );
