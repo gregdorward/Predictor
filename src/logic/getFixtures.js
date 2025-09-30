@@ -464,6 +464,7 @@ async function createFixture(match, result, mockBool) {
 
 export function RenderAllFixtures(props) {
   let matches;
+  let uncappedFixtures;
   let capped = false;
   let paid = false;
   if (userDetail) {
@@ -473,16 +474,19 @@ export function RenderAllFixtures(props) {
   let newLength;
   if (paid === true) {
     matches = props.matches;
+    uncappedFixtures = props.matches;
     newLength = matches.length;
   } else {
     if (originalLength > 20) {
       matches = props.matches.slice(0, 20);
+      uncappedFixtures = props.matches;
       capped = true;
       newLength = 20;
     } else {
       const slicePercent = 0.5; // 50%
       const sliceCount = Math.ceil(props.matches.length * slicePercent);
       matches = props.matches.slice(0, sliceCount);
+      uncappedFixtures = props.matches;
       capped = true;
       newLength = sliceCount;
     }
@@ -494,6 +498,7 @@ export function RenderAllFixtures(props) {
   return (
     <Fixture
       fixtures={matches}
+      uncappedFixtures={uncappedFixtures}
       result={props.result}
       mock={false}
       className={"individualFixture"}
@@ -1549,7 +1554,7 @@ export async function generateFixtures(
               className={"GeneratePredictions"}
             />
             <div className="Version">Prediction engine v1.5.2 (25/09/25)</div>
-            <div>If predictions are missing on games with little data, switch to AI tips in the options, above</div>
+            <div className="MissingPredictionsNotice">If predictions are missing on games with little data, switch to AI tips in the options, above</div>
             <Collapsable
               buttonText={"Filters"}
               className={"Filters2"}

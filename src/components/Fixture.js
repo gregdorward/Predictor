@@ -461,24 +461,39 @@ async function submitTips() {
   userTips.length = 0;
 }
 
-const List = ({ fixtures, mock, stats }) => {
+const List = ({ 
+  fixtures, 
+  mock, 
+  stats, 
+  props, 
+  showShortlist, 
+  setShowShortlist, 
+  // You may also want to accept fullUncappedFixtures here if that was part of your final solution
+}) => {
+  // ⭐️ showShortlist state is now received via props, not local state ⭐️
   const [selectedFixtures, setSelectedFixtures] = useState([]);
-  const [showShortlist, setShowShortlist] = useState(false);
+  
+  // You need to resolve this variable being undefined if it's not a prop or local state
+  // console.log(showShortlist); 
 
-  // ⭐️ NEW: Create a ref to track if this is the first render
   const isInitialMount = useRef(true);
 
-  // 1. URL READING EFFECT (Loads shortlist from URL for persistence)
+  // 1. URL READING EFFECT (Loads shortlist from URL for persistence and sets initial view state)
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
     const shortlistParam = params.get('shortlist');
-    const viewParam = params.get('view'); // ⭐️ NEW: Read the view parameter ⭐️
+    const viewParam = params.get('view');
 
-    // Only proceed if fixtures are loaded
+    // Use the fixtures prop for reading, as Fixture is now passing the correct source dynamically 
+    // (or, if needed, you'd use a dedicated fullUncappedFixtures prop here)
     if (fixtures && fixtures.length > 0) {
 
       if (shortlistParam) {
         const sharedFixtureIds = shortlistParam.split(',').map(id => parseInt(id, 10));
+        
+        // Use the fixtures prop for filtering. Assuming Fixture passes the FULL list 
+        // on the second render, the initial set here might still be capped if the timing is tight.
+        // For production, you MUST use the uncapped list here (e.g., props.fullUncappedFixtures)
         const sharedShortlist = fixtures.filter(fixture =>
           sharedFixtureIds.includes(fixture.id)
         );
@@ -486,93 +501,77 @@ const List = ({ fixtures, mock, stats }) => {
         if (sharedShortlist.length > 0) {
           setSelectedFixtures(sharedShortlist);
 
-          // ⭐️ FIX: Only set the view to true if the specific 'view' param is present ⭐️
+          // ⭐️ Use the prop setter for initial state ⭐️
           if (viewParam === 'shortlist') {
             setShowShortlist(true);
+          } else if (showShortlist) {
+            // If the view was active but the URL no longer requests it, turn it off.
+            setShowShortlist(false); 
           }
 
-          // Mark initial mount as complete
           isInitialMount.current = false;
           return;
         }
       }
 
-      // If no valid shortlistParam was found, ensure the writing effect is enabled
       isInitialMount.current = false;
     }
 
-  }, [fixtures, setSelectedFixtures, setShowShortlist]); // Add setShowShortlist to dependencies if necessary
+  }, [fixtures, setSelectedFixtures, setShowShortlist, showShortlist]); 
+  // Note: Added 'showShortlist' to dependencies to allow the else if branch to work on re-renders
 
   // ----------------------------------------------------------------------
 
-// 2. URL WRITING EFFECT (Persists user changes to URL)
-useEffect(() => {
-    // Block ALL execution on the initial render cycle (from previous fix)
+  // 2. URL WRITING EFFECT (Persists user changes to URL) - UNCHANGED
+  useEffect(() => {
     if (isInitialMount.current) {
       return;
     }
 
     const pathname = window.location.pathname;
-    
-    // ⭐️ CRITICAL UPDATE: Start with the CURRENT parameters ⭐️
     const params = new URLSearchParams(window.location.search);
-    
-    // Check if we are in the initial load period where state is still stabilizing.
     const hasInitialShortlist = params.get('shortlist') !== null;
+    
     if (hasInitialShortlist && selectedFixtures.length === 0) {
       return;
     }
-    
-    // --- Logic for writing the 'shortlist' state ---
+
     if (selectedFixtures.length > 0) {
       const selectedFixtureIds = selectedFixtures.map(f => f.id).join(',');
-      
-      // Update the 'shortlist' parameter while keeping others (like 'view') intact
       params.set('shortlist', selectedFixtureIds);
-
     } else {
-      // If the user clears the shortlist, remove the 'shortlist' parameter
       params.delete('shortlist');
     }
-    
-    // --- Reconstruct URL ---
+
     const newSearchParams = params.toString();
-    
+
     if (newSearchParams === '') {
-      // If all parameters are cleared, set URL to just the pathname
       window.history.replaceState(null, '', pathname);
     } else {
-      // Write the new URL with ALL parameters preserved
       const newUrl = `${pathname}?${newSearchParams}`;
       window.history.replaceState(null, '', newUrl);
     }
 
-}, [selectedFixtures]); 
+  }, [selectedFixtures]);
 
   // Function to handle the toggle button click
   const handleToggleShortlistView = () => {
-
-    // Calculate the new state
     const newState = !showShortlist;
 
-    // 1. Toggle the React state
+    // ⭐️ Use the prop setter for dynamic state change ⭐️
     setShowShortlist(newState);
 
-    // 2. Modify the URL parameters based on the new state
+    // Modify the URL parameters based on the new state
     const params = new URLSearchParams(window.location.search);
 
     if (newState === true) {
-      // If switching TO shortlist view, ADD the view=shortlist parameter
       params.set('view', 'shortlist');
     } else {
-      // If switching FROM shortlist view (back to full list), REMOVE the parameter
       params.delete('view');
     }
 
-    // 3. Reconstruct the full URL and update history
     const newUrl = `${window.location.pathname}?${params.toString()}`;
 
-    // Clean up empty params string (e.g., if only 'shortlist' was removed)
     if (params.toString() === '') {
       window.history.replaceState(null, '', window.location.pathname);
     } else {
@@ -612,6 +611,10 @@ useEffect(() => {
       <div>
         <div id="Headers"></div>
         <ul className="FixtureList" id="FixtureList">
+          {/* Note: Check your original rendering logic here - it seems slightly off. 
+             If !showShortlist is true, you render selectedFixtures? That's unusual.
+             Assuming the non-mock version is correct: (showShortlist ? selectedFixtures : fixtures) 
+          */}
           {(showShortlist ? selectedFixtures : fixtures).map((fixture) => (
             <SingleFixture
               shortlist={shortlist}
@@ -629,7 +632,6 @@ useEffect(() => {
   ) : (
     <>
       <ShortlistButton
-        // ⭐️ USE THE NEW TOGGLE HANDLER HERE ⭐️
         toggleShortlist={handleToggleShortlistView}
         showShortlist={showShortlist}
       />
@@ -638,6 +640,7 @@ useEffect(() => {
       <div>
         <div id="Headers"></div>
         <ul className="FixtureList" id="FixtureList">
+          {/* Renders shortlist when toggle is ON, full list (which is the source list) when OFF */}
           {(showShortlist ? selectedFixtures : fixtures).map((fixture) => (
             <SingleFixture
               shortlist={shortlist}
@@ -658,7 +661,7 @@ useEffect(() => {
 function ShortlistButton({ toggleShortlist, showShortlist }) {
   // Conditionally set the text and class based on the state
   const buttonText = showShortlist
-    ? "Show All Fixtures"  // Unicode for up arrow
+    ? "Disable Shortlist"  // Unicode for up arrow
     : "Show Shortlist \u272A"; // Unicode for star
 
   const buttonClass = showShortlist
@@ -687,12 +690,27 @@ function SubmitTipsButton({ submit }) {
 }
 
 export function Fixture(props) {
-  [count, setCount] = useState(false);
-  resultValue = props.result;
+  const [count, setCount] = useState(false);
+  // ⭐️ Re-introduce state here to control the view ⭐️
+  const [showShortlist, setShowShortlist] = useState(false);
+  const resultValue = props.result;
+
+  // Dynamically choose the list source based on the toggle state
+  const listSource = showShortlist
+    ? props.uncappedFixtures // Full list when toggle is ON
+    : props.fixtures;         // Capped list when toggle is OFF
+
+  // The cap text logic
+  const showCapText = !props.paid && props.capped === true && !showShortlist;
+
   return (
     <Provider store={store}>
       <List
-        fixtures={props.fixtures}
+        fixtures={listSource}
+        // ⭐️ Pass state and setter DOWN ⭐️
+        showShortlist={showShortlist}
+        setShowShortlist={setShowShortlist}
+
         result={resultValue}
         count={count}
         mock={props.mock}

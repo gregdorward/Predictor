@@ -47,43 +47,52 @@ const Login = () => {
   };
 
   return (
-    <div>
+     <div>
       <button className="SignUp" onClick={() => setIsLogin(!isLogin)}>
-        {isLogin ? "Need an account? Sign up" : "Enter your details below. Already have an account? Switch to login"}
+        {isLogin ? "Need an account? Sign up" : "Enter your details below. Already have an account? Click to switch to login"}
       </button>
       {error && <p style={{ color: "red" }}>{error}</p>}
+      
+      {/* ⭐️ LoginForm: Main Flex Container ⭐️ */}
       <form onSubmit={handleAuth} className="LoginForm">
-        <input
-          type="email"
-          placeholder="Email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          required
-          className="LoginInput1"
-        />
-
-        {/* Password Input with Toggle Button */}
-        <div className="PasswordContainer">
+        
+        {/* ⭐️ InputGroup: Groups and stacks the inputs on the left ⭐️ */}
+        <div className="InputGroup">
           <input
-            type={showPassword ? "text" : "password"} // Toggle between "text" and "password"
-            placeholder="Password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
+            type="email"
+            placeholder="Email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
             required
-            className="LoginInput2"
+            className="LoginInput1"
           />
-          <button
-            type="button"
-            onClick={() => setShowPassword(!showPassword)}
-            className="TogglePasswordButton"
-          >
-            {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
-          </button>
+
+          {/* Password Input with Toggle Button */}
+          <div className="PasswordContainer">
+            <input
+              type={showPassword ? "text" : "password"}
+              placeholder="Password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              required
+              className="LoginInput2"
+            />
+            <button
+              type="button"
+              onClick={() => setShowPassword(!showPassword)}
+              className="TogglePasswordButton"
+            >
+              {/* Replace with your actual icon components */}
+              {showPassword ? '👁️' : '🔒'} 
+            </button>
+          </div>
         </div>
 
+        {/* ⭐️ LoginSignUp: Submit button aligned to the right ⭐️ */}
         <button type="submit" className="LoginSignUp">
           {isLogin ? "Login" : "Sign Up"}
         </button>
+        
         <button
           className="ResetPasswordLink"
           onClick={() => {

@@ -514,8 +514,8 @@ export async function getLeagueList() {
   } else {
     ReactDOM.render(
       <>
-        <h3 className="MembersGetMore">Members get more</h3>
-        <div><p className="MembersGetMore">Browse as a free user or unlock all fixtures by signing up and becoming a premium member from as little as £1/week, cancel anytime</p></div>
+        <h3 className="MembersGetMore">Discover the most in depth stats and tips available</h3>
+        <div><p className="MembersGetMore">Join as a free user or upgrade to premium for as little as £1/week, cancel anytime</p></div>
         <Login />
       </>
       , document.getElementById("Email"));
@@ -645,9 +645,9 @@ function AppContent() {
           <div />
         ) : (
           // If the user is logged in but is NOT a paying customer, show subscribe buttons
-          <div>
+          <div className="SubscribeContainer">
             <span className="MembershipInfo">
-              Full fixtures and AI predictions are restricted to premium
+              Full fixtures and multis are restricted to premium
               members. Memberships can be cancelled at any time and prices will
               differ in currencies other than GBP. Payments are securely hosted
               by Stripe.

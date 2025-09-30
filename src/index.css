@@ -466,22 +466,13 @@ h2 {
 
 
 
-.MembersGetMore {
-  font-size: 1.5em;
+.MembersGetMore p{
+  font-size: 1.1em;
   margin: 0%;
   line-height: 1.5em;
   padding-top: 1em;
 }
 
-h3 {
-  /* font-size: 1.75em; */
-  color: var(--text-color);
-  padding: 1em;
-  margin: 0%;
-    border: 1px solid var(--primary-color);
-    background-color: var(--button-color);
-    color: var(--primary-color);
-}
 
 h4 {
   font-size: 1.2em;
@@ -489,6 +480,10 @@ h4 {
   padding-top: 2em;
   padding: 0.75em;
   margin: 0%
+}
+
+.MissingPredictionsNotice {
+  margin: 1em;
 }
 
 .TeamPreview {
@@ -822,6 +817,14 @@ span.MembershipInfo {
   display: block;
   font-size: 1.2em;
   padding: 1em;
+}
+
+.SubscribeContainer {
+  background-color: var(--secondary-background-color);
+  border-radius: 10px;
+  border: var(--primary-color) solid 1px;
+  padding: 1em;
+  margin-bottom: 1em;
 }
 
 .Explainer {
@@ -3985,71 +3988,104 @@ h6.AttackingMomentum {
   width: 50%;
   text-align: center;
 }
-
+/* 1. Main Form Layout: Places the input group and the submit button side-by-side */
 .LoginForm {
-  font-size: 0.8em;
-  margin-left: auto;
+  /* Enables Flexbox */
+  display: flex; 
+  /* Sets direction to row (default) */
+  flex-direction: row; 
+  /* Aligns the items vertically to the top of the container */
+  align-items: center;
+  margin-left: auto; 
   margin-right: auto;
-  width: 50%;
-  text-align: center;
+  margin-bottom: 1em;
+  /* Space between the input group and the submit button */
+  gap: 1em; 
+  /* Optional: Set a max width for the form itself */
+  margin-top: 20px;
+  align-items: center;
+  max-width: 600px;
+  height: 12em;
+  background-color: var(--secondary-background-color);
+  border-radius: 10px;
+}
+
+/* 2. Input Group Layout: Stacks the email and password fields */
+.InputGroup {
+  /* Enables Flexbox */
   display: flex;
+  /* Sets direction to column (stacking inputs) */
   flex-direction: column;
-  padding-top: 2em;
-  padding-bottom: 0em;
+  width: 60%;
+  /* margin-left: 3em; */
+  /* Controls the vertical spacing between the two fields */
+  gap: 1em; 
+  /* Allows the input group to consume the majority of the form width */
+  flex-grow: 1; 
+    margin-left: 1em;
 }
 
-.LoginInput1 {
-  /* height: 2em; */
-  border: 1px solid #030052;
-  border-bottom: 1px solid #030052;
-  /* text-align: center;  */
-  padding-left: 1em;
-  padding-right: 0;
-  width: 100%;
-  color: #030052;
-  line-height: 2.5em;
-  height: 3em;
+/* Ensure the stacked fields fill the space */
+.LoginInput1,
+.LoginInput2,
+.PasswordContainer {
+  min-width: 12em; 
+  height: 2.5em;
 }
 
+input {
+  border: 1px solid var(--text-color);
+}
+
+/* 3. Password Container (Nested Flex) */
+.PasswordContainer {
+  display: flex;
+  /* Space between the password input and the toggle button */
+  gap: 5px; 
+  margin-bottom: 1em;
+}
+
+/* Ensure the submit button aligns with the stacked fields */
+.LoginSignUp {
+  /* Ensures the button maintains its content width and doesn't shrink */
+  flex-shrink: 0; 
+  /* Set a height that visually balances the stacked inputs and their gap */
+  /* height: 80px;  */
+  padding: 1em;
+  /* margin-right: 3em;
+  margin-left: 3em; */
+  flex: 1;
+  /* Center button text/content */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 0em;
+}
+
+/* Optional: Style the password input to fill the remaining space next to the toggle button */
 .LoginInput2 {
-  /* height: 2em; */
-  border-bottom: 1px solid #030052;
-  border: 1px solid #030052;
-  border-top: 0px;
-  /* text-align: center;  */
-  padding-left: 1em;
-  padding-right: 0;
-  margin-bottom: 0.5em;
-  flex-basis: 90%;
-  margin-right: 0.5em;
-  color: #030052;
-  line-height: 2.5em;
-  height: 3em;
+  flex-grow: 1;
 }
 
+/* Ensure the Reset Password Link button drops below the main flex row */
 .ResetPasswordLink {
-  background: none;
+  /* Makes the button start on a new line */
+  flex-basis: 100%; 
+  text-align: right;
+  height: 4em;
+  padding: 0em;
+  /* Optional cleanup for styling */
+  margin-left: 0em;
+  margin-right: 1em;
   border: none;
   color: var(--text-color);
-  text-decoration: underline;
+  text-align: center;
+  background: none;
+  flex: 1;
   cursor: pointer;
-  padding: 0;
-  margin-left: auto;
-  margin-right: auto;
-  margin-top: 1em;
-}
-
-.ResetPasswordLink:hover {
+  font-size: 0.9em;
   text-decoration: underline;
-}
-
-.LoginSignUp {
-  /* flex-direction: column; */
-  height: 4em;
-  margin-left: auto;
-  margin-right: auto;
-  margin-bottom: 0em;
-  margin-top: 1em;
+  /* margin-top: 10px; */
 }
 
 .CancelButton {
@@ -4071,8 +4107,8 @@ h6.AttackingMomentum {
 .SignUp {
   margin-top: 1em;
   font-size: 1em;
-  width: 75%;
-  height: 5em;
+  width: 50%;
+  height: auto;
 }
 
 .text-blue-500 {
@@ -4087,7 +4123,7 @@ form input {
   display: block;
   opacity: 1;
   pointer-events: auto;
-
+  padding-left: 1em;
 }
 
 button.PaymentReturn {
@@ -4104,10 +4140,10 @@ button.TogglePasswordButton {
   flex-basis: 10%;
   margin: 0px;
   padding: 0em;
-  margin-bottom: 0.5em;
   background: none;
   border: none;
   color: #030052;
+  align-self: center;
   /* margin-left: auto;
   margin-right: auto;
   margin-top: 0em; */
