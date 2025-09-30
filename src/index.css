@@ -1377,12 +1377,12 @@ input:focus {
   display: flex;
   flex-direction: column;
   flex-basis: 100%;
-  background-color: var(--alternate-background-color);
   align-items: left;
   align-content: left;
   color: var(--text-color);
   padding-bottom: 0.5em;
   cursor: pointer;
+  opacity: 0.6;
 }
 
 

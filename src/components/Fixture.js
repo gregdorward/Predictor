@@ -289,7 +289,7 @@ function SingleFixture({
       <LeagueName fixture={fixture} mock={mock} showShortlist={showShortlist} />
       <div className={`individualFixtureContainerfalse`}>
         <li
-          className={`individualFixturefalse`}
+          className={`individualFixture${fixture.omit}`}
           key={fixture.id}
           data-cy={fixture.id}
         // onClick={handleGameStatsClick}
