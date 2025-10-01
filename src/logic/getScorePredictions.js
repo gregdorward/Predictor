@@ -3364,6 +3364,7 @@ async function getSuccessMeasure(fixtures) {
       fixtures[i].hasOwnProperty("prediction") &&
       fixtures[i].omit !== true
     ) {
+      console.log(fixtures[i]);
       sumProfit += fixtures[i].profit;
       investment += 1;
       netProfit = (sumProfit - investment).toFixed(2);

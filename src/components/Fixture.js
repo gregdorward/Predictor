@@ -28,6 +28,7 @@ let tipOutcome = undefined;
 function GetDivider(fixture, mock) {
   const matchStatus = fixture.status;
   let isPrediction = resultValue;
+  console.log(fixture)
 
   if (fixture.fixture.omit === true && matchStatus !== "complete") {
     isPrediction = true;
@@ -65,6 +66,7 @@ function GetDivider(fixture, mock) {
   } else if (isPrediction === true && matchStatus === "complete") {
     let outcome;
     let prediction;
+    console.log(fixture.fixture)
 
     switch (true) {
       case fixture.fixture.homeGoals > fixture.fixture.awayGoals:
@@ -102,6 +104,7 @@ function GetDivider(fixture, mock) {
         break;
     }
 
+    console.log(fixture.fixture)
     if (fixture.fixture.omit === true) {
       return (
         <Fragment>
@@ -464,8 +467,6 @@ async function submitTips() {
 const List = ({ 
   fixtures, 
   mock, 
-  stats, 
-  props, 
   showShortlist, 
   setShowShortlist, 
   // You may also want to accept fullUncappedFixtures here if that was part of your final solution
@@ -692,8 +693,9 @@ function SubmitTipsButton({ submit }) {
 export function Fixture(props) {
   const [count, setCount] = useState(false);
   // ⭐️ Re-introduce state here to control the view ⭐️
+  console.log(props)
   const [showShortlist, setShowShortlist] = useState(false);
-  const resultValue = props.result;
+  resultValue = props.result;
 
   // Dynamically choose the list source based on the toggle state
   const listSource = showShortlist
@@ -702,6 +704,7 @@ export function Fixture(props) {
 
   // The cap text logic
   const showCapText = !props.paid && props.capped === true && !showShortlist;
+  console.log(resultValue)
 
   return (
     <Provider store={store}>

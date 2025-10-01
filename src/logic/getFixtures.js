@@ -463,6 +463,7 @@ async function createFixture(match, result, mockBool) {
 }
 
 export function RenderAllFixtures(props) {
+  console.log(props);
   let matches;
   let uncappedFixtures;
   let capped = false;
