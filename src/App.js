@@ -63,9 +63,9 @@ const leagueOrder = [
   15115, //Portagul Prem 25 12931
   14936, //Dutch Prem 25 12322
   14937, //Belgian Pro League 25 12137
-  13963, //sweden 25
+  16263, //sweden 25
   15055, //Danish Prem 24/25 12132
-  13987, //Norway Prem 25
+  16260, //Norway Prem 25
   14923, //Austrian Prem 25 12472
   15163, //Greek Prem 25 12734
   14972, //turkey 25 12641
@@ -101,8 +101,8 @@ const leagueOrder = [
   15234, //Mexico prem 25 12136
   12933, //National league North and South 24
   13703, //Australian A league 24/25
-  14069, //S Korea 25,
-  13960, //Japan 25
+  16243, //S Korea 25,
+  16242, //Japan 25
   12772, //Saudi 24/25
   13964, // WC Qual Europe 26,
   10121, // WC Qual SA 26,
@@ -113,7 +113,7 @@ const leagueOrder = [
   14924, // Champs league 25 12321
   15002, //Europa 25 12327
   14904, //Europa Conference 25 12278
-  13974, // Copa Libertadores 25
+  16261, // Copa Libertadores 25
 ];
 
 // const sofaScoreIds = [
@@ -167,9 +167,9 @@ const leagueOrder = [
 //   15115, //Portagul Prem 22/23
 //   14936, //Dutch Prem 22/23
 //   14937, //Belgian Pro League 22/23
-//   13963, //sweden 24
+//   16263, //sweden 24
 //   15055, //Danish Prem 24/25
-//   13987, //Norway Prem 23
+//   16260, //Norway Prem 23
 //   14923, //Austrian Prem 22/23
 //   15163, //Greek Prem 22/23
 //   14972, //turkey
@@ -196,8 +196,8 @@ const leagueOrder = [
 //   15234, //Mexico prem 23/24
 //   12933, //National league North and South 22/23
 //   13703, //Australian A league 24/25
-//   14069, //S Korea 25,
-//   13960, //Japan 25
+//   16243, //S Korea 25,
+//   16242, //Japan 25
 //   12772, //Saudi 24/25
 //   13964, // WC Qual Europe,
 //   10121, // WC Qual SA,

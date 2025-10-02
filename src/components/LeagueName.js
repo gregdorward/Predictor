@@ -13,7 +13,7 @@ const sofaScoreIds = [
   { 14924: 7 }, //Champions League
   { 13734: 10783 }, //Nations league 24/25
   { 13878: 357 }, // Club World Cup 25
-    { 13974: 384 }, // Copa Libertadores 25
+    { 16261: 384 }, // Copa Libertadores 25
 
   { 15068: 23 }, //Serie A
 
@@ -22,9 +22,9 @@ const sofaScoreIds = [
   { 15115: 44 }, //Portugal
   { 14936: 35 }, //Dutch
   { 14937: 38 }, //Belgium
-  { 13963: 40 }, //Sweden
+  { 16263: 40 }, //Sweden
   { 15055: 39 }, //Denmark
-  { 13987: 20 }, //Norway
+  { 16260: 20 }, //Norway
   { 14923: 45 }, //Austrian Prem 22/23
   { 15163: 185 }, //Greek Prem 22/23
   { 14972: 52 }, //turkey
@@ -63,8 +63,8 @@ const sofaScoreIds = [
   { 15657: 173 }, //National league
   { 15845: 176 }, //National league north 25
   { 15844: 174 }, //National league south 25
-  { 14069: 410 }, //S Korea 25,
-  { 13960: 196 }, //Japan 25
+  { 16243: 410 }, //S Korea 25,
+  { 16242: 196 }, //Japan 25
   { 12772: 955 }, //Saudi 24/25
   { 13964: 11}, // World Cup 26 EU Qualifiers
   { 10121: 295 }, // World Cup 26 SA Qualifiers
