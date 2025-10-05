@@ -900,6 +900,7 @@ function GameStats({ game, displayBool, stats }) {
       }
 
       const refData = await response.json(); // Parse the JSON response
+      console.log(refData)
 
       // Access the array within the 'data' property
       const dataArray = refData.data;
@@ -908,6 +909,8 @@ function GameStats({ game, displayBool, stats }) {
         console.error("Error: Expected 'data' property to be an array.");
         return null;
       }
+
+      console.log(dataArray)
 
       // Find the object with the matching competition_id
       const filteredObject = dataArray.find(
@@ -2793,6 +2796,7 @@ function GameStats({ game, displayBool, stats }) {
 
       // console.log(homeTeamStats);
       // console.log(oddsData);
+      console.log(game);
 
       try {
         const AIPayload = {

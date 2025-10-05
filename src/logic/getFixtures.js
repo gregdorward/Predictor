@@ -82,7 +82,6 @@ export async function generateTables(a, leagueIdArray, allResults) {
   let i = 0;
   leagueArray.forEach(function (league) {
     let currentLeagueId = leagueIdArray[i];
-    console.log(currentLeagueId);
     i++;
     leagueInstance = [];
 
@@ -463,7 +462,6 @@ async function createFixture(match, result, mockBool) {
 }
 
 export function RenderAllFixtures(props) {
-  console.log(props);
   let matches;
   let uncappedFixtures;
   let capped = false;
@@ -495,7 +493,6 @@ export function RenderAllFixtures(props) {
 
   uniqueLeagueIDs = [...new Set(matches.map(match => match.leagueID))];
 
-  console.log(uniqueLeagueIDs);
   return (
     <Fixture
       fixtures={matches}
@@ -1554,7 +1551,7 @@ export async function generateFixtures(
               onClickEvent={() => getScorePrediction(day)}
               className={"GeneratePredictions"}
             />
-            <div className="Version">Prediction engine v1.5.2 (25/09/25)</div>
+            <div className="Version">Prediction engine v1.5.3 (05/10/25)</div>
             <div className="MissingPredictionsNotice">If predictions are missing on games with little data, switch to AI tips in the options, above</div>
             <Collapsable
               buttonText={"Filters"}

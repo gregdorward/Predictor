@@ -1728,10 +1728,6 @@ export async function generateGoals(homeForm, awayForm, match) {
   let adjustToAway = Math.round(awayForm.CleanSheetPercentage / 50) * -1;
   let finalScore = goalDifference + adjustToHome + adjustToAway;
 
-  console.log(adjustToHome, adjustToAway);
-
-  console.log('Pre Adjustment', homeGoals, awayGoals)
-  console.log('Final Score', finalScore)
 
   const homeAttackVsAwayDefenceComparison = await comparison(
     homeForm.attackingStrength,
@@ -1822,7 +1818,7 @@ export async function generateGoals(homeForm, awayForm, match) {
 
   homeGoals =
     homeGoals +
-    homeAttackVsAwayDefenceComparison * 2 +
+    homeAttackVsAwayDefenceComparison * 3 +
     XGRatingHomeComparison * 0 +
     homeAttackVsAwayDefenceComparisonLast5 * 0.5 +
     0.1 +
@@ -1832,7 +1828,7 @@ export async function generateGoals(homeForm, awayForm, match) {
 
   awayGoals =
     awayGoals +
-    awayAttackVsHomeDefenceComparison * 2 +
+    awayAttackVsHomeDefenceComparison * 3 +
     XGRatingAwayComparison * 0 +
     -Math.abs(0.1) +
     awayAttackVsHomeDefenceComparisonLast5 * 0.5 +
@@ -1842,13 +1838,13 @@ export async function generateGoals(homeForm, awayForm, match) {
 
   // Cumulative ROI for all 3157 match outcomes: +4.31%
 
-  // if (finalScore > 0 && (await diff(homeGoals, awayGoals)) < 1.25) {
-  //   homeGoals = homeGoals + 0.35;
-  //   awayGoals = awayGoals + -Math.abs(0.35);
-  // } else if (finalScore < 0 && (await diff(awayGoals, homeGoals)) < 1.25) {
-  //   homeGoals = homeGoals + -Math.abs(0.35);
-  //   awayGoals = awayGoals + 0.35;
-  // }
+  if (finalScore > 0 && (await diff(homeGoals, awayGoals)) < 1.25) {
+    homeGoals = homeGoals + 0.35;
+    awayGoals = awayGoals + -Math.abs(0.35);
+  } else if (finalScore < 0 && (await diff(awayGoals, homeGoals)) < 1.25) {
+    homeGoals = homeGoals + -Math.abs(0.35);
+    awayGoals = awayGoals + 0.35;
+  }
 
   //PLACEHOLDER
 

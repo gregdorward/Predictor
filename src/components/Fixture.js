@@ -28,7 +28,6 @@ let tipOutcome = undefined;
 function GetDivider(fixture, mock) {
   const matchStatus = fixture.status;
   let isPrediction = resultValue;
-  console.log(fixture)
 
   if (fixture.fixture.omit === true && matchStatus !== "complete") {
     isPrediction = true;
@@ -66,7 +65,6 @@ function GetDivider(fixture, mock) {
   } else if (isPrediction === true && matchStatus === "complete") {
     let outcome;
     let prediction;
-    console.log(fixture.fixture)
 
     switch (true) {
       case fixture.fixture.homeGoals > fixture.fixture.awayGoals:
@@ -104,7 +102,6 @@ function GetDivider(fixture, mock) {
         break;
     }
 
-    console.log(fixture.fixture)
     if (fixture.fixture.omit === true) {
       return (
         <Fragment>
@@ -693,7 +690,6 @@ function SubmitTipsButton({ submit }) {
 export function Fixture(props) {
   const [count, setCount] = useState(false);
   // ⭐️ Re-introduce state here to control the view ⭐️
-  console.log(props)
   const [showShortlist, setShowShortlist] = useState(false);
   resultValue = props.result;
 
@@ -704,7 +700,6 @@ export function Fixture(props) {
 
   // The cap text logic
   const showCapText = !props.paid && props.capped === true && !showShortlist;
-  console.log(resultValue)
 
   return (
     <Provider store={store}>
