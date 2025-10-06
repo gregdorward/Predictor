@@ -1335,6 +1335,8 @@ function GameStats({ game, displayBool, stats }) {
             const homeTeam = await homeTeamStatsResponse.json();
             let homeStats = homeTeam.statistics;
 
+            console.log(homeStats)
+
             const awayTeamStatsResponse = await fetch(
               `${process.env.REACT_APP_EXPRESS_SERVER}teamStats/${matchingGameInfo.awayId}/${game.sofaScoreId}/${derivedRoundId}`
             );
@@ -1590,10 +1592,17 @@ function GameStats({ game, displayBool, stats }) {
             name={formDataHome[0].name}
             goals={homeForm.avgScored}
             conceeded={homeForm.avgConceeded}
+            averageRating={homeTeamStats?.avgRating.toFixed(2)}
             XG={homeForm.XGOverall?.toFixed(2)}
             XGConceded={homeForm.XGAgainstAvgOverall?.toFixed(2)}
             XGSwing={homeForm.XGChangeRecently}
+            bigChances={homeTeamStats?.bigChancesCreated}
+            bigChancesConceded={homeTeamStats?.bigChancesCreatedAgainst}
             possession={homeForm.AveragePossessionOverall?.toFixed(2)}
+            accuratePassesOpponentHalf={homeTeamStats?.accurateOppositionHalfPassesPercentage.toFixed(2)}
+            accuratePassesDefensiveHalf={homeTeamStats?.accurateOwnHalfPassesPercentage.toFixed(2)}
+            longBallPercentage={(homeTeamStats?.totalLongBalls / homeTeamStats?.totalPasses * 100).toFixed(2)}
+            //todo add goal diff and btts percentages
             shots={homeForm.avgShots?.toFixed(2)}
             sot={homeForm.AverageShotsOnTargetOverall?.toFixed(2)}
             dangerousAttacks={
@@ -1601,6 +1610,8 @@ function GameStats({ game, displayBool, stats }) {
                 ? homeForm.AverageDangerousAttacksOverall?.toFixed(2)
                 : homeForm.AverageDangerousAttacks
             }
+            duelsWonPercentage={homeTeamStats?.duelsWonPercentage}
+            aerialDuelsWonPercentage={homeTeamStats?.aerialDuelsWonPercentage}
             leaguePosition={
               homeForm.LeaguePosition !== undefined &&
                 homeForm.LeaguePosition !== "undefined"
@@ -1676,9 +1687,15 @@ function GameStats({ game, displayBool, stats }) {
             name={formDataAway[0].name}
             goals={awayForm.avgScored}
             conceeded={awayForm.avgConceeded}
+            averageRating={awayTeamStats?.avgRating.toFixed(2)}
             XG={awayForm.XGOverall?.toFixed(2)}
             XGConceded={awayForm.XGAgainstAvgOverall?.toFixed(2)}
             XGSwing={awayForm.XGChangeRecently}
+            bigChances={awayTeamStats?.bigChancesCreated}
+            bigChancesConceded={awayTeamStats?.bigChancesCreatedAgainst}
+            accuratePassesOpponentHalf={awayTeamStats?.accurateOppositionHalfPassesPercentage.toFixed(2)}
+            accuratePassesDefensiveHalf={awayTeamStats?.accurateOwnHalfPassesPercentage.toFixed(2)}
+            longBallPercentage={(awayTeamStats?.totalLongBalls / awayTeamStats?.totalPasses * 100).toFixed(2)}
             //todo add goal diff and btts percentages
             possession={awayForm.AveragePossessionOverall?.toFixed(2)}
             rawPosition={game.awayRawPosition ? game.awayRawPosition : 0}
@@ -1689,6 +1706,8 @@ function GameStats({ game, displayBool, stats }) {
                 ? awayForm.AverageDangerousAttacksOverall?.toFixed(2)
                 : awayForm.AverageDangerousAttacks
             }
+            duelsWonPercentage={awayTeamStats?.duelsWonPercentage}
+            aerialDuelsWonPercentage={awayTeamStats?.aerialDuelsWonPercentage}
             leaguePosition={
               awayForm.LeaguePosition !== undefined &&
                 awayForm.LeaguePosition !== "undefined"

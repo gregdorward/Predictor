@@ -108,6 +108,14 @@ function Stats(props) {
           </div>
           <div className="AllStats">
             <li
+              key="LeaguePosition"
+              className="LeaguePosition"
+              data-cy={props.name ? props.name + "leaguePosition" : "leaguePosition"}
+            >
+              {`League position - ${props.leaguePosition !== undefined ? props.leaguePosition : "N/A"
+                }`}
+            </li>
+            <li
               key="TeamScored"
               className="TeamScored"
               data-cy={props.name ? props.name + "teamScored" : "teamScored"}
@@ -122,11 +130,27 @@ function Stats(props) {
               {`Avg goals conceeded - ${props.conceeded !== undefined ? props.conceeded : "N/A"}`}
             </li>
             <li
+              key="TeamAverageRating"
+              className="TeamAverageRating"
+              data-cy={props.name ? props.name + "teamAverageRating" : "teamAverageRating"}
+            >
+              {`Avg rating - ${props.averageRating !== undefined ? props.averageRating : "N/A"}`}
+            </li>
+            <li
               key="TeamPossession"
               className="TeamPossession"
               data-cy={props.name ? props.name + "teamPossession" : "teamPossession"}
             >
               {`Avg possession - ${props.possession !== undefined ? props.possession : "N/A"}%`}
+            </li>
+            <li className="AccuratePassesOpponentHalf" data-cy={props.name ? props.name + "AccuratePassesOpponentHalf" : "AccuratePassesOpponentHalf"}>
+              {`Accurate attacking passes- ${props.accuratePassesOpponentHalf !== undefined ? `${props.accuratePassesOpponentHalf} %` : "N/A"}`}
+            </li>
+            <li className="AccuratePassesDefensiveHalf" data-cy={props.name ? props.name + "AccuratePassesDefensiveHalf" : "AccuratePassesDefensiveHalf"}>
+              {`Accurate own half passes - ${props.accuratePassesDefensiveHalf !== undefined ? `${props.accuratePassesDefensiveHalf} %` : "N/A"}`}
+            </li>
+            <li className="LongBallPercentage" data-cy={props.name ? props.name + "LongBallPercentage" : "LongBallPercentage"}>
+              {`Long ball percentage - ${props.longBallPercentage !== undefined ? `${props.longBallPercentage} %` : "N/A"}`}
             </li>
             <li key="TeamXG" className="TeamXG" data-cy={props.name ? props.name + "teamXG" : "teamXG"}>
               {`Avg XG - ${props.XG !== undefined ? props.XG : "N/A"}`}
@@ -145,6 +169,20 @@ function Stats(props) {
             >
               {`XG difference swing (last 5): ${props.XGSwing !== undefined ? props.XGSwing?.toFixed(2) : "N/A"
                 }`}
+            </li>
+            <li
+              key="bigChances"
+              className="bigChances"
+              data-cy={props.name ? props.name + "bigChances" : "bigChances"}
+            >
+              {`Big chances created - ${props.bigChances !== undefined ? props.bigChances : "N/A"}`}
+            </li>
+            <li
+              key="bigChancesConceded"
+              className="bigChancesConceded"
+              data-cy={props.name ? props.name + "bigChancesConceded" : "bigChancesConceded"}
+            >
+              {`Big chances against - ${props.bigChancesConceded !== undefined ? props.bigChancesConceded : "N/A"}`}
             </li>
             <li
               key="goalDifference"
@@ -184,12 +222,18 @@ function Stats(props) {
               {`Avg dangerous attacks - ${props.dangerousAttacks !== undefined ? props.dangerousAttacks : "N/A"}`}
             </li>
             <li
-              key="LeaguePosition"
-              className="LeaguePosition"
-              data-cy={props.name ? props.name + "leaguePosition" : "leaguePosition"}
+              key="DuelsWon"
+              className="DuelsWon"
+              data-cy={props.name ? props.name + "duelsWon" : "duelsWon"}
             >
-              {`League position - ${props.leaguePosition !== undefined ? props.leaguePosition : "N/A"
-                }`}
+              {`Duels won - ${props.duelsWon !== undefined ? `${props.duelsWon} %` : "N/A"}`}
+            </li>
+            <li
+              key="AerialDuelsWon"
+              className="AerialDuelsWon"
+              data-cy={props.name ? props.name + "aerialDuelsWon" : "aerialDuelsWon"}
+            >
+              {`Aerial duels won - ${props.aerialDuelsWon !== undefined ? `${props.aerialDuelsWon} %` : "N/A"}`}
             </li>
             <li
               key="WinPercentage"
