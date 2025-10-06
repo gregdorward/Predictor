@@ -33,8 +33,8 @@ export async function calculateAttackingStrength(stats) {
     "Average Dangerous Attacks": { min: 25, max: 75 }, // Adjust the max value as needed
     "Average Shots": { min: 4, max: 25 }, // Adjust the max value as needed
     "Average Shots On Target": { min: 3, max: 7 }, // Adjust the max value as needed
-    "Average Expected Goals": { min: 0.75, max: 2.25 }, // Adjust the max value as needed
-    "Recent XG": { min: 0.5, max: 2.25 }, // Adjust the max value as needed
+    "Average Expected Goals": { min: 0.75, max: 2 }, // Adjust the max value as needed
+    "Recent XG": { min: 0.5, max: 2 }, // Adjust the max value as needed
     "Average Goals": { min: 0, max: 3 }, // Adjust the max value as needed
     Corners: { min: 2, max: 9 },
     "Average Shot Value": { min: 3, max: 35 },
@@ -77,8 +77,8 @@ export async function calculateDefensiveStrength(stats, normalizedValue = 1) {
 
   // Define the ranges for normalization
   const ranges = {
-    "Average XG Against": { min: 0.5, max: 2.25 }, // Adjust the max value as needed
-    "Recent XG Against": { min: 0.75, max: 2.25 },
+    "Average XG Against": { min: 0.5, max: 2 }, // Adjust the max value as needed
+    "Recent XG Against": { min: 0.75, max: 2 },
     "Average Goals Against": { min: 0, max: 3 }, // Adjust the max value as needed
     "Average SOT Against": { min: 3, max: 7 },
   };

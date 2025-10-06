@@ -1628,9 +1628,9 @@ function GameStats({ game, displayBool, stats }) {
             }
             ppg={homeForm.avPointsAll?.toFixed(2)}
             formTrend={[
-              homeTenGameAverage?.toFixed(2),
-              homeSixGameAverage?.toFixed(2),
-              homeFiveGameAverage?.toFixed(2),
+              homeForm.avPoints10?.toFixed(2),
+              homeForm.avPoints6?.toFixed(2),
+              homeForm.avPoints5?.toFixed(2),
             ]}
             formRun={homeForm.resultsAll}
             goalDifference={formDataHome[0].goalDifference}
@@ -1710,9 +1710,9 @@ function GameStats({ game, displayBool, stats }) {
             }
             ppg={awayForm.avPointsAll?.toFixed(2)}
             formTrend={[
-              awayTenGameAverage?.toFixed(2),
-              awaySixGameAverage?.toFixed(2),
-              awayFiveGameAverage?.toFixed(2),
+              awayForm.avPoints10?.toFixed(2),
+              awayForm.avPoints6?.toFixed(2),
+              awayForm.avPoints5?.toFixed(2),
             ]}
             formRun={awayForm.resultsAll}
             goalDifference={formDataAway[0].goalDifference}

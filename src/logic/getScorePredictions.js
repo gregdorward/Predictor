@@ -586,6 +586,12 @@ async function getPastLeagueResults(team, game, hOrA, form) {
     allTeamResults.sort((b, a) => a.dateRaw - b.dateRaw);
     form.allTeamResultsLast6 = form.allTeamResults.slice(0, 6);
 
+    const points10 = allTeamResults.map((res) => res.points).slice(0, 10);
+    const pointsSum10 = points10.reduce((a, b) => a + b, 0);
+    form.avPoints10 = pointsSum10 / points10.length;
+    form.pointsSum10 = pointsSum10;
+
+
     const points6 = allTeamResults.map((res) => res.points).slice(0, 6);
     const pointsSum6 = points6.reduce((a, b) => a + b, 0);
     form.avPoints6 = pointsSum6 / points6.length;
@@ -1818,7 +1824,7 @@ export async function generateGoals(homeForm, awayForm, match) {
 
   homeGoals =
     homeGoals +
-    homeAttackVsAwayDefenceComparison * 3 +
+    homeAttackVsAwayDefenceComparison * 3.25 +
     XGRatingHomeComparison * 0 +
     homeAttackVsAwayDefenceComparisonLast5 * 0.5 +
     0.1 +
@@ -1828,7 +1834,7 @@ export async function generateGoals(homeForm, awayForm, match) {
 
   awayGoals =
     awayGoals +
-    awayAttackVsHomeDefenceComparison * 3 +
+    awayAttackVsHomeDefenceComparison * 3.25 +
     XGRatingAwayComparison * 0 +
     -Math.abs(0.1) +
     awayAttackVsHomeDefenceComparisonLast5 * 0.5 +
@@ -1838,13 +1844,19 @@ export async function generateGoals(homeForm, awayForm, match) {
 
   // Cumulative ROI for all 3157 match outcomes: +4.31%
 
-  if (finalScore > 0 && (await diff(homeGoals, awayGoals)) < 1.25) {
-    homeGoals = homeGoals + 0.35;
-    awayGoals = awayGoals + -Math.abs(0.35);
-  } else if (finalScore < 0 && (await diff(awayGoals, homeGoals)) < 1.25) {
-    homeGoals = homeGoals + -Math.abs(0.35);
-    awayGoals = awayGoals + 0.35;
-  }
+  // if (finalScore > 0 && (await diff(homeGoals, awayGoals)) < 1.25) {
+  //   homeGoals = homeGoals + 0.25;
+  //   awayGoals = awayGoals + -Math.abs(0.25);
+  // } else if (finalScore < 0 && (await diff(awayGoals, homeGoals)) < 1.25) {
+  //   homeGoals = homeGoals + -Math.abs(0.25);
+  //   awayGoals = awayGoals + 0.25;
+  // }
+
+  const homePointsChange = parseFloat(await diff(homeForm.avPoints5, homeForm.avPoints10));
+  const awayPointsChange = parseFloat(await diff(awayForm.avPoints5, awayForm.avPoints10));
+
+  homeGoals = homeGoals + (homePointsChange + homeForm.XGChangeRecently);
+  awayGoals = awayGoals + (awayPointsChange + awayForm.XGChangeRecently);
 
   //PLACEHOLDER
 
@@ -2577,42 +2589,42 @@ export async function calculateScore(match, index, divider, calculate, AIPredict
     );
 
     formHome.defensiveStrengthScoreGeneration =
-      await calculateDefensiveStrength(defensiveMetricsHome, 0.85);
+      await calculateDefensiveStrength(defensiveMetricsHome, 0.9);
 
     formHome.defensiveStrengthLast5 = await calculateDefensiveStrength(
       defensiveMetricsHomeLast5
     );
 
     formHome.defensiveStrengthScoreGenerationLast5 =
-      await calculateDefensiveStrength(defensiveMetricsHomeLast5, 0.85);
+      await calculateDefensiveStrength(defensiveMetricsHomeLast5, 0.9);
 
     formHome.defensiveStrengthHomeOnly = await calculateDefensiveStrength(
       defensiveMetricsHomeOnly
     );
 
     formHome.defensiveStrengthScoreGenerationHomeOnly =
-      await calculateDefensiveStrength(defensiveMetricsHomeOnly, 0.85);
+      await calculateDefensiveStrength(defensiveMetricsHomeOnly, 0.9);
 
     formAway.defensiveStrength = await calculateDefensiveStrength(
       defensiveMetricsAway
     );
 
     formAway.defensiveStrengthScoreGeneration =
-      await calculateDefensiveStrength(defensiveMetricsAway, 0.85);
+      await calculateDefensiveStrength(defensiveMetricsAway, 0.9);
 
     formAway.defensiveStrengthLast5 = await calculateDefensiveStrength(
       defensiveMetricsAwayLast5
     );
 
     formAway.defensiveStrengthScoreGenerationLast5 =
-      await calculateDefensiveStrength(defensiveMetricsAwayLast5, 0.85);
+      await calculateDefensiveStrength(defensiveMetricsAwayLast5, 0.9);
 
     formAway.defensiveStrengthAwayOnly = await calculateDefensiveStrength(
       defensiveMetricsAwayOnly
     );
 
     formAway.defensiveStrengthScoreGenerationAwayOnly =
-      await calculateDefensiveStrength(defensiveMetricsAwayOnly, 0.85);
+      await calculateDefensiveStrength(defensiveMetricsAwayOnly, 0.9);
 
     formHome.possessionStrength = await calculateMetricStrength(
       "averagePossession",
@@ -4614,32 +4626,32 @@ async function renderTips() {
     newArray = newArray.slice(0, 6);
     ReactDOM.render(
       <div className="PredictionContainer">
-      <Fragment>
-        <Increment />
-        <Collapsable
-        buttonText={"Build a Multi"}
-        element={
-          <ul className="BestPredictions" id="BestPredictions">
-          <div className="BestPredictionsExplainer">
-            Multis limited to a maximum of 6 selections for free users.<br />
-            Add or remove a selection using the buttons below. Predictions
-            are ordered by confidence in the outcome.
-          </div>
-          {newArray.map((tip) => (
-            <li key={`${tip.game}acca`}>
-            <div>
-              {tip.team}: {tip.odds}{" "}
-              <span className={tip.outcome}>{tip.outcomeSymbol}</span>
-            </div>
-            <div className="TipGame">{tip.game}</div>
-            </li>
-          ))}
-          <div className="AccumulatedOdds">{`Accumulator odds ~ : ${Math.round(accumulatedOdds) - 1
-            }/1`}</div>
-          </ul>
-        }
-        />
-      </Fragment>
+        <Fragment>
+          <Increment />
+          <Collapsable
+            buttonText={"Build a Multi"}
+            element={
+              <ul className="BestPredictions" id="BestPredictions">
+                <div className="BestPredictionsExplainer">
+                  Multis limited to a maximum of 6 selections for free users.<br />
+                  Add or remove a selection using the buttons below. Predictions
+                  are ordered by confidence in the outcome.
+                </div>
+                {newArray.map((tip) => (
+                  <li key={`${tip.game}acca`}>
+                    <div>
+                      {tip.team}: {tip.odds}{" "}
+                      <span className={tip.outcome}>{tip.outcomeSymbol}</span>
+                    </div>
+                    <div className="TipGame">{tip.game}</div>
+                  </li>
+                ))}
+                <div className="AccumulatedOdds">{`Accumulator odds ~ : ${Math.round(accumulatedOdds) - 1
+                  }/1`}</div>
+              </ul>
+            }
+          />
+        </Fragment>
       </div>,
       document.getElementById("bestPredictions")
     );
@@ -4698,7 +4710,7 @@ async function renderTips() {
     );
   } else if (paid !== true) {
     exoticArray = exoticArray.slice(0, 6);
-        ReactDOM.render(
+    ReactDOM.render(
       <div className="PredictionContainer">
         <Fragment>
           <Collapsable
