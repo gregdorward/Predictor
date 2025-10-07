@@ -56,6 +56,20 @@ const MemoizedSofaLineupsWidget = memo(SofaLineupsWidget);
 
 function GameStats({ game, displayBool, stats }) {
 
+  const [openSections, setOpenSections] = useState({});
+
+  const handleToggle = (sectionName) => {
+    setOpenSections(prev => ({
+      ...prev,
+      [sectionName]: !prev[sectionName]
+    }));
+  };
+
+  const getCollapsableProps = (sectionName) => ({
+    isOpen: !!openSections[sectionName],
+    onTriggerToggle: () => handleToggle(sectionName),
+  });
+
   function styling(testBool) {
     let bool = testBool;
     if (bool === true && clicked === true) {
@@ -887,58 +901,57 @@ function GameStats({ game, displayBool, stats }) {
     return currentTimestamp < targetTimestamp;
   }
 
-  async function getRefStats(refId, compId) {
-    try {
-      const response = await fetch(
-        `${process.env.REACT_APP_EXPRESS_SERVER}referee/${refId}`
-      );
+  // async function getRefStats(refId, compId) {
+  //   try {
+  //     const response = await fetch(
+  //       `${process.env.REACT_APP_EXPRESS_SERVER}referee/${refId}`
+  //     );
 
-      if (!response.ok) {
-        // Handle HTTP errors (e.g., 404, 500)
-        console.error(`HTTP error! Status: ${response.status}`);
-        return null; // Or throw an error to be caught later
-      }
+  //     if (!response.ok) {
+  //       // Handle HTTP errors (e.g., 404, 500)
+  //       console.error(`HTTP error! Status: ${response.status}`);
+  //       return null; // Or throw an error to be caught later
+  //     }
 
-      const refData = await response.json(); // Parse the JSON response
-      console.log(refData)
+  //     const refData = await response.json(); // Parse the JSON response
 
-      // Access the array within the 'data' property
-      const dataArray = refData.data;
+  //     // Access the array within the 'data' property
+  //     const dataArray = refData.data;
 
-      if (!Array.isArray(dataArray)) {
-        console.error("Error: Expected 'data' property to be an array.");
-        return null;
-      }
+  //     if (!Array.isArray(dataArray)) {
+  //       console.error("Error: Expected 'data' property to be an array.");
+  //       return null;
+  //     }
 
-      console.log(dataArray)
+  //     console.log(dataArray)
 
-      // Find the object with the matching competition_id
-      const filteredObject = dataArray.find(
-        (item) => item.competition_id === compId
-      );
+  //     // Find the object with the matching competition_id
+  //     const filteredObject = dataArray.find(
+  //       (item) => item.competition_id === compId
+  //     );
 
-      const distilledRefData = {
-        appearances_overall: filteredObject.appearances_overall,
-        full_name: filteredObject.full_name,
-        cards_per_match_overall: filteredObject.cards_per_match_overall,
-        goals_per_match_overall: filteredObject.goals_per_match_overall,
-        min_per_card_overall: filteredObject.min_per_card_overall,
-        nationality: filteredObject.nationality,
-        over25_cards_percentage_overall:
-          filteredObject.over25_cards_percentage_overall,
-        over35_cards_percentage_overall:
-          filteredObject.over35_cards_percentage_overall,
-        penalties_given_per_match_overall:
-          filteredObject.penalties_given_per_match_overall,
-        red_cards_overall: filteredObject.red_cards_overall,
-      };
+  //     const distilledRefData = {
+  //       appearances_overall: filteredObject.appearances_overall,
+  //       full_name: filteredObject.full_name,
+  //       cards_per_match_overall: filteredObject.cards_per_match_overall,
+  //       goals_per_match_overall: filteredObject.goals_per_match_overall,
+  //       min_per_card_overall: filteredObject.min_per_card_overall,
+  //       nationality: filteredObject.nationality,
+  //       over25_cards_percentage_overall:
+  //         filteredObject.over25_cards_percentage_overall,
+  //       over35_cards_percentage_overall:
+  //         filteredObject.over35_cards_percentage_overall,
+  //       penalties_given_per_match_overall:
+  //         filteredObject.penalties_given_per_match_overall,
+  //       red_cards_overall: filteredObject.red_cards_overall,
+  //     };
 
-      return distilledRefData; // Returns the found object, or undefined if not found
-    } catch (error) {
-      console.error("Error fetching or processing data:", error);
-      return null; // Or handle the error as appropriate for your application (e.g., display an error message to the user)
-    }
-  }
+  //     return distilledRefData; // Returns the found object, or undefined if not found
+  //   } catch (error) {
+  //     console.error("Error fetching or processing data:", error);
+  //     return null; // Or handle the error as appropriate for your application (e.g., display an error message to the user)
+  //   }
+  // }
 
   const reasonCodeMap = {
     1: "Injury",
@@ -1335,7 +1348,6 @@ function GameStats({ game, displayBool, stats }) {
             const homeTeam = await homeTeamStatsResponse.json();
             let homeStats = homeTeam.statistics;
 
-            console.log(homeStats)
 
             const awayTeamStatsResponse = await fetch(
               `${process.env.REACT_APP_EXPRESS_SERVER}teamStats/${matchingGameInfo.awayId}/${game.sofaScoreId}/${derivedRoundId}`
@@ -1343,9 +1355,6 @@ function GameStats({ game, displayBool, stats }) {
             console.log(`${process.env.REACT_APP_EXPRESS_SERVER}teamStats/${matchingGameInfo.awayId}/${game.sofaScoreId}/${derivedRoundId}`)
             const awayTeam = await awayTeamStatsResponse.json();
             let awayStats = awayTeam.statistics;
-
-            console.log("Home Stats:", homeStats);
-            console.log("Away Stats:", awayStats);
 
             setHomeTeamStats(homeStats);
             setAwayTeamStats(awayStats);
@@ -1361,7 +1370,6 @@ function GameStats({ game, displayBool, stats }) {
               `${process.env.REACT_APP_EXPRESS_SERVER}bestPlayers/${game.sofaScoreId}/${derivedRoundId}/${week}`
             );
             const playerStats = await leaguePlayerStatsResponse.json();
-            console.log("Player Stats:", playerStats);
 
             let playersHome = await extractRankedPlayersByTeam(
               playerStats.topPlayers,
@@ -1573,12 +1581,32 @@ function GameStats({ game, displayBool, stats }) {
     );
   }
 
-  function StatsHomeComponent() {
+  function StatsHomeComponent({ getCollapsableProps }) {
+    const opponentPassesHome = homeTeamStats?.ownHalfPassesTotalAgainst ?? 0;
+    const defensiveActionsHome =
+      (homeTeamStats?.interceptions ?? 0) +
+      (homeTeamStats?.tackles ?? 0) +
+      (homeTeamStats?.blockedScoringAttempt ?? 0) +
+      (homeTeamStats?.clearances ?? 0);
+
+    // Check for zero to prevent division by zero (resulting in Infinity)
+    const PPDA_valueHome = defensiveActionsHome > 0
+      ? (opponentPassesHome / defensiveActionsHome).toFixed(2)
+      : 'N/A'; // Or handle as desired (e.g., return 0 or a very high number)
+
+          const oppositionHalfPassesHome = homeTeamStats?.totalOppositionHalfPasses ?? 0;
+    const attackingPlaysHome = ( homeTeamStats?.shots ?? 0 + homeTeamStats?.totalCrosses ?? 0 + homeTeamStats?.dribbleAttempts ?? 0 + homeTeamStats?.bigChancesCreated ?? 0);
+
+    const PPAA_valueHome = attackingPlaysHome > 0
+      ? (oppositionHalfPassesHome / attackingPlaysHome).toFixed(2)
+      : 'N/A';
+
     if (!homeForm) return null;
     return (
       <div className="flex-childOne">
         <ul style={style}>
           <Stats
+            getCollapsableProps={getCollapsableProps}
             games={"all"}
             style={style}
             homeOrAway="Home"
@@ -1592,26 +1620,61 @@ function GameStats({ game, displayBool, stats }) {
             name={formDataHome[0].name}
             goals={homeForm.avgScored}
             conceeded={homeForm.avgConceeded}
-            averageRating={homeTeamStats?.avgRating.toFixed(2)}
+            averageRating={homeTeamStats?.avgRating?.toFixed(2)}
             XG={homeForm.XGOverall?.toFixed(2)}
             XGConceded={homeForm.XGAgainstAvgOverall?.toFixed(2)}
             XGSwing={homeForm.XGChangeRecently}
             bigChances={homeTeamStats?.bigChancesCreated}
+            bigChancesMissed={homeTeamStats?.bigChancesMissed}
             bigChancesConceded={homeTeamStats?.bigChancesCreatedAgainst}
+            shotsOnTargetAgainst={
+              homeTeamStats?.shotsOnTargetAgainst !== undefined &&
+                homeTeamStats?.matches
+                ? (homeTeamStats.shotsOnTargetAgainst / homeTeamStats.matches).toFixed(2)
+                : "N/A"
+            }
+
             possession={homeForm.AveragePossessionOverall?.toFixed(2)}
-            accuratePassesOpponentHalf={homeTeamStats?.accurateOppositionHalfPassesPercentage.toFixed(2)}
-            accuratePassesDefensiveHalf={homeTeamStats?.accurateOwnHalfPassesPercentage.toFixed(2)}
-            longBallPercentage={(homeTeamStats?.totalLongBalls / homeTeamStats?.totalPasses * 100).toFixed(2)}
-            //todo add goal diff and btts percentages
+            accuratePassesPercentage={homeTeamStats?.accuratePassesPercentage?.toFixed(2)}
+            accuratePassesOpponentHalf={homeTeamStats?.accurateOppositionHalfPassesPercentage?.toFixed(2)}
+            accuratePassesDefensiveHalf={homeTeamStats?.accurateOwnHalfPassesPercentage?.toFixed(2)}
+            accurateCrosses={homeTeamStats?.accurateCrosses}
+
+            longBallPercentage={
+              homeTeamStats?.totalLongBalls !== undefined &&
+                homeTeamStats?.totalPasses
+                ? ((homeTeamStats.totalLongBalls / homeTeamStats.totalPasses) * 100).toFixed(2)
+                : "N/A"
+            }            //todo add goal diff and btts percentages
+            accurateLongBallsPercentage={homeTeamStats?.accurateLongBallsPercentage?.toFixed(2)}
+            accurateLongBallsAgainstPercentage={
+              homeTeamStats?.longBallsSuccessfulAgainst !== undefined &&
+                homeTeamStats?.longBallsTotalAgainst
+                ? ((homeTeamStats.longBallsSuccessfulAgainst / homeTeamStats.longBallsTotalAgainst) * 100).toFixed(2)
+                : "N/A"
+            }
             shots={homeForm.avgShots?.toFixed(2)}
             sot={homeForm.AverageShotsOnTargetOverall?.toFixed(2)}
+            shotsInsideBox={homeTeamStats?.shotsFromInsideTheBox}
+            shotsInsideBoxAgainst={homeTeamStats?.shotsFromInsideTheBoxAgainst}
             dangerousAttacks={
               homeForm.AverageDangerousAttacksOverall !== 0
                 ? homeForm.AverageDangerousAttacksOverall?.toFixed(2)
                 : homeForm.AverageDangerousAttacks
             }
-            duelsWonPercentage={homeTeamStats?.duelsWonPercentage}
-            aerialDuelsWonPercentage={homeTeamStats?.aerialDuelsWonPercentage}
+            goalsFromInsideTheBox={homeTeamStats?.goalsFromInsideTheBox}
+            goalsFromOutsideTheBox={homeTeamStats?.goalsFromOutsideTheBox}
+            fastBreakShots={homeTeamStats?.fastBreakShots}
+            dribbleAttempts={homeTeamStats?.dribbleAttempts}
+            successfulDribbles={homeTeamStats?.successfulDribbles}
+            duelsWonPercentage={homeTeamStats?.duelsWonPercentage?.toFixed(2)}
+            aerialDuelsWonPercentage={homeTeamStats?.aerialDuelsWonPercentage?.toFixed(2)}
+            ballRecovery={homeTeamStats?.ballRecovery}
+            interceptions={homeTeamStats?.interceptions}
+            errorsLeadingToShotAgainst={homeTeamStats?.errorsLeadingToShotAgainst}
+            offsides={homeTeamStats?.offsides}
+            PPDA={PPDA_valueHome}
+            PPAA={PPAA_valueHome}
             leaguePosition={
               homeForm.LeaguePosition !== undefined &&
                 homeForm.LeaguePosition !== "undefined"
@@ -1652,7 +1715,11 @@ function GameStats({ game, displayBool, stats }) {
             Results={formDataHome[0].Results}
             ResultsHorA={formDataHome[0].ResultsHorA}
             CardsTotal={formDataHome[0].CardsTotal}
+            RedCardsTotal={homeTeamStats?.redCards}
+            Fouls={homeTeamStats?.fouls}
+            PenaltiesConceded={homeTeamStats?.penaltiesCommited}
             CornersAverage={homeForm.AverageCorners}
+            FreeKickGoals={homeTeamStats?.freeKickGoals}
             ScoredBothHalvesPercentage={
               formDataHome[0].ScoredBothHalvesPercentage
             }
@@ -1667,12 +1734,36 @@ function GameStats({ game, displayBool, stats }) {
   }
 
   // Component: StatsAway (Render Away Team Stats)
-  function StatsAwayComponent() {
+  function StatsAwayComponent({ getCollapsableProps }) {
+
+    const oppositionPassesAway = awayTeamStats?.ownHalfPassesTotalAgainst ?? 0;
+    const defensiveActionsAway =
+      (awayTeamStats?.interceptions ?? 0) +
+      (awayTeamStats?.tackles ?? 0) +
+      (awayTeamStats?.blockedScoringAttempt ?? 0) +
+      (awayTeamStats?.clearances ?? 0);
+
+    // Check for zero to prevent division by zero (resulting in Infinity)
+    const PPDA_valueAway = defensiveActionsAway > 0
+      ? (oppositionPassesAway / defensiveActionsAway).toFixed(2)
+      : 'N/A'; 
+
+    const oppositionHalfPassesAway = awayTeamStats?.totalOppositionHalfPasses ?? 0;
+    const attackingPlaysAway = ( awayTeamStats?.shots ?? 0 + awayTeamStats?.totalCrosses ?? 0 + awayTeamStats?.dribbleAttempts ?? 0 + awayTeamStats?.bigChancesCreated ?? 0);
+
+    const PPAA_valueAway = attackingPlaysAway > 0
+      ? (oppositionHalfPassesAway / attackingPlaysAway).toFixed(2)
+      : 'N/A'; 
+
+    // PPAA = Opponent Passes / (Shots + Crosses + Dribbles/Take-ons + Key Passes)
+
+
     if (!awayForm) return null;
     return (
       <div className="flex-childTwo">
         <ul style={style}>
           <Stats
+            getCollapsableProps={getCollapsableProps}
             games={"all"}
             style={style}
             homeOrAway="Away"
@@ -1687,27 +1778,61 @@ function GameStats({ game, displayBool, stats }) {
             name={formDataAway[0].name}
             goals={awayForm.avgScored}
             conceeded={awayForm.avgConceeded}
-            averageRating={awayTeamStats?.avgRating.toFixed(2)}
+            averageRating={awayTeamStats?.avgRating?.toFixed(2)}
             XG={awayForm.XGOverall?.toFixed(2)}
             XGConceded={awayForm.XGAgainstAvgOverall?.toFixed(2)}
             XGSwing={awayForm.XGChangeRecently}
             bigChances={awayTeamStats?.bigChancesCreated}
+            bigChancesMissed={awayTeamStats?.bigChancesMissed}
             bigChancesConceded={awayTeamStats?.bigChancesCreatedAgainst}
-            accuratePassesOpponentHalf={awayTeamStats?.accurateOppositionHalfPassesPercentage.toFixed(2)}
-            accuratePassesDefensiveHalf={awayTeamStats?.accurateOwnHalfPassesPercentage.toFixed(2)}
-            longBallPercentage={(awayTeamStats?.totalLongBalls / awayTeamStats?.totalPasses * 100).toFixed(2)}
+            shotsOnTargetAgainst={
+              awayTeamStats?.shotsOnTargetAgainst !== undefined &&
+                awayTeamStats?.matches
+                ? (awayTeamStats.shotsOnTargetAgainst / awayTeamStats.matches).toFixed(2)
+                : "N/A"
+            }
+            accuratePassesPercentage={awayTeamStats?.accuratePassesPercentage?.toFixed(2)}
+            accuratePassesOpponentHalf={awayTeamStats?.accurateOppositionHalfPassesPercentage?.toFixed(2)}
+            accuratePassesDefensiveHalf={awayTeamStats?.accurateOwnHalfPassesPercentage?.toFixed(2)}
+            accurateCrosses={awayTeamStats?.accurateCrosses}
+            longBallPercentage={
+              awayTeamStats?.totalLongBalls !== undefined &&
+                awayTeamStats?.totalPasses
+                ? ((awayTeamStats.totalLongBalls / awayTeamStats.totalPasses) * 100).toFixed(2)
+                : "N/A"
+            }
+            accurateLongBallsPercentage={awayTeamStats?.accurateLongBallsPercentage?.toFixed(2)}
+            accurateLongBallsAgainstPercentage={
+              awayTeamStats?.longBallsSuccessfulAgainst !== undefined &&
+                awayTeamStats?.longBallsTotalAgainst
+                ? ((awayTeamStats.longBallsSuccessfulAgainst / awayTeamStats.longBallsTotalAgainst) * 100).toFixed(2)
+                : "N/A"
+            }
             //todo add goal diff and btts percentages
             possession={awayForm.AveragePossessionOverall?.toFixed(2)}
             rawPosition={game.awayRawPosition ? game.awayRawPosition : 0}
             sot={awayForm.AverageShotsOnTargetOverall?.toFixed(2)}
             shots={awayForm.avgShots?.toFixed(2)}
+            shotsInsideBox={awayTeamStats?.shotsFromInsideTheBox}
+            shotsInsideBoxAgainst={awayTeamStats?.shotsFromInsideTheBoxAgainst}
             dangerousAttacks={
               awayForm.AverageDangerousAttacksOverall !== 0
                 ? awayForm.AverageDangerousAttacksOverall?.toFixed(2)
                 : awayForm.AverageDangerousAttacks
             }
-            duelsWonPercentage={awayTeamStats?.duelsWonPercentage}
-            aerialDuelsWonPercentage={awayTeamStats?.aerialDuelsWonPercentage}
+            goalsFromInsideTheBox={awayTeamStats?.goalsFromInsideTheBox}
+            goalsFromOutsideTheBox={awayTeamStats?.goalsFromOutsideTheBox}
+            fastBreakShots={awayTeamStats?.fastBreakShots}
+            dribbleAttempts={awayTeamStats?.dribbleAttempts}
+            successfulDribbles={awayTeamStats?.successfulDribbles}
+            duelsWonPercentage={awayTeamStats?.duelsWonPercentage?.toFixed(2)}
+            aerialDuelsWonPercentage={awayTeamStats?.aerialDuelsWonPercentage?.toFixed(2)}
+            ballRecovery={awayTeamStats?.ballRecovery}
+            interceptions={awayTeamStats?.interceptions}
+            errorsLeadingToShotAgainst={awayTeamStats?.errorsLeadingToShotAgainst}
+            offsides={awayTeamStats?.offsides}
+            PPDA={PPDA_valueAway}
+            PPAA={PPAA_valueAway}
             leaguePosition={
               awayForm.LeaguePosition !== undefined &&
                 awayForm.LeaguePosition !== "undefined"
@@ -1742,7 +1867,11 @@ function GameStats({ game, displayBool, stats }) {
             Results={formDataAway[0].Results}
             ResultsHorA={formDataAway[0].ResultsHorA}
             CardsTotal={formDataAway[0].CardsTotal}
+            RedCardsTotal={awayTeamStats?.redCards}
+            Fouls={awayTeamStats?.fouls}
+            PenaltiesConceded={homeTeamStats?.penaltiesCommited}
             CornersAverage={awayForm.AverageCorners}
+            FreeKickGoals={awayTeamStats?.freeKickGoals}
             ScoredBothHalvesPercentage={
               formDataAway[0].ScoredBothHalvesPercentage
             }
@@ -2815,7 +2944,6 @@ function GameStats({ game, displayBool, stats }) {
 
       // console.log(homeTeamStats);
       // console.log(oddsData);
-      console.log(game);
 
       try {
         const AIPayload = {
@@ -3068,7 +3196,6 @@ function GameStats({ game, displayBool, stats }) {
       }
 
       let odds;
-      console.log(game)
 
       if (tipType === "homeTeam") {
         odds = game.homeOdds;
@@ -3459,8 +3586,8 @@ function GameStats({ game, displayBool, stats }) {
           <>
             <h2>All games</h2>
             <div className="flex-container">
-              <StatsHomeComponent />
-              <StatsAwayComponent />
+              <StatsHomeComponent getCollapsableProps={getCollapsableProps} />
+              <StatsAwayComponent getCollapsableProps={getCollapsableProps} />
             </div>
             {stats && ranksHome && ranksAway && stats?.topTeams && (
               <TeamRankingsFlexView

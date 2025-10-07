@@ -14,17 +14,17 @@ const Collapsable = ({
   element,
   elementTwo,
   isOpen,
-  onTriggerOpening,
-  onTriggerClosing,
+  onTriggerToggle
+  // onTriggerOpening,
+  // onTriggerClosing,
 }) => {
   return (
     <Collapsible
       transitionTime={300}
       open={isOpen}
-      onOpening={onTriggerOpening}
-      onClosing={onTriggerClosing}
       trigger={
-          <button className={classNameButton} style={{ display }}>
+        // ⭐️ FIX: ADD onClick={onTriggerToggle} to the button ⭐️
+        <button className={classNameButton} style={{ display }} onClick={onTriggerToggle}>
           {buttonImage && (
             <img
               src={buttonImage}

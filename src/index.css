@@ -466,7 +466,7 @@ h2 {
 
 
 
-.MembersGetMore p{
+.MembersGetMore p {
   font-size: 1.1em;
   margin: 0%;
   line-height: 1.5em;
@@ -2036,7 +2036,19 @@ h6.MediaTitle {
   margin-bottom: 0em;
 }
 
-
+.StatHeader {
+  font-size: 1.1em;
+  background-color: var(--secondary-background-color);
+  width: 95%;
+  padding-left: 2em;
+  padding-right: 2em;
+  color: var(--button-color);
+  margin-left: 0em;
+  margin-right: 0em;
+  margin-top: 0.25em;
+  margin-bottom: 0.25em;
+  text-align: -webkit-match-parent;
+}
 
 .StatsDiv {
   background-color: #e2e2e26c;
@@ -2659,7 +2671,7 @@ a.PreviousMatchLink {
 .KeyStatsHome {
   padding-top: 0.5em;
   padding-bottom: 2em;
-  /* padding-right: 0.25em; */
+  padding-right: 0.5em;
   padding-left: 0.5em;
 }
 
@@ -2669,11 +2681,30 @@ a.PreviousMatchLink {
   padding-right: 0.5em;
 }
 
+.AllStats li {
+  line-height: 2em;
+}
+
+.AllStats li:nth-child(even) {
+  background: var(--secondary-background-color);
+  color: var(--text-color);
+}
+
+.AllStats li:last-child {
+  margin-bottom: 1em;
+}
+
+.StatExplanation {
+  font-size: 0.8em;
+  color: var(--mid-grey);
+  padding: 1em;
+}
+
 .KeyStatsAway {
   padding-top: 0.5em;
   padding-bottom: 2em;
   padding-right: 0.5em;
-  /* padding-left: 0.5em; */
+  padding-left: 0.5em;
 }
 
 .KeyStatsAway li {
@@ -3988,19 +4019,20 @@ h6.AttackingMomentum {
   width: 50%;
   text-align: center;
 }
+
 /* 1. Main Form Layout: Places the input group and the submit button side-by-side */
 .LoginForm {
   /* Enables Flexbox */
-  display: flex; 
+  display: flex;
   /* Sets direction to row (default) */
-  flex-direction: row; 
+  flex-direction: row;
   /* Aligns the items vertically to the top of the container */
   align-items: center;
-  margin-left: auto; 
+  margin-left: auto;
   margin-right: auto;
   margin-bottom: 1em;
   /* Space between the input group and the submit button */
-  gap: 1em; 
+  gap: 1em;
   /* Optional: Set a max width for the form itself */
   margin-top: 20px;
   align-items: center;
@@ -4019,17 +4051,17 @@ h6.AttackingMomentum {
   width: 60%;
   /* margin-left: 3em; */
   /* Controls the vertical spacing between the two fields */
-  gap: 1em; 
+  gap: 1em;
   /* Allows the input group to consume the majority of the form width */
-  flex-grow: 1; 
-    margin-left: 1em;
+  flex-grow: 1;
+  margin-left: 1em;
 }
 
 /* Ensure the stacked fields fill the space */
 .LoginInput1,
 .LoginInput2,
 .PasswordContainer {
-  min-width: 12em; 
+  min-width: 12em;
   height: 2.5em;
 }
 
@@ -4041,14 +4073,14 @@ input {
 .PasswordContainer {
   display: flex;
   /* Space between the password input and the toggle button */
-  gap: 5px; 
+  gap: 5px;
   margin-bottom: 1em;
 }
 
 /* Ensure the submit button aligns with the stacked fields */
 .LoginSignUp {
   /* Ensures the button maintains its content width and doesn't shrink */
-  flex-shrink: 0; 
+  flex-shrink: 0;
   /* Set a height that visually balances the stacked inputs and their gap */
   /* height: 80px;  */
   padding: 1em;
@@ -4070,7 +4102,7 @@ input {
 /* Ensure the Reset Password Link button drops below the main flex row */
 .ResetPasswordLink {
   /* Makes the button start on a new line */
-  flex-basis: 100%; 
+  flex-basis: 100%;
   text-align: right;
   height: 4em;
   padding: 0em;
@@ -4359,9 +4391,10 @@ button.AIInsights button:active {
 }
 
 .swiper-pagination-bullet {
-  background-color: white !important;
-  height: 1.5em !important;
-  width: 1.5em !important;
+  background-color: var(--primary-color) !important;
+  height: 2em !important;
+  width: 2em !important;
+
 
 }
 
