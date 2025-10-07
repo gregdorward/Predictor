@@ -336,34 +336,6 @@ function Stats(props) {
                 </>
               }
             />
-            <Collapsable buttonText={"Performance"}
-              classNameButton="StatHeader"
-              {...getCollapsableProps("Performance")}
-
-              element={
-                <>         <li
-                  key="TeamAverageRating"
-                  className="TeamAverageRating"
-                  data-cy={props.name ? props.name + "teamAverageRating" : "teamAverageRating"}
-                >
-                  {`Avg rating: ${props.averageRating !== undefined ? props.averageRating : "N/A"}`}
-                </li>
-
-
-                  <li
-                    key="TeamXGSwing"
-                    className="TeamXGSwing"
-                    data-cy={props.name ? props.name + "teamXGSwing" : "teamXGSwing"}
-                  >
-                    {`XG difference swing (last 5): ${props.XGSwing !== undefined ? props.XGSwing?.toFixed(2) : "N/A"
-                      }`}
-                  </li>
-                  <li key="Offsides" className="Offsides" data-cy={props.name ? props.name + "Offsides" : "Offsides"}>
-                    {`Offsides: ${props.offsides !== undefined ? props.offsides : "N/A"}`}
-                  </li>
-                </>
-              }
-            />
             <Collapsable buttonText={"Form"}
               classNameButton="StatHeader"
               {...getCollapsableProps("Form")}
@@ -450,6 +422,33 @@ function Stats(props) {
                     data-cy={props.name ? props.name + "FreeKickGoals" : "FreeKickGoals"}
                   >
                     {`Free kick goals: ${props.FreeKickGoals !== undefined ? props.FreeKickGoals : "N/A"}`}
+                  </li>
+                </>
+              }
+            />
+            <Collapsable buttonText={"Misc"}
+              classNameButton="StatHeader"
+              {...getCollapsableProps("Misc")}
+              element={
+                <>         <li
+                  key="TeamAverageRating"
+                  className="TeamAverageRating"
+                  data-cy={props.name ? props.name + "teamAverageRating" : "teamAverageRating"}
+                >
+                  {`Avg rating: ${props.averageRating !== undefined ? props.averageRating : "N/A"}`}
+                </li>
+
+
+                  <li
+                    key="TeamXGSwing"
+                    className="TeamXGSwing"
+                    data-cy={props.name ? props.name + "teamXGSwing" : "teamXGSwing"}
+                  >
+                    {`XG difference swing (last 5): ${props.XGSwing !== undefined ? props.XGSwing?.toFixed(2) : "N/A"
+                      }`}
+                  </li>
+                  <li key="Offsides" className="Offsides" data-cy={props.name ? props.name + "Offsides" : "Offsides"}>
+                    {`Offsides: ${props.offsides !== undefined ? props.offsides : "N/A"}`}
                   </li>
                 </>
               }
