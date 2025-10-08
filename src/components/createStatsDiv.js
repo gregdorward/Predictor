@@ -186,8 +186,18 @@ function Stats(props) {
                   className="AverageSOT"
                   data-cy={props.name ? props.name + "averageSOT" : "averageSOT"}
                 >
-                    {`Avg shots on target: ${props.sot !== undefined ? props.sot : "N/A"}`}
-                  </li><li
+                    {`Avg SOT: ${props.sot !== undefined ? props.sot : "N/A"}`}
+                  </li>
+                  <li key="ShootingAccuracy" className="ShootingAccuracy" data-cy={props.name ? props.name + "shootingAccuracy" : "shootingAccuracy"}>
+                    {`Shooting accuracy: ${props.shootingAccuracy !== undefined ? `${props.shootingAccuracy}%` : "N/A"}`}
+                  </li>
+                  <li key="GoalConversionRate" className="GoalConversionRate" data-cy={props.name ? props.name + "goalConversionRate" : "goalConversionRate"}>
+                    {`Goal conversion rate: ${props.goalConversionRate !== undefined ? `${props.goalConversionRate}%` : "N/A"}`}
+                  </li>
+                  <li key="BigChanceConversionRate" className="BigChanceConversionRate" data-cy={props.name ? props.name + "bigChanceConversionRate" : "bigChanceConversionRate"}>
+                    {`Big chance conversion rate: ${props.bigChanceConversionRate !== undefined ? `${props.bigChanceConversionRate}%` : "N/A"}`}
+                  </li>
+                  <li
                     key="DangerousAttacks"
                     className="DangerousAttacks"
                     data-cy={props.name ? props.name + "dangerousAttacks" : "dangerousAttacks"}

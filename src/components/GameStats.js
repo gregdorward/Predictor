@@ -1355,6 +1355,7 @@ function GameStats({ game, displayBool, stats }) {
             console.log(`${process.env.REACT_APP_EXPRESS_SERVER}teamStats/${matchingGameInfo.awayId}/${game.sofaScoreId}/${derivedRoundId}`)
             const awayTeam = await awayTeamStatsResponse.json();
             let awayStats = awayTeam.statistics;
+            console.log(homeStats)
 
             setHomeTeamStats(homeStats);
             setAwayTeamStats(awayStats);
@@ -1624,9 +1625,26 @@ function GameStats({ game, displayBool, stats }) {
             XG={homeForm.XGOverall?.toFixed(2)}
             XGConceded={homeForm.XGAgainstAvgOverall?.toFixed(2)}
             XGSwing={homeForm.XGChangeRecently}
-            bigChances={homeTeamStats?.bigChancesCreated}
+            bigChances={homeTeamStats?.bigChances}
             bigChancesMissed={homeTeamStats?.bigChancesMissed}
-            bigChancesConceded={homeTeamStats?.bigChancesCreatedAgainst}
+            bigChancesConceded={homeTeamStats?.bigChancesAgainst}
+            goalConversionRate={
+              homeTeamStats?.shots !== undefined && homeTeamStats?.goalsScored
+                ? ((homeTeamStats.goalsScored / homeTeamStats.shots) * 100).toFixed(2)
+                : "N/A"
+            }
+            bigChanceConversionRate={
+              homeTeamStats?.bigChances !== undefined &&
+                homeTeamStats?.goalsScored
+                ? ((homeTeamStats.goalsScored / homeTeamStats.bigChances) * 100).toFixed(2)
+                : "N/A"
+            }
+            shootingAccuracy={
+              homeTeamStats?.shotsOnTarget !== undefined &&
+                homeTeamStats?.shots
+                ? ((homeTeamStats.shotsOnTarget / homeTeamStats.shots) * 100).toFixed(2)
+                : "N/A"
+            }
             shotsOnTargetAgainst={
               homeTeamStats?.shotsOnTargetAgainst !== undefined &&
                 homeTeamStats?.matches
@@ -1782,13 +1800,29 @@ function GameStats({ game, displayBool, stats }) {
             XG={awayForm.XGOverall?.toFixed(2)}
             XGConceded={awayForm.XGAgainstAvgOverall?.toFixed(2)}
             XGSwing={awayForm.XGChangeRecently}
-            bigChances={awayTeamStats?.bigChancesCreated}
+            bigChances={awayTeamStats?.bigChances}
             bigChancesMissed={awayTeamStats?.bigChancesMissed}
-            bigChancesConceded={awayTeamStats?.bigChancesCreatedAgainst}
+            goalConversionRate={
+              awayTeamStats?.shots !== undefined && awayTeamStats?.goalsScored
+                ? ((awayTeamStats.goalsScored / awayTeamStats.shots) * 100).toFixed(2)
+                : "N/A"
+            }
+            bigChanceConversionRate={
+              awayTeamStats?.bigChances !== undefined && awayTeamStats?.goalsScored
+                ? ((awayTeamStats.goalsScored / awayTeamStats.bigChances) * 100).toFixed(2)
+                : "N/A"
+            }
+            bigChancesConceded={awayTeamStats?.bigChancesAgainst}
             shotsOnTargetAgainst={
               awayTeamStats?.shotsOnTargetAgainst !== undefined &&
                 awayTeamStats?.matches
                 ? (awayTeamStats.shotsOnTargetAgainst / awayTeamStats.matches).toFixed(2)
+                : "N/A"
+            }
+            shootingAccuracy={
+              awayTeamStats?.shotsOnTarget !== undefined &&
+                awayTeamStats?.shots
+                ? ((awayTeamStats.shotsOnTarget / awayTeamStats.shots) * 100).toFixed(2)
                 : "N/A"
             }
             accuratePassesPercentage={awayTeamStats?.accuratePassesPercentage?.toFixed(2)}
