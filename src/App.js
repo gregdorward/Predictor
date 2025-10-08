@@ -762,7 +762,7 @@ function AppContent() {
           <button
             onClick={() => {
               window.location.href =
-                "https://www.soccerstatshub.com/#/cancelsubscription";
+                "https://https://www.soccerstatshub.com/#/cancelsubscription";
             }}
             className="CancelButton"
           >
@@ -775,43 +775,30 @@ function AppContent() {
         // If the user is not logged in, show nothing
         <div></div>
       )}
-      <div className="bitcoin" id="bitcoin">
-        <a
-          href="https://www.ko-fi.com/xgtipping"
-          target="_blank"
-          rel="noreferrer"
-        >
-          Donations
-        </a>
-        <span className="bitcoinSymbol">&#x20bf;itcoin address</span>
-        <span className="bitcoinAddress">
-          bc1q7j62txkvhfu0dt3l0s07saze6pjnyzs26wfgp0
-        </span>
-      </div>
       <div className="Social">
         <TwitterShareButton
-          url={"www.soccerstatshub.com"}
+          url={"https://www.soccerstatshub.com"}
           title={"#SoccerStatsHub"}
           className="ShareButton"
         >
           <TwitterIcon size={"3em"} round={true} />
         </TwitterShareButton>
         <RedditShareButton
-          url={"www.soccerstatshub.com"}
+          url={"https://www.soccerstatshub.com"}
           title={"Soccer Stats Hub"}
           className="ShareButton"
         >
           <RedditIcon size={"3em"} round={true} />
         </RedditShareButton>
         <FacebookShareButton
-          url={"www.soccerstatshub.com"}
+          url={"https://www.soccerstatshub.com"}
           quote={"SoccerStatsHub - data-driven football predictions"}
           className="ShareButton"
         >
           <FacebookIcon size={"3em"} round={true} />
         </FacebookShareButton>
         <WhatsappShareButton
-          url={"www.soccerstatshub.com"}
+          url={"https://www.soccerstatshub.com"}
           title={"SoccerStatsHub"}
           separator=": "
           className="ShareButton"
@@ -829,6 +816,19 @@ function AppContent() {
 
       <Collapsable buttonText={"Terms and Conditions"} element={<StripePolicies />} />
       <Collapsable buttonText={"Privacy Policy"} element={<PrivacyPolicy />} />
+      <div className="bitcoin" id="bitcoin">
+        <a
+          href="https://www.ko-fi.com/xgtipping"
+          target="_blank"
+          rel="noreferrer"
+        >
+          Donations
+        </a>
+        <span className="bitcoinSymbol">&#x20bf;itcoin address</span>
+        <span className="bitcoinAddress">
+          bc1q7j62txkvhfu0dt3l0s07saze6pjnyzs26wfgp0
+        </span>
+      </div>
     </div>
   );
 }

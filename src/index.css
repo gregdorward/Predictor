@@ -293,16 +293,10 @@
 
 body {
   background-color: var(--background-color);
-  /* background: linear-gradient(to bottom, white 20%, #020029 40%,  #020029 100%); */
-
-  /* align-content: space-between; */
   text-align: center;
   color: var(--text-color);
-  /* max-width: 1240px; */
   margin-left: auto;
-  /* flex-basis: 100%; */
   margin-right: auto;
-  /* margin: 10px; */
   height: 100%;
   font-weight: bolder;
   margin-top: 0px;
@@ -579,7 +573,10 @@ button {
 
 button:active {
   box-shadow: 0 0px 0px 0 rgba(0, 0, 0, 0.2), 0 1px 2px 0 #030052 inset;
+}
 
+button:hover {
+  color: var(--primary-color);
 }
 
 button.GeneratePredictions {
@@ -593,7 +590,7 @@ button.GeneratePredictions {
 }
 
 button.GeneratePredictions:hover {
-  border: var(--text-color), 2px, solid;
+  border: var(--button-text-color), 2px, solid;
   /* box-shadow: 0 0px 0px 0 rgba(0, 0, 0, 0.2), 0 1px 2px 0 #030052 */
 }
 
@@ -624,17 +621,7 @@ button.GeneratePredictions:active {
   border: 1px solid var(--text-color);
 }  */
 
-.ShortlistButton {
-  background-color: var(--background-color);
-  color: var(--text-color);
-  border: 1px solid var(--text-color);
-}
 
-.SubmitTipsButton {
-  background-color: var(--background-color);
-  color: var(--text-color);
-  border: 1px solid var(--text-color);
-}
 
 .disclaimerButton {
   background-color: #ffffff;
@@ -656,13 +643,17 @@ button.GeneratePredictions:active {
   justify-content: center;
 }
 
+.FixtureButtons button:hover {
+  color: var(--primary-color);
+}
+
 .FixtureButtons button {
   background-color: var(--text-color);
   color: var(--button-text-color);
   margin: 1em;
   cursor: pointer;
   /* width: 8em; */
-  box-shadow: 0 0px 0px 0 rgba(0, 0, 0, 0.2), 0 1px 2px 0 var(--text-color);
+  box-shadow: 0 0px 2px 0 rgba(0, 0, 0, 0.2), 0 2px 4px 0 var(--secondary-background-color);
   flex: 1;
   flex-basis: 100%;
 }
@@ -673,7 +664,7 @@ button.GeneratePredictions:active {
   margin: 0.5em;
   cursor: pointer;
   width: 10em;
-  box-shadow: 0 0px 0px 0 rgba(0, 0, 0, 0.2), 0 1px 2px 0 var(--text-color);
+  box-shadow: 0 0px 0px 0 rgba(0, 0, 0, 0.2), 0 1px 2px 0 var(--secondary-background-color);
 }
 
 
@@ -687,7 +678,7 @@ button.GeneratePredictions:active {
 }
 
 .FixtureButtons button:active {
-  box-shadow: 0 0px 0px 0 rgba(0, 0, 0, 0.2), 0 1px 2px 0 var(--text-color) inset;
+  box-shadow: 0 0px 0px 0 rgba(0, 0, 0, 0.2), 0 1px 2px 0 var(--secondary-background-color) inset;
 
 }
 
@@ -1252,6 +1243,9 @@ strong {
   color: gold;
 }
 
+.star:hover::before{
+  color: gold;
+}
 .pointsGapExplainer {
   color: var(--text-color);
 }
@@ -1302,9 +1296,17 @@ input:focus {
   padding-bottom: 0.5em;
   cursor: pointer;
 
-  /* box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.2), 0 1px 2px 0 #030052; */
-  /* margin-bottom: 1em; */
+  box-shadow:
+    0 1px 1px hsl(0deg 0% 0% / 0.075),
+    0 2px 2px hsl(0deg 0% 0% / 0.075),
+    0 4px 4px hsl(0deg 0% 0% / 0.075),
+    0 8px 8px hsl(0deg 0% 0% / 0.075),
+    0 16px 16px hsl(0deg 0% 0% / 0.075);
   /* border: black 0.25px solid; */
+}
+
+.individualFixturefalse:hover {
+  border: var(--primary-color) solid 1px;
 }
 
 .individualFixtureundefined {
@@ -2045,8 +2047,8 @@ h6.MediaTitle {
   color: var(--button-color);
   margin-left: 0em;
   margin-right: 0em;
-  margin-top: 0.25em;
-  margin-bottom: 0.25em;
+  margin-top: 0.5em;
+  margin-bottom: 0.5em;
   text-align: -webkit-match-parent;
 }
 
@@ -4594,7 +4596,7 @@ button.AIInsights button:active {
 }
 
 .HomeMissingPlayers li {
-  margin: 0.5em;
+  margin: 1em;
   padding: 0.25em;
   background-color: var(--secondary-background-color);
 }
@@ -4626,6 +4628,10 @@ button.AIInsights button:active {
 
 .MissingPlayersTeamName {
   text-align: center;
+}
+
+.LoadingMessage {
+  margin: 1em;
 }
 
 .TeamStreaksButton {

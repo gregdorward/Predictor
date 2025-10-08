@@ -3912,19 +3912,21 @@ export async function getScorePrediction(day, mocked) {
   let index = 2;
   let divider = 10;
 
+    ReactDOM.render(
+    <div>
+      <ThreeDots className="MainLoading" fill="#fe8c00" />
+      <div className="LoadingMessage">Collecting form data and calculating predictions...</div>
+    </div>,
+    document.getElementById("FixtureContainer")
+  );
+
   // Call the function to fetch and store the league stats
   const leagueStatsPromise = fetchLeagueStats();
   const playerStatsPromise = fetchPlayerStats();
   const predictedScores = await fetch(`${process.env.REACT_APP_EXPRESS_SERVER}predictedScores`);
   const predictedScoresData = await predictedScores.json();
 
-  ReactDOM.render(
-    <div>
-      <ThreeDots className="MainLoading" fill="#fe8c00" />
-      <div>Collecting form data and calculating predictions...</div>
-    </div>,
-    document.getElementById("FixtureContainer")
-  );
+
 
   await Promise.all(
     matches.map(async (match) => {

@@ -429,7 +429,7 @@ function SingleFixture({
           </div>
         </li>
       </div>
-      {isLoadingGameStats && <div>Loading Game Stats...</div>}{" "}
+      {isLoadingGameStats && <div className="LoadingMessage">Loading Game Stats...</div>}{" "}
       {/* Show loading message */}
       {showGameStats && !isLoadingGameStats && (
         <GameStats

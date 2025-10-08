@@ -1698,6 +1698,6 @@ export async function generateFixtures(
     // ReactDOM.render(<RenderAllFixtures matches={matches} bool={false}/>),document.getElementById("FixtureContainer")
     setTimeout(() => {
       isFunctionRunning = false;
-    }, 3000);
+    }, 1000);
   }
 }
