@@ -247,6 +247,9 @@ function Stats(props) {
 
               element={
                 <>
+                  <li key="CleanSheetPercentage" className="CleanSheetPercentage" data-cy={props.name ? props.name + "cleanSheetPercentage" : "cleanSheetPercentage"}>
+                    {`Clean sheet percentage: ${props.cleansheetPercentage !== undefined ? `${props.cleansheetPercentage}%` : "N/A"}`}
+                  </li>
                   <li key="shotsOnTargetAgainst" className="shotsOnTargetAgainst" data-cy={props.name ? props.name + "shotsOnTargetAgainst" : "shotsOnTargetAgainst"}>
                     {`Avg Shots on target against: ${props.shotsOnTargetAgainst !== undefined ? props.shotsOnTargetAgainst : "N/A"}`}
                   </li>

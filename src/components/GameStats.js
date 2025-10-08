@@ -1689,6 +1689,13 @@ function GameStats({ game, displayBool, stats }) {
             aerialDuelsWonPercentage={homeTeamStats?.aerialDuelsWonPercentage?.toFixed(2)}
             ballRecovery={homeTeamStats?.ballRecovery}
             interceptions={homeTeamStats?.interceptions}
+            cleansheetPercentage={
+              homeTeamStats?.cleanSheets !== undefined &&
+                homeTeamStats?.matches
+                ? ((homeTeamStats.cleanSheets / homeTeamStats.matches) * 100).toFixed(2)
+                : "N/A"
+            }
+            tackles={homeTeamStats?.tackles}
             errorsLeadingToShotAgainst={homeTeamStats?.errorsLeadingToShotAgainst}
             offsides={homeTeamStats?.offsides}
             PPDA={PPDA_valueHome}
@@ -1863,6 +1870,12 @@ function GameStats({ game, displayBool, stats }) {
             aerialDuelsWonPercentage={awayTeamStats?.aerialDuelsWonPercentage?.toFixed(2)}
             ballRecovery={awayTeamStats?.ballRecovery}
             interceptions={awayTeamStats?.interceptions}
+            cleansheetPercentage={
+              awayTeamStats?.cleanSheets !== undefined &&
+                awayTeamStats?.matches
+                ? ((awayTeamStats.cleanSheets / awayTeamStats.matches) * 100).toFixed(2)
+                : "N/A"
+            }
             errorsLeadingToShotAgainst={awayTeamStats?.errorsLeadingToShotAgainst}
             offsides={awayTeamStats?.offsides}
             PPDA={PPDA_valueAway}
