@@ -1595,8 +1595,8 @@ function GameStats({ game, displayBool, stats }) {
       ? (opponentPassesHome / defensiveActionsHome).toFixed(2)
       : 'N/A'; // Or handle as desired (e.g., return 0 or a very high number)
 
-          const oppositionHalfPassesHome = homeTeamStats?.totalOppositionHalfPasses ?? 0;
-    const attackingPlaysHome = ( homeTeamStats?.shots ?? 0 + homeTeamStats?.totalCrosses ?? 0 + homeTeamStats?.dribbleAttempts ?? 0 + homeTeamStats?.bigChancesCreated ?? 0);
+    const oppositionHalfPassesHome = homeTeamStats?.totalOppositionHalfPasses ?? 0;
+    const attackingPlaysHome = (homeTeamStats?.shots ?? 0 + homeTeamStats?.totalCrosses ?? 0 + homeTeamStats?.dribbleAttempts ?? 0 + homeTeamStats?.bigChancesCreated ?? 0);
 
     const PPAA_valueHome = attackingPlaysHome > 0
       ? (oppositionHalfPassesHome / attackingPlaysHome).toFixed(2)
@@ -1656,8 +1656,13 @@ function GameStats({ game, displayBool, stats }) {
             accuratePassesPercentage={homeTeamStats?.accuratePassesPercentage?.toFixed(2)}
             accuratePassesOpponentHalf={homeTeamStats?.accurateOppositionHalfPassesPercentage?.toFixed(2)}
             accuratePassesDefensiveHalf={homeTeamStats?.accurateOwnHalfPassesPercentage?.toFixed(2)}
-            accurateCrosses={homeTeamStats?.accurateCrosses}
-
+            accurateCrosses={homeTeamStats?.accurateCrossesPercentage?.toFixed(2)}
+           accurateCrossesAgainst={
+               homeTeamStats?.crossesSuccessfulAgainst !== undefined &&
+                homeTeamStats?.crossesTotalAgainst
+                ? ((homeTeamStats.crossesSuccessfulAgainst / homeTeamStats.crossesTotalAgainst) * 100).toFixed(2)
+                : "N/A"
+            }
             longBallPercentage={
               homeTeamStats?.totalLongBalls !== undefined &&
                 homeTeamStats?.totalPasses
@@ -1683,6 +1688,11 @@ function GameStats({ game, displayBool, stats }) {
             goalsFromInsideTheBox={homeTeamStats?.goalsFromInsideTheBox}
             goalsFromOutsideTheBox={homeTeamStats?.goalsFromOutsideTheBox}
             fastBreakShots={homeTeamStats?.fastBreakShots}
+            fastBreaksLeadingToShot={
+              homeTeamStats?.fastBreakShots !== undefined && homeTeamStats?.fastBreaks
+                ? ((homeTeamStats.fastBreakShots / homeTeamStats.fastBreaks) * 100).toFixed(2)
+                : "N/A"
+            }
             dribbleAttempts={homeTeamStats?.dribbleAttempts}
             successfulDribbles={homeTeamStats?.successfulDribbles}
             duelsWonPercentage={homeTeamStats?.duelsWonPercentage?.toFixed(2)}
@@ -1771,14 +1781,14 @@ function GameStats({ game, displayBool, stats }) {
     // Check for zero to prevent division by zero (resulting in Infinity)
     const PPDA_valueAway = defensiveActionsAway > 0
       ? (oppositionPassesAway / defensiveActionsAway).toFixed(2)
-      : 'N/A'; 
+      : 'N/A';
 
     const oppositionHalfPassesAway = awayTeamStats?.totalOppositionHalfPasses ?? 0;
-    const attackingPlaysAway = ( awayTeamStats?.shots ?? 0 + awayTeamStats?.totalCrosses ?? 0 + awayTeamStats?.dribbleAttempts ?? 0 + awayTeamStats?.bigChancesCreated ?? 0);
+    const attackingPlaysAway = (awayTeamStats?.shots ?? 0 + awayTeamStats?.totalCrosses ?? 0 + awayTeamStats?.dribbleAttempts ?? 0 + awayTeamStats?.bigChancesCreated ?? 0);
 
     const PPAA_valueAway = attackingPlaysAway > 0
       ? (oppositionHalfPassesAway / attackingPlaysAway).toFixed(2)
-      : 'N/A'; 
+      : 'N/A';
 
     // PPAA = Opponent Passes / (Shots + Crosses + Dribbles/Take-ons + Key Passes)
 
@@ -1835,7 +1845,13 @@ function GameStats({ game, displayBool, stats }) {
             accuratePassesPercentage={awayTeamStats?.accuratePassesPercentage?.toFixed(2)}
             accuratePassesOpponentHalf={awayTeamStats?.accurateOppositionHalfPassesPercentage?.toFixed(2)}
             accuratePassesDefensiveHalf={awayTeamStats?.accurateOwnHalfPassesPercentage?.toFixed(2)}
-            accurateCrosses={awayTeamStats?.accurateCrosses}
+            accurateCrosses={awayTeamStats?.accurateCrossesPercentage?.toFixed(2)}
+            accurateCrossesAgainst={
+               awayTeamStats?.crossesSuccessfulAgainst !== undefined &&
+                awayTeamStats?.crossesTotalAgainst
+                ? ((awayTeamStats.crossesSuccessfulAgainst / awayTeamStats.crossesTotalAgainst) * 100).toFixed(2)
+                : "N/A"
+            }
             longBallPercentage={
               awayTeamStats?.totalLongBalls !== undefined &&
                 awayTeamStats?.totalPasses
@@ -1864,6 +1880,11 @@ function GameStats({ game, displayBool, stats }) {
             goalsFromInsideTheBox={awayTeamStats?.goalsFromInsideTheBox}
             goalsFromOutsideTheBox={awayTeamStats?.goalsFromOutsideTheBox}
             fastBreakShots={awayTeamStats?.fastBreakShots}
+            fastBreaksLeadingToShot={
+              awayTeamStats?.fastBreakShots !== undefined && awayTeamStats?.fastBreaks
+                ? ((awayTeamStats.fastBreakShots / awayTeamStats.fastBreaks) * 100).toFixed(2)
+                : "N/A"
+            }
             dribbleAttempts={awayTeamStats?.dribbleAttempts}
             successfulDribbles={awayTeamStats?.successfulDribbles}
             duelsWonPercentage={awayTeamStats?.duelsWonPercentage?.toFixed(2)}
@@ -3631,8 +3652,61 @@ function GameStats({ game, displayBool, stats }) {
         length="3"
         element1={
           <>
+            {/* <BarChart
+              text="Attacking"
+              labels={[
+                'Avg Shots', 'Avg SOT', 'Shooting Acc %', 'Goal Conv %', 'Big Chances', 'Big Chance Conv %',
+                'Dngr. Attacks', 'Shots in Box', 'Goals in Box', 'Goals out Box',
+                'Fast Break Shots'
+              ]}
+              data1={[
+                homeTeamStats?.shots,
+                homeForm.AverageShotsOnTargetOverall,
+                homeTeamStats?.shotsOnTarget !== undefined &&
+                  homeTeamStats?.shots
+                  ? ((homeTeamStats.shotsOnTarget / homeTeamStats.shots) * 100)
+                  : undefined,
+                homeTeamStats?.shots !== undefined && homeTeamStats?.goalsScored
+                  ? ((homeTeamStats.goalsScored / homeTeamStats.shots) * 100)
+                  : undefined,
+                homeTeamStats?.bigChances,
+                homeTeamStats?.bigChances !== undefined && homeTeamStats?.goalsScored
+                  ? ((homeTeamStats.goalsScored / homeTeamStats.bigChances) * 100)
+                  : undefined,
+                homeForm.AverageDangerousAttacksOverall !== 0
+                  ? homeForm.AverageDangerousAttacksOverall
+                  : homeForm.AverageDangerousAttacks,
+                homeTeamStats?.shotsFromInsideTheBox,
+                homeTeamStats?.goalsFromInsideTheBox,
+                homeTeamStats?.goalsFromOutsideTheBox,
+                homeTeamStats?.fastBreakShots,
+              ]}
+              data2={[
+                awayTeamStats?.shots,
+                awayForm.AverageShotsOnTargetOverall,
+                awayTeamStats?.shotsOnTarget !== undefined &&
+                  awayTeamStats?.shots
+                  ? ((awayTeamStats.shotsOnTarget / awayTeamStats.shots) * 100)
+                  : undefined,
+                awayTeamStats?.shots !== undefined && awayTeamStats?.goalsScored
+                  ? ((awayTeamStats.goalsScored / awayTeamStats.shots) * 100)
+                  : undefined,
+                awayTeamStats?.bigChances,
+                awayTeamStats?.bigChances !== undefined && awayTeamStats?.goalsScored
+                  ? ((awayTeamStats.goalsScored / awayTeamStats.bigChances) * 100)
+                  : undefined,
+                awayForm.AverageDangerousAttacksOverall !== 0
+                  ? awayForm.AverageDangerousAttacksOverall
+                  : awayForm.AverageDangerousAttacks,
+                awayTeamStats?.shotsFromInsideTheBox,
+                awayTeamStats?.goalsFromInsideTheBox,
+                awayTeamStats?.goalsFromOutsideTheBox,
+                awayTeamStats?.fastBreakShots,
+              ]}
+            /> */}
             <h2>All games</h2>
             <div className="flex-container">
+              {/* ## ⚔️ Attacking ## */}
               <StatsHomeComponent getCollapsableProps={getCollapsableProps} />
               <StatsAwayComponent getCollapsableProps={getCollapsableProps} />
             </div>
@@ -3682,6 +3756,19 @@ function GameStats({ game, displayBool, stats }) {
               ></RadarChart>
               <BarChart
                 text="All Games - Home Team | Away Team"
+                labels={[
+
+                  "Highest Goals",
+                  "Fewest Conceeded",
+                  "PPG",
+                  "Highest XGF",
+                  "Fewest XGA",
+                  "SoT",
+                  "Dangerous Attacks",
+                  "Av. Possession",
+                  "Home/Away Goal Diff",
+                  "Corners"
+                ]}
                 data1={[
                   homeForm.avgScored * 2,
                   awayForm.avgConceeded * 2,

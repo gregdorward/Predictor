@@ -324,7 +324,7 @@ export const DoughnutChart = ({ labels, values, colors, label = 'Dataset', chart
     }
   };
 
-    return<Doughnut className="DoughnutChart" data = { data } options = { options } />;
+  return <Doughnut className="DoughnutChart" data={data} options={options} />;
 };
 
 
@@ -621,31 +621,41 @@ export function RadarChartLeagueStats({
 }
 
 export function BarChart(props) {
-  const datasetOne = props.data1;
-  const datasetTwo = props.data2;
-  const sum = datasetTwo.map(function (num, idx) {
-    return num - datasetOne[idx];
-  });
+  const { data1, data2 } = props; // Destructure props for easier access
+  // --- SOLUTION: Add this check at the top ---
+// Ensure the data arrays are not empty/invalid BEFORE calculation
+if (!data1 || !data2 || data1.length === 0 || data2.length === 0) {
+    return <div style={{ color: "#fe8c00", textAlign: "center" }}>No data available for this chart.</div>;
+}
+
+const sum = data2.map(function (num, idx) {
+    // 1. Use ?? 0 to turn null/undefined stats into 0
+    const val1 = data1[idx] ?? 0; 
+    const val2 = num ?? 0;
+    
+    // 2. Use Number() to ensure any strings (like "396.00") are converted back to numbers
+    return Number(val2) - Number(val1);
+}).filter(value => !isNaN(value)); // Filter out any values that couldn't be converted
+
+// Add this critical check back
+if (sum.length === 0) {
+    return <div style={{ color: "#fe8c00", textAlign: "center" }}>Invalid numeric data available for this chart.</div>;
+}
 
   const max = Math.max(...sum);
   const min = Math.min(...sum);
 
-  const largest = findLargestNum(max, min);
-
+  // This function is fine as is
   function findLargestNum(numOne, numTwo) {
-    const tempArr = [];
-    const firstNum = Math.abs(numOne);
-    const secondNum = Math.abs(numTwo);
-    tempArr.push(firstNum, secondNum);
-
+    const tempArr = [Math.abs(numOne), Math.abs(numTwo)];
     return Math.max(...tempArr) + 1;
   }
+
+  const largest = findLargestNum(max, min);
 
   const options = {
     color: "#fe8c00",
     indexAxis: "y",
-    // Elements options apply to all of the options unless overridden in a dataset
-    // In this case, we are setting the border of each horizontal bar to be 2px wide
     aspectRatio: 1.2,
     elements: {
       bar: {
@@ -654,8 +664,8 @@ export function BarChart(props) {
     },
     scales: {
       x: {
-        min: -8,
-        max: 8,
+        min: -largest, // Now protected from Infinity
+        max: largest,  // Now protected from Infinity
         ticks: {
           display: false,
         },
@@ -688,27 +698,10 @@ export function BarChart(props) {
     },
   };
 
-  const labels = [
-    "Highest Goals",
-    "Fewest Conceeded",
-    "PPG",
-    "Highest XGF",
-    "Fewest XGA",
-    "SoT",
-    "Dangerous Attacks",
-    "Av. Possession",
-    "Home/Away Goal Diff",
-    "Corners",
-  ];
-
   const data = {
-    labels,
+    labels: props.labels, // Assuming you made the change to accept labels as a prop
     datasets: [
       {
-        // label: 'Dataset 1',
-        legend: {
-          display: false,
-        },
         data: sum,
         backgroundColor(context) {
           const index = context.dataIndex;

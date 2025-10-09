@@ -1,6 +1,7 @@
 import React, { Fragment } from "react";
 import { CreateBadge } from "./createBadge";
 import Collapsable from "../components/CollapsableElement";
+import BarChart from "../components/Chart";
 function Stats(props) {
   const { getCollapsableProps } = props;
   let shouldOpen = props.clicked;
@@ -191,8 +192,8 @@ function Stats(props) {
                   <li key="ShootingAccuracy" className="ShootingAccuracy" data-cy={props.name ? props.name + "shootingAccuracy" : "shootingAccuracy"}>
                     {`Shooting accuracy: ${props.shootingAccuracy !== undefined ? `${props.shootingAccuracy}%` : "N/A"}`}
                   </li>
-                  <li key="GoalConversionRate" className="GoalConversionRate" data-cy={props.name ? props.name + "goalConversionRate" : "goalConversionRate"}>
-                    {`Goal conversion rate: ${props.goalConversionRate !== undefined ? `${props.goalConversionRate}%` : "N/A"}`}
+                  <li key="ShotConversionRate" className="GoalConversionRate" data-cy={props.name ? props.name + "goalConversionRate" : "goalConversionRate"}>
+                    {`Shot conversion rate: ${props.goalConversionRate !== undefined ? `${props.goalConversionRate}%` : "N/A"}`}
                   </li>
                   <li key="BigChanceConversionRate" className="BigChanceConversionRate" data-cy={props.name ? props.name + "bigChanceConversionRate" : "bigChanceConversionRate"}>
                     {`Big chance conversion rate: ${props.bigChanceConversionRate !== undefined ? `${props.bigChanceConversionRate}%` : "N/A"}`}
@@ -267,6 +268,9 @@ function Stats(props) {
                   >
                     {`Big chances against: ${props.bigChancesConceded !== undefined ? props.bigChancesConceded : "N/A"}`}
                   </li>
+                  <li key="accurateCrossesAgainst" className="accurateCrossesAgainst" data-cy={props.name ? props.name + "accurateCrossesAgainst" : "accurateCrossesAgainst"}>
+                    {`Accurate crosses against: ${props.accurateCrossesAgainst !== undefined ? `${props.accurateCrossesAgainst}%` : "N/A"}`}
+                  </li>
                   <li key="ErrorsLeadingToShotAgainst" className="ErrorsLeadingToShotAgainst" data-cy={props.name ? props.name + "ErrorsLeadingToShotAgainst" : "ErrorsLeadingToShotAgainst"}>
                     {`Errors leading to shot against: ${props.errorsLeadingToShotAgainst !== undefined ? props.errorsLeadingToShotAgainst : "N/A"}`}
                   </li>
@@ -300,13 +304,16 @@ function Stats(props) {
                     {`Accurate long balls: ${props.accurateLongBallsPercentage !== undefined ? `${props.accurateLongBallsPercentage}%` : "N/A"}`}
                   </li>
                   <li key="AccurateCrosses" className="AccurateCrosses" data-cy={props.name ? props.name + "AccurateCrosses" : "AccurateCrosses"}>
-                    {`Accurate crosses: ${props.accurateCrosses !== undefined ? `${props.accurateCrosses}` : "N/A"}`}
+                    {`Accurate crosses: ${props.accurateCrosses !== undefined ? `${props.accurateCrosses}%` : "N/A"}`}
                   </li>
                   <li key="dribbleAttempts" className="dribbleAttempts" data-cy={props.name ? props.name + "dribbleAttempts" : "dribbleAttempts"}>
                     {`Dribble attempts: ${props.dribbleAttempts !== undefined ? `${props.dribbleAttempts}` : "N/A"}`}
                   </li>
                   <li key="successfulDribbles" className="successfulDribbles" data-cy={props.name ? props.name + "successfulDribbles" : "successfulDribbles"}>
                     {`Successful dribbles: ${props.successfulDribbles !== undefined ? `${props.successfulDribbles}` : "N/A"}`}
+                  </li>
+                  <li key="fastBreaksLeadingToShot" className="fastBreaksLeadingToShot" data-cy={props.name ? props.name + "fastBreaksLeadingToShot" : "fastBreaksLeadingToShot"}>
+                    {`Fast breaks leading to shot: ${props.fastBreaksLeadingToShot !== undefined ? `${props.fastBreaksLeadingToShot}%` : "N/A"}`}
                   </li>
                 </>
               }

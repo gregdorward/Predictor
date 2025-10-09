@@ -1243,9 +1243,10 @@ strong {
   color: gold;
 }
 
-.star:hover::before{
+.star:hover::before {
   color: gold;
 }
+
 .pointsGapExplainer {
   color: var(--text-color);
 }
@@ -2040,16 +2041,17 @@ h6.MediaTitle {
 
 .StatHeader {
   font-size: 1.1em;
-  background-color: var(--secondary-background-color);
-  width: 95%;
+  background-color: var(--accent-color);
+  width: 100%;
   padding-left: 2em;
   padding-right: 2em;
-  color: var(--button-color);
+  color: var(--button-text-color);
   margin-left: 0em;
   margin-right: 0em;
   margin-top: 0.5em;
   margin-bottom: 0.5em;
   text-align: -webkit-match-parent;
+  border: var(--button-color) 1px solid;
 }
 
 .StatsDiv {
@@ -3997,11 +3999,11 @@ input:active+.design::after {
 
 .Lineups {
   font-size: 1.1em;
-  background-color: var(--secondary-background-color);
+  background-color: var(--accent-color);
   width: 100%;
   margin-left: auto;
   margin-right: auto;
-  color: var(--button-color);
+  color: var(--button-text-color);
 }
 
 .CurrentScore {
@@ -4619,11 +4621,11 @@ button.AIInsights button:active {
 
 .MissingPlayersButton {
   font-size: 1.1em;
-  background-color: var(--secondary-background-color);
+  background-color: var(--accent-color);
   width: 100%;
   margin-left: auto;
   margin-right: auto;
-  color: var(--button-color);
+  color: var(--button-text-color);
 }
 
 .MissingPlayersTeamName {
@@ -4636,21 +4638,21 @@ button.AIInsights button:active {
 
 .TeamStreaksButton {
   font-size: 1.1em;
-  background-color: var(--secondary-background-color);
+  background-color: var(--accent-color);
   width: 100%;
   margin-left: auto;
   margin-right: auto;
-  color: var(--button-color);
+  color: var(--button-text-color);
 }
 
 
 .FutureFixturesButton {
   font-size: 1.1em;
-  background-color: var(--secondary-background-color);
+  background-color: var(--accent-color);
   width: 100%;
   margin-left: auto;
   margin-right: auto;
-  color: var(--button-color);
+  color: var(--button-text-color);
 }
 
 /* Each fixture "card" */
@@ -4870,11 +4872,11 @@ button.AIInsights button:active {
 
 .PlayerStatsButton {
   font-size: 1.1em;
-  background-color: var(--secondary-background-color);
+  background-color: var(--accent-color);
   width: 100%;
   margin-left: auto;
   margin-right: auto;
-  color: var(--button-color);
+  color: var(--button-text-color);
 }
 
 .HomePlayerStats {
