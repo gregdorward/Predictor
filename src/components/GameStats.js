@@ -1635,8 +1635,13 @@ function GameStats({ game, displayBool, stats }) {
             }
             bigChanceConversionRate={
               homeTeamStats?.bigChances !== undefined &&
-                homeTeamStats?.goalsScored
-                ? ((homeTeamStats.goalsScored / homeTeamStats.bigChances) * 100).toFixed(2)
+                homeTeamStats?.bigChancesMissed !== undefined &&
+                homeTeamStats?.bigChances > 0
+                ? (
+                  ((homeTeamStats.bigChances - homeTeamStats.bigChancesMissed) /
+                    homeTeamStats.bigChances) *
+                  100
+                ).toFixed(2)
                 : "N/A"
             }
             shootingAccuracy={
@@ -1657,8 +1662,8 @@ function GameStats({ game, displayBool, stats }) {
             accuratePassesOpponentHalf={homeTeamStats?.accurateOppositionHalfPassesPercentage?.toFixed(2)}
             accuratePassesDefensiveHalf={homeTeamStats?.accurateOwnHalfPassesPercentage?.toFixed(2)}
             accurateCrosses={homeTeamStats?.accurateCrossesPercentage?.toFixed(2)}
-           accurateCrossesAgainst={
-               homeTeamStats?.crossesSuccessfulAgainst !== undefined &&
+            accurateCrossesAgainst={
+              homeTeamStats?.crossesSuccessfulAgainst !== undefined &&
                 homeTeamStats?.crossesTotalAgainst
                 ? ((homeTeamStats.crossesSuccessfulAgainst / homeTeamStats.crossesTotalAgainst) * 100).toFixed(2)
                 : "N/A"
@@ -1825,8 +1830,14 @@ function GameStats({ game, displayBool, stats }) {
                 : "N/A"
             }
             bigChanceConversionRate={
-              awayTeamStats?.bigChances !== undefined && awayTeamStats?.goalsScored
-                ? ((awayTeamStats.goalsScored / awayTeamStats.bigChances) * 100).toFixed(2)
+              awayTeamStats?.bigChances !== undefined &&
+                awayTeamStats?.bigChancesMissed !== undefined &&
+                awayTeamStats?.bigChances > 0
+                ? (
+                  ((awayTeamStats.bigChances - awayTeamStats.bigChancesMissed) /
+                    awayTeamStats.bigChances) *
+                  100
+                ).toFixed(2)
                 : "N/A"
             }
             bigChancesConceded={awayTeamStats?.bigChancesAgainst}
@@ -1847,7 +1858,7 @@ function GameStats({ game, displayBool, stats }) {
             accuratePassesDefensiveHalf={awayTeamStats?.accurateOwnHalfPassesPercentage?.toFixed(2)}
             accurateCrosses={awayTeamStats?.accurateCrossesPercentage?.toFixed(2)}
             accurateCrossesAgainst={
-               awayTeamStats?.crossesSuccessfulAgainst !== undefined &&
+              awayTeamStats?.crossesSuccessfulAgainst !== undefined &&
                 awayTeamStats?.crossesTotalAgainst
                 ? ((awayTeamStats.crossesSuccessfulAgainst / awayTeamStats.crossesTotalAgainst) * 100).toFixed(2)
                 : "N/A"
