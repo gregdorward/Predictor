@@ -2885,6 +2885,7 @@ canvas.DoughnutChart {
 
 .TeamStyle {
   padding-top: 1em;
+  min-height: 13em;
 }
 
 /* .StarRatingHeader{
@@ -2916,10 +2917,6 @@ canvas.DoughnutChart {
   color: black;
 }
 
-li.FormHeader {
-  padding-top: 1em;
-  /* margin-top: 1em; */
-}
 
 .win {
   background-color: #01a501;
@@ -3060,6 +3057,7 @@ li.TeamScored {
 
 li.FormHeader {
   padding-bottom: 1em;
+  font-size: 0.9em;
 }
 
 .MatchTime {
@@ -3989,6 +3987,7 @@ input:active+.design::after {
   width: fit-content;
   background-color: var(--background-color);
   margin-top: 2em;
+  height: auto;
 }
 
 .ChartContainer {
@@ -4239,7 +4238,7 @@ button.SecondaryButtons {
 .AIContainer {
   display: flex;
   color: var(--text-color);
-  font-size: 1em;
+  font-size: 1.1em;
 }
 
 .AIMatchPreview {
@@ -4257,6 +4256,7 @@ button.SecondaryButtons {
   max-width: 32em;
   margin: auto;
   margin-top: 2em;
+  font-size: 1.1em;
 }
 
 .AIMatchPreviewCard h2 {
@@ -4329,7 +4329,6 @@ button.SecondaryButtons {
 }
 
 .Strengths {
-  margin-top: 2em;
   border: 1px solid #009c00;
   background-color: #01950135;
 }
@@ -4428,6 +4427,7 @@ button.AIInsights button:active {
   max-width: 800px;
   margin-left: auto;
   margin-right: auto;
+  font-size: 1.1em;
 }
 
 .rankings-title {
@@ -4441,7 +4441,10 @@ button.AIInsights button:active {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 1em;
+  padding-top: 1em;
+  padding-bottom: 1em;
+  padding-left: 1.5em;
+  padding-right: 1.5em;
   border-bottom: 1px solid #ddd;
 }
 
