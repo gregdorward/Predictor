@@ -2452,6 +2452,7 @@ a.PreviousMatchLink {
   align-items: stretch;
   justify-content: center;
   color: var(--text-color);
+  width: 100%;
 }
 
 
@@ -2459,6 +2460,7 @@ a.PreviousMatchLink {
 
 .AllStats {
   /* align-items: flex-end; */
+  /* font-size: 1.1em; */
 }
 
 .RecentResults {
@@ -2475,7 +2477,7 @@ a.PreviousMatchLink {
   flex-direction: column;
   text-align: right;
   padding-right: 0.5em;
-  flex-basis: 45%;
+  flex-basis: 50%;
   background-color: var(--background-color);
   color: var(--text-color);
 }
@@ -2569,7 +2571,7 @@ a.PreviousMatchLink {
 .flex-childTwo {
   flex-direction: column;
   text-align: left;
-  flex-basis: 45%;
+  flex-basis: 50%;
   background-color: var(--background-color);
   color: var(--text-color);
   padding-left: 0.5em;
@@ -2677,6 +2679,7 @@ a.PreviousMatchLink {
   padding-bottom: 2em;
   padding-right: 0.5em;
   padding-left: 0.5em;
+  font-size: 1.1em;
 }
 
 .KeyStatsHome li {
@@ -2709,6 +2712,7 @@ a.PreviousMatchLink {
   padding-bottom: 2em;
   padding-right: 0.5em;
   padding-left: 0.5em;
+  font-size: 1.1em;
 }
 
 .KeyStatsAway li {
@@ -2892,7 +2896,7 @@ canvas.DoughnutChart {
 .FormSummaryHome {
   /* display: flex; */
   /* height: auto; */
-  min-height: 11em;
+  min-height: 12em;
   /* vertical-align: middle; */
   background-color: #e2e2e200 !important;
   /* max-width: 21em; */
@@ -4719,6 +4723,7 @@ button.AIInsights button:active {
   text-align: right;
   /* align text right */
   align-items: flex-end;
+  font-size: 1.1em;
   /* align fixtures inside */
 }
 
@@ -4727,6 +4732,8 @@ button.AIInsights button:active {
   text-align: left;
   /* default anyway */
   align-items: flex-start;
+  font-size: 1.1em;
+
 }
 
 /* Columns: share width */
