@@ -28,7 +28,6 @@ import {
   WhatsappIcon,
 } from "react-share";
 import { generateFixtures } from "./logic/getFixtures";
-// import Logo from "./components/Logo";
 import { BrowserRouter as Router, Route, Routes, Link } from "react-router-dom";
 import PrivacyPolicy from "./components/PrivacyPolicy";
 

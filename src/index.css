@@ -767,7 +767,8 @@ h6.PredictionTypeText {
 
 .LoadingText {
   /* padding-top: 2em; */
-  padding-bottom: 0.5em;
+  padding-bottom: 1em;
+  margin-top: 0.5em;
   font-size: 1em;
   color: var(--text-color);
 }
@@ -1189,6 +1190,10 @@ span.MembershipInfo {
   color: #030052;
   border: #030052 1px solid
     /* line-height: 1em; */
+}
+
+.UserTips{
+  margin-bottom: 1em;
 }
 
 .UserTipsList {
@@ -4456,7 +4461,7 @@ button.AIInsights button:active {
 }
 
 .rankings-title {
-  font-size: 1.5em;
+  font-size: 1.25em;
   font-weight: bold;
   margin-bottom: 0em;
   padding-bottom: 0em;
@@ -4472,6 +4477,8 @@ button.AIInsights button:active {
   padding-right: 1.5em;
   border-bottom: 1px solid #ddd;
 }
+
+
 
 .rankings-row.header {
   font-weight: bold;

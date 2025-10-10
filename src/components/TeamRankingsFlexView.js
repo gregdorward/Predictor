@@ -52,7 +52,7 @@ export default function TeamRankingsFlexView({
 
   return (
     <div className="rankings-container">
-      <h3 className="rankings-title">{title}</h3>
+      <h4 className="rankings-title">{title}</h4>
 
       {attackingMetrics.length > 0 && (
         <RankingsSection

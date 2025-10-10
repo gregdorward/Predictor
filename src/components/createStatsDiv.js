@@ -197,10 +197,10 @@ function Stats(props) {
                     {`Shooting accuracy: ${props.shootingAccuracy !== undefined ? `${props.shootingAccuracy}%` : "N/A"}`}
                   </li>
                   <li key="ShotConversionRate" className="GoalConversionRate" data-cy={props.name ? props.name + "goalConversionRate" : "goalConversionRate"}>
-                    {`Shot conversion rate: ${props.goalConversionRate !== undefined ? `${props.goalConversionRate}%` : "N/A"}`}
+                    {`Shot conversion: ${props.goalConversionRate !== undefined ? `${props.goalConversionRate}%` : "N/A"}`}
                   </li>
                   <li key="BigChanceConversionRate" className="BigChanceConversionRate" data-cy={props.name ? props.name + "bigChanceConversionRate" : "bigChanceConversionRate"}>
-                    {`Big chance conversion rate: ${props.bigChanceConversionRate !== undefined ? `${props.bigChanceConversionRate}%` : "N/A"}`}
+                    {`Big chance conversion: ${props.bigChanceConversionRate !== undefined ? `${props.bigChanceConversionRate}%` : "N/A"}`}
                   </li>
                   <li
                     key="DangerousAttacks"
@@ -289,9 +289,6 @@ function Stats(props) {
                   <li key="PPAA" className="PPAA" data-cy={props.name ? props.name + "PPAA" : "PPAA"}>
                     {`Passes per attacking action: ${props.PPAA !== undefined ? `${props.PPAA}` : "N/A"}`}
                   </li>
-                  {/* <span className="StatExplanation">
-                    PPAA = Total Opposition Half Passes / Total Attacking Actions (Shots + Crosses + Dribbles + Big Chances Created)
-                  </span> */}
                   <li key="AccuratePassesPercentage" className="AccuratePassesPercentage" data-cy={props.name ? props.name + "AccuratePassesPercentage" : "AccuratePassesPercentage"}>
                     {`Accurate passes: ${props.accuratePassesPercentage !== undefined ? `${props.accuratePassesPercentage}%` : "N/A"}`}
                   </li>
@@ -334,11 +331,14 @@ function Stats(props) {
                   {/* <span className="StatExplanation">
                     PPDA = Total Own Half Passes Against / Total Defensive Actions (Tackles + Interceptions + Clearances + Blocks)
                   </span> */}
+                  <li key="tackles" className="tackles" data-cy={props.name ? props.name + "tackles" : "tackles"}>
+                    {`Successful tackles per game: ${props.tackles !== undefined ? `${props.tackles}` : "N/A"}`}
+                  </li>
                   <li key="ballRecovery" className="ballRecovery" data-cy={props.name ? props.name + "ballRecovery" : "ballRecovery"}>
-                    {`Ball recoveries: ${props.ballRecovery !== undefined ? `${props.ballRecovery}` : "N/A"}`}
+                    {`Ball recoveries per game: ${props.ballRecovery !== undefined ? `${props.ballRecovery}` : "N/A"}`}
                   </li>
                   <li key="interceptions" className="interceptions" data-cy={props.name ? props.name + "interceptions" : "interceptions"}>
-                    {`Interceptions: ${props.interceptions !== undefined ? `${props.interceptions}` : "N/A"}`}
+                    {`Interceptions per game: ${props.interceptions !== undefined ? `${props.interceptions}` : "N/A"}`}
                   </li>
                   <li
                     key="DuelsWon"
@@ -407,21 +407,21 @@ function Stats(props) {
                   className="CardsTotal"
                   data-cy={props.name ? props.name + "CardsTotal" : "CardsTotal"}
                 >
-                  {`Yellow cards: ${props.CardsTotal !== undefined ? props.CardsTotal : "N/A"}`}
+                  {`Yellow cards per game: ${props.CardsPerGame !== undefined ? props.CardsPerGame : "N/A"}`}
                 </li>
                   <li
                     key="RedCardsTotal"
                     className="RedCardsTotal"
                     data-cy={props.name ? props.name + "RedCardsTotal" : "RedCardsTotal"}
                   >
-                    {`Red cards: ${props.RedCardsTotal !== undefined ? props.RedCardsTotal : "N/A"}`}
+                    {`Red cards per game: ${props.RedCardsPerGame !== undefined ? props.RedCardsPerGame : "N/A"}`}
                   </li>
                   <li
                     key="Fouls"
                     className="Fouls"
                     data-cy={props.name ? props.name + "Fouls" : "Fouls"}
                   >
-                    {`Fouls: ${props.Fouls !== undefined ? props.Fouls : "N/A"}`}
+                    {`Fouls per game: ${props.FoulsPerGame !== undefined ? props.FoulsPerGame : "N/A"}`}
                   </li>
                   <li key="PenaltiesConceded" className="PenaltiesConceded" data-cy={props.name ? props.name + "PenaltiesConceded" : "PenaltiesConceded"}>
                     {`Penalties conceded: ${props.PenaltiesConceded !== undefined ? props.PenaltiesConceded : "N/A"}`}
@@ -472,7 +472,7 @@ function Stats(props) {
                       }`}
                   </li>
                   <li key="Offsides" className="Offsides" data-cy={props.name ? props.name + "Offsides" : "Offsides"}>
-                    {`Offsides: ${props.offsides !== undefined ? props.offsides : "N/A"}`}
+                    {`Offsides per game: ${props.offsides !== undefined ? props.offsides : "N/A"}`}
                   </li>
                 </>
               }

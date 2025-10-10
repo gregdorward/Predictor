@@ -4,7 +4,7 @@ import {
   useRef,
   useCallback,
   useMemo,
-  lazy, 
+  lazy,
   Suspense
 } from "react";
 import { Button } from "./Button";
@@ -1639,17 +1639,17 @@ function GameStats({ game, displayBool, stats }) {
             successfulDribbles={homeTeamStats?.successfulDribbles}
             duelsWonPercentage={homeTeamStats?.duelsWonPercentage?.toFixed(2)}
             aerialDuelsWonPercentage={homeTeamStats?.aerialDuelsWonPercentage?.toFixed(2)}
-            ballRecovery={homeTeamStats?.ballRecovery}
-            interceptions={homeTeamStats?.interceptions}
+            ballRecovery={(homeTeamStats?.ballRecovery / homeTeamStats?.matches)?.toFixed(2)}
+            interceptions={(homeTeamStats?.interceptions / homeTeamStats?.matches)?.toFixed(2)}
             cleansheetPercentage={
               homeTeamStats?.cleanSheets !== undefined &&
                 homeTeamStats?.matches
                 ? ((homeTeamStats.cleanSheets / homeTeamStats.matches) * 100).toFixed(2)
                 : "N/A"
             }
-            tackles={homeTeamStats?.tackles}
+            tackles={(homeTeamStats?.tackles / homeTeamStats?.matches)?.toFixed(2)}
             errorsLeadingToShotAgainst={homeTeamStats?.errorsLeadingToShotAgainst}
-            offsides={homeTeamStats?.offsides}
+            offsides={(homeTeamStats?.offsides / homeTeamStats?.matches)?.toFixed(2)}
             PPDA={PPDA_valueHome}
             PPAA={PPAA_valueHome}
             leaguePosition={
@@ -1691,9 +1691,9 @@ function GameStats({ game, displayBool, stats }) {
             BTTSArray={formDataHome[0].BTTSArray}
             Results={formDataHome[0].Results}
             ResultsHorA={formDataHome[0].ResultsHorA}
-            CardsTotal={formDataHome[0].CardsTotal}
-            RedCardsTotal={homeTeamStats?.redCards}
-            Fouls={homeTeamStats?.fouls}
+            CardsPerGame={(homeTeamStats?.yellowCards / homeTeamStats?.matches)?.toFixed(2)}
+            RedCardsPerGame={(homeTeamStats?.redCards / homeTeamStats?.matches)?.toFixed(2)}
+            FoulsPerGame={(homeTeamStats?.fouls / homeTeamStats?.matches)?.toFixed(2)}
             PenaltiesConceded={homeTeamStats?.penaltiesCommited}
             CornersAverage={homeForm.AverageCorners}
             FreeKickGoals={homeTeamStats?.freeKickGoals}
@@ -1837,16 +1837,17 @@ function GameStats({ game, displayBool, stats }) {
             successfulDribbles={awayTeamStats?.successfulDribbles}
             duelsWonPercentage={awayTeamStats?.duelsWonPercentage?.toFixed(2)}
             aerialDuelsWonPercentage={awayTeamStats?.aerialDuelsWonPercentage?.toFixed(2)}
-            ballRecovery={awayTeamStats?.ballRecovery}
-            interceptions={awayTeamStats?.interceptions}
+            ballRecovery={(awayTeamStats?.ballRecovery / awayTeamStats?.matches)?.toFixed(2)}
+            interceptions={(awayTeamStats?.interceptions / awayTeamStats?.matches)?.toFixed(2)}
             cleansheetPercentage={
               awayTeamStats?.cleanSheets !== undefined &&
                 awayTeamStats?.matches
                 ? ((awayTeamStats.cleanSheets / awayTeamStats.matches) * 100).toFixed(2)
                 : "N/A"
             }
+            tackles={(awayTeamStats?.tackles / awayTeamStats?.matches)?.toFixed(2)}
             errorsLeadingToShotAgainst={awayTeamStats?.errorsLeadingToShotAgainst}
-            offsides={awayTeamStats?.offsides}
+            offsides={(awayTeamStats?.offsides / awayTeamStats?.matches)?.toFixed(2)}
             PPDA={PPDA_valueAway}
             PPAA={PPAA_valueAway}
             leaguePosition={
@@ -1882,9 +1883,9 @@ function GameStats({ game, displayBool, stats }) {
             BTTSArray={formDataAway[0].BTTSArray}
             Results={formDataAway[0].Results}
             ResultsHorA={formDataAway[0].ResultsHorA}
-            CardsTotal={formDataAway[0].CardsTotal}
-            RedCardsTotal={awayTeamStats?.redCards}
-            Fouls={awayTeamStats?.fouls}
+            CardsPerGame={(awayTeamStats?.yellowCards / awayTeamStats?.matches)?.toFixed(2)}
+            RedCardsPerGame={(awayTeamStats?.redCards / awayTeamStats?.matches)?.toFixed(2)}
+            FoulsPerGame={(awayTeamStats?.fouls / awayTeamStats?.matches)?.toFixed(2)}
             PenaltiesConceded={homeTeamStats?.penaltiesCommited}
             CornersAverage={awayForm.AverageCorners}
             FreeKickGoals={awayTeamStats?.freeKickGoals}
