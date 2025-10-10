@@ -355,7 +355,7 @@ function Stats(props) {
                     {`Aerial duels won: ${props.aerialDuelsWonPercentage !== undefined ? `${props.aerialDuelsWonPercentage}%` : "N/A"}`}
                   </li>
                   <li key="accurateLongBallsAgainstPercentage" className="accurateLongBallsAgainstPercentage" data-cy={props.name ? props.name + "accurateLongBallsAgainstPercentage" : "accurateLongBallsAgainstPercentage"}>
-                    {`Accurate long balls against: ${props.accurateLongBallsAgainstPercentage !== undefined ? `${props.accurateLongBallsAgainstPercentage}%` : "N/A"}`}
+                    {`Long balls against success: ${props.accurateLongBallsAgainstPercentage !== undefined ? `${props.accurateLongBallsAgainstPercentage}%` : "N/A"}`}
                   </li>
                 </>
               }
