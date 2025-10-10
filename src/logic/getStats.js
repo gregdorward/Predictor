@@ -3,7 +3,6 @@ import { allForm } from "../logic/getFixtures";
 import { getPointsFromLastX } from "../logic/getScorePredictions";
 import { allLeagueResultsArrayOfObjects } from "../logic/getFixtures";
 import GenerateFormSummary from "../logic/compareFormTrend";
-import Collapsable from "../components/CollapsableElement";
 import { clicked } from "../logic/getScorePredictions";
 import { userDetail } from "../logic/authProvider";
 import { checkUserPaidStatus } from "../logic/hasUserPaid";

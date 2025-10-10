@@ -1,4 +1,4 @@
-import React, { Fragment } from "react";
+import { Fragment } from "react";
 import { CreateBadge } from "./createBadge";
 import Collapsable from "../components/CollapsableElement";
 import BarChart from "../components/Chart";
@@ -387,7 +387,7 @@ function Stats(props) {
                     className="FormTrend"
                     data-cy={props.name ? props.name + "FormTrend10" : "FormTrend10"}
                   >
-                    {`Last 5 PPG: ${props.formTrend && props.formTrend[2] !== undefined ? props.formTrend[2] : "N/A"}.`}
+                    {`Last 5 PPG: ${props.formTrend && props.formTrend[2] !== undefined ? props.formTrend[2] : "N/A"}`}
                   </li>
                   <li
                     key="WinPercentage"

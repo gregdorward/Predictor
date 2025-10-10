@@ -1,4 +1,3 @@
-import React from "react";
 import PreviousGames from "../components/PreviousGames"
 
 function HeadToHead(props) {

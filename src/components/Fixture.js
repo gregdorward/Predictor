@@ -1,4 +1,4 @@
-import React, { Fragment, useState, useEffect, useRef } from "react";
+import { Fragment, useState, useEffect, useRef, lazy, Suspense } from "react";
 import { CreateBadge } from "./createBadge";
 import { useDispatch } from "react-redux";
 import { setData } from "../logic/dataSlice";
@@ -7,11 +7,11 @@ import store from "../logic/store"; // Import your Redux store
 import { clicked } from "../logic/getScorePredictions";
 import { userDetail } from "../logic/authProvider";
 import { checkUserPaidStatus } from "../logic/hasUserPaid";
-import GameStats from "./GameStats";
 import { userTips } from "./GameStats";
 import { leagueStatsArray } from "../logic/getScorePredictions";
 import LeagueName from './LeagueName';
 import ShareShortlistButton from "./ShareShortlistButton";
+const LazyGameStats = lazy(() => import('./GameStats'));
 
 let resultValue;
 let paid;
@@ -431,13 +431,17 @@ function SingleFixture({
       </div>
       {isLoadingGameStats && <div className="LoadingMessage">Loading Game Stats...</div>}{" "}
       {/* Show loading message */}
-      {showGameStats && !isLoadingGameStats && (
-        <GameStats
-          game={fixture}
-          displayBool={true}
-          stats={leagueStatsArray[`leagueStats${fixture.leagueID}`]}
-        />
-      )}
+      <Suspense fallback={<div>Loading game statistics...</div>}>
+
+        {/* The condition ensures LazyGameStats is only mounted when ready */}
+        {showGameStats && !isLoadingGameStats && (
+          <LazyGameStats
+            game={fixture}
+            displayBool={true}
+            stats={leagueStatsArray[`leagueStats${fixture.leagueID}`]}
+          />
+        )}
+      </Suspense>
     </div>
   );
 }
@@ -461,16 +465,16 @@ async function submitTips() {
   userTips.length = 0;
 }
 
-const List = ({ 
-  fixtures, 
-  mock, 
-  showShortlist, 
-  setShowShortlist, 
+const List = ({
+  fixtures,
+  mock,
+  showShortlist,
+  setShowShortlist,
   // You may also want to accept fullUncappedFixtures here if that was part of your final solution
 }) => {
   // ⭐️ showShortlist state is now received via props, not local state ⭐️
   const [selectedFixtures, setSelectedFixtures] = useState([]);
-  
+
   // You need to resolve this variable being undefined if it's not a prop or local state
   // console.log(showShortlist); 
 
@@ -488,7 +492,7 @@ const List = ({
 
       if (shortlistParam) {
         const sharedFixtureIds = shortlistParam.split(',').map(id => parseInt(id, 10));
-        
+
         // Use the fixtures prop for filtering. Assuming Fixture passes the FULL list 
         // on the second render, the initial set here might still be capped if the timing is tight.
         // For production, you MUST use the uncapped list here (e.g., props.fullUncappedFixtures)
@@ -504,7 +508,7 @@ const List = ({
             setShowShortlist(true);
           } else if (showShortlist) {
             // If the view was active but the URL no longer requests it, turn it off.
-            setShowShortlist(false); 
+            setShowShortlist(false);
           }
 
           isInitialMount.current = false;
@@ -515,7 +519,7 @@ const List = ({
       isInitialMount.current = false;
     }
 
-  }, [fixtures, setSelectedFixtures, setShowShortlist, showShortlist]); 
+  }, [fixtures, setSelectedFixtures, setShowShortlist, showShortlist]);
   // Note: Added 'showShortlist' to dependencies to allow the else if branch to work on re-renders
 
   // ----------------------------------------------------------------------
@@ -529,7 +533,7 @@ const List = ({
     const pathname = window.location.pathname;
     const params = new URLSearchParams(window.location.search);
     const hasInitialShortlist = params.get('shortlist') !== null;
-    
+
     if (hasInitialShortlist && selectedFixtures.length === 0) {
       return;
     }

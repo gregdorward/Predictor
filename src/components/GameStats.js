@@ -1,12 +1,12 @@
-import React, {
+import {
   useState,
   useEffect,
   useRef,
-  Fragment,
   useCallback,
   useMemo,
+  lazy, 
+  Suspense
 } from "react";
-// import ReactDOM from "react-dom";
 import { Button } from "./Button";
 import { memo } from "react";
 import SofaLineupsWidget from "./SofaScore";
@@ -16,7 +16,6 @@ import {
   MultilineChart,
   RadarChart,
   BarChart,
-  DoughnutChart,
 } from "./Chart";
 import MultiTypeChart from "./MultitypeChart"; // Adjust the path if necessary
 import { Slider } from "../components/CarouselXGChart";
@@ -42,15 +41,15 @@ import {
   calculateDefensiveStrength,
   calculateMetricStrength,
 } from "../logic/getStats";
-import { dynamicDate } from "../logic/getFixtures";
 import { rounds } from "./TeamOfTheSeason";
-import { Doughnut } from "react-chartjs-2";
 import StarRating from "../components/StarRating";
 import { handleCheckout, stripePromise } from "../App"
-import FutureFixturesSideBySide from "./FutureFixturesSideBySide";
+// import FutureFixturesSideBySide from "./FutureFixturesSideBySide";
 export let userTips;
 let setUserTips;
 const MemoizedSofaLineupsWidget = memo(SofaLineupsWidget);
+const LazyFutureFixturesSideBySide = lazy(() => import('./FutureFixturesSideBySide'));
+
 
 // let id, team1, team2, timestamp, homeGoals, awayGoals;
 
@@ -157,9 +156,6 @@ function GameStats({ game, displayBool, stats }) {
   const [awayDirectnessStrength, setAwayDirectnessStrength] = useState(0);
   const [awayAccuracyOverallStrength, setAwayAccuracyOverallStrength] =
     useState(0);
-  //   const [formArrayHome, setFormArrayHome] = useState([]);
-  //   const [formArrayAway, setFormArrayAway] = useState([]);
-  //   const [chartType, setChartType] = useState("");
   const [rollingSOTDiffTotalHome, setRollingSOTDiffTotalHome] = useState([]);
   const [similarGamesHome, setSimilarGamesHome] = useState([]);
   const [similarGamesAway, setSimilarGamesAway] = useState([]);
@@ -456,9 +452,6 @@ function GameStats({ game, displayBool, stats }) {
     "botafogo": "botafogo",
   };
 
-  // const normalizedTargetName = cleanTeamName(
-  //   teamNameAliases[targetTeamName.toLowerCase()] || targetTeamName
-  // );
 
   const warnedTeams = new Set(); // Move this outside the function if reused
 
@@ -901,58 +894,6 @@ function GameStats({ game, displayBool, stats }) {
     return currentTimestamp < targetTimestamp;
   }
 
-  // async function getRefStats(refId, compId) {
-  //   try {
-  //     const response = await fetch(
-  //       `${process.env.REACT_APP_EXPRESS_SERVER}referee/${refId}`
-  //     );
-
-  //     if (!response.ok) {
-  //       // Handle HTTP errors (e.g., 404, 500)
-  //       console.error(`HTTP error! Status: ${response.status}`);
-  //       return null; // Or throw an error to be caught later
-  //     }
-
-  //     const refData = await response.json(); // Parse the JSON response
-
-  //     // Access the array within the 'data' property
-  //     const dataArray = refData.data;
-
-  //     if (!Array.isArray(dataArray)) {
-  //       console.error("Error: Expected 'data' property to be an array.");
-  //       return null;
-  //     }
-
-  //     console.log(dataArray)
-
-  //     // Find the object with the matching competition_id
-  //     const filteredObject = dataArray.find(
-  //       (item) => item.competition_id === compId
-  //     );
-
-  //     const distilledRefData = {
-  //       appearances_overall: filteredObject.appearances_overall,
-  //       full_name: filteredObject.full_name,
-  //       cards_per_match_overall: filteredObject.cards_per_match_overall,
-  //       goals_per_match_overall: filteredObject.goals_per_match_overall,
-  //       min_per_card_overall: filteredObject.min_per_card_overall,
-  //       nationality: filteredObject.nationality,
-  //       over25_cards_percentage_overall:
-  //         filteredObject.over25_cards_percentage_overall,
-  //       over35_cards_percentage_overall:
-  //         filteredObject.over35_cards_percentage_overall,
-  //       penalties_given_per_match_overall:
-  //         filteredObject.penalties_given_per_match_overall,
-  //       red_cards_overall: filteredObject.red_cards_overall,
-  //     };
-
-  //     return distilledRefData; // Returns the found object, or undefined if not found
-  //   } catch (error) {
-  //     console.error("Error fetching or processing data:", error);
-  //     return null; // Or handle the error as appropriate for your application (e.g., display an error message to the user)
-  //   }
-  // }
-
   const reasonCodeMap = {
     1: "Injury",
     2: "Unknown",
@@ -1312,10 +1253,6 @@ function GameStats({ game, displayBool, stats }) {
                 "Less than 4.5 cards": null, // Explicitly map to null if no odds exist
                 "Less than 10.5 corners": "Under10.5Corners",
                 "More than 10.5 corners": "Over10.5Corners",
-                // For "First to score" when team is "both", you might need to decide
-                // if it maps to a general odds or if it's always team-specific.
-                // Based on your previous example, "First to score" was team-specific.
-                // If it could be "both", you'd need a "FirstToScore" key here.
               },
             },
           };
@@ -2939,21 +2876,15 @@ function GameStats({ game, displayBool, stats }) {
     formRun: homeForm.formRun,
     goalDifference: homeForm.goalDifference,
     goalDifferenceHomeOrAway: homeForm.goalDifferenceHomeOrAway,
-    // BttsPercentage: homeForm.BttsPercentage || "-",
-    // BttsPercentageHomeOrAway: homeForm.BttsPercentageHomeOrAway || "-",
     CardsTotal: homeForm.CardsTotal || "-",
     CornersAverage: homeForm.AverageCorners || "-",
     FormTextStringHome: formSummaries[0],
-    // FavouriteRecord:
-    //   favouriteRecordHome + `. ${homeForm.reliabilityString}`,
     BTTSArray: bttsArrayHome,
     Results: homeForm.resultsAll,
     ResultsHorA: homeForm.resultsHome,
     XGSwing: homeForm.XGChangeRecently,
     styleOfPlayOverall: homeForm.styleOfPlayOverall,
     styleOfPlayHome: homeForm.styleOfPlayHome,
-    // BTTSAll: homeForm.last10btts,
-    // BTTSHorA: homeForm.last10bttsHome,
   });
 
   const formDataAway = [];
@@ -2976,21 +2907,15 @@ function GameStats({ game, displayBool, stats }) {
     formRun: awayForm.formRun,
     goalDifference: awayForm.goalDifference,
     goalDifferenceHomeOrAway: awayForm.goalDifferenceHomeOrAway,
-    // BttsPercentage: awayForm.BttsPercentage || "-",
-    // BttsPercentageHomeOrAway: awayForm.BttsPercentageHomeOrAway || "-",
     CardsTotal: awayForm.CardsTotal || "-",
     CornersAverage: awayForm.AverageCorners || "-",
     FormTextStringAway: formSummaries[1],
-    // FavouriteRecord:
-    //   favouriteRecordAway + `. ${awayForm.reliabilityString}`,
     BTTSArray: bttsArrayAway,
     Results: awayForm.resultsAll,
     ResultsHorA: awayForm.resultsAway,
     XGSwing: awayForm.XGChangeRecently,
     styleOfPlayOverall: awayForm.styleOfPlayOverall,
     styleOfPlayAway: awayForm.styleOfPlayAway,
-    // BTTSAll: awayForm.last10btts,
-    // BTTSHorA: awayForm.last10bttsAway,
   });
 
   // AI Insights Generation
@@ -3021,16 +2946,12 @@ function GameStats({ game, displayBool, stats }) {
         totalGames = (statistics.totalMatches * 2) / statistics.clubNum;
       });
 
-      // console.log(homeTeamStats);
-      // console.log(oddsData);
-
       try {
         const AIPayload = {
           competition: game.leagueDesc,
           totalLeagueGames: totalGames?.toFixed(0),
           gameweek: game.matches_completed_minimum + 1,
           gameType: roundType,
-          // referee: await getRefStats(game.refereeID, game.competition_id),
           leagueTable: leagueTable,
           seasonProgressPercent: progress,
           venue: game.stadium,
@@ -3116,32 +3037,6 @@ function GameStats({ game, displayBool, stats }) {
     return text.split(". ").join(".\n");
   };
 
-
-  //AI Match Preview Data Structure
-  //   {
-  //   "homeTeam": {
-  //     "teamName": "String (Team Name)",
-  //     "style": "String (Team's playing style, a concise description based on the performanceStats and competitionRankings.)",
-  //     "strengths": Array of strings (Team's strengths, qualitative analysis based on performanceStats and competitionRankings. Each strength should be a single string.)",
-  //     "weaknesses": Array of strings (Team's weaknesses, qualitative analysis based on performanceStats and competitionRankings. Each weakness should be a single string.)",
-  //   },
-  //   "awayTeam": {
-  //     "teamName": "String (Team Name)",
-  //     "style": "String (Team's playing style, a concise description based on the performanceStats and competitionRankings.)",
-  //     "strengths": Array of strings (Team's strengths, qualitative analysis based on performanceStats and competitionRankings. Each strength should be a single string.)",
-  //     "weaknesses": Array of strings (Team's weaknesses, qualitative analysis based on performanceStats and competitionRankings. Each weakness should be a single string.)",
-  //   },
-  //   "matchPreview": [
-  //     "A detailed, qualitative match preview, drawing on the wide range of stats available. Each paragraph should be its own string within this array.",
-  //     "The preview must convey the importance of the match, if any, and relevant context.",
-  //     "Previous head-to-head results can be mentioned here. Anything noteworthy from the predicted lineups should be included.",
-  //     "If a key player is missing or doubtful, this should be included."
-  //   ],
-  //   "prediction": "String (Match prediction, including likely occurrences/tips and a correct score prediction. Supply relevant odds where available.)"
-  //   "homeGoalsPrediction": "Int (Predicted number of goals for the home team. Must match the prediction in the 'prediction' field.)",
-  //   "awayGoalsPrediction": "Int (Predicted number of goals for the away team. Must match the prediction in the 'prediction' field.)",
-  // }
-  //Render the AI data
   const AIOutput = useMemo(() => {
     if (!aiMatchPreview) return null;
 
@@ -3504,11 +3399,13 @@ function GameStats({ game, displayBool, stats }) {
             buttonText={`Upcoming Games`}
             classNameButton="FutureFixturesButton"
             element={
-              <FutureFixturesSideBySide
-                loadingFutureFixtures={loadingFutureFixtures}
-                futureFixturesHome={futureFixturesHome}
-                futureFixturesAway={futureFixturesAway}
-              />
+              <Suspense fallback={<div>Loading fixtures...</div>}>
+                <LazyFutureFixturesSideBySide
+                  loadingFutureFixtures={loadingFutureFixtures}
+                  futureFixturesHome={futureFixturesHome}
+                  futureFixturesAway={futureFixturesAway}
+                />
+              </Suspense>
             }
           />
         )}
@@ -3663,58 +3560,6 @@ function GameStats({ game, displayBool, stats }) {
         length="3"
         element1={
           <>
-            {/* <BarChart
-              text="Attacking"
-              labels={[
-                'Avg Shots', 'Avg SOT', 'Shooting Acc %', 'Goal Conv %', 'Big Chances', 'Big Chance Conv %',
-                'Dngr. Attacks', 'Shots in Box', 'Goals in Box', 'Goals out Box',
-                'Fast Break Shots'
-              ]}
-              data1={[
-                homeTeamStats?.shots,
-                homeForm.AverageShotsOnTargetOverall,
-                homeTeamStats?.shotsOnTarget !== undefined &&
-                  homeTeamStats?.shots
-                  ? ((homeTeamStats.shotsOnTarget / homeTeamStats.shots) * 100)
-                  : undefined,
-                homeTeamStats?.shots !== undefined && homeTeamStats?.goalsScored
-                  ? ((homeTeamStats.goalsScored / homeTeamStats.shots) * 100)
-                  : undefined,
-                homeTeamStats?.bigChances,
-                homeTeamStats?.bigChances !== undefined && homeTeamStats?.goalsScored
-                  ? ((homeTeamStats.goalsScored / homeTeamStats.bigChances) * 100)
-                  : undefined,
-                homeForm.AverageDangerousAttacksOverall !== 0
-                  ? homeForm.AverageDangerousAttacksOverall
-                  : homeForm.AverageDangerousAttacks,
-                homeTeamStats?.shotsFromInsideTheBox,
-                homeTeamStats?.goalsFromInsideTheBox,
-                homeTeamStats?.goalsFromOutsideTheBox,
-                homeTeamStats?.fastBreakShots,
-              ]}
-              data2={[
-                awayTeamStats?.shots,
-                awayForm.AverageShotsOnTargetOverall,
-                awayTeamStats?.shotsOnTarget !== undefined &&
-                  awayTeamStats?.shots
-                  ? ((awayTeamStats.shotsOnTarget / awayTeamStats.shots) * 100)
-                  : undefined,
-                awayTeamStats?.shots !== undefined && awayTeamStats?.goalsScored
-                  ? ((awayTeamStats.goalsScored / awayTeamStats.shots) * 100)
-                  : undefined,
-                awayTeamStats?.bigChances,
-                awayTeamStats?.bigChances !== undefined && awayTeamStats?.goalsScored
-                  ? ((awayTeamStats.goalsScored / awayTeamStats.bigChances) * 100)
-                  : undefined,
-                awayForm.AverageDangerousAttacksOverall !== 0
-                  ? awayForm.AverageDangerousAttacksOverall
-                  : awayForm.AverageDangerousAttacks,
-                awayTeamStats?.shotsFromInsideTheBox,
-                awayTeamStats?.goalsFromInsideTheBox,
-                awayTeamStats?.goalsFromOutsideTheBox,
-                awayTeamStats?.fastBreakShots,
-              ]}
-            /> */}
             <h2>All games</h2>
             <div className="flex-container">
               {/* ## ⚔️ Attacking ## */}
@@ -4146,109 +3991,8 @@ function GameStats({ game, displayBool, stats }) {
         <div className="flex-childOneOverviewSmall">{overviewHome}</div>
         <div className="flex-childTwoOverviewSmall">{overviewAway}</div>
       </div>
-      {/* <h2>Results from similar profile games</h2>
-        <span>(Games where each team had similar odds)</span>
-        <h3>Most recent first</h3>
-        <div className="flex-container-similar">
-          <div className="flex-childOneOverviewSmall">{similarGamesHome}</div>
-          <div className="flex-childTwoOverviewSmall">{similarGamesAway}</div>
-        </div>
-        <input type="hidden" name="IL_IN_ARTICLE" />
-        <Button
-          className="MoreStats"
-          onClickEvent={() =>
-            getTeamStats(
-              game.id,
-              game.homeTeam,
-              game.awayTeam,
-              formDataHome[0].BttsPercentage,
-              formDataHome[0].BttsPercentageHomeOrAway,
-              formDataAway[0].BttsPercentage,
-              formDataAway[0].BttsPercentageHomeOrAway
-            )
-          }
-          text={"Fixture trends + AI Preview"}
-        ></Button> */}
     </>
   );
 }
 
 export default GameStats;
-
-
-
-//  {homeTeamStats && awayTeamStats && (
-//         <Collapsable
-//           buttonText="Additional Team Stats"
-//           classNameButton="TeamStatsButton"
-//           element={
-//             <div className="TeamStats">
-//               <DoughnutChart
-//                 chartTitle="SoT For vs Against"
-//                 // labels={['For', 'Against']}
-//                 values={[homeTeamStats.shotsOnTarget, homeTeamStats.shotsOnTargetAgainst]}
-//                 colors={[
-//                   'rgba(49, 196, 0, 1)',
-//                   'rgba(216, 0, 0, 1)',
-//                 ]}
-//                 label="SoT For vs Against"
-//               />
-//               <DoughnutChart
-//                 chartTitle="Big Chances For vs Against"
-//                 // labels={['For', 'Against']}
-//                 values={[homeTeamStats.bigChances, homeTeamStats.bigChancesAgainst]}
-//                 colors={[
-//                   'rgba(49, 196, 0, 1)',
-//                   'rgba(216, 0, 0, 1)',
-//                 ]}
-//                 label="SoT For vs Against"
-//               />
-//               <DoughnutChart
-//                 chartTitle="Accurate Passes in Opposition Half vs Own Half"
-//                 // labels={['For', 'Against']}
-//                 values={[homeTeamStats.accurateOppositionHalfPasses, homeTeamStats.accurateOwnHalfPasses]}
-//                 colors={[
-//                   'rgba(49, 196, 0, 1)',
-//                   'rgba(216, 0, 0, 1)',
-//                 ]}
-//                 label="SoT For vs Against"
-//               />
-//               <DoughnutChart
-//                 chartTitle="Corners For vs Against"
-//                 // labels={['For', 'Against']}
-//                 values={[homeTeamStats.corners, homeTeamStats.cornersAgainst]}
-//                 colors={[
-//                   'rgba(49, 196, 0, 1)',
-//                   'rgba(216, 0, 0, 1)',
-//                 ]}
-//                 label="SoT For vs Against"
-//               />
-//               <DoughnutChart
-//                 chartTitle="Penalties For vs Against"
-//                 // labels={['For', 'Against']}
-//                 values={[homeTeamStats.penaltiesTaken, homeTeamStats.penaltiesCommited]}
-//                 colors={[
-//                   'rgba(49, 196, 0, 1)',
-//                   'rgba(216, 0, 0, 1)',
-//                 ]}
-//                 label="SoT For vs Against"
-//               />
-//               <DoughnutChart
-//                 chartTitle="Accurate Passes vs Accurate Long Balls"
-//                 // labels={['For', 'Against']}
-//                 values={[homeTeamStats.accuratePasses, homeTeamStats.accurateLongBalls]}
-//                 colors={[
-//                   'rgba(49, 196, 0, 1)',
-//                   'rgba(216, 0, 0, 1)',
-//                 ]}
-//                 label="SoT For vs Against"
-//               />
-//               {/* <DoughnutChart
-//                       teamStats={awayTeamStats}
-//                       className="AwayPlayerStats"
-//                       spanClass="SpanAway"
-//                     /> */}
-//             </div>
-//           }
-//         />
-//       )}

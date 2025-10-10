@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import { Component } from "react";
 export var selectedTipType = "SSH Tips";
 
 export class PredictionTypeRadio extends Component {

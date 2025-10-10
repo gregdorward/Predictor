@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 export var toggleState = false;
 export var setIsOff = false;
 

@@ -1,10 +1,8 @@
-import React, { Fragment, useEffect, useState } from "react";
+import { Fragment, useEffect, useState, lazy, Suspense } from "react";
 import ReactDOM from "react-dom";
 import { Button } from "./components/Button";
 import OddsRadio from "./components/OddsRadio";
 import PredictionTypeRadio from "./components/PredictionTypeRadio";
-import { Fixture } from "./components/Fixture";
-import mockedFixtures from "./data/mockedFixtures.json";
 import ThemeToggle from "./components/DarkModeToggle";
 import { selectedOdds } from "./components/OddsRadio";
 import Collapsable from "./components/CollapsableElement";
@@ -30,8 +28,7 @@ import {
   WhatsappIcon,
 } from "react-share";
 import { generateFixtures } from "./logic/getFixtures";
-import { ThreeDots } from "react-loading-icons";
-import Logo from "./components/Logo";
+// import Logo from "./components/Logo";
 import { BrowserRouter as Router, Route, Routes, Link } from "react-router-dom";
 import PrivacyPolicy from "./components/PrivacyPolicy";
 
@@ -44,6 +41,8 @@ export var orderedLeagues = [];
 
 let loggedIn;
 export let paid = false;
+const LazyLogo = lazy(() => import('./components/Logo'));
+
 
 const menuItems = ['Home', 'bttsteams', 'Services', 'Contact'];
 
@@ -205,52 +204,13 @@ const leagueOrder = [
 //   12801, // WC Qual Aus,
 // ];
 
-let today;
-let todayFootyStats;
-let todaySS;
-let tomorrow;
-let tomorrowFootyStats;
-let tomorrowSS;
 export let date;
 let dateSS;
 let dateFootyStats;
-let yesterday;
-let yesterdayFootyStats;
-let yesterdaySS;
-let lastSaturday;
-let lastSaturdayFootyStats;
-let historic;
-let historicFootyStats;
-let historicSS;
-let historicDate;
 let string;
 let dateString;
-let dateString2;
 let dateUnformatted;
 let todaysDateUnformatted;
-let tomorrowsDateUnformatted;
-let yesterdaysDateUnformatted;
-let saturdayDateUnformatted;
-
-
-// let matches = [];
-// let fixtureArray = [];
-// let dynamicDate = unformattedDate;
-
-// // Fire all fetches at the same time
-// const [matchesRes, formRes, leagueRes] = await Promise.all([
-//   fetch(url),
-//   fetch(formUrl),
-//   fetch(leagueUrl),
-// ]);
-
-// // Parse JSON (in parallel too)
-// const [matchesData, formData, leagueData] = await Promise.all([
-//   matchesRes.json(),
-//   formRes.json(),
-//   leagueRes.json(),
-// ]);
-
 
 async function calculateDate(dateString) {
   const day = dateString.getDate();
@@ -383,19 +343,15 @@ export async function getLeagueList() {
 
   // Run calculateDate on all in parallel
   const [
-    [today, todayFootyStats],
-    [lastSaturday, lastSaturdayFootyStats],
+    [today, todayFootyStats]
   ] = await Promise.all([
-    calculateDate(todayRaw),
-    calculateDate(saturdayDate),
+    calculateDate(todayRaw)
   ]);
 
   const [
     todaySS,
-    lastSaturdaySS,
   ] = await Promise.all([
-    convertTimestampForSofaScore(new Date()),
-    convertTimestampForSofaScore(saturdayDate),
+    convertTimestampForSofaScore(new Date())
   ]);
 
   const text =
@@ -606,7 +562,9 @@ function AppContent() {
   return (
     <div className="App">
       <div className="DarkMode">
-        <Logo />
+        <Suspense fallback={<div></div>}>
+          <LazyLogo />
+        </Suspense>
         <ThemeToggle />
       </div>
       <HamburgerMenu />
@@ -734,25 +692,6 @@ function AppContent() {
             </a>
           </h6>
         </div>
-        <h6 className="GetMatchStatText">
-          Games shown below for illustrative purposes only
-        </h6>
-        {/* <div id="Checkbox" /> */}
-        {/* <div id="CheckboxTwo" className="CheckboxTwo" /> */}
-        {/* <div className="ExplainerContainer">
-          <span className="oddsHomeExplainer">Home odds</span>
-          <span className="emptyHomeTeam"></span>
-          <span className="scoreExplainer">Result / KO Time</span>
-          <span className="predictionExplainer">Our Prediction</span>
-          <span className="emptyAwayTeam"></span>
-          <span className="oddsAwayExplainer">Away odds</span>
-        </div> */}
-
-        <Fixture
-          fixtures={mockedFixtures.matches}
-          mock={true}
-          className={"individualFixture"}
-        />
       </div>
       <div id="XGDiff" />
 

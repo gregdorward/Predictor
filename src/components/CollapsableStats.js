@@ -1,4 +1,3 @@
-import React from "react";
 import Collapsible from "react-collapsible";
 
 const CollapsableStats = (props) => {

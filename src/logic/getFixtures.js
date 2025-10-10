@@ -1,4 +1,4 @@
-import React, { Fragment } from "react";
+import { Fragment, lazy, Suspense } from "react";
 import ReactDOM from "react-dom";
 import { orderedLeagues } from "../App";
 import { getForm } from "./getForm";
@@ -8,12 +8,13 @@ import { Slide } from "../components/Slider";
 import { getScorePrediction } from "../logic/getScorePredictions";
 import { ThreeDots } from "react-loading-icons";
 import { selectedOdds } from "../components/OddsRadio";
-import LeagueTable from "../components/LeagueTable";
 import { getPointsFromLastX } from "../logic/getScorePredictions";
 import SlideDiff from "../components/SliderDiff";
 import Collapsable from "../components/CollapsableElement";
 import { userDetail } from "./authProvider";
 import { leagueStatsArray, playerStatsArray } from "../logic/getScorePredictions";
+const LazyLeagueTable = lazy(() => import('../components/LeagueTable'));
+
 var oddslib = require("oddslib");
 
 var fixtureResponse;
@@ -146,14 +147,7 @@ export async function generateTables(a, leagueIdArray, allResults) {
       }));
       basicTableArray.push({ id: currentLeagueId, table: basicElements });
     } else if (currentLeagueId === 13973
-      // || currentLeagueId === 12933
     ) {
-      // for (let x = 0; x < league.data.specific_tables[0].groups.length; x++) {
-      // for (
-      //   let index = 0;
-      //   index < league.data.specific_tables[0].groups[x].table.length;
-      //   index++
-      // )
       let instances;
 
       if (currentLeagueId === 13973) {
@@ -166,14 +160,6 @@ export async function generateTables(a, leagueIdArray, allResults) {
           groups = false
         }
       }
-      // else if (currentLeagueId === 12933) {
-      //   groups = true
-      //   instances = [
-      //     league.data.specific_tables[0],
-      //     league.data.specific_tables[1],
-      //   ];
-      // }
-
       if (groups) {
         instances.forEach((group) => {
           leagueInstance = [];
@@ -285,8 +271,7 @@ export async function renderTable(index, results, id) {
 
   const nowInSeconds = Math.floor(Date.now() / 1000); // Current time in seconds
   const twoWeeksAgo = nowInSeconds - 14 * 24 * 60 * 60; // Two week ago in seconds  console.log(oneWeekAgo)
-  // 1740576517073
-  // 1723230000
+
   let mostRecentGames = results.fixtures.filter(
     (result) => result.date_unix >= twoWeeksAgo
   );
@@ -306,18 +291,20 @@ export async function renderTable(index, results, id) {
 
     if (league !== undefined) {
       ReactDOM.render(
-        <LeagueTable
-          Teams={league}
-          Id={id}
-          Stats={statistics}
-          Key={`League${index}`}
-          GamesPlayed={statistics.game_week}
-          Results={mostRecentGames}
-          Date={todaysDateString}
-          RankingStats={leagueStatsArray[`leagueStats${id}`]}
-          PlayerRankingStats={playerStatsArray[`playerStats${id}`]}
-        // mostRecentGameweek={mostRecentGameweek}
-        />,
+        <Suspense fallback={<div>Loading game statistics...</div>}>
+          <LazyLeagueTable
+            Teams={league}
+            Id={id}
+            Stats={statistics}
+            Key={`League${index}`}
+            GamesPlayed={statistics.game_week}
+            Results={mostRecentGames}
+            Date={todaysDateString}
+            RankingStats={leagueStatsArray[`leagueStats${id}`]}
+            PlayerRankingStats={playerStatsArray[`playerStats${id}`]}
+          // mostRecentGameweek={mostRecentGameweek}
+          />
+        </Suspense>,
         document.getElementById(`leagueName${id}`)
       );
     }
@@ -340,29 +327,31 @@ export async function renderTable(index, results, id) {
     if (leagueTable1 !== undefined && leagueTable2 !== undefined) {
       ReactDOM.render(
         <>
-          <LeagueTable
-            Teams={leagueTable1}
-            Stats={statistics}
-            Id={id}
-            Division={divisionName1}
-            Key={`League${index}${divisionName1}`}
-            GamesPlayed={statistics.game_week}
-            Results={mostRecentGames}
-            RankingStats={leagueStatsArray[`leagueStats${id}`]}
-            PlayerRankingStats={playerStatsArray[`playerStats${id}`]}
-          />
-          <LeagueTable
-            Teams={leagueTable2}
-            Division={divisionName2}
-            Stats={statistics}
-            Id={id}
-            Key={`League${index}${divisionName1}`}
-            GamesPlayed={statistics.game_week}
-            Results={mostRecentGames}
-            RankingStats={leagueStatsArray[`leagueStats${id}`]}
-            PlayerRankingStats={playerStatsArray[`playerStats${id}`]}
+          <Suspense fallback={<div>Loading game statistics...</div>}>
+            <LazyLeagueTable
+              Teams={leagueTable1}
+              Stats={statistics}
+              Id={id}
+              Division={divisionName1}
+              Key={`League${index}${divisionName1}`}
+              GamesPlayed={statistics.game_week}
+              Results={mostRecentGames}
+              RankingStats={leagueStatsArray[`leagueStats${id}`]}
+              PlayerRankingStats={playerStatsArray[`playerStats${id}`]}
+            />
+            <LazyLeagueTable
+              Teams={leagueTable2}
+              Division={divisionName2}
+              Stats={statistics}
+              Id={id}
+              Key={`League${index}${divisionName1}`}
+              GamesPlayed={statistics.game_week}
+              Results={mostRecentGames}
+              RankingStats={leagueStatsArray[`leagueStats${id}`]}
+              PlayerRankingStats={playerStatsArray[`playerStats${id}`]}
 
-          />
+            />
+          </Suspense>
         </>,
         document.getElementById(`leagueName${id}`)
       );
@@ -894,11 +883,6 @@ export async function generateFixtures(
       }
       return data.all_matches_table_overall.length;
     }
-
-    // Sort leagueArray based on leagueInstance length (ascending)
-    // leagueArray.sort((a, b) => {
-    //   return getLeagueInstanceLength(a.data) - getLeagueInstanceLength(b.data);
-    // });
 
     for (let i = 0; i < leagueArray.length; i++) {
       let leagueInstance;

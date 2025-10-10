@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from "react";
+import { Component, Fragment } from "react";
 import { getNewTips } from "../logic/getScorePredictions"
 import {allTips} from "../logic/getScorePredictions"
 export var incrementValue = 3;

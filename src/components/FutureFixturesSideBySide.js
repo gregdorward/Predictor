@@ -1,5 +1,3 @@
-import React from "react";
-import Collapsable from "./CollapsableElement"; // adjust import path if needed
 import { FutureFixture } from "./FutureFixture"; // adjust import path if needed
 
 export default function FutureFixturesSideBySide({

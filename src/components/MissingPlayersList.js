@@ -1,5 +1,3 @@
-import React from "react";
-
 const MissingPlayersList = ({ players = [], className, team }) => {
   return (
     <>

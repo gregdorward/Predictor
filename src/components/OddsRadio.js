@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import { Component } from "react";
 export var selectedOdds = "Fractional odds";
 
 export class OddsRadio extends Component {

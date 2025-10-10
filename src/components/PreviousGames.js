@@ -1,5 +1,3 @@
-import React from "react";
-
 function PreviousGames(props) {
   // Function to find the key(s) from a given value
   function getKeysByValue(object, value) {

@@ -1,4 +1,4 @@
-import React, { Fragment, useState } from "react";
+import { Fragment, useState } from "react";
 import ReactDOM from "react-dom";
 import { matches, diff } from "./getFixtures";
 import { RenderAllFixtures } from "../logic/getFixtures";
@@ -27,7 +27,7 @@ import { userDetail } from "../logic/authProvider";
 import { dynamicDate } from "./getFixtures";
 import { ThreeDots } from "react-loading-icons";
 import { uniqueLeagueIDs } from "./getFixtures";
-import PredictionTypeRadio, { selectedTipType } from "../components/PredictionTypeRadio";
+import { selectedTipType } from "../components/PredictionTypeRadio";
 
 
 var myHeaders = new Headers();
@@ -1254,20 +1254,6 @@ async function getPastLeagueResults(team, game, hOrA, form) {
 
     form.goalDifference = sum - sumTwo;
 
-    // console.log(teamGoalsHomeRollingAverage)
-    // console.log(teamGoalsAwayRollingAverage)
-    // console.log(teamGoalsAllRollingAverage)
-    // console.log(teamConceededHomeRollingAverage)
-    // console.log(teamConceededAwayRollingAverage)
-    // console.log(teamGoalsConceededAllRollingAverage)
-    // console.log(averageOddsHome)
-    // console.log(averageOddsAway)
-    // console.log(avgScored)
-    // console.log(avgConceeded)
-    // console.log(form.XGPrediction)
-    // console.log(forAndAgainstRollingAvHomeOrAway)
-    // console.log(forAndAgainstRollingAv)
-
     return [
       teamConceededHomeRollingAverage,
       teamConceededAwayRollingAverage,
@@ -1282,8 +1268,6 @@ async function getPastLeagueResults(team, game, hOrA, form) {
       bttsAllPercentage,
       bttsHomePercentage,
       bttsAwayPercentage,
-      // forAndAgainstRollingAvHomeOrAway,
-      // forAndAgainstRollingAv,
     ];
   } else {
     console.log(form.teamName);
@@ -1302,12 +1286,6 @@ async function predictNextWeightedMovingAverage(numbers, windowSize) {
   const movingAverage = sum / weights.reduce((acc, w) => acc + w, 0);
   return parseFloat(movingAverage.toFixed(2));
 }
-
-// // Function to cap goals at a maximum value
-// function capGoals(goals, maxGoals = 4) {
-//   return Math.min(goals, maxGoals);
-// }
-
 
 async function calculateDifference(num1, num2) {
   return num1 >= num2 ? num1 - num2 : -(num2 - num1);
@@ -1351,11 +1329,6 @@ export async function compareStat(statOne, statTwo) {
 
   statDiff = await diff(finalValue1, finalValue2);
 
-  // if (statDiff > 0.3 || statDiff < -0.3) {
-  //   // console.log(statDiff)
-  // } else {
-  //   statDiff = 0;
-  // }
   return statDiff;
 }
 
@@ -1583,79 +1556,6 @@ async function normalizeDifference(value1, value2) {
   };
 }
 
-async function predictScore(
-  goalsForTeam1,
-  goalsAgainstTeam1,
-  goalsForTeam2,
-  goalsAgainstTeam2,
-  team1Metrics,
-  team2Metrics,
-  game
-) {
-  let team1AverageGoalsFor = await calculateAverageGoals(goalsForTeam1);
-  let team1AverageGoalsAgainst = await calculateAverageGoals(goalsAgainstTeam1);
-  let team2AverageGoalsFor = await calculateAverageGoals(goalsForTeam2);
-  let team2AverageGoalsAgainst = await calculateAverageGoals(goalsAgainstTeam2);
-
-  let team1StrengthRatio = 1;
-  let team2StrengthRatio = 1;
-
-  let adjustedTeam1AverageGoals = await adjustGoalsAvg(
-    team1AverageGoalsFor,
-    team1StrengthRatio
-  );
-  let adjustedTeam2AverageGoals = await adjustGoalsAvg(
-    team2AverageGoalsFor,
-    team2StrengthRatio
-  );
-
-  let adjustedTeam1AverageGoalsAgainst = await adjustGoalsAvg(
-    team1AverageGoalsAgainst,
-    team2StrengthRatio
-  );
-  let adjustedTeam2AverageGoalsAgainst = await adjustGoalsAvg(
-    team2AverageGoalsAgainst,
-    team1StrengthRatio
-  );
-
-  let maxGoals = 5; // Set the maximum number of goals to predict
-
-  const scores = [];
-
-  for (let i = 0; i <= maxGoals; i++) {
-    for (let j = 0; j <= maxGoals; j++) {
-      let team1GoalExpectation =
-        (adjustedTeam1AverageGoals + adjustedTeam2AverageGoalsAgainst) / 2;
-      // (adjustedTeam2AverageGoalsAgainst / adjustedTeam1AverageGoalsAgainst);
-      let team2GoalExpectation =
-        (adjustedTeam2AverageGoals + adjustedTeam1AverageGoalsAgainst) / 2;
-      // (adjustedTeam1AverageGoalsAgainst / adjustedTeam2AverageGoalsAgainst);
-
-      if (!isFinite(team1GoalExpectation)) {
-        team1GoalExpectation = 0;
-      }
-
-      if (!isFinite(team2GoalExpectation)) {
-        team2GoalExpectation = 0;
-      }
-
-      const probability =
-        (await poissonDistribution(team1GoalExpectation, i)) *
-        (await poissonDistribution(team2GoalExpectation, j));
-      scores.push({
-        team1Score: i,
-        team2Score: j,
-        probability,
-      });
-    }
-  }
-
-  scores.sort((a, b) => b.probability - a.probability); // Sort scores in descending order by probability
-  const top5Scores = scores.slice(0, 5); // Get the top 5 scores
-
-  return top5Scores;
-}
-
 async function normalizeValues(value1, value2, minRange, maxRange) {
   if (
     typeof value1 !== "number" ||
@@ -1812,16 +1712,6 @@ export async function generateGoals(homeForm, awayForm, match) {
     homeForm.XGRating
   );
 
-  const weighedPointsComparisonHome = await comparison(
-    homeForm.pointsWeighted,
-    homeForm.points
-  );
-
-  const weighedPointsComparisonAway = await comparison(
-    awayForm.pointsWeighted,
-    awayForm.points
-  );
-
   homeGoals =
     homeGoals +
     homeAttackVsAwayDefenceComparison * 3.25 +
@@ -1829,7 +1719,6 @@ export async function generateGoals(homeForm, awayForm, match) {
     homeAttackVsAwayDefenceComparisonLast5 * 0.5 +
     0.1 +
     homeAttackVsAwayDefenceComparisonHomeOnly * 0 +
-    // weighedPointsComparisonHome * 0.005 +
     oddsComparisonHome * 0;
 
   awayGoals =
@@ -1839,7 +1728,6 @@ export async function generateGoals(homeForm, awayForm, match) {
     -Math.abs(0.1) +
     awayAttackVsHomeDefenceComparisonLast5 * 0.5 +
     awayAttackVsHomeDefenceComparisonAwayOnly * 0 +
-    // weighedPointsComparisonAway * 0.005 +
     oddsComparisonAway * 0;
 
   // Cumulative ROI for all 3157 match outcomes: +4.31%
@@ -2189,8 +2077,6 @@ export async function calculateScore(match, index, divider, calculate, AIPredict
         match.bttsAllPercentageHome,
         match.bttsPercentageHomeHome,
         match.bttsPercentageHomeAway,
-        // formHome.forAndAgainstRollingAvHomeOrAway,
-        // formHome.forAndAgainstRollingAv,
       ] = await getPastLeagueResults(match.homeTeam, match, "home", formHome);
 
       [
@@ -2207,19 +2093,9 @@ export async function calculateScore(match, index, divider, calculate, AIPredict
         match.bttsAllPercentageAway,
         match.bttsPercentageAwayHome,
         match.bttsPercentageAwayAway,
-        // formAway.forAndAgainstRollingAvHomeOrAway,
-        // formAway.forAndAgainstRollingAv,
       ] = await getPastLeagueResults(match.awayTeam, match, "away", formAway);
     } else {
       formHome.completeData = false;
-      // formHome.forAndAgainstRollingAv = {
-      //   goalsFor: formHome.ScoredAverage,
-      //   goalsAgainst: formHome.ConcededAverage,
-      // };
-      // formHome.forAndAgainstRollingAvHomeOrAway = {
-      //   goalsFor: formHome.ScoredAverage,
-      //   goalsAgainst: formHome.ConcededAverage,
-      // };
       formHome.predictedGoalsConceededBasedOnHomeAv = formHome.ConcededAverage;
       formHome.predictedGoalsConceededBasedOnAwayAv = formHome.ConcededAverage;
       formHome.allTeamGoalsConceededBasedOnAverages = formHome.ConcededAverage;
@@ -2250,14 +2126,6 @@ export async function calculateScore(match, index, divider, calculate, AIPredict
       match.bttsPercentageHomeHome = "";
       match.bttsPercentageHomeAway = "";
       formAway.completeData = false;
-      // formAway.forAndAgainstRollingAv = {
-      //   goalsFor: formAway.ScoredAverage,
-      //   goalsAgainst: formAway.ConcededAverage,
-      // };
-      // formAway.forAndAgainstRollingAvHomeOrAway = {
-      //   goalsFor: formAway.ScoredAverage,
-      //   goalsAgainst: formAway.ConcededAverage,
-      // };
       formAway.predictedGoalsConceededBasedOnHomeAv = formAway.ConcededAverage;
       formAway.predictedGoalsConceededBasedOnAwayAv = formAway.ConcededAverage;
       formAway.allTeamGoalsConceededBasedOnAverages = formAway.ConcededAverage;
@@ -2942,14 +2810,6 @@ export async function calculateScore(match, index, divider, calculate, AIPredict
     let rawFinalHomeGoals = experimentalHomeGoals;
     let rawFinalAwayGoals = experimentalAwayGoals;
 
-    // if(rawFinalHomeGoals < 0){
-    //   rawFinalHomeGoals = 0
-    // }
-
-    // if(rawFinalAwayGoals < 0){
-    //   rawFinalAwayGoals = 0
-    // }
-
     match.rawFinalHomeGoals = rawFinalHomeGoals;
     match.rawFinalAwayGoals = rawFinalAwayGoals;
 
@@ -2970,17 +2830,6 @@ export async function calculateScore(match, index, divider, calculate, AIPredict
     }
 
 
-    // if (match.matches_completed_minimum < 3 && AIPredictionHome !== null && AIPredictionAway !== null) {
-    //   finalHomeGoals = AIPredictionHome;
-    //   finalAwayGoals = AIPredictionAway;
-    // } else if (match.matches_completed_minimum >= 4 && AIPredictionHome !== null && AIPredictionAway !== null) {
-    //   finalHomeGoals = Math.floor((rawFinalHomeGoals + AIPredictionHome) / 2);
-    //   finalAwayGoals = Math.floor((rawFinalAwayGoals + AIPredictionAway) / 2);
-    // } else {
-    //   finalHomeGoals = Math.floor(rawFinalHomeGoals);
-    //   finalAwayGoals = Math.floor(rawFinalAwayGoals);
-    // }
-
     if (selectedTipType === "SSH Tips") {
       finalHomeGoals = Math.floor(rawFinalHomeGoals);
       finalAwayGoals = Math.floor(rawFinalAwayGoals);
@@ -2991,14 +2840,6 @@ export async function calculateScore(match, index, divider, calculate, AIPredict
       finalHomeGoals = Math.floor(rawFinalHomeGoals);
       finalAwayGoals = Math.floor(rawFinalAwayGoals);
     }
-
-
-
-    // if(rawFinalHomeGoals > formHome.avgScored && rawFinalAwayGoals > formAway.avgScored){
-    //   rawFinalHomeGoals -= Math.abs(-1)
-    //   rawFinalAwayGoals -= Math.abs(-1)
-    // }
-
 
     if (match.status !== "suspended") {
       if (finalHomeGoals > finalAwayGoals) {
@@ -4710,7 +4551,7 @@ async function renderTips() {
       </div>,
       document.getElementById("exoticOfTheDay")
     );
-  } else if (paid !== true) {
+  } else if (paid !== true && exoticArray.length > 0) {
     exoticArray = exoticArray.slice(0, 6);
     ReactDOM.render(
       <div className="PredictionContainer">

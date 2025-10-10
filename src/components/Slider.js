@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import Slider from "@mui/material/Slider";
 import { selectedOdds } from "../components/OddsRadio";
 import oddslib from "oddslib";

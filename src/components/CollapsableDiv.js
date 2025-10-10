@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import { Component } from "react";
 import EscapeOutside from "react-escape-outside";
 
 class CollapsableDiv extends Component {

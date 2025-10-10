@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { FormControl, InputLabel, Select, MenuItem } from "@mui/material";
+import { useState } from "react";
+import { FormControl, Select, MenuItem } from "@mui/material";
 
 // Utility to convert camelCase or mixedCase to "Proper Case With Spaces"
 const formatLabel = (key) =>

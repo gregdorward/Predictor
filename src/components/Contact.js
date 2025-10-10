@@ -1,5 +1,3 @@
-import React from "react";
-
 const StripePolicies = () => {
   return (
     <div className="ContactText">

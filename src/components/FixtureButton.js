@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { generateFixtures } from "../logic/getFixtures";
 export var fixtureList = [];
 

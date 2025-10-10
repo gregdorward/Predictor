@@ -1,4 +1,4 @@
-import React from "react";
+import {useEffect} from "react";
 import CollapsableStats from "./leagueStatsCollapsable";
 
 const useLeagueStats = () => {
@@ -33,7 +33,7 @@ const SuccessMeasure = ({ fixtures }) => {
 
   const [processedFixtures, setProcessedFixtures] = React.useState(new Set());
 
-  React.useEffect(() => {
+  useEffect(() => {
     let sumProfit = 0;
     let investment = 0;
     let exactScores = 0;

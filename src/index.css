@@ -1306,9 +1306,6 @@ input:focus {
   /* border: black 0.25px solid; */
 }
 
-.individualFixturefalse:hover {
-  border: var(--primary-color) solid 1px;
-}
 
 .individualFixtureundefined {
   display: flex;
@@ -1337,24 +1334,52 @@ input:focus {
 .HomeAndAwayContainerundefined {
   display: flex;
   flex-direction: column;
+  flex-basis: 100%;
 }
 
 .HomeAndAwayContainerWon {
   display: flex;
   flex-direction: column;
   border-left: #009700 solid 6px;
+  flex-basis: 100%;
+
 }
 
 .HomeAndAwayContainerLost {
   display: flex;
   flex-direction: column;
   border-left: #b10f00 solid 6px;
+  flex-basis: 100%;
+
 }
 
 .HomeAndAwayContainerExact {
   display: flex;
   flex-direction: column;
   border-left: Gold solid 6px;
+  flex-basis: 100%;
+}
+
+.HomeAndAwayContainerundefined:hover {
+  border: var(--primary-color) solid 1px;
+
+}
+
+.HomeAndAwayContainerWon:hover {
+  border: var(--primary-color) solid 1px;
+  border-left: #009700 solid 7px;
+
+}
+
+.HomeAndAwayContainerLost:hover {
+  border: var(--primary-color) solid 1px;
+  border-left: #b10f00 solid 7px;
+
+}
+
+.HomeAndAwayContainerExact:hover {
+  border: var(--primary-color) solid 1px;
+  border-left: Gold solid 7px;
 }
 
 .HomeContainer {

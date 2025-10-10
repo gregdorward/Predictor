@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { getAuth, sendPasswordResetEmail } from "firebase/auth";
 
 const PasswordReset = () => {

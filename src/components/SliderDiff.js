@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import Slider from "@mui/material/Slider";
 export let minimumXG = 0;
 export let minimumGD = 0;

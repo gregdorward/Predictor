@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import { Component } from "react";
 export var selectedOption = "all";
 
 export var fixtureList = [];

@@ -1,4 +1,3 @@
-import React from "react";
 
 // function BulletList(props) {
 //     const arr = props.array;

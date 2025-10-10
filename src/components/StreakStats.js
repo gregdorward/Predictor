@@ -1,4 +1,3 @@
-import React from "react";
 import { CreateBadge } from "./createBadge";
 
 export const StreakStats = ({ stats, home, away, homeLogo, awayLogo }) => {

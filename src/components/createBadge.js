@@ -1,5 +1,3 @@
-import React from "react";
-
 export function CreateBadge(props) {
 
   if(props.image === "-"){
