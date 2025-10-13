@@ -30,6 +30,7 @@ import {
 import { generateFixtures } from "./logic/getFixtures";
 import { BrowserRouter as Router, Route, Routes, Link } from "react-router-dom";
 import PrivacyPolicy from "./components/PrivacyPolicy";
+import Over18Badge from './components/images/18.png';
 
 export const proxyurl = "https://safe-caverns-99679.herokuapp.com/";
 export var fixtureList = [];
@@ -564,6 +565,14 @@ function AppContent() {
         <Suspense fallback={<div></div>}>
           <LazyLogo />
         </Suspense>
+        <a
+          className="BeGamblingAware"
+          href="https://www.begambleaware.org"
+          target="_blank"
+          rel="noreferrer"
+        >
+          begambleaware
+        </a>
         <ThemeToggle />
       </div>
       <HamburgerMenu />
@@ -751,7 +760,12 @@ function AppContent() {
           <TelegramIcon size={"3em"} round={true} />
         </TelegramShareButton>
       </div>
-
+      <div>Soccer Stats Hub is for users over 18 years of age only</div>
+      <img
+        src={Over18Badge} // Use the imported path here
+        alt="18+ only"
+        className="age-badge" // Add your CSS class here
+      />
       <Collapsable buttonText={"Terms and Conditions"} element={<StripePolicies />} />
       <Collapsable buttonText={"Privacy Policy"} element={<PrivacyPolicy />} />
       <div className="bitcoin" id="bitcoin">
