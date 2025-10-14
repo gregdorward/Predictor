@@ -40,7 +40,7 @@ const sofaScoreIds = [
   { 14933: 211 }, // Slovakia 25
 
   { 13952: 192 }, //Irish Prem
-  { 13703: 136 }, //Aus A League
+  { 16036: 136 }, //Aus A League
   { 15002: 679 }, //Europa
   { 14904: 17015 }, //Europa Conference
   { 15066: 54 }, //Spanish secunda 22/23

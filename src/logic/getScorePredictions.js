@@ -2217,8 +2217,8 @@ export async function calculateScore(match, index, divider, calculate, AIPredict
 
     const attackingMetricsHome = {
       "Average Dangerous Attacks": formHome.AverageDangerousAttacksOverall,
-      "Average Shots": formHome.avgShots.toFixed(2),
-      "Average Shot Value": formHome.avgShotValueChart.toFixed(2),
+      "Average Shots": formHome.avgShots?.toFixed(2),
+      "Average Shot Value": formHome.avgShotValueChart?.toFixed(2),
       "Average Shots On Target": formHome.AverageShotsOnTargetOverall,
       "Average Expected Goals": formHome.XGOverall,
       "Recent XG": formHome.XGlast5,
@@ -2301,8 +2301,8 @@ export async function calculateScore(match, index, divider, calculate, AIPredict
 
     const attackingMetricsAway = {
       "Average Dangerous Attacks": formAway.AverageDangerousAttacksOverall,
-      "Average Shots": formAway.avgShots.toFixed(2),
-      "Average Shot Value": formAway.avgShotValueChart.toFixed(2),
+      "Average Shots": formAway.avgShots?.toFixed(2),
+      "Average Shot Value": formAway.avgShotValueChart?.toFixed(2),
       "Average Shots On Target": formAway.AverageShotsOnTargetOverall,
       "Average Expected Goals": formAway.XGOverall,
       "Recent XG": formAway.XGlast5,
@@ -3635,9 +3635,9 @@ const footyStatsToSofaScore = [
       id: 192,
       season: 69981, // Ireland 24/25
     },
-    13703: {
+    16036: {
       id: 136,
-      season: 64864, // A League 24/25
+      season: 82603, // A League 24/25
     },
     15002: {
       id: 679,

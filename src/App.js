@@ -99,7 +99,7 @@ const leagueOrder = [
   // 14626, // Uraguay 25
   15234, //Mexico prem 25 12136
   12933, //National league North and South 24
-  13703, //Australian A league 24/25
+  16036, //Australian A league 24/25 13703
   16243, //S Korea 25,
   16242, //Japan 25
   12772, //Saudi 24/25
@@ -194,7 +194,7 @@ const leagueOrder = [
 //   15310, //Argentina prem 23
 //   15234, //Mexico prem 23/24
 //   12933, //National league North and South 22/23
-//   13703, //Australian A league 24/25
+//   16036, //Australian A league 24/25
 //   16243, //S Korea 25,
 //   16242, //Japan 25
 //   12772, //Saudi 24/25
