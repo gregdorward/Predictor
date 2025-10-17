@@ -33,6 +33,9 @@ import { selectedTipType } from "../components/PredictionTypeRadio";
 var myHeaders = new Headers();
 myHeaders.append("Origin", "https://gregdorward.github.io");
 
+let averageStrengthHome = 0
+let averageStrengthAway = 0
+let leagueAveragesData;
 let finalHomeGoals;
 let finalAwayGoals;
 let rawFinalHomeGoals;
@@ -1605,6 +1608,64 @@ async function findClosestProperty(obj, number) {
 }
 
 export async function generateGoals(homeForm, awayForm, match) {
+  const leagueObject = leagueAveragesData.find(league => league.id === match.leagueID);
+
+  let averageLeagueGoals = 2.5; // Default to null if not found
+
+
+  if (leagueObject) {
+    // 2. Extract the specific averageGoals value
+    averageLeagueGoals = leagueObject.averageGoals;
+  }
+  const averageGoalsPerTeam = averageLeagueGoals / 2
+
+  // This is the product of two average strength scores (0.5 * 0.5)
+  const AVERAGE_STRENGTH_PRODUCT = 0.5 * 0.5; // = 0.25
+
+  // This is the multiplier needed to scale the product (0.25) up to 1.0
+  // SCALING_FACTOR = 1 / 0.25 = 4.0
+  const SCALING_FACTOR = 1 / AVERAGE_STRENGTH_PRODUCT; // = 4.0
+
+  const awayDefenseWeakness = 1 - awayForm.defensiveStrengthScoreGeneration;
+  const homeDefenseWeakness = 1 - homeForm.defensiveStrengthScoreGeneration;
+
+
+
+  // The Corrected Formula:
+  const homeLambda_raw =
+    (homeForm.attackingStrength * awayDefenseWeakness) *
+    SCALING_FACTOR * // <-- Now multiplying by 4.0 (the SCALING_FACTOR)
+    averageLeagueGoals;
+
+  const awayLambda_raw =
+    (awayForm.attackingStrength * homeDefenseWeakness) *
+    SCALING_FACTOR * // <-- Now multiplying by 4.0 (the SCALING_FACTOR)
+    averageLeagueGoals;
+
+  averageStrengthHome = averageStrengthHome + homeDefenseWeakness
+  averageStrengthAway = averageStrengthAway + awayDefenseWeakness
+
+
+  const ALPHA = 0.6;
+  const LEAGUE_WEIGHT = 1.0 - ALPHA; // 0.30
+
+  // Apply Regression to the Mean for the Home team
+  const homeLambda_final =
+    (homeLambda_raw * ALPHA) +
+    (averageGoalsPerTeam * LEAGUE_WEIGHT);
+
+  // Apply Regression to the Mean for the Away team
+  const awayLambda_final =
+    (awayLambda_raw * ALPHA) +
+    (averageGoalsPerTeam * LEAGUE_WEIGHT);
+
+  //Cumulative ROI for all 1154 match outcomes: +0.72%
+
+
+
+  // Calculate the away team's expected goal volume (lambda)
+
+
   const avgHomeXG = (homeForm.avXGLast5 + awayForm.avXGAgainstLast5) / 2;
   const avgHomeGoalsLast5 = (homeForm.avScoredLast5 + awayForm.avConceededLast5) / 2;
   const avgHomeGoals = (homeForm.avgScoredHome + awayForm.teamConceededAvgAwayOnly) / 2;
@@ -1712,25 +1773,41 @@ export async function generateGoals(homeForm, awayForm, match) {
     homeForm.XGRating
   );
 
-  homeGoals =
-    homeGoals +
-    homeAttackVsAwayDefenceComparison * 3.25 +
-    XGRatingHomeComparison * 0 +
-    homeAttackVsAwayDefenceComparisonLast5 * 0.5 +
-    0.1 +
-    homeAttackVsAwayDefenceComparisonHomeOnly * 0 +
-    oddsComparisonHome * 0;
+  // homeGoals =
+  //   homeGoals +
+  //   homeAttackVsAwayDefenceComparison * 2.5 +
+  //   XGRatingHomeComparison * 0 +
+  //   homeAttackVsAwayDefenceComparisonLast5 * 0.5 +
+  //   0.1 +
+  //   homeAttackVsAwayDefenceComparisonHomeOnly * 0 +
+  //   oddsComparisonHome * 0;
 
-  awayGoals =
-    awayGoals +
-    awayAttackVsHomeDefenceComparison * 3.25 +
-    XGRatingAwayComparison * 0 +
-    -Math.abs(0.1) +
-    awayAttackVsHomeDefenceComparisonLast5 * 0.5 +
-    awayAttackVsHomeDefenceComparisonAwayOnly * 0 +
-    oddsComparisonAway * 0;
+  // awayGoals =
+  //   awayGoals +
+  //   awayAttackVsHomeDefenceComparison * 2.5 +
+  //   XGRatingAwayComparison * 0 +
+  //   -Math.abs(0.1) +
+  //   awayAttackVsHomeDefenceComparisonLast5 * 0.5 +
+  //   awayAttackVsHomeDefenceComparisonAwayOnly * 0 +
+  //   oddsComparisonAway * 0;
 
-  // Cumulative ROI for all 3157 match outcomes: +4.31%
+  homeGoals = (homeLambda_final + 0.1)
+    +
+    (homeForm.actualToXGDifference / 15);
+
+  awayGoals = (awayLambda_final - 0.1)
+    +
+    (awayForm.actualToXGDifference / 15);
+
+  if (homeGoals > 5) {
+    homeGoals = (homeForm.XGOverall + homeGoals) / 2
+  }
+
+  if (awayGoals > 5) {
+    awayGoals = (awayForm.XGOverall + awayGoals) / 2
+  }
+
+  // Cumulative ROI for all 1154 match outcomes: +0.59%
 
   // if (finalScore > 0 && (await diff(homeGoals, awayGoals)) < 1.25) {
   //   homeGoals = homeGoals + 0.25;
@@ -1740,27 +1817,27 @@ export async function generateGoals(homeForm, awayForm, match) {
   //   awayGoals = awayGoals + 0.25;
   // }
 
-  const homePointsChange = parseFloat(await diff(homeForm.avPoints5, homeForm.avPoints10));
-  const awayPointsChange = parseFloat(await diff(awayForm.avPoints5, awayForm.avPoints10));
+  // const homePointsChange = parseFloat(await diff(homeForm.avPoints5, homeForm.avPoints10));
+  // const awayPointsChange = parseFloat(await diff(awayForm.avPoints5, awayForm.avPoints10));
 
-  homeGoals = homeGoals + (homePointsChange + homeForm.XGChangeRecently);
-  awayGoals = awayGoals + (awayPointsChange + awayForm.XGChangeRecently);
+  // homeGoals = homeGoals + (homePointsChange + homeForm.XGChangeRecently);
+  // awayGoals = awayGoals + (awayPointsChange + awayForm.XGChangeRecently);
 
   //PLACEHOLDER
 
-  if (homeGoals < 0 && awayGoals < 0) {
-    if (homeGoals < awayGoals) {
-      homeGoals = homeGoals + awayGoals / 4;
-      awayGoals = awayGoals - homeGoals / 4;
-    } else if (homeGoals > awayGoals) {
-      homeGoals = homeGoals - awayGoals / 4;
-      awayGoals = awayGoals + homeGoals / 4;
-    }
-  } else if (homeGoals < -1 && awayGoals < 1) {
-    awayGoals = awayGoals + Math.abs(homeGoals) / 2;
-  } else if (awayGoals < -1 && homeGoals < 1) {
-    homeGoals = homeGoals + Math.abs(awayGoals) / 2;
-  }
+  // if (homeGoals < 0 && awayGoals < 0) {
+  //   if (homeGoals < awayGoals) {
+  //     homeGoals = homeGoals + awayGoals / 4;
+  //     awayGoals = awayGoals - homeGoals / 4;
+  //   } else if (homeGoals > awayGoals) {
+  //     homeGoals = homeGoals - awayGoals / 4;
+  //     awayGoals = awayGoals + homeGoals / 4;
+  //   }
+  // } else if (homeGoals < -1 && awayGoals < 1) {
+  //   awayGoals = awayGoals + Math.abs(homeGoals) / 2;
+  // } else if (awayGoals < -1 && homeGoals < 1) {
+  //   homeGoals = homeGoals + Math.abs(awayGoals) / 2;
+  // }
 
   return [homeGoals, awayGoals];
 }
@@ -2457,42 +2534,42 @@ export async function calculateScore(match, index, divider, calculate, AIPredict
     );
 
     formHome.defensiveStrengthScoreGeneration =
-      await calculateDefensiveStrength(defensiveMetricsHome, 0.9);
+      await calculateDefensiveStrength(defensiveMetricsHome, 1);
 
     formHome.defensiveStrengthLast5 = await calculateDefensiveStrength(
       defensiveMetricsHomeLast5
     );
 
     formHome.defensiveStrengthScoreGenerationLast5 =
-      await calculateDefensiveStrength(defensiveMetricsHomeLast5, 0.9);
+      await calculateDefensiveStrength(defensiveMetricsHomeLast5, 1);
 
     formHome.defensiveStrengthHomeOnly = await calculateDefensiveStrength(
       defensiveMetricsHomeOnly
     );
 
     formHome.defensiveStrengthScoreGenerationHomeOnly =
-      await calculateDefensiveStrength(defensiveMetricsHomeOnly, 0.9);
+      await calculateDefensiveStrength(defensiveMetricsHomeOnly, 1);
 
     formAway.defensiveStrength = await calculateDefensiveStrength(
       defensiveMetricsAway
     );
 
     formAway.defensiveStrengthScoreGeneration =
-      await calculateDefensiveStrength(defensiveMetricsAway, 0.9);
+      await calculateDefensiveStrength(defensiveMetricsAway, 1);
 
     formAway.defensiveStrengthLast5 = await calculateDefensiveStrength(
       defensiveMetricsAwayLast5
     );
 
     formAway.defensiveStrengthScoreGenerationLast5 =
-      await calculateDefensiveStrength(defensiveMetricsAwayLast5, 0.9);
+      await calculateDefensiveStrength(defensiveMetricsAwayLast5, 1);
 
     formAway.defensiveStrengthAwayOnly = await calculateDefensiveStrength(
       defensiveMetricsAwayOnly
     );
 
     formAway.defensiveStrengthScoreGenerationAwayOnly =
-      await calculateDefensiveStrength(defensiveMetricsAwayOnly, 0.9);
+      await calculateDefensiveStrength(defensiveMetricsAwayOnly, 1);
 
     formHome.possessionStrength = await calculateMetricStrength(
       "averagePossession",
@@ -2541,15 +2618,15 @@ export async function calculateScore(match, index, divider, calculate, AIPredict
       formHome.XGAgainstlast5
     );
 
-    formHome.actualToXGDifferenceRecent = await diff(
+    formHome.actualToXGDifferenceRecent = parseFloat(await diff(
       formHome.XGdifferentialRecent,
       formHome.last5GoalDiff
-    );
+    ));
 
-    formAway.XGdifferentialRecent = await diff(
+    formAway.XGdifferentialRecent = parseFloat(await diff(
       formAway.XGlast5,
       formAway.XGAgainstlast5
-    );
+    ));
 
     formAway.actualToXGDifferenceRecent = await diff(
       formAway.XGdifferentialRecent,
@@ -3213,7 +3290,6 @@ async function getSuccessMeasure(fixtures) {
       fixtures[i].hasOwnProperty("prediction") &&
       fixtures[i].omit !== true
     ) {
-      console.log(fixtures[i]);
       sumProfit += fixtures[i].profit;
       investment += 1;
       netProfit = (sumProfit - investment).toFixed(2);
@@ -3272,6 +3348,13 @@ async function getSuccessMeasure(fixtures) {
   if (userDetail) {
     isPaid = userDetail.isPaid;
   }
+
+  const averageStrengthHomeAvg = averageStrengthHome / totalInvestment
+  const averageStrengthAwayAvg = averageStrengthAway / totalInvestment
+
+  console.log(`averageStrengthHomeAvg = ${averageStrengthHomeAvg}`)
+  console.log(`averageStrengthAwayAvg = ${averageStrengthAwayAvg}`)
+
   console.log(isPaid);
   if (investment > 0 && isPaid) {
     ReactDOM.render(
@@ -3686,7 +3769,6 @@ async function fetchLeagueStats() {
       allLeagueStats[`leagueStats${leagueId}`] = { error: error.message };
     }
   }
-
   return allLeagueStats;
 }
 
@@ -3750,10 +3832,12 @@ export async function getScorePrediction(day, mocked) {
   dangerousAttacksDiffTips = [];
   allTips = [];
 
+
   let index = 2;
   let divider = 10;
 
-    ReactDOM.render(
+  // Render the initial loading state
+  ReactDOM.render(
     <div>
       <ThreeDots className="MainLoading" fill="#fe8c00" />
       <div className="LoadingMessage">Collecting form data and calculating predictions...</div>
@@ -3761,16 +3845,33 @@ export async function getScorePrediction(day, mocked) {
     document.getElementById("FixtureContainer")
   );
 
-  // Call the function to fetch and store the league stats
+  // --- 1. START ALL ASYNCHRONOUS OPERATIONS CONCURRENTLY ---
+
+  // Start the long background data fetches immediately (non-blocking)
   const leagueStatsPromise = fetchLeagueStats();
   const playerStatsPromise = fetchPlayerStats();
-  const predictedScores = await fetch(`${process.env.REACT_APP_EXPRESS_SERVER}predictedScores`);
-  const predictedScoresData = await predictedScores.json();
 
+  // Start fetches for required prediction data (must await these before the loop)
+  const predictedScoresPromise = fetch(`${process.env.REACT_APP_EXPRESS_SERVER}predictedScores`);
+  const leagueAveragesPromise = fetch(`${process.env.REACT_APP_EXPRESS_SERVER}league-averages`);
 
+  // Await the HTTP responses
+  const [predictedScoresResponse, leagueAveragesResponse] = await Promise.all([
+    predictedScoresPromise,
+    leagueAveragesPromise
+  ]);
+
+  // Await JSON parsing and assign results.
+  const predictedScoresData = await predictedScoresResponse.json();
+  // Assuming leagueAveragesData is an outer-scoped variable
+  leagueAveragesData = await leagueAveragesResponse.json();
+
+  // --- 2. RUN MATCH CALCULATION LOOP (Concurrent match processing) ---
 
   await Promise.all(
     matches.map(async (match) => {
+      // NOTE: leagueStatsPromise and playerStatsPromise are running in the background.
+
       // if there are no stored predictions, calculate them based on live data
       if (match) {
         switch (true) {
@@ -4018,9 +4119,6 @@ export async function getScorePrediction(day, mocked) {
         XGDiffTips.push(XGPredictionObject);
       }
 
-      leagueStatsArray = await leagueStatsPromise;
-      playerStatsArray = await playerStatsPromise;
-
       if (
         match.pointsDifferential === true &&
         match.prediction === "homeWin" &&
@@ -4192,20 +4290,24 @@ export async function getScorePrediction(day, mocked) {
       predictions.push(match);
     })
   );
+
+  // --- 3. RENDER FIXTURES IMMEDIATELY (Replacing the loading spinner) ---
+
+  // Clear the generic "Loading" placeholder
   ReactDOM.render(
     <div />,
     document.getElementById("Loading")
   );
+
+  // Render Collapsable content
   ReactDOM.render(
     <Collapsable
       buttonText={"Multis"}
       className={"MultisCollapsable"}
-      // display={fixtureList.length > 0 ? "" : "none"}
       element={
         <Fragment>
           <div id="bestPredictions" className="bestPredictions" />
           <div id="exoticOfTheDay" className="exoticOfTheDay" />
-          {/* <div id="successMeasure2" /> */}
           <div id="RowOneContainer" className="RowOneContainer">
             <div id="BTTS" className="RowOne" />
             <div id="longShots" className="RowOne" />
@@ -4218,19 +4320,48 @@ export async function getScorePrediction(day, mocked) {
     />,
     document.getElementById("MultiPlaceholder")
   );
+
+
+  await getMultis();
+  await getNewTips(allTipsSorted);
+
+  // RENDER FIXTURES: Use a placeholder for stats as they are still loading in the background.
   ReactDOM.render(
     <RenderAllFixtures
       matches={matches}
       result={true}
       bool={mock}
-      stats={leagueStatsArray}
+      stats={[]} // Placeholder stats, assuming RenderAllFixtures can gracefully handle an empty array
     />,
     document.getElementById("FixtureContainer")
   );
   await getSuccessMeasure(matches);
-  await getMultis();
-  await getNewTips(allTipsSorted);
+
+  // --- 4. WAIT FOR BACKGROUND STATS (Non-blocking step) ---
+  // Now we wait for the long-running stats, but the user is already viewing the fixtures.
+  const [resolvedLeagueStatsArray, resolvedPlayerStatsArray] = await Promise.all([
+    leagueStatsPromise,
+    playerStatsPromise
+  ]);
+
+  // Assign to global/outer scope variables
+  leagueStatsArray = resolvedLeagueStatsArray;
+  playerStatsArray = resolvedPlayerStatsArray;
+
+  // --- 5. RERENDER FIXTURES WITH FULL STATS ---
+  // Rerender the FixtureContainer now that leagueStatsArray is ready (if stats are used visually)
+  ReactDOM.render(
+    <RenderAllFixtures
+      matches={matches}
+      result={true}
+      bool={mock}
+      stats={leagueStatsArray} // Now passing the full stats
+    />,
+    document.getElementById("FixtureContainer")
+  );
+
 }
+
 
 async function getMultis() {
   allTipsSorted = allTips.sort(function (a, b) {

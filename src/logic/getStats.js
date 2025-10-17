@@ -15,28 +15,40 @@ export async function getPointAverage(pointTotal, games) {
 export async function calculateAttackingStrength(stats) {
   // Define weights for each metric (you can adjust these based on your preference)
   const weights = {
-    // averagePossession: 0.15,
+    averagePossession: 0.1,
     "Average Dangerous Attacks": 0.1,
-    "Average Shots": 0.05,
-    "Average Shots On Target": 0.15,
-    "Average Expected Goals": 0.15,
-    "Recent XG": 0.15,
-    "Average Goals": 0.3,
+    "Average Shots": 0.1,
+    "Average Shots On Target": 0.1,
+    "Average Expected Goals": 0.2,
+    "Recent XG": 0.2,
+    "Average Goals": 0.2,
     Corners: 0,
     "Average Shot Value": 0.1,
   };
 
   // Define the ranges for normalization
   const ranges = {
-    // averagePossession: { min: 25, max: 75 },
-    "Average Dangerous Attacks": { min: 25, max: 75 }, // Adjust the max value as needed
-    "Average Shots": { min: 4, max: 25 }, // Adjust the max value as needed
-    "Average Shots On Target": { min: 3, max: 7 }, // Adjust the max value as needed
-    "Average Expected Goals": { min: 0.75, max: 2 }, // Adjust the max value as needed
-    "Recent XG": { min: 0.5, max: 2 }, // Adjust the max value as needed
-    "Average Goals": { min: 0, max: 3 }, // Adjust the max value as needed
-    Corners: { min: 2, max: 9 },
-    "Average Shot Value": { min: 3, max: 35 },
+    // League average Dangerous Attacks is highly variable
+    "Average Dangerous Attacks": { min: 20, max: 80 }, 
+    
+    // League average Shots is typically 12-14
+    "Average Shots": { min: 7, max: 19 }, 
+    
+    // League average Shots On Target is typically 4.5-5.5
+    "Average Shots On Target": { min: 3, max: 7 }, 
+    
+    // League average XG scored is typically 1.3 - 1.5
+    "Average Expected Goals": { min: 0.6, max: 2.2 }, 
+    "Recent XG": { min: 0.6, max: 2.2 },
+    
+    // League average Goals scored is typically 1.3 - 1.5
+    "Average Goals": { min: 0.5, max: 3 }, 
+    
+    // League average Corners is typically 5-6
+    Corners: { min: 3, max: 8 },
+    
+    // Speculative range for average shot value (XG/Shot)
+    "Average Shot Value": { min: 5, max: 25 },
   };
 
   // Normalize each metric value and calculate the weighted sum
@@ -52,7 +64,7 @@ export async function calculateAttackingStrength(stats) {
         Math.min(
           1,
           (stats[metric] - ranges[metric].min) /
-            (ranges[metric].max - ranges[metric].min)
+          (ranges[metric].max - ranges[metric].min)
         )
       );
       weightedSum += normalizedValue * weights[metric];
@@ -68,18 +80,23 @@ export async function calculateDefensiveStrength(stats, normalizedValue = 1) {
   let normValue = normalizedValue;
   // Define weights for each metric (you can adjust these based on your preference)
   const weights = {
-    "Average XG Against": 0.2,
+    "Average XG Against": 0.3,
     "Recent XG Against": 0.3,
-    "Average Goals Against": 0.4,
-    "Average SOT Against": 0.1,
+    "Average Goals Against": 0.2,
+    "Average SOT Against": 0.2,
   };
 
   // Define the ranges for normalization
   const ranges = {
-    "Average XG Against": { min: 0.5, max: 2 }, // Adjust the max value as needed
-    "Recent XG Against": { min: 0.75, max: 2 },
-    "Average Goals Against": { min: 0, max: 3 }, // Adjust the max value as needed
-    "Average SOT Against": { min: 3, max: 7 },
+    // League average XG conceded is typically 1.3 - 1.5
+    "Average XG Against": { min: 0.6, max: 2.2 }, 
+    "Recent XG Against": { min: 0.6, max: 2.2 },
+    
+    // League average Goals conceded is typically 1.3 - 1.5
+    "Average Goals Against": { min: 0.5, max: 2.3 }, 
+    
+    // League average SOT conceded is typically 4 - 5
+    "Average SOT Against": { min: 2, max: 7 }, 
   };
 
   // Normalize each metric value and calculate the weighted sum
@@ -90,17 +107,16 @@ export async function calculateDefensiveStrength(stats, normalizedValue = 1) {
       weights.hasOwnProperty(metric) &&
       ranges.hasOwnProperty(metric)
     ) {
-      // Normalize the value and clamp it between 0 and 1
-      let normalizedValue =
-        (stats[metric] - ranges[metric].min) /
-        (ranges[metric].max - ranges[metric].min);
-      normalizedValue = Math.max(0, Math.min(1, normalizedValue));
+      let normalizedValueRaw =
+        (stats[metric] - ranges[metric].min) / (ranges[metric].max - ranges[metric].min);
+      let normalizedValueClamped = Math.max(0, Math.min(1, normalizedValueRaw));
 
-      // Reverse logic for defensive strength: better defense, lower metric value
-      let val = normValue - normalizedValue;
+      // 🟢 Correctly reverse the score: Low Goals Against (0) should yield Strength Score (1)
+      let reversedScore = 1 - normalizedValueClamped;
+      // If XG Against is at MIN, normalizedValueClamped = 0. reversedScore = 1. (Strong Defense)
 
-      // Add the weighted value to the weightedSum
-      weightedSum += val * weights[metric];
+      weightedSum += reversedScore * weights[metric];
+      // You can remove the unused 'normValue' parameter completely if you always use 1.
     }
   }
 
@@ -528,7 +544,7 @@ export async function createStatsDiv(game, displayBool) {
 
       const bttsArrayHome = Array.from(gameArrayHome, (x) => x.btts);
 
-      
+
       const bttsArrayAway = Array.from(gameArrayAway, (x) => x.btts);
 
       let homeTeam = gameStats.home.teamName;
@@ -678,40 +694,36 @@ export async function createStatsDiv(game, displayBool) {
       ) {
         favouriteRecordHome =
           game.homeOdds < game.awayOdds || game.homeOdds === game.awayOdds
-            ? `${homeForm.teamName} have been favourites ${
-                homeForm.favouriteCount
-              } times. Of these games, they have Won: ${homeForm.oddsReliabilityWin.toFixed(
-                0
-              )}%, Drawn:  ${homeForm.oddsReliabilityDraw.toFixed(
-                0
-              )}%, Lost:  ${homeForm.oddsReliabilityLose.toFixed(0)}%`
-            : `${homeForm.teamName} have been underdogs ${
-                homeForm.underdogCount
-              } times. Of these games, they have Won: ${homeForm.oddsReliabilityWinAsUnderdog.toFixed(
-                0
-              )}%, Drawn:  ${homeForm.oddsReliabilityDrawAsUnderdog.toFixed(
-                0
-              )}%, Lost:  ${homeForm.oddsReliabilityLoseAsUnderdog.toFixed(
-                0
-              )}%`;
+            ? `${homeForm.teamName} have been favourites ${homeForm.favouriteCount
+            } times. Of these games, they have Won: ${homeForm.oddsReliabilityWin.toFixed(
+              0
+            )}%, Drawn:  ${homeForm.oddsReliabilityDraw.toFixed(
+              0
+            )}%, Lost:  ${homeForm.oddsReliabilityLose.toFixed(0)}%`
+            : `${homeForm.teamName} have been underdogs ${homeForm.underdogCount
+            } times. Of these games, they have Won: ${homeForm.oddsReliabilityWinAsUnderdog.toFixed(
+              0
+            )}%, Drawn:  ${homeForm.oddsReliabilityDrawAsUnderdog.toFixed(
+              0
+            )}%, Lost:  ${homeForm.oddsReliabilityLoseAsUnderdog.toFixed(
+              0
+            )}%`;
         favouriteRecordAway =
           game.homeOdds > game.awayOdds || game.homeOdds === game.awayOdds
-            ? `${awayForm.teamName} have been favourites ${
-                awayForm.favouriteCount
-              } times. Of these games, they have Won: ${awayForm.oddsReliabilityWin.toFixed(
-                0
-              )}%, Drawn:  ${awayForm.oddsReliabilityDraw.toFixed(
-                0
-              )}%, Lost:  ${awayForm.oddsReliabilityLose.toFixed(0)}%`
-            : `${awayForm.teamName} have been underdogs ${
-                awayForm.underdogCount
-              } times. Of these games, they have Won: ${awayForm.oddsReliabilityWinAsUnderdog.toFixed(
-                0
-              )}%, Drawn:  ${awayForm.oddsReliabilityDrawAsUnderdog.toFixed(
-                0
-              )}%, Lost:  ${awayForm.oddsReliabilityLoseAsUnderdog.toFixed(
-                0
-              )}%`;
+            ? `${awayForm.teamName} have been favourites ${awayForm.favouriteCount
+            } times. Of these games, they have Won: ${awayForm.oddsReliabilityWin.toFixed(
+              0
+            )}%, Drawn:  ${awayForm.oddsReliabilityDraw.toFixed(
+              0
+            )}%, Lost:  ${awayForm.oddsReliabilityLose.toFixed(0)}%`
+            : `${awayForm.teamName} have been underdogs ${awayForm.underdogCount
+            } times. Of these games, they have Won: ${awayForm.oddsReliabilityWinAsUnderdog.toFixed(
+              0
+            )}%, Drawn:  ${awayForm.oddsReliabilityDrawAsUnderdog.toFixed(
+              0
+            )}%, Lost:  ${awayForm.oddsReliabilityLoseAsUnderdog.toFixed(
+              0
+            )}%`;
       } else if (
         !homeForm.favouriteCount &&
         awayForm.favouriteCount &&
@@ -722,41 +734,37 @@ export async function createStatsDiv(game, displayBool) {
           "No previous fixtures match the profile of this game.";
         favouriteRecordAway =
           game.homeOdds > game.awayOdds || game.homeOdds === game.awayOdds
-            ? `${awayForm.teamName} have been favourites ${
-                awayForm.favouriteCount
-              } times. Of these games, they have Won: ${awayForm.oddsReliabilityWin.toFixed(
-                0
-              )}%, Drawn:  ${awayForm.oddsReliabilityDraw.toFixed(
-                0
-              )}%, Lost:  ${awayForm.oddsReliabilityLose.toFixed(0)}%`
-            : `${awayForm.teamName} have been underdogs ${
-                awayForm.underdogCount
-              } times. Of these games, they have Won: ${awayForm.oddsReliabilityWinAsUnderdog.toFixed(
-                0
-              )}%, Drawn:  ${awayForm.oddsReliabilityDrawAsUnderdog.toFixed(
-                0
-              )}%, Lost:  ${awayForm.oddsReliabilityLoseAsUnderdog.toFixed(
-                0
-              )}%`;
+            ? `${awayForm.teamName} have been favourites ${awayForm.favouriteCount
+            } times. Of these games, they have Won: ${awayForm.oddsReliabilityWin.toFixed(
+              0
+            )}%, Drawn:  ${awayForm.oddsReliabilityDraw.toFixed(
+              0
+            )}%, Lost:  ${awayForm.oddsReliabilityLose.toFixed(0)}%`
+            : `${awayForm.teamName} have been underdogs ${awayForm.underdogCount
+            } times. Of these games, they have Won: ${awayForm.oddsReliabilityWinAsUnderdog.toFixed(
+              0
+            )}%, Drawn:  ${awayForm.oddsReliabilityDrawAsUnderdog.toFixed(
+              0
+            )}%, Lost:  ${awayForm.oddsReliabilityLoseAsUnderdog.toFixed(
+              0
+            )}%`;
       } else if (homeForm.oddsReliabilityWin && !awayForm.oddsReliabilityWin) {
         favouriteRecordHome =
           game.homeOdds < game.awayOdds || game.homeOdds === game.awayOdds
-            ? `${homeForm.teamName} have been favourites ${
-                homeForm.favouriteCount
-              } times. Of these games, they have Won: ${homeForm.oddsReliabilityWin.toFixed(
-                0
-              )}%, Drawn:  ${homeForm.oddsReliabilityDraw.toFixed(
-                0
-              )}%, Lost:  ${homeForm.oddsReliabilityLose.toFixed(0)}%`
-            : `${homeForm.teamName} have been underdogs ${
-                homeForm.underdogCount
-              } times. Of these games, they have Won: ${homeForm.oddsReliabilityWinAsUnderdog.toFixed(
-                0
-              )}%, Drawn:  ${homeForm.oddsReliabilityDrawAsUnderdog.toFixed(
-                0
-              )}%, Lost:  ${homeForm.oddsReliabilityLoseAsUnderdog.toFixed(
-                0
-              )}%`;
+            ? `${homeForm.teamName} have been favourites ${homeForm.favouriteCount
+            } times. Of these games, they have Won: ${homeForm.oddsReliabilityWin.toFixed(
+              0
+            )}%, Drawn:  ${homeForm.oddsReliabilityDraw.toFixed(
+              0
+            )}%, Lost:  ${homeForm.oddsReliabilityLose.toFixed(0)}%`
+            : `${homeForm.teamName} have been underdogs ${homeForm.underdogCount
+            } times. Of these games, they have Won: ${homeForm.oddsReliabilityWinAsUnderdog.toFixed(
+              0
+            )}%, Drawn:  ${homeForm.oddsReliabilityDrawAsUnderdog.toFixed(
+              0
+            )}%, Lost:  ${homeForm.oddsReliabilityLoseAsUnderdog.toFixed(
+              0
+            )}%`;
         favouriteRecordAway =
           "No previous fixtures match the profile of this game.";
       } else if (!homeForm.oddsReliabilityWin && !awayForm.oddsReliabilityWin) {
@@ -779,7 +787,7 @@ export async function createStatsDiv(game, displayBool) {
         "Recent XG": homeForm.XGlast5 ? homeForm.XGlast5 : homeForm.XGOverall,
         "Average Goals":
           homeForm.averageScoredLeague !== undefined &&
-          homeForm.averageScoredLeague !== null
+            homeForm.averageScoredLeague !== null
             ? homeForm.averageScoredLeague
             : homeForm.ScoredOverall / 10,
       };
@@ -792,7 +800,7 @@ export async function createStatsDiv(game, displayBool) {
         "Recent XG": awayForm.XGlast5 ? awayForm.XGlast5 : awayForm.XGOverall,
         "Average Goals":
           awayForm.averageScoredLeague !== undefined &&
-          awayForm.averageScoredLeague !== null
+            awayForm.averageScoredLeague !== null
             ? awayForm.averageScoredLeague
             : awayForm.ScoredOverall / 10,
       };
@@ -805,7 +813,7 @@ export async function createStatsDiv(game, displayBool) {
           : homeForm.XGAgainstAvgOverall,
         "Average Goals Against":
           homeForm.averageConceededLeague !== undefined &&
-          homeForm.averageConceededLeague !== null
+            homeForm.averageConceededLeague !== null
             ? homeForm.averageConceededLeague
             : homeForm.ConcededOverall / 10,
       };
@@ -818,12 +826,12 @@ export async function createStatsDiv(game, displayBool) {
           : awayForm.XGAgainstAvgOverall,
         "Average Goals Against":
           awayForm.averageConceededLeague !== undefined &&
-          awayForm.averageConceededLeague !== null
+            awayForm.averageConceededLeague !== null
             ? awayForm.averageConceededLeague
             : awayForm.ConcededOverall / 10,
       };
 
-   
+
 
       let [formPointsHome, testArrayHome] = await getPointsFromGames(
         gameStats.home[2].WDLRecord
@@ -834,20 +842,20 @@ export async function createStatsDiv(game, displayBool) {
 
       let rollingGoalDiffHome = [
         (gameStats.home[0].ScoredOverall - gameStats.home[0].ConcededOverall) /
-          10,
+        10,
         (gameStats.home[1].ScoredOverall - gameStats.home[1].ConcededOverall) /
-          6,
+        6,
         (gameStats.home[2].ScoredOverall - gameStats.home[2].ConcededOverall) /
-          5,
+        5,
       ];
 
       let rollingGoalDiffAway = [
         (gameStats.away[0].ScoredOverall - gameStats.away[0].ConcededOverall) /
-          10,
+        10,
         (gameStats.away[1].ScoredOverall - gameStats.away[1].ConcededOverall) /
-          6,
+        6,
         (gameStats.away[2].ScoredOverall - gameStats.away[2].ConcededOverall) /
-          5,
+        5,
       ];
 
       const formDataMatch = [];
@@ -931,7 +939,7 @@ export async function createStatsDiv(game, displayBool) {
         document.getElementById("history" + homeTeam)
       );
 
-   
+
 
       // function StatsHome() {
       //   return (

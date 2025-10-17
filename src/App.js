@@ -86,28 +86,21 @@ const leagueOrder = [
   15061, //Scottish Championship 25 12456
   14943, //Scottish league 1 25 12474
   15209, //Scottish league 2 25 12453
-  15478, //Women's prem 25 12827
   13973, //MLS 25,
-  13967, // USL Championship 25
-  14226, // US Open Cup 25
   14236, //Canada 25
   14231, //Brazil prem 25
-  14305, // Brazil Serie B 25
   15746, //Argentina prem 23 15310
   // 14086, // Columbia 25
   // 14116, // Chile 25
   // 14626, // Uraguay 25
   15234, //Mexico prem 25 12136
-  12933, //National league North and South 24
   16036, //Australian A league 24/25 13703
   16243, //S Korea 25,
   16242, //Japan 25
-  12772, //Saudi 24/25
   13964, // WC Qual Europe 26,
   10121, // WC Qual SA 26,
   // 11426, // WC Qual ConCaf 26
   // 12801, // WC Qual Aus 26,
-  14056, // Womens Euros 25
   13734, //Nations league 24
   14924, // Champs league 25 12321
   15002, //Europa 25 12327

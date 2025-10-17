@@ -151,7 +151,6 @@ export async function generateTables(a, leagueIdArray, allResults) {
       let instances;
 
       if (currentLeagueId === 13973) {
-        console.log(league.data)
         if (league.data.specific_tables[0].groups) {
           instances = league.data.specific_tables[0].groups;
           groups = true
@@ -1535,7 +1534,7 @@ export async function generateFixtures(
               onClickEvent={() => getScorePrediction(day)}
               className={"GeneratePredictions"}
             />
-            <div className="Version">Prediction engine v1.5.4 (06/10/25)</div>
+            <div className="Version">Prediction engine v1.6.0 (17/10/25)</div>
             <div className="MissingPredictionsNotice">If predictions are missing on games with little data, switch to AI tips in the options, above</div>
             <Collapsable
               buttonText={"Filters"}

@@ -1010,7 +1010,6 @@ function GameStats({ game, displayBool, stats }) {
   // Memoize derivedRoundId so it's only recalculated when game.sofaScoreId or rounds changes
   const derivedRoundId = useMemo(() => {
     for (const mapping of rounds) {
-      console.log(mapping);
       console.log(game.sofaScoreId);
       console.log(rounds)
       if (mapping.hasOwnProperty(game.sofaScoreId)) {
@@ -1275,8 +1274,6 @@ function GameStats({ game, displayBool, stats }) {
         }
 
         if (derivedRoundId) {
-          console.log(matchingGameInfo)
-          // https://sofascore.p.rapidapi.com/teams/get-statistics?teamId=38&tournamentId=17015&seasonId=61648&type=overall
           try {
             const homeTeamStatsResponse = await fetch(
               `${process.env.REACT_APP_EXPRESS_SERVER}teamStats/${matchingGameInfo.homeId}/${game.sofaScoreId}/${derivedRoundId}`
@@ -2969,7 +2966,6 @@ function GameStats({ game, displayBool, stats }) {
             predictedLineup: homeLineupList,
             homeAttackingStats: homeForm?.attackingMetrics,
             homeDefensiveStats: homeForm?.defensiveMetrics,
-            fixtures: futureFixturesHome,
           },
           awayTeam: {
             awayTeamName: game.awayTeam,
@@ -2982,7 +2978,6 @@ function GameStats({ game, displayBool, stats }) {
             predictedLineup: awayLineupList,
             awayAttackingStats: awayForm?.attackingMetrics,
             awayDefensiveStats: awayForm?.defensiveMetrics,
-            fixtures: futureFixturesAway,
           },
         };
         console.log(AIPayload);

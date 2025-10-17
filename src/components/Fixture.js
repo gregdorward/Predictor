@@ -417,18 +417,9 @@ function SingleFixture({
                 {downArrow}
               </button>
             </div>
-            {/* <div className="ActionButtons">
-              <input
-                type="checkbox"
-                checked={checked}
-                onChange={onToggle}
-                className="star"
-                id={`shortlist-${fixture.id}`} // Unique ID for label association
-              />
-            </div> */}
           </div>
         </li>
-      </div>
+   </div>
       {isLoadingGameStats && <div className="LoadingMessage">Loading Game Stats...</div>}{" "}
       {/* Show loading message */}
       <Suspense fallback={<div>Loading game statistics...</div>}>
@@ -438,7 +429,11 @@ function SingleFixture({
           <LazyGameStats
             game={fixture}
             displayBool={true}
-            stats={leagueStatsArray[`leagueStats${fixture.leagueID}`]}
+            stats={
+              leagueStatsArray && leagueStatsArray[`leagueStats${fixture.leagueID}`]
+                ? leagueStatsArray[`leagueStats${fixture.leagueID}`]
+                : null
+            }
           />
         )}
       </Suspense>
