@@ -3770,10 +3770,21 @@ function GameStats({ game, displayBool, stats }) {
                   team1={game.homeTeam}
                   team2={game.awayTeam}
                 />
-
                 <BarChart
                   text="Last 5 only - Home Team | Away Team"
                   theme={localStorage.getItem('theme')}
+                  labels={[
+                  "Highest Goals",
+                  "Fewest Conceeded",
+                  "PPG",
+                  "Highest XGF",
+                  "Fewest XGA",
+                  "SoT",
+                  "Dangerous Attacks",
+                  "Av. Possession",
+                  "Home/Away Goal Diff",
+                  "Corners"
+                ]}
                   data1={[
                     homeForm.last5Goals * 2,
                     awayForm.last5GoalsConceeded * 2,
@@ -3902,6 +3913,18 @@ function GameStats({ game, displayBool, stats }) {
                 <BarChart
                   text="Home/Away only - Home Team | Away Team"
                   theme={localStorage.getItem('theme')}
+                  labels={[
+                  "Highest Goals",
+                  "Fewest Conceeded",
+                  "PPG",
+                  "Highest XGF",
+                  "Fewest XGA",
+                  "SoT",
+                  "Dangerous Attacks",
+                  "Av. Possession",
+                  "Home/Away Goal Diff",
+                  "Corners"
+                ]}
                   data1={[
                     homeForm.avgScoredHome * 2,
                     awayForm.teamConceededAvgAwayOnly * 2,

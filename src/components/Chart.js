@@ -545,12 +545,12 @@ export function RadarChartLeagueStats({
 }
 
 export function BarChart(props) {
-  const { data1, data2 } = props; // Destructure props for easier access
+  const { data1, data2, theme } = props; // Destructure props for easier access
   let color;
 
-  if (props.theme === 'light') {
+  if (theme === 'light') {
     color = "#020029"
-  } else if (props.theme === 'dark') {
+  } else if (theme === 'dark') {
     color = "#ffffff"
   } else {
     color = "#f57701"
