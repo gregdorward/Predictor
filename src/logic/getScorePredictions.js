@@ -604,6 +604,10 @@ async function getPastLeagueResults(team, game, hOrA, form) {
     const pointsSum5 = points5.reduce((a, b) => a + b, 0);
     form.avPoints5 = pointsSum5 / points5.length;
 
+    const points2 = allTeamResults.map((res) => res.points).slice(0, 2);
+    const pointsSum2 = points2.reduce((a, b) => a + b, 0);
+    form.avPoints2 = pointsSum2 / points2.length;
+
     const pointsAll = allTeamResults.map((res) => res.points);
     const pointsSumAll = pointsAll.reduce((a, b) => a + b, 0);
     form.avPointsAll = pointsSumAll / pointsAll.length;
@@ -1752,16 +1756,20 @@ export async function generateGoals(homeForm, awayForm, match) {
     homeForm.defensiveStrengthScoreGeneration +
     homeForm.attackingStrengthLast5 +
     homeForm.defensiveStrengthScoreGenerationLast5 +
-    homeForm.attackingStrengthHomeOnly +
-    homeForm.defensiveStrengthScoreGenerationHomeOnly;
+    (homeForm.avPoints2 / 2)
+  // +
+  // homeForm.attackingStrengthHomeOnly +
+  // homeForm.defensiveStrengthScoreGenerationHomeOnly;
 
   awayForm.XGRating =
     awayForm.attackingStrength +
     awayForm.defensiveStrengthScoreGeneration +
     awayForm.attackingStrengthLast5 +
     awayForm.defensiveStrengthScoreGenerationLast5 +
-    awayForm.attackingStrengthAwayOnly +
-    awayForm.defensiveStrengthScoreGenerationAwayOnly;
+    (awayForm.avPoints2 / 2)
+  // +
+  // awayForm.attackingStrengthAwayOnly +
+  // awayForm.defensiveStrengthScoreGenerationAwayOnly;
 
   const XGRatingHomeComparison = await comparison(
     homeForm.XGRating,
@@ -1793,11 +1801,11 @@ export async function generateGoals(homeForm, awayForm, match) {
 
   homeGoals = (homeLambda_final + 0.1)
     +
-    (homeForm.actualToXGDifference / 15);
+    (homeForm.actualToXGDifference / 20) + (XGRatingHomeComparison * 0.35);
 
   awayGoals = (awayLambda_final - 0.1)
     +
-    (awayForm.actualToXGDifference / 15);
+    (awayForm.actualToXGDifference / 20) + (XGRatingAwayComparison * 0.35);
 
   if (homeGoals > 5) {
     homeGoals = (homeForm.XGOverall + homeGoals) / 2

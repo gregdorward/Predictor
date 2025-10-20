@@ -15,7 +15,7 @@ export async function getPointAverage(pointTotal, games) {
 export async function calculateAttackingStrength(stats) {
   // Define weights for each metric (you can adjust these based on your preference)
   const weights = {
-    averagePossession: 0.1,
+    // averagePossession: 0.1,
     "Average Dangerous Attacks": 0.1,
     "Average Shots": 0.1,
     "Average Shots On Target": 0.1,
@@ -80,9 +80,9 @@ export async function calculateDefensiveStrength(stats, normalizedValue = 1) {
   let normValue = normalizedValue;
   // Define weights for each metric (you can adjust these based on your preference)
   const weights = {
-    "Average XG Against": 0.3,
-    "Recent XG Against": 0.3,
-    "Average Goals Against": 0.2,
+    "Average XG Against": 0.25,
+    "Recent XG Against": 0.25,
+    "Average Goals Against": 0.3,
     "Average SOT Against": 0.2,
   };
 

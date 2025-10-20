@@ -57,6 +57,9 @@ function GameStats({ game, displayBool, stats }) {
 
   const [openSections, setOpenSections] = useState({});
 
+  console.log(localStorage.getItem('theme'))
+
+
   const handleToggle = (sectionName) => {
     setOpenSections(prev => ({
       ...prev,
@@ -3575,6 +3578,7 @@ function GameStats({ game, displayBool, stats }) {
               <RadarChart
                 style={{ height: "auto" }}
                 title="Soccer Stats Hub Strength Ratings - All Games"
+                theme={localStorage.getItem('theme')}
                 max={1}
                 labels={[
                   "Attack",
@@ -3608,8 +3612,8 @@ function GameStats({ game, displayBool, stats }) {
               ></RadarChart>
               <BarChart
                 text="All Games - Home Team | Away Team"
+                theme={localStorage.getItem('theme')}
                 labels={[
-
                   "Highest Goals",
                   "Fewest Conceeded",
                   "PPG",
@@ -3651,10 +3655,12 @@ function GameStats({ game, displayBool, stats }) {
                 ]}
               ></BarChart>
               <MultiTypeChart
+                theme={localStorage.getItem('theme')}
                 dataArray={homeForm.twoDGoalsArray || []}
                 text={homeForm.teamName + " XG Diff (All)"}
               />
               <MultiTypeChart
+                theme={localStorage.getItem('theme')}
                 dataArray={awayForm.twoDGoalsArray || []}
                 text={awayForm.teamName + " XG Diff (All)"}
               />
@@ -3667,6 +3673,7 @@ function GameStats({ game, displayBool, stats }) {
                 team2={game.awayTeam}
                 type={chartType}
                 tension={0}
+                theme={localStorage.getItem('theme')}
               ></Chart>
               <MultilineChart
                 height={
@@ -3707,6 +3714,7 @@ function GameStats({ game, displayBool, stats }) {
                     )
                     : -2
                 }
+                theme={localStorage.getItem('theme')}
                 data1={rollingGoalDiffTotalHome || []}
                 data2={rollingGoalDiffTotalAway || []}
                 data3={rollingXGDiffTotalHome || []}
@@ -3740,6 +3748,7 @@ function GameStats({ game, displayBool, stats }) {
                     "Directness",
                     "Attacking precision",
                   ]}
+                  theme={localStorage.getItem('theme')}
                   data={[
                     homeAttackStrengthLast5,
                     homeDefenceStrengthLast5,
@@ -3764,6 +3773,7 @@ function GameStats({ game, displayBool, stats }) {
 
                 <BarChart
                   text="Last 5 only - Home Team | Away Team"
+                  theme={localStorage.getItem('theme')}
                   data1={[
                     homeForm.last5Goals * 2,
                     awayForm.last5GoalsConceeded * 2,
@@ -3795,12 +3805,14 @@ function GameStats({ game, displayBool, stats }) {
                 />
 
                 <MultiTypeChart
+                  theme={localStorage.getItem('theme')}
                   dataArray={homeForm.twoDGoalsArray.slice(
                     Math.max(homeForm.twoDGoalsArray.length - 5, 0)
                   )}
                   text={homeForm.teamName + ' XG Diff Last 5'}
                 />
                 <MultiTypeChart
+                  theme={localStorage.getItem('theme')}
                   dataArray={awayForm.twoDGoalsArray.slice(
                     Math.max(awayForm.twoDGoalsArray.length - 5, 0)
                   )}
@@ -3808,6 +3820,7 @@ function GameStats({ game, displayBool, stats }) {
                 />
 
                 <MultilineChart
+                  theme={localStorage.getItem('theme')}
                   height={
                     Math.max(
                       rollingGoalDiffTotalHomeLast5.at(-1),
@@ -3853,6 +3866,7 @@ function GameStats({ game, displayBool, stats }) {
               </div>
               <div className="Chart" id={`Chart${game.id}`} style={style}>
                 <RadarChart
+                  theme={localStorage.getItem('theme')}
                   title="Soccer Stats Hub Strength Ratings - Home/Away Games Only"
                   max={1}
                   labels={[
@@ -3887,6 +3901,7 @@ function GameStats({ game, displayBool, stats }) {
                 ></RadarChart>
                 <BarChart
                   text="Home/Away only - Home Team | Away Team"
+                  theme={localStorage.getItem('theme')}
                   data1={[
                     homeForm.avgScoredHome * 2,
                     awayForm.teamConceededAvgAwayOnly * 2,
@@ -3917,10 +3932,12 @@ function GameStats({ game, displayBool, stats }) {
                   ]}
                 ></BarChart>
                 <MultiTypeChart
+                  theme={localStorage.getItem('theme')}
                   dataArray={homeForm.twoDGoalsArrayHome}
                   text={homeForm.teamName + " XG Diff (Home)"}
                 />
                 <MultiTypeChart
+                  theme={localStorage.getItem('theme')}
                   dataArray={awayForm.twoDGoalsArrayAway}
                   text={awayForm.teamName + " XG Diff (Away)"}
                 />
@@ -3963,6 +3980,7 @@ function GameStats({ game, displayBool, stats }) {
                       )
                       : -2
                   }
+                  theme={localStorage.getItem('theme')}
                   data1={rollingGoalDiffTotalHomeOnly}
                   data2={rollingGoalDiffTotalAwayOnly}
                   data3={rollingXGDiffTotalHomeOnly}

@@ -33,9 +33,21 @@ ChartJS.register(
 
 );
 
+
+
+
 export function Chart(props) {
   let length;
   let depth;
+  let color;
+
+  if (props.theme === 'light') {
+    color = "#020029"
+  } else if (props.theme === 'dark') {
+    color = "#ffffff"
+  } else {
+    color = "#f57701"
+  }
 
   if (props.type === "Points over time") {
     length = props.data1.length * 3;
@@ -55,7 +67,7 @@ export function Chart(props) {
   }
 
   const options = {
-    color: "#fe8c00",
+    color: color,
     responsive: true,
     aspectRatio: 1.2,
     maintainAspectRatio: true,
@@ -80,7 +92,7 @@ export function Chart(props) {
           font: {
             size: 12,
           },
-          color: "#fe8c00",
+          color: color,
         },
       },
       x: {
@@ -114,7 +126,7 @@ export function Chart(props) {
       title: {
         display: true,
         text: props.type,
-        color: "#fe8c00",
+        color: color,
         font: {
           size: 14,
         },
@@ -130,7 +142,7 @@ export function Chart(props) {
       {
         label: props.team1,
         font: {
-          color: "#fe8c00",
+          color: color,
         },
         data: props.data1,
         borderColor: "#01a501",
@@ -155,6 +167,15 @@ export function Chart(props) {
 export function MultilineChart(props) {
   let length;
   let depth;
+  let color;
+
+  if (props.theme === 'light') {
+    color = "#020029"
+  } else if (props.theme === 'dark') {
+    color = "#ffffff"
+  } else {
+    color = "#f57701"
+  }
 
   if (props.type === "Points over time") {
     length = props.data1.length * 3;
@@ -174,7 +195,7 @@ export function MultilineChart(props) {
   }
 
   const options = {
-    color: "#fe8c00",
+    color: color,
     responsive: true,
     aspectRatio: 1.2,
     maintainAspectRatio: true,
@@ -199,7 +220,7 @@ export function MultilineChart(props) {
           font: {
             size: 12,
           },
-          color: "#fe8c00",
+          color: color,
         },
       },
       x: {
@@ -233,7 +254,7 @@ export function MultilineChart(props) {
       title: {
         display: true,
         text: props.type,
-        color: "#fe8c00",
+        color: color,
         font: {
           size: 14,
         },
@@ -249,7 +270,7 @@ export function MultilineChart(props) {
       {
         label: props.team1,
         font: {
-          color: "#fe8c00",
+          color: color,
         },
         data: props.data1,
         borderColor: "#01a501",
@@ -280,7 +301,7 @@ export function MultilineChart(props) {
       {
         label: `${props.team2} XG Diff`,
         font: {
-          color: "#fe8c00",
+          color: color,
         },
         data: props.data4,
         borderColor: "#ae0f018d",
@@ -297,6 +318,8 @@ export function MultilineChart(props) {
 
 export const DoughnutChart = ({ labels, values, colors, label = 'Dataset', chartTitle = ''
 }) => {
+  let color;
+
   const data = {
     labels,
     datasets: [{
@@ -330,6 +353,16 @@ export const DoughnutChart = ({ labels, values, colors, label = 'Dataset', chart
 
 
 export function RadarChart(props) {
+  let color;
+
+  if (props.theme === 'light') {
+    color = "#020029"
+  } else if (props.theme === 'dark') {
+    color = "#ffffff"
+  } else {
+    color = "#f57701"
+  }
+
   const options = {
     color: "white",
     scales: {
@@ -340,10 +373,10 @@ export function RadarChart(props) {
         },
         grid: {
           // circular: true,
-          color: "#f57701",
+          color: color,
         },
         pointLabels: {
-          color: "#f57701",
+          color: color,
           font: {
             size: 12
           },
@@ -358,7 +391,7 @@ export function RadarChart(props) {
 
         labels: {
           boxHeight: 10,
-          color: "#f57701",
+          color: color,
           font: {
             size: 14
           },
@@ -367,7 +400,7 @@ export function RadarChart(props) {
       title: {
         display: true,
         text: props.title,
-        color: "#f57701",
+        color: color,
         backgroundColor: "black",
         font: {
           size: 14,
@@ -513,25 +546,34 @@ export function RadarChartLeagueStats({
 
 export function BarChart(props) {
   const { data1, data2 } = props; // Destructure props for easier access
-  // --- SOLUTION: Add this check at the top ---
-// Ensure the data arrays are not empty/invalid BEFORE calculation
-if (!data1 || !data2 || data1.length === 0 || data2.length === 0) {
-    return <div style={{ color: "#fe8c00", textAlign: "center" }}>No data available for this chart.</div>;
-}
+  let color;
 
-const sum = data2.map(function (num, idx) {
+  if (props.theme === 'light') {
+    color = "#020029"
+  } else if (props.theme === 'dark') {
+    color = "#ffffff"
+  } else {
+    color = "#f57701"
+  }
+  // --- SOLUTION: Add this check at the top ---
+  // Ensure the data arrays are not empty/invalid BEFORE calculation
+  if (!data1 || !data2 || data1.length === 0 || data2.length === 0) {
+    return <div style={{ color: color, textAlign: "center" }}>No data available for this chart.</div>;
+  }
+
+  const sum = data2.map(function (num, idx) {
     // 1. Use ?? 0 to turn null/undefined stats into 0
-    const val1 = data1[idx] ?? 0; 
+    const val1 = data1[idx] ?? 0;
     const val2 = num ?? 0;
-    
+
     // 2. Use Number() to ensure any strings (like "396.00") are converted back to numbers
     return Number(val2) - Number(val1);
-}).filter(value => !isNaN(value)); // Filter out any values that couldn't be converted
+  }).filter(value => !isNaN(value)); // Filter out any values that couldn't be converted
 
-// Add this critical check back
-if (sum.length === 0) {
-    return <div style={{ color: "#fe8c00", textAlign: "center" }}>Invalid numeric data available for this chart.</div>;
-}
+  // Add this critical check back
+  if (sum.length === 0) {
+    return <div style={{ color: color, textAlign: "center" }}>Invalid numeric data available for this chart.</div>;
+  }
 
   const max = Math.max(...sum);
   const min = Math.min(...sum);
@@ -545,7 +587,7 @@ if (sum.length === 0) {
   const largest = findLargestNum(max, min);
 
   const options = {
-    color: "#fe8c00",
+    color: color,
     indexAxis: "y",
     aspectRatio: 1.2,
     elements: {
@@ -566,7 +608,7 @@ if (sum.length === 0) {
           font: {
             size: 11,
           },
-          color: "#fe8c00",
+          color: color,
         },
       },
     },
@@ -581,7 +623,7 @@ if (sum.length === 0) {
       title: {
         display: true,
         text: props.text,
-        color: "#fe8c00",
+        color: color,
         font: {
           size: 14,
         },
@@ -608,9 +650,18 @@ if (sum.length === 0) {
 
 export function BarChartTwo(props) {
   const dataset = [props.data1, props.data2];
+  let color;
+
+  if (props.theme === 'light') {
+    color = "#020029"
+  } else if (props.theme === 'dark') {
+    color = "#ffffff"
+  } else {
+    color = "#f57701"
+  }
 
   const options = {
-    color: "#fe8c00",
+    color: color,
     indexAxis: "x",
     // Elements options apply to all of the options unless overridden in a dataset
     // In this case, we are setting the border of each horizontal bar to be 2px wide
@@ -629,7 +680,7 @@ export function BarChartTwo(props) {
           font: {
             size: 10,
           },
-          color: "#fe8c00",
+          color: color,
         },
       },
       // y: {
@@ -653,7 +704,7 @@ export function BarChartTwo(props) {
       title: {
         display: true,
         text: [props.text],
-        color: "#fe8c00",
+        color: color,
         font: {
           size: 14,
         },
@@ -661,7 +712,7 @@ export function BarChartTwo(props) {
       subtitle: {
         display: true,
         text: "Green - Improving | Red - Worsening",
-        color: "#fe8c00",
+        color: color,
         font: {
           size: 12,
         },
