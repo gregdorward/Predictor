@@ -119,7 +119,7 @@ export default function Over25() {
 
   console.log(leagues)
   // Filter leagues based on allowed countries
-  const filteredLeagues = leagues.filter(league => allowedCountries.includes(league.leagueCountry) && league.division > 0 && league.domestic_scale < 6);
+  const filteredLeagues = leagues.filter(league => ids.includes(league.leagueId));
   console.log(filteredLeagues)
 
   const headers = ["League", "Country", "Avg Goals", "Over 2.5%"];

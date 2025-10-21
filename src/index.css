@@ -241,7 +241,7 @@
 :root {
   --background-color: #ffffff;
   /* White */
-  --secondary-background-color: whitesmoke;
+  --secondary-background-color: rgb(248, 248, 248);
   /* White */
   --third-background-color: rgb(225, 225, 225);
   /* White */
@@ -250,10 +250,10 @@
   --button-color: #020029;
   --button-text-color: #ffffff;
   --secondary-button-text-color: #ffffff;
-  --alternate-background-color: #dddcdc;
+  --alternate-background-color: #f5f4f4;
   --primary-color: #fe8c00;
   /* Orange */
-  --secondary-color: #9b0000;
+  --secondary-color: #383737;
   /* Dark Red */
   --accent-color: #030040;
   /* Light Gray */
@@ -268,8 +268,8 @@
 .dark-mode {
   --background-color: black;
   /* Dark Blue */
-  --secondary-background-color: #191919;
-  --alternate-background-color: rgb(39, 39, 39);
+  --secondary-background-color: #121212;
+  --alternate-background-color: rgb(26, 26, 26);
   /* White */
   --third-background-color: #1b1b1b;
   /* White */
@@ -292,9 +292,9 @@
 }
 
 body {
-  background-color: var(--background-color);
   text-align: center;
   color: var(--text-color);
+  background-color: var(--background-color);
   margin-left: auto;
   margin-right: auto;
   height: 100%;
@@ -1192,7 +1192,7 @@ span.MembershipInfo {
     /* line-height: 1em; */
 }
 
-.UserTips{
+.UserTips {
   margin-bottom: 1em;
 }
 
@@ -1266,19 +1266,20 @@ strong {
   display: flex;
   padding-bottom: 2em;
   padding-top: 1em;
+  border: var(--button-color) 1px solid;
+  margin-top: 1em;
+  /* margin-bottom: 1em; */
 }
 
-.individualFixtureContainer:active,
-input:focus {
-  /* box-shadow:2px 2px 2px 2px grey; */
-
-  box-shadow: 0 0px 0px 0 rgba(0, 0, 0, 0.2), 0 0px 0px 0 #030052 inset;
+.individualFixtureContainerfalse:hover {
+  border: var(--button-color) 2px solid;
 }
+
 
 *[class^='individualFixture'] {
   display: flex;
   flex-basis: 100%;
-  background-color: var(--background-color);
+  background-color: var(--secondary-background-color);
   align-items: left;
   align-content: center;
   color: var(--text-color);
@@ -1301,13 +1302,6 @@ input:focus {
   color: var(--text-color);
   padding-bottom: 0.5em;
   cursor: pointer;
-
-  box-shadow:
-    0 1px 1px hsl(0deg 0% 0% / 0.075),
-    0 2px 2px hsl(0deg 0% 0% / 0.075),
-    0 4px 4px hsl(0deg 0% 0% / 0.075),
-    0 8px 8px hsl(0deg 0% 0% / 0.075),
-    0 16px 16px hsl(0deg 0% 0% / 0.075);
   /* border: black 0.25px solid; */
 }
 
@@ -1364,13 +1358,13 @@ input:focus {
   border-left: Gold solid 6px;
   flex-basis: 100%;
 }
-
+/* 
 .HomeAndAwayContainerundefined:hover {
   border: var(--primary-color) solid 1px;
 
-}
+} */
 
-.HomeAndAwayContainerWon:hover {
+/* .HomeAndAwayContainerWon:hover {
   border: var(--primary-color) solid 1px;
   border-left: #009700 solid 7px;
 
@@ -1385,7 +1379,7 @@ input:focus {
 .HomeAndAwayContainerExact:hover {
   border: var(--primary-color) solid 1px;
   border-left: Gold solid 7px;
-}
+} */
 
 .HomeContainer {
   display: inline-flex;
@@ -2695,6 +2689,9 @@ a.PreviousMatchLink {
   padding-left: 0.25em;
 } */
 
+.ExpandingStats {
+  background-color: var(--background-color);
+}
 
 .IndividualPastFixtureHome {
   text-align: left;
@@ -3202,7 +3199,7 @@ li.FormHeader {
 
 .BestPredictions li {
   font-size: 1.1em;
-  margin: 0.5em;
+  margin: 1em;
   padding: 0.25em;
   background-color: var(--secondary-background-color);
 }
@@ -3216,7 +3213,7 @@ li.FormHeader {
 
 .LongshotPredictions li {
   font-size: 1.1em;
-  margin: 0.5em;
+  margin: 1em;
   padding: 0.25em;
   background-color: var(--secondary-background-color);
 }
@@ -3230,7 +3227,7 @@ li.FormHeader {
 
 .BTTSGames li {
   font-size: 1.1em;
-  margin: 0.5em;
+  margin: 1em;
   padding: 0.25em;
   background-color: var(--secondary-background-color);
 }
@@ -3248,7 +3245,7 @@ li.FormHeader {
 
 .XGDiffTips li {
   font-size: 1.1em;
-  margin: 0.5em;
+  margin: 1em;
   padding: 0.25em;
   background-color: var(--secondary-background-color);
 }
@@ -4529,6 +4526,7 @@ button.AIInsights button:active {
   font-size: 1.1em;
   font-family: Arial, Helvetica, sans-serif;
   font-weight: bolder;
+  border: var(--text-color) solid 1px;
 }
 
 .circle.red {
@@ -4538,6 +4536,7 @@ button.AIInsights button:active {
   font-size: 1.1em;
   font-family: Arial, Helvetica, sans-serif;
   font-weight: bolder;
+  border: var(--text-color) solid 1px;
 }
 
 .placeholder {

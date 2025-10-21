@@ -46,6 +46,7 @@ export default function HighestScoringTeams() {
   useEffect(() => {
     async function fetchTeams() {
       const data = await getHighestScoringTeams();
+      console.log(data)
       setTeams(data);
     }
     fetchTeams();

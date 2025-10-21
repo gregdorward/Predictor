@@ -368,7 +368,7 @@ export function RadarChart(props) {
     scales: {
       r: {
         ticks: {
-          stepSize: 20, // Adjust this to space out ticks more (default is 10)
+          stepSize: 0.25, // Adjust this to space out ticks more (default is 10)
           display: false,
         },
         grid: {

@@ -3314,6 +3314,7 @@ function GameStats({ game, displayBool, stats }) {
   };
   return (
     <>
+    <div className="ExpandingStats">
       {isBeforeTimestamp(game.date) && (
         <>
           <h2>Your Prediction</h2>
@@ -4027,6 +4028,7 @@ function GameStats({ game, displayBool, stats }) {
       <div className="flex-container">
         <div className="flex-childOneOverviewSmall">{overviewHome}</div>
         <div className="flex-childTwoOverviewSmall">{overviewAway}</div>
+      </div>
       </div>
     </>
   );
