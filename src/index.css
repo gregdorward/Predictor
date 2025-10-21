@@ -1266,13 +1266,13 @@ strong {
   display: flex;
   padding-bottom: 2em;
   padding-top: 1em;
-  border: var(--button-color) 1px solid;
+  border: var(--accent-color) 1px solid;
   margin-top: 1em;
   /* margin-bottom: 1em; */
 }
 
 .individualFixtureContainerfalse:hover {
-  border: var(--button-color) 2px solid;
+  border: var(--accent-color) 2px solid;
 }
 
 
