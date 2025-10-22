@@ -3869,10 +3869,12 @@ export async function getScorePrediction(day, mocked) {
     leagueAveragesPromise
   ]);
 
+
   // Await JSON parsing and assign results.
   const predictedScoresData = await predictedScoresResponse.json();
   // Assuming leagueAveragesData is an outer-scoped variable
   leagueAveragesData = await leagueAveragesResponse.json();
+  console.log(leagueAveragesData)
 
   // --- 2. RUN MATCH CALCULATION LOOP (Concurrent match processing) ---
 

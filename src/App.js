@@ -606,6 +606,8 @@ function AppContent() {
           // If the user is logged in but is NOT a paying customer, show subscribe buttons
           <div className="SubscribeContainer">
             <span className="MembershipInfo">
+              25% off for new members when using code SSH25 at the checkout (one time use only)<br />
+              <br />
               Full fixtures and multis are restricted to premium
               members. Memberships can be cancelled at any time and prices will
               differ in currencies other than GBP. Payments are securely hosted
