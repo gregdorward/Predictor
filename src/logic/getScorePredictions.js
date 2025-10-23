@@ -1799,13 +1799,32 @@ export async function generateGoals(homeForm, awayForm, match) {
   //   awayAttackVsHomeDefenceComparisonAwayOnly * 0 +
   //   oddsComparisonAway * 0;
 
-  homeGoals = (homeLambda_final + 0.1)
-    +
-    (homeForm.actualToXGDifference / 20) + (XGRatingHomeComparison * 0.35);
+  const majorContinentalLeagues = [
+  "Europe UEFA Champions League",
+  "Europe UEFA Europa League",
+  "Europe UEFA Europa Conference League",
+  "South America Copa Libertadores"
+];
 
-  awayGoals = (awayLambda_final - 0.1)
-    +
-    (awayForm.actualToXGDifference / 20) + (XGRatingAwayComparison * 0.35);
+  if (majorContinentalLeagues.includes(match.leagueDesc)) {
+    homeGoals = (homeLambda_final + 0.1)
+      + (oddsComparisonHome * 0.25) +
+      (homeForm.actualToXGDifference / 20) + (XGRatingHomeComparison * 0.1);
+
+    awayGoals = (awayLambda_final - 0.1)
+      + (oddsComparisonAway * 0.25) +
+      (awayForm.actualToXGDifference / 20) + (XGRatingAwayComparison * 0.1);
+  } else {
+    homeGoals = (homeLambda_final + 0.1)
+      +
+      (homeForm.actualToXGDifference / 20) + (XGRatingHomeComparison * 0.35);
+
+    awayGoals = (awayLambda_final - 0.1)
+      +
+      (awayForm.actualToXGDifference / 20) + (XGRatingAwayComparison * 0.35);
+  }
+
+
 
   if (homeGoals > 5) {
     homeGoals = (homeForm.XGOverall + homeGoals) / 2
