@@ -4089,6 +4089,10 @@ export async function getScorePrediction(day, mocked) {
             match.status === "complete"
               ? `${match.homeTeam} ${match.homeGoals} - ${match.awayGoals} ${match.awayTeam}`
               : match.game,
+          homeTeam: match.homeTeam,
+          awayTeam: match.awayTeam,
+          competition: match.leagueDesc,
+          id: match.id,
           team: match.homeTeam,
           decimalOdds: match.homeDoubleChance,
           rawOdds: match.over25Odds,
@@ -4115,6 +4119,10 @@ export async function getScorePrediction(day, mocked) {
               ? `${match.homeTeam} ${match.homeGoals} - ${match.awayGoals} ${match.awayTeam}`
               : match.game,
           team: `${match.homeTeam} to win`,
+          homeTeam: match.homeTeam,
+          awayTeam: match.awayTeam,
+          competition: match.leagueDesc,
+          id: match.id,
           rawOdds: match.homeOdds,
           comparisonScore: Math.abs(match.teamComparisonScore),
           rawComparisonScore: match.teamComparisonScore,
@@ -4142,6 +4150,10 @@ export async function getScorePrediction(day, mocked) {
               ? `${match.homeTeam} ${match.homeGoals} - ${match.awayGoals} ${match.awayTeam}`
               : match.game,
           team: `${match.awayTeam} to win`,
+          homeTeam: match.homeTeam,
+          awayTeam: match.awayTeam,
+          competition: match.leagueDesc,
+          id: match.id,
           rawOdds: match.awayOdds,
           comparisonScore: Math.abs(match.teamComparisonScore),
           rawComparisonScore: match.teamComparisonScore,
@@ -4171,6 +4183,10 @@ export async function getScorePrediction(day, mocked) {
               ? `${match.homeTeam} ${match.homeGoals} - ${match.awayGoals} ${match.awayTeam}`
               : match.game,
           team: `${match.homeTeam} to win`,
+          homeTeam: match.homeTeam,
+          awayTeam: match.awayTeam,
+          competition: match.leagueDesc,
+          id: match.id,
           rawOdds: match.homeOdds,
           comparisonScore: Math.abs(match.teamComparisonScore),
           rawComparisonScore: match.teamComparisonScore,
@@ -4227,6 +4243,10 @@ export async function getScorePrediction(day, mocked) {
               ? `${match.homeTeam} ${match.homeGoals} - ${match.awayGoals} ${match.awayTeam}`
               : match.game,
           team: `${match.homeTeam} to win`,
+          homeTeam: match.homeTeam,
+          awayTeam: match.awayTeam,
+          competition: match.leagueDesc,
+          id: match.id,
           rawOdds: match.homeOdds,
           comparisonScore: Math.abs(match.teamComparisonScore),
           rawComparisonScore: match.teamComparisonScore,
@@ -4283,6 +4303,10 @@ export async function getScorePrediction(day, mocked) {
               ? `${match.homeTeam} ${match.homeGoals} - ${match.awayGoals} ${match.awayTeam}`
               : match.game,
           team: `${match.homeTeam} to win`,
+          homeTeam: match.homeTeam,
+          awayTeam: match.awayTeam,
+          competition: match.leagueDesc,
+          id: match.id,
           rawOdds: match.homeOdds,
           comparisonScore: Math.abs(match.teamComparisonScore),
           rawComparisonScore: match.teamComparisonScore,
@@ -4683,12 +4707,31 @@ async function renderTips() {
                   are ordered by confidence in the outcome.
                 </div>
                 {newArray.map((tip) => (
-                  <li key={`${tip.game}acca`}>
-                    <div>
-                      {tip.team}: {tip.odds}{" "}
-                      <span className={tip.outcome}>{tip.outcomeSymbol}</span>
-                    </div>
-                    <div className="TipGame">{tip.game}</div>
+                  <li key={`${tip.game}acca`} className={`tip-item`}>
+                    <a
+                      href={`#${tip.id}`}
+                      onClick={(e) => {
+                        e.preventDefault(); // Prevent the immediate jump/reload
+                        scrollToTarget(tip.id); // Call the custom smooth scroll function
+                      }}
+                      style={{ textDecoration: 'none', color: 'inherit' }}                    >
+                      {/* This is the new flex container for the content */}
+                      <div className="TipCompetition">{tip.competition} | KO:{tip.time}</div>
+                      <div className="tip-content-flex">
+                        {/* 1. Game Name (Will take 50% width) */}
+                        {/* <div className="TipGame">{tip.game}</div> */}
+                        <div className={`TipTeams${tip.outcome}`}>
+                          <span className="TipHomeTeam">{tip.homeTeam}</span>
+                          <span className="TipAwayTeam">{tip.awayTeam}</span>
+
+                        </div>
+
+                        {/* 2. Team, Odds, and Outcome (Will take 50% width) */}
+                        <div className="TipDetails">
+                          {tip.team} {tip.odds}{" "}
+                        </div>
+                      </div>
+                    </a>
                   </li>
                 ))}
                 <div className="AccumulatedOdds">{`Accumulator odds ~ : ${Math.round(accumulatedOdds) - 1
@@ -4815,12 +4858,20 @@ async function renderTips() {
               <ul className="LongshotPredictions" id="LongshotPredictions">
                 <h4>Over 2.5 goals</h4>
                 {Over25Tips.map((tip) => (
-                  <li key={tip.team}>
-                    {tip.game} - Odds: {tip.odds}{" "}
-                    <span className={`${tip.doubleChanceOutcome}`}>
-                      {tip.outcomeSymbol}
-                    </span>
-                  </li>
+                  <a
+                    href={`#${tip.id}`}
+                    onClick={(e) => {
+                      e.preventDefault(); // Prevent the immediate jump/reload
+                      scrollToTarget(tip.id); // Call the custom smooth scroll function
+                    }}
+                    style={{ textDecoration: 'none', color: 'inherit' }}                    >
+                    <li key={tip.team}>
+                      {tip.game} - Odds: {tip.odds}{" "}
+                      <span className={`${tip.doubleChanceOutcome}`}>
+                        {tip.outcomeSymbol}
+                      </span>
+                    </li>
+                  </a>
                 ))}
               </ul>
             }
@@ -4857,12 +4908,20 @@ async function renderTips() {
               <ul className="BTTSGames" id="BTTSGames">
                 <h4>Games with highest chance of BTTS</h4>
                 {bttsArray.map((game) => (
-                  <li key={game.game}>
-                    {`${game.game} odds: ${game.bttsFraction}`}{" "}
-                    <span className={game.bttsOutcome}>
-                      {game.bttsOutcomeSymbol}
-                    </span>
-                  </li>
+                  <a
+                    href={`#${game.id}`}
+                    onClick={(e) => {
+                      e.preventDefault(); // Prevent the immediate jump/reload
+                      scrollToTarget(game.id); // Call the custom smooth scroll function
+                    }}
+                    style={{ textDecoration: 'none', color: 'inherit' }}                    >
+                    <li key={game.game}>
+                      {`${game.game} odds: ${game.bttsFraction}`}{" "}
+                      <span className={game.bttsOutcome}>
+                        {game.bttsOutcomeSymbol}
+                      </span>
+                    </li>
+                  </a>
                 ))}
               </ul>
             }
@@ -4901,10 +4960,18 @@ async function renderTips() {
                 {paid ? (
                   XGDiffTips.length > 0 ? (
                     XGDiffTips.map((tip) => (
-                      <li key={tip.game}>
-                        {tip.game} | {tip.prediction} {tip.odds}{" "}
-                        <span className={tip.outcome}>{tip.outcomeSymbol}</span>
-                      </li>
+                      <a
+                        href={`#${tip.id}`}
+                        onClick={(e) => {
+                          e.preventDefault(); // Prevent the immediate jump/reload
+                          scrollToTarget(tip.id); // Call the custom smooth scroll function
+                        }}
+                        style={{ textDecoration: 'none', color: 'inherit' }}                    >
+                        <li key={tip.game}>
+                          {tip.game} | {tip.prediction} {tip.odds}{" "}
+                          <span className={tip.outcome}>{tip.outcomeSymbol}</span>
+                        </li>
+                      </a>
                     ))
                   ) : (
                     <li key="noGames">
@@ -4924,12 +4991,20 @@ async function renderTips() {
                 {paid ? (
                   pointsDiffTips.length > 0 ? (
                     pointsDiffTips.map((game) => (
-                      <li key={game.game}>
-                        {game.game} | {game.prediction} {game.odds}{" "}
-                        <span className={game.outcome}>
-                          {game.outcomeSymbol}
-                        </span>
-                      </li>
+                      <a
+                        href={`#${game.id}`}
+                        onClick={(e) => {
+                          e.preventDefault(); // Prevent the immediate jump/reload
+                          scrollToTarget(game.id); // Call the custom smooth scroll function
+                        }}
+                        style={{ textDecoration: 'none', color: 'inherit' }}                    >
+                        <li key={game.game}>
+                          {game.game} | {game.prediction} {game.odds}{" "}
+                          <span className={game.outcome}>
+                            {game.outcomeSymbol}
+                          </span>
+                        </li>
+                      </a>
                     ))
                   ) : (
                     <li key="noGames">
@@ -4949,12 +5024,20 @@ async function renderTips() {
                 {paid ? (
                   rollingDiffTips.length > 0 ? (
                     rollingDiffTips.map((game) => (
-                      <li key={game.game}>
-                        {game.game} | {game.prediction} {game.odds}{" "}
-                        <span className={game.outcome}>
-                          {game.outcomeSymbol}
-                        </span>
-                      </li>
+                      <a
+                        href={`#${game.id}`}
+                        onClick={(e) => {
+                          e.preventDefault(); // Prevent the immediate jump/reload
+                          scrollToTarget(game.id); // Call the custom smooth scroll function
+                        }}
+                        style={{ textDecoration: 'none', color: 'inherit' }}                    >
+                        <li key={game.game}>
+                          {game.game} | {game.prediction} {game.odds}{" "}
+                          <span className={game.outcome}>
+                            {game.outcomeSymbol}
+                          </span>
+                        </li>
+                      </a>
                     ))
                   ) : (
                     <li key="noGames">
@@ -4974,12 +5057,20 @@ async function renderTips() {
                 {paid ? (
                   dangerousAttacksDiffTips.length > 0 ? (
                     dangerousAttacksDiffTips.map((game) => (
-                      <li key={game.game}>
-                        {game.game} | {game.prediction} {game.odds}{" "}
-                        <span className={game.outcome}>
-                          {game.outcomeSymbol}
-                        </span>
-                      </li>
+                      <a
+                        href={`#${game.id}`}
+                        onClick={(e) => {
+                          e.preventDefault(); // Prevent the immediate jump/reload
+                          scrollToTarget(game.id); // Call the custom smooth scroll function
+                        }}
+                        style={{ textDecoration: 'none', color: 'inherit' }}                    >
+                        <li key={game.game}>
+                          {game.game} | {game.prediction} {game.odds}{" "}
+                          <span className={game.outcome}>
+                            {game.outcomeSymbol}
+                          </span>
+                        </li>
+                      </a>
                     ))
                   ) : (
                     <li key="noGames">

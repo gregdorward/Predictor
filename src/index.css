@@ -3198,11 +3198,13 @@ li.FormHeader {
 }
 
 .BestPredictions li {
-  font-size: 1em;
-  margin-top: 0.5em;
-  margin-bottom: 0.5em;
-  padding: 0.25em;
+  font-size: 1.1em;
+  margin-top: 0.75em;
+  margin-bottom: 0.75em;
+  padding-top: 0.25em;
+  padding-bottom: 0.25em;
   background-color: var(--secondary-background-color);
+  /* box-shadow: 1.8px 3.5px 3.5px hsl(0deg 0% 0% / 0.45); */
 }
 
 .BestPredictions a {
@@ -3210,31 +3212,43 @@ li.FormHeader {
 }
 
 .LongshotPredictions {
-  padding: 1em;
+  padding: 0.25em;
   border: var(--text-color) 1px dashed;
   margin: 0.5em;
   background-color: var(--background-color);
 }
 
 .LongshotPredictions li {
-  font-size: 1.1em;
-  margin: 1em;
+  font-size: 1em;
+  margin-top: 0.75em;
+  margin-bottom: 0.75em;
   padding: 0.25em;
   background-color: var(--secondary-background-color);
 }
 
+.LongshotPredictions a {
+  padding: 0em;
+  margin: 0em;
+}
+
 .BTTSGames {
+  padding: 0.25em;
   border: var(--text-color) 1px dashed;
-  padding: 1em;
   margin: 0.5em;
   background-color: var(--background-color);
 }
 
 .BTTSGames li {
-  font-size: 1.1em;
-  margin: 1em;
+  font-size: 1em;
+  margin-top: 0.75em;
+  margin-bottom: 0.75em;
   padding: 0.25em;
   background-color: var(--secondary-background-color);
+}
+
+.BTTSGames a {
+  padding: 0em;
+  margin: 0em;
 }
 
 .XGDiffTips {
@@ -3249,10 +3263,16 @@ li.FormHeader {
 }
 
 .XGDiffTips li {
-  font-size: 1.1em;
-  margin: 1em;
+  font-size: 1em;
+  margin-top: 0.75em;
+  margin-bottom: 0.75em;
   padding: 0.25em;
   background-color: var(--secondary-background-color);
+}
+
+.XGDiffTips a {
+  padding: 0em;
+  margin: 0em;
 }
 
 .BTTSGames lh {
@@ -3271,9 +3291,11 @@ ul {
 }
 
 .PredictionsOfTheDay li {
-  /* font-size: 0.8em; */
-  font-size: 1.1em;
-  padding-top: 1em;
+  font-size: 1em;
+  margin-top: 0.75em;
+  margin-bottom: 0.75em;
+  padding: 0.25em;
+  background-color: var(--secondary-background-color);
 }
 
 
