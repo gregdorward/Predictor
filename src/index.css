@@ -3378,7 +3378,7 @@ ul {
 }
 
 /* Outcome symbols styling (optional but useful) */
-.win {
+/* .win {
   color: green;
   font-weight: bold;
 }
@@ -3386,7 +3386,7 @@ ul {
 .lose {
   color: red;
   font-weight: bold;
-}
+} */
 
 .Lost1 {
   color: #bf1000;

@@ -3894,7 +3894,6 @@ export async function getScorePrediction(day, mocked) {
   const predictedScoresData = await predictedScoresResponse.json();
   // Assuming leagueAveragesData is an outer-scoped variable
   leagueAveragesData = await leagueAveragesResponse.json();
-  console.log(leagueAveragesData)
 
   // --- 2. RUN MATCH CALCULATION LOOP (Concurrent match processing) ---
 
@@ -3978,7 +3977,6 @@ export async function getScorePrediction(day, mocked) {
           match.status !== "notEnoughData" &&
           match.homeOdds < 3
         ) {
-          console.log(match)
           predictionObject = {
             team: `${match.homeTeam} @ `,
             homeTeam: match.homeTeam,
