@@ -3188,7 +3188,6 @@ li.FormHeader {
 
 .BestPredictions {
   /* border: var(--text-color) 1px dashed; */
-  padding: 0.5em;
   background-color: var(--background-color);
   max-width: 30em;
 }
@@ -3204,6 +3203,10 @@ li.FormHeader {
   margin-bottom: 0.5em;
   padding: 0.25em;
   background-color: var(--secondary-background-color);
+}
+
+.BestPredictions a {
+  font-size: 1em;
 }
 
 .LongshotPredictions {
@@ -3342,7 +3345,7 @@ ul {
   text-align: start;
   flex: 1;
   border-left: 6px solid #01a501;
-  padding-left: 1em;
+  padding-left: 0.5em;
 }
 
 .TipTeamsLost {
@@ -3351,8 +3354,7 @@ ul {
   text-align: start;
   flex: 1;
   border-left: 6px solid #b10f00;
-    padding-left: 1em;
-
+  padding-left: 0.5em;
 }
 
 .TipTeamsundefined {
@@ -3360,8 +3362,7 @@ ul {
   flex-direction: column;
   text-align: start;
   flex: 1;
-    padding-left: 1em;
-
+  padding-left: 0.5em;
 }
 
 .TipHomeTeam {
@@ -3373,7 +3374,7 @@ ul {
   /* Allows it to grow and take space */
   flex: 1;
   text-align: end;
-  margin-right: 1em;
+  padding-right: 0.5em;
   /* Right align the odds/outcome for a clean look */
 }
 
@@ -4018,8 +4019,9 @@ input:active+.design::after {
 .scroll-target {
   /* This is the key property */
   /* Set this value to the height of your fixed top navigation bar */
-  scroll-margin-top: 9em; 
+  scroll-margin-top: 9em;
 }
+
 .HomeTeamBadge {
   order: 0;
   border-color: #393d3f;
