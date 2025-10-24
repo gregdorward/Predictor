@@ -287,139 +287,141 @@ function SingleFixture({
   return (
     <div key={fixture.game}>
       <LeagueName fixture={fixture} mock={mock} showShortlist={showShortlist} />
-      <div className={`individualFixtureContainerfalse`}>
-        <li
-          className={`individualFixture${fixture.omit}`}
-          key={fixture.id}
-          data-cy={fixture.id}
-        // onClick={handleGameStatsClick}
-        // onClick={onToggle} // Toggle checked state on click
-        // style={{ display: checked ? "lightblue" : "white" }} // Change background when checked
-        >
-          <div className="MatchDetail">
-            <GetDivider
-              result={resultValue}
-              status={fixture.status}
-              fixture={fixture}
-            />
-            <input
-              type="checkbox"
-              checked={checked}
-              onChange={onToggle}
-              className="star"
-              id={`shortlist-${fixture.id}`} // Unique ID for label association
-            />
-          </div>
-          <div className={`HomeAndAwayContainer${fixture.predictionOutcome}`}>
-            <div className="HomeContainer">
-              <div className="HomeOdds">{fixture.fractionHome}</div>
-              <CreateBadge
-                image={fixture.homeBadge}
-                ClassName="HomeBadge"
-                alt="Home team badge"
-                flexShrink={5}
+      <div id={fixture.id} className="scroll-target">
+        <div className={`individualFixtureContainerfalse`}>
+          <li
+            className={`individualFixture${fixture.omit}`}
+            key={fixture.id}
+            data-cy={fixture.id}
+          // onClick={handleGameStatsClick}
+          // onClick={onToggle} // Toggle checked state on click
+          // style={{ display: checked ? "lightblue" : "white" }} // Change background when checked
+          >
+            <div className="MatchDetail">
+              <GetDivider
+                result={resultValue}
+                status={fixture.status}
+                fixture={fixture}
               />
-              <div className="homeTeam">
-                {" "}
-                {fixture.homeTeam}{" "}
-                {fixture.formHome ? `(${fixture.formHome.LeaguePosition})` : ""}
-              </div>
-              <div className="score" key={fixture.homeTeam}>
-                {fixture.goalsA !== undefined ? `${fixture.goalsA}` : `-`}
-              </div>
-              <div className={`result`}>
-                {fixture.status === "complete" ? `${fixture.homeGoals}` : `-`}
-              </div>
-              <div className={`Last5`}>
-                {fixture.formHome && (
-                  <>
-                    <span
-                      className={styleForm(
-                        fixture.formHome.resultsAll[4] || ""
-                      )}
-                    ></span>
-                    <span
-                      className={styleForm(
-                        fixture.formHome.resultsAll[3] || ""
-                      )}
-                    ></span>
-                    <span
-                      className={styleForm(
-                        fixture.formHome.resultsAll[2] || ""
-                      )}
-                    ></span>
-                    <span
-                      className={styleForm(
-                        fixture.formHome.resultsAll[1] || ""
-                      )}
-                    ></span>
-                    <span
-                      className={styleForm(
-                        fixture.formHome.resultsAll[0] || ""
-                      )}
-                    ></span>
-                  </>
-                )}
-              </div>
-              <button className="GameStatsTwo" onClick={handleButtonClick}>
-                {rightArrow}
-              </button>
-            </div>
-            <div className="AwayContainer">
-              <div className="AwayOdds">{fixture.fractionAway}</div>
-              <CreateBadge
-                image={fixture.awayBadge}
-                ClassName="AwayBadge"
-                alt="Away team badge"
+              <input
+                type="checkbox"
+                checked={checked}
+                onChange={onToggle}
+                className="star"
+                id={`shortlist-${fixture.id}`} // Unique ID for label association
               />
-              <div className="awayTeam">
-                {fixture.awayTeam}{" "}
-                {fixture.formAway ? `(${fixture.formAway.LeaguePosition})` : ""}
-              </div>
-              <div className="score" key={fixture.awayTeam}>
-                {fixture.goalsB !== undefined ? `${fixture.goalsB}` : `-`}
-              </div>
-              <div className="result">
-                {fixture.status === "complete" ? `${fixture.awayGoals}` : `-`}
-              </div>
-              <div className={`Last5`}>
-                {fixture.formAway && (
-                  <>
-                    <span
-                      className={styleForm(
-                        fixture.formAway.resultsAll[4] || ""
-                      )}
-                    ></span>
-                    <span
-                      className={styleForm(
-                        fixture.formAway.resultsAll[3] || ""
-                      )}
-                    ></span>
-                    <span
-                      className={styleForm(
-                        fixture.formAway.resultsAll[2] || ""
-                      )}
-                    ></span>
-                    <span
-                      className={styleForm(
-                        fixture.formAway.resultsAll[1] || ""
-                      )}
-                    ></span>
-                    <span
-                      className={styleForm(
-                        fixture.formAway.resultsAll[0] || ""
-                      )}
-                    ></span>
-                  </>
-                )}
-              </div>
-              <button className="GameStats" onClick={handleGameStatsClick}>
-                {downArrow}
-              </button>
             </div>
-          </div>
-        </li>
-   </div>
+            <div className={`HomeAndAwayContainer${fixture.predictionOutcome}`}>
+              <div className="HomeContainer">
+                <div className="HomeOdds">{fixture.fractionHome}</div>
+                <CreateBadge
+                  image={fixture.homeBadge}
+                  ClassName="HomeBadge"
+                  alt="Home team badge"
+                  flexShrink={5}
+                />
+                <div className="homeTeam">
+                  {" "}
+                  {fixture.homeTeam}{" "}
+                  {fixture.formHome ? `(${fixture.formHome.LeaguePosition})` : ""}
+                </div>
+                <div className="score" key={fixture.homeTeam}>
+                  {fixture.goalsA !== undefined ? `${fixture.goalsA}` : `-`}
+                </div>
+                <div className={`result`}>
+                  {fixture.status === "complete" ? `${fixture.homeGoals}` : `-`}
+                </div>
+                <div className={`Last5`}>
+                  {fixture.formHome && (
+                    <>
+                      <span
+                        className={styleForm(
+                          fixture.formHome.resultsAll[4] || ""
+                        )}
+                      ></span>
+                      <span
+                        className={styleForm(
+                          fixture.formHome.resultsAll[3] || ""
+                        )}
+                      ></span>
+                      <span
+                        className={styleForm(
+                          fixture.formHome.resultsAll[2] || ""
+                        )}
+                      ></span>
+                      <span
+                        className={styleForm(
+                          fixture.formHome.resultsAll[1] || ""
+                        )}
+                      ></span>
+                      <span
+                        className={styleForm(
+                          fixture.formHome.resultsAll[0] || ""
+                        )}
+                      ></span>
+                    </>
+                  )}
+                </div>
+                <button className="GameStatsTwo" onClick={handleButtonClick}>
+                  {rightArrow}
+                </button>
+              </div>
+              <div className="AwayContainer">
+                <div className="AwayOdds">{fixture.fractionAway}</div>
+                <CreateBadge
+                  image={fixture.awayBadge}
+                  ClassName="AwayBadge"
+                  alt="Away team badge"
+                />
+                <div className="awayTeam">
+                  {fixture.awayTeam}{" "}
+                  {fixture.formAway ? `(${fixture.formAway.LeaguePosition})` : ""}
+                </div>
+                <div className="score" key={fixture.awayTeam}>
+                  {fixture.goalsB !== undefined ? `${fixture.goalsB}` : `-`}
+                </div>
+                <div className="result">
+                  {fixture.status === "complete" ? `${fixture.awayGoals}` : `-`}
+                </div>
+                <div className={`Last5`}>
+                  {fixture.formAway && (
+                    <>
+                      <span
+                        className={styleForm(
+                          fixture.formAway.resultsAll[4] || ""
+                        )}
+                      ></span>
+                      <span
+                        className={styleForm(
+                          fixture.formAway.resultsAll[3] || ""
+                        )}
+                      ></span>
+                      <span
+                        className={styleForm(
+                          fixture.formAway.resultsAll[2] || ""
+                        )}
+                      ></span>
+                      <span
+                        className={styleForm(
+                          fixture.formAway.resultsAll[1] || ""
+                        )}
+                      ></span>
+                      <span
+                        className={styleForm(
+                          fixture.formAway.resultsAll[0] || ""
+                        )}
+                      ></span>
+                    </>
+                  )}
+                </div>
+                <button className="GameStats" onClick={handleGameStatsClick}>
+                  {downArrow}
+                </button>
+              </div>
+            </div>
+          </li>
+        </div>
+      </div>
       {isLoadingGameStats && <div className="LoadingMessage">Loading Game Stats...</div>}{" "}
       {/* Show loading message */}
       <Suspense fallback={<div>Loading game statistics...</div>}>

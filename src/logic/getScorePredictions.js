@@ -1,5 +1,6 @@
 import { Fragment, useState } from "react";
 import ReactDOM from "react-dom";
+import { Link } from 'react-router-dom';
 import { matches, diff } from "./getFixtures";
 import { RenderAllFixtures } from "../logic/getFixtures";
 import Collapsable from "../components/CollapsableElement";
@@ -1800,11 +1801,11 @@ export async function generateGoals(homeForm, awayForm, match) {
   //   oddsComparisonAway * 0;
 
   const majorContinentalLeagues = [
-  "Europe UEFA Champions League",
-  "Europe UEFA Europa League",
-  "Europe UEFA Europa Conference League",
-  "South America Copa Libertadores"
-];
+    "Europe UEFA Champions League",
+    "Europe UEFA Europa League",
+    "Europe UEFA Europa Conference League",
+    "South America Copa Libertadores"
+  ];
 
   if (majorContinentalLeagues.includes(match.leagueDesc)) {
     homeGoals = (homeLambda_final + 0.1)
@@ -3977,8 +3978,14 @@ export async function getScorePrediction(day, mocked) {
           match.status !== "notEnoughData" &&
           match.homeOdds < 3
         ) {
+          console.log(match)
           predictionObject = {
-            team: `${match.homeTeam} to win`,
+            team: `${match.homeTeam} @ `,
+            homeTeam: match.homeTeam,
+            awayTeam: match.awayTeam,
+            competition: match.leagueDesc,
+            id: match.id,
+            time: match.time,
             game:
               match.status === "complete"
                 ? `${match.homeTeam} ${match.homeGoals} - ${match.awayGoals} ${match.awayTeam}`
@@ -4027,7 +4034,12 @@ export async function getScorePrediction(day, mocked) {
           match.awayOdds < 3.5
         ) {
           predictionObject = {
-            team: `${match.awayTeam} to win`,
+            team: `${match.awayTeam} @ `,
+            homeTeam: match.homeTeam,
+            awayTeam: match.awayTeam,
+            competition: match.leagueDesc,
+            id: match.id,
+            time: match.time,
             game:
               match.status === "complete"
                 ? `${match.homeTeam} ${match.homeGoals} - ${match.awayGoals} ${match.awayTeam}`
@@ -4586,6 +4598,19 @@ function NewlineText(props) {
   return newText;
 }
 
+const scrollToTarget = (id) => {
+  // Use a small timeout to ensure the DOM element exists after async load
+  setTimeout(() => {
+    const targetElement = document.getElementById(id);
+    if (targetElement) {
+      targetElement.scrollIntoView({
+        behavior: 'smooth',
+        block: 'start'
+      });
+    }
+  }, 0);
+};
+
 async function renderTips() {
   if (userDetail) {
     paid = await checkUserPaidStatus(userDetail.uid);
@@ -4604,16 +4629,35 @@ async function renderTips() {
             element={
               <ul className="BestPredictions" id="BestPredictions">
                 <div className="BestPredictionsExplainer">
-                  Add or remove a selection using the buttons below. Predictions
+                  Add or remove a selection using the buttons. Predictions
                   are ordered by confidence in the outcome.
                 </div>
                 {newArray.map((tip) => (
-                  <li key={`${tip.game}acca`}>
-                    <div>
-                      {tip.team}: {tip.odds}{" "}
-                      <span className={tip.outcome}>{tip.outcomeSymbol}</span>
-                    </div>
-                    <div className="TipGame">{tip.game}</div>
+                  <li key={`${tip.game}acca`} className={`tip-item`}>
+                    <a
+                      href={`#${tip.id}`}
+                      onClick={(e) => {
+                        e.preventDefault(); // Prevent the immediate jump/reload
+                        scrollToTarget(tip.id); // Call the custom smooth scroll function
+                      }}
+                      style={{ textDecoration: 'none', color: 'inherit' }}                    >
+                      {/* This is the new flex container for the content */}
+                      <div className="TipCompetition">{tip.competition} | KO:{tip.time}</div>
+                      <div className="tip-content-flex">
+                        {/* 1. Game Name (Will take 50% width) */}
+                        {/* <div className="TipGame">{tip.game}</div> */}
+                        <div className={`TipTeams${tip.outcome}`}>
+                          <span className="TipHomeTeam">{tip.homeTeam}</span>
+                          <span className="TipAwayTeam">{tip.awayTeam}</span>
+
+                        </div>
+
+                        {/* 2. Team, Odds, and Outcome (Will take 50% width) */}
+                        <div className="TipDetails">
+                          {tip.team} {tip.odds}{" "}
+                        </div>
+                      </div>
+                    </a>
                   </li>
                 ))}
                 <div className="AccumulatedOdds">{`Accumulator odds ~ : ${Math.round(accumulatedOdds) - 1
@@ -4637,7 +4681,7 @@ async function renderTips() {
               <ul className="BestPredictions" id="BestPredictions">
                 <div className="BestPredictionsExplainer">
                   Multis limited to a maximum of 6 selections for free users.<br />
-                  Add or remove a selection using the buttons below. Predictions
+                  Add or remove a selection using the buttons. Predictions
                   are ordered by confidence in the outcome.
                 </div>
                 {newArray.map((tip) => (

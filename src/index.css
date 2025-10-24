@@ -1358,6 +1358,7 @@ strong {
   border-left: Gold solid 6px;
   flex-basis: 100%;
 }
+
 /* 
 .HomeAndAwayContainerundefined:hover {
   border: var(--primary-color) solid 1px;
@@ -3186,20 +3187,21 @@ li.FormHeader {
 }
 
 .BestPredictions {
-  padding: 1em;
-  border: var(--text-color) 1px dashed;
-  margin: 0.5em;
+  /* border: var(--text-color) 1px dashed; */
+  padding: 0.5em;
   background-color: var(--background-color);
+  max-width: 30em;
 }
 
 .BestPredictionsExplainer {
-  padding-bottom: 0.2em;
+  margin-bottom: 2em;
   font-size: 1.1em;
 }
 
 .BestPredictions li {
-  font-size: 1.1em;
-  margin: 1em;
+  font-size: 1em;
+  margin-top: 0.5em;
+  margin-bottom: 0.5em;
   padding: 0.25em;
   background-color: var(--secondary-background-color);
 }
@@ -3299,8 +3301,91 @@ ul {
   font-size: 1.2em;
 }
 
-.TipGame {
-  padding-top: 0.25em;
+/* Container for the entire list (ul/ol) */
+.tip-list {
+  list-style: none;
+  /* Remove default bullets */
+  padding: 0;
+  margin: 0;
+}
+
+/* Individual Tip Item (li) */
+.tip-item {
+  padding: 10px 0;
+}
+
+
+/* THE MAIN FLEX CONTAINER */
+.tip-content-flex {
+  display: flex;
+  /* Space out the two columns (game and details) */
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 0.5em;
+  /* Vertically align items */
+  gap: 2em;
+  /* Space between the columns */
+}
+
+.TipCompetition {
+  font-size: 0.9em;
+  background-color: var(--button-color);
+  color: var(--button-text-color);
+  flex-basis: 100%;
+  height: 1.5em;
+  align-content: center;
+}
+
+.TipTeamsWon {
+  display: flex;
+  flex-direction: column;
+  text-align: start;
+  flex: 1;
+  border-left: 6px solid #01a501;
+  padding-left: 1em;
+}
+
+.TipTeamsLost {
+  display: flex;
+  flex-direction: column;
+  text-align: start;
+  flex: 1;
+  border-left: 6px solid #b10f00;
+    padding-left: 1em;
+
+}
+
+.TipTeamsundefined {
+  display: flex;
+  flex-direction: column;
+  text-align: start;
+  flex: 1;
+    padding-left: 1em;
+
+}
+
+.TipHomeTeam {
+  margin-bottom: 0.25em;
+}
+
+/* Column 2: Details (Team, Odds, Outcome) */
+.TipDetails {
+  /* Allows it to grow and take space */
+  flex: 1;
+  text-align: end;
+  margin-right: 1em;
+  /* Right align the odds/outcome for a clean look */
+}
+
+/* Outcome symbols styling (optional but useful) */
+.win {
+  color: green;
+  font-weight: bold;
+}
+
+.lose {
+  color: red;
+  font-weight: bold;
 }
 
 .Lost1 {
@@ -3930,8 +4015,11 @@ input:active+.design::after {
   padding-top: 0.5em; */
 }
 
-.FixtureHeading {}
-
+.scroll-target {
+  /* This is the key property */
+  /* Set this value to the height of your fixed top navigation bar */
+  scroll-margin-top: 9em; 
+}
 .HomeTeamBadge {
   order: 0;
   border-color: #393d3f;
@@ -4048,6 +4136,7 @@ input:active+.design::after {
   width: 100%;
   margin-left: auto;
   margin-right: auto;
+  margin-top: 1em;
   color: var(--button-text-color);
 }
 
