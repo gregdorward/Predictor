@@ -16,6 +16,7 @@ import {
   MultilineChart,
   RadarChart,
   BarChart,
+  DoughnutChart
 } from "./Chart";
 import MultiTypeChart from "./MultitypeChart"; // Adjust the path if necessary
 import { Slider } from "../components/CarouselXGChart";
@@ -454,6 +455,26 @@ function GameStats({ game, displayBool, stats }) {
     "montreal impact": "cf montreal",
     "botafogo": "botafogo",
   };
+
+
+  function getTrueFormColor(ppgValue, minVal = -1.5, maxVal = 1.5) {
+    // 1. Clamp the value: ensure the value stays within the defined min/max range
+    const clampedValue = Math.max(minVal, Math.min(maxVal, ppgValue));
+
+    // 2. Normalize the value: convert the range [minVal, maxVal] to [0, 1]
+    const normalized = (clampedValue - minVal) / (maxVal - minVal);
+
+    // 3. Map to Hue: Map the [0, 1] range to the HSL Hue range [0 (Red), 120 (Green)]
+    // We reverse the range so low values are Red (0) and high values are Green (120)
+    // The formula is: Hue = (normalized value) * 120
+    const hue = normalized * 120;
+
+    // Set fixed saturation and lightness for consistent color pop
+    const saturation = 70;
+    const lightness = 25;
+
+    return `hsl(${hue}, ${saturation}%, ${lightness}%)`;
+  }
 
 
   const warnedTeams = new Set(); // Move this outside the function if reused
@@ -1539,6 +1560,8 @@ function GameStats({ game, displayBool, stats }) {
       ? (oppositionHalfPassesHome / attackingPlaysHome).toFixed(2)
       : 'N/A';
 
+    const trueFormColour = getTrueFormColor(homeForm.trueForm);
+
     if (!homeForm) return null;
     return (
       <div className="flex-childOne">
@@ -1556,6 +1579,8 @@ function GameStats({ game, displayBool, stats }) {
             LeagueOrAll={formDataHome[0].LeagueOrAll}
             className={"KeyStatsHome"}
             name={formDataHome[0].name}
+            value={homeForm.trueForm}
+            color={trueFormColour}
             goals={homeForm.avgScored}
             conceeded={homeForm.avgConceeded}
             averageRating={homeTeamStats?.avgRating?.toFixed(2)}
@@ -1732,8 +1757,11 @@ function GameStats({ game, displayBool, stats }) {
       ? (oppositionHalfPassesAway / attackingPlaysAway).toFixed(2)
       : 'N/A';
 
-    // PPAA = Opponent Passes / (Shots + Crosses + Dribbles/Take-ons + Key Passes)
+    const trueFormColour = getTrueFormColor(awayForm.trueForm);
 
+
+    // PPAA = Opponent Passes / (Shots + Crosses + Dribbles/Take-ons + Key Passes)
+    console.log("Away Team Stats:", awayTeamStats);
 
     if (!awayForm) return null;
     return (
@@ -1753,6 +1781,8 @@ function GameStats({ game, displayBool, stats }) {
             className={"KeyStatsAway"}
             classNameTwo={"FormStatsAway"}
             name={formDataAway[0].name}
+            value={awayForm.trueForm}
+            color={trueFormColour}
             goals={awayForm.avgScored}
             conceeded={awayForm.avgConceeded}
             averageRating={awayTeamStats?.avgRating?.toFixed(2)}
@@ -3314,721 +3344,732 @@ function GameStats({ game, displayBool, stats }) {
   };
   return (
     <>
-    <div className="ExpandingStats">
-      {isBeforeTimestamp(game.date) && (
-        <>
-          <h2>Your Prediction</h2>
-          <UserTips
-            game={game}
-            handleSetUserTips={handleSetUserTips}
-            userDetail={userDetail}
-            selectedTip={selectedTip} // Pass selectedTip down
-            handleTipSelect={handleTipSelect} // Pass handler down
-          />
-        </>
-      )}
-      <div style={style}>
-        <div style={style}>
-          <Collapsable
-            buttonText={`Lineups & match action \u{2630}`}
-            classNameButton="Lineups"
-            element={
-              <>
-                <MemoizedSofaLineupsWidget
-                  id={id}
-                  team1={team1}
-                  team2={team2}
-                  time={timestamp}
-                  homeGoals={homeGoals}
-                  awayGoals={awayGoals}
-                />
-              </>
-            }
-          />
-        </div>
-
-        {loading ||
-          (homeMissingPlayersList.length === 0 &&
-            awayMissingPlayersList.length === 0) ? (
-          <div></div>
-        ) : (
-          <Collapsable
-            buttonText={`Missing players \u{2630}`}
-            classNameButton="MissingPlayersButton"
-            element={
-              <div className="MissingPlayers">
-                <MissingPlayersList
-                  team={game.homeTeam}
-                  className="HomeMissingPlayers"
-                  players={homeMissingPlayersList}
-                />
-                <MissingPlayersList
-                  team={game.awayTeam}
-                  className="AwayMissingPlayers"
-                  players={awayMissingPlayersList}
-                />
-              </div>
-            }
-          />
-        )}
-
-        {loadingStreaks || streakData.length === 0 ? (
-          <div></div>
-        ) : (
-          <Collapsable
-            buttonText={`Team Streaks (All comps) \u{2630}`}
-            classNameButton="TeamStreaksButton"
-            element={
-              <div className="TeamStreaks">
-                <StreakStats
-                  stats={streakData}
-                  home={game.homeTeam}
-                  away={game.awayTeam}
-                  homeLogo={game.homeBadge}
-                  awayLogo={game.awayBadge}
-                />
-              </div>
-            }
-          />
-        )}
-
-        {loadingFutureFixtures || futureFixturesHome.length === 0 ? (
-          <div></div>
-        ) : (
-          <Collapsable
-            buttonText={`Upcoming Games`}
-            classNameButton="FutureFixturesButton"
-            element={
-              <Suspense fallback={<div>Loading fixtures...</div>}>
-                <LazyFutureFixturesSideBySide
-                  loadingFutureFixtures={loadingFutureFixtures}
-                  futureFixturesHome={futureFixturesHome}
-                  futureFixturesAway={futureFixturesAway}
-                />
-              </Suspense>
-            }
-          />
-        )}
-
-
-        {loadingPlayerData || homePlayerDataWithImages.length === 0 ? (
-          <div></div>
-        ) : (
+      <div className="ExpandingStats">
+        {isBeforeTimestamp(game.date) && (
           <>
+            <h2>Your Prediction</h2>
+            <UserTips
+              game={game}
+              handleSetUserTips={handleSetUserTips}
+              userDetail={userDetail}
+              selectedTip={selectedTip} // Pass selectedTip down
+              handleTipSelect={handleTipSelect} // Pass handler down
+            />
+          </>
+        )}
+        <div style={style}>
+          <div style={style}>
             <Collapsable
-              buttonText={`Key Players (League Rankings by Metric) \u{2630}`}
-              classNameButton="PlayerStatsButton"
+              buttonText={`Lineups & match action \u{2630}`}
+              classNameButton="Lineups"
               element={
-                <div className="PlayerStats">
-                  <PlayerStatsList
-                    playerStats={homePlayerDataWithImages}
-                    className="HomePlayerStats"
-                    spanClass="SpanHome"
+                <>
+                  <MemoizedSofaLineupsWidget
+                    id={id}
+                    team1={team1}
+                    team2={team2}
+                    time={timestamp}
+                    homeGoals={homeGoals}
+                    awayGoals={awayGoals}
                   />
-                  <PlayerStatsList
-                    playerStats={awayPlayerDataWithImages}
-                    className="AwayPlayerStats"
-                    spanClass="SpanAway"
+                </>
+              }
+            />
+          </div>
+
+          {loading ||
+            (homeMissingPlayersList.length === 0 &&
+              awayMissingPlayersList.length === 0) ? (
+            <div></div>
+          ) : (
+            <Collapsable
+              buttonText={`Missing players \u{2630}`}
+              classNameButton="MissingPlayersButton"
+              element={
+                <div className="MissingPlayers">
+                  <MissingPlayersList
+                    team={game.homeTeam}
+                    className="HomeMissingPlayers"
+                    players={homeMissingPlayersList}
+                  />
+                  <MissingPlayersList
+                    team={game.awayTeam}
+                    className="AwayMissingPlayers"
+                    players={awayMissingPlayersList}
                   />
                 </div>
               }
             />
-            {dataHome.length !== 0 ||
-              dataAway.length !== 0 ? (
-              <Collapsable
-                buttonText={`Key Player Comparison \u{2630}`}
-                classNameButton="PlayerAttributesButton"
-                element={
-                  <div className="PlayerAttributes">
-                    <div className="HomePlayerAttributes">
-                      {homePlayerImage && (
-                        <img
-                          src={homePlayerImage}
-                          alt={homePlayerData[0]?.playerName || "Home Player"}
-                          className="player-image"
-                        />
-                      )}
-                      <RadarChart
-                        style={{ height: "auto" }}
-                        title={homePlayerData[0]?.playerName}
-                        labels={labelsHome}
-                        data={dataHome}
-                        data2={data2Home}
-                        team1={`${homePlayerData[0]?.playerName} (${positionHome})`}
-                        team2={"Competition Average"}
-                        max={100}
-                      />
-                    </div>
+          )}
 
-                    <div className="AwayPlayerAttributes">
-                      {awayPlayerImage && (
-                        <img
-                          src={awayPlayerImage}
-                          alt={awayPlayerData[0]?.playerName || "Away Player"}
-                          className="player-image"
-                        />
-                      )}
-                      <RadarChart
-                        style={{ height: "auto" }}
-                        title={awayPlayerData[0]?.playerName}
-                        labels={labelsAway}
-                        data={dataAway}
-                        data2={data2Away}
-                        team1={`${awayPlayerData[0]?.playerName} (${positionAway})`}
-                        team2={"Competition Average"}
-                        max={100}
-                      />
-                    </div>
+          {loadingStreaks || streakData.length === 0 ? (
+            <div></div>
+          ) : (
+            <Collapsable
+              buttonText={`Team Streaks (All comps) \u{2630}`}
+              classNameButton="TeamStreaksButton"
+              element={
+                <div className="TeamStreaks">
+                  <StreakStats
+                    stats={streakData}
+                    home={game.homeTeam}
+                    away={game.awayTeam}
+                    homeLogo={game.homeBadge}
+                    awayLogo={game.awayBadge}
+                  />
+                </div>
+              }
+            />
+          )}
+
+          {loadingFutureFixtures || futureFixturesHome.length === 0 ? (
+            <div></div>
+          ) : (
+            <Collapsable
+              buttonText={`Upcoming Games`}
+              classNameButton="FutureFixturesButton"
+              element={
+                <Suspense fallback={<div>Loading fixtures...</div>}>
+                  <LazyFutureFixturesSideBySide
+                    loadingFutureFixtures={loadingFutureFixtures}
+                    futureFixturesHome={futureFixturesHome}
+                    futureFixturesAway={futureFixturesAway}
+                  />
+                </Suspense>
+              }
+            />
+          )}
+
+
+          {loadingPlayerData || homePlayerDataWithImages.length === 0 ? (
+            <div></div>
+          ) : (
+            <>
+              <Collapsable
+                buttonText={`Key Players (League Rankings by Metric) \u{2630}`}
+                classNameButton="PlayerStatsButton"
+                element={
+                  <div className="PlayerStats">
+                    <PlayerStatsList
+                      playerStats={homePlayerDataWithImages}
+                      className="HomePlayerStats"
+                      spanClass="SpanHome"
+                    />
+                    <PlayerStatsList
+                      playerStats={awayPlayerDataWithImages}
+                      className="AwayPlayerStats"
+                      spanClass="SpanAway"
+                    />
                   </div>
                 }
               />
-            ) : (
-              <div></div>
-            )
-            }
+              {dataHome.length !== 0 ||
+                dataAway.length !== 0 ? (
+                <Collapsable
+                  buttonText={`Key Player Comparison \u{2630}`}
+                  classNameButton="PlayerAttributesButton"
+                  element={
+                    <div className="PlayerAttributes">
+                      <div className="HomePlayerAttributes">
+                        {homePlayerImage && (
+                          <img
+                            src={homePlayerImage}
+                            alt={homePlayerData[0]?.playerName || "Home Player"}
+                            className="player-image"
+                          />
+                        )}
+                        <RadarChart
+                          style={{ height: "auto" }}
+                          title={homePlayerData[0]?.playerName}
+                          labels={labelsHome}
+                          data={dataHome}
+                          data2={data2Home}
+                          team1={`${homePlayerData[0]?.playerName} (${positionHome})`}
+                          team2={"Competition Average"}
+                          max={100}
+                        />
+                      </div>
 
-          </>
-        )}
+                      <div className="AwayPlayerAttributes">
+                        {awayPlayerImage && (
+                          <img
+                            src={awayPlayerImage}
+                            alt={awayPlayerData[0]?.playerName || "Away Player"}
+                            className="player-image"
+                          />
+                        )}
+                        <RadarChart
+                          style={{ height: "auto" }}
+                          title={awayPlayerData[0]?.playerName}
+                          labels={labelsAway}
+                          data={dataAway}
+                          data2={data2Away}
+                          team1={`${awayPlayerData[0]?.playerName} (${positionAway})`}
+                          team2={"Competition Average"}
+                          max={100}
+                        />
+                      </div>
+                    </div>
+                  }
+                />
+              ) : (
+                <div></div>
+              )
+              }
 
-        <div id="AIInsightsContainer" className="AIInsightsContainer">
-          {loadingKeyPlayers ? (
-            <p>Loading data for Match Preview...</p>
-          ) : !paid && game.leagueID !== 15050 ? (
-            <><Button
-              className="AIInsightsLocked"
-              text={"Match Preview 🔒"}
-              onClickEvent={() => {
-                alert("Match Preview is locked. Please subscribe to access.");
-              }}
-            />
-              <div className="SubscribeText">
-                Subscribe to unlock full match previews, team star ratings, styles and more
-              </div>
-              <button
-                onClick={() => handleCheckout("price_1QrQ4ZBrqiWlVPadCkhLhtiZ")}
-                className="SubscribeButton"
-              >
-                Subscribe for £1/week
-              </button><button
-                onClick={() => handleCheckout("price_1QqgbEBrqiWlVPadocMuIEeI")}
-                className="SubscribeButton"
-              >
-                Subscribe for £3/month
-              </button><button
-                onClick={() => handleCheckout("price_1QrQ75BrqiWlVPadEML30BoJ")}
-                className="SubscribeButton"
-              >
-                Subscribe for £30/year
-              </button>
             </>
-          ) : (
-            <Button
-              className="AIInsights"
-              onClickEvent={() => {
-                generateAIInsights(
-                  game.id,
-                  streakData,
-                  oddsData,
-                  homeTeamStats,
-                  awayTeamStats,
-                  homePlayerData,
-                  awayPlayerData,
-                  homeMissingPlayersList,
-                  awayMissingPlayersList,
-                  homeLineupList,
-                  awayLineupList,
-                  ranksHome,
-                  ranksAway,
-                  futureFixturesHome,
-                  futureFixturesAway
-                );
-                setShowAIInsights(true);
-              }}
-              text={"Match Preview"}
-              disabled={!paid && game.leagueID !== 15050}
-            />
           )}
-        </div>
 
-        {showAIInsights && ( // Conditionally Render the AI Insights.
-          <div className="AIOutputContainer">
-            {isLoading ? <p>Loading AI data....</p> : AIOutput}
-          </div>
-        )}
-      </div>
-      <Slider
-        length="3"
-        element1={
-          <>
-            <h2>All games</h2>
-            <div className="flex-container">
-              {/* ## ⚔️ Attacking ## */}
-              <StatsHomeComponent getCollapsableProps={getCollapsableProps} />
-              <StatsAwayComponent getCollapsableProps={getCollapsableProps} />
-            </div>
-            {stats && ranksHome && ranksAway && stats?.topTeams && (
-              <TeamRankingsFlexView
-                title={`Rankings in ${game.leagueDesc} out of ${stats.topTeams.accurateCrosses?.length} teams`}
-                ranksHome={ranksHome}
-                ranksAway={ranksAway}
-                teamALabel={game.homeTeam}
-                teamBLabel={game.awayTeam}
+          <div id="AIInsightsContainer" className="AIInsightsContainer">
+            {loadingKeyPlayers ? (
+              <p>Loading data for Match Preview...</p>
+            ) : !paid && game.leagueID !== 15050 ? (
+              <><Button
+                className="AIInsightsLocked"
+                text={"Match Preview 🔒"}
+                onClickEvent={() => {
+                  alert("Match Preview is locked. Please subscribe to access.");
+                }}
+              />
+                <div className="SubscribeText">
+                  Subscribe to unlock full match previews, team star ratings, styles and more
+                </div>
+                <button
+                  onClick={() => handleCheckout("price_1QrQ4ZBrqiWlVPadCkhLhtiZ")}
+                  className="SubscribeButton"
+                >
+                  Subscribe for £1/week
+                </button><button
+                  onClick={() => handleCheckout("price_1QqgbEBrqiWlVPadocMuIEeI")}
+                  className="SubscribeButton"
+                >
+                  Subscribe for £3/month
+                </button><button
+                  onClick={() => handleCheckout("price_1QrQ75BrqiWlVPadEML30BoJ")}
+                  className="SubscribeButton"
+                >
+                  Subscribe for £30/year
+                </button>
+              </>
+            ) : (
+              <Button
+                className="AIInsights"
+                onClickEvent={() => {
+                  generateAIInsights(
+                    game.id,
+                    streakData,
+                    oddsData,
+                    homeTeamStats,
+                    awayTeamStats,
+                    homePlayerData,
+                    awayPlayerData,
+                    homeMissingPlayersList,
+                    awayMissingPlayersList,
+                    homeLineupList,
+                    awayLineupList,
+                    ranksHome,
+                    ranksAway,
+                    futureFixturesHome,
+                    futureFixturesAway
+                  );
+                  setShowAIInsights(true);
+                }}
+                text={"Match Preview"}
+                disabled={!paid && game.leagueID !== 15050}
               />
             )}
-            <div className="Chart" id={`Chart${game.id}`} style={style}>
-              <RadarChart
-                style={{ height: "auto" }}
-                title="Soccer Stats Hub Strength Ratings - All Games"
-                theme={localStorage.getItem('theme')}
-                max={1}
-                labels={[
-                  "Attack",
-                  "Defence",
-                  "Possession",
-                  "XGF",
-                  "XGA",
-                  "Directness",
-                  "Precision",
-                ]}
-                data={[
-                  homeAttackStrength,
-                  homeDefenceStrength,
-                  homePossessionStrength,
-                  homeXGForStrength,
-                  homeXGAgainstStrength,
-                  homeDirectnessStrength,
-                  homeAccuracyOverallStrength,
-                ]}
-                data2={[
-                  awayAttackStrength,
-                  awayDefenceStrength,
-                  awayPossessionStrength,
-                  awayXGForStrength,
-                  awayXGAgainstStrength,
-                  awayDirectnessStrength,
-                  awayAccuracyOverallStrength,
-                ]}
-                team1={game.homeTeam}
-                team2={game.awayTeam}
-              ></RadarChart>
-              <BarChart
-                text="All Games - Home Team | Away Team"
-                theme={localStorage.getItem('theme')}
-                labels={[
-                  "Highest Goals",
-                  "Fewest Conceeded",
-                  "PPG",
-                  "Highest XGF",
-                  "Fewest XGA",
-                  "SoT",
-                  "Dangerous Attacks",
-                  "Av. Possession",
-                  "Home/Away Goal Diff",
-                  "Corners"
-                ]}
-                data1={[
-                  homeForm.avgScored * 2,
-                  awayForm.avgConceeded * 2,
-                  homeForm.avPointsAll * 3,
-                  homeForm.XGOverall * 2,
-                  awayForm.XGAgainstAvgOverall * 2,
-                  homeForm.AverageShotsOnTargetOverall,
-                  homeForm.AverageDangerousAttacksOverall !== 0
-                    ? homeForm.AverageDangerousAttacksOverall / 7.5
-                    : homeForm.AverageDangerousAttacks / 7.5,
-                  homeForm.AveragePossessionOverall / 7.5,
-                  homeForm.goalDifference / 10,
-                  homeForm.AverageCorners,
-                ]}
-                data2={[
-                  awayForm.avgScored * 2,
-                  homeForm.avgConceeded * 2,
-                  awayForm.avPointsAll * 3,
-                  awayForm.XGOverall * 2,
-                  homeForm.XGAgainstAvgOverall * 2,
-                  awayForm.AverageShotsOnTargetOverall,
-                  awayForm.AverageDangerousAttacksOverall !== 0
-                    ? awayForm.AverageDangerousAttacksOverall / 7.5
-                    : awayForm.AverageDangerousAttacks / 7.5,
-                  awayForm.AveragePossessionOverall / 7.5,
-                  awayForm.goalDifference / 10,
-                  awayForm.AverageCorners,
-                ]}
-              ></BarChart>
-              <MultiTypeChart
-                theme={localStorage.getItem('theme')}
-                dataArray={homeForm.twoDGoalsArray || []}
-                text={homeForm.teamName + " XG Diff (All)"}
-              />
-              <MultiTypeChart
-                theme={localStorage.getItem('theme')}
-                dataArray={awayForm.twoDGoalsArray || []}
-                text={awayForm.teamName + " XG Diff (All)"}
-              />
-              <Chart
-                height={3}
-                depth={0}
-                data1={formArrayHome}
-                data2={formArrayAway}
-                team1={game.homeTeam}
-                team2={game.awayTeam}
-                type={chartType}
-                tension={0}
-                theme={localStorage.getItem('theme')}
-              ></Chart>
-              <MultilineChart
-                height={
-                  Math.max(
-                    rollingGoalDiffTotalHome[
-                    rollingGoalDiffTotalHome.length - 1
-                    ],
-                    rollingGoalDiffTotalAway[
-                    rollingGoalDiffTotalAway.length - 1
-                    ]
-                  ) > 2
-                    ? Math.max(
-                      rollingGoalDiffTotalHome[
-                      rollingGoalDiffTotalHome.length - 1
-                      ],
-                      rollingGoalDiffTotalAway[
-                      rollingGoalDiffTotalAway.length - 1
-                      ]
-                    )
-                    : 2
-                }
-                depth={
-                  Math.min(
-                    rollingGoalDiffTotalHome[
-                    rollingGoalDiffTotalHome.length - 1
-                    ],
-                    rollingGoalDiffTotalAway[
-                    rollingGoalDiffTotalAway.length - 1
-                    ]
-                  ) < -2
-                    ? Math.min(
-                      rollingGoalDiffTotalHome[
-                      rollingGoalDiffTotalHome.length - 1
-                      ],
-                      rollingGoalDiffTotalAway[
-                      rollingGoalDiffTotalAway.length - 1
-                      ]
-                    )
-                    : -2
-                }
-                theme={localStorage.getItem('theme')}
-                data1={rollingGoalDiffTotalHome || []}
-                data2={rollingGoalDiffTotalAway || []}
-                data3={rollingXGDiffTotalHome || []}
-                data4={rollingXGDiffTotalAway || []}
-                team1={game.homeTeam}
-                team2={game.awayTeam}
-                type={"Goal/XG difference over time"}
-                tension={0.5}
-              ></MultilineChart>
+          </div>
+
+          {showAIInsights && ( // Conditionally Render the AI Insights.
+            <div className="AIOutputContainer">
+              {isLoading ? <p>Loading AI data....</p> : AIOutput}
             </div>
-          </>
-        }
-        element2={
-          homeForm?.twoDGoalsArray ? (
+          )}
+        </div>
+        <Slider
+          length="3"
+          element1={
             <>
-              <h2>Last 5 games only</h2>
+              <h2>All games</h2>
               <div className="flex-container">
-                <StatsHomeLast5Component />
-                <StatsAwayLast5Component />
+                <StatsHomeComponent getCollapsableProps={getCollapsableProps} />
+                <StatsAwayComponent getCollapsableProps={getCollapsableProps} />
               </div>
+              <h2>Betting value</h2>
+              <h4>Points difference from bookies predictions over last 5 games</h4>
+              <h4>{game.homeTeam} | {game.awayTeam}</h4>
+              <span>Based on implied probability derived from odds for each match</span>
+              <div className="flex-container">
+                <div className="DoughnutOne">
+                  <DoughnutChart pointsTotal = {homeForm.pointsSum5} predictedPoints = {homeForm.totalExpectedPoints} deltaPTS={homeForm.trueForm !== undefined ? homeForm.trueForm : 0} chartTitle={homeForm.trueForm.toFixed(2)} color="#333333" label={homeForm.trueForm.toFixed(2)} theme={localStorage.getItem('theme')}/>
+                </div>
+                <div className="DoughnutTwo">
+                  <DoughnutChart pointsTotal = {awayForm.pointsSum5} predictedPoints = {awayForm.totalExpectedPoints} deltaPTS={awayForm.trueForm !== undefined ? awayForm.trueForm : 0} chartTitle={awayForm.trueForm.toFixed(2)} color="#333333" label={awayForm.trueForm.toFixed(2)} theme={localStorage.getItem('theme')}/>
+                </div>
+              </div>
+              {stats && ranksHome && ranksAway && stats?.topTeams && (
+                <TeamRankingsFlexView
+                  title={`Rankings in ${game.leagueDesc} out of ${stats.topTeams.accurateCrosses?.length} teams`}
+                  ranksHome={ranksHome}
+                  ranksAway={ranksAway}
+                  teamALabel={game.homeTeam}
+                  teamBLabel={game.awayTeam}
+                />
+              )}
               <div className="Chart" id={`Chart${game.id}`} style={style}>
                 <RadarChart
-                  title="Soccer Stats Hub Strength Ratings - Last 5 Games Only"
+                  style={{ height: "auto" }}
+                  title="Soccer Stats Hub Strength Ratings - All Games"
+                  theme={localStorage.getItem('theme')}
                   max={1}
                   labels={[
-                    "Attack rating",
-                    "Defence rating",
-                    "Ball retention",
-                    "XG For",
-                    "XG Against",
+                    "Attack",
+                    "Defence",
+                    "Possession",
+                    "XGF",
+                    "XGA",
                     "Directness",
-                    "Attacking precision",
-                  ]}
-                  theme={localStorage.getItem('theme')}
-                  data={[
-                    homeAttackStrengthLast5,
-                    homeDefenceStrengthLast5,
-                    homePossessionStrengthLast5,
-                    homeXGForStrengthLast5,
-                    homeXGAgainstStrengthLast5,
-                    homeDirectnessStrengthLast5,
-                    homeAccuracyOverallStrengthLast5,
-                  ]}
-                  data2={[
-                    awayAttackStrengthLast5,
-                    awayDefenceStrengthLast5,
-                    awayPossessionStrengthLast5,
-                    awayXGForStrengthLast5,
-                    awayXGAgainstStrengthLast5,
-                    awayDirectnessStrengthLast5,
-                    awayAccuracyOverallStrengthLast5,
-                  ]}
-                  team1={game.homeTeam}
-                  team2={game.awayTeam}
-                />
-                <BarChart
-                  text="Last 5 only - Home Team | Away Team"
-                  theme={localStorage.getItem('theme')}
-                  labels={[
-                  "Highest Goals",
-                  "Fewest Conceeded",
-                  "PPG",
-                  "Highest XGF",
-                  "Fewest XGA",
-                  "SoT",
-                  "Dangerous Attacks",
-                  "Av. Possession",
-                  "Home/Away Goal Diff",
-                  "Corners"
-                ]}
-                  data1={[
-                    homeForm.last5Goals * 2,
-                    awayForm.last5GoalsConceeded * 2,
-                    homeForm.avPoints5 * 3,
-                    homeForm.avXGLast5 * 2,
-                    awayForm.avXGAgainstLast5 * 2,
-                    homeForm.avSOTLast5,
-                    homeForm.avDALast5 !== 0
-                      ? homeForm.avDALast5 / 7.5
-                      : homeForm.AverageDangerousAttacks / 7.5,
-                    homeForm.avPosessionLast5 / 7.5,
-                    homeForm.last5GoalDiff / 5,
-                    homeForm.last5Corners,
-                  ]}
-                  data2={[
-                    awayForm.last5Goals * 2,
-                    homeForm.last5GoalsConceeded * 2,
-                    awayForm.avPoints5 * 3,
-                    awayForm.avXGLast5 * 2,
-                    homeForm.avXGAgainstLast5 * 2,
-                    awayForm.avSOTLast5,
-                    awayForm.avDALast5 !== 0
-                      ? awayForm.avDALast5 / 7.5
-                      : awayForm.AverageDangerousAttacks / 7.5,
-                    awayForm.avPosessionLast5 / 7.5,
-                    awayForm.last5GoalDiff / 5,
-                    awayForm.last5Corners,
-                  ]}
-                />
-
-                <MultiTypeChart
-                  theme={localStorage.getItem('theme')}
-                  dataArray={homeForm.twoDGoalsArray.slice(
-                    Math.max(homeForm.twoDGoalsArray.length - 5, 0)
-                  )}
-                  text={homeForm.teamName + ' XG Diff Last 5'}
-                />
-                <MultiTypeChart
-                  theme={localStorage.getItem('theme')}
-                  dataArray={awayForm.twoDGoalsArray.slice(
-                    Math.max(awayForm.twoDGoalsArray.length - 5, 0)
-                  )}
-                  text={awayForm.teamName + ' XG Diff Last 5'}
-                />
-
-                <MultilineChart
-                  theme={localStorage.getItem('theme')}
-                  height={
-                    Math.max(
-                      rollingGoalDiffTotalHomeLast5.at(-1),
-                      rollingGoalDiffTotalAwayLast5.at(-1)
-                    ) > 2
-                      ? Math.max(
-                        rollingGoalDiffTotalHomeLast5.at(-1),
-                        rollingGoalDiffTotalAwayLast5.at(-1)
-                      )
-                      : 2
-                  }
-                  depth={
-                    Math.min(
-                      rollingGoalDiffTotalHomeLast5.at(-1),
-                      rollingGoalDiffTotalAwayLast5.at(-1)
-                    ) < -2
-                      ? Math.min(
-                        rollingGoalDiffTotalHomeLast5.at(-1),
-                        rollingGoalDiffTotalAwayLast5.at(-1)
-                      )
-                      : -2
-                  }
-                  data1={rollingGoalDiffTotalHomeLast5}
-                  data2={rollingGoalDiffTotalAwayLast5}
-                  data3={rollingXGDiffTotalHomeLast5}
-                  data4={rollingXGDiffTotalAwayLast5}
-                  team1={game.homeTeam}
-                  team2={game.awayTeam}
-                  type="Goal/XG difference over last 5"
-                  tension={0.5}
-                />
-              </div>
-            </>
-          ) : null
-        }
-        element3={
-          homeForm?.twoDGoalsArray ? (
-            <>
-              <h2>Home/Away games only</h2>
-              <div className="flex-container">
-                <StatsHomeOnlyComponent />
-                <StatsAwayOnlyComponent />
-              </div>
-              <div className="Chart" id={`Chart${game.id}`} style={style}>
-                <RadarChart
-                  theme={localStorage.getItem('theme')}
-                  title="Soccer Stats Hub Strength Ratings - Home/Away Games Only"
-                  max={1}
-                  labels={[
-                    "Attack rating",
-                    "Defence rating",
-                    "Ball retention",
-                    "XG For",
-                    "XG Against",
-                    "Directness",
-                    "Attacking precision",
+                    "Precision",
                   ]}
                   data={[
-                    homeOnlyAttackStrength,
-                    homeOnlyDefenceStrength,
-                    homeOnlyPossessionStrength,
-                    homeOnlyXGForStrength,
-                    homeOnlyXGAgainstStrength,
-                    homeOnlyDirectnessStrength,
-                    homeOnlyAccuracyOverallStrength,
+                    homeAttackStrength,
+                    homeDefenceStrength,
+                    homePossessionStrength,
+                    homeXGForStrength,
+                    homeXGAgainstStrength,
+                    homeDirectnessStrength,
+                    homeAccuracyOverallStrength,
                   ]}
                   data2={[
-                    awayOnlyAttackStrength,
-                    awayOnlyDefenceStrength,
-                    awayOnlyPossessionStrength,
-                    awayOnlyXGForStrength,
-                    awayOnlyXGAgainstStrength,
-                    awayOnlyDirectnessStrength,
-                    awayOnlyAccuracyOverallStrength,
+                    awayAttackStrength,
+                    awayDefenceStrength,
+                    awayPossessionStrength,
+                    awayXGForStrength,
+                    awayXGAgainstStrength,
+                    awayDirectnessStrength,
+                    awayAccuracyOverallStrength,
                   ]}
                   team1={game.homeTeam}
                   team2={game.awayTeam}
                 ></RadarChart>
                 <BarChart
-                  text="Home/Away only - Home Team | Away Team"
+                  text="All Games - Home Team | Away Team"
                   theme={localStorage.getItem('theme')}
                   labels={[
-                  "Highest Goals",
-                  "Fewest Conceeded",
-                  "PPG",
-                  "Highest XGF",
-                  "Fewest XGA",
-                  "SoT",
-                  "Dangerous Attacks",
-                  "Av. Possession",
-                  "Home/Away Goal Diff",
-                  "Corners"
-                ]}
+                    "Highest Goals",
+                    "Fewest Conceeded",
+                    "PPG",
+                    "Highest XGF",
+                    "Fewest XGA",
+                    "SoT",
+                    "Dangerous Attacks",
+                    "Av. Possession",
+                    "Home/Away Goal Diff",
+                    "Corners"
+                  ]}
                   data1={[
-                    homeForm.avgScoredHome * 2,
-                    awayForm.teamConceededAvgAwayOnly * 2,
-                    homeForm.homePPGAv * 3,
-                    homeForm.avgXGScoredHome * 2,
-                    awayForm.avgXGConceededHome * 2,
-                    homeForm.avgShotsOnTargetHome,
-                    homeForm.avgDangerousAttacksHome !== 0
-                      ? homeForm.avgDangerousAttacksHome / 7.5
+                    homeForm.avgScored * 2,
+                    awayForm.avgConceeded * 2,
+                    homeForm.avPointsAll * 3,
+                    homeForm.XGOverall * 2,
+                    awayForm.XGAgainstAvgOverall * 2,
+                    homeForm.AverageShotsOnTargetOverall,
+                    homeForm.AverageDangerousAttacksOverall !== 0
+                      ? homeForm.AverageDangerousAttacksOverall / 7.5
                       : homeForm.AverageDangerousAttacks / 7.5,
-                    homeForm.avgPossessionHome / 7.5,
-                    homeForm.goalDifferenceHomeOrAway / 10,
-                    homeForm.cornersAvHome,
+                    homeForm.AveragePossessionOverall / 7.5,
+                    homeForm.goalDifference / 10,
+                    homeForm.AverageCorners,
                   ]}
                   data2={[
-                    awayForm.avgScoredAway * 2,
-                    homeForm.teamConceededAvgAwayOnly * 2,
-                    awayForm.awayPPGAv * 3,
-                    awayForm.avgXGScoredAway * 2,
-                    homeForm.avgXGConceededAway * 2,
-                    awayForm.avgShotsOnTargetAway,
-                    awayForm.avgDangerousAttacksAway !== 0
-                      ? awayForm.avgDangerousAttacksAway / 7.5
+                    awayForm.avgScored * 2,
+                    homeForm.avgConceeded * 2,
+                    awayForm.avPointsAll * 3,
+                    awayForm.XGOverall * 2,
+                    homeForm.XGAgainstAvgOverall * 2,
+                    awayForm.AverageShotsOnTargetOverall,
+                    awayForm.AverageDangerousAttacksOverall !== 0
+                      ? awayForm.AverageDangerousAttacksOverall / 7.5
                       : awayForm.AverageDangerousAttacks / 7.5,
-                    awayForm.avgPossessionAway / 7.5,
-                    awayForm.goalDifferenceHomeOrAway / 10,
-                    awayForm.cornersAvAway,
+                    awayForm.AveragePossessionOverall / 7.5,
+                    awayForm.goalDifference / 10,
+                    awayForm.AverageCorners,
                   ]}
                 ></BarChart>
                 <MultiTypeChart
                   theme={localStorage.getItem('theme')}
-                  dataArray={homeForm.twoDGoalsArrayHome}
-                  text={homeForm.teamName + " XG Diff (Home)"}
+                  dataArray={homeForm.twoDGoalsArray || []}
+                  text={homeForm.teamName + " XG Diff (All)"}
                 />
                 <MultiTypeChart
                   theme={localStorage.getItem('theme')}
-                  dataArray={awayForm.twoDGoalsArrayAway}
-                  text={awayForm.teamName + " XG Diff (Away)"}
+                  dataArray={awayForm.twoDGoalsArray || []}
+                  text={awayForm.teamName + " XG Diff (All)"}
                 />
+                <Chart
+                  height={3}
+                  depth={0}
+                  data1={formArrayHome}
+                  data2={formArrayAway}
+                  team1={game.homeTeam}
+                  team2={game.awayTeam}
+                  type={chartType}
+                  tension={0}
+                  theme={localStorage.getItem('theme')}
+                ></Chart>
                 <MultilineChart
                   height={
                     Math.max(
-                      rollingGoalDiffTotalHomeOnly[
-                      rollingGoalDiffTotalHomeOnly.length - 1
+                      rollingGoalDiffTotalHome[
+                      rollingGoalDiffTotalHome.length - 1
                       ],
-                      rollingGoalDiffTotalAwayOnly[
-                      rollingGoalDiffTotalAwayOnly.length - 1
+                      rollingGoalDiffTotalAway[
+                      rollingGoalDiffTotalAway.length - 1
                       ]
                     ) > 2
                       ? Math.max(
-                        rollingGoalDiffTotalHomeOnly[
-                        rollingGoalDiffTotalHomeOnly.length - 1
+                        rollingGoalDiffTotalHome[
+                        rollingGoalDiffTotalHome.length - 1
                         ],
-                        rollingGoalDiffTotalAwayOnly[
-                        rollingGoalDiffTotalAwayOnly.length - 1
+                        rollingGoalDiffTotalAway[
+                        rollingGoalDiffTotalAway.length - 1
                         ]
                       )
                       : 2
                   }
                   depth={
                     Math.min(
-                      rollingGoalDiffTotalHomeOnly[
-                      rollingGoalDiffTotalHomeOnly.length - 1
+                      rollingGoalDiffTotalHome[
+                      rollingGoalDiffTotalHome.length - 1
                       ],
-                      rollingGoalDiffTotalAwayOnly[
-                      rollingGoalDiffTotalAwayOnly.length - 1
+                      rollingGoalDiffTotalAway[
+                      rollingGoalDiffTotalAway.length - 1
                       ]
                     ) < -2
                       ? Math.min(
+                        rollingGoalDiffTotalHome[
+                        rollingGoalDiffTotalHome.length - 1
+                        ],
+                        rollingGoalDiffTotalAway[
+                        rollingGoalDiffTotalAway.length - 1
+                        ]
+                      )
+                      : -2
+                  }
+                  theme={localStorage.getItem('theme')}
+                  data1={rollingGoalDiffTotalHome || []}
+                  data2={rollingGoalDiffTotalAway || []}
+                  data3={rollingXGDiffTotalHome || []}
+                  data4={rollingXGDiffTotalAway || []}
+                  team1={game.homeTeam}
+                  team2={game.awayTeam}
+                  type={"Goal/XG difference over time"}
+                  tension={0.5}
+                ></MultilineChart>
+              </div>
+            </>
+          }
+          element2={
+            homeForm?.twoDGoalsArray ? (
+              <>
+                <h2>Last 5 games only</h2>
+                <div className="flex-container">
+                  <StatsHomeLast5Component />
+                  <StatsAwayLast5Component />
+                </div>
+                <div className="Chart" id={`Chart${game.id}`} style={style}>
+                  <RadarChart
+                    title="Soccer Stats Hub Strength Ratings - Last 5 Games Only"
+                    max={1}
+                    labels={[
+                      "Attack rating",
+                      "Defence rating",
+                      "Ball retention",
+                      "XG For",
+                      "XG Against",
+                      "Directness",
+                      "Attacking precision",
+                    ]}
+                    theme={localStorage.getItem('theme')}
+                    data={[
+                      homeAttackStrengthLast5,
+                      homeDefenceStrengthLast5,
+                      homePossessionStrengthLast5,
+                      homeXGForStrengthLast5,
+                      homeXGAgainstStrengthLast5,
+                      homeDirectnessStrengthLast5,
+                      homeAccuracyOverallStrengthLast5,
+                    ]}
+                    data2={[
+                      awayAttackStrengthLast5,
+                      awayDefenceStrengthLast5,
+                      awayPossessionStrengthLast5,
+                      awayXGForStrengthLast5,
+                      awayXGAgainstStrengthLast5,
+                      awayDirectnessStrengthLast5,
+                      awayAccuracyOverallStrengthLast5,
+                    ]}
+                    team1={game.homeTeam}
+                    team2={game.awayTeam}
+                  />
+                  <BarChart
+                    text="Last 5 only - Home Team | Away Team"
+                    theme={localStorage.getItem('theme')}
+                    labels={[
+                      "Highest Goals",
+                      "Fewest Conceeded",
+                      "PPG",
+                      "Highest XGF",
+                      "Fewest XGA",
+                      "SoT",
+                      "Dangerous Attacks",
+                      "Av. Possession",
+                      "Home/Away Goal Diff",
+                      "Corners"
+                    ]}
+                    data1={[
+                      homeForm.last5Goals * 2,
+                      awayForm.last5GoalsConceeded * 2,
+                      homeForm.avPoints5 * 3,
+                      homeForm.avXGLast5 * 2,
+                      awayForm.avXGAgainstLast5 * 2,
+                      homeForm.avSOTLast5,
+                      homeForm.avDALast5 !== 0
+                        ? homeForm.avDALast5 / 7.5
+                        : homeForm.AverageDangerousAttacks / 7.5,
+                      homeForm.avPosessionLast5 / 7.5,
+                      homeForm.last5GoalDiff / 5,
+                      homeForm.last5Corners,
+                    ]}
+                    data2={[
+                      awayForm.last5Goals * 2,
+                      homeForm.last5GoalsConceeded * 2,
+                      awayForm.avPoints5 * 3,
+                      awayForm.avXGLast5 * 2,
+                      homeForm.avXGAgainstLast5 * 2,
+                      awayForm.avSOTLast5,
+                      awayForm.avDALast5 !== 0
+                        ? awayForm.avDALast5 / 7.5
+                        : awayForm.AverageDangerousAttacks / 7.5,
+                      awayForm.avPosessionLast5 / 7.5,
+                      awayForm.last5GoalDiff / 5,
+                      awayForm.last5Corners,
+                    ]}
+                  />
+
+                  <MultiTypeChart
+                    theme={localStorage.getItem('theme')}
+                    dataArray={homeForm.twoDGoalsArray.slice(
+                      Math.max(homeForm.twoDGoalsArray.length - 5, 0)
+                    )}
+                    text={homeForm.teamName + ' XG Diff Last 5'}
+                  />
+                  <MultiTypeChart
+                    theme={localStorage.getItem('theme')}
+                    dataArray={awayForm.twoDGoalsArray.slice(
+                      Math.max(awayForm.twoDGoalsArray.length - 5, 0)
+                    )}
+                    text={awayForm.teamName + ' XG Diff Last 5'}
+                  />
+
+                  <MultilineChart
+                    theme={localStorage.getItem('theme')}
+                    height={
+                      Math.max(
+                        rollingGoalDiffTotalHomeLast5.at(-1),
+                        rollingGoalDiffTotalAwayLast5.at(-1)
+                      ) > 2
+                        ? Math.max(
+                          rollingGoalDiffTotalHomeLast5.at(-1),
+                          rollingGoalDiffTotalAwayLast5.at(-1)
+                        )
+                        : 2
+                    }
+                    depth={
+                      Math.min(
+                        rollingGoalDiffTotalHomeLast5.at(-1),
+                        rollingGoalDiffTotalAwayLast5.at(-1)
+                      ) < -2
+                        ? Math.min(
+                          rollingGoalDiffTotalHomeLast5.at(-1),
+                          rollingGoalDiffTotalAwayLast5.at(-1)
+                        )
+                        : -2
+                    }
+                    data1={rollingGoalDiffTotalHomeLast5}
+                    data2={rollingGoalDiffTotalAwayLast5}
+                    data3={rollingXGDiffTotalHomeLast5}
+                    data4={rollingXGDiffTotalAwayLast5}
+                    team1={game.homeTeam}
+                    team2={game.awayTeam}
+                    type="Goal/XG difference over last 5"
+                    tension={0.5}
+                  />
+                </div>
+              </>
+            ) : null
+          }
+          element3={
+            homeForm?.twoDGoalsArray ? (
+              <>
+                <h2>Home/Away games only</h2>
+                <div className="flex-container">
+                  <StatsHomeOnlyComponent />
+                  <StatsAwayOnlyComponent />
+                </div>
+                <div className="Chart" id={`Chart${game.id}`} style={style}>
+                  <RadarChart
+                    theme={localStorage.getItem('theme')}
+                    title="Soccer Stats Hub Strength Ratings - Home/Away Games Only"
+                    max={1}
+                    labels={[
+                      "Attack rating",
+                      "Defence rating",
+                      "Ball retention",
+                      "XG For",
+                      "XG Against",
+                      "Directness",
+                      "Attacking precision",
+                    ]}
+                    data={[
+                      homeOnlyAttackStrength,
+                      homeOnlyDefenceStrength,
+                      homeOnlyPossessionStrength,
+                      homeOnlyXGForStrength,
+                      homeOnlyXGAgainstStrength,
+                      homeOnlyDirectnessStrength,
+                      homeOnlyAccuracyOverallStrength,
+                    ]}
+                    data2={[
+                      awayOnlyAttackStrength,
+                      awayOnlyDefenceStrength,
+                      awayOnlyPossessionStrength,
+                      awayOnlyXGForStrength,
+                      awayOnlyXGAgainstStrength,
+                      awayOnlyDirectnessStrength,
+                      awayOnlyAccuracyOverallStrength,
+                    ]}
+                    team1={game.homeTeam}
+                    team2={game.awayTeam}
+                  ></RadarChart>
+                  <BarChart
+                    text="Home/Away only - Home Team | Away Team"
+                    theme={localStorage.getItem('theme')}
+                    labels={[
+                      "Highest Goals",
+                      "Fewest Conceeded",
+                      "PPG",
+                      "Highest XGF",
+                      "Fewest XGA",
+                      "SoT",
+                      "Dangerous Attacks",
+                      "Av. Possession",
+                      "Home/Away Goal Diff",
+                      "Corners"
+                    ]}
+                    data1={[
+                      homeForm.avgScoredHome * 2,
+                      awayForm.teamConceededAvgAwayOnly * 2,
+                      homeForm.homePPGAv * 3,
+                      homeForm.avgXGScoredHome * 2,
+                      awayForm.avgXGConceededHome * 2,
+                      homeForm.avgShotsOnTargetHome,
+                      homeForm.avgDangerousAttacksHome !== 0
+                        ? homeForm.avgDangerousAttacksHome / 7.5
+                        : homeForm.AverageDangerousAttacks / 7.5,
+                      homeForm.avgPossessionHome / 7.5,
+                      homeForm.goalDifferenceHomeOrAway / 10,
+                      homeForm.cornersAvHome,
+                    ]}
+                    data2={[
+                      awayForm.avgScoredAway * 2,
+                      homeForm.teamConceededAvgAwayOnly * 2,
+                      awayForm.awayPPGAv * 3,
+                      awayForm.avgXGScoredAway * 2,
+                      homeForm.avgXGConceededAway * 2,
+                      awayForm.avgShotsOnTargetAway,
+                      awayForm.avgDangerousAttacksAway !== 0
+                        ? awayForm.avgDangerousAttacksAway / 7.5
+                        : awayForm.AverageDangerousAttacks / 7.5,
+                      awayForm.avgPossessionAway / 7.5,
+                      awayForm.goalDifferenceHomeOrAway / 10,
+                      awayForm.cornersAvAway,
+                    ]}
+                  ></BarChart>
+                  <MultiTypeChart
+                    theme={localStorage.getItem('theme')}
+                    dataArray={homeForm.twoDGoalsArrayHome}
+                    text={homeForm.teamName + " XG Diff (Home)"}
+                  />
+                  <MultiTypeChart
+                    theme={localStorage.getItem('theme')}
+                    dataArray={awayForm.twoDGoalsArrayAway}
+                    text={awayForm.teamName + " XG Diff (Away)"}
+                  />
+                  <MultilineChart
+                    height={
+                      Math.max(
                         rollingGoalDiffTotalHomeOnly[
                         rollingGoalDiffTotalHomeOnly.length - 1
                         ],
                         rollingGoalDiffTotalAwayOnly[
                         rollingGoalDiffTotalAwayOnly.length - 1
                         ]
-                      )
-                      : -2
-                  }
-                  theme={localStorage.getItem('theme')}
-                  data1={rollingGoalDiffTotalHomeOnly}
-                  data2={rollingGoalDiffTotalAwayOnly}
-                  data3={rollingXGDiffTotalHomeOnly}
-                  data4={rollingXGDiffTotalAwayOnly}
-                  team1={game.homeTeam}
-                  team2={game.awayTeam}
-                  type={"Home/Away Goal/XG difference over time"}
-                  tension={0.5}
-                ></MultilineChart>
-              </div>
-            </>
-          ) : null
-        }
-      />
-      <div className="Chart" id={`Chart${game.id}`} style={style}></div>
+                      ) > 2
+                        ? Math.max(
+                          rollingGoalDiffTotalHomeOnly[
+                          rollingGoalDiffTotalHomeOnly.length - 1
+                          ],
+                          rollingGoalDiffTotalAwayOnly[
+                          rollingGoalDiffTotalAwayOnly.length - 1
+                          ]
+                        )
+                        : 2
+                    }
+                    depth={
+                      Math.min(
+                        rollingGoalDiffTotalHomeOnly[
+                        rollingGoalDiffTotalHomeOnly.length - 1
+                        ],
+                        rollingGoalDiffTotalAwayOnly[
+                        rollingGoalDiffTotalAwayOnly.length - 1
+                        ]
+                      ) < -2
+                        ? Math.min(
+                          rollingGoalDiffTotalHomeOnly[
+                          rollingGoalDiffTotalHomeOnly.length - 1
+                          ],
+                          rollingGoalDiffTotalAwayOnly[
+                          rollingGoalDiffTotalAwayOnly.length - 1
+                          ]
+                        )
+                        : -2
+                    }
+                    theme={localStorage.getItem('theme')}
+                    data1={rollingGoalDiffTotalHomeOnly}
+                    data2={rollingGoalDiffTotalAwayOnly}
+                    data3={rollingXGDiffTotalHomeOnly}
+                    data4={rollingXGDiffTotalAwayOnly}
+                    team1={game.homeTeam}
+                    team2={game.awayTeam}
+                    type={"Home/Away Goal/XG difference over time"}
+                    tension={0.5}
+                  ></MultilineChart>
+                </div>
+              </>
+            ) : null
+          }
+        />
+        <div className="Chart" id={`Chart${game.id}`} style={style}></div>
 
-      <Div
-        text={`Last league games (most recent first)`}
-        className={"LastGameHeader"}
-      ></Div>
-      <div className="flex-container">
-        <div className="flex-childOneOverviewSmall">{overviewHome}</div>
-        <div className="flex-childTwoOverviewSmall">{overviewAway}</div>
-      </div>
+        <Div
+          text={`Last league games (most recent first)`}
+          className={"LastGameHeader"}
+        ></Div>
+        <div className="flex-container">
+          <div className="flex-childOneOverviewSmall">{overviewHome}</div>
+          <div className="flex-childTwoOverviewSmall">{overviewAway}</div>
+        </div>
       </div>
     </>
   );

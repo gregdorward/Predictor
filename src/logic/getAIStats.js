@@ -1,5 +1,6 @@
 import React, { useState, useEffect, Fragment, memo } from "react";
 import ReactDOM from "react-dom";
+import { render } from '../utils/render';
 
 async function addNewlinesAfterPeriods(text) {
     // This regex handles periods followed by a space and capital letter,
@@ -105,10 +106,10 @@ const MemoizedAIInsights = memo(AIInsights);
 
 // Modified generateAIInsights function (now just renders the component)
 export function generateAIInsights(game, homeForm, awayForm) {
-  ReactDOM.render(
+  render(
     <React.StrictMode>
     <MemoizedAIInsights game={game} homeForm={homeForm} awayForm={awayForm} />
     </React.StrictMode>,
-    document.getElementById("AIInsightsContainer")
+    "AIInsightsContainer"
   );
 }

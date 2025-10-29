@@ -3,6 +3,7 @@ import HeadToHead from "../components/HeadToHead";
 import { Fragment } from "react";
 import CustomizedTables from "../components/Table";
 import { userDetail } from "./authProvider";
+import { render } from './utils/render';
 
 
 export async function getTeamStats(
@@ -139,7 +140,7 @@ export async function getTeamStats(
       }
 
 
-      ReactDOM.render(
+      render(
         <Fragment>
           <h2>AI Preview</h2>
           {paid ? (
@@ -188,12 +189,12 @@ export async function getTeamStats(
             CornersOdds={match.data.odds_corners_over_105}
           />
         </Fragment>,
-        document.getElementById(`H2HStats${identifier}`)
+        `H2HStats${identifier}`
       );
     } else {
-      ReactDOM.render(
+      render(
         <div>No fixture history found</div>,
-        document.getElementById(`H2HStats${identifier}`)
+        `H2HStats${identifier}`
       );
     }
   });

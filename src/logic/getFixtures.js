@@ -1,6 +1,7 @@
 import { Fragment, lazy, Suspense } from "react";
 import ReactDOM from "react-dom";
 import { orderedLeagues } from "../App";
+import { render } from '../utils/render';
 import { getForm } from "./getForm";
 import { Fixture } from "../components/Fixture";
 import { Button } from "../components/Button";
@@ -289,7 +290,7 @@ export async function renderTable(index, results, id) {
     });
 
     if (league !== undefined) {
-      ReactDOM.render(
+      render(
         <Suspense fallback={<div>Loading game statistics...</div>}>
           <LazyLeagueTable
             Teams={league}
@@ -304,7 +305,7 @@ export async function renderTable(index, results, id) {
           // mostRecentGameweek={mostRecentGameweek}
           />
         </Suspense>,
-        document.getElementById(`leagueName${id}`)
+        `leagueName${id}`
       );
     }
   } else if (groups) {
@@ -324,7 +325,7 @@ export async function renderTable(index, results, id) {
     });
 
     if (leagueTable1 !== undefined && leagueTable2 !== undefined) {
-      ReactDOM.render(
+      render(
         <>
           <Suspense fallback={<div>Loading game statistics...</div>}>
             <LazyLeagueTable
@@ -352,7 +353,7 @@ export async function renderTable(index, results, id) {
             />
           </Suspense>
         </>,
-        document.getElementById(`leagueName${id}`)
+        `leagueName${id}`
       );
     }
   }
@@ -520,27 +521,26 @@ export async function generateFixtures(
     isFunctionRunning = true;
     todaysDateString = todaysDate;
 
-    ReactDOM.render(
+    render(
       <div>
         <div className="LoadingText">
           Loading all league, fixture & form data, please be patient...
         </div>
         <ThreeDots className="MainLoading" height="3em" fill="#fe8c00" />
       </div>,
-      document.getElementById("Loading")
+      "Loading"
     );
 
     //cleanup if different day is selected
-    ReactDOM.render(
+    render(
       <div></div>,
-      document.getElementById("GeneratePredictions")
+      "GeneratePredictions"
     );
-    ReactDOM.render(<div></div>, document.getElementById("MultiPlaceholder"));
+    render(<div></div>, "MultiPlaceholder");
 
 
     const url = `${process.env.REACT_APP_EXPRESS_SERVER}matches/${footyStatsFormattedDate}`;
     const formUrl = `${process.env.REACT_APP_EXPRESS_SERVER}form/${date}`;
-    console.log(unformattedDate);
     dynamicDate = unformattedDate;
 
     matches = [];
@@ -550,7 +550,7 @@ export async function generateFixtures(
       `${process.env.REACT_APP_EXPRESS_SERVER}leagues/${todaysDate}`
     );
 
-    ReactDOM.render(<div></div>, document.getElementById("FixtureContainer"));
+    render(<div></div>, "FixtureContainer");
 
     fixtureResponse = await fetch(url);
 
@@ -701,6 +701,7 @@ export async function generateFixtures(
         );
 
         let games = await fixtures.json();
+
         let gamesFiltered;
         let gamesShortened;
         if (games.pager.current_page < games.pager.max_page) {
@@ -748,6 +749,7 @@ export async function generateFixtures(
             team_b_xg,
             odds_ft_1,
             odds_ft_2,
+            odds_ft_x,
             team_a_shots,
             team_b_shots,
             team_a_corners,
@@ -775,6 +777,7 @@ export async function generateFixtures(
             team_b_xg,
             odds_ft_1,
             odds_ft_2,
+            odds_ft_x,
             team_a_shots,
             team_b_shots,
             team_a_corners,
@@ -1527,7 +1530,7 @@ export async function generateFixtures(
       }
 
       if (matches.length > 0) {
-        ReactDOM.render(
+        render(
           <Fragment>
             <Button
               text={"Get Predictions & Stats"}
@@ -1609,18 +1612,18 @@ export async function generateFixtures(
               }
             />
           </Fragment>,
-          document.getElementById("GeneratePredictions")
+          "GeneratePredictions"
         );
       }
 
       // }
     }
 
-    ReactDOM.render(
+    render(
       <div>
         <div className="LoadingText"></div>
       </div>,
-      document.getElementById("Loading")
+      "Loading"
     );
 
     async function updateResults(bool) {
@@ -1674,11 +1677,10 @@ export async function generateFixtures(
 
     // const allFixtures = await RenderAllFixtures(matches, false)
 
-    ReactDOM.render(
+    render(
       <RenderAllFixtures matches={matches} result={false} bool={false} />,
-      document.getElementById("FixtureContainer")
+      "FixtureContainer"
     );
-    // ReactDOM.render(<RenderAllFixtures matches={matches} bool={false}/>),document.getElementById("FixtureContainer")
     setTimeout(() => {
       isFunctionRunning = false;
     }, 1000);

@@ -1,11 +1,11 @@
 import { Fragment } from "react";
 import { CreateBadge } from "./createBadge";
 import Collapsable from "../components/CollapsableElement";
-import BarChart from "../components/Chart";
+import BarChart, { DoughnutChart } from "../components/Chart";
 function Stats(props) {
   const { getCollapsableProps } = props;
   let shouldOpen = props.clicked;
-
+  console.log(props)
   function styleForm(formIndicator) {
     let className;
     if (formIndicator === "W") {
@@ -77,6 +77,15 @@ function Stats(props) {
               {props.ResultsHorA && props.ResultsHorA[0] ? props.ResultsHorA[0] : ""}
             </span>
           </li>
+          <div style={{
+            backgroundColor: props.color ? props.color : 'grey',
+            color: 'white', // Ensure text is readable against the background
+            padding: '1em 2em',
+            borderRadius: '4px',
+            fontWeight: 'bold'
+          }}>
+            Points diff from bookies' expectation: {props.value !== undefined ? props.value.toFixed(2) : "N/A"}
+          </div>
           <li
             key="BTTSArrayHomeOrAway"
             className="BTTSArrayHomeOrAway"

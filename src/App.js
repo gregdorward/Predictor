@@ -1,5 +1,6 @@
 import { Fragment, useEffect, useState, lazy, Suspense } from "react";
 import ReactDOM from "react-dom";
+import { render } from './utils/render';
 import { Button } from "./components/Button";
 import OddsRadio from "./components/OddsRadio";
 import PredictionTypeRadio from "./components/PredictionTypeRadio";
@@ -43,6 +44,8 @@ import { generateFixtures } from "./logic/getFixtures";
 import { BrowserRouter as Router, Route, Routes, Link } from "react-router-dom";
 import PrivacyPolicy from "./components/PrivacyPolicy";
 import Over18Badge from './components/images/18.png';
+import { createRoot } from 'react-dom/client';
+
 
 export const proxyurl = "https://safe-caverns-99679.herokuapp.com/";
 export var fixtureList = [];
@@ -372,7 +375,7 @@ export async function getLeagueList() {
   });
 
   async function renderButtons(loginStatus) {
-    ReactDOM.render(
+    render(
       <div className="FixtureButtons">
         <h6>{loginStatus}</h6>
         <Button
@@ -404,11 +407,11 @@ export async function getLeagueList() {
           onClickEvent={async () => await incrementDateV2(1, date)}
         />
       </div>,
-      document.getElementById("Buttons")
+      "Buttons"
     );
   }
 
-  ReactDOM.render(
+  render(
     <div className="FixtureButtons">
       <Button
         text={`<`}
@@ -439,24 +442,24 @@ export async function getLeagueList() {
         onClickEvent={async () => await incrementDateV2(1, date)}
       />
     </div>,
-    document.getElementById("Buttons")
+    "Buttons"
   );
-  ReactDOM.render(
+  render(
     <div className="OddsRadios">
       <OddsRadio value="Fractional odds"></OddsRadio>
       <OddsRadio value="Decimal odds"></OddsRadio>
     </div>,
-    document.getElementById("Checkbox")
+    "Checkbox"
   );
-  ReactDOM.render(
+  render(
     <><h6 className="PredictionTypeText">Prediction algorithm type</h6>
       <div className="PredictionRadios">
         <PredictionTypeRadio value="SSH Tips"></PredictionTypeRadio>
         <PredictionTypeRadio value="AI Tips"></PredictionTypeRadio>
       </div></>,
-    document.getElementById("CheckboxTwo")
+    "CheckboxTwo"
   );
-  ReactDOM.render(
+  render(
     <Fragment>
       <Collapsable
         // className={"HowToUse"}
@@ -464,22 +467,22 @@ export async function getLeagueList() {
         element={newText}
       />
     </Fragment>,
-    document.getElementById("XGDiff")
+    "XGDiff"
   );
 
   if (loggedIn) {
-    ReactDOM.render(
+    render(
       <><div className="WelcomeBack">Welcome back {loggedIn.email}</div></>,
-      document.getElementById("Email")
+      "Email"
     );
   } else {
-    ReactDOM.render(
+    render(
       <>
         <h3 className="MembersGetMore">Discover the most in depth stats and tips available</h3>
         <div><p className="MembersGetMore">Join as a free user or upgrade to premium for as little as £1/week, cancel anytime</p></div>
         <Login />
       </>
-      , document.getElementById("Email"));
+      , "Email");
   }
 }
 

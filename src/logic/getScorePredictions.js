@@ -11,6 +11,7 @@ import { incrementValue } from "../components/Increment";
 import { getBTTSPotential } from "../logic/getBTTSPotential";
 import { allLeagueResultsArrayOfObjects } from "../logic/getFixtures";
 import { Slider } from "../components/Carousel";
+import { render } from '../utils/render';
 import {
   calculateAttackingStrength,
   calculateDefensiveStrength,
@@ -227,6 +228,51 @@ function UserTips() {
   );
 }
 
+
+function calculateOddsBasedTrueForm(pointsSum5, allTeamResults) {
+  // 3 points for a win, 1 point for a draw, 0 points for a loss
+  const POINTS_WIN = 3;
+  const POINTS_DRAW = 1;
+  let expectedPPG_Odds = 0;
+  let deltaPTS_Odds = 0;
+
+  console.log(pointsSum5);
+
+  // Calculate the total Expected Points (xPTS) over the last 5 games
+  const totalExpectedPoints = allTeamResults.slice(0, 5).reduce((acc, game) => {
+
+    // Check for required odds data to prevent division by zero or NaN results
+    if (!game.odds || !game.oddsDraw) {
+      console.warn("Missing odds data for a game. Skipping calculation for this game.");
+      return acc;
+    }
+
+    // --- 1. Calculate Implied Probabilities (P) from Decimal Odds ---
+    // P = 1 / Odds. (Note: These probabilities include the bookmaker's margin/vig).
+    const P_Win = 1 / game.odds;
+    const P_Draw = 1 / game.oddsDraw;
+
+    // --- 2. Calculate Expected Points (xPTS) for this single game ---
+    // xPTS = (P(Win) * 3) + (P(Draw) * 1) + (P(Loss) * 0)
+    // P(Loss) is implicitly handled since P(Loss) * 0 = 0.
+    const xPTS = (P_Win * POINTS_WIN) + (P_Draw * POINTS_DRAW);
+
+    // Accumulate the Expected Points for the average calculation
+    return acc + xPTS;
+  }, 0);
+
+  // 3. Calculate the Average Expected PPG (the benchmark)
+  expectedPPG_Odds = totalExpectedPoints;
+
+  // 4. Calculate the Final Differential (True Form Metric)
+  // Positive value = team is OUTPERFORMING the odds/market expectation.
+  deltaPTS_Odds = pointsSum5 - expectedPPG_Odds;
+
+  // The range for form.deltaPTS_Odds is approximately -3.0 to +3.0
+  return [deltaPTS_Odds, totalExpectedPoints];
+}
+
+
 async function getPastLeagueResults(team, game, hOrA, form) {
   form.completeData = true;
   let date = game.date;
@@ -296,12 +342,15 @@ async function getPastLeagueResults(team, game, hOrA, form) {
 
     for (let index = 0; index < teamsHomeResults.length; index++) {
       const resultedGame = teamsHomeResults[index];
+      console.log(resultedGame)
       homeResults.push({
         homeTeam: resultedGame.home_name,
         gameweek: resultedGame.game_week,
+        venue: "Home",
         homeGoals: resultedGame.homeGoalCount,
         homePPGPreMatch: resultedGame.pre_match_teamA_overall_ppg,
         awayPPGPreMatch: resultedGame.pre_match_teamB_overall_ppg,
+        oppositionPPG: resultedGame.pre_match_teamB_overall_ppg,
         XG:
           resultedGame.team_a_xg <= 0 || resultedGame.team_a_xg > 7
             ? resultedGame.homeGoalCount
@@ -335,8 +384,11 @@ async function getPastLeagueResults(team, game, hOrA, form) {
           resultedGame.team_a_corners === -1 ? 6 : resultedGame.team_a_corners,
         date: await convertTimestamp(resultedGame.date_unix),
         dateRaw: resultedGame.date_unix,
+        oppositionOdds: resultedGame.odds_ft_2,
+        odds: resultedGame.odds_ft_1,
         oddsHome: resultedGame.odds_ft_1,
         oddsAway: resultedGame.odds_ft_2,
+        oddsDraw: resultedGame.odds_ft_x,
         btts:
           resultedGame.homeGoalCount > 0 && resultedGame.awayGoalCount > 0
             ? true
@@ -428,9 +480,12 @@ async function getPastLeagueResults(team, game, hOrA, form) {
       awayResults.push({
         homeTeam: resultedGame.home_name,
         gameweek: resultedGame.game_week,
+        venue: "Away",
         homeGoals: resultedGame.homeGoalCount,
         homePPGPreMatch: resultedGame.pre_match_teamA_overall_ppg,
         awayPPGPreMatch: resultedGame.pre_match_teamB_overall_ppg,
+        oppositionPPG: resultedGame.pre_match_teamA_overall_ppg,
+        oppositionOdds: resultedGame.odds_ft_1,
         XG:
           resultedGame.team_b_xg <= 0 || resultedGame.team_b_xg > 7
             ? resultedGame.awayGoalCount
@@ -464,8 +519,11 @@ async function getPastLeagueResults(team, game, hOrA, form) {
           resultedGame.team_b_corners === -1 ? 6 : resultedGame.team_b_corners,
         date: await convertTimestamp(resultedGame.date_unix),
         dateRaw: resultedGame.date_unix,
+        odds: resultedGame.odds_ft_2,
+        oppositionOdds: resultedGame.odds_ft_1,
         oddsHome: resultedGame.odds_ft_1,
         oddsAway: resultedGame.odds_ft_2,
+        oddsDraw: resultedGame.odds_ft_x,
         btts:
           resultedGame.homeGoalCount > 0 && resultedGame.awayGoalCount > 0
             ? true
@@ -602,8 +660,8 @@ async function getPastLeagueResults(team, game, hOrA, form) {
     form.pointsSum6 = pointsSum6;
 
     const points5 = allTeamResults.map((res) => res.points).slice(0, 5);
-    const pointsSum5 = points5.reduce((a, b) => a + b, 0);
-    form.avPoints5 = pointsSum5 / points5.length;
+    form.pointsSum5 = points5.reduce((a, b) => a + b, 0);
+    form.avPoints5 = form.pointsSum5 / points5.length;
 
     const points2 = allTeamResults.map((res) => res.points).slice(0, 2);
     const pointsSum2 = points2.reduce((a, b) => a + b, 0);
@@ -879,6 +937,12 @@ async function getPastLeagueResults(team, game, hOrA, form) {
     const cornersSumLast5 = cornersLast5.reduce((a, b) => a + b, 0);
     const cornersAvLast5 = cornersSumLast5 / cornersLast5.length || 0;
     form.last5Corners = cornersAvLast5;
+
+    const VENUE_OFFSET = 0.15; // Set your desired offset
+
+    [form.trueForm, form.totalExpectedPoints] = calculateOddsBasedTrueForm(form.pointsSum5, allTeamResults);
+
+    console.log(form.teamName + " true form: " + form.trueForm.toFixed(2));
 
     const cornersHome = homeResults.map((res) => res.corners);
     const cornersSumHome = cornersHome.reduce((a, b) => a + b, 0);
@@ -3385,7 +3449,7 @@ async function getSuccessMeasure(fixtures) {
 
   console.log(isPaid);
   if (investment > 0 && isPaid) {
-    ReactDOM.render(
+    render(
       <Fragment>
         <h3 className={"SuccessMeasureText"}>
           ROI for all {investment} W/D/W outcomes: {ROI >= 0 ? "+" : " "}{" "}
@@ -3443,10 +3507,10 @@ async function getSuccessMeasure(fixtures) {
             })}
         </CollapsableStats>
       </Fragment>,
-      document.getElementById("successMeasure2")
+      "successMeasure2"
     );
   } else if (!isPaid) {
-    ReactDOM.render(
+    render(
       <Fragment>
         <p>{`Correct W/D/W predictions: ${successCount} / ${investment} (${(
           (successCount / investment) *
@@ -3458,7 +3522,7 @@ async function getSuccessMeasure(fixtures) {
         ).toFixed(1)}% of unlocked games)`}</p>
         <p>Full ROI stats available when fixtures are uncapped</p>
       </Fragment>,
-      document.getElementById("successMeasure2")
+      "successMeasure2"
     );
   } else {
     return;
@@ -3865,12 +3929,12 @@ export async function getScorePrediction(day, mocked) {
   let divider = 10;
 
   // Render the initial loading state
-  ReactDOM.render(
+  render(
     <div>
       <ThreeDots className="MainLoading" fill="#fe8c00" />
       <div className="LoadingMessage">Collecting form data and calculating predictions...</div>
     </div>,
-    document.getElementById("FixtureContainer")
+    "FixtureContainer"
   );
 
   // --- 1. START ALL ASYNCHRONOUS OPERATIONS CONCURRENTLY ---
@@ -4357,13 +4421,13 @@ export async function getScorePrediction(day, mocked) {
   // --- 3. RENDER FIXTURES IMMEDIATELY (Replacing the loading spinner) ---
 
   // Clear the generic "Loading" placeholder
-  ReactDOM.render(
+  render(
     <div />,
-    document.getElementById("Loading")
+    "Loading"
   );
 
   // Render Collapsable content
-  ReactDOM.render(
+  render(
     <Collapsable
       buttonText={"Multis"}
       className={"MultisCollapsable"}
@@ -4381,7 +4445,7 @@ export async function getScorePrediction(day, mocked) {
         </Fragment>
       }
     />,
-    document.getElementById("MultiPlaceholder")
+    "MultiPlaceholder"
   );
 
 
@@ -4389,14 +4453,14 @@ export async function getScorePrediction(day, mocked) {
   await getNewTips(allTipsSorted);
 
   // RENDER FIXTURES: Use a placeholder for stats as they are still loading in the background.
-  ReactDOM.render(
+  render(
     <RenderAllFixtures
       matches={matches}
       result={true}
       bool={mock}
       stats={[]} // Placeholder stats, assuming RenderAllFixtures can gracefully handle an empty array
     />,
-    document.getElementById("FixtureContainer")
+    "FixtureContainer"
   );
   await getSuccessMeasure(matches);
 
@@ -4413,14 +4477,14 @@ export async function getScorePrediction(day, mocked) {
 
   // --- 5. RERENDER FIXTURES WITH FULL STATS ---
   // Rerender the FixtureContainer now that leagueStatsArray is ready (if stats are used visually)
-  ReactDOM.render(
+  render(
     <RenderAllFixtures
       matches={matches}
       result={true}
       bool={mock}
       stats={leagueStatsArray} // Now passing the full stats
     />,
-    document.getElementById("FixtureContainer")
+    "FixtureContainer"
   );
 
 }
@@ -4642,7 +4706,7 @@ async function renderTips() {
 
   console.log(paid);
   if (paid && newArray.length > 0) {
-    ReactDOM.render(
+    render(
       <div className="PredictionContainer">
         <Fragment>
           <Increment />
@@ -4689,11 +4753,11 @@ async function renderTips() {
           />
         </Fragment>
       </div>,
-      document.getElementById("bestPredictions")
+      "bestPredictions"
     );
   } else if (paid !== true) {
     newArray = newArray.slice(0, 6);
-    ReactDOM.render(
+    render(
       <div className="PredictionContainer">
         <Fragment>
           <Increment />
@@ -4741,10 +4805,10 @@ async function renderTips() {
           />
         </Fragment>
       </div>,
-      document.getElementById("bestPredictions")
+      "bestPredictions"
     );
   } else {
-    ReactDOM.render(
+    render(
       <div className="PredictionContainer">
         <Fragment>
           <Increment />
@@ -4762,12 +4826,12 @@ async function renderTips() {
           />
         </Fragment>
       </div>,
-      document.getElementById("bestPredictions")
+      "bestPredictions"
     );
   }
 
   if (paid && exoticArray.length > 4) {
-    ReactDOM.render(
+    render(
       <div className="PredictionContainer">
         <Fragment>
           <Collapsable
@@ -4794,11 +4858,11 @@ async function renderTips() {
           />
         </Fragment>
       </div>,
-      document.getElementById("exoticOfTheDay")
+      "exoticOfTheDay"
     );
   } else if (paid !== true && exoticArray.length > 0) {
     exoticArray = exoticArray.slice(0, 6);
-    ReactDOM.render(
+    render(
       <div className="PredictionContainer">
         <Fragment>
           <Collapsable
@@ -4826,10 +4890,10 @@ async function renderTips() {
           />
         </Fragment>
       </div>,
-      document.getElementById("exoticOfTheDay")
+      "exoticOfTheDay"
     );
   } else {
-    ReactDOM.render(
+    render(
       <div className="PredictionContainer">
         <Fragment>
           <Collapsable
@@ -4844,12 +4908,12 @@ async function renderTips() {
           />
         </Fragment>
       </div>,
-      document.getElementById("exoticOfTheDay")
+      "exoticOfTheDay"
     );
   }
 
   if (Over25Tips.length > 0) {
-    ReactDOM.render(
+    render(
       <div>
         <Fragment>
           <Collapsable
@@ -4878,10 +4942,10 @@ async function renderTips() {
           />
         </Fragment>
       </div>,
-      document.getElementById("longShots")
+      "longShots"
     );
   } else {
-    ReactDOM.render(
+    render(
       <div>
         <Fragment>
           <Collapsable
@@ -4894,12 +4958,12 @@ async function renderTips() {
           />
         </Fragment>
       </div>,
-      document.getElementById("longShots")
+      "longShots"
     );
   }
 
   if (bttsArray.length > 0) {
-    ReactDOM.render(
+    render(
       <div>
         <Fragment>
           <Collapsable
@@ -4928,10 +4992,10 @@ async function renderTips() {
           />
         </Fragment>
       </div>,
-      document.getElementById("BTTS")
+      "BTTS"
     );
   } else {
-    ReactDOM.render(
+    render(
       <div>
         <Fragment>
           <Collapsable
@@ -4944,11 +5008,11 @@ async function renderTips() {
           />
         </Fragment>
       </div>,
-      document.getElementById("BTTS")
+      "BTTS"
     );
   }
 
-  ReactDOM.render(
+  render(
     <div>
       <Collapsable
         buttonText={"SSH Tips"}
@@ -5106,16 +5170,16 @@ async function renderTips() {
           </div>
         )}
     </div>,
-    document.getElementById("insights")
+    "insights"
   );
 
-  ReactDOM.render(
+  render(
     <div>
       <Fragment>
         <UserTips />
       </Fragment>
     </div>,
-    document.getElementById("UserGeneratedTips")
+    "UserGeneratedTips"
   );
 
 }

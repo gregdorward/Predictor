@@ -16,6 +16,7 @@ import {
   SubTitle,
 } from "chart.js";
 import { Line, Radar, Bar, Doughnut, PolarArea } from "react-chartjs-2";
+import annotationPlugin from 'chartjs-plugin-annotation';
 
 ChartJS.register(
   CategoryScale,
@@ -30,7 +31,7 @@ ChartJS.register(
   Tooltip,
   Legend,
   SubTitle,
-
+  annotationPlugin
 );
 
 
@@ -316,41 +317,118 @@ export function MultilineChart(props) {
   return <Line options={options} data={data} />;
 }
 
-export const DoughnutChart = ({ labels, values, colors, label = 'Dataset', chartTitle = ''
-}) => {
-  let color;
+function index(score) {
+  if (score < -4) return 0;       // Deep Red
+  if (score < -1) return 1;       // Orange
+  if (score < 1) return 2;       // Yellow
+  if (score < 4) return 3;       // Light Green
+  return 4;                          // Dark Green
+}
+
+export const DoughnutChart = ({ pointsTotal, predictedPoints, deltaPTS, theme, label, chartTitle }) => {
+  const MAX_CHART_SIZE = 15;
+  let color, secondaryColor;
+
+  if (theme === 'light') {
+    color = "#020029"
+    secondaryColor = "#b8b8b8ff"
+
+  } else if (theme === 'dark') {
+    color = "#ffffff"
+    secondaryColor = "#b8b8b8ff"
+  } else {
+    color = "#f57701"
+  }
+
+  const predicted = Math.min(predictedPoints, MAX_CHART_SIZE);
+  const actual = Math.min(pointsTotal, MAX_CHART_SIZE);
+
+  console.log("Doughnut Chart - Predicted Points: ", predictedPoints);
+  console.log("Doughnut Chart - Actual Points: ", pointsTotal);
+
+  // Overlay colors
+  const COLORS = ['#bf1000', '#e07800ff', '#fff700d8', '#8be800e7', '#01a501'];
+  // const overlayColors = deltaValue >= 0
+  //   ? ['rgba(0,0,0,0)', COLORS[index(deltaPTS)], 'rgba(0,0,0,0)'] // forward delta
+  //   : ['rgba(0,0,0,0)', '#F44336', 'rgba(0,0,0,0)'];            // backward delta
 
   const data = {
-    labels,
-    datasets: [{
-      label,
-      data: values,
-      backgroundColor: colors,
-      hoverOffset: 4
-    }]
+    labels: [
+      `Predicted Points: ${predicted.toFixed(0)}`,
+    ],
+    datasets: [
+      {
+        label: `Predicted Points: ${predictedPoints.toFixed(1)}`,
+        data: [predicted, MAX_CHART_SIZE - predicted],
+        backgroundColor: [color, secondaryColor], // filled, remainder
+        cutout: '50%',
+        rotation: 270,
+        circumference: 180,
+        borderWidth: 0,
+      },
+      {
+        label: `Actual Points: ${pointsTotal.toFixed(0)}`,
+        data: [actual, MAX_CHART_SIZE - actual],
+        backgroundColor: [COLORS[index(deltaPTS)], 'rgba(0,0,0,0)'],
+        cutout: '50%',
+        rotation: 270,
+        circumference: 180,
+        borderWidth: 0
+      }
+    ]
+  };
+
+  // Central annotation
+  const annotation = {
+    type: 'doughnutLabel',
+    content: () => [
+      ` ${deltaPTS >= 0 ? '+' : ''}${deltaPTS.toFixed(1)} pts`,
+      ` ${deltaPTS >= 0 ? 'overachieving' : 'underachieving'}`
+    ],
+    drawTime: 'beforeDraw',
+    position: { y: '-50%' },
+    font: [{ size: 60, weight: 'bold' }, { size: 40 }],
+    color: color,
   };
 
   const options = {
     rotation: 270,
     circumference: 180,
+
     plugins: {
-      legend: {
-        position: 'top'
+      tooltip: {
+        enabled: true
       },
-      title: {
-        display: !!chartTitle,
-        text: chartTitle,
-        font: {
-          size: 12
-        }
-      }
+      legend: {
+        display: true,
+        position: 'top',
+        labels: {
+          font: {
+            size: 12
+          },
+          color: '#FF0000', // fallback for when not using custom generator
+          generateLabels: (chart) =>
+            chart.data.datasets.map((ds) => ({
+              text: ds.label,
+              fillStyle: Array.isArray(ds.backgroundColor)
+                ? ds.backgroundColor[0]
+                : ds.backgroundColor,
+              strokeStyle: '#000', // border around color box
+              lineWidth: 1,
+              fontColor: color, // ✅ custom text color here
+              hidden: false,
+              datasetIndex: chart.data.datasets.indexOf(ds)
+            })),
+        },
+      },
+      annotation: { annotations: { annotation } }
+
     }
+
   };
 
-  return <Doughnut className="DoughnutChart" data={data} options={options} />;
+  return <Doughnut data={data} options={options} className="DoughnutChart" />;
 };
-
-
 
 export function RadarChart(props) {
   let color;

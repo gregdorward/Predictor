@@ -2498,6 +2498,30 @@ a.PreviousMatchLink {
   /* align-items: flex-start; */
 }
 
+canvas.DoughnutChart {
+  max-width: 17em;
+  max-height: 17em;
+  margin: 0.25em;
+}
+
+.DoughnutOne {
+  flex-direction: column;
+  /* padding-right: 0.5em; */
+  flex-basis: 50%;
+  background-color: var(--background-color);
+  color: var(--text-color);
+  text-align: center;
+}
+
+.DoughnutTwo {
+  flex-direction: column;
+  /* padding-left: 0.5em; */
+  flex-basis: 50%;
+  background-color: var(--background-color);
+  color: var(--text-color);
+  text-align: center;
+}
+
 .flex-childOne {
   flex-direction: column;
   text-align: right;
@@ -2892,13 +2916,6 @@ canvas.LeagueStatsRadar {
   height: 70em !important; */
   display: flex !important;
   max-width: 100%;
-}
-
-canvas.DoughnutChart {
-  /* width: 70em !important;
-  height: 70em !important; */
-  max-width: 14em;
-  max-height: 14em;
 }
 
 .StarRating {
@@ -4590,6 +4607,7 @@ button.AIInsights button:active {
   font-weight: bold;
   margin-bottom: 0em;
   padding-bottom: 0em;
+  margin-top: 2em;
 }
 
 .rankings-row {
