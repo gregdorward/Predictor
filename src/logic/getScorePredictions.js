@@ -485,7 +485,6 @@ async function getPastLeagueResults(team, game, hOrA, form) {
         homePPGPreMatch: resultedGame.pre_match_teamA_overall_ppg,
         awayPPGPreMatch: resultedGame.pre_match_teamB_overall_ppg,
         oppositionPPG: resultedGame.pre_match_teamA_overall_ppg,
-        oppositionOdds: resultedGame.odds_ft_1,
         XG:
           resultedGame.team_b_xg <= 0 || resultedGame.team_b_xg > 7
             ? resultedGame.awayGoalCount
@@ -676,6 +675,7 @@ async function getPastLeagueResults(team, game, hOrA, form) {
     const resultsAway = allTeamResultsAway.map((res) => res.result);
 
     form.LastFiveForm = resultsAll.slice(0, 5);
+    console.log(form.LastFiveForm)
     form.LastSixForm = resultsAll.slice(0, 6);
     form.LastTenForm = resultsAll.slice(0, 10);
 

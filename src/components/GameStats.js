@@ -2789,15 +2789,15 @@ function GameStats({ game, displayBool, stats }) {
           homeForm.homePPGame,
           homeForm.resultsHome.length
         );
-        homeForm.tenGameAv = homeTenGameAverage;
-        homeForm.fiveGameAv = homeFiveGameAverage;
+        homeForm.tenGameAv = home10GA;
+        homeForm.fiveGameAv = home5GA;
 
         awayForm.awayPPGAv = await getPointAverage(
           awayForm.awayPPGame,
           awayForm.resultsAway.length
         );
-        awayForm.tenGameAv = awayTenGameAverage;
-        awayForm.fiveGameAv = awayFiveGameAverage;
+        awayForm.tenGameAv = away10GA;
+        awayForm.fiveGameAv = away5GA;
 
         // Set calculated strengths and averages directly, as hooks cannot be used here
         setHomeAttackStrength(attackH);
@@ -2837,6 +2837,7 @@ function GameStats({ game, displayBool, stats }) {
         setAwaySixGameAverage(away6GA);
         setAwayTenGameAverage(away10GA);
 
+  
         if (homeForm.fiveGameAv && game.matches_completed_minimum > 4) {
           const formTextStringHome = await GenerateFormSummary(
             homeForm,
@@ -2848,6 +2849,7 @@ function GameStats({ game, displayBool, stats }) {
             awayForm.tenGameAv,
             awayForm.fiveGameAv
           );
+          console.log(formTextStringHome)
           setFormSummary([formTextStringHome, formTextStringAway]);
         }
 
