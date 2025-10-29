@@ -77,15 +77,6 @@ function Stats(props) {
               {props.ResultsHorA && props.ResultsHorA[0] ? props.ResultsHorA[0] : ""}
             </span>
           </li>
-          <div style={{
-            backgroundColor: props.color ? props.color : 'grey',
-            color: 'white', // Ensure text is readable against the background
-            padding: '1em 2em',
-            borderRadius: '4px',
-            fontWeight: 'bold'
-          }}>
-            Points diff from bookies' expectation: {props.value !== undefined ? props.value.toFixed(2) : "N/A"}
-          </div>
           <li
             key="BTTSArrayHomeOrAway"
             className="BTTSArrayHomeOrAway"

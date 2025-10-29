@@ -258,7 +258,6 @@ async function convertTimestampForSofaScore(timestamp) {
     leagueArray = Array.from(leagues.data);
   });
 
-  console.log(leagueArray)
   for (let i = 0; i < leagueArray.length; i++) {
     const league = leagueArray[i];
     const name = leagueArray[i].name;

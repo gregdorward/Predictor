@@ -87,6 +87,7 @@ function GetDivider(fixture, mock) {
       default:
         break;
     }
+    
 
     switch (true) {
       case fixture.fixture.goalsA > fixture.fixture.goalsB:
@@ -116,13 +117,13 @@ function GetDivider(fixture, mock) {
       if (fixture.fixture.homeOdds !== 0) {
         switch (true) {
           case outcome === 0:
-            fixture.fixture.profit = fixture.fixture.homeOdds;
+            fixture.fixture.profit = parseFloat(fixture.fixture.homeOdds);
             break;
           case outcome === 1:
-            fixture.fixture.profit = fixture.fixture.drawOdds;
+            fixture.fixture.profit = parseFloat(fixture.fixture.drawOdds);
             break;
           case outcome === 2:
-            fixture.fixture.profit = fixture.fixture.awayOdds;
+            fixture.fixture.profit = parseFloat(fixture.fixture.awayOdds);
             break;
           default:
             break;
