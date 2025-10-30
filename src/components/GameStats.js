@@ -1034,8 +1034,6 @@ function GameStats({ game, displayBool, stats }) {
   // Memoize derivedRoundId so it's only recalculated when game.sofaScoreId or rounds changes
   const derivedRoundId = useMemo(() => {
     for (const mapping of rounds) {
-      console.log(game.sofaScoreId);
-      console.log(rounds)
       if (mapping.hasOwnProperty(game.sofaScoreId)) {
         return mapping[game.sofaScoreId];
       }
@@ -1302,7 +1300,6 @@ function GameStats({ game, displayBool, stats }) {
             const homeTeamStatsResponse = await fetch(
               `${process.env.REACT_APP_EXPRESS_SERVER}teamStats/${matchingGameInfo.homeId}/${game.sofaScoreId}/${derivedRoundId}`
             );
-            console.log(`${process.env.REACT_APP_EXPRESS_SERVER}teamStats/${matchingGameInfo.homeId}/${game.sofaScoreId}/${derivedRoundId}`)
             const homeTeam = await homeTeamStatsResponse.json();
             let homeStats = homeTeam.statistics;
 
@@ -1310,10 +1307,8 @@ function GameStats({ game, displayBool, stats }) {
             const awayTeamStatsResponse = await fetch(
               `${process.env.REACT_APP_EXPRESS_SERVER}teamStats/${matchingGameInfo.awayId}/${game.sofaScoreId}/${derivedRoundId}`
             );
-            console.log(`${process.env.REACT_APP_EXPRESS_SERVER}teamStats/${matchingGameInfo.awayId}/${game.sofaScoreId}/${derivedRoundId}`)
             const awayTeam = await awayTeamStatsResponse.json();
             let awayStats = awayTeam.statistics;
-            console.log(homeStats)
 
             setHomeTeamStats(homeStats);
             setAwayTeamStats(awayStats);
@@ -1759,9 +1754,6 @@ function GameStats({ game, displayBool, stats }) {
 
     const trueFormColour = getTrueFormColor(awayForm.trueForm);
 
-
-    // PPAA = Opponent Passes / (Shots + Crosses + Dribbles/Take-ons + Key Passes)
-    console.log("Away Team Stats:", awayTeamStats);
 
     if (!awayForm) return null;
     return (
@@ -2849,7 +2841,6 @@ function GameStats({ game, displayBool, stats }) {
             awayForm.tenGameAv,
             awayForm.fiveGameAv
           );
-          console.log(formTextStringHome)
           setFormSummary([formTextStringHome, formTextStringAway]);
         }
 

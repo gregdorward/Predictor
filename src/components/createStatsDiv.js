@@ -5,7 +5,6 @@ import BarChart, { DoughnutChart } from "../components/Chart";
 function Stats(props) {
   const { getCollapsableProps } = props;
   let shouldOpen = props.clicked;
-  console.log(props)
   function styleForm(formIndicator) {
     let className;
     if (formIndicator === "W") {

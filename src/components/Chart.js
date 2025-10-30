@@ -343,9 +343,6 @@ export const DoughnutChart = ({ pointsTotal, predictedPoints, deltaPTS, theme, l
   const predicted = Math.min(predictedPoints, MAX_CHART_SIZE);
   const actual = Math.min(pointsTotal, MAX_CHART_SIZE);
 
-  console.log("Doughnut Chart - Predicted Points: ", predictedPoints);
-  console.log("Doughnut Chart - Actual Points: ", pointsTotal);
-
   // Overlay colors
   const COLORS = ['#bf1000', '#e07800ff', '#fff700d8', '#8be800e7', '#01a501'];
   // const overlayColors = deltaValue >= 0

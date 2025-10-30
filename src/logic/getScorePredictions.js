@@ -236,8 +236,6 @@ function calculateOddsBasedTrueForm(pointsSum5, allTeamResults) {
   let expectedPPG_Odds = 0;
   let deltaPTS_Odds = 0;
 
-  console.log(pointsSum5);
-
   // Calculate the total Expected Points (xPTS) over the last 5 games
   const totalExpectedPoints = allTeamResults.slice(0, 5).reduce((acc, game) => {
 
@@ -342,7 +340,6 @@ async function getPastLeagueResults(team, game, hOrA, form) {
 
     for (let index = 0; index < teamsHomeResults.length; index++) {
       const resultedGame = teamsHomeResults[index];
-      console.log(resultedGame)
       homeResults.push({
         homeTeam: resultedGame.home_name,
         gameweek: resultedGame.game_week,
@@ -643,6 +640,7 @@ async function getPastLeagueResults(team, game, hOrA, form) {
       (b, a) => a.dateRaw - b.dateRaw
     );
 
+
     form.allTeamResults = allTeamResults.sort((b, a) => a.dateRaw - b.dateRaw);
     allTeamResults.sort((b, a) => a.dateRaw - b.dateRaw);
     form.allTeamResultsLast6 = form.allTeamResults.slice(0, 6);
@@ -675,7 +673,6 @@ async function getPastLeagueResults(team, game, hOrA, form) {
     const resultsAway = allTeamResultsAway.map((res) => res.result);
 
     form.LastFiveForm = resultsAll.slice(0, 5);
-    console.log(form.LastFiveForm)
     form.LastSixForm = resultsAll.slice(0, 6);
     form.LastTenForm = resultsAll.slice(0, 10);
 
@@ -941,8 +938,6 @@ async function getPastLeagueResults(team, game, hOrA, form) {
     const VENUE_OFFSET = 0.15; // Set your desired offset
 
     [form.trueForm, form.totalExpectedPoints] = calculateOddsBasedTrueForm(form.pointsSum5, allTeamResults);
-
-    console.log(form.teamName + " true form: " + form.trueForm.toFixed(2));
 
     const cornersHome = homeResults.map((res) => res.corners);
     const cornersSumHome = cornersHome.reduce((a, b) => a + b, 0);
@@ -3376,12 +3371,14 @@ async function getSuccessMeasure(fixtures) {
   let profit = 0;
   let netProfit = 0;
 
+
   for (let i = 0; i < fixtures.length; i++) {
     if (
       fixtures[i].status === "complete" &&
       fixtures[i].hasOwnProperty("prediction") &&
       fixtures[i].omit !== true
     ) {
+
       sumProfit += fixtures[i].profit;
       investment += 1;
       netProfit = (sumProfit - investment).toFixed(2);
@@ -3393,6 +3390,7 @@ async function getSuccessMeasure(fixtures) {
       if (fixtures[i].predictionOutcome === "Won") {
         successCount += 1;
       }
+
 
       // Handle league-specific results
       const leagueName = fixtures[i].leagueDesc || "Unknown League";
@@ -3423,9 +3421,13 @@ async function getSuccessMeasure(fixtures) {
     }
   }
 
+
+
   // Update cumulative totals
   totalInvestment += investment;
   totalProfit += profit;
+    console.log(totalInvestment)
+  console.log(totalProfit)
   const ROI = (profit / investment) * 100;
   totalROI = (totalProfit / totalInvestment) * 100;
 
@@ -4068,8 +4070,9 @@ export async function getScorePrediction(day, mocked) {
             XGdifferentialValue: parseFloat(match.XGdifferentialValue),
           };
           if (
-            predictionObject.rawOdds >= 1.25 &&
-            match.formHome.clinicalRating !== "awful"
+            predictionObject.rawOdds >= 1.25 
+            // &&
+            // match.formHome.clinicalRating !== "awful"
           ) {
             allTips.push(predictionObject);
 
@@ -4123,8 +4126,9 @@ export async function getScorePrediction(day, mocked) {
             XGdifferentialValue: parseFloat(match.XGdifferentialValue),
           };
           if (
-            predictionObject.rawOdds >= 1.25 &&
-            match.formAway.clinicalRating !== "awful"
+            predictionObject.rawOdds >= 1.25 
+            // &&
+            // match.formAway.clinicalRating !== "awful"
           ) {
             allTips.push(predictionObject);
             if (match.unroundedGoalsB - match.unroundedGoalsA > 2) {
@@ -4462,7 +4466,6 @@ export async function getScorePrediction(day, mocked) {
     />,
     "FixtureContainer"
   );
-  await getSuccessMeasure(matches);
 
   // --- 4. WAIT FOR BACKGROUND STATS (Non-blocking step) ---
   // Now we wait for the long-running stats, but the user is already viewing the fixtures.
@@ -4486,6 +4489,8 @@ export async function getScorePrediction(day, mocked) {
     />,
     "FixtureContainer"
   );
+    await getSuccessMeasure(matches);
+
 
 }
 
