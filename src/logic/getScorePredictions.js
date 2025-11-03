@@ -3364,6 +3364,7 @@ export async function calculateScore(match, index, divider, calculate, AIPredict
 let specificLeagueResults = {}; // Initialize outside the function to persist data
 
 async function getSuccessMeasure(fixtures) {
+  console.log("Calculating Success Measure...");
   let sumProfit = 0;
   let investment = 0;
   let exactScores = 0;
@@ -3426,7 +3427,7 @@ async function getSuccessMeasure(fixtures) {
   // Update cumulative totals
   totalInvestment += investment;
   totalProfit += profit;
-    console.log(totalInvestment)
+  console.log(totalInvestment)
   console.log(totalProfit)
   const ROI = (profit / investment) * 100;
   totalROI = (totalProfit / totalInvestment) * 100;
@@ -4070,7 +4071,7 @@ export async function getScorePrediction(day, mocked) {
             XGdifferentialValue: parseFloat(match.XGdifferentialValue),
           };
           if (
-            predictionObject.rawOdds >= 1.25 
+            predictionObject.rawOdds >= 1.25
             // &&
             // match.formHome.clinicalRating !== "awful"
           ) {
@@ -4126,7 +4127,7 @@ export async function getScorePrediction(day, mocked) {
             XGdifferentialValue: parseFloat(match.XGdifferentialValue),
           };
           if (
-            predictionObject.rawOdds >= 1.25 
+            predictionObject.rawOdds >= 1.25
             // &&
             // match.formAway.clinicalRating !== "awful"
           ) {
@@ -4452,11 +4453,6 @@ export async function getScorePrediction(day, mocked) {
     "MultiPlaceholder"
   );
 
-
-  await getMultis();
-  await getNewTips(allTipsSorted);
-
-  // RENDER FIXTURES: Use a placeholder for stats as they are still loading in the background.
   render(
     <RenderAllFixtures
       matches={matches}
@@ -4466,6 +4462,11 @@ export async function getScorePrediction(day, mocked) {
     />,
     "FixtureContainer"
   );
+
+  await getMultis();
+  await getNewTips(allTipsSorted);
+  await getSuccessMeasure(matches);
+
 
   // --- 4. WAIT FOR BACKGROUND STATS (Non-blocking step) ---
   // Now we wait for the long-running stats, but the user is already viewing the fixtures.
@@ -4489,9 +4490,6 @@ export async function getScorePrediction(day, mocked) {
     />,
     "FixtureContainer"
   );
-    await getSuccessMeasure(matches);
-
-
 }
 
 

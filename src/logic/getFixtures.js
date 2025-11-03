@@ -1683,6 +1683,6 @@ export async function generateFixtures(
     );
     setTimeout(() => {
       isFunctionRunning = false;
-    }, 2000);
+    }, 1000);
   }
 }
