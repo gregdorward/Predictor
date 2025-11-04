@@ -651,7 +651,24 @@ function AppContent() {
       )}
 
       <div id="GeneratePredictions" className="GeneratePredictions" />
-      <div id="MultiPlaceholder" className="MultiPlaceholder" />
+      <Collapsable
+      buttonText={"Multis"}
+      className={"MultisCollapsable"}
+      key="MultisCollapsable"
+      element={
+        <Fragment>
+          <div id="bestPredictions" className="bestPredictions" />
+          <div id="exoticOfTheDay" className="exoticOfTheDay" />
+          <div id="RowOneContainer" className="RowOneContainer">
+            <div id="BTTS" className="RowOne" />
+            <div id="longShots" className="RowOne" />
+            <div id="draws" className="RowOne" />
+          </div>
+          <div id="insights" />
+          <div id="UserGeneratedTips" />
+        </Fragment>
+      }
+    />
       <div id="shortlistRender" />
       <Collapsable buttonText={"ROI"} className={"ROI"} element={<div id="successMeasure2" />} />
       <div id="highLowLeagues" className="HighLowLeagues" />

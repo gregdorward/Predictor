@@ -1730,6 +1730,16 @@ export async function generateGoals(homeForm, awayForm, match) {
   // Calculate the away team's expected goal volume (lambda)
 
 
+
+//     const homePPGDifferential =  homeForm.PPGHome - homeForm.avPointsAll;
+//   const awayPPGDifferential = awayForm.PPGAway - awayForm.avPointsAll;
+
+// const PPG_ADJUSTMENT_WEIGHT = 0.2; 
+
+// const homePPGFactor = homePPGDifferential * PPG_ADJUSTMENT_WEIGHT;
+// const awayPPGFactor = awayPPGDifferential * PPG_ADJUSTMENT_WEIGHT;
+
+
   const avgHomeXG = (homeForm.avXGLast5 + awayForm.avXGAgainstLast5) / 2;
   const avgHomeGoalsLast5 = (homeForm.avScoredLast5 + awayForm.avConceededLast5) / 2;
   const avgHomeGoals = (homeForm.avgScoredHome + awayForm.teamConceededAvgAwayOnly) / 2;

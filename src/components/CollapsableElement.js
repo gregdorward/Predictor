@@ -9,6 +9,7 @@ const Collapsable = ({
   classNameFlex,
   classNameTwo,
   classNameThree,
+  key,
   style,
   element,
   elementTwo,
@@ -17,10 +18,12 @@ const Collapsable = ({
   // onTriggerOpening,
   // onTriggerClosing,
 }) => {
+  console.log(element);
   return (
     <Collapsible
       transitionTime={300}
       open={isOpen}
+      key={key}
       trigger={
         // ⭐️ FIX: ADD onClick={onTriggerToggle} to the button ⭐️
         <button className={classNameButton} style={{ display }} onClick={onTriggerToggle}>
