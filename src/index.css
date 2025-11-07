@@ -2613,7 +2613,7 @@ canvas.DoughnutChart {
 }
 
 .flex-childOne li:nth-child(odd) {
-  background-color: var(--background-color);
+  background-color: var(--secondary-background-color);
   color: var(--text-color);
 }
 
@@ -2627,7 +2627,7 @@ canvas.DoughnutChart {
 }
 
 .flex-childTwo li:nth-child(odd) {
-  background-color: var(--background-color);
+  background-color: var(--secondary-background-color);
   color: var(--text-color);
 }
 
@@ -2745,7 +2745,7 @@ canvas.DoughnutChart {
 }
 
 .AllStats li:nth-child(even) {
-  background: var(--secondary-background-color);
+  /* background: var(--secondary-background-color); */
   color: var(--text-color);
 }
 
@@ -2851,6 +2851,55 @@ canvas.DoughnutChart {
 
 }
 
+
+
+.stat-betterHome {
+  /* border: 1px solid #01a501; */
+  border-right: 4px solid #01a501;
+   margin-top: 0.4em;
+  margin-bottom: 0.4em;
+  font-size: 1em;
+}
+
+.stat-worseHome {
+  border-right: 4px solid #970d00;
+   margin-top: 0.4em;
+  margin-bottom: 0.4em;
+  font-size: 1em;
+
+}
+
+.stat-equalHome {
+  /* border: 1px solid var(--background-color); */
+  border-right: 4px solid gray;
+   margin-top: 0.4em;
+  margin-bottom: 0.4em;
+  font-size: 1em;
+}
+
+
+.stat-betterAway {
+  /* border: 1px solid #01a501; */
+  border-left: 4px solid #01a501;
+   margin-top: 0.4em;
+  margin-bottom: 0.4em;
+  font-size: 1em;
+}
+
+.stat-worseAway {
+  border-left: 4px solid #970d00;
+   margin-top: 0.4em;
+  margin-bottom: 0.4em;
+  font-size: 1em;
+}
+
+.stat-equalAway {
+  /* border: 1px solid var(--background-color); */
+  border-left: 4px solid gray;
+   margin-top: 0.4em;
+  margin-bottom: 0.4em;
+  font-size: 1em;
+}
 
 
 .Home li {

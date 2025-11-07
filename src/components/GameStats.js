@@ -1535,394 +1535,608 @@ function GameStats({ game, displayBool, stats }) {
     );
   }
 
-  function StatsHomeComponent({ getCollapsableProps }) {
-    const opponentPassesHome = homeTeamStats?.ownHalfPassesTotalAgainst ?? 0;
-    const defensiveActionsHome =
-      (homeTeamStats?.interceptions ?? 0) +
-      (homeTeamStats?.tackles ?? 0) +
-      (homeTeamStats?.blockedScoringAttempt ?? 0) +
-      (homeTeamStats?.clearances ?? 0);
+  const COMPARISON_RULES = [
+    // --- Performance & Goals ---
+    { key: 'goals', higherIsBetter: true },
+    { key: 'conceeded', higherIsBetter: false },
+    { key: 'goalDifference', higherIsBetter: true },
+    { key: 'goalDifferenceHomeOrAway', higherIsBetter: true },
+    { key: 'ppg', higherIsBetter: true },
+    { key: 'formTrend', higherIsBetter: true },
+    { key: 'winPercentage', higherIsBetter: true },
+    { key: 'lossPercentage', higherIsBetter: false },
+    { key: 'drawPercentage', higherIsBetter: false },
+    { key: 'cleansheetPercentage', higherIsBetter: true },
+    { key: 'averageRating', higherIsBetter: true },
+    { key: 'XGSwing', higherIsBetter: true },
+    // --- League Position (Lower is Better) ---
+    { key: 'leaguePosition', higherIsBetter: false }, // Lower rank is better
+    { key: 'rawPosition', higherIsBetter: false }, // Lower rank is better
+    { key: 'homeOrAwayLeaguePosition', higherIsBetter: false }, // Lower rank is better
 
-    // Check for zero to prevent division by zero (resulting in Infinity)
-    const PPDA_valueHome = defensiveActionsHome > 0
-      ? (opponentPassesHome / defensiveActionsHome).toFixed(2)
-      : 'N/A'; // Or handle as desired (e.g., return 0 or a very high number)
+    // --- Expected Goals & Big Chances ---
+    { key: 'XG', higherIsBetter: true },
+    { key: 'XGConceded', higherIsBetter: false },
+    { key: 'bigChances', higherIsBetter: true },
+    { key: 'bigChancesMissed', higherIsBetter: false }, // Fewer missed is better
+    { key: 'bigChancesConceded', higherIsBetter: false }, // Fewer conceded is better
 
-    const oppositionHalfPassesHome = homeTeamStats?.totalOppositionHalfPasses ?? 0;
-    const attackingPlaysHome = (homeTeamStats?.shots ?? 0 + homeTeamStats?.totalCrosses ?? 0 + homeTeamStats?.dribbleAttempts ?? 0 + homeTeamStats?.bigChancesCreated ?? 0);
+    // --- Shooting & Conversion ---
+    { key: 'shots', higherIsBetter: true },
+    { key: 'sot', higherIsBetter: true },
+    { key: 'shotsInsideBox', higherIsBetter: true },
+    { key: 'shotsInsideBoxAgainst', higherIsBetter: false },
+    { key: 'shotsOnTargetAgainst', higherIsBetter: false }, // Fewer shots on target conceded is better
+    { key: 'shootingAccuracy', higherIsBetter: true },
+    { key: 'goalConversionRate', higherIsBetter: true },
+    { key: 'bigChanceConversionRate', higherIsBetter: true },
+    { key: 'goalsFromInsideTheBox', higherIsBetter: true },
+    { key: 'goalsFromOutsideTheBox', higherIsBetter: true },
+    { key: 'fastBreakShots', higherIsBetter: true },
+    { key: 'fastBreaksLeadingToShot', higherIsBetter: true },
+    { key: 'FreeKickGoals', higherIsBetter: true },
 
-    const PPAA_valueHome = attackingPlaysHome > 0
-      ? (oppositionHalfPassesHome / attackingPlaysHome).toFixed(2)
-      : 'N/A';
+    // --- Attack & Build-up ---
+    { key: 'dangerousAttacks', higherIsBetter: true },
+    { key: 'possession', higherIsBetter: true },
+    { key: 'accuratePassesPercentage', higherIsBetter: true },
+    { key: 'accuratePassesOpponentHalf', higherIsBetter: true },
+    { key: 'accuratePassesDefensiveHalf', higherIsBetter: true },
+    { key: 'accurateCrosses', higherIsBetter: true },
+    { key: 'accurateCrossesAgainst', higherIsBetter: false }, // Lower success rate conceded is better
+    { key: 'longBallPercentage', higherIsBetter: false }, // Often better to have lower reliance on long balls
+    { key: 'accurateLongBallsPercentage', higherIsBetter: true },
+    { key: 'accurateLongBallsAgainstPercentage', higherIsBetter: false },
+    { key: 'CornersAverage', higherIsBetter: true },
+    { key: 'offsides', higherIsBetter: false }, // Fewer offsides is better
+    { key: 'dribbleAttempts', higherIsBetter: true },
+    { key: 'successfulDribbles', higherIsBetter: true },
 
-    const trueFormColour = getTrueFormColor(homeForm.trueForm);
+    // --- Defensive & Pressing ---
+    { key: 'PPDA', higherIsBetter: false }, // Lower PPDA means better pressing
+    { key: 'PPAA', higherIsBetter: false }, // Lower PPAA means more efficient attacking
+    { key: 'duelsWonPercentage', higherIsBetter: true },
+    { key: 'aerialDuelsWonPercentage', higherIsBetter: true },
+    { key: 'ballRecovery', higherIsBetter: true },
+    { key: 'interceptions', higherIsBetter: true },
+    { key: 'tackles', higherIsBetter: true },
+    { key: 'errorsLeadingToShotAgainst', higherIsBetter: false }, // Fewer errors is better
 
+    // --- Discipline & Fouls ---
+    { key: 'FoulsPerGame', higherIsBetter: false }, // Fewer fouls is better
+    { key: 'CardsPerGame', higherIsBetter: false }, // Fewer cards is better
+    { key: 'RedCardsPerGame', higherIsBetter: false }, // Fewer cards is better
+    { key: 'PenaltiesConceded', higherIsBetter: false }, // Fewer conceded is better
+
+    // --- Betting/Form Specifics ---
+    { key: 'BttsPercentage', higherIsBetter: true },
+    { key: 'BttsPercentageHomeOrAway', higherIsBetter: true },
+  ];
+
+const calculateComparisonStatusMap = (homeStats, awayStats) => {
+    const comparisonMap = {};
+
+    COMPARISON_RULES.forEach(({ key, higherIsBetter }) => {
+        const homeValue = homeStats[key];
+        const awayValue = awayStats[key];
+
+        // --- SCALAR COMPARISON (Default Case) ---
+        if (typeof homeValue !== 'object' || homeValue === null || !Array.isArray(homeValue)) {
+            if (homeValue !== undefined && awayValue !== undefined) {
+                // Compare simple properties (goals, ppg, etc.)
+                comparisonMap[key] = compareStat(homeValue, awayValue, higherIsBetter);
+            }
+        } 
+        
+        // --- ARRAY COMPARISON (e.g., 'formTrend') ---
+        else if (Array.isArray(homeValue) && Array.isArray(awayValue)) {
+            const minLength = Math.min(homeValue.length, awayValue.length);
+            
+            for (let i = 0; i < minLength; i++) {
+                const homeItem = homeValue[i];
+                const awayItem = awayValue[i];
+                const arrayKey = `${key}[${i}]`; // e.g., 'formTrend[0]'
+
+                if (homeItem !== undefined && awayItem !== undefined) {
+                    // Compare the individual array elements
+                    comparisonMap[arrayKey] = compareStat(homeItem, awayItem, higherIsBetter);
+                }
+            }
+        }
+    });
+
+    return comparisonMap;
+};
+
+
+  const compareStat = (homeValue, awayValue, higherIsBetter) => {
+    const home = parseFloat(homeValue);
+    const away = parseFloat(awayValue);
+
+    // If both are non-numeric (like 'N/A'), they are equal
+    if (isNaN(home) && isNaN(away)) return 'equal';
+    // If only one is non-numeric, the other is 'better' or 'worse' depending on the rule
+    if (isNaN(home)) return higherIsBetter ? 'worse' : 'better';
+    if (isNaN(away)) return higherIsBetter ? 'better' : 'worse';
+
+    if (home === away) return 'equal';
+
+    if (higherIsBetter) {
+      return home > away ? 'better' : 'worse';
+    } else {
+      return home < away ? 'better' : 'worse';
+    }
+  };
+  gameArrayHome.sort((a, b) => b.unixTimestamp - a.unixTimestamp);
+  gameArrayAway.sort((a, b) => b.unixTimestamp - a.unixTimestamp);
+
+  const bttsArrayHome = Array.from(gameArrayHome, (x) => x.btts);
+  const bttsArrayAway = Array.from(gameArrayAway, (x) => x.btts);
+
+  const formDataHome = [];
+
+  formDataHome.push({
+    name: game.homeTeam,
+    Last5: gameStats.home[2].LastFiveForm,
+    LeagueOrAll: gameStats.home[2].LeagueOrAll,
+    AverageGoals: homeForm.ScoredOverall / 10,
+    AverageConceeded: homeForm.ConcededOverall / 10,
+    AverageXG: homeForm.XGOverall,
+    AverageXGConceded: homeForm.XGAgainstAvgOverall,
+    AveragePossession: homeForm.AveragePossessionOverall,
+    AverageShotsOnTarget: homeForm.AverageShotsOnTargetOverall,
+    AverageDangerousAttacks: homeForm.AverageDangerousAttacksOverall,
+    homeOrAway: "Home",
+    leaguePosition: homeForm.LeaguePosition,
+    Last5PPG: homeForm.PPG,
+    SeasonPPG: homeForm.SeasonPPG,
+    formRun: homeForm.formRun,
+    goalDifference: homeForm.goalDifference,
+    goalDifferenceHomeOrAway: homeForm.goalDifferenceHomeOrAway,
+    CardsTotal: homeForm.CardsTotal || "-",
+    CornersAverage: homeForm.AverageCorners || "-",
+    FormTextStringHome: formSummaries[0],
+    BTTSArray: bttsArrayHome,
+    Results: homeForm.resultsAll,
+    ResultsHorA: homeForm.resultsHome,
+    XGSwing: homeForm.XGChangeRecently,
+    styleOfPlayOverall: homeForm.styleOfPlayOverall,
+    styleOfPlayHome: homeForm.styleOfPlayHome,
+  });
+
+  const formDataAway = [];
+
+  formDataAway.push({
+    name: game.awayTeam,
+    Last5: gameStats.away[2].LastFiveForm,
+    LeagueOrAll: gameStats.away[2].LeagueOrAll,
+    AverageGoals: awayForm.ScoredOverall / 10,
+    AverageConceeded: awayForm.ConcededOverall / 10,
+    AverageXG: awayForm.XGOverall,
+    AverageXGConceded: awayForm.XGAgainstAvgOverall,
+    AveragePossession: awayForm.AveragePossessionOverall,
+    AverageShotsOnTarget: awayForm.AverageShotsOnTargetOverall,
+    AverageDangerousAttacks: awayForm.AverageDangerousAttacksOverall,
+    homeOrAway: "Away",
+    leaguePosition: awayForm.LeaguePosition,
+    Last5PPG: awayForm.PPG,
+    SeasonPPG: awayForm.SeasonPPG,
+    formRun: awayForm.formRun,
+    goalDifference: awayForm.goalDifference,
+    goalDifferenceHomeOrAway: awayForm.goalDifferenceHomeOrAway,
+    CardsTotal: awayForm.CardsTotal || "-",
+    CornersAverage: awayForm.AverageCorners || "-",
+    FormTextStringAway: formSummaries[1],
+    BTTSArray: bttsArrayAway,
+    Results: awayForm.resultsAll,
+    ResultsHorA: awayForm.resultsAway,
+    XGSwing: awayForm.XGChangeRecently,
+    styleOfPlayOverall: awayForm.styleOfPlayOverall,
+    styleOfPlayAway: awayForm.styleOfPlayAway,
+  });
+
+  const opponentPassesHome = homeTeamStats?.ownHalfPassesTotalAgainst ?? 0;
+  const defensiveActionsHome =
+    (homeTeamStats?.interceptions ?? 0) +
+    (homeTeamStats?.tackles ?? 0) +
+    (homeTeamStats?.blockedScoringAttempt ?? 0) +
+    (homeTeamStats?.clearances ?? 0);
+
+  // Check for zero to prevent division by zero (resulting in Infinity)
+  const PPDA_valueHome = defensiveActionsHome > 0
+    ? (opponentPassesHome / defensiveActionsHome).toFixed(2)
+    : 'N/A'; // Or handle as desired (e.g., return 0 or a very high number)
+
+  const oppositionHalfPassesHome = homeTeamStats?.totalOppositionHalfPasses ?? 0;
+  const attackingPlaysHome = (homeTeamStats?.shots ?? 0 + homeTeamStats?.totalCrosses ?? 0 + homeTeamStats?.dribbleAttempts ?? 0 + homeTeamStats?.bigChancesCreated ?? 0);
+
+  const PPAA_valueHome = attackingPlaysHome > 0
+    ? (oppositionHalfPassesHome / attackingPlaysHome).toFixed(2)
+    : 'N/A';
+
+  // const trueFormColour = getTrueFormColor(homeForm.trueForm);
+
+  const homeAllStatsProps = {
+    // Note: getCollapsableProps is usually passed directly from the parent component props
+    getCollapsableProps: getCollapsableProps,
+    games: "all",
+    style: style,
+    homeOrAway: "Home",
+    badge: game.homeBadge,
+    gameCount: divider,
+    key: formDataHome[0].name,
+    last5: formDataHome[0].Last5,
+    // homeOrAwayResults: gameArrayHomeTeamHomeGames, // Commented out as in original
+    LeagueOrAll: formDataHome[0].LeagueOrAll,
+    className: "KeyStatsHome",
+    name: formDataHome[0].name,
+    value: homeForm.trueForm,
+    color: getTrueFormColor(homeForm.trueForm),
+    goals: homeForm.avgScored,
+    conceeded: homeForm.avgConceeded,
+    averageRating: homeTeamStats?.avgRating?.toFixed(2),
+    XG: homeForm.XGOverall?.toFixed(2),
+    XGConceded: homeForm.XGAgainstAvgOverall?.toFixed(2),
+    XGSwing: homeForm.XGChangeRecently,
+    bigChances: homeTeamStats?.bigChances,
+    bigChancesMissed: homeTeamStats?.bigChancesMissed,
+    bigChancesConceded: homeTeamStats?.bigChancesAgainst,
+    goalConversionRate:
+      homeTeamStats?.shots !== undefined && homeTeamStats?.goalsScored
+        ? ((homeTeamStats.goalsScored / homeTeamStats.shots) * 100).toFixed(2)
+        : "N/A",
+    bigChanceConversionRate:
+      homeTeamStats?.bigChances !== undefined &&
+        homeTeamStats?.bigChancesMissed !== undefined &&
+        homeTeamStats?.bigChances > 0
+        ? (
+          ((homeTeamStats.bigChances - homeTeamStats.bigChancesMissed) /
+            homeTeamStats.bigChances) *
+          100
+        ).toFixed(2)
+        : "N/A",
+    shootingAccuracy:
+      homeTeamStats?.shotsOnTarget !== undefined &&
+        homeTeamStats?.shots
+        ? ((homeTeamStats.shotsOnTarget / homeTeamStats.shots) * 100).toFixed(2)
+        : "N/A",
+    shotsOnTargetAgainst:
+      homeTeamStats?.shotsOnTargetAgainst !== undefined &&
+        homeTeamStats?.matches
+        ? (homeTeamStats.shotsOnTargetAgainst / homeTeamStats.matches).toFixed(2)
+        : "N/A",
+
+    possession: homeForm.AveragePossessionOverall?.toFixed(2),
+    accuratePassesPercentage: homeTeamStats?.accuratePassesPercentage?.toFixed(2),
+    accuratePassesOpponentHalf: homeTeamStats?.accurateOppositionHalfPassesPercentage?.toFixed(2),
+    accuratePassesDefensiveHalf: homeTeamStats?.accurateOwnHalfPassesPercentage?.toFixed(2),
+    accurateCrosses: homeTeamStats?.accurateCrossesPercentage?.toFixed(2),
+    accurateCrossesAgainst:
+      homeTeamStats?.crossesSuccessfulAgainst !== undefined &&
+        homeTeamStats?.crossesTotalAgainst
+        ? ((homeTeamStats.crossesSuccessfulAgainst / homeTeamStats.crossesTotalAgainst) * 100).toFixed(2)
+        : "N/A",
+    longBallPercentage:
+      homeTeamStats?.totalLongBalls !== undefined &&
+        homeTeamStats?.totalPasses
+        ? ((homeTeamStats.totalLongBalls / homeTeamStats.totalPasses) * 100).toFixed(2)
+        : "N/A",
+    accurateLongBallsPercentage: homeTeamStats?.accurateLongBallsPercentage?.toFixed(2),
+    accurateLongBallsAgainstPercentage:
+      homeTeamStats?.longBallsSuccessfulAgainst !== undefined &&
+        homeTeamStats?.longBallsTotalAgainst
+        ? ((homeTeamStats.longBallsSuccessfulAgainst / homeTeamStats.longBallsTotalAgainst) * 100).toFixed(2)
+        : "N/A",
+    shots: homeForm.avgShots?.toFixed(2),
+    sot: homeForm.AverageShotsOnTargetOverall?.toFixed(2),
+    shotsInsideBox: homeTeamStats?.shotsFromInsideTheBox,
+    shotsInsideBoxAgainst: homeTeamStats?.shotsFromInsideTheBoxAgainst,
+    dangerousAttacks:
+      homeForm.AverageDangerousAttacksOverall !== 0
+        ? homeForm.AverageDangerousAttacksOverall?.toFixed(2)
+        : homeForm.AverageDangerousAttacks,
+    goalsFromInsideTheBox: homeTeamStats?.goalsFromInsideTheBox,
+    goalsFromOutsideTheBox: homeTeamStats?.goalsFromOutsideTheBox,
+    fastBreakShots: homeTeamStats?.fastBreakShots,
+    fastBreaksLeadingToShot:
+      homeTeamStats?.fastBreakShots !== undefined && homeTeamStats?.fastBreaks
+        ? ((homeTeamStats.fastBreakShots / homeTeamStats.fastBreaks) * 100).toFixed(2)
+        : "N/A",
+    dribbleAttempts: homeTeamStats?.dribbleAttempts,
+    successfulDribbles: homeTeamStats?.successfulDribbles,
+    duelsWonPercentage: homeTeamStats?.duelsWonPercentage?.toFixed(2),
+    aerialDuelsWonPercentage: homeTeamStats?.aerialDuelsWonPercentage?.toFixed(2),
+    ballRecovery: (homeTeamStats?.ballRecovery / homeTeamStats?.matches)?.toFixed(2),
+    interceptions: (homeTeamStats?.interceptions / homeTeamStats?.matches)?.toFixed(2),
+    cleansheetPercentage:
+      homeTeamStats?.cleanSheets !== undefined &&
+        homeTeamStats?.matches
+        ? ((homeTeamStats.cleanSheets / homeTeamStats.matches) * 100).toFixed(2)
+        : "N/A",
+    tackles: (homeTeamStats?.tackles / homeTeamStats?.matches)?.toFixed(2),
+    errorsLeadingToShotAgainst: homeTeamStats?.errorsLeadingToShotAgainst,
+    offsides: (homeTeamStats?.offsides / homeTeamStats?.matches)?.toFixed(2),
+    // NOTE: PPDA_valueHome and PPAA_valueHome are calculated right before this is used
+    PPDA: PPDA_valueHome,
+    PPAA: PPAA_valueHome,
+    leaguePosition:
+      homeForm.LeaguePosition !== undefined &&
+        homeForm.LeaguePosition !== "undefined"
+        ? formDataHome[0].leaguePosition
+        : 0,
+    rawPosition:
+      game.homeRawPosition !== undefined &&
+        game.homeRawPosition !== "undefined"
+        ? game.homeRawPosition
+        : 0,
+    homeOrAwayLeaguePosition:
+      homeForm.homePositionHomeOnly !== undefined &&
+        homeForm.homePositionHomeOnly !== "undefined"
+        ? homeForm.homePositionHomeOnly
+        : 0,
+    winPercentage: homeForm.homePPGAv ? homeForm.homePPGAv : "N/A",
+    lossPercentage:
+      game.homeTeamLossPercentage ? game.homeTeamLossPercentage : "N/A",
+    drawPercentage:
+      game.homeTeamDrawPercentage ? game.homeTeamDrawPercentage : "N/A",
+    ppg: homeForm.avPointsAll?.toFixed(2),
+    formTrend: [
+      homeForm.avPoints10?.toFixed(2),
+      homeForm.avPoints6?.toFixed(2),
+      homeForm.avPoints5?.toFixed(2),
+    ],
+    formRun: homeForm.resultsAll,
+    goalDifference: formDataHome[0].goalDifference,
+    goalDifferenceHomeOrAway: formDataHome[0].goalDifferenceHomeOrAway,
+    BttsPercentage: formDataHome[0].BttsPercentage,
+    BttsPercentageHomeOrAway: formDataHome[0].BttsPercentageHomeOrAway,
+    BTTSArray: formDataHome[0].BTTSArray,
+    Results: formDataHome[0].Results,
+    ResultsHorA: formDataHome[0].ResultsHorA,
+    CardsPerGame: (homeTeamStats?.yellowCards / homeTeamStats?.matches)?.toFixed(2),
+    RedCardsPerGame: (homeTeamStats?.redCards / homeTeamStats?.matches)?.toFixed(2),
+    FoulsPerGame: (homeTeamStats?.fouls / homeTeamStats?.matches)?.toFixed(2),
+    PenaltiesConceded: homeTeamStats?.penaltiesCommited,
+    CornersAverage: homeForm.AverageCorners,
+    FreeKickGoals: homeTeamStats?.freeKickGoals,
+    ScoredBothHalvesPercentage: formDataHome[0].ScoredBothHalvesPercentage,
+    FormTextString: formDataHome[0].FormTextStringHome,
+    FavouriteRecord: formDataHome[0].FavouriteRecord,
+    StyleOfPlay: formDataHome[0].styleOfPlayOverall,
+    StyleOfPlayHomeOrAway: formDataHome[0].styleOfPlayHome
+  };
+
+  const oppositionPassesAway = awayTeamStats?.ownHalfPassesTotalAgainst ?? 0;
+  const defensiveActionsAway =
+    (awayTeamStats?.interceptions ?? 0) +
+    (awayTeamStats?.tackles ?? 0) +
+    (awayTeamStats?.blockedScoringAttempt ?? 0) +
+    (awayTeamStats?.clearances ?? 0);
+
+  // Check for zero to prevent division by zero (resulting in Infinity)
+  const PPDA_valueAway = defensiveActionsAway > 0
+    ? (oppositionPassesAway / defensiveActionsAway).toFixed(2)
+    : 'N/A';
+
+  const oppositionHalfPassesAway = awayTeamStats?.totalOppositionHalfPasses ?? 0;
+  const attackingPlaysAway = (awayTeamStats?.shots ?? 0 + awayTeamStats?.totalCrosses ?? 0 + awayTeamStats?.dribbleAttempts ?? 0 + awayTeamStats?.bigChancesCreated ?? 0);
+
+  const PPAA_valueAway = attackingPlaysAway > 0
+    ? (oppositionHalfPassesAway / attackingPlaysAway).toFixed(2)
+    : 'N/A';
+
+  // const trueFormColour = getTrueFormColor(awayForm.trueForm);
+
+  const awayAllStatsProps = {
+    getCollapsableProps: getCollapsableProps,
+    games: "all",
+    style: style,
+    homeOrAway: "Away",
+    badge: game.awayBadge,
+    gameCount: divider,
+    key: formDataAway[0].name,
+    last5: formDataAway[0].Last5,
+    // homeOrAwayResults: gameArrayAwayTeamAwayGames,
+    LeagueOrAll: formDataAway[0].LeagueOrAll,
+    className: "KeyStatsAway",
+    classNameTwo: "FormStatsAway",
+    name: formDataAway[0].name,
+    value: awayForm.trueForm,
+    color: getTrueFormColor(awayForm.trueForm),
+    goals: awayForm.avgScored,
+    conceeded: awayForm.avgConceeded,
+    averageRating: awayTeamStats?.avgRating?.toFixed(2),
+    XG: awayForm.XGOverall?.toFixed(2),
+    XGConceded: awayForm.XGAgainstAvgOverall?.toFixed(2),
+    XGSwing: awayForm.XGChangeRecently,
+    bigChances: awayTeamStats?.bigChances,
+    bigChancesMissed: awayTeamStats?.bigChancesMissed,
+    goalConversionRate:
+      awayTeamStats?.shots !== undefined && awayTeamStats?.goalsScored
+        ? ((awayTeamStats.goalsScored / awayTeamStats.shots) * 100).toFixed(2)
+        : "N/A",
+    bigChanceConversionRate:
+      awayTeamStats?.bigChances !== undefined &&
+        awayTeamStats?.bigChancesMissed !== undefined &&
+        awayTeamStats?.bigChances > 0
+        ? (
+          ((awayTeamStats.bigChances - awayTeamStats.bigChancesMissed) /
+            awayTeamStats.bigChances) *
+          100
+        ).toFixed(2)
+        : "N/A",
+    bigChancesConceded: awayTeamStats?.bigChancesAgainst,
+    shotsOnTargetAgainst:
+      awayTeamStats?.shotsOnTargetAgainst !== undefined &&
+        awayTeamStats?.matches
+        ? (awayTeamStats.shotsOnTargetAgainst / awayTeamStats.matches).toFixed(2)
+        : "N/A",
+    shootingAccuracy:
+      awayTeamStats?.shotsOnTarget !== undefined &&
+        awayTeamStats?.shots
+        ? ((awayTeamStats.shotsOnTarget / awayTeamStats.shots) * 100).toFixed(2)
+        : "N/A",
+    accuratePassesPercentage: awayTeamStats?.accuratePassesPercentage?.toFixed(2),
+    accuratePassesOpponentHalf: awayTeamStats?.accurateOppositionHalfPassesPercentage?.toFixed(2),
+    accuratePassesDefensiveHalf: awayTeamStats?.accurateOwnHalfPassesPercentage?.toFixed(2),
+    accurateCrosses: awayTeamStats?.accurateCrossesPercentage?.toFixed(2),
+    accurateCrossesAgainst:
+      awayTeamStats?.crossesSuccessfulAgainst !== undefined &&
+        awayTeamStats?.crossesTotalAgainst
+        ? ((awayTeamStats.crossesSuccessfulAgainst / awayTeamStats.crossesTotalAgainst) * 100).toFixed(2)
+        : "N/A",
+    longBallPercentage:
+      awayTeamStats?.totalLongBalls !== undefined &&
+        awayTeamStats?.totalPasses
+        ? ((awayTeamStats.totalLongBalls / awayTeamStats.totalPasses) * 100).toFixed(2)
+        : "N/A",
+    accurateLongBallsPercentage: awayTeamStats?.accurateLongBallsPercentage?.toFixed(2),
+    accurateLongBallsAgainstPercentage:
+      awayTeamStats?.longBallsSuccessfulAgainst !== undefined &&
+        awayTeamStats?.longBallsTotalAgainst
+        ? ((awayTeamStats.longBallsSuccessfulAgainst / awayTeamStats.longBallsTotalAgainst) * 100).toFixed(2)
+        : "N/A",
+    possession: awayForm.AveragePossessionOverall?.toFixed(2),
+    rawPosition: game.awayRawPosition ? game.awayRawPosition : 0,
+    sot: awayForm.AverageShotsOnTargetOverall?.toFixed(2),
+    shots: awayForm.avgShots?.toFixed(2),
+    shotsInsideBox: awayTeamStats?.shotsFromInsideTheBox,
+    shotsInsideBoxAgainst: awayTeamStats?.shotsFromInsideTheBoxAgainst,
+    dangerousAttacks:
+      awayForm.AverageDangerousAttacksOverall !== 0
+        ? awayForm.AverageDangerousAttacksOverall?.toFixed(2)
+        : awayForm.AverageDangerousAttacks,
+    goalsFromInsideTheBox: awayTeamStats?.goalsFromInsideTheBox,
+    goalsFromOutsideTheBox: awayTeamStats?.goalsFromOutsideTheBox,
+    fastBreakShots: awayTeamStats?.fastBreakShots,
+    fastBreaksLeadingToShot:
+      awayTeamStats?.fastBreakShots !== undefined && awayTeamStats?.fastBreaks
+        ? ((awayTeamStats.fastBreakShots / awayTeamStats.fastBreaks) * 100).toFixed(2)
+        : "N/A",
+    dribbleAttempts: awayTeamStats?.dribbleAttempts,
+    successfulDribbles: awayTeamStats?.successfulDribbles,
+    duelsWonPercentage: awayTeamStats?.duelsWonPercentage?.toFixed(2),
+    aerialDuelsWonPercentage: awayTeamStats?.aerialDuelsWonPercentage?.toFixed(2),
+    ballRecovery: (awayTeamStats?.ballRecovery / awayTeamStats?.matches)?.toFixed(2),
+    interceptions: (awayTeamStats?.interceptions / awayTeamStats?.matches)?.toFixed(2),
+    cleansheetPercentage:
+      awayTeamStats?.cleanSheets !== undefined &&
+        awayTeamStats?.matches
+        ? ((awayTeamStats.cleanSheets / awayTeamStats.matches) * 100).toFixed(2)
+        : "N/A",
+    tackles: (awayTeamStats?.tackles / awayTeamStats?.matches)?.toFixed(2),
+    errorsLeadingToShotAgainst: awayTeamStats?.errorsLeadingToShotAgainst,
+    offsides: (awayTeamStats?.offsides / awayTeamStats?.matches)?.toFixed(2),
+    PPDA: PPDA_valueAway,
+    PPAA: PPAA_valueAway,
+    leaguePosition:
+      awayForm.LeaguePosition !== undefined &&
+        awayForm.LeaguePosition !== "undefined"
+        ? formDataAway[0].leaguePosition
+        : 0,
+    homeOrAwayLeaguePosition:
+      awayForm.awayPositionAwayOnly !== undefined &&
+        awayForm.awayPositionAwayOnly !== "undefinedundefined"
+        ? awayForm.awayPositionAwayOnly
+        : 0,
+    winPercentage: awayForm.awayPPGAv ? awayForm.awayPPGAv : "N/A",
+    lossPercentage:
+      game.awayTeamLossPercentage ? game.awayTeamLossPercentage : "N/A",
+    drawPercentage:
+      game.awayTeamDrawPercentage ? game.awayTeamDrawPercentage : "N/A",
+    ppg: awayForm.avPointsAll?.toFixed(2),
+    formTrend: [
+      awayForm.avPoints10?.toFixed(2),
+      awayForm.avPoints6?.toFixed(2),
+      awayForm.avPoints5?.toFixed(2),
+    ],
+    formRun: awayForm.resultsAll,
+    goalDifference: formDataAway[0].goalDifference,
+    goalDifferenceHomeOrAway: formDataAway[0].goalDifferenceHomeOrAway,
+    BttsPercentage: formDataAway[0].BttsPercentage,
+    BttsPercentageHomeOrAway: formDataAway[0].BttsPercentageHomeOrAway,
+    BTTSArray: formDataAway[0].BTTSArray,
+    Results: formDataAway[0].Results,
+    ResultsHorA: formDataAway[0].ResultsHorA,
+    CardsPerGame: (awayTeamStats?.yellowCards / awayTeamStats?.matches)?.toFixed(2),
+    RedCardsPerGame: (awayTeamStats?.redCards / awayTeamStats?.matches)?.toFixed(2),
+    FoulsPerGame: (awayTeamStats?.fouls / awayTeamStats?.matches)?.toFixed(2),
+    PenaltiesConceded: homeTeamStats?.penaltiesCommited,
+    CornersAverage: awayForm.AverageCorners,
+    FreeKickGoals: awayTeamStats?.freeKickGoals,
+    ScoredBothHalvesPercentage: formDataAway[0].ScoredBothHalvesPercentage,
+    FormTextString: formDataAway[0].FormTextStringAway,
+    FavouriteRecord: formDataAway[0].FavouriteRecord,
+    StyleOfPlay: formDataAway[0].styleOfPlayOverall,
+    StyleOfPlayHomeOrAway: formDataAway[0].styleOfPlayAway,
+  };
+
+  function StatsHomeComponent({ getCollapsableProps, homeAllStatsProps, comparisonStatusMap }) {
+    console.log("Rendering StatsHomeComponent with props:", comparisonStatusMap);
     if (!homeForm) return null;
     return (
       <div className="flex-childOne">
         <ul style={style}>
           <Stats
-            getCollapsableProps={getCollapsableProps}
-            games={"all"}
-            style={style}
-            homeOrAway="Home"
-            badge={game.homeBadge}
-            gameCount={divider}
-            key={formDataHome[0].name}
-            last5={formDataHome[0].Last5}
-            // homeOrAwayResults={gameArrayHomeTeamHomeGames}
-            LeagueOrAll={formDataHome[0].LeagueOrAll}
-            className={"KeyStatsHome"}
-            name={formDataHome[0].name}
-            value={homeForm.trueForm}
-            color={trueFormColour}
-            goals={homeForm.avgScored}
-            conceeded={homeForm.avgConceeded}
-            averageRating={homeTeamStats?.avgRating?.toFixed(2)}
-            XG={homeForm.XGOverall?.toFixed(2)}
-            XGConceded={homeForm.XGAgainstAvgOverall?.toFixed(2)}
-            XGSwing={homeForm.XGChangeRecently}
-            bigChances={homeTeamStats?.bigChances}
-            bigChancesMissed={homeTeamStats?.bigChancesMissed}
-            bigChancesConceded={homeTeamStats?.bigChancesAgainst}
-            goalConversionRate={
-              homeTeamStats?.shots !== undefined && homeTeamStats?.goalsScored
-                ? ((homeTeamStats.goalsScored / homeTeamStats.shots) * 100).toFixed(2)
-                : "N/A"
-            }
-            bigChanceConversionRate={
-              homeTeamStats?.bigChances !== undefined &&
-                homeTeamStats?.bigChancesMissed !== undefined &&
-                homeTeamStats?.bigChances > 0
-                ? (
-                  ((homeTeamStats.bigChances - homeTeamStats.bigChancesMissed) /
-                    homeTeamStats.bigChances) *
-                  100
-                ).toFixed(2)
-                : "N/A"
-            }
-            shootingAccuracy={
-              homeTeamStats?.shotsOnTarget !== undefined &&
-                homeTeamStats?.shots
-                ? ((homeTeamStats.shotsOnTarget / homeTeamStats.shots) * 100).toFixed(2)
-                : "N/A"
-            }
-            shotsOnTargetAgainst={
-              homeTeamStats?.shotsOnTargetAgainst !== undefined &&
-                homeTeamStats?.matches
-                ? (homeTeamStats.shotsOnTargetAgainst / homeTeamStats.matches).toFixed(2)
-                : "N/A"
-            }
-
-            possession={homeForm.AveragePossessionOverall?.toFixed(2)}
-            accuratePassesPercentage={homeTeamStats?.accuratePassesPercentage?.toFixed(2)}
-            accuratePassesOpponentHalf={homeTeamStats?.accurateOppositionHalfPassesPercentage?.toFixed(2)}
-            accuratePassesDefensiveHalf={homeTeamStats?.accurateOwnHalfPassesPercentage?.toFixed(2)}
-            accurateCrosses={homeTeamStats?.accurateCrossesPercentage?.toFixed(2)}
-            accurateCrossesAgainst={
-              homeTeamStats?.crossesSuccessfulAgainst !== undefined &&
-                homeTeamStats?.crossesTotalAgainst
-                ? ((homeTeamStats.crossesSuccessfulAgainst / homeTeamStats.crossesTotalAgainst) * 100).toFixed(2)
-                : "N/A"
-            }
-            longBallPercentage={
-              homeTeamStats?.totalLongBalls !== undefined &&
-                homeTeamStats?.totalPasses
-                ? ((homeTeamStats.totalLongBalls / homeTeamStats.totalPasses) * 100).toFixed(2)
-                : "N/A"
-            }            //todo add goal diff and btts percentages
-            accurateLongBallsPercentage={homeTeamStats?.accurateLongBallsPercentage?.toFixed(2)}
-            accurateLongBallsAgainstPercentage={
-              homeTeamStats?.longBallsSuccessfulAgainst !== undefined &&
-                homeTeamStats?.longBallsTotalAgainst
-                ? ((homeTeamStats.longBallsSuccessfulAgainst / homeTeamStats.longBallsTotalAgainst) * 100).toFixed(2)
-                : "N/A"
-            }
-            shots={homeForm.avgShots?.toFixed(2)}
-            sot={homeForm.AverageShotsOnTargetOverall?.toFixed(2)}
-            shotsInsideBox={homeTeamStats?.shotsFromInsideTheBox}
-            shotsInsideBoxAgainst={homeTeamStats?.shotsFromInsideTheBoxAgainst}
-            dangerousAttacks={
-              homeForm.AverageDangerousAttacksOverall !== 0
-                ? homeForm.AverageDangerousAttacksOverall?.toFixed(2)
-                : homeForm.AverageDangerousAttacks
-            }
-            goalsFromInsideTheBox={homeTeamStats?.goalsFromInsideTheBox}
-            goalsFromOutsideTheBox={homeTeamStats?.goalsFromOutsideTheBox}
-            fastBreakShots={homeTeamStats?.fastBreakShots}
-            fastBreaksLeadingToShot={
-              homeTeamStats?.fastBreakShots !== undefined && homeTeamStats?.fastBreaks
-                ? ((homeTeamStats.fastBreakShots / homeTeamStats.fastBreaks) * 100).toFixed(2)
-                : "N/A"
-            }
-            dribbleAttempts={homeTeamStats?.dribbleAttempts}
-            successfulDribbles={homeTeamStats?.successfulDribbles}
-            duelsWonPercentage={homeTeamStats?.duelsWonPercentage?.toFixed(2)}
-            aerialDuelsWonPercentage={homeTeamStats?.aerialDuelsWonPercentage?.toFixed(2)}
-            ballRecovery={(homeTeamStats?.ballRecovery / homeTeamStats?.matches)?.toFixed(2)}
-            interceptions={(homeTeamStats?.interceptions / homeTeamStats?.matches)?.toFixed(2)}
-            cleansheetPercentage={
-              homeTeamStats?.cleanSheets !== undefined &&
-                homeTeamStats?.matches
-                ? ((homeTeamStats.cleanSheets / homeTeamStats.matches) * 100).toFixed(2)
-                : "N/A"
-            }
-            tackles={(homeTeamStats?.tackles / homeTeamStats?.matches)?.toFixed(2)}
-            errorsLeadingToShotAgainst={homeTeamStats?.errorsLeadingToShotAgainst}
-            offsides={(homeTeamStats?.offsides / homeTeamStats?.matches)?.toFixed(2)}
-            PPDA={PPDA_valueHome}
-            PPAA={PPAA_valueHome}
-            leaguePosition={
-              homeForm.LeaguePosition !== undefined &&
-                homeForm.LeaguePosition !== "undefined"
-                ? formDataHome[0].leaguePosition
-                : 0
-            }
-            rawPosition={
-              game.homeRawPosition !== undefined &&
-                game.homeRawPosition !== "undefined"
-                ? game.homeRawPosition
-                : 0
-            }
-            homeOrAwayLeaguePosition={
-              homeForm.homePositionHomeOnly !== undefined &&
-                homeForm.homePositionHomeOnly !== "undefined"
-                ? homeForm.homePositionHomeOnly
-                : 0
-            }
-            winPercentage={homeForm.homePPGAv ? homeForm.homePPGAv : "N/A"}
-            lossPercentage={
-              game.homeTeamLossPercentage ? game.homeTeamLossPercentage : "N/A"
-            }
-            drawPercentage={
-              game.homeTeamDrawPercentage ? game.homeTeamDrawPercentage : "N/A"
-            }
-            ppg={homeForm.avPointsAll?.toFixed(2)}
-            formTrend={[
-              homeForm.avPoints10?.toFixed(2),
-              homeForm.avPoints6?.toFixed(2),
-              homeForm.avPoints5?.toFixed(2),
-            ]}
-            formRun={homeForm.resultsAll}
-            goalDifference={formDataHome[0].goalDifference}
-            goalDifferenceHomeOrAway={formDataHome[0].goalDifferenceHomeOrAway}
-            BttsPercentage={formDataHome[0].BttsPercentage}
-            BttsPercentageHomeOrAway={formDataHome[0].BttsPercentageHomeOrAway}
-            BTTSArray={formDataHome[0].BTTSArray}
-            Results={formDataHome[0].Results}
-            ResultsHorA={formDataHome[0].ResultsHorA}
-            CardsPerGame={(homeTeamStats?.yellowCards / homeTeamStats?.matches)?.toFixed(2)}
-            RedCardsPerGame={(homeTeamStats?.redCards / homeTeamStats?.matches)?.toFixed(2)}
-            FoulsPerGame={(homeTeamStats?.fouls / homeTeamStats?.matches)?.toFixed(2)}
-            PenaltiesConceded={homeTeamStats?.penaltiesCommited}
-            CornersAverage={homeForm.AverageCorners}
-            FreeKickGoals={homeTeamStats?.freeKickGoals}
-            ScoredBothHalvesPercentage={
-              formDataHome[0].ScoredBothHalvesPercentage
-            }
-            FormTextString={formDataHome[0].FormTextStringHome}
-            FavouriteRecord={formDataHome[0].FavouriteRecord}
-            StyleOfPlay={formDataHome[0].styleOfPlayOverall}
-            StyleOfPlayHomeOrAway={formDataHome[0].styleOfPlayHome}
+            {...homeAllStatsProps}
+            getCollapsableProps={getCollapsableProps} // Always pass functions explicitly if they aren't in the map
+            comparisonStatusMap={comparisonStatusMap}
           />
         </ul>
       </div>
     );
   }
 
+
+  const invertStatus = (status) => {
+    switch (status) {
+      case 'better':
+        return 'worse';
+      case 'worse':
+        return 'better';
+      case 'equal': // 'equal' stays the same
+      default:
+        return status;
+    }
+  };
+
+  // Function to generate the inverted map
+  const getInvertedComparisonMap = (originalMap) => {
+    const invertedMap = {};
+    for (const key in originalMap) {
+      if (Object.hasOwnProperty.call(originalMap, key)) {
+        invertedMap[key] = invertStatus(originalMap[key]);
+      }
+    }
+    return invertedMap;
+  };
+
   // Component: StatsAway (Render Away Team Stats)
-  function StatsAwayComponent({ getCollapsableProps }) {
-
-    const oppositionPassesAway = awayTeamStats?.ownHalfPassesTotalAgainst ?? 0;
-    const defensiveActionsAway =
-      (awayTeamStats?.interceptions ?? 0) +
-      (awayTeamStats?.tackles ?? 0) +
-      (awayTeamStats?.blockedScoringAttempt ?? 0) +
-      (awayTeamStats?.clearances ?? 0);
-
-    // Check for zero to prevent division by zero (resulting in Infinity)
-    const PPDA_valueAway = defensiveActionsAway > 0
-      ? (oppositionPassesAway / defensiveActionsAway).toFixed(2)
-      : 'N/A';
-
-    const oppositionHalfPassesAway = awayTeamStats?.totalOppositionHalfPasses ?? 0;
-    const attackingPlaysAway = (awayTeamStats?.shots ?? 0 + awayTeamStats?.totalCrosses ?? 0 + awayTeamStats?.dribbleAttempts ?? 0 + awayTeamStats?.bigChancesCreated ?? 0);
-
-    const PPAA_valueAway = attackingPlaysAway > 0
-      ? (oppositionHalfPassesAway / attackingPlaysAway).toFixed(2)
-      : 'N/A';
-
-    const trueFormColour = getTrueFormColor(awayForm.trueForm);
-
+  function StatsAwayComponent({ getCollapsableProps, awayAllStatsProps, comparisonStatusMap }) {
+    const invertedMap = getInvertedComparisonMap(comparisonStatusMap);
 
     if (!awayForm) return null;
     return (
       <div className="flex-childTwo">
         <ul style={style}>
           <Stats
+            {...awayAllStatsProps}
             getCollapsableProps={getCollapsableProps}
-            games={"all"}
-            style={style}
-            homeOrAway="Away"
-            badge={game.awayBadge}
-            gameCount={divider}
-            key={formDataAway[0].name}
-            last5={formDataAway[0].Last5}
-            // homeOrAwayResults={gameArrayAwayTeamAwayGames}
-            LeagueOrAll={formDataAway[0].LeagueOrAll}
-            className={"KeyStatsAway"}
-            classNameTwo={"FormStatsAway"}
-            name={formDataAway[0].name}
-            value={awayForm.trueForm}
-            color={trueFormColour}
-            goals={awayForm.avgScored}
-            conceeded={awayForm.avgConceeded}
-            averageRating={awayTeamStats?.avgRating?.toFixed(2)}
-            XG={awayForm.XGOverall?.toFixed(2)}
-            XGConceded={awayForm.XGAgainstAvgOverall?.toFixed(2)}
-            XGSwing={awayForm.XGChangeRecently}
-            bigChances={awayTeamStats?.bigChances}
-            bigChancesMissed={awayTeamStats?.bigChancesMissed}
-            goalConversionRate={
-              awayTeamStats?.shots !== undefined && awayTeamStats?.goalsScored
-                ? ((awayTeamStats.goalsScored / awayTeamStats.shots) * 100).toFixed(2)
-                : "N/A"
-            }
-            bigChanceConversionRate={
-              awayTeamStats?.bigChances !== undefined &&
-                awayTeamStats?.bigChancesMissed !== undefined &&
-                awayTeamStats?.bigChances > 0
-                ? (
-                  ((awayTeamStats.bigChances - awayTeamStats.bigChancesMissed) /
-                    awayTeamStats.bigChances) *
-                  100
-                ).toFixed(2)
-                : "N/A"
-            }
-            bigChancesConceded={awayTeamStats?.bigChancesAgainst}
-            shotsOnTargetAgainst={
-              awayTeamStats?.shotsOnTargetAgainst !== undefined &&
-                awayTeamStats?.matches
-                ? (awayTeamStats.shotsOnTargetAgainst / awayTeamStats.matches).toFixed(2)
-                : "N/A"
-            }
-            shootingAccuracy={
-              awayTeamStats?.shotsOnTarget !== undefined &&
-                awayTeamStats?.shots
-                ? ((awayTeamStats.shotsOnTarget / awayTeamStats.shots) * 100).toFixed(2)
-                : "N/A"
-            }
-            accuratePassesPercentage={awayTeamStats?.accuratePassesPercentage?.toFixed(2)}
-            accuratePassesOpponentHalf={awayTeamStats?.accurateOppositionHalfPassesPercentage?.toFixed(2)}
-            accuratePassesDefensiveHalf={awayTeamStats?.accurateOwnHalfPassesPercentage?.toFixed(2)}
-            accurateCrosses={awayTeamStats?.accurateCrossesPercentage?.toFixed(2)}
-            accurateCrossesAgainst={
-              awayTeamStats?.crossesSuccessfulAgainst !== undefined &&
-                awayTeamStats?.crossesTotalAgainst
-                ? ((awayTeamStats.crossesSuccessfulAgainst / awayTeamStats.crossesTotalAgainst) * 100).toFixed(2)
-                : "N/A"
-            }
-            longBallPercentage={
-              awayTeamStats?.totalLongBalls !== undefined &&
-                awayTeamStats?.totalPasses
-                ? ((awayTeamStats.totalLongBalls / awayTeamStats.totalPasses) * 100).toFixed(2)
-                : "N/A"
-            }
-            accurateLongBallsPercentage={awayTeamStats?.accurateLongBallsPercentage?.toFixed(2)}
-            accurateLongBallsAgainstPercentage={
-              awayTeamStats?.longBallsSuccessfulAgainst !== undefined &&
-                awayTeamStats?.longBallsTotalAgainst
-                ? ((awayTeamStats.longBallsSuccessfulAgainst / awayTeamStats.longBallsTotalAgainst) * 100).toFixed(2)
-                : "N/A"
-            }
-            //todo add goal diff and btts percentages
-            possession={awayForm.AveragePossessionOverall?.toFixed(2)}
-            rawPosition={game.awayRawPosition ? game.awayRawPosition : 0}
-            sot={awayForm.AverageShotsOnTargetOverall?.toFixed(2)}
-            shots={awayForm.avgShots?.toFixed(2)}
-            shotsInsideBox={awayTeamStats?.shotsFromInsideTheBox}
-            shotsInsideBoxAgainst={awayTeamStats?.shotsFromInsideTheBoxAgainst}
-            dangerousAttacks={
-              awayForm.AverageDangerousAttacksOverall !== 0
-                ? awayForm.AverageDangerousAttacksOverall?.toFixed(2)
-                : awayForm.AverageDangerousAttacks
-            }
-            goalsFromInsideTheBox={awayTeamStats?.goalsFromInsideTheBox}
-            goalsFromOutsideTheBox={awayTeamStats?.goalsFromOutsideTheBox}
-            fastBreakShots={awayTeamStats?.fastBreakShots}
-            fastBreaksLeadingToShot={
-              awayTeamStats?.fastBreakShots !== undefined && awayTeamStats?.fastBreaks
-                ? ((awayTeamStats.fastBreakShots / awayTeamStats.fastBreaks) * 100).toFixed(2)
-                : "N/A"
-            }
-            dribbleAttempts={awayTeamStats?.dribbleAttempts}
-            successfulDribbles={awayTeamStats?.successfulDribbles}
-            duelsWonPercentage={awayTeamStats?.duelsWonPercentage?.toFixed(2)}
-            aerialDuelsWonPercentage={awayTeamStats?.aerialDuelsWonPercentage?.toFixed(2)}
-            ballRecovery={(awayTeamStats?.ballRecovery / awayTeamStats?.matches)?.toFixed(2)}
-            interceptions={(awayTeamStats?.interceptions / awayTeamStats?.matches)?.toFixed(2)}
-            cleansheetPercentage={
-              awayTeamStats?.cleanSheets !== undefined &&
-                awayTeamStats?.matches
-                ? ((awayTeamStats.cleanSheets / awayTeamStats.matches) * 100).toFixed(2)
-                : "N/A"
-            }
-            tackles={(awayTeamStats?.tackles / awayTeamStats?.matches)?.toFixed(2)}
-            errorsLeadingToShotAgainst={awayTeamStats?.errorsLeadingToShotAgainst}
-            offsides={(awayTeamStats?.offsides / awayTeamStats?.matches)?.toFixed(2)}
-            PPDA={PPDA_valueAway}
-            PPAA={PPAA_valueAway}
-            leaguePosition={
-              awayForm.LeaguePosition !== undefined &&
-                awayForm.LeaguePosition !== "undefined"
-                ? formDataAway[0].leaguePosition
-                : 0
-            }
-            homeOrAwayLeaguePosition={
-              awayForm.awayPositionAwayOnly !== undefined &&
-                awayForm.awayPositionAwayOnly !== "undefinedundefined"
-                ? awayForm.awayPositionAwayOnly
-                : 0
-            }
-            winPercentage={awayForm.awayPPGAv ? awayForm.awayPPGAv : "N/A"}
-            lossPercentage={
-              game.awayTeamLossPercentage ? game.awayTeamLossPercentage : "N/A"
-            }
-            drawPercentage={
-              game.awayTeamDrawPercentage ? game.awayTeamDrawPercentage : "N/A"
-            }
-            ppg={awayForm.avPointsAll?.toFixed(2)}
-            formTrend={[
-              awayForm.avPoints10?.toFixed(2),
-              awayForm.avPoints6?.toFixed(2),
-              awayForm.avPoints5?.toFixed(2),
-            ]}
-            formRun={awayForm.resultsAll}
-            goalDifference={formDataAway[0].goalDifference}
-            goalDifferenceHomeOrAway={formDataAway[0].goalDifferenceHomeOrAway}
-            BttsPercentage={formDataAway[0].BttsPercentage}
-            BttsPercentageHomeOrAway={formDataAway[0].BttsPercentageHomeOrAway}
-            BTTSArray={formDataAway[0].BTTSArray}
-            Results={formDataAway[0].Results}
-            ResultsHorA={formDataAway[0].ResultsHorA}
-            CardsPerGame={(awayTeamStats?.yellowCards / awayTeamStats?.matches)?.toFixed(2)}
-            RedCardsPerGame={(awayTeamStats?.redCards / awayTeamStats?.matches)?.toFixed(2)}
-            FoulsPerGame={(awayTeamStats?.fouls / awayTeamStats?.matches)?.toFixed(2)}
-            PenaltiesConceded={homeTeamStats?.penaltiesCommited}
-            CornersAverage={awayForm.AverageCorners}
-            FreeKickGoals={awayTeamStats?.freeKickGoals}
-            ScoredBothHalvesPercentage={
-              formDataAway[0].ScoredBothHalvesPercentage
-            }
-            FormTextString={formDataAway[0].FormTextStringAway}
-            FavouriteRecord={formDataAway[0].FavouriteRecord}
-            StyleOfPlay={formDataAway[0].styleOfPlayOverall}
-            StyleOfPlayHomeOrAway={formDataAway[0].styleOfPlayAway}
+            // 2. Pass the inverted map to the Stats component!
+            comparisonStatusMap={invertedMap}
           />
         </ul>
       </div>
     );
   }
+
+
+  const comparisonStatusMap = calculateComparisonStatusMap(
+    homeAllStatsProps,
+    awayAllStatsProps
+  );
+
+  console.log("Comparison Status Map:", comparisonStatusMap);
 
   function StatsHomeLast5Component() {
     if (!homeForm) return null;
@@ -2244,11 +2458,7 @@ function GameStats({ game, displayBool, stats }) {
     });
   }
 
-  gameArrayHome.sort((a, b) => b.unixTimestamp - a.unixTimestamp);
-  gameArrayAway.sort((a, b) => b.unixTimestamp - a.unixTimestamp);
 
-  const bttsArrayHome = Array.from(gameArrayHome, (x) => x.btts);
-  const bttsArrayAway = Array.from(gameArrayAway, (x) => x.btts);
 
   const overviewHome = gameArrayHome.slice(0, 10).map((game) => (
     <div>
@@ -2293,7 +2503,6 @@ function GameStats({ game, displayBool, stats }) {
     btts: game.btts_potential,
   });
 
-  const formDataHome = [];
 
   function getPointsFromGames(formArr) {
     const pairings = {
@@ -2829,7 +3038,7 @@ function GameStats({ game, displayBool, stats }) {
         setAwaySixGameAverage(away6GA);
         setAwayTenGameAverage(away10GA);
 
-  
+
         if (homeForm.fiveGameAv && game.matches_completed_minimum > 4) {
           const formTextStringHome = await GenerateFormSummary(
             homeForm,
@@ -2882,65 +3091,7 @@ function GameStats({ game, displayBool, stats }) {
     homeTenGameAverage,
   ]); // Dependencies for the useCallback
 
-  formDataHome.push({
-    name: game.homeTeam,
-    Last5: gameStats.home[2].LastFiveForm,
-    LeagueOrAll: gameStats.home[2].LeagueOrAll,
-    AverageGoals: homeForm.ScoredOverall / 10,
-    AverageConceeded: homeForm.ConcededOverall / 10,
-    AverageXG: homeForm.XGOverall,
-    AverageXGConceded: homeForm.XGAgainstAvgOverall,
-    AveragePossession: homeForm.AveragePossessionOverall,
-    AverageShotsOnTarget: homeForm.AverageShotsOnTargetOverall,
-    AverageDangerousAttacks: homeForm.AverageDangerousAttacksOverall,
-    homeOrAway: "Home",
-    leaguePosition: homeForm.LeaguePosition,
-    Last5PPG: homeForm.PPG,
-    SeasonPPG: homeForm.SeasonPPG,
-    formRun: homeForm.formRun,
-    goalDifference: homeForm.goalDifference,
-    goalDifferenceHomeOrAway: homeForm.goalDifferenceHomeOrAway,
-    CardsTotal: homeForm.CardsTotal || "-",
-    CornersAverage: homeForm.AverageCorners || "-",
-    FormTextStringHome: formSummaries[0],
-    BTTSArray: bttsArrayHome,
-    Results: homeForm.resultsAll,
-    ResultsHorA: homeForm.resultsHome,
-    XGSwing: homeForm.XGChangeRecently,
-    styleOfPlayOverall: homeForm.styleOfPlayOverall,
-    styleOfPlayHome: homeForm.styleOfPlayHome,
-  });
 
-  const formDataAway = [];
-
-  formDataAway.push({
-    name: game.awayTeam,
-    Last5: gameStats.away[2].LastFiveForm,
-    LeagueOrAll: gameStats.away[2].LeagueOrAll,
-    AverageGoals: awayForm.ScoredOverall / 10,
-    AverageConceeded: awayForm.ConcededOverall / 10,
-    AverageXG: awayForm.XGOverall,
-    AverageXGConceded: awayForm.XGAgainstAvgOverall,
-    AveragePossession: awayForm.AveragePossessionOverall,
-    AverageShotsOnTarget: awayForm.AverageShotsOnTargetOverall,
-    AverageDangerousAttacks: awayForm.AverageDangerousAttacksOverall,
-    homeOrAway: "Away",
-    leaguePosition: awayForm.LeaguePosition,
-    Last5PPG: awayForm.PPG,
-    SeasonPPG: awayForm.SeasonPPG,
-    formRun: awayForm.formRun,
-    goalDifference: awayForm.goalDifference,
-    goalDifferenceHomeOrAway: awayForm.goalDifferenceHomeOrAway,
-    CardsTotal: awayForm.CardsTotal || "-",
-    CornersAverage: awayForm.AverageCorners || "-",
-    FormTextStringAway: formSummaries[1],
-    BTTSArray: bttsArrayAway,
-    Results: awayForm.resultsAll,
-    ResultsHorA: awayForm.resultsAway,
-    XGSwing: awayForm.XGChangeRecently,
-    styleOfPlayOverall: awayForm.styleOfPlayOverall,
-    styleOfPlayAway: awayForm.styleOfPlayAway,
-  });
 
   // AI Insights Generation
 
@@ -3585,8 +3736,16 @@ function GameStats({ game, displayBool, stats }) {
             <>
               <h2>All games</h2>
               <div className="flex-container">
-                <StatsHomeComponent getCollapsableProps={getCollapsableProps} />
-                <StatsAwayComponent getCollapsableProps={getCollapsableProps} />
+                <StatsHomeComponent
+                  getCollapsableProps={getCollapsableProps}
+                  homeAllStatsProps={homeAllStatsProps} // Pass the stats object down too
+                  comparisonStatusMap={comparisonStatusMap} // <--- This is the key
+                />
+                <StatsAwayComponent
+                  getCollapsableProps={getCollapsableProps}
+                  awayAllStatsProps={awayAllStatsProps} // Pass the stats object down too
+                  comparisonStatusMap={comparisonStatusMap} // <--- This is the key
+                />
               </div>
               <h2>Betting value</h2>
               <h4>Points difference from bookies predictions over last 5 games</h4>
@@ -3594,10 +3753,10 @@ function GameStats({ game, displayBool, stats }) {
               <span>Based on implied probability derived from odds for each match</span>
               <div className="flex-container">
                 <div className="DoughnutOne">
-                  <DoughnutChart pointsTotal = {homeForm.pointsSum5} predictedPoints = {homeForm.totalExpectedPoints} deltaPTS={homeForm.trueForm !== undefined ? homeForm.trueForm : 0} chartTitle={homeForm.trueForm.toFixed(2)} color="#333333" label={homeForm.trueForm.toFixed(2)} theme={localStorage.getItem('theme')}/>
+                  <DoughnutChart pointsTotal={homeForm.pointsSum5} predictedPoints={homeForm.totalExpectedPoints} deltaPTS={homeForm.trueForm !== undefined ? homeForm.trueForm : 0} chartTitle={homeForm.trueForm.toFixed(2)} color="#333333" label={homeForm.trueForm.toFixed(2)} theme={localStorage.getItem('theme')} />
                 </div>
                 <div className="DoughnutTwo">
-                  <DoughnutChart pointsTotal = {awayForm.pointsSum5} predictedPoints = {awayForm.totalExpectedPoints} deltaPTS={awayForm.trueForm !== undefined ? awayForm.trueForm : 0} chartTitle={awayForm.trueForm.toFixed(2)} color="#333333" label={awayForm.trueForm.toFixed(2)} theme={localStorage.getItem('theme')}/>
+                  <DoughnutChart pointsTotal={awayForm.pointsSum5} predictedPoints={awayForm.totalExpectedPoints} deltaPTS={awayForm.trueForm !== undefined ? awayForm.trueForm : 0} chartTitle={awayForm.trueForm.toFixed(2)} color="#333333" label={awayForm.trueForm.toFixed(2)} theme={localStorage.getItem('theme')} />
                 </div>
               </div>
               {stats && ranksHome && ranksAway && stats?.topTeams && (

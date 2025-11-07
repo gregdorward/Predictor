@@ -2,9 +2,21 @@ import { Fragment } from "react";
 import { CreateBadge } from "./createBadge";
 import Collapsable from "../components/CollapsableElement";
 import BarChart, { DoughnutChart } from "../components/Chart";
+
 function Stats(props) {
-  const { getCollapsableProps } = props;
+  console.log("Rendering Stats with props:", props);
+  const { getCollapsableProps, comparisonStatusMap } = props;
   let shouldOpen = props.clicked;
+
+  // Helper function to get the status class for a specific stat key
+  const getComparisonClass = (statKey) => {
+    // If comparisonStatusMap exists and has the key, return the class name
+    // If not, return an empty string to avoid adding unwanted classes
+    return comparisonStatusMap && comparisonStatusMap[statKey] 
+      ? `stat-${comparisonStatusMap[statKey]}` 
+      : '';
+  };
+  
   function styleForm(formIndicator) {
     let className;
     if (formIndicator === "W") {
@@ -119,7 +131,7 @@ function Stats(props) {
               element={
                 <><li
                   key="LeaguePosition"
-                  className="LeaguePosition"
+                  className={`LeaguePosition ${getComparisonClass('leaguePosition')}${props.homeOrAway}`}
                   data-cy={props.name ? props.name + "leaguePosition" : "leaguePosition"}
                 >
                   {`League position: ${props.leaguePosition !== undefined ? props.leaguePosition : "N/A"
@@ -127,31 +139,35 @@ function Stats(props) {
                 </li>
                   <li
                     key="TeamScored"
-                    className="TeamScored"
+                    className={`TeamScored ${getComparisonClass('goals')}${props.homeOrAway}`}
                     data-cy={props.name ? props.name + "teamScored" : "teamScored"}
                   >
                     {`Avg goals scored: ${props.goals !== undefined ? props.goals : "N/A"}`}
                   </li>
                   <li
                     key="TeamConceeded"
-                    className="TeamConceeded"
+                    className={`TeamConceeded ${getComparisonClass('conceeded')}${props.homeOrAway}`}
                     data-cy={props.name ? props.name + "teamConceded" : "teamConceded"}
                   >
                     {`Avg goals conceeded: ${props.conceeded !== undefined ? props.conceeded : "N/A"}`}
                   </li>
-                  <li key="TeamXG" className="TeamXG" data-cy={props.name ? props.name + "teamXG" : "teamXG"}>
+                  <li
+                    key="TeamXG"
+                    className={`TeamXG ${getComparisonClass('XG')}${props.homeOrAway}`}
+                    data-cy={props.name ? props.name + "teamXG" : "teamXG"}
+                  >
                     {`Avg XG: ${props.XG !== undefined ? props.XG : "N/A"}`}
                   </li>
                   <li
                     key="TeamXGConceded"
-                    className="TeamXGConceded"
+                    className={`TeamXGConceded ${getComparisonClass('XGConceded')}${props.homeOrAway}`}
                     data-cy={props.name ? props.name + "teamXGConceded" : "teamXGConceded"}
                   >
                     {`Avg XG conceded: ${props.XGConceded !== undefined ? props.XGConceded : "N/A"}`}
                   </li>
                   <li
                     key="goalDifference"
-                    className="goalDifference"
+                    className={`goalDifference ${getComparisonClass('goalDifference')}${props.homeOrAway}`}
                     data-cy={props.name ? props.name + "goalDifference" : "goalDifference"}
                   >
                     {`Goal difference : `}
@@ -159,7 +175,7 @@ function Stats(props) {
                   </li>
                   <li
                     key="goalDifferenceHorA"
-                    className="goalDifferenceHorA"
+                    className={`goalDifferenceHorA ${getComparisonClass('goalDifferenceHomeOrAway')}${props.homeOrAway}`}
                     data-cy={props.name ? props.name + "goalDifference" : "goalDifference"}
                   >
                     {`Goal difference ${props.homeOrAway ? props.homeOrAway : "N/A"} : ${props.goalDifferenceHomeOrAway !== undefined ? props.goalDifferenceHomeOrAway : "N/A"
@@ -167,7 +183,7 @@ function Stats(props) {
                   </li>
                   <li
                     key="TeamPossession"
-                    className="TeamPossession"
+                    className={`TeamPossession ${getComparisonClass('possession')}${props.homeOrAway}`}
                     data-cy={props.name ? props.name + "teamPossession" : "teamPossession"}
                   >
                     {`Avg possession: ${props.possession !== undefined ? props.possession : "N/A"}%`}
@@ -181,62 +197,62 @@ function Stats(props) {
               element={
                 <><li
                   key="AverageShots"
-                  className="AverageShots"
+                  className={`AverageShots ${getComparisonClass('shots')}${props.homeOrAway}`}
                   data-cy={props.name ? props.name + "AverageShots" : "AverageShots"}
                 >
                   {`Avg shots: ${props.shots !== undefined ? props.shots : "N/A"}`}
                 </li><li
                   key="AverageSOT"
-                  className="AverageSOT"
+                  className={`AverageSOT ${getComparisonClass('sot')}${props.homeOrAway}`}
                   data-cy={props.name ? props.name + "averageSOT" : "averageSOT"}
                 >
                     {`Avg SOT: ${props.sot !== undefined ? props.sot : "N/A"}`}
                   </li>
-                  <li key="ShootingAccuracy" className="ShootingAccuracy" data-cy={props.name ? props.name + "shootingAccuracy" : "shootingAccuracy"}>
+                  <li key="ShootingAccuracy" className={`ShootingAccuracy ${getComparisonClass('shootingAccuracy')}${props.homeOrAway}`} data-cy={props.name ? props.name + "shootingAccuracy" : "shootingAccuracy"}>
                     {`Shooting accuracy: ${props.shootingAccuracy !== undefined ? `${props.shootingAccuracy}%` : "N/A"}`}
                   </li>
-                  <li key="ShotConversionRate" className="GoalConversionRate" data-cy={props.name ? props.name + "goalConversionRate" : "goalConversionRate"}>
+                  <li key="ShotConversionRate" className={`GoalConversionRate ${getComparisonClass('goalConversionRate')}${props.homeOrAway}`} data-cy={props.name ? props.name + "goalConversionRate" : "goalConversionRate"}>
                     {`Shot conversion: ${props.goalConversionRate !== undefined ? `${props.goalConversionRate}%` : "N/A"}`}
                   </li>
-                  <li key="BigChanceConversionRate" className="BigChanceConversionRate" data-cy={props.name ? props.name + "bigChanceConversionRate" : "bigChanceConversionRate"}>
+                  <li key="BigChanceConversionRate" className={`BigChanceConversionRate ${getComparisonClass('bigChanceConversionRate')}${props.homeOrAway}`} data-cy={props.name ? props.name + "bigChanceConversionRate" : "bigChanceConversionRate"}>
                     {`Big chance conversion: ${props.bigChanceConversionRate !== undefined ? `${props.bigChanceConversionRate}%` : "N/A"}`}
                   </li>
                   <li
                     key="DangerousAttacks"
-                    className="DangerousAttacks"
+                    className={`DangerousAttacks ${getComparisonClass('dangerousAttacks')}${props.homeOrAway}`}
                     data-cy={props.name ? props.name + "dangerousAttacks" : "dangerousAttacks"}
                   >
                     {`Avg dangerous attacks: ${props.dangerousAttacks !== undefined ? props.dangerousAttacks : "N/A"}`}
                   </li><li
                     key="TeamShotsInsideBox"
-                    className="TeamShotsInsideBox"
+                    className={`TeamShotsInsideBox ${getComparisonClass('shotsInsideBox')}${props.homeOrAway}`}
                     data-cy={props.name ? props.name + "teamShotsInsideBox" : "teamShotsInsideBox"}
                   >
                     {`Shots inside box: ${props.shotsInsideBox !== undefined ? props.shotsInsideBox : "N/A"}`}
                   </li>
-                  <li key="GoalsFromInsideBox" className="GoalsFromInsideBox" data-cy={props.name ? props.name + "goalsFromInsideBox" : "goalsFromInsideBox"}>
+                  <li key="GoalsFromInsideBox" className={`GoalsFromInsideBox ${getComparisonClass('goalsFromInsideTheBox')}${props.homeOrAway}`} data-cy={props.name ? props.name + "goalsFromInsideBox" : "goalsFromInsideBox"}>
                     {`Goals from inside box: ${props.goalsFromInsideTheBox !== undefined ? props.goalsFromInsideTheBox : "N/A"}`}
                   </li>
-                  <li key="GoalsFromOutsideBox" className="GoalsFromOutsideBox" data-cy={props.name ? props.name + "goalsFromOutsideBox" : "goalsFromOutsideBox"}>
+                  <li key="GoalsFromOutsideBox" className={`GoalsFromOutsideBox ${getComparisonClass('goalsFromOutsideTheBox')}${props.homeOrAway}`} data-cy={props.name ? props.name + "goalsFromOutsideBox" : "goalsFromOutsideBox"}>
                     {`Goals from outside box: ${props.goalsFromOutsideTheBox !== undefined ? props.goalsFromOutsideTheBox : "N/A"}`}
                   </li>
                   <li
                     key="fastBreakShots"
-                    className="fastBreakShots"
+                    className={`fastBreakShots ${getComparisonClass('fastBreakShots')}${props.homeOrAway}`}
                     data-cy={props.name ? props.name + "fastBreakShots" : "fastBreakShots"}
                   >
                     {`Fast break shots: ${props.fastBreakShots !== undefined ? props.fastBreakShots : "N/A"}`}
                   </li>
                   <li
                     key="bigChances"
-                    className="bigChances"
+                    className={`bigChances ${getComparisonClass('bigChances')}${props.homeOrAway}`}
                     data-cy={props.name ? props.name + "bigChances" : "bigChances"}
                   >
                     {`Big chances created: ${props.bigChances !== undefined ? props.bigChances : "N/A"}`}
                   </li>
                   <li
                     key="bigChancesMissed"
-                    className="bigChancesMissed"
+                    className={`bigChancesMissed ${getComparisonClass('bigChancesMissed')}${props.homeOrAway}`}
                     data-cy={props.name ? props.name + "bigChancesMissed" : "bigChancesMissed"}
                   >
                     {`Big chances missed: ${props.bigChancesMissed !== undefined ? props.bigChancesMissed : "N/A"}`}
@@ -251,30 +267,30 @@ function Stats(props) {
 
               element={
                 <>
-                  <li key="CleanSheetPercentage" className="CleanSheetPercentage" data-cy={props.name ? props.name + "cleanSheetPercentage" : "cleanSheetPercentage"}>
+                  <li key="CleanSheetPercentage" className={`CleanSheetPercentage ${getComparisonClass('cleansheetPercentage')}${props.homeOrAway}`} data-cy={props.name ? props.name + "cleanSheetPercentage" : "cleanSheetPercentage"}>
                     {`Clean sheet percentage: ${props.cleansheetPercentage !== undefined ? `${props.cleansheetPercentage}%` : "N/A"}`}
                   </li>
-                  <li key="shotsOnTargetAgainst" className="shotsOnTargetAgainst" data-cy={props.name ? props.name + "shotsOnTargetAgainst" : "shotsOnTargetAgainst"}>
+                  <li key="shotsOnTargetAgainst" className={`shotsOnTargetAgainst ${getComparisonClass('shotsOnTargetAgainst')}${props.homeOrAway}`} data-cy={props.name ? props.name + "shotsOnTargetAgainst" : "shotsOnTargetAgainst"}>
                     {`Avg Shots on target against: ${props.shotsOnTargetAgainst !== undefined ? props.shotsOnTargetAgainst : "N/A"}`}
                   </li>
                   <li
                     key="TeamShotsInsideBoxAgainst"
-                    className="TeamShotsInsideBoxAgainst"
+                    className={`TeamShotsInsideBoxAgainst ${getComparisonClass('shotsInsideBoxAgainst')}${props.homeOrAway}`}
                     data-cy={props.name ? props.name + "teamShotsInsideBoxAgainst" : "teamShotsInsideBoxAgainst"}
                   >
                     {`Shots inside box against: ${props.shotsInsideBoxAgainst !== undefined ? props.shotsInsideBoxAgainst : "N/A"}`}
                   </li>
                   <li
                     key="bigChancesConceded"
-                    className="bigChancesConceded"
+                    className={`bigChancesConceded ${getComparisonClass('bigChancesConceded')}${props.homeOrAway}`}
                     data-cy={props.name ? props.name + "bigChancesConceded" : "bigChancesConceded"}
                   >
                     {`Big chances against: ${props.bigChancesConceded !== undefined ? props.bigChancesConceded : "N/A"}`}
                   </li>
-                  <li key="accurateCrossesAgainst" className="accurateCrossesAgainst" data-cy={props.name ? props.name + "accurateCrossesAgainst" : "accurateCrossesAgainst"}>
+                  <li key="accurateCrossesAgainst" className={`accurateCrossesAgainst ${getComparisonClass('accurateCrossesAgainst')}${props.homeOrAway}`} data-cy={props.name ? props.name + "accurateCrossesAgainst" : "accurateCrossesAgainst"}>
                     {`Accurate crosses against: ${props.accurateCrossesAgainst !== undefined ? `${props.accurateCrossesAgainst}%` : "N/A"}`}
                   </li>
-                  <li key="ErrorsLeadingToShotAgainst" className="ErrorsLeadingToShotAgainst" data-cy={props.name ? props.name + "ErrorsLeadingToShotAgainst" : "ErrorsLeadingToShotAgainst"}>
+                  <li key="ErrorsLeadingToShotAgainst" className={`ErrorsLeadingToShotAgainst ${getComparisonClass('errorsLeadingToShotAgainst')}${props.homeOrAway}`} data-cy={props.name ? props.name + "ErrorsLeadingToShotAgainst" : "ErrorsLeadingToShotAgainst"}>
                     {`Errors leading to shot against: ${props.errorsLeadingToShotAgainst !== undefined ? props.errorsLeadingToShotAgainst : "N/A"}`}
                   </li>
                 </>
@@ -285,35 +301,35 @@ function Stats(props) {
               {...getCollapsableProps("In Possession")}
               element={
                 <>
-                  <li key="PPAA" className="PPAA" data-cy={props.name ? props.name + "PPAA" : "PPAA"}>
+                  <li key="PPAA" className={`PPAA ${getComparisonClass('PPAA')}${props.homeOrAway}`} data-cy={props.name ? props.name + "PPAA" : "PPAA"}>
                     {`Passes per attacking action: ${props.PPAA !== undefined ? `${props.PPAA}` : "N/A"}`}
                   </li>
-                  <li key="AccuratePassesPercentage" className="AccuratePassesPercentage" data-cy={props.name ? props.name + "AccuratePassesPercentage" : "AccuratePassesPercentage"}>
+                  <li key="AccuratePassesPercentage" className={`AccuratePassesPercentage ${getComparisonClass('accuratePassesPercentage')}${props.homeOrAway}`} data-cy={props.name ? props.name + "AccuratePassesPercentage" : "AccuratePassesPercentage"}>
                     {`Accurate passes: ${props.accuratePassesPercentage !== undefined ? `${props.accuratePassesPercentage}%` : "N/A"}`}
                   </li>
-                  <li key="AccuratePassesOpponentHalf" className="AccuratePassesOpponentHalf" data-cy={props.name ? props.name + "AccuratePassesOpponentHalf" : "AccuratePassesOpponentHalf"}>
+                  <li key="AccuratePassesOpponentHalf" className={`AccuratePassesOpponentHalf ${getComparisonClass('accuratePassesOpponentHalf')}${props.homeOrAway}`} data-cy={props.name ? props.name + "AccuratePassesOpponentHalf" : "AccuratePassesOpponentHalf"}>
                     {`Accurate attacking passes: ${props.accuratePassesOpponentHalf !== undefined ? `${props.accuratePassesOpponentHalf}%` : "N/A"}`}
                   </li>
-                  <li key="AccuratePassesDefensiveHalf" className="AccuratePassesDefensiveHalf" data-cy={props.name ? props.name + "AccuratePassesDefensiveHalf" : "AccuratePassesDefensiveHalf"}>
+                  <li key="AccuratePassesDefensiveHalf" className={`AccuratePassesDefensiveHalf ${getComparisonClass('accuratePassesDefensiveHalf')}${props.homeOrAway}`} data-cy={props.name ? props.name + "AccuratePassesDefensiveHalf" : "AccuratePassesDefensiveHalf"}>
                     {`Accurate own half passes: ${props.accuratePassesDefensiveHalf !== undefined ? `${props.accuratePassesDefensiveHalf}%` : "N/A"}`}
                   </li>
-                  <li key="LongBallPercentage" className="LongBallPercentage" data-cy={props.name ? props.name + "LongBallPercentage" : "LongBallPercentage"}>
+                  <li key="LongBallPercentage" className={`LongBallPercentage ${getComparisonClass('longBallPercentage')}${props.homeOrAway}`} data-cy={props.name ? props.name + "LongBallPercentage" : "LongBallPercentage"}>
                     {`Long ball percentage: ${props.longBallPercentage !== undefined ? `${props.longBallPercentage}%` : "N/A"}`}
                   </li>
-                  <li key="AccurateLongBallsPercentage" className="AccurateLongBallsPercentage" data-cy={props.name ? props.name + "AccurateLongBallsPercentage" : "AccurateLongBallsPercentage"}>
+                  <li key="AccurateLongBallsPercentage" className={`AccurateLongBallsPercentage ${getComparisonClass('accurateLongBallsPercentage')}${props.homeOrAway}`} data-cy={props.name ? props.name + "AccurateLongBallsPercentage" : "AccurateLongBallsPercentage"}>
                     {`Accurate long balls: ${props.accurateLongBallsPercentage !== undefined ? `${props.accurateLongBallsPercentage}%` : "N/A"}`}
                   </li>
-                  <li key="AccurateCrosses" className="AccurateCrosses" data-cy={props.name ? props.name + "AccurateCrosses" : "AccurateCrosses"}>
+                  <li key="AccurateCrosses" className={`AccurateCrosses ${getComparisonClass('accurateCrosses')}${props.homeOrAway}`} data-cy={props.name ? props.name + "AccurateCrosses" : "AccurateCrosses"}>
                     {`Accurate crosses: ${props.accurateCrosses !== undefined ? `${props.accurateCrosses}%` : "N/A"}`}
                   </li>
-                  <li key="dribbleAttempts" className="dribbleAttempts" data-cy={props.name ? props.name + "dribbleAttempts" : "dribbleAttempts"}>
+                  <li key="dribbleAttempts" className={`dribbleAttempts ${getComparisonClass('dribbleAttempts')}${props.homeOrAway}`} data-cy={props.name ? props.name + "dribbleAttempts" : "dribbleAttempts"}>
                     {`Dribble attempts: ${props.dribbleAttempts !== undefined ? `${props.dribbleAttempts}` : "N/A"}`}
                   </li>
-                  <li key="successfulDribbles" className="successfulDribbles" data-cy={props.name ? props.name + "successfulDribbles" : "successfulDribbles"}>
+                  <li key="successfulDribbles" className={`successfulDribbles ${getComparisonClass('successfulDribbles')}${props.homeOrAway}`} data-cy={props.name ? props.name + "successfulDribbles" : "successfulDribbles"}>
                     {`Successful dribbles: ${props.successfulDribbles !== undefined ? `${props.successfulDribbles}` : "N/A"}`}
                   </li>
-                  <li key="fastBreaksLeadingToShot" className="fastBreaksLeadingToShot" data-cy={props.name ? props.name + "fastBreaksLeadingToShot" : "fastBreaksLeadingToShot"}>
-                    {`Fast breaks leading to shot: ${props.fastBreaksLeadingToShot !== undefined ? `${props.fastBreaksLeadingToShot}%` : "N/A"}`}
+                  <li key="fastBreaksLeadingToShot" className={`fastBreaksLeadingToShot ${getComparisonClass('fastBreaksLeadingToShot')}${props.homeOrAway}`} data-cy={props.name ? props.name + "fastBreaksLeadingToShot" : "fastBreaksLeadingToShot"}>
+                    {`Fast breaks -> shot: ${props.fastBreaksLeadingToShot !== undefined ? `${props.fastBreaksLeadingToShot}%` : "N/A"}`}
                   </li>
                 </>
               }
@@ -324,36 +340,36 @@ function Stats(props) {
 
               element={
                 <>
-                  <li key="PPDA" className="PPDA" data-cy={props.name ? props.name + "PPDA" : "PPDA"}>
+                  <li key="PPDA" className={`PPDA ${getComparisonClass('PPDA')}${props.homeOrAway}`} data-cy={props.name ? props.name + "PPDA" : "PPDA"}>
                     {`Passes per defensive action: ${props.PPDA !== undefined ? `${props.PPDA}` : "N/A"}`}
                   </li>
                   {/* <span className="StatExplanation">
                     PPDA = Total Own Half Passes Against / Total Defensive Actions (Tackles + Interceptions + Clearances + Blocks)
                   </span> */}
-                  <li key="tackles" className="tackles" data-cy={props.name ? props.name + "tackles" : "tackles"}>
+                  <li key="tackles" className={`tackles ${getComparisonClass('tackles')}${props.homeOrAway}`} data-cy={props.name ? props.name + "tackles" : "tackles"}>
                     {`Successful tackles per game: ${props.tackles !== undefined ? `${props.tackles}` : "N/A"}`}
                   </li>
-                  <li key="ballRecovery" className="ballRecovery" data-cy={props.name ? props.name + "ballRecovery" : "ballRecovery"}>
+                  <li key="ballRecovery" className={`ballRecovery ${getComparisonClass('ballRecovery')}${props.homeOrAway}`} data-cy={props.name ? props.name + "ballRecovery" : "ballRecovery"}>
                     {`Ball recoveries per game: ${props.ballRecovery !== undefined ? `${props.ballRecovery}` : "N/A"}`}
                   </li>
-                  <li key="interceptions" className="interceptions" data-cy={props.name ? props.name + "interceptions" : "interceptions"}>
+                  <li key="interceptions" className={`interceptions ${getComparisonClass('interceptions')}${props.homeOrAway}`} data-cy={props.name ? props.name + "interceptions" : "interceptions"}>
                     {`Interceptions per game: ${props.interceptions !== undefined ? `${props.interceptions}` : "N/A"}`}
                   </li>
                   <li
                     key="DuelsWon"
-                    className="DuelsWon"
+                    className={`DuelsWon ${getComparisonClass('duelsWonPercentage')}${props.homeOrAway}`}
                     data-cy={props.name ? props.name + "duelsWon" : "duelsWon"}
                   >
                     {`Duels won: ${props.duelsWonPercentage !== undefined ? `${props.duelsWonPercentage}%` : "N/A"}`}
                   </li>
                   <li
                     key="AerialDuelsWon"
-                    className="AerialDuelsWon"
+                    className={`AerialDuelsWon ${getComparisonClass('aerialDuelsWonPercentage')}${props.homeOrAway}`}
                     data-cy={props.name ? props.name + "aerialDuelsWon" : "aerialDuelsWon"}
                   >
                     {`Aerial duels won: ${props.aerialDuelsWonPercentage !== undefined ? `${props.aerialDuelsWonPercentage}%` : "N/A"}`}
                   </li>
-                  <li key="accurateLongBallsAgainstPercentage" className="accurateLongBallsAgainstPercentage" data-cy={props.name ? props.name + "accurateLongBallsAgainstPercentage" : "accurateLongBallsAgainstPercentage"}>
+                  <li key="accurateLongBallsAgainstPercentage" className={`accurateLongBallsAgainstPercentage ${getComparisonClass('accurateLongBallsAgainstPercentage')}${props.homeOrAway}`} data-cy={props.name ? props.name + "accurateLongBallsAgainstPercentage" : "accurateLongBallsAgainstPercentage"}>
                     {`Long balls against success: ${props.accurateLongBallsAgainstPercentage !== undefined ? `${props.accurateLongBallsAgainstPercentage}%` : "N/A"}`}
                   </li>
                 </>
@@ -364,33 +380,33 @@ function Stats(props) {
               {...getCollapsableProps("Form")}
 
               element={
-                <> <li key="PPG" className="PPG" data-cy={props.name ? props.name + "PPG" : "PPG"}>
+                <> <li key="PPG" className={`PPG ${getComparisonClass('ppg')}${props.homeOrAway}`} data-cy={props.name ? props.name + "PPG" : "PPG"}>
                   {`Season PPG: ${props.ppg !== undefined ? props.ppg : "N/A"}`}
                 </li>
                   <li
                     key="FormTrend10a"
-                    className="FormTrend"
+                    className={`FormTrend ${getComparisonClass('formTrend[0]')}${props.homeOrAway}`}
                     data-cy={props.name ? props.name + "FormTrend10" : "FormTrend10"}
                   >
                     {`Last 10 PPG: ${props.formTrend && props.formTrend[0] !== undefined ? props.formTrend[0] : "N/A"}`}
                   </li>
                   <li
                     key="FormTrend10b"
-                    className="FormTrend"
+                    className={`FormTrend ${getComparisonClass('formTrend[1]')}${props.homeOrAway}`}
                     data-cy={props.name ? props.name + "FormTrend10" : "FormTrend10"}
                   >
                     {`Last 6 PPG: ${props.formTrend && props.formTrend[1] !== undefined ? props.formTrend[1] : "N/A"}`}
                   </li>
                   <li
                     key="FormTrend10c"
-                    className="FormTrend"
+                    className={`FormTrend ${getComparisonClass('formTrend[2]')}${props.homeOrAway}`}
                     data-cy={props.name ? props.name + "FormTrend10" : "FormTrend10"}
                   >
                     {`Last 5 PPG: ${props.formTrend && props.formTrend[2] !== undefined ? props.formTrend[2] : "N/A"}`}
                   </li>
                   <li
                     key="WinPercentage"
-                    className="WinPercentage"
+                    className={`WinPercentage ${getComparisonClass('winPercentage')}${props.homeOrAway}`}
                     data-cy={props.name ? props.name + "WinPercentage" : "WinPercentage"}
                   >
                     {props.homeOrAway && props.winPercentage !== undefined && props.winPercentage !== "N/A" ? `${props.homeOrAway} PPG: ${props.winPercentage.toFixed(2)}` : "N/A"}
@@ -403,26 +419,26 @@ function Stats(props) {
               element={
                 <> <li
                   key="CardsTotal"
-                  className="CardsTotal"
+                  className={`CardsTotal ${getComparisonClass('CardsPerGame')}${props.homeOrAway}`}
                   data-cy={props.name ? props.name + "CardsTotal" : "CardsTotal"}
                 >
                   {`Yellow cards per game: ${props.CardsPerGame !== undefined ? props.CardsPerGame : "N/A"}`}
                 </li>
                   <li
                     key="RedCardsTotal"
-                    className="RedCardsTotal"
+                    className={`RedCardsTotal ${getComparisonClass('RedCardsPerGame')}${props.homeOrAway}`}
                     data-cy={props.name ? props.name + "RedCardsTotal" : "RedCardsTotal"}
                   >
                     {`Red cards per game: ${props.RedCardsPerGame !== undefined ? props.RedCardsPerGame : "N/A"}`}
                   </li>
                   <li
                     key="Fouls"
-                    className="Fouls"
+                    className={`Fouls ${getComparisonClass('FoulsPerGame')}${props.homeOrAway}`}
                     data-cy={props.name ? props.name + "Fouls" : "Fouls"}
                   >
                     {`Fouls per game: ${props.FoulsPerGame !== undefined ? props.FoulsPerGame : "N/A"}`}
                   </li>
-                  <li key="PenaltiesConceded" className="PenaltiesConceded" data-cy={props.name ? props.name + "PenaltiesConceded" : "PenaltiesConceded"}>
+                  <li key="PenaltiesConceded" className={`PenaltiesConceded ${getComparisonClass('PenaltiesConceded')}${props.homeOrAway}`} data-cy={props.name ? props.name + "PenaltiesConceded" : "PenaltiesConceded"}>
                     {`Penalties conceded: ${props.PenaltiesConceded !== undefined ? props.PenaltiesConceded : "N/A"}`}
                   </li>
                 </>
@@ -434,14 +450,14 @@ function Stats(props) {
               element={
                 <> <li
                   key="CornersAverage"
-                  className="CornersAverage"
+                  className={`CornersAverage ${getComparisonClass('CornersAverage')}${props.homeOrAway}`}
                   data-cy={props.name ? props.name + "CornersAverage" : "CornersAverage"}
                 >
                   {`Corners average: ${props.CornersAverage !== undefined ? props.CornersAverage : "N/A"}`}
                 </li>
                   <li
                     key="FreeKickGoals"
-                    className="FreeKickGoals"
+                    className={`FreeKickGoals ${getComparisonClass('FreeKickGoals')}${props.homeOrAway}`}
                     data-cy={props.name ? props.name + "FreeKickGoals" : "FreeKickGoals"}
                   >
                     {`Free kick goals: ${props.FreeKickGoals !== undefined ? props.FreeKickGoals : "N/A"}`}
@@ -455,7 +471,7 @@ function Stats(props) {
               element={
                 <>         <li
                   key="TeamAverageRating"
-                  className="TeamAverageRating"
+                  className={`TeamAverageRating ${getComparisonClass('averageRating')}${props.homeOrAway}`}
                   data-cy={props.name ? props.name + "teamAverageRating" : "teamAverageRating"}
                 >
                   {`Avg rating: ${props.averageRating !== undefined ? props.averageRating : "N/A"}`}
@@ -464,13 +480,13 @@ function Stats(props) {
 
                   <li
                     key="TeamXGSwing"
-                    className="TeamXGSwing"
+                    className={`TeamXGSwing ${getComparisonClass('XGSwing')}${props.homeOrAway}`}
                     data-cy={props.name ? props.name + "teamXGSwing" : "teamXGSwing"}
                   >
                     {`XG difference swing (last 5): ${props.XGSwing !== undefined ? props.XGSwing?.toFixed(2) : "N/A"
                       }`}
                   </li>
-                  <li key="Offsides" className="Offsides" data-cy={props.name ? props.name + "Offsides" : "Offsides"}>
+                  <li key="Offsides" className={`Offsides ${getComparisonClass('offsides')}${props.homeOrAway}`} data-cy={props.name ? props.name + "Offsides" : "Offsides"}>
                     {`Offsides per game: ${props.offsides !== undefined ? props.offsides : "N/A"}`}
                   </li>
                 </>
