@@ -4,7 +4,6 @@ import Collapsable from "../components/CollapsableElement";
 import BarChart, { DoughnutChart } from "../components/Chart";
 
 function Stats(props) {
-  console.log("Rendering Stats with props:", props);
   const { getCollapsableProps, comparisonStatusMap } = props;
   let shouldOpen = props.clicked;
 
@@ -95,22 +94,22 @@ function Stats(props) {
           >
             <div className="BTTSResults">{props.BTTSArray ? `BTTS` : ``}</div>
             <span className={styleBTTS(props.BTTSArray && props.BTTSArray[5] ? props.BTTSArray[5] : "")}>
-              {props.BTTSArray && props.BTTSArray[5] ? props.BTTSArray[5] : ""}
+              {props.BTTSArray && props.BTTSArray[5] ? "" : ""}
             </span>
             <span className={styleBTTS(props.BTTSArray && props.BTTSArray[4] ? props.BTTSArray[4] : "")}>
-              {props.BTTSArray && props.BTTSArray[4] ? props.BTTSArray[4] : ""}
+              {props.BTTSArray && props.BTTSArray[4] ? "" : ""}
             </span>
             <span className={styleBTTS(props.BTTSArray && props.BTTSArray[3] ? props.BTTSArray[3] : "")}>
-              {props.BTTSArray && props.BTTSArray[3] ? props.BTTSArray[3] : ""}
+              {props.BTTSArray && props.BTTSArray[3] ? "" : ""}
             </span>
             <span className={styleBTTS(props.BTTSArray && props.BTTSArray[2] ? props.BTTSArray[2] : "")}>
-              {props.BTTSArray && props.BTTSArray[2] ? props.BTTSArray[2] : ""}
+              {props.BTTSArray && props.BTTSArray[2] ? "" : ""}
             </span>
             <span className={styleBTTS(props.BTTSArray && props.BTTSArray[1] ? props.BTTSArray[1] : "")}>
-              {props.BTTSArray && props.BTTSArray[1] ? props.BTTSArray[1] : ""}
+              {props.BTTSArray && props.BTTSArray[1] ? "" : ""}
             </span>
             <span className={styleBTTS(props.BTTSArray && props.BTTSArray[0] ? props.BTTSArray[0] : "")}>
-              {props.BTTSArray && props.BTTSArray[0] ? props.BTTSArray[0] : ""}
+              {props.BTTSArray && props.BTTSArray[0] ? "" : ""}
             </span>
           </li>
           <div className="FormSummaries">

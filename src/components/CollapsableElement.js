@@ -18,7 +18,6 @@ const Collapsable = ({
   // onTriggerOpening,
   // onTriggerClosing,
 }) => {
-  console.log(element);
   return (
     <Collapsible
       transitionTime={300}

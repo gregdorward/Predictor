@@ -1034,8 +1034,9 @@ span.MembershipInfo {
   padding: 1em;
   align-items: center;
   font-size: 1.1em;
-  background-color: #004b00;
+  background-color: var(--secondary-background-color);
   color: var(--text-color);
+  border-left: #009700 solid 6px;
 }
 
 .ResultRowOverviewSmallD {
@@ -1045,8 +1046,9 @@ span.MembershipInfo {
   padding: 1em;
   align-items: center;
   font-size: 1.1em;
-  background-color: #020029;
+  background-color: var(--secondary-background-color);
   color: var(--text-color);
+  border-left: gray solid 6px;
 }
 
 .ResultRowOverviewSmallL {
@@ -1056,8 +1058,10 @@ span.MembershipInfo {
   padding: 1em;
   align-items: center;
   font-size: 1.1em;
-  background-color: #730a00;
+  background-color: var(--secondary-background-color);
   color: var(--text-color);
+  border-left: #b10f00 solid 6px;
+
 }
 
 .columnOverviewHome {
@@ -2097,25 +2101,37 @@ li .Aligned {
 }
 
 .BTTSResults {
-  padding-top: 0.5em;
-  padding-bottom: 0.5em;
   padding-right: 6.5em;
   padding-left: 6.5em;
 
 }
 
 .BTTSTrue {
-  color: #01a501;
-  padding: 0.75em;
-  padding-bottom: 0.5em;
-  font-size: 1.2em;
+  background-color: #01a501;
+  display: inline-block;
+  padding: 0.65em;
+  margin-top: 1em;
+  /* padding-left: 0.8em;
+  padding-right: 0.8em; */
+  width: 1em;
+  height: 1.25em;
+  border-radius: 5px;
+  margin-left: 0.25em;
+  margin-right: 0.25em;
 }
 
 .BTTSFalse {
-  color: #970d00;
-  padding: 0.75em;
-  padding-bottom: 0.5em;
-  font-size: 1.2em;
+  background-color: #ca1100;
+  display: inline-block;
+  padding: 0.65em;
+  margin-top: 1em;
+  /* padding-left: 0.8em;
+  padding-right: 0.8em; */
+  width: 1em;
+  height: 1.25em;
+  border-radius: 5px;
+  margin-left: 0.25em;
+  margin-right: 0.25em;
 }
 
 .RadioContainer {
@@ -2612,7 +2628,7 @@ canvas.DoughnutChart {
   padding: 0.5em;
 }
 
-.flex-childOne li:nth-child(odd) {
+.flex-childOne li:nth-child(even) {
   background-color: var(--secondary-background-color);
   color: var(--text-color);
 }
@@ -2626,7 +2642,7 @@ canvas.DoughnutChart {
   padding-left: 0.5em;
 }
 
-.flex-childTwo li:nth-child(odd) {
+.flex-childTwo li:nth-child(even) {
   background-color: var(--secondary-background-color);
   color: var(--text-color);
 }
@@ -2856,14 +2872,14 @@ canvas.DoughnutChart {
 .stat-betterHome {
   /* border: 1px solid #01a501; */
   border-right: 4px solid #01a501;
-   margin-top: 0.4em;
+  margin-top: 0.4em;
   margin-bottom: 0.4em;
   font-size: 1em;
 }
 
 .stat-worseHome {
   border-right: 4px solid #970d00;
-   margin-top: 0.4em;
+  margin-top: 0.4em;
   margin-bottom: 0.4em;
   font-size: 1em;
 
@@ -2872,7 +2888,7 @@ canvas.DoughnutChart {
 .stat-equalHome {
   /* border: 1px solid var(--background-color); */
   border-right: 4px solid gray;
-   margin-top: 0.4em;
+  margin-top: 0.4em;
   margin-bottom: 0.4em;
   font-size: 1em;
 }
@@ -2881,14 +2897,14 @@ canvas.DoughnutChart {
 .stat-betterAway {
   /* border: 1px solid #01a501; */
   border-left: 4px solid #01a501;
-   margin-top: 0.4em;
+  margin-top: 0.4em;
   margin-bottom: 0.4em;
   font-size: 1em;
 }
 
 .stat-worseAway {
   border-left: 4px solid #970d00;
-   margin-top: 0.4em;
+  margin-top: 0.4em;
   margin-bottom: 0.4em;
   font-size: 1em;
 }
@@ -2896,7 +2912,7 @@ canvas.DoughnutChart {
 .stat-equalAway {
   /* border: 1px solid var(--background-color); */
   border-left: 4px solid gray;
-   margin-top: 0.4em;
+  margin-top: 0.4em;
   margin-bottom: 0.4em;
   font-size: 1em;
 }
@@ -3018,9 +3034,7 @@ canvas.LeagueStatsRadar {
   margin-top: 1em;
   padding-left: 0.8em;
   padding-right: 0.8em;
-
-  /* padding-left: 7px;
-  padding-right: 7px; */
+  border-radius: 5px;
   margin: 0.2em;
   color: var(--secondary-button-text-color);
   font-weight: 700;
@@ -3030,11 +3044,9 @@ canvas.LeagueStatsRadar {
   background-color: #ca1100;
   padding: 0.7em;
   margin-top: 1em;
-  padding-left: 0.8em;
-  padding-right: 0.8em;
-
-  /* padding-left: 7px;
-  padding-right: 7px; */
+  padding-left: 0.9em;
+  padding-right: 0.9em;
+  border-radius: 5px;
   margin: 0.2em;
   color: var(--secondary-button-text-color);
   font-weight: 700;
@@ -3046,8 +3058,7 @@ canvas.LeagueStatsRadar {
   margin-top: 1em;
   padding-left: 0.8em;
   padding-right: 0.8em;
-  /* padding-left: 7px;
-  padding-right: 7px; */
+  border-radius: 5px;
   margin: 0.2em;
   color: var(--secondary-button-text-color);
   font-weight: 700;

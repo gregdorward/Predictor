@@ -58,9 +58,6 @@ function GameStats({ game, displayBool, stats }) {
 
   const [openSections, setOpenSections] = useState({});
 
-  console.log(localStorage.getItem('theme'))
-
-
   const handleToggle = (sectionName) => {
     setOpenSections(prev => ({
       ...prev,
@@ -2072,7 +2069,6 @@ const calculateComparisonStatusMap = (homeStats, awayStats) => {
   };
 
   function StatsHomeComponent({ getCollapsableProps, homeAllStatsProps, comparisonStatusMap }) {
-    console.log("Rendering StatsHomeComponent with props:", comparisonStatusMap);
     if (!homeForm) return null;
     return (
       <div className="flex-childOne">
@@ -2135,8 +2131,6 @@ const calculateComparisonStatusMap = (homeStats, awayStats) => {
     homeAllStatsProps,
     awayAllStatsProps
   );
-
-  console.log("Comparison Status Map:", comparisonStatusMap);
 
   function StatsHomeLast5Component() {
     if (!homeForm) return null;
@@ -2466,7 +2460,7 @@ const calculateComparisonStatusMap = (homeStats, awayStats) => {
         key={`${game.homeTeam}v${game.awayTeam}`}
         classNameButton="ResultButton"
         buttonText={
-          <div className="ResultRowOverviewSmall">
+          <div className={`ResultRowOverviewSmall${game.won}`}>
             <div className="columnOverviewHomeSmall">{game.homeTeam}</div>
             <span className="columnOverviewScoreSmall">
               {game.homeGoals} : {game.awayGoals}
@@ -2484,7 +2478,7 @@ const calculateComparisonStatusMap = (homeStats, awayStats) => {
       <Collapsable
         classNameButton="ResultButton"
         buttonText={
-          <div className="ResultRowOverviewSmall">
+          <div className={`ResultRowOverviewSmall${game.won}`}>
             <div className="columnOverviewHomeSmall">{game.homeTeam}</div>
             <span className="columnOverviewScoreSmall">
               {game.homeGoals} : {game.awayGoals}
