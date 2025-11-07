@@ -1307,6 +1307,8 @@ function GameStats({ game, displayBool, stats }) {
             const awayTeam = await awayTeamStatsResponse.json();
             let awayStats = awayTeam.statistics;
 
+            console.log("Home Stats:", homeStats);
+
             setHomeTeamStats(homeStats);
             setAwayTeamStats(awayStats);
           } catch (error) {

@@ -2746,7 +2746,7 @@ canvas.DoughnutChart {
   padding-top: 0.5em;
   padding-bottom: 2em;
   padding-right: 0.25em;
-  padding-left: 0.5em;
+  padding-left: 0.25em;
   font-size: 1.1em;
 }
 
@@ -2778,7 +2778,7 @@ canvas.DoughnutChart {
 .KeyStatsAway {
   padding-top: 0.5em;
   padding-bottom: 2em;
-  padding-right: 0.5em;
+  padding-right: 0.25em;
   padding-left: 0.25em;
   font-size: 1.1em;
 }
