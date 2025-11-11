@@ -1476,6 +1476,7 @@ function GameStats({ game, displayBool, stats }) {
 
   useEffect(() => {
     if (matchingGame) {
+      console.log("Matching game updated:", matchingGame);
       setId(matchingGame.id.toString());
       setTeam1(matchingGame.homeTeam);
       setTeam2(matchingGame.awayTeam);
@@ -1933,7 +1934,7 @@ const calculateComparisonStatusMap = (homeStats, awayStats) => {
     homeOrAway: "Away",
     badge: game.awayBadge,
     gameCount: divider,
-    key: formDataAway[0].name,
+    // key: formDataAway[0].name,
     last5: formDataAway[0].Last5,
     // homeOrAwayResults: gameArrayAwayTeamAwayGames,
     LeagueOrAll: formDataAway[0].LeagueOrAll,
@@ -2145,7 +2146,7 @@ const calculateComparisonStatusMap = (homeStats, awayStats) => {
             homeOrAway="Home"
             badge={game.homeBadge}
             gameCount={divider}
-            key={formDataHome[0].name}
+            // key={formDataHome[0].name}
             last5={formDataHome[0].Last5}
             // homeOrAwayResults={gameArrayHomeTeamHomeGames}
             LeagueOrAll={formDataHome[0].LeagueOrAll}
@@ -3503,16 +3504,14 @@ const calculateComparisonStatusMap = (homeStats, awayStats) => {
               buttonText={`Lineups & match action \u{2630}`}
               classNameButton="Lineups"
               element={
-                <>
+                <div className="LineupsAndMatchAction">
                   <MemoizedSofaLineupsWidget
                     id={id}
                     team1={team1}
                     team2={team2}
                     time={timestamp}
-                    homeGoals={homeGoals}
-                    awayGoals={awayGoals}
                   />
-                </>
+                </div>
               }
             />
           </div>

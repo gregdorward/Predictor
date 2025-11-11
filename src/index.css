@@ -4247,8 +4247,13 @@ input:active+.design::after {
   padding-bottom: 0.5em;
 }
 
+.LineupsAndMatchAction{
+  background-color: var(--background-color);
+}
+
 h6.AttackingMomentum {
-  padding: 1em;
+  padding: 0.25em;
+  color: var(--text-color);
 }
 
 .ContactText {
@@ -4772,8 +4777,8 @@ button.AIInsights button:active {
   min-width: 5em;
   max-width: 5em;
   max-height: 5em;
-  border-radius: 0.5rem;
-  background-color: whitesmoke;
+  border-radius: 50%;
+  /* background-color: whitesmoke; */
   margin-top: 0.5em;
   margin-bottom: 0.5em;
 }

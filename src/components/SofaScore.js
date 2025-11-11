@@ -4,12 +4,11 @@ const SofaLineupsWidget = ({
   id,
   team1,
   team2,
-  time,
-  homeGoals,
-  awayGoals,
+  time
 }) => {
-  console.log(team1)
+
   const iframeSrc = `https://widgets.sofascore.com/embed/lineups?id=${id}&widgetTheme=light`;
+  console.log(iframeSrc);
 
   let differenceInSeconds, minutes;
   const currentTime = new Date().getTime() / 1000;
@@ -68,10 +67,6 @@ const SofaLineupsWidget = ({
   } else if (minutes < 0) {
     return (
       <div>
-        <div className="CurrentScore">
-          Score: {`${team1}: ${homeGoals} - ${team2}: ${awayGoals}`}
-        </div>
-        <span>Score not live updated</span>
         <h6 className="AttackingMomentum">Live attacking momentum and goals</h6>
         <iframe
           width="100%"
@@ -83,7 +78,7 @@ const SofaLineupsWidget = ({
         <div
           style={{ fontSize: "12px", fontFamily: "Open Sans, sans-serif" }}
         ></div>
-        <h6>Lineups and in-play ratings</h6>
+        <h6 className="AttackingMomentum">Lineups and in-play ratings</h6>
         <iframe
           id={`sofa-lineups-embed-${id}`}
           src={iframeSrc}
