@@ -1731,13 +1731,13 @@ export async function generateGoals(homeForm, awayForm, match) {
 
 
 
-//     const homePPGDifferential =  homeForm.PPGHome - homeForm.avPointsAll;
-//   const awayPPGDifferential = awayForm.PPGAway - awayForm.avPointsAll;
+  //     const homePPGDifferential =  homeForm.PPGHome - homeForm.avPointsAll;
+  //   const awayPPGDifferential = awayForm.PPGAway - awayForm.avPointsAll;
 
-// const PPG_ADJUSTMENT_WEIGHT = 0.2; 
+  // const PPG_ADJUSTMENT_WEIGHT = 0.2; 
 
-// const homePPGFactor = homePPGDifferential * PPG_ADJUSTMENT_WEIGHT;
-// const awayPPGFactor = awayPPGDifferential * PPG_ADJUSTMENT_WEIGHT;
+  // const homePPGFactor = homePPGDifferential * PPG_ADJUSTMENT_WEIGHT;
+  // const awayPPGFactor = awayPPGDifferential * PPG_ADJUSTMENT_WEIGHT;
 
 
   const avgHomeXG = (homeForm.avXGLast5 + awayForm.avXGAgainstLast5) / 2;
@@ -1873,18 +1873,31 @@ export async function generateGoals(homeForm, awayForm, match) {
     "Europe UEFA Champions League",
     "Europe UEFA Europa League",
     "Europe UEFA Europa Conference League",
-    "South America Copa Libertadores"
+    "South America Copa Libertadores",
   ];
+
+  const InternationalComps = [
+    "International WC Qualification Europe",
+    "International WC Qualification South America"
+  ]
 
   if (majorContinentalLeagues.includes(match.leagueDesc)) {
     homeGoals = (homeLambda_final + 0.1)
-      + (oddsComparisonHome * 0.25) +
+      + (oddsComparisonHome * 0.2) +
       (homeForm.actualToXGDifference / 20) + (XGRatingHomeComparison * 0.1);
 
     awayGoals = (awayLambda_final - 0.1)
-      + (oddsComparisonAway * 0.25) +
+      + (oddsComparisonAway * 0.2) +
       (awayForm.actualToXGDifference / 20) + (XGRatingAwayComparison * 0.1);
-  } else {
+  } if (InternationalComps.includes(match.leagueDesc)) {
+    homeGoals = (homeLambda_final + 0.1)
+      +
+      (homeForm.actualToXGDifference / 20) + (XGRatingHomeComparison * 0.1);
+
+    awayGoals = (awayLambda_final - 0.1)
+      +
+      (awayForm.actualToXGDifference / 20) + (XGRatingAwayComparison * 0.1);
+  }  else {
     homeGoals = (homeLambda_final + 0.1)
       +
       (homeForm.actualToXGDifference / 20) + (XGRatingHomeComparison * 0.35);
