@@ -4622,7 +4622,7 @@ button.AIInsights button:active {
 .swiper-wrapper {
   padding-bottom: 30px;
   display: flex;
-  height: auto !;
+  height: auto !important;
   width: 100%;
 }
 

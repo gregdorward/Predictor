@@ -11,11 +11,11 @@ function Stats(props) {
   const getComparisonClass = (statKey) => {
     // If comparisonStatusMap exists and has the key, return the class name
     // If not, return an empty string to avoid adding unwanted classes
-    return comparisonStatusMap && comparisonStatusMap[statKey] 
-      ? `stat-${comparisonStatusMap[statKey]}` 
+    return comparisonStatusMap && comparisonStatusMap[statKey]
+      ? `stat-${comparisonStatusMap[statKey]}`
       : '';
   };
-  
+
   function styleForm(formIndicator) {
     let className;
     if (formIndicator === "W") {
@@ -213,9 +213,6 @@ function Stats(props) {
                   <li key="ShotConversionRate" className={`GoalConversionRate ${getComparisonClass('goalConversionRate')}${props.homeOrAway}`} data-cy={props.name ? props.name + "goalConversionRate" : "goalConversionRate"}>
                     {`Shot conversion: ${props.goalConversionRate !== undefined ? `${props.goalConversionRate}%` : "N/A"}`}
                   </li>
-                  <li key="BigChanceConversionRate" className={`BigChanceConversionRate ${getComparisonClass('bigChanceConversionRate')}${props.homeOrAway}`} data-cy={props.name ? props.name + "bigChanceConversionRate" : "bigChanceConversionRate"}>
-                    {`Big chance conversion: ${props.bigChanceConversionRate !== undefined ? `${props.bigChanceConversionRate}%` : "N/A"}`}
-                  </li>
                   <li
                     key="DangerousAttacks"
                     className={`DangerousAttacks ${getComparisonClass('dangerousAttacks')}${props.homeOrAway}`}
@@ -229,11 +226,21 @@ function Stats(props) {
                   >
                     {`Shots inside box: ${props.shotsInsideBox !== undefined ? props.shotsInsideBox : "N/A"}`}
                   </li>
+                  <li key="ShotsFromOutsideBox" className={`ShotsFromOutsideTheBox ${getComparisonClass('shotsFromOutsideTheBox')}${props.homeOrAway}`} data-cy={props.name ? props.name + "goalsFromOutsideBox" : "goalsFromOutsideBox"}>
+                    {`Shots from outside box: ${props.shotsFromOutsideTheBox !== undefined ? props.shotsFromOutsideTheBox : "N/A"}`}
+                  </li>
+                  <li key="shotsFromInsideBoxPercentage" className={`ShotsFromInsideBoxPercentage ${getComparisonClass('shotsFromInsideBoxPercentage')}${props.homeOrAway}`} data-cy={props.name ? props.name + "goalsFromOutsideBox" : "goalsFromOutsideBox"}>
+                    {`Shots inside box percent: ${props.shotsFromInsideBoxPercentage !== undefined ? `${props.shotsFromInsideBoxPercentage.toFixed(0)}%` : "N/A"}`}
+                  </li>
                   <li key="GoalsFromInsideBox" className={`GoalsFromInsideBox ${getComparisonClass('goalsFromInsideTheBox')}${props.homeOrAway}`} data-cy={props.name ? props.name + "goalsFromInsideBox" : "goalsFromInsideBox"}>
                     {`Goals from inside box: ${props.goalsFromInsideTheBox !== undefined ? props.goalsFromInsideTheBox : "N/A"}`}
                   </li>
-                  <li key="GoalsFromOutsideBox" className={`GoalsFromOutsideBox ${getComparisonClass('goalsFromOutsideTheBox')}${props.homeOrAway}`} data-cy={props.name ? props.name + "goalsFromOutsideBox" : "goalsFromOutsideBox"}>
-                    {`Goals from outside box: ${props.goalsFromOutsideTheBox !== undefined ? props.goalsFromOutsideTheBox : "N/A"}`}
+                  <li
+                    key="GoalsFromOutsideBox"
+                    className={`TeamGoalsFromInsideBox ${getComparisonClass('goalsFromOutsideTheBox')}${props.homeOrAway}`}
+                    data-cy={props.name ? props.name + "GoalsFromInsideBox" : "GoalsFromInsideBox"}
+                  >
+                  {`Goals from outside box: ${props.goalsFromOutsideTheBox !== undefined ? props.goalsFromOutsideTheBox : "N/A"}`}
                   </li>
                   <li
                     key="fastBreakShots"
@@ -255,6 +262,9 @@ function Stats(props) {
                     data-cy={props.name ? props.name + "bigChancesMissed" : "bigChancesMissed"}
                   >
                     {`Big chances missed: ${props.bigChancesMissed !== undefined ? props.bigChancesMissed : "N/A"}`}
+                  </li>
+                  <li key="BigChanceConversionRate" className={`BigChanceConversionRate ${getComparisonClass('bigChanceConversionRate')}${props.homeOrAway}`} data-cy={props.name ? props.name + "bigChanceConversionRate" : "bigChanceConversionRate"}>
+                    {`Big chance conversion: ${props.bigChanceConversionRate !== undefined ? `${props.bigChanceConversionRate}%` : "N/A"}`}
                   </li>
                 </>
               }
@@ -278,6 +288,20 @@ function Stats(props) {
                     data-cy={props.name ? props.name + "teamShotsInsideBoxAgainst" : "teamShotsInsideBoxAgainst"}
                   >
                     {`Shots inside box against: ${props.shotsInsideBoxAgainst !== undefined ? props.shotsInsideBoxAgainst : "N/A"}`}
+                  </li>
+                                    <li
+                    key="TeamShotsFromOutsideTheBoxAgainst"
+                    className={`TeamShotsFromOutsideTheBoxAgainst ${getComparisonClass('shotsFromOutsideTheBoxAgainst')}${props.homeOrAway}`}
+                    data-cy={props.name ? props.name + "shotsFromOutsideTheBoxAgainst" : "shotsFromOutsideTheBoxAgainst"}
+                  >
+                    {`Shots outside box against: ${props.shotsFromOutsideTheBoxAgainst !== undefined ? props.shotsFromOutsideTheBoxAgainst : "N/A"}`}
+                  </li>
+                  <li
+                    key="TeamShotsInsideBoxPercentAgainst"
+                    className={`TeamShotsInsideBoxPercentAgainst ${getComparisonClass('shotsInsideBoxPercentAgainst')}${props.homeOrAway}`}
+                    data-cy={props.name ? props.name + "shotsInsideBoxPercentAgainst" : "shotsInsideBoxPercentAgainst"}
+                  >
+                    {`Shots inside box ag percent: ${props.shotsInsideBoxPercentAgainst !== undefined ? `${props.shotsInsideBoxPercentAgainst.toFixed(0)}%` : "N/A"}`}
                   </li>
                   <li
                     key="bigChancesConceded"

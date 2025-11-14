@@ -51,6 +51,8 @@ const MultiTypeChart = ({ dataArray, text, theme }) => {
         backgroundColor: backgroundColors, // Use the dynamic colors
         borderColor: backgroundColors, // Match the border color
         borderWidth: 0,
+        barThickness: 'flex',
+        // maxBarThickness: 30,
       },
     ],
   };
@@ -87,7 +89,7 @@ const MultiTypeChart = ({ dataArray, text, theme }) => {
         ticks: {
           color: color,
         }
-      },
+      }
     },
   };
 

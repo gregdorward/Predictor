@@ -1640,7 +1640,11 @@ function GameStats({ game, displayBool, stats }) {
     { key: 'shots', higherIsBetter: true },
     { key: 'sot', higherIsBetter: true },
     { key: 'shotsInsideBox', higherIsBetter: true },
+    { key: 'shotsFromOutsideTheBox', higherIsBetter: true },
+    { key: 'shotsFromInsideBoxPercentage', higherIsBetter: true },
     { key: 'shotsInsideBoxAgainst', higherIsBetter: false },
+    { key: 'shotsFromOutsideTheBoxAgainst', higherIsBetter: false },
+    { key: 'shotsInsideBoxPercentAgainst', higherIsBetter: false },
     { key: 'shotsOnTargetAgainst', higherIsBetter: false }, // Fewer shots on target conceded is better
     { key: 'shootingAccuracy', higherIsBetter: true },
     { key: 'goalConversionRate', higherIsBetter: true },
@@ -1830,7 +1834,7 @@ function GameStats({ game, displayBool, stats }) {
     : 'N/A';
 
   // const trueFormColour = getTrueFormColor(homeForm.trueForm);
-
+  console.log(homeTeamStats)
   const homeAllStatsProps = {
     // Note: getCollapsableProps is usually passed directly from the parent component props
     getCollapsableProps: getCollapsableProps,
@@ -1905,7 +1909,11 @@ function GameStats({ game, displayBool, stats }) {
     shots: homeForm.avgShots?.toFixed(2),
     sot: homeForm.AverageShotsOnTargetOverall?.toFixed(2),
     shotsInsideBox: homeTeamStats?.shotsFromInsideTheBox,
+    shotsFromOutsideTheBox: homeTeamStats?.shotsFromOutsideTheBox,
+    shotsFromInsideBoxPercentage: (homeTeamStats?.shotsFromInsideTheBox / (homeTeamStats?.shotsFromInsideTheBox + homeTeamStats?.shotsFromOutsideTheBox)) * 100,
     shotsInsideBoxAgainst: homeTeamStats?.shotsFromInsideTheBoxAgainst,
+    shotsFromOutsideTheBoxAgainst: homeTeamStats?.shotsFromOutsideTheBoxAgainst,
+    shotsInsideBoxPercentAgainst: (homeTeamStats?.shotsFromInsideTheBoxAgainst / (homeTeamStats?.shotsFromInsideTheBoxAgainst + homeTeamStats?.shotsFromOutsideTheBoxAgainst) * 100),
     dangerousAttacks:
       homeForm.AverageDangerousAttacksOverall !== 0
         ? homeForm.AverageDangerousAttacksOverall?.toFixed(2)
@@ -2076,7 +2084,11 @@ function GameStats({ game, displayBool, stats }) {
     sot: awayForm.AverageShotsOnTargetOverall?.toFixed(2),
     shots: awayForm.avgShots?.toFixed(2),
     shotsInsideBox: awayTeamStats?.shotsFromInsideTheBox,
+    shotsFromOutsideTheBox: awayTeamStats?.shotsFromOutsideTheBox,
+    shotsFromInsideBoxPercentage: (awayTeamStats?.shotsFromInsideTheBox / (awayTeamStats?.shotsFromInsideTheBox + awayTeamStats?.shotsFromOutsideTheBox)) * 100,
     shotsInsideBoxAgainst: awayTeamStats?.shotsFromInsideTheBoxAgainst,
+    shotsFromOutsideTheBoxAgainst: awayTeamStats?.shotsFromOutsideTheBoxAgainst,
+    shotsInsideBoxPercentAgainst: (awayTeamStats?.shotsFromInsideTheBoxAgainst / (awayTeamStats?.shotsFromInsideTheBoxAgainst + awayTeamStats?.shotsFromOutsideTheBoxAgainst) * 100),
     dangerousAttacks:
       awayForm.AverageDangerousAttacksOverall !== 0
         ? awayForm.AverageDangerousAttacksOverall?.toFixed(2)
@@ -3739,7 +3751,7 @@ function GameStats({ game, displayBool, stats }) {
                   element={
                     <Suspense fallback={<div>Loading votes...</div>}>
                       <h6>Votes cast on SofaScore</h6>
-                      <VotePieChart pollData={voteData.vote} theme={localStorage.getItem('theme')}/>
+                      <VotePieChart pollData={voteData.vote} theme={localStorage.getItem('theme')} />
                       <BTTSPieChart pollData={voteData.bothTeamsToScoreVote} theme={localStorage.getItem('theme')} />
                     </Suspense>
                   }
@@ -4000,7 +4012,7 @@ function GameStats({ game, displayBool, stats }) {
                   team1={game.homeTeam}
                   team2={game.awayTeam}
                   type={"Goal/XG difference over time"}
-                  tension={0.5}
+                  tension={0}
                 ></MultilineChart>
               </div>
             </>
