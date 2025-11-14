@@ -16,7 +16,9 @@ import {
   MultilineChart,
   RadarChart,
   BarChart,
-  DoughnutChart
+  DoughnutChart,
+  BTTSPieChart,
+  VotePieChart
 } from "./Chart";
 import MultiTypeChart from "./MultitypeChart"; // Adjust the path if necessary
 import { Slider } from "../components/CarouselXGChart";
@@ -90,6 +92,8 @@ function GameStats({ game, displayBool, stats }) {
   const [awayMissingPlayersList, setAwayMissingPlayersList] = useState([]);
   const [homeLineupList, setHomeLineupList] = useState([]);
   const [awayLineupList, setAwayLineupList] = useState([]);
+  const [voteData, setVoteData] = useState([]);
+  const [loadingVoteData, setLoadingVoteData] = useState(true);
   const [loading, setLoading] = useState(null);
   const [streakData, setStreakData] = useState([]);
   const [homeTeamStats, setHomeTeamStats] = useState(null);
@@ -1141,6 +1145,62 @@ function GameStats({ game, displayBool, stats }) {
 
         const now = Math.floor(Date.now() / 1000); // current Unix timestamp in seconds
         const isWithin48Hours = game.date > now && game.date - now <= 172800;
+        const lowerTierLeagueIds = [
+          // Conference 25/26
+          173,
+          //National league north 25/26
+          176,
+          //National league south 25/26
+          174,
+          // Ekstraklasa (Poland)
+          202,
+          // Spanish Segunda Division
+          54,
+          // Bundesliga 2
+          44,
+          // French Ligue 2
+          182,
+          // Italian Serie B 25/26
+          53,
+          // Dutch Eerste Divisie 25
+          131,
+          // Scottish Championship 25
+          206,
+          // Scottish League One 25
+          207,
+          // Scottish League Two 25
+          209,
+          // Swiss Super League
+          215,
+          // Croatian First League
+          170,
+          // Czech First League
+          172,
+          // Finnish Veikkausliiga
+          41,
+          // Ukrainian Premier League
+          218,
+          // Slovenian Prva Liga
+          212,
+          // Slovak Super Liga
+          211,
+          // Serbian SuperLiga
+          210,
+          // Brazil Serie B
+          390,
+          // Colombian Liga BetPlay 25
+          11539,
+          // Chilean Primera Division 25
+          11653,
+          // Uruguayan Primera Division 25
+          278,
+          // USL 25 (USA 2nd Div)
+          13363,
+          // Canadian Premier League 25
+          13470,
+          // Ireland 24/25
+          192,
+        ];
 
         // console.log("isWithin48Hours:", isWithin48Hours);
         // console.log("game.date:", game.date, "| now:", now, "| diff:", game.date - now);
@@ -1151,12 +1211,15 @@ function GameStats({ game, displayBool, stats }) {
         setLoadingTeamStats(true);
         setLoadingKeyPlayers(true);
         setLoadingFutureFixtures(true);
+        setLoadingVoteData(true);
         if (
-          isWithin48Hours
+          isWithin48Hours && !lowerTierLeagueIds.includes(game.sofaScoreId)
         ) {
           const lineupDetail = await fetch(
             `${process.env.REACT_APP_EXPRESS_SERVER}lineups/${matchingGameInfo.id}`
           );
+
+          console.log(game)
 
           const data = await lineupDetail.json();
           const { homeMissingPlayers, awayMissingPlayers } =
@@ -1167,6 +1230,9 @@ function GameStats({ game, displayBool, stats }) {
           setHomeMissingPlayersList(homeMissingPlayers);
           setAwayMissingPlayersList(awayMissingPlayers);
         }
+
+
+
 
         let previousGames = await fetch(
           `${process.env.REACT_APP_EXPRESS_SERVER}match/${game.id}`
@@ -1322,6 +1388,7 @@ function GameStats({ game, displayBool, stats }) {
             const leaguePlayerStatsResponse = await fetch(
               `${process.env.REACT_APP_EXPRESS_SERVER}bestPlayers/${game.sofaScoreId}/${derivedRoundId}/${week}`
             );
+
             const playerStats = await leaguePlayerStatsResponse.json();
 
             let playersHome = await extractRankedPlayersByTeam(
@@ -1408,6 +1475,13 @@ function GameStats({ game, displayBool, stats }) {
               error
             );
           }
+
+          const voteRequest = await fetch(
+            `${process.env.REACT_APP_EXPRESS_SERVER}votes/${matchingGameInfo.id}/${today.getDay()}`
+          );
+          const data = await voteRequest.json();
+          setVoteData(data);
+
         }
       } catch (error) {
         console.error("Error fetching or processing data:", error);
@@ -1420,6 +1494,7 @@ function GameStats({ game, displayBool, stats }) {
         setLoadingStreaks(false);
         setLoadingFutureFixtures(false);
         setLoadingKeyPlayers(false);
+        setLoadingVoteData(false);
         setLoading(false);
         console.log("Loading states reset.");
         // console.log(homePlayerData);
@@ -1613,40 +1688,40 @@ function GameStats({ game, displayBool, stats }) {
     { key: 'BttsPercentageHomeOrAway', higherIsBetter: true },
   ];
 
-const calculateComparisonStatusMap = (homeStats, awayStats) => {
+  const calculateComparisonStatusMap = (homeStats, awayStats) => {
     const comparisonMap = {};
 
     COMPARISON_RULES.forEach(({ key, higherIsBetter }) => {
-        const homeValue = homeStats[key];
-        const awayValue = awayStats[key];
+      const homeValue = homeStats[key];
+      const awayValue = awayStats[key];
 
-        // --- SCALAR COMPARISON (Default Case) ---
-        if (typeof homeValue !== 'object' || homeValue === null || !Array.isArray(homeValue)) {
-            if (homeValue !== undefined && awayValue !== undefined) {
-                // Compare simple properties (goals, ppg, etc.)
-                comparisonMap[key] = compareStat(homeValue, awayValue, higherIsBetter);
-            }
-        } 
-        
-        // --- ARRAY COMPARISON (e.g., 'formTrend') ---
-        else if (Array.isArray(homeValue) && Array.isArray(awayValue)) {
-            const minLength = Math.min(homeValue.length, awayValue.length);
-            
-            for (let i = 0; i < minLength; i++) {
-                const homeItem = homeValue[i];
-                const awayItem = awayValue[i];
-                const arrayKey = `${key}[${i}]`; // e.g., 'formTrend[0]'
-
-                if (homeItem !== undefined && awayItem !== undefined) {
-                    // Compare the individual array elements
-                    comparisonMap[arrayKey] = compareStat(homeItem, awayItem, higherIsBetter);
-                }
-            }
+      // --- SCALAR COMPARISON (Default Case) ---
+      if (typeof homeValue !== 'object' || homeValue === null || !Array.isArray(homeValue)) {
+        if (homeValue !== undefined && awayValue !== undefined) {
+          // Compare simple properties (goals, ppg, etc.)
+          comparisonMap[key] = compareStat(homeValue, awayValue, higherIsBetter);
         }
+      }
+
+      // --- ARRAY COMPARISON (e.g., 'formTrend') ---
+      else if (Array.isArray(homeValue) && Array.isArray(awayValue)) {
+        const minLength = Math.min(homeValue.length, awayValue.length);
+
+        for (let i = 0; i < minLength; i++) {
+          const homeItem = homeValue[i];
+          const awayItem = awayValue[i];
+          const arrayKey = `${key}[${i}]`; // e.g., 'formTrend[0]'
+
+          if (homeItem !== undefined && awayItem !== undefined) {
+            // Compare the individual array elements
+            comparisonMap[arrayKey] = compareStat(homeItem, awayItem, higherIsBetter);
+          }
+        }
+      }
     });
 
     return comparisonMap;
-};
+  };
 
 
   const compareStat = (homeValue, awayValue, higherIsBetter) => {
@@ -1764,7 +1839,7 @@ const calculateComparisonStatusMap = (homeStats, awayStats) => {
     homeOrAway: "Home",
     badge: game.homeBadge,
     gameCount: divider,
-    key: formDataHome[0].name,
+    // key: formDataHome[0].name,
     last5: formDataHome[0].Last5,
     // homeOrAwayResults: gameArrayHomeTeamHomeGames, // Commented out as in original
     LeagueOrAll: formDataHome[0].LeagueOrAll,
@@ -3483,6 +3558,7 @@ const calculateComparisonStatusMap = (homeStats, awayStats) => {
   const handleTipSelect = (tipType) => {
     setSelectedTip(tipType);
   };
+  console.log(voteData);
   return (
     <>
       <div className="ExpandingStats">
@@ -3653,9 +3729,22 @@ const calculateComparisonStatusMap = (homeStats, awayStats) => {
                 />
               ) : (
                 <div></div>
-              )
-              }
-
+              )}
+              {loadingVoteData || voteData.length === 0 ? (
+                <div></div>
+              ) : (
+                <Collapsable
+                  buttonText={`Public Votes \u{2630}`}
+                  classNameButton="PublicVoteButton"
+                  element={
+                    <Suspense fallback={<div>Loading votes...</div>}>
+                      <h6>Votes cast on SofaScore</h6>
+                      <VotePieChart pollData={voteData.vote} theme={localStorage.getItem('theme')}/>
+                      <BTTSPieChart pollData={voteData.bothTeamsToScoreVote} theme={localStorage.getItem('theme')} />
+                    </Suspense>
+                  }
+                />
+              )}
             </>
           )}
 

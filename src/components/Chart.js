@@ -15,7 +15,7 @@ import {
   Legend,
   SubTitle,
 } from "chart.js";
-import { Line, Radar, Bar, Doughnut, PolarArea } from "react-chartjs-2";
+import { Line, Radar, Bar, Doughnut, PolarArea, Pie } from "react-chartjs-2";
 import annotationPlugin from 'chartjs-plugin-annotation';
 
 ChartJS.register(
@@ -34,6 +34,166 @@ ChartJS.register(
   annotationPlugin
 );
 
+const valueLabelPlugin = {
+  id: "valueLabelPlugin",
+  afterDatasetsDraw(chart, args, pluginOptions) {
+    const { ctx } = chart;
+
+    const dataset = chart.data.datasets[0];
+    const total = dataset.data.reduce((a, b) => a + b, 0);
+
+    chart.getDatasetMeta(0).data.forEach((arc, index) => {
+      const value = dataset.data[index];
+      const percentage = ((value / total) * 100).toFixed(1) + "%";
+
+      // Correct position inside the slice
+      const { x, y } = arc.tooltipPosition();
+
+      ctx.save();
+      // ctx.fillStyle = "white";
+      // ctx.font = "bold 18px";
+      // ctx.textAlign = "center";
+      ctx.textBaseline = "middle";
+      ctx.fillText(percentage, x, y);
+      ctx.restore();
+    });
+  }
+};
+
+
+export function VotePieChart({ pollData, theme }) {
+  let color;
+  let background;
+  const home = Number(pollData.vote1);
+  const away = Number(pollData.vote2);
+  const draw = Number(pollData.voteX);
+  const total = home + away + draw;
+
+  if (theme === 'light') {
+    color = "#020029";
+    background = '#ffffff'
+  } else if (theme === 'dark') {
+    color = "#ffffff";
+    background = "#020029";
+  } else {
+    color = "#f57701";
+    background = "#020029";
+  }
+
+  // Labels with line breaks for key, percentage, and vote count
+  const labelsWithDetails = [
+    `Home\n${((home / total) * 100).toFixed(1)}%\n(${home} votes)`,
+    `Away\n${((away / total) * 100).toFixed(1)}%\n(${away} votes)`,
+    `Draw\n${((draw / total) * 100).toFixed(1)}%\n(${draw} votes)`
+  ];
+
+  const chartOptions = {
+    layout: { padding: { top: 5, bottom: 5 } },
+    plugins: {
+      legend: {
+        position: 'top',
+        labels: {
+          // padding: 15,
+          font: { size: 14 },
+          color: color,
+        },
+      },
+      tooltip: {
+        callbacks: {
+          label: (ctx) => `${ctx.label.replace(/\n/g, ' ')}: ${ctx.raw}`, // tooltip shows in one line
+        },
+      },
+      title: {
+        display: true,
+        text: "Who will win?",
+        color: color,
+        font: { size: 16 },
+      },
+    },
+    animation: { duration: 600 },
+  };
+
+  const data = {
+    labels: labelsWithDetails,
+    datasets: [
+      {
+        data: [home, away, draw],
+        backgroundColor: ['#01a501', '#ae1001', '#f57701'],
+        borderColor: background,
+        borderWidth: 2,
+      },
+    ],
+  };
+
+  return <Pie data={data} options={chartOptions} className="Pie" />;
+}
+
+
+
+export function BTTSPieChart({ pollData, theme }) {
+  let color;
+  let background
+  const yes = Number(pollData.voteYes);
+  const no = Number(pollData.voteNo);
+  const total = yes + no;
+
+  if (theme === 'light') {
+    color = "#020029";
+    background = '#ffffff'
+  } else if (theme === 'dark') {
+    color = "#ffffff";
+    background = "#020029";
+  } else {
+    color = "#f57701";
+    background = "#020029";
+  }
+
+  // Labels with line breaks for key, percentage, and vote count
+  const labelsWithDetails = [
+    `Yes\n${((yes / total) * 100).toFixed(1)}%\n(${yes} votes)`,
+    `No\n${((no / total) * 100).toFixed(1)}%\n(${no} votes)`
+  ];
+
+  const chartOptions = {
+    layout: { padding: { top: 5, bottom: 5 } },
+    plugins: {
+      legend: {
+        position: 'top',
+        labels: {
+          // padding: 15,
+          font: { size: 14 },
+          color: color,
+        },
+      },
+      tooltip: {
+        callbacks: {
+          label: (ctx) => `${ctx.label.replace(/\n/g, ' ')}: ${ctx.raw}`, // tooltip in one line
+        },
+      },
+      title: {
+        display: true,
+        text: "Will both teams score?",
+        color: color,
+        font: { size: 16 },
+      },
+    },
+    animation: { duration: 600 },
+  };
+
+  const data = {
+    labels: labelsWithDetails,
+    datasets: [
+      {
+        data: [yes, no],
+        backgroundColor: ['#01a501', '#ae1001ff'],
+        borderColor: background,
+        borderWidth: 2,
+      },
+    ],
+  };
+
+  return <Pie data={data} options={chartOptions} className="Pie" />;
+}
 
 
 
@@ -426,6 +586,7 @@ export const DoughnutChart = ({ pointsTotal, predictedPoints, deltaPTS, theme, l
 
   return <Doughnut data={data} options={options} className="DoughnutChart" />;
 };
+
 
 export function RadarChart(props) {
   let color;

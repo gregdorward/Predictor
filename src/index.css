@@ -2520,6 +2520,11 @@ canvas.DoughnutChart {
   margin: 0.25em;
 }
 
+canvas.Pie {
+  padding: 1em;
+  margin: 0em;
+}
+
 .DoughnutOne {
   flex-direction: column;
   /* padding-right: 0.5em; */
@@ -4247,7 +4252,7 @@ input:active+.design::after {
   padding-bottom: 0.5em;
 }
 
-.LineupsAndMatchAction{
+.LineupsAndMatchAction {
   background-color: var(--background-color);
 }
 
@@ -5181,6 +5186,15 @@ button.AIInsights button:active {
   margin-top: 1em;
   margin-bottom: 1em;
   /* margin: 1em; */
+}
+
+.PublicVoteButton {
+  font-size: 1.1em;
+  background-color: var(--accent-color);
+  width: 100%;
+  margin-left: auto;
+  margin-right: auto;
+  color: var(--button-text-color);
 }
 
 .SpanHome {
