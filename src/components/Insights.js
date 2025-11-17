@@ -72,7 +72,7 @@ export const InsightsPanel = ({ statsArray, paidUser }) => {
                 element={
                     <>
                         <StatList
-                            title="Best value teams"
+                            title="Best betting value"
                             sub="Points difference from bookies' expectations (last 5)"
                             operator=""
                             items={statsArray.trueFormArray}
@@ -94,7 +94,7 @@ export const InsightsPanel = ({ statsArray, paidUser }) => {
                 element={
                     <>
                         <StatList
-                            title="Worst value teams"
+                            title="Worst betting value"
                             sub="Points difference from bookies' expectations (last 5)"
                             operator=""
                             items={statsArray.trueFormArray}
@@ -109,12 +109,12 @@ export const InsightsPanel = ({ statsArray, paidUser }) => {
                 }
             />
             <Collapsable
-                buttonText={"Best XG performers"}
+                buttonText={"Best XG difference"}
                 classNameButton="BestValueCollapsable"
                 element={
                     <>
                         <StatList
-                            title="Best xG Differential"
+                            title="Best XG Difference"
                             sub="XG goal difference (last 5)"
                             operator=""
                             items={statsArray.XGDiffArray}
