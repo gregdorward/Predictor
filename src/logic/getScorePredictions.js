@@ -30,6 +30,7 @@ import { dynamicDate } from "./getFixtures";
 import { ThreeDots } from "react-loading-icons";
 import { uniqueLeagueIDs } from "./getFixtures";
 import { selectedTipType } from "../components/PredictionTypeRadio";
+import { InsightsPanel } from "../components/Insights"
 
 
 var myHeaders = new Headers();
@@ -270,6 +271,15 @@ function calculateOddsBasedTrueForm(pointsSum5, allTeamResults) {
   return [deltaPTS_Odds, totalExpectedPoints];
 }
 
+export let statsArray = {
+  trueFormArray: [],
+  XGDiffArray: [],
+  goalDiffArray: [],
+  cornersArray: [],
+  cardsArray: [],
+  bttsArray: [],
+  sotArray: []
+}
 
 async function getPastLeagueResults(team, game, hOrA, form) {
   form.completeData = true;
@@ -1897,7 +1907,7 @@ export async function generateGoals(homeForm, awayForm, match) {
     awayGoals = (awayLambda_final - 0.1)
       +
       (awayForm.actualToXGDifference / 20) + (XGRatingAwayComparison * 0.1);
-  }  else {
+  } else {
     homeGoals = (homeLambda_final + 0.1)
       +
       (homeForm.actualToXGDifference / 20) + (XGRatingHomeComparison * 0.35);
@@ -3061,6 +3071,29 @@ export async function calculateScore(match, index, divider, calculate, AIPredict
       }
     }
 
+    statsArray.trueFormArray.push({ "name": formHome.teamName, "score": formHome.trueForm, "gameId": match.id, "game": match.game })
+    statsArray.trueFormArray.push({ "name": formAway.teamName, "score": formAway.trueForm, "gameId": match.id, "game": match.game })
+
+    statsArray.XGDiffArray.push({ "name": formHome.teamName, "score": formHome.XGDiffNonAverageLast5, "gameId": match.id, "game": match.game })
+    statsArray.XGDiffArray.push({ "name": formAway.teamName, "score": formAway.XGDiffNonAverageLast5, "gameId": match.id, "game": match.game })
+
+    statsArray.goalDiffArray.push({ "name": formHome.teamName, "score": formHome.last5GoalDiff, "gameId": match.id, "game": match.game })
+    statsArray.goalDiffArray.push({ "name": formAway.teamName, "score": formAway.last5GoalDiff, "gameId": match.id, "game": match.game })
+
+    statsArray.cornersArray.push({ "name": formHome.teamName, "score": formHome.last5Corners, "gameId": match.id, "game": match.game })
+    statsArray.cornersArray.push({ "name": formAway.teamName, "score": formAway.last5Corners, "gameId": match.id, "game": match.game })
+
+    statsArray.bttsArray.push({ "name": formHome.teamName, "score": parseFloat(formHome.bttsLast5Percentage), "gameId": match.id, "game": match.game })
+    statsArray.bttsArray.push({ "name": formAway.teamName, "score": parseFloat(formAway.bttsLast5Percentage), "gameId": match.id, "game": match.game })
+
+    statsArray.sotArray.push({ "name": formHome.teamName, "score": formHome.avSOTLast5, "gameId": match.id, "game": match.game })
+    statsArray.sotArray.push({ "name": formAway.teamName, "score": formAway.avSOTLast5, "gameId": match.id, "game": match.game })
+
+ statsArray.cardsArray.push({ "name": formHome.teamName, "score": formHome.CardsTotal, "gameId": match.id, "game": match.game })
+    statsArray.cardsArray.push({ "name": formAway.teamName, "score": formAway.CardsTotal, "gameId": match.id, "game": match.game })
+    
+
+
     console.log(`drawPredictions: ${drawPredictions}`);
 
     if (
@@ -3470,8 +3503,28 @@ async function getSuccessMeasure(fixtures) {
   const averageStrengthHomeAvg = averageStrengthHome / totalInvestment
   const averageStrengthAwayAvg = averageStrengthAway / totalInvestment
 
-  console.log(`averageStrengthHomeAvg = ${averageStrengthHomeAvg}`)
-  console.log(`averageStrengthAwayAvg = ${averageStrengthAwayAvg}`)
+  statsArray.trueFormArray.sort((a, b) => a.score - b.score);
+  statsArray.bttsArray.sort((a, b) => a.score - b.score);
+  statsArray.cornersArray.sort((a, b) => a.score - b.score);
+  statsArray.cardsArray.sort((a, b) => a.score - b.score);
+  statsArray.goalDiffArray.sort((a, b) => a.score - b.score);
+  statsArray.sotArray.sort((a, b) => a.score - b.score);
+  statsArray.XGDiffArray.sort((a, b) => a.score - b.score);
+
+  const list = statsArray.sotArray.slice(0, 10)
+
+  // console.log(statsArray.trueFormArray.slice(0, 10))
+  // console.log(statsArray.trueFormArray.slice(-10).sort((a, b) => b.score - a.score))
+
+  console.log(statsArray)
+
+  render(
+    <Collapsable classNameButton="InsightsButton" buttonText={"Insights"} element={
+      <InsightsPanel statsArray={statsArray} classNameButton="InsightsCollapsable" />
+    }
+    />,
+    "statsInsights" // This targets the div inside your Collapsable component
+  );
 
   console.log(isPaid);
   if (investment > 0 && isPaid) {
@@ -3990,6 +4043,15 @@ export async function getScorePrediction(day, mocked) {
   await Promise.all(
     matches.map(async (match) => {
       // NOTE: leagueStatsPromise and playerStatsPromise are running in the background.
+      statsArray = {
+        trueFormArray: [],
+        XGDiffArray: [],
+        goalDiffArray: [],
+        cornersArray: [],
+        cardsArray: [],
+        bttsArray: [],
+        sotArray: []
+      }
 
       // if there are no stored predictions, calculate them based on live data
       if (match) {

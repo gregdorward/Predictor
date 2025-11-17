@@ -1219,8 +1219,6 @@ function GameStats({ game, displayBool, stats }) {
             `${process.env.REACT_APP_EXPRESS_SERVER}lineups/${matchingGameInfo.id}`
           );
 
-          console.log(game)
-
           const data = await lineupDetail.json();
           const { homeMissingPlayers, awayMissingPlayers } =
             await extractMissingPlayers(data);
@@ -1372,8 +1370,6 @@ function GameStats({ game, displayBool, stats }) {
             );
             const awayTeam = await awayTeamStatsResponse.json();
             let awayStats = awayTeam.statistics;
-
-            console.log("Home Stats:", homeStats);
 
             setHomeTeamStats(homeStats);
             setAwayTeamStats(awayStats);
@@ -1545,7 +1541,6 @@ function GameStats({ game, displayBool, stats }) {
 
   useEffect(() => {
     if (homeTeamStats) {
-      console.log("Home team stats updated:", homeTeamStats);
     }
   }, [homeTeamStats]);
 
@@ -1834,7 +1829,6 @@ function GameStats({ game, displayBool, stats }) {
     : 'N/A';
 
   // const trueFormColour = getTrueFormColor(homeForm.trueForm);
-  console.log(homeTeamStats)
   const homeAllStatsProps = {
     // Note: getCollapsableProps is usually passed directly from the parent component props
     getCollapsableProps: getCollapsableProps,

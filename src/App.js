@@ -670,6 +670,7 @@ function AppContent() {
       />
       <div id="shortlistRender" />
       <Collapsable buttonText={"ROI"} className={"ROI"} element={<div id="successMeasure2" />} />
+      <div className={"StatsInsights"} id="statsInsights" />
       <div id="highLowLeagues" className="HighLowLeagues" />
       <div id="risk" />
       <div id="successMeasure" />

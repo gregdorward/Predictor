@@ -4909,6 +4909,77 @@ button.AIInsights button:active {
   color: var(--button-text-color);
 }
 
+
+.BestValueCollapsable {
+  font-size: 1em;
+  background-color: var(--background-color);
+  width: 60%;
+  margin-left: auto;
+  margin-right: auto;
+  color: var(--text-color);
+  border: var(--button-color) solid 1px;
+}
+
+.InsightContainer {
+  background-color: var(--background-color);
+  text-align: center;
+}
+
+.InsightContainer h6{
+  padding-top: 0em;
+  font-size: 1em;
+}
+
+.InsightListItem {
+  padding-top: 1em;
+  padding-bottom: 1em;
+  width: 100%;
+  background-color: var(--secondary-background-color);
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.InsightListItem:nth-child(odd) {
+  background-color: var(--background-color);
+  width: 100%;
+}
+
+.InsightScore {
+  margin-bottom: 0.5em;
+}
+
+.InsightGame {
+  text-decoration: none;
+  font-size: 1em;
+}
+
+.InsightGame:hover {
+  color: var(--primary-color);
+}
+
+.InsightIndex {
+    display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  width: 1.75em;
+  height: 1.75em;
+  border-radius: 50%;
+  font-weight: bold;
+  margin-right: 0.25em;
+  background-color: var(--button-color);
+  /* blue-600 */
+  color: var(--button-text-color);
+  font-size: 1.1em;
+  font-family: Arial, Helvetica, sans-serif;
+  font-weight: bolder;
+  border: var(--text-color) solid 1px;
+}
+
+.InsightScoreValue {
+  color: var(--text-color);
+  /* font-size: 1.1em; */
+  
+}
 /* Each fixture "card" */
 .FutureFixture {
   background: var(--secondary-background-color, #f9f9f9);
