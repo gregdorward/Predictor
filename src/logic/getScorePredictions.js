@@ -3520,7 +3520,7 @@ async function getSuccessMeasure(fixtures) {
 
   render(
     <Collapsable classNameButton="InsightsButton" buttonText={"Insights"} element={
-      <InsightsPanel statsArray={statsArray} classNameButton="InsightsCollapsable" />
+      <InsightsPanel statsArray={statsArray} paidUser={isPaid} classNameButton="InsightsCollapsable" />
     }
     />,
     "statsInsights" // This targets the div inside your Collapsable component

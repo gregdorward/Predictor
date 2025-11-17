@@ -18,41 +18,41 @@ const scrollToTarget = (id) => {
     }, 0);
 };
 
-const StatList = ({ title, sub, items, operator, sortOrder = 'desc' }) => {
-    // Sort items: 'desc' (highest first) or 'asc' (lowest first)
+const StatList = ({ title, sub, items, operator, sortOrder = 'desc', limit = 10 }) => {
+    // Sort items
     const sortedItems = [...items].sort((a, b) =>
         sortOrder === 'desc' ? b.score - a.score : a.score - b.score
     );
 
-    // Get top 10
-    const list = sortedItems.slice(0, 10);
-
+    // Apply limit (default 10)
+    const list = sortedItems.slice(0, limit);
 
     return (
         <div className="InsightContainer">
             <h2>{title}</h2>
             <h6>{sub}</h6>
-            <ul>
-                {list.length > 0 ? (
-                    list.map((item, index) => (
-                        <li key={index} className="InsightListItem">
-                            <div className='InsightScore'>
-                                <span className='InsightIndex'>{`${index + 1}`}</span> {`${item.name}: `} <span className='InsightScoreValue'>{`${item.score.toFixed(2)}${operator}`}</span>
-                            </div>
-                            <a href={`#${item.gameId}`} className='InsightGame'
-                                onClick={(e) => {
-                                    e.preventDefault(); // Prevent the immediate jump/reload
-                                    scrollToTarget(item.gameId); // Call the custom smooth scroll function
-                                }}
-                            >
-                                {item.game}
-                            </a>
-                        </li>
+            {!items || items.length === 0 && <li>No data available.</li>}
 
-                    ))
-                ) : (
-                    <li>No data available.</li>
-                )}
+            <ul>
+                {list.map((item, index) => (
+                    <li key={index} className="InsightListItem">
+                        <div className='InsightScore'>
+                            <span className='InsightIndex'>{index + 1}</span> {`${item.name}: `}
+                            <span className='InsightScoreValue'>{`${item.score.toFixed(2)}${operator}`}</span>
+                        </div>
+
+                        <a
+                            href={`#${item.gameId}`}
+                            className='InsightGame'
+                            onClick={(e) => {
+                                e.preventDefault();
+                                scrollToTarget(item.gameId);
+                            }}
+                        >
+                            {item.game}
+                        </a>
+                    </li>
+                ))}
             </ul>
         </div>
     );
@@ -61,7 +61,7 @@ const StatList = ({ title, sub, items, operator, sortOrder = 'desc' }) => {
 /**
  * Main component to render all the sorted insight lists.
  */
-export const InsightsPanel = ({ statsArray }) => {
+export const InsightsPanel = ({ statsArray, paidUser }) => {
     if (!statsArray) return <div className="p-4">Loading insights...</div>;
 
     return (
@@ -70,39 +70,63 @@ export const InsightsPanel = ({ statsArray }) => {
                 buttonText={"Best value performers"}
                 classNameButton="BestValueCollapsable"
                 element={
-                    <StatList
-                        title="Best value teams"
-                        sub="Points difference from bookies' expectations (last 5)"
-                        operator=""
-                        items={statsArray.trueFormArray}
-                        sortOrder="desc" // Highest score is best
-                    />
+                    <>
+                        <StatList
+                            title="Best value teams"
+                            sub="Points difference from bookies' expectations (last 5)"
+                            operator=""
+                            items={statsArray.trueFormArray}
+                            sortOrder="desc"
+                            limit={paidUser ? 10 : 5}
+                        />
+
+                        {!paidUser && (
+                            <div className="PaidFeatureNotice">
+                                Showing top 5 only — Top 10 available to paid users.
+                            </div>
+                        )}
+                    </>
                 }
             />
             <Collapsable
                 buttonText={"Worst value performers"}
                 classNameButton="BestValueCollapsable"
                 element={
-                    <StatList
-                        title="Worst value teams"
-                        sub="Points difference from bookies' expectations (last 5)"
-                        operator=""
-                        items={statsArray.trueFormArray}
-                        sortOrder="asc" // Lowest score is worst
-                    />
+                    <>
+                        <StatList
+                            title="Worst value teams"
+                            sub="Points difference from bookies' expectations (last 5)"
+                            operator=""
+                            items={statsArray.trueFormArray}
+                            sortOrder="asc" // Lowest score is worst
+                        />
+                        {!paidUser && (
+                            <div className="PaidFeatureNotice">
+                                Showing top 5 only — Top 10 available to paid users.
+                            </div>
+                        )}
+                    </>
                 }
             />
             <Collapsable
                 buttonText={"Best XG performers"}
                 classNameButton="BestValueCollapsable"
                 element={
-                    <StatList
-                        title="Best xG Differential"
-                        sub="XG goal difference (last 5)"
-                        operator=""
-                        items={statsArray.XGDiffArray}
-                        sortOrder="desc"
-                    />
+                    <>
+                        <StatList
+                            title="Best xG Differential"
+                            sub="XG goal difference (last 5)"
+                            operator=""
+                            items={statsArray.XGDiffArray}
+                            sortOrder="desc"
+                            limit={paidUser ? 10 : 5}
+                        />
+                        {!paidUser && (
+                            <div className="PaidFeatureNotice">
+                                Showing top 5 only — Top 10 available to paid users.
+                            </div>
+                        )}
+                    </>
                 }
             />
             <Collapsable
@@ -115,6 +139,7 @@ export const InsightsPanel = ({ statsArray }) => {
                         operator=""
                         items={statsArray.goalDiffArray}
                         sortOrder="desc"
+                        limit={paidUser ? 10 : 5}
                     />
                 }
             />
@@ -122,53 +147,88 @@ export const InsightsPanel = ({ statsArray }) => {
                 buttonText={"Most SOT"}
                 classNameButton="BestValueCollapsable"
                 element={
-                    <StatList
-                        title="Most Shots on Target"
-                        sub="Average shots on target (last 5)"
-                        operator=""
+                    <>
+                        <StatList
+                            title="Most Shots on Target"
+                            sub="Average shots on target (last 5)"
+                            operator=""
 
-                        items={statsArray.sotArray}
-                        sortOrder="desc"
-                    />
+                            items={statsArray.sotArray}
+                            sortOrder="desc"
+                            limit={paidUser ? 10 : 5}
+
+                        />
+                        {!paidUser && (
+                            <div className="PaidFeatureNotice">
+                                Showing top 5 only — Top 10 available to paid users.
+                            </div>
+                        )}
+                    </>
                 }
             />
             <Collapsable
                 buttonText={"Most BTTS games"}
                 classNameButton="BestValueCollapsable"
                 element={
-                    <StatList
-                        title="Best for BTTS"
-                        sub="Percentage of games ending in BTTS (last 5)"
-                        operator="%"
-                        items={statsArray.bttsArray}
-                        sortOrder="desc"
-                    />
+                    <>
+                        <StatList
+                            title="Best for BTTS"
+                            sub="Percentage of games ending in BTTS (last 5)"
+                            operator="%"
+                            items={statsArray.bttsArray}
+                            sortOrder="desc"
+                            limit={paidUser ? 10 : 5}
+
+                        />
+                        {!paidUser && (
+                            <div className="PaidFeatureNotice">
+                                Showing top 5 only — Top 10 available to paid users.
+                            </div>
+                        )}
+                    </>
                 }
             />
             <Collapsable
                 buttonText={"Most corners"}
                 classNameButton="BestValueCollapsable"
                 element={
-                    <StatList
-                        title="Most Corners"
-                        sub="Average corners (last 5)"
-                        operator=""
-                        items={statsArray.cornersArray}
-                        sortOrder="desc"
-                    />
+                    <>
+                        <StatList
+                            title="Most Corners"
+                            sub="Average corners (last 5)"
+                            operator=""
+                            items={statsArray.cornersArray}
+                            sortOrder="desc"
+                            limit={paidUser ? 10 : 5}
+                        />
+                        {!paidUser && (
+                            <div className="PaidFeatureNotice">
+                                Showing top 5 only — Top 10 available to paid users.
+                            </div>
+                        )}
+                    </>
                 }
             />
-                        <Collapsable
+            <Collapsable
                 buttonText={"Most cards"}
                 classNameButton="BestValueCollapsable"
                 element={
-                    <StatList
-                        title="Most Cards"
-                        sub="Cards (all games)"
-                        operator=""
-                        items={statsArray.cardsArray}
-                        sortOrder="desc"
-                    />
+                    <>
+                        <StatList
+                            title="Most Cards"
+                            sub="Cards (all games)"
+                            operator=""
+                            items={statsArray.cardsArray}
+                            sortOrder="desc"
+                            limit={paidUser ? 10 : 5}
+                        />
+                        {!paidUser && (
+                            <div className="PaidFeatureNotice">
+                                Showing top 5 only — Top 10 available to paid users.
+                            </div>
+                        )}
+                    </>
+
                 }
             />
         </div>

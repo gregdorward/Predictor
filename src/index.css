@@ -4977,9 +4977,12 @@ button.AIInsights button:active {
 
 .InsightScoreValue {
   color: var(--text-color);
-  /* font-size: 1.1em; */
-  
 }
+
+.PaidFeatureNotice{
+  padding-bottom: 1em;
+}
+
 /* Each fixture "card" */
 .FutureFixture {
   background: var(--secondary-background-color, #f9f9f9);
