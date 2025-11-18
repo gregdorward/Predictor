@@ -2877,6 +2877,7 @@ canvas.Pie {
 .stat-betterHome {
   /* border: 1px solid #01a501; */
   border-right: 4px solid #01a501;
+  border-radius: 4px;
   margin-top: 0.4em;
   margin-bottom: 0.4em;
   font-size: 1em;
@@ -2884,6 +2885,7 @@ canvas.Pie {
 
 .stat-worseHome {
   border-right: 4px solid #970d00;
+  border-radius: 4px;
   margin-top: 0.4em;
   margin-bottom: 0.4em;
   font-size: 1em;
@@ -2893,6 +2895,7 @@ canvas.Pie {
 .stat-equalHome {
   /* border: 1px solid var(--background-color); */
   border-right: 4px solid gray;
+  border-radius: 4px;
   margin-top: 0.4em;
   margin-bottom: 0.4em;
   font-size: 1em;
@@ -2902,6 +2905,7 @@ canvas.Pie {
 .stat-betterAway {
   /* border: 1px solid #01a501; */
   border-left: 4px solid #01a501;
+  border-radius: 4px;
   margin-top: 0.4em;
   margin-bottom: 0.4em;
   font-size: 1em;
@@ -2909,6 +2913,7 @@ canvas.Pie {
 
 .stat-worseAway {
   border-left: 4px solid #970d00;
+  border-radius: 4px;
   margin-top: 0.4em;
   margin-bottom: 0.4em;
   font-size: 1em;
@@ -2917,6 +2922,7 @@ canvas.Pie {
 .stat-equalAway {
   /* border: 1px solid var(--background-color); */
   border-left: 4px solid gray;
+  border-radius: 4px;
   margin-top: 0.4em;
   margin-bottom: 0.4em;
   font-size: 1em;
@@ -3166,7 +3172,8 @@ li.TeamScored {
 }
 
 li.FormHeader {
-  padding-bottom: 1em;
+  margin-bottom: 0.5em;
+  margin-top: 0.5em;
   font-size: 0.9em;
 }
 
@@ -4925,7 +4932,7 @@ button.AIInsights button:active {
   text-align: center;
 }
 
-.InsightContainer h6{
+.InsightContainer h6 {
   padding-top: 0em;
   font-size: 1em;
 }
@@ -4958,7 +4965,7 @@ button.AIInsights button:active {
 }
 
 .InsightIndex {
-    display: inline-flex;
+  display: inline-flex;
   justify-content: center;
   align-items: center;
   width: 1.75em;
@@ -4979,7 +4986,7 @@ button.AIInsights button:active {
   color: var(--text-color);
 }
 
-.PaidFeatureNotice{
+.PaidFeatureNotice {
   padding-bottom: 1em;
 }
 
@@ -5168,7 +5175,7 @@ button.AIInsights button:active {
 }
 
 .StreakValueSpan {
-  background-color: var(--span-background);
+  background-color: var(--primary-color);
   /* or any color */
   min-width: 2.5em;
   color: var(--span-text-colour);
@@ -5185,10 +5192,10 @@ button.AIInsights button:active {
 }
 
 .StreakOddsSpan {
-  background-color: var(--span-background);
+  background-color: var(--button-color);
   /* or any color */
   min-width: 2.5em;
-  color: var(--span-text-colour);
+  color: var(--button-text-color);
   padding: 0.25em 0.5em;
   border-radius: 0.5em;
   display: inline-block;

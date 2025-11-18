@@ -3089,9 +3089,9 @@ export async function calculateScore(match, index, divider, calculate, AIPredict
     statsArray.sotArray.push({ "name": formHome.teamName, "score": formHome.avSOTLast5, "gameId": match.id, "game": match.game })
     statsArray.sotArray.push({ "name": formAway.teamName, "score": formAway.avSOTLast5, "gameId": match.id, "game": match.game })
 
- statsArray.cardsArray.push({ "name": formHome.teamName, "score": formHome.CardsTotal, "gameId": match.id, "game": match.game })
+    statsArray.cardsArray.push({ "name": formHome.teamName, "score": formHome.CardsTotal, "gameId": match.id, "game": match.game })
     statsArray.cardsArray.push({ "name": formAway.teamName, "score": formAway.CardsTotal, "gameId": match.id, "game": match.game })
-    
+
 
 
     console.log(`drawPredictions: ${drawPredictions}`);
@@ -3511,12 +3511,20 @@ async function getSuccessMeasure(fixtures) {
   statsArray.sotArray.sort((a, b) => a.score - b.score);
   statsArray.XGDiffArray.sort((a, b) => a.score - b.score);
 
-  const list = statsArray.sotArray.slice(0, 10)
+  const reducedStatsArray = {
+    trueFormArray: statsArray.trueFormArray.slice(-10),
+    bttsArray: statsArray.bttsArray.slice(-10),
+    cornersArray: statsArray.cornersArray.slice(-10),
+    cardsArray: statsArray.cardsArray.slice(-10),
+    goalDiffArray: statsArray.goalDiffArray.slice(-10),
+    sotArray: statsArray.sotArray.slice(-10),
+    XGDiffArray: statsArray.XGDiffArray
+  }
 
   // console.log(statsArray.trueFormArray.slice(0, 10))
   // console.log(statsArray.trueFormArray.slice(-10).sort((a, b) => b.score - a.score))
 
-  console.log(statsArray)
+  console.log(reducedStatsArray)
 
   render(
     <Collapsable classNameButton="InsightsButton" buttonText={"Insights"} element={

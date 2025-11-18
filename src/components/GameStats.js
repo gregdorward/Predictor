@@ -3527,6 +3527,8 @@ function GameStats({ game, displayBool, stats }) {
   const attributesHomeComparison = homePlayerAtttributesComparison;
 
   const positionHome = attributesHome.position;
+  console.log(homeForm)
+  console.log(awayForm)
 
   const filteredEntriesHome = Object.entries(attributesHome).filter(
     ([key, value]) =>
@@ -3841,14 +3843,32 @@ function GameStats({ game, displayBool, stats }) {
               <h4>Points difference from bookies predictions over last 5 games</h4>
               <h4>{game.homeTeam} | {game.awayTeam}</h4>
               <span>Based on implied probability derived from odds for each match</span>
-              <div className="flex-container">
-                <div className="DoughnutOne">
-                  <DoughnutChart pointsTotal={homeForm.pointsSum5} predictedPoints={homeForm.totalExpectedPoints} deltaPTS={homeForm.trueForm !== undefined ? homeForm.trueForm : 0} chartTitle={homeForm.trueForm.toFixed(2)} color="#333333" label={homeForm.trueForm.toFixed(2)} theme={localStorage.getItem('theme')} />
+              {homeForm?.trueForm !== undefined && awayForm?.trueForm !== undefined && (
+                <div className="flex-container">
+                  <div className="DoughnutOne">
+                    <DoughnutChart
+                      pointsTotal={homeForm.pointsSum5}
+                      predictedPoints={homeForm.totalExpectedPoints}
+                      deltaPTS={homeForm.trueForm}
+                      chartTitle={homeForm.trueForm.toFixed(2)}
+                      color="#333333"
+                      label={homeForm.trueForm.toFixed(2)}
+                      theme={localStorage.getItem('theme')}
+                    />
+                  </div>
+                  <div className="DoughnutTwo">
+                    <DoughnutChart
+                      pointsTotal={awayForm.pointsSum5}
+                      predictedPoints={awayForm.totalExpectedPoints}
+                      deltaPTS={awayForm.trueForm}
+                      chartTitle={awayForm.trueForm.toFixed(2)}
+                      color="#333333"
+                      label={awayForm.trueForm.toFixed(2)}
+                      theme={localStorage.getItem('theme')}
+                    />
+                  </div>
                 </div>
-                <div className="DoughnutTwo">
-                  <DoughnutChart pointsTotal={awayForm.pointsSum5} predictedPoints={awayForm.totalExpectedPoints} deltaPTS={awayForm.trueForm !== undefined ? awayForm.trueForm : 0} chartTitle={awayForm.trueForm.toFixed(2)} color="#333333" label={awayForm.trueForm.toFixed(2)} theme={localStorage.getItem('theme')} />
-                </div>
-              </div>
+              )}
               {stats && ranksHome && ranksAway && stats?.topTeams && (
                 <TeamRankingsFlexView
                   title={`Rankings in ${game.leagueDesc} out of ${stats.topTeams.accurateCrosses?.length} teams`}
@@ -4101,14 +4121,14 @@ function GameStats({ game, displayBool, stats }) {
 
                   <MultiTypeChart
                     theme={localStorage.getItem('theme')}
-                    dataArray={homeForm.twoDGoalsArray.slice(
+                    dataArray={homeForm.twoDGoalsArray?.slice(
                       Math.max(homeForm.twoDGoalsArray.length - 5, 0)
                     )}
                     text={homeForm.teamName + ' XG Diff Last 5'}
                   />
                   <MultiTypeChart
                     theme={localStorage.getItem('theme')}
-                    dataArray={awayForm.twoDGoalsArray.slice(
+                    dataArray={awayForm.twoDGoalsArray?.slice(
                       Math.max(awayForm.twoDGoalsArray.length - 5, 0)
                     )}
                     text={awayForm.teamName + ' XG Diff Last 5'}
