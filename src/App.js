@@ -746,7 +746,8 @@ function AppContent() {
         // If the user is not logged in, show nothing
         <div></div>
       )}
-      <div className="Social">
+      <div className="Social" height="40" width="40"
+      >
         <TwitterShareButton
           url={"https://www.soccerstatshub.com"}
           title={"#SoccerStatsHub"}
@@ -790,8 +791,8 @@ function AppContent() {
         alt="18+ only"
         className="age-badge" // Add your CSS class here
         width="100"
-        height="100" 
-        />
+        height="100"
+      />
       <Collapsable buttonText={"Terms and Conditions"} element={<StripePolicies />} />
       <Collapsable buttonText={"Privacy Policy"} element={<PrivacyPolicy />} />
       <div className="bitcoin" id="bitcoin">

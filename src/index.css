@@ -1,3 +1,11 @@
+/* @font-face {
+  font-family: 'Open Sans';
+  font-style: normal;
+  font-weight: 600;
+  src: url('%PUBLIC_URL%/fonts/OpenSans-SemiBold.woff2') format('woff2');
+  font-display: swap;
+} */
+
 @media (max-width: 4000px) {
   body>#root {
     height: 100vh;
@@ -578,29 +586,35 @@ button:active {
 button:hover {
   color: var(--primary-color);
 }
+.GeneratePredictions{
+    min-height: 30vh;
+}
 
-button.GeneratePredictions {
+button.GeneratePredictionsButton {
   margin-top: 0.5em;
   padding-top: 1em;
   padding-bottom: 1em;
   background-color: #fe8c00;
   color: #020029;
   border: var(--text-color), 1px, solid;
+  height: 5em;
   /* box-shadow: 0 0px 0px 0 rgba(0, 0, 0, 0.2), 0 1px 2px 0 #030052 */
 }
 
-button.GeneratePredictions:hover {
+button.GeneratePredictionsButton:hover {
   border: var(--button-text-color), 2px, solid;
   /* box-shadow: 0 0px 0px 0 rgba(0, 0, 0, 0.2), 0 1px 2px 0 #030052 */
 }
 
 
-button.GeneratePredictions:active {
+button.GeneratePredictionsButton:active {
   padding-top: 1em;
   padding-bottom: 1em;
   background-color: #ce7100;
   color: var(--button-text-color);
   box-shadow: 0 0px 0px 0 rgba(0, 0, 0, 0.2), 0 1px 2px 0 #030052 inset;
+  height: 5em;
+
 }
 
 /* .Filters2 button {
@@ -705,9 +719,9 @@ button.GeneratePredictions:active {
   /* flex-direction: column; */
 }
 
-/* .FixtureContainer{
-
-} */
+.FixtureContainer{
+  min-height: 40vw;
+}
 
 .WelcomeBack {
   font-size: 0.9em;
