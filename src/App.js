@@ -678,7 +678,7 @@ function AppContent() {
       <div id="homeBadge" />
       <div id="FixtureContainerHeaders"></div>
 
-      <div id="FixtureContainer">
+      <div id="FixtureContainer" className="FixtureContainer">
         <h6 className="WelcomeText">{welcomeTextOne}</h6>
         <div>
           <h6 className="WelcomeText">
@@ -746,7 +746,7 @@ function AppContent() {
         // If the user is not logged in, show nothing
         <div></div>
       )}
-      <div className="Social" height="40" width="40"
+      <div className="Social"
       >
         <TwitterShareButton
           url={"https://www.soccerstatshub.com"}

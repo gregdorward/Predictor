@@ -587,7 +587,7 @@ button:hover {
   color: var(--primary-color);
 }
 .GeneratePredictions{
-    min-height: 30vh;
+    min-height: 18em;
 }
 
 button.GeneratePredictionsButton {
@@ -720,7 +720,7 @@ button.GeneratePredictionsButton:active {
 }
 
 .FixtureContainer{
-  min-height: 40vw;
+  min-height: 30em;
 }
 
 .WelcomeBack {
@@ -902,6 +902,8 @@ span.MembershipInfo {
   margin-left: 2em;
   margin-right: 2em;
   margin-bottom: 1em;
+  height: 12em;
+  width: 90%;
 }
 
 .leagueName {

@@ -532,10 +532,10 @@ export async function generateFixtures(
     );
 
     //cleanup if different day is selected
-    render(
-      <div></div>,
-      "GeneratePredictions"
-    );
+    // render(
+    //   <div></div>,
+    //   "GeneratePredictions"
+    // );
     render(<div></div>, "MultiPlaceholder");
 
 
