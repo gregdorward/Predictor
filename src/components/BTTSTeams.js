@@ -88,6 +88,7 @@ export default function BTTSTeams() {
     <Fragment>
       <HamburgerMenu />
       <Logo />
+      <a href="https://www.soccerstatshub.com/" className="HomeLink">Home</a>
       <h1>Teams With Best BTTS Records</h1>
       <TableContainer component={Paper} className="O25Table">
         <Table aria-label="highest scoring games">

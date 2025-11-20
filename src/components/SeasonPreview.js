@@ -34,6 +34,7 @@ export default function SeasonPreview() {
 
     return (
         <><HamburgerMenu /><Logo /><div className="p-4">
+            <a href="https://www.soccerstatshub.com/" className="HomeLink">Home</a>
             <h1 className="text-2xl font-bold mb-6">Season Previews</h1>
             <ul>
                 {leagues.map((league) => {

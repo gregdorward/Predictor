@@ -87,6 +87,7 @@ export default function HighestScoringFixtures() {
     <Fragment>
       <HamburgerMenu />
       <Logo />
+      <a href="https://www.soccerstatshub.com/" className="HomeLink">Home</a>
       <h1>Fixtures With Highest Goal Potential</h1>
       <TableContainer component={Paper} className="O25Table">
         <Table aria-label="highest scoring games">

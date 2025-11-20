@@ -68,6 +68,7 @@ export default function Under25() {
     <Fragment>
       <HamburgerMenu />
       <Logo />
+      <a href="https://www.soccerstatshub.com/" className="HomeLink">Home</a>
       <h1>Lowest Scoring Leagues</h1>
       <TableContainer component={Paper} className="O25Table">
         <Table aria-label="Lowest scoring leagues">
