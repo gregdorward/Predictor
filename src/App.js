@@ -679,8 +679,8 @@ function AppContent() {
       <div id="FixtureContainerHeaders"></div>
 
       <div id="FixtureContainer" className="FixtureContainer">
-        <h6 className="WelcomeText">{welcomeTextOne}</h6>
-        <div>
+        {/* <h6 className="WelcomeText">{welcomeTextOne}</h6> */}
+        {/* <div>
           <h6 className="WelcomeText">
             <ul className="AllLeagues" key="league-list">
               <li className="League" key="premier-league">
@@ -723,7 +723,7 @@ function AppContent() {
               r/xgtipping
             </a>
           </h6>
-        </div>
+        </div> */}
       </div>
       <div id="XGDiff" />
 
