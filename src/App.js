@@ -789,8 +789,9 @@ function AppContent() {
         src={Over18Badge} // Use the imported path here
         alt="18+ only"
         className="age-badge" // Add your CSS class here
-        style={{ height: "10em" }}
-      />
+        width="100"
+        height="100" 
+        />
       <Collapsable buttonText={"Terms and Conditions"} element={<StripePolicies />} />
       <Collapsable buttonText={"Privacy Policy"} element={<PrivacyPolicy />} />
       <div className="bitcoin" id="bitcoin">
