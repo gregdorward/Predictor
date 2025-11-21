@@ -636,7 +636,6 @@ const List = ({
         showShortlist={showShortlist}
       />
       <ShareShortlistButton selectedFixtures={selectedFixtures} />
-      <SubmitTipsButton submit={() => submitTips()} />
       <div>
         <div id="Headers"></div>
         <ul className="FixtureList" id="FixtureList">
@@ -674,17 +673,6 @@ function ShortlistButton({ toggleShortlist, showShortlist }) {
       className={buttonClass}
     >
       {buttonText}
-    </button>
-  );
-}
-
-function SubmitTipsButton({ submit }) {
-  return (
-    <button
-      className="SubmitTipsButton"
-      onClick={submit}
-    >
-      Submit My Tips
     </button>
   );
 }
