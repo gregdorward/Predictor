@@ -10,7 +10,10 @@ import Increment from "../components/Increment";
 import { incrementValue } from "../components/Increment";
 import { getBTTSPotential } from "../logic/getBTTSPotential";
 import { allLeagueResultsArrayOfObjects } from "../logic/getFixtures";
+import { Button } from "../components/Button";
 import { Slider } from "../components/Carousel";
+import { Slide } from "../components/Slider";
+import SlideDiff from "../components/SliderDiff";
 import { render } from '../utils/render';
 import {
   calculateAttackingStrength,
@@ -218,10 +221,7 @@ function UserTips() {
           ))
         ) : (
           <p>
-            Expand an individual ficture to make your prediction. Predictions
-            will only be submitted when the 'Submit My Tips' button is clicked.
-            All users tips will be displayed here with a tally against each,
-            showing the most popular.
+            Expand an individual fixture to make your prediction
           </p>
         )}
       </ul>
@@ -4525,26 +4525,119 @@ export async function getScorePrediction(day, mocked) {
   );
 
   // Render Collapsable content
-  render(
-    <Collapsable
-      buttonText={"Multis"}
-      className={"MultisCollapsable"}
-      element={
-        <Fragment>
-          <div id="bestPredictions" className="bestPredictions" />
-          <div id="exoticOfTheDay" className="exoticOfTheDay" />
-          <div id="RowOneContainer" className="RowOneContainer">
-            <div id="BTTS" className="RowOne" />
-            <div id="longShots" className="RowOne" />
-            <div id="draws" className="RowOne" />
-          </div>
-          <div id="insights" />
-          <div id="UserGeneratedTips" />
-        </Fragment>
-      }
-    />,
-    "MultiPlaceholder"
-  );
+render(
+          <Fragment>
+            <Button
+              text={"Get Predictions & Stats"}
+              onClickEvent={() => getScorePrediction(day)}
+              className={"GeneratePredictionsButton"}
+            />
+            <div className="Version">Prediction engine v1.6.2 (23/10/25)</div>
+            <div className="MissingPredictionsNotice">If predictions are missing on games with little data, switch to AI tips in the options, above</div>
+            <Collapsable
+              buttonText={"Multis"}
+              className={"MultisCollapsable"}
+              key="MultisCollapsable"
+              element={
+                <Fragment>
+                  <div id="bestPredictions" className="bestPredictions" />
+                  <div id="exoticOfTheDay" className="exoticOfTheDay" />
+                  <div id="RowOneContainer" className="RowOneContainer">
+                    <div id="BTTS" className="RowOne" />
+                    <div id="longShots" className="RowOne" />
+                    <div id="draws" className="RowOne" />
+                  </div>
+                  <div id="insights" />
+                  <div id="UserGeneratedTips" />
+                </Fragment>
+              }
+            />
+            <div id="shortlistRender" />
+            <Collapsable buttonText={"ROI"} className={"ROI"} element={<div id="successMeasure2" />} />
+            <div className={"StatsInsights"} id="statsInsights" />
+            <div id="highLowLeagues" className="HighLowLeagues" />
+            <div id="risk" />
+            <div id="successMeasure" />
+            <div id="tables" />
+            <div id="homeBadge" />
+            <div id="FixtureContainerHeaders"></div>
+            <Collapsable
+              buttonText={"Filters"}
+              className={"Filters2"}
+              element={
+                <div className="FilterContainer">
+                  <h6>
+                    Use the below filters to remove predictions that don't meet
+                    the set criteria. These will be greyed out and not included
+                    in multi-builders and ROI stats
+                  </h6>
+                  <h6>Goals for/against differential filter</h6>
+                  <div>
+                    I'm looking for tips where the goal differential between
+                    teams is at least...
+                  </div>
+                  <SlideDiff
+                    value="0"
+                    text="all games"
+                    useCase="gd"
+                    lower="0"
+                    upper="30"
+                  ></SlideDiff>
+                  <h6>Goals for/against home or away differential filter</h6>
+                  <div>
+                    I'm looking for tips where the goal differential (home or
+                    away only) between teams is at least...
+                  </div>
+                  <SlideDiff
+                    value="0"
+                    text="all games"
+                    useCase="gdHorA"
+                    lower="0"
+                    upper="30"
+                  ></SlideDiff>
+                  <Fragment>
+                    <h6>XG for/against differential filter</h6>
+                    <div>
+                      I'm looking for tips where the XG differential between
+                      teams is at least...
+                    </div>
+                    <SlideDiff
+                      value="0"
+                      text="all games"
+                      useCase="xg"
+                      lower="0"
+                      upper="30"
+                    ></SlideDiff>
+                  </Fragment>
+                  <Fragment>
+                    <h6>Last 6 points differential filter</h6>
+                    <div>
+                      I'm looking for tips where the points differential between
+                      teams is at least...
+                    </div>
+                    <SlideDiff
+                      value="0"
+                      text="all games"
+                      useCase="last10"
+                      lower="0"
+                      upper="18"
+                    ></SlideDiff>
+                  </Fragment>
+                  <Fragment>
+                    <h6>Choose your risk profile</h6>
+                    <div>
+                      I'm looking for tips where the odds are between...
+                    </div>
+                    <Slide value="1" text="all games"></Slide>
+                  </Fragment>
+                </div>
+              }
+            />
+          </Fragment>,
+          "GeneratePredictions"
+        );
+
+  
 
   render(
     <RenderAllFixtures

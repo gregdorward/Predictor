@@ -2509,32 +2509,47 @@ function GameStats({ game, displayBool, stats }) {
     );
   }
 
-  function handleSetUserTips(gameId, game, tipString, tip, date, uid, odds) {
-    setUserTips((prevTips) => {
-      // Check if the tip for this gameId already exists
-      const existingTipIndex = prevTips.findIndex(
-        (tip) => tip.gameId === gameId
-      );
+  async function submitSingleTip(tip) {
+  return fetch(`${process.env.REACT_APP_EXPRESS_SERVER}tips`, {
+    method: "POST",
+    headers: {
+      Accept: "application/json",
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(tip),
+  });
+}
 
-      if (existingTipIndex !== -1) {
-        // If the tip already exists, update it
-        const updatedTips = [...prevTips];
-        updatedTips[existingTipIndex] = {
-          gameId,
-          game,
-          tipString,
-          tip,
-          date,
-          uid,
-          odds,
-        };
-        return updatedTips; // Return the updated list
-      } else {
-        // If the tip doesn't exist, add a new one
-        return [...prevTips, { gameId, game, tipString, tip, date, uid, odds }];
-      }
-    });
-  }
+
+function handleSetUserTips(gameId, game, tipString, tip, date, uid, odds) {
+  const newTip = { gameId, game, tipString, tip, date, uid, odds };
+
+  setUserTips((prevTips) => {
+    const existingTipIndex = prevTips.findIndex(
+      (tip) => tip.gameId === gameId
+    );
+
+    let updatedTips;
+
+    if (existingTipIndex !== -1) {
+      updatedTips = [...prevTips];
+      updatedTips[existingTipIndex] = newTip;
+    } else {
+      updatedTips = [...prevTips, newTip];
+    }
+
+    // Persist to localStorage
+    localStorage.setItem("userTips", JSON.stringify(updatedTips));
+
+    return updatedTips;
+  });
+
+  // Submit the tip immediately (no need to await)
+  submitSingleTip(newTip)
+    .then(() => console.log("Tip submitted"))
+    .catch((err) => console.error("Error submitting tip", err));
+}
+
 
 
 

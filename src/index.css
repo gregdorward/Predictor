@@ -29,6 +29,37 @@
     margin-right: auto;
   }
 
+  .LoadingLogo,
+  .LogoSubHeading {
+    flex: 1;
+    /* ← this is the key */
+  }
+
+  .LoadingLogo {
+    display: flex;
+    justify-content: center;
+    width: 10em;
+    padding-left: 1em;
+    align-self: center;
+    margin-left: auto;
+    margin-right: auto;
+    padding-left: 4em;
+  }
+
+  /* 
+.responsive-logo {
+  max-width: 100%;
+  height: auto;
+} */
+
+  .LogoSubHeading {
+    font-size: 1.3em;
+    color: var(--button-text-color);
+    text-align: center;
+    margin: 0;
+    color: #e98103;
+  }
+
   .MuiTable-root {
     background-color: var(--background-color);
     color: var(--text-color);
@@ -101,6 +132,37 @@
     margin-right: auto;
   }
 
+  .LoadingLogo,
+  .LogoSubHeading {
+    flex: 1;
+    /* ← this is the key */
+  }
+
+  .LoadingLogo {
+    display: flex;
+    justify-content: center;
+    width: 8em;
+    padding-left: 1em;
+    align-self: center;
+    margin-left: auto;
+    margin-right: auto;
+    padding-left: 3em;
+  }
+
+  /* 
+.responsive-logo {
+  max-width: 100%;
+  height: auto;
+} */
+
+  .LogoSubHeading {
+    font-size: 1.3em;
+    color: var(--button-text-color);
+    text-align: center;
+    margin: 0;
+    color: #e98103;
+  }
+
   .FormSummaries {
     /* align-items: flex-start; */
     display: flex;
@@ -132,6 +194,37 @@
     padding-right: 7.5em;
     margin-left: auto;
     margin-right: auto;
+  }
+
+  .LoadingLogo,
+  .LogoSubHeading {
+    flex: 1;
+    /* ← this is the key */
+  }
+
+  .LoadingLogo {
+    display: flex;
+    justify-content: center;
+    width: 8em;
+    padding-left: 1em;
+    align-self: center;
+    margin-left: auto;
+    margin-right: auto;
+    padding-left: 2em;
+  }
+
+  /* 
+.responsive-logo {
+  max-width: 100%;
+  height: auto;
+} */
+
+  .LogoSubHeading {
+    font-size: 1.3em;
+    color: var(--button-text-color);
+    text-align: center;
+    margin: 0;
+    color: #e98103;
   }
 
   .FormSummaries {
@@ -167,6 +260,37 @@
     margin-right: auto;
   }
 
+  .LoadingLogo,
+  .LogoSubHeading {
+    flex: 1;
+    /* ← this is the key */
+  }
+
+  .LoadingLogo {
+    display: flex;
+    justify-content: center;
+    width: 7em;
+    padding-left: 1em;
+    align-self: center;
+    margin-left: auto;
+    margin-right: auto;
+    padding-left: 1em;
+  }
+
+  /* 
+.responsive-logo {
+  max-width: 100%;
+  height: auto;
+} */
+
+  .LogoSubHeading {
+    font-size: 1.3em;
+    color: var(--button-text-color);
+    text-align: center;
+    margin: 0;
+    color: #e98103;
+  }
+
   .FormSummaries {
     /* align-items: flex-start; */
     display: flex;
@@ -192,6 +316,30 @@
     align-content: center;
   }
 
+  .LoadingLogo,
+  .LogoSubHeading {
+    flex: 1;
+    /* ← this is the key */
+  }
+
+  .LoadingLogo {
+    display: flex;
+    justify-content: center;
+    width: 6em;
+    padding-left: 1em;
+    align-self: center;
+    margin-left: auto;
+    margin-right: auto;
+    padding-left: 1em;
+  }
+
+    .LogoSubHeading {
+    font-size: 1.2em;
+    color: var(--button-text-color);
+    text-align: center;
+    margin: 0;
+    color: #e98103;
+  }
   .LeagueTable {
     padding-bottom: 0.5em;
     padding-left: 2em;
@@ -232,6 +380,31 @@
     margin-left: auto;
     margin-right: auto;
 
+  }
+
+  .LoadingLogo,
+  .LogoSubHeading {
+    flex: 1;
+    /* ← this is the key */
+  }
+
+  .LoadingLogo {
+    display: flex;
+    justify-content: center;
+    width: 6em;
+    /* padding-left: 1em; */
+    align-self: center;
+    margin-left: auto;
+    margin-right: auto;
+    /* padding-left: 5em; */
+  }
+
+    .LogoSubHeading {
+    font-size: 1.2em;
+    color: var(--button-text-color);
+    text-align: center;
+    margin: 0;
+    color: #fe8c00;
   }
 
   .FormSummaries {
@@ -418,6 +591,19 @@ h1 {
   /* Optional: add padding or margin if needed */
 }
 
+.LogoAndText {
+  display: flex;
+  margin-top: 3em;
+  align-items: center;
+  width: 75%;
+  margin-left: auto;
+  margin-right: auto;
+  padding: 1em;
+  border: var(--primary-color) 2px solid;
+  border-radius: 2px;
+  background-color: var(--button-color);
+}
+
 .HamburgerMenuDiv {
   margin: 0em;
   padding-top: 10em;
@@ -578,8 +764,9 @@ button:active {
 button:hover {
   color: var(--primary-color);
 }
-.GeneratePredictions{
-    min-height: 18em;
+
+.GeneratePredictions {
+  min-height: 23em;
 }
 
 button.GeneratePredictionsButton {
@@ -711,7 +898,7 @@ button.GeneratePredictionsButton:active {
   /* flex-direction: column; */
 }
 
-.FixtureContainer{
+.FixtureContainer {
   min-height: 30em;
 }
 
@@ -756,7 +943,12 @@ p {
 }
 
 h6.PredictionTypeText {
-  padding-top: 0em;
+  padding-top: 1em;
+}
+
+.LoadingGames {
+  height: 10em;
+  width: 10em;
 }
 
 .PredictionRadios {
@@ -771,11 +963,15 @@ h6.PredictionTypeText {
   padding: 0px;
 } */
 
+
 .LoadingText {
   /* padding-top: 2em; */
   padding-bottom: 1em;
-  margin-top: 0.5em;
-  font-size: 1em;
+  margin-top: 3em;
+  width: 75%;
+  margin-left: auto;
+  margin-right: auto;
+  font-size: 1.1em;
   color: var(--text-color);
 }
 
@@ -1266,6 +1462,39 @@ strong {
 
 .pointsGapExplainer {
   color: var(--text-color);
+}
+
+.bouncing-loader {
+  display: flex;
+  justify-content: center;
+}
+
+.bouncing-loader>div {
+  margin-top: 4em;
+  margin-bottom: 2em;
+  width: 4em;
+  height: 4em;
+  margin-left: 1em;
+  margin-right: 1em;
+  border-radius: 50%;
+  background-color: var(--primary-color);
+  opacity: 1;
+  animation: bouncing-loader 0.6s infinite alternate;
+}
+
+@keyframes bouncing-loader {
+  to {
+    opacity: 0.1;
+    transform: translateY(-16px);
+  }
+}
+
+.bouncing-loader>div:nth-child(2) {
+  animation-delay: 0.2s;
+}
+
+.bouncing-loader>div:nth-child(3) {
+  animation-delay: 0.4s;
 }
 
 .individualFixtureContainerundefined {
