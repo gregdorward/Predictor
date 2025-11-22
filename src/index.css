@@ -57,7 +57,7 @@
     color: var(--button-text-color);
     text-align: center;
     margin: 0;
-    color: #e98103;
+    color: var(--button-text-color);
   }
 
   .MuiTable-root {
@@ -160,7 +160,7 @@
     color: var(--button-text-color);
     text-align: center;
     margin: 0;
-    color: #e98103;
+    color: var(--button-text-color);
   }
 
   .FormSummaries {
@@ -224,7 +224,7 @@
     color: var(--button-text-color);
     text-align: center;
     margin: 0;
-    color: #e98103;
+    color: var(--button-text-color);
   }
 
   .FormSummaries {
@@ -288,7 +288,7 @@
     color: var(--button-text-color);
     text-align: center;
     margin: 0;
-    color: #e98103;
+    color: var(--button-text-color);
   }
 
   .FormSummaries {
@@ -338,7 +338,7 @@
     color: var(--button-text-color);
     text-align: center;
     margin: 0;
-    color: #e98103;
+    color: var(--button-text-color);
   }
   .LeagueTable {
     padding-bottom: 0.5em;
@@ -404,7 +404,7 @@
     color: var(--button-text-color);
     text-align: center;
     margin: 0;
-    color: #fe8c00;
+    color: var(--button-text-color);
   }
 
   .FormSummaries {
@@ -765,9 +765,9 @@ button:hover {
   color: var(--primary-color);
 }
 
-.GeneratePredictions {
+/* .GeneratePredictions {
   min-height: 15em;
-}
+} */
 
 button.GeneratePredictionsButton {
   margin-top: 0.5em;
