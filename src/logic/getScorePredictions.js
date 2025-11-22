@@ -10,10 +10,7 @@ import Increment from "../components/Increment";
 import { incrementValue } from "../components/Increment";
 import { getBTTSPotential } from "../logic/getBTTSPotential";
 import { allLeagueResultsArrayOfObjects } from "../logic/getFixtures";
-import { Button } from "../components/Button";
 import { Slider } from "../components/Carousel";
-import { Slide } from "../components/Slider";
-import SlideDiff from "../components/SliderDiff";
 import { render } from '../utils/render';
 import {
   calculateAttackingStrength,
@@ -221,7 +218,10 @@ function UserTips() {
           ))
         ) : (
           <p>
-            Expand an individual fixture to make your prediction
+            Expand an individual ficture to make your prediction. Predictions
+            will only be submitted when the 'Submit My Tips' button is clicked.
+            All users tips will be displayed here with a tally against each,
+            showing the most popular.
           </p>
         )}
       </ul>
@@ -3537,79 +3537,75 @@ async function getSuccessMeasure(fixtures) {
   console.log(isPaid);
   if (investment > 0 && isPaid) {
     render(
-      <Fragment>
-        <h3 className={"SuccessMeasureText"}>
+      <Collapsable buttonText={"ROI"} element={
+        <><h3 className={"SuccessMeasureText"}>
           ROI for all {investment} W/D/W outcomes: {ROI >= 0 ? "+" : " "}{" "}
           {ROI.toFixed(2)}%
-        </h3>
-        <p>{`Correct W/D/W predictions: ${successCount} (${(
+        </h3><p>{`Correct W/D/W predictions: ${successCount} (${(
           (successCount / investment) *
           100
-        ).toFixed(1)}%)`}</p>
-        <p>{`Exact scores predicted: ${exactScores} (${(
+        ).toFixed(1)}%)`}</p><p>{`Exact scores predicted: ${exactScores} (${(
           (exactScores / investment) *
           100
-        ).toFixed(1)}%)`}</p>
-        <p className="SuccessMeasureText">
-          Cumulative ROI for all {totalInvestment} match outcomes:{" "}
-          {totalROI >= 0 ? "+" : ""}
-          {totalROI.toFixed(2)}%
-        </p>
-        <CollapsableStats buttonText="ROI by League">
-          {Object.entries(specificLeagueResults)
-            .sort(([, a], [, b]) => b.totalROI - a.totalROI) // Sort by ROI in descending order
-            .map(([leagueName, league]) => {
-              return (
-                <div className="SuccessMeasure" key={leagueName}>
-                  <h3
-                    className={`${league.totalROI >= 0
-                      ? "ProfitableLeague"
-                      : "NonProfitableLeague"
-                      }`}
-                  >
-                    {leagueName}: ROI {league.totalROI >= 0 ? "+" : " "}
-                    {league.totalROI}%
-                  </h3>
-                  <p>
-                    Successful Predictions: {league.successCount} /{" "}
-                    {specificLeagueResults[leagueName].totalInvestment} :{" "}
-                    {(
-                      (league.successCount /
-                        specificLeagueResults[leagueName].totalInvestment) *
-                      100
-                    ).toFixed(2)}
-                    %
-                  </p>
-                  <p>
-                    Exact Scores: {league.exactScores} /{" "}
-                    {specificLeagueResults[leagueName].totalInvestment} :{" "}
-                    {(
-                      (league.exactScores /
-                        specificLeagueResults[leagueName].totalInvestment) *
-                      100
-                    ).toFixed(2)}
-                  </p>
-                </div>
-              );
-            })}
-        </CollapsableStats>
-      </Fragment>,
-      "successMeasure2"
+        ).toFixed(1)}%)`}</p><p className="SuccessMeasureText">
+            Cumulative ROI for all {totalInvestment} match outcomes:{" "}
+            {totalROI >= 0 ? "+" : ""}
+            {totalROI.toFixed(2)}%
+          </p><CollapsableStats buttonText="ROI by League">
+            {Object.entries(specificLeagueResults)
+              .sort(([, a], [, b]) => b.totalROI - a.totalROI) // Sort by ROI in descending order
+              .map(([leagueName, league]) => {
+                return (
+                  <div className="SuccessMeasure" key={leagueName}>
+                    <h3
+                      className={`${league.totalROI >= 0
+                        ? "ProfitableLeague"
+                        : "NonProfitableLeague"}`}
+                    >
+                      {leagueName}: ROI {league.totalROI >= 0 ? "+" : " "}
+                      {league.totalROI}%
+                    </h3>
+                    <p>
+                      Successful Predictions: {league.successCount} /{" "}
+                      {specificLeagueResults[leagueName].totalInvestment} :{" "}
+                      {(
+                        (league.successCount /
+                          specificLeagueResults[leagueName].totalInvestment) *
+                        100
+                      ).toFixed(2)}
+                      %
+                    </p>
+                    <p>
+                      Exact Scores: {league.exactScores} /{" "}
+                      {specificLeagueResults[leagueName].totalInvestment} :{" "}
+                      {(
+                        (league.exactScores /
+                          specificLeagueResults[leagueName].totalInvestment) *
+                        100
+                      ).toFixed(2)}
+                    </p>
+                  </div>
+                );
+              })}
+          </CollapsableStats></>
+      } />, "ROIPlaceholder"
     );
   } else if (!isPaid) {
     render(
-      <Fragment>
-        <p>{`Correct W/D/W predictions: ${successCount} / ${investment} (${(
-          (successCount / investment) *
-          100
-        ).toFixed(1)}%)`}</p>
-        <p>{`Exact scores predicted: ${exactScores} (${(
-          (exactScores / investment) *
-          100
-        ).toFixed(1)}% of unlocked games)`}</p>
-        <p>Full ROI stats available when fixtures are uncapped</p>
-      </Fragment>,
-      "successMeasure2"
+      <Collapsable buttonText={"ROI"} element={
+        <Fragment>
+          <p>{`Correct W/D/W predictions: ${successCount} / ${investment} (${(
+            (successCount / investment) *
+            100
+          ).toFixed(1)}%)`}</p>
+          <p>{`Exact scores predicted: ${exactScores} (${(
+            (exactScores / investment) *
+            100
+          ).toFixed(1)}% of unlocked games)`}</p>
+          <p>Full ROI stats available when fixtures are uncapped</p>
+        </Fragment>
+      } />,
+      "ROIPlaceholder"
     );
   } else {
     return;
@@ -4525,119 +4521,26 @@ export async function getScorePrediction(day, mocked) {
   );
 
   // Render Collapsable content
-render(
-          <Fragment>
-            <Button
-              text={"Get Predictions & Stats"}
-              onClickEvent={() => getScorePrediction(day)}
-              className={"GeneratePredictionsButton"}
-            />
-            <div className="Version">Prediction engine v1.6.2 (23/10/25)</div>
-            <div className="MissingPredictionsNotice">If predictions are missing on games with little data, switch to AI tips in the options, above</div>
-            <Collapsable
-              buttonText={"Multis"}
-              className={"MultisCollapsable"}
-              key="MultisCollapsable"
-              element={
-                <Fragment>
-                  <div id="bestPredictions" className="bestPredictions" />
-                  <div id="exoticOfTheDay" className="exoticOfTheDay" />
-                  <div id="RowOneContainer" className="RowOneContainer">
-                    <div id="BTTS" className="RowOne" />
-                    <div id="longShots" className="RowOne" />
-                    <div id="draws" className="RowOne" />
-                  </div>
-                  <div id="insights" />
-                  <div id="UserGeneratedTips" />
-                </Fragment>
-              }
-            />
-            <div id="shortlistRender" />
-            <Collapsable buttonText={"ROI"} className={"ROI"} element={<div id="successMeasure2" />} />
-            <div className={"StatsInsights"} id="statsInsights" />
-            <div id="highLowLeagues" className="HighLowLeagues" />
-            <div id="risk" />
-            <div id="successMeasure" />
-            <div id="tables" />
-            <div id="homeBadge" />
-            <div id="FixtureContainerHeaders"></div>
-            <Collapsable
-              buttonText={"Filters"}
-              className={"Filters2"}
-              element={
-                <div className="FilterContainer">
-                  <h6>
-                    Use the below filters to remove predictions that don't meet
-                    the set criteria. These will be greyed out and not included
-                    in multi-builders and ROI stats
-                  </h6>
-                  <h6>Goals for/against differential filter</h6>
-                  <div>
-                    I'm looking for tips where the goal differential between
-                    teams is at least...
-                  </div>
-                  <SlideDiff
-                    value="0"
-                    text="all games"
-                    useCase="gd"
-                    lower="0"
-                    upper="30"
-                  ></SlideDiff>
-                  <h6>Goals for/against home or away differential filter</h6>
-                  <div>
-                    I'm looking for tips where the goal differential (home or
-                    away only) between teams is at least...
-                  </div>
-                  <SlideDiff
-                    value="0"
-                    text="all games"
-                    useCase="gdHorA"
-                    lower="0"
-                    upper="30"
-                  ></SlideDiff>
-                  <Fragment>
-                    <h6>XG for/against differential filter</h6>
-                    <div>
-                      I'm looking for tips where the XG differential between
-                      teams is at least...
-                    </div>
-                    <SlideDiff
-                      value="0"
-                      text="all games"
-                      useCase="xg"
-                      lower="0"
-                      upper="30"
-                    ></SlideDiff>
-                  </Fragment>
-                  <Fragment>
-                    <h6>Last 6 points differential filter</h6>
-                    <div>
-                      I'm looking for tips where the points differential between
-                      teams is at least...
-                    </div>
-                    <SlideDiff
-                      value="0"
-                      text="all games"
-                      useCase="last10"
-                      lower="0"
-                      upper="18"
-                    ></SlideDiff>
-                  </Fragment>
-                  <Fragment>
-                    <h6>Choose your risk profile</h6>
-                    <div>
-                      I'm looking for tips where the odds are between...
-                    </div>
-                    <Slide value="1" text="all games"></Slide>
-                  </Fragment>
-                </div>
-              }
-            />
-          </Fragment>,
-          "GeneratePredictions"
-        );
-
-  
+  render(
+    <Collapsable
+      buttonText={"Multis"}
+      className={"MultisCollapsable"}
+      element={
+        <Fragment>
+          <div id="bestPredictions" className="bestPredictions" />
+          <div id="exoticOfTheDay" className="exoticOfTheDay" />
+          <div id="RowOneContainer" className="RowOneContainer">
+            <div id="BTTS" className="RowOne" />
+            <div id="longShots" className="RowOne" />
+            <div id="draws" className="RowOne" />
+          </div>
+          <div id="insights" />
+          <div id="UserGeneratedTips" />
+        </Fragment>
+      }
+    />,
+    "MultiPlaceholder"
+  );
 
   render(
     <RenderAllFixtures
@@ -4945,7 +4848,9 @@ async function renderTips() {
       "bestPredictions"
     );
   } else if (paid !== true) {
+    console.log(paid)
     newArray = newArray.slice(0, 6);
+        console.log(newArray)
     render(
       <div className="PredictionContainer">
         <Fragment>
@@ -4955,7 +4860,6 @@ async function renderTips() {
             element={
               <ul className="BestPredictions" id="BestPredictions">
                 <div className="BestPredictionsExplainer">
-                  Multis limited to a maximum of 6 selections for free users.<br />
                   Add or remove a selection using the buttons. Predictions
                   are ordered by confidence in the outcome.
                 </div>

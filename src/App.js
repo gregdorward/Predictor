@@ -2,6 +2,8 @@ import { Fragment, useEffect, useState, lazy, Suspense } from "react";
 import ReactDOM from "react-dom";
 import { render } from './utils/render';
 import { Button } from "./components/Button";
+import OddsRadio from "./components/OddsRadio";
+import PredictionTypeRadio from "./components/PredictionTypeRadio";
 import ThemeToggle from "./components/DarkModeToggle";
 import { selectedOdds } from "./components/OddsRadio";
 import Collapsable from "./components/CollapsableElement";
@@ -9,6 +11,8 @@ import StripePolicies from "./components/Contact";
 import { loadStripe } from "@stripe/stripe-js";
 import { AuthProvider, useAuth } from "./logic/authProvider";
 import { getAuth } from "firebase/auth";
+import Login from "./components/Login";
+import { getCurrentUser } from "./components/ProtectedContent";
 import { userDetail } from "./logic/authProvider";
 import { checkUserPaidStatus } from "./logic/hasUserPaid";
 import HamburgerMenu from "./components/HamburgerMenu";
@@ -49,6 +53,7 @@ export let allLeagueData = [];
 export const availableLeagues = [];
 export var orderedLeagues = [];
 
+let loggedIn;
 export let paid = false;
 const LazyLogo = lazy(() => import('./components/Logo'));
 
@@ -221,7 +226,17 @@ async function calculateDate(dateString) {
   return [`${month}${day}${year}`, `${year}-${month}-${day}`];
 }
 
+async function convertTimestampForSofaScore(timestamp) {
+  let newDate = new Date(timestamp);
 
+  let year = newDate.getFullYear();
+  let month = String(newDate.getMonth() + 1).padStart(2, "0"); // Adding 1 to month because it is zero-based
+  let day = String(newDate.getDate()).padStart(2, "0");
+
+  let converted = `${year}-${month}-${day}`;
+
+  return converted;
+}
 
 (async function fetchLeagueData() {
   let leagueList;
@@ -283,6 +298,191 @@ async function calculateDate(dateString) {
   return orderedLeagues;
 })();
 
+export async function getLeagueList() {
+  let i = 0;
+  date = new Date();
+  string = "Today";
+  loggedIn = await getCurrentUser();
+
+
+  async function decrementDate(num, date) {
+    i = i - num;
+    console.log(i);
+    if (i > -120) {
+      date.setDate(date.getDate() - num);
+      dateUnformatted = date;
+      dateSS = await convertTimestampForSofaScore(date);
+      [date, dateFootyStats] = await calculateDate(date);
+      string = dateFootyStats;
+      dateString = date;
+      await renderButtons();
+    }
+  }
+
+  async function incrementDateV2(num, date) {
+    i = i + num;
+    console.log(i);
+    if (i <= 4) {
+      date.setDate(date.getDate() + num);
+      dateUnformatted = date;
+      dateSS = await convertTimestampForSofaScore(date);
+      [date, dateFootyStats] = await calculateDate(date);
+      string = dateFootyStats;
+      dateString = date;
+      console.log(dateString);
+      await renderButtons();
+    }
+  }
+
+  const todayRaw = new Date();
+  const tomorrowsDate = new Date(todayRaw);
+  tomorrowsDate.setDate(todayRaw.getDate() + 1);
+
+  const yesterdaysDate = new Date(todayRaw);
+  yesterdaysDate.setDate(todayRaw.getDate() - 1);
+
+  const saturdayDate = new Date(todayRaw);
+  saturdayDate.setDate(todayRaw.getDate() - ((saturdayDate.getDay() + 6) % 7) - 2);
+
+  const historicDate = new Date(todayRaw);
+  historicDate.setDate(todayRaw.getDate() - ((historicDate.getDay() + 6) % 7) - 9);
+
+  // Run calculateDate on all in parallel
+  const [
+    [today, todayFootyStats]
+  ] = await Promise.all([
+    calculateDate(todayRaw)
+  ]);
+
+  const [
+    todaySS,
+  ] = await Promise.all([
+    convertTimestampForSofaScore(new Date())
+  ]);
+
+  const text =
+    "Select a day you would like to retrieve fixtures for from the options above\n A list of games will be returned once the data has loaded\n Once all fixtures have loaded, click on “Get Predictions and Stats” to see our forecasted outcomes for every game\n If a game has completed, the predictions is displayed on the right and the actual result on the left\n Each individual fixture is tappable/clickable. By doing so, you can access a range of detailed stats, from comparative charts, granular performance measures to previous meetings.\n All games are subject to the same automated prediction algorithm with the outcome being a score prediction. Factors that determine the tip include the following, amongst others:\n - Goal differentials\n - Expected goal differentials \n - Attack/Defence performance\n - Form trends over time\n - Home/Away records\n - WDL records\n - Points per game \n - A range of other comparative factors\n  –\n";
+
+  const text2 =
+    "A range of tools are available should you wish to use them\n Build a multi - Use the '+' or '-' buttons to add or remove a game deemed to be one of our highest confidence tips from the day\n Exotic of the day: A pre-built exotic multi comprising of our highest confidence tips\n BTTS games: Games where both teams to score is deemed a likely outcome\n Over 2.5 goals tips: Games where over 2.5 goals are most likely to be scored\n SSH Tips: Comprises only games where the expected goal differentials between each team are at their greatest. We believe this shows a true disparity in the form of the two opposing teams\n Tap the 'How to use' option to hide this text";
+
+  let textJoined = text.concat(text2);
+
+  let newText = textJoined.split("\n").map((i) => {
+    return <p>{i}</p>;
+  });
+
+  async function renderButtons(loginStatus) {
+    render(
+      <div className="FixtureButtons">
+        <h6>{loginStatus}</h6>
+        <Button
+          text={`<`}
+          className="FixturesButtonAmend"
+          onClickEvent={async () => await decrementDate(1, date)}
+        />
+        <Button
+          text={dateFootyStats !== undefined ? dateFootyStats : date}
+          className="FixturesButtonToday"
+          onClickEvent={async () =>
+            fixtureList.push(
+              await generateFixtures(
+                "todaysFixtures",
+                dateString,
+                selectedOdds,
+                dateFootyStats,
+                false,
+                today,
+                dateSS,
+                dateUnformatted
+              )
+            )
+          }
+        />
+        <Button
+          text={`>`}
+          className="FixturesButtonAmend"
+          onClickEvent={async () => await incrementDateV2(1, date)}
+        />
+      </div>,
+      "Buttons"
+    );
+  }
+
+  render(
+    <div className="FixtureButtons">
+      <Button
+        text={`<`}
+        className="FixturesButtonAmend"
+        onClickEvent={async () => await decrementDate(1, date)}
+      />
+      <Button
+        text={`${string}`}
+        className="FixturesButtonToday"
+        onClickEvent={async () =>
+          fixtureList.push(
+            await generateFixtures(
+              "todaysFixtures",
+              today,
+              selectedOdds,
+              todayFootyStats,
+              true,
+              today,
+              todaySS,
+              todaysDateUnformatted
+            )
+          )
+        }
+      />
+      <Button
+        text={`>`}
+        className="FixturesButtonAmend"
+        onClickEvent={async () => await incrementDateV2(1, date)}
+      />
+    </div>,
+    "Buttons"
+  );
+  render(
+    <div className="OddsRadios">
+      <OddsRadio value="Fractional odds"></OddsRadio>
+      <OddsRadio value="Decimal odds"></OddsRadio>
+    </div>,
+    "Checkbox"
+  );
+  render(
+    <><h6 className="PredictionTypeText">Prediction algorithm type</h6>
+      <div className="PredictionRadios">
+        <PredictionTypeRadio value="SSH Tips"></PredictionTypeRadio>
+        <PredictionTypeRadio value="AI Tips"></PredictionTypeRadio>
+      </div></>,
+    "CheckboxTwo"
+  );
+  render(
+    <Fragment>
+      <Collapsable
+        // className={"HowToUse"}
+        buttonText={"How to use"}
+        element={newText}
+      />
+    </Fragment>,
+    "XGDiff"
+  );
+
+  if (loggedIn) {
+    render(
+      <><div className="WelcomeBack">Welcome back {loggedIn.email}</div></>,
+      "Email"
+    );
+  } else {
+    render(
+      <>
+        <h3 className="MembersGetMore">Discover the most in depth stats and tips available</h3>
+        <div><p className="MembersGetMore">Join as a free user or upgrade to premium for as little as £1/week, cancel anytime</p></div>
+        <Login />
+      </>
+      , "Email");
+  }
+}
 
 // Replace with your own Stripe public key
 export const stripePromise = loadStripe(
@@ -324,18 +524,6 @@ let welcomeTextOne = welcomeTextUnsplitOne.split("\n").map((i) => {
   return <p>{i}</p>;
 });
 
-async function convertTimestampForSofaScore(timestamp) {
-  let newDate = new Date(timestamp);
-
-  let year = newDate.getFullYear();
-  let month = String(newDate.getMonth() + 1).padStart(2, "0"); // Adding 1 to month because it is zero-based
-  let day = String(newDate.getDate()).padStart(2, "0");
-
-  let converted = `${year}-${month}-${day}`;
-
-  return converted;
-}
-
 function AppContent() {
   const { user, isPaidUser } = useAuth();
 
@@ -375,7 +563,7 @@ function AppContent() {
     fetchData();
   }, []); // The empty dependency array ensures this runs only o
 
-  // getLeagueList();
+  getLeagueList();
 
   return (
     <div className="App">
@@ -415,11 +603,14 @@ function AppContent() {
 
 
       <div id="ExplainerText" />
-      <div id="Loading" className="Loading"></div>
       <div id="Buttons" className="Buttons">
       </div>
-      <div id="Checkbox" className="Checkbox"/>
-      <div id="Options"  className="Options"/>
+      <Collapsable buttonText={"Options \u{2630}"} className={"Options"} element={
+        <><div id="Checkbox" /><div id="CheckboxTwo" className="CheckboxTwo" /></>
+      }>
+      </Collapsable>
+      <div id="Loading" className="Loading"></div>
+
       {user ? (
         isPaidUser ? (
           // If the user is logged in and is a paying customer, show the cancel button
@@ -459,10 +650,13 @@ function AppContent() {
       )}
 
       <div id="GeneratePredictions" className="GeneratePredictions" />
-      {/* <Collapsable
+            {/* <div id="MultiPlaceholder" className="MultiPlaceholder" /> */}
+
+      <Collapsable
         buttonText={"Multis"}
-        className={"MultisCollapsable"}
+        className={"MultiPlaceholder"}
         key="MultisCollapsable"
+        id="MultiPlaceholder"
         element={
           <Fragment>
             <div id="bestPredictions" className="bestPredictions" />
@@ -478,7 +672,8 @@ function AppContent() {
         }
       />
       <div id="shortlistRender" />
-      <Collapsable buttonText={"ROI"} className={"ROI"} element={<div id="successMeasure2" />} /> */}
+      <div id="ROIPlaceholder" />
+      {/* <Collapsable buttonText={"ROI"} className={"ROI"} element={<div id="successMeasure2" />} /> */}
       <div className={"StatsInsights"} id="statsInsights" />
       <div id="highLowLeagues" className="HighLowLeagues" />
       <div id="risk" />
@@ -487,9 +682,9 @@ function AppContent() {
       <div id="homeBadge" />
       <div id="FixtureContainerHeaders"></div>
 
-      <div id="FixtureContainer" className="FixtureContainer">
-        {/* <h6 className="WelcomeText">{welcomeTextOne}</h6> */}
-        {/* <div>
+      <div id="FixtureContainer">
+        <h6 className="WelcomeText">{welcomeTextOne}</h6>
+        <div>
           <h6 className="WelcomeText">
             <ul className="AllLeagues" key="league-list">
               <li className="League" key="premier-league">
@@ -532,7 +727,7 @@ function AppContent() {
               r/xgtipping
             </a>
           </h6>
-        </div> */}
+        </div>
       </div>
       <div id="XGDiff" />
 
@@ -555,7 +750,7 @@ function AppContent() {
         // If the user is not logged in, show nothing
         <div></div>
       )}
-      <div className="Social"
+      <div className="Social" height="100" width="100"
       >
         <TwitterShareButton
           url={"https://www.soccerstatshub.com"}

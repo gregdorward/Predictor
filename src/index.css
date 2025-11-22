@@ -766,7 +766,7 @@ button:hover {
 }
 
 .GeneratePredictions {
-  min-height: 23em;
+  min-height: 15em;
 }
 
 button.GeneratePredictionsButton {
@@ -963,11 +963,16 @@ h6.PredictionTypeText {
   padding: 0px;
 } */
 
+.hidden-placeholder {
+  visibility: hidden;   /* Invisible but occupies layout space */
+  opacity: 0;           /* Ensures fully hidden */
+  pointer-events: none; /* Prevents click events */
+}
 
 .LoadingText {
   /* padding-top: 2em; */
-  padding-bottom: 1em;
-  margin-top: 3em;
+  padding-bottom: 0em;
+  margin-top: 0em;
   width: 75%;
   margin-left: auto;
   margin-right: auto;

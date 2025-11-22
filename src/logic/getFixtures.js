@@ -4,23 +4,18 @@ import { orderedLeagues } from "../App";
 import { render } from '../utils/render';
 import { getForm } from "./getForm";
 import { Fixture } from "../components/Fixture";
-import OddsRadio from "../components/OddsRadio";
-import PredictionTypeRadio from "../components/PredictionTypeRadio";
-import Login from "../components/Login";
 import { Button } from "../components/Button";
 import { Slide } from "../components/Slider";
-import { getCurrentUser } from "../components/ProtectedContent";
+import Logo from "../components/Logo"
 import { getScorePrediction } from "../logic/getScorePredictions";
 import { ThreeDots } from "react-loading-icons";
+import BouncingDotsLoader from "../components/BouncingDots"
 import { selectedOdds } from "../components/OddsRadio";
 import { getPointsFromLastX } from "../logic/getScorePredictions";
 import SlideDiff from "../components/SliderDiff";
 import Collapsable from "../components/CollapsableElement";
 import { userDetail } from "./authProvider";
-import { fixtureList } from "../App"
 import { leagueStatsArray, playerStatsArray } from "../logic/getScorePredictions";
-import Logo from "../components/Logo";
-import BouncingDotsLoader from "../components/BouncingDots";
 const LazyLeagueTable = lazy(() => import('../components/LeagueTable'));
 
 var oddslib = require("oddslib");
@@ -62,7 +57,6 @@ let awayAverageGoals;
 let AwayAverageConceded;
 let awayAverageConceded;
 let paid = false;
-    let dateSS;
 
 export async function diff(a, b) {
   return parseFloat(a - b).toFixed(2);
@@ -84,25 +78,6 @@ async function convertTimestamp(timestamp) {
   return converted;
 }
 let groups = false;
-
-async function convertTimestampForSofaScore(timestamp) {
-  let newDate = new Date(timestamp);
-
-  let year = newDate.getFullYear();
-  let month = String(newDate.getMonth() + 1).padStart(2, "0"); // Adding 1 to month because it is zero-based
-  let day = String(newDate.getDate()).padStart(2, "0");
-
-  let converted = `${year}-${month}-${day}`;
-
-  return converted;
-}
-
-async function calculateDate(dateString) {
-  const day = dateString.getDate();
-  const month = dateString.getMonth() + 1;
-  const year = dateString.getFullYear();
-  return [`${month}${day}${year}`, `${year}-${month}-${day}`];
-}
 
 export async function generateTables(a, leagueIdArray, allResults) {
   tableArray = [];
@@ -316,7 +291,7 @@ export async function renderTable(index, results, id) {
       statistics = stats.data;
     });
 
-    if (leagueStatsArray !== undefined) {
+    if (league !== undefined) {
       render(
         <Suspense fallback={<div>Loading game statistics...</div>}>
           <LazyLeagueTable
@@ -548,10 +523,20 @@ export async function generateFixtures(
     isFunctionRunning = true;
     todaysDateString = todaysDate;
 
+    // render(
+    //   <div>
+    //     <div className="LoadingText">
+    //       Loading all league, fixture & form data, please be patient...
+    //     </div>
+    //     <ThreeDots className="MainLoading" height="3em" fill="#fe8c00" />
+    //   </div>,
+    //   "Loading"
+    // );
+
     render(
       <div>
         <div className="LogoAndText"><Logo className="LoadingLogo"></Logo>
-          <h1 className="LogoSubHeading"> Football stats <br />Tips <br />Multi-builders <br />Unparalleled insight </h1>
+          <h1 className="LogoSubHeading"> Football stats <br />Tips <br />Multi-builders <br />Unparalleled insight</h1>
         </div>
         <div className="LoadingText">
           Loading all league, fixture & form data. Depending on the number of fixtures, this can take some time...
@@ -562,11 +547,11 @@ export async function generateFixtures(
     );
 
     //cleanup if different day is selected
-    // render(
-    //   <div></div>,
-    //   "GeneratePredictions"
-    // );
-    render(<div></div>, "MultiPlaceholder");
+    render(
+      <div></div>,
+      "GeneratePredictions"
+    );
+    // render(<div></div>, "MultiPlaceholder");
 
 
     const url = `${process.env.REACT_APP_EXPRESS_SERVER}matches/${footyStatsFormattedDate}`;
@@ -1569,33 +1554,6 @@ export async function generateFixtures(
             />
             <div className="Version">Prediction engine v1.6.2 (23/10/25)</div>
             <div className="MissingPredictionsNotice">If predictions are missing on games with little data, switch to AI tips in the options, above</div>
-            {/* <Collapsable
-              buttonText={"Multis"}
-              className={"MultisCollapsable"}
-              key="MultisCollapsable"
-              element={
-                <Fragment>
-                  <div id="bestPredictions" className="bestPredictions" />
-                  <div id="exoticOfTheDay" className="exoticOfTheDay" />
-                  <div id="RowOneContainer" className="RowOneContainer">
-                    <div id="BTTS" className="RowOne" />
-                    <div id="longShots" className="RowOne" />
-                    <div id="draws" className="RowOne" />
-                  </div>
-                  <div id="insights" />
-                  <div id="UserGeneratedTips" />
-                </Fragment>
-              }
-            /> */}
-            <div id="shortlistRender" />
-            <Collapsable buttonText={"ROI"} className={"ROI"} element={<div id="successMeasure2" />} />
-            <div className={"StatsInsights"} id="statsInsights" />
-            <div id="highLowLeagues" className="HighLowLeagues" />
-            <div id="risk" />
-            <div id="successMeasure" />
-            <div id="tables" />
-            <div id="homeBadge" />
-            <div id="FixtureContainerHeaders"></div>
             <Collapsable
               buttonText={"Filters"}
               className={"Filters2"}
@@ -1671,208 +1629,10 @@ export async function generateFixtures(
           </Fragment>,
           "GeneratePredictions"
         );
-        render(
-
-          <Collapsable className={"Options"} buttonText={"Options \u{2630}"} element={<>
-            <h6 className="PredictionTypeText">Odds type</h6>
-            <div className="OddsRadios">
-              <OddsRadio value="Fractional odds"></OddsRadio>
-              <OddsRadio value="Decimal odds"></OddsRadio>
-            </div>
-            <h6 className="PredictionTypeText">Prediction algorithm type</h6>
-            <div className="PredictionRadios">
-              <PredictionTypeRadio value="SSH Tips"></PredictionTypeRadio>
-              <PredictionTypeRadio value="AI Tips"></PredictionTypeRadio>
-            </div></>}
-          />
-          ,
-          "Checkbox"
-        );
       }
-
 
       // }
     }
-
-    let loggedIn;
-    let dateFootyStats;
-    let string;
-    let dateString;
-    let dateUnformatted;
-    let todaysDateUnformatted;
-
-    async function getLeagueList() {
-      let i = 0;
-      date = new Date();
-      string = "Today";
-      loggedIn = await getCurrentUser();
-
-
-      async function decrementDate(num, date) {
-        i = i - num;
-        console.log(i);
-        if (i > -120) {
-          date.setDate(date.getDate() - num);
-          dateUnformatted = date;
-          dateSS = await convertTimestampForSofaScore(date);
-          [date, dateFootyStats] = await calculateDate(date);
-          string = dateFootyStats;
-          dateString = date;
-          await renderButtons();
-        }
-      }
-
-      async function incrementDateV2(num, date) {
-        i = i + num;
-        console.log(i);
-        if (i <= 4) {
-          date.setDate(date.getDate() + num);
-          dateUnformatted = date;
-          dateSS = await convertTimestampForSofaScore(date);
-          [date, dateFootyStats] = await calculateDate(date);
-          string = dateFootyStats;
-          dateString = date;
-          console.log(dateString);
-          await renderButtons();
-        }
-      }
-
-      const todayRaw = new Date();
-      const tomorrowsDate = new Date(todayRaw);
-      tomorrowsDate.setDate(todayRaw.getDate() + 1);
-
-      const yesterdaysDate = new Date(todayRaw);
-      yesterdaysDate.setDate(todayRaw.getDate() - 1);
-
-      const saturdayDate = new Date(todayRaw);
-      saturdayDate.setDate(todayRaw.getDate() - ((saturdayDate.getDay() + 6) % 7) - 2);
-
-      const historicDate = new Date(todayRaw);
-      historicDate.setDate(todayRaw.getDate() - ((historicDate.getDay() + 6) % 7) - 9);
-
-      // Run calculateDate on all in parallel
-      const [
-        [today, todayFootyStats]
-      ] = await Promise.all([
-        calculateDate(todayRaw)
-      ]);
-
-      const [
-        todaySS,
-      ] = await Promise.all([
-        convertTimestampForSofaScore(new Date())
-      ]);
-
-      const text =
-        "Select a day you would like to retrieve fixtures for from the options above\n A list of games will be returned once the data has loaded\n Once all fixtures have loaded, click on “Get Predictions and Stats” to see our forecasted outcomes for every game\n If a game has completed, the predictions is displayed on the right and the actual result on the left\n Each individual fixture is tappable/clickable. By doing so, you can access a range of detailed stats, from comparative charts, granular performance measures to previous meetings.\n All games are subject to the same automated prediction algorithm with the outcome being a score prediction. Factors that determine the tip include the following, amongst others:\n - Goal differentials\n - Expected goal differentials \n - Attack/Defence performance\n - Form trends over time\n - Home/Away records\n - WDL records\n - Points per game \n - A range of other comparative factors\n  –\n";
-
-      const text2 =
-        "A range of tools are available should you wish to use them\n Build a multi - Use the '+' or '-' buttons to add or remove a game deemed to be one of our highest confidence tips from the day\n Exotic of the day: A pre-built exotic multi comprising of our highest confidence tips\n BTTS games: Games where both teams to score is deemed a likely outcome\n Over 2.5 goals tips: Games where over 2.5 goals are most likely to be scored\n SSH Tips: Comprises only games where the expected goal differentials between each team are at their greatest. We believe this shows a true disparity in the form of the two opposing teams\n Tap the 'How to use' option to hide this text";
-
-      let textJoined = text.concat(text2);
-
-      let newText = textJoined.split("\n").map((i) => {
-        return <p>{i}</p>;
-      });
-
-      async function renderButtons(loginStatus) {
-        render(
-          <div className="FixtureButtons">
-            <h6>{loginStatus}</h6>
-            <Button
-              text={`<`}
-              className="FixturesButtonAmend"
-              onClickEvent={async () => await decrementDate(1, date)}
-            />
-            <Button
-              text={dateFootyStats !== undefined ? dateFootyStats : date}
-              className="FixturesButtonToday"
-              onClickEvent={async () =>
-                fixtureList.push(
-                  await generateFixtures(
-                    "todaysFixtures",
-                    dateString,
-                    selectedOdds,
-                    dateFootyStats,
-                    false,
-                    today,
-                    dateSS,
-                    dateUnformatted
-                  )
-                )
-              }
-            />
-            <Button
-              text={`>`}
-              className="FixturesButtonAmend"
-              onClickEvent={async () => await incrementDateV2(1, date)}
-            />
-          </div>,
-          "Buttons"
-        );
-      }
-
-      render(
-        <div className="FixtureButtons">
-          <Button
-            text={`<`}
-            className="FixturesButtonAmend"
-            onClickEvent={async () => await decrementDate(1, date)}
-          />
-          <Button
-            text={`${string}`}
-            className="FixturesButtonToday"
-            onClickEvent={async () =>
-              fixtureList.push(
-                await generateFixtures(
-                  "todaysFixtures",
-                  today,
-                  selectedOdds,
-                  todayFootyStats,
-                  true,
-                  today,
-                  todaySS,
-                  todaysDateUnformatted
-                )
-              )
-            }
-          />
-          <Button
-            text={`>`}
-            className="FixturesButtonAmend"
-            onClickEvent={async () => await incrementDateV2(1, date)}
-          />
-        </div>,
-        "Buttons"
-      );
-
-      render(
-        <Fragment>
-          <Collapsable
-            // className={"HowToUse"}
-            buttonText={"How to use"}
-            element={newText}
-          />
-        </Fragment>,
-        "XGDiff"
-      );
-
-      if (loggedIn) {
-        render(
-          <><div className="WelcomeBack">Welcome back {loggedIn.email}</div></>,
-          "Email"
-        );
-      } else {
-        render(
-          <>
-            <h3 className="MembersGetMore">Discover the most in depth stats and tips available</h3>
-            <div><p className="MembersGetMore">Join as a free user or upgrade to premium for as little as £1/week, cancel anytime</p></div>
-            <Login />
-          </>
-          , "Email");
-      }
-    }
-
 
     render(
       <div>
@@ -1880,7 +1640,6 @@ export async function generateFixtures(
       </div>,
       "Loading"
     );
-    getLeagueList();
 
     async function updateResults(bool) {
       console.log("updating results");
