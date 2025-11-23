@@ -28,6 +28,7 @@ import TeamPage from "./components/Team";
 import { SuccessPage } from "./components/Success"
 import { CancelPage } from "./components/Cancel"
 import PasswordReset from "./components/PasswordReset";
+import Logo from "./components/Logo";
 import {
   FacebookShareButton,
   FacebookIcon,
@@ -55,7 +56,6 @@ export var orderedLeagues = [];
 
 let loggedIn;
 export let paid = false;
-const LazyLogo = lazy(() => import('./components/Logo'));
 
 
 const menuItems = ['Home', 'bttsteams', 'Services', 'Contact'];
@@ -568,9 +568,7 @@ function AppContent() {
   return (
     <div className="App">
       <div className="DarkMode">
-        <Suspense fallback={<div></div>}>
-          <LazyLogo />
-        </Suspense>
+        <Logo/>
         <a
           className="BeGamblingAware"
           href="https://www.begambleaware.org"

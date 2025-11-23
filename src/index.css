@@ -970,7 +970,7 @@ h6.PredictionTypeText {
 }
 
 .LoadingText {
-  /* padding-top: 2em; */
+  padding-top: 1em;
   padding-bottom: 0em;
   margin-top: 0em;
   width: 75%;
