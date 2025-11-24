@@ -484,15 +484,34 @@ export async function getLeagueList() {
   }
 }
 
-// Replace with your own Stripe public key
-export const stripePromise = loadStripe(
-  "pk_live_51QojxLBrqiWlVPadBxhtoj499YzoC8YjFUIVQwCcTe8B7ZUG47NbYAam2wvNox2mUmzd0WgQh4PWKaIQaxKxubig00yEzjNuVQ"
-);
+  
+
+
+let stripePromise = null;
+
+// Only initialize Stripe in the browser
+const getStripe = () => {
+  if (typeof window === "undefined") return null; // Prevent SSR / react-snap errors
+  if (!stripePromise) {
+    stripePromise = loadStripe("pk_live_51QojxLBrqiWlVPadBxhtoj499YzoC8YjFUIVQwCcTe8B7ZUG47NbYAam2wvNox2mUmzd0WgQh4PWKaIQaxKxubig00yEzjNuVQ");
+  }
+  return stripePromise;
+};
 
 export const handleCheckout = async (priceId) => {
-  const stripe = await stripePromise;
-  const auth = getAuth();
-  const user = auth.currentUser;
+  const stripe = await getStripe();
+
+  if (!stripe) {
+    console.warn("Stripe not initialized. Are you prerendering?");
+    return;
+  }
+let auth = null;
+let user = null;
+
+  if (typeof window !== "undefined") {
+    auth = getAuth();
+    user = auth.currentUser;
+}
 
   if (!user) {
     alert("Please sign-up or login before purchasing");
@@ -506,7 +525,7 @@ export const handleCheckout = async (priceId) => {
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ priceId, uid: user.uid }), // Send uid
+      body: JSON.stringify({ priceId, uid: user.uid }),
     }
   );
 
