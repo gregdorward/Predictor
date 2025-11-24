@@ -1,17 +1,22 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { loadStripe } from "@stripe/stripe-js";
 import { Elements, useStripe, useElements, CardElement } from "@stripe/react-stripe-js";
 
-const stripePromise = loadStripe("pk_live_51QojxLBrqiWlVPadBxhtoj499YzoC8YjFUIVQwCcTe8B7ZUG47NbYAam2wvNox2mUmzd0WgQh4PWKaIQaxKxubig00yEzjNuVQ");
+// Lazy-load Stripe in the browser
+let stripePromise = null;
+const getStripe = () => {
+  if (typeof window === "undefined") return null;
+  if (!stripePromise) stripePromise = loadStripe("pk_live_51QojxLBrqiWlVPadBxhtoj499YzoC8YjFUIVQwCcTe8B7ZUG47NbYAam2wvNox2mUmzd0WgQh4PWKaIQaxKxubig00yEzjNuVQ");
+  return stripePromise;
+};
 
 const CheckoutForm = () => {
   const stripe = useStripe();
   const elements = useElements();
-  const [promoCode, setPromoCode] = useState(""); // 🔹 State to store promo code
+  const [promoCode, setPromoCode] = useState("");
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-
     if (!stripe || !elements) return;
 
     try {
@@ -19,14 +24,13 @@ const CheckoutForm = () => {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          priceId: "price_12345", // Replace with your actual Stripe price ID
-          uid: "user_uid_here",  // Replace with actual user ID
-          promoCode: promoCode.trim() || null, // 🔹 Send promo code if entered
+          priceId: "price_12345",
+          uid: "user_uid_here",
+          promoCode: promoCode.trim() || null,
         }),
       });
 
       const { id } = await response.json();
-
       if (id) {
         const { error } = await stripe.redirectToCheckout({ sessionId: id });
         if (error) console.error(error);
@@ -53,10 +57,21 @@ const CheckoutForm = () => {
   );
 };
 
-const PaymentPage = () => (
-  <Elements stripe={stripePromise}>
-    <CheckoutForm />
-  </Elements>
-);
+const PaymentPage = () => {
+  const [stripeObj, setStripeObj] = useState(null);
+
+  useEffect(() => {
+    const s = getStripe();
+    if (s) setStripeObj(s);
+  }, []);
+
+  if (!stripeObj) return null; // Render nothing during prerender
+
+  return (
+    <Elements stripe={stripeObj}>
+      <CheckoutForm />
+    </Elements>
+  );
+};
 
 export default PaymentPage;

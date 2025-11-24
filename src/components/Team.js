@@ -175,18 +175,18 @@ function TeamPage() {
 
   const storedDataHome = useSelector((state) => state.data.dataHome);
   const jsonDataHome = JSON.parse(storedDataHome);
-  const propertyNamesHome = Object.entries(jsonDataHome);
+const propertyNamesHome = Object.entries(jsonDataHome || {});
 
   const storedDataHomeDef = useSelector((state) => state.data.dataHomeDef);
   const jsonDataHomeDef = JSON.parse(storedDataHomeDef);
-  const propertyNamesHomeDef = Object.entries(jsonDataHomeDef);
+  const propertyNamesHomeDef = Object.entries(jsonDataHomeDef || {});
 
   const storedDataallTeamResultsHome = useSelector(
     (state) => state.data.allTeamResultsHome
   );
   const jsonDataallTeamResultsHome = JSON.parse(storedDataallTeamResultsHome);
   const propertyNamesallTeamResultsHome = Object.values(
-    jsonDataallTeamResultsHome
+    jsonDataallTeamResultsHome || {}
   );
 
   const homeDetails = useSelector((state) => state.data.homeDetails);
@@ -194,18 +194,18 @@ function TeamPage() {
 
   const storedDataAway = useSelector((state) => state.data.dataAway);
   const jsonDataAway = JSON.parse(storedDataAway);
-  const propertyNamesAway = Object.entries(jsonDataAway);
+  const propertyNamesAway = Object.entries(jsonDataAway || {});
 
   const storedDataAwayDef = useSelector((state) => state.data.dataAwayDef);
   const jsonDataAwayDef = JSON.parse(storedDataAwayDef);
-  const propertyNamesAwayDef = Object.entries(jsonDataAwayDef);
+  const propertyNamesAwayDef = Object.entries(jsonDataAwayDef || {});
 
   const storedDataallTeamResultsAway = useSelector(
     (state) => state.data.allTeamResultsAway
   );
   const jsonDataallTeamResultsAway = JSON.parse(storedDataallTeamResultsAway);
   const propertyNamesallTeamResultsAway = Object.values(
-    jsonDataallTeamResultsAway
+    jsonDataallTeamResultsAway || {}
   );
 
   const awayDetails = useSelector((state) => state.data.awayDetails);
@@ -238,8 +238,8 @@ function TeamPage() {
     },
   };
   const labels = [
-    storedFixtureDetailsJson.homeTeamName,
-    storedFixtureDetailsJson.awayTeamName,
+    storedFixtureDetailsJson?.homeTeamName,
+    storedFixtureDetailsJson?.awayTeamName,
   ];
 
   const data = {

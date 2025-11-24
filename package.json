@@ -48,10 +48,29 @@
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build && cp build/index.html build/404.html",
+    "postbuild": "react-snap",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "predeploy": "npm run build",
     "deploy": "gh-pages -d build"
+  },
+  "reactSnap": {
+    "include": [
+      "/o25",
+      "/u25",
+      "/bttsteams",
+      "/seasonpreviews",
+      "/bttsfixtures",
+      "/fixtureshigh",
+      "/teamshigh"
+    ],
+    "puppeteerArgs": [
+      "--no-sandbox"
+    ],
+    "waitFor": 1000,
+    "timeout": 60000,
+    "removeStyleTags": false,
+    "inlineCss": true
   },
   "eslintConfig": {
     "extends": [
@@ -74,6 +93,7 @@
   "proxy": "https://api.soccerstatshub.com",
   "devDependencies": {
     "@types/react-slider": "^1.1.0",
-    "gh-pages": "^3.1.0"
+    "gh-pages": "^3.1.0",
+    "react-snap": "^1.23.0"
   }
 }
