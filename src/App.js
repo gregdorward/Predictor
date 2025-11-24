@@ -735,7 +735,7 @@ function AppContent() {
           <button
             onClick={() => {
               window.location.href =
-                "https://https://www.soccerstatshub.com/#/cancelsubscription";
+                "https://www.soccerstatshub.com/cancelsubscription";
             }}
             className="CancelButton"
           >

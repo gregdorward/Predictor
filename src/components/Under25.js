@@ -70,6 +70,7 @@ export default function Under25() {
       <Logo />
       <a href="https://www.soccerstatshub.com/" className="HomeLink">Home</a>
       <h1>Lowest Scoring Leagues</h1>
+      <h2>Leagues with the lowest average goals</h2>
       <TableContainer component={Paper} className="O25Table">
         <Table aria-label="Lowest scoring leagues">
           <TableHead>

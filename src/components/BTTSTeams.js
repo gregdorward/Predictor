@@ -90,6 +90,7 @@ export default function BTTSTeams() {
       <Logo />
       <a href="https://www.soccerstatshub.com/" className="HomeLink">Home</a>
       <h1>Teams With Best BTTS Records</h1>
+      <h2>Teams with the highest percentage of games ending in both teams to score</h2>
       <TableContainer component={Paper} className="O25Table">
         <Table aria-label="highest scoring games">
           <TableHead>

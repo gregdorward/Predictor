@@ -89,6 +89,7 @@ export default function BTTSFixtures() {
       <Logo />
       <a href="https://www.soccerstatshub.com/" className="HomeLink">Home</a>
       <h1>Fixtures With Highest BTTS Potential</h1>
+      <h2>Games with the highest total combined goals between each team</h2>
       <TableContainer component={Paper} className="O25Table">
         <Table aria-label="highest scoring games">
           <TableHead>

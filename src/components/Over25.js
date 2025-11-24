@@ -119,7 +119,7 @@ export default function Over25() {
 
   console.log(leagues)
   // Filter leagues based on allowed countries
-  const filteredLeagues = leagues.filter(league => ids.includes(league.leagueId));
+  const filteredLeagues = leagues.filter(league => allowedCountries.includes(league.leagueCountry) && league.division > 0 && league.division < 5);
   console.log(filteredLeagues)
 
   const headers = ["League", "Country", "Avg Goals", "Over 2.5%"];
@@ -130,6 +130,7 @@ export default function Over25() {
       <Logo />
       <a href="https://www.soccerstatshub.com/" className="HomeLink">Home</a>
       <h1>Highest Scoring Leagues</h1>
+      <h2>Leagues with the highest average goals</h2>
       <TableContainer component={Paper} className="O25Table">
         <Table aria-label="highest scoring leagues">
           <TableHead>

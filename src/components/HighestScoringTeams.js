@@ -89,6 +89,7 @@ export default function HighestScoringTeams() {
       <Logo />
       <a href="https://www.soccerstatshub.com/" className="HomeLink">Home</a>
       <h1>Highest Scoring Teams</h1>
+      <h2>Teams with the highest average goals and their upcoming fixture</h2>
       <TableContainer component={Paper} className="O25Table">
         <Table aria-label="highest scoring teams">
           <TableHead>

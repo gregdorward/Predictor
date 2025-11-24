@@ -3,16 +3,17 @@ import { render } from './utils/render';
 import "./index.css";
 import App from "./App";
 import reportWebVitals from "./reportWebVitals";
-import { BrowserRouter as Router, Route, Routes, HashRouter } from "react-router-dom";
+// import { BrowserRouter as Router, Route, Routes, HashRouter } from "react-router-dom";
+import { BrowserRouter } from "react-router-dom";
 import { Provider } from "react-redux";
 import store from "./logic/store"; // Import your Redux store
 
 render(
   // <React.StrictMode>
   <Provider store={store}>
-    <HashRouter>
+    <BrowserRouter>
       <App />
-    </HashRouter>
+    </BrowserRouter>
   </Provider>
   ,
   // </React.StrictMode>,

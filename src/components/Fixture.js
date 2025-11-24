@@ -251,7 +251,7 @@ function SingleFixture({
       paid = await checkUserPaidStatus(userDetail.uid);
       if (clicked === true && paid) {
         StoreData();
-        window.open("/#/fixture");
+        window.open("/fixture");
       } else {
         alert("Premium feature only");
       }
