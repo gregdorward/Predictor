@@ -65,6 +65,9 @@
       "/teamshigh",
       "/reset"
     ],
+    "exclude": [
+      "/"
+    ],
     "puppeteerArgs": [
       "--no-sandbox"
     ],

@@ -2,17 +2,18 @@
 <html lang="en">
 
 <head>
-  <!-- Google Analytics -->
+  <!-- Global site tag (gtag.js) - Google Analytics -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-9F3KSWZWEQ"></script>
   <script>
     window.dataLayer = window.dataLayer || [];
-    function gtag(){ dataLayer.push(arguments); }
+    function gtag() {
+      dataLayer.push(arguments);
+    }
     gtag("js", new Date());
+
     gtag("config", "G-9F3KSWZWEQ");
   </script>
-
-  <!-- Critical Inline Font (fast, no FOUC) -->
-  <style>
+    <style>
     @font-face {
       font-family: 'Open Sans';
       font-style: normal;
@@ -38,43 +39,28 @@
       margin-right: auto;
     }
   </style>
-
-  <!-- Canonical -->
   <link rel="canonical" href="https://www.soccerstatshub.com/" />
-
-  <!-- Preload Critical Images -->
   <link rel="preload" as="image" href="/images/NewLogo.webp" type="image/webp" />
   <link rel="preload" as="image" href="/images/NewLogo.png" type="image/png" />
 
-  <!-- REAL CSS (avoids FOUC) -->
-  <!-- CRA/Vite always maps this to hashed bundle correctly -->
-  <!-- <link rel="preload" href="/static/css/main.css" as="style" />
-  <link rel="stylesheet" href="/static/css/main.css" /> -->
-
   <title>SoccerStatsHub | Football Stats, AI Predictions & Multis</title>
-
   <meta name="description"
-        content="Unlock comprehensive soccer stats powered by XG, AI analysis, and in-depth data. Explore detailed football statistics, team metrics and extensive tips.">
+    content="Unlock comprehensive soccer stats powered by XG, AI analysis, and in-depth data. Explore detailed football statistics, team metrics and extensive tips." />
   <meta name="keywords"
-        content="soccer stats, football stats, soccer statistics, football statistics, soccer tips, football tips, XG stats, XG score, expected goals, player stats, team stats, advanced soccer stats, data-driven soccer analysis">
-
+    content="soccer stats, football stats, soccer statistics, football statistics, soccer tips, football tips, XG stats, XG score, expected goals, player stats, team stats, advanced soccer stats, data-driven soccer analysis" />
   <meta charset="utf-8" />
+  <link rel="icon" href="%PUBLIC_URL%/favicon.ico" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="theme-color" content="#000000" />
-
-  <!-- Favicons & PWA -->
-  <link rel="icon" href="%PUBLIC_URL%/favicon.ico" />
+  <meta name="google-site-verification" content="sk_LlsYZBR5VAvw9KP2dSEc3CyP-IJ0kcVTLxGsbyEU" />
   <link rel="apple-touch-icon" href="%PUBLIC_URL%/logo192.png" />
   <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
-
-  <!-- SEO Verifications -->
-  <meta name="google-site-verification" content="sk_LlsYZBR5VAvw9KP2dSEc3CyP-IJ0kcVTLxGsbyEU" />
-  <meta name="msvalidate.01" content="6F676F15115DB2A7E13109B4A7C0BA02" />
-
-  <!-- Font Optimisation -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <!-- <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@600&display=swap" rel="stylesheet" /> -->
+  <meta name="msvalidate.01" content="6F676F15115DB2A7E13109B4A7C0BA02" />
 </head>
+
 <body>
   <noscript>You need to enable JavaScript to run this app.</noscript>
   <div id="root">
@@ -92,9 +78,48 @@
     <h1 class="PlaceholderTitle" style="color: white;">Soccer Stats Hub - Football Stats, Predictions & Multis</h1>
   </div>
 </body>
+<footer class="Footer">
+  <div>
+    <div>
+      <!-- Column 1 -->
+      <div>
+        <ul>
+          <li><a href="/">Home</a></li>
+          <li><a href="/seasonpreviews" class="hover:underline">Season Previews (BETA)</a></li>
+        </ul>
+      </div>
+
+      <!-- Column 2 -->
+      <div>
+        <h3>Stats & Analysis</h3>
+        <ul>
+          <li><a href="/bttsteams">BTTS Teams</a></li>
+          <li><a href="/bttsfixtures">BTTS Games</a></li>
+          <li><a href="/fixtureshigh">Over 2.5 Goals Games</a></li>
+        </ul>
+      </div>
+
+      <!-- Column 3 -->
+      <div>
+        <h3>League Data</h3>
+        <ul>
+          <li><a href="/o25">Highest Scoring Leagues</a></li>
+          <li><a href="/u25">Lowest Scoring Leagues</a></li>
+          <li><a href="/teamshigh">Highest Scoring Teams</a></li>
+        </ul>
+      </div>
+
+    </div>
+
+    <div>
+      © <span id="year"></span> XGTipping. All rights reserved.
+    </div>
+
+  </div>
+</footer>
+
 <script>
   // Auto-update year
   document.getElementById("year").textContent = new Date().getFullYear();
 </script>
-
 </html>
