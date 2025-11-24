@@ -70,6 +70,7 @@
       "--no-sandbox"
     ],
     "timeout": 30000,
+    "waitFor": 3000,
     "removeStyleTags": false,
     "inlineCss": true
   },
