@@ -71,7 +71,7 @@
     "puppeteerArgs": [
       "--no-sandbox"
     ],
-    "waitFor": 1000,
+    "waitFor": 20000,
     "timeout": 60000,
     "removeStyleTags": false,
     "inlineCss": true
