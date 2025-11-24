@@ -62,7 +62,8 @@
       "/seasonpreviews",
       "/bttsfixtures",
       "/fixtureshigh",
-      "/teamshigh"
+      "/teamshigh",
+      "/reset"
     ],
     "puppeteerArgs": [
       "--no-sandbox"
