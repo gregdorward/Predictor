@@ -29,6 +29,7 @@ import { SuccessPage } from "./components/Success"
 import { CancelPage } from "./components/Cancel"
 import PasswordReset from "./components/PasswordReset";
 import Logo from "./components/Logo";
+import Footer from "./components/Footer"
 import {
   FacebookShareButton,
   FacebookIcon,
@@ -829,6 +830,7 @@ function AppContent() {
           bc1q7j62txkvhfu0dt3l0s07saze6pjnyzs26wfgp0
         </span>
       </div>
+      <Footer/>
     </div>
   );
 }

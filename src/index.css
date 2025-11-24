@@ -1355,6 +1355,23 @@ span.MembershipInfo {
   font-size: 1.2em;
 }
 
+.Footer{
+  line-height: 2em;
+  font-size: 1em;
+  font-family: 'Open Sans', sans-serif;
+}
+
+.Footer a {
+  text-decoration: none;
+}
+
+.Footer a:hover {
+  text-decoration: underline;
+}
+
+.Footer h3 {
+  font-size: 1.5em;
+}
 .column {
   flex: 33.33%;
 }
