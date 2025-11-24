@@ -38,12 +38,11 @@
   .LoadingLogo {
     display: flex;
     justify-content: center;
-    width: 10em;
-    padding-left: 1em;
+    width: 14em;
     align-self: center;
     margin-left: auto;
     margin-right: auto;
-    padding-left: 4em;
+    padding-left: 1em;
   }
 
   /* 
@@ -135,18 +134,18 @@
   .LoadingLogo,
   .LogoSubHeading {
     flex: 1;
+    max-width: 800px;
     /* ← this is the key */
   }
 
   .LoadingLogo {
     display: flex;
     justify-content: center;
-    width: 8em;
-    padding-left: 1em;
+    width: 14em;
     align-self: center;
     margin-left: auto;
     margin-right: auto;
-    padding-left: 3em;
+    padding-left: 1em;
   }
 
   /* 
@@ -205,8 +204,7 @@
   .LoadingLogo {
     display: flex;
     justify-content: center;
-    width: 8em;
-    padding-left: 1em;
+    width: 14em;
     align-self: center;
     margin-left: auto;
     margin-right: auto;
@@ -269,12 +267,11 @@
   .LoadingLogo {
     display: flex;
     justify-content: center;
-    width: 7em;
-    padding-left: 1em;
+    width: 14em;
     align-self: center;
     margin-left: auto;
     margin-right: auto;
-    padding-left: 1em;
+    padding-left: 2em;
   }
 
   /* 
@@ -325,12 +322,11 @@
   .LoadingLogo {
     display: flex;
     justify-content: center;
-    width: 6em;
-    padding-left: 1em;
+    width: 14em;
     align-self: center;
     margin-left: auto;
     margin-right: auto;
-    padding-left: 1em;
+    padding-left: 2em;
   }
 
     .LogoSubHeading {
@@ -391,12 +387,11 @@
   .LoadingLogo {
     display: flex;
     justify-content: center;
-    width: 6em;
-    /* padding-left: 1em; */
+    width: 14em;
     align-self: center;
     margin-left: auto;
     margin-right: auto;
-    /* padding-left: 5em; */
+    padding-left: 2em;
   }
 
     .LogoSubHeading {
@@ -595,7 +590,7 @@ h1 {
   display: flex;
   margin-top: 3em;
   align-items: center;
-  width: 75%;
+  max-width: 500px;
   margin-left: auto;
   margin-right: auto;
   padding: 1em;
