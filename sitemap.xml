@@ -6,36 +6,36 @@
     <changefreq>daily</changefreq>
   </url>
   <url>
-    <loc>https://www.soccerstatshub.com/o25/</loc>
+    <loc>https://www.soccerstatshub.com/o25</loc>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://www.soccerstatshub.com/u25/</loc>
+    <loc>https://www.soccerstatshub.com/u25</loc>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://www.soccerstatshub.com/teamshigh/</loc>
+    <loc>https://www.soccerstatshub.com/teamshigh</loc>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://www.soccerstatshub.com/fixtureshigh/</loc>
+    <loc>https://www.soccerstatshub.com/fixtureshigh</loc>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://www.soccerstatshub.com/bttsfixtures/</loc>
+    <loc>https://www.soccerstatshub.com/bttsfixtures</loc>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://www.soccerstatshub.com/bttsteams/</loc>
+    <loc>https://www.soccerstatshub.com/bttsteams</loc>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://www.soccerstatshub.com/fixture/</loc>
+    <loc>https://www.soccerstatshub.com/fixture</loc>
   </url>
   <url>
-    <loc>https://www.soccerstatshub.com/reset/</loc>
+    <loc>https://www.soccerstatshub.com/reset</loc>
   </url>
   <url>
-    <loc>https://www.soccerstatshub.com/cancelsubscription/</loc>
+    <loc>https://www.soccerstatshub.com/cancelsubscription</loc>
   </url>
 </urlset>
