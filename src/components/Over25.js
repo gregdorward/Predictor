@@ -11,7 +11,7 @@ import { useEffect, useState } from "react";
 import { getHighestScoringLeagues } from "../logic/getStatsInsights";
 import Logo from "../components/Logo"
 import HamburgerMenu from "./HamburgerMenu";
-
+import Canonical from "../components/Canonical";
 
 const ids = [
   15050, //premier league 25 12325
@@ -126,6 +126,7 @@ export default function Over25() {
 
   return (
     <Fragment>
+      <Canonical />
       <HamburgerMenu />
       <Logo />
       <a href="https://www.soccerstatshub.com/" className="HomeLink">Home</a>

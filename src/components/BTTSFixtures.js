@@ -11,6 +11,7 @@ import { useEffect, useState } from "react";
 import { getBTTSFixtures } from "../logic/getStatsInsights";
 import Logo from "../components/Logo"
 import HamburgerMenu from "./HamburgerMenu";
+import Canonical from "../components/Canonical";
 
 const StyledTableCell = withStyles(() => ({
   head: {
@@ -85,6 +86,7 @@ export default function BTTSFixtures() {
 
   return (
     <Fragment>
+      <Canonical />
       <HamburgerMenu />
       <Logo />
       <a href="https://www.soccerstatshub.com/" className="HomeLink">Home</a>
