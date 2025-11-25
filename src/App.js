@@ -840,18 +840,18 @@ export default function App() {
     <AuthProvider>
       <Routes>
         <Route path="/" element={<AppContent />} />
-        <Route path="/fixture/" element={<TeamPage />} />
-        <Route path="/success/" element={<SuccessPage />} />
-        <Route path="/cancel/" element={<CancelPage />} />
-        <Route path="/reset/" element={<PasswordReset />} />
-        <Route path="/o25/" element={<Over25 />} />
-        <Route path="/u25/" element={<Under25 />} />
-        <Route path="/teamshigh/" element={<HighestScoringTeams />} />
-        <Route path="/fixtureshigh/" element={<HighestScoringFixtures />} />
-        <Route path="/bttsfixtures/" element={<BTTSFixtures />} />
-        <Route path="/bttsteams/" element={<BTTSTeams />} />
-        <Route path="/cancelsubscription/" element={<CancelSubscription />} />
-        <Route path="/seasonpreviews/" element={<SeasonPreview />} />
+        <Route path="/fixture" element={<TeamPage />} />
+        <Route path="/success" element={<SuccessPage />} />
+        <Route path="/cancel" element={<CancelPage />} />
+        <Route path="/reset" element={<PasswordReset />} />
+        <Route path="/o25" element={<Over25 />} />
+        <Route path="/u25" element={<Under25 />} />
+        <Route path="/teamshigh" element={<HighestScoringTeams />} />
+        <Route path="/fixtureshigh" element={<HighestScoringFixtures />} />
+        <Route path="/bttsfixtures" element={<BTTSFixtures />} />
+        <Route path="/bttsteams" element={<BTTSTeams />} />
+        <Route path="/cancelsubscription" element={<CancelSubscription />} />
+        <Route path="/seasonpreviews" element={<SeasonPreview />} />
         {/* <Route path="/" element={<Fixture />} /> */}
       </Routes>
     </AuthProvider>
