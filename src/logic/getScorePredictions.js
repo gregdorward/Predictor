@@ -1892,14 +1892,17 @@ export async function generateGoals(homeForm, awayForm, match) {
   ]
 
   if (majorContinentalLeagues.includes(match.leagueDesc)) {
-    homeGoals = (homeLambda_final + 0.1)
-      + (oddsComparisonHome * 0.2) +
+    console.log(match.game)
+    console.log(oddsComparisonAway)
+    homeGoals = (homeLambda_final - 0.15)
+      + (oddsComparisonHome * 0.1) +
       (homeForm.actualToXGDifference / 20) + (XGRatingHomeComparison * 0.1);
-
-    awayGoals = (awayLambda_final - 0.1)
-      + (oddsComparisonAway * 0.2) +
+    console.log(homeGoals)
+    awayGoals = (awayLambda_final - 0.7)
+      + (oddsComparisonAway * 0.1) +
       (awayForm.actualToXGDifference / 20) + (XGRatingAwayComparison * 0.1);
-  } if (InternationalComps.includes(match.leagueDesc)) {
+          console.log(awayGoals)
+  } else if (InternationalComps.includes(match.leagueDesc)) {
     homeGoals = (homeLambda_final + 0.1)
       +
       (homeForm.actualToXGDifference / 20) + (XGRatingHomeComparison * 0.1);
