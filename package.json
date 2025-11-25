@@ -57,15 +57,15 @@
   },
   "reactSnap": {
     "include": [
-      "/o25",
-      "/u25",
-      "/bttsteams",
-      "/seasonpreviews",
-      "/bttsfixtures",
-      "/fixtureshigh",
-      "/teamshigh",
-      "/reset",
-      "/cancelsubscription"
+      "/o25/",
+      "/u25/",
+      "/bttsteams/",
+      "/seasonpreviews/",
+      "/bttsfixtures/",
+      "/fixtureshigh/",
+      "/teamshigh/",
+      "/reset/",
+      "/cancelsubscription/"
     ],
     "crawl": false,
     "puppeteerArgs": [
