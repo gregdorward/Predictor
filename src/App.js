@@ -28,6 +28,7 @@ import TeamPage from "./components/Team";
 import { SuccessPage } from "./components/Success"
 import { CancelPage } from "./components/Cancel"
 import PasswordReset from "./components/PasswordReset";
+import Canonical from './components/Canonical';
 import Logo from "./components/Logo";
 import Footer from "./components/Footer"
 import {
@@ -838,6 +839,7 @@ function AppContent() {
 export default function App() {
   return (
     <AuthProvider>
+      <Canonical />
       <Routes>
         <Route path="/" element={<AppContent />} />
         <Route path="/fixture" element={<TeamPage />} />
