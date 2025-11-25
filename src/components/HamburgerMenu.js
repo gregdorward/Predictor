@@ -5,13 +5,13 @@ const menuItems = ['Home', 'Season Previews (BETA)', 'BTTS Teams', 'BTTS Games',
 
 const mappings = {
     'Home': '/',
-    'Season Previews (BETA)': '/seasonpreviews',
-    'BTTS Teams': '/bttsteams',
-    'BTTS Games': '/bttsfixtures',
-    'Over 2.5 Goals Games': '/fixtureshigh',
-    'Highest Scoring Leagues': '/o25',
-    'Lowest Scoring Leagues': '/u25',
-    'Highest Scoring Teams': '/teamshigh',
+    'Season Previews (BETA)': '/seasonpreviews/',
+    'BTTS Teams': '/bttsteams/',
+    'BTTS Games': '/bttsfixtures/',
+    'Over 2.5 Goals Games': '/fixtureshigh/',
+    'Highest Scoring Leagues': '/o25/',
+    'Lowest Scoring Leagues': '/u25/',
+    'Highest Scoring Teams': '/teamshigh/',
 };
 
 export default function HamburgerMenu() {
