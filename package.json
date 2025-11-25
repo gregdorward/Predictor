@@ -63,7 +63,8 @@
       "/bttsfixtures",
       "/fixtureshigh",
       "/teamshigh",
-      "/reset"
+      "/reset",
+      "/cancelsubscription"
     ],
     "crawl": false,
     "puppeteerArgs": [
