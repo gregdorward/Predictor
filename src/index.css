@@ -329,13 +329,14 @@
     padding-left: 2em;
   }
 
-    .LogoSubHeading {
+  .LogoSubHeading {
     font-size: 1.2em;
     color: var(--button-text-color);
     text-align: center;
     margin: 0;
     color: var(--button-text-color);
   }
+
   .LeagueTable {
     padding-bottom: 0.5em;
     padding-left: 2em;
@@ -394,7 +395,7 @@
     padding-left: 2em;
   }
 
-    .LogoSubHeading {
+  .LogoSubHeading {
     font-size: 1.2em;
     color: var(--button-text-color);
     text-align: center;
@@ -639,15 +640,38 @@ h2 {
   color: var(--text-color);
 }
 
-
-
-.MembersGetMore p {
-  font-size: 1.1em;
+.MembersGetMore {
+  font-size: 1.3em;
   margin: 0%;
   line-height: 1.5em;
   padding-top: 1em;
+  padding-bottom: 1em;
 }
 
+h3.MembersGetMore {
+  font-size: 1.8em;
+  margin: 0%;
+  line-height: 1.5em;
+  padding: 0em;
+}
+
+.MembersGetMoreUnderlined {
+  font-size: 1.4em;
+  text-decoration: underline;
+  padding: 1em;
+  max-width: 300px;
+  margin-left: auto;
+  margin-right: auto;
+  /* color: var(--primary-color); */
+}
+
+.MembersGetMoreUnderlined:hover {
+  font-size: 1.5em;
+  text-decoration: underline;
+  padding: 1em;
+  color: var(--primary-color);
+  cursor: pointer;
+}
 
 h4 {
   font-size: 1.2em;
@@ -959,9 +983,12 @@ h6.PredictionTypeText {
 } */
 
 .hidden-placeholder {
-  visibility: hidden;   /* Invisible but occupies layout space */
-  opacity: 0;           /* Ensures fully hidden */
-  pointer-events: none; /* Prevents click events */
+  visibility: hidden;
+  /* Invisible but occupies layout space */
+  opacity: 0;
+  /* Ensures fully hidden */
+  pointer-events: none;
+  /* Prevents click events */
 }
 
 .LoadingText {
@@ -1350,7 +1377,7 @@ span.MembershipInfo {
   font-size: 1.2em;
 }
 
-.Footer{
+.Footer {
   line-height: 2em;
   font-size: 1em;
   font-family: 'Open Sans', sans-serif;
@@ -1367,6 +1394,7 @@ span.MembershipInfo {
 .Footer h3 {
   font-size: 1.5em;
 }
+
 .column {
   flex: 33.33%;
 }
@@ -4544,7 +4572,7 @@ h6.AttackingMomentum {
   /* Space between the input group and the submit button */
   gap: 1em;
   /* Optional: Set a max width for the form itself */
-  margin-top: 20px;
+  margin-top: 1em;
   align-items: center;
   max-width: 600px;
   height: 12em;
@@ -4915,6 +4943,8 @@ button.AIInsights button:active {
 .LockText {
   font-size: 1.2em;
   line-height: 1.5em;
+  padding: 1em;
+  border: var(--primary-color) dotted 3px;
 }
 
 .WelcomeText {
@@ -4923,6 +4953,16 @@ button.AIInsights button:active {
 
 .WelcomeText p {
   margin: 0.5em;
+}
+
+.flash-attention {
+  /* Define a flashy border/background for attention */
+  border: 3px solid #ff9900 !important;
+  /* Brighter color */
+  background-color: var(--span-background) !important;
+  box-shadow: 0 0 10px rgba(255, 153, 0, 0.7);
+  transition: all 0.5s ease-in-out;
+  color: var(--text-color) !important;
 }
 
 .rankings-container {

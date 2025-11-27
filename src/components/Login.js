@@ -9,7 +9,7 @@ export let userIsPaid = false;
 const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [isLogin, setIsLogin] = useState(true);
+  const [isLogin, setIsLogin] = useState(false);
   const [error, setError] = useState("");
   const [showPassword, setShowPassword] = useState(false); // State for toggling password visibility
 
@@ -48,16 +48,17 @@ const Login = () => {
 
   return (
      <div>
-      <button className="SignUp" onClick={() => setIsLogin(!isLogin)}>
-        {isLogin ? "Need an account? Sign up" : "Enter your details below. Already have an account? Click to switch to login"}
+      <button className="SignUp" id="SignUp" onClick={() => setIsLogin(!isLogin)}>
+        {isLogin ? "Switch to sign up form." : "Switch to login form"}
       </button>
+      <div>We don't contact you or share your information with anyone</div>
       {error && <p style={{ color: "red" }}>{error}</p>}
       
       {/* ⭐️ LoginForm: Main Flex Container ⭐️ */}
-      <form onSubmit={handleAuth} className="LoginForm">
+      <form onSubmit={handleAuth} className="LoginForm" id="LoginForm">
         
         {/* ⭐️ InputGroup: Groups and stacks the inputs on the left ⭐️ */}
-        <div className="InputGroup">
+        <div className="InputGroup" id="login-email-input">
           <input
             type="email"
             placeholder="Email"
@@ -89,7 +90,7 @@ const Login = () => {
         </div>
 
         {/* ⭐️ LoginSignUp: Submit button aligned to the right ⭐️ */}
-        <button type="submit" className="LoginSignUp">
+        <button type="submit" className="LoginSignUp" id="LoginSignUp">
           {isLogin ? "Login" : "Sign Up"}
         </button>
         

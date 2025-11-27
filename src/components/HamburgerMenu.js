@@ -19,7 +19,7 @@ export default function HamburgerMenu() {
     const toggleMenu = () => setIsOpen((prev) => !prev);
 
     return (
-        <div className="HamburgerMenuDiv">
+        <div className="HamburgerMenuDiv" id="HamburgerMenuDiv">
             {/* Toggle Button */}
             <button
                 onClick={toggleMenu}

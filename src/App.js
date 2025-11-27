@@ -476,16 +476,34 @@ export async function getLeagueList() {
     );
   } else {
     render(
-      <>
-        <h3 className="MembersGetMore">Discover the most in depth stats and tips available</h3>
-        <div><p className="MembersGetMore">Join as a free user or upgrade to premium for as little as £1/week, cancel anytime</p></div>
+      <div className="NonFixtureInfo">
+        <h3 className="MembersGetMore">Welcome to Soccer Stats Hub</h3>
+        <div className="MembersGetMore">Browse as a free user or upgrade to premium for as little as £1/week, cancel anytime</div>
+        <div className="MembersGetMoreUnderlined" onClick={() => {
+          const FixtureList = document.getElementById("Buttons");
+          if (FixtureList) {
+            FixtureList.scrollIntoView({ behavior: "smooth" });
+            // Optional: Flash the login box or focus an input to draw attention
+          }
+          const getPredictionsButton = document.getElementById('GeneratePredictionsButton');
+          if (getPredictionsButton) {
+            // Example: Add a class that quickly changes the background/border color
+            getPredictionsButton.classList.add('flash-attention');
+
+            // Remove the class after a short delay (e.g., 1 second)
+            setTimeout(() => {
+              getPredictionsButton.classList.remove('flash-attention');
+              getPredictionsButton.focus(); // Optional: Focus the input after scrolling
+            }, 1000);
+          }
+        }}>Just show me the games</div>
         <Login />
-      </>
+      </div>
       , "Email");
   }
 }
 
-  
+
 
 
 let stripePromise = null;
@@ -506,13 +524,13 @@ export const handleCheckout = async (priceId) => {
     console.warn("Stripe not initialized. Are you prerendering?");
     return;
   }
-let auth = null;
-let user = null;
+  let auth = null;
+  let user = null;
 
   if (typeof window !== "undefined") {
     auth = getAuth();
     user = auth.currentUser;
-}
+  }
 
   if (!user) {
     alert("Please sign-up or login before purchasing");
@@ -585,10 +603,39 @@ function AppContent() {
 
   getLeagueList();
 
+  const handleSubscribeClick = (priceId) => {
+    if (user) {
+      // User is logged in, proceed to Stripe checkout as normal
+      handleCheckout(priceId);
+    } else {
+      // User is NOT logged in.
+      // 1. You could alert them:
+      // alert("Please sign up or log in to subscribe.");
+
+      // 2. Or better, scroll them to the Login component smoothly:
+      const loginSection = document.getElementById("HamburgerMenuDiv");
+      if (loginSection) {
+        loginSection.scrollIntoView({ behavior: "smooth" });
+        // Optional: Flash the login box or focus an input to draw attention
+      }
+      const emailInput = document.getElementById('LoginSignUp');
+      if (emailInput) {
+        // Example: Add a class that quickly changes the background/border color
+        emailInput.classList.add('flash-attention');
+
+        // Remove the class after a short delay (e.g., 1 second)
+        setTimeout(() => {
+          emailInput.classList.remove('flash-attention');
+          emailInput.focus(); // Optional: Focus the input after scrolling
+        }, 1000);
+      }
+    }
+  };
+
   return (
     <div className="App">
       <div className="DarkMode">
-        <Logo/>
+        <Logo />
         <a
           className="BeGamblingAware"
           href="https://www.begambleaware.org"
@@ -617,6 +664,39 @@ function AppContent() {
         <div id="RadioButtons" />
       </div>
       <div id="Email" className="Email"></div>
+      {isPaidUser ? (
+        <div />
+      ) : (
+        <div className="NonFixtureInfo">
+          <div className="SubscribeContainer">
+            <span className="MembershipInfo">
+              Full fixtures and multis are restricted to premium members. Memberships
+              can be cancelled at any time and prices will differ in currencies other
+              than GBP. Payments are securely hosted by Stripe.
+            </span>
+
+            {/* Helper function to handle the click logic */}
+            <button
+              onClick={() => handleSubscribeClick("price_1QrQ4ZBrqiWlVPadCkhLhtiZ")}
+              className="SubscribeButton"
+            >
+              Subscribe for £1/week
+            </button>
+            <button
+              onClick={() => handleSubscribeClick("price_1QrQ5NBrqiWlVPadFBuBKKSM")}
+              className="SubscribeButton"
+            >
+              Subscribe for £3/month
+            </button>
+            <button
+              onClick={() => handleSubscribeClick("price_1QrQ75BrqiWlVPadEML30BoJ")}
+              className="SubscribeButton"
+            >
+              Subscribe for £30/year
+            </button>
+          </div>
+        </div>
+      )}
       <div id="Day" />
 
 
@@ -628,47 +708,8 @@ function AppContent() {
       }>
       </Collapsable>
       <div id="Loading" className="Loading"></div>
-
-      {user ? (
-        isPaidUser ? (
-          // If the user is logged in and is a paying customer, show the cancel button
-          <div />
-        ) : (
-          // If the user is logged in but is NOT a paying customer, show subscribe buttons
-          <div className="SubscribeContainer">
-            <span className="MembershipInfo">
-              Full fixtures and multis are restricted to premium
-              members. Memberships can be cancelled at any time and prices will
-              differ in currencies other than GBP. Payments are securely hosted
-              by Stripe.
-            </span>
-            <button
-              onClick={() => handleCheckout("price_1QrQ4ZBrqiWlVPadCkhLhtiZ")}
-              className="SubscribeButton"
-            >
-              Subscribe for £1/week
-            </button>
-            <button
-              onClick={() => handleCheckout("price_1QrQ5NBrqiWlVPadFBuBKKSM")}
-              className="SubscribeButton"
-            >
-              Subscribe for £3/month
-            </button>
-            <button
-              onClick={() => handleCheckout("price_1QrQ75BrqiWlVPadEML30BoJ")}
-              className="SubscribeButton"
-            >
-              Subscribe for £30/year
-            </button>
-          </div>
-        )
-      ) : (
-        // If the user is not logged in, show nothing
-        <div></div>
-      )}
-
       <div id="GeneratePredictions" className="GeneratePredictions" />
-            {/* <div id="MultiPlaceholder" className="MultiPlaceholder" /> */}
+      {/* <div id="MultiPlaceholder" className="MultiPlaceholder" /> */}
 
       <Collapsable
         buttonText={"Multis"}
@@ -830,7 +871,7 @@ function AppContent() {
           bc1q7j62txkvhfu0dt3l0s07saze6pjnyzs26wfgp0
         </span>
       </div>
-      <Footer/>
+      <Footer />
     </div>
   );
 }

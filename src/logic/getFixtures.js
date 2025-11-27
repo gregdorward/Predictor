@@ -1551,6 +1551,7 @@ export async function generateFixtures(
               text={"Get Predictions & Stats"}
               onClickEvent={() => getScorePrediction(day)}
               className={"GeneratePredictionsButton"}
+              id={"GeneratePredictionsButton"}
             />
             <div className="Version">Prediction engine v1.6.2 (23/10/25)</div>
             <div className="MissingPredictionsNotice">If predictions are missing on games with little data, switch to AI tips in the options, above</div>
