@@ -83,7 +83,7 @@ export default function BTTSTeams() {
     allowedCountries.includes(game.country) && game.played > 10
   ).slice(0, 30);
 
-  const headers = ["Name", "Country", "BTTS %", "Played", "Next Opponent", "Date", "Odds BTTS",];
+  const headers = ["Name", "Country", "BTTS %", "Played", "Next Opponent", "Odds BTTS",];
 
   return (
     <Fragment>
@@ -120,9 +120,7 @@ export default function BTTSTeams() {
                   {team.played}
                 </StyledTableCell>
                 <StyledTableCell align="center">
-                  {team.opponent}
-                </StyledTableCell>
-                <StyledTableCell align="center">
+                  {team.opponent}<br/>
                   {team.date}
                 </StyledTableCell>
                 <StyledTableCell align="center">
