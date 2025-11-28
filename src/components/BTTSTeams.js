@@ -83,7 +83,7 @@ export default function BTTSTeams() {
     allowedCountries.includes(game.country) && game.played > 10
   ).slice(0, 30);
 
-  const headers = ["Name", "Country", "BTTS %", "Played", "Next Opponent", "Odds BTTS",];
+  const headers = ["Name", "Country", "BTTS Percent", "Played", "Next Opponent", "Odds BTTS",];
 
   return (
     <Fragment>

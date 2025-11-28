@@ -539,8 +539,7 @@ export async function generateFixtures(
           <h1 className="LogoSubHeading"> Football stats <br />Tips <br />Multi-builders <br />Unparalleled insight</h1>
         </div>
         <div className="LoadingText">
-          {/* Loading all league, fixture & form data. Depending on the number of fixtures, this can take some time... */}
-          There is currently an outage with our data provider, we are working to resolve the issue, awaiting feedback. <br /> Thank you for your patience.
+          Loading all league, fixture & form data. Depending on the number of fixtures, this can take some time...
         </div>
         <BouncingDotsLoader />
       </div>,

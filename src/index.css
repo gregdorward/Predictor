@@ -936,25 +936,33 @@ p {
   /* font-size: 0.5em; */
 }
 
-.O25Table .MuiTable-root {
-    background-color: red;
-    box-shadow: #009700 0px 0px 10px 0px;
-}
+/* .O25Table {
+    background-color: var(--button-color);
+
+} */
 
 .O25Table .MuiTableHead-root th {
-  background-color: var(--background-color);
+  background-color: var(--button-color);
   height: 5em;
-  color: var(--text-color);
+  color: var(--button-text-color);
   line-height: 1em;
-  border: var(--text-color) solid 2px;
+  /* border: var(--primary-color) solid 1px; */
 }
 
 .O25Table .MuiTableCell-root{
+  /* background-color: var(--background-color); */
+  height: 5em;
+  color: var(--text-color);
+  line-height: 1.25em;
+  border: none;
+}
+
+.O25Table tr{
   background-color: var(--background-color);
   height: 5em;
   color: var(--text-color);
   line-height: 1em;
-  border: var(--text-color) solid 2px;
+  border: none;
 }
 
 .FormRadio {
