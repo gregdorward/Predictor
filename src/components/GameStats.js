@@ -3542,8 +3542,6 @@ function handleSetUserTips(gameId, game, tipString, tip, date, uid, odds) {
   const attributesHomeComparison = homePlayerAtttributesComparison;
 
   const positionHome = attributesHome.position;
-  console.log(homeForm)
-  console.log(awayForm)
 
   const filteredEntriesHome = Object.entries(attributesHome).filter(
     ([key, value]) =>

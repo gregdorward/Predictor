@@ -636,14 +636,7 @@ function AppContent() {
     <div className="App">
       <div className="DarkMode">
         <Logo />
-        <a
-          className="BeGamblingAware"
-          href="https://www.begambleaware.org"
-          target="_blank"
-          rel="noreferrer"
-        >
-          begambleaware
-        </a>
+        <div className="DarkModeIcon">&#9681;</div>
         <ThemeToggle />
       </div>
       <HamburgerMenu />
@@ -858,6 +851,14 @@ function AppContent() {
       />
       <Collapsable buttonText={"Terms and Conditions"} element={<StripePolicies />} />
       <Collapsable buttonText={"Privacy Policy"} element={<PrivacyPolicy />} />
+      <a
+        className="BeGamblingAware"
+        href="https://www.begambleaware.org"
+        target="_blank"
+        rel="noreferrer"
+      >
+        begambleaware
+      </a>
       <div className="bitcoin" id="bitcoin">
         <a
           href="https://www.ko-fi.com/xgtipping"

@@ -207,7 +207,7 @@ function UserTips() {
 
   return (
     <div>
-      <button onClick={fetchAndSetUserTips}>Get User Tips</button>
+      <button onClick={fetchAndSetUserTips}>User Tips</button>
       <h4>Most Tipped Games by Soccer Stats Hub Users</h4>
       <ul className="UserTipsList">
         {tips.length > 0 ? (
@@ -1700,10 +1700,8 @@ export async function generateGoals(homeForm, awayForm, match) {
   // SCALING_FACTOR = 1 / 0.25 = 4.0
   const SCALING_FACTOR = 1 / AVERAGE_STRENGTH_PRODUCT; // = 4.0
 
-  const awayDefenseWeakness = 1 - awayForm.defensiveStrengthScoreGeneration;
-  const homeDefenseWeakness = 1 - homeForm.defensiveStrengthScoreGeneration;
-
-
+  const awayDefenseWeakness = 1 - awayForm.defensiveStrengthScoreGenerationLast5;
+  const homeDefenseWeakness = 1 - homeForm.defensiveStrengthScoreGenerationLast5;
 
   // The Corrected Formula:
   const homeLambda_raw =
@@ -1897,11 +1895,9 @@ export async function generateGoals(homeForm, awayForm, match) {
     homeGoals = (homeLambda_final - 0.15)
       + (oddsComparisonHome * 0.1) +
       (homeForm.actualToXGDifference / 20) + (XGRatingHomeComparison * 0.1);
-    console.log(homeGoals)
     awayGoals = (awayLambda_final - 0.7)
       + (oddsComparisonAway * 0.1) +
       (awayForm.actualToXGDifference / 20) + (XGRatingAwayComparison * 0.1);
-          console.log(awayGoals)
   } else if (InternationalComps.includes(match.leagueDesc)) {
     homeGoals = (homeLambda_final + 0.1)
       +
@@ -2222,8 +2218,8 @@ export async function calculateScore(match, index, divider, calculate, AIPredict
         teams[i][0].ScoredAverage - teams[i][0].ConcededAverage;
 
       teams[i][index].XGdifferential = await diff(
-        teams[i][index].XGOverall,
-        teams[i][index].XGAgainstAvgOverall
+        teams[i][index].avXGLast5,
+        teams[i][index].avXGAgainstLast5
       );
     }
 
@@ -3100,8 +3096,8 @@ export async function calculateScore(match, index, divider, calculate, AIPredict
     console.log(`drawPredictions: ${drawPredictions}`);
 
     if (
-      (XGdifferential > 1 && match.prediction === "homeWin") ||
-      (XGdifferential < -1.6 && match.prediction === "awayWin")
+      (XGdifferential > 0.7 && match.prediction === "homeWin") ||
+      (XGdifferential < -1.2 && match.prediction === "awayWin")
     ) {
       match.XGdifferential = true;
     } else {
@@ -3122,14 +3118,15 @@ export async function calculateScore(match, index, divider, calculate, AIPredict
     }
 
     let rollingGoalDiffDifferential = await diff(
-      formHome.rollingAverageGoalsDifferential,
-      formAway.rollingAverageGoalsDifferential
+      formHome.last5GoalDiff,
+      formAway.last5GoalDiff
     );
 
     if (
-      (rollingGoalDiffDifferential > 1.5 && match.prediction === "homeWin") ||
-      (rollingGoalDiffDifferential < -1.5 && match.prediction === "awayWin")
+      (rollingGoalDiffDifferential >= 10 && match.prediction === "homeWin") ||
+      (rollingGoalDiffDifferential <= -10 && match.prediction === "awayWin")
     ) {
+      console.log(`rollingGoalDiffDifferential: ${rollingGoalDiffDifferential}`);
       match.rollingGoalDiff = true;
       match.rollingGoalDiffValue = rollingGoalDiffDifferential;
     } else {
@@ -3138,19 +3135,36 @@ export async function calculateScore(match, index, divider, calculate, AIPredict
     }
 
     let dangerousAttacksDifferential = await diff(
-      formHome.AverageDangerousAttacksOverall,
-      formAway.AverageDangerousAttacksOverall
+      formHome.avDALast5,
+      formAway.avDALast5
+    );
+
+    let shotsOnTargetDifferential = await diff(
+      formHome.avSOTLast5,
+      formAway.avSOTLast5
     );
 
     if (
-      (dangerousAttacksDifferential > 20 && match.prediction === "homeWin") ||
-      (dangerousAttacksDifferential < -20 && match.prediction === "awayWin")
+      (dangerousAttacksDifferential > 25 && match.prediction === "homeWin") ||
+      (dangerousAttacksDifferential < -25 && match.prediction === "awayWin")
     ) {
       match.dangerousAttacksDiff = true;
       match.dangerousAttacksDiffValue = dangerousAttacksDifferential;
     } else {
       match.dangerousAttacksDiff = false;
       match.dangerousAttacksDiffValue = dangerousAttacksDifferential;
+    }
+
+
+    if (
+      (shotsOnTargetDifferential > 3 && match.prediction === "homeWin") ||
+      (shotsOnTargetDifferential < -3 && match.prediction === "awayWin")
+    ) {
+      match.shotOnTargetDiff = true;
+      match.shotOnTargetDiffValue = shotsOnTargetDifferential;
+    } else {
+      match.shotOnTargetDiff = false;
+      match.shotOnTargetDiffValue = shotsOnTargetDifferential;
     }
 
     switch (true) {
@@ -3621,6 +3635,7 @@ var Over25Tips = [];
 var XGDiffTips = [];
 var rollingDiffTips = [];
 var dangerousAttacksDiffTips = [];
+let shotsOnTargetTips = [];
 var pointsDiffTips = [];
 var combinations;
 var exoticArray = [];
@@ -4004,6 +4019,7 @@ export async function getScorePrediction(day, mocked) {
   pointsDiffTips = [];
   rollingDiffTips = [];
   dangerousAttacksDiffTips = [];
+  shotsOnTargetTips = [];
   allTips = [];
 
 
@@ -4104,6 +4120,7 @@ export async function getScorePrediction(day, mocked) {
       let pointsDiffObject;
       let rollingDiffObject;
       let dangerousAttacksDiffObject;
+      let shotOnTargetDiffObject;
 
       if (match.status === "complete" && match.prediction) {
         match.outcomeSymbol =
@@ -4373,6 +4390,7 @@ export async function getScorePrediction(day, mocked) {
           team: `${match.awayTeam} to win`,
           rawOdds: match.awayOdds,
           comparisonScore: Math.abs(match.teamComparisonScore),
+          id: match.id,
           rawComparisonScore: match.teamComparisonScore,
           outcome: match.predictionOutcome,
           outcomeSymbol: match.outcomeSymbol,
@@ -4434,6 +4452,7 @@ export async function getScorePrediction(day, mocked) {
           rawOdds: match.awayOdds,
           comparisonScore: Math.abs(match.teamComparisonScore),
           rawComparisonScore: match.teamComparisonScore,
+          id: match.id,
           outcome: match.predictionOutcome,
           outcomeSymbol: match.outcomeSymbol,
           prediction: `${match.awayTeam} to win`,
@@ -4472,14 +4491,14 @@ export async function getScorePrediction(day, mocked) {
           prediction: `${match.homeTeam} to win`,
           odds: match.fractionHome,
           otherTeam: match.awayTeam,
-          rollingGoalDiffValue: match.rollingGoalDiffValue,
+          dangerousAttacksDiffValue: match.dangerousAttacksDiffValue,
           goalDifferential: parseFloat(
             await diff(match.unroundedGoalsA, match.unroundedGoalsB)
           ),
         };
         dangerousAttacksDiffTips.push(dangerousAttacksDiffObject);
       } else if (
-        match.XGdifferential === true &&
+        match.dangerousAttacksDiff === true &&
         match.prediction === "awayWin" &&
         match.status !== "notEnoughData" &&
         match.status !== "suspended" &&
@@ -4496,16 +4515,80 @@ export async function getScorePrediction(day, mocked) {
           rawComparisonScore: match.teamComparisonScore,
           outcome: match.predictionOutcome,
           outcomeSymbol: match.outcomeSymbol,
+          id: match.id,
           prediction: `${match.awayTeam} to win`,
           odds: match.fractionAway,
           otherTeam: match.homeTeam,
-          rollingGoalDiffValue: match.rollingGoalDiffValue,
+          dangerousAttacksDiffValue: match.dangerousAttacksDiffValue,
           goalDifferential: parseFloat(
             await diff(match.unroundedGoalsB, match.unroundedGoalsA)
           ),
         };
         dangerousAttacksDiffTips.push(dangerousAttacksDiffObject);
       }
+
+      if (
+        match.shotOnTargetDiff === true &&
+        match.prediction === "homeWin" &&
+        match.status !== "notEnoughData" &&
+        match.status !== "suspended" &&
+        match.status !== "canceled"
+      ) {
+        shotOnTargetDiffObject = {
+          game:
+            match.status === "complete"
+              ? `${match.homeTeam} ${match.homeGoals} - ${match.awayGoals} ${match.awayTeam}`
+              : match.game,
+          team: `${match.homeTeam} to win`,
+          homeTeam: match.homeTeam,
+          awayTeam: match.awayTeam,
+          competition: match.leagueDesc,
+          id: match.id,
+          rawOdds: match.homeOdds,
+          comparisonScore: Math.abs(match.teamComparisonScore),
+          rawComparisonScore: match.teamComparisonScore,
+          outcome: match.predictionOutcome,
+          outcomeSymbol: match.outcomeSymbol,
+          prediction: `${match.homeTeam} to win`,
+          odds: match.fractionHome,
+          otherTeam: match.awayTeam,
+          shotsOnTargetDiffValue: match.shotOnTargetDiffValue,
+          goalDifferential: parseFloat(
+            await diff(match.unroundedGoalsA, match.unroundedGoalsB)
+          ),
+        };
+        shotsOnTargetTips.push(shotOnTargetDiffObject);
+      } else if (
+        match.shotOnTargetDiff === true &&
+        match.prediction === "awayWin" &&
+        match.status !== "notEnoughData" &&
+        match.status !== "suspended" &&
+        match.status !== "canceled"
+      ) {
+        shotOnTargetDiffObject = {
+          game:
+            match.status === "complete"
+              ? `${match.homeTeam} ${match.homeGoals} - ${match.awayGoals} ${match.awayTeam}`
+              : match.game,
+          team: `${match.awayTeam} to win`,
+          rawOdds: match.awayOdds,
+          comparisonScore: Math.abs(match.teamComparisonScore),
+          rawComparisonScore: match.teamComparisonScore,
+          outcome: match.predictionOutcome,
+          outcomeSymbol: match.outcomeSymbol,
+          id: match.id,
+          prediction: `${match.awayTeam} to win`,
+          odds: match.fractionAway,
+          otherTeam: match.homeTeam,
+          shotsOnTargetDiffValue: match.shotOnTargetDiffValue,
+          goalDifferential: parseFloat(
+            await diff(match.unroundedGoalsB, match.unroundedGoalsA)
+          ),
+        };
+        shotsOnTargetTips.push(shotOnTargetDiffObject);
+      }
+
+      console.log(shotsOnTargetTips)
 
       predictions.push(match);
     })
@@ -4621,6 +4704,10 @@ async function getMultis() {
       Math.abs(b.dangerousAttacksDiffValue) -
       Math.abs(a.dangerousAttacksDiffValue)
     );
+  });
+
+  shotsOnTargetTips.sort(function (a, b) {
+    return Math.abs(b.shotsOnTargetDiffValue) - Math.abs(a.shotsOnTargetDiffValue);
   });
 
   exoticArray = [];
@@ -4849,7 +4936,7 @@ async function renderTips() {
   } else if (paid !== true) {
     console.log(paid)
     newArray = newArray.slice(0, 6);
-        console.log(newArray)
+    console.log(newArray)
     render(
       <div className="PredictionContainer">
         <Fragment>
@@ -4989,7 +5076,7 @@ async function renderTips() {
       <div className="PredictionContainer">
         <Fragment>
           <Collapsable
-            buttonText={"Exotic of the day"}
+            buttonText={"Exotic of the Day"}
             element={
               <ul className="BestPredictions" id="BestPredictions">
                 <h4 className="BestPredictionsExplainer">
@@ -5107,12 +5194,12 @@ async function renderTips() {
   render(
     <div>
       <Collapsable
-        buttonText={"SSH Tips"}
+        buttonText={"Stats-based Tips"}
         element={
           <Slider
             element={
               <ul className="XGDiffTips" id="XGDiffTips">
-                <h4>Games with greatest XG Differentials</h4>
+                <h4>Games with greatest XG Differentials (last 5)</h4>
                 {paid ? (
                   XGDiffTips.length > 0 ? (
                     XGDiffTips.map((tip) => (
@@ -5175,7 +5262,7 @@ async function renderTips() {
             element3={
               <ul className="XGDiffTips" id="XGDiffTips">
                 <h4>
-                  Games with greatest rolling goal difference differentials
+                  Games with greatest goal differentials (last 5)
                 </h4>
                 {paid ? (
                   rollingDiffTips.length > 0 ? (
@@ -5208,11 +5295,44 @@ async function renderTips() {
             element4={
               <ul className="XGDiffTips" id="XGDiffTips">
                 <h4>
-                  Games with greatest average dangerous attacks differentials
+                  Games with greatest average dangerous attacks differentials (last 5)
                 </h4>
                 {paid ? (
                   dangerousAttacksDiffTips.length > 0 ? (
                     dangerousAttacksDiffTips.map((game) => (
+                      <a
+                        href={`#${game.id}`}
+                        onClick={(e) => {
+                          e.preventDefault(); // Prevent the immediate jump/reload
+                          scrollToTarget(game.id); // Call the custom smooth scroll function
+                        }}
+                        style={{ textDecoration: 'none', color: 'inherit' }}                    >
+                        <li key={game.game}>
+                          {game.game} | {game.prediction} {game.odds}{" "}
+                          <span className={game.outcome}>
+                            {game.outcomeSymbol}
+                          </span>
+                        </li>
+                      </a>
+                    ))
+                  ) : (
+                    <li key="noGames">
+                      Sorry, no games fit this criteria today
+                    </li>
+                  )
+                ) : (
+                  <li key="premiumOnly">Premium members only</li>
+                )}
+              </ul>
+            }
+            element5={
+              <ul className="XGDiffTips" id="XGDiffTips">
+                <h4>
+                  Games with greatest shots on target differentials (last 5)
+                </h4>
+                {paid ? (
+                  shotsOnTargetTips.length > 0 ? (
+                    shotsOnTargetTips.map((game) => (
                       <a
                         href={`#${game.id}`}
                         onClick={(e) => {

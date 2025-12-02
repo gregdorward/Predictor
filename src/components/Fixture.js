@@ -29,6 +29,8 @@ function GetDivider(fixture, mock) {
   const matchStatus = fixture.status;
   let isPrediction = resultValue;
 
+  console.log(fixture)
+
   if (fixture.fixture.omit === true && matchStatus !== "complete") {
     isPrediction = true;
     return (
@@ -87,7 +89,7 @@ function GetDivider(fixture, mock) {
       default:
         break;
     }
-    
+
 
     switch (true) {
       case fixture.fixture.goalsA > fixture.fixture.goalsB:
@@ -312,29 +314,34 @@ function SingleFixture({
                 id={`shortlist-${fixture.id}`} // Unique ID for label association
               />
             </div>
-            <div className={`HomeAndAwayContainer${fixture.predictionOutcome}`}>
-              <div className="HomeContainer">
-                <div className="HomeOdds">{fixture.fractionHome}</div>
-                <CreateBadge
-                  image={fixture.homeBadge}
-                  ClassName="HomeBadge"
-                  alt="Home team badge"
-                  flexShrink={5}
-                />
-                <div className="homeTeam">
-                  {" "}
-                  {fixture.homeTeam}{" "}
-                  {fixture.formHome ? `(${fixture.formHome.LeaguePosition})` : ""}
-                </div>
+            <div className={`HomeAndAwayContainer${fixture.predictionOutcome}${fixture.exactScore ? "ExactScore" : ""}`}>              <div className="HomeContainer">
+              <div className="HomeOdds">{fixture.fractionHome}</div>
+              <CreateBadge
+                image={fixture.homeBadge}
+                ClassName="HomeBadge"
+                alt="Home team badge"
+                flexShrink={5}
+              />
+              <div className="homeTeam">
+                {fixture.homeTeam}{" "}
+                <br />
+                {fixture.formHome ? `(${fixture.formHome.LeaguePosition})` : ""}
+              </div>
+              <div className="ScoreContainer">
                 <div className="score" key={fixture.homeTeam}>
                   {fixture.goalsA !== undefined ? `${fixture.goalsA}` : `-`}
                 </div>
+              </div>
+              <div className="ResultContainer">
                 <div className={`result`}>
                   {fixture.status === "complete" ? `${fixture.homeGoals}` : `-`}
                 </div>
+              </div>
+              <div className="FormContainer">
                 <div className={`Last5`}>
                   {fixture.formHome && (
                     <>
+                      <span className="FormAllorHA">All</span>
                       <span
                         className={styleForm(
                           fixture.formHome.resultsAll[4] || ""
@@ -363,10 +370,43 @@ function SingleFixture({
                     </>
                   )}
                 </div>
-                <button className="GameStatsTwo" onClick={handleButtonClick}>
-                  {rightArrow}
-                </button>
+                <div className={`Last5Home`}>
+                  {fixture.formHome && (
+                    <>
+                      <span className="FormAllorHA">Home</span>
+                      <span
+                        className={styleForm(
+                          fixture.formHome.resultsHome[4] || ""
+                        )}
+                      ></span>
+                      <span
+                        className={styleForm(
+                          fixture.formHome.resultsHome[3] || ""
+                        )}
+                      ></span>
+                      <span
+                        className={styleForm(
+                          fixture.formHome.resultsHome[2] || ""
+                        )}
+                      ></span>
+                      <span
+                        className={styleForm(
+                          fixture.formHome.resultsHome[1] || ""
+                        )}
+                      ></span>
+                      <span
+                        className={styleForm(
+                          fixture.formHome.resultsHome[0] || ""
+                        )}
+                      ></span>
+                    </>
+                  )}
+                </div>
               </div>
+              <button className="GameStatsTwo" onClick={handleButtonClick}>
+                {rightArrow}
+              </button>
+            </div>
               <div className="AwayContainer">
                 <div className="AwayOdds">{fixture.fractionAway}</div>
                 <CreateBadge
@@ -376,44 +416,85 @@ function SingleFixture({
                 />
                 <div className="awayTeam">
                   {fixture.awayTeam}{" "}
+                  <br />
                   {fixture.formAway ? `(${fixture.formAway.LeaguePosition})` : ""}
                 </div>
-                <div className="score" key={fixture.awayTeam}>
-                  {fixture.goalsB !== undefined ? `${fixture.goalsB}` : `-`}
+                <div className="ScoreContainer">
+                  <div className="score" key={fixture.awayTeam}>
+                    {fixture.goalsB !== undefined ? `${fixture.goalsB}` : `-`}
+                  </div>
                 </div>
-                <div className="result">
-                  {fixture.status === "complete" ? `${fixture.awayGoals}` : `-`}
+                <div className="ResultContainer">
+
+                  <div className="result">
+                    {fixture.status === "complete" ? `${fixture.awayGoals}` : `-`}
+                  </div>
                 </div>
-                <div className={`Last5`}>
-                  {fixture.formAway && (
-                    <>
-                      <span
-                        className={styleForm(
-                          fixture.formAway.resultsAll[4] || ""
-                        )}
-                      ></span>
-                      <span
-                        className={styleForm(
-                          fixture.formAway.resultsAll[3] || ""
-                        )}
-                      ></span>
-                      <span
-                        className={styleForm(
-                          fixture.formAway.resultsAll[2] || ""
-                        )}
-                      ></span>
-                      <span
-                        className={styleForm(
-                          fixture.formAway.resultsAll[1] || ""
-                        )}
-                      ></span>
-                      <span
-                        className={styleForm(
-                          fixture.formAway.resultsAll[0] || ""
-                        )}
-                      ></span>
-                    </>
-                  )}
+                <div className="FormContainer">
+                  <div className={`Last5`}>
+                    {fixture.formAway && (
+                      <>
+                        <span className="FormAllorHA">All</span>
+                        <span
+                          className={styleForm(
+                            fixture.formAway.resultsAll[4] || ""
+                          )}
+                        ></span>
+                        <span
+                          className={styleForm(
+                            fixture.formAway.resultsAll[3] || ""
+                          )}
+                        ></span>
+                        <span
+                          className={styleForm(
+                            fixture.formAway.resultsAll[2] || ""
+                          )}
+                        ></span>
+                        <span
+                          className={styleForm(
+                            fixture.formAway.resultsAll[1] || ""
+                          )}
+                        ></span>
+                        <span
+                          className={styleForm(
+                            fixture.formAway.resultsAll[0] || ""
+                          )}
+                        ></span>
+                      </>
+                    )}
+                  </div>
+                  <div className={`Last5Away`}>
+                    {fixture.formAway && (
+                      <>
+                        <span className="FormAllorHA">Away</span>
+                        <span
+                          className={styleForm(
+                            fixture.formAway.resultsAway[4] || ""
+                          )}
+                        ></span>
+                        <span
+                          className={styleForm(
+                            fixture.formAway.resultsAway[3] || ""
+                          )}
+                        ></span>
+                        <span
+                          className={styleForm(
+                            fixture.formAway.resultsAway[2] || ""
+                          )}
+                        ></span>
+                        <span
+                          className={styleForm(
+                            fixture.formAway.resultsAway[1] || ""
+                          )}
+                        ></span>
+                        <span
+                          className={styleForm(
+                            fixture.formAway.resultsAway[0] || ""
+                          )}
+                        ></span>
+                      </>
+                    )}
+                  </div>
                 </div>
                 <button className="GameStats" onClick={handleGameStatsClick}>
                   {downArrow}

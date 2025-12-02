@@ -421,6 +421,7 @@
   --secondary-background-color: rgb(248, 248, 248);
   /* White */
   --third-background-color: rgb(225, 225, 225);
+  --fourth-background-color: rgb(219, 219, 219);
   /* White */
   --text-color: #020029;
   /* Dark Blue */
@@ -449,6 +450,7 @@
   --alternate-background-color: rgb(26, 26, 26);
   /* White */
   --third-background-color: #1b1b1b;
+  --fourth-background-color: #1f1f1f;
   /* White */
   --text-color: #ffffff;
   /* White */
@@ -949,7 +951,7 @@ p {
   /* border: var(--primary-color) solid 1px; */
 }
 
-.O25Table .MuiTableCell-root{
+.O25Table .MuiTableCell-root {
   /* background-color: var(--background-color); */
   height: 5em;
   color: var(--text-color);
@@ -957,7 +959,7 @@ p {
   border: none;
 }
 
-.O25Table tr{
+.O25Table tr {
   background-color: var(--background-color);
   height: 5em;
   color: var(--text-color);
@@ -1368,7 +1370,8 @@ span.MembershipInfo {
 .columnOverviewScoreSmall {
   flex: 1em;
   background-color: yellow;
-  padding: 0.25em;
+  padding-top: 0.25em;
+  padding-bottom: 0.25em;
   color: black;
 }
 
@@ -1576,6 +1579,9 @@ strong {
   display: flex;
   padding-bottom: 2em;
   padding-top: 1em;
+  border: var(--accent-color) 1px solid;
+  margin-top: 1em;
+  font-size: 0.9em;
 }
 
 .individualFixtureContainerfalse {
@@ -1584,6 +1590,7 @@ strong {
   padding-top: 1em;
   border: var(--accent-color) 1px solid;
   margin-top: 1em;
+  font-size: 0.9em;
   /* margin-bottom: 1em; */
 }
 
@@ -1643,7 +1650,6 @@ strong {
   display: inline-flex;
   align-items: center;
   font-size: 1.2em;
-  padding-bottom: 0.25em;
 }
 
 .HomeAndAwayContainerundefined {
@@ -1657,7 +1663,13 @@ strong {
   flex-direction: column;
   border-left: #009700 solid 6px;
   flex-basis: 100%;
+}
 
+.HomeAndAwayContainerWonExactScore {
+  display: flex;
+  flex-direction: column;
+  border-left: 6px solid #009700;
+  border-right: 6px solid gold;
 }
 
 .HomeAndAwayContainerLost {
@@ -1702,14 +1714,20 @@ strong {
   display: inline-flex;
   align-items: center;
   font-size: 1em;
-  flex-basis: 60%;
+  min-width: 100%;
+  /* flex-basis: 60%; */
+  height: 5em;
+  align-self: center;
 }
 
 .AwayContainer {
   display: inline-flex;
   align-items: center;
   font-size: 1em;
-  flex-basis: 60%;
+  min-width: 100%;
+  /* flex-basis: 60%; */
+  height: 5em;
+  align-self: center;
 }
 
 .ActionButtons {
@@ -1809,8 +1827,7 @@ strong {
   border-color: #393d3f;
   height: 2.5em;
   /* order: 1; */
-  padding: 1em;
-  padding-left: 1.5em;
+  padding: 0.75em;
   /* padding-right: 0.5em; */
   flex-basis: 1%;
 }
@@ -1819,8 +1836,7 @@ strong {
   border-color: #393d3f;
   height: 2.5em;
   /* order: 5; */
-  padding: 1em;
-  padding-left: 1.5em;
+  padding: 0.75em;
   /* padding-right: 0.5em; */
   flex-basis: 1%;
 }
@@ -1835,7 +1851,7 @@ strong {
   /* order: 0; */
   /* font-size: 0.5em; */
   padding: 0.5em;
-  margin-left: 2em;
+  margin-left: 1.5em;
   background-color: var(--button-color);
   color: var(--button-text-color);
   width: 2.5em;
@@ -1909,7 +1925,7 @@ strong {
   /* order: 7; */
   /* font-size: 0.5em; */
   padding: 0.5em;
-  margin-left: 2em;
+  margin-left: 1.5em;
   background-color: var(--button-color);
   color: var(--button-text-color);
   width: 2.5em;
@@ -1952,7 +1968,7 @@ strong {
   flex-shrink: 2;
   /* display: inline-block; */
   text-align: left;
-  /* padding-left: 1em; */
+  padding-left: 1em;
   font-weight: bolder;
 }
 
@@ -1965,7 +1981,7 @@ strong {
   flex-shrink: 2;
   /* display: inline-block; */
   text-align: left;
-  /* padding-left: 1em; */
+  padding-left: 1em;
   font-weight: bolder;
 }
 
@@ -2022,13 +2038,26 @@ strong {
   text-align: left;
   padding-left: 2em;
   padding-top: 1em;
+}
 
+.ScoreContainer {
+  height: 100%;
+  align-content: center;
+  /* background-color: var(--fourth-background-color); */
+  width: 5em;
+}
+
+.ResultContainer {
+  height: 100%;
+  align-content: center;
+  /* background-color: var(--background-color); */
+  width: 5em;
 }
 
 .divider,
 .score {
   height: auto;
-  flex-basis: 5%;
+  width: 2em;
   /* width: auto; */
   /* max-width: 5em; */
   /* order: 3; */
@@ -2045,7 +2074,7 @@ strong {
 
 .result {
   height: auto;
-  flex-basis: 5%;
+  width: 2em;
   /* width: auto; */
   /* max-width: 5em; */
   /* order: 3; */
@@ -2055,6 +2084,7 @@ strong {
   background-color: #FFE500;
   border: black 1px solid;
   border-radius: 0px;
+  margin-left: 0.5em;
   margin-right: 0.5em;
   font-size: 1.1em;
   /* font-family: 'Fira Sans'; */
@@ -2827,9 +2857,9 @@ a.PreviousMatchLink {
 }
 
 canvas.DoughnutChart {
-  max-width: 17em;
-  max-height: 17em;
-  margin: 0.25em;
+  max-width: 18em;
+  max-height: 18em;
+  margin-top: 1em;
 }
 
 canvas.Pie {
@@ -2946,7 +2976,7 @@ canvas.Pie {
 }
 
 .flex-childOne li:nth-child(even) {
-  background-color: var(--secondary-background-color);
+  background-color: var(--background-color);
   color: var(--text-color);
 }
 
@@ -2960,7 +2990,7 @@ canvas.Pie {
 }
 
 .flex-childTwo li:nth-child(even) {
-  background-color: var(--secondary-background-color);
+  background-color: var(--background-color);
   color: var(--text-color);
 }
 
@@ -3318,6 +3348,7 @@ canvas.LeagueStatsRadar {
 
 .TeamStyle {
   padding-top: 1em;
+  padding-bottom: 1em;
   min-height: 13em;
 }
 
@@ -3391,9 +3422,9 @@ canvas.LeagueStatsRadar {
 .winSmall {
   background-color: #01a501;
   width: 1em;
-  /* Set width and height to create a circle */
   height: 1em;
-  margin: 0.1em;
+  margin-left: 0.2em;
+  margin-right: 0.2em;  
   padding: 0;
   /* Reset padding */
   border-radius: 50%;
@@ -3404,9 +3435,9 @@ canvas.LeagueStatsRadar {
 .lossSmall {
   background-color: #ca1100;
   width: 1em;
-  /* Set width and height to create a circle */
   height: 1em;
-  margin: 0.1em;
+  margin-left: 0.2em;
+  margin-right: 0.2em;
   padding: 0;
   /* Reset padding */
   border-radius: 50%;
@@ -3417,9 +3448,9 @@ canvas.LeagueStatsRadar {
 .drawSmall {
   background-color: #f69300;
   width: 1em;
-  /* Set width and height to create a circle */
   height: 1em;
-  margin: 0.1em;
+  margin-left: 0.2em;
+  margin-right: 0.2em;
   padding: 0;
   /* Reset padding */
   border-radius: 50%;
@@ -4206,6 +4237,15 @@ label {
   z-index: -1;
 }
 
+.DarkModeIcon {
+  width: 2em;
+  height: 2em;
+  font-size: 2.5em;
+  margin-right: 0em;
+  align-content: center;
+  margin-left: auto;
+}
+
 .DarkMode {
   position: fixed;
   top: 0;
@@ -4221,10 +4261,9 @@ label {
 }
 
 .BeGamblingAware {
-  margin-left: auto;
-  padding-right: 1em;
   color: var(--primary-color);
-  font-size: 1em;
+  font-size: 1.5em;
+  margin: 2em;
 }
 
 .age-badge {
@@ -4405,11 +4444,46 @@ input:active+.design::after {
   box-shadow: 0 1px 1px 0 rgba(0.1, 0.1, 0.1, 0.1), 0 1px 1px 0 #626262 inset;
 }
 
+.FormContainer {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-self: center;
+  flex-basis: 30%;
+  flex-wrap: nowrap;
+  margin-top: 1em;
+  margin-bottom: 1em;
+  gap: 0.5em;
+  text-align: left;
+}
+
 .Last5 {
   display: flex;
   padding-left: 0.2em;
   min-width: 6em;
+  align-items: center;
   align-self: center;
+}
+
+.Last5Home {
+  display: flex;
+  padding-left: 0.2em;
+  min-width: 6em;
+  align-items: center;
+  align-self: center;
+}
+
+.Last5Away {
+  display: flex;
+  padding-left: 0.2em;
+  min-width: 6em;
+  align-items: center;
+  align-self: center;
+}
+
+.FormAllorHA {
+  padding-right: 0.5em;
+  min-width: 3em;
 }
 
 .TeamStatsContainer canvas {
@@ -4652,6 +4726,7 @@ input {
   /* Set a height that visually balances the stacked inputs and their gap */
   /* height: 80px;  */
   padding: 1em;
+  min-width: 6em;
   /* margin-right: 3em;
   margin-left: 3em; */
   flex: 1;
@@ -5739,12 +5814,13 @@ button.AIInsights button:active {
 .ColumnBadge {
   height: 3em;
   width: 3em;
-  padding: 1em;
-  margin-left: 5em;
-  margin-right: 5em;
+  padding: 0.5em;
+  margin-left: 3em;
+  margin-right: 3em;
+  font-size: 1.7em;
   align-self: center;
   background-color: whitesmoke;
-  border-radius: 0.5rem;
+  border-radius: 50%;
 }
 
 .OpenStatsButton {

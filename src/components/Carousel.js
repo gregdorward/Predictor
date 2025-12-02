@@ -24,16 +24,19 @@ export const Slider = (props) => {
       className="mySwiper"
     >
       <SwiperSlide>
-       {props.element}
+        {props.element}
       </SwiperSlide>
       <SwiperSlide>
-      {props.element2}
+        {props.element2}
       </SwiperSlide>
       <SwiperSlide>
-      {props.element3}
+        {props.element3}
       </SwiperSlide>
       <SwiperSlide>
-      {props.element4}
+        {props.element4}
+      </SwiperSlide>
+      <SwiperSlide>
+        {props.element5}
       </SwiperSlide>
     </Swiper>
   );
