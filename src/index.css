@@ -5820,7 +5820,7 @@ button.AIInsights button:active {
   font-size: 1.7em;
   align-self: center;
   background-color: whitesmoke;
-  border-radius: 50%;
+  border-radius: 25%;
 }
 
 .OpenStatsButton {
