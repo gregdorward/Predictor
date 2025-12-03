@@ -29,8 +29,6 @@ function GetDivider(fixture, mock) {
   const matchStatus = fixture.status;
   let isPrediction = resultValue;
 
-  console.log(fixture)
-
   if (fixture.fixture.omit === true && matchStatus !== "complete") {
     isPrediction = true;
     return (
