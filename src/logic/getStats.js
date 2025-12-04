@@ -25,6 +25,7 @@ export async function calculateAttackingStrength(stats) {
     "Average Goals": 0.3,
     Corners: 0,
     "Average Shot Value": 0.1,
+    "Possession": 0,
   };
 
   // Define the ranges for normalization
@@ -39,7 +40,7 @@ export async function calculateAttackingStrength(stats) {
     "Average Shots On Target": { min: 3, max: 7 }, 
     
     // League average XG scored is typically 1.3 - 1.5
-    "Average Expected Goals": { min: 0.6, max: 2.1 }, 
+    "Average Expected Goals": { min: 0.6, max: 2.2 }, 
     "Recent XG": { min: 0.6, max: 2.2 },
     
     // League average Goals scored is typically 1.3 - 1.5

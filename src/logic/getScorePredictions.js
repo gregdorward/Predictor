@@ -727,9 +727,15 @@ async function getPastLeagueResults(team, game, hOrA, form) {
     const avCornersLast5 = allTeamResults.map((res) => res.corners).slice(0, 5);
     const avCornersLast5Sum = avCornersLast5.reduce((a, b) => a + b, 0);
     form.avCornersLast5 = avCornersLast5Sum / avCornersLast5.length;
+    const avPossessionOverall = allTeamResults
+      .map((res) => res.possession);
+    const avPossessionOverallSum = avPossessionOverall.reduce((a, b) => a + b, 0);
+    form.avPossessionOverall =
+      avPossessionOverallSum / avPossessionOverall.length;
+
     const avPosessionLast5 = allTeamResults
       .map((res) => res.possession)
-      .slice(0, 6);
+      .slice(0, 5);
     const avPosessionLast5Sum = avPosessionLast5.reduce((a, b) => a + b, 0);
     form.avPosessionLast5 = avPosessionLast5Sum / avPosessionLast5.length;
     const avXGLast5 = allTeamResults.map((res) => res.XG).slice(0, 5);
@@ -871,7 +877,7 @@ async function getPastLeagueResults(team, game, hOrA, form) {
     const dangerousAttacks = allTeamResults.map((res) => res.dangerousAttacks);
     const dangerousAttacksSum = dangerousAttacks.reduce((a, b) => a + b, 0);
     const avgDangerousAttacks =
-      dangerousAttacksSum / dangerousAttacks.length || 40;
+      dangerousAttacksSum / dangerousAttacks.length || 45;
 
     const dangerousAttacksHome = homeResults.map((res) => res.dangerousAttacks);
     const dangerousAttacksSumHome = dangerousAttacksHome.reduce(
@@ -879,7 +885,15 @@ async function getPastLeagueResults(team, game, hOrA, form) {
       40
     );
     form.avgDangerousAttacksHome =
-      dangerousAttacksSumHome / dangerousAttacksHome.length || 40;
+      dangerousAttacksSumHome / dangerousAttacksHome.length || 45;
+
+      const dangerousAttacksAgainstHome = homeResults.map((res) => res.dangerousAttacksAgainst);
+    const dangerousAttacksAgainstSumHome = dangerousAttacksAgainstHome.reduce(
+      (a, b) => a + b,
+      0
+    );
+    form.avgDangerousAttacksAgainstHome =
+      dangerousAttacksAgainstSumHome / dangerousAttacksAgainstHome.length || 45;
 
 
     const dangerousAttacksAway = awayResults.map((res) => res.dangerousAttacks);
@@ -888,7 +902,15 @@ async function getPastLeagueResults(team, game, hOrA, form) {
       0
     );
     form.avgDangerousAttacksAway =
-      dangerousAttacksSumAway / dangerousAttacksAway.length || 40;
+      dangerousAttacksSumAway / dangerousAttacksAway.length || 45;
+
+    const dangerousAttacksAgainstAway = awayResults.map((res) => res.dangerousAttacksAgainst);
+    const dangerousAttacksAgainstSumAway = dangerousAttacksAgainstAway.reduce(
+      (a, b) => a + b,
+      0
+    );
+    form.avgDangerousAttacksAgainstAway =
+      dangerousAttacksAgainstSumAway / dangerousAttacksAgainstAway.length || 45;
 
     const shots = allTeamResults.map((res) => res.shots);
     const shotsSum = shots.reduce((a, b) => a + b, 0);
@@ -930,7 +952,7 @@ async function getPastLeagueResults(team, game, hOrA, form) {
       0
     );
     form.avgDangerousAttacksAgainst =
-      dangerousAttacksAgainstSum / dangerousAttacksAgainst.length || 40;
+      dangerousAttacksAgainstSum / dangerousAttacksAgainst.length || 45;
 
     const dangerousAttacksAgainstLast5 = dangerousAttacksAgainst.slice(0, 5);
     const dangerousAttacksAgainstSumLast5 = dangerousAttacksAgainstLast5.reduce(
@@ -938,7 +960,7 @@ async function getPastLeagueResults(team, game, hOrA, form) {
       0
     );
     form.avgDangerousAttacksAgainstLast5 =
-      dangerousAttacksAgainstSumLast5 / dangerousAttacksAgainstLast5.length || 40;
+      dangerousAttacksAgainstSumLast5 / dangerousAttacksAgainstLast5.length || 45;
 
     const shotsOnTargetAgainst = allTeamResults.map((res) => res.sotAgainst);
     const shotsOnTargetSumAgainst = shotsOnTargetAgainst.reduce(
@@ -1732,6 +1754,9 @@ export async function generateGoals(homeForm, awayForm, match) {
   const homeDefenseWeakness = 1 - homeForm.defensiveStrengthScoreGenerationLast5;
   const awayDefenseWeaknessOverall = 1 - awayForm.defensiveStrengthScoreGeneration;
   const homeDefenseWeaknessOverall = 1 - homeForm.defensiveStrengthScoreGeneration;
+  const homeAverageStrengthHome = 1 - homeForm.defensiveStrengthHomeOnly;
+  const awayAverageStrengthAway = 1 - awayForm.defensiveStrengthAwayOnly;
+
 
   const homeLambda_raw =
     (homeForm.attackingStrengthLast5 * awayDefenseWeakness) *
@@ -1754,11 +1779,21 @@ export async function generateGoals(homeForm, awayForm, match) {
     SCALING_FACTOR * // <-- Now multiplying by 4.0 (the SCALING_FACTOR)
     averageGoalsPerTeam;
 
+  const homeLambda_homeOnly =
+    (homeForm.attackingStrengthHomeOnly * awayAverageStrengthAway) *
+    SCALING_FACTOR * // <-- Now multiplying by 4.0 (the SCALING_FACTOR)
+    averageGoalsPerTeam;
+
+  const awayLambda_awayOnly =
+    (awayForm.attackingStrengthAwayOnly * homeAverageStrengthHome) *
+    SCALING_FACTOR * // <-- Now multiplying by 4.0 (the SCALING_FACTOR)
+    averageGoalsPerTeam;
+
   const homeLambdaAverage = (homeLambda_raw + homeLambda_rawOverall) / 2;
   const awayLambdaAverage = (awayLambda_raw + awayLambda_rawOverall) / 2;
 
-  averageStrengthHome = averageStrengthHome + homeForm.defensiveStrengthScoreGenerationLast5
-  averageStrengthAway = averageStrengthAway + awayForm.defensiveStrengthScoreGenerationLast5
+  averageStrengthHome = averageStrengthHome + homeDefenseWeakness
+  averageStrengthAway = averageStrengthAway + awayDefenseWeakness
 
   averageAttackStrengthHome = averageAttackStrengthHome + homeForm.attackingStrength
   averageAttackStrengthAway = averageAttackStrengthAway + awayForm.attackingStrength
@@ -1880,7 +1915,7 @@ export async function generateGoals(homeForm, awayForm, match) {
     homeForm.defensiveStrengthScoreGeneration +
     homeForm.attackingStrengthLast5 +
     homeForm.defensiveStrengthScoreGenerationLast5 +
-    (homeForm.avPoints2 / 2)
+    (homeForm.avPoints2 - 1.5)
   // +
   // homeForm.attackingStrengthHomeOnly +
   // homeForm.defensiveStrengthScoreGenerationHomeOnly;
@@ -1890,10 +1925,14 @@ export async function generateGoals(homeForm, awayForm, match) {
     awayForm.defensiveStrengthScoreGeneration +
     awayForm.attackingStrengthLast5 +
     awayForm.defensiveStrengthScoreGenerationLast5 +
-    (awayForm.avPoints2 / 2)
+    (awayForm.avPoints2 - 1.5)
   // +
   // awayForm.attackingStrengthAwayOnly +
   // awayForm.defensiveStrengthScoreGenerationAwayOnly;
+
+  // Cumulative ROI for all 1141 match outcomes: +2.22%
+
+
 
   const XGRatingHomeComparison = await comparison(
     homeForm.XGRating,
@@ -1952,10 +1991,10 @@ export async function generateGoals(homeForm, awayForm, match) {
       (awayForm.actualToXGDifference / 20) + (XGRatingAwayComparison * 0.1);
   } else {
     homeGoals = (homeLambda_final + 0.1)
-      + (XGRatingHomeComparison * 0.3);
+      + (XGRatingHomeComparison * 0.4);
 
     awayGoals = (awayLambda_final - 0.1)
-      + (XGRatingAwayComparison * 0.3);
+      + (XGRatingAwayComparison * 0.4);
   }
 
 
@@ -2535,6 +2574,7 @@ export async function calculateScore(match, index, divider, calculate, AIPredict
       Corners: formAway.cornersAvAway
         ? formAway.cornersAvAway
         : formAway.CornersAverage,
+      
     };
 
     const attackingMetricsAway = {
@@ -2578,7 +2618,7 @@ export async function calculateScore(match, index, divider, calculate, AIPredict
         : formHome.XGAgainstAvgOverall,
       "Average Goals Against": formHome.avgConceeded,
       "Average SOT Against": formHome.AverageShotsOnTargetAgainstOverall,
-      "Average Dangerous Attacks Against": formHome.avgDangerousAttacksAgainst,
+      "Average Dangerous Attacks Against": formHome.avgDangerousAttacksAgainst.toFixed(2),
     };
 
     const defensiveMetricsHomeLast5 = {
@@ -2594,7 +2634,7 @@ export async function calculateScore(match, index, divider, calculate, AIPredict
       "Average SOT Against": formHome.avSOTAgainstLast5
         ? formHome.avSOTAgainstLast5
         : 5,
-      "Average Dangerous Attacks Against": formHome.avgDangerousAttacksAgainstLast5
+      "Average Dangerous Attacks Against": formHome.avgDangerousAttacksAgainstLast5.toFixed(2)
         ? formHome.avgDangerousAttacksAgainstLast5
         : formHome.avgDangerousAttacksAgainst,
 
@@ -2607,7 +2647,7 @@ export async function calculateScore(match, index, divider, calculate, AIPredict
         : formAway.XGAgainstAvgOverall,
       "Average Goals Against": formAway.avgConceeded,
       "Average SOT Against": formAway.AverageShotsOnTargetAgainstOverall,
-      "Average Dangerous Attacks Against": formAway.avgDangerousAttacksAgainst,
+      "Average Dangerous Attacks Against": formAway.avgDangerousAttacksAgainst.toFixed(2),
     };
 
     const defensiveMetricsAwayLast5 = {
@@ -2623,7 +2663,7 @@ export async function calculateScore(match, index, divider, calculate, AIPredict
       "Average SOT Against": formAway.avSOTAgainstLast5
         ? formAway.avSOTAgainstLast5
         : 5,
-      "Average Dangerous Attacks Against": formAway.avgDangerousAttacksAgainstLast5
+      "Average Dangerous Attacks Against": formAway.avgDangerousAttacksAgainstLast5.toFixed(2)
         ? formAway.avgDangerousAttacksAgainstLast5
         : formAway.avgDangerousAttacksAgainst,
     };
@@ -2704,14 +2744,14 @@ export async function calculateScore(match, index, divider, calculate, AIPredict
     );
 
     formHome.defensiveStrengthScoreGeneration =
-      await calculateDefensiveStrength(defensiveMetricsHome, 1);
+      await calculateDefensiveStrength(defensiveMetricsHome);
 
     formHome.defensiveStrengthLast5 = await calculateDefensiveStrength(
       defensiveMetricsHomeLast5
     );
 
     formHome.defensiveStrengthScoreGenerationLast5 =
-      await calculateDefensiveStrength(defensiveMetricsHomeLast5, 1);
+      await calculateDefensiveStrength(defensiveMetricsHomeLast5);
 
 
     formHome.defensiveStrengthHomeOnly = await calculateDefensiveStrength(
@@ -2719,28 +2759,28 @@ export async function calculateScore(match, index, divider, calculate, AIPredict
     );
 
     formHome.defensiveStrengthScoreGenerationHomeOnly =
-      await calculateDefensiveStrength(defensiveMetricsHomeOnly, 1);
+      await calculateDefensiveStrength(defensiveMetricsHomeOnly);
 
     formAway.defensiveStrength = await calculateDefensiveStrength(
       defensiveMetricsAway
     );
 
     formAway.defensiveStrengthScoreGeneration =
-      await calculateDefensiveStrength(defensiveMetricsAway, 1);
+      await calculateDefensiveStrength(defensiveMetricsAway);
 
     formAway.defensiveStrengthLast5 = await calculateDefensiveStrength(
       defensiveMetricsAwayLast5
     );
 
     formAway.defensiveStrengthScoreGenerationLast5 =
-      await calculateDefensiveStrength(defensiveMetricsAwayLast5, 1);
+      await calculateDefensiveStrength(defensiveMetricsAwayLast5);
 
     formAway.defensiveStrengthAwayOnly = await calculateDefensiveStrength(
       defensiveMetricsAwayOnly
     );
 
     formAway.defensiveStrengthScoreGenerationAwayOnly =
-      await calculateDefensiveStrength(defensiveMetricsAwayOnly, 1);
+      await calculateDefensiveStrength(defensiveMetricsAwayOnly);
 
     formHome.possessionStrength = await calculateMetricStrength(
       "averagePossession",
@@ -3659,6 +3699,7 @@ async function getSuccessMeasure(fixtures) {
                           specificLeagueResults[leagueName].totalInvestment) *
                         100
                       ).toFixed(2)}
+                      %
                     </p>
                   </div>
                 );
@@ -4000,24 +4041,24 @@ async function fetchLeagueStats() {
   // Use uniqueLeagueIDs array instead of iterating all keys in footyStatsToSofaScore
   const leagueObject = footyStatsToSofaScore[0];
 
-  for (const leagueId of uniqueLeagueIDs) {
-    const mapping = leagueObject[leagueId];
-    if (!mapping) continue; // skip if not found
+  // for (const leagueId of uniqueLeagueIDs) {
+  //   const mapping = leagueObject[leagueId];
+  //   if (!mapping) continue; // skip if not found
 
-    const { id: sofaScoreId, season: sofaScoreSeason } = mapping;
+  //   const { id: sofaScoreId, season: sofaScoreSeason } = mapping;
 
-    try {
-      const leagueTeamStatsResponse = await fetch(
-        `${process.env.REACT_APP_EXPRESS_SERVER}LeagueTeamStats/${sofaScoreId}/${sofaScoreSeason}/${week}`
-      );
-      const teamStats = await leagueTeamStatsResponse.json();
-      allLeagueStats[`leagueStats${leagueId}`] = teamStats;
-      console.log(`Fetched stats for league ${leagueId}`);
-    } catch (error) {
-      console.error(`Error fetching stats for league ${leagueId}:`, error);
-      allLeagueStats[`leagueStats${leagueId}`] = { error: error.message };
-    }
-  }
+  //   try {
+  //     const leagueTeamStatsResponse = await fetch(
+  //       `${process.env.REACT_APP_EXPRESS_SERVER}LeagueTeamStats/${sofaScoreId}/${sofaScoreSeason}/${week}`
+  //     );
+  //     const teamStats = await leagueTeamStatsResponse.json();
+  //     allLeagueStats[`leagueStats${leagueId}`] = teamStats;
+  //     console.log(`Fetched stats for league ${leagueId}`);
+  //   } catch (error) {
+  //     console.error(`Error fetching stats for league ${leagueId}:`, error);
+  //     allLeagueStats[`leagueStats${leagueId}`] = { error: error.message };
+  //   }
+  // }
   return allLeagueStats;
 }
 
@@ -4043,24 +4084,24 @@ async function fetchPlayerStats() {
   // Use uniqueLeagueIDs array instead of iterating all keys in footyStatsToSofaScore
   const leagueObject = footyStatsToSofaScore[0];
 
-  for (const leagueId of uniqueLeagueIDs) {
-    const mapping = leagueObject[leagueId];
-    if (!mapping) continue; // skip if not found
+  // for (const leagueId of uniqueLeagueIDs) {
+  //   const mapping = leagueObject[leagueId];
+  //   if (!mapping) continue; // skip if not found
 
-    const { id: sofaScoreId, season: sofaScoreSeason } = mapping;
+  //   const { id: sofaScoreId, season: sofaScoreSeason } = mapping;
 
-    try {
-      const leagueTeamStatsResponse = await fetch(
-        `${process.env.REACT_APP_EXPRESS_SERVER}bestPlayers/${sofaScoreId}/${sofaScoreSeason}/${week}`
-      );
-      const teamStats = await leagueTeamStatsResponse.json();
-      allLeagueStats[`playerStats${leagueId}`] = teamStats;
-      console.log(`Fetched player stats for league ${leagueId}`);
-    } catch (error) {
-      console.error(`Error fetching player stats for league ${leagueId}:`, error);
-      allLeagueStats[`playerStats${leagueId}`] = { error: error.message };
-    }
-  }
+  //   try {
+  //     const leagueTeamStatsResponse = await fetch(
+  //       `${process.env.REACT_APP_EXPRESS_SERVER}bestPlayers/${sofaScoreId}/${sofaScoreSeason}/${week}`
+  //     );
+  //     const teamStats = await leagueTeamStatsResponse.json();
+  //     allLeagueStats[`playerStats${leagueId}`] = teamStats;
+  //     console.log(`Fetched player stats for league ${leagueId}`);
+  //   } catch (error) {
+  //     console.error(`Error fetching player stats for league ${leagueId}:`, error);
+  //     allLeagueStats[`playerStats${leagueId}`] = { error: error.message };
+  //   }
+  // }
 
   return allLeagueStats;
 }

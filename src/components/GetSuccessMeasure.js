@@ -126,7 +126,7 @@ const SuccessMeasure = ({ fixtures }) => {
                 {roi}%
               </h3>
               <p>Successful Predictions: {successCount}</p>
-              <p>Exact Scores: {exactScores}</p>
+              <p>Exact Scores: {exactScores}%</p>
             </div>
           );
         })}
