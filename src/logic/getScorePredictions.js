@@ -31,6 +31,7 @@ import { ThreeDots } from "react-loading-icons";
 import { uniqueLeagueIDs } from "./getFixtures";
 import { selectedTipType } from "../components/PredictionTypeRadio";
 import { InsightsPanel } from "../components/Insights"
+import { X } from "lucide-react";
 
 
 var myHeaders = new Headers();
@@ -739,14 +740,22 @@ async function getPastLeagueResults(team, game, hOrA, form) {
     const avPosessionLast5Sum = avPosessionLast5.reduce((a, b) => a + b, 0);
     form.avPosessionLast5 = avPosessionLast5Sum / avPosessionLast5.length;
     const avXGLast5 = allTeamResults.map((res) => res.XG).slice(0, 5);
+
     const avXGLast5Sum = avXGLast5.reduce((a, b) => a + b, 0);
     form.avXGLast5 = avXGLast5Sum / avXGLast5.length;
+    console.log(form.avXGLast5);
+
     const avXGAgainstLast5 = allTeamResults
       .map((res) => res.XGAgainst)
       .slice(0, 5);
-
     const avXGAgainstLast5Sum = avXGAgainstLast5.reduce((a, b) => a + b, 0);
     form.avXGAgainstLast5 = avXGAgainstLast5Sum / avXGAgainstLast5.length;
+    console.log(form.avXGAgainstLast5);
+
+    form.XGdifferential = await diff(
+      form.avXGLast5,
+      form.avXGAgainstLast5
+    );
 
     const averageOddsHome = oddsSumHome / teamsHomeResults.length;
     const averageOddsAway = oddsSumAway / teamsAwayResults.length;
@@ -887,7 +896,7 @@ async function getPastLeagueResults(team, game, hOrA, form) {
     form.avgDangerousAttacksHome =
       dangerousAttacksSumHome / dangerousAttacksHome.length || 45;
 
-      const dangerousAttacksAgainstHome = homeResults.map((res) => res.dangerousAttacksAgainst);
+    const dangerousAttacksAgainstHome = homeResults.map((res) => res.dangerousAttacksAgainst);
     const dangerousAttacksAgainstSumHome = dangerousAttacksAgainstHome.reduce(
       (a, b) => a + b,
       0
@@ -1539,61 +1548,6 @@ export async function getPointsDifferential(pointsHomeAvg, pointsAwayAvg) {
   return parseFloat(differential);
 }
 
-export async function getPointWeighting(pointsDiff) {
-  let pointsDiffWeightingHome;
-  let pointsDiffWeightingAway;
-
-  switch (true) {
-    case pointsDiff >= 2.5:
-      pointsDiffWeightingHome = 0.3;
-      pointsDiffWeightingAway = -0.3;
-      break;
-    case pointsDiff >= 2 && pointsDiff < 2.5:
-      pointsDiffWeightingHome = 0.2;
-      pointsDiffWeightingAway = -0.2;
-      break;
-    case pointsDiff >= 1.5 && pointsDiff < 2:
-      pointsDiffWeightingHome = 0.15;
-      pointsDiffWeightingAway = -0.15;
-      break;
-    case pointsDiff >= 1 && pointsDiff < 1.5:
-      pointsDiffWeightingHome = 0.1;
-      pointsDiffWeightingAway = -0.1;
-      break;
-    case pointsDiff >= 0.5 && pointsDiff < 1:
-      pointsDiffWeightingHome = 0.05;
-      pointsDiffWeightingAway = -0.05;
-      break;
-    case pointsDiff > -0.5 && pointsDiff < 0.5:
-      pointsDiffWeightingHome = 0;
-      pointsDiffWeightingAway = 0;
-      break;
-    case pointsDiff <= -0.5 && pointsDiff > -1:
-      pointsDiffWeightingHome = -0.05;
-      pointsDiffWeightingAway = 0.05;
-      break;
-    case pointsDiff <= -1 && pointsDiff > -1.5:
-      pointsDiffWeightingHome = -0.1;
-      pointsDiffWeightingAway = 0.1;
-      break;
-    case pointsDiff <= -1.5 && pointsDiff > -2:
-      pointsDiffWeightingHome = -0.15;
-      pointsDiffWeightingAway = 0.15;
-      break;
-    case pointsDiff <= -2 && pointsDiff > -2.5:
-      pointsDiffWeightingHome = -0.2;
-      pointsDiffWeightingAway = 0.2;
-      break;
-    case pointsDiff <= -2.5:
-      pointsDiffWeightingHome = -0.3;
-      pointsDiffWeightingAway = 0.3;
-      break;
-    default:
-      pointsDiffWeightingHome = 0;
-      pointsDiffWeightingAway = 0;
-  }
-  return [pointsDiffWeightingHome, pointsDiffWeightingAway];
-}
 
 export async function compareFormTrend(recentForm, distantForm) {
   let score;
@@ -1618,69 +1572,6 @@ export async function compareFormTrend(recentForm, distantForm) {
 
 export async function getPointAverage(pointTotal, games) {
   return pointTotal / games;
-}
-
-async function poissonDistribution(lambda, k) {
-  const numerator = Math.exp(-lambda) * Math.pow(lambda, k);
-  const denominator = factorial(k);
-  return numerator / denominator;
-}
-
-function factorial(n) {
-  if (n === 0 || n === 1) {
-    return 1;
-  }
-  let result = 1;
-  for (let i = 2; i <= n; i++) {
-    result *= i;
-  }
-  return result;
-}
-
-async function calculateAverageGoals(goalsFor) {
-  const totalGoals = goalsFor.reduce((sum, goals) => sum + goals, 0);
-  return totalGoals / goalsFor.length;
-}
-
-async function adjustGoalsAvg(goalsAvg, strengthRatio) {
-  return goalsAvg * strengthRatio;
-}
-
-async function normalizeDifference(value1, value2) {
-  // Calculate the absolute difference between the two values
-  const difference = Math.abs(value1 - value2);
-
-  // Define a fixed maximum possible difference (you can adjust this value based on your needs)
-  const maxDifference = 25; // Adjust this based on your expected data
-
-  // Normalize the difference to a 0-1 range
-  const normalizedDifference = difference / maxDifference;
-
-  // Map to range 0.25 to 1.75 inversely for value1 and value2
-  const scaleMin = 0.8;
-  const scaleMax = 1.2;
-
-  // The multiplier now stretches across the 0.25 to 1.75 range (difference is 1.5)
-  const multiplier = 0.2;
-
-  let value1Normalized, value2Normalized;
-
-  if (value1 > value2) {
-    value1Normalized = 1 + normalizedDifference * multiplier; // Closer to 1.75
-    value2Normalized = 1 - normalizedDifference * multiplier; // Closer to 0.25
-  } else if (value1 < value2) {
-    value1Normalized = 1 - normalizedDifference * multiplier; // Closer to 0.25
-    value2Normalized = 1 + normalizedDifference * multiplier; // Closer to 1.75
-  } else {
-    // If the values are equal, normalize both to 1
-    value1Normalized = 1;
-    value2Normalized = 1;
-  }
-
-  return {
-    value1Normalized: Math.max(scaleMin, Math.min(value1Normalized, scaleMax)),
-    value2Normalized: Math.max(scaleMin, Math.min(value2Normalized, scaleMax)),
-  };
 }
 
 async function normalizeValues(value1, value2, minRange, maxRange) {
@@ -1716,20 +1607,6 @@ async function normalizeValues(value1, value2, minRange, maxRange) {
   return { normalizedValue1, normalizedValue2 };
 }
 
-async function findClosestProperty(obj, number) {
-  let closestProperty = null;
-  let smallestDifference = Infinity;
-
-  for (const [key, value] of Object.entries(obj)) {
-    const difference = Math.abs(number - value);
-    if (difference < smallestDifference) {
-      smallestDifference = difference;
-      closestProperty = key;
-    }
-  }
-
-  return closestProperty;
-}
 
 export async function generateGoals(homeForm, awayForm, match) {
   const leagueObject = leagueAveragesData.find(league => league.id === match.leagueID);
@@ -2297,11 +2174,6 @@ export async function calculateScore(match, index, divider, calculate, AIPredict
 
       teams[i][index].shortTermGoalDifference =
         teams[i][0].ScoredAverage - teams[i][0].ConcededAverage;
-
-      teams[i][index].XGdifferential = await diff(
-        teams[i][index].avXGLast5,
-        teams[i][index].avXGAgainstLast5
-      );
     }
 
     homeOdds = match.homeOdds;
@@ -2326,16 +2198,8 @@ export async function calculateScore(match, index, divider, calculate, AIPredict
       formAway
     );
 
-    let XGdifferential = await diff(
-      formHome.XGdifferential,
-      formAway.XGdifferential
-    );
 
-    formHome.teamName = match.homeTeam;
-    formAway.teamName = match.awayTeam;
 
-    match.XGdifferentialValue = Math.abs(XGdifferential);
-    match.XGdifferentialValueRaw = parseFloat(XGdifferential);
     if (
       allLeagueResultsArrayOfObjects[match.leagueIndex].fixtures.length > 10 &&
       match.leagueID !== 7956
@@ -2481,6 +2345,22 @@ export async function calculateScore(match, index, divider, calculate, AIPredict
       formAway.avPoints6
     );
 
+    console.log(formHome)
+    console.log(formAway)
+    console.log(formHome.XGdifferential)
+    console.log(formAway.XGdifferential)
+    let XGdifferential = await diff(
+      formHome.XGdifferential,
+      formAway.XGdifferential
+    );
+
+    console.log(XGdifferential);
+
+    formHome.teamName = match.homeTeam;
+    formAway.teamName = match.awayTeam;
+
+    match.XGdifferentialValue = Math.abs(XGdifferential);
+    match.XGdifferentialValueRaw = parseFloat(XGdifferential);
     formHome.AttackingPotency = (formHome.XG / formHome.AttacksHome) * 100;
     formAway.AttackingPotency = (formAway.XG / formAway.AttacksAverage) * 100;
 
@@ -2574,7 +2454,7 @@ export async function calculateScore(match, index, divider, calculate, AIPredict
       Corners: formAway.cornersAvAway
         ? formAway.cornersAvAway
         : formAway.CornersAverage,
-      
+
     };
 
     const attackingMetricsAway = {
@@ -3187,9 +3067,10 @@ export async function calculateScore(match, index, divider, calculate, AIPredict
 
     console.log(`drawPredictions: ${drawPredictions}`);
 
+    console.log(XGdifferential);
     if (
-      (XGdifferential > 0.7 && match.prediction === "homeWin") ||
-      (XGdifferential < -1.2 && match.prediction === "awayWin")
+      (XGdifferential > 1 && match.prediction === "homeWin") ||
+      (XGdifferential < -1.4 && match.prediction === "awayWin")
     ) {
       match.XGdifferential = true;
     } else {
@@ -4041,24 +3922,24 @@ async function fetchLeagueStats() {
   // Use uniqueLeagueIDs array instead of iterating all keys in footyStatsToSofaScore
   const leagueObject = footyStatsToSofaScore[0];
 
-  for (const leagueId of uniqueLeagueIDs) {
-    const mapping = leagueObject[leagueId];
-    if (!mapping) continue; // skip if not found
+  // for (const leagueId of uniqueLeagueIDs) {
+  //   const mapping = leagueObject[leagueId];
+  //   if (!mapping) continue; // skip if not found
 
-    const { id: sofaScoreId, season: sofaScoreSeason } = mapping;
+  //   const { id: sofaScoreId, season: sofaScoreSeason } = mapping;
 
-    try {
-      const leagueTeamStatsResponse = await fetch(
-        `${process.env.REACT_APP_EXPRESS_SERVER}LeagueTeamStats/${sofaScoreId}/${sofaScoreSeason}/${week}`
-      );
-      const teamStats = await leagueTeamStatsResponse.json();
-      allLeagueStats[`leagueStats${leagueId}`] = teamStats;
-      console.log(`Fetched stats for league ${leagueId}`);
-    } catch (error) {
-      console.error(`Error fetching stats for league ${leagueId}:`, error);
-      allLeagueStats[`leagueStats${leagueId}`] = { error: error.message };
-    }
-  }
+  //   try {
+  //     const leagueTeamStatsResponse = await fetch(
+  //       `${process.env.REACT_APP_EXPRESS_SERVER}LeagueTeamStats/${sofaScoreId}/${sofaScoreSeason}/${week}`
+  //     );
+  //     const teamStats = await leagueTeamStatsResponse.json();
+  //     allLeagueStats[`leagueStats${leagueId}`] = teamStats;
+  //     console.log(`Fetched stats for league ${leagueId}`);
+  //   } catch (error) {
+  //     console.error(`Error fetching stats for league ${leagueId}:`, error);
+  //     allLeagueStats[`leagueStats${leagueId}`] = { error: error.message };
+  //   }
+  // }
   return allLeagueStats;
 }
 
@@ -4084,24 +3965,24 @@ async function fetchPlayerStats() {
   // Use uniqueLeagueIDs array instead of iterating all keys in footyStatsToSofaScore
   const leagueObject = footyStatsToSofaScore[0];
 
-  for (const leagueId of uniqueLeagueIDs) {
-    const mapping = leagueObject[leagueId];
-    if (!mapping) continue; // skip if not found
+  // for (const leagueId of uniqueLeagueIDs) {
+  //   const mapping = leagueObject[leagueId];
+  //   if (!mapping) continue; // skip if not found
 
-    const { id: sofaScoreId, season: sofaScoreSeason } = mapping;
+  //   const { id: sofaScoreId, season: sofaScoreSeason } = mapping;
 
-    try {
-      const leagueTeamStatsResponse = await fetch(
-        `${process.env.REACT_APP_EXPRESS_SERVER}bestPlayers/${sofaScoreId}/${sofaScoreSeason}/${week}`
-      );
-      const teamStats = await leagueTeamStatsResponse.json();
-      allLeagueStats[`playerStats${leagueId}`] = teamStats;
-      console.log(`Fetched player stats for league ${leagueId}`);
-    } catch (error) {
-      console.error(`Error fetching player stats for league ${leagueId}:`, error);
-      allLeagueStats[`playerStats${leagueId}`] = { error: error.message };
-    }
-  }
+  //   try {
+  //     const leagueTeamStatsResponse = await fetch(
+  //       `${process.env.REACT_APP_EXPRESS_SERVER}bestPlayers/${sofaScoreId}/${sofaScoreSeason}/${week}`
+  //     );
+  //     const teamStats = await leagueTeamStatsResponse.json();
+  //     allLeagueStats[`playerStats${leagueId}`] = teamStats;
+  //     console.log(`Fetched player stats for league ${leagueId}`);
+  //   } catch (error) {
+  //     console.error(`Error fetching player stats for league ${leagueId}:`, error);
+  //     allLeagueStats[`playerStats${leagueId}`] = { error: error.message };
+  //   }
+  // }
 
   return allLeagueStats;
 }
@@ -4354,7 +4235,7 @@ export async function getScorePrediction(day, mocked) {
         bttsArray.push(match);
       }
       if (
-        match.unroundedGoalsA + match.unroundedGoalsB > 4 &&
+        match.unroundedGoalsA + match.unroundedGoalsB > 3.5 &&
         match.goalsA + match.goalsB > 2 &&
         match.GoalsInGamesAverageHome > 3 &&
         match.GoalsInGamesAverageAway > 3
@@ -4444,6 +4325,8 @@ export async function getScorePrediction(day, mocked) {
         };
         XGDiffTips.push(XGPredictionObject);
       }
+
+      console.log(XGDiffTips);
 
       if (
         match.pointsDifferential === true &&

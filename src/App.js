@@ -45,7 +45,7 @@ import {
 import { generateFixtures } from "./logic/getFixtures";
 import { BrowserRouter as Router, Route, Routes, Link } from "react-router-dom";
 import PrivacyPolicy from "./components/PrivacyPolicy";
-import Over18Badge from './components/images/18.png';
+import Over18Badge from './components/images/18.webp';
 import { createRoot } from 'react-dom/client';
 
 export const proxyurl = "https://safe-caverns-99679.herokuapp.com/";
@@ -477,7 +477,7 @@ export async function getLeagueList() {
   } else {
     render(
       <div className="NonFixtureInfo">
-        <h3 className="MembersGetMore">Welcome to Soccer Stats Hub</h3>
+        <h3 className="MembersGetMore">Welcome to <span className="TitleColouring">Soccer Stats Hub</span></h3>
         <div className="MembersGetMore">Browse as a free user or upgrade to premium for as little as £1/week, cancel anytime</div>
         <div className="MembersGetMoreUnderlined" onClick={() => {
           const FixtureList = document.getElementById("Buttons");
