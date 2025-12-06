@@ -1553,8 +1553,8 @@ export async function generateFixtures(
               className={"GeneratePredictionsButton"}
               id={"GeneratePredictionsButton"}
             />
-            <div className="Version">Prediction engine v1.8.1 (04/12/25)</div>
-            <div className="MissingPredictionsNotice">If predictions are missing on games with little data, switch to AI tips in the options, above</div>
+            <div className="Version">Prediction engine v1.8.2 (06/12/25)</div>
+            <div className="MissingPredictionsNotice">If AI predictions are missing for a game, you can generate one with the "Match Preview" button</div>
             <Collapsable
               buttonText={"Filters"}
               className={"Filters2"}

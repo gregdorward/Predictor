@@ -478,7 +478,7 @@ export async function getLeagueList() {
     render(
       <div className="NonFixtureInfo">
         <h3 className="MembersGetMore">Welcome to <span className="TitleColouring">Soccer Stats Hub</span></h3>
-        <div className="MembersGetMore">Browse as a free user or upgrade to premium for as little as £1/week, cancel anytime</div>
+        <div className="MembersGetMore">Sign up for a free account or upgrade to premium for as little as £1/week, cancel anytime</div>
         <div className="MembersGetMoreUnderlined" onClick={() => {
           const FixtureList = document.getElementById("Buttons");
           if (FixtureList) {
@@ -663,9 +663,8 @@ function AppContent() {
         <div className="NonFixtureInfo">
           <div className="SubscribeContainer">
             <span className="MembershipInfo">
-              Full fixtures and multis are restricted to premium members. Memberships
-              can be cancelled at any time and prices will differ in currencies other
-              than GBP. Payments are securely hosted by Stripe.
+              While account creation is free, full fixtures and multis are restricted to premium members. Memberships
+              can be cancelled at any time - no contracts, no tie-ins. Payments are securely hosted by Stripe.
             </span>
 
             {/* Helper function to handle the click logic */}

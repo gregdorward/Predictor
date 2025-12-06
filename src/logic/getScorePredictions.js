@@ -1792,7 +1792,9 @@ export async function generateGoals(homeForm, awayForm, match) {
     homeForm.defensiveStrengthScoreGeneration +
     homeForm.attackingStrengthLast5 +
     homeForm.defensiveStrengthScoreGenerationLast5 +
-    (homeForm.avPoints2 - 1.5)
+    homeForm.attackingStrengthHomeOnly +
+    homeForm.defensiveStrengthScoreGenerationHomeOnly +
+    (homeForm.avPoints2 / 5)
   // +
   // homeForm.attackingStrengthHomeOnly +
   // homeForm.defensiveStrengthScoreGenerationHomeOnly;
@@ -1802,7 +1804,9 @@ export async function generateGoals(homeForm, awayForm, match) {
     awayForm.defensiveStrengthScoreGeneration +
     awayForm.attackingStrengthLast5 +
     awayForm.defensiveStrengthScoreGenerationLast5 +
-    (awayForm.avPoints2 - 1.5)
+    awayForm.attackingStrengthAwayOnly +
+    awayForm.defensiveStrengthScoreGenerationAwayOnly +
+    (awayForm.avPoints2 / 5)
   // +
   // awayForm.attackingStrengthAwayOnly +
   // awayForm.defensiveStrengthScoreGenerationAwayOnly;
