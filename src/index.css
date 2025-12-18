@@ -1,4 +1,3 @@
-
 @media (max-width: 4000px) {
   body>#root {
     height: 100%;
@@ -655,7 +654,7 @@ h3.MembersGetMore {
   align-content: center;
 }
 
-.TitleColouring{
+.TitleColouring {
   color: var(--primary-color);
 }
 
@@ -752,7 +751,7 @@ h6 {
   flex-direction: row;
 }
 
-.LogoSubHeading{
+.LogoSubHeading {
   text-align: left;
   padding-left: 3em;
 }
@@ -1926,6 +1925,59 @@ strong {
   margin-right: auto;
   padding-top: 1em;
   font-size: 0.8em;
+}
+
+.modal-backdrop {
+  position: fixed;
+  /* Ensures it covers the entire viewport */
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.7);
+  /* Use a semi-transparent black for the overlay */
+  z-index: 1000;
+  /* Set a very high index to ensure it is on top */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: #020029;
+}
+
+#root>div>div.modal-backdrop>div>form>input[type=text] {
+  width: 90%;
+  height: 3em;
+  margin-left: auto;
+  margin-right: auto;
+  color: #020029;
+}
+
+.modal-content {
+  background: white;
+  width: 90%;
+  margin-left: auto;
+  margin-right: auto;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  /* The z-index here should still be below the backdrop if needed, but the backdrop handles the layering */
+  z-index: 1001;
+}
+
+.modal-content p{
+    color: #020029;
+}
+
+.modal-content input {
+    color: #020029;
+    border: 1px solid var(--primary-color);
+}
+
+
+.modal-content button{
+    background-color: #020029;
+    color: white;
+    margin-top: 2em;
 }
 
 *[class^='AwayOdds'] {
@@ -3431,7 +3483,7 @@ canvas.LeagueStatsRadar {
   width: 1em;
   height: 1em;
   margin-left: 0.2em;
-  margin-right: 0.2em;  
+  margin-right: 0.2em;
   padding: 0;
   /* Reset padding */
   border-radius: 50%;

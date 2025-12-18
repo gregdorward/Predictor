@@ -13,6 +13,7 @@ import { AuthProvider, useAuth } from "./logic/authProvider";
 import { getAuth } from "firebase/auth";
 import Login from "./components/Login";
 import { getCurrentUser } from "./components/ProtectedContent";
+import { doc, getDoc, collection, getDocs, query } from 'firebase/firestore';
 import { userDetail } from "./logic/authProvider";
 import { checkUserPaidStatus } from "./logic/hasUserPaid";
 import HamburgerMenu from "./components/HamburgerMenu";
@@ -29,6 +30,8 @@ import { SuccessPage } from "./components/Success"
 import { CancelPage } from "./components/Cancel"
 import PasswordReset from "./components/PasswordReset";
 import Logo from "./components/Logo";
+import { auth, db } from "./firebase";
+import UsernameModal from "./components/UsernameModal";
 import Footer from "./components/Footer"
 import {
   FacebookShareButton,
@@ -57,7 +60,7 @@ export var orderedLeagues = [];
 
 let loggedIn;
 export let paid = false;
-
+export let userTips;
 
 const menuItems = ['Home', 'bttsteams', 'Services', 'Contact'];
 
@@ -471,7 +474,7 @@ export async function getLeagueList() {
 
   if (loggedIn) {
     render(
-      <><div className="WelcomeBack">Welcome back {loggedIn.email}</div></>,
+      <><div className="WelcomeBack">Welcome back {loggedIn.email}</div><div className="WelcomeBack">Username: {loggedIn.displayName}</div> </>,
       "Email"
     );
   } else {
@@ -564,6 +567,69 @@ let welcomeTextOne = welcomeTextUnsplitOne.split("\n").map((i) => {
 
 function AppContent() {
   const { user, isPaidUser } = useAuth();
+  const [showUsernameModal, setShowUsernameModal] = useState(false);
+
+
+  useEffect(() => {
+    // ⭐️ Important: useEffect callback cannot be directly 'async'.
+    // Use an IIFE (Immediately Invoked Function Expression) inside.
+    const fetchData = async () => {
+        if (!user) {
+            setShowUsernameModal(false);
+            return;
+        }
+        
+        // 1. Check for displayName (Existing logic)
+        if (!user.displayName) {
+            console.log("User does not have a displayName. Prompting for username.");
+            setShowUsernameModal(true);
+            return;
+        }
+
+        console.log("User has displayName:", user.displayName);
+        setShowUsernameModal(false);
+
+        // --- FETCHING USER PROFILE (Top-level document) ---
+        const userDocRef = doc(db, "users", user.uid);
+        const docSnap = await getDoc(userDocRef);
+        
+        if (docSnap.exists()) {
+            console.log("User Profile Data:", docSnap.data());
+        } else {
+            console.warn("User document not found.");
+        }
+
+        // --- FETCHING THE TIPS SUBCOLLECTION (New Logic) ---
+        
+        // 1. Create a reference to the 'tips' subcollection
+        const tipsCollectionRef = collection(db, "users", user.uid, "tips");
+        
+        // 2. Optional: Create a query to order or limit the tips (e.g., show 10 most recent)
+        // const q = query(tipsCollectionRef, orderBy("date", "desc"), limit(10));
+        
+        // 3. Fetch all documents in the subcollection
+        const tipsSnapshot = await getDocs(tipsCollectionRef);
+
+        if (!tipsSnapshot.empty) {
+            // 4. Map the snapshot to an array of tip objects
+            userTips = tipsSnapshot.docs.map(tipDoc => ({
+                id: tipDoc.id, // The document ID is the gameId in your case
+                ...tipDoc.data()
+            }));
+
+            console.log(`Successfully retrieved ${userTips.length} tips.`);
+            console.log("Tips Data:", userTips);
+            
+            // ⭐️ Here you would call a state setter to store the tips in your component state
+            // setTips(userTips); 
+        } else {
+            console.log("No tips found in the 'tips' subcollection.");
+        }
+    };
+
+    fetchData();
+
+}, [user, db]); // Re-ru
 
   const [data, setData] = useState({
     loading: true,
@@ -634,6 +700,21 @@ function AppContent() {
 
   return (
     <div className="App">
+      {showUsernameModal && user && (
+        console.log("Rendering UsernameModal for user:", user),
+        <UsernameModal
+          auth={auth} // Use imported 'auth'
+          db={db}     // Use imported 'db'
+          user={user} // User object from useAuth()
+          onClose={() => setShowUsernameModal(false)}
+          onUsernameSet={() => {
+            // This function is called after the user successfully sets the name.
+            // It closes the modal, and the useEffect hook will prevent it from re-opening.
+            setShowUsernameModal(false);
+            // You might want to navigate the user or show a success message here.
+          }}
+        />
+      )}
       <div className="DarkMode">
         <Logo />
         <div className="DarkModeIcon">&#9681;</div>

@@ -32,8 +32,9 @@ import { uniqueLeagueIDs } from "./getFixtures";
 import { selectedTipType } from "../components/PredictionTypeRadio";
 import { InsightsPanel } from "../components/Insights"
 import { X } from "lucide-react";
-
-
+import { doc, getDoc, collection, getDocs, query } from 'firebase/firestore';
+import { auth, db } from "../firebase";
+import { userTips } from "../App"
 var myHeaders = new Headers();
 myHeaders.append("Origin", "https://gregdorward.github.io");
 
@@ -79,6 +80,7 @@ let allDrawOutcomes = 0;
 let totalROI = 0;
 let totalInvestment = 0;
 let totalProfit = 0;
+const resultedUserTipsArray = []
 export let formObjectHome;
 export let formObjectAway;
 export let clicked = false;
@@ -93,6 +95,37 @@ async function convertTimestamp(timestamp) {
   let converted = `${year}-${day}-${month}`;
 
   return converted;
+}
+
+const allIndividualTips = [];
+
+async function fetchAllUserTips() {
+  try {
+    const response = await fetch(`${process.env.REACT_APP_EXPRESS_SERVER}tips`);
+    const tipsData = await response.json(); // Format: { "UID1": [tips], "UID2": [tips] }
+
+
+    console.log(tipsData)
+    // Loop through each User ID in the object
+    Object.entries(tipsData).forEach(([uid, userTips]) => {
+      userTips.forEach((tip) => {
+        // We spread the tip and inject the UID so we know who it belongs to later
+        allIndividualTips.push({
+          ...tip,
+          uid: uid,
+          // Ensure these exist for the scoring logic later
+          status: tip.status || "PENDING",
+          stake: tip.stake || 10,
+          odds: parseFloat(tip.odds) || 0
+        });
+      });
+    });
+
+    return allIndividualTips; // Now a flat array of every single tip
+  } catch (error) {
+    console.error("Error fetching user tips:", error);
+    return [];
+  }
 }
 
 export function getPointsFromLastX(lastX) {
@@ -131,31 +164,30 @@ function isSameDayOrLater(targetTimestamp) {
   const targetDate = new Date(targetTimestamp * 1000);
   const currentDate = dynamicDate; // Current date-time
 
-  console.log("Target date:", targetDate);
-  console.log("Current date:", currentDate);
-
   // Reset both dates to UTC midnight for comparison
   targetDate.setUTCHours(0, 0, 0, 0);
   currentDate.setUTCHours(0, 0, 0, 0);
-
-  console.log("Target date (UTC midnight):", targetDate);
-  console.log("Current date (UTC midnight):", currentDate);
 
   return targetDate >= currentDate;
 }
 
 async function fetchUserTips() {
   try {
-    const userGeneratedTips = await fetch(
-      `${process.env.REACT_APP_EXPRESS_SERVER}tips`
-    );
-    const tips = await userGeneratedTips.json();
+    const response = await fetch(`${process.env.REACT_APP_EXPRESS_SERVER}tips`);
+    const tips = await response.json();
 
     const tipCounts = {};
+    let uidCount = 0;
+    let rejectedByDate = 0;
+    let totalTipsFound = 0;
 
-    // Process the tips
-    Object.values(tips).forEach((userTips) => {
-      userTips.forEach(({ gameId, game, tipString, date, odds }) => {
+    const uids = Object.keys(tips);
+    uidCount = uids.length;
+
+    Object.values(tips).forEach((userTipsArray) => {
+      userTipsArray.forEach(({ gameId, game, tipString, date, odds }) => {
+        totalTipsFound++;
+
         if (isSameDayOrLater(date)) {
           if (!tipCounts[gameId]) {
             tipCounts[gameId] = { game, tips: {} };
@@ -165,12 +197,17 @@ async function fetchUserTips() {
             tipCounts[gameId].tips[tipString] = { count: 0, odds };
           }
 
-          // Increment the respective tip count
           tipCounts[gameId].tips[tipString].count += 1;
+        } else {
+          rejectedByDate++;
         }
       });
     });
 
+    console.log(`Audit: Found ${uidCount} UIDs and ${totalTipsFound} total tips.`);
+    console.log(`Audit: ${rejectedByDate} tips were hidden because they are in the past.`);
+
+    // ... rest of your flatMap logic
     // Convert the object to an array and format output
     const formattedTips = Object.entries(tipCounts).flatMap(
       ([gameId, { game, tips }]) =>
@@ -198,15 +235,20 @@ async function fetchUserTips() {
   }
 }
 
+const fetchedTips = await fetchAllUserTips();
+
+
 function UserTips() {
   const [tips, setTips] = useState([]);
 
   const fetchAndSetUserTips = async () => {
-    const fetchedTips = await fetchUserTips();
-    if (fetchedTips) {
-      setTips(fetchedTips);
+    const fetchedTipsForDisplay = await fetchUserTips();
+    if (fetchedTipsForDisplay) {
+      setTips(fetchedTipsForDisplay);
     }
   };
+
+  console.log(tips)
 
   return (
     <div>
@@ -283,6 +325,38 @@ export let statsArray = {
   bttsArray: [],
   sotArray: []
 }
+
+
+function calculateWeightedXG(recentXG, oppositionPPG, leagueAvgPPG = 1.5) {
+  if (recentXG.length === 0 || recentXG.length !== oppositionPPG.length) {
+    return 0;
+  }
+
+  let weightedXGSum = 0;
+  let totalWeight = 0;
+
+  for (let i = 0; i < recentXG.length; i++) {
+    const xG = recentXG[i];
+    const oppPPG = oppositionPPG[i];
+
+    // Calculate the Difficulty Multiplier (D): 
+    // D will be > 1.0 for tough opponents, and < 1.0 for easy opponents.
+    const difficultyMultiplier = oppPPG / leagueAvgPPG;
+
+    // Apply the multiplier to the xG score
+    const weightedXG = xG * difficultyMultiplier;
+
+    weightedXGSum += weightedXG;
+
+    // We sum the multipliers instead of just counting 1 for each game.
+    // This ensures the average is correctly calculated based on the total applied weight.
+    totalWeight += difficultyMultiplier;
+  }
+
+  // The weighted average is the sum of weighted scores divided by the sum of the weights.
+  return weightedXGSum / totalWeight;
+}
+
 
 async function getPastLeagueResults(team, game, hOrA, form) {
   form.completeData = true;
@@ -1008,6 +1082,8 @@ async function getPastLeagueResults(team, game, hOrA, form) {
 
     [form.trueForm, form.totalExpectedPoints] = calculateOddsBasedTrueForm(form.pointsSum5, allTeamResults);
 
+    console.log(`True Form for team ID ${form.teamName}: ${form.trueForm}, Total Expected Points: ${form.totalExpectedPoints}`);
+
     const cornersHome = homeResults.map((res) => res.corners);
     const cornersSumHome = cornersHome.reduce((a, b) => a + b, 0);
     form.cornersAvHome = cornersSumHome / cornersHome.length || 0;
@@ -1018,7 +1094,7 @@ async function getPastLeagueResults(team, game, hOrA, form) {
 
     const last5XG = teamXGForAllRecentAtStart.slice(0, 5);
     const last5XGSum = last5XG.reduce((a, b) => a + b, 0);
-    const last5XGAvgFor = last5XGSum / last5XG.length || 0;
+    form.XGlast5 = last5XGSum / last5XG.length || 0;
 
     const last5XGHome = teamXGForHome.slice(0, 5);
     const last5XGSumHome = last5XGHome.reduce((a, b) => a + b, 0);
@@ -1043,6 +1119,14 @@ async function getPastLeagueResults(team, game, hOrA, form) {
     const last5XGAgainst = teamXGAgainstAllRecentAtStart.slice(0, 5);
     const last5XGAgainstSum = last5XGAgainst.reduce((a, b) => a + b, 0);
     const last5XGAvgAgainst = last5XGAgainstSum / last5XGAgainst.length || 0;
+    const opponentPPG = allTeamResults.map((res) => res.oppositionPPG); // Example opponent PPGs for last 5 matches
+    const opponentPPGLast5 = allTeamResults.map((res) => res.oppositionPPG).slice(0, 5); // Example opponent PPGs for last 5 matches
+
+    form.weightedXGAvgFor = calculateWeightedXG(teamXGForAll, opponentPPG, 1.5);
+    form.weightedXGAvgAgainst = calculateWeightedXG(teamXGAgainstAll, opponentPPG, 1.5);
+
+    form.weightedXGAvgForLast5 = calculateWeightedXG(last5XG, opponentPPGLast5, 1.5);
+    form.weightedXGAvgAgainstLast5 = calculateWeightedXG(last5XGAgainst, opponentPPGLast5, 1.5);
 
     const last5XGAgainstHome = teamXGForHome.slice(0, 5);
     const last5XGAgainstSumHome = last5XGAgainstHome.reduce((a, b) => a + b, 0);
@@ -1058,7 +1142,7 @@ async function getPastLeagueResults(team, game, hOrA, form) {
     form.XGDiffNonAverageLast5 = last5XGSum - last5XGAgainstSum;
 
     form.XGOverall = parseFloat(avgXGScored.toFixed(2));
-    form.XGlast5 = parseFloat(last5XGAvgFor.toFixed(2));
+    // form.XGlast5 = parseFloat(last5XGAvgFor.toFixed(2));
 
     const shotsLast5Arr = shots.slice(0, 5);
     const shotsLast5Sum = shotsLast5Arr.reduce((a, b) => a + b, 0);
@@ -1609,6 +1693,7 @@ async function normalizeValues(value1, value2, minRange, maxRange) {
 
 
 export async function generateGoals(homeForm, awayForm, match) {
+
   const leagueObject = leagueAveragesData.find(league => league.id === match.leagueID);
 
   let averageLeagueGoals = 2.5; // Default to null if not found
@@ -1669,6 +1754,8 @@ export async function generateGoals(homeForm, awayForm, match) {
   const homeLambdaAverage = (homeLambda_raw + homeLambda_rawOverall) / 2;
   const awayLambdaAverage = (awayLambda_raw + awayLambda_rawOverall) / 2;
 
+  console.log()
+
   averageStrengthHome = averageStrengthHome + homeDefenseWeakness
   averageStrengthAway = averageStrengthAway + awayDefenseWeakness
 
@@ -1690,7 +1777,6 @@ export async function generateGoals(homeForm, awayForm, match) {
     (averageGoalsPerTeam * LEAGUE_WEIGHT);
 
   //Cumulative ROI for all 1154 match outcomes: +0.72%
-
 
 
   // Calculate the away team's expected goal volume (lambda)
@@ -1872,10 +1958,10 @@ export async function generateGoals(homeForm, awayForm, match) {
       (awayForm.actualToXGDifference / 20) + (XGRatingAwayComparison * 0.1);
   } else {
     homeGoals = (homeLambda_final + 0.1)
-      + (XGRatingHomeComparison * 0.4);
+      + (XGRatingHomeComparison * 0.25);
 
     awayGoals = (awayLambda_final - 0.1)
-      + (XGRatingAwayComparison * 0.4);
+      + (XGRatingAwayComparison * 0.25);
   }
 
 
@@ -2382,7 +2468,7 @@ export async function calculateScore(match, index, divider, calculate, AIPredict
       "Average Shot Value": formHome.avgShotValueChart?.toFixed(2),
       "Average Shots On Target": formHome.AverageShotsOnTargetOverall,
       "Average Expected Goals": formHome.XGOverall,
-      "Recent XG": formHome.XGlast5,
+      "Weighted XG": formHome.weightedXGAvgFor,
       "Average Goals": formHome.avgScored,
       "Corners": formHome.AverageCorners,
     };
@@ -2401,7 +2487,7 @@ export async function calculateScore(match, index, divider, calculate, AIPredict
       "Average Expected Goals": formHome.XGlast5
         ? formHome.XGlast5
         : formHome.XGOverall,
-      "Recent XG": formHome.XGlast5 ? formHome.XGlast5 : formHome.XGOverall,
+      "Weighted XG": formHome.weightedXGAvgForLast5 ? formHome.weightedXGAvgForLast5 : formHome.XGOverall,
       "Average Goals": formHome.avScoredLast5
         ? formHome.avScoredLast5
         : formHome.ScoredAverage,
@@ -2424,8 +2510,8 @@ export async function calculateScore(match, index, divider, calculate, AIPredict
       "Average Expected Goals": formHome.avgXGScoredHome
         ? formHome.avgXGScoredHome
         : formHome.XGOverall,
-      "Recent XG": formHome.last5XGAvgForHome
-        ? formHome.last5XGAvgForHome
+      "Weighted XG": formHome.weightedXGAvgFor
+        ? formHome.weightedXGAvgFor
         : formHome.XGOverall,
       "Average Goals": formHome.avgScoredHome
         ? formHome.avgScoredHome
@@ -2449,8 +2535,8 @@ export async function calculateScore(match, index, divider, calculate, AIPredict
       "Average Expected Goals": formAway.avgXGScoredAway
         ? formAway.avgXGScoredAway
         : formAway.XGOverall,
-      "Recent XG": formAway.last5XGAvgForAway
-        ? formAway.last5XGAvgForAway
+      "Weighted XG": formAway.weightedXGAvgFor
+        ? formAway.weightedXGAvgFor
         : formAway.XGOverall,
       "Average Goals": formAway.avgScoredAway
         ? formAway.avgScoredAway
@@ -2467,7 +2553,7 @@ export async function calculateScore(match, index, divider, calculate, AIPredict
       "Average Shot Value": formAway.avgShotValueChart?.toFixed(2),
       "Average Shots On Target": formAway.AverageShotsOnTargetOverall,
       "Average Expected Goals": formAway.XGOverall,
-      "Recent XG": formAway.XGlast5,
+      "Weighted XG": formAway.weightedXGAvgFor,
       "Average Goals": formAway.avgScored,
       "Corners": formAway.AverageCorners,
     };
@@ -2486,7 +2572,7 @@ export async function calculateScore(match, index, divider, calculate, AIPredict
       "Average Expected Goals": formAway.XGlast5
         ? formAway.XGlast5
         : formAway.XGOverall,
-      "Recent XG": formAway.XGlast5 ? formAway.XGlast5 : formAway.XGOverall,
+      "Weighted XG": formAway.weightedXGAvgForLast5 ? formAway.weightedXGAvgForLast5 : formAway.XGOverall,
       "Average Goals": formAway.avScoredLast5
         ? formAway.avScoredLast5
         : formAway.ScoredAverage,
@@ -2497,8 +2583,8 @@ export async function calculateScore(match, index, divider, calculate, AIPredict
 
     const defensiveMetricsHome = {
       "Average XG Against": formHome.XGAgainstAvgOverall,
-      "Recent XG Against": formHome.XGAgainstlast5
-        ? formHome.XGAgainstlast5
+      "Weighted XG Against": formHome.weightedXGAvgAgainst
+        ? formHome.weightedXGAvgAgainst
         : formHome.XGAgainstAvgOverall,
       "Average Goals Against": formHome.avgConceeded,
       "Average SOT Against": formHome.AverageShotsOnTargetAgainstOverall,
@@ -2509,8 +2595,8 @@ export async function calculateScore(match, index, divider, calculate, AIPredict
       "Average XG Against": formHome.XGAgainstlast5
         ? formHome.XGAgainstlast5
         : formHome.XGAgainstAvgOverall,
-      "Recent XG Against": formHome.avXGAgainstLast5
-        ? formHome.avXGAgainstLast5
+      "Weighted XG Against": formHome.weightedXGAvgAgainstLast5
+        ? formHome.weightedXGAvgAgainstLast5
         : formHome.XGAgainstAvgOverall,
       "Average Goals Against": formHome.avConceededLast5
         ? formHome.avConceededLast5
@@ -2526,8 +2612,8 @@ export async function calculateScore(match, index, divider, calculate, AIPredict
 
     const defensiveMetricsAway = {
       "Average XG Against": formAway.XGAgainstAvgOverall,
-      "Recent XG Against": formAway.XGAgainstlast5
-        ? formAway.XGAgainstlast5
+      "Weighted XG Against": formAway.weightedXGAvgAgainst
+        ? formAway.weightedXGAvgAgainst
         : formAway.XGAgainstAvgOverall,
       "Average Goals Against": formAway.avgConceeded,
       "Average SOT Against": formAway.AverageShotsOnTargetAgainstOverall,
@@ -2538,8 +2624,8 @@ export async function calculateScore(match, index, divider, calculate, AIPredict
       "Average XG Against": formAway.XGAgainstlast5
         ? formAway.XGAgainstlast5
         : formAway.XGAgainstAvgOverall,
-      "Recent XG Against": formAway.avXGAgainstLast5
-        ? formAway.avXGAgainstLast5
+      "Weighted XG Against": formAway.weightedXGAvgAgainstLast5
+        ? formAway.weightedXGAvgAgainstLast5
         : formAway.XGAgainstAvgOverall,
       "Average Goals Against": formAway.avConceededLast5
         ? formAway.avConceededLast5
@@ -2556,8 +2642,8 @@ export async function calculateScore(match, index, divider, calculate, AIPredict
       "Average XG Against": formHome.avgXGConceededHome
         ? formHome.avgXGConceededHome
         : formHome.XGAgainstAvgOverall,
-      "Recent XG Against": formHome.last5XGAvgAgainstHome
-        ? formHome.last5XGAvgAgainstHome
+      "Weighted XG Against": formHome.weightedXGAvgAgainst
+        ? formHome.weightedXGAvgAgainst
         : formHome.XGAgainstAvgOverall,
       "Average Goals Against": formHome.teamConceededAvgHomeOnly
         ? formHome.teamConceededAvgHomeOnly
@@ -2571,8 +2657,8 @@ export async function calculateScore(match, index, divider, calculate, AIPredict
       "Average XG Against": formAway.avgXGConceededAway
         ? formAway.avgXGConceededAway
         : formAway.XGAgainstAvgOverall,
-      "Recent XG Against": formAway.last5XGAvgAgainstAway
-        ? formAway.last5XGAvgAgainstAway
+      "Weighted XG Against": formAway.weightedXGAvgAgainst
+        ? formAway.weightedXGAvgAgainst
         : formAway.XGAgainstAvgOverall,
       "Average Goals Against": formAway.teamConceededAvgAwayOnly
         ? formAway.teamConceededAvgAwayOnly
@@ -2979,6 +3065,10 @@ export async function calculateScore(match, index, divider, calculate, AIPredict
 
     let experimentalHomeGoals = formHome.teamGoalsCalc;
     let experimentalAwayGoals = formAway.teamGoalsCalc;
+
+    console.log(formHome);
+    console.log(formAway);
+
     let rawFinalHomeGoals = experimentalHomeGoals;
     let rawFinalAwayGoals = experimentalAwayGoals;
 
@@ -3208,6 +3298,37 @@ export async function calculateScore(match, index, divider, calculate, AIPredict
         break;
     }
 
+    console.log(fetchedTips)
+    //if the match.id is in my userTips array of objects, compare the match.outcome with the tip prediction. If it matches, add a profit value of 1 multiplied by the odds of that outcome (homeOdds, awayOdds or drawOdds)
+    // 1. Get ALL tips for this specific match (not just the first one)
+    const matchingTips = fetchedTips.filter((t) => String(t.gameId) === String(match.id));
+
+    if (matchingTips.length > 0 && match.status === "complete") {
+      matchingTips.forEach((tip) => {
+        if (tip.status === "PENDING") {
+          let isWinner = false;
+
+          switch (tip.tip) {
+            case "homeTeam": isWinner = match.outcome === "homeWin"; break;
+            case "awayTeam": isWinner = match.outcome === "awayWin"; break;
+            case "draw": isWinner = match.outcome === "draw"; break;
+            case "BTTS": isWinner = (match.homeGoals > 0 && match.awayGoals > 0); break;
+            case "over25": isWinner = (match.homeGoals + match.awayGoals) > 2.5; break;
+          }
+
+          // Update the properties on the ORIGINAL object in the array
+          tip.status = isWinner ? "WON" : "LOST";
+          tip.profit = isWinner ? (tip.stake * tip.odds) - tip.stake : -tip.stake;
+          tip.pointsChange = isWinner ? 1 : -1;
+          tip.result = tip.status; // Optional helper
+
+          // This array now contains individual tips with UIDs, ready for the DB
+          resultedUserTipsArray.push(tip);
+        }
+      });
+    }
+
+    console.log(resultedUserTipsArray)
     console.log(`allDrawOutcomes: ${allDrawOutcomes}`);
 
     if (match.matches_completed_minimum < 3 && selectedTipType !== "AI Tips") {
@@ -3422,6 +3543,60 @@ async function getSuccessMeasure(fixtures) {
   let profit = 0;
   let netProfit = 0;
 
+  let hasUpdates = false; // Initialize the flag
+
+  const updatedFlatTips = allIndividualTips.map((originalTip) => {
+    const match = resultedUserTipsArray.find(
+      (r) =>
+        r.uid === originalTip.uid &&
+        r.gameId === originalTip.gameId &&
+        r.tip === originalTip.tip
+    );
+
+    if (match) {
+      hasUpdates = true; // ⭐️ We found at least one update!
+      return { ...originalTip, ...match };
+    }
+
+    return originalTip;
+  });
+
+
+  const prepareTipsForS3 = (flatArray) => {
+    return flatArray.reduce((acc, tip) => {
+      const { uid, ...tipData } = tip; // Remove UID from the object as it becomes the key
+
+      if (!acc[uid]) {
+        acc[uid] = [];
+      }
+
+      acc[uid].push(tipData);
+      return acc;
+    }, {});
+  };
+
+  const finalS3Data = prepareTipsForS3(updatedFlatTips);
+  console.log(resultedUserTipsArray)
+
+  async function submitUpdatedTips(tips) {
+    return fetch(`${process.env.REACT_APP_EXPRESS_SERVER}result-tips`, {
+      method: "POST",
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(tips),
+    });
+  }
+
+  if (hasUpdates) {
+    await submitUpdatedTips(resultedUserTipsArray)
+  } else {
+    console.log("No new match results found. Skipping update.");
+  }
+
+
+
 
   for (let i = 0; i < fixtures.length; i++) {
     if (
@@ -3488,6 +3663,7 @@ async function getSuccessMeasure(fixtures) {
   console.log(`Total Investment: ${totalInvestment}`);
   console.log(`Total ROI: ${totalROI}`);
   console.log(typeof totalROI);
+
 
   let isPaid;
   if (userDetail) {
@@ -3926,24 +4102,24 @@ async function fetchLeagueStats() {
   // Use uniqueLeagueIDs array instead of iterating all keys in footyStatsToSofaScore
   const leagueObject = footyStatsToSofaScore[0];
 
-  for (const leagueId of uniqueLeagueIDs) {
-    const mapping = leagueObject[leagueId];
-    if (!mapping) continue; // skip if not found
+  // for (const leagueId of uniqueLeagueIDs) {
+  //   const mapping = leagueObject[leagueId];
+  //   if (!mapping) continue; // skip if not found
 
-    const { id: sofaScoreId, season: sofaScoreSeason } = mapping;
+  //   const { id: sofaScoreId, season: sofaScoreSeason } = mapping;
 
-    try {
-      const leagueTeamStatsResponse = await fetch(
-        `${process.env.REACT_APP_EXPRESS_SERVER}LeagueTeamStats/${sofaScoreId}/${sofaScoreSeason}/${week}`
-      );
-      const teamStats = await leagueTeamStatsResponse.json();
-      allLeagueStats[`leagueStats${leagueId}`] = teamStats;
-      console.log(`Fetched stats for league ${leagueId}`);
-    } catch (error) {
-      console.error(`Error fetching stats for league ${leagueId}:`, error);
-      allLeagueStats[`leagueStats${leagueId}`] = { error: error.message };
-    }
-  }
+  //   try {
+  //     const leagueTeamStatsResponse = await fetch(
+  //       `${process.env.REACT_APP_EXPRESS_SERVER}LeagueTeamStats/${sofaScoreId}/${sofaScoreSeason}/${week}`
+  //     );
+  //     const teamStats = await leagueTeamStatsResponse.json();
+  //     allLeagueStats[`leagueStats${leagueId}`] = teamStats;
+  //     console.log(`Fetched stats for league ${leagueId}`);
+  //   } catch (error) {
+  //     console.error(`Error fetching stats for league ${leagueId}:`, error);
+  //     allLeagueStats[`leagueStats${leagueId}`] = { error: error.message };
+  //   }
+  // }
   return allLeagueStats;
 }
 
@@ -3969,24 +4145,24 @@ async function fetchPlayerStats() {
   // Use uniqueLeagueIDs array instead of iterating all keys in footyStatsToSofaScore
   const leagueObject = footyStatsToSofaScore[0];
 
-  for (const leagueId of uniqueLeagueIDs) {
-    const mapping = leagueObject[leagueId];
-    if (!mapping) continue; // skip if not found
+  // for (const leagueId of uniqueLeagueIDs) {
+  //   const mapping = leagueObject[leagueId];
+  //   if (!mapping) continue; // skip if not found
 
-    const { id: sofaScoreId, season: sofaScoreSeason } = mapping;
+  //   const { id: sofaScoreId, season: sofaScoreSeason } = mapping;
 
-    try {
-      const leagueTeamStatsResponse = await fetch(
-        `${process.env.REACT_APP_EXPRESS_SERVER}bestPlayers/${sofaScoreId}/${sofaScoreSeason}/${week}`
-      );
-      const teamStats = await leagueTeamStatsResponse.json();
-      allLeagueStats[`playerStats${leagueId}`] = teamStats;
-      console.log(`Fetched player stats for league ${leagueId}`);
-    } catch (error) {
-      console.error(`Error fetching player stats for league ${leagueId}:`, error);
-      allLeagueStats[`playerStats${leagueId}`] = { error: error.message };
-    }
-  }
+  //   try {
+  //     const leagueTeamStatsResponse = await fetch(
+  //       `${process.env.REACT_APP_EXPRESS_SERVER}bestPlayers/${sofaScoreId}/${sofaScoreSeason}/${week}`
+  //     );
+  //     const teamStats = await leagueTeamStatsResponse.json();
+  //     allLeagueStats[`playerStats${leagueId}`] = teamStats;
+  //     console.log(`Fetched player stats for league ${leagueId}`);
+  //   } catch (error) {
+  //     console.error(`Error fetching player stats for league ${leagueId}:`, error);
+  //     allLeagueStats[`playerStats${leagueId}`] = { error: error.message };
+  //   }
+  // }
 
   return allLeagueStats;
 }
@@ -4265,6 +4441,8 @@ export async function getScorePrediction(day, mocked) {
         };
         Over25Tips.push(Over25PredictionObject);
       }
+
+      console.log(match);
 
       if (
         match.XGdifferential === true &&

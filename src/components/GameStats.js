@@ -2510,45 +2510,45 @@ function GameStats({ game, displayBool, stats }) {
   }
 
   async function submitSingleTip(tip) {
-  return fetch(`${process.env.REACT_APP_EXPRESS_SERVER}tips`, {
-    method: "POST",
-    headers: {
-      Accept: "application/json",
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify(tip),
-  });
-}
+    return fetch(`${process.env.REACT_APP_EXPRESS_SERVER}tips`, {
+      method: "POST",
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(tip),
+    });
+  }
 
 
-function handleSetUserTips(gameId, game, tipString, tip, date, uid, odds) {
-  const newTip = { gameId, game, tipString, tip, date, uid, odds };
+  function handleSetUserTips(gameId, game, tipString, tip, date, uid, odds, status, stake) {
+    const newTip = { gameId, game, tipString, tip, date, uid, odds, status, stake };
+    console.log(newTip)
+    setUserTips((prevTips) => {
+      const existingTipIndex = prevTips.findIndex(
+        (tip) => tip.gameId === gameId
+      );
 
-  setUserTips((prevTips) => {
-    const existingTipIndex = prevTips.findIndex(
-      (tip) => tip.gameId === gameId
-    );
+      let updatedTips;
 
-    let updatedTips;
+      if (existingTipIndex !== -1) {
+        updatedTips = [...prevTips];
+        updatedTips[existingTipIndex] = newTip;
+      } else {
+        updatedTips = [...prevTips, newTip];
+      }
 
-    if (existingTipIndex !== -1) {
-      updatedTips = [...prevTips];
-      updatedTips[existingTipIndex] = newTip;
-    } else {
-      updatedTips = [...prevTips, newTip];
-    }
+      // Persist to localStorage
+      localStorage.setItem("userTips", JSON.stringify(updatedTips));
 
-    // Persist to localStorage
-    localStorage.setItem("userTips", JSON.stringify(updatedTips));
+      return updatedTips;
+    });
 
-    return updatedTips;
-  });
-
-  // Submit the tip immediately (no need to await)
-  submitSingleTip(newTip)
-    .then(() => console.log("Tip submitted"))
-    .catch((err) => console.error("Error submitting tip", err));
-}
+    // Submit the tip immediately (no need to await)
+    submitSingleTip(newTip)
+      .then(() => console.log("Tip submitted"))
+      .catch((err) => console.error("Error submitting tip", err));
+  }
 
 
 
@@ -3431,23 +3431,35 @@ function handleSetUserTips(gameId, game, tipString, tip, date, uid, odds) {
     handleTipSelect,
   }) => {
     const handleClick = (tipType, label) => {
+
+      console.log(game)
+      let odds;
+      if (tipType === "homeWin") {
+        odds = parseFloat(game.homeOdds);
+        // outcome = game.outcome;
+      } else if (tipType === "awayWin") {
+        odds = game.awayOdds;
+        // outcome = game.outcome;
+      } else if (tipType === "draw") {
+        odds = game.drawOdds;
+        // outcome = game.outcome;
+      } else if (tipType === "BTTS") {
+        odds = game.bttsOdds;
+        // outcome = game.bttsOutcome;
+      } else if (tipType === "over25") {
+        odds = game.over25Odds;
+        // outcome = game.over25PredictionOutcome;
+      }
+      console.log(odds)
       if (selectedTip === tipType) {
         return; // If the button clicked is already selected, do nothing
       }
 
-      let odds;
 
-      if (tipType === "homeTeam") {
-        odds = game.homeOdds;
-      } else if (tipType === "awayTeam") {
-        odds = game.awayOdds;
-      } else if (tipType === "draw") {
-        odds = game.drawOdds;
-      } else if (tipType === "BTTS") {
-        odds = game.bttsOdds;
-      } else if (tipType === "over25") {
-        odds = game.over25Odds;
-      }
+
+      //bttsOutcome
+      //over25PredictionOutcome
+      //outcome
 
       handleTipSelect(tipType); // Update parent state
       handleSetUserTips(
@@ -3457,8 +3469,8 @@ function handleSetUserTips(gameId, game, tipString, tip, date, uid, odds) {
         tipType,
         game.date,
         userDetail.uid,
-        odds
-      );
+        odds,
+        "PENDING");
     };
 
     return (
@@ -3467,12 +3479,12 @@ function handleSetUserTips(gameId, game, tipString, tip, date, uid, odds) {
           id="TipButtonHome"
           className="TipButton"
           style={{
-            backgroundColor: selectedTip === "homeTeam" ? "#fe8c00" : "white",
-            color: selectedTip === "homeTeam" ? "white" : "#030052",
-            border: `1px solid ${selectedTip === "homeTeam" ? "#fe8c00" : "#030052"
+            backgroundColor: selectedTip === "homeWin" ? "#fe8c00" : "white",
+            color: selectedTip === "homeWiin" ? "white" : "#030052",
+            border: `1px solid ${selectedTip === "homeWin" ? "#fe8c00" : "#030052"
               }`,
           }}
-          onClick={() => handleClick("homeTeam", `${game.homeTeam} to win`)}
+          onClick={() => handleClick("homeWin", `${game.homeTeam} to win`)}
         >
           Home
         </button>
@@ -3495,12 +3507,12 @@ function handleSetUserTips(gameId, game, tipString, tip, date, uid, odds) {
           id="TipButtonAway"
           className="TipButton"
           style={{
-            backgroundColor: selectedTip === "awayTeam" ? "#fe8c00" : "white",
+            backgroundColor: selectedTip === "awayWin" ? "#fe8c00" : "white",
             color: selectedTip === "awayTeam" ? "white" : "#030052",
-            border: `1px solid ${selectedTip === "awayTeam" ? "#fe8c00" : "#030052"
+            border: `1px solid ${selectedTip === "awayWin" ? "#fe8c00" : "#030052"
               }`,
           }}
-          onClick={() => handleClick("awayTeam", `${game.awayTeam} to win`)}
+          onClick={() => handleClick("awayWin", `${game.awayTeam} to win`)}
         >
           Away
         </button>
