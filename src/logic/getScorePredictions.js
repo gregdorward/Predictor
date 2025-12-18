@@ -177,58 +177,52 @@ async function fetchUserTips() {
     const tips = await response.json();
 
     const tipCounts = {};
-    let uidCount = 0;
-    let rejectedByDate = 0;
-    let totalTipsFound = 0;
-
-    const uids = Object.keys(tips);
-    uidCount = uids.length;
 
     Object.values(tips).forEach((userTipsArray) => {
-      userTipsArray.forEach(({ gameId, game, tipString, date, odds }) => {
-        totalTipsFound++;
-
+      userTipsArray.forEach(({ gameId, game, tipString, date, odds, tipper }) => {
         if (isSameDayOrLater(date)) {
           if (!tipCounts[gameId]) {
             tipCounts[gameId] = { game, tips: {} };
           }
 
           if (!tipCounts[gameId].tips[tipString]) {
-            tipCounts[gameId].tips[tipString] = { count: 0, odds };
+            // Initialize tippers as an empty array
+            tipCounts[gameId].tips[tipString] = { count: 0, odds, tippers: [] };
           }
 
           tipCounts[gameId].tips[tipString].count += 1;
-        } else {
-          rejectedByDate++;
+          
+          // Add the tipper name to the array if it exists
+          if (tipper) {
+            tipCounts[gameId].tips[tipString].tippers.push(tipper);
+          }
         }
       });
     });
 
-    console.log(`Audit: Found ${uidCount} UIDs and ${totalTipsFound} total tips.`);
-    console.log(`Audit: ${rejectedByDate} tips were hidden because they are in the past.`);
-
-    // ... rest of your flatMap logic
-    // Convert the object to an array and format output
     const formattedTips = Object.entries(tipCounts).flatMap(
       ([gameId, { game, tips }]) =>
-        Object.entries(tips).map(([tipString, { count, odds }]) => ({
-          game,
-          tipString,
-          count,
-          formatted: (
-            <>
-              {tipString} @ {odds} <br />
-              {game} <br />
-              Tips - {count}
-            </>
-          ),
-        }))
+        Object.entries(tips).map(([tipString, { count, odds, tippers }]) => {
+          // Join names with a comma, or show nothing if empty
+          const tipperList = tippers.length > 0 ? ` (${tippers.join(", ")})` : "";
+          
+          return {
+            game,
+            tipString,
+            count,
+            formatted: (
+              <>
+                <strong>{tipString} @ {odds}</strong> <br />
+                {game} <br />
+                Tips - {count}{tipperList}
+              </>
+            ),
+          };
+        })
     );
 
-    // Sort by count in descending order
     formattedTips.sort((a, b) => b.count - a.count);
-
-    return formattedTips.slice(0, 10); // ✅ Sorted list with game name, tipString, and count
+    return formattedTips.slice(0, 10);
   } catch (error) {
     console.error("Error fetching user tips:", error);
     return null;

@@ -574,62 +574,63 @@ function AppContent() {
     // ⭐️ Important: useEffect callback cannot be directly 'async'.
     // Use an IIFE (Immediately Invoked Function Expression) inside.
     const fetchData = async () => {
-        if (!user) {
-            setShowUsernameModal(false);
-            return;
-        }
-        
-        // 1. Check for displayName (Existing logic)
-        if (!user.displayName) {
-            console.log("User does not have a displayName. Prompting for username.");
-            setShowUsernameModal(true);
-            return;
-        }
-
-        console.log("User has displayName:", user.displayName);
+      if (!user) {
         setShowUsernameModal(false);
+        return;
+      }
 
-        // --- FETCHING USER PROFILE (Top-level document) ---
-        const userDocRef = doc(db, "users", user.uid);
-        const docSnap = await getDoc(userDocRef);
-        
-        if (docSnap.exists()) {
-            console.log("User Profile Data:", docSnap.data());
-        } else {
-            console.warn("User document not found.");
-        }
+      // 1. Check for displayName (Existing logic)
+      if (!user.displayName) {
+        console.log("User does not have a displayName. Prompting for username.");
+        setShowUsernameModal(true);
+        return;
+      }
 
-        // --- FETCHING THE TIPS SUBCOLLECTION (New Logic) ---
-        
-        // 1. Create a reference to the 'tips' subcollection
-        const tipsCollectionRef = collection(db, "users", user.uid, "tips");
-        
-        // 2. Optional: Create a query to order or limit the tips (e.g., show 10 most recent)
-        // const q = query(tipsCollectionRef, orderBy("date", "desc"), limit(10));
-        
-        // 3. Fetch all documents in the subcollection
-        const tipsSnapshot = await getDocs(tipsCollectionRef);
+      console.log("Main Profile:", user.displayName);
+      console.log("Provider Info:", user.providerData[0]?.displayName);
+      setShowUsernameModal(false);
 
-        if (!tipsSnapshot.empty) {
-            // 4. Map the snapshot to an array of tip objects
-            userTips = tipsSnapshot.docs.map(tipDoc => ({
-                id: tipDoc.id, // The document ID is the gameId in your case
-                ...tipDoc.data()
-            }));
+      // --- FETCHING USER PROFILE (Top-level document) ---
+      const userDocRef = doc(db, "users", user.uid);
+      const docSnap = await getDoc(userDocRef);
 
-            console.log(`Successfully retrieved ${userTips.length} tips.`);
-            console.log("Tips Data:", userTips);
-            
-            // ⭐️ Here you would call a state setter to store the tips in your component state
-            // setTips(userTips); 
-        } else {
-            console.log("No tips found in the 'tips' subcollection.");
-        }
+      if (docSnap.exists()) {
+        console.log("User Profile Data:", docSnap.data());
+      } else {
+        console.warn("User document not found.");
+      }
+
+      // --- FETCHING THE TIPS SUBCOLLECTION (New Logic) ---
+
+      // 1. Create a reference to the 'tips' subcollection
+      const tipsCollectionRef = collection(db, "users", user.uid, "tips");
+
+      // 2. Optional: Create a query to order or limit the tips (e.g., show 10 most recent)
+      // const q = query(tipsCollectionRef, orderBy("date", "desc"), limit(10));
+
+      // 3. Fetch all documents in the subcollection
+      const tipsSnapshot = await getDocs(tipsCollectionRef);
+
+      if (!tipsSnapshot.empty) {
+        // 4. Map the snapshot to an array of tip objects
+        userTips = tipsSnapshot.docs.map(tipDoc => ({
+          id: tipDoc.id, // The document ID is the gameId in your case
+          ...tipDoc.data()
+        }));
+
+        console.log(`Successfully retrieved ${userTips.length} tips.`);
+        console.log("Tips Data:", userTips);
+
+        // ⭐️ Here you would call a state setter to store the tips in your component state
+        // setTips(userTips); 
+      } else {
+        console.log("No tips found in the 'tips' subcollection.");
+      }
     };
 
     fetchData();
 
-}, [user, db]); // Re-ru
+  }, [user, db]); // Re-ru
 
   const [data, setData] = useState({
     loading: true,

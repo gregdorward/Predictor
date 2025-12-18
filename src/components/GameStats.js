@@ -47,6 +47,8 @@ import {
 import { rounds } from "./TeamOfTheSeason";
 import StarRating from "../components/StarRating";
 import { handleCheckout, stripePromise } from "../App"
+import { AuthProvider, useAuth } from "../logic/authProvider";
+
 // import FutureFixturesSideBySide from "./FutureFixturesSideBySide";
 export let userTips;
 let setUserTips;
@@ -57,6 +59,8 @@ const LazyFutureFixturesSideBySide = lazy(() => import('./FutureFixturesSideBySi
 // let id, team1, team2, timestamp, homeGoals, awayGoals;
 
 function GameStats({ game, displayBool, stats }) {
+  console.log(userDetail)
+  // const { user } = useAuth();
 
   const [openSections, setOpenSections] = useState({});
 
@@ -2521,8 +2525,8 @@ function GameStats({ game, displayBool, stats }) {
   }
 
 
-  function handleSetUserTips(gameId, game, tipString, tip, date, uid, odds, status, stake) {
-    const newTip = { gameId, game, tipString, tip, date, uid, odds, status, stake };
+  function handleSetUserTips(gameId, game, tipString, tip, date, uid, odds, status, stake, tipper) {
+    const newTip = { gameId, game, tipString, tip, date, uid, odds, status, stake, tipper };
     console.log(newTip)
     setUserTips((prevTips) => {
       const existingTipIndex = prevTips.findIndex(
@@ -3455,8 +3459,6 @@ function GameStats({ game, displayBool, stats }) {
         return; // If the button clicked is already selected, do nothing
       }
 
-
-
       //bttsOutcome
       //over25PredictionOutcome
       //outcome
@@ -3470,7 +3472,10 @@ function GameStats({ game, displayBool, stats }) {
         game.date,
         userDetail.uid,
         odds,
-        "PENDING");
+        "PENDING",
+        1,
+        userDetail.displayName
+      );
     };
 
     return (
