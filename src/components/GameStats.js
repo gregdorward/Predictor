@@ -3600,7 +3600,7 @@ function GameStats({ game, displayBool, stats }) {
   return (
     <>
       <div className="ExpandingStats">
-        {/* {isBeforeTimestamp(game.date) && ( */}
+        {isBeforeTimestamp(game.date) && (
           <>
             <h2>Your Prediction</h2>
             <UserTips
@@ -3611,7 +3611,7 @@ function GameStats({ game, displayBool, stats }) {
               handleTipSelect={handleTipSelect} // Pass handler down
             />
           </>
-        {/* )} */}
+        )}
         <div style={style}>
           <div style={style}>
             <Collapsable
