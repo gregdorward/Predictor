@@ -595,7 +595,7 @@ function AppContent() {
       const docSnap = await getDoc(userDocRef);
 
       if (docSnap.exists()) {
-        console.log("User Profile Data:", docSnap.data());
+        console.log("User Profile Data fetched");
       } else {
         console.warn("User document not found.");
       }
@@ -617,9 +617,6 @@ function AppContent() {
           id: tipDoc.id, // The document ID is the gameId in your case
           ...tipDoc.data()
         }));
-
-        console.log(`Successfully retrieved ${userTips.length} tips.`);
-        console.log("Tips Data:", userTips);
 
         // ⭐️ Here you would call a state setter to store the tips in your component state
         // setTips(userTips); 
@@ -702,7 +699,6 @@ function AppContent() {
   return (
     <div className="App">
       {showUsernameModal && user && (
-        console.log("Rendering UsernameModal for user:", user),
         <UsernameModal
           auth={auth} // Use imported 'auth'
           db={db}     // Use imported 'db'

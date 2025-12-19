@@ -105,8 +105,6 @@ async function fetchAllUserTips() {
     const response = await fetch(`${process.env.REACT_APP_EXPRESS_SERVER}tips`);
     const tipsData = await response.json(); // Format: { "UID1": [tips], "UID2": [tips] }
 
-
-    console.log(tipsData)
     // Loop through each User ID in the object
     Object.entries(tipsData).forEach(([uid, userTips]) => {
       userTips.forEach((tip) => {
@@ -178,7 +176,6 @@ async function fetchUserTips() {
     const tips = await response.json();
 
     const tipCounts = {};
-    console.log(tips)
 
     Object.values(tips).forEach((userTipsArray) => {
       userTipsArray.forEach(({ gameId, game, tipString, date, odds, tipper, status }) => {
@@ -835,14 +832,12 @@ async function getPastLeagueResults(team, game, hOrA, form) {
 
     const avXGLast5Sum = avXGLast5.reduce((a, b) => a + b, 0);
     form.avXGLast5 = avXGLast5Sum / avXGLast5.length;
-    console.log(form.avXGLast5);
 
     const avXGAgainstLast5 = allTeamResults
       .map((res) => res.XGAgainst)
       .slice(0, 5);
     const avXGAgainstLast5Sum = avXGAgainstLast5.reduce((a, b) => a + b, 0);
     form.avXGAgainstLast5 = avXGAgainstLast5Sum / avXGAgainstLast5.length;
-    console.log(form.avXGAgainstLast5);
 
     form.XGdifferential = await diff(
       form.avXGLast5,
@@ -1772,8 +1767,6 @@ export async function generateGoals(homeForm, awayForm, match) {
   const homeLambdaAverage = (homeLambda_raw + homeLambda_rawOverall) / 2;
   const awayLambdaAverage = (awayLambda_raw + awayLambda_rawOverall) / 2;
 
-  console.log()
-
   averageStrengthHome = averageStrengthHome + homeDefenseWeakness
   averageStrengthAway = averageStrengthAway + awayDefenseWeakness
 
@@ -2453,16 +2446,11 @@ export async function calculateScore(match, index, divider, calculate, AIPredict
       formAway.avPoints6
     );
 
-    console.log(formHome)
-    console.log(formAway)
-    console.log(formHome.XGdifferential)
-    console.log(formAway.XGdifferential)
+
     let XGdifferential = await diff(
       formHome.XGdifferential,
       formAway.XGdifferential
     );
-
-    console.log(XGdifferential);
 
     formHome.teamName = match.homeTeam;
     formAway.teamName = match.awayTeam;
@@ -3084,9 +3072,6 @@ export async function calculateScore(match, index, divider, calculate, AIPredict
     let experimentalHomeGoals = formHome.teamGoalsCalc;
     let experimentalAwayGoals = formAway.teamGoalsCalc;
 
-    console.log(formHome);
-    console.log(formAway);
-
     let rawFinalHomeGoals = experimentalHomeGoals;
     let rawFinalAwayGoals = experimentalAwayGoals;
 
@@ -3179,7 +3164,6 @@ export async function calculateScore(match, index, divider, calculate, AIPredict
 
     console.log(`drawPredictions: ${drawPredictions}`);
 
-    console.log(XGdifferential);
     if (
       (XGdifferential > 1 && match.prediction === "homeWin") ||
       (XGdifferential < -1.4 && match.prediction === "awayWin")
@@ -3316,7 +3300,6 @@ export async function calculateScore(match, index, divider, calculate, AIPredict
         break;
     }
 
-    console.log(fetchedTips)
     //if the match.id is in my userTips array of objects, compare the match.outcome with the tip prediction. If it matches, add a profit value of 1 multiplied by the odds of that outcome (homeOdds, awayOdds or drawOdds)
     // 1. Get ALL tips for this specific match (not just the first one)
     const matchingTips = fetchedTips.filter((t) => String(t.gameId) === String(match.id));
@@ -3326,8 +3309,6 @@ export async function calculateScore(match, index, divider, calculate, AIPredict
         if (tip.status === "PENDING") {
           let isWinner = false;
 
-          console.log(tip)
-          console.log(match.outcome)
 
           switch (tip.tip) {
             case "homeWin": isWinner = match.outcome === "homeWin"; break;
@@ -3349,7 +3330,6 @@ export async function calculateScore(match, index, divider, calculate, AIPredict
       });
     }
 
-    console.log(resultedUserTipsArray)
     console.log(`allDrawOutcomes: ${allDrawOutcomes}`);
 
     if (match.matches_completed_minimum < 3 && selectedTipType !== "AI Tips") {
@@ -3597,7 +3577,6 @@ async function getSuccessMeasure(fixtures) {
   };
 
   const finalS3Data = prepareTipsForS3(updatedFlatTips);
-  console.log(resultedUserTipsArray)
 
   async function submitUpdatedTips(tips) {
     return fetch(`${process.env.REACT_APP_EXPRESS_SERVER}result-tips`, {
@@ -3697,11 +3676,6 @@ async function getSuccessMeasure(fixtures) {
   const averageAttackStrengthAvgAway = averageAttackStrengthAway / totalInvestment
 
   console.log(`totalInvestment: ${totalInvestment}`);
-
-  console.log(`averageStrengthHomeAvg: ${averageStrengthHomeAvg}`);
-  console.log(`averageStrengthAwayAvg: ${averageStrengthAwayAvg}`);
-  console.log(`averageAttackStrengthAvgHome: ${averageAttackStrengthAvgHome}`);
-  console.log(`averageAttackStrengthAvgAway: ${averageAttackStrengthAvgAway}`);
 
   statsArray.trueFormArray.sort((a, b) => a.score - b.score);
   statsArray.bttsArray.sort((a, b) => a.score - b.score);
@@ -4463,8 +4437,6 @@ export async function getScorePrediction(day, mocked) {
         Over25Tips.push(Over25PredictionObject);
       }
 
-      console.log(match);
-
       if (
         match.XGdifferential === true &&
         match.prediction === "homeWin" &&
@@ -4528,8 +4500,6 @@ export async function getScorePrediction(day, mocked) {
         };
         XGDiffTips.push(XGPredictionObject);
       }
-
-      console.log(XGDiffTips);
 
       if (
         match.pointsDifferential === true &&
@@ -5120,7 +5090,6 @@ async function renderTips() {
   } else if (paid !== true) {
     console.log(paid)
     newArray = newArray.slice(0, 6);
-    console.log(newArray)
     render(
       <div className="PredictionContainer">
         <Fragment>
