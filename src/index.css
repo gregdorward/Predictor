@@ -1489,7 +1489,7 @@ span.MembershipInfo {
 
 .UserTipsList {
   padding: 1em;
-  border: white 1px dashed;
+  border: var(--text-color) 1px dashed;
   margin: 0.5em;
   background-color: var(--background-color);
 }
@@ -1497,13 +1497,31 @@ span.MembershipInfo {
 .UserTipsListItems {
   padding-top: 0.5em;
   padding-bottom: 0.5em;
-  font-size: 1.1em;
 }
 
+.UserTipsList :nth-child(odd) {
+  background-color: var(--secondary-background-color);
+}
 strong {
   font-weight: bold !important;
 }
+ 
+strong.WON {
+  color: #009700;
+}
 
+strong.LOST {
+  color: #b10f00
+}
+.leaderboard-container {
+  margin-bottom: 2em;
+}
+
+.leaderboard-table th, 
+.leaderboard-table td {
+  padding: 1em;
+  border-bottom: 1px solid #eee; /* Optional: adds nice separation */
+}
 /* Base styles for the checkbox */
 .star {
   appearance: none;

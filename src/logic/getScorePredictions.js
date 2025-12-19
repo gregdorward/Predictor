@@ -35,6 +35,7 @@ import { X } from "lucide-react";
 import { doc, getDoc, collection, getDocs, query } from 'firebase/firestore';
 import { auth, db } from "../firebase";
 import { userTips } from "../App"
+import MonthlyLeaderboard from "../components/TippingTable"
 var myHeaders = new Headers();
 myHeaders.append("Origin", "https://gregdorward.github.io");
 
@@ -177,9 +178,10 @@ async function fetchUserTips() {
     const tips = await response.json();
 
     const tipCounts = {};
+    console.log(tips)
 
     Object.values(tips).forEach((userTipsArray) => {
-      userTipsArray.forEach(({ gameId, game, tipString, date, odds, tipper }) => {
+      userTipsArray.forEach(({ gameId, game, tipString, date, odds, tipper, status }) => {
         if (isSameDayOrLater(date)) {
           if (!tipCounts[gameId]) {
             tipCounts[gameId] = { game, tips: {} };
@@ -187,11 +189,11 @@ async function fetchUserTips() {
 
           if (!tipCounts[gameId].tips[tipString]) {
             // Initialize tippers as an empty array
-            tipCounts[gameId].tips[tipString] = { count: 0, odds, tippers: [] };
+            tipCounts[gameId].tips[tipString] = { count: 0, odds, status, tippers: [] };
           }
 
           tipCounts[gameId].tips[tipString].count += 1;
-          
+
           // Add the tipper name to the array if it exists
           if (tipper) {
             tipCounts[gameId].tips[tipString].tippers.push(tipper);
@@ -202,18 +204,19 @@ async function fetchUserTips() {
 
     const formattedTips = Object.entries(tipCounts).flatMap(
       ([gameId, { game, tips }]) =>
-        Object.entries(tips).map(([tipString, { count, odds, tippers }]) => {
+        Object.entries(tips).map(([tipString, { count, odds, tippers, status }]) => {
           // Join names with a comma, or show nothing if empty
           const tipperList = tippers.length > 0 ? ` (${tippers.join(", ")})` : "";
-          
           return {
             game,
             tipString,
             count,
+            status,
             formatted: (
               <>
-                <strong>{tipString} @ {odds}</strong> <br />
-                {game} <br />
+                {game}
+                <br />
+                <strong className={status}>{tipString} @ {odds}</strong><br />
                 Tips - {count}{tipperList}
               </>
             ),
@@ -222,7 +225,7 @@ async function fetchUserTips() {
     );
 
     formattedTips.sort((a, b) => b.count - a.count);
-    return formattedTips.slice(0, 10);
+    return formattedTips.slice(0, 20);
   } catch (error) {
     console.error("Error fetching user tips:", error);
     return null;
@@ -234,40 +237,61 @@ const fetchedTips = await fetchAllUserTips();
 
 function UserTips() {
   const [tips, setTips] = useState([]);
+  const [isVisible, setIsVisible] = useState(false); // New: Tracks visibility
+  const [loading, setLoading] = useState(false);    // New: Tracks API call
 
   const fetchAndSetUserTips = async () => {
+    setLoading(true);
     const fetchedTipsForDisplay = await fetchUserTips();
+
     if (fetchedTipsForDisplay) {
       setTips(fetchedTipsForDisplay);
+      setIsVisible(true); // Show the list once data is ready
     }
+    setLoading(false);
   };
 
-  console.log(tips)
+  // 1. If we haven't clicked the button yet, ONLY show the button.
+  if (!isVisible && !loading) {
+    return (
+      <div className="UserTipsContainer">
+        <button onClick={fetchAndSetUserTips}>Show User Tips</button>
+      </div>
+    );
+  }
 
+  // 2. If we are loading, show a loading state.
+  if (loading) {
+    return (
+      <div className="UserTipsContainer">
+        <button disabled>Loading Tips...</button>
+      </div>
+    );
+  }
+
+  // 3. If we have tips and isVisible is true, show the list.
   return (
-    <div>
-      <button onClick={fetchAndSetUserTips}>User Tips</button>
-      <h4>Most Tipped Games by Soccer Stats Hub Users</h4>
-      <ul className="UserTipsList">
-        {tips.length > 0 ? (
-          tips.map((game, index) => (
+    <div className="UserTipsContainer">
+      <button onClick={() => setIsVisible(false)}>Hide User Tips</button>
+
+      {/* We only render the <ul> if there are actually tips. 
+         If tips.length is 0 after a fetch, it renders nothing (or your BlankDiv).
+      */}
+      {tips.length > 0 ? (
+        <><h4>To add to this list, select your tips within any game from the main list. This is a beta feature where bugs will be ironed out. For now, there's nothing at stake other than bragging rights</h4><ul className="UserTipsList">
+          {tips.map((game, index) => (
             <li key={index} className="UserTipsListItems">
               {game.formatted}
             </li>
-          ))
-        ) : (
-          <p>
-            Expand an individual ficture to make your prediction. Predictions
-            will only be submitted when the 'Submit My Tips' button is clicked.
-            All users tips will be displayed here with a tally against each,
-            showing the most popular.
-          </p>
-        )}
-      </ul>
+          ))}
+        </ul>
+        <MonthlyLeaderboard/></>
+      ) : (
+        <div className="BlankDiv">No active tips found.</div>
+      )}
     </div>
   );
 }
-
 
 function calculateOddsBasedTrueForm(pointsSum5, allTeamResults) {
   // 3 points for a win, 1 point for a draw, 0 points for a loss
@@ -3302,9 +3326,12 @@ export async function calculateScore(match, index, divider, calculate, AIPredict
         if (tip.status === "PENDING") {
           let isWinner = false;
 
+          console.log(tip)
+          console.log(match.outcome)
+
           switch (tip.tip) {
-            case "homeTeam": isWinner = match.outcome === "homeWin"; break;
-            case "awayTeam": isWinner = match.outcome === "awayWin"; break;
+            case "homeWin": isWinner = match.outcome === "homeWin"; break;
+            case "awayWin": isWinner = match.outcome === "awayWin"; break;
             case "draw": isWinner = match.outcome === "draw"; break;
             case "BTTS": isWinner = (match.homeGoals > 0 && match.awayGoals > 0); break;
             case "over25": isWinner = (match.homeGoals + match.awayGoals) > 2.5; break;

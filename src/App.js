@@ -800,10 +800,11 @@ function AppContent() {
               <div id="draws" className="RowOne" />
             </div>
             <div id="insights" />
-            <div id="UserGeneratedTips" />
           </Fragment>
         }
       />
+      <div id="UserGeneratedTips" />
+
       <div id="shortlistRender" />
       <div id="ROIPlaceholder" />
       {/* <Collapsable buttonText={"ROI"} className={"ROI"} element={<div id="successMeasure2" />} /> */}
