@@ -222,7 +222,7 @@ async function fetchUserTips() {
     );
 
     formattedTips.sort((a, b) => b.count - a.count);
-    return formattedTips.slice(0, 20);
+    return formattedTips.slice(0, 50);
   } catch (error) {
     console.error("Error fetching user tips:", error);
     return null;
@@ -270,7 +270,7 @@ function UserTips() {
   return (
     <div className="UserTipsContainer">
       <button onClick={() => setIsVisible(false)}>Hide User Tips</button>
-
+      <MonthlyLeaderboard />
       {/* We only render the <ul> if there are actually tips. 
          If tips.length is 0 after a fetch, it renders nothing (or your BlankDiv).
       */}
@@ -282,7 +282,7 @@ function UserTips() {
             </li>
           ))}
         </ul>
-        <MonthlyLeaderboard/></>
+        </>
       ) : (
         <div className="BlankDiv">No active tips found.</div>
       )}
