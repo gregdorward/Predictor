@@ -28,7 +28,7 @@ const MonthlyLeaderboard = () => {
                         <th>User</th>
                         <th>Resulted Tips</th>
                         <th>Strike rate</th>
-                        <th>Profit</th>
+                        <th>ROI</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -41,7 +41,12 @@ const MonthlyLeaderboard = () => {
                                 {row.tipsCount > 0
                                     ? `${((row.wins / row.tipsCount) * 100).toFixed(1)}%`
                                     : '0%'}
-                            </td>              
+                            </td>
+                            <td style={{ color: row.monthlyProfit >= 0 ? '#4caf50' : '#f44336', fontWeight: 'bold' }}>
+                                {row.tipsCount > 0
+                                    ? `${((row.monthlyProfit / row.tipsCount) * 100).toFixed(1)}%`
+                                    : '0%'}
+                            </td>
                             <td style={{ color: row.monthlyProfit >= 0 ? 'green' : 'red' }}>
                                 {row.monthlyProfit.toFixed(2)}
                             </td>
