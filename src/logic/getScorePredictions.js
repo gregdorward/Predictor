@@ -114,7 +114,7 @@ async function fetchAllUserTips() {
           uid: uid,
           // Ensure these exist for the scoring logic later
           status: tip.status || "PENDING",
-          stake: tip.stake || 10,
+          stake: tip.stake || 1,
           odds: parseFloat(tip.odds) || 0
         });
       });
