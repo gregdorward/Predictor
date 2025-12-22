@@ -4097,24 +4097,24 @@ async function fetchLeagueStats() {
   // Use uniqueLeagueIDs array instead of iterating all keys in footyStatsToSofaScore
   const leagueObject = footyStatsToSofaScore[0];
 
-  // for (const leagueId of uniqueLeagueIDs) {
-  //   const mapping = leagueObject[leagueId];
-  //   if (!mapping) continue; // skip if not found
+  for (const leagueId of uniqueLeagueIDs) {
+    const mapping = leagueObject[leagueId];
+    if (!mapping) continue; // skip if not found
 
-  //   const { id: sofaScoreId, season: sofaScoreSeason } = mapping;
+    const { id: sofaScoreId, season: sofaScoreSeason } = mapping;
 
-  //   try {
-  //     const leagueTeamStatsResponse = await fetch(
-  //       `${process.env.REACT_APP_EXPRESS_SERVER}LeagueTeamStats/${sofaScoreId}/${sofaScoreSeason}/${week}`
-  //     );
-  //     const teamStats = await leagueTeamStatsResponse.json();
-  //     allLeagueStats[`leagueStats${leagueId}`] = teamStats;
-  //     console.log(`Fetched stats for league ${leagueId}`);
-  //   } catch (error) {
-  //     console.error(`Error fetching stats for league ${leagueId}:`, error);
-  //     allLeagueStats[`leagueStats${leagueId}`] = { error: error.message };
-  //   }
-  // }
+    try {
+      const leagueTeamStatsResponse = await fetch(
+        `${process.env.REACT_APP_EXPRESS_SERVER}LeagueTeamStats/${sofaScoreId}/${sofaScoreSeason}/${week}`
+      );
+      const teamStats = await leagueTeamStatsResponse.json();
+      allLeagueStats[`leagueStats${leagueId}`] = teamStats;
+      console.log(`Fetched stats for league ${leagueId}`);
+    } catch (error) {
+      console.error(`Error fetching stats for league ${leagueId}:`, error);
+      allLeagueStats[`leagueStats${leagueId}`] = { error: error.message };
+    }
+  }
   return allLeagueStats;
 }
 
@@ -4140,24 +4140,24 @@ async function fetchPlayerStats() {
   // Use uniqueLeagueIDs array instead of iterating all keys in footyStatsToSofaScore
   const leagueObject = footyStatsToSofaScore[0];
 
-  // for (const leagueId of uniqueLeagueIDs) {
-  //   const mapping = leagueObject[leagueId];
-  //   if (!mapping) continue; // skip if not found
+  for (const leagueId of uniqueLeagueIDs) {
+    const mapping = leagueObject[leagueId];
+    if (!mapping) continue; // skip if not found
 
-  //   const { id: sofaScoreId, season: sofaScoreSeason } = mapping;
+    const { id: sofaScoreId, season: sofaScoreSeason } = mapping;
 
-  //   try {
-  //     const leagueTeamStatsResponse = await fetch(
-  //       `${process.env.REACT_APP_EXPRESS_SERVER}bestPlayers/${sofaScoreId}/${sofaScoreSeason}/${week}`
-  //     );
-  //     const teamStats = await leagueTeamStatsResponse.json();
-  //     allLeagueStats[`playerStats${leagueId}`] = teamStats;
-  //     console.log(`Fetched player stats for league ${leagueId}`);
-  //   } catch (error) {
-  //     console.error(`Error fetching player stats for league ${leagueId}:`, error);
-  //     allLeagueStats[`playerStats${leagueId}`] = { error: error.message };
-  //   }
-  // }
+    try {
+      const leagueTeamStatsResponse = await fetch(
+        `${process.env.REACT_APP_EXPRESS_SERVER}bestPlayers/${sofaScoreId}/${sofaScoreSeason}/${week}`
+      );
+      const teamStats = await leagueTeamStatsResponse.json();
+      allLeagueStats[`playerStats${leagueId}`] = teamStats;
+      console.log(`Fetched player stats for league ${leagueId}`);
+    } catch (error) {
+      console.error(`Error fetching player stats for league ${leagueId}:`, error);
+      allLeagueStats[`playerStats${leagueId}`] = { error: error.message };
+    }
+  }
 
   return allLeagueStats;
 }
