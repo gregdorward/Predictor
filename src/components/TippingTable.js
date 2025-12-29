@@ -10,11 +10,18 @@ const MonthlyLeaderboard = () => {
         fetch(`${process.env.REACT_APP_EXPRESS_SERVER}leaderboard/${monthKey}`)
             .then(res => res.json())
             .then(json => {
-                setData(json);
+                // --- SORTING LOGIC BY PROFIT/LOSS ---
+                const sortedData = json.sort((a, b) => {
+                    // Sort by monthlyProfit (Descending)
+                    // If profit is equal, we can use tipsCount as a secondary tie-breaker
+                    return b.monthlyProfit - a.monthlyProfit;
+                });
+
+                setData(sortedData);
                 setLoading(false);
             })
             .catch(err => console.error(err));
-    }, []);
+    }, [monthKey]);
 
     if (loading) return <div>Loading Leaderboard...</div>;
 
@@ -29,26 +36,39 @@ const MonthlyLeaderboard = () => {
                         <th>Resulted Tips</th>
                         <th>Strike rate</th>
                         <th>ROI</th>
+                        <th>Profit/Loss</th>
                     </tr>
                 </thead>
                 <tbody>
-                    {data.map((row, index) => (
-                        <tr key={row.uid}>
-                            <td>{index + 1}</td>
-                            <td>{row.displayName}</td>
-                            <td>{row.tipsCount}</td>
-                            <td>
-                                {row.tipsCount > 0
-                                    ? `${((row.wins / row.tipsCount) * 100).toFixed(1)}%`
-                                    : '0%'}
-                            </td>
-                            <td style={{ color: row.monthlyProfit >= 0 ? '#4caf50' : '#f44336', fontWeight: 'bold' }}>
-                                {row.tipsCount > 0
-                                    ? `${((row.monthlyProfit / row.tipsCount) * 100).toFixed(1)}%`
-                                    : '0%'}
-                            </td>
-                        </tr>
-                    ))}
+                    {data.map((row, index) => {
+                        const strikeRate = row.tipsCount > 0
+                            ? ((row.wins / row.tipsCount) * 100).toFixed(1)
+                            : '0';
+                        const roi = row.tipsCount > 0
+                            ? ((row.monthlyProfit / row.tipsCount) * 100).toFixed(1)
+                            : '0';
+
+                        return (
+                            <tr key={row.uid}>
+                                <td>{index + 1}</td>
+                                <td>{row.displayName}</td>
+                                <td>{row.tipsCount}</td>
+                                <td>{strikeRate}%</td>
+                                <td style={{
+                                    color: parseFloat(roi) >= 0 ? '#4caf50' : '#f44336',
+                                    fontWeight: 'bold'
+                                }}>
+                                    {roi}%
+                                </td>
+                                <td style={{ 
+                                    color: row.monthlyProfit >= 0 ? '#4caf50' : '#f44336',
+                                    fontWeight: 'bold' 
+                                }}>
+                                    {row.monthlyProfit > 0 ? `+${row.monthlyProfit.toFixed(2)}` : row.monthlyProfit.toFixed(2)}
+                                </td>
+                            </tr>
+                        );
+                    })}
                 </tbody>
             </table>
         </div>
