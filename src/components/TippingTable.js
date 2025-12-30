@@ -6,6 +6,9 @@ const MonthlyLeaderboard = () => {
     const now = new Date();
     const monthKey = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}`;
 
+    const monthName = now.toLocaleString('default', { month: 'long' });
+    const year = now.getFullYear();
+
     useEffect(() => {
         fetch(`${process.env.REACT_APP_EXPRESS_SERVER}leaderboard/${monthKey}`)
             .then(res => res.json())
@@ -27,7 +30,8 @@ const MonthlyLeaderboard = () => {
 
     return (
         <div className="leaderboard-container">
-            <h3>December 2025 Leaderboard</h3>
+            <h3>{monthName} {year} Leaderboard</h3>
+            <div>Each participant started on a balance of 50 units</div>            
             <table className="leaderboard-table">
                 <thead>
                     <tr>
@@ -36,7 +40,7 @@ const MonthlyLeaderboard = () => {
                         <th>Resulted Tips</th>
                         <th>Strike rate</th>
                         <th>ROI</th>
-                        <th>Profit/Loss</th>
+                        <th>Current Balance</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -60,11 +64,11 @@ const MonthlyLeaderboard = () => {
                                 }}>
                                     {roi}%
                                 </td>
-                                <td style={{ 
-                                    color: row.monthlyProfit >= 0 ? '#4caf50' : '#f44336',
-                                    fontWeight: 'bold' 
+                                <td style={{
+                                    color: row.currentBalance >= 50 ? '#4caf50' : '#f44336',
+                                    fontWeight: 'bold'
                                 }}>
-                                    {row.monthlyProfit > 0 ? `+${row.monthlyProfit.toFixed(2)}` : row.monthlyProfit.toFixed(2)}
+                                    {row.currentBalance.toFixed(2)}
                                 </td>
                             </tr>
                         );

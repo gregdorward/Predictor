@@ -36,6 +36,8 @@ import { doc, getDoc, collection, getDocs, query } from 'firebase/firestore';
 import { auth, db } from "../firebase";
 import { userTips } from "../App"
 import MonthlyLeaderboard from "../components/TippingTable"
+var oddslib = require("oddslib");
+
 var myHeaders = new Headers();
 myHeaders.append("Origin", "https://gregdorward.github.io");
 
@@ -208,6 +210,44 @@ function getMostLikelyScore(scoreMatrix) {
   return scoreMatrix.reduce((best, current) =>
     current.probability > best.probability ? current : best
   );
+}
+
+function clampLambda(lambda, min = 0.2, max = 3.5) {
+  return Math.max(min, Math.min(max, lambda));
+}
+
+function normaliseScoreMatrix(scoreMatrix) {
+  const total = scoreMatrix.reduce(
+    (sum, s) => sum + s.probability, 0
+  );
+
+  return scoreMatrix.map(s => ({
+    ...s,
+    probability: s.probability / total
+  }));
+}
+
+
+function getMatchOddsProbabilities(scoreMatrix) {
+  let homeWin = 0;
+  let draw = 0;
+  let awayWin = 0;
+
+  for (const { home, away, probability } of scoreMatrix) {
+    if (home > away) homeWin += probability;
+    else if (home === away) draw += probability;
+    else awayWin += probability;
+  }
+
+  return { homeWin, draw, awayWin };
+}
+
+function probabilityToOdds(p) {
+  return p > 0 ? 1 / p : Infinity;
+}
+
+function expectedValue(probability, bookOdds) {
+  return (probability * bookOdds) - 1;
 }
 
 
@@ -3021,8 +3061,42 @@ export async function calculateScore(match, index, divider, calculate, AIPredict
     const lambdaAway = formAway.teamGoalsCalc;
 
 
-    const scoreMatrix = buildScoreMatrix(lambdaHome, lambdaAway);
+    const scoreMatrixRaw = buildScoreMatrix(
+      clampLambda(lambdaHome),
+      clampLambda(lambdaAway)
+    );
+
+    const scoreMatrix = normaliseScoreMatrix(scoreMatrixRaw);
     const predictedScore = getMostLikelyScore(scoreMatrix);
+
+    const { homeWin, draw, awayWin } =
+      getMatchOddsProbabilities(scoreMatrix);
+
+    match.fairHomeOddsDecimal = probabilityToOdds(homeWin);
+    match.fairAwayOddsDecimal = probabilityToOdds(awayWin);
+    match.fairDrawOddsDecimal = probabilityToOdds(draw);
+    match.fairHomeOddsFractional = oddslib
+      .from("decimal", match.fairHomeOddsDecimal)
+      .to("fractional", { precision: 1 });
+    match.fairAwayOddsFractional = oddslib
+      .from("decimal", match.fairAwayOddsDecimal)
+      .to("fractional", { precision: 1 });
+    match.fairDrawOddsFractional = oddslib
+      .from("decimal", match.fairDrawOddsDecimal)
+      .to("fractional", { precision: 1 });
+
+
+
+    // if (match.homeOdds > match.fairHomeOdds && predictedScore.home > predictedScore.away) {
+    //   console.log(match.game);
+    //   console.log(`Home odds value bet detected. Bookmaker odds: ${match.homeOdds}, Fair odds: ${match.fairHomeOdds.toFixed(2)}`);
+    // } else if (match.awayOdds > match.fairAwayOdds && predictedScore.away > predictedScore.home) {
+    //   console.log(match.game);
+    //   console.log(`Away odds value bet detected. Bookmaker odds: ${match.awayOdds}, Fair odds: ${(1 / awayWin).toFixed(2)}`);
+    // } else if (match.drawOdds > match.fairDrawOdds && predictedScore.away === predictedScore.home) {
+    //   console.log(match.game);
+    //   console.log(`Draw odds value bet detected. Bookmaker odds: ${match.drawOdds}, Fair odds: ${(1 / draw).toFixed(2)}`);
+    // }
 
     console.log(
       `Predicted score: ${predictedScore.home}-${predictedScore.away}`,
@@ -3030,6 +3104,8 @@ export async function calculateScore(match, index, divider, calculate, AIPredict
     );
 
 
+    console.log(match)
+    
     let finalHomeGoals;
     let finalAwayGoals;
 
