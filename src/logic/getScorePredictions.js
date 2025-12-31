@@ -357,7 +357,7 @@ function UserTips() {
          If tips.length is 0 after a fetch, it renders nothing (or your BlankDiv).
       */}
       {tips.length > 0 ? (
-        <><h4>To add to this list, select your tips within any game from the main list. This is a beta feature where bugs will be ironed out. For today only (21/12), the leader will win 1 month free Premium tier use</h4><ul className="UserTipsList">
+        <><h4>To add to this list, select your tips within any game from the main list</h4><ul className="UserTipsList">
           {tips.map((game, index) => (
             <li key={index} className="UserTipsListItems">
               {game.formatted}
