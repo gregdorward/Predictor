@@ -58,8 +58,56 @@ const LazyFutureFixturesSideBySide = lazy(() => import('./FutureFixturesSideBySi
 
 // let id, team1, team2, timestamp, homeGoals, awayGoals;
 
+function getOverUnderProbability(scoreMatrix, line = 2.5) {
+  let over = 0;
+  let under = 0;
+
+  for (const { home, away, probability } of scoreMatrix) {
+    if (home + away > line) over += probability;
+    else under += probability;
+  }
+  over = over * 100
+  under = under * 100
+
+  return { over, under };
+}
+
+function getBTTSProbability(scoreMatrix) {
+  let yes = 0;
+  let no = 0;
+
+  for (const { home, away, probability } of scoreMatrix) {
+    if (home > 0 && away > 0) yes += probability;
+    else no += probability;
+  }
+  yes = yes * 100
+  no = no * 100
+
+  return { yes, no };
+}
+
+
+function getMatchOddsProbabilities(scoreMatrix) {
+  let homeWin = 0;
+  let draw = 0;
+  let awayWin = 0;
+
+  for (const { home, away, probability } of scoreMatrix) {
+    if (home > away) homeWin += probability;
+    else if (home === away) draw += probability;
+    else awayWin += probability;
+  }
+
+  homeWin = homeWin * 100
+  draw = draw * 100
+  awayWin = awayWin * 100
+
+  return { homeWin, draw, awayWin };
+}
+
+
+
 function GameStats({ game, displayBool, stats }) {
-  console.log(userDetail)
   // const { user } = useAuth();
 
   const [openSections, setOpenSections] = useState({});
@@ -420,6 +468,16 @@ function GameStats({ game, displayBool, stats }) {
       )(0)
     );
   }, [xgDiffArrayAway]);
+
+  const { homeWin, draw, awayWin } =
+    getMatchOddsProbabilities(game.scoreMatrix);
+
+
+  const { yes, no } = getBTTSProbability(game.scoreMatrix);
+  const { over, under } = getOverUnderProbability(game.scoreMatrix, 2.5);
+
+
+
 
   const [firstRenderDone, setFirstRenderDone] = useState(false);
   const [divider, setDivider] = useState(0);
@@ -1046,8 +1104,6 @@ function GameStats({ game, displayBool, stats }) {
     console.warn(`No matching ID found for ID: ${game.sofaScoreId}`);
     return null;
   }, [game.sofaScoreId, rounds]);
-
-  console.log(derivedRoundId);
 
   function getWeekOfYear(date) {
     const target = new Date(date.valueOf());
@@ -3436,7 +3492,6 @@ function GameStats({ game, displayBool, stats }) {
   }) => {
     const handleClick = (tipType, label) => {
 
-      console.log(game)
       let odds;
       if (tipType === "homeWin") {
         odds = parseFloat(game.homeOdds);
@@ -3454,7 +3509,6 @@ function GameStats({ game, displayBool, stats }) {
         odds = game.over25Odds;
         // outcome = game.over25PredictionOutcome;
       }
-      console.log(odds)
       if (selectedTip === tipType) {
         return; // If the button clicked is already selected, do nothing
       }
@@ -3592,11 +3646,31 @@ function GameStats({ game, displayBool, stats }) {
   );
   const data2Away = filteredEntries2Away.map(([, value]) => value);
 
-
   const handleTipSelect = (tipType) => {
     setSelectedTip(tipType);
   };
-  console.log(voteData);
+
+
+  function impliedProbability(decimalOdds) {
+    if (!decimalOdds) return null;
+    return (1 / decimalOdds) * 100;
+  }
+  const bttsYesImplied = impliedProbability(game.bttsOdds);
+  const bttsNoImplied = 100 - bttsYesImplied;
+
+  const over25Implied = impliedProbability(game.over25Odds);
+  const under25Implied = 100 - over25Implied;
+
+  const fairOdds = (prob) =>
+    prob > 0 ? (100 / prob) : null;
+
+  const valueClass = (value) => {
+    if (value > 2) return "value-positive";   // strong value
+    if (value < -2) return "value-negative";  // clearly bad
+    return "value-neutral";
+  };
+
+
   return (
     <>
       <div className="ExpandingStats">
@@ -3612,6 +3686,80 @@ function GameStats({ game, displayBool, stats }) {
             />
           </>
         )}
+        <Collapsable
+          buttonText={`Market Value \u{2630}`}
+          classNameButton="PredictionsButton"
+          element={
+            <Suspense fallback={<div>Loading predictions...</div>}>
+              <table className="PredictionsTable">
+                <thead>
+                  <tr>
+                    <th>Market</th>
+                    <th>Our Probability</th>
+                    <th>Bookies Probability</th>
+                    <th>Fair Odds</th>
+                    <th>Value</th>
+                  </tr>
+                </thead>
+
+                <tbody>
+                  {[
+                    {
+                      label: "Home Win",
+                      model: homeWin,
+                      bookie: impliedProbability(game.homeOdds)
+                    },
+                    {
+                      label: "Away Win",
+                      model: awayWin,
+                      bookie: impliedProbability(game.awayOdds)
+                    },
+                    {
+                      label: "Draw",
+                      model: draw,
+                      bookie: impliedProbability(game.drawOdds)
+                    },
+                    {
+                      label: "BTTS – Yes",
+                      model: yes,
+                      bookie: bttsYesImplied
+                    },
+                    {
+                      label: "BTTS – No",
+                      model: no,
+                      bookie: bttsNoImplied
+                    },
+                    {
+                      label: "Over 2.5",
+                      model: over,
+                      bookie: over25Implied
+                    },
+                    {
+                      label: "Under 2.5",
+                      model: under,
+                      bookie: under25Implied
+                    }
+                  ].map(({ label, model, bookie }) => {
+                    const value = model - bookie;
+
+                    return (
+                      <tr key={label}>
+                        <td>{label}</td>
+
+                        <td>{model.toFixed(1)}%</td>
+                        <td>{bookie.toFixed(1)}%</td>
+                        <td>{fairOdds(model)?.toFixed(2)}</td>
+                        <td className={valueClass(value)}>
+                          {value.toFixed(1)}%
+                        </td>
+                      </tr>
+                    );
+                  })}
+                </tbody>
+              </table>
+            </Suspense>
+          }
+        />
         <div style={style}>
           <div style={style}>
             <Collapsable

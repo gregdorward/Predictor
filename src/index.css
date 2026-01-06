@@ -4706,13 +4706,69 @@ input:active+.design::after {
   padding-top: 2em;
 }
 
-.Lineups {
+.PredictionsButton {
   font-size: 1.1em;
   background-color: var(--accent-color);
   width: 100%;
   margin-left: auto;
   margin-right: auto;
   margin-top: 1em;
+  color: var(--button-text-color);
+}
+
+.PredictionRow {
+  margin-top: 0.5em;
+  margin-bottom: 0.5em;
+}
+
+.PredictionsTable {
+  width: 100%;
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: 2em !important;
+  margin-bottom: 1em !important;
+  text-align: center;
+  font-size: 1em;
+  background-color: var(--background-color);
+}
+
+.PredictionsTable th {
+  padding: 0.5em;
+  background-color: var(--text-color);
+  color: var(--button-text-color);
+  margin-bottom: 1em;
+}
+
+.PredictionsTable tr {
+  line-height: 3em;
+}
+
+.PredictionsTable tr:nth-child(even) {
+  background-color: var(--secondary-background-color);
+}
+
+.value-positive {
+  color: #00d500;
+  font-weight: 600;
+}
+
+.value-negative {
+  color: #d71200;
+  font-weight: 600;
+}
+
+.value-neutral {
+  color: var(--text-color);
+}
+
+
+.Lineups {
+  font-size: 1.1em;
+  background-color: var(--accent-color);
+  width: 100%;
+  margin-left: auto;
+  margin-right: auto;
+  /* margin-top: 1em; */
   color: var(--button-text-color);
 }
 

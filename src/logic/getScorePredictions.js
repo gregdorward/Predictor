@@ -185,15 +185,46 @@ function poissonProbability(k, lambda) {
   return (Math.pow(lambda, k) * Math.exp(-lambda)) / factorial(k);
 }
 
+function dixonColesAdjustment(home, away, lambdaHome, lambdaAway, rho = 0) {
+  if (home === 0 && away === 0)
+    return 1 - (lambdaHome * lambdaAway * rho);
 
-function buildScoreMatrix(lambdaHome, lambdaAway, maxGoals = 5) {
+  if (home === 0 && away === 1)
+    return 1 + (lambdaHome * rho);
+
+  if (home === 1 && away === 0)
+    return 1 + (lambdaAway * rho);
+
+  if (home === 1 && away === 1)
+    return 1 - rho;
+
+  return 1;
+}
+
+
+function buildScoreMatrix(
+  lambdaHome,
+  lambdaAway,
+  maxGoals = 5,
+  rho = 0.075
+) {
   const scores = [];
 
   for (let home = 0; home <= maxGoals; home++) {
     for (let away = 0; away <= maxGoals; away++) {
-      const prob =
+
+      let prob =
         poissonProbability(home, lambdaHome) *
         poissonProbability(away, lambdaAway);
+
+      // 🔑 APPLY DIXON–COLES HERE
+      prob *= dixonColesAdjustment(
+        home,
+        away,
+        lambdaHome,
+        lambdaAway,
+        rho
+      );
 
       scores.push({
         home,
@@ -205,6 +236,7 @@ function buildScoreMatrix(lambdaHome, lambdaAway, maxGoals = 5) {
 
   return scores;
 }
+
 
 function getMostLikelyScore(scoreMatrix) {
   return scoreMatrix.reduce((best, current) =>
@@ -285,7 +317,6 @@ async function fetchUserTips() {
         Object.entries(tips).map(([tipString, { count, odds, tippers, status }]) => {
           // Join names with a comma, or show nothing if empty
           const tipperList = tippers.length > 0 ? ` (${tippers.join(", ")})` : "";
-          console.log(tips)
           return {
             game,
             tipString,
@@ -1800,70 +1831,65 @@ export async function generateGoals(homeForm, awayForm, match) {
     // 2. Extract the specific averageGoals value
     averageLeagueGoals = leagueObject.averageGoals;
   }
-  const averageGoalsPerTeam = averageLeagueGoals / 2
+  const averageGoalsPerTeam = averageLeagueGoals / 2;
+  const BASELINE = 0.5;
 
-  // This is the product of two average strength scores (0.5 * 0.5)
-  const AVERAGE_STRENGTH_PRODUCT = 0.5 * 0.5; // = 0.25
+  // Defensive weaknesses (unchanged)
+  const awayDefenseWeakness = 1.15 - awayForm.defensiveStrengthScoreGenerationLast5;
+  const homeDefenseWeakness = 1.15 - homeForm.defensiveStrengthScoreGenerationLast5;
+  const awayDefenseWeaknessOverall = 1.15 - awayForm.defensiveStrengthScoreGeneration;
+  const homeDefenseWeaknessOverall = 1.15 - homeForm.defensiveStrengthScoreGeneration;
 
-  // This is the multiplier needed to scale the product (0.25) up to 1.0
-  // SCALING_FACTOR = 1 / 0.25 = 4.0
-  const SCALING_FACTOR = 1 / AVERAGE_STRENGTH_PRODUCT; // = 4.0
+  // Helper to compute a dampened lambda component
+  function computeLambdaComponent(attackStrength, defenseWeakness) {
+    const attackFactor = attackStrength / BASELINE;
+    const defenseFactor = defenseWeakness / BASELINE;
 
-  const awayDefenseWeakness = 1 - awayForm.defensiveStrengthScoreGenerationLast5;
-  const homeDefenseWeakness = 1 - homeForm.defensiveStrengthScoreGenerationLast5;
-  const awayDefenseWeaknessOverall = 1 - awayForm.defensiveStrengthScoreGeneration;
-  const homeDefenseWeaknessOverall = 1 - homeForm.defensiveStrengthScoreGeneration;
-  const homeAverageStrengthHome = 1 - homeForm.defensiveStrengthHomeOnly;
-  const awayAverageStrengthAway = 1 - awayForm.defensiveStrengthAwayOnly;
+    // Geometric dampening to avoid extreme mismatches
+    return averageGoalsPerTeam * Math.sqrt(attackFactor * defenseFactor);
+  }
 
+  // Last 5 form
+  const homeLambda_raw = computeLambdaComponent(
+    homeForm.attackingStrengthLast5,
+    awayDefenseWeakness
+  );
 
-  const homeLambda_raw =
-    (homeForm.attackingStrengthLast5 * awayDefenseWeakness) *
-    SCALING_FACTOR * // <-- Now multiplying by 4.0 (the SCALING_FACTOR)
-    averageGoalsPerTeam;
+  const awayLambda_raw = computeLambdaComponent(
+    awayForm.attackingStrengthLast5,
+    homeDefenseWeakness
+  );
 
-  const awayLambda_raw =
-    (awayForm.attackingStrengthLast5 * homeDefenseWeakness) *
-    SCALING_FACTOR * // <-- Now multiplying by 4.0 (the SCALING_FACTOR)
-    averageGoalsPerTeam;
+  // Overall form
+  const homeLambda_rawOverall = computeLambdaComponent(
+    homeForm.attackingStrength,
+    awayDefenseWeaknessOverall
+  );
 
+  const awayLambda_rawOverall = computeLambdaComponent(
+    awayForm.attackingStrength,
+    homeDefenseWeaknessOverall
+  );
 
-  const homeLambda_rawOverall =
-    (homeForm.attackingStrength * awayDefenseWeaknessOverall) *
-    SCALING_FACTOR * // <-- Now multiplying by 4.0 (the SCALING_FACTOR)
-    averageGoalsPerTeam;
+  // Average last-5 and overall (unchanged logic)
+  const homeLambdaAverage =
+    (homeLambda_raw + homeLambda_rawOverall) / 2;
 
-  const awayLambda_rawOverall =
-    (awayForm.attackingStrength * homeDefenseWeaknessOverall) *
-    SCALING_FACTOR * // <-- Now multiplying by 4.0 (the SCALING_FACTOR)
-    averageGoalsPerTeam;
+  const awayLambdaAverage =
+    (awayLambda_raw + awayLambda_rawOverall) / 2;
 
-  const homeLambda_homeOnly =
-    (homeForm.attackingStrengthHomeOnly * awayAverageStrengthAway) *
-    SCALING_FACTOR * // <-- Now multiplying by 4.0 (the SCALING_FACTOR)
-    averageGoalsPerTeam;
+  // Regression to league mean (unchanged)
+  const ALPHA = 0.8;
+  const LEAGUE_WEIGHT = 1.0 - ALPHA;
 
-  const awayLambda_awayOnly =
-    (awayForm.attackingStrengthAwayOnly * homeAverageStrengthHome) *
-    SCALING_FACTOR * // <-- Now multiplying by 4.0 (the SCALING_FACTOR)
-    averageGoalsPerTeam;
-
-  const homeLambdaAverage = (homeLambda_raw + homeLambda_rawOverall) / 2;
-  const awayLambdaAverage = (awayLambda_raw + awayLambda_rawOverall) / 2;
-
-
-  const ALPHA = 0.9;
-  const LEAGUE_WEIGHT = 1.0 - ALPHA; // 0.30
-
-  // Apply Regression to the Mean for the Home team
   const homeLambda_final =
     (homeLambdaAverage * ALPHA) +
     (averageGoalsPerTeam * LEAGUE_WEIGHT);
 
-  // Apply Regression to the Mean for the Away team
   const awayLambda_final =
     (awayLambdaAverage * ALPHA) +
     (averageGoalsPerTeam * LEAGUE_WEIGHT);
+
 
   //Cumulative ROI for all 1154 match outcomes: +0.72%
 
@@ -2008,9 +2034,6 @@ export async function generateGoals(homeForm, awayForm, match) {
     "International WC Qualification Europe",
     "International WC Qualification South America"
   ]
-
-  console.log(homeForm.teamXGAllRollingAverage)
-  console.log(homeForm.teamXGConceededAllRollingAverage)
 
   if (majorContinentalLeagues.includes(match.leagueDesc)) {
     homeGoals = (homeLambda_final - 0.15)
@@ -3060,30 +3083,26 @@ export async function calculateScore(match, index, divider, calculate, AIPredict
     const lambdaHome = formHome.teamGoalsCalc; // output from generateGoals
     const lambdaAway = formAway.teamGoalsCalc;
 
-
     const scoreMatrixRaw = buildScoreMatrix(
       clampLambda(lambdaHome),
       clampLambda(lambdaAway)
     );
 
-    const scoreMatrix = normaliseScoreMatrix(scoreMatrixRaw);
-    const predictedScore = getMostLikelyScore(scoreMatrix);
+    match.scoreMatrix = normaliseScoreMatrix(scoreMatrixRaw);
+    const predictedScore = getMostLikelyScore(match.scoreMatrix);
 
-    const { homeWin, draw, awayWin } =
-      getMatchOddsProbabilities(scoreMatrix);
-
-    match.fairHomeOddsDecimal = probabilityToOdds(homeWin);
-    match.fairAwayOddsDecimal = probabilityToOdds(awayWin);
-    match.fairDrawOddsDecimal = probabilityToOdds(draw);
-    match.fairHomeOddsFractional = oddslib
-      .from("decimal", match.fairHomeOddsDecimal)
-      .to("fractional", { precision: 1 });
-    match.fairAwayOddsFractional = oddslib
-      .from("decimal", match.fairAwayOddsDecimal)
-      .to("fractional", { precision: 1 });
-    match.fairDrawOddsFractional = oddslib
-      .from("decimal", match.fairDrawOddsDecimal)
-      .to("fractional", { precision: 1 });
+    // match.fairHomeOddsDecimal = probabilityToOdds(homeWin);
+    // match.fairAwayOddsDecimal = probabilityToOdds(awayWin);
+    // match.fairDrawOddsDecimal = probabilityToOdds(draw);
+    // match.fairHomeOddsFractional = oddslib
+    //   .from("decimal", match.fairHomeOddsDecimal)
+    //   .to("fractional", { precision: 1 });
+    // match.fairAwayOddsFractional = oddslib
+    //   .from("decimal", match.fairAwayOddsDecimal)
+    //   .to("fractional", { precision: 1 });
+    // match.fairDrawOddsFractional = oddslib
+    //   .from("decimal", match.fairDrawOddsDecimal)
+    //   .to("fractional", { precision: 1 });
 
 
 
@@ -3105,7 +3124,7 @@ export async function calculateScore(match, index, divider, calculate, AIPredict
 
 
     console.log(match)
-    
+
     let finalHomeGoals;
     let finalAwayGoals;
 
@@ -3176,15 +3195,12 @@ export async function calculateScore(match, index, divider, calculate, AIPredict
     }
 
 
-    if (selectedTipType === "SSH Tips") {
-      finalHomeGoals = Math.floor(rawFinalHomeGoals);
-      finalAwayGoals = Math.floor(rawFinalAwayGoals);
-    } else if (selectedTipType === "AI Tips" && AIPredictionHome !== null) {
+    if (selectedTipType === "AI Tips" && AIPredictionHome !== null) {
       finalHomeGoals = AIPredictionHome;
       finalAwayGoals = AIPredictionAway;
     } else {
-      finalHomeGoals = Math.floor(rawFinalHomeGoals);
-      finalAwayGoals = Math.floor(rawFinalAwayGoals);
+      finalHomeGoals = rawFinalHomeGoals;
+      finalAwayGoals = rawFinalAwayGoals;
     }
 
     if (match.status !== "suspended") {
@@ -4173,24 +4189,24 @@ async function fetchLeagueStats() {
   // Use uniqueLeagueIDs array instead of iterating all keys in footyStatsToSofaScore
   const leagueObject = footyStatsToSofaScore[0];
 
-  // for (const leagueId of uniqueLeagueIDs) {
-  //   const mapping = leagueObject[leagueId];
-  //   if (!mapping) continue; // skip if not found
+  for (const leagueId of uniqueLeagueIDs) {
+    const mapping = leagueObject[leagueId];
+    if (!mapping) continue; // skip if not found
 
-  //   const { id: sofaScoreId, season: sofaScoreSeason } = mapping;
+    const { id: sofaScoreId, season: sofaScoreSeason } = mapping;
 
-  //   try {
-  //     const leagueTeamStatsResponse = await fetch(
-  //       `${process.env.REACT_APP_EXPRESS_SERVER}LeagueTeamStats/${sofaScoreId}/${sofaScoreSeason}/${week}`
-  //     );
-  //     const teamStats = await leagueTeamStatsResponse.json();
-  //     allLeagueStats[`leagueStats${leagueId}`] = teamStats;
-  //     console.log(`Fetched stats for league ${leagueId}`);
-  //   } catch (error) {
-  //     console.error(`Error fetching stats for league ${leagueId}:`, error);
-  //     allLeagueStats[`leagueStats${leagueId}`] = { error: error.message };
-  //   }
-  // }
+    try {
+      const leagueTeamStatsResponse = await fetch(
+        `${process.env.REACT_APP_EXPRESS_SERVER}LeagueTeamStats/${sofaScoreId}/${sofaScoreSeason}/${week}`
+      );
+      const teamStats = await leagueTeamStatsResponse.json();
+      allLeagueStats[`leagueStats${leagueId}`] = teamStats;
+      console.log(`Fetched stats for league ${leagueId}`);
+    } catch (error) {
+      console.error(`Error fetching stats for league ${leagueId}:`, error);
+      allLeagueStats[`leagueStats${leagueId}`] = { error: error.message };
+    }
+  }
   return allLeagueStats;
 }
 
@@ -4216,24 +4232,24 @@ async function fetchPlayerStats() {
   // Use uniqueLeagueIDs array instead of iterating all keys in footyStatsToSofaScore
   const leagueObject = footyStatsToSofaScore[0];
 
-  // for (const leagueId of uniqueLeagueIDs) {
-  //   const mapping = leagueObject[leagueId];
-  //   if (!mapping) continue; // skip if not found
+  for (const leagueId of uniqueLeagueIDs) {
+    const mapping = leagueObject[leagueId];
+    if (!mapping) continue; // skip if not found
 
-  //   const { id: sofaScoreId, season: sofaScoreSeason } = mapping;
+    const { id: sofaScoreId, season: sofaScoreSeason } = mapping;
 
-  //   try {
-  //     const leagueTeamStatsResponse = await fetch(
-  //       `${process.env.REACT_APP_EXPRESS_SERVER}bestPlayers/${sofaScoreId}/${sofaScoreSeason}/${week}`
-  //     );
-  //     const teamStats = await leagueTeamStatsResponse.json();
-  //     allLeagueStats[`playerStats${leagueId}`] = teamStats;
-  //     console.log(`Fetched player stats for league ${leagueId}`);
-  //   } catch (error) {
-  //     console.error(`Error fetching player stats for league ${leagueId}:`, error);
-  //     allLeagueStats[`playerStats${leagueId}`] = { error: error.message };
-  //   }
-  // }
+    try {
+      const leagueTeamStatsResponse = await fetch(
+        `${process.env.REACT_APP_EXPRESS_SERVER}bestPlayers/${sofaScoreId}/${sofaScoreSeason}/${week}`
+      );
+      const teamStats = await leagueTeamStatsResponse.json();
+      allLeagueStats[`playerStats${leagueId}`] = teamStats;
+      console.log(`Fetched player stats for league ${leagueId}`);
+    } catch (error) {
+      console.error(`Error fetching player stats for league ${leagueId}:`, error);
+      allLeagueStats[`playerStats${leagueId}`] = { error: error.message };
+    }
+  }
 
   return allLeagueStats;
 }

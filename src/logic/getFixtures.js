@@ -1553,7 +1553,7 @@ export async function generateFixtures(
               className={"GeneratePredictionsButton"}
               id={"GeneratePredictionsButton"}
             />
-            <div className="Version">Prediction engine v1.8.3 (29/12/25)</div>
+            <div className="Version">Prediction engine v1.9.0 (06/01/26)</div>
             <h4>Tipping league for Jan 2026 open now</h4>
             <div className="MissingPredictionsNotice">The leader at the end of the month will recieve a 3-month subscription to Soccer Stats Hub. The winner will be based the highest remaining balance at the end of the month with each user starting on 50 units. Each tip will equate to 1 unit with the profit/loss being added to your running balance.</div>
             {/* <div className="MissingPredictionsNotice">If AI predictions are missing for a game, you can generate one with the "Match Preview" button</div> */}
