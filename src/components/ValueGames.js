@@ -16,8 +16,6 @@ const TopValueGames = ({ tips, limit = 10, paid }) => {
 
     if (!tips?.length) return null;
 
-    console.log('TopValueGames tips:', tips);
-
     const normalisedValueTips = tips
         .map(tip => ({
             ...tip,

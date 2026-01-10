@@ -3137,7 +3137,6 @@ export async function calculateScore(match, index, divider, calculate, AIPredict
 
     const homeWinImplied = impliedProbability(match.homeOdds);
 
-    console.log(homeWinImplied)
     const drawImplied = impliedProbability(match.drawOdds);
     const awayWinImplied = impliedProbability(match.awayOdds);
     const bttsYesImplied = impliedProbability(match.bttsOdds);
@@ -3148,9 +3147,6 @@ export async function calculateScore(match, index, divider, calculate, AIPredict
     match.over25Implied = over25Implied;
     const under25Implied = 100 - over25Implied;
     match.under25Implied = under25Implied;
-
-    console.log(homeWinImplied, drawImplied, awayWinImplied);
-    console.log(match.bttsYesImplied);
 
     // match.fairHomeOddsDecimal = probabilityToOdds(homeWin);
     // match.fairAwayOddsDecimal = probabilityToOdds(awayWin);
