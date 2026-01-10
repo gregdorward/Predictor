@@ -10,6 +10,7 @@ import Increment from "../components/Increment";
 import { incrementValue } from "../components/Increment";
 import { getBTTSPotential } from "../logic/getBTTSPotential";
 import { allLeagueResultsArrayOfObjects } from "../logic/getFixtures";
+import TopValueGames from "../components/ValueGames";
 import { Slider } from "../components/Carousel";
 import { render } from '../utils/render';
 import {
@@ -99,6 +100,54 @@ async function convertTimestamp(timestamp) {
 
   return converted;
 }
+
+function getOverUnderProbability(scoreMatrix, line = 2.5) {
+  let over = 0;
+  let under = 0;
+
+  for (const { home, away, probability } of scoreMatrix) {
+    if (home + away > line) over += probability;
+    else under += probability;
+  }
+  over = over * 100
+  under = under * 100
+
+  return { over, under };
+}
+
+function getBTTSProbability(scoreMatrix) {
+  let yes = 0;
+  let no = 0;
+
+  for (const { home, away, probability } of scoreMatrix) {
+    if (home > 0 && away > 0) yes += probability;
+    else no += probability;
+  }
+  yes = yes * 100
+  no = no * 100
+
+  return { yes, no };
+}
+
+
+function getMatchOddsProbabilities(scoreMatrix) {
+  let homeWin = 0;
+  let draw = 0;
+  let awayWin = 0;
+
+  for (const { home, away, probability } of scoreMatrix) {
+    if (home > away) homeWin += probability;
+    else if (home === away) draw += probability;
+    else awayWin += probability;
+  }
+
+  homeWin = homeWin * 100
+  draw = draw * 100
+  awayWin = awayWin * 100
+
+  return { homeWin, draw, awayWin };
+}
+
 
 const allIndividualTips = [];
 
@@ -260,26 +309,9 @@ function normaliseScoreMatrix(scoreMatrix) {
 }
 
 
-function getMatchOddsProbabilities(scoreMatrix) {
-  let homeWin = 0;
-  let draw = 0;
-  let awayWin = 0;
-
-  for (const { home, away, probability } of scoreMatrix) {
-    if (home > away) homeWin += probability;
-    else if (home === away) draw += probability;
-    else awayWin += probability;
-  }
-
-  return { homeWin, draw, awayWin };
-}
-
-function probabilityToOdds(p) {
-  return p > 0 ? 1 / p : Infinity;
-}
-
-function expectedValue(probability, bookOdds) {
-  return (probability * bookOdds) - 1;
+function impliedProbability(decimalOdds) {
+  if (!decimalOdds) return null;
+  return (1 / decimalOdds) * 100;
 }
 
 
@@ -1997,7 +2029,7 @@ export async function generateGoals(homeForm, awayForm, match) {
     // homeForm.defensiveStrengthScoreGenerationHomeOnly +
     (homeForm.avPoints10 / 2) +
     (homeForm.avPoints5 / 2) +
-    (homeForm.goalDifferenceHomeOrAway / 4) +
+    (homeForm.goalDifferenceHomeOrAway / 5) +
     (homeForm.teamXGAllRollingAverage - homeForm.teamXGConceededAllRollingAverage)
 
   awayForm.XGRating =
@@ -2009,7 +2041,7 @@ export async function generateGoals(homeForm, awayForm, match) {
     // awayForm.defensiveStrengthScoreGenerationAwayOnly +
     (awayForm.avPoints10 / 2) +
     (awayForm.avPoints5 / 2) +
-    (awayForm.goalDifferenceHomeOrAway / 4) +
+    (awayForm.goalDifferenceHomeOrAway / 5) +
     (awayForm.teamXGAllRollingAverage - awayForm.teamXGConceededAllRollingAverage)
 
 
@@ -2052,10 +2084,10 @@ export async function generateGoals(homeForm, awayForm, match) {
       (awayForm.actualToXGDifference / 20) + (XGRatingAwayComparison * 0.1);
   } else {
     homeGoals = (homeLambda_final + 0.1)
-      + (XGRatingHomeComparison * 0.1)
+      + (XGRatingHomeComparison * 0.09)
 
     awayGoals = (awayLambda_final - 0.1)
-      + (XGRatingAwayComparison * 0.1);
+      + (XGRatingAwayComparison * 0.09);
   }
 
 
@@ -3091,6 +3123,35 @@ export async function calculateScore(match, index, divider, calculate, AIPredict
     match.scoreMatrix = normaliseScoreMatrix(scoreMatrixRaw);
     const predictedScore = getMostLikelyScore(match.scoreMatrix);
 
+    const { homeWin, draw, awayWin } =
+      getMatchOddsProbabilities(match.scoreMatrix);
+    const { yes, no } = getBTTSProbability(match.scoreMatrix);
+    const { over, under } = getOverUnderProbability(match.scoreMatrix, 2.5);
+    match.homeWinProbability = homeWin;
+    match.drawProbability = draw;
+    match.awayWinProbability = awayWin;
+    match.bttsYesProbability = yes;
+    match.bttsNoProbability = no;
+    match.over25Probability = over;
+    match.under25Probability = under;
+
+    const homeWinImplied = impliedProbability(match.homeOdds);
+
+    console.log(homeWinImplied)
+    const drawImplied = impliedProbability(match.drawOdds);
+    const awayWinImplied = impliedProbability(match.awayOdds);
+    const bttsYesImplied = impliedProbability(match.bttsOdds);
+    match.bttsYesImplied = bttsYesImplied;
+    const bttsNoImplied = 100 - bttsYesImplied;
+    match.bttsNoImplied = bttsNoImplied;
+    const over25Implied = impliedProbability(match.over25Odds);
+    match.over25Implied = over25Implied;
+    const under25Implied = 100 - over25Implied;
+    match.under25Implied = under25Implied;
+
+    console.log(homeWinImplied, drawImplied, awayWinImplied);
+    console.log(match.bttsYesImplied);
+
     // match.fairHomeOddsDecimal = probabilityToOdds(homeWin);
     // match.fairAwayOddsDecimal = probabilityToOdds(awayWin);
     // match.fairDrawOddsDecimal = probabilityToOdds(draw);
@@ -3121,9 +3182,6 @@ export async function calculateScore(match, index, divider, calculate, AIPredict
       `Predicted score: ${predictedScore.home}-${predictedScore.away}`,
       `(${(predictedScore.probability * 100).toFixed(1)}%)`
     );
-
-
-    console.log(match)
 
     let finalHomeGoals;
     let finalAwayGoals;
@@ -3207,6 +3265,9 @@ export async function calculateScore(match, index, divider, calculate, AIPredict
       if (finalHomeGoals > finalAwayGoals) {
         match.prediction = "homeWin";
         homePredictions = homePredictions + 1;
+        match.winValue = (match.homeWinProbability - homeWinImplied).toFixed(2)
+        match.winImplied = homeWinImplied;
+        match.winImpliedOurs = match.homeWinProbability
         if (
           formHome.lastGame === "L" ||
           formHome.last2Points < 3 ||
@@ -3220,6 +3281,9 @@ export async function calculateScore(match, index, divider, calculate, AIPredict
       } else if (finalAwayGoals > finalHomeGoals) {
         match.prediction = "awayWin";
         awayPredictions = awayPredictions + 1;
+        match.winValue = (match.awayWinProbability - awayWinImplied).toFixed(2)
+        match.winImplied = awayWinImplied;
+        match.winImpliedOurs = match.awayWinProbability
         if (
           formAway.lastGame === "L" ||
           formAway.last2Points < 3 ||
@@ -3233,8 +3297,24 @@ export async function calculateScore(match, index, divider, calculate, AIPredict
       } else if (finalHomeGoals === finalAwayGoals) {
         match.prediction = "draw";
         drawPredictions = drawPredictions + 1;
+        // match.winValue = (draw - drawImplied).toFixed(2)
+        match.winImplied = drawImplied;
+        match.winImpliedOurs = match.drawProbability
+      }
+
+      if (finalHomeGoals > 1 && finalAwayGoals > 1) {
+        match.bttsValue = (yes - bttsYesImplied).toFixed(2)
+      } else {
+        match.bttsValue = (no - bttsNoImplied).toFixed(2)
+      }
+
+      if (finalHomeGoals + finalAwayGoals > 2.5) {
+        match.over25Value = (over - over25Implied).toFixed(2)
+      } else {
+        match.under25Value = (under - under25Implied).toFixed(2)
       }
     }
+
 
     statsArray.trueFormArray.push({ "name": formHome.teamName, "score": formHome.trueForm, "gameId": match.id, "game": match.game })
     statsArray.trueFormArray.push({ "name": formAway.teamName, "score": formAway.trueForm, "gameId": match.id, "game": match.game })
@@ -3886,6 +3966,7 @@ var rollingDiffTips = [];
 var dangerousAttacksDiffTips = [];
 let shotsOnTargetTips = [];
 var pointsDiffTips = [];
+var valueDiffTipsWinMarket = [];
 var combinations;
 var exoticArray = [];
 var gamesInExotic;
@@ -4189,24 +4270,24 @@ async function fetchLeagueStats() {
   // Use uniqueLeagueIDs array instead of iterating all keys in footyStatsToSofaScore
   const leagueObject = footyStatsToSofaScore[0];
 
-  for (const leagueId of uniqueLeagueIDs) {
-    const mapping = leagueObject[leagueId];
-    if (!mapping) continue; // skip if not found
+  // for (const leagueId of uniqueLeagueIDs) {
+  //   const mapping = leagueObject[leagueId];
+  //   if (!mapping) continue; // skip if not found
 
-    const { id: sofaScoreId, season: sofaScoreSeason } = mapping;
+  //   const { id: sofaScoreId, season: sofaScoreSeason } = mapping;
 
-    try {
-      const leagueTeamStatsResponse = await fetch(
-        `${process.env.REACT_APP_EXPRESS_SERVER}LeagueTeamStats/${sofaScoreId}/${sofaScoreSeason}/${week}`
-      );
-      const teamStats = await leagueTeamStatsResponse.json();
-      allLeagueStats[`leagueStats${leagueId}`] = teamStats;
-      console.log(`Fetched stats for league ${leagueId}`);
-    } catch (error) {
-      console.error(`Error fetching stats for league ${leagueId}:`, error);
-      allLeagueStats[`leagueStats${leagueId}`] = { error: error.message };
-    }
-  }
+  //   try {
+  //     const leagueTeamStatsResponse = await fetch(
+  //       `${process.env.REACT_APP_EXPRESS_SERVER}LeagueTeamStats/${sofaScoreId}/${sofaScoreSeason}/${week}`
+  //     );
+  //     const teamStats = await leagueTeamStatsResponse.json();
+  //     allLeagueStats[`leagueStats${leagueId}`] = teamStats;
+  //     console.log(`Fetched stats for league ${leagueId}`);
+  //   } catch (error) {
+  //     console.error(`Error fetching stats for league ${leagueId}:`, error);
+  //     allLeagueStats[`leagueStats${leagueId}`] = { error: error.message };
+  //   }
+  // }
   return allLeagueStats;
 }
 
@@ -4232,24 +4313,24 @@ async function fetchPlayerStats() {
   // Use uniqueLeagueIDs array instead of iterating all keys in footyStatsToSofaScore
   const leagueObject = footyStatsToSofaScore[0];
 
-  for (const leagueId of uniqueLeagueIDs) {
-    const mapping = leagueObject[leagueId];
-    if (!mapping) continue; // skip if not found
+  // for (const leagueId of uniqueLeagueIDs) {
+  //   const mapping = leagueObject[leagueId];
+  //   if (!mapping) continue; // skip if not found
 
-    const { id: sofaScoreId, season: sofaScoreSeason } = mapping;
+  //   const { id: sofaScoreId, season: sofaScoreSeason } = mapping;
 
-    try {
-      const leagueTeamStatsResponse = await fetch(
-        `${process.env.REACT_APP_EXPRESS_SERVER}bestPlayers/${sofaScoreId}/${sofaScoreSeason}/${week}`
-      );
-      const teamStats = await leagueTeamStatsResponse.json();
-      allLeagueStats[`playerStats${leagueId}`] = teamStats;
-      console.log(`Fetched player stats for league ${leagueId}`);
-    } catch (error) {
-      console.error(`Error fetching player stats for league ${leagueId}:`, error);
-      allLeagueStats[`playerStats${leagueId}`] = { error: error.message };
-    }
-  }
+  //   try {
+  //     const leagueTeamStatsResponse = await fetch(
+  //       `${process.env.REACT_APP_EXPRESS_SERVER}bestPlayers/${sofaScoreId}/${sofaScoreSeason}/${week}`
+  //     );
+  //     const teamStats = await leagueTeamStatsResponse.json();
+  //     allLeagueStats[`playerStats${leagueId}`] = teamStats;
+  //     console.log(`Fetched player stats for league ${leagueId}`);
+  //   } catch (error) {
+  //     console.error(`Error fetching player stats for league ${leagueId}:`, error);
+  //     allLeagueStats[`playerStats${leagueId}`] = { error: error.message };
+  //   }
+  // }
 
   return allLeagueStats;
 }
@@ -4266,6 +4347,7 @@ export async function getScorePrediction(day, mocked) {
   Over25Tips = [];
   XGDiffTips = [];
   pointsDiffTips = [];
+  valueDiffTipsWinMarket = [];
   rollingDiffTips = [];
   dangerousAttacksDiffTips = [];
   shotsOnTargetTips = [];
@@ -4370,6 +4452,7 @@ export async function getScorePrediction(day, mocked) {
       let rollingDiffObject;
       let dangerousAttacksDiffObject;
       let shotOnTargetDiffObject;
+      let valueDiffMarketObject;
 
       if (match.status === "complete" && match.prediction) {
         match.outcomeSymbol =
@@ -4776,6 +4859,58 @@ export async function getScorePrediction(day, mocked) {
         dangerousAttacksDiffTips.push(dangerousAttacksDiffObject);
       }
 
+      // 1. Determine the result key first
+      let resultKey = 'draw';
+      if (match.goalsA > match.goalsB) resultKey = 'home';
+      else if (match.goalsB > match.goalsA) resultKey = 'away';
+
+      // 2. Define a map for the labels and odds
+      const mapping = {
+        home: {
+          label: `${match.homeTeam} to win`,
+          other: match.awayTeam,
+          odds: match.homeOdds
+        },
+        away: {
+          label: `${match.awayTeam} to win`,
+          other: match.homeTeam,
+          odds: match.awayOdds
+        },
+        draw: {
+          label: "Draw",
+          other: "N/A",
+          odds: match.drawOdds
+        }
+      };
+
+      const choice = mapping[resultKey];
+
+      // 3. Simple Guard Clause
+      const isValidMatch =
+        match.winValue !== undefined &&
+        !["notEnoughData", "suspended", "canceled"].includes(match.status) && (match.winImpliedOurs - 5) > match.winImplied;
+
+      if (isValidMatch) {
+        valueDiffTipsWinMarket.push({
+          game: match.status === "complete"
+            ? `${match.homeTeam} ${match.homeGoals} - ${match.awayGoals} ${match.awayTeam}`
+            : match.game,
+          team: choice.label,
+          homeTeam: match.homeTeam,
+          awayTeam: match.awayTeam,
+          competition: match.leagueDesc,
+          id: match.id,
+          comparisonScore: Math.abs(match.teamComparisonScore),
+          outcome: match.predictionOutcome,
+          outcomeSymbol: match.outcomeSymbol,
+          prediction: choice.label,
+          bookiesProbability: match.winImplied,
+          ourProbability: match.winImpliedOurs,
+          otherTeam: choice.other,
+          valuePercentage: match.winValue,
+        });
+      }
+
       if (
         match.shotOnTargetDiff === true &&
         match.prediction === "homeWin" &&
@@ -4955,6 +5090,8 @@ async function getMultis() {
   shotsOnTargetTips.sort(function (a, b) {
     return Math.abs(b.shotsOnTargetDiffValue) - Math.abs(a.shotsOnTargetDiffValue);
   });
+
+
 
   exoticArray = [];
   gamesInExotic = 0;
@@ -5238,6 +5375,7 @@ async function renderTips() {
           <Increment />
           <Collapsable
             buttonText={"Build a multi"}
+            classNameButton={"BuildAMulti"}
             element={
               <ul className="BestPredictions" id="BestPredictions">
                 <h4 className="BestPredictionsExplainer">
@@ -5253,6 +5391,16 @@ async function renderTips() {
       "bestPredictions"
     );
   }
+
+
+render(
+  <TopValueGames
+    tips={valueDiffTipsWinMarket}
+    limit={10}
+    paid={paid}
+  />,
+  "valueBets"
+);
 
   if (paid && exoticArray.length > 4) {
     render(
@@ -5629,6 +5777,8 @@ async function renderTips() {
     </div>,
     "insights"
   );
+
+
 
   render(
     <div>

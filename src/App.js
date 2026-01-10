@@ -781,24 +781,28 @@ function AppContent() {
       <div id="GeneratePredictions" className="GeneratePredictions" />
       {/* <div id="MultiPlaceholder" className="MultiPlaceholder" /> */}
 
-      <Collapsable
-        buttonText={"Multis"}
-        className={"MultiPlaceholder"}
-        key="MultisCollapsable"
-        id="MultiPlaceholder"
-        element={
-          <Fragment>
-            <div id="bestPredictions" className="bestPredictions" />
-            <div id="exoticOfTheDay" className="exoticOfTheDay" />
-            <div id="RowOneContainer" className="RowOneContainer">
-              <div id="BTTS" className="RowOne" />
-              <div id="longShots" className="RowOne" />
-              <div id="draws" className="RowOne" />
-            </div>
-            <div id="insights" />
-          </Fragment>
-        }
-      />
+      <div id="MultiWrapper" className="MultiWrapper">
+        <Collapsable
+          buttonText={"Multis"}
+          className={"MultisCollapsable"}
+          openedClassName={"MultisCollapsableOpened"}
+          key="MultisCollapsable"
+          id="MultiPlaceholder"
+          element={
+            <Fragment>
+              <div id="bestPredictions" className="bestPredictions" />
+              <div id="valueBets" className="ValueBets" />
+              <div id="exoticOfTheDay" className="exoticOfTheDay" />
+              <div id="RowOneContainer" className="RowOneContainer">
+                <div id="BTTS" className="RowOne" />
+                <div id="longShots" className="RowOne" />
+                <div id="draws" className="RowOne" />
+              </div>
+              <div id="insights" />
+            </Fragment>
+          }
+        />
+      </div>
       <div id="UserGeneratedTips" />
 
       <div id="shortlistRender" />

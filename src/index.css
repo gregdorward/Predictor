@@ -772,7 +772,7 @@ button {
   /* flex-basis: 100%; */
   width: 12em;
   height: auto;
-  font-size: 1.2em;
+  font-size: 1.1em;
   cursor: pointer;
   color: var(--secondary-button-text-color);
   background-color: var(--button-color);
@@ -792,7 +792,7 @@ button:hover {
 }
 
 /* .GeneratePredictions {
-  min-height: 15em;
+  background-color: var(--primary-color);
 } */
 
 button.GeneratePredictionsButton {
@@ -819,7 +819,10 @@ button.GeneratePredictionsButton:active {
   color: var(--button-text-color);
   box-shadow: 0 0px 0px 0 rgba(0, 0, 0, 0.2), 0 1px 2px 0 #030052 inset;
   height: 5em;
+}
 
+.BuildAMulti {
+  margin-top: 1em;
 }
 
 /* .Filters2 button {
@@ -1502,10 +1505,11 @@ span.MembershipInfo {
 .UserTipsList :nth-child(odd) {
   background-color: var(--secondary-background-color);
 }
+
 strong {
   font-weight: bold !important;
 }
- 
+
 strong.WON {
   color: #009700;
 }
@@ -1513,15 +1517,21 @@ strong.WON {
 strong.LOST {
   color: #b10f00
 }
+
 .leaderboard-container {
   margin-bottom: 2em;
+  background-color: var(--secondary-background-color);
+  padding-top: 1em;
+  padding-bottom: 1em;
 }
 
-.leaderboard-table th, 
+.leaderboard-table th,
 .leaderboard-table td {
   padding: 1em;
-  border-bottom: 1px solid #eee; /* Optional: adds nice separation */
+  border-bottom: 1px solid #eee;
+  /* Optional: adds nice separation */
 }
+
 /* Base styles for the checkbox */
 .star {
   appearance: none;
@@ -1982,20 +1992,20 @@ strong.LOST {
   z-index: 1001;
 }
 
-.modal-content p{
-    color: #020029;
+.modal-content p {
+  color: #020029;
 }
 
 .modal-content input {
-    color: #020029;
-    border: 1px solid var(--primary-color);
+  color: #020029;
+  border: 1px solid var(--primary-color);
 }
 
 
-.modal-content button{
-    background-color: #020029;
-    color: white;
-    margin-top: 2em;
+.modal-content button {
+  background-color: #020029;
+  color: white;
+  margin-top: 2em;
 }
 
 *[class^='AwayOdds'] {
@@ -2370,7 +2380,7 @@ strong.LOST {
   height: auto;
   /* border: white 0.1px dashed; */
   /* border-radius: 5px; */
-  background-color: var(--background-color);
+  /* background-color: var(--background-color); */
   /* border: white 1px dashed; */
   /* box-shadow: 4px 4px 4px 4px rgba(0.2, 0.2, 0.2, 0.2), 0 6px 20px 0 #294A66; */
   /* box-shadow: rgba(0, 0, 0, 0.15) 0px 0px 0px 1px; */
@@ -2385,6 +2395,69 @@ strong.LOST {
 
 .FilterContainer {
   width: 100%;
+  background-color: var(--secondary-background-color);
+}
+
+.ValueTable {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.ValueTable th,
+.ValueTable td {
+  padding: 0.5em;
+  border-bottom: 1px solid var(--alternate-background-color);
+}
+
+.GameLink {
+  text-decoration: none;
+  color: var(--text-color);
+}
+
+.game {
+  font-size: 0.9em;
+  font-weight: bold;
+  color: var(--text-color);
+}
+
+.ValueTable .competition {
+  padding-top: 0.25em;
+  font-size: 0.8em;
+  /* color: var(--mid-grey); */
+}
+
+.ValueTableHeaders th {
+  background-color: var(--button-color);
+  color: var(--button-text-color);
+  width: 15%;
+}
+
+.ValueTable:nth-child(1) {
+  background-color: var(--secondary-background-color);
+}
+
+.ValueTableHeaders .ValueTableGameHeader {
+  width: 30%;
+}
+
+.blurred {
+  filter: blur(4px);
+  pointer-events: none;
+  user-select: none;
+}
+
+.blurred-row {
+  position: relative;
+}
+
+.blurred-row::after {
+  content: "🔒 Premium";
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 0.8rem;
+  color: #666;
 }
 
 .DetailedFixtures {
@@ -3624,6 +3697,20 @@ li.FormHeader {
   align-self: center;
 }
 
+.MultisCollapsable {
+  padding: 1em;
+}
+
+/* .BuildAMulti{
+  background-color: var(--alternate-background-color);
+} */
+
+.MultisCollapsableOpened {
+  background-color: var(--secondary-background-color);
+  margin-bottom: 2em;
+  padding: 1em;
+}
+
 .DecrementButton {
   order: 2;
   font-weight: 700;
@@ -3633,6 +3720,7 @@ li.FormHeader {
   max-width: 5em;
   min-width: 3em;
   margin-right: 2em;
+  margin-top: 1em;
 }
 
 .IncrementButton {
@@ -3644,6 +3732,7 @@ li.FormHeader {
   max-width: 5em;
   min-width: 3em;
   margin-left: 2em;
+  margin-top: 1em;
 }
 
 .RiskText {
@@ -3699,6 +3788,7 @@ li.FormHeader {
   /* border: var(--text-color) 1px dashed; */
   background-color: var(--background-color);
   max-width: 30em;
+  padding-bottom: 1em;
 }
 
 .BestPredictionsExplainer {
@@ -4761,6 +4851,16 @@ input:active+.design::after {
   color: var(--text-color);
 }
 
+.ShortlistButton,
+.ShareButton,
+.InsightsButton {
+  font-size: 0.9em;
+  background-color: var(--accent-color);
+  margin-left: 1em;
+  margin-right: 1em;
+  margin-top: 1em;
+  color: var(--button-text-color);
+}
 
 .Lineups {
   font-size: 1.1em;

@@ -13,6 +13,7 @@ const Collapsable = ({
   style,
   element,
   elementTwo,
+  openedClassName,
   isOpen,
   onTriggerToggle
   // onTriggerOpening,
@@ -37,6 +38,7 @@ const Collapsable = ({
         </button>
       }
       className={className || "Collapsable"}
+      openedClassName={openedClassName || "Collapsable"}
     >
       <div className={classNameFlex || ""}>
         <div className={classNameTwo || buttonText} style={style}>
