@@ -25,141 +25,89 @@ function toggle(bool) {
 
 let tipOutcome = undefined;
 
-function GetDivider(fixture, mock) {
-  const matchStatus = fixture.status;
-  let isPrediction = resultValue;
+// const [displayMode, setDisplayMode] = useState("score"); 
+// // "score" | "probability"
 
-  if (fixture.fixture.omit === true && matchStatus !== "complete") {
-    isPrediction = true;
+
+function getOutcome(home, away) {
+  if (home > away) return 0; // home
+  if (home === away) return 1; // draw
+  return 2; // away
+}
+
+function getProfit(fixture, outcome) {
+  if (fixture.homeOdds === 0) return 1;
+
+  switch (outcome) {
+    case 0: return parseFloat(fixture.homeOdds);
+    case 1: return parseFloat(fixture.drawOdds);
+    case 2: return parseFloat(fixture.awayOdds);
+    default: return 0;
+  }
+}
+
+
+
+function GetDivider(fixture, mockValue) {
+  const { status, omit, time } = fixture.fixture;
+
+  const isComplete = status === "complete";
+  const isPrediction =
+    fixture.fixture.omit === true ||
+    mockValue === true ||
+    resultValue === true;
+
+  // ✅ Most common case: just show KO time
+  if (!isComplete || !isPrediction) {
     return (
       <div className="KOAndPrediction">
-        <div className="KOTime">{`${fixture.fixture.time}`}</div>
-      </div>
-    );
-  } else if (mockValue === true && matchStatus === "complete") {
-    isPrediction = false;
-    return (
-      <div className="KOAndPrediction">
-        <div className="KOTime">{`${fixture.fixture.time}`}</div>
-      </div>
-    );
-  } else if (mockValue === true && matchStatus !== "complete") {
-    isPrediction = true;
-    return (
-      <div className="KOAndPrediction">
-        <div className="KOTime">{`${fixture.fixture.time}`}</div>
-      </div>
-    );
-  } else if (isPrediction === false && matchStatus !== "complete") {
-    return (
-      <div className="KOAndPrediction">
-        <div className="KOTime">{`${fixture.fixture.time}`}</div>
-      </div>
-    );
-  } else if (isPrediction === false && matchStatus === "complete") {
-    return (
-      <div className="KOAndPrediction">
-        <div className="KOTime">{`${fixture.fixture.time}`}</div>
-      </div>
-    );
-  } else if (isPrediction === true && matchStatus === "complete") {
-    let outcome;
-    let prediction;
-
-    switch (true) {
-      case fixture.fixture.homeGoals > fixture.fixture.awayGoals:
-        outcome = 0;
-        fixture.fixture.winner = fixture.fixture.homeTeam;
-        fixture.fixture.outcome = "homeWin";
-        break;
-      case fixture.fixture.homeGoals === fixture.fixture.awayGoals:
-        outcome = 1;
-        fixture.fixture.winner = "draw";
-        fixture.fixture.outcome = "draw";
-
-        break;
-      case fixture.fixture.homeGoals < fixture.fixture.awayGoals:
-        outcome = 2;
-        fixture.fixture.winner = fixture.fixture.awayTeam;
-        fixture.fixture.outcome = "awayWin";
-
-        break;
-      default:
-        break;
-    }
-
-
-    switch (true) {
-      case fixture.fixture.goalsA > fixture.fixture.goalsB:
-        prediction = 0;
-        break;
-      case fixture.fixture.goalsA === fixture.fixture.goalsB:
-        prediction = 1;
-        break;
-      case fixture.fixture.goalsA < fixture.fixture.goalsB:
-        prediction = 2;
-        break;
-      default:
-        break;
-    }
-
-    if (fixture.fixture.omit === true) {
-      return (
-        <Fragment>
-          <div
-            className="Omitted"
-            key={fixture.fixture.homeTeam}
-            data-cy={"score-" + fixture.fixture.id}
-          ></div>
-        </Fragment>
-      );
-    } else if (outcome === prediction) {
-      if (fixture.fixture.homeOdds !== 0) {
-        switch (true) {
-          case outcome === 0:
-            fixture.fixture.profit = parseFloat(fixture.fixture.homeOdds);
-            break;
-          case outcome === 1:
-            fixture.fixture.profit = parseFloat(fixture.fixture.drawOdds);
-            break;
-          case outcome === 2:
-            fixture.fixture.profit = parseFloat(fixture.fixture.awayOdds);
-            break;
-          default:
-            break;
-        }
-      } else fixture.fixture.profit = 1;
-
-      if (
-        fixture.fixture.goalsA === fixture.fixture.homeGoals &&
-        fixture.fixture.goalsB === fixture.fixture.awayGoals
-      ) {
-        fixture.fixture.exactScore = true;
-        tipOutcome = "exact";
-        return null;
-      } else {
-        fixture.fixture.exactScore = false;
-        tipOutcome = "correct";
-        return null;
-      }
-    } else if (outcome !== prediction) {
-      if (fixture.fixture.homeOdds !== 0) {
-        fixture.fixture.profit = 0;
-      } else {
-        fixture.fixture.profit = 1;
-      }
-      // fixture.fixture.exactScore = false;
-      tipOutcome = "incorrect";
-      return null;
-    }
-  } else {
-    return (
-      <div className="KOAndPrediction">
-        <div className="KOTime">{`${fixture.fixture.time}`}</div>
+        <div className="KOTime">{time}</div>
       </div>
     );
   }
+
+  // 🚫 Omitted predictions render nothing
+  if (omit === true) {
+    return <div className="Omitted" />;
+  }
+
+  // 🧠 Evaluate prediction
+  const actualOutcome = getOutcome(
+    fixture.fixture.homeGoals,
+    fixture.fixture.awayGoals
+  );
+
+  const predictedOutcome = getOutcome(
+    fixture.fixture.goalsA,
+    fixture.fixture.goalsB
+  );
+
+  fixture.fixture.outcome =
+    ["homeWin", "draw", "awayWin"][actualOutcome];
+
+  fixture.fixture.winner =
+    actualOutcome === 1
+      ? "draw"
+      : actualOutcome === 0
+      ? fixture.fixture.homeTeam
+      : fixture.fixture.awayTeam;
+
+  if (actualOutcome === predictedOutcome) {
+    fixture.fixture.profit = getProfit(fixture.fixture, actualOutcome);
+
+    fixture.fixture.exactScore =
+      fixture.fixture.goalsA === fixture.fixture.homeGoals &&
+      fixture.fixture.goalsB === fixture.fixture.awayGoals;
+
+    tipOutcome = fixture.fixture.exactScore ? "exact" : "correct";
+  } else {
+    fixture.fixture.profit = fixture.fixture.homeOdds !== 0 ? 0 : 1;
+    tipOutcome = "incorrect";
+  }
+
+  return null;
 }
+
 
 const downArrow = "\u{2630}";
 const rightArrow = "\u{29C9}";

@@ -79,6 +79,7 @@ export async function calculateAttackingStrength(stats) {
 }
 
 export async function calculateDefensiveStrength(stats, normalizedValue = 1) {
+  console.log(stats)
   let normValue = normalizedValue;
   // Define weights for each metric (you can adjust these based on your preference)
   const weights = {
@@ -809,18 +810,18 @@ export async function createStatsDiv(game, displayBool) {
             : awayForm.ScoredOverall / 10,
       };
 
-      const defensiveMetricsHome = {
-        "Clean Sheet Percentage": 100 - homeForm.CleanSheetPercentage,
-        "Average XG Against": homeForm.XGAgainstAvgOverall,
-        "Recent XG Against": homeForm.XGAgainstlast5
-          ? homeForm.XGAgainstlast5
-          : homeForm.XGAgainstAvgOverall,
-        "Average Goals Against":
-          homeForm.averageConceededLeague !== undefined &&
-            homeForm.averageConceededLeague !== null
-            ? homeForm.averageConceededLeague
-            : homeForm.ConcededOverall / 10,
-      };
+      // const defensiveMetricsHome = {
+      //   "Clean Sheet Percentage": 100 - homeForm.CleanSheetPercentage,
+      //   "Average XG Against": homeForm.XGAgainstAvgOverall,
+      //   "Recent XG Against": homeForm.XGAgainstlast5
+      //     ? homeForm.XGAgainstlast5
+      //     : homeForm.XGAgainstAvgOverall,
+      //   "Average Goals Against":
+      //     homeForm.averageConceededLeague !== undefined &&
+      //       homeForm.averageConceededLeague !== null
+      //       ? homeForm.averageConceededLeague
+      //       : homeForm.ConcededOverall / 10,
+      // };
 
       const defensiveMetricsAway = {
         "Clean Sheet Percentage": 100 - awayForm.CleanSheetPercentage,

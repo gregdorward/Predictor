@@ -99,6 +99,7 @@ const leagueOrder = [
   15066, //Spanish secunda 25 12467
   15632, //Italy serie B 24 12621
   14931, //Bundesliga 2 25 12528
+  14977, //German 3rd tier 25 12623
   14954, //French League 2 25 12338
   14987, //Dutch League 2 25
   15061, //Scottish Championship 25 12456

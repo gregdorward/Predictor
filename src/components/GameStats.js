@@ -471,8 +471,6 @@ function GameStats({ game, displayBool, stats }) {
 
   const { homeWin, draw, awayWin } =
     getMatchOddsProbabilities(game.scoreMatrix);
-
-
   const { yes, no } = getBTTSProbability(game.scoreMatrix);
   const { over, under } = getOverUnderProbability(game.scoreMatrix, 2.5);
 
@@ -2772,229 +2770,23 @@ function GameStats({ game, displayBool, stats }) {
         const awayForm = gameStats.away[index];
         let id = game.id;
 
-        const attackingMetricsHome = {
-          "Average Dangerous Attacks":
-            gameStats?.home[index]?.AverageDangerousAttacksOverall || 0,
-          "Average Shots": gameStats?.home[index]?.AverageShots || 0,
-          "Average Shots On Target":
-            gameStats?.home[index]?.AverageShotsOnTargetOverall || 0,
-          "Average Expected Goals": gameStats?.home[index]?.XGOverall || 0,
-          "Recent XG": gameStats?.home[index]?.XGlast5
-            ? gameStats?.home[index]?.XGlast5
-            : gameStats?.home[index]?.XGOverall || 0,
-          "Average Goals":
-            gameStats?.home[index]?.averageScoredLeague !== undefined &&
-              gameStats?.home[index]?.averageScoredLeague !== null
-              ? gameStats?.home[index]?.averageScoredLeague
-              : gameStats?.home[index]?.ScoredOverall / 10,
-        };
+        console.log(gameStats);
 
-        const attackingMetricsHomeLast5 = {
-          "Average Dangerous Attacks": gameStats?.home[index]?.avDALast5
-            ? gameStats?.home[index]?.avDALast5
-            : gameStats?.home[index]?.AverageDangerousAttacksOverall,
-          "Average Shots": gameStats?.home[index]?.avShotsLast5
-            ? gameStats?.home[index]?.avShotsLast5
-            : gameStats?.home[index]?.AverageShots,
-          "Average Shot Value": gameStats?.home[index]?.avgShotValueLast5Chart,
-          "Average Shots On Target": gameStats?.home[index]?.avSOTLast5
-            ? gameStats?.home[index]?.avSOTLast5
-            : gameStats?.home[index]?.AverageShotsOnTarget,
-          "Average Expected Goals": gameStats?.home[index]?.XGlast5
-            ? gameStats?.home[index]?.XGlast5
-            : gameStats?.home[index]?.XGOverall,
-          "Recent XG": gameStats?.home[index]?.XGlast5 ? gameStats?.home[index]?.XGlast5 : gameStats?.home[index]?.XGOverall,
-          "Average Goals": gameStats?.home[index]?.avScoredLast5
-            ? gameStats?.home[index]?.avScoredLast5
-            : gameStats?.home[index]?.ScoredAverage,
-          Corners: gameStats?.home[index]?.avCornersLast5
-            ? gameStats?.home[index]?.avCornersLast5
-            : gameStats?.home[index]?.CornersAverage,
-        };
+        const attackingMetricsHome = homeForm.attackingMetrics
+        const attackingMetricsHomeLast5 = homeForm.attackingMetricsHomeLast5
+        const attackingMetricsHomeOnly = homeForm.attackingMetricsHomeOnly
 
-        const attackingMetricsHomeOnly = {
-          "Average Dangerous Attacks": gameStats?.home[index]?.avgDangerousAttacksHome
-            ? gameStats?.home[index]?.avgDangerousAttacksHome
-            : gameStats?.home[index]?.AverageDangerousAttacksOverall,
-          "Average Shots": gameStats?.home[index]?.avgShotsHome
-            ? gameStats?.home[index]?.avgShotsHome
-            : gameStats?.home[index]?.AverageShots,
-          "Average Shot Value": gameStats?.home[index]?.avgShotValueHomeChart,
-          "Average Shots On Target": gameStats?.home[index]?.avgShotsOnTargetHome
-            ? gameStats?.home[index]?.avgShotsOnTargetHome
-            : gameStats?.home[index]?.AverageShotsOnTarget,
-          "Average Expected Goals": gameStats?.home[index]?.avgXGScoredHome
-            ? gameStats?.home[index]?.avgXGScoredHome
-            : gameStats?.home[index]?.XGOverall,
-          "Recent XG": gameStats?.home[index]?.last5XGAvgForHome
-            ? gameStats?.home[index]?.last5XGAvgForHome
-            : gameStats?.home[index]?.XGOverall,
-          "Average Goals": gameStats?.home[index]?.avgScoredHome
-            ? gameStats?.home[index]?.avgScoredHome
-            : gameStats?.home[index]?.ScoredAverage,
-          Corners: gameStats?.home[index]?.cornersAvHome
-            ? gameStats?.home[index]?.cornersAvHome
-            : gameStats?.home[index]?.CornersAverage,
-        };
+        const attackingMetricsAway = awayForm.attackingMetrics
+        const attackingMetricsAwayLast5 = awayForm.attackingMetricsAwayLast5
+        const attackingMetricsAwayOnly = awayForm.attackingMetricsAwayOnly
+        
+        const defensiveMetricsHome = homeForm.defensiveMetrics
+        const defensiveMetricsHomeLast5 = homeForm.defensiveMetricsHomeLast5
+        const defensiveMetricsHomeOnly = homeForm.defensiveMetricsHomeOnly
 
-        const attackingMetricsAway = {
-          // averagePossession: awayForm.AveragePossessionOverall,
-          "Average Dangerous Attacks":
-            gameStats?.away[index]?.AverageDangerousAttacksOverall || 0,
-          "Average Shots": gameStats?.away[index]?.AverageShots || 0,
-          "Average Shots On Target":
-            gameStats?.away[index]?.AverageShotsOnTargetOverall || 0,
-          "Average Expected Goals": gameStats?.away[index]?.XGOverall || 0,
-          "Recent XG": gameStats?.away[index]?.XGlast5
-            ? gameStats?.away[index]?.XGlast5
-            : gameStats?.away[index]?.XGOverall || 0,
-          "Average Goals":
-            gameStats?.away[index]?.averageScoredLeague !== undefined &&
-              gameStats?.away[index]?.averageScoredLeague !== null
-              ? gameStats?.away[index]?.averageScoredLeague
-              : gameStats?.away[index]?.ScoredOverall / 10,
-        };
-
-        const attackingMetricsAwayOnly = {
-          "Average Dangerous Attacks": gameStats?.away[index]?.avgDangerousAttacksAway
-            ? gameStats?.away[index]?.avgDangerousAttacksAway
-            : gameStats?.away[index]?.AverageDangerousAttacksOverall,
-          "Average Shots": gameStats?.away[index]?.avgShotsAway
-            ? gameStats?.away[index]?.avgShotsAway
-            : gameStats?.away[index]?.AverageShots,
-          "Average Shot Value": gameStats?.away[index]?.avgShotValueAwayChart,
-          "Average Shots On Target": gameStats?.away[index]?.avgShotsOnTargetAway
-            ? gameStats?.away[index]?.avgShotsOnTargetAway
-            : gameStats?.away[index]?.AverageShotsOnTarget,
-          "Average Expected Goals": gameStats?.away[index]?.avgXGScoredAway
-            ? gameStats?.away[index]?.avgXGScoredAway
-            : gameStats?.away[index]?.XGOverall,
-          "Recent XG": gameStats?.away[index]?.last5XGAvgForAway
-            ? gameStats?.away[index]?.last5XGAvgForAway
-            : gameStats?.away[index]?.XGOverall,
-          "Average Goals": gameStats?.away[index]?.avgScoredAway
-            ? gameStats?.away[index]?.avgScoredAway
-            : gameStats?.away[index]?.ScoredAverage,
-          Corners: gameStats?.away[index]?.cornersAvAway
-            ? gameStats?.away[index]?.cornersAvAway
-            : gameStats?.away[index]?.CornersAverage,
-        };
-
-        const attackingMetricsAwayLast5 = {
-          "Average Dangerous Attacks": gameStats?.away[index]?.avDALast5
-            ? gameStats?.away[index]?.avDALast5
-            : gameStats?.away[index]?.AverageDangerousAttacksOverall,
-          "Average Shots": gameStats?.away[index]?.avShotsLast5
-            ? gameStats?.away[index]?.avShotsLast5
-            : gameStats?.away[index]?.AverageShots,
-          "Average Shot Value": gameStats?.away[index]?.avgShotValueLast5Chart,
-          "Average Shots On Target": gameStats?.away[index]?.avSOTLast5
-            ? gameStats?.away[index]?.avSOTLast5
-            : gameStats?.away[index]?.AverageShotsOnTarget,
-          "Average Expected Goals": gameStats?.away[index]?.XGlast5
-            ? gameStats?.away[index]?.XGlast5
-            : gameStats?.away[index]?.XGOverall,
-          "Recent XG": gameStats?.away[index]?.XGlast5 ? gameStats?.away[index]?.XGlast5 : gameStats?.away[index]?.XGOverall,
-          "Average Goals": gameStats?.away[index]?.avScoredLast5
-            ? gameStats?.away[index]?.avScoredLast5
-            : gameStats?.away[index]?.ScoredAverage,
-          Corners: gameStats?.away[index]?.avCornersLast5
-            ? gameStats?.away[index]?.avCornersLast5
-            : gameStats?.away[index]?.CornersAverage,
-        };
-
-        const defensiveMetricsHome = {
-          "Clean Sheet Percentage":
-            100 - gameStats?.home[index]?.CleanSheetPercentage || 0,
-          "Average XG Against":
-            gameStats?.home[index]?.XGAgainstAvgOverall || 0,
-          "Recent XG Against": gameStats?.home[index]?.XGAgainstlast5
-            ? gameStats?.home[index]?.XGAgainstlast5
-            : gameStats?.home[index]?.XGAgainstAvgOverall || 0,
-          "Average Goals Against":
-            gameStats?.home[index]?.averageConceededLeague !== undefined &&
-              gameStats?.home[index]?.averageConceededLeague !== null
-              ? gameStats?.home[index]?.averageConceededLeague
-              : gameStats?.home[index]?.ConcededOverall / 10,
-        };
-
-
-        const defensiveMetricsHomeLast5 = {
-          "Average XG Against": gameStats?.home[index]?.XGAgainstlast5
-            ? gameStats?.home[index]?.XGAgainstlast5
-            : gameStats?.home[index]?.XGAgainstAvgOverall,
-          "Recent XG Against": gameStats?.home[index]?.avXGAgainstLast5
-            ? gameStats?.home[index]?.avXGAgainstLast5
-            : gameStats?.home[index]?.XGAgainstAvgOverall,
-          "Average Goals Against": gameStats?.home[index]?.avConceededLast5
-            ? gameStats?.home[index]?.avConceededLast5
-            : gameStats?.home[index]?.ConcededAverage,
-          "Average SOT Against": gameStats?.home[index]?.avSOTAgainstLast5
-            ? gameStats?.home[index]?.avSOTAgainstLast5
-            : 5,
-        };
-
-
-        const defensiveMetricsHomeOnly = {
-          "Average XG Against": gameStats?.home[index]?.avgXGConceededHome
-            ? gameStats?.home[index]?.avgXGConceededHome
-            : gameStats?.home[index]?.XGAgainstAvgOverall,
-          "Recent XG Against": gameStats?.home[index]?.last5XGAvgAgainstHome
-            ? gameStats?.home[index]?.last5XGAvgAgainstHome
-            : gameStats?.home[index]?.XGAgainstAvgOverall,
-          "Average Goals Against": gameStats?.home[index]?.teamConceededAvgHomeOnly
-            ? gameStats?.home[index]?.teamConceededAvgHomeOnly
-            : gameStats?.home[index]?.ConcededAverage,
-          "Average SOT Against": gameStats?.home[index]?.avgShotsOnTargetAgainstHome
-            ? gameStats?.home[index]?.avgShotsOnTargetAgainstHome
-            : 5,
-        };
-
-
-        const defensiveMetricsAway = {
-          "Clean Sheet Percentage":
-            100 - gameStats?.away[index]?.CleanSheetPercentage || 0,
-          "Average XG Against":
-            gameStats?.away[index]?.XGAgainstAvgOverall || 0,
-          "Recent XG Against": gameStats?.away[index]?.XGAgainstlast5
-            ? gameStats?.away[index]?.XGAgainstlast5
-            : gameStats?.away[index]?.XGAgainstAvgOverall || 0,
-          "Average Goals Against":
-            gameStats?.away[index]?.averageConceededLeague !== undefined &&
-              gameStats?.away[index]?.averageConceededLeague !== null
-              ? gameStats?.away[index]?.averageConceededLeague
-              : gameStats?.away[index]?.ConcededOverall / 10,
-        };
-
-        const defensiveMetricsAwayLast5 = {
-          "Average XG Against": gameStats?.away[index]?.XGAgainstlast5
-            ? gameStats?.away[index]?.XGAgainstlast5
-            : gameStats?.away[index]?.XGAgainstAvgOverall,
-          "Recent XG Against": gameStats?.away[index]?.avXGAgainstLast5
-            ? gameStats?.away[index]?.avXGAgainstLast5
-            : gameStats?.away[index]?.XGAgainstAvgOverall,
-          "Average Goals Against": gameStats?.away[index]?.avConceededLast5
-            ? gameStats?.away[index]?.avConceededLast5
-            : gameStats?.away[index]?.ConcededAverage,
-          "Average SOT Against": gameStats?.away[index]?.avSOTAgainstLast5
-            ? gameStats?.away[index]?.avSOTAgainstLast5
-            : 5,
-        };
-
-        const defensiveMetricsAwayOnly = {
-          "Average XG Against": gameStats?.away[index]?.avgXGConceededAway
-            ? gameStats?.away[index]?.avgXGConceededAway
-            : gameStats?.away[index]?.XGAgainstAvgOverall,
-          "Recent XG Against": gameStats?.away[index]?.last5XGAvgAgainstAway
-            ? gameStats?.away[index]?.last5XGAvgAgainstAway
-            : gameStats?.away[index]?.XGAgainstAvgOverall,
-          "Average Goals Against": gameStats?.away[index]?.teamConceededAvgAwayOnly
-            ? gameStats?.away[index]?.teamConceededAvgAwayOnly
-            : gameStats?.away[index]?.ConcededAverage,
-          "Average SOT Against": gameStats?.away[index]?.avgShotsOnTargetAgainstAway
-            ? gameStats?.away[index]?.avgShotsOnTargetAgainstAway
-            : 5,
-        };
+        const defensiveMetricsAway = awayForm.defensiveMetrics
+        const defensiveMetricsAwayLast5 = awayForm.defensiveMetricsAwayLast5
+        const defensiveMetricsAwayOnly = awayForm.defensiveMetricsAwayOnly
 
 
         const attackH = await calculateAttackingStrength(attackingMetricsHome);
@@ -3005,6 +2797,8 @@ function GameStats({ game, displayBool, stats }) {
           attackingMetricsHomeOnly
         );
 
+
+            console.log(defensiveMetricsHome)
 
         const defenceH = await calculateDefensiveStrength(defensiveMetricsHome);
         const defenceHLast5 = await calculateDefensiveStrength(
@@ -3661,6 +3455,7 @@ function GameStats({ game, displayBool, stats }) {
   const over25Implied = impliedProbability(game.over25Odds);
   const under25Implied = 100 - over25Implied;
 
+
   const fairOdds = (prob) =>
     prob > 0 ? (100 / prob) : null;
 
@@ -3746,8 +3541,8 @@ function GameStats({ game, displayBool, stats }) {
                       <tr key={label}>
                         <td>{label}</td>
 
-                        <td>{model.toFixed(1)}%</td>
-                        <td>{bookie.toFixed(1)}%</td>
+                        <td>{model?.toFixed(1)}%</td>
+                        <td>{bookie?.toFixed(1)}%</td>
                         <td>{fairOdds(model)?.toFixed(2)}</td>
                         <td className={valueClass(value)}>
                           {value.toFixed(1)}%

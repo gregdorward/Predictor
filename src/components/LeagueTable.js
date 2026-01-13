@@ -139,6 +139,7 @@ export const sofaScoreIds = [
   { 15066: 54 }, //Spanish secunda 22/23
   { 15632: 53 }, //Italy serie B 22/23
   { 14931: 44 }, //Bundesliga 2 22/23
+  { 14977: 491 }, //German 3rd tier 25/26
   { 14954: 182 }, //French League 2 22/23
   { 14987: 131 }, //Dutch League 2 25
   { 15061: 206 }, //Scottish Championship 22/23

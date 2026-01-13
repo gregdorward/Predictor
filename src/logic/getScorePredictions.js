@@ -1195,6 +1195,8 @@ async function getPastLeagueResults(team, game, hOrA, form) {
     form.avgDangerousAttacksAgainst =
       dangerousAttacksAgainstSum / dangerousAttacksAgainst.length || 45;
 
+    console.log('Dangerous Attacks Against:', form.avgDangerousAttacksAgainst);
+
     const dangerousAttacksAgainstLast5 = dangerousAttacksAgainst.slice(0, 5);
     const dangerousAttacksAgainstSumLast5 = dangerousAttacksAgainstLast5.reduce(
       (a, b) => a + b,
@@ -2675,13 +2677,15 @@ export async function calculateScore(match, index, divider, calculate, AIPredict
     };
 
     const defensiveMetricsHome = {
+      "Clean Sheet Percentage":
+        100 - formHome.CleanSheetPercentage || 0,
       "Average XG Against": formHome.XGAgainstAvgOverall,
       "Weighted XG Against": formHome.weightedXGAvgAgainst
         ? formHome.weightedXGAvgAgainst
         : formHome.XGAgainstAvgOverall,
       "Average Goals Against": formHome.avgConceeded,
       "Average SOT Against": formHome.AverageShotsOnTargetAgainstOverall,
-      "Average Dangerous Attacks Against": formHome.avgDangerousAttacksAgainst.toFixed(2),
+      "Average Dangerous Attacks Against": formHome.avgDangerousAttacksAgainst,
     };
 
     const defensiveMetricsHomeLast5 = {
@@ -2704,6 +2708,8 @@ export async function calculateScore(match, index, divider, calculate, AIPredict
     };
 
     const defensiveMetricsAway = {
+      "Clean Sheet Percentage":
+        100 - formAway.CleanSheetPercentage || 0,
       "Average XG Against": formAway.XGAgainstAvgOverall,
       "Weighted XG Against": formAway.weightedXGAvgAgainst
         ? formAway.weightedXGAvgAgainst
@@ -2802,7 +2808,10 @@ export async function calculateScore(match, index, divider, calculate, AIPredict
       attackingMetricsAwayOnly
     );
 
-    formHome.defensiveStrength = await calculateDefensiveStrength(
+    console.log(defensiveMetricsHome)
+
+    formHome.defensiveStrength = 1
+    await calculateDefensiveStrength(
       defensiveMetricsHome
     );
 
@@ -3135,6 +3144,8 @@ export async function calculateScore(match, index, divider, calculate, AIPredict
     match.over25Probability = over;
     match.under25Probability = under;
 
+    console.log(match)
+
     const homeWinImplied = impliedProbability(match.homeOdds);
 
     const drawImplied = impliedProbability(match.drawOdds);
@@ -3226,8 +3237,11 @@ export async function calculateScore(match, index, divider, calculate, AIPredict
     let experimentalHomeGoals = formHome.teamGoalsCalc;
     let experimentalAwayGoals = formAway.teamGoalsCalc;
 
-    let rawFinalHomeGoals = predictedScore.home;
-    let rawFinalAwayGoals = predictedScore.away;
+    // let rawFinalHomeGoals = predictedScore.home;
+    // let rawFinalAwayGoals = predictedScore.away;
+
+    let rawFinalHomeGoals = `${match.homeWinProbability.toFixed(1)}%`;
+    let rawFinalAwayGoals = `${match.awayWinProbability.toFixed(1)}%`;
 
     match.rawFinalHomeGoals = rawFinalHomeGoals;
     match.rawFinalAwayGoals = rawFinalAwayGoals;
@@ -4108,6 +4122,10 @@ const footyStatsToSofaScore = [
     14931: {
       id: 44,
       season: 77354, // Bundesliga 2
+    },
+    14977: {
+      id: 491,
+      season: 77744, // German 3. Liga
     },
     14954: {
       id: 182,
@@ -5389,14 +5407,14 @@ async function renderTips() {
   }
 
 
-render(
-  <TopValueGames
-    tips={valueDiffTipsWinMarket}
-    limit={10}
-    paid={paid}
-  />,
-  "valueBets"
-);
+  render(
+    <TopValueGames
+      tips={valueDiffTipsWinMarket}
+      limit={10}
+      paid={paid}
+    />,
+    "valueBets"
+  );
 
   if (paid && exoticArray.length > 4) {
     render(
