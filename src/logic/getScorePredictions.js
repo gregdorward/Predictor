@@ -3237,11 +3237,11 @@ export async function calculateScore(match, index, divider, calculate, AIPredict
     let experimentalHomeGoals = formHome.teamGoalsCalc;
     let experimentalAwayGoals = formAway.teamGoalsCalc;
 
-    // let rawFinalHomeGoals = predictedScore.home;
-    // let rawFinalAwayGoals = predictedScore.away;
+    let rawFinalHomeGoals = predictedScore.home;
+    let rawFinalAwayGoals = predictedScore.away;
 
-    let rawFinalHomeGoals = `${match.homeWinProbability.toFixed(1)}%`;
-    let rawFinalAwayGoals = `${match.awayWinProbability.toFixed(1)}%`;
+    // let rawFinalHomeGoals = `${match.homeWinProbability.toFixed(1)}%`;
+    // let rawFinalAwayGoals = `${match.awayWinProbability.toFixed(1)}%`;
 
     match.rawFinalHomeGoals = rawFinalHomeGoals;
     match.rawFinalAwayGoals = rawFinalAwayGoals;
@@ -4125,7 +4125,7 @@ const footyStatsToSofaScore = [
     },
     14977: {
       id: 491,
-      season: 77744, // German 3. Liga
+      season: 346654, // German 3. Liga
     },
     14954: {
       id: 182,
