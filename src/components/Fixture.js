@@ -11,6 +11,9 @@ import { userTips } from "./GameStats";
 import { leagueStatsArray } from "../logic/getScorePredictions";
 import LeagueName from './LeagueName';
 import ShareShortlistButton from "./ShareShortlistButton";
+import { getAuth } from "firebase/auth";
+import { getFirestore, doc, getDoc, updateDoc } from "firebase/firestore";
+
 const LazyGameStats = lazy(() => import('./GameStats'));
 
 let resultValue;
@@ -47,7 +50,6 @@ function getProfit(fixture, outcome) {
 }
 
 
-
 function GetDivider(fixture, mockValue) {
   const { status, omit, time } = fixture.fixture;
 
@@ -67,9 +69,9 @@ function GetDivider(fixture, mockValue) {
   }
 
   // 🚫 Omitted predictions render nothing
-  if (omit === true) {
-    return <div className="Omitted" />;
-  }
+  // if (omit === true) {
+  //   return <div className="Omitted" />;
+  // }
 
   // 🧠 Evaluate prediction
   const actualOutcome = getOutcome(
@@ -89,8 +91,8 @@ function GetDivider(fixture, mockValue) {
     actualOutcome === 1
       ? "draw"
       : actualOutcome === 0
-      ? fixture.fixture.homeTeam
-      : fixture.fixture.awayTeam;
+        ? fixture.fixture.homeTeam
+        : fixture.fixture.awayTeam;
 
   if (actualOutcome === predictedOutcome) {
     fixture.fixture.profit = getProfit(fixture.fixture, actualOutcome);
@@ -114,6 +116,73 @@ const rightArrow = "\u{29C9}";
 
 export let testing;
 
+const getProbabilityClass = (probability) => {
+  if (probability >= 60) return "prob-strong";
+  if (probability >= 45) return "prob-slightlyStrong";
+  if (probability >= 35) return "prob-medium";
+  if (probability >= 20) return "prob-slightlyWeak";
+  return "prob-weak";
+};
+
+const PredictionSection = ({ isProbability, goals, team, probability }) => {
+  if (!isProbability) {
+    return (
+      <div className="ScoreContainer">
+        <div className="score">{goals ?? "-"}</div>
+      </div>
+    );
+  }
+
+  const safeProb = probability ?? 0;
+  const probClass = getProbabilityClass(safeProb);
+
+  return (
+    <div className="ProbabilityWrapper">
+      <div className="ProbabilityBarBackground">
+        {/* BAR FILL (doesn't affect layout) */}
+        <div
+          className={`ProbabilityBarFill ${probClass}`}
+          style={{ width: `${safeProb}%` }}
+        />
+
+        {/* TEXT LAYER */}
+        <span className="ProbabilityBarText">
+          {probability !== undefined ? `${safeProb.toFixed(1)}%` : ""}
+        </span>
+      </div>
+
+      {/* <div className="ProbabilityValue">
+        {probability !== undefined ? `${safeProb.toFixed(1)}%` : ""}
+      </div> */}
+    </div>
+  );
+};
+
+
+function ProbabilityView({ fixture }) {
+
+  return (
+    <div className="ProbabilityContainer">
+      <div className="ProbRow home">
+        <span>H</span>
+        <span>{fixture.homeWinProbability.toFixed(1)}%</span>
+      </div>
+      <div className="ProbRow draw">
+        <span>D</span>
+        <span>{fixture.drawProbability.toFixed(1)}%</span>
+      </div>
+      <div className="ProbRow away">
+        <span>A</span>
+        <span>{fixture.awayWinProbability.toFixed(1)}%</span>
+      </div>
+    </div>
+  );
+}
+
+
+
+
+
 function SingleFixture({
   fixture,
   count,
@@ -121,6 +190,7 @@ function SingleFixture({
   checked,
   onToggle,
   showShortlist,
+  isProbability
 }) {
   const dispatch = useDispatch();
   const [showGameStats, setShowGameStats] = useState(false);
@@ -233,6 +303,7 @@ function SingleFixture({
     }, 1);
   };
 
+
   return (
     <div key={fixture.game}>
       <LeagueName fixture={fixture} mock={mock} showShortlist={showShortlist} />
@@ -242,6 +313,7 @@ function SingleFixture({
             className={`individualFixture${fixture.omit}`}
             key={fixture.id}
             data-cy={fixture.id}
+            onClick={handleGameStatsClick}
           // onClick={handleGameStatsClick}
           // onClick={onToggle} // Toggle checked state on click
           // style={{ display: checked ? "lightblue" : "white" }} // Change background when checked
@@ -259,117 +331,165 @@ function SingleFixture({
                 className="star"
                 id={`shortlist-${fixture.id}`} // Unique ID for label association
               />
-            </div>
-            <div className={`HomeAndAwayContainer${fixture.predictionOutcome}${fixture.exactScore ? "ExactScore" : ""}`}>              <div className="HomeContainer">
-              <div className="HomeOdds">{fixture.fractionHome}</div>
-              <CreateBadge
-                image={fixture.homeBadge}
-                ClassName="HomeBadge"
-                alt="Home team badge"
-                flexShrink={5}
-              />
-              <div className="homeTeam">
-                {fixture.homeTeam}{" "}
-                <br />
-                {fixture.formHome ? `(${fixture.formHome.LeaguePosition})` : ""}
-              </div>
-              <div className="ScoreContainer">
-                <div className="score" key={fixture.homeTeam}>
-                  {fixture.goalsA !== undefined ? `${fixture.goalsA}` : `-`}
-                </div>
-              </div>
-              <div className="ResultContainer">
-                <div className={`result`}>
-                  {fixture.status === "complete" ? `${fixture.homeGoals}` : `-`}
-                </div>
-              </div>
-              <div className="FormContainer">
-                <div className={`Last5`}>
-                  {fixture.formHome && (
-                    <>
-                      <span className="FormAllorHA">All</span>
-                      <span
-                        className={styleForm(
-                          fixture.formHome.resultsAll[4] || ""
-                        )}
-                      ></span>
-                      <span
-                        className={styleForm(
-                          fixture.formHome.resultsAll[3] || ""
-                        )}
-                      ></span>
-                      <span
-                        className={styleForm(
-                          fixture.formHome.resultsAll[2] || ""
-                        )}
-                      ></span>
-                      <span
-                        className={styleForm(
-                          fixture.formHome.resultsAll[1] || ""
-                        )}
-                      ></span>
-                      <span
-                        className={styleForm(
-                          fixture.formHome.resultsAll[0] || ""
-                        )}
-                      ></span>
-                    </>
-                  )}
-                </div>
-                <div className={`Last5Home`}>
-                  {fixture.formHome && (
-                    <>
-                      <span className="FormAllorHA">Home</span>
-                      <span
-                        className={styleForm(
-                          fixture.formHome.resultsHome[4] || ""
-                        )}
-                      ></span>
-                      <span
-                        className={styleForm(
-                          fixture.formHome.resultsHome[3] || ""
-                        )}
-                      ></span>
-                      <span
-                        className={styleForm(
-                          fixture.formHome.resultsHome[2] || ""
-                        )}
-                      ></span>
-                      <span
-                        className={styleForm(
-                          fixture.formHome.resultsHome[1] || ""
-                        )}
-                      ></span>
-                      <span
-                        className={styleForm(
-                          fixture.formHome.resultsHome[0] || ""
-                        )}
-                      ></span>
-                    </>
-                  )}
-                </div>
-              </div>
               <button className="GameStatsTwo" onClick={handleButtonClick}>
                 {rightArrow}
               </button>
             </div>
-              <div className="AwayContainer">
+            <div className={`HomeAndAwayContainer${fixture.predictionOutcome}${fixture.exactScore ? "ExactScore" : ""}`}>
+
+              <div className={`ExplainerContainer${isProbability}`}>
+                <div className="HomeOddsExplainer">Odds</div>
+                <div
+                  className="HomeBadgeExplainer"
+                />
+                <div className={`homeTeam${isProbability}Explainer`}>
+                </div>
+                <div className={`PredictionOrProbabilityExplainer${isProbability}`}>{isProbability ? 'Chance' : 'Tip'}</div>
+                <div className="ResultContainerExplainer">
+                  <div className={`resultExplainer`}>
+                    Result
+                  </div>
+                </div>
+                <div className="FormContainerExplainer">
+                  Form
+                </div>
+                <div className="GameStatsTwoExplainer">
+                </div>
+              </div>
+
+              <div className={`HomeContainer${isProbability}`}>
+                <div className="HomeOdds">{fixture.fractionHome}</div>
+                <CreateBadge
+                  image={fixture.homeBadge}
+                  ClassName="HomeBadge"
+                  alt="Home team badge"
+                  flexShrink={5}
+                />
+                <div className={`homeTeam${isProbability}`}>
+                  {fixture.homeTeam}{" "}
+                  {fixture.formHome ? `(${fixture.formHome.LeaguePosition})` : ""}
+                </div>
+                <PredictionSection
+                  isProbability={isProbability}
+                  team={""}
+                  goals={fixture.goalsA}
+                  probability={fixture.homeWinProbability}
+                />
+                <div className="ResultContainer">
+                  <div className={`result`}>
+                    {fixture.status === "complete" ? `${fixture.homeGoals}` : `-`}
+                  </div>
+                </div>
+                <div className="FormContainer">
+                  <div className={`Last5`}>
+                    {fixture.formHome && (
+                      <>
+                        <span className="FormAllorHA">All</span>
+                        <span
+                          className={styleForm(
+                            fixture.formHome.resultsAll[4] || ""
+                          )}
+                        ></span>
+                        <span
+                          className={styleForm(
+                            fixture.formHome.resultsAll[3] || ""
+                          )}
+                        ></span>
+                        <span
+                          className={styleForm(
+                            fixture.formHome.resultsAll[2] || ""
+                          )}
+                        ></span>
+                        <span
+                          className={styleForm(
+                            fixture.formHome.resultsAll[1] || ""
+                          )}
+                        ></span>
+                        <span
+                          className={styleForm(
+                            fixture.formHome.resultsAll[0] || ""
+                          )}
+                        ></span>
+                      </>
+                    )}
+                  </div>
+                  <div className={`Last5Home`}>
+                    {fixture.formHome && (
+                      <>
+                        <span className="FormAllorHA">Home</span>
+                        <span
+                          className={styleForm(
+                            fixture.formHome.resultsHome[4] || ""
+                          )}
+                        ></span>
+                        <span
+                          className={styleForm(
+                            fixture.formHome.resultsHome[3] || ""
+                          )}
+                        ></span>
+                        <span
+                          className={styleForm(
+                            fixture.formHome.resultsHome[2] || ""
+                          )}
+                        ></span>
+                        <span
+                          className={styleForm(
+                            fixture.formHome.resultsHome[1] || ""
+                          )}
+                        ></span>
+                        <span
+                          className={styleForm(
+                            fixture.formHome.resultsHome[0] || ""
+                          )}
+                        ></span>
+                      </>
+                    )}
+                  </div>
+                </div>
+              </div>
+
+              <div className={`DrawContainer${isProbability}`}>
+                <div className="DrawOdds">{fixture.fractionDraw}</div>
+                <div
+                  className="DrawBadgeExplainer"
+                />
+                <div className={`homeTeam${isProbability}Explainer`}>
+                </div>
+                <PredictionSection
+                  isProbability={isProbability}
+                  team="Draw"
+                  // goals={fixture.goalsB}
+                  probability={fixture.drawProbability}
+                />
+                <div className="ResultContainerExplainer">
+                  {/* <div className={`result`}>
+                  </div> */}
+                </div>
+                <div className="FormContainerExplainer">
+                </div>
+                <div className="GameStatsTwoExplainer">
+                </div>
+              </div>
+
+
+              <div className={`AwayContainer${isProbability}`}>
                 <div className="AwayOdds">{fixture.fractionAway}</div>
                 <CreateBadge
                   image={fixture.awayBadge}
                   ClassName="AwayBadge"
                   alt="Away team badge"
                 />
-                <div className="awayTeam">
+                <div className={`awayTeam${isProbability}`}>
                   {fixture.awayTeam}{" "}
                   <br />
                   {fixture.formAway ? `(${fixture.formAway.LeaguePosition})` : ""}
                 </div>
-                <div className="ScoreContainer">
-                  <div className="score" key={fixture.awayTeam}>
-                    {fixture.goalsB !== undefined ? `${fixture.goalsB}` : `-`}
-                  </div>
-                </div>
+                <PredictionSection
+                  isProbability={isProbability}
+                  team=""
+                  goals={fixture.goalsB}
+                  probability={fixture.awayWinProbability}
+                />
                 <div className="ResultContainer">
 
                   <div className="result">
@@ -442,9 +562,9 @@ function SingleFixture({
                     )}
                   </div>
                 </div>
-                <button className="GameStats" onClick={handleGameStatsClick}>
+                {/* <button className="GameStats" onClick={handleGameStatsClick}>
                   {downArrow}
-                </button>
+                </button> */}
               </div>
             </div>
           </li>
@@ -500,10 +620,46 @@ const List = ({
   // ⭐️ showShortlist state is now received via props, not local state ⭐️
   const [selectedFixtures, setSelectedFixtures] = useState([]);
 
+const togglePredictionMode = async () => {
+  const user = auth.currentUser;
+  if (!user) return;
+
+  const newValue = !isProbability;
+  setIsProbability(newValue);
+
+  await updateDoc(doc(db, "users", user.uid), {
+    predictionMode: newValue ? "probability" : "score"
+  });
+};
+
+
   // You need to resolve this variable being undefined if it's not a prop or local state
   // console.log(showShortlist); 
 
   const isInitialMount = useRef(true);
+
+const auth = getAuth();
+const db = getFirestore();
+const [isProbability, setIsProbability] = useState(true);
+const [loadingPreference, setLoadingPreference] = useState(true);
+
+useEffect(() => {
+  const user = auth.currentUser;
+  if (!user) return;
+
+  const loadPreference = async () => {
+    const ref = doc(db, "users", user.uid);
+    const snap = await getDoc(ref);
+
+    if (snap.exists()) {
+      const data = snap.data();
+      setIsProbability(data.predictionMode !== "score");
+    }
+  };
+
+  loadPreference();
+}, []);
+
 
   // 1. URL READING EFFECT (Loads shortlist from URL for persistence and sets initial view state)
   useEffect(() => {
@@ -651,6 +807,7 @@ const List = ({
               mock={mock}
               checked={selectedFixtures.some((f) => f.id === fixture.id)}
               onToggle={() => handleToggle(fixture)}
+              isProbability={isProbability}
             />
           ))}
         </ul>
@@ -665,6 +822,9 @@ const List = ({
       <ShareShortlistButton selectedFixtures={selectedFixtures} />
       <div>
         <div id="Headers"></div>
+        <button className="ProbabilityToggle" onClick={togglePredictionMode}>
+          {isProbability ? "Show scores" : "Show probabilities"}
+        </button>
         <ul className="FixtureList" id="FixtureList">
           {/* Renders shortlist when toggle is ON, full list (which is the source list) when OFF */}
           {(showShortlist ? selectedFixtures : fixtures).map((fixture) => (
@@ -676,6 +836,7 @@ const List = ({
               mock={mock}
               checked={selectedFixtures.some((f) => f.id === fixture.id)}
               onToggle={() => handleToggle(fixture)}
+              isProbability={isProbability}
             />
           ))}
         </ul>
@@ -708,6 +869,7 @@ export function Fixture(props) {
   const [count, setCount] = useState(false);
   // ⭐️ Re-introduce state here to control the view ⭐️
   const [showShortlist, setShowShortlist] = useState(false);
+
   resultValue = props.result;
 
   // Dynamically choose the list source based on the toggle state
@@ -725,7 +887,8 @@ export function Fixture(props) {
         // ⭐️ Pass state and setter DOWN ⭐️
         showShortlist={showShortlist}
         setShowShortlist={setShowShortlist}
-
+        isProbability={props.isProbability}
+        setIsProbability={props.setIsProbability}
         result={resultValue}
         count={count}
         mock={props.mock}

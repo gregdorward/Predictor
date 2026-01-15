@@ -4599,10 +4599,8 @@ export async function getScorePrediction(day, mocked) {
         bttsArray.push(match);
       }
       if (
-        match.unroundedGoalsA + match.unroundedGoalsB > 3.5 &&
         match.goalsA + match.goalsB > 2 &&
-        match.GoalsInGamesAverageHome > 3 &&
-        match.GoalsInGamesAverageAway > 3
+        match.over25Probability >= 60
       ) {
         Over25PredictionObject = {
           game:
@@ -4622,6 +4620,7 @@ export async function getScorePrediction(day, mocked) {
           outcomeSymbol: match.over25PredictionOutcomeSymbol,
           doubleChanceOutcome: match.over25PredictionOutcome,
           goalTotalUnrounded: match.unroundedGoalsA + match.unroundedGoalsB,
+          probability: match.over25Probability,
         };
         Over25Tips.push(Over25PredictionObject);
       }
@@ -5073,11 +5072,11 @@ async function getMultis() {
   });
 
   bttsArray.sort(function (a, b) {
-    return b.combinedBTTS - a.combinedBTTS;
+    return b.bttsYesProbability - a.bttsYesProbability;
   });
 
   Over25Tips.sort(function (a, b) {
-    return b.goalTotalUnrounded - a.goalTotalUnrounded;
+    return b.probability - a.probability;
   });
 
   XGDiffTips.sort(function (a, b) {
@@ -5516,10 +5515,15 @@ async function renderTips() {
                     }}
                     style={{ textDecoration: 'none', color: 'inherit' }}                    >
                     <li key={tip.team}>
+                      <div>
                       {tip.game} - Odds: {tip.odds}{" "}
                       <span className={`${tip.doubleChanceOutcome}`}>
                         {tip.outcomeSymbol}
                       </span>
+                      </div>
+                      <div className="over25Percentage">
+                        Probability: {`${tip.probability.toFixed(1)}%` ?? "-"}
+                      </div>
                     </li>
                   </a>
                 ))}
@@ -5566,11 +5570,18 @@ async function renderTips() {
                     }}
                     style={{ textDecoration: 'none', color: 'inherit' }}                    >
                     <li key={game.game}>
-                      {`${game.game} odds: ${game.bttsFraction}`}{" "}
-                      <span className={game.bttsOutcome}>
-                        {game.bttsOutcomeSymbol}
-                      </span>
+                      <div>
+                        {`${game.game} odds: ${game.bttsFraction}`}{" "}
+                        <span className={game.bttsOutcome}>
+                          {game.bttsOutcomeSymbol}
+                        </span>
+                      </div>
+
+                      <div className="bttsPercentage">
+                        Probability: {`${game.bttsYesProbability.toFixed(1)}%` ?? "-"}
+                      </div>
                     </li>
+
                   </a>
                 ))}
               </ul>

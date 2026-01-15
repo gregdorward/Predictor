@@ -12,6 +12,7 @@ export async function getBTTSPotential(
   const homeG = homeGoals;
   const awayG = awayGoals;
 
+  console.log(match)
   match.combinedBTTS = (homeBTTS + awayBTTS) / 2;
 
   if (
@@ -20,16 +21,9 @@ export async function getBTTSPotential(
     match.status !== "canceled"
   ) {
     if (
-      homeBTTS >= 50 &&
-      awayBTTS >= 50 &&
-      homeOnlyBTTS >= 50 &&
-      awayOnlyBTTS >= 50 &&
-      match.awayOdds < 4 &&
-      match.awayOdds > 1.3 &&
+      match.bttsYesProbability >= 60 &&
       homeG >= 1 &&
-      awayG >= 1 &&
-      directnessHome < 11 &&
-      directnessAway < 11
+      awayG >= 1
     ) {
       match.btts = true;
       match.bttsChosen = true;

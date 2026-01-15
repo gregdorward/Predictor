@@ -474,8 +474,20 @@ export async function getLeagueList() {
   );
 
   if (loggedIn) {
+              const getPredictionsButton = document.getElementById('GeneratePredictionsButton');
+          if (getPredictionsButton) {
+            // Example: Add a class that quickly changes the background/border color
+            getPredictionsButton.classList.add('flash-attention');
+
+            // Remove the class after a short delay (e.g., 1 second)
+            setTimeout(() => {
+              getPredictionsButton.classList.remove('flash-attention');
+              getPredictionsButton.focus(); // Optional: Focus the input after scrolling
+            }, 1000);
+          }
     render(
-      <><div className="WelcomeBack">Welcome back {loggedIn.email}</div><div className="WelcomeBack">Username: {loggedIn.displayName}</div> </>,
+      <><div className="WelcomeBack">Welcome back {loggedIn.email}</div><div className="WelcomeBack">Username: {loggedIn.displayName}</div> 
+      </>,
       "Email"
     );
   } else {

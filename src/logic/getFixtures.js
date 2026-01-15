@@ -1,4 +1,4 @@
-import { Fragment, lazy, Suspense } from "react";
+import { Fragment, lazy, Suspense, useState } from "react";
 import ReactDOM from "react-dom";
 import { orderedLeagues } from "../App";
 import { render } from '../utils/render';
@@ -364,15 +364,18 @@ export async function renderTable(index, results, id) {
 async function createFixture(match, result, mockBool) {
   let roundedHomeOdds;
   let roundedAwayOdds;
+  let roundedDrawOdds;
   let roundedBTTSOdds;
   let homeFraction;
   let awayFraction;
+  let drawFraction
   let bttsFraction;
 
   if (selectedOdds === "Fractional odds") {
     if (match.homeOdds !== 0 && match.awayOdds !== 0) {
       roundedHomeOdds = (Math.round(match.homeOdds * 5) / 5).toFixed(1);
       roundedAwayOdds = (Math.round(match.awayOdds * 5) / 5).toFixed(1);
+      roundedDrawOdds = (Math.round(match.drawOdds * 5) / 5).toFixed(1);
 
       if (roundedHomeOdds < 1.1) {
         roundedHomeOdds = 1.1;
@@ -395,6 +398,7 @@ async function createFixture(match, result, mockBool) {
         awayFraction = oddslib
           .from("decimal", roundedAwayOdds)
           .to("fractional", { precision: 1 });
+        drawFraction = oddslib.from("decimal", roundedDrawOdds).to("fractional", { precision: 1 });
       } catch (error) {
         console.log(error);
       }
@@ -424,6 +428,7 @@ async function createFixture(match, result, mockBool) {
     if (match.homeOdds !== 0 && match.awayOdds !== 0) {
       homeFraction = match.homeOdds;
       awayFraction = match.awayOdds;
+      drawFraction = match.drawOdds;
     } else {
       homeFraction = "N/A";
       awayFraction = "N/A";
@@ -446,13 +451,15 @@ async function createFixture(match, result, mockBool) {
   match.awayTeamDrawsPercentage = match.awayTeamDrawPercentage;
   match.fractionHome = homeFraction;
   match.fractionAway = awayFraction;
-
+  match.fractionDraw = drawFraction;
   match.bttsFraction = bttsFraction;
 
   match.game = match.homeTeam + " v " + match.awayTeam;
 }
 
 export function RenderAllFixtures(props) {
+  const [isProbability, setIsProbability] = useState(true);
+
   let matches;
   let uncappedFixtures;
   let capped = false;
@@ -486,6 +493,8 @@ export function RenderAllFixtures(props) {
 
   return (
     <Fixture
+      isProbability={isProbability}
+      setIsProbability={setIsProbability}
       fixtures={matches}
       uncappedFixtures={uncappedFixtures}
       result={props.result}
@@ -1635,6 +1644,18 @@ export async function generateFixtures(
 
       // }
     }
+
+              const getPredictionsButton = document.getElementById('GeneratePredictionsButton');
+          if (getPredictionsButton) {
+            // Example: Add a class that quickly changes the background/border color
+            getPredictionsButton.classList.add('flash-attention');
+
+            // Remove the class after a short delay (e.g., 1 second)
+            setTimeout(() => {
+              getPredictionsButton.classList.remove('flash-attention');
+              getPredictionsButton.focus(); // Optional: Focus the input after scrolling
+            }, 1000);
+          }
 
     render(
       <div>
