@@ -5672,9 +5672,9 @@ button.AIInsights button:active {
   /* Define a flashy border/background for attention */
   border: 3px solid #ff9900 !important;
   /* Brighter color */
-  background-color: white !important;
-  box-shadow: 0 0 10px rgba(255, 153, 0, 0.7);
-  transition: all 0.5s ease-in-out;
+  background-color: rgb(255, 247, 0) !important;
+  box-shadow: 0 0 15px var(--text-color);
+  transition: all 1s ease-in-out;
   color: #020029 !important;
 }
 

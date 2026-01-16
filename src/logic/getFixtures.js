@@ -1654,7 +1654,8 @@ export async function generateFixtures(
             setTimeout(() => {
               getPredictionsButton.classList.remove('flash-attention');
               getPredictionsButton.focus(); // Optional: Focus the input after scrolling
-            }, 1000);
+            }, 2000);
+            
           }
 
     render(

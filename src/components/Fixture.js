@@ -825,6 +825,7 @@ useEffect(() => {
         <button className="ProbabilityToggle" onClick={togglePredictionMode}>
           {isProbability ? "Show scores" : "Show probabilities"}
         </button>
+        <h4>Generate predictions and click on any fixture for unparalleled insight</h4>
         <ul className="FixtureList" id="FixtureList">
           {/* Renders shortlist when toggle is ON, full list (which is the source list) when OFF */}
           {(showShortlist ? selectedFixtures : fixtures).map((fixture) => (
