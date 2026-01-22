@@ -33,6 +33,7 @@ import Logo from "./components/Logo";
 import { auth, db } from "./firebase";
 import UsernameModal from "./components/UsernameModal";
 import Footer from "./components/Footer"
+import handleLogout from "./components/SignOut"
 import {
   FacebookShareButton,
   FacebookIcon,
@@ -487,6 +488,12 @@ export async function getLeagueList() {
     }
     render(
       <><div className="WelcomeBack">Welcome back {loggedIn.email}</div><div className="WelcomeBack">Username: {loggedIn.displayName}</div>
+        <button
+          onClick={handleLogout}
+          className="LogoutButton"
+        >
+          Logout
+        </button>
       </>,
       "Email"
     );

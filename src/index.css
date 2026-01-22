@@ -4718,6 +4718,10 @@ h6.AttackingMomentum {
   height: 2.5em;
 }
 
+.LogoutButton{
+  font-size: 0.7em;
+}
+
 input {
   border: 1px solid var(--text-color);
 }
