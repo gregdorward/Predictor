@@ -482,7 +482,7 @@ export async function getLeagueList() {
       // Remove the class after a short delay (e.g., 1 second)
       setTimeout(() => {
         getPredictionsButton.classList.remove('flash-attention');
-        getPredictionsButton.focus(); // Optional: Focus the input after scrolling
+        // getPredictionsButton.focus(); // Optional: Focus the input after scrolling
       }, 1000);
     }
     render(
