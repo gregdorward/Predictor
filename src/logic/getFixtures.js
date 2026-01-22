@@ -464,31 +464,35 @@ export function RenderAllFixtures(props) {
   let uncappedFixtures;
   let capped = false;
   let paid = false;
+
+  // 1. Filter out matches with less than 3 completed games
+  // This ensures the model has enough data for a reliable tip
+  const filteredMatches = props.matches.filter(
+    (match) => match.matches_completed_minimum >= 3
+  );
+
   if (userDetail) {
     paid = userDetail.isPaid;
   }
-  const originalLength = props.matches.length;
+
+  // 2. Use the filtered list as the base for length and slicing
+  const originalLength = filteredMatches.length;
   let newLength;
+
   if (paid === true) {
-    matches = props.matches;
-    uncappedFixtures = props.matches;
+    matches = filteredMatches;
+    uncappedFixtures = filteredMatches;
     newLength = matches.length;
   } else {
-    if (originalLength > 20) {
-      matches = props.matches.slice(0, 20);
-      uncappedFixtures = props.matches;
-      capped = true;
-      newLength = 20;
-    } else {
-      const slicePercent = 0.5; // 50%
-      const sliceCount = Math.ceil(props.matches.length * slicePercent);
-      matches = props.matches.slice(0, sliceCount);
-      uncappedFixtures = props.matches;
-      capped = true;
-      newLength = sliceCount;
-    }
+    const slicePercent = 0.25; // 25%
+    const sliceCount = Math.ceil(filteredMatches.length * slicePercent);
+    matches = filteredMatches.slice(0, sliceCount);
+    uncappedFixtures = filteredMatches;
+    capped = true;
+    newLength = sliceCount;
   }
 
+  // Ensure we use the 'matches' list (which might be sliced) for unique IDs
   uniqueLeagueIDs = [...new Set(matches.map(match => match.leagueID))];
 
   return (

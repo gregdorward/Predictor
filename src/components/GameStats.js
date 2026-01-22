@@ -178,8 +178,9 @@ function GameStats({ game, displayBool, stats }) {
 
   const [isLoading, setIsLoading] = useState(false);
   const [aiMatchPreview, setAiMatchPreview] = useState(null);
-  // const [paid, setPaid] = useState(false);
-  const paid = true;
+  const [paid, setPaid] = useState(false);
+
+  // const paid = true;
   const [hasCompleteData, setHasCompleteData] = useState(false);
 
 
@@ -2711,13 +2712,13 @@ function GameStats({ game, displayBool, stats }) {
       if (userDetail?.uid) {
         try {
           const paymentStatus = await checkUserPaidStatus(userDetail.uid);
-          // setPaid(paymentStatus);
+          setPaid(paymentStatus);
         } catch (error) {
           console.error("Error checking payment status:", error);
-          // setPaid(false); // Set to false in case of an error
+          setPaid(false); // Set to false in case of an error
         }
       } else {
-        // setPaid(false); // Set to false if there's no user ID
+        setPaid(false); // Set to false if there's no user ID
       }
     }
 
@@ -2779,7 +2780,7 @@ function GameStats({ game, displayBool, stats }) {
         const attackingMetricsAway = awayForm.attackingMetrics
         const attackingMetricsAwayLast5 = awayForm.attackingMetricsAwayLast5
         const attackingMetricsAwayOnly = awayForm.attackingMetricsAwayOnly
-        
+
         const defensiveMetricsHome = homeForm.defensiveMetrics
         const defensiveMetricsHomeLast5 = homeForm.defensiveMetricsHomeLast5
         const defensiveMetricsHomeOnly = homeForm.defensiveMetricsHomeOnly
@@ -2798,7 +2799,7 @@ function GameStats({ game, displayBool, stats }) {
         );
 
 
-            console.log(defensiveMetricsHome)
+        console.log(defensiveMetricsHome)
 
         const defenceH = await calculateDefensiveStrength(defensiveMetricsHome);
         const defenceHLast5 = await calculateDefensiveStrength(
@@ -3465,6 +3466,10 @@ function GameStats({ game, displayBool, stats }) {
     return "value-neutral";
   };
 
+  console.log(stats)
+  console.log(ranksHome)
+  console.log(ranksAway)
+  console.log(stats?.topTeams)
 
   return (
     <>

@@ -643,16 +643,28 @@ const List = ({
   // ⭐️ showShortlist state is now received via props, not local state ⭐️
   const [selectedFixtures, setSelectedFixtures] = useState([]);
 
-  const togglePredictionMode = async () => {
-    const user = auth.currentUser;
-    if (!user) return;
-
+const togglePredictionMode = async () => {
+    // 1. Always update the local UI state first so the toggle feels instant
     const newValue = !isProbability;
     setIsProbability(newValue);
 
-    await updateDoc(doc(db, "users", user.uid), {
-      predictionMode: newValue ? "probability" : "score"
-    });
+    // 2. Check if a user is logged in
+    const user = auth.currentUser;
+    
+    // 3. If no user, stop here. The UI has changed, but nothing is saved to Firebase.
+    if (!user) {
+      console.log("Guest mode: Preference not saved.");
+      return;
+    }
+
+    // 4. If user exists, sync the preference to the database
+    try {
+      await updateDoc(doc(db, "users", user.uid), {
+        predictionMode: newValue ? "probability" : "score"
+      });
+    } catch (error) {
+      console.error("Error updating preference:", error);
+    }
   };
 
 

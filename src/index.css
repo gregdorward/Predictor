@@ -1,7 +1,6 @@
 @media (max-width: 4000px) {
   body>#root {
     height: 100%;
-    /* font-family: 'Noto Sans', regular; */
     font-family: 'Open Sans', sans-serif;
     font-size: 1em;
     font-weight: bolder;
@@ -24,7 +23,6 @@
   .LoadingLogo,
   .LogoSubHeading {
     flex: 1;
-    /* ← this is the key */
   }
 
   .LoadingLogo {
@@ -37,11 +35,7 @@
     padding-left: 1em;
   }
 
-  /* 
-.responsive-logo {
-  max-width: 100%;
-  height: auto;
-} */
+
 
   .LogoSubHeading {
     font-size: 1.3em;
@@ -66,22 +60,16 @@
   }
 
   .FormSummaries {
-    /* align-items: flex-start; */
     display: flex;
     flex-direction: column;
     flex: 1;
-    /* Ensure both columns take equal width */
-    /* min-height: 18em; */
     box-sizing: border-box;
-    /* Include padding in the total height calculation */
   }
 }
 
 .teamComparisonScore {
   display: inline-block;
   padding: 0.5vw;
-  /* padding-top: 8px;
-  padding-bottom: 8px; */
   margin: 0.5vw;
   border: 0.1em solid white;
   border-radius: 2em;
@@ -93,7 +81,6 @@
   font-weight: 500;
   color: var(--text-color);
   background-color: grey;
-  /* text-shadow: 0 0.04em 0.04em rgba(0, 0, 0, 0.35); */
   text-align: center;
 
   transition: all 0.2s;
@@ -127,7 +114,6 @@
   .LogoSubHeading {
     flex: 1;
     max-width: 800px;
-    /* ← this is the key */
   }
 
   .LoadingLogo {
@@ -140,12 +126,6 @@
     padding-left: 1em;
   }
 
-  /* 
-.responsive-logo {
-  max-width: 100%;
-  height: auto;
-} */
-
   .LogoSubHeading {
     font-size: 1.3em;
     color: var(--button-text-color);
@@ -155,13 +135,10 @@
   }
 
   .FormSummaries {
-    /* align-items: flex-start; */
     display: flex;
     flex-direction: column;
     flex: 1;
-    /* Ensure both columns take equal width */
     box-sizing: border-box;
-    /* Include padding in the total height calculation */
   }
 }
 
@@ -190,7 +167,6 @@
   .LoadingLogo,
   .LogoSubHeading {
     flex: 1;
-    /* ← this is the key */
   }
 
   .LoadingLogo {
@@ -203,12 +179,6 @@
     padding-left: 2em;
   }
 
-  /* 
-.responsive-logo {
-  max-width: 100%;
-  height: auto;
-} */
-
   .LogoSubHeading {
     font-size: 1.3em;
     color: var(--button-text-color);
@@ -218,13 +188,10 @@
   }
 
   .FormSummaries {
-    /* align-items: flex-start; */
     display: flex;
     flex-direction: column;
     flex: 1;
-    /* Ensure both columns take equal width */
     box-sizing: border-box;
-    /* Include padding in the total height calculation */
   }
 }
 
@@ -253,7 +220,6 @@
   .LoadingLogo,
   .LogoSubHeading {
     flex: 1;
-    /* ← this is the key */
   }
 
   .LoadingLogo {
@@ -266,12 +232,6 @@
     padding-left: 2em;
   }
 
-  /* 
-.responsive-logo {
-  max-width: 100%;
-  height: auto;
-} */
-
   .LogoSubHeading {
     font-size: 1.3em;
     color: var(--button-text-color);
@@ -281,13 +241,10 @@
   }
 
   .FormSummaries {
-    /* align-items: flex-start; */
     display: flex;
     flex-direction: column;
     flex: 1;
-    /* Ensure both columns take equal width */
     box-sizing: border-box;
-    /* Include padding in the total height calculation */
   }
 }
 
@@ -308,7 +265,6 @@
   .LoadingLogo,
   .LogoSubHeading {
     flex: 1;
-    /* ← this is the key */
   }
 
   .LoadingLogo {
@@ -338,13 +294,10 @@
   }
 
   .FormSummaries {
-    /* align-items: flex-start; */
     display: flex;
     flex-direction: column;
     flex: 1;
-    /* Ensure both columns take equal width */
     box-sizing: border-box;
-    /* Include padding in the total height calculation */
   }
 }
 
@@ -356,7 +309,6 @@
     display: flex;
     flex-direction: column;
     flex-basis: 100%;
-    /* font-weight: 900; */
     margin-right: 0.25em;
     margin-left: 0.25em;
     align-content: center;
@@ -374,7 +326,6 @@
   .LoadingLogo,
   .LogoSubHeading {
     flex: 1;
-    /* ← this is the key */
   }
 
   .LoadingLogo {
@@ -396,37 +347,26 @@
   }
 
   .FormSummaries {
-    /* align-items: flex-start; */
     display: flex;
     flex-direction: column;
     flex: 1;
-    /* Ensure both columns take equal width */
     box-sizing: border-box;
-    /* Include padding in the total height calculation */
   }
 }
 
-/* Default Light Mode Colors */
 :root {
   --background-color: #ffffff;
-  /* White */
   --secondary-background-color: rgb(248, 248, 248);
-  /* White */
   --third-background-color: rgb(225, 225, 225);
   --fourth-background-color: rgb(219, 219, 219);
-  /* White */
   --text-color: #020029;
-  /* Dark Blue */
   --button-color: #020029;
   --button-text-color: #ffffff;
   --secondary-button-text-color: #ffffff;
   --alternate-background-color: #f5f4f4;
   --primary-color: #fe8c00;
-  /* Orange */
   --secondary-color: #383737;
-  /* Dark Red */
   --accent-color: #030040;
-  /* Light Gray */
   --mid-grey: #030040;
   --disabled-div: #eeeeee;
   --span-background: #FFE500;
@@ -435,27 +375,19 @@
   --faint-text: #454545;
 }
 
-/* Dark Mode Colors */
 .dark-mode {
   --background-color: black;
-  /* Dark Blue */
   --secondary-background-color: #121212;
   --alternate-background-color: rgb(26, 26, 26);
-  /* White */
   --third-background-color: #1b1b1b;
   --fourth-background-color: #1f1f1f;
-  /* White */
   --text-color: #ffffff;
-  /* White */
   --button-color: whitesmoke;
   --button-text-color: #191919;
   --secondary-button-text-color: #191919;
   --primary-color: #f57701;
-  /* Orange */
   --secondary-color: #860000;
-  /* Dark Red */
   --accent-color: whitesmoke;
-  /* Dark Gray */
   --mid-grey: #020029;
   --disabled-div: #252525;
   --span-background: whitesmoke;
@@ -539,37 +471,25 @@ input:checked+.slider:before {
   display: flex;
   flex-direction: column;
   flex-basis: 100%;
-  /* background-color: #020029; */
-  /* background-image: linear-gradient( #000000, #404040); */
   color: var(--text-color);
   padding-top: 1em;
   padding-bottom: 1em;
   margin: 0px;
   vertical-align: top;
   background-color: white;
-  /* padding-bottom: 1em; */
 }
 
 h1 {
-  /* font-size: 3.5em; */
   color: var(--text-color);
 }
 
-
-
-/* h1 .logo-container{
-  height: auto;
-} */
-
 .logo-container {
   display: flex;
-  /* flex-basis: 50%; */
   justify-content: center;
   align-items: center;
   max-width: 28em;
   margin-left: auto;
   margin-right: auto;
-  /* width: 100%; */
   margin: 0em;
   height: 6em;
 }
@@ -580,7 +500,6 @@ h1 {
   margin-left: none;
   height: auto;
   flex: 1;
-  /* Optional: add padding or margin if needed */
 }
 
 .LogoAndText {
@@ -605,14 +524,11 @@ h1 {
 .HamburgerMenuButton {
   display: block;
   width: 20%;
-  /* margin-left: 1em; */
-  /* margin-top: 0em; */
   background-color: var(--background-color);
   color: var(--text-color);
   border: none;
   margin: 0em;
   margin-right: auto;
-  /* padding-top: 9em; */
 }
 
 .NavItems {
@@ -627,11 +543,9 @@ h1 {
   color: var(--button-text-color);
   margin-left: 1.3em;
   z-index: 1;
-  /* background-color: var(--background-color); */
 }
 
 h2 {
-  /* font-size: 2em; */
   font-weight: 500;
   color: var(--text-color);
 }
@@ -662,19 +576,18 @@ h3.MembersGetMore {
 
 
 .MembersGetMoreUnderlined {
-  font-size: 1.4em;
+  font-size: 1.2em;
   text-decoration: underline;
-  padding: 1em;
+  padding: 0.5em;
   max-width: 300px;
   margin-left: auto;
   margin-right: auto;
-  /* color: var(--primary-color); */
 }
 
 .MembersGetMoreUnderlined:hover {
-  font-size: 1.5em;
+  font-size: 1.3em;
   text-decoration: underline;
-  padding: 1em;
+  padding: 0.5em;
   color: var(--primary-color);
   cursor: pointer;
 }
@@ -721,7 +634,6 @@ h5 {
 h6 {
   font-size: 1.2em;
   color: var(--text-color);
-  /* padding: 1em; */
   padding-top: 2em;
   line-height: 2em;
   max-width: 600px;
@@ -731,12 +643,182 @@ h6 {
   margin-bottom: 0px;
 }
 
+.PremiumUpsell {
+  background: var(--alternate-background-color);
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  padding: 2rem;
+  max-width: 900px;
+  margin: 1rem auto;
+  margin-left: 0.5em;
+  margin-right: 0.5em;
+  font-family: 'Inter', sans-serif;
+  text-align: center;
+}
+
+.UpsellHeader h2 {
+  color: var(--primary-color);
+  font-size: 2em;
+  margin-bottom: 0.5rem;
+}
+
+.UpsellHeader p {
+  color: var(--text-color);
+  margin-bottom: 2rem;
+}
+
+.FeatureComparison {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  background: white;
+  padding: 1.5rem;
+  border-radius: 8px;
+  margin-bottom: 2rem;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  border: var(--primary-color) 1px solid;
+}
+
+.FeatureGroup {
+  flex: 1;
+  align-self: flex-start;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.FeatureGroup h4 {
+  margin-bottom: 0.25em;
+  font-size: 2em;
+  color: #374151;
+  padding: 0.5em;
+}
+
+.FeatureGroup ul {
+  list-style: none;
+  padding: 0;
+  text-align: left;
+  display: inline-block;
+}
+
+.FeatureGroup li {
+  margin-bottom: 0.5rem;
+  font-size: 1em;
+}
+
+.FeatureGroup.premium li {
+  font-weight: 600;
+  color: #059669;
+}
+
+.limited {
+  /* text-decoration: line-through; */
+  color: #696d75;
+}
+
+.FeatureDivider {
+  font-weight: 800;
+  color: #9b9b9b;
+  padding: 0 1rem;
+}
+
+/* Pricing Cards */
+.SubscriptionOptions {
+  display: grid;
+  /* This replaces repeat(3, 1fr) */
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); 
+  gap: 1.5rem;
+  width: 100%;
+}
+
+.OptionCard {
+  background: white;
+  border: 1px solid #e5e7eb;
+  padding: 1.5rem;
+  border-radius: 10px;
+  display: flex;
+  flex-direction: column;
+  transition: transform 0.2s;
+  color: #020029
+}
+
+.OptionCard.featured {
+  border: 2px solid #2563eb;
+  transform: scale(1.05);
+  position: relative;
+}
+
+.Badge {
+  position: absolute;
+  top: -12px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: #2563eb;
+  color: white;
+  padding: 2px 12px;
+  border-radius: 20px;
+  font-size: 0.75rem;
+  font-weight: bold;
+}
+
+.Price {
+  font-size: 1.5rem;
+  font-weight: 800;
+  margin-bottom: 1rem;
+}
+
+.Price span {
+  font-size: 0.9rem;
+  font-weight: 400;
+  color: #6b7280;
+}
+
+.OptionCard button {
+  background: #1f2937;
+  color: white;
+  border: none;
+  padding: 0.75rem;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 600;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.OptionCard.featured button {
+  background: var(--primary-color);
+  color: #020029;
+}
+
+.OptionCard button:hover {
+  opacity: 0.9;
+}
+
+.TrustNote {
+  margin-top: 1.5rem;
+  font-size: 0.85rem;
+  color: #9ca3af;
+}
+
+@media (max-width: 600px) {
+  .SubscriptionOptions {
+    grid-template-columns: 1fr;
+  }
+
+  .FeatureComparison {
+    flex-direction: column;
+  }
+
+  .OptionCard.featured {
+    transform: scale(1);
+    margin: 1rem 0;
+  }
+}
+
 
 .historicResults {
   display: flex;
   height: 5em;
   flex-basis: 100%;
-  /* font-size: 1em; */
   justify-content: center;
   align-items: center;
 }
@@ -749,7 +831,6 @@ h6 {
 }
 
 .Buttons {
-  /* display: flex; */
   flex-direction: row;
 }
 
@@ -761,8 +842,6 @@ h6 {
 button {
   display: inline-block;
   padding: 0.75em;
-  /* padding-top: 8px;
-  padding-bottom: 8px; */
   margin: 1em;
   margin-top: 0.25em;
   margin-bottom: 0.5em;
@@ -771,17 +850,13 @@ button {
   box-sizing: border-box;
   text-decoration: none;
   font-family: 'Open Sans', sans-serif;
-  /* flex-basis: 100%; */
   width: 12em;
   height: auto;
   font-size: 1.1em;
   cursor: pointer;
   color: var(--secondary-button-text-color);
   background-color: var(--button-color);
-  /* text-shadow: 0 0.04em 0.04em rgba(0, 0, 0, 0.35); */
   text-align: center;
-  /* box-shadow: 0 0px 0px 0 rgba(0, 0, 0, 0.2), 0 1px 2px 0 #030052; */
-
   transition: all 0.2s;
 }
 
@@ -793,10 +868,6 @@ button:hover {
   color: var(--primary-color);
 }
 
-/* .GeneratePredictions {
-  background-color: var(--primary-color);
-} */
-
 button.GeneratePredictionsButton {
   margin-top: 0.5em;
   padding-top: 1em;
@@ -805,12 +876,10 @@ button.GeneratePredictionsButton {
   color: #020029;
   border: var(--text-color), 1px, solid;
   height: 5em;
-  /* box-shadow: 0 0px 0px 0 rgba(0, 0, 0, 0.2), 0 1px 2px 0 #030052 */
 }
 
 button.GeneratePredictionsButton:hover {
   border: var(--button-text-color), 2px, solid;
-  /* box-shadow: 0 0px 0px 0 rgba(0, 0, 0, 0.2), 0 1px 2px 0 #030052 */
 }
 
 
@@ -826,26 +895,6 @@ button.GeneratePredictionsButton:active {
 .BuildAMulti {
   margin-top: 1em;
 }
-
-/* .Filters2 button {
-  background-color: var(--background-color);
-  color: var(--text-color);
-  border: 1px solid var(--text-color);
-}
-
-.ROI button {
-  background-color: var(--background-color);
-  color: var(--text-color);
-  border: 1px solid var(--text-color);
-} */
-
-/* .MultisCollapsable button {
-  background-color: var(--primary-color);
-  color: var(--text-color);
-  border: 1px solid var(--text-color);
-}  */
-
-
 
 .disclaimerButton {
   background-color: #ffffff;
@@ -876,7 +925,6 @@ button.GeneratePredictionsButton:active {
   color: var(--button-text-color);
   margin: 1em;
   cursor: pointer;
-  /* width: 8em; */
   box-shadow: 0 0px 2px 0 rgba(0, 0, 0, 0.2), 0 2px 4px 0 var(--secondary-background-color);
   flex: 1;
   flex-basis: 100%;
@@ -914,19 +962,12 @@ button.GeneratePredictionsButton:active {
 .RowOne {
   flex: 1;
   flex-basis: 50%;
-
-  /* display: inline-block;
-  width: 20em;
-  vertical-align: top; */
-
-  /* flex-direction: column; */
 }
 
 .RowTwo {
   display: inline-block;
   width: 20em;
   vertical-align: top;
-  /* flex-direction: column; */
 }
 
 .FixtureContainer {
@@ -945,24 +986,16 @@ p {
 
 .RadioText {
   padding: 1em;
-  /* font-size: 0.5em; */
 }
-
-/* .O25Table {
-    background-color: var(--button-color);
-
-} */
 
 .O25Table .MuiTableHead-root th {
   background-color: var(--button-color);
   height: 5em;
   color: var(--button-text-color);
   line-height: 1em;
-  /* border: var(--primary-color) solid 1px; */
 }
 
 .O25Table .MuiTableCell-root {
-  /* background-color: var(--background-color); */
   height: 5em;
   color: var(--text-color);
   line-height: 1.25em;
@@ -979,7 +1012,6 @@ p {
 
 .FormRadio {
   padding-bottom: 0.5em;
-  /* font-size: 0.9em; */
 }
 
 .Options button {
@@ -992,7 +1024,6 @@ p {
 .OddsRadios {
   display: flex;
   height: 30px;
-  /* font-size: 1em; */
   justify-content: center;
   align-items: center;
 }
@@ -1015,22 +1046,14 @@ h6.PredictionTypeText {
 .PredictionRadios {
   display: flex;
   height: 30px;
-  /* font-size: 1em; */
   justify-content: center;
   align-items: center;
 }
 
-/* .container {
-  padding: 0px;
-} */
-
 .hidden-placeholder {
   visibility: hidden;
-  /* Invisible but occupies layout space */
   opacity: 0;
-  /* Ensures fully hidden */
   pointer-events: none;
-  /* Prevents click events */
 }
 
 .LoadingText {
@@ -1046,7 +1069,6 @@ h6.PredictionTypeText {
 
 .lastXGames {
   height: 100px;
-  /* font-size: 1em; */
   justify-content: center;
   align-items: center;
 }
@@ -1055,7 +1077,6 @@ h6.PredictionTypeText {
   height: auto;
   flex-basis: 10%;
   padding: 0.5em;
-  /* font-size: 0.8em; */
   flex-grow: 1000;
   display: inline-block;
   width: 40%;
@@ -1211,7 +1232,6 @@ span.MembershipInfo {
 
   flex-direction: row;
   padding: 2em;
-  /* background-color: #020029; */
   opacity: 1;
   width: 50%;
   text-align: center;
@@ -1250,11 +1270,9 @@ span.MembershipInfo {
 
 .ResultsList {
   font-size: 2em;
-  /* padding: 1em; */
 }
 
 .ResultsList li {
-  /* padding: 0.5em; */
   margin: 0.5em;
   background-color: #020029;
   color: var(--text-color);
@@ -1268,17 +1286,6 @@ span.MembershipInfo {
   margin-left: 0px;
   margin-right: 0px;
 }
-
-/* .ResultButton:hover{
-  width: 100%;
-  padding: 0em;
-  margin: 0.35em;
-  margin-left: 0px;
-  margin-right: 0px;
-  border: 0px;
-  background-color: #020029;
-  border-radius: 0px;
-} */
 
 .ResultRowOverview {
   display: flex;
@@ -1352,7 +1359,6 @@ span.MembershipInfo {
 .columnOverviewHomeSmall {
   flex: 33.33%;
   text-align: right;
-  /* padding-left: 0.5em; */
   padding-right: 0.75em;
   white-space: nowrap;
   overflow: hidden;
@@ -1363,7 +1369,6 @@ span.MembershipInfo {
   flex: 33.33%;
   text-align: left;
   padding-left: 0.75em;
-  /* padding-right: 0.5em; */
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -1453,14 +1458,10 @@ span.MembershipInfo {
 .fixture {
   display: flex;
   align-items: center;
-  /* align-content: center; */
-  /* justify-content: center; */
-  /* width: 100%; */
   flex-direction: column;
   flex-wrap: nowrap;
   display: inline-block;
   height: auto;
-  /* border: 0px; */
 }
 
 .ShortlistedGameDiv {
@@ -1471,7 +1472,6 @@ span.MembershipInfo {
 }
 
 .TipButton {
-  /* flex-basis: 33%; */
   margin-top: 0.25em;
   margin-bottom: 0.75em;
   padding: 0.75em;
@@ -1479,13 +1479,9 @@ span.MembershipInfo {
   align-items: center;
   margin-left: 1em;
   margin-right: 1em;
-  /* margin-right: auto; */
   font-size: 0.8em;
-  /* font-size: 0.75em; */
-  /* background-color: #020029; */
   color: #030052;
   border: #030052 1px solid
-    /* line-height: 1em; */
 }
 
 .UserTips {
@@ -1531,13 +1527,10 @@ strong.LOST {
 .leaderboard-table td {
   padding: 1em;
   border-bottom: 1px solid #eee;
-  /* Optional: adds nice separation */
 }
 
-/* Base styles for the checkbox */
 .star {
   appearance: none;
-  /* Remove default checkbox */
   font-size: 1.4em;
   width: 3em;
   height: 1em;
@@ -1548,24 +1541,17 @@ strong.LOST {
   margin-left: auto;
   margin-bottom: 0.5em;
   padding-left: 75%;
-  /* padding-right: 1.75em; */
-  /* margin-left: auto; */
-
 }
 
-/* Default empty star */
 .star:before {
   content: "\2606";
-  /* Unicode for empty star */
   color: var(--text-color);
   font-size: 1em;
   display: inline-block;
 }
 
-/* Change to filled star when checked */
 .star:checked:before {
   content: "\2605";
-  /* Unicode for filled star */
   color: gold;
 }
 
@@ -1626,7 +1612,6 @@ strong.LOST {
   border: var(--accent-color) 1px solid;
   margin-top: 1em;
   font-size: 0.9em;
-  /* margin-bottom: 1em; */
 }
 
 .individualFixtureContainerfalse:hover {
@@ -1644,9 +1629,6 @@ strong.LOST {
   padding-top: 0.5em;
   padding-bottom: 0.5em;
   cursor: pointer;
-  /* box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.2), 0 1px 2px 0 #030052; */
-  /* margin-bottom: 1em; */
-  /* border: black 0.25px solid; */
 }
 
 
@@ -1660,7 +1642,6 @@ strong.LOST {
   color: var(--text-color);
   padding-bottom: 0.5em;
   cursor: pointer;
-  /* border: black 0.25px solid; */
 }
 
 
@@ -1674,10 +1655,6 @@ strong.LOST {
   color: var(--text-color);
   padding-bottom: 0.5em;
   cursor: pointer;
-
-  /* box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.2), 0 1px 2px 0 #030052; */
-  /* margin-bottom: 1em; */
-  /* border: black 0.25px solid; */
 }
 
 
@@ -1722,45 +1699,10 @@ strong.LOST {
   flex-basis: 100%;
 }
 
-/* 
-.HomeAndAwayContainerundefined:hover {
-  border: var(--primary-color) solid 1px;
-
-} */
-
-/* .HomeAndAwayContainerWon:hover {
-  border: var(--primary-color) solid 1px;
-  border-left: #009700 solid 7px;
-
-}
-
-.HomeAndAwayContainerLost:hover {
-  border: var(--primary-color) solid 1px;
-  border-left: #b10f00 solid 7px;
-
-}
-
-.HomeAndAwayContainerExact:hover {
-  border: var(--primary-color) solid 1px;
-  border-left: Gold solid 7px;
-} */
-
 .HomeContainertrue {
   display: grid;
   grid-template-columns:
-    minmax(0.5rem, 0.5fr)
-    /* odds */
-    minmax(0.5em, 0.4fr)
-    /* badge */
-    minmax(2rem, 1.2fr)
-    /* team name */
-    minmax(2rem, 1.3fr)
-    /* prediction */
-    minmax(0.5rem, 0.6fr)
-    /* action */
-    minmax(1.5rem, 1.5fr);
-    /* result */
-  /* form */
+    minmax(0.5rem, 0.5fr) minmax(0.5em, 0.4fr) minmax(2rem, 1.2fr) minmax(2rem, 1.3fr) minmax(0.5rem, 0.6fr) minmax(1.5rem, 1.5fr);
   font-size: 1.1em;
   align-items: center;
   column-gap: 0.25rem;
@@ -1771,19 +1713,7 @@ strong.LOST {
 .AwayContainertrue {
   display: grid;
   grid-template-columns:
-    minmax(0.5rem, 0.5fr)
-    /* odds */
-    minmax(0.5em, 0.4fr)
-    /* badge */
-    minmax(2rem, 1.2fr)
-    /* team name */
-    minmax(2rem, 1.3fr)
-    /* prediction */
-    minmax(0.5rem, 0.6fr)
-    /* action */
-    minmax(1.5rem, 1.5fr);
-    /* result */
-  /* form */
+    minmax(0.5rem, 0.5fr) minmax(0.5em, 0.4fr) minmax(2rem, 1.2fr) minmax(2rem, 1.3fr) minmax(0.5rem, 0.6fr) minmax(1.5rem, 1.5fr);
   font-size: 1.1em;
   align-items: center;
   column-gap: 0.25rem;
@@ -1795,20 +1725,9 @@ strong.LOST {
 .HomeContainerfalse {
   display: grid;
   grid-template-columns:
-    minmax(0.5rem, 0.5fr)
-    /* odds */
-    minmax(0.5em, 0.4fr)
-    /* badge */
-    minmax(2.5rem, 1.3fr)
-    /* team name */
-    minmax(0.5rem, 0.5fr)
-    /* prediction */
-    minmax(0.5rem, 0.5fr)
-    /* action */
-    minmax(1.8rem, 1.3fr);
-    /* result */
+    minmax(0.5rem, 0.5fr) minmax(0.5em, 0.4fr) minmax(2.5rem, 1.3fr) minmax(0.5rem, 0.5fr) minmax(0.5rem, 0.5fr) minmax(1.8rem, 1.3fr);
   font-size: 1.1em;
-  margin-left: 0.5em;
+  margin-left: 1em;
   margin-right: 0.5em;
   align-items: center;
   column-gap: 0.25rem;
@@ -1818,21 +1737,9 @@ strong.LOST {
 .AwayContainerfalse {
   display: grid;
   grid-template-columns:
-    minmax(0.5rem, 0.5fr)
-    /* odds */
-    minmax(0.5em, 0.4fr)
-    /* badge */
-    minmax(2.5rem, 1.3fr)
-    /* team name */
-    minmax(0.5rem, 0.5fr)
-    /* prediction */
-    minmax(0.5rem, 0.5fr)
-    /* action */
-    minmax(1.8rem, 1.3fr);
-
-  /* form */
+    minmax(0.5rem, 0.5fr) minmax(0.5em, 0.4fr) minmax(2.5rem, 1.3fr) minmax(0.5rem, 0.5fr) minmax(0.5rem, 0.5fr) minmax(1.8rem, 1.3fr);
   font-size: 1.1em;
-  margin-left: 0.5em;
+  margin-left: 1em;
   margin-right: 0.5em;
   align-items: center;
   column-gap: 0.25rem;
@@ -1864,17 +1771,11 @@ strong.LOST {
   display: flex;
   flex-wrap: wrap;
   flex-basis: 100%;
-  /* background-color: var(--alternate-background-color); */
-  /* border: 0.1em dashed white; */
   align-items: center;
   align-content: center;
-  /* color: black; */
   padding-top: 1em;
   padding-bottom: 1em;
   cursor: pointer;
-  /* box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.2), 0 1px 2px 0 #030052; */
-  /* margin-bottom: 1em; */
-  /* box-shadow: 0 0px 0px 0 rgba(0, 0, 0, 0.2), 0 1px 2px 0 #030052; */
 }
 
 .individualFixturecomplete {
@@ -1885,11 +1786,6 @@ strong.LOST {
   align-content: center;
   color: black;
   padding-top: 0.25em;
-  /* padding-bottom: 0.25em; */
-  /* box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.2), 0 1px 2px 0 #030052; */
-  /* margin-bottom: 0.5em; */
-
-  /* border: 1em; */
 }
 
 
@@ -1906,7 +1802,6 @@ strong.LOST {
   box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 2px 4px 0 #030052;
   margin-bottom: 0.5em;
   color: var(--text-color);
-  /* border: 1em; */
 }
 
 .FixtureSpacing {
@@ -1920,7 +1815,6 @@ strong.LOST {
   flex-basis: 100%;
   padding-top: 10px;
   padding-bottom: 10px;
-  /* font-size: 0.4em; */
 }
 
 .highlight {
@@ -1929,7 +1823,6 @@ strong.LOST {
   flex-basis: 100%;
   padding-top: 10px;
   padding-bottom: 10px;
-  /* font-size: 0.4em; */
   color: yellow;
 }
 
@@ -1937,25 +1830,17 @@ strong.LOST {
   border-color: #393d3f;
   height: 2.5em;
   flex: 1;
-  /* min-width: 25px; */
-  /* order: 1; */
-  /* padding: 1vw; */
   box-sizing: border-box;
   justify-self: center;
-  /* padding-right: 0.5em; */
 }
 
 .HomeBadgeExplainer {
-  /* border-color: #393d3f; */
   height: 1em;
   flex: 1;
   min-width: 25px;
-  /* order: 1; */
   padding: 1vw;
   font-size: 1em;
   box-sizing: border-box;
-
-  /* padding-right: 0.5em; */
 }
 
 .DrawBadgeExplainer {
@@ -1971,13 +1856,8 @@ strong.LOST {
 .AwayBadge {
   border-color: #393d3f;
   height: 2.5em;
-  /* flex: 1;
-  min-width: 25px; */
-  /* order: 5; */
   box-sizing: border-box;
   justify-self: center;
-
-  /* padding-right: 0.5em; */
 }
 
 .break {
@@ -1987,8 +1867,6 @@ strong.LOST {
 
 
 .HomeOdds {
-  /* order: 0; */
-  /* font-size: 0.5em; */
   padding: 0.5em;
   background-color: var(--button-color);
   color: var(--button-text-color);
@@ -1996,39 +1874,25 @@ strong.LOST {
   min-width: 20px;
   border-radius: 0px;
   font-weight: bolder;
-  /* margin-left: 1em; */
 }
 
 .DrawOdds {
-  /* order: 0; */
-  /* font-size: 0.5em; */
   padding: 0.5em;
   background-color: var(--disabled-div);
   color: var(--text-color);
   flex-basis: 5%;
   min-width: 20px;
-
-  /* margin-left: 1em; */
 }
 
 .HomeOddsExplainer {
-  /* order: 0; */
-  /* font-size: 0.5em; */
   padding: 0.5em;
-  /* margin-left: 0.5em; */
-  /* background-color: var(--button-color); */
-  /* color: var(--button-text-color); */
-  /* flex-basis: 5%; */
   font-weight: bolder;
-  /* margin-left: 1em; */
 }
 
 
 .emptyHomeTeam {
   height: auto;
-  /* width:30%; */
   order: 1;
-  /* font-size: 0.7em; */
   flex-grow: 0;
   flex-basis: 40%;
   flex-shrink: 2;
@@ -2042,7 +1906,6 @@ strong.LOST {
   height: auto;
   flex-basis: 40%;
   order: 6;
-  /* font-size: 0.7em; */
   flex-grow: 0;
   flex-shrink: 2;
   display: inline-block;
@@ -2053,7 +1916,6 @@ strong.LOST {
 
 .HomeOddscomplete {
   order: 0;
-  /* font-size: 0.5em; */
   padding: 0.5em;
   background-color: #020029;
   color: white;
@@ -2075,15 +1937,12 @@ strong.LOST {
 
 .modal-backdrop {
   position: fixed;
-  /* Ensures it covers the entire viewport */
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
   background-color: rgba(0, 0, 0, 0.7);
-  /* Use a semi-transparent black for the overlay */
   z-index: 1000;
-  /* Set a very high index to ensure it is on top */
   display: flex;
   justify-content: center;
   align-items: center;
@@ -2106,7 +1965,6 @@ strong.LOST {
   padding: 20px;
   border-radius: 8px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  /* The z-index here should still be below the backdrop if needed, but the backdrop handles the layering */
   z-index: 1001;
 }
 
@@ -2127,21 +1985,15 @@ strong.LOST {
 }
 
 *[class^='AwayOdds'] {
-  /* order: 7; */
-  /* font-size: 0.5em; */
   padding: 0.5em;
   background-color: var(--button-color);
   color: var(--button-text-color);
-  /* flex-basis: 5%;
-  min-width: 20px; */
   border-radius: 0px;
   font-weight: 500;
-  /* margin-right: 1em; */
 }
 
 .oddsAwayExplainer {
   order: 7;
-  /* font-size: 0.5em; */
   padding: 0.5em;
   background-color: #020029;
   color: var(--text-color);
@@ -2165,13 +2017,8 @@ strong.LOST {
 
 .homeTeamfalse {
   height: auto;
-  /* width:30%; */
-  /* order: 1; */
-  /* font-size: 0.7em; */
   flex-grow: 0;
   flex-basis: 35%;
-  /* flex-shrink: 2; */
-  /* display: inline-block; */
   text-align: left;
   padding-left: 0.5em;
   font-weight: bolder;
@@ -2179,12 +2026,7 @@ strong.LOST {
 
 .homeTeamtrue {
   height: auto;
-  /* width:30%; */
-  /* order: 1; */
-  /* font-size: 0.7em; */
   flex-grow: 0;
-  /* flex-shrink: 2; */
-  /* display: inline-block; */
   text-align: left;
   font-weight: bolder;
   box-sizing: border-box;
@@ -2193,12 +2035,7 @@ strong.LOST {
 
 .homeTeamtrueExplainer {
   height: 100%;
-  /* width:30%; */
-  /* order: 1; */
-  /* font-size: 0.7em; */
   flex-grow: 0;
-  /* flex-shrink: 2; */
-  /* display: inline-block; */
   text-align: right;
   align-content: center;
   font-weight: bolder;
@@ -2208,12 +2045,7 @@ strong.LOST {
 
 .homeTeamfalseExplainer {
   height: 100%;
-  /* width:30%; */
-  /* order: 1; */
-  /* font-size: 0.7em; */
   flex-grow: 0;
-  /* flex-shrink: 2; */
-  /* display: inline-block; */
   text-align: left;
   font-weight: bolder;
   box-sizing: border-box;
@@ -2222,11 +2054,7 @@ strong.LOST {
 
 .awayTeamfalse {
   height: auto;
-  /* order: 6; */
-  /* font-size: 0.7em; */
   flex-grow: 0;
-  /* flex-shrink: 2; */
-  /* display: inline-block; */
   text-align: left;
   font-weight: bolder;
   box-sizing: border-box;
@@ -2237,11 +2065,7 @@ strong.LOST {
 
 .awayTeamtrue {
   height: auto;
-  /* order: 6; */
-  /* font-size: 0.7em; */
   flex-grow: 0;
-  /* flex-shrink: 2; */
-  /* display: inline-block; */
   text-align: left;
   font-weight: bolder;
   box-sizing: border-box;
@@ -2250,11 +2074,6 @@ strong.LOST {
 
 .ExplainerHeaders {
   display: flex;
-  /* align-items: center;
-  justify-content: center;
-  align-content: center;
-  flex-direction: row; */
-
   justify-content: center;
   padding-top: 2em;
 
@@ -2263,16 +2082,8 @@ strong.LOST {
 .ScoreHeader {
   flex-basis: 50%;
   font-size: 0.9em;
-  /* margin: 0.1em;
-  flex-wrap: wrap;
-  padding: 0.5em; */
-
-  /* background-color: #020029; */
   color: var(--text-color);
   text-align: right;
-  /* border-right: white;
-  border-style: solid;
-  border-right-width: 0.5px; */
   border: none;
   padding: 0.5em;
 }
@@ -2280,11 +2091,7 @@ strong.LOST {
 .PredictionHeader {
   flex-basis: 50%;
   font-size: 0.9em;
-
-  /* background-color: #020029; */
   color: var(--text-color);
-  /* padding-left: 1em; */
-
   text-align: left;
   border: none;
   padding: 0.5em;
@@ -2338,9 +2145,7 @@ strong.LOST {
 
 .ProbabilityBarBackground {
   position: relative;
-  /* 🔑 REQUIRED */
   flex: 1;
-  /* height: 1.5em; */
   border-radius: 4px;
   overflow: hidden;
   background-color: #eeeeee;
@@ -2351,17 +2156,13 @@ strong.LOST {
 
 .ProbabilityBarFill {
   position: absolute;
-  /* 🔑 removes it from layout */
   top: 0;
   left: 0;
   height: 100%;
-  /* now SAFE */
   background-color: red;
-  /* or via class */
   transition: width 0.3s ease;
   z-index: 1;
 }
-
 
 .ProbabilityBarText {
   color: #020029;
@@ -2369,8 +2170,6 @@ strong.LOST {
   z-index: 2;
 }
 
-
-/* Colour coding */
 .prob-strong {
   background-color: #009700;
 }
@@ -2394,14 +2193,11 @@ strong.LOST {
 .PredictionOrProbabilityExplainertrue {
   height: 100%;
   align-content: center;
-  /* background-color: var(--fourth-background-color); */
-  /* flex-basis: 30%; */
 }
 
 .PredictionOrProbabilityExplainerfalse {
   height: 100%;
   align-content: center;
-  /* background-color: var(--fourth-background-color); */
   width: 5em;
   margin-right: 0.5em;
 }
@@ -2409,24 +2205,17 @@ strong.LOST {
 .ResultContainer {
   height: 100%;
   align-content: center;
-  /* background-color: var(--background-color); */
-  /* width: 5em; */
 }
 
 .ResultContainerExplainer {
   height: 100%;
   align-content: center;
-  /* background-color: var(--background-color); */
-  /* width: 5em; */
 }
 
 .divider,
 .score {
   height: auto;
   width: 1.5em;
-  /* width: auto; */
-  /* max-width: 5em; */
-  /* order: 3; */
   padding: 0.5em;
   display: inline-block;
   color: rgb(55, 55, 55);
@@ -2441,9 +2230,6 @@ strong.LOST {
 .result {
   height: auto;
   width: 1.5em;
-  /* width: auto; */
-  /* max-width: 5em; */
-  /* order: 3; */
   padding: 0.5em;
   display: inline-block;
   color: black;
@@ -2453,18 +2239,12 @@ strong.LOST {
   margin-left: 0.5em;
   margin-right: 0.5em;
   font-size: 1.1em;
-  /* font-family: 'Fira Sans'; */
 }
 
 .resultExplainer {
   height: auto;
-  /* width: auto; */
-  /* max-width: 5em; */
-  /* order: 3; */
   display: inline-block;
   color: black;
-  /* background-color: #FFE500;
-  border: black 1px solid; */
   border-radius: 0px;
   font-size: 1em;
 }
@@ -2472,9 +2252,6 @@ strong.LOST {
 .resultexact {
   height: auto;
   flex-basis: 5%;
-  /* width: auto; */
-  /* max-width: 5em; */
-  /* order: 3; */
   padding: 0.5em;
   display: inline-block;
   color: var(--text-color);
@@ -2491,13 +2268,8 @@ strong.LOST {
   width: auto;
   text-align: left;
   font-size: 0.8em;
-  /* order: 3; */
-  /* padding: 0.5em; */
   padding-left: 0.5em;
-  /* display: inline-block; */
   color: var(--text-color);
-  /* background-color: #020029;
-  border-radius: 10px; */
   margin-left: 1em;
 }
 
@@ -2505,7 +2277,6 @@ strong.LOST {
   height: auto;
   flex-basis: 10%;
   max-width: 5em;
-  /* order: 3; */
   padding: 0.25em;
   display: inline-block;
   color: black;
@@ -2517,27 +2288,13 @@ strong.LOST {
 }
 
 .KOAndPrediction {
-  /* margin-left: auto; */
   align-self: left;
-  /* margin-left: 1em; */
 }
 
 .ExplainerContainertrue {
   display: grid;
   grid-template-columns:
-    minmax(0.5rem, 0.5fr)
-    /* odds */
-    minmax(0.5em, 0.4fr)
-    /* badge */
-    minmax(2rem, 1.2fr)
-    /* team name */
-    minmax(2rem, 1.3fr)
-    /* prediction */
-    minmax(0.5rem, 0.6fr)
-    /* action */
-    minmax(1.5rem, 1.5fr);
-    /* result */
-  /* form */
+    minmax(0.5rem, 0.5fr) minmax(0.5em, 0.4fr) minmax(2rem, 1.2fr) minmax(2rem, 1.3fr) minmax(0.5rem, 0.6fr) minmax(1.5rem, 1.5fr);
   font-size: 1.1em;
   align-items: center;
   column-gap: 0.25rem;
@@ -2548,21 +2305,9 @@ strong.LOST {
 .ExplainerContainerfalse {
   display: grid;
   grid-template-columns:
-    minmax(0.5rem, 0.5fr)
-    /* odds */
-    minmax(0.5em, 0.4fr)
-    /* badge */
-    minmax(2.5rem, 1.3fr)
-    /* team name */
-    minmax(0.5rem, 0.5fr)
-    /* prediction */
-    minmax(0.5rem, 0.5fr)
-    /* action */
-    minmax(1.8rem, 1.3fr);
-
-  /* form */
+    minmax(0.5rem, 0.5fr) minmax(0.5em, 0.4fr) minmax(2.5rem, 1.3fr) minmax(0.5rem, 0.5fr) minmax(0.5rem, 0.5fr) minmax(1.8rem, 1.3fr);
   font-size: 1.1em;
-  margin-left: 0.5em;
+  margin-left: 1em;
   margin-right: 0.5em;
   align-items: center;
   column-gap: 0.25rem;
@@ -2572,19 +2317,7 @@ strong.LOST {
 .DrawContainertrue {
   display: grid;
   grid-template-columns:
-    minmax(0.5rem, 0.5fr)
-    /* odds */
-    minmax(0.5em, 0.4fr)
-    /* badge */
-    minmax(2rem, 1.2fr)
-    /* team name */
-    minmax(2rem, 1.3fr)
-    /* prediction */
-    minmax(0.5rem, 0.6fr)
-    /* action */
-    minmax(1.5rem, 1.5fr);
-    /* result */
-  /* form */
+    minmax(0.5rem, 0.5fr) minmax(0.5em, 0.4fr) minmax(2rem, 1.2fr) minmax(2rem, 1.3fr) minmax(0.5rem, 0.6fr) minmax(1.5rem, 1.5fr);
   font-size: 1.1em;
   align-items: center;
   column-gap: 0.25rem;
@@ -2614,7 +2347,6 @@ strong.LOST {
 }
 
 .HomeResults {
-  /* padding-right: 1em; */
   font-size: 1em;
   padding: 1em;
   text-align: center;
@@ -2626,7 +2358,6 @@ strong.LOST {
 }
 
 .AwayResults {
-  /* padding-left: 1em; */
   font-size: 1em;
   padding: 1em;
   text-align: center;
@@ -2718,31 +2449,16 @@ strong.LOST {
   display: none;
 }
 
-/* .RowOneContainer {
-  max-width: 1200px;
-  vertical-align: middle;
-} */
-
 .Collapsable {
-  /* font-size: 2vw; */
-  /* flex-basis: 50%; */
   margin: 0em;
   margin-left: auto;
   margin-right: auto;
   padding: 0em;
-  /* margin: 0.25em; */
   flex-wrap: wrap;
   height: auto;
-  /* border: white 0.1px dashed; */
-  /* border-radius: 5px; */
-  /* background-color: var(--background-color); */
-  /* border: white 1px dashed; */
-  /* box-shadow: 4px 4px 4px 4px rgba(0.2, 0.2, 0.2, 0.2), 0 6px 20px 0 #294A66; */
-  /* box-shadow: rgba(0, 0, 0, 0.15) 0px 0px 0px 1px; */
 }
 
 .Collapsible__contentOuter {
-  /* width: 100%; */
   margin: auto;
   margin-left: auto;
   margin-right: auto;
@@ -2778,7 +2494,6 @@ strong.LOST {
 .ValueTable .competition {
   padding-top: 0.25em;
   font-size: 0.8em;
-  /* color: var(--mid-grey); */
 }
 
 .ValueTableHeaders th {
@@ -2852,32 +2567,25 @@ strong.LOST {
 }
 
 .gallery-item-wrapper {
-  /* Default for larger screens (4 per row) */
   width: calc(25% - 10px);
-  /* Roughly 1/4 width with some margin */
   margin-right: 10px;
   margin-bottom: 20px;
   box-sizing: border-box;
 }
 
-/* Remove margin from the last item in each row for the 4-column layout */
 .gallery-item-wrapper:nth-child(4n) {
   margin-right: 0;
 }
 
-/* Media query for mobile screens (show 2 images per row) */
 @media (max-width: 768px) {
   .gallery-item-wrapper {
     width: calc(50% - 10px);
-    /* Roughly 1/2 width with some margin */
   }
 
-  /* Remove margin from the last item in each row for the 2-column layout */
   .gallery-item-wrapper:nth-child(2n) {
     margin-right: 0;
   }
 
-  /* Re-apply right margin to all other items in the row */
   .gallery-item-wrapper:nth-child(4n) {
     margin-right: 10px;
   }
@@ -2903,11 +2611,8 @@ strong.LOST {
 
 .gallery-item-wrapper h6 {
   margin-top: 0;
-  /* Remove default top margin of h6 */
   margin-bottom: 5px;
-  /* Add some bottom margin to separate from the image */
   text-align: center;
-  /* Optional: Center the title */
 }
 
 h6.MediaTitle {
@@ -2958,8 +2663,6 @@ li .Aligned {
   display: inline-block;
   padding: 0.65em;
   margin-top: 1em;
-  /* padding-left: 0.8em;
-  padding-right: 0.8em; */
   width: 1em;
   height: 1.25em;
   border-radius: 5px;
@@ -2972,8 +2675,6 @@ li .Aligned {
   display: inline-block;
   padding: 0.65em;
   margin-top: 1em;
-  /* padding-left: 0.8em;
-  padding-right: 0.8em; */
   width: 1em;
   height: 1.25em;
   border-radius: 5px;
@@ -2992,15 +2693,8 @@ li .Aligned {
   flex-wrap: wrap;
   justify-content: center;
   font-size: 1.1em;
-  /* flex-direction: column; */
-  /* flex-basis: 50%; */
-  /* font-size: 3vw; */
 }
 
-/* 
-.Stat {
-  padding: 5px;
-} */
 .MuiPaper-root {
   margin: 0px !important;
   border: 0px !important;
@@ -3025,9 +2719,6 @@ li .Aligned {
   align-items: center;
   background-color: #e2e2e26c;
   color: black;
-  /* flex-direction: column;
-  align-items: center;
-  flex-basis: 100%; */
 }
 
 .LeagueStatsColumn {
@@ -3066,9 +2757,7 @@ li .Aligned {
 .StatsContainer {
   display: flex;
   flex-direction: row;
-  /* justify-content: center; */
   text-align: center;
-  /* align-items: end; */
 }
 
 .HomeBadgePrevious {
@@ -3117,9 +2806,6 @@ li .Aligned {
   align-items: center;
   align-content: center;
   color: black;
-  /* padding-top: 0.5em;
-  padding-bottom: 0.5em;
-  padding-right: 0.5em; */
   flex-wrap: wrap;
 }
 
@@ -3128,9 +2814,6 @@ li .Aligned {
   align-items: center;
   align-content: center;
   color: black;
-  /* padding-top: 0.5em;
-  padding-bottom: 0.5em;
-  padding-left: 0.5em; */
   flex-wrap: wrap;
 }
 
@@ -3190,30 +2873,6 @@ a.PreviousMatchLink {
   margin-bottom: 1em;
 }
 
-/* .PreviousResultHome {
-  display: flex;
-  flex-basis: 50%;
-  background-color: #e2e2e26c;
-  align-items: center;
-  align-content: center;
-  color: black;
-  flex-direction: row-reverse;
-  text-align: center;
-  padding-bottom: 1.5em;
-}
-
-.PreviousResultAway {
-  display: flex;
-  flex-basis: 50%;
-  background-color: #e2e2e26c;
-  align-items: center;
-  align-content: center;
-  text-align: center;
-  color: black;
-  padding-bottom: 1.5em;
-
-} */
-
 .LastGameHeader {
   font-weight: bolder;
   color: var(--text-color);
@@ -3228,7 +2887,6 @@ a.PreviousMatchLink {
   flex-direction: row;
   justify-content: center;
   text-align: center;
-  /* font-size: 2.3vw; */
   align-items: center;
 }
 
@@ -3244,7 +2902,6 @@ a.PreviousMatchLink {
   padding-top: 5px;
   padding-bottom: 5px;
   text-align: center;
-  /* font-size: 2.5vw; */
 }
 
 .InsightsExplainer {
@@ -3327,14 +2984,6 @@ a.PreviousMatchLink {
   padding-bottom: 1em;
 }
 
-
-/* .row {
-  display: flex;
-  flex-direction: row;
-  flex-wrap: wrap;
-  width: 100%;
-} */
-
 .flex-container {
   display: flex;
   align-items: stretch;
@@ -3343,22 +2992,9 @@ a.PreviousMatchLink {
   width: 100%;
 }
 
-
-
-
-.AllStats {
-  /* align-items: flex-end; */
-  /* font-size: 1.1em; */
-}
-
-.RecentResults {
-  /* align-items: flex-end; */
-}
-
 .flex-container-similar {
   display: flex;
   justify-content: center;
-  /* align-items: flex-start; */
 }
 
 canvas.DoughnutChart {
@@ -3374,7 +3010,6 @@ canvas.Pie {
 
 .DoughnutOne {
   flex-direction: column;
-  /* padding-right: 0.5em; */
   flex-basis: 50%;
   background-color: var(--background-color);
   color: var(--text-color);
@@ -3383,7 +3018,6 @@ canvas.Pie {
 
 .DoughnutTwo {
   flex-direction: column;
-  /* padding-left: 0.5em; */
   flex-basis: 50%;
   background-color: var(--background-color);
   color: var(--text-color);
@@ -3406,8 +3040,6 @@ canvas.Pie {
   flex-basis: 45%;
   background-color: var(--background-color);
   color: var(--text-color);
-  /* min-width: 16em;
-  max-width: 21em; */
 }
 
 .flex-childOneOverviewSmall {
@@ -3419,8 +3051,6 @@ canvas.Pie {
   font-size: 0.75em;
   background-color: var(--background-color);
   color: var(--text-color);
-  /* min-width: 16em;
-  max-width: 21em; */
 }
 
 .flex-childTwoOverview {
@@ -3430,9 +3060,6 @@ canvas.Pie {
   flex-basis: 45%;
   background-color: var(--background-color);
   color: var(--text-color);
-  /* width: auto;
-  min-width: 16em;
-  max-width: 21em; */
 }
 
 .flex-childTwoOverviewSmall {
@@ -3444,9 +3071,6 @@ canvas.Pie {
   font-size: 0.75em;
   background-color: var(--background-color);
   color: var(--text-color);
-  /* width: auto;
-  min-width: 16em;
-  max-width: 21em; */
 }
 
 .flex-childOneOverview .W {
@@ -3518,8 +3142,6 @@ canvas.Pie {
   margin-bottom: 0.5em;
   border: solid 1px white;
   text-align: center;
-  /* padding-left: 7px;
-  padding-right: 7px; */
 }
 
 .L {
@@ -3528,7 +3150,6 @@ canvas.Pie {
   margin-bottom: 0.5em;
   border: solid 1px white;
   text-align: center;
-
 }
 
 .D {
@@ -3537,9 +3158,7 @@ canvas.Pie {
   margin-bottom: 0.5em;
   border: solid 1px white;
   text-align: center;
-
 }
-
 
 .W li {
   padding: 0.5em;
@@ -3555,32 +3174,6 @@ canvas.Pie {
   padding: 0.5em;
   text-align: center;
 }
-
-
-/* .column {
-  display: flex;
-  flex-direction: column;
-  flex-basis: 50%;
-  flex: 1;
-} */
-/* 
-.ColumnOne{
-  display: flex;
-  flex-direction: column;
-  flex-basis: 50%;
-  text-align: end;
-  padding-right: 0.25em;
-  padding-left: 0.5em;
-}
-
-.ColumnTwo{
-  display: flex;
-  flex-direction: column;
-  flex-basis: 50%;
-  text-align: start;
-  padding-right: 0.5em;
-  padding-left: 0.25em;
-} */
 
 .ExpandingStats {
   background-color: var(--background-color);
@@ -3613,7 +3206,6 @@ canvas.Pie {
 }
 
 .AllStats li:nth-child(even) {
-  /* background: var(--secondary-background-color); */
   color: var(--text-color);
 }
 
@@ -3688,7 +3280,6 @@ canvas.Pie {
   width: 45%;
   background-color: #e2e2e26c;
   padding-right: 0.2em;
-  /* padding-right: 20px; */
 }
 
 .HomeLineup li {
@@ -3711,8 +3302,6 @@ canvas.Pie {
 }
 
 .Home {
-  /* padding-left: 5px; */
-
   padding-right: 0px;
   flex-basis: 50%;
   border-right: 1px solid #e2e2e26c;
@@ -3722,7 +3311,6 @@ canvas.Pie {
 
 
 .stat-betterHome {
-  /* border: 1px solid #01a501; */
   border-right: 4px solid #01a501;
   border-radius: 4px;
   margin-top: 0.4em;
@@ -3740,7 +3328,6 @@ canvas.Pie {
 }
 
 .stat-equalHome {
-  /* border: 1px solid var(--background-color); */
   border-right: 4px solid gray;
   border-radius: 4px;
   margin-top: 0.4em;
@@ -3750,7 +3337,6 @@ canvas.Pie {
 
 
 .stat-betterAway {
-  /* border: 1px solid #01a501; */
   border-left: 4px solid #01a501;
   border-radius: 4px;
   margin-top: 0.4em;
@@ -3767,7 +3353,6 @@ canvas.Pie {
 }
 
 .stat-equalAway {
-  /* border: 1px solid var(--background-color); */
   border-left: 4px solid gray;
   border-radius: 4px;
   margin-top: 0.4em;
@@ -3781,7 +3366,6 @@ canvas.Pie {
   list-style: none;
   background: #e2e2e26c;
   color: black;
-  /* padding-left: 1em; */
 }
 
 .Home li:nth-child(odd) {
@@ -3798,22 +3382,6 @@ canvas.Pie {
   padding-top: 1.5em;
 }
 
-
-/* 
-
-.Away {
-  padding-left: 0px;
-  flex-basis: 50%;
-} */
-/* 
-.Away li {
-  padding: 0.8em;
-  margin: 0px;
-  list-style: none;
-  background: #e2e2e26c;
-  color: black;
-} */
-
 .Away li.Form {
   padding-top: 1.5em;
   padding-bottom: 1.5em;
@@ -3825,8 +3393,6 @@ canvas.Pie {
 
 
 canvas {
-  /* padding-top: 1em;
-  padding-bottom: 1em; */
   max-height: 36em;
   max-width: 36em;
   display: inline !important;
@@ -3835,8 +3401,6 @@ canvas {
 }
 
 canvas.LeagueStatsRadar {
-  /* width: 70em !important;
-  height: 70em !important; */
   display: flex !important;
   max-width: 100%;
 }
@@ -3857,35 +3421,17 @@ canvas.LeagueStatsRadar {
   min-height: 13em;
 }
 
-/* .StarRatingHeader{
-  width: 20em;
-} */
-
-
-
 .FormSummaryHome {
-  /* display: flex; */
-  /* height: auto; */
   min-height: 12em;
-  /* vertical-align: middle; */
   background-color: #e2e2e200 !important;
-  /* max-width: 21em; */
-  /* justify-content:flex-end;
-  align-items: flex-start;
-  background-color: #e2e2e26c !important; */
   line-height: 1.5em;
   padding-bottom: 0em !important;
-  /* margin-left: auto; */
 }
-
-
-
 
 .Away li:nth-child(odd) {
   background: #dedddd;
   color: black;
 }
-
 
 .win {
   background-color: #01a501;
@@ -3931,9 +3477,7 @@ canvas.LeagueStatsRadar {
   margin-left: 0.2em;
   margin-right: 0.2em;
   padding: 0;
-  /* Reset padding */
   border-radius: 50%;
-  /* Make it a circle */
   display: block;
 }
 
@@ -3944,9 +3488,7 @@ canvas.LeagueStatsRadar {
   margin-left: 0.2em;
   margin-right: 0.2em;
   padding: 0;
-  /* Reset padding */
   border-radius: 50%;
-  /* Make it a circle */
   display: block;
 }
 
@@ -3957,9 +3499,7 @@ canvas.LeagueStatsRadar {
   margin-left: 0.2em;
   margin-right: 0.2em;
   padding: 0;
-  /* Reset padding */
   border-radius: 50%;
-  /* Make it a circle */
   display: block;
 }
 
@@ -3979,8 +3519,6 @@ canvas.LeagueStatsRadar {
   background-color: rgb(0, 164, 0);
   padding: 0.3em;
   margin-top: 0em;
-  /* padding-left: 7px;
-  padding-right: 7px; */
   width: 1.2vw;
   margin: 0.25vw;
   color: var(--secondary-button-text-color);
@@ -3993,8 +3531,6 @@ canvas.LeagueStatsRadar {
   padding-left: 0.5em;
   padding-right: 0.5em;
   margin-top: 0em;
-  /* padding-left: 7px;
-  padding-right: 7px; */
   width: 1.2vw;
   margin: 0.25vw;
   color: var(--secondary-button-text-color);
@@ -4007,8 +3543,6 @@ canvas.LeagueStatsRadar {
   margin-top: 0em;
   padding-left: 0.4em;
   padding-right: 0.4em;
-  /* padding-left: 7px;
-  padding-right: 7px; */
   width: 1.2vw;
   margin: 0.25vw;
   color: var(--secondary-button-text-color);
@@ -4055,10 +3589,6 @@ li.FormHeader {
 .MultisCollapsable {
   padding: 1em;
 }
-
-/* .BuildAMulti{
-  background-color: var(--alternate-background-color);
-} */
 
 .MultisCollapsableOpened {
   background-color: var(--secondary-background-color);
@@ -4121,7 +3651,6 @@ li.FormHeader {
   box-sizing: border-box;
   text-decoration: none;
   font-family: 'Open Sans', sans-serif;
-  /* font-size: 0.8em; */
   font-weight: 500;
   color: var(--text-color);
   background-color: #020029;
@@ -4132,7 +3661,6 @@ li.FormHeader {
 }
 
 .StyleOfPlay {
-  /* min-height: 2.5em; */
   margin-bottom: 0;
   padding-top: 1em !important;
   padding-bottom: 0.75em !important;
@@ -4140,7 +3668,6 @@ li.FormHeader {
 }
 
 .BestPredictions {
-  /* border: var(--text-color) 1px dashed; */
   background-color: var(--background-color);
   max-width: 30em;
   padding-bottom: 1em;
@@ -4158,7 +3685,6 @@ li.FormHeader {
   padding-top: 0.25em;
   padding-bottom: 0.25em;
   background-color: var(--secondary-background-color);
-  /* box-shadow: 1.8px 3.5px 3.5px hsl(0deg 0% 0% / 0.45); */
 }
 
 .BestPredictions a {
@@ -4230,10 +3756,8 @@ li.FormHeader {
 }
 
 .BTTSGames lh {
-  /* font-size: 1em; */
   font-size: 1.1em;
 }
-
 
 .fact {
   padding: 5px;
@@ -4252,10 +3776,6 @@ ul {
   background-color: var(--secondary-background-color);
 }
 
-
-
-
-
 .LongshotPredictions lh {
   font-size: 1.2em;
 }
@@ -4267,9 +3787,7 @@ ul {
 .Won {
   color: #01a501;
   font-size: 1.2em;
-  /* display: flex; */
 }
-
 
 .Won1 {
   color: #01a501;
@@ -4280,30 +3798,22 @@ ul {
   font-size: 1.2em;
 }
 
-/* Container for the entire list (ul/ol) */
 .tip-list {
   list-style: none;
-  /* Remove default bullets */
   padding: 0;
   margin: 0;
 }
 
-/* Individual Tip Item (li) */
 .tip-item {
   padding: 10px 0;
 }
 
-
-/* THE MAIN FLEX CONTAINER */
 .tip-content-flex {
   display: flex;
-  /* Space out the two columns (game and details) */
   justify-content: space-between;
   align-items: center;
   margin-top: 0.5em;
-  /* Vertically align items */
   gap: 2em;
-  /* Space between the columns */
 }
 
 .TipCompetition {
@@ -4345,25 +3855,11 @@ ul {
   margin-bottom: 0.25em;
 }
 
-/* Column 2: Details (Team, Odds, Outcome) */
 .TipDetails {
-  /* Allows it to grow and take space */
   flex: 1;
   text-align: end;
   padding-right: 0.5em;
-  /* Right align the odds/outcome for a clean look */
 }
-
-/* Outcome symbols styling (optional but useful) */
-/* .win {
-  color: green;
-  font-weight: bold;
-}
-
-.lose {
-  color: red;
-  font-weight: bold;
-} */
 
 .Lost1 {
   color: #bf1000;
@@ -4378,8 +3874,7 @@ ul {
 }
 
 .AccumulatedOdds {
-  padding-top: 1em;
-  font-size: 1.2em;
+  font-size: 1.1em;
 }
 
 .kofitext {
@@ -4437,7 +3932,6 @@ table,
 th,
 td {
   border-collapse: collapse;
-  /* border-top: groove; */
   padding: 0.25em;
   padding-left: 1em;
   padding-right: 1em;
@@ -4457,8 +3951,6 @@ td {
   text-align: center;
   font-size: 1.8em;
   line-height: 1.8em;
-  /* padding-left: 1em;
-  padding-right: 1em; */
   margin: 0em;
   padding-bottom: 0.25em;
   padding-top: 0.25em;
@@ -4481,7 +3973,6 @@ button:hover {
 
 .disclaimerButton:hover {
   border-color: white;
-  /* border-radius: 45px; */
 }
 
 .content h3,
@@ -4509,7 +4000,6 @@ button:hover {
 }
 
 .H2HStats {
-  /* margin: 1em; */
   text-align: center;
 }
 
@@ -4523,10 +4013,7 @@ button:hover {
 
 .PreviousMatchStats {
   display: flex;
-  /* flex-direction: column; */
   flex-wrap: wrap;
-  /* margin-left: 1em;
-  margin-right: 1em; */
   padding-bottom: 15px;
 }
 
@@ -4553,7 +4040,6 @@ li .Stadium {
 
 
 .LastGameDetail {
-  /* padding-top: 0.5em; */
   padding-bottom: 0.5em;
   width: 100%;
   text-align: center;
@@ -4607,20 +4093,17 @@ li .Stadium {
   padding: 0.25em;
   margin-left: 0.25em;
   margin-right: 0.25em;
-  /* margin: 0.5em; */
 }
 
 
 
 
 .StatsTable {
-  /* width: 75%; */
   text-align: center;
   font-family: 'Open Sans', sans-serif;
   font-size: .5em;
   align-items: stretch;
   background-color: #030052;
-  /* margin: 1em; */
 }
 
 .ResultsStatsTable {
@@ -4710,30 +4193,14 @@ section {
   margin-right: auto;
 }
 
-
-
-/* section::after {
-  width: 42px;
-  height: 42px;
-
-  border: 1px solid var(--primary);
-
-  top: 11px;
-  left: 11px;
-} */
-
 .dark {
-  /* display: flex; */
   flex-basis: 30%;
-  /* font-size: 1.2em; */
   --primary: #EC9A29;
   --other: hsl(0, 0%, 90%);
 }
 
 .dark2 {
-  /* display: flex; */
   flex-basis: 30%;
-  /* font-size: 1.2em; */
   --primary: #EC9A29;
   --other: hsl(0, 0%, 90%);
 }
@@ -4792,14 +4259,12 @@ label {
   margin-left: auto;
   margin-right: auto;
   margin-top: 0em;
-  /* height: 9em; */
   background-color: var(--background-color);
 }
 
 .design {
   width: 1em;
   height: 1em;
-  /* padding: 0.5em; */
   border: 2px solid var(--other);
   border-radius: 100%;
   margin-right: 0.2em;
@@ -4835,13 +4300,11 @@ label {
   transition: 0.6s;
 }
 
-/* checked state */
 input:checked+.design::before {
   opacity: 1;
   transform: scale(0.6);
 }
 
-/* other states */
 input:hover+.design,
 input:focus+.design {
   border: 1px solid var(--primary);
@@ -4865,16 +4328,6 @@ input:active+.design::after {
 .DonationButton {
   padding-bottom: 2em;
 }
-
-
-/* Team page */
-/* .TeamStatsContainer{
-  display: flex;
-  flex-direction: column;
-  width: 80%;
-  margin-left: auto;
-  margin-right: auto;
-} */
 
 .custom-checkbox {
   display: flex;
@@ -4906,17 +4359,8 @@ input:active+.design::after {
 }
 
 .GameStats {
-  /* margin-top: 0.25em;
-  margin-bottom: 0.75em; */
-  /* padding: 0.75em;
-  margin: 0em;
-  align-content: flex-end;
-  align-items: center;
-  margin-left: auto; */
-  /* margin-right: auto; */
   font-size: 2em;
   width: 3em;
-  /* font-size: 0.75em; */
   background-color: #ffffff00;
   color: var(--text-color);
   border: none;
@@ -4924,7 +4368,6 @@ input:active+.design::after {
   margin-left: auto;
   padding: 0em;
   padding-right: 1.5em;
-  /* line-height: 1em; */
 }
 
 .GameStats:hover {
@@ -4932,7 +4375,6 @@ input:active+.design::after {
 }
 
 .GameStats:active {
-  /* background-color: var(--secondary-color); */
   box-shadow: 0 1px 1px 0 rgba(0.1, 0.1, 0.1, 0.1), 0 1px 1px 0 #626262 inset;
 }
 
@@ -4945,7 +4387,6 @@ input:active+.design::after {
   margin: 0em;
   margin-left: auto;
   padding: 0em;
-  /* padding-right: 1.5em; */
 }
 
 .GameStatsTwoExplainer {
@@ -4966,7 +4407,6 @@ input:active+.design::after {
 }
 
 .GameStatsTwo:active {
-  /* background-color: var(--secondary-color); */
   box-shadow: 0 1px 1px 0 rgba(0.1, 0.1, 0.1, 0.1), 0 1px 1px 0 #626262 inset;
 }
 
@@ -5029,7 +4469,6 @@ input:active+.design::after {
 }
 
 .TeamStatsContainer canvas {
-  /* min-width: 35%; */
   border: 1em;
   flex-basis: 100%;
 }
@@ -5046,18 +4485,9 @@ input:active+.design::after {
   align-items: center;
   order: 1;
   justify-content: center;
-  /* flex-basis: 100%;
-
-  background-color: #020029;
-  align-items: center;
-  align-content: center;
-  color: black;
-  padding-top: 0.5em; */
 }
 
 .scroll-target {
-  /* This is the key property */
-  /* Set this value to the height of your fixed top navigation bar */
   scroll-margin-top: 9em;
 }
 
@@ -5068,8 +4498,6 @@ input:active+.design::after {
   height: 3vw;
   width: 3vw;
   padding-right: 1em;
-  /* padding-left: 0.5em;
-  padding-right: 0.5em; */
   flex-basis: 1%;
   margin: 0px;
   border: 0px;
@@ -5086,8 +4514,6 @@ input:active+.design::after {
   height: 3vw;
   width: 3vw;
   padding-left: 1em;
-  /* padding-left: 0.5em;
-  padding-right: 0.5em; */
   flex-basis: 1%;
   margin: 0px;
   border: 0px;
@@ -5099,13 +4525,10 @@ input:active+.design::after {
   line-height: 2em;
   flex-direction: row;
   flex-wrap: wrap;
-  /* margin: 1em; */
 }
 
 .HomeTeamStats {
   flex-basis: 50%;
-  /* padding: 2em; */
-  /* border-right: #030052 0.5px solid; */
 }
 
 .HomeTeamStats li {
@@ -5116,8 +4539,6 @@ input:active+.design::after {
 
 .AwayTeamStats {
   flex-basis: 50%;
-  /* padding: 2em; */
-  /* border-left: #030052 0.5px solid; */
 }
 
 .AwayTeamStats li {
@@ -5128,12 +4549,10 @@ input:active+.design::after {
 
 .HomeTeamResults {
   flex-basis: 50%;
-
 }
 
 .AwayTeamResults {
   flex-basis: 50%;
-
 }
 
 .ResultedGame {
@@ -5148,7 +4567,6 @@ input:active+.design::after {
 }
 
 .ComparisonBar {
-  /* display: inline; */
   margin-left: auto;
   margin-right: auto;
   flex-basis: 100%;
@@ -5243,7 +4661,6 @@ input:active+.design::after {
   width: 100%;
   margin-left: auto;
   margin-right: auto;
-  /* margin-top: 1em; */
   color: var(--button-text-color);
 }
 
@@ -5270,20 +4687,13 @@ h6.AttackingMomentum {
   text-align: center;
 }
 
-/* 1. Main Form Layout: Places the input group and the submit button side-by-side */
 .LoginForm {
-  /* Enables Flexbox */
   display: flex;
-  /* Sets direction to row (default) */
   flex-direction: row;
-  /* Aligns the items vertically to the top of the container */
   align-items: center;
   margin-left: auto;
   margin-right: auto;
-  margin-bottom: 1em;
-  /* Space between the input group and the submit button */
   gap: 1em;
-  /* Optional: Set a max width for the form itself */
   margin-top: 1em;
   align-items: center;
   max-width: 600px;
@@ -5292,22 +4702,15 @@ h6.AttackingMomentum {
   border-radius: 10px;
 }
 
-/* 2. Input Group Layout: Stacks the email and password fields */
 .InputGroup {
-  /* Enables Flexbox */
   display: flex;
-  /* Sets direction to column (stacking inputs) */
   flex-direction: column;
   width: 60%;
-  /* margin-left: 3em; */
-  /* Controls the vertical spacing between the two fields */
   gap: 1em;
-  /* Allows the input group to consume the majority of the form width */
   flex-grow: 1;
   margin-left: 1em;
 }
 
-/* Ensure the stacked fields fill the space */
 .LoginInput1,
 .LoginInput2,
 .PasswordContainer {
@@ -5319,45 +4722,32 @@ input {
   border: 1px solid var(--text-color);
 }
 
-/* 3. Password Container (Nested Flex) */
 .PasswordContainer {
   display: flex;
-  /* Space between the password input and the toggle button */
   gap: 5px;
   margin-bottom: 1em;
 }
 
-/* Ensure the submit button aligns with the stacked fields */
 .LoginSignUp {
-  /* Ensures the button maintains its content width and doesn't shrink */
   flex-shrink: 0;
-  /* Set a height that visually balances the stacked inputs and their gap */
-  /* height: 80px;  */
   padding: 1em;
   min-width: 6em;
-  /* margin-right: 3em;
-  margin-left: 3em; */
   flex: 1;
-  /* Center button text/content */
   display: flex;
   align-items: center;
   justify-content: center;
   margin-right: 0em;
 }
 
-/* Optional: Style the password input to fill the remaining space next to the toggle button */
 .LoginInput2 {
   flex-grow: 1;
 }
 
-/* Ensure the Reset Password Link button drops below the main flex row */
 .ResetPasswordLink {
-  /* Makes the button start on a new line */
   flex-basis: 100%;
   text-align: right;
   height: 4em;
   padding: 0em;
-  /* Optional cleanup for styling */
   margin-left: 0em;
   margin-right: 1em;
   border: none;
@@ -5368,7 +4758,6 @@ input {
   cursor: pointer;
   font-size: 0.9em;
   text-decoration: underline;
-  /* margin-top: 10px; */
 }
 
 .CancelButton {
@@ -5427,9 +4816,6 @@ button.TogglePasswordButton {
   border: none;
   color: #030052;
   align-self: center;
-  /* margin-left: auto;
-  margin-right: auto;
-  margin-top: 0em; */
 }
 
 .ResetPasswordField {
@@ -5509,7 +4895,6 @@ button.SecondaryButtons {
   margin-bottom: 1em;
   border-bottom: 1px solid var(--primary-color);
   padding-bottom: 1em;
-  /* color: var(--primary-color); */
 }
 
 .AIMatchPreviewCard ul {
@@ -5525,10 +4910,6 @@ button.SecondaryButtons {
   border-bottom: 1px solid rgba(255, 255, 255, 0.1);
   font-size: 1em;
 }
-
-/* .AIMatchPreviewCard li strong {
-  color: var(--primary-color);
-} */
 
 .AIMatchPreviewCard i {
   display: block;
@@ -5548,7 +4929,6 @@ button.SecondaryButtons {
 }
 
 .HomeAIInsights ul {
-  /* margin-top: 1em; */
   padding: 1em;
   font-size: 1em;
 }
@@ -5567,7 +4947,6 @@ button.SecondaryButtons {
 }
 
 .AwayAIInsights ul {
-  /* margin-top: 1em; */
   padding: 1em;
   font-size: 1em;
 }
@@ -5596,8 +4975,6 @@ button.AIInsights {
   color: black;
   margin: 1em;
   cursor: pointer;
-  /* box-shadow: 0 0px 0px 0 rgba(0, 0, 0, 0.2), 0 1px 2px 0 #030052; */
-
 }
 
 button.AIInsightsLocked {
@@ -5605,8 +4982,6 @@ button.AIInsightsLocked {
   color: #030052;
   margin: 1em;
   cursor: pointer;
-  /* box-shadow: 0 0px 0px 0 rgba(0, 0, 0, 0.2), 0 1px 2px 0 #030052; */
-
 }
 
 button.AIInsights button:active {
@@ -5618,17 +4993,12 @@ button.AIInsights button:active {
   height: 1000;
 }
 
-/* .XGSwiper{
-} */
-
 .swiper-wrapper {
   padding-bottom: 30px;
   display: flex;
   height: auto !important;
   width: 100%;
 }
-
-
 
 .swiper-pagination {
   position: initial !important
@@ -5645,8 +5015,6 @@ button.AIInsights button:active {
   background-color: var(--primary-color) !important;
   height: 2em !important;
   width: 2em !important;
-
-
 }
 
 .LockIcon {
@@ -5669,9 +5037,7 @@ button.AIInsights button:active {
 }
 
 .flash-attention {
-  /* Define a flashy border/background for attention */
   border: 3px solid #ff9900 !important;
-  /* Brighter color */
   background-color: rgb(255, 247, 0) !important;
   box-shadow: 0 0 15px var(--text-color);
   transition: all 1s ease-in-out;
@@ -5736,7 +5102,6 @@ button.AIInsights button:active {
 
 .circle.blue {
   background-color: #fe8c00;
-  /* blue-600 */
   color: #020029;
   font-size: 1.1em;
   font-family: Arial, Helvetica, sans-serif;
@@ -5746,7 +5111,6 @@ button.AIInsights button:active {
 
 .circle.red {
   background-color: yellow;
-  /* blue-600 */
   color: #020029;
   font-size: 1.1em;
   font-family: Arial, Helvetica, sans-serif;
@@ -5785,7 +5149,6 @@ button.AIInsights button:active {
   max-height: 6em;
   border-radius: 0.5rem;
   background-color: whitesmoke;
-  /* margin-right: 0.5em; */
 }
 
 
@@ -5797,7 +5160,6 @@ button.AIInsights button:active {
   max-width: 5em;
   max-height: 5em;
   border-radius: 50%;
-  /* background-color: whitesmoke; */
   margin-top: 0.5em;
   margin-bottom: 0.5em;
 }
@@ -5828,12 +5190,6 @@ button.AIInsights button:active {
   flex-direction: row;
 }
 
-/* .MissingPlayersList{
-  width: 75%;
-  margin-left: auto;
-  margin-right: auto;
-} */
-
 .MissingPlayer {
   flex-direction: row;
   line-height: 2em;
@@ -5851,8 +5207,6 @@ button.AIInsights button:active {
 .MissingPlayers {
   display: flex;
   gap: 2em;
-  /* space between the two columns */
-  /* align-items: center; */
 }
 
 .HomeMissingPlayers {
@@ -5981,7 +5335,6 @@ button.AIInsights button:active {
   font-weight: bold;
   margin-right: 0.25em;
   background-color: var(--button-color);
-  /* blue-600 */
   color: var(--button-text-color);
   font-size: 1.1em;
   font-family: Arial, Helvetica, sans-serif;
@@ -5997,10 +5350,8 @@ button.AIInsights button:active {
   padding-bottom: 1em;
 }
 
-/* Each fixture "card" */
 .FutureFixture {
   background: var(--secondary-background-color, #f9f9f9);
-  /* fallback if var missing */
   border-radius: 2px;
   padding: 0.75rem 1rem;
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
@@ -6012,20 +5363,16 @@ button.AIInsights button:active {
   margin-bottom: 1.5em;
 }
 
-
-/* Inner list reset */
 .FutureFixture ul {
   list-style: none;
   padding: 0;
 }
-
 
 .FutureFixture ul li {
   color: var(--text-color);
   padding: 0.2em;
 }
 
-/* Date + time */
 .FutureFixture ul li:nth-child(3),
 .FutureFixture ul li:nth-child(4) {
   padding-top: 0.6em;
@@ -6034,7 +5381,6 @@ button.AIInsights button:active {
   margin-right: auto;
 }
 
-/* Column headings */
 .FutureFixturesColumn h4 {
   font-size: 1.1em;
   font-weight: 600;
@@ -6047,43 +5393,28 @@ button.AIInsights button:active {
   display: flex;
   flex-direction: row;
   justify-content: space-between;
-  /* push columns apart */
   align-items: flex-start;
   flex-wrap: wrap;
   gap: 2rem;
-  /* space between */
-  /* width: 100%; */
   box-sizing: border-box;
 }
 
-/* Left column aligned to the right */
 .FutureFixturesHome {
   text-align: right;
-  /* align text right */
   align-items: flex-end;
   font-size: 1.1em;
-  /* align fixtures inside */
 }
 
-/* Right column aligned to the left */
 .FutureFixturesAway {
   text-align: left;
-  /* default anyway */
   align-items: flex-start;
   font-size: 1.1em;
-
 }
 
-/* Columns: share width */
 .FutureFixturesColumn {
   flex: 1 1 45%;
-  /* take ~45% each */
   box-sizing: border-box;
 }
-
-
-
-
 
 .StreakCategory {
   margin-bottom: 2rem;
@@ -6093,15 +5424,12 @@ button.AIInsights button:active {
   width: 100%;
   margin-left: auto;
   margin-right: auto;
-  /* border-collapse: collapse; */
-  /* border-radius: 0.5rem; */
   overflow: hidden;
   background-color: var(--secondary-background-color);
 }
 
 .StreakTable thead {
   background-color: var(--background-color);
-  /* line-height: 4em; */
   font-size: 1.1em;
   text-align: left;
 }
@@ -6109,13 +5437,11 @@ button.AIInsights button:active {
 .StreakTable th,
 .StreakTable td {
   padding: 0.75em 1em;
-  /* font-size: 0.95em; */
-  /* color: var(--text-color); */
+
 }
 
 .StreakTable thead .TableTeamName {
   width: 4em;
-  /* ensures some consistency */
 }
 
 .StreakTable td,
@@ -6125,7 +5451,6 @@ button.AIInsights button:active {
 
 .StreakRow {
   line-height: 3em;
-  /* border: 1px var(--text-color) solid; */
   border-radius: 0.5rem;
 }
 
@@ -6138,7 +5463,6 @@ button.AIInsights button:active {
   align-items: center;
   justify-content: center;
   width: 4em;
-  /* ensures some consistency */
   vertical-align: middle;
   margin: 0%;
   padding: 1em;
@@ -6160,13 +5484,10 @@ button.AIInsights button:active {
   justify-content: center;
   vertical-align: middle;
   min-width: 9em;
-  /* padding: 2em;
-  margin: 1em; */
 }
 
 .StreakTable td {
   vertical-align: middle;
-  /* force center alignment */
 }
 
 .StreakLabel {
@@ -6183,7 +5504,6 @@ button.AIInsights button:active {
 
 .StreakValueSpan {
   background-color: var(--primary-color);
-  /* or any color */
   min-width: 2.5em;
   color: var(--span-text-colour);
   padding: 0.25em 0.5em;
@@ -6200,7 +5520,6 @@ button.AIInsights button:active {
 
 .StreakOddsSpan {
   background-color: var(--button-color);
-  /* or any color */
   min-width: 2.5em;
   color: var(--button-text-color);
   padding: 0.25em 0.5em;
@@ -6266,14 +5585,12 @@ button.AIInsights button:active {
   flex: 1;
   margin-top: 1em;
   margin-bottom: 1em;
-  /* margin: 1em; */
 }
 
 .AwayPlayerAttributes {
   flex: 1;
   margin-top: 1em;
   margin-bottom: 1em;
-  /* margin: 1em; */
 }
 
 .PublicVoteButton {
@@ -6296,7 +5613,6 @@ button.AIInsights button:active {
   color: white;
   font-weight: bold;
   background-color: var(--button-color);
-  /* blue-600 */
   color: var(--button-text-color);
   font-size: 1.1em;
   font-family: Arial, Helvetica, sans-serif;
@@ -6315,7 +5631,6 @@ button.AIInsights button:active {
   color: white;
   font-weight: bold;
   background-color: var(--button-color);
-  /* blue-600 */
   color: var(--button-text-color);
   font-size: 1.1em;
   font-family: Arial, Helvetica, sans-serif;
@@ -6325,11 +5640,9 @@ button.AIInsights button:active {
 
 .PlayerToggleButton {
   width: 100%;
-  /* text-align: left; */
   padding: 0.75em 1em;
   margin: 0em;
   margin-bottom: 1em;
-  /* margin: 1em; */
   font-size: 1em;
   background-color: var(--secondary-background-color);
   color: var(--text-color);
@@ -6339,7 +5652,6 @@ button.AIInsights button:active {
   display: inline-flex;
   flex-direction: column;
   align-items: center;
-  /* text-align: center; */
 }
 
 .HomePlayerStats .PlayerToggleButton {
@@ -6395,21 +5707,16 @@ button.AIInsights button:active {
 
 
 
-/* Adjust positioning */
 .LeftBall {
   margin-right: 0.75em;
   margin-top: 0.25em;
   margin-bottom: 0.25em;
-  /* margin-left: 3vw; */
-
 }
 
 .RightBall {
   margin-left: 0.75em;
   margin-top: 0.25em;
   margin-bottom: 0.25em;
-
-  /* margin-right: 3vw; */
 }
 
 .StatBall.Gold {
@@ -6464,17 +5771,14 @@ button.AIInsights button:active {
   background: #fff;
   width: 90vw;
   height: 90dvh;
-  /* Ensure the modal has a height */
   padding: 1rem;
   position: relative;
   border-radius: 8px;
   overflow-y: auto;
-  /* Enable vertical scroll if needed */
 }
 
 .IframeModalContent iframe {
   width: 100%;
-  /* height: auto; */
   border: none;
   display: block;
 }
@@ -6492,9 +5796,7 @@ button.AIInsights button:active {
     position: fixed;
     top: 0;
     left: 50%;
-    /* Center horizontally */
     transform: translateX(-50%);
-    /* Offset back by half the width */
     width: 60vw;
     height: 100dvh;
     background: rgba(0, 0, 0, 0.7);
@@ -6507,7 +5809,6 @@ button.AIInsights button:active {
   .IframeModalContent {
     background: #fff;
     width: 100%;
-    /* Fill the overlay width */
     height: 90dvh;
     padding: 1rem;
     position: relative;
@@ -6531,9 +5832,7 @@ button.AIInsights button:active {
     position: fixed;
     top: 0;
     left: 50%;
-    /* Center horizontally */
     transform: translateX(-50%);
-    /* Offset back by half the width */
     width: 60vw;
     height: 100dvh;
     background: rgb(25, 25, 40, 0.5);
@@ -6546,7 +5845,6 @@ button.AIInsights button:active {
   .IframeModalContent {
     background: var(--secondary-background-color);
     width: 100%;
-    /* Fill the overlay width */
     height: 80dvh;
     padding: 1rem;
     position: relative;

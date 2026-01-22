@@ -55,7 +55,7 @@ let homeOdds;
 let awayOdds;
 let totalGoals = 0;
 let totalGoals2 = 0;
-let numberOfGames = 0;
+export let numberOfGames = 0;
 let drawPredictions = 0;
 let homePredictions = 0;
 let awayPredictions = 0;
@@ -4266,7 +4266,11 @@ const footyStatsToSofaScore = [
   },
 ];
 
+  console.log("HELLO")
+
+
 async function fetchLeagueStats() {
+  console.log(uniqueLeagueIDs)
   function getWeekOfYear(date) {
     const target = new Date(date.valueOf());
     const dayNumber = (date.getUTCDay() + 6) % 7;
@@ -4284,24 +4288,26 @@ async function fetchLeagueStats() {
   // Use uniqueLeagueIDs array instead of iterating all keys in footyStatsToSofaScore
   const leagueObject = footyStatsToSofaScore[0];
 
-  // for (const leagueId of uniqueLeagueIDs) {
-  //   const mapping = leagueObject[leagueId];
-  //   if (!mapping) continue; // skip if not found
+  for (const leagueId of uniqueLeagueIDs) {
+    const mapping = leagueObject[leagueId];
+    if (!mapping) continue; // skip if not found
+  console.log("FETCHING IN LOOP")
 
-  //   const { id: sofaScoreId, season: sofaScoreSeason } = mapping;
+    const { id: sofaScoreId, season: sofaScoreSeason } = mapping;
 
-  //   try {
-  //     const leagueTeamStatsResponse = await fetch(
-  //       `${process.env.REACT_APP_EXPRESS_SERVER}LeagueTeamStats/${sofaScoreId}/${sofaScoreSeason}/${week}`
-  //     );
-  //     const teamStats = await leagueTeamStatsResponse.json();
-  //     allLeagueStats[`leagueStats${leagueId}`] = teamStats;
-  //     console.log(`Fetched stats for league ${leagueId}`);
-  //   } catch (error) {
-  //     console.error(`Error fetching stats for league ${leagueId}:`, error);
-  //     allLeagueStats[`leagueStats${leagueId}`] = { error: error.message };
-  //   }
-  // }
+    try {
+      const leagueTeamStatsResponse = await fetch(
+        `${process.env.REACT_APP_EXPRESS_SERVER}LeagueTeamStats/${sofaScoreId}/${sofaScoreSeason}/${week}`
+      );
+      const teamStats = await leagueTeamStatsResponse.json();
+      console.log(teamStats)
+      allLeagueStats[`leagueStats${leagueId}`] = teamStats;
+      console.log(`Fetched stats for league ${leagueId}`);
+    } catch (error) {
+      console.error(`Error fetching stats for league ${leagueId}:`, error);
+      allLeagueStats[`leagueStats${leagueId}`] = { error: error.message };
+    }
+  }
   return allLeagueStats;
 }
 
@@ -4386,6 +4392,8 @@ export async function getScorePrediction(day, mocked) {
   const leagueStatsPromise = fetchLeagueStats();
   const playerStatsPromise = fetchPlayerStats();
 
+  console.log(leagueStatsPromise)
+
   // Start fetches for required prediction data (must await these before the loop)
   const predictedScoresPromise = fetch(`${process.env.REACT_APP_EXPRESS_SERVER}predictedScores`);
   const leagueAveragesPromise = fetch(`${process.env.REACT_APP_EXPRESS_SERVER}league-averages`);
@@ -4430,7 +4438,7 @@ export async function getScorePrediction(day, mocked) {
             match.goalsA = "x";
             match.goalsB = "x";
             match.completeData = false;
-            await calculateScore(match, index, divider, true, predictedScoresData);
+            // await calculateScore(match, index, divider, true, predictedScoresData);
             break;
           default:
             [
@@ -5044,6 +5052,9 @@ export async function getScorePrediction(day, mocked) {
   leagueStatsArray = resolvedLeagueStatsArray;
   playerStatsArray = resolvedPlayerStatsArray;
 
+  console.log(leagueStatsArray)
+  console.log(playerStatsArray)
+
   // --- 5. RERENDER FIXTURES WITH FULL STATS ---
   // Rerender the FixtureContainer now that leagueStatsArray is ready (if stats are used visually)
   render(
@@ -5498,6 +5509,11 @@ async function renderTips() {
   }
 
   if (Over25Tips.length > 0) {
+    // 1. Determine how many tips to show
+    const displayLimit = 3;
+    const tipsToShow = paid ? Over25Tips : Over25Tips.slice(0, displayLimit);
+    const hiddenCount = Over25Tips.length - tipsToShow.length;
+
     render(
       <div>
         <Fragment>
@@ -5506,20 +5522,22 @@ async function renderTips() {
             element={
               <ul className="LongshotPredictions" id="LongshotPredictions">
                 <h4>Over 2.5 goals</h4>
-                {Over25Tips.map((tip) => (
+                {tipsToShow.map((tip) => (
                   <a
+                    key={tip.id}
                     href={`#${tip.id}`}
                     onClick={(e) => {
-                      e.preventDefault(); // Prevent the immediate jump/reload
-                      scrollToTarget(tip.id); // Call the custom smooth scroll function
+                      e.preventDefault();
+                      scrollToTarget(tip.id);
                     }}
-                    style={{ textDecoration: 'none', color: 'inherit' }}                    >
-                    <li key={tip.team}>
+                    style={{ textDecoration: 'none', color: 'inherit' }}
+                  >
+                    <li>
                       <div>
-                      {tip.game} - Odds: {tip.odds}{" "}
-                      <span className={`${tip.doubleChanceOutcome}`}>
-                        {tip.outcomeSymbol}
-                      </span>
+                        {tip.game} - Odds: {tip.odds}{" "}
+                        <span className={`${tip.doubleChanceOutcome}`}>
+                          {tip.outcomeSymbol}
+                        </span>
                       </div>
                       <div className="over25Percentage">
                         Probability: {`${tip.probability.toFixed(1)}%` ?? "-"}
@@ -5527,6 +5545,15 @@ async function renderTips() {
                     </li>
                   </a>
                 ))}
+
+                {/* 2. Show the "Unlock" banner if the user isn't paid and there are more games */}
+                {!paid && hiddenCount > 0 && (
+                  <li className="UnlockBannerListItem" style={{ listStyle: 'none', marginTop: '10px' }}>
+                    <div className="UnlockBanner" style={{ cursor: 'pointer', textAlign: 'center' }}>
+                      🔒 Premium members see <strong>{hiddenCount}</strong> more Over 2.5 tips
+                    </div>
+                  </li>
+                )}
               </ul>
             }
           />

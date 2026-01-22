@@ -474,45 +474,25 @@ export async function getLeagueList() {
   );
 
   if (loggedIn) {
-              const getPredictionsButton = document.getElementById('GeneratePredictionsButton');
-          if (getPredictionsButton) {
-            // Example: Add a class that quickly changes the background/border color
-            getPredictionsButton.classList.add('flash-attention');
+    const getPredictionsButton = document.getElementById('GeneratePredictionsButton');
+    if (getPredictionsButton) {
+      // Example: Add a class that quickly changes the background/border color
+      getPredictionsButton.classList.add('flash-attention');
 
-            // Remove the class after a short delay (e.g., 1 second)
-            setTimeout(() => {
-              getPredictionsButton.classList.remove('flash-attention');
-              getPredictionsButton.focus(); // Optional: Focus the input after scrolling
-            }, 1000);
-          }
+      // Remove the class after a short delay (e.g., 1 second)
+      setTimeout(() => {
+        getPredictionsButton.classList.remove('flash-attention');
+        getPredictionsButton.focus(); // Optional: Focus the input after scrolling
+      }, 1000);
+    }
     render(
-      <><div className="WelcomeBack">Welcome back {loggedIn.email}</div><div className="WelcomeBack">Username: {loggedIn.displayName}</div> 
+      <><div className="WelcomeBack">Welcome back {loggedIn.email}</div><div className="WelcomeBack">Username: {loggedIn.displayName}</div>
       </>,
       "Email"
     );
   } else {
     render(
       <div className="NonFixtureInfo">
-        <h3 className="MembersGetMore">Welcome to <span className="TitleColouring">Soccer Stats Hub</span></h3>
-        <div className="MembersGetMore">Sign up for a free account or upgrade to premium for as little as £1/week, cancel anytime</div>
-        <div className="MembersGetMoreUnderlined" onClick={() => {
-          const FixtureList = document.getElementById("Buttons");
-          if (FixtureList) {
-            FixtureList.scrollIntoView({ behavior: "smooth" });
-            // Optional: Flash the login box or focus an input to draw attention
-          }
-          const getPredictionsButton = document.getElementById('GeneratePredictionsButton');
-          if (getPredictionsButton) {
-            // Example: Add a class that quickly changes the background/border color
-            getPredictionsButton.classList.add('flash-attention');
-
-            // Remove the class after a short delay (e.g., 1 second)
-            setTimeout(() => {
-              getPredictionsButton.classList.remove('flash-attention');
-              getPredictionsButton.focus(); // Optional: Focus the input after scrolling
-            }, 1000);
-          }
-        }}>Just show me the games</div>
         <Login />
       </div>
       , "Email");
@@ -747,39 +727,88 @@ function AppContent() {
         <div id="RadioText" />
         <div id="RadioButtons" />
       </div>
-      <div id="Email" className="Email"></div>
+      <h3 className="MembersGetMore">Welcome to <span className="TitleColouring">Soccer Stats Hub</span></h3>
       {isPaidUser ? (
         <div />
       ) : (
-        <div className="NonFixtureInfo">
-          <div className="SubscribeContainer">
-            <span className="MembershipInfo">
-              While account creation is free, full fixtures and multis are restricted to premium members. Memberships
-              can be cancelled at any time - no contracts, no tie-ins. Payments are securely hosted by Stripe.
-            </span>
+        <><div className="MembersGetMoreUnderlined" onClick={() => {
+          const FixtureList = document.getElementById("Buttons");
+          if (FixtureList) {
+            FixtureList.scrollIntoView({ behavior: "smooth" });
+            // Optional: Flash the login box or focus an input to draw attention
+          }
+          const getPredictionsButton = document.getElementById('GeneratePredictionsButton');
+          if (getPredictionsButton) {
+            // Example: Add a class that quickly changes the background/border color
+            getPredictionsButton.classList.add('flash-attention');
 
-            {/* Helper function to handle the click logic */}
-            <button
-              onClick={() => handleSubscribeClick("price_1QrQ4ZBrqiWlVPadCkhLhtiZ")}
-              className="SubscribeButton"
-            >
-              Subscribe for £1/week
-            </button>
-            <button
-              onClick={() => handleSubscribeClick("price_1QrQ5NBrqiWlVPadFBuBKKSM")}
-              className="SubscribeButton"
-            >
-              Subscribe for £3/month
-            </button>
-            <button
-              onClick={() => handleSubscribeClick("price_1QrQ75BrqiWlVPadEML30BoJ")}
-              className="SubscribeButton"
-            >
-              Subscribe for £30/year
-            </button>
-          </div>
-        </div>
+            // Remove the class after a short delay (e.g., 1 second)
+            setTimeout(() => {
+              getPredictionsButton.classList.remove('flash-attention');
+              getPredictionsButton.focus(); // Optional: Focus the input after scrolling
+            }, 1000);
+          }
+        }}>Just show me the games</div><div className="NonFixtureInfo">
+            <div className="PremiumUpsell">
+              <div className="UpsellHeader">
+                <h2>Unlock the Full Experience</h2>
+                <p>You're currently seeing 25% of the action. Get the edge with full access.</p>
+              </div>
+
+              <div className="FeatureComparison">
+                <div className="FeatureGroup">
+                  <h4>Free Tier</h4>
+                  <ul>
+                    <li className="limited">Limited Multi Tips</li>
+                    <li className="limited">25% of Matches with detailed stats</li>
+                  </ul>
+                </div>
+                <div className="FeatureDivider">VS</div>
+                <div className="FeatureGroup premium">
+                  <h4>Premium</h4>
+                  <ul>
+                    <li>✅ All matches - unrivalled detail</li>
+                    <li>✅ 50 competitions</li>
+                    <li>✅ Full multi tips list</li>
+                    <li>✅ Full BTTS picks</li>
+                    <li>✅ Full over 2.5 goals picks</li>
+                    <li>✅ AI-powered match previews</li>
+                    <li>✅ Best value tips</li>
+                  </ul>
+                </div>
+              </div>
+
+              <div className="SubscriptionOptions">
+                <div className="OptionCard">
+                  <span className="Price">£1<span>/week</span></span>
+                  <button onClick={() => handleSubscribeClick("price_1QrQ4ZBrqiWlVPadCkhLhtiZ")}>
+                    Get Weekly
+                  </button>
+                </div>
+
+                <div className="OptionCard featured">
+                  <div className="Badge">Best Value</div>
+                  <span className="Price">£30<span>/year</span></span>
+                  <button onClick={() => handleSubscribeClick("price_1QrQ75BrqiWlVPadEML30BoJ")}>
+                    Go Annual
+                  </button>
+                </div>
+
+                <div className="OptionCard">
+                  <span className="Price">£3<span>/month</span></span>
+                  <button onClick={() => handleSubscribeClick("price_1QrQ5NBrqiWlVPadFBuBKKSM")}>
+                    Get Monthly
+                  </button>
+                </div>
+              </div>
+
+              <p className="TrustNote">
+                Secure payments via <strong>Stripe</strong>. Cancel anytime, no contracts.
+              </p>
+            </div>
+          </div></>
       )}
+      <div id="Email" className="Email"></div>
       <div id="Day" />
 
 
