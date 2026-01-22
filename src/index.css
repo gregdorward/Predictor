@@ -5230,7 +5230,7 @@ input:active+.design::after {
 .ShareButton,
 .InsightsButton {
   font-size: 0.9em;
-  background-color: var(--accent-color);
+  background-color: var(--button-color);
   margin-left: 1em;
   margin-right: 1em;
   margin-top: 1em;

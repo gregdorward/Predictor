@@ -2685,7 +2685,7 @@ export async function calculateScore(match, index, divider, calculate, AIPredict
         : formHome.XGAgainstAvgOverall,
       "Average Goals Against": formHome.avgConceeded,
       "Average SOT Against": formHome.AverageShotsOnTargetAgainstOverall,
-      "Average Dangerous Attacks Against": formHome.avgDangerousAttacksAgainst,
+      "Average Dangerous Attacks Against": formHome.avgDangerousAttacksAgainst?.toFixed(2),
     };
 
     const defensiveMetricsHomeLast5 = {
@@ -2701,7 +2701,7 @@ export async function calculateScore(match, index, divider, calculate, AIPredict
       "Average SOT Against": formHome.avSOTAgainstLast5
         ? formHome.avSOTAgainstLast5
         : 5,
-      "Average Dangerous Attacks Against": formHome.avgDangerousAttacksAgainstLast5.toFixed(2)
+      "Average Dangerous Attacks Against": formHome.avgDangerousAttacksAgainstLast5?.toFixed(2)
         ? formHome.avgDangerousAttacksAgainstLast5
         : formHome.avgDangerousAttacksAgainst,
 
@@ -2716,7 +2716,7 @@ export async function calculateScore(match, index, divider, calculate, AIPredict
         : formAway.XGAgainstAvgOverall,
       "Average Goals Against": formAway.avgConceeded,
       "Average SOT Against": formAway.AverageShotsOnTargetAgainstOverall,
-      "Average Dangerous Attacks Against": formAway.avgDangerousAttacksAgainst.toFixed(2),
+      "Average Dangerous Attacks Against": formAway.avgDangerousAttacksAgainst?.toFixed(2),
     };
 
     const defensiveMetricsAwayLast5 = {
@@ -2732,7 +2732,7 @@ export async function calculateScore(match, index, divider, calculate, AIPredict
       "Average SOT Against": formAway.avSOTAgainstLast5
         ? formAway.avSOTAgainstLast5
         : 5,
-      "Average Dangerous Attacks Against": formAway.avgDangerousAttacksAgainstLast5.toFixed(2)
+      "Average Dangerous Attacks Against": formAway.avgDangerousAttacksAgainstLast5?.toFixed(2)
         ? formAway.avgDangerousAttacksAgainstLast5
         : formAway.avgDangerousAttacksAgainst,
     };
@@ -4215,9 +4215,9 @@ const footyStatsToSofaScore = [
       id: 278,
       season: 71306, // Uruguayan Primera Division 25
     },
-    15746: {
+    16571: {
       id: 155,
-      season: 70268, // Argentina Primera Division 25
+      season: 87913, // Argentina Primera Division 25
     },
     16242: {
       id: 196,

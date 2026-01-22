@@ -56,7 +56,7 @@ const ids = [
   14236, //Canada 25
   14231, //Brazil prem 25
   14305, // Brazil Serie B 25
-  15746, //Argentina prem 23 15310
+  16571, //Argentina prem 26 15310
   15234, //Mexico prem 25 12136
   12933, //National league North and South 24
   16036, //Australian A league 24/25 13703

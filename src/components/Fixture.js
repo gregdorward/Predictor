@@ -136,26 +136,49 @@ const PredictionSection = ({ isProbability, goals, team, probability }) => {
   const safeProb = probability ?? 0;
   const probClass = getProbabilityClass(safeProb);
 
-  return (
-    <div className="ProbabilityWrapper">
-      <div className="ProbabilityBarBackground">
-        {/* BAR FILL (doesn't affect layout) */}
-        <div
-          className={`ProbabilityBarFill ${probClass}`}
-          style={{ width: `${safeProb}%` }}
-        />
+  if (safeProb > 0) {
+    return (
+      <div className="ProbabilityWrapper">
+        <div className="ProbabilityBarBackground">
+          {/* BAR FILL (doesn't affect layout) */}
+          <div
+            className={`ProbabilityBarFill ${probClass}`}
+            style={{ width: `${safeProb}%` }}
+          />
 
-        {/* TEXT LAYER */}
-        <span className="ProbabilityBarText">
-          {probability !== undefined ? `${safeProb.toFixed(1)}%` : ""}
-        </span>
-      </div>
+          {/* TEXT LAYER */}
+          <span className="ProbabilityBarText">
+            {probability !== undefined ? `${safeProb?.toFixed(1)}%` : ""}
+          </span>
+        </div>
 
-      {/* <div className="ProbabilityValue">
+        {/* <div className="ProbabilityValue">
         {probability !== undefined ? `${safeProb.toFixed(1)}%` : ""}
       </div> */}
-    </div>
-  );
+      </div>
+    );
+  } else {
+     return (
+      <div className="ProbabilityWrapper">
+        <div className="ProbabilityBarBackground">
+          {/* BAR FILL (doesn't affect layout) */}
+          <div
+            className={`ProbabilityBarFill ${probClass}`}
+          />
+
+          {/* TEXT LAYER */}
+          <span className="ProbabilityBarText">
+          </span>
+        </div>
+
+        {/* <div className="ProbabilityValue">
+        {probability !== undefined ? `${safeProb.toFixed(1)}%` : ""}
+      </div> */}
+      </div>
+    )
+  }
+
+
 };
 
 
@@ -373,7 +396,7 @@ function SingleFixture({
                   isProbability={isProbability}
                   team={""}
                   goals={fixture.goalsA}
-                  probability={fixture.homeWinProbability}
+                  probability={fixture.homeWinProbability !== undefined ? fixture.homeWinProbability : '-'}
                 />
                 <div className="ResultContainer">
                   <div className={`result`}>
@@ -620,17 +643,17 @@ const List = ({
   // ⭐️ showShortlist state is now received via props, not local state ⭐️
   const [selectedFixtures, setSelectedFixtures] = useState([]);
 
-const togglePredictionMode = async () => {
-  const user = auth.currentUser;
-  if (!user) return;
+  const togglePredictionMode = async () => {
+    const user = auth.currentUser;
+    if (!user) return;
 
-  const newValue = !isProbability;
-  setIsProbability(newValue);
+    const newValue = !isProbability;
+    setIsProbability(newValue);
 
-  await updateDoc(doc(db, "users", user.uid), {
-    predictionMode: newValue ? "probability" : "score"
-  });
-};
+    await updateDoc(doc(db, "users", user.uid), {
+      predictionMode: newValue ? "probability" : "score"
+    });
+  };
 
 
   // You need to resolve this variable being undefined if it's not a prop or local state
@@ -638,27 +661,27 @@ const togglePredictionMode = async () => {
 
   const isInitialMount = useRef(true);
 
-const auth = getAuth();
-const db = getFirestore();
-const [isProbability, setIsProbability] = useState(true);
-const [loadingPreference, setLoadingPreference] = useState(true);
+  const auth = getAuth();
+  const db = getFirestore();
+  const [isProbability, setIsProbability] = useState(true);
+  const [loadingPreference, setLoadingPreference] = useState(true);
 
-useEffect(() => {
-  const user = auth.currentUser;
-  if (!user) return;
+  useEffect(() => {
+    const user = auth.currentUser;
+    if (!user) return;
 
-  const loadPreference = async () => {
-    const ref = doc(db, "users", user.uid);
-    const snap = await getDoc(ref);
+    const loadPreference = async () => {
+      const ref = doc(db, "users", user.uid);
+      const snap = await getDoc(ref);
 
-    if (snap.exists()) {
-      const data = snap.data();
-      setIsProbability(data.predictionMode !== "score");
-    }
-  };
+      if (snap.exists()) {
+        const data = snap.data();
+        setIsProbability(data.predictionMode !== "score");
+      }
+    };
 
-  loadPreference();
-}, []);
+    loadPreference();
+  }, []);
 
 
   // 1. URL READING EFFECT (Loads shortlist from URL for persistence and sets initial view state)

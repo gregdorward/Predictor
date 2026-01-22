@@ -56,7 +56,7 @@ const sofaScoreIds = [
   { 13967: 13363 }, // USL
   { 14236: 13470 }, //Canada 25
   { 14231: 325 }, //Brazil prem 24
-  { 15746: 155 }, //Argentina prem 23
+  { 16571: 155 }, //Argentina prem 26
   { 14086: 11539}, //Colombia 25
     { 14626: 278}, //Uraguay 25
 
