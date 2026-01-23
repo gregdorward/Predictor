@@ -768,6 +768,7 @@ function AppContent() {
                   <ul>
                     <li className="limited">Limited Multi Tips</li>
                     <li className="limited">25% of Matches with detailed stats</li>
+                    <li className="limited">All EPL games and AI previews</li>
                   </ul>
                 </div>
                 <div className="FeatureDivider">VS</div>
