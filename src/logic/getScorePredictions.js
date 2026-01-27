@@ -3159,6 +3159,7 @@ export async function calculateScore(match, index, divider, calculate, AIPredict
     const under25Implied = 100 - over25Implied;
     match.under25Implied = under25Implied;
 
+
     // match.fairHomeOddsDecimal = probabilityToOdds(homeWin);
     // match.fairAwayOddsDecimal = probabilityToOdds(awayWin);
     // match.fairDrawOddsDecimal = probabilityToOdds(draw);
@@ -4266,7 +4267,7 @@ const footyStatsToSofaScore = [
   },
 ];
 
-  console.log("HELLO")
+console.log("HELLO")
 
 
 async function fetchLeagueStats() {
@@ -4291,7 +4292,7 @@ async function fetchLeagueStats() {
   for (const leagueId of uniqueLeagueIDs) {
     const mapping = leagueObject[leagueId];
     if (!mapping) continue; // skip if not found
-  console.log("FETCHING IN LOOP")
+    console.log("FETCHING IN LOOP")
 
     const { id: sofaScoreId, season: sofaScoreSeason } = mapping;
 

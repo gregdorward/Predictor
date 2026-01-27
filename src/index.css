@@ -529,6 +529,7 @@ h1 {
   border: none;
   margin: 0em;
   margin-right: auto;
+  box-shadow: none;
 }
 
 .NavItems {
@@ -650,8 +651,8 @@ h6 {
   padding: 2rem;
   max-width: 900px;
   margin: 1rem auto;
-  margin-left: 0.5em;
-  margin-right: 0.5em;
+  margin-left: auto;
+  margin-right: auto;
   font-family: 'Inter', sans-serif;
   text-align: center;
 }
@@ -725,7 +726,7 @@ h6 {
 .SubscriptionOptions {
   display: grid;
   /* This replaces repeat(3, 1fr) */
-  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); 
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
   gap: 1.5rem;
   width: 100%;
 }
@@ -830,6 +831,10 @@ h6 {
   padding-bottom: 1em;
 }
 
+.react-share__ShareButton {
+  box-shadow: none;
+}
+
 .Buttons {
   flex-direction: row;
 }
@@ -845,7 +850,7 @@ button {
   margin: 1em;
   margin-top: 0.25em;
   margin-bottom: 0.5em;
-  border: 0.2em solid white;
+  border: var(--primary-color) 1px solid;
   border-radius: 10px;
   box-sizing: border-box;
   text-decoration: none;
@@ -858,6 +863,8 @@ button {
   background-color: var(--button-color);
   text-align: center;
   transition: all 0.2s;
+  box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+
 }
 
 button:active {
@@ -925,7 +932,6 @@ button.GeneratePredictionsButton:active {
   color: var(--button-text-color);
   margin: 1em;
   cursor: pointer;
-  box-shadow: 0 0px 2px 0 rgba(0, 0, 0, 0.2), 0 2px 4px 0 var(--secondary-background-color);
   flex: 1;
   flex-basis: 100%;
 }
@@ -936,7 +942,7 @@ button.GeneratePredictionsButton:active {
   margin: 0.5em;
   cursor: pointer;
   width: 10em;
-  box-shadow: 0 0px 0px 0 rgba(0, 0, 0, 0.2), 0 1px 2px 0 var(--secondary-background-color);
+  /* box-shadow: 0 0px 0px 0 rgba(0, 0, 0, 0.2), 0 1px 2px 0 var(--secondary-background-color); */
 }
 
 
@@ -1017,8 +1023,9 @@ p {
 .Options button {
   background-color: var(--background-color);
   color: var(--text-color);
-  border: none;
+  border: var(--primary-color) 1px solid;
   width: 8em;
+  box-shadow: none;
 }
 
 .OddsRadios {
@@ -1192,7 +1199,7 @@ span.MembershipInfo {
   padding-bottom: 0.75em;
   margin-top: 1.5em;
   background-color: var(--accent-color);
-  box-shadow: 0 1px 2px 0 white75 inset, 0 2px 2px 0 white75;
+  box-shadow: rgba(0, 0, 0, 0.16) 0px 3px 6px, rgba(0, 0, 0, 0.23) 0px 3px 6px;
   cursor: pointer;
 }
 
@@ -1285,6 +1292,8 @@ span.MembershipInfo {
   margin: 0.35em;
   margin-left: 0px;
   margin-right: 0px;
+  margin-bottom: 1em;
+  box-shadow: rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px;
 }
 
 .ResultRowOverview {
@@ -1341,7 +1350,6 @@ span.MembershipInfo {
   background-color: var(--secondary-background-color);
   color: var(--text-color);
   border-left: #b10f00 solid 6px;
-
 }
 
 .columnOverviewHome {
@@ -1481,7 +1489,8 @@ span.MembershipInfo {
   margin-right: 1em;
   font-size: 0.8em;
   color: #030052;
-  border: #030052 1px solid
+  border: #030052 1px solid;
+  box-shadow: rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px;
 }
 
 .UserTips {
@@ -1603,19 +1612,23 @@ strong.LOST {
   border: var(--accent-color) 1px solid;
   margin-top: 1em;
   font-size: 0.9em;
+  box-shadow: rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px;
 }
 
 .individualFixtureContainerfalse {
   display: flex;
   padding-bottom: 2em;
   padding-top: 1em;
-  border: var(--accent-color) 1px solid;
+  /* border: var(--accent-color) 1px solid; */
   margin-top: 1em;
+  margin-bottom: 1em;
   font-size: 0.9em;
+  box-shadow: rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px;
+  border: var(--primary-color) 1px solid;
 }
 
 .individualFixtureContainerfalse:hover {
-  border: var(--accent-color) 2px solid;
+  box-shadow: rgba(0, 0, 0, 0.12) 0px 2px 6px, rgba(0, 0, 0, 0.24) 0px 2px 4px;
 }
 
 
@@ -1626,8 +1639,6 @@ strong.LOST {
   align-items: left;
   align-content: center;
   color: var(--text-color);
-  padding-top: 0.5em;
-  padding-bottom: 0.5em;
   cursor: pointer;
 }
 
@@ -1657,6 +1668,9 @@ strong.LOST {
   cursor: pointer;
 }
 
+.SubscribeText {
+  padding: 1em;
+}
 
 .MatchDetail {
   display: inline-flex;
@@ -1776,6 +1790,7 @@ strong.LOST {
   padding-top: 1em;
   padding-bottom: 1em;
   cursor: pointer;
+  box-shadow: rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px;
 }
 
 .individualFixturecomplete {
@@ -1786,6 +1801,8 @@ strong.LOST {
   align-content: center;
   color: black;
   padding-top: 0.25em;
+  box-shadow: rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px;
+
 }
 
 
@@ -2633,6 +2650,7 @@ h6.MediaTitle {
   margin-bottom: 0.5em;
   text-align: -webkit-match-parent;
   border: var(--button-color) 1px solid;
+  box-shadow: rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px;
 }
 
 .StatsDiv {
@@ -3591,8 +3609,9 @@ li.FormHeader {
 }
 
 .MultisCollapsableOpened {
-  background-color: var(--secondary-background-color);
-  margin-bottom: 2em;
+  /* background-color: var(--secondary-background-color); */
+  /* margin-top: 3em; */
+  margin-bottom: 3em;
   padding: 1em;
 }
 
@@ -4387,6 +4406,7 @@ input:active+.design::after {
   margin: 0em;
   margin-left: auto;
   padding: 0em;
+  box-shadow: none;
 }
 
 .GameStatsTwoExplainer {
@@ -4597,6 +4617,7 @@ input:active+.design::after {
   margin-right: auto;
   margin-top: 1em;
   color: var(--button-text-color);
+  box-shadow: none;
 }
 
 .PredictionRow {
@@ -4662,6 +4683,7 @@ input:active+.design::after {
   margin-left: auto;
   margin-right: auto;
   color: var(--button-text-color);
+  box-shadow: none;
 }
 
 .CurrentScore {
@@ -4718,7 +4740,7 @@ h6.AttackingMomentum {
   height: 2.5em;
 }
 
-.LogoutButton{
+.LogoutButton {
   font-size: 0.7em;
 }
 
@@ -4750,18 +4772,19 @@ input {
 .ResetPasswordLink {
   flex-basis: 100%;
   text-align: right;
-  height: 4em;
-  padding: 0em;
+  height: 5em;
+  padding: 1em;
   margin-left: 0em;
   margin-right: 1em;
   border: none;
   color: var(--text-color);
   text-align: center;
-  background: none;
+  background-color: var(--secondary-background-color);
   flex: 1;
   cursor: pointer;
-  font-size: 0.9em;
+  font-size: 0.7em;
   text-decoration: underline;
+  box-shadow: none;
 }
 
 .CancelButton {
@@ -4820,6 +4843,7 @@ button.TogglePasswordButton {
   border: none;
   color: #030052;
   align-self: center;
+  box-shadow: none;
 }
 
 .ResetPasswordField {
@@ -5030,6 +5054,7 @@ button.AIInsights button:active {
   line-height: 1.5em;
   padding: 1em;
   border: var(--primary-color) dotted 3px;
+  margin-bottom: 1em;
 }
 
 .WelcomeText {
@@ -5269,6 +5294,7 @@ button.AIInsights button:active {
   margin-left: auto;
   margin-right: auto;
   color: var(--button-text-color);
+  box-shadow: none;
 }
 
 
@@ -5279,6 +5305,7 @@ button.AIInsights button:active {
   margin-left: auto;
   margin-right: auto;
   color: var(--button-text-color);
+  box-shadow: none;
 }
 
 
@@ -5290,6 +5317,8 @@ button.AIInsights button:active {
   margin-right: auto;
   color: var(--text-color);
   border: var(--button-color) solid 1px;
+  box-shadow: none;
+
 }
 
 .InsightContainer {
@@ -5545,6 +5574,7 @@ button.AIInsights button:active {
   margin-left: auto;
   margin-right: auto;
   color: var(--button-text-color);
+  box-shadow: none;
 }
 
 .HomePlayerStats {
@@ -5604,6 +5634,7 @@ button.AIInsights button:active {
   margin-left: auto;
   margin-right: auto;
   color: var(--button-text-color);
+  box-shadow: none;
 }
 
 .SpanHome {

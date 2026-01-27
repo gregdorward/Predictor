@@ -55,7 +55,6 @@ const Login = () => {
       <button className="SignUp" id="SignUp" onClick={() => setIsLogin(!isLogin)}>
         {isLogin ? "Switch to sign up form." : "Switch to login form"}
       </button>
-      <div>We don't contact you or share your information with anyone</div>
       {error && <p style={{ color: "red" }}>{error}</p>}
 
       {/* ⭐️ LoginForm: Main Flex Container ⭐️ */}

@@ -361,6 +361,17 @@ export async function renderTable(index, results, id) {
   }
 }
 
+const convertToDecimalOdds = (probability) => {
+  // Ensure the value is within a valid range and not zero
+  if (probability <= 0) return "N/A";
+  if (probability > 1) return 1.00; // Probability cannot exceed 100%
+
+  const odds = 1 / probability;
+
+  // Return as a number rounded to 2 decimal places
+  return parseFloat(odds.toFixed(2));
+};
+
 async function createFixture(match, result, mockBool) {
   let roundedHomeOdds;
   let roundedAwayOdds;
@@ -372,6 +383,11 @@ async function createFixture(match, result, mockBool) {
   let bttsFraction;
 
   if (selectedOdds === "Fractional odds") {
+    if (match.homeOdds < 1) {
+      match.homeOdds = convertToDecimalOdds(match.homeOdds)
+      match.drawOdds = convertToDecimalOdds(match.drawOdds)
+      match.awayOdds = convertToDecimalOdds(match.awayOdds)
+    }
     if (match.homeOdds !== 0 && match.awayOdds !== 0) {
       roundedHomeOdds = (Math.round(match.homeOdds * 5) / 5).toFixed(1);
       roundedAwayOdds = (Math.round(match.awayOdds * 5) / 5).toFixed(1);
@@ -425,22 +441,25 @@ async function createFixture(match, result, mockBool) {
       bttsFraction = "N/A";
     }
   } else if (selectedOdds === "Decimal odds") {
-    if (match.homeOdds !== 0 && match.awayOdds !== 0) {
-      homeFraction = match.homeOdds;
-      awayFraction = match.awayOdds;
-      drawFraction = match.drawOdds;
-    } else {
-      homeFraction = "N/A";
-      awayFraction = "N/A";
+    if (match.homeOdds < 1) {
+      match.homeOdds = convertToDecimalOdds(match.homeOdds)
+      match.drawOdds = convertToDecimalOdds(match.drawOdds)
+      match.awayOdds = convertToDecimalOdds(match.awayOdds)
     }
+    homeFraction = match.homeOdds;
+    awayFraction = match.awayOdds;
+    drawFraction = match.drawOdds;
+
+
+
 
     if (match.bttsOdds !== 0) {
       bttsFraction = match.bttsOdds;
     } else {
       bttsFraction = "N/A";
     }
-  }
 
+  }
   match.omit = false;
   match.homeTeamWinsPercentage = match.homeTeamWinPercentage;
   match.homeTeamLossesPercentage = match.homeTeamLossPercentage;
@@ -1649,18 +1668,18 @@ export async function generateFixtures(
       // }
     }
 
-              const getPredictionsButton = document.getElementById('GeneratePredictionsButton');
-          if (getPredictionsButton) {
-            // Example: Add a class that quickly changes the background/border color
-            getPredictionsButton.classList.add('flash-attention');
+    const getPredictionsButton = document.getElementById('GeneratePredictionsButton');
+    if (getPredictionsButton) {
+      // Example: Add a class that quickly changes the background/border color
+      getPredictionsButton.classList.add('flash-attention');
 
-            // Remove the class after a short delay (e.g., 1 second)
-            setTimeout(() => {
-              getPredictionsButton.classList.remove('flash-attention');
-              getPredictionsButton.focus(); // Optional: Focus the input after scrolling
-            }, 2000);
-            
-          }
+      // Remove the class after a short delay (e.g., 1 second)
+      setTimeout(() => {
+        getPredictionsButton.classList.remove('flash-attention');
+        getPredictionsButton.focus(); // Optional: Focus the input after scrolling
+      }, 2000);
+
+    }
 
     render(
       <div>
