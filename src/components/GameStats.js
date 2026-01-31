@@ -3364,7 +3364,7 @@ function GameStats({ game, displayBool, stats, handleToggleTip, userTips }) {
   return (
     <>
       <div className="ExpandingStats">
-        {/* {isBeforeTimestamp(game.date) && ( */}
+        {isBeforeTimestamp(game.date) && (
           <>
             <h2>Your Prediction</h2>
             <UserTips
@@ -3374,7 +3374,7 @@ function GameStats({ game, displayBool, stats, handleToggleTip, userTips }) {
               userDetail={userDetail}
             />
           </>
-        {/* )} */}
+        )}
         <Collapsable
           buttonText={`Market Value \u{2630}`}
           classNameButton="PredictionsButton"
