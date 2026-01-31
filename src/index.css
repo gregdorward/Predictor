@@ -602,7 +602,10 @@ h4 {
 }
 
 .MissingPredictionsNotice {
-  margin: 1em;
+  margin-bottom: 1.5em;
+  width: 75%;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 .TeamPreview {
@@ -1532,10 +1535,20 @@ strong.LOST {
   padding-bottom: 1em;
 }
 
+.leaderboard-table {
+  width: 95%;
+  margin-left: auto;
+  margin-right: auto;
+  border-collapse: collapse;
+}
+
 .leaderboard-table th,
 .leaderboard-table td {
-  padding: 1em;
-  border-bottom: 1px solid #eee;
+  padding-top: 1em;
+  padding-bottom: 1em;
+  padding-left: 0em;
+  padding-right: 0em;
+  border-bottom: 1px solid var(--alternate-background-color);
 }
 
 .star {
@@ -1547,9 +1560,7 @@ strong.LOST {
   border: none;
   background: none;
   text-align: center;
-  margin-left: auto;
   margin-bottom: 0.5em;
-  padding-left: 75%;
 }
 
 .star:before {
@@ -1617,7 +1628,7 @@ strong.LOST {
 
 .individualFixtureContainerfalse {
   display: flex;
-  padding-bottom: 2em;
+  padding-bottom: 1em;
   padding-top: 1em;
   /* border: var(--accent-color) 1px solid; */
   margin-top: 1em;
@@ -1675,6 +1686,7 @@ strong.LOST {
 .MatchDetail {
   display: inline-flex;
   align-items: center;
+  justify-content: space-between;
   font-size: 1.2em;
   margin-bottom: 1em;
 }
@@ -2651,6 +2663,364 @@ h6.MediaTitle {
   text-align: -webkit-match-parent;
   border: var(--button-color) 1px solid;
   box-shadow: rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px;
+}
+
+/* The container that stays at the bottom */
+.BetSlipFooter {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  background: white;
+  z-index: 99999;
+  /* Higher than any other element on your page */
+  box-shadow: 0 -5px 20px rgba(0, 0, 0, 0.2);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  z-index: 1000;
+  /* Ensure it stays above fixtures */
+  border-top: 2px solid #fe8c00;
+  animation: slideUp 0.3s ease-out;
+  font-size: 1.1em;
+  padding-bottom: 1em;
+  padding-top: 1em;
+}
+
+@keyframes slideUp {
+  from {
+    transform: translateY(100%);
+  }
+
+  to {
+    transform: translateY(0);
+  }
+}
+
+.BalanceInfo {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin-left: 1em;
+}
+
+.BalanceInfo span {
+  font-size: 1.3em;
+  color: #666;
+}
+
+.BalanceInfo strong {
+  font-size: 1.4em;
+  color: #030052;
+}
+
+.StakeInputRow {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: #f1f5f9;
+  padding: 8px 12px;
+  border-radius: 6px;
+}
+
+.StakeInputRow label {
+  font-size: 1.2em;
+  color: #020029;
+}
+
+.StakeInputRow input {
+  width: 60px;
+  border: 1px solid #cbd5e1;
+  border-radius: 4px;
+  padding: 4px;
+  font-weight: bold;
+  text-align: center;
+}
+
+.PlaceBetButton {
+  background: #fe8c00;
+  color: white;
+  border: none;
+  padding: 12px 24px;
+  border-radius: 8px;
+  font-weight: 800;
+  cursor: pointer;
+  transition: transform 0.1s;
+}
+
+.PlaceBetButton:hover {
+  background: #e67e00;
+}
+
+.PlaceBetButton:active {
+  transform: scale(0.96);
+}
+
+/* Container for the whole list */
+.SlipsList {
+  display: flex;
+  flex-direction: column;
+  gap: 1em;
+  margin: 1em auto;
+}
+
+/* Individual Card Styling */
+.SlipCard {
+  /* background: #1e1e1e; */
+  border: 1px solid #333;
+  border-radius: 5px;
+  overflow: hidden;
+}
+
+.SlipCard:hover {
+  border-color: #555;
+}
+
+/* Header Section */
+.SlipHeader {
+  padding: 1em;
+  cursor: pointer;
+  background: var(--alternate-background-color);
+}
+
+.SlipMainInfo {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1em;
+  margin-left: 0.5em;
+  margin-right: 0.5em;
+  font-size: 0.9em;
+  color: var(--text-color);
+}
+
+.SlipTypeTag {
+  background: var(--button-color);
+  color: var(--button-text-color);
+  padding: 0.5em;
+  border-radius: 5px;
+  font-size: 0.9em;
+  font-weight: 700;
+}
+
+.SlipDateHeader {
+  align-self: flex-end;
+  color: var(--text-color);
+  margin-right: 0.5em;
+}
+
+.SlipDate {
+  color: var(--text-color);
+  max-width: 4em;
+}
+
+.TipType {
+  padding-right: 2em;
+}
+
+/* Summary Bar */
+.SlipSummary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 0.9em;
+  color: var(--text-color);
+  margin-left: 0.5em;
+  margin-right: 0.5em;
+}
+
+.SlipSummary strong {
+  color: var(--text-color);
+}
+
+/* Selection List (Inside the accordion) */
+.SelectionList {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  background: var(--alternate-background-color);
+  border-top: 1px solid var(--background-color);
+  color: var(--text-color);
+  text-align: left;
+}
+
+.SingleDetailSurface {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-top: 0em;
+  color: var(--text-color);
+  background-color: var(--alternate-background-color)
+}
+
+.SelectionItem {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.5em;
+  color: var(--text-color);
+  flex: 1;
+  border-bottom: var(--background-color) 1px solid;
+}
+
+.SelectionGame {
+  padding-right: 1em;
+  min-width: 19em;
+  text-align: left;
+}
+
+.SelectionLeft {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1em;
+  color: var(--text-color);
+  width: 80%;
+  font-size: 0.9em;
+  text-align: left;
+}
+
+
+.SelectionTip {
+  align-items: flex-end;
+  max-width: 5em;
+}
+
+.SlipDateSelection {
+  font-size: 0.8em;
+  color: var(--text-color);
+}
+
+/* Status Badges */
+.StatusBadge,
+.SelectionStatus {
+  padding: 0.75em;
+  margin-right: 0.5em;
+  border-radius: 5px;
+  font-size: 0.9em;
+  /* font-weight: 800; */
+  text-transform: uppercase;
+  background-color: var(--button-color);
+}
+
+/* Global Status Color logic */
+.won {
+  color: #009c00;
+  background: white;
+}
+
+.lost {
+  color: #ca1100;
+  background: white;
+}
+
+.pending {
+  color: var(--primary-color);
+  background: white;
+}
+
+.void {
+  color: rgb(99, 99, 99);
+  background: white;
+}
+
+/* Apply border color based on status */
+.SlipCard.won {
+  border-left: 0.5em solid #2ecc71;
+}
+
+.SlipCard.lost {
+  border-left: 0.5em solid #e74c3c;
+}
+
+.SlipCard.pending {
+  border-left: 0.5em solid #f1c40f;
+}
+
+.ExpandIcon {
+  color: var(--text-color);
+  margin-left: 1em;
+}
+
+
+
+.leaderboard-row {
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.leaderboard-row:hover {
+  border: var(--primary-color) solid 2px;
+}
+
+.leaderboard-row.active {
+  border: var(--primary-color) solid 2px;
+}
+
+.expanded-tips-area {
+  background: var(--background-color);
+}
+
+.expanded-content-wrapper {
+  padding: 0em;
+}
+
+.tip-count-badge {
+  font-size: 0.8em;
+  background: var(--button-color);
+  padding: 1em;
+  border-radius: 10px;
+  margin-left: 3em;
+  color: var(--button-text-color);
+}
+
+.mini-slips-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.ActionBtn {
+  margin-bottom: 1em;
+}
+
+.TopPicksGrid {
+  gap: 1em;
+  margin-bottom: 2em;
+}
+
+.TrendCard {
+  background-color: var(--alternate-background-color);
+  border: 1px solid var(--primary-color);
+  border-radius: 8px;
+  padding: 1em;
+  box-shadow: rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px;
+}
+
+.TrendingTipGame {
+  font-size: 1em;
+}
+
+.TrendingTipsCount {
+  margin-bottom: 1em;
+}
+
+/* Ensure the main content isn't hidden behind the bar */
+body {
+  padding-bottom: 80px;
+}
+
+/* Mobile Adjustments */
+@media (max-width: 600px) {
+  .BetSlipDrawer {
+    flex-direction: column;
+    gap: 12px;
+    padding: 1rem;
+  }
+
+  .PlaceBetButton {
+    width: 100%;
+  }
 }
 
 .StatsDiv {
@@ -4404,7 +4774,6 @@ input:active+.design::after {
   color: var(--text-color);
   border: none;
   margin: 0em;
-  margin-left: auto;
   padding: 0em;
   box-shadow: none;
 }
@@ -4742,6 +5111,11 @@ h6.AttackingMomentum {
 
 .LogoutButton {
   font-size: 0.7em;
+  background-color: var(--background-color);
+  color: var(--text-color);
+  border: var(--primary-color) 1px solid;
+  width: 8em;
+  box-shadow: none;
 }
 
 input {
@@ -5125,6 +5499,7 @@ button.AIInsights button:active {
   height: 2.5em;
   border-radius: 50%;
   color: white;
+
   font-weight: bold;
   margin: 0 auto;
 }

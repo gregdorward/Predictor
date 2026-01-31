@@ -14,7 +14,7 @@ import { selectedOdds } from "../components/OddsRadio";
 import { getPointsFromLastX } from "../logic/getScorePredictions";
 import SlideDiff from "../components/SliderDiff";
 import Collapsable from "../components/CollapsableElement";
-import { userDetail } from "./authProvider";
+import { userDetail, triggerGlobalPredictions } from "./authProvider";
 import { leagueStatsArray, playerStatsArray } from "../logic/getScorePredictions";
 const LazyLeagueTable = lazy(() => import('../components/LeagueTable'));
 
@@ -477,48 +477,44 @@ async function createFixture(match, result, mockBool) {
 }
 
 export function RenderAllFixtures(props) {
-  const [isProbability, setIsProbability] = useState(true);
+  // 1. Destructure props. Use a different name if you plan to reassign.
+  const { matches: rawMatches, isProbability, setIsProbability, userDetail } = props;
 
-  let matches;
+  let displayMatches; // Use 'let' so we can assign it below
   let uncappedFixtures;
   let capped = false;
-  let paid = false;
+  let paid = userDetail?.isPaid || false;
 
-  // 1. Filter out matches with less than 3 completed games
-  // This ensures the model has enough data for a reliable tip
-  const filteredMatches = props.matches.filter(
+  // 2. Filter logic
+  const filteredMatches = rawMatches.filter(
     (match) => match.matches_completed_minimum >= 3
   );
 
-  if (userDetail) {
-    paid = userDetail.isPaid;
-  }
-
-  // 2. Use the filtered list as the base for length and slicing
   const originalLength = filteredMatches.length;
   let newLength;
 
+  // 3. Paid vs Free Logic
   if (paid === true) {
-    matches = filteredMatches;
+    displayMatches = filteredMatches;
     uncappedFixtures = filteredMatches;
-    newLength = matches.length;
+    newLength = displayMatches.length;
   } else {
-    const slicePercent = 0.25; // 25%
+    const slicePercent = 0.25;
     const sliceCount = Math.ceil(filteredMatches.length * slicePercent);
-    matches = filteredMatches.slice(0, sliceCount);
+    displayMatches = filteredMatches.slice(0, sliceCount);
     uncappedFixtures = filteredMatches;
     capped = true;
     newLength = sliceCount;
   }
 
-  // Ensure we use the 'matches' list (which might be sliced) for unique IDs
-  uniqueLeagueIDs = [...new Set(matches.map(match => match.leagueID))];
+  // 4. Calculate unique league IDs using the processed list
+  const uniqueLeagueIDs = [...new Set(displayMatches.map(match => match.leagueID))];
 
   return (
     <Fixture
       isProbability={isProbability}
       setIsProbability={setIsProbability}
-      fixtures={matches}
+      fixtures={displayMatches} // Pass the processed list
       uncappedFixtures={uncappedFixtures}
       result={props.result}
       mock={false}
@@ -528,6 +524,8 @@ export function RenderAllFixtures(props) {
       originalLength={originalLength}
       newLength={newLength}
       stats={props.stats}
+      handleToggleTip={props.handleToggleTip}
+      userTips={props.userTips}
     />
   );
 }
@@ -549,12 +547,62 @@ export async function generateFixtures(
   current,
   todaysDate,
   dateSS,
-  unformattedDate
+  unformattedDate,
+  handleGetPredictions
 ) {
   if (!isFunctionRunning) {
     isFunctionRunning = true;
     todaysDateString = todaysDate;
+    console.log("Generating fixtures for date: ", date);
 
+    const isYouthOrReserveTeam = (name) => {
+      const lowered = name.toLowerCase().trim();
+      return (
+        lowered.includes("u16") ||
+        lowered.includes("u17") ||
+        lowered.includes("u18") ||
+        lowered.includes("u19") ||
+        lowered.includes("u20") ||
+        lowered.includes("u21") ||
+        lowered.includes("u23") ||
+        lowered.includes("reserves") ||
+        lowered.includes("reserve") ||
+        lowered.endsWith(" b") ||  // only match "Team B", not "FBK Balkan"
+        lowered.endsWith(" ii")    // match "Team II"
+      );
+    };
+    // Start the fetch process without 'await' at the top level
+    const sofaScorePromise = fetch(`${process.env.REACT_APP_EXPRESS_SERVER}scheduledEvents/${dateSS}`)
+      .then(res => res.json())
+      .then(games => {
+        games.forEach((game) => {
+          const homeName = game.homeTeam || "";
+          const awayName = game.awayTeam || "";
+
+          if (isYouthOrReserveTeam(homeName) || isYouthOrReserveTeam(awayName)) {
+            return;
+          }
+
+          // Populating the same local variable you had before
+          arrayOfGames.push({
+            homeTeam: game.homeTeam,
+            homeId: game.homeId ?? null,
+            awayTeam: game.awayTeam,
+            awayId: game.awayId ?? null,
+            id: game.id,
+            time: game.time,
+            homeGoals: game.homeScore ?? "-",
+            awayGoals: game.awayScore ?? "-",
+          });
+        });
+
+        // Optional: If you have a specific function that needs arrayOfGames, 
+        // call it here: proceedWithGames(arrayOfGames);
+        console.log("SofaScore data processed in background.");
+      })
+      .catch(error => {
+        console.error("Background fetch error:", error);
+      });
     // render(
     //   <div>
     //     <div className="LoadingText">
@@ -565,25 +613,32 @@ export async function generateFixtures(
     //   "Loading"
     // );
 
-    render(
-      <div>
-        <div className="LogoAndText"><Logo className="LoadingLogo"></Logo>
-          <h1 className="LogoSubHeading"> Football stats <br />Tips <br />Multi-builders <br />Unparalleled insight</h1>
-        </div>
-        <div className="LoadingText">
-          Loading all league, fixture & form data. Depending on the number of fixtures, this can take some time...
-        </div>
-        <BouncingDotsLoader />
-      </div>,
-      "Loading"
-    );
+    // render(
+    //   <div>
+    //     <div className="LogoAndText"><Logo className="LoadingLogo"></Logo>
+    //       <h1 className="LogoSubHeading"> Football stats <br />Tips <br />Multi-builders <br />Unparalleled insight</h1>
+    //     </div>
+    //     <div className="LoadingText">
+    //       Loading all league, fixture & form data. Depending on the number of fixtures, this can take some time...
+    //     </div>
+    //     <BouncingDotsLoader />
+    //   </div>,
+    //   "Loading"
+    // );
 
     //cleanup if different day is selected
-    render(
-      <div></div>,
-      "GeneratePredictions"
-    );
+    // render(
+    //   <div></div>,
+    //   "GeneratePredictions"
+    // );
     // render(<div></div>, "MultiPlaceholder");
+
+    async function calculateDate(dateString) {
+      const day = dateString.getDate();
+      const month = dateString.getMonth() + 1;
+      const year = dateString.getFullYear();
+      return [`${month}${day}${year}`, `${year}-${month}-${day}`];
+    }
 
 
     const url = `${process.env.REACT_APP_EXPRESS_SERVER}matches/${footyStatsFormattedDate}`;
@@ -592,12 +647,15 @@ export async function generateFixtures(
 
     matches = [];
     fixtureArray = [];
+    let dateLeague = new Date();
+    const [dateRaw, dateFormatted] = await calculateDate(dateLeague);
+    // dateLeague.setDate(dateLeague.getDate());
 
     league = await fetch(
-      `${process.env.REACT_APP_EXPRESS_SERVER}leagues/${todaysDate}`
+      `${process.env.REACT_APP_EXPRESS_SERVER}leagues/${dateRaw}`
     );
 
-    render(<div></div>, "FixtureContainer");
+    // render(<div></div>, "FixtureContainer");
 
     fixtureResponse = await fetch(url);
 
@@ -665,63 +723,7 @@ export async function generateFixtures(
         allLeagueResultsArrayOfObjects
       );
 
-
-      const isYouthOrReserveTeam = (name) => {
-        const lowered = name.toLowerCase().trim();
-        return (
-          lowered.includes("u16") ||
-          lowered.includes("u17") ||
-          lowered.includes("u18") ||
-          lowered.includes("u19") ||
-          lowered.includes("u20") ||
-          lowered.includes("u21") ||
-          lowered.includes("u23") ||
-          lowered.includes("reserves") ||
-          lowered.includes("reserve") ||
-          lowered.endsWith(" b") ||  // only match "Team B", not "FBK Balkan"
-          lowered.endsWith(" ii")    // match "Team II"
-        );
-      };
       arrayOfGames = [];
-
-      try {
-        const sofaScore = await fetch(
-          `${process.env.REACT_APP_EXPRESS_SERVER}scheduledEvents/${dateSS}`
-        );
-
-        const games = await sofaScore.json();
-
-        games.forEach((game) => {
-          const homeName = game.homeTeam || "";
-          const awayName = game.awayTeam || "";
-
-          // if(homeName.contains("U17") || awayName.contains("U17")) {
-          // console.log(homeName, awayName);
-          // }
-
-          if (isYouthOrReserveTeam(homeName) || isYouthOrReserveTeam(awayName)) {
-            return;
-          }
-
-          arrayOfGames.push({
-            homeTeam: game.homeTeam,
-            homeId: game.homeId !== undefined ? game.homeId : null,
-            awayTeam: game.awayTeam,
-            awayId: game.awayId !== undefined ? game.awayId : null,
-            id: game.id,
-            time: game.time,
-            homeGoals: game.homeScore !== undefined ? game.homeScore : "-",
-            awayGoals: game.awayScore !== undefined ? game.awayScore : "-",
-          });
-        });
-      } catch (error) {
-        console.error(
-          "An error occurred while fetching or processing data:",
-          error
-        );
-        // You might want to add more specific error handling here,
-        // such as setting a default value for arrayOfGames or logging the error to a server.
-      }
     } else {
       allLeagueResultsArrayOfObjects = [];
       console.log("Fetching leagues");
@@ -1570,123 +1572,124 @@ export async function generateFixtures(
         match.expectedGoalsAwayToDate = fixture.team_b_xg_prematch;
         match.game_week = fixture.game_week;
 
-        if (match.status !== "canceled" || match.status !== "suspended") {
-          matches.push(match);
-          await createFixture(match, false);
-        }
+        // if (match.status !== "canceled" || match.status !== "suspended") {
+        matches.push(match);
+        await createFixture(match, false);
+        // }
       }
 
-      if (matches.length > 0) {
-        render(
-          <Fragment>
-            <Button
-              text={"Get Predictions & Stats"}
-              onClickEvent={() => getScorePrediction(day)}
-              className={"GeneratePredictionsButton"}
-              id={"GeneratePredictionsButton"}
-            />
-            <div className="Version">Prediction engine v1.9.0 (06/01/26)</div>
-            <h4>Tipping league for Jan 2026 open now</h4>
-            <div className="MissingPredictionsNotice">The leader at the end of the month will recieve a 3-month subscription to Soccer Stats Hub. The winner will be based the highest remaining balance at the end of the month with each user starting on 50 units. Each tip will equate to 1 unit with the profit/loss being added to your running balance.</div>
-            <Collapsable
-              buttonText={"Filters"}
-              className={"Filters2"}
-              element={
-                <div className="FilterContainer">
-                  <h6>
-                    Use the below filters to remove predictions that don't meet
-                    the set criteria. These will be greyed out and not included
-                    in multi-builders and ROI stats
-                  </h6>
-                  <h6>Goals for/against differential filter</h6>
-                  <div>
-                    I'm looking for tips where the goal differential between
-                    teams is at least...
-                  </div>
-                  <SlideDiff
-                    value="0"
-                    text="all games"
-                    useCase="gd"
-                    lower="0"
-                    upper="30"
-                  ></SlideDiff>
-                  <h6>Goals for/against home or away differential filter</h6>
-                  <div>
-                    I'm looking for tips where the goal differential (home or
-                    away only) between teams is at least...
-                  </div>
-                  <SlideDiff
-                    value="0"
-                    text="all games"
-                    useCase="gdHorA"
-                    lower="0"
-                    upper="30"
-                  ></SlideDiff>
-                  <Fragment>
-                    <h6>XG for/against differential filter</h6>
-                    <div>
-                      I'm looking for tips where the XG differential between
-                      teams is at least...
-                    </div>
-                    <SlideDiff
-                      value="0"
-                      text="all games"
-                      useCase="xg"
-                      lower="0"
-                      upper="30"
-                    ></SlideDiff>
-                  </Fragment>
-                  <Fragment>
-                    <h6>Last 6 points differential filter</h6>
-                    <div>
-                      I'm looking for tips where the points differential between
-                      teams is at least...
-                    </div>
-                    <SlideDiff
-                      value="0"
-                      text="all games"
-                      useCase="last10"
-                      lower="0"
-                      upper="18"
-                    ></SlideDiff>
-                  </Fragment>
-                  <Fragment>
-                    <h6>Choose your risk profile</h6>
-                    <div>
-                      I'm looking for tips where the odds are between...
-                    </div>
-                    <Slide value="1" text="all games"></Slide>
-                  </Fragment>
-                </div>
-              }
-            />
-          </Fragment>,
-          "GeneratePredictions"
-        );
-      }
+      // if (matches.length > 0) {
+      //   render(
+      //     <Fragment>
+      //       <Button
+      //         text={"Get Predictions & Stats"}
+      //         // Pass the day, but we need to ensure this onClick can reach App.js state
+      //         onClickEvent={() => triggerGlobalPredictions(day)}
+      //         className={"GeneratePredictionsButton"}
+      //         id={"GeneratePredictionsButton"}
+      //       />
+      //       <div className="Version">Prediction engine v1.9.0 (06/01/26)</div>
+      //       <h4>Tipping league for Jan 2026 open now</h4>
+      //       <div className="MissingPredictionsNotice">The leader at the end of the month will recieve a 3-month subscription to Soccer Stats Hub. The winner will be based the highest remaining balance at the end of the month with each user starting on 50 units. Each tip will equate to 1 unit with the profit/loss being added to your running balance.</div>
+      //       <Collapsable
+      //         buttonText={"Filters"}
+      //         className={"Filters2"}
+      //         element={
+      //           <div className="FilterContainer">
+      //             <h6>
+      //               Use the below filters to remove predictions that don't meet
+      //               the set criteria. These will be greyed out and not included
+      //               in multi-builders and ROI stats
+      //             </h6>
+      //             <h6>Goals for/against differential filter</h6>
+      //             <div>
+      //               I'm looking for tips where the goal differential between
+      //               teams is at least...
+      //             </div>
+      //             <SlideDiff
+      //               value="0"
+      //               text="all games"
+      //               useCase="gd"
+      //               lower="0"
+      //               upper="30"
+      //             ></SlideDiff>
+      //             <h6>Goals for/against home or away differential filter</h6>
+      //             <div>
+      //               I'm looking for tips where the goal differential (home or
+      //               away only) between teams is at least...
+      //             </div>
+      //             <SlideDiff
+      //               value="0"
+      //               text="all games"
+      //               useCase="gdHorA"
+      //               lower="0"
+      //               upper="30"
+      //             ></SlideDiff>
+      //             <Fragment>
+      //               <h6>XG for/against differential filter</h6>
+      //               <div>
+      //                 I'm looking for tips where the XG differential between
+      //                 teams is at least...
+      //               </div>
+      //               <SlideDiff
+      //                 value="0"
+      //                 text="all games"
+      //                 useCase="xg"
+      //                 lower="0"
+      //                 upper="30"
+      //               ></SlideDiff>
+      //             </Fragment>
+      //             <Fragment>
+      //               <h6>Last 6 points differential filter</h6>
+      //               <div>
+      //                 I'm looking for tips where the points differential between
+      //                 teams is at least...
+      //               </div>
+      //               <SlideDiff
+      //                 value="0"
+      //                 text="all games"
+      //                 useCase="last10"
+      //                 lower="0"
+      //                 upper="18"
+      //               ></SlideDiff>
+      //             </Fragment>
+      //             <Fragment>
+      //               <h6>Choose your risk profile</h6>
+      //               <div>
+      //                 I'm looking for tips where the odds are between...
+      //               </div>
+      //               <Slide value="1" text="all games"></Slide>
+      //             </Fragment>
+      //           </div>
+      //         }
+      //       />
+      //     </Fragment>,
+      //     "GeneratePredictions"
+      //   );
+      // }
 
       // }
     }
 
-    const getPredictionsButton = document.getElementById('GeneratePredictionsButton');
-    if (getPredictionsButton) {
-      // Example: Add a class that quickly changes the background/border color
-      getPredictionsButton.classList.add('flash-attention');
+    // const getPredictionsButton = document.getElementById('GeneratePredictionsButton');
+    // if (getPredictionsButton) {
+    //   // Example: Add a class that quickly changes the background/border color
+    //   getPredictionsButton.classList.add('flash-attention');
 
-      // Remove the class after a short delay (e.g., 1 second)
-      setTimeout(() => {
-        getPredictionsButton.classList.remove('flash-attention');
-        getPredictionsButton.focus(); // Optional: Focus the input after scrolling
-      }, 2000);
+    //   // Remove the class after a short delay (e.g., 1 second)
+    //   setTimeout(() => {
+    //     getPredictionsButton.classList.remove('flash-attention');
+    //     getPredictionsButton.focus(); // Optional: Focus the input after scrolling
+    //   }, 2000);
 
-    }
+    // }
 
-    render(
-      <div>
-        <div className="LoadingText"></div>
-      </div>,
-      "Loading"
-    );
+    // render(
+    //   <div>
+    //     <div className="LoadingText"></div>
+    //   </div>,
+    //   "Loading"
+    // );
 
     async function updateResults(bool) {
       console.log("updating results");
@@ -1739,12 +1742,13 @@ export async function generateFixtures(
 
     // const allFixtures = await RenderAllFixtures(matches, false)
 
-    render(
-      <RenderAllFixtures matches={matches} result={false} bool={false} />,
-      "FixtureContainer"
-    );
+    // render(
+    //   <RenderAllFixtures matches={matches} result={false} bool={false} />,
+    //   "FixtureContainer"
+    // );
     setTimeout(() => {
       isFunctionRunning = false;
     }, 1000);
+    return [...matches];
   }
 }

@@ -48,9 +48,12 @@ import { rounds } from "./TeamOfTheSeason";
 import StarRating from "../components/StarRating";
 import { handleCheckout, stripePromise } from "../App"
 import { AuthProvider, useAuth } from "../logic/authProvider";
+import BetSlipFooter from "../components/Betslip";
 
 // import FutureFixturesSideBySide from "./FutureFixturesSideBySide";
-export let userTips;
+// export let userTips;
+
+// console.log(userTips);
 let setUserTips;
 const MemoizedSofaLineupsWidget = memo(SofaLineupsWidget);
 const LazyFutureFixturesSideBySide = lazy(() => import('./FutureFixturesSideBySide'));
@@ -107,7 +110,7 @@ function getMatchOddsProbabilities(scoreMatrix) {
 
 
 
-function GameStats({ game, displayBool, stats }) {
+function GameStats({ game, displayBool, stats, handleToggleTip, userTips }) {
   // const { user } = useAuth();
 
   const [openSections, setOpenSections] = useState({});
@@ -135,11 +138,8 @@ function GameStats({ game, displayBool, stats }) {
     }
   }
   let style = styling(displayBool);
-  // State Variables
-  [userTips, setUserTips] = useState(() => {
-    const savedTips = localStorage.getItem("userTips");
-    return savedTips ? JSON.parse(savedTips) : [];
-  });
+
+
   const [homeMissingPlayersList, setHomeMissingPlayersList] = useState([]);
   const [awayMissingPlayersList, setAwayMissingPlayersList] = useState([]);
   const [homeLineupList, setHomeLineupList] = useState([]);
@@ -170,11 +170,6 @@ function GameStats({ game, displayBool, stats }) {
   const [loadingPlayerData, setLoadingPlayerData] = useState(true);
   const [homePlayerDataWithImages, setHomePlayerDataWithImages] = useState([]);
   const [awayPlayerDataWithImages, setAwayPlayerDataWithImages] = useState([]);
-
-  // Save to localStorage whenever userTips changes
-  useEffect(() => {
-    localStorage.setItem("userTips", JSON.stringify(userTips));
-  }, [userTips]);
 
   const [isLoading, setIsLoading] = useState(false);
   const [aiMatchPreview, setAiMatchPreview] = useState(null);
@@ -2568,49 +2563,6 @@ function GameStats({ game, displayBool, stats }) {
     );
   }
 
-  async function submitSingleTip(tip) {
-    return fetch(`${process.env.REACT_APP_EXPRESS_SERVER}tips`, {
-      method: "POST",
-      headers: {
-        Accept: "application/json",
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(tip),
-    });
-  }
-
-
-  function handleSetUserTips(gameId, game, tipString, tip, date, uid, odds, status, stake, tipper) {
-    const newTip = { gameId, game, tipString, tip, date, uid, odds, status, stake, tipper };
-    console.log(newTip)
-    setUserTips((prevTips) => {
-      const existingTipIndex = prevTips.findIndex(
-        (tip) => tip.gameId === gameId
-      );
-
-      let updatedTips;
-
-      if (existingTipIndex !== -1) {
-        updatedTips = [...prevTips];
-        updatedTips[existingTipIndex] = newTip;
-      } else {
-        updatedTips = [...prevTips, newTip];
-      }
-
-      // Persist to localStorage
-      localStorage.setItem("userTips", JSON.stringify(updatedTips));
-
-      return updatedTips;
-    });
-
-    // Submit the tip immediately (no need to await)
-    submitSingleTip(newTip)
-      .then(() => console.log("Tip submitted"))
-      .catch((err) => console.error("Error submitting tip", err));
-  }
-
-
-
 
   const overviewHome = gameArrayHome.slice(0, 10).map((game) => (
     <div>
@@ -3278,124 +3230,62 @@ function GameStats({ game, displayBool, stats }) {
     chartType = "Rolling average points over last 10";
   }
 
-  const UserTips = ({
-    game,
-    handleSetUserTips,
-    userDetail,
-    selectedTip,
-    handleTipSelect,
-  }) => {
-    const handleClick = (tipType, label) => {
+  console.log(game)
+  console.log(userDetail)
+  console.log(userTips)
+  const UserTips = ({ game, userTips, handleToggleTip, userDetail }) => {
 
-      let odds;
-      if (tipType === "homeWin") {
-        odds = parseFloat(game.homeOdds);
-        // outcome = game.outcome;
-      } else if (tipType === "awayWin") {
-        odds = game.awayOdds;
-        // outcome = game.outcome;
-      } else if (tipType === "draw") {
-        odds = game.drawOdds;
-        // outcome = game.outcome;
-      } else if (tipType === "BTTS") {
-        odds = game.bttsOdds;
-        // outcome = game.bttsOutcome;
-      } else if (tipType === "over25") {
-        odds = game.over25Odds;
-        // outcome = game.over25PredictionOutcome;
-      }
-      if (selectedTip === tipType) {
-        return; // If the button clicked is already selected, do nothing
-      }
+    console.log("UserTips props:", { game, userTips, userDetail });
 
-      //bttsOutcome
-      //over25PredictionOutcome
-      //outcome
+    const isSelected = (type) => {
+      // Use 'userTips' (the prop) and 'game' (the prop)
+      // Remove any reference to 'props.game.id'
+      return (userTips || []).some(t =>
+        t.gameId === game.id && t.tip === type
+      );
+    };
+    const onBtnClick = (tipType, label) => {
+      // 1. Calculate odds (Keep this accessible for everyone)
+      const oddsMap = {
+        homeWin: game.homeOdds,
+        awayWin: game.awayOdds,
+        draw: game.drawOdds,
+        BTTS: game.bttsOdds,
+        over25: game.over25Odds
+      };
 
-      handleTipSelect(tipType); // Update parent state
-      handleSetUserTips(
+      // 2. Safely extract user info, or use a placeholder for guests
+      const uid = userDetail ? userDetail.uid : "GUEST";
+      const displayName = userDetail ? userDetail.displayName : "Guest User";
+
+      // 3. Call the toggle function
+      handleToggleTip(
         game.id,
         game.game,
         label,
         tipType,
         game.date,
-        userDetail.uid,
-        odds,
-        "PENDING",
-        1,
-        userDetail.displayName
+        uid,            // Now safely passes "GUEST" if null
+        oddsMap[tipType],
+        displayName     // Now safely passes "Guest User" if null
       );
     };
 
     return (
       <div className="UserTips">
-        <button
-          id="TipButtonHome"
-          className="TipButton"
-          style={{
-            backgroundColor: selectedTip === "homeWin" ? "#fe8c00" : "white",
-            color: selectedTip === "homeWiin" ? "white" : "#030052",
-            border: `1px solid ${selectedTip === "homeWin" ? "#fe8c00" : "#030052"
-              }`,
-          }}
-          onClick={() => handleClick("homeWin", `${game.homeTeam} to win`)}
-        >
-          Home
-        </button>
-
-        <button
-          id="TipButtonDraw"
-          className="TipButton"
-          style={{
-            backgroundColor: selectedTip === "draw" ? "#fe8c00" : "white",
-            color: selectedTip === "draw" ? "white" : "#030052",
-            border: `1px solid ${selectedTip === "draw" ? "#fe8c00" : "#030052"
-              }`,
-          }}
-          onClick={() => handleClick("draw", "Draw")}
-        >
-          Draw
-        </button>
-
-        <button
-          id="TipButtonAway"
-          className="TipButton"
-          style={{
-            backgroundColor: selectedTip === "awayWin" ? "#fe8c00" : "white",
-            color: selectedTip === "awayTeam" ? "white" : "#030052",
-            border: `1px solid ${selectedTip === "awayWin" ? "#fe8c00" : "#030052"
-              }`,
-          }}
-          onClick={() => handleClick("awayWin", `${game.awayTeam} to win`)}
-        >
-          Away
-        </button>
-        <button
-          id="TipButtonBTTS"
-          className="TipButton"
-          style={{
-            backgroundColor: selectedTip === "BTTS" ? "#fe8c00" : "white",
-            color: selectedTip === "BTTS" ? "white" : "#030052",
-            border: `1px solid ${selectedTip === "BTTS" ? "#fe8c00" : "#030052"
-              }`,
-          }}
-          onClick={() => handleClick("BTTS", "Both teams to score")}
-        >
-          BTTS
-        </button>
-        <button
-          id="TipButtonOver25"
-          className="TipButton"
-          style={{
-            backgroundColor: selectedTip === "over25" ? "#fe8c00" : "white",
-            color: selectedTip === "over25" ? "white" : "#030052",
-            border: `1px solid ${selectedTip === "over25" ? "#fe8c00" : "#030052"
-              }`,
-          }}
-          onClick={() => handleClick("over25", "Over 2.5 goals")}
-        >
-          Over 2.5
-        </button>
+        {["homeWin", "draw", "awayWin", "BTTS", "over25"].map((type) => (
+          <button
+            key={type}
+            className={`TipButton ${isSelected(type) ? "active" : ""}`}
+            style={{
+              backgroundColor: isSelected(type) ? "#fe8c00" : "white",
+              color: isSelected(type) ? "white" : "#030052"
+            }}
+            onClick={() => onBtnClick(type, type)}
+          >
+            {type.replace("Win", "")}
+          </button>
+        ))}
       </div>
     );
   };
@@ -3474,18 +3364,17 @@ function GameStats({ game, displayBool, stats }) {
   return (
     <>
       <div className="ExpandingStats">
-        {isBeforeTimestamp(game.date) && (
+        {/* {isBeforeTimestamp(game.date) && ( */}
           <>
             <h2>Your Prediction</h2>
             <UserTips
               game={game}
-              handleSetUserTips={handleSetUserTips}
+              userTips={userTips}
+              handleToggleTip={handleToggleTip}
               userDetail={userDetail}
-              selectedTip={selectedTip} // Pass selectedTip down
-              handleTipSelect={handleTipSelect} // Pass handler down
             />
           </>
-        )}
+        {/* )} */}
         <Collapsable
           buttonText={`Market Value \u{2630}`}
           classNameButton="PredictionsButton"

@@ -19,6 +19,12 @@ const Login = () => {
     setError("");
     try {
       let userCredential;
+      const STARTING_BUDGET = 50;
+
+      // Generate current month key (e.g., "2026-02")
+      const now = new Date();
+      const monthKey = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}`;
+
       if (isLogin) {
         userCredential = await signInWithEmailAndPassword(auth, email, password);
         // await updateProfile(userCredential.user, {
@@ -27,9 +33,21 @@ const Login = () => {
       } else {
         userCredential = await createUserWithEmailAndPassword(auth, email, password);
         // Create Firestore user document with default isPaidUser set to false
-        await setDoc(doc(db, "users", userCredential.user.uid), {
+        const uid = userCredential.user.uid;
+        await setDoc(doc(db, "users", uid), {
           email: userCredential.user.email,
           isPaidUser: false,
+          createdAt: new Date(),
+        });
+
+        // 2. Initialize Monthly Stats for the new user ⭐️
+        const monthlyRef = doc(db, "users", uid, "monthlyStats", monthKey);
+        await setDoc(monthlyRef, {
+          currentBalance: STARTING_BUDGET,
+          initialBudget: STARTING_BUDGET,
+          monthlyProfit: 0,
+          tipsCount: 0,
+          wins: 0
         });
       }
 

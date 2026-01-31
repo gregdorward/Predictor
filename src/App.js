@@ -10,16 +10,18 @@ import Collapsable from "./components/CollapsableElement";
 import StripePolicies from "./components/Contact";
 import { loadStripe } from "@stripe/stripe-js";
 import { AuthProvider, useAuth } from "./logic/authProvider";
-import { getAuth } from "firebase/auth";
+import { getAuth, onAuthStateChanged } from "firebase/auth";
 import Login from "./components/Login";
 import { getCurrentUser } from "./components/ProtectedContent";
 import { doc, getDoc, collection, getDocs, query } from 'firebase/firestore';
 import { userDetail } from "./logic/authProvider";
 import { checkUserPaidStatus } from "./logic/hasUserPaid";
+import { getScorePrediction } from "./logic/getScorePredictions";
 import HamburgerMenu from "./components/HamburgerMenu";
 import CancelSubscription from "./components/CancelSubscription"
 import Over25 from "./components/Over25"
 import Under25 from "./components/Under25"
+import { ThreeDots } from "react-loading-icons";
 import HighestScoringTeams from "./components/HighestScoringTeams"
 import HighestScoringFixtures from "./components/HighestScoringFixtures";
 import BTTSFixtures from "./components/BTTSFixtures";
@@ -34,6 +36,8 @@ import { auth, db } from "./firebase";
 import UsernameModal from "./components/UsernameModal";
 import Footer from "./components/Footer"
 import handleLogout from "./components/SignOut"
+import { RenderAllFixtures } from "./logic/getFixtures";
+import { triggerGlobalPredictions } from "./logic/authProvider";
 import {
   FacebookShareButton,
   FacebookIcon,
@@ -51,6 +55,9 @@ import { BrowserRouter as Router, Route, Routes, Link } from "react-router-dom";
 import PrivacyPolicy from "./components/PrivacyPolicy";
 import Over18Badge from './components/images/18.webp';
 import { createRoot } from 'react-dom/client';
+import setUserTips from "./components/GameStats";
+import BetSlipFooter from "./components/Betslip";
+
 
 export const proxyurl = "https://safe-caverns-99679.herokuapp.com/";
 export var fixtureList = [];
@@ -58,10 +65,9 @@ export let allLeagueData = [];
 
 export const availableLeagues = [];
 export var orderedLeagues = [];
-
 let loggedIn;
 export let paid = false;
-export let userTips;
+// export let userTips;
 
 const menuItems = ['Home', 'bttsteams', 'Services', 'Contact'];
 
@@ -217,20 +223,24 @@ const leagueOrder = [
 //   12801, // WC Qual Aus,
 // ];
 
-export let date;
+export let date = new Date();
 let dateSS;
 let dateFootyStats;
 let string;
 let dateString;
 let dateUnformatted;
 let todaysDateUnformatted;
-
 async function calculateDate(dateString) {
   const day = dateString.getDate();
   const month = dateString.getMonth() + 1;
   const year = dateString.getFullYear();
   return [`${month}${day}${year}`, `${year}-${month}-${day}`];
 }
+[date, dateFootyStats] = await calculateDate(date);
+
+
+
+
 
 async function convertTimestampForSofaScore(timestamp) {
   let newDate = new Date(timestamp);
@@ -253,7 +263,6 @@ async function convertTimestampForSofaScore(timestamp) {
   }
   let now = new Date();
   let dateNow = await calculateDate(now);
-  console.log(dateNow)
   leagueList = await fetch(
     `${process.env.REACT_APP_EXPRESS_SERVER}leagueList/${dateNow[0]}`
   );
@@ -304,6 +313,49 @@ async function convertTimestampForSofaScore(timestamp) {
   return orderedLeagues;
 })();
 
+
+
+// async function renderButtons(today, dateFootyStats) {
+//   render(
+//     <div className="FixtureButtons">
+//       {/* <h6>{loginStatus}</h6> */}
+//       <Button
+//         text={`<`}
+//         className="FixturesButtonAmend"
+//         onClickEvent={async () => await decrementDate(1, date)}
+//       />
+//       <Button
+//         text={dateFootyStats !== undefined ? dateFootyStats : date}
+//         className="FixturesButtonToday"
+//         onClickEvent={async () =>
+//           fixtureList.push(
+//             await generateFixtures(
+//               "todaysFixtures",
+//               dateString,
+//               selectedOdds,
+//               dateFootyStats,
+//               false,
+//               today,
+//               dateSS,
+//               dateUnformatted,
+//               triggerGlobalPredictions
+//             )
+//           )
+//         }
+//       />
+//       <Button
+//         text={`>`}
+//         className="FixturesButtonAmend"
+//         onClickEvent={async () => await incrementDateV2(1, date)}
+//       />
+//     </div>,
+//     "Buttons"
+//   );
+// }
+
+let todayFootyStats;
+let today;
+
 export async function getLeagueList() {
   let i = 0;
   date = new Date();
@@ -311,34 +363,6 @@ export async function getLeagueList() {
   loggedIn = await getCurrentUser();
 
 
-  async function decrementDate(num, date) {
-    i = i - num;
-    console.log(i);
-    if (i > -120) {
-      date.setDate(date.getDate() - num);
-      dateUnformatted = date;
-      dateSS = await convertTimestampForSofaScore(date);
-      [date, dateFootyStats] = await calculateDate(date);
-      string = dateFootyStats;
-      dateString = date;
-      await renderButtons();
-    }
-  }
-
-  async function incrementDateV2(num, date) {
-    i = i + num;
-    console.log(i);
-    if (i <= 4) {
-      date.setDate(date.getDate() + num);
-      dateUnformatted = date;
-      dateSS = await convertTimestampForSofaScore(date);
-      [date, dateFootyStats] = await calculateDate(date);
-      string = dateFootyStats;
-      dateString = date;
-      console.log(dateString);
-      await renderButtons();
-    }
-  }
 
   const todayRaw = new Date();
   const tomorrowsDate = new Date(todayRaw);
@@ -354,17 +378,9 @@ export async function getLeagueList() {
   historicDate.setDate(todayRaw.getDate() - ((historicDate.getDay() + 6) % 7) - 9);
 
   // Run calculateDate on all in parallel
-  const [
-    [today, todayFootyStats]
-  ] = await Promise.all([
-    calculateDate(todayRaw)
-  ]);
+  [today, todayFootyStats] = await calculateDate(todayRaw)
 
-  const [
-    todaySS,
-  ] = await Promise.all([
-    convertTimestampForSofaScore(new Date())
-  ]);
+  // const todaySS = await convertTimestampForSofaScore(new Date());
 
   const text =
     "Select a day you would like to retrieve fixtures for from the options above\n A list of games will be returned once the data has loaded\n Once all fixtures have loaded, click on “Get Predictions and Stats” to see our forecasted outcomes for every game\n If a game has completed, the predictions is displayed on the right and the actual result on the left\n Each individual fixture is tappable/clickable. By doing so, you can access a range of detailed stats, from comparative charts, granular performance measures to previous meetings.\n All games are subject to the same automated prediction algorithm with the outcome being a score prediction. Factors that determine the tip include the following, amongst others:\n - Goal differentials\n - Expected goal differentials \n - Attack/Defence performance\n - Form trends over time\n - Home/Away records\n - WDL records\n - Points per game \n - A range of other comparative factors\n  –\n";
@@ -378,76 +394,40 @@ export async function getLeagueList() {
     return <p>{i}</p>;
   });
 
-  async function renderButtons(loginStatus) {
-    render(
-      <div className="FixtureButtons">
-        <h6>{loginStatus}</h6>
-        <Button
-          text={`<`}
-          className="FixturesButtonAmend"
-          onClickEvent={async () => await decrementDate(1, date)}
-        />
-        <Button
-          text={dateFootyStats !== undefined ? dateFootyStats : date}
-          className="FixturesButtonToday"
-          onClickEvent={async () =>
-            fixtureList.push(
-              await generateFixtures(
-                "todaysFixtures",
-                dateString,
-                selectedOdds,
-                dateFootyStats,
-                false,
-                today,
-                dateSS,
-                dateUnformatted
-              )
-            )
-          }
-        />
-        <Button
-          text={`>`}
-          className="FixturesButtonAmend"
-          onClickEvent={async () => await incrementDateV2(1, date)}
-        />
-      </div>,
-      "Buttons"
-    );
-  }
-
-  render(
-    <div className="FixtureButtons">
-      <Button
-        text={`<`}
-        className="FixturesButtonAmend"
-        onClickEvent={async () => await decrementDate(1, date)}
-      />
-      <Button
-        text={`${string}`}
-        className="FixturesButtonToday"
-        onClickEvent={async () =>
-          fixtureList.push(
-            await generateFixtures(
-              "todaysFixtures",
-              today,
-              selectedOdds,
-              todayFootyStats,
-              true,
-              today,
-              todaySS,
-              todaysDateUnformatted
-            )
-          )
-        }
-      />
-      <Button
-        text={`>`}
-        className="FixturesButtonAmend"
-        onClickEvent={async () => await incrementDateV2(1, date)}
-      />
-    </div>,
-    "Buttons"
-  );
+  // render(
+  //   <div className="FixtureButtons">
+  //     <Button
+  //       text={`<`}
+  //       className="FixturesButtonAmend"
+  //       onClickEvent={async () => await decrementDate(1, date)}
+  //     />
+  //     <Button
+  //       text={`${string}`}
+  //       className="FixturesButtonToday"
+  //       onClickEvent={async () =>
+  //         fixtureList.push(
+  //           await generateFixtures(
+  //             "todaysFixtures",
+  //             today,
+  //             selectedOdds,
+  //             todayFootyStats,
+  //             true,
+  //             today,
+  //             todaySS,
+  //             todaysDateUnformatted,
+  //             triggerGlobalPredictions
+  //           )
+  //         )
+  //       }
+  //     />
+  //     <Button
+  //       text={`>`}
+  //       className="FixturesButtonAmend"
+  //       onClickEvent={async () => await incrementDateV2(1, date)}
+  //     />
+  //   </div>,
+  //   "Buttons"
+  // );
   render(
     <div className="OddsRadios">
       <OddsRadio value="Fractional odds"></OddsRadio>
@@ -566,9 +546,149 @@ let welcomeTextOne = welcomeTextUnsplitOne.split("\n").map((i) => {
 });
 
 function AppContent() {
-  const { user, isPaidUser } = useAuth();
-  const [showUsernameModal, setShowUsernameModal] = useState(false);
+  const { user, isPaidUser, fixtures, setFixtures, handleGetPredictions } = useAuth()
 
+  const [showUsernameModal, setShowUsernameModal] = useState(false);
+  const [userTips, setUserTips] = useState([]); // This is the React state
+  // 1. For the items the user is currently clicking on the site
+  const [activeSlip, setActiveSlip] = useState([]);
+  // 2. For the items already in the database (History)
+  const [tipHistory, setTipHistory] = useState([]);
+  const [offset, setOffset] = useState(0);
+  const [currentDate, setCurrentDate] = useState(new Date());
+  const [isLoading, setIsLoading] = useState(false);
+  const [isProbability, setIsProbability] = useState(true);
+  const [currentUser, setCurrentUser] = useState(null);
+  useEffect(() => {
+    console.log("App mounted: Triggering initial fixture load");
+    getLeagueList(triggerGlobalPredictions);
+    handleAction();
+  }, [user]);
+
+
+  // This function replaces decrementDate and incrementDateV2
+  const changeDate = (num) => {
+    const newOffset = offset + num;
+    if (newOffset > -120 && newOffset <= 4) {
+      const newDate = new Date();
+      newDate.setDate(newDate.getDate() + newOffset);
+
+      setOffset(newOffset);
+      setCurrentDate(newDate);
+    }
+  };
+
+
+  const handleAction = async () => {
+    setIsLoading(true);
+
+    // 1. Convert the current state date into the formats generateFixtures needs
+    // Assuming calculateDate returns [dateRaw, dateFormatted]
+    const [raw, formatted] = await calculateDate(currentDate);
+    const sofaDate = await convertTimestampForSofaScore(currentDate);
+
+    const data = await generateFixtures(
+      "fixtures",       // day
+      raw,              // date
+      selectedOdds,     // odds
+      formatted,        // dateFootyStats
+      false,            // current
+      raw,              // todaysDate
+      sofaDate,         // sofaScoreDate
+      currentDate,      // unformattedDate
+      handleGetPredictions
+    );
+
+    setFixtures(data);
+    setIsLoading(false);
+  };
+
+
+
+  const submitTips = async (selectedStake) => {
+    if (!user || activeSlip.length === 0) return;
+
+    // 1. Define isMulti inside the function scope
+    const isMulti = activeSlip.length > 1;
+
+    const payload = {
+      uid: user.uid,
+      tips: activeSlip,
+      type: isMulti ? "MULTI" : "SINGLE", // ✅ Now isMulti is defined here
+      submittedAt: new Date().toISOString(),
+      stake: selectedStake
+    };
+
+    try {
+      const response = await fetch(`${process.env.REACT_APP_EXPRESS_SERVER}tipsNEW`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      });
+
+      if (response.ok) {
+        // ✅ Now isMulti is also defined here for the alert
+        alert(isMulti ? "Accumulator submitted!" : "Single tip submitted!");
+        setActiveSlip([]);
+        localStorage.removeItem("userTips");
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+
+
+  function handleToggleTip(gameId, game, label, tipType, date, uid, odds, tipper) {
+    setActiveSlip((prevTips) => {
+      // 1. Check if the EXACT same tip is already there (for deselecting)
+      const isExactMatch = prevTips.find(
+        (t) => t.gameId === gameId && t.tip === tipType
+      );
+
+      if (isExactMatch) {
+        // If user clicked the same button again, just remove it
+        const updated = prevTips.filter((t) => !(t.gameId === gameId && t.tip === tipType));
+        localStorage.setItem("userTips", JSON.stringify(updated));
+        return updated;
+      }
+
+      // 2. Remove ANY existing tip for this specific gameId 
+      // This enforces the "1 selection per game" rule
+      const filteredTips = prevTips.filter((t) => t.gameId !== gameId);
+
+      // 3. Add the new selection
+      const newTip = {
+        gameId,
+        game,
+        tipString: label,
+        tip: tipType,
+        date,
+        uid,
+        odds,
+        status: "PENDING",
+        tipper,
+        stake: 1
+      };
+
+      const updatedTips = [...filteredTips, newTip];
+      localStorage.setItem("userTips", JSON.stringify(updatedTips));
+      console.log("Tip added (and any previous selection for this game removed)");
+
+      return updatedTips;
+    });
+  }
+
+  useEffect(() => {
+    const auth = getAuth();
+    // This is the only reliable way to get the user in Firebase
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      if (user) {
+        setCurrentUser(user);
+      }
+    });
+    return () => unsubscribe();
+  }, []);
 
   useEffect(() => {
     // ⭐️ Important: useEffect callback cannot be directly 'async'.
@@ -586,8 +706,6 @@ function AppContent() {
         return;
       }
 
-      console.log("Main Profile:", user.displayName);
-      console.log("Provider Info:", user.providerData[0]?.displayName);
       setShowUsernameModal(false);
 
       // --- FETCHING USER PROFILE (Top-level document) ---
@@ -612,15 +730,18 @@ function AppContent() {
       const tipsSnapshot = await getDocs(tipsCollectionRef);
 
       if (!tipsSnapshot.empty) {
-        // 4. Map the snapshot to an array of tip objects
-        userTips = tipsSnapshot.docs.map(tipDoc => ({
-          id: tipDoc.id, // The document ID is the gameId in your case
+        const fetchedTips = tipsSnapshot.docs.map(tipDoc => ({
+          id: tipDoc.id,
           ...tipDoc.data()
         }));
-
+        // If you want history and the slip to be different, use a different state.
+        // For now, let's just make the UI work:
+        const history = tipsSnapshot.docs.map(doc => doc.data());
+        setTipHistory(history); // Store history separately
         // ⭐️ Here you would call a state setter to store the tips in your component state
         // setTips(userTips); 
       } else {
+        setUserTips([]);
         console.log("No tips found in the 'tips' subcollection.");
       }
     };
@@ -632,40 +753,6 @@ function AppContent() {
   const [data, setData] = useState({
     loading: true,
   });
-
-  useEffect(() => {
-    async function fetchData() {
-      let now = new Date();
-      let dateNow = await calculateDate(now);
-      const [
-        todaySS,
-      ] = await Promise.all([
-        convertTimestampForSofaScore(new Date())]);
-
-
-      fixtureList.push(
-        await generateFixtures(
-          "todaysFixtures",
-          dateNow[0],
-          selectedOdds,
-          dateNow[1],
-          true,
-          dateNow[0],
-          todaySS,
-          new Date()
-        ))
-
-
-      // Update the component state with the fetched data
-      setData({
-        loading: false,
-      });
-    }
-
-    fetchData();
-  }, []); // The empty dependency array ensures this runs only o
-
-  getLeagueList();
 
   const handleSubscribeClick = (priceId) => {
     if (user) {
@@ -822,13 +909,44 @@ function AppContent() {
 
       <div id="ExplainerText" />
       <div id="Buttons" className="Buttons">
+        <div className="FixtureButtons">
+          <Button
+            text="<"
+            className="FixturesButtonAmend"
+            onClickEvent={() => changeDate(-1)}
+          />
+
+          <Button
+            text={currentDate.toLocaleDateString()} // Or your dateFootyStats variable
+            className="FixturesButtonToday"
+            onClickEvent={() => handleAction()} // This re-runs the current date load
+          />
+
+          <Button
+            text=">"
+            className="FixturesButtonAmend"
+            onClickEvent={() => changeDate(1)}
+          />
+        </div>
       </div>
       <Collapsable buttonText={"Options \u{2630}"} className={"Options"} element={
         <><div id="Checkbox" /><div id="CheckboxTwo" className="CheckboxTwo" /></>
       }>
       </Collapsable>
       <div id="Loading" className="Loading"></div>
-      <div id="GeneratePredictions" className="GeneratePredictions" />
+      <div id="GeneratePredictions">
+        {/* If we have fixtures loaded from getFixtures, show the Prediction button */}
+        {fixtures?.length > 0 && (
+          <div className="PredictionControls">
+            <Button
+              text="Get Predictions & Stats"
+              onClickEvent={() => handleGetPredictions('today')}
+              className="GeneratePredictionsButton"
+            />
+            <div className="Version">Prediction engine v1.9.0</div>
+          </div>
+        )}
+      </div>
       {/* <div id="MultiPlaceholder" className="MultiPlaceholder" /> */}
 
       <div id="MultiWrapper" className="MultiWrapper">
@@ -867,54 +985,34 @@ function AppContent() {
       <div id="FixtureContainerHeaders"></div>
 
       <div id="FixtureContainer">
-        <h6 className="WelcomeText">{welcomeTextOne}</h6>
-        <div>
-          <h6 className="WelcomeText">
-            <ul className="AllLeagues" key="league-list">
-              <li className="League" key="premier-league">
-                Premier League
-              </li>
-              <li className="League" key="english-football-league">
-                English Football League
-              </li>
-              <li className="League" key="la-liga">
-                La Liga
-              </li>
-              <li className="League" key="serie-a">
-                Serie A
-              </li>
-              <li className="League" key="bundesliga">
-                Bundesliga
-              </li>
-              <li className="League" key="ligue-1">
-                Ligue 1
-              </li>
-              <li className="League" key="mls">
-                MLS
-              </li>
-              <li className="League" key="primeira-liga">
-                Primeira Liga
-              </li>
-              <li className="League" key="champions-league">
-                UEFA Champions League
-              </li>
-              <li className="League" key="loads-more">
-                Loads more...
-              </li>
-            </ul>
-            <a
-              className="SocialLink"
-              href="https://www.reddit.com/r/xgtipping/"
-              target="_blank"
-              rel="noreferrer"
-            >
-              r/xgtipping
-            </a>
-          </h6>
-        </div>
+        {/* 1. Show Spinner while loading */}
+        {isLoading ? (
+          <div className="LoadingSpinnerContainer" style={{ display: 'flex', justifyContent: 'center', padding: '20px' }}>
+            <ThreeDots stroke="#fe8c00" />
+          </div>
+        ) : (
+          /* 2. Show Fixtures only when NOT loading and data exists */
+          fixtures?.length > 0 && (
+            <RenderAllFixtures
+              matches={fixtures}
+              userTips={activeSlip}
+              handleToggleTip={handleToggleTip}
+              userDetail={user}
+              result={false}
+              isProbability={isProbability}
+              setIsProbability={setIsProbability}
+            />
+          )
+        )}
       </div>
+      <BetSlipFooter
+        userTips={activeSlip}  // Only show the new selections
+        setUserTips={setActiveSlip}
+        userDetail={user}
+        onPlaceBet={submitTips}
+        user={currentUser}
+      />
       <div id="XGDiff" />
-
       {user ? (
         isPaidUser ? (
           // If the user is logged in and is a paying customer, show the cancel button

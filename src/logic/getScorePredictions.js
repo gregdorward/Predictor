@@ -149,34 +149,45 @@ function getMatchOddsProbabilities(scoreMatrix) {
 }
 
 
-const allIndividualTips = [];
 
 async function fetchAllUserTips() {
   try {
-    const response = await fetch(`${process.env.REACT_APP_EXPRESS_SERVER}tips`);
-    const tipsData = await response.json(); // Format: { "UID1": [tips], "UID2": [tips] }
+    const response = await fetch(`${process.env.REACT_APP_EXPRESS_SERVER}tipsNEW`);
+    const tipsData = await response.json();
 
-    // Loop through each User ID in the object
-    Object.entries(tipsData).forEach(([uid, userTips]) => {
-      userTips.forEach((tip) => {
-        // We spread the tip and inject the UID so we know who it belongs to later
-        allIndividualTips.push({
-          ...tip,
-          uid: uid,
-          // Ensure these exist for the scoring logic later
-          status: tip.status || "PENDING",
-          stake: tip.stake || 1,
-          odds: parseFloat(tip.odds) || 0
+    const flattenedPendingLegs = [];
+
+    // tipsData is { "UID1": [Slips], "UID2": [Slips] }
+    Object.entries(tipsData).forEach(([uid, userSlips]) => {
+      userSlips.forEach((slip) => {
+        // 1. Iterate through the nested selections array
+        slip.selections.forEach((selection) => {
+
+          // 2. Only extract if this specific leg is PENDING
+          if (selection.status === "PENDING") {
+            flattenedPendingLegs.push({
+              ...selection,
+              uid: uid,
+              slipId: slip.slipId,
+              parentType: slip.type,
+              // Carry over top-level slip info if needed for context
+              slipStatus: slip.status
+            });
+          }
         });
       });
     });
 
-    return allIndividualTips; // Now a flat array of every single tip
+    console.log(`Extracted ${flattenedPendingLegs.length} pending legs.`);
+    return flattenedPendingLegs;
   } catch (error) {
     console.error("Error fetching user tips:", error);
     return [];
   }
 }
+
+const allIndividualTips = await fetchAllUserTips();
+
 
 export function getPointsFromLastX(lastX) {
   let points = 0;
@@ -315,121 +326,229 @@ function impliedProbability(decimalOdds) {
 }
 
 
+// 1. Function starts here
 async function fetchUserTips() {
   try {
-    const response = await fetch(`${process.env.REACT_APP_EXPRESS_SERVER}tips`);
-    const tips = await response.json();
+    const response = await fetch(`${process.env.REACT_APP_EXPRESS_SERVER}tipsNEW`);
+    const data = await response.json();
 
-    const tipCounts = {};
+    // ... your logic to process/sort data ...
+    const activeSlips = data; // simplified for example
 
-    Object.values(tips).forEach((userTipsArray) => {
-      userTipsArray.forEach(({ gameId, game, tipString, date, odds, tipper, status }) => {
-        if (isSameDayOrLater(date)) {
-          if (!tipCounts[gameId]) {
-            tipCounts[gameId] = { game, tips: {} };
-          }
+    // 2. This return MUST be inside the function braces
+    return activeSlips;
 
-          if (!tipCounts[gameId].tips[tipString]) {
-            // Initialize tippers as an empty array
-            tipCounts[gameId].tips[tipString] = { count: 0, odds, status, tippers: [] };
-          }
-
-          tipCounts[gameId].tips[tipString].count += 1;
-
-          // Add the tipper name to the array if it exists
-          if (tipper) {
-            tipCounts[gameId].tips[tipString].tippers.push(tipper);
-          }
-        }
-      });
-    });
-
-    const formattedTips = Object.entries(tipCounts).flatMap(
-      ([gameId, { game, tips }]) =>
-        Object.entries(tips).map(([tipString, { count, odds, tippers, status }]) => {
-          // Join names with a comma, or show nothing if empty
-          const tipperList = tippers.length > 0 ? ` (${tippers.join(", ")})` : "";
-          return {
-            game,
-            tipString,
-            count,
-            status,
-            formatted: (
-              <>
-                {game}
-                <br />
-                <strong className={status}>{tipString} @ {odds}</strong><br />
-                Tips - {count}{tipperList}
-              </>
-            ),
-          };
-        })
-    );
-
-    formattedTips.sort((a, b) => b.count - a.count);
-    return formattedTips.slice(0, 50);
   } catch (error) {
     console.error("Error fetching user tips:", error);
-    return null;
+    return [];
   }
-}
+} // 3. Function ends here
 
-const fetchedTips = await fetchAllUserTips();
+export function BetSlipItem({ slip }) {
+  const [isExpanded, setIsExpanded] = useState(false);
+  const isSingle = slip.type === 'SINGLE';
+  const firstLeg = slip.selections[0]; // Get the only selection for singles
+
+  const getStatusClass = (status) => {
+    if (!status) return 'pending';
+    return status.toLowerCase(); // Returns 'won', 'lost', or 'pending'
+  };
+
+  const formatGameDate = (unixSeconds) => {
+    if (!unixSeconds) return "";
+    const date = new Date(unixSeconds * 1000);
+
+    return date.toLocaleString('en-GB', {
+      day: '2-digit',
+      month: '2-digit',
+      hour: '2-digit',
+      minute: '2-digit',
+    });
+  };
+
+  console.log(slip)
+  return (
+    <div className={`SlipCard ${slip.status.toLowerCase()} ${isSingle ? 'single-view' : ''}`}>
+      {/* HEADER: Shared by both types */}
+      <div className="SlipHeader" onClick={() => !isSingle && setIsExpanded(!isExpanded)}>
+        <div className="SlipMainInfo">
+          <div>
+            <span className="TipType">Type: <strong>{slip.type}</strong></span>
+            <span>Stake: <strong>{slip.stake}</strong></span>
+          </div>
+          <span className="SlipDateHeader">Submitted: {new Date(slip.submittedAt).toLocaleDateString()}</span>
+        </div>
+
+        <div className="SlipSummary">
+          <span>Potential return: <strong>{slip.totalOdds}</strong></span>
+          <span className="ExpandIcon">
+            {!isSingle ? (isExpanded ? '▲' : '▼') : <span style={{ visibility: 'hidden' }}>▲</span>}
+          </span>
+        </div>
+      </div>
+
+      {/* SURFACE DETAIL: Only for Singles */}
+      {isSingle && firstLeg && (
+        <div className="SingleDetailSurface">
+          <div className="SelectionLeft">
+            <span className="SelectionGame">{firstLeg.game}</span>
+            <span className="SelectionTip">{firstLeg.tipString} @ {firstLeg.odds}</span>
+            <span className="SlipDate">{formatGameDate(firstLeg.date)}</span>
+          </div>
+          <div className={`SelectionStatus ${getStatusClass(firstLeg.status)}`}>
+            {firstLeg.status}
+          </div>
+          {/* We hide the extra status here if the badge above is enough, 
+              or keep it for consistency */}
+        </div>
+      )}
+
+      {/* ACCORDION DETAIL: Only for Multis */}
+      {!isSingle && isExpanded && (
+        <ul className="SelectionList">
+          {slip.selections.map((leg, idx) => (
+            <li key={idx} className="SelectionItem">
+              <div className="SelectionLeft">
+                <span className="SelectionGame">{leg.game}</span>
+                <span className="SelectionTip">{leg.tipString} @ {leg.odds}</span>
+                <span className="SlipDate">{formatGameDate(leg.date)}</span>
+              </div>
+              <div className={`SelectionStatus ${getStatusClass(leg.status)}`}>
+                {leg.status}
+              </div>
+            </li>
+          ))}
+        </ul>
+      )}
+    </div>
+  );
+}
 
 
 function UserTips() {
-  const [tips, setTips] = useState([]);
-  const [isVisible, setIsVisible] = useState(false); // New: Tracks visibility
-  const [loading, setLoading] = useState(false);    // New: Tracks API call
+  const [slips, setSlips] = useState([]);
+  const [isVisible, setIsVisible] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   const fetchAndSetUserTips = async () => {
     setLoading(true);
-    const fetchedTipsForDisplay = await fetchUserTips();
+    const data = await fetchUserTips();
 
-    if (fetchedTipsForDisplay) {
-      setTips(fetchedTipsForDisplay);
-      setIsVisible(true); // Show the list once data is ready
+    if (data && typeof data === 'object') {
+      const allSlips = Object.entries(data).flatMap(([uid, userSlips]) => {
+        if (!Array.isArray(userSlips)) return [];
+
+        return userSlips.map(slip => {
+          // 1. Ensure we only grab valid numbers
+          const validDates = slip.selections
+            .map(leg => Number(leg.date))
+            .filter(date => !isNaN(date) && date > 0);
+
+          // 2. Find earliest (in seconds) or fallback to now
+          const earliestUnix = validDates.length > 0
+            ? Math.min(...validDates)
+            : Math.floor(Date.now() / 1000);
+
+          return {
+            ...slip,
+            tipper: slip.tipper || `User_${uid.substring(0, 5)}`,
+            uid: uid,
+            earliestGameDate: earliestUnix // This is now "lifted" (in seconds)
+          };
+        });
+      });
+
+      // 3. Sort: Nearest game first
+      // We compare Unix seconds (a.earliestGameDate - b.earliestGameDate)
+      console.log(allSlips[0].submittedAt);
+
+      const sorted = [...allSlips].sort((a, b) =>
+        new Date(b.submittedAt).getTime() - new Date(a.submittedAt).getTime()
+      ); console.log("Verified Slips with Lifted Dates:", sorted);
+
+      setSlips(sorted);
+      setIsVisible(true);
     }
     setLoading(false);
   };
 
-  // 1. If we haven't clicked the button yet, ONLY show the button.
   if (!isVisible && !loading) {
+
     return (
-      <div className="UserTipsContainer">
-        <button onClick={fetchAndSetUserTips}>Show User Tips</button>
-      </div>
+      <><h4>Febuary Prediction League now open</h4><div className="MissingPredictionsNotice">Singles, multis, play it safe, be bold - many strategies, only 1 winner. The leader at the end of the month will receive 1 years Soccer Stats Hub subscription</div><div className="UserTipsContainer">
+        <button onClick={fetchAndSetUserTips} className="ActionBtn">Show Prediction League</button>
+      </div></>
     );
   }
 
-  // 2. If we are loading, show a loading state.
   if (loading) {
-    return (
-      <div className="UserTipsContainer">
-        <button disabled>Loading Tips...</button>
-      </div>
-    );
+    return <div className="UserTipsContainer"><button disabled>Loading...</button></div>;
   }
+  console.log(slips)
 
-  // 3. If we have tips and isVisible is true, show the list.
+  const getTopPicks = (allSlips) => {
+    const counts = {};
+
+    allSlips.forEach((slip) => {
+      // Only count selections from slips that aren't settled yet
+      if (slip.status === "PENDING") {
+        slip.selections.forEach((sel) => {
+          // Unique key: Combine Game ID and the Tip
+          const key = `${sel.gameId}_${sel.tipString}`;
+
+          if (!counts[key]) {
+            counts[key] = {
+              game: sel.game,
+              tip: sel.tipString,
+              count: 0,
+              odds: sel.odds
+            };
+          }
+          counts[key].count += 1;
+        });
+      }
+    });
+
+    // Convert to array, sort by highest count, take top 5
+    return Object.values(counts)
+      .sort((a, b) => b.count - a.count)
+      .slice(0, 5);
+  };
+
+
+
+  const topPicks = getTopPicks(slips);
+  const formatTip = (tip) => tip.replace(/([A-Z])/g, ' $1').replace(/^./, str => str.toUpperCase());
+
   return (
     <div className="UserTipsContainer">
-      <button onClick={() => setIsVisible(false)}>Hide User Tips</button>
-      <MonthlyLeaderboard />
-      {/* We only render the <ul> if there are actually tips. 
-         If tips.length is 0 after a fetch, it renders nothing (or your BlankDiv).
-      */}
-      {tips.length > 0 ? (
-        <><h4>To add to this list, select your tips within any game from the main list</h4><ul className="UserTipsList">
-          {tips.map((game, index) => (
-            <li key={index} className="UserTipsListItems">
-              {game.formatted}
-            </li>
-          ))}
-        </ul>
-        </>
-      ) : (
-        <div className="BlankDiv">No active tips found.</div>
+      <button onClick={() => setIsVisible(false)} className="ActionBtn">Hide Prediction League</button>
+      <MonthlyLeaderboard slips={slips} />
+      {topPicks.length > 0 && (
+        <div className="TrendingSection">
+          <h3>
+            🔥 Trending Selections
+          </h3>
+          <div className="TopPicksGrid" style={{
+            display: 'grid',
+            gridTemplateColumns: 'repeat(auto-fill, minmax(180px, 1fr))',
+          }}>
+            {topPicks.map((pick, i) => (
+              <div key={i} className="TrendCard" style={{
+                position: 'relative'
+              }}>
+                <span className="TrendingTipsCount" style={{
+                  position: 'absolute', top: '40%', right: '15px',
+                }}>
+                  {pick.count}x
+                </span>
+                <div className="TrendingTipGame">{pick.game}</div>
+                <div>{formatTip(pick.tip)}</div>
+                <div>@{pick.odds}</div>
+              </div>
+            ))}
+          </div>
+        </div>
       )}
     </div>
   );
@@ -1195,7 +1314,6 @@ async function getPastLeagueResults(team, game, hOrA, form) {
     form.avgDangerousAttacksAgainst =
       dangerousAttacksAgainstSum / dangerousAttacksAgainst.length || 45;
 
-    console.log('Dangerous Attacks Against:', form.avgDangerousAttacksAgainst);
 
     const dangerousAttacksAgainstLast5 = dangerousAttacksAgainst.slice(0, 5);
     const dangerousAttacksAgainstSumLast5 = dangerousAttacksAgainstLast5.reduce(
@@ -1241,8 +1359,6 @@ async function getPastLeagueResults(team, game, hOrA, form) {
     const VENUE_OFFSET = 0.15; // Set your desired offset
 
     [form.trueForm, form.totalExpectedPoints] = calculateOddsBasedTrueForm(form.pointsSum5, allTeamResults);
-
-    console.log(`True Form for team ID ${form.teamName}: ${form.trueForm}, Total Expected Points: ${form.totalExpectedPoints}`);
 
     const cornersHome = homeResults.map((res) => res.corners);
     const cornersSumHome = cornersHome.reduce((a, b) => a + b, 0);
@@ -2230,13 +2346,12 @@ export async function roundCustom(num) {
 //Calculates scores based on prior XG figures, weighted by odds
 let i = 0;
 
-export async function calculateScore(match, index, divider, calculate, AIPredictions) {
+export async function calculateScore(match, index, divider, calculate, AIPredictions, fetchedTips) {
   i++;
 
   let teams;
   let AIPredictionHome;
   let AIPredictionAway;
-
   if (
     calculate === true &&
     allForm.find(
@@ -2808,8 +2923,6 @@ export async function calculateScore(match, index, divider, calculate, AIPredict
       attackingMetricsAwayOnly
     );
 
-    console.log(defensiveMetricsHome)
-
     formHome.defensiveStrength = 1
     await calculateDefensiveStrength(
       defensiveMetricsHome
@@ -3144,8 +3257,6 @@ export async function calculateScore(match, index, divider, calculate, AIPredict
     match.over25Probability = over;
     match.under25Probability = under;
 
-    console.log(match)
-
     const homeWinImplied = impliedProbability(match.homeOdds);
 
     const drawImplied = impliedProbability(match.drawOdds);
@@ -3185,11 +3296,6 @@ export async function calculateScore(match, index, divider, calculate, AIPredict
     //   console.log(match.game);
     //   console.log(`Draw odds value bet detected. Bookmaker odds: ${match.drawOdds}, Fair odds: ${(1 / draw).toFixed(2)}`);
     // }
-
-    console.log(
-      `Predicted score: ${predictedScore.home}-${predictedScore.away}`,
-      `(${(predictedScore.probability * 100).toFixed(1)}%)`
-    );
 
     let finalHomeGoals;
     let finalAwayGoals;
@@ -3490,30 +3596,43 @@ export async function calculateScore(match, index, divider, calculate, AIPredict
 
     //if the match.id is in my userTips array of objects, compare the match.outcome with the tip prediction. If it matches, add a profit value of 1 multiplied by the odds of that outcome (homeOdds, awayOdds or drawOdds)
     // 1. Get ALL tips for this specific match (not just the first one)
-    const matchingTips = fetchedTips.filter((t) => String(t.gameId) === String(match.id));
 
-    if (matchingTips.length > 0 && match.status === "complete") {
+    const matchingTips = fetchedTips.filter((t) => String(t.gameId) === String(match.id));
+    const finishedStatuses = ["complete", "suspended", "canceled", "postponed", "abandoned"];
+
+    if (matchingTips.length > 0 && finishedStatuses.includes(match.status)) {
       matchingTips.forEach((tip) => {
         if (tip.status === "PENDING") {
-          let isWinner = false;
 
+          // 1. HANDLE NON-PLAYED GAMES (VOID LOGIC)
+          const voidStatuses = ["suspended", "canceled", "cancelled", "postponed"];
 
-          switch (tip.tip) {
-            case "homeWin": isWinner = match.outcome === "homeWin"; break;
-            case "awayWin": isWinner = match.outcome === "awayWin"; break;
-            case "draw": isWinner = match.outcome === "draw"; break;
-            case "BTTS": isWinner = (match.homeGoals > 0 && match.awayGoals > 0); break;
-            case "over25": isWinner = (match.homeGoals + match.awayGoals) > 2.5; break;
+          if (voidStatuses.includes(match.status)) {
+            tip.status = "VOID";
+          } else {
+            // 2. HANDLE COMPLETED GAMES (WIN/LOSS LOGIC)
+            let isWinner = false;
+            const totalGoals = Number(match.homeGoals) + Number(match.awayGoals);
+
+            switch (tip.tip) {
+              case "homeWin": isWinner = match.outcome === "homeWin"; break;
+              case "awayWin": isWinner = match.outcome === "awayWin"; break;
+              case "draw": isWinner = match.outcome === "draw"; break;
+              case "BTTS": isWinner = (match.homeGoals > 0 && match.awayGoals > 0); break;
+              case "over25": isWinner = totalGoals > 2.5; break;
+              default: isWinner = false;
+            }
+
+            tip.status = isWinner ? "WON" : "LOST";
           }
 
-          // Update the properties on the ORIGINAL object in the array
-          tip.status = isWinner ? "WON" : "LOST";
-          tip.profit = isWinner ? (tip.stake * tip.odds) - tip.stake : -tip.stake;
-          tip.pointsChange = isWinner ? 1 : -1;
-          tip.result = tip.status; // Optional helper
-
-          // This array now contains individual tips with UIDs, ready for the DB
-          resultedUserTipsArray.push(tip);
+          // 3. PUSH TO RESULTS ARRAY
+          resultedUserTipsArray.push({
+            uid: tip.uid,
+            gameId: tip.gameId,
+            status: tip.status,
+            tip: tip.tip
+          });
         }
       });
     }
@@ -3733,6 +3852,8 @@ async function getSuccessMeasure(fixtures) {
   let netProfit = 0;
 
   let hasUpdates = false; // Initialize the flag
+  // console.log(allIndividualTips);
+  // const allIndividualTips = [];
 
   const updatedFlatTips = allIndividualTips.map((originalTip) => {
     const match = resultedUserTipsArray.find(
@@ -3857,6 +3978,7 @@ async function getSuccessMeasure(fixtures) {
   if (userDetail) {
     isPaid = userDetail.isPaid;
   }
+  console.log(`paidUser: ${isPaid}`);
 
   console.log(`totalInvestment: ${totalInvestment}`);
 
@@ -4267,9 +4389,6 @@ const footyStatsToSofaScore = [
   },
 ];
 
-console.log("HELLO")
-
-
 async function fetchLeagueStats() {
   console.log(uniqueLeagueIDs)
   function getWeekOfYear(date) {
@@ -4373,19 +4492,21 @@ export async function getScorePrediction(day, mocked) {
   dangerousAttacksDiffTips = [];
   shotsOnTargetTips = [];
   allTips = [];
+  const fetchedTips = await fetchAllUserTips();
 
+  console.log("Getting score predictions...");
 
   let index = 2;
   let divider = 10;
 
   // Render the initial loading state
-  render(
-    <div>
-      <ThreeDots className="MainLoading" fill="#fe8c00" />
-      <div className="LoadingMessage">Collecting form data and calculating predictions...</div>
-    </div>,
-    "FixtureContainer"
-  );
+  // render(
+  //   <div>
+  //     <ThreeDots className="MainLoading" fill="#fe8c00" />
+  //     <div className="LoadingMessage">Collecting form data and calculating predictions...</div>
+  //   </div>,
+  //   "FixtureContainer"
+  // );
 
   // --- 1. START ALL ASYNCHRONOUS OPERATIONS CONCURRENTLY ---
 
@@ -4433,7 +4554,7 @@ export async function getScorePrediction(day, mocked) {
             match.goalsA = "P";
             match.goalsB = "P";
             match.completeData = false;
-            await calculateScore(match, index, divider, false, predictedScoresData);
+            await calculateScore(match, index, divider, false, predictedScoresData, fetchedTips);
             break;
           case match.matches_completed_minimum < 3 && selectedTipType !== "AI Tips":
             match.goalsA = "x";
@@ -4448,7 +4569,7 @@ export async function getScorePrediction(day, mocked) {
               match.unroundedGoalsA,
               match.unroundedGoalsB,
               match.completeData = true,
-            ] = await calculateScore(match, index, divider, true, predictedScoresData);
+            ] = await calculateScore(match, index, divider, true, predictedScoresData, fetchedTips);
             break;
         }
       } else {
@@ -4457,7 +4578,7 @@ export async function getScorePrediction(day, mocked) {
           match.goalsB,
           match.unroundedGoalsA,
           match.unroundedGoalsB,
-        ] = await calculateScore(match, index, divider, true, predictedScoresData);
+        ] = await calculateScore(match, index, divider, true, predictedScoresData, fetchedTips);
       }
 
       await getBTTSPotential(
@@ -5027,15 +5148,15 @@ export async function getScorePrediction(day, mocked) {
     "MultiPlaceholder"
   );
 
-  render(
-    <RenderAllFixtures
-      matches={matches}
-      result={true}
-      bool={mock}
-      stats={[]} // Placeholder stats, assuming RenderAllFixtures can gracefully handle an empty array
-    />,
-    "FixtureContainer"
-  );
+  // render(
+  //   <RenderAllFixtures
+  //     matches={matches}
+  //     result={true}
+  //     bool={mock}
+  //     stats={[]} // Placeholder stats, assuming RenderAllFixtures can gracefully handle an empty array
+  //   />,
+  //   "FixtureContainer"
+  // );
 
   await getMultis();
   await getNewTips(allTipsSorted);
@@ -5058,15 +5179,17 @@ export async function getScorePrediction(day, mocked) {
 
   // --- 5. RERENDER FIXTURES WITH FULL STATS ---
   // Rerender the FixtureContainer now that leagueStatsArray is ready (if stats are used visually)
-  render(
-    <RenderAllFixtures
-      matches={matches}
-      result={true}
-      bool={mock}
-      stats={leagueStatsArray} // Now passing the full stats
-    />,
-    "FixtureContainer"
-  );
+  // render(
+  //   <RenderAllFixtures
+  //     matches={matches}
+  //     result={true}
+  //     bool={mock}
+  //     stats={leagueStatsArray} // Now passing the full stats
+  //   />,
+  //   "FixtureContainer"
+  // );
+  return matches;
+
 }
 
 

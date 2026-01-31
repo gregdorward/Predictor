@@ -7,14 +7,13 @@ import store from "../logic/store"; // Import your Redux store
 import { clicked } from "../logic/getScorePredictions";
 import { userDetail } from "../logic/authProvider";
 import { checkUserPaidStatus } from "../logic/hasUserPaid";
-import { userTips } from "./GameStats";
 import { leagueStatsArray } from "../logic/getScorePredictions";
 import LeagueName from './LeagueName';
 import ShareShortlistButton from "./ShareShortlistButton";
 import { getAuth } from "firebase/auth";
 import { getFirestore, doc, getDoc, updateDoc } from "firebase/firestore";
+import GameStats from "./GameStats";  
 
-const LazyGameStats = lazy(() => import('./GameStats'));
 
 let resultValue;
 let paid;
@@ -60,7 +59,7 @@ function GetDivider(fixture, mockValue) {
     resultValue === true;
 
   // ✅ Most common case: just show KO time
-  if (!isComplete || !isPrediction) {
+  if (!isComplete && !isPrediction) {
     return (
       <div className="KOAndPrediction">
         <div className="KOTime">{time}</div>
@@ -93,6 +92,7 @@ function GetDivider(fixture, mockValue) {
       : actualOutcome === 0
         ? fixture.fixture.homeTeam
         : fixture.fixture.awayTeam;
+
 
   if (actualOutcome === predictedOutcome) {
     fixture.fixture.profit = getProfit(fixture.fixture, actualOutcome);
@@ -158,7 +158,7 @@ const PredictionSection = ({ isProbability, goals, team, probability }) => {
       </div>
     );
   } else {
-     return (
+    return (
       <div className="ProbabilityWrapper">
         <div className="ProbabilityBarBackground">
           {/* BAR FILL (doesn't affect layout) */}
@@ -213,12 +213,13 @@ function SingleFixture({
   checked,
   onToggle,
   showShortlist,
-  isProbability
+  isProbability,
+  handleToggleTip,
+  userTips
 }) {
   const dispatch = useDispatch();
   const [showGameStats, setShowGameStats] = useState(false);
   const [isLoadingGameStats, setIsLoadingGameStats] = useState(false); // New loading state
-
   function StoreData() {
     const fixtureDetails = {
       id: fixture.id,
@@ -325,7 +326,6 @@ function SingleFixture({
       setIsLoadingGameStats(false); // Set loading to false after "loading"
     }, 1);
   };
-
 
   return (
     <div key={fixture.game}>
@@ -599,9 +599,11 @@ function SingleFixture({
 
         {/* The condition ensures LazyGameStats is only mounted when ready */}
         {showGameStats && !isLoadingGameStats && (
-          <LazyGameStats
+          <GameStats
             game={fixture}
             displayBool={true}
+            handleToggleTip={handleToggleTip} // 👈 Pass this down
+            userTips={userTips}               // 👈 Pass this down
             stats={
               leagueStatsArray && leagueStatsArray[`leagueStats${fixture.leagueID}`]
                 ? leagueStatsArray[`leagueStats${fixture.leagueID}`]
@@ -614,43 +616,45 @@ function SingleFixture({
   );
 }
 
-async function submitTips() {
-  if (userDetail?.uid && userTips) {
-    await fetch(`${process.env.REACT_APP_EXPRESS_SERVER}tips`, {
-      method: "POST",
-      headers: {
-        Accept: "application/json",
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(userTips),
-    });
-    alert("Tips submitted");
-  } else {
-    return;
-  }
+// async function submitTips(userTips) {
+//   if (userDetail?.uid && userTips) {
+//     await fetch(`${process.env.REACT_APP_EXPRESS_SERVER}tips`, {
+//       method: "POST",
+//       headers: {
+//         Accept: "application/json",
+//         "Content-Type": "application/json",
+//       },
+//       body: JSON.stringify(userTips),
+//     });
+//     alert("Tips submitted");
+//   } else {
+//     return;
+//   }
 
-  localStorage.removeItem("userTips");
-  userTips.length = 0;
-}
+//   localStorage.removeItem("userTips");
+//   userTips.length = 0;
+// }
 
 const List = ({
   fixtures,
   mock,
   showShortlist,
   setShowShortlist,
+  handleToggleTip,
+  userTips
   // You may also want to accept fullUncappedFixtures here if that was part of your final solution
 }) => {
   // ⭐️ showShortlist state is now received via props, not local state ⭐️
   const [selectedFixtures, setSelectedFixtures] = useState([]);
 
-const togglePredictionMode = async () => {
+  const togglePredictionMode = async () => {
     // 1. Always update the local UI state first so the toggle feels instant
     const newValue = !isProbability;
     setIsProbability(newValue);
 
     // 2. Check if a user is logged in
     const user = auth.currentUser;
-    
+
     // 3. If no user, stop here. The UI has changed, but nothing is saved to Firebase.
     if (!user) {
       console.log("Guest mode: Preference not saved.");
@@ -843,6 +847,8 @@ const togglePredictionMode = async () => {
               checked={selectedFixtures.some((f) => f.id === fixture.id)}
               onToggle={() => handleToggle(fixture)}
               isProbability={isProbability}
+              handleToggleTip={handleToggleTip}
+              userTips={userTips}
             />
           ))}
         </ul>
@@ -873,6 +879,8 @@ const togglePredictionMode = async () => {
               checked={selectedFixtures.some((f) => f.id === fixture.id)}
               onToggle={() => handleToggle(fixture)}
               isProbability={isProbability}
+              handleToggleTip={handleToggleTip}
+              userTips={userTips}
             />
           ))}
         </ul>
@@ -928,6 +936,8 @@ export function Fixture(props) {
         result={resultValue}
         count={count}
         mock={props.mock}
+        handleToggleTip={props.handleToggleTip}
+        userTips={props.userTips}
       />
       {!props.paid && props.capped === true && (
         <>
