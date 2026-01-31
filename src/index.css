@@ -5165,7 +5165,7 @@ input {
   background: none;
   border: none;
   color: var(--text-color);
-  text-decoration: underline;
+  text-decoration: none;
   cursor: pointer;
   padding: 0;
   margin-left: auto;

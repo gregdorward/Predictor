@@ -4511,8 +4511,8 @@ export async function getScorePrediction(day, mocked) {
   // --- 1. START ALL ASYNCHRONOUS OPERATIONS CONCURRENTLY ---
 
   // Start the long background data fetches immediately (non-blocking)
-  const leagueStatsPromise = fetchLeagueStats();
-  const playerStatsPromise = fetchPlayerStats();
+  const leagueStatsPromise = await fetchLeagueStats();
+  const playerStatsPromise = await fetchPlayerStats();
 
   console.log(leagueStatsPromise)
 
@@ -5163,16 +5163,10 @@ export async function getScorePrediction(day, mocked) {
   await getSuccessMeasure(matches);
 
 
-  // --- 4. WAIT FOR BACKGROUND STATS (Non-blocking step) ---
-  // Now we wait for the long-running stats, but the user is already viewing the fixtures.
-  const [resolvedLeagueStatsArray, resolvedPlayerStatsArray] = await Promise.all([
-    leagueStatsPromise,
-    playerStatsPromise
-  ]);
 
   // Assign to global/outer scope variables
-  leagueStatsArray = resolvedLeagueStatsArray;
-  playerStatsArray = resolvedPlayerStatsArray;
+  leagueStatsArray = leagueStatsPromise;
+  playerStatsArray = playerStatsPromise;
 
   console.log(leagueStatsArray)
   console.log(playerStatsArray)
