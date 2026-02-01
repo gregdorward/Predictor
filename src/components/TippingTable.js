@@ -36,7 +36,9 @@ const MonthlyLeaderboard = ({ slips = [] }) => {
                         ...user,
                         userSlips: sortedUserSlips
                     };
-                }).sort((a, b) => b.monthlyProfit - a.monthlyProfit); // Keep leaderboard sorted by profit
+                })
+                .filter(user => user.userSlips.length > 0)
+                .sort((a, b) => b.monthlyProfit - a.monthlyProfit); // Keep leaderboard sorted by profit
 
                 setData(merged);
                 setLoading(false);
