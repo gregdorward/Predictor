@@ -380,7 +380,7 @@ export function BetSlipItem({ slip }) {
         </div>
 
         <div className="SlipSummary">
-          <span>Potential return: <strong>{slip.totalOdds}</strong></span>
+          <span>Odds: <strong>{slip.totalOdds}</strong></span>
           <span className="ExpandIcon">
             {!isSingle ? (isExpanded ? '▲' : '▼') : <span style={{ visibility: 'hidden' }}>▲</span>}
           </span>
