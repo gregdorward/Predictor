@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import {BetSlipItem} from '../logic/getScorePredictions'; // Ensure this matches your component's export
+import { BetSlipItem } from '../logic/getScorePredictions'; 
 
 const MonthlyLeaderboard = ({ slips = [] }) => {
     const [data, setData] = useState([]);
@@ -21,24 +21,29 @@ const MonthlyLeaderboard = ({ slips = [] }) => {
                 const response = await fetch(`${process.env.REACT_APP_EXPRESS_SERVER}leaderboard/${monthKey}`);
                 const lbJson = await response.json();
 
-                console.log("Fetched leaderboard data:", lbJson);
-                // MERGE: Map the passed 'slips' prop to the leaderboard users
                 const merged = lbJson.map(user => {
-                    // Filter slips for this specific user
                     const userSlips = slips.filter(s => s.uid === user.uid);
                     
-                    // SORT: Ensure the tips inside the accordion are newest first
+                    // 1. Calculate Total Staked for settled/active bets to use as ROI divisor
+                    const totalStaked = userSlips.reduce((sum, s) => sum + (Number(s.stake) || 0), 0);
+                    
+                    // 2. Calculate ROI safely
+                    // Formula: (Profit / Total Stake) * 100
+                    const roiValue = totalStaked > 0 ? (user.monthlyProfit / totalStaked) * 100 : 0;
+
                     const sortedUserSlips = [...userSlips].sort((a, b) => 
                         new Date(b.submittedAt).getTime() - new Date(a.submittedAt).getTime()
                     );
 
                     return {
                         ...user,
-                        userSlips: sortedUserSlips
+                        userSlips: sortedUserSlips,
+                        roi: isFinite(roiValue) ? roiValue : 0 // Final safety check
                     };
                 })
+                // 3. Filter: Only show users who have actually submitted slips
                 .filter(user => user.userSlips.length > 0)
-                .sort((a, b) => b.monthlyProfit - a.monthlyProfit); // Keep leaderboard sorted by profit
+                .sort((a, b) => b.monthlyProfit - a.monthlyProfit); 
 
                 setData(merged);
                 setLoading(false);
@@ -48,9 +53,8 @@ const MonthlyLeaderboard = ({ slips = [] }) => {
             }
         };
 
-        // Only fetch if we have slips data (or handle empty state)
         fetchLeaderboard();
-    }, [monthKey, slips]); // Re-run if month changes or slips prop updates
+    }, [monthKey, slips]);
 
     if (loading) return <div className="leaderboard-loading">Loading Leaderboard...</div>;
 
@@ -79,7 +83,8 @@ const MonthlyLeaderboard = ({ slips = [] }) => {
                                     <strong>{row.displayName}</strong>
                                 </td>
                                 <td>{row.userSlips.length}</td>
-                                <td>{((row.monthlyProfit / row.tipsCount) * 100 || 0).toFixed(1)}%</td>
+                                {/* Use the pre-calculated ROI from the merged object */}
+                                <td>{row.roi.toFixed(1)}%</td>
                                 <td style={{ 
                                     color: row.monthlyProfit >= 0 ? '#4caf50' : '#f44336',
                                     fontWeight: 'bold' 
@@ -94,13 +99,9 @@ const MonthlyLeaderboard = ({ slips = [] }) => {
                                         <div className="expanded-content-wrapper">
                                             <h4 className="expanded-header">{row.displayName} Tip Record</h4>
                                             <div className="mini-slips-list">
-                                                {row.userSlips.length > 0 ? (
-                                                    row.userSlips.map(slip => (
-                                                        <BetSlipItem key={slip.slipId} slip={slip} />
-                                                    ))
-                                                ) : (
-                                                    <p className="no-tips-msg">No tips found for this month.</p>
-                                                )}
+                                                {row.userSlips.map(slip => (
+                                                    <BetSlipItem key={slip.slipId} slip={slip} />
+                                                ))}
                                             </div>
                                         </div>
                                     </td>
