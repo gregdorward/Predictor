@@ -572,12 +572,14 @@ export async function generateFixtures(
       );
     };
     // Start the fetch process without 'await' at the top level
-    const sofaScorePromise = fetch(`${process.env.REACT_APP_EXPRESS_SERVER}scheduledEvents/${dateSS}`)
+    await fetch(`${process.env.REACT_APP_EXPRESS_SERVER}scheduledEvents/${dateSS}`)
       .then(res => res.json())
       .then(games => {
         games.forEach((game) => {
           const homeName = game.homeTeam || "";
           const awayName = game.awayTeam || "";
+
+          console.log(`Processing game: ${homeName} vs ${awayName}`);
 
           if (isYouthOrReserveTeam(homeName) || isYouthOrReserveTeam(awayName)) {
             return;
@@ -723,7 +725,7 @@ export async function generateFixtures(
         allLeagueResultsArrayOfObjects
       );
 
-      arrayOfGames = [];
+      // arrayOfGames = [];
     } else {
       allLeagueResultsArrayOfObjects = [];
       console.log("Fetching leagues");

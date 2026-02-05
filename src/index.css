@@ -5171,6 +5171,7 @@ input {
   margin-left: auto;
   margin-right: auto;
   margin-top: 1em;
+  box-shadow: none;
 }
 
 .CancelButton:hover {

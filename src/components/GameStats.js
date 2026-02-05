@@ -900,13 +900,16 @@ function GameStats({ game, displayBool, stats, handleToggleTip, userTips }) {
   // Helper: Memoized team name mapping to avoid repeated computation
   const mappedTeamNameCache = new Map();
   function getMappedTeamName(name) {
+    console.log("Mapping team name:", name);
     if (mappedTeamNameCache.has(name)) {
       return mappedTeamNameCache.get(name);
     }
     const normalized = cleanTeamName(name);
+    console.log(`Normalized "${name}" to "${normalized}"`);
     const aliasKey = normalize(name);
     const mapped = cleanTeamName(teamNameAliases[aliasKey] || normalized);
     mappedTeamNameCache.set(name, mapped);
+    console.log(`Mapped "${name}" to "${mapped}"`);
     return mapped;
   }
 
@@ -1157,6 +1160,8 @@ function GameStats({ game, displayBool, stats, handleToggleTip, userTips }) {
         const mappedHome = getMappedTeamName(game.homeTeam);
         const mappedAway = getMappedTeamName(game.awayTeam);
 
+        console.log(`Attempting to find matching game for homeTeam: "${mappedHome}" and awayTeam: "${mappedAway}"`);
+        console.log("Available games to match against:", arrayOfGames.map(g => ({ id: g.id, homeTeam: g.homeTeam, awayTeam: g.awayTeam })));
         let matchingGameInfo =
           await getGameIdByHomeTeam(arrayOfGames, mappedHome);
 
