@@ -54,7 +54,7 @@ const ids = [
   13967, // USL Championship 25
   14226, // US Open Cup 25
   14236, //Canada 25
-  14231, //Brazil prem 25
+  16544, //Brazil prem 25
   14305, // Brazil Serie B 25
   16571, //Argentina prem 26 15310
   15234, //Mexico prem 25 12136

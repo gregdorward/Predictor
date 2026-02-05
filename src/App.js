@@ -114,7 +114,7 @@ const leagueOrder = [
   15209, //Scottish league 2 25 12453
   13973, //MLS 25,
   14236, //Canada 25
-  14231, //Brazil prem 25
+  16544, //Brazil prem 26
   16571, //Argentina prem 23 15310 16571
   // 14086, // Columbia 25
   // 14116, // Chile 25
@@ -500,7 +500,8 @@ const getStripe = () => {
   return stripePromise;
 };
 
-export const handleCheckout = async (priceId) => {
+// 1. Add currency as a parameter to the function
+export const handleCheckout = async (priceId, currency = 'usd') => {
   const stripe = await getStripe();
 
   if (!stripe) {
@@ -527,7 +528,12 @@ export const handleCheckout = async (priceId) => {
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ priceId, uid: user.uid }),
+      // 2. Pass the currency in the request body
+      body: JSON.stringify({
+        priceId,
+        uid: user.uid,
+        currency: currency.toLowerCase()
+      }),
     }
   );
 
@@ -690,6 +696,19 @@ function AppContent() {
     return () => unsubscribe();
   }, []);
 
+  const [pricing, setPricing] = useState(null);
+  const [currentCurrency, setCurrentCurrency] = useState('usd'); // ⭐️ Store the code here
+
+  useEffect(() => {
+    const currency = detectCurrency();
+    setCurrentCurrency(currency);
+    fetch(`${process.env.REACT_APP_EXPRESS_SERVER}pricing?currency=${currency}`)
+      .then(res => res.json())
+      .then(setPricing)
+      .catch(console.error);
+  }, []);
+
+
   useEffect(() => {
     // ⭐️ Important: useEffect callback cannot be directly 'async'.
     // Use an IIFE (Immediately Invoked Function Expression) inside.
@@ -757,7 +776,7 @@ function AppContent() {
   const handleSubscribeClick = (priceId) => {
     if (user) {
       // User is logged in, proceed to Stripe checkout as normal
-      handleCheckout(priceId);
+      handleCheckout(priceId, currentCurrency);
     } else {
       // User is NOT logged in.
       // 1. You could alert them:
@@ -782,6 +801,54 @@ function AppContent() {
       }
     }
   };
+
+  function formatPrice(amount, currency) {
+    return new Intl.NumberFormat(undefined, {
+      style: "currency",
+      currency,
+      minimumFractionDigits: ["jpy", "krw"].includes(currency) ? 0 : 2,
+    }).format(amount);
+  }
+
+
+function detectCurrency() {
+  // Get the browser language (e.g., "da-DK" or "en-AU")
+  const locale = navigator.language || "en-US";
+
+  // 1. Direct Region/Locale Mapping (High Priority)
+  const regionMap = {
+    "en-AU": "aud",
+    "en-CA": "cad",
+    "en-GB": "gbp",
+    "en-SG": "sgd",
+    "en-NZ": "nzd",
+    "da-DK": "dkk",
+    "sv-SE": "sek",
+    "de-CH": "chf", // Swiss German
+    "fr-CH": "chf", // Swiss French
+    "ar-SA": "sar",
+    "en-NG": "ngn",
+    "ko-KR": "krw",
+  };
+
+  // Check for an exact locale match first
+  if (regionMap[locale]) return regionMap[locale];
+
+  // 2. Language-based Mapping (Fallback)
+  // Useful for "fr-BE" or "de-AT" which both use Euro
+  const language = locale.split('-')[0]; // Gets "de" from "de-DE"
+  
+  const languageMap = {
+    "ja": "jpy",
+    "de": "eur",
+    "fr": "eur",
+    "it": "eur",
+    "es": "eur",
+    "nl": "eur",
+  };
+
+  return languageMap[language] || "usd";
+}
 
   return (
     <div className="App">
@@ -873,29 +940,41 @@ function AppContent() {
                 </div>
               </div>
 
-              <div className="SubscriptionOptions">
-                <div className="OptionCard">
-                  <span className="Price">£1<span>/week</span></span>
-                  <button onClick={() => handleSubscribeClick("price_1QrQ4ZBrqiWlVPadCkhLhtiZ")}>
-                    Get Weekly
-                  </button>
-                </div>
+              {pricing && (
+                <div className="SubscriptionOptions">
+                  <div className="OptionCard">
+                    <span className="Price">
+                      {formatPrice(pricing.weekly.amount, pricing.weekly.currency)}
+                      <span>/week</span>
+                    </span>
+                    <button onClick={() => handleSubscribeClick("price_1SxC9QBrqiWlVPadyHJj3Y91")}>
+                      Get Weekly
+                    </button>
+                  </div>
 
-                <div className="OptionCard featured">
-                  <div className="Badge">Best Value</div>
-                  <span className="Price">£30<span>/year</span></span>
-                  <button onClick={() => handleSubscribeClick("price_1QrQ75BrqiWlVPadEML30BoJ")}>
-                    Go Annual
-                  </button>
-                </div>
+                  <div className="OptionCard featured">
+                    <div className="Badge">Best Value</div>
+                    <span className="Price">
+                      {formatPrice(pricing.yearly.amount, pricing.yearly.currency)}
+                      <span>/year</span>
+                    </span>
+                    <button onClick={() => handleSubscribeClick("price_1SxCPDBrqiWlVPad3nFXzU1B")}>
+                      Go Annual
+                    </button>
+                  </div>
 
-                <div className="OptionCard">
-                  <span className="Price">£3<span>/month</span></span>
-                  <button onClick={() => handleSubscribeClick("price_1QrQ5NBrqiWlVPadFBuBKKSM")}>
-                    Get Monthly
-                  </button>
+                  <div className="OptionCard">
+                    <span className="Price">
+                      {formatPrice(pricing.monthly.amount, pricing.monthly.currency)}
+                      <span>/month</span>
+                    </span>
+                    <button onClick={() => handleSubscribeClick("price_1SxCGuBrqiWlVPadO7N4jpQJ")}>
+                      Get Monthly
+                    </button>
+                  </div>
                 </div>
-              </div>
+              )}
+
 
               <p className="TrustNote">
                 Secure payments via <strong>Stripe</strong>. Cancel anytime, no contracts.

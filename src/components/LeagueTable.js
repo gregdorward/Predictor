@@ -146,7 +146,7 @@ export const sofaScoreIds = [
   { 14943: 207 }, //Scottish league 1 22/23
   { 15209: 209 }, //Scottish league 2 22/23
   { 14236: 13470 }, //Canada 25
-  { 14231: 325 }, //Brazil prem 24
+  { 16544: 325 }, //Brazil prem 26
   { 15746: 155 }, //Argentina prem 23
   { 15234: 11621 }, //Mexico prem 25
   { 15657: 173 }, //National league

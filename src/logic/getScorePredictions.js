@@ -4310,9 +4310,9 @@ const footyStatsToSofaScore = [
       id: 11621,
       season: 76500, // Liga MX 25
     },
-    14231: {
+    16544: {
       id: 325,
-      season: 72034, // Brazil Serie A
+      season: 87678, // Brazil Serie A
     },
     14305: {
       id: 390,

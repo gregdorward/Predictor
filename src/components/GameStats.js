@@ -3638,20 +3638,20 @@ function GameStats({ game, displayBool, stats, handleToggleTip, userTips }) {
                   Subscribe to unlock full match previews, team star ratings, styles and more
                 </div>
                 <button
-                  onClick={() => handleCheckout("price_1QrQ4ZBrqiWlVPadCkhLhtiZ")}
+                  onClick={() => handleCheckout("price_1SxC9QBrqiWlVPadyHJj3Y91")}
                   className="SubscribeButton"
                 >
-                  Subscribe for £1/week
+                  Weekly
                 </button><button
-                  onClick={() => handleCheckout("price_1QqgbEBrqiWlVPadocMuIEeI")}
+                  onClick={() => handleCheckout("price_1SxCGuBrqiWlVPadO7N4jpQJ")}
                   className="SubscribeButton"
                 >
-                  Subscribe for £3/month
+                  Monthly
                 </button><button
-                  onClick={() => handleCheckout("price_1QrQ75BrqiWlVPadEML30BoJ")}
+                  onClick={() => handleCheckout("price_1SxCPDBrqiWlVPad3nFXzU1B")}
                   className="SubscribeButton"
                 >
-                  Subscribe for £30/year
+                  Yearly
                 </button>
               </>
             ) : (
