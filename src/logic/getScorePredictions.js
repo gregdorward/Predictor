@@ -4016,20 +4016,24 @@ async function getSuccessMeasure(fixtures) {
   if (investment > 0 && isPaid) {
     render(
       <Collapsable buttonText={"ROI"} element={
-        <><h3 className={"SuccessMeasureText"}>
+        <>
+        {/* <h3 className={"SuccessMeasureText"}>
           ROI for all {investment} W/D/W outcomes: {ROI >= 0 ? "+" : " "}{" "}
           {ROI.toFixed(2)}%
-        </h3><p>{`Correct W/D/W predictions: ${successCount} (${(
+        </h3> */}
+        <p>{`Correct W/D/W predictions: ${successCount} (${(
           (successCount / investment) *
           100
-        ).toFixed(1)}%)`}</p><p>{`Exact scores predicted: ${exactScores} (${(
+        ).toFixed(1)}%)`}</p>
+        {/* <p>{`Exact scores predicted: ${exactScores} (${(
           (exactScores / investment) *
           100
         ).toFixed(1)}%)`}</p><p className="SuccessMeasureText">
             Cumulative ROI for all {totalInvestment} match outcomes:{" "}
             {totalROI >= 0 ? "+" : ""}
             {totalROI.toFixed(2)}%
-          </p><CollapsableStats buttonText="ROI by League">
+          </p> */}
+          <CollapsableStats buttonText="ROI by League">
             {Object.entries(specificLeagueResults)
               .sort(([, a], [, b]) => b.totalROI - a.totalROI) // Sort by ROI in descending order
               .map(([leagueName, league]) => {
@@ -5166,7 +5170,7 @@ export async function getScorePrediction(day, mocked) {
   await getMultis();
   await getNewTips(allTipsSorted);
   // console.log(matches)
-  // await getSuccessMeasure(matches);
+  await getSuccessMeasure(matches);
 
 
 
