@@ -568,7 +568,7 @@ function AppContent() {
   const [currentUser, setCurrentUser] = useState(null);
   useEffect(() => {
     console.log("App mounted: Triggering initial fixture load");
-    getLeagueList(triggerGlobalPredictions);
+    // getLeagueList(triggerGlobalPredictions);
     handleAction();
   }, [user]);
 

@@ -484,7 +484,6 @@ function UserTips() {
   if (loading) {
     return <div className="UserTipsContainer"><button disabled>Loading...</button></div>;
   }
-  console.log(slips)
 
   const getTopPicks = (allSlips) => {
     const counts = {};
@@ -3919,6 +3918,8 @@ async function getSuccessMeasure(fixtures) {
       netProfit = (sumProfit - investment).toFixed(2);
       profit = parseFloat(netProfit);
 
+      console.log(`Match: ${fixtures[i].homeTeam} vs ${fixtures[i].awayTeam }, Prediction Outcome: ${fixtures[i].predictionOutcome}, Profit: ${fixtures[i].profit}`);
+      console.log(`Exact Score: ${fixtures[i].exactScore}`);
       if (fixtures[i].exactScore === true) {
         exactScores += 1;
       }
@@ -4341,6 +4342,10 @@ const footyStatsToSofaScore = [
     16571: {
       id: 155,
       season: 87913, // Argentina Primera Division 25
+    },
+    16614: {
+      id: 11539,
+      season: 87913, // Colombian Primera Division 25
     },
     16242: {
       id: 196,
@@ -5160,7 +5165,8 @@ export async function getScorePrediction(day, mocked) {
 
   await getMultis();
   await getNewTips(allTipsSorted);
-  await getSuccessMeasure(matches);
+  // console.log(matches)
+  // await getSuccessMeasure(matches);
 
 
 
@@ -5168,8 +5174,6 @@ export async function getScorePrediction(day, mocked) {
   leagueStatsArray = leagueStatsPromise;
   playerStatsArray = playerStatsPromise;
 
-  console.log(leagueStatsArray)
-  console.log(playerStatsArray)
 
   // --- 5. RERENDER FIXTURES WITH FULL STATS ---
   // Rerender the FixtureContainer now that leagueStatsArray is ready (if stats are used visually)
