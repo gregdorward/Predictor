@@ -552,23 +552,15 @@ h2 {
 }
 
 .MembersGetMore {
-  font-size: 1.3em;
+  font-size: 1.8em;
   margin: 0%;
   line-height: 1.5em;
-  padding-top: 1em;
-  padding-bottom: 1em;
+  padding-top: 0.5em;
+  padding-bottom: 0.5em;
 }
 
-h3.MembersGetMore {
-  font-size: 2em;
-  margin: 0%;
-  line-height: 1.5em;
-  padding: 0em;
-  max-width: 80%;
-  margin-left: auto;
-  margin-right: auto;
-  height: 2em;
-  align-content: center;
+.Blurb {
+  padding-top: 0em;
 }
 
 .TitleColouring {
