@@ -553,7 +553,7 @@ let welcomeTextOne = welcomeTextUnsplitOne.split("\n").map((i) => {
 });
 
 function AppContent() {
-  const { user, isPaidUser, fixtures, setFixtures, handleGetPredictions } = useAuth()
+  const { user, isPaidUser, fixtures, setFixtures, handleGetPredictions, isPredicting } = useAuth()
 
   const [showUsernameModal, setShowUsernameModal] = useState(false);
   const [userTips, setUserTips] = useState([]); // This is the React state
@@ -568,7 +568,7 @@ function AppContent() {
   const [currentUser, setCurrentUser] = useState(null);
   useEffect(() => {
     console.log("App mounted: Triggering initial fixture load");
-    // getLeagueList(triggerGlobalPredictions);
+    getLeagueList(triggerGlobalPredictions);
     handleAction();
   }, [user]);
 
@@ -812,44 +812,44 @@ function AppContent() {
   }
 
 
-function detectCurrency() {
-  // Get the browser language (e.g., "da-DK" or "en-AU")
-  const locale = navigator.language || "en-US";
+  function detectCurrency() {
+    // Get the browser language (e.g., "da-DK" or "en-AU")
+    const locale = navigator.language || "en-US";
 
-  // 1. Direct Region/Locale Mapping (High Priority)
-  const regionMap = {
-    "en-AU": "aud",
-    "en-CA": "cad",
-    "en-GB": "gbp",
-    "en-SG": "sgd",
-    "en-NZ": "nzd",
-    "da-DK": "dkk",
-    "sv-SE": "sek",
-    "de-CH": "chf", // Swiss German
-    "fr-CH": "chf", // Swiss French
-    "ar-SA": "sar",
-    "en-NG": "ngn",
-    "ko-KR": "krw",
-  };
+    // 1. Direct Region/Locale Mapping (High Priority)
+    const regionMap = {
+      "en-AU": "aud",
+      "en-CA": "cad",
+      "en-GB": "gbp",
+      "en-SG": "sgd",
+      "en-NZ": "nzd",
+      "da-DK": "dkk",
+      "sv-SE": "sek",
+      "de-CH": "chf", // Swiss German
+      "fr-CH": "chf", // Swiss French
+      "ar-SA": "sar",
+      "en-NG": "ngn",
+      "ko-KR": "krw",
+    };
 
-  // Check for an exact locale match first
-  if (regionMap[locale]) return regionMap[locale];
+    // Check for an exact locale match first
+    if (regionMap[locale]) return regionMap[locale];
 
-  // 2. Language-based Mapping (Fallback)
-  // Useful for "fr-BE" or "de-AT" which both use Euro
-  const language = locale.split('-')[0]; // Gets "de" from "de-DE"
-  
-  const languageMap = {
-    "ja": "jpy",
-    "de": "eur",
-    "fr": "eur",
-    "it": "eur",
-    "es": "eur",
-    "nl": "eur",
-  };
+    // 2. Language-based Mapping (Fallback)
+    // Useful for "fr-BE" or "de-AT" which both use Euro
+    const language = locale.split('-')[0]; // Gets "de" from "de-DE"
 
-  return languageMap[language] || "usd";
-}
+    const languageMap = {
+      "ja": "jpy",
+      "de": "eur",
+      "fr": "eur",
+      "it": "eur",
+      "es": "eur",
+      "nl": "eur",
+    };
+
+    return languageMap[language] || "usd";
+  }
 
   return (
     <div className="App">
@@ -1015,14 +1015,18 @@ function detectCurrency() {
       </Collapsable>
       <div id="Loading" className="Loading"></div>
       <div id="GeneratePredictions">
-        {/* If we have fixtures loaded from getFixtures, show the Prediction button */}
         {fixtures?.length > 0 && (
           <div className="PredictionControls">
             <Button
-              text="Get Predictions & Stats"
+              text={isPredicting ? "Processing..." : "Get Predictions & Stats"}
               onClickEvent={() => handleGetPredictions('today')}
-              className="GeneratePredictionsButton"
+              disabled={isPredicting} // 🛡️ Disable to prevent multiple clicks
+              className={`GeneratePredictionsButton ${isPredicting ? "loading" : ""}`}
             />
+
+            {/* Optional: Add a subtle text indicator below */}
+            {isPredicting && <p className="LoadingStatus">Updating ROI and League Stats...</p>}
+
             <div className="Version">Prediction engine v1.9.0</div>
           </div>
         )}

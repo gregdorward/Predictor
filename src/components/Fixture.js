@@ -31,27 +31,6 @@ let tipOutcome = undefined;
 // // "score" | "probability"
 
 
-function getOutcome(home, away) {
-  const h = Number(home);
-  const a = Number(away);
-
-  if (h > a) return 0; // home
-  if (h === a) return 1; // draw
-  return 2; // away
-}
-
-function getProfit(fixture, outcome) {
-  if (fixture.homeOdds === 0) return 1;
-
-  switch (outcome) {
-    case 0: return parseFloat(fixture.homeOdds);
-    case 1: return parseFloat(fixture.drawOdds);
-    case 2: return parseFloat(fixture.awayOdds);
-    default: return 0;
-  }
-}
-
-
 function GetDivider(fixture, mockValue) {
   const { status, time } = fixture.fixture;
 
@@ -65,37 +44,6 @@ function GetDivider(fixture, mockValue) {
         <div className="KOTime">{time}</div>
       </div>
     );
-  }
-
-  // 2. Normalize inputs to Numbers to avoid alphabetical comparison errors ("10" vs "2")
-  const actualHome = Number(fixture.fixture.homeGoals);
-  const actualAway = Number(fixture.fixture.awayGoals);
-  const predHome = Number(fixture.fixture.goalsA);
-  const predAway = Number(fixture.fixture.goalsB);
-
-  // 3. Evaluate Outcomes
-  const actualOutcome = getOutcome(actualHome, actualAway);
-  const predictedOutcome = getOutcome(predHome, predAway);
-
-  // 4. Update Fixture metadata
-  fixture.fixture.outcome = ["homeWin", "draw", "awayWin"][actualOutcome];
-  fixture.fixture.winner = actualOutcome === 1 ? "draw" : (actualOutcome === 0 ? fixture.fixture.homeTeam : fixture.fixture.awayTeam);
-
-  // 5. Determine Success and Profit
-  const isCorrectOutcome = actualOutcome === predictedOutcome;
-  
-  if (isCorrectOutcome) {
-    // Check if score is exact
-    fixture.fixture.exactScore = (actualHome === predHome && actualAway === predAway);
-    
-    // Set Profit (W/D/W odds)
-    fixture.fixture.profit = getProfit(fixture.fixture, actualOutcome);
-    fixture.fixture.predictionOutcome = "Won";
-  } else {
-    // ESSENTIAL: Reset values for losing tips to prevent "stale" data from showing profit
-    fixture.fixture.exactScore = false;
-    fixture.fixture.profit = 0; 
-    fixture.fixture.predictionOutcome = "Lost";
   }
 
   return null;

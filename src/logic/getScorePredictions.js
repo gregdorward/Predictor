@@ -177,8 +177,6 @@ async function fetchAllUserTips() {
         });
       });
     });
-
-    console.log(`Extracted ${flattenedPendingLegs.length} pending legs.`);
     return flattenedPendingLegs;
   } catch (error) {
     console.error("Error fetching user tips:", error);
@@ -219,7 +217,6 @@ export function getPointsFromLastX(lastX) {
 }
 
 function isSameDayOrLater(targetTimestamp) {
-  console.log("Target timestamp:", targetTimestamp);
 
   // Convert Unix timestamp (seconds) to a Date object
   const targetDate = new Date(targetTimestamp * 1000);
@@ -366,7 +363,6 @@ export function BetSlipItem({ slip }) {
     });
   };
 
-  console.log(slip)
   return (
     <div className={`SlipCard ${slip.status.toLowerCase()} ${isSingle ? 'single-view' : ''}`}>
       {/* HEADER: Shared by both types */}
@@ -460,7 +456,6 @@ function UserTips() {
 
       // 3. Sort: Nearest game first
       // We compare Unix seconds (a.earliestGameDate - b.earliestGameDate)
-      console.log(allSlips[0].submittedAt);
 
       const sorted = [...allSlips].sort((a, b) =>
         new Date(b.submittedAt).getTime() - new Date(a.submittedAt).getTime()
@@ -1802,8 +1797,6 @@ export async function compareStat(statOne, statTwo) {
   let stat1 = parseFloat(statOne);
   let stat2 = parseFloat(statTwo);
   let statDiff;
-  // console.log( await normalizeValues(12, 2, 0, 1))
-  // console.log(await diff(1.8571428571428571, 1.14285714285714285))
 
   if (stat1 === 0) {
     stat1 = stat1 + 1;
@@ -3904,7 +3897,25 @@ async function getSuccessMeasure(fixtures) {
   }
 
 
+  function getOutcome(home, away) {
+    const h = Number(home);
+    const a = Number(away);
 
+    if (h > a) return 0; // home
+    if (h === a) return 1; // draw
+    return 2; // away
+  }
+
+  function getProfit(fixture, outcome) {
+    if (fixture.homeOdds === 0) return 1;
+
+    switch (outcome) {
+      case 0: return parseFloat(fixture.homeOdds);
+      case 1: return parseFloat(fixture.drawOdds);
+      case 2: return parseFloat(fixture.awayOdds);
+      default: return 0;
+    }
+  }
 
   for (let i = 0; i < fixtures.length; i++) {
     if (
@@ -3913,20 +3924,48 @@ async function getSuccessMeasure(fixtures) {
       fixtures[i].omit !== true
     ) {
 
+      // 2. Normalize inputs to Numbers to avoid alphabetical comparison errors ("10" vs "2")
+      const actualHome = Number(fixtures[i].homeGoals);
+      const actualAway = Number(fixtures[i].awayGoals);
+      const predHome = Number(fixtures[i].goalsA);
+      const predAway = Number(fixtures[i].goalsB);
+
+      // 3. Evaluate Outcomes
+      const actualOutcome = getOutcome(actualHome, actualAway);
+      const predictedOutcome = getOutcome(predHome, predAway);
+
+      // 4. Update Fixture metadata
+      fixtures[i].outcome = ["homeWin", "draw", "awayWin"][actualOutcome];
+      fixtures[i].winner = actualOutcome === 1 ? "draw" : (actualOutcome === 0 ? fixtures[i].homeTeam : fixtures[i].awayTeam);
+
+      // 5. Determine Success and Profit
+      const isCorrectOutcome = actualOutcome === predictedOutcome;
+
+      if (isCorrectOutcome) {
+        // Check if score is exact
+        fixtures[i].exactScore = (actualHome === predHome && actualAway === predAway);
+
+        // Set Profit (W/D/W odds)
+        fixtures[i].profit = getProfit(fixtures[i], actualOutcome);
+        fixtures[i].predictionOutcome = "Won";
+      } else {
+        // ESSENTIAL: Reset values for losing tips to prevent "stale" data from showing profit
+        fixtures[i].exactScore = false;
+        fixtures[i].profit = 0;
+        fixtures[i].predictionOutcome = "Lost";
+      }
+
       sumProfit += fixtures[i].profit;
       investment += 1;
       netProfit = (sumProfit - investment).toFixed(2);
       profit = parseFloat(netProfit);
 
-      console.log(`Match: ${fixtures[i].homeTeam} vs ${fixtures[i].awayTeam }, Prediction Outcome: ${fixtures[i].predictionOutcome}, Profit: ${fixtures[i].profit}`);
-      console.log(`Exact Score: ${fixtures[i].exactScore}`);
       if (fixtures[i].exactScore === true) {
         exactScores += 1;
       }
       if (fixtures[i].predictionOutcome === "Won") {
         successCount += 1;
       }
-
 
       // Handle league-specific results
       const leagueName = fixtures[i].leagueDesc || "Unknown League";
@@ -3966,14 +4005,6 @@ async function getSuccessMeasure(fixtures) {
   console.log(totalProfit)
   const ROI = (profit / investment) * 100;
   totalROI = (totalProfit / totalInvestment) * 100;
-
-  console.log(`Total Investment: ${totalInvestment}`);
-  console.log(`Total Profit: ${totalProfit}`);
-  console.log(typeof totalProfit);
-  console.log(`Total Investment: ${totalInvestment}`);
-  console.log(`Total ROI: ${totalROI}`);
-  console.log(typeof totalROI);
-
 
   let isPaid;
   if (userDetail) {
@@ -4017,22 +4048,22 @@ async function getSuccessMeasure(fixtures) {
     render(
       <Collapsable buttonText={"ROI"} element={
         <>
-        {/* <h3 className={"SuccessMeasureText"}>
+          <h3 className={"SuccessMeasureText"}>
           ROI for all {investment} W/D/W outcomes: {ROI >= 0 ? "+" : " "}{" "}
           {ROI.toFixed(2)}%
-        </h3> */}
-        <p>{`Correct W/D/W predictions: ${successCount} (${(
-          (successCount / investment) *
-          100
-        ).toFixed(1)}%)`}</p>
-        {/* <p>{`Exact scores predicted: ${exactScores} (${(
+        </h3>
+          <p>{`Correct W/D/W predictions: ${successCount} (${(
+            (successCount / investment) *
+            100
+          ).toFixed(1)}%)`}</p>
+          <p>{`Exact scores predicted: ${exactScores} (${(
           (exactScores / investment) *
           100
         ).toFixed(1)}%)`}</p><p className="SuccessMeasureText">
             Cumulative ROI for all {totalInvestment} match outcomes:{" "}
             {totalROI >= 0 ? "+" : ""}
             {totalROI.toFixed(2)}%
-          </p> */}
+          </p>
           <CollapsableStats buttonText="ROI by League">
             {Object.entries(specificLeagueResults)
               .sort(([, a], [, b]) => b.totalROI - a.totalROI) // Sort by ROI in descending order
@@ -4399,7 +4430,6 @@ const footyStatsToSofaScore = [
 ];
 
 async function fetchLeagueStats() {
-  console.log(uniqueLeagueIDs)
   function getWeekOfYear(date) {
     const target = new Date(date.valueOf());
     const dayNumber = (date.getUTCDay() + 6) % 7;
@@ -4420,7 +4450,6 @@ async function fetchLeagueStats() {
   for (const leagueId of uniqueLeagueIDs) {
     const mapping = leagueObject[leagueId];
     if (!mapping) continue; // skip if not found
-    console.log("FETCHING IN LOOP")
 
     const { id: sofaScoreId, season: sofaScoreSeason } = mapping;
 
@@ -4429,9 +4458,7 @@ async function fetchLeagueStats() {
         `${process.env.REACT_APP_EXPRESS_SERVER}LeagueTeamStats/${sofaScoreId}/${sofaScoreSeason}/${week}`
       );
       const teamStats = await leagueTeamStatsResponse.json();
-      console.log(teamStats)
       allLeagueStats[`leagueStats${leagueId}`] = teamStats;
-      console.log(`Fetched stats for league ${leagueId}`);
     } catch (error) {
       console.error(`Error fetching stats for league ${leagueId}:`, error);
       allLeagueStats[`leagueStats${leagueId}`] = { error: error.message };
@@ -4474,7 +4501,6 @@ async function fetchPlayerStats() {
       );
       const teamStats = await leagueTeamStatsResponse.json();
       allLeagueStats[`playerStats${leagueId}`] = teamStats;
-      console.log(`Fetched player stats for league ${leagueId}`);
     } catch (error) {
       console.error(`Error fetching player stats for league ${leagueId}:`, error);
       allLeagueStats[`playerStats${leagueId}`] = { error: error.message };
@@ -4503,8 +4529,6 @@ export async function getScorePrediction(day, mocked) {
   allTips = [];
   const fetchedTips = await fetchAllUserTips();
 
-  console.log("Getting score predictions...");
-
   let index = 2;
   let divider = 10;
 
@@ -4522,8 +4546,6 @@ export async function getScorePrediction(day, mocked) {
   // Start the long background data fetches immediately (non-blocking)
   const leagueStatsPromise = await fetchLeagueStats();
   const playerStatsPromise = await fetchPlayerStats();
-
-  console.log(leagueStatsPromise)
 
   // Start fetches for required prediction data (must await these before the loop)
   const predictedScoresPromise = fetch(`${process.env.REACT_APP_EXPRESS_SERVER}predictedScores`);
@@ -5169,7 +5191,6 @@ export async function getScorePrediction(day, mocked) {
 
   await getMultis();
   await getNewTips(allTipsSorted);
-  // console.log(matches)
   await getSuccessMeasure(matches);
 
 
@@ -5415,7 +5436,6 @@ async function renderTips() {
     paid = false;
   }
 
-  console.log(paid);
   if (paid && newArray.length > 0) {
     render(
       <div className="PredictionContainer">

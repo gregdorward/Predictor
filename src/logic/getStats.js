@@ -79,7 +79,6 @@ export async function calculateAttackingStrength(stats) {
 }
 
 export async function calculateDefensiveStrength(stats, normalizedValue = 1) {
-  console.log(stats)
   let normValue = normalizedValue;
   // Define weights for each metric (you can adjust these based on your preference)
   const weights = {
@@ -673,7 +672,6 @@ export async function createStatsDiv(game, displayBool) {
 
       // if (displayBool === true && gameStats.home[2].LeagueOrAll === "League") {
       //   console.log(1)
-      console.log(game)
       formTextStringHome = await GenerateFormSummary(
         homeForm,
         homeForm.tenGameAv,

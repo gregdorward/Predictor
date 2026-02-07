@@ -578,9 +578,6 @@ export async function generateFixtures(
         games.forEach((game) => {
           const homeName = game.homeTeam || "";
           const awayName = game.awayTeam || "";
-
-          console.log(`Processing game: ${homeName} vs ${awayName}`);
-
           if (isYouthOrReserveTeam(homeName) || isYouthOrReserveTeam(awayName)) {
             return;
           }

@@ -12,7 +12,6 @@ export async function getBTTSPotential(
   const homeG = homeGoals;
   const awayG = awayGoals;
 
-  console.log(match)
   match.combinedBTTS = (homeBTTS + awayBTTS) / 2;
 
   if (

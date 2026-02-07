@@ -15,6 +15,7 @@ export const AuthProvider = ({ children }) => {
   const [isPaidUser, setIsPaidUser] = useState(false);
   const [loading, setLoading] = useState(true); // Add a loading state
   const [fixtures, setFixtures] = useState([]);
+const [isPredicting, setIsPredicting] = useState(false);
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
       setUser(currentUser);
@@ -49,8 +50,16 @@ export const AuthProvider = ({ children }) => {
 
 
   const handleGetPredictions = async (day) => {
+    setIsPredicting(true)
+    try {
+    // Replace this with your actual prediction logic/API call
     const data = await getScorePrediction(day);
-    setFixtures(data);
+    setFixtures(data);  
+  } catch (error) {
+    console.error("Prediction failed:", error);
+  } finally {
+    setIsPredicting(false);
+  }
   };
 
   triggerGlobalPredictions = handleGetPredictions;
@@ -61,7 +70,7 @@ export const AuthProvider = ({ children }) => {
   }
 
   return (
-    <AuthContext.Provider value={{ user, isPaidUser, fixtures, setFixtures, handleGetPredictions }}>
+    <AuthContext.Provider value={{ user, isPaidUser, fixtures, setFixtures, handleGetPredictions, isPredicting }}>
       {children}
     </AuthContext.Provider>
   );
