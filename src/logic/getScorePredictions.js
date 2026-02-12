@@ -4430,6 +4430,7 @@ const footyStatsToSofaScore = [
 ];
 
 async function fetchLeagueStats() {
+  console.log("Fetching league stats...");
   function getWeekOfYear(date) {
     const target = new Date(date.valueOf());
     const dayNumber = (date.getUTCDay() + 6) % 7;
@@ -4447,17 +4448,21 @@ async function fetchLeagueStats() {
   // Use uniqueLeagueIDs array instead of iterating all keys in footyStatsToSofaScore
   const leagueObject = footyStatsToSofaScore[0];
 
+  console.log("Unique League IDs to fetch stats for:", uniqueLeagueIDs);
+
   for (const leagueId of uniqueLeagueIDs) {
     const mapping = leagueObject[leagueId];
     if (!mapping) continue; // skip if not found
 
     const { id: sofaScoreId, season: sofaScoreSeason } = mapping;
+    console.log(`Fetching stats for league ${leagueId} (SofaScore ID: ${sofaScoreId}, Season: ${sofaScoreSeason}, Week: ${week})`);
 
     try {
       const leagueTeamStatsResponse = await fetch(
         `${process.env.REACT_APP_EXPRESS_SERVER}LeagueTeamStats/${sofaScoreId}/${sofaScoreSeason}/${week}`
       );
       const teamStats = await leagueTeamStatsResponse.json();
+      console.log(`Stats for league ${leagueId}:`, teamStats);
       allLeagueStats[`leagueStats${leagueId}`] = teamStats;
     } catch (error) {
       console.error(`Error fetching stats for league ${leagueId}:`, error);

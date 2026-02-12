@@ -508,7 +508,7 @@ export function RenderAllFixtures(props) {
   }
 
   // 4. Calculate unique league IDs using the processed list
-  const uniqueLeagueIDs = [...new Set(displayMatches.map(match => match.leagueID))];
+  uniqueLeagueIDs = [...new Set(displayMatches.map(match => match.leagueID))];
 
   return (
     <Fixture

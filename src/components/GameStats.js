@@ -47,6 +47,7 @@ import {
 import { rounds } from "./TeamOfTheSeason";
 import StarRating from "../components/StarRating";
 import { handleCheckout, stripePromise } from "../App"
+import PlayerStatsTable from "./PlayerStatsTable";
 import { AuthProvider, useAuth } from "../logic/authProvider";
 import BetSlipFooter from "../components/Betslip";
 
@@ -111,6 +112,8 @@ function getMatchOddsProbabilities(scoreMatrix) {
 
 
 function GameStats({ game, displayBool, stats, handleToggleTip, userTips }) {
+
+  console.log("stats in GameStats:", stats);
   // const { user } = useAuth();
 
   const [openSections, setOpenSections] = useState({});
@@ -150,10 +153,13 @@ function GameStats({ game, displayBool, stats, handleToggleTip, userTips }) {
   const [streakData, setStreakData] = useState([]);
   const [homeTeamStats, setHomeTeamStats] = useState(null);
   const [awayTeamStats, setAwayTeamStats] = useState(null);
+  const [homeTeamPlayerStats, setHomeTeamPlayerStats] = useState(null);
+  const [awayTeamPlayerStats, setAwayTeamPlayerStats] = useState(null);
   const [futureFixturesHome, setFutureFixturesHome] = useState([]);
   const [futureFixturesAway, setFutureFixturesAway] = useState([]);
   const [loadingTeamStats, setLoadingTeamStats] = useState(true);
   const [loadingKeyPlayers, setLoadingKeyPlayers] = useState(true);
+  const [loadingPlayerStats, setLoadingPlayerStats] = useState(true);
   const [loadingKeyPlayerComparison, setLoadingKeyPlayerComparison] = useState(true);
   const [loadingStreaks, setLoadingStreaks] = useState(true);
   const [loadingFutureFixtures, setLoadingFutureFixtures] = useState(true);
@@ -609,6 +615,7 @@ function GameStats({ game, displayBool, stats, handleToggleTip, userTips }) {
   useEffect(() => {
     if (stats && homeForm?.teamName) {
       const ranks = getTeamRanksFromTopTeamsWithPartialMatch(stats, homeForm.teamName);
+      console.log("Home ranks:", ranks);
       setRanksHome(ranks);
     }
   }, [stats, homeForm?.teamName]);
@@ -1416,6 +1423,7 @@ function GameStats({ game, displayBool, stats, handleToggleTip, userTips }) {
         }
 
         if (derivedRoundId) {
+          console.log(`Derived round ID for league ${game.sofaScoreId}: ${derivedRoundId}`);
           try {
             const homeTeamStatsResponse = await fetch(
               `${process.env.REACT_APP_EXPRESS_SERVER}teamStats/${matchingGameInfo.homeId}/${game.sofaScoreId}/${derivedRoundId}`
@@ -1439,12 +1447,15 @@ function GameStats({ game, displayBool, stats, handleToggleTip, userTips }) {
             );
           }
 
+
           try {
             const leaguePlayerStatsResponse = await fetch(
               `${process.env.REACT_APP_EXPRESS_SERVER}bestPlayers/${game.sofaScoreId}/${derivedRoundId}/${week}`
             );
 
             const playerStats = await leaguePlayerStatsResponse.json();
+
+            console.log("Player stats response:", playerStats);
 
             let playersHome = await extractRankedPlayersByTeam(
               playerStats.topPlayers,
@@ -1493,6 +1504,59 @@ function GameStats({ game, displayBool, stats, handleToggleTip, userTips }) {
             // allLeagueStats[`leagueStats${leagueId}`] = { error: error.message }; // Store error if fetch fails
           }
 
+
+          try {
+            setLoadingPlayerStats(true);
+
+            // Run both fetches in parallel
+            const [homeResult, awayResult] = await Promise.allSettled([
+              fetch(`${process.env.REACT_APP_EXPRESS_SERVER}teams/get-player-statistics/${matchingGameInfo.homeId}/${game.sofaScoreId}/${derivedRoundId}`),
+              fetch(`${process.env.REACT_APP_EXPRESS_SERVER}teams/get-player-statistics/${matchingGameInfo.awayId}/${game.sofaScoreId}/${derivedRoundId}`)
+            ]);
+
+            // Handle Home Team Data
+            if (homeResult.status === 'fulfilled' && homeResult.value.ok) {
+              const data = await homeResult.value.json();
+              setHomeTeamPlayerStats(data);
+            } else {
+              console.error("Home stats fetch failed");
+              setHomeTeamPlayerStats({ error: true, players: [] }); // Set a "safe" empty state
+            }
+
+            // Handle Away Team Data
+            if (awayResult.status === 'fulfilled' && awayResult.value.ok) {
+              const data = await awayResult.value.json();
+              setAwayTeamPlayerStats(data);
+            } else {
+              console.error("Away stats fetch failed");
+              setAwayTeamPlayerStats({ error: true, players: [] });
+            }
+
+          } catch (err) {
+            console.error("Critical error in stats fetch:", err);
+          } finally {
+            setLoadingPlayerStats(false);
+          }
+
+          // const matchPreviewResponse = await fetch(
+          //   `${process.env.REACT_APP_EXPRESS_SERVER}gemini/match-preview/${matchingGameInfo.homeId}${matchingGameInfo.awayId}/${matchingGameInfo.time}`,
+          //   {
+          //     method: "POST",
+          //     headers: {
+          //       Accept: "application/json",
+          //       "Content-Type": "application/json",
+          //     },
+          //     body: JSON.stringify({
+          //       homeTeamName: matchingGameInfo.homeTeam,
+          //       awayTeamName: matchingGameInfo.awayTeam,
+          //       matchTime: matchingGameInfo.time,
+          //       homeData: teamDataHomeResponse, // The full home team JSON
+          //       awayData: teamDataAwayResponse, // The full away team JSON
+          //     }),
+          //   }
+          // );
+
+
           try {
             const futureFixturesHomeResponse = await fetch(
               `${process.env.REACT_APP_EXPRESS_SERVER}futureFixtures/${matchingGameInfo.homeId}/${week}`
@@ -1531,11 +1595,11 @@ function GameStats({ game, displayBool, stats, handleToggleTip, userTips }) {
             );
           }
 
-          const voteRequest = await fetch(
-            `${process.env.REACT_APP_EXPRESS_SERVER}votes/${matchingGameInfo.id}/${today.getDay()}`
-          );
-          const data = await voteRequest.json();
-          setVoteData(data);
+          // const voteRequest = await fetch(
+          //   `${process.env.REACT_APP_EXPRESS_SERVER}votes/${matchingGameInfo.id}/${today.getDay()}`
+          // );
+          // const data = await voteRequest.json();
+          // setVoteData(data);
 
         }
       } catch (error) {
@@ -3454,6 +3518,23 @@ function GameStats({ game, displayBool, stats, handleToggleTip, userTips }) {
             </Suspense>
           }
         />
+        <div>
+          {/* <h1>{homeTeamPlayerStats.homeTeamName} vs {homeTeamPlayerStats.awayTeamName}</h1> */}
+
+          {loadingPlayerStats === false && (homeTeamPlayerStats || awayTeamPlayerStats) && (
+            <Collapsable
+              buttonText={`Player stats \u{2630}`}
+              classNameButton="MissingPlayersButton"
+              element={
+                <div className="match-grids">
+                  {/* If home stats failed, the table will show its internal error guard */}
+                  <PlayerStatsTable data={homeTeamPlayerStats} />
+                  <PlayerStatsTable data={awayTeamPlayerStats} />
+                </div>
+              }
+            />
+          )}
+        </div>
         <div style={style}>
           <div style={style}>
             <Collapsable
