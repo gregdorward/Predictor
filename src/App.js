@@ -1026,7 +1026,7 @@ function AppContent() {
             />
 
             {/* Optional: Add a subtle text indicator below */}
-            {isPredicting && <p className="LoadingStatus">Updating ROI and League Stats...</p>}
+            {isPredicting && <p className="LoadingStatus">Calculating all predictions...</p>}
 
             <div className="Version">Prediction engine v1.9.0</div>
           </div>

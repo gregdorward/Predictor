@@ -50,6 +50,9 @@ const PlayerStatsTable = ({ data }) => {
 
     // 2. NOW DEFINE HELPERS
     const toggleColumn = (key) => {
+        // Prevent removing 'name'
+        if (key === 'name') return;
+
         setVisibleColumns(prev =>
             prev.includes(key) ? prev.filter(c => c !== key) : [...prev, key]
         );
@@ -84,6 +87,8 @@ const PlayerStatsTable = ({ data }) => {
                             type="checkbox"
                             checked={visibleColumns.includes(col.key)}
                             onChange={() => toggleColumn(col.key)}
+                            // Disable the checkbox if it's the name column
+                            disabled={col.key === 'name'}
                         />
                         {col.label}
                     </label>

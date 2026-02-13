@@ -4494,23 +4494,23 @@ async function fetchPlayerStats() {
   // Use uniqueLeagueIDs array instead of iterating all keys in footyStatsToSofaScore
   const leagueObject = footyStatsToSofaScore[0];
 
-  for (const leagueId of uniqueLeagueIDs) {
-    const mapping = leagueObject[leagueId];
-    if (!mapping) continue; // skip if not found
+for (const leagueId of uniqueLeagueIDs) {
+  const mapping = leagueObject[leagueId];
+  if (!mapping) continue;
 
-    const { id: sofaScoreId, season: sofaScoreSeason } = mapping;
+  const { id: sofaScoreId, season: sofaScoreSeason } = mapping;
 
-    try {
-      const leagueTeamStatsResponse = await fetch(
-        `${process.env.REACT_APP_EXPRESS_SERVER}bestPlayers/${sofaScoreId}/${sofaScoreSeason}/${week}`
-      );
-      const teamStats = await leagueTeamStatsResponse.json();
+  // We do NOT await here. We fire the request and move to the next leagueId immediately.
+  fetch(`${process.env.REACT_APP_EXPRESS_SERVER}bestPlayers/${sofaScoreId}/${sofaScoreSeason}/${week}`)
+    .then(res => res.json())
+    .then(teamStats => {
       allLeagueStats[`playerStats${leagueId}`] = teamStats;
-    } catch (error) {
-      console.error(`Error fetching player stats for league ${leagueId}:`, error);
+    })
+    .catch(error => {
+      console.error(`Error for league ${leagueId}:`, error);
       allLeagueStats[`playerStats${leagueId}`] = { error: error.message };
-    }
-  }
+    });
+}
 
   return allLeagueStats;
 }

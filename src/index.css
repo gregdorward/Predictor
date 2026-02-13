@@ -1406,6 +1406,11 @@ td {
   text-align: center;
 }
 
+
+table tr:nth-child(even){
+  background-color: var(--alternate-background-color);
+}
+
 .column-picker {
   display: flex;
   flex-wrap: wrap;
@@ -1459,6 +1464,14 @@ padding-bottom: 0.5em;
 
 .PlayerStatsTable tr {
   min-height: 2.5em;
+}
+
+.PlayerStatsTable tr:nth-child(even) {
+  background-color: var(--alternate-background-color);
+}
+
+.PlayerName {
+  text-align: left;
 }
 
 .cardSpan {
@@ -3191,9 +3204,15 @@ li .Aligned {
   padding: 1em;
 }
 
+
+
 .LeagueStatistics li {
   color: var(--text-color);
   padding: 0.5em;
+}
+
+.LeagueStatistics li:nth-child(even) {
+  background: var(--alternate-background-color);
 }
 
 .TeamNameHeader {
@@ -5639,10 +5658,6 @@ button.AIInsights button:active {
   border: var(--text-color), 1px, solid;
   background-color: var(--background-color);
   color: var(--text-color);
-}
-
-.LeagueStatsTable tr {
-  border: var(--text-color), 1px, solid;
 }
 
 .DropdownControl {
