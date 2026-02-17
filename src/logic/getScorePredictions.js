@@ -4044,7 +4044,7 @@ async function getSuccessMeasure(fixtures) {
   );
 
   console.log(isPaid);
-  if (investment > 0 && isPaid) {
+  if (investment > 0) {
     render(
       <Collapsable buttonText={"ROI"} element={
         <>
