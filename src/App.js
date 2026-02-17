@@ -65,7 +65,6 @@ export let allLeagueData = [];
 
 export const availableLeagues = [];
 export var orderedLeagues = [];
-let loggedIn;
 export let paid = false;
 // export let userTips;
 
@@ -238,8 +237,7 @@ async function calculateDate(dateString) {
   return [`${month}${day}${year}`, `${year}-${month}-${day}`];
 }
 [date, dateFootyStats] = await calculateDate(date);
-
-
+let loggedIn
 
 
 
@@ -566,6 +564,20 @@ function AppContent() {
   const [isLoading, setIsLoading] = useState(false);
   const [isProbability, setIsProbability] = useState(true);
   const [currentUser, setCurrentUser] = useState(null);
+  const [loggedInUser, setLoggedInUser] = useState (false);
+
+    useEffect(() => {
+    const auth = getAuth();
+    // This is the only reliable way to get the user in Firebase
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      if (user) {
+        setLoggedInUser(true)
+        setCurrentUser(user);
+      }
+    });
+    return () => unsubscribe();
+  }, []);
+
   useEffect(() => {
     console.log("App mounted: Triggering initial fixture load");
     getLeagueList(triggerGlobalPredictions);
@@ -685,17 +697,6 @@ function AppContent() {
       return updatedTips;
     });
   }
-
-  useEffect(() => {
-    const auth = getAuth();
-    // This is the only reliable way to get the user in Firebase
-    const unsubscribe = onAuthStateChanged(auth, (user) => {
-      if (user) {
-        setCurrentUser(user);
-      }
-    });
-    return () => unsubscribe();
-  }, []);
 
   const [pricing, setPricing] = useState(null);
   const [currentCurrency, setCurrentCurrency] = useState('usd'); // ⭐️ Store the code here
@@ -891,7 +892,7 @@ function AppContent() {
       </div>
       <h1 className="MembersGetMore">Welcome to <span className="TitleColouring">Soccer Stats Hub</span></h1>
       <h4 className="Blurb">The best for in-depth football statistics, analytics and predictions</h4>
-      {isPaidUser ? (
+      {!loggedIn || isPaidUser ? (
         <div />
       ) : (
         <><div className="MembersGetMoreUnderlined" onClick={() => {
