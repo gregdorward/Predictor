@@ -3712,35 +3712,8 @@ function GameStats({ game, displayBool, stats, handleToggleTip, userTips }) {
           <div id="AIInsightsContainer" className="AIInsightsContainer">
             {loadingKeyPlayers ? (
               <p>Loading data for Match Preview...</p>
-            ) : !paid && game.leagueID !== 15050 ? (
-              <><Button
-                className="AIInsightsLocked"
-                text={"Match Preview 🔒"}
-                onClickEvent={() => {
-                  alert("Match Preview is locked. Please subscribe to access.");
-                }}
-              />
-                <div className="SubscribeText">
-                  Subscribe to unlock full match previews, team star ratings, styles and more
-                </div>
-                <button
-                  onClick={() => handleCheckout("price_1SxC9QBrqiWlVPadyHJj3Y91")}
-                  className="SubscribeButton"
-                >
-                  Weekly
-                </button><button
-                  onClick={() => handleCheckout("price_1SxCGuBrqiWlVPadO7N4jpQJ")}
-                  className="SubscribeButton"
-                >
-                  Monthly
-                </button><button
-                  onClick={() => handleCheckout("price_1SxCPDBrqiWlVPad3nFXzU1B")}
-                  className="SubscribeButton"
-                >
-                  Yearly
-                </button>
-              </>
             ) : (
+              /* The paywall logic is removed; everyone sees the active button now */
               <Button
                 className="AIInsights"
                 onClickEvent={() => {
@@ -3764,7 +3737,8 @@ function GameStats({ game, displayBool, stats, handleToggleTip, userTips }) {
                   setShowAIInsights(true);
                 }}
                 text={"Match Preview"}
-                disabled={!paid && game.leagueID !== 15050}
+                /* Ensure disabled is also set to false so the button is clickable */
+                disabled={false}
               />
             )}
           </div>
