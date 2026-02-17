@@ -2179,10 +2179,10 @@ export async function generateGoals(homeForm, awayForm, match) {
 
   if (majorContinentalLeagues.includes(match.leagueDesc)) {
     homeGoals = (homeLambda_final - 0.15)
-      + (oddsComparisonHome * 0.1) +
+      + (oddsComparisonHome * 0.15) +
       (homeForm.actualToXGDifference / 20) + (XGRatingHomeComparison * 0.1);
-    awayGoals = (awayLambda_final - 0.7)
-      + (oddsComparisonAway * 0.1) +
+    awayGoals = (awayLambda_final - 0.25)
+      + (oddsComparisonAway * 0.15) +
       (awayForm.actualToXGDifference / 20) + (XGRatingAwayComparison * 0.1);
   } else if (InternationalComps.includes(match.leagueDesc)) {
     homeGoals = (homeLambda_final + 0.1)
