@@ -872,8 +872,8 @@ button:hover {
 
 button.GeneratePredictionsButton {
   margin-top: 0.5em;
-  padding-top: 1em;
-  padding-bottom: 1em;
+  padding-top: 0.75em;
+  padding-bottom: 0.75em;
   background-color: #fe8c00;
   color: #020029;
   border: var(--text-color), 1px, solid;
@@ -916,11 +916,13 @@ button.GeneratePredictionsButton:active {
   flex-wrap: wrap;
   flex-basis: 100%;
   justify-content: center;
+  font-size: 0.8em;
 }
 
 .FixtureButtons button:hover {
   color: var(--primary-color);
 }
+
 
 .FixtureButtons button {
   background-color: var(--text-color);
@@ -1034,6 +1036,19 @@ p {
   background-color: var(--secondary-background-color);
   padding: 1em;
   border: var(--primary-color) solid 1px;
+  margin-bottom: 1em;
+}
+
+.LoginSignUp {
+  background-color: var(--primary-color);
+  color: black;
+  padding: 0.5em;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.LoginSignUp:hover {
+  background-color:#020029
 }
 
 h6.PredictionTypeText {
@@ -1873,7 +1888,7 @@ strong.LOST {
   color: var(--text-color);
   padding-bottom: 0.5em;
   cursor: pointer;
-  opacity: 0.6;
+  opacity: 0.25;
 }
 
 
@@ -5207,7 +5222,7 @@ input {
   margin-bottom: 1em;
 }
 
-.LoginSignUp {
+/* .LoginSignUp {
   flex-shrink: 0;
   padding: 1em;
   min-width: 6em;
@@ -5216,7 +5231,7 @@ input {
   align-items: center;
   justify-content: center;
   margin-right: 0em;
-}
+} */
 
 .LoginInput2 {
   flex-grow: 1;

@@ -57,6 +57,8 @@ import Over18Badge from './components/images/18.webp';
 import { createRoot } from 'react-dom/client';
 import setUserTips from "./components/GameStats";
 import BetSlipFooter from "./components/Betslip";
+import SlideDiff from "./components/SliderDiff";
+import { Slide } from "./components/Slider";
 
 
 export const proxyurl = "https://safe-caverns-99679.herokuapp.com/";
@@ -478,9 +480,16 @@ export async function getLeagueList() {
     );
   } else {
     render(
-      <div className="NonFixtureInfo">
+      <Collapsable
+      buttonText="Log In / Sign Up"
+      classNameButton="LoginSignUp"
+      element={
+        <div className="NonFixtureInfo">
         <Login />
       </div>
+      }
+      
+      />
       , "Email");
   }
 }
@@ -564,9 +573,9 @@ function AppContent() {
   const [isLoading, setIsLoading] = useState(false);
   const [isProbability, setIsProbability] = useState(true);
   const [currentUser, setCurrentUser] = useState(null);
-  const [loggedInUser, setLoggedInUser] = useState (false);
+  const [loggedInUser, setLoggedInUser] = useState(false);
 
-    useEffect(() => {
+  useEffect(() => {
     const auth = getAuth();
     // This is the only reliable way to get the user in Firebase
     const unsubscribe = onAuthStateChanged(auth, (user) => {
@@ -1012,7 +1021,75 @@ function AppContent() {
         </div>
       </div>
       <Collapsable buttonText={"Options \u{2630}"} className={"Options"} element={
-        <><div id="Checkbox" /><div id="CheckboxTwo" className="CheckboxTwo" /></>
+        <><><div id="Checkbox" /><div id="CheckboxTwo" className="CheckboxTwo" /></><Collapsable
+          buttonText={"Filters"}
+          className={"Filters2"}
+          element={<div className="FilterContainer">
+            <h6>
+              Use the below filters to show predicted winners that meet
+              the set criteria. Others will be greyed out and not included
+              in multi-builders and ROI stats. Once the filter is set, tap "Get Predictions and Stats" to see the results.
+            </h6>
+            <h6>Goals for/against differential filter</h6>
+            <div>
+              I'm looking for tips where the goal differential between
+              teams is at least...
+            </div>
+            <SlideDiff
+              value="0"
+              text="all games"
+              useCase="gd"
+              lower="0"
+              upper="30"
+            ></SlideDiff>
+            <h6>Goals for/against home or away differential filter</h6>
+            <div>
+              I'm looking for tips where the goal differential (home or
+              away only) between teams is at least...
+            </div>
+            <SlideDiff
+              value="0"
+              text="all games"
+              useCase="gdHorA"
+              lower="0"
+              upper="30"
+            ></SlideDiff>
+            <Fragment>
+              <h6>XG for/against differential filter</h6>
+              <div>
+                I'm looking for tips where the XG differential between
+                teams is at least...
+              </div>
+              <SlideDiff
+                value="0"
+                text="all games"
+                useCase="xg"
+                lower="0"
+                upper="30"
+              ></SlideDiff>
+            </Fragment>
+            <Fragment>
+              <h6>Last 6 points differential filter</h6>
+              <div>
+                I'm looking for tips where the points differential between
+                teams is at least...
+              </div>
+              <SlideDiff
+                value="0"
+                text="all games"
+                useCase="last10"
+                lower="0"
+                upper="18"
+              ></SlideDiff>
+            </Fragment>
+            <Fragment>
+              <h6>Choose your risk profile</h6>
+              <div>
+                I'm looking for tips where the odds are between...
+              </div>
+              <Slide value="1" text="all games"></Slide>
+            </Fragment>
+          </div>} /></>
       }>
       </Collapsable>
       <div id="Loading" className="Loading"></div>
@@ -1050,7 +1127,7 @@ function AppContent() {
               <div id="RowOneContainer" className="RowOneContainer">
                 <div id="BTTS" className="RowOne" />
                 <div id="longShots" className="RowOne" />
-                <div id="draws" className="RowOne" />
+                {/* <div id="draws" className="RowOne" /> */}
               </div>
               <div id="insights" />
             </Fragment>
@@ -1058,7 +1135,6 @@ function AppContent() {
         />
       </div>
       <div id="UserGeneratedTips" />
-
       <div id="shortlistRender" />
       <div id="ROIPlaceholder" />
       {/* <Collapsable buttonText={"ROI"} className={"ROI"} element={<div id="successMeasure2" />} /> */}
