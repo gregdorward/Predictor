@@ -1977,10 +1977,10 @@ export async function generateGoals(homeForm, awayForm, match) {
   const BASELINE = 0.5;
 
   // Defensive weaknesses (unchanged)
-  const awayDefenseWeakness = 1.15 - awayForm.defensiveStrengthScoreGenerationLast5;
-  const homeDefenseWeakness = 1.15 - homeForm.defensiveStrengthScoreGenerationLast5;
-  const awayDefenseWeaknessOverall = 1.15 - awayForm.defensiveStrengthScoreGeneration;
-  const homeDefenseWeaknessOverall = 1.15 - homeForm.defensiveStrengthScoreGeneration;
+  const awayDefenseWeakness = 1.10 - awayForm.defensiveStrengthScoreGenerationLast5;
+  const homeDefenseWeakness = 1.10 - homeForm.defensiveStrengthScoreGenerationLast5;
+  const awayDefenseWeaknessOverall = 1.10 - awayForm.defensiveStrengthScoreGeneration;
+  const homeDefenseWeaknessOverall = 1.10 - homeForm.defensiveStrengthScoreGeneration;
 
   // Helper to compute a dampened lambda component
   function computeLambdaComponent(attackStrength, defenseWeakness) {
@@ -2194,10 +2194,10 @@ export async function generateGoals(homeForm, awayForm, match) {
       (awayForm.actualToXGDifference / 20) + (XGRatingAwayComparison * 0.1);
   } else {
     homeGoals = (homeLambda_final + 0.1)
-      + (XGRatingHomeComparison * 0.09)
+      + (XGRatingHomeComparison * 0.075)
 
     awayGoals = (awayLambda_final - 0.1)
-      + (XGRatingAwayComparison * 0.09);
+      + (XGRatingAwayComparison * 0.075);
   }
 
 
@@ -4429,8 +4429,10 @@ const footyStatsToSofaScore = [
   },
 ];
 
+// 1. Mark the function as async so it returns a promise
 async function fetchLeagueStats() {
   console.log("Fetching league stats...");
+  
   function getWeekOfYear(date) {
     const target = new Date(date.valueOf());
     const dayNumber = (date.getUTCDay() + 6) % 7;
@@ -4442,33 +4444,38 @@ async function fetchLeagueStats() {
 
   const today = new Date();
   const week = getWeekOfYear(today);
-
-  const allLeagueStats = {};
-
-  // Use uniqueLeagueIDs array instead of iterating all keys in footyStatsToSofaScore
   const leagueObject = footyStatsToSofaScore[0];
 
-  console.log("Unique League IDs to fetch stats for:", uniqueLeagueIDs);
-
-  for (const leagueId of uniqueLeagueIDs) {
+  // 2. Create an array of Promises instead of awaiting inside a loop
+  const fetchPromises = uniqueLeagueIDs.map(async (leagueId) => {
     const mapping = leagueObject[leagueId];
-    if (!mapping) continue; // skip if not found
+    if (!mapping) return null;
 
     const { id: sofaScoreId, season: sofaScoreSeason } = mapping;
-    console.log(`Fetching stats for league ${leagueId} (SofaScore ID: ${sofaScoreId}, Season: ${sofaScoreSeason}, Week: ${week})`);
 
     try {
-      const leagueTeamStatsResponse = await fetch(
+      const response = await fetch(
         `${process.env.REACT_APP_EXPRESS_SERVER}LeagueTeamStats/${sofaScoreId}/${sofaScoreSeason}/${week}`
       );
-      const teamStats = await leagueTeamStatsResponse.json();
-      console.log(`Stats for league ${leagueId}:`, teamStats);
-      allLeagueStats[`leagueStats${leagueId}`] = teamStats;
+      const teamStats = await response.json();
+      return { key: `leagueStats${leagueId}`, data: teamStats };
     } catch (error) {
-      console.error(`Error fetching stats for league ${leagueId}:`, error);
-      allLeagueStats[`leagueStats${leagueId}`] = { error: error.message };
+      console.error(`Error for league ${leagueId}:`, error);
+      return { key: `leagueStats${leagueId}`, data: { error: error.message } };
     }
-  }
+  });
+
+  // 3. Wait for all league fetches to happen simultaneously
+  const results = await Promise.all(fetchPromises);
+
+  // 4. Convert the results array back into your allLeagueStats object
+  const allLeagueStats = {};
+  results.forEach(result => {
+    if (result) {
+      allLeagueStats[result.key] = result.data;
+    }
+  });
+
   return allLeagueStats;
 }
 
@@ -4476,7 +4483,7 @@ export let leagueStatsArray;
 
 
 
-async function fetchPlayerStats() {
+function fetchPlayerStats() {
   function getWeekOfYear(date) {
     const target = new Date(date.valueOf());
     const dayNumber = (date.getUTCDay() + 6) % 7;
@@ -4546,22 +4553,24 @@ export async function getScorePrediction(day, mocked) {
   //   "FixtureContainer"
   // );
 
-  // --- 1. START ALL ASYNCHRONOUS OPERATIONS CONCURRENTLY ---
+const leagueStatsPromise = fetchLeagueStats();
+const playerStatsPromise = fetchPlayerStats();
 
-  // Start the long background data fetches immediately (non-blocking)
-  const leagueStatsPromise = await fetchLeagueStats();
-  const playerStatsPromise = await fetchPlayerStats();
+const predictedScoresPromise = fetch(`${process.env.REACT_APP_EXPRESS_SERVER}predictedScores`);
+const leagueAveragesPromise = fetch(`${process.env.REACT_APP_EXPRESS_SERVER}league-averages`);
 
-  // Start fetches for required prediction data (must await these before the loop)
-  const predictedScoresPromise = fetch(`${process.env.REACT_APP_EXPRESS_SERVER}predictedScores`);
-  const leagueAveragesPromise = fetch(`${process.env.REACT_APP_EXPRESS_SERVER}league-averages`);
-
-  // Await the HTTP responses
-  const [predictedScoresResponse, leagueAveragesResponse] = await Promise.all([
-    predictedScoresPromise,
-    leagueAveragesPromise
-  ]);
-
+// 2. Await everything in parallel
+const [
+  leagueStats, 
+  playerStats, 
+  predictedScoresResponse, 
+  leagueAveragesResponse
+] = await Promise.all([
+  leagueStatsPromise,
+  playerStatsPromise,
+  predictedScoresPromise,
+  leagueAveragesPromise
+]);
 
   // Await JSON parsing and assign results.
   const predictedScoresData = await predictedScoresResponse.json();
