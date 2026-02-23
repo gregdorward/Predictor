@@ -852,14 +852,12 @@ button {
   font-family: 'Open Sans', sans-serif;
   width: 12em;
   height: auto;
-  font-size: 1.1em;
+  font-size: 1em;
   cursor: pointer;
   color: var(--secondary-button-text-color);
   background-color: var(--button-color);
   text-align: center;
   transition: all 0.2s;
-  box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
-
 }
 
 button:active {
@@ -874,10 +872,9 @@ button.GeneratePredictionsButton {
   margin-top: 0.5em;
   padding-top: 0.75em;
   padding-bottom: 0.75em;
-  background-color: #fe8c00;
+  background-color: var(--primary-color);
   color: #020029;
   border: var(--text-color), 1px, solid;
-  height: 5em;
 }
 
 button.GeneratePredictionsButton:hover {
@@ -888,10 +885,9 @@ button.GeneratePredictionsButton:hover {
 button.GeneratePredictionsButton:active {
   padding-top: 1em;
   padding-bottom: 1em;
-  background-color: #ce7100;
+  background-color: var(--primary-color);
   color: var(--button-text-color);
   box-shadow: 0 0px 0px 0 rgba(0, 0, 0, 0.2), 0 1px 2px 0 #030052 inset;
-  height: 5em;
 }
 
 .BuildAMulti {
@@ -916,7 +912,8 @@ button.GeneratePredictionsButton:active {
   flex-wrap: wrap;
   flex-basis: 100%;
   justify-content: center;
-  font-size: 0.8em;
+  align-items: center;
+  font-size: 0.9em;
 }
 
 .FixtureButtons button:hover {
@@ -924,7 +921,7 @@ button.GeneratePredictionsButton:active {
 }
 
 
-.FixtureButtons button {
+.FixturesButtonToday {
   background-color: var(--text-color);
   color: var(--button-text-color);
   margin: 1em;
@@ -933,24 +930,7 @@ button.GeneratePredictionsButton:active {
   flex-basis: 100%;
 }
 
-.FixturesButtonToday {
-  background-color: var(--text-color);
-  color: var(--button-text-color);
-  margin: 0.5em;
-  cursor: pointer;
-  width: 10em;
-  /* box-shadow: 0 0px 0px 0 rgba(0, 0, 0, 0.2), 0 1px 2px 0 var(--secondary-background-color); */
-}
 
-
-.FixturesButtonAmend {
-  background-color: var(--text-color);
-  color: var(--button-text-color);
-  cursor: pointer;
-  width: 5em;
-  box-shadow: 0 0px 0px 0 rgba(0, 0, 0, 0.2), 0 1px 2px 0 var(--text-color);
-
-}
 
 .FixtureButtons button:active {
   box-shadow: 0 0px 0px 0 rgba(0, 0, 0, 0.2), 0 1px 2px 0 var(--secondary-background-color) inset;
@@ -1020,7 +1000,7 @@ p {
 .Options button {
   background-color: var(--background-color);
   color: var(--text-color);
-  border: var(--primary-color) 1px solid;
+  border: none;
   width: 8em;
   box-shadow: none;
 }
@@ -1137,7 +1117,21 @@ span.MembershipInfo {
 
 .Version {
   font-size: 0.75em;
-  padding-bottom: 1em;
+  padding-bottom: 0em;
+}
+
+.Filters2 button{
+  border: var(--primary-color) 1px solid;
+}
+
+.Filters2 button:hover{
+  background-color: var(--button-color);
+  color: var(--primary-color);
+  border: var(--primary-color) 2px solid;
+}
+
+.InstructionalDiv {
+  padding-top: 1em;
 }
 
 .bitcoin {
@@ -2248,10 +2242,10 @@ strong.LOST {
 }
 
 .ProbabilityToggle {
-  margin-top: 2em;
+  margin-top: 1em;
   background-color: var(--button-text-color);
   color: var(--button-color);
-  border: var(--primary-color) 2px solid;
+  border: var(--primary-color) 1px solid;
 }
 
 .ProbabilityToggle:hover {
@@ -2857,6 +2851,17 @@ h6.MediaTitle {
   transform: scale(0.96);
 }
 
+
+.FixturesButtonAmend {
+  background-color: var(--background-color);
+  color: var(--text-color);
+  cursor: pointer;
+  font-size: 1.5em;
+  width: 5em;
+  border: none;
+  font-weight: bolder;
+}
+
 /* Container for the whole list */
 .SlipsList {
   display: flex;
@@ -3083,6 +3088,8 @@ h6.MediaTitle {
 
 .ActionBtn {
   margin-bottom: 1em;
+  background-color: var(--background-color);
+  color: var(--text-color);
 }
 
 .TopPicksGrid {
@@ -4074,6 +4081,14 @@ li.FormHeader {
   justify-content: center;
   align-self: center;
   flex-wrap: nowrap;
+  align-items: center;
+}
+
+
+.ROIButton {
+  width: 4em;
+  background-color: var(--background-color);
+  color: var(--text-color);
 }
 
 .PredictionsOfTheDay {
@@ -5128,15 +5143,32 @@ input:active+.design::after {
   color: var(--text-color);
 }
 
+.ShortListButtons {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+
+}
+
 .ShortlistButton,
-.ShareButton,
-.InsightsButton {
-  font-size: 0.9em;
-  background-color: var(--button-color);
-  margin-left: 1em;
-  margin-right: 1em;
-  margin-top: 1em;
-  color: var(--button-text-color);
+.ShareButton {
+  font-size: 1em;
+  background-color: var(--background-color);
+  margin-left: 0.5em;
+  margin-right: 0.5em;
+  margin-top: 0.5em;
+  border: none;
+  color: var(--text-color);
+}
+
+.InsightsButton{
+  font-size: 1em;
+  background-color: var(--background-color);
+  margin-left: 0.5em;
+  margin-right: 0.5em;
+  margin-top: 0.5em;
+  color: var(--text-color);
 }
 
 .Lineups {
@@ -5204,10 +5236,11 @@ h6.AttackingMomentum {
 }
 
 .LogoutButton {
-  font-size: 0.7em;
+  font-size: 0.8em;
   background-color: var(--background-color);
   color: var(--text-color);
-  border: var(--primary-color) 1px solid;
+  border: none;
+  margin: 0em;
   width: 8em;
   box-shadow: none;
 }

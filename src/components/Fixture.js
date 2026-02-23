@@ -12,7 +12,7 @@ import LeagueName from './LeagueName';
 import ShareShortlistButton from "./ShareShortlistButton";
 import { getAuth } from "firebase/auth";
 import { getFirestore, doc, getDoc, updateDoc } from "firebase/firestore";
-import GameStats from "./GameStats";  
+import GameStats from "./GameStats";
 
 
 let resultValue;
@@ -765,7 +765,8 @@ const List = ({
 
   // Append the 'view' parameter to indicate the shortlist view should be active
   const shareableLink = `${baseUrl}?shortlist=${fixtureIdsString}&view=shortlist`;
-
+  const hasShortlistInUrl = new URLSearchParams(window.location.search).has('shortlist');
+  const isShortlistVisible = selectedFixtures.length > 0 || hasShortlistInUrl;
 
   return mock === true ? (
     <>
@@ -795,17 +796,22 @@ const List = ({
     </>
   ) : (
     <>
-      <ShortlistButton
-        toggleShortlist={handleToggleShortlistView}
-        showShortlist={showShortlist}
-      />
-      <ShareShortlistButton selectedFixtures={selectedFixtures} />
+      {isShortlistVisible && (
+        <div className="ShortListButtons">
+          <ShortlistButton
+            toggleShortlist={handleToggleShortlistView}
+            showShortlist={showShortlist}
+          />
+          <div>Shortlist</div>
+          <ShareShortlistButton selectedFixtures={selectedFixtures} />
+        </div>
+      )}
       <div>
         <div id="Headers"></div>
         <button className="ProbabilityToggle" onClick={togglePredictionMode}>
-          {isProbability ? "Show scores" : "Show probabilities"}
+          {isProbability ? "Select score mode" : "Select probability mode"}
         </button>
-        <h4>Generate predictions and click on any fixture for unparalleled insight</h4>
+        <div className="InstructionalDiv">Generate predictions and click on any fixture for unparalleled insight</div>
         <ul className="FixtureList" id="FixtureList">
           {/* Renders shortlist when toggle is ON, full list (which is the source list) when OFF */}
           {(showShortlist ? selectedFixtures : fixtures).map((fixture) => (
@@ -831,8 +837,8 @@ const List = ({
 function ShortlistButton({ toggleShortlist, showShortlist }) {
   // Conditionally set the text and class based on the state
   const buttonText = showShortlist
-    ? "Disable Shortlist"  // Unicode for up arrow
-    : "Show Shortlist \u272A"; // Unicode for star
+    ? "\u2605"  // Unicode for greyed out star
+    : "\u2606"; // Unicode for star
 
   const buttonClass = showShortlist
     ? "ShortlistButton active"

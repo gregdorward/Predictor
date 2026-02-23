@@ -470,9 +470,11 @@ function UserTips() {
   if (!isVisible && !loading) {
 
     return (
-      <><h4>Febuary Prediction League now open</h4><div className="MissingPredictionsNotice">Singles, multis, play it safe, be bold - many strategies, only 1 winner. The leader at the end of the month will receive 1 years Soccer Stats Hub subscription</div><div className="UserTipsContainer">
-        <button onClick={fetchAndSetUserTips} className="ActionBtn">Show Prediction League</button>
-      </div></>
+      <>
+        <div className="UserTipsContainer">
+          <button onClick={fetchAndSetUserTips} className="ActionBtn">Prediction League</button>
+        </div>
+      </>
     );
   }
 
@@ -516,7 +518,7 @@ function UserTips() {
 
   return (
     <div className="UserTipsContainer">
-      <button onClick={() => setIsVisible(false)} className="ActionBtn">Hide Prediction League</button>
+      <button onClick={() => setIsVisible(false)} className="ActionBtn">Prediction League</button>
       <MonthlyLeaderboard slips={slips} />
       {topPicks.length > 0 && (
         <div className="TrendingSection">
@@ -4036,7 +4038,7 @@ async function getSuccessMeasure(fixtures) {
   // console.log(statsArray.trueFormArray.slice(-10).sort((a, b) => b.score - a.score))
 
   render(
-    <Collapsable classNameButton="InsightsButton" buttonText={"Insights"} element={
+    <Collapsable classNameButton="InsightsButton" buttonText={"Insights \u{2630}"} element={
       <InsightsPanel statsArray={statsArray} paidUser={isPaid} classNameButton="InsightsCollapsable" />
     }
     />,
@@ -4046,20 +4048,20 @@ async function getSuccessMeasure(fixtures) {
   console.log(isPaid);
   if (investment > 0) {
     render(
-      <Collapsable buttonText={"ROI"} element={
+      <Collapsable buttonText={"ROI"} classNameButton="ROIButton" element={
         <>
           <h3 className={"SuccessMeasureText"}>
-          ROI for all {investment} W/D/W outcomes: {ROI >= 0 ? "+" : " "}{" "}
-          {ROI.toFixed(2)}%
-        </h3>
+            ROI for all {investment} W/D/W outcomes: {ROI >= 0 ? "+" : " "}{" "}
+            {ROI.toFixed(2)}%
+          </h3>
           <p>{`Correct W/D/W predictions: ${successCount} (${(
             (successCount / investment) *
             100
           ).toFixed(1)}%)`}</p>
           <p>{`Exact scores predicted: ${exactScores} (${(
-          (exactScores / investment) *
-          100
-        ).toFixed(1)}%)`}</p><p className="SuccessMeasureText">
+            (exactScores / investment) *
+            100
+          ).toFixed(1)}%)`}</p><p className="SuccessMeasureText">
             Cumulative ROI for all {totalInvestment} match outcomes:{" "}
             {totalROI >= 0 ? "+" : ""}
             {totalROI.toFixed(2)}%
@@ -4432,7 +4434,7 @@ const footyStatsToSofaScore = [
 // 1. Mark the function as async so it returns a promise
 async function fetchLeagueStats() {
   console.log("Fetching league stats...");
-  
+
   function getWeekOfYear(date) {
     const target = new Date(date.valueOf());
     const dayNumber = (date.getUTCDay() + 6) % 7;
@@ -4501,23 +4503,23 @@ function fetchPlayerStats() {
   // Use uniqueLeagueIDs array instead of iterating all keys in footyStatsToSofaScore
   const leagueObject = footyStatsToSofaScore[0];
 
-for (const leagueId of uniqueLeagueIDs) {
-  const mapping = leagueObject[leagueId];
-  if (!mapping) continue;
+  for (const leagueId of uniqueLeagueIDs) {
+    const mapping = leagueObject[leagueId];
+    if (!mapping) continue;
 
-  const { id: sofaScoreId, season: sofaScoreSeason } = mapping;
+    const { id: sofaScoreId, season: sofaScoreSeason } = mapping;
 
-  // We do NOT await here. We fire the request and move to the next leagueId immediately.
-  fetch(`${process.env.REACT_APP_EXPRESS_SERVER}bestPlayers/${sofaScoreId}/${sofaScoreSeason}/${week}`)
-    .then(res => res.json())
-    .then(teamStats => {
-      allLeagueStats[`playerStats${leagueId}`] = teamStats;
-    })
-    .catch(error => {
-      console.error(`Error for league ${leagueId}:`, error);
-      allLeagueStats[`playerStats${leagueId}`] = { error: error.message };
-    });
-}
+    // We do NOT await here. We fire the request and move to the next leagueId immediately.
+    fetch(`${process.env.REACT_APP_EXPRESS_SERVER}bestPlayers/${sofaScoreId}/${sofaScoreSeason}/${week}`)
+      .then(res => res.json())
+      .then(teamStats => {
+        allLeagueStats[`playerStats${leagueId}`] = teamStats;
+      })
+      .catch(error => {
+        console.error(`Error for league ${leagueId}:`, error);
+        allLeagueStats[`playerStats${leagueId}`] = { error: error.message };
+      });
+  }
 
   return allLeagueStats;
 }
@@ -4553,24 +4555,24 @@ export async function getScorePrediction(day, mocked) {
   //   "FixtureContainer"
   // );
 
-const leagueStatsPromise = fetchLeagueStats();
-const playerStatsPromise = fetchPlayerStats();
+  const leagueStatsPromise = fetchLeagueStats();
+  const playerStatsPromise = fetchPlayerStats();
 
-const predictedScoresPromise = fetch(`${process.env.REACT_APP_EXPRESS_SERVER}predictedScores`);
-const leagueAveragesPromise = fetch(`${process.env.REACT_APP_EXPRESS_SERVER}league-averages`);
+  const predictedScoresPromise = fetch(`${process.env.REACT_APP_EXPRESS_SERVER}predictedScores`);
+  const leagueAveragesPromise = fetch(`${process.env.REACT_APP_EXPRESS_SERVER}league-averages`);
 
-// 2. Await everything in parallel
-const [
-  leagueStats, 
-  playerStats, 
-  predictedScoresResponse, 
-  leagueAveragesResponse
-] = await Promise.all([
-  leagueStatsPromise,
-  playerStatsPromise,
-  predictedScoresPromise,
-  leagueAveragesPromise
-]);
+  // 2. Await everything in parallel
+  const [
+    leagueStats,
+    playerStats,
+    predictedScoresResponse,
+    leagueAveragesResponse
+  ] = await Promise.all([
+    leagueStatsPromise,
+    playerStatsPromise,
+    predictedScoresPromise,
+    leagueAveragesPromise
+  ]);
 
   // Await JSON parsing and assign results.
   const predictedScoresData = await predictedScoresResponse.json();

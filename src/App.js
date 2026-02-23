@@ -481,14 +481,14 @@ export async function getLeagueList() {
   } else {
     render(
       <Collapsable
-      buttonText="Log In / Sign Up"
-      classNameButton="LoginSignUp"
-      element={
-        <div className="NonFixtureInfo">
-        <Login />
-      </div>
-      }
-      
+        buttonText="Log In / Sign Up"
+        classNameButton="LoginSignUp"
+        element={
+          <div className="NonFixtureInfo">
+            <Login />
+          </div>
+        }
+
       />
       , "Email");
   }
@@ -574,6 +574,7 @@ function AppContent() {
   const [isProbability, setIsProbability] = useState(true);
   const [currentUser, setCurrentUser] = useState(null);
   const [loggedInUser, setLoggedInUser] = useState(false);
+  const [showMultis, setShowMultis] = useState(false);
 
   useEffect(() => {
     const auth = getAuth();
@@ -1098,8 +1099,10 @@ function AppContent() {
           <div className="PredictionControls">
             <Button
               text={isPredicting ? "Processing..." : "Get Predictions & Stats"}
-              onClickEvent={() => handleGetPredictions('today')}
-              disabled={isPredicting} // 🛡️ Disable to prevent multiple clicks
+              onClickEvent={() => {
+                handleGetPredictions('today');
+                setShowMultis(true);
+              }} disabled={isPredicting} // 🛡️ Disable to prevent multiple clicks
               className={`GeneratePredictionsButton ${isPredicting ? "loading" : ""}`}
             />
 
@@ -1112,33 +1115,27 @@ function AppContent() {
       </div>
       {/* <div id="MultiPlaceholder" className="MultiPlaceholder" /> */}
 
-      <div id="MultiWrapper" className="MultiWrapper">
-        <Collapsable
-          buttonText={"Multis"}
-          className={"MultisCollapsable"}
-          openedClassName={"MultisCollapsableOpened"}
-          key="MultisCollapsable"
-          id="MultiPlaceholder"
-          element={
-            <Fragment>
+      {showMultis && (
+        <><div id="MultiWrapper" className="MultiWrapper">
+          <Collapsable
+            buttonText={"Multis"}
+            className={"MultisCollapsable"}
+            openedClassName={"MultisCollapsableOpened"}
+            key="MultisCollapsable"
+            element={<Fragment>
               <div id="bestPredictions" className="bestPredictions" />
               <div id="valueBets" className="ValueBets" />
               <div id="exoticOfTheDay" className="exoticOfTheDay" />
               <div id="RowOneContainer" className="RowOneContainer">
                 <div id="BTTS" className="RowOne" />
                 <div id="longShots" className="RowOne" />
-                {/* <div id="draws" className="RowOne" /> */}
               </div>
               <div id="insights" />
-            </Fragment>
-          }
-        />
-      </div>
-      <div id="UserGeneratedTips" />
-      <div id="shortlistRender" />
-      <div id="ROIPlaceholder" />
+            </Fragment>} />
+        </div><div id="UserGeneratedTips" /><div id="shortlistRender" /><div id="ROIPlaceholder" /></>
+      )}
+
       {/* <Collapsable buttonText={"ROI"} className={"ROI"} element={<div id="successMeasure2" />} /> */}
-      <div className={"StatsInsights"} id="statsInsights" />
       <div id="highLowLeagues" className="HighLowLeagues" />
       <div id="risk" />
       <div id="successMeasure" />
@@ -1167,6 +1164,7 @@ function AppContent() {
           )
         )}
       </div>
+      <div className={"StatsInsights"} id="statsInsights" />
       <BetSlipFooter
         userTips={activeSlip}  // Only show the new selections
         setUserTips={setActiveSlip}

@@ -44,7 +44,7 @@ const ShareShortlistButton = ({ selectedFixtures }) => {
 
   return (
     <button onClick={handleShare} className="ShareButton">
-      Share Shortlist 🔗
+      🔗
     </button>
   );
 };
