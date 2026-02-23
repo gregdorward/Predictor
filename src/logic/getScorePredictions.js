@@ -4432,7 +4432,7 @@ const footyStatsToSofaScore = [
 ];
 
 // 1. Mark the function as async so it returns a promise
-async function fetchLeagueStats() {
+function fetchLeagueStats() {
   console.log("Fetching league stats...");
 
   function getWeekOfYear(date) {
@@ -4448,37 +4448,36 @@ async function fetchLeagueStats() {
   const week = getWeekOfYear(today);
   const leagueObject = footyStatsToSofaScore[0];
 
-  // 2. Create an array of Promises instead of awaiting inside a loop
-  const fetchPromises = uniqueLeagueIDs.map(async (leagueId) => {
+  // 1. Map to an array of Promises
+  const fetchPromises = uniqueLeagueIDs.map((leagueId) => {
     const mapping = leagueObject[leagueId];
-    if (!mapping) return null;
+    if (!mapping) return Promise.resolve(null);
 
     const { id: sofaScoreId, season: sofaScoreSeason } = mapping;
 
-    try {
-      const response = await fetch(
-        `${process.env.REACT_APP_EXPRESS_SERVER}LeagueTeamStats/${sofaScoreId}/${sofaScoreSeason}/${week}`
-      );
-      const teamStats = await response.json();
-      return { key: `leagueStats${leagueId}`, data: teamStats };
-    } catch (error) {
-      console.error(`Error for league ${leagueId}:`, error);
-      return { key: `leagueStats${leagueId}`, data: { error: error.message } };
-    }
+    // Use .then() instead of await to keep the inner logic non-async
+    return fetch(`${process.env.REACT_APP_EXPRESS_SERVER}LeagueTeamStats/${sofaScoreId}/${sofaScoreSeason}/${week}`)
+      .then((response) => response.json())
+      .then((teamStats) => ({
+        key: `leagueStats${leagueId}`,
+        data: teamStats
+      }))
+      .catch((error) => {
+        console.error(`Error for league ${leagueId}:`, error);
+        return { key: `leagueStats${leagueId}`, data: { error: error.message } };
+      });
   });
 
-  // 3. Wait for all league fetches to happen simultaneously
-  const results = await Promise.all(fetchPromises);
-
-  // 4. Convert the results array back into your allLeagueStats object
-  const allLeagueStats = {};
-  results.forEach(result => {
-    if (result) {
-      allLeagueStats[result.key] = result.data;
-    }
+  // 2. Return the Promise.all chain
+  return Promise.all(fetchPromises).then((results) => {
+    const allLeagueStats = {};
+    results.forEach((result) => {
+      if (result) {
+        allLeagueStats[result.key] = result.data;
+      }
+    });
+    return allLeagueStats;
   });
-
-  return allLeagueStats;
 }
 
 export let leagueStatsArray;
@@ -4497,31 +4496,37 @@ function fetchPlayerStats() {
 
   const today = new Date();
   const week = getWeekOfYear(today);
-
-  const allLeagueStats = {};
-
-  // Use uniqueLeagueIDs array instead of iterating all keys in footyStatsToSofaScore
   const leagueObject = footyStatsToSofaScore[0];
 
-  for (const leagueId of uniqueLeagueIDs) {
+  // 1. Create an array of promises (one for each league)
+  const playerPromises = uniqueLeagueIDs.map((leagueId) => {
     const mapping = leagueObject[leagueId];
-    if (!mapping) continue;
+    if (!mapping) return Promise.resolve(null);
 
     const { id: sofaScoreId, season: sofaScoreSeason } = mapping;
 
-    // We do NOT await here. We fire the request and move to the next leagueId immediately.
-    fetch(`${process.env.REACT_APP_EXPRESS_SERVER}bestPlayers/${sofaScoreId}/${sofaScoreSeason}/${week}`)
+    return fetch(`${process.env.REACT_APP_EXPRESS_SERVER}bestPlayers/${sofaScoreId}/${sofaScoreSeason}/${week}`)
       .then(res => res.json())
-      .then(teamStats => {
-        allLeagueStats[`playerStats${leagueId}`] = teamStats;
-      })
+      .then(playerData => ({
+        key: `playerStats${leagueId}`,
+        data: playerData
+      }))
       .catch(error => {
         console.error(`Error for league ${leagueId}:`, error);
-        allLeagueStats[`playerStats${leagueId}`] = { error: error.message };
+        return { key: `playerStats${leagueId}`, data: { error: error.message } };
       });
-  }
+  });
 
-  return allLeagueStats;
+  // 2. Return the Promise.all chain so the caller can wait for completion
+  return Promise.all(playerPromises).then((results) => {
+    const allPlayerStats = {};
+    results.forEach((result) => {
+      if (result) {
+        allPlayerStats[result.key] = result.data;
+      }
+    });
+    return allPlayerStats;
+  });
 }
 
 export let playerStatsArray;
@@ -4555,8 +4560,9 @@ export async function getScorePrediction(day, mocked) {
   //   "FixtureContainer"
   // );
 
-  const leagueStatsPromise = fetchLeagueStats();
-  const playerStatsPromise = fetchPlayerStats();
+const leagueStatsPromise = fetchLeagueStats(); // This is still a promise!
+const playerStatsPromise = fetchPlayerStats();
+
 
   const predictedScoresPromise = fetch(`${process.env.REACT_APP_EXPRESS_SERVER}predictedScores`);
   const leagueAveragesPromise = fetch(`${process.env.REACT_APP_EXPRESS_SERVER}league-averages`);
@@ -5212,8 +5218,8 @@ export async function getScorePrediction(day, mocked) {
 
 
   // Assign to global/outer scope variables
-  leagueStatsArray = leagueStatsPromise;
-  playerStatsArray = playerStatsPromise;
+  leagueStatsArray = leagueStats;
+  playerStatsArray = playerStats;
 
 
   // --- 5. RERENDER FIXTURES WITH FULL STATS ---
