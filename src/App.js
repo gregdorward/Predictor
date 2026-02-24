@@ -98,12 +98,12 @@ const leagueOrder = [
   15047, //Swiss prem 25 12326
   15053, //Croatia 25 12121
   14973, //Czecjh 25 12336
-  14089, // Finland 25 14089
+  // 14089, // Finland 25 14089
   // 14951, // Ulraine 25 12483
   // 15065, // Serbia 25 12138
   // 15063, // Slovenia 25 12476
   // 14933, // Slovakia 25 12944
-  13952, //Irish Prem 25
+  16537, //Irish Prem 26
   15066, //Spanish secunda 25 12467
   15632, //Italy serie B 24 12621
   14931, //Bundesliga 2 25 12528
@@ -113,8 +113,7 @@ const leagueOrder = [
   15061, //Scottish Championship 25 12456
   14943, //Scottish league 1 25 12474
   15209, //Scottish league 2 25 12453
-  13973, //MLS 25,
-  14236, //Canada 25
+  16504, //MLS 26,
   16544, //Brazil prem 26
   16571, //Argentina prem 23 15310 16571
   // 14086, // Columbia 25
@@ -123,13 +122,13 @@ const leagueOrder = [
   15234, //Mexico prem 25 12136
   16614, //Colombia 26
   16036, //Australian A league 24/25 13703
-  16243, //S Korea 25,
+  16627, //S Korea 25,
   16242, //Japan 25
   13964, // WC Qual Europe 26,
   10121, // WC Qual SA 26,
   // 11426, // WC Qual ConCaf 26
   // 12801, // WC Qual Aus 26,
-  13734, //Nations league 24
+  16808, //Nations league 24
   14924, // Champs league 25 12321
   15002, //Europa 25 12327
   14904, //Europa Conference 25 12278

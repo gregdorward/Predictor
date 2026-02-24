@@ -4223,9 +4223,9 @@ const footyStatsToSofaScore = [
       season: 76457,
     },
     //MLS
-    13973: {
+    16504: {
       id: 242,
-      season: 70158,
+      season: 86668,
     },
     //Ligue 1 25
     14932: {
@@ -4388,9 +4388,9 @@ const footyStatsToSofaScore = [
       id: 196,
       season: 69871, // J League 25
     },
-    16243: {
+    16627: {
       id: 410,
-      season: 70830, // K League 25
+      season: 88606, // K League 25
     },
     12772: {
       id: 955,
@@ -4400,10 +4400,10 @@ const footyStatsToSofaScore = [
       id: 13363,
       season: 70263 // USL 25
     },
-    14236: {
-      id: 13470,
-      season: 72315 // Canadian Premier League 25
-    },
+    // 14236: {
+    //   id: 13470,
+    //   season: 72315 // Canadian Premier League 25
+    // },
     13964: {
       id: 11,
       season: 69427, // World Cup EU 2026
@@ -4412,9 +4412,9 @@ const footyStatsToSofaScore = [
       id: 295,
       season: 53820, // World Cup SA 2026
     },
-    13952: {
+    16537: {
       id: 192,
-      season: 69981, // Ireland 24/25
+      season: 87682, // Ireland 24/25
     },
     16036: {
       id: 136,

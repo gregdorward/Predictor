@@ -84,10 +84,14 @@ export async function generateTables(a, leagueIdArray, allResults) {
   basicTableArray = [];
   bespokeLeagueArray = [];
   let i = 0;
+  console.log(leagueArray)
   leagueArray.forEach(function (league) {
     let currentLeagueId = leagueIdArray[i];
     i++;
     leagueInstance = [];
+    console.log(currentLeagueId)
+
+    const hasSpecificTable = league?.data?.specific_tables?.[0]?.table;
 
     //Skip MLS which has a weird format
     if (
@@ -95,7 +99,7 @@ export async function generateTables(a, leagueIdArray, allResults) {
       // currentLeagueId !== 13973 &&
       currentLeagueId !== 12933 &&
       // currentLeagueId !== 13734 &&
-      league.data.specific_tables[0]?.table
+      hasSpecificTable
     ) {
       for (
         let index = 0;
@@ -149,11 +153,11 @@ export async function generateTables(a, leagueIdArray, allResults) {
         Zone: item.zone,
       }));
       basicTableArray.push({ id: currentLeagueId, table: basicElements });
-    } else if (currentLeagueId === 13973
+    } else if (currentLeagueId === 16504
     ) {
       let instances;
 
-      if (currentLeagueId === 13973) {
+      if (currentLeagueId === 16504) {
         if (league.data.specific_tables[0].groups) {
           instances = league.data.specific_tables[0].groups;
           groups = true
@@ -278,7 +282,9 @@ export async function renderTable(index, results, id) {
     (result) => result.date_unix >= twoWeeksAgo
   );
 
-  if (id !== 13973 && id !== 12933) {
+  if (id !== 16504 && id !== 14236) {
+    console.log(tableArray)
+    console.log(id)
     const leagueTable = tableArray.filter((table) => table.id === id);
 
     league = leagueTable[0].table;
@@ -310,7 +316,7 @@ export async function renderTable(index, results, id) {
         `leagueName${id}`
       );
     }
-  } else if (groups) {
+  } else if (groups && id !== 14236) {
 
     const leagueTable = bespokeLeagueArray.filter((table) => table.id === id);
     const leagueTable1 = leagueTable[0].table;
@@ -657,6 +663,8 @@ export async function generateFixtures(
     // render(<div></div>, "FixtureContainer");
 
     fixtureResponse = await fetch(url);
+
+    console.log(fixtureResponse)
 
     await fixtureResponse.json().then((fixtures) => {
       fixtureArray = Array.from(fixtures.data);

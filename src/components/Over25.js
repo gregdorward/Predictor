@@ -40,7 +40,7 @@ const ids = [
   15053, //Croatia 25 12121
   14973, //Czecjh 25 12336
   14089, // Finland 25 14089
-  13952, //Irish Prem 25
+  16537, //Irish Prem 25
   15066, //Spanish secunda 25 12467
   15632, //Italy serie B 24 12621
   14931, //Bundesliga 2 25 12528
@@ -50,10 +50,10 @@ const ids = [
   14943, //Scottish league 1 25 12474
   15209, //Scottish league 2 25 12453
   15478, //Women's prem 25 12827
-  13973, //MLS 25,
+  16504, //MLS 25,
   13967, // USL Championship 25
   14226, // US Open Cup 25
-  14236, //Canada 25
+  // 14236, //Canada 25
   16544, //Brazil prem 25
   14305, // Brazil Serie B 25
   16571, //Argentina prem 26 15310
@@ -61,7 +61,7 @@ const ids = [
   16614, //Colombia prem 26 11539
   12933, //National league North and South 24
   16036, //Australian A league 24/25 13703
-  16243, //S Korea 25,
+  16627, //S Korea 25,
   16242, //Japan 25
   13964, // WC Qual Europe 26,
   10121, // WC Qual SA 26,

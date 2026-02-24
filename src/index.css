@@ -852,7 +852,7 @@ button {
   font-family: 'Open Sans', sans-serif;
   width: 12em;
   height: auto;
-  font-size: 1em;
+  font-size: 1.1em;
   cursor: pointer;
   color: var(--secondary-button-text-color);
   background-color: var(--button-color);
@@ -2368,7 +2368,7 @@ strong.LOST {
 .resultExplainer {
   height: auto;
   display: inline-block;
-  color: black;
+  color: var(--text-color);
   border-radius: 0px;
   font-size: 1em;
 }

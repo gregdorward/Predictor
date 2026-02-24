@@ -3426,6 +3426,7 @@ function GameStats({ game, displayBool, stats, handleToggleTip, userTips }) {
   };
 
   console.log(stats)
+  console.log(game)
   console.log(ranksHome)
   console.log(ranksAway)
   console.log(stats?.topTeams)
@@ -3753,7 +3754,7 @@ function GameStats({ game, displayBool, stats, handleToggleTip, userTips }) {
           length="3"
           element1={
             <>
-              <h2>All games</h2>
+              <h2>{`${game.leagueDesc} Form`}</h2>
               <div className="flex-container">
                 <StatsHomeComponent
                   getCollapsableProps={getCollapsableProps}

@@ -8,7 +8,7 @@ const Ids = [
     { 14934: 24 }, //League 1
     { 14968: 35 }, // Bundesliga
     { 15068: 23 }, // Serie A
-    { 13973: 242 }, // MLS
+    { 16504: 242 }, // MLS
     { 14932: 34 }, //Ligue 1,
     { 15000: 36 }, //Scottish Prem
 ];

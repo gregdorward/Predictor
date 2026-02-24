@@ -108,7 +108,7 @@ export const sofaScoreIds = [
   { 13878: 357 }, // Club World Cup 25
   { 16261: 384 }, // Copa Libertadores 25
   { 15068: 23 }, //Serie A
-  { 13973: 242 }, //MLS
+  { 16504: 242 }, //MLS
   { 13967: 13363 }, // USL
   { 14932: 34 }, //Ligue 1,
   { 15000: 36 }, //Scottish Prem
@@ -132,7 +132,7 @@ export const sofaScoreIds = [
   { 15063: 212 }, // Slovenia 25
   { 14933: 211 }, // Slovakia 25
 
-  { 13952: 192 }, //Irish Prem
+  { 16537: 192 }, //Irish Prem
   { 16036: 136 }, //Aus A League
   { 12327: 679 }, //Europa
   { 14904: 17015 }, //Europa Conference
@@ -145,7 +145,7 @@ export const sofaScoreIds = [
   { 15061: 206 }, //Scottish Championship 22/23
   { 14943: 207 }, //Scottish league 1 22/23
   { 15209: 209 }, //Scottish league 2 22/23
-  { 14236: 13470 }, //Canada 25
+  // { 14236: 13470 }, //Canada 25
   { 16544: 325 }, //Brazil prem 26
   { 15746: 155 }, //Argentina prem 23
   { 15234: 11621 }, //Mexico prem 25
@@ -409,7 +409,7 @@ export default function LeagueTable(props) {
 
   if (
     // props.GamesPlayed > 3 &&
-    props.Teams[0].LeagueID !== 13973 && //MLS
+    props.Teams[0].LeagueID !== 16504 && //MLS
     props.Teams[0].LeagueID !== 12933 && //UKNorth&South
     props.Teams[0].LeagueID !== 15002 //Europa
     // props.Teams[0].LeagueID !== 14924 //ChampionsLeague
@@ -617,7 +617,7 @@ export default function LeagueTable(props) {
   } else if (props.Teams[0].LeagueID === 4340) {
     return null;
   } else if (
-    props.Teams[0].LeagueID === 13973 || //MLS
+    props.Teams[0].LeagueID === 16504 || //MLS
     // props.Teams[0].LeagueID === 12933 || //UKNorth&South
     props.Teams[0].LeagueID === 15002 || //Europa
     props.Teams[0].LeagueID === 14924 //ChampionsLeague

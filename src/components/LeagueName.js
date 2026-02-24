@@ -39,7 +39,7 @@ const sofaScoreIds = [
   { 15063: 212 }, // Slovenia 25
   { 14933: 211 }, // Slovakia 25
 
-  { 13952: 192 }, //Irish Prem
+  { 16537: 192 }, //Irish Prem
   { 16036: 136 }, //Aus A League
   { 15002: 679 }, //Europa
   { 14904: 17015 }, //Europa Conference
@@ -52,9 +52,8 @@ const sofaScoreIds = [
   { 15061: 206 }, //Scottish Championship 22/23
   { 14943: 207 }, //Scottish league 1 22/23
   { 15209: 209 }, //Scottish league 2 22/23
-    { 13973: 242 }, //MLS
+    { 16504: 242 }, //MLS
   { 13967: 13363 }, // USL
-  { 14236: 13470 }, //Canada 25
   { 16544: 325 }, //Brazil prem 26
   { 16571: 155 }, //Argentina prem 26
   { 16614: 11539}, //Colombia 26
@@ -64,7 +63,7 @@ const sofaScoreIds = [
   { 15657: 173 }, //National league
   { 15845: 176 }, //National league north 25
   { 15844: 174 }, //National league south 25
-  { 16243: 410 }, //S Korea 25,
+  { 16627: 410 }, //S Korea 25,
   { 16242: 196 }, //Japan 25
   { 12772: 955 }, //Saudi 24/25
   { 13964: 11}, // World Cup 26 EU Qualifiers
