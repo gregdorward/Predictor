@@ -889,7 +889,7 @@ export function Fixture(props) {
           <div className="LockIcon">🔒</div>
           <div className="LockText">
             {props.originalLength} games have been capped at {props.newLength} for free users
-            with full stats available for those returned - sign up for as little as £1 a week to access 50 leagues and cups including the EPL, EFL, La Liga, Serie A, Champions League, Europa League, Copa Libertadores and loads more.
+            with full stats available for those returned - sign up for access 50 leagues and cups including the EPL, EFL, La Liga, Serie A, Champions League, Europa League, Copa Libertadores and loads more.
           </div>
         </>
       )}{" "}

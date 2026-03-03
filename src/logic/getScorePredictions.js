@@ -24,6 +24,12 @@ import {
   minimumXG,
   minimumLast6,
   minimumGDHorA,
+  edge,
+  oddsRange,
+  over25Probability,
+  bttsProbability,
+  O25edge,
+  BTTSedge,
 } from "../components/SliderDiff";
 import { checkUserPaidStatus } from "../logic/hasUserPaid";
 import { userDetail } from "../logic/authProvider";
@@ -82,7 +88,7 @@ let allWinOutcomes = 0;
 let allLossOutcomes = 0;
 let allDrawOutcomes = 0;
 let totalROI = 0;
-let totalInvestment = 0;
+// let totalInvestment = 0;
 let totalProfit = 0;
 const resultedUserTipsArray = []
 export let formObjectHome;
@@ -427,20 +433,23 @@ function UserTips() {
   const [loading, setLoading] = useState(false);
 
   const fetchAndSetUserTips = async () => {
-    setLoading(true);
-    const data = await fetchUserTips();
+  setLoading(true);
+  const data = await fetchUserTips();
 
-    if (data && typeof data === 'object') {
-      const allSlips = Object.entries(data).flatMap(([uid, userSlips]) => {
-        if (!Array.isArray(userSlips)) return [];
+  if (data && typeof data === 'object') {
+    // 1. Define the start of the current month (e.g., March 1st, 2026)
+    const now = new Date();
+    const startOfMonth = new Date(now.getFullYear(), now.getMonth(), 1).getTime();
 
-        return userSlips.map(slip => {
-          // 1. Ensure we only grab valid numbers
+    const allSlips = Object.entries(data).flatMap(([uid, userSlips]) => {
+      if (!Array.isArray(userSlips)) return [];
+
+      return userSlips
+        .map(slip => {
           const validDates = slip.selections
             .map(leg => Number(leg.date))
             .filter(date => !isNaN(date) && date > 0);
 
-          // 2. Find earliest (in seconds) or fallback to now
           const earliestUnix = validDates.length > 0
             ? Math.min(...validDates)
             : Math.floor(Date.now() / 1000);
@@ -449,23 +458,26 @@ function UserTips() {
             ...slip,
             tipper: slip.tipper || `User_${uid.substring(0, 5)}`,
             uid: uid,
-            earliestGameDate: earliestUnix // This is now "lifted" (in seconds)
+            earliestGameDate: earliestUnix
           };
+        })
+        // 2. FILTER: Only keep slips submitted in the current month
+        .filter(slip => {
+          const submissionTime = new Date(slip.submittedAt).getTime();
+          return submissionTime >= startOfMonth;
         });
-      });
+    });
 
-      // 3. Sort: Nearest game first
-      // We compare Unix seconds (a.earliestGameDate - b.earliestGameDate)
+    // 3. Sort: Newest submissions first
+    const sorted = [...allSlips].sort((a, b) =>
+      new Date(b.submittedAt).getTime() - new Date(a.submittedAt).getTime()
+    );
 
-      const sorted = [...allSlips].sort((a, b) =>
-        new Date(b.submittedAt).getTime() - new Date(a.submittedAt).getTime()
-      ); console.log("Verified Slips with Lifted Dates:", sorted);
-
-      setSlips(sorted);
-      setIsVisible(true);
-    }
-    setLoading(false);
-  };
+    setSlips(sorted);
+    setIsVisible(true);
+  }
+  setLoading(false);
+};
 
   if (!isVisible && !loading) {
 
@@ -2027,11 +2039,11 @@ export async function generateGoals(homeForm, awayForm, match) {
   const LEAGUE_WEIGHT = 1.0 - ALPHA;
 
   const homeLambda_final =
-    (homeLambdaAverage * ALPHA) +
+    (homeLambda_rawOverall * ALPHA) +
     (averageGoalsPerTeam * LEAGUE_WEIGHT);
 
   const awayLambda_final =
-    (awayLambdaAverage * ALPHA) +
+    (awayLambda_rawOverall * ALPHA) +
     (averageGoalsPerTeam * LEAGUE_WEIGHT);
 
 
@@ -2132,6 +2144,14 @@ export async function generateGoals(homeForm, awayForm, match) {
   const oddsComparisonHome = await comparison(match.awayOdds, match.homeOdds);
   const oddsComparisonAway = await comparison(match.homeOdds, match.awayOdds);
 
+
+  const XGtoActualComparisonHome = await comparison(homeForm.actualToXGDifferenceRecent, awayForm.actualToXGDifferenceRecent);
+  const XGtoActualComparisonAway = await comparison(awayForm.actualToXGDifferenceRecent, homeForm.actualToXGDifferenceRecent);
+
+  console.log(match.homeTeam, "vs", match.awayTeam);
+  console.log("XG to Actual Comparison Home:", XGtoActualComparisonHome);
+  console.log("XG to Actual Comparison Away:", XGtoActualComparisonAway);
+
   homeForm.XGRating =
     // homeForm.attackingStrength +
     // homeForm.defensiveStrengthScoreGeneration +
@@ -2141,7 +2161,7 @@ export async function generateGoals(homeForm, awayForm, match) {
     // homeForm.defensiveStrengthScoreGenerationHomeOnly +
     (homeForm.avPoints10 / 2) +
     (homeForm.avPoints5 / 2) +
-    (homeForm.goalDifferenceHomeOrAway / 5) +
+    (homeForm.goalDifferenceHomeOrAway / 6) +
     (homeForm.teamXGAllRollingAverage - homeForm.teamXGConceededAllRollingAverage)
 
   awayForm.XGRating =
@@ -2153,7 +2173,7 @@ export async function generateGoals(homeForm, awayForm, match) {
     // awayForm.defensiveStrengthScoreGenerationAwayOnly +
     (awayForm.avPoints10 / 2) +
     (awayForm.avPoints5 / 2) +
-    (awayForm.goalDifferenceHomeOrAway / 5) +
+    (awayForm.goalDifferenceHomeOrAway / 6) +
     (awayForm.teamXGAllRollingAverage - awayForm.teamXGConceededAllRollingAverage)
 
 
@@ -3371,6 +3391,9 @@ export async function calculateScore(match, index, divider, calculate, AIPredict
       finalHomeGoals = rawFinalHomeGoals;
       finalAwayGoals = rawFinalAwayGoals;
     }
+    match.O25Value = (match.over25Probability - match.over25Implied).toFixed(2)
+    match.U25Value = (match.under25Probability - match.under25Implied).toFixed(2)
+    match.BTTSValue = (match.bttsYesProbability - match.bttsYesImplied).toFixed(2)
 
     if (match.status !== "suspended") {
       if (finalHomeGoals > finalAwayGoals) {
@@ -3379,6 +3402,15 @@ export async function calculateScore(match, index, divider, calculate, AIPredict
         match.winValue = (match.homeWinProbability - homeWinImplied).toFixed(2)
         match.winImplied = homeWinImplied;
         match.winImpliedOurs = match.homeWinProbability
+
+        // console.log(match.winValue)
+
+        //   if (match.winValue < 0) {  
+        //     match.omit = true;
+        //   } else {
+        //     match.omit = false;
+        //   }
+
         if (
           formHome.lastGame === "L" ||
           formHome.last2Points < 3 ||
@@ -3395,6 +3427,11 @@ export async function calculateScore(match, index, divider, calculate, AIPredict
         match.winValue = (match.awayWinProbability - awayWinImplied).toFixed(2)
         match.winImplied = awayWinImplied;
         match.winImpliedOurs = match.awayWinProbability
+        // if (match.winValue < 0) {  
+        //   match.omit = true;
+        // } else {
+        //   match.omit = false;
+        // }
         if (
           formAway.lastGame === "L" ||
           formAway.last2Points < 3 ||
@@ -3408,9 +3445,14 @@ export async function calculateScore(match, index, divider, calculate, AIPredict
       } else if (finalHomeGoals === finalAwayGoals) {
         match.prediction = "draw";
         drawPredictions = drawPredictions + 1;
-        // match.winValue = (draw - drawImplied).toFixed(2)
+        match.drawValue = (draw - drawImplied).toFixed(2)
         match.winImplied = drawImplied;
         match.winImpliedOurs = match.drawProbability
+        // if (match.drawValue < -5) {
+        //   match.omit = true;
+        // } else {
+        //   match.omit = false;
+        // }
       }
 
       if (finalHomeGoals > 1 && finalAwayGoals > 1) {
@@ -3694,25 +3736,25 @@ export async function calculateScore(match, index, divider, calculate, AIPredict
       finalAwayGoals = "P";
     }
 
-    if (
-      finalHomeGoals > finalAwayGoals &&
-      match.homeOdds !== 0 &&
-      (match.homeOdds < rangeValue[0] || match.homeOdds > rangeValue[1])
-    ) {
-      match.omit = true;
-    } else if (
-      finalAwayGoals > finalHomeGoals &&
-      match.homeOdds !== 0 &&
-      (match.awayOdds < rangeValue[0] || match.awayOdds > rangeValue[1])
-    ) {
-      match.omit = true;
-    } else if (
-      finalHomeGoals === finalAwayGoals &&
-      match.homeOdds !== 0 &&
-      (match.drawOdds < rangeValue[0] || match.drawOdds > rangeValue[1])
-    ) {
-      match.omit = true;
-    }
+    // if (
+    //   finalHomeGoals > finalAwayGoals &&
+    //   match.homeOdds !== 0 &&
+    //   (match.homeOdds < rangeValue[0] || match.homeOdds > rangeValue[1])
+    // ) {
+    //   match.omit = true;
+    // } else if (
+    //   finalAwayGoals > finalHomeGoals &&
+    //   match.homeOdds !== 0 &&
+    //   (match.awayOdds < rangeValue[0] || match.awayOdds > rangeValue[1])
+    // ) {
+    //   match.omit = true;
+    // } else if (
+    //   finalHomeGoals === finalAwayGoals &&
+    //   match.homeOdds !== 0 &&
+    //   (match.drawOdds < rangeValue[0] || match.drawOdds > rangeValue[1])
+    // ) {
+    //   match.omit = true;
+    // }
 
     const last10PointDiffHomePerspective = Math.abs(
       formHome.pointsSum6 - formAway.pointsSum6
@@ -3736,73 +3778,158 @@ export async function calculateScore(match, index, divider, calculate, AIPredict
     match.goalDifferenceComparison =
       parseFloat(formHome.goalDifference) - parseFloat(formAway.goalDifference);
 
+    match.omit = false; // default to false, only set to true if conditions are met
+
+    console.log(`Evaluating match: ${match.game}`);
+    console.log(match.omit);
     switch (true) {
       case finalHomeGoals > finalAwayGoals:
-        if (minimumXG !== 0 && XGDiffBetweenTeamsHomePerspective < minimumXG) {
+        if (minimumXG !== null && XGDiffBetweenTeamsHomePerspective < minimumXG) {
           match.omit = true;
         }
         if (
-          minimumLast6 !== 0 &&
+          minimumLast6 !== null &&
           last10PointDiffHomePerspective < minimumLast6
         ) {
           match.omit = true;
         }
         if (
-          minimumGDHorA !== 0 &&
+          edge !== null &&
+          match.winValue < edge
+        ) {
+          match.omit = true;
+        }
+        if (
+          O25edge !== null &&
+          match.O25Value < O25edge
+        ) {
+          match.omit = true;
+        }
+        if (
+          BTTSedge !== null &&
+          match.BTTSValue < BTTSedge
+        ) {
+          match.omit = true;
+        }
+        if (
+          minimumGDHorA !== null &&
           match.goalDiffHomeOrAwayComparison < minimumGDHorA
         ) {
           match.omit = true;
         }
-        if (minimumGD !== 0 && match.goalDifferenceComparison < minimumGD) {
+        if (minimumGD !== null && match.goalDifferenceComparison < minimumGD) {
+          console.log(`match.goalDifferenceComparison: ${match.goalDifferenceComparison}`);
+          console.log(`minimumGD: ${minimumGD}`);
+          console.log(`match: ${match.game}`);
+          match.omit = true;
+        }
+        if (over25Probability !== null && match.over25Probability < over25Probability) {
+          match.omit = true;
+        }
+        if (bttsProbability !== null && match.bttsYesProbability < bttsProbability) {
+          match.omit = true;
+        }
+        if (oddsRange !== null && (match.homeOdds < oddsRange[0] || match.homeOdds > oddsRange[1])) {
           match.omit = true;
         }
         break;
       case finalHomeGoals < finalAwayGoals:
-        if (minimumXG !== 0 && XGDiffBetweenTeamsAwayPerspective < minimumXG) {
+        if (minimumXG !== null && XGDiffBetweenTeamsAwayPerspective < minimumXG) {
           match.omit = true;
         }
         if (
-          minimumLast6 !== 0 &&
+          minimumLast6 !== null &&
           last6PointDiffAwayPerspective < minimumLast6
         ) {
           match.omit = true;
         }
         if (
-          minimumGDHorA !== 0 &&
+          minimumGDHorA !== null &&
           Math.abs(match.goalDiffHomeOrAwayComparison) < minimumGDHorA
         ) {
           match.omit = true;
         }
         if (
-          minimumGD !== 0 &&
+          edge !== null &&
+          match.winValue < edge
+        ) {
+          match.omit = true;
+        }
+                if (
+          O25edge !== null &&
+          match.O25Value < O25edge
+        ) {
+          match.omit = true;
+        }
+        if (
+          BTTSedge !== null &&
+          match.BTTSValue < BTTSedge
+        ) {
+          match.omit = true;
+        }
+        if (
+          minimumGD !== null &&
           Math.abs(match.goalDifferenceComparison) < minimumGD
         ) {
+          match.omit = true;
+        }
+        if (over25Probability !== null && match.over25Probability < over25Probability) {
+          match.omit = true;
+        }
+        if (bttsProbability !== null && match.bttsYesProbability < bttsProbability) {
+          match.omit = true;
+        }
+        if (oddsRange !== null && (match.awayOdds < oddsRange[0] || match.awayOdds > oddsRange[1])) {
           match.omit = true;
         }
         break;
       case finalHomeGoals === finalAwayGoals:
         if (
-          minimumXG !== 0 &&
+          minimumXG !== null &&
           Math.abs(XGDiffBetweenTeamsHomePerspective) < minimumXG
         ) {
           match.omit = true;
         }
         if (
-          minimumLast6 !== 0 &&
+          minimumLast6 !== null &&
           last10PointDiffHomePerspective < minimumLast6
         ) {
           match.omit = true;
         }
+        if (edge !== null && match.drawValue < edge) {
+          match.omit = true;
+        }
+                if (
+          O25edge !== null &&
+          match.O25Value < O25edge
+        ) {
+          match.omit = true;
+        }
         if (
-          minimumGDHorA !== 0 &&
+          BTTSedge !== null &&
+          match.BTTSValue < BTTSedge
+        ) {
+          match.omit = true;
+        }
+        if (
+          minimumGDHorA !== null &&
           Math.abs(match.goalDiffHomeOrAwayComparison) < minimumGDHorA
         ) {
           match.omit = true;
         }
         if (
-          minimumGD !== 0 &&
+          minimumGD !== null &&
           Math.abs(match.goalDifferenceComparison) < minimumGD
         ) {
+          match.omit = true;
+        }
+        if (over25Probability !== null && match.over25Probability < over25Probability) {
+          match.omit = true;
+        }
+        if (bttsProbability !== null && match.bttsYesProbability < bttsProbability) {
+          match.omit = true;
+        }
+        if (oddsRange !== null && (match.drawOdds < oddsRange[0] || match.drawOdds > oddsRange[1])) {
           match.omit = true;
         }
         break;
@@ -3810,11 +3937,11 @@ export async function calculateScore(match, index, divider, calculate, AIPredict
         break;
     }
 
-    if (match.omit === true) {
-      finalHomeGoals = "-";
-      finalAwayGoals = "-";
-      match.status = "notEnoughData";
-    }
+    // if (match.omit === true) {
+    //   finalHomeGoals = "-";
+    //   finalAwayGoals = "-";
+    //   match.status = "notEnoughData";
+    // }
 
     return [
       finalHomeGoals,
@@ -3844,6 +3971,7 @@ async function getSuccessMeasure(fixtures) {
   let successCount = 0;
   let profit = 0;
   let netProfit = 0;
+  let totalInvestment = 0;
 
   let hasUpdates = false; // Initialize the flag
   // console.log(allIndividualTips);
@@ -3925,7 +4053,8 @@ async function getSuccessMeasure(fixtures) {
       fixtures[i].hasOwnProperty("prediction") &&
       fixtures[i].omit !== true
     ) {
-
+      console.log(`Evaluating fixture: ${fixtures[i].game}`);
+      console.log(fixtures[i]);
       // 2. Normalize inputs to Numbers to avoid alphabetical comparison errors ("10" vs "2")
       const actualHome = Number(fixtures[i].homeGoals);
       const actualAway = Number(fixtures[i].awayGoals);
@@ -4015,6 +4144,7 @@ async function getSuccessMeasure(fixtures) {
   console.log(`paidUser: ${isPaid}`);
 
   console.log(`totalInvestment: ${totalInvestment}`);
+  console.log(investment);
 
   statsArray.trueFormArray.sort((a, b) => a.score - b.score);
   statsArray.bttsArray.sort((a, b) => a.score - b.score);
@@ -4106,21 +4236,14 @@ async function getSuccessMeasure(fixtures) {
           </CollapsableStats></>
       } />, "ROIPlaceholder"
     );
-  } else if (!isPaid) {
+  } else {
     render(
       <Collapsable buttonText={"ROI"} element={
         <Fragment>
-          <p>{`Correct W/D/W predictions: ${successCount} / ${investment} (${(
-            (successCount / investment) *
-            100
-          ).toFixed(1)}%)`}</p>
-          <p>Full ROI stats available when fixtures are uncapped</p>
         </Fragment>
       } />,
       "ROIPlaceholder"
     );
-  } else {
-    return;
   }
 }
 
@@ -4560,8 +4683,8 @@ export async function getScorePrediction(day, mocked) {
   //   "FixtureContainer"
   // );
 
-const leagueStatsPromise = fetchLeagueStats(); // This is still a promise!
-const playerStatsPromise = fetchPlayerStats();
+  const leagueStatsPromise = fetchLeagueStats(); // This is still a promise!
+  const playerStatsPromise = fetchPlayerStats();
 
 
   const predictedScoresPromise = fetch(`${process.env.REACT_APP_EXPRESS_SERVER}predictedScores`);

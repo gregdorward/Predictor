@@ -639,6 +639,17 @@ h6 {
   margin-bottom: 0px;
 }
 
+.FilterExplainer {
+  font-size: 1em;
+  color: var(--text-color);
+  /* padding-bottom: 1em; */
+}
+
+.FilterHeading {
+  font-size: 1.1em;
+  padding-top: 0.5em;
+}
+
 .PremiumUpsell {
   background: var(--alternate-background-color);
   border: 1px solid #e5e7eb;
@@ -1000,9 +1011,10 @@ p {
 .Options button {
   background-color: var(--background-color);
   color: var(--text-color);
-  border: none;
   width: 8em;
   box-shadow: none;
+  font-size: 0.9em;
+  margin-top: 1em;
 }
 
 .OddsRadios {
@@ -1028,7 +1040,7 @@ p {
 }
 
 .LoginSignUp:hover {
-  background-color:#020029
+  background-color: #020029
 }
 
 h6.PredictionTypeText {
@@ -1120,11 +1132,12 @@ span.MembershipInfo {
   padding-bottom: 0em;
 }
 
-.Filters2 button{
+.Filters2 button {
   border: var(--primary-color) 1px solid;
+  margin-top: 1em;
 }
 
-.Filters2 button:hover{
+.Filters2 button:hover {
   background-color: var(--button-color);
   color: var(--primary-color);
   border: var(--primary-color) 2px solid;
@@ -1416,7 +1429,7 @@ td {
 }
 
 
-table tr:nth-child(even){
+table tr:nth-child(even) {
   background-color: var(--alternate-background-color);
 }
 
@@ -1450,7 +1463,7 @@ table tr:nth-child(even){
 
 .PlayerStatsTable td {
   padding-top: 0.5em;
-padding-bottom: 0.5em;
+  padding-bottom: 0.5em;
 }
 
 
@@ -2246,12 +2259,14 @@ strong.LOST {
   background-color: var(--button-text-color);
   color: var(--button-color);
   border: var(--primary-color) 1px solid;
+  font-size: 0.9em;
 }
 
 .ProbabilityToggle:hover {
   background-color: var(--button-color);
   color: var(--primary-color);
   border: var(--primary-color) 2px solid;
+  font-size: 0.9em;
 }
 
 .ProbabilityContainer {
@@ -2589,8 +2604,30 @@ strong.LOST {
 }
 
 .FilterContainer {
+  width: 95%;
+  margin-left: auto;
+  margin-right: auto;
+  background-color: var(--background-color);
+}
+
+.FilterContainer button {
+  font-size: 1em;
+  background-color: var(--accent-color);
   width: 100%;
-  background-color: var(--secondary-background-color);
+  margin-left: auto;
+  margin-right: auto;
+  color: var(--button-text-color);
+  box-shadow: none;
+  margin-top: 0.5em;
+}
+
+.FilterDiv {
+  font-size: 0.9em;
+  padding-bottom: 0.5em;
+}
+
+.SliderBar {
+  padding: 1em;
 }
 
 .ValueTable {
@@ -3090,6 +3127,7 @@ h6.MediaTitle {
   margin-bottom: 1em;
   background-color: var(--background-color);
   color: var(--text-color);
+  font-size: 0.9em;
 }
 
 .TopPicksGrid {
@@ -4089,6 +4127,7 @@ li.FormHeader {
   width: 4em;
   background-color: var(--background-color);
   color: var(--text-color);
+  font-size: 0.9em;
 }
 
 .PredictionsOfTheDay {
@@ -5162,7 +5201,7 @@ input:active+.design::after {
   color: var(--text-color);
 }
 
-.InsightsButton{
+.InsightsButton {
   font-size: 1em;
   background-color: var(--background-color);
   margin-left: 0.5em;

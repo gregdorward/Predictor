@@ -1020,79 +1020,142 @@ function AppContent() {
           />
         </div>
       </div>
-      <Collapsable buttonText={"Options \u{2630}"} className={"Options"} element={
-        <><><div id="Checkbox" /><div id="CheckboxTwo" className="CheckboxTwo" /></><Collapsable
-          buttonText={"Filters"}
-          className={"Filters2"}
-          element={<div className="FilterContainer">
-            <h6>
-              Use the below filters to show predicted winners that meet
-              the set criteria. Others will be greyed out and not included
-              in multi-builders and ROI stats. Once the filter is set, tap "Get Predictions and Stats" to see the results.
-            </h6>
-            <h6>Goals for/against differential filter</h6>
-            <div>
-              I'm looking for tips where the goal differential between
-              teams is at least...
-            </div>
-            <SlideDiff
-              value="0"
-              text="all games"
-              useCase="gd"
-              lower="0"
-              upper="30"
-            ></SlideDiff>
-            <h6>Goals for/against home or away differential filter</h6>
-            <div>
-              I'm looking for tips where the goal differential (home or
-              away only) between teams is at least...
-            </div>
-            <SlideDiff
-              value="0"
-              text="all games"
-              useCase="gdHorA"
-              lower="0"
-              upper="30"
-            ></SlideDiff>
-            <Fragment>
-              <h6>XG for/against differential filter</h6>
-              <div>
-                I'm looking for tips where the XG differential between
-                teams is at least...
-              </div>
-              <SlideDiff
-                value="0"
-                text="all games"
-                useCase="xg"
-                lower="0"
-                upper="30"
-              ></SlideDiff>
-            </Fragment>
-            <Fragment>
-              <h6>Last 6 points differential filter</h6>
-              <div>
-                I'm looking for tips where the points differential between
-                teams is at least...
-              </div>
-              <SlideDiff
-                value="0"
-                text="all games"
-                useCase="last10"
-                lower="0"
-                upper="18"
-              ></SlideDiff>
-            </Fragment>
-            <Fragment>
-              <h6>Choose your risk profile</h6>
-              <div>
-                I'm looking for tips where the odds are between...
-              </div>
-              <Slide value="1" text="all games"></Slide>
-            </Fragment>
-          </div>} /></>
-      }>
-      </Collapsable>
       <div id="Loading" className="Loading"></div>
+      <Collapsable
+        buttonText={"Customise tips"}
+        className={"Filters2"}
+        element={<div className="FilterContainer">
+          <h5 className="FilterExplainer">
+            Customise the tips you see by applying filters based on value, stats, probabilities and odds. Adjust the sliders to set your desired thresholds and click 'Get Predictions and Stats' to see the games that meet your criteria.
+          </h5>
+          <Collapsable
+            buttonText={"Value filters"}
+            className={"ValueFilters"}
+            element={
+              <><h6 className="FilterHeading">Match outcome edge %</h6><div className="FilterDiv">
+                Percentage difference between our probability and bookies implied probability for match outcome (home/draw/away)
+              </div><SlideDiff
+                value="0"
+                text="edge"
+                useCase="edge"
+                lower="0"
+                upper="40"
+              ></SlideDiff><h6 className="FilterHeading">Over 2.5 goals edge %</h6><div className="FilterDiv">
+                  Percentage difference between our probability and bookies implied probability for over 2.5 goals
+                </div><SlideDiff
+                  value="0"
+                  text="O25edge"
+                  useCase="O25edge"
+                  lower="0"
+                  upper="40"
+                ></SlideDiff><h6 className="FilterHeading">BTTS edge %</h6><div className="FilterDiv">
+                  Percentage difference between our probability and bookies implied probability for BTTS
+                </div><SlideDiff
+                  value="0"
+                  text="BTTSedge"
+                  useCase="BTTSedge"
+                  lower="0"
+                  upper="40"
+                ></SlideDiff></>
+            }
+          />
+          <Collapsable
+            buttonText={"Stats filters"}
+            className={"StatsFilters"}
+            element={
+              <><h6 className="FilterHeading">Goals for/against difference</h6>
+                <div className="FilterDiv">
+                  Goal difference between teams is at least...
+                </div>
+                <SlideDiff
+                  value="0"
+                  text="all games"
+                  useCase="gd"
+                  lower="0"
+                  upper="30"
+                ></SlideDiff>
+                <h6 className="FilterHeading">Goals for/against home or away difference</h6>
+                <div className="FilterDiv">
+                  Goal difference (home or away only) between teams is at least...
+                </div>
+                <SlideDiff
+                  value="0"
+                  text="all games"
+                  useCase="gdHorA"
+                  lower="0"
+                  upper="30"
+                ></SlideDiff>
+                <h6 className="FilterHeading">XG for/against difference</h6>
+                <div className="FilterDiv">
+                  XG difference between teams is at least...
+                </div>
+                <SlideDiff
+                  value="0"
+                  text="all games"
+                  useCase="xg"
+                  lower="0"
+                  upper="30"
+                ></SlideDiff>
+                <h6 className="FilterHeading">Last 6 points difference</h6>
+                <div className="FilterDiv">
+                  Points difference between teams is at least...
+                </div>
+                <SlideDiff
+                  value="0"
+                  text="all games"
+                  useCase="last10"
+                  lower="0"
+                  upper="18"
+                ></SlideDiff></>
+            }
+          />
+          <Collapsable
+            buttonText={"Probability filters"}
+            className={"ProbabilityFilters"}
+            element={
+              <>            <h6 className="FilterHeading">Over 2.5 goals probability</h6>
+                <div className="FilterDiv">
+                  Probability of over 2.5 goals is over...
+                </div>
+                <SlideDiff
+                  value="0"
+                  text="over25"
+                  useCase="over25"
+                  lower="50"
+                  upper="100"
+                ></SlideDiff>
+
+                <h6 className="FilterHeading">BTTS probability</h6>
+                <div className="FilterDiv">
+                  Probability of BTTS is over...
+                </div>
+                <SlideDiff
+                  value="0"
+                  text="btts"
+                  useCase="btts"
+                  lower="50"
+                  upper="100"
+                ></SlideDiff></>
+            }
+          />
+
+          <Collapsable
+            buttonText={"Odds filters"}
+            className={"OddsFilters"}
+            element={
+              <>
+                <h6 className="FilterHeading">Odds range</h6>
+                <div className="FilterDiv">
+                  Odds range for tipped outcome is between...
+                </div>
+                <SlideDiff
+                  value="0"
+                  text="odds"
+                  useCase="odds" lower="1.1" upper="10" step={0.1}
+                ></SlideDiff></>
+            }
+          />
+        </div>} />
       <div id="GeneratePredictions">
         {fixtures?.length > 0 && (
           <div className="PredictionControls">
@@ -1133,7 +1196,11 @@ function AppContent() {
             </Fragment>} />
         </div><div id="UserGeneratedTips" /><div id="shortlistRender" /><div id="ROIPlaceholder" /></>
       )}
-
+      <Collapsable buttonText={"Options \u{2630}"} className={"Options"} element={
+        <><><div id="Checkbox" /><div id="CheckboxTwo" className="CheckboxTwo" /></>
+        </>
+      }>
+      </Collapsable>
       {/* <Collapsable buttonText={"ROI"} className={"ROI"} element={<div id="successMeasure2" />} /> */}
       <div id="highLowLeagues" className="HighLowLeagues" />
       <div id="risk" />
