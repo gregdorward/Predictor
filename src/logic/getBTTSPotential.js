@@ -20,7 +20,7 @@ export async function getBTTSPotential(
     match.status !== "canceled"
   ) {
     if (
-      match.bttsYesProbability >= 60 &&
+      match.bttsYesProbability >= 65 &&
       homeG >= 1 &&
       awayG >= 1
     ) {

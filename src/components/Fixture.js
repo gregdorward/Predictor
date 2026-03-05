@@ -871,6 +871,11 @@ export function Fixture(props) {
 
   return (
     <Provider store={store}>
+      {props.totalVisible !== props.fullGameListLength && (
+        <div className="CapText">
+          {props.fullGameListLength} games have been reduced to {props.totalVisible} by the applied filters. Reset the filter to view all games.
+        </div>
+      )}
       <List
         fixtures={listSource}
         // ⭐️ Pass state and setter DOWN ⭐️
@@ -883,6 +888,8 @@ export function Fixture(props) {
         mock={props.mock}
         handleToggleTip={props.handleToggleTip}
         userTips={props.userTips}
+        fullGameListLength={props.fullGameListLength}
+        totalVisible={props.totalVisible}
       />
       {!props.paid && props.capped === true && (
         <>

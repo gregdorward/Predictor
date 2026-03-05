@@ -58,6 +58,7 @@ import { createRoot } from 'react-dom/client';
 import setUserTips from "./components/GameStats";
 import BetSlipFooter from "./components/Betslip";
 import SlideDiff from "./components/SliderDiff";
+import {FilterPresets} from "./components/SliderDiff";
 import { Slide } from "./components/Slider";
 
 
@@ -1028,6 +1029,7 @@ function AppContent() {
           <h5 className="FilterExplainer">
             Customise the tips you see by applying filters based on value, stats, probabilities and odds. Adjust the sliders to set your desired thresholds and click 'Get Predictions and Stats' to see the games that meet your criteria.
           </h5>
+          <FilterPresets/>
           <Collapsable
             buttonText={"Value filters"}
             className={"ValueFilters"}
@@ -1155,6 +1157,24 @@ function AppContent() {
                 ></SlideDiff></>
             }
           />
+                    <Collapsable
+            buttonText={"Other filters"}
+            className={"OtherFilters"}
+            element={
+              <>
+                <h6 className="FilterHeading">Omit draws</h6>
+                <div className="FilterDiv">
+                  Remove draws from the tip list...
+                </div>
+                <SlideDiff
+                  value="0"
+                  text="odds"
+                  useCase="omitDraws"                   
+                  lower="0"
+                  upper="1"
+                ></SlideDiff></>
+            }
+          />
         </div>} />
       <div id="GeneratePredictions">
         {fixtures?.length > 0 && (
@@ -1171,7 +1191,7 @@ function AppContent() {
             {/* Optional: Add a subtle text indicator below */}
             {isPredicting && <p className="LoadingStatus">Calculating all predictions... Each fixture will be interactable once these are returned</p>}
 
-            <div className="Version">Prediction engine v1.9.1</div>
+            <div className="Version">Prediction engine v1.9.2</div>
           </div>
         )}
       </div>

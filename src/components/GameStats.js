@@ -3425,12 +3425,6 @@ function GameStats({ game, displayBool, stats, handleToggleTip, userTips }) {
     return "value-neutral";
   };
 
-  console.log(stats)
-  console.log(game)
-  console.log(ranksHome)
-  console.log(ranksAway)
-  console.log(stats?.topTeams)
-
   return (
     <>
       <div className="ExpandingStats">

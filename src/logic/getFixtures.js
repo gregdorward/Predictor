@@ -84,12 +84,10 @@ export async function generateTables(a, leagueIdArray, allResults) {
   basicTableArray = [];
   bespokeLeagueArray = [];
   let i = 0;
-  console.log(leagueArray)
   leagueArray.forEach(function (league) {
     let currentLeagueId = leagueIdArray[i];
     i++;
     leagueInstance = [];
-    console.log(currentLeagueId)
 
     const hasSpecificTable = league?.data?.specific_tables?.[0]?.table;
 
@@ -316,7 +314,7 @@ export async function renderTable(index, results, id) {
         `leagueName${id}`
       );
     }
-  } else if (groups && id !== 14236) {
+  } else if (groups) {
 
     const leagueTable = bespokeLeagueArray.filter((table) => table.id === id);
     const leagueTable1 = leagueTable[0].table;
@@ -490,9 +488,20 @@ export function RenderAllFixtures(props) {
   let uncappedFixtures;
   let capped = false;
   let paid = userDetail?.isPaid || false;
+  const fullGameListLength = rawMatches.length; // 174
+
+  const omitFilteredGames = rawMatches.filter(
+    (match) => match.omit === false
+  ); // 27 matches survived
+
+  // This is the number you were expecting to see
+  const totalVisible = omitFilteredGames.length;
+
+  console.log(`Total games: ${fullGameListLength}`);
+  console.log(`Visible (Shown): ${totalVisible}`); // This will output 27
 
   // 2. Filter logic
-  const filteredMatches = rawMatches.filter(
+  const filteredMatches = omitFilteredGames.filter(
     (match) => match.matches_completed_minimum >= 3
   );
 
@@ -532,6 +541,8 @@ export function RenderAllFixtures(props) {
       stats={props.stats}
       handleToggleTip={props.handleToggleTip}
       userTips={props.userTips}
+      fullGameListLength={fullGameListLength}
+      totalVisible={totalVisible}
     />
   );
 }
