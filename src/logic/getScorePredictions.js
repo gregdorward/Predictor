@@ -1919,12 +1919,12 @@ export async function getPointsDifferential(pointsHomeAvg, pointsAwayAvg) {
  * @param {number} dampening - How much the rating affects the goals (e.g., 0.04).
  */
 function calculateXGMultiplier(rawComparison, dampening = 0.04) {
-    // rawComparison of 5.0 * 0.04 = 0.20 boost (1.20x multiplier)
-    // rawComparison of -5.0 * 0.04 = -0.20 drop (0.80x multiplier)
-    const multiplier = 1 + (rawComparison * dampening);
+  // rawComparison of 5.0 * 0.04 = 0.20 boost (1.20x multiplier)
+  // rawComparison of -5.0 * 0.04 = -0.20 drop (0.80x multiplier)
+  const multiplier = 1 + (rawComparison * dampening);
 
-    // Safety Clamp: Don't let a massive stat outlier swing goals by more than 25%
-    return Math.max(0.75, Math.min(1.25, multiplier));
+  // Safety Clamp: Don't let a massive stat outlier swing goals by more than 25%
+  return Math.max(0.75, Math.min(1.25, multiplier));
 }
 
 export async function compareFormTrend(recentForm, distantForm) {
@@ -2085,27 +2085,27 @@ export async function generateGoals(homeForm, awayForm, match) {
 
   let awayGoals = (avgAwayGoals + avgAwayXG + avgAwayGoalsLast10 + avgAwayGoalsLast5) / 4;
 
-const homeNetXG = homeForm.teamXGAllRollingAverage - homeForm.teamXGConceededAllRollingAverage;
+  const homeNetXG = homeForm.teamXGAllRollingAverage - homeForm.teamXGConceededAllRollingAverage;
 
-homeForm.XGRating = 
+  homeForm.XGRating =
     (homeForm.avPoints6 * 0.5) + // Momentum
     (homeForm.goalDifferenceHomeOrAway * 0.2) + // Historical dominance
     (homeNetXG * 0.3); // True underlying quality
 
-const awayNetXG = awayForm.teamXGAllRollingAverage - awayForm.teamXGConceededAllRollingAverage;
+  const awayNetXG = awayForm.teamXGAllRollingAverage - awayForm.teamXGConceededAllRollingAverage;
 
-  awayForm.XGRating = 
+  awayForm.XGRating =
     (awayForm.avPoints6 * 0.5) + // Momentum
     (awayForm.goalDifferenceHomeOrAway * 0.2) + // Historical dominance
     (awayNetXG * 0.3); // True underlying quality
 
 
-const rawHomeComparison = homeForm.XGRating - awayForm.XGRating;
-const rawAwayComparison = awayForm.XGRating - homeForm.XGRating;
+  const rawHomeComparison = homeForm.XGRating - awayForm.XGRating;
+  const rawAwayComparison = awayForm.XGRating - homeForm.XGRating;
 
-// 2. Convert to multipliers (centered at 1.0)
-const homeXGMult = calculateXGMultiplier(rawHomeComparison, 0.225); // Adjust 0.05 to taste
-const awayXGMult = calculateXGMultiplier(rawAwayComparison, 0.225);
+  // 2. Convert to multipliers (centered at 1.0)
+  const homeXGMult = calculateXGMultiplier(rawHomeComparison, 0.225); // Adjust 0.05 to taste
+  const awayXGMult = calculateXGMultiplier(rawAwayComparison, 0.225);
 
   const majorContinentalLeagues = [
     "Europe UEFA Champions League",
@@ -3782,6 +3782,9 @@ export async function calculateScore(match, index, divider, calculate, AIPredict
           console.log(`match: ${match.game}`);
           match.omit = true;
         }
+        if (GlobalFilters.winProbability !== null && match.homeWinProbability < GlobalFilters.winProbability) {
+          match.omit = true;
+        }
         if (GlobalFilters.over25Probability !== null && match.over25Probability < GlobalFilters.over25Probability) {
           match.omit = true;
         }
@@ -3832,6 +3835,9 @@ export async function calculateScore(match, index, divider, calculate, AIPredict
         ) {
           match.omit = true;
         }
+        if (GlobalFilters.winProbability !== null && match.awayWinProbability < GlobalFilters.winProbability) {
+          match.omit = true;
+        }
         if (GlobalFilters.over25Probability !== null && match.over25Probability < GlobalFilters.over25Probability) {
           match.omit = true;
         }
@@ -3880,6 +3886,9 @@ export async function calculateScore(match, index, divider, calculate, AIPredict
           GlobalFilters.minimumGD !== null &&
           Math.abs(match.goalDifferenceComparison) < GlobalFilters.minimumGD
         ) {
+          match.omit = true;
+        }
+        if (GlobalFilters.winProbability !== null) {
           match.omit = true;
         }
         if (GlobalFilters.over25Probability !== null && match.over25Probability < GlobalFilters.over25Probability) {

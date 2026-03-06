@@ -1115,7 +1115,19 @@ function AppContent() {
             buttonText={"Probability filters"}
             className={"ProbabilityFilters"}
             element={
-              <>            <h6 className="FilterHeading">Over 2.5 goals probability</h6>
+              <>   
+              <h6 className="FilterHeading">Win probability</h6>
+                <div className="FilterDiv">
+                  Probability of win is over...
+                </div>
+                <SlideDiff
+                  value="0"
+                  text="winProb"
+                  useCase="winProb"
+                  lower="40"
+                  upper="100"
+                ></SlideDiff>         
+              <h6 className="FilterHeading">Over 2.5 goals probability</h6>
                 <div className="FilterDiv">
                   Probability of over 2.5 goals is over...
                 </div>
@@ -1126,7 +1138,6 @@ function AppContent() {
                   lower="50"
                   upper="100"
                 ></SlideDiff>
-
                 <h6 className="FilterHeading">BTTS probability</h6>
                 <div className="FilterDiv">
                   Probability of BTTS is over...

@@ -16,6 +16,7 @@ export const GlobalFilters = {
   over25Probability: null,
   bttsProbability: null,
   omitDraws: false,
+  winProbability: null,
 };
 
 export const FilterPresets = () => {
@@ -32,6 +33,7 @@ export const FilterPresets = () => {
     GlobalFilters.BTTSedge = null;
     GlobalFilters.oddsRange = [1.1, 10];
     GlobalFilters.omitDraws = false;
+    GlobalFilters.winProbability = null;
 
     // Apply specific preset values
     switch (preset) {
@@ -119,6 +121,7 @@ const SlideDiff = (props) => {
       switch (props.useCase) {
         case "edge": newValue = GlobalFilters.edge; break;
         case "btts": newValue = GlobalFilters.bttsProbability; break;
+        case "winProb": newValue = GlobalFilters.winProbability; break;
         case "over25": newValue = GlobalFilters.over25Probability; break;
         case "xg": newValue = GlobalFilters.minimumXG; break;
         case "gd": newValue = GlobalFilters.minimumGD; break;
@@ -154,6 +157,7 @@ const SlideDiff = (props) => {
         case "gd": GlobalFilters.minimumGD = filterValue; break;
         case "gdHorA": GlobalFilters.minimumGDHorA = filterValue; break;
         case "last10": GlobalFilters.minimumLast6 = filterValue; break;
+        case "winProb": GlobalFilters.winProbability = filterValue; break;
         case "over25": GlobalFilters.over25Probability = filterValue; break;
         case "btts": GlobalFilters.bttsProbability = filterValue; break;
         case "omitDraws": GlobalFilters.omitDraws = filterValue === 1; break;
