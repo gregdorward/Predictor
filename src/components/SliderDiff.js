@@ -62,6 +62,9 @@ export const FilterPresets = () => {
         GlobalFilters.oddsRange = [3, 10];
         GlobalFilters.omitDraws = true;
         break;
+      case "clear_favourites":
+        GlobalFilters.winProbability = 80;
+        break;
       case "ssh":
         GlobalFilters.edge = 1;
         GlobalFilters.winProbability = 60;
@@ -86,6 +89,7 @@ export const FilterPresets = () => {
         <option value="stats_picks">Form-based picks</option>
         <option value="long-shots">Medium to high odds win picks</option>
         <option value="underdogs">Underdog picks</option>
+        <option value="clear_favourites">Clear favourites</option>
         <option value="ssh">Soccer Stats Hub recommended</option>
       </select>
     </div>
