@@ -13,7 +13,9 @@ import ShareShortlistButton from "./ShareShortlistButton";
 import { getAuth } from "firebase/auth";
 import { getFirestore, doc, getDoc, updateDoc } from "firebase/firestore";
 import GameStats from "./GameStats";
-
+import {
+  GlobalFilters,
+} from "./SliderDiff";
 
 let resultValue;
 let paid;
@@ -871,14 +873,56 @@ export function Fixture(props) {
 
   return (
     <Provider store={store}>
+      {/* Section 1: Visibility Warning */}
       {props.totalVisible !== props.fullGameListLength && (
         <div className="CapText">
-          {props.fullGameListLength} games have been reduced to {props.totalVisible} by the applied filters. Reset the filter to view all games.
+          {props.fullGameListLength} games have been reduced to {props.totalVisible} by the applied filters or the minimum games played threshold. Reset the filter to view all games.
         </div>
       )}
+
+      {/* Section 2: Active Filters List (Separated so it always shows when filters are active) */}
+      {(GlobalFilters.minimumXG ||
+        GlobalFilters.minimumGD ||
+        GlobalFilters.minimumGDHorA ||
+        GlobalFilters.minimumLast6 ||
+        GlobalFilters.edge ||
+        GlobalFilters.O25edge ||
+        GlobalFilters.BTTSedge ||
+        GlobalFilters.over25Probability ||
+        GlobalFilters.bttsProbability ||
+        GlobalFilters.winProbability ||
+        GlobalFilters.omitDraws ||
+        GlobalFilters.oddsRange[0] !== 1.1 ||
+        GlobalFilters.oddsRange[1] !== 10) && (
+          <div className="FiltersSelected">
+            <h4>Filters selected:</h4>
+            <ul className="FiltersSelectedList">
+              {GlobalFilters.minimumXG && <li>Min XG Difference spread: {GlobalFilters.minimumXG}</li>}
+              {GlobalFilters.minimumGD && <li>Min Goal Difference spread: {GlobalFilters.minimumGD}</li>}
+              {GlobalFilters.minimumGDHorA && <li>Min H/A Goal Difference spread: {GlobalFilters.minimumGDHorA}</li>}
+              {GlobalFilters.minimumLast6 && <li>Min PPG (Last 6) spread: {GlobalFilters.minimumLast6}</li>}
+
+              {/* Probability Filters */}
+              {GlobalFilters.winProbability && <li>Min win Probability: {GlobalFilters.winProbability}%</li>}
+              {GlobalFilters.over25Probability && <li>Min Over 2.5 Probability: {GlobalFilters.over25Probability}%</li>}
+              {GlobalFilters.bttsProbability && <li>Min BTTS Probability: {GlobalFilters.bttsProbability}%</li>}
+
+              {/* Edge Filters */}
+              {GlobalFilters.edge && <li>Min Value Edge: {GlobalFilters.edge}%</li>}
+              {GlobalFilters.O25edge && <li>Min O2.5 Edge: {GlobalFilters.O25edge}%</li>}
+              {GlobalFilters.BTTSedge && <li>Min BTTS Edge: {GlobalFilters.BTTSedge}%</li>}
+
+              {/* Boolean and Range Filters */}
+              {GlobalFilters.omitDraws && <li>Draws Omitted</li>}
+              {(GlobalFilters.oddsRange[0] !== 1.1 || GlobalFilters.oddsRange[1] !== 10) && (
+                <li>Odds Range: {GlobalFilters.oddsRange[0]} - {GlobalFilters.oddsRange[1]}</li>
+              )}
+            </ul>
+          </div>
+        )}
+
       <List
         fixtures={listSource}
-        // ⭐️ Pass state and setter DOWN ⭐️
         showShortlist={showShortlist}
         setShowShortlist={setShowShortlist}
         isProbability={props.isProbability}
@@ -891,15 +935,16 @@ export function Fixture(props) {
         fullGameListLength={props.fullGameListLength}
         totalVisible={props.totalVisible}
       />
+
       {!props.paid && props.capped === true && (
         <>
           <div className="LockIcon">🔒</div>
           <div className="LockText">
             {props.originalLength} games have been capped at {props.newLength} for free users
-            with full stats available for those returned - sign up for access 50 leagues and cups including the EPL, EFL, La Liga, Serie A, Champions League, Europa League, Copa Libertadores and loads more.
+            with full stats available for those returned - sign up for access 50 leagues and cups...
           </div>
         </>
-      )}{" "}
+      )}
     </Provider>
   );
 }

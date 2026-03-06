@@ -2728,9 +2728,14 @@ strong.LOST {
 }
 
 .FiltersSelected {
-  padding: 1em;
+  padding: 0em;
   color: var(--text-color);
   background-color: var(--background-color);
+  border: var(--primary-color) 1px solid;
+}
+
+.FiltersSelected h4 {
+  padding-bottom: 0em;
 }
 
 .FiltersSelectedList li {

@@ -69,7 +69,7 @@ const ids = [
   14924, // Champs league 25 12321
   15002, //Europa 25 12327
   14904, //Europa Conference 25 12278
-  16261, // Copa Libertadores 25
+  16556, // Copa Libertadores 26
 ];
 
 const StyledTableCell = withStyles(() => ({

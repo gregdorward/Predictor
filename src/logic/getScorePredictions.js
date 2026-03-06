@@ -3739,7 +3739,13 @@ export async function calculateScore(match, index, divider, calculate, AIPredict
     match.goalDifferenceComparison =
       parseFloat(formHome.goalDifference) - parseFloat(formAway.goalDifference);
 
-    match.omit = false; // default to false, only set to true if conditions are met
+    if (match.matches_completed_minimum < 4) {
+      match.omit = true;
+    } else {
+      match.omit = false; // default to false, only set to true if conditions are met
+
+    }
+
 
     switch (true) {
       case finalHomeGoals > finalAwayGoals:
@@ -4418,9 +4424,9 @@ const footyStatsToSofaScore = [
       id: 238,
       season: 77806, // Portuguese Primeira Liga 25
     },
-    16261: {
+    16556: {
       id: 384,
-      season: 70083, // Copa Libertadores
+      season: 87760, // Copa Libertadores
     },
     14936: {
       id: 37,
@@ -6156,26 +6162,6 @@ async function renderTips() {
           ></Slider>
         }
       ></Collapsable>
-      {(GlobalFilters.minimumGD !== 0 ||
-        GlobalFilters.minimumXG !== 0 ||
-        GlobalFilters.minimumLast6 !== 0 ||
-        GlobalFilters.minimumGDHorA !== 0) && (
-          <div className="FiltersSelected">
-            <h4>Filters selected:</h4>
-            <ul className="FiltersSelectedList">
-              <li>Minimum goal difference spread: {GlobalFilters.minimumGD}</li>
-              <li>
-                Minimum goal difference spread (home or away only):{" "}
-                {GlobalFilters.minimumGDHorA}
-              </li>
-              <li>Minimum XG difference spread: {GlobalFilters.minimumXG}</li>
-              <li>Minimum PPG difference spread: {GlobalFilters.minimumLast6}</li>
-              <li>
-                Odds range: {rangeValue[0]} - {rangeValue[1]}
-              </li>
-            </ul>
-          </div>
-        )}
     </div>,
     "insights"
   );
