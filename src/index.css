@@ -669,6 +669,7 @@ h6 {
 .CapText {
   padding: 1em;
 }
+
 .PremiumUpsell {
   background: var(--alternate-background-color);
   border: 1px solid #e5e7eb;
@@ -5795,41 +5796,43 @@ button.AIInsights button:active {
   margin-right: 0.5em;
 }
 
+.AbsenceImpactMessage{
+  padding: 1em;
+}
+
 .MissingPlayers {
   display: flex;
-  gap: 2em;
+  gap: 1em;
 }
 
 .HomeMissingPlayers {
   flex: 1;
   flex-direction: column;
-  gap: 1rem;
-  padding: 1rem;
+  margin-top: 1em;
+  margin-bottom: 1em;
   color: var(--text-color);
-  border-radius: 0.5rem;
-  justify-content: center
+  justify-content: center;
 }
 
 .HomeMissingPlayers li {
-  margin: 1em;
-  padding: 0.25em;
-  background-color: var(--secondary-background-color);
+  margin-bottom: 0.5em;
+  padding: 0.5em;
+  background-color: var(--background-color);
 }
 
 .AwayMissingPlayers {
   flex: 1;
   flex-direction: column;
-  gap: 1rem;
-  padding: 1rem;
+  margin-top: 1em;
+  margin-bottom: 1em;
   color: var(--text-color);
-  border-radius: 0.5rem;
-  justify-content: center
+  justify-content: center;
 }
 
 .AwayMissingPlayers li {
-  margin: 1em;
-  padding: 0.25em;
-  background-color: var(--secondary-background-color);
+  margin-bottom: 0.5em;
+  padding: 0.5em;
+  /* background-color: var(--secondary-background-color); */
 }
 
 .MissingPlayersButton {
@@ -5845,6 +5848,57 @@ button.AIInsights button:active {
   text-align: center;
 }
 
+/* Each player "card" */
+.MissingPlayerCard {
+  /* border: 1px solid var(--primary-color); */
+  background-color: var(--secondary-background-color);
+  border-radius: 8px;
+  padding: 1em;
+  margin-bottom: 1em;
+}
+
+.PlayerIdentity {
+  margin-bottom: 10px;
+  border-bottom: 1px solid var(--primary-color);
+  padding-bottom: 6px;
+}
+
+.MissingPlayerName {
+  font-weight: bold;
+  font-size: 1.2em;
+}
+
+.PlayerMeta {
+  text-transform: capitalize;
+}
+
+/* The magic Flex rows */
+.StatLine {
+  display: flex;
+  justify-content: space-between; /* This splits label and value */
+  align-items: center;
+  padding: 2px 0;
+}
+
+
+.StatValue {
+  font-weight: 600;
+  color: var(--text-color);
+}
+
+/* Highlighting specific rows */
+.StatLine.highlight {
+  color: #2b6cb0;
+  font-weight: bold;
+}
+
+.StatValue.score {
+  color: #2f855a; /* SofaScore Green */
+}
+
+.Label {
+  flex: 1;
+}
 .LoadingMessage {
   margin: 1em;
 }

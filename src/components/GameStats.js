@@ -113,7 +113,6 @@ function getMatchOddsProbabilities(scoreMatrix) {
 
 function GameStats({ game, displayBool, stats, handleToggleTip, userTips }) {
 
-  console.log("stats in GameStats:", stats);
   // const { user } = useAuth();
 
   const [openSections, setOpenSections] = useState({});
@@ -145,6 +144,8 @@ function GameStats({ game, displayBool, stats, handleToggleTip, userTips }) {
 
   const [homeMissingPlayersList, setHomeMissingPlayersList] = useState([]);
   const [awayMissingPlayersList, setAwayMissingPlayersList] = useState([]);
+  const [homeMissingPlayersImpact, setHomeMissingPlayersImpact] = useState([]);
+  const [awayMissingPlayersImpact, setAwayMissingPlayersImpact] = useState([]);
   const [homeLineupList, setHomeLineupList] = useState([]);
   const [awayLineupList, setAwayLineupList] = useState([]);
   const [voteData, setVoteData] = useState([]);
@@ -615,7 +616,6 @@ function GameStats({ game, displayBool, stats, handleToggleTip, userTips }) {
   useEffect(() => {
     if (stats && homeForm?.teamName) {
       const ranks = getTeamRanksFromTopTeamsWithPartialMatch(stats, homeForm.teamName);
-      console.log("Home ranks:", ranks);
       setRanksHome(ranks);
     }
   }, [stats, homeForm?.teamName]);
@@ -1167,8 +1167,6 @@ function GameStats({ game, displayBool, stats, handleToggleTip, userTips }) {
         const mappedHome = getMappedTeamName(game.homeTeam);
         const mappedAway = getMappedTeamName(game.awayTeam);
 
-        console.log(`Attempting to find matching game for homeTeam: "${mappedHome}" and awayTeam: "${mappedAway}"`);
-        console.log("Available games to match against:", arrayOfGames.map(g => ({ id: g.id, homeTeam: g.homeTeam, awayTeam: g.awayTeam })));
         let matchingGameInfo =
           await getGameIdByHomeTeam(arrayOfGames, mappedHome);
 
@@ -1278,25 +1276,6 @@ function GameStats({ game, displayBool, stats, handleToggleTip, userTips }) {
         setLoadingKeyPlayers(true);
         setLoadingFutureFixtures(true);
         setLoadingVoteData(true);
-        if (
-          isWithin48Hours && !lowerTierLeagueIds.includes(game.sofaScoreId)
-        ) {
-          const lineupDetail = await fetch(
-            `${process.env.REACT_APP_EXPRESS_SERVER}lineups/${matchingGameInfo.id}`
-          );
-
-          const data = await lineupDetail.json();
-          const { homeMissingPlayers, awayMissingPlayers } =
-            await extractMissingPlayers(data);
-          const { homeLineup, awayLineup } = await extractPlayerRatings(data);
-          setHomeLineupList(homeLineup);
-          setAwayLineupList(awayLineup);
-          setHomeMissingPlayersList(homeMissingPlayers);
-          setAwayMissingPlayersList(awayMissingPlayers);
-        }
-
-
-
 
         let previousGames = await fetch(
           `${process.env.REACT_APP_EXPRESS_SERVER}match/${game.id}`
@@ -1455,8 +1434,6 @@ function GameStats({ game, displayBool, stats, handleToggleTip, userTips }) {
 
             const playerStats = await leaguePlayerStatsResponse.json();
 
-            console.log("Player stats response:", playerStats);
-
             let playersHome = await extractRankedPlayersByTeam(
               playerStats.topPlayers,
               matchingGameInfo.homeId
@@ -1504,6 +1481,9 @@ function GameStats({ game, displayBool, stats, handleToggleTip, userTips }) {
             // allLeagueStats[`leagueStats${leagueId}`] = { error: error.message }; // Store error if fetch fails
           }
 
+          let homePlayers;
+          let awayPlayers;
+
 
           try {
             setLoadingPlayerStats(true);
@@ -1517,6 +1497,7 @@ function GameStats({ game, displayBool, stats, handleToggleTip, userTips }) {
             // Handle Home Team Data
             if (homeResult.status === 'fulfilled' && homeResult.value.ok) {
               const data = await homeResult.value.json();
+              homePlayers = data || [];
               setHomeTeamPlayerStats(data);
             } else {
               console.error("Home stats fetch failed");
@@ -1526,6 +1507,7 @@ function GameStats({ game, displayBool, stats, handleToggleTip, userTips }) {
             // Handle Away Team Data
             if (awayResult.status === 'fulfilled' && awayResult.value.ok) {
               const data = await awayResult.value.json();
+              awayPlayers = data || [];
               setAwayTeamPlayerStats(data);
             } else {
               console.error("Away stats fetch failed");
@@ -1537,6 +1519,176 @@ function GameStats({ game, displayBool, stats, handleToggleTip, userTips }) {
           } finally {
             setLoadingPlayerStats(false);
           }
+
+          if (
+            isWithin48Hours && !lowerTierLeagueIds.includes(game.sofaScoreId)
+          ) {
+            console.log(`Game is within 48 hours and not in lower tier league. Fetching lineup details for game ID: ${matchingGameInfo.id}`);
+            const lineupDetail = await fetch(
+              `${process.env.REACT_APP_EXPRESS_SERVER}lineups/${matchingGameInfo.id}`
+            );
+
+            const data = await lineupDetail.json();
+            const { homeMissingPlayers, awayMissingPlayers } =
+              await extractMissingPlayers(data);
+            const { homeLineup, awayLineup } = await extractPlayerRatings(data);
+            setHomeLineupList(homeLineup);
+            setAwayLineupList(awayLineup);
+            setHomeMissingPlayersList(homeMissingPlayers);
+            setAwayMissingPlayersList(awayMissingPlayers);
+            const enrichMissingPlayers = (missingList, teamStats, played, scored, teamDefActions, teamAttActions) => {
+              if (!missingList || !teamStats || !teamStats.players) return [];
+
+              return missingList.map(missingPlayer => {
+                // 1. Find the player in the full statistics list (matching by name or ID)
+                const statsEntry = teamStats.players.find(p =>
+                  p.name === missingPlayer.name || p.id === missingPlayer.id
+                );
+
+                const stats = statsEntry || {};
+                const appearances = stats.appearances || 0;
+                const tackles = stats.tackles || 0;
+                const interceptions = stats.interceptions || 0;
+                const accuratePasses = stats.accuratePasses || 0;
+                const keyPasses = stats.keyPasses || 0;
+                const bigChancesCreated = stats.bigChancesCreated || 0;
+                const goals = stats.goals || 0;
+                const assists = stats.assists || 0;
+                const rating = stats.rating || 6.5;
+
+                let goalWeight = 8;
+                let assistWeight = 6;
+
+                if (stats.position === "M") {
+                  goalWeight = 16;
+                  assistWeight = 8;
+                }
+
+                const attackingActions =
+                  (goals * goalWeight) +
+                  (assists * assistWeight) +
+                  (keyPasses * 1.5) +
+                  (bigChancesCreated * 4);
+
+                const attackingShare =
+                  Math.min(1, attackingActions / teamAttActions);
+
+                const usageImpact = Math.min(1, appearances / played) * 3;
+
+                const attackingContributionImpact =
+                  Math.pow(attackingShare, 0.6) * 8;
+
+                const attackingQualityImpact =
+                  Math.max(0, rating - 6.5) * 2;
+
+                const attackingImpactScore = Math.min(
+                  10,
+                  usageImpact +
+                  attackingContributionImpact +
+                  attackingQualityImpact
+                );
+
+
+                const defensiveActions =
+                  tackles * 2 +
+                  interceptions * 2 +
+                  accuratePasses * 0.04;
+
+                const defensiveShare = Math.min(1, defensiveActions / teamDefActions);
+                const defensiveUsageImpact = Math.min(1, appearances / played) * 2;
+                const defensiveContributionImpact = defensiveShare * 10;
+                const defensiveQualityImpact = Math.max(0, rating - 6.5) * 3;
+
+                let defensivePositionMultiplier = 1;
+
+                if (stats.position === "F") defensivePositionMultiplier = 0.35;
+                if (stats.position === "M") defensivePositionMultiplier = 0.75;
+                if (stats.position === "D") defensivePositionMultiplier = 1.2;
+
+
+                const defensiveImpactScore = Math.min(
+                  10,
+                  (defensiveUsageImpact +
+                    defensiveContributionImpact +
+                    defensiveQualityImpact) * defensivePositionMultiplier
+                );
+
+
+
+                let attackLambdaImpact = 1 - (attackingImpactScore * 0.02);
+                let defenceLambdaImpact = 1 + (defensiveImpactScore * 0.02);
+                if (missingPlayer.type === "doubtful") {
+                  attackLambdaImpact = 1 - ((attackingImpactScore * 0.02) * 0.5);
+                  defenceLambdaImpact = 1 + ((defensiveImpactScore * 0.02) * 0.5);
+                }
+                attackLambdaImpact = Math.max(0.8, attackLambdaImpact);
+                defenceLambdaImpact = Math.min(1.2, defenceLambdaImpact);
+                // 2. Return the "Headline" object
+                return {
+                  name: missingPlayer.name,
+                  reason: missingPlayer.reason || "Unknown",
+                  type: missingPlayer.type, // e.g., 'Missing' or 'Doubtful'
+                  appearances: stats.appearances || 0,
+                  goals: stats.goals || 0,
+                  assists: stats.assists || 0,
+                  rating: stats.rating || 0,
+                  position: missingPlayer.position || "Unknown",
+                  // Calculate an "Impact Score" (weighted importance)
+                  attackingImpactScore: attackingImpactScore.toFixed(1),
+                  defensiveImpactScore: defensiveImpactScore.toFixed(1),
+                };
+              }).sort((a, b) => b.appearances - a.appearances); // Most important players first
+            };
+
+            const teamDefensiveActionsHome = homePlayers.players.reduce((sum, player) => {
+              const tackles = player.tackles || 0;
+              const interceptions = player.interceptions || 0;
+              const accuratePasses = player.accuratePasses || 0;
+              return sum + (tackles * 1.2) + (interceptions * 1.5) + (accuratePasses * 0.02);
+            }, 0);
+
+            const teamAttackingActionsHome = homePlayers.players.reduce((sum, player) => {
+              const goals = player.goals || 0;
+              const assists = player.assists || 0;
+              const keyPasses = player.keyPasses || 0;
+              const bigChancesCreated = player.bigChancesCreated || 0;
+
+              return sum +
+                (goals * 4) +
+                (assists * 3) +
+                (keyPasses * 1.5) +
+                (bigChancesCreated * 2);
+            }, 0);
+
+            const teamAttackingActionsAway = awayPlayers.players.reduce((sum, player) => {
+              const goals = player.goals || 0;
+              const assists = player.assists || 0;
+              const keyPasses = player.keyPasses || 0;
+              const bigChancesCreated = player.bigChancesCreated || 0;
+
+              return sum +
+                (goals * 4) +
+                (assists * 3) +
+                (keyPasses * 1.5) +
+                (bigChancesCreated * 2);
+            }, 0);
+
+            const teamDefensiveActionsAway = awayPlayers.players.reduce((sum, player) => {
+              const tackles = player.tackles || 0;
+              const interceptions = player.interceptions || 0;
+              const accuratePasses = player.accuratePasses || 0;
+              return sum + (tackles * 1.2) + (interceptions * 1.5) + (accuratePasses * 0.02);
+            }, 0);
+
+
+            const homeMissingPlayersImpactAssessment = enrichMissingPlayers(homeMissingPlayers, homePlayers, gameStats.home[2].gamesPlayed, gameStats.home[2].ScoredOverall, teamDefensiveActionsHome, teamAttackingActionsHome);
+            const awayMissingPlayersImpactAssessment = enrichMissingPlayers(awayMissingPlayers, awayPlayers, gameStats.away[2].gamesPlayed, gameStats.away[2].ScoredOverall, teamDefensiveActionsAway, teamAttackingActionsAway);
+
+            setHomeMissingPlayersImpact(homeMissingPlayersImpactAssessment);
+            setAwayMissingPlayersImpact(awayMissingPlayersImpactAssessment);
+          }
+
+
 
           // const matchPreviewResponse = await fetch(
           //   `${process.env.REACT_APP_EXPRESS_SERVER}gemini/match-preview/${matchingGameInfo.homeId}${matchingGameInfo.awayId}/${matchingGameInfo.time}`,
@@ -1606,7 +1758,6 @@ function GameStats({ game, displayBool, stats, handleToggleTip, userTips }) {
         console.error("Error fetching or processing data:", error);
         // Handle errors (e.g., set error state, show error message)
       } finally {
-        console.log("Data fetching completed.");
         setLoadingTeamStats(false);
         setLoadingOdds(false);
         setLoadingPlayerData(false);
@@ -1615,7 +1766,6 @@ function GameStats({ game, displayBool, stats, handleToggleTip, userTips }) {
         setLoadingKeyPlayers(false);
         setLoadingVoteData(false);
         setLoading(false);
-        console.log("Loading states reset.");
         // console.log(homePlayerData);
       }
     }
@@ -1669,7 +1819,6 @@ function GameStats({ game, displayBool, stats, handleToggleTip, userTips }) {
 
   useEffect(() => {
     if (matchingGame) {
-      console.log("Matching game updated:", matchingGame);
       setId(matchingGame.id.toString());
       setTeam1(matchingGame.homeTeam);
       setTeam2(matchingGame.awayTeam);
@@ -2792,8 +2941,6 @@ function GameStats({ game, displayBool, stats, handleToggleTip, userTips }) {
         const awayForm = gameStats.away[index];
         let id = game.id;
 
-        console.log(gameStats);
-
         const attackingMetricsHome = homeForm.attackingMetrics
         const attackingMetricsHomeLast5 = homeForm.attackingMetricsHomeLast5
         const attackingMetricsHomeOnly = homeForm.attackingMetricsHomeOnly
@@ -2818,9 +2965,6 @@ function GameStats({ game, displayBool, stats, handleToggleTip, userTips }) {
         const attackHOnly = await calculateAttackingStrength(
           attackingMetricsHomeOnly
         );
-
-
-        console.log(defensiveMetricsHome)
 
         const defenceH = await calculateDefensiveStrength(defensiveMetricsHome);
         const defenceHLast5 = await calculateDefensiveStrength(
@@ -3126,8 +3270,6 @@ function GameStats({ game, displayBool, stats, handleToggleTip, userTips }) {
             awayDefensiveStats: awayForm?.defensiveMetrics,
           },
         };
-        console.log(AIPayload);
-        console.log(gameId)
 
         const response = await fetch(
           `${process.env.REACT_APP_EXPRESS_SERVER}gemini/${gameId}`,
@@ -3298,10 +3440,6 @@ function GameStats({ game, displayBool, stats, handleToggleTip, userTips }) {
     ];
     chartType = "Rolling average points over last 10";
   }
-
-  console.log(game)
-  console.log(userDetail)
-  console.log(userTips)
   const UserTips = ({ game, userTips, handleToggleTip, userDetail }) => {
 
     console.log("UserTips props:", { game, userTips, userDetail });
@@ -3557,18 +3695,18 @@ function GameStats({ game, displayBool, stats, handleToggleTip, userTips }) {
               buttonText={`Missing players \u{2630}`}
               classNameButton="MissingPlayersButton"
               element={
-                <div className="MissingPlayers">
-                  <MissingPlayersList
-                    team={game.homeTeam}
-                    className="HomeMissingPlayers"
-                    players={homeMissingPlayersList}
-                  />
-                  <MissingPlayersList
-                    team={game.awayTeam}
-                    className="AwayMissingPlayers"
-                    players={awayMissingPlayersList}
-                  />
-                </div>
+                <><div className="AbsenceImpactMessage">Impact of absence based on player's contribution so far in this competition alone</div>
+                  <div className="AbsenceImpactMessage">Attacking and defensive impact are derived from competition appearances and contributions relative to the rest of the team in this area</div>
+                  <div className="MissingPlayers">
+                    <MissingPlayersList
+                      team={game.homeTeam}
+                      className="HomeMissingPlayers"
+                      players={homeMissingPlayersImpact} />
+                    <MissingPlayersList
+                      team={game.awayTeam}
+                      className="AwayMissingPlayers"
+                      players={awayMissingPlayersImpact} />
+                  </div></>
               }
             />
           )}

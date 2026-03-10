@@ -3304,9 +3304,6 @@ export async function calculateScore(match, index, divider, calculate, AIPredict
     let experimentalHomeGoals = formHome.teamGoalsCalc;
     let experimentalAwayGoals = formAway.teamGoalsCalc;
 
-    console.log(match.game);
-    console.log(predictedScore);
-
     let rawFinalHomeGoals = predictedScore.home;
     let rawFinalAwayGoals = predictedScore.away;
 
@@ -3486,7 +3483,6 @@ export async function calculateScore(match, index, divider, calculate, AIPredict
       (rollingGoalDiffDifferential >= 10 && match.prediction === "homeWin") ||
       (rollingGoalDiffDifferential <= -10 && match.prediction === "awayWin")
     ) {
-      console.log(`rollingGoalDiffDifferential: ${rollingGoalDiffDifferential}`);
       match.rollingGoalDiff = true;
       match.rollingGoalDiffValue = rollingGoalDiffDifferential;
     } else {
@@ -3783,9 +3779,6 @@ export async function calculateScore(match, index, divider, calculate, AIPredict
           match.omit = true;
         }
         if (GlobalFilters.minimumGD !== null && match.goalDifferenceComparison < GlobalFilters.minimumGD) {
-          console.log(`match.goalDifferenceComparison: ${match.goalDifferenceComparison}`);
-          console.log(`GlobalFilters.minimumGD: ${GlobalFilters.minimumGD}`);
-          console.log(`match: ${match.game}`);
           match.omit = true;
         }
         if (GlobalFilters.winProbability !== null && match.homeWinProbability < GlobalFilters.winProbability) {
@@ -4187,8 +4180,6 @@ async function getSuccessMeasure(fixtures) {
   if (userDetail) {
     isPaid = userDetail.isPaid;
   }
-  console.log(`paidUser: ${isPaid}`);
-
   console.log(`totalInvestment: ${totalInvestment}`);
   console.log(investment);
 
@@ -5697,7 +5688,6 @@ async function renderTips() {
       "bestPredictions"
     );
   } else if (paid !== true) {
-    console.log(paid)
     newArray = newArray.slice(0, 6);
     render(
       <div className="PredictionContainer">
