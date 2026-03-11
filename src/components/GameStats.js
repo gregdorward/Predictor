@@ -50,7 +50,7 @@ import { handleCheckout, stripePromise } from "../App"
 import PlayerStatsTable from "./PlayerStatsTable";
 import { AuthProvider, useAuth } from "../logic/authProvider";
 import BetSlipFooter from "../components/Betslip";
-
+import { TeamImpactSummary } from "./MissingPlayersList";
 // import FutureFixturesSideBySide from "./FutureFixturesSideBySide";
 // export let userTips;
 
@@ -510,6 +510,7 @@ function GameStats({ game, displayBool, stats, handleToggleTip, userTips }) {
   // Centralized alias map
   const teamNameAliases = {
     "psg": "Paris saint-germain",
+    "FK Bodo - Glimt": "Bodø/Glimt",
     "inter milan": "inter",
     "ac milan": "milan",
     "man utd": "manchester united",
@@ -518,6 +519,7 @@ function GameStats({ game, displayBool, stats, handleToggleTip, userTips }) {
     "bayern": "bayern munich",
     "montreal impact": "cf montreal",
     "botafogo": "botafogo",
+    "fk bodo - glimt": "Bodø/Glimt",
   };
 
 
@@ -544,6 +546,8 @@ function GameStats({ game, displayBool, stats, handleToggleTip, userTips }) {
   const warnedTeams = new Set(); // Move this outside the function if reused
 
   function getTeamRanksFromTopTeamsWithPartialMatch(topTeamsData, targetTeamName) {
+    console.log("Finding ranks for team:", targetTeamName);
+    console.log("Top teams data:", topTeamsData);
     if (!topTeamsData) return;
 
     const teamRanks = {};
@@ -554,11 +558,16 @@ function GameStats({ game, displayBool, stats, handleToggleTip, userTips }) {
       "ac milan": "milan",
       "man city": "manchester city",
       "man united": "manchester united",
-      psg: "paris saint-germain",
+      "psg": "paris saint-germain",
+      "fk bodo - glimt": "bodø/glimt", // Changed to lowercase
+      "bodøglimt": "bodø/glimt",      // Changed to lowercase
+      "bodo/glimt": "bodø/glimt"       // Common variation
     };
 
     const targetNameLower = targetTeamName.toLowerCase();
     const normalizedTargetName = teamNameAliases[targetNameLower] || targetNameLower;
+
+    console.log("Normalized target team name:", normalizedTargetName);
 
     for (const statistic in topTeams) {
       if (!Array.isArray(topTeams[statistic])) continue;
@@ -581,6 +590,7 @@ function GameStats({ game, displayBool, stats, handleToggleTip, userTips }) {
           targetTeamIndex = teamArray.indexOf(partialMatches[0]);
         } else {
           const warningKey = `${targetTeamName}-${statistic}`;
+          console.log(warningKey);
           if (!warnedTeams.has(warningKey)) {
             console.warn(
               `Ambiguous or missing match for "${targetTeamName}" in "${statistic}" — found:`,
@@ -609,12 +619,15 @@ function GameStats({ game, displayBool, stats, handleToggleTip, userTips }) {
         };
       }
     }
+    console.log("Calculated team ranks:", teamRanks);
 
     return teamRanks;
   }
 
   useEffect(() => {
     if (stats && homeForm?.teamName) {
+      console.log("Calculating ranks for home team:", homeForm.teamName);
+      console.log("Available stats data:", stats);
       const ranks = getTeamRanksFromTopTeamsWithPartialMatch(stats, homeForm.teamName);
       setRanksHome(ranks);
     }
@@ -1536,9 +1549,9 @@ function GameStats({ game, displayBool, stats, handleToggleTip, userTips }) {
             setAwayLineupList(awayLineup);
             setHomeMissingPlayersList(homeMissingPlayers);
             setAwayMissingPlayersList(awayMissingPlayers);
-            const enrichMissingPlayers = (missingList, teamStats, played, scored, teamDefActions, teamAttActions) => {
+            const enrichMissingPlayers = (missingList, teamStats, played, scored, teamDefActions, teamAttActions, team) => {
               if (!missingList || !teamStats || !teamStats.players) return [];
-
+              console.log(teamStats);
               return missingList.map(missingPlayer => {
                 // 1. Find the player in the full statistics list (matching by name or ID)
                 const statsEntry = teamStats.players.find(p =>
@@ -1555,6 +1568,18 @@ function GameStats({ game, displayBool, stats, handleToggleTip, userTips }) {
                 const goals = stats.goals || 0;
                 const assists = stats.assists || 0;
                 const rating = stats.rating || 6.5;
+                const scoringFrequency = stats.scoringFrequency || 0; // e.g., 105.5 minutes per goal
+                let efficiencyBonus = 1;
+
+                if (scoringFrequency > 0) {
+                  // If a player scores every 90 mins, bonus is ~2.2
+                  // If they score every 200 mins, bonus is ~1.0
+                  if (stats.position === "F") {
+                    efficiencyBonus = Math.max(1, 270 / scoringFrequency);
+                  } else {
+                    efficiencyBonus = Math.max(1, 360 / scoringFrequency);
+                  }
+                }
 
                 let goalWeight = 8;
                 let assistWeight = 6;
@@ -1576,7 +1601,7 @@ function GameStats({ game, displayBool, stats, handleToggleTip, userTips }) {
                 const usageImpact = Math.min(1, appearances / played) * 3;
 
                 const attackingContributionImpact =
-                  Math.pow(attackingShare, 0.6) * 8;
+                  Math.pow(attackingShare, 0.6) * 8 * efficiencyBonus;
 
                 const attackingQualityImpact =
                   Math.max(0, rating - 6.5) * 2;
@@ -1621,9 +1646,14 @@ function GameStats({ game, displayBool, stats, handleToggleTip, userTips }) {
                   attackLambdaImpact = 1 - ((attackingImpactScore * 0.02) * 0.5);
                   defenceLambdaImpact = 1 + ((defensiveImpactScore * 0.02) * 0.5);
                 }
-                attackLambdaImpact = Math.max(0.8, attackLambdaImpact);
-                defenceLambdaImpact = Math.min(1.2, defenceLambdaImpact);
-                // 2. Return the "Headline" object
+                if (team === "home") {
+                  gameStats.home[2].attackLambdaImpact = Math.max(0.8, attackLambdaImpact);
+                  gameStats.home[2].defenceLambdaImpact = Math.min(1.2, defenceLambdaImpact);
+                } else if (team === "away") {
+                  gameStats.away[2].attackLambdaImpact = Math.max(0.8, attackLambdaImpact);
+                  gameStats.away[2].defenceLambdaImpact = Math.min(1.2, defenceLambdaImpact);
+                }
+
                 return {
                   name: missingPlayer.name,
                   reason: missingPlayer.reason || "Unknown",
@@ -1637,7 +1667,26 @@ function GameStats({ game, displayBool, stats, handleToggleTip, userTips }) {
                   attackingImpactScore: attackingImpactScore.toFixed(1),
                   defensiveImpactScore: defensiveImpactScore.toFixed(1),
                 };
-              }).sort((a, b) => b.appearances - a.appearances); // Most important players first
+              }).sort((a, b) => {
+                // 1. Get the max impact for player A
+                const maxImpactA = Math.max(
+                  parseFloat(a.attackingImpactScore),
+                  parseFloat(a.defensiveImpactScore)
+                );
+
+                // 2. Get the max impact for player B
+                const maxImpactB = Math.max(
+                  parseFloat(b.attackingImpactScore),
+                  parseFloat(b.defensiveImpactScore)
+                );
+
+                // 3. Sort descending (highest impact first)
+                // If impacts are equal, fall back to appearances
+                if (maxImpactB !== maxImpactA) {
+                  return maxImpactB - maxImpactA;
+                }
+                return b.appearances - a.appearances;
+              });
             };
 
             const teamDefensiveActionsHome = homePlayers.players.reduce((sum, player) => {
@@ -1681,14 +1730,15 @@ function GameStats({ game, displayBool, stats, handleToggleTip, userTips }) {
             }, 0);
 
 
-            const homeMissingPlayersImpactAssessment = enrichMissingPlayers(homeMissingPlayers, homePlayers, gameStats.home[2].gamesPlayed, gameStats.home[2].ScoredOverall, teamDefensiveActionsHome, teamAttackingActionsHome);
-            const awayMissingPlayersImpactAssessment = enrichMissingPlayers(awayMissingPlayers, awayPlayers, gameStats.away[2].gamesPlayed, gameStats.away[2].ScoredOverall, teamDefensiveActionsAway, teamAttackingActionsAway);
+            const homeMissingPlayersImpactAssessment = enrichMissingPlayers(homeMissingPlayers, homePlayers, gameStats.home[2].gamesPlayed, gameStats.home[2].ScoredOverall, teamDefensiveActionsHome, teamAttackingActionsHome, "home");
+            const awayMissingPlayersImpactAssessment = enrichMissingPlayers(awayMissingPlayers, awayPlayers, gameStats.away[2].gamesPlayed, gameStats.away[2].ScoredOverall, teamDefensiveActionsAway, teamAttackingActionsAway, "away");
 
             setHomeMissingPlayersImpact(homeMissingPlayersImpactAssessment);
             setAwayMissingPlayersImpact(awayMissingPlayersImpactAssessment);
           }
 
 
+          console.log(gameStats);
 
           // const matchPreviewResponse = await fetch(
           //   `${process.env.REACT_APP_EXPRESS_SERVER}gemini/match-preview/${matchingGameInfo.homeId}${matchingGameInfo.awayId}/${matchingGameInfo.time}`,
@@ -3442,8 +3492,6 @@ function GameStats({ game, displayBool, stats, handleToggleTip, userTips }) {
   }
   const UserTips = ({ game, userTips, handleToggleTip, userDetail }) => {
 
-    console.log("UserTips props:", { game, userTips, userDetail });
-
     const isSelected = (type) => {
       // Use 'userTips' (the prop) and 'game' (the prop)
       // Remove any reference to 'props.game.id'
@@ -3698,15 +3746,31 @@ function GameStats({ game, displayBool, stats, handleToggleTip, userTips }) {
                 <><div className="AbsenceImpactMessage">Impact of absence based on player's contribution so far in this competition alone</div>
                   <div className="AbsenceImpactMessage">Attacking and defensive impact are derived from competition appearances and contributions relative to the rest of the team in this area</div>
                   <div className="MissingPlayers">
-                    <MissingPlayersList
-                      team={game.homeTeam}
-                      className="HomeMissingPlayers"
-                      players={homeMissingPlayersImpact} />
-                    <MissingPlayersList
-                      team={game.awayTeam}
-                      className="AwayMissingPlayers"
-                      players={awayMissingPlayersImpact} />
-                  </div></>
+                    {/* HOME COLUMN */}
+                    <div className="TeamColumn">
+                      <TeamImpactSummary
+                        players={homeMissingPlayersImpact}
+                        teamName={game.homeTeam}
+                      />
+                      <MissingPlayersList
+                        players={homeMissingPlayersImpact}
+                        className="HomeMissingPlayers"
+                      />
+                    </div>
+
+                    {/* AWAY COLUMN */}
+                    <div className="TeamColumn">
+                      <TeamImpactSummary
+                        players={awayMissingPlayersImpact}
+                        teamName={game.awayTeam}
+                      />
+                      <MissingPlayersList
+                        players={awayMissingPlayersImpact}
+                        className="AwayMissingPlayers"
+                      />
+                    </div>
+                  </div>
+                </>
               }
             />
           )}

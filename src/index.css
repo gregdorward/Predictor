@@ -2361,6 +2361,67 @@ strong.LOST {
   margin-right: 0.5em;
 }
 
+/* Container for the bar */
+.ImpactWrapper {
+  width: 100%;
+  margin-top: 4px;
+  margin-bottom: 8px;
+}
+
+.ImpactBarBackground {
+  position: relative;
+  height: 1.5em;
+  background-color: #e2e8f0; /* Light gray track */
+  border-radius: 4px;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+}
+
+.ImpactBarFill {
+  height: 100%;
+  transition: width 0.5s ease-in-out;
+}
+
+/* Text centered over the bar */
+.ImpactBarText {
+  position: absolute;
+  width: 100%;
+  text-align: center;
+  font-size: 0.75rem;
+  font-weight: bold;
+  color: #1a202c;
+  z-index: 1;
+}
+
+/* Color Palette for Impact */
+.impact-critical { background-color: #e53e3e; color: white; } /* Strong Red */
+.impact-high     { background-color: #ed8936; }               /* Orange */
+.impact-medium   { background-color: #ecc94b; }               /* Yellow */
+.impact-low      { background-color: #9ae6b4; }               /* Light Green */
+.impact-minimal  { background-color: #cbd5e0; }               /* Grey */
+
+.MissingPlayers {
+  display: flex;
+  gap: 20px;
+  width: 100%;
+  align-items: flex-start;
+}
+
+.TeamColumn {
+  flex: 1;
+  display: flex;
+  flex-direction: column; /* Stacks summary and list vertically */
+  gap: 15px; /* Adds breathing room between cards */
+}
+
+/* Adjusting StatLine for bars */
+.StatLine.flex-col {
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 2px;
+}
+
 .ResultContainer {
   height: 100%;
   align-content: center;
@@ -5849,7 +5910,7 @@ button.AIInsights button:active {
 }
 
 /* Each player "card" */
-.MissingPlayerCard {
+.MissingPlayerCard, .TeamImpactSummaryCard{
   /* border: 1px solid var(--primary-color); */
   background-color: var(--secondary-background-color);
   border-radius: 8px;

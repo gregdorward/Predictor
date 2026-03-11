@@ -1,9 +1,88 @@
-const MissingPlayersList = ({ players = [], className, team }) => {
+import React from 'react';
+
+// 1. Individual Progress Bar Component
+const ImpactBar = ({ score }) => {
+  const numericScore = parseFloat(score) || 0;
+
+  const getImpactClass = (val) => {
+    if (val >= 8) return "impact-critical";
+    if (val >= 6) return "impact-high";
+    if (val >= 4) return "impact-medium";
+    if (val >= 2) return "impact-low";
+    return "impact-minimal";
+  };
+
+  const impactClass = getImpactClass(numericScore);
+  const percentage = Math.min(numericScore * 10, 100);
+
+  return (
+    <div className="ImpactWrapper">
+      <div className="ImpactBarBackground">
+        <div
+          className={`ImpactBarFill ${impactClass}`}
+          style={{ width: `${percentage}%` }}
+        />
+        <span className="ImpactBarText">{numericScore.toFixed(1)}</span>
+      </div>
+    </div>
+  );
+};
+
+// 2. New Summary Component (To be called once at the top of each column)
+export const TeamImpactSummary = ({ players, teamName }) => {
+  if (!players || players.length === 0) return null;
+
+  // 1. Sort players so the biggest impacts are processed first
+  const sortedByAtk = [...players].sort((a, b) => b.attackingImpactScore - a.attackingImpactScore);
+  const sortedByDef = [...players].sort((a, b) => b.defensiveImpactScore - a.defensiveImpactScore);
+
+  const calculateDiminishingTotal = (sortedPlayers, key) => {
+    return sortedPlayers.reduce((acc, p, index) => {
+      const score = parseFloat(p[key] || 0);
+      const statusMult = p.type === 'doubtful' ? 0.5 : 1.0;
+
+      // DIMINISHING RETURNS: The 1st player counts 100%, 2nd counts 60%, 3rd+ counts 30%
+      let positionMult = 1.0;
+      if (index === 1) positionMult = 0.6;
+      if (index >= 2) positionMult = 0.3;
+
+      return acc + (score * statusMult * positionMult);
+    }, 0);
+  };
+
+  const totalAtk = calculateDiminishingTotal(sortedByAtk, 'attackingImpactScore');
+  const totalDef = calculateDiminishingTotal(sortedByDef, 'defensiveImpactScore');
+
+  // Since we are using diminishing returns, we don't need a massive divisor.
+  // We want a team that loses Mbappé (10) and Bellingham (7.3) to be around an 8 or 9.
+  const atkLoss = Math.min(10, totalAtk / 2);
+  const defLoss = Math.min(10, totalDef / 2);
+
+  return (
+    <div className="TeamImpactSummaryCard">
+      <div className="PlayerIdentity">
+        <div className="MissingPlayerName">{teamName}</div>
+      </div>
+      <div className="PlayerStatsRows">
+        <div className="StatLine flex-col">
+          <span className="MissingPlayerStatLabel">Attacking Threat Lost</span>
+          <ImpactBar score={atkLoss} />
+        </div>
+        <div className="StatLine flex-col">
+          <span className="MissingPlayerStatLabel">Defensive Solidity Lost</span>
+          <ImpactBar score={defLoss} />
+        </div>
+      </div>
+    </div>
+  );
+};
+
+// 3. The List Component (Maps through individual players only)
+const MissingPlayersList = ({ players = [], className }) => {
   return (
     <div className={`MissingPlayersList ${className}`}>
       {players.map((player, index) => (
         <div key={index} className="MissingPlayerCard">
-          {/* Header Info */}
           <div className="PlayerIdentity">
             <div className="MissingPlayerName">{player.name}</div>
             <div className="PlayerMeta">
@@ -11,20 +90,22 @@ const MissingPlayersList = ({ players = [], className, team }) => {
             </div>
           </div>
 
-          {/* Stats Section */}
           <div className="PlayerStatsRows">
             <div className="StatLine">
               <span className="MissingPlayerStatLabel">Position</span>
               <span className="StatValue">{player.position}</span>
             </div>
-            <div className="StatLine">
-              <span className="MissingPlayerStatLabel">Attacking Impact (0 - 10)</span>
-              <span className="StatValue">{player.attackingImpactScore}</span>
+
+            <div className="StatLine flex-col">
+              <span className="MissingPlayerStatLabel">Attacking Impact</span>
+              <ImpactBar score={player.attackingImpactScore} />
             </div>
-            <div className="StatLine">
-              <span className="MissingPlayerStatLabel">Defensive Impact (0 - 10)</span>
-              <span className="StatValue">{player.defensiveImpactScore}</span>
+
+            <div className="StatLine flex-col">
+              <span className="MissingPlayerStatLabel">Defensive Impact</span>
+              <ImpactBar score={player.defensiveImpactScore} />
             </div>
+
             <div className="StatLine">
               <span className="MissingPlayerStatLabel">Appearances</span>
               <span className="StatValue">{player.appearances}</span>
@@ -47,4 +128,5 @@ const MissingPlayersList = ({ players = [], className, team }) => {
     </div>
   );
 };
+
 export default MissingPlayersList;
