@@ -4435,9 +4435,9 @@ const footyStatsToSofaScore = [
       id: 39,
       season: 76491, // Danish Superliga
     },
-    16260: {
+    16558: {
       id: 20,
-      season: 70174, // Norwegian Eliteserien
+      season: 87809, // Norwegian Eliteserien
     },
     14923: {
       id: 45,

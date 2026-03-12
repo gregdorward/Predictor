@@ -1575,9 +1575,9 @@ function GameStats({ game, displayBool, stats, handleToggleTip, userTips }) {
                   // If a player scores every 90 mins, bonus is ~2.2
                   // If they score every 200 mins, bonus is ~1.0
                   if (stats.position === "F") {
-                    efficiencyBonus = Math.max(1, 180 / scoringFrequency);
+                    efficiencyBonus = Math.max(1, 90 / scoringFrequency);
                   } else {
-                    efficiencyBonus = Math.max(1, 270 / scoringFrequency);
+                    efficiencyBonus = Math.max(1, 180 / scoringFrequency);
                   }
                 }
 

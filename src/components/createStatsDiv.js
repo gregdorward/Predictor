@@ -43,7 +43,7 @@ function Stats(props) {
       <Fragment>
         <ul className={props.className ? props.className : ""} style={props.style ? props.style : {}}>
           <CreateBadge image={props.badge} alt="Team badge" ClassName={"ColumnBadge"} />
-          <li className="FormHeader">League results (most recent on right)</li>
+          <li className="FormHeader">Competition results (most recent on right)</li>
           <li key={`last5League`} className="last5League">
             <span className={styleForm(props.Results && props.Results[5] ? props.Results[5] : "")}>
               {props.Results && props.Results[5] ? props.Results[5] : ""}
@@ -523,7 +523,7 @@ function Stats(props) {
         <ul className={props.className ? props.className : ""} style={props.style ? props.style : {}}>
           <CreateBadge image={props.badge} alt="Team badge" ClassName={"ColumnBadge"} />
 
-          <li className="FormHeader">League results (most recent on right)</li>
+          <li className="FormHeader">Competition results (most recent on right)</li>
           <li key={`last5${props.homeOrAwayResults ? props.homeOrAwayResults : "default"}`} className="FormHomeOrAway">
             <span className={styleForm(props.ResultsHorA && props.ResultsHorA[5] ? props.ResultsHorA[5] : "")}>
               {props.ResultsHorA && props.ResultsHorA[5] ? props.ResultsHorA[5] : ""}

@@ -24,7 +24,7 @@ const sofaScoreIds = [
   { 14937: 38 }, //Belgium
   { 16263: 40 }, //Sweden
   { 15055: 39 }, //Denmark
-  { 16260: 20 }, //Norway
+  { 16558: 20 }, //Norway
   { 14923: 45 }, //Austrian Prem 22/23
   { 15163: 185 }, //Greek Prem 22/23
   { 14972: 52 }, //turkey
