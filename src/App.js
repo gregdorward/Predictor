@@ -91,7 +91,7 @@ const leagueOrder = [
   14937, //Belgian Pro League 25 12137
   16263, //sweden 25
   15055, //Danish Prem 24/25 12132
-  16260, //Norway Prem 25
+  16558, //Norway Prem 25
   14923, //Austrian Prem 25 12472
   15163, //Greek Prem 25 12734
   14972, //turkey 25 12641
@@ -281,10 +281,9 @@ async function convertTimestampForSofaScore(timestamp) {
       const element = league.season[x];
 
       if (
-        element.year === 2025 ||
         element.year === 20252026 ||
         element.year === 2026 ||
-        element.year === -1
+        element.year === 20262027
       ) {
         if (
           element.id !== 5874 &&

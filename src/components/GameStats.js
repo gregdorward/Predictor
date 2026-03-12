@@ -1575,18 +1575,18 @@ function GameStats({ game, displayBool, stats, handleToggleTip, userTips }) {
                   // If a player scores every 90 mins, bonus is ~2.2
                   // If they score every 200 mins, bonus is ~1.0
                   if (stats.position === "F") {
-                    efficiencyBonus = Math.max(1, 270 / scoringFrequency);
+                    efficiencyBonus = Math.max(1, 180 / scoringFrequency);
                   } else {
-                    efficiencyBonus = Math.max(1, 360 / scoringFrequency);
+                    efficiencyBonus = Math.max(1, 270 / scoringFrequency);
                   }
                 }
 
-                let goalWeight = 8;
-                let assistWeight = 6;
+                let goalWeight = 6;
+                let assistWeight = 4;
 
                 if (stats.position === "M") {
-                  goalWeight = 16;
-                  assistWeight = 8;
+                  goalWeight = 12;
+                  assistWeight = 6;
                 }
 
                 const attackingActions =
@@ -1737,6 +1737,7 @@ function GameStats({ game, displayBool, stats, handleToggleTip, userTips }) {
             setAwayMissingPlayersImpact(awayMissingPlayersImpactAssessment);
           }
 
+          
 
           console.log(gameStats);
 
@@ -3302,7 +3303,7 @@ function GameStats({ game, displayBool, stats, handleToggleTip, userTips }) {
             performanceStats: homeTeamStats,
             keyPlayers: homePlayerData?.slice(0, 5),
             competitionRankings: ranksHome,
-            missingPlayers: homeMissingPlayersList,
+            missingPlayers: homeMissingPlayersImpact,
             predictedLineup: homeLineupList,
             homeAttackingStats: homeForm?.attackingMetrics,
             homeDefensiveStats: homeForm?.defensiveMetrics,
@@ -3314,7 +3315,7 @@ function GameStats({ game, displayBool, stats, handleToggleTip, userTips }) {
             performanceStats: awayTeamStats,
             keyPlayers: awayPlayerData?.slice(0, 5),
             competitionRankings: ranksAway,
-            missingPlayers: awayMissingPlayersList,
+            missingPlayers: awayMissingPlayersImpact,
             predictedLineup: awayLineupList,
             awayAttackingStats: awayForm?.attackingMetrics,
             awayDefensiveStats: awayForm?.defensiveMetrics,

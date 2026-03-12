@@ -28,35 +28,43 @@ const ImpactBar = ({ score }) => {
   );
 };
 
+const calculateDiminishingTotal = (sortedPlayers, key) => {
+  return sortedPlayers.reduce((acc, p, index) => {
+    const score = parseFloat(p[key] || 0);
+    const statusMult = p.type === 'doubtful' ? 0.5 : 1.0;
+
+    let positionMult = 1.0;
+    if (index === 1) positionMult = 0.6;
+    if (index >= 2) positionMult = 0.3;
+
+    return acc + (score * statusMult * positionMult);
+  }, 0);
+};
+
 // 2. New Summary Component (To be called once at the top of each column)
-export const TeamImpactSummary = ({ players, teamName }) => {
-  if (!players || players.length === 0) return null;
+export const TeamImpactSummary = ({ players, teamName, onCalculate }) => {
+  // 1. Move the data preparation to the top (ensure it's always an array)
+  const safePlayers = players || [];
 
-  // 1. Sort players so the biggest impacts are processed first
-  const sortedByAtk = [...players].sort((a, b) => b.attackingImpactScore - a.attackingImpactScore);
-  const sortedByDef = [...players].sort((a, b) => b.defensiveImpactScore - a.defensiveImpactScore);
-
-  const calculateDiminishingTotal = (sortedPlayers, key) => {
-    return sortedPlayers.reduce((acc, p, index) => {
-      const score = parseFloat(p[key] || 0);
-      const statusMult = p.type === 'doubtful' ? 0.5 : 1.0;
-
-      // DIMINISHING RETURNS: The 1st player counts 100%, 2nd counts 60%, 3rd+ counts 30%
-      let positionMult = 1.0;
-      if (index === 1) positionMult = 0.6;
-      if (index >= 2) positionMult = 0.3;
-
-      return acc + (score * statusMult * positionMult);
-    }, 0);
-  };
+  const sortedByAtk = [...safePlayers].sort((a, b) => b.attackingImpactScore - a.attackingImpactScore);
+  const sortedByDef = [...safePlayers].sort((a, b) => b.defensiveImpactScore - a.defensiveImpactScore);
 
   const totalAtk = calculateDiminishingTotal(sortedByAtk, 'attackingImpactScore');
   const totalDef = calculateDiminishingTotal(sortedByDef, 'defensiveImpactScore');
 
-  // Since we are using diminishing returns, we don't need a massive divisor.
-  // We want a team that loses Mbappé (10) and Bellingham (7.3) to be around an 8 or 9.
-  const atkLoss = Math.min(10, totalAtk / 2);
-  const defLoss = Math.min(10, totalDef / 2);
+  const atkLoss = parseFloat(Math.min(10, totalAtk / 2).toFixed(1));
+  const defLoss = parseFloat(Math.min(10, totalDef / 2).toFixed(1));
+
+  // 2. The Hook is now guaranteed to run every single time
+  React.useEffect(() => {
+    if (onCalculate && safePlayers.length > 0) {
+      onCalculate({ atk: atkLoss, def: defLoss });
+    }
+  }, [atkLoss, defLoss, onCalculate, safePlayers.length]);
+
+  // 3. ONLY NOW do we return null if there's no data to show visually
+  if (safePlayers.length === 0) return null;
+
 
   return (
     <div className="TeamImpactSummaryCard">

@@ -74,9 +74,11 @@ const sofaScoreIds = [
 ];
 
 
+
 export default function LeagueName({ fixture, mock, showShortlist }) {
   const [logoUrl, setLogoUrl] = useState(null);
 
+  console.log(allLeagueResultsArrayOfObjects)
 const name = showShortlist ? fixture.leagueDesc : fixture.leagueName; 
  const id =
     allLeagueResultsArrayOfObjects.length > 0
