@@ -53,6 +53,7 @@ let awayOdds;
 let totalGoals = 0;
 let totalGoals2 = 0;
 export let numberOfGames = 0;
+export let predictedScoresData;
 let drawPredictions = 0;
 let homePredictions = 0;
 let awayPredictions = 0;
@@ -2066,6 +2067,26 @@ export async function generateGoals(homeForm, awayForm, match) {
     (awayLambdaAverage * ALPHA) +
     (averageGoalsPerTeam * LEAGUE_WEIGHT);
 
+  const existing = predictedScoresData.find(p => p.gameId === match.id);
+
+  const IMPACT_SENSITIVITY = 0.015;
+
+  // 2. Extract scores from your JSON (use 0 as fallback)
+  const hAtk = existing?.impacts?.home?.atk || 0;
+  const hDef = existing?.impacts?.home?.def || 0;
+  const aAtk = existing?.impacts?.away?.atk || 0;
+  const aDef = existing?.impacts?.away?.def || 0;
+
+  // 3. Apply the Injury Correction
+  // If Home has 5.1 Atk Loss, they lose ~7.6% of their lambda
+  // If Away has 0.5 Def Loss, Home gains ~0.75% of their lambda
+  const homeLambda_withInjuries = homeLambda_final * (1 - (hAtk * IMPACT_SENSITIVITY)) * (1 + (aDef * IMPACT_SENSITIVITY));
+  const awayLambda_withInjuries = awayLambda_final * (1 - (aAtk * IMPACT_SENSITIVITY)) * (1 + (hDef * IMPACT_SENSITIVITY));
+
+  // 4. Ensure Lambda never drops below a realistic floor (e.g., 0.05)
+  const homeLambda_final_v2 = Math.max(0.05, homeLambda_withInjuries);
+  const awayLambda_final_v2 = Math.max(0.05, awayLambda_withInjuries);
+
 
   const avgHomeXG = (homeForm.avXGLast5 + awayForm.avXGAgainstLast5) / 2;
   const avgHomeGoalsLast5 = (homeForm.avScoredLast5 + awayForm.avConceededLast5) / 2;
@@ -2121,25 +2142,25 @@ export async function generateGoals(homeForm, awayForm, match) {
 
 
   if (majorContinentalLeagues.includes(match.leagueDesc)) {
-    homeGoals = (homeLambda_final - 0.15)
+    homeGoals = (homeLambda_final_v2 - 0.15)
       + (oddsComparisonHome * 0.15) +
       (homeForm.actualToXGDifference / 20) * homeXGMult;
-    awayGoals = (awayLambda_final - 0.25)
+    awayGoals = (awayLambda_final_v2 - 0.25)
       + (oddsComparisonAway * 0.15) +
       (awayForm.actualToXGDifference / 20) * awayXGMult;
   } else if (InternationalComps.includes(match.leagueDesc)) {
-    homeGoals = (homeLambda_final + 0.1)
+    homeGoals = (homeLambda_final_v2 + 0.1)
       +
       (homeForm.actualToXGDifference / 20) * homeXGMult;
 
-    awayGoals = (awayLambda_final - 0.1)
+    awayGoals = (awayLambda_final_v2 - 0.1)
       +
       (awayForm.actualToXGDifference / 20) * awayXGMult;
   } else {
-    homeGoals = (homeLambda_final)
+    homeGoals = (homeLambda_final_v2)
       * homeXGMult
 
-    awayGoals = (awayLambda_final)
+    awayGoals = (awayLambda_final_v2)
       * awayXGMult
   }
 
@@ -4743,7 +4764,7 @@ export async function getScorePrediction(day, mocked) {
   const playerStatsPromise = fetchPlayerStats();
 
 
-  const predictedScoresPromise = fetch(`${process.env.REACT_APP_EXPRESS_SERVER}predictedScores`);
+  const predictedScoresPromise = fetch(`${process.env.REACT_APP_EXPRESS_SERVER}predictedScores2`);
   const leagueAveragesPromise = fetch(`${process.env.REACT_APP_EXPRESS_SERVER}league-averages`);
 
   // 2. Await everything in parallel
@@ -4760,7 +4781,7 @@ export async function getScorePrediction(day, mocked) {
   ]);
 
   // Await JSON parsing and assign results.
-  const predictedScoresData = await predictedScoresResponse.json();
+  predictedScoresData = await predictedScoresResponse.json();
   // Assuming leagueAveragesData is an outer-scoped variable
   leagueAveragesData = await leagueAveragesResponse.json();
 

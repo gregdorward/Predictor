@@ -51,6 +51,7 @@ import PlayerStatsTable from "./PlayerStatsTable";
 import { AuthProvider, useAuth } from "../logic/authProvider";
 import BetSlipFooter from "../components/Betslip";
 import { TeamImpactSummary } from "./MissingPlayersList";
+import { predictedScoresData } from "../logic/getScorePredictions";
 // import FutureFixturesSideBySide from "./FutureFixturesSideBySide";
 // export let userTips;
 
@@ -58,7 +59,6 @@ import { TeamImpactSummary } from "./MissingPlayersList";
 let setUserTips;
 const MemoizedSofaLineupsWidget = memo(SofaLineupsWidget);
 const LazyFutureFixturesSideBySide = lazy(() => import('./FutureFixturesSideBySide'));
-
 
 // let id, team1, team2, timestamp, homeGoals, awayGoals;
 
@@ -317,6 +317,56 @@ function GameStats({ game, displayBool, stats, handleToggleTip, userTips }) {
   const [ranksHome, setRanksHome] = useState([]);
   const [ranksAway, setRanksAway] = useState([]);
 
+  // At the top of your component
+  const [homeImpacts, setHomeImpacts] = useState({ atk: 0, def: 0 });
+  const [awayImpacts, setAwayImpacts] = useState({ atk: 0, def: 0 });
+
+  // Inside GameStats.js
+  const handleHomeCalculate = useCallback((vals) => {
+    setHomeImpacts(prev => {
+      // Only update if the values are actually different
+      if (prev.atk === vals.atk && prev.def === vals.def) return prev;
+      return vals;
+    });
+  }, []); // Empty array means this function never changes
+
+  const handleAwayCalculate = useCallback((vals) => {
+    setAwayImpacts(prev => {
+      if (prev.atk === vals.atk && prev.def === vals.def) return prev;
+      return vals;
+    });
+  }, []);
+  // The sync logic
+  useEffect(() => {
+    const syncImpacts = async () => {
+      // Check if we have valid data and if it differs from S3 (existingPredictions)
+      const existing = predictedScoresData.find(p => p.gameId === game.id);
+
+      // Check if any value has changed compared to what's in S3
+      const hasChanged = !existing ||
+        existing.impacts?.home?.atk !== homeImpacts.atk ||
+        existing.impacts?.away?.atk !== awayImpacts.atk;
+
+      // Only save if impacts are greater than 0 to avoid saving empty stats
+      if (hasChanged && (homeImpacts.atk > 0 || awayImpacts.atk > 0)) {
+        await fetch(`${process.env.REACT_APP_EXPRESS_SERVER}predictedScores2`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            gameId: game.id,
+            homeAtkLoss: homeImpacts.atk,
+            homeDefLoss: homeImpacts.def,
+            awayAtkLoss: awayImpacts.atk,
+            awayDefLoss: awayImpacts.def
+          })
+        });
+        // Optionally: Refresh existingPredictions here to prevent loop
+      }
+    };
+
+    syncImpacts();
+  }, [homeImpacts, awayImpacts, game.id, predictedScoresData]);
+
   const allResultsHome = useMemo(() => {
     const results = homeForm?.allTeamResults ?? [];
     return [...results].sort((b, a) => b.dateRaw - a.dateRaw);
@@ -567,8 +617,6 @@ function GameStats({ game, displayBool, stats, handleToggleTip, userTips }) {
     const targetNameLower = targetTeamName.toLowerCase();
     const normalizedTargetName = teamNameAliases[targetNameLower] || targetNameLower;
 
-    console.log("Normalized target team name:", normalizedTargetName);
-
     for (const statistic in topTeams) {
       if (!Array.isArray(topTeams[statistic])) continue;
 
@@ -590,7 +638,6 @@ function GameStats({ game, displayBool, stats, handleToggleTip, userTips }) {
           targetTeamIndex = teamArray.indexOf(partialMatches[0]);
         } else {
           const warningKey = `${targetTeamName}-${statistic}`;
-          console.log(warningKey);
           if (!warnedTeams.has(warningKey)) {
             console.warn(
               `Ambiguous or missing match for "${targetTeamName}" in "${statistic}" — found:`,
@@ -619,15 +666,12 @@ function GameStats({ game, displayBool, stats, handleToggleTip, userTips }) {
         };
       }
     }
-    console.log("Calculated team ranks:", teamRanks);
 
     return teamRanks;
   }
 
   useEffect(() => {
     if (stats && homeForm?.teamName) {
-      console.log("Calculating ranks for home team:", homeForm.teamName);
-      console.log("Available stats data:", stats);
       const ranks = getTeamRanksFromTopTeamsWithPartialMatch(stats, homeForm.teamName);
       setRanksHome(ranks);
     }
@@ -920,16 +964,13 @@ function GameStats({ game, displayBool, stats, handleToggleTip, userTips }) {
   // Helper: Memoized team name mapping to avoid repeated computation
   const mappedTeamNameCache = new Map();
   function getMappedTeamName(name) {
-    console.log("Mapping team name:", name);
     if (mappedTeamNameCache.has(name)) {
       return mappedTeamNameCache.get(name);
     }
     const normalized = cleanTeamName(name);
-    console.log(`Normalized "${name}" to "${normalized}"`);
     const aliasKey = normalize(name);
     const mapped = cleanTeamName(teamNameAliases[aliasKey] || normalized);
     mappedTeamNameCache.set(name, mapped);
-    console.log(`Mapped "${name}" to "${mapped}"`);
     return mapped;
   }
 
@@ -1549,6 +1590,8 @@ function GameStats({ game, displayBool, stats, handleToggleTip, userTips }) {
             setAwayLineupList(awayLineup);
             setHomeMissingPlayersList(homeMissingPlayers);
             setAwayMissingPlayersList(awayMissingPlayers);
+            console.log(predictedScoresData)
+
             const enrichMissingPlayers = (missingList, teamStats, played, scored, teamDefActions, teamAttActions, team) => {
               if (!missingList || !teamStats || !teamStats.players) return [];
               console.log(teamStats);
@@ -1737,7 +1780,7 @@ function GameStats({ game, displayBool, stats, handleToggleTip, userTips }) {
             setAwayMissingPlayersImpact(awayMissingPlayersImpactAssessment);
           }
 
-          
+
 
           console.log(gameStats);
 
@@ -3265,7 +3308,7 @@ function GameStats({ game, displayBool, stats, handleToggleTip, userTips }) {
   }
 
   const generateAIInsights = useCallback(
-    async (gameId, streak, oddsData, homeTeamStats, awayTeamStats, homePlayerData, awayPlayerData, homeMissingPlayersList, awayMissingPlayersList, homeLineupList, awayLineupList, ranksHome, ranksAway, futureFixturesHome, futureFixturesAway) => {
+    async (gameId, streak, oddsData, homeTeamStats, awayTeamStats, homePlayerData, awayPlayerData, homeMissingPlayersImpact, awayMissingPlayersImpact, homeLineupList, awayLineupList, ranksHome, ranksAway, futureFixturesHome, futureFixturesAway) => {
       setIsLoading(true);
       const table = await fetchBasicTable(game.leagueID);
       const leagueTable = table?.table || null;
@@ -3284,6 +3327,8 @@ function GameStats({ game, displayBool, stats, handleToggleTip, userTips }) {
         progress = statistics.progress;
         totalGames = (statistics.totalMatches * 2) / statistics.clubNum;
       });
+
+      console.log(homeMissingPlayersImpact, awayMissingPlayersImpact);
 
       try {
         const AIPayload = {
@@ -3322,6 +3367,8 @@ function GameStats({ game, displayBool, stats, handleToggleTip, userTips }) {
           },
         };
 
+        console.log("AI Payload:", AIPayload);
+
         const response = await fetch(
           `${process.env.REACT_APP_EXPRESS_SERVER}gemini/${gameId}`,
           {
@@ -3343,7 +3390,7 @@ function GameStats({ game, displayBool, stats, handleToggleTip, userTips }) {
         setAiMatchPreview(jsonData);
 
         // Store predicted score in backend array
-        await fetch(`${process.env.REACT_APP_EXPRESS_SERVER}predictedScores`, {
+        await fetch(`${process.env.REACT_APP_EXPRESS_SERVER}predictedScores2`, {
           method: "POST",
           headers: {
             Accept: "application/json",
@@ -3735,23 +3782,28 @@ function GameStats({ game, displayBool, stats, handleToggleTip, userTips }) {
             />
           </div>
 
-          {loading ||
-            (homeMissingPlayersList.length === 0 &&
-              awayMissingPlayersList.length === 0) ? (
+          {loading || (homeMissingPlayersList.length === 0 && awayMissingPlayersList.length === 0) ? (
             <div></div>
           ) : (
             <Collapsable
               buttonText={`Missing players \u{2630}`}
               classNameButton="MissingPlayersButton"
               element={
-                <><div className="AbsenceImpactMessage">Impact of absence based on player's contribution so far in this competition alone</div>
-                  <div className="AbsenceImpactMessage">Attacking and defensive impact are derived from competition appearances and contributions relative to the rest of the team in this area</div>
+                <>
+                  <div className="AbsenceImpactMessage">
+                    Impact of absence based on player's contribution so far in this competition alone
+                  </div>
+                  <div className="AbsenceImpactMessage">
+                    Attacking and defensive impact are derived from competition appearances and contributions relative to the rest of the team in this area
+                  </div>
+
                   <div className="MissingPlayers">
                     {/* HOME COLUMN */}
                     <div className="TeamColumn">
                       <TeamImpactSummary
                         players={homeMissingPlayersImpact}
                         teamName={game.homeTeam}
+                        onCalculate={handleHomeCalculate} // Pass the memoized version
                       />
                       <MissingPlayersList
                         players={homeMissingPlayersImpact}
@@ -3764,6 +3816,8 @@ function GameStats({ game, displayBool, stats, handleToggleTip, userTips }) {
                       <TeamImpactSummary
                         players={awayMissingPlayersImpact}
                         teamName={game.awayTeam}
+                        // NEW: Capture the calculated values
+                        onCalculate={handleAwayCalculate}
                       />
                       <MissingPlayersList
                         players={awayMissingPlayersImpact}
@@ -3923,8 +3977,8 @@ function GameStats({ game, displayBool, stats, handleToggleTip, userTips }) {
                     awayTeamStats,
                     homePlayerData,
                     awayPlayerData,
-                    homeMissingPlayersList,
-                    awayMissingPlayersList,
+                    homeMissingPlayersImpact,
+                    awayMissingPlayersImpact,
                     homeLineupList,
                     awayLineupList,
                     ranksHome,

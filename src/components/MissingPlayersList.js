@@ -57,10 +57,12 @@ export const TeamImpactSummary = ({ players, teamName, onCalculate }) => {
 
   // 2. The Hook is now guaranteed to run every single time
   React.useEffect(() => {
-    if (onCalculate && safePlayers.length > 0) {
+    if (onCalculate && players.length > 0) {
       onCalculate({ atk: atkLoss, def: defLoss });
     }
-  }, [atkLoss, defLoss, onCalculate, safePlayers.length]);
+    // Remove atkLoss and defLoss from dependencies if they are calculated 
+    // every render, OR ensure they are stable.
+  }, [atkLoss, defLoss, onCalculate, players.length]);
 
   // 3. ONLY NOW do we return null if there's no data to show visually
   if (safePlayers.length === 0) return null;
