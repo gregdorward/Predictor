@@ -34,8 +34,8 @@ const calculateDiminishingTotal = (sortedPlayers, key) => {
     const statusMult = p.type === 'doubtful' ? 0.5 : 1.0;
 
     let positionMult = 1.0;
-    if (index === 1) positionMult = 0.6;
-    if (index >= 2) positionMult = 0.3;
+    if (index === 1) positionMult = 0.5;
+    if (index >= 2) positionMult = 0.25;
 
     return acc + (score * statusMult * positionMult);
   }, 0);

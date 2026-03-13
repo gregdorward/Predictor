@@ -1618,14 +1618,14 @@ function GameStats({ game, displayBool, stats, handleToggleTip, userTips }) {
                   // If a player scores every 90 mins, bonus is ~2.2
                   // If they score every 200 mins, bonus is ~1.0
                   if (stats.position === "F") {
-                    efficiencyBonus = Math.max(1, 90 / scoringFrequency);
-                  } else {
                     efficiencyBonus = Math.max(1, 180 / scoringFrequency);
+                  } else {
+                    efficiencyBonus = Math.max(1, 270 / scoringFrequency);
                   }
                 }
 
-                let goalWeight = 6;
-                let assistWeight = 4;
+                let goalWeight = 8;
+                let assistWeight = 6;
 
                 if (stats.position === "M") {
                   goalWeight = 12;
@@ -1641,10 +1641,10 @@ function GameStats({ game, displayBool, stats, handleToggleTip, userTips }) {
                 const attackingShare =
                   Math.min(1, attackingActions / teamAttActions);
 
-                const usageImpact = Math.min(1, appearances / played) * 3;
+                const usageImpact = Math.min(1, appearances / played) * 4;
 
                 const attackingContributionImpact =
-                  Math.pow(attackingShare, 0.6) * 8 * efficiencyBonus;
+                  Math.pow(attackingShare, 0.6) * 7 * efficiencyBonus;
 
                 const attackingQualityImpact =
                   Math.max(0, rating - 6.5) * 2;
@@ -3476,12 +3476,12 @@ function GameStats({ game, displayBool, stats, handleToggleTip, userTips }) {
             <div className="TeamStyle">{aiMatchPreview?.homeTeam?.style}</div>
             <ul className="Strengths">
               {aiMatchPreview?.homeTeam?.strengths?.map((strength, index) => (
-                <li key={index}>+ {strength}</li>
+                <li key={index}>{strength}</li>
               ))}
             </ul>
             <ul className="Weaknesses">
               {aiMatchPreview?.homeTeam?.weaknesses?.map((weakness, index) => (
-                <li key={index}>− {weakness}</li>
+                <li key={index}>{weakness}</li>
               ))}
             </ul>
           </div>
@@ -3500,12 +3500,12 @@ function GameStats({ game, displayBool, stats, handleToggleTip, userTips }) {
             <div className="TeamStyle">{aiMatchPreview?.awayTeam?.style}</div>
             <ul className="Strengths">
               {aiMatchPreview?.awayTeam?.strengths?.map((strength, index) => (
-                <li key={index}>+ {strength}</li>
+                <li key={index}>{strength}</li>
               ))}
             </ul>
             <ul className="Weaknesses">
               {aiMatchPreview?.awayTeam?.weaknesses?.map((weakness, index) => (
-                <li key={index}>− {weakness}</li>
+                <li key={index}>{weakness}</li>
               ))}
             </ul>
           </div>
@@ -4060,7 +4060,7 @@ function GameStats({ game, displayBool, stats, handleToggleTip, userTips }) {
               <div className="Chart" id={`Chart${game.id}`} style={style}>
                 <RadarChart
                   style={{ height: "auto" }}
-                  title="Soccer Stats Hub Strength Ratings - All Games"
+                  title="Soccer Stats Hub Strength Ratings - All Competition Games"
                   theme={localStorage.getItem('theme')}
                   max={1}
                   labels={[
@@ -4094,7 +4094,7 @@ function GameStats({ game, displayBool, stats, handleToggleTip, userTips }) {
                   team2={game.awayTeam}
                 ></RadarChart>
                 <BarChart
-                  text="All Games - Home Team | Away Team"
+                  text="All Competition Games - Home Team | Away Team"
                   theme={localStorage.getItem('theme')}
                   labels={[
                     "Highest Goals",
@@ -4140,12 +4140,12 @@ function GameStats({ game, displayBool, stats, handleToggleTip, userTips }) {
                 <MultiTypeChart
                   theme={localStorage.getItem('theme')}
                   dataArray={homeForm.twoDGoalsArray || []}
-                  text={homeForm.teamName + " XG Diff (All)"}
+                  text={homeForm.teamName + " XG Diff (All Competition Games)"}
                 />
                 <MultiTypeChart
                   theme={localStorage.getItem('theme')}
                   dataArray={awayForm.twoDGoalsArray || []}
-                  text={awayForm.teamName + " XG Diff (All)"}
+                  text={awayForm.teamName + " XG Diff (All Competition Games)"}
                 />
                 <Chart
                   height={3}
@@ -4504,7 +4504,7 @@ function GameStats({ game, displayBool, stats, handleToggleTip, userTips }) {
         <div className="Chart" id={`Chart${game.id}`} style={style}></div>
 
         <Div
-          text={`Last league games (most recent first)`}
+          text={`Last competition games (most recent first)`}
           className={"LastGameHeader"}
         ></Div>
         <div className="flex-container">

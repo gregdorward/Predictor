@@ -1768,6 +1768,8 @@ strong.LOST {
 
 .individualFixtureContainerfalse:hover {
   box-shadow: rgba(0, 0, 0, 0.12) 0px 2px 6px, rgba(0, 0, 0, 0.24) 0px 2px 4px;
+  border: var(--primary-color) 2px solid;
+
 }
 
 
@@ -2371,7 +2373,8 @@ strong.LOST {
 .ImpactBarBackground {
   position: relative;
   height: 1.5em;
-  background-color: #e2e8f0; /* Light gray track */
+  background-color: #e2e8f0;
+  /* Light gray track */
   border-radius: 4px;
   overflow: hidden;
   display: flex;
@@ -2395,11 +2398,32 @@ strong.LOST {
 }
 
 /* Color Palette for Impact */
-.impact-critical { background-color: #e53e3e; color: white; } /* Strong Red */
-.impact-high     { background-color: #ed8936; }               /* Orange */
-.impact-medium   { background-color: #ecc94b; }               /* Yellow */
-.impact-low      { background-color: #9ae6b4; }               /* Light Green */
-.impact-minimal  { background-color: #cbd5e0; }               /* Grey */
+.impact-critical {
+  background-color: #e53e3e;
+  color: white;
+}
+
+/* Strong Red */
+.impact-high {
+  background-color: #ed8936;
+}
+
+/* Orange */
+.impact-medium {
+  background-color: #ecc94b;
+}
+
+/* Yellow */
+.impact-low {
+  background-color: #9ae6b4;
+}
+
+/* Light Green */
+.impact-minimal {
+  background-color: #cbd5e0;
+}
+
+/* Grey */
 
 .MissingPlayers {
   display: flex;
@@ -2411,8 +2435,10 @@ strong.LOST {
 .TeamColumn {
   flex: 1;
   display: flex;
-  flex-direction: column; /* Stacks summary and list vertically */
-  gap: 15px; /* Adds breathing room between cards */
+  flex-direction: column;
+  /* Stacks summary and list vertically */
+  gap: 15px;
+  /* Adds breathing room between cards */
 }
 
 /* Adjusting StatLine for bars */
@@ -4045,6 +4071,7 @@ canvas.LeagueStatsRadar {
   padding-top: 1em;
   padding-bottom: 1em;
   min-height: 13em;
+  font-size: 0.9em;
 }
 
 .FormSummaryHome {
@@ -5584,8 +5611,7 @@ button.SecondaryButtons {
 }
 
 .HomeAIInsights ul {
-  padding: 1em;
-  font-size: 1em;
+  font-size: 0.9em;
 }
 
 .HomeAIInsights li {
@@ -5602,19 +5628,24 @@ button.SecondaryButtons {
 }
 
 .AwayAIInsights ul {
-  padding: 1em;
-  font-size: 1em;
+  font-size: 0.9em;
 }
 
-.Strengths {
-  border: 1px solid #009c00;
-  background-color: #01950135;
+.Strengths li {
+  /* border: 1px solid #009c00; */
+  background-color: #01950172;
+  padding: 0.5em;
+  margin-top: 1em;
+  text-align: center;
+  border-radius: 8px;
 }
 
-.Weaknesses {
-  margin-top: 2em;
-  border: 1px solid #d70000;
-  background-color: #e000002e;
+.Weaknesses li {
+  padding: 0.5em;
+  margin-top: 1em;
+  text-align: center;
+  background-color: #e0000062;
+  border-radius: 8px;
 }
 
 .AwayAIInsights li {
@@ -5857,7 +5888,7 @@ button.AIInsights button:active {
   margin-right: 0.5em;
 }
 
-.AbsenceImpactMessage{
+.AbsenceImpactMessage {
   padding: 1em;
 }
 
@@ -5910,7 +5941,8 @@ button.AIInsights button:active {
 }
 
 /* Each player "card" */
-.MissingPlayerCard, .TeamImpactSummaryCard{
+.MissingPlayerCard,
+.TeamImpactSummaryCard {
   /* border: 1px solid var(--primary-color); */
   background-color: var(--secondary-background-color);
   border-radius: 8px;
@@ -5936,7 +5968,8 @@ button.AIInsights button:active {
 /* The magic Flex rows */
 .StatLine {
   display: flex;
-  justify-content: space-between; /* This splits label and value */
+  justify-content: space-between;
+  /* This splits label and value */
   align-items: center;
   padding: 2px 0;
 }
@@ -5954,12 +5987,14 @@ button.AIInsights button:active {
 }
 
 .StatValue.score {
-  color: #2f855a; /* SofaScore Green */
+  color: #2f855a;
+  /* SofaScore Green */
 }
 
 .Label {
   flex: 1;
 }
+
 .LoadingMessage {
   margin: 1em;
 }
