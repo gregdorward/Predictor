@@ -2008,20 +2008,37 @@ export async function generateGoals(homeForm, awayForm, match) {
   const averageGoalsPerTeam = averageLeagueGoals / 2;
   const BASELINE = 0.5;
 
-  // Defensive weaknesses (unchanged)
-  const awayDefenseWeakness = 1.10 - awayForm.defensiveStrengthScoreGenerationLast5;
-  const homeDefenseWeakness = 1.10 - homeForm.defensiveStrengthScoreGenerationLast5;
-  const awayDefenseWeaknessOverall = 1.10 - awayForm.defensiveStrengthScoreGeneration;
-  const homeDefenseWeaknessOverall = 1.10 - homeForm.defensiveStrengthScoreGeneration;
+  // Define a minimum weakness so the factor never hits 0 or negative
+  const MIN_WEAKNESS = 0.10;
+
+  const awayDefenseWeakness = Math.max(
+    MIN_WEAKNESS,
+    1.10 - awayForm.defensiveStrengthScoreGenerationLast5
+  );
+
+  const homeDefenseWeakness = Math.max(
+    MIN_WEAKNESS,
+    1.10 - homeForm.defensiveStrengthScoreGenerationLast5
+  );
+  const awayDefenseWeaknessOverall = Math.max(MIN_WEAKNESS, 1.10 - awayForm.defensiveStrengthScoreGeneration);
+  const homeDefenseWeaknessOverall = Math.max(MIN_WEAKNESS, 1.10 - homeForm.defensiveStrengthScoreGeneration);
 
   // Helper to compute a dampened lambda component
-  function computeLambdaComponent(attackStrength, defenseWeakness) {
-    const attackFactor = attackStrength / BASELINE;
-    const defenseFactor = defenseWeakness / BASELINE;
+function computeLambdaComponent(attackStrength, defenseWeakness) {
+  const attackFactor = attackStrength / BASELINE;
+  
+  // 1. Clamp the defenseFactor so it never drops below 0.2
+  // This ensures even the best defense in the world still 
+  // has a 20% "chance" of conceding relative to the baseline.
+  const defenseFactor = Math.max(0.2, defenseWeakness / BASELINE);
 
-    // Geometric dampening to avoid extreme mismatches
-    return averageGoalsPerTeam * Math.sqrt(attackFactor * defenseFactor);
-  }
+  // 2. The "Aggression" Tuning
+  // If you want more blowouts (higher spreads), increase 1.2.
+  // If you want more draws, decrease it toward 1.0.
+  const weightedMultiplier = Math.pow(attackFactor, 1.25) * Math.pow(defenseFactor, 0.85);
+
+  return averageGoalsPerTeam * weightedMultiplier;
+}
 
   // Last 5 form
   const homeLambda_raw = computeLambdaComponent(
@@ -2041,19 +2058,21 @@ export async function generateGoals(homeForm, awayForm, match) {
   const homeLambda_rawOverall = computeLambdaComponent(
     homeForm.attackingStrength,
     awayDefenseWeaknessOverall
-  ) * (homeForm.formTrendScore); // Incorporate form trend into overall lambda
+  )
+  // * (homeForm.formTrendScore); // Incorporate form trend into overall lambda
 
   const awayLambda_rawOverall = computeLambdaComponent(
     awayForm.attackingStrength,
     homeDefenseWeaknessOverall
-  ) * (awayForm.formTrendScore); // Incorporate form trend into overall lambda
+  )
+  // * (awayForm.formTrendScore); // Incorporate form trend into overall lambda
 
   // Average last-5 and overall (unchanged logic)
   const homeLambdaAverage =
-    (homeLambda_raw + (homeLambda_rawOverall * 1)) / 2;
+    ((homeLambda_raw * 1.5) + (homeLambda_rawOverall * 0.5)) / 2;
 
   const awayLambdaAverage =
-    (awayLambda_raw + (awayLambda_rawOverall * 1)) / 2;
+    ((awayLambda_raw * 1.5) + (awayLambda_rawOverall * 0.5)) / 2;
 
   // Regression to league mean (unchanged)
   const ALPHA = 0.8;
@@ -2083,10 +2102,27 @@ export async function generateGoals(homeForm, awayForm, match) {
   const homeLambda_withInjuries = homeLambda_final * (1 - (hAtk * IMPACT_SENSITIVITY)) * (1 + (aDef * IMPACT_SENSITIVITY));
   const awayLambda_withInjuries = awayLambda_final * (1 - (aAtk * IMPACT_SENSITIVITY)) * (1 + (hDef * IMPACT_SENSITIVITY));
 
-  // 4. Ensure Lambda never drops below a realistic floor (e.g., 0.05)
-  const homeLambda_final_v2 = Math.max(0.05, homeLambda_withInjuries);
-  const awayLambda_final_v2 = Math.max(0.05, awayLambda_withInjuries);
+  // Define how sensitive you want the adjustment to be
+  // A lower value (0.02) means a more conservative adjustment
+  const scale = 0.01;
 
+  // Calculate the multiplier
+  // If actualToXGDifference is negative (underperforming), 
+  // this will slightly increase the lambda for future games (expecting regression)
+  const homeMultiplier = 1 + (homeForm.actualToXGDifference * scale);
+  const awayMultiplier = 1 + (awayForm.actualToXGDifference * scale);
+
+  const clampedXGMultiplierHome = Math.min(Math.max(homeMultiplier, 0.85), 1.15);
+  const clampedXGMultiplierAway = Math.min(Math.max(awayMultiplier, 0.85), 1.15);
+
+  // Apply to your existing lambda
+  const adjustedLambdaHome = homeLambda_withInjuries
+  //  * clampedXGMultiplierHome;
+  const adjustedLambdaAway = awayLambda_withInjuries
+  //  * clampedXGMultiplierAway;
+  // 4. Ensure Lambda never drops below a realistic floor (e.g., 0.05)
+  const homeLambda_final_v2 = Math.max(0.05, adjustedLambdaHome);
+  const awayLambda_final_v2 = Math.max(0.05, adjustedLambdaAway);
 
   const avgHomeXG = (homeForm.avXGLast5 + awayForm.avXGAgainstLast5) / 2;
   const avgHomeGoalsLast5 = (homeForm.avScoredLast5 + awayForm.avConceededLast5) / 2;
@@ -2125,8 +2161,8 @@ export async function generateGoals(homeForm, awayForm, match) {
   const rawAwayComparison = awayForm.XGRating - homeForm.XGRating;
 
   // 2. Convert to multipliers (centered at 1.0)
-  const homeXGMult = calculateXGMultiplier(rawHomeComparison, 0.225); // Adjust 0.05 to taste
-  const awayXGMult = calculateXGMultiplier(rawAwayComparison, 0.225);
+  const homeXGMult = calculateXGMultiplier(rawHomeComparison, 0.1); // Adjust 0.05 to taste
+  const awayXGMult = calculateXGMultiplier(rawAwayComparison, 0.1);
 
   const majorContinentalLeagues = [
     "Europe UEFA Champions League",
@@ -2142,26 +2178,26 @@ export async function generateGoals(homeForm, awayForm, match) {
 
 
   if (majorContinentalLeagues.includes(match.leagueDesc)) {
-    homeGoals = (homeLambda_final_v2 - 0.15)
+    homeGoals = (homeLambda_final_v2 * 0.85)
       + (oddsComparisonHome * 0.15) +
       (homeForm.actualToXGDifference / 20) * homeXGMult;
-    awayGoals = (awayLambda_final_v2 - 0.25)
+    awayGoals = (awayLambda_final_v2 * 0.75)
       + (oddsComparisonAway * 0.15) +
       (awayForm.actualToXGDifference / 20) * awayXGMult;
   } else if (InternationalComps.includes(match.leagueDesc)) {
-    homeGoals = (homeLambda_final_v2 + 0.1)
+    homeGoals = (homeLambda_final_v2 * 1.05)
       +
       (homeForm.actualToXGDifference / 20) * homeXGMult;
 
-    awayGoals = (awayLambda_final_v2 - 0.1)
+    awayGoals = (awayLambda_final_v2 * 0.95)
       +
       (awayForm.actualToXGDifference / 20) * awayXGMult;
   } else {
-    homeGoals = (homeLambda_final_v2)
-      * homeXGMult
+    homeGoals = (homeLambda_final_v2 * 1.025)
+    // * homeXGMult
 
-    awayGoals = (awayLambda_final_v2)
-      * awayXGMult
+    awayGoals = (awayLambda_final_v2 * 0.975)
+    // * awayXGMult
   }
 
 
@@ -2177,6 +2213,32 @@ export async function generateGoals(homeForm, awayForm, match) {
   homeGoals = Math.max(0.05, homeGoals);
   awayGoals = Math.max(0.05, awayGoals);
 
+  console.log(`--- Matchup Profile: ${match.homeTeam} vs ${match.awayTeam} ---`);
+
+console.table({
+  "Metric": ["Attacking (Recent)", "Defensive (Recent)", "Attacking (Overall)", "Defensive (Overall)"],
+  "Home": [
+    homeForm.attackingStrengthLast5.toFixed(2),
+    homeForm.defensiveStrengthScoreGenerationLast5.toFixed(2),
+    homeForm.attackingStrength.toFixed(2),
+    homeForm.defensiveStrengthScoreGeneration.toFixed(2)
+  ],
+  "Away": [
+    awayForm.attackingStrengthLast5.toFixed(2),
+    awayForm.defensiveStrengthScoreGenerationLast5.toFixed(2),
+    awayForm.attackingStrength.toFixed(2),
+    awayForm.defensiveStrengthScoreGeneration.toFixed(2)
+  ],
+  "Match Average": [
+    ((homeForm.attackingStrengthLast5 + awayForm.attackingStrengthLast5) / 2).toFixed(2),
+    ((homeForm.defensiveStrengthScoreGenerationLast5 + awayForm.defensiveStrengthScoreGenerationLast5) / 2).toFixed(2),
+    ((homeForm.attackingStrength + awayForm.attackingStrength) / 2).toFixed(2),
+    ((homeForm.defensiveStrengthScoreGeneration + awayForm.defensiveStrengthScoreGeneration) / 2).toFixed(2)
+  ]
+});
+
+console.log(`Final Expected Goals -> Home: ${homeGoals.toFixed(2)} | Away: ${awayGoals.toFixed(2)}`);
+console.log('---------------------------------------------------------');
 
   return [homeGoals, awayGoals];
 }
@@ -3201,13 +3263,14 @@ export async function calculateScore(match, index, divider, calculate, AIPredict
       formAway.avgPossessionAway
     );
 
-    formHome.actualToXGDifference = parseInt(
+    formHome.actualToXGDifference = parseFloat(
       await diff(formHome.XGDiffNonAverage, formHome.goalDifference)
     );
 
-    formAway.actualToXGDifference = parseInt(
+    formAway.actualToXGDifference = parseFloat(
       await diff(formAway.XGDiffNonAverage, formAway.goalDifference)
     );
+
 
     [formHome.teamGoalsCalc, formAway.teamGoalsCalc] = await generateGoals(
       formHome,
@@ -4254,25 +4317,6 @@ async function getSuccessMeasure(fixtures) {
             {totalROI >= 0 ? "+" : ""}
             {totalROI.toFixed(2)}%
           </p>
-
-          <h3 className={"SuccessMeasureHeader"}>
-            ROI for all {bttsInvestment} BTTS tips: {BTTSROI >= 0 ? "+" : " "}{" "}
-            {BTTSROI.toFixed(2)}%
-          </h3>
-          {/* <p className="SuccessMeasureText">
-            Cumulative ROI for all {totalbttsInvestment} BTTS tips:{" "}
-            {totalBTTSROI >= 0 ? "+" : ""}
-            {totalBTTSROI.toFixed(2)}%
-          </p> */}
-          <h3 className={"SuccessMeasureHeader"}>
-            ROI for all {over25Investment} over 2.5 goals tips: {over25ROI >= 0 ? "+" : " "}{" "}
-            {over25ROI.toFixed(2)}%
-          </h3>
-          {/* <p className="SuccessMeasureText">
-            Cumulative ROI for all {totalOver25Investment} Over 2.5 gosls tips:{" "}
-            {totalOver25ROI >= 0 ? "+" : ""}
-            {totalOver25ROI.toFixed(2)}%
-          </p> */}
           <CollapsableStats buttonText="ROI by League">
             {Object.entries(specificLeagueResults)
               .sort(([, a], [, b]) => b.totalROI - a.totalROI) // Sort by ROI in descending order
@@ -5906,9 +5950,6 @@ async function renderTips() {
                           {tip.outcomeSymbol}
                         </span>
                       </div>
-                      <div className="over25Percentage">
-                        Probability: {`${tip.probability.toFixed(1)}%` ?? "-"}
-                      </div>
                     </li>
                   </a>
                 ))}
@@ -5970,12 +6011,7 @@ async function renderTips() {
                           {game.bttsOutcomeSymbol}
                         </span>
                       </div>
-
-                      <div className="bttsPercentage">
-                        Probability: {`${game.bttsYesProbability.toFixed(1)}%` ?? "-"}
-                      </div>
                     </li>
-
                   </a>
                 ))}
               </ul>

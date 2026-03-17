@@ -4255,7 +4255,7 @@ li.FormHeader {
 .MultisCollapsableOpened {
   /* background-color: var(--secondary-background-color); */
   /* margin-top: 3em; */
-  margin-bottom: 3em;
+  /* margin-bottom: 3em; */
   padding: 1em;
 }
 
@@ -4358,7 +4358,9 @@ li.FormHeader {
   padding: 0.25em;
   border: var(--text-color) 1px dashed;
   margin: 0.5em;
+  margin-bottom: 1em;
   background-color: var(--background-color);
+  font-size: 0.9em;
 }
 
 .LongshotPredictions li {
@@ -4379,6 +4381,8 @@ li.FormHeader {
   border: var(--text-color) 1px dashed;
   margin: 0.5em;
   background-color: var(--background-color);
+  font-size: 0.9em;
+  margin-bottom: 1em;
 }
 
 .BTTSGames li {
@@ -4399,6 +4403,7 @@ li.FormHeader {
   border: var(--text-color) 1px dashed;
   margin: 0.5em;
   background-color: var(--background-color);
+  font-size: 0.9em;
 }
 
 .XGDiffTips lh {

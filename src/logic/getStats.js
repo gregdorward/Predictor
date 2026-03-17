@@ -19,10 +19,10 @@ export async function calculateAttackingStrength(stats) {
     // averagePossession: 0.1,
     "Average Dangerous Attacks": 0.1,
     "Average Shots": 0.1,
-    "Average Shots On Target": 0.15,
-    "Average Expected Goals": 0.2,
+    "Average Shots On Target": 0.2,
+    "Average Expected Goals": 0.25,
     "Weighted XG": 0,
-    "Average Goals": 0.4,
+    "Average Goals": 0.3,
     Corners: 0,
     "Average Shot Value": 0.05,
     "Possession": 0,
@@ -31,26 +31,26 @@ export async function calculateAttackingStrength(stats) {
   // Define the ranges for normalization
   const ranges = {
     // League average Dangerous Attacks is highly variable
-    "Average Dangerous Attacks": { min: 30, max: 70 }, 
+    "Average Dangerous Attacks": { min: 30, max: 80 }, 
     
     // League average Shots is typically 12-14
-    "Average Shots": { min: 7, max: 19 }, 
+    "Average Shots": { min: 6, max: 20 }, 
     
     // League average Shots On Target is typically 4.5-5.5
-    "Average Shots On Target": { min: 3, max: 7 }, 
+    "Average Shots On Target": { min: 2, max: 8 }, 
     
     // League average XG scored is typically 1.3 - 1.5
-    "Average Expected Goals": { min: 0.6, max: 2.2 }, 
-    "Weighted XG": { min: 0.6, max: 2.2 },
+    "Average Expected Goals": { min: 0.5, max: 2.2 }, 
+    "Weighted XG": { min: 0.5, max: 2.3 },
     
     // League average Goals scored is typically 1.3 - 1.5
-    "Average Goals": { min: 0.6, max: 2.2 }, 
+    "Average Goals": { min: 0.5, max: 2.5 }, 
     
     // League average Corners is typically 5-6
-    Corners: { min: 3, max: 8 },
+    Corners: { min: 3, max: 9 },
     
     // Speculative range for average shot value (XG/Shot)
-    "Average Shot Value": { min: 5, max: 23 },
+    "Average Shot Value": { min: 4, max: 25 },
   };
 
   // Normalize each metric value and calculate the weighted sum
@@ -82,25 +82,25 @@ export async function calculateDefensiveStrength(stats, normalizedValue = 1) {
   let normValue = normalizedValue;
   // Define weights for each metric (you can adjust these based on your preference)
   const weights = {
-    "Average XG Against": 0.3,
+    "Average XG Against": 0.2,
     "Weighted XG Against": 0,
     "Average Goals Against": 0.4,
     "Average SOT Against": 0.2,
-    "Average Dangerous Attacks Against": 0.1
+    "Average Dangerous Attacks Against": 0.2
   };
 
   // Define the ranges for normalization
   const ranges = {
     // League average XG conceded is typically 1.3 - 1.5
-    "Average XG Against": { min: 0.6, max: 2.2 }, 
-    "Weighted XG Against": { min: 0.6, max: 2.2 },
+    "Average XG Against": { min: 0.5, max: 2.2 }, 
+    "Weighted XG Against": { min: 0.5, max: 2 },
     
     // League average Goals conceded is typically 1.3 - 1.5
-    "Average Goals Against": { min: 0.6, max: 2.2 }, 
+    "Average Goals Against": { min: 0.5, max: 2.5 }, 
     
     // League average SOT conceded is typically 4 - 5
-    "Average SOT Against": { min: 3, max: 7 }, 
-    "Average Dangerous Attacks Against": { min: 30, max: 70 },
+    "Average SOT Against": { min: 2, max: 8 }, 
+    "Average Dangerous Attacks Against": { min: 30, max: 80 },
   };
 
   // Normalize each metric value and calculate the weighted sum
