@@ -2001,7 +2001,7 @@ async function normalizeValues(value1, value2, minRange, maxRange) {
 function calculateGDMultiplier(gd) {
   // The 'sensitivity' controls how much each goal affects the multiplier.
   // A value of 0.03 means each +1 GD adds 3% to the team's strength.
-  const sensitivity = 0.01;
+  const sensitivity = 0.0125;
 
   // Calculate raw multiplier
   let multiplier = 1 + (gd * sensitivity);
@@ -2056,7 +2056,7 @@ export async function generateGoals(homeForm, awayForm, match) {
     // 2. The "Aggression" Tuning
     // If you want more blowouts (higher spreads), increase 1.2.
     // If you want more draws, decrease it toward 1.0.
-    const weightedMultiplier = Math.pow(attackFactor, 1.25) * Math.pow(defenseFactor, 0.85);
+    const weightedMultiplier = Math.pow(attackFactor, 1.2) * Math.pow(defenseFactor, 0.8);
 
     return averageGoalsPerTeam * weightedMultiplier;
   }
@@ -2130,9 +2130,6 @@ export async function generateGoals(homeForm, awayForm, match) {
   const finalHomeMultiplier = Math.min(Math.max(regressionMultiplierHome, 0.5), 1.5);
   const finalAwayMultiplier = Math.min(Math.max(regressionMultiplierAway, 0.5), 1.5);
 
-  console.log(match.homeTeam + " vs " + match.awayTeam);
-  console.log(`Home Goal Efficiency: ${homeForm.GoalEfficiency.toFixed(2)}, Multiplier: ${finalHomeMultiplier.toFixed(2)}`);
-  console.log(`Away Goal Efficiency: ${awayForm.GoalEfficiency.toFixed(2)}, Multiplier: ${finalAwayMultiplier.toFixed(2)}`);
   // Calculate the multiplier
   // If actualToXGDifference is negative (underperforming), 
   // this will slightly increase the lambda for future games (expecting regression)
@@ -2245,32 +2242,6 @@ export async function generateGoals(homeForm, awayForm, match) {
   homeGoals = Math.max(0.05, homeGoals);
   awayGoals = Math.max(0.05, awayGoals);
 
-  console.log(`--- Matchup Profile: ${match.homeTeam} vs ${match.awayTeam} ---`);
-
-  console.table({
-    "Metric": ["Attacking (Recent)", "Defensive (Recent)", "Attacking (Overall)", "Defensive (Overall)"],
-    "Home": [
-      homeForm.attackingStrengthLast5.toFixed(2),
-      homeForm.defensiveStrengthScoreGenerationLast5.toFixed(2),
-      homeForm.attackingStrength.toFixed(2),
-      homeForm.defensiveStrengthScoreGeneration.toFixed(2)
-    ],
-    "Away": [
-      awayForm.attackingStrengthLast5.toFixed(2),
-      awayForm.defensiveStrengthScoreGenerationLast5.toFixed(2),
-      awayForm.attackingStrength.toFixed(2),
-      awayForm.defensiveStrengthScoreGeneration.toFixed(2)
-    ],
-    "Match Average": [
-      ((homeForm.attackingStrengthLast5 + awayForm.attackingStrengthLast5) / 2).toFixed(2),
-      ((homeForm.defensiveStrengthScoreGenerationLast5 + awayForm.defensiveStrengthScoreGenerationLast5) / 2).toFixed(2),
-      ((homeForm.attackingStrength + awayForm.attackingStrength) / 2).toFixed(2),
-      ((homeForm.defensiveStrengthScoreGeneration + awayForm.defensiveStrengthScoreGeneration) / 2).toFixed(2)
-    ]
-  });
-
-  console.log(`Final Expected Goals -> Home: ${homeGoals.toFixed(2)} | Away: ${awayGoals.toFixed(2)}`);
-  console.log('---------------------------------------------------------');
 
   return [homeGoals, awayGoals];
 }
@@ -2686,8 +2657,6 @@ export async function calculateScore(match, index, divider, calculate, AIPredict
       formHome.avPosessionLast5,
     ];
 
-    console.log(formHome.teamName, "Recent Form Array:", formHome.recentFormArray);
-
     formHome.distantFormArray = [
       formHome.avgScored - formHome.avgConceeded,
       formHome.XGOverall - formHome.XGAgainstAvgOverall,
@@ -2695,8 +2664,6 @@ export async function calculateScore(match, index, divider, calculate, AIPredict
       formHome.AverageShotsOnTargetOverall - formHome.AverageShotsOnTargetAgainstOverall,
       formHome.avPossessionOverall
     ];
-
-    console.log(formHome.teamName, "Distant Form Array:", formHome.distantFormArray);
 
     formHome.formTrendScore = await compareFormTrend(
       formHome.recentFormArray,
@@ -2712,8 +2679,6 @@ export async function calculateScore(match, index, divider, calculate, AIPredict
       formAway.avPosessionLast5,
     ];
 
-    console.log(formAway.teamName, "Recent Form Array:", formAway.recentFormArray);
-
     formAway.distantFormArray = [
       formAway.avgScored - formAway.avgConceeded,
       formAway.XGOverall - formAway.XGAgainstAvgOverall,
@@ -2722,17 +2687,10 @@ export async function calculateScore(match, index, divider, calculate, AIPredict
       formAway.avPossessionOverall
     ];
 
-    console.log(formAway.teamName, "Distant Form Array:", formAway.distantFormArray);
-
     formAway.formTrendScore = await compareFormTrend(
       formAway.recentFormArray,
       formAway.distantFormArray
     );
-
-
-    console.log(formHome.teamName, "Form Trend Score:", formHome.formTrendScore);
-    console.log(formAway.teamName, "Form Trend Score:", formAway.formTrendScore);
-
 
     match.XGdifferentialValue = Math.abs(XGdifferential);
     match.XGdifferentialValueRaw = parseFloat(XGdifferential);

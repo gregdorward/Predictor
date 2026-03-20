@@ -66,9 +66,8 @@ export const FilterPresets = () => {
         GlobalFilters.winProbability = 80;
         break;
       case "ssh":
-        GlobalFilters.edge = 1;
-        GlobalFilters.winProbability = 60;
-        GlobalFilters.omitDraws = true;
+        GlobalFilters.minimumGDHorA = 5;
+        GlobalFilters.minimumXG = 2;
         GlobalFilters.oddsRange = [1.2, 10];
         break;
       default:

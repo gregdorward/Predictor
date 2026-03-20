@@ -62,7 +62,7 @@ export async function calculateAttackingStrength(stats, last5 = false) {
       "Average Dangerous Attacks": { min: 20, max: 90 },
       "Average Shots": { min: 5, max: 25 },
       "Average Shots On Target": { min: 2, max: 8 },
-      "Average Expected Goals": { min: 0.5, max: 2.5 },
+      "Average Expected Goals": { min: 0.6, max: 2.4 },
       "Weighted XG": { min: 0.5, max: 2.5 },
       "Average Goals": { min: 0.5, max: 2.5 },
       Corners: { min: 2, max: 10 },
@@ -91,7 +91,8 @@ export async function calculateAttackingStrength(stats, last5 = false) {
       console.log(metric);
     }
   }
-
+  const spreadIntensity = 1.1;
+  weightedSum = 0.5 + Math.sign(weightedSum - 0.5) * Math.pow(Math.abs(weightedSum - 0.5), 1 / spreadIntensity);
   return parseFloat(weightedSum.toFixed(2));
 }
 
@@ -125,7 +126,7 @@ export async function calculateDefensiveStrength(stats, normalizedValue = 1, las
   } else {
     // Define the ranges for normalization for last 5 games (more variability)
     ranges = {
-      "Average XG Against": { min: 0.5, max: 2.5 },
+      "Average XG Against": { min: 0.6, max: 2.4 },
       "Weighted XG Against": { min: 0.4, max: 2.5 },
       "Average Goals Against": { min: 0.5, max: 2.5 },
       "Average SOT Against": { min: 2, max: 7 },
@@ -153,7 +154,8 @@ export async function calculateDefensiveStrength(stats, normalizedValue = 1, las
       // You can remove the unused 'normValue' parameter completely if you always use 1.
     }
   }
-
+  const spreadIntensity = 1.1;
+  weightedSum = 0.5 + Math.sign(weightedSum - 0.5) * Math.pow(Math.abs(weightedSum - 0.5), 1 / spreadIntensity);
   return parseFloat(weightedSum.toFixed(2));
 }
 

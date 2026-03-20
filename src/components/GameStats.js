@@ -1590,11 +1590,9 @@ function GameStats({ game, displayBool, stats, handleToggleTip, userTips }) {
             setAwayLineupList(awayLineup);
             setHomeMissingPlayersList(homeMissingPlayers);
             setAwayMissingPlayersList(awayMissingPlayers);
-            console.log(predictedScoresData)
 
             const enrichMissingPlayers = (missingList, teamStats, played, scored, teamDefActions, teamAttActions, team) => {
               if (!missingList || !teamStats || !teamStats.players) return [];
-              console.log(teamStats);
               return missingList.map(missingPlayer => {
                 // 1. Find the player in the full statistics list (matching by name or ID)
                 const statsEntry = teamStats.players.find(p =>
@@ -1641,7 +1639,7 @@ function GameStats({ game, displayBool, stats, handleToggleTip, userTips }) {
                 const attackingShare =
                   Math.min(1, attackingActions / teamAttActions);
 
-                const usageImpact = Math.min(1, appearances / played) * 4;
+                const usageImpact = Math.min(1, appearances / played) * 6;
 
                 const attackingContributionImpact =
                   Math.pow(attackingShare, 0.6) * 7 * efficiencyBonus;
@@ -1779,10 +1777,6 @@ function GameStats({ game, displayBool, stats, handleToggleTip, userTips }) {
             setHomeMissingPlayersImpact(homeMissingPlayersImpactAssessment);
             setAwayMissingPlayersImpact(awayMissingPlayersImpactAssessment);
           }
-
-
-
-          console.log(gameStats);
 
           // const matchPreviewResponse = await fetch(
           //   `${process.env.REACT_APP_EXPRESS_SERVER}gemini/match-preview/${matchingGameInfo.homeId}${matchingGameInfo.awayId}/${matchingGameInfo.time}`,
@@ -3327,8 +3321,6 @@ function GameStats({ game, displayBool, stats, handleToggleTip, userTips }) {
         progress = statistics.progress;
         totalGames = (statistics.totalMatches * 2) / statistics.clubNum;
       });
-
-      console.log(homeMissingPlayersImpact, awayMissingPlayersImpact);
 
       try {
         const AIPayload = {
