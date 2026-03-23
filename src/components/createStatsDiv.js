@@ -237,7 +237,7 @@ function Stats(props) {
                     className={`TeamGoalsFromInsideBox ${getComparisonClass('goalsFromOutsideTheBox')}${props.homeOrAway}`}
                     data-cy={props.name ? props.name + "GoalsFromInsideBox" : "GoalsFromInsideBox"}
                   >
-                  {`Goals from outside box: ${props.goalsFromOutsideTheBox !== undefined ? props.goalsFromOutsideTheBox : "N/A"}`}
+                    {`Goals from outside box: ${props.goalsFromOutsideTheBox !== undefined ? props.goalsFromOutsideTheBox : "N/A"}`}
                   </li>
                   <li
                     key="fastBreakShots"
@@ -286,7 +286,7 @@ function Stats(props) {
                   >
                     {`Shots inside box against: ${props.shotsInsideBoxAgainst !== undefined ? props.shotsInsideBoxAgainst : "N/A"}`}
                   </li>
-                                    <li
+                  <li
                     key="TeamShotsFromOutsideTheBoxAgainst"
                     className={`TeamShotsFromOutsideTheBoxAgainst ${getComparisonClass('shotsFromOutsideTheBoxAgainst')}${props.homeOrAway}`}
                     data-cy={props.name ? props.name + "shotsFromOutsideTheBoxAgainst" : "shotsFromOutsideTheBoxAgainst"}
@@ -550,74 +550,87 @@ function Stats(props) {
             </div>
             <li
               key="TeamScored"
-              className="TeamScored"
+              className={`TeamScored ${getComparisonClass('goals')}${props.homeOrAway}`}
               data-cy={props.name ? props.name + "teamScored" : "teamScored"}
             >
               {`Avg goals scored: ${props.goals !== undefined ? props.goals : "N/A"}`}
             </li>
+
             <li
               key="TeamConceeded"
-              className="TeamConceeded"
+              className={`TeamConceeded ${getComparisonClass('conceeded')}${props.homeOrAway}`}
               data-cy={props.name ? props.name + "teamConceded" : "teamConceded"}
             >
               {`Avg goals conceeded: ${props.conceeded !== undefined ? props.conceeded : "N/A"}`}
             </li>
+
             <li
               key="TeamPossession"
-              className="TeamPossession"
+              className={`TeamPossession ${getComparisonClass('possession')}${props.homeOrAway}`}
               data-cy={props.name ? props.name + "teamPossession" : "teamPossession"}
             >
               {`Avg possession: ${props.possession !== undefined ? props.possession : "N/A"}%`}
             </li>
-            <li key="TeamXG" className="TeamXG" data-cy={props.name ? props.name + "teamXG" : "teamXG"}>
+
+            <li
+              key="TeamXG"
+              className={`TeamXG ${getComparisonClass('XG')}${props.homeOrAway}`}
+              data-cy={props.name ? props.name + "teamXG" : "teamXG"}
+            >
               {`Avg XG: ${props.XG !== undefined ? props.XG : "N/A"}`}
             </li>
+
             <li
               key="TeamXGConceded"
-              className="TeamXGConceded"
+              className={`TeamXGConceded ${getComparisonClass('XGConceded')}${props.homeOrAway}`}
               data-cy={props.name ? props.name + "teamXGConceded" : "teamXGConceded"}
             >
               {`Avg XG conceded: ${props.XGConceded !== undefined ? props.XGConceded : "N/A"}`}
             </li>
+
             <li
               key="goalDifferenceHorA"
-              className="goalDifferenceHorA"
+              className={`goalDifferenceHorA ${getComparisonClass('goalDifference')}${props.homeOrAway}`}
               data-cy={props.name ? props.name + "goalDifference" : "goalDifference"}
             >
-              {`Goal difference ${props.homeOrAway ? props.homeOrAway : "N/A"} : ${props.goalDifferenceHomeOrAway !== undefined ? props.goalDifferenceHomeOrAway : "N/A"
-                }`}
+              {`Goal difference ${props.homeOrAway ? props.homeOrAway : "N/A"} : ${props.goalDifferenceHomeOrAway !== undefined ? props.goalDifferenceHomeOrAway : "N/A"}`}
             </li>
+
             <li
               key="AverageShots"
-              className="AverageShots"
+              className={`AverageShots ${getComparisonClass('shots')}${props.homeOrAway}`}
               data-cy={props.name ? props.name + "AverageShots" : "AverageShots"}
             >
               {`Avg shots: ${props.shots !== undefined ? props.shots : "N/A"}`}
             </li>
+
             <li
               key="AverageSOT"
-              className="AverageSOT"
+              className={`AverageSOT ${getComparisonClass('sot')}${props.homeOrAway}`}
               data-cy={props.name ? props.name + "averageSOT" : "averageSOT"}
             >
               {`Avg shots on target: ${props.sot !== undefined ? props.sot : "N/A"}`}
             </li>
+
             <li
               key="DangerousAttacks"
-              className="DangerousAttacks"
+              className={`DangerousAttacks ${getComparisonClass('dangerousAttacks')}${props.homeOrAway}`}
               data-cy={props.name ? props.name + "dangerousAttacks" : "dangerousAttacks"}
             >
               {`Avg dangerous attacks: ${props.dangerousAttacks !== undefined ? props.dangerousAttacks : "N/A"}`}
             </li>
+
             <li
               key="WinPercentage"
-              className="WinPercentage"
+              className={`WinPercentage ${getComparisonClass('ppg')}${props.homeOrAway}`}
               data-cy={props.name ? props.name + "WinPercentage" : "WinPercentage"}
             >
               {props.homeOrAway && props.winPercentage !== undefined && props.winPercentage !== "N/A" ? `${props.homeOrAway} PPG: ${props.winPercentage.toFixed(2)}` : "N/A"}
             </li>
+
             <li
               key="CornersAverage"
-              className="CornersAverage"
+              className={`CornersAverage ${getComparisonClass('CornersAverage')}${props.homeOrAway}`}
               data-cy={props.name ? props.name + "CornersAverage" : "CornersAverage"}
             >
               {`Corners average: ${props.CornersAverage !== undefined ? props.CornersAverage : "N/A"}`}
@@ -652,73 +665,116 @@ function Stats(props) {
               {props.Results && props.Results[0] ? props.Results[0] : ""}
             </span>
           </li>
+          <li
+            key="BTTSArrayHomeOrAway"
+            className="BTTSArrayHomeOrAway"
+            data-cy={props.name ? props.name + "BTTSArrayHomeOrAway" : "BTTSArrayHomeOrAway"}
+          >
+            <div className="BTTSResults">{props.BTTSArray ? `BTTS` : ``}</div>
+            <span className={styleBTTS(props.BTTSArray && props.BTTSArray[5] ? props.BTTSArray[5] : "")}>
+              {props.BTTSArray && props.BTTSArray[5] ? "" : ""}
+            </span>
+            <span className={styleBTTS(props.BTTSArray && props.BTTSArray[4] ? props.BTTSArray[4] : "")}>
+              {props.BTTSArray && props.BTTSArray[4] ? "" : ""}
+            </span>
+            <span className={styleBTTS(props.BTTSArray && props.BTTSArray[3] ? props.BTTSArray[3] : "")}>
+              {props.BTTSArray && props.BTTSArray[3] ? "" : ""}
+            </span>
+            <span className={styleBTTS(props.BTTSArray && props.BTTSArray[2] ? props.BTTSArray[2] : "")}>
+              {props.BTTSArray && props.BTTSArray[2] ? "" : ""}
+            </span>
+            <span className={styleBTTS(props.BTTSArray && props.BTTSArray[1] ? props.BTTSArray[1] : "")}>
+              {props.BTTSArray && props.BTTSArray[1] ? "" : ""}
+            </span>
+            <span className={styleBTTS(props.BTTSArray && props.BTTSArray[0] ? props.BTTSArray[0] : "")}>
+              {props.BTTSArray && props.BTTSArray[0] ? "" : ""}
+            </span>
+          </li>
           <div className="AllStats">
             <li
               key="TeamScored"
-              className="TeamScored"
+              className={`TeamScored ${getComparisonClass('goals')}${props.homeOrAway}`}
               data-cy={props.name ? props.name + "teamScored" : "teamScored"}
             >
               {`Avg goals scored: ${props.goals !== undefined ? props.goals : "N/A"}`}
             </li>
+
             <li
               key="TeamConceeded"
-              className="TeamConceeded"
+              className={`TeamConceeded ${getComparisonClass('conceeded')}${props.homeOrAway}`}
               data-cy={props.name ? props.name + "teamConceded" : "teamConceded"}
             >
               {`Avg goals conceeded: ${props.conceeded !== undefined ? props.conceeded : "N/A"}`}
             </li>
+
             <li
               key="TeamPossession"
-              className="TeamPossession"
+              className={`TeamPossession ${getComparisonClass('possession')}${props.homeOrAway}`}
               data-cy={props.name ? props.name + "teamPossession" : "teamPossession"}
             >
               {`Avg possession: ${props.possession !== undefined ? props.possession : "N/A"}%`}
             </li>
-            <li key="TeamXG" className="TeamXG" data-cy={props.name ? props.name + "teamXG" : "teamXG"}>
+
+            <li
+              key="TeamXG"
+              className={`TeamXG ${getComparisonClass('XG')}${props.homeOrAway}`}
+              data-cy={props.name ? props.name + "teamXG" : "teamXG"}
+            >
               {`Avg XG: ${props.XG !== undefined ? props.XG : "N/A"}`}
             </li>
+
             <li
               key="TeamXGConceded"
-              className="TeamXGConceded"
+              className={`TeamXGConceded ${getComparisonClass('XGConceded')}${props.homeOrAway}`}
               data-cy={props.name ? props.name + "teamXGConceded" : "teamXGConceded"}
             >
               {`Avg XG conceded: ${props.XGConceded !== undefined ? props.XGConceded : "N/A"}`}
             </li>
+
             <li
               key="goalDifference"
-              className="goalDifference"
+              className={`goalDifference ${getComparisonClass('goalDifference')}${props.homeOrAway}`}
               data-cy={props.name ? props.name + "goalDifference" : "goalDifference"}
             >
               {`Goal difference : `}
               <span>{props.goalDifference !== undefined ? props.goalDifference : "N/A"}</span>
             </li>
+
             <li
               key="AverageShots"
-              className="AverageShots"
+              className={`AverageShots ${getComparisonClass('shots')}${props.homeOrAway}`}
               data-cy={props.name ? props.name + "AverageShots" : "AverageShots"}
             >
               {`Avg shots: ${props.shots !== undefined ? props.shots : "N/A"}`}
             </li>
+
             <li
               key="AverageSOT"
-              className="AverageSOT"
+              className={`AverageSOT ${getComparisonClass('sot')}${props.homeOrAway}`}
               data-cy={props.name ? props.name + "averageSOT" : "averageSOT"}
             >
               {`Avg shots on target: ${props.sot !== undefined ? props.sot : "N/A"}`}
             </li>
+
             <li
               key="DangerousAttacks"
-              className="DangerousAttacks"
+              className={`DangerousAttacks ${getComparisonClass('dangerousAttacks')}${props.homeOrAway}`}
               data-cy={props.name ? props.name + "dangerousAttacks" : "dangerousAttacks"}
             >
               {`Avg dangerous attacks: ${props.dangerousAttacks !== undefined ? props.dangerousAttacks : "N/A"}`}
             </li>
-            <li key="PPG" className="PPG" data-cy={props.name ? props.name + "PPG" : "PPG"}>
+
+            <li
+              key="PPG"
+              className={`PPG ${getComparisonClass('ppg')}${props.homeOrAway}`}
+              data-cy={props.name ? props.name + "PPG" : "PPG"}
+            >
               {`Last 5 PPG: ${props.ppg !== undefined ? props.ppg : "N/A"}`}
             </li>
+
             <li
               key="CornersAverage"
-              className="CornersAverage"
+              className={`CornersAverage ${getComparisonClass('CornersAverage')}${props.homeOrAway}`}
               data-cy={props.name ? props.name + "CornersAverage" : "CornersAverage"}
             >
               {`Corners average: ${props.CornersAverage !== undefined ? props.CornersAverage : "N/A"}`}

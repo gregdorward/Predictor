@@ -1040,6 +1040,10 @@ async function getPastLeagueResults(team, game, hOrA, form) {
     form.pointsSum5 = points5.reduce((a, b) => a + b, 0);
     form.avPoints5 = form.pointsSum5 / points5.length;
 
+    const points1 = allTeamResults.map((res) => res.points).slice(0, 1);
+    const pointsSum1 = points1.reduce((a, b) => a + b, 0);
+    form.avPoints1 = pointsSum1 / points1.length;
+
     const points2 = allTeamResults.map((res) => res.points).slice(0, 2);
     const pointsSum2 = points2.reduce((a, b) => a + b, 0);
     form.avPoints2 = pointsSum2 / points2.length;
@@ -1047,6 +1051,14 @@ async function getPastLeagueResults(team, game, hOrA, form) {
     const pointsAll = allTeamResults.map((res) => res.points);
     const pointsSumAll = pointsAll.reduce((a, b) => a + b, 0);
     form.avPointsAll = pointsSumAll / pointsAll.length;
+
+    const pointsHome = allTeamResults.map((res) => res.points);
+    const pointsSumHome = pointsHome.reduce((a, b) => a + b, 0);
+    form.avPointsHome = pointsSumHome / pointsHome.length;
+
+    const pointsAway = allTeamResults.map((res) => res.points);
+    const pointsSumAway = pointsAway.reduce((a, b) => a + b, 0);
+    form.avPointsAway = pointsSumAway / pointsAway.length;
 
     const resultsAll = allTeamResults.map((res) => res.result);
     const resultsHome = allTeamResultsHome.map((res) => res.result);
@@ -1056,9 +1068,9 @@ async function getPastLeagueResults(team, game, hOrA, form) {
     form.LastSixForm = resultsAll.slice(0, 6);
     form.LastTenForm = resultsAll.slice(0, 10);
 
-    form.resultsAll = resultsAll.slice(0, 6);
-    form.resultsHome = resultsHome.slice(0, 6);
-    form.resultsAway = resultsAway.slice(0, 6);
+    form.resultsAll = resultsAll
+    form.resultsHome = resultsHome
+    form.resultsAway = resultsAway
 
     const avScoredLast5 = allTeamResults.map((res) => res.scored).slice(0, 5);
     const avScoredLast5Sum = avScoredLast5.reduce((a, b) => a + b, 0);
@@ -1920,6 +1932,7 @@ export async function getPointsDifferential(pointsHomeAvg, pointsAwayAvg) {
  * @param {number} dampening - How much the rating affects the goals (e.g., 0.04).
  */
 function calculateXGMultiplier(rawComparison, dampening = 0.04) {
+  console.log(`Raw XG Comparison: ${rawComparison}`);
   // rawComparison of 5.0 * 0.04 = 0.20 boost (1.20x multiplier)
   // rawComparison of -5.0 * 0.04 = -0.20 drop (0.80x multiplier)
   const multiplier = 1 + (rawComparison * dampening);
@@ -2171,27 +2184,21 @@ export async function generateGoals(homeForm, awayForm, match) {
 
   let awayGoals = (avgAwayGoals + avgAwayXG + avgAwayGoalsLast10 + avgAwayGoalsLast5) / 4;
 
-  const homeNetXG = homeForm.teamXGAllRollingAverage - homeForm.teamXGConceededAllRollingAverage;
-
   homeForm.XGRating =
-    (homeForm.avPoints6 * 0.5) + // Momentum
-    (homeForm.goalDifferenceHomeOrAway * 0.2) + // Historical dominance
-    (homeNetXG * 0.3); // True underlying quality
-
-  const awayNetXG = awayForm.teamXGAllRollingAverage - awayForm.teamXGConceededAllRollingAverage;
+    (homeForm.avPoints2 * 0.2) + // Momentum
+    (homeForm.avPointsHome * 0.2)
 
   awayForm.XGRating =
-    (awayForm.avPoints6 * 0.5) + // Momentum
-    (awayForm.goalDifferenceHomeOrAway * 0.2) + // Historical dominance
-    (awayNetXG * 0.3); // True underlying quality
+    (awayForm.avPoints2 * 0.2) + // Momentum
+    (awayForm.avPointsAway * 0.2)
 
 
   const rawHomeComparison = homeForm.XGRating - awayForm.XGRating;
   const rawAwayComparison = awayForm.XGRating - homeForm.XGRating;
 
   // 2. Convert to multipliers (centered at 1.0)
-  const homeXGMult = calculateXGMultiplier(rawHomeComparison, 0.05); // Adjust 0.05 to taste
-  const awayXGMult = calculateXGMultiplier(rawAwayComparison, 0.05);
+  const homeXGMult = calculateXGMultiplier(rawHomeComparison, 0.25); // Adjust 0.05 to taste
+  const awayXGMult = calculateXGMultiplier(rawAwayComparison, 0.25);
 
   const majorContinentalLeagues = [
     "Europe UEFA Champions League",
@@ -2223,10 +2230,10 @@ export async function generateGoals(homeForm, awayForm, match) {
       (awayForm.actualToXGDifference / 20) * awayXGMult;
   } else {
     homeGoals = (homeLambda_final_v3 * 1)
-    // * homeXGMult
+      * homeXGMult
 
     awayGoals = (awayLambda_final_v3 * 1)
-    // * awayXGMult
+      * awayXGMult
   }
 
 

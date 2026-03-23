@@ -9,7 +9,12 @@ export const Slider = (props) => {
   return (
     <Swiper
       effect={"coverflow"}
-      autoHeight={true}
+      autoHeight={true} // Keep this enabled
+      onSlideChange={(swiper) => {
+        // Force the swiper to recalculate the height of the current slide immediately
+        swiper.updateAutoHeight(300); // 300 is the transition duration in ms
+      }}
+      // ... your other props
       grabCursor={true}
       centeredSlides={true}
       slidesPerView={1}
@@ -23,21 +28,11 @@ export const Slider = (props) => {
       pagination={{ clickable: true }}
       className="mySwiper"
     >
-      <SwiperSlide>
-        {props.element}
-      </SwiperSlide>
-      <SwiperSlide>
-        {props.element2}
-      </SwiperSlide>
-      <SwiperSlide>
-        {props.element3}
-      </SwiperSlide>
-      <SwiperSlide>
-        {props.element4}
-      </SwiperSlide>
-      <SwiperSlide>
-        {props.element5}
-      </SwiperSlide>
+      <SwiperSlide>{props.element}</SwiperSlide>
+      <SwiperSlide>{props.element2}</SwiperSlide>
+      <SwiperSlide>{props.element3}</SwiperSlide>
+      <SwiperSlide>{props.element4}</SwiperSlide>
+      <SwiperSlide>{props.element5}</SwiperSlide>
     </Swiper>
   );
 };

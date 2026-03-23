@@ -58,7 +58,7 @@ import { createRoot } from 'react-dom/client';
 import setUserTips from "./components/GameStats";
 import BetSlipFooter from "./components/Betslip";
 import SlideDiff from "./components/SliderDiff";
-import {FilterPresets} from "./components/SliderDiff";
+import { FilterPresets } from "./components/SliderDiff";
 import { Slide } from "./components/Slider";
 
 
@@ -1028,7 +1028,7 @@ function AppContent() {
           <h5 className="FilterExplainer">
             Customise the tips you see by applying filters based on value, stats, probabilities and odds. Adjust the sliders to set your desired thresholds and click 'Get Predictions and Stats' to see the games that meet your criteria.
           </h5>
-          <FilterPresets/>
+          <FilterPresets />
           <Collapsable
             buttonText={"Value filters"}
             className={"ValueFilters"}
@@ -1114,8 +1114,8 @@ function AppContent() {
             buttonText={"Probability filters"}
             className={"ProbabilityFilters"}
             element={
-              <>   
-              <h6 className="FilterHeading">Win probability</h6>
+              <>
+                <h6 className="FilterHeading">Win probability</h6>
                 <div className="FilterDiv">
                   Probability of win is over...
                 </div>
@@ -1125,8 +1125,8 @@ function AppContent() {
                   useCase="winProb"
                   lower="40"
                   upper="100"
-                ></SlideDiff>         
-              <h6 className="FilterHeading">Over 2.5 goals probability</h6>
+                ></SlideDiff>
+                <h6 className="FilterHeading">Over 2.5 goals probability</h6>
                 <div className="FilterDiv">
                   Probability of over 2.5 goals is over...
                 </div>
@@ -1167,7 +1167,7 @@ function AppContent() {
                 ></SlideDiff></>
             }
           />
-                    <Collapsable
+          <Collapsable
             buttonText={"Other filters"}
             className={"OtherFilters"}
             element={
@@ -1179,7 +1179,7 @@ function AppContent() {
                 <SlideDiff
                   value="0"
                   text="odds"
-                  useCase="omitDraws"                   
+                  useCase="omitDraws"
                   lower="0"
                   upper="1"
                 ></SlideDiff></>
@@ -1269,25 +1269,6 @@ function AppContent() {
         user={currentUser}
       />
       <div id="XGDiff" />
-      {user ? (
-        isPaidUser ? (
-          // If the user is logged in and is a paying customer, show the cancel button
-          <button
-            onClick={() => {
-              window.location.href =
-                "https://www.soccerstatshub.com/cancelsubscription";
-            }}
-            className="CancelButton"
-          >
-            Cancel Subscription
-          </button>
-        ) : (
-          <div />
-        )
-      ) : (
-        // If the user is not logged in, show nothing
-        <div></div>
-      )}
       <div className="Social" height="100" width="100"
       >
         <TwitterShareButton
@@ -1345,6 +1326,25 @@ function AppContent() {
       >
         begambleaware
       </a>
+       {user ? (
+        isPaidUser ? (
+          // If the user is logged in and is a paying customer, show the cancel button
+          <button
+            onClick={() => {
+              window.location.href =
+                "https://www.soccerstatshub.com/cancelsubscription";
+            }}
+            className="CancelButton"
+          >
+            Cancel Subscription
+          </button>
+        ) : (
+          <div />
+        )
+      ) : (
+        // If the user is not logged in, show nothing
+        <div></div>
+      )}
       <div className="bitcoin" id="bitcoin">
         <a
           href="https://www.ko-fi.com/xgtipping"

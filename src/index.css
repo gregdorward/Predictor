@@ -3853,6 +3853,10 @@ canvas.Pie {
   padding-right: 0.5em;
 }
 
+.AllStats{
+  margin-top: 1em;
+}
+
 .AllStats li {
   line-height: 2em;
 }
@@ -4906,7 +4910,7 @@ label {
 
 .BeGamblingAware {
   color: var(--primary-color);
-  font-size: 1.5em;
+  font-size: 1.2em;
   margin: 2em;
 }
 
@@ -5456,6 +5460,7 @@ input {
   margin-right: auto;
   margin-top: 1em;
   box-shadow: none;
+  font-size: 1.2em;
 }
 
 .CancelButton:hover {
@@ -5684,12 +5689,12 @@ button.AIInsights button:active {
   height: 1000;
 }
 
-.swiper-wrapper {
+/* .swiper-wrapper {
   padding-bottom: 30px;
   display: flex;
   height: auto !important;
   width: 100%;
-}
+} */
 
 .swiper-pagination {
   position: initial !important
@@ -5703,10 +5708,23 @@ button.AIInsights button:active {
 }
 
 .swiper-pagination-bullet {
-  background-color: var(--primary-color) !important;
+  background-color: var(--text-color) !important;
   height: 2em !important;
   width: 2em !important;
+  margin-left: 2em !important;
+  margin-right: 2em !important;
 }
+
+.swiper-pagination-bullet-active {
+  background-color: var(--primary-color) !important;
+  height: 2.5em !important;
+  width: 2.5em !important;
+  margin-left: 2em !important;
+  margin-right: 2em !important;
+}
+
+
+
 
 .LockIcon {
   font-size: 3em;

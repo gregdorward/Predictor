@@ -2576,12 +2576,13 @@ function GameStats({ game, displayBool, stats, handleToggleTip, userTips }) {
     awayAllStatsProps
   );
 
-  function StatsHomeLast5Component() {
+  function StatsHomeLast5Component({ comparisonStatusMap }) {
     if (!homeForm) return null;
     return (
       <div className="flex-childOne">
         <ul style={style}>
           <Stats
+            comparisonStatusMap={comparisonStatusMap}
             games={"last5"}
             style={style}
             homeOrAway="Home"
@@ -2651,12 +2652,14 @@ function GameStats({ game, displayBool, stats, handleToggleTip, userTips }) {
   }
 
   // Component: StatsAway (Render Away Team Stats)
-  function StatsAwayLast5Component() {
+  function StatsAwayLast5Component({ comparisonStatusMap }) {
+    const invertedMap = getInvertedComparisonMap(comparisonStatusMap);
     if (!awayForm) return null;
     return (
       <div className="flex-childTwo">
         <ul style={style}>
           <Stats
+            comparisonStatusMap={invertedMap}
             games={"last5"}
             style={style}
             homeOrAway="Away"
@@ -2721,12 +2724,42 @@ function GameStats({ game, displayBool, stats, handleToggleTip, userTips }) {
     );
   }
 
-  function StatsHomeOnlyComponent() {
+  const getLast5ComparisonData = (form, isHome = true) => {
+    return {
+      goals: form.last5Goals,
+      conceeded: form.last5GoalsConceeded,
+      XG: form.avXGLast5,
+      XGConceded: form.avXGAgainstLast5,
+      possession: form.avPosessionLast5,
+      shots: form.avShotsLast5,
+      sot: form.avSOTLast5,
+      dangerousAttacks: form.avDALast5 !== 0 ? form.avDALast5 : form.AverageDangerousAttacks,
+      ppg: form.avPoints5,
+      goalDifference: form.last5GoalDiff,
+      BttsPercentage: form.bttsLast5Percentage,
+      CornersAverage: form.last5Corners,
+      // Add these if your COMPARISON_RULES support array comparison for formTrend
+      formTrend: isHome
+        ? [homeTenGameAverage, homeSixGameAverage, homeFiveGameAverage]
+        : [awayTenGameAverage, awaySixGameAverage, awayFiveGameAverage],
+    };
+  };
+
+  const homeLast5Data = getLast5ComparisonData(homeForm, true);
+  const awayLast5Data = getLast5ComparisonData(awayForm, false);
+
+  const last5ComparisonMap = calculateComparisonStatusMap(
+    homeLast5Data,
+    awayLast5Data
+  );
+
+  function StatsHomeOnlyComponent({ comparisonStatusMap }) {
     if (!homeForm) return null;
     return (
       <div className="flex-childOne">
         <ul style={style}>
           <Stats
+            comparisonStatusMap={comparisonStatusMap}
             games={"hOrA"}
             style={style}
             homeOrAway="Home"
@@ -2797,12 +2830,15 @@ function GameStats({ game, displayBool, stats, handleToggleTip, userTips }) {
   }
 
   // Component: StatsAway (Render Away Team Stats)
-  function StatsAwayOnlyComponent() {
+  function StatsAwayOnlyComponent({ comparisonStatusMap }) {
+    const invertedMap = getInvertedComparisonMap(comparisonStatusMap);
+
     if (!awayForm) return null;
     return (
       <div className="flex-childTwo">
         <ul style={style}>
           <Stats
+            comparisonStatusMap={invertedMap}
             games={"hOrA"}
             style={style}
             homeOrAway="Away"
@@ -2868,6 +2904,38 @@ function GameStats({ game, displayBool, stats, handleToggleTip, userTips }) {
       </div>
     );
   }
+
+
+  const getHorAComparisonData = (form, isHome = true) => {
+    return {
+      goals: `${isHome ? form.avgScoredHome : form.avgScoredAway}`,
+      conceeded: `${isHome ? form.teamConceededAvgHomeOnly : form.teamConceededAvgAwayOnly}`,
+      XG: `${isHome ? form.avgXGScoredHome : form.avgXGScoredAway}`,
+      XGConceded: `${isHome ? form.avgXGConceededHome : form.avgXGConceededAway}`,
+      possession: `${isHome ? form.avgPossessionHome : form.avgPossessionAway}`,
+      shots: `${isHome ? form.avgShotsHome : form.avgShotsAway}`,
+      sot: `${isHome ? form.avgShotsOnTargetHome : form.avgShotsOnTargetAway}`,
+      dangerousAttacks: `${isHome ? form.avgDangerousAttacksHome : form.avgDangerousAttacksAway}`,
+      ppg: `${isHome ? form.homePPGAv : form.awayPPGAv}`,
+      goalDifference: `${isHome ? form.goalDifferenceHomeOrAway : form.goalDifferenceHomeOrAway}`,
+      BttsPercentage: `${isHome ? form.bttsHomePercentage : form.bttsAwayPercentage}`,
+      CornersAverage: `${isHome ? form.cornersAvHome : form.cornersAvAway}`,
+      winPercentage: `${isHome ? form.homePPGAv : form.awayPPGAv}`,
+      // Add these if your COMPARISON_RULES support array comparison for formTrend
+      formTrend: isHome
+        ? [homeTenGameAverage, homeSixGameAverage, homeFiveGameAverage]
+        : [awayTenGameAverage, awaySixGameAverage, awayFiveGameAverage],
+    };
+  };
+
+  const homeOnlyData = getHorAComparisonData(homeForm, true);
+  const awayOnlyData = getHorAComparisonData(awayForm, false);
+
+  const hOrAComparisonMap = calculateComparisonStatusMap(
+    homeOnlyData,
+    awayOnlyData
+  );
+
 
 
   const overviewHome = gameArrayHome.slice(0, 10).map((game) => (
@@ -4207,8 +4275,12 @@ function GameStats({ game, displayBool, stats, handleToggleTip, userTips }) {
               <>
                 <h2>Last 5 games only</h2>
                 <div className="flex-container">
-                  <StatsHomeLast5Component />
-                  <StatsAwayLast5Component />
+                  <StatsHomeLast5Component
+                    comparisonStatusMap={last5ComparisonMap}
+                  />
+                  <StatsAwayLast5Component
+                    comparisonStatusMap={last5ComparisonMap}
+                  />
                 </div>
                 <div className="Chart" id={`Chart${game.id}`} style={style}>
                   <RadarChart
@@ -4347,8 +4419,12 @@ function GameStats({ game, displayBool, stats, handleToggleTip, userTips }) {
               <>
                 <h2>Home/Away games only</h2>
                 <div className="flex-container">
-                  <StatsHomeOnlyComponent />
-                  <StatsAwayOnlyComponent />
+                  <StatsHomeOnlyComponent
+                    comparisonStatusMap={hOrAComparisonMap}
+                  />
+                  <StatsAwayOnlyComponent
+                    comparisonStatusMap={hOrAComparisonMap}
+                  />
                 </div>
                 <div className="Chart" id={`Chart${game.id}`} style={style}>
                   <RadarChart
