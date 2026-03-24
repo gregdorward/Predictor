@@ -38,6 +38,7 @@ import { getPointAverage } from "../logic/getStats";
 import { allForm } from "../logic/getFixtures";
 import MissingPlayersList from "../components/MissingPlayersList";
 import PlayerStatsList from "../components/PlayerStatsList";
+import { ManagerComparison } from "../components/ManagerCard";
 import { StreakStats } from "../components/StreakStats";
 import {
   calculateAttackingStrength,
@@ -163,6 +164,9 @@ function GameStats({ game, displayBool, stats, handleToggleTip, userTips }) {
   const [loadingPlayerStats, setLoadingPlayerStats] = useState(true);
   const [loadingKeyPlayerComparison, setLoadingKeyPlayerComparison] = useState(true);
   const [loadingStreaks, setLoadingStreaks] = useState(true);
+  const [homeManager, setHomeManager] = useState(null);
+  const [awayManager, setAwayManager] = useState(null);
+  const [loadingManagers, setLoadingManagers] = useState(true);
   const [loadingFutureFixtures, setLoadingFutureFixtures] = useState(true);
   const [oddsData, setOddsData] = useState(null); // State to hold your odds object
   const [loadingOdds, setLoadingOdds] = useState(false);
@@ -180,7 +184,7 @@ function GameStats({ game, displayBool, stats, handleToggleTip, userTips }) {
 
   const [isLoading, setIsLoading] = useState(false);
   const [aiMatchPreview, setAiMatchPreview] = useState(null);
-  const [paid, setPaid] = useState(false);
+  const { user, isPaidUser } = useAuth()
 
   // const paid = true;
   const [hasCompleteData, setHasCompleteData] = useState(false);
@@ -320,6 +324,8 @@ function GameStats({ game, displayBool, stats, handleToggleTip, userTips }) {
   // At the top of your component
   const [homeImpacts, setHomeImpacts] = useState({ atk: 0, def: 0 });
   const [awayImpacts, setAwayImpacts] = useState({ atk: 0, def: 0 });
+  const [newManagerHome, setNewManagerHome] = useState(false);
+  const [newManagerAway, setNewManagerAway] = useState(false);
 
   // Inside GameStats.js
   const handleHomeCalculate = useCallback((vals) => {
@@ -336,36 +342,57 @@ function GameStats({ game, displayBool, stats, handleToggleTip, userTips }) {
       return vals;
     });
   }, []);
+
+
   // The sync logic
   useEffect(() => {
     const syncImpacts = async () => {
-      // Check if we have valid data and if it differs from S3 (existingPredictions)
       const existing = predictedScoresData.find(p => p.gameId === game.id);
 
-      // Check if any value has changed compared to what's in S3
-      const hasChanged = !existing ||
+      // 1. Check if impacts changed
+      const impactsChanged = !existing ||
         existing.impacts?.home?.atk !== homeImpacts.atk ||
         existing.impacts?.away?.atk !== awayImpacts.atk;
 
-      // Only save if impacts are greater than 0 to avoid saving empty stats
-      if (hasChanged && (homeImpacts.atk > 0 || awayImpacts.atk > 0)) {
+      // 2. Check if manager flags changed 
+      // (Comparing true/false against undefined/true/false)
+      const managersChanged = !existing ||
+        Boolean(existing.homeNewManager) !== newManagerHome ||
+        Boolean(existing.awayNewManager) !== newManagerAway;
+
+      const hasChanged = impactsChanged || managersChanged;
+
+      // 3. The "Gate": Only POST if we have something meaningful to save
+      // We allow the POST if there are impacts OR if there's a new manager
+      const leadsToSave = homeImpacts.atk > 0 ||
+        awayImpacts.atk > 0 ||
+        newManagerHome ||
+        newManagerAway;
+
+      if (hasChanged && leadsToSave) {
+        console.log("🚀 Condition met! Sending POST...");
+
         await fetch(`${process.env.REACT_APP_EXPRESS_SERVER}predictedScores2`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
             gameId: game.id,
-            homeAtkLoss: homeImpacts.atk,
-            homeDefLoss: homeImpacts.def,
-            awayAtkLoss: awayImpacts.atk,
-            awayDefLoss: awayImpacts.def
+            ...(homeImpacts.atk > 0 && { homeAtkLoss: homeImpacts.atk }),
+            ...(homeImpacts.def > 0 && { homeDefLoss: homeImpacts.def }),
+            ...(awayImpacts.atk > 0 && { awayAtkLoss: awayImpacts.atk }),
+            ...(awayImpacts.def > 0 && { awayDefLoss: awayImpacts.def }),
+            homeNewManager: newManagerHome, // Sends true/false
+            awayNewManager: newManagerAway  // Sends true/false
           })
         });
-        // Optionally: Refresh existingPredictions here to prevent loop
+
+        // IMPORTANT: You should trigger a refresh of predictedScoresData here 
+        // so 'existing' becomes current and prevents a loop.
       }
     };
 
     syncImpacts();
-  }, [homeImpacts, awayImpacts, game.id, predictedScoresData]);
+  }, [homeImpacts, awayImpacts, game.id, predictedScoresData, newManagerHome, newManagerAway]);
 
   const allResultsHome = useMemo(() => {
     const results = homeForm?.allTeamResults ?? [];
@@ -596,8 +623,6 @@ function GameStats({ game, displayBool, stats, handleToggleTip, userTips }) {
   const warnedTeams = new Set(); // Move this outside the function if reused
 
   function getTeamRanksFromTopTeamsWithPartialMatch(topTeamsData, targetTeamName) {
-    console.log("Finding ranks for team:", targetTeamName);
-    console.log("Top teams data:", topTeamsData);
     if (!topTeamsData) return;
 
     const teamRanks = {};
@@ -1214,7 +1239,6 @@ function GameStats({ game, displayBool, stats, handleToggleTip, userTips }) {
     return result;
   }
 
-
   useEffect(() => {
     async function fetchMatchingGame() {
       try {
@@ -1330,6 +1354,7 @@ function GameStats({ game, displayBool, stats, handleToggleTip, userTips }) {
         setLoadingKeyPlayers(true);
         setLoadingFutureFixtures(true);
         setLoadingVoteData(true);
+        setLoadingManagers(true);
 
         let previousGames = await fetch(
           `${process.env.REACT_APP_EXPRESS_SERVER}match/${game.id}`
@@ -1443,16 +1468,27 @@ function GameStats({ game, displayBool, stats, handleToggleTip, userTips }) {
 
         setOddsData(odds);
 
-        const streaks = await fetch(
-          `${process.env.REACT_APP_EXPRESS_SERVER}streaks/${matchingGameInfo.id}`
-        );
+        // 1. Only proceed if the user is a premium member
+        console.log("User paid status:", isPaidUser);
+        if (isPaidUser && matchingGameInfo?.id) {
+          try {
+            const streaks = await fetch(
+              `${process.env.REACT_APP_EXPRESS_SERVER}streaks/${matchingGameInfo.id}`
+            );
 
+            const streaksDataRaw = await streaks.json();
 
-        const streaksDataRaw = await streaks.json();
-
-        if (streaksDataRaw && odds) {
-          const mappedStreaks = mapOddsToStreaks(streaksDataRaw, odds);
-          setStreakData(mappedStreaks); // Update state with the mapped data
+            // 2. Ensure we have data and odds before mapping
+            if (streaksDataRaw && odds) {
+              const mappedStreaks = mapOddsToStreaks(streaksDataRaw, odds);
+              setStreakData(mappedStreaks); // Update state with the mapped data
+            }
+          } catch (error) {
+            console.error("Error fetching streaks:", error);
+          }
+        } else if (!isPaidUser) {
+          // Optional: Clear the state for free users so they don't see old data
+          setStreakData(null);
         }
 
         if (derivedRoundId) {
@@ -1574,6 +1610,25 @@ function GameStats({ game, displayBool, stats, handleToggleTip, userTips }) {
             setLoadingPlayerStats(false);
           }
 
+          const getManagers = await fetch(
+            `${process.env.REACT_APP_EXPRESS_SERVER}matches/get-managers/${matchingGameInfo.id}`
+          );
+          const managersData = await getManagers.json();
+          console.log("Managers data fetched:", managersData);
+
+          if (managersData?.homeManager) {
+            setHomeManager(managersData.homeManager);
+            setAwayManager(managersData.awayManager);
+
+            if (managersData?.homeManager?.careerHistory?.total < 6) {
+              console.log("Home manager has less than 10 games of career history. Marking as new manager.");
+              setNewManagerHome(true);
+            }
+            if (managersData?.awayManager?.careerHistory?.total < 6) {
+              setNewManagerAway(true);
+            }
+          }
+
           if (
             isWithin48Hours && !lowerTierLeagueIds.includes(game.sofaScoreId)
           ) {
@@ -1583,6 +1638,7 @@ function GameStats({ game, displayBool, stats, handleToggleTip, userTips }) {
             );
 
             const data = await lineupDetail.json();
+            console.log("Lineup details fetched:", data);
             const { homeMissingPlayers, awayMissingPlayers } =
               await extractMissingPlayers(data);
             const { homeLineup, awayLineup } = await extractPlayerRatings(data);
@@ -1797,42 +1853,54 @@ function GameStats({ game, displayBool, stats, handleToggleTip, userTips }) {
           // );
 
 
-          try {
-            const futureFixturesHomeResponse = await fetch(
-              `${process.env.REACT_APP_EXPRESS_SERVER}futureFixtures/${matchingGameInfo.homeId}/${week}`
-            );
-            const fixturesDataHome = await futureFixturesHomeResponse.json();
+          // 1. Check if the user is 'paid' before doing anything expensive
+          if (isPaidUser && matchingGameInfo?.homeId && matchingGameInfo?.awayId) {
+            try {
+              // Fetch Home Future Fixtures
+              const futureFixturesHomeResponse = await fetch(
+                `${process.env.REACT_APP_EXPRESS_SERVER}futureFixtures/${matchingGameInfo.homeId}/${week}`
+              );
+              const fixturesDataHome = await futureFixturesHomeResponse.json();
 
-            const reducedFixturesHome = fixturesDataHome.events.map(event => ({
-              tournamentName: event.tournament?.name || "",
-              homeTeam: event.homeTeam?.name || "",
-              awayTeam: event.awayTeam?.name || "",
-              date: event.startTimestamp ? new Date(event.startTimestamp * 1000).toLocaleDateString("en-GB") : "N/A",
-              colourOne: event.tournament?.uniqueTournament?.primaryColorHex || "",
-              colourTwo: event.tournament?.uniqueTournament?.secondaryColorHex || ""
-            }));
+              const reducedFixturesHome = (fixturesDataHome.events || []).map(event => ({
+                tournamentName: event.tournament?.name || "",
+                homeTeam: event.homeTeam?.name || "",
+                awayTeam: event.awayTeam?.name || "",
+                date: event.startTimestamp ? new Date(event.startTimestamp * 1000).toLocaleDateString("en-GB") : "N/A",
+                colourOne: event.tournament?.uniqueTournament?.primaryColorHex || "",
+                colourTwo: event.tournament?.uniqueTournament?.secondaryColorHex || ""
+              }));
 
-            setFutureFixturesHome(reducedFixturesHome.slice(1, 6));
+              setFutureFixturesHome(reducedFixturesHome.slice(1, 6));
 
-            const futureFixturesAwayResponse = await fetch(
-              `${process.env.REACT_APP_EXPRESS_SERVER}futureFixtures/${matchingGameInfo.awayId}/${week}`
-            );
-            const fixturesDataAway = await futureFixturesAwayResponse.json();
+              // Fetch Away Future Fixtures
+              const futureFixturesAwayResponse = await fetch(
+                `${process.env.REACT_APP_EXPRESS_SERVER}futureFixtures/${matchingGameInfo.awayId}/${week}`
+              );
+              const fixturesDataAway = await futureFixturesAwayResponse.json();
 
-            const reducedFixturesAway = fixturesDataAway.events.map(event => ({
-              tournamentName: event.tournament?.name || "",
-              homeTeam: event.homeTeam?.name || "",
-              awayTeam: event.awayTeam?.name || "",
-              date: event.startTimestamp ? new Date(event.startTimestamp * 1000).toLocaleDateString("en-GB") : "N/A",
-              colourOne: event.tournament?.uniqueTournament?.primaryColorHex || "",
-              colourTwo: event.tournament?.uniqueTournament?.secondaryColorHex || ""
-            }));
-            setFutureFixturesAway(reducedFixturesAway.slice(1, 6));
-          } catch (error) {
-            console.error(
-              `Error fetching future fixtures for game ${game.sofaScoreId}:`,
-              error
-            );
+              const reducedFixturesAway = (fixturesDataAway.events || []).map(event => ({
+                tournamentName: event.tournament?.name || "",
+                homeTeam: event.homeTeam?.name || "",
+                awayTeam: event.awayTeam?.name || "",
+                date: event.startTimestamp ? new Date(event.startTimestamp * 1000).toLocaleDateString("en-GB") : "N/A",
+                colourOne: event.tournament?.uniqueTournament?.primaryColorHex || "",
+                colourTwo: event.tournament?.uniqueTournament?.secondaryColorHex || ""
+              }));
+
+              setFutureFixturesAway(reducedFixturesAway.slice(1, 6));
+
+            } catch (error) {
+              console.error(
+                `Error fetching future fixtures for game ${game.sofaScoreId}:`,
+                error
+              );
+            }
+          } else if (!isPaidUser) {
+            console.log("User is not premium. Skipping future fixtures fetch.");
+            // Optional: Clear any existing state if the user isn't premium
+            setFutureFixturesHome([]);
+            setFutureFixturesAway([]);
           }
 
           // const voteRequest = await fetch(
@@ -1853,6 +1921,7 @@ function GameStats({ game, displayBool, stats, handleToggleTip, userTips }) {
         setLoadingFutureFixtures(false);
         setLoadingKeyPlayers(false);
         setLoadingVoteData(false);
+        setLoadingManagers(false);
         setLoading(false);
         // console.log(homePlayerData);
       }
@@ -3032,24 +3101,6 @@ function GameStats({ game, displayBool, stats, handleToggleTip, userTips }) {
 
   // Side Effect: Initialize component
 
-  //Uncomment 3 lines below to check if user is paid
-  useEffect(() => {
-    async function checkPaymentStatus() {
-      if (userDetail?.uid) {
-        try {
-          const paymentStatus = await checkUserPaidStatus(userDetail.uid);
-          setPaid(paymentStatus);
-        } catch (error) {
-          console.error("Error checking payment status:", error);
-          setPaid(false); // Set to false in case of an error
-        }
-      } else {
-        setPaid(false); // Set to false if there's no user ID
-      }
-    }
-
-    checkPaymentStatus(); // Call the function
-  }); // Dependency on userDetail
 
   // Get all necessary data
 
@@ -3370,7 +3421,7 @@ function GameStats({ game, displayBool, stats, handleToggleTip, userTips }) {
   }
 
   const generateAIInsights = useCallback(
-    async (gameId, streak, oddsData, homeTeamStats, awayTeamStats, homePlayerData, awayPlayerData, homeMissingPlayersImpact, awayMissingPlayersImpact, homeLineupList, awayLineupList, ranksHome, ranksAway, futureFixturesHome, futureFixturesAway) => {
+    async (gameId, streak, oddsData, homeTeamStats, awayTeamStats, homePlayerData, awayPlayerData, homeMissingPlayersImpact, awayMissingPlayersImpact, homeLineupList, awayLineupList, ranksHome, ranksAway, homeManager, away) => {
       setIsLoading(true);
       const table = await fetchBasicTable(game.leagueID);
       const leagueTable = table?.table || null;
@@ -3403,6 +3454,7 @@ function GameStats({ game, displayBool, stats, handleToggleTip, userTips }) {
           teamStreakDataFromAllCompetitions: streak,
           homeTeam: {
             homeTeamName: game.homeTeam,
+            manager: homeManager,
             homeLeaguePosition: homeForm?.LeaguePosition,
             homeTeamResultsLast5: homeForm?.allTeamResults?.slice(0, 5),
             performanceStats: homeTeamStats,
@@ -3415,6 +3467,7 @@ function GameStats({ game, displayBool, stats, handleToggleTip, userTips }) {
           },
           awayTeam: {
             awayTeamName: game.awayTeam,
+            manager: awayManager,
             awayLeaguePosition: awayForm?.LeaguePosition,
             awayTeamResultsLast5: awayForm?.allTeamResults?.slice(0, 5),
             performanceStats: awayTeamStats,
@@ -3719,6 +3772,7 @@ function GameStats({ game, displayBool, stats, handleToggleTip, userTips }) {
     return "value-neutral";
   };
 
+
   return (
     <>
       <div className="ExpandingStats">
@@ -3890,9 +3944,17 @@ function GameStats({ game, displayBool, stats, handleToggleTip, userTips }) {
             />
           )}
 
-          {loadingStreaks || streakData.length === 0 ? (
-            <div></div>
+          {loadingStreaks ? (
+            <div className="loading-spinner"></div>
+          ) : streakData === null ? (
+            /* The "Locked" state for non-paid users or missing data */
+            <div className="TeamStreaksLocked">
+              <button className="TeamStreaksButton locked" disabled >
+                Team Streaks (All comps) 🔒
+              </button>
+            </div>
           ) : (
+            /* The "Success" state for paid users */
             <Collapsable
               buttonText={`Team Streaks (All comps) \u{2630}`}
               classNameButton="TeamStreaksButton"
@@ -3910,9 +3972,18 @@ function GameStats({ game, displayBool, stats, handleToggleTip, userTips }) {
             />
           )}
 
-          {loadingFutureFixtures || futureFixturesHome.length === 0 ? (
-            <div></div>
+
+          {loadingFutureFixtures ? (
+            <div className="loading-spinner"></div> // Show actual loading state
+          ) : futureFixturesHome.length === 0 ? (
+            /* This is the "Locked" or "Empty" state */
+            <div className="FutureFixturesLocked">
+              <button className="FutureFixturesButton locked" disabled>
+                Upcoming Games <span className="lock-icon">🔒</span>
+              </button>
+            </div>
           ) : (
+            /* This is the "Success" state for paid users with data */
             <Collapsable
               buttonText={`Upcoming Games`}
               classNameButton="FutureFixturesButton"
@@ -3924,6 +3995,31 @@ function GameStats({ game, displayBool, stats, handleToggleTip, userTips }) {
                     futureFixturesAway={futureFixturesAway}
                   />
                 </Suspense>
+              }
+            />
+          )}
+
+          {loadingManagers ? (
+            <div className="loading-spinner"></div> // Show actual loading state
+          ) : homeManager === null ? (
+            /* This is the "Locked" or "Empty" state */
+            <div className="FutureFixturesLocked">
+              <button className="FutureFixturesButton locked" disabled>
+                Managers <span className="lock-icon">🔒</span>
+              </button>
+            </div>
+          ) : (
+            /* This is the "Success" state for paid users with data */
+            <Collapsable
+              buttonText={`Managers`}
+              classNameButton="FutureFixturesButton"
+              element={
+                <ManagerComparison
+                  homeManager={homeManager}
+                  awayManager={awayManager}
+                  homeTeam={game.homeTeam}
+                  awayTeam={game.awayTeam}
+                />
               }
             />
           )}
@@ -3951,7 +4047,7 @@ function GameStats({ game, displayBool, stats, handleToggleTip, userTips }) {
                   </div>
                 }
               />
-              {dataHome.length !== 0 ||
+              {/* { paid && dataHome.length !== 0 ||
                 dataAway.length !== 0 ? (
                 <Collapsable
                   buttonText={`Key Player Comparison \u{2630}`}
@@ -4002,7 +4098,7 @@ function GameStats({ game, displayBool, stats, handleToggleTip, userTips }) {
                 />
               ) : (
                 <div></div>
-              )}
+              )} */}
               {loadingVoteData || voteData.length === 0 ? (
                 <div></div>
               ) : (

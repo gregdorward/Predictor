@@ -5724,7 +5724,148 @@ button.AIInsights button:active {
 }
 
 
+.manager-comparison-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: stretch;
+  background: var(--secondary-background-color);
+  padding: 1em;
+  border-radius: 8px;
+  gap: 2em;
+  margin: 1em;
+  line-height: 1.5em;
+}
 
+.manager-card {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  text-align: center;
+}
+
+.manager-label {
+  font-size: 1.2em;
+  text-transform: uppercase;
+  color: var(--text-color);
+  letter-spacing: 1px;
+}
+
+.manager-name {
+  /* margin: 1em; */
+  font-size: 1.2em;
+  color: var(--text-color);
+}
+
+.manager-hired {
+  font-size: 0.9em;
+  margin-top: 0em;
+  color: var(--text-color);
+}
+
+.manager-stats-grid {
+  display: flex;
+  justify-content: center;
+  gap: 1.5em;
+  margin-bottom: 15px;
+}
+
+.stat-item-played {
+  display: flex;
+  flex-direction: column;
+  width: 2em;
+  background-color: rgba(179, 179, 179, 0.277);
+    padding: 0.5em;
+
+}
+
+.stat-item-wins {
+  display: flex;
+  flex-direction: column;
+  background-color: #01a50144;
+    width: 2em;
+  padding: 0.5em;
+}
+
+.stat-item-draws {
+  display: flex;
+  flex-direction: column;
+  background-color: rgba(255, 166, 0, 0.22);
+    width: 2em;
+  padding: 0.5em;
+
+}
+
+.stat-item-losses {
+  display: flex;
+  flex-direction: column;
+  background-color: #970d003a;
+    width: 2em;
+  padding: 0.5em;
+
+}
+
+.stat-label {
+  font-size: 1em;
+  color: var(--text-color);
+}
+
+.stat-value {
+  font-size: 1.1em;
+  font-weight: bold;
+  color: var(--text-color);
+}
+/* Win Percentage Progress Bar */
+.win-pct-container {
+  margin-top: auto;
+}
+
+.win-pct-bar-bg {
+  height: 1em;
+  background: #333;
+  border-radius: 5px;
+  overflow: hidden;
+  margin-bottom: 1em;
+}
+
+.previous-team{
+  margin-top: auto;
+  padding-top: 2em;
+  border-top: gray 1px solid;
+  margin-top: 2em;
+}
+
+.previous-team-name{
+  font-size: 1em;
+  color: var(--text-color);
+  height: 4em;
+}
+.win-pct-bar-bg-previous {
+  height: 0.5em;
+  background: #333;
+  border-radius: 5px;
+  overflow: hidden;
+  margin-bottom: 1em;
+}
+
+.win-pct-bar-fill, .win-pct-bar-fill-previous {
+  height: 100%;
+  background: #009c00; /* Green for performance */
+  transition: width 0.5s ease-in-out;
+}
+
+.win-pct-text {
+  font-size: 1.2em;
+  color: var(--text-color);
+}
+
+.manager-divider {
+  display: flex;
+  align-items: center;
+  color: #444;
+  font-weight: bold;
+  font-style: italic;
+  padding: 0 10px;
+}
 
 .LockIcon {
   font-size: 3em;

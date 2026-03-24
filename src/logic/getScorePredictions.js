@@ -1932,7 +1932,6 @@ export async function getPointsDifferential(pointsHomeAvg, pointsAwayAvg) {
  * @param {number} dampening - How much the rating affects the goals (e.g., 0.04).
  */
 function calculateXGMultiplier(rawComparison, dampening = 0.04) {
-  console.log(`Raw XG Comparison: ${rawComparison}`);
   // rawComparison of 5.0 * 0.04 = 0.20 boost (1.20x multiplier)
   // rawComparison of -5.0 * 0.04 = -0.20 drop (0.80x multiplier)
   const multiplier = 1 + (rawComparison * dampening);
@@ -2130,6 +2129,9 @@ export async function generateGoals(homeForm, awayForm, match) {
   const aAtk = existing?.impacts?.away?.atk || 0;
   const aDef = existing?.impacts?.away?.def || 0;
 
+  const newManagerHome = existing?.homeNewManager || false;
+  const newManagerAway = existing?.awayNewManager || false;
+
   // 3. Apply the Injury Correction
   // If Home has 5.1 Atk Loss, they lose ~7.6% of their lambda
   // If Away has 0.5 Def Loss, Home gains ~0.75% of their lambda
@@ -2163,8 +2165,19 @@ export async function generateGoals(homeForm, awayForm, match) {
   const homeGDMult = calculateGDMultiplier(homeForm.goalDifferenceHomeOrAway);
   const awayGDMult = calculateGDMultiplier(awayForm.goalDifferenceHomeOrAway);
 
-  const homeLambda_final_v3 = homeLambda_final_v2 * homeGDMult;
-  const awayLambda_final_v3 = awayLambda_final_v2 * awayGDMult;
+    let additionHome = 1;
+    let additionAway = 1;
+
+  if(newManagerHome) {
+    additionHome += 0.3;
+  }
+
+  if(newManagerAway) {
+    additionAway += 0.3;
+  }
+
+  const homeLambda_final_v3 = (homeLambda_final_v2 * homeGDMult) * additionHome;
+  const awayLambda_final_v3 = (awayLambda_final_v2 * awayGDMult) * additionAway;
 
   const avgHomeXG = (homeForm.avXGLast5 + awayForm.avXGAgainstLast5) / 2;
   const avgHomeGoalsLast5 = (homeForm.avScoredLast5 + awayForm.avConceededLast5) / 2;
