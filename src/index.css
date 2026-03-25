@@ -2039,7 +2039,7 @@ strong.LOST {
   color: var(--text-color);
   flex-basis: 5%;
   min-width: 20px;
-    font-size: 0.9em;
+  font-size: 0.9em;
 }
 
 .HomeOddsExplainer {
@@ -3845,16 +3845,16 @@ canvas.Pie {
   padding-bottom: 2em;
   padding-right: 0.25em;
   padding-left: 0.25em;
-  font-size: 1.1em;
+  font-size: 1em;
 }
 
 .KeyStatsHome li {
-  padding-top: 0.75em;
-  padding-bottom: 0.75em;
-  padding-right: 0.5em;
+  padding-top: 0.5em;
+  padding-bottom: 0.5em;
+  padding-right: 1em;
 }
 
-.AllStats{
+.AllStats {
   margin-top: 1em;
 }
 
@@ -3881,13 +3881,13 @@ canvas.Pie {
   padding-bottom: 2em;
   padding-right: 0.25em;
   padding-left: 0.25em;
-  font-size: 1.1em;
+  font-size: 1em;
 }
 
 .KeyStatsAway li {
-  padding-top: 0.75em;
-  padding-bottom: 0.75em;
-  padding-left: 0.5em;
+  padding-top: 0.5em;
+  padding-bottom: 0.5em;
+  padding-left: 1em;
 }
 
 .TestingLayout {
@@ -4079,7 +4079,7 @@ canvas.LeagueStatsRadar {
   font-size: 0.9em;
 }
 
-.FormSummaries{
+.FormSummaries {
   min-height: 11em;
 }
 
@@ -4342,20 +4342,19 @@ li.FormHeader {
   background-color: var(--background-color);
   max-width: 30em;
   padding-bottom: 1em;
+  border: #b7b7b7 1px solid;
+  border-radius: 1em;
 }
 
 .BestPredictionsExplainer {
   margin-bottom: 2em;
-  font-size: 1.1em;
+  font-size: 1em;
 }
 
 .BestPredictions li {
-  font-size: 1.1em;
-  margin-top: 0.75em;
-  margin-bottom: 0.75em;
-  padding-top: 0.25em;
-  padding-bottom: 0.25em;
-  background-color: var(--secondary-background-color);
+  font-size: 0.9em;
+  padding-top: 1em;
+  padding-bottom: 1em;
 }
 
 .BestPredictions a {
@@ -4364,19 +4363,18 @@ li.FormHeader {
 
 .LongshotPredictions {
   padding: 0.25em;
-  border: var(--text-color) 1px dashed;
-  margin: 0.5em;
+  border: #b7b7b7 1px solid;
+  border-radius: 1em;
+  margin: 0.25em;
   margin-bottom: 1em;
   background-color: var(--background-color);
   font-size: 0.9em;
 }
 
 .LongshotPredictions li {
-  font-size: 1em;
-  margin-top: 0.75em;
-  margin-bottom: 0.75em;
-  padding: 0.25em;
-  background-color: var(--secondary-background-color);
+  font-size: 0.9em;
+  padding-top: 1em;
+  padding-bottom: 1em;
 }
 
 .LongshotPredictions a {
@@ -4386,20 +4384,24 @@ li.FormHeader {
 
 .BTTSGames {
   padding: 0.25em;
-  border: var(--text-color) 1px dashed;
-  margin: 0.5em;
+  border: #b7b7b7 1px solid;
+  border-radius: 1em;
+  margin: 0.25em;
   background-color: var(--background-color);
   font-size: 0.9em;
   margin-bottom: 1em;
 }
 
 .BTTSGames li {
-  font-size: 1em;
-  margin-top: 0.75em;
-  margin-bottom: 0.75em;
-  padding: 0.25em;
-  background-color: var(--secondary-background-color);
+  font-size: 0.9em;
+  /* margin-top: 0.75em;
+  margin-bottom: 0.75em; */
+  padding-top: 1em;
+  padding-bottom: 1em;
+  text-align: center;
+  /* background-color: var(--secondary-background-color); */
 }
+
 
 .BTTSGames a {
   padding: 0em;
@@ -4408,10 +4410,17 @@ li.FormHeader {
 
 .XGDiffTips {
   padding: 1em;
-  border: var(--text-color) 1px dashed;
   margin: 0.5em;
+  margin-top: 1em;
+  border: #b7b7b7 1px solid;
+  border-radius: 1em;
+  margin-bottom: 1em;
   background-color: var(--background-color);
   font-size: 0.9em;
+}
+
+.XGDiffTips h4 {
+  margin-top: 1em;
 }
 
 .XGDiffTips lh {
@@ -4419,11 +4428,10 @@ li.FormHeader {
 }
 
 .XGDiffTips li {
-  font-size: 1em;
+  font-size: 0.9em;
   margin-top: 0.75em;
   margin-bottom: 0.75em;
-  padding: 0.25em;
-  background-color: var(--secondary-background-color);
+  padding: 0.5em;
 }
 
 .XGDiffTips a {
@@ -5708,7 +5716,7 @@ button.AIInsights button:active {
 .swiper-container-horizontal>.swiper-pagination-bullets,
 .swiper-pagination-custom,
 .swiper-pagination-fraction {
-  bottom: 5px !important;
+  bottom: 1em !important;
 }
 
 .swiper-pagination-bullet {
@@ -5732,7 +5740,6 @@ button.AIInsights button:active {
   display: flex;
   justify-content: space-between;
   align-items: stretch;
-  background: var(--secondary-background-color);
   padding: 1em;
   border-radius: 8px;
   gap: 2em;
@@ -5778,34 +5785,35 @@ button.AIInsights button:active {
   flex-direction: column;
   width: 2em;
   background-color: rgba(179, 179, 179, 0.277);
-    padding: 0.5em;
-
+  padding: 0.5em;
+  border-radius: 1em;
 }
 
 .stat-item-wins {
   display: flex;
   flex-direction: column;
   background-color: #01a50144;
-    width: 2em;
+  width: 2em;
   padding: 0.5em;
+  border-radius: 1em;
 }
 
 .stat-item-draws {
   display: flex;
   flex-direction: column;
   background-color: rgba(255, 166, 0, 0.22);
-    width: 2em;
+  width: 2em;
   padding: 0.5em;
-
+  border-radius: 1em;
 }
 
 .stat-item-losses {
   display: flex;
   flex-direction: column;
   background-color: #970d003a;
-    width: 2em;
+  width: 2em;
   padding: 0.5em;
-
+  border-radius: 1em;
 }
 
 .stat-label {
@@ -5818,6 +5826,7 @@ button.AIInsights button:active {
   font-weight: bold;
   color: var(--text-color);
 }
+
 /* Win Percentage Progress Bar */
 .win-pct-container {
   margin-top: auto;
@@ -5825,35 +5834,38 @@ button.AIInsights button:active {
 
 .win-pct-bar-bg {
   height: 1em;
-  background: #333;
+  background: #dedede;
   border-radius: 5px;
   overflow: hidden;
   margin-bottom: 1em;
 }
 
-.previous-team{
+.previous-team {
   margin-top: auto;
   padding-top: 2em;
   border-top: gray 1px solid;
   margin-top: 2em;
 }
 
-.previous-team-name{
+.previous-team-name {
   font-size: 1em;
   color: var(--text-color);
   height: 4em;
 }
+
 .win-pct-bar-bg-previous {
   height: 0.5em;
-  background: #333;
+  background: #dedede;
   border-radius: 5px;
   overflow: hidden;
   margin-bottom: 1em;
 }
 
-.win-pct-bar-fill, .win-pct-bar-fill-previous {
+.win-pct-bar-fill,
+.win-pct-bar-fill-previous {
   height: 100%;
-  background: #009c00; /* Green for performance */
+  background: #009c00;
+  /* Green for performance */
   transition: width 0.5s ease-in-out;
 }
 

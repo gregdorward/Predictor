@@ -1068,9 +1068,9 @@ async function getPastLeagueResults(team, game, hOrA, form) {
     form.LastSixForm = resultsAll.slice(0, 6);
     form.LastTenForm = resultsAll.slice(0, 10);
 
-    form.resultsAll = resultsAll
-    form.resultsHome = resultsHome
-    form.resultsAway = resultsAway
+    form.resultsAll = resultsAll.slice(0, 6)
+    form.resultsHome = resultsHome.slice(0, 6)
+    form.resultsAway = resultsAway.slice(0, 6)
 
     const avScoredLast5 = allTeamResults.map((res) => res.scored).slice(0, 5);
     const avScoredLast5Sum = avScoredLast5.reduce((a, b) => a + b, 0);
@@ -2165,14 +2165,14 @@ export async function generateGoals(homeForm, awayForm, match) {
   const homeGDMult = calculateGDMultiplier(homeForm.goalDifferenceHomeOrAway);
   const awayGDMult = calculateGDMultiplier(awayForm.goalDifferenceHomeOrAway);
 
-    let additionHome = 1;
-    let additionAway = 1;
+  let additionHome = 1;
+  let additionAway = 1;
 
-  if(newManagerHome) {
+  if (newManagerHome) {
     additionHome += 0.3;
   }
 
-  if(newManagerAway) {
+  if (newManagerAway) {
     additionAway += 0.3;
   }
 
@@ -5032,6 +5032,11 @@ export async function getScorePrediction(day, mocked) {
         }
       }
 
+      let bttsGame =
+            match.status === "complete"
+              ? `${match.homeTeam} ${match.homeGoals} - ${match.awayGoals} ${match.awayTeam}`
+              : match.game;
+      match.bttsGame = bttsGame;
       if (
         match.btts === true &&
         match.status !== "suspended" &&
@@ -5042,7 +5047,7 @@ export async function getScorePrediction(day, mocked) {
       }
       if (
         match.goalsA + match.goalsB > 2 &&
-        match.over25Probability >= 65
+        match.over25Probability >= 70
       ) {
         Over25PredictionObject = {
           game:
@@ -5947,7 +5952,7 @@ async function renderTips() {
             buttonText={"Over 2.5 Goals Tips"}
             element={
               <ul className="LongshotPredictions" id="LongshotPredictions">
-                <h4>Over 2.5 goals</h4>
+                <h4>Over 2.5 Goals Tips</h4>
                 {tipsToShow.map((tip) => (
                   <a
                     key={tip.id}
@@ -5960,10 +5965,11 @@ async function renderTips() {
                   >
                     <li>
                       <div>
-                        {tip.game} - Odds: {tip.odds}{" "}
-                        <span className={`${tip.doubleChanceOutcome}`}>
+                        <div>{tip.game}</div>
+                        <div>{`Odds: ${tip.odds} `}<span className={`${tip.doubleChanceOutcome}`}>
                           {tip.outcomeSymbol}
                         </span>
+                        </div>
                       </div>
                     </li>
                   </a>
@@ -6010,7 +6016,7 @@ async function renderTips() {
             buttonText={"BTTS Games"}
             element={
               <ul className="BTTSGames" id="BTTSGames">
-                <h4>Games with highest chance of BTTS</h4>
+                <h4>BTTS Tips</h4>
                 {bttsArray.map((game) => (
                   <a
                     href={`#${game.id}`}
@@ -6021,10 +6027,10 @@ async function renderTips() {
                     style={{ textDecoration: 'none', color: 'inherit' }}                    >
                     <li key={game.game}>
                       <div>
-                        {`${game.game} odds: ${game.bttsFraction}`}{" "}
-                        <span className={game.bttsOutcome}>
+                        <div>{game.bttsGame}</div>
+                        <div>{`Odds: ${game.bttsOdds}`}{" "}<span className={game.bttsOutcome}>
                           {game.bttsOutcomeSymbol}
-                        </span>
+                        </span></div>
                       </div>
                     </li>
                   </a>
