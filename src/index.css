@@ -1045,10 +1045,9 @@ p {
 }
 
 .CheckboxTwo {
-  background-color: var(--secondary-background-color);
   padding: 1em;
-  border: var(--primary-color) solid 1px;
   margin-bottom: 1em;
+  border-radius: 1em;
 }
 
 .LoginSignUp {
@@ -1229,15 +1228,15 @@ span.MembershipInfo {
 }
 
 .leagueName {
-  font-size: 1.2em;
+  font-size: 1em;
   font-weight: 550;
   color: var(--button-text-color);
   padding-top: 0.75em;
   padding-bottom: 0.75em;
   margin-top: 1.5em;
   background-color: var(--accent-color);
-  box-shadow: rgba(0, 0, 0, 0.16) 0px 3px 6px, rgba(0, 0, 0, 0.23) 0px 3px 6px;
   cursor: pointer;
+  border-radius: 1em;
 }
 
 .leagueName:hover {
@@ -1751,32 +1750,25 @@ strong.LOST {
   border: var(--accent-color) 1px solid;
   margin-top: 1em;
   font-size: 0.9em;
-  box-shadow: rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px;
 }
 
 .individualFixtureContainerfalse {
   display: flex;
-  padding-bottom: 1em;
-  padding-top: 1em;
+  padding-bottom: 0.25em;
+  padding-top: 0.25em;
   /* border: var(--accent-color) 1px solid; */
-  margin-top: 1em;
-  margin-bottom: 1em;
-  font-size: 0.9em;
-  box-shadow: rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px;
-  border: var(--primary-color) 1px solid;
+  margin-top: 0.25em;
+  margin-bottom: 0.25em;
+  font-size: 0.8em;
+  /* border: var(--primary-color) 1px solid; */
 }
 
-.individualFixtureContainerfalse:hover {
-  box-shadow: rgba(0, 0, 0, 0.12) 0px 2px 6px, rgba(0, 0, 0, 0.24) 0px 2px 4px;
-  border: var(--primary-color) 2px solid;
 
-}
 
 
 *[class^='individualFixture'] {
   display: flex;
   flex-basis: 100%;
-  background-color: var(--secondary-background-color);
   align-items: left;
   align-content: center;
   color: var(--text-color);
@@ -1792,8 +1784,13 @@ strong.LOST {
   align-items: left;
   align-content: left;
   color: var(--text-color);
-  padding-bottom: 0.5em;
+  padding: 0.5em;
   cursor: pointer;
+  border-radius: 1em;
+}
+
+.individualFixturefalse:hover {
+  border: var(--primary-color) 1px solid;
 }
 
 
@@ -2033,6 +2030,7 @@ strong.LOST {
   min-width: 20px;
   border-radius: 0px;
   font-weight: bolder;
+  font-size: 0.9em;
 }
 
 .DrawOdds {
@@ -2041,6 +2039,7 @@ strong.LOST {
   color: var(--text-color);
   flex-basis: 5%;
   min-width: 20px;
+    font-size: 0.9em;
 }
 
 .HomeOddsExplainer {
@@ -2149,6 +2148,7 @@ strong.LOST {
   color: var(--button-text-color);
   border-radius: 0px;
   font-weight: 500;
+  font-size: 0.9em;
 }
 
 .oddsAwayExplainer {
@@ -3829,6 +3829,7 @@ canvas.Pie {
 
 .ExpandingStats {
   background-color: var(--background-color);
+  font-size: 0.9em;
 }
 
 .IndividualPastFixtureHome {
@@ -4078,8 +4079,11 @@ canvas.LeagueStatsRadar {
   font-size: 0.9em;
 }
 
+.FormSummaries{
+  min-height: 11em;
+}
+
 .FormSummaryHome {
-  min-height: 12em;
   background-color: #e2e2e200 !important;
   line-height: 1.5em;
   padding-bottom: 0em !important;

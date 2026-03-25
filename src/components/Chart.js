@@ -107,7 +107,7 @@ export function VotePieChart({ pollData, theme }) {
         display: true,
         text: "Who will win?",
         color: color,
-        font: { size: 16 },
+        font: { size: 14 },
       },
     },
     animation: { duration: 600 },
@@ -174,7 +174,7 @@ export function BTTSPieChart({ pollData, theme }) {
         display: true,
         text: "Will both teams score?",
         color: color,
-        font: { size: 16 },
+        font: { size: 14 },
       },
     },
     animation: { duration: 600 },
@@ -261,7 +261,7 @@ export function Chart(props) {
           display: false,
           text: "Last X Games",
           font: {
-            size: 14,
+            size: 12,
           },
         },
         grid: {
@@ -289,7 +289,7 @@ export function Chart(props) {
         text: props.type,
         color: color,
         font: {
-          size: 14,
+          size: 12,
         },
       },
     },
@@ -389,7 +389,7 @@ export function MultilineChart(props) {
           display: false,
           text: "Last X Games",
           font: {
-            size: 14,
+            size: 12,
           },
         },
         grid: {
@@ -417,7 +417,7 @@ export function MultilineChart(props) {
         text: props.type,
         color: color,
         font: {
-          size: 14,
+          size: 12,
         },
       },
     },
@@ -639,7 +639,7 @@ export function RadarChart(props) {
         color: color,
         backgroundColor: "black",
         font: {
-          size: 14,
+          size: 12,
         },
       },
     },
@@ -762,7 +762,7 @@ export function RadarChartLeagueStats({
         text: title || "Team Comparison by League Ranking",
         color: "#fe8c00",
         font: {
-          size: 14,
+          size: 12,
         },
       },
       tooltip: {
@@ -861,7 +861,7 @@ export function BarChart(props) {
         text: props.text,
         color: color,
         font: {
-          size: 14,
+          size: 12,
         },
       },
     },
@@ -942,7 +942,7 @@ export function BarChartTwo(props) {
         text: [props.text],
         color: color,
         font: {
-          size: 14,
+          size: 12,
         },
       },
       subtitle: {

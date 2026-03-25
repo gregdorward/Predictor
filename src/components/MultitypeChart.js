@@ -68,7 +68,7 @@ const MultiTypeChart = ({ dataArray, text, theme }) => {
         text: text,
         color: color,
         font: {
-          size: 14,
+          size: 12,
         },
       },
       legend: {
