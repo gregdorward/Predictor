@@ -2228,19 +2228,15 @@ export async function generateGoals(homeForm, awayForm, match) {
 
   if (majorContinentalLeagues.includes(match.leagueDesc)) {
     homeGoals = (homeLambda_final_v2 * 0.85)
-      + (oddsComparisonHome * 0.15) +
+      * (1+ oddsComparisonHome * 0.15) +
       (homeForm.actualToXGDifference / 20) * homeXGMult;
     awayGoals = (awayLambda_final_v2 * 0.75)
-      + (oddsComparisonAway * 0.15) +
+      * (1 + oddsComparisonAway * 0.15) +
       (awayForm.actualToXGDifference / 20) * awayXGMult;
   } else if (InternationalComps.includes(match.leagueDesc)) {
-    homeGoals = (homeLambda_final_v2 * 1.05)
-      +
-      (homeForm.actualToXGDifference / 20) * homeXGMult;
+    homeGoals = ((homeLambda_final_v3 / 1.25) * (1 + (oddsComparisonHome * 0.05))) * (1 + homeForm.actualToXGDifference / 20)
 
-    awayGoals = (awayLambda_final_v2 * 0.95)
-      +
-      (awayForm.actualToXGDifference / 20) * awayXGMult;
+    awayGoals = ((awayLambda_final_v3 / 1.25) * (1 + (oddsComparisonAway * 0.05))) * (1 + awayForm.actualToXGDifference / 20)
   } else {
     homeGoals = (homeLambda_final_v3 * 1)
       * homeXGMult
@@ -5033,9 +5029,9 @@ export async function getScorePrediction(day, mocked) {
       }
 
       let bttsGame =
-            match.status === "complete"
-              ? `${match.homeTeam} ${match.homeGoals} - ${match.awayGoals} ${match.awayTeam}`
-              : match.game;
+        match.status === "complete"
+          ? `${match.homeTeam} ${match.homeGoals} - ${match.awayGoals} ${match.awayTeam}`
+          : match.game;
       match.bttsGame = bttsGame;
       if (
         match.btts === true &&

@@ -96,7 +96,7 @@ const MissingPlayersList = ({ players = [], className }) => {
           <div className="PlayerIdentity">
             <div className="MissingPlayerName">{player.name}</div>
             <div className="PlayerMeta">
-              {player.type} - {player.reason}
+              {player.type} - {player.reason} - {player.description}
             </div>
           </div>
 

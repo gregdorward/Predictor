@@ -1100,6 +1100,7 @@ function GameStats({ game, displayBool, stats, handleToggleTip, userTips }) {
         name: mp.player?.name ?? "Unknown",
         position: getPos(mp.player?.position),
         reason: getReasonDescription(mp.reason),
+        description: mp.description ?? "Unknown",
         type: mp.type,
       }));
     };
@@ -1672,17 +1673,17 @@ function GameStats({ game, displayBool, stats, handleToggleTip, userTips }) {
                   // If a player scores every 90 mins, bonus is ~2.2
                   // If they score every 200 mins, bonus is ~1.0
                   if (stats.position === "F") {
-                    efficiencyBonus = Math.max(1, 180 / scoringFrequency);
+                    efficiencyBonus = Math.max(1, 135 / scoringFrequency);
                   } else {
                     efficiencyBonus = Math.max(1, 270 / scoringFrequency);
                   }
                 }
 
-                let goalWeight = 8;
-                let assistWeight = 6;
+                let goalWeight = 7;
+                let assistWeight = 5;
 
                 if (stats.position === "M") {
-                  goalWeight = 12;
+                  goalWeight = 10;
                   assistWeight = 6;
                 }
 
@@ -1695,7 +1696,7 @@ function GameStats({ game, displayBool, stats, handleToggleTip, userTips }) {
                 const attackingShare =
                   Math.min(1, attackingActions / teamAttActions);
 
-                const usageImpact = Math.min(1, appearances / played) * 6;
+                const usageImpact = Math.min(1, appearances / played) * 3;
 
                 const attackingContributionImpact =
                   Math.pow(attackingShare, 0.6) * 7 * efficiencyBonus;
@@ -1703,12 +1704,19 @@ function GameStats({ game, displayBool, stats, handleToggleTip, userTips }) {
                 const attackingQualityImpact =
                   Math.max(0, rating - 6.5) * 2;
 
+                let positionalAdjustment = 1
+
+                if (stats.position === "F") positionalAdjustment = 1;
+                else if (stats.position === "M") positionalAdjustment = 0.9;
+                else if (stats.position === "D") positionalAdjustment = 0.8;
+                else if (stats.position === "G") positionalAdjustment = 0.4;
+
                 const attackingImpactScore = Math.min(
                   10,
                   usageImpact +
-                  attackingContributionImpact +
+                  attackingContributionImpact * 3 +
                   attackingQualityImpact
-                );
+                ) * positionalAdjustment;
 
 
                 const defensiveActions =
@@ -1726,6 +1734,8 @@ function GameStats({ game, displayBool, stats, handleToggleTip, userTips }) {
                 if (stats.position === "F") defensivePositionMultiplier = 0.35;
                 if (stats.position === "M") defensivePositionMultiplier = 0.75;
                 if (stats.position === "D") defensivePositionMultiplier = 1.2;
+                if( stats.position === "G") defensivePositionMultiplier = 1.5;
+              
 
 
                 const defensiveImpactScore = Math.min(
@@ -1754,6 +1764,7 @@ function GameStats({ game, displayBool, stats, handleToggleTip, userTips }) {
                 return {
                   name: missingPlayer.name,
                   reason: missingPlayer.reason || "Unknown",
+                  description: missingPlayer.description || "",
                   type: missingPlayer.type, // e.g., 'Missing' or 'Doubtful'
                   appearances: stats.appearances || 0,
                   goals: stats.goals || 0,
