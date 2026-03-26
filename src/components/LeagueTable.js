@@ -213,6 +213,7 @@ export default function LeagueTable(props) {
   }, [derivedMediaId, date]); // Re-fetch only if derivedMediaId or date changes
 
   let rows = props.Teams.map((team, i) => (
+    console.log(team),
     <StyledTableRow key={`${props.Key}row${i}`}>
       <StyledTableCell component="th" scope="row">
         {`${i + 1}`}
@@ -411,7 +412,8 @@ export default function LeagueTable(props) {
     // props.GamesPlayed > 3 &&
     props.Teams[0].LeagueID !== 16504 && //MLS
     props.Teams[0].LeagueID !== 12933 && //UKNorth&South
-    props.Teams[0].LeagueID !== 15002 //Europa
+    props.Teams[0].LeagueID !== 15002 && //Europa
+    props.Teams[0].LeagueID !== 13964
     // props.Teams[0].LeagueID !== 14924 //ChampionsLeague
   ) {
     for (let i = 0; i < props.Teams.length; i++) {
@@ -500,7 +502,7 @@ export default function LeagueTable(props) {
               <h5>Player Rankings by Metric</h5>
               <PlayerRankingTable
                 rankingStats={props.PlayerRankingStats.topPlayers}
-                statKey="accurateLongBalls" 
+                statKey="accurateLongBalls"
               />
             </>
           )}
@@ -616,27 +618,42 @@ export default function LeagueTable(props) {
     }
   } else if (props.Teams[0].LeagueID === 4340) {
     return null;
-  } else if (
-    props.Teams[0].LeagueID === 16504 || //MLS
-    // props.Teams[0].LeagueID === 12933 || //UKNorth&South
-    props.Teams[0].LeagueID === 15002 || //Europa
-    props.Teams[0].LeagueID === 14924 //ChampionsLeague
-  ) {
-    for (let i = 0; i < props.Teams.length; i++) {
-      return (
-        <>
-          <h2 className="DivisionName">{props.Division}</h2>
-          <TableContainer component={Paper} className="StatsTable">
-            <Table
-              className="Table"
+  } else if ([16504, 15002, 14924, 13964].includes(props.Teams[0]?.LeagueID)) {
+    console.log("Rendering league table with grouping for league ID:", props.Teams);
+
+    // 1. Regroup the flat list into an object: { "Group L": [team1, team2...], "Group M": [...] }
+    const groupedData = props.Teams.reduce((acc, team) => {
+      const key = team.GroupName || "League Table";
+      if (!acc[key]) acc[key] = [];
+      acc[key].push(team);
+      return acc;
+    }, {});
+
+    return (
+      <>
+        <h2 className="DivisionName">{props.Division}</h2>
+
+        {/* 2. Map over the unique Groups */}
+        {Object.entries(groupedData).map(([groupName, teams], i) => (
+          <TableContainer
+            key={`${props.Key}-${groupName}`}
+            component={Paper}
+            className="StatsTable"
+          >
+            {/* Display Group Header */}
+            <h3 className="GroupName">
+              {groupName}
+            </h3>
+
+            <Table className="Table"
               aria-label="customized table"
               key={props.Key}
-              style={{ marginTop: "2em", marginBottom: "0em" }}
+            // style={{ marginTop: "2em", marginBottom: "0em" }}
             >
               <TableHead>
                 <TableRow>
-                  <StyledTableCell></StyledTableCell>
-                  <StyledTableCell></StyledTableCell>
+                  <StyledTableCell></StyledTableCell> {/* # */}
+                  <StyledTableCell></StyledTableCell> {/* Team */}
                   <StyledTableCell>Pld</StyledTableCell>
                   <StyledTableCell>W</StyledTableCell>
                   <StyledTableCell>D</StyledTableCell>
@@ -644,64 +661,63 @@ export default function LeagueTable(props) {
                   <StyledTableCell>GF</StyledTableCell>
                   <StyledTableCell>GA</StyledTableCell>
                   <StyledTableCell>GD</StyledTableCell>
+                  {/* Use <td> here if that's what Block 1 uses for the buttons */}
                   <td>
-                    <button
-                      className="SortedColumn"
-                      style={{ textAlign: "center" }}
-                      onClick={() => sorted(props.Teams, "Points", "desc")}
-                    >
+                    <button className="SortedColumn" onClick={() => sorted(teams, "Points", "desc")}>
                       Pts {upArrow}
                     </button>
                   </td>
                   <td>
-                    <button
-                      className="SortedColumn"
-                      style={{ textAlign: "center" }}
-                      onClick={() => sorted(props.Teams, "LastXPoints", "desc")}
-                    >
+                    <button className="SortedColumn" onClick={() => sorted(teams, "LastXPoints", "desc")}>
                       Last 5 {upArrow}
                     </button>
                   </td>
                 </TableRow>
               </TableHead>
-              <TableBody>{rows}</TableBody>
+              <TableBody>
+                {rows}
+              </TableBody>
             </Table>
-            <ul className="gallery-container">
-              {mediaItems.map((item, index) => (
-                <div
-                  key={`media-item-${index}`}
-                  className="gallery-item-wrapper"
-                >
-                  <h6 className="MediaTitle">{item.title}</h6>
-                  <li className="gallery-item MediaLinks">
-                    {item.thumbnailUrl ? (
-                      <a
-                        href={item.url}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                      >
-                        <img
-                          src={item.thumbnailUrl}
-                          alt={`Media Thumbnail ${index + 1}`}
-                          className="MediaImage"
-                        />
-                      </a>
-                    ) : (
-                      <a
-                        href={item.url}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                      >
-                        View Media {index + 1}
-                      </a>
-                    )}
-                  </li>
-                </div>
-              ))}
-            </ul>
           </TableContainer>
-        </>
-      );
-    }
+        ))}
+
+        {/* Media gallery rendered once at the bottom of all groups */}
+        {/* <ul className="gallery-container">
+          {mediaItems.map((item, index) => (
+            <div key={`media-item-${index}`} className="gallery-item-wrapper">
+              <h6 className="MediaTitle">{item.title}</h6>
+              <li className="gallery-item MediaLinks">
+                <a href={item.url} target="_blank" rel="noopener noreferrer">
+                  {item.thumbnailUrl ? (
+                    <img src={item.thumbnailUrl} alt="Thumbnail" className="MediaImage" />
+                  ) : (
+                    <span>View Media {index + 1}</span>
+                  )}
+                </a>
+              </li>
+            </div>
+          ))}
+        </ul> */}
+        {/* {props.RankingStats?.topTeams && (
+          <>
+            <h5>League Rankings by Metric</h5>
+            <StatTable
+              rankingStats={props.RankingStats.topTeams}
+              statKey="accurateCrosses"
+            />
+          </>
+        )}
+        {props.PlayerRankingStats?.topPlayers && (
+          <>
+            <h5>Player Rankings by Metric</h5>
+            <PlayerRankingTable
+              rankingStats={props.PlayerRankingStats.topPlayers}
+              statKey="accurateLongBalls"
+            />
+          </>
+        )} */}
+      </>
+
+    );
   }
 }

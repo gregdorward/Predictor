@@ -8,6 +8,7 @@ const formatLabel = (key) =>
     .replace(/^./, (str) => str.toUpperCase()); // Capitalize first letter
 
 const PlayerRankingTable = ({ rankingStats }) => {
+  console.log(rankingStats)
   const statKeys = Object.keys(rankingStats);
   const [selectedStat, setSelectedStat] = useState(statKeys[0]);
 

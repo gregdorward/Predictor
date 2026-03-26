@@ -2889,8 +2889,12 @@ strong.LOST {
 }
 
 h6.MediaTitle {
-  font-size: 2em;
+  font-size: 12px;
   margin-bottom: 0em;
+}
+
+.GroupName {
+  font-size: 1.6em;
 }
 
 .StatHeader {
