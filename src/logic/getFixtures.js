@@ -861,7 +861,6 @@ export async function generateFixtures(
         );
 
         let games = await fixtures.json();
-
         let gamesFiltered;
         let gamesShortened;
         if (games.pager.current_page < games.pager.max_page) {
@@ -916,6 +915,8 @@ export async function generateFixtures(
             team_b_corners,
             team_a_shotsOnTarget,
             team_b_shotsOnTarget,
+            team_a_fouls,
+            team_b_fouls,
             team_a_red_cards,
             team_b_red_cards,
             team_a_possession,
@@ -944,6 +945,8 @@ export async function generateFixtures(
             team_b_corners,
             team_a_shotsOnTarget,
             team_b_shotsOnTarget,
+            team_a_fouls,
+            team_b_fouls,
             team_a_red_cards,
             team_b_red_cards,
             team_a_possession,

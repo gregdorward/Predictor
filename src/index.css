@@ -373,6 +373,7 @@
   --span-text-colour: #020029;
   --member-text-color: #020029;
   --faint-text: #454545;
+  --slightly-darker-than-background: #ffffff;
 }
 
 .dark-mode {
@@ -394,6 +395,8 @@
   --span-text-colour: #020029;
   --member-text-color: #fe8c00;
   --faint-text: #c7c7c7;
+  --slightly-darker-than-background: #000000;
+
 }
 
 body {
@@ -6058,6 +6061,146 @@ button.AIInsights button:active {
   flex-direction: row;
 }
 
+.TacticalFixtureContainer {
+  display: flex;
+  gap: 1em;
+  align-items: stretch;
+  margin: 10px 0;
+}
+
+.TacticalTeamCard {
+  flex: 1;
+  background: var(--secondary-background-color);
+  padding: 1em;
+  border-radius: 1em;
+}
+
+.TacticalGrid {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5em;
+  margin-top: 0.75em;
+  /* Removed flex-wrap as column handles verticality */
+}
+
+/* Base styles for Mobile */
+.TacticalRow {
+  display: grid;
+  /* Reduce fixed columns slightly or use percentages */
+  grid-template-columns: 1fr 3em 3em;
+  column-gap: 8px;
+  /* Remove those heavy 5em margins for mobile */
+  margin-left: 0.5em;
+  margin-right: 0.5em;
+  padding: 1em;
+}
+
+/* Styles for Desktop (Tablet and up) */
+@media (min-width: 768px) {
+  .TacticalRow {
+    grid-template-columns: 1fr 60px 60px;
+    margin-left: 2em;
+    margin-right: 2em;
+    column-gap: 20px;
+    padding: 1em;
+  }
+}
+
+.TacticalGrid {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2em;
+  margin-top: 0.75em;
+}
+
+
+
+.TacticalRow.highlight {
+  font-weight: bold;
+  background-color: var(--slightly-darker-than-background);
+  color: var(--primary-color);
+  /* Make text pop */
+  font-size: 1em;
+  padding: 1em;
+  border: var(--primary-color) solid 1px;
+  border-radius: 1em;
+}
+
+/* Header styling */
+.TacticalRow.header {
+  border-bottom: 1px solid #444;
+  margin-bottom: 5px;
+  align-items: center;
+  font-size: 0.9em;
+}
+
+.StyleLabel {
+  text-align: left;
+  font-size: 0.9em;
+}
+
+.StyleGames {
+  text-align: center;
+  font-size: 0.9em;
+}
+
+.StyleValue {
+  text-align: right;
+  font-size: 0.9em;
+  font-weight: 800;
+}
+
+
+
+.GridItem span {
+  font-weight: bold;
+  color: var(--text-color);
+}
+
+.TacticalList li {
+  align-items: left;
+}
+
+.TacticalList span {
+  align-items: right;
+}
+
+.TeamName {
+  font-weight: 800;
+  font-size: 1.12em;
+  margin-bottom: 1em;
+}
+
+.ExpectedStyleLabel {
+  font-size: 1em;
+  color: var(--text-color);
+  margin-bottom: 1em;
+}
+
+.ExpectedStyleLabel span {
+  font-weight: bold;
+  color: var(--text-color);
+}
+
+.StatDivider {
+  font-size: 1em;
+  font-weight: bold;
+  color: var(--text-color);
+  padding: 1em;
+}
+
+.TacticalList li b {
+  float: right;
+}
+
+.VersusDivider {
+  display: flex;
+  align-items: center;
+  font-weight: 900;
+  color: var(--text-color);
+  font-size: 0.8rem;
+}
+
 .MissingPlayer {
   flex-direction: row;
   line-height: 2em;
@@ -6464,6 +6607,16 @@ button.AIInsights button:active {
 }
 
 .PlayerStatsButton {
+  font-size: 1.1em;
+  background-color: var(--accent-color);
+  width: 100%;
+  margin-left: auto;
+  margin-right: auto;
+  color: var(--button-text-color);
+  box-shadow: none;
+}
+
+.TeamStylesButton {
   font-size: 1.1em;
   background-color: var(--accent-color);
   width: 100%;

@@ -53,6 +53,7 @@ import { AuthProvider, useAuth } from "../logic/authProvider";
 import BetSlipFooter from "../components/Betslip";
 import { TeamImpactSummary } from "./MissingPlayersList";
 import { predictedScoresData } from "../logic/getScorePredictions";
+import { MatchTacticalComparison } from "../components/TacticalApproach";
 // import FutureFixturesSideBySide from "./FutureFixturesSideBySide";
 // export let userTips;
 
@@ -1734,8 +1735,8 @@ function GameStats({ game, displayBool, stats, handleToggleTip, userTips }) {
                 if (stats.position === "F") defensivePositionMultiplier = 0.35;
                 if (stats.position === "M") defensivePositionMultiplier = 0.75;
                 if (stats.position === "D") defensivePositionMultiplier = 1.2;
-                if( stats.position === "G") defensivePositionMultiplier = 1.5;
-              
+                if (stats.position === "G") defensivePositionMultiplier = 1.5;
+
 
 
                 const defensiveImpactScore = Math.min(
@@ -1844,6 +1845,7 @@ function GameStats({ game, displayBool, stats, handleToggleTip, userTips }) {
             setHomeMissingPlayersImpact(homeMissingPlayersImpactAssessment);
             setAwayMissingPlayersImpact(awayMissingPlayersImpactAssessment);
           }
+
 
           // const matchPreviewResponse = await fetch(
           //   `${process.env.REACT_APP_EXPRESS_SERVER}gemini/match-preview/${matchingGameInfo.homeId}${matchingGameInfo.awayId}/${matchingGameInfo.time}`,
@@ -2002,6 +2004,8 @@ function GameStats({ game, displayBool, stats, handleToggleTip, userTips }) {
       setAwayGoals("-");
     }
   }, [matchingGame]); //This useEffect hook runs whenever matchingGame changes.
+
+
 
   function singleResult(game) {
     return (
@@ -3783,6 +3787,19 @@ function GameStats({ game, displayBool, stats, handleToggleTip, userTips }) {
     return "value-neutral";
   };
 
+  console.log(homeForm)
+  const teamAData = {
+    name: game.homeTeam,
+    preferredStyle: homeForm.tacticalIdentity,
+    recordsAgainst: homeForm.tacticalRecords, // This should be an object like { LOW_BLOCK: "W3 D1 L2", HIGH_PRESSURE: "W1 D2 L3", ... }
+  };
+
+  const teamBData = {
+    name: game.awayTeam,
+    preferredStyle: awayForm.tacticalIdentity,
+    recordsAgainst: awayForm.tacticalRecords, // This should be an object like { LOW_BLOCK: "W3 D1 L2", HIGH_PRESSURE: "W1 D2 L3", ... }
+  };
+
 
   return (
     <>
@@ -4110,24 +4127,24 @@ function GameStats({ game, displayBool, stats, handleToggleTip, userTips }) {
               ) : (
                 <div></div>
               )} */}
-              {loadingVoteData || voteData.length === 0 ? (
-                <div></div>
-              ) : (
-                <Collapsable
-                  buttonText={`Public Votes \u{2630}`}
-                  classNameButton="PublicVoteButton"
-                  element={
-                    <Suspense fallback={<div>Loading votes...</div>}>
-                      <h6>Votes cast on SofaScore</h6>
-                      <VotePieChart pollData={voteData.vote} theme={localStorage.getItem('theme')} />
-                      <BTTSPieChart pollData={voteData.bothTeamsToScoreVote} theme={localStorage.getItem('theme')} />
-                    </Suspense>
-                  }
-                />
-              )}
             </>
           )}
-
+          <>
+            <Collapsable
+              buttonText={`Team styles) \u{2630}`}
+              classNameButton="TeamStylesButton"
+              element={
+                <><h4>Likely styles and respective records</h4><MatchTacticalComparison
+                  homeTeam={game.homeTeam}
+                  awayTeam={game.awayTeam}
+                  homeTactics={teamAData} // The object with preferredStyle and recordsAgainst
+                  awayTactics={teamBData}
+                  homeOdds={game.homeOdds} // Pass current match odds
+                  awayOdds={game.awayOdds} /></>
+              }
+            />
+          </>
+          {/* <MatchTacticalComparison teamAData={teamAData} teamBData={teamBData} /> */}
           <div id="AIInsightsContainer" className="AIInsightsContainer">
             {loadingKeyPlayers ? (
               <p>Loading data for Match Preview...</p>

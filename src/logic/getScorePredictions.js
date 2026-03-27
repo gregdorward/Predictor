@@ -713,7 +713,7 @@ async function getPastLeagueResults(team, game, hOrA, form) {
     for (let index = 0; index < teamsHomeResults.length; index++) {
       const resultedGame = teamsHomeResults[index];
       homeResults.push({
-        homeTeam: resultedGame.home_name,
+        team: resultedGame.home_name,
         gameweek: resultedGame.game_week,
         venue: "Home",
         homeGoals: resultedGame.homeGoalCount,
@@ -724,7 +724,7 @@ async function getPastLeagueResults(team, game, hOrA, form) {
           resultedGame.team_a_xg <= 0 || resultedGame.team_a_xg > 7
             ? resultedGame.homeGoalCount
             : resultedGame.team_a_xg,
-        awayTeam: resultedGame.away_name,
+        oppTeam: resultedGame.away_name,
         awayGoals: resultedGame.awayGoalCount,
         XGAgainst:
           resultedGame.team_b_xg <= 0 || resultedGame.team_b_xg > 7
@@ -753,6 +753,8 @@ async function getPastLeagueResults(team, game, hOrA, form) {
           resultedGame.team_b_dangerous_attacks <= 0
             ? 50
             : resultedGame.team_b_dangerous_attacks,
+        fouls: resultedGame.team_a_fouls === -1 ? 10 : resultedGame.team_a_fouls,
+        foulsAgainst: resultedGame.team_b_fouls === -1 ? 10 : resultedGame.team_b_fouls,
         corners:
           resultedGame.team_a_corners === -1 ? 6 : resultedGame.team_a_corners,
         date: await convertTimestamp(resultedGame.date_unix),
@@ -851,7 +853,7 @@ async function getPastLeagueResults(team, game, hOrA, form) {
     for (let index = 0; index < teamsAwayResults.length; index++) {
       const resultedGame = teamsAwayResults[index];
       awayResults.push({
-        homeTeam: resultedGame.home_name,
+        oppTeam: resultedGame.home_name,
         gameweek: resultedGame.game_week,
         venue: "Away",
         homeGoals: resultedGame.homeGoalCount,
@@ -862,7 +864,7 @@ async function getPastLeagueResults(team, game, hOrA, form) {
           resultedGame.team_b_xg <= 0 || resultedGame.team_b_xg > 7
             ? resultedGame.awayGoalCount
             : resultedGame.team_b_xg,
-        awayTeam: resultedGame.away_name,
+        team: resultedGame.away_name,
         awayGoals: resultedGame.awayGoalCount,
         XGAgainst:
           resultedGame.team_a_xg <= 0 || resultedGame.team_a_xg > 7
@@ -891,6 +893,8 @@ async function getPastLeagueResults(team, game, hOrA, form) {
           resultedGame.team_a_dangerous_attacks <= 0
             ? 50
             : resultedGame.team_a_dangerous_attacks,
+        fouls: resultedGame.team_b_fouls === -1 ? 10 : resultedGame.team_b_fouls,
+        foulsAgainst: resultedGame.team_a_fouls === -1 ? 10 : resultedGame.team_a_fouls,
         corners:
           resultedGame.team_b_corners === -1 ? 6 : resultedGame.team_b_corners,
         date: await convertTimestamp(resultedGame.date_unix),
@@ -988,6 +992,84 @@ async function getPastLeagueResults(team, game, hOrA, form) {
 
     await addTotalsToRecord(form.recordAgainstIndividualStyles);
 
+
+    const getOpponentStyle = (game) => {
+      const oppPossession = 100 - game.possession;
+      const oppFouls = game.foulsAgainst;
+      const oppDA = game.dangerousAttacksAgainst;
+      const oppSOT = game.sotAgainst;
+      // oppOdds is available here if you want to add "UNDERDOG_SHOCK" logic later
+
+      switch (true) {
+        // 1. DOMINANT (High control + High pressure/threat)
+        case (oppPossession > 55 && oppDA > 55):
+          return "Dominant";
+
+        // 2. LOW BLOCK (Defensive shell, minimal attacking intent)
+        case (oppPossession < 40 && oppDA < 45):
+          return "Low block";
+        // 3. PRESSING (High disruption and aggressive hunting)
+        case (oppFouls > 14 && oppDA > 50):
+          return "Pressing";
+
+        // 4. PATIENT ATTACKING (High possession, but struggling to find an opening)
+        case (oppPossession > 60 && oppSOT < 6):
+          return "Patient attacking";
+        // 5. ATTACKING (High volume of threats regardless of possession)
+        case (oppPossession > 50 && oppSOT >= 6):
+          return "Attacking";
+
+        // 6. COUNTER-ATTACK (Low ball time, but highly efficient when they have it)
+        case (oppPossession < 48 && oppSOT > 4):
+          return "Counter attack";
+
+        // 7. EXPLICIT BALANCED (The genuine 50/50 midfield battle)
+        case (oppPossession >= 45 && oppPossession <= 55 && oppSOT >= 3):
+          return "Balanced";
+
+        // 8. FALLBACK (Default for low-event or "messy" games)
+        default:
+          return "Balanced";
+      }
+    };
+
+    const getTeamStyle = (game) => {
+      const { possession, dangerousAttacks, shots, fouls, sot } = game;
+
+      switch (true) {
+        // 1. HIGH INTENSITY / EXTREMES
+        case (possession > 55 && dangerousAttacks > 55):
+          return "Dominant";
+
+        case (possession < 40 && dangerousAttacks < 45):
+          return "Low block";
+
+        case (fouls > 14 && dangerousAttacks > 50):
+          return "Pressing";
+
+        // 2. SPECIFIC ATTACKING VARIATIONS
+        case (possession > 60 && sot < 6):
+          return "Patient attacking";
+        case (sot >= 6): // High output regardless of possession
+          return "Attacking";
+
+        case (possession < 48 && sot > 4):
+          return "Counter attack";
+
+        // 3. EXPLICIT BALANCED (The "Middle Ground")
+        // Defined as mid-range possession and moderate output
+        case (possession >= 45 && possession <= 55 && sot >= 3):
+          return "Balanced";
+
+        // 4. FALLBACK
+        default:
+          // If a game is so low-event it doesn't meet the Balanced criteria, 
+          // you could label it "INACTIVE" or keep it as BALANCED.
+          return "Balanced";
+      }
+    };
+
+
     let reversedResultsHome = homeResults;
     let reversedResultsAway = awayResults;
 
@@ -1019,6 +1101,139 @@ async function getPastLeagueResults(team, game, hOrA, form) {
     const allTeamResultsAway = reversedResultsAway.sort(
       (b, a) => a.dateRaw - b.dateRaw
     );
+
+    const tacticalRecords = {
+      Pressing: { W: 0, D: 0, L: 0, goalsFor: 0, goalsAgainst: 0, xGFor: 0, xGAgainst: 0, games: 0, points: 0, possessionTotal: 0, opponents: [] },
+      "Low block": { W: 0, D: 0, L: 0, goalsFor: 0, goalsAgainst: 0, xGFor: 0, xGAgainst: 0, games: 0, points: 0, possessionTotal: 0, opponents: [] },
+      Dominant: { W: 0, D: 0, L: 0, goalsFor: 0, goalsAgainst: 0, xGFor: 0, xGAgainst: 0, games: 0, points: 0, possessionTotal: 0, opponents: [] },
+      "Counter attack": { W: 0, D: 0, L: 0, goalsFor: 0, goalsAgainst: 0, xGFor: 0, xGAgainst: 0, games: 0, points: 0, possessionTotal: 0, opponents: [] },
+      Balanced: { W: 0, D: 0, L: 0, goalsFor: 0, goalsAgainst: 0, xGFor: 0, xGAgainst: 0, games: 0, points: 0, possessionTotal: 0, opponents: [] },
+      "Patient attacking": { W: 0, D: 0, L: 0, goalsFor: 0, goalsAgainst: 0, xGFor: 0, xGAgainst: 0, games: 0, points: 0, possessionTotal: 0, opponents: [] },
+      Attacking: { W: 0, D: 0, L: 0, goalsFor: 0, goalsAgainst: 0, xGFor: 0, xGAgainst: 0, games: 0, points: 0, possessionTotal: 0, opponents: [] },
+    };
+
+    // ... your loop stays exactly as it is ...
+
+    allTeamResults.forEach(game => {
+      const style = getOpponentStyle(game);
+      const record = tacticalRecords[style];
+
+      const safePoints = Number(game.points) || 0;
+      const safeXG = Number(game.XG) || 0;
+      const safeXGA = Number(game.XGAgainst) || 0;
+
+      record.games += 1;
+      record[game.result] += 1;
+      record.goalsFor += (Number(game.scored) || 0);
+      record.goalsAgainst += (Number(game.conceeded) || 0);
+      record.points += safePoints;
+      record.xGFor += safeXG;
+      record.xGAgainst += safeXGA;
+      record.possessionTotal += (Number(game.possession) || 50);
+
+      if (game.oppTeam) {
+        record.opponents.push(game.oppTeam);
+      }
+    });
+
+    const tacticalIdentity = {
+      "clear favourite": { Pressing: 0, "Low block": 0, Dominant: 0, "Counter attack": 0, Balanced: 0, "Patient attacking": 0, Attacking: 0 },
+      "clear underdog": { Pressing: 0, "Low block": 0, Dominant: 0, "Counter attack": 0, Balanced: 0, "Patient attacking": 0, Attacking: 0 },
+      "favourite": { Pressing: 0, "Low block": 0, Dominant: 0, "Counter attack": 0, Balanced: 0, "Patient attacking": 0, Attacking: 0 },
+      "underdog": { Pressing: 0, "Low block": 0, Dominant: 0, "Counter attack": 0, Balanced: 0, "Patient attacking": 0, Attacking: 0 }
+    };
+
+
+    allTeamResults.forEach(game => {
+      // 1. Determine if they were the Favorite or Underdog (Threshold of 2.0 or 2.1 is standard)
+      let context
+      if (game.odds < 1.4) {
+        context = "clear favourite";
+      } else if (game.odds > 4) {
+        context = "clear underdog";
+      } else {
+        context = game.odds <= game.oppositionOdds ? "favourite" : "underdog";
+      }
+
+      // 2. Determine how they actually played
+      const style = getTeamStyle(game);
+
+      // 3. Increment the count
+      if (tacticalIdentity[context] && tacticalIdentity[context][style] !== undefined) {
+        tacticalIdentity[context][style]++;
+      }
+    });
+
+    console.log("Tactical identity for team:", team);
+    console.log(tacticalIdentity);
+
+    // Finalize the object by adding averages and PPG
+    Object.keys(tacticalRecords).forEach(style => {
+      const record = tacticalRecords[style];
+      if (record.games > 0) {
+        record.PPG = Number((record.points / record.games).toFixed(2));
+        record.avgXGFor = Number((record.xGFor / record.games).toFixed(2));
+        record.avgXGAgainst = Number((record.xGAgainst / record.games).toFixed(2));
+        record.avgPossession = Number((record.possessionTotal / record.games).toFixed(1));
+      } else {
+        // Set defaults for styles not yet played to avoid 'undefined'
+        record.PPG = 0;
+        record.avgXGFor = 0;
+        record.avgXGAgainst = 0;
+        record.avgPossession = 0;
+      }
+    });
+
+    console.log("Tactical Records for team:", team);
+    console.log(tacticalRecords);
+
+    // --- INSIGHT CALCULATION ---
+    const totalGames = allTeamResults.length;
+    const seasonAvgXG = allTeamResults.reduce((acc, g) => acc + (Number(g.XG) || 0), 0) / totalGames;
+    const seasonAvgPossession = allTeamResults.reduce((acc, g) => acc + (Number(g.possession) || 50), 0) / totalGames;
+
+    const hp = tacticalRecords.PRESSING;
+
+    // 1. Calculate PPG for each style that has actually been played
+    const stylePerformance = Object.entries(tacticalRecords)
+      .map(([style, data]) => ({
+        style,
+        ppg: data.games > 0 ? data.points / data.games : null,
+        games: data.games,
+        opponents: data.opponents
+      }))
+      .filter(item => item.games > 0); // Ignore styles with 0 games
+
+    // 2. Find Strongest and Weakest (if any games have been played at all)
+    let strongest = null;
+    let weakest = null;
+
+    if (stylePerformance.length > 0) {
+      strongest = stylePerformance.reduce((prev, curr) => (curr.ppg > prev.ppg ? curr : prev));
+      weakest = stylePerformance.reduce((prev, curr) => (curr.ppg < prev.ppg ? curr : prev));
+    }
+
+    // // 3. Update tacticalInsights
+    // form.tacticalInsights = {
+    //   // Strongest Style flagging
+    //   strongestStyle: strongest ? strongest.style.replace('_', ' ') : "N/A",
+    //   strongestPPG: strongest ? strongest.ppg.toFixed(2) : "0",
+
+    //   // Weakest Style flagging
+    //   weakestStyle: weakest ? weakest.style.replace('_', ' ') : "N/A",
+    //   weakestPPG: weakest ? weakest.ppg.toFixed(2) : "0",
+
+    //   description: weakest && weakest.ppg < 1.0
+    //     ? `Tactically vulnerable against ${weakest.style.replace('_', ' ')} systems (${weakest.ppg.toFixed(2)} PPG).`
+    //     : "Showing consistent tactical adaptability across different opponent styles."
+    // };
+
+    // console.log("Team:", team);
+    // console.log("Tactical Records:", tacticalRecords);
+    // console.log("Tactical Insights:", form.tacticalInsights);
+
+    form.tacticalIdentity = tacticalIdentity;
+    form.tacticalRecords = tacticalRecords;
 
 
     form.allTeamResults = allTeamResults.sort((b, a) => a.dateRaw - b.dateRaw);
@@ -2228,7 +2443,7 @@ export async function generateGoals(homeForm, awayForm, match) {
 
   if (majorContinentalLeagues.includes(match.leagueDesc)) {
     homeGoals = (homeLambda_final_v2 * 0.85)
-      * (1+ oddsComparisonHome * 0.15) +
+      * (1 + oddsComparisonHome * 0.15) +
       (homeForm.actualToXGDifference / 20) * homeXGMult;
     awayGoals = (awayLambda_final_v2 * 0.75)
       * (1 + oddsComparisonAway * 0.15) +
