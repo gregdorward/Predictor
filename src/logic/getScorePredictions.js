@@ -1164,9 +1164,6 @@ async function getPastLeagueResults(team, game, hOrA, form) {
       }
     });
 
-    console.log("Tactical identity for team:", team);
-    console.log(tacticalIdentity);
-
     // Finalize the object by adding averages and PPG
     Object.keys(tacticalRecords).forEach(style => {
       const record = tacticalRecords[style];
@@ -1183,16 +1180,6 @@ async function getPastLeagueResults(team, game, hOrA, form) {
         record.avgPossession = 0;
       }
     });
-
-    console.log("Tactical Records for team:", team);
-    console.log(tacticalRecords);
-
-    // --- INSIGHT CALCULATION ---
-    const totalGames = allTeamResults.length;
-    const seasonAvgXG = allTeamResults.reduce((acc, g) => acc + (Number(g.XG) || 0), 0) / totalGames;
-    const seasonAvgPossession = allTeamResults.reduce((acc, g) => acc + (Number(g.possession) || 50), 0) / totalGames;
-
-    const hp = tacticalRecords.PRESSING;
 
     // 1. Calculate PPG for each style that has actually been played
     const stylePerformance = Object.entries(tacticalRecords)
