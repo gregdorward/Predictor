@@ -1132,9 +1132,11 @@ async function getPastLeagueResults(team, game, hOrA, form) {
       record.possessionTotal += (Number(game.possession) || 50);
 
       if (game.oppTeam) {
-        record.opponents.push(game.oppTeam);
+        record.opponents.push({ team: game.oppTeam, date: game.date, goalsFor: game.scored, goalsAgainst: game.conceeded, result: game.result });
       }
     });
+
+    console.log("Tactical Records before Identity:", tacticalRecords);
 
     const tacticalIdentity = {
       "clear favourite": { Pressing: 0, "Low block": 0, Dominant: 0, "Counter attack": 0, Balanced: 0, "Patient attacking": 0, Attacking: 0 },

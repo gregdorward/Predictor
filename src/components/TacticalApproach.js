@@ -1,4 +1,6 @@
 import React from 'react';
+import Collapsable from "./CollapsableElement";
+
 
 export function MatchTacticalComparison({
     homeTeam,
@@ -9,7 +11,7 @@ export function MatchTacticalComparison({
     awayOdds,
 }) {
     // 1. Logic to determine the Expected Style based on current match odds
-    
+
     const getExpectedStyle = (tacticalIdentity, odds, opponentOdds) => {
         let bracket = "BALANCED";
 
@@ -38,7 +40,7 @@ export function MatchTacticalComparison({
         { label: "High Press", key: "Pressing" },
         { label: "Dominant", key: "Dominant" },
         { label: "Balanced", key: "Balanced" },
-        { label: "Patient Attack", key: "Patient attacking" },
+        { label: "Patient Attacking", key: "Patient attacking" },
         { label: "Attacking", key: "Attacking" },
         { label: "Counter Attack", key: "Counter attack" },
     ];
@@ -65,21 +67,41 @@ export function MatchTacticalComparison({
 
                         {/* Data Rows */}
                         {tacticalRows.map((row) => {
-                            // Check if this row matches the style the opponent is expected to use
                             const isHighlighted = row.label.toLowerCase() === opponentExpectedStyle.toLowerCase();
+                            const styleData = teamData.recordsAgainst[row.key];
+                            const sortedOpponents = styleData?.opponents
+                                ? [...styleData.opponents].sort((a, b) => new Date(b.date) - new Date(a.date))
+                                : [];
 
                             return (
-                                <div
-                                    key={row.key}
-                                    className={`TacticalRow ${isHighlighted ? 'highlight' : ''}`}
-                                >
-                                    <div className="StyleLabel">{row.label}</div>
-                                    <div className="StyleGames">
-                                        {teamData.recordsAgainst[row.key]?.games || 0}
-                                    </div>
-                                    <div className="StyleValue">
-                                        {teamData.recordsAgainst[row.key]?.PPG || 0}
-                                    </div>
+                                <div key={row.key} className="StyleGroupContainer">
+                                    <Collapsable
+                                        classNameButton={`StyleExpand ${isHighlighted ? 'highlight' : ''}`}
+                                        buttonText={
+                                            <div className="TacticalRow">
+                                                <div className="StyleLabel">{row.label} ☰</div>
+                                                <div className="StyleGames">{styleData?.games || 0}</div>
+                                                <div className="StyleValue">{styleData?.PPG || 0}</div>
+                                            </div>
+                                        }
+                                        element={
+                                            <div className="OpponentList">
+                                                {sortedOpponents.length > 0 ? (
+                                                    sortedOpponents.map((opp, idx) => (
+                                                        <div key={idx} className="OpponentRow">
+                                                            <span className="OppDate">{opp.date}</span>
+                                                            <span className="OppName">{opp.team}</span>
+                                                            <span className={`OppResult ${opp.result}`}>
+                                                                {opp.goalsFor} - {opp.goalsAgainst}
+                                                            </span>
+                                                        </div>
+                                                    ))
+                                                ) : (
+                                                    <div className="NoData">No games recorded</div>
+                                                )}
+                                            </div>
+                                        }
+                                    />
                                 </div>
                             );
                         })}

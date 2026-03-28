@@ -6090,21 +6090,14 @@ button.AIInsights button:active {
   grid-template-columns: 1fr 3em 3em;
   column-gap: 8px;
   /* Remove those heavy 5em margins for mobile */
-  margin-left: 0.5em;
-  margin-right: 0.5em;
-  padding: 1em;
+  /* margin-left: 0.5em;
+  margin-right: 0.5em; */
+  padding-top: 1em;
+  padding-bottom: 1em;
 }
 
 /* Styles for Desktop (Tablet and up) */
-@media (min-width: 768px) {
-  .TacticalRow {
-    grid-template-columns: 1fr 60px 60px;
-    margin-left: 2em;
-    margin-right: 2em;
-    column-gap: 20px;
-    padding: 1em;
-  }
-}
+
 
 .TacticalGrid {
   display: flex;
@@ -6128,10 +6121,30 @@ button.AIInsights button:active {
 
 /* Header styling */
 .TacticalRow.header {
+  grid-template-columns: 1fr 3em 3em;
   border-bottom: 1px solid #444;
   margin-bottom: 5px;
   align-items: center;
-  font-size: 0.9em;
+  font-size: 1em;
+}
+
+@media (min-width: 768px) {
+  .TacticalRow {
+    grid-template-columns: 1fr 60px 60px;
+    /* margin-left: 2em;
+    margin-right: 2em; */
+    column-gap: 20px;
+    padding-top: 1em;
+    padding-bottom: 1em;
+  }
+
+  .TacticalRow.header {
+    grid-template-columns: 1fr 60px 60px;
+    border-bottom: 1px solid #444;
+    margin-bottom: 5px;
+    align-items: center;
+    font-size: 1em;
+  }
 }
 
 .StyleLabel {
@@ -6150,7 +6163,93 @@ button.AIInsights button:active {
   font-weight: 800;
 }
 
+/* Ensure the button doesn't look like a standard button */
+.StyleExpand {
+  width: 100%;
+  background: none;
+  border: none;
+  padding: 0;
+  margin: 0;
+  cursor: pointer;
+  text-align: left;
+  color: inherit;
+  font-family: inherit;
+}
 
+.StyleExpand.highlight {
+  display: grid;
+  align-content: center;
+  width: 100%;
+  background: none;
+  border: none;
+  padding: 0;
+  margin: 0;
+  cursor: pointer;
+  text-align: left;
+  color: inherit;
+  font-family: inherit;
+  color: var(--primary-color);
+}
+
+/* Container for the opponent list inside the collapse */
+.OpponentList {
+  background: var(--secondary-background-color);
+  margin-top: 1em;
+  margin-bottom: 1em;
+  padding: 0em;
+  border-radius: 0 0 8px 8px;
+  font-size: 0.85em;
+}
+
+.OpponentRow {
+  display: flex;
+  justify-content: space-between;
+  padding: 0em;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  align-items: center;
+  margin-left: 0.5em;
+  margin-right: 0.5em;
+}
+
+.OppDate {
+  color: var(--text-color);
+  flex: 2;
+  text-align: left;
+}
+
+.OppName {
+  font-weight: bold;
+  flex: 4;
+  text-align: left;
+}
+
+.OppResult {
+  flex: 1;
+  text-align: center;
+}
+
+/* Result Colors */
+.OppResult.W {
+  color: var(--text-color);
+  background-color: #009c0068;
+}
+
+.OppResult.D {
+  color: var(--text-color);
+  background-color: #ff980068;
+}
+
+.OppResult.L {
+  color: var(--text-color);
+  background-color: #f4433668;
+}
+
+.NoData {
+  padding: 10px;
+  color: #666;
+  font-style: italic;
+  text-align: center;
+}
 
 .GridItem span {
   font-weight: bold;
