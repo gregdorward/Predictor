@@ -79,7 +79,7 @@ export function MatchTacticalComparison({
                                         classNameButton={`StyleExpand ${isHighlighted ? 'highlight' : ''}`}
                                         buttonText={
                                             <div className="TacticalRow">
-                                                <div className="StyleLabel">{row.label} ☰</div>
+                                                <div className="StyleLabel">{row.label}  ☰</div>
                                                 <div className="StyleGames">{styleData?.games || 0}</div>
                                                 <div className="StyleValue">{styleData?.PPG || 0}</div>
                                             </div>
