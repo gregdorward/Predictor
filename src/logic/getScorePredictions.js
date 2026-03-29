@@ -1132,7 +1132,7 @@ async function getPastLeagueResults(team, game, hOrA, form) {
       record.possessionTotal += (Number(game.possession) || 50);
 
       if (game.oppTeam) {
-        record.opponents.push({ team: game.oppTeam, date: game.date, goalsFor: game.scored, goalsAgainst: game.conceeded, result: game.result });
+        record.opponents.push({ team: game.oppTeam, date: game.date, goalsFor: game.scored, goalsAgainst: game.conceeded, result: game.result, venue: game.venue});
       }
     });
 

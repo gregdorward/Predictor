@@ -90,6 +90,7 @@ export function MatchTacticalComparison({
                                                     sortedOpponents.map((opp, idx) => (
                                                         <div key={idx} className="OpponentRow">
                                                             <span className="OppDate">{opp.date}</span>
+                                                            <span className="OppVenue">{opp.venue === "Home" ? "H" : "A"}</span>
                                                             <span className="OppName">{opp.team}</span>
                                                             <span className={`OppResult ${opp.result}`}>
                                                                 {opp.goalsFor} - {opp.goalsAgainst}
