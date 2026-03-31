@@ -267,7 +267,7 @@ function buildScoreMatrix(
   lambdaHome,
   lambdaAway,
   maxGoals = 5,
-  rho = 0.015
+  rho = 0.0125
 ) {
   const scores = [];
 
@@ -1132,7 +1132,7 @@ async function getPastLeagueResults(team, game, hOrA, form) {
       record.possessionTotal += (Number(game.possession) || 50);
 
       if (game.oppTeam) {
-        record.opponents.push({ team: game.oppTeam, date: game.date, goalsFor: game.scored, goalsAgainst: game.conceeded, result: game.result, venue: game.venue});
+        record.opponents.push({ team: game.oppTeam, date: game.date, goalsFor: game.scored, goalsAgainst: game.conceeded, result: game.result, venue: game.venue });
       }
     });
 
@@ -2141,7 +2141,7 @@ function calculateXGMultiplier(rawComparison, dampening = 0.04) {
   const multiplier = 1 + (rawComparison * dampening);
 
   // Safety Clamp: Don't let a massive stat outlier swing goals by more than 25%
-  return Math.max(0.75, Math.min(1.25, multiplier));
+  return Math.max(0.85, Math.min(1.15, multiplier));
 }
 
 export async function compareFormTrend(recentForm, distantForm) {
@@ -2217,15 +2217,15 @@ async function normalizeValues(value1, value2, minRange, maxRange) {
 function calculateGDMultiplier(gd) {
   // The 'sensitivity' controls how much each goal affects the multiplier.
   // A value of 0.03 means each +1 GD adds 3% to the team's strength.
-  const sensitivity = 0.0125;
+  const sensitivity = 0.01;
 
   // Calculate raw multiplier
   let multiplier = 1 + (gd * sensitivity);
 
   // Set 'Safety Rails' (Clamping)
   // We don't want GD to ever more than double a team's chances or nullify them.
-  const minMultiplier = 0.8; // Max 30% penalty
-  const maxMultiplier = 1.2; // Max 30% bonus
+  const minMultiplier = 0.95; // Max 30% penalty
+  const maxMultiplier = 1.05; // Max 30% bonus
 
   return Math.max(minMultiplier, Math.min(maxMultiplier, multiplier));
 }
@@ -2250,18 +2250,18 @@ export async function generateGoals(homeForm, awayForm, match) {
 
   const awayDefenseWeakness = Math.max(
     MIN_WEAKNESS,
-    1.10 - awayForm.defensiveStrengthScoreGenerationLast5
+    1.05 - awayForm.defensiveStrengthScoreGenerationLast5
   );
 
   const homeDefenseWeakness = Math.max(
     MIN_WEAKNESS,
-    1.10 - homeForm.defensiveStrengthScoreGenerationLast5
+    1.05 - homeForm.defensiveStrengthScoreGenerationLast5
   );
-  const awayDefenseWeaknessOverall = Math.max(MIN_WEAKNESS, 1.10 - awayForm.defensiveStrengthScoreGeneration);
-  const homeDefenseWeaknessOverall = Math.max(MIN_WEAKNESS, 1.10 - homeForm.defensiveStrengthScoreGeneration);
+  const awayDefenseWeaknessOverall = Math.max(MIN_WEAKNESS, 1.05 - awayForm.defensiveStrengthScoreGeneration);
+  const homeDefenseWeaknessOverall = Math.max(MIN_WEAKNESS, 1.05 - homeForm.defensiveStrengthScoreGeneration);
 
   // Helper to compute a dampened lambda component
-  function computeLambdaComponent(attackStrength, defenseWeakness) {
+  function computeLambdaComponent(attackStrength, defenseWeakness, last5 = false) {
     const attackFactor = attackStrength / BASELINE;
 
     // 1. Clamp the defenseFactor so it never drops below 0.2
@@ -2272,7 +2272,8 @@ export async function generateGoals(homeForm, awayForm, match) {
     // 2. The "Aggression" Tuning
     // If you want more blowouts (higher spreads), increase 1.2.
     // If you want more draws, decrease it toward 1.0.
-    const weightedMultiplier = Math.pow(attackFactor, 1.2) * Math.pow(defenseFactor, 0.8);
+    let multiplier = last5 ? 0.85 : 1.0;
+    const weightedMultiplier = Math.pow(attackFactor, multiplier) * Math.pow(defenseFactor, multiplier);
 
     return averageGoalsPerTeam * weightedMultiplier;
   }
@@ -2280,12 +2281,14 @@ export async function generateGoals(homeForm, awayForm, match) {
   // Last 5 form
   const homeLambda_raw = computeLambdaComponent(
     homeForm.attackingStrengthLast5,
-    awayDefenseWeakness
+    awayDefenseWeakness,
+    true
   );
 
   const awayLambda_raw = computeLambdaComponent(
     awayForm.attackingStrengthLast5,
-    homeDefenseWeakness
+    homeDefenseWeakness,
+    true
   );
 
   const oddsComparisonHome = await comparison(match.awayOdds, match.homeOdds);
@@ -2302,17 +2305,19 @@ export async function generateGoals(homeForm, awayForm, match) {
     awayForm.attackingStrength,
     homeDefenseWeaknessOverall
   )
+
+  console.log(`Raw Lambda (Overall) - Home: ${homeLambda_rawOverall.toFixed(3)}, Away: ${awayLambda_rawOverall.toFixed(3)}`);
   // * (awayForm.formTrendScore); // Incorporate form trend into overall lambda
 
   // Average last-5 and overall (unchanged logic)
   const homeLambdaAverage =
-    ((homeLambda_raw * 1.25) + (homeLambda_rawOverall * 0.75)) / 2;
+    (((homeLambda_raw * 1.1) + (homeLambda_rawOverall * 0.9)) / 2) * 1.1;
 
   const awayLambdaAverage =
-    ((awayLambda_raw * 1.25) + (awayLambda_rawOverall * 0.75)) / 2;
+   ( ((awayLambda_raw * 1.1) + (awayLambda_rawOverall * 0.9)) / 2) * 0.9;
 
   // Regression to league mean (unchanged)
-  const ALPHA = 0.8;
+  const ALPHA = 1;
   const LEAGUE_WEIGHT = 1.0 - ALPHA;
 
   const homeLambda_final =
@@ -2333,21 +2338,29 @@ export async function generateGoals(homeForm, awayForm, match) {
   const aAtk = existing?.impacts?.away?.atk || 0;
   const aDef = existing?.impacts?.away?.def || 0;
 
+  const homeAttackInjurryAdjustment = 1 - (hAtk * IMPACT_SENSITIVITY) + (aDef * IMPACT_SENSITIVITY);
+  const awayAttackInjurryAdjustment = 1 - (aAtk * IMPACT_SENSITIVITY) + (hDef * IMPACT_SENSITIVITY);
+
+  console.log(`Injury/Manager Impacts - Home ATK: ${hAtk}, Home DEF: ${hDef}, Away ATK: ${aAtk}, Away DEF: ${aDef}`);
+  console.log(`Injury/Manager Adjustments - Home: ${homeAttackInjurryAdjustment.toFixed(3)}, Away: ${awayAttackInjurryAdjustment.toFixed(3)}`);
+
   const newManagerHome = existing?.homeNewManager || false;
   const newManagerAway = existing?.awayNewManager || false;
 
   // 3. Apply the Injury Correction
   // If Home has 5.1 Atk Loss, they lose ~7.6% of their lambda
   // If Away has 0.5 Def Loss, Home gains ~0.75% of their lambda
-  const homeLambda_withInjuries = homeLambda_final * (1 - (hAtk * IMPACT_SENSITIVITY)) * (1 + (aDef * IMPACT_SENSITIVITY));
-  const awayLambda_withInjuries = awayLambda_final * (1 - (aAtk * IMPACT_SENSITIVITY)) * (1 + (hDef * IMPACT_SENSITIVITY));
+  const homeLambda_withInjuries = homeLambda_final * homeAttackInjurryAdjustment;
+  const awayLambda_withInjuries = awayLambda_final * awayAttackInjurryAdjustment;
 
+  console.log(`homeLambda before injuries: ${homeLambda_final.toFixed(3)}, after injuries: ${homeLambda_withInjuries.toFixed(3)}`);
+  console.log(`awayLambda before injuries: ${awayLambda_final.toFixed(3)}, after injuries: ${awayLambda_withInjuries.toFixed(3)}`);
   // Define how sensitive you want the adjustment to be
   // A lower value (0.02) means a more conservative adjustment
   const regressionMultiplierHome = 1 / homeForm.GoalEfficiency;
   const regressionMultiplierAway = 1 / awayForm.GoalEfficiency;
-  const finalHomeMultiplier = Math.min(Math.max(regressionMultiplierHome, 0.5), 1.5);
-  const finalAwayMultiplier = Math.min(Math.max(regressionMultiplierAway, 0.5), 1.5);
+  const finalHomeMultiplier = Math.min(Math.max(regressionMultiplierHome, 0.95), 1.05);
+  const finalAwayMultiplier = Math.min(Math.max(regressionMultiplierAway, 0.95), 1.05);
 
   // Calculate the multiplier
   // If actualToXGDifference is negative (underperforming), 
@@ -2358,9 +2371,9 @@ export async function generateGoals(homeForm, awayForm, match) {
 
   // Apply to your existing lambda
   const adjustedLambdaHome = homeLambda_withInjuries
-    * clampedXGMultiplierHome;
+    // * clampedXGMultiplierHome;
   const adjustedLambdaAway = awayLambda_withInjuries
-    * clampedXGMultiplierAway;
+    // * clampedXGMultiplierAway;
   // 4. Ensure Lambda never drops below a realistic floor (e.g., 0.05)
   const homeLambda_final_v2 = Math.max(0.05, adjustedLambdaHome);
   const awayLambda_final_v2 = Math.max(0.05, adjustedLambdaAway);
@@ -2380,8 +2393,11 @@ export async function generateGoals(homeForm, awayForm, match) {
     additionAway += 0.3;
   }
 
-  const homeLambda_final_v3 = (homeLambda_final_v2 * homeGDMult) * additionHome;
-  const awayLambda_final_v3 = (awayLambda_final_v2 * awayGDMult) * additionAway;
+  const homeLambda_final_v3 = (homeLambda_final_v2) * additionHome;
+  const awayLambda_final_v3 = (awayLambda_final_v2) * additionAway;
+
+  console.log(`home lambda before GD and Manager Adjustment: ${homeLambda_final_v2.toFixed(3)}, after adjustment: ${homeLambda_final_v3.toFixed(3)}`);
+  console.log(`away lambda before GD and Manager Adjustment: ${awayLambda_final_v2.toFixed(3)}, after adjustment: ${awayLambda_final_v3.toFixed(3)}`);
 
   const avgHomeXG = (homeForm.avXGLast5 + awayForm.avXGAgainstLast5) / 2;
   const avgHomeGoalsLast5 = (homeForm.avScoredLast5 + awayForm.avConceededLast5) / 2;
@@ -2401,21 +2417,28 @@ export async function generateGoals(homeForm, awayForm, match) {
 
   let awayGoals = (avgAwayGoals + avgAwayXG + avgAwayGoalsLast10 + avgAwayGoalsLast5) / 4;
 
+
   homeForm.XGRating =
-    (homeForm.avPoints2 * 0.2) + // Momentum
-    (homeForm.avPointsHome * 0.2)
+    (homeForm.avPoints10 * 0.1) + // Momentum
+    (homeForm.XGChangeRecently * 0.4) + // XG Momentum
+    // (homeForm.avPointsHome * 0.1) + // Home Strength
+    (match.scoutingReport.home.weightedPPG * 0.1)
 
   awayForm.XGRating =
-    (awayForm.avPoints2 * 0.2) + // Momentum
-    (awayForm.avPointsAway * 0.2)
-
+    (awayForm.avPoints10 * 0.1) + // Momentum
+    (awayForm.XGChangeRecently * 0.4) + // XG Momentum
+    // (awayForm.avPointsAway * 0.1) + // Away Strength
+    (match.scoutingReport.away.weightedPPG * 0.1)
 
   const rawHomeComparison = homeForm.XGRating - awayForm.XGRating;
   const rawAwayComparison = awayForm.XGRating - homeForm.XGRating;
 
   // 2. Convert to multipliers (centered at 1.0)
-  const homeXGMult = calculateXGMultiplier(rawHomeComparison, 0.25); // Adjust 0.05 to taste
-  const awayXGMult = calculateXGMultiplier(rawAwayComparison, 0.25);
+  const homeXGMult = calculateXGMultiplier(rawHomeComparison, 0.1); // Adjust 0.05 to taste
+  const awayXGMult = calculateXGMultiplier(rawAwayComparison, 0.1);
+
+  console.log(`Home XG Comparison: ${rawHomeComparison.toFixed(3)}, Multiplier: ${homeXGMult.toFixed(3)}`);
+  console.log(`Away XG Comparison: ${rawAwayComparison.toFixed(3)}, Multiplier: ${awayXGMult.toFixed(3)}`);
 
   const majorContinentalLeagues = [
     "Europe UEFA Champions League",
@@ -2430,6 +2453,9 @@ export async function generateGoals(homeForm, awayForm, match) {
   ]
 
 
+  console.log(match.game)
+  console.log("Home XG Mult: " + homeXGMult + " | Away XG Mult: " + awayXGMult);
+
   if (majorContinentalLeagues.includes(match.leagueDesc)) {
     homeGoals = (homeLambda_final_v2 * 0.85)
       * (1 + oddsComparisonHome * 0.15) +
@@ -2442,13 +2468,21 @@ export async function generateGoals(homeForm, awayForm, match) {
 
     awayGoals = ((awayLambda_final_v3 / 1.25) * (1 + (oddsComparisonAway * 0.05))) * (1 + awayForm.actualToXGDifference / 20)
   } else {
-    homeGoals = (homeLambda_final_v3 * 1)
-      * homeXGMult
+    homeGoals =
+      // (homeLambda_final_v3 * 2)
+      //   * homeXGMult
+      (homeLambda_final_v3 * homeXGMult)
 
-    awayGoals = (awayLambda_final_v3 * 1)
-      * awayXGMult
-  }
+    awayGoals =
+      // (awayLambda_final_v3 * 1)
+      //   * awayXGMult
+        (awayLambda_final_v3 * awayXGMult)
+    }
+    //ROI ~2.77%
 
+  console.log(match.homeTeam + " vs " + match.awayTeam);
+  console.log(match.scoutingReport.home)
+  console.log(match.scoutingReport.away);
 
 
   if (homeGoals > 5) {
@@ -2813,6 +2847,7 @@ export async function calculateScore(match, index, divider, calculate, AIPredict
 
     match.directnessRatingHome = formHome.directnessRatingHome;
     match.directnessRatingAway = formAway.directnessRatingAway;
+
 
     if (
       typeof formHome.homeTeamHomePositionRaw === "number" &&
@@ -3476,6 +3511,101 @@ export async function calculateScore(match, index, divider, calculate, AIPredict
       formAway.directnessRatingAway,
       formAway.avgPossessionAway
     );
+
+
+    const getMatchScouting = (homeData, awayData, homeOdds, awayOdds) => {
+
+      const getBracket = (odds, oppOdds) => {
+        if (odds < 1.3) return "clear favourite";
+        if (odds < oppOdds) return "favourite";
+        if (oppOdds < odds && odds < 4) return "underdog";
+        return "clear underdog";
+      };
+
+      const getExpectedStyle = (identity, bracket) => {
+        const styles = identity[bracket];
+        if (!styles) return "Balanced";
+
+        // Find style with highest count
+        const topStyle = Object.keys(styles).reduce((a, b) =>
+          styles[a] > styles[b] ? a : b
+        );
+
+        // If team has 0 games in this bracket, default to Balanced
+        return styles[topStyle] > 0 ? topStyle : "Balanced";
+      };
+
+      const homePPG = homeData.avPointsAll || 0;
+      const awayPPG = awayData.avPointsAll || 0;
+
+      // 1. Determine Brackets & Styles
+      const homeBracket = getBracket(match.homeOdds, match.awayOdds);
+      const awayBracket = getBracket(match.awayOdds, match.homeOdds);
+
+      console.log(match.homeTeam, "is the", homeBracket);
+      console.log(match.awayTeam, "is the", awayBracket);
+      console.log(homeData.tacticalIdentity, homeBracket);
+      console.log(awayData.tacticalIdentity, awayBracket);
+
+      const homeExpected = getExpectedStyle(homeData.tacticalIdentity, homeBracket);
+      const awayExpected = getExpectedStyle(awayData.tacticalIdentity, awayBracket);
+
+      // 2. THE FIX: Ensure we are pulling the CURRENT team's record against the OPPONENT'S style
+      // Home record vs the style Away is going to play
+      const homeRecordVsStyle = homeData.tacticalRecords[awayExpected] || { PPG: 0, games: 0 };
+
+      // Away record vs the style Home is going to play
+      const awayRecordVsStyle = awayData.tacticalRecords[homeExpected] || { PPG: 0, games: 0 };
+
+      /**
+       * Weighting Logic:
+       * C = The "Confidence Constant" (how many games to reach 50% weight)
+       */
+      const calculateWeightedDiff = (generalPPG, specificRecord, C = 5) => {
+        const n = specificRecord.games || 0;
+
+        // If no games, we have 0% confidence in a "specific" record.
+        // Therefore, the "Credibility PPG" is just the team's General PPG.
+        if (n === 0) return parseFloat(generalPPG.toFixed(2));
+
+        const weight = n / (n + C);
+
+        // Weighted Average: 
+        // High N = mostly specificRecord.PPG
+        // Low N = mostly generalPPG
+        const credibilityPPG = (weight * specificRecord.PPG) + ((1 - weight) * generalPPG);
+
+        return parseFloat(credibilityPPG.toFixed(2));
+      };
+
+      const weightedDiffHome = calculateWeightedDiff(homePPG, homeRecordVsStyle);
+      const weightedDiffAway = calculateWeightedDiff(awayPPG, awayRecordVsStyle);
+
+      return {
+        home: {
+          expectedStyle: homeExpected,
+          vsStyleName: awayExpected,
+          ppg: homeRecordVsStyle.PPG,
+          ppgAll: homePPG,
+          // If positive: they are WORSE against this style. If negative: they are BETTER.
+          weightedPPG: weightedDiffHome,
+          games: homeRecordVsStyle.games,
+          confidence: Math.round((homeRecordVsStyle.games / (homeRecordVsStyle.games + 5)) * 100)
+        },
+        away: {
+          expectedStyle: awayExpected,
+          vsStyleName: homeExpected,
+          ppg: awayRecordVsStyle.PPG,
+          ppgAll: awayPPG,
+          weightedPPG: weightedDiffAway,
+          games: awayRecordVsStyle.games,
+          confidence: Math.round((awayRecordVsStyle.games / (awayRecordVsStyle.games + 5)) * 100)
+        }
+      };
+    };
+
+    // EXECUTION
+    match.scoutingReport = getMatchScouting(formHome, formAway, formHome.odds, formAway.odds);
 
     formHome.actualToXGDifference = parseFloat(
       await diff(formHome.XGDiffNonAverage, formHome.goalDifference)

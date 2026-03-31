@@ -310,8 +310,6 @@ export async function generateTables(a, leagueIdArray, allResults) {
       }));
       basicTableArray.push({ id: currentLeagueId, table: basicElements });
     }
-    console.log("Full Table Array:", tableArray);
-    console.log("Bespoke Array:", bespokeLeagueArray);
   });
 }
 
