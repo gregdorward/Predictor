@@ -79,24 +79,34 @@ export function MatchTacticalComparison({
                                         classNameButton={`StyleExpand ${isHighlighted ? 'highlight' : ''}`}
                                         buttonText={
                                             <div className="TacticalRow">
-                                                <div className="StyleLabel">{row.label}  ☰</div>
+                                                <div className="StyleLabel">{row.label} ☰</div>
                                                 <div className="StyleGames">{styleData?.games || 0}</div>
                                                 <div className="StyleValue">{styleData?.PPG || 0}</div>
                                             </div>
                                         }
                                         element={
+                                            /* Start of the element prop */
                                             <div className="OpponentList">
                                                 {sortedOpponents.length > 0 ? (
-                                                    sortedOpponents.map((opp, idx) => (
-                                                        <div key={idx} className="OpponentRow">
-                                                            <span className="OppDate">{opp.date}</span>
-                                                            <span className="OppVenue">{opp.venue === "Home" ? "H" : "A"}</span>
-                                                            <span className="OppName">{opp.team}</span>
-                                                            <span className={`OppResult ${opp.result}`}>
-                                                                {opp.goalsFor} - {opp.goalsAgainst}
-                                                            </span>
-                                                        </div>
-                                                    ))
+                                                    sortedOpponents.map((opp, idx) => {
+                                                        // Determine display order based on venue
+                                                        const isHome = opp.venue === "Home";
+                                                        return (
+                                                            <>
+                                                                <div key={idx} className={'TacticDateRow'}>{opp.date}</div>
+                                                                <div key={idx} className={`ResultRowOverviewSmall${opp.result}`}>
+                                                                    <div className="columnOverviewHomeSmall">
+                                                                        {isHome ? teamName : opp.team}
+                                                                    </div>
+                                                                    <span className="columnOverviewScoreSmall">
+                                                                        {opp.goalsFor} : {opp.goalsAgainst}
+                                                                    </span>
+                                                                    <div className="columnOverviewAwaySmall">
+                                                                        {isHome ? opp.team : teamName}
+                                                                    </div>
+                                                                </div></>
+                                                        );
+                                                    })
                                                 ) : (
                                                     <div className="NoData">No games recorded</div>
                                                 )}
@@ -108,7 +118,7 @@ export function MatchTacticalComparison({
                         })}
                     </div>
                 </div>
-            </div>
+            </div >
         );
     };
 

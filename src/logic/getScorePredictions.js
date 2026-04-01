@@ -2341,9 +2341,6 @@ export async function generateGoals(homeForm, awayForm, match) {
   const homeAttackInjurryAdjustment = 1 - (hAtk * IMPACT_SENSITIVITY) + (aDef * IMPACT_SENSITIVITY);
   const awayAttackInjurryAdjustment = 1 - (aAtk * IMPACT_SENSITIVITY) + (hDef * IMPACT_SENSITIVITY);
 
-  console.log(`Injury/Manager Impacts - Home ATK: ${hAtk}, Home DEF: ${hDef}, Away ATK: ${aAtk}, Away DEF: ${aDef}`);
-  console.log(`Injury/Manager Adjustments - Home: ${homeAttackInjurryAdjustment.toFixed(3)}, Away: ${awayAttackInjurryAdjustment.toFixed(3)}`);
-
   const newManagerHome = existing?.homeNewManager || false;
   const newManagerAway = existing?.awayNewManager || false;
 
@@ -2353,14 +2350,12 @@ export async function generateGoals(homeForm, awayForm, match) {
   const homeLambda_withInjuries = homeLambda_final * homeAttackInjurryAdjustment;
   const awayLambda_withInjuries = awayLambda_final * awayAttackInjurryAdjustment;
 
-  console.log(`homeLambda before injuries: ${homeLambda_final.toFixed(3)}, after injuries: ${homeLambda_withInjuries.toFixed(3)}`);
-  console.log(`awayLambda before injuries: ${awayLambda_final.toFixed(3)}, after injuries: ${awayLambda_withInjuries.toFixed(3)}`);
   // Define how sensitive you want the adjustment to be
   // A lower value (0.02) means a more conservative adjustment
   const regressionMultiplierHome = 1 / homeForm.GoalEfficiency;
   const regressionMultiplierAway = 1 / awayForm.GoalEfficiency;
-  const finalHomeMultiplier = Math.min(Math.max(regressionMultiplierHome, 0.95), 1.05);
-  const finalAwayMultiplier = Math.min(Math.max(regressionMultiplierAway, 0.95), 1.05);
+  const finalHomeMultiplier = Math.min(Math.max(regressionMultiplierHome, 0.98), 1.02);
+  const finalAwayMultiplier = Math.min(Math.max(regressionMultiplierAway, 0.98), 1.02);
 
   // Calculate the multiplier
   // If actualToXGDifference is negative (underperforming), 
@@ -2368,7 +2363,9 @@ export async function generateGoals(homeForm, awayForm, match) {
 
   const clampedXGMultiplierHome = finalHomeMultiplier;
   const clampedXGMultiplierAway = finalAwayMultiplier;
-
+  const homeGDMult = calculateGDMultiplier(homeForm.goalDifferenceHomeOrAway);
+  const awayGDMult = calculateGDMultiplier(awayForm.goalDifferenceHomeOrAway);
+  
   // Apply to your existing lambda
   const adjustedLambdaHome = homeLambda_withInjuries
     // * clampedXGMultiplierHome;
@@ -2379,8 +2376,7 @@ export async function generateGoals(homeForm, awayForm, match) {
   const awayLambda_final_v2 = Math.max(0.05, adjustedLambdaAway);
 
 
-  const homeGDMult = calculateGDMultiplier(homeForm.goalDifferenceHomeOrAway);
-  const awayGDMult = calculateGDMultiplier(awayForm.goalDifferenceHomeOrAway);
+
 
   let additionHome = 1;
   let additionAway = 1;
@@ -2396,8 +2392,6 @@ export async function generateGoals(homeForm, awayForm, match) {
   const homeLambda_final_v3 = (homeLambda_final_v2) * additionHome;
   const awayLambda_final_v3 = (awayLambda_final_v2) * additionAway;
 
-  console.log(`home lambda before GD and Manager Adjustment: ${homeLambda_final_v2.toFixed(3)}, after adjustment: ${homeLambda_final_v3.toFixed(3)}`);
-  console.log(`away lambda before GD and Manager Adjustment: ${awayLambda_final_v2.toFixed(3)}, after adjustment: ${awayLambda_final_v3.toFixed(3)}`);
 
   const avgHomeXG = (homeForm.avXGLast5 + awayForm.avXGAgainstLast5) / 2;
   const avgHomeGoalsLast5 = (homeForm.avScoredLast5 + awayForm.avConceededLast5) / 2;
@@ -4061,7 +4055,7 @@ export async function calculateScore(match, index, divider, calculate, AIPredict
 
     console.log(`allDrawOutcomes: ${allDrawOutcomes}`);
 
-    if (match.matches_completed_minimum < 3 && selectedTipType !== "AI Tips") {
+    if ((match.matches_completed_minimum < 3 && selectedTipType !== "AI Tips") || match.homeOdds === "N/A") {
       match.omit = true;
     } else if (selectedTipType === "AI Tips" && (AIPredictionHome === null || AIPredictionAway === null)) {
       match.omit = true;
@@ -4166,9 +4160,6 @@ export async function calculateScore(match, index, divider, calculate, AIPredict
 
     if (match.matches_completed_minimum < 4) {
       match.omit = true;
-    } else {
-      match.omit = false; // default to false, only set to true if conditions are met
-
     }
 
 

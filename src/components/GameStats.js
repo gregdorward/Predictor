@@ -114,6 +114,7 @@ function getMatchOddsProbabilities(scoreMatrix) {
 
 
 function GameStats({ game, displayBool, stats, handleToggleTip, userTips }) {
+  console.log(game);
 
   // const { user } = useAuth();
 
