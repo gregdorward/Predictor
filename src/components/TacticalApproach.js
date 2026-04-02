@@ -90,21 +90,32 @@ export function MatchTacticalComparison({
                                                 {sortedOpponents.length > 0 ? (
                                                     sortedOpponents.map((opp, idx) => {
                                                         // Determine display order based on venue
+                                                        // Inside sortedOpponents.map
                                                         const isHome = opp.venue === "Home";
+                                                        const teamScored = opp.goalsFor;
+                                                        const oppScored = opp.goalsAgainst;
+
+                                                        // Determine if THIS team (Middlesbrough) actually won, lost, or drew
+                                                        let actualResultClass = "D";
+                                                        if (teamScored > oppScored) actualResultClass = "W";
+                                                        if (teamScored < oppScored) actualResultClass = "L";
+
                                                         return (
-                                                            <>
-                                                                <div key={idx} className={'TacticDateRow'}>{opp.date}</div>
-                                                                <div key={idx} className={`ResultRowOverviewSmall${opp.result}`}>
-                                                                    <div className="columnOverviewHomeSmall">
+                                                            <React.Fragment key={idx}>
+                                                                <div className='TacticDateRow'>{opp.date}</div>
+                                                                <div className={`ResultRowOverviewSmall${actualResultClass}`}> {/* Dynamic class */}
+                                                                    <div className={`columnOverviewHomeSmall ${isHome ? 'is-subject' : ''}`}>
                                                                         {isHome ? teamName : opp.team}
                                                                     </div>
                                                                     <span className="columnOverviewScoreSmall">
-                                                                        {opp.goalsFor} : {opp.goalsAgainst}
+                                                                        {/* Always show teamScore : oppScore relative to the Home/Away positions */}
+                                                                        {isHome ? `${teamScored} : ${oppScored}` : `${oppScored} : ${teamScored}`}
                                                                     </span>
-                                                                    <div className="columnOverviewAwaySmall">
+                                                                    <div className={`columnOverviewAwaySmall ${!isHome ? 'is-subject' : ''}`}>
                                                                         {isHome ? opp.team : teamName}
                                                                     </div>
-                                                                </div></>
+                                                                </div>
+                                                            </React.Fragment>
                                                         );
                                                     })
                                                 ) : (

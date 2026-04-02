@@ -757,6 +757,9 @@ async function getPastLeagueResults(team, game, hOrA, form) {
         foulsAgainst: resultedGame.team_b_fouls === -1 ? 10 : resultedGame.team_b_fouls,
         corners:
           resultedGame.team_a_corners === -1 ? 6 : resultedGame.team_a_corners,
+        cornersAgainst: resultedGame.team_b_corners === -1
+          ? 6
+          : resultedGame.team_b_corners,
         date: await convertTimestamp(resultedGame.date_unix),
         dateRaw: resultedGame.date_unix,
         oppositionOdds: resultedGame.odds_ft_2,
@@ -897,6 +900,9 @@ async function getPastLeagueResults(team, game, hOrA, form) {
         foulsAgainst: resultedGame.team_a_fouls === -1 ? 10 : resultedGame.team_a_fouls,
         corners:
           resultedGame.team_b_corners === -1 ? 6 : resultedGame.team_b_corners,
+        cornersAgainst: resultedGame.team_a_corners === -1
+          ? 6
+          : resultedGame.team_a_corners,
         date: await convertTimestamp(resultedGame.date_unix),
         dateRaw: resultedGame.date_unix,
         odds: resultedGame.odds_ft_2,
@@ -998,29 +1004,30 @@ async function getPastLeagueResults(team, game, hOrA, form) {
       const oppFouls = game.foulsAgainst;
       const oppDA = game.dangerousAttacksAgainst;
       const oppSOT = game.sotAgainst;
+      const oppCorners = game.cornersAgainst;
       // oppOdds is available here if you want to add "UNDERDOG_SHOCK" logic later
 
       switch (true) {
         // 1. DOMINANT (High control + High pressure/threat)
-        case (oppPossession > 55 && oppDA > 55):
+        case (oppPossession > 55 && oppDA > 50 && oppSOT > 5):
           return "Dominant";
 
         // 2. LOW BLOCK (Defensive shell, minimal attacking intent)
-        case (oppPossession < 40 && oppDA < 45):
+        case (oppPossession < 40 && oppDA < 45 && oppCorners < 4):
           return "Low block";
         // 3. PRESSING (High disruption and aggressive hunting)
         case (oppFouls > 14 && oppDA > 50):
           return "Pressing";
 
         // 4. PATIENT ATTACKING (High possession, but struggling to find an opening)
-        case (oppPossession > 60 && oppSOT < 6):
+        case (oppPossession > 60 && oppSOT < 5):
           return "Patient attacking";
         // 5. ATTACKING (High volume of threats regardless of possession)
-        case (oppPossession > 50 && oppSOT >= 6):
+        case (oppPossession > 50 && oppSOT >= 5 && oppDA > 50):
           return "Attacking";
 
         // 6. COUNTER-ATTACK (Low ball time, but highly efficient when they have it)
-        case (oppPossession < 48 && oppSOT > 4):
+        case (oppPossession < 48 && oppSOT >= 4):
           return "Counter attack";
 
         // 7. EXPLICIT BALANCED (The genuine 50/50 midfield battle)
@@ -1034,37 +1041,25 @@ async function getPastLeagueResults(team, game, hOrA, form) {
     };
 
     const getTeamStyle = (game) => {
-      const { possession, dangerousAttacks, shots, fouls, sot } = game;
+      const { possession, dangerousAttacks, shots, fouls, sot, corners } = game;
+
 
       switch (true) {
-        // 1. HIGH INTENSITY / EXTREMES
-        case (possession > 55 && dangerousAttacks > 55):
+        case (possession > 55 && dangerousAttacks > 50 && sot > 5):
           return "Dominant";
-
-        case (possession < 40 && dangerousAttacks < 45):
+        case (possession < 40 && dangerousAttacks < 45 && corners < 4):
           return "Low block";
-
         case (fouls > 14 && dangerousAttacks > 50):
           return "Pressing";
-
-        // 2. SPECIFIC ATTACKING VARIATIONS
-        case (possession > 60 && sot < 6):
+        case (possession > 60 && sot < 5):
           return "Patient attacking";
-        case (sot >= 6): // High output regardless of possession
+        case (possession > 50 && sot >= 5 && dangerousAttacks > 50):
           return "Attacking";
-
-        case (possession < 48 && sot > 4):
+        case (possession < 48 && sot >= 4):
           return "Counter attack";
-
-        // 3. EXPLICIT BALANCED (The "Middle Ground")
-        // Defined as mid-range possession and moderate output
         case (possession >= 45 && possession <= 55 && sot >= 3):
           return "Balanced";
-
-        // 4. FALLBACK
         default:
-          // If a game is so low-event it doesn't meet the Balanced criteria, 
-          // you could label it "INACTIVE" or keep it as BALANCED.
           return "Balanced";
       }
     };
@@ -1118,21 +1113,40 @@ async function getPastLeagueResults(team, game, hOrA, form) {
       const style = getOpponentStyle(game);
       const record = tacticalRecords[style];
 
-      const safePoints = Number(game.points) || 0;
-      const safeXG = Number(game.XG) || 0;
-      const safeXGA = Number(game.XGAgainst) || 0;
+      // Force numbers to ensure math works
+      const scored = Number(game.scored) || 0;
+      const conceded = Number(game.conceeded) || 0;
 
+      // PERSPECTIVE LOGIC:
+      // If Middlesbrough scored more, it's a win for Middlesbrough.
+      let pointsForThisGame = 0;
+      let calculatedResult = "L";
+
+      if (scored > conceded) {
+        pointsForThisGame = 3;
+        calculatedResult = "W";
+      } else if (scored === conceded) {
+        pointsForThisGame = 1;
+        calculatedResult = "D";
+      }
+
+      // Update the record with the CORRECTED perspective
       record.games += 1;
-      record[game.result] += 1;
-      record.goalsFor += (Number(game.scored) || 0);
-      record.goalsAgainst += (Number(game.conceeded) || 0);
-      record.points += safePoints;
-      record.xGFor += safeXG;
-      record.xGAgainst += safeXGA;
-      record.possessionTotal += (Number(game.possession) || 50);
+      record.points += pointsForThisGame;
+      record[calculatedResult] += 1;
+
+      record.goalsFor += scored;
+      record.goalsAgainst += conceded;
 
       if (game.oppTeam) {
-        record.opponents.push({ team: game.oppTeam, date: game.date, goalsFor: game.scored, goalsAgainst: game.conceeded, result: game.result, venue: game.venue });
+        record.opponents.push({
+          team: game.oppTeam,
+          date: game.date,
+          goalsFor: scored,
+          goalsAgainst: conceded,
+          result: calculatedResult, // Push 'L' for that Birmingham game
+          venue: game.venue
+        });
       }
     });
 
@@ -1202,24 +1216,6 @@ async function getPastLeagueResults(team, game, hOrA, form) {
       weakest = stylePerformance.reduce((prev, curr) => (curr.ppg < prev.ppg ? curr : prev));
     }
 
-    // // 3. Update tacticalInsights
-    // form.tacticalInsights = {
-    //   // Strongest Style flagging
-    //   strongestStyle: strongest ? strongest.style.replace('_', ' ') : "N/A",
-    //   strongestPPG: strongest ? strongest.ppg.toFixed(2) : "0",
-
-    //   // Weakest Style flagging
-    //   weakestStyle: weakest ? weakest.style.replace('_', ' ') : "N/A",
-    //   weakestPPG: weakest ? weakest.ppg.toFixed(2) : "0",
-
-    //   description: weakest && weakest.ppg < 1.0
-    //     ? `Tactically vulnerable against ${weakest.style.replace('_', ' ')} systems (${weakest.ppg.toFixed(2)} PPG).`
-    //     : "Showing consistent tactical adaptability across different opponent styles."
-    // };
-
-    // console.log("Team:", team);
-    // console.log("Tactical Records:", tacticalRecords);
-    // console.log("Tactical Insights:", form.tacticalInsights);
 
     form.tacticalIdentity = tacticalIdentity;
     form.tacticalRecords = tacticalRecords;
@@ -2314,7 +2310,7 @@ export async function generateGoals(homeForm, awayForm, match) {
     (((homeLambda_raw * 1.1) + (homeLambda_rawOverall * 0.9)) / 2) * 1.1;
 
   const awayLambdaAverage =
-   ( ((awayLambda_raw * 1.1) + (awayLambda_rawOverall * 0.9)) / 2) * 0.9;
+    (((awayLambda_raw * 1.1) + (awayLambda_rawOverall * 0.9)) / 2) * 0.9;
 
   // Regression to league mean (unchanged)
   const ALPHA = 1;
@@ -2365,12 +2361,12 @@ export async function generateGoals(homeForm, awayForm, match) {
   const clampedXGMultiplierAway = finalAwayMultiplier;
   const homeGDMult = calculateGDMultiplier(homeForm.goalDifferenceHomeOrAway);
   const awayGDMult = calculateGDMultiplier(awayForm.goalDifferenceHomeOrAway);
-  
+
   // Apply to your existing lambda
   const adjustedLambdaHome = homeLambda_withInjuries
-    // * clampedXGMultiplierHome;
+  // * clampedXGMultiplierHome;
   const adjustedLambdaAway = awayLambda_withInjuries
-    // * clampedXGMultiplierAway;
+  // * clampedXGMultiplierAway;
   // 4. Ensure Lambda never drops below a realistic floor (e.g., 0.05)
   const homeLambda_final_v2 = Math.max(0.05, adjustedLambdaHome);
   const awayLambda_final_v2 = Math.max(0.05, adjustedLambdaAway);
@@ -2470,9 +2466,9 @@ export async function generateGoals(homeForm, awayForm, match) {
     awayGoals =
       // (awayLambda_final_v3 * 1)
       //   * awayXGMult
-        (awayLambda_final_v3 * awayXGMult)
-    }
-    //ROI ~2.77%
+      (awayLambda_final_v3 * awayXGMult)
+  }
+  //ROI ~2.77%
 
   console.log(match.homeTeam + " vs " + match.awayTeam);
   console.log(match.scoutingReport.home)
@@ -3536,10 +3532,6 @@ export async function calculateScore(match, index, divider, calculate, AIPredict
       const homeBracket = getBracket(match.homeOdds, match.awayOdds);
       const awayBracket = getBracket(match.awayOdds, match.homeOdds);
 
-      console.log(match.homeTeam, "is the", homeBracket);
-      console.log(match.awayTeam, "is the", awayBracket);
-      console.log(homeData.tacticalIdentity, homeBracket);
-      console.log(awayData.tacticalIdentity, awayBracket);
 
       const homeExpected = getExpectedStyle(homeData.tacticalIdentity, homeBracket);
       const awayExpected = getExpectedStyle(awayData.tacticalIdentity, awayBracket);
