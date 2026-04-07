@@ -888,7 +888,7 @@ button {
   justify-content: center;
 
   /* 1. Flexible spacing: Vertical 0.6em, Horizontal 1.4em */
-  padding: 0.6em 1.4em;
+  padding: 0.7em 1.5em;
   margin: 0.5em;
 
   /* 2. Content-driven width with a minimum */
@@ -1183,7 +1183,7 @@ span.MembershipInfo {
 
 .Version {
   font-size: 0.75em;
-  padding-bottom: 0em;
+  padding-bottom: 1em;
 }
 
 .Filters2 button {
@@ -1353,10 +1353,11 @@ span.MembershipInfo {
   display: inline;
   width: 100%;
   /* padding: 1em; */
-  border-radius: 0;
+  border-radius: 6px;
   /* margin: 0.35em; */
   margin-left: 0px;
   margin-right: 0px;
+  padding: 0em;
   /* margin-bottom: 1em; */
   background-color: var(--secondary-background-color);
   color: var(--text-color);
@@ -1364,7 +1365,7 @@ span.MembershipInfo {
 }
 
 .ResultButton:hover {
-    background-color: var(--secondary-background-color);
+  background-color: var(--secondary-background-color);
 
 }
 
@@ -1673,6 +1674,7 @@ table tr:nth-child(even) {
   background-color: var(--primary-color);
   color: var(--button-text-color);
 }
+
 /* .TipButton :hover {
   background-color: var(--primary-color);
   color: "white";
@@ -1681,7 +1683,7 @@ table tr:nth-child(even) {
 .UserTips {
   margin-bottom: 1em;
   display: grid;
-   grid-template-columns:
+  grid-template-columns:
     minmax(0.5em, 0.5fr) minmax(0.5em, 0.5fr) minmax(0.5em, 0.5fr) minmax(0.5em, 0.5fr) minmax(0.5em, 0.5fr);
 }
 
@@ -1838,17 +1840,20 @@ strong.LOST {
   display: flex;
   flex-direction: column;
   flex-basis: 100%;
-  background-color: var(--secondary-background-color);
+  /* background-color: var(--secondary-background-color); */
   align-items: left;
   align-content: left;
   color: var(--text-color);
-  padding: 0.5em;
+  padding-top: 1em;
+  padding-bottom: 2em;
   cursor: pointer;
   border-radius: 6px;
 }
 
 .individualFixturefalse:hover {
-  border: var(--primary-color) 1px solid;
+  /* border: var(--primary-color) 1px solid; */
+   transform: translateY(-2px);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.12);
 }
 
 
@@ -1860,7 +1865,7 @@ strong.LOST {
   align-items: left;
   align-content: left;
   color: var(--text-color);
-  padding-bottom: 0.5em;
+  padding-bottom: 1em;
   cursor: pointer;
 }
 
@@ -1877,7 +1882,8 @@ strong.LOST {
 }
 
 .HomeAndAwayContainerundefined {
-  display: flex;
+  display: grid;
+  grid-template-rows: auto;
   flex-direction: column;
   flex-basis: 100%;
 }
@@ -1917,8 +1923,10 @@ strong.LOST {
   font-size: 1.1em;
   align-items: center;
   column-gap: 0.25rem;
-  margin-left: 1em;
-  margin-right: 1em;
+  margin-left: 0.5em;
+  margin-right: 0em;
+  margin-bottom: 0.5em;
+  /* height: 4em; */
 }
 
 .AwayContainertrue {
@@ -1928,9 +1936,13 @@ strong.LOST {
   font-size: 1.1em;
   align-items: center;
   column-gap: 0.25rem;
-  margin-left: 1em;
-  margin-right: 1em;
-  margin-bottom: 1em;
+  margin-left: 0.5em;
+  margin-right: 0em;
+    margin-bottom: 0.5em;
+
+    /* height: 4em; */
+
+  /* margin-bottom: 1em; */
 }
 
 .HomeContainerfalse {
@@ -1940,6 +1952,7 @@ strong.LOST {
   font-size: 1.1em;
   margin-left: 1em;
   margin-right: 0.5em;
+  margin-bottom: 1em;
   align-items: center;
   column-gap: 0.25rem;
   padding-top: 0.5em;
@@ -2358,15 +2371,17 @@ strong.LOST {
 
 .ProbabilityWrapper {
   display: flex;
-  align-items: center;
   gap: 0.25em;
   box-sizing: border-box;
+  height: 1.5em;
+    border-radius: 6px;
+
 }
 
 .ProbabilityBarBackground {
   position: relative;
   flex: 1;
-  border-radius: 4px;
+  border-radius: 6px;
   overflow: hidden;
   background-color: #eeeeee;
   display: flex;
@@ -2391,23 +2406,23 @@ strong.LOST {
 }
 
 .prob-strong {
-  background-color: #009700;
+  background-color: #009700bf;
 }
 
 .prob-slightlyStrong {
-  background-color: #589700;
+  background-color: #589700b8;
 }
 
 .prob-medium {
-  background-color: #ffdd00;
+  background-color: #ffdd00b7;
 }
 
 .prob-slightlyWeak {
-  background-color: #ff6f00;
+  background-color: #ff6f00bf;
 }
 
 .prob-weak {
-  background-color: #b10f00;
+  background-color: #b10f00be;
 }
 
 .PredictionOrProbabilityExplainertrue {
@@ -2515,6 +2530,13 @@ strong.LOST {
 .ResultContainerExplainer {
   height: 100%;
   align-content: center;
+    /* height: auto; */
+  width: 1.5em;
+  padding: 0.5em;
+  display: inline-block;
+  margin-left: 0.5em;
+  margin-right: 0.5em;
+  font-size: 1.1em;
 }
 
 .divider,
@@ -2525,7 +2547,7 @@ strong.LOST {
   display: inline-block;
   color: rgb(55, 55, 55);
   background-color: white;
-  border: #fe8c00 1px, solid;
+  border: #FFE500 solid 1px;
   border-radius: 6px;
   margin-right: 0.5em;
   margin-left: 0.5em;
@@ -2543,6 +2565,7 @@ strong.LOST {
   border-radius: 6px;
   margin-left: 0.5em;
   margin-right: 0.5em;
+  font-size: 1.1em;
 }
 
 .resultExplainer {
@@ -2601,9 +2624,10 @@ strong.LOST {
     minmax(0.5rem, 0.5fr) minmax(0.5em, 0.4fr) minmax(2rem, 1.2fr) minmax(2rem, 1.3fr) minmax(0.5rem, 0.6fr) minmax(1.5rem, 1.5fr);
   font-size: 1.1em;
   align-items: center;
-  column-gap: 0.25rem;
   margin-left: 1em;
   margin-right: 1em;
+  margin-bottom: 1em;
+  column-gap: 0.25rem;
 }
 
 .ExplainerContainerfalse {
@@ -2611,10 +2635,10 @@ strong.LOST {
   grid-template-columns:
     minmax(0.5rem, 0.5fr) minmax(0.5em, 0.4fr) minmax(2.5rem, 1.3fr) minmax(0.5rem, 0.5fr) minmax(0.5rem, 0.5fr) minmax(1.8rem, 1.3fr);
   font-size: 1.1em;
-  margin-left: 1em;
-  margin-right: 0.5em;
   align-items: center;
   column-gap: 0.25rem;
+    margin-left: 1em;
+  margin-right: 1em;
   padding-top: 0.5em;
 }
 
@@ -2625,9 +2649,11 @@ strong.LOST {
   font-size: 1.1em;
   align-items: center;
   column-gap: 0.25rem;
-  margin-left: 1em;
-  margin-right: 1em;
-  height: 2.4em;
+  margin-left: 0.5em;
+  margin-right: 0em;
+    margin-bottom: 0.5em;
+
+  /* height: 0.7rem; */
 }
 
 .DrawContainerfalse {
@@ -3098,7 +3124,7 @@ h6.MediaTitle {
   padding: 1em;
   cursor: pointer;
   background: var(--alternate-background-color);
-    font-size: 1em;
+  font-size: 1em;
 
 }
 
@@ -5146,6 +5172,7 @@ input:active+.design::after {
   margin-left: auto;
   padding: 0.25em;
   padding-left: 0em;
+  display: none;
 }
 
 
@@ -5165,8 +5192,8 @@ input:active+.design::after {
   align-self: center;
   flex-basis: 30%;
   flex-wrap: nowrap;
-  margin-top: 1em;
-  margin-bottom: 1em;
+  /* margin-top: 1em;
+  margin-bottom: 1em; */
   gap: 0.5em;
   text-align: left;
 }
@@ -5398,7 +5425,6 @@ input:active+.design::after {
   flex-direction: row;
   justify-content: center;
   align-items: center;
-
 }
 
 .ShortlistButton,
@@ -5410,6 +5436,7 @@ input:active+.design::after {
   margin-top: 0.5em;
   border: none;
   color: var(--text-color);
+  box-shadow: none;
 }
 
 .InsightsButton {
@@ -6148,8 +6175,8 @@ button.AIInsights button:active {
   /* Remove those heavy 5em margins for mobile */
   /* margin-left: 0.5em;
   margin-right: 0.5em; */
-  padding-top: 1em;
-  padding-bottom: 1em;
+  padding: 1em;
+  border-radius: 6px;
 }
 
 /* Styles for Desktop (Tablet and up) */
@@ -6232,22 +6259,13 @@ button.AIInsights button:active {
   font-family: inherit;
   display: grid;
   justify-content: unset;
+  height: 3em;
 }
 
 .StyleExpand.highlight {
-  display: grid;
-  align-content: center;
-  width: 100%;
-  background: none;
-  border: none;
-  padding: 0;
-  margin: 0;
-  cursor: pointer;
-  text-align: left;
-  color: inherit;
-  font-family: inherit;
-  color: var(--primary-color);
+  border: var(--primary-color) solid 1px;
 }
+
 
 /* Container for the opponent list inside the collapse */
 .OpponentList {

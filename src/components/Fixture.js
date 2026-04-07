@@ -330,8 +330,7 @@ function SingleFixture({
                   flexShrink={5}
                 />
                 <div className={`homeTeam${isProbability}`}>
-                  {fixture.homeTeam}{" "}
-                  {fixture.formHome ? `(${fixture.formHome.LeaguePosition})` : ""}
+                  {fixture.homeTeam}{" "} {fixture.formHome ? `(${fixture.formHome.LeaguePosition})` : ""}
                 </div>
                 <PredictionSection
                   isProbability={isProbability}
@@ -444,9 +443,7 @@ function SingleFixture({
                   alt="Away team badge"
                 />
                 <div className={`awayTeam${isProbability}`}>
-                  {fixture.awayTeam}{" "}
-                  <br />
-                  {fixture.formAway ? `(${fixture.formAway.LeaguePosition})` : ""}
+                  {fixture.awayTeam}{" "} {fixture.formAway ? `(${fixture.formAway.LeaguePosition})` : ""}
                 </div>
                 <PredictionSection
                   isProbability={isProbability}
