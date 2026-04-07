@@ -3705,7 +3705,7 @@ function GameStats({ game, displayBool, stats, handleToggleTip, userTips }) {
 
     return (
       <div className="UserTips">
-        {["Home", "Draw", "Away", "BTTS", "Over 2.5"].map((type) => (
+        {["homeWin", "draw", "awayWin", "BTTS", "over25"].map((type) => (
           <button
             key={type}
             className={`TipButton ${isSelected(type) ? "active" : ""}`}
