@@ -374,7 +374,8 @@ export function BetSlipItem({ slip }) {
         <div className="SlipMainInfo">
           <div>
             <span className="TipType">Type: <strong>{slip.type}</strong></span>
-            <span>Stake: <strong>{slip.stake}</strong></span>
+            <span className="TipType">Stake: <strong>{slip.stake}</strong></span>
+            <span className="TipType">To win: <strong>{(slip.stake * slip.totalOdds).toFixed(2)}</strong></span>
           </div>
           <span className="SlipDateHeader">Submitted: {new Date(slip.submittedAt).toLocaleDateString()}</span>
         </div>

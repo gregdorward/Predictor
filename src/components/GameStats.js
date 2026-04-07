@@ -3705,14 +3705,10 @@ function GameStats({ game, displayBool, stats, handleToggleTip, userTips }) {
 
     return (
       <div className="UserTips">
-        {["homeWin", "draw", "awayWin", "BTTS", "over25"].map((type) => (
+        {["Home", "Draw", "Away", "BTTS", "Over 2.5"].map((type) => (
           <button
             key={type}
             className={`TipButton ${isSelected(type) ? "active" : ""}`}
-            style={{
-              backgroundColor: isSelected(type) ? "#fe8c00" : "white",
-              color: isSelected(type) ? "white" : "#030052"
-            }}
             onClick={() => onBtnClick(type, type)}
           >
             {type.replace("Win", "")}

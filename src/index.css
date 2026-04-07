@@ -552,6 +552,7 @@ h1 {
 h2 {
   font-weight: 500;
   color: var(--text-color);
+  font-size: 1.3em;
 }
 
 .MembersGetMore {
@@ -654,11 +655,12 @@ h6 {
 }
 
 .PresetDropdown {
-  margin-top: 0.5em;
-  padding: 1em;
-  font-size: 1em;
+  margin: 0.5em;
+  padding: 0.75em;
+  font-size: 0.9em;
   border: var(--primary-color) solid 1px;
   border-radius: 6px;
+  text-align: center;
 }
 
 .SuccessMeasureHeader {
@@ -873,37 +875,69 @@ h6 {
   padding-left: 3em;
 }
 
+.LoadingStatus {
+  margin-left: 3em;
+  margin-top: 1em;
+  margin-right: 3em;
+  line-height: 1.5em;
+}
+
 button {
-  display: inline-block;
-  padding: 0.75em;
-  margin: 1em;
-  margin-top: 0.25em;
-  margin-bottom: 0.5em;
-  border: var(--primary-color) 1px solid;
-  border-radius: 10px;
-  box-sizing: border-box;
-  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  /* 1. Flexible spacing: Vertical 0.6em, Horizontal 1.4em */
+  padding: 0.6em 1.4em;
+  margin: 0.5em;
+
+  /* 2. Content-driven width with a minimum */
+  min-width: 10em;
+  width: auto;
+
+  /* 3. Typography refinements */
   font-family: 'Open Sans', sans-serif;
-  width: 12em;
-  height: auto;
-  font-size: 1.1em;
+  font-size: 1em;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  text-decoration: none;
+  line-height: 1.2;
+
+  /* 4. Visuals */
   cursor: pointer;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  /* Subtle border */
+  border-radius: 6px;
   color: var(--secondary-button-text-color);
   background-color: var(--button-color);
-  text-align: center;
-  transition: all 0.2s;
+
+  /* 5. Depth and Transition */
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  outline: none;
 }
 
-button:active {
-  box-shadow: 0 0px 0px 0 rgba(0, 0, 0, 0.2), 0 1px 2px 0 #030052 inset;
-}
-
+/* Hover State: Slight lift and darken */
 button:hover {
-  color: var(--primary-color);
+  background-color: var(--primary-color);
+  /* Or a slightly darker shade */
+  transform: translateY(-2px);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.12);
+}
+
+/* Active State: "Pressed" effect */
+button:active {
+  transform: translateY(0px);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+}
+
+/* Focus State: High accessibility */
+button:focus-visible {
+  box-shadow: 0 0 0 3px rgba(var(--primary-rgb), 0.4);
 }
 
 button.GeneratePredictionsButton {
-  margin-top: 0.5em;
+  margin-top: 1.5em;
   padding-top: 0.75em;
   padding-bottom: 0.75em;
   background-color: var(--primary-color);
@@ -911,18 +945,18 @@ button.GeneratePredictionsButton {
   border: var(--text-color), 1px, solid;
 }
 
-button.GeneratePredictionsButton:hover {
+/* button.GeneratePredictionsButton:hover {
   border: var(--button-text-color), 2px, solid;
-}
+} */
 
 
-button.GeneratePredictionsButton:active {
+/* button.GeneratePredictionsButton:active {
   padding-top: 1em;
   padding-bottom: 1em;
   background-color: var(--primary-color);
   color: var(--button-text-color);
   box-shadow: 0 0px 0px 0 rgba(0, 0, 0, 0.2), 0 1px 2px 0 #030052 inset;
-}
+} */
 
 .BuildAMulti {
   margin-top: 1em;
@@ -950,9 +984,9 @@ button.GeneratePredictionsButton:active {
   font-size: 0.9em;
 }
 
-.FixtureButtons button:hover {
+/* .FixtureButtons button:hover {
   color: var(--primary-color);
-}
+} */
 
 
 .FixturesButtonToday {
@@ -966,10 +1000,10 @@ button.GeneratePredictionsButton:active {
 
 
 
-.FixtureButtons button:active {
+/* .FixtureButtons button:active {
   box-shadow: 0 0px 0px 0 rgba(0, 0, 0, 0.2), 0 1px 2px 0 var(--secondary-background-color) inset;
 
-}
+} */
 
 .RowOneContainer {
   display: flex;
@@ -1034,10 +1068,8 @@ p {
 .Options button {
   background-color: var(--background-color);
   color: var(--text-color);
-  width: 8em;
-  box-shadow: none;
   font-size: 0.9em;
-  margin-top: 1em;
+  border: var(--primary-color) 1px solid;
 }
 
 .OddsRadios {
@@ -1050,7 +1082,7 @@ p {
 .CheckboxTwo {
   padding: 1em;
   margin-bottom: 1em;
-  border-radius: 1em;
+  border-radius: 6px;
 }
 
 .LoginSignUp {
@@ -1066,7 +1098,7 @@ p {
 }
 
 h6.PredictionTypeText {
-  padding-top: 1em;
+  padding-top: 0em;
 }
 
 .LoadingGames {
@@ -1155,14 +1187,7 @@ span.MembershipInfo {
 }
 
 .Filters2 button {
-  border: var(--primary-color) 1px solid;
   margin-top: 1em;
-}
-
-.Filters2 button:hover {
-  background-color: var(--button-color);
-  color: var(--primary-color);
-  border: var(--primary-color) 2px solid;
 }
 
 .InstructionalDiv {
@@ -1239,7 +1264,7 @@ span.MembershipInfo {
   margin-top: 1.5em;
   background-color: var(--accent-color);
   cursor: pointer;
-  border-radius: 1em;
+  border-radius: 6px;
 }
 
 .leagueName:hover {
@@ -1325,6 +1350,7 @@ span.MembershipInfo {
 }
 
 .ResultButton {
+  display: inline;
   width: 100%;
   /* padding: 1em; */
   border-radius: 0;
@@ -1333,7 +1359,13 @@ span.MembershipInfo {
   margin-right: 0px;
   /* margin-bottom: 1em; */
   background-color: var(--secondary-background-color);
+  color: var(--text-color);
   box-shadow: rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px;
+}
+
+.ResultButton:hover {
+    background-color: var(--secondary-background-color);
+
 }
 
 .ResultRowOverview {
@@ -1553,7 +1585,7 @@ table tr:nth-child(even) {
   flex-wrap: wrap;
   width: 100%;
   padding: 0.5em;
-  color: #020029;
+  color: var(--text-color);
 }
 
 .ResultRowSmall {
@@ -1629,21 +1661,28 @@ table tr:nth-child(even) {
 }
 
 .TipButton {
-  margin-top: 0.25em;
-  margin-bottom: 0.75em;
-  padding: 0.75em;
-  align-content: flex-end;
-  align-items: center;
-  margin-left: 1em;
-  margin-right: 1em;
-  font-size: 0.8em;
-  color: #030052;
-  border: #030052 1px solid;
-  box-shadow: rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px;
+  background-color: var(--button-text-color);
+  color: var(--button-color);
+  border: var(--primary-color) 1px solid;
+  font-size: 0.9em;
+  padding: 0.75em 0.25em;
+  min-width: auto;
 }
+
+.TipButton.active {
+  background-color: var(--primary-color);
+  color: var(--button-text-color);
+}
+/* .TipButton :hover {
+  background-color: var(--primary-color);
+  color: "white";
+} */
 
 .UserTips {
   margin-bottom: 1em;
+  display: grid;
+   grid-template-columns:
+    minmax(0.5em, 0.5fr) minmax(0.5em, 0.5fr) minmax(0.5em, 0.5fr) minmax(0.5em, 0.5fr) minmax(0.5em, 0.5fr);
 }
 
 .UserTipsList {
@@ -1805,7 +1844,7 @@ strong.LOST {
   color: var(--text-color);
   padding: 0.5em;
   cursor: pointer;
-  border-radius: 1em;
+  border-radius: 6px;
 }
 
 .individualFixturefalse:hover {
@@ -1922,6 +1961,7 @@ strong.LOST {
 .ActionButtons {
   display: inline-flex;
   width: 15%;
+  border: 1px solid var(--primary-color);
 }
 
 .individualFixturetrue {
@@ -2047,7 +2087,7 @@ strong.LOST {
   color: var(--button-text-color);
   flex-basis: 5%;
   min-width: 20px;
-  border-radius: 0px;
+  border-radius: 6px;
   font-weight: bolder;
   font-size: 0.9em;
 }
@@ -2059,6 +2099,7 @@ strong.LOST {
   flex-basis: 5%;
   min-width: 20px;
   font-size: 0.9em;
+  border-radius: 6px
 }
 
 .HomeOddsExplainer {
@@ -2165,7 +2206,7 @@ strong.LOST {
   padding: 0.5em;
   background-color: var(--button-color);
   color: var(--button-text-color);
-  border-radius: 0px;
+  border-radius: 6px;
   font-weight: 500;
   font-size: 0.9em;
 }
@@ -2296,19 +2337,18 @@ strong.LOST {
 }
 
 .ProbabilityToggle {
-  margin-top: 1em;
   background-color: var(--button-text-color);
   color: var(--button-color);
   border: var(--primary-color) 1px solid;
   font-size: 0.9em;
 }
 
-.ProbabilityToggle:hover {
+/* .ProbabilityToggle:hover {
   background-color: var(--button-color);
   color: var(--primary-color);
   border: var(--primary-color) 2px solid;
   font-size: 0.9em;
-}
+} */
 
 .ProbabilityContainer {
   height: 100%;
@@ -2486,7 +2526,7 @@ strong.LOST {
   color: rgb(55, 55, 55);
   background-color: white;
   border: #fe8c00 1px, solid;
-  border-radius: 0px;
+  border-radius: 6px;
   margin-right: 0.5em;
   margin-left: 0.5em;
   font-size: 1.1em;
@@ -2499,18 +2539,17 @@ strong.LOST {
   display: inline-block;
   color: black;
   background-color: #FFE500;
-  border: black 1px solid;
-  border-radius: 0px;
+  /* border: black 1px solid; */
+  border-radius: 6px;
   margin-left: 0.5em;
   margin-right: 0.5em;
-  font-size: 1.1em;
 }
 
 .resultExplainer {
   height: auto;
   display: inline-block;
   color: var(--text-color);
-  border-radius: 0px;
+  border-radius: 6px;
   font-size: 1em;
 }
 
@@ -2832,6 +2871,7 @@ strong.LOST {
 .Collapsible {
   display: block;
   color: var(--text-color);
+  background-color: var(--background-color);
 }
 
 .FiltersSelected {
@@ -3025,12 +3065,11 @@ h6.MediaTitle {
 
 
 .FixturesButtonAmend {
-  background-color: var(--background-color);
-  color: var(--text-color);
+  /* background-color: var(--background-color); */
+  /* color: var(--text-color); */
   cursor: pointer;
-  font-size: 1.5em;
-  width: 5em;
-  border: none;
+  font-size: 0.9em;
+  border: 1px solid var(--button-color);
   font-weight: bolder;
 }
 
@@ -3059,6 +3098,8 @@ h6.MediaTitle {
   padding: 1em;
   cursor: pointer;
   background: var(--alternate-background-color);
+    font-size: 1em;
+
 }
 
 .SlipMainInfo {
@@ -3068,8 +3109,8 @@ h6.MediaTitle {
   margin-bottom: 1em;
   margin-left: 0.5em;
   margin-right: 0.5em;
-  font-size: 0.9em;
   color: var(--text-color);
+  font-size: 1em;
 }
 
 .SlipTypeTag {
@@ -3093,7 +3134,12 @@ h6.MediaTitle {
 }
 
 .TipType {
-  padding-right: 2em;
+  padding-right: 3em;
+  line-height: 1.5em;
+}
+
+.leaderboard-loading {
+  margin: 2em;
 }
 
 /* Summary Bar */
@@ -3101,7 +3147,7 @@ h6.MediaTitle {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  font-size: 0.9em;
+  font-size: 1em;
   color: var(--text-color);
   margin-left: 0.5em;
   margin-right: 0.5em;
@@ -3237,6 +3283,7 @@ h6.MediaTitle {
 
 .expanded-tips-area {
   background: var(--background-color);
+  font-size: 0.9em;
 }
 
 .expanded-content-wrapper {
@@ -3259,10 +3306,10 @@ h6.MediaTitle {
 }
 
 .ActionBtn {
-  margin-bottom: 1em;
   background-color: var(--background-color);
   color: var(--text-color);
   font-size: 0.9em;
+  border: var(--primary-color) 1px solid;
 }
 
 .TopPicksGrid {
@@ -3274,7 +3321,11 @@ h6.MediaTitle {
   background-color: var(--alternate-background-color);
   border: 1px solid var(--primary-color);
   border-radius: 8px;
-  padding: 1em;
+  font-size: 0.9em;
+  padding-top: 1em;
+  padding-bottom: 1em;
+  padding-left: 0.5em;
+  padding-right: 0.5em;
   box-shadow: rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px;
 }
 
@@ -4268,10 +4319,10 @@ li.FormHeader {
 
 
 .ROIButton {
-  width: 4em;
   background-color: var(--background-color);
   color: var(--text-color);
   font-size: 0.9em;
+  border: var(--primary-color) 1px solid;
 }
 
 .PredictionsOfTheDay {
@@ -4366,7 +4417,7 @@ li.FormHeader {
   max-width: 30em;
   padding: 1em;
   border: #b7b7b7 1px solid;
-  border-radius: 1em;
+  border-radius: 6px;
 }
 
 .BestPredictionsExplainer {
@@ -4387,7 +4438,7 @@ li.FormHeader {
 .LongshotPredictions {
   padding: 0.25em;
   border: #b7b7b7 1px solid;
-  border-radius: 1em;
+  border-radius: 6px;
   margin: 0.25em;
   margin-bottom: 1em;
   background-color: var(--background-color);
@@ -4408,7 +4459,7 @@ li.FormHeader {
 .BTTSGames {
   padding: 0.25em;
   border: #b7b7b7 1px solid;
-  border-radius: 1em;
+  border-radius: 6px;
   margin: 0.25em;
   background-color: var(--background-color);
   font-size: 0.9em;
@@ -4436,7 +4487,7 @@ li.FormHeader {
   margin: 0.5em;
   margin-top: 1em;
   border: #b7b7b7 1px solid;
-  border-radius: 1em;
+  border-radius: 6px;
   margin-bottom: 1em;
   background-color: var(--background-color);
   font-size: 0.9em;
@@ -4618,7 +4669,7 @@ a {
 
 .kofi-button:hover {
   border-color: #ff0000;
-  border-radius: 1em;
+  border-radius: 6px;
 }
 
 
@@ -5081,6 +5132,7 @@ input:active+.design::after {
   margin: 0em;
   padding: 0em;
   box-shadow: none;
+  min-width: none !important;
 }
 
 .GameStatsTwoExplainer {
@@ -5098,10 +5150,11 @@ input:active+.design::after {
 
 .GameStatsTwo:hover {
   color: var(--primary-color);
+  background-color: var(--secondary-background-color);
 }
 
 .GameStatsTwo:active {
-  box-shadow: 0 1px 1px 0 rgba(0.1, 0.1, 0.1, 0.1), 0 1px 1px 0 #626262 inset;
+  box-shadow: none;
 }
 
 .FormContainer {
@@ -5809,7 +5862,7 @@ button.AIInsights button:active {
   width: 2em;
   background-color: rgba(179, 179, 179, 0.277);
   padding: 0.5em;
-  border-radius: 1em;
+  border-radius: 6px;
 }
 
 .stat-item-wins {
@@ -5818,7 +5871,7 @@ button.AIInsights button:active {
   background-color: #01a50144;
   width: 2em;
   padding: 0.5em;
-  border-radius: 1em;
+  border-radius: 6px;
 }
 
 .stat-item-draws {
@@ -5827,7 +5880,7 @@ button.AIInsights button:active {
   background-color: rgba(255, 166, 0, 0.22);
   width: 2em;
   padding: 0.5em;
-  border-radius: 1em;
+  border-radius: 6px;
 }
 
 .stat-item-losses {
@@ -5836,7 +5889,7 @@ button.AIInsights button:active {
   background-color: #970d003a;
   width: 2em;
   padding: 0.5em;
-  border-radius: 1em;
+  border-radius: 6px;
 }
 
 .stat-label {
@@ -5935,7 +5988,7 @@ button.AIInsights button:active {
 }
 
 .rankings-container {
-  padding: 1rem;
+  padding: 2em;
   max-width: 800px;
   margin-left: auto;
   margin-right: auto;
@@ -5954,8 +6007,8 @@ button.AIInsights button:active {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding-top: 1em;
-  padding-bottom: 1em;
+  padding-top: 0.75em;
+  padding-bottom: 0.75em;
   padding-left: 1.5em;
   padding-right: 1.5em;
   border-bottom: 1px solid #ddd;
@@ -5965,7 +6018,9 @@ button.AIInsights button:active {
 
 .rankings-row.header {
   font-weight: bold;
-  border-bottom: 2px solid #000;
+  border-bottom: 1px solid #000;
+  margin-bottom: 1em;
+  padding-bottom: 1em;
 }
 
 .metric {
@@ -5982,32 +6037,16 @@ button.AIInsights button:active {
   display: inline-flex;
   justify-content: center;
   align-items: center;
-  width: 2.5em;
-  height: 2.5em;
-  border-radius: 50%;
-  color: white;
-
-  font-weight: bold;
+  width: 2.25em;
+  height: 2.25em;
+  border-radius: 6px;
+  color: var(--button-text-color);
+  background-color: var(--accent-color);
+  font-size: 1em;
+  /* font-weight: bold; */
   margin: 0 auto;
 }
 
-.circle.blue {
-  background-color: #fe8c00;
-  color: #020029;
-  font-size: 1.1em;
-  font-family: Arial, Helvetica, sans-serif;
-  font-weight: bolder;
-  border: var(--text-color) solid 1px;
-}
-
-.circle.red {
-  background-color: yellow;
-  color: #020029;
-  font-size: 1.1em;
-  font-family: Arial, Helvetica, sans-serif;
-  font-weight: bolder;
-  border: var(--text-color) solid 1px;
-}
 
 .placeholder {
   color: #999;
@@ -6088,7 +6127,7 @@ button.AIInsights button:active {
   flex: 1;
   background: var(--secondary-background-color);
   padding: 1em;
-  border-radius: 1em;
+  border-radius: 6px;
 }
 
 .TacticalGrid {
@@ -6132,7 +6171,7 @@ button.AIInsights button:active {
   font-size: 1em;
   padding: 1em;
   border: var(--primary-color) solid 1px;
-  border-radius: 1em;
+  border-radius: 6px;
 }
 
 /* Header styling */
@@ -6190,6 +6229,8 @@ button.AIInsights button:active {
   text-align: left;
   color: inherit;
   font-family: inherit;
+  display: grid;
+  justify-content: unset;
 }
 
 .StyleExpand.highlight {
