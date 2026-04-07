@@ -1845,7 +1845,7 @@ strong.LOST {
   align-content: left;
   color: var(--text-color);
   padding-top: 1em;
-  padding-bottom: 2em;
+  padding-bottom: 1em;
   cursor: pointer;
   border-radius: 6px;
 }
@@ -1923,8 +1923,8 @@ strong.LOST {
   font-size: 1.1em;
   align-items: center;
   column-gap: 0.25rem;
-  margin-left: 0.5em;
-  margin-right: 0em;
+  margin-left: 1em;
+  margin-right: 1em;
   margin-bottom: 0.5em;
   /* height: 4em; */
 }
@@ -1936,8 +1936,8 @@ strong.LOST {
   font-size: 1.1em;
   align-items: center;
   column-gap: 0.25rem;
-  margin-left: 0.5em;
-  margin-right: 0em;
+    margin-left: 1em;
+  margin-right: 1em;
     margin-bottom: 0.5em;
 
     /* height: 4em; */
@@ -2530,13 +2530,6 @@ strong.LOST {
 .ResultContainerExplainer {
   height: 100%;
   align-content: center;
-    /* height: auto; */
-  width: 1.5em;
-  padding: 0.5em;
-  display: inline-block;
-  margin-left: 0.5em;
-  margin-right: 0.5em;
-  font-size: 1.1em;
 }
 
 .divider,
@@ -2649,8 +2642,8 @@ strong.LOST {
   font-size: 1.1em;
   align-items: center;
   column-gap: 0.25rem;
-  margin-left: 0.5em;
-  margin-right: 0em;
+    margin-left: 1em;
+  margin-right: 1em;
     margin-bottom: 0.5em;
 
   /* height: 0.7rem; */
