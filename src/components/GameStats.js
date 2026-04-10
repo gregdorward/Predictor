@@ -3173,6 +3173,7 @@ function GameStats({ game, displayBool, stats, handleToggleTip, userTips }) {
         const attackingMetricsAwayOnly = awayForm.attackingMetricsAwayOnly
 
         const defensiveMetricsHome = homeForm.defensiveMetrics
+        console.log(defensiveMetricsHome)
         const defensiveMetricsHomeLast5 = homeForm.defensiveMetricsHomeLast5
         const defensiveMetricsHomeOnly = homeForm.defensiveMetricsHomeOnly
 

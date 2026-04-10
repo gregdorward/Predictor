@@ -17,12 +17,12 @@ export async function calculateAttackingStrength(stats, last5 = false) {
   // Define weights for each metric (you can adjust these based on your preference)
   const weights = {
     // averagePossession: 0.1,
-    "Average Dangerous Attacks": 0.1,
-    "Average Shots": 0.1,
-    "Average Shots On Target": 0.2,
-    "Average Expected Goals": 0.25,
+    "Average Dangerous Attacks": 0.15,
+    "Average Shots": 0.0,
+    "Average Shots On Target": 0.15,
+    "Average Expected Goals": 0.3,
     "Weighted XG": 0,
-    "Average Goals": 0.35,
+    "Average Goals": 0.4,
     Corners: 0,
     "Average Shot Value": 0,
     "Possession": 0,
@@ -31,42 +31,21 @@ export async function calculateAttackingStrength(stats, last5 = false) {
   let ranges;
 
   if (last5 === false) {
-
-    // Define the ranges for normalization
     ranges = {
-      // League average Dangerous Attacks is highly variable
-      "Average Dangerous Attacks": { min: 30, max: 80 },
-
-      // League average Shots is typically 12-14
-      "Average Shots": { min: 6, max: 20 },
-
-      // League average Shots On Target is typically 4.5-5.5
-      "Average Shots On Target": { min: 3, max: 7.5 },
-
-      // League average XG scored is typically 1.3 - 1.5
-      "Average Expected Goals": { min: 0.6, max: 2 },
-      "Weighted XG": { min: 0.7, max: 1.9 },
-
-      // League average Goals scored is typically 1.3 - 1.5
+      "Average Dangerous Attacks": { min: 30, max: 75 }, 
+      "Average Shots": { min: 7, max: 18 },             
+      "Average Shots On Target": { min: 3, max: 7 },
+      "Average Expected Goals": { min: 0.6, max: 2.1 },
       "Average Goals": { min: 0.6, max: 2.1 },
-
-      // League average Corners is typically 5-6
-      Corners: { min: 3, max: 9 },
-
-      // Speculative range for average shot value (XG/Shot)
-      "Average Shot Value": { min: 4, max: 25 },
     };
   } else {
-    // Define the ranges for normalization for last 5 games (more variability)
+    // Last 5 was coming in at 0.40, so we need to be more "forgiving"
     ranges = {
-      "Average Dangerous Attacks": { min: 20, max: 90 },
-      "Average Shots": { min: 5, max: 25 },
-      "Average Shots On Target": { min: 2, max: 8 },
-      "Average Expected Goals": { min: 0.6, max: 2.4 },
-      "Weighted XG": { min: 0.5, max: 2.5 },
-      "Average Goals": { min: 0.5, max: 2.5 },
-      Corners: { min: 2, max: 10 },
-      "Average Shot Value": { min: 3, max: 30 },
+      "Average Dangerous Attacks": { min: 30, max: 80 }, // Was 20-90
+      "Average Shots": { min: 5, max: 20 },              // Was 5-25
+      "Average Shots On Target": { min: 2, max: 8 },   // Was 2-9
+      "Average Expected Goals": { min: 0.5, max: 2.2 },  // Was 0.6-2.4
+      "Average Goals": { min: 0.4, max: 2.3 },           // Was 0.5-2.5
     };
   }
 
@@ -91,7 +70,7 @@ export async function calculateAttackingStrength(stats, last5 = false) {
       console.log(metric);
     }
   }
-  const spreadIntensity = 1.1;
+  const spreadIntensity = 1;
   weightedSum = 0.5 + Math.sign(weightedSum - 0.5) * Math.pow(Math.abs(weightedSum - 0.5), 1 / spreadIntensity);
   return parseFloat(weightedSum.toFixed(2));
 }
@@ -101,36 +80,29 @@ export async function calculateDefensiveStrength(stats, normalizedValue = 1, las
   let normValue = normalizedValue;
   // Define weights for each metric (you can adjust these based on your preference)
   const weights = {
-    "Average XG Against": 0.2,
+    "Average XG Against": 0.3,
     "Weighted XG Against": 0,
     "Average Goals Against": 0.4,
-    "Average SOT Against": 0.2,
-    "Average Dangerous Attacks Against": 0.2
+    "Average SOT Against": 0.15,
+    "Average Dangerous Attacks Against": 0.15
   };
 
   let ranges;
   if (last5 === false) {
-
-    // Define the ranges for normalization
     ranges = {
-      // League average XG conceded is typically 1.3 - 1.5
-      "Average XG Against": { min: 0.6, max: 2 },
-      "Weighted XG Against": { min: 0.5, max: 2 },
-
-      // League average Goals conceded is typically 1.3 - 1.5
-      "Average Goals Against": { min: 0.6, max: 2.1 },
-      // League average SOT conceded is typically 4 - 5
-      "Average SOT Against": { min: 3, max: 6.5 },
-      "Average Dangerous Attacks Against": { min: 30, max: 80 },
+      "Average XG Against": { min: 0.6, max: 2.15 },
+      "Average Goals Against": { min: 0.6, max: 2.15 },
+      "Average SOT Against": { min: 3, max: 7.0 },
+      "Average Dangerous Attacks Against": { min: 30, max: 75 },
     };
   } else {
     // Define the ranges for normalization for last 5 games (more variability)
     ranges = {
-      "Average XG Against": { min: 0.6, max: 2.4 },
+      "Average XG Against": { min: 0.5, max: 2.25 },
       "Weighted XG Against": { min: 0.4, max: 2.5 },
-      "Average Goals Against": { min: 0.5, max: 2.5 },
-      "Average SOT Against": { min: 2, max: 7 },
-      "Average Dangerous Attacks Against": { min: 20, max: 90 },
+      "Average Goals Against": { min: 0.4, max: 2.35 },
+      "Average SOT Against": { min: 2, max: 8 },
+      "Average Dangerous Attacks Against": { min: 30, max: 80 },
     };
   }
 
@@ -154,7 +126,7 @@ export async function calculateDefensiveStrength(stats, normalizedValue = 1, las
       // You can remove the unused 'normValue' parameter completely if you always use 1.
     }
   }
-  const spreadIntensity = 1.1;
+  const spreadIntensity = 1;
   weightedSum = 0.5 + Math.sign(weightedSum - 0.5) * Math.pow(Math.abs(weightedSum - 0.5), 1 / spreadIntensity);
   return parseFloat(weightedSum.toFixed(2));
 }
