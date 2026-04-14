@@ -20,9 +20,9 @@ export async function calculateAttackingStrength(stats, last5 = false) {
     "Average Dangerous Attacks": 0.15,
     "Average Shots": 0.0,
     "Average Shots On Target": 0.15,
-    "Average Expected Goals": 0.3,
+    "Average Expected Goals": 0.35,
     "Weighted XG": 0,
-    "Average Goals": 0.4,
+    "Average Goals": 0.35,
     Corners: 0,
     "Average Shot Value": 0,
     "Possession": 0,
@@ -70,7 +70,7 @@ export async function calculateAttackingStrength(stats, last5 = false) {
       console.log(metric);
     }
   }
-  const spreadIntensity = 1;
+  const spreadIntensity = 1.05;
   weightedSum = 0.5 + Math.sign(weightedSum - 0.5) * Math.pow(Math.abs(weightedSum - 0.5), 1 / spreadIntensity);
   return parseFloat(weightedSum.toFixed(2));
 }
@@ -80,9 +80,9 @@ export async function calculateDefensiveStrength(stats, normalizedValue = 1, las
   let normValue = normalizedValue;
   // Define weights for each metric (you can adjust these based on your preference)
   const weights = {
-    "Average XG Against": 0.3,
+    "Average XG Against": 0.35,
     "Weighted XG Against": 0,
-    "Average Goals Against": 0.4,
+    "Average Goals Against": 0.35,
     "Average SOT Against": 0.15,
     "Average Dangerous Attacks Against": 0.15
   };
@@ -126,7 +126,7 @@ export async function calculateDefensiveStrength(stats, normalizedValue = 1, las
       // You can remove the unused 'normValue' parameter completely if you always use 1.
     }
   }
-  const spreadIntensity = 1;
+  const spreadIntensity = 1.05;
   weightedSum = 0.5 + Math.sign(weightedSum - 0.5) * Math.pow(Math.abs(weightedSum - 0.5), 1 / spreadIntensity);
   return parseFloat(weightedSum.toFixed(2));
 }

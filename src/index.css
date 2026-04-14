@@ -1380,7 +1380,7 @@ span.MembershipInfo {
 
 .TacticDateRow {
   color: var(--text-color);
-  margin-top: 0.5em;
+  padding-top: 0.5em;
   opacity: 0.5;
 }
 
@@ -1402,8 +1402,6 @@ span.MembershipInfo {
   padding: 1em;
   align-items: center;
   font-size: 1.1em;
-  margin-top: 0.5em;
-  margin-bottom: 0.5em;
   background-color: var(--secondary-background-color);
   color: var(--text-color);
   border-left: #009700 solid 5px;
@@ -1416,8 +1414,6 @@ span.MembershipInfo {
   flex-wrap: wrap;
   padding: 1em;
   align-items: center;
-  margin-top: 0.5em;
-  margin-bottom: 0.5em;
   font-size: 1.1em;
   background-color: var(--secondary-background-color);
   color: var(--text-color);
@@ -1430,8 +1426,6 @@ span.MembershipInfo {
   flex-direction: row;
   flex-wrap: wrap;
   padding: 1em;
-  margin-top: 0.5em;
-  margin-bottom: 0.5em;
   align-items: center;
   font-size: 1.1em;
   background-color: var(--secondary-background-color);
@@ -1852,7 +1846,7 @@ strong.LOST {
 
 .individualFixturefalse:hover {
   /* border: var(--primary-color) 1px solid; */
-   transform: translateY(-2px);
+  transform: translateY(-2px);
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.12);
 }
 
@@ -1922,9 +1916,9 @@ strong.LOST {
     minmax(0.5rem, 0.5fr) minmax(0.5em, 0.4fr) minmax(2rem, 1.2fr) minmax(2rem, 1.3fr) minmax(0.5rem, 0.6fr) minmax(1.5rem, 1.5fr);
   font-size: 1.1em;
   align-items: center;
-  column-gap: 0.25rem;
+  column-gap: 1em;
   margin-left: 1em;
-  margin-right: 1em;
+  margin-right: 0em;
   margin-bottom: 0.5em;
   /* height: 4em; */
 }
@@ -1935,12 +1929,12 @@ strong.LOST {
     minmax(0.5rem, 0.5fr) minmax(0.5em, 0.4fr) minmax(2rem, 1.2fr) minmax(2rem, 1.3fr) minmax(0.5rem, 0.6fr) minmax(1.5rem, 1.5fr);
   font-size: 1.1em;
   align-items: center;
-  column-gap: 0.25rem;
-    margin-left: 1em;
-  margin-right: 1em;
-    margin-bottom: 0.5em;
+  column-gap: 1em;
+  margin-left: 1em;
+  margin-right: 0em;
+  margin-bottom: 0.5em;
 
-    /* height: 4em; */
+  /* height: 4em; */
 
   /* margin-bottom: 1em; */
 }
@@ -1951,10 +1945,10 @@ strong.LOST {
     minmax(0.5rem, 0.5fr) minmax(0.5em, 0.4fr) minmax(2.5rem, 1.3fr) minmax(0.5rem, 0.5fr) minmax(0.5rem, 0.5fr) minmax(1.8rem, 1.3fr);
   font-size: 1.1em;
   margin-left: 1em;
-  margin-right: 0.5em;
+  margin-right: 0em;
   margin-bottom: 1em;
   align-items: center;
-  column-gap: 0.25rem;
+  column-gap: 1em;
   padding-top: 0.5em;
 }
 
@@ -1964,9 +1958,9 @@ strong.LOST {
     minmax(0.5rem, 0.5fr) minmax(0.5em, 0.4fr) minmax(2.5rem, 1.3fr) minmax(0.5rem, 0.5fr) minmax(0.5rem, 0.5fr) minmax(1.8rem, 1.3fr);
   font-size: 1.1em;
   margin-left: 1em;
-  margin-right: 0.5em;
+  margin-right: 0em;
   align-items: center;
-  column-gap: 0.25rem;
+  column-gap: 1em;
   padding-top: 0.5em;
   margin-bottom: 1em;
 }
@@ -2374,14 +2368,14 @@ strong.LOST {
   gap: 0.25em;
   box-sizing: border-box;
   height: 1.5em;
-    border-radius: 6px;
-
+  border-radius: 6px;
+  border: var(--faint-text) 0.1em solid;
 }
 
 .ProbabilityBarBackground {
   position: relative;
   flex: 1;
-  border-radius: 6px;
+  border-radius: 5px;
   overflow: hidden;
   background-color: #eeeeee;
   display: flex;
@@ -2400,29 +2394,29 @@ strong.LOST {
 }
 
 .ProbabilityBarText {
-  color: #020029;
+  color: #000000;
   font-size: 0.9em;
   z-index: 2;
 }
 
 .prob-strong {
-  background-color: #009700bf;
+  background-color: #01b001;
 }
 
 .prob-slightlyStrong {
-  background-color: #589700b8;
+  background-color: #6ed848;
 }
 
 .prob-medium {
-  background-color: #ffdd00b7;
+  background-color: #e9ca00;
 }
 
 .prob-slightlyWeak {
-  background-color: #ff6f00bf;
+  background-color: #ff6f00;
 }
 
 .prob-weak {
-  background-color: #b10f00be;
+  background-color: #a90f01;
 }
 
 .PredictionOrProbabilityExplainertrue {
@@ -2540,7 +2534,7 @@ strong.LOST {
   display: inline-block;
   color: rgb(55, 55, 55);
   background-color: white;
-  border: #FFE500 solid 1px;
+  border: var(--button-color) solid 1px;
   border-radius: 6px;
   margin-right: 0.5em;
   margin-left: 0.5em;
@@ -2554,6 +2548,7 @@ strong.LOST {
   display: inline-block;
   color: black;
   background-color: #FFE500;
+    border: var(--button-color) solid 1px;
   /* border: black 1px solid; */
   border-radius: 6px;
   margin-left: 0.5em;
@@ -2618,9 +2613,9 @@ strong.LOST {
   font-size: 1.1em;
   align-items: center;
   margin-left: 1em;
-  margin-right: 1em;
+  margin-right: 0em;
   margin-bottom: 1em;
-  column-gap: 0.25rem;
+  column-gap: 1em;
 }
 
 .ExplainerContainerfalse {
@@ -2629,9 +2624,9 @@ strong.LOST {
     minmax(0.5rem, 0.5fr) minmax(0.5em, 0.4fr) minmax(2.5rem, 1.3fr) minmax(0.5rem, 0.5fr) minmax(0.5rem, 0.5fr) minmax(1.8rem, 1.3fr);
   font-size: 1.1em;
   align-items: center;
-  column-gap: 0.25rem;
-    margin-left: 1em;
-  margin-right: 1em;
+  column-gap: 1em;
+  margin-left: 1em;
+  margin-right: 0em;
   padding-top: 0.5em;
 }
 
@@ -2641,10 +2636,10 @@ strong.LOST {
     minmax(0.5rem, 0.5fr) minmax(0.5em, 0.4fr) minmax(2rem, 1.2fr) minmax(2rem, 1.3fr) minmax(0.5rem, 0.6fr) minmax(1.5rem, 1.5fr);
   font-size: 1.1em;
   align-items: center;
-  column-gap: 0.25rem;
-    margin-left: 1em;
-  margin-right: 1em;
-    margin-bottom: 0.5em;
+  column-gap: 1em;
+  margin-left: 1em;
+  margin-right: 0em;
+  margin-bottom: 0.5em;
 
   /* height: 0.7rem; */
 }
@@ -5873,7 +5868,7 @@ button.AIInsights button:active {
 .manager-stats-grid {
   display: flex;
   justify-content: center;
-  gap: 1.5em;
+  gap: 1em;
   margin-bottom: 15px;
 }
 
@@ -5881,47 +5876,49 @@ button.AIInsights button:active {
   display: flex;
   flex-direction: column;
   width: 2em;
-  background-color: rgba(179, 179, 179, 0.277);
-  padding: 0.5em;
+  background-color: rgb(60, 60, 60);
+  color: white;
+  padding: 0.75em;
   border-radius: 6px;
 }
 
 .stat-item-wins {
   display: flex;
   flex-direction: column;
-  background-color: #01a50144;
+  background-color: #01a501;
   width: 2em;
-  padding: 0.5em;
+  padding: 0.75em;
   border-radius: 6px;
 }
 
 .stat-item-draws {
   display: flex;
   flex-direction: column;
-  background-color: rgba(255, 166, 0, 0.22);
+  background-color: rgb(206, 134, 0);
   width: 2em;
-  padding: 0.5em;
+  padding: 0.75em;
   border-radius: 6px;
 }
 
 .stat-item-losses {
   display: flex;
   flex-direction: column;
-  background-color: #970d003a;
+  background-color: #970d00;
   width: 2em;
-  padding: 0.5em;
+  padding: 0.75em;
   border-radius: 6px;
 }
 
 .stat-label {
   font-size: 1em;
   color: var(--text-color);
+  color: white;
 }
 
 .stat-value {
   font-size: 1.1em;
   font-weight: bold;
-  color: var(--text-color);
+  color: white;
 }
 
 /* Win Percentage Progress Bar */
@@ -6139,7 +6136,6 @@ button.AIInsights button:active {
 
 .TacticalFixtureContainer {
   display: flex;
-  gap: 1em;
   align-items: stretch;
   margin: 10px 0;
 }
@@ -6256,6 +6252,18 @@ button.AIInsights button:active {
 }
 
 .StyleExpand.highlight {
+  width: 100%;
+  background: none;
+  border: none;
+  padding: 0em;
+  margin: 0;
+  cursor: pointer;
+  text-align: left;
+  color: inherit;
+  font-family: inherit;
+  display: grid;
+  justify-content: unset;
+  height: 4em;
   border: var(--primary-color) solid 1px;
 }
 

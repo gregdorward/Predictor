@@ -2538,15 +2538,15 @@ export async function generateGoals(homeForm, awayForm, match) {
 
 
   homeForm.XGRating =
-    (homeForm.avPoints2 * 0.1) + // Momentum
-    (homeForm.XGChangeRecently * 0.3) // XG Momentum
+    (last5PointsHomeMultipliedByOppPoints * 0.1) + // Momentum
+    (homeForm.XGChangeRecently * 1) // XG Momentum
   // (homeForm.avPointsHome * 0.1) + // Home Strength
   // (last5PointsHomeMultipliedByOppPoints * 0.05
   // )
 
   awayForm.XGRating =
-    (awayForm.avPoints2 * 0.1) + // Momentum
-    (awayForm.XGChangeRecently * 0.3) // XG Momentum
+    (last5PointsAwayMultipliedByOppPoints * 0.1) + // Momentum
+    (awayForm.XGChangeRecently * 1) // XG Momentum
   // (awayForm.avPointsAway * 0.1) + // Away Strength
   // (last5PointsAwayMultipliedByOppPoints * 0.05)
 
@@ -2554,8 +2554,8 @@ export async function generateGoals(homeForm, awayForm, match) {
   const rawAwayComparison = awayForm.XGRating - homeForm.XGRating;
 
   // 2. Convert to multipliers (centered at 1.0)
-  const homeXGMult = calculateXGMultiplier(rawHomeComparison, 0.025); // Adjust 0.05 to taste
-  const awayXGMult = calculateXGMultiplier(rawAwayComparison, 0.025);
+  const homeXGMult = calculateXGMultiplier(rawHomeComparison, 0.035); // Adjust 0.05 to taste
+  const awayXGMult = calculateXGMultiplier(rawAwayComparison, 0.035);
 
   const majorContinentalLeagues = [
     "Europe UEFA Champions League",
@@ -2569,18 +2569,22 @@ export async function generateGoals(homeForm, awayForm, match) {
     "International WC Qualification South America"
   ]
 
+  console.log(match.game)
+  console.log(homeLambda_final_v3)
+  console.log(awayLambda_final_v3)
+
   if (majorContinentalLeagues.includes(match.leagueDesc)) {
     homeGoals =
       // (homeLambda_final_v2 * 0.85)
       //   * (1 + oddsComparisonHome * 0.15) +
       //   (homeForm.actualToXGDifference / 20) * homeXGMult;
-      ((homeLambda_final_v3) * (1 + (oddsComparisonHome * 0.15)))
+      ((homeLambda_rawOverall * 0.75) * (1 + (oddsComparisonHome * 0.1)))
 
     awayGoals =
       // (awayLambda_final_v2 * 0.75)
       //   * (1 + oddsComparisonAway * 0.15) +
       //   (awayForm.actualToXGDifference / 20) * awayXGMult;
-      ((awayLambda_final_v3) * (1 + (oddsComparisonAway * 0.15)))
+      ((awayLambda_rawOverall * 0.75) * (1 + (oddsComparisonAway * 0.1)))
 
   } else if (InternationalComps.includes(match.leagueDesc)) {
     homeGoals = ((homeLambda_final_v3 / 1.25) * (1 + (oddsComparisonHome * 0.05))) * (1 + homeForm.actualToXGDifference / 20)
