@@ -334,6 +334,20 @@ function normaliseScoreMatrix(scoreMatrix) {
   }));
 }
 
+function calibrateScoreMatrix(matrix, alpha = 1.1) {
+  const calibrated = matrix.map(score => ({
+    ...score,
+    probability: Math.pow(score.probability, alpha)
+  }));
+
+  const sum = calibrated.reduce((acc, s) => acc + s.probability, 0);
+
+  return calibrated.map(score => ({
+    ...score,
+    probability: score.probability / sum
+  }));
+}
+
 
 function impliedProbability(decimalOdds) {
   if (!decimalOdds) return null;
@@ -3766,19 +3780,26 @@ export async function calculateScore(match, index, divider, calculate, AIPredict
 
     const lambdaHome = formHome.teamGoalsCalc; // output from generateGoals
     const lambdaAway = formAway.teamGoalsCalc;
-
     const scoreMatrixRaw = buildScoreMatrix(
       clampLambda(lambdaHome),
       clampLambda(lambdaAway)
     );
 
-    match.scoreMatrix = normaliseScoreMatrix(scoreMatrixRaw);
-    const predictedScore = getMostLikelyScore(match.scoreMatrix);
+    const scoreMatrix = normaliseScoreMatrix(scoreMatrixRaw);
+
+    // 🔥 CALIBRATE HERE
+    const calibratedMatrix = calibrateScoreMatrix(scoreMatrix, 0.5);
+
+    match.scoreMatrix = calibratedMatrix;
+
+    const predictedScore = getMostLikelyScore(calibratedMatrix);
 
     const { homeWin, draw, awayWin } =
-      getMatchOddsProbabilities(match.scoreMatrix);
-    const { yes, no } = getBTTSProbability(match.scoreMatrix);
-    const { over, under } = getOverUnderProbability(match.scoreMatrix, 2.5);
+      getMatchOddsProbabilities(calibratedMatrix);
+
+    const { yes, no } = getBTTSProbability(calibratedMatrix);
+    const { over, under } = getOverUnderProbability(calibratedMatrix, 2.5);
+
     match.homeWinProbability = homeWin;
     match.drawProbability = draw;
     match.awayWinProbability = awayWin;
