@@ -281,7 +281,7 @@ function buildScoreMatrix(
   lambdaHome,
   lambdaAway,
   maxGoals = 5,
-  rho = 0.0125
+  rho = 0.04
 ) {
   const scores = [];
 
@@ -1181,8 +1181,6 @@ async function getPastLeagueResults(team, game, hOrA, form) {
       }
     });
 
-    console.log("Tactical Records before Identity:", tacticalRecords);
-
     const tacticalIdentity = {
       "clear favourite": { Pressing: 0, "Low block": 0, Dominant: 0, "Counter attack": 0, Balanced: 0, "Patient attacking": 0, Attacking: 0 },
       "clear underdog": { Pressing: 0, "Low block": 0, Dominant: 0, "Counter attack": 0, Balanced: 0, "Patient attacking": 0, Attacking: 0 },
@@ -2020,7 +2018,6 @@ async function getPastLeagueResults(team, game, hOrA, form) {
 
     form.avgShotValueChart =
       (form.XGOverall / form.avgShots) * 100 * form.ScoredAverage;
-    console.log(form.XGAgainstAvgOverall, form.avgShotsAgainst, form.avgConceeded)
     form.avgShotValueAgainstChart =
       (form.XGAgainstAvgOverall / form.avgShotsAgainst) * 100 * form.avgConceeded;
     form.avgShotValueLast5Chart =
@@ -2320,7 +2317,6 @@ export async function generateGoals(homeForm, awayForm, match) {
   // Define a minimum weakness so the factor never hits 0 or negative
   const MIN_WEAKNESS = 0.10;
 
-  console.log(`defensiveStrengthScoreGenerationLast5 - Home: ${homeForm.defensiveStrengthScoreGenerationLast5.toFixed(3)}, Away: ${awayForm.defensiveStrengthScoreGenerationLast5.toFixed(3)}`);
   const awayDefenseWeakness = Math.max(
     MIN_WEAKNESS,
     1 - awayForm.defensiveStrengthScoreGenerationLast5
@@ -2335,7 +2331,7 @@ export async function generateGoals(homeForm, awayForm, match) {
 
   // Helper to compute a dampened lambda component
   function computeLambdaComponent(attackStrength, defenseWeakness, last5 = false, gamesPlayed = 10, location) {
-    const attackFactor = attackStrength / BASELINE;
+    const attackFactor = attackStrength / 0.4;
     const defenseFactor = Math.max(0.2, defenseWeakness / BASELINE);
     // 1. Set the raw multiplier
     let multiplier = last5 ? 0.9 : 1.0;
@@ -2583,10 +2579,6 @@ export async function generateGoals(homeForm, awayForm, match) {
     "International WC Qualification South America"
   ]
 
-  console.log(match.game)
-  console.log(homeLambda_final_v3)
-  console.log(awayLambda_final_v3)
-
   if (majorContinentalLeagues.includes(match.leagueDesc)) {
     homeGoals =
       // (homeLambda_final_v2 * 0.85)
@@ -2616,11 +2608,6 @@ export async function generateGoals(homeForm, awayForm, match) {
       (awayLambda_final_v3) * awayXGMult
   }
   //ROI ~2.77%
-
-
-  console.log(match.homeTeam + " vs " + match.awayTeam);
-  console.log(`homeLambda_final_v3: ${homeLambda_final_v3.toFixed(3)}, awayLambda_final_v3: ${awayLambda_final_v3.toFixed(3)}`);
-
 
   if (homeGoals > 5) {
     homeGoals = (homeForm.XGOverall + homeGoals) / 2
@@ -3404,13 +3391,6 @@ export async function calculateScore(match, index, divider, calculate, AIPredict
     formAway.defensiveStrengthScoreGenerationLast5 =
       await calculateDefensiveStrength(defensiveMetricsAwayLast5);
 
-    console.log(match.game);
-    console.log(`home defensive metrics: defensiveMetricsHomeLast5`, defensiveMetricsHomeLast5);
-    console.log(`home defensive strength last 5: formHome.defensiveStrengthLast5`, formHome.defensiveStrengthLast5);
-
-    console.log(`away defensive metrics: defensiveMetricsAwayLast5`, defensiveMetricsAwayLast5);
-    console.log(`away defensive strength last 5: formAway.defensiveStrengthLast5`, formAway.defensiveStrengthLast5);
-
     formAway.defensiveStrengthAwayOnly = await calculateDefensiveStrength(
       defensiveMetricsAwayOnly
     );
@@ -3788,7 +3768,7 @@ export async function calculateScore(match, index, divider, calculate, AIPredict
     const scoreMatrix = normaliseScoreMatrix(scoreMatrixRaw);
 
     // 🔥 CALIBRATE HERE
-    const calibratedMatrix = calibrateScoreMatrix(scoreMatrix, 0.5);
+    const calibratedMatrix = calibrateScoreMatrix(scoreMatrix, 0.75);
 
     match.scoreMatrix = calibratedMatrix;
 
