@@ -682,9 +682,13 @@ export async function generateFixtures(
       .then(res => res.json())
       .then(games => {
         games.forEach((game) => {
+          console.log(game)
           const homeName = game.homeTeam || "";
           const awayName = game.awayTeam || "";
           if (isYouthOrReserveTeam(homeName) || isYouthOrReserveTeam(awayName)) {
+            return;
+          }
+          if(game.homeId === 5543 || game.awayId === 5543) {
             return;
           }
 
