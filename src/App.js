@@ -1201,7 +1201,7 @@ function AppContent() {
             {/* Optional: Add a subtle text indicator below */}
             {isPredicting && <p className="LoadingStatus">Calculating all predictions... Each fixture will be interactable once these are returned</p>}
 
-            <div className="Version">Prediction engine v2.1.2</div>
+            <div className="Version">Prediction engine v2.1.3</div>
           </div>
         )}
       </div>

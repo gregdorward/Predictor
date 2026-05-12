@@ -1806,16 +1806,15 @@ async function getPastLeagueResults(team, game, hOrA, form) {
 
     let r = 10;
     let x = 10;
+    console.log(form)
+    console.log(teamGoalsAll)
 
-    const teamGoalsHomeRollingAverage = await predictNextWeightedMovingAverage(
-      teamGoalsHome,
-      teamGoalsHome.length < x ? teamGoalsHome.length : x
-    );
+    form.teamGoalsRollingAverage = await calculateBalancedRollingAverage(
+      teamGoalsAll
+        );
+    
+        console.log(form.teamGoalsRollingAverage)
 
-    const teamGoalsAwayRollingAverage = await predictNextWeightedMovingAverage(
-      teamGoalsAway,
-      teamGoalsAway.length < x ? teamGoalsAway.length : x
-    );
 
     function roundXG(xg, scored) {
       if (scored >= xg) {
@@ -1909,16 +1908,10 @@ async function getPastLeagueResults(team, game, hOrA, form) {
     // RoundedXGAgainstAway.reverse()
 
 
-    const teamConceededHomeRollingAverage =
-      await predictNextWeightedMovingAverage(
-        teamConceededHome,
-        teamConceededHome.length < x ? teamConceededHome.length : x
-      );
-
-    const teamConceededAwayRollingAverage =
-      await predictNextWeightedMovingAverage(
-        teamConceededAway,
-        teamConceededAway.length < x ? teamConceededAway.length : x
+    console.log(teamConceededAll)
+    form.teamConceededRollingAverage =
+      await calculateBalancedRollingAverage(
+        teamConceededAll
       );
 
     const sum = teamGoalsAll.reduce((a, b) => a + b, 0);
@@ -1983,15 +1976,15 @@ async function getPastLeagueResults(team, game, hOrA, form) {
     form.last10GoalsConceeded = parseFloat(last10AvgConceeded.toFixed(2));
     form.last10GoalDiff = form.last10Goals - form.last10GoalsConceeded;
 
-    form.teamXGAllRollingAverage = await predictNextWeightedMovingAverage(
-      teamXGForAll,
-      teamXGForAll.length < r ? teamXGForAll.length : r
+    console.log(teamXGForAll)
+    form.teamXGAllRollingAverage = await calculateBalancedRollingAverage(
+      teamXGForAll
     );
 
+    console.log(teamXGAgainstAll)
     form.teamXGConceededAllRollingAverage =
-      await predictNextWeightedMovingAverage(
-        teamXGAgainstAll,
-        teamXGAgainstAll.length < r ? teamXGAgainstAll.length : r
+      await calculateBalancedRollingAverage(
+        teamXGAgainstAll
       );
 
     const sumTwo = teamConceededAll.reduce((a, b) => a + b, 0);
@@ -2040,10 +2033,6 @@ async function getPastLeagueResults(team, game, hOrA, form) {
     // averageShotValueAll = averageShotValueAll + form.avgShotValueChart
 
     return [
-      teamConceededHomeRollingAverage,
-      teamConceededAwayRollingAverage,
-      // teamXGAllRollingAverage,
-      // teamXGConceededAllRollingAverage,
       averageOddsHome,
       averageOddsAway,
       avgScored,
@@ -2060,19 +2049,28 @@ async function getPastLeagueResults(team, game, hOrA, form) {
     return null;
   }
 }
+//Cumulative ROI for all 3436 match outcomes: -1.38%
+function calculateBalancedRollingAverage(numbers, boost = 3) {
+  const n = numbers.length;
+  if (n === 0) return 0;
+  if (n === 1) return numbers[0];
 
-async function predictNextWeightedMovingAverage(numbers, windowSize) {
-  const window = numbers.slice(0, windowSize);
-  const n = window.length;
+  let totalWeight = 0;
+  let weightedSum = 0;
 
-  // Index 0 (Newest) gets n^2, last index gets 1^2
-  const weights = Array.from({ length: n }, (_, i) => Math.pow(n - i, 2));
+  for (let i = 0; i < n; i++) {
+    // Flipped Logic:
+    // i=0 (Newest)     -> (n-1-0)/(n-1) = 1.0 -> weight = 1 + boost
+    // i=n-1 (Oldest)   -> (n-1-(n-1))/(n-1) = 0 -> weight = 1.0
+    const weight = 1 + ((n - 1 - i) / (n - 1)) * boost;
+    
+    weightedSum += numbers[i] * weight;
+    totalWeight += weight;
+  }
 
-  const weightSum = weights.reduce((acc, w) => acc + w, 0);
-  const weightedSum = window.reduce((acc, num, i) => acc + num * weights[i], 0);
-
-  return parseFloat((weightedSum / weightSum).toFixed(2));
+  return parseFloat((weightedSum / totalWeight).toFixed(2));
 }
+
 
 async function calculateDifference(num1, num2) {
   return num1 >= num2 ? num1 - num2 : -(num2 - num1);
@@ -2315,7 +2313,7 @@ export async function generateGoals(homeForm, awayForm, match) {
   const BASELINE = 0.5;
 
   // Define a minimum weakness so the factor never hits 0 or negative
-  const MIN_WEAKNESS = 0.10;
+  const MIN_WEAKNESS = 0.1;
 
   const awayDefenseWeakness = Math.max(
     MIN_WEAKNESS,
@@ -2425,10 +2423,10 @@ export async function generateGoals(homeForm, awayForm, match) {
 
   // Average last-5 and overall (unchanged logic)
   const homeLambdaAverage =
-    (((homeLambda_raw * 0.75) + (homeLambda_rawOverall * 1.25)) / 2)
+    (((homeLambda_raw * 0) + (homeLambda_rawOverall * 2)) / 2)
 
   const awayLambdaAverage =
-    (((awayLambda_raw * 0.75) + (awayLambda_rawOverall * 1.25)) / 2)
+    (((awayLambda_raw * 0) + (awayLambda_rawOverall * 2)) / 2)
 
   // console.log(match.homeTeam + " vs " + match.awayTeam);
   // console.log(`homeAttackingStrengthLast5: ${homeForm.attackingStrengthLast5.toFixed(3)}, awayAttackingStrengthLast5: ${awayForm.attackingStrengthLast5.toFixed(3)}`);
@@ -2876,9 +2874,6 @@ export async function calculateScore(match, index, divider, calculate, AIPredict
       match.leagueID !== 7956
     ) {
       [
-        formHome.predictedGoalsConceededBasedOnHomeAv,
-        formHome.predictedGoalsConceededBasedOnAwayAv,
-        formHome.allTeamGoalsConceededBasedOnAverages,
         formHome.averageOddsHome,
         formHome.averageOddsAway,
         formHome.averageScoredLeague,
@@ -2892,9 +2887,6 @@ export async function calculateScore(match, index, divider, calculate, AIPredict
       ] = await getPastLeagueResults(match.homeTeam, match, "home", formHome);
 
       [
-        formAway.predictedGoalsConceededBasedOnHomeAv,
-        formAway.predictedGoalsConceededBasedOnAwayAv,
-        formAway.allTeamGoalsConceededBasedOnAverages,
         formAway.averageOddsHome,
         formAway.averageOddsAway,
         formAway.averageScoredLeague,
@@ -2908,9 +2900,6 @@ export async function calculateScore(match, index, divider, calculate, AIPredict
       ] = await getPastLeagueResults(match.awayTeam, match, "away", formAway);
     } else {
       formHome.completeData = false;
-      formHome.predictedGoalsConceededBasedOnHomeAv = formHome.ConcededAverage;
-      formHome.predictedGoalsConceededBasedOnAwayAv = formHome.ConcededAverage;
-      formHome.allTeamGoalsConceededBasedOnAverages = formHome.ConcededAverage;
       formHome.averageOddsHome = null;
       formHome.averageOddsAway = null;
       formHome.averageScoredLeague = null;
@@ -3090,8 +3079,8 @@ export async function calculateScore(match, index, divider, calculate, AIPredict
       "Average Shot Value": formHome?.avgShotValueChart?.toFixed(2),
       "Average Shots On Target": formHome?.AverageShotsOnTargetOverall,
       "Average Expected Goals": formHome?.XGOverall,
-      "Weighted XG": formHome?.weightedXGAvgFor,
-      "Average Goals": formHome?.avgScored,
+      "Weighted XG": formHome?.teamXGAllRollingAverage,
+      "Average Goals": formHome?.teamGoalsRollingAverage,
       "Corners": formHome?.AverageCorners,
     };
 
@@ -3175,8 +3164,8 @@ export async function calculateScore(match, index, divider, calculate, AIPredict
       "Average Shot Value": formAway.avgShotValueChart?.toFixed(2),
       "Average Shots On Target": formAway.AverageShotsOnTargetOverall,
       "Average Expected Goals": formAway.XGOverall,
-      "Weighted XG": formAway.weightedXGAvgFor,
-      "Average Goals": formAway.avgScored,
+      "Weighted XG": formAway.teamXGAllRollingAverage,
+      "Average Goals": formAway.teamGoalsRollingAverage,
       "Corners": formAway.AverageCorners,
     };
 
@@ -3207,10 +3196,10 @@ export async function calculateScore(match, index, divider, calculate, AIPredict
       "Clean Sheet Percentage":
         100 - formHome.CleanSheetPercentage || 0,
       "Average XG Against": formHome.XGAgainstAvgOverall,
-      "Weighted XG Against": formHome.weightedXGAvgAgainst
-        ? formHome.weightedXGAvgAgainst
+      "Weighted XG Against": formHome.teamXGConceededAllRollingAverage
+        ? formHome.teamXGConceededAllRollingAverage
         : formHome.XGAgainstAvgOverall,
-      "Average Goals Against": formHome.avgConceeded,
+      "Average Goals Against": formHome.teamConceededRollingAverage,
       "Average SOT Against": formHome.AverageShotsOnTargetAgainstOverall,
       "Average Shots Against": formHome.avgShotsAgainst,
       "Average Shot Value Against": formHome.avgShotValueAgainstChart,
@@ -3246,10 +3235,10 @@ export async function calculateScore(match, index, divider, calculate, AIPredict
       "Clean Sheet Percentage":
         100 - formAway.CleanSheetPercentage || 0,
       "Average XG Against": formAway.XGAgainstAvgOverall,
-      "Weighted XG Against": formAway.weightedXGAvgAgainst
-        ? formAway.weightedXGAvgAgainst
+      "Weighted XG Against": formAway.teamXGConceededAllRollingAverage
+        ? formAway.teamXGConceededAllRollingAverage
         : formAway.XGAgainstAvgOverall,
-      "Average Goals Against": formAway.avgConceeded,
+      "Average Goals Against": formAway.teamConceededRollingAverage,
       "Average SOT Against": formAway.AverageShotsOnTargetAgainstOverall,
       "Average Shots Against": formAway.avgShotsAgainst,
       "Average Shot Value Against": formAway.avgShotValueAgainstChart,

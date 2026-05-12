@@ -20,9 +20,9 @@ export async function calculateAttackingStrength(stats, last5 = false) {
     "Average Dangerous Attacks": 0.15,
     "Average Shots": 0.0,
     "Average Shots On Target": 0.15,
-    "Average Expected Goals": 0.35,
-    "Weighted XG": 0,
-    "Average Goals": 0.35,
+    "Average Expected Goals": 0.15,
+    "Weighted XG": 0.3,
+    "Average Goals": 0.25,
     Corners: 0,
     "Average Shot Value": 0,
     "Possession": 0,
@@ -81,9 +81,9 @@ export async function calculateDefensiveStrength(stats, normalizedValue = 1, las
   let normValue = normalizedValue;
   // Define weights for each metric (you can adjust these based on your preference)
   const weights = {
-    "Average XG Against": 0.35,
-    "Weighted XG Against": 0,
-    "Average Goals Against": 0.35,
+    "Average XG Against": 0.15,
+    "Weighted XG Against": 0.3,
+    "Average Goals Against": 0.25,
     "Average SOT Against": 0.15,
     "Average Dangerous Attacks Against": 0.15
   };

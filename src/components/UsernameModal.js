@@ -73,9 +73,8 @@ const UsernameModal = ({ auth, db, user, onClose, onUsernameSet }) => {
     return (
         <div className="modal-backdrop">
             <div className="modal-content">
-                <h3>User tips are expanding soon. Choose a username to link to your account</h3>
-                <p>This will be used for tracking your tips, their profitibility and as a means to take part in a tipping league - coming soon!</p>
-                <p>Choose something anomynous that you can use to identify yourself in the league table.</p>
+                <h3>Choose an optional username to link to your account</h3>
+                <p>This will be used in the monthly prediction league where you can win 1 month's free access, should you wish to take part</p>
                 <form onSubmit={handleSubmit}>
                     <input
                         type="text"
