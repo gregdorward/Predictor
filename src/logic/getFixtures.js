@@ -682,7 +682,6 @@ export async function generateFixtures(
       .then(res => res.json())
       .then(games => {
         games.forEach((game) => {
-          console.log(game)
           const homeName = game.homeTeam || "";
           const awayName = game.awayTeam || "";
           if (isYouthOrReserveTeam(homeName) || isYouthOrReserveTeam(awayName)) {
@@ -767,8 +766,6 @@ export async function generateFixtures(
     // render(<div></div>, "FixtureContainer");
 
     fixtureResponse = await fetch(url);
-
-    console.log(fixtureResponse)
 
     await fixtureResponse.json().then((fixtures) => {
       fixtureArray = Array.from(fixtures.data);

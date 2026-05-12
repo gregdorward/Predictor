@@ -67,8 +67,6 @@ export async function calculateAttackingStrength(stats, last5 = false) {
         )
       );
       weightedSum += normalizedValue * weights[metric];
-    } else {
-      console.log(metric);
     }
   }
   const spreadIntensity = 1.05;

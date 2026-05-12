@@ -1806,14 +1806,27 @@ async function getPastLeagueResults(team, game, hOrA, form) {
 
     let r = 10;
     let x = 10;
-    console.log(form)
-    console.log(teamGoalsAll)
 
     form.teamGoalsRollingAverage = await calculateBalancedRollingAverage(
       teamGoalsAll
-        );
+    );
+
+    form.dangerousAttacksRollingAverage = await calculateBalancedRollingAverage(
+      dangerousAttacks
+    );
+
+    form.dangerousAttacksAgainstRollingAverage = await calculateBalancedRollingAverage(
+      dangerousAttacksAgainst
+    );
+
+    form.shotsOnTargetRollingAverage = await calculateBalancedRollingAverage(
+      shotsOnTarget
+    );
+
+    form.shotsOnTargetAgainstRollingAverage = await calculateBalancedRollingAverage(
+      shotsOnTargetAgainst
+    );
     
-        console.log(form.teamGoalsRollingAverage)
 
 
     function roundXG(xg, scored) {
@@ -1908,7 +1921,6 @@ async function getPastLeagueResults(team, game, hOrA, form) {
     // RoundedXGAgainstAway.reverse()
 
 
-    console.log(teamConceededAll)
     form.teamConceededRollingAverage =
       await calculateBalancedRollingAverage(
         teamConceededAll
@@ -1976,12 +1988,10 @@ async function getPastLeagueResults(team, game, hOrA, form) {
     form.last10GoalsConceeded = parseFloat(last10AvgConceeded.toFixed(2));
     form.last10GoalDiff = form.last10Goals - form.last10GoalsConceeded;
 
-    console.log(teamXGForAll)
     form.teamXGAllRollingAverage = await calculateBalancedRollingAverage(
       teamXGForAll
     );
 
-    console.log(teamXGAgainstAll)
     form.teamXGConceededAllRollingAverage =
       await calculateBalancedRollingAverage(
         teamXGAgainstAll
@@ -3077,7 +3087,7 @@ export async function calculateScore(match, index, divider, calculate, AIPredict
       "Average Dangerous Attacks": formHome?.AverageDangerousAttacksOverall,
       "Average Shots": formHome?.avgShots?.toFixed(2),
       "Average Shot Value": formHome?.avgShotValueChart?.toFixed(2),
-      "Average Shots On Target": formHome?.AverageShotsOnTargetOverall,
+      "Average Shots On Target": formHome?.shotsOnTargetRollingAverage,
       "Average Expected Goals": formHome?.XGOverall,
       "Weighted XG": formHome?.teamXGAllRollingAverage,
       "Average Goals": formHome?.teamGoalsRollingAverage,
@@ -3162,7 +3172,7 @@ export async function calculateScore(match, index, divider, calculate, AIPredict
       "Average Dangerous Attacks": formAway.AverageDangerousAttacksOverall,
       "Average Shots": formAway.avgShots?.toFixed(2),
       "Average Shot Value": formAway.avgShotValueChart?.toFixed(2),
-      "Average Shots On Target": formAway.AverageShotsOnTargetOverall,
+      "Average Shots On Target": formAway.shotsOnTargetRollingAverage,
       "Average Expected Goals": formAway.XGOverall,
       "Weighted XG": formAway.teamXGAllRollingAverage,
       "Average Goals": formAway.teamGoalsRollingAverage,
@@ -3200,7 +3210,7 @@ export async function calculateScore(match, index, divider, calculate, AIPredict
         ? formHome.teamXGConceededAllRollingAverage
         : formHome.XGAgainstAvgOverall,
       "Average Goals Against": formHome.teamConceededRollingAverage,
-      "Average SOT Against": formHome.AverageShotsOnTargetAgainstOverall,
+      "Average SOT Against": formHome.shotsOnTargetAgainstRollingAverage,
       "Average Shots Against": formHome.avgShotsAgainst,
       "Average Shot Value Against": formHome.avgShotValueAgainstChart,
       "Average Dangerous Attacks Against": formHome.avgDangerousAttacksAgainst?.toFixed(2),
@@ -3239,7 +3249,7 @@ export async function calculateScore(match, index, divider, calculate, AIPredict
         ? formAway.teamXGConceededAllRollingAverage
         : formAway.XGAgainstAvgOverall,
       "Average Goals Against": formAway.teamConceededRollingAverage,
-      "Average SOT Against": formAway.AverageShotsOnTargetAgainstOverall,
+      "Average SOT Against": formAway.shotsOnTargetAgainstRollingAverage,
       "Average Shots Against": formAway.avgShotsAgainst,
       "Average Shot Value Against": formAway.avgShotValueAgainstChart,
       "Average Dangerous Attacks Against": formAway.avgDangerousAttacksAgainst?.toFixed(2),
