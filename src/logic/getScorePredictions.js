@@ -696,35 +696,6 @@ async function getPastLeagueResults(team, game, hOrA, form) {
       })
       .sort((a, b) => a.date_unix - b.date_unix);
 
-    async function addTotalsToRecord(record) {
-      // Calculate the total for each array and add as a new property
-      record.totalW =
-        record.W.reduce((sum, value) => sum + value, 0) / record.W.length;
-      record.totalD =
-        record.D.reduce((sum, value) => sum + value, 0) / record.D.length;
-      record.totalL =
-        record.L.reduce((sum, value) => sum + value, 0) / record.L.length;
-
-      return record; // Return the updated object
-    }
-
-    form.recordAgainstIndividualStyles = {
-      W: [],
-      D: [],
-      L: [],
-    };
-
-    form.recordAgainstIndividualStylesHome = {
-      W: [],
-      D: [],
-      L: [],
-    };
-
-    form.recordAgainstIndividualStylesAway = {
-      W: [],
-      D: [],
-      L: [],
-    };
 
     let homeResults = [];
     let awayResults = [];
@@ -824,23 +795,6 @@ async function getPastLeagueResults(team, game, hOrA, form) {
           ? 5
           : resultedGame.team_b_shotsOnTarget);
 
-      switch (true) {
-        case resultedGame.homeGoalCount > resultedGame.awayGoalCount:
-          form.recordAgainstIndividualStyles.W.push(directnessHome);
-          form.recordAgainstIndividualStylesHome.W.push(directnessHome);
-          break;
-        case resultedGame.homeGoalCount < resultedGame.awayGoalCount:
-          form.recordAgainstIndividualStyles.L.push(directnessHome);
-          form.recordAgainstIndividualStylesHome.L.push(directnessHome);
-
-          break;
-        case resultedGame.homeGoalCount === resultedGame.awayGoalCount:
-          form.recordAgainstIndividualStyles.D.push(directnessHome);
-          form.recordAgainstIndividualStylesHome.D.push(directnessHome);
-          break;
-        default:
-          break;
-      }
 
       oddsSumHome = oddsSumHome + resultedGame.odds_ft_1;
       favouriteCount =
@@ -968,23 +922,6 @@ async function getPastLeagueResults(team, game, hOrA, form) {
           ? 5
           : resultedGame.team_a_shotsOnTarget);
 
-      switch (true) {
-        case resultedGame.homeGoalCount > resultedGame.awayGoalCount:
-          form.recordAgainstIndividualStyles.L.push(directnessAway);
-          form.recordAgainstIndividualStylesAway.L.push(directnessAway);
-          break;
-        case resultedGame.homeGoalCount < resultedGame.awayGoalCount:
-          form.recordAgainstIndividualStyles.W.push(directnessAway);
-          form.recordAgainstIndividualStylesAway.W.push(directnessAway);
-          break;
-        case resultedGame.homeGoalCount === resultedGame.awayGoalCount:
-          form.recordAgainstIndividualStyles.D.push(directnessAway);
-          form.recordAgainstIndividualStylesAway.D.push(directnessAway);
-          break;
-        default:
-          break;
-      }
-
       oddsSumAway = oddsSumAway + resultedGame.odds_ft_2;
       favouriteCount =
         resultedGame.odds_ft_1 > resultedGame.odds_ft_2
@@ -1026,8 +963,6 @@ async function getPastLeagueResults(team, game, hOrA, form) {
           ? beatenUnderdogCount + 1
           : beatenUnderdogCount + 0;
     }
-
-    await addTotalsToRecord(form.recordAgainstIndividualStyles);
 
 
     const getOpponentStyle = (game) => {
@@ -2060,7 +1995,7 @@ async function getPastLeagueResults(team, game, hOrA, form) {
   }
 }
 //Cumulative ROI for all 3436 match outcomes: -1.38%
-function calculateBalancedRollingAverage(numbers, boost = 3) {
+function calculateBalancedRollingAverage(numbers, boost = 2.5) {
   const n = numbers.length;
   if (n === 0) return 0;
   if (n === 1) return numbers[0];
@@ -2504,9 +2439,9 @@ export async function generateGoals(homeForm, awayForm, match) {
 
   // Apply to your existing lambda
   const adjustedLambdaHome = homeLambda_withInjuries
-  // * clampedXGMultiplierHome;
+  * clampedXGMultiplierHome;
   const adjustedLambdaAway = awayLambda_withInjuries
-  // * clampedXGMultiplierAway;
+  * clampedXGMultiplierAway;
   // 4. Ensure Lambda never drops below a realistic floor (e.g., 0.05)
   const homeLambda_final_v2 = Math.max(0.05, adjustedLambdaHome);
   const awayLambda_final_v2 = Math.max(0.05, adjustedLambdaAway);
@@ -3751,6 +3686,7 @@ export async function calculateScore(match, index, divider, calculate, AIPredict
     );
     formAway.GoalEfficiency = formAway.avgScored / formAway.XGOverall;
 
+    //13/05 Cumulative ROI for all 3506 match outcomes: +0.53%
     [formHome.teamGoalsCalc, formAway.teamGoalsCalc] = await generateGoals(
       formHome,
       formAway,
