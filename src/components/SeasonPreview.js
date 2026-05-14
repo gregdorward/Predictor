@@ -34,51 +34,56 @@ export default function SeasonPreview() {
     };
 
     return (
-        <><Canonical /><HamburgerMenu /><Logo /><div className="p-4">
-            <a href="https://www.soccerstatshub.com/" className="HomeLink">Home</a>
-            <h1 className="text-2xl font-bold mb-6">Season Previews</h1>
-            <ul>
-                {leagues.map((league) => {
-                    const preview = previews[league.key];
+        <><Canonical />
+            <div className="DarkMode">
+                <Logo />
+            </div>
+            <HamburgerMenu />
+            <div className="p-4">
+                <a href="https://www.soccerstatshub.com/" className="HomeLink">Home</a>
+                <h1 className="text-2xl font-bold mb-6">Season Previews</h1>
+                <ul>
+                    {leagues.map((league) => {
+                        const preview = previews[league.key];
 
-                    return (
-                        <li
-                            key={league.key}
-                            className="mb-8 cursor-pointer border-b pb-4"
-                            onClick={() => fetchPreview(league.key, league.season)}
-                        >
-                            <h2 className="text-xl font-semibold mb-2">{league.name}</h2>
+                        return (
+                            <li
+                                key={league.key}
+                                className="mb-8 cursor-pointer border-b pb-4"
+                                onClick={() => fetchPreview(league.key, league.season)}
+                            >
+                                <h2 className="text-xl font-semibold mb-2">{league.name}</h2>
 
-                            {loading[league.key] && <p className="text-gray-500">Loading preview...</p>}
+                                {loading[league.key] && <p className="text-gray-500">Loading preview...</p>}
 
-                            {preview?.error && <p className="text-red-500">{preview.error}</p>}
+                                {preview?.error && <p className="text-red-500">{preview.error}</p>}
 
-                            {preview?.summary && (
-                                <div className="mb-4">
-                                    {preview.summary.split('\n').map((para, idx) => (
-                                        <p key={idx} className="mb-2 text-gray-800">{para.trim()}</p>
-                                    ))}
-                                </div>
-                            )}
+                                {preview?.summary && (
+                                    <div className="mb-4">
+                                        {preview.summary.split('\n').map((para, idx) => (
+                                            <p key={idx} className="mb-2 text-gray-800">{para.trim()}</p>
+                                        ))}
+                                    </div>
+                                )}
 
-                            {Array.isArray(preview?.teams) && (
-                                <div>
-                                    <ul className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                                        {preview.teams
-                                            .sort((a, b) => a.predictedPosition - b.predictedPosition)
-                                            .map((team, idx) => (
-                                                <li key={idx} className="TeamPreview">
-                                                    <h4 className="TeamPreviewName">P{team.predictedPosition}. {team.name}</h4>
-                                                    <p className="TeamPreviewDescription">{team.preview}</p>
-                                                </li>
-                                            ))}
-                                    </ul>
-                                </div>
-                            )}
-                        </li>
-                    );
-                })}
-            </ul>
-        </div></>
+                                {Array.isArray(preview?.teams) && (
+                                    <div>
+                                        <ul className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                            {preview.teams
+                                                .sort((a, b) => a.predictedPosition - b.predictedPosition)
+                                                .map((team, idx) => (
+                                                    <li key={idx} className="TeamPreview">
+                                                        <h4 className="TeamPreviewName">P{team.predictedPosition}. {team.name}</h4>
+                                                        <p className="TeamPreviewDescription">{team.preview}</p>
+                                                    </li>
+                                                ))}
+                                        </ul>
+                                    </div>
+                                )}
+                            </li>
+                        );
+                    })}
+                </ul>
+            </div></>
     );
 }

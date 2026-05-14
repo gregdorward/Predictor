@@ -1,15 +1,11 @@
-import { Fragment } from "react";
-import { withStyles } from "@material-ui/core/styles";
-import Table from "@material-ui/core/Table";
-import TableBody from "@material-ui/core/TableBody";
-import TableCell from "@material-ui/core/TableCell";
-import TableContainer from "@material-ui/core/TableContainer";
-import TableHead from "@material-ui/core/TableHead";
-import TableRow from "@material-ui/core/TableRow";
-import Paper from "@material-ui/core/Paper";
-import { useEffect, useState } from "react";
-import { getHighestScoringLeagues } from "../logic/getStatsInsights";
-import Logo from "../components/Logo"
+import { Fragment, useEffect, useState } from "react";
+import { withStyles, makeStyles } from "@material-ui/core/styles";
+import { 
+  Table, TableBody, TableCell, TableContainer, TableHead, 
+  TableRow, Paper, Box, Typography, Chip 
+} from "@material-ui/core";
+import { getHighestScoringTeams } from "../logic/getStatsInsights";
+import Logo from "../components/Logo";
 import HamburgerMenu from "./HamburgerMenu";
 import Canonical from "../components/Canonical";
 
@@ -72,96 +68,160 @@ const ids = [
   16556, // Copa Libertadores 26
 ];
 
+
+// Unified Modern Styling consistent with the rest of the application
+const useStyles = makeStyles((theme) => ({
+  container: {
+    maxWidth: 1000,
+    margin: "40px auto",
+    padding: "1em 1em",
+    "& h1": {
+      fontSize: "2em",
+      fontWeight: 800,
+      textAlign: "center",
+      marginBottom: 8,
+      color: "var(--text-color)",
+    },
+    "& h2": {
+      fontSize: "1.5em",
+      fontWeight: 400,
+      textAlign: "center",
+      marginBottom: 32,
+      color: "var(--accent-color)",
+      opacity: 0.8,
+    },
+  },
+  tableWrapper: {
+    borderRadius: 5,
+    boxShadow: "0 10px 30px rgba(0,0,0,0.15)",
+    overflow: "hidden",
+    border: "1px solid rgba(255,255,255,0.05)",
+    backgroundColor: "var(--secondary-background-color)",
+  },
+  homeLink: {
+    display: "inline-block",
+    marginBottom: 20,
+    textDecoration: "none",
+    color: "var(--accent-color)",
+    fontWeight: 600,
+    "&:hover": { textDecoration: "underline" }
+  }
+}));
+
 const StyledTableCell = withStyles(() => ({
   head: {
     backgroundColor: "var(--accent-color)",
     color: "var(--button-text-color)",
-    padding: 2,
-    textAlign: "center",
+    fontWeight: 600,
+    textTransform: "uppercase",
     fontSize: "1em",
-    fontFamily: "inherit",
-    border: "1px solid black"
+    letterSpacing: "1px",
+    borderBottom: "none",
   },
   body: {
     fontSize: "1em",
-    fontFamily: "inherit",
-    padding: 5,
-    border: "1px solid black",
+    padding: "1em 1em",
+    borderBottom: "1px solid rgba(0,0,0,0.05)",
     color: "var(--text-color)",
   },
 }))(TableCell);
 
 const StyledTableRow = withStyles(() => ({
   root: {
-    "&:nth-of-type(odd)": {
-      backgroundColor: "var(--secondary-background-color)",
-      textAlign: "center",
+    transition: "background-color 0.2s ease",
+    "&:nth-of-type(even)": {
+      backgroundColor: "rgba(255,255,255,0.02)",
+    },
+    "&:hover": {
+      backgroundColor: "rgba(var(--accent-color-rgb), 0.1)",
+      cursor: "default",
     },
   },
 }))(TableRow);
 
-
-export default function Over25() {
-  const [leagues, setLeagues] = useState([]);
+export default function HighestScoringTeams() {
+  const classes = useStyles();
+  const [teams, setTeams] = useState([]);
 
   useEffect(() => {
-    async function fetchLeagues() {
-      const data = await getHighestScoringLeagues();
-      setLeagues(data);
+    async function fetchTeams() {
+      const data = await getHighestScoringTeams();
+      setTeams(data);
     }
-    fetchLeagues();
+    fetchTeams();
   }, []);
 
-  const allowedCountries = [
-    "England", "Scotland", "Italy", "Spain", "Germany", "France", "USA", "Denmark",
-    "Greece", "Turkey", "Switzerland", "Austria", "Norway", "Mexico", "Poland",
-    "Brazil", "Argentina", "Sweden", "Netherlands", "Portugal", "Belgium"
-  ];
+  const allowedCountries = ["England", "Scotland", "Italy", "Spain", "Germany", "France", "USA", "Denmark", "Greece", "Turkey", "Switzerland", "Austria", "Norway", "Mexico", "Poland", "Brazil", "Argentina", "Sweden", "Netherlands", "Portugal", "Belgium"];
 
-  console.log(leagues)
-  // Filter leagues based on allowed countries
-  const filteredLeagues = leagues.filter(league => allowedCountries.includes(league.leagueCountry) && league.division > 0 && league.division < 5);
-  console.log(filteredLeagues)
-
-  const headers = ["League", "Country", "Avg Goals", "Over 2.5%"];
+  const filteredTeams = teams.filter((team) =>
+    allowedCountries.includes(team.teamCountry)
+  );
 
   return (
     <Fragment>
       <Canonical />
+      <div className="DarkMode"><Logo /></div>
       <HamburgerMenu />
-      <Logo />
-      <a href="https://www.soccerstatshub.com/" className="HomeLink">Home</a>
-      <h1>Highest Scoring Leagues</h1>
-      <h2>Leagues with the highest average goals</h2>
-      <TableContainer component={Paper} className="O25Table">
-        <Table aria-label="highest scoring leagues">
-          <TableHead>
-            <TableRow>
-              {headers.map((header, index) => (
-                <StyledTableCell key={index} align="center">
-                  {header}
-                </StyledTableCell>
+      
+      <Box className={classes.container}>
+        <a href="https://www.soccerstatshub.com/" className={classes.homeLink}>← Back to Home</a>
+        
+        <Typography variant="h1">Elite Scoring Teams</Typography>
+        <Typography variant="h2">Teams with the highest average goals and their upcoming fixture</Typography>
+        
+        <TableContainer component={Paper} className={classes.tableWrapper}>
+          <Table aria-label="highest scoring teams table">
+            <TableHead>
+              <TableRow>
+                <StyledTableCell align="center">Country</StyledTableCell>
+                <StyledTableCell align="left">Team</StyledTableCell>
+                <StyledTableCell align="center">Next Match</StyledTableCell>
+                <StyledTableCell align="center">Avg Goals</StyledTableCell>
+                <StyledTableCell align="center">Over 2.5%</StyledTableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {filteredTeams.map((team, index) => (
+                <StyledTableRow key={index}>
+                  <StyledTableCell align="center">
+                    <Chip 
+                      label={team.teamCountry} 
+                      size="small" 
+                      variant="outlined" 
+                      style={{ color: "var(--text-color)", borderColor: "rgba(255,255,255,0.2)" }} 
+                    />
+                  </StyledTableCell>
+                  <StyledTableCell align="left" style={{ fontWeight: 600 }}>
+                    {team.team}
+                  </StyledTableCell>
+                  <StyledTableCell align="center" style={{ opacity: 0.8 }}>
+                    {team.next_match_team}
+                  </StyledTableCell>
+                  <StyledTableCell align="center">
+                    <Box 
+                      style={{ 
+                        backgroundColor: "var(--accent-color)", 
+                        color: "#fff", 
+                        borderRadius: 4, 
+                        padding: "2px 8px", 
+                        display: "inline-block",
+                        fontWeight: 600 
+                      }}
+                    >
+                      {team.averageGoals}
+                    </Box>
+                  </StyledTableCell>
+                  <StyledTableCell align="center">
+                    <Box fontWeight="bold" color="var(--accent-color)">
+                      {team.over25Percentage}%
+                    </Box>
+                  </StyledTableCell>
+                </StyledTableRow>
               ))}
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {filteredLeagues.map((league, index) => (
-              <StyledTableRow key={index}>
-                <StyledTableCell align="center">{league.league}</StyledTableCell>
-                <StyledTableCell align="center">
-                  {league.leagueCountry}
-                </StyledTableCell>
-                <StyledTableCell align="center">
-                  {league.averageGoals}
-                </StyledTableCell>
-                <StyledTableCell align="center">
-                  {league.over25Percentage}%
-                </StyledTableCell>
-              </StyledTableRow>
-            ))}
-          </TableBody>
-        </Table>
-      </TableContainer>
+            </TableBody>
+          </Table>
+        </TableContainer>
+      </Box>
     </Fragment>
   );
 }

@@ -1581,10 +1581,11 @@ function GameStats({ game, displayBool, stats, handleToggleTip, userTips }) {
           try {
             setLoadingPlayerStats(true);
 
+            console.log(matchingGameInfo)
             // Run both fetches in parallel
             const [homeResult, awayResult] = await Promise.allSettled([
-              fetch(`${process.env.REACT_APP_EXPRESS_SERVER}teams/get-player-statistics/${matchingGameInfo.homeId}/${game.sofaScoreId}/${derivedRoundId}`),
-              fetch(`${process.env.REACT_APP_EXPRESS_SERVER}teams/get-player-statistics/${matchingGameInfo.awayId}/${game.sofaScoreId}/${derivedRoundId}`)
+              fetch(`${process.env.REACT_APP_EXPRESS_SERVER}teams/get-player-statistics/${matchingGameInfo.homeId}/${game.sofaScoreId}/${derivedRoundId}/${matchingGameInfo.id}`),
+              fetch(`${process.env.REACT_APP_EXPRESS_SERVER}teams/get-player-statistics/${matchingGameInfo.awayId}/${game.sofaScoreId}/${derivedRoundId}/${matchingGameInfo.id}`)
             ]);
 
             // Handle Home Team Data
