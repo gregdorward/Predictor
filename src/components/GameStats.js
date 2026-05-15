@@ -1620,7 +1620,7 @@ function GameStats({ game, displayBool, stats, handleToggleTip, userTips }) {
           const managersData = await getManagers.json();
           console.log("Managers data fetched:", managersData);
 
-          if (managersData?.homeManager) {
+          if (managersData?.homeManager?.name) {
             setHomeManager(managersData.homeManager);
             setAwayManager(managersData.awayManager);
 
@@ -3439,7 +3439,7 @@ function GameStats({ game, displayBool, stats, handleToggleTip, userTips }) {
   }
 
   const generateAIInsights = useCallback(
-    async (gameId, streak, oddsData, homeTeamStats, awayTeamStats, homePlayerData, awayPlayerData, homeMissingPlayersImpact, awayMissingPlayersImpact, homeLineupList, awayLineupList, ranksHome, ranksAway, homeManager, away) => {
+    async (gameId, streak, oddsData, homeTeamStats, awayTeamStats, homePlayerData, awayPlayerData, homeMissingPlayersImpact, awayMissingPlayersImpact, homeLineupList, awayLineupList, ranksHome, ranksAway, futureFixturesHome, futureFixturesAway, homeManager, awayManager, homeTeamPlayerStats, awayTeamPlayerStats) => {
       setIsLoading(true);
       const table = await fetchBasicTable(game.leagueID);
       const leagueTable = table?.table || null;
@@ -3476,7 +3476,7 @@ function GameStats({ game, displayBool, stats, handleToggleTip, userTips }) {
             homeLeaguePosition: homeForm?.LeaguePosition,
             homeTeamResultsLast5: homeForm?.allTeamResults?.slice(0, 5),
             performanceStats: homeTeamStats,
-            keyPlayers: homePlayerData?.slice(0, 5),
+            players: homeTeamPlayerStats,
             competitionRankings: ranksHome,
             missingPlayers: homeMissingPlayersImpact,
             predictedLineup: homeLineupList,
@@ -3489,7 +3489,7 @@ function GameStats({ game, displayBool, stats, handleToggleTip, userTips }) {
             awayLeaguePosition: awayForm?.LeaguePosition,
             awayTeamResultsLast5: awayForm?.allTeamResults?.slice(0, 5),
             performanceStats: awayTeamStats,
-            keyPlayers: awayPlayerData?.slice(0, 5),
+            players: awayTeamPlayerStats,
             competitionRankings: ranksAway,
             missingPlayers: awayMissingPlayersImpact,
             predictedLineup: awayLineupList,
@@ -4167,7 +4167,11 @@ function GameStats({ game, displayBool, stats, handleToggleTip, userTips }) {
                     ranksHome,
                     ranksAway,
                     futureFixturesHome,
-                    futureFixturesAway
+                    futureFixturesAway,
+                    homeManager,
+                    awayManager,
+                    homeTeamPlayerStats,
+                    awayTeamPlayerStats
                   );
                   setShowAIInsights(true);
                 }}

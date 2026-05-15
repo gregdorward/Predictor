@@ -26,6 +26,7 @@ export async function calculateAttackingStrength(stats, last5 = false) {
     Corners: 0,
     "Average Shot Value": 0,
     "Possession": 0,
+    "Injury impact": 0,
   };
 
   let ranges;
@@ -37,7 +38,8 @@ export async function calculateAttackingStrength(stats, last5 = false) {
       "Average Shots On Target": { min: 3.39, max: 5.71 },
       "Average Expected Goals": { min: 1.03, max: 1.92 },
       "Average Goals": { min: 0.95, max: 1.91 },
-      "Average Shot Value": { min: 5.56, max: 26.94 }
+      "Average Shot Value": { min: 5.56, max: 26.94 },
+      "Injury impact": { min: 2, max: 8 },
     };
   } else {
     ranges = {
@@ -83,7 +85,8 @@ export async function calculateDefensiveStrength(stats, normalizedValue = 1, las
     "Weighted XG Against": 0.3,
     "Average Goals Against": 0.25,
     "Average SOT Against": 0.15,
-    "Average Dangerous Attacks Against": 0.15
+    "Average Dangerous Attacks Against": 0.15,
+    "Injury impact": 0,
   };
 
   let ranges;
@@ -95,6 +98,7 @@ export async function calculateDefensiveStrength(stats, normalizedValue = 1, las
       "Average Dangerous Attacks Against": { min: 31.8, max: 68.83 },
       "Clean Sheet Percentage": { min: 11.72, max: 44.53 },
       "Average Shots Against": { min: 7.35, max: 17.66 },
+      "Injury impact": { min: 2, max: 8 },
     };
   } else {
     ranges = {

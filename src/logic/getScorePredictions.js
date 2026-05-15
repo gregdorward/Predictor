@@ -1761,7 +1761,14 @@ async function getPastLeagueResults(team, game, hOrA, form) {
     form.shotsOnTargetAgainstRollingAverage = await calculateBalancedRollingAverage(
       shotsOnTargetAgainst
     );
-    
+
+    form.shotsRollingAverage = await calculateBalancedRollingAverage(
+      shots
+    );
+
+    form.shotsAgainstRollingAverage = await calculateBalancedRollingAverage(
+      shotsAgainst
+    );
 
 
     function roundXG(xg, scored) {
@@ -2008,7 +2015,7 @@ function calculateBalancedRollingAverage(numbers, boost = 2.5) {
     // i=0 (Newest)     -> (n-1-0)/(n-1) = 1.0 -> weight = 1 + boost
     // i=n-1 (Oldest)   -> (n-1-(n-1))/(n-1) = 0 -> weight = 1.0
     const weight = 1 + ((n - 1 - i) / (n - 1)) * boost;
-    
+
     weightedSum += numbers[i] * weight;
     totalWeight += weight;
   }
@@ -2403,11 +2410,12 @@ export async function generateGoals(homeForm, awayForm, match) {
 
   const IMPACT_SENSITIVITY = 0.01;
 
-  // 2. Extract scores from your JSON (use 0 as fallback)
   const hAtk = existing?.impacts?.home?.atk || 0;
   const hDef = existing?.impacts?.home?.def || 0;
   const aAtk = existing?.impacts?.away?.atk || 0;
   const aDef = existing?.impacts?.away?.def || 0;
+
+  // console.log(hAtk, hDef, aAtk, aDef)
 
   const homeAttackInjurryAdjustment = 1 - (hAtk * IMPACT_SENSITIVITY) + (aDef * IMPACT_SENSITIVITY);
   const awayAttackInjurryAdjustment = 1 - (aAtk * IMPACT_SENSITIVITY) + (hDef * IMPACT_SENSITIVITY);
@@ -2418,8 +2426,10 @@ export async function generateGoals(homeForm, awayForm, match) {
   // 3. Apply the Injury Correction
   // If Home has 5.1 Atk Loss, they lose ~7.6% of their lambda
   // If Away has 0.5 Def Loss, Home gains ~0.75% of their lambda
-  const homeLambda_withInjuries = homeLambda_final * homeAttackInjurryAdjustment;
-  const awayLambda_withInjuries = awayLambda_final * awayAttackInjurryAdjustment;
+  const homeLambda_withInjuries = homeLambda_final 
+  * homeAttackInjurryAdjustment;
+  const awayLambda_withInjuries = awayLambda_final 
+  * awayAttackInjurryAdjustment;
 
   // Define how sensitive you want the adjustment to be
   // A lower value (0.02) means a more conservative adjustment
@@ -2439,9 +2449,9 @@ export async function generateGoals(homeForm, awayForm, match) {
 
   // Apply to your existing lambda
   const adjustedLambdaHome = homeLambda_withInjuries
-  * clampedXGMultiplierHome;
+    * clampedXGMultiplierHome;
   const adjustedLambdaAway = awayLambda_withInjuries
-  * clampedXGMultiplierAway;
+    * clampedXGMultiplierAway;
   // 4. Ensure Lambda never drops below a realistic floor (e.g., 0.05)
   const homeLambda_final_v2 = Math.max(0.05, adjustedLambdaHome);
   const awayLambda_final_v2 = Math.max(0.05, adjustedLambdaAway);
@@ -3018,15 +3028,24 @@ export async function calculateScore(match, index, divider, calculate, AIPredict
 
     let teamComparisonScore;
 
+    const existing = predictedScoresData.find(p => p.gameId === match.id);
+
+    // 2. Extract scores from your JSON (use 0 as fallback)
+    const hAtk = existing?.impacts?.home?.atk || 0;
+    const hDef = existing?.impacts?.home?.def || 0;
+    const aAtk = existing?.impacts?.away?.atk || 0;
+    const aDef = existing?.impacts?.away?.def || 0;
+
     const attackingMetricsHome = {
       "Average Dangerous Attacks": formHome?.AverageDangerousAttacksOverall,
-      "Average Shots": formHome?.avgShots?.toFixed(2),
+      "Average Shots": formHome?.shotsRollingAverage,
       "Average Shot Value": formHome?.avgShotValueChart?.toFixed(2),
       "Average Shots On Target": formHome?.shotsOnTargetRollingAverage,
       "Average Expected Goals": formHome?.XGOverall,
       "Weighted XG": formHome?.teamXGAllRollingAverage,
       "Average Goals": formHome?.teamGoalsRollingAverage,
       "Corners": formHome?.AverageCorners,
+      "Injury impact": hAtk != 0 ? 10 - hAtk : 4
     };
 
     const attackingMetricsHomeLast5 = {
@@ -3105,13 +3124,14 @@ export async function calculateScore(match, index, divider, calculate, AIPredict
 
     const attackingMetricsAway = {
       "Average Dangerous Attacks": formAway.AverageDangerousAttacksOverall,
-      "Average Shots": formAway.avgShots?.toFixed(2),
+      "Average Shots": formAway.shotsRollingAverage,
       "Average Shot Value": formAway.avgShotValueChart?.toFixed(2),
       "Average Shots On Target": formAway.shotsOnTargetRollingAverage,
       "Average Expected Goals": formAway.XGOverall,
       "Weighted XG": formAway.teamXGAllRollingAverage,
       "Average Goals": formAway.teamGoalsRollingAverage,
       "Corners": formAway.AverageCorners,
+      "Injury impact": aAtk !== 0 ? 10 - aAtk : 4
     };
 
     const attackingMetricsAwayLast5 = {
@@ -3146,9 +3166,10 @@ export async function calculateScore(match, index, divider, calculate, AIPredict
         : formHome.XGAgainstAvgOverall,
       "Average Goals Against": formHome.teamConceededRollingAverage,
       "Average SOT Against": formHome.shotsOnTargetAgainstRollingAverage,
-      "Average Shots Against": formHome.avgShotsAgainst,
+      "Average Shots Against": formHome.shotsAgainstRollingAverage,
       "Average Shot Value Against": formHome.avgShotValueAgainstChart,
       "Average Dangerous Attacks Against": formHome.avgDangerousAttacksAgainst?.toFixed(2),
+      "Injury impact": hDef !== 0 ? 10 - hDef : 4
     };
 
     const defensiveMetricsHomeLast5 = {
@@ -3185,9 +3206,10 @@ export async function calculateScore(match, index, divider, calculate, AIPredict
         : formAway.XGAgainstAvgOverall,
       "Average Goals Against": formAway.teamConceededRollingAverage,
       "Average SOT Against": formAway.shotsOnTargetAgainstRollingAverage,
-      "Average Shots Against": formAway.avgShotsAgainst,
+      "Average Shots Against": formAway.shotsAgainstRollingAverage,
       "Average Shot Value Against": formAway.avgShotValueAgainstChart,
       "Average Dangerous Attacks Against": formAway.avgDangerousAttacksAgainst?.toFixed(2),
+      "Injury impact": aDef !== 0 ? 10 - aDef : 4
     };
 
     const defensiveMetricsAwayLast5 = {
