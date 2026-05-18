@@ -889,7 +889,7 @@ export function Fixture(props) {
         GlobalFilters.bttsProbability ||
         GlobalFilters.winProbability ||
         GlobalFilters.omitDraws ||
-        GlobalFilters.oddsRange[0] !== 1.1 ||
+        GlobalFilters.oddsRange[0] !== 1.01 ||
         GlobalFilters.oddsRange[1] !== 10) && (
           <div className="FiltersSelected">
             <h4>Filters selected:</h4>
@@ -911,7 +911,7 @@ export function Fixture(props) {
 
               {/* Boolean and Range Filters */}
               {GlobalFilters.omitDraws && <li>Draws Omitted</li>}
-              {(GlobalFilters.oddsRange[0] !== 1.1 || GlobalFilters.oddsRange[1] !== 10) && (
+              {(GlobalFilters.oddsRange[0] !== 1.01 || GlobalFilters.oddsRange[1] !== 10) && (
                 <li>Odds Range: {GlobalFilters.oddsRange[0]} - {GlobalFilters.oddsRange[1]}</li>
               )}
             </ul>

@@ -12,7 +12,7 @@ export const GlobalFilters = {
   edge: null,
   O25edge: null,
   BTTSedge: null,
-  oddsRange: [1.1, 10],
+  oddsRange: [1.01, 10],
   over25Probability: null,
   bttsProbability: null,
   omitDraws: false,
@@ -31,7 +31,7 @@ export const FilterPresets = () => {
     GlobalFilters.minimumLast6 = null;
     GlobalFilters.O25edge = null;
     GlobalFilters.BTTSedge = null;
-    GlobalFilters.oddsRange = [1.1, 10];
+    GlobalFilters.oddsRange = [1.01, 10];
     GlobalFilters.omitDraws = false;
     GlobalFilters.winProbability = null;
 
