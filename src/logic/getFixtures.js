@@ -1132,6 +1132,25 @@ export async function generateFixtures(
 
     let previousLeagueName;
 
+    if(fixtureArray.length === 0) {
+      console.log("No fixtures found for this date.");
+      render(
+        <div className="NoFixtures">
+          <h2>No fixtures found for this date</h2>
+          <p>World Cup 2026 coming soon...</p>
+        </div>,
+        "GeneratePredictions"
+      );
+      isFunctionRunning = false;
+      return;
+    } else {
+      render(
+        <div className="NoFixtures">
+        </div>,
+        "GeneratePredictions"
+      );
+    }
+
     for (let i = 0; i < orderedLeagues.length; i++) {
       leagueID = orderedLeagues[i].element.id;
       leagueGames = fixtureArray.filter(

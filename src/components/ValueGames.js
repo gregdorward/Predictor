@@ -80,7 +80,7 @@ const TopValueGames = ({ tips, limit = 10, paid }) => {
                                 <tr className="UnlockBannerRow">
                                     <td colSpan={5}>
                                         <div className="UnlockBanner">
-                                            🔒 Sign-up for as little as £1 to see{" "}
+                                            🔒 Sign-up for {" "}
                                             <strong>{Math.min(limit, normalisedValueTips.length) - 1}</strong>{" "}
                                             more value picks
                                         </div>
