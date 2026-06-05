@@ -2,7 +2,7 @@ import { Fragment, useEffect, useState } from "react";
 import { withStyles, makeStyles } from "@material-ui/core/styles";
 import { 
   Table, TableBody, TableCell, TableContainer, TableHead, 
-  TableRow, Paper, Box, Typography, Chip 
+  TableRow, Paper, Box, Typography
 } from "@material-ui/core";
 import { getBTTSFixtures } from "../logic/getStatsInsights";
 import Logo from "../components/Logo";
@@ -13,8 +13,10 @@ import Canonical from "../components/Canonical";
 const useStyles = makeStyles((theme) => ({
   container: {
     maxWidth: 1000,
+    width: "100%",
     margin: "40px auto",
     padding: "1em 1em",
+    boxSizing: "border-box",
     "& h1": {
       fontSize: "2em",
       fontWeight: 800,
@@ -35,6 +37,7 @@ const useStyles = makeStyles((theme) => ({
     borderRadius: 5,
     boxShadow: "0 10px 30px rgba(0,0,0,0.15)", // Soft UK-style shadow
     overflow: "hidden",
+    maxWidth: "100%",
     border: "1px solid rgba(255,255,255,0.05)",
     backgroundColor: "var(--secondary-background-color)",
   },
@@ -103,21 +106,21 @@ export default function BTTSFixtures() {
       <div className="DarkMode"><Logo /></div>
       <HamburgerMenu />
       
-      <Box className={classes.container}>
+      <Box className={`${classes.container} SubpageContent`}>
         <a href="https://www.soccerstatshub.com/" className={classes.homeLink}>← Back to Home</a>
         
         <Typography variant="h1">BTTS Insights</Typography>
         <Typography variant="h2">High-potential fixtures based on combined scoring averages</Typography>
         
-        <TableContainer component={Paper} className={classes.tableWrapper}>
-          <Table aria-label="BTTS potential table">
+        <TableContainer component={Paper} className={`${classes.tableWrapper} SubpageTableScroll`}>
+          <Table size="small" aria-label="BTTS potential table">
             <TableHead>
               <TableRow>
                 <StyledTableCell align="left">Fixture</StyledTableCell>
-                <StyledTableCell align="center">Date</StyledTableCell>
-                <StyledTableCell align="center">Country</StyledTableCell>
-                <StyledTableCell align="center">BTTS Yes</StyledTableCell>
-                <StyledTableCell align="center">Avg Goals</StyledTableCell>
+                <StyledTableCell align="center" className="SubpageCol--date">Date</StyledTableCell>
+                <StyledTableCell align="center" className="SubpageCol--country">Country</StyledTableCell>
+                <StyledTableCell align="center">BTTS</StyledTableCell>
+                <StyledTableCell align="center">Avg</StyledTableCell>
               </TableRow>
             </TableHead>
             <TableBody>
@@ -125,17 +128,13 @@ export default function BTTSFixtures() {
                 <StyledTableRow key={index}>
                   <StyledTableCell align="left" style={{ fontWeight: 600 }}>
                     {team.match}
+                    <span className="SubpageCellMeta">{team.date}</span>
                   </StyledTableCell>
-                  <StyledTableCell align="center" style={{ opacity: 0.7 }}>
+                  <StyledTableCell align="center" className="SubpageCol--date" style={{ opacity: 0.7 }}>
                     {team.date}
                   </StyledTableCell>
-                  <StyledTableCell align="center">
-                    <Chip 
-                      label={team.country} 
-                      size="small" 
-                      variant="outlined" 
-                      style={{ color: "var(--text-color)", borderColor: "rgba(255,255,255,0.2)" }} 
-                    />
+                  <StyledTableCell align="center" className="SubpageCol--country">
+                    {team.country}
                   </StyledTableCell>
                   <StyledTableCell align="center">
                     <Box fontWeight="bold" color="var(--accent-color)">

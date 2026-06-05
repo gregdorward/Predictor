@@ -2,7 +2,7 @@ import { Fragment, useEffect, useState } from "react";
 import { withStyles, makeStyles } from "@material-ui/core/styles";
 import { 
   Table, TableBody, TableCell, TableContainer, TableHead, 
-  TableRow, Paper, Box, Typography, Chip 
+  TableRow, Paper, Box, Typography
 } from "@material-ui/core";
 import { getHighestScoringTeams } from "../logic/getStatsInsights";
 import Logo from "../components/Logo";
@@ -74,8 +74,10 @@ const ids = [
 const useStyles = makeStyles((theme) => ({
   container: {
     maxWidth: 1000,
+    width: "100%",
     margin: "40px auto",
     padding: "1em 1em",
+    boxSizing: "border-box",
     "& h1": {
       fontSize: "2em",
       fontWeight: 800,
@@ -96,6 +98,7 @@ const useStyles = makeStyles((theme) => ({
     borderRadius: 5,
     boxShadow: "0 10px 30px rgba(0,0,0,0.15)",
     overflow: "hidden",
+    maxWidth: "100%",
     border: "1px solid rgba(255,255,255,0.05)",
     backgroundColor: "var(--secondary-background-color)",
   },
@@ -164,33 +167,28 @@ export default function HighestScoringTeams() {
       <div className="DarkMode"><Logo /></div>
       <HamburgerMenu />
       
-      <Box className={classes.container}>
+      <Box className={`${classes.container} SubpageContent`}>
         <a href="https://www.soccerstatshub.com/" className={classes.homeLink}>← Back to Home</a>
         
         <Typography variant="h1">Elite Scoring Teams</Typography>
         <Typography variant="h2">Teams with the highest average goals and their upcoming fixture</Typography>
         
-        <TableContainer component={Paper} className={classes.tableWrapper}>
-          <Table aria-label="highest scoring teams table">
+        <TableContainer component={Paper} className={`${classes.tableWrapper} SubpageTableScroll`}>
+          <Table size="small" aria-label="highest scoring teams table">
             <TableHead>
               <TableRow>
-                <StyledTableCell align="center">Country</StyledTableCell>
+                <StyledTableCell align="center" className="SubpageCol--country">Country</StyledTableCell>
                 <StyledTableCell align="left">Team</StyledTableCell>
-                <StyledTableCell align="center">Next Match</StyledTableCell>
-                <StyledTableCell align="center">Avg Goals</StyledTableCell>
-                <StyledTableCell align="center">Over 2.5%</StyledTableCell>
+                <StyledTableCell align="center">Next</StyledTableCell>
+                <StyledTableCell align="center">Avg</StyledTableCell>
+                <StyledTableCell align="center">O2.5%</StyledTableCell>
               </TableRow>
             </TableHead>
             <TableBody>
               {filteredTeams.map((team, index) => (
                 <StyledTableRow key={index}>
-                  <StyledTableCell align="center">
-                    <Chip 
-                      label={team.teamCountry} 
-                      size="small" 
-                      variant="outlined" 
-                      style={{ color: "var(--text-color)", borderColor: "rgba(255,255,255,0.2)" }} 
-                    />
+                  <StyledTableCell align="center" className="SubpageCol--country">
+                    {team.teamCountry}
                   </StyledTableCell>
                   <StyledTableCell align="left" style={{ fontWeight: 600 }}>
                     {team.team}

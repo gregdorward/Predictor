@@ -82,8 +82,6 @@ export default function HighestScoringTeams() {
     allowedCountries.includes(team.teamCountry)
   );
 
-  const headers = ["Country", "Team", "Next Match", "Avg Goals", "Over 2.5%"];
-
   return (
     <Fragment>
       <Canonical />
@@ -91,24 +89,25 @@ export default function HighestScoringTeams() {
         <Logo />
       </div>
       <HamburgerMenu />
+      <div className="SubpageContent">
       <a href="https://www.soccerstatshub.com/" className="HomeLink">Home</a>
       <h1>Highest Scoring Teams</h1>
       <h2>Teams with the highest average goals and their upcoming fixture</h2>
-      <TableContainer component={Paper} className="O25Table">
-        <Table aria-label="highest scoring teams">
+      <TableContainer component={Paper} className="O25Table SubpageTableScroll">
+        <Table size="small" aria-label="highest scoring teams">
           <TableHead>
             <TableRow>
-              {headers.map((header, index) => (
-                <StyledTableCell key={index} align="center">
-                  {header}
-                </StyledTableCell>
-              ))}
+              <StyledTableCell align="center" className="SubpageCol--country">Country</StyledTableCell>
+              <StyledTableCell align="center">Team</StyledTableCell>
+              <StyledTableCell align="center">Next</StyledTableCell>
+              <StyledTableCell align="center">Avg</StyledTableCell>
+              <StyledTableCell align="center">O2.5%</StyledTableCell>
             </TableRow>
           </TableHead>
           <TableBody>
             {filteredTeams.map((team, index) => (
               <StyledTableRow key={index}>
-                <StyledTableCell align="center">
+                <StyledTableCell align="center" className="SubpageCol--country">
                   {team.teamCountry}
                 </StyledTableCell>
                 <StyledTableCell align="center">{team.team}</StyledTableCell>
@@ -126,6 +125,7 @@ export default function HighestScoringTeams() {
           </TableBody>
         </Table>
       </TableContainer>
+      </div>
     </Fragment>
   );
 }

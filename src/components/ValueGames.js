@@ -31,8 +31,6 @@ const TopValueGames = ({ tips, limit = 10, paid }) => {
             buttonText={"Best Value Picks"}
             element={
                 <div className="TopValueGames">
-                    <h3>Highest Value Picks</h3>
-
                     <table className="ValueTable">
                         <thead className="ValueTableHeaders">
                             <tr>

@@ -1039,6 +1039,134 @@ p {
   padding: 1em;
 }
 
+.SubpageContent {
+  width: 100%;
+  max-width: 1000px;
+  margin: 40px auto;
+  padding: 1em;
+  box-sizing: border-box;
+}
+
+.SubpageTableScroll {
+  overflow-x: hidden;
+  max-width: 100%;
+  box-sizing: border-box;
+}
+
+.SubpageTableScroll table {
+  table-layout: fixed;
+  width: 100%;
+}
+
+.SubpageTableScroll table,
+.SubpageTableScroll th,
+.SubpageTableScroll td {
+  margin-top: 0;
+  padding-left: 0;
+  padding-right: 0;
+}
+
+.SubpageTableScroll .MuiTableCell-root:first-child {
+  padding-left: 1em;
+}
+
+.SubpageTableScroll .MuiTableCell-root:last-child {
+  padding-right: 1em;
+}
+
+.SubpageCellMeta {
+  display: none;
+  margin-top: 0.2em;
+  font-size: 0.85em;
+  line-height: 1.2;
+  opacity: 0.65;
+  font-weight: 400;
+}
+
+@media (max-width: 600px) {
+  .SubpageContent {
+    padding: 0.5em 0.35em;
+    margin: 16px auto;
+  }
+
+  .SubpageContent h1,
+  .SubpageContent .MuiTypography-h1 {
+    font-size: 1.35rem !important;
+    line-height: 1.2;
+  }
+
+  .SubpageContent h2,
+  .SubpageContent .MuiTypography-h2 {
+    font-size: 0.95rem !important;
+    line-height: 1.3;
+    margin-bottom: 1rem !important;
+  }
+
+  .SubpageTableScroll .MuiTableCell-root {
+    padding: 0.3em 0.15em;
+    font-size: 0.62rem;
+    line-height: 1.15;
+    white-space: normal;
+    word-break: break-word;
+    letter-spacing: 0;
+    text-transform: none;
+  }
+
+  .SubpageTableScroll .MuiTableCell-head {
+    font-size: 0.58rem;
+    font-weight: 700;
+    padding: 0.35em 0.1em;
+    line-height: 1.1;
+    vertical-align: bottom;
+  }
+
+  .SubpageTableScroll .MuiTableCell-head:first-child {
+    padding-left: 1em;
+  }
+
+  .SubpageTableScroll .MuiTableCell-head:last-child {
+    padding-right: 1em;
+  }
+
+  .SubpageCol--country,
+  .SubpageCol--date,
+  .SubpageCol--played {
+    display: none;
+  }
+
+  .SubpageCellMeta {
+    display: block;
+  }
+
+  .SubpageTableScroll .MuiTableCell-root:first-child {
+    width: 32%;
+    padding-left: 1em;
+  }
+
+  .SubpageTableScroll .MuiTableCell-root:last-child {
+    padding-right: 1em;
+  }
+
+  .SubpageTableScroll .MuiChip-root {
+    height: auto;
+    max-width: 100%;
+  }
+
+  .SubpageTableScroll .MuiChip-label {
+    white-space: normal;
+    padding: 0 2px;
+    font-size: inherit;
+    line-height: 1.1;
+  }
+
+  .O25Table .MuiTableCell-root,
+  .O25Table .MuiTableHead-root th,
+  .O25Table tr {
+    height: auto;
+    min-height: unset;
+  }
+}
+
 .O25Table .MuiTableHead-root th {
   background-color: var(--button-color);
   height: 5em;
@@ -4323,12 +4451,13 @@ li.FormHeader {
 }
 
 .PredictionContainer {
-  display: flex;
-  flex-direction: row;
+  display: grid;
+  grid-template-columns: 3em minmax(0, 1fr) 3em;
+  gap: 0.75rem;
   justify-content: center;
   align-self: center;
-  flex-wrap: nowrap;
   align-items: center;
+  width: 100%;
 }
 
 
@@ -4355,28 +4484,186 @@ li.FormHeader {
   padding: 1em;
 }
 
-.DecrementButton {
-  order: 2;
+.MultisCarousel {
+  max-width: 42rem;
+  margin: 0 auto;
+}
+
+.MultisCarousel-nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+}
+
+.MultisCarousel-navControl {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.25rem 0.35rem;
+  margin: 0;
+  min-width: unset;
+  border: none;
+  background: none;
+  color: var(--text-color);
+  box-shadow: none;
+  cursor: pointer;
+  max-width: 45%;
+  font-size: 1.05em;
   font-weight: 700;
-  font-size: 1.3em;
-  align-self: flex-start;
-  flex-basis: 3em;
-  max-width: 5em;
-  min-width: 3em;
-  margin-right: 2em;
-  margin-top: 1em;
+  transition: transform 0.15s ease, opacity 0.15s ease;
+}
+
+.MultisCarousel-navControl:hover {
+  background: none;
+  color: var(--text-color);
+  transform: none;
+  box-shadow: none;
+}
+
+.MultisCarousel-navControl:active:not(:disabled) {
+  background: none;
+  color: var(--text-color);
+  transform: translateY(1px);
+  box-shadow: none;
+  opacity: 0.75;
+}
+
+.MultisCarousel-navControl:focus-visible {
+  background: none;
+  box-shadow: none;
+  outline: 2px solid var(--third-background-color);
+  outline-offset: 2px;
+}
+
+.MultisCarousel-navControl--prev {
+  justify-content: flex-start;
+  text-align: left;
+}
+
+.MultisCarousel-navControl--next {
+  justify-content: flex-end;
+  text-align: right;
+}
+
+.MultisCarousel-navControl:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+}
+
+.MultisCarousel-arrowIcon {
+  flex-shrink: 0;
+  width: 1.4rem;
+  height: 1.4rem;
+  stroke-width: 2.5;
+}
+
+.Collapsable--titleOnly {
+  width: 100%;
+}
+
+.Collapsable--titleOnly .Collapsable-title {
+  margin: 0 0 0.75rem;
+  padding: 0;
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: var(--text-color);
+  text-align: center;
+  background: none;
+  border: none;
+  box-shadow: none;
+  width: auto;
+}
+
+.Collapsable--titleOnly .Collapsable-content {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.MultisCarousel-viewport {
+  position: relative;
+  min-height: 10rem;
+}
+
+.MultisCarousel-panel {
+  display: none;
+  width: 100%;
+}
+
+.MultisCarousel-panel.is-active {
+  display: block;
+}
+
+.PredictionContainer > .Collapsable:not(.Collapsable--titleOnly) {
+  grid-column: 1 / -1;
+}
+
+.PredictionContainer > .Collapsable--titleOnly {
+  display: contents;
+}
+
+.PredictionContainer > .Collapsable--titleOnly > .Collapsable-title {
+  grid-column: 2;
+  grid-row: 1;
+  margin: 0;
+}
+
+.PredictionContainer > .Collapsable--titleOnly > .Collapsable-content {
+  grid-column: 1 / -1;
+  grid-row: 2;
+  justify-self: center;
+  max-width: 100%;
+}
+
+.PredictionContainer:not(:has(.IncrementButton)) > .Collapsable--titleOnly > .Collapsable-title {
+  grid-column: 1 / -1;
+}
+
+.PredictionContainer:has(.IncrementButton) {
+  grid-template-columns: 1fr auto auto auto 1fr;
+  column-gap: 1rem;
+}
+
+.PredictionContainer:has(.IncrementButton) > .IncrementButton {
+  grid-column: 2;
+  grid-row: 1;
+}
+
+.PredictionContainer:has(.IncrementButton) > .DecrementButton {
+  grid-column: 4;
+  grid-row: 1;
+}
+
+.PredictionContainer:has(.IncrementButton) > .Collapsable--titleOnly > .Collapsable-title {
+  grid-column: 3;
+  grid-row: 1;
+}
+
+.PredictionContainer:has(.IncrementButton) > .Collapsable--titleOnly > .Collapsable-content {
+  grid-column: 1 / -1;
+  grid-row: 2;
 }
 
 .IncrementButton {
-  order: 0;
   font-weight: 700;
   font-size: 1.3em;
-  align-self: flex-start;
-  flex-basis: 3em;
-  max-width: 5em;
-  min-width: 3em;
-  margin-left: 2em;
-  margin-top: 1em;
+  width: 2.5em;
+  min-width: 2.5em;
+  max-width: 2.5em;
+  margin: 0 0.15em 0 0;
+  justify-self: center;
+}
+
+.DecrementButton {
+  font-weight: 700;
+  font-size: 1.3em;
+  width: 2.5em;
+  min-width: 2.5em;
+  max-width: 2.5em;
+  margin: 0 0 0 0.15em;
+  justify-self: center;
 }
 
 .RiskText {
@@ -4426,109 +4713,51 @@ li.FormHeader {
 
 }
 
-.BestPredictions {
+.BestPredictions,
+.LongshotPredictions,
+.BTTSGames,
+.XGDiffTips,
+.TopValueGames {
   background-color: var(--background-color);
-  max-width: 30em;
+  min-width: 35em;
+  max-width: 40em;
+  width: 100%;
+  margin-left: auto;
+  margin-right: auto;
   padding: 1em;
   border: #b7b7b7 1px solid;
   border-radius: 6px;
+  box-sizing: border-box;
 }
 
-.BestPredictionsExplainer {
-  margin-bottom: 2em;
-  font-size: 1em;
-}
-
-.BestPredictions li {
-  font-size: 0.9em;
-  padding-top: 1em;
-  padding-bottom: 1em;
-}
-
-.BestPredictions a {
-  font-size: 1em;
-}
-
-.LongshotPredictions {
-  padding: 0.25em;
-  border: #b7b7b7 1px solid;
-  border-radius: 6px;
-  margin: 0.25em;
-  margin-bottom: 1em;
-  background-color: var(--background-color);
-  font-size: 0.9em;
-}
-
-.LongshotPredictions li {
-  font-size: 0.9em;
-  padding-top: 1em;
-  padding-bottom: 1em;
-}
-
-.LongshotPredictions a {
-  padding: 0em;
-  margin: 0em;
-}
-
-.BTTSGames {
-  padding: 0.25em;
-  border: #b7b7b7 1px solid;
-  border-radius: 6px;
-  margin: 0.25em;
-  background-color: var(--background-color);
-  font-size: 0.9em;
-  margin-bottom: 1em;
-}
-
-.BTTSGames li {
-  font-size: 0.9em;
-  /* margin-top: 0.75em;
-  margin-bottom: 0.75em; */
-  padding-top: 1em;
-  padding-bottom: 1em;
-  text-align: center;
-  /* background-color: var(--secondary-background-color); */
-}
-
-
-.BTTSGames a {
-  padding: 0em;
-  margin: 0em;
-}
-
-.XGDiffTips {
-  padding: 1em;
-  margin: 0.5em;
-  margin-top: 1em;
-  border: #b7b7b7 1px solid;
-  border-radius: 6px;
-  margin-bottom: 1em;
-  background-color: var(--background-color);
-  font-size: 0.9em;
-}
-
+.BestPredictionsExplainer,
+.BestPredictions h4,
+.LongshotPredictions h4,
+.BTTSGames h4,
 .XGDiffTips h4 {
-  margin-top: 1em;
+  margin: 0 0 2em;
+  font-size: 1em;
+  font-weight: normal;
 }
 
-.XGDiffTips lh {
-  font-size: 1.2em;
-}
-
+.BestPredictions li,
+.LongshotPredictions li,
+.BTTSGames li,
 .XGDiffTips li {
   font-size: 0.9em;
-  margin-top: 0.75em;
-  margin-bottom: 0.75em;
-  padding: 0.5em;
+  padding-top: 1em;
+  padding-bottom: 1em;
 }
 
+.BestPredictions a,
+.LongshotPredictions a,
+.BTTSGames a,
 .XGDiffTips a {
-  padding: 0em;
-  margin: 0em;
-}
-
-.BTTSGames lh {
-  font-size: 1.1em;
+  font-size: 1em;
+  padding: 0;
+  margin: 0;
+  text-decoration: none;
+  color: inherit;
 }
 
 .fact {
@@ -4546,10 +4775,6 @@ ul {
   margin-bottom: 0.75em;
   padding: 0.25em;
   background-color: var(--secondary-background-color);
-}
-
-.LongshotPredictions lh {
-  font-size: 1.2em;
 }
 
 .over25ActualOutcome {

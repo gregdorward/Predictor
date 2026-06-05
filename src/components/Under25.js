@@ -2,7 +2,7 @@ import { Fragment, useEffect, useState } from "react";
 import { withStyles, makeStyles } from "@material-ui/core/styles";
 import { 
   Table, TableBody, TableCell, TableContainer, TableHead, 
-  TableRow, Paper, Box, Typography, Chip 
+  TableRow, Paper, Box, Typography
 } from "@material-ui/core";
 import { getLowestScoringLeagues } from "../logic/getStatsInsights";
 import Logo from "../components/Logo";
@@ -13,8 +13,10 @@ import Canonical from "../components/Canonical";
 const useStyles = makeStyles((theme) => ({
   container: {
     maxWidth: 1000,
+    width: "100%",
     margin: "40px auto",
     padding: "1em 1em",
+    boxSizing: "border-box",
     "& h1": {
       fontSize: "2em",
       fontWeight: 800,
@@ -35,6 +37,7 @@ const useStyles = makeStyles((theme) => ({
     borderRadius: 5,
     boxShadow: "0 10px 30px rgba(0,0,0,0.15)",
     overflow: "hidden",
+    maxWidth: "100%",
     border: "1px solid rgba(255,255,255,0.05)",
     backgroundColor: "var(--secondary-background-color)",
   },
@@ -109,20 +112,20 @@ export default function Under25() {
       <div className="DarkMode"><Logo /></div>
       <HamburgerMenu />
       
-      <Box className={classes.container}>
+      <Box className={`${classes.container} SubpageContent`}>
         <a href="https://www.soccerstatshub.com/" className={classes.homeLink}>← Back to Home</a>
         
         <Typography variant="h1">Lowest Scoring Leagues</Typography>
         <Typography variant="h2">Leagues with the lowest goals-per-match averages</Typography>
         
-        <TableContainer component={Paper} className={classes.tableWrapper}>
-          <Table aria-label="Lowest scoring leagues table">
+        <TableContainer component={Paper} className={`${classes.tableWrapper} SubpageTableScroll`}>
+          <Table size="small" aria-label="Lowest scoring leagues table">
             <TableHead>
               <TableRow>
                 <StyledTableCell align="left">League</StyledTableCell>
-                <StyledTableCell align="center">Country</StyledTableCell>
-                <StyledTableCell align="center">Avg Goals</StyledTableCell>
-                <StyledTableCell align="center">Under 2.5%</StyledTableCell>
+                <StyledTableCell align="center" className="SubpageCol--country">Country</StyledTableCell>
+                <StyledTableCell align="center">Avg</StyledTableCell>
+                <StyledTableCell align="center">U2.5%</StyledTableCell>
               </TableRow>
             </TableHead>
             <TableBody>
@@ -131,13 +134,8 @@ export default function Under25() {
                   <StyledTableCell align="left" style={{ fontWeight: 600 }}>
                     {league.league}
                   </StyledTableCell>
-                  <StyledTableCell align="center">
-                    <Chip 
-                      label={league.leagueCountry} 
-                      size="small" 
-                      variant="outlined" 
-                      style={{ color: "var(--text-color)", borderColor: "rgba(255,255,255,0.2)" }} 
-                    />
+                  <StyledTableCell align="center" className="SubpageCol--country">
+                    {league.leagueCountry}
                   </StyledTableCell>
                   <StyledTableCell align="center" style={{ opacity: 0.8 }}>
                     {league.averageGoals}

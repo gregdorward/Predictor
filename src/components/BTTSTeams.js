@@ -2,7 +2,7 @@ import { Fragment, useEffect, useState } from "react";
 import { withStyles, makeStyles } from "@material-ui/core/styles";
 import { 
   Table, TableBody, TableCell, TableContainer, TableHead, 
-  TableRow, Paper, Box, Typography, Chip 
+  TableRow, Paper, Box, Typography
 } from "@material-ui/core";
 import { getBTTSTeams } from "../logic/getStatsInsights";
 import Logo from "../components/Logo";
@@ -13,8 +13,10 @@ import Canonical from "../components/Canonical";
 const useStyles = makeStyles((theme) => ({
   container: {
     maxWidth: 1000,
+    width: "100%",
     margin: "40px auto",
     padding: "1em 1em",
+    boxSizing: "border-box",
     "& h1": {
       fontSize: "2em",
       fontWeight: 800,
@@ -35,6 +37,7 @@ const useStyles = makeStyles((theme) => ({
     borderRadius: 5,
     boxShadow: "0 10px 30px rgba(0,0,0,0.15)",
     overflow: "hidden",
+    maxWidth: "100%",
     border: "1px solid rgba(255,255,255,0.05)",
     backgroundColor: "var(--secondary-background-color)",
   },
@@ -103,22 +106,22 @@ export default function BTTSTeams() {
       <div className="DarkMode"><Logo /></div>
       <HamburgerMenu />
       
-      <Box className={classes.container}>
+      <Box className={`${classes.container} SubpageContent`}>
         <a href="https://www.soccerstatshub.com/" className={classes.homeLink}>← Back to Home</a>
         
         <Typography variant="h1">BTTS Elite Teams</Typography>
         <Typography variant="h2">Teams with the highest percentage of games ending in both teams to score</Typography>
         
-        <TableContainer component={Paper} className={classes.tableWrapper}>
-          <Table aria-label="BTTS teams table">
+        <TableContainer component={Paper} className={`${classes.tableWrapper} SubpageTableScroll`}>
+          <Table size="small" aria-label="BTTS teams table">
             <TableHead>
               <TableRow>
                 <StyledTableCell align="left">Name</StyledTableCell>
-                <StyledTableCell align="center">Country</StyledTableCell>
+                <StyledTableCell align="center" className="SubpageCol--country">Country</StyledTableCell>
                 <StyledTableCell align="center">BTTS %</StyledTableCell>
-                <StyledTableCell align="center">Played</StyledTableCell>
-                <StyledTableCell align="center">Next Opponent</StyledTableCell>
-                <StyledTableCell align="center">BTTS Odds</StyledTableCell>
+                <StyledTableCell align="center" className="SubpageCol--played">Played</StyledTableCell>
+                <StyledTableCell align="center">Next</StyledTableCell>
+                <StyledTableCell align="center">Odds</StyledTableCell>
               </TableRow>
             </TableHead>
             <TableBody>
@@ -127,13 +130,8 @@ export default function BTTSTeams() {
                   <StyledTableCell align="left" style={{ fontWeight: 600 }}>
                     {team.name}
                   </StyledTableCell>
-                  <StyledTableCell align="center">
-                    <Chip 
-                      label={team.country} 
-                      size="small" 
-                      variant="outlined" 
-                      style={{ color: "var(--text-color)", borderColor: "rgba(255,255,255,0.2)" }} 
-                    />
+                  <StyledTableCell align="center" className="SubpageCol--country">
+                    {team.country}
                   </StyledTableCell>
                   <StyledTableCell align="center">
                     <Box 
@@ -149,12 +147,12 @@ export default function BTTSTeams() {
                       {team.bttsPercentage}
                     </Box>
                   </StyledTableCell>
-                  <StyledTableCell align="center" style={{ opacity: 0.8 }}>
+                  <StyledTableCell align="center" className="SubpageCol--played" style={{ opacity: 0.8 }}>
                     {team.played}
                   </StyledTableCell>
                   <StyledTableCell align="center">
-                    <Box fontSize="0.9em" fontWeight="600">{team.opponent}</Box>
-                    <Box fontSize="0.8em" style={{ opacity: 0.6 }}>{team.date}</Box>
+                    <Box fontWeight="600">{team.opponent}</Box>
+                    <span className="SubpageCellMeta">{team.date}</span>
                   </StyledTableCell>
                   <StyledTableCell align="center">
                     <Box fontWeight="bold" color="var(--accent-color)">

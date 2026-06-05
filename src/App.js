@@ -7,6 +7,7 @@ import PredictionTypeRadio from "./components/PredictionTypeRadio";
 import ThemeToggle from "./components/DarkModeToggle";
 import { selectedOdds } from "./components/OddsRadio";
 import Collapsable from "./components/CollapsableElement";
+import MultisPanelCarousel from "./components/MultisPanelCarousel";
 import StripePolicies from "./components/Contact";
 import { loadStripe } from "@stripe/stripe-js";
 import { AuthProvider, useAuth } from "./logic/authProvider";
@@ -1215,16 +1216,13 @@ function AppContent() {
             className={"MultisCollapsable"}
             openedClassName={"MultisCollapsableOpened"}
             key="MultisCollapsable"
-            element={<Fragment>
-              <div id="bestPredictions" className="bestPredictions" />
-              <div id="valueBets" className="ValueBets" />
-              <div id="exoticOfTheDay" className="exoticOfTheDay" />
-              <div id="RowOneContainer" className="RowOneContainer">
-                <div id="BTTS" className="RowOne" />
-                <div id="longShots" className="RowOne" />
-              </div>
-              <div id="insights" />
-            </Fragment>} />
+            element={
+              <>
+                <MultisPanelCarousel />
+                <div id="valueBets" className="ValueBets" />
+                <div id="insights" />
+              </>
+            } />
         </div><div id="UserGeneratedTips" /><div id="shortlistRender" /><div id="ROIPlaceholder" /></>
       )}
       <Collapsable buttonText={"Options \u{2630}"} className={"Options"} element={

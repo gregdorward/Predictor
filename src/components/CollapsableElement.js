@@ -15,14 +15,32 @@ const Collapsable = ({
   elementTwo,
   openedClassName,
   isOpen,
+  defaultOpen = false,
+  titleOnly = false,
   onTriggerToggle
   // onTriggerOpening,
   // onTriggerClosing,
 }) => {
+  if (titleOnly) {
+    return (
+      <div className={`${className || "Collapsable"} Collapsable--titleOnly`}>
+        <h3 className={`Collapsable-title ${classNameButton || ""}`}>{buttonText}</h3>
+        <div className={classNameFlex || "Collapsable-content"}>
+          <div className={classNameTwo || buttonText} style={style}>
+            {element}
+          </div>
+          {elementTwo ? (
+            <div className={classNameThree || buttonText}>{elementTwo}</div>
+          ) : null}
+        </div>
+      </div>
+    );
+  }
+
   return (
     <Collapsible
       transitionTime={300}
-      open={isOpen}
+      open={isOpen ?? (defaultOpen ? true : undefined)}
       key={key}
       trigger={
         // ⭐️ FIX: ADD onClick={onTriggerToggle} to the button ⭐️

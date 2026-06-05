@@ -12,6 +12,7 @@ import { getBTTSPotential } from "../logic/getBTTSPotential";
 import { allLeagueResultsArrayOfObjects } from "../logic/getFixtures";
 import TopValueGames from "../components/ValueGames";
 import { Slider } from "../components/Carousel";
+import MultisPanelCarousel from "../components/MultisPanelCarousel";
 import { render } from '../utils/render';
 import {
   calculateAttackingStrength,
@@ -5910,13 +5911,8 @@ export async function getScorePrediction(day, mocked) {
       className={"MultisCollapsable"}
       element={
         <Fragment>
-          <div id="bestPredictions" className="bestPredictions" />
-          <div id="exoticOfTheDay" className="exoticOfTheDay" />
-          <div id="RowOneContainer" className="RowOneContainer">
-            <div id="BTTS" className="RowOne" />
-            <div id="longShots" className="RowOne" />
-            <div id="draws" className="RowOne" />
-          </div>
+          <MultisPanelCarousel />
+          <div id="valueBets" className="ValueBets" />
           <div id="insights" />
           <div id="UserGeneratedTips" />
         </Fragment>
@@ -6188,6 +6184,7 @@ async function renderTips() {
         <Fragment>
           <Increment />
           <Collapsable
+            titleOnly
             buttonText={"Build a Multi"}
             element={
               <ul className="BestPredictions" id="BestPredictions">
@@ -6239,6 +6236,7 @@ async function renderTips() {
         <Fragment>
           <Increment />
           <Collapsable
+            titleOnly
             buttonText={"Build a Multi"}
             element={
               <ul className="BestPredictions" id="BestPredictions">
@@ -6289,6 +6287,7 @@ async function renderTips() {
         <Fragment>
           <Increment />
           <Collapsable
+            titleOnly
             buttonText={"Build a multi"}
             classNameButton={"BuildAMulti"}
             element={
@@ -6309,11 +6308,13 @@ async function renderTips() {
 
 
   render(
-    <TopValueGames
-      tips={valueDiffTipsWinMarket}
-      limit={10}
-      paid={paid}
-    />,
+    <div>
+      <TopValueGames
+        tips={valueDiffTipsWinMarket}
+        limit={10}
+        paid={paid}
+      />
+    </div>,
     "valueBets"
   );
 
@@ -6322,6 +6323,7 @@ async function renderTips() {
       <div className="PredictionContainer">
         <Fragment>
           <Collapsable
+            titleOnly
             buttonText={"Exotic of the Day"}
             element={
               <ul className="BestPredictions" id="BestPredictions">
@@ -6353,6 +6355,7 @@ async function renderTips() {
       <div className="PredictionContainer">
         <Fragment>
           <Collapsable
+            titleOnly
             buttonText={"Exotic of the Day"}
             element={
               <ul className="BestPredictions" id="BestPredictions">
@@ -6384,6 +6387,7 @@ async function renderTips() {
       <div className="PredictionContainer">
         <Fragment>
           <Collapsable
+            titleOnly
             buttonText={"Exotic of the Day"}
             element={
               <ul className="BestPredictions" id="BestPredictions">
@@ -6406,13 +6410,12 @@ async function renderTips() {
     const hiddenCount = Over25Tips.length - tipsToShow.length;
 
     render(
-      <div>
-        <Fragment>
+      <div className="PredictionContainer">
           <Collapsable
+            titleOnly
             buttonText={"Over 2.5 Goals Tips"}
             element={
               <ul className="LongshotPredictions" id="LongshotPredictions">
-                <h4>Over 2.5 Goals Tips</h4>
                 {tipsToShow.map((tip) => (
                   <a
                     key={tip.id}
@@ -6446,23 +6449,23 @@ async function renderTips() {
               </ul>
             }
           />
-        </Fragment>
       </div>,
       "longShots"
     );
   } else {
     render(
-      <div>
-        <Fragment>
+      <div className="PredictionContainer">
           <Collapsable
+            titleOnly
             buttonText={"Over 2.5 goals tips"}
             element={
               <ul className="LongshotPredictions" id="LongshotPredictions">
-                <h4>No games fit the criteria - try again on a day with more fixtures</h4>
+                <h4 className="BestPredictionsExplainer">
+                  No games fit the criteria - try again on a day with more fixtures
+                </h4>
               </ul>
             }
           />
-        </Fragment>
       </div>,
       "longShots"
     );
@@ -6470,13 +6473,12 @@ async function renderTips() {
 
   if (bttsArray.length > 0) {
     render(
-      <div>
-        <Fragment>
+      <div className="PredictionContainer">
           <Collapsable
+            titleOnly
             buttonText={"BTTS Games"}
             element={
               <ul className="BTTSGames" id="BTTSGames">
-                <h4>BTTS Tips</h4>
                 {bttsArray.map((game) => (
                   <a
                     href={`#${game.id}`}
@@ -6498,23 +6500,23 @@ async function renderTips() {
               </ul>
             }
           />
-        </Fragment>
       </div>,
       "BTTS"
     );
   } else {
     render(
-      <div>
-        <Fragment>
+      <div className="PredictionContainer">
           <Collapsable
+            titleOnly
             buttonText={"BTTS games"}
             element={
               <ul className="BTTSGames" id="BTTSGames">
-                <h4>No games fit the criteria - try again on a day with more fixtures</h4>
+                <h4 className="BestPredictionsExplainer">
+                  No games fit the criteria - try again on a day with more fixtures
+                </h4>
               </ul>
             }
           />
-        </Fragment>
       </div>,
       "BTTS"
     );
@@ -6528,7 +6530,7 @@ async function renderTips() {
           <Slider
             element={
               <ul className="XGDiffTips" id="XGDiffTips">
-                <h4>Games with greatest XG Differentials (last 5)</h4>
+                <h4 className="BestPredictionsExplainer">Games with greatest XG Differentials (last 5)</h4>
                 {paid ? (
                   XGDiffTips.length > 0 ? (
                     XGDiffTips.map((tip) => (
@@ -6557,7 +6559,7 @@ async function renderTips() {
             }
             element2={
               <ul className="XGDiffTips" id="XGDiffTips">
-                <h4>
+                <h4 className="BestPredictionsExplainer">
                   Games with greatest points per game differentials (last 6)
                 </h4>
                 {paid ? (
@@ -6590,7 +6592,7 @@ async function renderTips() {
             }
             element3={
               <ul className="XGDiffTips" id="XGDiffTips">
-                <h4>
+                <h4 className="BestPredictionsExplainer">
                   Games with greatest goal differentials (last 5)
                 </h4>
                 {paid ? (
@@ -6623,7 +6625,7 @@ async function renderTips() {
             }
             element4={
               <ul className="XGDiffTips" id="XGDiffTips">
-                <h4>
+                <h4 className="BestPredictionsExplainer">
                   Games with greatest average dangerous attacks differentials (last 5)
                 </h4>
                 {paid ? (
@@ -6656,7 +6658,7 @@ async function renderTips() {
             }
             element5={
               <ul className="XGDiffTips" id="XGDiffTips">
-                <h4>
+                <h4 className="BestPredictionsExplainer">
                   Games with greatest shots on target differentials (last 5)
                 </h4>
                 {paid ? (
@@ -6689,7 +6691,7 @@ async function renderTips() {
             }
           ></Slider>
         }
-      ></Collapsable>
+      />
     </div>,
     "insights"
   );
