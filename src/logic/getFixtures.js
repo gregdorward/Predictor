@@ -363,8 +363,8 @@ export async function renderTable(index, results, id) {
             GamesPlayed={statistics.game_week}
             Results={mostRecentGames}
             Date={todaysDateString}
-            RankingStats={leagueStatsArray[`leagueStats${id}`]}
-            PlayerRankingStats={playerStatsArray[`playerStats${id}`]}
+            RankingStats={leagueStatsArray?.[`leagueStats${id}`]}
+            PlayerRankingStats={playerStatsArray?.[`playerStats${id}`]}
           // mostRecentGameweek={mostRecentGameweek}
           />
         </Suspense>,
@@ -395,8 +395,8 @@ export async function renderTable(index, results, id) {
               GamesPlayed={statistics.game_week}
               Results={mostRecentGames}
               Date={todaysDateString}
-              RankingStats={leagueStatsArray[`leagueStats${id}`]}
-              PlayerRankingStats={playerStatsArray[`playerStats${id}`]}
+              RankingStats={leagueStatsArray?.[`leagueStats${id}`]}
+              PlayerRankingStats={playerStatsArray?.[`playerStats${id}`]}
             />
           </Suspense>
           </>
@@ -437,8 +437,8 @@ export async function renderTable(index, results, id) {
               Key={`League${index}${divisionName1}`}
               GamesPlayed={statistics.game_week}
               Results={mostRecentGames}
-              RankingStats={leagueStatsArray[`leagueStats${id}`]}
-              PlayerRankingStats={playerStatsArray[`playerStats${id}`]}
+              RankingStats={leagueStatsArray?.[`leagueStats${id}`]}
+              PlayerRankingStats={playerStatsArray?.[`playerStats${id}`]}
             />
             <LazyLeagueTable
               Teams={leagueTable2}
@@ -448,8 +448,8 @@ export async function renderTable(index, results, id) {
               Key={`League${index}${divisionName1}`}
               GamesPlayed={statistics.game_week}
               Results={mostRecentGames}
-              RankingStats={leagueStatsArray[`leagueStats${id}`]}
-              PlayerRankingStats={playerStatsArray[`playerStats${id}`]}
+              RankingStats={leagueStatsArray?.[`leagueStats${id}`]}
+              PlayerRankingStats={playerStatsArray?.[`playerStats${id}`]}
 
             />
           </Suspense>

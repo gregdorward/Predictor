@@ -598,7 +598,7 @@ function AppContent() {
   // This function replaces decrementDate and incrementDateV2
   const changeDate = (num) => {
     const newOffset = offset + num;
-    if (newOffset > -120 && newOffset <= 4) {
+    if (newOffset > -120 && newOffset <= 3) {
       const newDate = new Date();
       newDate.setDate(newDate.getDate() + newOffset);
 

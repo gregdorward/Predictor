@@ -5199,7 +5199,7 @@ function fetchLeagueStats() {
   });
 }
 
-export let leagueStatsArray;
+export let leagueStatsArray = {};
 
 
 
@@ -5248,7 +5248,7 @@ function fetchPlayerStats() {
   });
 }
 
-export let playerStatsArray;
+export let playerStatsArray = {};
 
 export async function getScorePrediction(day, mocked) {
   let mock = mocked;
