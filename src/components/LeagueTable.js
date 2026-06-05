@@ -98,6 +98,7 @@ function styleForm(formIndicator) {
 
 export const sofaScoreIds = [
   { 15050: 17 }, //EPL
+  { 16494: 16 }, // World Cup 2026
   { 14930: 18 }, //Championship
   { 14934: 24 }, //League 1
   { 14935: 25 }, //League 2
@@ -413,7 +414,8 @@ export default function LeagueTable(props) {
     props.Teams[0].LeagueID !== 16504 && //MLS
     props.Teams[0].LeagueID !== 12933 && //UKNorth&South
     props.Teams[0].LeagueID !== 15002 && //Europa
-    props.Teams[0].LeagueID !== 13964
+    props.Teams[0].LeagueID !== 13964 &&
+    props.Teams[0].LeagueID !== 16494
     // props.Teams[0].LeagueID !== 14924 //ChampionsLeague
   ) {
     for (let i = 0; i < props.Teams.length; i++) {
@@ -618,7 +620,7 @@ export default function LeagueTable(props) {
     }
   } else if (props.Teams[0].LeagueID === 4340) {
     return null;
-  } else if ([16504, 15002, 14924, 13964].includes(props.Teams[0]?.LeagueID)) {
+  } else if ([16504, 15002, 14924, 13964, 16494].includes(props.Teams[0]?.LeagueID)) {
     console.log("Rendering league table with grouping for league ID:", props.Teams);
 
     // 1. Regroup the flat list into an object: { "Group L": [team1, team2...], "Group M": [...] }

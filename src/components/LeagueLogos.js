@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 
 const Ids = [
     { 15050: 17 }, // EPL
+    { 16494: 16 }, // World Cup 2026
     { 14924: 7 },  // Champions League
     { 14956: 8 },  // La Liga
     { 14930: 18 }, // Championship

@@ -79,6 +79,14 @@ async function convertTimestamp(timestamp) {
 }
 let groups = false;
 
+const GROUP_STAGE_LEAGUE_IDS = [13964, 16494]; // WC Qual Europe, World Cup 2026
+
+function getGroupStageTable(league) {
+  return league?.data?.specific_tables?.find(
+    (st) => st.groups?.length > 0
+  );
+}
+
 export async function generateTables(a, leagueIdArray, allResults) {
   tableArray = [];
   basicTableArray = [];
@@ -91,60 +99,58 @@ export async function generateTables(a, leagueIdArray, allResults) {
 
     const hasSpecificTable = league?.data?.specific_tables?.[0]?.table;
 
-    if (currentLeagueId === 13964) {
-      const groups = league.data.specific_tables[0].groups;
+    if (GROUP_STAGE_LEAGUE_IDS.includes(currentLeagueId)) {
+      const groupStage = getGroupStageTable(league) || league.data.specific_tables?.[0];
+      const cupGroups = groupStage?.groups;
 
-      groups.forEach((group) => {
-        // 1. Create a fresh instance for THIS specific group
-        let groupInstance = [];
+      if (cupGroups?.length) {
+        cupGroups.forEach((group) => {
+          let groupInstance = [];
 
-        group.table.forEach((currentTeam, index) => {
-          let last5 = currentTeam.wdl_record.slice(-5).toUpperCase();
+          group.table.forEach((currentTeam, index) => {
+            let last5 = currentTeam.wdl_record.slice(-5).toUpperCase();
 
-          const team = {
-            LeagueID: currentLeagueId,
-            Position: index + 1,
-            GroupName: group.name,
-            Name: currentTeam.cleanName,
-            ID: currentTeam.id,
-            Played: currentTeam.matchesPlayed,
-            Wins: currentTeam.seasonWins_overall,
-            Draws: currentTeam.seasonDraws_overall,
-            Losses: currentTeam.seasonLosses_overall,
-            For: currentTeam.seasonGoals,
-            Against: currentTeam.seasonConceded_home + currentTeam.seasonConceded_away,
-            GoalDifference: currentTeam.seasonGoalDifference,
-            Form: last5,
-            LastXPoints: getPointsFromLastX(last5.split("")),
-            Points: currentTeam.points,
-            wdl: currentTeam.wdl_record,
-            seasonGoals: currentTeam.seasonGoals,
-            seasonConceded: currentTeam.seasonConceded,
-            zone: currentTeam.zone.name || "mid-table",
-          };
-          groupInstance.push(team);
+            const team = {
+              LeagueID: currentLeagueId,
+              Position: index + 1,
+              GroupName: group.name,
+              Name: currentTeam.cleanName,
+              ID: currentTeam.id,
+              Played: currentTeam.matchesPlayed,
+              Wins: currentTeam.seasonWins_overall,
+              Draws: currentTeam.seasonDraws_overall,
+              Losses: currentTeam.seasonLosses_overall,
+              For: currentTeam.seasonGoals,
+              Against: currentTeam.seasonConceded_home + currentTeam.seasonConceded_away,
+              GoalDifference: currentTeam.seasonGoalDifference,
+              Form: last5,
+              LastXPoints: getPointsFromLastX(last5.split("")),
+              Points: currentTeam.points,
+              wdl: currentTeam.wdl_record,
+              seasonGoals: currentTeam.seasonGoals,
+              seasonConceded: currentTeam.seasonConceded,
+              zone: currentTeam.zone?.name || "mid-table",
+            };
+            groupInstance.push(team);
+          });
+
+          tableArray.push({
+            id: currentLeagueId,
+            group: group.name,
+            table: groupInstance
+          });
+
+          let basicElements = groupInstance.map((item) => ({
+            LeagueID: item.LeagueID,
+            Name: item.Name,
+            Position: item.Position,
+            GoalDifference: item.GoalDifference,
+            Played: item.Played,
+            Points: item.Points,
+          }));
+          basicTableArray.push({ id: currentLeagueId, table: basicElements });
         });
-
-        // 2. CRITICAL: Push this group into your storage arrays
-        // Use tableArray if you want it treated as a standard table, 
-        // or bespokeLeagueArray if that's how your renderer handles groups.
-        tableArray.push({
-          id: currentLeagueId,
-          group: group.name,
-          table: groupInstance
-        });
-
-        // 3. Update basicTableArray so your summary views work
-        let basicElements = groupInstance.map((item) => ({
-          LeagueID: item.LeagueID,
-          Name: item.Name,
-          Position: item.Position,
-          GoalDifference: item.GoalDifference,
-          Played: item.Played,
-          Points: item.Points,
-        }));
-        basicTableArray.push({ id: currentLeagueId, table: basicElements });
-      });
+      }
     } else if (
       // !league.data.specific_tables[0]?.groups &&
       // currentLeagueId !== 13973 &&
@@ -333,7 +339,7 @@ export async function renderTable(index, results, id) {
     (result) => result.date_unix >= twoWeeksAgo
   );
 
-  if (id !== 16504 && id !== 14236 && id !== 13964) {
+  if (id !== 16504 && id !== 14236 && !GROUP_STAGE_LEAGUE_IDS.includes(id)) {
     const leagueTable = tableArray.filter((table) => table.id === id);
 
     league = leagueTable[0].table;
@@ -365,7 +371,7 @@ export async function renderTable(index, results, id) {
         `leagueName${id}`
       );
     }
-  } else if (id === 13964) {
+  } else if (GROUP_STAGE_LEAGUE_IDS.includes(id)) {
     const groups = tableArray.filter((table) => table.id === id);
 
 
@@ -379,7 +385,7 @@ export async function renderTable(index, results, id) {
       return (
         // <div className="group-container" key={`group-wrapper-${groupIndex}`} style={{ marginBottom: '2rem' }}>
         <> 
-        <h3 className="GroupName">{group.name || group.round}</h3>
+        <h3 className="GroupName">{group.group || group.name || group.round}</h3>
           <Suspense fallback={<div>Loading group...</div>}>
             <LazyLeagueTable
               Teams={group.table} // Pass the individual group's table

@@ -11,6 +11,7 @@ import Canonical from "../components/Canonical";
 
 const ids = [
   15050, //premier league 25 12325
+  16494, // World cup 2026
   14930, //championship 25 12451
   14934, //league 1 25 12446
   14935, //league 2 25 12422

@@ -4886,6 +4886,10 @@ const footyStatsToSofaScore = [
       id: 17,
       season: 76986,
     },
+    16494: {
+      id: 16,
+      season: 58210,
+    },
     //Championship 25
     14930: {
       id: 18,

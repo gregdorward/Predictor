@@ -5,6 +5,7 @@ import { renderTable } from "../logic/getFixtures";
 
 const sofaScoreIds = [
   { 15050: 17 }, //EPL
+  { 16494: 16 }, // World Cup 2026
   { 14930: 18 }, //Championship
   { 14934: 24 }, //League 1
   { 14935: 25 }, //League 2

@@ -74,6 +74,7 @@ export let paid = false;
 const menuItems = ['Home', 'bttsteams', 'Services', 'Contact'];
 
 const leagueOrder = [
+  16494, // World cup 2026
   15050, //premier league 25 12325
   14930, //championship 25 12451
   14934, //league 1 25 12446
