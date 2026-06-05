@@ -16,3 +16,16 @@ export function render(element, containerId) {
 
   root.render(element);
 }
+
+export function clearRender(containerId) {
+  const root = roots.get(containerId);
+  if (root) {
+    root.unmount();
+    roots.delete(containerId);
+  }
+
+  const container = document.getElementById(containerId);
+  if (container) {
+    container.innerHTML = "";
+  }
+}

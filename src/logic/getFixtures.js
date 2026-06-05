@@ -1,7 +1,7 @@
 import { Fragment, lazy, Suspense, useState } from "react";
 import ReactDOM from "react-dom";
 import { orderedLeagues } from "../App";
-import { render } from '../utils/render';
+import { render, clearRender } from '../utils/render';
 import { getForm } from "./getForm";
 import { Fixture } from "../components/Fixture";
 import { Button } from "../components/Button";
@@ -328,7 +328,17 @@ function isWithin48Hours(targetDate) {
   return Math.abs(timeDifference) <= fortyEightHoursInMs;
 }
 
+const openLeagueTables = new Set();
+
 export async function renderTable(index, results, id) {
+  const containerId = `leagueName${id}`;
+
+  if (openLeagueTables.has(id)) {
+    clearRender(containerId);
+    openLeagueTables.delete(id);
+    return;
+  }
+
   let league;
   //World cup table rendering
 
@@ -353,6 +363,7 @@ export async function renderTable(index, results, id) {
     });
     console.log(league)
     if (league !== undefined) {
+      openLeagueTables.add(id);
       render(
         <Suspense fallback={<div>Loading game statistics...</div>}>
           <LazyLeagueTable
@@ -368,7 +379,7 @@ export async function renderTable(index, results, id) {
           // mostRecentGameweek={mostRecentGameweek}
           />
         </Suspense>,
-        `leagueName${id}`
+        containerId
       );
     }
   } else if (GROUP_STAGE_LEAGUE_IDS.includes(id)) {
@@ -405,9 +416,10 @@ export async function renderTable(index, results, id) {
     });
 
     // 3. Render the ENTIRE array into the target container once
+    openLeagueTables.add(id);
     render(
       <>{allGroupTables}</>,
-      `leagueName${id}`
+      containerId
     );
   } else if (groups) {
 
@@ -426,6 +438,7 @@ export async function renderTable(index, results, id) {
     });
 
     if (leagueTable1 !== undefined && leagueTable2 !== undefined) {
+      openLeagueTables.add(id);
       render(
         <>
           <Suspense fallback={<div>Loading game statistics...</div>}>
@@ -454,7 +467,7 @@ export async function renderTable(index, results, id) {
             />
           </Suspense>
         </>,
-        `leagueName${id}`
+        containerId
       );
     }
   }
@@ -664,6 +677,7 @@ export async function generateFixtures(
 ) {
   if (!isFunctionRunning) {
     isFunctionRunning = true;
+    openLeagueTables.clear();
     todaysDateString = todaysDate;
     console.log("Generating fixtures for date: ", date);
 
