@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { getAuth } from "firebase/auth";
 import { doc, getDoc } from "firebase/firestore";
 import { db } from "../firebase"; // Ensure you have Firebase initialized
-import Canonical from "../components/Canonical";
+import PageMeta from "./PageMeta";
 
 export default function CancelSubscription() {
   const [loading, setLoading] = useState(false);
@@ -70,7 +70,7 @@ export default function CancelSubscription() {
 
   return (
     <>
-    <Canonical />
+    <PageMeta />
     <div className="p-4 bg-white shadow-md rounded-lg">
       <h2 className="text-xl font-semibold mb-2">Manage Subscription</h2>
       {isPaidUser ? (

@@ -7,7 +7,7 @@ import {
 import { getLowestScoringLeagues } from "../logic/getStatsInsights";
 import Logo from "../components/Logo";
 import HamburgerMenu from "./HamburgerMenu";
-import Canonical from "../components/Canonical";
+import PageMeta from "./PageMeta";
 
 // Consistent Modern Styling for the UI
 const useStyles = makeStyles((theme) => ({
@@ -108,7 +108,7 @@ export default function Under25() {
 
   return (
     <Fragment>
-      <Canonical />
+      <PageMeta />
       <div className="DarkMode"><Logo /></div>
       <HamburgerMenu />
       

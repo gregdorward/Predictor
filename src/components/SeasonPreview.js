@@ -1,7 +1,7 @@
 import { useState } from "react";
 import Logo from "../components/Logo"
 import HamburgerMenu from "./HamburgerMenu";
-import Canonical from "../components/Canonical";
+import PageMeta from "./PageMeta";
 
 const leagues = [
     { name: "English Premier League 25/26", key: "English-Premier-League", season: "2025-2026" },
@@ -34,7 +34,7 @@ export default function SeasonPreview() {
     };
 
     return (
-        <><Canonical />
+        <><PageMeta />
             <div className="DarkMode">
                 <Logo />
             </div>

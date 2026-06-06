@@ -4692,18 +4692,31 @@ li.FormHeader {
   padding-top: 6px;
   padding-bottom: 6px;
   margin: 1em;
-  border: 0.1em solid white;
+  border: 1px solid var(--primary-color);
   border-radius: 10px;
   box-sizing: border-box;
   text-decoration: none;
   font-family: 'Open Sans', sans-serif;
   font-weight: 500;
   color: var(--text-color);
-  background-color: #020029;
-  text-shadow: 0 0.04em 0.04em rgba(0, 0, 0, 0.35);
+  background-color: var(--secondary-background-color);
   text-align: center;
-
   transition: all 0.2s;
+}
+
+.HowToUse p {
+  color: var(--text-color);
+}
+
+.HowToUse-heading {
+  font-weight: 700;
+  font-size: calc(1em + 2px);
+  margin-top: 1.75em;
+  margin-bottom: 0.25em;
+}
+
+.HowToUse-heading:first-child {
+  margin-top: 0;
 }
 
 .StyleOfPlay {

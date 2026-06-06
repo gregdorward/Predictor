@@ -7,7 +7,7 @@ import {
 import { getBTTSFixtures } from "../logic/getStatsInsights";
 import Logo from "../components/Logo";
 import HamburgerMenu from "./HamburgerMenu";
-import Canonical from "../components/Canonical";
+import PageMeta from "./PageMeta";
 
 // Modern Styling using Hook API for better performance
 const useStyles = makeStyles((theme) => ({
@@ -102,7 +102,7 @@ export default function BTTSFixtures() {
 
   return (
     <Fragment>
-      <Canonical />
+      <PageMeta />
       <div className="DarkMode"><Logo /></div>
       <HamburgerMenu />
       

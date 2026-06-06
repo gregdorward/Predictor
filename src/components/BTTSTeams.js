@@ -7,7 +7,7 @@ import {
 import { getBTTSTeams } from "../logic/getStatsInsights";
 import Logo from "../components/Logo";
 import HamburgerMenu from "./HamburgerMenu";
-import Canonical from "../components/Canonical";
+import PageMeta from "./PageMeta";
 
 // Consistent Modern Styling
 const useStyles = makeStyles((theme) => ({
@@ -102,7 +102,7 @@ export default function BTTSTeams() {
 
   return (
     <Fragment>
-      <Canonical />
+      <PageMeta />
       <div className="DarkMode"><Logo /></div>
       <HamburgerMenu />
       

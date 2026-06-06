@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { getAuth, sendPasswordResetEmail } from "firebase/auth";
+import PageMeta from "./PageMeta";
 
 const PasswordReset = () => {
   const [email, setEmail] = useState("");
@@ -22,6 +23,7 @@ const PasswordReset = () => {
 
   return (
     <div>
+      <PageMeta />
       <h2>Reset Password</h2>
       {message && <p style={{ color: "green" }}>{message}</p>}
       {error && <p style={{ color: "red" }}>{error}</p>}

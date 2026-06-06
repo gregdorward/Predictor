@@ -7,7 +7,7 @@ import {
 import { getHighestScoringTeams } from "../logic/getStatsInsights";
 import Logo from "../components/Logo";
 import HamburgerMenu from "./HamburgerMenu";
-import Canonical from "../components/Canonical";
+import PageMeta from "./PageMeta";
 
 const ids = [
   15050, //premier league 25 12325
@@ -163,7 +163,7 @@ export default function HighestScoringTeams() {
 
   return (
     <Fragment>
-      <Canonical />
+      <PageMeta />
       <div className="DarkMode"><Logo /></div>
       <HamburgerMenu />
       

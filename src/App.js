@@ -53,6 +53,7 @@ import {
 } from "react-share";
 import { generateFixtures } from "./logic/getFixtures";
 import { BrowserRouter as Router, Route, Routes, Link } from "react-router-dom";
+import PageMeta from "./components/PageMeta";
 import PrivacyPolicy from "./components/PrivacyPolicy";
 import Over18Badge from './components/images/18.webp';
 import { createRoot } from 'react-dom/client';
@@ -384,16 +385,25 @@ export async function getLeagueList() {
 
   // const todaySS = await convertTimestampForSofaScore(new Date());
 
+  const howToUseHeadings = new Set([
+    "Getting started",
+    "Viewing fixtures",
+    "Options",
+    "Customise tips",
+    "Multis and insights",
+    "Free and premium",
+    "More tools",
+  ]);
+
   const text =
-    "Select a day you would like to retrieve fixtures for from the options above\n A list of games will be returned once the data has loaded\n Once all fixtures have loaded, click on “Get Predictions and Stats” to see our forecasted outcomes for every game\n If a game has completed, the predictions is displayed on the right and the actual result on the left\n Each individual fixture is tappable/clickable. By doing so, you can access a range of detailed stats, from comparative charts, granular performance measures to previous meetings.\n All games are subject to the same automated prediction algorithm with the outcome being a score prediction. Factors that determine the tip include the following, amongst others:\n - Goal differentials\n - Expected goal differentials \n - Attack/Defence performance\n - Form trends over time\n - Home/Away records\n - WDL records\n - Points per game \n - A range of other comparative factors\n  –\n";
+    "Getting started\nUse the < and > arrows to browse fixtures by date. Games load automatically once the data is ready.\nWhen fixtures appear, click \"Get Predictions & Stats\" to generate score predictions and statistics for each match.\n\nViewing fixtures\nEach fixture is clickable. Tap one to open detailed stats, comparative charts, form data, head-to-head history, and match previews.\nUse the toggle above the list to switch between probability mode (percentages) and score mode (predicted outcomes).\nFor completed games, the actual score appears in the Result column alongside our prediction.\nUse the checkbox on a fixture to add it to your shortlist. You can view and share your shortlist once you have selections.\n\nOptions\nOpen \"Options ☰\" to choose fractional or decimal odds, and to select a prediction algorithm:\nSSH Tips - our standard model using expected goal differentials, form, home/away records, attack/defence performance, and other comparative factors.\nAI Tips - an alternative model powered by AI, useful where limited match data is available.\n\nCustomise tips\nOpen \"Customise tips\" to filter the tip list by value edge, stats thresholds, probabilities, and odds ranges. Adjust the sliders, then click \"Get Predictions & Stats\" again to refresh results.\n\nMultis and insights\nAfter generating predictions, open \"Multis\" and use the carousel arrows to browse curated selections:\nBuild a Multi - our highest-confidence picks; use the + and - buttons to change how many games are included.\nExotic of the Day - a pre-built multi from our top selections.\nOver 2.5 Goals - games where three or more goals are most likely.\nBTTS Games - games where both teams to score is most likely.\nThe insights section lists standout performers by value, xG difference, goal difference, and more.\n\nFree and premium\nFree accounts see a sample of matches and limited multi and insight lists. Premium unlocks all competitions, full fixture detail, complete multi and BTTS/O2.5 lists, and AI match previews.\n\nMore tools\nUse the menu icon to access BTTS Teams, BTTS Games, Over 2.5 Goals fixtures, highest and lowest scoring leagues and teams, and season previews.\n\nTap \"How to use\" again to hide this text.";
 
-  const text2 =
-    "A range of tools are available should you wish to use them\n Build a multi - Use the '+' or '-' buttons to add or remove a game deemed to be one of our highest confidence tips from the day\n Exotic of the day: A pre-built exotic multi comprising of our highest confidence tips\n BTTS games: Games where both teams to score is deemed a likely outcome\n Over 2.5 goals tips: Games where over 2.5 goals are most likely to be scored\n SSH Tips: Comprises only games where the expected goal differentials between each team are at their greatest. We believe this shows a true disparity in the form of the two opposing teams\n Tap the 'How to use' option to hide this text";
-
-  let textJoined = text.concat(text2);
-
-  let newText = textJoined.split("\n").map((i) => {
-    return <p>{i}</p>;
+  let newText = text.split("\n").map((line, index) => {
+    if (!line) return null;
+    if (howToUseHeadings.has(line)) {
+      return <p key={index} className="HowToUse-heading">{line}</p>;
+    }
+    return <p key={index}>{line}</p>;
   });
 
   // render(
@@ -448,7 +458,7 @@ export async function getLeagueList() {
   render(
     <Fragment>
       <Collapsable
-        // className={"HowToUse"}
+        classNameTwo="HowToUse"
         buttonText={"How to use"}
         element={newText}
       />
@@ -865,6 +875,7 @@ function AppContent() {
 
   return (
     <div className="App">
+      <PageMeta />
       {showUsernameModal && user && (
         <UsernameModal
           auth={auth} // Use imported 'auth'

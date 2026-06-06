@@ -11,7 +11,7 @@ import { useEffect, useState } from "react";
 import { getHighestScoringTeams } from "../logic/getStatsInsights";
 import Logo from "../components/Logo";
 import HamburgerMenu from "./HamburgerMenu";
-import Canonical from "../components/Canonical";
+import PageMeta from "./PageMeta";
 
 const StyledTableCell = withStyles(() => ({
   head: {
@@ -84,7 +84,7 @@ export default function HighestScoringTeams() {
 
   return (
     <Fragment>
-      <Canonical />
+      <PageMeta />
       <div className="DarkMode">
         <Logo />
       </div>
