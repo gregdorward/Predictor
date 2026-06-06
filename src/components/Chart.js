@@ -991,7 +991,7 @@ export function BarChart(props) {
     aspectRatio: 1.2,
     layout: {
       padding: {
-        left: 4,
+        left: 0,
         right: 12,
       },
     },
@@ -1029,13 +1029,17 @@ export function BarChart(props) {
         border: {
           display: false,
         },
+        afterFit(scale) {
+          scale.width = Math.min(scale.width, 100);
+        },
         ticks: {
           font: {
-            size: 11,
+            size: 9,
             weight: "500",
           },
           color: color,
-          padding: 8,
+          padding: 2,
+          autoSkip: false,
         },
       },
     },

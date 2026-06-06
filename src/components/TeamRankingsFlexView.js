@@ -6,6 +6,7 @@ export default function TeamRankingsFlexView({
   ranksAway,
   teamALabel,
   teamBLabel,
+  totalTeams,
 }) {
   const allMetrics = Object.keys(ranksHome); // assumes both have same keys
 
@@ -51,8 +52,27 @@ export default function TeamRankingsFlexView({
   const miscMetrics = mapMetrics(MISC_METRICS);
 
   return (
-    <div className="rankings-container">
+    <div className="rankings-wrapper">
+      <div className="rankings-container">
       <h4 className="rankings-title">{title}</h4>
+
+      <div className="Rankings-legend">
+        <span className="Rankings-legendItem">
+          <span
+            className="Rankings-legendSwatch Rankings-legendSwatch--home"
+            aria-hidden="true"
+          />
+          {teamALabel}
+        </span>
+        <span className="Rankings-legendItem">
+          <span
+            className="Rankings-legendSwatch Rankings-legendSwatch--away"
+            aria-hidden="true"
+          />
+          {teamBLabel}
+        </span>
+        <span className="Rankings-legendNote">Left = most in competition</span>
+      </div>
 
       {attackingMetrics.length > 0 && (
         <RankingsSection
@@ -62,6 +82,7 @@ export default function TeamRankingsFlexView({
           ranksAway={ranksAway}
           teamALabel={teamALabel}
           teamBLabel={teamBLabel}
+          totalTeams={totalTeams}
         />
       )}
 
@@ -73,6 +94,7 @@ export default function TeamRankingsFlexView({
           ranksAway={ranksAway}
           teamALabel={teamALabel}
           teamBLabel={teamBLabel}
+          totalTeams={totalTeams}
         />
       )}
 
@@ -84,6 +106,7 @@ export default function TeamRankingsFlexView({
           ranksAway={ranksAway}
           teamALabel={teamALabel}
           teamBLabel={teamBLabel}
+          totalTeams={totalTeams}
         />
       )}
 
@@ -95,8 +118,10 @@ export default function TeamRankingsFlexView({
           ranksAway={ranksAway}
           teamALabel={teamALabel}
           teamBLabel={teamBLabel}
+          totalTeams={totalTeams}
         />
       )}
+      </div>
     </div>
   );
 }

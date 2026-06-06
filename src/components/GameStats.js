@@ -4237,11 +4237,21 @@ function GameStats({ game, displayBool, stats, handleToggleTip, userTips }) {
               )}
               {stats && ranksHome && ranksAway && stats?.topTeams && (
                 <TeamRankingsFlexView
-                  title={`Rankings in ${game.leagueDesc} out of ${stats.topTeams.accurateCrosses?.length} teams`}
+                  title={`Rankings in ${game.leagueDesc} out of ${
+                    stats.topTeams.accurateCrosses?.length ??
+                    Object.values(stats.topTeams).find((v) => Array.isArray(v))
+                      ?.length ??
+                    "?"
+                  } teams`}
                   ranksHome={ranksHome}
                   ranksAway={ranksAway}
                   teamALabel={game.homeTeam}
                   teamBLabel={game.awayTeam}
+                  totalTeams={
+                    stats.topTeams.accurateCrosses?.length ??
+                    Object.values(stats.topTeams).find((v) => Array.isArray(v))
+                      ?.length
+                  }
                 />
               )}
               <div className="Chart" id={`Chart${game.id}`} style={style}>
