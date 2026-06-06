@@ -775,12 +775,9 @@ export async function generateFixtures(
 
     matches = [];
     fixtureArray = [];
-    let dateLeague = new Date();
-    const [dateRaw, dateFormatted] = await calculateDate(dateLeague);
-    // dateLeague.setDate(dateLeague.getDate());
 
     league = await fetch(
-      `${process.env.REACT_APP_EXPRESS_SERVER}leagues/${dateRaw}`
+      `${process.env.REACT_APP_EXPRESS_SERVER}leagues/${todaysDate}`
     );
 
     // render(<div></div>, "FixtureContainer");
@@ -824,11 +821,6 @@ export async function generateFixtures(
     allLeagueResults = await fetch(
       `${process.env.REACT_APP_EXPRESS_SERVER}results`
     );
-
-    if (league.status === 200) {
-      leaguesStored = true;
-      console.log("leagues fetched from s3");
-    }
 
     if (
       league.status === 200 &&
@@ -994,6 +986,35 @@ export async function generateFixtures(
       );
     }
 
+    async function saveLeaguesIfNeeded() {
+      if (leaguesStored || leagueArray.length === 0) {
+        return;
+      }
+
+      try {
+        const response = await fetch(
+          `${process.env.REACT_APP_EXPRESS_SERVER}leagues/${todaysDate}`,
+          {
+            method: "POST",
+            headers: {
+              Accept: "application/json",
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ leagueArray }),
+          }
+        );
+
+        if (!response.ok) {
+          console.error(
+            `Failed to save leagues for ${todaysDate}:`,
+            response.status
+          );
+        }
+      } catch (error) {
+        console.error(`Error saving leagues for ${todaysDate}:`, error);
+      }
+    }
+
     let teamPositionPrefix;
 
     async function getPrefix(position) {
@@ -1153,6 +1174,7 @@ export async function generateFixtures(
     let previousLeagueName;
 
     if(fixtureArray.length === 0) {
+      await saveLeaguesIfNeeded();
       console.log("No fixtures found for this date.");
       render(
         <div className="NoFixtures">
@@ -1878,19 +1900,7 @@ export async function generateFixtures(
       });
       await updateResults(true);
     }
-    if (!leaguesStored) {
-      await fetch(
-        `${process.env.REACT_APP_EXPRESS_SERVER}leagues/${todaysDate}`,
-        {
-          method: "POST",
-          headers: {
-            Accept: "application/json",
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ leagueArray }),
-        }
-      );
-    }
+    await saveLeaguesIfNeeded();
 
     // const allFixtures = await RenderAllFixtures(matches, false)
 
