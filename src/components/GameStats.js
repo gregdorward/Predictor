@@ -4283,6 +4283,8 @@ function GameStats({ game, displayBool, stats, handleToggleTip, userTips }) {
                 <BarChart
                   text="All Competition Games - Home Team | Away Team"
                   theme={localStorage.getItem('theme')}
+                  team1={game.homeTeam}
+                  team2={game.awayTeam}
                   labels={[
                     "Highest Goals",
                     "Fewest Conceeded",
@@ -4447,6 +4449,8 @@ function GameStats({ game, displayBool, stats, handleToggleTip, userTips }) {
                   <BarChart
                     text="Last 5 only - Home Team | Away Team"
                     theme={localStorage.getItem('theme')}
+                    team1={game.homeTeam}
+                    team2={game.awayTeam}
                     labels={[
                       "Highest Goals",
                       "Fewest Conceeded",
@@ -4591,6 +4595,8 @@ function GameStats({ game, displayBool, stats, handleToggleTip, userTips }) {
                   <BarChart
                     text="Home/Away only - Home Team | Away Team"
                     theme={localStorage.getItem('theme')}
+                    team1={game.homeTeam}
+                    team2={game.awayTeam}
                     labels={[
                       "Highest Goals",
                       "Fewest Conceeded",

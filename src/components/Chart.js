@@ -1,5 +1,4 @@
-// import { light } from "@material-ui/core/styles/createPalette";
-// import { toBePartiallyChecked } from "@testing-library/jest-dom/dist/matchers";
+import { useState, useEffect } from "react";
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -33,6 +32,39 @@ ChartJS.register(
   SubTitle,
   annotationPlugin
 );
+
+function resolveChartTheme() {
+  return document.body.classList.contains("dark-mode") ? "dark" : "light";
+}
+
+function useChartTheme() {
+  const [theme, setTheme] = useState(resolveChartTheme);
+
+  useEffect(() => {
+    const syncTheme = () => setTheme(resolveChartTheme());
+    const observer = new MutationObserver(syncTheme);
+    observer.observe(document.body, { attributes: true, attributeFilter: ["class"] });
+    return () => observer.disconnect();
+  }, []);
+
+  return theme;
+}
+
+function getChartColors(theme) {
+  if (theme === "dark") {
+    return {
+      color: "#ffffff",
+      gridColor: "rgba(255, 255, 255, 0.08)",
+      tooltipBackground: "#1f1f1f",
+    };
+  }
+
+  return {
+    color: "#020029",
+    gridColor: "rgba(2, 0, 41, 0.08)",
+    tooltipBackground: "#020029",
+  };
+}
 
 const valueLabelPlugin = {
   id: "valueLabelPlugin",
@@ -589,93 +621,183 @@ export const DoughnutChart = ({ pointsTotal, predictedPoints, deltaPTS, theme, l
 
 
 export function RadarChart(props) {
-  let color;
+  const { title, labels, data, data2, team1, team2, max = 1 } = props;
+  const theme = useChartTheme();
+  const { color, gridColor, tooltipBackground } = getChartColors(theme);
 
-  if (props.theme === 'light') {
-    color = "#020029"
-  } else if (props.theme === 'dark') {
-    color = "#ffffff"
-  } else {
-    color = "#f57701"
-  }
+  const homeColor = "#01a501";
+  const homeFill = "#01a50133";
+  const awayColor = "#d71200";
+  const awayFill = "#d7120033";
+
+  const radarLabelAbbreviations = {
+    Attack: "Atk",
+    Defence: "Def",
+    Possession: "Poss",
+    Directness: "Dir",
+    Precision: "Prec",
+    "Attack rating": "Atk",
+    "Defence rating": "Def",
+    "Ball retention": "Poss",
+    "XG For": "XGF",
+    "XG Against": "XGA",
+    "Attacking precision": "Prec",
+  };
+
+  const abbreviateRadarLabel = (label) => {
+    if (radarLabelAbbreviations[label]) {
+      return radarLabelAbbreviations[label];
+    }
+
+    const words = label.trim().split(/\s+/);
+    if (words.length > 1) {
+      return words.map((word) => word[0]?.toUpperCase() ?? "").join("");
+    }
+
+    return label.length > 5 ? label.slice(0, 4) : label;
+  };
+
+  const displayLabels = labels.map(abbreviateRadarLabel);
 
   const options = {
-    color: "white",
+    color,
+    responsive: true,
+    maintainAspectRatio: true,
+    aspectRatio: 1,
+    layout: {
+      padding: 4,
+    },
+    animation: {
+      duration: 700,
+      easing: "easeOutQuart",
+    },
     scales: {
       r: {
+        min: 0,
+        max,
         ticks: {
-          stepSize: 0.25, // Adjust this to space out ticks more (default is 10)
+          stepSize: 0.25,
           display: false,
+          backdropColor: "transparent",
         },
         grid: {
-          // circular: true,
-          color: color,
+          circular: true,
+          color: gridColor,
+          lineWidth: 1,
+        },
+        angleLines: {
+          color: gridColor,
+          lineWidth: 1,
         },
         pointLabels: {
-          color: color,
+          color,
           font: {
-            size: 12
+            size: 9,
+            weight: "500",
           },
+          padding: 4,
         },
-        min: 0,
-        max: props.max, // Set this according to your chart's range
-      }
+      },
     },
     plugins: {
       legend: {
         position: "top",
-
         labels: {
-          boxHeight: 10,
-          color: color,
+          boxWidth: 12,
+          boxHeight: 12,
+          useBorderRadius: true,
+          borderRadius: 3,
+          color,
           font: {
-            size: 14
+            size: 11,
+            weight: "500",
+          },
+          padding: 12,
+        },
+      },
+      tooltip: {
+        enabled: true,
+        backgroundColor: tooltipBackground,
+        titleColor: "#ffffff",
+        bodyColor: "#ffffff",
+        padding: 10,
+        cornerRadius: 8,
+        callbacks: {
+          title(items) {
+            const index = items[0]?.dataIndex;
+            return labels[index] ?? items[0]?.label ?? "";
+          },
+          label(context) {
+            return `${context.dataset.label}: ${Number(context.raw).toFixed(2)}`;
           },
         },
       },
       title: {
         display: true,
-        text: props.title,
-        color: color,
-        backgroundColor: "black",
+        text: title,
+        color,
         font: {
-          size: 12,
+          size: 13,
+          weight: "600",
+        },
+        padding: {
+          bottom: 4,
+        },
+      },
+      subtitle: {
+        display: true,
+        text: "Higher values indicate stronger ratings",
+        color,
+        font: {
+          size: 11,
+          weight: "400",
+        },
+        padding: {
+          bottom: 12,
         },
       },
     },
   };
 
-  let data = {
-    labels: props.labels,
+  const chartData = {
+    labels: displayLabels,
     datasets: [
       {
-        label: props.team1,
-        data: props.data,
+        label: team1,
+        data,
         fill: true,
-        backgroundColor: "#01a50141",
-        borderColor: "#01a501",
-        pointBackgroundColor: "#01a501",
-        pointBorderColor: "#01a501",
-        pointHoverBackgroundColor: "#01a501",
-        pointHoverBorderColor: "#007900ff",
-        borderWidth: 2,
+        backgroundColor: homeFill,
+        borderColor: homeColor,
+        pointBackgroundColor: homeColor,
+        pointBorderColor: theme === "dark" ? "#1f1f1f" : "#ffffff",
+        pointHoverBackgroundColor: homeColor,
+        pointHoverBorderColor: theme === "dark" ? "#ffffff" : "#020029",
+        pointRadius: 4,
+        pointHoverRadius: 6,
+        borderWidth: 2.5,
       },
       {
-        label: props.team2,
-        data: props.data2,
+        label: team2,
+        data: data2,
         fill: true,
-        backgroundColor: "#ae0f0141",
-        borderColor: "#ae1001ff",
-        pointBackgroundColor: "#ae1001ff",
-        pointBorderColor: "#ae1001ff",
-        pointHoverBackgroundColor: "#ae1001ff",
-        pointHoverBorderColor: "#ae1001ff",
-        borderWidth: 2,
+        backgroundColor: awayFill,
+        borderColor: awayColor,
+        pointBackgroundColor: awayColor,
+        pointBorderColor: theme === "dark" ? "#1f1f1f" : "#ffffff",
+        pointHoverBackgroundColor: awayColor,
+        pointHoverBorderColor: theme === "dark" ? "#ffffff" : "#020029",
+        pointRadius: 4,
+        pointHoverRadius: 6,
+        borderWidth: 2.5,
       },
     ],
   };
 
-  return <Radar options={options} data={data} />;
+  return (
+    <div className="ComparisonBarChart ComparisonRadarChart">
+      <Radar key={theme} options={options} data={chartData} />
+    </div>
+  );
 }
 
 export function RadarChartLeagueStats({
@@ -781,32 +903,25 @@ export function RadarChartLeagueStats({
 }
 
 export function BarChart(props) {
-  const { data1, data2, theme } = props; // Destructure props for easier access
-  let color;
+  const { data1, data2, team1 = "Home", team2 = "Away" } = props;
+  const theme = useChartTheme();
+  const { color, gridColor, tooltipBackground } = getChartColors(theme);
 
-  if (theme === 'light') {
-    color = "#020029"
-  } else if (theme === 'dark') {
-    color = "#ffffff"
-  } else {
-    color = "#f57701"
-  }
-  // --- SOLUTION: Add this check at the top ---
-  // Ensure the data arrays are not empty/invalid BEFORE calculation
+  const homeColor = "#01a501";
+  const homeColorSoft = "#01a50166";
+  const awayColor = "#d71200";
+  const awayColorSoft = "#d7120066";
+
   if (!data1 || !data2 || data1.length === 0 || data2.length === 0) {
     return <div style={{ color: color, textAlign: "center" }}>No data available for this chart.</div>;
   }
 
   const sum = data2.map(function (num, idx) {
-    // 1. Use ?? 0 to turn null/undefined stats into 0
     const val1 = data1[idx] ?? 0;
     const val2 = num ?? 0;
-
-    // 2. Use Number() to ensure any strings (like "396.00") are converted back to numbers
     return Number(val2) - Number(val1);
-  }).filter(value => !isNaN(value)); // Filter out any values that couldn't be converted
+  }).filter(value => !isNaN(value));
 
-  // Add this critical check back
   if (sum.length === 0) {
     return <div style={{ color: color, textAlign: "center" }}>Invalid numeric data available for this chart.</div>;
   }
@@ -814,7 +929,6 @@ export function BarChart(props) {
   const max = Math.max(...sum);
   const min = Math.min(...sum);
 
-  // This function is fine as is
   function findLargestNum(numOne, numTwo) {
     const tempArr = [Math.abs(numOne), Math.abs(numTwo)];
     return Math.max(...tempArr) + 1;
@@ -822,66 +936,217 @@ export function BarChart(props) {
 
   const largest = findLargestNum(max, min);
 
+  const getBarFillColor = (value) => (value < 0 ? homeColor : awayColor);
+
+  const getBarGradient = (ctx, bar, value) => {
+    const x0 = bar.base;
+    const y0 = bar.y;
+    const x1 = bar.x;
+    const y1 = bar.y;
+
+    if (![x0, y0, x1, y1].every(Number.isFinite)) {
+      return getBarFillColor(value);
+    }
+
+    const gradient = ctx.createLinearGradient(x0, y0, x1, y1);
+    if (value < 0) {
+      gradient.addColorStop(0, homeColorSoft);
+      gradient.addColorStop(1, homeColor);
+    } else {
+      gradient.addColorStop(0, awayColorSoft);
+      gradient.addColorStop(1, awayColor);
+    }
+    return gradient;
+  };
+
+  const barDeltaLabelPlugin = {
+    id: "barDeltaLabelPlugin",
+    afterDatasetsDraw(chart) {
+      const { ctx } = chart;
+      const dataset = chart.data.datasets[0];
+      const meta = chart.getDatasetMeta(0);
+
+      meta.data.forEach((bar, index) => {
+        const value = dataset.data[index];
+        if (!value || !Number.isFinite(bar.x) || !Number.isFinite(bar.y)) return;
+
+        const label = `+${Math.abs(value).toFixed(1)}`;
+        ctx.save();
+        ctx.fillStyle = color;
+        ctx.font = "600 10px 'Open Sans', sans-serif";
+        ctx.textAlign = value < 0 ? "right" : "left";
+        ctx.textBaseline = "middle";
+
+        const padding = 8;
+        const x = value < 0 ? bar.x - padding : bar.x + padding;
+        ctx.fillText(label, x, bar.y);
+        ctx.restore();
+      });
+    },
+  };
+
   const options = {
     color: color,
     indexAxis: "y",
     aspectRatio: 1.2,
+    layout: {
+      padding: {
+        left: 4,
+        right: 12,
+      },
+    },
+    animation: {
+      duration: 700,
+      easing: "easeOutQuart",
+    },
     elements: {
       bar: {
-        borderWidth: 2,
+        borderWidth: 0,
+        borderRadius: 6,
+        borderSkipped: false,
       },
     },
     scales: {
       x: {
-        min: -largest, // Now protected from Infinity
-        max: largest,  // Now protected from Infinity
+        min: -largest,
+        max: largest,
+        grid: {
+          display: true,
+          color: gridColor,
+          drawTicks: false,
+        },
         ticks: {
+          display: false,
+        },
+        border: {
           display: false,
         },
       },
       y: {
+        grid: {
+          display: false,
+        },
+        border: {
+          display: false,
+        },
         ticks: {
           font: {
             size: 11,
+            weight: "500",
           },
           color: color,
+          padding: 8,
         },
       },
     },
     responsive: true,
+    maintainAspectRatio: true,
     plugins: {
       legend: {
         display: false,
       },
       tooltip: {
-        enabled: false,
+        enabled: true,
+        backgroundColor: tooltipBackground,
+        titleColor: "#ffffff",
+        bodyColor: "#ffffff",
+        padding: 10,
+        cornerRadius: 8,
+        displayColors: false,
+        callbacks: {
+          title(items) {
+            return items[0]?.label ?? "";
+          },
+          label(context) {
+            const value = context.raw;
+            const leader = value < 0 ? team1 : value > 0 ? team2 : "Even";
+            const magnitude = Math.abs(value).toFixed(1);
+            return value === 0 ? "Even" : `${leader} +${magnitude}`;
+          },
+        },
       },
       title: {
         display: true,
         text: props.text,
         color: color,
         font: {
-          size: 12,
+          size: 13,
+          weight: "600",
+        },
+        padding: {
+          bottom: 4,
+        },
+      },
+      subtitle: {
+        display: true,
+        text: `Bars show which team leads each metric`,
+        color: color,
+        font: {
+          size: 11,
+          weight: "400",
+        },
+        padding: {
+          bottom: 12,
+        },
+      },
+      annotation: {
+        annotations: {
+          zeroLine: {
+            type: "line",
+            xMin: 0,
+            xMax: 0,
+            borderColor: color,
+            borderWidth: 1,
+            borderDash: [4, 4],
+            opacity: 0.35,
+          },
         },
       },
     },
   };
 
   const data = {
-    labels: props.labels, // Assuming you made the change to accept labels as a prop
+    labels: props.labels,
     datasets: [
       {
         data: sum,
+        barPercentage: 0.72,
+        categoryPercentage: 0.82,
         backgroundColor(context) {
-          const index = context.dataIndex;
-          const value = context.dataset.data[index];
-          return value < 0 ? "#01a501" : "#ae1001ff";
+          const { chart, dataIndex } = context;
+          const value = context.dataset.data[dataIndex];
+          const meta = chart.getDatasetMeta(0);
+          const bar = meta.data[dataIndex];
+
+          if (!bar) {
+            return getBarFillColor(value);
+          }
+
+          return getBarGradient(chart.ctx, bar, value);
+        },
+        hoverBackgroundColor(context) {
+          const value = context.dataset.data[context.dataIndex];
+          return getBarFillColor(value);
         },
       },
     ],
   };
 
-  return <Bar options={options} data={data} />;
+  return (
+    <div className="ComparisonBarChart">
+      <Bar key={theme} options={options} data={data} plugins={[barDeltaLabelPlugin]} />
+      <div className="ComparisonBarChart-legend">
+        <span className="ComparisonBarChart-legendItem">
+          <span className="ComparisonBarChart-legendSwatch ComparisonBarChart-legendSwatch--home" />
+          {team1}
+        </span>
+        <span className="ComparisonBarChart-legendItem">
+          <span className="ComparisonBarChart-legendSwatch ComparisonBarChart-legendSwatch--away" />
+          {team2}
+        </span>
+      </div>
+    </div>
+  );
 }
 
 export function BarChartTwo(props) {
@@ -987,3 +1252,5 @@ export function BarChartTwo(props) {
 
   return <Bar options={options} data={data} />;
 }
+
+export { useChartTheme, getChartColors };

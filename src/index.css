@@ -5573,6 +5573,65 @@ input:active+.design::after {
   flex-basis: 100%;
 }
 
+.ComparisonBarChart {
+  width: 100%;
+  max-width: 640px;
+  margin: 1.5em auto;
+  padding: 1rem 1.1rem 0.85rem;
+  border-radius: 12px;
+  background-color: var(--secondary-background-color);
+  border: 1px solid var(--third-background-color);
+  box-sizing: border-box;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.ComparisonBarChart:hover {
+  border-color: var(--primary-color);
+  box-shadow: 0 4px 18px rgba(0, 0, 0, 0.08);
+}
+
+.ComparisonBarChart-legend {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 1.25rem;
+  margin-top: 0.5rem;
+  padding-bottom: 0.25rem;
+  font-size: 0.85rem;
+  color: var(--text-color);
+}
+
+.ComparisonBarChart-legendItem {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+}
+
+.ComparisonBarChart-legendSwatch {
+  width: 12px;
+  height: 12px;
+  border-radius: 3px;
+  flex-shrink: 0;
+}
+
+.ComparisonBarChart-legendSwatch--home {
+  background: linear-gradient(90deg, #01a50166, #01a501);
+}
+
+.ComparisonBarChart-legendSwatch--away {
+  background: linear-gradient(90deg, #d7120066, #d71200);
+}
+
+.ComparisonRadarChart {
+  max-width: 640px;
+}
+
+.ComparisonRadarChart canvas {
+  margin-left: auto;
+  margin-right: auto;
+  max-height: 42em;
+}
+
 .Chart {
   width: fit-content;
   background-color: var(--background-color);
@@ -6063,6 +6122,15 @@ button.AIInsights button:active {
   width: 2.5em !important;
   margin-left: 2em !important;
   margin-right: 2em !important;
+}
+
+.XGSwiper {
+  width: 100%;
+  overflow: visible;
+}
+
+.XGSwiper .swiper-slide {
+  height: auto;
 }
 
 
