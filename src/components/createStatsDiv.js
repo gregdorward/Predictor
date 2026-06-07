@@ -64,61 +64,69 @@ function Stats(props) {
               {props.Results && props.Results[0] ? props.Results[0] : ""}
             </span>
           </li>
-          <li className="FormHeader">
-            {props.homeOrAway ? props.homeOrAway : "N/A"} form (most recent on right)
-          </li>
-          <li key={`last5${props.homeOrAwayResults ? props.homeOrAwayResults : "default"}`} className="FormHomeOrAway">
-            <span className={styleForm(props.ResultsHorA && props.ResultsHorA[5] ? props.ResultsHorA[5] : "")}>
-              {props.ResultsHorA && props.ResultsHorA[5] ? props.ResultsHorA[5] : ""}
-            </span>
-            <span className={styleForm(props.ResultsHorA && props.ResultsHorA[4] ? props.ResultsHorA[4] : "")}>
-              {props.ResultsHorA && props.ResultsHorA[4] ? props.ResultsHorA[4] : ""}
-            </span>
-            <span className={styleForm(props.ResultsHorA && props.ResultsHorA[3] ? props.ResultsHorA[3] : "")}>
-              {props.ResultsHorA && props.ResultsHorA[3] ? props.ResultsHorA[3] : ""}
-            </span>
-            <span className={styleForm(props.ResultsHorA && props.ResultsHorA[2] ? props.ResultsHorA[2] : "")}>
-              {props.ResultsHorA && props.ResultsHorA[2] ? props.ResultsHorA[2] : ""}
-            </span>
-            <span className={styleForm(props.ResultsHorA && props.ResultsHorA[1] ? props.ResultsHorA[1] : "")}>
-              {props.ResultsHorA && props.ResultsHorA[1] ? props.ResultsHorA[1] : ""}
-            </span>
-            <span className={styleForm(props.ResultsHorA && props.ResultsHorA[0] ? props.ResultsHorA[0] : "")}>
-              {props.ResultsHorA && props.ResultsHorA[0] ? props.ResultsHorA[0] : ""}
-            </span>
-          </li>
-          <li
-            key="BTTSArrayHomeOrAway"
-            className="BTTSArrayHomeOrAway"
-            data-cy={props.name ? props.name + "BTTSArrayHomeOrAway" : "BTTSArrayHomeOrAway"}
-          >
-            <div className="BTTSResults">{props.BTTSArray ? `BTTS` : ``}</div>
-            <span className={styleBTTS(props.BTTSArray && props.BTTSArray[5] ? props.BTTSArray[5] : "")}>
-              {props.BTTSArray && props.BTTSArray[5] ? "" : ""}
-            </span>
-            <span className={styleBTTS(props.BTTSArray && props.BTTSArray[4] ? props.BTTSArray[4] : "")}>
-              {props.BTTSArray && props.BTTSArray[4] ? "" : ""}
-            </span>
-            <span className={styleBTTS(props.BTTSArray && props.BTTSArray[3] ? props.BTTSArray[3] : "")}>
-              {props.BTTSArray && props.BTTSArray[3] ? "" : ""}
-            </span>
-            <span className={styleBTTS(props.BTTSArray && props.BTTSArray[2] ? props.BTTSArray[2] : "")}>
-              {props.BTTSArray && props.BTTSArray[2] ? "" : ""}
-            </span>
-            <span className={styleBTTS(props.BTTSArray && props.BTTSArray[1] ? props.BTTSArray[1] : "")}>
-              {props.BTTSArray && props.BTTSArray[1] ? "" : ""}
-            </span>
-            <span className={styleBTTS(props.BTTSArray && props.BTTSArray[0] ? props.BTTSArray[0] : "")}>
-              {props.BTTSArray && props.BTTSArray[0] ? "" : ""}
-            </span>
-          </li>
-          <div className="FormSummaries">
-            {props.FormTextString && (
-              <li className="FormSummaryHome">
-                {props.FormTextString}
+          {!props.isWorldCupCompetition && (
+            <>
+              <li className="FormHeader">
+                {props.homeOrAway ? props.homeOrAway : "N/A"} form (most recent on right)
               </li>
-            )}
-          </div>
+              <li key={`last5${props.homeOrAwayResults ? props.homeOrAwayResults : "default"}`} className="FormHomeOrAway">
+                <span className={styleForm(props.ResultsHorA && props.ResultsHorA[5] ? props.ResultsHorA[5] : "")}>
+                  {props.ResultsHorA && props.ResultsHorA[5] ? props.ResultsHorA[5] : ""}
+                </span>
+                <span className={styleForm(props.ResultsHorA && props.ResultsHorA[4] ? props.ResultsHorA[4] : "")}>
+                  {props.ResultsHorA && props.ResultsHorA[4] ? props.ResultsHorA[4] : ""}
+                </span>
+                <span className={styleForm(props.ResultsHorA && props.ResultsHorA[3] ? props.ResultsHorA[3] : "")}>
+                  {props.ResultsHorA && props.ResultsHorA[3] ? props.ResultsHorA[3] : ""}
+                </span>
+                <span className={styleForm(props.ResultsHorA && props.ResultsHorA[2] ? props.ResultsHorA[2] : "")}>
+                  {props.ResultsHorA && props.ResultsHorA[2] ? props.ResultsHorA[2] : ""}
+                </span>
+                <span className={styleForm(props.ResultsHorA && props.ResultsHorA[1] ? props.ResultsHorA[1] : "")}>
+                  {props.ResultsHorA && props.ResultsHorA[1] ? props.ResultsHorA[1] : ""}
+                </span>
+                <span className={styleForm(props.ResultsHorA && props.ResultsHorA[0] ? props.ResultsHorA[0] : "")}>
+                  {props.ResultsHorA && props.ResultsHorA[0] ? props.ResultsHorA[0] : ""}
+                </span>
+              </li>
+            </>
+          )}
+          {!props.isWorldCupCompetition && (
+            <>
+              <li
+                key="BTTSArrayHomeOrAway"
+                className="BTTSArrayHomeOrAway"
+                data-cy={props.name ? props.name + "BTTSArrayHomeOrAway" : "BTTSArrayHomeOrAway"}
+              >
+                <div className="BTTSResults">{props.BTTSArray ? `BTTS` : ``}</div>
+                <span className={styleBTTS(props.BTTSArray && props.BTTSArray[5] ? props.BTTSArray[5] : "")}>
+                  {props.BTTSArray && props.BTTSArray[5] ? "" : ""}
+                </span>
+                <span className={styleBTTS(props.BTTSArray && props.BTTSArray[4] ? props.BTTSArray[4] : "")}>
+                  {props.BTTSArray && props.BTTSArray[4] ? "" : ""}
+                </span>
+                <span className={styleBTTS(props.BTTSArray && props.BTTSArray[3] ? props.BTTSArray[3] : "")}>
+                  {props.BTTSArray && props.BTTSArray[3] ? "" : ""}
+                </span>
+                <span className={styleBTTS(props.BTTSArray && props.BTTSArray[2] ? props.BTTSArray[2] : "")}>
+                  {props.BTTSArray && props.BTTSArray[2] ? "" : ""}
+                </span>
+                <span className={styleBTTS(props.BTTSArray && props.BTTSArray[1] ? props.BTTSArray[1] : "")}>
+                  {props.BTTSArray && props.BTTSArray[1] ? "" : ""}
+                </span>
+                <span className={styleBTTS(props.BTTSArray && props.BTTSArray[0] ? props.BTTSArray[0] : "")}>
+                  {props.BTTSArray && props.BTTSArray[0] ? "" : ""}
+                </span>
+              </li>
+              <div className="FormSummaries">
+                {props.FormTextString && (
+                  <li className="FormSummaryHome">
+                    {props.FormTextString}
+                  </li>
+                )}
+              </div>
+            </>
+          )}
           <div className="AllStats">
             <Collapsable buttonText={`Key Stats`}
               classNameButton="StatHeader"
@@ -665,31 +673,33 @@ function Stats(props) {
               {props.Results && props.Results[0] ? props.Results[0] : ""}
             </span>
           </li>
-          <li
-            key="BTTSArrayHomeOrAway"
-            className="BTTSArrayHomeOrAway"
-            data-cy={props.name ? props.name + "BTTSArrayHomeOrAway" : "BTTSArrayHomeOrAway"}
-          >
-            <div className="BTTSResults">{props.BTTSArray ? `BTTS` : ``}</div>
-            <span className={styleBTTS(props.BTTSArray && props.BTTSArray[5] ? props.BTTSArray[5] : "")}>
-              {props.BTTSArray && props.BTTSArray[5] ? "" : ""}
-            </span>
-            <span className={styleBTTS(props.BTTSArray && props.BTTSArray[4] ? props.BTTSArray[4] : "")}>
-              {props.BTTSArray && props.BTTSArray[4] ? "" : ""}
-            </span>
-            <span className={styleBTTS(props.BTTSArray && props.BTTSArray[3] ? props.BTTSArray[3] : "")}>
-              {props.BTTSArray && props.BTTSArray[3] ? "" : ""}
-            </span>
-            <span className={styleBTTS(props.BTTSArray && props.BTTSArray[2] ? props.BTTSArray[2] : "")}>
-              {props.BTTSArray && props.BTTSArray[2] ? "" : ""}
-            </span>
-            <span className={styleBTTS(props.BTTSArray && props.BTTSArray[1] ? props.BTTSArray[1] : "")}>
-              {props.BTTSArray && props.BTTSArray[1] ? "" : ""}
-            </span>
-            <span className={styleBTTS(props.BTTSArray && props.BTTSArray[0] ? props.BTTSArray[0] : "")}>
-              {props.BTTSArray && props.BTTSArray[0] ? "" : ""}
-            </span>
-          </li>
+          {!props.isWorldCupCompetition && (
+            <li
+              key="BTTSArrayHomeOrAway"
+              className="BTTSArrayHomeOrAway"
+              data-cy={props.name ? props.name + "BTTSArrayHomeOrAway" : "BTTSArrayHomeOrAway"}
+            >
+              <div className="BTTSResults">{props.BTTSArray ? `BTTS` : ``}</div>
+              <span className={styleBTTS(props.BTTSArray && props.BTTSArray[5] ? props.BTTSArray[5] : "")}>
+                {props.BTTSArray && props.BTTSArray[5] ? "" : ""}
+              </span>
+              <span className={styleBTTS(props.BTTSArray && props.BTTSArray[4] ? props.BTTSArray[4] : "")}>
+                {props.BTTSArray && props.BTTSArray[4] ? "" : ""}
+              </span>
+              <span className={styleBTTS(props.BTTSArray && props.BTTSArray[3] ? props.BTTSArray[3] : "")}>
+                {props.BTTSArray && props.BTTSArray[3] ? "" : ""}
+              </span>
+              <span className={styleBTTS(props.BTTSArray && props.BTTSArray[2] ? props.BTTSArray[2] : "")}>
+                {props.BTTSArray && props.BTTSArray[2] ? "" : ""}
+              </span>
+              <span className={styleBTTS(props.BTTSArray && props.BTTSArray[1] ? props.BTTSArray[1] : "")}>
+                {props.BTTSArray && props.BTTSArray[1] ? "" : ""}
+              </span>
+              <span className={styleBTTS(props.BTTSArray && props.BTTSArray[0] ? props.BTTSArray[0] : "")}>
+                {props.BTTSArray && props.BTTSArray[0] ? "" : ""}
+              </span>
+            </li>
+          )}
           <div className="AllStats">
             <li
               key="TeamScored"

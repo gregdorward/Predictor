@@ -1,23 +1,34 @@
 import { useRef, useEffect, useCallback } from "react";
-import SwiperCore, { EffectCoverflow, Pagination } from "swiper";
+import SwiperCore, { Pagination } from "swiper";
 import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/swiper-bundle.min.css";
 import "swiper/swiper.min.css";
 
-SwiperCore.use([EffectCoverflow, Pagination]);
+SwiperCore.use([Pagination]);
 
 function SlideResizeObserver({ children, onResize }) {
   const ref = useRef(null);
+  const frameRef = useRef(null);
 
   useEffect(() => {
     const node = ref.current;
     if (!node) return;
 
     const observer = new ResizeObserver(() => {
-      onResize();
+      if (frameRef.current) {
+        cancelAnimationFrame(frameRef.current);
+      }
+      frameRef.current = requestAnimationFrame(() => {
+        onResize();
+      });
     });
     observer.observe(node);
-    return () => observer.disconnect();
+    return () => {
+      observer.disconnect();
+      if (frameRef.current) {
+        cancelAnimationFrame(frameRef.current);
+      }
+    };
   }, [onResize]);
 
   return <div ref={ref}>{children}</div>;
@@ -29,8 +40,15 @@ export const Slider = (props) => {
 
   const updateSwiperHeight = useCallback(() => {
     const swiper = swiperRef.current;
-    if (swiper?.updateAutoHeight) {
+    if (!swiper || swiper.destroyed || !swiper.params) {
+      return;
+    }
+
+    try {
       swiper.updateAutoHeight(0);
+      window.dispatchEvent(new Event("resize"));
+    } catch (error) {
+      // Swiper can throw if autoHeight runs during init/teardown.
     }
   }, []);
 
@@ -38,7 +56,10 @@ export const Slider = (props) => {
     const timeouts = [50, 150, 400, 800, 1200].map((delay) =>
       window.setTimeout(updateSwiperHeight, delay)
     );
-    return () => timeouts.forEach(window.clearTimeout);
+    return () => {
+      timeouts.forEach(window.clearTimeout);
+      swiperRef.current = null;
+    };
   }, [updateSwiperHeight, length]);
 
   const slides = [];
@@ -55,21 +76,12 @@ export const Slider = (props) => {
 
   return (
     <Swiper
-      effect={"coverflow"}
       autoHeight={true}
       grabCursor={true}
       observer={true}
       observeParents={true}
-      centeredSlides={true}
-      slidesPerView={"auto"}
-      spaceBetween={100}
-      coverflowEffect={{
-        rotate: 10,
-        stretch: 0,
-        depth: 100,
-        modifier: 1,
-        slideShadows: false,
-      }}
+      slidesPerView={1}
+      spaceBetween={0}
       pagination={{ clickable: true }}
       className="XGSwiper"
       onSwiper={(swiper) => {
@@ -77,6 +89,7 @@ export const Slider = (props) => {
         updateSwiperHeight();
       }}
       onSlideChange={updateSwiperHeight}
+      onSlideChangeTransitionEnd={updateSwiperHeight}
     >
       {slides}
     </Swiper>

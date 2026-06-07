@@ -9,8 +9,7 @@ import TableRow from "@material-ui/core/TableRow";
 import Paper from "@material-ui/core/Paper";
 import { useEffect, useState } from "react";
 import { getHighestScoringTeams } from "../logic/getStatsInsights";
-import Logo from "../components/Logo";
-import HamburgerMenu from "./HamburgerMenu";
+import SiteHeader from "./SiteHeader";
 import PageMeta from "./PageMeta";
 
 const StyledTableCell = withStyles(() => ({
@@ -85,10 +84,7 @@ export default function HighestScoringTeams() {
   return (
     <Fragment>
       <PageMeta />
-      <div className="DarkMode">
-        <Logo />
-      </div>
-      <HamburgerMenu />
+      <SiteHeader />
       <div className="SubpageContent">
       <a href="https://www.soccerstatshub.com/" className="HomeLink">Home</a>
       <h1>Highest Scoring Teams</h1>

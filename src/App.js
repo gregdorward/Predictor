@@ -4,7 +4,6 @@ import { render } from './utils/render';
 import { Button } from "./components/Button";
 import OddsRadio from "./components/OddsRadio";
 import PredictionTypeRadio from "./components/PredictionTypeRadio";
-import ThemeToggle from "./components/DarkModeToggle";
 import { selectedOdds } from "./components/OddsRadio";
 import Collapsable from "./components/CollapsableElement";
 import MultisPanelCarousel from "./components/MultisPanelCarousel";
@@ -18,7 +17,7 @@ import { doc, getDoc, collection, getDocs, query } from 'firebase/firestore';
 import { userDetail } from "./logic/authProvider";
 import { checkUserPaidStatus } from "./logic/hasUserPaid";
 import { getScorePrediction } from "./logic/getScorePredictions";
-import HamburgerMenu from "./components/HamburgerMenu";
+import SiteHeader from "./components/SiteHeader";
 import CancelSubscription from "./components/CancelSubscription"
 import Over25 from "./components/Over25"
 import Under25 from "./components/Under25"
@@ -29,10 +28,10 @@ import BTTSFixtures from "./components/BTTSFixtures";
 import BTTSTeams from "./components/BTTSTeams";
 import SeasonPreview from "./components/SeasonPreview";
 import TeamPage from "./components/Team";
+import { initTheme } from "./utils/theme";
 import { SuccessPage } from "./components/Success"
 import { CancelPage } from "./components/Cancel"
 import PasswordReset from "./components/PasswordReset";
-import Logo from "./components/Logo";
 import { auth, db } from "./firebase";
 import UsernameModal from "./components/UsernameModal";
 import Footer from "./components/Footer"
@@ -609,7 +608,9 @@ function AppContent() {
   // This function replaces decrementDate and incrementDateV2
   const changeDate = (num) => {
     const newOffset = offset + num;
-    if (newOffset > -120 && newOffset <= 3) {
+    // TEMP: allow browsing 4 days ahead (revert to 3 before merge)
+    const maxForwardDays = 4;
+    if (newOffset > -120 && newOffset <= maxForwardDays) {
       const newDate = new Date();
       newDate.setDate(newDate.getDate() + newOffset);
 
@@ -890,12 +891,7 @@ function AppContent() {
           }}
         />
       )}
-      <div className="DarkMode">
-        <Logo />
-        <div className="DarkModeIcon">&#9681;</div>
-        <ThemeToggle />
-      </div>
-      <HamburgerMenu />
+      <SiteHeader showThemeToggle />
       <nav className="hidden md:flex gap-6">
         {menuItems.map((item) => (
           <a
@@ -917,7 +913,10 @@ function AppContent() {
       {!loggedIn || isPaidUser ? (
         <div />
       ) : (
-        <><div className="MembersGetMoreUnderlined" onClick={() => {
+        <><button
+          type="button"
+          className="MembersGetMoreUnderlined"
+          onClick={() => {
           const FixtureList = document.getElementById("Buttons");
           if (FixtureList) {
             FixtureList.scrollIntoView({ behavior: "smooth" });
@@ -934,7 +933,10 @@ function AppContent() {
               getPredictionsButton.focus(); // Optional: Focus the input after scrolling
             }, 1000);
           }
-        }}>Just show me the games</div><div className="NonFixtureInfo">
+        }}
+        >
+          Just show me the games
+        </button><div className="NonFixtureInfo">
             <div className="PremiumUpsell">
               <div className="UpsellHeader">
                 <h2>Unlock the Full Experience</h2>
@@ -1374,6 +1376,10 @@ function AppContent() {
 }
 
 export default function App() {
+  useEffect(() => {
+    initTheme();
+  }, []);
+
   return (
     <AuthProvider>
       <Routes>

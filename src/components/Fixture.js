@@ -13,6 +13,7 @@ import ShareShortlistButton from "./ShareShortlistButton";
 import { getAuth } from "firebase/auth";
 import { getFirestore, doc, getDoc, updateDoc } from "firebase/firestore";
 import GameStats from "./GameStats";
+import { getStoredTheme } from "../utils/theme";
 import {
   GlobalFilters,
 } from "./SliderDiff";
@@ -234,7 +235,7 @@ function SingleFixture({
       paid = await checkUserPaidStatus(userDetail.uid);
       if (clicked === true && paid) {
         StoreData();
-        window.open("/fixture");
+        window.open(`/fixture?theme=${getStoredTheme()}`);
       } else {
         alert("Premium feature only");
       }

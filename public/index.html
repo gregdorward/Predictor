@@ -27,13 +27,23 @@
   <meta name="theme-color" content="#000000" />
   <meta name="msvalidate.01" content="6F676F15115DB2A7E13109B4A7C0BA02" />
   <link rel="preload" as="image" href="/images/NewLogo.webp" type="image/webp" />
+  <link rel="preload" as="font" href="/fonts/OpenSans-Regular.woff2" type="font/woff2" crossorigin />
+  <link rel="preload" as="font" href="/fonts/OpenSans-SemiBold.woff2" type="font/woff2" crossorigin />
   <style>
     @font-face {
       font-family: 'Open Sans';
       font-style: normal;
-      font-weight: 600;
-      src: url('/fonts/OpenSans-SemiBold.woff2') format('woff2');
+      font-weight: 400;
       font-display: swap;
+      src: url('/fonts/OpenSans-Regular.woff2') format('woff2');
+    }
+
+    @font-face {
+      font-family: 'Open Sans';
+      font-style: normal;
+      font-weight: 600;
+      font-display: swap;
+      src: url('/fonts/OpenSans-SemiBold.woff2') format('woff2');
     }
 
     body {
@@ -102,6 +112,24 @@
 </head>
 
 <body>
+  <script>
+    (function () {
+      try {
+        var params = new URLSearchParams(window.location.search);
+        var theme = params.get("theme") || localStorage.getItem("theme");
+        var isDark =
+          theme === "dark" ||
+          (!theme &&
+            window.matchMedia &&
+            window.matchMedia("(prefers-color-scheme: dark)").matches);
+        if (isDark) {
+          document.body.classList.add("dark-mode");
+          document.body.style.backgroundColor = "#000000";
+          document.body.style.color = "#ffffff";
+        }
+      } catch (error) {}
+    })();
+  </script>
   <noscript>
     <h1>SoccerStatsHub</h1>
     <p>Football stats, BTTS tips, Over 2.5 predictions, correct score analysis and daily multis for today's matches.</p>

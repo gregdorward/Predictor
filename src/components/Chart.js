@@ -903,7 +903,7 @@ export function RadarChartLeagueStats({
 }
 
 export function BarChart(props) {
-  const { data1, data2, team1 = "Home", team2 = "Away" } = props;
+  const { data1, data2, displayDeltas, team1 = "Home", team2 = "Away" } = props;
   const theme = useChartTheme();
   const { color, gridColor, tooltipBackground } = getChartColors(theme);
 
@@ -970,7 +970,15 @@ export function BarChart(props) {
         const value = dataset.data[index];
         if (!value || !Number.isFinite(bar.x) || !Number.isFinite(bar.y)) return;
 
-        const label = `+${Math.abs(value).toFixed(1)}`;
+        const labelValue =
+          displayDeltas && displayDeltas[index] !== undefined
+            ? displayDeltas[index]
+            : value;
+        const absLabel = Math.abs(Number(labelValue));
+        const fixed = absLabel.toFixed(2);
+        const display =
+          fixed.endsWith(".00") ? String(Math.round(absLabel)) : fixed;
+        const label = `+${display}`;
         ctx.save();
         ctx.fillStyle = color;
         ctx.font = "600 10px 'Open Sans', sans-serif";

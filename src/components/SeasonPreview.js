@@ -1,6 +1,5 @@
 import { useState } from "react";
-import Logo from "../components/Logo"
-import HamburgerMenu from "./HamburgerMenu";
+import SiteHeader from "./SiteHeader";
 import PageMeta from "./PageMeta";
 
 const leagues = [
@@ -35,10 +34,7 @@ export default function SeasonPreview() {
 
     return (
         <><PageMeta />
-            <div className="DarkMode">
-                <Logo />
-            </div>
-            <HamburgerMenu />
+            <SiteHeader />
             <div className="p-4">
                 <a href="https://www.soccerstatshub.com/" className="HomeLink">Home</a>
                 <h1 className="text-2xl font-bold mb-6">Season Previews</h1>

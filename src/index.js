@@ -8,6 +8,9 @@ import { BrowserRouter } from "react-router-dom";
 import { HelmetProvider } from "react-helmet-async";
 import { Provider } from "react-redux";
 import store from "./logic/store"; // Import your Redux store
+import { initTheme } from "./utils/theme";
+
+initTheme();
 
 render(
   // <React.StrictMode>

@@ -81,6 +81,60 @@ let groups = false;
 
 const GROUP_STAGE_LEAGUE_IDS = [13964, 16494]; // WC Qual Europe, World Cup 2026
 
+export const API_FORM_ONLY_LEAGUE_IDS = [16494]; // World Cup 2026
+
+export function shouldUseApiFormOnly(match) {
+  return (
+    API_FORM_ONLY_LEAGUE_IDS.includes(match.leagueID) &&
+    match.matches_completed_minimum < 4
+  );
+}
+
+function shouldStoreApiFormWindows(leagueId, matchesCompletedMinimum) {
+  return (
+    API_FORM_ONLY_LEAGUE_IDS.includes(leagueId) &&
+    matchesCompletedMinimum < 4
+  );
+}
+
+// Minimal fields read by hydrateFormFromApi for short-term prediction inputs.
+function buildApiFormShortWindow(teamFormResponse, windowIndex, venue) {
+  const stats = teamFormResponse?.data?.[windowIndex]?.stats;
+  if (!stats) {
+    return {};
+  }
+  const venueKey = venue === "home" ? "home" : "away";
+  return {
+    ScoredOverall: parseFloat(stats.seasonScoredNum_overall),
+    ConcededOverall: parseFloat(stats.seasonConcededNum_overall),
+    ScoredAverage: parseFloat(stats.seasonScoredAVG_overall),
+    ConcededAverage: parseFloat(stats.seasonConcededAVG_overall),
+    PlayedHome: parseFloat(stats.seasonMatchesPlayed_home),
+    PlayedAway: parseFloat(stats.seasonMatchesPlayed_away),
+    XGOverall: parseFloat(stats.xg_for_avg_overall),
+    XGAgainstAvgOverall: parseFloat(stats.xg_against_avg_overall),
+    AverageDangerousAttacksOverall: parseFloat(
+      stats.dangerous_attacks_avg_overall
+    ),
+    AverageShotsOnTargetOverall: parseFloat(stats.shotsOnTargetAVG_overall),
+    AverageShots: parseFloat(stats.shotsAVG_overall),
+    AverageShotsHomeOrAway: parseFloat(stats[`shotsAVG_${venueKey}`]),
+    AveragePossessionOverall: parseFloat(stats.possessionAVG_overall),
+  };
+}
+
+// Minimal fields for rolling goal-diff chart in getStats.js.
+function buildApiFormChartWindow(teamFormResponse, windowIndex) {
+  const stats = teamFormResponse?.data?.[windowIndex]?.stats;
+  if (!stats) {
+    return {};
+  }
+  return {
+    ScoredOverall: parseFloat(stats.seasonScoredNum_overall),
+    ConcededOverall: parseFloat(stats.seasonConcededNum_overall),
+  };
+}
+
 function getGroupStageTable(league) {
   return league?.data?.specific_tables?.find(
     (st) => st.groups?.length > 0
@@ -610,7 +664,8 @@ export function RenderAllFixtures(props) {
 
   // 2. Filter logic
   const filteredMatches = omitFilteredGames.filter(
-    (match) => match.matches_completed_minimum >= 3
+    (match) =>
+      match.matches_completed_minimum >= 3 || shouldUseApiFormOnly(match)
   );
 
   const originalLength = filteredMatches.length;
@@ -1470,6 +1525,10 @@ export async function generateFixtures(
             awayPrefix = "";
             awayPrefixAwayTable = "";
           }
+          const storeApiWindows = shouldStoreApiFormWindows(
+            leagueID,
+            fixture.matches_completed_minimum
+          );
           allForm.push({
             id: match.id,
             teamIDHome: match.homeId,
@@ -1477,8 +1536,12 @@ export async function generateFixtures(
             leagueId: leagueID,
             home: {
               teamName: match.homeTeam,
-              0: {},
-              1: {},
+              0: storeApiWindows
+                ? buildApiFormShortWindow(form[0], 0, "home")
+                : {},
+              1: storeApiWindows
+                ? buildApiFormChartWindow(form[0], 1)
+                : {},
               2: {
                 XGOverall: parseFloat(form[0].data[2].stats.xg_for_avg_overall),
                 XG: parseFloat(form[0].data[2].stats.xg_for_avg_home),
@@ -1487,6 +1550,12 @@ export async function generateFixtures(
                 ),
                 ScoredAverage: parseFloat(
                   form[0].data[2].stats.seasonScoredAVG_home
+                ),
+                ScoredAverageOverall: parseFloat(
+                  form[0].data[2].stats.seasonScoredAVG_overall
+                ),
+                ConcededAverageOverall: parseFloat(
+                  form[0].data[2].stats.seasonConcededAVG_overall
                 ),
                 PlayedHome: parseFloat(
                   form[0].data[2].stats.seasonMatchesPlayed_home
@@ -1595,8 +1664,12 @@ export async function generateFixtures(
             },
             away: {
               teamName: match.awayTeam,
-              0: {},
-              1: {},
+              0: storeApiWindows
+                ? buildApiFormShortWindow(form[1], 0, "away")
+                : {},
+              1: storeApiWindows
+                ? buildApiFormChartWindow(form[1], 1)
+                : {},
               2: {
                 XGOverall: parseFloat(form[1].data[2].stats.xg_for_avg_overall),
                 XG: parseFloat(form[1].data[2].stats.xg_for_avg_away),
@@ -1605,6 +1678,12 @@ export async function generateFixtures(
                 ),
                 ScoredAverage: parseFloat(
                   form[1].data[2].stats.seasonScoredAVG_away
+                ),
+                ScoredAverageOverall: parseFloat(
+                  form[1].data[2].stats.seasonScoredAVG_overall
+                ),
+                ConcededAverageOverall: parseFloat(
+                  form[1].data[2].stats.seasonConcededAVG_overall
                 ),
                 PlayedHome: parseFloat(
                   form[1].data[2].stats.seasonMatchesPlayed_home

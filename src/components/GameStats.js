@@ -35,7 +35,9 @@ import { arrayOfGames } from "../logic/getFixtures";
 import GenerateFormSummary from "../logic/compareFormTrend";
 import { checkUserPaidStatus } from "../logic/hasUserPaid";
 import { getPointAverage } from "../logic/getStats";
-import { allForm } from "../logic/getFixtures";
+import { allForm, API_FORM_ONLY_LEAGUE_IDS } from "../logic/getFixtures";
+import { formatStatDisplay } from "../utils/formatStat";
+import { expandRadarStrengthSeries } from "../utils/radarDisplay";
 import MissingPlayersList from "../components/MissingPlayersList";
 import PlayerStatsList from "../components/PlayerStatsList";
 import { ManagerComparison } from "../components/ManagerCard";
@@ -92,6 +94,186 @@ function getBTTSProbability(scoreMatrix) {
   return { yes, no };
 }
 
+function formatLeagueStat(value) {
+  return formatStatDisplay(value);
+}
+
+function leagueDangerousAttacksValue(form) {
+  if (!form) return 0;
+  return (
+    form.dangerousAttacksRollingAverage ??
+    (form.AverageDangerousAttacksOverall !== 0
+      ? form.AverageDangerousAttacksOverall
+      : form.AverageDangerousAttacks) ??
+    0
+  );
+}
+
+function leagueStatNumber(value) {
+  const n = Number(value);
+  return Number.isNaN(n) ? 0 : n;
+}
+
+function getOverallLeagueStatNumbers(form) {
+  if (!form) return {};
+  return {
+    goals: leagueStatNumber(form.avgScored),
+    conceeded: leagueStatNumber(form.avgConceeded),
+    XG: leagueStatNumber(form.XGOverall),
+    XGConceded: leagueStatNumber(form.XGAgainstAvgOverall),
+    possession: leagueStatNumber(form.AveragePossessionOverall),
+    shots: leagueStatNumber(form.avgShots),
+    sot: leagueStatNumber(
+      form.shotsOnTargetRollingAverage ?? form.AverageShotsOnTargetOverall
+    ),
+    dangerousAttacks: leagueStatNumber(leagueDangerousAttacksValue(form)),
+    ppg: leagueStatNumber(form.avPointsAll),
+    goalDifference: leagueStatNumber(form.goalDifference),
+    goalDifferenceHomeOrAway: leagueStatNumber(form.goalDifferenceHomeOrAway),
+    corners: leagueStatNumber(form.AverageCorners),
+  };
+}
+
+function getOverallLeagueStats(form) {
+  const stats = getOverallLeagueStatNumbers(form);
+  return {
+    goals: formatLeagueStat(stats.goals),
+    conceeded: formatLeagueStat(stats.conceeded),
+    XG: formatLeagueStat(stats.XG),
+    XGConceded: formatLeagueStat(stats.XGConceded),
+    possession: formatLeagueStat(stats.possession),
+    shots: formatLeagueStat(stats.shots),
+    sot: formatLeagueStat(stats.sot),
+    dangerousAttacks: formatLeagueStat(stats.dangerousAttacks),
+    ppg: formatLeagueStat(stats.ppg),
+    goalDifference: formatLeagueStat(stats.goalDifference),
+    goalDifferenceHomeOrAway: formatLeagueStat(stats.goalDifferenceHomeOrAway),
+    corners: formatLeagueStat(stats.corners),
+  };
+}
+
+function getLast5LeagueStatNumbers(form) {
+  if (!form) return {};
+  return {
+    goals: leagueStatNumber(form.last5Goals),
+    conceeded: leagueStatNumber(form.last5GoalsConceeded),
+    XG: leagueStatNumber(form.avXGLast5),
+    XGConceded: leagueStatNumber(form.avXGAgainstLast5),
+    possession: leagueStatNumber(form.avPosessionLast5),
+    shots: leagueStatNumber(form.avShotsLast5),
+    sot: leagueStatNumber(form.avSOTLast5),
+    dangerousAttacks: leagueStatNumber(
+      form.avDALast5 !== 0 ? form.avDALast5 : form.AverageDangerousAttacks
+    ),
+    ppg: leagueStatNumber(form.avPoints5),
+    goalDifference: leagueStatNumber(form.last5GoalDiff),
+    corners: leagueStatNumber(form.last5Corners),
+  };
+}
+
+function getLast5LeagueStats(form) {
+  const stats = getLast5LeagueStatNumbers(form);
+  return {
+    goals: formatLeagueStat(stats.goals),
+    conceeded: formatLeagueStat(stats.conceeded),
+    XG: formatLeagueStat(stats.XG),
+    XGConceded: formatLeagueStat(stats.XGConceded),
+    possession: formatLeagueStat(stats.possession),
+    shots: formatLeagueStat(stats.shots),
+    sot: formatLeagueStat(stats.sot),
+    dangerousAttacks: formatLeagueStat(stats.dangerousAttacks),
+    ppg: formatLeagueStat(stats.ppg),
+    goalDifference: formatLeagueStat(stats.goalDifference),
+    corners: formatLeagueStat(stats.corners),
+  };
+}
+
+function homeAwayDangerousAttacksValue(form, isHome) {
+  const venueDa = isHome
+    ? form.avgDangerousAttacksHome
+    : form.avgDangerousAttacksAway;
+  if (venueDa !== 0 && venueDa !== undefined) return venueDa;
+  return form.AverageDangerousAttacks ?? 0;
+}
+
+function getHomeAwayLeagueStatNumbers(form, venue) {
+  if (!form) return {};
+  const isHome = venue === "home";
+  return {
+    goals: leagueStatNumber(isHome ? form.avgScoredHome : form.avgScoredAway),
+    conceeded: leagueStatNumber(
+      isHome ? form.teamConceededAvgHomeOnly : form.teamConceededAvgAwayOnly
+    ),
+    XG: leagueStatNumber(isHome ? form.avgXGScoredHome : form.avgXGScoredAway),
+    XGConceded: leagueStatNumber(
+      isHome ? form.avgXGConceededHome : form.avgXGConceededAway
+    ),
+    possession: leagueStatNumber(
+      isHome ? form.avgPossessionHome : form.avgPossessionAway
+    ),
+    shots: leagueStatNumber(isHome ? form.avgShotsHome : form.avgShotsAway),
+    sot: leagueStatNumber(
+      isHome ? form.avgShotsOnTargetHome : form.avgShotsOnTargetAway
+    ),
+    dangerousAttacks: leagueStatNumber(
+      homeAwayDangerousAttacksValue(form, isHome)
+    ),
+    ppg: leagueStatNumber(isHome ? form.homePPGAv : form.awayPPGAv),
+    goalDifference: leagueStatNumber(form.goalDifferenceHomeOrAway),
+    corners: leagueStatNumber(isHome ? form.cornersAvHome : form.cornersAvAway),
+  };
+}
+
+function getHomeAwayLeagueStats(form, venue) {
+  const stats = getHomeAwayLeagueStatNumbers(form, venue);
+  return {
+    goals: formatLeagueStat(stats.goals),
+    conceeded: formatLeagueStat(stats.conceeded),
+    XG: formatLeagueStat(stats.XG),
+    XGConceded: formatLeagueStat(stats.XGConceded),
+    possession: formatLeagueStat(stats.possession),
+    shots: formatLeagueStat(stats.shots),
+    sot: formatLeagueStat(stats.sot),
+    dangerousAttacks: formatLeagueStat(stats.dangerousAttacks),
+    ppg: formatLeagueStat(stats.ppg),
+    goalDifference: formatLeagueStat(stats.goalDifference),
+    corners: formatLeagueStat(stats.corners),
+  };
+}
+
+function buildComparisonBarChartData(homeStats, awayStats, options = {}) {
+  const goalDiffDivisor = options.goalDiffDivisor ?? 10;
+  const rows = [
+    { home: homeStats.goals, away: awayStats.goals, scale: 2 },
+    { home: awayStats.conceeded, away: homeStats.conceeded, scale: 2 },
+    { home: homeStats.ppg, away: awayStats.ppg, scale: 3 },
+    { home: homeStats.XG, away: awayStats.XG, scale: 2 },
+    { home: awayStats.XGConceded, away: homeStats.XGConceded, scale: 2 },
+    { home: homeStats.sot, away: awayStats.sot, scale: 1 },
+    {
+      home: homeStats.dangerousAttacks,
+      away: awayStats.dangerousAttacks,
+      scale: 1 / 7.5,
+    },
+    {
+      home: homeStats.possession,
+      away: awayStats.possession,
+      scale: 1 / 7.5,
+    },
+    {
+      home: homeStats.goalDifference,
+      away: awayStats.goalDifference,
+      scale: 1 / goalDiffDivisor,
+    },
+    { home: homeStats.corners, away: awayStats.corners, scale: 1 },
+  ];
+
+  return {
+    data1: rows.map((row) => row.home * row.scale),
+    data2: rows.map((row) => row.away * row.scale),
+    displayDeltas: rows.map((row) => row.away - row.home),
+  };
+}
 
 function getMatchOddsProbabilities(scoreMatrix) {
   let homeWin = 0;
@@ -2193,28 +2375,48 @@ function GameStats({ game, displayBool, stats, handleToggleTip, userTips }) {
   const bttsArrayHome = Array.from(gameArrayHome, (x) => x.btts);
   const bttsArrayAway = Array.from(gameArrayAway, (x) => x.btts);
 
+  const homeLeagueStats = getOverallLeagueStats(homeForm);
+  const awayLeagueStats = getOverallLeagueStats(awayForm);
+  const homeLast5LeagueStats = getLast5LeagueStats(homeForm);
+  const awayLast5LeagueStats = getLast5LeagueStats(awayForm);
+  const homeOnlyLeagueStats = getHomeAwayLeagueStats(homeForm, "home");
+  const awayOnlyLeagueStats = getHomeAwayLeagueStats(awayForm, "away");
+  const overallBarChartData = buildComparisonBarChartData(
+    getOverallLeagueStatNumbers(homeForm),
+    getOverallLeagueStatNumbers(awayForm)
+  );
+  const last5BarChartData = buildComparisonBarChartData(
+    getLast5LeagueStatNumbers(homeForm),
+    getLast5LeagueStatNumbers(awayForm),
+    { goalDiffDivisor: 5 }
+  );
+  const homeAwayBarChartData = buildComparisonBarChartData(
+    getHomeAwayLeagueStatNumbers(homeForm, "home"),
+    getHomeAwayLeagueStatNumbers(awayForm, "away")
+  );
+
   const formDataHome = [];
 
   formDataHome.push({
     name: game.homeTeam,
     Last5: gameStats.home[2].LastFiveForm,
     LeagueOrAll: gameStats.home[2].LeagueOrAll,
-    AverageGoals: homeForm.ScoredOverall / 10,
-    AverageConceeded: homeForm.ConcededOverall / 10,
-    AverageXG: homeForm.XGOverall,
-    AverageXGConceded: homeForm.XGAgainstAvgOverall,
-    AveragePossession: homeForm.AveragePossessionOverall,
-    AverageShotsOnTarget: homeForm.AverageShotsOnTargetOverall,
-    AverageDangerousAttacks: homeForm.AverageDangerousAttacksOverall,
+    AverageGoals: homeLeagueStats.goals,
+    AverageConceeded: homeLeagueStats.conceeded,
+    AverageXG: homeLeagueStats.XG,
+    AverageXGConceded: homeLeagueStats.XGConceded,
+    AveragePossession: homeLeagueStats.possession,
+    AverageShotsOnTarget: homeLeagueStats.sot,
+    AverageDangerousAttacks: homeLeagueStats.dangerousAttacks,
     homeOrAway: "Home",
     leaguePosition: homeForm.LeaguePosition,
     Last5PPG: homeForm.PPG,
     SeasonPPG: homeForm.SeasonPPG,
     formRun: homeForm.formRun,
-    goalDifference: homeForm.goalDifference,
-    goalDifferenceHomeOrAway: homeForm.goalDifferenceHomeOrAway,
+    goalDifference: homeLeagueStats.goalDifference,
+    goalDifferenceHomeOrAway: homeLeagueStats.goalDifferenceHomeOrAway,
     CardsTotal: homeForm.CardsTotal || "-",
-    CornersAverage: homeForm.AverageCorners || "-",
+    CornersAverage: homeLeagueStats.corners || "-",
     FormTextStringHome: formSummaries[0],
     BTTSArray: bttsArrayHome,
     Results: homeForm.resultsAll,
@@ -2230,22 +2432,22 @@ function GameStats({ game, displayBool, stats, handleToggleTip, userTips }) {
     name: game.awayTeam,
     Last5: gameStats.away[2].LastFiveForm,
     LeagueOrAll: gameStats.away[2].LeagueOrAll,
-    AverageGoals: awayForm.ScoredOverall / 10,
-    AverageConceeded: awayForm.ConcededOverall / 10,
-    AverageXG: awayForm.XGOverall,
-    AverageXGConceded: awayForm.XGAgainstAvgOverall,
-    AveragePossession: awayForm.AveragePossessionOverall,
-    AverageShotsOnTarget: awayForm.AverageShotsOnTargetOverall,
-    AverageDangerousAttacks: awayForm.AverageDangerousAttacksOverall,
+    AverageGoals: awayLeagueStats.goals,
+    AverageConceeded: awayLeagueStats.conceeded,
+    AverageXG: awayLeagueStats.XG,
+    AverageXGConceded: awayLeagueStats.XGConceded,
+    AveragePossession: awayLeagueStats.possession,
+    AverageShotsOnTarget: awayLeagueStats.sot,
+    AverageDangerousAttacks: awayLeagueStats.dangerousAttacks,
     homeOrAway: "Away",
     leaguePosition: awayForm.LeaguePosition,
     Last5PPG: awayForm.PPG,
     SeasonPPG: awayForm.SeasonPPG,
     formRun: awayForm.formRun,
-    goalDifference: awayForm.goalDifference,
-    goalDifferenceHomeOrAway: awayForm.goalDifferenceHomeOrAway,
+    goalDifference: awayLeagueStats.goalDifference,
+    goalDifferenceHomeOrAway: awayLeagueStats.goalDifferenceHomeOrAway,
     CardsTotal: awayForm.CardsTotal || "-",
-    CornersAverage: awayForm.AverageCorners || "-",
+    CornersAverage: awayLeagueStats.corners || "-",
     FormTextStringAway: formSummaries[1],
     BTTSArray: bttsArrayAway,
     Results: awayForm.resultsAll,
@@ -2275,10 +2477,13 @@ function GameStats({ game, displayBool, stats, handleToggleTip, userTips }) {
     : 'N/A';
 
   // const trueFormColour = getTrueFormColor(homeForm.trueForm);
+  const isWorldCupCompetition = API_FORM_ONLY_LEAGUE_IDS.includes(game.leagueID);
+
   const homeAllStatsProps = {
     // Note: getCollapsableProps is usually passed directly from the parent component props
     getCollapsableProps: getCollapsableProps,
     games: "all",
+    isWorldCupCompetition,
     style: style,
     homeOrAway: "Home",
     badge: game.homeBadge,
@@ -2291,11 +2496,11 @@ function GameStats({ game, displayBool, stats, handleToggleTip, userTips }) {
     name: formDataHome[0].name,
     value: homeForm.trueForm,
     color: getTrueFormColor(homeForm.trueForm),
-    goals: homeForm.avgScored,
-    conceeded: homeForm.avgConceeded,
-    averageRating: homeTeamStats?.avgRating?.toFixed(2),
-    XG: homeForm.XGOverall?.toFixed(2),
-    XGConceded: homeForm.XGAgainstAvgOverall?.toFixed(2),
+    goals: homeLeagueStats.goals,
+    conceeded: homeLeagueStats.conceeded,
+    averageRating: formatStatDisplay(homeTeamStats?.avgRating),
+    XG: homeLeagueStats.XG,
+    XGConceded: homeLeagueStats.XGConceded,
     XGSwing: homeForm.XGChangeRecently,
     bigChances: homeTeamStats?.bigChances,
     bigChancesMissed: homeTeamStats?.bigChancesMissed,
@@ -2325,7 +2530,7 @@ function GameStats({ game, displayBool, stats, handleToggleTip, userTips }) {
         ? (homeTeamStats.shotsOnTargetAgainst / homeTeamStats.matches).toFixed(2)
         : "N/A",
 
-    possession: homeForm.AveragePossessionOverall?.toFixed(2),
+    possession: homeLeagueStats.possession,
     accuratePassesPercentage: homeTeamStats?.accuratePassesPercentage?.toFixed(2),
     accuratePassesOpponentHalf: homeTeamStats?.accurateOppositionHalfPassesPercentage?.toFixed(2),
     accuratePassesDefensiveHalf: homeTeamStats?.accurateOwnHalfPassesPercentage?.toFixed(2),
@@ -2346,18 +2551,15 @@ function GameStats({ game, displayBool, stats, handleToggleTip, userTips }) {
         homeTeamStats?.longBallsTotalAgainst
         ? ((homeTeamStats.longBallsSuccessfulAgainst / homeTeamStats.longBallsTotalAgainst) * 100).toFixed(2)
         : "N/A",
-    shots: homeForm.avgShots?.toFixed(2),
-    sot: homeForm.AverageShotsOnTargetOverall?.toFixed(2),
+    shots: homeLeagueStats.shots,
+    sot: homeLeagueStats.sot,
     shotsInsideBox: homeTeamStats?.shotsFromInsideTheBox,
     shotsFromOutsideTheBox: homeTeamStats?.shotsFromOutsideTheBox,
     shotsFromInsideBoxPercentage: (homeTeamStats?.shotsFromInsideTheBox / (homeTeamStats?.shotsFromInsideTheBox + homeTeamStats?.shotsFromOutsideTheBox)) * 100,
     shotsInsideBoxAgainst: homeTeamStats?.shotsFromInsideTheBoxAgainst,
     shotsFromOutsideTheBoxAgainst: homeTeamStats?.shotsFromOutsideTheBoxAgainst,
     shotsInsideBoxPercentAgainst: (homeTeamStats?.shotsFromInsideTheBoxAgainst / (homeTeamStats?.shotsFromInsideTheBoxAgainst + homeTeamStats?.shotsFromOutsideTheBoxAgainst) * 100),
-    dangerousAttacks:
-      homeForm.AverageDangerousAttacksOverall !== 0
-        ? homeForm.AverageDangerousAttacksOverall?.toFixed(2)
-        : homeForm.AverageDangerousAttacks,
+    dangerousAttacks: homeLeagueStats.dangerousAttacks,
     goalsFromInsideTheBox: homeTeamStats?.goalsFromInsideTheBox,
     goalsFromOutsideTheBox: homeTeamStats?.goalsFromOutsideTheBox,
     fastBreakShots: homeTeamStats?.fastBreakShots,
@@ -2402,15 +2604,15 @@ function GameStats({ game, displayBool, stats, handleToggleTip, userTips }) {
       game.homeTeamLossPercentage ? game.homeTeamLossPercentage : "N/A",
     drawPercentage:
       game.homeTeamDrawPercentage ? game.homeTeamDrawPercentage : "N/A",
-    ppg: homeForm.avPointsAll?.toFixed(2),
+    ppg: homeLeagueStats.ppg,
     formTrend: [
-      homeForm.avPoints10?.toFixed(2),
-      homeForm.avPoints6?.toFixed(2),
-      homeForm.avPoints5?.toFixed(2),
+      formatStatDisplay(homeForm.avPoints10),
+      formatStatDisplay(homeForm.avPoints6),
+      formatStatDisplay(homeForm.avPoints5),
     ],
     formRun: homeForm.resultsAll,
-    goalDifference: formDataHome[0].goalDifference,
-    goalDifferenceHomeOrAway: formDataHome[0].goalDifferenceHomeOrAway,
+    goalDifference: homeLeagueStats.goalDifference,
+    goalDifferenceHomeOrAway: homeLeagueStats.goalDifferenceHomeOrAway,
     BttsPercentage: formDataHome[0].BttsPercentage,
     BttsPercentageHomeOrAway: formDataHome[0].BttsPercentageHomeOrAway,
     BTTSArray: formDataHome[0].BTTSArray,
@@ -2420,7 +2622,7 @@ function GameStats({ game, displayBool, stats, handleToggleTip, userTips }) {
     RedCardsPerGame: (homeTeamStats?.redCards / homeTeamStats?.matches)?.toFixed(2),
     FoulsPerGame: (homeTeamStats?.fouls / homeTeamStats?.matches)?.toFixed(2),
     PenaltiesConceded: homeTeamStats?.penaltiesCommited,
-    CornersAverage: homeForm.AverageCorners,
+    CornersAverage: homeLeagueStats.corners,
     FreeKickGoals: homeTeamStats?.freeKickGoals,
     ScoredBothHalvesPercentage: formDataHome[0].ScoredBothHalvesPercentage,
     FormTextString: formDataHome[0].FormTextStringHome,
@@ -2453,6 +2655,7 @@ function GameStats({ game, displayBool, stats, handleToggleTip, userTips }) {
   const awayAllStatsProps = {
     getCollapsableProps: getCollapsableProps,
     games: "all",
+    isWorldCupCompetition,
     style: style,
     homeOrAway: "Away",
     badge: game.awayBadge,
@@ -2466,11 +2669,11 @@ function GameStats({ game, displayBool, stats, handleToggleTip, userTips }) {
     name: formDataAway[0].name,
     value: awayForm.trueForm,
     color: getTrueFormColor(awayForm.trueForm),
-    goals: awayForm.avgScored,
-    conceeded: awayForm.avgConceeded,
-    averageRating: awayTeamStats?.avgRating?.toFixed(2),
-    XG: awayForm.XGOverall?.toFixed(2),
-    XGConceded: awayForm.XGAgainstAvgOverall?.toFixed(2),
+    goals: awayLeagueStats.goals,
+    conceeded: awayLeagueStats.conceeded,
+    averageRating: formatStatDisplay(awayTeamStats?.avgRating),
+    XG: awayLeagueStats.XG,
+    XGConceded: awayLeagueStats.XGConceded,
     XGSwing: awayForm.XGChangeRecently,
     bigChances: awayTeamStats?.bigChances,
     bigChancesMissed: awayTeamStats?.bigChancesMissed,
@@ -2519,20 +2722,17 @@ function GameStats({ game, displayBool, stats, handleToggleTip, userTips }) {
         awayTeamStats?.longBallsTotalAgainst
         ? ((awayTeamStats.longBallsSuccessfulAgainst / awayTeamStats.longBallsTotalAgainst) * 100).toFixed(2)
         : "N/A",
-    possession: awayForm.AveragePossessionOverall?.toFixed(2),
+    possession: awayLeagueStats.possession,
     rawPosition: game.awayRawPosition ? game.awayRawPosition : 0,
-    sot: awayForm.AverageShotsOnTargetOverall?.toFixed(2),
-    shots: awayForm.avgShots?.toFixed(2),
+    sot: awayLeagueStats.sot,
+    shots: awayLeagueStats.shots,
     shotsInsideBox: awayTeamStats?.shotsFromInsideTheBox,
     shotsFromOutsideTheBox: awayTeamStats?.shotsFromOutsideTheBox,
     shotsFromInsideBoxPercentage: (awayTeamStats?.shotsFromInsideTheBox / (awayTeamStats?.shotsFromInsideTheBox + awayTeamStats?.shotsFromOutsideTheBox)) * 100,
     shotsInsideBoxAgainst: awayTeamStats?.shotsFromInsideTheBoxAgainst,
     shotsFromOutsideTheBoxAgainst: awayTeamStats?.shotsFromOutsideTheBoxAgainst,
     shotsInsideBoxPercentAgainst: (awayTeamStats?.shotsFromInsideTheBoxAgainst / (awayTeamStats?.shotsFromInsideTheBoxAgainst + awayTeamStats?.shotsFromOutsideTheBoxAgainst) * 100),
-    dangerousAttacks:
-      awayForm.AverageDangerousAttacksOverall !== 0
-        ? awayForm.AverageDangerousAttacksOverall?.toFixed(2)
-        : awayForm.AverageDangerousAttacks,
+    dangerousAttacks: awayLeagueStats.dangerousAttacks,
     goalsFromInsideTheBox: awayTeamStats?.goalsFromInsideTheBox,
     goalsFromOutsideTheBox: awayTeamStats?.goalsFromOutsideTheBox,
     fastBreakShots: awayTeamStats?.fastBreakShots,
@@ -2571,15 +2771,15 @@ function GameStats({ game, displayBool, stats, handleToggleTip, userTips }) {
       game.awayTeamLossPercentage ? game.awayTeamLossPercentage : "N/A",
     drawPercentage:
       game.awayTeamDrawPercentage ? game.awayTeamDrawPercentage : "N/A",
-    ppg: awayForm.avPointsAll?.toFixed(2),
+    ppg: awayLeagueStats.ppg,
     formTrend: [
-      awayForm.avPoints10?.toFixed(2),
-      awayForm.avPoints6?.toFixed(2),
-      awayForm.avPoints5?.toFixed(2),
+      formatStatDisplay(awayForm.avPoints10),
+      formatStatDisplay(awayForm.avPoints6),
+      formatStatDisplay(awayForm.avPoints5),
     ],
     formRun: awayForm.resultsAll,
-    goalDifference: formDataAway[0].goalDifference,
-    goalDifferenceHomeOrAway: formDataAway[0].goalDifferenceHomeOrAway,
+    goalDifference: awayLeagueStats.goalDifference,
+    goalDifferenceHomeOrAway: awayLeagueStats.goalDifferenceHomeOrAway,
     BttsPercentage: formDataAway[0].BttsPercentage,
     BttsPercentageHomeOrAway: formDataAway[0].BttsPercentageHomeOrAway,
     BTTSArray: formDataAway[0].BTTSArray,
@@ -2589,7 +2789,7 @@ function GameStats({ game, displayBool, stats, handleToggleTip, userTips }) {
     RedCardsPerGame: (awayTeamStats?.redCards / awayTeamStats?.matches)?.toFixed(2),
     FoulsPerGame: (awayTeamStats?.fouls / awayTeamStats?.matches)?.toFixed(2),
     PenaltiesConceded: homeTeamStats?.penaltiesCommited,
-    CornersAverage: awayForm.AverageCorners,
+    CornersAverage: awayLeagueStats.corners,
     FreeKickGoals: awayTeamStats?.freeKickGoals,
     ScoredBothHalvesPercentage: formDataAway[0].ScoredBothHalvesPercentage,
     FormTextString: formDataAway[0].FormTextStringAway,
@@ -2670,6 +2870,7 @@ function GameStats({ game, displayBool, stats, handleToggleTip, userTips }) {
           <Stats
             comparisonStatusMap={comparisonStatusMap}
             games={"last5"}
+            isWorldCupCompetition={isWorldCupCompetition}
             style={style}
             homeOrAway="Home"
             badge={game.homeBadge}
@@ -2680,18 +2881,14 @@ function GameStats({ game, displayBool, stats, handleToggleTip, userTips }) {
             LeagueOrAll={formDataHome[0].LeagueOrAll}
             className={"KeyStatsHome"}
             name={formDataHome[0].name}
-            goals={homeForm.last5Goals}
-            conceeded={homeForm.last5GoalsConceeded}
-            XG={homeForm.avXGLast5?.toFixed(2)}
-            XGConceded={homeForm.avXGAgainstLast5?.toFixed(2)}
-            possession={homeForm.avPosessionLast5?.toFixed(2)}
-            shots={homeForm.avShotsLast5?.toFixed(2)}
-            sot={homeForm.avSOTLast5?.toFixed(2)}
-            dangerousAttacks={
-              homeForm.avDALast5 !== 0
-                ? homeForm.avDALast5?.toFixed(2)
-                : homeForm.AverageDangerousAttacks
-            }
+            goals={homeLast5LeagueStats.goals}
+            conceeded={homeLast5LeagueStats.conceeded}
+            XG={homeLast5LeagueStats.XG}
+            XGConceded={homeLast5LeagueStats.XGConceded}
+            possession={homeLast5LeagueStats.possession}
+            shots={homeLast5LeagueStats.shots}
+            sot={homeLast5LeagueStats.sot}
+            dangerousAttacks={homeLast5LeagueStats.dangerousAttacks}
             leaguePosition={
               homeForm.LeaguePosition !== undefined &&
                 homeForm.LeaguePosition !== "undefined"
@@ -2717,19 +2914,19 @@ function GameStats({ game, displayBool, stats, handleToggleTip, userTips }) {
             drawPercentage={
               game.homeTeamDrawPercentage ? game.homeTeamDrawPercentage : "N/A"
             }
-            ppg={homeForm.avPoints5?.toFixed(2)}
+            ppg={homeLast5LeagueStats.ppg}
             formTrend={[
-              homeTenGameAverage?.toFixed(2),
-              homeSixGameAverage?.toFixed(2),
-              homeFiveGameAverage?.toFixed(2),
+              formatStatDisplay(homeTenGameAverage),
+              formatStatDisplay(homeSixGameAverage),
+              formatStatDisplay(homeFiveGameAverage),
             ]}
             formRun={homeForm.resultsAll}
-            goalDifference={homeForm.last5GoalDiff}
+            goalDifference={homeLast5LeagueStats.goalDifference}
             BttsPercentage={homeForm.bttsLast5Percentage}
             BTTSArray={formDataHome[0].BTTSArray}
             Results={formDataHome[0].Results}
             ResultsHorA={formDataHome[0].ResultsHorA}
-            CornersAverage={homeForm.last5Corners}
+            CornersAverage={homeLast5LeagueStats.corners}
             FormTextString={formDataHome[0].FormTextStringHome}
           />
         </ul>
@@ -2747,6 +2944,7 @@ function GameStats({ game, displayBool, stats, handleToggleTip, userTips }) {
           <Stats
             comparisonStatusMap={invertedMap}
             games={"last5"}
+            isWorldCupCompetition={isWorldCupCompetition}
             style={style}
             homeOrAway="Away"
             badge={game.awayBadge}
@@ -2758,20 +2956,16 @@ function GameStats({ game, displayBool, stats, handleToggleTip, userTips }) {
             className={"KeyStatsAway"}
             classNameTwo={"FormStatsAway"}
             name={formDataAway[0].name}
-            goals={awayForm.last5Goals}
-            conceeded={awayForm.last5GoalsConceeded}
-            XG={awayForm.avXGLast5?.toFixed(2)}
-            XGConceded={awayForm.avXGAgainstLast5?.toFixed(2)}
+            goals={awayLast5LeagueStats.goals}
+            conceeded={awayLast5LeagueStats.conceeded}
+            XG={awayLast5LeagueStats.XG}
+            XGConceded={awayLast5LeagueStats.XGConceded}
             //todo add goal diff and btts percentages
-            possession={awayForm.avPosessionLast5?.toFixed(2)}
+            possession={awayLast5LeagueStats.possession}
             rawPosition={game.awayRawPosition ? game.awayRawPosition : 0}
-            sot={awayForm.avSOTLast5?.toFixed(2)}
-            shots={awayForm.avShotsLast5?.toFixed(2)}
-            dangerousAttacks={
-              awayForm.avDALast5 !== 0
-                ? awayForm.avDALast5?.toFixed(2)
-                : awayForm.AverageDangerousAttacks
-            }
+            sot={awayLast5LeagueStats.sot}
+            shots={awayLast5LeagueStats.shots}
+            dangerousAttacks={awayLast5LeagueStats.dangerousAttacks}
             leaguePosition={
               awayForm.LeaguePosition !== undefined &&
                 awayForm.LeaguePosition !== "undefined"
@@ -2791,19 +2985,19 @@ function GameStats({ game, displayBool, stats, handleToggleTip, userTips }) {
             drawPercentage={
               game.awayTeamDrawPercentage ? game.awayTeamDrawPercentage : "N/A"
             }
-            ppg={awayForm.avPoints5?.toFixed(2)}
+            ppg={awayLast5LeagueStats.ppg}
             formTrend={[
-              awayTenGameAverage?.toFixed(2),
-              awaySixGameAverage?.toFixed(2),
-              awayFiveGameAverage?.toFixed(2),
+              formatStatDisplay(awayTenGameAverage),
+              formatStatDisplay(awaySixGameAverage),
+              formatStatDisplay(awayFiveGameAverage),
             ]}
             formRun={awayForm.resultsAll}
-            goalDifference={awayForm.last5GoalDiff}
+            goalDifference={awayLast5LeagueStats.goalDifference}
             BttsPercentage={awayForm.bttsLast5Percentage}
             BTTSArray={formDataAway[0].BTTSArray}
             Results={formDataAway[0].Results}
             ResultsHorA={formDataAway[0].ResultsHorA}
-            CornersAverage={awayForm.last5Corners}
+            CornersAverage={awayLast5LeagueStats.corners}
           />
         </ul>
       </div>
@@ -2811,19 +3005,20 @@ function GameStats({ game, displayBool, stats, handleToggleTip, userTips }) {
   }
 
   const getLast5ComparisonData = (form, isHome = true) => {
+    const stats = getLast5LeagueStats(form);
     return {
-      goals: form.last5Goals,
-      conceeded: form.last5GoalsConceeded,
-      XG: form.avXGLast5,
-      XGConceded: form.avXGAgainstLast5,
-      possession: form.avPosessionLast5,
-      shots: form.avShotsLast5,
-      sot: form.avSOTLast5,
-      dangerousAttacks: form.avDALast5 !== 0 ? form.avDALast5 : form.AverageDangerousAttacks,
-      ppg: form.avPoints5,
-      goalDifference: form.last5GoalDiff,
+      goals: stats.goals,
+      conceeded: stats.conceeded,
+      XG: stats.XG,
+      XGConceded: stats.XGConceded,
+      possession: stats.possession,
+      shots: stats.shots,
+      sot: stats.sot,
+      dangerousAttacks: stats.dangerousAttacks,
+      ppg: stats.ppg,
+      goalDifference: stats.goalDifference,
       BttsPercentage: form.bttsLast5Percentage,
-      CornersAverage: form.last5Corners,
+      CornersAverage: stats.corners,
       // Add these if your COMPARISON_RULES support array comparison for formTrend
       formTrend: isHome
         ? [homeTenGameAverage, homeSixGameAverage, homeFiveGameAverage]
@@ -2857,18 +3052,14 @@ function GameStats({ game, displayBool, stats, handleToggleTip, userTips }) {
             LeagueOrAll={formDataHome[0].LeagueOrAll}
             className={"KeyStatsHome"}
             name={formDataHome[0].name}
-            goals={homeForm.avgScoredHome}
-            conceeded={homeForm.teamConceededAvgHomeOnly?.toFixed(2)}
-            XG={homeForm.avgXGScoredHome?.toFixed(2)}
-            XGConceded={homeForm.avgXGConceededHome?.toFixed(2)}
-            possession={homeForm.avgPossessionHome?.toFixed(2)}
-            sot={homeForm.avgShotsOnTargetHome?.toFixed(2)}
-            shots={homeForm.avgShotsHome?.toFixed(2)}
-            dangerousAttacks={
-              homeForm.avgDangerousAttacksHome !== 0
-                ? homeForm.avgDangerousAttacksHome?.toFixed(2)
-                : homeForm.AverageDangerousAttacks
-            }
+            goals={homeOnlyLeagueStats.goals}
+            conceeded={homeOnlyLeagueStats.conceeded}
+            XG={homeOnlyLeagueStats.XG}
+            XGConceded={homeOnlyLeagueStats.XGConceded}
+            possession={homeOnlyLeagueStats.possession}
+            sot={homeOnlyLeagueStats.sot}
+            shots={homeOnlyLeagueStats.shots}
+            dangerousAttacks={homeOnlyLeagueStats.dangerousAttacks}
             leaguePosition={
               homeForm.homePositionHomeOnly !== undefined &&
                 homeForm.homePositionHomeOnly !== "undefined"
@@ -2889,19 +3080,20 @@ function GameStats({ game, displayBool, stats, handleToggleTip, userTips }) {
             }
             winPercentage={homeForm.homePPGAv ? homeForm.homePPGAv : "N/A"}
             formTrend={[
-              homeTenGameAverage?.toFixed(2),
-              homeSixGameAverage?.toFixed(2),
-              homeFiveGameAverage?.toFixed(2),
+              formatStatDisplay(homeTenGameAverage),
+              formatStatDisplay(homeSixGameAverage),
+              formatStatDisplay(homeFiveGameAverage),
             ]}
             formRun={homeForm.resultsAll}
-            goalDifference={formDataHome[0].goalDifference}
-            goalDifferenceHomeOrAway={formDataHome[0].goalDifferenceHomeOrAway}
+            goalDifference={homeOnlyLeagueStats.goalDifference}
+            goalDifferenceHomeOrAway={homeOnlyLeagueStats.goalDifference}
             BttsPercentage={homeForm.bttsHomePercentage}
             BTTSArray={formDataHome[0].BTTSArray}
             // Results={formDataHome[0].Results}
             ResultsHorA={formDataHome[0].ResultsHorA}
             CardsTotal={formDataHome[0].CardsTotal}
-            CornersAverage={homeForm.cornersAvHome?.toFixed(2)}
+            CornersAverage={homeOnlyLeagueStats.corners}
+            ppg={homeOnlyLeagueStats.ppg}
             ScoredBothHalvesPercentage={
               formDataHome[0].ScoredBothHalvesPercentage
             }
@@ -2937,20 +3129,16 @@ function GameStats({ game, displayBool, stats, handleToggleTip, userTips }) {
             className={"KeyStatsAway"}
             classNameTwo={"FormStatsAway"}
             name={formDataAway[0].name}
-            goals={awayForm.avgScoredAway}
-            conceeded={awayForm.teamConceededAvgAwayOnly?.toFixed(2)}
-            XG={awayForm.avgXGScoredAway?.toFixed(2)}
-            XGConceded={awayForm.avgXGConceededAway?.toFixed(2)}
+            goals={awayOnlyLeagueStats.goals}
+            conceeded={awayOnlyLeagueStats.conceeded}
+            XG={awayOnlyLeagueStats.XG}
+            XGConceded={awayOnlyLeagueStats.XGConceded}
             //todo add goal diff and btts percentages
-            possession={awayForm.avgPossessionAway?.toFixed(2)}
+            possession={awayOnlyLeagueStats.possession}
             rawPosition={game.awayRawPosition ? game.awayRawPosition : 0}
-            sot={awayForm.avgShotsOnTargetAway?.toFixed(2)}
-            shots={awayForm.avgShotsAway?.toFixed(2)}
-            dangerousAttacks={
-              awayForm.avgDangerousAttacksAway !== 0
-                ? awayForm.avgDangerousAttacksAway?.toFixed(2)
-                : awayForm.AverageDangerousAttacks
-            }
+            sot={awayOnlyLeagueStats.sot}
+            shots={awayOnlyLeagueStats.shots}
+            dangerousAttacks={awayOnlyLeagueStats.dangerousAttacks}
             leaguePosition={
               awayForm.awayPosition !== undefined &&
                 awayForm.awayPosition !== "undefined"
@@ -2965,19 +3153,20 @@ function GameStats({ game, displayBool, stats, handleToggleTip, userTips }) {
             }
             winPercentage={awayForm.awayPPGAv ? awayForm.awayPPGAv : "N/A"}
             formTrend={[
-              awayTenGameAverage?.toFixed(2),
-              awaySixGameAverage?.toFixed(2),
-              awayFiveGameAverage?.toFixed(2),
+              formatStatDisplay(awayTenGameAverage),
+              formatStatDisplay(awaySixGameAverage),
+              formatStatDisplay(awayFiveGameAverage),
             ]}
             formRun={awayForm.resultsAll}
-            goalDifference={formDataAway[0].goalDifference}
-            goalDifferenceHomeOrAway={formDataAway[0].goalDifferenceHomeOrAway}
+            goalDifference={awayOnlyLeagueStats.goalDifference}
+            goalDifferenceHomeOrAway={awayOnlyLeagueStats.goalDifference}
             BttsPercentage={awayForm.bttsHomePercentage}
             BTTSArray={formDataAway[0].BTTSArray}
             // Results={formDataAway[0].Results}
             ResultsHorA={formDataAway[0].ResultsHorA}
             CardsTotal={formDataAway[0].CardsTotal}
-            CornersAverage={awayForm.cornersAvAway?.toFixed(2)}
+            CornersAverage={awayOnlyLeagueStats.corners}
+            ppg={awayOnlyLeagueStats.ppg}
             ScoredBothHalvesPercentage={
               formDataAway[0].ScoredBothHalvesPercentage
             }
@@ -2993,20 +3182,21 @@ function GameStats({ game, displayBool, stats, handleToggleTip, userTips }) {
 
 
   const getHorAComparisonData = (form, isHome = true) => {
+    const stats = getHomeAwayLeagueStats(form, isHome ? "home" : "away");
     return {
-      goals: `${isHome ? form.avgScoredHome : form.avgScoredAway}`,
-      conceeded: `${isHome ? form.teamConceededAvgHomeOnly : form.teamConceededAvgAwayOnly}`,
-      XG: `${isHome ? form.avgXGScoredHome : form.avgXGScoredAway}`,
-      XGConceded: `${isHome ? form.avgXGConceededHome : form.avgXGConceededAway}`,
-      possession: `${isHome ? form.avgPossessionHome : form.avgPossessionAway}`,
-      shots: `${isHome ? form.avgShotsHome : form.avgShotsAway}`,
-      sot: `${isHome ? form.avgShotsOnTargetHome : form.avgShotsOnTargetAway}`,
-      dangerousAttacks: `${isHome ? form.avgDangerousAttacksHome : form.avgDangerousAttacksAway}`,
-      ppg: `${isHome ? form.homePPGAv : form.awayPPGAv}`,
-      goalDifference: `${isHome ? form.goalDifferenceHomeOrAway : form.goalDifferenceHomeOrAway}`,
+      goals: stats.goals,
+      conceeded: stats.conceeded,
+      XG: stats.XG,
+      XGConceded: stats.XGConceded,
+      possession: stats.possession,
+      shots: stats.shots,
+      sot: stats.sot,
+      dangerousAttacks: stats.dangerousAttacks,
+      ppg: stats.ppg,
+      goalDifference: stats.goalDifference,
       BttsPercentage: `${isHome ? form.bttsHomePercentage : form.bttsAwayPercentage}`,
-      CornersAverage: `${isHome ? form.cornersAvHome : form.cornersAvAway}`,
-      winPercentage: `${isHome ? form.homePPGAv : form.awayPPGAv}`,
+      CornersAverage: stats.corners,
+      winPercentage: stats.ppg,
       // Add these if your COMPARISON_RULES support array comparison for formTrend
       formTrend: isHome
         ? [homeTenGameAverage, homeSixGameAverage, homeFiveGameAverage]
@@ -3182,37 +3372,73 @@ function GameStats({ game, displayBool, stats, handleToggleTip, userTips }) {
         const defensiveMetricsAwayLast5 = awayForm.defensiveMetricsAwayLast5
         const defensiveMetricsAwayOnly = awayForm.defensiveMetricsAwayOnly
 
+        const strengthOptions =
+          homeForm.apiFormOnly || awayForm.apiFormOnly
+            ? { international: true }
+            : {};
 
-        const attackH = await calculateAttackingStrength(attackingMetricsHome);
+        const attackH = await calculateAttackingStrength(
+          attackingMetricsHome,
+          false,
+          strengthOptions
+        );
         const attackHLast5 = await calculateAttackingStrength(
-          attackingMetricsHomeLast5
+          attackingMetricsHomeLast5,
+          true,
+          strengthOptions
         );
         const attackHOnly = await calculateAttackingStrength(
-          attackingMetricsHomeOnly
+          attackingMetricsHomeOnly,
+          false,
+          strengthOptions
         );
 
-        const defenceH = await calculateDefensiveStrength(defensiveMetricsHome);
+        const defenceH = await calculateDefensiveStrength(
+          defensiveMetricsHome,
+          false,
+          strengthOptions
+        );
         const defenceHLast5 = await calculateDefensiveStrength(
-          defensiveMetricsHomeLast5
+          defensiveMetricsHomeLast5,
+          true,
+          strengthOptions
         );
         const defenceHOnly = await calculateDefensiveStrength(
-          defensiveMetricsHomeOnly
+          defensiveMetricsHomeOnly,
+          false,
+          strengthOptions
         );
 
-        const attackA = await calculateAttackingStrength(attackingMetricsAway);
+        const attackA = await calculateAttackingStrength(
+          attackingMetricsAway,
+          false,
+          strengthOptions
+        );
         const attackALast5 = await calculateAttackingStrength(
-          attackingMetricsAwayLast5
+          attackingMetricsAwayLast5,
+          true,
+          strengthOptions
         );
         const attackAOnly = await calculateAttackingStrength(
-          attackingMetricsAwayOnly
+          attackingMetricsAwayOnly,
+          false,
+          strengthOptions
         );
 
-        const defenceA = await calculateDefensiveStrength(defensiveMetricsAway);
+        const defenceA = await calculateDefensiveStrength(
+          defensiveMetricsAway,
+          false,
+          strengthOptions
+        );
         const defenceALast5 = await calculateDefensiveStrength(
-          defensiveMetricsAwayLast5
+          defensiveMetricsAwayLast5,
+          true,
+          strengthOptions
         );
         const defenceAOnly = await calculateDefensiveStrength(
-          defensiveMetricsAwayOnly
+          defensiveMetricsAwayOnly,
+          false,
+          strengthOptions
         );
 
         const possH = await calculateMetricStrength(
@@ -4192,7 +4418,11 @@ function GameStats({ game, displayBool, stats, handleToggleTip, userTips }) {
           length="3"
           element1={
             <>
-              <h2>{`${game.leagueDesc} Form`}</h2>
+              <h2>
+                {isWorldCupCompetition
+                  ? "All Recent Form"
+                  : `${game.leagueDesc} Form`}
+              </h2>
               <div className="flex-container">
                 <StatsHomeComponent
                   getCollapsableProps={getCollapsableProps}
@@ -4269,7 +4499,7 @@ function GameStats({ game, displayBool, stats, handleToggleTip, userTips }) {
                     "Directness",
                     "Precision",
                   ]}
-                  data={[
+                  data={expandRadarStrengthSeries([
                     homeAttackStrength,
                     homeDefenceStrength,
                     homePossessionStrength,
@@ -4277,8 +4507,8 @@ function GameStats({ game, displayBool, stats, handleToggleTip, userTips }) {
                     homeXGAgainstStrength,
                     homeDirectnessStrength,
                     homeAccuracyOverallStrength,
-                  ]}
-                  data2={[
+                  ])}
+                  data2={expandRadarStrengthSeries([
                     awayAttackStrength,
                     awayDefenceStrength,
                     awayPossessionStrength,
@@ -4286,7 +4516,7 @@ function GameStats({ game, displayBool, stats, handleToggleTip, userTips }) {
                     awayXGAgainstStrength,
                     awayDirectnessStrength,
                     awayAccuracyOverallStrength,
-                  ]}
+                  ])}
                   team1={game.homeTeam}
                   team2={game.awayTeam}
                 ></RadarChart>
@@ -4307,34 +4537,9 @@ function GameStats({ game, displayBool, stats, handleToggleTip, userTips }) {
                     "Home/Away Goal Diff",
                     "Corners"
                   ]}
-                  data1={[
-                    homeForm.avgScored * 2,
-                    awayForm.avgConceeded * 2,
-                    homeForm.avPointsAll * 3,
-                    homeForm.XGOverall * 2,
-                    awayForm.XGAgainstAvgOverall * 2,
-                    homeForm.AverageShotsOnTargetOverall,
-                    homeForm.AverageDangerousAttacksOverall !== 0
-                      ? homeForm.AverageDangerousAttacksOverall / 7.5
-                      : homeForm.AverageDangerousAttacks / 7.5,
-                    homeForm.AveragePossessionOverall / 7.5,
-                    homeForm.goalDifference / 10,
-                    homeForm.AverageCorners,
-                  ]}
-                  data2={[
-                    awayForm.avgScored * 2,
-                    homeForm.avgConceeded * 2,
-                    awayForm.avPointsAll * 3,
-                    awayForm.XGOverall * 2,
-                    homeForm.XGAgainstAvgOverall * 2,
-                    awayForm.AverageShotsOnTargetOverall,
-                    awayForm.AverageDangerousAttacksOverall !== 0
-                      ? awayForm.AverageDangerousAttacksOverall / 7.5
-                      : awayForm.AverageDangerousAttacks / 7.5,
-                    awayForm.AveragePossessionOverall / 7.5,
-                    awayForm.goalDifference / 10,
-                    awayForm.AverageCorners,
-                  ]}
+                  data1={overallBarChartData.data1}
+                  data2={overallBarChartData.data2}
+                  displayDeltas={overallBarChartData.displayDeltas}
                 ></BarChart>
                 <MultiTypeChart
                   theme={localStorage.getItem('theme')}
@@ -4435,7 +4640,7 @@ function GameStats({ game, displayBool, stats, handleToggleTip, userTips }) {
                       "Attacking precision",
                     ]}
                     theme={localStorage.getItem('theme')}
-                    data={[
+                    data={expandRadarStrengthSeries([
                       homeAttackStrengthLast5,
                       homeDefenceStrengthLast5,
                       homePossessionStrengthLast5,
@@ -4443,8 +4648,8 @@ function GameStats({ game, displayBool, stats, handleToggleTip, userTips }) {
                       homeXGAgainstStrengthLast5,
                       homeDirectnessStrengthLast5,
                       homeAccuracyOverallStrengthLast5,
-                    ]}
-                    data2={[
+                    ])}
+                    data2={expandRadarStrengthSeries([
                       awayAttackStrengthLast5,
                       awayDefenceStrengthLast5,
                       awayPossessionStrengthLast5,
@@ -4452,7 +4657,7 @@ function GameStats({ game, displayBool, stats, handleToggleTip, userTips }) {
                       awayXGAgainstStrengthLast5,
                       awayDirectnessStrengthLast5,
                       awayAccuracyOverallStrengthLast5,
-                    ]}
+                    ])}
                     team1={game.homeTeam}
                     team2={game.awayTeam}
                   />
@@ -4473,34 +4678,9 @@ function GameStats({ game, displayBool, stats, handleToggleTip, userTips }) {
                       "Home/Away Goal Diff",
                       "Corners"
                     ]}
-                    data1={[
-                      homeForm.last5Goals * 2,
-                      awayForm.last5GoalsConceeded * 2,
-                      homeForm.avPoints5 * 3,
-                      homeForm.avXGLast5 * 2,
-                      awayForm.avXGAgainstLast5 * 2,
-                      homeForm.avSOTLast5,
-                      homeForm.avDALast5 !== 0
-                        ? homeForm.avDALast5 / 7.5
-                        : homeForm.AverageDangerousAttacks / 7.5,
-                      homeForm.avPosessionLast5 / 7.5,
-                      homeForm.last5GoalDiff / 5,
-                      homeForm.last5Corners,
-                    ]}
-                    data2={[
-                      awayForm.last5Goals * 2,
-                      homeForm.last5GoalsConceeded * 2,
-                      awayForm.avPoints5 * 3,
-                      awayForm.avXGLast5 * 2,
-                      homeForm.avXGAgainstLast5 * 2,
-                      awayForm.avSOTLast5,
-                      awayForm.avDALast5 !== 0
-                        ? awayForm.avDALast5 / 7.5
-                        : awayForm.AverageDangerousAttacks / 7.5,
-                      awayForm.avPosessionLast5 / 7.5,
-                      awayForm.last5GoalDiff / 5,
-                      awayForm.last5Corners,
-                    ]}
+                    data1={last5BarChartData.data1}
+                    data2={last5BarChartData.data2}
+                    displayDeltas={last5BarChartData.displayDeltas}
                   />
 
                   <MultiTypeChart
@@ -4581,7 +4761,7 @@ function GameStats({ game, displayBool, stats, handleToggleTip, userTips }) {
                       "Directness",
                       "Attacking precision",
                     ]}
-                    data={[
+                    data={expandRadarStrengthSeries([
                       homeOnlyAttackStrength,
                       homeOnlyDefenceStrength,
                       homeOnlyPossessionStrength,
@@ -4589,8 +4769,8 @@ function GameStats({ game, displayBool, stats, handleToggleTip, userTips }) {
                       homeOnlyXGAgainstStrength,
                       homeOnlyDirectnessStrength,
                       homeOnlyAccuracyOverallStrength,
-                    ]}
-                    data2={[
+                    ])}
+                    data2={expandRadarStrengthSeries([
                       awayOnlyAttackStrength,
                       awayOnlyDefenceStrength,
                       awayOnlyPossessionStrength,
@@ -4598,7 +4778,7 @@ function GameStats({ game, displayBool, stats, handleToggleTip, userTips }) {
                       awayOnlyXGAgainstStrength,
                       awayOnlyDirectnessStrength,
                       awayOnlyAccuracyOverallStrength,
-                    ]}
+                    ])}
                     team1={game.homeTeam}
                     team2={game.awayTeam}
                   ></RadarChart>
@@ -4619,34 +4799,9 @@ function GameStats({ game, displayBool, stats, handleToggleTip, userTips }) {
                       "Home/Away Goal Diff",
                       "Corners"
                     ]}
-                    data1={[
-                      homeForm.avgScoredHome * 2,
-                      awayForm.teamConceededAvgAwayOnly * 2,
-                      homeForm.homePPGAv * 3,
-                      homeForm.avgXGScoredHome * 2,
-                      awayForm.avgXGConceededHome * 2,
-                      homeForm.avgShotsOnTargetHome,
-                      homeForm.avgDangerousAttacksHome !== 0
-                        ? homeForm.avgDangerousAttacksHome / 7.5
-                        : homeForm.AverageDangerousAttacks / 7.5,
-                      homeForm.avgPossessionHome / 7.5,
-                      homeForm.goalDifferenceHomeOrAway / 10,
-                      homeForm.cornersAvHome,
-                    ]}
-                    data2={[
-                      awayForm.avgScoredAway * 2,
-                      homeForm.teamConceededAvgAwayOnly * 2,
-                      awayForm.awayPPGAv * 3,
-                      awayForm.avgXGScoredAway * 2,
-                      homeForm.avgXGConceededAway * 2,
-                      awayForm.avgShotsOnTargetAway,
-                      awayForm.avgDangerousAttacksAway !== 0
-                        ? awayForm.avgDangerousAttacksAway / 7.5
-                        : awayForm.AverageDangerousAttacks / 7.5,
-                      awayForm.avgPossessionAway / 7.5,
-                      awayForm.goalDifferenceHomeOrAway / 10,
-                      awayForm.cornersAvAway,
-                    ]}
+                    data1={homeAwayBarChartData.data1}
+                    data2={homeAwayBarChartData.data2}
+                    displayDeltas={homeAwayBarChartData.displayDeltas}
                   ></BarChart>
                   <MultiTypeChart
                     theme={localStorage.getItem('theme')}

@@ -5,8 +5,7 @@ import {
   TableRow, Paper, Box, Typography
 } from "@material-ui/core";
 import { getBTTSTeams } from "../logic/getStatsInsights";
-import Logo from "../components/Logo";
-import HamburgerMenu from "./HamburgerMenu";
+import SiteHeader from "./SiteHeader";
 import PageMeta from "./PageMeta";
 
 // Consistent Modern Styling
@@ -103,8 +102,7 @@ export default function BTTSTeams() {
   return (
     <Fragment>
       <PageMeta />
-      <div className="DarkMode"><Logo /></div>
-      <HamburgerMenu />
+      <SiteHeader />
       
       <Box className={`${classes.container} SubpageContent`}>
         <a href="https://www.soccerstatshub.com/" className={classes.homeLink}>← Back to Home</a>

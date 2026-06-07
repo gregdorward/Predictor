@@ -19,25 +19,27 @@ export default function HamburgerMenu() {
     const toggleMenu = () => setIsOpen((prev) => !prev);
 
     return (
-        <div className="HamburgerMenuDiv" id="HamburgerMenuDiv">
-            {/* Toggle Button */}
+        <div
+            className={`HamburgerMenuDiv${isOpen ? " HamburgerMenuDiv--open" : ""}`}
+            id="HamburgerMenuDiv"
+        >
             <button
                 onClick={toggleMenu}
                 className="HamburgerMenuButton"
                 aria-label="Toggle menu"
+                aria-expanded={isOpen}
             >
-                {isOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+                {isOpen ? <X /> : <Menu />}
             </button>
 
-            {/* Full-screen Overlay Menu (Mobile) */}
             {isOpen && (
-                <div className="fixed inset-0 bg-white z-40 p-6 md:hidden">
-                    <nav className="NavItems">
+                <div className="MobileNavOverlay">
+                    <nav className="NavItems" aria-label="Main navigation">
                         {menuItems.map((item) => (
                             <a
                                 key={item}
                                 href={mappings[item]}
-                                className="block text-2xl font-semibold hover:text-blue-500"
+                                className="MobileNavLink"
                                 onClick={() => setIsOpen(false)}
                             >
                                 {item}
@@ -49,4 +51,3 @@ export default function HamburgerMenu() {
         </div>
     );
 }
-
