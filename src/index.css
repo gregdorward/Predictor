@@ -6509,6 +6509,23 @@ button.AIInsights button:active {
   background: linear-gradient(90deg, rgba(215, 18, 0, 0.06), rgba(215, 18, 0, 0.16));
 }
 
+.dark-mode .RankComparisonBar-zones {
+  border-color: rgba(255, 255, 255, 0.22);
+  background-color: rgba(255, 255, 255, 0.06);
+}
+
+.dark-mode .RankComparisonBar-zone--top {
+  background: linear-gradient(90deg, rgba(1, 165, 1, 0.45), rgba(1, 165, 1, 0.2));
+}
+
+.dark-mode .RankComparisonBar-zone--mid {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.dark-mode .RankComparisonBar-zone--bottom {
+  background: linear-gradient(90deg, rgba(215, 18, 0, 0.2), rgba(215, 18, 0, 0.45));
+}
+
 .RankComparisonBar-marker {
   position: absolute;
   left: 0;
