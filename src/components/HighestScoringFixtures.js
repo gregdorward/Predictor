@@ -143,7 +143,7 @@ export default function HighestScoringFixtures() {
                     <Box 
                       style={{ 
                         backgroundColor: "var(--accent-color)", 
-                        color: "#fff", 
+                        color: "var(--button-text-color)", 
                         borderRadius: 4, 
                         padding: "2px 8px", 
                         display: "inline-block",

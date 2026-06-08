@@ -24,3 +24,7 @@ yarn-debug.log*
 yarn-error.log*
 
 .eslintcache
+
+# Cursor — keep shared rules, ignore local-only state
+.cursor/*
+!.cursor/rules/
