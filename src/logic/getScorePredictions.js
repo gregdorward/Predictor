@@ -3374,7 +3374,8 @@ export async function calculateScore(match, index, divider, calculate, AIPredict
 
 
     const leagueHasEnoughFixtures =
-      allLeagueResultsArrayOfObjects[match.leagueIndex].fixtures.length > 10 &&
+      (allLeagueResultsArrayOfObjects[match.leagueIndex]?.fixtures?.length ??
+        0) > 10 &&
       match.leagueID !== 7956;
 
     if (shouldUseApiFormOnly(match)) {

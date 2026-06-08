@@ -752,7 +752,8 @@ export async function generateFixtures(
         lowered.endsWith(" ii")    // match "Team II"
       );
     };
-    // Start the fetch process without 'await' at the top level
+    // Reset before each date load so GameStats SofaScore lookups cannot match stale games.
+    arrayOfGames = [];
     await fetch(`${process.env.REACT_APP_EXPRESS_SERVER}scheduledEvents/${dateSS}`)
       .then(res => res.json())
       .then(games => {
