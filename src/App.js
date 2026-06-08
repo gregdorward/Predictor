@@ -13,7 +13,7 @@ import { AuthProvider, useAuth } from "./logic/authProvider";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import Login from "./components/Login";
 import { getCurrentUser } from "./components/ProtectedContent";
-import { doc, getDoc, collection, getDocs, query } from 'firebase/firestore';
+import { doc, getDoc, collection, getDocs, query, updateDoc } from 'firebase/firestore';
 import { userDetail } from "./logic/authProvider";
 import { checkUserPaidStatus } from "./logic/hasUserPaid";
 import { getScorePrediction } from "./logic/getScorePredictions";
@@ -395,7 +395,7 @@ export async function getLeagueList() {
   ]);
 
   const text =
-    "Getting started\nUse the < and > arrows to browse fixtures by date. Games load automatically once the data is ready.\nWhen fixtures appear, click \"Get Predictions & Stats\" to generate score predictions and statistics for each match.\n\nViewing fixtures\nEach fixture is clickable. Tap one to open detailed stats, comparative charts, form data, head-to-head history, and match previews.\nUse the toggle above the list to switch between probability mode (percentages) and score mode (predicted outcomes).\nFor completed games, the actual score appears in the Result column alongside our prediction.\nUse the checkbox on a fixture to add it to your shortlist. You can view and share your shortlist once you have selections.\n\nOptions\nOpen \"Options ☰\" to choose fractional or decimal odds, and to select a prediction algorithm:\nSSH Tips - our standard model using expected goal differentials, form, home/away records, attack/defence performance, and other comparative factors.\nAI Tips - an alternative model powered by AI, useful where limited match data is available.\n\nCustomise tips\nOpen \"Customise tips\" to filter the tip list by value edge, stats thresholds, probabilities, and odds ranges. Adjust the sliders, then click \"Get Predictions & Stats\" again to refresh results.\n\nMultis and insights\nAfter generating predictions, open \"Multis\" and use the carousel arrows to browse curated selections:\nBuild a Multi - our highest-confidence picks; use the + and - buttons to change how many games are included.\nExotic of the Day - a pre-built multi from our top selections.\nOver 2.5 Goals - games where three or more goals are most likely.\nBTTS Games - games where both teams to score is most likely.\nThe insights section lists standout performers by value, xG difference, goal difference, and more.\n\nFree and premium\nFree accounts see a sample of matches and limited multi and insight lists. Premium unlocks all competitions, full fixture detail, complete multi and BTTS/O2.5 lists, and AI match previews.\n\nMore tools\nUse the menu icon to access BTTS Teams, BTTS Games, Over 2.5 Goals fixtures, highest and lowest scoring leagues and teams, and season previews.\n\nTap \"How to use\" again to hide this text.";
+    "Getting started\nUse the < and > arrows to browse fixtures by date. Games load automatically once the data is ready.\nWhen fixtures appear, click \"Get Predictions & Stats\" to generate score predictions and statistics for each match.\n\nViewing fixtures\nEach fixture is clickable. Tap one to open detailed stats, comparative charts, form data, head-to-head history, and match previews.\nFor completed games, the actual score appears in the Result column alongside our prediction.\nUse the checkbox on a fixture to add it to your shortlist. You can view and share your shortlist once you have selections.\n\nOptions\nOpen \"Options ☰\" to choose fractional or decimal odds, select a prediction algorithm, and switch between probability mode (percentages) and score mode (predicted outcomes):\nSSH Tips - our standard model using expected goal differentials, form, home/away records, attack/defence performance, and other comparative factors.\nAI Tips - an alternative model powered by AI, useful where limited match data is available.\n\nCustomise tips\nOpen \"Customise tips\" to filter the tip list by value edge, stats thresholds, probabilities, and odds ranges. Adjust the sliders, then click \"Get Predictions & Stats\" again to refresh results.\n\nMultis and insights\nAfter generating predictions, open \"Multis\" and use the carousel arrows to browse curated selections:\nBuild a Multi - our highest-confidence picks; use the + and - buttons to change how many games are included.\nExotic of the Day - a pre-built multi from our top selections.\nOver 2.5 Goals - games where three or more goals are most likely.\nBTTS Games - games where both teams to score is most likely.\nThe insights section lists standout performers by value, xG difference, goal difference, and more.\n\nFree and premium\nFree accounts see a sample of matches and limited multi and insight lists. Premium unlocks all competitions, full fixture detail, complete multi and BTTS/O2.5 lists, and AI match previews.\n\nMore tools\nUse the menu icon to access BTTS Teams, BTTS Games, Over 2.5 Goals fixtures, highest and lowest scoring leagues and teams, and season previews.\n\nTap \"How to use\" again to hide this text.";
 
   let newText = text.split("\n").map((line, index) => {
     if (!line) return null;
@@ -447,11 +447,10 @@ export async function getLeagueList() {
     "Checkbox"
   );
   render(
-    <><h6 className="PredictionTypeText">Prediction algorithm type</h6>
-      <div className="PredictionRadios">
-        <PredictionTypeRadio value="SSH Tips"></PredictionTypeRadio>
-        <PredictionTypeRadio value="AI Tips"></PredictionTypeRadio>
-      </div></>,
+    <div className="PredictionRadios">
+      <PredictionTypeRadio value="SSH Tips"></PredictionTypeRadio>
+      <PredictionTypeRadio value="AI Tips"></PredictionTypeRadio>
+    </div>,
     "CheckboxTwo"
   );
   render(
@@ -597,6 +596,37 @@ function AppContent() {
     });
     return () => unsubscribe();
   }, []);
+
+  useEffect(() => {
+    if (!currentUser) return;
+
+    const loadPreference = async () => {
+      const ref = doc(db, "users", currentUser.uid);
+      const snap = await getDoc(ref);
+
+      if (snap.exists()) {
+        const data = snap.data();
+        setIsProbability(data.predictionMode !== "score");
+      }
+    };
+
+    loadPreference();
+  }, [currentUser]);
+
+  const togglePredictionMode = async () => {
+    const newValue = !isProbability;
+    setIsProbability(newValue);
+
+    if (!currentUser) return;
+
+    try {
+      await updateDoc(doc(db, "users", currentUser.uid), {
+        predictionMode: newValue ? "probability" : "score",
+      });
+    } catch (error) {
+      console.error("Error updating preference:", error);
+    }
+  };
 
   useEffect(() => {
     console.log("App mounted: Triggering initial fixture load");
@@ -1238,11 +1268,33 @@ function AppContent() {
             } />
         </div><div id="UserGeneratedTips" /><div id="shortlistRender" /><div id="ROIPlaceholder" /></>
       )}
-      <Collapsable buttonText={"Options \u{2630}"} className={"Options"} element={
-        <><><div id="Checkbox" /><div id="CheckboxTwo" className="CheckboxTwo" /></>
-        </>
-      }>
-      </Collapsable>
+      <Collapsable
+        buttonText={"Options \u{2630}"}
+        className={"Options"}
+        classNameTwo="OptionsPanel"
+        element={
+          <>
+            <section className="OptionsSection">
+              <h6 className="OptionsSection-heading">Odds format</h6>
+              <div id="Checkbox" className="OptionsSection-controls" />
+            </section>
+            <section className="OptionsSection">
+              <h6 className="OptionsSection-heading">Prediction algorithm</h6>
+              <div id="CheckboxTwo" className="OptionsSection-controls" />
+            </section>
+            <section className="OptionsSection">
+              <h6 className="OptionsSection-heading">Fixture display</h6>
+              <button
+                type="button"
+                className="OptionsDisplayToggle"
+                onClick={togglePredictionMode}
+              >
+                {isProbability ? "Select score mode" : "Select probability mode"}
+              </button>
+            </section>
+          </>
+        }
+      />
       {/* <Collapsable buttonText={"ROI"} className={"ROI"} element={<div id="successMeasure2" />} /> */}
       <div id="highLowLeagues" className="HighLowLeagues" />
       <div id="risk" />

@@ -21,6 +21,7 @@ import {
   VotePieChart
 } from "./Chart";
 import MultiTypeChart from "./MultitypeChart"; // Adjust the path if necessary
+import FixtureComparisonShare from "./FixtureComparisonShare";
 import { Slider } from "../components/CarouselXGChart";
 import Collapsable from "../components/CollapsableElement";
 import Stats from "../components/createStatsDiv";
@@ -4380,6 +4381,12 @@ function GameStats({ game, displayBool, stats, handleToggleTip, userTips }) {
                   ? "All Recent Form"
                   : `${game.leagueDesc} Form`}
               </h2>
+              <FixtureComparisonShare
+                game={game}
+                homeStats={homeAllStatsProps}
+                awayStats={awayAllStatsProps}
+                comparisonMap={comparisonStatusMap}
+              />
               <div className="flex-container">
                 <StatsHomeComponent
                   getCollapsableProps={getCollapsableProps}

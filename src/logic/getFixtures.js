@@ -543,10 +543,12 @@ async function createFixture(match, result, mockBool) {
   let roundedAwayOdds;
   let roundedDrawOdds;
   let roundedBTTSOdds;
+  let roundedOver25Odds;
   let homeFraction;
   let awayFraction;
   let drawFraction
   let bttsFraction;
+  let over25Fraction;
 
   if (selectedOdds === "Fractional odds") {
     if (match.homeOdds < 1) {
@@ -606,6 +608,24 @@ async function createFixture(match, result, mockBool) {
     } else {
       bttsFraction = "N/A";
     }
+
+    if (match.over25Odds !== 0 && match.over25Odds) {
+      roundedOver25Odds = (Math.round(match.over25Odds * 5) / 5).toFixed(1);
+
+      if (roundedOver25Odds < 1.1) {
+        roundedOver25Odds = 1.1;
+      }
+
+      try {
+        over25Fraction = oddslib
+          .from("decimal", roundedOver25Odds)
+          .to("fractional", { precision: 1 });
+      } catch (error) {
+        console.log(error);
+      }
+    } else {
+      over25Fraction = "N/A";
+    }
   } else if (selectedOdds === "Decimal odds") {
     if (match.homeOdds < 1) {
       match.homeOdds = convertToDecimalOdds(match.homeOdds)
@@ -625,6 +645,12 @@ async function createFixture(match, result, mockBool) {
       bttsFraction = "N/A";
     }
 
+    if (match.over25Odds !== 0 && match.over25Odds) {
+      over25Fraction = match.over25Odds;
+    } else {
+      over25Fraction = "N/A";
+    }
+
   }
   match.omit = false;
   match.homeTeamWinsPercentage = match.homeTeamWinPercentage;
@@ -638,6 +664,7 @@ async function createFixture(match, result, mockBool) {
   match.fractionAway = awayFraction;
   match.fractionDraw = drawFraction;
   match.bttsFraction = bttsFraction;
+  match.over25Fraction = over25Fraction;
 
   match.game = match.homeTeam + " v " + match.awayTeam;
 }

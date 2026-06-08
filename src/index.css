@@ -1314,11 +1314,101 @@ p {
   padding-bottom: 0.5em;
 }
 
-.Options button {
+.Options .Collapsible__trigger button {
   background-color: var(--background-color);
   color: var(--text-color);
   font-size: 0.9em;
   border: var(--primary-color) 1px solid;
+}
+
+.Options .Collapsible__contentOuter {
+  width: 100%;
+  max-width: 24em;
+  margin: 0 auto;
+}
+
+.OptionsPanel {
+  padding: 0.25em 0.5em 0.5em;
+}
+
+.OptionsSection {
+  width: 100%;
+  min-height: auto;
+  align-items: stretch;
+  padding: 0.85em 0;
+}
+
+.OptionsSection:not(:last-child) {
+  border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+}
+
+.OptionsSection-heading {
+  margin: 0 0 0.65rem;
+  padding: 0;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--text-color);
+  opacity: 0.72;
+  text-align: center;
+}
+
+.OptionsSection-controls .OddsRadios,
+.OptionsSection-controls .PredictionRadios {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.5rem;
+  height: auto;
+}
+
+.OptionsPanel .dark2 {
+  flex-basis: auto;
+}
+
+.OptionsPanel label {
+  margin: 0;
+  padding: 0.5em 0.85em;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  border-radius: 6px;
+  background-color: var(--secondary-background-color);
+  transition: border-color 0.2s ease, background-color 0.2s ease;
+}
+
+.OptionsPanel label:has(input:checked) {
+  border-color: var(--primary-color);
+  background-color: var(--background-color);
+}
+
+.OptionsPanel .text {
+  font-size: 0.85em;
+}
+
+.OptionsDisplayToggle {
+  display: block;
+  width: 100%;
+  max-width: 16em;
+  margin: 0 auto;
+  min-width: unset;
+  padding: 0.55em 1em;
+  font-size: 0.85em;
+  font-weight: 600;
+  background-color: var(--secondary-background-color);
+  color: var(--text-color);
+  border: 1px solid rgba(0, 0, 0, 0.12);
+  box-shadow: none;
+  transition: border-color 0.2s ease, background-color 0.2s ease, transform 0.2s ease;
+}
+
+.OptionsDisplayToggle:hover {
+  border-color: var(--primary-color);
+  background-color: var(--background-color);
+  transform: translateY(-1px);
+}
+
+.OptionsDisplayToggle:active {
+  transform: translateY(0);
 }
 
 .OddsRadios {
@@ -1349,6 +1439,20 @@ p {
 
 h6.PredictionTypeText {
   padding-top: 0em;
+}
+
+@media (max-width: 460px) {
+  .OptionsPanel label {
+    padding: 0.45em 0.65em;
+  }
+
+  .OptionsPanel .text {
+    font-size: 0.8em;
+  }
+
+  .OptionsDisplayToggle {
+    max-width: 100%;
+  }
 }
 
 .LoadingGames {
@@ -4586,8 +4690,25 @@ li.FormHeader {
 .ROIButton {
   background-color: var(--background-color);
   color: var(--text-color);
-  font-size: 0.9em;
-  border: var(--primary-color) 1px solid;
+  font-size: 0.82em;
+  font-weight: 600;
+  border: 1px solid var(--primary-color);
+  min-width: unset;
+  margin: 0.35em auto;
+  padding: 0.45em 1.1em;
+  box-shadow: none;
+}
+
+.ROIButton:hover {
+  background-color: var(--secondary-background-color);
+  border-color: var(--primary-color);
+  transform: translateY(-1px);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08);
+}
+
+.ROIButton:active {
+  transform: translateY(0);
+  box-shadow: none;
 }
 
 .PredictionsOfTheDay {
@@ -6547,6 +6668,162 @@ input:active+.design::after {
   border: none;
   color: var(--text-color);
   box-shadow: none;
+}
+
+.CopyMultiActions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  gap: 0.5rem;
+  width: 100%;
+  margin: 1rem 0 0.5rem;
+  text-align: center;
+}
+
+.CopyMultiButton {
+  font-size: 1em;
+  font-weight: 400;
+  font-family: inherit;
+  background: none;
+  color: var(--text-color);
+  border: none;
+  border-radius: 0;
+  padding: 0;
+  cursor: pointer;
+  text-decoration: underline;
+  box-shadow: none;
+}
+
+.CopyMultiButton:hover,
+.CopyMultiButton:focus-visible {
+  color: var(--accent-color);
+}
+
+.CopyMultiButton__status {
+  font-size: 0.9em;
+  color: var(--accent-color);
+  font-weight: 400;
+  width: 100%;
+  text-align: center;
+}
+
+.CopyMultiButton__status--error {
+  color: #d71200;
+}
+
+.FixtureComparisonShare {
+  margin: 1rem 0 1.5rem;
+}
+
+.FixtureComparisonShare__header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 0.75rem;
+  text-align: center;
+}
+
+.FixtureComparisonShare__title {
+  margin: 0 0 0.25rem;
+  font-size: 1.1rem;
+}
+
+.FixtureComparisonShare__subtitle {
+  margin: 0;
+  font-size: 0.9rem;
+  opacity: 0.8;
+}
+
+.FixtureComparisonShare__card {
+  border: 1px solid rgba(254, 140, 0, 0.35);
+  border-radius: 10px;
+  padding: 1rem;
+  background: linear-gradient(
+    180deg,
+    rgba(254, 140, 0, 0.08) 0%,
+    rgba(254, 140, 0, 0.02) 100%
+  );
+}
+
+.FixtureComparisonShare__match {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 1.15rem;
+  font-weight: 700;
+  text-align: center;
+}
+
+.FixtureComparisonShare__team {
+  max-width: 42%;
+}
+
+.FixtureComparisonShare__vs {
+  opacity: 0.7;
+  font-weight: 600;
+}
+
+.FixtureComparisonShare__meta,
+.FixtureComparisonShare__prediction,
+.FixtureComparisonShare__brand {
+  text-align: center;
+  margin: 0.5rem 0 0;
+}
+
+.FixtureComparisonShare__prediction strong {
+  color: var(--accent-color);
+}
+
+.FixtureComparisonShare__columns,
+.FixtureComparisonShare__row {
+  display: grid;
+  grid-template-columns: 1fr 1.2fr 1fr;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+.FixtureComparisonShare__columns {
+  margin-top: 1rem;
+  padding-bottom: 0.35rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  font-size: 0.8rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  opacity: 0.75;
+  text-align: center;
+}
+
+.FixtureComparisonShare__rows {
+  display: flex;
+  flex-direction: column;
+  gap: 0.45rem;
+  margin-top: 0.5rem;
+}
+
+.FixtureComparisonShare__label {
+  text-align: center;
+  font-size: 0.85rem;
+  opacity: 0.85;
+}
+
+.FixtureComparisonShare__value {
+  text-align: center;
+  font-weight: 600;
+  font-size: 0.95rem;
+}
+
+.FixtureComparisonShare__value--better {
+  color: #01a501;
+}
+
+.FixtureComparisonShare__brand {
+  font-size: 0.8rem;
+  opacity: 0.7;
+  letter-spacing: 0.03em;
 }
 
 .InsightsButton {

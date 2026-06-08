@@ -13,6 +13,13 @@ import { allLeagueResultsArrayOfObjects } from "../logic/getFixtures";
 import TopValueGames from "../components/ValueGames";
 import { Slider } from "../components/Carousel";
 import MultisPanelCarousel from "../components/MultisPanelCarousel";
+import CopyMultiButton from "../components/CopyMultiButton";
+import {
+  formatBuildMultiText,
+  formatExoticMultiText,
+  formatOver25MultiText,
+  formatBttsMultiText,
+} from "../utils/formatMultiShareText";
 import { render } from '../utils/render';
 import {
   calculateAttackingStrength,
@@ -5473,7 +5480,7 @@ async function getSuccessMeasure(fixtures) {
     );
   } else {
     render(
-      <Collapsable buttonText={"ROI"} element={
+      <Collapsable buttonText={"ROI"} classNameButton="ROIButton" element={
         <Fragment>
         </Fragment>
       } />,
@@ -6179,7 +6186,7 @@ export async function getScorePrediction(day, mocked) {
           team: match.homeTeam,
           decimalOdds: match.homeDoubleChance,
           rawOdds: match.over25Odds,
-          odds: match.over25Odds,
+          odds: match.over25Fraction,
           comparisonScore: match.teamComparisonScore,
           outcome: match.predictionOutcome,
           outcomeSymbol: match.over25PredictionOutcomeSymbol,
@@ -6879,6 +6886,9 @@ async function renderTips() {
                 ))}
                 <div className="AccumulatedOdds">{`Accumulator odds ~ : ${Math.round(accumulatedOdds) - 1
                   }/1`}</div>
+                <CopyMultiButton
+                  getText={() => formatBuildMultiText(newArray, accumulatedOdds)}
+                />
               </ul>
             }
           />
@@ -6931,6 +6941,9 @@ async function renderTips() {
                 ))}
                 <div className="AccumulatedOdds">{`Accumulator odds ~ : ${Math.round(accumulatedOdds) - 1
                   }/1`}</div>
+                <CopyMultiButton
+                  getText={() => formatBuildMultiText(newArray, accumulatedOdds)}
+                />
               </ul>
             }
           />
@@ -6999,6 +7012,18 @@ async function renderTips() {
                     <div>{tip.game}</div>
                   </li>
                 ))}
+                <CopyMultiButton
+                  getText={() =>
+                    formatExoticMultiText({
+                      tips: exoticArray,
+                      gamesInExotic,
+                      exoticString,
+                      exoticStake,
+                      combinations,
+                      price,
+                    })
+                  }
+                />
               </ul>
             }
           />
@@ -7032,6 +7057,18 @@ async function renderTips() {
                     <div>{tip.game}</div>
                   </li>
                 ))}
+                <CopyMultiButton
+                  getText={() =>
+                    formatExoticMultiText({
+                      tips: exoticArray,
+                      gamesInExotic,
+                      exoticString,
+                      exoticStake,
+                      combinations,
+                      price,
+                    })
+                  }
+                />
               </ul>
             }
           />
@@ -7103,6 +7140,9 @@ async function renderTips() {
                     </div>
                   </li>
                 )}
+                <CopyMultiButton
+                  getText={() => formatOver25MultiText(tipsToShow)}
+                />
               </ul>
             }
           />
@@ -7147,13 +7187,16 @@ async function renderTips() {
                     <li key={game.game}>
                       <div>
                         <div>{game.bttsGame}</div>
-                        <div>{`Odds: ${game.bttsOdds}`}{" "}<span className={game.bttsOutcome}>
+                        <div>{`Odds: ${game.bttsFraction}`}{" "}<span className={game.bttsOutcome}>
                           {game.bttsOutcomeSymbol}
                         </span></div>
                       </div>
                     </li>
                   </a>
                 ))}
+                <CopyMultiButton
+                  getText={() => formatBttsMultiText(bttsArray)}
+                />
               </ul>
             }
           />

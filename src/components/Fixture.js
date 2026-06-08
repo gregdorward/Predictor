@@ -10,8 +10,6 @@ import { checkUserPaidStatus } from "../logic/hasUserPaid";
 import { leagueStatsArray } from "../logic/getScorePredictions";
 import LeagueName from './LeagueName';
 import ShareShortlistButton from "./ShareShortlistButton";
-import { getAuth } from "firebase/auth";
-import { getFirestore, doc, getDoc, updateDoc } from "firebase/firestore";
 import GameStats from "./GameStats";
 import { getStoredTheme } from "../utils/theme";
 import {
@@ -554,63 +552,13 @@ const List = ({
   showShortlist,
   setShowShortlist,
   handleToggleTip,
-  userTips
-  // You may also want to accept fullUncappedFixtures here if that was part of your final solution
+  userTips,
+  isProbability,
 }) => {
   // ⭐️ showShortlist state is now received via props, not local state ⭐️
   const [selectedFixtures, setSelectedFixtures] = useState([]);
 
-  const togglePredictionMode = async () => {
-    // 1. Always update the local UI state first so the toggle feels instant
-    const newValue = !isProbability;
-    setIsProbability(newValue);
-
-    // 2. Check if a user is logged in
-    const user = auth.currentUser;
-
-    // 3. If no user, stop here. The UI has changed, but nothing is saved to Firebase.
-    if (!user) {
-      console.log("Guest mode: Preference not saved.");
-      return;
-    }
-
-    // 4. If user exists, sync the preference to the database
-    try {
-      await updateDoc(doc(db, "users", user.uid), {
-        predictionMode: newValue ? "probability" : "score"
-      });
-    } catch (error) {
-      console.error("Error updating preference:", error);
-    }
-  };
-
-
-  // You need to resolve this variable being undefined if it's not a prop or local state
-  // console.log(showShortlist); 
-
   const isInitialMount = useRef(true);
-
-  const auth = getAuth();
-  const db = getFirestore();
-  const [isProbability, setIsProbability] = useState(true);
-  const [loadingPreference, setLoadingPreference] = useState(true);
-
-  useEffect(() => {
-    const user = auth.currentUser;
-    if (!user) return;
-
-    const loadPreference = async () => {
-      const ref = doc(db, "users", user.uid);
-      const snap = await getDoc(ref);
-
-      if (snap.exists()) {
-        const data = snap.data();
-        setIsProbability(data.predictionMode !== "score");
-      }
-    };
-
-    loadPreference();
-  }, []);
 
 
   // 1. URL READING EFFECT (Loads shortlist from URL for persistence and sets initial view state)
@@ -782,9 +730,6 @@ const List = ({
       )}
       <div>
         <div id="Headers"></div>
-        <button className="ProbabilityToggle" onClick={togglePredictionMode}>
-          {isProbability ? "Select score mode" : "Select probability mode"}
-        </button>
         <div className="InstructionalDiv">Generate predictions and click on any fixture for unparalleled insight</div>
         <ul className="FixtureList" id="FixtureList">
           {/* Renders shortlist when toggle is ON, full list (which is the source list) when OFF */}
@@ -898,7 +843,6 @@ export function Fixture(props) {
         showShortlist={showShortlist}
         setShowShortlist={setShowShortlist}
         isProbability={props.isProbability}
-        setIsProbability={props.setIsProbability}
         result={resultValue}
         count={count}
         mock={props.mock}
