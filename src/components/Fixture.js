@@ -17,6 +17,11 @@ import { getStoredTheme } from "../utils/theme";
 import {
   GlobalFilters,
 } from "./SliderDiff";
+import {
+  formatProbabilityPercent,
+  getProbabilityNumber,
+  statPercentDisplay,
+} from "../utils/formatStat";
 
 let resultValue;
 let paid;
@@ -75,52 +80,21 @@ const PredictionSection = ({ isProbability, goals, team, probability }) => {
     );
   }
 
-  const safeProb = probability ?? 0;
-  const probClass = getProbabilityClass(safeProb);
+  const probabilityValue = getProbabilityNumber(probability);
+  const probabilityLabel = formatProbabilityPercent(probability);
+  const probClass = getProbabilityClass(probabilityValue);
 
-  if (safeProb > 0) {
-    return (
-      <div className="ProbabilityWrapper">
-        <div className="ProbabilityBarBackground">
-          {/* BAR FILL (doesn't affect layout) */}
-          <div
-            className={`ProbabilityBarFill ${probClass}`}
-            style={{ width: `${safeProb}%` }}
-          />
-
-          {/* TEXT LAYER */}
-          <span className="ProbabilityBarText">
-            {probability !== undefined ? `${safeProb?.toFixed(1)}%` : ""}
-          </span>
-        </div>
-
-        {/* <div className="ProbabilityValue">
-        {probability !== undefined ? `${safeProb.toFixed(1)}%` : ""}
-      </div> */}
+  return (
+    <div className="ProbabilityWrapper">
+      <div className="ProbabilityBarBackground">
+        <div
+          className={`ProbabilityBarFill ${probClass}`}
+          style={probabilityValue > 0 ? { width: `${probabilityValue}%` } : undefined}
+        />
+        <span className="ProbabilityBarText">{probabilityLabel}</span>
       </div>
-    );
-  } else {
-    return (
-      <div className="ProbabilityWrapper">
-        <div className="ProbabilityBarBackground">
-          {/* BAR FILL (doesn't affect layout) */}
-          <div
-            className={`ProbabilityBarFill ${probClass}`}
-          />
-
-          {/* TEXT LAYER */}
-          <span className="ProbabilityBarText">
-          </span>
-        </div>
-
-        {/* <div className="ProbabilityValue">
-        {probability !== undefined ? `${safeProb.toFixed(1)}%` : ""}
-      </div> */}
-      </div>
-    )
-  }
-
-
+    </div>
+  );
 };
 
 
@@ -130,15 +104,15 @@ function ProbabilityView({ fixture }) {
     <div className="ProbabilityContainer">
       <div className="ProbRow home">
         <span>H</span>
-        <span>{fixture.homeWinProbability.toFixed(1)}%</span>
+        <span>{statPercentDisplay(fixture.homeWinProbability, 1)}</span>
       </div>
       <div className="ProbRow draw">
         <span>D</span>
-        <span>{fixture.drawProbability.toFixed(1)}%</span>
+        <span>{statPercentDisplay(fixture.drawProbability, 1)}</span>
       </div>
       <div className="ProbRow away">
         <span>A</span>
-        <span>{fixture.awayWinProbability.toFixed(1)}%</span>
+        <span>{statPercentDisplay(fixture.awayWinProbability, 1)}</span>
       </div>
     </div>
   );
@@ -337,7 +311,7 @@ function SingleFixture({
                   isProbability={isProbability}
                   team={""}
                   goals={fixture.goalsA}
-                  probability={fixture.homeWinProbability !== undefined ? fixture.homeWinProbability : '-'}
+                  probability={fixture.homeWinProbability}
                 />
                 <div className="ResultContainer">
                   <div className={`result`}>

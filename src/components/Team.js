@@ -46,6 +46,18 @@ function formatStatValue(label, value) {
   return value;
 }
 
+// Avoids "undefined%" when API stats are missing on the /fixture page.
+function formatPercentValue(value) {
+  if (value == null || value === "") {
+    return "—";
+  }
+  const n = Number(value);
+  if (!Number.isFinite(n)) {
+    return "—";
+  }
+  return `${n}%`;
+}
+
 function normalizeResultMatch(match) {
   if (!match || typeof match !== "object") {
     return null;
@@ -208,27 +220,33 @@ function getSeasonStats(dataState, side) {
     },
     {
       label: "BTTS",
-      value: isHome
-        ? `${dataState.BTTSPercentage_overallHome}%`
-        : `${dataState.BTTSPercentage_overallAway}%`,
+      value: formatPercentValue(
+        isHome
+          ? dataState.BTTSPercentage_overallHome
+          : dataState.BTTSPercentage_overallAway
+      ),
     },
     {
       label: "BTTS and win",
-      value: isHome
-        ? `${dataState.BTTSAndWinPercentage_Home}%`
-        : `${dataState.BTTSAndWinPercentage_Away}%`,
+      value: formatPercentValue(
+        isHome
+          ? dataState.BTTSAndWinPercentage_Home
+          : dataState.BTTSAndWinPercentage_Away
+      ),
     },
     {
       label: "BTTS and lose",
-      value: isHome
-        ? `${dataState.BTTSAndLosePercentage_Home}%`
-        : `${dataState.BTTSAndLosePercentage_Away}%`,
+      value: formatPercentValue(
+        isHome
+          ? dataState.BTTSAndLosePercentage_Home
+          : dataState.BTTSAndLosePercentage_Away
+      ),
     },
     {
       label: "BTTS both halves",
-      value: isHome
-        ? `${dataState.BTTSBothHalvesHome}%`
-        : `${dataState.BTTSBothHalvesAway}%`,
+      value: formatPercentValue(
+        isHome ? dataState.BTTSBothHalvesHome : dataState.BTTSBothHalvesAway
+      ),
     },
     {
       label: "Goal diff 1st half",
@@ -242,39 +260,51 @@ function getSeasonStats(dataState, side) {
     },
     {
       label: "Leading at half time",
-      value: isHome
-        ? `${dataState.leadingAtHTPercentage_overallHome}%`
-        : `${dataState.leadingAtHTPercentage_overallAway}%`,
+      value: formatPercentValue(
+        isHome
+          ? dataState.leadingAtHTPercentage_overallHome
+          : dataState.leadingAtHTPercentage_overallAway
+      ),
     },
     {
       label: "Over 1.5 goals",
-      value: isHome
-        ? `${dataState.seasonOver15Percentage_overallHome}%`
-        : `${dataState.seasonOver15Percentage_overallAway}%`,
+      value: formatPercentValue(
+        isHome
+          ? dataState.seasonOver15Percentage_overallHome
+          : dataState.seasonOver15Percentage_overallAway
+      ),
     },
     {
       label: "Over 2.5 goals",
-      value: isHome
-        ? `${dataState.seasonOver25Percentage_overallHome}%`
-        : `${dataState.seasonOver25Percentage_overallAway}%`,
+      value: formatPercentValue(
+        isHome
+          ? dataState.seasonOver25Percentage_overallHome
+          : dataState.seasonOver25Percentage_overallAway
+      ),
     },
     {
       label: "Over 3.5 goals",
-      value: isHome
-        ? `${dataState.seasonOver35Percentage_overallHome}%`
-        : `${dataState.seasonOver35Percentage_overallAway}%`,
+      value: formatPercentValue(
+        isHome
+          ? dataState.seasonOver35Percentage_overallHome
+          : dataState.seasonOver35Percentage_overallAway
+      ),
     },
     {
       label: "Over 4.5 goals",
-      value: isHome
-        ? `${dataState.seasonOver45Percentage_overallHome}%`
-        : `${dataState.seasonOver45Percentage_overallAway}%`,
+      value: formatPercentValue(
+        isHome
+          ? dataState.seasonOver45Percentage_overallHome
+          : dataState.seasonOver45Percentage_overallAway
+      ),
     },
     {
       label: "Scored both halves",
-      value: isHome
-        ? `${dataState.scoredBothHalvesPercentage_overallHome}%`
-        : `${dataState.scoredBothHalvesPercentage_overallAway}%`,
+      value: formatPercentValue(
+        isHome
+          ? dataState.scoredBothHalvesPercentage_overallHome
+          : dataState.scoredBothHalvesPercentage_overallAway
+      ),
     },
     {
       label: "SOTs per goal",
@@ -304,9 +334,11 @@ function getSeasonStats(dataState, side) {
     },
     {
       label: "Penalties in match",
-      value: isHome
-        ? `${dataState.penalty_in_a_match_percentage_overallHome}%`
-        : `${dataState.penalty_in_a_match_percentage_overallAway}%`,
+      value: formatPercentValue(
+        isHome
+          ? dataState.penalty_in_a_match_percentage_overallHome
+          : dataState.penalty_in_a_match_percentage_overallAway
+      ),
     },
   ];
 }
