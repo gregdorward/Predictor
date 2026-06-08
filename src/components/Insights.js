@@ -1,5 +1,6 @@
 import React from 'react';
 import Collapsable from "./CollapsableElement"
+import { STAT_FALLBACK } from "../utils/formatStat";
 
 /**
  * A helper component to render a single list of stats.
@@ -38,7 +39,11 @@ const StatList = ({ title, sub, items, operator, sortOrder = 'desc', limit = 10 
                     <li key={index} className="InsightListItem">
                         <div className='InsightScore'>
                             <span className='InsightIndex'>{index + 1}</span> {`${item.name}: `}
-                            <span className='InsightScoreValue'>{`${item.score?.toFixed(2)}${operator}`}</span>
+                            <span className='InsightScoreValue'>
+                              {Number.isFinite(Number(item.score))
+                                ? `${Number(item.score).toFixed(2)}${operator}`
+                                : STAT_FALLBACK}
+                            </span>
                         </div>
 
                         <a

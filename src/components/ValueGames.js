@@ -1,4 +1,8 @@
 import Collapsable from "../components/CollapsableElement";
+import {
+  formatProbabilityPercent,
+  STAT_FALLBACK,
+} from "../utils/formatStat";
 
 const scrollToTarget = (id) => {
     const element = document.getElementById(String(id));
@@ -63,12 +67,21 @@ const TopValueGames = ({ tips, limit = 10, paid }) => {
 
                                         <td>{tip.prediction}</td>
 
-                                        <td>{tip.ourProbability.toFixed(1)}%</td>
+                                        <td>
+                                          {formatProbabilityPercent(tip.ourProbability) ||
+                                            STAT_FALLBACK}
+                                        </td>
 
-                                        <td>{tip.bookiesProbability.toFixed(1)}%</td>
+                                        <td>
+                                          {formatProbabilityPercent(
+                                            tip.bookiesProbability
+                                          ) || STAT_FALLBACK}
+                                        </td>
 
                                         <td className="TipsValuePercentage">
-                                            {tip.value.toFixed(1)}%
+                                          {Number.isFinite(tip.value)
+                                            ? `${tip.value.toFixed(1)}%`
+                                            : STAT_FALLBACK}
                                         </td>
                                     </tr>
                                 );

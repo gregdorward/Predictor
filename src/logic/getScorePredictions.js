@@ -2530,7 +2530,8 @@ export async function generateGoals(homeForm, awayForm, match) {
 
   const InternationalComps = [
     "International WC Qualification Europe",
-    "International WC Qualification South America"
+    "International WC Qualification South America",
+    "International World Cup"
   ]
 
   if (majorContinentalLeagues.includes(match.leagueDesc)) {
@@ -2547,9 +2548,8 @@ export async function generateGoals(homeForm, awayForm, match) {
       ((awayLambda_rawOverall * 0.75) * (1 + (oddsComparisonAway * 0.1)))
 
   } else if (InternationalComps.includes(match.leagueDesc)) {
-    homeGoals = ((homeLambda_final_v3 / 1.25) * (1 + (oddsComparisonHome * 0.05))) * (1 + homeForm.actualToXGDifference / 20)
-
-    awayGoals = ((awayLambda_final_v3 / 1.25) * (1 + (oddsComparisonAway * 0.05))) * (1 + awayForm.actualToXGDifference / 20)
+    homeGoals = ((homeLambda_rawOverall * 0.75) * (1 + (oddsComparisonHome * 0.1)))
+    awayGoals = ((awayLambda_rawOverall * 0.75) * (1 + (oddsComparisonAway * 0.1)))
   } else {
     homeGoals =
       // (homeLambda_final_v3 * 2)

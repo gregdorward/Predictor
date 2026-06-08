@@ -35,8 +35,21 @@ import { arrayOfGames } from "../logic/getFixtures";
 import GenerateFormSummary from "../logic/compareFormTrend";
 import { checkUserPaidStatus } from "../logic/hasUserPaid";
 import { getPointAverage } from "../logic/getStats";
-import { allForm, API_FORM_ONLY_LEAGUE_IDS } from "../logic/getFixtures";
-import { formatStatDisplay } from "../utils/formatStat";
+import {
+  allForm,
+  API_FORM_ONLY_LEAGUE_IDS,
+  shouldUseApiFormOnly,
+} from "../logic/getFixtures";
+import {
+  fixedStatOrDash,
+  formatProbabilityPercent,
+  formatStatDisplay,
+  formatStatOrDash,
+  ratioOrDash,
+  ratioPercentOrDash,
+  statOrDash,
+  STAT_FALLBACK,
+} from "../utils/formatStat";
 import { expandRadarStrengthSeries } from "../utils/radarDisplay";
 import MissingPlayersList from "../components/MissingPlayersList";
 import PlayerStatsList from "../components/PlayerStatsList";
@@ -66,11 +79,11 @@ const LazyFutureFixturesSideBySide = lazy(() => import('./FutureFixturesSideBySi
 
 // let id, team1, team2, timestamp, homeGoals, awayGoals;
 
-function getOverUnderProbability(scoreMatrix, line = 2.5) {
+function getOverUnderProbability(scoreMatrix = [], line = 2.5) {
   let over = 0;
   let under = 0;
 
-  for (const { home, away, probability } of scoreMatrix) {
+  for (const { home, away, probability } of scoreMatrix || []) {
     if (home + away > line) over += probability;
     else under += probability;
   }
@@ -80,11 +93,11 @@ function getOverUnderProbability(scoreMatrix, line = 2.5) {
   return { over, under };
 }
 
-function getBTTSProbability(scoreMatrix) {
+function getBTTSProbability(scoreMatrix = []) {
   let yes = 0;
   let no = 0;
 
-  for (const { home, away, probability } of scoreMatrix) {
+  for (const { home, away, probability } of scoreMatrix || []) {
     if (home > 0 && away > 0) yes += probability;
     else no += probability;
   }
@@ -96,6 +109,138 @@ function getBTTSProbability(scoreMatrix) {
 
 function formatLeagueStat(value) {
   return formatStatDisplay(value);
+}
+
+// Shared stat fields for homeAllStatsProps / awayAllStatsProps with "-" fallbacks.
+function buildTeamAllStatsFields(teamStats, leagueStats, form) {
+  const shotsInsideBox = teamStats?.shotsFromInsideTheBox;
+  const shotsOutsideBox = teamStats?.shotsFromOutsideTheBox;
+  const shotsInsideBoxAgainst = teamStats?.shotsFromInsideTheBoxAgainst;
+  const shotsOutsideBoxAgainst = teamStats?.shotsFromOutsideTheBoxAgainst;
+
+  return {
+    goals: statOrDash(leagueStats.goals),
+    conceeded: statOrDash(leagueStats.conceeded),
+    averageRating: formatStatOrDash(teamStats?.avgRating),
+    XG: statOrDash(leagueStats.XG),
+    XGConceded: statOrDash(leagueStats.XGConceded),
+    XGSwing:
+      form?.XGChangeRecently != null
+        ? fixedStatOrDash(form.XGChangeRecently)
+        : STAT_FALLBACK,
+    bigChances: statOrDash(teamStats?.bigChances),
+    bigChancesMissed: statOrDash(teamStats?.bigChancesMissed),
+    bigChancesConceded: statOrDash(teamStats?.bigChancesAgainst),
+    goalConversionRate: ratioPercentOrDash(
+      teamStats?.goalsScored,
+      teamStats?.shots
+    ),
+    bigChanceConversionRate:
+      teamStats?.bigChances > 0
+        ? ratioPercentOrDash(
+            teamStats.bigChances - teamStats.bigChancesMissed,
+            teamStats.bigChances
+          )
+        : STAT_FALLBACK,
+    shootingAccuracy: ratioPercentOrDash(
+      teamStats?.shotsOnTarget,
+      teamStats?.shots
+    ),
+    shotsOnTargetAgainst: ratioOrDash(
+      teamStats?.shotsOnTargetAgainst,
+      teamStats?.matches
+    ),
+    possession: statOrDash(leagueStats.possession),
+    accuratePassesPercentage: fixedStatOrDash(teamStats?.accuratePassesPercentage),
+    accuratePassesOpponentHalf: fixedStatOrDash(
+      teamStats?.accurateOppositionHalfPassesPercentage
+    ),
+    accuratePassesDefensiveHalf: fixedStatOrDash(
+      teamStats?.accurateOwnHalfPassesPercentage
+    ),
+    accurateCrosses: fixedStatOrDash(teamStats?.accurateCrossesPercentage),
+    accurateCrossesAgainst: ratioPercentOrDash(
+      teamStats?.crossesSuccessfulAgainst,
+      teamStats?.crossesTotalAgainst
+    ),
+    longBallPercentage: ratioPercentOrDash(
+      teamStats?.totalLongBalls,
+      teamStats?.totalPasses
+    ),
+    accurateLongBallsPercentage: fixedStatOrDash(
+      teamStats?.accurateLongBallsPercentage
+    ),
+    accurateLongBallsAgainstPercentage: ratioPercentOrDash(
+      teamStats?.longBallsSuccessfulAgainst,
+      teamStats?.longBallsTotalAgainst
+    ),
+    shots: statOrDash(leagueStats.shots),
+    sot: statOrDash(leagueStats.sot),
+    shotsInsideBox: statOrDash(shotsInsideBox),
+    shotsFromOutsideTheBox: statOrDash(shotsOutsideBox),
+    shotsFromInsideBoxPercentage: ratioPercentOrDash(
+      shotsInsideBox,
+      (shotsInsideBox ?? 0) + (shotsOutsideBox ?? 0),
+      0
+    ),
+    shotsInsideBoxAgainst: statOrDash(shotsInsideBoxAgainst),
+    shotsFromOutsideTheBoxAgainst: statOrDash(shotsOutsideBoxAgainst),
+    shotsInsideBoxPercentAgainst: ratioPercentOrDash(
+      shotsInsideBoxAgainst,
+      (shotsInsideBoxAgainst ?? 0) + (shotsOutsideBoxAgainst ?? 0),
+      0
+    ),
+    dangerousAttacks: statOrDash(leagueStats.dangerousAttacks),
+    goalsFromInsideTheBox: statOrDash(teamStats?.goalsFromInsideTheBox),
+    goalsFromOutsideTheBox: statOrDash(teamStats?.goalsFromOutsideTheBox),
+    fastBreakShots: statOrDash(teamStats?.fastBreakShots),
+    fastBreaksLeadingToShot: ratioPercentOrDash(
+      teamStats?.fastBreakShots,
+      teamStats?.fastBreaks
+    ),
+    dribbleAttempts: statOrDash(teamStats?.dribbleAttempts),
+    successfulDribbles: statOrDash(teamStats?.successfulDribbles),
+    duelsWonPercentage: fixedStatOrDash(teamStats?.duelsWonPercentage),
+    aerialDuelsWonPercentage: fixedStatOrDash(teamStats?.aerialDuelsWonPercentage),
+    ballRecovery: ratioOrDash(teamStats?.ballRecovery, teamStats?.matches),
+    interceptions: ratioOrDash(teamStats?.interceptions, teamStats?.matches),
+    cleansheetPercentage: ratioPercentOrDash(
+      teamStats?.cleanSheets,
+      teamStats?.matches
+    ),
+    tackles: ratioOrDash(teamStats?.tackles, teamStats?.matches),
+    errorsLeadingToShotAgainst: statOrDash(teamStats?.errorsLeadingToShotAgainst),
+    offsides: ratioOrDash(teamStats?.offsides, teamStats?.matches),
+    ppg: statOrDash(leagueStats.ppg),
+    formTrend: [
+      formatStatOrDash(form?.avPoints10),
+      formatStatOrDash(form?.avPoints6),
+      formatStatOrDash(form?.avPoints5),
+    ],
+    goalDifference: statOrDash(leagueStats.goalDifference),
+    goalDifferenceHomeOrAway: statOrDash(leagueStats.goalDifferenceHomeOrAway),
+    CardsPerGame: ratioOrDash(teamStats?.yellowCards, teamStats?.matches),
+    RedCardsPerGame: ratioOrDash(teamStats?.redCards, teamStats?.matches),
+    FoulsPerGame: ratioOrDash(teamStats?.fouls, teamStats?.matches),
+    PenaltiesConceded: statOrDash(teamStats?.penaltiesCommited),
+    CornersAverage: statOrDash(leagueStats.corners),
+    FreeKickGoals: statOrDash(teamStats?.freeKickGoals),
+    BttsPercentage: statOrDash(form?.BttsPercentage),
+    BttsPercentageHomeOrAway: statOrDash(form?.BttsPercentageHomeOrAway),
+    ScoredBothHalvesPercentage: statOrDash(form?.ScoredBothHalvesPercentage),
+  };
+}
+
+function leaguePositionOrDash(position) {
+  if (
+    position === undefined ||
+    position === null ||
+    position === "undefined" ||
+    position === 0
+  ) {
+    return STAT_FALLBACK;
+  }
+  return position;
 }
 
 function leagueDangerousAttacksValue(form) {
@@ -275,12 +420,12 @@ function buildComparisonBarChartData(homeStats, awayStats, options = {}) {
   };
 }
 
-function getMatchOddsProbabilities(scoreMatrix) {
+function getMatchOddsProbabilities(scoreMatrix = []) {
   let homeWin = 0;
   let draw = 0;
   let awayWin = 0;
 
-  for (const { home, away, probability } of scoreMatrix) {
+  for (const { home, away, probability } of scoreMatrix || []) {
     if (home > away) homeWin += probability;
     else if (home === away) draw += probability;
     else awayWin += probability;
@@ -733,10 +878,27 @@ function GameStats({ game, displayBool, stats, handleToggleTip, userTips }) {
     );
   }, [xgDiffArrayAway]);
 
-  const { homeWin, draw, awayWin } =
-    getMatchOddsProbabilities(game.scoreMatrix);
-  const { yes, no } = getBTTSProbability(game.scoreMatrix);
-  const { over, under } = getOverUnderProbability(game.scoreMatrix, 2.5);
+  const scoreMatrix = game.scoreMatrix ?? [];
+  const hasScoreMatrix = scoreMatrix.length > 0;
+  const { homeWin, draw, awayWin } = hasScoreMatrix
+    ? getMatchOddsProbabilities(scoreMatrix)
+    : {
+        homeWin: game.homeWinProbability,
+        draw: game.drawProbability,
+        awayWin: game.awayWinProbability,
+      };
+  const { yes, no } = hasScoreMatrix
+    ? getBTTSProbability(scoreMatrix)
+    : {
+        yes: game.bttsYesProbability,
+        no: game.bttsNoProbability,
+      };
+  const { over, under } = hasScoreMatrix
+    ? getOverUnderProbability(scoreMatrix, 2.5)
+    : {
+        over: game.over25Probability,
+        under: game.under25Probability,
+      };
 
 
 
@@ -2464,23 +2626,16 @@ function GameStats({ game, displayBool, stats, handleToggleTip, userTips }) {
     (homeTeamStats?.blockedScoringAttempt ?? 0) +
     (homeTeamStats?.clearances ?? 0);
 
-  // Check for zero to prevent division by zero (resulting in Infinity)
-  const PPDA_valueHome = defensiveActionsHome > 0
-    ? (opponentPassesHome / defensiveActionsHome).toFixed(2)
-    : 'N/A'; // Or handle as desired (e.g., return 0 or a very high number)
-
   const oppositionHalfPassesHome = homeTeamStats?.totalOppositionHalfPasses ?? 0;
   const attackingPlaysHome = (homeTeamStats?.shots ?? 0 + homeTeamStats?.totalCrosses ?? 0 + homeTeamStats?.dribbleAttempts ?? 0 + homeTeamStats?.bigChancesCreated ?? 0);
-
-  const PPAA_valueHome = attackingPlaysHome > 0
-    ? (oppositionHalfPassesHome / attackingPlaysHome).toFixed(2)
-    : 'N/A';
+  const PPDA_valueHome = ratioOrDash(opponentPassesHome, defensiveActionsHome);
+  const PPAA_valueHome = ratioOrDash(oppositionHalfPassesHome, attackingPlaysHome);
 
   // const trueFormColour = getTrueFormColor(homeForm.trueForm);
   const isWorldCupCompetition = API_FORM_ONLY_LEAGUE_IDS.includes(game.leagueID);
+  const showXgDiffCharts = !shouldUseApiFormOnly(game);
 
   const homeAllStatsProps = {
-    // Note: getCollapsableProps is usually passed directly from the parent component props
     getCollapsableProps: getCollapsableProps,
     games: "all",
     isWorldCupCompetition,
@@ -2488,147 +2643,44 @@ function GameStats({ game, displayBool, stats, handleToggleTip, userTips }) {
     homeOrAway: "Home",
     badge: game.homeBadge,
     gameCount: divider,
-    // key: formDataHome[0].name,
     last5: formDataHome[0].Last5,
-    // homeOrAwayResults: gameArrayHomeTeamHomeGames, // Commented out as in original
     LeagueOrAll: formDataHome[0].LeagueOrAll,
     className: "KeyStatsHome",
     name: formDataHome[0].name,
     value: homeForm.trueForm,
     color: getTrueFormColor(homeForm.trueForm),
-    goals: homeLeagueStats.goals,
-    conceeded: homeLeagueStats.conceeded,
-    averageRating: formatStatDisplay(homeTeamStats?.avgRating),
-    XG: homeLeagueStats.XG,
-    XGConceded: homeLeagueStats.XGConceded,
-    XGSwing: homeForm.XGChangeRecently,
-    bigChances: homeTeamStats?.bigChances,
-    bigChancesMissed: homeTeamStats?.bigChancesMissed,
-    bigChancesConceded: homeTeamStats?.bigChancesAgainst,
-    goalConversionRate:
-      homeTeamStats?.shots !== undefined && homeTeamStats?.goalsScored
-        ? ((homeTeamStats.goalsScored / homeTeamStats.shots) * 100).toFixed(2)
-        : "N/A",
-    bigChanceConversionRate:
-      homeTeamStats?.bigChances !== undefined &&
-        homeTeamStats?.bigChancesMissed !== undefined &&
-        homeTeamStats?.bigChances > 0
-        ? (
-          ((homeTeamStats.bigChances - homeTeamStats.bigChancesMissed) /
-            homeTeamStats.bigChances) *
-          100
-        ).toFixed(2)
-        : "N/A",
-    shootingAccuracy:
-      homeTeamStats?.shotsOnTarget !== undefined &&
-        homeTeamStats?.shots
-        ? ((homeTeamStats.shotsOnTarget / homeTeamStats.shots) * 100).toFixed(2)
-        : "N/A",
-    shotsOnTargetAgainst:
-      homeTeamStats?.shotsOnTargetAgainst !== undefined &&
-        homeTeamStats?.matches
-        ? (homeTeamStats.shotsOnTargetAgainst / homeTeamStats.matches).toFixed(2)
-        : "N/A",
-
-    possession: homeLeagueStats.possession,
-    accuratePassesPercentage: homeTeamStats?.accuratePassesPercentage?.toFixed(2),
-    accuratePassesOpponentHalf: homeTeamStats?.accurateOppositionHalfPassesPercentage?.toFixed(2),
-    accuratePassesDefensiveHalf: homeTeamStats?.accurateOwnHalfPassesPercentage?.toFixed(2),
-    accurateCrosses: homeTeamStats?.accurateCrossesPercentage?.toFixed(2),
-    accurateCrossesAgainst:
-      homeTeamStats?.crossesSuccessfulAgainst !== undefined &&
-        homeTeamStats?.crossesTotalAgainst
-        ? ((homeTeamStats.crossesSuccessfulAgainst / homeTeamStats.crossesTotalAgainst) * 100).toFixed(2)
-        : "N/A",
-    longBallPercentage:
-      homeTeamStats?.totalLongBalls !== undefined &&
-        homeTeamStats?.totalPasses
-        ? ((homeTeamStats.totalLongBalls / homeTeamStats.totalPasses) * 100).toFixed(2)
-        : "N/A",
-    accurateLongBallsPercentage: homeTeamStats?.accurateLongBallsPercentage?.toFixed(2),
-    accurateLongBallsAgainstPercentage:
-      homeTeamStats?.longBallsSuccessfulAgainst !== undefined &&
-        homeTeamStats?.longBallsTotalAgainst
-        ? ((homeTeamStats.longBallsSuccessfulAgainst / homeTeamStats.longBallsTotalAgainst) * 100).toFixed(2)
-        : "N/A",
-    shots: homeLeagueStats.shots,
-    sot: homeLeagueStats.sot,
-    shotsInsideBox: homeTeamStats?.shotsFromInsideTheBox,
-    shotsFromOutsideTheBox: homeTeamStats?.shotsFromOutsideTheBox,
-    shotsFromInsideBoxPercentage: (homeTeamStats?.shotsFromInsideTheBox / (homeTeamStats?.shotsFromInsideTheBox + homeTeamStats?.shotsFromOutsideTheBox)) * 100,
-    shotsInsideBoxAgainst: homeTeamStats?.shotsFromInsideTheBoxAgainst,
-    shotsFromOutsideTheBoxAgainst: homeTeamStats?.shotsFromOutsideTheBoxAgainst,
-    shotsInsideBoxPercentAgainst: (homeTeamStats?.shotsFromInsideTheBoxAgainst / (homeTeamStats?.shotsFromInsideTheBoxAgainst + homeTeamStats?.shotsFromOutsideTheBoxAgainst) * 100),
-    dangerousAttacks: homeLeagueStats.dangerousAttacks,
-    goalsFromInsideTheBox: homeTeamStats?.goalsFromInsideTheBox,
-    goalsFromOutsideTheBox: homeTeamStats?.goalsFromOutsideTheBox,
-    fastBreakShots: homeTeamStats?.fastBreakShots,
-    fastBreaksLeadingToShot:
-      homeTeamStats?.fastBreakShots !== undefined && homeTeamStats?.fastBreaks
-        ? ((homeTeamStats.fastBreakShots / homeTeamStats.fastBreaks) * 100).toFixed(2)
-        : "N/A",
-    dribbleAttempts: homeTeamStats?.dribbleAttempts,
-    successfulDribbles: homeTeamStats?.successfulDribbles,
-    duelsWonPercentage: homeTeamStats?.duelsWonPercentage?.toFixed(2),
-    aerialDuelsWonPercentage: homeTeamStats?.aerialDuelsWonPercentage?.toFixed(2),
-    ballRecovery: (homeTeamStats?.ballRecovery / homeTeamStats?.matches)?.toFixed(2),
-    interceptions: (homeTeamStats?.interceptions / homeTeamStats?.matches)?.toFixed(2),
-    cleansheetPercentage:
-      homeTeamStats?.cleanSheets !== undefined &&
-        homeTeamStats?.matches
-        ? ((homeTeamStats.cleanSheets / homeTeamStats.matches) * 100).toFixed(2)
-        : "N/A",
-    tackles: (homeTeamStats?.tackles / homeTeamStats?.matches)?.toFixed(2),
-    errorsLeadingToShotAgainst: homeTeamStats?.errorsLeadingToShotAgainst,
-    offsides: (homeTeamStats?.offsides / homeTeamStats?.matches)?.toFixed(2),
-    // NOTE: PPDA_valueHome and PPAA_valueHome are calculated right before this is used
+    ...buildTeamAllStatsFields(homeTeamStats, homeLeagueStats, homeForm),
     PPDA: PPDA_valueHome,
     PPAA: PPAA_valueHome,
-    leaguePosition:
+    leaguePosition: leaguePositionOrDash(
       homeForm.LeaguePosition !== undefined &&
         homeForm.LeaguePosition !== "undefined"
         ? formDataHome[0].leaguePosition
-        : 0,
-    rawPosition:
+        : undefined
+    ),
+    rawPosition: leaguePositionOrDash(
       game.homeRawPosition !== undefined &&
         game.homeRawPosition !== "undefined"
         ? game.homeRawPosition
-        : 0,
-    homeOrAwayLeaguePosition:
+        : undefined
+    ),
+    homeOrAwayLeaguePosition: leaguePositionOrDash(
       homeForm.homePositionHomeOnly !== undefined &&
         homeForm.homePositionHomeOnly !== "undefined"
         ? homeForm.homePositionHomeOnly
-        : 0,
-    winPercentage: homeForm.homePPGAv ? homeForm.homePPGAv : "N/A",
-    lossPercentage:
-      game.homeTeamLossPercentage ? game.homeTeamLossPercentage : "N/A",
-    drawPercentage:
-      game.homeTeamDrawPercentage ? game.homeTeamDrawPercentage : "N/A",
-    ppg: homeLeagueStats.ppg,
-    formTrend: [
-      formatStatDisplay(homeForm.avPoints10),
-      formatStatDisplay(homeForm.avPoints6),
-      formatStatDisplay(homeForm.avPoints5),
-    ],
+        : undefined
+    ),
+    winPercentage: statOrDash(homeForm.homePPGAv),
+    lossPercentage: statOrDash(game.homeTeamLossPercentage),
+    drawPercentage: statOrDash(game.homeTeamDrawPercentage),
     formRun: homeForm.resultsAll,
-    goalDifference: homeLeagueStats.goalDifference,
-    goalDifferenceHomeOrAway: homeLeagueStats.goalDifferenceHomeOrAway,
-    BttsPercentage: formDataHome[0].BttsPercentage,
-    BttsPercentageHomeOrAway: formDataHome[0].BttsPercentageHomeOrAway,
     BTTSArray: formDataHome[0].BTTSArray,
     Results: formDataHome[0].Results,
     ResultsHorA: formDataHome[0].ResultsHorA,
-    CardsPerGame: (homeTeamStats?.yellowCards / homeTeamStats?.matches)?.toFixed(2),
-    RedCardsPerGame: (homeTeamStats?.redCards / homeTeamStats?.matches)?.toFixed(2),
-    FoulsPerGame: (homeTeamStats?.fouls / homeTeamStats?.matches)?.toFixed(2),
-    PenaltiesConceded: homeTeamStats?.penaltiesCommited,
-    CornersAverage: homeLeagueStats.corners,
-    FreeKickGoals: homeTeamStats?.freeKickGoals,
-    ScoredBothHalvesPercentage: formDataHome[0].ScoredBothHalvesPercentage,
     FormTextString: formDataHome[0].FormTextStringHome,
-    FavouriteRecord: formDataHome[0].FavouriteRecord,
-    StyleOfPlay: formDataHome[0].styleOfPlayOverall,
-    StyleOfPlayHomeOrAway: formDataHome[0].styleOfPlayHome
+    FavouriteRecord: statOrDash(formDataHome[0].FavouriteRecord),
+    StyleOfPlay: statOrDash(formDataHome[0].styleOfPlayOverall),
+    StyleOfPlayHomeOrAway: statOrDash(formDataHome[0].styleOfPlayHome),
   };
 
   const oppositionPassesAway = awayTeamStats?.ownHalfPassesTotalAgainst ?? 0;
@@ -2638,19 +2690,10 @@ function GameStats({ game, displayBool, stats, handleToggleTip, userTips }) {
     (awayTeamStats?.blockedScoringAttempt ?? 0) +
     (awayTeamStats?.clearances ?? 0);
 
-  // Check for zero to prevent division by zero (resulting in Infinity)
-  const PPDA_valueAway = defensiveActionsAway > 0
-    ? (oppositionPassesAway / defensiveActionsAway).toFixed(2)
-    : 'N/A';
-
   const oppositionHalfPassesAway = awayTeamStats?.totalOppositionHalfPasses ?? 0;
   const attackingPlaysAway = (awayTeamStats?.shots ?? 0 + awayTeamStats?.totalCrosses ?? 0 + awayTeamStats?.dribbleAttempts ?? 0 + awayTeamStats?.bigChancesCreated ?? 0);
-
-  const PPAA_valueAway = attackingPlaysAway > 0
-    ? (oppositionHalfPassesAway / attackingPlaysAway).toFixed(2)
-    : 'N/A';
-
-  // const trueFormColour = getTrueFormColor(awayForm.trueForm);
+  const PPDA_valueAway = ratioOrDash(oppositionPassesAway, defensiveActionsAway);
+  const PPAA_valueAway = ratioOrDash(oppositionHalfPassesAway, attackingPlaysAway);
 
   const awayAllStatsProps = {
     getCollapsableProps: getCollapsableProps,
@@ -2660,142 +2703,40 @@ function GameStats({ game, displayBool, stats, handleToggleTip, userTips }) {
     homeOrAway: "Away",
     badge: game.awayBadge,
     gameCount: divider,
-    // key: formDataAway[0].name,
     last5: formDataAway[0].Last5,
-    // homeOrAwayResults: gameArrayAwayTeamAwayGames,
     LeagueOrAll: formDataAway[0].LeagueOrAll,
     className: "KeyStatsAway",
     classNameTwo: "FormStatsAway",
     name: formDataAway[0].name,
     value: awayForm.trueForm,
     color: getTrueFormColor(awayForm.trueForm),
-    goals: awayLeagueStats.goals,
-    conceeded: awayLeagueStats.conceeded,
-    averageRating: formatStatDisplay(awayTeamStats?.avgRating),
-    XG: awayLeagueStats.XG,
-    XGConceded: awayLeagueStats.XGConceded,
-    XGSwing: awayForm.XGChangeRecently,
-    bigChances: awayTeamStats?.bigChances,
-    bigChancesMissed: awayTeamStats?.bigChancesMissed,
-    goalConversionRate:
-      awayTeamStats?.shots !== undefined && awayTeamStats?.goalsScored
-        ? ((awayTeamStats.goalsScored / awayTeamStats.shots) * 100).toFixed(2)
-        : "N/A",
-    bigChanceConversionRate:
-      awayTeamStats?.bigChances !== undefined &&
-        awayTeamStats?.bigChancesMissed !== undefined &&
-        awayTeamStats?.bigChances > 0
-        ? (
-          ((awayTeamStats.bigChances - awayTeamStats.bigChancesMissed) /
-            awayTeamStats.bigChances) *
-          100
-        ).toFixed(2)
-        : "N/A",
-    bigChancesConceded: awayTeamStats?.bigChancesAgainst,
-    shotsOnTargetAgainst:
-      awayTeamStats?.shotsOnTargetAgainst !== undefined &&
-        awayTeamStats?.matches
-        ? (awayTeamStats.shotsOnTargetAgainst / awayTeamStats.matches).toFixed(2)
-        : "N/A",
-    shootingAccuracy:
-      awayTeamStats?.shotsOnTarget !== undefined &&
-        awayTeamStats?.shots
-        ? ((awayTeamStats.shotsOnTarget / awayTeamStats.shots) * 100).toFixed(2)
-        : "N/A",
-    accuratePassesPercentage: awayTeamStats?.accuratePassesPercentage?.toFixed(2),
-    accuratePassesOpponentHalf: awayTeamStats?.accurateOppositionHalfPassesPercentage?.toFixed(2),
-    accuratePassesDefensiveHalf: awayTeamStats?.accurateOwnHalfPassesPercentage?.toFixed(2),
-    accurateCrosses: awayTeamStats?.accurateCrossesPercentage?.toFixed(2),
-    accurateCrossesAgainst:
-      awayTeamStats?.crossesSuccessfulAgainst !== undefined &&
-        awayTeamStats?.crossesTotalAgainst
-        ? ((awayTeamStats.crossesSuccessfulAgainst / awayTeamStats.crossesTotalAgainst) * 100).toFixed(2)
-        : "N/A",
-    longBallPercentage:
-      awayTeamStats?.totalLongBalls !== undefined &&
-        awayTeamStats?.totalPasses
-        ? ((awayTeamStats.totalLongBalls / awayTeamStats.totalPasses) * 100).toFixed(2)
-        : "N/A",
-    accurateLongBallsPercentage: awayTeamStats?.accurateLongBallsPercentage?.toFixed(2),
-    accurateLongBallsAgainstPercentage:
-      awayTeamStats?.longBallsSuccessfulAgainst !== undefined &&
-        awayTeamStats?.longBallsTotalAgainst
-        ? ((awayTeamStats.longBallsSuccessfulAgainst / awayTeamStats.longBallsTotalAgainst) * 100).toFixed(2)
-        : "N/A",
-    possession: awayLeagueStats.possession,
-    rawPosition: game.awayRawPosition ? game.awayRawPosition : 0,
-    sot: awayLeagueStats.sot,
-    shots: awayLeagueStats.shots,
-    shotsInsideBox: awayTeamStats?.shotsFromInsideTheBox,
-    shotsFromOutsideTheBox: awayTeamStats?.shotsFromOutsideTheBox,
-    shotsFromInsideBoxPercentage: (awayTeamStats?.shotsFromInsideTheBox / (awayTeamStats?.shotsFromInsideTheBox + awayTeamStats?.shotsFromOutsideTheBox)) * 100,
-    shotsInsideBoxAgainst: awayTeamStats?.shotsFromInsideTheBoxAgainst,
-    shotsFromOutsideTheBoxAgainst: awayTeamStats?.shotsFromOutsideTheBoxAgainst,
-    shotsInsideBoxPercentAgainst: (awayTeamStats?.shotsFromInsideTheBoxAgainst / (awayTeamStats?.shotsFromInsideTheBoxAgainst + awayTeamStats?.shotsFromOutsideTheBoxAgainst) * 100),
-    dangerousAttacks: awayLeagueStats.dangerousAttacks,
-    goalsFromInsideTheBox: awayTeamStats?.goalsFromInsideTheBox,
-    goalsFromOutsideTheBox: awayTeamStats?.goalsFromOutsideTheBox,
-    fastBreakShots: awayTeamStats?.fastBreakShots,
-    fastBreaksLeadingToShot:
-      awayTeamStats?.fastBreakShots !== undefined && awayTeamStats?.fastBreaks
-        ? ((awayTeamStats.fastBreakShots / awayTeamStats.fastBreaks) * 100).toFixed(2)
-        : "N/A",
-    dribbleAttempts: awayTeamStats?.dribbleAttempts,
-    successfulDribbles: awayTeamStats?.successfulDribbles,
-    duelsWonPercentage: awayTeamStats?.duelsWonPercentage?.toFixed(2),
-    aerialDuelsWonPercentage: awayTeamStats?.aerialDuelsWonPercentage?.toFixed(2),
-    ballRecovery: (awayTeamStats?.ballRecovery / awayTeamStats?.matches)?.toFixed(2),
-    interceptions: (awayTeamStats?.interceptions / awayTeamStats?.matches)?.toFixed(2),
-    cleansheetPercentage:
-      awayTeamStats?.cleanSheets !== undefined &&
-        awayTeamStats?.matches
-        ? ((awayTeamStats.cleanSheets / awayTeamStats.matches) * 100).toFixed(2)
-        : "N/A",
-    tackles: (awayTeamStats?.tackles / awayTeamStats?.matches)?.toFixed(2),
-    errorsLeadingToShotAgainst: awayTeamStats?.errorsLeadingToShotAgainst,
-    offsides: (awayTeamStats?.offsides / awayTeamStats?.matches)?.toFixed(2),
+    ...buildTeamAllStatsFields(awayTeamStats, awayLeagueStats, awayForm),
     PPDA: PPDA_valueAway,
     PPAA: PPAA_valueAway,
-    leaguePosition:
+    leaguePosition: leaguePositionOrDash(
       awayForm.LeaguePosition !== undefined &&
         awayForm.LeaguePosition !== "undefined"
         ? formDataAway[0].leaguePosition
-        : 0,
-    homeOrAwayLeaguePosition:
+        : undefined
+    ),
+    rawPosition: leaguePositionOrDash(game.awayRawPosition),
+    homeOrAwayLeaguePosition: leaguePositionOrDash(
       awayForm.awayPositionAwayOnly !== undefined &&
         awayForm.awayPositionAwayOnly !== "undefinedundefined"
         ? awayForm.awayPositionAwayOnly
-        : 0,
-    winPercentage: awayForm.awayPPGAv ? awayForm.awayPPGAv : "N/A",
-    lossPercentage:
-      game.awayTeamLossPercentage ? game.awayTeamLossPercentage : "N/A",
-    drawPercentage:
-      game.awayTeamDrawPercentage ? game.awayTeamDrawPercentage : "N/A",
-    ppg: awayLeagueStats.ppg,
-    formTrend: [
-      formatStatDisplay(awayForm.avPoints10),
-      formatStatDisplay(awayForm.avPoints6),
-      formatStatDisplay(awayForm.avPoints5),
-    ],
+        : undefined
+    ),
+    winPercentage: statOrDash(awayForm.awayPPGAv),
+    lossPercentage: statOrDash(game.awayTeamLossPercentage),
+    drawPercentage: statOrDash(game.awayTeamDrawPercentage),
     formRun: awayForm.resultsAll,
-    goalDifference: awayLeagueStats.goalDifference,
-    goalDifferenceHomeOrAway: awayLeagueStats.goalDifferenceHomeOrAway,
-    BttsPercentage: formDataAway[0].BttsPercentage,
-    BttsPercentageHomeOrAway: formDataAway[0].BttsPercentageHomeOrAway,
     BTTSArray: formDataAway[0].BTTSArray,
     Results: formDataAway[0].Results,
     ResultsHorA: formDataAway[0].ResultsHorA,
-    CardsPerGame: (awayTeamStats?.yellowCards / awayTeamStats?.matches)?.toFixed(2),
-    RedCardsPerGame: (awayTeamStats?.redCards / awayTeamStats?.matches)?.toFixed(2),
-    FoulsPerGame: (awayTeamStats?.fouls / awayTeamStats?.matches)?.toFixed(2),
-    PenaltiesConceded: homeTeamStats?.penaltiesCommited,
-    CornersAverage: awayLeagueStats.corners,
-    FreeKickGoals: awayTeamStats?.freeKickGoals,
-    ScoredBothHalvesPercentage: formDataAway[0].ScoredBothHalvesPercentage,
     FormTextString: formDataAway[0].FormTextStringAway,
-    FavouriteRecord: formDataAway[0].FavouriteRecord,
-    StyleOfPlay: formDataAway[0].styleOfPlayOverall,
-    StyleOfPlayHomeOrAway: formDataAway[0].styleOfPlayAway,
+    FavouriteRecord: statOrDash(formDataAway[0].FavouriteRecord),
+    StyleOfPlay: statOrDash(formDataAway[0].styleOfPlayOverall),
+    StyleOfPlayHomeOrAway: statOrDash(formDataAway[0].styleOfPlayAway),
   };
 
   function StatsHomeComponent({ getCollapsableProps, homeAllStatsProps, comparisonStatusMap }) {
@@ -4094,17 +4035,33 @@ function GameStats({ game, displayBool, stats, handleToggleTip, userTips }) {
                       bookie: under25Implied
                     }
                   ].map(({ label, model, bookie }) => {
-                    const value = model - bookie;
+                    const modelValue = Number(model);
+                    const bookieValue = Number(bookie);
+                    const value =
+                      Number.isFinite(modelValue) && Number.isFinite(bookieValue)
+                        ? modelValue - bookieValue
+                        : null;
+                    const fairOddsValue = fairOdds(model);
 
                     return (
                       <tr key={label}>
                         <td>{label}</td>
 
-                        <td>{model?.toFixed(1)}%</td>
-                        <td>{bookie?.toFixed(1)}%</td>
-                        <td>{fairOdds(model)?.toFixed(2)}</td>
+                        <td>
+                          {formatProbabilityPercent(model) || STAT_FALLBACK}
+                        </td>
+                        <td>
+                          {formatProbabilityPercent(bookie) || STAT_FALLBACK}
+                        </td>
+                        <td>
+                          {fairOddsValue != null
+                            ? fairOddsValue.toFixed(2)
+                            : STAT_FALLBACK}
+                        </td>
                         <td className={valueClass(value)}>
-                          {value.toFixed(1)}%
+                          {Number.isFinite(value)
+                            ? `${value.toFixed(1)}%`
+                            : STAT_FALLBACK}
                         </td>
                       </tr>
                     );
@@ -4541,16 +4498,20 @@ function GameStats({ game, displayBool, stats, handleToggleTip, userTips }) {
                   data2={overallBarChartData.data2}
                   displayDeltas={overallBarChartData.displayDeltas}
                 ></BarChart>
-                <MultiTypeChart
-                  theme={localStorage.getItem('theme')}
-                  dataArray={homeForm.twoDGoalsArray || []}
-                  text={homeForm.teamName + " XG Diff (All Competition Games)"}
-                />
-                <MultiTypeChart
-                  theme={localStorage.getItem('theme')}
-                  dataArray={awayForm.twoDGoalsArray || []}
-                  text={awayForm.teamName + " XG Diff (All Competition Games)"}
-                />
+                {showXgDiffCharts && (
+                  <>
+                    <MultiTypeChart
+                      theme={localStorage.getItem('theme')}
+                      dataArray={homeForm.twoDGoalsArray || []}
+                      text={homeForm.teamName + " XG Diff (All Competition Games)"}
+                    />
+                    <MultiTypeChart
+                      theme={localStorage.getItem('theme')}
+                      dataArray={awayForm.twoDGoalsArray || []}
+                      text={awayForm.teamName + " XG Diff (All Competition Games)"}
+                    />
+                  </>
+                )}
                 <Chart
                   height={3}
                   depth={0}
@@ -4683,20 +4644,24 @@ function GameStats({ game, displayBool, stats, handleToggleTip, userTips }) {
                     displayDeltas={last5BarChartData.displayDeltas}
                   />
 
-                  <MultiTypeChart
-                    theme={localStorage.getItem('theme')}
-                    dataArray={homeForm.twoDGoalsArray?.slice(
-                      Math.max(homeForm.twoDGoalsArray.length - 5, 0)
-                    )}
-                    text={homeForm.teamName + ' XG Diff Last 5'}
-                  />
-                  <MultiTypeChart
-                    theme={localStorage.getItem('theme')}
-                    dataArray={awayForm.twoDGoalsArray?.slice(
-                      Math.max(awayForm.twoDGoalsArray.length - 5, 0)
-                    )}
-                    text={awayForm.teamName + ' XG Diff Last 5'}
-                  />
+                  {showXgDiffCharts && (
+                    <>
+                      <MultiTypeChart
+                        theme={localStorage.getItem('theme')}
+                        dataArray={homeForm.twoDGoalsArray?.slice(
+                          Math.max(homeForm.twoDGoalsArray.length - 5, 0)
+                        )}
+                        text={homeForm.teamName + ' XG Diff Last 5'}
+                      />
+                      <MultiTypeChart
+                        theme={localStorage.getItem('theme')}
+                        dataArray={awayForm.twoDGoalsArray?.slice(
+                          Math.max(awayForm.twoDGoalsArray.length - 5, 0)
+                        )}
+                        text={awayForm.teamName + ' XG Diff Last 5'}
+                      />
+                    </>
+                  )}
 
                   <MultilineChart
                     theme={localStorage.getItem('theme')}
@@ -4803,16 +4768,20 @@ function GameStats({ game, displayBool, stats, handleToggleTip, userTips }) {
                     data2={homeAwayBarChartData.data2}
                     displayDeltas={homeAwayBarChartData.displayDeltas}
                   ></BarChart>
-                  <MultiTypeChart
-                    theme={localStorage.getItem('theme')}
-                    dataArray={homeForm.twoDGoalsArrayHome}
-                    text={homeForm.teamName + " XG Diff (Home)"}
-                  />
-                  <MultiTypeChart
-                    theme={localStorage.getItem('theme')}
-                    dataArray={awayForm.twoDGoalsArrayAway}
-                    text={awayForm.teamName + " XG Diff (Away)"}
-                  />
+                  {showXgDiffCharts && (
+                    <>
+                      <MultiTypeChart
+                        theme={localStorage.getItem('theme')}
+                        dataArray={homeForm.twoDGoalsArrayHome}
+                        text={homeForm.teamName + " XG Diff (Home)"}
+                      />
+                      <MultiTypeChart
+                        theme={localStorage.getItem('theme')}
+                        dataArray={awayForm.twoDGoalsArrayAway}
+                        text={awayForm.teamName + " XG Diff (Away)"}
+                      />
+                    </>
+                  )}
                   <MultilineChart
                     height={
                       Math.max(

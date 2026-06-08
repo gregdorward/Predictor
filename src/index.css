@@ -5967,8 +5967,8 @@ input:active+.design::after {
 }
 
 .FixturePage-pairedSection {
-  width: 100%;
-  max-width: 100%;
+  width: 98%;
+  max-width: 98%;
   min-height: auto;
   display: block;
   position: static;
