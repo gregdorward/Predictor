@@ -26,7 +26,6 @@
   <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
   <meta name="theme-color" content="#000000" />
   <meta name="msvalidate.01" content="6F676F15115DB2A7E13109B4A7C0BA02" />
-  <link rel="preload" as="image" href="/images/NewLogo.webp" type="image/webp" />
   <link rel="preload" as="font" href="/fonts/OpenSans-Regular.woff2" type="font/woff2" crossorigin />
   <link rel="preload" as="font" href="/fonts/OpenSans-SemiBold.woff2" type="font/woff2" crossorigin />
   <style>
@@ -46,23 +45,63 @@
       src: url('/fonts/OpenSans-SemiBold.woff2') format('woff2');
     }
 
+    html,
     body {
       margin: 0;
+      min-height: 100%;
+    }
+
+    body {
       background-color: #ffffff;
     }
 
-    .ssr-logo {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      max-width: 28em;
-      height: 6em;
-      margin: 0 auto;
+    body.dark-mode {
+      background-color: #000000;
+      color: #ffffff;
     }
 
-    .ssr-logo img {
-      max-width: 14em;
-      height: auto;
+    .app-splash {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      gap: 1rem;
+      padding: 2rem;
+      box-sizing: border-box;
+    }
+
+    .app-splash__spinner {
+      width: 2.75rem;
+      height: 2.75rem;
+      border: 0.2rem solid rgba(2, 0, 41, 0.12);
+      border-top-color: #fe8c00;
+      border-radius: 50%;
+      animation: app-splash-spin 0.75s linear infinite;
+    }
+
+    body.dark-mode .app-splash__spinner {
+      border-color: rgba(255, 255, 255, 0.15);
+      border-top-color: #fe8c00;
+    }
+
+    .app-splash__text {
+      margin: 0;
+      font-family: 'Open Sans', system-ui, sans-serif;
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: #020029;
+      letter-spacing: 0.02em;
+    }
+
+    body.dark-mode .app-splash__text {
+      color: #ffffff;
+    }
+
+    @keyframes app-splash-spin {
+      to {
+        transform: rotate(360deg);
+      }
     }
 
     /* SEO copy for crawlers; hidden visually to avoid flash before React loads */
@@ -136,8 +175,9 @@
     <p>You need to enable JavaScript to use the full interactive app.</p>
   </noscript>
   <div id="root">
-    <div class="ssr-logo">
-      <img src="/images/NewLogo.webp" alt="SoccerStatsHub logo" width="219" height="60" fetchpriority="high" />
+    <div class="app-splash" role="status" aria-live="polite" aria-label="Loading Soccer Stats Hub">
+      <div class="app-splash__spinner" aria-hidden="true"></div>
+      <p class="app-splash__text">Soccer Stats Hub</p>
     </div>
     <div class="sr-only">
       <h1>SoccerStatsHub – Football Stats, Predictions &amp; Tips</h1>

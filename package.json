@@ -51,6 +51,11 @@
     "build": "react-scripts build && cp build/index.html build/404.html",
     "postbuild": "react-snap",
     "test": "react-scripts test",
+    "test:e2e:install": "playwright install chromium",
+    "test:e2e": "playwright test",
+    "test:e2e:ui": "PW_TEST_NO_WEBSERVER=1 playwright test --config=playwright.config.js --ui",
+    "test:e2e:headed": "playwright test --headed",
+    "test:e2e:report": "playwright show-report",
     "eject": "react-scripts eject",
     "predeploy": "npm run build",
     "deploy": "gh-pages -d build"
@@ -96,6 +101,7 @@
   },
   "proxy": "https://api.soccerstatshub.com",
   "devDependencies": {
+    "@playwright/test": "^1.60.0",
     "@types/react-slider": "^1.1.0",
     "gh-pages": "^3.1.0",
     "react-snap": "^1.23.0"
