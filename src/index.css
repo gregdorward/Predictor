@@ -6716,114 +6716,12 @@ input:active+.design::after {
   margin: 1rem 0 1.5rem;
 }
 
-.FixtureComparisonShare__header {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 0.5rem;
-  margin-bottom: 0.75rem;
-  text-align: center;
-}
-
-.FixtureComparisonShare__title {
-  margin: 0 0 0.25rem;
-  font-size: 1.1rem;
-}
-
-.FixtureComparisonShare__subtitle {
-  margin: 0;
-  font-size: 0.9rem;
-  opacity: 0.8;
-}
-
-.FixtureComparisonShare__card {
-  border: 1px solid rgba(254, 140, 0, 0.35);
-  border-radius: 10px;
-  padding: 1rem;
-  background: linear-gradient(
-    180deg,
-    rgba(254, 140, 0, 0.08) 0%,
-    rgba(254, 140, 0, 0.02) 100%
-  );
-}
-
-.FixtureComparisonShare__match {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  align-items: center;
-  gap: 0.5rem;
-  font-size: 1.15rem;
-  font-weight: 700;
-  text-align: center;
-}
-
-.FixtureComparisonShare__team {
-  max-width: 42%;
-}
-
-.FixtureComparisonShare__vs {
-  opacity: 0.7;
-  font-weight: 600;
-}
-
-.FixtureComparisonShare__meta,
-.FixtureComparisonShare__prediction,
-.FixtureComparisonShare__brand {
-  text-align: center;
+.FixtureComparisonShare__hint {
   margin: 0.5rem 0 0;
-}
-
-.FixtureComparisonShare__prediction strong {
-  color: var(--accent-color);
-}
-
-.FixtureComparisonShare__columns,
-.FixtureComparisonShare__row {
-  display: grid;
-  grid-template-columns: 1fr 1.2fr 1fr;
-  gap: 0.5rem;
-  align-items: center;
-}
-
-.FixtureComparisonShare__columns {
-  margin-top: 1rem;
-  padding-bottom: 0.35rem;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-  font-size: 0.8rem;
-  font-weight: 700;
-  text-transform: uppercase;
+  font-size: 0.78rem;
   opacity: 0.75;
   text-align: center;
-}
-
-.FixtureComparisonShare__rows {
-  display: flex;
-  flex-direction: column;
-  gap: 0.45rem;
-  margin-top: 0.5rem;
-}
-
-.FixtureComparisonShare__label {
-  text-align: center;
-  font-size: 0.85rem;
-  opacity: 0.85;
-}
-
-.FixtureComparisonShare__value {
-  text-align: center;
-  font-weight: 600;
-  font-size: 0.95rem;
-}
-
-.FixtureComparisonShare__value--better {
-  color: #01a501;
-}
-
-.FixtureComparisonShare__brand {
-  font-size: 0.8rem;
-  opacity: 0.7;
-  letter-spacing: 0.03em;
+  line-height: 1.4;
 }
 
 .InsightsButton {

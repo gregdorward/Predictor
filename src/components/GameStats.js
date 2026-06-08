@@ -4381,12 +4381,6 @@ function GameStats({ game, displayBool, stats, handleToggleTip, userTips }) {
                   ? "All Recent Form"
                   : `${game.leagueDesc} Form`}
               </h2>
-              <FixtureComparisonShare
-                game={game}
-                homeStats={homeAllStatsProps}
-                awayStats={awayAllStatsProps}
-                comparisonMap={comparisonStatusMap}
-              />
               <div className="flex-container">
                 <StatsHomeComponent
                   getCollapsableProps={getCollapsableProps}
@@ -4853,6 +4847,12 @@ function GameStats({ game, displayBool, stats, handleToggleTip, userTips }) {
           <div className="flex-childOneOverviewSmall">{overviewHome}</div>
           <div className="flex-childTwoOverviewSmall">{overviewAway}</div>
         </div>
+        <FixtureComparisonShare
+          game={game}
+          homeStats={homeAllStatsProps}
+          awayStats={awayAllStatsProps}
+          comparisonMap={comparisonStatusMap}
+        />
       </div>
     </>
   );

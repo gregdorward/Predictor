@@ -3,9 +3,9 @@ const SITE_URL = "https://www.soccerstatshub.com";
 export const SHARE_COMPARISON_STATS = [
   { key: "leaguePosition", label: "League position" },
   { key: "goals", label: "Goals/game" },
-  { key: "conceeded", label: "Conceded/game" },
+  { key: "conceeded", label: "Conceeded/game" },
   { key: "XG", label: "xG/game" },
-  { key: "XGConceded", label: "xG conceded" },
+  { key: "XGConceded", label: "xG conceeded" },
   { key: "goalDifference", label: "Goal difference" },
   { key: "ppg", label: "PPG" },
   { key: "dangerousAttacks", label: "Dangerous attacks" },
@@ -34,26 +34,78 @@ function formatProbability(value) {
   return `${Math.round(n)}%`;
 }
 
+function getWinnerSide(comparisonMap, key) {
+  if (comparisonMap[key] === "better") {
+    return "home";
+  }
+  if (comparisonMap[key] === "worse") {
+    return "away";
+  }
+  return null;
+}
+
+function formatComparisonValues(homeValue, awayValue, winner, format) {
+  if (format === "markdown") {
+    if (winner === "home") {
+      return `**${homeValue}** | ${awayValue}`;
+    }
+    if (winner === "away") {
+      return `${homeValue} | **${awayValue}**`;
+    }
+    return `${homeValue} | ${awayValue}`;
+  }
+
+  if (winner === "home") {
+    return `${homeValue} ✓ | ${awayValue}`;
+  }
+  if (winner === "away") {
+    return `${homeValue} | ${awayValue} ✓`;
+  }
+  return `${homeValue} | ${awayValue}`;
+}
+
 export function formatFixtureComparisonText({
   game,
   homeStats,
   awayStats,
   comparisonMap = {},
+  format = "text",
 }) {
   if (!game || !homeStats || !awayStats) {
     return "";
   }
 
-  const lines = [
-    `⚽ ${game.homeTeam} vs ${game.awayTeam} | Soccer Stats Hub`,
-    game.leagueDesc ? game.leagueDesc : "",
-    game.time ? `Kick-off: ${game.time}` : "",
-    "",
-  ].filter(Boolean);
+  const isMarkdown = format === "markdown";
+  const lines = [];
+
+  if (isMarkdown) {
+    lines.push(`## ${game.homeTeam} vs ${game.awayTeam}`);
+    lines.push("*Soccer Stats Hub*");
+    if (game.leagueDesc) {
+      lines.push(`**${game.leagueDesc}**`);
+    }
+    if (game.time) {
+      lines.push(`Kick-off: ${game.time}`);
+    }
+    lines.push("");
+  } else {
+    lines.push(`⚽ ${game.homeTeam} vs ${game.awayTeam} | Soccer Stats Hub`);
+    if (game.leagueDesc) {
+      lines.push(game.leagueDesc);
+    }
+    if (game.time) {
+      lines.push(`Kick-off: ${game.time}`);
+    }
+    lines.push("");
+  }
 
   const prediction = formatPrediction(game);
   if (prediction) {
-    lines.push(`SSH Prediction: ${prediction}`);
+    lines.push(
+      isMarkdown
+        ? `**SSH Prediction:** ${prediction}`
+        : `SSH Prediction: ${prediction}`
+    );
   }
 
   if (game.homeWinProbability != null) {
@@ -62,7 +114,7 @@ export function formatFixtureComparisonText({
     );
   }
 
-  lines.push("", "Key stats (season):", "");
+  lines.push("", isMarkdown ? "### Key stats (season)" : "Key stats (season):", "");
 
   SHARE_COMPARISON_STATS.forEach(({ key, label }) => {
     const homeValue = formatStatValue(homeStats[key]);
@@ -71,16 +123,19 @@ export function formatFixtureComparisonText({
       return;
     }
 
-    const edge =
-      comparisonMap[key] === "better"
-        ? `→ ${homeStats.name}`
-        : comparisonMap[key] === "worse"
-          ? `→ ${awayStats.name}`
-          : "";
+    const winner = getWinnerSide(comparisonMap, key);
+    const values = formatComparisonValues(homeValue, awayValue, winner, format);
 
-    lines.push(`${label}: ${homeValue} | ${awayValue}${edge ? ` ${edge}` : ""}`);
+    lines.push(
+      isMarkdown ? `- **${label}:** ${values}` : `${label}: ${values}`
+    );
   });
 
-  lines.push("", `🔗 ${SITE_URL}`);
+  if (isMarkdown) {
+    lines.push("", `[soccerstatshub.com](${SITE_URL})`);
+  } else {
+    lines.push("", `🔗 ${SITE_URL}`);
+  }
+
   return lines.join("\n");
 }

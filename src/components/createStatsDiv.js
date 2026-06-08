@@ -172,7 +172,7 @@ function Stats(props) {
                     className={`TeamXGConceded ${getComparisonClass('XGConceded')}${props.homeOrAway}`}
                     data-cy={props.name ? props.name + "teamXGConceded" : "teamXGConceded"}
                   >
-                    {`Avg XG conceded: ${statDisplay(props.XGConceded)}`}
+                    {`Avg XG conceeded: ${statDisplay(props.XGConceded)}`}
                   </li>
                   <li
                     key="goalDifference"
@@ -473,7 +473,7 @@ function Stats(props) {
                     {`Fouls per game: ${statDisplay(props.FoulsPerGame)}`}
                   </li>
                   <li key="PenaltiesConceded" className={`PenaltiesConceded ${getComparisonClass('PenaltiesConceded')}${props.homeOrAway}`} data-cy={props.name ? props.name + "PenaltiesConceded" : "PenaltiesConceded"}>
-                    {`Penalties conceded: ${statDisplay(props.PenaltiesConceded)}`}
+                    {`Penalties conceeded: ${statDisplay(props.PenaltiesConceded)}`}
                   </li>
                 </>
               }
@@ -598,7 +598,7 @@ function Stats(props) {
               className={`TeamXGConceded ${getComparisonClass('XGConceded')}${props.homeOrAway}`}
               data-cy={props.name ? props.name + "teamXGConceded" : "teamXGConceded"}
             >
-              {`Avg XG conceded: ${props.XGConceded !== undefined ? props.XGConceded : "N/A"}`}
+              {`Avg XG conceeded: ${props.XGConceded !== undefined ? props.XGConceded : "N/A"}`}
             </li>
 
             <li
@@ -743,7 +743,7 @@ function Stats(props) {
               className={`TeamXGConceded ${getComparisonClass('XGConceded')}${props.homeOrAway}`}
               data-cy={props.name ? props.name + "teamXGConceded" : "teamXGConceded"}
             >
-              {`Avg XG conceded: ${props.XGConceded !== undefined ? props.XGConceded : "N/A"}`}
+              {`Avg XG conceeded: ${props.XGConceded !== undefined ? props.XGConceded : "N/A"}`}
             </li>
 
             <li

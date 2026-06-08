@@ -185,7 +185,7 @@ function getSeasonStats(dataState, side) {
       value: isHome ? dataState.scoredOverallHome : dataState.scoredOverallAway,
     },
     {
-      label: "Conceded overall",
+      label: "Conceeded overall",
       value: isHome
         ? dataState.conceededOverallHome
         : dataState.conceededOverallAway,
@@ -195,7 +195,7 @@ function getSeasonStats(dataState, side) {
       value: playedOnly ? (scoredOnly / playedOnly).toFixed(2) : "—",
     },
     {
-      label: `Average conceded ${isHome ? "home" : "away"} only`,
+      label: `Average conceeded ${isHome ? "home" : "away"} only`,
       value: playedOnly ? (concededOnly / playedOnly).toFixed(2) : "—",
     },
     {
