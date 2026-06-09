@@ -8815,7 +8815,7 @@ h5.section-title {
   margin: 0 auto;
   padding: 1em var(--content-padding-x) 3em;
   color: var(--text-color);
-  font-size: 0.9375rem;
+  font-size: 12px;
   line-height: 1.5;
 }
 
@@ -8839,12 +8839,18 @@ h5.section-title {
   margin: 0.35em 0 0.25em;
   color: var(--text-color);
   line-height: 1.2;
+  text-align: center;
 }
 
 .WC26__subtitle {
   color: var(--text-color);
   margin: 0;
   font-size: 0.875rem;
+  text-align: center;
+}
+
+.WC26__heroContent {
+  text-align: center;
 }
 
 .WC26__hero {
@@ -8891,23 +8897,65 @@ h5.section-title {
   letter-spacing: 0.04em;
   color: var(--text-color);
   margin-bottom: 0.5em;
+  text-align: center;
 }
 
-.WC26__heroPick {
+.WC26__heroCard .WC26__odds,
+.WC26__heroCard .WC26__playerMeta {
+  display: block;
+  text-align: center;
+}
+
+.WC26__inlineHeader {
   display: flex;
   align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 0.35em 0.5em;
+  line-height: 1.3;
+  text-align: center;
+}
+
+.WC26__inlineHeader--block {
+  margin-bottom: 0.5em;
+}
+
+.WC26__inlineHeader--split {
+  justify-content: center;
+  align-items: center;
+}
+
+.WC26__inlineHeader--grow {
+  flex: 1 1 auto;
+  min-width: 0;
+  justify-content: flex-start;
+  text-align: left;
+}
+
+.WC26__inlineHeader--hero {
   gap: 0.75em;
   margin-bottom: 0.25em;
 }
 
+.WC26__inlineHeader h4 {
+  margin: 0;
+  font-size: 1rem;
+  font-weight: 600;
+}
+
+strong.WC26__inlineHeader {
+  font-size: 1rem;
+  font-weight: 600;
+}
+
 .WC26__heroTeam {
-  font-size: 1.15rem;
+  font-size: 1rem;
   font-weight: 600;
   line-height: 1.25;
 }
 
 .WC26__heroReason {
-  font-size: 0.9rem;
+  font-size: 0.75rem;
   margin: 0.75em 0 0;
   line-height: 1.5;
   color: var(--text-color);
@@ -8925,6 +8973,7 @@ h5.section-title {
 .WC26__tabs {
   display: flex;
   flex-wrap: wrap;
+  justify-content: center;
   gap: 0.5em;
   margin-bottom: 1.5em;
   border-bottom: 2px solid var(--third-background-color);
@@ -8933,6 +8982,9 @@ h5.section-title {
 
 .WC26__tab {
   padding: 0.5em 0.75em;
+  margin: 0;
+  min-width: 0;
+  width: auto;
   border: none;
   background: transparent;
   color: var(--text-color);
@@ -8941,16 +8993,34 @@ h5.section-title {
   font-weight: 600;
   cursor: pointer;
   border-radius: 6px;
+  box-shadow: none;
+  transform: none;
   transition: background 0.15s, color 0.15s;
 }
 
-.WC26__tab:hover {
+.WC26__tab:hover:not(.WC26__tab--active) {
   background: var(--secondary-background-color);
+  box-shadow: none;
+  transform: none;
 }
 
-.WC26__tab--active {
+.WC26__tab--active,
+.WC26__tab--active:hover,
+.WC26__tab--active:focus,
+.WC26__tab--active:focus-visible,
+.WC26__tab--active:active {
   background: var(--primary-color);
   color: var(--button-text-color);
+  box-shadow: none;
+  transform: none;
+}
+
+.WC26__tab:focus-visible {
+  box-shadow: 0 0 0 2px rgba(var(--primary-rgb), 0.45);
+}
+
+.WC26__tab--active:focus-visible {
+  box-shadow: 0 0 0 2px rgba(var(--primary-rgb), 0.45);
 }
 
 .WC26__section {
@@ -8968,12 +9038,14 @@ h5.section-title {
   margin: 1.25em 0 0.75em;
   color: var(--text-color);
   line-height: 1.3;
+  text-align: center;
 }
 
 .WC26__subTitle {
   font-size: 0.9375rem;
   font-weight: 600;
   margin: 0.85em 0 0.5em;
+  text-align: center;
 }
 
 .WC26__overviewText {
@@ -9019,22 +9091,10 @@ h5.section-title {
   border: 1px solid var(--third-background-color);
 }
 
-.WC26__cardHeader {
-  display: flex;
-  align-items: center;
-  gap: 0.5em;
-  flex-wrap: wrap;
-  margin-bottom: 0.5em;
-}
-
-.WC26__cardHeader h4 {
-  margin: 0;
-  font-size: 1rem;
-}
-
 .WC26__cardTitle {
   margin: 0 0 0.5em;
   font-size: 1rem;
+  text-align: center;
 }
 
 .WC26__cardMeta {
@@ -9044,7 +9104,7 @@ h5.section-title {
 }
 
 .WC26__cardText {
-  font-size: 0.875rem;
+  font-size: 0.8rem;
   line-height: 1.45;
   margin: 0.25em 0 0;
 }
@@ -9081,12 +9141,9 @@ h5.section-title {
 }
 
 .WC26__playerCard {
-  display: flex;
-  gap: 0.75em;
   padding: 1em;
   background: var(--secondary-background-color);
   border-radius: 8px;
-  align-items: flex-start;
 }
 
 .WC26__playerMeta {
@@ -9125,6 +9182,7 @@ h5.section-title {
   margin: 0 0 0.75em;
   font-size: 0.9375rem;
   color: var(--primary-color);
+  text-align: center;
 }
 
 .WC26__groupTeams {
@@ -9186,41 +9244,53 @@ h5.section-title {
 
 .WC26__teamCardToggle {
   width: 100%;
-  display: flex;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 5.25rem 5em;
   align-items: center;
-  flex-wrap: wrap;
-  gap: 0.35em 0.5em;
-  padding: 0.75em 0.85em;
+  gap: 0.35em 0.65em;
+  padding: 0.65em 0.85em;
   border: none;
   background: transparent;
   color: var(--text-color);
   font-family: inherit;
-  font-size: 0.875rem;
+  font-size: 0.875em;
   cursor: pointer;
   text-align: left;
 }
 
-.WC26__teamName {
-  flex: 1 1 auto;
+.WC26__teamCardToggle .WC26__inlineHeader--grow {
+  grid-column: 1;
   min-width: 0;
+}
+
+.WC26__teamCardToggle .WC26__badge {
+  grid-column: 2;
+  justify-self: center;
+  white-space: nowrap;
+}
+
+.WC26__teamName {
   font-weight: 600;
 }
 
 .WC26__teamPrediction {
-  font-size: 0.75rem;
+  grid-column: 3;
+  justify-self: end;
+  font-size: 0.85em;
   color: var(--text-color);
-  flex-shrink: 0;
+  text-align: right;
+  line-height: 1.3;
 }
 
 .WC26__teamCardBody {
   padding: 0 1em 1em;
-  font-size: 0.9rem;
   line-height: 1.5;
 }
 
 .WC26__keyPlayersTitle {
   margin: 0.75em 0 0.35em;
   font-size: 0.9rem;
+  text-align: center;
 }
 
 .WC26__keyPlayersList {
@@ -9255,15 +9325,7 @@ h5.section-title {
 
 .WC26__contenderBody {
   flex: 1;
-}
-
-.WC26__contenderHeader {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: space-between;
-  align-items: baseline;
-  gap: 0.25em 0.75em;
-  margin-bottom: 0.35em;
+  min-width: 0;
 }
 
 .WC26__goldenBootCard {
@@ -9284,7 +9346,7 @@ h5.section-title {
   display: flex;
   flex-wrap: wrap;
   align-items: baseline;
-  gap: 0.25em 0.5em;
+  gap: 0.35em 0.5em;
   padding: 0.65em 0;
   border-bottom: 1px solid var(--third-background-color);
   font-size: 0.875rem;
@@ -9292,7 +9354,6 @@ h5.section-title {
 }
 
 .WC26__matchesNote {
-  font-size: 0.9rem;
   color: var(--text-color);
   margin-bottom: 1.5em;
   line-height: 1.5;
@@ -9322,7 +9383,6 @@ h5.section-title {
 }
 
 .WC26__matchDate {
-  font-size: 0.85rem;
   color: var(--text-color);
 }
 
@@ -9332,7 +9392,6 @@ h5.section-title {
   align-items: center;
   gap: 0.5em;
   font-weight: 600;
-  font-size: 0.875rem;
   margin-bottom: 0.65em;
   line-height: 1.3;
 }
@@ -9369,7 +9428,7 @@ h5.section-title {
   align-items: center;
   justify-content: center;
   min-width: 2em;
-  color: #fff;
+  color: var(--button-text-color);
 }
 
 .WC26__predictionSegment--home {
@@ -9390,14 +9449,6 @@ h5.section-title {
   font-size: 0.75rem;
   color: var(--text-color);
   margin-top: 0.35em;
-}
-
-.WC26__generated {
-  margin-top: 2em;
-  font-size: 0.8rem;
-  color: var(--text-color);
-  text-align: center;
-  line-height: 1.5;
 }
 
 .WC26__phaseFilters {
@@ -9438,7 +9489,7 @@ h5.section-title {
 
 @media (min-width: 768px) {
   .WC26 {
-    font-size: 1rem;
+    font-size: 14px;
   }
 
   .WC26__title {
@@ -9455,7 +9506,7 @@ h5.section-title {
   }
 
   .WC26__heroTeam {
-    font-size: 1.35rem;
+    font-size: 1rem;
   }
 
   .WC26__flag--large {
@@ -9472,17 +9523,13 @@ h5.section-title {
     margin: 1.5em 0 1em;
   }
 
-  .WC26__matchTeams {
-    font-size: 0.9375rem;
-  }
-
   .WC26__matchScore {
     font-size: 1.1rem;
   }
 
   .WC26__teamCardToggle {
-    font-size: 0.9375rem;
-    flex-wrap: nowrap;
+    grid-template-columns: minmax(0, 1fr) 5.25rem 5em;
+    padding: 0.75em 0.85em;
   }
 
   .WC26__matchCard {

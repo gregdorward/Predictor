@@ -4,7 +4,6 @@ import PageMeta from "./PageMeta";
 import Footer from "./Footer";
 import WorldCup2026MatchesTab from "./WorldCup2026MatchesTab";
 import previewData from "../data/worldcup2026/tournament-preview.json";
-import { formatGeneratedAt } from "../utils/worldCup2026Format";
 
 const TABS = [
   { id: "overview", label: "Overview" },
@@ -47,7 +46,7 @@ function OverviewTab({ data }) {
       <div className="WC26__cardGrid">
         {data.hostNations.map((host) => (
           <div key={host.team} className="WC26__card">
-            <div className="WC26__cardHeader">
+            <div className="WC26__inlineHeader WC26__inlineHeader--block">
               <span className="WC26__flag">{host.flag}</span>
               <h4>{host.team}</h4>
               <span className="WC26__badge">Group {host.group}</span>
@@ -62,7 +61,7 @@ function OverviewTab({ data }) {
       <div className="WC26__cardGrid">
         {data.darkHorses.map((item) => (
           <div key={item.team} className="WC26__card">
-            <div className="WC26__cardHeader">
+            <div className="WC26__inlineHeader WC26__inlineHeader--block">
               <span className="WC26__flag">{item.flag}</span>
               <h4>{item.team}</h4>
             </div>
@@ -75,14 +74,14 @@ function OverviewTab({ data }) {
       <div className="WC26__playerGrid">
         {data.onesToWatch.map((player) => (
           <div key={`${player.player}-${player.team}`} className="WC26__playerCard">
-            <span className="WC26__flag">{player.flag}</span>
-            <div>
-              <strong>{player.player}</strong>
-              <span className="WC26__playerMeta">
-                {player.team} · age {player.age}
-              </span>
-              <p className="WC26__cardText">{player.note}</p>
-            </div>
+            <strong className="WC26__inlineHeader">
+              <span className="WC26__flag">{player.flag}</span>
+              {player.player}
+            </strong>
+            <span className="WC26__playerMeta">
+              {player.team} · age {player.age}
+            </span>
+            <p className="WC26__cardText">{player.note}</p>
           </div>
         ))}
       </div>
@@ -155,8 +154,10 @@ function TeamsTab({ teamPreviews }) {
                 onClick={() => setExpandedTeam(isOpen ? null : team.team)}
                 aria-expanded={isOpen}
               >
-                <span className="WC26__flag">{team.flag}</span>
-                <span className="WC26__teamName">{team.team}</span>
+                <span className="WC26__inlineHeader WC26__inlineHeader--grow">
+                  <span className="WC26__flag">{team.flag}</span>
+                  <span className="WC26__teamName">{team.team}</span>
+                </span>
                 <span className="WC26__badge">Group {team.group}</span>
                 <span className="WC26__teamPrediction">{team.prediction}</span>
               </button>
@@ -193,10 +194,12 @@ function ContendersTab({ contenders, goldenBoot }) {
         {contenders.map((item, index) => (
           <li key={item.team} className="WC26__contenderItem">
             <span className="WC26__contenderRank">{index + 1}</span>
-            <span className="WC26__flag">{item.flag}</span>
             <div className="WC26__contenderBody">
-              <div className="WC26__contenderHeader">
-                <strong>{item.team}</strong>
+              <div className="WC26__inlineHeader WC26__inlineHeader--split WC26__inlineHeader--block">
+                <span className="WC26__inlineHeader">
+                  <span className="WC26__flag">{item.flag}</span>
+                  <strong>{item.team}</strong>
+                </span>
                 <span className="WC26__odds">{item.odds}</span>
               </div>
               <p className="WC26__cardText">{item.reasoning}</p>
@@ -207,7 +210,7 @@ function ContendersTab({ contenders, goldenBoot }) {
 
       <h3 className="WC26__sectionTitle">Golden Boot</h3>
       <div className="WC26__goldenBootCard">
-        <div className="WC26__cardHeader">
+        <div className="WC26__inlineHeader WC26__inlineHeader--block">
           <span className="WC26__flag">{goldenBoot.predicted.flag}</span>
           <h4>{goldenBoot.predicted.player}</h4>
           <span className="WC26__badge">{goldenBoot.predicted.team}</span>
@@ -218,8 +221,10 @@ function ContendersTab({ contenders, goldenBoot }) {
       <ul className="WC26__goldenBootList">
         {goldenBoot.candidates.map((c) => (
           <li key={c.player} className="WC26__goldenBootItem">
-            <span className="WC26__flag">{c.flag}</span>
-            <strong>{c.player}</strong>
+            <span className="WC26__inlineHeader">
+              <span className="WC26__flag">{c.flag}</span>
+              <strong>{c.player}</strong>
+            </span>
             <span className="WC26__playerMeta">{c.team}</span>
             <span className="WC26__cardText"> — {c.note}</span>
           </li>
@@ -243,12 +248,12 @@ export default function WorldCup2026() {
         <header className="WC26__hero">
           <div className="WC26__heroContent">
             <h1 className="WC26__title">FIFA World Cup 2026</h1>
-            <p className="WC26__subtitle">Tournament preview · USA, Canada & Mexico</p>
+            <p className="WC26__subtitle">Tournament Preview</p>
           </div>
           <div className="WC26__heroCards">
             <div className="WC26__heroCard WC26__heroCard--winner">
               <span className="WC26__heroLabel">Predicted winner</span>
-              <div className="WC26__heroPick">
+              <div className="WC26__inlineHeader WC26__inlineHeader--hero">
                 <span className="WC26__flag WC26__flag--large">{data.predictedWinner.flag}</span>
                 <span className="WC26__heroTeam">{data.predictedWinner.team}</span>
               </div>
@@ -261,7 +266,7 @@ export default function WorldCup2026() {
             </div>
             <div className="WC26__heroCard WC26__heroCard--boot">
               <span className="WC26__heroLabel">Golden Boot pick</span>
-              <div className="WC26__heroPick">
+              <div className="WC26__inlineHeader WC26__inlineHeader--hero">
                 <span className="WC26__flag WC26__flag--large">{data.goldenBoot.predicted.flag}</span>
                 <span className="WC26__heroTeam">{data.goldenBoot.predicted.player}</span>
               </div>
@@ -293,11 +298,6 @@ export default function WorldCup2026() {
           )}
           {activeTab === "matches" && <WorldCup2026MatchesTab />}
         </div>
-
-        <p className="WC26__generated">
-          Preview generated {formatGeneratedAt(data.generatedAt)}. Sources include BBC Sport,
-          Sky Sports, FourFourTwo and The Guardian.
-        </p>
       </main>
       <Footer />
     </>
