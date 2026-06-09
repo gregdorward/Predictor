@@ -8809,3 +8809,548 @@ h5.section-title {
     display: block;
   }
 }
+/* World Cup 2026 preview page */
+.WC26 {
+  max-width: var(--content-max-width);
+  margin: 0 auto;
+  padding: 1em var(--content-padding-x) 3em;
+  color: var(--text-color);
+}
+
+.WC26__title {
+  font-size: 2rem;
+  font-weight: 600;
+  margin: 0.5em 0 0.25em;
+  color: var(--text-color);
+}
+
+.WC26__subtitle {
+  color: var(--secondary-color);
+  margin: 0;
+}
+
+.WC26__hero {
+  margin: 1.5em 0 2em;
+  padding: 1.5em;
+  background: var(--secondary-background-color);
+  border-radius: 12px;
+  border: 1px solid var(--third-background-color);
+}
+
+.WC26__heroCards {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1em;
+  margin-top: 1.5em;
+}
+
+@media (min-width: 768px) {
+  .WC26__heroCards {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+.WC26__heroCard {
+  padding: 1.25em;
+  border-radius: 10px;
+  background: var(--background-color);
+  border: 2px solid var(--third-background-color);
+}
+
+.WC26__heroCard--winner {
+  border-color: var(--primary-color);
+}
+
+.WC26__heroCard--boot {
+  border-color: var(--accent-color);
+}
+
+.WC26__heroLabel {
+  display: block;
+  font-size: 0.85rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--secondary-color);
+  margin-bottom: 0.5em;
+}
+
+.WC26__heroPick {
+  display: flex;
+  align-items: center;
+  gap: 0.75em;
+  margin-bottom: 0.25em;
+}
+
+.WC26__heroTeam {
+  font-size: 1.5rem;
+  font-weight: 600;
+}
+
+.WC26__heroReason {
+  font-size: 0.9rem;
+  margin: 0.75em 0 0;
+  line-height: 1.5;
+  color: var(--secondary-color);
+}
+
+.WC26__flag {
+  font-size: 1.25rem;
+  line-height: 1;
+}
+
+.WC26__flag--large {
+  font-size: 2rem;
+}
+
+.WC26__tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5em;
+  margin-bottom: 1.5em;
+  border-bottom: 2px solid var(--third-background-color);
+  padding-bottom: 0.5em;
+}
+
+.WC26__tab {
+  padding: 0.6em 1em;
+  border: none;
+  background: transparent;
+  color: var(--text-color);
+  font-family: inherit;
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  border-radius: 6px;
+  transition: background 0.15s, color 0.15s;
+}
+
+.WC26__tab:hover {
+  background: var(--secondary-background-color);
+}
+
+.WC26__tab--active {
+  background: var(--primary-color);
+  color: var(--button-text-color);
+}
+
+.WC26__section {
+  animation: WC26FadeIn 0.2s ease;
+}
+
+@keyframes WC26FadeIn {
+  from { opacity: 0; transform: translateY(4px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.WC26__sectionTitle {
+  font-size: 1.25rem;
+  font-weight: 600;
+  margin: 1.5em 0 1em;
+  color: var(--text-color);
+}
+
+.WC26__subTitle {
+  font-size: 1rem;
+  font-weight: 600;
+  margin: 1em 0 0.5em;
+}
+
+.WC26__overviewText {
+  line-height: 1.6;
+  margin-bottom: 1.5em;
+}
+
+.WC26__formatCard {
+  padding: 1.25em;
+  background: var(--secondary-background-color);
+  border-radius: 10px;
+  margin-bottom: 1.5em;
+}
+
+.WC26__formatList {
+  margin: 0.5em 0 0;
+  padding-left: 1.25em;
+  line-height: 1.7;
+}
+
+.WC26__cardGrid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1em;
+}
+
+@media (min-width: 600px) {
+  .WC26__cardGrid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (min-width: 900px) {
+  .WC26__cardGrid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+.WC26__card {
+  padding: 1em;
+  background: var(--secondary-background-color);
+  border-radius: 10px;
+  border: 1px solid var(--third-background-color);
+}
+
+.WC26__cardHeader {
+  display: flex;
+  align-items: center;
+  gap: 0.5em;
+  flex-wrap: wrap;
+  margin-bottom: 0.5em;
+}
+
+.WC26__cardHeader h4 {
+  margin: 0;
+  font-size: 1rem;
+}
+
+.WC26__cardTitle {
+  margin: 0 0 0.5em;
+  font-size: 1.1rem;
+}
+
+.WC26__cardMeta {
+  font-size: 0.9rem;
+  color: var(--secondary-color);
+  margin: 0.25em 0;
+}
+
+.WC26__cardText {
+  font-size: 0.9rem;
+  line-height: 1.5;
+  margin: 0.25em 0 0;
+}
+
+.WC26__badge {
+  font-size: 0.75rem;
+  font-weight: 600;
+  padding: 0.2em 0.5em;
+  border-radius: 4px;
+  background: var(--accent-color);
+  color: #fff;
+}
+
+.dark-mode .WC26__badge {
+  background: var(--primary-color);
+  color: var(--button-text-color);
+}
+
+.WC26__odds {
+  font-weight: 600;
+  color: var(--primary-color);
+}
+
+.WC26__playerGrid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 0.75em;
+}
+
+@media (min-width: 600px) {
+  .WC26__playerGrid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+.WC26__playerCard {
+  display: flex;
+  gap: 0.75em;
+  padding: 1em;
+  background: var(--secondary-background-color);
+  border-radius: 8px;
+  align-items: flex-start;
+}
+
+.WC26__playerMeta {
+  display: block;
+  font-size: 0.85rem;
+  color: var(--secondary-color);
+  margin-top: 0.15em;
+}
+
+.WC26__groupGrid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1em;
+}
+
+@media (min-width: 600px) {
+  .WC26__groupGrid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (min-width: 1000px) {
+  .WC26__groupGrid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+.WC26__groupCard {
+  padding: 1em;
+  background: var(--secondary-background-color);
+  border-radius: 10px;
+  border: 1px solid var(--third-background-color);
+}
+
+.WC26__groupTitle {
+  margin: 0 0 0.75em;
+  font-size: 1.1rem;
+  color: var(--primary-color);
+}
+
+.WC26__groupTeams {
+  margin: 0 0 0.75em;
+  padding-left: 1.25em;
+  line-height: 1.6;
+}
+
+.WC26__groupPredictions p {
+  margin: 0.25em 0;
+  font-size: 0.9rem;
+}
+
+.WC26__keyGame {
+  margin-top: 0.5em;
+  font-size: 0.85rem;
+  color: var(--secondary-color);
+}
+
+.WC26__search {
+  width: 100%;
+  max-width: 400px;
+  padding: 0.65em 1em;
+  font-size: 1rem;
+  font-family: inherit;
+  border: 2px solid var(--third-background-color);
+  border-radius: 8px;
+  background: var(--background-color);
+  color: var(--text-color);
+  margin-bottom: 0.5em;
+}
+
+.WC26__search:focus {
+  outline: none;
+  border-color: var(--primary-color);
+}
+
+.WC26__resultCount {
+  font-size: 0.85rem;
+  color: var(--secondary-color);
+  margin: 0 0 1em;
+}
+
+.WC26__teamList {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5em;
+}
+
+.WC26__teamCard {
+  border: 1px solid var(--third-background-color);
+  border-radius: 8px;
+  background: var(--secondary-background-color);
+}
+
+.WC26__teamCard--open {
+  border-color: var(--primary-color);
+}
+
+.WC26__teamCardToggle {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 0.5em;
+  padding: 0.85em 1em;
+  border: none;
+  background: transparent;
+  color: var(--text-color);
+  font-family: inherit;
+  font-size: 0.95rem;
+  cursor: pointer;
+  text-align: left;
+}
+
+.WC26__teamName {
+  flex: 1;
+  font-weight: 600;
+}
+
+.WC26__teamPrediction {
+  font-size: 0.8rem;
+  color: var(--secondary-color);
+}
+
+.WC26__teamCardBody {
+  padding: 0 1em 1em;
+  font-size: 0.9rem;
+  line-height: 1.5;
+}
+
+.WC26__keyPlayersTitle {
+  margin: 0.75em 0 0.35em;
+  font-size: 0.9rem;
+}
+
+.WC26__keyPlayersList {
+  margin: 0;
+  padding-left: 1.25em;
+}
+
+.WC26__contenderList {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.WC26__contenderItem {
+  display: flex;
+  gap: 0.75em;
+  padding: 1em;
+  margin-bottom: 0.75em;
+  background: var(--secondary-background-color);
+  border-radius: 10px;
+  border: 1px solid var(--third-background-color);
+  align-items: flex-start;
+}
+
+.WC26__contenderRank {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: var(--primary-color);
+  min-width: 1.5em;
+}
+
+.WC26__contenderBody {
+  flex: 1;
+}
+
+.WC26__contenderHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1em;
+  margin-bottom: 0.35em;
+}
+
+.WC26__goldenBootCard {
+  padding: 1.25em;
+  background: var(--secondary-background-color);
+  border-radius: 10px;
+  border: 2px solid var(--accent-color);
+  margin-bottom: 1em;
+}
+
+.WC26__goldenBootList {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.WC26__goldenBootItem {
+  padding: 0.65em 0;
+  border-bottom: 1px solid var(--third-background-color);
+  font-size: 0.9rem;
+}
+
+.WC26__matchesNote {
+  font-size: 0.9rem;
+  color: var(--secondary-color);
+  margin-bottom: 1.5em;
+  line-height: 1.5;
+}
+
+.WC26__matchList {
+  display: flex;
+  flex-direction: column;
+  gap: 1em;
+}
+
+.WC26__matchCard {
+  padding: 1.25em;
+  background: var(--secondary-background-color);
+  border-radius: 10px;
+  border: 1px solid var(--third-background-color);
+}
+
+.WC26__matchMeta {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.75em;
+}
+
+.WC26__matchDate {
+  font-size: 0.85rem;
+  color: var(--secondary-color);
+}
+
+.WC26__matchTeams {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1em;
+  font-weight: 600;
+  margin-bottom: 0.75em;
+}
+
+.WC26__matchScore {
+  font-size: 1.25rem;
+  color: var(--primary-color);
+  padding: 0.25em 0.75em;
+  background: var(--background-color);
+  border-radius: 6px;
+}
+
+.WC26__predictionBar {
+  display: flex;
+  height: 28px;
+  border-radius: 6px;
+  overflow: hidden;
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+.WC26__predictionSegment {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 2em;
+  color: #fff;
+}
+
+.WC26__predictionSegment--home {
+  background: var(--accent-color);
+}
+
+.WC26__predictionSegment--draw {
+  background: var(--secondary-color);
+}
+
+.WC26__predictionSegment--away {
+  background: var(--primary-color);
+}
+
+.WC26__predictionLabels {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.75rem;
+  color: var(--secondary-color);
+  margin-top: 0.35em;
+}
+
+.WC26__generated {
+  margin-top: 2em;
+  font-size: 0.8rem;
+  color: var(--secondary-color);
+  text-align: center;
+  line-height: 1.5;
+}

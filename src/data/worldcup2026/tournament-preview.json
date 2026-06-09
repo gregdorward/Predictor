@@ -1,0 +1,1515 @@
+{
+  "generatedAt": "2026-06-09T19:38:54.233Z",
+  "overview": "The 2026 FIFA World Cup is the first expanded 48-team tournament, hosted across the USA, Canada and Mexico from 11 June to 19 July. With 12 groups of four and 32 teams advancing to a new Round of 32, the format rewards depth and consistency. Host nations USA, Mexico and Canada bring unprecedented home support, while Spain, France, England and Argentina headline the outright market. Our preview combines squad analysis from BBC Sport, Sky Sports, FourFourTwo and The Guardian with Soccer Stats Hub prediction data for key group-stage fixtures.",
+  "format": {
+    "teams": 48,
+    "groups": 12,
+    "hosts": [
+      "USA",
+      "Canada",
+      "Mexico"
+    ],
+    "startDate": "2026-06-11",
+    "endDate": "2026-07-19"
+  },
+  "contenders": [
+    {
+      "team": "Spain",
+      "flag": "🇪🇸",
+      "odds": "4/1",
+      "reasoning": "Euro 2024 winners with the best blend of youth (Yamal, Williams) and experience (Rodri). Positional dominance and pressing suit the expanded format."
+    },
+    {
+      "team": "France",
+      "flag": "🇫🇷",
+      "odds": "5/1",
+      "reasoning": "Unmatched squad depth with Mbappé, Dembélé and a proven tournament manager in Deschamps. Always deliver when it matters."
+    },
+    {
+      "team": "England",
+      "flag": "🏴󠁧󠁢󠁥󠁮󠁧󠁿",
+      "odds": "6/1",
+      "reasoning": "Thomas Tuchel brings tactical rigour. Kane, Saka and a deep squad make England genuine contenders on paper."
+    },
+    {
+      "team": "Argentina",
+      "flag": "🇦🇷",
+      "odds": "6/1",
+      "reasoning": "2022 champions with Scaloni still in charge. Lautaro Martínez and Enzo Fernández lead a squad that knows how to win knockouts."
+    },
+    {
+      "team": "Brazil",
+      "flag": "🇧🇷",
+      "odds": "7/1",
+      "reasoning": "Vinícius Júnior and Rodrygo provide elite attacking quality. Dorival Júnior must solve defensive transition issues."
+    },
+    {
+      "team": "Germany",
+      "flag": "🇩🇪",
+      "odds": "8/1",
+      "reasoning": "Wirtz and Musiala give Nagelsmann two of Europe's best creators. Quarter-final run at Euro 2024 showed progress."
+    },
+    {
+      "team": "Portugal",
+      "flag": "🇵🇹",
+      "odds": "9/1",
+      "reasoning": "Attacking talent with Leão, Ronaldo and emerging stars. Martínez must balance creativity with midfield control."
+    },
+    {
+      "team": "Netherlands",
+      "flag": "🇳🇱",
+      "odds": "10/1",
+      "reasoning": "Koeman's side blend Van Dijk's leadership with exciting wide play. Centre-back depth is the main concern."
+    }
+  ],
+  "predictedWinner": {
+    "team": "Spain",
+    "flag": "🇪🇸",
+    "reasoning": "Spain combine the best midfield in the tournament with generational wide talent in Lamine Yamal and Nico Williams. Luis de la Fuente's Euro 2024-winning system is built for control and pressing — ideal for navigating a gruelling 48-team schedule. Rodri's return strengthens the spine, and the squad's age profile suggests peak performance in summer 2026.",
+    "oddsRange": "4/1"
+  },
+  "goldenBoot": {
+    "predicted": {
+      "player": "Erling Haaland",
+      "team": "Norway",
+      "flag": "🇳🇴",
+      "reasoning": "Haaland is the most prolific striker in world football. Norway's direct style funnels chances to him, and Group I offers winnable games against Senegal, Iraq and France (where Norway may still score on the counter). If Norway advance from the group, Haaland could face weaker Round of 32 opposition."
+    },
+    "candidates": [
+      {
+        "player": "Erling Haaland",
+        "team": "Norway",
+        "flag": "🇳🇴",
+        "goals": 0,
+        "note": "Favourite — elite finisher in a Haaland-centric system"
+      },
+      {
+        "player": "Kylian Mbappé",
+        "team": "France",
+        "flag": "🇫🇷",
+        "goals": 0,
+        "note": "France's main outlet; deep tournament runs boost tally"
+      },
+      {
+        "player": "Harry Kane",
+        "team": "England",
+        "flag": "🏴󠁧󠁢󠁥󠁮󠁧󠁿",
+        "goals": 0,
+        "note": "Penalty-area predator under Tuchel"
+      },
+      {
+        "player": "Lamine Yamal",
+        "team": "Spain",
+        "flag": "🇪🇸",
+        "goals": 0,
+        "note": "Creative force who also scores from wide positions"
+      },
+      {
+        "player": "Vinícius Júnior",
+        "team": "Brazil",
+        "flag": "🇧🇷",
+        "goals": 0,
+        "note": "World-class winger with improved finishing"
+      },
+      {
+        "player": "Mohamed Salah",
+        "team": "Egypt",
+        "flag": "🇪🇬",
+        "goals": 0,
+        "note": "Egypt's everything — but group path is tough"
+      }
+    ]
+  },
+  "darkHorses": [
+    {
+      "team": "Norway",
+      "flag": "🇳🇴",
+      "reason": "Haaland and Ødegaard in a favourable group could spring a surprise run if the defence holds."
+    },
+    {
+      "team": "Morocco",
+      "flag": "🇲🇦",
+      "reason": "2022 semi-finalists with Regragui's organised system and Hakimi's dynamism."
+    },
+    {
+      "team": "Japan",
+      "flag": "🇯🇵",
+      "reason": "Technical cohesion and Mitoma's creativity make them dangerous in knockout football."
+    },
+    {
+      "team": "Austria",
+      "flag": "🇦🇹",
+      "reason": "Rangnick's high press could upset established sides in the Round of 32."
+    },
+    {
+      "team": "Colombia",
+      "flag": "🇨🇴",
+      "reason": "Luis Díaz and James Rodríguez provide flair that knockout football rewards."
+    }
+  ],
+  "onesToWatch": [
+    {
+      "player": "Lamine Yamal",
+      "team": "Spain",
+      "flag": "🇪🇸",
+      "age": 18,
+      "note": "Generational winger already starring for Barcelona and Spain."
+    },
+    {
+      "player": "Arda Güler",
+      "team": "Türkiye",
+      "flag": "🇹🇷",
+      "age": 20,
+      "note": "Real Madrid playmaker with eye for the spectacular."
+    },
+    {
+      "player": "Florian Wirtz",
+      "team": "Germany",
+      "flag": "🇩🇪",
+      "age": 22,
+      "note": "Liverpool-bound creator who can unlock any defence."
+    },
+    {
+      "player": "Kaoru Mitoma",
+      "team": "Japan",
+      "flag": "🇯🇵",
+      "age": 28,
+      "note": "Elite dribbler who thrives in big moments."
+    },
+    {
+      "player": "Mohammed Kudus",
+      "team": "Ghana",
+      "flag": "🇬🇭",
+      "age": 24,
+      "note": "West Ham star with pace and trickery from wide areas."
+    },
+    {
+      "player": "Eldor Shomurodov",
+      "team": "Uzbekistan",
+      "flag": "🇺🇿",
+      "age": 29,
+      "note": "Uzbekistan's first World Cup — their main goal threat."
+    },
+    {
+      "player": "Jonathan David",
+      "team": "Canada",
+      "flag": "🇨🇦",
+      "age": 25,
+      "note": "Clinical finisher leading Canada's home-nation charge."
+    },
+    {
+      "player": "Nico Williams",
+      "team": "Spain",
+      "flag": "🇪🇸",
+      "age": 22,
+      "note": "Pace merchant who complements Yamal on the opposite flank."
+    }
+  ],
+  "hostNations": [
+    {
+      "team": "USA",
+      "flag": "🇺🇸",
+      "group": "D",
+      "prediction": "Round of 32",
+      "note": "Pochettino's high press and home crowds give the US a genuine edge. Türkiye and Australia provide stern tests."
+    },
+    {
+      "team": "Mexico",
+      "flag": "🇲🇽",
+      "group": "A",
+      "prediction": "Round of 32",
+      "note": "Opening match at Estadio Azteca. Aguirre's experience and fan support make Mexico tough to beat at home."
+    },
+    {
+      "team": "Canada",
+      "flag": "🇨🇦",
+      "group": "B",
+      "prediction": "Round of 32",
+      "note": "Marsch's pressing style suits Davies and David. Switzerland is the key group test."
+    }
+  ],
+  "keyMatchups": [
+    {
+      "home": "Mexico",
+      "away": "South Africa",
+      "group": "A",
+      "date": "2026-06-11",
+      "prediction": {
+        "predictedScore": "2-0",
+        "homeWin": 62,
+        "draw": 22,
+        "awayWin": 16
+      }
+    },
+    {
+      "home": "Canada",
+      "away": "Switzerland",
+      "group": "B",
+      "date": "2026-06-15",
+      "prediction": {
+        "predictedScore": "1-1",
+        "homeWin": 35,
+        "draw": 30,
+        "awayWin": 35
+      }
+    },
+    {
+      "home": "Brazil",
+      "away": "Morocco",
+      "group": "C",
+      "date": "2026-06-14",
+      "prediction": {
+        "predictedScore": "2-1",
+        "homeWin": 55,
+        "draw": 25,
+        "awayWin": 20
+      }
+    },
+    {
+      "home": "USA",
+      "away": "Türkiye",
+      "group": "D",
+      "date": "2026-06-14",
+      "prediction": {
+        "predictedScore": "2-1",
+        "homeWin": 48,
+        "draw": 27,
+        "awayWin": 25
+      }
+    },
+    {
+      "home": "Germany",
+      "away": "Ecuador",
+      "group": "E",
+      "date": "2026-06-15",
+      "prediction": {
+        "predictedScore": "2-1",
+        "homeWin": 58,
+        "draw": 24,
+        "awayWin": 18
+      }
+    },
+    {
+      "home": "Netherlands",
+      "away": "Japan",
+      "group": "F",
+      "date": "2026-06-16",
+      "prediction": {
+        "predictedScore": "2-1",
+        "homeWin": 52,
+        "draw": 26,
+        "awayWin": 22
+      }
+    },
+    {
+      "home": "Spain",
+      "away": "Uruguay",
+      "group": "H",
+      "date": "2026-06-17",
+      "prediction": {
+        "predictedScore": "2-0",
+        "homeWin": 60,
+        "draw": 25,
+        "awayWin": 15
+      }
+    },
+    {
+      "home": "France",
+      "away": "Norway",
+      "group": "I",
+      "date": "2026-06-18",
+      "prediction": {
+        "predictedScore": "2-1",
+        "homeWin": 52,
+        "draw": 24,
+        "awayWin": 24
+      }
+    },
+    {
+      "home": "Argentina",
+      "away": "Austria",
+      "group": "J",
+      "date": "2026-06-19",
+      "prediction": {
+        "predictedScore": "2-0",
+        "homeWin": 58,
+        "draw": 24,
+        "awayWin": 18
+      }
+    },
+    {
+      "home": "England",
+      "away": "Croatia",
+      "group": "L",
+      "date": "2026-06-20",
+      "prediction": {
+        "predictedScore": "2-1",
+        "homeWin": 50,
+        "draw": 26,
+        "awayWin": 24
+      }
+    }
+  ],
+  "groups": [
+    {
+      "group": "A",
+      "teams": [
+        "Mexico",
+        "South Africa",
+        "Korea Republic",
+        "Czechia"
+      ],
+      "predicted1st": "Mexico",
+      "predicted2nd": "Korea Republic",
+      "keyGame": "Mexico vs Korea Republic"
+    },
+    {
+      "group": "B",
+      "teams": [
+        "Canada",
+        "Bosnia and Herzegovina",
+        "Qatar",
+        "Switzerland"
+      ],
+      "predicted1st": "Switzerland",
+      "predicted2nd": "Canada",
+      "keyGame": "Canada vs Switzerland"
+    },
+    {
+      "group": "C",
+      "teams": [
+        "Brazil",
+        "Morocco",
+        "Haiti",
+        "Scotland"
+      ],
+      "predicted1st": "Brazil",
+      "predicted2nd": "Morocco",
+      "keyGame": "Brazil vs Morocco"
+    },
+    {
+      "group": "D",
+      "teams": [
+        "USA",
+        "Paraguay",
+        "Australia",
+        "Türkiye"
+      ],
+      "predicted1st": "USA",
+      "predicted2nd": "Türkiye",
+      "keyGame": "USA vs Türkiye"
+    },
+    {
+      "group": "E",
+      "teams": [
+        "Germany",
+        "Curaçao",
+        "Côte d'Ivoire",
+        "Ecuador"
+      ],
+      "predicted1st": "Germany",
+      "predicted2nd": "Ecuador",
+      "keyGame": "Germany vs Ecuador"
+    },
+    {
+      "group": "F",
+      "teams": [
+        "Netherlands",
+        "Japan",
+        "Sweden",
+        "Tunisia"
+      ],
+      "predicted1st": "Netherlands",
+      "predicted2nd": "Japan",
+      "keyGame": "Netherlands vs Japan"
+    },
+    {
+      "group": "G",
+      "teams": [
+        "Belgium",
+        "Egypt",
+        "IR Iran",
+        "New Zealand"
+      ],
+      "predicted1st": "Belgium",
+      "predicted2nd": "Egypt",
+      "keyGame": "Belgium vs Egypt"
+    },
+    {
+      "group": "H",
+      "teams": [
+        "Spain",
+        "Cabo Verde",
+        "Saudi Arabia",
+        "Uruguay"
+      ],
+      "predicted1st": "Spain",
+      "predicted2nd": "Uruguay",
+      "keyGame": "Spain vs Uruguay"
+    },
+    {
+      "group": "I",
+      "teams": [
+        "France",
+        "Senegal",
+        "Iraq",
+        "Norway"
+      ],
+      "predicted1st": "France",
+      "predicted2nd": "Norway",
+      "keyGame": "France vs Norway"
+    },
+    {
+      "group": "J",
+      "teams": [
+        "Argentina",
+        "Algeria",
+        "Austria",
+        "Jordan"
+      ],
+      "predicted1st": "Argentina",
+      "predicted2nd": "Austria",
+      "keyGame": "Argentina vs Austria"
+    },
+    {
+      "group": "K",
+      "teams": [
+        "Portugal",
+        "Jamaica",
+        "Uzbekistan",
+        "Colombia"
+      ],
+      "predicted1st": "Portugal",
+      "predicted2nd": "Colombia",
+      "keyGame": "Portugal vs Colombia"
+    },
+    {
+      "group": "L",
+      "teams": [
+        "England",
+        "Croatia",
+        "Ghana",
+        "Panama"
+      ],
+      "predicted1st": "England",
+      "predicted2nd": "Croatia",
+      "keyGame": "England vs Croatia"
+    }
+  ],
+  "teamPreviews": [
+    {
+      "team": "Mexico",
+      "flag": "🇲🇽",
+      "manager": "Javier Aguirre",
+      "group": "A",
+      "keyPlayers": [
+        {
+          "name": "Raúl Jiménez",
+          "position": "ST",
+          "club": "Fulham",
+          "note": "Experienced focal point"
+        },
+        {
+          "name": "Edson Álvarez",
+          "position": "CM",
+          "club": "Bournemouth",
+          "note": "Midfield anchor"
+        }
+      ],
+      "style": "Direct, physical, counter-attacking",
+      "strength": "Home support and set-piece threat",
+      "weakness": "Inconsistent against top-tier pressing",
+      "prediction": "Round of 32"
+    },
+    {
+      "team": "South Africa",
+      "flag": "🇿🇦",
+      "manager": "Hugo Broos",
+      "group": "A",
+      "keyPlayers": [
+        {
+          "name": "Percy Tau",
+          "position": "RW",
+          "club": "Al Ahly",
+          "note": "Creative outlet"
+        }
+      ],
+      "style": "Organised, compact defending",
+      "strength": "Work rate and discipline",
+      "weakness": "Limited firepower upfront",
+      "prediction": "Group stage exit"
+    },
+    {
+      "team": "Korea Republic",
+      "flag": "🇰🇷",
+      "manager": "Hong Myung-bo",
+      "group": "A",
+      "keyPlayers": [
+        {
+          "name": "Son Heung-min",
+          "position": "FW",
+          "club": "Tottenham",
+          "note": "Elite finisher and leader"
+        },
+        {
+          "name": "Lee Kang-in",
+          "position": "AM",
+          "club": "PSG",
+          "note": "Technical playmaker"
+        }
+      ],
+      "style": "High tempo, pressing",
+      "strength": "Son Heung-min-led transitions",
+      "weakness": "Depth behind the star man",
+      "prediction": "Round of 32"
+    },
+    {
+      "team": "Czechia",
+      "flag": "🇨🇿",
+      "manager": "Ivan Hašek",
+      "group": "A",
+      "keyPlayers": [
+        {
+          "name": "Patrik Schick",
+          "position": "ST",
+          "club": "Borussia Dortmund",
+          "note": "Proven goal threat"
+        }
+      ],
+      "style": "Structured 4-2-3-1",
+      "strength": "Set pieces and midfield grit",
+      "weakness": "Pace in wide areas",
+      "prediction": "Group stage exit"
+    },
+    {
+      "team": "Canada",
+      "flag": "🇨🇦",
+      "manager": "Jesse Marsch",
+      "group": "B",
+      "keyPlayers": [
+        {
+          "name": "Alphonso Davies",
+          "position": "LB",
+          "club": "Bayern Munich",
+          "note": "Elite wide outlet"
+        },
+        {
+          "name": "Jonathan David",
+          "position": "ST",
+          "club": "Lille",
+          "note": "Clinical finisher"
+        }
+      ],
+      "style": "High press, vertical play",
+      "strength": "Pace on the wings",
+      "weakness": "Defensive concentration lapses",
+      "prediction": "Round of 32"
+    },
+    {
+      "team": "Bosnia and Herzegovina",
+      "flag": "🇧🇦",
+      "manager": "Sergej Barbarez",
+      "group": "B",
+      "keyPlayers": [
+        {
+          "name": "Edin Džeko",
+          "position": "ST",
+          "club": "Fiorentina",
+          "note": "Veteran goal scorer"
+        }
+      ],
+      "style": "Balanced 4-3-3",
+      "strength": "Technical midfield",
+      "weakness": "Aging defensive line",
+      "prediction": "Group stage exit"
+    },
+    {
+      "team": "Qatar",
+      "flag": "🇶🇦",
+      "manager": "Carlos Queiroz",
+      "group": "B",
+      "keyPlayers": [
+        {
+          "name": "Almoez Ali",
+          "position": "ST",
+          "club": "Al-Duhail",
+          "note": "Record national team scorer"
+        }
+      ],
+      "style": "Possession-based",
+      "strength": "Tournament experience from 2022",
+      "weakness": "Physical matchups",
+      "prediction": "Group stage exit"
+    },
+    {
+      "team": "Switzerland",
+      "flag": "🇨🇭",
+      "manager": "Murat Yakin",
+      "group": "B",
+      "keyPlayers": [
+        {
+          "name": "Granit Xhaka",
+          "position": "CM",
+          "club": "Sunderland",
+          "note": "Controls tempo"
+        },
+        {
+          "name": "Breel Embolo",
+          "position": "ST",
+          "club": "Monaco",
+          "note": "Physical presence"
+        }
+      ],
+      "style": "Compact, disciplined",
+      "strength": "Defensive organisation",
+      "weakness": "Creativity in final third",
+      "prediction": "Round of 32"
+    },
+    {
+      "team": "Brazil",
+      "flag": "🇧🇷",
+      "manager": "Dorival Júnior",
+      "group": "C",
+      "keyPlayers": [
+        {
+          "name": "Vinícius Júnior",
+          "position": "LW",
+          "club": "Real Madrid",
+          "note": "World-class winger"
+        },
+        {
+          "name": "Rodrygo",
+          "position": "RW",
+          "club": "Real Madrid",
+          "note": "Big-game performer"
+        }
+      ],
+      "style": "Fluid attacking football",
+      "strength": "Individual quality across the pitch",
+      "weakness": "Defensive transitions",
+      "prediction": "Quarter-finals"
+    },
+    {
+      "team": "Morocco",
+      "flag": "🇲🇦",
+      "manager": "Walid Regragui",
+      "group": "C",
+      "keyPlayers": [
+        {
+          "name": "Achraf Hakimi",
+          "position": "RB",
+          "club": "PSG",
+          "note": "Elite overlapping full-back"
+        },
+        {
+          "name": "Sofyan Amrabat",
+          "position": "CM",
+          "club": "Manchester United",
+          "note": "Ball-winning midfielder"
+        }
+      ],
+      "style": "Compact, counter-pressing",
+      "strength": "2022 semi-final pedigree",
+      "weakness": "Squad depth",
+      "prediction": "Round of 32"
+    },
+    {
+      "team": "Haiti",
+      "flag": "🇭🇹",
+      "manager": "Rodrigue Mortreux",
+      "group": "C",
+      "keyPlayers": [
+        {
+          "name": "Duckens Nazon",
+          "position": "ST",
+          "club": "Sint-Truiden",
+          "note": "Main goal threat"
+        }
+      ],
+      "style": "Direct, physical",
+      "strength": "Pace in attack",
+      "weakness": "Defensive organisation",
+      "prediction": "Group stage exit"
+    },
+    {
+      "team": "Scotland",
+      "flag": "🏴󠁧󠁢󠁳󠁣󠁴󠁿",
+      "manager": "Steve Clarke",
+      "group": "C",
+      "keyPlayers": [
+        {
+          "name": "Scott McTominay",
+          "position": "CM",
+          "club": "Napoli",
+          "note": "Box-to-box goals threat"
+        }
+      ],
+      "style": "Organised, set-piece focused",
+      "strength": "Team spirit and structure",
+      "weakness": "Creativity against low blocks",
+      "prediction": "Group stage exit"
+    },
+    {
+      "team": "USA",
+      "flag": "🇺🇸",
+      "manager": "Mauricio Pochettino",
+      "group": "D",
+      "keyPlayers": [
+        {
+          "name": "Christian Pulisic",
+          "position": "LW",
+          "club": "AC Milan",
+          "note": "Star attacker"
+        },
+        {
+          "name": "Tyler Adams",
+          "position": "CM",
+          "club": "Bournemouth",
+          "note": "Defensive midfielder"
+        }
+      ],
+      "style": "High intensity press",
+      "strength": "Athletic squad and home advantage",
+      "weakness": "Experience in knockout football",
+      "prediction": "Round of 32"
+    },
+    {
+      "team": "Paraguay",
+      "flag": "🇵🇾",
+      "manager": "Gustavo Alfaro",
+      "group": "D",
+      "keyPlayers": [
+        {
+          "name": "Miguel Almirón",
+          "position": "AM",
+          "club": "Atlanta United",
+          "note": "Creative spark"
+        }
+      ],
+      "style": "Counter-attacking",
+      "strength": "Defensive resilience",
+      "weakness": "Limited scoring options",
+      "prediction": "Group stage exit"
+    },
+    {
+      "team": "Australia",
+      "flag": "🇦🇺",
+      "manager": "Tony Popovic",
+      "group": "D",
+      "keyPlayers": [
+        {
+          "name": "Mathew Ryan",
+          "position": "GK",
+          "club": "Roma",
+          "note": "Experienced keeper"
+        }
+      ],
+      "style": "Direct, physical",
+      "strength": "Set pieces and work rate",
+      "weakness": "Technical quality in midfield",
+      "prediction": "Group stage exit"
+    },
+    {
+      "team": "Türkiye",
+      "flag": "🇹🇷",
+      "manager": "Vincenzo Montella",
+      "group": "D",
+      "keyPlayers": [
+        {
+          "name": "Arda Güler",
+          "position": "AM",
+          "club": "Real Madrid",
+          "note": "Creative talisman"
+        },
+        {
+          "name": "Kerem Aktürkoğlu",
+          "position": "LW",
+          "club": "Benfica",
+          "note": "Pace and trickery"
+        }
+      ],
+      "style": "Attacking, wide play",
+      "strength": "Young exciting attackers",
+      "weakness": "Defensive consistency",
+      "prediction": "Round of 32"
+    },
+    {
+      "team": "Germany",
+      "flag": "🇩🇪",
+      "manager": "Julian Nagelsmann",
+      "group": "E",
+      "keyPlayers": [
+        {
+          "name": "Florian Wirtz",
+          "position": "AM",
+          "club": "Liverpool",
+          "note": "Elite creator"
+        },
+        {
+          "name": "Jamal Musiala",
+          "position": "AM",
+          "club": "Bayern Munich",
+          "note": "Dribbling threat"
+        }
+      ],
+      "style": "Positional play, high press",
+      "strength": "Squad depth and tactical flexibility",
+      "weakness": "Recent tournament inconsistency",
+      "prediction": "Semi-finals"
+    },
+    {
+      "team": "Curaçao",
+      "flag": "🇨🇼",
+      "manager": "Dick Advocaat",
+      "group": "E",
+      "keyPlayers": [
+        {
+          "name": "Leandro Bacuna",
+          "position": "CM",
+          "club": "PEC Zwolle",
+          "note": "Experienced leader"
+        }
+      ],
+      "style": "Compact defending",
+      "strength": "Organisation under Advocaat",
+      "weakness": "Quality gap vs top sides",
+      "prediction": "Group stage exit"
+    },
+    {
+      "team": "Côte d'Ivoire",
+      "flag": "🇨🇮",
+      "manager": "Emerse Faé",
+      "group": "E",
+      "keyPlayers": [
+        {
+          "name": "Sébastien Haller",
+          "position": "ST",
+          "club": "Borussia Dortmund",
+          "note": "Target man"
+        },
+        {
+          "name": "Nicolas Pépé",
+          "position": "RW",
+          "club": "Villarreal",
+          "note": "Pace on the wing"
+        }
+      ],
+      "style": "Powerful, direct",
+      "strength": "Physical midfield and forwards",
+      "weakness": "Defensive transitions",
+      "prediction": "Round of 32"
+    },
+    {
+      "team": "Ecuador",
+      "flag": "🇪🇨",
+      "manager": "Sebastián Beccacece",
+      "group": "E",
+      "keyPlayers": [
+        {
+          "name": "Moisés Caicedo",
+          "position": "CM",
+          "club": "Chelsea",
+          "note": "Dominant midfielder"
+        },
+        {
+          "name": "Enner Valencia",
+          "position": "ST",
+          "club": "LDU Quito",
+          "note": "Veteran scorer"
+        }
+      ],
+      "style": "High press, energetic",
+      "strength": "Youth and athleticism",
+      "weakness": "Experience at this level",
+      "prediction": "Round of 32"
+    },
+    {
+      "team": "Netherlands",
+      "flag": "🇳🇱",
+      "manager": "Ronald Koeman",
+      "group": "F",
+      "keyPlayers": [
+        {
+          "name": "Virgil van Dijk",
+          "position": "CB",
+          "club": "Liverpool",
+          "note": "Defensive leader"
+        },
+        {
+          "name": "Memphis Depay",
+          "position": "ST",
+          "club": "Corinthians",
+          "note": "Creative forward"
+        }
+      ],
+      "style": "Possession with width",
+      "strength": "Attacking full-backs and midfield",
+      "weakness": "Centre-back pairing questions",
+      "prediction": "Quarter-finals"
+    },
+    {
+      "team": "Japan",
+      "flag": "🇯🇵",
+      "manager": "Hajime Moriyasu",
+      "group": "F",
+      "keyPlayers": [
+        {
+          "name": "Kaoru Mitoma",
+          "position": "LW",
+          "club": "Brighton",
+          "note": "Elite dribbler"
+        },
+        {
+          "name": "Takefusa Kubo",
+          "position": "RW",
+          "club": "Real Sociedad",
+          "note": "Technical winger"
+        }
+      ],
+      "style": "Collective pressing, quick combinations",
+      "strength": "Technical cohesion",
+      "weakness": "Physical duels vs giants",
+      "prediction": "Round of 32"
+    },
+    {
+      "team": "Sweden",
+      "flag": "🇸🇪",
+      "manager": "Jon Dahl Tomasson",
+      "group": "F",
+      "keyPlayers": [
+        {
+          "name": "Alexander Isak",
+          "position": "ST",
+          "club": "Newcastle",
+          "note": "Elite striker"
+        }
+      ],
+      "style": "Structured, aerial threat",
+      "strength": "Set pieces and height",
+      "weakness": "Creativity in open play",
+      "prediction": "Group stage exit"
+    },
+    {
+      "team": "Tunisia",
+      "flag": "🇹🇳",
+      "manager": "Samuel Shashoua",
+      "group": "F",
+      "keyPlayers": [
+        {
+          "name": "Youssef Msakni",
+          "position": "AM",
+          "club": "Al-Arabi",
+          "note": "Creative outlet"
+        }
+      ],
+      "style": "Compact, counter-attacking",
+      "strength": "Defensive discipline",
+      "weakness": "Scoring consistency",
+      "prediction": "Group stage exit"
+    },
+    {
+      "team": "Belgium",
+      "flag": "🇧🇪",
+      "manager": "Domenico Tedesco",
+      "group": "G",
+      "keyPlayers": [
+        {
+          "name": "Kevin De Bruyne",
+          "position": "CM",
+          "club": "Napoli",
+          "note": "World-class playmaker"
+        },
+        {
+          "name": "Romelu Lukaku",
+          "position": "ST",
+          "club": "Napoli",
+          "note": "Physical finisher"
+        }
+      ],
+      "style": "Possession-based 4-3-3",
+      "strength": "Star quality in attack",
+      "weakness": "Aging squad and defensive gaps",
+      "prediction": "Round of 32"
+    },
+    {
+      "team": "Egypt",
+      "flag": "🇪🇬",
+      "manager": "Hossam Hassan",
+      "group": "G",
+      "keyPlayers": [
+        {
+          "name": "Mohamed Salah",
+          "position": "RW",
+          "club": "Liverpool",
+          "note": "Elite goal scorer"
+        }
+      ],
+      "style": "Counter-attacking",
+      "strength": "Salah-led transitions",
+      "weakness": "Dependency on one player",
+      "prediction": "Round of 32"
+    },
+    {
+      "team": "IR Iran",
+      "flag": "🇮🇷",
+      "manager": "Amir Ghalenoei",
+      "group": "G",
+      "keyPlayers": [
+        {
+          "name": "Sardar Azmoun",
+          "position": "ST",
+          "club": "Shabab Al-Ahli",
+          "note": "Main striker"
+        }
+      ],
+      "style": "Organised, defensive",
+      "strength": "Compact shape",
+      "weakness": "Limited attacking options",
+      "prediction": "Group stage exit"
+    },
+    {
+      "team": "New Zealand",
+      "flag": "🇳🇿",
+      "manager": "Anthony Hudson",
+      "group": "G",
+      "keyPlayers": [
+        {
+          "name": "Chris Wood",
+          "position": "ST",
+          "club": "Nottingham Forest",
+          "note": "Aerial presence"
+        }
+      ],
+      "style": "Direct, physical",
+      "strength": "Set-piece threat",
+      "weakness": "Squad depth",
+      "prediction": "Group stage exit"
+    },
+    {
+      "team": "Spain",
+      "flag": "🇪🇸",
+      "manager": "Luis de la Fuente",
+      "group": "H",
+      "keyPlayers": [
+        {
+          "name": "Lamine Yamal",
+          "position": "RW",
+          "club": "Barcelona",
+          "note": "Generational talent"
+        },
+        {
+          "name": "Rodri",
+          "position": "CM",
+          "club": "Manchester City",
+          "note": "Controls games"
+        },
+        {
+          "name": "Nico Williams",
+          "position": "LW",
+          "club": "Athletic Bilbao",
+          "note": "Pace and dribbling"
+        }
+      ],
+      "style": "Positional dominance, youth-driven",
+      "strength": "Midfield control and pressing",
+      "weakness": "Occasional lack of a natural finisher",
+      "prediction": "Winners"
+    },
+    {
+      "team": "Cabo Verde",
+      "flag": "🇨🇻",
+      "manager": "Bubista",
+      "group": "H",
+      "keyPlayers": [
+        {
+          "name": "Ryan Mendes",
+          "position": "LW",
+          "club": "Al-Taawoun",
+          "note": "Experienced winger"
+        }
+      ],
+      "style": "Organised, counter-attacking",
+      "strength": "Team unity and discipline",
+      "weakness": "Star quality",
+      "prediction": "Group stage exit"
+    },
+    {
+      "team": "Saudi Arabia",
+      "flag": "🇸🇦",
+      "manager": "Roberto Mancini",
+      "group": "H",
+      "keyPlayers": [
+        {
+          "name": "Salem Al-Dawsari",
+          "position": "LW",
+          "club": "Al-Hilal",
+          "note": "Creative winger"
+        }
+      ],
+      "style": "Possession, technical",
+      "strength": "Improved under Mancini",
+      "weakness": "Defensive fragility vs elite",
+      "prediction": "Group stage exit"
+    },
+    {
+      "team": "Uruguay",
+      "flag": "🇺🇾",
+      "manager": "Sebastián Abreu",
+      "group": "H",
+      "keyPlayers": [
+        {
+          "name": "Darwin Núñez",
+          "position": "ST",
+          "club": "Liverpool",
+          "note": "Relentless runner"
+        },
+        {
+          "name": "Federico Valverde",
+          "position": "CM",
+          "club": "Real Madrid",
+          "note": "Box-to-box engine"
+        }
+      ],
+      "style": "Gritty, competitive",
+      "strength": "Midfield battle and experience",
+      "weakness": "Aging attack",
+      "prediction": "Round of 32"
+    },
+    {
+      "team": "France",
+      "flag": "🇫🇷",
+      "manager": "Didier Deschamps",
+      "group": "I",
+      "keyPlayers": [
+        {
+          "name": "Kylian Mbappé",
+          "position": "ST",
+          "club": "Real Madrid",
+          "note": "Elite goal scorer"
+        },
+        {
+          "name": "Ousmane Dembélé",
+          "position": "RW",
+          "club": "PSG",
+          "note": "Creative force"
+        }
+      ],
+      "style": "Balanced, star-powered",
+      "strength": "Squad depth unrivalled",
+      "weakness": "Occasional complacency",
+      "prediction": "Finalists"
+    },
+    {
+      "team": "Senegal",
+      "flag": "🇸🇳",
+      "manager": "Pape Thiaw",
+      "group": "I",
+      "keyPlayers": [
+        {
+          "name": "Sadio Mané",
+          "position": "LW",
+          "club": "Al-Nassr",
+          "note": "Experienced leader"
+        }
+      ],
+      "style": "Physical, direct",
+      "strength": "Pace and power",
+      "weakness": "Creativity in midfield",
+      "prediction": "Round of 32"
+    },
+    {
+      "team": "Iraq",
+      "flag": "🇮🇶",
+      "manager": "Jesús Ramírez",
+      "group": "I",
+      "keyPlayers": [
+        {
+          "name": "Aymen Dahouk",
+          "position": "CM",
+          "club": "Al-Shorta",
+          "note": "Midfield engine"
+        }
+      ],
+      "style": "Organised, defensive",
+      "strength": "Passion and home-region support",
+      "weakness": "Quality gap",
+      "prediction": "Group stage exit"
+    },
+    {
+      "team": "Norway",
+      "flag": "🇳🇴",
+      "manager": "Ståle Solbakken",
+      "group": "I",
+      "keyPlayers": [
+        {
+          "name": "Erling Haaland",
+          "position": "ST",
+          "club": "Manchester City",
+          "note": "Golden Boot favourite"
+        },
+        {
+          "name": "Martin Ødegaard",
+          "position": "CM",
+          "club": "Arsenal",
+          "note": "Creative hub"
+        }
+      ],
+      "style": "Direct, Haaland-focused",
+      "strength": "Haaland goal threat",
+      "weakness": "Building play without Haaland",
+      "prediction": "Round of 32"
+    },
+    {
+      "team": "Argentina",
+      "flag": "🇦🇷",
+      "manager": "Lionel Scaloni",
+      "group": "J",
+      "keyPlayers": [
+        {
+          "name": "Lautaro Martínez",
+          "position": "ST",
+          "club": "Inter Milan",
+          "note": "Clinical finisher"
+        },
+        {
+          "name": "Enzo Fernández",
+          "position": "CM",
+          "club": "Chelsea",
+          "note": "Midfield controller"
+        }
+      ],
+      "style": "Balanced, Messi-era evolution",
+      "strength": "Tournament pedigree and depth",
+      "weakness": "Aging core",
+      "prediction": "Semi-finals"
+    },
+    {
+      "team": "Algeria",
+      "flag": "🇩🇿",
+      "manager": "Vahid Halilhodžić",
+      "group": "J",
+      "keyPlayers": [
+        {
+          "name": "Riyad Mahrez",
+          "position": "RW",
+          "club": "Al-Ahli",
+          "note": "Creative winger"
+        }
+      ],
+      "style": "Counter-attacking",
+      "strength": "Experience in squad",
+      "weakness": "Consistency",
+      "prediction": "Group stage exit"
+    },
+    {
+      "team": "Austria",
+      "flag": "🇦🇹",
+      "manager": "Ralf Rangnick",
+      "group": "J",
+      "keyPlayers": [
+        {
+          "name": "Marcel Sabitzer",
+          "position": "CM",
+          "club": "Borussia Dortmund",
+          "note": "Experienced midfielder"
+        },
+        {
+          "name": "Christoph Baumgartner",
+          "position": "AM",
+          "club": "RB Leipzig",
+          "note": "Energy in midfield"
+        }
+      ],
+      "style": "High press, gegenpressing",
+      "strength": "Intensity and pressing",
+      "weakness": "Big-game experience",
+      "prediction": "Round of 32"
+    },
+    {
+      "team": "Jordan",
+      "flag": "🇯🇴",
+      "manager": "Hussein Ammouta",
+      "group": "J",
+      "keyPlayers": [
+        {
+          "name": "Musa Al-Taamari",
+          "position": "LW",
+          "club": "Montpellier",
+          "note": "Pace on the wing"
+        }
+      ],
+      "style": "Compact, defensive",
+      "strength": "Organisation",
+      "weakness": "Scoring threat",
+      "prediction": "Group stage exit"
+    },
+    {
+      "team": "Portugal",
+      "flag": "🇵🇹",
+      "manager": "Roberto Martínez",
+      "group": "K",
+      "keyPlayers": [
+        {
+          "name": "Cristiano Ronaldo",
+          "position": "ST",
+          "club": "Al-Nassr",
+          "note": "Record international scorer"
+        },
+        {
+          "name": "Rafael Leão",
+          "position": "LW",
+          "club": "AC Milan",
+          "note": "Pace and dribbling"
+        }
+      ],
+      "style": "Attacking, possession",
+      "strength": "Attacking talent depth",
+      "weakness": "Defensive midfield balance",
+      "prediction": "Quarter-finals"
+    },
+    {
+      "team": "Jamaica",
+      "flag": "🇯🇲",
+      "manager": "Steve McClaren",
+      "group": "K",
+      "keyPlayers": [
+        {
+          "name": "Leon Bailey",
+          "position": "RW",
+          "club": "Aston Villa",
+          "note": "Pace and trickery"
+        }
+      ],
+      "style": "Direct, physical",
+      "strength": "Pace in attack",
+      "weakness": "Technical midfield",
+      "prediction": "Group stage exit"
+    },
+    {
+      "team": "Uzbekistan",
+      "flag": "🇺🇿",
+      "manager": "Slavisa Jokanović",
+      "group": "K",
+      "keyPlayers": [
+        {
+          "name": "Eldor Shomurodov",
+          "position": "ST",
+          "club": "Roma",
+          "note": "Main striker"
+        }
+      ],
+      "style": "Organised, improving",
+      "strength": "Rising Asian football standard",
+      "weakness": "First World Cup experience",
+      "prediction": "Group stage exit"
+    },
+    {
+      "team": "Colombia",
+      "flag": "🇨🇴",
+      "manager": "Néstor Lorenzo",
+      "group": "K",
+      "keyPlayers": [
+        {
+          "name": "Luis Díaz",
+          "position": "LW",
+          "club": "Liverpool",
+          "note": "Elite winger"
+        },
+        {
+          "name": "James Rodríguez",
+          "position": "AM",
+          "club": "León",
+          "note": "Creative playmaker"
+        }
+      ],
+      "style": "Attacking flair",
+      "strength": "Creative attackers",
+      "weakness": "Defensive consistency",
+      "prediction": "Round of 32"
+    },
+    {
+      "team": "England",
+      "flag": "🏴󠁧󠁢󠁥󠁮󠁧󠁿",
+      "manager": "Thomas Tuchel",
+      "group": "L",
+      "keyPlayers": [
+        {
+          "name": "Harry Kane",
+          "position": "ST",
+          "club": "Bayern Munich",
+          "note": "Elite finisher"
+        },
+        {
+          "name": "Bukayo Saka",
+          "position": "RW",
+          "club": "Arsenal",
+          "note": "Consistent performer"
+        }
+      ],
+      "style": "Structured, tactical flexibility",
+      "strength": "Squad depth under Tuchel",
+      "weakness": "Penalty-area ruthlessness",
+      "prediction": "Semi-finals"
+    },
+    {
+      "team": "Croatia",
+      "flag": "🇭🇷",
+      "manager": "Zlatko Dalić",
+      "group": "L",
+      "keyPlayers": [
+        {
+          "name": "Luka Modrić",
+          "position": "CM",
+          "club": "Real Madrid",
+          "note": "Legendary playmaker"
+        },
+        {
+          "name": "Josko Gvardiol",
+          "position": "CB",
+          "club": "Manchester City",
+          "note": "Elite defender"
+        }
+      ],
+      "style": "Technical, experienced",
+      "strength": "Midfield mastery",
+      "weakness": "Aging squad",
+      "prediction": "Round of 32"
+    },
+    {
+      "team": "Ghana",
+      "flag": "🇬🇭",
+      "manager": "Otto Addo",
+      "group": "L",
+      "keyPlayers": [
+        {
+          "name": "Mohammed Kudus",
+          "position": "AM",
+          "club": "West Ham",
+          "note": "Creative attacker"
+        }
+      ],
+      "style": "Direct, athletic",
+      "strength": "Pace in wide areas",
+      "weakness": "Defensive organisation",
+      "prediction": "Group stage exit"
+    },
+    {
+      "team": "Panama",
+      "flag": "🇵🇦",
+      "manager": "Thomas Christiansen",
+      "group": "L",
+      "keyPlayers": [
+        {
+          "name": "José Fajardo",
+          "position": "ST",
+          "club": "LDU Quito",
+          "note": "Goal threat"
+        }
+      ],
+      "style": "Compact, counter",
+      "strength": "Organisation",
+      "weakness": "Quality depth",
+      "prediction": "Group stage exit"
+    }
+  ]
+}

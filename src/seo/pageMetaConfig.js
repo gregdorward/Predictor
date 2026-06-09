@@ -41,6 +41,11 @@ export const PAGE_META = {
     description:
       "Teams with the strongest Both Teams To Score records. Find BTTS-elite sides and their upcoming fixtures.",
   },
+  "/worldcup2026": {
+    title: "World Cup 2026 Preview | SoccerStatsHub",
+    description:
+      "FIFA World Cup 2026 tournament preview: predicted winner, Golden Boot picks, group predictions, all 48 team guides and key match predictions.",
+  },
   "/seasonpreviews": {
     title: "Season Previews | SoccerStatsHub",
     description:

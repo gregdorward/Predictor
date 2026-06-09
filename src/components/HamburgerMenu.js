@@ -1,10 +1,11 @@
 import { useState } from 'react';
 import { Menu, X } from 'lucide-react';
 
-const menuItems = ['Home', 'Season Previews (BETA)', 'BTTS Teams', 'BTTS Games', 'Over 2.5 Goals Games', 'Highest Scoring Leagues', 'Lowest Scoring Leagues', 'Highest Scoring Teams'];
+const menuItems = ['Home', 'World Cup 2026', 'Season Previews (BETA)', 'BTTS Teams', 'BTTS Games', 'Over 2.5 Goals Games', 'Highest Scoring Leagues', 'Lowest Scoring Leagues', 'Highest Scoring Teams'];
 
 const mappings = {
     'Home': '/',
+    'World Cup 2026': '/worldcup2026/',
     'Season Previews (BETA)': '/seasonpreviews/',
     'BTTS Teams': '/bttsteams/',
     'BTTS Games': '/bttsfixtures/',

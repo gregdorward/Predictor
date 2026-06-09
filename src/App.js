@@ -27,6 +27,7 @@ import HighestScoringFixtures from "./components/HighestScoringFixtures";
 import BTTSFixtures from "./components/BTTSFixtures";
 import BTTSTeams from "./components/BTTSTeams";
 import SeasonPreview from "./components/SeasonPreview";
+import WorldCup2026 from "./components/WorldCup2026";
 import TeamPage from "./components/Team";
 import { initTheme } from "./utils/theme";
 import { getInitialDateFromShareUrl } from "./utils/shareMatchUrl";
@@ -1449,6 +1450,7 @@ export default function App() {
         <Route path="/bttsteams/" element={<BTTSTeams />} />
         <Route path="/cancelsubscription/" element={<CancelSubscription />} />
         <Route path="/seasonpreviews/" element={<SeasonPreview />} />
+        <Route path="/worldcup2026/" element={<WorldCup2026 />} />
         {/* <Route path="/" element={<Fixture />} /> */}
       </Routes>
     </AuthProvider>

@@ -17,6 +17,7 @@ function Footer() {
           <li><a href="/o25/">Highest Scoring Leagues</a></li>
           <li><a href="/u25/">Lowest Scoring Leagues</a></li>
           <li><a href="/teamshigh/">Highest Scoring Teams</a></li>
+          <li><a href="/worldcup2026/">World Cup 2026</a></li>
           <li><a href="/seasonpreviews/">Season Previews (BETA)</a></li>
         </ul>
       </div>

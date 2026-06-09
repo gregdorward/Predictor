@@ -70,7 +70,8 @@
       "/fixtureshigh",
       "/teamshigh",
       "/reset",
-      "/cancelsubscription"
+      "/cancelsubscription",
+      "/worldcup2026"
     ],
     "crawl": false,
     "puppeteerArgs": [
