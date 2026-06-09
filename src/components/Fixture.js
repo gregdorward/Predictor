@@ -592,6 +592,16 @@ const List = ({
             setShowShortlist(false);
           }
 
+          const scrollTargetId = sharedShortlist[0]?.id;
+          if (scrollTargetId) {
+            window.setTimeout(() => {
+              document.getElementById(scrollTargetId)?.scrollIntoView({
+                behavior: "smooth",
+                block: "start",
+              });
+            }, 300);
+          }
+
           isInitialMount.current = false;
           return;
         }

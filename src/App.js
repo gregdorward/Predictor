@@ -29,6 +29,7 @@ import BTTSTeams from "./components/BTTSTeams";
 import SeasonPreview from "./components/SeasonPreview";
 import TeamPage from "./components/Team";
 import { initTheme } from "./utils/theme";
+import { getInitialDateFromShareUrl } from "./utils/shareMatchUrl";
 import { SuccessPage } from "./components/Success"
 import { CancelPage } from "./components/Cancel"
 import PasswordReset from "./components/PasswordReset";
@@ -577,8 +578,8 @@ function AppContent() {
   const [activeSlip, setActiveSlip] = useState([]);
   // 2. For the items already in the database (History)
   const [tipHistory, setTipHistory] = useState([]);
-  const [offset, setOffset] = useState(0);
-  const [currentDate, setCurrentDate] = useState(new Date());
+  const [offset, setOffset] = useState(() => getInitialDateFromShareUrl().offset);
+  const [currentDate, setCurrentDate] = useState(() => getInitialDateFromShareUrl().date);
   const [isLoading, setIsLoading] = useState(false);
   const [isProbability, setIsProbability] = useState(true);
   const [currentUser, setCurrentUser] = useState(null);

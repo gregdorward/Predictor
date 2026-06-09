@@ -112,6 +112,24 @@ function formatLeagueStat(value) {
   return formatStatDisplay(value);
 }
 
+function getTeamInjuryImpactLoss(impacts, gameId, side) {
+  let atk = Number(impacts?.atk) || 0;
+  let def = Number(impacts?.def) || 0;
+
+  if (atk === 0 && def === 0) {
+    const existing = predictedScoresData?.find((entry) => entry.gameId === gameId);
+    const stored = existing?.impacts?.[side];
+    atk = Number(stored?.atk) || 0;
+    def = Number(stored?.def) || 0;
+  }
+
+  if (atk === 0 && def === 0) {
+    return undefined;
+  }
+
+  return Math.max(atk, def);
+}
+
 // Shared stat fields for homeAllStatsProps / awayAllStatsProps with "-" fallbacks.
 function buildTeamAllStatsFields(teamStats, leagueStats, form) {
   const shotsInsideBox = teamStats?.shotsFromInsideTheBox;
@@ -2403,6 +2421,9 @@ function GameStats({ game, displayBool, stats, handleToggleTip, userTips }) {
     { key: 'goalDifference', higherIsBetter: true },
     { key: 'goalDifferenceHomeOrAway', higherIsBetter: true },
     { key: 'ppg', higherIsBetter: true },
+    { key: 'ppgLast5', higherIsBetter: true },
+    { key: 'ppgHomeOrAway', higherIsBetter: true },
+    { key: 'injuryImpact', higherIsBetter: false },
     { key: 'formTrend', higherIsBetter: true },
     { key: 'winPercentage', higherIsBetter: true },
     { key: 'lossPercentage', higherIsBetter: false },
@@ -2682,6 +2703,9 @@ function GameStats({ game, displayBool, stats, handleToggleTip, userTips }) {
     FavouriteRecord: statOrDash(formDataHome[0].FavouriteRecord),
     StyleOfPlay: statOrDash(formDataHome[0].styleOfPlayOverall),
     StyleOfPlayHomeOrAway: statOrDash(formDataHome[0].styleOfPlayHome),
+    ppgLast5: statOrDash(homeLast5LeagueStats.ppg),
+    ppgHomeOrAway: statOrDash(homeForm.homePPGAv),
+    injuryImpact: getTeamInjuryImpactLoss(homeImpacts, game.id, "home"),
   };
 
   const oppositionPassesAway = awayTeamStats?.ownHalfPassesTotalAgainst ?? 0;
@@ -2738,6 +2762,9 @@ function GameStats({ game, displayBool, stats, handleToggleTip, userTips }) {
     FavouriteRecord: statOrDash(formDataAway[0].FavouriteRecord),
     StyleOfPlay: statOrDash(formDataAway[0].styleOfPlayOverall),
     StyleOfPlayHomeOrAway: statOrDash(formDataAway[0].styleOfPlayAway),
+    ppgLast5: statOrDash(awayLast5LeagueStats.ppg),
+    ppgHomeOrAway: statOrDash(awayForm.awayPPGAv),
+    injuryImpact: getTeamInjuryImpactLoss(awayImpacts, game.id, "away"),
   };
 
   function StatsHomeComponent({ getCollapsableProps, homeAllStatsProps, comparisonStatusMap }) {
