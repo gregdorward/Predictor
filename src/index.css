@@ -8825,7 +8825,7 @@ h5.section-title {
 }
 
 .WC26__subtitle {
-  color: var(--secondary-color);
+  color: var(--text-color);
   margin: 0;
 }
 
@@ -8871,7 +8871,7 @@ h5.section-title {
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.04em;
-  color: var(--secondary-color);
+  color: var(--text-color);
   margin-bottom: 0.5em;
 }
 
@@ -8891,7 +8891,7 @@ h5.section-title {
   font-size: 0.9rem;
   margin: 0.75em 0 0;
   line-height: 1.5;
-  color: var(--secondary-color);
+  color: var(--text-color);
 }
 
 .WC26__flag {
@@ -9019,7 +9019,7 @@ h5.section-title {
 
 .WC26__cardMeta {
   font-size: 0.9rem;
-  color: var(--secondary-color);
+  color: var(--text-color);
   margin: 0.25em 0;
 }
 
@@ -9072,7 +9072,7 @@ h5.section-title {
 .WC26__playerMeta {
   display: block;
   font-size: 0.85rem;
-  color: var(--secondary-color);
+  color: var(--text-color);
   margin-top: 0.15em;
 }
 
@@ -9121,7 +9121,7 @@ h5.section-title {
 .WC26__keyGame {
   margin-top: 0.5em;
   font-size: 0.85rem;
-  color: var(--secondary-color);
+  color: var(--text-color);
 }
 
 .WC26__search {
@@ -9144,7 +9144,7 @@ h5.section-title {
 
 .WC26__resultCount {
   font-size: 0.85rem;
-  color: var(--secondary-color);
+  color: var(--text-color);
   margin: 0 0 1em;
 }
 
@@ -9186,7 +9186,7 @@ h5.section-title {
 
 .WC26__teamPrediction {
   font-size: 0.8rem;
-  color: var(--secondary-color);
+  color: var(--text-color);
 }
 
 .WC26__teamCardBody {
@@ -9263,7 +9263,7 @@ h5.section-title {
 
 .WC26__matchesNote {
   font-size: 0.9rem;
-  color: var(--secondary-color);
+  color: var(--text-color);
   margin-bottom: 1.5em;
   line-height: 1.5;
 }
@@ -9272,6 +9272,7 @@ h5.section-title {
   display: flex;
   flex-direction: column;
   gap: 1em;
+  width: 100%;
 }
 
 .WC26__matchCard {
@@ -9290,7 +9291,7 @@ h5.section-title {
 
 .WC26__matchDate {
   font-size: 0.85rem;
-  color: var(--secondary-color);
+  color: var(--text-color);
 }
 
 .WC26__matchTeams {
@@ -9343,14 +9344,14 @@ h5.section-title {
   display: flex;
   justify-content: space-between;
   font-size: 0.75rem;
-  color: var(--secondary-color);
+  color: var(--text-color);
   margin-top: 0.35em;
 }
 
 .WC26__generated {
   margin-top: 2em;
   font-size: 0.8rem;
-  color: var(--secondary-color);
+  color: var(--text-color);
   text-align: center;
   line-height: 1.5;
 }
