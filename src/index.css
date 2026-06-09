@@ -8815,23 +8815,41 @@ h5.section-title {
   margin: 0 auto;
   padding: 1em var(--content-padding-x) 3em;
   color: var(--text-color);
+  font-size: 0.9375rem;
+  line-height: 1.5;
+}
+
+/* Override global section { width: 50% } used elsewhere in the app */
+.WC26 section {
+  width: 100%;
+  min-height: auto;
+  display: block;
+  position: static;
+  align-items: stretch;
+  justify-content: flex-start;
+}
+
+.WC26__tabContent {
+  width: 100%;
 }
 
 .WC26__title {
-  font-size: 2rem;
+  font-size: 1.5rem;
   font-weight: 600;
-  margin: 0.5em 0 0.25em;
+  margin: 0.35em 0 0.25em;
   color: var(--text-color);
+  line-height: 1.2;
 }
 
 .WC26__subtitle {
   color: var(--text-color);
   margin: 0;
+  font-size: 0.875rem;
 }
 
 .WC26__hero {
-  margin: 1.5em 0 2em;
-  padding: 1.5em;
+  margin: 1em 0 1.5em;
+  padding: 1em;
   background: var(--secondary-background-color);
   border-radius: 12px;
   border: 1px solid var(--third-background-color);
@@ -8883,8 +8901,9 @@ h5.section-title {
 }
 
 .WC26__heroTeam {
-  font-size: 1.5rem;
+  font-size: 1.15rem;
   font-weight: 600;
+  line-height: 1.25;
 }
 
 .WC26__heroReason {
@@ -8900,7 +8919,7 @@ h5.section-title {
 }
 
 .WC26__flag--large {
-  font-size: 2rem;
+  font-size: 1.5rem;
 }
 
 .WC26__tabs {
@@ -8913,12 +8932,12 @@ h5.section-title {
 }
 
 .WC26__tab {
-  padding: 0.6em 1em;
+  padding: 0.5em 0.75em;
   border: none;
   background: transparent;
   color: var(--text-color);
   font-family: inherit;
-  font-size: 0.95rem;
+  font-size: 0.8125rem;
   font-weight: 600;
   cursor: pointer;
   border-radius: 6px;
@@ -8944,16 +8963,17 @@ h5.section-title {
 }
 
 .WC26__sectionTitle {
-  font-size: 1.25rem;
+  font-size: 1.05rem;
   font-weight: 600;
-  margin: 1.5em 0 1em;
+  margin: 1.25em 0 0.75em;
   color: var(--text-color);
+  line-height: 1.3;
 }
 
 .WC26__subTitle {
-  font-size: 1rem;
+  font-size: 0.9375rem;
   font-weight: 600;
-  margin: 1em 0 0.5em;
+  margin: 0.85em 0 0.5em;
 }
 
 .WC26__overviewText {
@@ -9014,7 +9034,7 @@ h5.section-title {
 
 .WC26__cardTitle {
   margin: 0 0 0.5em;
-  font-size: 1.1rem;
+  font-size: 1rem;
 }
 
 .WC26__cardMeta {
@@ -9024,8 +9044,8 @@ h5.section-title {
 }
 
 .WC26__cardText {
-  font-size: 0.9rem;
-  line-height: 1.5;
+  font-size: 0.875rem;
+  line-height: 1.45;
   margin: 0.25em 0 0;
 }
 
@@ -9103,7 +9123,7 @@ h5.section-title {
 
 .WC26__groupTitle {
   margin: 0 0 0.75em;
-  font-size: 1.1rem;
+  font-size: 0.9375rem;
   color: var(--primary-color);
 }
 
@@ -9126,9 +9146,9 @@ h5.section-title {
 
 .WC26__search {
   width: 100%;
-  max-width: 400px;
-  padding: 0.65em 1em;
-  font-size: 1rem;
+  max-width: 100%;
+  padding: 0.6em 0.85em;
+  font-size: 0.9375rem;
   font-family: inherit;
   border: 2px solid var(--third-background-color);
   border-radius: 8px;
@@ -9168,25 +9188,28 @@ h5.section-title {
   width: 100%;
   display: flex;
   align-items: center;
-  gap: 0.5em;
-  padding: 0.85em 1em;
+  flex-wrap: wrap;
+  gap: 0.35em 0.5em;
+  padding: 0.75em 0.85em;
   border: none;
   background: transparent;
   color: var(--text-color);
   font-family: inherit;
-  font-size: 0.95rem;
+  font-size: 0.875rem;
   cursor: pointer;
   text-align: left;
 }
 
 .WC26__teamName {
-  flex: 1;
+  flex: 1 1 auto;
+  min-width: 0;
   font-weight: 600;
 }
 
 .WC26__teamPrediction {
-  font-size: 0.8rem;
+  font-size: 0.75rem;
   color: var(--text-color);
+  flex-shrink: 0;
 }
 
 .WC26__teamCardBody {
@@ -9223,10 +9246,11 @@ h5.section-title {
 }
 
 .WC26__contenderRank {
-  font-size: 1.25rem;
+  font-size: 1rem;
   font-weight: 600;
   color: var(--primary-color);
-  min-width: 1.5em;
+  min-width: 1.25em;
+  flex-shrink: 0;
 }
 
 .WC26__contenderBody {
@@ -9235,9 +9259,10 @@ h5.section-title {
 
 .WC26__contenderHeader {
   display: flex;
+  flex-wrap: wrap;
   justify-content: space-between;
-  align-items: center;
-  gap: 1em;
+  align-items: baseline;
+  gap: 0.25em 0.75em;
   margin-bottom: 0.35em;
 }
 
@@ -9256,9 +9281,14 @@ h5.section-title {
 }
 
 .WC26__goldenBootItem {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.25em 0.5em;
   padding: 0.65em 0;
   border-bottom: 1px solid var(--third-background-color);
-  font-size: 0.9rem;
+  font-size: 0.875rem;
+  line-height: 1.4;
 }
 
 .WC26__matchesNote {
@@ -9276,7 +9306,7 @@ h5.section-title {
 }
 
 .WC26__matchCard {
-  padding: 1.25em;
+  padding: 0.85em;
   background: var(--secondary-background-color);
   border-radius: 10px;
   border: 1px solid var(--third-background-color);
@@ -9284,9 +9314,11 @@ h5.section-title {
 
 .WC26__matchMeta {
   display: flex;
+  flex-wrap: wrap;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 0.75em;
+  gap: 0.35em 0.5em;
+  margin-bottom: 0.65em;
 }
 
 .WC26__matchDate {
@@ -9295,20 +9327,32 @@ h5.section-title {
 }
 
 .WC26__matchTeams {
-  display: flex;
-  justify-content: space-between;
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
   align-items: center;
-  gap: 1em;
+  gap: 0.5em;
   font-weight: 600;
-  margin-bottom: 0.75em;
+  font-size: 0.875rem;
+  margin-bottom: 0.65em;
+  line-height: 1.3;
+}
+
+.WC26__matchTeams span:first-child {
+  text-align: left;
+}
+
+.WC26__matchTeams span:last-child {
+  text-align: right;
 }
 
 .WC26__matchScore {
-  font-size: 1.25rem;
+  font-size: 1rem;
   color: var(--primary-color);
-  padding: 0.25em 0.75em;
+  padding: 0.2em 0.55em;
   background: var(--background-color);
   border-radius: 6px;
+  text-align: center;
+  white-space: nowrap;
 }
 
 .WC26__predictionBar {
@@ -9382,10 +9426,70 @@ h5.section-title {
 }
 
 .WC26__matchPhaseSection {
-  margin-bottom: 2em;
+  width: 100%;
+  max-width: 100%;
+  margin-bottom: 1.5em;
 }
 
 .WC26__badge--live {
   background: var(--primary-color);
   color: var(--button-text-color);
+}
+
+@media (min-width: 768px) {
+  .WC26 {
+    font-size: 1rem;
+  }
+
+  .WC26__title {
+    font-size: 1.75rem;
+  }
+
+  .WC26__subtitle {
+    font-size: 0.9375rem;
+  }
+
+  .WC26__hero {
+    margin: 1.5em 0 2em;
+    padding: 1.25em 1.5em;
+  }
+
+  .WC26__heroTeam {
+    font-size: 1.35rem;
+  }
+
+  .WC26__flag--large {
+    font-size: 1.75rem;
+  }
+
+  .WC26__tab {
+    font-size: 0.875rem;
+    padding: 0.55em 0.9em;
+  }
+
+  .WC26__sectionTitle {
+    font-size: 1.15rem;
+    margin: 1.5em 0 1em;
+  }
+
+  .WC26__matchTeams {
+    font-size: 0.9375rem;
+  }
+
+  .WC26__matchScore {
+    font-size: 1.1rem;
+  }
+
+  .WC26__teamCardToggle {
+    font-size: 0.9375rem;
+    flex-wrap: nowrap;
+  }
+
+  .WC26__matchCard {
+    padding: 1.1em;
+  }
+
+  .WC26__search {
+    max-width: 400px;
+  }
 }
