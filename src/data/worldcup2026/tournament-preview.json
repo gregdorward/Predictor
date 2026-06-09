@@ -160,49 +160,49 @@
       "team": "Türkiye",
       "flag": "🇹🇷",
       "age": 20,
-      "note": "Real Madrid playmaker with eye for the spectacular."
+      "note": "Real Madrid playmaker with an eye for the spectacular."
     },
     {
       "player": "Florian Wirtz",
       "team": "Germany",
       "flag": "🇩🇪",
-      "age": 22,
-      "note": "Liverpool-bound creator who can unlock any defence."
+      "age": 23,
+      "note": "Liverpool playmaker after a full 25/26 Premier League season under Arne Slot."
     },
     {
       "player": "Kaoru Mitoma",
       "team": "Japan",
       "flag": "🇯🇵",
-      "age": 28,
-      "note": "Elite dribbler who thrives in big moments."
+      "age": 29,
+      "note": "Brighton dribbler who thrives in big moments."
     },
     {
       "player": "Mohammed Kudus",
       "team": "Ghana",
       "flag": "🇬🇭",
-      "age": 24,
-      "note": "West Ham star with pace and trickery from wide areas."
+      "age": 25,
+      "note": "Tottenham winger with pace and trickery after his summer 2025 move from West Ham."
     },
     {
       "player": "Eldor Shomurodov",
       "team": "Uzbekistan",
       "flag": "🇺🇿",
-      "age": 29,
-      "note": "Uzbekistan's first World Cup — their main goal threat."
+      "age": 30,
+      "note": "Başakşehir striker who fired Uzbekistan to their first World Cup; joint Süper Lig top scorer in 25/26."
     },
     {
       "player": "Jonathan David",
       "team": "Canada",
       "flag": "🇨🇦",
-      "age": 25,
-      "note": "Clinical finisher leading Canada's home-nation charge."
+      "age": 26,
+      "note": "Juventus striker leading Canada's home-nation charge after leaving Lille."
     },
     {
       "player": "Nico Williams",
       "team": "Spain",
       "flag": "🇪🇸",
       "age": 22,
-      "note": "Pace merchant who complements Yamal on the opposite flank."
+      "note": "Athletic Bilbao pace merchant who complements Yamal on the opposite flank."
     }
   ],
   "hostNations": [
@@ -225,7 +225,7 @@
       "flag": "🇨🇦",
       "group": "B",
       "prediction": "Round of 32",
-      "note": "Marsch's pressing style suits Davies and David. Switzerland is the key group test."
+      "note": "Marsch's pressing style suits Davies and David. Switzerland is the key group test — David arrives from a first season at Juventus."
     }
   ],
   "groups": [
@@ -474,8 +474,8 @@
         {
           "name": "Jonathan David",
           "position": "ST",
-          "club": "Lille",
-          "note": "Clinical finisher"
+          "club": "Juventus",
+          "note": "Clinical finisher after Lille move"
         }
       ],
       "style": "High press, vertical play",
@@ -582,8 +582,8 @@
         {
           "name": "Sofyan Amrabat",
           "position": "CM",
-          "club": "Manchester United",
-          "note": "Ball-winning midfielder"
+          "club": "Real Betis",
+          "note": "Midfield anchor on loan from Fenerbahçe"
         }
       ],
       "style": "Compact, counter-pressing",
@@ -1212,8 +1212,8 @@
         {
           "name": "Musa Al-Taamari",
           "position": "LW",
-          "club": "Montpellier",
-          "note": "Pace on the wing"
+          "club": "Stade Rennais",
+          "note": "Pace and trickery on the wing"
         }
       ],
       "style": "Compact, defensive",
@@ -1272,8 +1272,8 @@
         {
           "name": "Eldor Shomurodov",
           "position": "ST",
-          "club": "Roma",
-          "note": "Main striker"
+          "club": "Istanbul Başakşehir",
+          "note": "Joint Süper Lig top scorer in 25/26"
         }
       ],
       "style": "Organised, improving",
@@ -1296,8 +1296,8 @@
         {
           "name": "James Rodríguez",
           "position": "AM",
-          "club": "León",
-          "note": "Creative playmaker"
+          "club": "Minnesota United",
+          "note": "Captain; short MLS spell before World Cup release"
         }
       ],
       "style": "Attacking flair",
@@ -1338,8 +1338,8 @@
         {
           "name": "Luka Modrić",
           "position": "CM",
-          "club": "Real Madrid",
-          "note": "Legendary playmaker"
+          "club": "AC Milan",
+          "note": "Legendary playmaker after leaving Real Madrid"
         },
         {
           "name": "Josko Gvardiol",
@@ -1362,7 +1362,7 @@
         {
           "name": "Mohammed Kudus",
           "position": "AM",
-          "club": "West Ham",
+          "club": "Tottenham",
           "note": "Creative attacker"
         }
       ],
