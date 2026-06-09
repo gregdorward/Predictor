@@ -64,6 +64,7 @@ import {
 import { rounds } from "./TeamOfTheSeason";
 import { applyNationalTeamAlias } from "../utils/nationalTeamAliases";
 import { findSofaScoreGameByTeams } from "../utils/sofaScoreMatch";
+import { getLeagueFixturesByLeagueId } from "../utils/leagueResultsAccess";
 import {
   mapFutureFixtureEvents,
   selectUpcomingFixtures,
@@ -1080,30 +1081,30 @@ function GameStats({ game, displayBool, stats, handleToggleTip, userTips }) {
     }
   }, [stats, awayForm?.teamName]);
 
-  const pos = allLeagueResultsArrayOfObjects
-    .map((i) => i.id)
-    .indexOf(gameStats.leagueId);
-  let matches = allLeagueResultsArrayOfObjects[pos];
-  const resultHome = matches.fixtures.filter(
+  const leagueFixtures = getLeagueFixturesByLeagueId(
+    allLeagueResultsArrayOfObjects,
+    gameStats?.leagueId
+  );
+  const resultHome = leagueFixtures.filter(
     (game) =>
       game.home_name === gameStats.home.teamName ||
       game.away_name === gameStats.home.teamName
   );
 
-  const resultHomeOnly = matches.fixtures.filter(
+  const resultHomeOnly = leagueFixtures.filter(
     (game) => game.home_name === gameStats.home.teamName
   );
 
   resultHome.sort((a, b) => b.date_unix - a.date_unix);
   resultHomeOnly.sort((a, b) => b.date_unix - a.date_unix);
 
-  const resultAway = matches.fixtures.filter(
+  const resultAway = leagueFixtures.filter(
     (game) =>
       game.away_name === gameStats.away.teamName ||
       game.home_name === gameStats.away.teamName
   );
 
-  const resultAwayOnly = matches.fixtures.filter(
+  const resultAwayOnly = leagueFixtures.filter(
     (game) => game.away_name === gameStats.away.teamName
   );
 
@@ -3307,30 +3308,30 @@ function GameStats({ game, displayBool, stats, handleToggleTip, userTips }) {
       let gameStats = allForm.find((match) => match.id === game.id);
       if (!gameStats) {
         console.warn("No game stats found for game id:", game.id);
-        // return;
+        return;
       }
 
       try {
-        const pos = allLeagueResultsArrayOfObjects
-          .map((i) => i.id)
-          .indexOf(gameStats.leagueId);
-        let matches = allLeagueResultsArrayOfObjects[pos];
-        const resultHome = matches.fixtures.filter(
+        const leagueFixtures = getLeagueFixturesByLeagueId(
+          allLeagueResultsArrayOfObjects,
+          gameStats.leagueId
+        );
+        const resultHome = leagueFixtures.filter(
           (game) =>
             game.home_name === gameStats.home.teamName ||
             game.away_name === gameStats.home.teamName
         );
 
-        const resultHomeOnly = matches.fixtures.filter(
+        const resultHomeOnly = leagueFixtures.filter(
           (game) => game.home_name === gameStats.home.teamName
         );
-        const resultAway = matches.fixtures.filter(
+        const resultAway = leagueFixtures.filter(
           (game) =>
             game.away_name === gameStats.away.teamName ||
             game.home_name === gameStats.away.teamName
         );
 
-        const resultAwayOnly = matches.fixtures.filter(
+        const resultAwayOnly = leagueFixtures.filter(
           (game) => game.away_name === gameStats.away.teamName
         );
 

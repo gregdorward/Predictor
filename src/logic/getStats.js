@@ -7,6 +7,7 @@ import { clicked } from "../logic/getScorePredictions";
 import { userDetail } from "../logic/authProvider";
 import { checkUserPaidStatus } from "../logic/hasUserPaid";
 import { render } from '../utils/render';
+import { getLeagueFixturesByLeagueId } from "../utils/leagueResultsAccess";
 
 export async function getPointAverage(pointTotal, games) {
   return pointTotal / games;
@@ -325,18 +326,17 @@ export async function createStatsDiv(game, displayBool) {
 
       if (displayBool === true) {
 
-        const pos = allLeagueResultsArrayOfObjects
-          .map((i) => i.id)
-          .indexOf(gameStats.leagueId);
-        let matches = allLeagueResultsArrayOfObjects[pos];
-        // await fixtures.json().then((matches) => {
-        const resultHome = matches.fixtures.filter(
+        const leagueFixtures = getLeagueFixturesByLeagueId(
+          allLeagueResultsArrayOfObjects,
+          gameStats.leagueId
+        );
+        const resultHome = leagueFixtures.filter(
           (game) =>
             game.home_name === gameStats.home.teamName ||
             game.away_name === gameStats.home.teamName
         );
 
-        const resultHomeOnly = matches.fixtures.filter(
+        const resultHomeOnly = leagueFixtures.filter(
           (game) => game.home_name === gameStats.home.teamName
         );
 
@@ -468,13 +468,13 @@ export async function createStatsDiv(game, displayBool) {
           }
         }
 
-        const resultAway = matches.fixtures.filter(
+        const resultAway = leagueFixtures.filter(
           (game) =>
             game.away_name === gameStats.away.teamName ||
             game.home_name === gameStats.away.teamName
         );
 
-        const resultAwayOnly = matches.fixtures.filter(
+        const resultAwayOnly = leagueFixtures.filter(
           (game) => game.away_name === gameStats.away.teamName
         );
 
