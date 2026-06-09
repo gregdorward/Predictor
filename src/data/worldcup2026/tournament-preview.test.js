@@ -1,4 +1,5 @@
-import previewData from "../data/worldcup2026/tournament-preview.json";
+import previewData from "./tournament-preview.json";
+import matchData from "./match-predictions.json";
 
 describe("World Cup 2026 tournament preview data", () => {
   test("has required top-level sections", () => {
@@ -7,7 +8,10 @@ describe("World Cup 2026 tournament preview data", () => {
     expect(previewData.goldenBoot).toBeTruthy();
     expect(previewData.groups).toHaveLength(12);
     expect(previewData.teamPreviews).toHaveLength(48);
-    expect(previewData.keyMatchups.length).toBeGreaterThanOrEqual(10);
+  });
+
+  test("match predictions live in separate file", () => {
+    expect(matchData.matches.length).toBeGreaterThanOrEqual(10);
   });
 
   test("each group has four teams", () => {

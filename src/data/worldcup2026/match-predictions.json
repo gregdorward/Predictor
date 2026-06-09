@@ -1,0 +1,166 @@
+{
+  "version": 1,
+  "lastUpdated": "2026-06-09T19:38:54.233Z",
+  "matches": [
+    {
+      "id": "group-A-mexico-vs-south-africa",
+      "phase": "group",
+      "roundLabel": "Group A",
+      "group": "A",
+      "date": "2026-06-11",
+      "home": "Mexico",
+      "away": "South Africa",
+      "prediction": {
+        "predictedScore": "2-0",
+        "homeWin": 62,
+        "draw": 22,
+        "awayWin": 16
+      },
+      "source": "static"
+    },
+    {
+      "id": "group-B-canada-vs-switzerland",
+      "phase": "group",
+      "roundLabel": "Group B",
+      "group": "B",
+      "date": "2026-06-15",
+      "home": "Canada",
+      "away": "Switzerland",
+      "prediction": {
+        "predictedScore": "1-1",
+        "homeWin": 35,
+        "draw": 30,
+        "awayWin": 35
+      },
+      "source": "static"
+    },
+    {
+      "id": "group-C-brazil-vs-morocco",
+      "phase": "group",
+      "roundLabel": "Group C",
+      "group": "C",
+      "date": "2026-06-14",
+      "home": "Brazil",
+      "away": "Morocco",
+      "prediction": {
+        "predictedScore": "2-1",
+        "homeWin": 55,
+        "draw": 25,
+        "awayWin": 20
+      },
+      "source": "static"
+    },
+    {
+      "id": "group-D-usa-vs-türkiye",
+      "phase": "group",
+      "roundLabel": "Group D",
+      "group": "D",
+      "date": "2026-06-14",
+      "home": "USA",
+      "away": "Türkiye",
+      "prediction": {
+        "predictedScore": "2-1",
+        "homeWin": 48,
+        "draw": 27,
+        "awayWin": 25
+      },
+      "source": "static"
+    },
+    {
+      "id": "group-E-germany-vs-ecuador",
+      "phase": "group",
+      "roundLabel": "Group E",
+      "group": "E",
+      "date": "2026-06-15",
+      "home": "Germany",
+      "away": "Ecuador",
+      "prediction": {
+        "predictedScore": "2-1",
+        "homeWin": 58,
+        "draw": 24,
+        "awayWin": 18
+      },
+      "source": "static"
+    },
+    {
+      "id": "group-F-netherlands-vs-japan",
+      "phase": "group",
+      "roundLabel": "Group F",
+      "group": "F",
+      "date": "2026-06-16",
+      "home": "Netherlands",
+      "away": "Japan",
+      "prediction": {
+        "predictedScore": "2-1",
+        "homeWin": 52,
+        "draw": 26,
+        "awayWin": 22
+      },
+      "source": "static"
+    },
+    {
+      "id": "group-H-spain-vs-uruguay",
+      "phase": "group",
+      "roundLabel": "Group H",
+      "group": "H",
+      "date": "2026-06-17",
+      "home": "Spain",
+      "away": "Uruguay",
+      "prediction": {
+        "predictedScore": "2-0",
+        "homeWin": 60,
+        "draw": 25,
+        "awayWin": 15
+      },
+      "source": "static"
+    },
+    {
+      "id": "group-I-france-vs-norway",
+      "phase": "group",
+      "roundLabel": "Group I",
+      "group": "I",
+      "date": "2026-06-18",
+      "home": "France",
+      "away": "Norway",
+      "prediction": {
+        "predictedScore": "2-1",
+        "homeWin": 52,
+        "draw": 24,
+        "awayWin": 24
+      },
+      "source": "static"
+    },
+    {
+      "id": "group-J-argentina-vs-austria",
+      "phase": "group",
+      "roundLabel": "Group J",
+      "group": "J",
+      "date": "2026-06-19",
+      "home": "Argentina",
+      "away": "Austria",
+      "prediction": {
+        "predictedScore": "2-0",
+        "homeWin": 58,
+        "draw": 24,
+        "awayWin": 18
+      },
+      "source": "static"
+    },
+    {
+      "id": "group-L-england-vs-croatia",
+      "phase": "group",
+      "roundLabel": "Group L",
+      "group": "L",
+      "date": "2026-06-20",
+      "home": "England",
+      "away": "Croatia",
+      "prediction": {
+        "predictedScore": "2-1",
+        "homeWin": 50,
+        "draw": 26,
+        "awayWin": 24
+      },
+      "source": "static"
+    }
+  ]
+}

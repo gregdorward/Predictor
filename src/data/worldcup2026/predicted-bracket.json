@@ -1,0 +1,223 @@
+{
+  "predictedChampion": "Spain",
+  "predictedChampionFlag": "🇪🇸",
+  "note": "Illustrative predicted knockout path. Third-place pairings are simplified for preview purposes and will be updated as the group stage concludes.",
+  "rounds": [
+    {
+      "id": "round32",
+      "label": "Round of 32",
+      "matches": [
+        {
+          "id": "r32-1",
+          "home": "Spain",
+          "away": "Senegal",
+          "winner": "Spain"
+        },
+        {
+          "id": "r32-2",
+          "home": "France",
+          "away": "Czechia",
+          "winner": "France"
+        },
+        {
+          "id": "r32-3",
+          "home": "Germany",
+          "away": "Australia",
+          "winner": "Germany"
+        },
+        {
+          "id": "r32-4",
+          "home": "England",
+          "away": "Ghana",
+          "winner": "England"
+        },
+        {
+          "id": "r32-5",
+          "home": "Argentina",
+          "away": "Algeria",
+          "winner": "Argentina"
+        },
+        {
+          "id": "r32-6",
+          "home": "Portugal",
+          "away": "Scotland",
+          "winner": "Portugal"
+        },
+        {
+          "id": "r32-7",
+          "home": "Netherlands",
+          "away": "Côte d'Ivoire",
+          "winner": "Netherlands"
+        },
+        {
+          "id": "r32-8",
+          "home": "Belgium",
+          "away": "Sweden",
+          "winner": "Belgium"
+        },
+        {
+          "id": "r32-9",
+          "home": "Brazil",
+          "away": "Japan",
+          "winner": "Brazil"
+        },
+        {
+          "id": "r32-10",
+          "home": "USA",
+          "away": "Ecuador",
+          "winner": "USA"
+        },
+        {
+          "id": "r32-11",
+          "home": "Mexico",
+          "away": "Morocco",
+          "winner": "Mexico"
+        },
+        {
+          "id": "r32-12",
+          "home": "Switzerland",
+          "away": "Colombia",
+          "winner": "Switzerland"
+        },
+        {
+          "id": "r32-13",
+          "home": "Uruguay",
+          "away": "Korea Republic",
+          "winner": "Uruguay"
+        },
+        {
+          "id": "r32-14",
+          "home": "Norway",
+          "away": "Austria",
+          "winner": "Norway"
+        },
+        {
+          "id": "r32-15",
+          "home": "Canada",
+          "away": "Türkiye",
+          "winner": "Canada"
+        },
+        {
+          "id": "r32-16",
+          "home": "Croatia",
+          "away": "Egypt",
+          "winner": "Croatia"
+        }
+      ]
+    },
+    {
+      "id": "round16",
+      "label": "Round of 16",
+      "matches": [
+        {
+          "id": "r16-1",
+          "home": "Spain",
+          "away": "Croatia",
+          "winner": "Spain"
+        },
+        {
+          "id": "r16-2",
+          "home": "France",
+          "away": "Canada",
+          "winner": "France"
+        },
+        {
+          "id": "r16-3",
+          "home": "Germany",
+          "away": "USA",
+          "winner": "Germany"
+        },
+        {
+          "id": "r16-4",
+          "home": "England",
+          "away": "Norway",
+          "winner": "England"
+        },
+        {
+          "id": "r16-5",
+          "home": "Argentina",
+          "away": "Switzerland",
+          "winner": "Argentina"
+        },
+        {
+          "id": "r16-6",
+          "home": "Portugal",
+          "away": "Belgium",
+          "winner": "Portugal"
+        },
+        {
+          "id": "r16-7",
+          "home": "Netherlands",
+          "away": "Mexico",
+          "winner": "Netherlands"
+        },
+        {
+          "id": "r16-8",
+          "home": "Brazil",
+          "away": "Uruguay",
+          "winner": "Brazil"
+        }
+      ]
+    },
+    {
+      "id": "quarter",
+      "label": "Quarter-finals",
+      "matches": [
+        {
+          "id": "qf-1",
+          "home": "Spain",
+          "away": "Germany",
+          "winner": "Spain"
+        },
+        {
+          "id": "qf-2",
+          "home": "France",
+          "away": "England",
+          "winner": "France"
+        },
+        {
+          "id": "qf-3",
+          "home": "Argentina",
+          "away": "Netherlands",
+          "winner": "Argentina"
+        },
+        {
+          "id": "qf-4",
+          "home": "Brazil",
+          "away": "Portugal",
+          "winner": "Brazil"
+        }
+      ]
+    },
+    {
+      "id": "semi",
+      "label": "Semi-finals",
+      "matches": [
+        {
+          "id": "semi-1",
+          "home": "Spain",
+          "away": "France",
+          "winner": "Spain"
+        },
+        {
+          "id": "semi-2",
+          "home": "Argentina",
+          "away": "Brazil",
+          "winner": "Argentina"
+        }
+      ]
+    },
+    {
+      "id": "final",
+      "label": "Final",
+      "matches": [
+        {
+          "id": "final",
+          "home": "Spain",
+          "away": "France",
+          "winner": "Spain"
+        }
+      ]
+    }
+  ]
+}
