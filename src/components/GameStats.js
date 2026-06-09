@@ -62,6 +62,12 @@ import {
   calculateMetricStrength,
 } from "../logic/getStats";
 import { rounds } from "./TeamOfTheSeason";
+import { applyNationalTeamAlias } from "../utils/nationalTeamAliases";
+import { findSofaScoreGameByTeams } from "../utils/sofaScoreMatch";
+import {
+  mapFutureFixtureEvents,
+  selectUpcomingFixtures,
+} from "../utils/futureFixturesDisplay";
 import StarRating from "../components/StarRating";
 import { handleCheckout, stripePromise } from "../App"
 import PlayerStatsTable from "./PlayerStatsTable";
@@ -1359,7 +1365,9 @@ function GameStats({ game, displayBool, stats, handleToggleTip, userTips }) {
     }
     const normalized = cleanTeamName(name);
     const aliasKey = normalize(name);
-    const mapped = cleanTeamName(teamNameAliases[aliasKey] || normalized);
+    const mapped = cleanTeamName(
+      teamNameAliases[aliasKey] || applyNationalTeamAlias(aliasKey)
+    );
     mappedTeamNameCache.set(name, mapped);
     return mapped;
   }
@@ -1611,8 +1619,18 @@ function GameStats({ game, displayBool, stats, handleToggleTip, userTips }) {
         const mappedHome = getMappedTeamName(game.homeTeam);
         const mappedAway = getMappedTeamName(game.awayTeam);
 
-        let matchingGameInfo =
-          await getGameIdByHomeTeam(arrayOfGames, mappedHome);
+        // Prefer matching both teams together to avoid false positives in international fixtures.
+        let matchingGameInfo = findSofaScoreGameByTeams(
+          arrayOfGames,
+          game.homeTeam,
+          game.awayTeam,
+          getMappedTeamName
+        );
+
+        if (!matchingGameInfo) {
+          matchingGameInfo =
+            await getGameIdByHomeTeam(arrayOfGames, mappedHome);
+        }
 
         if (!matchingGameInfo) {
           console.log(
@@ -1977,25 +1995,6 @@ function GameStats({ game, displayBool, stats, handleToggleTip, userTips }) {
             setLoadingPlayerStats(false);
           }
 
-          const getManagers = await fetch(
-            `${process.env.REACT_APP_EXPRESS_SERVER}matches/get-managers/${matchingGameInfo.id}`
-          );
-          const managersData = await getManagers.json();
-          console.log("Managers data fetched:", managersData);
-
-          if (managersData?.homeManager?.name) {
-            setHomeManager(managersData.homeManager);
-            setAwayManager(managersData.awayManager);
-
-            if (managersData?.homeManager?.careerHistory?.total < 6) {
-              console.log("Home manager has less than 10 games of career history. Marking as new manager.");
-              setNewManagerHome(true);
-            }
-            if (managersData?.awayManager?.careerHistory?.total < 6) {
-              setNewManagerAway(true);
-            }
-          }
-
           if (
             isWithin48Hours && !lowerTierLeagueIds.includes(game.sofaScoreId)
           ) {
@@ -2231,62 +2230,77 @@ function GameStats({ game, displayBool, stats, handleToggleTip, userTips }) {
           // );
 
 
-          // 1. Check if the user is 'paid' before doing anything expensive
-          if (isPaidUser && matchingGameInfo?.homeId && matchingGameInfo?.awayId) {
-            try {
-              // Fetch Home Future Fixtures
-              const futureFixturesHomeResponse = await fetch(
-                `${process.env.REACT_APP_EXPRESS_SERVER}futureFixtures/${matchingGameInfo.homeId}/${week}`
-              );
-              const fixturesDataHome = await futureFixturesHomeResponse.json();
-
-              const reducedFixturesHome = (fixturesDataHome.events || []).map(event => ({
-                tournamentName: event.tournament?.name || "",
-                homeTeam: event.homeTeam?.name || "",
-                awayTeam: event.awayTeam?.name || "",
-                date: event.startTimestamp ? new Date(event.startTimestamp * 1000).toLocaleDateString("en-GB") : "N/A",
-                colourOne: event.tournament?.uniqueTournament?.primaryColorHex || "",
-                colourTwo: event.tournament?.uniqueTournament?.secondaryColorHex || ""
-              }));
-
-              setFutureFixturesHome(reducedFixturesHome.slice(1, 6));
-
-              // Fetch Away Future Fixtures
-              const futureFixturesAwayResponse = await fetch(
-                `${process.env.REACT_APP_EXPRESS_SERVER}futureFixtures/${matchingGameInfo.awayId}/${week}`
-              );
-              const fixturesDataAway = await futureFixturesAwayResponse.json();
-
-              const reducedFixturesAway = (fixturesDataAway.events || []).map(event => ({
-                tournamentName: event.tournament?.name || "",
-                homeTeam: event.homeTeam?.name || "",
-                awayTeam: event.awayTeam?.name || "",
-                date: event.startTimestamp ? new Date(event.startTimestamp * 1000).toLocaleDateString("en-GB") : "N/A",
-                colourOne: event.tournament?.uniqueTournament?.primaryColorHex || "",
-                colourTwo: event.tournament?.uniqueTournament?.secondaryColorHex || ""
-              }));
-
-              setFutureFixturesAway(reducedFixturesAway.slice(1, 6));
-
-            } catch (error) {
-              console.error(
-                `Error fetching future fixtures for game ${game.sofaScoreId}:`,
-                error
-              );
-            }
-          } else if (!isPaidUser) {
-            console.log("User is not premium. Skipping future fixtures fetch.");
-            // Optional: Clear any existing state if the user isn't premium
-            setFutureFixturesHome([]);
-            setFutureFixturesAway([]);
-          }
-
           // const voteRequest = await fetch(
           //   `${process.env.REACT_APP_EXPRESS_SERVER}votes/${matchingGameInfo.id}/${today.getDay()}`
           // );
           // const data = await voteRequest.json();
           // setVoteData(data);
 
+        }
+
+        // Managers only need the SofaScore match id, not a league season round.
+        if (matchingGameInfo?.id) {
+          try {
+            const getManagers = await fetch(
+              `${process.env.REACT_APP_EXPRESS_SERVER}matches/get-managers/${matchingGameInfo.id}`
+            );
+            const managersData = await getManagers.json();
+            console.log("Managers data fetched:", managersData);
+
+            if (managersData?.homeManager?.name) {
+              setHomeManager(managersData.homeManager);
+              setAwayManager(managersData.awayManager);
+
+              if (managersData?.homeManager?.careerHistory?.total < 6) {
+                console.log(
+                  "Home manager has less than 10 games of career history. Marking as new manager."
+                );
+                setNewManagerHome(true);
+              }
+              if (managersData?.awayManager?.careerHistory?.total < 6) {
+                setNewManagerAway(true);
+              }
+            }
+          } catch (error) {
+            console.error(
+              `Error fetching managers for game ${matchingGameInfo.id}:`,
+              error
+            );
+          }
+        }
+
+        if (isPaidUser && matchingGameInfo?.homeId && matchingGameInfo?.awayId) {
+          try {
+            const futureFixturesHomeResponse = await fetch(
+              `${process.env.REACT_APP_EXPRESS_SERVER}futureFixtures/${matchingGameInfo.homeId}/${week}`
+            );
+            const fixturesDataHome = await futureFixturesHomeResponse.json();
+
+            const futureFixturesAwayResponse = await fetch(
+              `${process.env.REACT_APP_EXPRESS_SERVER}futureFixtures/${matchingGameInfo.awayId}/${week}`
+            );
+            const fixturesDataAway = await futureFixturesAwayResponse.json();
+
+            setFutureFixturesHome(
+              selectUpcomingFixtures(
+                mapFutureFixtureEvents(fixturesDataHome.events)
+              )
+            );
+            setFutureFixturesAway(
+              selectUpcomingFixtures(
+                mapFutureFixtureEvents(fixturesDataAway.events)
+              )
+            );
+          } catch (error) {
+            console.error(
+              `Error fetching future fixtures for game ${game.sofaScoreId}:`,
+              error
+            );
+          }
+        } else if (!isPaidUser) {
+          console.log("User is not premium. Skipping future fixtures fetch.");
+          setFutureFixturesHome([]);
+          setFutureFixturesAway([]);
         }
       } catch (error) {
         console.error("Error fetching or processing data:", error);

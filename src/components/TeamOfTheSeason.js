@@ -244,6 +244,7 @@ import { useState, useEffect } from "react";
 
 export const rounds = [
   {
+    16: 58210, // World Cup 2026
     17: 76986,
     18: 77347,
     24: 77352,
