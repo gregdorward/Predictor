@@ -406,6 +406,10 @@ export async function renderTable(index, results, id) {
   if (id !== 16504 && id !== 14236 && !GROUP_STAGE_LEAGUE_IDS.includes(id)) {
     const leagueTable = tableArray.filter((table) => table.id === id);
 
+    if (!leagueTable[0]?.table) {
+      return;
+    }
+
     league = leagueTable[0].table;
 
     let statistics;

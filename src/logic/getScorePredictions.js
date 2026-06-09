@@ -683,10 +683,13 @@ function calculateWeightedXG(recentXG, oppositionPPG, leagueAvgPPG = 1.5) {
 async function getPastLeagueResults(team, game, hOrA, form) {
   form.completeData = true;
   let date = game.date;
-  if (allLeagueResultsArrayOfObjects[game.leagueIndex].fixtures.length > 10) {
-    let teamsHomeResults = allLeagueResultsArrayOfObjects[
-      game.leagueIndex
-    ].fixtures.filter((fixture) => fixture.home_name === team);
+  const leagueFixtures =
+    allLeagueResultsArrayOfObjects[game.leagueIndex]?.fixtures ?? [];
+
+  if (leagueFixtures.length > 10) {
+    let teamsHomeResults = leagueFixtures.filter(
+      (fixture) => fixture.home_name === team
+    );
 
     teamsHomeResults = teamsHomeResults
       .filter(function (item) {
@@ -694,9 +697,9 @@ async function getPastLeagueResults(team, game, hOrA, form) {
       })
       .sort((a, b) => a.date_unix - b.date_unix);
 
-    let teamsAwayResults = allLeagueResultsArrayOfObjects[
-      game.leagueIndex
-    ].fixtures.filter((fixture) => fixture.away_name === team);
+    let teamsAwayResults = leagueFixtures.filter(
+      (fixture) => fixture.away_name === team
+    );
 
     teamsAwayResults = teamsAwayResults
       .filter(function (item) {
