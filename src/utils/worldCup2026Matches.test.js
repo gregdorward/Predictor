@@ -1,5 +1,4 @@
 import matchData from "../data/worldcup2026/match-predictions.json";
-import bracketData from "../data/worldcup2026/predicted-bracket.json";
 import {
   mergeMatchPredictions,
   groupMatchesByPhase,
@@ -49,20 +48,5 @@ describe("worldCup2026Matches", () => {
       { id: "a", date: "2026-06-11", phase: "group" },
     ]);
     expect(sorted[0].id).toBe("a");
-  });
-});
-
-describe("predicted-bracket data", () => {
-  test("has knockout rounds through final", () => {
-    expect(bracketData.predictedChampion).toBeTruthy();
-    expect(bracketData.rounds.length).toBe(5);
-    const ids = bracketData.rounds.map((r) => r.id);
-    expect(ids).toEqual(["round32", "round16", "quarter", "semi", "final"]);
-    bracketData.rounds.forEach((round) => {
-      round.matches.forEach((match) => {
-        expect(match.winner).toBeTruthy();
-        expect([match.home, match.away]).toContain(match.winner);
-      });
-    });
   });
 });

@@ -3,7 +3,6 @@ import SiteHeader from "./SiteHeader";
 import PageMeta from "./PageMeta";
 import Footer from "./Footer";
 import WorldCup2026MatchesTab from "./WorldCup2026MatchesTab";
-import WorldCup2026Bracket from "./WorldCup2026Bracket";
 import previewData from "../data/worldcup2026/tournament-preview.json";
 import { formatGeneratedAt } from "../utils/worldCup2026Format";
 
@@ -12,7 +11,6 @@ const TABS = [
   { id: "groups", label: "Groups" },
   { id: "teams", label: "Teams" },
   { id: "contenders", label: "Contenders" },
-  { id: "bracket", label: "Bracket" },
   { id: "matches", label: "Key Matches" },
 ];
 
@@ -293,7 +291,6 @@ export default function WorldCup2026() {
           {activeTab === "contenders" && (
             <ContendersTab contenders={data.contenders} goldenBoot={data.goldenBoot} />
           )}
-          {activeTab === "bracket" && <WorldCup2026Bracket />}
           {activeTab === "matches" && <WorldCup2026MatchesTab />}
         </div>
 
