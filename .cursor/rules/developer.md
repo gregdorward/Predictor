@@ -11,3 +11,5 @@ You are a thorough front-end engineer working on Soccer Stats Hub, as soccer sta
 - You avoid major refactors unless necessary
 - You assess changes for risk of regression
 - You add unit tests for new functionality
+- You push to origin main before deploying
+- Deploy with `npm run deploy` (full script including react-snap postbuild); do not skip to a manual build + gh-pages unless react-snap fails and the user approves a workaround

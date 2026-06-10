@@ -1102,9 +1102,6 @@ button.GeneratePredictionsButton {
   background-color: var(--primary-color);
   color: var(--span-text-colour);
   border-color: var(--primary-color);
-  box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.25),
-    var(--button-shadow-hover);
 }
 
 button.GeneratePredictionsButton:hover:not(:disabled) {
