@@ -1,5 +1,8 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
+
+const SWIPE_THRESHOLD_PX = 48;
+const SWIPE_MAX_VERTICAL_PX = 80;
 
 export const MULTIS_PANELS = [
   { id: "bestPredictions", label: "Build a Multi", className: "bestPredictions" },
@@ -11,6 +14,7 @@ export const MULTIS_PANELS = [
 export default function MultisPanelCarousel({ panels = MULTIS_PANELS }) {
   const [activeIndex, setActiveIndex] = useState(0);
   const panelCount = panels.length;
+  const swipeStart = useRef(null);
 
   const goTo = (index) => {
     if (index >= 0 && index < panelCount) {
@@ -18,11 +22,64 @@ export default function MultisPanelCarousel({ panels = MULTIS_PANELS }) {
     }
   };
 
+  const goNext = () => {
+    setActiveIndex((index) => Math.min(index + 1, panelCount - 1));
+  };
+
+  const goPrevious = () => {
+    setActiveIndex((index) => Math.max(index - 1, 0));
+  };
+
+  const handleSwipeStart = (clientX, clientY) => {
+    swipeStart.current = { x: clientX, y: clientY };
+  };
+
+  const handleSwipeEnd = (clientX, clientY) => {
+    if (!swipeStart.current) return;
+
+    const deltaX = clientX - swipeStart.current.x;
+    const deltaY = clientY - swipeStart.current.y;
+    swipeStart.current = null;
+
+    if (Math.abs(deltaY) > SWIPE_MAX_VERTICAL_PX) return;
+    if (Math.abs(deltaX) < SWIPE_THRESHOLD_PX) return;
+
+    if (deltaX < 0) {
+      goNext();
+    } else {
+      goPrevious();
+    }
+  };
+
   const previousPanel = activeIndex > 0 ? panels[activeIndex - 1] : null;
   const nextPanel = activeIndex < panelCount - 1 ? panels[activeIndex + 1] : null;
 
   return (
-    <div className="MultisCarousel">
+    <div
+      className="MultisCarousel"
+      onTouchStart={(event) => {
+        const touch = event.changedTouches[0];
+        handleSwipeStart(touch.clientX, touch.clientY);
+      }}
+      onTouchEnd={(event) => {
+        const touch = event.changedTouches[0];
+        handleSwipeEnd(touch.clientX, touch.clientY);
+      }}
+      onPointerDown={(event) => {
+        if (event.pointerType === "mouse" && event.button !== 0) return;
+        handleSwipeStart(event.clientX, event.clientY);
+        event.currentTarget.setPointerCapture(event.pointerId);
+      }}
+      onPointerUp={(event) => {
+        handleSwipeEnd(event.clientX, event.clientY);
+        if (event.currentTarget.hasPointerCapture(event.pointerId)) {
+          event.currentTarget.releasePointerCapture(event.pointerId);
+        }
+      }}
+      onPointerCancel={() => {
+        swipeStart.current = null;
+      }}
+    >
       <div className="MultisCarousel-nav">
         <button
           type="button"

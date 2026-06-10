@@ -4837,6 +4837,7 @@ li.FormHeader {
 .MultisCarousel {
   max-width: 42rem;
   margin: 0 auto;
+  touch-action: pan-y;
 }
 
 .MultisCarousel-nav {
@@ -4844,6 +4845,11 @@ li.FormHeader {
   align-items: center;
   justify-content: space-between;
   gap: 0.75rem;
+  cursor: grab;
+}
+
+.MultisCarousel-nav:active {
+  cursor: grabbing;
 }
 
 .MultisCarousel-navControl {
