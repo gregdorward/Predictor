@@ -33,6 +33,11 @@ export function applyTheme(theme) {
     document.body.classList.remove("dark-mode");
   }
 
+  // index.html boot script sets inline colours for dark FOUC prevention;
+  // clear them so CSS variables / body.dark-mode control the theme on toggle.
+  document.body.style.backgroundColor = "";
+  document.body.style.color = "";
+
   try {
     localStorage.setItem("theme", isDark ? "dark" : "light");
   } catch (error) {

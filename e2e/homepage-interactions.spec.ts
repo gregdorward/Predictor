@@ -1,13 +1,12 @@
-// @ts-check
-const { test, expect } = require('@playwright/test');
-const {
+import { test, expect } from '@playwright/test';
+import {
   waitForFixtures,
   expandSection,
   selectRadioOption,
   runPredictions,
   openFirstFixtureStats,
   getFixtureDateLabel,
-} = require('./helpers/homepage');
+} from './helpers/homepage';
 
 test.describe('Homepage interactions', () => {
   test.beforeEach(async ({ page }) => {
@@ -39,9 +38,7 @@ test.describe('Homepage interactions', () => {
     const initialDate = await getFixtureDateLabel(page);
 
     await page.getByTestId('>').click();
-    await expect
-      .poll(async () => getFixtureDateLabel(page))
-      .not.toBe(initialDate);
+    await expect.poll(async () => getFixtureDateLabel(page)).not.toBe(initialDate);
 
     await page.getByTestId('<').click();
     await expect.poll(async () => getFixtureDateLabel(page)).toBe(initialDate);

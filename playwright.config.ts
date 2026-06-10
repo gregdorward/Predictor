@@ -1,13 +1,11 @@
-// @ts-check
-const { defineConfig, devices } = require('@playwright/test');
+import { defineConfig, devices } from '@playwright/test';
 
 const PORT = process.env.PORT || 3000;
 const baseURL = `http://localhost:${PORT}`;
 const useWebServer = !process.env.PW_TEST_NO_WEBSERVER;
 
-module.exports = defineConfig({
+export default defineConfig({
   testDir: './e2e',
-  testMatch: '**/*.spec.js',
   testIgnore: '**/helpers/**',
   fullyParallel: true,
   forbidOnly: !!process.env.CI,

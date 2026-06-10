@@ -7648,7 +7648,7 @@ button.AIInsights button:active {
 }
 
 .RankComparisonBar-zone--top {
-  background: linear-gradient(90deg, rgba(1, 165, 1, 0.18), rgba(1, 165, 1, 0.06));
+  background: linear-gradient(90deg, rgba(1, 165, 1, 0.606), rgba(1, 165, 1, 0.128));
 }
 
 .RankComparisonBar-zone--mid {
@@ -7656,7 +7656,7 @@ button.AIInsights button:active {
 }
 
 .RankComparisonBar-zone--bottom {
-  background: linear-gradient(90deg, rgba(215, 18, 0, 0.06), rgba(215, 18, 0, 0.16));
+  background: linear-gradient(90deg, rgba(215, 18, 0, 0.131), rgba(215, 18, 0, 0.628));
 }
 
 .dark-mode .RankComparisonBar-zones {
@@ -7665,7 +7665,7 @@ button.AIInsights button:active {
 }
 
 .dark-mode .RankComparisonBar-zone--top {
-  background: linear-gradient(90deg, rgba(1, 165, 1, 0.45), rgba(1, 165, 1, 0.2));
+  background: linear-gradient(90deg, rgba(1, 165, 1, 0.707), rgba(1, 165, 1, 0.15));
 }
 
 .dark-mode .RankComparisonBar-zone--mid {
@@ -7673,7 +7673,7 @@ button.AIInsights button:active {
 }
 
 .dark-mode .RankComparisonBar-zone--bottom {
-  background: linear-gradient(90deg, rgba(215, 18, 0, 0.2), rgba(215, 18, 0, 0.45));
+  background: linear-gradient(90deg, rgba(215, 18, 0, 0.14), rgba(215, 18, 0, 0.502));
 }
 
 .RankComparisonBar-marker {

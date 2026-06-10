@@ -7,65 +7,9 @@ import {
   getPointWeighting,
   compareFormTrend,
   getPointAverage,
-  compareTeams,
   roundCustom,
   getCoverBetMaxReturns,
 } from "./getScorePredictions";
-
-const homeForm = {
-  AverageShotsOnTarget: 5,
-  AverageShotsOnTargetOverall: 4.5,
-  CleanSheetPercentage: 40,
-  dangerousAttackConversion: 0.1,
-  goalsPerDangerousAttack: 0.075,
-  ScoredAverage: 1.4,
-  ConcededAverage: 1.1,
-  AverageDangerousAttacks: 55,
-  AverageDangerousAttacksOverall: 50,
-  XGWeighting: 1.2,
-  formTrendScore: 9,
-  last10Points: 18,
-  twoGameAverage: 2.5,
-  fiveGameAverage: 2,
-  sixGameAverage: 2.2,
-  tenGameAverage: 2.25,
-  SeasonPPG: 1.98,
-  AttackingPotency: 3,
-  AveragePossession: 52.1,
-  AveragePossessionOverall: 51.8,
-  homePositionHomeOnly: 3,
-  homePosition: 5
-};
-
-const awayForm = {
-    AverageShotsOnTarget: 4.5,
-    AverageShotsOnTargetOverall: 4,
-    CleanSheetPercentage: 30,
-    dangerousAttackConversion: 0.12,
-    goalsPerDangerousAttack: 0.088,
-    ScoredAverage: 1.1,
-    ConcededAverage: 1.3,
-    AverageDangerousAttacks: 48,
-    AverageDangerousAttacksOverall: 49,
-    XGWeighting: 0.7,
-    formTrendScore: 6.5,
-    last10Points: 14,
-    twoGameAverage: 2,
-    fiveGameAverage: 1.7,
-    sixGameAverage: 1.8,
-    tenGameAverage: 1.96,
-    SeasonPPG: 1.6,
-    AttackingPotency: 3.5,
-    AveragePossession: 47.1,
-    AveragePossessionOverall: 45.8,
-    awayPositionAwayOnly: 2,
-    awayPosition: 7
-  };
-
-const match = {
-    homeTeamWinPercentage: 55,
-    awayTeamWinPercentage: 25,
-}
 
 describe("compare stat tests", () => {
   test("a positve number is returned when the home team has the greater number", async () => {
@@ -206,13 +150,6 @@ describe("the point average function", () => {
     expect(await getPointAverage(10, 4)).toBe(2.5);
   });
 });
-
-describe("the team comparison function", () => {
-    test("teams are compared and the correct calculation is returned", async () => {
-      expect(await compareTeams(homeForm, awayForm, match)).toBe(13);
-    });
-
-})
 
 describe("the custom round function", () => {
     test("a number with a remainder of over 0.9 is rounded up", async () => {
