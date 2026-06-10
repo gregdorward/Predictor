@@ -45,7 +45,7 @@ export default function WorldCup2026MatchesTab() {
     <div className="WC26__section">
       <p className="WC26__matchesNote">
         Predictions are illustrative estimates aligned with Soccer Stats Hub modelling.
-        Match lists are updated as the tournament progresses — live fixture data is also
+        Match lists are updated as the tournament progresses - live fixture data is also
         available on the homepage during the World Cup.
       </p>
 

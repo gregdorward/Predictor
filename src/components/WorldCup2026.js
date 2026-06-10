@@ -31,7 +31,7 @@ function OverviewTab({ data }) {
               month: "short",
               year: "numeric",
             })}
-            –
+            -
             {new Date(data.format.endDate + "T12:00:00").toLocaleDateString("en-GB", {
               day: "numeric",
               month: "short",
@@ -171,7 +171,7 @@ function TeamsTab({ teamPreviews }) {
                   <ul className="WC26__keyPlayersList">
                     {team.keyPlayers.map((player) => (
                       <li key={player.name}>
-                        <strong>{player.name}</strong> ({player.position}, {player.club}) —{" "}
+                        <strong>{player.name}</strong> ({player.position}, {player.club}) -{" "}
                         {player.note}
                       </li>
                     ))}
@@ -226,7 +226,7 @@ function ContendersTab({ contenders, goldenBoot }) {
               <strong>{c.player}</strong>
             </span>
             <span className="WC26__playerMeta">{c.team}</span>
-            <span className="WC26__cardText"> — {c.note}</span>
+            <span className="WC26__cardText"> - {c.note}</span>
           </li>
         ))}
       </ul>
