@@ -16,7 +16,7 @@ const PageMeta = ({ title, description, noIndex }) => {
   const canonicalUrl = getCanonicalUrl(pathname);
 
   return (
-    <Helmet>
+    <Helmet prioritizeSeoTags>
       <title>{pageTitle}</title>
       <meta name="description" content={pageDescription} />
       <link rel="canonical" href={canonicalUrl} />

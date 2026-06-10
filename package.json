@@ -49,7 +49,7 @@
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build && cp build/index.html build/404.html",
-    "postbuild": "react-snap",
+    "postbuild": "react-snap; node scripts/injectPrerenderMeta.js",
     "test": "react-scripts test",
     "test:e2e:install": "playwright install chromium",
     "test:e2e": "playwright test",
@@ -63,6 +63,7 @@
   },
   "reactSnap": {
     "include": [
+      "/",
       "/o25",
       "/u25",
       "/bttsteams",
@@ -70,16 +71,14 @@
       "/bttsfixtures",
       "/fixtureshigh",
       "/teamshigh",
-      "/reset",
-      "/cancelsubscription",
       "/worldcup2026"
     ],
     "crawl": false,
     "puppeteerArgs": [
       "--no-sandbox"
     ],
-    "timeout": 30000,
-    "waitFor": 3000,
+    "timeout": 60000,
+    "waitFor": 5000,
     "removeStyleTags": false,
     "inlineCss": true
   },
