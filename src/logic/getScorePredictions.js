@@ -35,6 +35,7 @@ import { userDetail } from "../logic/authProvider";
 import { dynamicDate } from "./getFixtures";
 import { ThreeDots } from "react-loading-icons";
 import { uniqueLeagueIDs, shouldUseApiFormOnly } from "./getFixtures";
+import { getLeagueFixturesByLeagueId } from "../utils/leagueResultsAccess";
 import { selectedTipType } from "../components/PredictionTypeRadio";
 import { InsightsPanel } from "../components/Insights"
 import { X } from "lucide-react";
@@ -683,8 +684,10 @@ function calculateWeightedXG(recentXG, oppositionPPG, leagueAvgPPG = 1.5) {
 async function getPastLeagueResults(team, game, hOrA, form) {
   form.completeData = true;
   let date = game.date;
-  const leagueFixtures =
-    allLeagueResultsArrayOfObjects[game.leagueIndex]?.fixtures ?? [];
+  const leagueFixtures = getLeagueFixturesByLeagueId(
+    allLeagueResultsArrayOfObjects,
+    game.leagueID
+  );
 
   if (leagueFixtures.length > 10) {
     let teamsHomeResults = leagueFixtures.filter(
@@ -2807,7 +2810,10 @@ function averageApiStats(values) {
 }
 
 function getTeamFixturesBeforeMatch(team, match) {
-  const fixtures = allLeagueResultsArrayOfObjects[match.leagueIndex]?.fixtures;
+  const fixtures = getLeagueFixturesByLeagueId(
+    allLeagueResultsArrayOfObjects,
+    match.leagueID
+  );
   if (!fixtures?.length) {
     return [];
   }
@@ -3384,9 +3390,8 @@ export async function calculateScore(match, index, divider, calculate, AIPredict
 
 
     const leagueHasEnoughFixtures =
-      (allLeagueResultsArrayOfObjects[match.leagueIndex]?.fixtures?.length ??
-        0) > 10 &&
-      match.leagueID !== 7956;
+      getLeagueFixturesByLeagueId(allLeagueResultsArrayOfObjects, match.leagueID)
+        .length > 10 && match.leagueID !== 7956;
 
     if (shouldUseApiFormOnly(match)) {
       match.apiFormOnly = true;

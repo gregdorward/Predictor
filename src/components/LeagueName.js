@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { allLeagueResultsArrayOfObjects } from "../logic/getFixtures";
 import { renderTable } from "../logic/getFixtures";
+import { getLeagueResultsByLeagueId } from "../utils/leagueResultsAccess";
 
 
 const sofaScoreIds = [
@@ -79,11 +80,12 @@ const sofaScoreIds = [
 export default function LeagueName({ fixture, mock, showShortlist }) {
   const [logoUrl, setLogoUrl] = useState(null);
 
-const name = showShortlist ? fixture.leagueDesc : fixture.leagueName; 
- const id =
-    allLeagueResultsArrayOfObjects.length > 0
-      ? allLeagueResultsArrayOfObjects[fixture.leagueIndex].id
-      : null;
+const name = showShortlist ? fixture.leagueDesc : fixture.leagueName;
+  const id = fixture.leagueID ?? null;
+  const leagueResults = getLeagueResultsByLeagueId(
+    allLeagueResultsArrayOfObjects,
+    id
+  );
 
   useEffect(() => {
     async function fetchLogo() {
@@ -119,13 +121,10 @@ const name = showShortlist ? fixture.leagueDesc : fixture.leagueName;
         className="leagueName"
         id={`league${id}`}
         key={`leagueName${id}div`}
-        onClick={() =>
-          renderTable(
-            fixture.leagueIndex,
-            allLeagueResultsArrayOfObjects[fixture.leagueIndex],
-            id
-          )
-        }
+        onClick={() => {
+          if (!leagueResults) return;
+          renderTable(fixture.leagueIndex, leagueResults, id);
+        }}
         style={{ display: "flex", alignItems: "center" }}
       >
         <div className="LeagueAndLogo">

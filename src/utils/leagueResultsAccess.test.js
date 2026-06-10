@@ -1,4 +1,7 @@
-import { getLeagueFixturesByLeagueId } from "./leagueResultsAccess";
+import {
+  getLeagueFixturesByLeagueId,
+  getLeagueResultsByLeagueId,
+} from "./leagueResultsAccess";
 
 describe("getLeagueFixturesByLeagueId", () => {
   const allLeagueResults = [
@@ -22,5 +25,33 @@ describe("getLeagueFixturesByLeagueId", () => {
   test("returns an empty array for invalid inputs", () => {
     expect(getLeagueFixturesByLeagueId(null, 8)).toEqual([]);
     expect(getLeagueFixturesByLeagueId(allLeagueResults, null)).toEqual([]);
+  });
+
+  test("finds fixtures by league id when array order differs from orderedLeagues index", () => {
+    const reorderedCache = [
+      { id: 15050, fixtures: [{ home_name: "EPL", away_name: "Side" }] },
+      { id: 16494, fixtures: [{ home_name: "USA", away_name: "Mexico" }] },
+    ];
+
+    expect(reorderedCache[0].id).toBe(15050);
+    expect(getLeagueFixturesByLeagueId(reorderedCache, 16494)).toHaveLength(1);
+    expect(getLeagueFixturesByLeagueId(reorderedCache, 16494)[0].home_name).toBe(
+      "USA"
+    );
+  });
+});
+
+describe("getLeagueResultsByLeagueId", () => {
+  const allLeagueResults = [{ id: 16494, fixtures: [] }];
+
+  test("returns the matching league entry", () => {
+    expect(getLeagueResultsByLeagueId(allLeagueResults, 16494)).toEqual({
+      id: 16494,
+      fixtures: [],
+    });
+  });
+
+  test("returns null when the league is not found", () => {
+    expect(getLeagueResultsByLeagueId(allLeagueResults, 99999)).toBeNull();
   });
 });
