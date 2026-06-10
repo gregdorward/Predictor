@@ -7196,6 +7196,35 @@ button.SecondaryButtons {
   padding-bottom: 0.5em;
 }
 
+.AIKeyPlayersList {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  text-align: center;
+  font-size: 0.9em;
+}
+
+.AIKeyPlayerItem {
+  padding: 0.5em;
+  margin-top: 0.5em;
+  background-color: var(--alternate-background-color);
+  border-radius: 8px;
+  line-height: 1.5;
+  text-align: center;
+}
+
+.AIKeyPlayerName {
+  display: block;
+}
+
+.AIKeyPlayerRole {
+  display: block;
+  margin-top: 0.25em;
+  font-size: 0.95em;
+  font-weight: 600;
+  color: var(--faint-text);
+}
+
 .IndividualAIComponent {
   padding: 1em;
 }

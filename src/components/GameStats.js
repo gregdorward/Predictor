@@ -3768,6 +3768,26 @@ function GameStats({ game, displayBool, stats, handleToggleTip, userTips }) {
     return text.split(". ").join(".\n");
   };
 
+  const renderAIKeyPlayersList = (roles) => (
+    <ul className="AIKeyPlayersList">
+      {roles.map((role, index) => {
+        const colonIndex = role.indexOf(":");
+        const name =
+          colonIndex === -1 ? role.trim() : role.slice(0, colonIndex).trim();
+        const description =
+          colonIndex === -1 ? "" : role.slice(colonIndex + 1).trim();
+        return (
+          <li key={index} className="AIKeyPlayerItem">
+            <strong className="AIKeyPlayerName">{name}</strong>
+            {description && (
+              <span className="AIKeyPlayerRole">{description}</span>
+            )}
+          </li>
+        );
+      })}
+    </ul>
+  );
+
   const AIOutput = useMemo(() => {
     if (!aiMatchPreview) return null;
 
@@ -3807,6 +3827,30 @@ function GameStats({ game, displayBool, stats, handleToggleTip, userTips }) {
           <i>(may not reflect the view of Soccer Stats Hub)</i>
         </div>
 
+        {(aiMatchPreview?.homeTeam?.keyPlayerRoles?.length > 0 ||
+          aiMatchPreview?.awayTeam?.keyPlayerRoles?.length > 0) && (
+          <>
+            <h2>Key Player Overviews</h2>
+            <div className="AIContainer AIKeyPlayers">
+              {aiMatchPreview?.homeTeam?.keyPlayerRoles?.length > 0 && (
+                <div className="HomeAIInsights">
+                  <h6 className="TeamName">
+                    {aiMatchPreview.homeTeam.teamName}
+                  </h6>
+                  {renderAIKeyPlayersList(aiMatchPreview.homeTeam.keyPlayerRoles)}
+                </div>
+              )}
+              {aiMatchPreview?.awayTeam?.keyPlayerRoles?.length > 0 && (
+                <div className="AwayAIInsights">
+                  <h6 className="TeamName">
+                    {aiMatchPreview.awayTeam.teamName}
+                  </h6>
+                  {renderAIKeyPlayersList(aiMatchPreview.awayTeam.keyPlayerRoles)}
+                </div>
+              )}
+            </div>
+          </>
+        )}
 
         <h2>Ratings and Styles</h2>
         <div className="AIContainer">
