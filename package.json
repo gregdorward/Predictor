@@ -47,10 +47,10 @@
     "web-vitals": "^0.2.4"
   },
   "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build && cp build/index.html build/404.html",
+    "start": "craco start",
+    "build": "craco build && cp build/index.html build/404.html",
     "postbuild": "react-snap; node scripts/injectPrerenderMeta.js",
-    "test": "react-scripts test",
+    "test": "craco test",
     "test:e2e:install": "playwright install chromium",
     "test:e2e": "playwright test",
     "test:e2e:ui": "PW_TEST_NO_WEBSERVER=1 playwright test --ui",
@@ -102,11 +102,13 @@
   },
   "proxy": "https://api.soccerstatshub.com",
   "devDependencies": {
+    "@craco/craco": "^7.1.0",
+    "@fullhuman/postcss-purgecss": "^8.0.0",
     "@playwright/test": "^1.60.0",
     "@types/node": "^22.15.0",
     "@types/react-slider": "^1.1.0",
-    "typescript": "^5.8.3",
     "gh-pages": "^3.1.0",
-    "react-snap": "^1.23.0"
+    "react-snap": "^1.23.0",
+    "typescript": "^5.8.3"
   }
 }
