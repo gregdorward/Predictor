@@ -102,10 +102,9 @@ export default function BTTSTeams() {
   return (
     <Fragment>
       <PageMeta />
-      <SiteHeader />
-      
+      <SiteHeader withFooter>
       <Box className={`${classes.container} SubpageContent`}>
-        <a href="https://www.soccerstatshub.com/" className={classes.homeLink}>← Back to Home</a>
+        <a href="/" className={classes.homeLink}>← Back to Home</a>
         
         <Typography variant="h1">BTTS Elite Teams</Typography>
         <Typography variant="h2">Teams with the highest percentage of games ending in both teams to score</Typography>
@@ -163,6 +162,7 @@ export default function BTTSTeams() {
           </Table>
         </TableContainer>
       </Box>
+      </SiteHeader>
     </Fragment>
   );
 }

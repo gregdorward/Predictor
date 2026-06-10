@@ -612,6 +612,11 @@ h1 {
 }
 
 .MobileNavOverlay {
+  display: none;
+}
+
+.MobileNavOverlay--open {
+  display: block;
   position: fixed;
   top: var(--header-height);
   left: 0;
@@ -2069,12 +2074,31 @@ table tr:nth-child(even) {
 }
 
 .Footer {
-  line-height: 2em;
-  font-size: 1em;
+  margin-top: 2.5em;
+  padding: 1.5em 1em 2em;
+  line-height: 1.6;
+  font-size: 0.95em;
   font-family: 'Open Sans', sans-serif;
+  text-align: center;
+  border-top: 1px solid rgba(0, 0, 0, 0.08);
+}
+
+body.dark-mode .Footer {
+  border-top-color: rgba(255, 255, 255, 0.12);
+}
+
+.Footer-navList {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.75em 1.25em;
+  list-style: none;
+  margin: 0 0 1em;
+  padding: 0;
 }
 
 .Footer a {
+  color: var(--accent-color);
   text-decoration: none;
 }
 
@@ -2082,8 +2106,10 @@ table tr:nth-child(even) {
   text-decoration: underline;
 }
 
-.Footer h3 {
-  font-size: 1.5em;
+.Footer-copy {
+  margin: 0;
+  opacity: 0.75;
+  font-size: 0.9em;
 }
 
 .column {

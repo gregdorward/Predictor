@@ -2,8 +2,13 @@ import Logo from "./Logo";
 import HamburgerMenu from "./HamburgerMenu";
 import ThemeToggle from "./DarkModeToggle";
 import WorldCupBanner from "./WorldCupBanner";
+import Footer from "./Footer";
 
-export default function SiteHeader({ showThemeToggle = false }) {
+export default function SiteHeader({
+  showThemeToggle = false,
+  withFooter = false,
+  children,
+}) {
   return (
     <>
       <header className="DarkMode">
@@ -14,6 +19,8 @@ export default function SiteHeader({ showThemeToggle = false }) {
         </div>
       </header>
       <WorldCupBanner />
+      {children}
+      {withFooter && <Footer />}
     </>
   );
 }

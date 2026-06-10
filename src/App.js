@@ -74,8 +74,6 @@ export var orderedLeagues = [];
 export let paid = false;
 // export let userTips;
 
-const menuItems = ['Home', 'bttsteams', 'Services', 'Contact'];
-
 const leagueOrder = [
   16494, // World cup 2026
   15050, //premier league 25 12325
@@ -924,17 +922,6 @@ function AppContent() {
         />
       )}
       <SiteHeader showThemeToggle />
-      <nav className="hidden md:flex gap-6">
-        {menuItems.map((item) => (
-          <a
-            key={item}
-            href={`#${item.toLowerCase()}`}
-            className="text-lg font-semibold hover:text-blue-500"
-          >
-            {item}
-          </a>
-        ))}
-      </nav>
       <div id="LoadingContainer" className="LoadingContainer" />
       <div id="RadioContainer" className="RadioContainer">
         <div id="RadioText" />

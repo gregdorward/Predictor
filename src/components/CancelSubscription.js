@@ -3,6 +3,7 @@ import { getAuth } from "firebase/auth";
 import { doc, getDoc } from "firebase/firestore";
 import { db } from "../firebase"; // Ensure you have Firebase initialized
 import PageMeta from "./PageMeta";
+import Footer from "./Footer";
 
 export default function CancelSubscription() {
   const [loading, setLoading] = useState(false);
@@ -72,7 +73,8 @@ export default function CancelSubscription() {
     <>
     <PageMeta />
     <div className="p-4 bg-white shadow-md rounded-lg">
-      <h2 className="text-xl font-semibold mb-2">Manage Subscription</h2>
+      <a href="/" className="HomeLink">Home</a>
+      <h1 className="text-xl font-semibold mb-2">Manage Subscription</h1>
       {isPaidUser ? (
         <>
           <p className="mb-2">Your subscription is active. Cancelations will come into effect after the end of your current billing cycle and are irreversible</p>
@@ -89,6 +91,7 @@ export default function CancelSubscription() {
       )}
       {message && <p className="mt-2 text-sm">{message}</p>}
     </div>
+    <Footer />
     </>
   );
 }

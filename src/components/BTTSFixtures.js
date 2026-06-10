@@ -102,10 +102,9 @@ export default function BTTSFixtures() {
   return (
     <Fragment>
       <PageMeta />
-      <SiteHeader />
-      
+      <SiteHeader withFooter>
       <Box className={`${classes.container} SubpageContent`}>
-        <a href="https://www.soccerstatshub.com/" className={classes.homeLink}>← Back to Home</a>
+        <a href="/" className={classes.homeLink}>← Back to Home</a>
         
         <Typography variant="h1">BTTS Insights</Typography>
         <Typography variant="h2">High-potential fixtures based on combined scoring averages</Typography>
@@ -159,6 +158,7 @@ export default function BTTSFixtures() {
           </Table>
         </TableContainer>
       </Box>
+      </SiteHeader>
     </Fragment>
   );
 }

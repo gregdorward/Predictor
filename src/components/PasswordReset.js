@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { getAuth, sendPasswordResetEmail } from "firebase/auth";
 import PageMeta from "./PageMeta";
+import Footer from "./Footer";
 
 const PasswordReset = () => {
   const [email, setEmail] = useState("");
@@ -24,7 +25,8 @@ const PasswordReset = () => {
   return (
     <div>
       <PageMeta />
-      <h2>Reset Password</h2>
+      <a href="/" className="HomeLink">Home</a>
+      <h1>Reset Password</h1>
       {message && <p style={{ color: "green" }}>{message}</p>}
       {error && <p style={{ color: "red" }}>{error}</p>}
       <form onSubmit={handleReset}>
@@ -38,6 +40,7 @@ const PasswordReset = () => {
         />
         <button type="submit">Send Reset Email</button>
       </form>
+      <Footer />
     </div>
   );
 };

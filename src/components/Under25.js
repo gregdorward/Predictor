@@ -108,10 +108,9 @@ export default function Under25() {
   return (
     <Fragment>
       <PageMeta />
-      <SiteHeader />
-      
+      <SiteHeader withFooter>
       <Box className={`${classes.container} SubpageContent`}>
-        <a href="https://www.soccerstatshub.com/" className={classes.homeLink}>← Back to Home</a>
+        <a href="/" className={classes.homeLink}>← Back to Home</a>
         
         <Typography variant="h1">Lowest Scoring Leagues</Typography>
         <Typography variant="h2">Leagues with the lowest goals-per-match averages</Typography>
@@ -158,6 +157,7 @@ export default function Under25() {
           </Table>
         </TableContainer>
       </Box>
+      </SiteHeader>
     </Fragment>
   );
 }

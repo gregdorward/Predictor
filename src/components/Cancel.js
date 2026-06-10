@@ -1,15 +1,17 @@
+import PageMeta from "./PageMeta";
+import Footer from "./Footer";
+
 export const CancelPage = () => {
   return (
     <div>
+      <PageMeta />
       <h1>Payment Cancelled</h1>
-      <button
-        className="PaymentReturn"
-        onClick={() => {
-          window.location.href = "https://www.soccerstatshub.com/";
-        }}
-      >
-        Return to Soccer Stats Hub
-      </button>
+      <p>
+        <a href="/" className="PaymentReturn">
+          Return to Soccer Stats Hub
+        </a>
+      </p>
+      <Footer />
     </div>
   );
 };

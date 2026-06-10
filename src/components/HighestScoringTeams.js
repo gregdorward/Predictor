@@ -84,9 +84,9 @@ export default function HighestScoringTeams() {
   return (
     <Fragment>
       <PageMeta />
-      <SiteHeader />
+      <SiteHeader withFooter>
       <div className="SubpageContent">
-      <a href="https://www.soccerstatshub.com/" className="HomeLink">Home</a>
+      <a href="/" className="HomeLink">Home</a>
       <h1>Highest Scoring Teams</h1>
       <h2>Teams with the highest average goals and their upcoming fixture</h2>
       <TableContainer component={Paper} className="O25Table SubpageTableScroll">
@@ -122,6 +122,7 @@ export default function HighestScoringTeams() {
         </Table>
       </TableContainer>
       </div>
+      </SiteHeader>
     </Fragment>
   );
 }

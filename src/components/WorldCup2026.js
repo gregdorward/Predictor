@@ -1,7 +1,6 @@
 import { useState } from "react";
 import SiteHeader from "./SiteHeader";
 import PageMeta from "./PageMeta";
-import Footer from "./Footer";
 import WorldCup2026MatchesTab from "./WorldCup2026MatchesTab";
 import previewData from "../data/worldcup2026/tournament-preview.json";
 
@@ -241,7 +240,7 @@ export default function WorldCup2026() {
   return (
     <>
       <PageMeta />
-      <SiteHeader showThemeToggle />
+      <SiteHeader showThemeToggle withFooter>
       <main className="WC26">
         <a href="/" className="HomeLink">Home</a>
 
@@ -299,7 +298,7 @@ export default function WorldCup2026() {
           {activeTab === "matches" && <WorldCup2026MatchesTab />}
         </div>
       </main>
-      <Footer />
+      </SiteHeader>
     </>
   );
 }
