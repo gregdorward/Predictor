@@ -385,6 +385,14 @@
   --secondary-button-text-color: #ffffff;
   --alternate-background-color: #f5f4f4;
   --primary-color: #fe8c00;
+  --primary-rgb: 254, 140, 0;
+  --button-border-color: rgba(2, 0, 41, 0.14);
+  --button-shadow-rest: 0 1px 2px rgba(2, 0, 41, 0.06), 0 2px 8px rgba(2, 0, 41, 0.08);
+  --button-shadow-hover: 0 2px 4px rgba(2, 0, 41, 0.08), 0 8px 20px rgba(254, 140, 0, 0.22);
+  --button-shadow-active: 0 1px 2px rgba(2, 0, 41, 0.1);
+  --button-secondary-bg: transparent;
+  --button-secondary-border: rgba(2, 0, 41, 0.35);
+  --button-secondary-hover-bg: rgba(254, 140, 0, 0.1);
   --secondary-color: #383737;
   --accent-color: #030040;
   --mid-grey: #030040;
@@ -407,6 +415,14 @@
   --button-text-color: #191919;
   --secondary-button-text-color: #191919;
   --primary-color: #f57701;
+  --primary-rgb: 245, 119, 1;
+  --button-border-color: rgba(255, 255, 255, 0.14);
+  --button-shadow-rest: 0 1px 2px rgba(0, 0, 0, 0.35), 0 2px 8px rgba(0, 0, 0, 0.25);
+  --button-shadow-hover: 0 2px 4px rgba(0, 0, 0, 0.3), 0 8px 20px rgba(245, 119, 1, 0.28);
+  --button-shadow-active: 0 1px 2px rgba(0, 0, 0, 0.35);
+  --button-secondary-bg: transparent;
+  --button-secondary-border: rgba(255, 255, 255, 0.35);
+  --button-secondary-hover-bg: rgba(245, 119, 1, 0.15);
   --secondary-color: #860000;
   --accent-color: whitesmoke;
   --mid-grey: #020029;
@@ -1007,54 +1023,76 @@ button {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-
-  /* 1. Flexible spacing: Vertical 0.6em, Horizontal 1.4em */
+  gap: 0.35em;
   padding: 0.7em 1.5em;
   margin: 0.5em;
-
-  /* 2. Content-driven width with a minimum */
   min-width: 10em;
   width: auto;
-
-  /* 3. Typography refinements */
   font-family: 'Open Sans', sans-serif;
   font-size: 1em;
   font-weight: 600;
-  letter-spacing: -0.01em;
+  letter-spacing: 0.01em;
   text-decoration: none;
   line-height: 1.2;
-
-  /* 4. Visuals */
   cursor: pointer;
-  border: 1px solid rgba(0, 0, 0, 0.1);
-  /* Subtle border */
-  border-radius: 6px;
+  border: 1px solid var(--button-border-color);
+  border-radius: 8px;
   color: var(--secondary-button-text-color);
   background-color: var(--button-color);
-
-  /* 5. Depth and Transition */
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.1),
+    var(--button-shadow-rest);
+  transition:
+    background-color 0.2s cubic-bezier(0.4, 0, 0.2, 1),
+    border-color 0.2s cubic-bezier(0.4, 0, 0.2, 1),
+    box-shadow 0.2s cubic-bezier(0.4, 0, 0.2, 1),
+    transform 0.2s cubic-bezier(0.4, 0, 0.2, 1),
+    color 0.2s cubic-bezier(0.4, 0, 0.2, 1);
   outline: none;
+  -webkit-tap-highlight-color: transparent;
 }
 
-/* Hover State: Slight lift and darken */
-button:hover {
+button:hover:not(:disabled) {
   background-color: var(--primary-color);
-  /* Or a slightly darker shade */
-  transform: translateY(-2px);
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.12);
+  border-color: var(--primary-color);
+  color: var(--span-text-colour);
+  transform: translateY(-1px);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.2),
+    var(--button-shadow-hover);
 }
 
-/* Active State: "Pressed" effect */
-button:active {
-  transform: translateY(0px);
-  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+button:active:not(:disabled) {
+  transform: translateY(0);
+  box-shadow: var(--button-shadow-active);
 }
 
-/* Focus State: High accessibility */
 button:focus-visible {
-  box-shadow: 0 0 0 3px rgba(var(--primary-rgb), 0.4);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.1),
+    var(--button-shadow-rest),
+    0 0 0 3px rgba(var(--primary-rgb), 0.38);
+}
+
+button:hover:focus-visible:not(:disabled) {
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.2),
+    var(--button-shadow-hover),
+    0 0 0 3px rgba(var(--primary-rgb), 0.38);
+}
+
+button:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+
+@media (max-width: 600px) {
+  button {
+    min-width: 8em;
+    padding: 0.65em 1.25em;
+  }
 }
 
 button.GeneratePredictionsButton {
@@ -1062,8 +1100,78 @@ button.GeneratePredictionsButton {
   padding-top: 0.75em;
   padding-bottom: 0.75em;
   background-color: var(--primary-color);
-  color: #020029;
-  border: var(--text-color), 1px, solid;
+  color: var(--span-text-colour);
+  border-color: var(--primary-color);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.25),
+    var(--button-shadow-hover);
+}
+
+button.GeneratePredictionsButton:hover:not(:disabled) {
+  filter: brightness(1.05);
+  color: var(--span-text-colour);
+}
+
+/* Secondary: outlined supporting actions */
+button.SecondaryButton,
+button.SecondaryButtons {
+  background-color: var(--button-secondary-bg);
+  color: var(--text-color);
+  border: 2px solid var(--button-secondary-border);
+  box-shadow: none;
+}
+
+button.SecondaryButton:hover:not(:disabled),
+button.SecondaryButtons:hover:not(:disabled) {
+  background-color: var(--button-secondary-hover-bg);
+  border-color: var(--primary-color);
+  color: var(--text-color);
+  transform: translateY(-1px);
+  box-shadow: var(--button-shadow-rest);
+}
+
+button.SecondaryButton:active:not(:disabled),
+button.SecondaryButtons:active:not(:disabled) {
+  transform: translateY(0);
+  box-shadow: var(--button-shadow-active);
+}
+
+button.SecondaryButton:focus-visible,
+button.SecondaryButtons:focus-visible {
+  box-shadow: 0 0 0 3px rgba(var(--primary-rgb), 0.38);
+}
+
+button.SecondaryButton:hover:focus-visible:not(:disabled),
+button.SecondaryButtons:hover:focus-visible:not(:disabled) {
+  box-shadow:
+    var(--button-shadow-rest),
+    0 0 0 3px rgba(var(--primary-rgb), 0.38);
+}
+
+/* Ghost: low-emphasis / inline actions */
+button.GhostButton {
+  background-color: transparent;
+  color: var(--text-color);
+  border-color: transparent;
+  box-shadow: none;
+  min-width: auto;
+  padding: 0.5em 0.85em;
+}
+
+button.GhostButton:hover:not(:disabled) {
+  background-color: var(--secondary-background-color);
+  border-color: transparent;
+  color: var(--text-color);
+  transform: none;
+  box-shadow: none;
+}
+
+button.GhostButton:active:not(:disabled) {
+  background-color: var(--third-background-color);
+}
+
+button.GhostButton:focus-visible {
+  box-shadow: 0 0 0 3px rgba(var(--primary-rgb), 0.38);
 }
 
 /* button.GeneratePredictionsButton:hover {
@@ -3433,12 +3541,11 @@ h6.MediaTitle {
 
 
 .FixturesButtonAmend {
-  /* background-color: var(--background-color); */
-  /* color: var(--text-color); */
   cursor: pointer;
   font-size: 0.9em;
-  border: 1px solid var(--button-color);
   font-weight: bolder;
+  min-width: 3.25em;
+  padding: 0.75em 2em;
 }
 
 /* Container for the whole list */
@@ -5206,11 +5313,6 @@ Table {
   margin-top: 0px !important;
 }
 
-button:hover {
-  border-color: #ff6f00;
-  /* border-radius: 45px; */
-}
-
 .disclaimerButton:hover {
   border-color: white;
 }
@@ -6661,13 +6763,11 @@ input:active+.design::after {
 .ShortlistButton,
 .ShareButton {
   font-size: 1em;
-  background-color: var(--background-color);
   margin-left: 0.5em;
   margin-right: 0.5em;
   margin-top: 0.5em;
-  border: none;
-  color: var(--text-color);
-  box-shadow: none;
+  min-width: auto;
+  padding: 0.55em 1em;
 }
 
 .CopyMultiActions {
@@ -6839,12 +6939,8 @@ h6.AttackingMomentum {
 
 .LogoutButton {
   font-size: 0.8em;
-  background-color: var(--background-color);
-  color: var(--text-color);
-  border: none;
-  margin: 0em;
+  margin: 0;
   width: 8em;
-  box-shadow: none;
 }
 
 input {
@@ -6891,21 +6987,18 @@ input {
 }
 
 .CancelButton {
-  background: none;
-  border: none;
-  color: var(--text-color);
-  text-decoration: none;
-  cursor: pointer;
-  padding: 0;
+  text-decoration: underline;
+  text-underline-offset: 0.15em;
   margin-left: auto;
   margin-right: auto;
   margin-top: 1em;
-  box-shadow: none;
-  font-size: 1.2em;
+  font-size: 1.1em;
+  padding: 0.35em 0.5em;
 }
 
-.CancelButton:hover {
+.CancelButton:hover:not(:disabled) {
   text-decoration: underline;
+  color: var(--primary-color);
 }
 
 .SignUp {
@@ -6965,9 +7058,6 @@ button.TogglePasswordButton {
 
 button.SecondaryButtons {
   font-size: 1em;
-  color: var(--button-text-color);
-  background-color: var(--button-color);
-  border: 1px solid #030052;
 }
 
 .LeagueList {

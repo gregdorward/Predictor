@@ -482,7 +482,7 @@ export async function getLeagueList() {
       <><div className="WelcomeBack">Welcome back {loggedIn.email}</div><div className="WelcomeBack">Username: {loggedIn.displayName}</div>
         <button
           onClick={handleLogout}
-          className="LogoutButton"
+          className="GhostButton LogoutButton"
         >
           Logout
         </button>
@@ -1050,7 +1050,7 @@ function AppContent() {
         <div className="FixtureButtons">
           <Button
             text="<"
-            className="FixturesButtonAmend"
+            className="SecondaryButton FixturesButtonAmend"
             onClickEvent={() => changeDate(-1)}
           />
 
@@ -1062,7 +1062,7 @@ function AppContent() {
 
           <Button
             text=">"
-            className="FixturesButtonAmend"
+            className="SecondaryButton FixturesButtonAmend"
             onClickEvent={() => changeDate(1)}
           />
         </div>
@@ -1340,21 +1340,21 @@ function AppContent() {
         <TwitterShareButton
           url={"https://www.soccerstatshub.com"}
           title={"#SoccerStatsHub"}
-          className="ShareButton"
+          className="SecondaryButton ShareButton"
         >
           <TwitterIcon size={"3em"} round={true} />
         </TwitterShareButton>
         <RedditShareButton
           url={"https://www.soccerstatshub.com"}
           title={"Soccer Stats Hub"}
-          className="ShareButton"
+          className="SecondaryButton ShareButton"
         >
           <RedditIcon size={"3em"} round={true} />
         </RedditShareButton>
         <FacebookShareButton
           url={"https://www.soccerstatshub.com"}
           quote={"SoccerStatsHub - data-driven football predictions"}
-          className="ShareButton"
+          className="SecondaryButton ShareButton"
         >
           <FacebookIcon size={"3em"} round={true} />
         </FacebookShareButton>
@@ -1362,14 +1362,14 @@ function AppContent() {
           url={"https://www.soccerstatshub.com"}
           title={"SoccerStatsHub"}
           separator=": "
-          className="ShareButton"
+          className="SecondaryButton ShareButton"
         >
           <WhatsappIcon size={"3em"} round={true} />
         </WhatsappShareButton>
         <TelegramShareButton
           url={"SoccerStatsHub"}
           title={"Soccer Stats Hub"}
-          className="ShareButton"
+          className="SecondaryButton ShareButton"
         >
           <TelegramIcon size={"3em"} round={true} />
         </TelegramShareButton>
@@ -1400,7 +1400,7 @@ function AppContent() {
               window.location.href =
                 "https://www.soccerstatshub.com/cancelsubscription";
             }}
-            className="CancelButton"
+            className="GhostButton CancelButton"
           >
             Cancel Subscription
           </button>
