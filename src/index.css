@@ -8961,6 +8961,7 @@ h5.section-title {
   width: 100%;
   max-width: var(--content-max-width);
   margin: 0 auto 1em;
+  margin-top: 1em;
   padding: 0.35em var(--content-padding-x) 0;
   box-sizing: border-box;
   text-decoration: none;
