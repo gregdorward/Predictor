@@ -575,34 +575,6 @@ h1 {
   margin-right: 0;
 }
 
-.DesktopNav {
-  display: none;
-  flex: 1;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: 0.75em 1.25em;
-  padding: 0 1em;
-}
-
-.DesktopNav-link {
-  color: var(--text-color);
-  font-size: 0.9em;
-  font-weight: 600;
-  text-decoration: none;
-  white-space: nowrap;
-}
-
-.DesktopNav-link:hover {
-  color: var(--accent-color);
-  text-decoration: underline;
-}
-
-@media (min-width: 1024px) {
-  .DesktopNav {
-    display: flex;
-  }
-}
-
 .HamburgerMenuDiv {
   margin: 0;
   padding: 0;
@@ -5630,14 +5602,12 @@ label {
   top: 0;
   left: 0;
   right: 0;
-  height: var(--header-height);
   display: flex;
   justify-content: flex-start;
   align-items: center;
-  padding: 1em 1em 0;
+  padding: 1em;
   background-color: var(--background-color);
   z-index: 1000;
-  overflow: hidden;
   box-sizing: border-box;
 }
 
