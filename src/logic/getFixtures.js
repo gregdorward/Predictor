@@ -855,6 +855,15 @@ export async function generateFixtures(
       return [`${month}${day}${year}`, `${year}-${month}-${day}`];
     }
 
+    const todayStart = new Date();
+    todayStart.setHours(0, 0, 0, 0);
+    const selectedStart = new Date(unformattedDate);
+    selectedStart.setHours(0, 0, 0, 0);
+
+    let leaguesDate = todaysDate;
+    if (selectedStart > todayStart) {
+      [leaguesDate] = await calculateDate(new Date());
+    }
 
     const url = `${process.env.REACT_APP_EXPRESS_SERVER}matches/${footyStatsFormattedDate}`;
     const formUrl = `${process.env.REACT_APP_EXPRESS_SERVER}form/${date}`;
@@ -864,7 +873,7 @@ export async function generateFixtures(
     fixtureArray = [];
 
     league = await fetch(
-      `${process.env.REACT_APP_EXPRESS_SERVER}leagues/${todaysDate}`
+      `${process.env.REACT_APP_EXPRESS_SERVER}leagues/${leaguesDate}`
     );
 
     // render(<div></div>, "FixtureContainer");
@@ -938,7 +947,7 @@ export async function generateFixtures(
       console.log("Fetching leagues");
       for (let i = 0; i < orderedLeagues.length; i++) {
         league = await fetch(
-          `${process.env.REACT_APP_EXPRESS_SERVER}tables/${orderedLeagues[i].element.id}/${todaysDate}`
+          `${process.env.REACT_APP_EXPRESS_SERVER}tables/${orderedLeagues[i].element.id}/${leaguesDate}`
         );
         // eslint-disable-next-line no-loop-func
         await league.json().then((table) => {
@@ -1080,7 +1089,7 @@ export async function generateFixtures(
 
       try {
         const response = await fetch(
-          `${process.env.REACT_APP_EXPRESS_SERVER}leagues/${todaysDate}`,
+          `${process.env.REACT_APP_EXPRESS_SERVER}leagues/${leaguesDate}`,
           {
             method: "POST",
             headers: {
@@ -1093,12 +1102,12 @@ export async function generateFixtures(
 
         if (!response.ok) {
           console.error(
-            `Failed to save leagues for ${todaysDate}:`,
+            `Failed to save leagues for ${leaguesDate}:`,
             response.status
           );
         }
       } catch (error) {
-        console.error(`Error saving leagues for ${todaysDate}:`, error);
+        console.error(`Error saving leagues for ${leaguesDate}:`, error);
       }
     }
 
