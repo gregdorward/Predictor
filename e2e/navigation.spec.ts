@@ -1,8 +1,13 @@
-// @ts-check
-const { test, expect } = require('@playwright/test');
-const { navigateViaMenu } = require('./helpers/navigation');
+import { test, expect } from '@playwright/test';
+import { navigateViaMenu } from './helpers/navigation';
 
-const menuRoutes = [
+type MenuRoute = {
+  label: string;
+  path: string;
+  heading: string | RegExp;
+};
+
+const menuRoutes: MenuRoute[] = [
   { label: 'Home', path: '/', heading: /Welcome to/ },
   { label: 'Highest Scoring Leagues', path: '/o25/', heading: 'Elite Scoring Teams' },
   { label: 'Lowest Scoring Leagues', path: '/u25/', heading: 'Lowest Scoring Leagues' },

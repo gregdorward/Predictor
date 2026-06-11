@@ -102,10 +102,9 @@ export default function HighestScoringFixtures() {
   return (
     <Fragment>
       <PageMeta />
-      <SiteHeader />
-      
+      <SiteHeader withFooter>
       <Box className={`${classes.container} SubpageContent`}>
-        <a href="https://www.soccerstatshub.com/" className={classes.homeLink}>← Back to Home</a>
+        <a href="/" className={classes.homeLink}>← Back to Home</a>
         
         <Typography variant="h1">Goal Potential Insights</Typography>
         <Typography variant="h2">Fixtures with the highest combined average goals per match</Typography>
@@ -159,6 +158,7 @@ export default function HighestScoringFixtures() {
           </Table>
         </TableContainer>
       </Box>
+      </SiteHeader>
     </Fragment>
   );
 }

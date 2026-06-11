@@ -1,7 +1,13 @@
-// @ts-check
-const { test, expect } = require('@playwright/test');
+import { test, expect } from '@playwright/test';
 
-const statsPages = [
+type StatsPage = {
+  path: string;
+  heading: string;
+  tableLabel: string;
+  requireRows: boolean;
+};
+
+const statsPages: StatsPage[] = [
   { path: '/o25/', heading: 'Elite Scoring Teams', tableLabel: 'highest scoring teams table', requireRows: true },
   { path: '/u25/', heading: 'Lowest Scoring Leagues', tableLabel: 'Lowest scoring leagues table', requireRows: true },
   { path: '/bttsteams/', heading: 'BTTS Elite Teams', tableLabel: 'BTTS teams table', requireRows: true },

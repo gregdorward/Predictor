@@ -47,13 +47,14 @@
     "web-vitals": "^0.2.4"
   },
   "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build && cp build/index.html build/404.html",
-    "postbuild": "react-snap",
-    "test": "react-scripts test",
+    "start": "craco start",
+    "build": "craco build && cp build/index.html build/404.html",
+    "postbuild": "react-snap; node scripts/injectPrerenderMeta.js",
+    "test": "craco test",
     "test:e2e:install": "playwright install chromium",
     "test:e2e": "playwright test",
-    "test:e2e:ui": "PW_TEST_NO_WEBSERVER=1 playwright test --config=playwright.config.js --ui",
+    "test:e2e:ui": "PW_TEST_NO_WEBSERVER=1 playwright test --ui",
+    "test:e2e:typecheck": "tsc -p e2e/tsconfig.json",
     "test:e2e:headed": "playwright test --headed",
     "test:e2e:report": "playwright show-report",
     "eject": "react-scripts eject",
@@ -62,6 +63,7 @@
   },
   "reactSnap": {
     "include": [
+      "/",
       "/o25",
       "/u25",
       "/bttsteams",
@@ -69,16 +71,14 @@
       "/bttsfixtures",
       "/fixtureshigh",
       "/teamshigh",
-      "/reset",
-      "/cancelsubscription",
       "/worldcup2026"
     ],
     "crawl": false,
     "puppeteerArgs": [
       "--no-sandbox"
     ],
-    "timeout": 30000,
-    "waitFor": 3000,
+    "timeout": 60000,
+    "waitFor": 5000,
     "removeStyleTags": false,
     "inlineCss": true
   },
@@ -102,9 +102,13 @@
   },
   "proxy": "https://api.soccerstatshub.com",
   "devDependencies": {
+    "@craco/craco": "^7.1.0",
+    "@fullhuman/postcss-purgecss": "^8.0.0",
     "@playwright/test": "^1.60.0",
+    "@types/node": "^22.15.0",
     "@types/react-slider": "^1.1.0",
     "gh-pages": "^3.1.0",
-    "react-snap": "^1.23.0"
+    "react-snap": "^1.23.0",
+    "typescript": "^5.8.3"
   }
 }

@@ -2388,11 +2388,9 @@ export async function generateGoals(homeForm, awayForm, match) {
   // * (awayForm.formTrendScore); // Incorporate form trend into overall lambda
 
   // Average last-5 and overall (unchanged logic)
-  const homeLambdaAverage =
-    (((homeLambda_raw * 0) + (homeLambda_rawOverall * 2)) / 2)
+  const homeLambdaAverage = homeLambda_rawOverall
 
-  const awayLambdaAverage =
-    (((awayLambda_raw * 0) + (awayLambda_rawOverall * 2)) / 2)
+  const awayLambdaAverage = awayLambda_rawOverall
 
   // console.log(match.homeTeam + " vs " + match.awayTeam);
   // console.log(`homeAttackingStrengthLast5: ${homeForm.attackingStrengthLast5.toFixed(3)}, awayAttackingStrengthLast5: ${awayForm.attackingStrengthLast5.toFixed(3)}`);
@@ -2503,7 +2501,7 @@ export async function generateGoals(homeForm, awayForm, match) {
 
   const avgAwayXG = (awayForm.avXGLast5 + homeForm.avXGAgainstLast5) / 2;
   const avgAwayGoalsLast5 = (awayForm.avScoredLast5 + homeForm.avConceededLast5) / 2;
-  const avgAwayGoals = (awayForm.avgScoredAway + awayForm.teamConceededAvgHomeOnly) / 2;
+  const avgAwayGoals = (awayForm.avgScoredAway + homeForm.teamConceededAvgHomeOnly) / 2;
 
   const avgAwayGoalsLast10 =
     (awayForm.last10Goals + homeForm.last10GoalsConceeded) / 2;
@@ -3269,31 +3267,24 @@ export async function calculateScore(match, index, divider, calculate, AIPredict
   let teams;
   let AIPredictionHome;
   let AIPredictionAway;
-  if (
-    calculate === true &&
-    allForm.find(
-      (game) =>
-        game.home.teamName === match.homeTeam &&
-        game.away.teamName === match.awayTeam
-    )
-  ) {
-    // Find the teams and their indexes in allForm
-    const homeFormIndex = allForm.findIndex((game) => game.home.teamName === match.homeTeam);
-    const awayFormIndex = allForm.findIndex((game) => game.away.teamName === match.awayTeam);
+  const fixtureFormIndex = allForm.findIndex(
+    (game) =>
+      game.id === match.id ||
+      (game.home.teamName === match.homeTeam &&
+        game.away.teamName === match.awayTeam)
+  );
 
-    teams = [
-      allForm[homeFormIndex].home,
-      allForm[awayFormIndex].away,
-    ];
+  if (calculate === true && fixtureFormIndex !== -1) {
+    const fixtureForm = allForm[fixtureFormIndex];
 
+    teams = [fixtureForm.home, fixtureForm.away];
 
     const AIPrediction = AIPredictions.find(p => p.gameId === match.id);
     AIPredictionHome = AIPrediction ? AIPrediction.homeGoalsPrediction : null;
     AIPredictionAway = AIPrediction ? AIPrediction.awayGoalsPrediction : null;
 
-    // Store the indexes on the team objects for later use
-    teams[0].allFormIndex = homeFormIndex;
-    teams[1].allFormIndex = awayFormIndex;
+    teams[0].allFormIndex = fixtureFormIndex;
+    teams[1].allFormIndex = fixtureFormIndex;
   } else {
     calculate = false;
   }
@@ -3609,8 +3600,6 @@ export async function calculateScore(match, index, divider, calculate, AIPredict
 
     formAway.lastGame = formAway.resultsAll?.[0] ?? null;
     formAway.previousToLastGame = formAway.resultsAll?.[1] ?? null;
-
-    let teamComparisonScore;
 
     const existing = predictedScoresData.find(p => p.gameId === match.id);
 
@@ -4467,23 +4456,6 @@ export async function calculateScore(match, index, divider, calculate, AIPredict
 
     match.GoalsInGamesAverageAway =
       formAway.avScoredLast5 + formAway.avConceededLast5;
-
-    let homeComparisonWeighting;
-    let awayComparisonWeighting;
-
-    if (teamComparisonScore > 0) {
-      homeComparisonWeighting = 1 + Math.abs(teamComparisonScore);
-      awayComparisonWeighting = 1 + -Math.abs(teamComparisonScore);
-    } else if (teamComparisonScore < 0) {
-      homeComparisonWeighting = 1 + -Math.abs(teamComparisonScore);
-      awayComparisonWeighting = 1 + Math.abs(teamComparisonScore);
-    } else {
-      homeComparisonWeighting = 1;
-      awayComparisonWeighting = 1;
-    }
-
-    let experimentalHomeGoals = formHome.teamGoalsCalc;
-    let experimentalAwayGoals = formAway.teamGoalsCalc;
 
     let rawFinalHomeGoals = predictedScore.home;
     let rawFinalAwayGoals = predictedScore.away;
@@ -5908,6 +5880,20 @@ function fetchPlayerStats() {
 
 export let playerStatsArray = {};
 
+/** XG momentum rating for the team being tipped (home/away/draw fallback). */
+function tippedTeamXGRating(match) {
+  if (match.prediction === "awayWin") {
+    return match.formAway?.XGRating ?? 0;
+  }
+  if (match.prediction === "homeWin") {
+    return match.formHome?.XGRating ?? 0;
+  }
+  return Math.max(
+    match.formHome?.XGRating ?? 0,
+    match.formAway?.XGRating ?? 0
+  );
+}
+
 export async function getScorePrediction(day, mocked) {
   let mock = mocked;
   clicked = true;
@@ -5923,6 +5909,47 @@ export async function getScorePrediction(day, mocked) {
   dangerousAttacksDiffTips = [];
   shotsOnTargetTips = [];
   allTips = [];
+  predictions = [];
+  resultedUserTipsArray.length = 0;
+
+  totalGoals = 0;
+  totalGoals2 = 0;
+  numberOfGames = 0;
+  drawPredictions = 0;
+  homePredictions = 0;
+  awayPredictions = 0;
+  allOutcomes = 0;
+  homeOutcomes = 0;
+  awayOutcomes = 0;
+  winAmount = 0;
+  lossAmount = 0;
+  sumStatDAWin = 0;
+  sumStatDALoss = 0;
+  sumStatPossessionWin = 0;
+  sumStatPossessionLoss = 0;
+  sumStatSOTWin = 0;
+  sumStatSOTLoss = 0;
+  sumStatPPGLast10Win = 0;
+  sumStatPPGLast10Loss = 0;
+  sumOddsWin = 0;
+  sumOddsLoss = 0;
+  sumXGForWin = 0;
+  sumXGForLoss = 0;
+  sumXGAgainstWin = 0;
+  sumXGAgainstLoss = 0;
+  allWinOutcomes = 0;
+  allLossOutcomes = 0;
+  allDrawOutcomes = 0;
+  totalROI = 0;
+  totalBTTSROI = 0;
+  totalOver25ROI = 0;
+  totalInvestment = 0;
+  totalbttsInvestment = 0;
+  totalOver25Investment = 0;
+  totalProfit = 0;
+  totalBTTSProfit = 0;
+  totalOver25Profit = 0;
+
   const fetchedTips = await fetchAllUserTips();
 
   let index = 2;
@@ -5962,21 +5989,19 @@ export async function getScorePrediction(day, mocked) {
   // Assuming leagueAveragesData is an outer-scoped variable
   leagueAveragesData = await leagueAveragesResponse.json();
 
-  // --- 2. RUN MATCH CALCULATION LOOP (Concurrent match processing) ---
+  // --- 2. RUN MATCH CALCULATION LOOP (sequential — calculateScore uses module accumulators) ---
 
-  await Promise.all(
-    matches.map(async (match) => {
-      // NOTE: leagueStatsPromise and playerStatsPromise are running in the background.
-      statsArray = {
-        trueFormArray: [],
-        XGDiffArray: [],
-        goalDiffArray: [],
-        cornersArray: [],
-        cardsArray: [],
-        bttsArray: [],
-        sotArray: []
-      }
+  statsArray = {
+    trueFormArray: [],
+    XGDiffArray: [],
+    goalDiffArray: [],
+    cornersArray: [],
+    cardsArray: [],
+    bttsArray: [],
+    sotArray: []
+  };
 
+  for (const match of matches) {
       // if there are no stored predictions, calculate them based on live data
       if (match) {
         switch (true) {
@@ -6083,8 +6108,7 @@ export async function getScorePrediction(day, mocked) {
                 : match.game,
             odds: match.fractionHome,
             rawOdds: match.homeOdds,
-            comparisonScore: Math.abs(match.teamComparisonScore),
-            rawComparisonScore: match.teamComparisonScore,
+            comparisonScore: tippedTeamXGRating(match),
             outcome: match.predictionOutcome,
             outcomeSymbol: match.outcomeSymbol,
             goalDifferential: parseFloat(
@@ -6092,7 +6116,7 @@ export async function getScorePrediction(day, mocked) {
             ),
             experimentalCalc: (
               (match.unroundedGoalsA - match.unroundedGoalsB) *
-              Math.abs(match.teamComparisonScore)
+              Math.abs(tippedTeamXGRating(match))
             ).toFixed(2),
             XGdifferentialValue: parseFloat(match.XGdifferentialValue),
           };
@@ -6138,8 +6162,7 @@ export async function getScorePrediction(day, mocked) {
                 : match.game,
             rawOdds: match.awayOdds,
             odds: match.fractionAway,
-            comparisonScore: Math.abs(match.teamComparisonScore),
-            rawComparisonScore: match.teamComparisonScore,
+            comparisonScore: tippedTeamXGRating(match),
             outcome: match.predictionOutcome,
             outcomeSymbol: match.outcomeSymbol,
             goalDifferential:
@@ -6148,7 +6171,7 @@ export async function getScorePrediction(day, mocked) {
               ) - 1,
             experimentalCalc: (
               (match.unroundedGoalsB - match.unroundedGoalsA) *
-              Math.abs(match.teamComparisonScore)
+              Math.abs(tippedTeamXGRating(match))
             ).toFixed(2),
             XGdifferentialValue: parseFloat(match.XGdifferentialValue),
           };
@@ -6195,7 +6218,7 @@ export async function getScorePrediction(day, mocked) {
           decimalOdds: match.homeDoubleChance,
           rawOdds: match.over25Odds,
           odds: match.over25Fraction,
-          comparisonScore: match.teamComparisonScore,
+          comparisonScore: tippedTeamXGRating(match),
           outcome: match.predictionOutcome,
           outcomeSymbol: match.over25PredictionOutcomeSymbol,
           doubleChanceOutcome: match.over25PredictionOutcome,
@@ -6223,8 +6246,7 @@ export async function getScorePrediction(day, mocked) {
           competition: match.leagueDesc,
           id: match.id,
           rawOdds: match.homeOdds,
-          comparisonScore: Math.abs(match.teamComparisonScore),
-          rawComparisonScore: match.teamComparisonScore,
+          comparisonScore: tippedTeamXGRating(match),
           outcome: match.predictionOutcome,
           outcomeSymbol: match.outcomeSymbol,
           prediction: `${match.homeTeam} to win`,
@@ -6254,8 +6276,7 @@ export async function getScorePrediction(day, mocked) {
           competition: match.leagueDesc,
           id: match.id,
           rawOdds: match.awayOdds,
-          comparisonScore: Math.abs(match.teamComparisonScore),
-          rawComparisonScore: match.teamComparisonScore,
+          comparisonScore: tippedTeamXGRating(match),
           outcome: match.predictionOutcome,
           outcomeSymbol: match.outcomeSymbol,
           prediction: `${match.awayTeam} to win`,
@@ -6287,8 +6308,7 @@ export async function getScorePrediction(day, mocked) {
           competition: match.leagueDesc,
           id: match.id,
           rawOdds: match.homeOdds,
-          comparisonScore: Math.abs(match.teamComparisonScore),
-          rawComparisonScore: match.teamComparisonScore,
+          comparisonScore: tippedTeamXGRating(match),
           outcome: match.predictionOutcome,
           outcomeSymbol: match.outcomeSymbol,
           prediction: `${match.homeTeam} to win`,
@@ -6314,9 +6334,8 @@ export async function getScorePrediction(day, mocked) {
               : match.game,
           team: `${match.awayTeam} to win`,
           rawOdds: match.awayOdds,
-          comparisonScore: Math.abs(match.teamComparisonScore),
+          comparisonScore: tippedTeamXGRating(match),
           id: match.id,
-          rawComparisonScore: match.teamComparisonScore,
           outcome: match.predictionOutcome,
           outcomeSymbol: match.outcomeSymbol,
           prediction: `${match.awayTeam} to win`,
@@ -6348,8 +6367,7 @@ export async function getScorePrediction(day, mocked) {
           competition: match.leagueDesc,
           id: match.id,
           rawOdds: match.homeOdds,
-          comparisonScore: Math.abs(match.teamComparisonScore),
-          rawComparisonScore: match.teamComparisonScore,
+          comparisonScore: tippedTeamXGRating(match),
           outcome: match.predictionOutcome,
           outcomeSymbol: match.outcomeSymbol,
           prediction: `${match.homeTeam} to win`,
@@ -6375,8 +6393,7 @@ export async function getScorePrediction(day, mocked) {
               : match.game,
           team: `${match.awayTeam} to win`,
           rawOdds: match.awayOdds,
-          comparisonScore: Math.abs(match.teamComparisonScore),
-          rawComparisonScore: match.teamComparisonScore,
+          comparisonScore: tippedTeamXGRating(match),
           id: match.id,
           outcome: match.predictionOutcome,
           outcomeSymbol: match.outcomeSymbol,
@@ -6409,8 +6426,7 @@ export async function getScorePrediction(day, mocked) {
           competition: match.leagueDesc,
           id: match.id,
           rawOdds: match.homeOdds,
-          comparisonScore: Math.abs(match.teamComparisonScore),
-          rawComparisonScore: match.teamComparisonScore,
+          comparisonScore: tippedTeamXGRating(match),
           outcome: match.predictionOutcome,
           outcomeSymbol: match.outcomeSymbol,
           prediction: `${match.homeTeam} to win`,
@@ -6436,8 +6452,7 @@ export async function getScorePrediction(day, mocked) {
               : match.game,
           team: `${match.awayTeam} to win`,
           rawOdds: match.awayOdds,
-          comparisonScore: Math.abs(match.teamComparisonScore),
-          rawComparisonScore: match.teamComparisonScore,
+          comparisonScore: tippedTeamXGRating(match),
           outcome: match.predictionOutcome,
           outcomeSymbol: match.outcomeSymbol,
           id: match.id,
@@ -6493,7 +6508,7 @@ export async function getScorePrediction(day, mocked) {
           awayTeam: match.awayTeam,
           competition: match.leagueDesc,
           id: match.id,
-          comparisonScore: Math.abs(match.teamComparisonScore),
+          comparisonScore: tippedTeamXGRating(match),
           outcome: match.predictionOutcome,
           outcomeSymbol: match.outcomeSymbol,
           prediction: choice.label,
@@ -6522,8 +6537,7 @@ export async function getScorePrediction(day, mocked) {
           competition: match.leagueDesc,
           id: match.id,
           rawOdds: match.homeOdds,
-          comparisonScore: Math.abs(match.teamComparisonScore),
-          rawComparisonScore: match.teamComparisonScore,
+          comparisonScore: tippedTeamXGRating(match),
           outcome: match.predictionOutcome,
           outcomeSymbol: match.outcomeSymbol,
           prediction: `${match.homeTeam} to win`,
@@ -6549,8 +6563,7 @@ export async function getScorePrediction(day, mocked) {
               : match.game,
           team: `${match.awayTeam} to win`,
           rawOdds: match.awayOdds,
-          comparisonScore: Math.abs(match.teamComparisonScore),
-          rawComparisonScore: match.teamComparisonScore,
+          comparisonScore: tippedTeamXGRating(match),
           outcome: match.predictionOutcome,
           outcomeSymbol: match.outcomeSymbol,
           id: match.id,
@@ -6565,8 +6578,7 @@ export async function getScorePrediction(day, mocked) {
         shotsOnTargetTips.push(shotOnTargetDiffObject);
       }
       predictions.push(match);
-    })
-  );
+  }
 
   // --- 3. RENDER FIXTURES IMMEDIATELY (Replacing the loading spinner) ---
 

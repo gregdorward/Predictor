@@ -612,6 +612,11 @@ h1 {
 }
 
 .MobileNavOverlay {
+  display: none;
+}
+
+.MobileNavOverlay--open {
+  display: block;
   position: fixed;
   top: var(--header-height);
   left: 0;
@@ -2069,12 +2074,31 @@ table tr:nth-child(even) {
 }
 
 .Footer {
-  line-height: 2em;
-  font-size: 1em;
+  margin-top: 2.5em;
+  padding: 1.5em 1em 2em;
+  line-height: 1.6;
+  font-size: 0.95em;
   font-family: 'Open Sans', sans-serif;
+  text-align: center;
+  border-top: 1px solid rgba(0, 0, 0, 0.08);
+}
+
+body.dark-mode .Footer {
+  border-top-color: rgba(255, 255, 255, 0.12);
+}
+
+.Footer-navList {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.75em 1.25em;
+  list-style: none;
+  margin: 0 0 1em;
+  padding: 0;
 }
 
 .Footer a {
+  color: var(--accent-color);
   text-decoration: none;
 }
 
@@ -2082,8 +2106,10 @@ table tr:nth-child(even) {
   text-decoration: underline;
 }
 
-.Footer h3 {
-  font-size: 1.5em;
+.Footer-copy {
+  margin: 0;
+  opacity: 0.75;
+  font-size: 0.9em;
 }
 
 .column {
@@ -5576,14 +5602,12 @@ label {
   top: 0;
   left: 0;
   right: 0;
-  height: var(--header-height);
   display: flex;
   justify-content: flex-start;
   align-items: center;
-  padding: 1em 1em 0;
+  padding: 1em;
   background-color: var(--background-color);
   z-index: 1000;
-  overflow: hidden;
   box-sizing: border-box;
 }
 
@@ -7196,6 +7220,35 @@ button.SecondaryButtons {
   padding-bottom: 0.5em;
 }
 
+.AIKeyPlayersList {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  text-align: center;
+  font-size: 0.9em;
+}
+
+.AIKeyPlayerItem {
+  padding: 0.5em;
+  margin-top: 0.5em;
+  background-color: var(--alternate-background-color);
+  border-radius: 8px;
+  line-height: 1.5;
+  text-align: center;
+}
+
+.AIKeyPlayerName {
+  display: block;
+}
+
+.AIKeyPlayerRole {
+  display: block;
+  margin-top: 0.25em;
+  font-size: 0.95em;
+  font-weight: 600;
+  color: var(--faint-text);
+}
+
 .IndividualAIComponent {
   padding: 1em;
 }
@@ -7648,7 +7701,7 @@ button.AIInsights button:active {
 }
 
 .RankComparisonBar-zone--top {
-  background: linear-gradient(90deg, rgba(1, 165, 1, 0.18), rgba(1, 165, 1, 0.06));
+  background: linear-gradient(90deg, rgba(1, 165, 1, 0.606), rgba(1, 165, 1, 0.128));
 }
 
 .RankComparisonBar-zone--mid {
@@ -7656,7 +7709,7 @@ button.AIInsights button:active {
 }
 
 .RankComparisonBar-zone--bottom {
-  background: linear-gradient(90deg, rgba(215, 18, 0, 0.06), rgba(215, 18, 0, 0.16));
+  background: linear-gradient(90deg, rgba(215, 18, 0, 0.131), rgba(215, 18, 0, 0.628));
 }
 
 .dark-mode .RankComparisonBar-zones {
@@ -7665,7 +7718,7 @@ button.AIInsights button:active {
 }
 
 .dark-mode .RankComparisonBar-zone--top {
-  background: linear-gradient(90deg, rgba(1, 165, 1, 0.45), rgba(1, 165, 1, 0.2));
+  background: linear-gradient(90deg, rgba(1, 165, 1, 0.707), rgba(1, 165, 1, 0.15));
 }
 
 .dark-mode .RankComparisonBar-zone--mid {
@@ -7673,7 +7726,7 @@ button.AIInsights button:active {
 }
 
 .dark-mode .RankComparisonBar-zone--bottom {
-  background: linear-gradient(90deg, rgba(215, 18, 0, 0.2), rgba(215, 18, 0, 0.45));
+  background: linear-gradient(90deg, rgba(215, 18, 0, 0.14), rgba(215, 18, 0, 0.502));
 }
 
 .RankComparisonBar-marker {
@@ -8902,13 +8955,148 @@ h5.section-title {
     display: block;
   }
 }
+/* World Cup 2026 site-wide promo banner */
+.WC26Banner {
+  display: block;
+  width: 100%;
+  max-width: var(--content-max-width);
+  margin: 0 auto 1em;
+  margin-top: 1em;
+  padding: 0.35em var(--content-padding-x) 0;
+  box-sizing: border-box;
+  text-decoration: none;
+  color: #ffffff;
+}
+
+.WC26Banner__inner {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 0.5em 0.85em;
+  padding: 0.7em 1em;
+  border-radius: 10px;
+  background: linear-gradient(120deg, #030040 0%, #020029 55%, #1a0a38 100%);
+  border: 1px solid rgba(var(--primary-rgb), 0.4);
+  box-shadow: 0 2px 10px rgba(2, 0, 41, 0.18);
+  transition: border-color 0.15s ease, box-shadow 0.15s ease, transform 0.15s ease;
+}
+
+.WC26Banner:hover .WC26Banner__inner {
+  border-color: var(--primary-color);
+  box-shadow: 0 4px 18px rgba(var(--primary-rgb), 0.28);
+  transform: translateY(-1px);
+}
+
+.WC26Banner:focus-visible {
+  outline: none;
+}
+
+.WC26Banner:focus-visible .WC26Banner__inner {
+  outline: 2px solid var(--primary-color);
+  outline-offset: 2px;
+}
+
+.WC26Banner__badge {
+  flex-shrink: 0;
+  padding: 0.2em 0.55em;
+  border-radius: 4px;
+  background: var(--primary-color);
+  color: var(--button-text-color);
+  font-size: 0.65rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  line-height: 1.3;
+}
+
+.WC26Banner__flags {
+  flex-shrink: 0;
+  font-size: 1.1rem;
+  line-height: 1;
+  letter-spacing: 0.12em;
+}
+
+.WC26Banner__copy {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.15em;
+  min-width: 0;
+  text-align: center;
+}
+
+.WC26Banner__title {
+  font-size: 0.8rem;
+  font-weight: 700;
+  line-height: 1.25;
+  color: #ffffff;
+}
+
+.WC26Banner__sub {
+  font-size: 0.7rem;
+  font-weight: 500;
+  line-height: 1.35;
+  color: rgba(255, 255, 255, 0.78);
+}
+
+.WC26Banner__cta {
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3em;
+  padding: 0.35em 0.75em;
+  border-radius: 6px;
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: #ffffff;
+  transition: background 0.15s ease, border-color 0.15s ease;
+}
+
+.WC26Banner:hover .WC26Banner__cta {
+  background: rgba(var(--primary-rgb), 0.25);
+  border-color: rgba(var(--primary-rgb), 0.55);
+}
+
+.WC26Banner__arrow {
+  display: inline-block;
+  transition: transform 0.15s ease;
+}
+
+.WC26Banner:hover .WC26Banner__arrow {
+  transform: translateX(2px);
+}
+
+@media (min-width: 640px) {
+  .WC26Banner__copy {
+    flex: 1 1 auto;
+    align-items: flex-start;
+    text-align: left;
+  }
+
+  .WC26Banner__sub {
+    font-size: 0.75rem;
+  }
+}
+
+@media (min-width: 768px) {
+  .WC26Banner__inner {
+    flex-wrap: nowrap;
+    justify-content: flex-start;
+    padding: 0.75em 1.15em;
+    gap: 1em;
+  }
+}
+
 /* World Cup 2026 preview page */
 .WC26 {
   max-width: var(--content-max-width);
   margin: 0 auto;
   padding: 1em var(--content-padding-x) 3em;
   color: var(--text-color);
-  font-size: 12px;
+  font-size: 11px;
   line-height: 1.5;
 }
 
@@ -9336,7 +9524,7 @@ strong.WC26__inlineHeader {
 }
 
 .WC26__teamCardToggle {
-  width: 100%;
+  width: 99%;
   display: grid;
   grid-template-columns: minmax(0, 1fr) 5.25rem 5em;
   align-items: center;
@@ -9444,6 +9632,121 @@ strong.WC26__inlineHeader {
   border-bottom: 1px solid var(--third-background-color);
   font-size: 0.875rem;
   line-height: 1.4;
+}
+
+.WC26__newsUpdated {
+  font-size: 0.8125rem;
+  color: var(--text-color);
+  margin: 0 0 1em;
+  opacity: 0.85;
+}
+
+.WC26__newsWrapUp {
+  padding: 1.25em;
+  background: var(--secondary-background-color);
+  border-radius: 10px;
+  border: 1px solid var(--third-background-color);
+  margin-bottom: 1.5em;
+}
+
+.WC26__newsSection {
+  margin-bottom: 2em;
+}
+
+.WC26__newsSection:last-child {
+  margin-bottom: 0;
+}
+
+.WC26__newsSectionIntro {
+  color: var(--text-color);
+  line-height: 1.5;
+  margin: -0.5em 0 1em;
+  font-size: 0.875rem;
+  opacity: 0.9;
+}
+
+.WC26__newsList {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 1em;
+}
+
+.WC26__newsCard {
+  padding: 1.1em;
+  background: var(--secondary-background-color);
+  border-radius: 10px;
+  border: 1px solid var(--third-background-color);
+}
+
+.WC26__newsCardHeader {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5em;
+  margin-bottom: 0.65em;
+}
+
+.WC26__badge--news {
+  background: var(--primary-color);
+  color: var(--button-text-color);
+}
+
+.dark-mode .WC26__badge--news {
+  background: var(--primary-color);
+  color: var(--button-text-color);
+}
+
+.WC26__newsDate {
+  font-size: 0.8125rem;
+  color: var(--text-color);
+  opacity: 0.85;
+}
+
+.WC26__newsHeadline {
+  font-size: 1rem;
+  font-weight: 600;
+  margin: 0 0 0.5em;
+  line-height: 1.35;
+  color: var(--text-color);
+}
+
+.WC26__newsSources {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.35em 0.5em;
+  margin-top: 0.85em;
+  padding-top: 0.75em;
+  border-top: 1px solid var(--third-background-color);
+  font-size: 0.8125rem;
+}
+
+.WC26__newsSourcesLabel {
+  font-weight: 600;
+  color: var(--text-color);
+}
+
+.WC26__newsSourceList {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35em 0.75em;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.WC26__newsSourceLink {
+  color: var(--primary-color);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.WC26__newsSourceLink:hover {
+  opacity: 0.85;
 }
 
 .WC26__matchesNote {
@@ -9582,7 +9885,7 @@ strong.WC26__inlineHeader {
 
 @media (min-width: 768px) {
   .WC26 {
-    font-size: 14px;
+    font-size: 13px;
   }
 
   .WC26__title {

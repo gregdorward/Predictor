@@ -1,6 +1,12 @@
-// @ts-check
-const { test, expect } = require('@playwright/test');
-const { prepareFixtureContext } = require('./helpers/homepage');
+import { test, expect } from '@playwright/test';
+import { prepareFixtureContext } from './helpers/homepage';
+
+type FixtureDetails = {
+  homeTeamName: string;
+  awayTeamName: string;
+  homeId: string | number;
+  awayId: string | number;
+};
 
 test.describe('Fixture detail page', () => {
   test.setTimeout(180_000);
@@ -11,7 +17,7 @@ test.describe('Fixture detail page', () => {
     const fixtureDetails = await page.evaluate(() => localStorage.getItem('fixtureDetails'));
     expect(fixtureDetails).toBeTruthy();
 
-    const { homeTeamName, awayTeamName, homeId, awayId } = JSON.parse(fixtureDetails);
+    const { homeTeamName, awayTeamName, homeId, awayId } = JSON.parse(fixtureDetails!) as FixtureDetails;
     expect(homeId).toBeTruthy();
     expect(awayId).toBeTruthy();
 

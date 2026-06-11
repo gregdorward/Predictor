@@ -44,7 +44,7 @@ export const PAGE_META = {
   "/worldcup2026": {
     title: "World Cup 2026 Preview | SoccerStatsHub",
     description:
-      "FIFA World Cup 2026 tournament preview: predicted winner, Golden Boot picks, group predictions, all 48 team guides and key match predictions.",
+      "FIFA World Cup 2026 tournament preview and news: predicted winner, Golden Boot picks, group predictions, all 48 team guides, key match predictions and latest tournament headlines.",
   },
   "/seasonpreviews": {
     title: "Season Previews | SoccerStatsHub",
@@ -53,12 +53,23 @@ export const PAGE_META = {
   },
   "/reset": {
     title: "Reset Password | SoccerStatsHub",
-    description: "Reset your SoccerStatsHub account password.",
+    description:
+      "Request a password reset email for your SoccerStatsHub account and regain access to football stats, predictions and premium features.",
     noIndex: true,
   },
   "/cancelsubscription": {
     title: "Cancel Subscription | SoccerStatsHub",
     description: "Manage or cancel your SoccerStatsHub subscription.",
+    noIndex: true,
+  },
+  "/success": {
+    title: "Subscription Confirmed | SoccerStatsHub",
+    description: "Your SoccerStatsHub premium subscription is active. Return to the app for full stats and predictions.",
+    noIndex: true,
+  },
+  "/cancel": {
+    title: "Checkout Cancelled | SoccerStatsHub",
+    description: "Your SoccerStatsHub checkout was cancelled. Return to the homepage to continue browsing football stats and tips.",
     noIndex: true,
   },
 };

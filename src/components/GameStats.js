@@ -3643,33 +3643,42 @@ function GameStats({ game, displayBool, stats, handleToggleTip, userTips }) {
 
   // AI Insights Generation
 
-  async function fetchBasicTable(id) {
-    const foundItem = basicTableArray.find((item) => item.id === id);
-    return foundItem;
+  function fetchBasicTable(id) {
+    return basicTableArray.find(
+      (item) => String(item.id) === String(id)
+    );
   }
 
   const generateAIInsights = useCallback(
     async (gameId, streak, oddsData, homeTeamStats, awayTeamStats, homePlayerData, awayPlayerData, homeMissingPlayersImpact, awayMissingPlayersImpact, homeLineupList, awayLineupList, ranksHome, ranksAway, futureFixturesHome, futureFixturesAway, homeManager, awayManager, homeTeamPlayerStats, awayTeamPlayerStats) => {
       setIsLoading(true);
-      const table = await fetchBasicTable(game.leagueID);
-      const leagueTable = table?.table || null;
-      let progress;
-      let type;
-      let statistics;
-      let leagueStatistics = await fetch(
-        `${process.env.REACT_APP_EXPRESS_SERVER}leagueStats/${table.id}`
-      );
-      let totalGames;
-      let roundType;
-
-      await leagueStatistics.json().then((stats) => {
-        statistics = stats.data;
-        roundType = stats.data.format;
-        progress = statistics.progress;
-        totalGames = (statistics.totalMatches * 2) / statistics.clubNum;
-      });
 
       try {
+        const table = fetchBasicTable(game.leagueID);
+        const leagueTable = table?.table ?? null;
+        const leagueId = table?.id ?? game.leagueID;
+
+        if (!leagueId) {
+          throw new Error("League data unavailable for this fixture.");
+        }
+
+        const leagueStatisticsResponse = await fetch(
+          `${process.env.REACT_APP_EXPRESS_SERVER}leagueStats/${leagueId}`
+        );
+
+        if (!leagueStatisticsResponse.ok) {
+          throw new Error(
+            `League stats request failed (${leagueStatisticsResponse.status})`
+          );
+        }
+
+        const stats = await leagueStatisticsResponse.json();
+        const statistics = stats.data;
+        const roundType = statistics?.format;
+        const progress = statistics?.progress;
+        const totalGames = statistics
+          ? (statistics.totalMatches * 2) / statistics.clubNum
+          : undefined;
         const AIPayload = {
           competition: game.leagueDesc,
           totalLeagueGames: totalGames?.toFixed(0),
@@ -3745,8 +3754,7 @@ function GameStats({ game, displayBool, stats, handleToggleTip, userTips }) {
         });
 
       } catch (error) {
-        console.error("Fetch error:", error);
-        // Handle the error
+        console.error("AI preview error:", error);
       } finally {
         setIsLoading(false);
       }
@@ -3759,6 +3767,26 @@ function GameStats({ game, displayBool, stats, handleToggleTip, userTips }) {
     if (!text) return "";
     return text.split(". ").join(".\n");
   };
+
+  const renderAIKeyPlayersList = (roles) => (
+    <ul className="AIKeyPlayersList">
+      {roles.map((role, index) => {
+        const colonIndex = role.indexOf(":");
+        const name =
+          colonIndex === -1 ? role.trim() : role.slice(0, colonIndex).trim();
+        const description =
+          colonIndex === -1 ? "" : role.slice(colonIndex + 1).trim();
+        return (
+          <li key={index} className="AIKeyPlayerItem">
+            <strong className="AIKeyPlayerName">{name}</strong>
+            {description && (
+              <span className="AIKeyPlayerRole">{description}</span>
+            )}
+          </li>
+        );
+      })}
+    </ul>
+  );
 
   const AIOutput = useMemo(() => {
     if (!aiMatchPreview) return null;
@@ -3799,6 +3827,30 @@ function GameStats({ game, displayBool, stats, handleToggleTip, userTips }) {
           <i>(may not reflect the view of Soccer Stats Hub)</i>
         </div>
 
+        {(aiMatchPreview?.homeTeam?.keyPlayerRoles?.length > 0 ||
+          aiMatchPreview?.awayTeam?.keyPlayerRoles?.length > 0) && (
+          <>
+            <h2>Key Player Overviews</h2>
+            <div className="AIContainer AIKeyPlayers">
+              {aiMatchPreview?.homeTeam?.keyPlayerRoles?.length > 0 && (
+                <div className="HomeAIInsights">
+                  <h6 className="TeamName">
+                    {aiMatchPreview.homeTeam.teamName}
+                  </h6>
+                  {renderAIKeyPlayersList(aiMatchPreview.homeTeam.keyPlayerRoles)}
+                </div>
+              )}
+              {aiMatchPreview?.awayTeam?.keyPlayerRoles?.length > 0 && (
+                <div className="AwayAIInsights">
+                  <h6 className="TeamName">
+                    {aiMatchPreview.awayTeam.teamName}
+                  </h6>
+                  {renderAIKeyPlayersList(aiMatchPreview.awayTeam.keyPlayerRoles)}
+                </div>
+              )}
+            </div>
+          </>
+        )}
 
         <h2>Ratings and Styles</h2>
         <div className="AIContainer">

@@ -1,5 +1,4 @@
-// @ts-check
-const { test, expect } = require('@playwright/test');
+import { test, expect } from '@playwright/test';
 
 test.describe('Homepage', () => {
   test.beforeEach(async ({ page }) => {
@@ -28,8 +27,11 @@ test.describe('Homepage', () => {
 
     await expect(fixtureContainer.locator('.LoadingSpinnerContainer')).toBeHidden({ timeout: 30_000 });
 
-    const hasFixtures = await page.locator('li[class*="individualFixture"]').count() > 0;
-    const hasEmptyState = await page.getByRole('heading', { name: 'No fixtures found for this date' }).isVisible().catch(() => false);
+    const hasFixtures = (await page.locator('li[class*="individualFixture"]').count()) > 0;
+    const hasEmptyState = await page
+      .getByRole('heading', { name: 'No fixtures found for this date' })
+      .isVisible()
+      .catch(() => false);
 
     expect(hasFixtures || hasEmptyState).toBeTruthy();
   });

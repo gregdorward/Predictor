@@ -17,11 +17,16 @@ export const AuthProvider = ({ children }) => {
   const [fixtures, setFixtures] = useState([]);
 const [isPredicting, setIsPredicting] = useState(false);
   useEffect(() => {
+    if (!auth) {
+      setLoading(false);
+      return undefined;
+    }
+
     const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
       setUser(currentUser);
       userDetail = currentUser;
-      
-      if (currentUser) {
+
+      if (currentUser && db) {
         // Check Firestore for subscription status using currentUser.email or uid
         // (Adjust the document reference as needed)
         const userRef = doc(db, "users", currentUser.uid);
