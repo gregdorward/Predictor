@@ -1,7 +1,10 @@
 import { useState, useEffect } from "react";
 import { allLeagueResultsArrayOfObjects } from "../logic/getFixtures";
 import { renderTable } from "../logic/getFixtures";
-import { getLeagueResultsByLeagueId } from "../utils/leagueResultsAccess";
+import {
+  getLeagueFixturesByLeagueId,
+  getLeagueResultsByLeagueId,
+} from "../utils/leagueResultsAccess";
 
 
 const sofaScoreIds = [
@@ -81,7 +84,10 @@ export default function LeagueName({ fixture, mock, showShortlist }) {
   const [logoUrl, setLogoUrl] = useState(null);
 
 const name = showShortlist ? fixture.leagueDesc : fixture.leagueName;
-  const id = fixture.leagueID ?? null;
+  const id =
+    fixture.leagueID ??
+    allLeagueResultsArrayOfObjects[fixture.leagueIndex]?.id ??
+    null;
   const leagueResults = getLeagueResultsByLeagueId(
     allLeagueResultsArrayOfObjects,
     id
@@ -123,7 +129,17 @@ const name = showShortlist ? fixture.leagueDesc : fixture.leagueName;
         key={`leagueName${id}div`}
         onClick={() => {
           if (!leagueResults) return;
-          renderTable(fixture.leagueIndex, leagueResults, id);
+          renderTable(
+            fixture.leagueIndex,
+            {
+              id,
+              fixtures: getLeagueFixturesByLeagueId(
+                allLeagueResultsArrayOfObjects,
+                id
+              ),
+            },
+            id
+          );
         }}
         style={{ display: "flex", alignItems: "center" }}
       >

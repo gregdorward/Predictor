@@ -5,7 +5,7 @@ import {
 
 describe("getLeagueFixturesByLeagueId", () => {
   const allLeagueResults = [
-    { id: 8, fixtures: [{ home_name: "A", away_name: "B" }] },
+    { id: 8, fixtures: [{ home_name: "A", away_name: "B", date_unix: 1 }] },
     { id: 16494, fixtures: undefined },
     { id: 18 },
   ];
@@ -38,6 +38,12 @@ describe("getLeagueFixturesByLeagueId", () => {
     expect(getLeagueFixturesByLeagueId(reorderedCache, 16494)[0].home_name).toBe(
       "USA"
     );
+  });
+
+  test("finds league by id regardless of array index", () => {
+    const shuffled = [allLeagueResults[2], allLeagueResults[0], allLeagueResults[1]];
+    expect(getLeagueFixturesByLeagueId(shuffled, 8)).toHaveLength(1);
+    expect(getLeagueFixturesByLeagueId(shuffled, 16494)).toEqual([]);
   });
 });
 

@@ -2812,7 +2812,7 @@ function getTeamFixturesBeforeMatch(team, match) {
     allLeagueResultsArrayOfObjects,
     match.leagueID
   );
-  if (!fixtures?.length) {
+  if (!fixtures.length) {
     return [];
   }
   return fixtures
@@ -3381,8 +3381,10 @@ export async function calculateScore(match, index, divider, calculate, AIPredict
 
 
     const leagueHasEnoughFixtures =
-      getLeagueFixturesByLeagueId(allLeagueResultsArrayOfObjects, match.leagueID)
-        .length > 10 && match.leagueID !== 7956;
+      getLeagueFixturesByLeagueId(
+        allLeagueResultsArrayOfObjects,
+        match.leagueID
+      ).length > 10 && match.leagueID !== 7956;
 
     if (shouldUseApiFormOnly(match)) {
       match.apiFormOnly = true;
