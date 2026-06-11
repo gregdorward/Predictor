@@ -44,7 +44,7 @@ export const PAGE_META = {
   "/worldcup2026": {
     title: "World Cup 2026 Preview | SoccerStatsHub",
     description:
-      "FIFA World Cup 2026 tournament preview: predicted winner, Golden Boot picks, group predictions, all 48 team guides and key match predictions.",
+      "FIFA World Cup 2026 tournament preview and news: predicted winner, Golden Boot picks, group predictions, all 48 team guides, key match predictions and latest tournament headlines.",
   },
   "/seasonpreviews": {
     title: "Season Previews | SoccerStatsHub",

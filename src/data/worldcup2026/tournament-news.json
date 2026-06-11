@@ -1,0 +1,378 @@
+{
+  "updatedAt": "2026-06-11T16:00:00.000Z",
+  "wrapUp": "The opening week of the 2026 World Cup is shaped as much by the treatment room as the pitch. Brazil, the Netherlands, Japan and Ghana arrive with key absences, while Spain, England, Mexico and the United States are managing fitness gambles on influential players. Off the field, visa and travel disruption has complicated preparation for Iran, Iraq and Haiti. Each story below links to the specific report it is drawn from; squad and fitness details reflect the latest available reporting as of 11 June 2026.",
+  "sections": [
+    {
+      "id": "injuries-fitness",
+      "heading": "Injuries and fitness doubts",
+      "description": "Players ruled out, late replacements and day-to-day concerns that could change starting line-ups and squad depth.",
+      "stories": [
+        {
+          "id": "brazil-attacking-crisis",
+          "headline": "Brazil turn to Neymar after Rodrygo, Estêvão and Wesley are ruled out",
+          "summary": "Carlo Ancelotti's final 26 includes Neymar despite fitness doubts, but Brazil have lost Rodrygo (ACL), Estêvão (hamstring) and Éder Militão before the tournament. Right-back Wesley was then ruled out with a thigh injury after the Egypt friendly, with Atalanta midfielder Éderson called up as his replacement. Vinícius Júnior and Raphinha remain, yet the Seleção look thinner in attack and defence than their pedigree suggests ahead of a Group C opener against Morocco on 13 June.",
+          "publishedDate": "2026-06-09",
+          "sources": [
+            {
+              "name": "BBC Sport",
+              "url": "https://www.bbc.com/sport/football/articles/c759vdlyr2wo"
+            },
+            {
+              "name": "ESPN",
+              "url": "https://www.espn.com/soccer/story/_/id/48809277/neymar-makes-cut-brazil-announce-final-26-man-world-cup-squad"
+            },
+            {
+              "name": "ESPN",
+              "url": "https://www.espn.com/soccer/story/_/id/48992759/man-united-transfer-target-ederson-brazil-world-cup-squad"
+            }
+          ]
+        },
+        {
+          "id": "netherlands-injury-wave",
+          "headline": "Netherlands lose Timber and Simons as Verbruggen faces race for Japan opener",
+          "summary": "Jurrien Timber has been ruled out with a groin strain despite playing in Arsenal's Champions League final, joining ACL casualties Xavi Simons and Jerdy Schouten plus Matthijs de Ligt, who failed to recover from a back problem. Ronald Koeman must also monitor goalkeeper Bart Verbruggen, who missed training with a hip issue after a collision against Uzbekistan. The Dutch open Group F against Japan in Dallas on 14 June without several planned starters.",
+          "publishedDate": "2026-06-11",
+          "sources": [
+            {
+              "name": "ESPN",
+              "url": "https://www.espn.com/soccer/story/_/id/48572979/2026-fifa-world-cup-injuries-tracker-which-stars-miss-latest-info"
+            },
+            {
+              "name": "TSN",
+              "url": "https://www.tsn.ca/soccer/fifa-world-cup/article/netherlands-rules-out-jurrien-timber-for-the-world-cup-geertruida-called-up/"
+            },
+            {
+              "name": "Yahoo Sports",
+              "url": "https://sports.yahoo.com/articles/netherlands-keeper-bart-verbruggen-day-195730707.html"
+            }
+          ]
+        },
+        {
+          "id": "spain-fitness-gambles",
+          "headline": "Spain manage Rodri scare and Yamal race as Fermín López misses out",
+          "summary": "Euro 2024 winners head into Group H without Barcelona midfielder Fermín López, who fractured a metatarsal in May. Luis de la Fuente also faces a delicate balancing act around Rodri, who survived a training-ground tackle from Gavi days before the opener but carries a recent ACL history, and Lamine Yamal, who was kept from heavy contact drills while completing his return from injury. Spain's control-based system depends on that spine staying intact across a demanding 48-team schedule.",
+          "publishedDate": "2026-06-10",
+          "sources": [
+            {
+              "name": "ESPN",
+              "url": "https://www.espn.com/soccer/story/_/id/48572979/2026-fifa-world-cup-injuries-tracker-which-stars-miss-latest-info"
+            },
+            {
+              "name": "Manchester Evening News",
+              "url": "https://www.manchestereveningnews.co.uk/sport/football/football-news/rodri-survives-world-cup-injury-34087877"
+            },
+            {
+              "name": "Barca Blaugranes",
+              "url": "https://www.barcablaugranes.com/barcelona-internationals/122831/i-want-this-gavi-spain-boss-defends-barcelona-star-from-criticism-after-training-tackle-on-rodri"
+            }
+          ]
+        },
+        {
+          "id": "argentina-balerdi",
+          "headline": "Argentina lose Balerdi and Scaloni delays naming a replacement",
+          "summary": "Leonardo Balerdi suffered a soleus muscle tear in training and the AFA confirmed he would miss the World Cup. Lionel Scaloni said he would not rush the replacement decision, noting several players were not at full fitness and that the new call-up might not be a like-for-like centre-back. Marcos Senesi, Lucas Martínez Quarta and Germán Pezzella remain on the preliminary list, while reports have also linked Guido Rodríguez. Argentina must confirm any change by 15 June, the day before their opener against Algeria.",
+          "publishedDate": "2026-06-06",
+          "sources": [
+            {
+              "name": "SuperSport",
+              "url": "https://supersport.com/football/news/b058df1d-5e49-4a8a-a9a2-2885a309f178/argentina-centre-back-balerdi-out-of-world-cup"
+            },
+            {
+              "name": "beIN SPORTS",
+              "url": "https://www.beinsports.com/en-us/soccer/fifa-world-cup-2026/articles/who-will-replace-balerdi-at-the-fifa-world-cup-2026-scaloni-s-options-2026-06-06"
+            },
+            {
+              "name": "World Soccer Talk",
+              "url": "https://worldsoccertalk.com/world-cup/lionel-scaloni-doesnt-rule-out-more-changes-to-argentinas-world-cup-squad-after-leonardo-balerdis-injury/"
+            }
+          ]
+        },
+        {
+          "id": "england-saka-fitness",
+          "headline": "Tuchel admits Saka is unlikely to finish every England match",
+          "summary": "Bukayo Saka arrives at the World Cup managing an Achilles issue he played through at the end of Arsenal's season. Thomas Tuchel said the winger is available but not at 100% and may need rotation across the group stage, raising questions over England's right flank in Group L against Croatia, Ghana and Panama. Noni Madueke is the natural deputy, though Tuchel has other tactical options if Saka's minutes must be capped.",
+          "publishedDate": "2026-06-10",
+          "sources": [
+            {
+              "name": "BBC Sport",
+              "url": "https://www.bbc.com/sport/football/articles/cq61ll2p5pzo"
+            },
+            {
+              "name": "Sports Mole",
+              "url": "https://www.sportsmole.co.uk/football/england/world-cup-2026/news/tuchels-pain-saka-injury-update-as-england-boss-faces-backup-dilemma_598900.html"
+            }
+          ]
+        },
+        {
+          "id": "japan-mitoma-absence",
+          "headline": "Japan lose Mitoma and Minamino before Group F test against Netherlands",
+          "summary": "Brighton winger Kaoru Mitoma was omitted after a hamstring injury, with Hajime Moriyasu judging he could not regain fitness during the tournament. Takumi Minamino also failed to convince selectors after an ACL lay-off. Japan beat England 1-0 at Wembley in March with Mitoma influential, so his absence weakens their counter-attacking threat in a group that also includes Sweden and Tunisia.",
+          "publishedDate": "2026-06-08",
+          "sources": [
+            {
+              "name": "ESPN",
+              "url": "https://www.espn.com/soccer/story/_/id/48572979/2026-fifa-world-cup-injuries-tracker-which-stars-miss-latest-info"
+            }
+          ]
+        },
+        {
+          "id": "ghana-kudus-absence",
+          "headline": "Ghana's World Cup balance fractured by Kudus absence",
+          "summary": "Tottenham playmaker Mohammed Kudus was ruled out after a quad injury and rehabilitation setback, removing Ghana's main ball-carrier and press-resistant creator. Carlos Queiroz also lost defensive options to injury and handed a late call-up to Derrick Luckassen. Without Kudus driving transitions, Ghana may rely more heavily on Thomas Partey and deep defensive blocks in Group L, where they face England and Croatia.",
+          "publishedDate": "2026-06-09",
+          "sources": [
+            {
+              "name": "GHANAsoccernet",
+              "url": "https://ghanasoccernet.com/the-price-of-casualties-how-injuries-fractured-ghanas-world-cup-2026-squad-balance"
+            },
+            {
+              "name": "ESPN",
+              "url": "https://www.espn.com/soccer/story/_/id/48572979/2026-fifa-world-cup-injuries-tracker-which-stars-miss-latest-info"
+            }
+          ]
+        },
+        {
+          "id": "mexico-opener-doubts",
+          "headline": "Four Mexico regulars race for fitness before South Africa opener",
+          "summary": "Javier Aguirre faces uncertainty over César Montes, Edson Álvarez, Luis Chávez and Alexis Vega, each carrying separate muscle or joint complaints. Aguirre had previously said he would not select unfit players but softened that stance as kick-off approached. Mexico are favourites to top Group A, yet a weakened spine against South Africa would immediately test their ability to control the expanded tournament's opening narrative.",
+          "publishedDate": "2026-06-10",
+          "sources": [
+            {
+              "name": "Africa Soccer",
+              "url": "https://africasoccer.com/2026-world-cup-aguirre-forced-into-u-turn-as-four-mexico-stars-race-to-face-south-africa/"
+            },
+            {
+              "name": "Al Jazeera",
+              "url": "https://www.aljazeera.com/sports/2026/6/10/mexico-south-africa-fifa-world-cup-2026-match-lineup-players-news-football"
+            }
+          ]
+        },
+        {
+          "id": "south-korea-kim-injury",
+          "headline": "South Korea fear Kim Tae-hyun could miss entire group stage",
+          "summary": "Starting centre-back Kim Tae-hyun injured his ankle in training and may sit out all three Group A fixtures against Czechia, Mexico and South Africa. Hong Myung-bo's side had already lost Jo Yu-min during the warm-up window. With Kim Min-jae the only established aerial presence left, South Korea's defensive plan against Mexico's direct play is under strain before a ball is kicked.",
+          "publishedDate": "2026-06-11",
+          "sources": [
+            {
+              "name": "STARNEWS Korea",
+              "url": "https://www.starnewskorea.com/en/sports/2026/06/11/2026061112154123256"
+            }
+          ]
+        },
+        {
+          "id": "usa-cardoso-richards",
+          "headline": "United States lose Cardoso but Richards cleared for Paraguay opener",
+          "summary": "Johnny Cardoso was ruled out after an ankle sprain requiring surgery, removing a likely starter alongside Tyler Adams in Mauricio Pochettino's midfield. At centre-back, Chris Richards missed warm-up matches with torn ankle ligaments but returned to full training and said he felt ready for the Paraguay game on 12 June. Pochettino must decide whether to start a defender who has lacked competitive minutes, with Group D also featuring Australia and Türkiye.",
+          "publishedDate": "2026-06-11",
+          "sources": [
+            {
+              "name": "ESPN",
+              "url": "https://www.espn.com/soccer/story/_/id/48572979/2026-fifa-world-cup-injuries-tracker-which-stars-miss-latest-info"
+            },
+            {
+              "name": "US Soccer",
+              "url": "https://www.ussoccer.com/stories/2026/06/usmnt/chris-richards-fitness-vs-paraguay-world-cup-group-stage"
+            },
+            {
+              "name": "CBS Sports",
+              "url": "https://www.cbssports.com/soccer/news/usmnt-burning-questions-can-tyler-adams-stay-healthy-can-chris-richards-get-healthy-and-more/"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "squad-selection",
+      "heading": "Squad selection and tactical reshuffles",
+      "description": "Omissions, late call-ups and manager decisions that reveal how teams plan to navigate the expanded format.",
+      "stories": [
+        {
+          "id": "england-tuchel-selections",
+          "headline": "Tuchel omits Alexander-Arnold, Foden and Palmer from final 26",
+          "summary": "Thomas Tuchel named his World Cup squad on 22 May, leaving out Trent Alexander-Arnold alongside Harry Maguire, Phil Foden and Cole Palmer. Tuchel said he preferred the right-backs he had evaluated in camp, selecting Tino Livramento, Djed Spence and Jarell Quansah with Reece James also in the defensive group. He described the squad as a balanced team rather than a collection of the 26 most talented individuals. England open against Croatia in Dallas on 17 June.",
+          "publishedDate": "2026-05-22",
+          "sources": [
+            {
+              "name": "BBC Sport",
+              "url": "https://www.bbc.com/sport/football/articles/c78ke277pmdo"
+            },
+            {
+              "name": "England Football",
+              "url": "https://www.englandfootball.com/articles/2026/May/22/england-mens-world-cup-2026-squad-named-by-thomas-tuchel-20262205"
+            },
+            {
+              "name": "BBC Sport",
+              "url": "https://www.bbc.co.uk/sport/football/articles/c1728r0l218o"
+            }
+          ]
+        },
+        {
+          "id": "france-ekitike-mateta",
+          "headline": "France replace Ekitiké with Mateta after Achilles blow",
+          "summary": "Hugo Ekitiké tore an Achilles tendon during Liverpool's defeat to Paris Saint-Germain in April, ending his excellent debut season and removing a forward Didier Deschamps had integrated during the qualifying window. Crystal Palace striker Jean-Philippe Mateta took his place. France remain among the favourites with Mbappé, Olise and Barcola, but lose a finisher who had scored in consecutive international breaks.",
+          "publishedDate": "2026-06-05",
+          "sources": [
+            {
+              "name": "ESPN",
+              "url": "https://www.espn.com/soccer/story/_/id/48572979/2026-fifa-world-cup-injuries-tracker-which-stars-miss-latest-info"
+            },
+            {
+              "name": "BBC Sport",
+              "url": "https://www.bbc.co.uk/sport/football/articles/c3exv0820e4o"
+            }
+          ]
+        },
+        {
+          "id": "germany-gnabry-musiala",
+          "headline": "Germany reshuffle after Gnabry and ter Stegen absences",
+          "summary": "Serge Gnabry's adductor injury removed Bayern Munich's most-used player across qualifying and the March friendlies. Jamal Musiala returns from his own long lay-off to assume a larger creative role, while Lennart Karl's thigh injury opened a spot for Assan Ouédraogo. Marc-André ter Stegen's absence also forces a rethink in goal. Germany's Group E looks winnable on paper, but the midfield reconstruction is a live experiment.",
+          "publishedDate": "2026-06-06",
+          "sources": [
+            {
+              "name": "ESPN",
+              "url": "https://www.espn.com/soccer/story/_/id/48572979/2026-fifa-world-cup-injuries-tracker-which-stars-miss-latest-info"
+            },
+            {
+              "name": "Opta Analyst",
+              "url": "https://theanalyst.com/articles/fifa-world-cup-2026-groups-predictions-previews"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "disruption-logistics",
+      "heading": "Disruption and preparation issues",
+      "description": "Travel, visa and logistical problems that could affect match readiness rather than just headlines.",
+      "stories": [
+        {
+          "id": "iran-cross-border-camp",
+          "headline": "Iran base camp in Mexico and shuttle flights for US fixtures",
+          "summary": "Iran relocated their training base from Arizona to Tijuana and plan to fly into the United States only for matches, after several delegation members were initially denied visas. Players received US visas roughly ten days before their Group G opener against Belgium, but the disrupted pre-tournament routine is far from ideal. FIFA said it worked behind the scenes to ensure Iran could compete, yet the arrangement adds travel fatigue to an already demanding group.",
+          "publishedDate": "2026-06-10",
+          "sources": [
+            {
+              "name": "France 24",
+              "url": "https://www.france24.com/en/sport/20260610-infantino-defends-world-cup-ticket-prices-dismisses-referee-us-entry-dispute"
+            },
+            {
+              "name": "Al Jazeera",
+              "url": "https://www.aljazeera.com/sports/2026/6/11/which-world-cup-teams-players-and-officials-were-denied-us-visas-entry"
+            },
+            {
+              "name": "BBC Sport",
+              "url": "https://www.bbc.co.uk/sport/football/articles/cvgj40vymlyo"
+            }
+          ]
+        },
+        {
+          "id": "iraq-delegation-delays",
+          "headline": "Iraq squad members face lengthy US border checks",
+          "summary": "Striker Aymen Hussein was detained for nearly seven hours at Chicago O'Hare before being admitted, while team photographer Talal Salah was held for more than ten hours and ultimately denied entry. Iraq open Group I against France on 16 June. Extended border processing for staff and players adds uncertainty to a squad already tasked with navigating a group containing France, Senegal and Norway.",
+          "publishedDate": "2026-06-11",
+          "sources": [
+            {
+              "name": "Al Jazeera",
+              "url": "https://www.aljazeera.com/sports/2026/6/11/which-world-cup-teams-players-and-officials-were-denied-us-visas-entry"
+            },
+            {
+              "name": "BBC Sport",
+              "url": "https://www.bbc.com/sport/football/articles/cnv9drg0qzgo"
+            }
+          ]
+        },
+        {
+          "id": "haiti-pierre-visa",
+          "headline": "Haiti receive late visa for their only domestically based player",
+          "summary": "Woodensky Pierre, the sole member of Haiti's squad living in Haiti, was granted a US visa at the eleventh hour after earlier uncertainty. Haiti face Brazil in Group C on 13 June. Any delay for a player without the same club infrastructure as team-mates based in Europe would have further weakened an already heavy underdog.",
+          "publishedDate": "2026-06-10",
+          "sources": [
+            {
+              "name": "Al Jazeera",
+              "url": "https://www.aljazeera.com/sports/2026/6/11/which-world-cup-teams-players-and-officials-were-denied-us-visas-entry"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "analysis-outlook",
+      "heading": "Analysis and tournament outlook",
+      "description": "Deeper previews on favourites, group dynamics and how the 48-team format changes the path to the final.",
+      "stories": [
+        {
+          "id": "opta-supercomputer",
+          "headline": "Opta supercomputer makes Spain favourites in 25,000 simulations",
+          "summary": "Opta Analyst ran 25,000 pre-tournament simulations and found Spain winning 16.1% of them, ahead of France (13%), England (11.2%) and Argentina (10.4%). The model also projects every group, highlighting favourable draws for Argentina in Group J and a competitive Group D where the United States are narrow favourites at 32.8%. With 32 of 48 teams reaching the knockouts, the analysis stresses that squad depth and rotation capacity matter more than in previous editions.",
+          "publishedDate": "2026-06-10",
+          "sources": [
+            {
+              "name": "Opta Analyst",
+              "url": "https://theanalyst.com/articles/who-will-win-2026-fifa-world-cup-predictions-opta-supercomputer"
+            },
+            {
+              "name": "Opta Analyst",
+              "url": "https://theanalyst.com/articles/fifa-world-cup-2026-groups-predictions-previews"
+            }
+          ]
+        },
+        {
+          "id": "bbc-favourites-dark-horses",
+          "headline": "BBC analysis points to Norway and Morocco as sides to watch",
+          "summary": "BBC Sport's pre-tournament guide identifies Spain as favourites after a near-flawless qualifying campaign, with France, Argentina and Brazil in the chasing pack. Norway are highlighted as a surprise package built around Erling Haaland's 16 qualifying goals, while Morocco are noted for an unbeaten qualifying record and strong AFCON form. Japan's defensive record in Asian qualifying (three goals conceded in 16 matches) and Colombia's wins over Brazil and Argentina are also flagged as reasons the expanded field may produce upsets.",
+          "publishedDate": "2026-06-09",
+          "sources": [
+            {
+              "name": "BBC Sport",
+              "url": "https://www.bbc.co.uk/sport/football/articles/c3exv0820e4o"
+            },
+            {
+              "name": "BBC Sport",
+              "url": "https://www.bbc.com/sport/football/articles/cg7485gyxz9o"
+            }
+          ]
+        },
+        {
+          "id": "groups-of-death",
+          "headline": "Group C and Group L flagged as the toughest paths to the knockouts",
+          "summary": "Pre-tournament analysis identifies Group C (Brazil, Morocco, Scotland, Haiti) and Group L (England, Croatia, Ghana, Panama) as the most consequential group-stage pools. Morocco's world ranking and Qatar 2022 semi-final run make them a genuine challenger to Brazil, while Scotland must beat Haiti in their opener to keep realistic hopes alive. In Group L, Croatia's knockout pedigree against England's paper superiority creates a familiar tension, with Ghana capable of exploiting any slip. The new best-third-placed route gives more teams a lifeline, but these groups still look likely to produce early eliminations for big names.",
+          "publishedDate": "2026-06-08",
+          "sources": [
+            {
+              "name": "Time Soccer",
+              "url": "https://timesoccertv.com/group-stage-preview-the-groups-of-death-the-dark-horses-and-what-to-expect/"
+            },
+            {
+              "name": "BBC Sport",
+              "url": "https://www.bbc.com/sport/football/articles/cg7485gyxz9o"
+            },
+            {
+              "name": "Opta Analyst",
+              "url": "https://theanalyst.com/articles/fifa-world-cup-2026-groups-predictions-previews"
+            }
+          ]
+        },
+        {
+          "id": "expanded-format-depth",
+          "headline": "Expanded format rewards squads that can rotate without dropping level",
+          "summary": "Analysis of the 48-team structure emphasises that reaching the Round of 32 is no longer enough to define success; finalists may play eight matches in 39 days. Teams with reliable second-string options across three group games hold a structural advantage over sides dependent on 11 starters. The eight best third-placed teams add further complexity, meaning goal difference and late group-stage permutations could decide who advances from tight pools such as Group F and Group I.",
+          "publishedDate": "2026-06-07",
+          "sources": [
+            {
+              "name": "Opta Analyst",
+              "url": "https://theanalyst.com/articles/who-will-win-2026-fifa-world-cup-predictions-opta-supercomputer"
+            },
+            {
+              "name": "Time Soccer",
+              "url": "https://timesoccertv.com/group-stage-preview-the-groups-of-death-the-dark-horses-and-what-to-expect/"
+            },
+            {
+              "name": "Sofascore",
+              "url": "https://www.sofascore.com/football/tournament/world/world-championship/16"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

@@ -9096,7 +9096,7 @@ h5.section-title {
   margin: 0 auto;
   padding: 1em var(--content-padding-x) 3em;
   color: var(--text-color);
-  font-size: 12px;
+  font-size: 11px;
   line-height: 1.5;
 }
 
@@ -9634,6 +9634,121 @@ strong.WC26__inlineHeader {
   line-height: 1.4;
 }
 
+.WC26__newsUpdated {
+  font-size: 0.8125rem;
+  color: var(--text-color);
+  margin: 0 0 1em;
+  opacity: 0.85;
+}
+
+.WC26__newsWrapUp {
+  padding: 1.25em;
+  background: var(--secondary-background-color);
+  border-radius: 10px;
+  border: 1px solid var(--third-background-color);
+  margin-bottom: 1.5em;
+}
+
+.WC26__newsSection {
+  margin-bottom: 2em;
+}
+
+.WC26__newsSection:last-child {
+  margin-bottom: 0;
+}
+
+.WC26__newsSectionIntro {
+  color: var(--text-color);
+  line-height: 1.5;
+  margin: -0.5em 0 1em;
+  font-size: 0.875rem;
+  opacity: 0.9;
+}
+
+.WC26__newsList {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 1em;
+}
+
+.WC26__newsCard {
+  padding: 1.1em;
+  background: var(--secondary-background-color);
+  border-radius: 10px;
+  border: 1px solid var(--third-background-color);
+}
+
+.WC26__newsCardHeader {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5em;
+  margin-bottom: 0.65em;
+}
+
+.WC26__badge--news {
+  background: var(--primary-color);
+  color: var(--button-text-color);
+}
+
+.dark-mode .WC26__badge--news {
+  background: var(--primary-color);
+  color: var(--button-text-color);
+}
+
+.WC26__newsDate {
+  font-size: 0.8125rem;
+  color: var(--text-color);
+  opacity: 0.85;
+}
+
+.WC26__newsHeadline {
+  font-size: 1rem;
+  font-weight: 600;
+  margin: 0 0 0.5em;
+  line-height: 1.35;
+  color: var(--text-color);
+}
+
+.WC26__newsSources {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.35em 0.5em;
+  margin-top: 0.85em;
+  padding-top: 0.75em;
+  border-top: 1px solid var(--third-background-color);
+  font-size: 0.8125rem;
+}
+
+.WC26__newsSourcesLabel {
+  font-weight: 600;
+  color: var(--text-color);
+}
+
+.WC26__newsSourceList {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35em 0.75em;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.WC26__newsSourceLink {
+  color: var(--primary-color);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.WC26__newsSourceLink:hover {
+  opacity: 0.85;
+}
+
 .WC26__matchesNote {
   color: var(--text-color);
   margin-bottom: 1.5em;
@@ -9770,7 +9885,7 @@ strong.WC26__inlineHeader {
 
 @media (min-width: 768px) {
   .WC26 {
-    font-size: 14px;
+    font-size: 13px;
   }
 
   .WC26__title {

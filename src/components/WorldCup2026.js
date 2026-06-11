@@ -2,10 +2,12 @@ import { useState } from "react";
 import SiteHeader from "./SiteHeader";
 import PageMeta from "./PageMeta";
 import WorldCup2026MatchesTab from "./WorldCup2026MatchesTab";
+import WorldCup2026NewsTab from "./WorldCup2026NewsTab";
 import previewData from "../data/worldcup2026/tournament-preview.json";
 
 const TABS = [
   { id: "overview", label: "Overview" },
+  { id: "news", label: "News" },
   { id: "groups", label: "Groups" },
   { id: "teams", label: "Teams" },
   { id: "contenders", label: "Contenders" },
@@ -290,6 +292,7 @@ export default function WorldCup2026() {
 
         <div className="WC26__tabContent">
           {activeTab === "overview" && <OverviewTab data={data} />}
+          {activeTab === "news" && <WorldCup2026NewsTab />}
           {activeTab === "groups" && <GroupsTab groups={data.groups} />}
           {activeTab === "teams" && <TeamsTab teamPreviews={data.teamPreviews} />}
           {activeTab === "contenders" && (
