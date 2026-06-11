@@ -23,7 +23,7 @@ export default function WorldCupBanner() {
         <span className="WC26Banner__copy">
           <strong className="WC26Banner__title">World Cup 2026</strong>
           <span className="WC26Banner__sub">
-            48 teams · group predictions · winner &amp; Golden Boot picks
+            News, group predictions, winner &amp; Golden Boot picks
           </span>
         </span>
         <span className="WC26Banner__cta" aria-hidden="true">
