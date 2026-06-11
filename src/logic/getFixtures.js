@@ -16,6 +16,7 @@ import SlideDiff from "../components/SliderDiff";
 import Collapsable from "../components/CollapsableElement";
 import { userDetail, triggerGlobalPredictions } from "./authProvider";
 import { leagueStatsArray, playerStatsArray } from "../logic/getScorePredictions";
+import { getLeagueFixturesByLeagueId } from "../utils/leagueResultsAccess";
 const LazyLeagueTable = lazy(() => import('../components/LeagueTable'));
 
 var oddslib = require("oddslib");
@@ -399,7 +400,12 @@ export async function renderTable(index, results, id) {
   const nowInSeconds = Math.floor(Date.now() / 1000); // Current time in seconds
   const twoWeeksAgo = nowInSeconds - 14 * 24 * 60 * 60; // Two week ago in seconds  console.log(oneWeekAgo)
 
-  let mostRecentGames = results.fixtures.filter(
+  const leagueFixtures = getLeagueFixturesByLeagueId(
+    allLeagueResultsArrayOfObjects,
+    id
+  );
+
+  let mostRecentGames = leagueFixtures.filter(
     (result) => result.date_unix >= twoWeeksAgo
   );
 
