@@ -1,9 +1,20 @@
 import newsData from "./tournament-news.json";
 
 const EM_DASH = "\u2014";
+const MAX_STORY_AGE_DAYS = 3;
 
 function allStoryText(stories) {
   return stories.flatMap((s) => [s.headline, s.summary]);
+}
+
+function parseDate(dateStr) {
+  return new Date(`${dateStr}T00:00:00Z`);
+}
+
+function storyCutoffDate(updatedAt) {
+  const cutoff = parseDate(updatedAt.slice(0, 10));
+  cutoff.setUTCDate(cutoff.getUTCDate() - MAX_STORY_AGE_DAYS);
+  return cutoff;
 }
 
 describe("World Cup 2026 tournament news data", () => {
@@ -53,5 +64,30 @@ describe("World Cup 2026 tournament news data", () => {
     const headings = newsData.sections.map((s) => s.id);
     expect(headings).toContain("injuries-fitness");
     expect(headings).toContain("analysis-outlook");
+  });
+
+  test("stories are no more than three days older than updatedAt", () => {
+    const cutoff = storyCutoffDate(newsData.updatedAt);
+    newsData.sections.forEach((section) => {
+      section.stories.forEach((story) => {
+        expect(parseDate(story.publishedDate).getTime()).toBeGreaterThanOrEqual(
+          cutoff.getTime()
+        );
+      });
+    });
+  });
+
+  test("stories within each section are sorted newest first", () => {
+    newsData.sections.forEach((section) => {
+      for (let i = 1; i < section.stories.length; i += 1) {
+        const prev = section.stories[i - 1];
+        const curr = section.stories[i];
+        const dateCompare = curr.publishedDate.localeCompare(prev.publishedDate);
+        expect(dateCompare).toBeLessThanOrEqual(0);
+        if (dateCompare === 0) {
+          expect(curr.id.localeCompare(prev.id)).toBeGreaterThanOrEqual(0);
+        }
+      }
+    });
   });
 });
