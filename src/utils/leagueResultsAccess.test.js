@@ -60,4 +60,11 @@ describe("getLeagueResultsByLeagueId", () => {
   test("returns null when the league is not found", () => {
     expect(getLeagueResultsByLeagueId(allLeagueResults, 99999)).toBeNull();
   });
+
+  test("matches league id regardless of string vs number type", () => {
+    const stringIdCache = [{ id: "16494", fixtures: [{ home_name: "USA" }] }];
+
+    expect(getLeagueResultsByLeagueId(stringIdCache, 16494)?.id).toBe("16494");
+    expect(getLeagueFixturesByLeagueId(stringIdCache, 16494)).toHaveLength(1);
+  });
 });

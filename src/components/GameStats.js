@@ -1876,7 +1876,11 @@ function GameStats({ game, displayBool, stats, handleToggleTip, userTips }) {
           setStreakData(null);
         }
 
-        if (derivedRoundId) {
+        if (
+          derivedRoundId &&
+          matchingGameInfo?.homeId &&
+          matchingGameInfo?.awayId
+        ) {
           console.log(`Derived round ID for league ${game.sofaScoreId}: ${derivedRoundId}`);
           try {
             const homeTeamStatsResponse = await fetch(

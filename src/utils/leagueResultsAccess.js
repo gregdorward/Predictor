@@ -7,7 +7,10 @@ export function getLeagueResultsByLeagueId(allLeagueResults, leagueId) {
     return null;
   }
 
-  return allLeagueResults.find((item) => item.id === leagueId) ?? null;
+  const normalizedId = String(leagueId);
+  return (
+    allLeagueResults.find((item) => String(item.id) === normalizedId) ?? null
+  );
 }
 
 /**

@@ -1221,14 +1221,14 @@ function AppContent() {
           />
         </div>} />
       <div id="GeneratePredictions">
-        {fixtures?.length > 0 && (
+        {fixtures?.length > 0 && !isLoading && (
           <div className="PredictionControls">
             <Button
               text={isPredicting ? "Processing..." : "Get Predictions & Stats"}
               onClickEvent={() => {
                 handleGetPredictions('today');
                 setShowMultis(true);
-              }} disabled={isPredicting} // 🛡️ Disable to prevent multiple clicks
+              }} disabled={isPredicting || isLoading}
               className={`GeneratePredictionsButton ${isPredicting ? "loading" : ""}`}
             />
 
