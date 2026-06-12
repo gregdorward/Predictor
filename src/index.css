@@ -8629,6 +8629,21 @@ h5.section-title {
   box-shadow: none;
 }
 
+.SeasonPpgChart {
+  width: 100%;
+  max-width: 100%;
+  height: 200px;
+  min-height: 180px;
+  box-sizing: border-box;
+  overflow: hidden;
+}
+
+@media (min-width: 768px) {
+  .SeasonPpgChart {
+    height: 240px;
+  }
+}
+
 .TeamStylesButton {
   font-size: 1.1em;
   background-color: var(--accent-color);

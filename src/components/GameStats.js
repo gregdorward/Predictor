@@ -77,6 +77,7 @@ import BetSlipFooter from "../components/Betslip";
 import { TeamImpactSummary } from "./MissingPlayersList";
 import { predictedScoresData } from "../logic/getScorePredictions";
 import { MatchTacticalComparison } from "../components/TacticalApproach";
+import SeasonPpgChart from "./SeasonPpgChart";
 // import FutureFixturesSideBySide from "./FutureFixturesSideBySide";
 // export let userTips;
 
@@ -4540,6 +4541,20 @@ function GameStats({ game, displayBool, stats, handleToggleTip, userTips }) {
                   }
                 />
               )}
+              {!isWorldCupCompetition &&
+                homeForm?.allTeamResults?.length > 0 &&
+                awayForm?.allTeamResults?.length > 0 && (
+                  <div className="rankings-wrapper">
+                    <div className="rankings-container">
+                      <SeasonPpgChart
+                        homeTeam={game.homeTeam}
+                        awayTeam={game.awayTeam}
+                        homeResults={homeForm.allTeamResults}
+                        awayResults={awayForm.allTeamResults}
+                      />
+                    </div>
+                  </div>
+                )}
               <div className="Chart" id={`Chart${game.id}`} style={style}>
                 <RadarChart
                   style={{ height: "auto" }}
