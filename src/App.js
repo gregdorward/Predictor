@@ -670,7 +670,10 @@ function AppContent() {
       handleGetPredictions
     );
 
-    setFixtures(data);
+    // generateFixtures returns undefined when a concurrent load holds the lock.
+    if (Array.isArray(data)) {
+      setFixtures(data);
+    }
     setIsLoading(false);
   };
 
@@ -1045,6 +1048,7 @@ function AppContent() {
             text={currentDate.toLocaleDateString()} // Or your dateFootyStats variable
             className="FixturesButtonToday"
             onClickEvent={() => handleAction()} // This re-runs the current date load
+            disabled={isLoading}
           />
 
           <Button

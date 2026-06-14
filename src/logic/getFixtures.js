@@ -1286,7 +1286,7 @@ export async function generateFixtures(
         "GeneratePredictions"
       );
       isFunctionRunning = false;
-      return;
+      return [];
     } else {
       render(
         <div className="NoFixtures">

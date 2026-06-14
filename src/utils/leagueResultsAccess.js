@@ -1,16 +1,21 @@
 /**
- * Look up a league's cached results object by FootyStats league id.
- * Do not use orderedLeagues index — cached result array order can drift.
+ * Find an entry in a league-keyed array, matching id with string coercion.
  */
-export function getLeagueResultsByLeagueId(allLeagueResults, leagueId) {
-  if (!Array.isArray(allLeagueResults) || leagueId == null) {
+export function findLeagueEntryById(entries, leagueId) {
+  if (!Array.isArray(entries) || leagueId == null) {
     return null;
   }
 
   const normalizedId = String(leagueId);
-  return (
-    allLeagueResults.find((item) => String(item.id) === normalizedId) ?? null
-  );
+  return entries.find((entry) => String(entry.id) === normalizedId) ?? null;
+}
+
+/**
+ * Look up a league's cached results object by FootyStats league id.
+ * Do not use orderedLeagues index — cached result array order can drift.
+ */
+export function getLeagueResultsByLeagueId(allLeagueResults, leagueId) {
+  return findLeagueEntryById(allLeagueResults, leagueId);
 }
 
 /**

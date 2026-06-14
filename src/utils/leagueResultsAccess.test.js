@@ -1,4 +1,5 @@
 import {
+  findLeagueEntryById,
   getLeagueFixturesByLeagueId,
   getLeagueResultsByLeagueId,
 } from "./leagueResultsAccess";
@@ -66,5 +67,19 @@ describe("getLeagueResultsByLeagueId", () => {
 
     expect(getLeagueResultsByLeagueId(stringIdCache, 16494)?.id).toBe("16494");
     expect(getLeagueFixturesByLeagueId(stringIdCache, 16494)).toHaveLength(1);
+  });
+});
+
+describe("findLeagueEntryById", () => {
+  test("matches league averages entries regardless of string vs number type", () => {
+    const averages = [
+      { id: "15050", averageGoals: 2.8 },
+      { id: 14930, averageGoals: 2.5 },
+    ];
+
+    expect(findLeagueEntryById(averages, 15050)?.averageGoals).toBe(2.8);
+    expect(findLeagueEntryById(averages, "14930")?.averageGoals).toBe(2.5);
+    expect(findLeagueEntryById(averages, 99999)).toBeNull();
+    expect(findLeagueEntryById(null, 15050)).toBeNull();
   });
 });

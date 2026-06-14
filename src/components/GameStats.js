@@ -703,7 +703,7 @@ function GameStats({ game, displayBool, stats, handleToggleTip, userTips }) {
   // The sync logic
   useEffect(() => {
     const syncImpacts = async () => {
-      const existing = predictedScoresData.find(p => p.gameId === game.id);
+      const existing = predictedScoresData?.find((p) => p.gameId === game.id);
 
       // 1. Check if impacts changed
       const impactsChanged = !existing ||
