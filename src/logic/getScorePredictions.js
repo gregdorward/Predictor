@@ -35,7 +35,10 @@ import { userDetail } from "../logic/authProvider";
 import { dynamicDate } from "./getFixtures";
 import { ThreeDots } from "react-loading-icons";
 import { uniqueLeagueIDs, shouldUseApiFormOnly } from "./getFixtures";
-import { getLeagueFixturesByLeagueId } from "../utils/leagueResultsAccess";
+import {
+  findLeagueEntryById,
+  getLeagueFixturesByLeagueId,
+} from "../utils/leagueResultsAccess";
 import { selectedTipType } from "../components/PredictionTypeRadio";
 import { InsightsPanel } from "../components/Insights"
 import { X } from "lucide-react";
@@ -2264,7 +2267,7 @@ function calculateGDMultiplier(gd) {
 
 export async function generateGoals(homeForm, awayForm, match) {
 
-  const leagueObject = leagueAveragesData.find(league => league.id === match.leagueID);
+  const leagueObject = findLeagueEntryById(leagueAveragesData, match.leagueID);
 
   let averageLeagueGoals = 2.5; // Default to null if not found
 
