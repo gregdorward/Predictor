@@ -1,6 +1,6 @@
 {
-  "updatedAt": "2026-06-14T12:00:00.000Z",
-  "wrapUp": "The second weekend of the 2026 World Cup turns on depleted squads and high-stakes openers. Brazil began Group C without Neymar, while Japan travel to Dallas shorn of captain Wataru Endo and Kaoru Mitoma for their Netherlands fixture on 14 June. The Dutch themselves are missing Jurrien Timber and Xavi Simons, making Group F one of the tournament's most compelling early tests. Co-hosts the United States have eased Pulisic fitness fears after a precautionary half-time withdrawal, but England's Kansas City arrival was complicated by a training-equipment theft on 13 June. Each story below links to the specific report it is drawn from; squad and fitness details reflect the latest available reporting as of 14 June 2026.",
+  "updatedAt": "2026-06-15T18:30:00.000Z",
+  "wrapUp": "Matchday four reshuffled the favourites' narrative. Spain were held 0-0 by Cape Verde despite Lamine Yamal's second-half introduction, Brazil drew 1-1 with Morocco without Neymar, and the Netherlands twice surrendered the lead in a 2-2 opener with Japan. Australia stunned Türkiye 2-0 to join the United States atop Group D, Tunisia sacked Sabri Lamouchi after a 5-1 defeat to Sweden, and Argentina prepare to defend their title on 16 June without Nicolas Tagliafico but with Lionel Messi passed fit. Each story below links to the specific report it is drawn from; squad and fitness details reflect the latest available reporting as of 15 June 2026.",
   "sections": [
     {
       "id": "injuries-fitness",
@@ -8,42 +8,62 @@
       "description": "Players ruled out, late replacements and day-to-day concerns that could change starting line-ups and squad depth.",
       "stories": [
         {
-          "id": "brazil-attacking-crisis",
-          "headline": "Ancelotti confirms Neymar will miss Morocco opener",
-          "summary": "Carlo Ancelotti said on 13 June that Neymar will not play Brazil's Group C curtain-raiser against Morocco, with the 34-year-old yet to return to full training after a grade-two calf injury. Ancelotti added that Neymar may only rejoin squad training next week, casting doubt on his availability for the Haiti fixture on 20 June. Brazil have already lost Rodrygo (ACL), Estêvão (hamstring) and Éder Militão before the tournament, while right-back Wesley was ruled out with a thigh injury and replaced by Éderson. Vinícius Júnior and Raphinha remain, but the Seleção look thinner in attack than their pedigree suggests.",
-          "publishedDate": "2026-06-13",
+          "id": "argentina-tagliafico-opener",
+          "headline": "Tagliafico ruled out as Messi passed fit for Algeria opener",
+          "summary": "Lyon left-back Nicolas Tagliafico will miss Argentina's Group J curtain-raiser against Algeria on 16 June with a calf strain, with Facundo Medina or Valentin Barco expected to deputise. Lionel Messi, meanwhile, is on track for his 200th cap after managing a hamstring issue through the warm-up window, and Emiliano Martinez has recovered from a broken finger to reclaim the number one shirt. Leandro Paredes and Nicolas Gonzalez are also fit, but Tagliafico's absence may extend to the Austria fixture on 22 June.",
+          "publishedDate": "2026-06-15",
           "sources": [
             {
-              "name": "BBC Sport",
-              "url": "https://www.bbc.com/sport/football/articles/c4gyxvxqrk8o"
+              "name": "Sports Mole",
+              "url": "https://www.sportsmole.co.uk/football/argentina/world-cup-2026/predicted-lineups/messi-makes-more-history-emi-returns-predicted-argentina-lineup-vs-algeria_599169.html"
             },
             {
-              "name": "beIN SPORTS",
-              "url": "https://www.beinsports.com/en-us/soccer/fifa-world-cup-2026/articles/brazil-loses-neymar-for-world-cup-opener-as-carlo-ancelotti-reveals-his-return-date-2026-06-13"
+              "name": "Daily Sabah",
+              "url": "https://www.dailysabah.com/sports/football/messis-argentina-launch-world-cup-defense-against-tricky-algeria"
             },
             {
-              "name": "FIFA",
-              "url": "https://www.fifa.com/en/tournaments/mens/worldcup/canadamexicousa2026/articles/brazil-neymar-injury"
+              "name": "Yahoo Sports",
+              "url": "https://sports.yahoo.com/articles/argentina-faces-injury-woes-messis-145936756.html"
             }
           ]
         },
         {
           "id": "spain-fitness-gambles",
-          "headline": "De la Fuente confirms Yamal is available but unlikely to play 90 minutes",
-          "summary": "Luis de la Fuente said on 13 June that Lamine Yamal is fit enough to feature against Cape Verde on 15 June after returning from a hamstring injury, though he is not ready for a full match and may begin on the bench. Nico Williams and Víctor Muñoz have also resumed training after missing Spain's Peru friendly. Euro 2024 winners remain without Fermín López, who fractured a metatarsal in May, while Rodri carries a recent ACL history that de la Fuente must manage across a demanding 48-team schedule.",
-          "publishedDate": "2026-06-13",
+          "headline": "Yamal off the bench but Spain held by Cape Verde in opener",
+          "summary": "Luis de la Fuente started without Lamine Yamal and Nico Williams in Atlanta on 15 June, with both eased back from hamstring injuries, and even Yamal's 71st-minute introduction could not break down Cape Verde in a 0-0 draw. De la Fuente had said Yamal was fit to play part of the match but not 90 minutes; the teenager still led all players with five dribbles after coming on. Euro 2024 winners remain without Fermín López, who fractured a metatarsal in May, and must sharpen their attack before facing Saudi Arabia on 21 June.",
+          "publishedDate": "2026-06-15",
           "sources": [
+            {
+              "name": "Al Jazeera",
+              "url": "https://www.aljazeera.com/sports/2026/6/15/spain-held-to-shock-draw-by-cape-verde-in-their-world-cup-opener"
+            },
+            {
+              "name": "AS USA",
+              "url": "https://en.as.com/soccer/world-cup/spain-vs-cape-verde-live-online-score-stats-goals-updates-world-cup-2026-group-h-f202606-n/"
+            },
             {
               "name": "Goal",
               "url": "https://www.goal.com/en-gb/lists/barcelona-lamine-yamal-spain-world-cup-availability-hamstring-injury/blt2e6ee87f5776fd24"
+            }
+          ]
+        },
+        {
+          "id": "brazil-attacking-crisis",
+          "headline": "Brazil draw with Morocco without Neymar as Haiti return looms",
+          "summary": "Vinícius Júnior equalised in a 1-1 draw with Morocco on 13 June, but Brazil created without Neymar, who missed the opener with a grade-two calf injury and is targeting a return to training this week ahead of the Haiti fixture on 19 June. Carlo Ancelotti said Neymar may rejoin the group next week, though a starting role against Haiti still looks unlikely after a month out. Brazil have already lost Rodrygo, Estêvão and Wesley before the tournament, leaving Ancelotti's attack thinner than their pedigree suggests.",
+          "publishedDate": "2026-06-14",
+          "sources": [
+            {
+              "name": "CBS Sports",
+              "url": "https://www.cbssports.com/soccer/news/brazil-vs-morocco-live-updates-world-cup-2026-score-result/live/"
             },
             {
-              "name": "FOX Sports",
-              "url": "https://www.foxsports.com/stories/soccer/lamine-yamal-nico-williams-return-to-full-training-with-spain-in-major-boost-ahead-of-world-cup-opener-vs-cabo-verde"
+              "name": "The Independent",
+              "url": "https://www.independent.co.uk/sport/football/world-cup-2026-injury-latest-neymar-lamine-yamal-christian-pulisic-b2994892.html"
             },
             {
-              "name": "ESPN",
-              "url": "https://www.espn.com/soccer/story/_/id/48572979/2026-fifa-world-cup-injuries-tracker-which-stars-miss-latest-info"
+              "name": "BBC Sport",
+              "url": "https://www.bbc.com/sport/football/articles/c4gyxvxqrk8o"
             }
           ]
         },
@@ -54,23 +74,23 @@
           "publishedDate": "2026-06-13",
           "sources": [
             {
+              "name": "The Independent",
+              "url": "https://www.independent.co.uk/sport/football/world-cup-2026-injury-latest-neymar-lamine-yamal-christian-pulisic-b2994892.html"
+            },
+            {
               "name": "Al Jazeera",
               "url": "https://www.aljazeera.com/sports/2026/6/13/usa-vs-paraguay-fifa-world-cup-2026-pulisic-injury-subbed-soccer"
             },
             {
               "name": "MARCA",
               "url": "https://www.marca.com/en/world-cup/2026/06/13/pulisic-injury-update-the-truth-behind-the-issue-that-sidelined-the-ac-milan-star-during-the-u-s-match.html"
-            },
-            {
-              "name": "FOX Sports",
-              "url": "https://www.foxsports.com/stories/soccer/christian-pulisic-good-after-subbing-out-halftime-usas-world-cup-opener"
             }
           ]
         },
         {
           "id": "canada-davies-opener",
           "headline": "Canada earn first World Cup point without Davies",
-          "summary": "Co-hosts Canada drew 1-1 with Bosnia and Herzegovina at BMO Field on 12 June, Cyle Larin equalising in the 78th minute after Jovo Lukic had headed Bosnia ahead. Alphonso Davies did not feature as he continues to recover from a hamstring injury sustained in May, though Jesse Marsch said an MRI showed encouraging progress and Davies may return later in Group B. Centre-back Moïse Bombito was available after winning his fitness race. The point was Canada's first in World Cup history, ending a run of six consecutive group-stage defeats.",
+          "summary": "Co-hosts Canada drew 1-1 with Bosnia and Herzegovina at BMO Field on 12 June, Cyle Larin equalising in the 78th minute after Jovo Lukic had headed Bosnia ahead. Alphonso Davies did not feature as he continues to recover from a hamstring injury sustained in May, though Jesse Marsch said an MRI showed encouraging progress and Davies may return for the Qatar fixture on 18 June. Centre-back Moïse Bombito was available after winning his fitness race. The point was Canada's first in World Cup history, ending a run of six consecutive group-stage defeats.",
           "publishedDate": "2026-06-12",
           "sources": [
             {
@@ -106,74 +126,6 @@
               "url": "https://fieldlevelmedia.com/news/chris-richards-starting-usmnt-opener-vs-paraguay-matt-freese-in-net/"
             }
           ]
-        },
-        {
-          "id": "mexico-opener-doubts",
-          "headline": "Mexico win opener but lose Montes to red card after fitness gamble",
-          "summary": "Javier Aguirre's side beat South Africa 2-0 in the tournament's opening match at the Azteca, yet the night was marred by three red cards, the most in a World Cup opener. César Montes, one of four players Aguirre had been managing through muscle complaints, was sent off in stoppage time and will miss the South Korea fixture on 18 June. Edson Álvarez, Luis Chávez and Alexis Vega all featured, suggesting Aguirre's pre-tournament fitness gambles largely paid off for the first game.",
-          "publishedDate": "2026-06-11",
-          "sources": [
-            {
-              "name": "ESPN",
-              "url": "https://www.espn.com.sg/soccer/story/_/id/49033183/mexico-south-africa-2026-world-cup-azetca-opening-game"
-            },
-            {
-              "name": "Al Jazeera",
-              "url": "https://www.aljazeera.com/sports/2026/6/10/mexico-south-africa-fifa-world-cup-2026-match-lineup-players-news-football"
-            }
-          ]
-        },
-        {
-          "id": "morocco-ezzalzouli-aguerd",
-          "headline": "Morocco lose Ezzalzouli and Aguerd on eve of Brazil opener",
-          "summary": "FIFA confirmed late squad changes after forward Abde Ezzalzouli suffered a knee ligament injury colliding with team-mate Chadi Riad in the Norway friendly, and centre-back Nayef Aguerd failed to recover from a long-standing groin problem. Amine Sbai and Marwane Saadane were called up as replacements. Morocco had hoped both could be nursed through the group stage but replaced them before the 24-hour registration deadline ahead of their Group C opener against Brazil on 13 June.",
-          "publishedDate": "2026-06-11",
-          "sources": [
-            {
-              "name": "BBC Sport",
-              "url": "https://www.bbc.com/sport/football/articles/c5yrr1k6nxyo"
-            },
-            {
-              "name": "ESPN",
-              "url": "https://www.espn.com/soccer/story/_/id/49027277/morocco-cut-injured-aguerd-ezzalzouli-last-minute-world-cup-reshuffle"
-            },
-            {
-              "name": "beIN SPORTS",
-              "url": "https://www.beinsports.com/en-us/soccer/fifa-world-cup-2026/articles/morocco-loses-ez-abde-and-aguerd-ahead-of-the-fifa-world-cup-2026-2026-06-11"
-            }
-          ]
-        },
-        {
-          "id": "netherlands-injury-wave",
-          "headline": "Netherlands lose Timber and Simons as Verbruggen faces race for Japan opener",
-          "summary": "Jurrien Timber has been ruled out with a groin strain despite playing in Arsenal's Champions League final, joining ACL casualties Xavi Simons and Jerdy Schouten plus Matthijs de Ligt, who failed to recover from a back problem. Ronald Koeman must also monitor goalkeeper Bart Verbruggen, who missed training with a hip issue after a collision against Uzbekistan. The Dutch open Group F against Japan in Dallas on 14 June without several planned starters.",
-          "publishedDate": "2026-06-11",
-          "sources": [
-            {
-              "name": "ESPN",
-              "url": "https://www.espn.com/soccer/story/_/id/48572979/2026-fifa-world-cup-injuries-tracker-which-stars-miss-latest-info"
-            },
-            {
-              "name": "TSN",
-              "url": "https://www.tsn.ca/soccer/fifa-world-cup/article/netherlands-rules-out-jurrien-timber-for-the-world-cup-geertruida-called-up/"
-            },
-            {
-              "name": "Yahoo Sports",
-              "url": "https://sports.yahoo.com/articles/netherlands-keeper-bart-verbruggen-day-195730707.html"
-            }
-          ]
-        },
-        {
-          "id": "south-korea-kim-injury",
-          "headline": "South Korea fear Kim Tae-hyun could miss entire group stage",
-          "summary": "Starting centre-back Kim Tae-hyun injured his ankle in training and may sit out all three Group A fixtures against Czechia, Mexico and South Africa. Hong Myung-bo's side had already lost Jo Yu-min during the warm-up window. With Kim Min-jae the only established aerial presence left, South Korea's defensive plan against Mexico's direct play is under strain before a ball is kicked.",
-          "publishedDate": "2026-06-11",
-          "sources": [
-            {
-              "name": "STARNEWS Korea",
-              "url": "https://www.starnewskorea.com/en/sports/2026/06/11/2026061112154123256"
-            }
-          ]
         }
       ]
     },
@@ -205,7 +157,7 @@
         {
           "id": "japan-endo-withdrawal",
           "headline": "Endo withdraws and retires as Machino called up before Netherlands opener",
-          "summary": "Japan captain Wataru Endo pulled out of the World Cup on 11 June after failing to recover from a foot injury sustained at Liverpool in February, and announced his immediate retirement from international football with 73 caps. Borussia Mönchengladbach forward Shūto Machino was named as his replacement, while Ajax defender Kō Itakura takes over as captain. Japan had already lost Kaoru Mitoma and Takumi Minamino to injury, thinning a midfield that must face the Netherlands, Sweden and Tunisia in Group F.",
+          "summary": "Japan captain Wataru Endo pulled out of the World Cup on 11 June after failing to recover from a foot injury sustained at Liverpool in February, and announced his immediate retirement from international football with 73 caps. Borussia Mönchengladbach forward Shūto Machino was named as his replacement, while Ajax defender Kō Itakura takes over as captain. Japan had already lost Kaoru Mitoma and Takumi Minamino to injury, thinning a midfield that drew 2-2 with the Netherlands in Dallas on 14 June.",
           "publishedDate": "2026-06-12",
           "sources": [
             {
@@ -230,6 +182,22 @@
       "description": "Travel, visa and logistical problems that could affect match readiness rather than just headlines.",
       "stories": [
         {
+          "id": "tunisia-lamouchi-sacked",
+          "headline": "Tunisia sack Lamouchi after 5-1 Sweden defeat",
+          "summary": "Sabri Lamouchi was dismissed on 15 June, the day after Tunisia's 5-1 opening defeat to Sweden in Monterrey, with Mondher Kebaier installed as interim coach ahead of the Japan fixture on 21 June. Lamouchi had already faced pressure after a 5-0 warm-up loss to Belgium and was criticised for having his son at the training camp despite no official role. Tunisia must now regroup in a Group F pool where Japan top the standings after drawing with the Netherlands and Sweden sit second after their five-goal haul.",
+          "publishedDate": "2026-06-15",
+          "sources": [
+            {
+              "name": "Al Jazeera",
+              "url": "https://www.aljazeera.com/sports/2026/6/15/tunisia-sack-boss-sabri-lamouchi-after-world-cup-thrashing-by-sweden"
+            },
+            {
+              "name": "SBS News",
+              "url": "https://www.sbs.com.au/news/article/fifa-world-cup-2026-results-june-15/ocls1mcso"
+            }
+          ]
+        },
+        {
           "id": "england-equipment-theft",
           "headline": "England training gear stolen en route to Kansas City base",
           "summary": "Balls, boots and other equipment were stolen from a vehicle transferring England's kit from their Florida pre-tournament camp to Swope Soccer Village in Kansas City on 13 June, just before the squad were due to arrive. Kansas City police arrested two suspects and most items were subsequently recovered, but the incident disrupted setup ahead of Thomas Tuchel's first full training day on 14 June. England open Group L against Croatia in Dallas on 17 June.",
@@ -248,22 +216,6 @@
               "url": "https://www.cbssports.com/soccer/news/england-gear-stolen-from-kansas-city-team-camp-ahead-of-world-cup-campaign-reportedly-recovered/"
             }
           ]
-        },
-        {
-          "id": "iraq-delegation-delays",
-          "headline": "Iraq squad members face lengthy US border checks",
-          "summary": "Striker Aymen Hussein was detained for nearly seven hours at Chicago O'Hare before being admitted, while team photographer Talal Salah was held for more than ten hours and ultimately denied entry. Iraq open Group I against France on 16 June. Extended border processing for staff and players adds uncertainty to a squad already tasked with navigating a group containing France, Senegal and Norway.",
-          "publishedDate": "2026-06-11",
-          "sources": [
-            {
-              "name": "Al Jazeera",
-              "url": "https://www.aljazeera.com/sports/2026/6/11/which-world-cup-teams-players-and-officials-were-denied-us-visas-entry"
-            },
-            {
-              "name": "BBC Sport",
-              "url": "https://www.bbc.com/sport/football/articles/cnv9drg0qzgo"
-            }
-          ]
         }
       ]
     },
@@ -273,54 +225,82 @@
       "description": "Deeper previews on favourites, group dynamics and how the 48-team format changes the path to the final.",
       "stories": [
         {
-          "id": "group-f-netherlands-japan",
-          "headline": "Group F opener pits depleted Netherlands against reshaped Japan",
-          "summary": "Ronald Koeman's side face Hajime Moriyasu's Japan in Dallas on 14 June in a fixture that could shape the race for top spot in one of the tournament's most competitive groups. The Dutch are without Timber, Simons and de Ligt but retain a strong spine of Virgil van Dijk, Frenkie de Jong and Cody Gakpo, while Japan arrive on a six-match winning run despite losing Endo, Mitoma and Minamino. Sweden and Tunisia complete a pool where squad depth and rotation capacity may matter more than in previous editions.",
-          "publishedDate": "2026-06-14",
+          "id": "spain-cape-verde-upset",
+          "headline": "Cape Verde hold Spain as favourites stumble on matchday four",
+          "summary": "Debutants Cape Verde earned a 0-0 draw against Spain in Atlanta despite registering just three shots on target, with 40-year-old goalkeeper Vozinha making seven saves. Spain dominated possession but lacked the incision of Yamal and Williams, who were both managed off the bench, echoing their meek knockout exits in 2018 and 2022. Opta data showed 27 Spanish attempts in total, yet Group H suddenly looks less straightforward with Saudi Arabia and Uruguay still to come.",
+          "publishedDate": "2026-06-15",
           "sources": [
             {
-              "name": "ESPN",
-              "url": "https://www.espn.com/soccer/story/_/id/49038195/fifa-world-cup-2026-netherlands-vs-japan-tv-channel-how-watch-kick-live-stream-referee-predicted-line-ups"
+              "name": "Al Jazeera",
+              "url": "https://www.aljazeera.com/sports/2026/6/15/spain-held-to-shock-draw-by-cape-verde-in-their-world-cup-opener"
             },
             {
-              "name": "Goal",
-              "url": "https://www.goal.com/en/news/netherlands-japan-world-cup-preview/blt48135779b5e280e4"
+              "name": "NBC News",
+              "url": "https://www.nbcnews.com/sports/soccer/live-blog/fifa-world-cup-2026-june-15-live-updates-rcna350042"
             },
             {
-              "name": "The Standard",
-              "url": "https://www.standard.co.uk/sport/football/netherlands-vs-japan-prediction-kick-off-time-tv-live-stream-team-news-latest-h2h-results-odds-world-cup-2026-preview-b1285653.html"
+              "name": "AS USA",
+              "url": "https://en.as.com/soccer/world-cup/spain-vs-cape-verde-live-online-score-stats-goals-updates-world-cup-2026-group-h-f202606-n/"
             }
           ]
         },
         {
           "id": "group-c-depleted-opener",
-          "headline": "Group C opener pits depleted Brazil against reshaped Morocco",
-          "summary": "Pre-tournament analysis had flagged Group C as one of the toughest pools, and the opening fixture was further reshaped by injuries on both sides. Ancelotti confirmed on 13 June that Neymar would miss the curtain-raiser and may not return until the Haiti match, while Brazil are also without Rodrygo, Estêvão and Wesley. Morocco have replaced Ezzalzouli and Aguerd with less familiar names, though Noussair Mazraoui returned to full training after a shoulder scare. Morocco's semi-final pedigree from Qatar 2022 still makes them a credible test for Ancelotti's rebuilt attack.",
-          "publishedDate": "2026-06-13",
+          "headline": "Depleted Brazil and Morocco share points in Group C opener",
+          "summary": "Ismael Saibari gave Morocco a 21st-minute lead before Vinícius Júnior levelled in a 1-1 draw that reflected both sides' injury disruption. Brazil were without Neymar, Rodrygo, Estêvão and Wesley, while Morocco had replaced Ezzalzouli and Aguerd before kick-off. Neither team found a winner despite 27 combined attempts and eight on target, leaving Haiti and Scotland to fight for scraps as Brazil and Morocco turn to supposedly softer fixtures on matchday two.",
+          "publishedDate": "2026-06-14",
           "sources": [
             {
-              "name": "BBC Sport",
-              "url": "https://www.bbc.com/sport/football/articles/c4gyxvxqrk8o"
+              "name": "CBS Sports",
+              "url": "https://www.cbssports.com/soccer/news/brazil-vs-morocco-live-updates-world-cup-2026-score-result/live/"
             },
             {
-              "name": "ESPN",
-              "url": "https://www.espn.com/soccer/story/_/id/49026946/fifa-world-cup-2026-brazil-vs-morocco-kickoff-how-watch-stats-team-news"
+              "name": "Yahoo Sports",
+              "url": "https://sports.yahoo.com/soccer/live/world-cup-scores-results-brazil-and-morocco-battle-to-1-1-draw-while-australia-stuns-turkiye-in-the-nightcap-145258881.html"
             },
             {
-              "name": "ESPN",
-              "url": "https://www.espn.com/soccer/story/_/id/49027277/morocco-cut-injured-aguerd-ezzalzouli-last-minute-world-cup-reshuffle"
+              "name": "Sky Sports",
+              "url": "https://www.skysports.com/football/news/12098/13543087/world-cup-2026-group-c-guide-fixtures-schedule-standings-and-odds-for-scotland-brazil-morocco-and-haiti"
             }
           ]
         },
         {
-          "id": "opta-mexico-opener-discipline",
-          "headline": "Opta flags record red-card tally and format mismatches after Mexico opener",
-          "summary": "Opta Analyst's review of Mexico's 2-0 win over South Africa notes three red cards in a single match, a World Cup record for an opener and already one fewer than the entire 2022 tournament produced. South Africa managed just 0.07 xG from three shots despite Mexico ranking only 21st against their 60th in the Power Rankings, suggesting the 48-team format could yield more one-sided scorelines. César Montes' late dismissal also rules the centre-back out of Mexico's South Korea tie on 18 June, adding a squad consequence to the disciplinary chaos.",
-          "publishedDate": "2026-06-11",
+          "id": "group-d-australia-turkiye",
+          "headline": "Australia stun Türkiye to join United States atop Group D",
+          "summary": "Nestory Irankunda and Connor Metcalfe scored as the Socceroos beat Türkiye 2-0 in Vancouver on 14 June despite conceding 71.7% possession and facing 30 shots. Debutant goalkeeper Patrick Beach made eight saves to keep a clean sheet, leaving Australia level on points with the United States ahead of their Seattle meeting on 19 June. Türkiye, back at a World Cup for the first time since 2002, must regroup against Paraguay after dominating territorially without reward.",
+          "publishedDate": "2026-06-14",
           "sources": [
             {
+              "name": "FIFA",
+              "url": "https://www.fifa.com/en/tournaments/mens/worldcup/canadamexicousa2026/articles/australia-turkiye-highlights-match-report"
+            },
+            {
+              "name": "ESPN",
+              "url": "https://www.espn.com/soccer/report/_/gameId/760421"
+            },
+            {
+              "name": "Socceroos",
+              "url": "https://socceroos.com.au/news/socceroos-defeat-turkiye-2-0-kick-fifa-world-cup-2026tm-campaign-style"
+            }
+          ]
+        },
+        {
+          "id": "group-f-netherlands-japan",
+          "headline": "Japan fight back twice to deny depleted Netherlands in Dallas",
+          "summary": "Ronald Koeman's side twice led through Virgil van Dijk and Crysencio Summerville but were pegged back by Keito Nakamura and a late Daichi Kamada header in a 2-2 draw on 14 June. Bart Verbruggen started despite a hip concern, yet the Dutch failed to win a World Cup match against an Asian nation for the first time in six attempts. Japan top Group F on disciplinary tiebreakers after Sweden's 5-1 win over Tunisia, setting up a pool where squad depth and composure under pressure may decide who advances.",
+          "publishedDate": "2026-06-14",
+          "sources": [
+            {
+              "name": "BBC Sport",
+              "url": "https://www.bbc.com/sport/football/live/c30ypmd6g35t"
+            },
+            {
               "name": "Opta Analyst",
-              "url": "https://theanalyst.com/articles/mexico-vs-south-africa-five-conclusions-world-cup-2026"
+              "url": "https://theanalyst.com/articles/netherlands-vs-japan-stats-world-cup-2026"
+            },
+            {
+              "name": "Al Jazeera",
+              "url": "https://www.aljazeera.com/sports/liveblog/2026/6/14/netherlands-vs-japan-live-world-cup-2026"
             }
           ]
         }
