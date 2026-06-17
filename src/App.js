@@ -34,7 +34,7 @@ import { getInitialDateFromShareUrl } from "./utils/shareMatchUrl";
 import { SuccessPage } from "./components/Success"
 import { CancelPage } from "./components/Cancel"
 import PasswordReset from "./components/PasswordReset";
-import { auth, db } from "./firebase";
+import { auth, db, isReactSnap } from "./firebase";
 import UsernameModal from "./components/UsernameModal";
 import Footer from "./components/Footer"
 import handleLogout from "./components/SignOut"
@@ -258,6 +258,8 @@ async function convertTimestampForSofaScore(timestamp) {
 }
 
 (async function fetchLeagueData() {
+  if (isReactSnap) return;
+
   let leagueList;
   if (userDetail) {
     paid = await checkUserPaidStatus(userDetail.uid);
@@ -510,7 +512,7 @@ let stripePromise = null;
 
 // Only initialize Stripe in the browser
 const getStripe = () => {
-  if (typeof window === "undefined") return null; // Prevent SSR / react-snap errors
+  if (typeof window === "undefined" || isReactSnap) return null; // Prevent SSR / react-snap errors
   if (!stripePromise) {
     stripePromise = loadStripe("pk_live_51QojxLBrqiWlVPadBxhtoj499YzoC8YjFUIVQwCcTe8B7ZUG47NbYAam2wvNox2mUmzd0WgQh4PWKaIQaxKxubig00yEzjNuVQ");
   }
@@ -586,8 +588,8 @@ function AppContent() {
   const [showMultis, setShowMultis] = useState(false);
 
   useEffect(() => {
-    const auth = getAuth();
-    // This is the only reliable way to get the user in Firebase
+    if (!auth) return;
+
     const unsubscribe = onAuthStateChanged(auth, (user) => {
       if (user) {
         setLoggedInUser(true)
@@ -629,6 +631,8 @@ function AppContent() {
   };
 
   useEffect(() => {
+    if (isReactSnap) return;
+
     console.log("App mounted: Triggering initial fixture load");
     getLeagueList(triggerGlobalPredictions);
     handleAction();
@@ -757,6 +761,8 @@ function AppContent() {
   const [currentCurrency, setCurrentCurrency] = useState('usd'); // ⭐️ Store the code here
 
   useEffect(() => {
+    if (isReactSnap) return;
+
     const currency = detectCurrency();
     setCurrentCurrency(currency);
     fetch(`${process.env.REACT_APP_EXPRESS_SERVER}pricing?currency=${currency}`)

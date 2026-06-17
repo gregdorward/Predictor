@@ -1,11 +1,13 @@
-import { getAuth, onAuthStateChanged } from "firebase/auth";
+import { onAuthStateChanged } from "firebase/auth";
+import { auth } from "../firebase";
 
 /**
  * Returns a promise that resolves to the current user if logged in,
  * or null if not logged in.
  */
 export async function getCurrentUser() {
-  const auth = getAuth();
+  if (!auth) return null;
+
   return new Promise((resolve, reject) => {
     // Use onAuthStateChanged to get the current user once
     const unsubscribe = onAuthStateChanged(

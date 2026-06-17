@@ -2,7 +2,7 @@ import { initializeApp } from "firebase/app";
 import { getAuth } from "firebase/auth";
 import { getFirestore } from "firebase/firestore";
 
-const isReactSnap =
+export const isReactSnap =
   typeof navigator !== "undefined" && navigator.userAgent === "ReactSnap";
 
 const firebaseConfig = {
@@ -15,7 +15,7 @@ const firebaseConfig = {
   measurementId: process.env.REACT_APP_FIREBASE_MEASUREMENT_ID,
 };
 
-const app = initializeApp(firebaseConfig);
+const app = isReactSnap ? null : initializeApp(firebaseConfig);
 
-export const auth = isReactSnap ? null : getAuth(app);
-export const db = isReactSnap ? null : getFirestore(app);
+export const auth = app ? getAuth(app) : null;
+export const db = app ? getFirestore(app) : null;

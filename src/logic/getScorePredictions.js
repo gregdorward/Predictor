@@ -1,6 +1,7 @@
 import { Fragment, useState } from "react";
 import ReactDOM from "react-dom";
 import { Link } from 'react-router-dom';
+import { isReactSnap } from "../firebase";
 import { matches, diff } from "./getFixtures";
 import { RenderAllFixtures } from "../logic/getFixtures";
 import Collapsable from "../components/CollapsableElement";
@@ -214,7 +215,7 @@ async function fetchAllUserTips() {
   }
 }
 
-const allIndividualTips = await fetchAllUserTips();
+const allIndividualTips = isReactSnap ? [] : await fetchAllUserTips();
 
 
 export function getPointsFromLastX(lastX) {

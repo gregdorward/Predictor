@@ -1,11 +1,12 @@
 import { useState, useEffect } from "react";
 import { loadStripe } from "@stripe/stripe-js";
 import { Elements, useStripe, useElements, CardElement } from "@stripe/react-stripe-js";
+import { isReactSnap } from "../firebase";
 
 // Lazy-load Stripe in the browser
 let stripePromise = null;
 const getStripe = () => {
-  if (typeof window === "undefined") return null;
+  if (typeof window === "undefined" || isReactSnap) return null;
   if (!stripePromise) stripePromise = loadStripe("pk_live_51QojxLBrqiWlVPadBxhtoj499YzoC8YjFUIVQwCcTe8B7ZUG47NbYAam2wvNox2mUmzd0WgQh4PWKaIQaxKxubig00yEzjNuVQ");
   return stripePromise;
 };

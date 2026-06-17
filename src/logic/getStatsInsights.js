@@ -1,4 +1,8 @@
+import { isReactSnap } from "../firebase";
+
 export async function getHighestScoringLeagues() {
+  if (isReactSnap) return [];
+
   let teamsList = await fetch(`${process.env.REACT_APP_EXPRESS_SERVER}over25`);
   let arr = [];
   await teamsList.json().then(async (leagues) => {
@@ -22,6 +26,8 @@ export async function getHighestScoringLeagues() {
 }
 
 export async function getLowestScoringLeagues() {
+  if (isReactSnap) return [];
+
   let teamsList = await fetch(`${process.env.REACT_APP_EXPRESS_SERVER}under25`);
   let arr = [];
   await teamsList.json().then(async (leagues) => {
@@ -42,6 +48,8 @@ export async function getLowestScoringLeagues() {
 }
 
 export async function getHighestScoringTeams() {
+  if (isReactSnap) return [];
+
   let teamsList = await fetch(`${process.env.REACT_APP_EXPRESS_SERVER}over25`);
   let arr = [];
   await teamsList.json().then(async (teams) => {
@@ -77,6 +85,8 @@ async function convertTimestamp(timestamp) {
 
 
 export async function getHighestScoringFixtures() {
+  if (isReactSnap) return [];
+
   let fixturesList = await fetch(
     `${process.env.REACT_APP_EXPRESS_SERVER}over25`
   );
@@ -111,6 +121,8 @@ export async function getHighestScoringFixtures() {
 }
 
 export async function getBTTSFixtures() {
+  if (isReactSnap) return [];
+
   let fixturesList = await fetch(
     `${process.env.REACT_APP_EXPRESS_SERVER}btts`
   );
@@ -146,6 +158,8 @@ export async function getBTTSFixtures() {
 }
 
 export async function getBTTSTeams() {
+  if (isReactSnap) return [];
+
   let fixturesList = await fetch(
     `${process.env.REACT_APP_EXPRESS_SERVER}btts`
   );
