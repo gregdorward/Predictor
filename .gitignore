@@ -15,6 +15,11 @@
 # production
 /build
 
+# next.js
+/.next/
+/out/
+next-env.d.ts
+
 # misc
 .DS_Store
 .env

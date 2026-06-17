@@ -1,17 +1,21 @@
 // src/dataSlice.js
 import { createSlice } from '@reduxjs/toolkit';
 
+// Safe on the server (Next.js static export build has no localStorage).
+const ls = (key) =>
+  typeof window !== "undefined" ? localStorage.getItem(key) : null;
+
 // src/dataSlice.js
 const initialState = {
-  dataHome: localStorage.getItem('homeForm'),
-  dataAway: localStorage.getItem('awayForm'),
-  dataHomeDef: localStorage.getItem('homeFormDef'),
-  dataAwayDef: localStorage.getItem('awayFormDef'),
-  allTeamResultsHome: localStorage.getItem('allTeamResultsHome'),
-  allTeamResultsAway: localStorage.getItem('allTeamResultsAway'),
-  homeDetails:localStorage.getItem('homeDetails'),
-  awayDetails:localStorage.getItem('awayDetails'),
-  fixtureDetails: localStorage.getItem('fixtureDetails')
+  dataHome: ls('homeForm'),
+  dataAway: ls('awayForm'),
+  dataHomeDef: ls('homeFormDef'),
+  dataAwayDef: ls('awayFormDef'),
+  allTeamResultsHome: ls('allTeamResultsHome'),
+  allTeamResultsAway: ls('allTeamResultsAway'),
+  homeDetails: ls('homeDetails'),
+  awayDetails: ls('awayDetails'),
+  fixtureDetails: ls('fixtureDetails')
 };
 
 const dataSlice = createSlice({

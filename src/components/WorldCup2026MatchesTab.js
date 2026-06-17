@@ -18,7 +18,7 @@ export default function WorldCup2026MatchesTab() {
   const [phaseFilter, setPhaseFilter] = useState("all");
 
   useEffect(() => {
-    const apiBase = process.env.REACT_APP_EXPRESS_SERVER;
+    const apiBase = process.env.NEXT_PUBLIC_EXPRESS_SERVER;
     if (!apiBase) return;
 
     let cancelled = false;

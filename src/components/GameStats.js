@@ -728,7 +728,7 @@ function GameStats({ game, displayBool, stats, handleToggleTip, userTips }) {
       if (hasChanged && leadsToSave) {
         console.log("🚀 Condition met! Sending POST...");
 
-        await fetch(`${process.env.REACT_APP_EXPRESS_SERVER}predictedScores2`, {
+        await fetch(`${process.env.NEXT_PUBLIC_EXPRESS_SERVER}predictedScores2`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
@@ -1743,7 +1743,7 @@ function GameStats({ game, displayBool, stats, handleToggleTip, userTips }) {
         setLoadingManagers(true);
 
         let previousGames = await fetch(
-          `${process.env.REACT_APP_EXPRESS_SERVER}match/${game.id}`
+          `${process.env.NEXT_PUBLIC_EXPRESS_SERVER}match/${game.id}`
         );
         let odds;
         await previousGames.json().then((data) => {
@@ -1859,7 +1859,7 @@ function GameStats({ game, displayBool, stats, handleToggleTip, userTips }) {
         if (isPaidUser && matchingGameInfo?.id) {
           try {
             const streaks = await fetch(
-              `${process.env.REACT_APP_EXPRESS_SERVER}streaks/${matchingGameInfo.id}`
+              `${process.env.NEXT_PUBLIC_EXPRESS_SERVER}streaks/${matchingGameInfo.id}`
             );
 
             const streaksDataRaw = await streaks.json();
@@ -1885,14 +1885,14 @@ function GameStats({ game, displayBool, stats, handleToggleTip, userTips }) {
           console.log(`Derived round ID for league ${game.sofaScoreId}: ${derivedRoundId}`);
           try {
             const homeTeamStatsResponse = await fetch(
-              `${process.env.REACT_APP_EXPRESS_SERVER}teamStats/${matchingGameInfo.homeId}/${game.sofaScoreId}/${derivedRoundId}`
+              `${process.env.NEXT_PUBLIC_EXPRESS_SERVER}teamStats/${matchingGameInfo.homeId}/${game.sofaScoreId}/${derivedRoundId}`
             );
             const homeTeam = await homeTeamStatsResponse.json();
             let homeStats = homeTeam.statistics;
 
 
             const awayTeamStatsResponse = await fetch(
-              `${process.env.REACT_APP_EXPRESS_SERVER}teamStats/${matchingGameInfo.awayId}/${game.sofaScoreId}/${derivedRoundId}`
+              `${process.env.NEXT_PUBLIC_EXPRESS_SERVER}teamStats/${matchingGameInfo.awayId}/${game.sofaScoreId}/${derivedRoundId}`
             );
             const awayTeam = await awayTeamStatsResponse.json();
             let awayStats = awayTeam.statistics;
@@ -1909,7 +1909,7 @@ function GameStats({ game, displayBool, stats, handleToggleTip, userTips }) {
 
           try {
             const leaguePlayerStatsResponse = await fetch(
-              `${process.env.REACT_APP_EXPRESS_SERVER}bestPlayers/${game.sofaScoreId}/${derivedRoundId}/${week}`
+              `${process.env.NEXT_PUBLIC_EXPRESS_SERVER}bestPlayers/${game.sofaScoreId}/${derivedRoundId}/${week}`
             );
 
             const playerStats = await leaguePlayerStatsResponse.json();
@@ -1931,8 +1931,8 @@ function GameStats({ game, displayBool, stats, handleToggleTip, userTips }) {
             setAwayPlayerData(trimmedPlayersAway);
 
             try {
-              const homeImageResponse = await fetch(`${process.env.REACT_APP_EXPRESS_SERVER}playerImage/${playersHome[0].playerId}`);
-              const awayImageResponse = await fetch(`${process.env.REACT_APP_EXPRESS_SERVER}playerImage/${playersAway[0].playerId}`);
+              const homeImageResponse = await fetch(`${process.env.NEXT_PUBLIC_EXPRESS_SERVER}playerImage/${playersHome[0].playerId}`);
+              const awayImageResponse = await fetch(`${process.env.NEXT_PUBLIC_EXPRESS_SERVER}playerImage/${playersAway[0].playerId}`);
 
               if (homeImageResponse.ok) {
                 const blob = await homeImageResponse.blob();
@@ -1971,8 +1971,8 @@ function GameStats({ game, displayBool, stats, handleToggleTip, userTips }) {
             console.log(matchingGameInfo)
             // Run both fetches in parallel
             const [homeResult, awayResult] = await Promise.allSettled([
-              fetch(`${process.env.REACT_APP_EXPRESS_SERVER}teams/get-player-statistics/${matchingGameInfo.homeId}/${game.sofaScoreId}/${derivedRoundId}/${matchingGameInfo.id}`),
-              fetch(`${process.env.REACT_APP_EXPRESS_SERVER}teams/get-player-statistics/${matchingGameInfo.awayId}/${game.sofaScoreId}/${derivedRoundId}/${matchingGameInfo.id}`)
+              fetch(`${process.env.NEXT_PUBLIC_EXPRESS_SERVER}teams/get-player-statistics/${matchingGameInfo.homeId}/${game.sofaScoreId}/${derivedRoundId}/${matchingGameInfo.id}`),
+              fetch(`${process.env.NEXT_PUBLIC_EXPRESS_SERVER}teams/get-player-statistics/${matchingGameInfo.awayId}/${game.sofaScoreId}/${derivedRoundId}/${matchingGameInfo.id}`)
             ]);
 
             // Handle Home Team Data
@@ -2006,7 +2006,7 @@ function GameStats({ game, displayBool, stats, handleToggleTip, userTips }) {
           ) {
             console.log(`Game is within 48 hours and not in lower tier league. Fetching lineup details for game ID: ${matchingGameInfo.id}`);
             const lineupDetail = await fetch(
-              `${process.env.REACT_APP_EXPRESS_SERVER}lineups/${matchingGameInfo.id}`
+              `${process.env.NEXT_PUBLIC_EXPRESS_SERVER}lineups/${matchingGameInfo.id}`
             );
 
             const data = await lineupDetail.json();
@@ -2218,7 +2218,7 @@ function GameStats({ game, displayBool, stats, handleToggleTip, userTips }) {
 
 
           // const matchPreviewResponse = await fetch(
-          //   `${process.env.REACT_APP_EXPRESS_SERVER}gemini/match-preview/${matchingGameInfo.homeId}${matchingGameInfo.awayId}/${matchingGameInfo.time}`,
+          //   `${process.env.NEXT_PUBLIC_EXPRESS_SERVER}gemini/match-preview/${matchingGameInfo.homeId}${matchingGameInfo.awayId}/${matchingGameInfo.time}`,
           //   {
           //     method: "POST",
           //     headers: {
@@ -2237,7 +2237,7 @@ function GameStats({ game, displayBool, stats, handleToggleTip, userTips }) {
 
 
           // const voteRequest = await fetch(
-          //   `${process.env.REACT_APP_EXPRESS_SERVER}votes/${matchingGameInfo.id}/${today.getDay()}`
+          //   `${process.env.NEXT_PUBLIC_EXPRESS_SERVER}votes/${matchingGameInfo.id}/${today.getDay()}`
           // );
           // const data = await voteRequest.json();
           // setVoteData(data);
@@ -2248,7 +2248,7 @@ function GameStats({ game, displayBool, stats, handleToggleTip, userTips }) {
         if (matchingGameInfo?.id) {
           try {
             const getManagers = await fetch(
-              `${process.env.REACT_APP_EXPRESS_SERVER}matches/get-managers/${matchingGameInfo.id}`
+              `${process.env.NEXT_PUBLIC_EXPRESS_SERVER}matches/get-managers/${matchingGameInfo.id}`
             );
             const managersData = await getManagers.json();
             console.log("Managers data fetched:", managersData);
@@ -2278,12 +2278,12 @@ function GameStats({ game, displayBool, stats, handleToggleTip, userTips }) {
         if (isPaidUser && matchingGameInfo?.homeId && matchingGameInfo?.awayId) {
           try {
             const futureFixturesHomeResponse = await fetch(
-              `${process.env.REACT_APP_EXPRESS_SERVER}futureFixtures/${matchingGameInfo.homeId}/${week}`
+              `${process.env.NEXT_PUBLIC_EXPRESS_SERVER}futureFixtures/${matchingGameInfo.homeId}/${week}`
             );
             const fixturesDataHome = await futureFixturesHomeResponse.json();
 
             const futureFixturesAwayResponse = await fetch(
-              `${process.env.REACT_APP_EXPRESS_SERVER}futureFixtures/${matchingGameInfo.awayId}/${week}`
+              `${process.env.NEXT_PUBLIC_EXPRESS_SERVER}futureFixtures/${matchingGameInfo.awayId}/${week}`
             );
             const fixturesDataAway = await futureFixturesAwayResponse.json();
 
@@ -2342,7 +2342,7 @@ function GameStats({ game, displayBool, stats, handleToggleTip, userTips }) {
 
       for (const player of players) {
         try {
-          const res = await fetch(`${process.env.REACT_APP_EXPRESS_SERVER}playerImage/${player.playerId}`);
+          const res = await fetch(`${process.env.NEXT_PUBLIC_EXPRESS_SERVER}playerImage/${player.playerId}`);
           if (res.ok) {
             const blob = await res.blob();
             const imageUrl = URL.createObjectURL(blob);
@@ -3668,7 +3668,7 @@ function GameStats({ game, displayBool, stats, handleToggleTip, userTips }) {
         }
 
         const leagueStatisticsResponse = await fetch(
-          `${process.env.REACT_APP_EXPRESS_SERVER}leagueStats/${leagueId}`
+          `${process.env.NEXT_PUBLIC_EXPRESS_SERVER}leagueStats/${leagueId}`
         );
 
         if (!leagueStatisticsResponse.ok) {
@@ -3725,7 +3725,7 @@ function GameStats({ game, displayBool, stats, handleToggleTip, userTips }) {
         console.log("AI Payload:", AIPayload);
 
         const response = await fetch(
-          `${process.env.REACT_APP_EXPRESS_SERVER}gemini/${gameId}`,
+          `${process.env.NEXT_PUBLIC_EXPRESS_SERVER}gemini/${gameId}`,
           {
             method: "POST",
             headers: {
@@ -3745,7 +3745,7 @@ function GameStats({ game, displayBool, stats, handleToggleTip, userTips }) {
         setAiMatchPreview(jsonData);
 
         // Store predicted score in backend array
-        await fetch(`${process.env.REACT_APP_EXPRESS_SERVER}predictedScores2`, {
+        await fetch(`${process.env.NEXT_PUBLIC_EXPRESS_SERVER}predictedScores2`, {
           method: "POST",
           headers: {
             Accept: "application/json",

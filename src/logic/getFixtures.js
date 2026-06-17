@@ -420,7 +420,7 @@ export async function renderTable(index, results, id) {
 
     let statistics;
     let leagueStatistics = await fetch(
-      `${process.env.REACT_APP_EXPRESS_SERVER}leagueStats/${id}`
+      `${process.env.NEXT_PUBLIC_EXPRESS_SERVER}leagueStats/${id}`
     );
     await leagueStatistics.json().then((stats) => {
       statistics = stats.data;
@@ -451,7 +451,7 @@ export async function renderTable(index, results, id) {
 
 
     // 1. Fetch statistics once
-    let leagueStatistics = await fetch(`${process.env.REACT_APP_EXPRESS_SERVER}leagueStats/${id}`);
+    let leagueStatistics = await fetch(`${process.env.NEXT_PUBLIC_EXPRESS_SERVER}leagueStats/${id}`);
     const statsJson = await leagueStatistics.json();
     const statistics = statsJson.data;
 
@@ -495,7 +495,7 @@ export async function renderTable(index, results, id) {
 
     let statistics;
     let leagueStatistics = await fetch(
-      `${process.env.REACT_APP_EXPRESS_SERVER}leagueStats/${id}`
+      `${process.env.NEXT_PUBLIC_EXPRESS_SERVER}leagueStats/${id}`
     );
     await leagueStatistics.json().then((stats) => {
       statistics = stats.data;
@@ -791,7 +791,7 @@ export async function generateFixtures(
     };
     // Reset before each date load so GameStats SofaScore lookups cannot match stale games.
     arrayOfGames = [];
-    await fetch(`${process.env.REACT_APP_EXPRESS_SERVER}scheduledEvents/${dateSS}`)
+    await fetch(`${process.env.NEXT_PUBLIC_EXPRESS_SERVER}scheduledEvents/${dateSS}`)
       .then(res => res.json())
       .then(games => {
         games.forEach((game) => {
@@ -871,15 +871,15 @@ export async function generateFixtures(
       [leaguesDate] = await calculateDate(new Date());
     }
 
-    const url = `${process.env.REACT_APP_EXPRESS_SERVER}matches/${footyStatsFormattedDate}`;
-    const formUrl = `${process.env.REACT_APP_EXPRESS_SERVER}form/${date}`;
+    const url = `${process.env.NEXT_PUBLIC_EXPRESS_SERVER}matches/${footyStatsFormattedDate}`;
+    const formUrl = `${process.env.NEXT_PUBLIC_EXPRESS_SERVER}form/${date}`;
     dynamicDate = unformattedDate;
 
     matches = [];
     fixtureArray = [];
 
     league = await fetch(
-      `${process.env.REACT_APP_EXPRESS_SERVER}leagues/${leaguesDate}`
+      `${process.env.NEXT_PUBLIC_EXPRESS_SERVER}leagues/${leaguesDate}`
     );
 
     // render(<div></div>, "FixtureContainer");
@@ -921,7 +921,7 @@ export async function generateFixtures(
     let allLeagueResults;
 
     allLeagueResults = await fetch(
-      `${process.env.REACT_APP_EXPRESS_SERVER}results`
+      `${process.env.NEXT_PUBLIC_EXPRESS_SERVER}results`
     );
 
     if (
@@ -953,7 +953,7 @@ export async function generateFixtures(
       console.log("Fetching leagues");
       for (let i = 0; i < orderedLeagues.length; i++) {
         league = await fetch(
-          `${process.env.REACT_APP_EXPRESS_SERVER}tables/${orderedLeagues[i].element.id}/${leaguesDate}`
+          `${process.env.NEXT_PUBLIC_EXPRESS_SERVER}tables/${orderedLeagues[i].element.id}/${leaguesDate}`
         );
         // eslint-disable-next-line no-loop-func
         await league.json().then((table) => {
@@ -970,7 +970,7 @@ export async function generateFixtures(
 
       for (const orderedLeague of orderedLeagues) {
         let fixtures = await fetch(
-          `${process.env.REACT_APP_EXPRESS_SERVER}leagueFixtures/${orderedLeague.element.id}`
+          `${process.env.NEXT_PUBLIC_EXPRESS_SERVER}leagueFixtures/${orderedLeague.element.id}`
         );
 
         let games = await fixtures.json();
@@ -978,7 +978,7 @@ export async function generateFixtures(
         let gamesShortened;
         if (games.pager.current_page < games.pager.max_page) {
           const page2 = await fetch(
-            `${process.env.REACT_APP_EXPRESS_SERVER}leagueFixtures/${orderedLeague.element.id}&page=2`
+            `${process.env.NEXT_PUBLIC_EXPRESS_SERVER}leagueFixtures/${orderedLeague.element.id}&page=2`
           );
           let page2Data = await page2.json();
 
@@ -1095,7 +1095,7 @@ export async function generateFixtures(
 
       try {
         const response = await fetch(
-          `${process.env.REACT_APP_EXPRESS_SERVER}leagues/${leaguesDate}`,
+          `${process.env.NEXT_PUBLIC_EXPRESS_SERVER}leagues/${leaguesDate}`,
           {
             method: "POST",
             headers: {
@@ -1994,14 +1994,14 @@ export async function generateFixtures(
     async function updateResults(bool) {
       console.log("updating results");
       if (allLeagueResultsArrayOfObjects.length > 0 && bool === true) {
-        await fetch(`${process.env.REACT_APP_EXPRESS_SERVER}results`, {
+        await fetch(`${process.env.NEXT_PUBLIC_EXPRESS_SERVER}results`, {
           method: "DELETE",
           headers: {
             Accept: "application/json",
             "Content-Type": "application/json",
           },
         }).then(async () => {
-          await fetch(`${process.env.REACT_APP_EXPRESS_SERVER}results`, {
+          await fetch(`${process.env.NEXT_PUBLIC_EXPRESS_SERVER}results`, {
             method: "POST",
             headers: {
               Accept: "application/json",
@@ -2016,7 +2016,7 @@ export async function generateFixtures(
     }
 
     if (!isStoredLocally) {
-      await fetch(`${process.env.REACT_APP_EXPRESS_SERVER}allForm/${date}`, {
+      await fetch(`${process.env.NEXT_PUBLIC_EXPRESS_SERVER}allForm/${date}`, {
         method: "POST",
         headers: {
           Accept: "application/json",

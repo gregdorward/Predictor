@@ -21,7 +21,7 @@ export default function SeasonPreview() {
         setLoading((prev) => ({ ...prev, [leagueKey]: true }));
 
         try {
-            const res = await fetch(`${process.env.REACT_APP_EXPRESS_SERVER}preview/${leagueKey}/${season}`);
+            const res = await fetch(`${process.env.NEXT_PUBLIC_EXPRESS_SERVER}preview/${leagueKey}/${season}`);
             const data = await res.json();
             setPreviews((prev) => ({ ...prev, [leagueKey]: data.aiJson })); // updated to match actual shape
         } catch (err) {

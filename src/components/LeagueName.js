@@ -99,7 +99,7 @@ const name = showShortlist ? fixture.leagueDesc : fixture.leagueName;
       const value = found ? found[id] : null;
       if (!value) return;
 
-      const logoPath = `${process.env.REACT_APP_EXPRESS_SERVER}logo/${value}`;
+      const logoPath = `${process.env.NEXT_PUBLIC_EXPRESS_SERVER}logo/${value}`;
       try {
         // Optionally verify it loads first
         const response = await fetch(logoPath);

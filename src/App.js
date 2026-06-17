@@ -54,7 +54,6 @@ import {
   WhatsappIcon,
 } from "react-share";
 import { generateFixtures } from "./logic/getFixtures";
-import { BrowserRouter as Router, Route, Routes, Link } from "react-router-dom";
 import PageMeta from "./components/PageMeta";
 import PrivacyPolicy from "./components/PrivacyPolicy";
 import Over18Badge from './components/images/18.webp';
@@ -241,7 +240,16 @@ async function calculateDate(dateString) {
   const year = dateString.getFullYear();
   return [`${month}${day}${year}`, `${year}-${month}-${day}`];
 }
-[date, dateFootyStats] = await calculateDate(date);
+
+// Synchronous module-init equivalent (avoids top-level await, which Next's
+// webpack build does not enable by default).
+(function initModuleDate() {
+  const day = date.getDate();
+  const month = date.getMonth() + 1;
+  const year = date.getFullYear();
+  date = `${month}${day}${year}`;
+  dateFootyStats = `${year}-${month}-${day}`;
+})();
 let loggedIn
 
 
@@ -270,7 +278,7 @@ async function convertTimestampForSofaScore(timestamp) {
   let now = new Date();
   let dateNow = await calculateDate(now);
   leagueList = await fetch(
-    `${process.env.REACT_APP_EXPRESS_SERVER}leagueList/${dateNow[0]}`
+    `${process.env.NEXT_PUBLIC_EXPRESS_SERVER}leagueList/${dateNow[0]}`
   );
 
   let leagueArray;
@@ -542,7 +550,7 @@ export const handleCheckout = async (priceId, currency = 'usd') => {
   }
 
   const response = await fetch(
-    `${process.env.REACT_APP_EXPRESS_SERVER}create-checkout-session`,
+    `${process.env.NEXT_PUBLIC_EXPRESS_SERVER}create-checkout-session`,
     {
       method: "POST",
       headers: {
@@ -571,7 +579,7 @@ let welcomeTextOne = welcomeTextUnsplitOne.split("\n").map((i) => {
   return <p>{i}</p>;
 });
 
-function AppContent() {
+export function AppContent() {
   const { user, isPaidUser, fixtures, setFixtures, handleGetPredictions, isPredicting } = useAuth()
 
   const [showUsernameModal, setShowUsernameModal] = useState(false);
@@ -700,7 +708,7 @@ function AppContent() {
     };
 
     try {
-      const response = await fetch(`${process.env.REACT_APP_EXPRESS_SERVER}tipsNEW`, {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_EXPRESS_SERVER}tipsNEW`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload),
@@ -767,7 +775,7 @@ function AppContent() {
 
     const currency = detectCurrency();
     setCurrentCurrency(currency);
-    fetch(`${process.env.REACT_APP_EXPRESS_SERVER}pricing?currency=${currency}`)
+    fetch(`${process.env.NEXT_PUBLIC_EXPRESS_SERVER}pricing?currency=${currency}`)
       .then(res => res.json())
       .then(setPricing)
       .catch(console.error);
@@ -1375,7 +1383,7 @@ function AppContent() {
       </div>
       <div>Soccer Stats Hub is for users over 18 years of age only</div>
       <img
-        src={Over18Badge} // Use the imported path here
+        src={Over18Badge.src || Over18Badge} // Next static import returns an object
         alt="18+ only"
         className="age-badge" // Add your CSS class here
         width="100"
@@ -1435,23 +1443,7 @@ export default function App() {
 
   return (
     <AuthProvider>
-      <Routes>
-        <Route path="/" element={<AppContent />} />
-        <Route path="/fixture/" element={<TeamPage />} />
-        <Route path="/success/" element={<SuccessPage />} />
-        <Route path="/cancel/" element={<CancelPage />} />
-        <Route path="/reset/" element={<PasswordReset />} />
-        <Route path="/o25/" element={<Over25 />} />
-        <Route path="/u25/" element={<Under25 />} />
-        <Route path="/teamshigh/" element={<HighestScoringTeams />} />
-        <Route path="/fixtureshigh/" element={<HighestScoringFixtures />} />
-        <Route path="/bttsfixtures/" element={<BTTSFixtures />} />
-        <Route path="/bttsteams/" element={<BTTSTeams />} />
-        <Route path="/cancelsubscription/" element={<CancelSubscription />} />
-        <Route path="/seasonpreviews/" element={<SeasonPreview />} />
-        <Route path="/worldcup2026/" element={<WorldCup2026 />} />
-        {/* <Route path="/" element={<Fixture />} /> */}
-      </Routes>
+      <AppContent />
     </AuthProvider>
   );
 }

@@ -529,7 +529,7 @@ function SingleFixture({
 
 // async function submitTips(userTips) {
 //   if (userDetail?.uid && userTips) {
-//     await fetch(`${process.env.REACT_APP_EXPRESS_SERVER}tips`, {
+//     await fetch(`${process.env.NEXT_PUBLIC_EXPRESS_SERVER}tips`, {
 //       method: "POST",
 //       headers: {
 //         Accept: "application/json",

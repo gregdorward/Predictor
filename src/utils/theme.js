@@ -1,4 +1,9 @@
 export function getStoredTheme() {
+  // No window during the Next.js static-export build; default to light.
+  if (typeof window === "undefined") {
+    return "light";
+  }
+
   try {
     const params = new URLSearchParams(window.location.search);
     const queryTheme = params.get("theme");

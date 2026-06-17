@@ -2,13 +2,21 @@ import { useState, useEffect } from "react";
 import { getStoredTheme, applyTheme } from "../utils/theme";
 
 function ThemeToggle() {
-  const [isDarkMode, setIsDarkMode] = useState(
-    () => getStoredTheme() === "dark"
-  );
+  // Start unchecked so server and first client render match (avoids hydration
+  // mismatch); read the real stored theme after mount.
+  const [isDarkMode, setIsDarkMode] = useState(false);
+  const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
-    applyTheme(isDarkMode ? "dark" : "light");
-  }, [isDarkMode]);
+    setIsDarkMode(getStoredTheme() === "dark");
+    setMounted(true);
+  }, []);
+
+  useEffect(() => {
+    if (mounted) {
+      applyTheme(isDarkMode ? "dark" : "light");
+    }
+  }, [isDarkMode, mounted]);
   
     const handleThemeToggle = () => {
       setIsDarkMode(!isDarkMode);

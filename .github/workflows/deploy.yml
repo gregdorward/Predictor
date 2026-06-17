@@ -1,0 +1,54 @@
+name: Build and deploy to GitHub Pages
+
+# Manual deploys still work locally via `npm run deploy`.
+# This workflow automates build + deploy of the Next.js static export.
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+  # Once build-time data pre-rendering (getStaticProps) is added to the
+  # content pages, uncomment to refresh stats on a schedule:
+  # schedule:
+  #   - cron: "0 6 * * *" # daily at 06:00 UTC
+
+permissions:
+  contents: write
+
+concurrency:
+  group: pages-deploy
+  cancel-in-progress: true
+
+jobs:
+  build-deploy:
+    runs-on: ubuntu-latest
+    env:
+      # Public (NEXT_PUBLIC_*) build-time config. Set these as repository
+      # Variables (Settings > Secrets and variables > Actions > Variables).
+      NEXT_PUBLIC_API_KEY: ${{ vars.NEXT_PUBLIC_API_KEY }}
+      NEXT_PUBLIC_EXPRESS_SERVER: ${{ vars.NEXT_PUBLIC_EXPRESS_SERVER }}
+      NEXT_PUBLIC_FIREBASE_API_KEY: ${{ vars.NEXT_PUBLIC_FIREBASE_API_KEY }}
+      NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN: ${{ vars.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN }}
+      NEXT_PUBLIC_FIREBASE_PROJECT_ID: ${{ vars.NEXT_PUBLIC_FIREBASE_PROJECT_ID }}
+      NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET: ${{ vars.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET }}
+      NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID: ${{ vars.NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID }}
+      NEXT_PUBLIC_FIREBASE_APP_ID: ${{ vars.NEXT_PUBLIC_FIREBASE_APP_ID }}
+      NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID: ${{ vars.NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - run: npm ci --legacy-peer-deps
+
+      - run: npm run build
+
+      - name: Deploy to gh-pages branch
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./out
+          # CNAME and .nojekyll are emitted into out/ by the build.
+          cname: www.soccerstatshub.com

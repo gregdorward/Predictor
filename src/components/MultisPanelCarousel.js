@@ -4,6 +4,16 @@ import { ChevronLeft, ChevronRight } from "lucide-react";
 const SWIPE_THRESHOLD_PX = 48;
 const SWIPE_MAX_VERTICAL_PX = 80;
 
+// Buttons/links inside the carousel (nav arrows, Increment/Decrement, tip
+// controls) must stay clickable. Starting a swipe — especially calling
+// setPointerCapture — on these would redirect the synthesized click to the
+// carousel container, so the element's own onClick would never fire.
+const INTERACTIVE_SELECTOR =
+  'button, a, input, select, textarea, label, [role="button"]';
+
+const isInteractiveTarget = (target) =>
+  target instanceof Element && target.closest(INTERACTIVE_SELECTOR) !== null;
+
 export const MULTIS_PANELS = [
   { id: "bestPredictions", label: "Build a Multi", className: "bestPredictions" },
   { id: "exoticOfTheDay", label: "Exotic of the Day", className: "exoticOfTheDay" },
@@ -58,6 +68,7 @@ export default function MultisPanelCarousel({ panels = MULTIS_PANELS }) {
     <div
       className="MultisCarousel"
       onTouchStart={(event) => {
+        if (isInteractiveTarget(event.target)) return;
         const touch = event.changedTouches[0];
         handleSwipeStart(touch.clientX, touch.clientY);
       }}
@@ -67,6 +78,8 @@ export default function MultisPanelCarousel({ panels = MULTIS_PANELS }) {
       }}
       onPointerDown={(event) => {
         if (event.pointerType === "mouse" && event.button !== 0) return;
+        // Don't hijack clicks on nav arrows, Increment/Decrement, etc.
+        if (isInteractiveTarget(event.target)) return;
         handleSwipeStart(event.clientX, event.clientY);
         event.currentTarget.setPointerCapture(event.pointerId);
       }}

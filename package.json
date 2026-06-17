@@ -24,6 +24,7 @@
     "firebase-functions": "^6.3.1",
     "kofi-button": "^1.1.1",
     "lucide-react": "^0.475.0",
+    "next": "^14.2.35",
     "node-cron": "^3.0.3",
     "oddslib": "^1.0.3",
     "react": "^18.3.1",
@@ -47,41 +48,20 @@
     "web-vitals": "^0.2.4"
   },
   "scripts": {
-    "start": "craco start",
-    "build": "craco build && cp build/index.html build/404.html",
-    "postbuild": "react-snap; node scripts/injectPrerenderMeta.js",
-    "test": "craco test",
+    "dev": "next dev",
+    "start": "next dev",
+    "build": "next build",
+    "serve": "npx serve out",
+    "test": "jest",
+    "test:watch": "jest --watch",
     "test:e2e:install": "playwright install chromium",
     "test:e2e": "playwright test",
     "test:e2e:ui": "PW_TEST_NO_WEBSERVER=1 playwright test --ui",
     "test:e2e:typecheck": "tsc -p e2e/tsconfig.json",
     "test:e2e:headed": "playwright test --headed",
     "test:e2e:report": "playwright show-report",
-    "eject": "react-scripts eject",
     "predeploy": "npm run build",
-    "deploy": "gh-pages -d build"
-  },
-  "reactSnap": {
-    "include": [
-      "/",
-      "/o25",
-      "/u25",
-      "/bttsteams",
-      "/seasonpreviews",
-      "/bttsfixtures",
-      "/fixtureshigh",
-      "/teamshigh",
-      "/worldcup2026"
-    ],
-    "crawl": false,
-    "skipThirdPartyRequests": true,
-    "preconnectThirdParty": false,
-    "puppeteerArgs": [
-      "--no-sandbox"
-    ],
-    "waitFor": 2000,
-    "removeStyleTags": false,
-    "inlineCss": true
+    "deploy": "gh-pages -d out -t true"
   },
   "eslintConfig": {
     "extends": [
@@ -101,15 +81,13 @@
       "last 1 safari version"
     ]
   },
-  "proxy": "https://api.soccerstatshub.com",
   "devDependencies": {
-    "@craco/craco": "^7.1.0",
-    "@fullhuman/postcss-purgecss": "^8.0.0",
     "@playwright/test": "^1.60.0",
     "@types/node": "^22.15.0",
     "@types/react-slider": "^1.1.0",
     "gh-pages": "^3.1.0",
-    "react-snap": "^1.23.0",
+    "jest": "^29.7.0",
+    "jest-environment-jsdom": "^29.7.0",
     "typescript": "^5.8.3"
   }
 }
