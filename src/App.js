@@ -10,6 +10,7 @@ import MultisPanelCarousel from "./components/MultisPanelCarousel";
 import StripePolicies from "./components/Contact";
 import { loadStripe } from "@stripe/stripe-js";
 import { AuthProvider, useAuth } from "./logic/authProvider";
+import { bumpFixturesEpoch } from "./logic/fixturesEpoch";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import Login from "./components/Login";
 import { getCurrentUser } from "./components/ProtectedContent";
@@ -651,6 +652,7 @@ function AppContent() {
 
 
   const handleAction = async () => {
+    bumpFixturesEpoch();
     setIsLoading(true);
 
     // 1. Convert the current state date into the formats generateFixtures needs
@@ -1048,7 +1050,7 @@ function AppContent() {
             text={currentDate.toLocaleDateString()} // Or your dateFootyStats variable
             className="FixturesButtonToday"
             onClickEvent={() => handleAction()} // This re-runs the current date load
-            disabled={isLoading}
+            disabled={isLoading || isPredicting}
           />
 
           <Button
