@@ -4,6 +4,10 @@ import { onAuthStateChanged } from "firebase/auth";
 import { doc, getDoc } from "firebase/firestore";
 import { ThreeDots } from "react-loading-icons";
 import { getScorePrediction } from "../logic/getScorePredictions";
+import {
+  getFixturesEpoch,
+  shouldApplyPredictionFixtures,
+} from "./fixturesEpoch";
 
 const AuthContext = createContext();
 
@@ -55,16 +59,18 @@ const [isPredicting, setIsPredicting] = useState(false);
 
 
   const handleGetPredictions = async (day) => {
-    setIsPredicting(true)
+    const epochAtStart = getFixturesEpoch();
+    setIsPredicting(true);
     try {
-    // Replace this with your actual prediction logic/API call
-    const data = await getScorePrediction(day);
-    setFixtures(data);  
-  } catch (error) {
-    console.error("Prediction failed:", error);
-  } finally {
-    setIsPredicting(false);
-  }
+      const data = await getScorePrediction(day);
+      if (shouldApplyPredictionFixtures(epochAtStart)) {
+        setFixtures(data);
+      }
+    } catch (error) {
+      console.error("Prediction failed:", error);
+    } finally {
+      setIsPredicting(false);
+    }
   };
 
   triggerGlobalPredictions = handleGetPredictions;
