@@ -74,11 +74,12 @@
       "/worldcup2026"
     ],
     "crawl": false,
+    "skipThirdPartyRequests": true,
+    "preconnectThirdParty": false,
     "puppeteerArgs": [
       "--no-sandbox"
     ],
-    "timeout": 60000,
-    "waitFor": 5000,
+    "waitFor": 2000,
     "removeStyleTags": false,
     "inlineCss": true
   },
