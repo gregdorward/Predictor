@@ -1,9 +1,12 @@
 // Edge-cached read-through proxy to the Express data origin.
 //
-// The client calls /api/ss/<origin-path> instead of hitting the origin
-// directly, so Vercel's CDN can serve repeat/global traffic without waking the
-// (slow) origin on every page load. Only GET requests to globally-cacheable
-// endpoints are allowed; anything user-specific must keep calling the origin.
+// Runs on the Edge runtime and streams the upstream body straight through, so
+// large payloads (e.g. /results) aren't buffered and aren't subject to the 4MB
+// Node serverless response limit. The client calls /api/ss/<origin-path>
+// instead of the origin directly, letting Vercel's CDN cache global traffic.
+// Only GET requests to allowlisted, non-personalised endpoints are proxied.
+
+export const config = { runtime: "edge" };
 
 const ORIGIN =
   process.env.EXPRESS_SERVER || process.env.NEXT_PUBLIC_EXPRESS_SERVER;
@@ -24,32 +27,37 @@ const CACHE_RULES = {
   "league-averages": { sMaxAge: 600, swr: 86400 },
 };
 
-export default async function handler(req, res) {
+function jsonError(body, status, extraHeaders) {
+  return new Response(JSON.stringify(body), {
+    status,
+    headers: {
+      "Content-Type": "application/json",
+      "Cache-Control": "no-store",
+      ...extraHeaders,
+    },
+  });
+}
+
+export default async function handler(req) {
   if (req.method !== "GET") {
-    res.setHeader("Allow", "GET");
-    return res.status(405).json({ error: "Method not allowed" });
+    return jsonError({ error: "Method not allowed" }, 405, { Allow: "GET" });
   }
-
   if (!ORIGIN) {
-    return res.status(500).json({ error: "Origin not configured" });
+    return jsonError({ error: "Origin not configured" }, 500);
   }
 
-  const segments = Array.isArray(req.query.path)
-    ? req.query.path
-    : [req.query.path];
+  const url = new URL(req.url);
+  const rest = url.pathname.replace(/^\/api\/ss\//, "").replace(/\/+$/, "");
+  const segments = rest.split("/");
   const head = segments[0];
   const rule = CACHE_RULES[head];
 
   // Only allowlisted, non-personalised endpoints may be proxied + cached.
   if (!rule) {
-    return res
-      .status(404)
-      .json({ error: `Endpoint '${head}' is not proxyable` });
+    return jsonError({ error: `Endpoint '${head}' is not proxyable` }, 404);
   }
 
-  // Preserve any original query string (e.g. ?page=2).
-  const qs = req.url.includes("?") ? req.url.slice(req.url.indexOf("?")) : "";
-  const target = `${ORIGIN}${segments.join("/")}${qs}`;
+  const target = `${ORIGIN}${segments.join("/")}${url.search}`;
 
   try {
     const upstream = await fetch(target, {
@@ -61,27 +69,29 @@ export default async function handler(req, res) {
       },
     });
 
-    const body = await upstream.text();
+    const contentType =
+      upstream.headers.get("content-type") || "application/json";
 
     if (!upstream.ok) {
       // Don't cache origin errors, so a transient blip isn't pinned for minutes.
-      res.setHeader("Cache-Control", "no-store");
-      return res.status(upstream.status).send(body);
+      return new Response(upstream.body, {
+        status: upstream.status,
+        headers: { "Cache-Control": "no-store", "Content-Type": contentType },
+      });
     }
 
-    res.setHeader(
-      "Cache-Control",
-      `public, s-maxage=${rule.sMaxAge}, stale-while-revalidate=${rule.swr}`
-    );
-    res.setHeader(
-      "Content-Type",
-      upstream.headers.get("content-type") || "application/json"
-    );
-    return res.status(200).send(body);
+    // Stream the body through with CDN cache headers; nothing is buffered.
+    return new Response(upstream.body, {
+      status: 200,
+      headers: {
+        "Cache-Control": `public, s-maxage=${rule.sMaxAge}, stale-while-revalidate=${rule.swr}`,
+        "Content-Type": contentType,
+      },
+    });
   } catch (err) {
-    res.setHeader("Cache-Control", "no-store");
-    return res
-      .status(502)
-      .json({ error: "Upstream fetch failed", detail: String(err) });
+    return jsonError(
+      { error: "Upstream fetch failed", detail: String(err) },
+      502
+    );
   }
 }
