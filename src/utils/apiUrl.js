@@ -24,7 +24,12 @@ const ORIGIN = process.env.NEXT_PUBLIC_EXPRESS_SERVER;
 export function apiGetUrl(path) {
   const head = String(path).split(/[/?&]/)[0];
   if (typeof window !== "undefined" && PROXIED_ENDPOINTS.has(head)) {
-    return `/api/ss/${path}`;
+    // next.config has trailingSlash:true, which 308-redirects un-slashed URLs.
+    // Emit the canonical trailing-slash URL (slash placed before any query
+    // string) so the client hits the cached endpoint directly with no hop.
+    const [p, query] = String(path).split("?");
+    const slashed = p.endsWith("/") ? p : `${p}/`;
+    return `/api/ss/${slashed}${query ? `?${query}` : ""}`;
   }
   return `${ORIGIN}${path}`;
 }
