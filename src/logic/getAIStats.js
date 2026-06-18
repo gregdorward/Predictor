@@ -36,7 +36,7 @@ function AIInsights({ game, homeForm, awayForm }) {
 
       try {
         const response = await fetch(
-          `${process.env.REACT_APP_EXPRESS_SERVER}gemini/${game}`,
+          `${process.env.NEXT_PUBLIC_EXPRESS_SERVER}gemini/${game}`,
           {
             method: "POST",
             headers: {

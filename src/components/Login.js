@@ -7,6 +7,12 @@ import { auth, db } from "../firebase"; // Adjust the path as needed
 
 export let userIsPaid = false;
 
+// Allows other modules to update this flag without reassigning the imported
+// binding directly (disallowed by the SWC/ESM compiler).
+export function setUserIsPaid(value) {
+  userIsPaid = value;
+}
+
 const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");

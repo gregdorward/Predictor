@@ -1,6 +1,5 @@
 import { Fragment, useState } from "react";
 import ReactDOM from "react-dom";
-import { Link } from 'react-router-dom';
 import { isReactSnap } from "../firebase";
 import { matches, diff } from "./getFixtures";
 import { RenderAllFixtures } from "../logic/getFixtures";
@@ -183,7 +182,7 @@ function getMatchOddsProbabilities(scoreMatrix) {
 
 async function fetchAllUserTips() {
   try {
-    const response = await fetch(`${process.env.REACT_APP_EXPRESS_SERVER}tipsNEW`);
+    const response = await fetch(`${process.env.NEXT_PUBLIC_EXPRESS_SERVER}tipsNEW`);
     const tipsData = await response.json();
 
     const flattenedPendingLegs = [];
@@ -215,7 +214,15 @@ async function fetchAllUserTips() {
   }
 }
 
-const allIndividualTips = isReactSnap ? [] : await fetchAllUserTips();
+// Populated asynchronously after module load (avoids top-level await, which
+// Next's webpack build does not enable). Guarded so it never runs during the
+// static-export/prerender pass.
+let allIndividualTips = [];
+(async () => {
+  if (!isReactSnap) {
+    allIndividualTips = await fetchAllUserTips();
+  }
+})();
 
 
 export function getPointsFromLastX(lastX) {
@@ -371,7 +378,7 @@ function impliedProbability(decimalOdds) {
 // 1. Function starts here
 async function fetchUserTips() {
   try {
-    const response = await fetch(`${process.env.REACT_APP_EXPRESS_SERVER}tipsNEW`);
+    const response = await fetch(`${process.env.NEXT_PUBLIC_EXPRESS_SERVER}tipsNEW`);
     const data = await response.json();
 
     // ... your logic to process/sort data ...
@@ -5149,7 +5156,7 @@ async function getSuccessMeasure(fixtures) {
   const finalS3Data = prepareTipsForS3(updatedFlatTips);
 
   async function submitUpdatedTips(tips) {
-    return fetch(`${process.env.REACT_APP_EXPRESS_SERVER}result-tips`, {
+    return fetch(`${process.env.NEXT_PUBLIC_EXPRESS_SERVER}result-tips`, {
       method: "POST",
       headers: {
         Accept: "application/json",
@@ -5811,7 +5818,7 @@ function fetchLeagueStats() {
     const { id: sofaScoreId, season: sofaScoreSeason } = mapping;
 
     // Use .then() instead of await to keep the inner logic non-async
-    return fetch(`${process.env.REACT_APP_EXPRESS_SERVER}LeagueTeamStats/${sofaScoreId}/${sofaScoreSeason}/${week}`)
+    return fetch(`${process.env.NEXT_PUBLIC_EXPRESS_SERVER}LeagueTeamStats/${sofaScoreId}/${sofaScoreSeason}/${week}`)
       .then((response) => response.json())
       .then((teamStats) => ({
         key: `leagueStats${leagueId}`,
@@ -5860,7 +5867,7 @@ function fetchPlayerStats() {
 
     const { id: sofaScoreId, season: sofaScoreSeason } = mapping;
 
-    return fetch(`${process.env.REACT_APP_EXPRESS_SERVER}bestPlayers/${sofaScoreId}/${sofaScoreSeason}/${week}`)
+    return fetch(`${process.env.NEXT_PUBLIC_EXPRESS_SERVER}bestPlayers/${sofaScoreId}/${sofaScoreSeason}/${week}`)
       .then(res => res.json())
       .then(playerData => ({
         key: `playerStats${leagueId}`,
@@ -5974,8 +5981,8 @@ export async function getScorePrediction(day, mocked) {
   const playerStatsPromise = fetchPlayerStats();
 
 
-  const predictedScoresPromise = fetch(`${process.env.REACT_APP_EXPRESS_SERVER}predictedScores2`);
-  const leagueAveragesPromise = fetch(`${process.env.REACT_APP_EXPRESS_SERVER}league-averages`);
+  const predictedScoresPromise = fetch(`${process.env.NEXT_PUBLIC_EXPRESS_SERVER}predictedScores2`);
+  const leagueAveragesPromise = fetch(`${process.env.NEXT_PUBLIC_EXPRESS_SERVER}league-averages`);
 
   // 2. Await everything in parallel
   const [

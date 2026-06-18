@@ -21,7 +21,7 @@ export default function LeagueLogos() {
         async function fetchLogos() {
             const logoPromises = Ids.map(async (obj) => {
                 const value = Object.values(obj)[0];
-                const logoUrl = `${process.env.REACT_APP_EXPRESS_SERVER}logo/${value}`;
+                const logoUrl = `${process.env.NEXT_PUBLIC_EXPRESS_SERVER}logo/${value}`;
 
                 try {
                     const response = await fetch(logoUrl);

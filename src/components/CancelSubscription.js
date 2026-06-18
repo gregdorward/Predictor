@@ -46,7 +46,7 @@ export default function CancelSubscription() {
     }
 
     try {
-      const response = await fetch(`${process.env.REACT_APP_EXPRESS_SERVER}cancel-subscription`, {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_EXPRESS_SERVER}cancel-subscription`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

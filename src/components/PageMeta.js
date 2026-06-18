@@ -1,5 +1,5 @@
-import { Helmet } from "react-helmet-async";
-import { useLocation } from "react-router-dom";
+import Head from "next/head";
+import { useRouter } from "next/router";
 import {
   OG_IMAGE,
   SITE_NAME,
@@ -8,7 +8,8 @@ import {
 } from "../seo/pageMetaConfig";
 
 const PageMeta = ({ title, description, noIndex }) => {
-  const { pathname } = useLocation();
+  const router = useRouter();
+  const pathname = router?.pathname || "/";
   const defaults = getPageMeta(pathname);
   const pageTitle = title ?? defaults.title;
   const pageDescription = description ?? defaults.description;
@@ -16,7 +17,7 @@ const PageMeta = ({ title, description, noIndex }) => {
   const canonicalUrl = getCanonicalUrl(pathname);
 
   return (
-    <Helmet prioritizeSeoTags>
+    <Head>
       <title>{pageTitle}</title>
       <meta name="description" content={pageDescription} />
       <link rel="canonical" href={canonicalUrl} />
@@ -32,7 +33,7 @@ const PageMeta = ({ title, description, noIndex }) => {
       <meta name="twitter:title" content={pageTitle} />
       <meta name="twitter:description" content={pageDescription} />
       <meta name="twitter:image" content={OG_IMAGE} />
-    </Helmet>
+    </Head>
   );
 };
 

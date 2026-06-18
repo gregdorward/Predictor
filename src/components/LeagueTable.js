@@ -183,7 +183,7 @@ export default function LeagueTable(props) {
       if (derivedMediaId && paid) {
         try {
           const response = await fetch(
-            `${process.env.REACT_APP_EXPRESS_SERVER}getMedia/${derivedMediaId}/${date}`
+            `${process.env.NEXT_PUBLIC_EXPRESS_SERVER}getMedia/${derivedMediaId}/${date}`
           );
           if (!response.ok) {
             throw new Error(`HTTP error! status: ${response.status}`);

@@ -353,12 +353,12 @@ function TeamPage() {
   const fetchData = async () => {
     try {
       const responseHome = await fetch(
-        `${process.env.REACT_APP_EXPRESS_SERVER}team/${storedFixtureDetailsJson.homeId}`
+        `${process.env.NEXT_PUBLIC_EXPRESS_SERVER}team/${storedFixtureDetailsJson.homeId}`
       );
       const resultHome = await responseHome.json();
 
       const responseAway = await fetch(
-        `${process.env.REACT_APP_EXPRESS_SERVER}team/${storedFixtureDetailsJson.awayId}`
+        `${process.env.NEXT_PUBLIC_EXPRESS_SERVER}team/${storedFixtureDetailsJson.awayId}`
       );
       const resultAway = await responseAway.json();
 

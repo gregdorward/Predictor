@@ -1,9 +1,10 @@
-import { useLocation } from "react-router-dom";
+import { useRouter } from "next/router";
 
 const BANNER_PATH = "/worldcup2026/";
 
 export default function WorldCupBanner() {
-  const { pathname } = useLocation();
+  const router = useRouter();
+  const pathname = router?.pathname || "/";
 
   if (pathname.startsWith("/worldcup2026")) {
     return null;

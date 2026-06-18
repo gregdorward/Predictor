@@ -3,7 +3,7 @@ import { isReactSnap } from "../firebase";
 export async function getHighestScoringLeagues() {
   if (isReactSnap) return [];
 
-  let teamsList = await fetch(`${process.env.REACT_APP_EXPRESS_SERVER}over25`);
+  let teamsList = await fetch(`${process.env.NEXT_PUBLIC_EXPRESS_SERVER}over25`);
   let arr = [];
   await teamsList.json().then(async (leagues) => {
     console.log(leagues)
@@ -28,7 +28,7 @@ export async function getHighestScoringLeagues() {
 export async function getLowestScoringLeagues() {
   if (isReactSnap) return [];
 
-  let teamsList = await fetch(`${process.env.REACT_APP_EXPRESS_SERVER}under25`);
+  let teamsList = await fetch(`${process.env.NEXT_PUBLIC_EXPRESS_SERVER}under25`);
   let arr = [];
   await teamsList.json().then(async (leagues) => {
     for (let index = 0; index < leagues.data.top_leagues.data.length; index++) {
@@ -50,7 +50,7 @@ export async function getLowestScoringLeagues() {
 export async function getHighestScoringTeams() {
   if (isReactSnap) return [];
 
-  let teamsList = await fetch(`${process.env.REACT_APP_EXPRESS_SERVER}over25`);
+  let teamsList = await fetch(`${process.env.NEXT_PUBLIC_EXPRESS_SERVER}over25`);
   let arr = [];
   await teamsList.json().then(async (teams) => {
     for (let index = 0; index < teams.data.top_teams.data.length; index++) {
@@ -88,7 +88,7 @@ export async function getHighestScoringFixtures() {
   if (isReactSnap) return [];
 
   let fixturesList = await fetch(
-    `${process.env.REACT_APP_EXPRESS_SERVER}over25`
+    `${process.env.NEXT_PUBLIC_EXPRESS_SERVER}over25`
   );
 
   let arr = [];
@@ -124,7 +124,7 @@ export async function getBTTSFixtures() {
   if (isReactSnap) return [];
 
   let fixturesList = await fetch(
-    `${process.env.REACT_APP_EXPRESS_SERVER}btts`
+    `${process.env.NEXT_PUBLIC_EXPRESS_SERVER}btts`
   );
 
   let arr = [];
@@ -161,7 +161,7 @@ export async function getBTTSTeams() {
   if (isReactSnap) return [];
 
   let fixturesList = await fetch(
-    `${process.env.REACT_APP_EXPRESS_SERVER}btts`
+    `${process.env.NEXT_PUBLIC_EXPRESS_SERVER}btts`
   );
 
   let arr = [];

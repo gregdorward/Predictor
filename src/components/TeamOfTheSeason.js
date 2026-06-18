@@ -334,7 +334,7 @@ const TeamOfTheSeason = (props) => {
       try {
         // Fetch rounds data to get the correct round ID
         const roundsResponse = await fetch(
-          `${process.env.REACT_APP_EXPRESS_SERVER}round/${id}/${derivedRoundId}`
+          `${process.env.NEXT_PUBLIC_EXPRESS_SERVER}round/${id}/${derivedRoundId}`
         );
         let roundsData = await roundsResponse.json();
 

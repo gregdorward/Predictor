@@ -22,7 +22,7 @@ export async function getTeamStats(
   let bestAwayOddsProvider;
 
   let match = await fetch(
-    `${process.env.REACT_APP_EXPRESS_SERVER}match/${identifier}`
+    `${process.env.NEXT_PUBLIC_EXPRESS_SERVER}match/${identifier}`
   );
   await match.json().then(async (match) => {
     const matchArr = match.data.h2h.previous_matches_ids;
@@ -95,7 +95,7 @@ export async function getTeamStats(
 
       //   // if (secondMatchExists !== false) {
       //   //   secondToPreviousMatch = await fetch(
-      //   //     `${process.env.REACT_APP_EXPRESS_SERVER}match/${secondToLastMatch}`
+      //   //     `${process.env.NEXT_PUBLIC_EXPRESS_SERVER}match/${secondToLastMatch}`
       //   //   );
       //   //   await secondToPreviousMatch.json().then((game) => {
       //   //     secondToPreviousMatchDetails = game.data;

@@ -18,7 +18,7 @@ const MonthlyLeaderboard = ({ slips = [] }) => {
     useEffect(() => {
         const fetchLeaderboard = async () => {
             try {
-                const response = await fetch(`${process.env.REACT_APP_EXPRESS_SERVER}leaderboard/${monthKey}`);
+                const response = await fetch(`${process.env.NEXT_PUBLIC_EXPRESS_SERVER}leaderboard/${monthKey}`);
                 const lbJson = await response.json();
 
                 const merged = lbJson.map(user => {
