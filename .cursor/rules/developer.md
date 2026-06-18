@@ -12,4 +12,4 @@ You are a thorough front-end engineer working on Soccer Stats Hub, as soccer sta
 - You assess changes for risk of regression
 - You add unit tests for new functionality
 - You push to origin main before deploying
-- Deploy with `npm run deploy` (full script including react-snap postbuild); do not skip to a manual build + gh-pages unless react-snap fails and the user approves a workaround
+- Deployment is handled by Vercel's Git integration: pushing to `main` triggers a production deploy and pull requests get preview deployments. Do not run manual deploy scripts (the old `npm run deploy`/gh-pages flow has been removed).
