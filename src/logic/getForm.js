@@ -1,3 +1,5 @@
+import { apiGetUrl } from "../utils/apiUrl";
+
 export async function getForm(match) {
   const teams = [match.homeId, match.awayId];
   const fixtureForm = [];
@@ -5,9 +7,7 @@ export async function getForm(match) {
   for (let i = 0; i < teams.length; i++) {
     const team = teams[i];
 
-    let response = await fetch(
-      `${process.env.NEXT_PUBLIC_EXPRESS_SERVER}formTeam/${team}`
-    );
+    let response = await fetch(apiGetUrl(`formTeam/${team}`));
     await response.json().then((formData) => {
       formData.lastMatchTimestamp = formData.last_updated_match_timestamp
       fixtureForm[i] = formData;

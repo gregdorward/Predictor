@@ -1,6 +1,7 @@
 import { Fragment, useState } from "react";
 import ReactDOM from "react-dom";
 import { isReactSnap } from "../firebase";
+import { apiGetUrl } from "../utils/apiUrl";
 import { matches, diff } from "./getFixtures";
 import { RenderAllFixtures } from "../logic/getFixtures";
 import Collapsable from "../components/CollapsableElement";
@@ -5982,7 +5983,7 @@ export async function getScorePrediction(day, mocked) {
 
 
   const predictedScoresPromise = fetch(`${process.env.NEXT_PUBLIC_EXPRESS_SERVER}predictedScores2`);
-  const leagueAveragesPromise = fetch(`${process.env.NEXT_PUBLIC_EXPRESS_SERVER}league-averages`);
+  const leagueAveragesPromise = fetch(apiGetUrl(`league-averages`));
 
   // 2. Await everything in parallel
   const [
