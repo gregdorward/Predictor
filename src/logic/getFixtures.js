@@ -17,6 +17,7 @@ import Collapsable from "../components/CollapsableElement";
 import { userDetail, triggerGlobalPredictions } from "./authProvider";
 import { leagueStatsArray, playerStatsArray } from "../logic/getScorePredictions";
 import { getLeagueFixturesByLeagueId } from "../utils/leagueResultsAccess";
+import { apiGetUrl } from "../utils/apiUrl";
 const LazyLeagueTable = lazy(() => import('../components/LeagueTable'));
 
 var oddslib = require("oddslib");
@@ -791,7 +792,7 @@ export async function generateFixtures(
     };
     // Reset before each date load so GameStats SofaScore lookups cannot match stale games.
     arrayOfGames = [];
-    await fetch(`${process.env.NEXT_PUBLIC_EXPRESS_SERVER}scheduledEvents/${dateSS}`)
+    await fetch(apiGetUrl(`scheduledEvents/${dateSS}`))
       .then(res => res.json())
       .then(games => {
         games.forEach((game) => {
@@ -871,16 +872,14 @@ export async function generateFixtures(
       [leaguesDate] = await calculateDate(new Date());
     }
 
-    const url = `${process.env.NEXT_PUBLIC_EXPRESS_SERVER}matches/${footyStatsFormattedDate}`;
-    const formUrl = `${process.env.NEXT_PUBLIC_EXPRESS_SERVER}form/${date}`;
+    const url = apiGetUrl(`matches/${footyStatsFormattedDate}`);
+    const formUrl = apiGetUrl(`form/${date}`);
     dynamicDate = unformattedDate;
 
     matches = [];
     fixtureArray = [];
 
-    league = await fetch(
-      `${process.env.NEXT_PUBLIC_EXPRESS_SERVER}leagues/${leaguesDate}`
-    );
+    league = await fetch(apiGetUrl(`leagues/${leaguesDate}`));
 
     // render(<div></div>, "FixtureContainer");
 
@@ -920,9 +919,7 @@ export async function generateFixtures(
 
     let allLeagueResults;
 
-    allLeagueResults = await fetch(
-      `${process.env.NEXT_PUBLIC_EXPRESS_SERVER}results`
-    );
+    allLeagueResults = await fetch(apiGetUrl(`results`));
 
     if (
       league.status === 200 &&
@@ -953,7 +950,7 @@ export async function generateFixtures(
       console.log("Fetching leagues");
       for (let i = 0; i < orderedLeagues.length; i++) {
         league = await fetch(
-          `${process.env.NEXT_PUBLIC_EXPRESS_SERVER}tables/${orderedLeagues[i].element.id}/${leaguesDate}`
+          apiGetUrl(`tables/${orderedLeagues[i].element.id}/${leaguesDate}`)
         );
         // eslint-disable-next-line no-loop-func
         await league.json().then((table) => {
@@ -970,7 +967,7 @@ export async function generateFixtures(
 
       for (const orderedLeague of orderedLeagues) {
         let fixtures = await fetch(
-          `${process.env.NEXT_PUBLIC_EXPRESS_SERVER}leagueFixtures/${orderedLeague.element.id}`
+          apiGetUrl(`leagueFixtures/${orderedLeague.element.id}`)
         );
 
         let games = await fixtures.json();
@@ -978,7 +975,7 @@ export async function generateFixtures(
         let gamesShortened;
         if (games.pager.current_page < games.pager.max_page) {
           const page2 = await fetch(
-            `${process.env.NEXT_PUBLIC_EXPRESS_SERVER}leagueFixtures/${orderedLeague.element.id}&page=2`
+            apiGetUrl(`leagueFixtures/${orderedLeague.element.id}&page=2`)
           );
           let page2Data = await page2.json();
 
