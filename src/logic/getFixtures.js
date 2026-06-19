@@ -18,7 +18,14 @@ import { userDetail, triggerGlobalPredictions } from "./authProvider";
 import { leagueStatsArray, playerStatsArray } from "../logic/getScorePredictions";
 import { getLeagueFixturesByLeagueId } from "../utils/leagueResultsAccess";
 import { apiGetUrl } from "../utils/apiUrl";
+import {
+  transformGroupStageTables,
+  flattenGroupTables,
+} from "../utils/groupStageTables";
 const LazyLeagueTable = lazy(() => import('../components/LeagueTable'));
+const LazyLeagueTableExtrasPanel = lazy(() =>
+  import('../components/LeagueTableExtrasPanel')
+);
 
 var oddslib = require("oddslib");
 
@@ -137,12 +144,6 @@ function buildApiFormChartWindow(teamFormResponse, windowIndex) {
   };
 }
 
-function getGroupStageTable(league) {
-  return league?.data?.specific_tables?.find(
-    (st) => st.groups?.length > 0
-  );
-}
-
 export async function generateTables(a, leagueIdArray, allResults) {
   tableArray = [];
   basicTableArray = [];
@@ -156,57 +157,21 @@ export async function generateTables(a, leagueIdArray, allResults) {
     const hasSpecificTable = league?.data?.specific_tables?.[0]?.table;
 
     if (GROUP_STAGE_LEAGUE_IDS.includes(currentLeagueId)) {
-      const groupStage = getGroupStageTable(league) || league.data.specific_tables?.[0];
-      const cupGroups = groupStage?.groups;
+      const groupTables = transformGroupStageTables(league, currentLeagueId);
 
-      if (cupGroups?.length) {
-        cupGroups.forEach((group) => {
-          let groupInstance = [];
+      groupTables.forEach(({ id, group, table: groupInstance }) => {
+        tableArray.push({ id, group, table: groupInstance });
 
-          group.table.forEach((currentTeam, index) => {
-            let last5 = currentTeam.wdl_record.slice(-5).toUpperCase();
-
-            const team = {
-              LeagueID: currentLeagueId,
-              Position: index + 1,
-              GroupName: group.name,
-              Name: currentTeam.cleanName,
-              ID: currentTeam.id,
-              Played: currentTeam.matchesPlayed,
-              Wins: currentTeam.seasonWins_overall,
-              Draws: currentTeam.seasonDraws_overall,
-              Losses: currentTeam.seasonLosses_overall,
-              For: currentTeam.seasonGoals,
-              Against: currentTeam.seasonConceded_home + currentTeam.seasonConceded_away,
-              GoalDifference: currentTeam.seasonGoalDifference,
-              Form: last5,
-              LastXPoints: getPointsFromLastX(last5.split("")),
-              Points: currentTeam.points,
-              wdl: currentTeam.wdl_record,
-              seasonGoals: currentTeam.seasonGoals,
-              seasonConceded: currentTeam.seasonConceded,
-              zone: currentTeam.zone?.name || "mid-table",
-            };
-            groupInstance.push(team);
-          });
-
-          tableArray.push({
-            id: currentLeagueId,
-            group: group.name,
-            table: groupInstance
-          });
-
-          let basicElements = groupInstance.map((item) => ({
-            LeagueID: item.LeagueID,
-            Name: item.Name,
-            Position: item.Position,
-            GoalDifference: item.GoalDifference,
-            Played: item.Played,
-            Points: item.Points,
-          }));
-          basicTableArray.push({ id: currentLeagueId, table: basicElements });
-        });
-      }
+        const basicElements = groupInstance.map((item) => ({
+          LeagueID: item.LeagueID,
+          Name: item.Name,
+          Position: item.Position,
+          GoalDifference: item.GoalDifference,
+          Played: item.Played,
+          Points: item.Points,
+        }));
+        basicTableArray.push({ id, table: basicElements });
+      });
     } else if (
       // !league.data.specific_tables[0]?.groups &&
       // currentLeagueId !== 13973 &&
@@ -457,33 +422,41 @@ export async function renderTable(index, results, id) {
     const statistics = statsJson.data;
 
     // 2. Map the groups into an array of JSX elements
+    const allGroupTeams = flattenGroupTables(groups);
+
     const allGroupTables = groups.map((group, groupIndex) => {
       return (
-        // <div className="group-container" key={`group-wrapper-${groupIndex}`} style={{ marginBottom: '2rem' }}>
-        <> 
-        <h3 className="GroupName">{group.group || group.name || group.round}</h3>
+        <>
+          <h3 className="GroupName">{group.group || group.name || group.round}</h3>
           <Suspense fallback={<div>Loading group...</div>}>
             <LazyLeagueTable
-              Teams={group.table} // Pass the individual group's table
+              Teams={group.table}
               Id={id}
-              Stats={statistics}
               Key={`LeagueGroup${id}-${groupIndex}`}
-              GamesPlayed={statistics.game_week}
-              Results={mostRecentGames}
-              Date={todaysDateString}
-              RankingStats={leagueStatsArray?.[`leagueStats${id}`]}
-              PlayerRankingStats={playerStatsArray?.[`playerStats${id}`]}
+              standingsOnly
+              hideGroupHeader
             />
           </Suspense>
-          </>
-        // </div>
+        </>
       );
     });
 
-    // 3. Render the ENTIRE array into the target container once
     openLeagueTables.add(id);
     render(
-      <>{allGroupTables}</>,
+      <>
+        {allGroupTables}
+        <Suspense fallback={<div>Loading league statistics...</div>}>
+          <LazyLeagueTableExtrasPanel
+            Stats={statistics}
+            allTeams={allGroupTeams}
+            Id={id}
+            Results={mostRecentGames}
+            Date={todaysDateString}
+            RankingStats={leagueStatsArray?.[`leagueStats${id}`]}
+            PlayerRankingStats={playerStatsArray?.[`playerStats${id}`]}
+          />
+        </Suspense>
+      </>,
       containerId
     );
   } else if (groups) {

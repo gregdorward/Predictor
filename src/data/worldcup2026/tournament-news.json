@@ -1,6 +1,6 @@
 {
-  "updatedAt": "2026-06-15T18:30:00.000Z",
-  "wrapUp": "Matchday four reshuffled the favourites' narrative. Spain were held 0-0 by Cape Verde despite Lamine Yamal's second-half introduction, Brazil drew 1-1 with Morocco without Neymar, and the Netherlands twice surrendered the lead in a 2-2 opener with Japan. Australia stunned Türkiye 2-0 to join the United States atop Group D, Tunisia sacked Sabri Lamouchi after a 5-1 defeat to Sweden, and Argentina prepare to defend their title on 16 June without Nicolas Tagliafico but with Lionel Messi passed fit. Each story below links to the specific report it is drawn from; squad and fitness details reflect the latest available reporting as of 15 June 2026.",
+  "updatedAt": "2026-06-19T20:00:00.000Z",
+  "wrapUp": "Matchday six reshaped several group races. Canada claimed their first World Cup win in a 6-0 rout of Qatar but lost Ismaël Koné to a serious leg injury, while Neymar remains in New Jersey and will miss Brazil's Haiti fixture. Christian Pulisic is questionable for the United States' Seattle clash with Australia, England won a chaotic 4-2 opener against Croatia with Declan Rice and Bukayo Saka both being managed through fitness issues, and Lionel Messi's hat-trick launched Argentina's title defence. Tunisia turned to Hervé Renard after sacking Sabri Lamouchi, and Switzerland revived their Group B campaign with four late goals against Bosnia and Herzegovina. Each story below links to the specific report it is drawn from; squad and fitness details reflect the latest available reporting as of 19 June 2026.",
   "sections": [
     {
       "id": "injuries-fitness",
@@ -8,122 +8,98 @@
       "description": "Players ruled out, late replacements and day-to-day concerns that could change starting line-ups and squad depth.",
       "stories": [
         {
-          "id": "argentina-tagliafico-opener",
-          "headline": "Tagliafico ruled out as Messi passed fit for Algeria opener",
-          "summary": "Lyon left-back Nicolas Tagliafico will miss Argentina's Group J curtain-raiser against Algeria on 16 June with a calf strain, with Facundo Medina or Valentin Barco expected to deputise. Lionel Messi, meanwhile, is on track for his 200th cap after managing a hamstring issue through the warm-up window, and Emiliano Martinez has recovered from a broken finger to reclaim the number one shirt. Leandro Paredes and Nicolas Gonzalez are also fit, but Tagliafico's absence may extend to the Austria fixture on 22 June.",
-          "publishedDate": "2026-06-15",
+          "id": "neymar-haiti-ruled-out",
+          "headline": "Neymar ruled out of Brazil's Haiti fixture in Philadelphia",
+          "summary": "The Brazilian confederation confirmed on 19 June that Neymar will not travel with the squad for Friday's Group C match against Haiti, remaining in New Jersey to continue recovering from the calf injury he sustained playing for Santos on 17 May. He returned to partial training this week but has not yet completed full sessions with Carlo Ancelotti's side. Brazil drew 1-1 with Morocco in their opener without him and already face the tournament without Rodrygo, Estêvão and Wesley, so another missed match deepens the attack crisis before Scotland and Haiti define the group's shape.",
+          "publishedDate": "2026-06-19",
           "sources": [
             {
-              "name": "Sports Mole",
-              "url": "https://www.sportsmole.co.uk/football/argentina/world-cup-2026/predicted-lineups/messi-makes-more-history-emi-returns-predicted-argentina-lineup-vs-algeria_599169.html"
-            },
-            {
-              "name": "Daily Sabah",
-              "url": "https://www.dailysabah.com/sports/football/messis-argentina-launch-world-cup-defense-against-tricky-algeria"
-            },
-            {
-              "name": "Yahoo Sports",
-              "url": "https://sports.yahoo.com/articles/argentina-faces-injury-woes-messis-145936756.html"
-            }
-          ]
-        },
-        {
-          "id": "spain-fitness-gambles",
-          "headline": "Yamal off the bench but Spain held by Cape Verde in opener",
-          "summary": "Luis de la Fuente started without Lamine Yamal and Nico Williams in Atlanta on 15 June, with both eased back from hamstring injuries, and even Yamal's 71st-minute introduction could not break down Cape Verde in a 0-0 draw. De la Fuente had said Yamal was fit to play part of the match but not 90 minutes; the teenager still led all players with five dribbles after coming on. Euro 2024 winners remain without Fermín López, who fractured a metatarsal in May, and must sharpen their attack before facing Saudi Arabia on 21 June.",
-          "publishedDate": "2026-06-15",
-          "sources": [
-            {
-              "name": "Al Jazeera",
-              "url": "https://www.aljazeera.com/sports/2026/6/15/spain-held-to-shock-draw-by-cape-verde-in-their-world-cup-opener"
-            },
-            {
-              "name": "AS USA",
-              "url": "https://en.as.com/soccer/world-cup/spain-vs-cape-verde-live-online-score-stats-goals-updates-world-cup-2026-group-h-f202606-n/"
-            },
-            {
-              "name": "Goal",
-              "url": "https://www.goal.com/en-gb/lists/barcelona-lamine-yamal-spain-world-cup-availability-hamstring-injury/blt2e6ee87f5776fd24"
-            }
-          ]
-        },
-        {
-          "id": "brazil-attacking-crisis",
-          "headline": "Brazil draw with Morocco without Neymar as Haiti return looms",
-          "summary": "Vinícius Júnior equalised in a 1-1 draw with Morocco on 13 June, but Brazil created without Neymar, who missed the opener with a grade-two calf injury and is targeting a return to training this week ahead of the Haiti fixture on 19 June. Carlo Ancelotti said Neymar may rejoin the group next week, though a starting role against Haiti still looks unlikely after a month out. Brazil have already lost Rodrygo, Estêvão and Wesley before the tournament, leaving Ancelotti's attack thinner than their pedigree suggests.",
-          "publishedDate": "2026-06-14",
-          "sources": [
-            {
-              "name": "CBS Sports",
-              "url": "https://www.cbssports.com/soccer/news/brazil-vs-morocco-live-updates-world-cup-2026-score-result/live/"
+              "name": "AP News",
+              "url": "https://apnews.com/article/neymar-brazil-world-cup-haiti-6725c3989575f942447b6e3df1ddde71"
             },
             {
               "name": "The Independent",
               "url": "https://www.independent.co.uk/sport/football/world-cup-2026-injury-latest-neymar-lamine-yamal-christian-pulisic-b2994892.html"
-            },
-            {
-              "name": "BBC Sport",
-              "url": "https://www.bbc.com/sport/football/articles/c4gyxvxqrk8o"
             }
           ]
         },
         {
-          "id": "usa-pulisic-calf",
-          "headline": "Pulisic plays down calf knock after precautionary half-time withdrawal",
-          "summary": "Christian Pulisic was substituted at half-time during the United States' 4-1 win over Paraguay on 12 June after taking a kick to his left calf on top of a pre-existing hamstring strain. The AC Milan forward and Mauricio Pochettino both described the change as precautionary, with Pulisic telling reporters it was \"nothing\" serious. He had set up Folarin Balogun's first goal and was the team's main creative outlet in a dominant opening 45 minutes, so any setback would be felt before the Australia fixture on 19 June.",
-          "publishedDate": "2026-06-13",
-          "sources": [
-            {
-              "name": "The Independent",
-              "url": "https://www.independent.co.uk/sport/football/world-cup-2026-injury-latest-neymar-lamine-yamal-christian-pulisic-b2994892.html"
-            },
-            {
-              "name": "Al Jazeera",
-              "url": "https://www.aljazeera.com/sports/2026/6/13/usa-vs-paraguay-fifa-world-cup-2026-pulisic-injury-subbed-soccer"
-            },
-            {
-              "name": "MARCA",
-              "url": "https://www.marca.com/en/world-cup/2026/06/13/pulisic-injury-update-the-truth-behind-the-issue-that-sidelined-the-ac-milan-star-during-the-u-s-match.html"
-            }
-          ]
-        },
-        {
-          "id": "canada-davies-opener",
-          "headline": "Canada earn first World Cup point without Davies",
-          "summary": "Co-hosts Canada drew 1-1 with Bosnia and Herzegovina at BMO Field on 12 June, Cyle Larin equalising in the 78th minute after Jovo Lukic had headed Bosnia ahead. Alphonso Davies did not feature as he continues to recover from a hamstring injury sustained in May, though Jesse Marsch said an MRI showed encouraging progress and Davies may return for the Qatar fixture on 18 June. Centre-back Moïse Bombito was available after winning his fitness race. The point was Canada's first in World Cup history, ending a run of six consecutive group-stage defeats.",
-          "publishedDate": "2026-06-12",
+          "id": "saka-achilles-managed",
+          "headline": "Tuchel unlikely to start Saka until Panama group finale",
+          "summary": "Thomas Tuchel said Bukayo Saka will be nursed through the next week of training as England manage the winger's Achilles problem, which troubled him during Arsenal's Premier League run-in. Saka came off the bench in the 72nd minute of the 4-2 win over Croatia on 17 June and impressed alongside Marcus Rashford, but Tuchel hinted he may not start against Ghana on 23 June, with Noni Madueke favoured on the right for now. England's depth on the wings gives Tuchel options, yet delaying Saka's full return could matter in a Group L race that also features Panama and Ghana.",
+          "publishedDate": "2026-06-19",
           "sources": [
             {
               "name": "Sky Sports",
-              "url": "https://www.skysports.com/football/canada-vs-bosnia-and-herzegovina/live/549768"
-            },
-            {
-              "name": "Sportstar",
-              "url": "https://sportstar.thehindu.com/football/fifa-world-cup/canada-vs-bosnia-and-herzegovina-live-score-fifa-world-cup-2026-can-vs-bih-live-goal-updates-highlights/article71094856.ece"
+              "url": "https://www.skysports.com/football/news/12040/13555396/world-cup-2026-bukayo-saka-unlikely-to-start-for-england-until-panama-game-thomas-tuchel-says"
             },
             {
               "name": "BBC Sport",
-              "url": "https://www.bbc.co.uk/sport/football/articles/cvgzz9gpyjmo"
+              "url": "https://www.bbc.com/sport/football/articles/cwylqvgne7lo"
             }
           ]
         },
         {
-          "id": "usa-cardoso-richards",
-          "headline": "Richards starts as United States thump Paraguay 4-1",
-          "summary": "Johnny Cardoso was ruled out after ankle surgery, but Mauricio Pochettino named Chris Richards at centre-back for the 4-1 Group D opener on 12 June, the Crystal Palace defender having recovered from torn ankle ligaments in May. Folarin Balogun scored twice in a joint-record World Cup win for the hosts. Pochettino had confirmed all 26 remaining players were available beforehand, with Group D also featuring Australia and Türkiye.",
-          "publishedDate": "2026-06-12",
+          "id": "kone-surgery-canada",
+          "headline": "Koné set for surgery after leg break in Canada's 6-0 win",
+          "summary": "Ismaël Koné was stretchered off and taken to hospital for surgery after Assim Madibo's tackle in Canada's 6-0 victory over Qatar on 18 June at BC Place, with Jesse Marsch saying he heard the \"bones snap\" from the bench. Madibo was sent off along with teammate Homam Ahmed as Qatar finished with nine men, and Nathan Saliba, who replaced Koné, scored and held up his team-mate's shirt in tribute. Canada move to four points in Group B but lose a midfielder Stephen Eustáquio described as the team's \"X factor\" before the Switzerland decider.",
+          "publishedDate": "2026-06-18",
           "sources": [
             {
-              "name": "US Soccer",
-              "url": "https://www.ussoccer.com/stories/2026/06/usmnt/chris-richards-fitness-vs-paraguay-world-cup-group-stage"
+              "name": "AP News",
+              "url": "https://apnews.com/article/canada-kone-qatar-world-cup-adeb49466729647329289b1153b17330"
+            },
+            {
+              "name": "FIFA",
+              "url": "https://www.fifa.com/en/tournaments/mens/worldcup/canadamexicousa2026/articles/canada-qatar-match-report-highlights"
+            }
+          ]
+        },
+        {
+          "id": "pulisic-australia-doubt",
+          "headline": "Pulisic questionable for United States showdown with Australia",
+          "summary": "Christian Pulisic has trained separately from the United States squad all week after coming off at half-time against Paraguay with a left calf issue, and Mauricio Pochettino said on 18 June that a final call would follow a meeting with medical staff on the eve of the Group D fixture in Seattle. Pulisic was influential in the 4-1 opener before the precautionary withdrawal, and his availability against an Australia side level on points would shape who tops the group ahead of Türkiye. Pochettino suggested Brenden Aaronson, Tim Weah and Gio Reyna are among the options if the Milan forward is not ready.",
+          "publishedDate": "2026-06-18",
+          "sources": [
+            {
+              "name": "AP News",
+              "url": "https://apnews.com/article/usmnt-world-cup-christian-pulisic-395f56394938d06b726f5c1dc7dc5c4a"
+            },
+            {
+              "name": "CBS Sports",
+              "url": "https://www.cbssports.com/soccer/news/christian-pulisic-world-cup-injury-update-usmnt-australia/"
+            }
+          ]
+        },
+        {
+          "id": "davies-return-qatar",
+          "headline": "Davies cleared to play but starts on bench against Qatar",
+          "summary": "Alphonso Davies was declared available for Canada's second group match on 18 June after months out with a hamstring injury suffered in Bayern Munich's Champions League semi-final, though Jesse Marsch kept him on the bench for the 6-0 win over Qatar. Marsch said Davies had trained all week and looked \"really good\", with the decision hinging on match rhythm rather than fitness alone. Co-hosts Canada can still deploy their captain against Switzerland on 24 June as they close in on a first knockout berth.",
+          "publishedDate": "2026-06-17",
+          "sources": [
+            {
+              "name": "Sportsnet",
+              "url": "https://www.sportsnet.ca/fifa-world-cup/article/canada-captain-alphonso-davies-available-to-play-vs-qatar/"
+            },
+            {
+              "name": "The Canadian Press",
+              "url": "https://www.cp24.com/news/sports/2026/06/18/alphonso-davies-available-for-canada-vs-qatar-world-cup-match-coach/"
+            }
+          ]
+        },
+        {
+          "id": "declan-rice-precaution",
+          "headline": "Rice substituted as precaution in England's Croatia win",
+          "summary": "Declan Rice was withdrawn in the 72nd minute of England's 4-2 victory over Croatia on 17 June after reporting discomfort in his lower back and upper hamstring, with Thomas Tuchel calling the change protective rather than reactive to a new serious injury. Rice had assisted Harry Kane's headed second goal and told ITV he was \"good as gold\", expecting to face Ghana on 23 June. Reece James slotted into midfield after the change as England chased a third tournament opening win in a row, but Rice's availability remains central to Tuchel's balance in Group L.",
+          "publishedDate": "2026-06-17",
+          "sources": [
+            {
+              "name": "The Standard",
+              "url": "https://www.standard.co.uk/sport/football/england-rice-injury-latest-limping-b1286556.html"
             },
             {
               "name": "BBC Sport",
-              "url": "https://www.bbc.com/sport/football/live/c78y1jyknv1t"
-            },
-            {
-              "name": "Field Level Media",
-              "url": "https://fieldlevelmedia.com/news/chris-richards-starting-usmnt-opener-vs-paraguay-matt-freese-in-net/"
+              "url": "https://www.bbc.com/sport/football/articles/cwylqvgne7lo"
             }
           ]
         }
@@ -135,42 +111,18 @@
       "description": "Omissions, late call-ups and manager decisions that reveal how teams plan to navigate the expanded format.",
       "stories": [
         {
-          "id": "argentina-balerdi",
-          "headline": "Argentina lose Balerdi as Senesi confirmed as replacement",
-          "summary": "Leonardo Balerdi suffered a soleus muscle tear in training and the AFA confirmed he would miss the World Cup. On 12 June, the federation announced that Marcos Senesi would take his place, ending speculation that Lionel Scaloni might recall a midfielder instead. Senesi, who has joined Tottenham on a free transfer, adds cover alongside Cristian Romero, Lisandro Martínez and Nicolás Otamendi. Argentina open Group J against Algeria on 16 June.",
-          "publishedDate": "2026-06-12",
+          "id": "chalobah-livramento",
+          "headline": "Chalobah replaces injured Livramento in England squad",
+          "summary": "Tino Livramento was ruled out of the World Cup on 16 June after a calf injury in training, with a scan confirming he could not continue in the United States. England called Trevoh Chalobah from the standby list to fill the defensive vacancy, though the Chelsea centre-back was not expected to feature in the Croatia opener in Dallas. Chalobah travelled to the Kansas City base while the matchday squad headed to Texas, giving Thomas Tuchel cover before Ghana and Panama complete Group L.",
+          "publishedDate": "2026-06-16",
           "sources": [
             {
-              "name": "Buenos Aires Times",
-              "url": "https://www.batimes.com.ar/news/sports/argentina-calls-up-senesi-for-world-cup-after-balerdi-injury.phtml"
+              "name": "FIFA",
+              "url": "https://www.fifa.com/en/tournaments/mens/worldcup/canadamexicousa2026/articles/trevor-chalobah-tino-livramento-england"
             },
             {
-              "name": "SuperSport",
-              "url": "https://supersport.com/football/news/b058df1d-5e49-4a8a-a9a2-2885a309f178/argentina-centre-back-balerdi-out-of-world-cup"
-            },
-            {
-              "name": "beIN SPORTS",
-              "url": "https://www.beinsports.com/en-us/soccer/fifa-world-cup-2026/articles/who-will-replace-balerdi-at-the-fifa-world-cup-2026-scaloni-s-options-2026-06-06"
-            }
-          ]
-        },
-        {
-          "id": "japan-endo-withdrawal",
-          "headline": "Endo withdraws and retires as Machino called up before Netherlands opener",
-          "summary": "Japan captain Wataru Endo pulled out of the World Cup on 11 June after failing to recover from a foot injury sustained at Liverpool in February, and announced his immediate retirement from international football with 73 caps. Borussia Mönchengladbach forward Shūto Machino was named as his replacement, while Ajax defender Kō Itakura takes over as captain. Japan had already lost Kaoru Mitoma and Takumi Minamino to injury, thinning a midfield that drew 2-2 with the Netherlands in Dallas on 14 June.",
-          "publishedDate": "2026-06-12",
-          "sources": [
-            {
-              "name": "Al Jazeera",
-              "url": "https://www.aljazeera.com/sports/2026/6/12/japans-wataru-endo-retires-after-injury-ends-world-cup-2026-dream"
-            },
-            {
-              "name": "ESPN",
-              "url": "https://africa.espn.com/football/story/_/id/49032127/japan-captain-wataru-endo-world-cup-injury-announces-retirement"
-            },
-            {
-              "name": "Sportsnet",
-              "url": "https://www.sportsnet.ca/fifa-world-cup/article/japan-captain-wataru-endo-out-for-world-cup-retires-from-international-duty/"
+              "name": "BBC Sport",
+              "url": "https://www.bbc.com/sport/football/articles/ckgp482v49xo"
             }
           ]
         }
@@ -182,38 +134,34 @@
       "description": "Travel, visa and logistical problems that could affect match readiness rather than just headlines.",
       "stories": [
         {
-          "id": "tunisia-lamouchi-sacked",
-          "headline": "Tunisia sack Lamouchi after 5-1 Sweden defeat",
-          "summary": "Sabri Lamouchi was dismissed on 15 June, the day after Tunisia's 5-1 opening defeat to Sweden in Monterrey, with Mondher Kebaier installed as interim coach ahead of the Japan fixture on 21 June. Lamouchi had already faced pressure after a 5-0 warm-up loss to Belgium and was criticised for having his son at the training camp despite no official role. Tunisia must now regroup in a Group F pool where Japan top the standings after drawing with the Netherlands and Sweden sit second after their five-goal haul.",
-          "publishedDate": "2026-06-15",
+          "id": "switzerland-hydration-breaks",
+          "headline": "Yakin times triple substitution to FIFA hydration pause",
+          "summary": "Murat Yakin said he used the second-half hydration break to introduce Johan Manzambi and Ruben Vargas, betting that Bosnia and Herzegovina could not handle an abrupt change of tempo in a previously goalless Group B match on 18 June. Switzerland scored four times after the 74th minute to win 4-1 at SoFi Stadium, with Manzambi netting twice after the pause. Several teams have grumbled about FIFA's new breaks killing momentum, but the Swiss turned the stoppage into a tactical weapon before facing Canada with four points.",
+          "publishedDate": "2026-06-18",
           "sources": [
             {
-              "name": "Al Jazeera",
-              "url": "https://www.aljazeera.com/sports/2026/6/15/tunisia-sack-boss-sabri-lamouchi-after-world-cup-thrashing-by-sweden"
+              "name": "AP News",
+              "url": "https://apnews.com/article/switzerland-bosnia-score-world-cup-e5edc7f0e9218d0919cf14610c7443d2"
             },
             {
-              "name": "SBS News",
-              "url": "https://www.sbs.com.au/news/article/fifa-world-cup-2026-results-june-15/ocls1mcso"
+              "name": "Sky Sports",
+              "url": "https://www.skysports.com/football/switzerland-vs-bosnia-and-herzegovina/report/549791"
             }
           ]
         },
         {
-          "id": "england-equipment-theft",
-          "headline": "England training gear stolen en route to Kansas City base",
-          "summary": "Balls, boots and other equipment were stolen from a vehicle transferring England's kit from their Florida pre-tournament camp to Swope Soccer Village in Kansas City on 13 June, just before the squad were due to arrive. Kansas City police arrested two suspects and most items were subsequently recovered, but the incident disrupted setup ahead of Thomas Tuchel's first full training day on 14 June. England open Group L against Croatia in Dallas on 17 June.",
-          "publishedDate": "2026-06-13",
+          "id": "renard-tunisia",
+          "headline": "Renard appointed Tunisia coach after Lamouchi sacking",
+          "summary": "Tunisia replaced Sabri Lamouchi with Hervé Renard on 16 June, two days after a 5-1 opening defeat to Sweden in Monterrey that left the side bottom of Group F. Renard, who has coached Morocco and Saudi Arabia at recent World Cups, has only days to prepare for a Japan fixture on 21 June before a closing meeting with the Netherlands. The emergency hire follows warm-up turmoil including a 5-0 loss to Belgium and off-field criticism of Lamouchi's camp arrangements, leaving Tunisia scrambling for organisation at the tournament.",
+          "publishedDate": "2026-06-16",
           "sources": [
             {
-              "name": "BBC Sport",
-              "url": "https://www.bbc.co.uk/sport/football/articles/cwyldy8w0jpo"
+              "name": "France 24",
+              "url": "https://www.france24.com/en/sport/20260616-world-cup-2026-tunisia-sacks-coach-lamouchi-appoints-renard-after-thrashing-by-sweden"
             },
             {
-              "name": "Al Jazeera",
-              "url": "https://www.aljazeera.com/sports/2026/6/13/england-training-equipment-stolen-ahead-of-squads-arrival-in-kansas-city"
-            },
-            {
-              "name": "CBS Sports",
-              "url": "https://www.cbssports.com/soccer/news/england-gear-stolen-from-kansas-city-team-camp-ahead-of-world-cup-campaign-reportedly-recovered/"
+              "name": "FOX Sports",
+              "url": "https://www.foxsports.com/stories/soccer/2026-fifa-world-cup-tunisia-coach-fired-herve-renard"
             }
           ]
         }
@@ -225,82 +173,66 @@
       "description": "Deeper previews on favourites, group dynamics and how the 48-team format changes the path to the final.",
       "stories": [
         {
-          "id": "spain-cape-verde-upset",
-          "headline": "Cape Verde hold Spain as favourites stumble on matchday four",
-          "summary": "Debutants Cape Verde earned a 0-0 draw against Spain in Atlanta despite registering just three shots on target, with 40-year-old goalkeeper Vozinha making seven saves. Spain dominated possession but lacked the incision of Yamal and Williams, who were both managed off the bench, echoing their meek knockout exits in 2018 and 2022. Opta data showed 27 Spanish attempts in total, yet Group H suddenly looks less straightforward with Saudi Arabia and Uruguay still to come.",
-          "publishedDate": "2026-06-15",
-          "sources": [
-            {
-              "name": "Al Jazeera",
-              "url": "https://www.aljazeera.com/sports/2026/6/15/spain-held-to-shock-draw-by-cape-verde-in-their-world-cup-opener"
-            },
-            {
-              "name": "NBC News",
-              "url": "https://www.nbcnews.com/sports/soccer/live-blog/fifa-world-cup-2026-june-15-live-updates-rcna350042"
-            },
-            {
-              "name": "AS USA",
-              "url": "https://en.as.com/soccer/world-cup/spain-vs-cape-verde-live-online-score-stats-goals-updates-world-cup-2026-group-h-f202606-n/"
-            }
-          ]
-        },
-        {
-          "id": "group-c-depleted-opener",
-          "headline": "Depleted Brazil and Morocco share points in Group C opener",
-          "summary": "Ismael Saibari gave Morocco a 21st-minute lead before Vinícius Júnior levelled in a 1-1 draw that reflected both sides' injury disruption. Brazil were without Neymar, Rodrygo, Estêvão and Wesley, while Morocco had replaced Ezzalzouli and Aguerd before kick-off. Neither team found a winner despite 27 combined attempts and eight on target, leaving Haiti and Scotland to fight for scraps as Brazil and Morocco turn to supposedly softer fixtures on matchday two.",
-          "publishedDate": "2026-06-14",
-          "sources": [
-            {
-              "name": "CBS Sports",
-              "url": "https://www.cbssports.com/soccer/news/brazil-vs-morocco-live-updates-world-cup-2026-score-result/live/"
-            },
-            {
-              "name": "Yahoo Sports",
-              "url": "https://sports.yahoo.com/soccer/live/world-cup-scores-results-brazil-and-morocco-battle-to-1-1-draw-while-australia-stuns-turkiye-in-the-nightcap-145258881.html"
-            },
-            {
-              "name": "Sky Sports",
-              "url": "https://www.skysports.com/football/news/12098/13543087/world-cup-2026-group-c-guide-fixtures-schedule-standings-and-odds-for-scotland-brazil-morocco-and-haiti"
-            }
-          ]
-        },
-        {
-          "id": "group-d-australia-turkiye",
-          "headline": "Australia stun Türkiye to join United States atop Group D",
-          "summary": "Nestory Irankunda and Connor Metcalfe scored as the Socceroos beat Türkiye 2-0 in Vancouver on 14 June despite conceding 71.7% possession and facing 30 shots. Debutant goalkeeper Patrick Beach made eight saves to keep a clean sheet, leaving Australia level on points with the United States ahead of their Seattle meeting on 19 June. Türkiye, back at a World Cup for the first time since 2002, must regroup against Paraguay after dominating territorially without reward.",
-          "publishedDate": "2026-06-14",
+          "id": "canada-historic-win",
+          "headline": "David hat-trick seals Canada's first World Cup victory",
+          "summary": "Jonathan David scored three times as co-hosts Canada beat nine-man Qatar 6-0 on 18 June, their first win at a men's World Cup finals and a result that leaves them on the verge of the Round of 32 with four Group B points. Cyle Larin and Nathan Saliba also scored in Vancouver, where Mohamed Manai's own goal compounded Qatar's misery after two red cards. David became the first player to score a World Cup hat-trick on home soil since Geoff Hurst in 1966, though Koné's serious injury tempered the celebrations.",
+          "publishedDate": "2026-06-18",
           "sources": [
             {
               "name": "FIFA",
-              "url": "https://www.fifa.com/en/tournaments/mens/worldcup/canadamexicousa2026/articles/australia-turkiye-highlights-match-report"
+              "url": "https://www.fifa.com/en/tournaments/mens/worldcup/canadamexicousa2026/articles/canada-qatar-match-report-highlights"
             },
             {
-              "name": "ESPN",
-              "url": "https://www.espn.com/soccer/report/_/gameId/760421"
-            },
-            {
-              "name": "Socceroos",
-              "url": "https://socceroos.com.au/news/socceroos-defeat-turkiye-2-0-kick-fifa-world-cup-2026tm-campaign-style"
+              "name": "NBC News",
+              "url": "https://www.nbcnews.com/sports/soccer/canada-jonathan-david-world-cup-qatar-results-rcna350819"
             }
           ]
         },
         {
-          "id": "group-f-netherlands-japan",
-          "headline": "Japan fight back twice to deny depleted Netherlands in Dallas",
-          "summary": "Ronald Koeman's side twice led through Virgil van Dijk and Crysencio Summerville but were pegged back by Keito Nakamura and a late Daichi Kamada header in a 2-2 draw on 14 June. Bart Verbruggen started despite a hip concern, yet the Dutch failed to win a World Cup match against an Asian nation for the first time in six attempts. Japan top Group F on disciplinary tiebreakers after Sweden's 5-1 win over Tunisia, setting up a pool where squad depth and composure under pressure may decide who advances.",
-          "publishedDate": "2026-06-14",
+          "id": "switzerland-late-flurry",
+          "headline": "Manzambi double lifts Switzerland to brink of knockouts",
+          "summary": "Substitute Johan Manzambi scored twice in the closing stages as Switzerland beat Bosnia and Herzegovina 4-1 on 18 June, rebounding from a flat 1-1 draw with Qatar in their opener. Ruben Vargas and captain Granit Xhaka added late goals after Tarik Muharemovic's red card, while Ermin Mahmic salvaged a consolation for Bosnia. Murat Yakin's side move top of Group B on four points and need only a point against Canada to guarantee progression, with Bosnia still alive on one point ahead of Qatar.",
+          "publishedDate": "2026-06-18",
           "sources": [
             {
-              "name": "BBC Sport",
-              "url": "https://www.bbc.com/sport/football/live/c30ypmd6g35t"
+              "name": "Sky Sports",
+              "url": "https://www.skysports.com/football/switzerland-vs-bosnia-and-herzegovina/report/549791"
             },
             {
-              "name": "Opta Analyst",
-              "url": "https://theanalyst.com/articles/netherlands-vs-japan-stats-world-cup-2026"
+              "name": "AP News",
+              "url": "https://apnews.com/article/switzerland-bosnia-score-world-cup-e5edc7f0e9218d0919cf14610c7443d2"
+            }
+          ]
+        },
+        {
+          "id": "argentina-messi-hat-trick",
+          "headline": "Messi hat-trick launches Argentina title defence",
+          "summary": "Lionel Messi scored three times as defending champions Argentina beat Algeria 3-0 on 17 June in Kansas City, equalling Miroslav Klose's record of 16 World Cup goals. The 38-year-old opened with a first-half curler, turned in a parried effort early in the second period and sealed his hat-trick from the edge of the box, 20 years after his tournament debut in 2006. Argentina top Group J ahead of Austria, Jordan and Algeria, with Messi able to become the outright record scorer against Austria on 22 June.",
+          "publishedDate": "2026-06-17",
+          "sources": [
+            {
+              "name": "FIFA",
+              "url": "https://www.fifa.com/en/tournaments/mens/worldcup/canadamexicousa2026/articles/argentina-v-algeria-highlights-match-report"
             },
             {
-              "name": "Al Jazeera",
-              "url": "https://www.aljazeera.com/sports/liveblog/2026/6/14/netherlands-vs-japan-live-world-cup-2026"
+              "name": "Sky Sports",
+              "url": "https://www.skysports.com/football/argentina-vs-algeria/report/549784"
+            }
+          ]
+        },
+        {
+          "id": "england-croatia-opener",
+          "headline": "England overpower Croatia in six-goal Dallas thriller",
+          "summary": "Harry Kane scored twice, including a retaken penalty, as England beat Croatia 4-2 on 17 June in a breathless Group L opener that swung four times in the first half. Jude Bellingham and Marcus Rashford struck after the break as Thomas Tuchel's side registered 22 shots and took the handbrake off in the second period, according to the head coach. Croatia equalised through Martin Baturina and Petar Musa, but England top the group ahead of Ghana and Panama with defensive issues still to address.",
+          "publishedDate": "2026-06-17",
+          "sources": [
+            {
+              "name": "FIFA",
+              "url": "https://www.fifa.com/en/tournaments/mens/worldcup/canadamexicousa2026/articles/england-croatia-highlights-match-report"
+            },
+            {
+              "name": "Sky Sports",
+              "url": "https://www.skysports.com/football/news/12309/13552729/world-cup-2026-england-4-2-croatia-harry-kane-jude-bellingham-and-marcus-rashford-on-target-as-three-lions-make-winning-start"
             }
           ]
         }
