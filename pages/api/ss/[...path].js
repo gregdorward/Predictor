@@ -16,15 +16,15 @@ const ORIGIN =
 //   swr: how long a stale copy may be served instantly while it refreshes.
 // Keep these keys in sync with PROXIED_ENDPOINTS in src/utils/apiUrl.js.
 const CACHE_RULES = {
-  matches: { sMaxAge: 120, swr: 86400 },
-  results: { sMaxAge: 300, swr: 86400 },
-  tables: { sMaxAge: 600, swr: 86400 },
-  leagues: { sMaxAge: 300, swr: 86400 },
-  form: { sMaxAge: 300, swr: 86400 },
-  formTeam: { sMaxAge: 300, swr: 86400 },
-  leagueFixtures: { sMaxAge: 300, swr: 86400 },
-  scheduledEvents: { sMaxAge: 300, swr: 86400 },
-  "league-averages": { sMaxAge: 600, swr: 86400 },
+  matches: { sMaxAge: 600, swr: 86400 },
+  results: { sMaxAge: 1200, swr: 86400 },
+  tables: { sMaxAge: 1200, swr: 86400 },
+  leagues: { sMaxAge: 1200, swr: 86400 },
+  form: { sMaxAge: 600, swr: 86400 },
+  formTeam: { sMaxAge: 2400, swr: 86400 },
+  leagueFixtures: { sMaxAge: 600, swr: 86400 },
+  scheduledEvents: { sMaxAge: 1200, swr: 86400 },
+  "league-averages": { sMaxAge: 100, swr: 86400 },
 };
 
 function jsonError(body, status, extraHeaders) {
