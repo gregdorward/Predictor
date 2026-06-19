@@ -651,5 +651,6 @@ export function mapMatchToFixturePageData(match) {
       away: match.formAway?.allTeamResults ?? [],
     },
     modelOutputs: buildFixtureModelOutputs(match),
+    headToHead: match.headToHead ?? null,
   };
 }

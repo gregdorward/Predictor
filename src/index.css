@@ -6158,12 +6158,14 @@ input:active+.design::after {
 
 .FixturePage-modelOutputsCard {
   width: 100%;
-  margin: 0 0 1.35rem;
+  max-width: 100%;
+  margin: 0 auto 1.35rem;
   padding: 0.85rem 1rem 1rem;
   border-radius: 12px;
   border: 1px solid var(--third-background-color);
   background-color: var(--background-color);
   box-shadow: 0 1px 6px rgba(0, 0, 0, 0.05);
+  box-sizing: border-box;
 }
 
 .FixturePage-modelOutputsChart {
@@ -6175,6 +6177,80 @@ input:active+.design::after {
   margin: 0;
   color: var(--secondary-text-color, #666);
   font-size: 0.95rem;
+}
+
+.FixturePage-h2hCard {
+  width: 100%;
+  max-width: 100%;
+  margin: 0 auto 1.35rem;
+  padding: 0.85rem 1rem 1rem;
+  border-radius: 12px;
+  border: 1px solid var(--third-background-color);
+  background-color: var(--background-color);
+  box-shadow: 0 1px 6px rgba(0, 0, 0, 0.05);
+  box-sizing: border-box;
+}
+
+.FixturePage-h2hSummary {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.35rem 1rem;
+  margin-bottom: 1rem;
+}
+
+.FixturePage-h2hSubheading {
+  margin: 0 0 0.65rem;
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--text-color);
+}
+
+.FixturePage-h2hMatches {
+  display: flex;
+  flex-direction: column;
+  gap: 0.65rem;
+}
+
+.FixturePage-h2hMatch {
+  border-top: 1px solid var(--third-background-color);
+  padding-top: 0.65rem;
+}
+
+.FixturePage-h2hMatchMeta {
+  margin-bottom: 0.35rem;
+}
+
+.FixturePage-h2hMatchDate {
+  font-size: 0.82rem;
+  color: var(--secondary-text-color, #666);
+}
+
+.FixturePage-h2hMatchRow {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+  gap: 0.75rem;
+  align-items: center;
+}
+
+.FixturePage-h2hMatchTeam {
+  font-size: 0.92rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.FixturePage-h2hMatchTeam--home {
+  text-align: right;
+}
+
+.FixturePage-h2hMatchTeam--away {
+  text-align: left;
+}
+
+.FixturePage-h2hMatchScore {
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
 }
 
 .FixturePage-grid {
@@ -6565,6 +6641,16 @@ input:active+.design::after {
     padding-right: 0.45rem;
   }
 
+  .FixturePage-h2hCard,
+  .FixturePage-modelOutputsCard {
+    padding-left: 0.55rem;
+    padding-right: 0.55rem;
+  }
+
+  .FixturePage-h2hSummary {
+    grid-template-columns: 1fr;
+  }
+
   .FixturePage-pairedHeaders {
     padding-top: 0.45rem;
   }
@@ -6644,6 +6730,41 @@ input:active+.design::after {
   .FixturePage-pairedRow--stretch {
     padding-left: 0.35rem;
     padding-right: 0.35rem;
+  }
+
+  .FixturePage-h2hCard,
+  .FixturePage-modelOutputsCard {
+    padding-left: 0.45rem;
+    padding-right: 0.45rem;
+  }
+
+  .FixturePage-h2hCard .FixturePage-statGroupTitle,
+  .FixturePage-h2hSubheading {
+    text-align: center;
+    border-left: none;
+    border-bottom: 2px solid var(--primary-color);
+    border-radius: 0;
+  }
+
+  .FixturePage-h2hSubheading {
+    border-bottom: none;
+    padding-bottom: 0;
+  }
+
+  .FixturePage-h2hMatchMeta {
+    text-align: center;
+  }
+
+  .FixturePage-h2hMatchRow {
+    grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+    justify-items: center;
+    text-align: center;
+  }
+
+  .FixturePage-h2hMatchTeam--home,
+  .FixturePage-h2hMatchTeam--away {
+    text-align: center;
+    white-space: normal;
   }
 
   .FixturePage-cardTitle {

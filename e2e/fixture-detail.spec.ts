@@ -35,6 +35,7 @@ test.describe('Fixture detail page', () => {
     await expect(page.getByRole('heading', { name: 'Defensive' })).toBeVisible();
     await expect(page.getByRole('heading', { name: 'Match Tendencies' })).toBeVisible();
     await expect(page.getByRole('heading', { name: 'Model Outputs' })).toBeVisible();
+    await expect(page.getByRole('heading', { name: 'Head to Head' })).toBeVisible();
     await expect(page.getByRole('heading', { name: 'Season Stats' })).toHaveCount(0);
   });
 

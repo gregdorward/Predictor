@@ -194,6 +194,76 @@ function ModelOutputsChart({ modelOutputs, homeTeamName, awayTeamName, theme, co
   );
 }
 
+function HeadToHeadSection({ headToHead, homeTeamName, awayTeamName }) {
+  if (!headToHead?.summary) {
+    return null;
+  }
+
+  const { summary, recentMatches } = headToHead;
+
+  return (
+    <section className="FixturePage-h2hCard">
+      <h3 className="FixturePage-statGroupTitle">Head to Head</h3>
+
+      <div className="FixturePage-h2hSummary">
+        <StatRow label="Total matches" value={summary.totalMatches} />
+        <StatRow
+          label={`${homeTeamName} wins`}
+          value={
+            summary.homeWinPercent != null
+              ? `${summary.homeTeamWins} (${summary.homeWinPercent}%)`
+              : summary.homeTeamWins
+          }
+        />
+        <StatRow
+          label={`${awayTeamName} wins`}
+          value={
+            summary.awayWinPercent != null
+              ? `${summary.awayTeamWins} (${summary.awayWinPercent}%)`
+              : summary.awayTeamWins
+          }
+        />
+        <StatRow label="Draws" value={summary.draws} />
+      </div>
+
+      {recentMatches.length > 0 ? (
+        <>
+          <h4 className="FixturePage-h2hSubheading">Recent meetings</h4>
+          <div className="FixturePage-h2hMatches">
+            {recentMatches.map((meeting, index) => (
+              <div
+                key={`${meeting.date}-${index}`}
+                className="FixturePage-h2hMatch"
+              >
+                <div className="FixturePage-h2hMatchMeta">
+                  <span className="FixturePage-h2hMatchDate">{meeting.date}</span>
+                </div>
+                <div className="FixturePage-h2hMatchRow">
+                  <span
+                    className="FixturePage-h2hMatchTeam FixturePage-h2hMatchTeam--home"
+                    title={meeting.homeTeam}
+                  >
+                    {meeting.homeTeam}
+                  </span>
+                  <span className="FixturePage-h2hMatchScore">
+                    {meeting.homeGoals} – {meeting.awayGoals}
+                  </span>
+                  <span
+                    className="FixturePage-h2hMatchTeam FixturePage-h2hMatchTeam--away"
+                    title={meeting.awayTeam}
+                  >
+                    {meeting.awayTeam}
+                  </span>
+                </div>
+              </div>
+            ))}
+          </div>
+        </>
+      ) : null}
+    </section>
+  );
+}
+
 function ResultsColumn({ side, matches }) {
   return (
     <div
@@ -563,6 +633,14 @@ function TeamPage({ matchId }) {
             tooltipBackground={tooltipBackground}
           />
         </section>
+      ) : null}
+
+      {matchId && pageData?.headToHead ? (
+        <HeadToHeadSection
+          headToHead={pageData.headToHead}
+          homeTeamName={storedFixtureDetailsJson.homeTeamName}
+          awayTeamName={storedFixtureDetailsJson.awayTeamName}
+        />
       ) : null}
 
       <div className="FixturePage-pairedBlock FixturePage-pairedBlock--results">

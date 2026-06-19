@@ -17,6 +17,7 @@ import {
   formatDateForApi,
 } from "./buildSingleMatch";
 import { resolveLeagueResultsForCompetition } from "./leagueResultsLoader";
+import { buildFixtureHeadToHead } from "./fixturePageH2h";
 
 export async function predictMatchById(matchId) {
   const snapshotRes = await fetch(apiGetUrl(`match-snapshot/${matchId}`));
@@ -110,6 +111,8 @@ export async function predictMatchById(matchId) {
   }
 
   await enrichMatchForFixturePageDisplay(match);
+
+  match.headToHead = buildFixtureHeadToHead(fixture);
 
   return match;
 }
