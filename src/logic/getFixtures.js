@@ -99,7 +99,7 @@ export function shouldUseApiFormOnly(match) {
   );
 }
 
-function shouldStoreApiFormWindows(leagueId, matchesCompletedMinimum) {
+export function shouldStoreApiFormWindows(leagueId, matchesCompletedMinimum) {
   return (
     API_FORM_ONLY_LEAGUE_IDS.includes(leagueId) &&
     matchesCompletedMinimum < 4
@@ -107,7 +107,7 @@ function shouldStoreApiFormWindows(leagueId, matchesCompletedMinimum) {
 }
 
 // Minimal fields read by hydrateFormFromApi for short-term prediction inputs.
-function buildApiFormShortWindow(teamFormResponse, windowIndex, venue) {
+export function buildApiFormShortWindow(teamFormResponse, windowIndex, venue) {
   const stats = teamFormResponse?.data?.[windowIndex]?.stats;
   if (!stats) {
     return {};
@@ -133,7 +133,7 @@ function buildApiFormShortWindow(teamFormResponse, windowIndex, venue) {
 }
 
 // Minimal fields for rolling goal-diff chart in getStats.js.
-function buildApiFormChartWindow(teamFormResponse, windowIndex) {
+export function buildApiFormChartWindow(teamFormResponse, windowIndex) {
   const stats = teamFormResponse?.data?.[windowIndex]?.stats;
   if (!stats) {
     return {};

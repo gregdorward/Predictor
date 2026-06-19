@@ -81,6 +81,11 @@ let totalGoals = 0;
 let totalGoals2 = 0;
 export let numberOfGames = 0;
 export let predictedScoresData;
+
+export function setSingleMatchPredictionData({ leagueAverages, predictedScores }) {
+  leagueAveragesData = leagueAverages;
+  predictedScoresData = predictedScores;
+}
 let drawPredictions = 0;
 let homePredictions = 0;
 let awayPredictions = 0;

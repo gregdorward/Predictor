@@ -1,6 +1,9 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { useSelector } from "react-redux";
 import { CreateBadge } from "./createBadge";
+import { predictMatchById } from "../logic/predictMatchById";
+import { mapMatchToFixturePageData } from "../logic/buildSingleMatch";
+import { buildLegacyFixtureSections } from "../logic/fixturePageMetrics";
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -36,26 +39,26 @@ function formatStatValue(label, value) {
   }
 
   if (
-    label === "Average Shot Value Against" &&
+    (label === "Average Shot Value Against" ||
+      label === "Average Shot Value" ||
+      label === "Weighted XG" ||
+      label === "Weighted XG Against" ||
+      label === "Average Shots" ||
+      label === "Average Shots Against") &&
     value !== "" &&
     !Number.isNaN(Number(value))
   ) {
     return Number(value).toFixed(2);
   }
 
-  return value;
-}
+  if (label === "Clean Sheet Percentage" && typeof value === "string" && value.endsWith("%")) {
+    const n = Number(value.replace("%", ""));
+    if (Number.isFinite(n)) {
+      return `${n.toFixed(2)}%`;
+    }
+  }
 
-// Avoids "undefined%" when API stats are missing on the /fixture page.
-function formatPercentValue(value) {
-  if (value == null || value === "") {
-    return "—";
-  }
-  const n = Number(value);
-  if (!Number.isFinite(n)) {
-    return "—";
-  }
-  return `${n}%`;
+  return value;
 }
 
 function normalizeResultMatch(match) {
@@ -109,6 +112,85 @@ function StatRow({ label, value }) {
       <span className="FixturePage-statLabel">{label}</span>
       <span className="FixturePage-statValue">{formatStatValue(label, value)}</span>
     </div>
+  );
+}
+
+function ModelOutputsChart({ modelOutputs, homeTeamName, awayTeamName, theme, color, gridColor, tooltipBackground }) {
+  if (!modelOutputs) {
+    return (
+      <p className="FixturePage-modelOutputsEmpty">Model outputs unavailable.</p>
+    );
+  }
+
+  const { homeWin, draw, awayWin } = modelOutputs;
+
+  const chartOptions = {
+    indexAxis: "y",
+    plugins: {
+      legend: {
+        labels: { color },
+      },
+      title: {
+        display: false,
+      },
+      tooltip: {
+        backgroundColor: tooltipBackground,
+        titleColor: "#ffffff",
+        bodyColor: "#ffffff",
+        callbacks: {
+          label: (context) => `${context.dataset.label}: ${context.raw.toFixed(1)}%`,
+        },
+      },
+    },
+    aspectRatio: 3.5,
+    maintainAspectRatio: true,
+    responsive: true,
+    scales: {
+      x: {
+        stacked: true,
+        max: 100,
+        ticks: {
+          color,
+          callback: (value) => `${value}%`,
+        },
+        grid: { color: gridColor },
+      },
+      y: {
+        stacked: true,
+        display: false,
+        grid: { display: false },
+      },
+    },
+  };
+
+  const chartData = {
+    labels: ["Match outcome"],
+    datasets: [
+      {
+        label: homeTeamName ? `${homeTeamName} win` : "Home win",
+        data: [homeWin],
+        backgroundColor: "#01a501",
+      },
+      {
+        label: "Draw",
+        data: [draw],
+        backgroundColor: "#888888",
+      },
+      {
+        label: awayTeamName ? `${awayTeamName} win` : "Away win",
+        data: [awayWin],
+        backgroundColor: "#d71200",
+      },
+    ],
+  };
+
+  return (
+    <Bar
+      key={`model-${theme}`}
+      options={chartOptions}
+      data={chartData}
+      className="FixturePage-modelOutputsChart"
+    />
   );
 }
 
@@ -166,389 +248,153 @@ function ResultsColumn({ side, matches }) {
   );
 }
 
-function getSeasonStats(dataState, side) {
-  const isHome = side === "home";
+function TeamPage({ matchId }) {
+  const [pageData, setPageData] = useState(null);
+  const [loading, setLoading] = useState(Boolean(matchId));
+  const [error, setError] = useState(null);
 
-  const playedOnly = isHome
-    ? dataState.playedHomeOnly
-    : dataState.playedAwayOnly;
-  const scoredOnly = isHome
-    ? dataState.scoredOverallHomeOnly
-    : dataState.scoredOverallAwayOnly;
-  const concededOnly = isHome
-    ? dataState.conceededOverallHomeOnly
-    : dataState.conceededOverallAwayOnly;
-
-  return [
-    {
-      label: "Scored overall",
-      value: isHome ? dataState.scoredOverallHome : dataState.scoredOverallAway,
-    },
-    {
-      label: "Conceeded overall",
-      value: isHome
-        ? dataState.conceededOverallHome
-        : dataState.conceededOverallAway,
-    },
-    {
-      label: `Average scored ${isHome ? "home" : "away"} only`,
-      value: playedOnly ? (scoredOnly / playedOnly).toFixed(2) : "—",
-    },
-    {
-      label: `Average conceeded ${isHome ? "home" : "away"} only`,
-      value: playedOnly ? (concededOnly / playedOnly).toFixed(2) : "—",
-    },
-    {
-      label: "PPG overall",
-      value: isHome ? dataState.PPGOverallHome : dataState.PPGOverallAway,
-    },
-    {
-      label: `PPG ${isHome ? "home" : "away"} only`,
-      value: isHome ? dataState.PPGOverallHomeOnly : dataState.PPGOverallAwayOnly,
-    },
-    {
-      label: "League position",
-      value: isHome
-        ? dataState.leaguePosition_overallHome
-        : dataState.leaguePosition_overallAway,
-    },
-    {
-      label: `League position ${isHome ? "home" : "away"} only`,
-      value: isHome
-        ? dataState.leaguePosition_HomeOnly
-        : dataState.leaguePosition_AwayOnly,
-    },
-    {
-      label: "BTTS",
-      value: formatPercentValue(
-        isHome
-          ? dataState.BTTSPercentage_overallHome
-          : dataState.BTTSPercentage_overallAway
-      ),
-    },
-    {
-      label: "BTTS and win",
-      value: formatPercentValue(
-        isHome
-          ? dataState.BTTSAndWinPercentage_Home
-          : dataState.BTTSAndWinPercentage_Away
-      ),
-    },
-    {
-      label: "BTTS and lose",
-      value: formatPercentValue(
-        isHome
-          ? dataState.BTTSAndLosePercentage_Home
-          : dataState.BTTSAndLosePercentage_Away
-      ),
-    },
-    {
-      label: "BTTS both halves",
-      value: formatPercentValue(
-        isHome ? dataState.BTTSBothHalvesHome : dataState.BTTSBothHalvesAway
-      ),
-    },
-    {
-      label: "Goal diff 1st half",
-      value: isHome
-        ? dataState.GoalDifferenceHT_overall_Home
-        : dataState.GoalDifferenceHT_overall_Away,
-    },
-    {
-      label: "Goal diff 2nd half",
-      value: isHome ? dataState.GD_2hg_overall_Home : dataState.GD_2hg_overall_Away,
-    },
-    {
-      label: "Leading at half time",
-      value: formatPercentValue(
-        isHome
-          ? dataState.leadingAtHTPercentage_overallHome
-          : dataState.leadingAtHTPercentage_overallAway
-      ),
-    },
-    {
-      label: "Over 1.5 goals",
-      value: formatPercentValue(
-        isHome
-          ? dataState.seasonOver15Percentage_overallHome
-          : dataState.seasonOver15Percentage_overallAway
-      ),
-    },
-    {
-      label: "Over 2.5 goals",
-      value: formatPercentValue(
-        isHome
-          ? dataState.seasonOver25Percentage_overallHome
-          : dataState.seasonOver25Percentage_overallAway
-      ),
-    },
-    {
-      label: "Over 3.5 goals",
-      value: formatPercentValue(
-        isHome
-          ? dataState.seasonOver35Percentage_overallHome
-          : dataState.seasonOver35Percentage_overallAway
-      ),
-    },
-    {
-      label: "Over 4.5 goals",
-      value: formatPercentValue(
-        isHome
-          ? dataState.seasonOver45Percentage_overallHome
-          : dataState.seasonOver45Percentage_overallAway
-      ),
-    },
-    {
-      label: "Scored both halves",
-      value: formatPercentValue(
-        isHome
-          ? dataState.scoredBothHalvesPercentage_overallHome
-          : dataState.scoredBothHalvesPercentage_overallAway
-      ),
-    },
-    {
-      label: "SOTs per goal",
-      value: isHome
-        ? dataState.shots_on_target_per_goals_scored_overallHome
-        : dataState.shots_on_target_per_goals_scored_overallAway,
-    },
-    {
-      label: "Corners avg",
-      value: isHome
-        ? dataState.cornersTotalAVG_overallHome
-        : dataState.cornersTotalAVG_overallAway,
-    },
-    {
-      label: "Cards avg",
-      value: isHome ? dataState.cardsAVG_overallHome : dataState.cardsAVG_overallAway,
-    },
-    {
-      label: "Fouls against avg",
-      value: isHome ? dataState.foulsAVG_overallHome : dataState.foulsAVG_overallAway,
-    },
-    {
-      label: "Penalties won avg",
-      value: isHome
-        ? dataState.penalties_won_per_match_overallHome
-        : dataState.penalties_won_per_match_overallAway,
-    },
-    {
-      label: "Penalties in match",
-      value: formatPercentValue(
-        isHome
-          ? dataState.penalty_in_a_match_percentage_overallHome
-          : dataState.penalty_in_a_match_percentage_overallAway
-      ),
-    },
-  ];
-}
-
-function TeamPage() {
-  const [dataState, setData] = useState({});
   const storedFixtureDetails = useSelector(
     (state) => state.data.fixtureDetails
   );
-  const storedFixtureDetailsJson = JSON.parse(storedFixtureDetails || "{}");
-
-  const fetchData = async () => {
-    try {
-      const responseHome = await fetch(
-        `${process.env.NEXT_PUBLIC_EXPRESS_SERVER}team/${storedFixtureDetailsJson.homeId}`
-      );
-      const resultHome = await responseHome.json();
-
-      const responseAway = await fetch(
-        `${process.env.NEXT_PUBLIC_EXPRESS_SERVER}team/${storedFixtureDetailsJson.awayId}`
-      );
-      const resultAway = await responseAway.json();
-
-      const indexHome = resultHome.data.findIndex(
-        (x) => x.season_format === "Domestic League"
-      );
-      const indexAway = resultAway.data.findIndex(
-        (x) => x.season_format === "Domestic League"
-      );
-
-      if (resultHome.data[indexHome].stats.seasonScoredNum_overall) {
-        setData((test) => ({
-          ...test,
-          scoredOverallHome:
-            resultHome.data[indexHome].stats.seasonScoredNum_overall,
-          playedHomeOnly:
-            resultHome.data[indexHome].stats.seasonMatchesPlayed_home,
-          scoredOverallHomeOnly:
-            resultHome.data[indexHome].stats.seasonScoredNum_home,
-          conceededOverallHome:
-            resultHome.data[indexHome].stats.seasonConcededNum_overall,
-          conceededOverallHomeOnly:
-            resultHome.data[indexHome].stats.seasonConcededNum_home,
-          PPGOverallHome: resultHome.data[indexHome].stats.seasonPPG_overall,
-          PPGOverallHomeOnly: resultHome.data[indexHome].stats.seasonPPG_home,
-          leaguePosition_overallHome:
-            resultHome.data[indexHome].stats.leaguePosition_overall,
-          leaguePosition_HomeOnly:
-            resultHome.data[indexHome].stats.leaguePosition_home,
-          averageAttendance:
-            resultHome.data[indexHome].stats.average_attendance_home,
-          BTTSPercentage_overallHome:
-            resultHome.data[indexHome].stats.seasonBTTSPercentage_overall,
-          BTTSAndWinPercentage_Home:
-            resultHome.data[indexHome].stats.BTTS_and_win_percentage_overall,
-          BTTSAndLosePercentage_Home:
-            resultHome.data[indexHome].stats.BTTS_and_lose_percentage_overall,
-          BTTSBothHalvesHome:
-            resultHome.data[indexHome].stats
-              .BTTS_both_halves_percentage_overall,
-          GoalDifferenceHT_overall_Home:
-            resultHome.data[indexHome].stats.GoalDifferenceHT_overall,
-          GD_2hg_overall_Home: resultHome.data[indexHome].stats.gd_2hg_overall,
-          leadingAtHTPercentage_overallHome:
-            resultHome.data[indexHome].stats.leadingAtHTPercentage_overall,
-          seasonOver15Percentage_overallHome:
-            resultHome.data[indexHome].stats.seasonOver15Percentage_overall,
-          seasonOver25Percentage_overallHome:
-            resultHome.data[indexHome].stats.seasonOver25Percentage_overall,
-          seasonOver35Percentage_overallHome:
-            resultHome.data[indexHome].stats.seasonOver35Percentage_overall,
-          seasonOver45Percentage_overallHome:
-            resultHome.data[indexHome].stats.seasonOver45Percentage_overall,
-          scoredBothHalvesPercentage_overallHome:
-            resultHome.data[indexHome].stats.scoredBothHalvesPercentage_overall,
-          shots_on_target_per_goals_scored_overallHome:
-            resultHome.data[indexHome].stats.additional_info
-              .shots_on_target_per_goals_scored_overall,
-          cornersTotalAVG_overallHome:
-            resultHome.data[indexHome].stats.cornersTotalAVG_overall,
-          cardsAVG_overallHome:
-            resultHome.data[indexHome].stats.cardsAVG_overall,
-          foulsAVG_overallHome:
-            resultHome.data[indexHome].stats.foulsAVG_overall,
-          penalties_won_per_match_overallHome:
-            resultHome.data[indexHome].stats.additional_info
-              .penalties_won_per_match_overall,
-          penalty_in_a_match_percentage_overallHome:
-            resultHome.data[indexHome].stats.additional_info
-              .penalty_in_a_match_percentage_overall,
-          scoredOverallAway:
-            resultAway.data[indexAway].stats.seasonScoredNum_overall,
-          playedAwayOnly:
-            resultAway.data[indexAway].stats.seasonMatchesPlayed_away,
-          scoredOverallAwayOnly:
-            resultAway.data[indexAway].stats.seasonScoredNum_away,
-          conceededOverallAway:
-            resultAway.data[indexAway].stats.seasonConcededNum_overall,
-          conceededOverallAwayOnly:
-            resultAway.data[indexAway].stats.seasonConcededNum_away,
-          PPGOverallAway: resultAway.data[indexAway].stats.seasonPPG_overall,
-          PPGOverallAwayOnly: resultAway.data[indexAway].stats.seasonPPG_away,
-          leaguePosition_overallAway:
-            resultAway.data[indexAway].stats.leaguePosition_overall,
-          leaguePosition_AwayOnly:
-            resultAway.data[indexAway].stats.leaguePosition_away,
-          BTTSPercentage_overallAway:
-            resultAway.data[indexAway].stats.seasonBTTSPercentage_overall,
-          BTTSAndWinPercentage_Away:
-            resultAway.data[indexAway].stats.BTTS_and_win_percentage_overall,
-          BTTSAndLosePercentage_Away:
-            resultAway.data[indexAway].stats.BTTS_and_lose_percentage_overall,
-          BTTSBothHalvesAway:
-            resultAway.data[indexAway].stats
-              .BTTS_both_halves_percentage_overall,
-          GoalDifferenceHT_overall_Away:
-            resultAway.data[indexAway].stats.GoalDifferenceHT_overall,
-          GD_2hg_overall_Away: resultAway.data[indexAway].stats.gd_2hg_overall,
-          leadingAtHTPercentage_overallAway:
-            resultAway.data[indexAway].stats.leadingAtHTPercentage_overall,
-          seasonOver15Percentage_overallAway:
-            resultAway.data[indexAway].stats.seasonOver15Percentage_overall,
-          seasonOver25Percentage_overallAway:
-            resultAway.data[indexAway].stats.seasonOver25Percentage_overall,
-          seasonOver35Percentage_overallAway:
-            resultAway.data[indexAway].stats.seasonOver35Percentage_overall,
-          seasonOver45Percentage_overallAway:
-            resultAway.data[indexAway].stats.seasonOver45Percentage_overall,
-          scoredBothHalvesPercentage_overallAway:
-            resultAway.data[indexAway].stats.scoredBothHalvesPercentage_overall,
-          shots_on_target_per_goals_scored_overallAway:
-            resultAway.data[indexAway].stats.additional_info
-              .shots_on_target_per_goals_scored_overall,
-          cornersTotalAVG_overallAway:
-            resultAway.data[indexAway].stats.cornersTotalAVG_overall,
-          cardsAVG_overallAway:
-            resultAway.data[indexAway].stats.cardsAVG_overall,
-          foulsAVG_overallAway:
-            resultAway.data[indexAway].stats.foulsAVG_overall,
-          penalties_won_per_match_overallAway:
-            resultAway.data[indexAway].stats.additional_info
-              .penalties_won_per_match_overall,
-          penalty_in_a_match_percentage_overallAway:
-            resultAway.data[indexAway].stats.additional_info
-              .penalty_in_a_match_percentage_overall,
-        }));
-      }
-    } catch (error) {
-      console.error("Error fetching data:", error);
-    }
-  };
+  const storedFixtureDetailsJson = matchId
+    ? pageData?.fixtureDetails ?? {}
+    : JSON.parse(storedFixtureDetails || "{}");
 
   useEffect(() => {
-    if (storedFixtureDetailsJson?.homeId && storedFixtureDetailsJson?.awayId) {
-      fetchData();
+    if (!matchId) {
+      return;
     }
-  }, [storedFixtureDetailsJson?.homeId, storedFixtureDetailsJson?.awayId]);
+
+    let cancelled = false;
+
+    async function loadMatch() {
+      setLoading(true);
+      setError(null);
+
+      try {
+        const match = await predictMatchById(matchId);
+        if (cancelled) {
+          return;
+        }
+
+        setPageData(mapMatchToFixturePageData(match));
+      } catch (loadError) {
+        if (!cancelled) {
+          setError(loadError.message || "Failed to load fixture");
+        }
+      } finally {
+        if (!cancelled) {
+          setLoading(false);
+        }
+      }
+    }
+
+    loadMatch();
+
+    return () => {
+      cancelled = true;
+    };
+  }, [matchId]);
 
   const theme = useChartTheme();
   const { color, gridColor, tooltipBackground } = getChartColors(theme);
 
   const storedDataHome = useSelector((state) => state.data.dataHome);
-  const jsonDataHome = JSON.parse(storedDataHome || "{}");
-  const propertyNamesHome = Object.entries(jsonDataHome);
-
   const storedDataHomeDef = useSelector((state) => state.data.dataHomeDef);
-  const jsonDataHomeDef = JSON.parse(storedDataHomeDef || "{}");
-  const propertyNamesHomeDef = Object.entries(jsonDataHomeDef);
-
+  const storedDataAway = useSelector((state) => state.data.dataAway);
+  const storedDataAwayDef = useSelector((state) => state.data.dataAwayDef);
   const storedDataallTeamResultsHome = useSelector(
     (state) => state.data.allTeamResultsHome
   );
-  const jsonDataallTeamResultsHome = JSON.parse(
-    storedDataallTeamResultsHome || "[]"
-  );
-  const propertyNamesallTeamResultsHome = (
-    Array.isArray(jsonDataallTeamResultsHome)
-      ? jsonDataallTeamResultsHome
-      : Object.values(jsonDataallTeamResultsHome)
-  )
-    .map(normalizeResultMatch)
-    .filter(Boolean);
-
-  const homeDetails = useSelector((state) => state.data.homeDetails);
-  const jsonHomeDetails = JSON.parse(homeDetails || "{}");
-
-  const storedDataAway = useSelector((state) => state.data.dataAway);
-  const jsonDataAway = JSON.parse(storedDataAway || "{}");
-  const propertyNamesAway = Object.entries(jsonDataAway);
-
-  const storedDataAwayDef = useSelector((state) => state.data.dataAwayDef);
-  const jsonDataAwayDef = JSON.parse(storedDataAwayDef || "{}");
-  const propertyNamesAwayDef = Object.entries(jsonDataAwayDef);
-
   const storedDataallTeamResultsAway = useSelector(
     (state) => state.data.allTeamResultsAway
   );
-  const jsonDataallTeamResultsAway = JSON.parse(
-    storedDataallTeamResultsAway || "[]"
-  );
-  const propertyNamesallTeamResultsAway = (
-    Array.isArray(jsonDataallTeamResultsAway)
-      ? jsonDataallTeamResultsAway
-      : Object.values(jsonDataallTeamResultsAway)
-  )
-    .map(normalizeResultMatch)
-    .filter(Boolean);
-
+  const homeDetails = useSelector((state) => state.data.homeDetails);
   const awayDetails = useSelector((state) => state.data.awayDetails);
-  const jsonAwayDetails = JSON.parse(awayDetails || "{}");
+
+  const sections = useMemo(() => {
+    if (matchId) {
+      return pageData?.sections ?? [];
+    }
+
+    const homeForm = JSON.parse(storedDataHome || "{}");
+    const homeFormDef = JSON.parse(storedDataHomeDef || "{}");
+    const awayForm = JSON.parse(storedDataAway || "{}");
+    const awayFormDef = JSON.parse(storedDataAwayDef || "{}");
+
+    return buildLegacyFixtureSections(homeForm, homeFormDef, awayForm, awayFormDef);
+  }, [
+    matchId,
+    pageData?.sections,
+    storedDataHome,
+    storedDataHomeDef,
+    storedDataAway,
+    storedDataAwayDef,
+  ]);
+
+  const chartValues = useMemo(() => {
+    if (matchId) {
+      return pageData?.chart ?? {};
+    }
+
+    const jsonHomeDetails = JSON.parse(homeDetails || "{}");
+    const jsonAwayDetails = JSON.parse(awayDetails || "{}");
+
+    return {
+      homeAttack: jsonHomeDetails["Attacking Strength"],
+      homeDefence: jsonHomeDetails["Defensive Strength"],
+      awayAttack: jsonAwayDetails["Attacking Strength"],
+      awayDefence: jsonAwayDetails["Defensive Strength"],
+    };
+  }, [matchId, pageData?.chart, homeDetails, awayDetails]);
+
+  const recentResults = useMemo(() => {
+    const normalizeList = (raw) =>
+      (Array.isArray(raw) ? raw : Object.values(raw ?? {}))
+        .map(normalizeResultMatch)
+        .filter(Boolean);
+
+    if (matchId) {
+      return {
+        home: normalizeList(pageData?.recentResults?.home),
+        away: normalizeList(pageData?.recentResults?.away),
+      };
+    }
+
+    return {
+      home: normalizeList(JSON.parse(storedDataallTeamResultsHome || "[]")),
+      away: normalizeList(JSON.parse(storedDataallTeamResultsAway || "[]")),
+    };
+  }, [
+    matchId,
+    pageData?.recentResults,
+    storedDataallTeamResultsHome,
+    storedDataallTeamResultsAway,
+  ]);
+
+  if (loading) {
+    return (
+      <div className="FixturePage">
+        <p className="FixturePage-loading">Loading fixture analysis…</p>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="FixturePage">
+        <p className="FixturePage-error">{error}</p>
+      </div>
+    );
+  }
+
+  if (matchId && !storedFixtureDetailsJson?.homeTeamName) {
+    return (
+      <div className="FixturePage">
+        <p className="FixturePage-error">Fixture not found.</p>
+      </div>
+    );
+  }
 
   const chartOptions = {
     plugins: {
@@ -591,26 +437,17 @@ function TeamPage() {
     ],
     datasets: [
       {
-        data: [
-          jsonHomeDetails["Attacking Strength"],
-          jsonAwayDetails["Attacking Strength"],
-        ],
+        data: [chartValues.homeAttack, chartValues.awayAttack],
         label: "Attacking Strength",
         backgroundColor: "#01a501",
       },
       {
-        data: [
-          jsonHomeDetails["Defensive Strength"],
-          jsonAwayDetails["Defensive Strength"],
-        ],
+        data: [chartValues.homeDefence, chartValues.awayDefence],
         label: "Defensive Strength",
         backgroundColor: "#d71200",
       },
     ],
   };
-
-  const homeSeasonStats = getSeasonStats(dataState, "home");
-  const awaySeasonStats = getSeasonStats(dataState, "away");
 
   return (
     <div className="FixturePage">
@@ -652,11 +489,11 @@ function TeamPage() {
           <span className="FixturePage-metaItem">
             KO: {storedFixtureDetailsJson.time}
           </span>
-          {dataState.averageAttendance != null && (
+          {storedFixtureDetailsJson.leagueName ? (
             <span className="FixturePage-metaItem">
-              Avg attendance: {dataState.averageAttendance}
+              {storedFixtureDetailsJson.leagueName}
             </span>
-          )}
+          ) : null}
         </div>
 
         <div className="FixturePage-prediction">
@@ -691,44 +528,42 @@ function TeamPage() {
           />
         </div>
 
-        <PairedStatSection
-          title="Attacking"
-          homeContent={propertyNamesHome.map(([key, value], index) => (
-            <StatRow key={`home-att-${index}`} label={key} value={value} />
-          ))}
-          awayContent={propertyNamesAway.map(([key, value], index) => (
-            <StatRow key={`away-att-${index}`} label={key} value={value} />
-          ))}
-        />
-
-        <PairedStatSection
-          title="Defensive"
-          homeContent={propertyNamesHomeDef.map(([key, value], index) => (
-            <StatRow key={`home-def-${index}`} label={key} value={value} />
-          ))}
-          awayContent={propertyNamesAwayDef.map(([key, value], index) => (
-            <StatRow key={`away-def-${index}`} label={key} value={value} />
-          ))}
-        />
-
-        <PairedStatSection
-          title="Season Stats"
-          homeContent={homeSeasonStats.map((stat) => (
-            <StatRow
-              key={`home-season-${stat.label}`}
-              label={stat.label}
-              value={stat.value}
-            />
-          ))}
-          awayContent={awaySeasonStats.map((stat) => (
-            <StatRow
-              key={`away-season-${stat.label}`}
-              label={stat.label}
-              value={stat.value}
-            />
-          ))}
-        />
+        {sections.map((section) => (
+          <PairedStatSection
+            key={section.id}
+            title={section.title}
+            homeContent={section.home.map((stat) => (
+              <StatRow
+                key={`home-${section.id}-${stat.label}`}
+                label={stat.label}
+                value={stat.value}
+              />
+            ))}
+            awayContent={section.away.map((stat) => (
+              <StatRow
+                key={`away-${section.id}-${stat.label}`}
+                label={stat.label}
+                value={stat.value}
+              />
+            ))}
+          />
+        ))}
       </div>
+
+      {matchId && pageData?.modelOutputs ? (
+        <section className="FixturePage-modelOutputsCard">
+          <h3 className="FixturePage-statGroupTitle">Model Outputs</h3>
+          <ModelOutputsChart
+            modelOutputs={pageData.modelOutputs}
+            homeTeamName={storedFixtureDetailsJson.homeTeamName}
+            awayTeamName={storedFixtureDetailsJson.awayTeamName}
+            theme={theme}
+            color={color}
+            gridColor={gridColor}
+            tooltipBackground={tooltipBackground}
+          />
+        </section>
+      ) : null}
 
       <div className="FixturePage-pairedBlock FixturePage-pairedBlock--results">
         <div className="FixturePage-pairedHeaders">
@@ -745,14 +580,8 @@ function TeamPage() {
         </div>
 
         <div className="FixturePage-pairedRow FixturePage-pairedRow--stretch">
-          <ResultsColumn
-            side="home"
-            matches={propertyNamesallTeamResultsHome}
-          />
-          <ResultsColumn
-            side="away"
-            matches={propertyNamesallTeamResultsAway}
-          />
+          <ResultsColumn side="home" matches={recentResults.home} />
+          <ResultsColumn side="away" matches={recentResults.away} />
         </div>
       </div>
     </div>

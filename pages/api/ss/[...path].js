@@ -25,6 +25,7 @@ const CACHE_RULES = {
   leagueFixtures: { sMaxAge: 600, swr: 86400 },
   scheduledEvents: { sMaxAge: 1200, swr: 86400 },
   "league-averages": { sMaxAge: 100, swr: 86400 },
+  "match-snapshot": { sMaxAge: 21600, swr: 86400 },
 };
 
 function jsonError(body, status, extraHeaders) {
@@ -57,7 +58,12 @@ export default async function handler(req) {
     return jsonError({ error: `Endpoint '${head}' is not proxyable` }, 404);
   }
 
-  const target = `${ORIGIN}${segments.join("/")}${url.search}`;
+  const targetPath =
+    head === "match-snapshot"
+      ? ["match", "snapshot", ...segments.slice(1)].join("/")
+      : segments.join("/");
+  const origin = ORIGIN.endsWith("/") ? ORIGIN : `${ORIGIN}/`;
+  const target = `${origin}${targetPath}${url.search}`;
 
   try {
     const upstream = await fetch(target, {

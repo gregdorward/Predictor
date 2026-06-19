@@ -6156,6 +6156,27 @@ input:active+.design::after {
   max-height: 22rem;
 }
 
+.FixturePage-modelOutputsCard {
+  width: 100%;
+  margin: 0 0 1.35rem;
+  padding: 0.85rem 1rem 1rem;
+  border-radius: 12px;
+  border: 1px solid var(--third-background-color);
+  background-color: var(--background-color);
+  box-shadow: 0 1px 6px rgba(0, 0, 0, 0.05);
+}
+
+.FixturePage-modelOutputsChart {
+  width: 100% !important;
+  max-height: 8rem;
+}
+
+.FixturePage-modelOutputsEmpty {
+  margin: 0;
+  color: var(--secondary-text-color, #666);
+  font-size: 0.95rem;
+}
+
 .FixturePage-grid {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));

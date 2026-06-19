@@ -69,13 +69,6 @@ export function buildMatchShareUrl(gameId, unixDate, siteUrl = DEFAULT_SITE_URL)
     return null;
   }
 
-  const url = new URL(siteUrl);
-  url.searchParams.set("shortlist", String(gameId));
-
-  const dateParam = formatShareDateParam(unixDate);
-  if (dateParam) {
-    url.searchParams.set("date", dateParam);
-  }
-
-  return url.toString();
+  const base = siteUrl.replace(/\/+$/, "");
+  return `${base}/fixture/${gameId}/`;
 }

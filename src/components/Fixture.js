@@ -147,6 +147,7 @@ function SingleFixture({
       time: fixture.time,
       homeGoals: fixture.goalsA,
       awayGoals: fixture.goalsB,
+      competitionId: fixture.competition_id,
     };
 
     const homeDetails = {
@@ -207,7 +208,7 @@ function SingleFixture({
       paid = await checkUserPaidStatus(userDetail.uid);
       if (clicked === true && paid) {
         StoreData();
-        window.open(`/fixture?theme=${getStoredTheme()}`);
+        window.open(`/fixture/${fixture.id}/?theme=${getStoredTheme()}`);
       } else {
         alert("Premium feature only");
       }

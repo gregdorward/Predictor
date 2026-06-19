@@ -13,6 +13,7 @@ const PROXIED_ENDPOINTS = new Set([
   "leagueFixtures",
   "scheduledEvents",
   "league-averages",
+  "match-snapshot",
 ]);
 
 const ORIGIN = process.env.NEXT_PUBLIC_EXPRESS_SERVER;
