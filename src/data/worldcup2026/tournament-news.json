@@ -1,6 +1,6 @@
 {
-  "updatedAt": "2026-06-19T20:00:00.000Z",
-  "wrapUp": "Matchday six reshaped several group races. Canada claimed their first World Cup win in a 6-0 rout of Qatar but lost Ismaël Koné to a serious leg injury, while Neymar remains in New Jersey and will miss Brazil's Haiti fixture. Christian Pulisic is questionable for the United States' Seattle clash with Australia, England won a chaotic 4-2 opener against Croatia with Declan Rice and Bukayo Saka both being managed through fitness issues, and Lionel Messi's hat-trick launched Argentina's title defence. Tunisia turned to Hervé Renard after sacking Sabri Lamouchi, and Switzerland revived their Group B campaign with four late goals against Bosnia and Herzegovina. Each story below links to the specific report it is drawn from; squad and fitness details reflect the latest available reporting as of 19 June 2026.",
+  "updatedAt": "2026-06-20T12:00:00.000Z",
+  "wrapUp": "Matchday nine reshaped several group races on 19 June. The United States qualified for the knockout stage and won Group D without Christian Pulisic, Brazil moved top of Group C with a 3-0 win over Haiti but lost Raphinha to a hamstring scare while Neymar remained sidelined, Morocco edged Scotland through Ismael Saibari's record-quick goal, and ten-man Paraguay knocked Turkey out despite 62 shots without a goal across two matches. Canada chase a knockout berth without Ismaël Koné after his leg break, England manage Bukayo Saka and Declan Rice through fitness issues ahead of Ghana, and Hervé Renard's Tunisia face a must-win test against Japan on 20 June. Each story below links to the specific report it is drawn from; squad and fitness details reflect the latest available reporting as of 20 June 2026.",
   "sections": [
     {
       "id": "injuries-fitness",
@@ -9,8 +9,8 @@
       "stories": [
         {
           "id": "neymar-haiti-ruled-out",
-          "headline": "Neymar ruled out of Brazil's Haiti fixture in Philadelphia",
-          "summary": "The Brazilian confederation confirmed on 19 June that Neymar will not travel with the squad for Friday's Group C match against Haiti, remaining in New Jersey to continue recovering from the calf injury he sustained playing for Santos on 17 May. He returned to partial training this week but has not yet completed full sessions with Carlo Ancelotti's side. Brazil drew 1-1 with Morocco in their opener without him and already face the tournament without Rodrygo, Estêvão and Wesley, so another missed match deepens the attack crisis before Scotland and Haiti define the group's shape.",
+          "headline": "Neymar watches on as Brazil sweep past Haiti 3-0",
+          "summary": "Neymar remained in New Jersey and did not travel for Brazil's 3-0 victory over Haiti on 19 June, continuing his recovery from the calf injury sustained playing for Santos on 17 May. He has returned to partial training but has not completed full sessions with Carlo Ancelotti's side, and it remains uncertain whether he will be available to face Scotland in the final Group C fixture on 24 June. Brazil drew 1-1 with Morocco in their opener without him and already face the tournament without Rodrygo, Estêvão and Wesley, so another missed match keeps the attack thin before the Scotland decider.",
           "publishedDate": "2026-06-19",
           "sources": [
             {
@@ -19,7 +19,39 @@
             },
             {
               "name": "The Independent",
-              "url": "https://www.independent.co.uk/sport/football/world-cup-2026-injury-latest-neymar-lamine-yamal-christian-pulisic-b2994892.html"
+              "url": "https://www.independent.co.uk/sport/football/world-cup-2026-injury-latest-lamine-yamal-neymar-christian-pulisic-b2997294.html"
+            }
+          ]
+        },
+        {
+          "id": "pulisic-australia-ruled-out",
+          "headline": "Pulisic ruled out as United States beat Australia without star winger",
+          "summary": "Christian Pulisic was left out of the United States squad for the 2-0 win over Australia on 19 June in Seattle after training separately all week with a left calf problem sustained during the 4-1 opener against Paraguay. Mauricio Pochettino said it was impossible for the Milan forward to play but hopes he will be available for the closing Group D fixture against Türkiye on 25 June. Ricardo Pepi started in his place as the co-hosts qualified for the Round of 32 with six points from two matches, showing they can progress even without their most influential attacker.",
+          "publishedDate": "2026-06-19",
+          "sources": [
+            {
+              "name": "AP News",
+              "url": "https://apnews.com/article/world-cup-united-states-australia-score-be65bf85eac80da9fd999af080bb300c"
+            },
+            {
+              "name": "The Seattle Times",
+              "url": "https://www.seattletimes.com/sports/world-cup/2026-world-cup-usmnts-christian-pulisic-ruled-out-against-australia/"
+            }
+          ]
+        },
+        {
+          "id": "raphinha-hamstring-haiti",
+          "headline": "Raphinha hobbles off as Brazil beat Haiti without Neymar",
+          "summary": "Raphinha was substituted before half-time in Brazil's 3-0 win over Haiti on 19 June in Philadelphia after feeling pain in his right hamstring, with the CBF confirming he has begun treatment and awaits re-evaluation. Matheus Cunha scored twice and Vinícius Júnior added a third as Carlo Ancelotti's side moved top of Group C, but the injury deepens an attack crisis that already includes Neymar, Rodrygo, Estêvão and Wesley. Brazil face Scotland on 24 June with their widest forward options under fresh doubt.",
+          "publishedDate": "2026-06-19",
+          "sources": [
+            {
+              "name": "ESPN",
+              "url": "https://www.espn.com/soccer/report/_/gameId/760444"
+            },
+            {
+              "name": "The Independent",
+              "url": "https://www.independent.co.uk/sport/football/world-cup-2026-injury-latest-lamine-yamal-neymar-christian-pulisic-b2997294.html"
             }
           ]
         },
@@ -52,22 +84,6 @@
             {
               "name": "FIFA",
               "url": "https://www.fifa.com/en/tournaments/mens/worldcup/canadamexicousa2026/articles/canada-qatar-match-report-highlights"
-            }
-          ]
-        },
-        {
-          "id": "pulisic-australia-doubt",
-          "headline": "Pulisic questionable for United States showdown with Australia",
-          "summary": "Christian Pulisic has trained separately from the United States squad all week after coming off at half-time against Paraguay with a left calf issue, and Mauricio Pochettino said on 18 June that a final call would follow a meeting with medical staff on the eve of the Group D fixture in Seattle. Pulisic was influential in the 4-1 opener before the precautionary withdrawal, and his availability against an Australia side level on points would shape who tops the group ahead of Türkiye. Pochettino suggested Brenden Aaronson, Tim Weah and Gio Reyna are among the options if the Milan forward is not ready.",
-          "publishedDate": "2026-06-18",
-          "sources": [
-            {
-              "name": "AP News",
-              "url": "https://apnews.com/article/usmnt-world-cup-christian-pulisic-395f56394938d06b726f5c1dc7dc5c4a"
-            },
-            {
-              "name": "CBS Sports",
-              "url": "https://www.cbssports.com/soccer/news/christian-pulisic-world-cup-injury-update-usmnt-australia/"
             }
           ]
         },
@@ -111,18 +127,34 @@
       "description": "Omissions, late call-ups and manager decisions that reveal how teams plan to navigate the expanded format.",
       "stories": [
         {
-          "id": "chalobah-livramento",
-          "headline": "Chalobah replaces injured Livramento in England squad",
-          "summary": "Tino Livramento was ruled out of the World Cup on 16 June after a calf injury in training, with a scan confirming he could not continue in the United States. England called Trevoh Chalobah from the standby list to fill the defensive vacancy, though the Chelsea centre-back was not expected to feature in the Croatia opener in Dallas. Chalobah travelled to the Kansas City base while the matchday squad headed to Texas, giving Thomas Tuchel cover before Ghana and Panama complete Group L.",
-          "publishedDate": "2026-06-16",
+          "id": "pepi-replaces-pulisic",
+          "headline": "Pepi starts as Pochettino rests Pulisic for Australia",
+          "summary": "Mauricio Pochettino handed Ricardo Pepi a first World Cup start against Australia on 19 June, leaving Christian Pulisic out of the matchday squad entirely as the co-hosts managed his calf injury. Pepi led the line in a high-pressing 2-0 win that secured knockout qualification, with Folarin Balogun's run forcing Cameron Burgess's own goal and Alex Freeman heading a second before half-time. Pochettino's decision to prioritise Pulisic's recovery over risking him in Seattle suggests the star winger is being targeted for the latter stages rather than the group finale against Türkiye.",
+          "publishedDate": "2026-06-19",
           "sources": [
             {
               "name": "FIFA",
-              "url": "https://www.fifa.com/en/tournaments/mens/worldcup/canadamexicousa2026/articles/trevor-chalobah-tino-livramento-england"
+              "url": "https://www.fifa.com/en/tournaments/mens/worldcup/canadamexicousa2026/articles/usa-australia-match-report-highlights"
             },
             {
-              "name": "BBC Sport",
-              "url": "https://www.bbc.com/sport/football/articles/ckgp482v49xo"
+              "name": "AP News",
+              "url": "https://apnews.com/article/world-cup-united-states-australia-score-be65bf85eac80da9fd999af080bb300c"
+            }
+          ]
+        },
+        {
+          "id": "renard-tunisia-japan",
+          "headline": "Renard demands Tunisia response in must-win Japan clash",
+          "summary": "Hervé Renard told Tunisia there are \"no excuses\" before their Group F meeting with Japan on 20 June, having been parachuted in after Sabri Lamouchi's sacking following a 5-1 opening defeat to Sweden. Captain Ellyes Skhiri said the squad has embraced Renard's energy and the Frenchman insisted he is focused only on the Japan fixture, not the closing game against the Netherlands. Tunisia must win to keep knockout hopes alive in a group where Sweden and the Netherlands already hold four points.",
+          "publishedDate": "2026-06-19",
+          "sources": [
+            {
+              "name": "FIFA",
+              "url": "https://www.fifa.com/en/tournaments/mens/worldcup/canadamexicousa2026/articles/can-herve-renard-spark-tunisia-revival"
+            },
+            {
+              "name": "France 24",
+              "url": "https://www.france24.com/en/sport/20260616-world-cup-2026-tunisia-sacks-coach-lamouchi-appoints-renard-after-thrashing-by-sweden"
             }
           ]
         }
@@ -133,6 +165,22 @@
       "heading": "Disruption and preparation issues",
       "description": "Travel, visa and logistical problems that could affect match readiness rather than just headlines.",
       "stories": [
+        {
+          "id": "almiron-mouth-covering-red",
+          "headline": "Almirón first player sent off for mouth-covering rule",
+          "summary": "Paraguay's Miguel Almirón became the first player dismissed under FIFA's new mouth-covering rule during the 1-0 win over Türkiye on 19 June, receiving a straight red in first-half stoppage time after obscuring his mouth while speaking to Mert Muldur. VAR reviewed the incident before referee Ivan Barton confirmed the dismissal, leaving Paraguay to defend a 64-second Matías Galarza goal with ten men for the entire second half. The IFAB-approved regulation is designed to curb abusive language and has already reshaped a knockout-race fixture in Group D.",
+          "publishedDate": "2026-06-19",
+          "sources": [
+            {
+              "name": "BBC Sport",
+              "url": "https://www.bbc.co.uk/sport/football/live/cx2vx4dnvvqt"
+            },
+            {
+              "name": "The Guardian",
+              "url": "https://www.theguardian.com/football/2026/jun/20/turkey-paraguay-world-cup-2026-group-d-match-report"
+            }
+          ]
+        },
         {
           "id": "switzerland-hydration-breaks",
           "headline": "Yakin times triple substitution to FIFA hydration pause",
@@ -148,22 +196,6 @@
               "url": "https://www.skysports.com/football/switzerland-vs-bosnia-and-herzegovina/report/549791"
             }
           ]
-        },
-        {
-          "id": "renard-tunisia",
-          "headline": "Renard appointed Tunisia coach after Lamouchi sacking",
-          "summary": "Tunisia replaced Sabri Lamouchi with Hervé Renard on 16 June, two days after a 5-1 opening defeat to Sweden in Monterrey that left the side bottom of Group F. Renard, who has coached Morocco and Saudi Arabia at recent World Cups, has only days to prepare for a Japan fixture on 21 June before a closing meeting with the Netherlands. The emergency hire follows warm-up turmoil including a 5-0 loss to Belgium and off-field criticism of Lamouchi's camp arrangements, leaving Tunisia scrambling for organisation at the tournament.",
-          "publishedDate": "2026-06-16",
-          "sources": [
-            {
-              "name": "France 24",
-              "url": "https://www.france24.com/en/sport/20260616-world-cup-2026-tunisia-sacks-coach-lamouchi-appoints-renard-after-thrashing-by-sweden"
-            },
-            {
-              "name": "FOX Sports",
-              "url": "https://www.foxsports.com/stories/soccer/2026-fifa-world-cup-tunisia-coach-fired-herve-renard"
-            }
-          ]
         }
       ]
     },
@@ -172,6 +204,70 @@
       "heading": "Analysis and tournament outlook",
       "description": "Deeper previews on favourites, group dynamics and how the 48-team format changes the path to the final.",
       "stories": [
+        {
+          "id": "brazil-haiti-cunha",
+          "headline": "Cunha double sends Brazil top and eliminates Haiti",
+          "summary": "Matheus Cunha scored twice in the first half as Brazil beat Haiti 3-0 on 19 June in Philadelphia, a marked improvement on their flat 1-1 draw with Morocco in the opener. Vinícius Júnior added a third before the break as Haiti, who lost to Scotland in their first game, became the first side eliminated from the expanded 48-team tournament. Brazil move level on four points with Morocco at the top of Group C, though Raphinha's hamstring scare and Neymar's continued absence cloud the outlook before Scotland.",
+          "publishedDate": "2026-06-19",
+          "sources": [
+            {
+              "name": "ESPN",
+              "url": "https://www.espn.com/soccer/report/_/gameId/760444"
+            },
+            {
+              "name": "FIFA",
+              "url": "https://www.fifa.com/en/tournaments/mens/worldcup/canadamexicousa2026/articles/brazil-haiti-match-report-highlights"
+            }
+          ]
+        },
+        {
+          "id": "scotland-morocco-saibari",
+          "headline": "Saibari screamer leaves Scotland relying on best-third route",
+          "summary": "Ismael Saibari scored after 71 seconds as Morocco beat Scotland 1-0 on 19 June in Boston, registering the fastest goal of the tournament so far and becoming only the second African player to score in his first two World Cup appearances. Scotland improved after the break and had penalty appeals waved away, but John McGinn's claims that Morocco \"got away with one\" could not change a result that leaves Steve Clarke's side on three points in Group C. Scotland's most likely path to the Round of 32 now runs through the best-third-placed formula before a daunting closing fixture against Brazil.",
+          "publishedDate": "2026-06-19",
+          "sources": [
+            {
+              "name": "FIFA",
+              "url": "https://www.fifa.com/en/tournaments/mens/worldcup/canadamexicousa2026/articles/scotland-morocco-match-report-highlights"
+            },
+            {
+              "name": "BBC Sport",
+              "url": "https://www.bbc.co.uk/sport/football/live/cx2vx4dnvvqt"
+            }
+          ]
+        },
+        {
+          "id": "turkey-paraguay-exit",
+          "headline": "Turkey crash out goalless after ten-man Paraguay hold on",
+          "summary": "Türkiye were eliminated from Group D on 19 June after a 1-0 defeat to ten-man Paraguay, completing a miserable campaign in which Vincenzo Montella's side took 62 shots across two matches without scoring. Matías Galarza's 64-second strike proved decisive before Miguel Almirón's red card, yet Türkiye dominated possession and created chances Arda Güler, Kenan Yildiz and Mert Muldur could not convert. Güler apologised to the nation after the loss, while Paraguay revive their knockout hopes ahead of a decider against Australia.",
+          "publishedDate": "2026-06-19",
+          "sources": [
+            {
+              "name": "The Guardian",
+              "url": "https://www.theguardian.com/football/2026/jun/20/turkey-paraguay-world-cup-2026-group-d-match-report"
+            },
+            {
+              "name": "Opta Analyst",
+              "url": "https://theanalyst.com/articles/turkiye-vs-paraguay-stats-fifa-world-cup-2026-live"
+            }
+          ]
+        },
+        {
+          "id": "usa-group-d-win",
+          "headline": "United States win Group D with second straight victory",
+          "summary": "The United States beat Australia 2-0 on 19 June in Seattle to qualify for the Round of 32 with a game to spare, then clinched Group D outright when Paraguay defeated Türkiye later that night. Alex Freeman headed his first World Cup goal and Cameron Burgess's own goal gave Mauricio Pochettino's side an early lead in a match they dominated without Christian Pulisic. The co-hosts have scored six goals from two group games, one shy of their tournament record, and will face a third-placed group finisher in Santa Clara on 1 July.",
+          "publishedDate": "2026-06-19",
+          "sources": [
+            {
+              "name": "FIFA",
+              "url": "https://www.fifa.com/en/tournaments/mens/worldcup/canadamexicousa2026/articles/usa-australia-match-report-highlights"
+            },
+            {
+              "name": "AP News",
+              "url": "https://apnews.com/article/world-cup-united-states-australia-score-be65bf85eac80da9fd999af080bb300c"
+            }
+          ]
+        },
         {
           "id": "canada-historic-win",
           "headline": "David hat-trick seals Canada's first World Cup victory",
@@ -201,38 +297,6 @@
             {
               "name": "AP News",
               "url": "https://apnews.com/article/switzerland-bosnia-score-world-cup-e5edc7f0e9218d0919cf14610c7443d2"
-            }
-          ]
-        },
-        {
-          "id": "argentina-messi-hat-trick",
-          "headline": "Messi hat-trick launches Argentina title defence",
-          "summary": "Lionel Messi scored three times as defending champions Argentina beat Algeria 3-0 on 17 June in Kansas City, equalling Miroslav Klose's record of 16 World Cup goals. The 38-year-old opened with a first-half curler, turned in a parried effort early in the second period and sealed his hat-trick from the edge of the box, 20 years after his tournament debut in 2006. Argentina top Group J ahead of Austria, Jordan and Algeria, with Messi able to become the outright record scorer against Austria on 22 June.",
-          "publishedDate": "2026-06-17",
-          "sources": [
-            {
-              "name": "FIFA",
-              "url": "https://www.fifa.com/en/tournaments/mens/worldcup/canadamexicousa2026/articles/argentina-v-algeria-highlights-match-report"
-            },
-            {
-              "name": "Sky Sports",
-              "url": "https://www.skysports.com/football/argentina-vs-algeria/report/549784"
-            }
-          ]
-        },
-        {
-          "id": "england-croatia-opener",
-          "headline": "England overpower Croatia in six-goal Dallas thriller",
-          "summary": "Harry Kane scored twice, including a retaken penalty, as England beat Croatia 4-2 on 17 June in a breathless Group L opener that swung four times in the first half. Jude Bellingham and Marcus Rashford struck after the break as Thomas Tuchel's side registered 22 shots and took the handbrake off in the second period, according to the head coach. Croatia equalised through Martin Baturina and Petar Musa, but England top the group ahead of Ghana and Panama with defensive issues still to address.",
-          "publishedDate": "2026-06-17",
-          "sources": [
-            {
-              "name": "FIFA",
-              "url": "https://www.fifa.com/en/tournaments/mens/worldcup/canadamexicousa2026/articles/england-croatia-highlights-match-report"
-            },
-            {
-              "name": "Sky Sports",
-              "url": "https://www.skysports.com/football/news/12309/13552729/world-cup-2026-england-4-2-croatia-harry-kane-jude-bellingham-and-marcus-rashford-on-target-as-three-lions-make-winning-start"
             }
           ]
         }
