@@ -6121,6 +6121,9 @@ export async function getScorePrediction(day, mocked) {
             competition: match.leagueDesc,
             id: match.id,
             time: match.time,
+            status: match.status,
+            homeGoals: match.homeGoals,
+            awayGoals: match.awayGoals,
             game:
               match.status === "complete"
                 ? `${match.homeTeam} ${match.homeGoals} - ${match.awayGoals} ${match.awayTeam}`
@@ -6175,6 +6178,9 @@ export async function getScorePrediction(day, mocked) {
             competition: match.leagueDesc,
             id: match.id,
             time: match.time,
+            status: match.status,
+            homeGoals: match.homeGoals,
+            awayGoals: match.awayGoals,
             game:
               match.status === "complete"
                 ? `${match.homeTeam} ${match.homeGoals} - ${match.awayGoals} ${match.awayTeam}`
@@ -6874,6 +6880,39 @@ const scrollToTarget = (id) => {
   }, 0);
 };
 
+function renderBuildMultiTip(tip) {
+  return (
+    <li key={`${tip.game}acca`} className="tip-item">
+      <a
+        href={`#${tip.id}`}
+        onClick={(e) => {
+          e.preventDefault();
+          scrollToTarget(tip.id);
+        }}
+        style={{ textDecoration: "none", color: "inherit" }}
+      >
+        <div className="TipCompetition">
+          {tip.competition} | KO:{tip.time}
+        </div>
+        <div className="tip-content-flex">
+          <div className={`TipTeams${tip.outcome}`}>
+            <span className="TipHomeTeam">{tip.homeTeam}</span>
+            {tip.status === "complete" ? (
+              <span className="TipScore">
+                {tip.homeGoals} - {tip.awayGoals}
+              </span>
+            ) : null}
+            <span className="TipAwayTeam">{tip.awayTeam}</span>
+          </div>
+          <div className="TipDetails">
+            {tip.team} {tip.odds}{" "}
+          </div>
+        </div>
+      </a>
+    </li>
+  );
+}
+
 async function renderTips() {
   if (userDetail) {
     paid = await checkUserPaidStatus(userDetail.uid);
@@ -6895,34 +6934,7 @@ async function renderTips() {
                   Add or remove a selection using the buttons. Predictions
                   are ordered by confidence in the outcome.
                 </div>
-                {newArray.map((tip) => (
-                  <li key={`${tip.game}acca`} className={`tip-item`}>
-                    <a
-                      href={`#${tip.id}`}
-                      onClick={(e) => {
-                        e.preventDefault(); // Prevent the immediate jump/reload
-                        scrollToTarget(tip.id); // Call the custom smooth scroll function
-                      }}
-                      style={{ textDecoration: 'none', color: 'inherit' }}                    >
-                      {/* This is the new flex container for the content */}
-                      <div className="TipCompetition">{tip.competition} | KO:{tip.time}</div>
-                      <div className="tip-content-flex">
-                        {/* 1. Game Name (Will take 50% width) */}
-                        {/* <div className="TipGame">{tip.game}</div> */}
-                        <div className={`TipTeams${tip.outcome}`}>
-                          <span className="TipHomeTeam">{tip.homeTeam}</span>
-                          <span className="TipAwayTeam">{tip.awayTeam}</span>
-
-                        </div>
-
-                        {/* 2. Team, Odds, and Outcome (Will take 50% width) */}
-                        <div className="TipDetails">
-                          {tip.team} {tip.odds}{" "}
-                        </div>
-                      </div>
-                    </a>
-                  </li>
-                ))}
+                {newArray.map((tip) => renderBuildMultiTip(tip))}
                 <div className="AccumulatedOdds">{`Accumulator odds ~ : ${Math.round(accumulatedOdds) - 1
                   }/1`}</div>
                 <CopyMultiButton
@@ -6950,34 +6962,7 @@ async function renderTips() {
                   Add or remove a selection using the buttons. Predictions
                   are ordered by confidence in the outcome.
                 </div>
-                {newArray.map((tip) => (
-                  <li key={`${tip.game}acca`} className={`tip-item`}>
-                    <a
-                      href={`#${tip.id}`}
-                      onClick={(e) => {
-                        e.preventDefault(); // Prevent the immediate jump/reload
-                        scrollToTarget(tip.id); // Call the custom smooth scroll function
-                      }}
-                      style={{ textDecoration: 'none', color: 'inherit' }}                    >
-                      {/* This is the new flex container for the content */}
-                      <div className="TipCompetition">{tip.competition} | KO:{tip.time}</div>
-                      <div className="tip-content-flex">
-                        {/* 1. Game Name (Will take 50% width) */}
-                        {/* <div className="TipGame">{tip.game}</div> */}
-                        <div className={`TipTeams${tip.outcome}`}>
-                          <span className="TipHomeTeam">{tip.homeTeam}</span>
-                          <span className="TipAwayTeam">{tip.awayTeam}</span>
-
-                        </div>
-
-                        {/* 2. Team, Odds, and Outcome (Will take 50% width) */}
-                        <div className="TipDetails">
-                          {tip.team} {tip.odds}{" "}
-                        </div>
-                      </div>
-                    </a>
-                  </li>
-                ))}
+                {newArray.map((tip) => renderBuildMultiTip(tip))}
                 <div className="AccumulatedOdds">{`Accumulator odds ~ : ${Math.round(accumulatedOdds) - 1
                   }/1`}</div>
                 <CopyMultiButton

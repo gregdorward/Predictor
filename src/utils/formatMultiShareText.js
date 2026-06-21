@@ -35,7 +35,7 @@ export function formatBuildMultiText(tips, accumulatedOdds) {
       const kickOff = tip.time ? ` — ${tip.time}` : "";
       const competition = tip.competition ? ` (${tip.competition})` : "";
       return [
-        `${index + 1}. ${tip.homeTeam} v ${tip.awayTeam}${competition}${kickOff}`,
+        `${index + 1}. ${tip.game}${competition}${kickOff}`,
         `   ${tip.team} @ ${tip.odds}`,
       ];
     }),

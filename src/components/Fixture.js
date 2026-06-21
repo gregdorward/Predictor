@@ -5,8 +5,6 @@ import { setData } from "../logic/dataSlice";
 import { Provider } from "react-redux";
 import store from "../logic/store"; // Import your Redux store
 import { clicked } from "../logic/getScorePredictions";
-import { userDetail } from "../logic/authProvider";
-import { checkUserPaidStatus } from "../logic/hasUserPaid";
 import { leagueStatsArray } from "../logic/getScorePredictions";
 import LeagueName from './LeagueName';
 import ShareShortlistButton from "./ShareShortlistButton";
@@ -22,7 +20,6 @@ import {
 } from "../utils/formatStat";
 
 let resultValue;
-let paid;
 var count;
 let mockValue;
 var setCount;
@@ -203,18 +200,13 @@ function SingleFixture({
     dispatch(setData({ key1: "value1", key2: "value2" }));
   }
 
-  async function handleButtonClick() {
-    if (userDetail) {
-      paid = await checkUserPaidStatus(userDetail.uid);
-      if (clicked === true && paid) {
-        StoreData();
-        window.open(`/fixture/${fixture.id}/?theme=${getStoredTheme()}`);
-      } else {
-        alert("Premium feature only");
-      }
-    } else {
-      paid = false;
-    }
+  function getFixturePageUrl() {
+    return `/fixture/${fixture.id}/?theme=${getStoredTheme()}`;
+  }
+
+  function handleButtonClick(event) {
+    event.stopPropagation();
+    StoreData();
   }
 
   function styleForm(formIndicator) {
@@ -269,9 +261,16 @@ function SingleFixture({
                 className="star"
                 id={`shortlist-${fixture.id}`} // Unique ID for label association
               />
-              <button className="GameStatsTwo" onClick={handleButtonClick}>
+              <a
+                href={getFixturePageUrl()}
+                className="GameStatsTwo"
+                target="_blank"
+                rel="noopener noreferrer"
+                onClick={handleButtonClick}
+                aria-label="Open fixture analysis in a new tab"
+              >
                 {rightArrow}
-              </button>
+              </a>
             </div>
             <div className={`HomeAndAwayContainer${fixture.predictionOutcome}${fixture.exactScore ? "ExactScore" : ""}`}>
 

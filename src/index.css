@@ -5244,6 +5244,11 @@ ul {
   margin-bottom: 0.25em;
 }
 
+.TipScore {
+  font-weight: 700;
+  margin: 0.15em 0;
+}
+
 .TipDetails {
   flex: 1;
   text-align: end;
@@ -5768,6 +5773,11 @@ input:active+.design::after {
   padding: 0em;
   box-shadow: none;
   min-width: none !important;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
 }
 
 .GameStatsTwoExplainer {
