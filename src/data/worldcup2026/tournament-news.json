@@ -1,12 +1,44 @@
 {
-  "updatedAt": "2026-06-22T12:00:00.000Z",
-  "wrapUp": "Matchdays ten and eleven reshaped several group races. Neymar completed his first full training session as Raphinha was ruled out of Brazil's Scotland decider, Germany lost Nico Schlotterbeck for the remainder of the tournament despite qualifying from Group E, Japan's 4-0 win eliminated Tunisia on Hervé Renard's debut, the Netherlands thrashed Sweden 5-1 and Spain responded with four goals against Saudi Arabia as Lamine Yamal scored on his World Cup return. England welcomed Bukayo Saka back to full training while managing Declan Rice's hamstring complaint ahead of Ghana, and Christian Pulisic is expected to be fit for the United States' group finale but may be rested with Group D already won. Each story below links to the specific report it is drawn from; squad and fitness details reflect the latest available reporting as of 22 June 2026.",
+  "updatedAt": "2026-06-23T12:00:00.000Z",
+  "wrapUp": "Matchday twelve centres on qualification deciders in Group L, where England and Ghana meet in Boston with both sides on three points and Thomas Tuchel reporting a fully fit squad including Bukayo Saka, while Thomas Partey's visa saga ends with clearance to face his former employers after missing the Panama opener in Canada. Scotland's path through Group C runs via a narrow defeat to Brazil in Miami, where Neymar is back in training but Raphinha is ruled out and Carlo Ancelotti may turn to Rayan on the right. Germany advance without Nico Schlotterbeck, Luka Modric earns his 200th Croatia cap in a must-win Panama fixture, and Japan's record-breaking win has reshaped the Netherlands' race at the top of Group F. Each story below links to the specific report it is drawn from; squad and fitness details reflect the latest available reporting as of 23 June 2026.",
   "sections": [
     {
       "id": "injuries-fitness",
       "heading": "Injuries and fitness doubts",
       "description": "Players ruled out, late replacements and day-to-day concerns that could change starting line-ups and squad depth.",
       "stories": [
+        {
+          "id": "rice-hamstring-managed",
+          "headline": "Rice fit to face Ghana despite managed hamstring neural pain",
+          "summary": "Declan Rice declared himself \"fit and raring to go\" for England's Group L meeting with Ghana on 23 June after Thomas Tuchel substituted him as a precaution in the 72nd minute of the 4-2 win over Croatia. Rice told ITV he has been managing neural pain in his hamstring since Christmas, a complaint Arsenal handled behind the scenes during their title run-in, and described Tuchel's decision as smart given the injury risk in the closing stages of matches. With Tuchel now confirming everyone trained and is available in Boston, Rice's availability as midfield anchor remains central to England's push for an early knockout berth.",
+          "publishedDate": "2026-06-23",
+          "sources": [
+            {
+              "name": "The Athletic",
+              "url": "https://www.nytimes.com/athletic/7382530/2026/06/22/declan-rice-neural-hamstring-pain-injury-explainer/"
+            },
+            {
+              "name": "Goal.com",
+              "url": "https://www.goal.com/en/lists/declan-rice-injured-arsenal-midfielder-pain-england-thomas-tuchel/blt939a3dfe8cdccec9"
+            }
+          ]
+        },
+        {
+          "id": "saka-full-training-ghana",
+          "headline": "Tuchel confirms Saka pain-free and available against Ghana",
+          "summary": "Thomas Tuchel said Bukayo Saka feels no more pain from the Achilles tendinitis that kept him on the bench against Croatia, with the Arsenal winger completing both training sessions at full intensity before England's Group L fixture with Ghana on 23 June. Tuchel told reporters that everyone in the squad trained and is available, though he declined to say whether Saka or Noni Madueke will start on the right wing. A win in Boston would secure England's place in the Round of 32 with a game to spare, and Saka's return to full fitness gives Tuchel a proven wide option off the bench or in the starting XI.",
+          "publishedDate": "2026-06-23",
+          "sources": [
+            {
+              "name": "BBC Sport",
+              "url": "https://www.bbc.co.uk/sport/football/articles/c8e21d5w0pjo"
+            },
+            {
+              "name": "Reuters",
+              "url": "https://www.channelnewsasia.com/sport/england-have-no-injuries-ahead-ghana-game-tuchel-says-6202226"
+            }
+          ]
+        },
         {
           "id": "neymar-scotland-return",
           "headline": "Neymar completes first full training session ahead of Scotland",
@@ -26,7 +58,7 @@
         {
           "id": "raphinha-scotland-ruled-out",
           "headline": "Raphinha ruled out of Scotland match with hamstring injury",
-          "summary": "Raphinha will miss Brazil's Group C decider against Scotland on 24 June after scans confirmed a hamstring injury sustained in the first half of the 3-0 win over Haiti on 19 June. The CBF said the Barcelona forward will undergo intensive treatment with the aim of returning for a possible last-16 fixture in early July, but Lucas Paqueta acknowledged the squad are losing a key wide outlet for the Scotland match. Raphinha had started both group games and his absence opens a starting berth that Neymar is now expected to fill, though Brazil already face the tournament without Rodrygo, Estêvão and Wesley.",
+          "summary": "Raphinha will miss Brazil's Group C decider against Scotland on 24 June after scans confirmed a hamstring injury sustained in the first half of the 3-0 win over Haiti on 19 June. The CBF said the Barcelona forward will undergo intensive treatment with the aim of returning for a possible last-16 fixture in early July, but Lucas Paqueta acknowledged the squad are losing a key wide outlet for the Scotland match. Raphinha had started both group games and his absence opens a starting berth that Neymar is now expected to fill from the bench, though Brazil already face the tournament without Rodrygo, Estêvão and Wesley.",
           "publishedDate": "2026-06-22",
           "sources": [
             {
@@ -36,22 +68,6 @@
             {
               "name": "AP News",
               "url": "https://apnews.com/article/raphinha-injury-brazil-world-cup-ed97ab0d6b87846f72a9be61b1cbea10"
-            }
-          ]
-        },
-        {
-          "id": "saka-full-training-ghana",
-          "headline": "Saka returns to full training before England face Ghana",
-          "summary": "Bukayo Saka took part in normal training with England on 21 June after doing individual work on the previous day, providing Thomas Tuchel a fitness boost before the Group L meeting with Ghana in Boston on 23 June. The Arsenal winger is managing Achilles tendinitis that kept him on the bench for the 4-2 opening win over Croatia, and Tuchel has said he is unlikely to start until the Panama group finale. Saka's issue has not deteriorated since Arsenal's title run-in, but Tuchel's caution means Noni Madueke may continue on the right against Ghana as England chase a second win to tighten their grip on Group L.",
-          "publishedDate": "2026-06-22",
-          "sources": [
-            {
-              "name": "BBC Sport",
-              "url": "https://www.bbc.co.uk/sport/football/articles/c8e21d5w0pjo"
-            },
-            {
-              "name": "Sky Sports",
-              "url": "https://www.skysports.com/football/news/12040/13555396/world-cup-2026-bukayo-saka-unlikely-to-start-for-england-until-panama-game-thomas-tuchel-says"
             }
           ]
         },
@@ -78,12 +94,12 @@
           "publishedDate": "2026-06-21",
           "sources": [
             {
-              "name": "AP News",
-              "url": "https://apnews.com/article/schlotterbeck-germany-injury-be22a6a8dc2f594b78f6bf78034a6996"
+              "name": "BBC Sport",
+              "url": "https://www.bbc.co.uk/sport/football/articles/cgk6rzd5g58o"
             },
             {
-              "name": "Bundesliga",
-              "url": "https://www.bundesliga.com/en/bundesliga/news/nico-schlotterbeck-germany-ankle-injury-world-cup-2026-37923"
+              "name": "AP News",
+              "url": "https://apnews.com/article/schlotterbeck-germany-injury-be22a6a8dc2f594b78f6bf78034a6996"
             }
           ]
         },
@@ -102,22 +118,6 @@
               "url": "https://www.usatoday.com/story/sports/soccer/worldcup/2026/06/19/is-christian-pulisic-playing-vs-australia-today-world-cup/90617553007/"
             }
           ]
-        },
-        {
-          "id": "rice-hamstring-managed",
-          "headline": "Rice playing through hamstring neural pain ahead of Ghana",
-          "summary": "Declan Rice is expected to start against Ghana on 23 June despite being substituted as a precaution in the 72nd minute of England's 4-2 win over Croatia on 17 June, when he reported discomfort in his lower back and upper hamstring. Rice told ITV he has been managing neural pain in his hamstring since Christmas, though Thomas Tuchel described the Croatia change as protective rather than a reaction to a new serious injury. Jamie Carragher said England cannot afford to rest their midfield anchor with knockout qualification still to be secured, making Rice's availability central to Tuchel's balance in Group L.",
-          "publishedDate": "2026-06-20",
-          "sources": [
-            {
-              "name": "Sky Sports",
-              "url": "https://www.skysports.com/football/news/12040/13556733/england-world-cup-latest-jamie-carragher-says-thomas-tuchel-cant-afford-to-drop-declan-rice-against-ghana-despite-fitness-concerns"
-            },
-            {
-              "name": "BBC Sport",
-              "url": "https://www.bbc.com/sport/football/articles/cwylqvgne7lo"
-            }
-          ]
         }
       ]
     },
@@ -126,6 +126,22 @@
       "heading": "Squad selection and tactical reshuffles",
       "description": "Omissions, late call-ups and manager decisions that reveal how teams plan to navigate the expanded format.",
       "stories": [
+        {
+          "id": "brazil-rayan-replaces-raphinha",
+          "headline": "Ancelotti set to pick Rayan as Raphinha's replacement against Scotland",
+          "summary": "Carlo Ancelotti must reshuffle Brazil's attack for the Group C finale against Scotland on 24 June after Raphinha's hamstring injury against Haiti, with Bournemouth teenager Rayan the most likely starter on the right flank. Ancelotti has confirmed Neymar \"will be available\" after his calf recovery but the 34-year-old is expected to begin on the bench, leaving Matheus Cunha and Vinicius Junior as the settled central and left outlets after Cunha's brace against Haiti. With Rodrygo, Estêvão and Wesley already absent, Brazil's reduced wide depth makes Ancelotti's selection between Rayan and a possible Neymar cameo pivotal before the knockouts.",
+          "publishedDate": "2026-06-23",
+          "sources": [
+            {
+              "name": "The Standard",
+              "url": "https://www.standard.co.uk/sport/football/brazil-xi-vs-scotland-confirmed-team-news-predicted-lineup-injury-latest-world-cup-2026-b1287076.html"
+            },
+            {
+              "name": "ESPN",
+              "url": "https://www.espn.com.au/football/story/_/id/49137398/scotland-brazil-fifa-world-cup-2026-tv-channel-how-watch-kick-live-stream-referee-predicted-line-ups"
+            }
+          ]
+        },
         {
           "id": "tunisia-renard-eliminated",
           "headline": "Renard's Tunisia bow ends in 4-0 defeat and group exit",
@@ -141,22 +157,6 @@
               "url": "https://www.theguardian.com/football/live/2026/jun/21/fifa-world-cup-2026-live-tunisia-v-japan-updates-tun-vs-jpn-group-f-match-score-latest"
             }
           ]
-        },
-        {
-          "id": "pepi-replaces-pulisic",
-          "headline": "Pepi starts as Pochettino rests Pulisic for Australia",
-          "summary": "Mauricio Pochettino handed Ricardo Pepi a first World Cup start against Australia on 19 June, leaving Christian Pulisic out of the matchday squad entirely as the co-hosts managed his calf injury. Pepi led the line in a high-pressing 2-0 win that secured knockout qualification, with Folarin Balogun's run forcing Cameron Burgess's own goal and Alex Freeman heading a second before half-time. Pochettino's decision to prioritise Pulisic's recovery over risking him in Seattle suggests the star winger is being targeted for the latter stages rather than the group finale against Türkiye.",
-          "publishedDate": "2026-06-19",
-          "sources": [
-            {
-              "name": "FIFA",
-              "url": "https://www.fifa.com/en/tournaments/mens/worldcup/canadamexicousa2026/articles/usa-australia-match-report-highlights"
-            },
-            {
-              "name": "AP News",
-              "url": "https://apnews.com/article/world-cup-united-states-australia-score-be65bf85eac80da9fd999af080bb300c"
-            }
-          ]
         }
       ]
     },
@@ -166,18 +166,18 @@
       "description": "Travel, visa and logistical problems that could affect match readiness rather than just headlines.",
       "stories": [
         {
-          "id": "almiron-mouth-covering-red",
-          "headline": "Almirón first player sent off for mouth-covering rule",
-          "summary": "Paraguay's Miguel Almirón became the first player dismissed under FIFA's new mouth-covering rule during the 1-0 win over Türkiye on 19 June, receiving a straight red in first-half stoppage time after obscuring his mouth while speaking to Mert Muldur. VAR reviewed the incident before referee Ivan Barton confirmed the dismissal, leaving Paraguay to defend a 64-second Matías Galarza goal with ten men for the entire second half. The IFAB-approved regulation is designed to curb abusive language and has already reshaped a knockout-race fixture in Group D.",
-          "publishedDate": "2026-06-19",
+          "id": "partey-visa-ghana-us",
+          "headline": "Partey cleared for US entry after Canada visa refusal",
+          "summary": "Thomas Partey missed Ghana's 1-0 win over Panama on 17 June because Canada refused his visa after he failed to disclose pending UK criminal charges on his application, but the midfielder has been admitted to the United States and says he is ready to face England on 23 June. US Customs and Border Protection confirmed Partey was issued a visa and had not been convicted of a crime, while FIFA noted he could not travel from Boston to Toronto for the Panama fixture. Partey's return strengthens Carlos Queiroz's midfield against an England side he spent six years facing at Arsenal, though goalkeeper Lawrence Ati-Zigi's groin issue from the opener remains a separate fitness doubt.",
+          "publishedDate": "2026-06-22",
           "sources": [
             {
               "name": "BBC Sport",
-              "url": "https://www.bbc.co.uk/sport/football/live/cx2vx4dnvvqt"
+              "url": "https://www.bbc.com/sport/football/articles/c75y4kqgn1wo"
             },
             {
-              "name": "The Guardian",
-              "url": "https://www.theguardian.com/football/2026/jun/20/turkey-paraguay-world-cup-2026-group-d-match-report"
+              "name": "talkSPORT",
+              "url": "https://talksport.com/football/world-cup/4353907/thomas-partey-allowed-to-play-versus-england-world-cup/"
             }
           ]
         }
@@ -189,9 +189,57 @@
       "description": "Deeper previews on favourites, group dynamics and how the 48-team format changes the path to the final.",
       "stories": [
         {
+          "id": "england-ghana-knockout-race",
+          "headline": "England and Ghana meet with knockout place in sight",
+          "summary": "England can book a Round of 32 berth with a game to spare if they beat Ghana on 23 June in Boston, after Harry Kane, Jude Bellingham and Marcus Rashford fired the Three Lions to a 4-2 opening win over Croatia. Ghana arrive on three points too after Caleb Yirenkyi's stoppage-time winner against Panama, their first World Cup victory since 2010, and a second successive win would secure their best tournament run since the 2010 quarter-finals. Thomas Tuchel may reshuffle central defence after conceding twice against Croatia, while Ghana could start Thomas Partey in midfield for the first time this tournament.",
+          "publishedDate": "2026-06-23",
+          "sources": [
+            {
+              "name": "beIN SPORTS",
+              "url": "https://www.beinsports.com/en-mena/football/fifa-world-cup-2026/articles-video/england-ghana-meet-with-knockout-place-in-sight-2026-06-23"
+            },
+            {
+              "name": "Al Jazeera",
+              "url": "https://www.aljazeera.com/sports/2026/6/23/england-ghana-prediction-fifa-world-cup-2026-kickoff-channel-kane-partey"
+            }
+          ]
+        },
+        {
+          "id": "scotland-brazil-group-finale",
+          "headline": "Scotland can advance via best-third route against Brazil",
+          "summary": "Scotland face Brazil on 24 June in Miami needing at most a narrow defeat to keep alive hopes of a first-ever knockout appearance via the best-third-placed formula, having taken three points from a win over Haiti and a 1-0 loss to Morocco. Steve Clarke's side improved after the break against the Atlas Lions but were undone by Ismael Saibari's 71-second opener, and John McGinn acknowledged Morocco \"got away with one\" in Boston. Brazil lead Group C on four points and can secure top spot with a convincing win, though their draws with Morocco and laboured Haiti victory have raised questions about whether Ancelotti's side have peaked yet.",
+          "publishedDate": "2026-06-23",
+          "sources": [
+            {
+              "name": "The Standard",
+              "url": "https://www.standard.co.uk/sport/football/scotland-vs-brazil-prediction-kick-off-time-tv-live-stream-team-news-latest-h2h-results-odds-world-cup-2026-preview-b1287045.html"
+            },
+            {
+              "name": "ESPN",
+              "url": "https://www.espn.com.au/football/story/_/id/49137398/scotland-brazil-fifa-world-cup-2026-tv-channel-how-watch-kick-live-stream-referee-predicted-line-ups"
+            }
+          ]
+        },
+        {
+          "id": "modric-200th-cap-panama",
+          "headline": "Modric set for 200th cap as Croatia chase Panama redemption",
+          "summary": "Luka Modric will earn his 200th Croatia cap against Panama on 23 June in Toronto, with Zlatko Dalic's side under pressure after a 4-2 opening defeat to England left them needing points before a closing fixture with Ghana. Dalic admitted Croatia \"gifted England a lot\" defensively and demanded his favourites \"act like it\" against Panama, while Mateo Kovacic said the squad thrive when backs are against the wall as in 2018 and 2022. Modric's milestone adds emotional weight to a must-win evening for a team that reached the 2018 final and finished third four years ago.",
+          "publishedDate": "2026-06-22",
+          "sources": [
+            {
+              "name": "FIFA",
+              "url": "https://www.fifa.com/en/tournaments/mens/worldcup/canadamexicousa2026/articles/croatia-panama-modric-200-caps"
+            },
+            {
+              "name": "FOX Sports",
+              "url": "https://www.foxsports.com/soccer/fifa-world-cup-men-panama-vs-croatia-jun-23-2026-game-boxscore-647662"
+            }
+          ]
+        },
+        {
           "id": "japan-tunisia-milestone",
           "headline": "Japan's record win eliminates Tunisia in 1,000th World Cup match",
-          "summary": "Japan beat Tunisia 4-0 on 21 June in the 1,000th match in World Cup history, matching the Netherlands' statement result from earlier in the day to move level on four points at the top of Group F. Daichi Kamada's fourth-minute opener was the fastest goal by a Japanese player at a World Cup, Ayase Ueda scored twice and Junya Ito added a third as Hajime Moriyasu's side posted the largest victory by any nation in tournament history. Tunisia's elimination leaves Japan and the Netherlands fighting for top spot before the closing fixtures against each other.",
+          "summary": "Japan beat Tunisia 4-0 on 21 June in the 1,000th match in World Cup history, matching the Netherlands' statement result from earlier in the day to move level on four points at the top of Group F. Daichi Kamada's fourth-minute opener was the fastest goal by a Japanese player at a World Cup, Ayase Ueda scored twice and Junya Ito added a third as Hajime Moriyasu's side posted the largest victory by any nation in tournament history. Tunisia's elimination leaves Japan and the Netherlands fighting for top spot before the closing fixtures against Sweden and Tunisia respectively on 25 June.",
           "publishedDate": "2026-06-21",
           "sources": [
             {
@@ -223,7 +271,7 @@
         {
           "id": "netherlands-sweden-gakpo",
           "headline": "Gakpo and Brobbey doubles send Netherlands top of Group F",
-          "summary": "Brian Brobbey and Cody Gakpo each scored twice as the Netherlands beat Sweden 5-1 on 20 June in Houston to leapfrog their opponents into first place in Group F. Brobbey struck twice inside 17 minutes before Gakpo added a quickfire double after the break, with substitute Crysencio Summerville sealing a fifth in the 89th minute after Anthony Elanga had briefly reduced the arrears. The Oranje all but guaranteed a Round of 32 place with four points from two games, setting up a closing group decider against Japan with both sides level on points.",
+          "summary": "Brian Brobbey and Cody Gakpo each scored twice as the Netherlands beat Sweden 5-1 on 20 June in Houston to leapfrog their opponents into first place in Group F. Brobbey struck twice inside 17 minutes before Gakpo added a quickfire double after the break, with substitute Crysencio Summerville sealing a fifth in the 89th minute after Anthony Elanga had briefly reduced the arrears. The Oranje sit top on four points from two games, setting up closing group fixtures against Tunisia and a Japan-Sweden decider that will determine who tops the section on 25 June.",
           "publishedDate": "2026-06-20",
           "sources": [
             {
@@ -233,38 +281,6 @@
             {
               "name": "ESPN",
               "url": "https://www.espn.com/soccer/match/_/gameId/760447"
-            }
-          ]
-        },
-        {
-          "id": "scotland-morocco-saibari",
-          "headline": "Saibari screamer leaves Scotland relying on best-third route",
-          "summary": "Ismael Saibari scored after 71 seconds as Morocco beat Scotland 1-0 on 19 June in Boston, registering the fastest goal of the tournament so far and becoming only the second African player to score in his first two World Cup appearances. Scotland improved after the break and had penalty appeals waved away, but John McGinn's claims that Morocco \"got away with one\" could not change a result that leaves Steve Clarke's side on three points in Group C. Scotland's most likely path to the Round of 32 now runs through the best-third-placed formula before a daunting closing fixture against Brazil.",
-          "publishedDate": "2026-06-19",
-          "sources": [
-            {
-              "name": "FIFA",
-              "url": "https://www.fifa.com/en/tournaments/mens/worldcup/canadamexicousa2026/articles/scotland-morocco-match-report-highlights"
-            },
-            {
-              "name": "BBC Sport",
-              "url": "https://www.bbc.co.uk/sport/football/live/cx2vx4dnvvqt"
-            }
-          ]
-        },
-        {
-          "id": "turkey-paraguay-exit",
-          "headline": "Turkey crash out goalless after ten-man Paraguay hold on",
-          "summary": "Türkiye were eliminated from Group D on 19 June after a 1-0 defeat to ten-man Paraguay, completing a miserable campaign in which Vincenzo Montella's side took 62 shots across two matches without scoring. Matías Galarza's 64-second strike proved decisive before Miguel Almirón's red card, yet Türkiye dominated possession and created chances Arda Güler, Kenan Yildiz and Mert Muldur could not convert. Güler apologised to the nation after the loss, while Paraguay revive their knockout hopes ahead of a decider against Australia.",
-          "publishedDate": "2026-06-19",
-          "sources": [
-            {
-              "name": "The Guardian",
-              "url": "https://www.theguardian.com/football/2026/jun/20/turkey-paraguay-world-cup-2026-group-d-match-report"
-            },
-            {
-              "name": "Opta Analyst",
-              "url": "https://theanalyst.com/articles/turkiye-vs-paraguay-stats-fifa-world-cup-2026-live"
             }
           ]
         }
