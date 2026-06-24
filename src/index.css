@@ -401,6 +401,7 @@
   --span-text-colour: #020029;
   --member-text-color: #020029;
   --faint-text: #454545;
+  --subtle-surface-color: #fafafa;
   --slightly-darker-than-background: #ffffff;
 }
 
@@ -431,6 +432,7 @@
   --span-text-colour: #020029;
   --member-text-color: #fe8c00;
   --faint-text: #c7c7c7;
+  --subtle-surface-color: #0a0a0a;
   --slightly-darker-than-background: #000000;
 
 }
@@ -728,6 +730,397 @@ h4.Blurb {
 .MembersGetMoreUnderlined:focus-visible {
   outline: 2px solid var(--primary-color);
   outline-offset: 2px;
+}
+
+/* Guest landing page (signed-out homepage hero) */
+.GuestLanding {
+  width: 100%;
+  margin-bottom: 1rem;
+}
+
+.GuestLanding-intro {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  text-align: left;
+}
+
+.GuestLanding-headline {
+  font-size: clamp(1.35rem, 3vw, 2rem);
+  font-weight: 700;
+  line-height: 1.25;
+  margin: 0 0 0.4rem;
+  color: var(--text-color);
+}
+
+.GuestLanding-headlineLines {
+  display: block;
+}
+
+.GuestLanding-headlineLine {
+  display: inline;
+  opacity: 0.3;
+  transition: opacity 0.55s ease;
+}
+
+.GuestLanding-headlineLine.is-active {
+  opacity: 1;
+}
+
+.GuestLanding-subheadline {
+  font-size: 0.875rem;
+  font-weight: 400;
+  color: var(--faint-text);
+  line-height: 1.45;
+  margin: 0;
+  max-width: 36em;
+}
+
+.GuestLanding-cards {
+  display: grid;
+  grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr);
+  grid-template-rows: auto auto auto;
+  gap: 1rem;
+  align-items: stretch;
+}
+
+.GuestLanding-card {
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  height: 100%;
+  background: transparent;
+  border-radius: 10px;
+  padding: 1rem;
+  box-sizing: border-box;
+}
+
+.GuestLanding-visual {
+  grid-column: 1;
+  grid-row: 1;
+  justify-content: center;
+  align-items: center;
+  padding: 0.85rem;
+  background: transparent;
+}
+
+.GuestLanding-introCard {
+  grid-column: 2;
+  grid-row: 1;
+  justify-content: center;
+  align-items: flex-start;
+  background: transparent;
+  padding: 1rem 1.15rem 1rem 0;
+}
+
+.GuestLanding-introCard .GuestLanding-intro {
+  align-items: flex-start;
+  text-align: left;
+}
+
+.GuestLanding-introCard .GuestLanding-subheadline {
+  margin-left: 0;
+  margin-right: 0;
+}
+
+.GuestLanding-auth {
+  grid-column: 1 / -1;
+  grid-row: 2;
+  justify-content: center;
+  align-items: center;
+  background: transparent;
+  padding: 0 1.15rem;
+  height: auto;
+  align-self: stretch;
+}
+
+.GuestLanding-auth .Login--landing {
+  width: 100%;
+  max-width: 28em;
+}
+
+.GuestLanding-about {
+  grid-column: 1 / -1;
+  grid-row: 3;
+  text-align: center;
+  align-items: center;
+  justify-content: center;
+}
+
+.GuestLanding-laptop {
+  width: 100%;
+  max-width: 520px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  flex-shrink: 0;
+}
+
+.GuestLanding-laptopLid {
+  width: 100%;
+  padding: 10px 10px 8px;
+  background: var(--third-background-color);
+  border: 2px solid var(--button-border-color);
+  border-radius: 10px 10px 2px 2px;
+  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.22);
+  box-sizing: border-box;
+}
+
+.GuestLanding-laptopScreen {
+  overflow: hidden;
+  border-radius: 4px;
+  background: #000;
+  border: 1px solid var(--button-border-color);
+}
+
+.GuestLanding-laptopBase {
+  width: 108%;
+  height: 12px;
+  margin-top: -2px;
+  background: var(--third-background-color);
+  border: 2px solid var(--button-border-color);
+  border-top: 1px solid var(--button-border-color);
+  border-radius: 0 0 12px 12px;
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.18);
+  box-sizing: border-box;
+}
+
+.GuestLanding-screenshot {
+  display: block;
+  width: 100%;
+  height: auto;
+  border-radius: 0;
+}
+
+
+.GuestLanding-aboutTitle {
+  font-size: 1.2rem;
+  font-weight: 800;
+  color: var(--text-color);
+  margin: 0 auto 0.75rem;
+  max-width: 42em;
+}
+
+.GuestLanding-about p {
+  font-size: 0.9rem;
+  font-weight: 400;
+  color: var(--faint-text);
+  line-height: 1.5;
+  margin: 0 auto 0.5rem;
+  max-width: 42em;
+}
+
+.GuestLanding-about p:last-child {
+  margin-bottom: 0;
+}
+
+
+.GuestLanding-skip {
+  margin: 0.75rem 0 0;
+  padding-left: 0;
+  font-size: 0.95em;
+}
+
+.GuestLanding-modeToggle {
+  display: block;
+  width: 100%;
+  margin: 0 0 1rem;
+  padding: 0;
+  font-size: 0.8rem;
+  font-weight: 600;
+  font-family: inherit;
+  color: var(--primary-color);
+  background: transparent;
+  border: none;
+  border-radius: 0;
+  box-shadow: none;
+  cursor: pointer;
+  text-align: left;
+  text-decoration: underline;
+  text-underline-offset: 0.2em;
+}
+
+.GuestLanding-modeToggle:hover {
+  color: var(--text-color);
+  background: transparent;
+  box-shadow: none;
+  transform: none;
+}
+
+.GuestLanding-modeToggle:focus-visible {
+  box-shadow: none;
+}
+
+.GuestLanding-modeToggle:active {
+  box-shadow: none;
+  transform: none;
+}
+
+.Login--landing {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  width: 100%;
+  min-height: 0;
+}
+
+.Login--landing .Login-error {
+  color: #e74c3c;
+  margin: 0 0 0.5rem;
+  font-size: 0.8rem;
+}
+
+.LoginForm--landing {
+  flex-direction: column;
+  align-items: stretch;
+  gap: 0.85rem;
+  width: 100%;
+  max-width: none;
+  padding: 0;
+  background: transparent;
+  border: none;
+  border-radius: 0;
+  box-sizing: border-box;
+}
+
+.LoginForm--landing .InputGroup {
+  width: 100%;
+  margin-left: 0;
+  gap: 0.75rem;
+}
+
+.LoginForm--landing .LoginInput1,
+.LoginForm--landing .LoginInput2,
+.LoginForm--landing .PasswordContainer {
+  width: 100%;
+  min-width: unset;
+}
+
+.LoginForm--landing .LoginInput1,
+.LoginForm--landing .LoginInput2 {
+  padding: 0.55em 0.75em;
+  font-size: 0.9rem;
+  box-sizing: border-box;
+}
+
+.LoginForm--landing .PasswordContainer {
+  margin-bottom: 0;
+}
+
+.LoginForm--landing .LoginSignUp {
+  width: 100%;
+  margin: 0.15rem 0 0;
+  padding: 0.65em 1em;
+  font-size: 0.9rem;
+  border-radius: 999px;
+}
+
+.LoginForm--landing .ResetPasswordLink {
+  flex-basis: auto;
+  height: auto;
+  margin: 0;
+  padding: 0.35em 0 0;
+  font-size: 0.75em;
+  background: transparent;
+}
+
+@media (max-width: 1024px) {
+  .GuestLanding-laptopLid {
+    padding: 6px 6px 5px;
+    border-radius: 8px 8px 2px 2px;
+  }
+
+  .GuestLanding-laptopBase {
+    width: 110%;
+    height: 8px;
+    border-radius: 0 0 8px 8px;
+  }
+
+  .GuestLanding-introCard {
+    padding: 0.75rem 0.85rem 0.75rem 0;
+  }
+
+  .GuestLanding-headline {
+    font-size: 1.2rem;
+  }
+
+  .GuestLanding-subheadline {
+    font-size: 0.8rem;
+  }
+
+  .GuestLanding-introCard .GuestLanding-intro {
+    text-align: left;
+    align-items: flex-start;
+  }
+
+  .GuestLanding-introCard .GuestLanding-subheadline {
+    margin-left: 0;
+    margin-right: 0;
+  }
+
+  .GuestLanding-aboutTitle {
+    font-size: 1.1rem;
+  }
+
+  .GuestLanding-about p {
+    font-size: 0.85rem;
+    line-height: 1.5;
+    margin-bottom: 0.45rem;
+  }
+
+  .GuestLanding-auth .GuestLanding-modeToggle {
+    font-size: 0.75rem;
+    margin-bottom: 1rem;
+  }
+
+  .LoginForm.LoginForm--landing {
+    gap: 0.65rem;
+  }
+
+  .LoginForm.LoginForm--landing .LoginInput1,
+  .LoginForm.LoginForm--landing .LoginInput2 {
+    padding: 0.5em 0.65em;
+    font-size: 0.85rem;
+  }
+
+  .LoginForm.LoginForm--landing .LoginSignUp {
+    padding: 0.55em 0.85em;
+    font-size: 0.85rem;
+  }
+
+  .GuestLanding-modeToggle {
+    text-align: center;
+  }
+
+  .GuestLanding-skip {
+    margin-left: auto;
+    margin-right: auto;
+  }
+}
+
+@media (max-width: 460px) {
+  .GuestLanding-laptopLid {
+    padding: 4px 4px 3px;
+  }
+
+  .GuestLanding-laptopBase {
+    height: 6px;
+  }
+
+  .GuestLanding-headline {
+    font-size: 1.3rem;
+  }
+
+  .GuestLanding-card {
+    padding: 0.65rem 0.75rem;
+  }
+
+  .GuestLanding-about p {
+    font-size: 0.8rem;
+  }
 }
 
 h4 {
@@ -7165,6 +7558,23 @@ input {
   box-shadow: none;
 }
 
+button.ResetPasswordLink:hover:not(:disabled),
+button.ResetPasswordLink:focus-visible:not(:disabled),
+button.ResetPasswordLink:active:not(:disabled) {
+  background-color: var(--secondary-background-color);
+  border: none;
+  color: var(--text-color);
+  transform: none;
+  box-shadow: none;
+}
+
+.LoginForm.LoginForm--landing .ResetPasswordLink:hover:not(:disabled),
+.LoginForm.LoginForm--landing .ResetPasswordLink:focus-visible:not(:disabled),
+.LoginForm.LoginForm--landing .ResetPasswordLink:active:not(:disabled) {
+  background: transparent;
+  color: var(--text-color);
+}
+
 .CancelButton {
   text-decoration: underline;
   text-underline-offset: 0.15em;
@@ -7221,6 +7631,83 @@ button.TogglePasswordButton {
   color: #030052;
   align-self: center;
   box-shadow: none;
+}
+
+/* Landing login – must follow base .LoginForm so row layout / fixed height do not win */
+.LoginForm.LoginForm--landing {
+  flex-direction: column;
+  align-items: stretch;
+  justify-content: center;
+  width: 100%;
+  max-width: none;
+  height: auto;
+  min-height: 0;
+  margin-top: 0;
+  gap: 0.85rem;
+  padding: 0;
+  background: transparent;
+  border: none;
+  border-radius: 0;
+  box-sizing: border-box;
+}
+
+.LoginForm.LoginForm--landing .InputGroup {
+  width: 100%;
+  min-width: 0;
+  margin-left: 0;
+  gap: 0.75rem;
+  align-self: stretch;
+  flex-grow: 0;
+}
+
+.LoginForm.LoginForm--landing .LoginInput1 {
+  width: 100%;
+  min-width: 0;
+  height: auto;
+  padding: 0.55em 0.75em;
+  font-size: 0.9rem;
+  box-sizing: border-box;
+}
+
+.LoginForm.LoginForm--landing .PasswordContainer {
+  display: flex;
+  align-items: stretch;
+  width: 100%;
+  min-width: 0;
+  height: auto;
+  margin-bottom: 0;
+  box-sizing: border-box;
+}
+
+.LoginForm.LoginForm--landing .LoginInput2 {
+  flex: 1 1 auto;
+  width: 0;
+  min-width: 0;
+  height: auto;
+  padding: 0.55em 0.75em;
+  font-size: 0.9rem;
+  box-sizing: border-box;
+}
+
+.LoginForm.LoginForm--landing .TogglePasswordButton {
+  flex: 0 0 auto;
+}
+
+.LoginForm.LoginForm--landing .LoginSignUp {
+  width: 100%;
+  margin: 0.15rem 0 0;
+  padding: 0.65em 1em;
+  font-size: 0.9rem;
+  border-radius: 999px;
+}
+
+.LoginForm.LoginForm--landing .ResetPasswordLink {
+  flex-basis: auto;
+  height: auto;
+  margin: 0;
+  padding: 0.35em 0 0;
+  font-size: 0.75em;
+  background: transparent;
 }
 
 .ResetPasswordField {

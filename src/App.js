@@ -12,7 +12,7 @@ import { loadStripe } from "@stripe/stripe-js";
 import { AuthProvider, useAuth } from "./logic/authProvider";
 import { bumpFixturesEpoch } from "./logic/fixturesEpoch";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
-import Login from "./components/Login";
+import GuestLanding, { scrollToGames } from "./components/GuestLanding";
 import { getCurrentUser } from "./components/ProtectedContent";
 import { doc, getDoc, collection, getDocs, query, updateDoc } from 'firebase/firestore';
 import { userDetail } from "./logic/authProvider";
@@ -499,18 +499,7 @@ export async function getLeagueList() {
       "Email"
     );
   } else {
-    render(
-      <Collapsable
-        buttonText="Log In / Sign Up"
-        classNameButton="LoginSignUp"
-        element={
-          <div className="NonFixtureInfo">
-            <Login />
-          </div>
-        }
-
-      />
-      , "Email");
+    render(<div />, "Email");
   }
 }
 
@@ -946,32 +935,19 @@ export function AppContent() {
         <div id="RadioText" />
         <div id="RadioButtons" />
       </div>
+      {!user ? (
+        <GuestLanding />
+      ) : (
+        <>
       <h1 className="MembersGetMore">Welcome to <span className="TitleColouring">Soccer Stats Hub</span></h1>
       <h4 className="Blurb">The best for in-depth football statistics, analytics and predictions</h4>
-      {!loggedIn || isPaidUser ? (
+      {isPaidUser ? (
         <div />
       ) : (
         <><button
           type="button"
           className="MembersGetMoreUnderlined"
-          onClick={() => {
-          const FixtureList = document.getElementById("Buttons");
-          if (FixtureList) {
-            FixtureList.scrollIntoView({ behavior: "smooth" });
-            // Optional: Flash the login box or focus an input to draw attention
-          }
-          const getPredictionsButton = document.getElementById('GeneratePredictionsButton');
-          if (getPredictionsButton) {
-            // Example: Add a class that quickly changes the background/border color
-            getPredictionsButton.classList.add('flash-attention');
-
-            // Remove the class after a short delay (e.g., 1 second)
-            setTimeout(() => {
-              getPredictionsButton.classList.remove('flash-attention');
-              getPredictionsButton.focus(); // Optional: Focus the input after scrolling
-            }, 1000);
-          }
-        }}
+          onClick={scrollToGames}
         >
           Just show me the games
         </button><div className="NonFixtureInfo">
@@ -1046,6 +1022,8 @@ export function AppContent() {
               </p>
             </div>
           </div></>
+      )}
+        </>
       )}
       <div id="Email" className="Email"></div>
       <div id="Day" />
@@ -1250,6 +1228,7 @@ export function AppContent() {
                 setShowMultis(true);
               }} disabled={isPredicting || isLoading}
               className={`GeneratePredictionsButton ${isPredicting ? "loading" : ""}`}
+              id="GeneratePredictionsButton"
             />
 
             {/* Optional: Add a subtle text indicator below */}

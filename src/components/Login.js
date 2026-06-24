@@ -13,7 +13,7 @@ export function setUserIsPaid(value) {
   userIsPaid = value;
 }
 
-const Login = () => {
+const Login = ({ variant = "default" }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isLogin, setIsLogin] = useState(false);
@@ -74,15 +74,30 @@ const Login = () => {
     }
   };
 
+  const isLanding = variant === "landing";
+
   return (
-    <div>
-      <button className="SignUp" id="SignUp" onClick={() => setIsLogin(!isLogin)}>
-        {isLogin ? "Switch to sign up form." : "Switch to login form"}
-      </button>
-      {error && <p style={{ color: "red" }}>{error}</p>}
+    <div className={isLanding ? "Login--landing" : undefined}>
+      {isLanding ? (
+        <button
+          type="button"
+          className="GuestLanding-modeToggle"
+          id="SignUp"
+          onClick={() => setIsLogin(!isLogin)}
+        >
+          {isLogin
+            ? "Don't have an account? Sign up"
+            : "Already have an account? Log in"}
+        </button>
+      ) : (
+        <button className="SignUp" id="SignUp" onClick={() => setIsLogin(!isLogin)}>
+          {isLogin ? "Switch to sign up form." : "Switch to login form"}
+        </button>
+      )}
+      {error && <p className="Login-error">{error}</p>}
 
       {/* ⭐️ LoginForm: Main Flex Container ⭐️ */}
-      <form onSubmit={handleAuth} className="LoginForm" id="LoginForm">
+      <form onSubmit={handleAuth} className={`LoginForm${isLanding ? " LoginForm--landing" : ""}`} id="LoginForm">
 
         {/* ⭐️ InputGroup: Groups and stacks the inputs on the left ⭐️ */}
         <div className="InputGroup" id="login-email-input">
@@ -118,7 +133,7 @@ const Login = () => {
 
         {/* ⭐️ LoginSignUp: Submit button aligned to the right ⭐️ */}
         <button type="submit" className="LoginSignUp" id="LoginSignUp">
-          {isLogin ? "Login" : "Sign Up"}
+          {isLogin ? "Login" : isLanding ? "Sign up (free)" : "Sign Up"}
         </button>
 
         <button
