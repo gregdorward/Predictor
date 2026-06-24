@@ -1,6 +1,5 @@
 import {
   compareStat,
-  getPointsFromLastX,
   getOverOrUnderAchievingResult,
   getClinicalRating,
   getPointsDifferential,
@@ -10,6 +9,7 @@ import {
   roundCustom,
   getCoverBetMaxReturns,
 } from "./getScorePredictions";
+import { getPointsFromLastX } from "../utils/getPointsFromLastX";
 
 describe("compare stat tests", () => {
   test("a positve number is returned when the home team has the greater number", async () => {

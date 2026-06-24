@@ -834,6 +834,7 @@ h4.Blurb {
   background: transparent;
   padding: 0 1.15rem;
   height: auto;
+  min-height: 14rem;
   align-self: stretch;
 }
 

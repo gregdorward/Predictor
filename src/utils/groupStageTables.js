@@ -1,4 +1,4 @@
-import { getPointsFromLastX } from "../logic/getScorePredictions";
+import { getPointsFromLastX } from "../utils/getPointsFromLastX";
 
 function getGroupStageTable(league) {
   return league?.data?.specific_tables?.find((st) => st.groups?.length > 0);

@@ -7,15 +7,10 @@ import { Fixture } from "../components/Fixture";
 import { Button } from "../components/Button";
 import { Slide } from "../components/Slider";
 import Logo from "../components/Logo"
-import { getScorePrediction } from "../logic/getScorePredictions";
 import { ThreeDots } from "react-loading-icons";
 import BouncingDotsLoader from "../components/BouncingDots"
 import { selectedOdds } from "../components/OddsRadio";
-import { getPointsFromLastX } from "../logic/getScorePredictions";
-import SlideDiff from "../components/SliderDiff";
-import Collapsable from "../components/CollapsableElement";
-import { userDetail, triggerGlobalPredictions } from "./authProvider";
-import { leagueStatsArray, playerStatsArray } from "../logic/getScorePredictions";
+import { getPointsFromLastX } from "../utils/getPointsFromLastX";
 import { getLeagueFixturesByLeagueId } from "../utils/leagueResultsAccess";
 import { apiGetUrl } from "../utils/apiUrl";
 import {
@@ -359,6 +354,10 @@ export async function renderTable(index, results, id) {
     openLeagueTables.delete(id);
     return;
   }
+
+  const { leagueStatsArray, playerStatsArray } = await import(
+    "./getScorePredictions"
+  );
 
   let league;
   //World cup table rendering

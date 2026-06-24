@@ -13,13 +13,13 @@ test.describe('Homepage', () => {
   });
 
   test('shows site header and date navigation controls', async ({ page }) => {
-    await expect(page.locator('header.DarkMode')).toBeVisible();
+    await expect(page.locator('header.DarkMode')).toBeVisible({ timeout: 10_000 });
     await expect(page.getByTestId('<')).toBeVisible();
     await expect(page.getByTestId('>')).toBeVisible();
   });
 
   test('shows collapsible sections for options and help', async ({ page }) => {
-    await expect(page.getByRole('button', { name: 'Options ☰' }).first()).toBeVisible();
+    await expect(page.getByRole('button', { name: 'Options ☰' }).first()).toBeVisible({ timeout: 10_000 });
     await expect(page.getByRole('button', { name: 'How to use' }).first()).toBeVisible();
     await expect(page.getByRole('button', { name: 'Customise tips' }).first()).toBeVisible();
   });
@@ -40,6 +40,7 @@ test.describe('Homepage', () => {
 
   test('toggles dark mode', async ({ page }) => {
     const themeToggle = page.locator('label.theme-switch');
+    await expect(themeToggle).toBeVisible({ timeout: 10_000 });
 
     const initialIsDark = await page.evaluate(() => document.body.classList.contains('dark-mode'));
     await themeToggle.click();

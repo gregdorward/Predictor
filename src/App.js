@@ -9,15 +9,14 @@ import Collapsable from "./components/CollapsableElement";
 import MultisPanelCarousel from "./components/MultisPanelCarousel";
 import StripePolicies from "./components/Contact";
 import { loadStripe } from "@stripe/stripe-js";
-import { AuthProvider, useAuth } from "./logic/authProvider";
+import { useAuth } from "./logic/authProvider";
 import { bumpFixturesEpoch } from "./logic/fixturesEpoch";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
-import GuestLanding, { scrollToGames } from "./components/GuestLanding";
+import { scrollToGames } from "./components/GuestLanding";
 import { getCurrentUser } from "./components/ProtectedContent";
 import { doc, getDoc, collection, getDocs, query, updateDoc } from 'firebase/firestore';
 import { userDetail } from "./logic/authProvider";
 import { checkUserPaidStatus } from "./logic/hasUserPaid";
-import { getScorePrediction } from "./logic/getScorePredictions";
 import SiteHeader from "./components/SiteHeader";
 import CancelSubscription from "./components/CancelSubscription"
 import Over25 from "./components/Over25"
@@ -935,9 +934,7 @@ export function AppContent() {
         <div id="RadioText" />
         <div id="RadioButtons" />
       </div>
-      {!user ? (
-        <GuestLanding />
-      ) : (
+      {!user ? null : (
         <>
       <h1 className="MembersGetMore">Welcome to <span className="TitleColouring">Soccer Stats Hub</span></h1>
       <h4 className="Blurb">The best for in-depth football statistics, analytics and predictions</h4>
@@ -1420,9 +1417,5 @@ export default function App() {
     initTheme();
   }, []);
 
-  return (
-    <AuthProvider>
-      <AppContent />
-    </AuthProvider>
-  );
+  return <AppContent />;
 }

@@ -2,6 +2,8 @@ import { Fragment, useState } from "react";
 import ReactDOM from "react-dom";
 import { isReactSnap } from "../firebase";
 import { apiGetUrl } from "../utils/apiUrl";
+import { getPointsFromLastX } from "../utils/getPointsFromLastX";
+export { getPointsFromLastX };
 import { matches, diff } from "./getFixtures";
 import { RenderAllFixtures } from "../logic/getFixtures";
 import Collapsable from "../components/CollapsableElement";
@@ -230,35 +232,6 @@ let allIndividualTips = [];
   }
 })();
 
-
-export function getPointsFromLastX(lastX) {
-  let points = 0;
-  let pointsAddition;
-
-  try {
-    lastX.forEach((game) => {
-      switch (true) {
-        case game === "W":
-          pointsAddition = 3;
-          break;
-        case game === "D":
-          pointsAddition = 1;
-          break;
-        case game === "L":
-          pointsAddition = 0;
-          break;
-        default:
-          break;
-      }
-
-      points = points + pointsAddition;
-    });
-    return points;
-  } catch (error) {
-    console.log(error);
-    return "N/A";
-  }
-}
 
 function isSameDayOrLater(targetTimestamp) {
 

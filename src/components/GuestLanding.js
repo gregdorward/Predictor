@@ -1,18 +1,46 @@
 import { useEffect, useState } from "react";
-import Login from "./Login";
+import dynamic from "next/dynamic";
+import Image from "next/image";
+import { requestAppLoad } from "../utils/loadApp";
+
+const Login = dynamic(() => import("./Login"), {
+  ssr: false,
+  loading: () => (
+    <div className="GuestLanding-authSkeleton" aria-hidden="true" />
+  ),
+});
 
 function scrollToGames() {
-  const buttons = document.getElementById("Buttons");
-  if (buttons) {
-    buttons.scrollIntoView({ behavior: "smooth" });
-  }
-  const getPredictionsButton = document.getElementById("GeneratePredictionsButton");
-  if (getPredictionsButton) {
-    getPredictionsButton.classList.add("flash-attention");
-    setTimeout(() => {
-      getPredictionsButton.classList.remove("flash-attention");
-      getPredictionsButton.focus();
-    }, 1000);
+  requestAppLoad();
+
+  const focusPredictions = () => {
+    const getPredictionsButton = document.getElementById("GeneratePredictionsButton");
+    if (getPredictionsButton) {
+      getPredictionsButton.classList.add("flash-attention");
+      setTimeout(() => {
+        getPredictionsButton.classList.remove("flash-attention");
+        getPredictionsButton.focus();
+      }, 1000);
+    }
+  };
+
+  const tryScroll = () => {
+    const buttons = document.getElementById("Buttons");
+    if (buttons) {
+      buttons.scrollIntoView({ behavior: "smooth" });
+      focusPredictions();
+      return true;
+    }
+    return false;
+  };
+
+  if (!tryScroll()) {
+    const interval = window.setInterval(() => {
+      if (tryScroll()) {
+        window.clearInterval(interval);
+      }
+    }, 100);
+    window.setTimeout(() => window.clearInterval(interval), 10000);
   }
 }
 
@@ -49,7 +77,7 @@ const GuestLandingIntro = ({ motionEnabled, activeLine }) => (
   </div>
 );
 
-const GuestLanding = () => {
+const GuestLanding = ({ id = "guest-landing", showLogin = false }) => {
   const [activeLine, setActiveLine] = useState(0);
   const [motionEnabled, setMotionEnabled] = useState(true);
 
@@ -72,19 +100,20 @@ const GuestLanding = () => {
   }, [motionEnabled]);
 
   return (
-    <section className="GuestLanding" aria-label="Welcome to Soccer Stats Hub">
+    <section className="GuestLanding" id={id} aria-label="Welcome to Soccer Stats Hub">
       <div className="GuestLanding-cards">
         <div className="GuestLanding-card GuestLanding-visual">
           <div className="GuestLanding-laptop">
             <div className="GuestLanding-laptopLid">
               <div className="GuestLanding-laptopScreen">
-                <img
+                <Image
                   src="/images/landing-fixtures-laptop.png"
                   alt="Soccer Stats Hub fixture list on laptop showing odds, win probabilities, scores and team form"
                   className="GuestLanding-screenshot"
                   width={1024}
                   height={576}
-                  loading="eager"
+                  priority
+                  sizes="(max-width: 768px) 90vw, 560px"
                 />
               </div>
             </div>
@@ -96,8 +125,13 @@ const GuestLanding = () => {
           <GuestLandingIntro motionEnabled={motionEnabled} activeLine={activeLine} />
         </div>
 
-        <div className="GuestLanding-card GuestLanding-auth">
-          <Login variant="landing" />
+        <div
+          id="guest-landing-auth-slot"
+          className="GuestLanding-card GuestLanding-auth"
+          aria-busy={showLogin ? "false" : "true"}
+          aria-label="Sign in"
+        >
+          {showLogin ? <Login variant="landing" /> : null}
         </div>
 
         <div className="GuestLanding-card GuestLanding-about">

@@ -1,6 +1,7 @@
 import React from "react";
 import Document, { Html, Head, Main, NextScript } from "next/document";
 import { ServerStyleSheets } from "@material-ui/core/styles";
+import GUEST_LANDING_CRITICAL_CSS from "../src/critical/guestLandingCriticalCss";
 
 const JSON_LD = {
   "@context": "https://schema.org",
@@ -82,6 +83,33 @@ const THEME_BOOT_SCRIPT = `
 })();
 `;
 
+// Load Google Analytics after the page is idle so it doesn't compete with LCP.
+const DEFERRED_GA_SCRIPT = `
+(function () {
+  function loadGA() {
+    if (window.__sshGaLoaded) return;
+    window.__sshGaLoaded = true;
+    window.dataLayer = window.dataLayer || [];
+    function gtag() { window.dataLayer.push(arguments); }
+    window.gtag = gtag;
+    gtag("js", new Date());
+  }
+  function injectGtag() {
+    loadGA();
+    var s = document.createElement("script");
+    s.async = true;
+    s.src = "https://www.googletagmanager.com/gtag/js?id=G-9F3KSWZWEQ";
+    s.onload = function () { gtag("config", "G-9F3KSWZWEQ"); };
+    document.head.appendChild(s);
+  }
+  if (typeof requestIdleCallback !== "undefined") {
+    requestIdleCallback(injectGtag, { timeout: 5000 });
+  } else {
+    window.addEventListener("load", function () { setTimeout(injectGtag, 2000); });
+  }
+})();
+`;
+
 export default class MyDocument extends Document {
   render() {
     return (
@@ -109,27 +137,24 @@ export default class MyDocument extends Document {
             type="font/woff2"
             crossOrigin="anonymous"
           />
+          <link
+            rel="preload"
+            as="image"
+            href="/images/landing-fixtures-laptop.png"
+            type="image/png"
+          />
           {/* eslint-disable-next-line react/no-danger */}
           <style dangerouslySetInnerHTML={{ __html: FONT_AND_SPLASH_CSS }} />
+          {/* eslint-disable-next-line react/no-danger */}
+          <style dangerouslySetInnerHTML={{ __html: GUEST_LANDING_CRITICAL_CSS }} />
           <script
             type="application/ld+json"
             // eslint-disable-next-line react/no-danger
             dangerouslySetInnerHTML={{ __html: JSON.stringify(JSON_LD) }}
           />
           <script
-            async
-            src="https://www.googletagmanager.com/gtag/js?id=G-9F3KSWZWEQ"
-          />
-          <script
             // eslint-disable-next-line react/no-danger
-            dangerouslySetInnerHTML={{
-              __html: `
-                window.dataLayer = window.dataLayer || [];
-                function gtag() { dataLayer.push(arguments); }
-                gtag("js", new Date());
-                gtag("config", "G-9F3KSWZWEQ");
-              `,
-            }}
+            dangerouslySetInnerHTML={{ __html: DEFERRED_GA_SCRIPT }}
           />
         </Head>
         <body>

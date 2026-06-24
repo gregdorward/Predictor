@@ -2,8 +2,6 @@ import { createContext, useContext, useState, useEffect } from "react";
 import { auth, db } from "../firebase";
 import { onAuthStateChanged } from "firebase/auth";
 import { doc, getDoc } from "firebase/firestore";
-import { ThreeDots } from "react-loading-icons";
-import { getScorePrediction } from "../logic/getScorePredictions";
 import {
   getFixturesEpoch,
   shouldApplyPredictionFixtures,
@@ -17,9 +15,10 @@ export let triggerGlobalPredictions;
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [isPaidUser, setIsPaidUser] = useState(false);
-  const [loading, setLoading] = useState(true); // Add a loading state
+  const [loading, setLoading] = useState(true);
   const [fixtures, setFixtures] = useState([]);
-const [isPredicting, setIsPredicting] = useState(false);
+  const [isPredicting, setIsPredicting] = useState(false);
+
   useEffect(() => {
     if (!auth) {
       setLoading(false);
@@ -29,39 +28,33 @@ const [isPredicting, setIsPredicting] = useState(false);
     const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
       setUser(currentUser);
       userDetail = currentUser;
+      setLoading(false);
 
       if (currentUser && db) {
-        // Check Firestore for subscription status using currentUser.email or uid
-        // (Adjust the document reference as needed)
         const userRef = doc(db, "users", currentUser.uid);
         const userSnap = await getDoc(userRef);
         if (userSnap.exists()) {
           const userData = userSnap.data();
-
           const isPaid = userData.isPaidUser;
-          currentUser.isPaid = isPaid
-          if (isPaid === true) {
-            setIsPaidUser(isPaid === true);
-          } else {
-            setIsPaidUser(false);
-          }
+          currentUser.isPaid = isPaid;
+          setIsPaidUser(isPaid === true);
         } else {
           console.log("User document does not exist in Firestore.");
           setIsPaidUser(false);
         }
+      } else {
+        setIsPaidUser(false);
       }
-
-      setLoading(false); // Auth state has been determined
     });
 
     return () => unsubscribe();
   }, []);
 
-
   const handleGetPredictions = async (day) => {
     const epochAtStart = getFixturesEpoch();
     setIsPredicting(true);
     try {
+      const { getScorePrediction } = await import("../logic/getScorePredictions");
       const data = await getScorePrediction(day);
       if (shouldApplyPredictionFixtures(epochAtStart)) {
         setFixtures(data);
@@ -75,17 +68,21 @@ const [isPredicting, setIsPredicting] = useState(false);
 
   triggerGlobalPredictions = handleGetPredictions;
 
-  // Until loading is complete, return a loading indicator (or null)
-  if (loading) {
-    return <ThreeDots className="MainLoading" />;
-  }
-
   return (
-    <AuthContext.Provider value={{ user, isPaidUser, fixtures, setFixtures, handleGetPredictions, isPredicting }}>
+    <AuthContext.Provider
+      value={{
+        user,
+        isPaidUser,
+        loading,
+        fixtures,
+        setFixtures,
+        handleGetPredictions,
+        isPredicting,
+      }}
+    >
       {children}
     </AuthContext.Provider>
   );
 };
 
-// Hook to access authentication data
 export const useAuth = () => useContext(AuthContext);

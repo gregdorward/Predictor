@@ -31,7 +31,8 @@ import {
   basicTableArray,
 } from "../logic/getFixtures";
 import { userDetail } from "../logic/authProvider";
-import { clicked, getPointsFromLastX } from "../logic/getScorePredictions";
+import { clicked } from "../logic/getScorePredictions";
+import { getPointsFromLastX } from "../utils/getPointsFromLastX";
 import { arrayOfGames } from "../logic/getFixtures";
 import GenerateFormSummary from "../logic/compareFormTrend";
 import { checkUserPaidStatus } from "../logic/hasUserPaid";

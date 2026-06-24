@@ -1,6 +1,6 @@
 import ReactDOM from "react-dom";
 import { allForm } from "../logic/getFixtures";
-import { getPointsFromLastX } from "../logic/getScorePredictions";
+import { getPointsFromLastX } from "../utils/getPointsFromLastX";
 import { allLeagueResultsArrayOfObjects } from "../logic/getFixtures";
 import GenerateFormSummary from "../logic/compareFormTrend";
 import { clicked } from "../logic/getScorePredictions";
