@@ -35,9 +35,14 @@ import {
 } from "../components/SliderDiff";
 import { checkUserPaidStatus } from "../logic/hasUserPaid";
 import { userDetail } from "../logic/authProvider";
+import UsernameSetup from "../components/UsernameSetup";
 import { dynamicDate } from "./getFixtures";
 import { ThreeDots } from "react-loading-icons";
-import { uniqueLeagueIDs, shouldUseApiFormOnly } from "./getFixtures";
+import {
+  uniqueLeagueIDs,
+  shouldUseApiFormOnly,
+  API_FORM_ONLY_LEAGUE_IDS,
+} from "./getFixtures";
 import {
   findLeagueEntryById,
   getLeagueFixturesByLeagueId,
@@ -457,6 +462,9 @@ function UserTips() {
   const [slips, setSlips] = useState([]);
   const [isVisible, setIsVisible] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [localDisplayName, setLocalDisplayName] = useState(null);
+  const user = userDetail;
+  const displayName = localDisplayName || user?.displayName;
 
   const fetchAndSetUserTips = async () => {
     setLoading(true);
@@ -554,9 +562,18 @@ function UserTips() {
   const topPicks = getTopPicks(slips);
   const formatTip = (tip) => tip.replace(/([A-Z])/g, ' $1').replace(/^./, str => str.toUpperCase());
 
+  const showUsernameSetup = user && !displayName;
+
   return (
     <div className="UserTipsContainer">
       <button onClick={() => setIsVisible(false)} className="ActionBtn">Prediction League</button>
+      {showUsernameSetup && (
+        <UsernameSetup
+          db={db}
+          user={user}
+          onUsernameSet={setLocalDisplayName}
+        />
+      )}
       <MonthlyLeaderboard slips={slips} />
       {topPicks.length > 0 && (
         <div className="TrendingSection">
@@ -2889,6 +2906,40 @@ function mapFixtureToTeamMatchStats(fixture, team) {
   };
 }
 
+function mapFixtureToFormResult(fixture, team) {
+  const isHome = fixture.home_name === team;
+  const teamGoals = isHome ? fixture.homeGoalCount : fixture.awayGoalCount;
+  const oppGoals = isHome ? fixture.awayGoalCount : fixture.homeGoalCount;
+  if (teamGoals > oppGoals) {
+    return "W";
+  }
+  if (teamGoals < oppGoals) {
+    return "L";
+  }
+  return "D";
+}
+
+function hydrateFormResultsFromCompetitionFixtures(team, match, form, venue) {
+  const fixtures = getTeamFixturesBeforeMatch(team, match);
+  if (!fixtures.length) {
+    return false;
+  }
+
+  const toResult = (fixture) => mapFixtureToFormResult(fixture, team);
+  form.resultsAll = fixtures.slice(0, 6).map(toResult);
+  const homeFixtures = fixtures.filter((fixture) => fixture.home_name === team);
+  const awayFixtures = fixtures.filter((fixture) => fixture.away_name === team);
+
+  if (venue === "home") {
+    form.resultsHome = homeFixtures.slice(0, 6).map(toResult);
+  } else {
+    form.resultsAway = awayFixtures.slice(0, 6).map(toResult);
+  }
+
+  form.LeagueOrAll = "League";
+  return true;
+}
+
 function applyNeutralAgainstDefaults(form) {
   form.avgShotsAgainst = 12;
   form.avgShotsAgainstLast5 = 12;
@@ -3005,15 +3056,31 @@ function hydrateFormFromApi(teamRoot, form, venue, teamName, match) {
   form.resultsHome = form.resultsHome || [];
   form.resultsAway = form.resultsAway || [];
 
-  const formRun = form.formRun || long.formRun || [];
-  const recent6 = recentApiFormRun(formRun, 6);
-  const recent5 = recentApiFormRun(formRun, 5);
-  const recent2 = recentApiFormRun(formRun, 2);
-  form.resultsAll = recent6;
-  if (venue === "home") {
-    form.resultsHome = recent6;
+  const usedCompetitionForm =
+    teamName &&
+    match &&
+    API_FORM_ONLY_LEAGUE_IDS.includes(match.leagueID) &&
+    hydrateFormResultsFromCompetitionFixtures(teamName, match, form, venue);
+
+  let recent6;
+  let recent5;
+  let recent2;
+
+  if (usedCompetitionForm) {
+    recent6 = form.resultsAll;
+    recent5 = form.resultsAll.slice(0, 5);
+    recent2 = form.resultsAll.slice(0, 2);
   } else {
-    form.resultsAway = recent6;
+    const formRun = form.formRun || long.formRun || [];
+    recent6 = recentApiFormRun(formRun, 6);
+    recent5 = recentApiFormRun(formRun, 5);
+    recent2 = recentApiFormRun(formRun, 2);
+    form.resultsAll = recent6;
+    if (venue === "home") {
+      form.resultsHome = recent6;
+    } else {
+      form.resultsAway = recent6;
+    }
   }
 
   form.avgScored = apiOverallAverage(
@@ -3420,6 +3487,24 @@ export async function calculateScore(match, index, divider, calculate, AIPredict
         match.bttsPercentageAwayHome,
         match.bttsPercentageAwayAway,
       ] = await getPastLeagueResults(match.awayTeam, match, "away", formAway);
+    } else if (API_FORM_ONLY_LEAGUE_IDS.includes(match.leagueID)) {
+      match.apiFormOnly = true;
+      hydrateFormFromApi(teams[0], formHome, "home", match.homeTeam, match);
+      hydrateFormFromApi(teams[1], formAway, "away", match.awayTeam, match);
+      match.bttsAllPercentageHome = formatBttsPercentage(formHome.BttsPercentage);
+      match.bttsPercentageHomeHome = formatBttsPercentage(
+        formHome.BttsPercentageHomeOrAway
+      );
+      match.bttsPercentageHomeAway = formatBttsPercentage(
+        formHome.BttsPercentageHomeOrAway
+      );
+      match.bttsAllPercentageAway = formatBttsPercentage(formAway.BttsPercentage);
+      match.bttsPercentageAwayHome = formatBttsPercentage(
+        formAway.BttsPercentageHomeOrAway
+      );
+      match.bttsPercentageAwayAway = formatBttsPercentage(
+        formAway.BttsPercentageHomeOrAway
+      );
     } else {
       formHome.completeData = false;
       formHome.averageOddsHome = null;

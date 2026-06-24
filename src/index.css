@@ -2588,6 +2588,47 @@ strong.LOST {
   color: #b10f00
 }
 
+.username-setup-banner {
+  margin: 1em auto 1.5em;
+  max-width: 95%;
+  padding: 1.25em;
+  background-color: var(--secondary-background-color);
+  border-radius: 8px;
+  text-align: center;
+}
+
+.username-setup-banner h3 {
+  margin-top: 0;
+  margin-bottom: 0.5em;
+}
+
+.username-setup-banner p {
+  margin-top: 0;
+  margin-bottom: 1em;
+  font-size: 0.9em;
+}
+
+.username-setup-banner form {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.75em;
+}
+
+.username-setup-banner input[type="text"] {
+  width: 100%;
+  max-width: 320px;
+  height: 2.5em;
+  padding: 0 0.75em;
+  color: #020029;
+}
+
+.username-setup-error {
+  color: #f44336;
+  margin: 0;
+  font-size: 0.9em;
+}
+
 .leaderboard-container {
   margin-bottom: 2em;
   background-color: var(--secondary-background-color);

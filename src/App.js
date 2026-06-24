@@ -35,7 +35,6 @@ import { SuccessPage } from "./components/Success"
 import { CancelPage } from "./components/Cancel"
 import PasswordReset from "./components/PasswordReset";
 import { auth, db, isReactSnap } from "./firebase";
-import UsernameModal from "./components/UsernameModal";
 import Footer from "./components/Footer"
 import handleLogout from "./components/SignOut"
 import { RenderAllFixtures } from "./logic/getFixtures";
@@ -570,7 +569,6 @@ let welcomeTextOne = welcomeTextUnsplitOne.split("\n").map((i) => {
 export function AppContent() {
   const { user, isPaidUser, fixtures, setFixtures, handleGetPredictions, isPredicting } = useAuth()
 
-  const [showUsernameModal, setShowUsernameModal] = useState(false);
   const [userTips, setUserTips] = useState([]); // This is the React state
   // 1. For the items the user is currently clicking on the site
   const [activeSlip, setActiveSlip] = useState([]);
@@ -775,18 +773,8 @@ export function AppContent() {
     // Use an IIFE (Immediately Invoked Function Expression) inside.
     const fetchData = async () => {
       if (!user) {
-        setShowUsernameModal(false);
         return;
       }
-
-      // 1. Check for displayName (Existing logic)
-      if (!user.displayName) {
-        console.log("User does not have a displayName. Prompting for username.");
-        setShowUsernameModal(true);
-        return;
-      }
-
-      setShowUsernameModal(false);
 
       // --- FETCHING USER PROFILE (Top-level document) ---
       const userDocRef = doc(db, "users", user.uid);
@@ -914,20 +902,6 @@ export function AppContent() {
   return (
     <div className="App">
       <PageMeta />
-      {showUsernameModal && user && (
-        <UsernameModal
-          auth={auth} // Use imported 'auth'
-          db={db}     // Use imported 'db'
-          user={user} // User object from useAuth()
-          onClose={() => setShowUsernameModal(false)}
-          onUsernameSet={() => {
-            // This function is called after the user successfully sets the name.
-            // It closes the modal, and the useEffect hook will prevent it from re-opening.
-            setShowUsernameModal(false);
-            // You might want to navigate the user or show a success message here.
-          }}
-        />
-      )}
       <SiteHeader showThemeToggle />
       <div id="LoadingContainer" className="LoadingContainer" />
       <div id="RadioContainer" className="RadioContainer">
