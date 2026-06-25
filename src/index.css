@@ -8061,6 +8061,91 @@ button.AIInsights button:active {
   color: var(--text-color);
 }
 
+.referee-card {
+  display: flex;
+  flex-direction: column;
+  text-align: center;
+  padding: 1em;
+}
+
+.referee-name {
+  font-size: 1.2em;
+  color: var(--text-color);
+  margin: 0;
+}
+
+.referee-meta {
+  font-size: 0.9em;
+  color: var(--text-color);
+  margin: 0.5em 0 1em;
+}
+
+.referee-secondary-stats {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 1em;
+  margin-top: 1em;
+  font-size: 0.9em;
+  color: var(--text-color);
+}
+
+.referee-stats-grid {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.75em;
+  margin-bottom: 15px;
+}
+
+.referee-stat-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-width: 5.5em;
+  padding: 0.85em 1em;
+  border-radius: 6px;
+  text-align: center;
+}
+
+.referee-stat-item--neutral {
+  background-color: rgb(60, 60, 60);
+  color: #fff;
+}
+
+.referee-stat-item--yellow {
+  background-color: #ffb900;
+  color: #1a1a1a;
+}
+
+.referee-stat-item--red {
+  background-color: #c41e1e;
+  color: #fff;
+}
+
+.referee-stat-value {
+  font-size: 1.1em;
+  font-weight: bold;
+  line-height: 1.2;
+}
+
+.referee-stat-label {
+  font-size: 0.75em;
+  line-height: 1.3;
+  margin-top: 0.35em;
+  white-space: nowrap;
+}
+
+.referee-stat-item--neutral .referee-stat-label,
+.referee-stat-item--red .referee-stat-label {
+  color: #fff;
+}
+
+.referee-stat-item--yellow .referee-stat-label {
+  color: #1a1a1a;
+}
+
 .manager-stats-grid {
   display: flex;
   justify-content: center;

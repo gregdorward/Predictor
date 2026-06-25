@@ -56,6 +56,7 @@ import { expandRadarStrengthSeries } from "../utils/radarDisplay";
 import MissingPlayersList from "../components/MissingPlayersList";
 import PlayerStatsList from "../components/PlayerStatsList";
 import { ManagerComparison } from "../components/ManagerCard";
+import RefereeStats from "../components/RefereeStats";
 import { StreakStats } from "../components/StreakStats";
 import {
   calculateAttackingStrength,
@@ -524,6 +525,8 @@ function GameStats({ game, displayBool, stats, handleToggleTip, userTips }) {
   const [homeManager, setHomeManager] = useState(null);
   const [awayManager, setAwayManager] = useState(null);
   const [loadingManagers, setLoadingManagers] = useState(true);
+  const [refereeData, setRefereeData] = useState(null);
+  const [loadingReferee, setLoadingReferee] = useState(true);
   const [loadingFutureFixtures, setLoadingFutureFixtures] = useState(true);
   const [oddsData, setOddsData] = useState(null); // State to hold your odds object
   const [loadingOdds, setLoadingOdds] = useState(false);
@@ -1742,12 +1745,15 @@ function GameStats({ game, displayBool, stats, handleToggleTip, userTips }) {
         setLoadingFutureFixtures(true);
         setLoadingVoteData(true);
         setLoadingManagers(true);
+        setLoadingReferee(true);
 
         let previousGames = await fetch(
           `${process.env.NEXT_PUBLIC_EXPRESS_SERVER}match/${game.id}`
         );
         let odds;
+        let matchDetailData = null;
         await previousGames.json().then((data) => {
+          matchDetailData = data;
           odds = {
             HomeTeam: {
               HomeWin: data.data.odds_ft_1,
@@ -1854,6 +1860,21 @@ function GameStats({ game, displayBool, stats, handleToggleTip, userTips }) {
         });
 
         setOddsData(odds);
+
+        const refereeId = game.refereeID || matchDetailData?.data?.refereeID;
+        if (refereeId) {
+          try {
+            const refereeRes = await fetch(
+              `${process.env.NEXT_PUBLIC_EXPRESS_SERVER}referee/${refereeId}`
+            );
+            const refereeJson = await refereeRes.json();
+            if (refereeJson?.data?.length) {
+              setRefereeData(refereeJson.data);
+            }
+          } catch (error) {
+            console.error(`Error fetching referee data for ${refereeId}:`, error);
+          }
+        }
 
         // 1. Only proceed if the user is a premium member
         console.log("User paid status:", isPaidUser);
@@ -2321,6 +2342,7 @@ function GameStats({ game, displayBool, stats, handleToggleTip, userTips }) {
         setLoadingKeyPlayers(false);
         setLoadingVoteData(false);
         setLoadingManagers(false);
+        setLoadingReferee(false);
         setLoading(false);
         // console.log(homePlayerData);
       }
@@ -4334,6 +4356,21 @@ function GameStats({ game, displayBool, stats, handleToggleTip, userTips }) {
               }
             />
           )}
+
+          {loadingReferee ? (
+            <div className="loading-spinner"></div>
+          ) : refereeData?.length ? (
+            <Collapsable
+              buttonText={`Referee \u{2630}`}
+              classNameButton="FutureFixturesButton"
+              element={
+                <RefereeStats
+                  refereeRecords={refereeData}
+                  leagueId={game.leagueID}
+                />
+              }
+            />
+          ) : null}
 
 
           {loadingPlayerData || homePlayerDataWithImages.length === 0 ? (

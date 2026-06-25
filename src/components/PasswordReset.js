@@ -1,5 +1,6 @@
 import { useState } from "react";
-import { getAuth, sendPasswordResetEmail } from "firebase/auth";
+import { sendPasswordResetEmail } from "firebase/auth";
+import { auth } from "../firebase";
 import PageMeta from "./PageMeta";
 import Footer from "./Footer";
 
@@ -8,12 +9,16 @@ const PasswordReset = () => {
   const [message, setMessage] = useState("");
   const [error, setError] = useState("");
 
-  const auth = getAuth();
-
   const handleReset = async (e) => {
     e.preventDefault();
     setMessage("");
     setError("");
+
+    if (!auth) {
+      setError("Authentication is unavailable. Please try again in your browser.");
+      return;
+    }
+
     try {
       await sendPasswordResetEmail(auth, email);
       setMessage("Password reset email sent! Check your inbox.");

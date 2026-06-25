@@ -1,7 +1,6 @@
 import { useState, useEffect } from "react";
-import { getAuth } from "firebase/auth";
 import { doc, getDoc } from "firebase/firestore";
-import { db } from "../firebase"; // Ensure you have Firebase initialized
+import { auth, db } from "../firebase";
 import PageMeta from "./PageMeta";
 import Footer from "./Footer";
 
@@ -12,8 +11,8 @@ export default function CancelSubscription() {
 
   useEffect(() => {
     async function fetchSubscriptionStatus() {
-      const user = getAuth().currentUser;
-      if (!user) return;
+      const user = auth?.currentUser;
+      if (!user || !db) return;
 
       try {
         const userRef = doc(db, "users", user.uid);
@@ -37,9 +36,9 @@ export default function CancelSubscription() {
     setLoading(true);
     setMessage("");
 
-    const user = getAuth().currentUser;
+    const user = auth?.currentUser;
 
-    if (!user) {
+    if (!auth || !user) {
       setMessage("User not authenticated.");
       setLoading(false);
       return;

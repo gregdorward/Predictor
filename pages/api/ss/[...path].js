@@ -26,6 +26,7 @@ const CACHE_RULES = {
   scheduledEvents: { sMaxAge: 1200, swr: 86400 },
   "league-averages": { sMaxAge: 100, swr: 86400 },
   "match-snapshot": { sMaxAge: 21600, swr: 86400 },
+  referee: { sMaxAge: 86400, swr: 604800 },
 };
 
 function jsonError(body, status, extraHeaders) {
