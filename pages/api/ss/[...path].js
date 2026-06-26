@@ -27,6 +27,7 @@ const CACHE_RULES = {
   "league-averages": { sMaxAge: 100, swr: 86400 },
   "match-snapshot": { sMaxAge: 21600, swr: 86400 },
   referee: { sMaxAge: 86400, swr: 604800 },
+  teamStats: { sMaxAge: 3600, swr: 86400 },
 };
 
 function jsonError(body, status, extraHeaders) {

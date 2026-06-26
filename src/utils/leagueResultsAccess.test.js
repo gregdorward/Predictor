@@ -1,7 +1,10 @@
 import {
+  applyCompetitionGoalDifference,
+  computeCompetitionGoalDifference,
   findLeagueEntryById,
   getLeagueFixturesByLeagueId,
   getLeagueResultsByLeagueId,
+  getTeamFixturesBeforeMatch,
 } from "./leagueResultsAccess";
 
 describe("getLeagueFixturesByLeagueId", () => {
@@ -67,6 +70,79 @@ describe("getLeagueResultsByLeagueId", () => {
 
     expect(getLeagueResultsByLeagueId(stringIdCache, 16494)?.id).toBe("16494");
     expect(getLeagueFixturesByLeagueId(stringIdCache, 16494)).toHaveLength(1);
+  });
+});
+
+describe("competition goal difference", () => {
+  const allLeagueResults = [
+    {
+      id: 16494,
+      fixtures: [
+        {
+          home_name: "England",
+          away_name: "Iran",
+          homeGoalCount: 6,
+          awayGoalCount: 2,
+          date_unix: 100000,
+        },
+        {
+          home_name: "Wales",
+          away_name: "England",
+          homeGoalCount: 0,
+          awayGoalCount: 3,
+          date_unix: 200000,
+        },
+        {
+          home_name: "England",
+          away_name: "USA",
+          homeGoalCount: 0,
+          awayGoalCount: 0,
+          date_unix: 300000,
+        },
+      ],
+    },
+  ];
+
+  const match = {
+    leagueID: 16494,
+    date: 400000,
+    homeTeam: "England",
+    awayTeam: "Senegal",
+  };
+
+  test("computes overall and home-only goal difference from competition fixtures", () => {
+    expect(
+      computeCompetitionGoalDifference(
+        "England",
+        match,
+        "home",
+        allLeagueResults
+      )
+    ).toEqual({
+      goalDifference: 7,
+      goalDifferenceHomeOrAway: 4,
+    });
+  });
+
+  test("getTeamFixturesBeforeMatch excludes the current match day", () => {
+    expect(
+      getTeamFixturesBeforeMatch("England", match, allLeagueResults)
+    ).toHaveLength(3);
+  });
+
+  test("applyCompetitionGoalDifference mutates the form object", () => {
+    const form = { goalDifference: 99, goalDifferenceHomeOrAway: 99 };
+    expect(
+      applyCompetitionGoalDifference(
+        form,
+        "England",
+        match,
+        "home",
+        allLeagueResults
+      )
+    ).toBe(true);
+    expect(form.goalDifference).toBe(7);
+    expect(form.goalDifferenceHomeOrAway).toBe(4);
   });
 });
 

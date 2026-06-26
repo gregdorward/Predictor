@@ -44,8 +44,10 @@ import {
   API_FORM_ONLY_LEAGUE_IDS,
 } from "./getFixtures";
 import {
+  applyCompetitionGoalDifference,
   findLeagueEntryById,
   getLeagueFixturesByLeagueId,
+  getTeamFixturesBeforeMatch,
 } from "../utils/leagueResultsAccess";
 import { selectedTipType } from "../components/PredictionTypeRadio";
 import { InsightsPanel } from "../components/Insights"
@@ -2814,23 +2816,6 @@ function averageApiStats(values) {
   );
 }
 
-function getTeamFixturesBeforeMatch(team, match) {
-  const fixtures = getLeagueFixturesByLeagueId(
-    allLeagueResultsArrayOfObjects,
-    match.leagueID
-  );
-  if (!fixtures.length) {
-    return [];
-  }
-  return fixtures
-    .filter(
-      (fixture) =>
-        (fixture.home_name === team || fixture.away_name === team) &&
-        fixture.date_unix < match.date - 86400
-    )
-    .sort((a, b) => b.date_unix - a.date_unix);
-}
-
 function mapFixtureToTeamMatchStats(fixture, team) {
   const isHome = fixture.home_name === team;
   if (isHome) {
@@ -2920,7 +2905,11 @@ function mapFixtureToFormResult(fixture, team) {
 }
 
 function hydrateFormResultsFromCompetitionFixtures(team, match, form, venue) {
-  const fixtures = getTeamFixturesBeforeMatch(team, match);
+  const fixtures = getTeamFixturesBeforeMatch(
+    team,
+    match,
+    allLeagueResultsArrayOfObjects
+  );
   if (!fixtures.length) {
     return false;
   }
@@ -2952,7 +2941,11 @@ function applyNeutralAgainstDefaults(form) {
 }
 
 function hydrateAgainstMetricsFromFixtures(team, match, form) {
-  const fixtures = getTeamFixturesBeforeMatch(team, match);
+  const fixtures = getTeamFixturesBeforeMatch(
+    team,
+    match,
+    allLeagueResultsArrayOfObjects
+  );
   if (!fixtures.length) {
     return false;
   }
@@ -3061,6 +3054,20 @@ function hydrateFormFromApi(teamRoot, form, venue, teamName, match) {
     match &&
     API_FORM_ONLY_LEAGUE_IDS.includes(match.leagueID) &&
     hydrateFormResultsFromCompetitionFixtures(teamName, match, form, venue);
+
+  if (
+    teamName &&
+    match &&
+    API_FORM_ONLY_LEAGUE_IDS.includes(match.leagueID)
+  ) {
+    applyCompetitionGoalDifference(
+      form,
+      teamName,
+      match,
+      venue,
+      allLeagueResultsArrayOfObjects
+    );
+  }
 
   let recent6;
   let recent5;

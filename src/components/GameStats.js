@@ -66,7 +66,9 @@ import {
 import { rounds } from "./TeamOfTheSeason";
 import { applyNationalTeamAlias } from "../utils/nationalTeamAliases";
 import { findSofaScoreGameByTeams } from "../utils/sofaScoreMatch";
+import { resolveTeamStatistics } from "../utils/sofaScoreTeamStats";
 import { getLeagueFixturesByLeagueId } from "../utils/leagueResultsAccess";
+import { apiGetUrl } from "../utils/apiUrl";
 import {
   mapFutureFixtureEvents,
   selectUpcomingFixtures,
@@ -1907,17 +1909,34 @@ function GameStats({ game, displayBool, stats, handleToggleTip, userTips }) {
           console.log(`Derived round ID for league ${game.sofaScoreId}: ${derivedRoundId}`);
           try {
             const homeTeamStatsResponse = await fetch(
-              `${process.env.NEXT_PUBLIC_EXPRESS_SERVER}teamStats/${matchingGameInfo.homeId}/${game.sofaScoreId}/${derivedRoundId}`
+              apiGetUrl(
+                `teamStats/${matchingGameInfo.homeId}/${game.sofaScoreId}/${derivedRoundId}`
+              )
             );
             const homeTeam = await homeTeamStatsResponse.json();
-            let homeStats = homeTeam.statistics;
-
+            const homeStats =
+              homeTeamStatsResponse.ok && !homeTeam?.error
+                ? resolveTeamStatistics(
+                    homeTeam,
+                    stats,
+                    matchingGameInfo.homeId
+                  )
+                : null;
 
             const awayTeamStatsResponse = await fetch(
-              `${process.env.NEXT_PUBLIC_EXPRESS_SERVER}teamStats/${matchingGameInfo.awayId}/${game.sofaScoreId}/${derivedRoundId}`
+              apiGetUrl(
+                `teamStats/${matchingGameInfo.awayId}/${game.sofaScoreId}/${derivedRoundId}`
+              )
             );
             const awayTeam = await awayTeamStatsResponse.json();
-            let awayStats = awayTeam.statistics;
+            const awayStats =
+              awayTeamStatsResponse.ok && !awayTeam?.error
+                ? resolveTeamStatistics(
+                    awayTeam,
+                    stats,
+                    matchingGameInfo.awayId
+                  )
+                : null;
 
             setHomeTeamStats(homeStats);
             setAwayTeamStats(awayStats);

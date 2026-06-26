@@ -3,7 +3,10 @@ import {
   buildApiFormShortWindow,
   buildApiFormChartWindow,
   shouldStoreApiFormWindows,
+  API_FORM_ONLY_LEAGUE_IDS,
+  allLeagueResultsArrayOfObjects,
 } from "./getFixtures";
+import { applyCompetitionGoalDifference } from "../utils/leagueResultsAccess";
 import {
   calculateAttackingStrength,
   calculateDefensiveStrength,
@@ -570,6 +573,23 @@ export async function buildAllFormEntry(match, fixture, leagueID, leaguePosition
   match.awayTeamLossPercentage = teamCtx.awayTeamLossPercentageAway;
   match.homeTeamDrawPercentage = teamCtx.homeTeamDrawPercentageHome;
   match.awayTeamDrawPercentage = teamCtx.awayTeamDrawPercentageAway;
+
+  if (API_FORM_ONLY_LEAGUE_IDS.includes(leagueID)) {
+    applyCompetitionGoalDifference(
+      formEntry.home[2],
+      match.homeTeam,
+      match,
+      "home",
+      allLeagueResultsArrayOfObjects
+    );
+    applyCompetitionGoalDifference(
+      formEntry.away[2],
+      match.awayTeam,
+      match,
+      "away",
+      allLeagueResultsArrayOfObjects
+    );
+  }
 
   return formEntry;
 }

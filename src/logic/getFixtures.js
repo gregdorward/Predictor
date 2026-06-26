@@ -11,7 +11,7 @@ import { ThreeDots } from "react-loading-icons";
 import BouncingDotsLoader from "../components/BouncingDots"
 import { selectedOdds } from "../components/OddsRadio";
 import { getPointsFromLastX } from "../utils/getPointsFromLastX";
-import { getLeagueFixturesByLeagueId } from "../utils/leagueResultsAccess";
+import { getLeagueFixturesByLeagueId, applyCompetitionGoalDifference } from "../utils/leagueResultsAccess";
 import { apiGetUrl } from "../utils/apiUrl";
 import {
   transformGroupStageTables,
@@ -1801,6 +1801,23 @@ export async function generateFixtures(
               },
             },
           });
+          if (API_FORM_ONLY_LEAGUE_IDS.includes(leagueID)) {
+            const formEntry = allForm[allForm.length - 1];
+            applyCompetitionGoalDifference(
+              formEntry.home[2],
+              match.homeTeam,
+              match,
+              "home",
+              allLeagueResultsArrayOfObjects
+            );
+            applyCompetitionGoalDifference(
+              formEntry.away[2],
+              match.awayTeam,
+              match,
+              "away",
+              allLeagueResultsArrayOfObjects
+            );
+          }
         }
 
         match.matches_completed_minimum = fixture.matches_completed_minimum;

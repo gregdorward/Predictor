@@ -15,6 +15,7 @@ const PROXIED_ENDPOINTS = new Set([
   "league-averages",
   "match-snapshot",
   "referee",
+  "teamStats",
 ]);
 
 const ORIGIN = process.env.NEXT_PUBLIC_EXPRESS_SERVER;
