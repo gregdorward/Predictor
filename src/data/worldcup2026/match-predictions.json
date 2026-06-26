@@ -1,132 +1,52 @@
 {
   "version": 1,
-  "lastUpdated": "2026-06-23T12:00:00.000Z",
+  "lastUpdated": "2026-06-26T12:00:00.000Z",
   "matches": [
     {
-      "id": "group-L-england-vs-ghana",
+      "id": "group-G-egypt-vs-iran",
       "phase": "group",
-      "roundLabel": "Group L",
-      "group": "L",
-      "date": "2026-06-23",
-      "home": "England",
-      "away": "Ghana",
+      "roundLabel": "Group G",
+      "group": "G",
+      "date": "2026-06-26",
+      "home": "Egypt",
+      "away": "IR Iran",
       "prediction": {
-        "predictedScore": "3-0",
-        "homeWin": 72,
-        "draw": 18,
-        "awayWin": 10
+        "predictedScore": "1-1",
+        "homeWin": 38,
+        "draw": 30,
+        "awayWin": 32
       },
       "source": "static"
     },
     {
-      "id": "group-L-panama-vs-croatia",
+      "id": "group-G-new-zealand-vs-belgium",
       "phase": "group",
-      "roundLabel": "Group L",
-      "group": "L",
-      "date": "2026-06-23",
-      "home": "Panama",
-      "away": "Croatia",
+      "roundLabel": "Group G",
+      "group": "G",
+      "date": "2026-06-26",
+      "home": "New Zealand",
+      "away": "Belgium",
       "prediction": {
-        "predictedScore": "1-2",
-        "homeWin": 18,
+        "predictedScore": "0-2",
+        "homeWin": 15,
         "draw": 22,
-        "awayWin": 60
+        "awayWin": 63
       },
       "source": "static"
     },
     {
-      "id": "group-C-scotland-vs-brazil",
+      "id": "group-I-senegal-vs-iraq",
       "phase": "group",
-      "roundLabel": "Group C",
-      "group": "C",
-      "date": "2026-06-24",
-      "home": "Scotland",
-      "away": "Brazil",
-      "prediction": {
-        "predictedScore": "1-3",
-        "homeWin": 12,
-        "draw": 18,
-        "awayWin": 70
-      },
-      "source": "static"
-    },
-    {
-      "id": "group-B-switzerland-vs-canada",
-      "phase": "group",
-      "roundLabel": "Group B",
-      "group": "B",
-      "date": "2026-06-24",
-      "home": "Switzerland",
-      "away": "Canada",
-      "prediction": {
-        "predictedScore": "1-2",
-        "homeWin": 28,
-        "draw": 26,
-        "awayWin": 46
-      },
-      "source": "static"
-    },
-    {
-      "id": "group-E-ecuador-vs-germany",
-      "phase": "group",
-      "roundLabel": "Group E",
-      "group": "E",
-      "date": "2026-06-25",
-      "home": "Ecuador",
-      "away": "Germany",
-      "prediction": {
-        "predictedScore": "1-2",
-        "homeWin": 22,
-        "draw": 24,
-        "awayWin": 54
-      },
-      "source": "static"
-    },
-    {
-      "id": "group-F-japan-vs-sweden",
-      "phase": "group",
-      "roundLabel": "Group F",
-      "group": "F",
-      "date": "2026-06-25",
-      "home": "Japan",
-      "away": "Sweden",
+      "roundLabel": "Group I",
+      "group": "I",
+      "date": "2026-06-26",
+      "home": "Senegal",
+      "away": "Iraq",
       "prediction": {
         "predictedScore": "2-1",
-        "homeWin": 48,
-        "draw": 26,
-        "awayWin": 26
-      },
-      "source": "static"
-    },
-    {
-      "id": "group-F-tunisia-vs-netherlands",
-      "phase": "group",
-      "roundLabel": "Group F",
-      "group": "F",
-      "date": "2026-06-25",
-      "home": "Tunisia",
-      "away": "Netherlands",
-      "prediction": {
-        "predictedScore": "0-3",
-        "homeWin": 8,
-        "draw": 14,
-        "awayWin": 78
-      },
-      "source": "static"
-    },
-    {
-      "id": "group-D-usa-vs-türkiye",
-      "phase": "group",
-      "roundLabel": "Group D",
-      "group": "D",
-      "date": "2026-06-25",
-      "home": "USA",
-      "away": "Türkiye",
-      "prediction": {
-        "predictedScore": "2-0",
-        "homeWin": 65,
-        "draw": 22,
-        "awayWin": 13
+        "homeWin": 55,
+        "draw": 25,
+        "awayWin": 20
       },
       "source": "static"
     },
@@ -159,6 +79,86 @@
         "homeWin": 25,
         "draw": 26,
         "awayWin": 49
+      },
+      "source": "static"
+    },
+    {
+      "id": "group-H-cape-verde-vs-saudi-arabia",
+      "phase": "group",
+      "roundLabel": "Group H",
+      "group": "H",
+      "date": "2026-06-26",
+      "home": "Cape Verde",
+      "away": "Saudi Arabia",
+      "prediction": {
+        "predictedScore": "2-1",
+        "homeWin": 52,
+        "draw": 24,
+        "awayWin": 24
+      },
+      "source": "static"
+    },
+    {
+      "id": "group-L-england-vs-panama",
+      "phase": "group",
+      "roundLabel": "Group L",
+      "group": "L",
+      "date": "2026-06-27",
+      "home": "England",
+      "away": "Panama",
+      "prediction": {
+        "predictedScore": "2-0",
+        "homeWin": 78,
+        "draw": 14,
+        "awayWin": 8
+      },
+      "source": "static"
+    },
+    {
+      "id": "group-L-ghana-vs-croatia",
+      "phase": "group",
+      "roundLabel": "Group L",
+      "group": "L",
+      "date": "2026-06-27",
+      "home": "Ghana",
+      "away": "Croatia",
+      "prediction": {
+        "predictedScore": "1-2",
+        "homeWin": 32,
+        "draw": 26,
+        "awayWin": 42
+      },
+      "source": "static"
+    },
+    {
+      "id": "round32-brazil-vs-japan",
+      "phase": "round32",
+      "roundLabel": "Round of 32",
+      "group": "F",
+      "date": "2026-06-29",
+      "home": "Brazil",
+      "away": "Japan",
+      "prediction": {
+        "predictedScore": "2-1",
+        "homeWin": 58,
+        "draw": 22,
+        "awayWin": 20
+      },
+      "source": "static"
+    },
+    {
+      "id": "round32-usa-vs-bosnia",
+      "phase": "round32",
+      "roundLabel": "Round of 32",
+      "group": "D",
+      "date": "2026-07-01",
+      "home": "USA",
+      "away": "Bosnia and Herzegovina",
+      "prediction": {
+        "predictedScore": "2-0",
+        "homeWin": 62,
+        "draw": 22,
+        "awayWin": 16
       },
       "source": "static"
     }
