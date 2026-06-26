@@ -308,11 +308,28 @@ export const rounds = [
 ];
 
 
+function pickLatestRoundId(roundList) {
+  if (!Array.isArray(roundList) || roundList.length === 0) return null;
+
+  // Prefer the highest matchday/round number when SofaScore provides it.
+  const withRoundNumber = roundList.filter((entry) => entry?.round != null);
+  if (withRoundNumber.length > 0) {
+    const latest = withRoundNumber.reduce((best, entry) =>
+      entry.round > best.round ? entry : best
+    );
+    return latest.id ?? null;
+  }
+
+  // Fallback: last entry is usually the most recent matchday.
+  const last = roundList[roundList.length - 1];
+  return last?.id ?? null;
+}
+
+
 const TeamOfTheSeason = (props) => {
   const [roundId, setRoundId] = useState(null);
-  const seasonId = 61627; // Update this dynamically if needed
-  const id = props.id
-  //WILL NEED TO BE UPDATED NEXT SEASON
+  const [loadError, setLoadError] = useState(null);
+  const id = props.id;
 
   const baseUrl = `https://widgets.sofascore.com/embed/unique-tournament/${id}`;
 
@@ -322,49 +339,71 @@ const TeamOfTheSeason = (props) => {
         return mapping[id];
       }
     }
-    console.warn(`No matching media ID found for ID: ${id}`);
+    console.warn(`No matching season ID found for tournament: ${id}`);
     return null;
   })();
 
-  console.log(id)
-  console.log(derivedRoundId)
-
   useEffect(() => {
+    if (!id || !derivedRoundId) {
+      setRoundId(null);
+      setLoadError(null);
+      return;
+    }
+
+    let cancelled = false;
+
     const fetchRoundId = async () => {
+      setRoundId(null);
+      setLoadError(null);
+
       try {
-        // Fetch rounds data to get the correct round ID
         const roundsResponse = await fetch(
           `${process.env.NEXT_PUBLIC_EXPRESS_SERVER}round/${id}/${derivedRoundId}`
         );
-        let roundsData = await roundsResponse.json();
 
-        // Get the round ID from the first round in the data
-        if (roundsData.rounds?.length > 0) {
-          const firstRoundId = roundsData.rounds[0]?.id; // Grabbing the id from index 0
-          setRoundId(firstRoundId); // Set the roundId state
+        if (!roundsResponse.ok) {
+          throw new Error(`Round fetch failed (${roundsResponse.status})`);
+        }
+
+        const roundsData = await roundsResponse.json();
+        const latestRoundId = pickLatestRoundId(roundsData.rounds);
+
+        if (cancelled) return;
+
+        if (latestRoundId) {
+          setRoundId(latestRoundId);
         } else {
-          console.error("No rounds data found.");
+          setLoadError("No team-of-the-week rounds available for this tournament yet.");
+          console.error("No rounds data found for tournament", id);
         }
       } catch (error) {
-        console.error("Error fetching SofaScore API:", error);
+        if (!cancelled) {
+          setLoadError("Unable to load Team of the Week.");
+          console.error("Error fetching SofaScore round data:", error);
+        }
       }
     };
 
     fetchRoundId();
-  }, [id, roundId]);
+
+    return () => {
+      cancelled = true;
+    };
+  }, [id, derivedRoundId]);
 
   return (
     <div className="TeamOfTheSeason">
-      {derivedRoundId ? (
+      {derivedRoundId && roundId ? (
         <iframe
           width="100%"
           height="700"
-          // style={{ display: 'block', maxWidth: '700px' }}
           src={`${baseUrl}/season/${derivedRoundId}/round/${roundId}/teamOfTheWeek?widgetBackground=Gray&showCompetitionLogo=true&v=2`}
           frameBorder="0"
           scrolling="no"
           title="SofaScore Team of the Week"
         ></iframe>
+      ) : loadError ? (
+        <p>{loadError}</p>
       ) : (
         <p>Loading Team of the Week...</p>
       )}
