@@ -142,6 +142,18 @@ function getTeamInjuryImpactLoss(impacts, gameId, side) {
   return Math.max(atk, def);
 }
 
+function getCompetitionGamesPlayed(formEntry) {
+  const fromForm = Number(formEntry?.gamesPlayed);
+  if (fromForm > 0) {
+    return fromForm;
+  }
+  const fromResults = formEntry?.resultsAll?.length ?? 0;
+  if (fromResults > 0) {
+    return fromResults;
+  }
+  return 1;
+}
+
 // Shared stat fields for homeAllStatsProps / awayAllStatsProps with "-" fallbacks.
 function buildTeamAllStatsFields(teamStats, leagueStats, form) {
   const shotsInsideBox = teamStats?.shotsFromInsideTheBox;
@@ -2130,7 +2142,6 @@ function GameStats({ game, displayBool, stats, handleToggleTip, userTips }) {
                   attackingQualityImpact
                 ) * positionalAdjustment;
 
-
                 const defensiveActions =
                   tackles * 2 +
                   interceptions * 2 +
@@ -2156,8 +2167,6 @@ function GameStats({ game, displayBool, stats, handleToggleTip, userTips }) {
                     defensiveContributionImpact +
                     defensiveQualityImpact) * defensivePositionMultiplier
                 );
-
-
 
                 let attackLambdaImpact = 1 - (attackingImpactScore * 0.02);
                 let defenceLambdaImpact = 1 + (defensiveImpactScore * 0.02);
@@ -2250,8 +2259,11 @@ function GameStats({ game, displayBool, stats, handleToggleTip, userTips }) {
             }, 0);
 
 
-            const homeMissingPlayersImpactAssessment = enrichMissingPlayers(homeMissingPlayers, homePlayers, gameStats.home[2].gamesPlayed, gameStats.home[2].ScoredOverall, teamDefensiveActionsHome, teamAttackingActionsHome, "home");
-            const awayMissingPlayersImpactAssessment = enrichMissingPlayers(awayMissingPlayers, awayPlayers, gameStats.away[2].gamesPlayed, gameStats.away[2].ScoredOverall, teamDefensiveActionsAway, teamAttackingActionsAway, "away");
+            const homeCompetitionGamesPlayed = getCompetitionGamesPlayed(gameStats.home[2]);
+            const awayCompetitionGamesPlayed = getCompetitionGamesPlayed(gameStats.away[2]);
+
+            const homeMissingPlayersImpactAssessment = enrichMissingPlayers(homeMissingPlayers, homePlayers, homeCompetitionGamesPlayed, gameStats.home[2].ScoredOverall, teamDefensiveActionsHome, teamAttackingActionsHome, "home");
+            const awayMissingPlayersImpactAssessment = enrichMissingPlayers(awayMissingPlayers, awayPlayers, awayCompetitionGamesPlayed, gameStats.away[2].ScoredOverall, teamDefensiveActionsAway, teamAttackingActionsAway, "away");
 
             setHomeMissingPlayersImpact(homeMissingPlayersImpactAssessment);
             setAwayMissingPlayersImpact(awayMissingPlayersImpactAssessment);
