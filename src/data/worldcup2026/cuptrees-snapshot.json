@@ -1,0 +1,74 @@
+{
+  "cupTrees": [
+    {
+      "id": 1,
+      "name": "World Cup 2026, Knockout Phase",
+      "currentRound": 1,
+      "rounds": [
+        {
+          "order": 1,
+          "description": "Round of 32",
+          "blocks": [
+            {
+              "id": 74,
+              "order": 1,
+              "finished": false,
+              "homeTeamScore": null,
+              "awayTeamScore": null,
+              "events": [14000001],
+              "participants": [
+                { "team": { "name": "Brazil", "shortName": "Brazil" }, "winner": false },
+                { "team": { "name": "Japan", "shortName": "Japan" }, "winner": false }
+              ]
+            },
+            {
+              "id": 77,
+              "order": 2,
+              "finished": true,
+              "homeTeamScore": 2,
+              "awayTeamScore": 0,
+              "events": [14000002],
+              "participants": [
+                { "team": { "name": "USA", "shortName": "USA" }, "winner": true },
+                { "team": { "name": "Bosnia and Herzegovina", "shortName": "BiH" }, "winner": false }
+              ]
+            }
+          ]
+        },
+        {
+          "order": 2,
+          "description": "Round of 16",
+          "blocks": [
+            {
+              "id": 201,
+              "order": 1,
+              "finished": false,
+              "homeTeamScore": null,
+              "awayTeamScore": null,
+              "events": [],
+              "participants": [
+                { "name": "W74", "team": { "name": "W74" }, "winner": false },
+                { "name": "W77", "team": { "name": "W77" }, "winner": false }
+              ]
+            }
+          ]
+        },
+        {
+          "order": 3,
+          "description": "Quarter-finals",
+          "blocks": []
+        },
+        {
+          "order": 4,
+          "description": "Semi-finals",
+          "blocks": []
+        },
+        {
+          "order": 5,
+          "description": "Final",
+          "blocks": []
+        }
+      ]
+    }
+  ]
+}

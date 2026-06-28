@@ -22,6 +22,11 @@ const LazyLeagueTable = lazy(() => import('../components/LeagueTable'));
 const LazyLeagueTableExtrasPanel = lazy(() =>
   import('../components/LeagueTableExtrasPanel')
 );
+const LazyWorldCupKnockoutBracket = lazy(() =>
+  import('../components/WorldCupKnockoutBracket')
+);
+
+export const WORLD_CUP_2026_LEAGUE_ID = 16494;
 
 var oddslib = require("oddslib");
 
@@ -443,6 +448,11 @@ export async function renderTable(index, results, id) {
     render(
       <>
         {allGroupTables}
+        {id === WORLD_CUP_2026_LEAGUE_ID && (
+          <Suspense fallback={<div>Loading knockout bracket...</div>}>
+            <LazyWorldCupKnockoutBracket tournamentId={16} seasonId={58210} />
+          </Suspense>
+        )}
         <Suspense fallback={<div>Loading league statistics...</div>}>
           <LazyLeagueTableExtrasPanel
             Stats={statistics}

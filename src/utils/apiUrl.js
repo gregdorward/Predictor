@@ -16,6 +16,7 @@ const PROXIED_ENDPOINTS = new Set([
   "match-snapshot",
   "referee",
   "teamStats",
+  "cuptrees",
 ]);
 
 const ORIGIN = process.env.NEXT_PUBLIC_EXPRESS_SERVER;
