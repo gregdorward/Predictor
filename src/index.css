@@ -6454,9 +6454,21 @@ input:active+.design::after {
   width: 100%;
   max-width: 72rem;
   margin: 0 auto;
-  padding: 1.25rem 1rem 2.5rem;
+  padding: 0em;
   box-sizing: border-box;
   text-align: left;
+}
+
+/* Override global section { width: 50% } used elsewhere in the app */
+.FixturePage section {
+  width: 100%;
+  max-width: 100%;
+  min-height: auto;
+  display: block;
+  position: static;
+  align-items: stretch;
+  justify-content: flex-start;
+  box-sizing: border-box;
 }
 
 .FixturePage-header {
@@ -6590,10 +6602,14 @@ input:active+.design::after {
   letter-spacing: 0.04em;
 }
 
-.FixturePage-chartCard {
+.FixturePage-chartCard.ComparisonBarChart {
   width: 100%;
-  max-width: 100%;
-  margin: 0 0 1.35rem;
+  max-width: 640px;
+  margin: 0 auto 1.35rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
 }
 
 .FixturePage-chart {
@@ -6601,9 +6617,9 @@ input:active+.design::after {
   max-height: 22rem;
 }
 
-.FixturePage-modelOutputsCard {
+.FixturePage .FixturePage-modelOutputsCard {
   width: 100%;
-  max-width: 100%;
+  max-width: 640px;
   margin: 0 auto 1.35rem;
   padding: 0.85rem 1rem 1rem;
   border-radius: 12px;
@@ -6611,10 +6627,20 @@ input:active+.design::after {
   background-color: var(--background-color);
   box-shadow: 0 1px 6px rgba(0, 0, 0, 0.05);
   box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.FixturePage-modelOutputsCard .FixturePage-statGroupTitle {
+  width: 100%;
+  align-self: stretch;
 }
 
 .FixturePage-modelOutputsChart {
   width: 100% !important;
+  max-width: 100%;
   max-height: 8rem;
 }
 
@@ -6712,6 +6738,39 @@ input:active+.design::after {
   background-color: var(--background-color);
   overflow: hidden;
   box-shadow: 0 1px 6px rgba(0, 0, 0, 0.05);
+}
+
+.FixturePage-seasonStats {
+  margin-bottom: 1.35rem;
+  border-radius: 12px;
+  border: 1px solid var(--third-background-color);
+  background-color: var(--background-color);
+  overflow: hidden;
+  box-shadow: 0 1px 6px rgba(0, 0, 0, 0.05);
+  padding: 0.65rem;
+  width: 100%;
+  max-width: 100%;
+}
+
+.FixturePage-seasonStats .FixturePage-statGroupTitle {
+  margin: 0 0 0.75rem;
+  padding: 0 0.25rem;
+}
+
+.FixturePage-seasonStats .flex-container {
+  width: 100%;
+}
+
+.FixturePage-seasonStats .ColumnBadge {
+  display: none;
+}
+
+.FixturePage-seasonStats .Collapsable,
+.FixturePage-seasonStats .Collapsible,
+.FixturePage-seasonStats .StatHeader {
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
 }
 
 .FixturePage-pairedBlock--results {
@@ -7154,7 +7213,7 @@ input:active+.design::after {
 
 @media (max-width: 520px) {
   .FixturePage {
-    padding: 0.75rem 0.4rem 1.75rem;
+    padding: 0em;
   }
 
   .FixturePage-header {

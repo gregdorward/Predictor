@@ -30,13 +30,17 @@ test.describe('Fixture detail page', () => {
     await expect(page.locator('.FixturePage-headingTeam--away')).toContainText(awayTeamName);
     await expect(page.getByText('Soccer Stats Hub Prediction')).toBeVisible();
     await expect(page.locator('.FixturePage-chartCard.ComparisonBarChart')).toBeVisible();
-    await expect(page.getByRole('heading', { name: 'Form & Context' })).toBeVisible();
-    await expect(page.getByRole('heading', { name: 'Attacking' })).toBeVisible();
-    await expect(page.getByRole('heading', { name: 'Defensive' })).toBeVisible();
+    await expect(page.getByRole('heading', { name: 'Season Stats' })).toBeVisible();
+    await expect(page.getByRole('button', { name: 'Key Stats' }).first()).toBeVisible();
+    await expect(page.getByRole('button', { name: 'Attacking' }).first()).toBeVisible();
+    await expect(page.getByRole('button', { name: 'In Possession' }).first()).toBeVisible();
+    await expect(page.getByRole('button', { name: 'Discipline' }).first()).toBeVisible();
+    await expect(page.getByRole('heading', { name: 'Form & Context' })).toHaveCount(0);
+    await expect(page.getByRole('heading', { name: 'Attacking', exact: true })).toHaveCount(0);
+    await expect(page.getByRole('heading', { name: 'Defensive' })).toHaveCount(0);
     await expect(page.getByRole('heading', { name: 'Match Tendencies' })).toBeVisible();
     await expect(page.getByRole('heading', { name: 'Model Outputs' })).toBeVisible();
     await expect(page.getByRole('heading', { name: 'Head to Head' })).toBeVisible();
-    await expect(page.getByRole('heading', { name: 'Season Stats' })).toHaveCount(0);
   });
 
   test('shows recent results for both teams', async ({ page }) => {

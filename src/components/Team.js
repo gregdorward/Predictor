@@ -4,6 +4,7 @@ import { CreateBadge } from "./createBadge";
 import { predictMatchById } from "../logic/predictMatchById";
 import { mapMatchToFixturePageData } from "../logic/buildSingleMatch";
 import { buildLegacyFixtureSections } from "../logic/fixturePageMetrics";
+import FixtureSeasonStats from "./FixtureSeasonStats";
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -320,6 +321,7 @@ function ResultsColumn({ side, matches }) {
 
 function TeamPage({ matchId }) {
   const [pageData, setPageData] = useState(null);
+  const [match, setMatch] = useState(null);
   const [loading, setLoading] = useState(Boolean(matchId));
   const [error, setError] = useState(null);
 
@@ -348,6 +350,7 @@ function TeamPage({ matchId }) {
         }
 
         setPageData(mapMatchToFixturePageData(match));
+        setMatch(match);
       } catch (loadError) {
         if (!cancelled) {
           setError(loadError.message || "Failed to load fixture");
@@ -384,7 +387,9 @@ function TeamPage({ matchId }) {
 
   const sections = useMemo(() => {
     if (matchId) {
-      return pageData?.sections ?? [];
+      return (pageData?.sections ?? []).filter(
+        (section) => section.id === "tendencies"
+      );
     }
 
     const homeForm = JSON.parse(storedDataHome || "{}");
@@ -576,6 +581,8 @@ function TeamPage({ matchId }) {
           </span>
         </div>
       </header>
+
+      {matchId && match ? <FixtureSeasonStats match={match} /> : null}
 
       <section className="FixturePage-chartCard ComparisonBarChart">
         <Bar

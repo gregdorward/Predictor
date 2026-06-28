@@ -72,6 +72,16 @@ import { resolveTeamStatistics } from "../utils/sofaScoreTeamStats";
 import { getLeagueFixturesByLeagueId } from "../utils/leagueResultsAccess";
 import { apiGetUrl } from "../utils/apiUrl";
 import {
+  buildTeamAllStatsFields,
+  calculateComparisonStatusMap,
+  getInvertedComparisonMap,
+  getLast5LeagueStats,
+  getOverallLeagueStatNumbers,
+  getOverallLeagueStats,
+  getTrueFormColor,
+  leaguePositionOrDash,
+} from "../logic/allStatsProps";
+import {
   mapFutureFixtureEvents,
   selectUpcomingFixtures,
 } from "../utils/futureFixturesDisplay";
@@ -156,138 +166,6 @@ function getCompetitionGamesPlayed(formEntry) {
   return 1;
 }
 
-// Shared stat fields for homeAllStatsProps / awayAllStatsProps with "-" fallbacks.
-function buildTeamAllStatsFields(teamStats, leagueStats, form) {
-  const shotsInsideBox = teamStats?.shotsFromInsideTheBox;
-  const shotsOutsideBox = teamStats?.shotsFromOutsideTheBox;
-  const shotsInsideBoxAgainst = teamStats?.shotsFromInsideTheBoxAgainst;
-  const shotsOutsideBoxAgainst = teamStats?.shotsFromOutsideTheBoxAgainst;
-
-  return {
-    goals: statOrDash(leagueStats.goals),
-    conceeded: statOrDash(leagueStats.conceeded),
-    averageRating: formatStatOrDash(teamStats?.avgRating),
-    XG: statOrDash(leagueStats.XG),
-    XGConceded: statOrDash(leagueStats.XGConceded),
-    XGSwing:
-      form?.XGChangeRecently != null
-        ? fixedStatOrDash(form.XGChangeRecently)
-        : STAT_FALLBACK,
-    bigChances: statOrDash(teamStats?.bigChances),
-    bigChancesMissed: statOrDash(teamStats?.bigChancesMissed),
-    bigChancesConceded: statOrDash(teamStats?.bigChancesAgainst),
-    goalConversionRate: ratioPercentOrDash(
-      teamStats?.goalsScored,
-      teamStats?.shots
-    ),
-    bigChanceConversionRate:
-      teamStats?.bigChances > 0
-        ? ratioPercentOrDash(
-            teamStats.bigChances - teamStats.bigChancesMissed,
-            teamStats.bigChances
-          )
-        : STAT_FALLBACK,
-    shootingAccuracy: ratioPercentOrDash(
-      teamStats?.shotsOnTarget,
-      teamStats?.shots
-    ),
-    shotsOnTargetAgainst: ratioOrDash(
-      teamStats?.shotsOnTargetAgainst,
-      teamStats?.matches
-    ),
-    possession: statOrDash(leagueStats.possession),
-    accuratePassesPercentage: fixedStatOrDash(teamStats?.accuratePassesPercentage),
-    accuratePassesOpponentHalf: fixedStatOrDash(
-      teamStats?.accurateOppositionHalfPassesPercentage
-    ),
-    accuratePassesDefensiveHalf: fixedStatOrDash(
-      teamStats?.accurateOwnHalfPassesPercentage
-    ),
-    accurateCrosses: fixedStatOrDash(teamStats?.accurateCrossesPercentage),
-    accurateCrossesAgainst: ratioPercentOrDash(
-      teamStats?.crossesSuccessfulAgainst,
-      teamStats?.crossesTotalAgainst
-    ),
-    longBallPercentage: ratioPercentOrDash(
-      teamStats?.totalLongBalls,
-      teamStats?.totalPasses
-    ),
-    accurateLongBallsPercentage: fixedStatOrDash(
-      teamStats?.accurateLongBallsPercentage
-    ),
-    accurateLongBallsAgainstPercentage: ratioPercentOrDash(
-      teamStats?.longBallsSuccessfulAgainst,
-      teamStats?.longBallsTotalAgainst
-    ),
-    shots: statOrDash(leagueStats.shots),
-    sot: statOrDash(leagueStats.sot),
-    shotsInsideBox: statOrDash(shotsInsideBox),
-    shotsFromOutsideTheBox: statOrDash(shotsOutsideBox),
-    shotsFromInsideBoxPercentage: ratioPercentOrDash(
-      shotsInsideBox,
-      (shotsInsideBox ?? 0) + (shotsOutsideBox ?? 0),
-      0
-    ),
-    shotsInsideBoxAgainst: statOrDash(shotsInsideBoxAgainst),
-    shotsFromOutsideTheBoxAgainst: statOrDash(shotsOutsideBoxAgainst),
-    shotsInsideBoxPercentAgainst: ratioPercentOrDash(
-      shotsInsideBoxAgainst,
-      (shotsInsideBoxAgainst ?? 0) + (shotsOutsideBoxAgainst ?? 0),
-      0
-    ),
-    dangerousAttacks: statOrDash(leagueStats.dangerousAttacks),
-    goalsFromInsideTheBox: statOrDash(teamStats?.goalsFromInsideTheBox),
-    goalsFromOutsideTheBox: statOrDash(teamStats?.goalsFromOutsideTheBox),
-    fastBreakShots: statOrDash(teamStats?.fastBreakShots),
-    fastBreaksLeadingToShot: ratioPercentOrDash(
-      teamStats?.fastBreakShots,
-      teamStats?.fastBreaks
-    ),
-    dribbleAttempts: statOrDash(teamStats?.dribbleAttempts),
-    successfulDribbles: statOrDash(teamStats?.successfulDribbles),
-    duelsWonPercentage: fixedStatOrDash(teamStats?.duelsWonPercentage),
-    aerialDuelsWonPercentage: fixedStatOrDash(teamStats?.aerialDuelsWonPercentage),
-    ballRecovery: ratioOrDash(teamStats?.ballRecovery, teamStats?.matches),
-    interceptions: ratioOrDash(teamStats?.interceptions, teamStats?.matches),
-    cleansheetPercentage: ratioPercentOrDash(
-      teamStats?.cleanSheets,
-      teamStats?.matches
-    ),
-    tackles: ratioOrDash(teamStats?.tackles, teamStats?.matches),
-    errorsLeadingToShotAgainst: statOrDash(teamStats?.errorsLeadingToShotAgainst),
-    offsides: ratioOrDash(teamStats?.offsides, teamStats?.matches),
-    ppg: statOrDash(leagueStats.ppg),
-    formTrend: [
-      formatStatOrDash(form?.avPoints10),
-      formatStatOrDash(form?.avPoints6),
-      formatStatOrDash(form?.avPoints5),
-    ],
-    goalDifference: statOrDash(leagueStats.goalDifference),
-    goalDifferenceHomeOrAway: statOrDash(leagueStats.goalDifferenceHomeOrAway),
-    CardsPerGame: ratioOrDash(teamStats?.yellowCards, teamStats?.matches),
-    RedCardsPerGame: ratioOrDash(teamStats?.redCards, teamStats?.matches),
-    FoulsPerGame: ratioOrDash(teamStats?.fouls, teamStats?.matches),
-    PenaltiesConceded: statOrDash(teamStats?.penaltiesCommited),
-    CornersAverage: statOrDash(leagueStats.corners),
-    FreeKickGoals: statOrDash(teamStats?.freeKickGoals),
-    BttsPercentage: statOrDash(form?.BttsPercentage),
-    BttsPercentageHomeOrAway: statOrDash(form?.BttsPercentageHomeOrAway),
-    ScoredBothHalvesPercentage: statOrDash(form?.ScoredBothHalvesPercentage),
-  };
-}
-
-function leaguePositionOrDash(position) {
-  if (
-    position === undefined ||
-    position === null ||
-    position === "undefined" ||
-    position === 0
-  ) {
-    return STAT_FALLBACK;
-  }
-  return position;
-}
-
 function leagueDangerousAttacksValue(form) {
   if (!form) return 0;
   return (
@@ -302,44 +180,6 @@ function leagueDangerousAttacksValue(form) {
 function leagueStatNumber(value) {
   const n = Number(value);
   return Number.isNaN(n) ? 0 : n;
-}
-
-function getOverallLeagueStatNumbers(form) {
-  if (!form) return {};
-  return {
-    goals: leagueStatNumber(form.avgScored),
-    conceeded: leagueStatNumber(form.avgConceeded),
-    XG: leagueStatNumber(form.XGOverall),
-    XGConceded: leagueStatNumber(form.XGAgainstAvgOverall),
-    possession: leagueStatNumber(form.AveragePossessionOverall),
-    shots: leagueStatNumber(form.avgShots),
-    sot: leagueStatNumber(
-      form.shotsOnTargetRollingAverage ?? form.AverageShotsOnTargetOverall
-    ),
-    dangerousAttacks: leagueStatNumber(leagueDangerousAttacksValue(form)),
-    ppg: leagueStatNumber(form.avPointsAll),
-    goalDifference: leagueStatNumber(form.goalDifference),
-    goalDifferenceHomeOrAway: leagueStatNumber(form.goalDifferenceHomeOrAway),
-    corners: leagueStatNumber(form.AverageCorners),
-  };
-}
-
-function getOverallLeagueStats(form) {
-  const stats = getOverallLeagueStatNumbers(form);
-  return {
-    goals: formatLeagueStat(stats.goals),
-    conceeded: formatLeagueStat(stats.conceeded),
-    XG: formatLeagueStat(stats.XG),
-    XGConceded: formatLeagueStat(stats.XGConceded),
-    possession: formatLeagueStat(stats.possession),
-    shots: formatLeagueStat(stats.shots),
-    sot: formatLeagueStat(stats.sot),
-    dangerousAttacks: formatLeagueStat(stats.dangerousAttacks),
-    ppg: formatLeagueStat(stats.ppg),
-    goalDifference: formatLeagueStat(stats.goalDifference),
-    goalDifferenceHomeOrAway: formatLeagueStat(stats.goalDifferenceHomeOrAway),
-    corners: formatLeagueStat(stats.corners),
-  };
 }
 
 function getLast5LeagueStatNumbers(form) {
@@ -358,23 +198,6 @@ function getLast5LeagueStatNumbers(form) {
     ppg: leagueStatNumber(form.avPoints5),
     goalDifference: leagueStatNumber(form.last5GoalDiff),
     corners: leagueStatNumber(form.last5Corners),
-  };
-}
-
-function getLast5LeagueStats(form) {
-  const stats = getLast5LeagueStatNumbers(form);
-  return {
-    goals: formatLeagueStat(stats.goals),
-    conceeded: formatLeagueStat(stats.conceeded),
-    XG: formatLeagueStat(stats.XG),
-    XGConceded: formatLeagueStat(stats.XGConceded),
-    possession: formatLeagueStat(stats.possession),
-    shots: formatLeagueStat(stats.shots),
-    sot: formatLeagueStat(stats.sot),
-    dangerousAttacks: formatLeagueStat(stats.dangerousAttacks),
-    ppg: formatLeagueStat(stats.ppg),
-    goalDifference: formatLeagueStat(stats.goalDifference),
-    corners: formatLeagueStat(stats.corners),
   };
 }
 
@@ -991,26 +814,6 @@ function GameStats({ game, displayBool, stats, handleToggleTip, userTips }) {
     "botafogo": "botafogo",
     "fk bodo - glimt": "Bodø/Glimt",
   };
-
-
-  function getTrueFormColor(ppgValue, minVal = -1.5, maxVal = 1.5) {
-    // 1. Clamp the value: ensure the value stays within the defined min/max range
-    const clampedValue = Math.max(minVal, Math.min(maxVal, ppgValue));
-
-    // 2. Normalize the value: convert the range [minVal, maxVal] to [0, 1]
-    const normalized = (clampedValue - minVal) / (maxVal - minVal);
-
-    // 3. Map to Hue: Map the [0, 1] range to the HSL Hue range [0 (Red), 120 (Green)]
-    // We reverse the range so low values are Red (0) and high values are Green (120)
-    // The formula is: Hue = (normalized value) * 120
-    const hue = normalized * 120;
-
-    // Set fixed saturation and lightness for consistent color pop
-    const saturation = 70;
-    const lightness = 25;
-
-    return `hsl(${hue}, ${saturation}%, ${lightness}%)`;
-  }
 
 
   const warnedTeams = new Set(); // Move this outside the function if reused
@@ -2491,145 +2294,6 @@ function GameStats({ game, displayBool, stats, handleToggleTip, userTips }) {
     );
   }
 
-  const COMPARISON_RULES = [
-    // --- Performance & Goals ---
-    { key: 'goals', higherIsBetter: true },
-    { key: 'conceeded', higherIsBetter: false },
-    { key: 'goalDifference', higherIsBetter: true },
-    { key: 'goalDifferenceHomeOrAway', higherIsBetter: true },
-    { key: 'ppg', higherIsBetter: true },
-    { key: 'ppgLast5', higherIsBetter: true },
-    { key: 'ppgHomeOrAway', higherIsBetter: true },
-    { key: 'injuryImpact', higherIsBetter: false },
-    { key: 'formTrend', higherIsBetter: true },
-    { key: 'winPercentage', higherIsBetter: true },
-    { key: 'lossPercentage', higherIsBetter: false },
-    { key: 'drawPercentage', higherIsBetter: false },
-    { key: 'cleansheetPercentage', higherIsBetter: true },
-    { key: 'averageRating', higherIsBetter: true },
-    { key: 'XGSwing', higherIsBetter: true },
-    // --- League Position (Lower is Better) ---
-    { key: 'leaguePosition', higherIsBetter: false }, // Lower rank is better
-    { key: 'rawPosition', higherIsBetter: false }, // Lower rank is better
-    { key: 'homeOrAwayLeaguePosition', higherIsBetter: false }, // Lower rank is better
-
-    // --- Expected Goals & Big Chances ---
-    { key: 'XG', higherIsBetter: true },
-    { key: 'XGConceded', higherIsBetter: false },
-    { key: 'bigChances', higherIsBetter: true },
-    { key: 'bigChancesMissed', higherIsBetter: false }, // Fewer missed is better
-    { key: 'bigChancesConceded', higherIsBetter: false }, // Fewer conceded is better
-
-    // --- Shooting & Conversion ---
-    { key: 'shots', higherIsBetter: true },
-    { key: 'sot', higherIsBetter: true },
-    { key: 'shotsInsideBox', higherIsBetter: true },
-    { key: 'shotsFromOutsideTheBox', higherIsBetter: true },
-    { key: 'shotsFromInsideBoxPercentage', higherIsBetter: true },
-    { key: 'shotsInsideBoxAgainst', higherIsBetter: false },
-    { key: 'shotsFromOutsideTheBoxAgainst', higherIsBetter: false },
-    { key: 'shotsInsideBoxPercentAgainst', higherIsBetter: false },
-    { key: 'shotsOnTargetAgainst', higherIsBetter: false }, // Fewer shots on target conceded is better
-    { key: 'shootingAccuracy', higherIsBetter: true },
-    { key: 'goalConversionRate', higherIsBetter: true },
-    { key: 'bigChanceConversionRate', higherIsBetter: true },
-    { key: 'goalsFromInsideTheBox', higherIsBetter: true },
-    { key: 'goalsFromOutsideTheBox', higherIsBetter: true },
-    { key: 'fastBreakShots', higherIsBetter: true },
-    { key: 'fastBreaksLeadingToShot', higherIsBetter: true },
-    { key: 'FreeKickGoals', higherIsBetter: true },
-
-    // --- Attack & Build-up ---
-    { key: 'dangerousAttacks', higherIsBetter: true },
-    { key: 'possession', higherIsBetter: true },
-    { key: 'accuratePassesPercentage', higherIsBetter: true },
-    { key: 'accuratePassesOpponentHalf', higherIsBetter: true },
-    { key: 'accuratePassesDefensiveHalf', higherIsBetter: true },
-    { key: 'accurateCrosses', higherIsBetter: true },
-    { key: 'accurateCrossesAgainst', higherIsBetter: false }, // Lower success rate conceded is better
-    { key: 'longBallPercentage', higherIsBetter: false }, // Often better to have lower reliance on long balls
-    { key: 'accurateLongBallsPercentage', higherIsBetter: true },
-    { key: 'accurateLongBallsAgainstPercentage', higherIsBetter: false },
-    { key: 'CornersAverage', higherIsBetter: true },
-    { key: 'offsides', higherIsBetter: false }, // Fewer offsides is better
-    { key: 'dribbleAttempts', higherIsBetter: true },
-    { key: 'successfulDribbles', higherIsBetter: true },
-
-    // --- Defensive & Pressing ---
-    { key: 'PPDA', higherIsBetter: false }, // Lower PPDA means better pressing
-    { key: 'PPAA', higherIsBetter: false }, // Lower PPAA means more efficient attacking
-    { key: 'duelsWonPercentage', higherIsBetter: true },
-    { key: 'aerialDuelsWonPercentage', higherIsBetter: true },
-    { key: 'ballRecovery', higherIsBetter: true },
-    { key: 'interceptions', higherIsBetter: true },
-    { key: 'tackles', higherIsBetter: true },
-    { key: 'errorsLeadingToShotAgainst', higherIsBetter: false }, // Fewer errors is better
-
-    // --- Discipline & Fouls ---
-    { key: 'FoulsPerGame', higherIsBetter: false }, // Fewer fouls is better
-    { key: 'CardsPerGame', higherIsBetter: false }, // Fewer cards is better
-    { key: 'RedCardsPerGame', higherIsBetter: false }, // Fewer cards is better
-    { key: 'PenaltiesConceded', higherIsBetter: false }, // Fewer conceded is better
-
-    // --- Betting/Form Specifics ---
-    { key: 'BttsPercentage', higherIsBetter: true },
-    { key: 'BttsPercentageHomeOrAway', higherIsBetter: true },
-  ];
-
-  const calculateComparisonStatusMap = (homeStats, awayStats) => {
-    const comparisonMap = {};
-
-    COMPARISON_RULES.forEach(({ key, higherIsBetter }) => {
-      const homeValue = homeStats[key];
-      const awayValue = awayStats[key];
-
-      // --- SCALAR COMPARISON (Default Case) ---
-      if (typeof homeValue !== 'object' || homeValue === null || !Array.isArray(homeValue)) {
-        if (homeValue !== undefined && awayValue !== undefined) {
-          // Compare simple properties (goals, ppg, etc.)
-          comparisonMap[key] = compareStat(homeValue, awayValue, higherIsBetter);
-        }
-      }
-
-      // --- ARRAY COMPARISON (e.g., 'formTrend') ---
-      else if (Array.isArray(homeValue) && Array.isArray(awayValue)) {
-        const minLength = Math.min(homeValue.length, awayValue.length);
-
-        for (let i = 0; i < minLength; i++) {
-          const homeItem = homeValue[i];
-          const awayItem = awayValue[i];
-          const arrayKey = `${key}[${i}]`; // e.g., 'formTrend[0]'
-
-          if (homeItem !== undefined && awayItem !== undefined) {
-            // Compare the individual array elements
-            comparisonMap[arrayKey] = compareStat(homeItem, awayItem, higherIsBetter);
-          }
-        }
-      }
-    });
-
-    return comparisonMap;
-  };
-
-
-  const compareStat = (homeValue, awayValue, higherIsBetter) => {
-    const home = parseFloat(homeValue);
-    const away = parseFloat(awayValue);
-
-    // If both are non-numeric (like 'N/A'), they are equal
-    if (isNaN(home) && isNaN(away)) return 'equal';
-    // If only one is non-numeric, the other is 'better' or 'worse' depending on the rule
-    if (isNaN(home)) return higherIsBetter ? 'worse' : 'better';
-    if (isNaN(away)) return higherIsBetter ? 'better' : 'worse';
-
-    if (home === away) return 'equal';
-
-    if (higherIsBetter) {
-      return home > away ? 'better' : 'worse';
-    } else {
-      return home < away ? 'better' : 'worse';
-    }
-  };
   gameArrayHome.sort((a, b) => b.unixTimestamp - a.unixTimestamp);
   gameArrayAway.sort((a, b) => b.unixTimestamp - a.unixTimestamp);
 
@@ -2860,30 +2524,6 @@ function GameStats({ game, displayBool, stats, handleToggleTip, userTips }) {
   }
 
 
-  const invertStatus = (status) => {
-    switch (status) {
-      case 'better':
-        return 'worse';
-      case 'worse':
-        return 'better';
-      case 'equal': // 'equal' stays the same
-      default:
-        return status;
-    }
-  };
-
-  // Function to generate the inverted map
-  const getInvertedComparisonMap = (originalMap) => {
-    const invertedMap = {};
-    for (const key in originalMap) {
-      if (Object.hasOwnProperty.call(originalMap, key)) {
-        invertedMap[key] = invertStatus(originalMap[key]);
-      }
-    }
-    return invertedMap;
-  };
-
-  // Component: StatsAway (Render Away Team Stats)
   function StatsAwayComponent({ getCollapsableProps, awayAllStatsProps, comparisonStatusMap }) {
     const invertedMap = getInvertedComparisonMap(comparisonStatusMap);
 
