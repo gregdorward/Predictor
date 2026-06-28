@@ -16,6 +16,7 @@ import { apiGetUrl } from "../utils/apiUrl";
 import {
   transformGroupStageTables,
   flattenGroupTables,
+  GROUP_STAGE_LEAGUE_IDS,
 } from "../utils/groupStageTables";
 const LazyLeagueTable = lazy(() => import('../components/LeagueTable'));
 const LazyLeagueTableExtrasPanel = lazy(() =>
@@ -82,8 +83,6 @@ async function convertTimestamp(timestamp) {
   return converted;
 }
 let groups = false;
-
-const GROUP_STAGE_LEAGUE_IDS = [13964, 16494]; // WC Qual Europe, World Cup 2026
 
 export const API_FORM_ONLY_LEAGUE_IDS = [16494]; // World Cup 2026
 
@@ -165,7 +164,7 @@ export async function generateTables(a, leagueIdArray, allResults) {
           Played: item.Played,
           Points: item.Points,
         }));
-        basicTableArray.push({ id, table: basicElements });
+        basicTableArray.push({ id, group, table: basicElements });
       });
     } else if (
       // !league.data.specific_tables[0]?.groups &&
@@ -787,6 +786,7 @@ export async function generateFixtures(
             time: game.time,
             homeGoals: game.homeScore ?? "-",
             awayGoals: game.awayScore ?? "-",
+            roundName: game.roundName ?? null,
           });
         });
 

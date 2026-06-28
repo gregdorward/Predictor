@@ -29,6 +29,7 @@ import TeamRankingsFlexView from "./TeamRankingsFlexView";
 import {
   allLeagueResultsArrayOfObjects,
   basicTableArray,
+  tableArray,
 } from "../logic/getFixtures";
 import { userDetail } from "../logic/authProvider";
 import { clicked } from "../logic/getScorePredictions";
@@ -65,6 +66,7 @@ import {
 } from "../logic/getStats";
 import { rounds } from "./TeamOfTheSeason";
 import { applyNationalTeamAlias } from "../utils/nationalTeamAliases";
+import { resolveFixtureTableContext } from "../utils/groupStageTables";
 import { findSofaScoreGameByTeams } from "../utils/sofaScoreMatch";
 import { resolveTeamStatistics } from "../utils/sofaScoreTeamStats";
 import { getLeagueFixturesByLeagueId } from "../utils/leagueResultsAccess";
@@ -1679,6 +1681,7 @@ function GameStats({ game, displayBool, stats, handleToggleTip, userTips }) {
         console.log(
           `Matching game found: ${matchingGameInfo ? matchingGameInfo.id : "None"}`
         );
+
         setMatchingGame(matchingGameInfo);
 
         if (!matchingGameInfo) {
@@ -3702,20 +3705,22 @@ function GameStats({ game, displayBool, stats, handleToggleTip, userTips }) {
 
   // AI Insights Generation
 
-  function fetchBasicTable(id) {
-    return basicTableArray.find(
-      (item) => String(item.id) === String(id)
-    );
-  }
-
   const generateAIInsights = useCallback(
     async (gameId, streak, oddsData, homeTeamStats, awayTeamStats, homePlayerData, awayPlayerData, homeMissingPlayersImpact, awayMissingPlayersImpact, homeLineupList, awayLineupList, ranksHome, ranksAway, futureFixturesHome, futureFixturesAway, homeManager, awayManager, homeTeamPlayerStats, awayTeamPlayerStats) => {
       setIsLoading(true);
 
       try {
-        const table = fetchBasicTable(game.leagueID);
-        const leagueTable = table?.table ?? null;
-        const leagueId = table?.id ?? game.leagueID;
+        const { leagueTable, competitionStage } = resolveFixtureTableContext({
+          leagueId: game.leagueID,
+          homeTeam: game.homeTeam,
+          awayTeam: game.awayTeam,
+          tableArray,
+          basicTableArray,
+          roundName: matchingGame?.roundName || null,
+          matchesCompletedMinimum: game.matches_completed_minimum,
+          gameWeek: game.game_week,
+        });
+        const leagueId = game.leagueID;
 
         if (!leagueId) {
           throw new Error("League data unavailable for this fixture.");
@@ -3743,6 +3748,7 @@ function GameStats({ game, displayBool, stats, handleToggleTip, userTips }) {
           totalLeagueGames: totalGames?.toFixed(0),
           gameweek: game.matches_completed_minimum + 1,
           gameType: roundType,
+          competitionStage,
           leagueTable: leagueTable,
           seasonProgressPercent: progress,
           venue: game.stadium,
@@ -3818,7 +3824,7 @@ function GameStats({ game, displayBool, stats, handleToggleTip, userTips }) {
         setIsLoading(false);
       }
     },
-    [game, homeForm, awayForm]
+    [game, homeForm, awayForm, matchingGame]
   );
 
   // Function to format the AI Match Preview text with newlines
