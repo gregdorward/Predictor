@@ -4680,6 +4680,19 @@ function GameStats({ game, displayBool, stats, handleToggleTip, userTips }) {
           homeStats={homeAllStatsProps}
           awayStats={awayAllStatsProps}
           comparisonMap={comparisonStatusMap}
+          rankings={
+            stats?.topTeams && Object.keys(ranksHome).length > 0
+              ? {
+                  ranksHome,
+                  ranksAway,
+                  totalTeams:
+                    stats.topTeams.accurateCrosses?.length ??
+                    Object.values(stats.topTeams).find((value) =>
+                      Array.isArray(value)
+                    )?.length,
+                }
+              : undefined
+          }
         />
       </div>
     </>

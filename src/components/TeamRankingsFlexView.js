@@ -1,4 +1,5 @@
 import RankingsSection from "../components/RankingsSection";
+import { buildRankingsSections } from "../utils/rankingsInsights";
 
 export default function TeamRankingsFlexView({
   title,
@@ -8,48 +9,7 @@ export default function TeamRankingsFlexView({
   teamBLabel,
   totalTeams,
 }) {
-  const allMetrics = Object.keys(ranksHome); // assumes both have same keys
-
-  const ATTACKING_METRICS = [
-    "goalsScored",
-    "shotsOnTarget",
-    "shots",
-    "bigChances",
-    "bigChancesMissed",
-    "hitWoodwork",
-    "corners",
-    "penaltyGoals",
-    "successfulDribbles",
-  ];
-
-  const PASSING_METRICS = [
-    "averageBallPossession",
-    "accuratePasses",
-    "accurateLongBalls",
-    "accurateCrosses",
-  ];
-
-  const MISC_METRICS = ["avgRating", "redCards", "yellowCards", "fouls"];
-
-  const DEFENSIVE_METRICS = [
-    "goalsConceded",
-    "cleanSheets",
-    "tackles",
-    "clearances",
-    "interceptions",
-    "penaltyGoalsConceded",
-  ];
-
-  // Helper to map an array of keys to label/key pairs
-  const mapMetrics = (keys) =>
-    keys
-      .filter((k) => allMetrics.includes(k))
-      .map((key) => ({ key, label: toLabel(key) }));
-
-  const attackingMetrics = mapMetrics(ATTACKING_METRICS);
-  const passingMetrics = mapMetrics(PASSING_METRICS);
-  const defensiveMetrics = mapMetrics(DEFENSIVE_METRICS);
-  const miscMetrics = mapMetrics(MISC_METRICS);
+  const sections = buildRankingsSections(ranksHome);
 
   return (
     <div className="rankings-wrapper">
@@ -73,61 +33,19 @@ export default function TeamRankingsFlexView({
         </span>
       </div>
 
-      {attackingMetrics.length > 0 && (
+      {sections.map((section) => (
         <RankingsSection
-          title="Attacking"
-          metrics={attackingMetrics}
+          key={section.title}
+          title={section.title}
+          metrics={section.metrics}
           ranksHome={ranksHome}
           ranksAway={ranksAway}
           teamALabel={teamALabel}
           teamBLabel={teamBLabel}
           totalTeams={totalTeams}
         />
-      )}
-
-      {defensiveMetrics.length > 0 && (
-        <RankingsSection
-          title="Defensive"
-          metrics={defensiveMetrics}
-          ranksHome={ranksHome}
-          ranksAway={ranksAway}
-          teamALabel={teamALabel}
-          teamBLabel={teamBLabel}
-          totalTeams={totalTeams}
-        />
-      )}
-
-      {passingMetrics.length > 0 && (
-        <RankingsSection
-          title="Passing"
-          metrics={passingMetrics}
-          ranksHome={ranksHome}
-          ranksAway={ranksAway}
-          teamALabel={teamALabel}
-          teamBLabel={teamBLabel}
-          totalTeams={totalTeams}
-        />
-      )}
-
-      {miscMetrics.length > 0 && (
-        <RankingsSection
-          title="Miscellaneous"
-          metrics={miscMetrics}
-          ranksHome={ranksHome}
-          ranksAway={ranksAway}
-          teamALabel={teamALabel}
-          teamBLabel={teamBLabel}
-          totalTeams={totalTeams}
-        />
-      )}
+      ))}
       </div>
     </div>
   );
 }
-
-function toLabel(camel) {
-  return camel
-    .replace(/([A-Z])/g, " $1")
-    .replace(/^./, (str) => str.toUpperCase());
-}
-

@@ -9,6 +9,7 @@ export default function FixtureComparisonShare({
   homeStats,
   awayStats,
   comparisonMap = {},
+  rankings,
 }) {
   const [status, setStatus] = useState("");
 
@@ -22,6 +23,7 @@ export default function FixtureComparisonShare({
       homeStats,
       awayStats,
       comparisonMap,
+      rankings,
       format,
     });
 
@@ -30,7 +32,7 @@ export default function FixtureComparisonShare({
     window.setTimeout(() => setStatus(""), 2500);
   };
 
-  const shareTitle = `${game.homeTeam} vs ${game.awayTeam} — Soccer Stats Hub`;
+  const shareTitle = `${game.homeTeam} vs ${game.awayTeam} - Soccer Stats Hub`;
 
   const handleShare = async () => {
     const text = getFormattedText("text");
@@ -56,7 +58,7 @@ export default function FixtureComparisonShare({
 
   const handleRedditShare = async () => {
     const text = getFormattedText("markdown");
-    const title = `${game.homeTeam} vs ${game.awayTeam} — stat comparison`;
+    const title = `${game.homeTeam} vs ${game.awayTeam} - stat comparison`;
 
     await copyToClipboard(text);
 

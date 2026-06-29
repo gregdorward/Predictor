@@ -1,6 +1,15 @@
 import { buildMatchShareUrl } from "./shareMatchUrl";
+import { formatRankingsShareText } from "./rankingsInsights";
 
 const SITE_URL = "https://www.soccerstatshub.com";
+
+// Keep in sync with API_FORM_ONLY_LEAGUE_IDS in logic/getFixtures.js
+const WORLD_CUP_LEAGUE_IDS = [16494];
+
+const HOME_AWAY_SHARE_STAT_KEYS = [
+  "goalDifferenceHomeOrAway",
+  "ppgHomeOrAway",
+];
 
 const INJURY_IMPACT_LABELS = {
   1: "Minimal",
@@ -193,6 +202,50 @@ function formatMatchLink(game, format) {
   return `🔗 ${url}`;
 }
 
+function isWorldCupCompetition(game) {
+  return WORLD_CUP_LEAGUE_IDS.includes(game?.leagueID);
+}
+
+function getShareComparisonStats(game) {
+  if (!isWorldCupCompetition(game)) {
+    return SHARE_COMPARISON_STATS;
+  }
+  return SHARE_COMPARISON_STATS.filter(
+    ({ key }) => !HOME_AWAY_SHARE_STAT_KEYS.includes(key)
+  );
+}
+
+function getMarkdownShareStats(game) {
+  if (!isWorldCupCompetition(game)) {
+    return MARKDOWN_SHARE_STATS;
+  }
+  return MARKDOWN_SHARE_STATS.filter(
+    ({ key }) => !HOME_AWAY_SHARE_STAT_KEYS.includes(key)
+  );
+}
+
+function appendRankingsBlock(lines, { game, rankings, format }) {
+  if (!rankings?.ranksHome || !rankings?.ranksAway || !rankings?.totalTeams) {
+    return;
+  }
+
+  const rankingsText = formatRankingsShareText({
+    ranksHome: rankings.ranksHome,
+    ranksAway: rankings.ranksAway,
+    teamALabel: game.homeTeam,
+    teamBLabel: game.awayTeam,
+    totalTeams: rankings.totalTeams,
+    format,
+  });
+
+  if (!rankingsText) {
+    return;
+  }
+
+  lines.push("");
+  lines.push(rankingsText);
+}
+
 function shouldSkipStat(homeStats, awayStats, key, type) {
   if (type === "injury") {
     const homeKnown = homeStats[key] != null && homeStats[key] !== "";
@@ -210,10 +263,11 @@ function formatMarkdownFixtureComparison({
   homeStats,
   awayStats,
   comparisonMap,
+  rankings,
 }) {
   const lines = [];
 
-  lines.push(`## ${game.homeTeam} vs ${game.awayTeam} — *Soccer Stats Hub*`);
+  lines.push(`## ${game.homeTeam} vs ${game.awayTeam} - *Soccer Stats Hub*`);
   lines.push("");
 
   const prediction = formatPrediction(game);
@@ -237,9 +291,8 @@ function formatMarkdownFixtureComparison({
     lines.push(`**Match odds (H/D/A):** ${matchOdds}`);
   }
 
-  const tableRows = MARKDOWN_SHARE_STATS.filter(
-    ({ key, type }) => !shouldSkipStat(homeStats, awayStats, key, type)
-  ).map(({ key, label, format, type }) => {
+  const tableRows = getMarkdownShareStats(game)
+    .filter(({ key, type }) => !shouldSkipStat(homeStats, awayStats, key, type)).map(({ key, label, format, type }) => {
     const homeValue = formatMarkdownStatValue(homeStats[key], format);
     const awayValue = formatMarkdownStatValue(awayStats[key], format);
     const winner = getWinnerSide(comparisonMap, key);
@@ -259,6 +312,8 @@ function formatMarkdownFixtureComparison({
     lines.push(...tableRows);
   }
 
+  appendRankingsBlock(lines, { game, rankings, format: "markdown" });
+
   const matchLink = formatMatchLink(game, "markdown");
   lines.push("");
   lines.push("---");
@@ -276,6 +331,7 @@ function formatPlainFixtureComparison({
   homeStats,
   awayStats,
   comparisonMap,
+  rankings,
 }) {
   const lines = [];
 
@@ -306,7 +362,7 @@ function formatPlainFixtureComparison({
 
   lines.push("", "Key stats:", "");
 
-  SHARE_COMPARISON_STATS.forEach(({ key, label, type }) => {
+  getShareComparisonStats(game).forEach(({ key, label, type }) => {
     if (shouldSkipStat(homeStats, awayStats, key, type)) {
       return;
     }
@@ -323,6 +379,8 @@ function formatPlainFixtureComparison({
     lines.push(`${label}: ${values}`);
   });
 
+  appendRankingsBlock(lines, { game, rankings, format: "text" });
+
   const matchLink = formatMatchLink(game, "text");
   if (matchLink) {
     lines.push("", matchLink);
@@ -338,6 +396,7 @@ export function formatFixtureComparisonText({
   homeStats,
   awayStats,
   comparisonMap = {},
+  rankings,
   format = "text",
 }) {
   if (!game || !homeStats || !awayStats) {
@@ -350,6 +409,7 @@ export function formatFixtureComparisonText({
       homeStats,
       awayStats,
       comparisonMap,
+      rankings,
     });
   }
 
@@ -358,5 +418,6 @@ export function formatFixtureComparisonText({
     homeStats,
     awayStats,
     comparisonMap,
+    rankings,
   });
 }
