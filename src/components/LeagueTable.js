@@ -227,15 +227,17 @@ export default function LeagueTable(props) {
           tableKey={props.Key}
           onSort={sorted}
         />
-        <LeagueTableExtras
-          Stats={props.Stats}
-          allTeams={props.allTeams || props.Teams}
-          Id={props.Id}
-          Results={props.Results}
-          Date={props.Date}
-          RankingStats={props.RankingStats}
-          PlayerRankingStats={props.PlayerRankingStats}
-        />
+        {!props.standingsOnly && (
+          <LeagueTableExtras
+            Stats={props.Stats}
+            allTeams={props.allTeams || props.Teams}
+            Id={props.Id}
+            Results={props.Results}
+            Date={props.Date}
+            RankingStats={props.RankingStats}
+            PlayerRankingStats={props.PlayerRankingStats}
+          />
+        )}
       </TableContainer>
     );
   }

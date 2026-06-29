@@ -1,5 +1,6 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { FormControl, Select, MenuItem } from "@mui/material";
+import { useEqualTableRowHeights } from "../utils/useEqualTableRowHeights";
 
 // Utility to convert camelCase or mixedCase to "Proper Case With Spaces"
 const formatLabel = (key) =>
@@ -8,9 +9,9 @@ const formatLabel = (key) =>
     .replace(/^./, (str) => str.toUpperCase()); // Capitalize first letter
 
 const PlayerRankingTable = ({ rankingStats }) => {
-  console.log(rankingStats)
   const statKeys = Object.keys(rankingStats);
   const [selectedStat, setSelectedStat] = useState(statKeys[0]);
+  const tableRef = useRef(null);
 
   // <-- Added mapping to handle aliases that point to the same statistics property
   const fieldMap = {
@@ -26,6 +27,8 @@ const PlayerRankingTable = ({ rankingStats }) => {
   };
 
   const data = rankingStats[selectedStat];
+
+  useEqualTableRowHeights(tableRef, [selectedStat, data]);
 
   return (
     <div className="LeagueStatsTable">
@@ -76,6 +79,7 @@ const PlayerRankingTable = ({ rankingStats }) => {
         </Select>
       </FormControl>
       <table
+        ref={tableRef}
         style={{ marginTop: "1em", borderCollapse: "collapse", width: "95%" }}
       >
         <thead>

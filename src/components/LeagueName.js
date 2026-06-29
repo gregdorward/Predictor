@@ -5,6 +5,7 @@ import {
   getLeagueFixturesByLeagueId,
   getLeagueResultsByLeagueId,
 } from "../utils/leagueResultsAccess";
+import { getStoredTheme } from "../utils/theme";
 
 
 const sofaScoreIds = [
@@ -121,38 +122,58 @@ const name = showShortlist ? fixture.leagueDesc : fixture.leagueName;
     return <div></div>;
   }
 
+  function getCompetitionPageUrl() {
+    return `/competition/${id}/?theme=${getStoredTheme()}`;
+  }
+
+  function handleExpandClick() {
+    if (!leagueResults) return;
+    renderTable(
+      fixture.leagueIndex,
+      {
+        id,
+        fixtures: getLeagueFixturesByLeagueId(
+          allLeagueResultsArrayOfObjects,
+          id
+        ),
+      },
+      id
+    );
+  }
+
   return (
     <div>
       <div
         className="leagueName"
         id={`league${id}`}
         key={`leagueName${id}div`}
-        onClick={() => {
-          if (!leagueResults) return;
-          renderTable(
-            fixture.leagueIndex,
-            {
-              id,
-              fixtures: getLeagueFixturesByLeagueId(
-                allLeagueResultsArrayOfObjects,
-                id
-              ),
-            },
-            id
-          );
-        }}
-        style={{ display: "flex", alignItems: "center" }}
       >
         <div className="LeagueAndLogo">
-          {logoUrl && (
-            <img
-              className="LeagueLogo"
-              src={logoUrl}
-              alt={`${name} Logo`}
-            />
-          )}
-          {showShortlist ? fixture.leagueDesc : fixture.leagueName} &#9776;
+          <a
+            href={getCompetitionPageUrl()}
+            className="leagueName-link"
+            target="_blank"
+            rel="noopener noreferrer"
+            onClick={(e) => e.stopPropagation()}
+          >
+            {logoUrl && (
+              <img
+                className="LeagueLogo"
+                src={logoUrl}
+                alt={`${name} Logo`}
+              />
+            )}
+            {showShortlist ? fixture.leagueDesc : fixture.leagueName}
+          </a>
         </div>
+        <button
+          type="button"
+          className="leagueName-expand"
+          onClick={handleExpandClick}
+          aria-label={`Expand ${name} league table`}
+        >
+          &#9776;
+        </button>
       </div>
 
       <div

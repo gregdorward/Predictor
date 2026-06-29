@@ -9,6 +9,15 @@ export default function SiteHeader({
   withFooter = false,
   children,
 }) {
+  const content = withFooter ? (
+    <div className="SitePageLayout">
+      <div className="SitePageLayout__content">{children}</div>
+      <Footer />
+    </div>
+  ) : (
+    children
+  );
+
   return (
     <>
       <header className="DarkMode">
@@ -19,8 +28,7 @@ export default function SiteHeader({
         </div>
       </header>
       <WorldCupBanner />
-      {children}
-      {withFooter && <Footer />}
+      {content}
     </>
   );
 }

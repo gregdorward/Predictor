@@ -1,5 +1,6 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { FormControl, Select, MenuItem } from "@mui/material";
+import { useEqualTableRowHeights } from "../utils/useEqualTableRowHeights";
 
 function mergeLeagueData(rankingStats) {
   const mergedTeams = {};
@@ -81,12 +82,14 @@ const RankingTable = ({ rankingStats }) => {
 
   const statKeys = Object.keys(rankingStats);
   const [selectedStat, setSelectedStat] = useState(statKeys[0]);
-  console.log(rankingStats)
+  const tableRef = useRef(null);
+  const data = rankingStats[selectedStat];
+
+  useEqualTableRowHeights(tableRef, [selectedStat, data]);
+
   const handleChange = (e) => {
     setSelectedStat(e.target.value);
   };
-
-  const data = rankingStats[selectedStat];
 
   return (
     <div className="LeagueStatsTable">
@@ -137,6 +140,7 @@ const RankingTable = ({ rankingStats }) => {
         </Select>
       </FormControl>
       <table
+        ref={tableRef}
         style={{ marginTop: "1em", borderCollapse: "collapse", width: "95%" }}
       >
         <thead>

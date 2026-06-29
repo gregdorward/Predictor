@@ -29,6 +29,7 @@ const CACHE_RULES = {
   referee: { sMaxAge: 86400, swr: 604800 },
   teamStats: { sMaxAge: 3600, swr: 86400 },
   cuptrees: { sMaxAge: 86400, swr: 86400 },
+  competition: { sMaxAge: 600, swr: 86400 },
 };
 
 function jsonError(body, status, extraHeaders) {

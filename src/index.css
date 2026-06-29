@@ -2123,6 +2123,10 @@ span.MembershipInfo {
   background-color: var(--accent-color);
   cursor: pointer;
   border-radius: 6px;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .leagueName:hover {
@@ -2153,6 +2157,44 @@ span.MembershipInfo {
 
 .leagueName:active {
   box-shadow: 0 1px 2px 0 #030052 inset, 0 2px 2px 0 #030052 inset;
+}
+
+.leagueName-link {
+  display: inline-flex;
+  align-items: center;
+  color: inherit;
+  text-decoration: none;
+  font-size: inherit;
+  font-weight: inherit;
+  line-height: inherit;
+}
+
+.leagueName-link:hover {
+  color: var(--primary-color);
+  text-decoration: underline;
+}
+
+.leagueName-expand {
+  position: absolute;
+  right: 0;
+  background: transparent;
+  border: none;
+  color: inherit;
+  font-size: inherit;
+  font-weight: inherit;
+  cursor: pointer;
+  line-height: 1;
+  box-shadow: none;
+}
+
+.leagueName-expand:hover {
+  color: var(--primary-color);
+}
+
+.leagueName-expand:active,
+.leagueName-expand:focus {
+  box-shadow: none;
+  outline: none;
 }
 
 .DateForm {
@@ -2468,13 +2510,24 @@ table tr:nth-child(even) {
 }
 
 .Footer {
-  margin-top: 2.5em;
+  margin-top: auto;
   padding: 1.5em 1em 2em;
   line-height: 1.6;
   font-size: 0.95em;
   font-family: 'Open Sans', sans-serif;
   text-align: center;
   border-top: 1px solid rgba(0, 0, 0, 0.08);
+}
+
+.SitePageLayout {
+  display: flex;
+  flex-direction: column;
+  min-height: calc(100vh - var(--header-height));
+}
+
+.SitePageLayout__content {
+  flex: 1 0 auto;
+  width: 100%;
 }
 
 body.dark-mode .Footer {
@@ -5915,6 +5968,7 @@ li .Stadium {
   font-size: .5em;
   align-items: stretch;
   background-color: #030052;
+  margin-bottom: 1em;
 }
 
 .ResultsStatsTable {
@@ -10917,5 +10971,619 @@ strong.WC26__inlineHeader {
 @media (min-width: 768px) {
   .WCBracket__scroll {
     column-gap: 3em;
+  }
+}
+
+/* Competition page */
+.Competition {
+  max-width: var(--content-max-width);
+  margin: 0 auto;
+  padding: 1em var(--content-padding-x) 3rem;
+  color: var(--text-color);
+  width: 100%;
+  box-sizing: border-box;
+  font-size: 11px;
+  line-height: 1.45;
+}
+
+/* Override global section { width: 50% } used elsewhere in the app */
+.Competition section {
+  width: 100%;
+  min-height: auto;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  position: static;
+  justify-content: flex-start;
+  text-align: left;
+}
+
+.Competition__section {
+  width: 100%;
+  margin-bottom: 2.5rem;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 1rem;
+}
+
+.Competition__sectionHeading {
+  width: 100%;
+  margin: 0;
+  padding-bottom: 0.65rem;
+  border-bottom: 1px solid var(--third-background-color);
+  font-size: 1.15em;
+  font-weight: 600;
+  color: var(--text-color);
+  text-align: left;
+  line-height: 1.3;
+}
+
+.Competition__sectionTitle {
+  margin: 0 0 0.5rem;
+  font-size: 1em;
+  font-weight: 600;
+  color: var(--text-color);
+  text-align: left;
+  line-height: 1.3;
+}
+
+.Competition__hero {
+  margin-bottom: 1.5rem;
+  text-align: center;
+}
+
+.Competition__heroMain {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  flex-wrap: nowrap;
+  width: 100%;
+  overflow-x: auto;
+}
+
+.Competition__logo {
+  width: 2.5rem;
+  height: 2.5rem;
+  flex-shrink: 0;
+  object-fit: contain;
+  background: white;
+  margin-top: 1em;
+  border-radius: 8px;
+  padding: 0.25rem;
+}
+
+.Competition__title {
+  margin: 0;
+  font-size: clamp(1.1em, 2.5vw, 1.35em);
+  color: var(--text-color);
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.Competition__meta {
+  margin: 0;
+  color: var(--faint-text);
+  font-size: 0.9em;
+}
+
+.Competition__heroMain .Competition__title,
+.Competition__heroMain .Competition__meta {
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.Competition section.Competition__metricGrid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.75rem;
+  margin-bottom: 2rem;
+  width: 100%;
+  align-items: stretch;
+}
+
+@media (min-width: 900px) {
+  .Competition section.Competition__metricGrid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+.Competition__metricCard {
+  background: var(--secondary-background-color);
+  border: 1px solid var(--third-background-color);
+  border-radius: 8px;
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 0.25rem;
+  height: 100%;
+  box-sizing: border-box;
+  text-align: center;
+}
+
+.Competition__metricLabel {
+  font-size: 0.9em;
+  color: var(--faint-text);
+}
+
+.Competition__metricValue {
+  font-size: 1.15em;
+  color: var(--primary-color);
+}
+
+.Competition__metricSub {
+  font-size: 0.85em;
+  color: var(--faint-text);
+}
+
+.Competition__chartGrid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1rem;
+  width: 100%;
+  align-items: stretch;
+}
+
+@media (min-width: 768px) {
+  .Competition__chartGrid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+.Competition__chartCard {
+  background: var(--secondary-background-color);
+  border: 1px solid var(--third-background-color);
+  border-radius: 8px;
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  min-height: 280px;
+  height: 100%;
+  box-sizing: border-box;
+  overflow: hidden;
+}
+
+.Competition__chartCard > div {
+  position: relative;
+  width: 100%;
+  max-width: 100%;
+  margin: 0 auto;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.Competition canvas {
+  display: block !important;
+  max-width: 100% !important;
+  max-height: clamp(160px, 32vw, 260px) !important;
+  margin: 0 auto !important;
+  box-sizing: border-box;
+}
+
+.Competition__advantageGrid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 0.75rem;
+  width: 100%;
+  align-items: stretch;
+}
+
+@media (min-width: 600px) {
+  .Competition__advantageGrid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (min-width: 900px) {
+  .Competition__advantageGrid {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+.Competition__rankingsGrid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.5rem;
+  width: 100%;
+  align-items: stretch;
+}
+
+@media (min-width: 768px) {
+  .Competition__rankingsGrid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+.Competition__rankingBlock {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: 100%;
+}
+
+.Competition__rankingBlock .Competition__table {
+  flex: 1;
+  width: 100%;
+}
+
+.Competition__standings .LeagueTable {
+  width: 100%;
+  max-width: 1000px;
+}
+
+.Competition .GroupName {
+  font-size: 1.8em;
+}
+
+.Competition__standingsLoading {
+  color: var(--text-color);
+  opacity: 0.75;
+  font-size: 1em;
+}
+
+.Competition__metricRankings .LeagueStatsTable {
+  width: 100%;
+  max-width: 1000px;
+  margin-left: auto;
+  margin-right: auto;
+  box-sizing: border-box;
+  font-size: 1em;
+  line-height: 1.45;
+  padding-top: 0.5em;
+  padding-bottom: 1em;
+}
+
+.Competition__metricRankings .LeagueStatsTable .MuiFormControl-root {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.Competition__metricRankings .LeagueStatsTable .MuiInputBase-root.MuiOutlinedInput-root {
+  font-size: 1em !important;
+  height: auto !important;
+  min-height: 2.25em;
+  width: 50%;
+  max-width: 20em;
+  margin-left: auto !important;
+  margin-right: auto !important;
+  color: #000 !important;
+  background-color: #f0f0f0;
+  text-align: center;
+}
+
+.Competition__metricRankings .LeagueStatsTable .MuiSelect-select {
+  padding-top: 0.35em;
+  padding-bottom: 0.35em;
+  color: #000 !important;
+  text-align: center;
+  justify-content: center;
+}
+
+.Competition__metricRankings .LeagueStatsTable .MuiSelect-icon {
+  color: #000 !important;
+}
+
+.Competition__metricRankings .LeagueStatsTable table {
+  font-size: 1em;
+  margin-top: 0.75em !important;
+}
+
+.Competition__metricRankings .LeagueStatsTable th,
+.Competition__metricRankings .LeagueStatsTable td {
+  padding: 0.35em 0.5em;
+  line-height: 1.45;
+  vertical-align: middle;
+}
+
+.LeagueStatsTable tbody td,
+.LeagueStatsTable tbody th {
+  vertical-align: middle;
+}
+
+.Competition__section .Collapsable {
+  text-align: left;
+  font-size: 1em;
+}
+
+.Competition__section .Collapsable .Collapsible__trigger {
+  font-size: 1em;
+}
+
+.Competition__table {
+  background: var(--secondary-background-color) !important;
+}
+
+.Competition__table .MuiTableCell-head {
+  font-weight: 600;
+  font-size: 0.95em;
+  color: var(--text-color);
+  background: var(--third-background-color);
+}
+
+.Competition__table .MuiTableCell-body {
+  font-size: 0.95em;
+  color: var(--text-color);
+  border-color: var(--third-background-color);
+}
+
+.Competition__table .MuiTableCell-head:first-child,
+.Competition__table .MuiTableCell-body:first-child {
+  width: 2.5rem;
+  text-align: center;
+}
+
+.Competition__table .MuiTableCell-head:last-child,
+.Competition__table .MuiTableCell-body:last-child {
+  text-align: right;
+  white-space: nowrap;
+}
+
+.Competition__scorersList {
+  width: 100%;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.Competition__playerTabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-bottom: 0.75rem;
+  align-self: center;
+}
+
+.Competition__playerTab {
+  background: var(--third-background-color);
+  border: 1px solid var(--third-background-color);
+  border-radius: 999px;
+  color: var(--text-color);
+  cursor: pointer;
+  font-size: 0.95em;
+  font-family: inherit;
+  padding: 0.45em 0.9em;
+  line-height: 1.2;
+}
+
+.Competition__playerTab--active {
+  background: var(--primary-color);
+  border-color: var(--primary-color);
+  color: #ffffff;
+}
+
+.Competition__playerSwipe {
+  display: flex;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+  width: 100%;
+}
+
+.Competition__playerSwipe::-webkit-scrollbar {
+  display: none;
+}
+
+.Competition__playerPanel {
+  flex: 0 0 100%;
+  min-width: 100%;
+  scroll-snap-align: start;
+  scroll-snap-stop: always;
+  box-sizing: border-box;
+}
+
+.Competition__scorersList li {
+  display: grid;
+  grid-template-columns: 2.5rem minmax(0, 1.5fr) minmax(0, 1fr) 2.5rem;
+  gap: 0.75rem;
+  align-items: center;
+  background: var(--secondary-background-color);
+  border: 1px solid var(--third-background-color);
+  border-radius: 6px;
+  padding: 0.65rem 0.85rem;
+}
+
+.Competition__scorerRank {
+  color: var(--faint-text);
+  font-weight: 600;
+  text-align: center;
+}
+
+.Competition__scorerName {
+  font-weight: 600;
+  font-size: 1em;
+  min-width: 0;
+}
+
+.Competition__scorerTeam {
+  color: var(--faint-text);
+  font-size: 0.9em;
+  text-align: right;
+  min-width: 0;
+}
+
+.Competition__scorerGoals {
+  color: var(--primary-color);
+  font-size: 1em;
+  min-width: 1.5rem;
+  text-align: right;
+}
+
+.Competition__extraStats {
+  padding: 0.5rem 0;
+  color: var(--text-color);
+  font-size: 0.95em;
+  text-align: center;
+}
+
+.Competition__error {
+  text-align: center;
+  padding: 3rem 1rem;
+  color: var(--text-color);
+}
+
+.Competition__loading {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.Competition__skeleton {
+  background: linear-gradient(
+    90deg,
+    var(--third-background-color) 25%,
+    var(--secondary-background-color) 50%,
+    var(--third-background-color) 75%
+  );
+  background-size: 200% 100%;
+  animation: CompetitionShimmer 1.2s ease-in-out infinite;
+  border-radius: 8px;
+}
+
+.Competition__skeleton--hero {
+  height: 6rem;
+}
+
+.Competition__skeleton--card {
+  height: 5rem;
+}
+
+.Competition__skeleton--chart {
+  height: 16rem;
+}
+
+@keyframes CompetitionShimmer {
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
+}
+
+@media (max-width: 640px) {
+  .Competition {
+    padding-left: 0.75rem;
+    padding-right: 0.75rem;
+  }
+
+  .Competition__section {
+    margin-bottom: 1.75rem;
+    gap: 0.75rem;
+  }
+
+  .Competition__sectionHeading {
+    font-size: 1.1em;
+    padding-bottom: 0.5rem;
+  }
+
+  .Competition__hero {
+    margin-bottom: 1rem;
+  }
+
+  .Competition__heroMain {
+    flex-direction: column;
+    flex-wrap: wrap;
+    overflow-x: visible;
+    gap: 0.35rem;
+    align-items: center;
+  }
+
+  .Competition__heroMain .Competition__title,
+  .Competition__heroMain .Competition__meta {
+    white-space: normal;
+    text-align: center;
+    flex-shrink: 1;
+  }
+
+  .Competition__title {
+    font-size: 1.1em;
+    line-height: 1.25;
+  }
+
+  .Competition__meta {
+    font-size: 0.85em;
+    line-height: 1.45;
+    max-width: 100%;
+  }
+
+  .Competition__metricCard {
+    padding: 0.85rem;
+  }
+
+  .Competition__metricValue {
+    font-size: 1.05em;
+    line-height: 1.3;
+    word-break: break-word;
+  }
+
+  .Competition__chartCard {
+    min-height: 220px;
+    padding: 0.75rem;
+  }
+
+  .Competition canvas {
+    max-height: clamp(140px, 45vw, 200px) !important;
+  }
+
+  .Competition__rankingsGrid {
+    gap: 1rem;
+  }
+
+  .Competition__table {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .Competition__table .MuiTableCell-root {
+    padding: 0.5rem 0.4rem;
+    font-size: 0.9em;
+  }
+
+  .Competition__scorersList li {
+    grid-template-columns: 2rem minmax(0, 1fr) auto;
+    grid-template-rows: auto auto;
+    gap: 0.2rem 0.65rem;
+    padding: 0.6rem 0.75rem;
+  }
+
+  .Competition__scorerRank {
+    grid-row: 1 / span 2;
+    align-self: center;
+  }
+
+  .Competition__scorerName {
+    grid-column: 2;
+    grid-row: 1;
+  }
+
+  .Competition__scorerTeam {
+    grid-column: 2;
+    grid-row: 2;
+    text-align: left;
+    font-size: 0.85em;
+  }
+
+  .Competition__scorerGoals {
+    grid-column: 3;
+    grid-row: 1 / span 2;
+    align-self: center;
+  }
+}
+
+@media (min-width: 641px) {
+  .Competition__heroMain {
+    flex-wrap: wrap;
   }
 }
