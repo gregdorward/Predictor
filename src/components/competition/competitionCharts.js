@@ -12,7 +12,12 @@ const CHART_COLORS = [
   "#0644B3",
 ];
 
-function buildBaseOptions(theme, title, indexAxis = "x") {
+function buildBaseOptions(
+  theme,
+  title,
+  indexAxis = "x",
+  { valueSuffix = "%", valueDecimals = 1 } = {}
+) {
   const { color, gridColor, tooltipBackground } = getChartColors(theme);
   return {
     color,
@@ -37,7 +42,10 @@ function buildBaseOptions(theme, title, indexAxis = "x") {
         bodyColor: "#ffffff",
         callbacks: {
           label(context) {
-            return `${context.label}: ${Number(context.raw).toFixed(1)}%`;
+            const value = Number(context.raw).toFixed(valueDecimals);
+            return valueSuffix
+              ? `${context.label}: ${value}${valueSuffix}`
+              : `${context.label}: ${value}`;
           },
         },
       },
@@ -147,17 +155,16 @@ export function ResultSplitChart({ data }) {
 export function BttsMarketChart({ data }) {
   const theme = useChartTheme();
   const btts = Number(data?.seasonBTTSPercentage);
-  const cs = Number(data?.seasonCSPercentage);
   if (!Number.isFinite(btts)) return null;
 
-  const fts = Math.max(0, 100 - btts - (Number.isFinite(cs) ? cs : 0));
+  const bttsNo = Math.max(0, 100 - btts);
   const { color, tooltipBackground } = getChartColors(theme);
   const chartData = {
-    labels: ["BTTS", "Clean sheet", "Failed to score"],
+    labels: ["BTTS", "BTTS No"],
     datasets: [
       {
-        data: [btts, Number.isFinite(cs) ? cs : 0, fts],
-        backgroundColor: ["#f57701", "#01a501", "#d71200"],
+        data: [btts, bttsNo],
+        backgroundColor: ["#01a501", "#d71200"],
         borderWidth: 2,
         borderColor: theme === "dark" ? "#1f1f1f" : "#ffffff",
       },
@@ -178,7 +185,7 @@ export function BttsMarketChart({ data }) {
             },
             title: {
               display: true,
-              text: "BTTS vs clean sheets",
+              text: "BTTS vs BTTS No",
               color,
               font: { size: 11, weight: "600" },
             },
@@ -345,7 +352,10 @@ export function GoalTimingChart({ data }) {
     <div className="Competition__chartCard">
       <Bar
         data={chartData}
-        options={buildBaseOptions(theme, "Goals by time period")}
+        options={buildBaseOptions(theme, "Goals by time period", "x", {
+          valueSuffix: "",
+          valueDecimals: 0,
+        })}
       />
     </div>
   );
