@@ -1,138 +1,227 @@
 function ordinal(rank) {
   const suffixes = ["th", "st", "nd", "rd"];
   const mod100 = rank % 100;
+  const mod10 = rank % 10;
   const suffix =
     mod100 >= 11 && mod100 <= 13
       ? "th"
-      : suffixes[Math.min(rank % 10, 3)] || "th";
+      : suffixes[mod10] || "th";
   return `${rank}${suffix}`;
 }
 
-function formatMarkerTitle(rank, rankData, teamLabel, totalTeams) {
-  if (rank == null) return "";
+function formatRank(rank, totalTeams) {
+  if (rank == null) return "No rank";
 
-  let title = `${teamLabel}: ${ordinal(rank)} of ${totalTeams}`;
-
-  if (rankData?.value != null) {
-    title += ` · ${rankData.value}`;
-  }
-
-  return title;
+  return totalTeams ? `${ordinal(rank)} of ${totalTeams}` : ordinal(rank);
 }
 
-function RankComparisonBar({
-  homeRank,
-  awayRank,
-  homeRankData,
-  awayRankData,
-  totalTeams,
-  homeLabel,
-  awayLabel,
+function formatRankDetail(rank, rankData, totalTeams) {
+  let detail = formatRank(rank, totalTeams);
+  if (rankData?.value != null) {
+    detail += ` · ${rankData.value}`;
+  }
+
+  return detail;
+}
+
+function getRankEdgeState(homeRank, awayRank, totalTeams) {
+  if (homeRank == null || awayRank == null) {
+    return {
+      tone: "neutral",
+      intensity: "none",
+      leader: "Unavailable",
+      edgeText: "Ranking data missing",
+    };
+  }
+
+  if (homeRank === awayRank) {
+    return {
+      tone: "level",
+      intensity: "none",
+      leader: "Level",
+      edgeText: "Same rank",
+    };
+  }
+
+  const edge = Math.abs(homeRank - awayRank);
+  const edgeRatio = totalTeams > 1 ? edge / (totalTeams - 1) : 0;
+  const intensity =
+    edge >= 6 || edgeRatio >= 0.35
+      ? "strong"
+      : edge >= 3 || edgeRatio >= 0.18
+      ? "medium"
+      : "subtle";
+
+  return {
+    tone: homeRank < awayRank ? "home" : "away",
+    intensity,
+    leader: homeRank < awayRank ? "Home edge" : "Away edge",
+    edgeText: `${edge} rank edge`,
+  };
+}
+
+function getSectionSummary(metrics, ranksHome, ranksAway, teamALabel, teamBLabel) {
+  const summary = metrics.reduce(
+    (acc, metric) => {
+      const homeRank = ranksHome[metric.key]?.rank;
+      const awayRank = ranksAway[metric.key]?.rank;
+
+      if (homeRank == null || awayRank == null) {
+        acc.unavailable += 1;
+      } else if (homeRank === awayRank) {
+        acc.level += 1;
+      } else if (homeRank < awayRank) {
+        acc.home += 1;
+      } else {
+        acc.away += 1;
+      }
+
+      return acc;
+    },
+    { home: 0, away: 0, level: 0, unavailable: 0 }
+  );
+  const compared = metrics.length - summary.unavailable;
+  const tone =
+    summary.home === summary.away
+      ? "level"
+      : summary.home > summary.away
+      ? "home"
+      : "away";
+  const leader =
+    tone === "level"
+      ? "Category level"
+      : `${tone === "home" ? teamALabel : teamBLabel} leads`;
+  const edge = Math.abs(summary.home - summary.away);
+  const edgeText =
+    edge === 0
+      ? `${summary.home}-${summary.away} across compared metrics`
+      : `${edge} metric edge`;
+
+  return {
+    ...summary,
+    compared,
+    tone,
+    leader,
+    edgeText,
+  };
+}
+
+function SectionSummaryTile({
+  title,
+  metrics,
+  ranksHome,
+  ranksAway,
+  teamALabel,
+  teamBLabel,
 }) {
-  if (!totalTeams || totalTeams < 2) {
-    return <span className="RankComparisonBar-empty">—</span>;
-  }
-
-  if (homeRank == null && awayRank == null) {
-    return <span className="RankComparisonBar-empty">—</span>;
-  }
-
-  const rankToPercent = (rank) =>
-    ((rank - 1) / Math.max(totalTeams - 1, 1)) * 100;
-
-  const homeBetter =
-    homeRank != null && awayRank != null && homeRank < awayRank;
-  const awayBetter =
-    homeRank != null && awayRank != null && awayRank < homeRank;
-
-  const homePct = homeRank != null ? rankToPercent(homeRank) : null;
-  const awayPct = awayRank != null ? rankToPercent(awayRank) : null;
-  const isTied =
-    homeRank != null && awayRank != null && homeRank === awayRank;
-  const isClustered =
-    !isTied &&
-    homePct != null &&
-    awayPct != null &&
-    Math.abs(homePct - awayPct) < 5;
+  const summary = getSectionSummary(
+    metrics,
+    ranksHome,
+    ranksAway,
+    teamALabel,
+    teamBLabel
+  );
 
   return (
-    <div
-      className={`RankComparisonBar${
-        isClustered || isTied ? " is-clustered" : ""
-      }`}
-      role="img"
-      aria-label={`${homeLabel} rank ${homeRank ?? "unknown"}, ${awayLabel} rank ${awayRank ?? "unknown"} of ${totalTeams}`}
+    <article
+      className={`RankingsHeatmap-tile RankingsHeatmap-summaryTile RankingsHeatmap-tile--${summary.tone} RankingsHeatmap-tile--medium`}
+      aria-label={`${title} summary. ${summary.leader}. ${teamALabel} leads ${summary.home} metrics. ${teamBLabel} leads ${summary.away} metrics.`}
     >
-      <div className="RankComparisonBar-track">
-        <div className="RankComparisonBar-scale">
-          <div className="RankComparisonBar-zones" aria-hidden="true">
-            <span className="RankComparisonBar-zone RankComparisonBar-zone--top" />
-            <span className="RankComparisonBar-zone RankComparisonBar-zone--mid" />
-            <span className="RankComparisonBar-zone RankComparisonBar-zone--bottom" />
-          </div>
-
-          {isTied ? (
-            <div
-              className="RankComparisonBar-marker RankComparisonBar-marker--tied"
-              style={{ left: `${homePct}%` }}
-              title={`${homeLabel} & ${awayLabel}: ${ordinal(
-                homeRank
-              )} of ${totalTeams}`}
-            >
-              <span className="RankComparisonBar-rank">{homeRank}</span>
-              <span className="RankComparisonBar-dots" aria-hidden="true">
-                <span className="RankComparisonBar-dot RankComparisonBar-dot--home" />
-                <span className="RankComparisonBar-dot RankComparisonBar-dot--away" />
-              </span>
-            </div>
-          ) : (
-            <>
-              {homeRank != null && (
-                <div
-                  className={`RankComparisonBar-marker RankComparisonBar-marker--home${
-                    homeBetter ? " is-leading" : ""
-                  }`}
-                  style={{ left: `${homePct}%` }}
-                  title={formatMarkerTitle(
-                    homeRank,
-                    homeRankData,
-                    homeLabel,
-                    totalTeams
-                  )}
-                >
-                  <span className="RankComparisonBar-rank">{homeRank}</span>
-                  <span
-                    className="RankComparisonBar-dot RankComparisonBar-dot--home"
-                    aria-hidden="true"
-                  />
-                </div>
-              )}
-
-              {awayRank != null && (
-                <div
-                  className={`RankComparisonBar-marker RankComparisonBar-marker--away${
-                    awayBetter ? " is-leading" : ""
-                  }`}
-                  style={{ left: `${awayPct}%` }}
-                  title={formatMarkerTitle(
-                    awayRank,
-                    awayRankData,
-                    awayLabel,
-                    totalTeams
-                  )}
-                >
-                  <span className="RankComparisonBar-rank">{awayRank}</span>
-                  <span
-                    className="RankComparisonBar-dot RankComparisonBar-dot--away"
-                    aria-hidden="true"
-                  />
-                </div>
-              )}
-            </>
-          )}
-        </div>
+      <div className="RankingsHeatmap-tileHeader">
+        <span className="RankingsHeatmap-metric">{title} snapshot</span>
+        <span
+          className={`RankingsHeatmap-leader RankingsHeatmap-leader--${summary.tone}`}
+        >
+          {summary.leader}
+        </span>
       </div>
-    </div>
+
+      <div className="RankingsHeatmap-summaryScores">
+        <span>
+          <strong>{summary.home}</strong>
+          {teamALabel}
+        </span>
+        <span>
+          <strong>{summary.away}</strong>
+          {teamBLabel}
+        </span>
+        <span>
+          <strong>{summary.level}</strong>
+          Level
+        </span>
+      </div>
+
+      <div className="RankingsHeatmap-edge">
+        {summary.edgeText}
+        {summary.unavailable > 0
+          ? ` · ${summary.unavailable} unavailable`
+          : ` · ${summary.compared} compared`}
+      </div>
+    </article>
+  );
+}
+
+function RankingHeatmapTile({
+  metric,
+  homeRankData,
+  awayRankData,
+  teamALabel,
+  teamBLabel,
+  totalTeams,
+}) {
+  const homeRank = homeRankData?.rank;
+  const awayRank = awayRankData?.rank;
+  const state = getRankEdgeState(homeRank, awayRank, totalTeams);
+  const tileClassName = [
+    "RankingsHeatmap-tile",
+    `RankingsHeatmap-tile--${state.tone}`,
+    `RankingsHeatmap-tile--${state.intensity}`,
+  ].join(" ");
+  const title = `${metric.label}: ${teamALabel} ${formatRankDetail(
+    homeRank,
+    homeRankData,
+    totalTeams
+  )}; ${teamBLabel} ${formatRankDetail(awayRank, awayRankData, totalTeams)}`;
+
+  return (
+    <article
+      className={tileClassName}
+      title={title}
+      aria-label={`${metric.label}. ${state.leader}. ${teamALabel} ${formatRank(
+        homeRank,
+        totalTeams
+      )}. ${teamBLabel} ${formatRank(awayRank, totalTeams)}.`}
+    >
+      <div className="RankingsHeatmap-tileHeader">
+        <span className="RankingsHeatmap-metric">{metric.label}</span>
+        <span
+          className={`RankingsHeatmap-leader RankingsHeatmap-leader--${state.tone}`}
+        >
+          {state.leader}
+        </span>
+      </div>
+
+      <div className="RankingsHeatmap-ranks">
+        <span className="RankingsHeatmap-teamRank">
+          <span
+            className="RankingsHeatmap-teamDot RankingsHeatmap-teamDot--home"
+            aria-hidden="true"
+          />
+          <span className="RankingsHeatmap-teamLabel">{teamALabel}</span>
+          <strong>{formatRank(homeRank, totalTeams)}</strong>
+        </span>
+        <span className="RankingsHeatmap-teamRank">
+          <span
+            className="RankingsHeatmap-teamDot RankingsHeatmap-teamDot--away"
+            aria-hidden="true"
+          />
+          <span className="RankingsHeatmap-teamLabel">{teamBLabel}</span>
+          <strong>{formatRank(awayRank, totalTeams)}</strong>
+        </span>
+      </div>
+
+      <div className="RankingsHeatmap-edge">{state.edgeText}</div>
+    </article>
   );
 }
 
@@ -157,42 +246,27 @@ export default function RankingsSection({
         {toTitleCase(title)}
       </h5>
 
-      <div className="rankings-row header">
-        <div className="ranking-metric">Metric</div>
-        <div className="ranking-comparison">Competition Rank</div>
-      </div>
-
-      {metrics.map((metric) => {
-        const homeRank = ranksHome[metric.key]?.rank;
-        const awayRank = ranksAway[metric.key]?.rank;
-        const homeBetter =
-          homeRank != null && awayRank != null && homeRank < awayRank;
-        const awayBetter =
-          homeRank != null && awayRank != null && awayRank < homeRank;
-
-        return (
-          <div
+      <div className="RankingsHeatmap-grid">
+        <SectionSummaryTile
+          title={toTitleCase(title)}
+          metrics={metrics}
+          ranksHome={ranksHome}
+          ranksAway={ranksAway}
+          teamALabel={teamALabel}
+          teamBLabel={teamBLabel}
+        />
+        {metrics.map((metric) => (
+          <RankingHeatmapTile
             key={metric.key}
-            className={`rankings-row${
-              homeBetter || awayBetter ? " has-leader" : ""
-            }`}
-          >
-            <div className="ranking-metric">{metric.label}</div>
-
-            <div className="ranking-comparison">
-              <RankComparisonBar
-                homeRank={homeRank}
-                awayRank={awayRank}
-                homeRankData={ranksHome[metric.key]}
-                awayRankData={ranksAway[metric.key]}
-                totalTeams={totalTeams}
-                homeLabel={teamALabel}
-                awayLabel={teamBLabel}
-              />
-            </div>
-          </div>
-        );
-      })}
+            metric={metric}
+            homeRankData={ranksHome[metric.key]}
+            awayRankData={ranksAway[metric.key]}
+            teamALabel={teamALabel}
+            teamBLabel={teamBLabel}
+            totalTeams={totalTeams}
+          />
+        ))}
+      </div>
     </section>
   );
 }

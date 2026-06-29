@@ -71,7 +71,6 @@ export default function TeamRankingsFlexView({
           />
           {teamBLabel}
         </span>
-        <span className="Rankings-legendNote">Left = most in competition</span>
       </div>
 
       {attackingMetrics.length > 0 && (
@@ -86,10 +85,10 @@ export default function TeamRankingsFlexView({
         />
       )}
 
-      {passingMetrics.length > 0 && (
+      {defensiveMetrics.length > 0 && (
         <RankingsSection
-          title="Passing"
-          metrics={passingMetrics}
+          title="Defensive"
+          metrics={defensiveMetrics}
           ranksHome={ranksHome}
           ranksAway={ranksAway}
           teamALabel={teamALabel}
@@ -98,10 +97,10 @@ export default function TeamRankingsFlexView({
         />
       )}
 
-      {defensiveMetrics.length > 0 && (
+      {passingMetrics.length > 0 && (
         <RankingsSection
-          title="Defensive"
-          metrics={defensiveMetrics}
+          title="Passing"
+          metrics={passingMetrics}
           ranksHome={ranksHome}
           ranksAway={ranksAway}
           teamALabel={teamALabel}
