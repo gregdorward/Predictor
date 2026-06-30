@@ -39,7 +39,7 @@ describe("worldCup2026Matches", () => {
 
   test("groupMatchesByPhase groups matches", () => {
     const grouped = groupMatchesByPhase(loadStaticMatchPredictions());
-    expect(grouped.group.length).toBeGreaterThan(0);
+    expect(grouped.round32.length).toBeGreaterThan(0);
   });
 
   test("sortMatchesByDate orders by date", () => {

@@ -12,56 +12,6 @@
     "startDate": "2026-06-11",
     "endDate": "2026-07-19"
   },
-  "contenders": [
-    {
-      "team": "Spain",
-      "flag": "🇪🇸",
-      "odds": "4/1",
-      "reasoning": "Euro 2024 winners with the best blend of youth (Yamal, Williams) and experience (Rodri). Positional dominance and pressing suit the expanded format."
-    },
-    {
-      "team": "France",
-      "flag": "🇫🇷",
-      "odds": "5/1",
-      "reasoning": "Unmatched squad depth with Mbappé, Dembélé and a proven tournament manager in Deschamps. Always deliver when it matters."
-    },
-    {
-      "team": "England",
-      "flag": "🏴󠁧󠁢󠁥󠁮󠁧󠁿",
-      "odds": "6/1",
-      "reasoning": "Thomas Tuchel brings tactical rigour. Kane, Saka and a deep squad make England genuine contenders on paper."
-    },
-    {
-      "team": "Argentina",
-      "flag": "🇦🇷",
-      "odds": "6/1",
-      "reasoning": "2022 champions with Scaloni still in charge. Lautaro Martínez and Enzo Fernández lead a squad that knows how to win knockouts."
-    },
-    {
-      "team": "Brazil",
-      "flag": "🇧🇷",
-      "odds": "7/1",
-      "reasoning": "Vinícius Júnior and Rodrygo provide elite attacking quality. Dorival Júnior must solve defensive transition issues."
-    },
-    {
-      "team": "Germany",
-      "flag": "🇩🇪",
-      "odds": "8/1",
-      "reasoning": "Wirtz and Musiala give Nagelsmann two of Europe's best creators. Quarter-final run at Euro 2024 showed progress."
-    },
-    {
-      "team": "Portugal",
-      "flag": "🇵🇹",
-      "odds": "9/1",
-      "reasoning": "Attacking talent with Leão, Ronaldo and emerging stars. Martínez must balance creativity with midfield control."
-    },
-    {
-      "team": "Netherlands",
-      "flag": "🇳🇱",
-      "odds": "10/1",
-      "reasoning": "Koeman's side blend Van Dijk's leadership with exciting wide play. Centre-back depth is the main concern."
-    }
-  ],
   "predictedWinner": {
     "team": "Spain",
     "flag": "🇪🇸",

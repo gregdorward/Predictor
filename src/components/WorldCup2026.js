@@ -4,13 +4,14 @@ import PageMeta from "./PageMeta";
 import WorldCup2026MatchesTab from "./WorldCup2026MatchesTab";
 import WorldCup2026NewsTab from "./WorldCup2026NewsTab";
 import previewData from "../data/worldcup2026/tournament-preview.json";
+import powerRankingsData from "../data/worldcup2026/power-rankings.json";
 
 const TABS = [
   { id: "overview", label: "Overview" },
   { id: "news", label: "News" },
   { id: "groups", label: "Groups" },
   { id: "teams", label: "Teams" },
-  { id: "contenders", label: "Contenders" },
+  { id: "rankings", label: "Power Rankings" },
   { id: "matches", label: "Key Matches" },
 ];
 
@@ -187,23 +188,35 @@ function TeamsTab({ teamPreviews }) {
   );
 }
 
-function ContendersTab({ contenders, goldenBoot }) {
+function PowerRankingsTab({ rankings, goldenBoot }) {
+  const updatedLabel = new Date(rankings.updatedAt).toLocaleDateString("en-GB", {
+    day: "numeric",
+    month: "long",
+    year: "numeric",
+  });
+
   return (
     <div className="WC26__section">
-      <h3 className="WC26__sectionTitle">Outright contenders</h3>
+      <p className="WC26__matchesNote">
+        Updated {updatedLabel}. {rankings.methodology}
+      </p>
+      <h3 className="WC26__sectionTitle">Power rankings</h3>
       <ol className="WC26__contenderList">
-        {contenders.map((item, index) => (
+        {rankings.rankings.map((item) => (
           <li key={item.team} className="WC26__contenderItem">
-            <span className="WC26__contenderRank">{index + 1}</span>
+            <span className="WC26__contenderRank">{item.rank}</span>
             <div className="WC26__contenderBody">
               <div className="WC26__inlineHeader WC26__inlineHeader--split WC26__inlineHeader--block">
                 <span className="WC26__inlineHeader">
                   <span className="WC26__flag">{item.flag}</span>
                   <strong>{item.team}</strong>
                 </span>
-                <span className="WC26__odds">{item.odds}</span>
+                <span className="WC26__odds" title="Estimated title win chance">
+                  {item.winChance}
+                </span>
               </div>
-              <p className="WC26__cardText">{item.reasoning}</p>
+              <p className="WC26__contenderRecord">{item.record}</p>
+              <p className="WC26__cardText">{item.summary}</p>
             </div>
           </li>
         ))}
@@ -295,8 +308,8 @@ export default function WorldCup2026() {
           {activeTab === "news" && <WorldCup2026NewsTab />}
           {activeTab === "groups" && <GroupsTab groups={data.groups} />}
           {activeTab === "teams" && <TeamsTab teamPreviews={data.teamPreviews} />}
-          {activeTab === "contenders" && (
-            <ContendersTab contenders={data.contenders} goldenBoot={data.goldenBoot} />
+          {activeTab === "rankings" && (
+            <PowerRankingsTab rankings={powerRankingsData} goldenBoot={data.goldenBoot} />
           )}
           {activeTab === "matches" && <WorldCup2026MatchesTab />}
         </div>

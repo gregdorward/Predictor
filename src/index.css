@@ -10566,6 +10566,13 @@ strong.WC26__inlineHeader {
   min-width: 0;
 }
 
+.WC26__contenderRecord {
+  margin: 0.25em 0 0.5em;
+  font-size: 0.85rem;
+  color: var(--secondary-text-color, #888);
+  font-weight: 500;
+}
+
 .WC26__goldenBootCard {
   padding: 1.25em;
   background: var(--secondary-background-color);
