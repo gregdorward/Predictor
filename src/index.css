@@ -785,6 +785,7 @@ h4.Blurb {
   grid-template-rows: auto auto auto;
   gap: 1rem;
   align-items: stretch;
+  margin-top: 1em;
 }
 
 .GuestLanding-card {
