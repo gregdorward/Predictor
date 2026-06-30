@@ -818,37 +818,39 @@ function GameStats({ game, displayBool, stats, handleToggleTip, userTips }) {
 
   const warnedTeams = new Set(); // Move this outside the function if reused
 
-  function getTeamRanksFromTopTeamsWithPartialMatch(topTeamsData, targetTeamName) {
+  function getTeamRanksFromTopTeamsWithPartialMatch(
+    topTeamsData,
+    targetTeamName,
+    teamId = null
+  ) {
     if (!topTeamsData) return;
 
     const teamRanks = {};
     const topTeams = topTeamsData.topTeams;
-
-    const teamNameAliases = {
-      "inter milan": "inter",
-      "ac milan": "milan",
-      "man city": "manchester city",
-      "man united": "manchester united",
-      "psg": "paris saint-germain",
-      "fk bodo - glimt": "bodø/glimt", // Changed to lowercase
-      "bodøglimt": "bodø/glimt",      // Changed to lowercase
-      "bodo/glimt": "bodø/glimt"       // Common variation
-    };
-
-    const targetNameLower = targetTeamName.toLowerCase();
-    const normalizedTargetName = teamNameAliases[targetNameLower] || targetNameLower;
+    const normalizedTargetName = getMappedTeamName(targetTeamName);
 
     for (const statistic in topTeams) {
       if (!Array.isArray(topTeams[statistic])) continue;
 
       const teamArray = topTeams[statistic];
-      let targetTeamIndex = teamArray.findIndex(
-        (teamInfo) => teamInfo.team.name.toLowerCase() === normalizedTargetName
-      );
+      let targetTeamIndex = -1;
+
+      if (teamId != null) {
+        targetTeamIndex = teamArray.findIndex(
+          (teamInfo) => teamInfo.team?.id === teamId
+        );
+      }
+
+      if (targetTeamIndex === -1) {
+        targetTeamIndex = teamArray.findIndex(
+          (teamInfo) =>
+            getMappedTeamName(teamInfo.team.name) === normalizedTargetName
+        );
+      }
 
       if (targetTeamIndex === -1) {
         const partialMatches = teamArray.filter((teamInfo) => {
-          const name = teamInfo.team.name.toLowerCase();
+          const name = getMappedTeamName(teamInfo.team.name);
           return (
             name.includes(normalizedTargetName) ||
             normalizedTargetName.includes(name)
@@ -893,17 +895,25 @@ function GameStats({ game, displayBool, stats, handleToggleTip, userTips }) {
 
   useEffect(() => {
     if (stats && homeForm?.teamName) {
-      const ranks = getTeamRanksFromTopTeamsWithPartialMatch(stats, homeForm.teamName);
+      const ranks = getTeamRanksFromTopTeamsWithPartialMatch(
+        stats,
+        homeForm.teamName,
+        matchingGame?.homeId
+      );
       setRanksHome(ranks);
     }
-  }, [stats, homeForm?.teamName]);
+  }, [stats, homeForm?.teamName, matchingGame?.homeId]);
 
   useEffect(() => {
     if (stats && awayForm?.teamName) {
-      const ranks = getTeamRanksFromTopTeamsWithPartialMatch(stats, awayForm.teamName);
+      const ranks = getTeamRanksFromTopTeamsWithPartialMatch(
+        stats,
+        awayForm.teamName,
+        matchingGame?.awayId
+      );
       setRanksAway(ranks);
     }
-  }, [stats, awayForm?.teamName]);
+  }, [stats, awayForm?.teamName, matchingGame?.awayId]);
 
   const leagueFixtures = getLeagueFixturesByLeagueId(
     allLeagueResultsArrayOfObjects,
@@ -3289,7 +3299,7 @@ function GameStats({ game, displayBool, stats, handleToggleTip, userTips }) {
         setAwayTenGameAverage(away10GA);
 
 
-        if (homeForm.fiveGameAv && game.matches_completed_minimum > 4) {
+        if (homeForm.fiveGameAv && game.matches_completed_minimum > 3) {
           const formTextStringHome = await GenerateFormSummary(
             homeForm,
             homeForm.tenGameAv,

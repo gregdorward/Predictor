@@ -37,7 +37,6 @@ import { userDetail } from "../logic/authProvider";
 import UsernameSetup from "../components/UsernameSetup";
 import {
   uniqueLeagueIDs,
-  shouldUseApiFormOnly,
   API_FORM_ONLY_LEAGUE_IDS,
 } from "./getFixtures";
 import {
@@ -3175,25 +3174,7 @@ export async function calculateScore(match, index, divider, calculate, AIPredict
         match.leagueID
       ).length > 10 && match.leagueID !== 7956;
 
-    if (shouldUseApiFormOnly(match)) {
-      match.apiFormOnly = true;
-      hydrateFormFromApi(teams[0], formHome, "home", match.homeTeam, match);
-      hydrateFormFromApi(teams[1], formAway, "away", match.awayTeam, match);
-      match.bttsAllPercentageHome = formatBttsPercentage(formHome.BttsPercentage);
-      match.bttsPercentageHomeHome = formatBttsPercentage(
-        formHome.BttsPercentageHomeOrAway
-      );
-      match.bttsPercentageHomeAway = formatBttsPercentage(
-        formHome.BttsPercentageHomeOrAway
-      );
-      match.bttsAllPercentageAway = formatBttsPercentage(formAway.BttsPercentage);
-      match.bttsPercentageAwayHome = formatBttsPercentage(
-        formAway.BttsPercentageHomeOrAway
-      );
-      match.bttsPercentageAwayAway = formatBttsPercentage(
-        formAway.BttsPercentageHomeOrAway
-      );
-    } else if (leagueHasEnoughFixtures) {
+    if (leagueHasEnoughFixtures) {
       [
         formHome.averageOddsHome,
         formHome.averageOddsAway,
@@ -3674,7 +3655,7 @@ export async function calculateScore(match, index, divider, calculate, AIPredict
     formAway.attackingMetricsAwayOnly = attackingMetricsAwayOnly;
     formAway.defensiveMetricsAwayOnly = defensiveMetricsAwayOnly;
 
-    const strengthOptions = shouldUseApiFormOnly(match)
+    const strengthOptions = API_FORM_ONLY_LEAGUE_IDS.includes(match.leagueID)
       ? { international: true }
       : {};
 
@@ -4482,8 +4463,7 @@ export async function calculateScore(match, index, divider, calculate, AIPredict
 
     if (
       (match.matches_completed_minimum < 3 &&
-        selectedTipType !== "AI Tips" &&
-        !shouldUseApiFormOnly(match)) ||
+        selectedTipType !== "AI Tips") ||
       match.homeOdds === "N/A"
     ) {
       match.omit = true;
@@ -4554,7 +4534,7 @@ export async function calculateScore(match, index, divider, calculate, AIPredict
     match.goalDifferenceComparison =
       parseFloat(formHome.goalDifference) - parseFloat(formAway.goalDifference);
 
-    if (match.matches_completed_minimum < 4 && !shouldUseApiFormOnly(match)) {
+    if (match.matches_completed_minimum < 3) {
       match.omit = true;
     }
 
@@ -5261,23 +5241,7 @@ export async function getScorePrediction(day, mocked) {
             match.completeData = false;
             await calculateScore(match, index, divider, false, predictedScoresData, fetchedTips);
             break;
-          case shouldUseApiFormOnly(match):
-            [
-              match.goalsA,
-              match.goalsB,
-              match.unroundedGoalsA,
-              match.unroundedGoalsB,
-              match.completeData = true,
-            ] = await calculateScore(
-              match,
-              index,
-              divider,
-              true,
-              predictedScoresData,
-              fetchedTips
-            );
-            break;
-          case match.matches_completed_minimum < 4:
+          case match.matches_completed_minimum < 3:
             match.goalsA = "x";
             match.goalsB = "x";
             match.completeData = false;

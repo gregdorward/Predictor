@@ -67,7 +67,7 @@ async function buildFormSummaries(match) {
   if (
     !homeForm?.fiveGameAv ||
     !awayForm?.fiveGameAv ||
-    Number(match?.matches_completed_minimum) <= 4
+    Number(match?.matches_completed_minimum) <= 3
   ) {
     return { home: undefined, away: undefined };
   }

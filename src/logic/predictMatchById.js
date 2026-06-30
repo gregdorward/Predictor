@@ -3,7 +3,6 @@ import { apiGetUrl } from "../utils/apiUrl";
 import {
   allForm,
   allLeagueResultsArrayOfObjects,
-  shouldUseApiFormOnly,
 } from "./getFixtures";
 import {
   calculateScore,
@@ -97,11 +96,7 @@ export async function predictMatchById(matchId) {
     match.goalsB = "P";
     match.completeData = false;
     await calculateScore(match, index, divider, false, predictedScores, []);
-  } else if (shouldUseApiFormOnly(match)) {
-    [match.goalsA, match.goalsB, match.unroundedGoalsA, match.unroundedGoalsB] =
-      await calculateScore(match, index, divider, true, predictedScores, []);
-    match.completeData = true;
-  } else if (match.matches_completed_minimum < 4) {
+  } else if (match.matches_completed_minimum < 3) {
     match.goalsA = "x";
     match.goalsB = "x";
     match.completeData = false;

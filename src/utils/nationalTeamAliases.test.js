@@ -1,5 +1,18 @@
 import { applyNationalTeamAlias } from "./nationalTeamAliases";
 
+function canonicalTeamKey(name) {
+  const normalize = (str) =>
+    String(str)
+      .toLowerCase()
+      .normalize("NFD")
+      .replace(/[\u0300-\u036f]/g, "")
+      .replace(/\s+/g, "")
+      .replace(/[^a-z]/g, "");
+
+  const aliasKey = normalize(name);
+  return normalize(applyNationalTeamAlias(aliasKey));
+}
+
 describe("applyNationalTeamAlias", () => {
   test("maps common FootyStats international labels to SofaScore names", () => {
     expect(applyNationalTeamAlias("usa")).toBe("united states");
@@ -11,5 +24,10 @@ describe("applyNationalTeamAlias", () => {
   test("returns the original key when no alias exists", () => {
     expect(applyNationalTeamAlias("england")).toBe("england");
     expect(applyNationalTeamAlias("")).toBe("");
+  });
+
+  test("FootyStats and SofaScore Ivory Coast labels resolve to the same key", () => {
+    expect(canonicalTeamKey("Ivory Coast")).toBe("ivorycoast");
+    expect(canonicalTeamKey("Côte d'Ivoire")).toBe("ivorycoast");
   });
 });

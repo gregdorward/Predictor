@@ -94,14 +94,14 @@ export const API_FORM_ONLY_LEAGUE_IDS = [16494]; // World Cup 2026
 export function shouldUseApiFormOnly(match) {
   return (
     API_FORM_ONLY_LEAGUE_IDS.includes(match.leagueID) &&
-    match.matches_completed_minimum < 4
+    match.matches_completed_minimum < 3
   );
 }
 
 export function shouldStoreApiFormWindows(leagueId, matchesCompletedMinimum) {
   return (
     API_FORM_ONLY_LEAGUE_IDS.includes(leagueId) &&
-    matchesCompletedMinimum < 4
+    matchesCompletedMinimum < 3
   );
 }
 
@@ -683,8 +683,7 @@ export function RenderAllFixtures(props) {
 
   // 2. Filter logic
   const filteredMatches = omitFilteredGames.filter(
-    (match) =>
-      match.matches_completed_minimum >= 3 || shouldUseApiFormOnly(match)
+    (match) => match.matches_completed_minimum >= 3
   );
 
   const originalLength = filteredMatches.length;
