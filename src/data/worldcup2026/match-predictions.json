@@ -1,71 +1,7 @@
 {
   "version": 1,
-  "lastUpdated": "2026-06-30T12:00:00.000Z",
+  "lastUpdated": "2026-07-01T14:00:00.000Z",
   "matches": [
-    {
-      "id": "round32-ivory-coast-vs-norway",
-      "phase": "round32",
-      "roundLabel": "Round of 32",
-      "group": "E",
-      "date": "2026-06-30",
-      "home": "Ivory Coast",
-      "away": "Norway",
-      "prediction": {
-        "predictedScore": "1-2",
-        "homeWin": 28,
-        "draw": 24,
-        "awayWin": 48
-      },
-      "source": "static"
-    },
-    {
-      "id": "round32-france-vs-sweden",
-      "phase": "round32",
-      "roundLabel": "Round of 32",
-      "group": "I",
-      "date": "2026-06-30",
-      "home": "France",
-      "away": "Sweden",
-      "prediction": {
-        "predictedScore": "2-0",
-        "homeWin": 72,
-        "draw": 18,
-        "awayWin": 10
-      },
-      "source": "static"
-    },
-    {
-      "id": "round32-mexico-vs-ecuador",
-      "phase": "round32",
-      "roundLabel": "Round of 32",
-      "group": "A",
-      "date": "2026-06-30",
-      "home": "Mexico",
-      "away": "Ecuador",
-      "prediction": {
-        "predictedScore": "1-0",
-        "homeWin": 55,
-        "draw": 28,
-        "awayWin": 17
-      },
-      "source": "static"
-    },
-    {
-      "id": "round32-england-vs-dr-congo",
-      "phase": "round32",
-      "roundLabel": "Round of 32",
-      "group": "L",
-      "date": "2026-07-01",
-      "home": "England",
-      "away": "DR Congo",
-      "prediction": {
-        "predictedScore": "2-0",
-        "homeWin": 68,
-        "draw": 20,
-        "awayWin": 12
-      },
-      "source": "static"
-    },
     {
       "id": "round32-belgium-vs-senegal",
       "phase": "round32",
@@ -75,10 +11,10 @@
       "home": "Belgium",
       "away": "Senegal",
       "prediction": {
-        "predictedScore": "1-1",
-        "homeWin": 42,
-        "draw": 28,
-        "awayWin": 30
+        "predictedScore": "2-1",
+        "homeWin": 48,
+        "draw": 26,
+        "awayWin": 26
       },
       "source": "static"
     },
@@ -92,9 +28,9 @@
       "away": "Bosnia and Herzegovina",
       "prediction": {
         "predictedScore": "2-0",
-        "homeWin": 62,
-        "draw": 22,
-        "awayWin": 16
+        "homeWin": 65,
+        "draw": 20,
+        "awayWin": 15
       },
       "source": "static"
     },
@@ -107,10 +43,10 @@
       "home": "Spain",
       "away": "Austria",
       "prediction": {
-        "predictedScore": "2-1",
-        "homeWin": 58,
-        "draw": 22,
-        "awayWin": 20
+        "predictedScore": "1-0",
+        "homeWin": 62,
+        "draw": 24,
+        "awayWin": 14
       },
       "source": "static"
     },
@@ -156,8 +92,8 @@
       "away": "Cape Verde",
       "prediction": {
         "predictedScore": "2-0",
-        "homeWin": 70,
-        "draw": 18,
+        "homeWin": 72,
+        "draw": 16,
         "awayWin": 12
       },
       "source": "static"
@@ -191,6 +127,70 @@
         "homeWin": 38,
         "draw": 30,
         "awayWin": 32
+      },
+      "source": "static"
+    },
+    {
+      "id": "round16-france-vs-paraguay",
+      "phase": "round16",
+      "roundLabel": "Round of 16",
+      "group": "I",
+      "date": "2026-07-04",
+      "home": "France",
+      "away": "Paraguay",
+      "prediction": {
+        "predictedScore": "3-1",
+        "homeWin": 78,
+        "draw": 14,
+        "awayWin": 8
+      },
+      "source": "static"
+    },
+    {
+      "id": "round16-morocco-vs-canada",
+      "phase": "round16",
+      "roundLabel": "Round of 16",
+      "group": "F",
+      "date": "2026-07-04",
+      "home": "Morocco",
+      "away": "Canada",
+      "prediction": {
+        "predictedScore": "2-1",
+        "homeWin": 52,
+        "draw": 24,
+        "awayWin": 24
+      },
+      "source": "static"
+    },
+    {
+      "id": "round16-brazil-vs-norway",
+      "phase": "round16",
+      "roundLabel": "Round of 16",
+      "group": "C",
+      "date": "2026-07-05",
+      "home": "Brazil",
+      "away": "Norway",
+      "prediction": {
+        "predictedScore": "2-1",
+        "homeWin": 58,
+        "draw": 22,
+        "awayWin": 20
+      },
+      "source": "static"
+    },
+    {
+      "id": "round16-england-vs-mexico",
+      "phase": "round16",
+      "roundLabel": "Round of 16",
+      "group": "L",
+      "date": "2026-07-06",
+      "home": "England",
+      "away": "Mexico",
+      "prediction": {
+        "predictedScore": "1-1",
+        "homeWin": 42,
+        "draw": 28,
+        "awayWin": 30
       },
       "source": "static"
     }

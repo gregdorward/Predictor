@@ -75,7 +75,7 @@ export function AmazonAffiliateFixtureAd({ product }) {
         rel="nofollow sponsored noopener noreferrer"
         aria-label={`${product.title} on Amazon`}
       >
-        <span className="AmazonAffiliateFixtureAd__badge">Fan pick</span>
+        <span className="AmazonAffiliateFixtureAd__badge">SSH recommends</span>
         <img
           src={product.imageUrl}
           alt=""

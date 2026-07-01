@@ -86,6 +86,19 @@ const AMAZON_PRODUCTS = [
     ratingCount: 204,
     placements: ["worldcup2026", "fixtures", "footer"],
   },
+  {
+    id: "amazon-prime-uk",
+    title: "Amazon Prime - 30-day free trial",
+    description:
+      "Stream World Cup coverage on Prime Video, plus unlimited One-Day Delivery and member-only deals. £8.99/month after trial.",
+    affiliateUrl: "https://amzn.to/44rfcgt",
+    asin: "B00CFM6BAO",
+    imageUrl:
+      "https://m.media-amazon.com/images/G/02/prime/piv/2022PrimeBrand/Prime_Logo_RGB_Prime_Blue._CB663813932_.png",
+    rating: 4.6,
+    ratingCount: 128000,
+    placements: ["worldcup2026", "fixtures", "footer"],
+  },
 ];
 
 export const FIXTURE_AD_CONFIG = {

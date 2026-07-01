@@ -1,14 +1,14 @@
 {
-  "updatedAt": "2026-06-30T12:00:00.000Z",
-  "methodology": "Rankings reflect group-stage and knockout results through 30 June 2026, weighted by results quality, goal difference and path difficulty. Title win chances are illustrative estimates aligned with Soccer Stats Hub modelling.",
+  "updatedAt": "2026-07-01T14:00:00.000Z",
+  "methodology": "Rankings reflect group-stage and knockout results through 1 July 2026, weighted by results quality, goal difference and path difficulty. Title win chances are illustrative estimates aligned with Soccer Stats Hub modelling.",
   "rankings": [
     {
       "rank": 1,
       "team": "France",
       "flag": "🇫🇷",
-      "record": "3W 0D 0L · Group I winners",
-      "winChance": "14%",
-      "summary": "The only side with a perfect group-stage record among the pre-tournament favourites, France arrive at the Round of 32 with Mbappé, Dembélé and Olise in strong form. A meeting with Sweden in New Jersey is a favourable opener before a potential quarter-final with Paraguay. Didier Deschamps's squad still look the team to beat on paper."
+      "record": "R16 · 3-0 vs Sweden",
+      "winChance": "16%",
+      "summary": "Kylian Mbappe scored twice as France dismantled Sweden 3-0 on 30 June, becoming the all-time leading scorer in World Cup knockout matches with 10 goals and moving level with Lionel Messi on six at this tournament. Michael Olise and Ousmane Dembele continue to supply ammunition from every angle, and Didier Deschamps's side have now scored three or more in five straight World Cup matches. A quarter-final path through Paraguay and then Canada or Morocco still looks the most forgiving among the pre-tournament favourites."
     },
     {
       "rank": 2,
@@ -16,95 +16,95 @@
       "flag": "🇦🇷",
       "record": "2W 1D · Group J winners",
       "winChance": "12%",
-      "summary": "The defending champions navigated Group J without defeat and face Cabo Verde in Miami on 3 July, a tie that should allow Lionel Scaloni to rotate before harder tests. Lautaro Martínez and Enzo Fernández remain the spine of a squad that knows how to win tight knockouts, though the expanded bracket demands greater squad depth than in 2022."
+      "summary": "The defending champions navigated Group J without defeat and face Cabo Verde in Miami on 3 July, a tie that should allow Lionel Scaloni to rotate before harder tests. Lautaro Martinez and Enzo Fernandez remain the spine of a squad that knows how to win tight knockouts, though France's attacking variety sets a higher bar than any other remaining side."
     },
     {
       "rank": 3,
       "team": "Spain",
       "flag": "🇪🇸",
       "record": "2W 1D · Group H winners",
-      "winChance": "11%",
-      "summary": "Luis de la Fuente's side topped Group H with seven points but head into the Austria tie on 2 July without Nico Williams and Yeremy Pino, both carrying moderate injuries from the Uruguay finale. Lamine Yamal has been managed carefully since April, so Spain's wing threat is thinner than at Euro 2024 despite their midfield control remaining elite."
+      "winChance": "10%",
+      "summary": "Luis de la Fuente's side topped Group H without conceding but head into the Austria tie on 2 July without Nico Williams and Yeremy Pino, both ruled out with moderate injuries from the Uruguay finale. Lamine Yamal's minutes are rising as he returns from a hamstring problem, but Spain's wing threat is thinner than at Euro 2024 and Alex Baena may need to provide width on the left."
     },
     {
       "rank": 4,
-      "team": "England",
-      "flag": "🏴󠁧󠁢󠁥󠁮󠁧󠁿",
-      "record": "2W 1D · Group L winners",
-      "winChance": "10%",
-      "summary": "Harry Kane became England's all-time leading World Cup scorer in the 2-0 win over Panama, and Thomas Tuchel's side finished top of Group L on seven points. Reece James's hamstring remains a concern before the DR Congo tie in Atlanta, but the bracket has steered England away from Spain and Portugal until a potential semi-final."
+      "team": "Mexico",
+      "flag": "🇲🇽",
+      "record": "R16 · 2-0 vs Ecuador",
+      "winChance": "9%",
+      "summary": "Co-hosts Mexico are the only team yet to concede at the tournament, beating Ecuador 2-0 at the Estadio Azteca on 1 July to set up a last-16 clash with England. Julian Quinones and Raul Jimenez scored in a storm-delayed fixture, and altitude plus crowd support give Javier Aguirre's side a genuine edge against a team that needed Harry Kane's late brace to survive DR Congo."
     },
     {
       "rank": 5,
-      "team": "Brazil",
-      "flag": "🇧🇷",
-      "record": "R16 · 2-1 vs Japan (aet)",
+      "team": "England",
+      "flag": "🏴󠁧󠁢󠁥󠁮󠁧󠁿",
+      "record": "R16 · 2-1 vs DR Congo",
       "winChance": "9%",
-      "summary": "Carlo Ancelotti's side needed Gabriel Martinelli's 95th-minute winner to survive Japan in Houston, exposing defensive lapses that Kaishu Sano punished in the first half. Vinícius Júnior has four goals in the tournament and Neymar made a tearful return against Scotland, but Brazil were far from convincing in their first knockout test."
+      "summary": "Harry Kane scored twice in the final 15 minutes to rescue England from a shock Round of 32 exit against DR Congo, but the 2-1 win in Atlanta raised serious questions about Thomas Tuchel's side at the knockout stage. Reece James and Jarrell Quansah remain unavailable at right-back, and a trip to the Azteca to face Mexico on 6 July demands a far sharper performance than the one that left England 15 minutes from elimination."
     },
     {
       "rank": 6,
-      "team": "USA",
-      "flag": "🇺🇸",
-      "record": "2W 1L · Group D winners",
-      "winChance": "7%",
-      "summary": "Mauricio Pochettino's co-hosts won Group D with victories over Paraguay and Australia before a stoppage-time defeat to Turkey in a rotated line-up. Christian Pulisic's calf concern eased after he came off the bench against Turkey, and the squad has arrived in the Bay Area for a home Round of 32 tie with Bosnia and Herzegovina that they are expected to win."
+      "team": "Brazil",
+      "flag": "🇧🇷",
+      "record": "R16 · 2-1 vs Japan (aet)",
+      "winChance": "8%",
+      "summary": "Carlo Ancelotti's side needed Gabriel Martinelli's 95th-minute winner to survive Japan in Houston, exposing defensive lapses that Kaishu Sano punished in the first half. Vinicius Junior has four goals in the tournament, but Brazil were far from convincing in their first knockout test and now face Erling Haaland's Norway in New Jersey on 5 July."
     },
     {
       "rank": 7,
-      "team": "Mexico",
-      "flag": "🇲🇽",
-      "record": "3W 0D 0L · Group A winners",
-      "winChance": "6%",
-      "summary": "Co-hosts Mexico are the only team yet to concede at the tournament, winning all three group games at the Estadio Azteca before hosting Ecuador in the Round of 32. Altitude and crowd support give them a genuine edge, though they have won only one World Cup knockout match in their history and Ecuador already stunned Germany in the group stage."
+      "team": "Norway",
+      "flag": "🇳🇴",
+      "record": "R16 · 2-1 vs Ivory Coast",
+      "winChance": "7%",
+      "summary": "Erling Haaland's 86th-minute winner gave Norway their first ever World Cup knockout victory, a 2-1 defeat of Ivory Coast in Dallas on 30 June after Antonio Nusa had opened the scoring. Haaland has five goals in three games and Stale Solbakken's side arrive in New Jersey with genuine momentum, though a last-16 meeting with Brazil is the toughest possible draw for a team riding knockout history."
     },
     {
       "rank": 8,
-      "team": "Portugal",
-      "flag": "🇵🇹",
-      "record": "1W 2D · Group K runners-up",
-      "winChance": "5%",
-      "summary": "Portugal were held by DR Congo and drew with Colombia before advancing, leaving Roberto Martínez with questions about midfield balance heading into a Croatia tie in Toronto. Rafael Leão and Cristiano Ronaldo still provide elite attacking options, but just one win from three group games will concern supporters expecting more from this squad."
+      "team": "USA",
+      "flag": "🇺🇸",
+      "record": "2W 1L · Group D winners",
+      "winChance": "6%",
+      "summary": "Mauricio Pochettino's co-hosts won Group D and face Bosnia and Herzegovina at Levi's Stadium on 1 July seeking a first knockout win since 2002. Christian Pulisic said he was fit after a calf concern limited him against Turkey, but the Americans have won only one of 21 games against European opposition since 1990 and must prove they can handle elimination pressure on home soil."
     },
     {
       "rank": 9,
       "team": "Morocco",
       "flag": "🇲🇦",
       "record": "R16 · 1-1 vs Netherlands (pens 3-2)",
-      "winChance": "4%",
-      "summary": "Walid Regragui's side followed up their 2022 semi-final run with a dramatic penalty shootout win over the Netherlands, Issa Diop's stoppage-time header forcing extra time before Ismael Saibari converted the winner. Yassine Bounou was decisive again, and Morocco now face Canada in Houston with genuine momentum behind them."
+      "winChance": "5%",
+      "summary": "Walid Regragui's side followed up their 2022 semi-final run with a dramatic penalty shootout win over the Netherlands, Issa Diop's stoppage-time header forcing extra time before Ismael Saibari converted the winner. Yassine Bounou was decisive again, and Morocco now face co-hosts Canada in Houston on 4 July with genuine belief they can reach another deep run."
     },
     {
       "rank": 10,
-      "team": "Colombia",
-      "flag": "🇨🇴",
-      "record": "1W 1D 1L · Group K third place",
-      "winChance": "3%",
-      "summary": "Néstor Lorenzo's side advanced as a best third-placed finisher and face Ghana in Kansas City on 3 July. Luis Díaz remains their main outlet, but a mixed group stage including a draw with Portugal means Colombia have not yet shown the consistency that took them to the 2014 quarter-finals."
+      "team": "Portugal",
+      "flag": "🇵🇹",
+      "record": "1W 2D · Group K runners-up",
+      "winChance": "4%",
+      "summary": "Portugal were held by DR Congo and drew with Colombia before advancing, leaving Roberto Martinez with questions about midfield balance heading into a Croatia tie in Toronto on 2 July. Rafael Leao and Cristiano Ronaldo still provide elite attacking options, but just one win from three group games will concern supporters expecting more from this squad."
     },
     {
       "rank": 11,
       "team": "Belgium",
       "flag": "🇧🇪",
-      "record": "2W 1D · Group G runners-up",
-      "winChance": "3%",
-      "summary": "Belgium finished behind Egypt in Group G on head-to-head and now meet Senegal in Seattle on 1 July. Rudi Garcia has attacking quality through Kevin De Bruyne and Jeremy Doku, but defensive inconsistency in the group stage leaves them vulnerable against a physical Senegalese side that scored five against Iraq."
+      "record": "2W 1D · Group G winners",
+      "winChance": "3.5%",
+      "summary": "Belgium topped Group G ahead of Egypt and face Senegal in Seattle on 1 July in one of the most open Round of 32 ties. Rudi Garcia has Kevin De Bruyne pulling the strings, but just five points from three group games and defensive inconsistency leave them vulnerable against a Senegalese side that scored five against Iraq."
     },
     {
       "rank": 12,
+      "team": "Colombia",
+      "flag": "🇨🇴",
+      "record": "1W 1D 1L · Group K third place",
+      "winChance": "3%",
+      "summary": "Nestor Lorenzo's side advanced as a best third-placed finisher and face Ghana in Kansas City on 3 July. Luis Diaz remains their main outlet, but a mixed group stage including a draw with Portugal means Colombia have not yet shown the consistency that took them to the 2014 quarter-finals."
+    },
+    {
+      "rank": 13,
       "team": "Paraguay",
       "flag": "🇵🇾",
       "record": "R16 · 1-1 vs Germany (pens 4-3)",
       "winChance": "2.5%",
-      "summary": "Paraguay produced the biggest shock of the tournament so far, eliminating Germany on penalties in Boston after absorbing 75% possession and 21 shots. Jose Canale held his nerve from the spot, but a probable quarter-final with France in Philadelphia is a far sterner test for a side that averaged under 0.8 goals per game in qualifying."
-    },
-    {
-      "rank": 13,
-      "team": "Ecuador",
-      "flag": "🇪🇨",
-      "record": "1W 1D 1L · Group E third place",
-      "winChance": "2%",
-      "summary": "Sebastián Beccacece's side stunned Germany 2-1 in New Jersey to reach the knockouts as a best third-placed team, with Gonzalo Plata's volley sealing a famous comeback. Travelling to the Estadio Azteca to face Mexico is a daunting assignment, but Ecuador have already shown they can beat elite European opposition."
+      "summary": "Paraguay produced the biggest shock of the tournament so far, eliminating Germany on penalties in Boston after absorbing 75% possession and 21 shots. Jose Canale held his nerve from the spot, but a quarter-final with France in Philadelphia on 4 July is a far sterner test for a side that averaged under 0.8 goals per game in qualifying."
     },
     {
       "rank": 14,
@@ -119,8 +119,8 @@
       "team": "Canada",
       "flag": "🇨🇦",
       "record": "R16 · 1-0 vs South Africa",
-      "winChance": "1.5%",
-      "summary": "Co-hosts Canada became the first team through to the Round of 16 when Stephen Eustaquio scored in stoppage time against South Africa at SoFi Stadium. Jesse Marsch's side have home support and growing belief, though a last-16 meeting with Morocco in Houston will test whether their progress is sustainable."
+      "winChance": "1.8%",
+      "summary": "Co-hosts Canada became the first team through to the Round of 16 when Stephen Eustaquio scored in stoppage time against South Africa at SoFi Stadium. Jesse Marsch's side have home support and growing belief, though a last-16 meeting with Morocco in Houston on 4 July will test whether their progress is sustainable."
     },
     {
       "rank": 16,
@@ -128,7 +128,7 @@
       "flag": "🇭🇷",
       "record": "1W 1D 1L · Group L runners-up",
       "winChance": "1.5%",
-      "summary": "Croatia edged Ghana 2-1 to secure second place behind England and now face Portugal in Toronto. Zlatko Dalić still has Luka Modrić pulling the strings, but an ageing squad showed signs of fatigue in the group stage and Portugal's attacking talent makes them underdogs in the Round of 32."
+      "summary": "Croatia edged Ghana 2-1 to secure second place behind England and now face Portugal in Toronto on 2 July. Zlatko Dalic still has Luka Modric pulling the strings, but an ageing squad showed signs of fatigue in the group stage and Portugal's attacking talent makes them underdogs in the Round of 32."
     },
     {
       "rank": 17,
@@ -136,7 +136,7 @@
       "flag": "🇦🇹",
       "record": "1W 1D 1L · Group J third place",
       "winChance": "1%",
-      "summary": "Ralf Rangnick's Austria advanced as a best third-placed side and face Spain in Los Angeles on 2 July, a brutal draw for a team that lacks the individual quality to trouble the European champions for 90 minutes. Their high press caused problems in the group stage, but Spain's midfield control could blunt it."
+      "summary": "Ralf Rangnick's Austria advanced as a best third-placed side and face Spain in Los Angeles on 2 July, a brutal draw for a team that lacks the individual quality to trouble the European champions for 90 minutes. Their high press caused problems in the group stage, but Spain's midfield control and clean sheet record could blunt it."
     },
     {
       "rank": 18,
@@ -144,7 +144,7 @@
       "flag": "🇸🇳",
       "record": "2W 1L · Group I third place",
       "winChance": "1%",
-      "summary": "Senegal reached the knockouts as a best third-placed finisher after a 5-0 demolition of ten-man Iraq, with Sadio Mané leading the line. A Seattle date with Belgium on 1 July is winnable on paper, but they must prove they can beat European opposition after finishing behind France in the group."
+      "summary": "Senegal reached the knockouts as a best third-placed finisher after a 5-0 demolition of ten-man Iraq, with Sadio Mane leading the line. A Seattle date with Belgium on 1 July is winnable on paper, though goalkeeper Edouard Mendy remains a doubt after a knee issue against Norway."
     },
     {
       "rank": 19,
@@ -160,58 +160,26 @@
       "flag": "🇩🇿",
       "record": "1W 1D 1L · Group J runners-up",
       "winChance": "0.7%",
-      "summary": "Algeria held Argentina to a draw in the group stage and advanced in second place, but a Vancouver knockout tie with Switzerland is a step up in quality. Vahid Halilhodžić has defensive organisation, though they scored sparingly across the opening three games."
+      "summary": "Algeria held Argentina to a draw in the group stage and advanced in second place, but a Vancouver knockout tie with Switzerland on 2 July is a step up in quality. Vahid Halilhodzic has defensive organisation, though they scored sparingly across the opening three games."
     },
     {
       "rank": 21,
-      "team": "Norway",
-      "flag": "🇳🇴",
-      "record": "1W 1D 1L · Group I runners-up",
-      "winChance": "0.7%",
-      "summary": "Erling Haaland has found the net but Norway were inconsistent in the group stage, including a 5-1 loss to France. Ståle Solbakken's side face Ivory Coast in Dallas on 30 June, and even victory would likely mean a Round of 16 meeting with Brazil in New Jersey."
-    },
-    {
-      "rank": 22,
-      "team": "DR Congo",
-      "flag": "🇨🇩",
-      "record": "1W 1D 1L · Group K third place",
-      "winChance": "0.5%",
-      "summary": "DR Congo held Portugal and beat Uzbekistan to reach their first World Cup knockout stage, with Yoane Wissa and Chancel Mbemba anchoring a compact side under Sébastien Desabre. England in Atlanta on 1 July is a steep step up, though their defensive discipline could keep the score tight."
-    },
-    {
-      "rank": 23,
       "team": "Bosnia and Herzegovina",
       "flag": "🇧🇦",
       "record": "1W 1D 1L · Group B third place",
       "winChance": "0.5%",
-      "summary": "Bosnia reached the knockouts for the first time after beating Qatar 3-1, with Edin Džeko still the focal point at 40. A Round of 32 tie with co-hosts USA at Levi's Stadium is a mismatch on paper, though Sergej Barbarez will urge his side to make the most of a historic occasion."
+      "summary": "Bosnia reached the knockouts for the first time after beating Qatar 3-1, with Edin Dzeko still the focal point at 40. A Round of 32 tie with co-hosts USA at Levi's Stadium on 1 July is a mismatch on paper, though Sergej Barbarez will urge his side to make the most of a historic occasion."
     },
     {
-      "rank": 24,
-      "team": "Côte d'Ivoire",
-      "flag": "🇨🇮",
-      "record": "1W 1D 1L · Group E runners-up",
-      "winChance": "0.4%",
-      "summary": "The Elephants finished behind Germany in Group E on goal difference and face Norway in Dallas on 30 June. Franck Kessié and Sébastien Haller provide experience, but a leaky defence that conceded against Curaçao and Ecuador leaves them as underdogs against Haaland's Norway."
-    },
-    {
-      "rank": 25,
-      "team": "Sweden",
-      "flag": "🇸🇪",
-      "record": "1W 1D 1L · Group F third place",
-      "winChance": "0.4%",
-      "summary": "Sweden advanced as a best third-placed side despite conceding seven goals across three group games, including a 5-1 loss to the Netherlands. Graham Potter must find defensive solidity quickly before facing France at MetLife Stadium on 30 June, where an upset would require something extraordinary."
-    },
-    {
-      "rank": 26,
+      "rank": 22,
       "team": "Egypt",
       "flag": "🇪🇬",
       "record": "1W 2D · Group G winners",
-      "winChance": "0.3%",
+      "winChance": "0.4%",
       "summary": "Egypt topped Group G ahead of Belgium without losing, with Mohamed Salah decisive in attack. Their reward is a Dallas tie with Australia on 3 July, which is winnable, but the path beyond that runs through stronger European and South American sides."
     },
     {
-      "rank": 27,
+      "rank": 23,
       "team": "Cabo Verde",
       "flag": "🇨🇻",
       "record": "1W 1D 1L · Group H third place",
@@ -219,12 +187,44 @@
       "summary": "Cabo Verde became one of the feel-good stories of the group stage by advancing as a best third-placed team. A Miami date with Argentina on 3 July is the toughest possible draw, and their limited squad depth makes a prolonged run unlikely despite their organised defending."
     },
     {
-      "rank": 28,
+      "rank": 24,
       "team": "Ghana",
       "flag": "🇬🇭",
       "record": "1W 1D 1L · Group L third place",
       "winChance": "0.3%",
-      "summary": "Ghana held England to a goalless draw in Boston but lost to Croatia and advanced only as a best third-placed finisher. Otto Addo's side face Colombia in Kansas City on 3 July and will need their counter-attacking best to trouble Luis Díaz and company."
+      "summary": "Ghana held England to a goalless draw in Boston but lost to Croatia and advanced only as a best third-placed finisher. Otto Addo's side face Colombia in Kansas City on 3 July and will need their counter-attacking best to trouble Luis Diaz and company."
+    },
+    {
+      "rank": 25,
+      "team": "DR Congo",
+      "flag": "🇨🇩",
+      "record": "Eliminated · R32 vs England",
+      "winChance": "0%",
+      "summary": "DR Congo pushed England to the brink in Atlanta before Harry Kane's late double sealed a 2-1 win for the Three Lions. Brian Cipenga's early strike and Lionel Mpasi's heroics in goal showed Sébastien Desabre's side belonged at this stage, but their first knockout campaign ended one comeback short."
+    },
+    {
+      "rank": 26,
+      "team": "Ecuador",
+      "flag": "🇪🇨",
+      "record": "Eliminated · R32 vs Mexico",
+      "winChance": "0%",
+      "summary": "Sebastian Beccacece's side stunned Germany 2-1 in the group stage but could not repeat the trick at the Estadio Azteca, losing 2-0 to Mexico on 1 July. Piero Hincapie's stoppage-time red card compounded a miserable evening for a team that had already shown they can trouble elite opposition."
+    },
+    {
+      "rank": 27,
+      "team": "Sweden",
+      "flag": "🇸🇪",
+      "record": "Eliminated · R32 vs France",
+      "winChance": "0%",
+      "summary": "Sweden advanced as a best third-placed side but were comprehensively beaten 3-0 by France at MetLife Stadium on 30 June, conceding seven goals across their four tournament matches. Graham Potter admitted it was no disgrace to lose to this France team, but the defensive frailties exposed against the Netherlands returned in New Jersey."
+    },
+    {
+      "rank": 28,
+      "team": "Côte d'Ivoire",
+      "flag": "🇨🇮",
+      "record": "Eliminated · R32 vs Norway",
+      "winChance": "0%",
+      "summary": "The Elephants reached their first World Cup knockout stage and fought back through Amad Diallo's equaliser in Dallas, only for Erling Haaland to break their hearts with an 86th-minute winner. Franck Kessie and Sebastien Haller provided experience, but Norway's ruthlessness ended Ivory Coast's best run in a generation."
     }
   ]
 }
