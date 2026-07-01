@@ -9,6 +9,7 @@ import { leagueStatsArray } from "../logic/getScorePredictions";
 import LeagueName from './LeagueName';
 import ShareShortlistButton from "./ShareShortlistButton";
 import GameStats from "./GameStats";
+import { renderFixtureListItem } from "./AmazonAffiliateAds";
 import { getStoredTheme } from "../utils/theme";
 import {
   GlobalFilters,
@@ -699,6 +700,22 @@ const List = ({
   const shareableLink = `${baseUrl}?shortlist=${fixtureIdsString}&view=shortlist`;
   const hasShortlistInUrl = new URLSearchParams(window.location.search).has('shortlist');
   const isShortlistVisible = selectedFixtures.length > 0 || hasShortlistInUrl;
+  const showFixtureAds = !showShortlist;
+
+  const renderSingleFixture = (fixture) => (
+    <SingleFixture
+      shortlist={shortlist}
+      showShortlist={showShortlist}
+      fixture={fixture}
+      key={fixture.id}
+      mock={mock}
+      checked={selectedFixtures.some((f) => f.id === fixture.id)}
+      onToggle={() => handleToggle(fixture)}
+      isProbability={isProbability}
+      handleToggleTip={handleToggleTip}
+      userTips={userTips}
+    />
+  );
 
   return mock === true ? (
     <>
@@ -709,20 +726,14 @@ const List = ({
              If !showShortlist is true, you render selectedFixtures? That's unusual.
              Assuming the non-mock version is correct: (showShortlist ? selectedFixtures : fixtures) 
           */}
-          {(showShortlist ? selectedFixtures : fixtures).map((fixture) => (
-            <SingleFixture
-              shortlist={shortlist}
-              showShortlist={showShortlist}
-              fixture={fixture}
-              key={fixture.id}
-              mock={mock}
-              checked={selectedFixtures.some((f) => f.id === fixture.id)}
-              onToggle={() => handleToggle(fixture)}
-              isProbability={isProbability}
-              handleToggleTip={handleToggleTip}
-              userTips={userTips}
-            />
-          ))}
+          {(showShortlist ? selectedFixtures : fixtures).flatMap((fixture, index) =>
+            renderFixtureListItem(
+              fixture,
+              index,
+              () => renderSingleFixture(fixture),
+              showFixtureAds
+            )
+          )}
         </ul>
       </div>
     </>
@@ -743,20 +754,14 @@ const List = ({
         <div className="InstructionalDiv">Generate predictions and click on any fixture for unparalleled insight</div>
         <ul className="FixtureList" id="FixtureList">
           {/* Renders shortlist when toggle is ON, full list (which is the source list) when OFF */}
-          {(showShortlist ? selectedFixtures : fixtures).map((fixture) => (
-            <SingleFixture
-              shortlist={shortlist}
-              showShortlist={showShortlist}
-              fixture={fixture}
-              key={fixture.id}
-              mock={mock}
-              checked={selectedFixtures.some((f) => f.id === fixture.id)}
-              onToggle={() => handleToggle(fixture)}
-              isProbability={isProbability}
-              handleToggleTip={handleToggleTip}
-              userTips={userTips}
-            />
-          ))}
+          {(showShortlist ? selectedFixtures : fixtures).flatMap((fixture, index) =>
+            renderFixtureListItem(
+              fixture,
+              index,
+              () => renderSingleFixture(fixture),
+              showFixtureAds
+            )
+          )}
         </ul>
       </div>
     </>
