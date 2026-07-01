@@ -73,6 +73,19 @@ const AMAZON_PRODUCTS = [
     ratingCount: 893,
     placements: ["worldcup2026", "fixtures"],
   },
+  {
+    id: "lg-oled48b56la-tv",
+    title: "LG OLED48B56LA 48\" OLED 4K Smart TV (2025)",
+    description:
+      "48-inch OLED 4K panel with 120Hz refresh, Dolby Atmos and α8 AI processing — built for crisp, immersive matchday viewing.",
+    affiliateUrl: "https://amzn.to/4eWvOBu",
+    asin: "B0F14XRCH8",
+    imageUrl:
+      "https://images-eu.ssl-images-amazon.com/images/P/B0F14XRCH8.MAIN._SCMZZZZZZZ_.jpg",
+    rating: 4.5,
+    ratingCount: 204,
+    placements: ["worldcup2026", "fixtures", "footer"],
+  },
 ];
 
 export const FIXTURE_AD_CONFIG = {
