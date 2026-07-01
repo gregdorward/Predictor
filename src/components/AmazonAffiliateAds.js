@@ -1,5 +1,25 @@
-import { getAmazonAffiliateProducts, getFixtureAdProduct, getFixtureAdSlotIndex } from "../data/amazonAffiliates";
+import { useEffect, useMemo, useState } from "react";
+import {
+  getAmazonAffiliateProducts,
+  getFixtureAdProduct,
+  getFixtureAdSlotIndex,
+  rotateProducts,
+  shuffleProducts,
+} from "../data/amazonAffiliates";
 import { useAuth } from "../logic/authProvider";
+
+/** Random starting offset per mount; shared across fixture-list ad slots on one page. */
+export function useAffiliateRotationOffset(productCount) {
+  const [offset, setOffset] = useState(0);
+
+  useEffect(() => {
+    if (productCount > 0) {
+      setOffset(Math.floor(Math.random() * productCount));
+    }
+  }, [productCount]);
+
+  return offset;
+}
 
 function useHideAffiliateAds() {
   const { isPaidUser, loading, user } = useAuth();
@@ -75,24 +95,24 @@ export function AmazonAffiliateFixtureAd({ product }) {
         rel="nofollow sponsored noopener noreferrer"
         aria-label={`${product.title} on Amazon`}
       >
-        <span className="AmazonAffiliateFixtureAd__badge">SSH recommends</span>
+        <span className="AmazonAffiliateFixtureAd__lead">
+          <span className="AmazonAffiliateFixtureAd__badge">SSH recommends</span>
+          <StarRating rating={product.rating} />
+        </span>
         <img
           src={product.imageUrl}
           alt=""
           className="AmazonAffiliateFixtureAd__image"
           loading="lazy"
-          width={56}
-          height={56}
+          width={80}
+          height={80}
         />
         <span className="AmazonAffiliateFixtureAd__copy">
           <span className="AmazonAffiliateFixtureAd__title">{product.title}</span>
-          <span className="AmazonAffiliateFixtureAd__meta">
-            <StarRating rating={product.rating} />
-            <span className="AmazonAffiliateFixtureAd__cta">
-              View on Amazon
-              <span className="AmazonAffiliate__arrow" aria-hidden="true">
-                →
-              </span>
+          <span className="AmazonAffiliateFixtureAd__cta">
+            View on Amazon
+            <span className="AmazonAffiliate__arrow" aria-hidden="true">
+              →
             </span>
           </span>
         </span>
@@ -104,12 +124,18 @@ export function AmazonAffiliateFixtureAd({ product }) {
   );
 }
 
-export function renderFixtureListItem(fixture, index, renderFixture, showAds) {
+export function renderFixtureListItem(
+  fixture,
+  index,
+  renderFixture,
+  showAds,
+  rotationOffset = 0
+) {
   const items = [renderFixture(fixture, index)];
 
   if (showAds) {
     const slotIndex = getFixtureAdSlotIndex(index);
-    const product = getFixtureAdProduct(slotIndex);
+    const product = getFixtureAdProduct(slotIndex, rotationOffset);
     if (product) {
       items.push(
         <AmazonAffiliateFixtureAd
@@ -132,7 +158,20 @@ export default function AmazonAffiliateAds({
 }) {
   const hideAds = useHideAffiliateAds();
   const products = getAmazonAffiliateProducts(placement);
-  const visible = limit ? products.slice(0, limit) : products;
+  const rotationOffset = useAffiliateRotationOffset(products.length);
+  const productIds = useMemo(
+    () => products.map((product) => product.id).join(","),
+    [products]
+  );
+  const [shuffledProducts, setShuffledProducts] = useState(products);
+
+  useEffect(() => {
+    setShuffledProducts(shuffleProducts(getAmazonAffiliateProducts(placement)));
+  }, [productIds, placement]);
+
+  const visible = limit
+    ? rotateProducts(products, rotationOffset).slice(0, limit)
+    : shuffledProducts;
 
   if (hideAds || visible.length === 0) return null;
 

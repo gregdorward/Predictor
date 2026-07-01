@@ -9,7 +9,8 @@ import { leagueStatsArray } from "../logic/getScorePredictions";
 import LeagueName from './LeagueName';
 import ShareShortlistButton from "./ShareShortlistButton";
 import GameStats from "./GameStats";
-import { renderFixtureListItem } from "./AmazonAffiliateAds";
+import { renderFixtureListItem, useAffiliateRotationOffset } from "./AmazonAffiliateAds";
+import { getAmazonAffiliateProducts } from "../data/amazonAffiliates";
 import { useAuth } from "../logic/authProvider";
 import { getStoredTheme } from "../utils/theme";
 import {
@@ -704,6 +705,9 @@ const List = ({
   const isShortlistVisible = selectedFixtures.length > 0 || hasShortlistInUrl;
   const hideAffiliateAds = isPaidUser || (loading && user);
   const showFixtureAds = !showShortlist && !hideAffiliateAds;
+  const affiliateRotationOffset = useAffiliateRotationOffset(
+    getAmazonAffiliateProducts("fixtures").length
+  );
 
   const renderSingleFixture = (fixture) => (
     <SingleFixture
@@ -734,7 +738,8 @@ const List = ({
               fixture,
               index,
               () => renderSingleFixture(fixture),
-              showFixtureAds
+              showFixtureAds,
+              affiliateRotationOffset
             )
           )}
         </ul>
@@ -762,7 +767,8 @@ const List = ({
               fixture,
               index,
               () => renderSingleFixture(fixture),
-              showFixtureAds
+              showFixtureAds,
+              affiliateRotationOffset
             )
           )}
         </ul>

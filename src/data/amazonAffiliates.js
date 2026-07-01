@@ -120,10 +120,33 @@ export function getFixtureAdSlotIndex(fixtureIndex) {
   return Math.floor((fixtureIndex - firstAfterIndex) / interval);
 }
 
-export function getFixtureAdProduct(slotIndex) {
+export function rotateProducts(products, rotationOffset = 0) {
+  if (!products.length) return [];
+  const offset =
+    ((rotationOffset % products.length) + products.length) % products.length;
+  if (!offset) return products;
+  return [...products.slice(offset), ...products.slice(0, offset)];
+}
+
+export function getRotatedProduct(products, index, rotationOffset = 0) {
+  if (!products.length || index == null) return null;
+  const offset =
+    ((rotationOffset % products.length) + products.length) % products.length;
+  return products[(index + offset) % products.length];
+}
+
+export function shuffleProducts(products) {
+  const shuffled = [...products];
+  for (let i = shuffled.length - 1; i > 0; i -= 1) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+  }
+  return shuffled;
+}
+
+export function getFixtureAdProduct(slotIndex, rotationOffset = 0) {
   const products = getAmazonAffiliateProducts("fixtures");
-  if (!products.length || slotIndex == null) return null;
-  return products[slotIndex % products.length];
+  return getRotatedProduct(products, slotIndex, rotationOffset);
 }
 
 export default AMAZON_PRODUCTS;

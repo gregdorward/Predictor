@@ -11842,7 +11842,7 @@ strong.WC26__inlineHeader {
 }
 
 .Footer-affiliates {
-  max-width: var(--content-max-width);
+  width: 80%;
   margin-left: auto;
   margin-right: auto;
 }
@@ -11863,10 +11863,13 @@ strong.WC26__inlineHeader {
 }
 
 .AmazonAffiliateFixtureAd__link {
-  display: flex;
-  align-items: center;
-  gap: 0.85em;
-  padding: 0.75em 1em;
+  display: grid;
+  grid-template-columns: 80px minmax(0, 1fr);
+  grid-template-areas:
+    "lead lead"
+    "image copy";
+  gap: 0.55em 0.85em;
+  padding: 0.7em 0.9em;
   border-radius: 10px;
   background: var(--secondary-background-color);
   border: 1px solid var(--third-background-color);
@@ -11889,7 +11892,6 @@ strong.WC26__inlineHeader {
 }
 
 .AmazonAffiliateFixtureAd__badge {
-  flex-shrink: 0;
   padding: 0.2em 0.5em;
   border-radius: 4px;
   background: rgba(var(--primary-rgb), 0.12);
@@ -11899,46 +11901,66 @@ strong.WC26__inlineHeader {
   font-weight: 700;
   letter-spacing: 0.03em;
   text-transform: uppercase;
+  text-align: center;
+}
+
+.AmazonAffiliateFixtureAd__lead {
+  grid-area: lead;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5em;
+  min-width: 0;
+  padding-bottom: 0.15em;
+  border-bottom: 1px solid var(--third-background-color);
+}
+
+.AmazonAffiliateFixtureAd__lead .AmazonAffiliate__stars {
+  font-size: 0.65rem;
+}
+
+.AmazonAffiliateFixtureAd__lead .AmazonAffiliate__ratingValue {
+  font-size: 0.62rem;
 }
 
 .AmazonAffiliateFixtureAd__image {
-  flex-shrink: 0;
-  width: 56px;
-  height: 56px;
+  grid-area: image;
+  align-self: center;
+  width: 80px;
+  height: 80px;
   object-fit: contain;
-  border-radius: 6px;
+  border-radius: 8px;
   background: #fff;
 }
 
 .AmazonAffiliateFixtureAd__copy {
+  grid-area: copy;
   display: flex;
-  flex: 1 1 auto;
-  flex-direction: column;
-  gap: 0.35em;
+  flex-direction: row;
+  align-items: center;
+  gap: 0.75em;
   min-width: 0;
 }
 
 .AmazonAffiliateFixtureAd__title {
-  font-size: 0.82rem;
+  flex: 1 1 auto;
+  min-width: 0;
+  font-size: 0.8rem;
   font-weight: 600;
   line-height: 1.35;
   color: var(--text-color);
 }
 
-.AmazonAffiliateFixtureAd__meta {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 0.5em 0.85em;
-  font-size: 0.72rem;
-}
-
 .AmazonAffiliateFixtureAd__cta {
+  flex-shrink: 0;
   display: inline-flex;
   align-items: center;
   gap: 0.25em;
+  font-size: 0.72rem;
   font-weight: 600;
   color: var(--primary-color);
+  white-space: nowrap;
 }
 
 .AmazonAffiliateFixtureAd__disclosure {
@@ -11951,14 +11973,40 @@ strong.WC26__inlineHeader {
   text-align: left;
 }
 
-@media (min-width: 768px) {
+@media (min-width: 540px) {
+  .AmazonAffiliateFixtureAd__link {
+    grid-template-columns: auto 96px minmax(0, 1fr);
+    grid-template-areas: "lead image copy";
+    align-items: center;
+    gap: 0.85em 1em;
+    padding: 0.85em 1em;
+  }
+
+  .AmazonAffiliateFixtureAd__lead {
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0.35em;
+    min-width: 4.5em;
+    padding-bottom: 0;
+    border-bottom: none;
+  }
+
+  .AmazonAffiliateFixtureAd__image {
+    width: 96px;
+    height: 96px;
+  }
+
+  .AmazonAffiliateFixtureAd__copy {
+    gap: 1em;
+  }
+
   .AmazonAffiliateFixtureAd__title {
     font-size: 0.88rem;
   }
 
-  .AmazonAffiliateFixtureAd__image {
-    width: 64px;
-    height: 64px;
+  .AmazonAffiliateFixtureAd__cta {
+    font-size: 0.75rem;
   }
 }
 
