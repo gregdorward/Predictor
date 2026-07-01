@@ -1,4 +1,12 @@
 import { getAmazonAffiliateProducts, getFixtureAdProduct, getFixtureAdSlotIndex } from "../data/amazonAffiliates";
+import { useAuth } from "../logic/authProvider";
+
+function useHideAffiliateAds() {
+  const { isPaidUser, loading, user } = useAuth();
+  if (isPaidUser) return true;
+  if (loading && user) return true;
+  return false;
+}
 
 function StarRating({ rating }) {
   const fullStars = Math.floor(rating);
@@ -122,10 +130,11 @@ export default function AmazonAffiliateAds({
   compact = false,
   className = "",
 }) {
+  const hideAds = useHideAffiliateAds();
   const products = getAmazonAffiliateProducts(placement);
   const visible = limit ? products.slice(0, limit) : products;
 
-  if (visible.length === 0) return null;
+  if (hideAds || visible.length === 0) return null;
 
   return (
     <section

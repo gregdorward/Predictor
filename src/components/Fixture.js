@@ -10,6 +10,7 @@ import LeagueName from './LeagueName';
 import ShareShortlistButton from "./ShareShortlistButton";
 import GameStats from "./GameStats";
 import { renderFixtureListItem } from "./AmazonAffiliateAds";
+import { useAuth } from "../logic/authProvider";
 import { getStoredTheme } from "../utils/theme";
 import {
   GlobalFilters,
@@ -556,6 +557,7 @@ const List = ({
   userTips,
   isProbability,
 }) => {
+  const { isPaidUser, loading, user } = useAuth();
   // ⭐️ showShortlist state is now received via props, not local state ⭐️
   const [selectedFixtures, setSelectedFixtures] = useState([]);
 
@@ -700,7 +702,8 @@ const List = ({
   const shareableLink = `${baseUrl}?shortlist=${fixtureIdsString}&view=shortlist`;
   const hasShortlistInUrl = new URLSearchParams(window.location.search).has('shortlist');
   const isShortlistVisible = selectedFixtures.length > 0 || hasShortlistInUrl;
-  const showFixtureAds = !showShortlist;
+  const hideAffiliateAds = isPaidUser || (loading && user);
+  const showFixtureAds = !showShortlist && !hideAffiliateAds;
 
   const renderSingleFixture = (fixture) => (
     <SingleFixture
