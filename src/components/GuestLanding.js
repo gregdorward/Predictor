@@ -173,6 +173,9 @@ const GuestLanding = ({ id = "guest-landing", showLogin = false }) => {
           <li>
             <a href="/competitions/">All competitions</a>
           </li>
+          <li>
+            <a href="/fixtures/">Upcoming fixtures</a>
+          </li>
         </ul>
       </nav>
     </section>

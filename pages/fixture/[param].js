@@ -10,9 +10,10 @@ import {
   isFixtureFinished,
   parseFixtureParam,
 } from "../../src/seo/fixtureSlug";
-import { fetchMatchSnapshot } from "../../src/seo/serverFetch";
+import { fetchMatchSnapshot, fetchUpcomingFixtureLinks } from "../../src/seo/serverFetch";
 import { getCanonicalUrl } from "../../src/seo/pageMetaConfig";
 import { getCompetitionById, getCompetitionUrl } from "../../src/seo/competitionCatalog";
+import SeoPageLinks from "../../src/components/SeoPageLinks";
 
 const TeamPage = dynamic(() => import("../../src/components/Team"), {
   ssr: false,
@@ -37,6 +38,7 @@ export default function FixtureByParam({
   canonicalPath,
   seoShell,
   noIndex,
+  relatedFixtureLinks = [],
 }) {
   return (
     <>
@@ -48,6 +50,13 @@ export default function FixtureByParam({
       />
       {!noIndex && <JsonLd data={jsonLd} />}
       <FixtureSeoShell {...seoShell} />
+      {!noIndex && (
+        <SeoPageLinks
+          relatedLinks={relatedFixtureLinks}
+          relatedLabel="Upcoming fixtures"
+          ssrOnly
+        />
+      )}
       <TeamPage matchId={matchId} />
     </>
   );
@@ -84,6 +93,9 @@ export async function getServerSideProps({ params }) {
   const competition = snapshot.competition_id
     ? getCompetitionById(snapshot.competition_id)
     : null;
+  const relatedFixtureLinks = noIndex
+    ? []
+    : await fetchUpcomingFixtureLinks({ excludeMatchId: matchId, limit: 150 });
 
   return {
     props: {
@@ -92,6 +104,7 @@ export async function getServerSideProps({ params }) {
       jsonLd,
       canonicalPath,
       noIndex,
+      relatedFixtureLinks,
       seoShell: {
         home: meta.home,
         away: meta.away,

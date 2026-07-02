@@ -1,3 +1,9 @@
+import {
+  buildFixtureUrl,
+  FIXTURE_SITEMAP_WINDOW_DAYS,
+  isFixtureFinished,
+} from "./fixtureSlug";
+
 const ORIGIN = process.env.NEXT_PUBLIC_EXPRESS_SERVER || "https://api.soccerstatshub.com/";
 
 function originUrl(path) {
@@ -65,4 +71,45 @@ export async function fetchUpcomingFixtureIds(days = 3) {
   }
 
   return [...ids];
+}
+
+function matchToFixtureLink(match) {
+  if (!match?.id) return null;
+  const home = match.home_name || match.homeTeam || "Home";
+  const away = match.away_name || match.awayTeam || "Away";
+  return {
+    label: `${home} vs ${away}`,
+    href: buildFixtureUrl(home, away, match.id),
+    league: match.competition_name || match.league_name || "",
+  };
+}
+
+export async function fetchUpcomingFixtureLinks({
+  excludeMatchId = null,
+  limit = 150,
+  days = FIXTURE_SITEMAP_WINDOW_DAYS,
+} = {}) {
+  const links = [];
+  const today = new Date();
+
+  for (let offset = 0; offset < days; offset += 1) {
+    const date = new Date(today);
+    date.setDate(today.getDate() + offset);
+    const matches = await fetchMatchesForDate(formatApiDate(date));
+
+    for (const match of matches) {
+      if (excludeMatchId != null && String(match.id) === String(excludeMatchId)) {
+        continue;
+      }
+      if (isFixtureFinished(match)) continue;
+
+      const link = matchToFixtureLink(match);
+      if (!link) continue;
+
+      links.push(link);
+      if (links.length >= limit) return links;
+    }
+  }
+
+  return links;
 }

@@ -12211,6 +12211,21 @@ body.js-loaded .SeoPageLinks--ssrOnly {
   text-underline-offset: 0.15em;
 }
 
+.FixturesIndex-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  list-style: none;
+  margin: 1.25rem 0 0;
+  padding: 0;
+}
+
+.FixturesIndex-list a {
+  color: inherit;
+  text-decoration: underline;
+  text-underline-offset: 0.15em;
+}
+
 .WC26__tabContent [hidden] {
   display: none;
 }

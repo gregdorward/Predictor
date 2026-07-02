@@ -1,10 +1,5 @@
 import { getIndexableCompetitions } from "../src/seo/competitionCatalog";
-import {
-  buildFixtureSlug,
-  FIXTURE_SITEMAP_WINDOW_DAYS,
-  isFixtureFinished,
-} from "../src/seo/fixtureSlug";
-import { fetchUpcomingFixtureIds, fetchMatchSnapshot } from "../src/seo/serverFetch";
+import { fetchUpcomingFixtureLinks } from "../src/seo/serverFetch";
 import { SITE_URL } from "../src/seo/pageMetaConfig";
 
 const STATIC_ROUTES = [
@@ -18,6 +13,7 @@ const STATIC_ROUTES = [
   { path: "/seasonpreviews/", priority: "0.7", changefreq: "weekly" },
   { path: "/worldcup2026/", priority: "0.9", changefreq: "weekly" },
   { path: "/competitions/", priority: "0.8", changefreq: "weekly" },
+  { path: "/fixtures/", priority: "0.8", changefreq: "daily" },
   { path: "/about/", priority: "0.6", changefreq: "monthly" },
   { path: "/faq/", priority: "0.6", changefreq: "monthly" },
 ];
@@ -41,26 +37,15 @@ function urlEntry(loc, { priority, changefreq, lastmod }) {
 }
 
 async function buildFixtureEntries(lastmod) {
-  const ids = await fetchUpcomingFixtureIds(FIXTURE_SITEMAP_WINDOW_DAYS);
-  const entries = [];
-  const limitedIds = ids.slice(0, 150);
+  const fixtures = await fetchUpcomingFixtureLinks({ limit: 150 });
 
-  for (const matchId of limitedIds) {
-    const snapshot = await fetchMatchSnapshot(matchId);
-    if (!snapshot || isFixtureFinished(snapshot)) continue;
-    const home = snapshot.home_name || snapshot.homeTeam || "home";
-    const away = snapshot.away_name || snapshot.awayTeam || "away";
-    const slug = buildFixtureSlug(home, away, matchId);
-    entries.push(
-      urlEntry(`${SITE_URL}/fixture/${slug}/`, {
-        priority: "0.7",
-        changefreq: "daily",
-        lastmod,
-      })
-    );
-  }
-
-  return entries;
+  return fixtures.map((fixture) =>
+    urlEntry(`${SITE_URL}${fixture.href}`, {
+      priority: "0.7",
+      changefreq: "daily",
+      lastmod,
+    })
+  );
 }
 
 async function generateSiteMap() {

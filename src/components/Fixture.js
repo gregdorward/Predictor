@@ -13,6 +13,7 @@ import { renderFixtureListItem, useAffiliateRotationOffset } from "./AmazonAffil
 import { getAmazonAffiliateProducts } from "../data/amazonAffiliates";
 import { useAuth } from "../logic/authProvider";
 import { getStoredTheme } from "../utils/theme";
+import { buildFixtureUrl } from "../seo/fixtureSlug";
 import {
   GlobalFilters,
 } from "./SliderDiff";
@@ -204,7 +205,7 @@ function SingleFixture({
   }
 
   function getFixturePageUrl() {
-    return `/fixture/${fixture.id}/?theme=${getStoredTheme()}`;
+    return `${buildFixtureUrl(fixture.homeTeam, fixture.awayTeam, fixture.id)}?theme=${getStoredTheme()}`;
   }
 
   function handleButtonClick(event) {

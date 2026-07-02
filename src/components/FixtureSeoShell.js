@@ -23,11 +23,15 @@ export default function FixtureSeoShell({
             Head-to-head stats, form, BTTS and Over 2.5 analysis for {home} vs {away}
             {league ? ` in ${league}` : ""}. Full predictions and charts load below.
           </p>
-          {competitionUrl && competitionName ? (
-            <p className="FixturePage-seoIntro">
-              View <a href={competitionUrl}>{competitionName} league stats</a>.
-            </p>
-          ) : null}
+          <p className="FixturePage-seoIntro">
+            <a href="/fixtures/">Browse upcoming fixtures</a>
+            {competitionUrl && competitionName ? (
+              <>
+                {" "}
+                · <a href={competitionUrl}>{competitionName} league stats</a>
+              </>
+            ) : null}
+          </p>
         </header>
       </section>
     </>
