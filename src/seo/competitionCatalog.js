@@ -78,6 +78,24 @@ export const FEATURED_COMPETITION_SLUGS = [
   "world-cup-2026",
 ];
 
+/** Competitions with no FootyStats season data — excluded from sitemap and index. */
+export const UNAVAILABLE_COMPETITION_SLUGS = new Set([
+  "allsvenskan",
+  "brazil-serie-b",
+  "chilean-primera-division",
+  "club-world-cup",
+  "saudi-pro-league",
+  "scottish-league-one",
+  "scottish-league-two",
+  "serbian-superliga",
+  "slovak-super-liga",
+  "slovenian-prva-liga",
+  "ukrainian-premier-league",
+  "uruguayan-primera-division",
+  "usl",
+  "veikkausliiga",
+]);
+
 const byId = new Map(COMPETITION_CATALOG.map((entry) => [entry.id, entry]));
 const bySlug = new Map(COMPETITION_CATALOG.map((entry) => [entry.slug, entry]));
 
@@ -87,6 +105,12 @@ export function getCompetitionById(id) {
 
 export function getCompetitionBySlug(slug) {
   return bySlug.get(String(slug).toLowerCase()) ?? null;
+}
+
+export function getIndexableCompetitions() {
+  return COMPETITION_CATALOG.filter(
+    (entry) => !UNAVAILABLE_COMPETITION_SLUGS.has(entry.slug)
+  );
 }
 
 export function getFeaturedCompetitions(excludeSlug = null) {

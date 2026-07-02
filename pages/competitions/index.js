@@ -1,7 +1,7 @@
 import SiteHeader from "../../src/components/SiteHeader";
 import PageMeta from "../../src/components/PageMeta";
 import JsonLd from "../../src/components/JsonLd";
-import { COMPETITION_CATALOG } from "../../src/seo/competitionCatalog";
+import { getIndexableCompetitions } from "../../src/seo/competitionCatalog";
 import { SITE_URL } from "../../src/seo/pageMetaConfig";
 
 const COMPETITIONS_JSON_LD = {
@@ -20,7 +20,7 @@ const COMPETITIONS_JSON_LD = {
   ],
 };
 
-const sortedCompetitions = [...COMPETITION_CATALOG].sort((a, b) =>
+const sortedCompetitions = [...getIndexableCompetitions()].sort((a, b) =>
   a.name.localeCompare(b.name, "en")
 );
 

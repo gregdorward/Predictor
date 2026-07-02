@@ -1,4 +1,4 @@
-import { COMPETITION_CATALOG } from "../src/seo/competitionCatalog";
+import { getIndexableCompetitions } from "../src/seo/competitionCatalog";
 import {
   buildFixtureSlug,
   FIXTURE_SITEMAP_WINDOW_DAYS,
@@ -73,7 +73,7 @@ async function generateSiteMap() {
     })
   );
 
-  const competitionEntries = COMPETITION_CATALOG.map((competition) =>
+  const competitionEntries = getIndexableCompetitions().map((competition) =>
     urlEntry(`${SITE_URL}/competition/${competition.slug}/`, {
       priority: "0.8",
       changefreq: "daily",
