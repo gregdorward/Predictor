@@ -190,13 +190,16 @@ function formatTableHeaderTeamName(name) {
 }
 
 function formatMatchLink(game, format) {
-  const url = buildMatchShareUrl(game?.id, game?.date, SITE_URL);
+  const url = buildMatchShareUrl(game?.id, game?.date, SITE_URL, {
+    homeTeam: game?.homeTeam || game?.home_name,
+    awayTeam: game?.awayTeam || game?.away_name,
+  });
   if (!url) {
     return null;
   }
 
   if (format === "markdown") {
-    return `👉 [View match on Soccer Stats Hub](${url})`;
+    return `👉 [View match on SoccerStatsHub](${url})`;
   }
 
   return `🔗 ${url}`;
@@ -267,7 +270,7 @@ function formatMarkdownFixtureComparison({
 }) {
   const lines = [];
 
-  lines.push(`## ${game.homeTeam} vs ${game.awayTeam} - *Soccer Stats Hub*`);
+  lines.push(`## ${game.homeTeam} vs ${game.awayTeam} - *SoccerStatsHub*`);
   lines.push("");
 
   const prediction = formatPrediction(game);
@@ -335,7 +338,7 @@ function formatPlainFixtureComparison({
 }) {
   const lines = [];
 
-  lines.push(`⚽ ${game.homeTeam} vs ${game.awayTeam} | Soccer Stats Hub`);
+  lines.push(`⚽ ${game.homeTeam} vs ${game.awayTeam} | SoccerStatsHub`);
   if (game.leagueDesc) {
     lines.push(game.leagueDesc);
   }

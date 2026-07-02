@@ -1,7 +1,7 @@
 const StripePolicies = () => {
   return (
     <div className="ContactText">
-      <h2 className="text-2xl font-bold mb-4">Soccer Stats Hub Policies</h2>
+      <h2 className="text-2xl font-bold mb-4">SoccerStatsHub Policies</h2>
       
       <section className="mb-6">
         <h2 className="text-xl font-semibold">Customer Support</h2>
@@ -34,7 +34,7 @@ const StripePolicies = () => {
       <section className="mb-6">
         <h2 className="text-xl font-semibold">Legal and Export Restrictions</h2>
         <p>
-        Soccer Stats Hub is available only in jurisdictions where online tipping and sports analysis services are legally permitted. 
+        SoccerStatsHub is available only in jurisdictions where online tipping and sports analysis services are legally permitted. 
           Users are responsible for ensuring compliance with local laws.
         </p>
       </section>
@@ -42,7 +42,7 @@ const StripePolicies = () => {
       <section className="mb-6">
         <h2 className="text-xl font-semibold">Terms and Conditions of Promotions</h2>
         <p>
-          Any promotions, free trials, or discounts offered are subject to change or termination at Soccer Stats Hub's discretion. 
+          Any promotions, free trials, or discounts offered are subject to change or termination at SoccerStatsHub's discretion. 
           Promotional offers cannot be combined unless explicitly stated. If a promotion is tied to a subscription, 
           standard billing resumes after the promotional period unless canceled before renewal.
         </p>

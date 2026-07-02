@@ -49,7 +49,17 @@ export const PAGE_META = {
   "/seasonpreviews": {
     title: "Season Previews | SoccerStatsHub",
     description:
-      "AI-powered season previews for the Premier League, La Liga, Serie A, Championship and more.",
+      "AI-generated season previews for the Premier League, La Liga, Serie A, Championship and more.",
+  },
+  "/about": {
+    title: "About SoccerStatsHub | Football Stats & Predictions",
+    description:
+      "Learn how SoccerStatsHub delivers transparent football statistics, BTTS insights, Over 2.5 analysis and data-driven match predictions across 50+ competitions.",
+  },
+  "/faq": {
+    title: "FAQ | SoccerStatsHub",
+    description:
+      "Frequently asked questions about SoccerStatsHub football stats, predictions, subscriptions and how our betting insights work.",
   },
   "/reset": {
     title: "Reset Password | SoccerStatsHub",
@@ -79,8 +89,13 @@ export function normalizePathname(pathname) {
   return stripped === "" ? "/" : stripped;
 }
 
-export function getCanonicalUrl(pathname) {
-  const path = normalizePathname(pathname);
+export function getCanonicalPathFromAsPath(asPath) {
+  const withoutQuery = String(asPath || "/").split("?")[0].split("#")[0];
+  return normalizePathname(withoutQuery);
+}
+
+export function getCanonicalUrl(pathOrAsPath) {
+  const path = normalizePathname(pathOrAsPath);
   if (path === "/") return `${SITE_URL}/`;
   return `${SITE_URL}${path}/`;
 }

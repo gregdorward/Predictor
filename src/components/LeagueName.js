@@ -6,6 +6,7 @@ import {
   getLeagueResultsByLeagueId,
 } from "../utils/leagueResultsAccess";
 import { getStoredTheme } from "../utils/theme";
+import { getCompetitionUrl } from "../seo/competitionCatalog";
 
 
 const sofaScoreIds = [
@@ -123,7 +124,7 @@ const name = showShortlist ? fixture.leagueDesc : fixture.leagueName;
   }
 
   function getCompetitionPageUrl() {
-    return `/competition/${id}/?theme=${getStoredTheme()}`;
+    return `${getCompetitionUrl(id)}?theme=${getStoredTheme()}`;
   }
 
   function handleExpandClick() {

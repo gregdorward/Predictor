@@ -3,18 +3,28 @@ import { useRouter } from "next/router";
 import {
   OG_IMAGE,
   SITE_NAME,
+  getCanonicalPathFromAsPath,
   getCanonicalUrl,
   getPageMeta,
 } from "../seo/pageMetaConfig";
 
-const PageMeta = ({ title, description, noIndex }) => {
+const PageMeta = ({
+  title,
+  description,
+  noIndex,
+  canonicalPath,
+  ogType = "website",
+}) => {
   const router = useRouter();
-  const pathname = router?.pathname || "/";
-  const defaults = getPageMeta(pathname);
+  const routePath = router?.pathname || "/";
+  const defaults = getPageMeta(routePath);
   const pageTitle = title ?? defaults.title;
   const pageDescription = description ?? defaults.description;
   const shouldNoIndex = noIndex ?? defaults.noIndex ?? false;
-  const canonicalUrl = getCanonicalUrl(pathname);
+  const resolvedPath =
+    canonicalPath ??
+    (router?.asPath ? getCanonicalPathFromAsPath(router.asPath) : routePath);
+  const canonicalUrl = getCanonicalUrl(resolvedPath);
 
   return (
     <Head>
@@ -25,8 +35,9 @@ const PageMeta = ({ title, description, noIndex }) => {
       <meta property="og:title" content={pageTitle} />
       <meta property="og:description" content={pageDescription} />
       <meta property="og:image" content={OG_IMAGE} />
+      <meta property="og:image:alt" content={`${SITE_NAME} social share card`} />
       <meta property="og:url" content={canonicalUrl} />
-      <meta property="og:type" content="website" />
+      <meta property="og:type" content={ogType} />
       <meta property="og:site_name" content={SITE_NAME} />
       <meta property="og:locale" content="en_GB" />
       <meta name="twitter:card" content="summary_large_image" />

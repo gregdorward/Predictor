@@ -30,7 +30,7 @@ export function formatBuildMultiText(tips, accumulatedOdds) {
   }
 
   const lines = [
-    ...buildHeader("Soccer Stats Hub Multi"),
+    ...buildHeader("SoccerStatsHub Multi"),
     ...tips.flatMap((tip, index) => {
       const kickOff = tip.time ? ` — ${tip.time}` : "";
       const competition = tip.competition ? ` (${tip.competition})` : "";

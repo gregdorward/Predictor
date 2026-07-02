@@ -12,6 +12,8 @@ import {
 import { Bar } from "react-chartjs-2";
 import annotationPlugin from "chartjs-plugin-annotation";
 import { useChartTheme, getChartColors } from "./Chart";
+import ShareableVisual from "./ShareableVisual";
+import { sanitizeImageFilename } from "../utils/captureElementImage";
 
 ChartJS.register(
   CategoryScale,
@@ -215,24 +217,33 @@ const MultiTypeChart = ({ dataArray, text }) => {
     },
   };
 
+  const shareFilename = sanitizeImageFilename(text || "xg-diff");
+  const shareTitle = text || "XG difference chart";
+
   return (
-    <div className="ComparisonBarChart">
-      <Bar
-        key={theme}
-        data={data}
-        options={options}
-      />
-      <div className="ComparisonBarChart-legend">
-        <span className="ComparisonBarChart-legendItem">
-          <span className="ComparisonBarChart-legendSwatch ComparisonBarChart-legendSwatch--home" />
-          Positive XG diff
-        </span>
-        <span className="ComparisonBarChart-legendItem">
-          <span className="ComparisonBarChart-legendSwatch ComparisonBarChart-legendSwatch--away" />
-          Negative XG diff
-        </span>
+    <ShareableVisual
+      filename={shareFilename}
+      shareTitle={shareTitle}
+      className="ComparisonBarChart-share"
+    >
+      <div data-share-capture className="ComparisonBarChart">
+        <Bar
+          key={theme}
+          data={data}
+          options={options}
+        />
+        <div className="ComparisonBarChart-legend">
+          <span className="ComparisonBarChart-legendItem">
+            <span className="ComparisonBarChart-legendSwatch ComparisonBarChart-legendSwatch--home" />
+            Positive XG diff
+          </span>
+          <span className="ComparisonBarChart-legendItem">
+            <span className="ComparisonBarChart-legendSwatch ComparisonBarChart-legendSwatch--away" />
+            Negative XG diff
+          </span>
+        </div>
       </div>
-    </div>
+    </ShareableVisual>
   );
 };
 

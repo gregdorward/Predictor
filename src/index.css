@@ -1848,7 +1848,7 @@ p {
 }
 
 .OptionsSection-heading {
-  margin: 0 0 0.65rem;
+  margin: 0;
   padding: 0;
   font-size: 0.72rem;
   font-weight: 700;
@@ -6052,6 +6052,19 @@ section {
   position: relative;
 }
 
+/* Override global section width for full-width layout sections */
+section.OptionsSection,
+.StaticPage section {
+  width: 100%;
+  max-width: 100%;
+  min-height: auto;
+  display: block;
+  position: static;
+  align-items: stretch;
+  justify-content: flex-start;
+  box-sizing: border-box;
+}
+
 .MainLoading {
   padding: 2em;
   color: white;
@@ -6458,13 +6471,19 @@ input:active+.design::after {
 .ComparisonBarChart {
   width: 100%;
   max-width: 640px;
-  margin: 1.5em auto;
+  margin: 0 auto;
   padding: 1rem 1.1rem 0.85rem;
   border-radius: 12px;
   background-color: var(--secondary-background-color);
   border: 1px solid var(--third-background-color);
   box-sizing: border-box;
   transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.ComparisonBarChart-share {
+  width: 100%;
+  max-width: 640px;
+  margin: 1.5em auto;
 }
 
 .ComparisonBarChart:hover {
@@ -6577,10 +6596,11 @@ input:active+.design::after {
 }
 
 .FixturePage-heading {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+  display: flex;
+  flex-wrap: wrap;
   align-items: center;
-  gap: 0.35rem 0.5rem;
+  justify-content: center;
+  gap: 0.5rem;
   margin: 0;
   font-size: clamp(1.25rem, 3.2vw, 2rem);
   line-height: 1.25;
@@ -6607,6 +6627,7 @@ input:active+.design::after {
 .FixturePage-vs {
   display: inline-block;
   margin: 0;
+  padding: 0.2em 0.75em;
   font-size: 0.72em;
   font-weight: 600;
   color: var(--faint-text);
@@ -6657,7 +6678,7 @@ input:active+.design::after {
   letter-spacing: 0.04em;
 }
 
-.FixturePage-chartCard.ComparisonBarChart {
+.FixturePage-chartCard {
   width: 100%;
   max-width: 640px;
   margin: 0 auto 1.35rem;
@@ -7179,7 +7200,7 @@ input:active+.design::after {
   }
 
   .FixturePage-heading {
-    gap: 0.25rem 0.35rem;
+    gap: 0.4rem;
     font-size: clamp(1rem, 4.2vw, 1.35rem);
   }
 
@@ -8404,13 +8425,14 @@ button.AIInsights button:active {
   width: 100%;
   max-width: 100%;
   padding: 0 1.25rem;
+  margin-top: 2em;
   box-sizing: border-box;
 }
 
 .rankings-container {
   width: 100%;
   max-width: 100%;
-  margin: 2em auto 0;
+  margin: 0 auto;
   padding: 1em 0;
   font-size: 1em;
   border-radius: 12px;
@@ -12008,5 +12030,149 @@ strong.WC26__inlineHeader {
   .AmazonAffiliateFixtureAd__cta {
     font-size: 0.75rem;
   }
+}
+
+.StaticPage {
+  max-width: 48rem;
+  margin: 0 auto;
+  padding: 1.5rem 1rem 3rem;
+  line-height: 1.6;
+}
+
+.StaticPage h1 {
+  margin-bottom: 1rem;
+}
+
+.StaticPage h2 {
+  margin-top: 1.75rem;
+  margin-bottom: 0.5rem;
+  font-size: 1.15rem;
+}
+
+.StaticPage-faq {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.StaticPage-faqItem h2 {
+  margin-top: 0;
+  font-size: 1.05rem;
+}
+
+.FixturePage--seoShell .FixturePage-seoIntro {
+  margin-top: 0.75rem;
+  opacity: 0.9;
+}
+
+.WC26__tabContent [hidden] {
+  display: none;
+}
+
+.ShareableVisual {
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
+}
+
+.ShareableVisual__actions {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 0.5rem;
+  margin: 0 0 0.5rem;
+  padding: 0 0.25rem;
+  font-size: 0.25em;
+}
+
+.ShareableVisual__btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 1.5rem;
+  height: 2rem;
+  margin: 0.5em;
+  padding: 0.5em;
+  border: none;
+  border-radius: 6px;
+  background-color: var(--secondary-background-color);
+  color: var(--text-color);
+  cursor: pointer;
+  transition: border-color 0.2s ease, transform 0.2s ease, background-color 0.2s ease;
+}
+
+.ShareableVisual__btn:hover,
+.ShareableVisual__btn:focus-visible {
+  background-color: var(--background-color);
+  transform: translateY(-1px);
+}
+
+.ShareableVisual__btn:disabled {
+  opacity: 0.55;
+  cursor: wait;
+  transform: none;
+}
+
+.ShareableVisual__capture {
+  width: 100%;
+  box-sizing: border-box;
+  background: var(--background-color);
+}
+
+.ShareableVisual__brand {
+  display: none;
+  margin-top: 0.85rem;
+  padding-top: 0.65rem;
+  border-top: 1px solid rgba(0, 0, 0, 0.08);
+  text-align: center;
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  color: var(--text-color);
+  opacity: 0.72;
+}
+
+.ShareableVisual__capture.is-exporting .ShareableVisual__brand,
+.ShareableVisual__canvasExport .ShareableVisual__brand,
+.is-exporting .ShareableVisual__brand {
+  display: block;
+}
+
+body.dark-mode .ShareableVisual__brand {
+  border-top-color: rgba(255, 255, 255, 0.12);
+}
+
+.Chart-shareBlock {
+  margin: 0.75rem 0 1.25rem;
+}
+
+.ShareableVisual__capture > [data-share-capture] {
+  margin-top: 0;
+}
+
+[data-share-capture].is-exporting {
+  padding: 1rem 1.1rem 0.85rem;
+}
+
+[data-share-capture].is-exporting.ComparisonBarChart,
+[data-share-capture].is-exporting.rankings-container {
+  background-color: var(--secondary-background-color);
+  border: 1px solid var(--third-background-color);
+  border-radius: 12px;
+  box-sizing: border-box;
+}
+
+[data-share-capture].is-exporting canvas,
+.is-exporting img[role="presentation"] {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.ShareableVisual__status {
+  margin: 0.35rem 0 0;
+  text-align: right;
+  font-size: 0.8rem;
+  color: var(--faint-text);
 }
 

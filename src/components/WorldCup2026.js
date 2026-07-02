@@ -6,6 +6,8 @@ import WorldCup2026NewsTab from "./WorldCup2026NewsTab";
 import previewData from "../data/worldcup2026/tournament-preview.json";
 import powerRankingsData from "../data/worldcup2026/power-rankings.json";
 import AmazonAffiliateAds from "./AmazonAffiliateAds";
+import JsonLd from "./JsonLd";
+import { buildWorldCupNewsJsonLd } from "../seo/worldCupSeo";
 
 const TABS = [
   { id: "overview", label: "Overview" },
@@ -262,6 +264,7 @@ export default function WorldCup2026() {
   return (
     <>
       <PageMeta />
+      <JsonLd data={buildWorldCupNewsJsonLd()} />
       <SiteHeader showThemeToggle withFooter>
       <main className="WC26">
         <a href="/" className="HomeLink">Home</a>
@@ -311,14 +314,24 @@ export default function WorldCup2026() {
         </nav>
 
         <div className="WC26__tabContent">
-          {activeTab === "overview" && <OverviewTab data={data} />}
-          {activeTab === "news" && <WorldCup2026NewsTab />}
-          {activeTab === "groups" && <GroupsTab groups={data.groups} />}
-          {activeTab === "teams" && <TeamsTab teamPreviews={data.teamPreviews} />}
-          {activeTab === "rankings" && (
+          <div hidden={activeTab !== "overview"} aria-hidden={activeTab !== "overview"}>
+            <OverviewTab data={data} />
+          </div>
+          <div hidden={activeTab !== "news"} aria-hidden={activeTab !== "news"}>
+            <WorldCup2026NewsTab />
+          </div>
+          <div hidden={activeTab !== "groups"} aria-hidden={activeTab !== "groups"}>
+            <GroupsTab groups={data.groups} />
+          </div>
+          <div hidden={activeTab !== "teams"} aria-hidden={activeTab !== "teams"}>
+            <TeamsTab teamPreviews={data.teamPreviews} />
+          </div>
+          <div hidden={activeTab !== "rankings"} aria-hidden={activeTab !== "rankings"}>
             <PowerRankingsTab rankings={powerRankingsData} goldenBoot={data.goldenBoot} />
-          )}
-          {activeTab === "matches" && <WorldCup2026MatchesTab />}
+          </div>
+          <div hidden={activeTab !== "matches"} aria-hidden={activeTab !== "matches"}>
+            <WorldCup2026MatchesTab />
+          </div>
         </div>
       </main>
       </SiteHeader>

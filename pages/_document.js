@@ -14,6 +14,14 @@ const JSON_LD = {
       description:
         "Football stats, BTTS tips, Over 2.5 predictions, correct score analysis and daily multis.",
       inLanguage: "en-GB",
+      potentialAction: {
+        "@type": "SearchAction",
+        target: {
+          "@type": "EntryPoint",
+          urlTemplate: "https://www.soccerstatshub.com/?q={search_term_string}",
+        },
+        "query-input": "required name=search_term_string",
+      },
     },
     {
       "@type": "Organization",

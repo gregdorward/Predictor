@@ -94,6 +94,8 @@ import { TeamImpactSummary } from "./MissingPlayersList";
 import { predictedScoresData } from "../logic/getScorePredictions";
 import { MatchTacticalComparison } from "../components/TacticalApproach";
 import SeasonPpgChart from "./SeasonPpgChart";
+import ShareableVisual from "./ShareableVisual";
+import { sanitizeImageFilename } from "../utils/captureElementImage";
 // import FutureFixturesSideBySide from "./FutureFixturesSideBySide";
 // export let userTips;
 
@@ -3539,7 +3541,7 @@ function GameStats({ game, displayBool, stats, handleToggleTip, userTips }) {
               <strong>To Be Carded:</strong> {aiMatchPreview.Guide.ToBeCarded}
             </li>
           </ul>
-          <i>(may not reflect the view of Soccer Stats Hub)</i>
+          <i>(may not reflect the view of SoccerStatsHub)</i>
         </div>
 
         {(aiMatchPreview?.homeTeam?.keyPlayerRoles?.length > 0 ||
@@ -4269,8 +4271,14 @@ function GameStats({ game, displayBool, stats, handleToggleTip, userTips }) {
               {!isWorldCupCompetition &&
                 homeForm?.allTeamResults?.length > 0 &&
                 awayForm?.allTeamResults?.length > 0 && (
-                  <div className="rankings-wrapper">
-                    <div className="rankings-container">
+                  <ShareableVisual
+                    filename={sanitizeImageFilename(
+                      `${game.homeTeam}-vs-${game.awayTeam}-season-form`
+                    )}
+                    shareTitle={`${game.homeTeam} vs ${game.awayTeam} - season form`}
+                    className="rankings-wrapper"
+                  >
+                    <div data-share-capture className="rankings-container">
                       <SeasonPpgChart
                         homeTeam={game.homeTeam}
                         awayTeam={game.awayTeam}
@@ -4278,12 +4286,20 @@ function GameStats({ game, displayBool, stats, handleToggleTip, userTips }) {
                         awayResults={awayForm.allTeamResults}
                       />
                     </div>
-                  </div>
+                  </ShareableVisual>
                 )}
               <div className="Chart" id={`Chart${game.id}`} style={style}>
+                <ShareableVisual
+                  filename={sanitizeImageFilename(
+                    `${game.homeTeam}-vs-${game.awayTeam}-strength-ratings`
+                  )}
+                  shareTitle={`${game.homeTeam} vs ${game.awayTeam} - strength ratings`}
+                  className="Chart-shareBlock"
+                >
                 <RadarChart
+                  shareCapture
                   style={{ height: "auto" }}
-                  title="Soccer Stats Hub Strength Ratings - All Competition Games"
+                  title="SoccerStatsHub Strength Ratings - All Competition Games"
                   theme={localStorage.getItem('theme')}
                   max={1}
                   labels={[
@@ -4316,6 +4332,7 @@ function GameStats({ game, displayBool, stats, handleToggleTip, userTips }) {
                   team1={game.homeTeam}
                   team2={game.awayTeam}
                 ></RadarChart>
+                </ShareableVisual>
                 <BarChart
                   text="All Competition Games - Home Team | Away Team"
                   theme={localStorage.getItem('theme')}
@@ -4428,7 +4445,7 @@ function GameStats({ game, displayBool, stats, handleToggleTip, userTips }) {
                 </div>
                 <div className="Chart" id={`Chart${game.id}`} style={style}>
                   <RadarChart
-                    title="Soccer Stats Hub Strength Ratings - Last 5 Games Only"
+                    title="SoccerStatsHub Strength Ratings - Last 5 Games Only"
                     max={1}
                     labels={[
                       "Attack rating",
@@ -4554,7 +4571,7 @@ function GameStats({ game, displayBool, stats, handleToggleTip, userTips }) {
                 <div className="Chart" id={`Chart${game.id}`} style={style}>
                   <RadarChart
                     theme={localStorage.getItem('theme')}
-                    title="Soccer Stats Hub Strength Ratings - Home/Away Games Only"
+                    title="SoccerStatsHub Strength Ratings - Home/Away Games Only"
                     max={1}
                     labels={[
                       "Attack rating",

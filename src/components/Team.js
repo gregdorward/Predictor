@@ -5,6 +5,8 @@ import { predictMatchById } from "../logic/predictMatchById";
 import { mapMatchToFixturePageData } from "../logic/buildSingleMatch";
 import { buildLegacyFixtureSections } from "../logic/fixturePageMetrics";
 import FixtureSeasonStats from "./FixtureSeasonStats";
+import ShareableVisual from "./ShareableVisual";
+import { sanitizeImageFilename } from "../utils/captureElementImage";
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -573,7 +575,7 @@ function TeamPage({ matchId }) {
 
         <div className="FixturePage-prediction">
           <span className="FixturePage-predictionLabel">
-            Soccer Stats Hub Prediction
+            SoccerStatsHub Prediction
           </span>
           <span className="FixturePage-predictionScore">
             {storedFixtureDetailsJson.homeGoals} –{" "}
@@ -584,14 +586,22 @@ function TeamPage({ matchId }) {
 
       {matchId && match ? <FixtureSeasonStats match={match} /> : null}
 
-      <section className="FixturePage-chartCard ComparisonBarChart">
-        <Bar
-          key={theme}
-          options={chartOptions}
-          data={chartData}
-          className="FixturePage-chart"
-        />
-      </section>
+      <ShareableVisual
+        filename={sanitizeImageFilename(
+          `${storedFixtureDetailsJson.homeTeamName}-vs-${storedFixtureDetailsJson.awayTeamName}-comparison`
+        )}
+        shareTitle={`${storedFixtureDetailsJson.homeTeamName} vs ${storedFixtureDetailsJson.awayTeamName} - stat comparison`}
+        className="FixturePage-chartCard"
+      >
+        <div data-share-capture className="ComparisonBarChart">
+          <Bar
+            key={theme}
+            options={chartOptions}
+            data={chartData}
+            className="FixturePage-chart"
+          />
+        </div>
+      </ShareableVisual>
 
       <div className="FixturePage-pairedBlock">
         <div className="FixturePage-pairedHeaders">

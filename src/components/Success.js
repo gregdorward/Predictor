@@ -17,7 +17,7 @@ export const SuccessPage = () => {
       <h1>Payment Successful! Thank you for subscribing.</h1>
       <p>
         <a href="/" className="PaymentReturn">
-          Return to Soccer Stats Hub
+          Return to SoccerStatsHub
         </a>
       </p>
       <Footer />

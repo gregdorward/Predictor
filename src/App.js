@@ -910,7 +910,7 @@ export function AppContent() {
       </div>
       {!user ? null : (
         <>
-      <h1 className="MembersGetMore">Welcome to <span className="TitleColouring">Soccer Stats Hub</span></h1>
+      <h1 className="MembersGetMore">Welcome to <span className="TitleColouring">SoccerStatsHub</span></h1>
       <h4 className="Blurb">The best for in-depth football statistics, analytics and predictions</h4>
       {isPaidUser ? (
         <div />
@@ -1303,7 +1303,7 @@ export function AppContent() {
         </TwitterShareButton>
         <RedditShareButton
           url={"https://www.soccerstatshub.com"}
-          title={"Soccer Stats Hub"}
+          title={"SoccerStatsHub"}
           className="SecondaryButton ShareButton"
         >
           <RedditIcon size={"3em"} round={true} />
@@ -1325,13 +1325,13 @@ export function AppContent() {
         </WhatsappShareButton>
         <TelegramShareButton
           url={"SoccerStatsHub"}
-          title={"Soccer Stats Hub"}
+          title={"SoccerStatsHub"}
           className="SecondaryButton ShareButton"
         >
           <TelegramIcon size={"3em"} round={true} />
         </TelegramShareButton>
       </div>
-      <div>Soccer Stats Hub is for users over 18 years of age only</div>
+      <div>SoccerStatsHub is for users over 18 years of age only</div>
       <img
         src={Over18Badge.src || Over18Badge} // Next static import returns an object
         alt="18+ only"

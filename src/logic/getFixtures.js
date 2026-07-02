@@ -1885,7 +1885,7 @@ export async function generateFixtures(
       //       />
       //       <div className="Version">Prediction engine v1.9.0 (06/01/26)</div>
       //       <h4>Tipping league for Jan 2026 open now</h4>
-      //       <div className="MissingPredictionsNotice">The leader at the end of the month will recieve a 3-month subscription to Soccer Stats Hub. The winner will be based the highest remaining balance at the end of the month with each user starting on 50 units. Each tip will equate to 1 unit with the profit/loss being added to your running balance.</div>
+      //       <div className="MissingPredictionsNotice">The leader at the end of the month will recieve a 3-month subscription to SoccerStatsHub. The winner will be based the highest remaining balance at the end of the month with each user starting on 50 units. Each tip will equate to 1 unit with the profit/loss being added to your running balance.</div>
       //       <Collapsable
       //         buttonText={"Filters"}
       //         className={"Filters2"}

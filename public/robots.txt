@@ -1,5 +1,24 @@
-# https://www.robotstxt.org/robotstxt.html
+# SoccerStatsHub — https://www.soccerstatshub.com
 User-agent: *
-Disallow:
+Disallow: /reset/
+Disallow: /success/
+Disallow: /cancel/
+Disallow: /cancelsubscription/
+
+# AI crawlers — allowed for discovery and citation; respect rate limits.
+User-agent: GPTBot
+Allow: /
+
+User-agent: ChatGPT-User
+Allow: /
+
+User-agent: ClaudeBot
+Allow: /
+
+User-agent: PerplexityBot
+Allow: /
+
+User-agent: Google-Extended
+Allow: /
 
 Sitemap: https://www.soccerstatshub.com/sitemap.xml

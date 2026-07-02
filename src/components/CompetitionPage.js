@@ -9,7 +9,6 @@ import {
   Paper,
 } from "@material-ui/core";
 import SiteHeader from "./SiteHeader";
-import PageMeta from "./PageMeta";
 import Collapsable from "./CollapsableElement";
 import { apiGetUrl } from "../utils/apiUrl";
 import { initTheme } from "../utils/theme";
@@ -87,10 +86,10 @@ function LoadingSkeleton() {
   );
 }
 
-export default function CompetitionPage({ seasonId }) {
-  const [data, setData] = useState(null);
+export default function CompetitionPage({ seasonId, initialData = null }) {
+  const [data, setData] = useState(initialData);
   const [logoUrl, setLogoUrl] = useState(null);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(!initialData);
   const [error, setError] = useState(null);
 
   useEffect(() => {
@@ -99,6 +98,11 @@ export default function CompetitionPage({ seasonId }) {
 
   useEffect(() => {
     if (!seasonId) return;
+    if (initialData) {
+      setData(initialData);
+      setLoading(false);
+      return undefined;
+    }
 
     let cancelled = false;
 
@@ -133,7 +137,7 @@ export default function CompetitionPage({ seasonId }) {
     return () => {
       cancelled = true;
     };
-  }, [seasonId]);
+  }, [seasonId, initialData]);
 
   useEffect(() => {
     const sofaId = getSofaScoreIdForSeason(Number(seasonId));
@@ -150,16 +154,10 @@ export default function CompetitionPage({ seasonId }) {
       .catch(() => setLogoUrl(null));
   }, [seasonId]);
 
-  const pageTitle = data
-    ? `${data.english_name || data.name} Betting Stats | Soccer Stats Hub`
-    : "Competition | Soccer Stats Hub";
-
   const teams = getTeamsList(data);
 
   return (
-    <>
-      <PageMeta title={pageTitle} />
-      <SiteHeader showThemeToggle withFooter>
+    <SiteHeader showThemeToggle withFooter>
       <main className="Competition">
         <a href="/" className="HomeLink">Home</a>
 
@@ -326,7 +324,6 @@ export default function CompetitionPage({ seasonId }) {
           </>
         )}
       </main>
-      </SiteHeader>
-    </>
+    </SiteHeader>
   );
 }

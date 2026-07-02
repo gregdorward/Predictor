@@ -16,6 +16,8 @@ import {
 } from "chart.js";
 import { Line, Radar, Bar, Doughnut, PolarArea, Pie } from "react-chartjs-2";
 import annotationPlugin from 'chartjs-plugin-annotation';
+import ShareableVisual from "./ShareableVisual";
+import { sanitizeImageFilename } from "../utils/captureElementImage";
 
 ChartJS.register(
   CategoryScale,
@@ -621,7 +623,7 @@ export const DoughnutChart = ({ pointsTotal, predictedPoints, deltaPTS, theme, l
 
 
 export function RadarChart(props) {
-  const { title, labels, data, data2, team1, team2, max = 1 } = props;
+  const { title, labels, data, data2, team1, team2, max = 1, shareCapture = false } = props;
   const theme = useChartTheme();
   const { color, gridColor, tooltipBackground } = getChartColors(theme);
 
@@ -633,15 +635,15 @@ export function RadarChart(props) {
   const radarLabelAbbreviations = {
     Attack: "Atk",
     Defence: "Def",
-    Possession: "Poss",
-    Directness: "Dir",
-    Precision: "Prec",
+    Possession: "Possession",
+    Directness: "Directness",
+    Precision: "Precision",
     "Attack rating": "Atk",
     "Defence rating": "Def",
-    "Ball retention": "Poss",
+    "Ball retention": "Possession",
     "XG For": "XGF",
     "XG Against": "XGA",
-    "Attacking precision": "Prec",
+    "Attacking precision": "Precision",
   };
 
   const abbreviateRadarLabel = (label) => {
@@ -794,7 +796,10 @@ export function RadarChart(props) {
   };
 
   return (
-    <div className="ComparisonBarChart ComparisonRadarChart">
+    <div
+      className="ComparisonBarChart ComparisonRadarChart"
+      {...(shareCapture ? { "data-share-capture": true } : {})}
+    >
       <Radar key={theme} options={options} data={chartData} />
     </div>
   );
@@ -1144,20 +1149,31 @@ export function BarChart(props) {
     ],
   };
 
+  const shareFilename = sanitizeImageFilename(
+    `${team1}-vs-${team2}-${props.text || "comparison"}`
+  );
+  const shareTitle = `${team1} vs ${team2} - ${props.text || "comparison"}`;
+
   return (
-    <div className="ComparisonBarChart">
-      <Bar key={theme} options={options} data={data} plugins={[barDeltaLabelPlugin]} />
-      <div className="ComparisonBarChart-legend">
-        <span className="ComparisonBarChart-legendItem">
-          <span className="ComparisonBarChart-legendSwatch ComparisonBarChart-legendSwatch--home" />
-          {team1}
-        </span>
-        <span className="ComparisonBarChart-legendItem">
-          <span className="ComparisonBarChart-legendSwatch ComparisonBarChart-legendSwatch--away" />
-          {team2}
-        </span>
+    <ShareableVisual
+      filename={shareFilename}
+      shareTitle={shareTitle}
+      className="ComparisonBarChart-share"
+    >
+      <div data-share-capture className="ComparisonBarChart">
+        <Bar key={theme} options={options} data={data} plugins={[barDeltaLabelPlugin]} />
+        <div className="ComparisonBarChart-legend">
+          <span className="ComparisonBarChart-legendItem">
+            <span className="ComparisonBarChart-legendSwatch ComparisonBarChart-legendSwatch--home" />
+            {team1}
+          </span>
+          <span className="ComparisonBarChart-legendItem">
+            <span className="ComparisonBarChart-legendSwatch ComparisonBarChart-legendSwatch--away" />
+            {team2}
+          </span>
+        </div>
       </div>
-    </div>
+    </ShareableVisual>
   );
 }
 

@@ -1,0 +1,101 @@
+import { COMPETITION_CATALOG } from "../src/seo/competitionCatalog";
+import {
+  buildFixtureSlug,
+  FIXTURE_SITEMAP_WINDOW_DAYS,
+  isFixtureFinished,
+} from "../src/seo/fixtureSlug";
+import { fetchUpcomingFixtureIds, fetchMatchSnapshot } from "../src/seo/serverFetch";
+import { SITE_URL } from "../src/seo/pageMetaConfig";
+
+const STATIC_ROUTES = [
+  { path: "/", priority: "1.0", changefreq: "daily" },
+  { path: "/o25/", priority: "0.8", changefreq: "daily" },
+  { path: "/u25/", priority: "0.8", changefreq: "daily" },
+  { path: "/teamshigh/", priority: "0.8", changefreq: "daily" },
+  { path: "/fixtureshigh/", priority: "0.8", changefreq: "daily" },
+  { path: "/bttsfixtures/", priority: "0.8", changefreq: "daily" },
+  { path: "/bttsteams/", priority: "0.8", changefreq: "daily" },
+  { path: "/seasonpreviews/", priority: "0.7", changefreq: "weekly" },
+  { path: "/worldcup2026/", priority: "0.9", changefreq: "weekly" },
+  { path: "/about/", priority: "0.6", changefreq: "monthly" },
+  { path: "/faq/", priority: "0.6", changefreq: "monthly" },
+];
+
+function escapeXml(value) {
+  return String(value)
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&apos;");
+}
+
+function urlEntry(loc, { priority, changefreq, lastmod }) {
+  return `  <url>
+    <loc>${escapeXml(loc)}</loc>
+    <lastmod>${lastmod}</lastmod>
+    <changefreq>${changefreq}</changefreq>
+    <priority>${priority}</priority>
+  </url>`;
+}
+
+async function buildFixtureEntries(lastmod) {
+  const ids = await fetchUpcomingFixtureIds(FIXTURE_SITEMAP_WINDOW_DAYS);
+  const entries = [];
+  const limitedIds = ids.slice(0, 150);
+
+  for (const matchId of limitedIds) {
+    const snapshot = await fetchMatchSnapshot(matchId);
+    if (!snapshot || isFixtureFinished(snapshot)) continue;
+    const home = snapshot.home_name || snapshot.homeTeam || "home";
+    const away = snapshot.away_name || snapshot.awayTeam || "away";
+    const slug = buildFixtureSlug(home, away, matchId);
+    entries.push(
+      urlEntry(`${SITE_URL}/fixture/${slug}/`, {
+        priority: "0.7",
+        changefreq: "daily",
+        lastmod,
+      })
+    );
+  }
+
+  return entries;
+}
+
+async function generateSiteMap() {
+  const lastmod = new Date().toISOString().slice(0, 10);
+  const staticEntries = STATIC_ROUTES.map((route) =>
+    urlEntry(`${SITE_URL}${route.path}`, {
+      priority: route.priority,
+      changefreq: route.changefreq,
+      lastmod,
+    })
+  );
+
+  const competitionEntries = COMPETITION_CATALOG.map((competition) =>
+    urlEntry(`${SITE_URL}/competition/${competition.slug}/`, {
+      priority: "0.8",
+      changefreq: "daily",
+      lastmod,
+    })
+  );
+
+  const fixtureEntries = await buildFixtureEntries(lastmod);
+
+  return `<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+${[...staticEntries, ...competitionEntries, ...fixtureEntries].join("\n")}
+</urlset>`;
+}
+
+export async function getServerSideProps({ res }) {
+  const xml = await generateSiteMap();
+  res.setHeader("Content-Type", "text/xml");
+  res.write(xml);
+  res.end();
+  return { props: {} };
+}
+
+export default function SiteMap() {
+  return null;
+}

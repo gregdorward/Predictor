@@ -1,3 +1,5 @@
+import { buildFixtureSlug } from "../seo/fixtureSlug";
+
 const DEFAULT_SITE_URL = "https://www.soccerstatshub.com";
 
 export function formatShareDateParam(unixTimestamp) {
@@ -64,11 +66,19 @@ export function getInitialDateFromShareUrl() {
   return parsed;
 }
 
-export function buildMatchShareUrl(gameId, unixDate, siteUrl = DEFAULT_SITE_URL) {
+export function buildMatchShareUrl(
+  gameId,
+  unixDate,
+  siteUrl = DEFAULT_SITE_URL,
+  { homeTeam, awayTeam } = {}
+) {
   if (gameId == null) {
     return null;
   }
 
   const base = siteUrl.replace(/\/+$/, "");
+  if (homeTeam && awayTeam) {
+    return `${base}/fixture/${buildFixtureSlug(homeTeam, awayTeam, gameId)}/`;
+  }
   return `${base}/fixture/${gameId}/`;
 }

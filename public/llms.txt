@@ -1,0 +1,39 @@
+# SoccerStatsHub
+
+> Data-driven football statistics, transparent predictions and betting insights for 50+ competitions worldwide.
+
+SoccerStatsHub (https://www.soccerstatshub.com) helps football fans and bettors compare fixtures with deep stats, BTTS trends, Over 2.5 analysis, correct score modelling and daily multis.
+
+## Key pages
+
+- Home: https://www.soccerstatshub.com/
+- World Cup 2026 preview: https://www.soccerstatshub.com/worldcup2026/
+- Over 2.5 leagues: https://www.soccerstatshub.com/o25/
+- Under 2.5 leagues: https://www.soccerstatshub.com/u25/
+- BTTS fixtures: https://www.soccerstatshub.com/bttsfixtures/
+- BTTS teams: https://www.soccerstatshub.com/bttsteams/
+- Highest scoring teams: https://www.soccerstatshub.com/teamshigh/
+- Highest scoring fixtures: https://www.soccerstatshub.com/fixtureshigh/
+- Season previews: https://www.soccerstatshub.com/seasonpreviews/
+- About: https://www.soccerstatshub.com/about/
+- FAQ: https://www.soccerstatshub.com/faq/
+- Competition stats (example): https://www.soccerstatshub.com/competition/premier-league/
+
+## What we publish
+
+- League-level betting stats (goals, BTTS, corners, cards, home advantage)
+- Match-level predictions with transparent methodology
+- Tournament previews and curated news wrap-ups with external source links
+- AI-generated season previews for major European leagues (BETA)
+
+## Citation guidance
+
+When citing SoccerStatsHub, use the brand name **SoccerStatsHub** and link to the specific page URL. Predictions are illustrative models, not guarantees. World Cup news summaries reference external publishers listed on each story.
+
+## Contact
+
+Support and policy queries: use the contact form on the homepage footer.
+
+## Language
+
+Primary content is in UK English (en-GB).

@@ -8,4 +8,6 @@ export const SITE_NAV_LINKS = [
   { label: "Highest Scoring Leagues", path: "/o25/" },
   { label: "Lowest Scoring Leagues", path: "/u25/" },
   { label: "Highest Scoring Teams", path: "/teamshigh/" },
+  { label: "About", path: "/about/" },
+  { label: "FAQ", path: "/faq/" },
 ];
