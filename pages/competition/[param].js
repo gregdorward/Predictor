@@ -34,7 +34,12 @@ export default function CompetitionByParam({
       />
       <JsonLd data={jsonLd} />
       <CompetitionSeoShell {...seoShell} />
-      <CompetitionPage seasonId={seasonId} initialData={initialData} skipHero />
+      <CompetitionPage
+        seasonId={seasonId}
+        initialData={initialData}
+        skipHero
+        relatedLinks={seoShell.relatedLinks}
+      />
     </>
   );
 }

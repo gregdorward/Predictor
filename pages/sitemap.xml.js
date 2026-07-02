@@ -17,6 +17,7 @@ const STATIC_ROUTES = [
   { path: "/bttsteams/", priority: "0.8", changefreq: "daily" },
   { path: "/seasonpreviews/", priority: "0.7", changefreq: "weekly" },
   { path: "/worldcup2026/", priority: "0.9", changefreq: "weekly" },
+  { path: "/competitions/", priority: "0.8", changefreq: "weekly" },
   { path: "/about/", priority: "0.6", changefreq: "monthly" },
   { path: "/faq/", priority: "0.6", changefreq: "monthly" },
 ];

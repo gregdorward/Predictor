@@ -67,6 +67,17 @@ export const COMPETITION_CATALOG = [
   { id: 14904, slug: "europa-conference-league", name: "Europa Conference League" },
 ];
 
+export const FEATURED_COMPETITION_SLUGS = [
+  "premier-league",
+  "la-liga",
+  "serie-a",
+  "bundesliga",
+  "ligue-1",
+  "championship",
+  "champions-league",
+  "world-cup-2026",
+];
+
 const byId = new Map(COMPETITION_CATALOG.map((entry) => [entry.id, entry]));
 const bySlug = new Map(COMPETITION_CATALOG.map((entry) => [entry.slug, entry]));
 
@@ -76,6 +87,12 @@ export function getCompetitionById(id) {
 
 export function getCompetitionBySlug(slug) {
   return bySlug.get(String(slug).toLowerCase()) ?? null;
+}
+
+export function getFeaturedCompetitions(excludeSlug = null) {
+  return FEATURED_COMPETITION_SLUGS.map((slug) => getCompetitionBySlug(slug)).filter(
+    (entry) => entry && entry.slug !== excludeSlug
+  );
 }
 
 export function getCompetitionUrl(seasonIdOrSlug) {

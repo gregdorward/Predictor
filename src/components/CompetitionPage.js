@@ -24,6 +24,7 @@ import {
 import CompetitionPlayerLeaders from "./competition/CompetitionPlayerLeaders";
 import CompetitionStandings from "./competition/CompetitionStandings";
 import CompetitionMetricRankings from "./competition/CompetitionMetricRankings";
+import SeoPageLinks from "./SeoPageLinks";
 import {
   getSofaScoreIdForSeason,
   formatPercent,
@@ -86,7 +87,12 @@ function LoadingSkeleton() {
   );
 }
 
-export default function CompetitionPage({ seasonId, initialData = null, skipHero = false }) {
+export default function CompetitionPage({
+  seasonId,
+  initialData = null,
+  skipHero = false,
+  relatedLinks = [],
+}) {
   const [data, setData] = useState(initialData);
   const [logoUrl, setLogoUrl] = useState(null);
   const [loading, setLoading] = useState(!initialData);
@@ -157,7 +163,11 @@ export default function CompetitionPage({ seasonId, initialData = null, skipHero
   const teams = getTeamsList(data);
 
   return (
-    <SiteHeader showThemeToggle withFooter>
+    <SiteHeader
+      showThemeToggle
+      withFooter
+      beforeFooter={<SeoPageLinks relatedLinks={relatedLinks} />}
+    >
       <main className="Competition">
         <a href="/" className="HomeLink">Home</a>
 

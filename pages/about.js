@@ -1,6 +1,7 @@
 import SiteHeader from "../src/components/SiteHeader";
 import PageMeta from "../src/components/PageMeta";
 import JsonLd from "../src/components/JsonLd";
+import { FEATURED_COMPETITION_SLUGS, getCompetitionBySlug } from "../src/seo/competitionCatalog";
 import { SITE_URL } from "../src/seo/pageMetaConfig";
 
 const ABOUT_JSON_LD = {
@@ -46,6 +47,21 @@ export default function AboutPage() {
             Our competition pages summarise league-wide markets — average goals, BTTS rates,
             corner and card lines, home advantage and team rankings — while individual fixture
             pages compare head-to-head records, recent form and model outputs side by side.
+          </p>
+          <h2>Popular competitions</h2>
+          <ul>
+            {FEATURED_COMPETITION_SLUGS.map((slug) => {
+              const competition = getCompetitionBySlug(slug);
+              if (!competition) return null;
+              return (
+                <li key={slug}>
+                  <a href={`/competition/${competition.slug}/`}>{competition.name}</a>
+                </li>
+              );
+            })}
+          </ul>
+          <p>
+            <a href="/competitions/">Browse all football competitions</a>
           </p>
           <h2>What makes us different</h2>
           <ul>

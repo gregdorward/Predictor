@@ -12,6 +12,7 @@ import {
 } from "../../src/seo/fixtureSlug";
 import { fetchMatchSnapshot } from "../../src/seo/serverFetch";
 import { getCanonicalUrl } from "../../src/seo/pageMetaConfig";
+import { getCompetitionById, getCompetitionUrl } from "../../src/seo/competitionCatalog";
 
 const TeamPage = dynamic(() => import("../../src/components/Team"), {
   ssr: false,
@@ -80,6 +81,9 @@ export async function getServerSideProps({ params }) {
   const canonicalUrl = getCanonicalUrl(canonicalPath);
   const noIndex = isFixtureFinished(snapshot);
   const jsonLd = noIndex ? null : buildFixtureJsonLd(snapshot, canonicalUrl, meta);
+  const competition = snapshot.competition_id
+    ? getCompetitionById(snapshot.competition_id)
+    : null;
 
   return {
     props: {
@@ -94,6 +98,8 @@ export async function getServerSideProps({ params }) {
         league: meta.league || snapshot.competition_name || snapshot.league_name || "",
         stadium: snapshot.stadium_name || snapshot.stadium || "",
         kickOff: formatKickOff(snapshot.date_unix),
+        competitionUrl: competition ? getCompetitionUrl(competition.slug) : null,
+        competitionName: competition?.name || meta.league || null,
       },
     },
   };

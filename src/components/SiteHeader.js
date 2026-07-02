@@ -7,11 +7,13 @@ import Footer from "./Footer";
 export default function SiteHeader({
   showThemeToggle = false,
   withFooter = false,
+  beforeFooter = null,
   children,
 }) {
   const content = withFooter ? (
     <div className="SitePageLayout">
       <div className="SitePageLayout__content">{children}</div>
+      {beforeFooter}
       <Footer />
     </div>
   ) : (
