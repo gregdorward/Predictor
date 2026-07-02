@@ -4,6 +4,7 @@ import JsonLd from "../../src/components/JsonLd";
 import CompetitionSeoShell, {
   buildCompetitionSeoShell,
 } from "../../src/components/CompetitionSeoShell";
+import SeoPageLinks from "../../src/components/SeoPageLinks";
 import {
   buildCompetitionJsonLd,
   buildCompetitionMeta,
@@ -34,6 +35,7 @@ export default function CompetitionByParam({
       />
       <JsonLd data={jsonLd} />
       <CompetitionSeoShell {...seoShell} />
+      <SeoPageLinks relatedLinks={seoShell.relatedLinks} ssrOnly />
       <CompetitionPage
         seasonId={seasonId}
         initialData={initialData}

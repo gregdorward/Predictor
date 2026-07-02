@@ -926,6 +926,37 @@ h4.Blurb {
   font-size: 0.95em;
 }
 
+.GuestLanding-competitions {
+  margin-top: 1.25rem;
+  max-width: 36rem;
+}
+
+.GuestLanding-competitionsLabel {
+  margin: 0 0 0.4rem;
+  font-size: 0.65rem;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  opacity: 0.65;
+}
+
+.GuestLanding-competitionsList {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.2rem 1rem;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  font-size: 0.7rem;
+  line-height: 1.35;
+}
+
+.GuestLanding-competitionsList a {
+  color: inherit;
+  text-decoration: underline;
+  text-underline-offset: 0.15em;
+}
+
 .GuestLanding-modeToggle {
   display: block;
   width: 100%;
@@ -12124,6 +12155,45 @@ body.dark-mode .SeoPageLinks {
   color: inherit;
   text-decoration: underline;
   text-underline-offset: 0.15em;
+}
+
+body.js-loaded .SeoPageLinks--ssrOnly {
+  display: none;
+}
+
+.Footer-competitions {
+  margin-bottom: 1rem;
+}
+
+.Footer-competitionsLabel {
+  margin: 0 0 0.4rem;
+  font-size: 0.65rem;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  opacity: 0.65;
+  text-align: center;
+}
+
+.Footer-competitionsList {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.2rem 1rem;
+  list-style: none;
+  margin: 0 auto 1rem;
+  padding: 0;
+  max-width: 48rem;
+  font-size: 0.7rem;
+  line-height: 1.35;
+}
+
+.Footer-competitionsList a {
+  color: var(--accent-color);
+  text-decoration: none;
+}
+
+.Footer-competitionsList a:hover {
+  text-decoration: underline;
 }
 
 .CompetitionsIndex-list {

@@ -1,4 +1,4 @@
-import { getFeaturedCompetitions } from "../seo/competitionCatalog";
+import { getRelatedCompetitionLinks } from "../seo/competitionCatalog";
 
 function formatPercent(value) {
   if (value == null || Number.isNaN(Number(value))) return null;
@@ -54,13 +54,13 @@ export default function CompetitionSeoShell({
           </dl>
         )}
       </header>
-      </section>
+    </section>
   );
 }
 
 export function buildCompetitionSeoShell(data, catalog) {
   const name = data?.english_name || data?.name || catalog?.name || "Competition";
-  const relatedLinks = getFeaturedCompetitionLinks(catalog?.slug);
+  const relatedLinks = getRelatedCompetitionLinks(catalog?.slug);
   return {
     name,
     country: data?.country || null,
@@ -70,11 +70,4 @@ export function buildCompetitionSeoShell(data, catalog) {
     over25: formatPercent(data?.seasonOver25Percentage_overall),
     relatedLinks,
   };
-}
-
-function getFeaturedCompetitionLinks(excludeSlug) {
-  return getFeaturedCompetitions(excludeSlug).map((entry) => ({
-    label: entry.name,
-    href: `/competition/${entry.slug}/`,
-  }));
 }

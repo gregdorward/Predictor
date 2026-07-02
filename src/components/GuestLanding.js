@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import dynamic from "next/dynamic";
 import Image from "next/image";
 import { requestAppLoad } from "../utils/loadApp";
+import { FEATURED_COMPETITION_SLUGS, getCompetitionBySlug } from "../seo/competitionCatalog";
 
 const Login = dynamic(() => import("./Login"), {
   ssr: false,
@@ -156,6 +157,24 @@ const GuestLanding = ({ id = "guest-landing", showLogin = false }) => {
       >
         Just show me the games
       </button>
+
+      <nav className="GuestLanding-competitions" aria-label="Popular league stats">
+        <p className="GuestLanding-competitionsLabel">League stats</p>
+        <ul className="GuestLanding-competitionsList">
+          {FEATURED_COMPETITION_SLUGS.map((slug) => {
+            const competition = getCompetitionBySlug(slug);
+            if (!competition) return null;
+            return (
+              <li key={slug}>
+                <a href={`/competition/${competition.slug}/`}>{competition.name}</a>
+              </li>
+            );
+          })}
+          <li>
+            <a href="/competitions/">All competitions</a>
+          </li>
+        </ul>
+      </nav>
     </section>
   );
 };

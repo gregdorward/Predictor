@@ -113,6 +113,15 @@ export function getIndexableCompetitions() {
   );
 }
 
+export function getRelatedCompetitionLinks(excludeSlug = null) {
+  return getIndexableCompetitions()
+    .filter((entry) => entry.slug !== excludeSlug)
+    .map((entry) => ({
+      label: entry.name,
+      href: `/competition/${entry.slug}/`,
+    }));
+}
+
 export function getFeaturedCompetitions(excludeSlug = null) {
   return FEATURED_COMPETITION_SLUGS.map((slug) => getCompetitionBySlug(slug)).filter(
     (entry) => entry && entry.slug !== excludeSlug

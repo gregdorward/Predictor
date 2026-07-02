@@ -9,6 +9,7 @@ import "../src/index.css";
 export default function MyApp({ Component, pageProps }) {
   useEffect(() => {
     initTheme();
+    document.body.classList.add("js-loaded");
   }, []);
 
   return (
