@@ -36,6 +36,7 @@ ChartJS.register(
 );
 
 function resolveChartTheme() {
+  if (typeof document === "undefined") return "light";
   return document.body.classList.contains("dark-mode") ? "dark" : "light";
 }
 

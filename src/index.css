@@ -12065,6 +12065,30 @@ strong.WC26__inlineHeader {
   opacity: 0.9;
 }
 
+.Competition--seoShell .Competition__seoIntro {
+  margin-top: 0.75rem;
+  opacity: 0.9;
+}
+
+.Competition--seoShell .Competition__seoStats {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem 1.5rem;
+  margin: 1rem 0 0;
+  justify-content: center;
+}
+
+.Competition--seoShell .Competition__seoStats dt {
+  font-size: 0.75rem;
+  opacity: 0.75;
+  margin: 0;
+}
+
+.Competition--seoShell .Competition__seoStats dd {
+  margin: 0.15rem 0 0;
+  font-weight: 600;
+}
+
 .WC26__tabContent [hidden] {
   display: none;
 }

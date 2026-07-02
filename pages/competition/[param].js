@@ -1,6 +1,9 @@
-import CompetitionPage from "../../src/components/CompetitionPage";
+import dynamic from "next/dynamic";
 import PageMeta from "../../src/components/PageMeta";
 import JsonLd from "../../src/components/JsonLd";
+import CompetitionSeoShell, {
+  buildCompetitionSeoShell,
+} from "../../src/components/CompetitionSeoShell";
 import {
   buildCompetitionJsonLd,
   buildCompetitionMeta,
@@ -9,12 +12,18 @@ import {
 import { fetchCompetitionData } from "../../src/seo/serverFetch";
 import { getCanonicalUrl } from "../../src/seo/pageMetaConfig";
 
+const CompetitionPage = dynamic(
+  () => import("../../src/components/CompetitionPage"),
+  { ssr: false }
+);
+
 export default function CompetitionByParam({
   seasonId,
   initialData,
   meta,
   jsonLd,
   canonicalPath,
+  seoShell,
 }) {
   return (
     <>
@@ -24,7 +33,8 @@ export default function CompetitionByParam({
         canonicalPath={canonicalPath}
       />
       <JsonLd data={jsonLd} />
-      <CompetitionPage seasonId={seasonId} initialData={initialData} />
+      <CompetitionSeoShell {...seoShell} />
+      <CompetitionPage seasonId={seasonId} initialData={initialData} skipHero />
     </>
   );
 }
@@ -56,6 +66,7 @@ export async function getServerSideProps({ params }) {
   const canonicalUrl = getCanonicalUrl(canonicalPath);
   const meta = buildCompetitionMeta(data, catalog);
   const jsonLd = buildCompetitionJsonLd(data, canonicalUrl, catalog);
+  const seoShell = buildCompetitionSeoShell(data, catalog);
 
   return {
     props: {
@@ -64,6 +75,7 @@ export async function getServerSideProps({ params }) {
       meta,
       jsonLd,
       canonicalPath,
+      seoShell,
     },
   };
 }

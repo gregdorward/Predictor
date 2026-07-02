@@ -86,7 +86,7 @@ function LoadingSkeleton() {
   );
 }
 
-export default function CompetitionPage({ seasonId, initialData = null }) {
+export default function CompetitionPage({ seasonId, initialData = null, skipHero = false }) {
   const [data, setData] = useState(initialData);
   const [logoUrl, setLogoUrl] = useState(null);
   const [loading, setLoading] = useState(!initialData);
@@ -172,6 +172,7 @@ export default function CompetitionPage({ seasonId, initialData = null }) {
 
         {!loading && data && (
           <>
+            {!skipHero && (
             <section className="Competition__hero">
               <div className="Competition__heroMain">
                 {(logoUrl || data.image) && (
@@ -199,6 +200,7 @@ export default function CompetitionPage({ seasonId, initialData = null }) {
                 </span>
               </div>
             </section>
+            )}
 
             <section className="Competition__metricGrid">
               <MetricCard

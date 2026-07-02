@@ -6,22 +6,30 @@ function originUrl(path) {
 }
 
 export async function fetchCompetitionData(seasonId) {
-  const response = await fetch(originUrl(`competition/${seasonId}`), {
-    headers: { accept: "application/json" },
-  });
-  if (!response.ok) return null;
-  const json = await response.json();
-  if (!json?.success || !json?.data) return null;
-  return json.data;
+  try {
+    const response = await fetch(originUrl(`competition/${seasonId}`), {
+      headers: { accept: "application/json" },
+    });
+    if (!response.ok) return null;
+    const json = await response.json();
+    if (!json?.success || !json?.data) return null;
+    return json.data;
+  } catch {
+    return null;
+  }
 }
 
 export async function fetchMatchSnapshot(matchId) {
-  const response = await fetch(originUrl(`match/snapshot/${matchId}`), {
-    headers: { accept: "application/json" },
-  });
-  if (!response.ok) return null;
-  const json = await response.json();
-  return json?.data ?? null;
+  try {
+    const response = await fetch(originUrl(`match/snapshot/${matchId}`), {
+      headers: { accept: "application/json" },
+    });
+    if (!response.ok) return null;
+    const json = await response.json();
+    return json?.data ?? null;
+  } catch {
+    return null;
+  }
 }
 
 export async function fetchMatchesForDate(dateStr) {
