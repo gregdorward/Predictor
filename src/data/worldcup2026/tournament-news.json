@@ -1,6 +1,6 @@
 {
-  "updatedAt": "2026-07-01T14:00:00.000Z",
-  "wrapUp": "Harry Kane's late double rescued England from a shock Round of 32 exit against DR Congo in Atlanta, setting up a last-16 clash with co-hosts Mexico at the Estadio Azteca after Julian Quinones and Raul Jimenez sent the hosts past Ecuador. Kylian Mbappe scored twice as France brushed Sweden aside 3-0 to join Norway, who claimed their first ever World Cup knockout win through Erling Haaland's late strike against Ivory Coast, in the last 16. Spain remain without Nico Williams and Yeremy Pino for Thursday's Austria tie, while Belgium face Senegal and the United States host Bosnia and Herzegovina later on 1 July. Each story below links to the specific report it is drawn from; squad and fitness details reflect the latest available reporting as of 1 July 2026.",
+  "updatedAt": "2026-07-03T11:30:00.000Z",
+  "wrapUp": "The Round of 32 closes on 3 July with Argentina, Australia, Egypt, Colombia and Ghana chasing the final last-16 places, while Spain and Portugal have already set up a blockbuster Iberian derby in Dallas on 6 July after Mikel Oyarzabal's double helped La Roja cruise past Austria and Goncalo Ramos snatched a stoppage-time winner against Croatia amid late VAR drama. Co-hosts USA are through to face Belgium in Seattle but will be without Folarin Balogun after his red card against Bosnia, while Youri Tielemans converted the latest goal in World Cup history to send Belgium past Senegal in extra time. England and Mexico await their Azteca showdown on 6 July as Harry Kane's late rescue against DR Congo and the hosts' clean-sheet run remain the defining subplots in the other half of the bracket. Each story below links to the specific report it is drawn from; squad and fitness details reflect the latest available reporting as of 3 July 2026.",
   "sections": [
     {
       "id": "injuries-fitness",
@@ -8,9 +8,41 @@
       "description": "Players ruled out, late replacements and day-to-day concerns that could change starting line-ups and squad depth.",
       "stories": [
         {
+          "id": "spain-williams-pino-portugal-doubt",
+          "headline": "Williams and Pino still out as Spain set up Portugal clash",
+          "summary": "Nico Williams and Yeremy Pino both missed Spain's 3-0 Round of 32 win over Austria on 2 July and remain doubts for the last-16 meeting with Portugal in Dallas on 6 July. Luis de la Fuente leaned on Mikel Oyarzabal, who scored twice, and Pedro Porro from right-back as La Roja kept a fourth straight clean sheet, but the absence of both wide men leaves Alex Baena and a returning Lamine Yamal to cover the flanks against Roberto Martinez's side.",
+          "publishedDate": "2026-07-02",
+          "sources": [
+            {
+              "name": "BBC Sport",
+              "url": "https://www.bbc.co.uk/sport/football/live/c8j2wvnzkvzt"
+            },
+            {
+              "name": "AP News",
+              "url": "https://apnews.com/article/spain-austria-score-world-cup-e5d701b4628f62556d18bdf565081c79"
+            }
+          ]
+        },
+        {
+          "id": "usa-balogun-red-card-suspension",
+          "headline": "Balogun suspended as USA advance to face Belgium",
+          "summary": "Folarin Balogun scored his third goal of the tournament to put the United States ahead against Bosnia and Herzegovina on 2 July, but was sent off in the 64th minute after VAR reviewed a challenge on Tarik Muharemovic and will miss the last-16 tie with Belgium in Seattle on 6 July. Malik Tillman's free-kick sealed a 2-0 win for the ten-man co-hosts, ending a long run without victory over European opposition at World Cups, but Mauricio Pochettino must reshuffle his attack without his leading scorer.",
+          "publishedDate": "2026-07-02",
+          "sources": [
+            {
+              "name": "AP News",
+              "url": "https://apnews.com/article/world-cup-usmnt-bosnia-score-b78bdf42bf14d604d7b466aa58d33324"
+            },
+            {
+              "name": "Sky Sports",
+              "url": "https://www.skysports.com/football/usa-vs-bos-and-herz/report/549845"
+            }
+          ]
+        },
+        {
           "id": "england-james-quansah-right-back-crisis",
-          "headline": "England miss James and Quansah at right-back for DR Congo tie",
-          "summary": "Reece James remained sidelined with a hamstring injury and Jarrell Quansah twisted an ankle in the Panama win as England entered their Round of 32 fixture without either of their preferred right-backs. Thomas Tuchel said both were getting closer to fitness but needed England to advance before they could return, leaving Djed Spence to cover the position against DR Congo. James was spotted speaking with Jude Bellingham during a hydration break in Atlanta, underlining how thin England's defensive options remain before the Mexico tie.",
+          "headline": "England miss James and Quansah at right-back before Mexico tie",
+          "summary": "Reece James remained sidelined with a hamstring injury and Jarrell Quansah twisted an ankle in the Panama win as England entered their Round of 32 fixture without either of their preferred right-backs. Thomas Tuchel said both were getting closer to fitness but needed England to advance before they could return, leaving Djed Spence to cover the position against DR Congo. James was spotted speaking with Jude Bellingham during a hydration break in Atlanta, underlining how thin England's defensive options remain before the Mexico tie at the Estadio Azteca on 6 July.",
           "publishedDate": "2026-07-01",
           "sources": [
             {
@@ -22,22 +54,6 @@
               "url": "https://www.espn.com/soccer/report/_/gameId/760495"
             }
           ]
-        },
-        {
-          "id": "williams-pino-ruled-out-austria",
-          "headline": "Williams and Pino ruled out as Spain prepare for Austria",
-          "summary": "Nico Williams and Yeremy Pino will both miss Spain's Round of 32 meeting with Austria on 2 July at SoFi Stadium after moderate injuries sustained against Uruguay. Williams suffered an adductor problem following Nicolas de la Cruz's challenge, while scans confirmed Pino's shoulder sprain is not a fracture but still rules him out of the Austria fixture. Luis de la Fuente may lean on Alex Baena and an increasingly fit Lamine Yamal out wide, with both wide men still doubts for a potential last-16 tie if Spain advance.",
-          "publishedDate": "2026-07-01",
-          "sources": [
-            {
-              "name": "ESPN",
-              "url": "https://www.espn.com/soccer/story/_/id/49213161/fifa-world-cup-2026-spain-vs-austria-tv-channel-how-watch-kickoff-live-stream-referee-predicted-lineups"
-            },
-            {
-              "name": "BBC Sport",
-              "url": "https://www.bbc.com/sport/football/articles/cx2j5j9xgp4o"
-            }
-          ]
         }
       ]
     },
@@ -46,6 +62,38 @@
       "heading": "Squad selection and tactical reshuffles",
       "description": "Omissions, late call-ups and manager decisions that reveal how teams plan to navigate the expanded format.",
       "stories": [
+        {
+          "id": "portugal-ramos-ronaldo-croatia-comeback",
+          "headline": "Ramos and Ronaldo send Portugal past Croatia into Spain tie",
+          "summary": "Cristiano Ronaldo converted a 68th-minute penalty for his first World Cup knockout goal as Portugal came from behind to beat Croatia 2-1 in Toronto on 2 July, before Goncalo Ramos headed a stoppage-time winner from Rafael Leao's cross. Ivan Perisic had given Croatia the lead in the 53rd minute in what was the first World Cup match featuring two outfield players aged 40 or over, but Roberto Martinez's substitutions proved decisive and Portugal now face Spain in Dallas on 6 July.",
+          "publishedDate": "2026-07-02",
+          "sources": [
+            {
+              "name": "ESPN",
+              "url": "https://www.espn.com/soccer/story/_/id/49253213/portugal-ronaldo-survive-late-scare-croatia-world-cup"
+            },
+            {
+              "name": "Sky Sports",
+              "url": "https://www.skysports.com/football/portugal-vs-croatia/report/549850"
+            }
+          ]
+        },
+        {
+          "id": "belgium-tielemans-senegal-record-penalty",
+          "headline": "Tielemans penalty in 125th minute sends Belgium past Senegal",
+          "summary": "Belgium trailed Senegal 2-0 with five minutes of regulation time remaining before Romelu Lukaku and Youri Tielemans forced extra time, and Tielemans then converted a VAR-awarded penalty in the 125th minute to complete a 3-2 win in Seattle on 1 July. Rudi Garcia's bold decision to withdraw Kevin De Bruyne and Jeremy Doku with his side facing elimination proved pivotal, and Belgium now face co-hosts USA in the last 16 on 6 July after the latest goal in World Cup history.",
+          "publishedDate": "2026-07-01",
+          "sources": [
+            {
+              "name": "Sky Sports",
+              "url": "https://www.skysports.com/football/belgium-vs-senegal/report/549846"
+            },
+            {
+              "name": "Al Jazeera",
+              "url": "https://www.aljazeera.com/sports/2026/7/2/belgium-stage-3-2-comeback-win-over-senegal-to-enter-world-cup-last"
+            }
+          ]
+        },
         {
           "id": "england-kane-dr-congo-comeback",
           "headline": "Kane double rescues England and sets up Mexico last-16 tie",
@@ -64,7 +112,7 @@
         },
         {
           "id": "mexico-ecuador-round32-win",
-          "headline": "Mexico beat Ecuador to set up potential England quarter-final path",
+          "headline": "Mexico beat Ecuador to set up England last-16 tie",
           "summary": "Julian Quinones and Raul Jimenez scored either side of half-time as co-hosts Mexico beat Ecuador 2-0 at the Estadio Azteca on 1 July to reach the last 16 without conceding at the tournament. Kick-off was delayed by an hour because of storms in Mexico City, and Piero Hincapie was sent off in stoppage time after covering his mouth during an altercation with Santiago Gimenez. Mexico's reward is a home last-16 tie with England on 6 July, with altitude and crowd support giving Javier Aguirre's side a genuine edge against a team that struggled to break down DR Congo.",
           "publishedDate": "2026-07-01",
           "sources": [
@@ -86,18 +134,34 @@
       "description": "Travel, visa and logistical problems that could affect match readiness rather than just headlines.",
       "stories": [
         {
-          "id": "usa-bosnia-knockout-prep",
-          "headline": "USA target first knockout win since 2002 against Bosnia",
-          "summary": "The United States prepare for their Round of 32 tie with Bosnia and Herzegovina at Levi's Stadium on 1 July, seeking a first World Cup knockout victory since beating Mexico in 2002. Christian Pulisic said he felt good and ready to go after a calf concern limited him against Turkey, while Mauricio Pochettino apologised for his curt post-match tone following that defeat. The co-hosts have won two of three meetings with Bosnia at senior level but have only one victory in 21 games against European opposition since returning to the World Cup in 1990.",
-          "publishedDate": "2026-07-01",
+          "id": "round32-final-slate-july-3",
+          "headline": "Final Round of 32 slate set as Argentina headline Friday fixtures",
+          "summary": "Three win-or-go-home ties on 3 July complete the first knockout round of the expanded 48-team format, with Australia facing Egypt in Arlington, Argentina meeting Cabo Verde in Miami and Colombia taking on Ghana in Kansas City. The winners join a last-16 field already featuring an Iberian derby between Spain and Portugal, a co-host showdown between USA and Belgium, and England against Mexico at altitude. Kick-off times across North American venues mean some teams face short turnarounds before the Round of 16 begins on 4 July.",
+          "publishedDate": "2026-07-03",
           "sources": [
             {
-              "name": "AP News",
-              "url": "https://apnews.com/article/world-cup-schedule-results-news-81645977a722c4020c9644d17589bdbb"
+              "name": "ESPN",
+              "url": "https://www.espn.com/soccer/story/_/id/48939282/2026-fifa-world-cup-fixtures-results-match-schedule-group-stage-knockout-rounds-bracket"
             },
             {
-              "name": "FOX Sports",
-              "url": "https://www.foxsports.com/stories/soccer/united-states-vs-bosnia-and-herzegovina-how-to-watch-tv-channel-live-stream-2026-fifa-world-cup-round-of-32"
+              "name": "Sky Sports",
+              "url": "https://www.skysports.com/football/news/11095/13556636/world-cup-2026-bracket-and-knockout-fixtures-whos-facing-who-in-the-last-32-and-route-to-final"
+            }
+          ]
+        },
+        {
+          "id": "portugal-croatia-var-bottle-protest",
+          "headline": "Croatia fans protest after Gvardiol goal disallowed in Toronto",
+          "summary": "Portugal's 2-1 win over Croatia on 2 July ended in chaos when Josko Gvardiol thought he had equalised in the 113th minute, only for VAR to rule the goal out after detecting a faint touch from Igor Matanovic on Ivan Perisic's cross that left Mario Pasalic in an offside position. Croatian supporters threw bottles onto the pitch and whistled in protest during a lengthy on-field review, and the incident was the tenth goal overturned by VAR at this tournament. Portugal advance to face Spain but the controversy adds to growing debate about connected-ball technology and knockout-stage officiating.",
+          "publishedDate": "2026-07-02",
+          "sources": [
+            {
+              "name": "Sky Sports",
+              "url": "https://www.skysports.com/football/portugal-vs-croatia/report/549850"
+            },
+            {
+              "name": "ESPN",
+              "url": "https://www.espn.com/soccer/story/_/id/49253213/portugal-ronaldo-survive-late-scare-croatia-world-cup"
             }
           ]
         }
@@ -109,18 +173,34 @@
       "description": "Deeper previews on favourites, group dynamics and how the 48-team format changes the path to the final.",
       "stories": [
         {
-          "id": "belgium-senegal-round32-preview",
-          "headline": "Belgium and Senegal meet in Seattle with knockout pedigree on show",
-          "summary": "Belgium topped Group G ahead of Egypt and face Senegal in Seattle on 1 July in one of the most evenly matched Round of 32 ties. Rudi Garcia said his side had achieved their minimum aim by escaping the group but wanted more, while Senegal arrive buoyed by a 5-0 win over Iraq that sent them through as a best third-placed finisher. Goalkeeper Edouard Mendy remains a doubt for Aliou Cisse's side after a knee issue against Norway, with Mory Diaw potentially continuing between the posts against Kevin De Bruyne and company.",
-          "publishedDate": "2026-07-01",
+          "id": "spain-oyarzabal-austria-shutout",
+          "headline": "Oyarzabal double sends Spain past Austria without conceding",
+          "summary": "Mikel Oyarzabal scored in the 36th and 89th minutes and Pedro Porro headed a second-half goal as Spain beat Austria 3-0 on 2 July at SoFi Stadium, their first World Cup knockout win since the 2010 final. Luis de la Fuente's side have not conceded in four matches and goalkeeper Unai Simon has faced limited work, while Marc Cucurella supplied assists on both Oyarzabal strikes. Spain join Mexico as the only teams yet to let in a goal and now face Portugal in a last-16 tie that could define the European path to the final.",
+          "publishedDate": "2026-07-02",
           "sources": [
             {
-              "name": "AP News",
-              "url": "https://apnews.com/article/world-cup-schedule-results-news-81645977a722c4020c9644d17589bdbb"
+              "name": "BBC Sport",
+              "url": "https://www.bbc.co.uk/sport/football/live/c8j2wvnzkvzt"
             },
             {
-              "name": "Sky Sports",
-              "url": "https://www.skysports.com/football/news/12098/13481245/world-cup-2026-fixture-schedule-and-uk-kick-off-times-day-by-day-breakdown-of-all-104-matches-including-england-scotland"
+              "name": "AP News",
+              "url": "https://apnews.com/article/spain-austria-score-world-cup-e5d701b4628f62556d18bdf565081c79"
+            }
+          ]
+        },
+        {
+          "id": "switzerland-embolo-algeria-knockout",
+          "headline": "Switzerland end 88-year knockout drought against Algeria",
+          "summary": "Breel Embolo and Dan Ndoye scored either side of half-time as Switzerland beat Algeria 2-0 in Vancouver on 2 July, their first World Cup knockout victory since beating Germany in 1938. Johan Manzambi's solo run set up the opener in the 10th minute and Murat Yakin's side controlled a tie in which Algeria managed just 0.73 expected goals. Switzerland will face the winner of Colombia and Ghana in the last 16 on 7 July, having reached the knockout stage for a fourth consecutive tournament.",
+          "publishedDate": "2026-07-02",
+          "sources": [
+            {
+              "name": "BBC Sport",
+              "url": "https://www.bbc.co.uk/sport/football/live/cyv05me9d6rt"
+            },
+            {
+              "name": "France 24",
+              "url": "https://www.france24.com/en/sport/20260703-switzerland-beat-algeria-2-0-to-move-into-world-cup-last-16"
             }
           ]
         },
@@ -153,54 +233,6 @@
             {
               "name": "AP News",
               "url": "https://apnews.com/article/world-cup-norway-ivory-coast-score-ea4cf42d9dcdd4c1e485d0263da438dd"
-            }
-          ]
-        },
-        {
-          "id": "brazil-martinelli-late-winner",
-          "headline": "Martinelli stoppage-time winner sends Brazil past Japan",
-          "summary": "Substitute Gabriel Martinelli scored in the fifth minute of added time as Brazil came from behind to beat Japan 2-1 on 29 June in Houston, denying Hajime Moriyasu's side a first-ever World Cup knockout victory. Kaishu Sano had put Japan ahead before Casemiro equalised with a header from Gabriel Magalhaes's cross, and Bruno Guimaraes slipped in Martinelli for the decisive finish. Brazil will face Norway in the Round of 16 on 5 July in New Jersey.",
-          "publishedDate": "2026-06-29",
-          "sources": [
-            {
-              "name": "Sky Sports",
-              "url": "https://www.skysports.com/football/brazil-vs-japan/report/549839"
-            },
-            {
-              "name": "ESPN",
-              "url": "https://www.espn.com/soccer/report/_/gameId/760487"
-            }
-          ]
-        },
-        {
-          "id": "germany-paraguay-shootout-upset",
-          "headline": "Paraguay eliminate Germany on penalties in Boston shock",
-          "summary": "Paraguay knocked four-time champions Germany out of the World Cup on 29 June, winning 4-3 on penalties after a 1-1 draw at Boston Stadium in Germany's first knockout defeat via a shootout. Jose Canale converted the decisive spot-kick after Jonathan Tah blazed over, capping a defiant display in which Paraguay completed just 161 passes to Germany's 719. Julian Nagelsmann's side failed to keep a clean sheet in any of their four matches, and Paraguay now face France in Philadelphia on 4 July.",
-          "publishedDate": "2026-06-29",
-          "sources": [
-            {
-              "name": "BBC Sport",
-              "url": "https://www.bbc.co.uk/sport/football/articles/cy5v96vk1q9o"
-            },
-            {
-              "name": "ESPN",
-              "url": "https://www.espn.com/soccer/story/_/id/49221163/paraguay-were-more-just-uncomfortable-sorry-germany-world-cup-were-too-much"
-            }
-          ]
-        },
-        {
-          "id": "morocco-netherlands-shootout",
-          "headline": "Saibari sends Morocco past Netherlands in Monterrey shootout",
-          "summary": "Morocco beat the Netherlands 3-2 on penalties on 29 June after Issa Diop's stoppage-time header forced extra time in a 1-1 draw at Estadio Monterrey. Yassine Bounou saved Crysencio Summerville's fourth kick before Ismael Saibari sealed the win, sending Walid Regragui's side into a last-16 meeting with Canada in Houston on 4 July. The result marked the earliest World Cup exit for the Dutch since 1990 despite Cody Gakpo giving Ronald Koeman's team the lead in the second half.",
-          "publishedDate": "2026-06-29",
-          "sources": [
-            {
-              "name": "Al Jazeera",
-              "url": "https://www.aljazeera.com/sports/2026/6/30/morocco-netherlands-world-cup-knockout-penalty-shootout-saibari-diop-gakpo"
-            },
-            {
-              "name": "AP News",
-              "url": "https://apnews.com/article/world-cup-netherlands-morocco-score-9187f746b2f53ff591287ac59c1f02f0"
             }
           ]
         }

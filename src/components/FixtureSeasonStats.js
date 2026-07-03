@@ -5,8 +5,11 @@ import {
   calculateComparisonStatusMap,
   getInvertedComparisonMap,
 } from "../logic/allStatsProps";
+import { useAuth } from "../logic/authProvider";
 
 function FixtureSeasonStats({ match }) {
+  const { isPaidUser, loading, user } = useAuth();
+  const lockPremiumSections = !isPaidUser && !(loading && user);
   const [openSections, setOpenSections] = useState({});
 
   const getCollapsableProps = useCallback(
@@ -72,6 +75,11 @@ function FixtureSeasonStats({ match }) {
   return (
     <section className="FixturePage-seasonStats">
       <h3 className="FixturePage-statGroupTitle">Season Stats</h3>
+      {lockPremiumSections ? (
+        <p className="FixturePage-seasonStatsPreviewNote">
+          Key Stats is a free preview. Upgrade to Premium to unlock all stat categories.
+        </p>
+      ) : null}
       <div className="flex-container">
         <div className="flex-childOne">
           <ul>
@@ -79,6 +87,7 @@ function FixtureSeasonStats({ match }) {
               {...homeAllStatsProps}
               getCollapsableProps={getCollapsableProps}
               comparisonStatusMap={comparisonStatusMap}
+              lockPremiumSections={lockPremiumSections}
             />
           </ul>
         </div>
@@ -88,6 +97,7 @@ function FixtureSeasonStats({ match }) {
               {...awayAllStatsProps}
               getCollapsableProps={getCollapsableProps}
               comparisonStatusMap={invertedComparisonMap}
+              lockPremiumSections={lockPremiumSections}
             />
           </ul>
         </div>

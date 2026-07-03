@@ -17,10 +17,26 @@ const Collapsable = ({
   isOpen,
   defaultOpen = false,
   titleOnly = false,
+  locked = false,
   onTriggerToggle
   // onTriggerOpening,
   // onTriggerClosing,
 }) => {
+  const handleTriggerClick = (event) => {
+    if (locked) {
+      event.preventDefault();
+      event.stopPropagation();
+      return;
+    }
+    onTriggerToggle?.(event);
+  };
+
+  const buttonClassName = [
+    classNameButton,
+    locked ? "StatHeader--locked" : "",
+  ]
+    .filter(Boolean)
+    .join(" ");
   if (titleOnly) {
     return (
       <div className={`${className || "Collapsable"} Collapsable--titleOnly`}>
@@ -40,11 +56,17 @@ const Collapsable = ({
   return (
     <Collapsible
       transitionTime={300}
-      open={isOpen ?? (defaultOpen ? true : undefined)}
+      open={locked ? false : isOpen ?? (defaultOpen ? true : undefined)}
       key={key}
       trigger={
-        // ⭐️ FIX: ADD onClick={onTriggerToggle} to the button ⭐️
-        <button className={classNameButton} style={{ display }} onClick={onTriggerToggle}>
+        <button
+          type="button"
+          className={buttonClassName}
+          style={{ display }}
+          onClick={handleTriggerClick}
+          disabled={locked}
+          aria-expanded={locked ? false : !!isOpen}
+        >
           {buttonImage && (
             <img
               src={buttonImage}
@@ -52,7 +74,16 @@ const Collapsable = ({
               className="player-image-thumb"
             />
           )}
-          {buttonText}
+          {locked ? (
+            <span className="StatHeader-label">
+              <span className="StatHeader-lock" aria-hidden="true">
+                🔒
+              </span>
+              {buttonText}
+            </span>
+          ) : (
+            buttonText
+          )}
         </button>
       }
       className={className || "Collapsable"}

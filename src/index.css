@@ -6880,6 +6880,33 @@ input:active+.design::after {
   box-sizing: border-box;
 }
 
+.FixturePage-seasonStatsPreviewNote {
+  margin: 0 0 0.75rem;
+  padding: 0.55rem 0.75rem;
+  font-size: 0.9rem;
+  line-height: 1.4;
+  color: var(--text-color);
+  background: var(--secondary-background-color, #f5f5f5);
+  border: 1px solid var(--accent-color);
+  border-radius: 4px;
+}
+
+.StatHeader--locked {
+  cursor: not-allowed;
+  opacity: 0.92;
+}
+
+.StatHeader-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+.StatHeader-lock {
+  font-size: 0.95em;
+  line-height: 1;
+}
+
 .FixturePage-pairedBlock--results {
   margin-bottom: 0;
 }

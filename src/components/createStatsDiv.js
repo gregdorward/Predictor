@@ -10,8 +10,19 @@ import {
 } from "../utils/formatStat";
 
 function Stats(props) {
-  const { getCollapsableProps, comparisonStatusMap } = props;
+  const { getCollapsableProps, comparisonStatusMap, lockPremiumSections } = props;
   let shouldOpen = props.clicked;
+
+  const collapsableProps = (sectionName, isKeyStats = false) => {
+    const base = getCollapsableProps(sectionName);
+    if (!lockPremiumSections) {
+      return base;
+    }
+    if (isKeyStats) {
+      return { ...base, isOpen: true };
+    }
+    return { ...base, isOpen: false, locked: true };
+  };
 
   // Helper function to get the status class for a specific stat key
   const getComparisonClass = (statKey) => {
@@ -136,7 +147,7 @@ function Stats(props) {
           <div className="AllStats">
             <Collapsable buttonText={`Key Stats`}
               classNameButton="StatHeader"
-              {...getCollapsableProps("Key Stats")}
+              {...collapsableProps("Key Stats", true)}
               isOpen={true}
               element={
                 <><li
@@ -200,7 +211,7 @@ function Stats(props) {
             />
             <Collapsable
               buttonText={`Attacking`}
-              {...getCollapsableProps("Attacking")}
+              {...collapsableProps("Attacking")}
               classNameButton="StatHeader"
               element={
                 <><li
@@ -281,7 +292,7 @@ function Stats(props) {
             <Collapsable
               buttonText={`Defensive`}
               classNameButton="StatHeader"
-              {...getCollapsableProps("Defensive")}
+              {...collapsableProps("Defensive")}
 
               element={
                 <>
@@ -330,7 +341,7 @@ function Stats(props) {
             />
             <Collapsable buttonText={"In Possession"}
               classNameButton="StatHeader"
-              {...getCollapsableProps("In Possession")}
+              {...collapsableProps("In Possession")}
               element={
                 <>
                   <li key="PPAA" className={`PPAA ${getComparisonClass('PPAA')}${props.homeOrAway}`} data-cy={props.name ? props.name + "PPAA" : "PPAA"}>
@@ -368,7 +379,7 @@ function Stats(props) {
             />
             <Collapsable buttonText={"Out Of Possession"}
               classNameButton="StatHeader"
-              {...getCollapsableProps("Out Of Possession")}
+              {...collapsableProps("Out Of Possession")}
 
               element={
                 <>
@@ -409,7 +420,7 @@ function Stats(props) {
             />
             <Collapsable buttonText={"Form"}
               classNameButton="StatHeader"
-              {...getCollapsableProps("Form")}
+              {...collapsableProps("Form")}
 
               element={
                 <> <li key="PPG" className={`PPG ${getComparisonClass('ppg')}${props.homeOrAway}`} data-cy={props.name ? props.name + "PPG" : "PPG"}>
@@ -449,7 +460,7 @@ function Stats(props) {
             />
             <Collapsable buttonText={"Discipline"}
               classNameButton="StatHeader"
-              {...getCollapsableProps("Discipline")}
+              {...collapsableProps("Discipline")}
               element={
                 <> <li
                   key="CardsTotal"
@@ -480,7 +491,7 @@ function Stats(props) {
             />
             <Collapsable buttonText={"Set Pieces"}
               classNameButton="StatHeader"
-              {...getCollapsableProps("Set Pieces")}
+              {...collapsableProps("Set Pieces")}
               element={
                 <> <li
                   key="CornersAverage"
@@ -501,7 +512,7 @@ function Stats(props) {
             />
             <Collapsable buttonText={"Misc"}
               classNameButton="StatHeader"
-              {...getCollapsableProps("Misc")}
+              {...collapsableProps("Misc")}
               element={
                 <>         <li
                   key="TeamAverageRating"
