@@ -381,19 +381,19 @@ export async function createStatsDiv(game, displayBool) {
               switch (true) {
                 case resultHome[i].homeGoalCount > resultHome[i].awayGoalCount:
                   won = "L";
-                  goalsScored = resultHome[i].homeGoalCount;
-                  goalsConceeded = resultHome[i].awayGoalCount;
+                  goalsScored = resultHome[i].awayGoalCount;
+                  goalsConceeded = resultHome[i].homeGoalCount;
                   break;
                 case resultHome[i].homeGoalCount ===
                   resultHome[i].awayGoalCount:
                   won = "D";
-                  goalsScored = resultHome[i].homeGoalCount;
-                  goalsConceeded = resultHome[i].awayGoalCount;
+                  goalsScored = resultHome[i].awayGoalCount;
+                  goalsConceeded = resultHome[i].homeGoalCount;
                   break;
                 case resultHome[i].homeGoalCount < resultHome[i].awayGoalCount:
                   won = "W";
-                  goalsScored = resultHome[i].homeGoalCount;
-                  goalsConceeded = resultHome[i].awayGoalCount;
+                  goalsScored = resultHome[i].awayGoalCount;
+                  goalsConceeded = resultHome[i].homeGoalCount;
                   break;
                 default:
                   break;
@@ -497,19 +497,19 @@ export async function createStatsDiv(game, displayBool) {
               switch (true) {
                 case resultAway[i].homeGoalCount > resultAway[i].awayGoalCount:
                   won = "W";
-                  goalsScored = resultAway[i].awayGoalCount;
-                  goalsConceeded = resultAway[i].homeGoalCount;
+                  goalsScored = resultAway[i].homeGoalCount;
+                  goalsConceeded = resultAway[i].awayGoalCount;
                   break;
                 case resultAway[i].awayGoalCount ===
                   resultAway[i].homeGoalCount:
                   won = "D";
-                  goalsScored = resultAway[i].awayGoalCount;
-                  goalsConceeded = resultAway[i].homeGoalCount;
+                  goalsScored = resultAway[i].homeGoalCount;
+                  goalsConceeded = resultAway[i].awayGoalCount;
                   break;
                 case resultAway[i].homeGoalCount < resultAway[i].awayGoalCount:
                   won = "L";
-                  goalsScored = resultAway[i].awayGoalCount;
-                  goalsConceeded = resultAway[i].homeGoalCount;
+                  goalsScored = resultAway[i].homeGoalCount;
+                  goalsConceeded = resultAway[i].awayGoalCount;
                   break;
                 default:
                   break;

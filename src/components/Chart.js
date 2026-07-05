@@ -18,6 +18,7 @@ import { Line, Radar, Bar, Doughnut, PolarArea, Pie } from "react-chartjs-2";
 import annotationPlugin from 'chartjs-plugin-annotation';
 import ShareableVisual from "./ShareableVisual";
 import { sanitizeImageFilename } from "../utils/captureElementImage";
+import { buildShotStackSeries } from "../utils/shotStackSeries";
 
 ChartJS.register(
   CategoryScale,
@@ -908,31 +909,6 @@ export function RadarChartLeagueStats({
   );
 }
 
-export function buildShotStackSeries(games = [], teamName = "") {
-  const sorted = [...games].sort((a, b) => a.unixTimestamp - b.unixTimestamp);
-
-  return sorted.map((game, index) => {
-    const isHome = game.homeTeam === teamName;
-    const goals = Number(game.goalsFor) || 0;
-    const sot = Number(isHome ? game.homeSot : game.awaySot) || 0;
-    const shots = Number(isHome ? game.homeShots : game.awayShots) || 0;
-
-    const label = game.date
-      ? String(game.date).split(",")[0].trim()
-      : `G${index + 1}`;
-
-    return {
-      label,
-      goals,
-      sot,
-      shots,
-      stackGoals: goals,
-      stackSot: Math.max(sot - goals, 0),
-      stackShotsOffTarget: Math.max(shots - sot, 0),
-    };
-  });
-}
-
 function buildLinearTrendLine(values = []) {
   const n = values.length;
   if (n === 0) return [];
@@ -1606,4 +1582,4 @@ export function BarChartTwo(props) {
   return <Bar options={options} data={data} />;
 }
 
-export { useChartTheme, getChartColors };
+export { useChartTheme, getChartColors, buildShotStackSeries };
