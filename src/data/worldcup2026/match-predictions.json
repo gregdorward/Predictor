@@ -1,87 +1,7 @@
 {
   "version": 1,
-  "lastUpdated": "2026-07-03T11:30:00.000Z",
+  "lastUpdated": "2026-07-05T19:05:00.000Z",
   "matches": [
-    {
-      "id": "round32-argentina-vs-cape-verde",
-      "phase": "round32",
-      "roundLabel": "Round of 32",
-      "group": "J",
-      "date": "2026-07-03",
-      "home": "Argentina",
-      "away": "Cape Verde",
-      "prediction": {
-        "predictedScore": "2-0",
-        "homeWin": 72,
-        "draw": 16,
-        "awayWin": 12
-      },
-      "source": "static"
-    },
-    {
-      "id": "round32-australia-vs-egypt",
-      "phase": "round32",
-      "roundLabel": "Round of 32",
-      "group": "D",
-      "date": "2026-07-03",
-      "home": "Australia",
-      "away": "Egypt",
-      "prediction": {
-        "predictedScore": "1-1",
-        "homeWin": 38,
-        "draw": 30,
-        "awayWin": 32
-      },
-      "source": "static"
-    },
-    {
-      "id": "round32-colombia-vs-ghana",
-      "phase": "round32",
-      "roundLabel": "Round of 32",
-      "group": "K",
-      "date": "2026-07-03",
-      "home": "Colombia",
-      "away": "Ghana",
-      "prediction": {
-        "predictedScore": "2-1",
-        "homeWin": 50,
-        "draw": 25,
-        "awayWin": 25
-      },
-      "source": "static"
-    },
-    {
-      "id": "round16-france-vs-paraguay",
-      "phase": "round16",
-      "roundLabel": "Round of 16",
-      "group": "I",
-      "date": "2026-07-04",
-      "home": "France",
-      "away": "Paraguay",
-      "prediction": {
-        "predictedScore": "3-1",
-        "homeWin": 78,
-        "draw": 14,
-        "awayWin": 8
-      },
-      "source": "static"
-    },
-    {
-      "id": "round16-morocco-vs-canada",
-      "phase": "round16",
-      "roundLabel": "Round of 16",
-      "group": "F",
-      "date": "2026-07-04",
-      "home": "Morocco",
-      "away": "Canada",
-      "prediction": {
-        "predictedScore": "2-1",
-        "homeWin": 52,
-        "draw": 24,
-        "awayWin": 24
-      },
-      "source": "static"
-    },
     {
       "id": "round16-brazil-vs-norway",
       "phase": "round16",
@@ -91,10 +11,26 @@
       "home": "Brazil",
       "away": "Norway",
       "prediction": {
-        "predictedScore": "2-1",
-        "homeWin": 58,
-        "draw": 22,
-        "awayWin": 20
+        "predictedScore": "2-2",
+        "homeWin": 46,
+        "draw": 27,
+        "awayWin": 27
+      },
+      "source": "static"
+    },
+    {
+      "id": "round16-england-vs-mexico",
+      "phase": "round16",
+      "roundLabel": "Round of 16",
+      "group": "L",
+      "date": "2026-07-06",
+      "home": "England",
+      "away": "Mexico",
+      "prediction": {
+        "predictedScore": "1-1",
+        "homeWin": 39,
+        "draw": 29,
+        "awayWin": 32
       },
       "source": "static"
     },
@@ -108,8 +44,8 @@
       "away": "Portugal",
       "prediction": {
         "predictedScore": "2-1",
-        "homeWin": 55,
-        "draw": 24,
+        "homeWin": 54,
+        "draw": 25,
         "awayWin": 21
       },
       "source": "static"
@@ -124,25 +60,25 @@
       "away": "Belgium",
       "prediction": {
         "predictedScore": "1-2",
-        "homeWin": 38,
-        "draw": 26,
-        "awayWin": 36
+        "homeWin": 36,
+        "draw": 27,
+        "awayWin": 37
       },
       "source": "static"
     },
     {
-      "id": "round16-england-vs-mexico",
+      "id": "round16-argentina-vs-egypt",
       "phase": "round16",
       "roundLabel": "Round of 16",
-      "group": "L",
-      "date": "2026-07-06",
-      "home": "England",
-      "away": "Mexico",
+      "group": "J",
+      "date": "2026-07-07",
+      "home": "Argentina",
+      "away": "Egypt",
       "prediction": {
-        "predictedScore": "1-1",
-        "homeWin": 42,
-        "draw": 28,
-        "awayWin": 30
+        "predictedScore": "2-1",
+        "homeWin": 64,
+        "draw": 22,
+        "awayWin": 14
       },
       "source": "static"
     },
@@ -159,6 +95,21 @@
         "homeWin": 40,
         "draw": 28,
         "awayWin": 32
+      },
+      "source": "static"
+    },
+    {
+      "id": "quarterfinal-france-vs-morocco",
+      "phase": "quarter",
+      "roundLabel": "Quarter-final",
+      "date": "2026-07-09",
+      "home": "France",
+      "away": "Morocco",
+      "prediction": {
+        "predictedScore": "2-1",
+        "homeWin": 57,
+        "draw": 25,
+        "awayWin": 18
       },
       "source": "static"
     }

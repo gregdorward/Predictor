@@ -908,8 +908,332 @@ export function RadarChartLeagueStats({
   );
 }
 
+export function buildShotStackSeries(games = [], teamName = "") {
+  const sorted = [...games].sort((a, b) => a.unixTimestamp - b.unixTimestamp);
+
+  return sorted.map((game, index) => {
+    const isHome = game.homeTeam === teamName;
+    const goals = Number(game.goalsFor) || 0;
+    const sot = Number(isHome ? game.homeSot : game.awaySot) || 0;
+    const shots = Number(isHome ? game.homeShots : game.awayShots) || 0;
+
+    const label = game.date
+      ? String(game.date).split(",")[0].trim()
+      : `G${index + 1}`;
+
+    return {
+      label,
+      goals,
+      sot,
+      shots,
+      stackGoals: goals,
+      stackSot: Math.max(sot - goals, 0),
+      stackShotsOffTarget: Math.max(shots - sot, 0),
+    };
+  });
+}
+
+function buildLinearTrendLine(values = []) {
+  const n = values.length;
+  if (n === 0) return [];
+  if (n === 1) return [values[0]];
+
+  const xs = values.map((_, index) => index);
+  const sumX = xs.reduce((total, x) => total + x, 0);
+  const sumY = values.reduce((total, value) => total + value, 0);
+  const sumXY = xs.reduce((total, x, index) => total + x * values[index], 0);
+  const sumXX = xs.reduce((total, x) => total + x * x, 0);
+  const denominator = n * sumXX - sumX * sumX;
+
+  if (denominator === 0) {
+    const average = sumY / n;
+    return values.map(() => average);
+  }
+
+  const slope = (n * sumXY - sumX * sumY) / denominator;
+  const intercept = (sumY - slope * sumX) / n;
+
+  return xs.map((x) => Number((slope * x + intercept).toFixed(2)));
+}
+
+function ShotAreaChart({ teamName, series = [], theme }) {
+  const { color, gridColor, tooltipBackground } = getChartColors(theme);
+
+  if (!series.length) {
+    return null;
+  }
+
+  const labels = series.map((point) => point.label);
+  const goalsColor = "#01a501";
+  const sotColor = "#f57701";
+  const shotsColor = "#4a90d9";
+  const goalsTrendColor = theme === "dark" ? "#8dffb8" : "#003d14";
+  const sotTrendColor = theme === "dark" ? "#ffc266" : "#8a3f00";
+  const shotsTrendColor = theme === "dark" ? "#8ec8ff" : "#1a4f7f";
+  const goalsTrend = buildLinearTrendLine(series.map((point) => point.goals));
+  const sotTrend = buildLinearTrendLine(series.map((point) => point.sot));
+  const shotsTrend = buildLinearTrendLine(series.map((point) => point.shots));
+
+  const trendLineStyle = {
+    type: "line",
+    backgroundColor: "transparent",
+    borderWidth: 2.5,
+    borderDash: [7, 4],
+    pointRadius: 0,
+    pointHoverRadius: 0,
+    fill: false,
+    tension: 0,
+    order: 0,
+  };
+
+  const options = {
+    color,
+    responsive: true,
+    maintainAspectRatio: false,
+    interaction: {
+      mode: "index",
+      intersect: false,
+    },
+    scales: {
+      x: {
+        stacked: true,
+        grid: {
+          display: false,
+        },
+        ticks: {
+          maxRotation: 0,
+          autoSkip: true,
+          maxTicksLimit: 8,
+          font: {
+            size: 9,
+          },
+          color,
+        },
+        border: {
+          display: false,
+        },
+      },
+      y: {
+        stacked: true,
+        beginAtZero: true,
+        grid: {
+          color: gridColor,
+          drawTicks: false,
+        },
+        ticks: {
+          font: {
+            size: 9,
+          },
+          color,
+          precision: 0,
+        },
+        border: {
+          display: false,
+        },
+      },
+    },
+    plugins: {
+      legend: {
+        position: "bottom",
+        labels: {
+          boxWidth: 10,
+          boxHeight: 10,
+          font: {
+            size: 10,
+          },
+          color,
+          filter(item) {
+            return !String(item.text).toLowerCase().includes("trend");
+          },
+        },
+      },
+      tooltip: {
+        enabled: true,
+        backgroundColor: tooltipBackground,
+        titleColor: "#ffffff",
+        bodyColor: "#ffffff",
+        padding: 10,
+        cornerRadius: 8,
+        filter(item) {
+          return !String(item.dataset.label).toLowerCase().includes("trend");
+        },
+        callbacks: {
+          title(items) {
+            return items[0]?.label ?? "";
+          },
+          label(context) {
+            const point = series[context.dataIndex];
+            if (!point) return "";
+
+            if (context.dataset.label === "Goals") {
+              return `Goals: ${point.goals}`;
+            }
+            if (context.dataset.label === "Shots on target") {
+              return `Shots on target: ${point.sot}`;
+            }
+            return `Shots: ${point.shots}`;
+          },
+        },
+      },
+      title: {
+        display: true,
+        text: teamName,
+        color,
+        font: {
+          size: 12,
+          weight: "600",
+        },
+        padding: {
+          bottom: 6,
+        },
+      },
+      subtitle: {
+        display: true,
+        text: "Goals, shots on target and shots per game",
+        color,
+        font: {
+          size: 10,
+          weight: "400",
+        },
+        padding: {
+          bottom: 8,
+        },
+      },
+    },
+  };
+
+  const data = {
+    labels,
+    datasets: [
+      {
+        label: "Goals",
+        data: series.map((point) => point.stackGoals),
+        borderColor: goalsColor,
+        backgroundColor: `${goalsColor}cc`,
+        fill: true,
+        tension: 0.25,
+        pointRadius: 0,
+        pointHoverRadius: 3,
+        borderWidth: 1.5,
+        stack: "shots",
+        order: 2,
+      },
+      {
+        label: "Shots on target",
+        data: series.map((point) => point.stackSot),
+        borderColor: sotColor,
+        backgroundColor: `${sotColor}bb`,
+        fill: true,
+        tension: 0.25,
+        pointRadius: 0,
+        pointHoverRadius: 3,
+        borderWidth: 1.5,
+        stack: "shots",
+        order: 2,
+      },
+      {
+        label: "Shots",
+        data: series.map((point) => point.stackShotsOffTarget),
+        borderColor: shotsColor,
+        backgroundColor: `${shotsColor}99`,
+        fill: true,
+        tension: 0.25,
+        pointRadius: 0,
+        pointHoverRadius: 3,
+        borderWidth: 1.5,
+        stack: "shots",
+        order: 2,
+      },
+      {
+        ...trendLineStyle,
+        label: "Goals trend",
+        data: goalsTrend,
+        borderColor: goalsTrendColor,
+        stack: "goalsTrend",
+      },
+      {
+        ...trendLineStyle,
+        label: "Shots on target trend",
+        data: sotTrend,
+        borderColor: sotTrendColor,
+        stack: "sotTrend",
+      },
+      {
+        ...trendLineStyle,
+        label: "Shots trend",
+        data: shotsTrend,
+        borderColor: shotsTrendColor,
+        stack: "shotsTrend",
+      },
+    ],
+  };
+
+  return (
+    <div className="ComparisonBarChart-areaChart">
+      <Line key={theme} options={options} data={data} />
+    </div>
+  );
+}
+
+export function ShotAreaChartsShare({
+  team1,
+  team2,
+  shotSeries,
+  text = "All Competition Games - Shots over time",
+}) {
+  const theme = useChartTheme();
+  const hasHome = shotSeries?.home?.length;
+  const hasAway = shotSeries?.away?.length;
+
+  if (!hasHome && !hasAway) {
+    return null;
+  }
+
+  const shareFilename = sanitizeImageFilename(`${team1}-vs-${team2}-shots`);
+  const shareTitle = `${team1} vs ${team2} - ${text}`;
+
+  return (
+    <ShareableVisual
+      filename={shareFilename}
+      shareTitle={shareTitle}
+      className="ShotAreaCharts-share"
+    >
+      <div data-share-capture className="ComparisonBarChart ShotAreaCharts">
+        <div className="ShotAreaCharts-header">
+          <p className="ShotAreaCharts-title">{text}</p>
+          <p className="ShotAreaCharts-subtitle">
+            Stacked per-game goals, shots on target and shots
+          </p>
+        </div>
+        <div className="ComparisonBarChart-areaCharts">
+          {hasHome ? (
+            <ShotAreaChart
+              teamName={team1}
+              series={shotSeries.home}
+              theme={theme}
+            />
+          ) : null}
+          {hasAway ? (
+            <ShotAreaChart
+              teamName={team2}
+              series={shotSeries.away}
+              theme={theme}
+            />
+          ) : null}
+        </div>
+      </div>
+    </ShareableVisual>
+  );
+}
+
 export function BarChart(props) {
-  const { data1, data2, displayDeltas, team1 = "Home", team2 = "Away" } = props;
+  const {
+    data1,
+    data2,
+    displayDeltas,
+    team1 = "Home",
+    team2 = "Away",
+  } = props;
   const theme = useChartTheme();
   const { color, gridColor, tooltipBackground } = getChartColors(theme);
 

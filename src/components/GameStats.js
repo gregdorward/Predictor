@@ -18,7 +18,9 @@ import {
   BarChart,
   DoughnutChart,
   BTTSPieChart,
-  VotePieChart
+  VotePieChart,
+  buildShotStackSeries,
+  ShotAreaChartsShare,
 } from "./Chart";
 import MultiTypeChart from "./MultitypeChart"; // Adjust the path if necessary
 import FixtureComparisonShare from "./FixtureComparisonShare";
@@ -2309,6 +2311,17 @@ function GameStats({ game, displayBool, stats, handleToggleTip, userTips }) {
   gameArrayHome.sort((a, b) => b.unixTimestamp - a.unixTimestamp);
   gameArrayAway.sort((a, b) => b.unixTimestamp - a.unixTimestamp);
 
+  const shotSeries = {
+    home: buildShotStackSeries(
+      gameArrayHome,
+      gameStats?.home?.teamName || game.homeTeam
+    ),
+    away: buildShotStackSeries(
+      gameArrayAway,
+      gameStats?.away?.teamName || game.awayTeam
+    ),
+  };
+
   const bttsArrayHome = Array.from(gameArrayHome, (x) => x.btts);
   const bttsArrayAway = Array.from(gameArrayAway, (x) => x.btts);
 
@@ -4354,6 +4367,12 @@ function GameStats({ game, displayBool, stats, handleToggleTip, userTips }) {
                   data2={overallBarChartData.data2}
                   displayDeltas={overallBarChartData.displayDeltas}
                 ></BarChart>
+                <ShotAreaChartsShare
+                  team1={game.homeTeam}
+                  team2={game.awayTeam}
+                  shotSeries={shotSeries}
+                  text="All Competition Games - Shots over time"
+                />
                 {showXgDiffCharts && (
                   <>
                     <MultiTypeChart

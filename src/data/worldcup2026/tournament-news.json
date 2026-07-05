@@ -1,6 +1,6 @@
 {
-  "updatedAt": "2026-07-03T11:30:00.000Z",
-  "wrapUp": "The Round of 32 closes on 3 July with Argentina, Australia, Egypt, Colombia and Ghana chasing the final last-16 places, while Spain and Portugal have already set up a blockbuster Iberian derby in Dallas on 6 July after Mikel Oyarzabal's double helped La Roja cruise past Austria and Goncalo Ramos snatched a stoppage-time winner against Croatia amid late VAR drama. Co-hosts USA are through to face Belgium in Seattle but will be without Folarin Balogun after his red card against Bosnia, while Youri Tielemans converted the latest goal in World Cup history to send Belgium past Senegal in extra time. England and Mexico await their Azteca showdown on 6 July as Harry Kane's late rescue against DR Congo and the hosts' clean-sheet run remain the defining subplots in the other half of the bracket. Each story below links to the specific report it is drawn from; squad and fitness details reflect the latest available reporting as of 3 July 2026.",
+  "updatedAt": "2026-07-05T19:05:00.000Z",
+  "wrapUp": "France and Morocco are the first confirmed quarter-final pairing after Kylian Mbappe's penalty edged Les Bleus past Paraguay in extreme Philadelphia heat and Azzedine Ounahi's double helped Morocco eliminate co-hosts Canada. The next bracket swing comes on 5 July, with Brazil facing a Norway side built around Erling Haaland and Mexico trying to use the Azteca altitude against England. Argentina survived Cape Verde's scare but now meet Egypt, who advanced on penalties through Mohamed Salah and a perfect shoot-out. Morocco's Ismael Saibari injury and Brazil's expected absence of Lucas Paqueta are the key fitness notes shaping the next round. Each story below links to the specific report it is drawn from; squad and fitness details reflect the latest available reporting as of 5 July 2026.",
   "sections": [
     {
       "id": "injuries-fitness",
@@ -8,50 +8,50 @@
       "description": "Players ruled out, late replacements and day-to-day concerns that could change starting line-ups and squad depth.",
       "stories": [
         {
-          "id": "spain-williams-pino-portugal-doubt",
-          "headline": "Williams and Pino still out as Spain set up Portugal clash",
-          "summary": "Nico Williams and Yeremy Pino both missed Spain's 3-0 Round of 32 win over Austria on 2 July and remain doubts for the last-16 meeting with Portugal in Dallas on 6 July. Luis de la Fuente leaned on Mikel Oyarzabal, who scored twice, and Pedro Porro from right-back as La Roja kept a fourth straight clean sheet, but the absence of both wide men leaves Alex Baena and a returning Lamine Yamal to cover the flanks against Roberto Martinez's side.",
-          "publishedDate": "2026-07-02",
-          "sources": [
-            {
-              "name": "BBC Sport",
-              "url": "https://www.bbc.co.uk/sport/football/live/c8j2wvnzkvzt"
-            },
-            {
-              "name": "AP News",
-              "url": "https://apnews.com/article/spain-austria-score-world-cup-e5d701b4628f62556d18bdf565081c79"
-            }
-          ]
-        },
-        {
-          "id": "usa-balogun-red-card-suspension",
-          "headline": "Balogun suspended as USA advance to face Belgium",
-          "summary": "Folarin Balogun scored his third goal of the tournament to put the United States ahead against Bosnia and Herzegovina on 2 July, but was sent off in the 64th minute after VAR reviewed a challenge on Tarik Muharemovic and will miss the last-16 tie with Belgium in Seattle on 6 July. Malik Tillman's free-kick sealed a 2-0 win for the ten-man co-hosts, ending a long run without victory over European opposition at World Cups, but Mauricio Pochettino must reshuffle his attack without his leading scorer.",
-          "publishedDate": "2026-07-02",
+          "id": "brazil-paqueta-norway-doubt",
+          "headline": "Paqueta expected to miss Brazil's Norway test",
+          "summary": "AP reports Lucas Paqueta is not expected to play against Norway after limping off at half-time in Brazil's Round of 32 win over Japan with a hamstring injury. Carlo Ancelotti said Brazil do not have another player with Paqueta's exact characteristics, so the midfield balance around Bruno Guimaraes and the supply into Vinicius Junior becomes a tactical question against an organised Norway side built around Erling Haaland.",
+          "publishedDate": "2026-07-05",
           "sources": [
             {
               "name": "AP News",
-              "url": "https://apnews.com/article/world-cup-usmnt-bosnia-score-b78bdf42bf14d604d7b466aa58d33324"
-            },
-            {
-              "name": "Sky Sports",
-              "url": "https://www.skysports.com/football/usa-vs-bos-and-herz/report/549845"
-            }
-          ]
-        },
-        {
-          "id": "england-james-quansah-right-back-crisis",
-          "headline": "England miss James and Quansah at right-back before Mexico tie",
-          "summary": "Reece James remained sidelined with a hamstring injury and Jarrell Quansah twisted an ankle in the Panama win as England entered their Round of 32 fixture without either of their preferred right-backs. Thomas Tuchel said both were getting closer to fitness but needed England to advance before they could return, leaving Djed Spence to cover the position against DR Congo. James was spotted speaking with Jude Bellingham during a hydration break in Atlanta, underlining how thin England's defensive options remain before the Mexico tie at the Estadio Azteca on 6 July.",
-          "publishedDate": "2026-07-01",
-          "sources": [
-            {
-              "name": "AP News",
-              "url": "https://apnews.com/article/world-cup-schedule-results-news-81645977a722c4020c9644d17589bdbb"
+              "url": "https://apnews.com/article/world-cup-schedule-scores-news-3b115208163906d3e15f2477c1af8471"
             },
             {
               "name": "ESPN",
-              "url": "https://www.espn.com/soccer/report/_/gameId/760495"
+              "url": "https://www.espn.com/soccer/story/_/id/49275459/brazil-vs-norway-gabriel-haaland-take-rivalry-international-stage"
+            }
+          ]
+        },
+        {
+          "id": "england-james-quansah-mexico-latest",
+          "headline": "Quansah available but James still a doubt for Mexico",
+          "summary": "Thomas Tuchel told BBC Sport that Jarell Quansah trained fully and is available for England's last-16 tie with Mexico, while Reece James still needs a final medical assessment and may only make the bench. The right-back decision matters because Julian Quinones has three goals at this World Cup and Mexico have started quickly at altitude in the Estadio Azteca.",
+          "publishedDate": "2026-07-05",
+          "sources": [
+            {
+              "name": "BBC Sport",
+              "url": "https://www.bbc.co.uk/sport/football/live/cze9x72rgwlt"
+            },
+            {
+              "name": "ESPN",
+              "url": "https://www.espn.com/soccer/story/_/id/49260482/mexico-vs-england-fifa-world-cup-2026-tv-channel-how-watch-kick-live-stream-injury-predicted-line-ups"
+            }
+          ]
+        },
+        {
+          "id": "morocco-saibari-quarterfinal-doubt",
+          "headline": "Saibari worry follows Morocco into France quarter-final",
+          "summary": "Ismael Saibari was forced off after 22 minutes of Morocco's 3-0 win over Canada and was replaced by Soufiane Rahimi, who later scored the stoppage-time third. ESPN and Sky Sports both reported the early change, leaving Morocco to wait on their leading attacking option before the 9 July quarter-final against France in Foxborough.",
+          "publishedDate": "2026-07-04",
+          "sources": [
+            {
+              "name": "ESPN",
+              "url": "https://www.espn.com/soccer/report/_/gameId/760502"
+            },
+            {
+              "name": "Sky Sports",
+              "url": "https://www.skysports.com/football/news/12098/13560137/world-cup-2026-canada-0-3-morocco-azzedine-ounahi-double-helps-knock-out-co-hosts-to-give-2022-semi-finalists-last-eight-spot"
             }
           ]
         }
@@ -63,66 +63,66 @@
       "description": "Omissions, late call-ups and manager decisions that reveal how teams plan to navigate the expanded format.",
       "stories": [
         {
-          "id": "portugal-ramos-ronaldo-croatia-comeback",
-          "headline": "Ramos and Ronaldo send Portugal past Croatia into Spain tie",
-          "summary": "Cristiano Ronaldo converted a 68th-minute penalty for his first World Cup knockout goal as Portugal came from behind to beat Croatia 2-1 in Toronto on 2 July, before Goncalo Ramos headed a stoppage-time winner from Rafael Leao's cross. Ivan Perisic had given Croatia the lead in the 53rd minute in what was the first World Cup match featuring two outfield players aged 40 or over, but Roberto Martinez's substitutions proved decisive and Portugal now face Spain in Dallas on 6 July.",
-          "publishedDate": "2026-07-02",
+          "id": "brazil-norway-haaland-vinicius-matchup",
+          "headline": "Brazil's structure faces Haaland and Norway history",
+          "summary": "Brazil face Norway in East Rutherford on 5 July, with AP describing Ancelotti's side as slight favourites but noting Norway's unbeaten history in four meetings with Brazil. Haaland has five goals at the tournament and 25 in his past 14 competitive internationals, while Brazil's forward threat rests on Vinicius Junior and Matheus Cunha after a less fluent knockout opener against Japan.",
+          "publishedDate": "2026-07-05",
           "sources": [
+            {
+              "name": "AP News",
+              "url": "https://apnews.com/article/world-cup-schedule-scores-news-3b115208163906d3e15f2477c1af8471"
+            },
             {
               "name": "ESPN",
-              "url": "https://www.espn.com/soccer/story/_/id/49253213/portugal-ronaldo-survive-late-scare-croatia-world-cup"
-            },
-            {
-              "name": "Sky Sports",
-              "url": "https://www.skysports.com/football/portugal-vs-croatia/report/549850"
+              "url": "https://www.espn.com/soccer/story/_/id/49275459/brazil-vs-norway-gabriel-haaland-take-rivalry-international-stage"
             }
           ]
         },
         {
-          "id": "belgium-tielemans-senegal-record-penalty",
-          "headline": "Tielemans penalty in 125th minute sends Belgium past Senegal",
-          "summary": "Belgium trailed Senegal 2-0 with five minutes of regulation time remaining before Romelu Lukaku and Youri Tielemans forced extra time, and Tielemans then converted a VAR-awarded penalty in the 125th minute to complete a 3-2 win in Seattle on 1 July. Rudi Garcia's bold decision to withdraw Kevin De Bruyne and Jeremy Doku with his side facing elimination proved pivotal, and Belgium now face co-hosts USA in the last 16 on 6 July after the latest goal in World Cup history.",
-          "publishedDate": "2026-07-01",
-          "sources": [
-            {
-              "name": "Sky Sports",
-              "url": "https://www.skysports.com/football/belgium-vs-senegal/report/549846"
-            },
-            {
-              "name": "Al Jazeera",
-              "url": "https://www.aljazeera.com/sports/2026/7/2/belgium-stage-3-2-comeback-win-over-senegal-to-enter-world-cup-last"
-            }
-          ]
-        },
-        {
-          "id": "england-kane-dr-congo-comeback",
-          "headline": "Kane double rescues England and sets up Mexico last-16 tie",
-          "summary": "Harry Kane headed Anthony Gordon's cross to equalise in the 75th minute and drilled a fierce strike into the roof of the net in the 86th to complete a 2-1 comeback against DR Congo in Atlanta on 1 July. Brian Cipenga had given the Leopards a shock seventh-minute lead, and Lionel Mpasi denied England repeatedly before Tuchel's side finally broke through. England will face co-hosts Mexico at the Estadio Azteca on 6 July, a fixture that will test whether the Three Lions can raise their level after a laboured knockout debut.",
-          "publishedDate": "2026-07-01",
+          "id": "england-mexico-altitude-right-flank",
+          "headline": "England adjust for Azteca altitude and Mexico's fast starts",
+          "summary": "England face Mexico at 01:00 BST on 6 July with Tuchel warning that the squad cannot fully adapt to the altitude and must survive the hosts' early pressure. BBC Sport notes Mexico have not conceded at home during this tournament, while AP highlights El Tri's three wins at the Azteca and the home-field edge that could shape England's tempo and selection.",
+          "publishedDate": "2026-07-05",
           "sources": [
             {
               "name": "BBC Sport",
-              "url": "https://www.bbc.com/sport/football/live/c4gyvx6xvevt"
+              "url": "https://www.bbc.co.uk/sport/football/live/cze9x72rgwlt"
             },
             {
-              "name": "Sky Sports",
-              "url": "https://www.skysports.com/football/england-vs-dr-congo/live/549847"
+              "name": "AP News",
+              "url": "https://apnews.com/article/world-cup-schedule-scores-news-3b115208163906d3e15f2477c1af8471"
             }
           ]
         },
         {
-          "id": "mexico-ecuador-round32-win",
-          "headline": "Mexico beat Ecuador to set up England last-16 tie",
-          "summary": "Julian Quinones and Raul Jimenez scored either side of half-time as co-hosts Mexico beat Ecuador 2-0 at the Estadio Azteca on 1 July to reach the last 16 without conceding at the tournament. Kick-off was delayed by an hour because of storms in Mexico City, and Piero Hincapie was sent off in stoppage time after covering his mouth during an altercation with Santiago Gimenez. Mexico's reward is a home last-16 tie with England on 6 July, with altitude and crowd support giving Javier Aguirre's side a genuine edge against a team that struggled to break down DR Congo.",
-          "publishedDate": "2026-07-01",
+          "id": "argentina-egypt-salah-messi-round16",
+          "headline": "Argentina's scare sets up Salah's Egypt test",
+          "summary": "Argentina needed extra time and a Diney Borges own goal to beat Cape Verde 3-2 after the tournament debutants equalised twice, including Sidny Lopes Cabral's 103rd-minute strike. Egypt reached the same last-16 path by beating Australia 4-2 on penalties after a 1-1 draw, with Mohamed Salah converting his spot kick, so Lionel Scaloni's side now face a side with belief and a clear penalty pathway in Atlanta on 7 July.",
+          "publishedDate": "2026-07-04",
           "sources": [
             {
               "name": "Sky Sports",
-              "url": "https://www.skysports.com/football/mexico-vs-ecuador/report/549842"
+              "url": "https://www.skysports.com/football/argentina-vs-cape-verde/report/549852"
             },
             {
-              "name": "SBS News",
-              "url": "https://www.sbs.com.au/news/article/fifa-world-cup-2026-results-july-01/8bzlbpbyp"
+              "name": "Sky Sports",
+              "url": "https://www.skysports.com/football/news/12098/13558810/world-cup-2026-australia-1-1-egypt-2-4-on-penalties-shoot-out-drama-sends-mohamed-salah-and-co-into-last-16"
+            }
+          ]
+        },
+        {
+          "id": "morocco-ounahi-rahimi-canada-depth",
+          "headline": "Ounahi and Rahimi show Morocco's depth after slow start",
+          "summary": "Morocco were second best for much of the first half against Canada, but Azzedine Ounahi scored twice after the break and substitute Soufiane Rahimi added a third in stoppage time. The reshuffle after Saibari's injury gives Mohamed Ouahbi a selection question before facing France, but the Canada result also showed Morocco can win knockout matches without controlling long spells.",
+          "publishedDate": "2026-07-04",
+          "sources": [
+            {
+              "name": "ESPN",
+              "url": "https://www.espn.com/soccer/report/_/gameId/760502"
+            },
+            {
+              "name": "Sky Sports",
+              "url": "https://www.skysports.com/football/news/12098/13560137/world-cup-2026-canada-0-3-morocco-azzedine-ounahi-double-helps-knock-out-co-hosts-to-give-2022-semi-finalists-last-eight-spot"
             }
           ]
         }
@@ -134,14 +134,14 @@
       "description": "Travel, visa and logistical problems that could affect match readiness rather than just headlines.",
       "stories": [
         {
-          "id": "round32-final-slate-july-3",
-          "headline": "Final Round of 32 slate set as Argentina headline Friday fixtures",
-          "summary": "Three win-or-go-home ties on 3 July complete the first knockout round of the expanded 48-team format, with Australia facing Egypt in Arlington, Argentina meeting Cabo Verde in Miami and Colombia taking on Ghana in Kansas City. The winners join a last-16 field already featuring an Iberian derby between Spain and Portugal, a co-host showdown between USA and Belgium, and England against Mexico at altitude. Kick-off times across North American venues mean some teams face short turnarounds before the Round of 16 begins on 4 July.",
-          "publishedDate": "2026-07-03",
+          "id": "july5-last16-schedule-turnaround",
+          "headline": "Two last-16 ties define the 5 July bracket",
+          "summary": "AP's 5 July schedule has Brazil vs Norway in East Rutherford at 4 p.m. EDT and Mexico vs England at the Estadio Azteca at 8 p.m. EDT, with the winners due to meet in a quarter-final outside Miami on 11 July. The timing means England and Mexico will know whether Brazil or Norway await before they kick off, while Brazil must solve Norway without the expected availability of Paqueta.",
+          "publishedDate": "2026-07-05",
           "sources": [
             {
-              "name": "ESPN",
-              "url": "https://www.espn.com/soccer/story/_/id/48939282/2026-fifa-world-cup-fixtures-results-match-schedule-group-stage-knockout-rounds-bracket"
+              "name": "AP News",
+              "url": "https://apnews.com/article/world-cup-schedule-scores-news-3b115208163906d3e15f2477c1af8471"
             },
             {
               "name": "Sky Sports",
@@ -150,18 +150,18 @@
           ]
         },
         {
-          "id": "portugal-croatia-var-bottle-protest",
-          "headline": "Croatia fans protest after Gvardiol goal disallowed in Toronto",
-          "summary": "Portugal's 2-1 win over Croatia on 2 July ended in chaos when Josko Gvardiol thought he had equalised in the 113th minute, only for VAR to rule the goal out after detecting a faint touch from Igor Matanovic on Ivan Perisic's cross that left Mario Pasalic in an offside position. Croatian supporters threw bottles onto the pitch and whistled in protest during a lengthy on-field review, and the incident was the tenth goal overturned by VAR at this tournament. Portugal advance to face Spain but the controversy adds to growing debate about connected-ball technology and knockout-stage officiating.",
-          "publishedDate": "2026-07-02",
+          "id": "philadelphia-heat-france-paraguay",
+          "headline": "France survive heat and physical Paraguay approach",
+          "summary": "France's 1-0 win over Paraguay was played under an extreme heat warning with temperatures around 38C, and ESPN reported that Paraguay's defensive approach kept the match tight until Mbappe's 70th-minute penalty. AP detailed repeated flashpoints around Mbappe and post-match tension, making recovery and discipline part of France's short lead-in to Morocco.",
+          "publishedDate": "2026-07-04",
           "sources": [
             {
-              "name": "Sky Sports",
-              "url": "https://www.skysports.com/football/portugal-vs-croatia/report/549850"
+              "name": "ESPN",
+              "url": "https://www.espn.com/soccer/report/_/gameId/760503"
             },
             {
-              "name": "ESPN",
-              "url": "https://www.espn.com/soccer/story/_/id/49253213/portugal-ronaldo-survive-late-scare-croatia-world-cup"
+              "name": "AP News",
+              "url": "https://apnews.com/article/world-cup-paraguay-physical-france-fouls-mbappe-f573f9c9b1c004cc11c4951b3ccbb060"
             }
           ]
         }
@@ -173,66 +173,66 @@
       "description": "Deeper previews on favourites, group dynamics and how the 48-team format changes the path to the final.",
       "stories": [
         {
-          "id": "spain-oyarzabal-austria-shutout",
-          "headline": "Oyarzabal double sends Spain past Austria without conceding",
-          "summary": "Mikel Oyarzabal scored in the 36th and 89th minutes and Pedro Porro headed a second-half goal as Spain beat Austria 3-0 on 2 July at SoFi Stadium, their first World Cup knockout win since the 2010 final. Luis de la Fuente's side have not conceded in four matches and goalkeeper Unai Simon has faced limited work, while Marc Cucurella supplied assists on both Oyarzabal strikes. Spain join Mexico as the only teams yet to let in a goal and now face Portugal in a last-16 tie that could define the European path to the final.",
-          "publishedDate": "2026-07-02",
+          "id": "key-quarterfinal-paths-july5",
+          "headline": "Sunday winners feed into a loaded Miami quarter-final",
+          "summary": "AP's 5 July schedule confirms Brazil vs Norway and Mexico vs England as the two remaining Sunday last-16 ties, with the winners due to meet outside Miami on 11 July. That path creates a sharp contrast with the confirmed France vs Morocco quarter-final on the other side of the bracket, and keeps England, Mexico, Brazil and Norway in the same high-variance lane.",
+          "publishedDate": "2026-07-05",
           "sources": [
             {
-              "name": "BBC Sport",
-              "url": "https://www.bbc.co.uk/sport/football/live/c8j2wvnzkvzt"
+              "name": "AP News",
+              "url": "https://apnews.com/article/world-cup-schedule-scores-news-3b115208163906d3e15f2477c1af8471"
             },
             {
-              "name": "AP News",
-              "url": "https://apnews.com/article/spain-austria-score-world-cup-e5d701b4628f62556d18bdf565081c79"
+              "name": "Sky Sports",
+              "url": "https://www.skysports.com/football/news/11095/13556636/world-cup-2026-bracket-and-knockout-fixtures-whos-facing-who-in-the-last-16-and-route-to-final"
             }
           ]
         },
         {
-          "id": "switzerland-embolo-algeria-knockout",
-          "headline": "Switzerland end 88-year knockout drought against Algeria",
-          "summary": "Breel Embolo and Dan Ndoye scored either side of half-time as Switzerland beat Algeria 2-0 in Vancouver on 2 July, their first World Cup knockout victory since beating Germany in 1938. Johan Manzambi's solo run set up the opener in the 10th minute and Murat Yakin's side controlled a tie in which Algeria managed just 0.73 expected goals. Switzerland will face the winner of Colombia and Ghana in the last 16 on 7 July, having reached the knockout stage for a fourth consecutive tournament.",
-          "publishedDate": "2026-07-02",
+          "id": "argentina-cape-verde-warning",
+          "headline": "Cape Verde scare leaves Argentina with warning before Egypt",
+          "summary": "Argentina advanced 3-2 after extra time against Cape Verde, but Sky Sports described the performance as laboured and Cape Verde's two equalisers as evidence of how close the champions came to a historic upset. Messi scored the opener and Argentina generated enough pressure to survive, yet Egypt's penalty win over Australia means the next tie has the same upset ingredients if Scaloni's side leave transition gaps.",
+          "publishedDate": "2026-07-04",
           "sources": [
             {
-              "name": "BBC Sport",
-              "url": "https://www.bbc.co.uk/sport/football/live/cyv05me9d6rt"
+              "name": "Sky Sports",
+              "url": "https://www.skysports.com/football/argentina-vs-cape-verde/report/549852"
             },
             {
-              "name": "France 24",
-              "url": "https://www.france24.com/en/sport/20260703-switzerland-beat-algeria-2-0-to-move-into-world-cup-last-16"
+              "name": "BBC Sport",
+              "url": "https://www.bbc.co.uk/sport/football/live/cy5v1xwrl7gt"
             }
           ]
         },
         {
-          "id": "france-mbappe-sweden-domination",
-          "headline": "Mbappe brace sends France past Sweden into Paraguay tie",
-          "summary": "Kylian Mbappe scored in each half as France beat Sweden 3-0 on 30 June at MetLife Stadium, with Bradley Barcola adding the second after Michael Olise's creative prompting. Mbappe moved level with Lionel Messi on six goals at this tournament and became the all-time leading scorer in World Cup knockout matches with 10, while France registered 25 shots in their most dominant display of the competition so far. Didier Deschamps's side face Paraguay in Philadelphia on 4 July, with Les Bleus now widely regarded as the team to beat after a third straight World Cup in which they have scored three or more in consecutive matches.",
-          "publishedDate": "2026-06-30",
+          "id": "france-mbappe-paraguay-quarterfinal",
+          "headline": "Mbappe keeps France on course but Paraguay expose friction",
+          "summary": "Kylian Mbappe's 70th-minute penalty was enough for France to beat Paraguay 1-0, his 19th World Cup goal in 19 appearances and seventh of this tournament. ESPN reported France will now face Morocco in Foxborough, but the narrow scoreline, heat and physical nature of the match give Didier Deschamps tactical questions before meeting a side that has already removed Canada and the Netherlands.",
+          "publishedDate": "2026-07-04",
           "sources": [
             {
-              "name": "BBC Sport",
-              "url": "https://www.bbc.co.uk/sport/football/live/cpd326dj9xvt"
+              "name": "ESPN",
+              "url": "https://www.espn.com/soccer/report/_/gameId/760503"
             },
             {
               "name": "AP News",
-              "url": "https://apnews.com/article/france-sweden-score-world-cup-ca2b876fbf1c4c879bfdb57bc1445989"
+              "url": "https://apnews.com/article/world-cup-paraguay-physical-france-fouls-mbappe-f573f9c9b1c004cc11c4951b3ccbb060"
             }
           ]
         },
         {
-          "id": "norway-haaland-ivory-coast-knockout",
-          "headline": "Haaland winner gives Norway first World Cup knockout victory",
-          "summary": "Erling Haaland prodded home from close range in the 86th minute as Norway beat Ivory Coast 2-1 on 30 June in Dallas to reach the last 16 for the first time in their history. The Manchester City striker has five goals at the tournament, and Stale Solbakken's side will face Brazil in New Jersey on 5 July after surviving a second half in which the Elephants pushed hard for an equaliser. Norway's path now runs through the form team of the knockout stage so far, with Carlo Ancelotti's Brazil having needed stoppage-time heroics to see off Japan.",
-          "publishedDate": "2026-06-30",
+          "id": "morocco-canada-contenders",
+          "headline": "Morocco reach second straight quarter-final with counter-attacking edge",
+          "summary": "Morocco beat Canada 3-0 despite a difficult first half, with Bounou making early saves before Ounahi and Rahimi punished Canada's stretched shape after the break. BBC analysis framed Morocco as unbeaten in 34 matches and a serious contender, while ESPN's match report shows a side capable of changing a game without sustained territorial control.",
+          "publishedDate": "2026-07-04",
           "sources": [
             {
-              "name": "SBS News",
-              "url": "https://www.sbs.com.au/news/article/fifa-world-cup-2026-results-july-01/8bzlbpbyp"
+              "name": "BBC Sport",
+              "url": "https://www.bbc.co.uk/sport/football/articles/cy4e22gqe50o"
             },
             {
-              "name": "AP News",
-              "url": "https://apnews.com/article/world-cup-norway-ivory-coast-score-ea4cf42d9dcdd4c1e485d0263da438dd"
+              "name": "ESPN",
+              "url": "https://www.espn.com/soccer/report/_/gameId/760502"
             }
           ]
         }

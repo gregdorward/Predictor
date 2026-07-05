@@ -1,78 +1,78 @@
 {
-  "updatedAt": "2026-07-03T11:30:00.000Z",
-  "methodology": "Rankings reflect group-stage and knockout results through 2 July 2026, weighted by results quality, goal difference and path difficulty. Title win chances are illustrative estimates aligned with SoccerStatsHub modelling.",
+  "updatedAt": "2026-07-05T19:05:00.000Z",
+  "methodology": "Rankings reflect group-stage and knockout results through 4 July 2026, weighted by results quality, goal difference, squad availability and path difficulty. Title win chances are illustrative estimates aligned with SoccerStatsHub modelling.",
   "rankings": [
     {
       "rank": 1,
       "team": "France",
       "flag": "🇫🇷",
-      "record": "R16 · 3-0 vs Sweden",
-      "winChance": "16%",
-      "summary": "Kylian Mbappe scored twice as France dismantled Sweden 3-0 on 30 June, becoming the all-time leading scorer in World Cup knockout matches with 10 goals and moving level with Lionel Messi on six at this tournament. Michael Olise and Ousmane Dembele continue to supply ammunition from every angle, and Didier Deschamps's side have now scored three or more in five straight World Cup matches. A quarter-final path through Paraguay and then Canada or Morocco still looks the most forgiving among the pre-tournament favourites."
+      "record": "QF · 1-0 vs Paraguay",
+      "winChance": "18%",
+      "summary": "France are the first elite favourite into the quarter-finals after Kylian Mbappe's 70th-minute penalty beat Paraguay in Philadelphia. The scoreline was tighter than expected and the match was played in extreme heat, but Mbappe now has seven goals at this tournament and France have a confirmed route through Morocco in Foxborough."
     },
     {
       "rank": 2,
-      "team": "Spain",
-      "flag": "🇪🇸",
-      "record": "R16 · 3-0 vs Austria",
-      "winChance": "13%",
-      "summary": "Mikel Oyarzabal scored twice and Pedro Porro headed a third as Spain beat Austria 3-0 on 2 July, their first World Cup knockout win since 2010 and a fourth straight clean sheet at this tournament. Luis de la Fuente's side have not conceded in 519 minutes across competitive internationals at the World Cup, but Nico Williams and Yeremy Pino remain out ahead of a last-16 Iberian derby with Portugal in Dallas on 6 July."
+      "team": "Morocco",
+      "flag": "🇲🇦",
+      "record": "QF · 3-0 vs Canada",
+      "winChance": "12%",
+      "summary": "Morocco are into a second straight World Cup quarter-final after beating co-hosts Canada 3-0 in Houston. Azzedine Ounahi scored twice and Soufiane Rahimi added the third after replacing injured Ismael Saibari, showing the depth and counter-attacking bite that make the France quarter-final more dangerous than the market may suggest."
     },
     {
       "rank": 3,
-      "team": "Argentina",
-      "flag": "🇦🇷",
-      "record": "2W 1D · Group J winners",
+      "team": "Spain",
+      "flag": "🇪🇸",
+      "record": "R16 · 3-0 vs Austria",
       "winChance": "11%",
-      "summary": "The defending champions navigated Group J without defeat and face Cabo Verde in Miami on 3 July, a tie that should allow Lionel Scaloni to rotate before harder tests. Lautaro Martinez and Enzo Fernandez remain the spine of a squad that knows how to win tight knockouts, though Spain's defensive record and France's attacking variety set a higher bar than any other remaining side."
+      "summary": "Spain remain one of the cleanest two-way teams in the field after beating Austria 3-0 and keeping a fourth straight clean sheet. The ranking holds them just below the confirmed quarter-finalists because Portugal still stand in the way, but their defensive base gives them a strong case to jump back to the top tier if they win the Iberian derby."
     },
     {
       "rank": 4,
-      "team": "Portugal",
-      "flag": "🇵🇹",
-      "record": "R16 · 2-1 vs Croatia",
-      "winChance": "9%",
-      "summary": "Cristiano Ronaldo scored his first World Cup knockout goal from the penalty spot and Goncalo Ramos headed a stoppage-time winner as Portugal came from behind to beat Croatia 2-1 in Toronto on 2 July. Roberto Martinez's substitutions proved decisive after Ivan Perisic had given Croatia the lead, and Portugal now face Spain in Dallas on 6 July with Rafael Leao and Ronaldo both in form at the business end of the tournament."
+      "team": "Argentina",
+      "flag": "🇦🇷",
+      "record": "R16 · 3-2 AET vs Cape Verde",
+      "winChance": "10%",
+      "summary": "Argentina survived Cape Verde rather than controlled them, needing extra time and a Diney Borges own goal to escape one of the great World Cup shocks. Lionel Messi scored and the champions still have the tournament craft to grind through Egypt, but the defensive vulnerability in Miami drops them behind France, Morocco and Spain for now."
     },
     {
       "rank": 5,
-      "team": "Mexico",
-      "flag": "🇲🇽",
-      "record": "R16 · 2-0 vs Ecuador",
+      "team": "Portugal",
+      "flag": "🇵🇹",
+      "record": "R16 · 2-1 vs Croatia",
       "winChance": "8%",
-      "summary": "Co-hosts Mexico are the only team yet to concede at the tournament, beating Ecuador 2-0 at the Estadio Azteca on 1 July to set up a last-16 clash with England. Julian Quinones and Raul Jimenez scored in a storm-delayed fixture, and altitude plus crowd support give Javier Aguirre's side a genuine edge against a team that needed Harry Kane's late brace to survive DR Congo."
+      "summary": "Portugal stay high after Cristiano Ronaldo and Goncalo Ramos turned the Croatia tie around, but Spain are the toughest possible last-16 opponent for a side that has still needed late moments to solve knockout pressure. If Portugal beat Spain in Dallas, their attacking depth immediately becomes one of the strongest title cases left."
     },
     {
       "rank": 6,
-      "team": "England",
-      "flag": "🏴󠁧󠁢󠁥󠁮󠁧󠁿",
-      "record": "R16 · 2-1 vs DR Congo",
+      "team": "Brazil",
+      "flag": "🇧🇷",
+      "record": "R16 · 2-1 vs Japan (aet)",
       "winChance": "8%",
-      "summary": "Harry Kane scored twice in the final 15 minutes to rescue England from a shock Round of 32 exit against DR Congo, but the 2-1 win in Atlanta raised serious questions about Thomas Tuchel's side at the knockout stage. Reece James and Jarrell Quansah remain unavailable at right-back, and a trip to the Azteca to face Mexico on 6 July demands a far sharper performance than the one that left England 15 minutes from elimination."
+      "summary": "Brazil remain a major contender but have more questions than France or Spain after needing extra time against Japan and likely losing Lucas Paqueta for the Norway tie. Vinicius Junior and Matheus Cunha give them decisive quality, while Carlo Ancelotti's knockout management keeps them above Norway before the East Rutherford meeting."
     },
     {
       "rank": 7,
-      "team": "USA",
-      "flag": "🇺🇸",
-      "record": "R16 · 2-0 vs Bosnia",
+      "team": "Mexico",
+      "flag": "🇲🇽",
+      "record": "R16 · 2-0 vs Ecuador",
       "winChance": "7%",
-      "summary": "Folarin Balogun scored before being sent off and Malik Tillman sealed a 2-0 win over Bosnia on 2 July, giving co-hosts USA their first World Cup knockout victory since 2002. Mauricio Pochettino's side snapped a long losing run against European opposition but will be without their leading scorer for a Seattle last-16 tie with Belgium on 6 July, a rematch of the 2014 round-of-16 defeat."
+      "summary": "Mexico's clean-sheet run and Azteca advantage make them one of the most awkward remaining opponents. They have won every match at home in this tournament without conceding, and England's right-back uncertainty gives Julian Quinones a clear matchup to attack."
     },
     {
       "rank": 8,
+      "team": "England",
+      "flag": "🏴󠁧󠁢󠁥󠁮󠁧󠁿",
+      "record": "R16 · 2-1 vs DR Congo",
+      "winChance": "7%",
+      "summary": "England have Harry Kane in form and Quansah available again, but the DR Congo comeback and Reece James doubt leave them outside the top group. The Mexico tie is a major style test: survive the opening altitude surge and England's midfield quality can still take control."
+    },
+    {
+      "rank": 9,
       "team": "Belgium",
       "flag": "🇧🇪",
       "record": "R16 · 3-2 AET vs Senegal",
       "winChance": "6%",
-      "summary": "Belgium trailed Senegal 2-0 with five minutes remaining before Romelu Lukaku and Youri Tielemans forced extra time, and Tielemans converted a VAR-awarded penalty in the 125th minute to complete a 3-2 win in Seattle on 1 July. Rudi Garcia's bold substitutions proved pivotal in the latest goal in World Cup history, and the Red Devils now face co-hosts USA in a last-16 rematch of their 2014 extra-time defeat."
-    },
-    {
-      "rank": 9,
-      "team": "Brazil",
-      "flag": "🇧🇷",
-      "record": "R16 · 2-1 vs Japan (aet)",
-      "winChance": "6%",
-      "summary": "Carlo Ancelotti's side needed Gabriel Martinelli's 95th-minute winner to survive Japan in Houston, exposing defensive lapses that Kaishu Sano punished in the first half. Vinicius Junior has four goals in the tournament, but Brazil were far from convincing in their first knockout test and now face Erling Haaland's Norway in New Jersey on 5 July."
+      "summary": "Belgium's comeback against Senegal had the drama of a deep-run team, but the first 85 minutes showed why they remain volatile. The USA tie in Seattle now looks finely balanced, especially with the hosts missing Folarin Balogun but carrying home support."
     },
     {
       "rank": 10,
@@ -80,79 +80,79 @@
       "flag": "🇳🇴",
       "record": "R16 · 2-1 vs Ivory Coast",
       "winChance": "5%",
-      "summary": "Erling Haaland's 86th-minute winner gave Norway their first ever World Cup knockout victory, a 2-1 defeat of Ivory Coast in Dallas on 30 June after Antonio Nusa had opened the scoring. Haaland has five goals in three games and Stale Solbakken's side arrive in New Jersey with genuine momentum, though a last-16 meeting with Brazil is the toughest possible draw for a team riding knockout history."
+      "summary": "Norway are no longer just a Haaland story, but his five tournament goals give them the most direct upset route against Brazil. Their unbeaten historical record against the Selecao is a useful subplot, while Julian Ryerson's possible return would help against Brazil's wide pace."
     },
     {
       "rank": 11,
-      "team": "Morocco",
-      "flag": "🇲🇦",
-      "record": "R16 · 1-1 vs Netherlands (pens 3-2)",
-      "winChance": "4%",
-      "summary": "Walid Regragui's side followed up their 2022 semi-final run with a dramatic penalty shootout win over the Netherlands, Issa Diop's stoppage-time header forcing extra time before Ismael Saibari converted the winner. Yassine Bounou was decisive again, and Morocco now face co-hosts Canada in Houston on 4 July with genuine belief they can reach another deep run."
+      "team": "USA",
+      "flag": "🇺🇸",
+      "record": "R16 · 2-0 vs Bosnia",
+      "winChance": "5%",
+      "summary": "The United States are still alive and have a Seattle home tie, but Balogun's suspension removes their best tournament finisher before Belgium arrive. Malik Tillman's dead-ball quality and the crowd keep the upset case alive."
     },
     {
       "rank": 12,
       "team": "Switzerland",
       "flag": "🇨🇭",
       "record": "R16 · 2-0 vs Algeria",
-      "winChance": "3.5%",
-      "summary": "Breel Embolo and Dan Ndoye scored either side of half-time as Switzerland beat Algeria 2-0 in Vancouver on 2 July, their first World Cup knockout victory since 1938. Johan Manzambi's solo run set up the opener and Murat Yakin's side controlled a tie in which Algeria managed just 0.73 expected goals, with a last-16 meeting against Colombia or Ghana awaiting on 7 July."
+      "winChance": "4%",
+      "summary": "Switzerland's 2-0 win over Algeria was controlled, mature and exactly the kind of result that gives them a credible path into the quarter-finals. Colombia are a harder opponent than Algeria, but Switzerland's defensive structure has been one of the most reliable in the second tier."
     },
     {
       "rank": 13,
       "team": "Colombia",
       "flag": "🇨🇴",
-      "record": "1W 1D 1L · Group K third place",
-      "winChance": "3%",
-      "summary": "Nestor Lorenzo's side advanced as a best third-placed finisher and face Ghana in Kansas City on 3 July. Luis Diaz remains their main outlet, but a mixed group stage including a draw with Portugal means Colombia have not yet shown the consistency that took them to the 2014 quarter-finals."
+      "record": "R16 · 1-0 vs Ghana",
+      "winChance": "3.5%",
+      "summary": "Colombia moved past Ghana 1-0 through Jhon Arias and now meet Switzerland in Vancouver. The attack still leans heavily on Luis Diaz and Arias moments, but the clean sheet and improved control lift them above the remaining low-probability chasers."
     },
     {
       "rank": 14,
-      "team": "Paraguay",
-      "flag": "🇵🇾",
-      "record": "R16 · 1-1 vs Germany (pens 4-3)",
-      "winChance": "2.5%",
-      "summary": "Paraguay produced the biggest shock of the tournament so far, eliminating Germany on penalties in Boston after absorbing 75% possession and 21 shots. Jose Canale held his nerve from the spot, but a quarter-final with France in Philadelphia on 4 July is a far sterner test for a side that averaged under 0.8 goals per game in qualifying."
+      "team": "Egypt",
+      "flag": "🇪🇬",
+      "record": "R16 · 1-1 vs Australia (pens 4-2)",
+      "winChance": "2%",
+      "summary": "Egypt are into the last 16 after holding their nerve against Australia, with Mohamed Salah converting his penalty and Abdelmaguid winning the shoot-out. Argentina are heavy favourites, but Egypt's compact shape and penalty confidence make them more dangerous than their open-play profile suggests."
     },
     {
       "rank": 15,
-      "team": "Canada",
-      "flag": "🇨🇦",
-      "record": "R16 · 1-0 vs South Africa",
-      "winChance": "2%",
-      "summary": "Co-hosts Canada became the first team through to the Round of 16 when Stephen Eustaquio scored in stoppage time against South Africa at SoFi Stadium. Jesse Marsch's side have home support and growing belief, though a last-16 meeting with Morocco in Houston on 4 July will test whether their progress is sustainable."
+      "team": "Paraguay",
+      "flag": "🇵🇾",
+      "record": "Eliminated · R16 vs France",
+      "winChance": "0%",
+      "summary": "Paraguay leave after making France uncomfortable in a physical 1-0 defeat under extreme Philadelphia heat. The Germany upset remains one of the tournament's defining shocks, but the lack of attacking volume eventually caught up with them against Mbappe."
     },
     {
       "rank": 16,
-      "team": "Australia",
-      "flag": "🇦🇺",
-      "record": "1W 1D 1L · Group D runners-up",
-      "winChance": "1%",
-      "summary": "The Socceroos finished second behind the USA in Group D and face Egypt in Dallas on 3 July. Tony Popovic has a disciplined, hard-working side that conceded just two goals in the group stage, but Mohamed Salah gives Egypt a decisive edge in attack if the tie becomes open."
+      "team": "Canada",
+      "flag": "🇨🇦",
+      "record": "Eliminated · R16 vs Morocco",
+      "winChance": "0%",
+      "summary": "Canada's co-host run ended with a 3-0 defeat to Morocco, despite early chances for Jonathan David and Tani Oluwaseyi. The scoreline was harsh on the first-half performance, but Morocco punished the spaces Canada left once they chased the game."
     },
     {
       "rank": 17,
-      "team": "Egypt",
-      "flag": "🇪🇬",
-      "record": "1W 2D · Group G runners-up",
-      "winChance": "0.8%",
-      "summary": "Egypt topped Group G ahead of Belgium without losing, with Mohamed Salah decisive in attack. Their reward is a Dallas tie with Australia on 3 July, which is winnable, but the path beyond that runs through stronger European and South American sides."
+      "team": "Australia",
+      "flag": "🇦🇺",
+      "record": "Eliminated · R32 vs Egypt",
+      "winChance": "0%",
+      "summary": "Australia were knocked out by Egypt on penalties after a 1-1 draw in Dallas. Mat Ryan was introduced for the shoot-out but could not save any of Egypt's four kicks, while Harry Souttar and Lucas Herrington missed for the Socceroos."
     },
     {
       "rank": 18,
-      "team": "Cabo Verde",
+      "team": "Cape Verde",
       "flag": "🇨🇻",
-      "record": "1W 1D 1L · Group H third place",
-      "winChance": "0.5%",
-      "summary": "Cabo Verde became one of the feel-good stories of the group stage by advancing as a best third-placed team. A Miami date with Argentina on 3 July is the toughest possible draw, and their limited squad depth makes a prolonged run unlikely despite their organised defending."
+      "record": "Eliminated · R32 vs Argentina",
+      "winChance": "0%",
+      "summary": "Cape Verde produced one of the tournament's great performances in defeat, twice equalising against Argentina before a 111th-minute own goal ended their run. Sidny Lopes Cabral's extra-time equaliser and Vozinha's eight saves will keep them near the top of the tournament story list."
     },
     {
       "rank": 19,
       "team": "Ghana",
       "flag": "🇬🇭",
-      "record": "1W 1D 1L · Group L third place",
-      "winChance": "0.5%",
-      "summary": "Ghana held England to a goalless draw in Boston but lost to Croatia and advanced only as a best third-placed finisher. Otto Addo's side face Colombia in Kansas City on 3 July and will need their counter-attacking best to trouble Luis Diaz and company."
+      "record": "Eliminated · R32 vs Colombia",
+      "winChance": "0%",
+      "summary": "Ghana's tournament ended in a 1-0 defeat to Colombia, with Jhon Arias scoring early and Ghana unable to create enough pressure to recover. Their draw with England remains the high point, but the knockout attack never found the same threat."
     },
     {
       "rank": 20,
