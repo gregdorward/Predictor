@@ -72,70 +72,69 @@ export var orderedLeagues = [];
 export let paid = false;
 // export let userTips;
 
+// Ids to be updated for the latest season
 const leagueOrder = [
   16494, // World cup 2026
-  15050, //premier league 25 12325
-  14930, //championship 25 12451
-  14934, //league 1 25 12446
-  14935, //league 2 25 12422
-  15657, //National league 25 12622
-  15845, //National league north 25
-  15844, //National league south 25
-  14956, //La Liga 25 12316
-  15000, //Scottish Prem 25 12455
-  14968, //Bundesliga 25 12529
-  15068, //Serie A 25 12530
-  14932, //French Prem 25 12337
-  15115, //Portagul Prem 25 12931
-  14936, //Dutch Prem 25 12322
-  14937, //Belgian Pro League 25 12137
-  16263, //sweden 25
-  15055, //Danish Prem 24/25 12132
-  16558, //Norway Prem 25
-  14923, //Austrian Prem 25 12472
-  15163, //Greek Prem 25 12734
-  14972, //turkey 25 12641
-  15031, //Polish prem 25 12120
-  15047, //Swiss prem 25 12326
-  15053, //Croatia 25 12121
-  14973, //Czecjh 25 12336
-  // 14089, // Finland 25 14089
-  // 14951, // Ulraine 25 12483
-  // 15065, // Serbia 25 12138
-  // 15063, // Slovenia 25 12476
-  // 14933, // Slovakia 25 12944
-  16537, //Irish Prem 26
-  15066, //Spanish secunda 25 12467
-  15632, //Italy serie B 24 12621
-  14931, //Bundesliga 2 25 12528
-  14977, //German 3rd tier 25 12623
-  14954, //French League 2 25 12338
-  14987, //Dutch League 2 25
-  15061, //Scottish Championship 25 12456
-  14943, //Scottish league 1 25 12474
-  15209, //Scottish league 2 25 12453
-  16504, //MLS 26,
-  16544, //Brazil prem 26
-  16571, //Argentina prem 23 15310 16571
-  // 14086, // Columbia 25
-  // 14116, // Chile 25
-  // 14626, // Uraguay 25
-  15234, //Mexico prem 25 12136
-  16614, //Colombia 26
-  16036, //Australian A league 24/25 13703
-  16627, //S Korea 25,
-  16242, //Japan 25
-  13964, // WC Qual Europe 26,
-  10121, // WC Qual SA 26,
-  // 11426, // WC Qual ConCaf 26
-  // 12801, // WC Qual Aus 26,
-  16808, //Nations league 24
-  14924, // Champs league 25 12321
-  15002, //Europa 25 12327
-  14904, //Europa Conference 25 12278
+  17146, // Premier League 26/27
+  17184, // Championship 26/27
+  17180, // League One 26/27
+  17185, // League Two 26/27
+  15657, // National League 25/26
+  15845, // National League north 25/26
+  15844, // National League south 25/26
+  17199, // La Liga 26/27
+  17148, // Scottish Prem 26/27
+  17210, // Bundesliga 26/27
+  17084, // Serie A 26/27
+  17102, // Ligue 1 26/27
+  15115, // Primeira Liga 25/26 (FootyStats id unchanged)
+  17097, // Eredivisie 26/27
+  17171, // Belgian Pro League 26/27
+  16263, // Allsvenskan — deferred, no FootyStats chosen_leagues
+  17091, // Danish Superliga 26/27
+  16558, // Norway 26
+  17181, // Austrian Bundesliga 26/27
+  15163, // Greek Super League 25/26
+  14972, // Turkish Super Lig 25/26
+  17112, // Ekstraklasa 26/27
+  17129, // Swiss Super League 26/27
+  17087, // Croatia 26/27
+  17157, // Czech First League 26/27
+  // 14089, // Veikkausliiga — deferred
+  // 14951, // Ukrainian Premier League — deferred
+  // 15065, // Serbian SuperLiga — deferred
+  // 15063, // Slovenian Prva Liga — deferred
+  // 14933, // Slovak Super Liga — deferred
+  16537, // Irish Prem 26
+  15066, // Segunda Division 26/27
+  15632, // Serie B 25/26
+  17212, // Bundesliga 2 26/27
+  14977, // 3. Liga 25/26
+  17117, // Ligue 2 26/27
+  17110, // Eerste Divisie 26/27
+  17144, // Scottish Championship 26/27
+  17147, // Scottish League One 26/27
+  17140, // Scottish League Two 26/27
+  16504, // MLS 26
+  16544, // Brazil Serie A 26
+  16571, // Argentina Primera 26
+  // 14116, // Chile — deferred
+  // 14626, // Uruguay — deferred
+  17099, // Liga MX 26
+  16614, // Colombia 26
+  16036, // A-League 25/26
+  16627, // K League 26
+  17115, // J League 26/27
+  13964, // WC Qual Europe 2026
+  10121, // WC Qual SA 2026
+  16808, // Nations League 26/27
+  17128, // Champions League 26/27
+  17127, // Europa League 26/27
+  17130, // Europa Conference League 26/27
   16556, // Copa Libertadores 26
 ];
 
+// Ids to be updated for the latest season
 // const sofaScoreIds = [
 //   {
 //     15050: 17, //EPL

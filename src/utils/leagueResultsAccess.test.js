@@ -33,11 +33,11 @@ describe("getLeagueFixturesByLeagueId", () => {
 
   test("finds fixtures by league id when array order differs from orderedLeagues index", () => {
     const reorderedCache = [
-      { id: 15050, fixtures: [{ home_name: "EPL", away_name: "Side" }] },
+      { id: 17146, fixtures: [{ home_name: "EPL", away_name: "Side" }] },
       { id: 16494, fixtures: [{ home_name: "USA", away_name: "Mexico" }] },
     ];
 
-    expect(reorderedCache[0].id).toBe(15050);
+    expect(reorderedCache[0].id).toBe(17146);
     expect(getLeagueFixturesByLeagueId(reorderedCache, 16494)).toHaveLength(1);
     expect(getLeagueFixturesByLeagueId(reorderedCache, 16494)[0].home_name).toBe(
       "USA"
@@ -149,13 +149,13 @@ describe("competition goal difference", () => {
 describe("findLeagueEntryById", () => {
   test("matches league averages entries regardless of string vs number type", () => {
     const averages = [
-      { id: "15050", averageGoals: 2.8 },
-      { id: 14930, averageGoals: 2.5 },
+      { id: "17146", averageGoals: 2.8 },
+      { id: 17184, averageGoals: 2.5 },
     ];
 
-    expect(findLeagueEntryById(averages, 15050)?.averageGoals).toBe(2.8);
-    expect(findLeagueEntryById(averages, "14930")?.averageGoals).toBe(2.5);
+    expect(findLeagueEntryById(averages, 17146)?.averageGoals).toBe(2.8);
+    expect(findLeagueEntryById(averages, "17184")?.averageGoals).toBe(2.5);
     expect(findLeagueEntryById(averages, 99999)).toBeNull();
-    expect(findLeagueEntryById(null, 15050)).toBeNull();
+    expect(findLeagueEntryById(null, 17146)).toBeNull();
   });
 });

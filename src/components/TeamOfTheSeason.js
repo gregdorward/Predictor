@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 //tournaments/search (Deprecated)
 //Use ID to call tournaments/get-seasons
 
+// Ids to be updated for the latest season
 // const footyStatsToSofaScore = [
 //   {
 //     //Prem 25
