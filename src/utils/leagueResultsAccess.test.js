@@ -5,6 +5,8 @@ import {
   getLeagueFixturesByLeagueId,
   getLeagueResultsByLeagueId,
   getTeamFixturesBeforeMatch,
+  isResultsCacheValid,
+  trimLeagueResultsToWindow,
 } from "./leagueResultsAccess";
 
 describe("getLeagueFixturesByLeagueId", () => {
@@ -157,5 +159,54 @@ describe("findLeagueEntryById", () => {
     expect(findLeagueEntryById(averages, "17184")?.averageGoals).toBe(2.5);
     expect(findLeagueEntryById(averages, 99999)).toBeNull();
     expect(findLeagueEntryById(null, 17146)).toBeNull();
+  });
+});
+
+describe("isResultsCacheValid", () => {
+  const orderedLeagues = [
+    { element: { id: 17146 } },
+    { element: { id: 16494 } },
+  ];
+
+  test("accepts cache that matches current season ids exactly", () => {
+    const cache = [
+      { id: 17146, fixtures: [] },
+      { id: 16494, fixtures: [] },
+    ];
+    expect(isResultsCacheValid(cache, orderedLeagues)).toBe(true);
+  });
+
+  test("rejects cache with stale league ids from prior seasons", () => {
+    const cache = [
+      { id: 15050, fixtures: [] },
+      { id: 17146, fixtures: [] },
+      { id: 16494, fixtures: [] },
+    ];
+    expect(isResultsCacheValid(cache, orderedLeagues)).toBe(false);
+  });
+
+  test("rejects cache missing a newly added league", () => {
+    const cache = [{ id: 17146, fixtures: [] }];
+    expect(isResultsCacheValid(cache, orderedLeagues)).toBe(false);
+  });
+});
+
+describe("trimLeagueResultsToWindow", () => {
+  test("keeps only fixtures after the cutoff and caps at 600", () => {
+    const cutoff = 1000;
+    const cache = [
+      {
+        id: 8,
+        fixtures: [
+          { date_unix: 500 },
+          { date_unix: 1500 },
+          { date_unix: 2000 },
+        ],
+      },
+    ];
+
+    const trimmed = trimLeagueResultsToWindow(cache, cutoff);
+    expect(trimmed[0].fixtures).toHaveLength(2);
+    expect(trimmed[0].fixtures[0].date_unix).toBe(1500);
   });
 });

@@ -1,5 +1,8 @@
 import { apiGetUrl } from "../utils/apiUrl";
-import { getLeagueResultsByLeagueId } from "../utils/leagueResultsAccess";
+import {
+  getLeagueResultsByLeagueId,
+  getRecentResultsCutoffUnix,
+} from "../utils/leagueResultsAccess";
 
 /** Same threshold as calculateScore's leagueHasEnoughFixtures gate. */
 export const MIN_LEAGUE_FIXTURES_FOR_DERIVED_STATS = 11;
@@ -71,8 +74,7 @@ function mapLeagueFixtureResults(gamesFiltered) {
 }
 
 export async function loadLeagueResultsForCompetition(competitionId, leagueName) {
-  const startDate = Math.floor(Date.now() / 1000);
-  const targetDate = startDate - 23778463;
+  const targetDate = getRecentResultsCutoffUnix();
 
   const fixtures = await fetch(apiGetUrl(`leagueFixtures/${competitionId}`));
   const games = await fixtures.json();

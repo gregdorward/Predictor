@@ -11,7 +11,13 @@ import { ThreeDots } from "react-loading-icons";
 import BouncingDotsLoader from "../components/BouncingDots"
 import { selectedOdds } from "../components/OddsRadio";
 import { getPointsFromLastX } from "../utils/getPointsFromLastX";
-import { getLeagueFixturesByLeagueId, applyCompetitionGoalDifference } from "../utils/leagueResultsAccess";
+import {
+  getLeagueFixturesByLeagueId,
+  applyCompetitionGoalDifference,
+  getRecentResultsCutoffUnix,
+  isResultsCacheValid,
+  trimLeagueResultsToWindow,
+} from "../utils/leagueResultsAccess";
 import { apiGetUrl } from "../utils/apiUrl";
 import {
   transformGroupStageTables,
@@ -732,7 +738,7 @@ export function RenderAllFixtures(props) {
 var myHeaders = new Headers();
 myHeaders.append("Origin", "https://gregdorward.github.io");
 
-let isFunctionRunning = false;
+let fixturesLoadPromise = null;
 
 export let dynamicDate;
 let todaysDateString;
@@ -748,8 +754,11 @@ export async function generateFixtures(
   unformattedDate,
   handleGetPredictions
 ) {
-  if (!isFunctionRunning) {
-    isFunctionRunning = true;
+  if (fixturesLoadPromise) {
+    return fixturesLoadPromise;
+  }
+
+  fixturesLoadPromise = (async () => {
     openLeagueTables.clear();
     todaysDateString = todaysDate;
     console.log("Generating fixtures for date: ", date);
@@ -902,31 +911,46 @@ export async function generateFixtures(
 
     allLeagueResults = await fetch(apiGetUrl(`results`));
 
-    if (
+    const resultsCacheOk =
       league.status === 200 &&
-      (allLeagueResults.status === 201 || allLeagueResults.status === 200)
-    ) {
-      console.log("Not fetching leagues");
-      await league.json().then((leagues) => {
-        console.log(leagues)
+      (allLeagueResults.status === 201 || allLeagueResults.status === 200);
 
-        leagueArray = Array.from(leagues.leagueArray);
-      });
-      updateResults(false);
-
-      await allLeagueResults.json().then((allGames) => {
-        allLeagueResultsArrayOfObjects = Array.from(allGames);
-      });
-
-      leaguesStored = true;
-      generateTables(
-        leagueArray,
-        leagueIdArray,
-        allLeagueResultsArrayOfObjects
+    if (resultsCacheOk) {
+      const cachedGames = await allLeagueResults.json();
+      const cacheValid = isResultsCacheValid(
+        Array.isArray(cachedGames) ? cachedGames : [],
+        orderedLeagues
       );
 
-      // arrayOfGames = [];
-    } else {
+      if (cacheValid) {
+        console.log("Using cached league results");
+        await league.json().then((leagues) => {
+          leagueArray = Array.from(leagues.leagueArray);
+        });
+
+        const cutoffUnix = getRecentResultsCutoffUnix();
+        allLeagueResultsArrayOfObjects = trimLeagueResultsToWindow(
+          Array.from(cachedGames),
+          cutoffUnix
+        );
+        leaguesStored = true;
+        generateTables(
+          leagueArray,
+          leagueIdArray,
+          allLeagueResultsArrayOfObjects
+        );
+      } else {
+        console.log(
+          "Cached results stale or mismatched current seasons — rebuilding"
+        );
+        allLeagueResults = { status: 404 };
+      }
+    }
+
+    if (
+      !resultsCacheOk ||
+      allLeagueResults.status === 404
+    ) {
       allLeagueResultsArrayOfObjects = [];
       console.log("Fetching leagues");
       for (let i = 0; i < orderedLeagues.length; i++) {
@@ -942,9 +966,7 @@ export async function generateFixtures(
 
       //set variable for date X amount of days in the past and use that to filter the results
 
-      let startDate = (new Date().getTime() / 1000).toFixed(0);
-      // deduct 3 months
-      let targetDate = startDate - 23778463;
+      const targetDate = getRecentResultsCutoffUnix();
 
       for (const orderedLeague of orderedLeagues) {
         let fixtures = await fetch(
@@ -974,16 +996,15 @@ export async function generateFixtures(
           gamesShortened = sorted.slice(-600);
           gamesFiltered = gamesShortened;
         } else {
-          gamesFiltered = games.data.filter(
+          const completed = games.data.filter(
             (game) => game.status === "complete"
           );
-
-          if (current) {
-            let mostRecentResults = gamesFiltered.filter(
-              (game) => game.date_unix > targetDate
-            );
-            gamesFiltered = mostRecentResults.slice(-600);
-          }
+          const mostRecentResults = completed.filter(
+            (game) => game.date_unix > targetDate
+          );
+          gamesFiltered = mostRecentResults
+            .sort((a, b) => a.date_unix - b.date_unix)
+            .slice(-600);
         }
 
         const shortenedResults = gamesFiltered.map(
@@ -1263,7 +1284,6 @@ export async function generateFixtures(
         </div>,
         "GeneratePredictions"
       );
-      isFunctionRunning = false;
       return [];
     } else {
       render(
@@ -1986,28 +2006,31 @@ export async function generateFixtures(
     //   "Loading"
     // );
 
-    async function updateResults(bool) {
-      console.log("updating results");
-      if (allLeagueResultsArrayOfObjects.length > 0 && bool === true) {
+    async function updateResults(shouldPersist) {
+      if (!shouldPersist) {
+        return;
+      }
+      if (allLeagueResultsArrayOfObjects.length === 0) {
+        console.warn("No league results to persist — skipping S3 upload");
+        return;
+      }
+      console.log("Persisting league results to S3");
+      await fetch(`${process.env.NEXT_PUBLIC_EXPRESS_SERVER}results`, {
+        method: "DELETE",
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+        },
+      }).then(async () => {
         await fetch(`${process.env.NEXT_PUBLIC_EXPRESS_SERVER}results`, {
-          method: "DELETE",
+          method: "POST",
           headers: {
             Accept: "application/json",
             "Content-Type": "application/json",
           },
-        }).then(async () => {
-          await fetch(`${process.env.NEXT_PUBLIC_EXPRESS_SERVER}results`, {
-            method: "POST",
-            headers: {
-              Accept: "application/json",
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify(allLeagueResultsArrayOfObjects),
-          });
+          body: JSON.stringify(allLeagueResultsArrayOfObjects),
         });
-      } else {
-        console.log("EMPTY RESULTS");
-      }
+      });
     }
 
     if (!isStoredLocally) {
@@ -2029,9 +2052,10 @@ export async function generateFixtures(
     //   <RenderAllFixtures matches={matches} result={false} bool={false} />,
     //   "FixtureContainer"
     // );
-    setTimeout(() => {
-      isFunctionRunning = false;
-    }, 1000);
     return [...matches];
-  }
+  })().finally(() => {
+    fixturesLoadPromise = null;
+  });
+
+  return fixturesLoadPromise;
 }
