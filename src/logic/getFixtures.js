@@ -12,6 +12,7 @@ import BouncingDotsLoader from "../components/BouncingDots"
 import { selectedOdds } from "../components/OddsRadio";
 import { getPointsFromLastX } from "../utils/getPointsFromLastX";
 import { getLeagueFixturesByLeagueId, applyCompetitionGoalDifference } from "../utils/leagueResultsAccess";
+import { resolveMultiDivisionLeagueTables } from "../utils/multiDivisionLeagueTables";
 import { apiGetUrl } from "../utils/apiUrl";
 import {
   transformGroupStageTables,
@@ -147,6 +148,7 @@ export async function generateTables(a, leagueIdArray, allResults) {
   tableArray = [];
   basicTableArray = [];
   bespokeLeagueArray = [];
+  groups = false;
   let i = 0;
   leagueArray.forEach(function (league) {
     let currentLeagueId = leagueIdArray[i];
@@ -467,13 +469,14 @@ export async function renderTable(index, results, id) {
       </>,
       containerId
     );
-  } else if (groups) {
+  } else {
+    const multiDivision = resolveMultiDivisionLeagueTables(bespokeLeagueArray, id);
+    if (!multiDivision) {
+      return;
+    }
 
-    const leagueTable = bespokeLeagueArray.filter((table) => table.id === id);
-    const leagueTable1 = leagueTable[0].table;
-    const leagueTable2 = leagueTable[1].table;
-    const divisionName1 = leagueTable[0].group;
-    const divisionName2 = leagueTable[1].group;
+    const { leagueTable1, leagueTable2, divisionName1, divisionName2 } =
+      multiDivision;
 
     let statistics;
     let leagueStatistics = await fetch(
@@ -750,6 +753,7 @@ export async function generateFixtures(
 ) {
   if (!isFunctionRunning) {
     isFunctionRunning = true;
+    try {
     openLeagueTables.clear();
     todaysDateString = todaysDate;
     console.log("Generating fixtures for date: ", date);
@@ -1058,7 +1062,6 @@ export async function generateFixtures(
 
         allLeagueResultsArrayOfObjects.push(leagueObj);
       }
-      updateResults(true);
       generateTables(
         leagueArray,
         leagueIdArray,
@@ -1263,7 +1266,6 @@ export async function generateFixtures(
         </div>,
         "GeneratePredictions"
       );
-      isFunctionRunning = false;
       return [];
     } else {
       render(
@@ -2019,6 +2021,8 @@ export async function generateFixtures(
         },
         body: JSON.stringify({ allForm }),
       });
+    }
+    if (!leaguesStored && allLeagueResultsArrayOfObjects.length > 0) {
       await updateResults(true);
     }
     await saveLeaguesIfNeeded();
@@ -2029,9 +2033,11 @@ export async function generateFixtures(
     //   <RenderAllFixtures matches={matches} result={false} bool={false} />,
     //   "FixtureContainer"
     // );
-    setTimeout(() => {
-      isFunctionRunning = false;
-    }, 1000);
     return [...matches];
+    } finally {
+      setTimeout(() => {
+        isFunctionRunning = false;
+      }, 1000);
+    }
   }
 }
