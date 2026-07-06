@@ -263,7 +263,7 @@ async function convertTimestampForSofaScore(timestamp) {
   return converted;
 }
 
-(async function fetchLeagueData() {
+export const leaguesReady = (async function fetchLeagueData() {
   if (isReactSnap) return;
 
   let leagueList;
@@ -303,23 +303,12 @@ async function convertTimestampForSofaScore(timestamp) {
         }
       }
     }
-
-    async function mapOrder(array, order, key) {
-      array.sort(function (a, b) {
-        var A = a.element[key],
-          B = b.element[key];
-
-        if (order.indexOf(A) > order.indexOf(B)) {
-          return 1;
-        } else {
-          return -1;
-        }
-      });
-      return array;
-    }
-    //leagues ordered by id
-    orderedLeagues = await mapOrder(availableLeagues, leagueOrder, "id");
   }
+
+  // Only ids in leagueOrder — availableLeagues also contains prior-season duplicates.
+  orderedLeagues = leagueOrder
+    .map((id) => availableLeagues.find((league) => league.element.id === id))
+    .filter(Boolean);
   return orderedLeagues;
 })();
 

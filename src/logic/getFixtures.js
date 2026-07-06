@@ -1,6 +1,6 @@
 import { Fragment, lazy, Suspense, useState } from "react";
 import ReactDOM from "react-dom";
-import { orderedLeagues } from "../App";
+import { orderedLeagues, leaguesReady } from "../App";
 import { render, clearRender } from '../utils/render';
 import { getForm } from "./getForm";
 import { Fixture } from "../components/Fixture";
@@ -759,6 +759,8 @@ export async function generateFixtures(
   }
 
   fixturesLoadPromise = (async () => {
+    await leaguesReady;
+
     openLeagueTables.clear();
     todaysDateString = todaysDate;
     console.log("Generating fixtures for date: ", date);
@@ -875,9 +877,17 @@ export async function generateFixtures(
 
     fixtureResponse = await fetch(url);
 
-    await fixtureResponse.json().then((fixtures) => {
-      fixtureArray = Array.from(fixtures.data);
-    });
+    let fixturesBody = null;
+    try {
+      fixturesBody = await fixtureResponse.json();
+    } catch (parseErr) {
+      console.warn("Matches API returned non-JSON body", fixtureResponse.status, parseErr);
+    }
+    if (fixturesBody?.error) {
+      console.warn("Matches API error:", fixturesBody.error, fixtureResponse.status);
+    }
+    fixtureArray = Array.isArray(fixturesBody?.data) ? fixturesBody.data : [];
+    const footyStatsUnavailable = Boolean(fixturesBody?.error);
 
     let form;
     let formArray = [];
@@ -885,14 +895,14 @@ export async function generateFixtures(
     let isFormStored;
     let isStoredLocally;
     let leaguesStored = false;
+    let resultsWereRebuilt = false;
     let storedForm = await fetch(formUrl);
     if (storedForm.status === 201 || storedForm.status === 200) {
-      await storedForm.json().then((form) => {
-        formArray = Array.from(form.allForm);
-        isFormStored = true;
-        isStoredLocally = true;
-        allForm = formArray;
-      });
+      const form = await storedForm.json();
+      formArray = Array.isArray(form?.allForm) ? form.allForm : [];
+      isFormStored = formArray.length > 0;
+      isStoredLocally = isFormStored;
+      allForm = formArray;
     } else {
       isFormStored = false;
       isStoredLocally = false;
@@ -916,11 +926,13 @@ export async function generateFixtures(
       (allLeagueResults.status === 201 || allLeagueResults.status === 200);
 
     if (resultsCacheOk) {
-      const cachedGames = await allLeagueResults.json();
-      const cacheValid = isResultsCacheValid(
-        Array.isArray(cachedGames) ? cachedGames : [],
-        orderedLeagues
-      );
+      const cachedBody = await allLeagueResults.json();
+      const cachedGames = Array.isArray(cachedBody)
+        ? cachedBody
+        : Array.isArray(cachedBody?.data)
+          ? cachedBody.data
+          : [];
+      const cacheValid = isResultsCacheValid(cachedGames, orderedLeagues);
 
       if (cacheValid) {
         console.log("Using cached league results");
@@ -948,11 +960,13 @@ export async function generateFixtures(
     }
 
     if (
-      !resultsCacheOk ||
-      allLeagueResults.status === 404
+      !footyStatsUnavailable &&
+      (!resultsCacheOk || allLeagueResults.status === 404)
     ) {
       allLeagueResultsArrayOfObjects = [];
       console.log("Fetching leagues");
+      let footyStatsRateLimited = false;
+
       for (let i = 0; i < orderedLeagues.length; i++) {
         league = await fetch(
           apiGetUrl(`tables/${orderedLeagues[i].element.id}/${leaguesDate}`)
@@ -969,20 +983,42 @@ export async function generateFixtures(
       const targetDate = getRecentResultsCutoffUnix();
 
       for (const orderedLeague of orderedLeagues) {
+        if (footyStatsRateLimited) {
+          break;
+        }
+
         let fixtures = await fetch(
           apiGetUrl(`leagueFixtures/${orderedLeague.element.id}`)
         );
 
         let games = await fixtures.json();
+        if (games?.error) {
+          console.warn(
+            `leagueFixtures ${orderedLeague.element.id}:`,
+            games.error
+          );
+          if (String(games.error).toLowerCase().includes("rate limit")) {
+            footyStatsRateLimited = true;
+          }
+          continue;
+        }
+        if (!Array.isArray(games?.data)) {
+          console.warn(
+            `leagueFixtures ${orderedLeague.element.id}: missing data array`
+          );
+          continue;
+        }
+
         let gamesFiltered;
-        let gamesShortened;
-        if (games.pager.current_page < games.pager.max_page) {
+        const pager = games.pager;
+        if (pager && pager.current_page < pager.max_page) {
           const page2 = await fetch(
             apiGetUrl(`leagueFixtures/${orderedLeague.element.id}&page=2`)
           );
           let page2Data = await page2.json();
 
-          const gamesConcat = games.data.concat(page2Data.data);
+          const page2Games = Array.isArray(page2Data?.data) ? page2Data.data : [];
+          const gamesConcat = games.data.concat(page2Games);
           const gamesConcatFiltered = gamesConcat.filter(
             (game) => game.status === "complete"
           );
@@ -993,8 +1029,7 @@ export async function generateFixtures(
           let sorted = mostRecentResults.sort(
             (a, b) => a.date_unix - b.date_unix
           );
-          gamesShortened = sorted.slice(-600);
-          gamesFiltered = gamesShortened;
+          gamesFiltered = sorted.slice(-600);
         } else {
           const completed = games.data.filter(
             (game) => game.status === "complete"
@@ -1079,11 +1114,26 @@ export async function generateFixtures(
 
         allLeagueResultsArrayOfObjects.push(leagueObj);
       }
-      updateResults(true);
-      generateTables(
-        leagueArray,
-        leagueIdArray,
-        allLeagueResultsArrayOfObjects
+      if (footyStatsRateLimited) {
+        console.warn(
+          "Results rebuild aborted — FootyStats rate limit during leagueFixtures"
+        );
+        allLeagueResultsArrayOfObjects = [];
+      } else if (allLeagueResultsArrayOfObjects.length > 0) {
+        resultsWereRebuilt = true;
+        generateTables(
+          leagueArray,
+          leagueIdArray,
+          allLeagueResultsArrayOfObjects
+        );
+      }
+    } else if (
+      footyStatsUnavailable &&
+      (!resultsCacheOk || allLeagueResults.status === 404)
+    ) {
+      console.warn(
+        "Skipping results rebuild — FootyStats unavailable:",
+        fixturesBody?.error
       );
     }
 
@@ -2015,21 +2065,24 @@ export async function generateFixtures(
         return;
       }
       console.log("Persisting league results to S3");
-      await fetch(`${process.env.NEXT_PUBLIC_EXPRESS_SERVER}results`, {
+      const payload = {
+        leagueIds: allLeagueResultsArrayOfObjects.map((entry) => entry.id),
+        data: allLeagueResultsArrayOfObjects,
+      };
+      const deleteRes = await fetch(`${process.env.NEXT_PUBLIC_EXPRESS_SERVER}results`, {
         method: "DELETE",
         headers: {
           Accept: "application/json",
           "Content-Type": "application/json",
         },
-      }).then(async () => {
-        await fetch(`${process.env.NEXT_PUBLIC_EXPRESS_SERVER}results`, {
-          method: "POST",
-          headers: {
-            Accept: "application/json",
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(allLeagueResultsArrayOfObjects),
-        });
+      });
+      const postRes = await fetch(`${process.env.NEXT_PUBLIC_EXPRESS_SERVER}results`, {
+        method: "POST",
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(payload),
       });
     }
 
@@ -2042,6 +2095,10 @@ export async function generateFixtures(
         },
         body: JSON.stringify({ allForm }),
       });
+    }
+    if (resultsWereRebuilt) {
+      await updateResults(true);
+    } else if (!isStoredLocally) {
       await updateResults(true);
     }
     await saveLeaguesIfNeeded();
