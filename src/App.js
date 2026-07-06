@@ -2,9 +2,9 @@ import { Fragment, useEffect, useState, lazy, Suspense } from "react";
 import ReactDOM from "react-dom";
 import { render } from './utils/render';
 import { Button } from "./components/Button";
-import OddsRadio from "./components/OddsRadio";
+import { renderOddsRadios, onOddsPreferenceChange, applyOddsPreference, selectedOdds } from "./components/OddsRadio";
 import PredictionTypeRadio from "./components/PredictionTypeRadio";
-import { selectedOdds } from "./components/OddsRadio";
+import { oddsModeToSelected, selectedToOddsMode } from "./utils/oddsPreference";
 import Collapsable from "./components/CollapsableElement";
 import MultisPanelCarousel from "./components/MultisPanelCarousel";
 import StripePolicies from "./components/Contact";
@@ -447,13 +447,7 @@ export async function getLeagueList() {
   //   </div>,
   //   "Buttons"
   // );
-  render(
-    <div className="OddsRadios">
-      <OddsRadio value="Fractional odds"></OddsRadio>
-      <OddsRadio value="Decimal odds"></OddsRadio>
-    </div>,
-    "Checkbox"
-  );
+  renderOddsRadios();
   render(
     <div className="PredictionRadios">
       <PredictionTypeRadio value="SSH Tips"></PredictionTypeRadio>
@@ -603,10 +597,27 @@ export function AppContent() {
       if (snap.exists()) {
         const data = snap.data();
         setIsProbability(data.predictionMode !== "score");
+        if (data.oddsMode) {
+          applyOddsPreference(oddsModeToSelected(data.oddsMode));
+        }
       }
     };
 
     loadPreference();
+  }, [currentUser]);
+
+  useEffect(() => {
+    if (!currentUser) return;
+
+    return onOddsPreferenceChange(async (value) => {
+      try {
+        await updateDoc(doc(db, "users", currentUser.uid), {
+          oddsMode: selectedToOddsMode(value),
+        });
+      } catch (error) {
+        console.error("Error updating odds preference:", error);
+      }
+    });
   }, [currentUser]);
 
   const togglePredictionMode = async () => {

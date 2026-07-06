@@ -4722,6 +4722,7 @@ export async function calculateScore(match, index, divider, calculate, AIPredict
 }
 
 let specificLeagueResults = {}; // Initialize outside the function to persist data
+const processedRoiMatchIds = new Set();
 
 async function getSuccessMeasure(fixtures) {
   console.log("Calculating Success Measure...");
@@ -4886,41 +4887,46 @@ async function getSuccessMeasure(fixtures) {
         successCount += 1;
       }
 
-      // Handle league-specific results
-      const leagueName = fixtures[i].leagueDesc || "Unknown League";
-
-      if (!specificLeagueResults[leagueName]) {
-        specificLeagueResults[leagueName] = {
-          totalProfit: 0,
-          totalInvestment: 0,
-          totalROI: 0,
-          exactScores: 0,
-          successCount: 0,
-        };
+      const alreadyCountedForCumulative = processedRoiMatchIds.has(fixtures[i].id);
+      if (!alreadyCountedForCumulative) {
+        processedRoiMatchIds.add(fixtures[i].id);
+        totalInvestment += 1;
+        totalProfit += gameResult;
       }
 
-      // Update the league-specific results
-      const league = specificLeagueResults[leagueName];
-      league.totalProfit += fixtures[i].profit;
-      league.totalInvestment += 1;
-      league.exactScores += fixtures[i].exactScore ? 1 : 0;
-      league.successCount += fixtures[i].predictionOutcome === "Won" ? 1 : 0;
+      // Handle league-specific results (cumulative across processed days)
+      const leagueName = fixtures[i].leagueDesc || "Unknown League";
 
-      // Calculate ROI for the league
-      const netLeagueProfit = league.totalProfit - league.totalInvestment;
-      league.totalROI = (
-        (netLeagueProfit / league.totalInvestment) *
-        100
-      ).toFixed(2);
+      if (!alreadyCountedForCumulative) {
+        if (!specificLeagueResults[leagueName]) {
+          specificLeagueResults[leagueName] = {
+            totalProfit: 0,
+            totalInvestment: 0,
+            totalROI: 0,
+            exactScores: 0,
+            successCount: 0,
+          };
+        }
+
+        const league = specificLeagueResults[leagueName];
+        league.totalProfit += fixtures[i].profit;
+        league.totalInvestment += 1;
+        league.exactScores += fixtures[i].exactScore ? 1 : 0;
+        league.successCount += fixtures[i].predictionOutcome === "Won" ? 1 : 0;
+
+        const netLeagueProfit = league.totalProfit - league.totalInvestment;
+        league.totalROI = (
+          (netLeagueProfit / league.totalInvestment) *
+          100
+        ).toFixed(2);
+      }
     }
   }
 
 
-  totalInvestment += investment;
-  totalProfit += profit;
-
   const ROI = investment > 0 ? (profit / investment) * 100 : 0;
-  totalROI = (totalProfit / totalInvestment) * 100;
+  totalROI =
+    totalInvestment > 0 ? (totalProfit / totalInvestment) * 100 : 0;
 
   let isPaid;
   if (userDetail) {
@@ -5186,10 +5192,6 @@ export async function getScorePrediction(day, mocked) {
   allTips = [];
   predictions = [];
   resultedUserTipsArray.length = 0;
-
-  totalROI = 0;
-  totalInvestment = 0;
-  totalProfit = 0;
 
   const fetchedTips = await fetchAllUserTips();
 
