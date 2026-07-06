@@ -93,8 +93,7 @@ const AMAZON_PRODUCTS = [
       "Stream World Cup coverage on Prime Video, plus unlimited One-Day Delivery and member-only deals. £8.99/month after trial.",
     affiliateUrl: "https://amzn.to/44rfcgt",
     asin: "B00CFM6BAO",
-    imageUrl:
-      "https://m.media-amazon.com/images/G/02/prime/piv/2022PrimeBrand/Prime_Logo_RGB_Prime_Blue._CB663813932_.png",
+    imageUrl: "/images/amazon-prime-logo.png",
     rating: 4.6,
     ratingCount: 128000,
     placements: ["worldcup2026", "fixtures", "footer"],

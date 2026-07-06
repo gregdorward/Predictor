@@ -74,6 +74,10 @@ import { resolveTeamStatistics } from "../utils/sofaScoreTeamStats";
 import { getLeagueFixturesByLeagueId } from "../utils/leagueResultsAccess";
 import { apiGetUrl } from "../utils/apiUrl";
 import {
+  fetchLeagueTeamMetricRankings,
+  fetchPlayerMetricRankings,
+} from "../utils/competitionMetricRankings";
+import {
   buildTeamAllStatsFields,
   calculateComparisonStatusMap,
   getInvertedComparisonMap,
@@ -522,6 +526,7 @@ function GameStats({ game, displayBool, stats, handleToggleTip, userTips }) {
   );
 
   const [ranksHome, setRanksHome] = useState([]);
+  const [leagueTopTeams, setLeagueTopTeams] = useState(stats ?? null);
   const [ranksAway, setRanksAway] = useState([]);
 
   // At the top of your component
@@ -897,27 +902,29 @@ function GameStats({ game, displayBool, stats, handleToggleTip, userTips }) {
     return teamRanks;
   }
 
+  const effectiveLeagueStats = leagueTopTeams || stats;
+
   useEffect(() => {
-    if (stats && homeForm?.teamName) {
+    if (effectiveLeagueStats && homeForm?.teamName) {
       const ranks = getTeamRanksFromTopTeamsWithPartialMatch(
-        stats,
+        effectiveLeagueStats,
         homeForm.teamName,
         matchingGame?.homeId
       );
       setRanksHome(ranks);
     }
-  }, [stats, homeForm?.teamName, matchingGame?.homeId]);
+  }, [effectiveLeagueStats, homeForm?.teamName, matchingGame?.homeId]);
 
   useEffect(() => {
-    if (stats && awayForm?.teamName) {
+    if (effectiveLeagueStats && awayForm?.teamName) {
       const ranks = getTeamRanksFromTopTeamsWithPartialMatch(
-        stats,
+        effectiveLeagueStats,
         awayForm.teamName,
         matchingGame?.awayId
       );
       setRanksAway(ranks);
     }
-  }, [stats, awayForm?.teamName, matchingGame?.awayId]);
+  }, [effectiveLeagueStats, awayForm?.teamName, matchingGame?.awayId]);
 
   const leagueFixtures = getLeagueFixturesByLeagueId(
     allLeagueResultsArrayOfObjects,
@@ -1401,18 +1408,6 @@ function GameStats({ game, displayBool, stats, handleToggleTip, userTips }) {
     return null;
   }, [game.sofaScoreId, rounds]);
 
-  function getWeekOfYear(date) {
-    const target = new Date(date.valueOf());
-    const dayNumber = (date.getUTCDay() + 6) % 7;
-    target.setUTCDate(target.getUTCDate() - dayNumber + 3);
-    const firstThursday = new Date(Date.UTC(target.getUTCFullYear(), 0, 4));
-    const diff = target - firstThursday;
-    return 1 + Math.round(diff / (7 * 24 * 60 * 60 * 1000));
-  }
-
-  const today = new Date(); // Or new Date()
-  const week = getWeekOfYear(today);
-
   async function extractRankedPlayersByTeam(topPlayers, teamId) {
     const result = [];
 
@@ -1739,6 +1734,17 @@ function GameStats({ game, displayBool, stats, handleToggleTip, userTips }) {
           matchingGameInfo?.awayId
         ) {
           console.log(`Derived round ID for league ${game.sofaScoreId}: ${derivedRoundId}`);
+          let leagueTeamRankings = leagueTopTeams || stats;
+          if (!leagueTeamRankings?.topTeams) {
+            leagueTeamRankings = await fetchLeagueTeamMetricRankings(
+              game.sofaScoreId,
+              derivedRoundId
+            );
+            if (leagueTeamRankings) {
+              setLeagueTopTeams(leagueTeamRankings);
+            }
+          }
+
           try {
             const homeTeamStatsResponse = await fetch(
               apiGetUrl(
@@ -1750,7 +1756,7 @@ function GameStats({ game, displayBool, stats, handleToggleTip, userTips }) {
               homeTeamStatsResponse.ok && !homeTeam?.error
                 ? resolveTeamStatistics(
                     homeTeam,
-                    stats,
+                    leagueTeamRankings,
                     matchingGameInfo.homeId
                   )
                 : null;
@@ -1765,7 +1771,7 @@ function GameStats({ game, displayBool, stats, handleToggleTip, userTips }) {
               awayTeamStatsResponse.ok && !awayTeam?.error
                 ? resolveTeamStatistics(
                     awayTeam,
-                    stats,
+                    leagueTeamRankings,
                     matchingGameInfo.awayId
                   )
                 : null;
@@ -1781,12 +1787,12 @@ function GameStats({ game, displayBool, stats, handleToggleTip, userTips }) {
 
 
           try {
-            const leaguePlayerStatsResponse = await fetch(
-              `${process.env.NEXT_PUBLIC_EXPRESS_SERVER}bestPlayers/${game.sofaScoreId}/${derivedRoundId}/${week}`
+            const playerStats = await fetchPlayerMetricRankings(
+              game.sofaScoreId,
+              derivedRoundId
             );
 
-            const playerStats = await leaguePlayerStatsResponse.json();
-
+            if (playerStats?.topPlayers) {
             let playersHome = await extractRankedPlayersByTeam(
               playerStats.topPlayers,
               matchingGameInfo.homeId
@@ -1822,6 +1828,7 @@ function GameStats({ game, displayBool, stats, handleToggleTip, userTips }) {
               }
             } catch (err) {
               console.error("Error fetching images:", err);
+            }
             }
 
             // allPlayerStats[`leagueStats${game.sofaScoreId}`] = teamStats;
@@ -4262,7 +4269,7 @@ function GameStats({ game, displayBool, stats, handleToggleTip, userTips }) {
                   </div>
                 </div>
               )}
-              {stats && ranksHome && ranksAway && stats?.topTeams && (
+              {effectiveLeagueStats && ranksHome && ranksAway && effectiveLeagueStats?.topTeams && (
                 <TeamRankingsFlexView
                   title={`Rankings in ${game.leagueDesc} out of ${
                     stats.topTeams.accurateCrosses?.length ??
@@ -4727,7 +4734,7 @@ function GameStats({ game, displayBool, stats, handleToggleTip, userTips }) {
           awayStats={awayAllStatsProps}
           comparisonMap={comparisonStatusMap}
           rankings={
-            stats?.topTeams && Object.keys(ranksHome).length > 0
+            effectiveLeagueStats?.topTeams && Object.keys(ranksHome).length > 0
               ? {
                   ranksHome,
                   ranksAway,
