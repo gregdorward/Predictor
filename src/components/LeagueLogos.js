@@ -1,17 +1,18 @@
 import { useEffect, useState } from 'react';
 
+// Ids to be updated for the latest season
 const Ids = [
-    { 15050: 17 }, // EPL
+    { 17146: 17 }, // EPL 26/27
     { 16494: 16 }, // World Cup 2026
-    { 14924: 7 },  // Champions League
-    { 14956: 8 },  // La Liga
-    { 14930: 18 }, // Championship
-    { 14934: 24 }, //League 1
-    { 14968: 35 }, // Bundesliga
-    { 15068: 23 }, // Serie A
-    { 16504: 242 }, // MLS
-    { 14932: 34 }, //Ligue 1,
-    { 15000: 36 }, //Scottish Prem
+    { 17128: 7 },  // Champions League 26/27
+    { 17199: 8 },  // La Liga 26/27
+    { 17184: 18 }, // Championship 26/27
+    { 17180: 24 }, // League One 26/27
+    { 17210: 35 }, // Bundesliga 26/27
+    { 17084: 23 }, // Serie A 26/27
+    { 16504: 242 }, // MLS 26
+    { 17102: 34 }, // Ligue 1 26/27
+    { 17148: 36 }, // Scottish Prem 26/27
 ];
 
 export default function LeagueLogos() {

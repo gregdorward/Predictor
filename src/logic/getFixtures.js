@@ -1,6 +1,6 @@
 import { Fragment, lazy, Suspense, useState } from "react";
 import ReactDOM from "react-dom";
-import { orderedLeagues } from "../App";
+import { orderedLeagues, leaguesReady } from "../App";
 import { render, clearRender } from '../utils/render';
 import { getForm } from "./getForm";
 import { Fixture } from "../components/Fixture";
@@ -11,7 +11,13 @@ import { ThreeDots } from "react-loading-icons";
 import BouncingDotsLoader from "../components/BouncingDots"
 import { selectedOdds } from "../components/OddsRadio";
 import { getPointsFromLastX } from "../utils/getPointsFromLastX";
-import { getLeagueFixturesByLeagueId, applyCompetitionGoalDifference } from "../utils/leagueResultsAccess";
+import {
+  getLeagueFixturesByLeagueId,
+  applyCompetitionGoalDifference,
+  getRecentResultsCutoffUnix,
+  isResultsCacheValid,
+  trimLeagueResultsToWindow,
+} from "../utils/leagueResultsAccess";
 import { resolveMultiDivisionLeagueTables } from "../utils/multiDivisionLeagueTables";
 import { apiGetUrl } from "../utils/apiUrl";
 import {
@@ -361,10 +367,6 @@ export async function renderTable(index, results, id) {
     return;
   }
 
-  const { leagueStatsArray, playerStatsArray } = await import(
-    "./getScorePredictions"
-  );
-
   let league;
   //World cup table rendering
 
@@ -409,8 +411,6 @@ export async function renderTable(index, results, id) {
             GamesPlayed={statistics.game_week}
             Results={mostRecentGames}
             Date={todaysDateString}
-            RankingStats={leagueStatsArray?.[`leagueStats${id}`]}
-            PlayerRankingStats={playerStatsArray?.[`playerStats${id}`]}
           // mostRecentGameweek={mostRecentGameweek}
           />
         </Suspense>,
@@ -462,8 +462,6 @@ export async function renderTable(index, results, id) {
             Id={id}
             Results={mostRecentGames}
             Date={todaysDateString}
-            RankingStats={leagueStatsArray?.[`leagueStats${id}`]}
-            PlayerRankingStats={playerStatsArray?.[`playerStats${id}`]}
           />
         </Suspense>
       </>,
@@ -499,8 +497,6 @@ export async function renderTable(index, results, id) {
               Key={`League${index}${divisionName1}`}
               GamesPlayed={statistics.game_week}
               Results={mostRecentGames}
-              RankingStats={leagueStatsArray?.[`leagueStats${id}`]}
-              PlayerRankingStats={playerStatsArray?.[`playerStats${id}`]}
             />
             <LazyLeagueTable
               Teams={leagueTable2}
@@ -510,8 +506,6 @@ export async function renderTable(index, results, id) {
               Key={`League${index}${divisionName1}`}
               GamesPlayed={statistics.game_week}
               Results={mostRecentGames}
-              RankingStats={leagueStatsArray?.[`leagueStats${id}`]}
-              PlayerRankingStats={playerStatsArray?.[`playerStats${id}`]}
 
             />
           </Suspense>
@@ -735,7 +729,7 @@ export function RenderAllFixtures(props) {
 var myHeaders = new Headers();
 myHeaders.append("Origin", "https://gregdorward.github.io");
 
-let isFunctionRunning = false;
+let fixturesLoadPromise = null;
 
 export let dynamicDate;
 let todaysDateString;
@@ -751,9 +745,13 @@ export async function generateFixtures(
   unformattedDate,
   handleGetPredictions
 ) {
-  if (!isFunctionRunning) {
-    isFunctionRunning = true;
-    try {
+  if (fixturesLoadPromise) {
+    return fixturesLoadPromise;
+  }
+
+  fixturesLoadPromise = (async () => {
+    await leaguesReady;
+
     openLeagueTables.clear();
     todaysDateString = todaysDate;
     console.log("Generating fixtures for date: ", date);
@@ -870,9 +868,17 @@ export async function generateFixtures(
 
     fixtureResponse = await fetch(url);
 
-    await fixtureResponse.json().then((fixtures) => {
-      fixtureArray = Array.from(fixtures.data);
-    });
+    let fixturesBody = null;
+    try {
+      fixturesBody = await fixtureResponse.json();
+    } catch (parseErr) {
+      console.warn("Matches API returned non-JSON body", fixtureResponse.status, parseErr);
+    }
+    if (fixturesBody?.error) {
+      console.warn("Matches API error:", fixturesBody.error, fixtureResponse.status);
+    }
+    fixtureArray = Array.isArray(fixturesBody?.data) ? fixturesBody.data : [];
+    const footyStatsUnavailable = Boolean(fixturesBody?.error);
 
     let form;
     let formArray = [];
@@ -880,14 +886,14 @@ export async function generateFixtures(
     let isFormStored;
     let isStoredLocally;
     let leaguesStored = false;
+    let resultsWereRebuilt = false;
     let storedForm = await fetch(formUrl);
     if (storedForm.status === 201 || storedForm.status === 200) {
-      await storedForm.json().then((form) => {
-        formArray = Array.from(form.allForm);
-        isFormStored = true;
-        isStoredLocally = true;
-        allForm = formArray;
-      });
+      const form = await storedForm.json();
+      formArray = Array.isArray(form?.allForm) ? form.allForm : [];
+      isFormStored = formArray.length > 0;
+      isStoredLocally = isFormStored;
+      allForm = formArray;
     } else {
       isFormStored = false;
       isStoredLocally = false;
@@ -906,33 +912,52 @@ export async function generateFixtures(
 
     allLeagueResults = await fetch(apiGetUrl(`results`));
 
-    if (
+    const resultsCacheOk =
       league.status === 200 &&
-      (allLeagueResults.status === 201 || allLeagueResults.status === 200)
+      (allLeagueResults.status === 201 || allLeagueResults.status === 200);
+
+    if (resultsCacheOk) {
+      const cachedBody = await allLeagueResults.json();
+      const cachedGames = Array.isArray(cachedBody)
+        ? cachedBody
+        : Array.isArray(cachedBody?.data)
+          ? cachedBody.data
+          : [];
+      const cacheValid = isResultsCacheValid(cachedGames, orderedLeagues);
+
+      if (cacheValid) {
+        console.log("Using cached league results");
+        await league.json().then((leagues) => {
+          leagueArray = Array.from(leagues.leagueArray);
+        });
+
+        const cutoffUnix = getRecentResultsCutoffUnix();
+        allLeagueResultsArrayOfObjects = trimLeagueResultsToWindow(
+          Array.from(cachedGames),
+          cutoffUnix
+        );
+        leaguesStored = true;
+        generateTables(
+          leagueArray,
+          leagueIdArray,
+          allLeagueResultsArrayOfObjects
+        );
+      } else {
+        console.log(
+          "Cached results stale or mismatched current seasons — rebuilding"
+        );
+        allLeagueResults = { status: 404 };
+      }
+    }
+
+    if (
+      !footyStatsUnavailable &&
+      (!resultsCacheOk || allLeagueResults.status === 404)
     ) {
-      console.log("Not fetching leagues");
-      await league.json().then((leagues) => {
-        console.log(leagues)
-
-        leagueArray = Array.from(leagues.leagueArray);
-      });
-      updateResults(false);
-
-      await allLeagueResults.json().then((allGames) => {
-        allLeagueResultsArrayOfObjects = Array.from(allGames);
-      });
-
-      leaguesStored = true;
-      generateTables(
-        leagueArray,
-        leagueIdArray,
-        allLeagueResultsArrayOfObjects
-      );
-
-      // arrayOfGames = [];
-    } else {
       allLeagueResultsArrayOfObjects = [];
       console.log("Fetching leagues");
+      let footyStatsRateLimited = false;
+
       for (let i = 0; i < orderedLeagues.length; i++) {
         league = await fetch(
           apiGetUrl(`tables/${orderedLeagues[i].element.id}/${leaguesDate}`)
@@ -946,25 +971,45 @@ export async function generateFixtures(
 
       //set variable for date X amount of days in the past and use that to filter the results
 
-      let startDate = (new Date().getTime() / 1000).toFixed(0);
-      // deduct 3 months
-      let targetDate = startDate - 23778463;
+      const targetDate = getRecentResultsCutoffUnix();
 
       for (const orderedLeague of orderedLeagues) {
+        if (footyStatsRateLimited) {
+          break;
+        }
+
         let fixtures = await fetch(
           apiGetUrl(`leagueFixtures/${orderedLeague.element.id}`)
         );
 
         let games = await fixtures.json();
+        if (games?.error) {
+          console.warn(
+            `leagueFixtures ${orderedLeague.element.id}:`,
+            games.error
+          );
+          if (String(games.error).toLowerCase().includes("rate limit")) {
+            footyStatsRateLimited = true;
+          }
+          continue;
+        }
+        if (!Array.isArray(games?.data)) {
+          console.warn(
+            `leagueFixtures ${orderedLeague.element.id}: missing data array`
+          );
+          continue;
+        }
+
         let gamesFiltered;
-        let gamesShortened;
-        if (games.pager.current_page < games.pager.max_page) {
+        const pager = games.pager;
+        if (pager && pager.current_page < pager.max_page) {
           const page2 = await fetch(
             apiGetUrl(`leagueFixtures/${orderedLeague.element.id}&page=2`)
           );
           let page2Data = await page2.json();
 
-          const gamesConcat = games.data.concat(page2Data.data);
+          const page2Games = Array.isArray(page2Data?.data) ? page2Data.data : [];
+          const gamesConcat = games.data.concat(page2Games);
           const gamesConcatFiltered = gamesConcat.filter(
             (game) => game.status === "complete"
           );
@@ -975,19 +1020,17 @@ export async function generateFixtures(
           let sorted = mostRecentResults.sort(
             (a, b) => a.date_unix - b.date_unix
           );
-          gamesShortened = sorted.slice(-600);
-          gamesFiltered = gamesShortened;
+          gamesFiltered = sorted.slice(-600);
         } else {
-          gamesFiltered = games.data.filter(
+          const completed = games.data.filter(
             (game) => game.status === "complete"
           );
-
-          if (current) {
-            let mostRecentResults = gamesFiltered.filter(
-              (game) => game.date_unix > targetDate
-            );
-            gamesFiltered = mostRecentResults.slice(-600);
-          }
+          const mostRecentResults = completed.filter(
+            (game) => game.date_unix > targetDate
+          );
+          gamesFiltered = mostRecentResults
+            .sort((a, b) => a.date_unix - b.date_unix)
+            .slice(-600);
         }
 
         const shortenedResults = gamesFiltered.map(
@@ -1062,10 +1105,26 @@ export async function generateFixtures(
 
         allLeagueResultsArrayOfObjects.push(leagueObj);
       }
-      generateTables(
-        leagueArray,
-        leagueIdArray,
-        allLeagueResultsArrayOfObjects
+      if (footyStatsRateLimited) {
+        console.warn(
+          "Results rebuild aborted — FootyStats rate limit during leagueFixtures"
+        );
+        allLeagueResultsArrayOfObjects = [];
+      } else if (allLeagueResultsArrayOfObjects.length > 0) {
+        resultsWereRebuilt = true;
+        generateTables(
+          leagueArray,
+          leagueIdArray,
+          allLeagueResultsArrayOfObjects
+        );
+      }
+    } else if (
+      footyStatsUnavailable &&
+      (!resultsCacheOk || allLeagueResults.status === 404)
+    ) {
+      console.warn(
+        "Skipping results rebuild — FootyStats unavailable:",
+        fixturesBody?.error
       );
     }
 
@@ -1988,28 +2047,34 @@ export async function generateFixtures(
     //   "Loading"
     // );
 
-    async function updateResults(bool) {
-      console.log("updating results");
-      if (allLeagueResultsArrayOfObjects.length > 0 && bool === true) {
-        await fetch(`${process.env.NEXT_PUBLIC_EXPRESS_SERVER}results`, {
-          method: "DELETE",
-          headers: {
-            Accept: "application/json",
-            "Content-Type": "application/json",
-          },
-        }).then(async () => {
-          await fetch(`${process.env.NEXT_PUBLIC_EXPRESS_SERVER}results`, {
-            method: "POST",
-            headers: {
-              Accept: "application/json",
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify(allLeagueResultsArrayOfObjects),
-          });
-        });
-      } else {
-        console.log("EMPTY RESULTS");
+    async function updateResults(shouldPersist) {
+      if (!shouldPersist) {
+        return;
       }
+      if (allLeagueResultsArrayOfObjects.length === 0) {
+        console.warn("No league results to persist — skipping S3 upload");
+        return;
+      }
+      console.log("Persisting league results to S3");
+      const payload = {
+        leagueIds: allLeagueResultsArrayOfObjects.map((entry) => entry.id),
+        data: allLeagueResultsArrayOfObjects,
+      };
+      const deleteRes = await fetch(`${process.env.NEXT_PUBLIC_EXPRESS_SERVER}results`, {
+        method: "DELETE",
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+        },
+      });
+      const postRes = await fetch(`${process.env.NEXT_PUBLIC_EXPRESS_SERVER}results`, {
+        method: "POST",
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(payload),
+      });
     }
 
     if (!isStoredLocally) {
@@ -2022,7 +2087,9 @@ export async function generateFixtures(
         body: JSON.stringify({ allForm }),
       });
     }
-    if (!leaguesStored && allLeagueResultsArrayOfObjects.length > 0) {
+    if (resultsWereRebuilt) {
+      await updateResults(true);
+    } else if (!isStoredLocally) {
       await updateResults(true);
     }
     await saveLeaguesIfNeeded();
@@ -2034,10 +2101,9 @@ export async function generateFixtures(
     //   "FixtureContainer"
     // );
     return [...matches];
-    } finally {
-      setTimeout(() => {
-        isFunctionRunning = false;
-      }, 1000);
-    }
-  }
+  })().finally(() => {
+    fixturesLoadPromise = null;
+  });
+
+  return fixturesLoadPromise;
 }

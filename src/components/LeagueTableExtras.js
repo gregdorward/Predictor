@@ -5,6 +5,7 @@ import StatTable from "./StatTable";
 import PlayerRankingTable from "./PlayerStatTable";
 import { paid } from "../logic/getScorePredictions";
 import { sofaScoreIds } from "../constants/sofaScoreIds";
+import { fetchCompetitionMetricRankings } from "../utils/competitionMetricRankings";
 
 function resolveScorerTeam(scorer, allTeams) {
   const teams = allTeams || [];
@@ -96,10 +97,10 @@ export default function LeagueTableExtras({
   Id,
   Results,
   Date,
-  RankingStats,
-  PlayerRankingStats,
 }) {
   const [mediaItems, setMediaItems] = useState([]);
+  const [rankingStats, setRankingStats] = useState(null);
+  const [playerRankingStats, setPlayerRankingStats] = useState(null);
   const derivedMediaId = getMediaId(Id);
   const leagueResults = buildResultCollapsables(Results);
   const topScorers = Stats?.top_scorers?.slice(0, 10) || [];
@@ -145,10 +146,34 @@ export default function LeagueTableExtras({
     fetchMedia();
   }, [derivedMediaId, Date]);
 
+  useEffect(() => {
+    let cancelled = false;
+
+    async function loadMetricRankings() {
+      if (!Id) {
+        setRankingStats(null);
+        setPlayerRankingStats(null);
+        return;
+      }
+
+      const data = await fetchCompetitionMetricRankings(Id);
+      if (!cancelled) {
+        setRankingStats(data.rankingStats);
+        setPlayerRankingStats(data.playerRankingStats);
+      }
+    }
+
+    loadMetricRankings();
+
+    return () => {
+      cancelled = true;
+    };
+  }, [Id]);
+
   const hasContent =
     mediaItems.length > 0 ||
-    RankingStats?.topTeams ||
-    PlayerRankingStats?.topPlayers ||
+    rankingStats?.topTeams ||
+    playerRankingStats?.topPlayers ||
     leagueResults.length > 0 ||
     (derivedMediaId && paid) ||
     hasLeagueStats ||
@@ -189,21 +214,21 @@ export default function LeagueTableExtras({
         </ul>
       )}
 
-      {RankingStats?.topTeams && (
+      {rankingStats?.topTeams && (
         <>
           <h5>League Rankings by Metric</h5>
           <StatTable
-            rankingStats={RankingStats.topTeams}
+            rankingStats={rankingStats.topTeams}
             statKey="accurateCrosses"
           />
         </>
       )}
 
-      {PlayerRankingStats?.topPlayers && (
+      {playerRankingStats?.topPlayers && (
         <>
           <h5>Player Rankings by Metric</h5>
           <PlayerRankingTable
-            rankingStats={PlayerRankingStats.topPlayers}
+            rankingStats={playerRankingStats.topPlayers}
             statKey="accurateLongBalls"
           />
         </>

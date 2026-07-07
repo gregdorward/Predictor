@@ -1,269 +1,219 @@
+// Ids to be updated for the latest season
 export const footyStatsToSofaScoreMap = {
-  15050: {
+  17146: {
     id: 17,
-    season: 76986,
+    season: 96668, // Premier League 26/27
   },
   16494: {
     id: 16,
-    season: 58210,
+    season: 58210, // World Cup 2026
   },
-  //Championship 25
-  14930: {
+  17184: {
     id: 18,
-    season: 77347,
+    season: 97037, // Championship 26/27
   },
-  //League 1
-  14934: {
+  17180: {
     id: 24,
-    season: 77352,
+    season: 97077, // League One 26/27
   },
-  //League 2
-  14935: {
+  17185: {
     id: 25,
-    season: 77351,
+    season: 97078, // League Two 26/27
   },
   15657: {
     id: 173,
-    season: 78229, // Conference 25/26
+    season: 78229, // National League 25/26
   },
   15845: {
     id: 176,
-    season: 78282, //National league north 25/26
+    season: 78282, // National League North 25/26
   },
   15844: {
     id: 174,
-    season: 78227, //National league south 25/26
+    season: 78227, // National League South 25/26
   },
-  //Bundesliga
-  14968: {
+  17210: {
     id: 35,
-    season: 77333,
+    season: 97464, // Bundesliga 26/27
   },
-  //La Liga 25
-  14956: {
+  17199: {
     id: 8,
-    season: 77559,
+    season: 97268, // La Liga 26/27
   },
-  15000: {
+  17148: {
     id: 36,
-    season: 77128, // Scottish Premiership 25
+    season: 96658, // Scottish Premiership 26/27
   },
-  //Champions league 25
-  14924: {
+  17128: {
     id: 7,
-    season: 76953,
+    season: 96518, // Champions League 26/27
   },
-  //Serie A 25
-  15068: {
+  17084: {
     id: 23,
-    season: 76457,
+    season: 95836, // Serie A 26/27
   },
-  //MLS
   16504: {
     id: 242,
-    season: 86668,
+    season: 86668, // MLS 26
   },
-  //Ligue 1 25
-  14932: {
+  17102: {
     id: 34,
-    season: 77356,
+    season: 96127, // Ligue 1 26/27
   },
   15115: {
     id: 238,
-    season: 77806, // Portuguese Primeira Liga 25
+    season: 97436, // Primeira Liga 26/27 (FootyStats season id unchanged)
   },
   16556: {
     id: 384,
-    season: 87760, // Copa Libertadores
+    season: 87760, // Copa Libertadores 26
   },
-  14936: {
+  17097: {
     id: 37,
-    season: 77012, // Eredivisie
+    season: 96143, // Eredivisie 26/27
   },
-  14937: {
-    id: 9,
-    season: 77849, // Belgian Pro League
+  17171: {
+    id: 38,
+    season: 96616, // Belgian Pro League 26/27
   },
-  16263: {
-    id: 40,
-    season: 69956, // Scottish Premiership
-  },
-  15055: {
+  17091: {
     id: 39,
-    season: 76491, // Danish Superliga
+    season: 95785, // Danish Superliga 26/27
   },
   16558: {
     id: 20,
-    season: 87809, // Norwegian Eliteserien
+    season: 87809, // Norwegian Eliteserien 26
   },
-  14923: {
+  17181: {
     id: 45,
-    season: 77382, // Austrian Bundesliga
+    season: 97043, // Austrian Bundesliga 26/27
   },
   15163: {
     id: 185,
-    season: 78175, // Greek Super League
+    season: 78175, // Greek Super League 25/26
   },
   14972: {
-    id: 52, // Turkish Super Lig
-    season: 78175,
+    id: 52,
+    season: 77805, // Turkish Super Lig 25/26
   },
-  15031: {
+  17112: {
     id: 202,
-    season: 76477, // Ekstraklasa
+    season: 96144, // Ekstraklasa 26/27
   },
   15066: {
     id: 54,
-    season: 77558, // Spanish Segunda Division
+    season: 97280, // Segunda Division 26/27
   },
-  14931: {
+  17212: {
     id: 44,
-    season: 77354, // Bundesliga 2
+    season: 97406, // Bundesliga 2 26/27
   },
   14977: {
     id: 491,
-    season: 346654, // German 3. Liga
+    season: 77744, // 3. Liga 25/26
   },
-  14954: {
+  17117: {
     id: 182,
-    season: 77357, // French Ligue 2
+    season: 96109, // Ligue 2 26/27
   },
   15632: {
     id: 53,
-    season: 79502, // Italian Serie B 25/26
+    season: 79502, // Serie B 25/26
   },
-  14987: {
+  17110: {
     id: 131,
-    season: 14987, // Dutch Eerste Divisie 25
+    season: 96187, // Eerste Divisie 26/27
   },
-  15061: {
+  17144: {
     id: 206,
-    season: 77037, // Scottish Championship 25
+    season: 96614, // Scottish Championship 26/27
   },
-  15062: {
+  17147: {
     id: 207,
-    season: 77037, // Scottish League One 25
+    season: 96638, // Scottish League One 26/27
   },
-  15064: {
+  17140: {
     id: 209,
-    season: 77045, // Scottish League Two 25
+    season: 96664, // Scottish League Two 26/27
   },
-  15047: {
+  17129: {
     id: 215,
-    season: 77152, // Swiss Super League
+    season: 96589, // Swiss Super League 26/27
   },
-  15053: {
+  17087: {
     id: 170,
-    season: 77152, // Croatian First League
+    season: 95727, // Croatian First League 26/27
   },
-  14973: {
+  17157: {
     id: 172,
-    season: 77019, // Czech First League
+    season: 96966, // Czech First League 26/27
   },
-  14089: {
-    id: 41,
-    season: 70853, // Finnish Veikkausliiga
-  },
-  14951: {
-    id: 218,
-    season: 77625, // Ukrainian Premier League
-  },
-  15063: {
-    id: 212,
-    season: 62660, // Slovenian Prva Liga
-  },
-  14933: {
-    id: 211,
-    season: 77154, // Slovak Super Liga
-  },
-  15065: {
-    id: 210,
-    season: 77625, // Serbian SuperLiga 
-  },
-  15234: {
+  17099: {
     id: 11621,
-    season: 76500, // Liga MX 25
+    season: 96191, // Liga MX 26
   },
   16544: {
     id: 325,
-    season: 87678, // Brazil Serie A
+    season: 87678, // Brazil Serie A 26
   },
-  14305: {
-    id: 390,
-    season: 72603, // Brazil Serie B
-  },
-  13878: {
-    id: 357,
-    season: 69619, // Club World Cup
-  },
-  13734: {
+  16808: {
     id: 10783,
-    season: 58337, // UEFA Nations League 25
-  },
-  14086: {
-    id: 11539,
-    season: 70681, // Colombian Liga BetPlay 25
-  },
-  14116: {
-    id: 11653,
-    season: 76986, // Chilean Primera Division 25
-  },
-  14626: {
-    id: 278,
-    season: 71306, // Uruguayan Primera Division 25
-  },
-  16571: {
-    id: 155,
-    season: 87913, // Argentina Primera Division 25
+    season: 89945, // UEFA Nations League 26/27
   },
   16614: {
     id: 11539,
-    season: 87913, // Colombian Primera Division 25
+    season: 88503, // Colombian Primera Division 26
   },
-  16242: {
+  17115: {
     id: 196,
-    season: 69871, // J League 25
+    season: 96370, // J League 26/27
   },
   16627: {
     id: 410,
-    season: 88606, // K League 25
+    season: 88606, // K League 26
   },
-  12772: {
-    id: 955,
-    season: 63998, // Saudi Pro League 24/25
-  },
-  13967: {
-    id: 13363,
-    season: 70263 // USL 25
-  },
-  // 14236: {
-  //   id: 13470,
-  //   season: 72315 // Canadian Premier League 25
-  // },
   13964: {
     id: 11,
-    season: 69427, // World Cup EU 2026
+    season: 69427, // World Cup Europe Qualifiers 2026
   },
   10121: {
     id: 295,
-    season: 53820, // World Cup SA 2026
+    season: 53820, // World Cup South America Qualifiers 2026
   },
   16537: {
     id: 192,
-    season: 87682, // Ireland 24/25
+    season: 87682, // Irish Premier Division 26
   },
   16036: {
     id: 136,
-    season: 82603, // A League 24/25
+    season: 82603, // A-League 25/26
   },
-  15002: {
+  17127: {
     id: 679,
-    season: 76984, // UEFA Europa League 25
+    season: 96522, // Europa League 26/27
   },
-  14904: {
+  17130: {
     id: 17015,
-    season: 76960, // UEFA Europa Conference League 24/25
+    season: 96529, // Europa Conference League 26/27
   },
+  16571: {
+    id: 155,
+    season: 87913, // Argentina Primera Division 26
+  },
+
+  // Deferred — not in FootyStats chosen_leagues; SofaScore refs commented out elsewhere
+  // 12772: { id: 955, season: 80443 }, // Saudi Pro League
+  // 13878: { id: 357, season: 69619 }, // Club World Cup
+  // 13967: { id: 13363, season: 87611 }, // USL
+  // 14089: { id: 41, season: 87930 }, // Veikkausliiga
+  // 14116: { id: 11653, season: 88493 }, // Chilean Primera Division
+  // 14305: { id: 390, season: 89840 }, // Brazil Serie B
+  // 14626: { id: 278, season: 89288 }, // Uruguayan Primera Division
+  // 14933: { id: 211, season: 96151 }, // Slovak Super Liga
+  // 14951: { id: 218, season: 97214 }, // Ukrainian Premier League
+  // 15063: { id: 212, season: 96864 }, // Slovenian Prva Liga
+  // 15065: { id: 210, season: 96249 }, // Serbian SuperLiga
+  // 16263: { id: 40, season: 87925 }, // Allsvenskan
 };
 
 export function getSofaScoreMapping(seasonId) {

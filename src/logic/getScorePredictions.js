@@ -3,7 +3,6 @@ import { isReactSnap } from "../firebase";
 import { apiGetUrl } from "../utils/apiUrl";
 import { getPointsFromLastX } from "../utils/getPointsFromLastX";
 export { getPointsFromLastX };
-import { footyStatsToSofaScoreMap } from "../constants/footyStatsToSofaScore";
 import { matches, diff } from "./getFixtures";
 import Collapsable from "../components/CollapsableElement";
 import CollapsableStats from "../components/CollapsableStats";
@@ -4722,6 +4721,7 @@ export async function calculateScore(match, index, divider, calculate, AIPredict
 }
 
 let specificLeagueResults = {}; // Initialize outside the function to persist data
+const processedRoiMatchIds = new Set();
 
 async function getSuccessMeasure(fixtures) {
   console.log("Calculating Success Measure...");
@@ -4886,41 +4886,46 @@ async function getSuccessMeasure(fixtures) {
         successCount += 1;
       }
 
-      // Handle league-specific results
-      const leagueName = fixtures[i].leagueDesc || "Unknown League";
-
-      if (!specificLeagueResults[leagueName]) {
-        specificLeagueResults[leagueName] = {
-          totalProfit: 0,
-          totalInvestment: 0,
-          totalROI: 0,
-          exactScores: 0,
-          successCount: 0,
-        };
+      const alreadyCountedForCumulative = processedRoiMatchIds.has(fixtures[i].id);
+      if (!alreadyCountedForCumulative) {
+        processedRoiMatchIds.add(fixtures[i].id);
+        totalInvestment += 1;
+        totalProfit += gameResult;
       }
 
-      // Update the league-specific results
-      const league = specificLeagueResults[leagueName];
-      league.totalProfit += fixtures[i].profit;
-      league.totalInvestment += 1;
-      league.exactScores += fixtures[i].exactScore ? 1 : 0;
-      league.successCount += fixtures[i].predictionOutcome === "Won" ? 1 : 0;
+      // Handle league-specific results (cumulative across processed days)
+      const leagueName = fixtures[i].leagueDesc || "Unknown League";
 
-      // Calculate ROI for the league
-      const netLeagueProfit = league.totalProfit - league.totalInvestment;
-      league.totalROI = (
-        (netLeagueProfit / league.totalInvestment) *
-        100
-      ).toFixed(2);
+      if (!alreadyCountedForCumulative) {
+        if (!specificLeagueResults[leagueName]) {
+          specificLeagueResults[leagueName] = {
+            totalProfit: 0,
+            totalInvestment: 0,
+            totalROI: 0,
+            exactScores: 0,
+            successCount: 0,
+          };
+        }
+
+        const league = specificLeagueResults[leagueName];
+        league.totalProfit += fixtures[i].profit;
+        league.totalInvestment += 1;
+        league.exactScores += fixtures[i].exactScore ? 1 : 0;
+        league.successCount += fixtures[i].predictionOutcome === "Won" ? 1 : 0;
+
+        const netLeagueProfit = league.totalProfit - league.totalInvestment;
+        league.totalROI = (
+          (netLeagueProfit / league.totalInvestment) *
+          100
+        ).toFixed(2);
+      }
     }
   }
 
 
-  totalInvestment += investment;
-  totalProfit += profit;
-
   const ROI = investment > 0 ? (profit / investment) * 100 : 0;
-  totalROI = (totalProfit / totalInvestment) * 100;
+  totalROI =
+    totalInvestment > 0 ? (totalProfit / totalInvestment) * 100 : 0;
 
   let isPaid;
   if (userDetail) {
@@ -5055,109 +5060,6 @@ export async function getNewTips(array) {
   await renderTips(newArray);
 }
 
-const footyStatsToSofaScore = [footyStatsToSofaScoreMap];
-
-
-// 1. Mark the function as async so it returns a promise
-function fetchLeagueStats() {
-  console.log("Fetching league stats...");
-
-  function getWeekOfYear(date) {
-    const target = new Date(date.valueOf());
-    const dayNumber = (date.getUTCDay() + 6) % 7;
-    target.setUTCDate(target.getUTCDate() - dayNumber + 3);
-    const firstThursday = new Date(Date.UTC(target.getUTCFullYear(), 0, 4));
-    const diff = target - firstThursday;
-    return 1 + Math.round(diff / (7 * 24 * 60 * 60 * 1000));
-  }
-
-  const today = new Date();
-  const week = getWeekOfYear(today);
-  const leagueObject = footyStatsToSofaScore[0];
-
-  // 1. Map to an array of Promises
-  const fetchPromises = uniqueLeagueIDs.map((leagueId) => {
-    const mapping = leagueObject[leagueId];
-    if (!mapping) return Promise.resolve(null);
-
-    const { id: sofaScoreId, season: sofaScoreSeason } = mapping;
-
-    // Use .then() instead of await to keep the inner logic non-async
-    return fetch(`${process.env.NEXT_PUBLIC_EXPRESS_SERVER}LeagueTeamStats/${sofaScoreId}/${sofaScoreSeason}/${week}`)
-      .then((response) => response.json())
-      .then((teamStats) => ({
-        key: `leagueStats${leagueId}`,
-        data: teamStats
-      }))
-      .catch((error) => {
-        console.error(`Error for league ${leagueId}:`, error);
-        return { key: `leagueStats${leagueId}`, data: { error: error.message } };
-      });
-  });
-
-  // 2. Return the Promise.all chain
-  return Promise.all(fetchPromises).then((results) => {
-    const allLeagueStats = {};
-    results.forEach((result) => {
-      if (result) {
-        allLeagueStats[result.key] = result.data;
-      }
-    });
-    return allLeagueStats;
-  });
-}
-
-export let leagueStatsArray = {};
-
-
-
-function fetchPlayerStats() {
-  function getWeekOfYear(date) {
-    const target = new Date(date.valueOf());
-    const dayNumber = (date.getUTCDay() + 6) % 7;
-    target.setUTCDate(target.getUTCDate() - dayNumber + 3);
-    const firstThursday = new Date(Date.UTC(target.getUTCFullYear(), 0, 4));
-    const diff = target - firstThursday;
-    return 1 + Math.round(diff / (7 * 24 * 60 * 60 * 1000));
-  }
-
-  const today = new Date();
-  const week = getWeekOfYear(today);
-  const leagueObject = footyStatsToSofaScore[0];
-
-  // 1. Create an array of promises (one for each league)
-  const playerPromises = uniqueLeagueIDs.map((leagueId) => {
-    const mapping = leagueObject[leagueId];
-    if (!mapping) return Promise.resolve(null);
-
-    const { id: sofaScoreId, season: sofaScoreSeason } = mapping;
-
-    return fetch(`${process.env.NEXT_PUBLIC_EXPRESS_SERVER}bestPlayers/${sofaScoreId}/${sofaScoreSeason}/${week}`)
-      .then(res => res.json())
-      .then(playerData => ({
-        key: `playerStats${leagueId}`,
-        data: playerData
-      }))
-      .catch(error => {
-        console.error(`Error for league ${leagueId}:`, error);
-        return { key: `playerStats${leagueId}`, data: { error: error.message } };
-      });
-  });
-
-  // 2. Return the Promise.all chain so the caller can wait for completion
-  return Promise.all(playerPromises).then((results) => {
-    const allPlayerStats = {};
-    results.forEach((result) => {
-      if (result) {
-        allPlayerStats[result.key] = result.data;
-      }
-    });
-    return allPlayerStats;
-  });
-}
-
-export let playerStatsArray = {};
-
 /** XG momentum rating for the team being tipped (home/away/draw fallback). */
 function tippedTeamXGRating(match) {
   if (match.prediction === "awayWin") {
@@ -5187,31 +5089,19 @@ export async function getScorePrediction(day, mocked) {
   predictions = [];
   resultedUserTipsArray.length = 0;
 
-  totalROI = 0;
-  totalInvestment = 0;
-  totalProfit = 0;
-
   const fetchedTips = await fetchAllUserTips();
 
   let index = 2;
   let divider = 10;
 
-  const leagueStatsPromise = fetchLeagueStats();
-  const playerStatsPromise = fetchPlayerStats();
-
-
   const predictedScoresPromise = fetch(`${process.env.NEXT_PUBLIC_EXPRESS_SERVER}predictedScores2`);
   const leagueAveragesPromise = fetch(apiGetUrl(`league-averages`));
 
-  // 2. Await everything in parallel
+  // Await everything in parallel
   const [
-    leagueStats,
-    playerStats,
     predictedScoresResponse,
     leagueAveragesResponse
   ] = await Promise.all([
-    leagueStatsPromise,
-    playerStatsPromise,
     predictedScoresPromise,
     leagueAveragesPromise
   ]);
@@ -5820,12 +5710,6 @@ export async function getScorePrediction(day, mocked) {
   await getMultis();
   await getNewTips(allTipsSorted);
   await getSuccessMeasure(matches);
-
-
-
-  // Assign to global/outer scope variables
-  leagueStatsArray = leagueStats;
-  playerStatsArray = playerStats;
 
   return matches;
 

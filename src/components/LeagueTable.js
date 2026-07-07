@@ -234,8 +234,6 @@ export default function LeagueTable(props) {
             Id={props.Id}
             Results={props.Results}
             Date={props.Date}
-            RankingStats={props.RankingStats}
-            PlayerRankingStats={props.PlayerRankingStats}
           />
         )}
       </TableContainer>

@@ -1,59 +1,67 @@
+// Ids to be updated for the latest season
 export const sofaScoreIds = [
-  { 15050: 17 }, //EPL
+  { 17146: 17 }, // EPL 26/27
   { 16494: 16 }, // World Cup 2026
-  { 14930: 18 }, //Championship
-  { 14934: 24 }, //League 1
-  { 14935: 25 }, //League 2
-  { 14968: 35 }, //Bundesliga
-  { 14956: 8 }, //La Liga
-  { 14924: 7 }, //Champions League
-  { 13734: 10783 }, //Nations league 24/25
-  { 13878: 357 }, // Club World Cup 25
-  { 16261: 384 }, // Copa Libertadores 25
-  { 15068: 23 }, //Serie A
-  { 16504: 242 }, //MLS
-  { 13967: 13363 }, // USL
-  { 14932: 34 }, //Ligue 1,
-  { 15000: 36 }, //Scottish Prem
-  { 15115: 44 }, //Portugal
-  { 14936: 35 }, //Dutch
-  { 14937: 38 }, //Belgium
-  { 16263: 40 }, //Sweden
-  { 15055: 39 }, //Denmark
-  { 16260: 20 }, //Norway
-  { 14923: 45 }, //Austrian Prem 22/23
-  { 15163: 185 }, //Greek Prem 22/23
-  { 14972: 52 }, //turkey
-  { 15031: 202 }, //Polish prem 22/23
-  { 15047: 215 }, //Swiss prem 22/23
-  { 15053: 170 }, //Croatia 24/25
-  { 14973: 172 }, //Czecjh 24/25
-  { 14089: 41 }, // Finland 25
-  { 14951: 218 }, // Ulraine 25
-  { 15065: 210 }, // Serbia 25
-  { 15063: 212 }, // Slovenia 25
-  { 14933: 211 }, // Slovakia 25
-  { 16537: 192 }, //Irish Prem
-  { 16036: 136 }, //Aus A League
-  { 12327: 679 }, //Europa
-  { 14904: 17015 }, //Europa Conference
-  { 15066: 54 }, //Spanish secunda 22/23
-  { 15632: 53 }, //Italy serie B 22/23
-  { 14931: 44 }, //Bundesliga 2 22/23
-  { 14977: 491 }, //German 3rd tier 25/26
-  { 14954: 182 }, //French League 2 22/23
-  { 14987: 131 }, //Dutch League 2 25
-  { 15061: 206 }, //Scottish Championship 22/23
-  { 14943: 207 }, //Scottish league 1 22/23
-  { 15209: 209 }, //Scottish league 2 22/23
-  { 16544: 325 }, //Brazil prem 26
-  { 15746: 155 }, //Argentina prem 23
-  { 15234: 11621 }, //Mexico prem 25
-  { 15657: 173 }, //National league
-  { 15845: 176 }, //National league north 25
-  { 15844: 174 }, //National league south 25
-  { 16242: 196 }, //Japan 25
-  { 12772: 955 }, //Saudi 24/25
-  { 13964: 11 }, // WC Qual Europe,
-  { 10121: 295 }, // WC Qual SA,
+  { 17184: 18 }, // Championship 26/27
+  { 17180: 24 }, // League One 26/27
+  { 17185: 25 }, // League Two 26/27
+  { 17210: 35 }, // Bundesliga 26/27
+  { 17199: 8 }, // La Liga 26/27
+  { 17128: 7 }, // Champions League 26/27
+  { 16808: 10783 }, // Nations League 26/27
+  { 16556: 384 }, // Copa Libertadores 26
+  { 17084: 23 }, // Serie A 26/27
+  { 16504: 242 }, // MLS 26
+  { 17102: 34 }, // Ligue 1 26/27
+  { 17148: 36 }, // Scottish Prem 26/27
+  { 15115: 238 }, // Primeira Liga 26/27
+  { 17097: 37 }, // Eredivisie 26/27
+  { 17171: 38 }, // Belgian Pro League 26/27
+  { 17091: 39 }, // Denmark 26/27
+  { 16558: 20 }, // Norway 26
+  { 17181: 45 }, // Austrian Bundesliga 26/27
+  { 15163: 185 }, // Greek Super League 25/26
+  { 14972: 52 }, // Turkish Super Lig 25/26
+  { 17112: 202 }, // Ekstraklasa 26/27
+  { 17129: 215 }, // Swiss Super League 26/27
+  { 17087: 170 }, // Croatia 26/27
+  { 17157: 172 }, // Czech First League 26/27
+  { 16537: 192 }, // Irish Prem 26
+  { 16036: 136 }, // A-League 25/26
+  { 17127: 679 }, // Europa League 26/27
+  { 17130: 17015 }, // Europa Conference League 26/27
+  { 15066: 54 }, // Segunda Division 26/27
+  { 15632: 53 }, // Serie B 25/26
+  { 17212: 44 }, // Bundesliga 2 26/27
+  { 14977: 491 }, // 3. Liga 25/26
+  { 17117: 182 }, // Ligue 2 26/27
+  { 17110: 131 }, // Eerste Divisie 26/27
+  { 17144: 206 }, // Scottish Championship 26/27
+  { 17147: 207 }, // Scottish League One 26/27
+  { 17140: 209 }, // Scottish League Two 26/27
+  { 16544: 325 }, // Brazil Serie A 26
+  { 16571: 155 }, // Argentina Primera 26
+  { 17099: 11621 }, // Liga MX 26
+  { 15657: 173 }, // National League 25/26
+  { 15845: 176 }, // National League North 25/26
+  { 15844: 174 }, // National League South 25/26
+  { 17115: 196 }, // J League 26/27
+  { 16614: 11539 }, // Colombia 26
+  { 16627: 410 }, // K League 26
+  { 13964: 11 }, // WC Qual Europe 2026
+  { 10121: 295 }, // WC Qual South America 2026
+
+  // Deferred — not in FootyStats chosen_leagues (may re-enable later)
+  // { 12772: 955 }, // Saudi Pro League
+  // { 13878: 357 }, // Club World Cup
+  // { 13967: 13363 }, // USL
+  // { 14089: 41 }, // Veikkausliiga
+  // { 14116: 11653 }, // Chilean Primera Division
+  // { 14305: 390 }, // Brazil Serie B
+  // { 14626: 278 }, // Uruguayan Primera Division
+  // { 14933: 211 }, // Slovak Super Liga
+  // { 14951: 218 }, // Ukrainian Premier League
+  // { 15063: 212 }, // Slovenian Prva Liga
+  // { 15065: 210 }, // Serbian SuperLiga
+  // { 16263: 40 }, // Allsvenskan
 ];

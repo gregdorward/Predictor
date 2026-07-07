@@ -5,6 +5,8 @@ import {
   getLeagueFixturesByLeagueId,
   getLeagueResultsByLeagueId,
   getTeamFixturesBeforeMatch,
+  isResultsCacheValid,
+  trimLeagueResultsToWindow,
 } from "./leagueResultsAccess";
 
 describe("getLeagueFixturesByLeagueId", () => {
@@ -33,11 +35,11 @@ describe("getLeagueFixturesByLeagueId", () => {
 
   test("finds fixtures by league id when array order differs from orderedLeagues index", () => {
     const reorderedCache = [
-      { id: 15050, fixtures: [{ home_name: "EPL", away_name: "Side" }] },
+      { id: 17146, fixtures: [{ home_name: "EPL", away_name: "Side" }] },
       { id: 16494, fixtures: [{ home_name: "USA", away_name: "Mexico" }] },
     ];
 
-    expect(reorderedCache[0].id).toBe(15050);
+    expect(reorderedCache[0].id).toBe(17146);
     expect(getLeagueFixturesByLeagueId(reorderedCache, 16494)).toHaveLength(1);
     expect(getLeagueFixturesByLeagueId(reorderedCache, 16494)[0].home_name).toBe(
       "USA"
@@ -149,13 +151,62 @@ describe("competition goal difference", () => {
 describe("findLeagueEntryById", () => {
   test("matches league averages entries regardless of string vs number type", () => {
     const averages = [
-      { id: "15050", averageGoals: 2.8 },
-      { id: 14930, averageGoals: 2.5 },
+      { id: "17146", averageGoals: 2.8 },
+      { id: 17184, averageGoals: 2.5 },
     ];
 
-    expect(findLeagueEntryById(averages, 15050)?.averageGoals).toBe(2.8);
-    expect(findLeagueEntryById(averages, "14930")?.averageGoals).toBe(2.5);
+    expect(findLeagueEntryById(averages, 17146)?.averageGoals).toBe(2.8);
+    expect(findLeagueEntryById(averages, "17184")?.averageGoals).toBe(2.5);
     expect(findLeagueEntryById(averages, 99999)).toBeNull();
-    expect(findLeagueEntryById(null, 15050)).toBeNull();
+    expect(findLeagueEntryById(null, 17146)).toBeNull();
+  });
+});
+
+describe("isResultsCacheValid", () => {
+  const orderedLeagues = [
+    { element: { id: 17146 } },
+    { element: { id: 16494 } },
+  ];
+
+  test("accepts cache that matches current season ids exactly", () => {
+    const cache = [
+      { id: 17146, fixtures: [] },
+      { id: 16494, fixtures: [] },
+    ];
+    expect(isResultsCacheValid(cache, orderedLeagues)).toBe(true);
+  });
+
+  test("rejects cache with stale league ids from prior seasons", () => {
+    const cache = [
+      { id: 15050, fixtures: [] },
+      { id: 17146, fixtures: [] },
+      { id: 16494, fixtures: [] },
+    ];
+    expect(isResultsCacheValid(cache, orderedLeagues)).toBe(false);
+  });
+
+  test("rejects cache missing a newly added league", () => {
+    const cache = [{ id: 17146, fixtures: [] }];
+    expect(isResultsCacheValid(cache, orderedLeagues)).toBe(false);
+  });
+});
+
+describe("trimLeagueResultsToWindow", () => {
+  test("keeps only fixtures after the cutoff and caps at 600", () => {
+    const cutoff = 1000;
+    const cache = [
+      {
+        id: 8,
+        fixtures: [
+          { date_unix: 500 },
+          { date_unix: 1500 },
+          { date_unix: 2000 },
+        ],
+      },
+    ];
+
+    const trimmed = trimLeagueResultsToWindow(cache, cutoff);
+    expect(trimmed[0].fixtures).toHaveLength(2);
+    expect(trimmed[0].fixtures[0].date_unix).toBe(1500);
   });
 });

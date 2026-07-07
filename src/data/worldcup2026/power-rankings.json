@@ -1,105 +1,81 @@
 {
-  "updatedAt": "2026-07-05T19:05:00.000Z",
-  "methodology": "Rankings reflect group-stage and knockout results through 4 July 2026, weighted by results quality, goal difference, squad availability and path difficulty. Title win chances are illustrative estimates aligned with SoccerStatsHub modelling.",
+  "updatedAt": "2026-07-06T21:25:00.000Z",
+  "methodology": "Rankings reflect group-stage and knockout results through 6 July 2026, weighted by results quality, goal difference, squad availability and path difficulty. Title win chances are illustrative estimates aligned with SoccerStatsHub modelling.",
   "rankings": [
     {
       "rank": 1,
       "team": "France",
       "flag": "🇫🇷",
       "record": "QF · 1-0 vs Paraguay",
-      "winChance": "18%",
-      "summary": "France are the first elite favourite into the quarter-finals after Kylian Mbappe's 70th-minute penalty beat Paraguay in Philadelphia. The scoreline was tighter than expected and the match was played in extreme heat, but Mbappe now has seven goals at this tournament and France have a confirmed route through Morocco in Foxborough."
+      "winChance": "17%",
+      "summary": "France remain the benchmark after Kylian Mbappe's penalty beat Paraguay in Philadelphia, giving him seven goals at this tournament. Didier Deschamps still has the clearest quarter-final path on one side of the bracket, but extreme heat, a narrow scoreline and Morocco's counter-attacking form make the Foxborough tie less straightforward than the ranking gap suggests."
     },
     {
       "rank": 2,
-      "team": "Morocco",
-      "flag": "🇲🇦",
-      "record": "QF · 3-0 vs Canada",
-      "winChance": "12%",
-      "summary": "Morocco are into a second straight World Cup quarter-final after beating co-hosts Canada 3-0 in Houston. Azzedine Ounahi scored twice and Soufiane Rahimi added the third after replacing injured Ismael Saibari, showing the depth and counter-attacking bite that make the France quarter-final more dangerous than the market may suggest."
+      "team": "Spain",
+      "flag": "🇪🇸",
+      "record": "QF · 1-0 vs Portugal",
+      "winChance": "15%",
+      "summary": "Spain moved above England after Mikel Merino's stoppage-time winner settled a grinding Iberian derby in Dallas, keeping Luis de la Fuente's side on course for a fifth straight clean sheet. They were not fluent against Portugal, but the late-game composure and extra recovery time before a Los Angeles quarter-final give Spain the strongest remaining path on the western side of the bracket."
     },
     {
       "rank": 3,
-      "team": "Spain",
-      "flag": "🇪🇸",
-      "record": "R16 · 3-0 vs Austria",
-      "winChance": "11%",
-      "summary": "Spain remain one of the cleanest two-way teams in the field after beating Austria 3-0 and keeping a fourth straight clean sheet. The ranking holds them just below the confirmed quarter-finalists because Portugal still stand in the way, but their defensive base gives them a strong case to jump back to the top tier if they win the Iberian derby."
+      "team": "England",
+      "flag": "🏴󠁧󠁢󠁥󠁮󠁧󠁿",
+      "record": "QF · 3-2 vs Mexico",
+      "winChance": "13%",
+      "summary": "England became the first team to beat Mexico at the Azteca, with Jude Bellingham's quickfire double and Harry Kane's penalty surviving a red card for Jarell Quansah. Thomas Tuchel's rearguard action in Mexico City lifts the Three Lions into the top tier, but the right-back crisis and a Miami quarter-final against Erling Haaland keep them below France and Spain for now."
     },
     {
       "rank": 4,
-      "team": "Argentina",
-      "flag": "🇦🇷",
-      "record": "R16 · 3-2 AET vs Cape Verde",
-      "winChance": "10%",
-      "summary": "Argentina survived Cape Verde rather than controlled them, needing extra time and a Diney Borges own goal to escape one of the great World Cup shocks. Lionel Messi scored and the champions still have the tournament craft to grind through Egypt, but the defensive vulnerability in Miami drops them behind France, Morocco and Spain for now."
+      "team": "Norway",
+      "flag": "🇳🇴",
+      "record": "QF · 2-1 vs Brazil",
+      "winChance": "11%",
+      "summary": "Norway are into their first World Cup quarter-final after Erling Haaland scored twice in the last 11 minutes to dump Brazil out in New Jersey. Stale Solbakken's side still give up chances, but Haaland's seven goals, Orjan Nyland's penalty save and Julian Ryerson's return make them genuine semi-final contenders before the England tie in Miami."
     },
     {
       "rank": 5,
-      "team": "Portugal",
-      "flag": "🇵🇹",
-      "record": "R16 · 2-1 vs Croatia",
-      "winChance": "8%",
-      "summary": "Portugal stay high after Cristiano Ronaldo and Goncalo Ramos turned the Croatia tie around, but Spain are the toughest possible last-16 opponent for a side that has still needed late moments to solve knockout pressure. If Portugal beat Spain in Dallas, their attacking depth immediately becomes one of the strongest title cases left."
+      "team": "Morocco",
+      "flag": "🇲🇦",
+      "record": "QF · 3-0 vs Canada",
+      "winChance": "9%",
+      "summary": "Morocco remain the biggest threat to France after beating co-hosts Canada 3-0, with Azzedine Ounahi scoring twice and Soufiane Rahimi adding the third after Ismael Saibari's early injury. The Atlas Lions are unbeaten in 34 matches, but Saibari's hamstring doubt and a possible Chadi Riad absence weaken the attack before Foxborough."
     },
     {
       "rank": 6,
-      "team": "Brazil",
-      "flag": "🇧🇷",
-      "record": "R16 · 2-1 vs Japan (aet)",
-      "winChance": "8%",
-      "summary": "Brazil remain a major contender but have more questions than France or Spain after needing extra time against Japan and likely losing Lucas Paqueta for the Norway tie. Vinicius Junior and Matheus Cunha give them decisive quality, while Carlo Ancelotti's knockout management keeps them above Norway before the East Rutherford meeting."
+      "team": "Argentina",
+      "flag": "🇦🇷",
+      "record": "R16 · 3-2 AET vs Cape Verde",
+      "winChance": "9%",
+      "summary": "Argentina survived Cape Verde rather than controlled them, needing extra time and a Diney Borges own goal to escape one of the great World Cup shocks. Lionel Scaloni's side still have the tournament craft to beat Egypt, but the defensive vulnerability in Miami drops them behind the confirmed quarter-finalists until they prove otherwise in Atlanta."
     },
     {
       "rank": 7,
-      "team": "Mexico",
-      "flag": "🇲🇽",
-      "record": "R16 · 2-0 vs Ecuador",
-      "winChance": "7%",
-      "summary": "Mexico's clean-sheet run and Azteca advantage make them one of the most awkward remaining opponents. They have won every match at home in this tournament without conceding, and England's right-back uncertainty gives Julian Quinones a clear matchup to attack."
-    },
-    {
-      "rank": 8,
-      "team": "England",
-      "flag": "🏴󠁧󠁢󠁥󠁮󠁧󠁿",
-      "record": "R16 · 2-1 vs DR Congo",
-      "winChance": "7%",
-      "summary": "England have Harry Kane in form and Quansah available again, but the DR Congo comeback and Reece James doubt leave them outside the top group. The Mexico tie is a major style test: survive the opening altitude surge and England's midfield quality can still take control."
-    },
-    {
-      "rank": 9,
       "team": "Belgium",
       "flag": "🇧🇪",
       "record": "R16 · 3-2 AET vs Senegal",
       "winChance": "6%",
-      "summary": "Belgium's comeback against Senegal had the drama of a deep-run team, but the first 85 minutes showed why they remain volatile. The USA tie in Seattle now looks finely balanced, especially with the hosts missing Folarin Balogun but carrying home support."
+      "summary": "Belgium's comeback against Senegal had the drama of a deep-run team, but the first 85 minutes showed why they remain volatile. The Seattle tie with the United States now looks finely balanced, especially with the hosts missing Folarin Balogun but carrying home support and revenge motivation from 2014."
     },
     {
-      "rank": 10,
-      "team": "Norway",
-      "flag": "🇳🇴",
-      "record": "R16 · 2-1 vs Ivory Coast",
-      "winChance": "5%",
-      "summary": "Norway are no longer just a Haaland story, but his five tournament goals give them the most direct upset route against Brazil. Their unbeaten historical record against the Selecao is a useful subplot, while Julian Ryerson's possible return would help against Brazil's wide pace."
-    },
-    {
-      "rank": 11,
+      "rank": 8,
       "team": "USA",
       "flag": "🇺🇸",
       "record": "R16 · 2-0 vs Bosnia",
       "winChance": "5%",
-      "summary": "The United States are still alive and have a Seattle home tie, but Balogun's suspension removes their best tournament finisher before Belgium arrive. Malik Tillman's dead-ball quality and the crowd keep the upset case alive."
+      "summary": "The United States are still alive and have a Seattle home tie, but Balogun's controversial suspension reprieve has overshadowed preparation before Belgium arrive. Mauricio Pochettino's side know Spain await in Los Angeles if they advance, so a quarter-final would mean a very different test to the group stage."
     },
     {
-      "rank": 12,
+      "rank": 9,
       "team": "Switzerland",
       "flag": "🇨🇭",
       "record": "R16 · 2-0 vs Algeria",
       "winChance": "4%",
-      "summary": "Switzerland's 2-0 win over Algeria was controlled, mature and exactly the kind of result that gives them a credible path into the quarter-finals. Colombia are a harder opponent than Algeria, but Switzerland's defensive structure has been one of the most reliable in the second tier."
+      "summary": "Switzerland's 2-0 win over Algeria was controlled, mature and exactly the kind of result that gives them a credible path into the quarter-finals. Colombia are a harder opponent than Algeria, but Murat Yakin's defensive structure has been one of the most reliable in the second tier."
     },
     {
-      "rank": 13,
+      "rank": 10,
       "team": "Colombia",
       "flag": "🇨🇴",
       "record": "R16 · 1-0 vs Ghana",
@@ -107,12 +83,36 @@
       "summary": "Colombia moved past Ghana 1-0 through Jhon Arias and now meet Switzerland in Vancouver. The attack still leans heavily on Luis Diaz and Arias moments, but the clean sheet and improved control lift them above the remaining low-probability chasers."
     },
     {
-      "rank": 14,
+      "rank": 11,
       "team": "Egypt",
       "flag": "🇪🇬",
       "record": "R16 · 1-1 vs Australia (pens 4-2)",
       "winChance": "2%",
       "summary": "Egypt are into the last 16 after holding their nerve against Australia, with Mohamed Salah converting his penalty and Abdelmaguid winning the shoot-out. Argentina are heavy favourites, but Egypt's compact shape and penalty confidence make them more dangerous than their open-play profile suggests."
+    },
+    {
+      "rank": 12,
+      "team": "Brazil",
+      "flag": "🇧🇷",
+      "record": "Eliminated · R16 vs Norway",
+      "winChance": "0%",
+      "summary": "Brazil leave after Erling Haaland's late double punished Bruno Guimaraes' missed penalty and a string of wasted chances in East Rutherford. Carlo Ancelotti's side exit before the quarter-finals for the first time since 1990 despite dominating possession, ending an eight-tournament run of last-eight appearances."
+    },
+    {
+      "rank": 13,
+      "team": "Portugal",
+      "flag": "🇵🇹",
+      "record": "Eliminated · R16 vs Spain",
+      "winChance": "0%",
+      "summary": "Portugal bowed out 1-0 to Spain in Dallas after Mikel Merino's stoppage-time winner, with Cristiano Ronaldo's World Cup career likely over at 41. Roberto Martinez's side created little after the first half and leave with an expected-goals figure of 0.60 against Spain's 1.77."
+    },
+    {
+      "rank": 14,
+      "team": "Mexico",
+      "flag": "🇲🇽",
+      "record": "Eliminated · R16 vs England",
+      "winChance": "0%",
+      "summary": "Mexico's co-host run ended with a 3-2 defeat to England at the Estadio Azteca, ending a ten-match unbeaten home record at the tournament's most iconic venue. Javier Aguirre's side fought back after Jarell Quansah's red card and Raul Jimenez's late penalty, but could not find an equaliser in 11 minutes of stoppage time."
     },
     {
       "rank": 15,

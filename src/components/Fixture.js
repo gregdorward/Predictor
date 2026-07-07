@@ -5,7 +5,6 @@ import { setData } from "../logic/dataSlice";
 import { Provider } from "react-redux";
 import store from "../logic/store"; // Import your Redux store
 import { clicked } from "../logic/getScorePredictions";
-import { leagueStatsArray } from "../logic/getScorePredictions";
 import LeagueName from './LeagueName';
 import ShareShortlistButton from "./ShareShortlistButton";
 import GameStats from "./GameStats";
@@ -517,13 +516,8 @@ function SingleFixture({
           <GameStats
             game={fixture}
             displayBool={true}
-            handleToggleTip={handleToggleTip} // 👈 Pass this down
-            userTips={userTips}               // 👈 Pass this down
-            stats={
-              leagueStatsArray && leagueStatsArray[`leagueStats${fixture.leagueID}`]
-                ? leagueStatsArray[`leagueStats${fixture.leagueID}`]
-                : null
-            }
+            handleToggleTip={handleToggleTip}
+            userTips={userTips}
           />
         )}
       </Suspense>

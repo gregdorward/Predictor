@@ -1,4 +1,5 @@
 import { apiGetUrl } from "../utils/apiUrl";
+import { fetchLeagueTeamMetricRankings } from "../utils/competitionMetricRankings";
 import { resolveTeamStatistics } from "../utils/sofaScoreTeamStats";
 import { resolveSofaScoreFixtureTeams } from "../utils/resolveSofaScoreFixtureTeams";
 import GenerateFormSummary from "./compareFormTrend";
@@ -7,15 +8,6 @@ import {
   resolveRoundId,
   resolveSofaScoreId,
 } from "./allStatsProps";
-
-function getWeekOfYear(date) {
-  const target = new Date(date.valueOf());
-  const dayNumber = (date.getUTCDay() + 6) % 7;
-  target.setUTCDate(target.getUTCDate() - dayNumber + 3);
-  const firstThursday = new Date(Date.UTC(target.getUTCFullYear(), 0, 4));
-  const diff = target - firstThursday;
-  return 1 + Math.round(diff / (7 * 24 * 60 * 60 * 1000));
-}
 
 async function fetchTeamStats(teamId, sofaScoreId, roundId, leagueTopTeams) {
   if (!teamId || !sofaScoreId || !roundId) {
@@ -36,25 +28,13 @@ async function fetchTeamStats(teamId, sofaScoreId, roundId, leagueTopTeams) {
   }
 }
 
-async function fetchLeagueTopTeams(sofaScoreId, roundId, matchDateUnix) {
+async function fetchLeagueTopTeams(sofaScoreId, roundId) {
   if (!sofaScoreId || !roundId) {
     return null;
   }
 
-  const matchDate = matchDateUnix
-    ? new Date(matchDateUnix * 1000)
-    : new Date();
-  const week = getWeekOfYear(matchDate);
-
   try {
-    const response = await fetch(
-      `${process.env.NEXT_PUBLIC_EXPRESS_SERVER}LeagueTeamStats/${sofaScoreId}/${roundId}/${week}`
-    );
-    if (!response.ok) {
-      return null;
-    }
-    const payload = await response.json();
-    return payload ?? null;
+    return (await fetchLeagueTeamMetricRankings(sofaScoreId, roundId)) ?? null;
   } catch {
     return null;
   }
@@ -95,11 +75,7 @@ export async function fetchFixtureSeasonStats(match) {
   const homeSofaTeamId = sofaScoreFixture?.homeId ?? null;
   const awaySofaTeamId = sofaScoreFixture?.awayId ?? null;
 
-  const leagueTopTeams = await fetchLeagueTopTeams(
-    sofaScoreId,
-    roundId,
-    match?.date
-  );
+  const leagueTopTeams = await fetchLeagueTopTeams(sofaScoreId, roundId);
 
   const [homeTeamStats, awayTeamStats, formSummaries] = await Promise.all([
     fetchTeamStats(homeSofaTeamId, sofaScoreId, roundId, leagueTopTeams),

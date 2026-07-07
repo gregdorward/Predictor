@@ -37,6 +37,10 @@ yarn-error.log*
 
 .eslintcache
 
+# backtest CLI artifacts
+/scripts/.backtest-bundle.mjs
+/scripts/output/
+
 # Cursor — keep shared rules, ignore local-only state
 .cursor/*
 !.cursor/rules/

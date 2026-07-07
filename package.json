@@ -58,7 +58,9 @@
     "test:e2e:ui": "PW_TEST_NO_WEBSERVER=1 playwright test --ui",
     "test:e2e:typecheck": "tsc -p e2e/tsconfig.json",
     "test:e2e:headed": "playwright test --headed",
-    "test:e2e:report": "playwright show-report"
+    "test:e2e:report": "playwright show-report",
+    "backtest": "node scripts/build-backtest-bundle.mjs && node scripts/.backtest-bundle.mjs",
+    "backtest:build": "node scripts/build-backtest-bundle.mjs"
   },
   "eslintConfig": {
     "extends": [
@@ -79,9 +81,11 @@
     ]
   },
   "devDependencies": {
+    "@aws-sdk/client-s3": "^3.1079.0",
     "@playwright/test": "^1.60.0",
     "@types/node": "^22.15.0",
     "@types/react-slider": "^1.1.0",
+    "esbuild": "^0.25.12",
     "jest": "^29.7.0",
     "jest-environment-jsdom": "^29.7.0",
     "typescript": "^5.8.3"

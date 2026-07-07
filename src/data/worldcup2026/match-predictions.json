@@ -1,52 +1,36 @@
 {
   "version": 1,
-  "lastUpdated": "2026-07-05T19:05:00.000Z",
+  "lastUpdated": "2026-07-06T21:25:00.000Z",
   "matches": [
     {
-      "id": "round16-brazil-vs-norway",
-      "phase": "round16",
-      "roundLabel": "Round of 16",
+      "id": "round32-brazil-vs-japan",
+      "phase": "round32",
+      "roundLabel": "Round of 32",
       "group": "C",
-      "date": "2026-07-05",
+      "date": "2026-07-01",
       "home": "Brazil",
-      "away": "Norway",
-      "prediction": {
-        "predictedScore": "2-2",
-        "homeWin": 46,
-        "draw": 27,
-        "awayWin": 27
-      },
-      "source": "static"
-    },
-    {
-      "id": "round16-england-vs-mexico",
-      "phase": "round16",
-      "roundLabel": "Round of 16",
-      "group": "L",
-      "date": "2026-07-06",
-      "home": "England",
-      "away": "Mexico",
-      "prediction": {
-        "predictedScore": "1-1",
-        "homeWin": 39,
-        "draw": 29,
-        "awayWin": 32
-      },
-      "source": "static"
-    },
-    {
-      "id": "round16-spain-vs-portugal",
-      "phase": "round16",
-      "roundLabel": "Round of 16",
-      "group": "H",
-      "date": "2026-07-06",
-      "home": "Spain",
-      "away": "Portugal",
+      "away": "Japan",
       "prediction": {
         "predictedScore": "2-1",
-        "homeWin": 54,
-        "draw": 25,
-        "awayWin": 21
+        "homeWin": 68,
+        "draw": 20,
+        "awayWin": 12
+      },
+      "source": "static"
+    },
+    {
+      "id": "round32-england-vs-dr-congo",
+      "phase": "round32",
+      "roundLabel": "Round of 32",
+      "group": "L",
+      "date": "2026-07-01",
+      "home": "England",
+      "away": "DR Congo",
+      "prediction": {
+        "predictedScore": "2-1",
+        "homeWin": 72,
+        "draw": 18,
+        "awayWin": 10
       },
       "source": "static"
     },
@@ -110,6 +94,96 @@
         "homeWin": 57,
         "draw": 25,
         "awayWin": 18
+      },
+      "source": "static"
+    },
+    {
+      "id": "quarterfinal-spain-vs-belgium",
+      "phase": "quarter",
+      "roundLabel": "Quarter-final",
+      "date": "2026-07-10",
+      "home": "Spain",
+      "away": "Belgium",
+      "prediction": {
+        "predictedScore": "2-0",
+        "homeWin": 62,
+        "draw": 22,
+        "awayWin": 16
+      },
+      "source": "static"
+    },
+    {
+      "id": "quarterfinal-england-vs-norway",
+      "phase": "quarter",
+      "roundLabel": "Quarter-final",
+      "date": "2026-07-11",
+      "home": "England",
+      "away": "Norway",
+      "prediction": {
+        "predictedScore": "2-1",
+        "homeWin": 48,
+        "draw": 26,
+        "awayWin": 26
+      },
+      "source": "static"
+    },
+    {
+      "id": "quarterfinal-argentina-vs-switzerland",
+      "phase": "quarter",
+      "roundLabel": "Quarter-final",
+      "date": "2026-07-11",
+      "home": "Argentina",
+      "away": "Switzerland",
+      "prediction": {
+        "predictedScore": "2-1",
+        "homeWin": 55,
+        "draw": 24,
+        "awayWin": 21
+      },
+      "source": "static"
+    },
+    {
+      "id": "semi-france-vs-england",
+      "phase": "semi",
+      "roundLabel": "Semi-final",
+      "date": "2026-07-14",
+      "home": "France",
+      "away": "England",
+      "prediction": {
+        "predictedScore": "2-1",
+        "homeWin": 52,
+        "draw": 24,
+        "awayWin": 24
+      },
+      "source": "static"
+    },
+    {
+      "id": "semi-spain-vs-argentina",
+      "phase": "semi",
+      "roundLabel": "Semi-final",
+      "date": "2026-07-15",
+      "home": "Spain",
+      "away": "Argentina",
+      "prediction": {
+        "predictedScore": "1-1",
+        "homeWin": 42,
+        "draw": 28,
+        "awayWin": 30
+      },
+      "source": "static"
+    },
+    {
+      "id": "final-france-vs-spain",
+      "phase": "final",
+      "roundLabel": "Final",
+      "date": "2026-07-19",
+      "home": "France",
+      "away": "Spain",
+      "prediction": {
+        "predictedScore": "2-1",
+        "homeWin": 46,
+        "draw": 27,
+        "awayWin": 27
       },
       "source": "static"
     }

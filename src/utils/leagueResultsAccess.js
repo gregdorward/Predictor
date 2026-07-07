@@ -1,3 +1,58 @@
+/** ~275 days — limits form/history payloads to the active season window. */
+export const RECENT_RESULTS_WINDOW_SEC = 23778463;
+
+export function getRecentResultsCutoffUnix(nowSec = Math.floor(Date.now() / 1000)) {
+  return nowSec - RECENT_RESULTS_WINDOW_SEC;
+}
+
+/**
+ * Cached /results must match the current FootyStats season ids exactly.
+ * Stale blobs from prior seasons (old ids alongside new) are rejected.
+ */
+export function isResultsCacheValid(cachedResults, orderedLeagues) {
+  if (!Array.isArray(cachedResults) || cachedResults.length === 0) {
+    return false;
+  }
+  if (!Array.isArray(orderedLeagues) || orderedLeagues.length === 0) {
+    return false;
+  }
+
+  const requiredIds = orderedLeagues.map((league) => String(league.element.id));
+  const cachedIds = cachedResults.map((entry) => String(entry.id));
+
+  if (cachedIds.length !== requiredIds.length) {
+    return false;
+  }
+
+  const requiredSet = new Set(requiredIds);
+  return (
+    requiredIds.every((id) => cachedIds.includes(id)) &&
+    cachedIds.every((id) => requiredSet.has(id))
+  );
+}
+
+/**
+ * Trim each league's fixture list to the recent window (same rules as a fresh build).
+ */
+export function trimLeagueResultsToWindow(
+  allLeagueResults,
+  cutoffUnix = getRecentResultsCutoffUnix()
+) {
+  if (!Array.isArray(allLeagueResults)) {
+    return [];
+  }
+
+  return allLeagueResults.map((entry) => {
+    const fixtures = Array.isArray(entry.fixtures) ? entry.fixtures : [];
+    const trimmed = fixtures
+      .filter((fixture) => fixture.date_unix > cutoffUnix)
+      .sort((a, b) => a.date_unix - b.date_unix)
+      .slice(-600);
+
+    return { ...entry, fixtures: trimmed };
+  });
+}
+
 /**
  * Find an entry in a league-keyed array, matching id with string coercion.
  */
