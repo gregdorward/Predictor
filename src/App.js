@@ -564,7 +564,7 @@ let welcomeTextOne = welcomeTextUnsplitOne.split("\n").map((i) => {
   return <p>{i}</p>;
 });
 
-export function AppContent() {
+export function AppContent({ shellMounted = false }) {
   const { user, isPaidUser, fixtures, setFixtures, handleGetPredictions, isPredicting } = useAuth()
 
   const [userTips, setUserTips] = useState([]); // This is the React state
@@ -912,8 +912,8 @@ export function AppContent() {
 
   return (
     <div className="App">
-      <PageMeta />
-      <SiteHeader showThemeToggle />
+      {!shellMounted ? <PageMeta /> : null}
+      {!shellMounted ? <SiteHeader showThemeToggle /> : null}
       <div id="LoadingContainer" className="LoadingContainer" />
       <div id="RadioContainer" className="RadioContainer">
         <div id="RadioText" />
@@ -1397,10 +1397,10 @@ export function AppContent() {
   );
 }
 
-export default function App() {
+export default function App({ shellMounted = false }) {
   useEffect(() => {
     initTheme();
   }, []);
 
-  return <AppContent />;
+  return <AppContent shellMounted={shellMounted} />;
 }

@@ -1,6 +1,7 @@
 // Inlined in _document.js so the guest landing paints before the main JS/CSS bundle.
 const GUEST_LANDING_CRITICAL_CSS = `
 :root {
+  --header-height: 5em;
   --content-max-width: 1400px;
   --content-padding-x: 1.5em;
   --background-color: #ffffff;
@@ -21,13 +22,56 @@ body.dark-mode {
 body {
   margin: 0;
   min-height: 100%;
-  padding-top: 0;
+  padding-top: var(--header-height);
   font-family: 'Open Sans', system-ui, sans-serif;
   font-size: 1em;
   font-weight: 600;
   text-align: center;
   color: var(--text-color);
   background-color: var(--background-color);
+}
+.DarkMode {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  padding: 1em;
+  background-color: var(--background-color);
+  z-index: 1000;
+  box-sizing: border-box;
+}
+.DarkMode .logo-container {
+  flex: 0 1 auto;
+  min-width: 0;
+  max-height: 3.25em;
+  max-width: calc(100% - 8rem);
+  margin: 0;
+  justify-content: flex-start;
+}
+.DarkMode .responsive-logo {
+  max-width: 10em;
+  width: 100%;
+  height: auto;
+}
+.HeaderActions {
+  position: absolute;
+  right: 1em;
+  top: 0;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  gap: 0.5em;
+  flex-shrink: 0;
+}
+.WC26Banner {
+  display: block;
+  width: 100%;
+  min-height: 3.25em;
+  margin: 1em auto;
+  box-sizing: border-box;
 }
 body > #__next {
   height: 100%;
@@ -134,7 +178,7 @@ body > #__next {
 .GuestLanding-authSkeleton {
   width: 100%;
   max-width: 28em;
-  min-height: 12rem;
+  min-height: 14rem;
   margin: 0 auto;
   border-radius: 8px;
   background: var(--third-background-color);
@@ -201,7 +245,8 @@ body > #__next {
 }
 .GuestLanding-skip {
   margin: 0.75rem 0 0;
-  font-size: 0.95em;
+  font-size: 1.25em;
+  color: var(--primary-color);
 }
 @media (max-width: 1024px) {
   .GuestLanding-laptopLid { padding: 6px 6px 5px; border-radius: 8px 8px 2px 2px; }
@@ -215,6 +260,22 @@ body > #__next {
   .GuestLanding-headline { font-size: 1.3rem; }
   .GuestLanding-card { padding: 0.65rem 0.75rem; }
   .GuestLanding-about p { font-size: 0.8rem; }
+}
+@media (max-width: 600px) {
+  body > #__next {
+    font-size: 2.4vw;
+    max-width: 100%;
+    padding-left: 0.75em;
+    padding-right: 0.75em;
+  }
+}
+@media (max-width: 460px) {
+  body > #__next {
+    font-size: 2.4vw;
+    max-width: 100%;
+    padding-left: 0.5em;
+    padding-right: 0.5em;
+  }
 }
 `;
 

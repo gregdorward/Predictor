@@ -923,7 +923,8 @@ h4.Blurb {
 .GuestLanding-skip {
   margin: 0.75rem 0 0;
   padding-left: 0;
-  font-size: 0.95em;
+  font-size: 1.25em;
+  color: var(--primary-color);
 }
 
 .GuestLanding-modeToggle {
@@ -3033,10 +3034,13 @@ strong.LOST {
 
 .HomeBadge {
   border-color: #393d3f;
+  width: 2.5em;
   height: 2.5em;
+  aspect-ratio: 1;
   flex: 1;
   box-sizing: border-box;
   justify-self: center;
+  object-fit: contain;
 }
 
 .HomeBadgeExplainer {
@@ -3060,9 +3064,12 @@ strong.LOST {
 
 .AwayBadge {
   border-color: #393d3f;
+  width: 2.5em;
   height: 2.5em;
+  aspect-ratio: 1;
   box-sizing: border-box;
   justify-self: center;
+  object-fit: contain;
 }
 
 .break {
