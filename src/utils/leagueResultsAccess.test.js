@@ -3,6 +3,7 @@ import {
   computeCompetitionGoalDifference,
   findLeagueEntryById,
   evaluateResultsCache,
+  isRebuiltResultsCacheComplete,
   getLeagueFixturesByLeagueId,
   getLeagueResultsByLeagueId,
   getTeamFixturesBeforeMatch,
@@ -228,6 +229,26 @@ describe("evaluateResultsCache", () => {
       staleIds: ["15050"],
       missingIds: [],
     });
+  });
+});
+
+describe("isRebuiltResultsCacheComplete", () => {
+  const orderedLeagues = [
+    { element: { id: 17146 }, name: "EPL" },
+    { element: { id: 16494 }, name: "MLS" },
+  ];
+
+  test("returns true when every current league is present after rebuild", () => {
+    const rebuilt = [
+      { id: 17146, fixtures: [] },
+      { id: 16494, fixtures: [] },
+    ];
+    expect(isRebuiltResultsCacheComplete(rebuilt, orderedLeagues)).toBe(true);
+  });
+
+  test("returns false for partial rebuilds (e.g. FootyStats rate limit)", () => {
+    const partial = [{ id: 17146, fixtures: [] }];
+    expect(isRebuiltResultsCacheComplete(partial, orderedLeagues)).toBe(false);
   });
 });
 
