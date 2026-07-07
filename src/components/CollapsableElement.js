@@ -9,7 +9,7 @@ const Collapsable = ({
   classNameFlex,
   classNameTwo,
   classNameThree,
-  key,
+  collapsibleKey,
   style,
   element,
   elementTwo,
@@ -57,7 +57,7 @@ const Collapsable = ({
     <Collapsible
       transitionTime={300}
       open={locked ? false : isOpen ?? (defaultOpen ? true : undefined)}
-      key={key}
+      key={collapsibleKey}
       trigger={
         <button
           type="button"

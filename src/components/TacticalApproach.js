@@ -20,7 +20,7 @@ export function MatchTacticalComparison({
         else if (opponentOdds < odds && odds < 4) bracket = "underdog";
         else bracket = "clear underdog";
 
-        const styles = tacticalIdentity[bracket];
+        const styles = tacticalIdentity?.[bracket];
         if (!styles) return "Balanced";
 
         // Find style with highest frequency
@@ -68,7 +68,7 @@ export function MatchTacticalComparison({
                         {/* Data Rows */}
                         {tacticalRows.map((row) => {
                             const isHighlighted = row.label.toLowerCase() === opponentExpectedStyle.toLowerCase();
-                            const styleData = teamData.recordsAgainst[row.key];
+                            const styleData = teamData.recordsAgainst?.[row.key];
                             const sortedOpponents = styleData?.opponents
                                 ? [...styleData.opponents].sort((a, b) => new Date(b.date) - new Date(a.date))
                                 : [];

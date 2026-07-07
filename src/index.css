@@ -1651,6 +1651,15 @@ button.GhostButton:focus-visible {
   min-height: 40em !important;
 }
 
+#FixtureContainer .NoFixtures {
+  margin: 2rem auto;
+  padding: 1.5rem;
+  max-width: 28rem;
+  font-size: 1rem;
+  color: var(--faint-text);
+  text-align: center;
+}
+
 .WelcomeBack {
   font-size: 0.9em;
   margin-bottom: 1em;

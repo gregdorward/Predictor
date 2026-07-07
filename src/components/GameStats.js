@@ -398,8 +398,11 @@ function GameStats({ game, displayBool, stats, handleToggleTip, userTips }) {
 
 
   let gameStats = allForm.find((match) => match.id === game.id);
-  const homeForm = gameStats?.home[2];
-  const awayForm = gameStats?.away[2];
+  const homeForm = game.formHome ?? gameStats?.home?.[2];
+  const awayForm = game.formAway ?? gameStats?.away?.[2];
+  const hasPredictionMetrics = Boolean(
+    homeForm?.attackingMetrics && awayForm?.attackingMetrics
+  );
 
   const [matchingGame, setMatchingGame] = useState(null); // State for the game
   const [formSummaries, setFormSummary] = useState([]);
@@ -2356,8 +2359,8 @@ function GameStats({ game, displayBool, stats, handleToggleTip, userTips }) {
 
   formDataHome.push({
     name: game.homeTeam,
-    Last5: gameStats.home[2].LastFiveForm,
-    LeagueOrAll: gameStats.home[2].LeagueOrAll,
+    Last5: homeForm?.LastFiveForm,
+    LeagueOrAll: homeForm?.LeagueOrAll,
     AverageGoals: homeLeagueStats.goals,
     AverageConceeded: homeLeagueStats.conceeded,
     AverageXG: homeLeagueStats.XG,
@@ -2387,8 +2390,8 @@ function GameStats({ game, displayBool, stats, handleToggleTip, userTips }) {
 
   formDataAway.push({
     name: game.awayTeam,
-    Last5: gameStats.away[2].LastFiveForm,
-    LeagueOrAll: gameStats.away[2].LeagueOrAll,
+    Last5: awayForm?.LastFiveForm,
+    LeagueOrAll: awayForm?.LeagueOrAll,
     AverageGoals: awayLeagueStats.goals,
     AverageConceeded: awayLeagueStats.conceeded,
     AverageXG: awayLeagueStats.XG,
@@ -2996,7 +2999,7 @@ function GameStats({ game, displayBool, stats, handleToggleTip, userTips }) {
 
   let time = game.time;
 
-  if (homeForm.last3Points === undefined) {
+  if (homeForm && awayForm && homeForm.last3Points === undefined) {
     homeForm.last3Points = getPointsFromLastX(homeForm.lastThreeForm);
 
     homeForm.last5Points = getPointsFromLastX(homeForm.LastFiveForm);
@@ -3072,6 +3075,12 @@ function GameStats({ game, displayBool, stats, handleToggleTip, userTips }) {
         const homeForm = gameStats.home[index];
         const awayForm = gameStats.away[index];
         let id = game.id;
+
+        if (!homeForm?.attackingMetrics || !awayForm?.attackingMetrics) {
+          setFirstRenderDone(true);
+          setIsLoading(false);
+          return;
+        }
 
         const attackingMetricsHome = homeForm.attackingMetrics
         const attackingMetricsHomeLast5 = homeForm.attackingMetricsHomeLast5
@@ -3788,20 +3797,33 @@ function GameStats({ game, displayBool, stats, handleToggleTip, userTips }) {
   console.log(homeForm)
   const teamAData = {
     name: game.homeTeam,
-    preferredStyle: homeForm.tacticalIdentity,
-    recordsAgainst: homeForm.tacticalRecords, // This should be an object like { LOW_BLOCK: "W3 D1 L2", HIGH_PRESSURE: "W1 D2 L3", ... }
+    preferredStyle: homeForm?.tacticalIdentity,
+    recordsAgainst: homeForm?.tacticalRecords,
   };
 
   const teamBData = {
     name: game.awayTeam,
-    preferredStyle: awayForm.tacticalIdentity,
-    recordsAgainst: awayForm.tacticalRecords, // This should be an object like { LOW_BLOCK: "W3 D1 L2", HIGH_PRESSURE: "W1 D2 L3", ... }
+    preferredStyle: awayForm?.tacticalIdentity,
+    recordsAgainst: awayForm?.tacticalRecords,
   };
 
+  if (!homeForm || !awayForm) {
+    return (
+      <div className="ExpandingStats GameStats--limited">
+        <p>Match form data is not available yet for this fixture.</p>
+      </div>
+    );
+  }
 
   return (
     <>
       <div className="ExpandingStats">
+        {(game.predictionsUnavailable || !hasPredictionMetrics) && (
+          <p className="GameStats--limited">
+            Score predictions are not available yet — fewer than three matches
+            have been played in this competition.
+          </p>
+        )}
         {isBeforeTimestamp(game.date) && (
           <>
             <h2>Your Prediction</h2>

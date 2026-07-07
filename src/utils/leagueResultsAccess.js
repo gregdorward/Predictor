@@ -6,29 +6,56 @@ export function getRecentResultsCutoffUnix(nowSec = Math.floor(Date.now() / 1000
 }
 
 /**
- * Cached /results must match the current FootyStats season ids exactly.
- * Stale blobs from prior seasons (old ids alongside new) are rejected.
+ * Assess whether a cached /results blob can be used as-is, merged, or must be rebuilt.
+ *
+ * - complete: every current league is present (use cache directly)
+ * - usable: no stale season ids (safe to merge; may be missing newly added leagues)
+ * - staleIds: cached ids no longer in leagueOrder (prior seasons — full rebuild)
+ * - missingLeagues: orderedLeague entries not yet in the cache
  */
-export function isResultsCacheValid(cachedResults, orderedLeagues) {
+export function evaluateResultsCache(cachedResults, orderedLeagues) {
   if (!Array.isArray(cachedResults) || cachedResults.length === 0) {
-    return false;
+    return {
+      complete: false,
+      usable: false,
+      staleIds: [],
+      missingIds: [],
+      missingLeagues: Array.isArray(orderedLeagues) ? [...orderedLeagues] : [],
+    };
   }
   if (!Array.isArray(orderedLeagues) || orderedLeagues.length === 0) {
-    return false;
+    return {
+      complete: false,
+      usable: false,
+      staleIds: [],
+      missingIds: [],
+      missingLeagues: [],
+    };
   }
 
   const requiredIds = orderedLeagues.map((league) => String(league.element.id));
-  const cachedIds = cachedResults.map((entry) => String(entry.id));
-
-  if (cachedIds.length !== requiredIds.length) {
-    return false;
-  }
-
   const requiredSet = new Set(requiredIds);
-  return (
-    requiredIds.every((id) => cachedIds.includes(id)) &&
-    cachedIds.every((id) => requiredSet.has(id))
+  const cachedIds = cachedResults.map((entry) => String(entry.id));
+  const cachedIdSet = new Set(cachedIds);
+
+  const staleIds = cachedIds.filter((id) => !requiredSet.has(id));
+  const missingIds = requiredIds.filter((id) => !cachedIdSet.has(id));
+  const missingLeagues = orderedLeagues.filter((league) =>
+    missingIds.includes(String(league.element.id))
   );
+
+  const usable = staleIds.length === 0;
+  const complete = usable && missingIds.length === 0;
+
+  return { complete, usable, staleIds, missingIds, missingLeagues };
+}
+
+/**
+ * True when every current league id is cached with no stale ids.
+ * Prefer evaluateResultsCache when deciding between full vs incremental fetch.
+ */
+export function isResultsCacheValid(cachedResults, orderedLeagues) {
+  return evaluateResultsCache(cachedResults, orderedLeagues).complete;
 }
 
 /**

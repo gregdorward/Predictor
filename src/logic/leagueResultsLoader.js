@@ -82,7 +82,7 @@ export async function loadLeagueResultsForCompetition(competitionId, leagueName)
   let gamesFiltered;
   if (games.pager?.current_page < games.pager?.max_page) {
     const page2 = await fetch(
-      apiGetUrl(`leagueFixtures/${competitionId}&page=2`)
+      apiGetUrl(`leagueFixtures/${competitionId}?page=2`)
     );
     const page2Data = await page2.json();
     const gamesConcat = games.data.concat(page2Data.data);

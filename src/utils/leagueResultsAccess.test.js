@@ -2,6 +2,7 @@ import {
   applyCompetitionGoalDifference,
   computeCompetitionGoalDifference,
   findLeagueEntryById,
+  evaluateResultsCache,
   getLeagueFixturesByLeagueId,
   getLeagueResultsByLeagueId,
   getTeamFixturesBeforeMatch,
@@ -188,6 +189,45 @@ describe("isResultsCacheValid", () => {
   test("rejects cache missing a newly added league", () => {
     const cache = [{ id: 17146, fixtures: [] }];
     expect(isResultsCacheValid(cache, orderedLeagues)).toBe(false);
+  });
+});
+
+describe("evaluateResultsCache", () => {
+  const orderedLeagues = [
+    { element: { id: 17146 }, name: "EPL" },
+    { element: { id: 16494 }, name: "MLS" },
+    { element: { id: 8 }, name: "Championship" },
+  ];
+
+  test("marks a partial cache as usable but not complete", () => {
+    const cache = [
+      { id: 17146, fixtures: [] },
+      { id: 16494, fixtures: [] },
+    ];
+
+    expect(evaluateResultsCache(cache, orderedLeagues)).toEqual({
+      complete: false,
+      usable: true,
+      staleIds: [],
+      missingIds: ["8"],
+      missingLeagues: [{ element: { id: 8 }, name: "Championship" }],
+    });
+  });
+
+  test("rejects caches that contain stale season ids", () => {
+    const cache = [
+      { id: 15050, fixtures: [] },
+      { id: 17146, fixtures: [] },
+      { id: 16494, fixtures: [] },
+      { id: 8, fixtures: [] },
+    ];
+
+    expect(evaluateResultsCache(cache, orderedLeagues)).toMatchObject({
+      complete: false,
+      usable: false,
+      staleIds: ["15050"],
+      missingIds: [],
+    });
   });
 });
 

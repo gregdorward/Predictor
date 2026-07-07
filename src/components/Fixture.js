@@ -5,6 +5,7 @@ import { setData } from "../logic/dataSlice";
 import { Provider } from "react-redux";
 import store from "../logic/store"; // Import your Redux store
 import { clicked } from "../logic/getScorePredictions";
+import { allForm } from "../logic/getFixtures";
 import LeagueName from './LeagueName';
 import ShareShortlistButton from "./ShareShortlistButton";
 import GameStats from "./GameStats";
@@ -134,7 +135,20 @@ function SingleFixture({
   const dispatch = useDispatch();
   const [showGameStats, setShowGameStats] = useState(false);
   const [isLoadingGameStats, setIsLoadingGameStats] = useState(false); // New loading state
+  function resolveFixtureForms() {
+    const formEntry = allForm.find((entry) => entry.id === fixture.id);
+    return {
+      homeForm: fixture.formHome ?? formEntry?.home?.[2],
+      awayForm: fixture.formAway ?? formEntry?.away?.[2],
+    };
+  }
+
   function StoreData() {
+    const { homeForm, awayForm } = resolveFixtureForms();
+    if (!homeForm || !awayForm) {
+      return;
+    }
+
     const fixtureDetails = {
       id: fixture.id,
       homeTeamName: fixture.homeTeam,
@@ -151,49 +165,53 @@ function SingleFixture({
     };
 
     const homeDetails = {
-      "Attacking Strength": fixture.formHome.attackingStrength,
-      "Defensive Strength": fixture.formHome.defensiveStrength,
+      "Attacking Strength": homeForm.attackingStrength ?? "N/A",
+      "Defensive Strength": homeForm.defensiveStrength ?? "N/A",
     };
 
     const awayDetails = {
-      "Attacking Strength": fixture.formAway.attackingStrength,
-      "Defensive Strength": fixture.formAway.defensiveStrength,
+      "Attacking Strength": awayForm.attackingStrength ?? "N/A",
+      "Defensive Strength": awayForm.defensiveStrength ?? "N/A",
     };
 
     const dataToSend = {
       key1: "value1",
       key2: "value2",
     };
-    fixture.formHome.defensiveMetrics["Clean Sheet Percentage"] =
-      fixture.formHome.CleanSheetPercentage;
-    fixture.formAway.defensiveMetrics["Clean Sheet Percentage"] =
-      fixture.formAway.CleanSheetPercentage;
+    if (homeForm.defensiveMetrics) {
+      homeForm.defensiveMetrics["Clean Sheet Percentage"] =
+        homeForm.CleanSheetPercentage;
+    }
+    if (awayForm.defensiveMetrics) {
+      awayForm.defensiveMetrics["Clean Sheet Percentage"] =
+        awayForm.CleanSheetPercentage;
+    }
 
     localStorage.setItem(
       "homeForm",
-      JSON.stringify(fixture.formHome.attackingMetrics)
+      JSON.stringify(homeForm.attackingMetrics ?? {})
     );
     localStorage.setItem(
       "homeFormDef",
-      JSON.stringify(fixture.formHome.defensiveMetrics)
+      JSON.stringify(homeForm.defensiveMetrics ?? {})
     );
     localStorage.setItem(
       "allTeamResultsHome",
-      JSON.stringify(fixture.formHome.allTeamResults)
+      JSON.stringify(homeForm.allTeamResults ?? [])
     );
     localStorage.setItem("homeDetails", JSON.stringify(homeDetails));
 
     localStorage.setItem(
       "awayForm",
-      JSON.stringify(fixture.formAway.attackingMetrics)
+      JSON.stringify(awayForm.attackingMetrics ?? {})
     );
     localStorage.setItem(
       "awayFormDef",
-      JSON.stringify(fixture.formAway.defensiveMetrics)
+      JSON.stringify(awayForm.defensiveMetrics ?? {})
     );
     localStorage.setItem(
       "allTeamResultsAway",
-      JSON.stringify(fixture.formAway.allTeamResults)
+      JSON.stringify(awayForm.allTeamResults ?? [])
     );
     localStorage.setItem("awayDetails", JSON.stringify(awayDetails));
 
@@ -225,7 +243,12 @@ function SingleFixture({
   }
 
   const handleGameStatsClick = () => {
-    if (!clicked) {
+    const { homeForm, awayForm } = resolveFixtureForms();
+    if (!homeForm || !awayForm) {
+      alert("Match form data is not available yet for this fixture.");
+      return;
+    }
+    if (!clicked && !fixture.predictionsUnavailable) {
       alert("Tap Get Predictions to fetch all game stats first");
       return;
     }
@@ -812,7 +835,7 @@ export function Fixture(props) {
       {/* Section 1: Visibility Warning */}
       {props.totalVisible !== props.fullGameListLength && (
         <div className="CapText">
-          {props.fullGameListLength} games have been reduced to {props.totalVisible} by the applied filters or the minimum games played threshold. Reset the filter to view all games.
+          {props.fullGameListLength} games have been reduced to {props.totalVisible} by the applied filters. Reset the filter to view all games.
         </div>
       )}
 

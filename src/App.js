@@ -238,6 +238,22 @@ async function calculateDate(dateString) {
   return [`${month}${day}${year}`, `${year}-${month}-${day}`];
 }
 
+function getNoFixturesMessage(offset, date) {
+  if (offset === 0) {
+    return "There are no fixtures today.";
+  }
+  if (offset === 1) {
+    return "There are no fixtures tomorrow.";
+  }
+  const formatted = date.toLocaleDateString("en-GB", {
+    weekday: "long",
+    day: "numeric",
+    month: "long",
+    year: "numeric",
+  });
+  return `There are no fixtures on ${formatted}.`;
+}
+
 // Synchronous module-init equivalent (avoids top-level await, which Next's
 // webpack build does not enable by default).
 (function initModuleDate() {
@@ -633,6 +649,31 @@ export function AppContent() {
   }, [user]);
 
 
+  const handleAction = async () => {
+    bumpFixturesEpoch();
+    setIsLoading(true);
+
+    const [raw, formatted] = await calculateDate(currentDate);
+    const sofaDate = await convertTimestampForSofaScore(currentDate);
+
+    const data = await generateFixtures(
+      "fixtures",
+      raw,
+      selectedOdds,
+      formatted,
+      false,
+      raw,
+      sofaDate,
+      currentDate,
+      handleGetPredictions
+    );
+
+    if (Array.isArray(data)) {
+      setFixtures(data);
+    }
+    setIsLoading(false);
+  };
+
   // This function replaces decrementDate and incrementDateV2
   const changeDate = (num) => {
     const newOffset = offset + num;
@@ -645,35 +686,6 @@ export function AppContent() {
       setOffset(newOffset);
       setCurrentDate(newDate);
     }
-  };
-
-
-  const handleAction = async () => {
-    bumpFixturesEpoch();
-    setIsLoading(true);
-
-    // 1. Convert the current state date into the formats generateFixtures needs
-    // Assuming calculateDate returns [dateRaw, dateFormatted]
-    const [raw, formatted] = await calculateDate(currentDate);
-    const sofaDate = await convertTimestampForSofaScore(currentDate);
-
-    const data = await generateFixtures(
-      "fixtures",       // day
-      raw,              // date
-      selectedOdds,     // odds
-      formatted,        // dateFootyStats
-      false,            // current
-      raw,              // todaysDate
-      sofaDate,         // sofaScoreDate
-      currentDate,      // unformattedDate
-      handleGetPredictions
-    );
-
-    // generateFixtures returns undefined when a concurrent load holds the lock.
-    if (Array.isArray(data)) {
-      setFixtures(data);
-    }
-    setIsLoading(false);
   };
 
 
@@ -1216,7 +1228,7 @@ export function AppContent() {
             buttonText={"Multis"}
             className={"MultisCollapsable"}
             openedClassName={"MultisCollapsableOpened"}
-            key="MultisCollapsable"
+            collapsibleKey="MultisCollapsable"
             element={
               <>
                 <MultisPanelCarousel />
@@ -1267,19 +1279,20 @@ export function AppContent() {
           <div className="LoadingSpinnerContainer" style={{ display: 'flex', justifyContent: 'center', padding: '20px' }}>
             <ThreeDots stroke="#fe8c00" />
           </div>
+        ) : fixtures?.length > 0 ? (
+          <RenderAllFixtures
+            matches={fixtures}
+            userTips={activeSlip}
+            handleToggleTip={handleToggleTip}
+            userDetail={user}
+            result={false}
+            isProbability={isProbability}
+            setIsProbability={setIsProbability}
+          />
         ) : (
-          /* 2. Show Fixtures only when NOT loading and data exists */
-          fixtures?.length > 0 && (
-            <RenderAllFixtures
-              matches={fixtures}
-              userTips={activeSlip}
-              handleToggleTip={handleToggleTip}
-              userDetail={user}
-              result={false}
-              isProbability={isProbability}
-              setIsProbability={setIsProbability}
-            />
-          )
+          <p className="NoFixtures">
+            {getNoFixturesMessage(offset, currentDate)}
+          </p>
         )}
       </div>
       <div className={"StatsInsights"} id="statsInsights" />
@@ -1309,7 +1322,6 @@ export function AppContent() {
         </RedditShareButton>
         <FacebookShareButton
           url={"https://www.soccerstatshub.com"}
-          quote={"SoccerStatsHub - data-driven football predictions"}
           className="SecondaryButton ShareButton"
         >
           <FacebookIcon size={"3em"} round={true} />

@@ -4461,10 +4461,11 @@ export async function calculateScore(match, index, divider, calculate, AIPredict
     }
 
     if (
-      (match.matches_completed_minimum < 3 &&
-        selectedTipType !== "AI Tips") ||
-      match.homeOdds === "N/A"
+      match.matches_completed_minimum < 3 &&
+      selectedTipType !== "AI Tips"
     ) {
+      match.predictionsUnavailable = true;
+    } else if (match.homeOdds === "N/A") {
       match.omit = true;
     } else if (selectedTipType === "AI Tips" && (AIPredictionHome === null || AIPredictionAway === null)) {
       match.omit = true;
@@ -4534,7 +4535,7 @@ export async function calculateScore(match, index, divider, calculate, AIPredict
       parseFloat(formHome.goalDifference) - parseFloat(formAway.goalDifference);
 
     if (match.matches_completed_minimum < 3) {
-      match.omit = true;
+      match.predictionsUnavailable = true;
     }
 
 

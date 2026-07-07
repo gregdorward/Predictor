@@ -15,11 +15,12 @@ import {
   getLeagueFixturesByLeagueId,
   applyCompetitionGoalDifference,
   getRecentResultsCutoffUnix,
-  isResultsCacheValid,
+  evaluateResultsCache,
   trimLeagueResultsToWindow,
 } from "../utils/leagueResultsAccess";
 import { resolveMultiDivisionLeagueTables } from "../utils/multiDivisionLeagueTables";
 import { apiGetUrl } from "../utils/apiUrl";
+import { persistLeagueResults } from "../utils/persistLeagueResults";
 import {
   transformGroupStageTables,
   flattenGroupTables,
@@ -670,32 +671,27 @@ export function RenderAllFixtures(props) {
 
   const omitFilteredGames = rawMatches.filter(
     (match) => match.omit === false
-  ); // 27 matches survived
+  );
 
-  // This is the number you were expecting to see
   const totalVisible = omitFilteredGames.length;
 
   console.log(`Total games: ${fullGameListLength}`);
-  console.log(`Visible (Shown): ${totalVisible}`); // This will output 27
+  console.log(`Visible (Shown): ${totalVisible}`);
 
-  // 2. Filter logic
-  const filteredMatches = omitFilteredGames.filter(
-    (match) => match.matches_completed_minimum >= 3
-  );
-
-  const originalLength = filteredMatches.length;
+  const displayPool = omitFilteredGames;
+  const originalLength = displayPool.length;
   let newLength;
 
   // 3. Paid vs Free Logic
   if (paid === true) {
-    displayMatches = filteredMatches;
-    uncappedFixtures = filteredMatches;
+    displayMatches = displayPool;
+    uncappedFixtures = displayPool;
     newLength = displayMatches.length;
   } else {
     const slicePercent = 0.25;
-    const sliceCount = Math.ceil(filteredMatches.length * slicePercent);
-    displayMatches = filteredMatches.slice(0, sliceCount);
-    uncappedFixtures = filteredMatches;
+    const sliceCount = Math.ceil(displayPool.length * slicePercent);
+    displayMatches = displayPool.slice(0, sliceCount);
+    uncappedFixtures = displayPool;
     capped = true;
     newLength = sliceCount;
   }
@@ -916,6 +912,8 @@ export async function generateFixtures(
       league.status === 200 &&
       (allLeagueResults.status === 201 || allLeagueResults.status === 200);
 
+    let leaguesToFetch = null;
+
     if (resultsCacheOk) {
       const cachedBody = await allLeagueResults.json();
       const cachedGames = Array.isArray(cachedBody)
@@ -923,9 +921,9 @@ export async function generateFixtures(
         : Array.isArray(cachedBody?.data)
           ? cachedBody.data
           : [];
-      const cacheValid = isResultsCacheValid(cachedGames, orderedLeagues);
+      const cacheEval = evaluateResultsCache(cachedGames, orderedLeagues);
 
-      if (cacheValid) {
+      if (cacheEval.complete) {
         console.log("Using cached league results");
         await league.json().then((leagues) => {
           leagueArray = Array.from(leagues.leagueArray);
@@ -942,6 +940,29 @@ export async function generateFixtures(
           leagueIdArray,
           allLeagueResultsArrayOfObjects
         );
+      } else if (cacheEval.usable && cacheEval.missingLeagues.length > 0) {
+        console.log(
+          `Cache missing ${cacheEval.missingIds.length} leagues — fetching incrementally`
+        );
+        await league.json().then((leagues) => {
+          leagueArray = Array.from(leagues.leagueArray);
+        });
+
+        const cutoffUnix = getRecentResultsCutoffUnix();
+        const requiredIdSet = new Set(
+          orderedLeagues.map((entry) => String(entry.element.id))
+        );
+        allLeagueResultsArrayOfObjects = trimLeagueResultsToWindow(
+          cachedGames.filter((entry) => requiredIdSet.has(String(entry.id))),
+          cutoffUnix
+        );
+        leaguesStored = true;
+        leaguesToFetch = cacheEval.missingLeagues;
+        generateTables(
+          leagueArray,
+          leagueIdArray,
+          allLeagueResultsArrayOfObjects
+        );
       } else {
         console.log(
           "Cached results stale or mismatched current seasons — rebuilding"
@@ -950,30 +971,57 @@ export async function generateFixtures(
       }
     }
 
-    if (
+    const needsResultsFetch =
       !footyStatsUnavailable &&
-      (!resultsCacheOk || allLeagueResults.status === 404)
-    ) {
-      allLeagueResultsArrayOfObjects = [];
-      console.log("Fetching leagues");
+      (leaguesToFetch ||
+        !resultsCacheOk ||
+        allLeagueResults.status === 404);
+
+    if (needsResultsFetch) {
+      const isIncrementalFetch = Boolean(leaguesToFetch);
+      if (!isIncrementalFetch) {
+        allLeagueResultsArrayOfObjects = [];
+      }
+      console.log(
+        isIncrementalFetch
+          ? "Fetching missing league results"
+          : "Rebuilding league results cache"
+      );
       let footyStatsRateLimited = false;
 
-      for (let i = 0; i < orderedLeagues.length; i++) {
-        league = await fetch(
-          apiGetUrl(`tables/${orderedLeagues[i].element.id}/${leaguesDate}`)
-        );
-        // eslint-disable-next-line no-loop-func
-        await league.json().then((table) => {
-          leagueArray.push(table);
-        });
-        leaguesStored = false;
+      if (league.status === 200) {
+        try {
+          const leaguesPayload = await league.json();
+          if (
+            Array.isArray(leaguesPayload?.leagueArray) &&
+            leaguesPayload.leagueArray.length > 0
+          ) {
+            leagueArray = leaguesPayload.leagueArray;
+            leaguesStored = true;
+          }
+        } catch (parseErr) {
+          console.warn("Failed to parse bundled leagues payload:", parseErr);
+        }
       }
 
-      //set variable for date X amount of days in the past and use that to filter the results
+      if (leagueArray.length === 0) {
+        console.log("Fetching league tables individually");
+        for (let i = 0; i < orderedLeagues.length; i++) {
+          league = await fetch(
+            apiGetUrl(`tables/${orderedLeagues[i].element.id}/${leaguesDate}`)
+          );
+          // eslint-disable-next-line no-loop-func
+          await league.json().then((table) => {
+            leagueArray.push(table);
+          });
+          leaguesStored = false;
+        }
+      }
 
       const targetDate = getRecentResultsCutoffUnix();
+      const leaguesForFixtureFetch = leaguesToFetch ?? orderedLeagues;
 
-      for (const orderedLeague of orderedLeagues) {
+      for (const orderedLeague of leaguesForFixtureFetch) {
         if (footyStatsRateLimited) {
           break;
         }
@@ -1004,7 +1052,7 @@ export async function generateFixtures(
         const pager = games.pager;
         if (pager && pager.current_page < pager.max_page) {
           const page2 = await fetch(
-            apiGetUrl(`leagueFixtures/${orderedLeague.element.id}&page=2`)
+            apiGetUrl(`leagueFixtures/${orderedLeague.element.id}?page=2`)
           );
           let page2Data = await page2.json();
 
@@ -1107,10 +1155,10 @@ export async function generateFixtures(
       }
       if (footyStatsRateLimited) {
         console.warn(
-          "Results rebuild aborted — FootyStats rate limit during leagueFixtures"
+          "Results rebuild hit FootyStats rate limit — keeping partial results"
         );
-        allLeagueResultsArrayOfObjects = [];
-      } else if (allLeagueResultsArrayOfObjects.length > 0) {
+      }
+      if (allLeagueResultsArrayOfObjects.length > 0) {
         resultsWereRebuilt = true;
         generateTables(
           leagueArray,
@@ -1318,21 +1366,11 @@ export async function generateFixtures(
     if(fixtureArray.length === 0) {
       await saveLeaguesIfNeeded();
       console.log("No fixtures found for this date.");
-      render(
-        <div className="NoFixtures">
-          <h2>No fixtures found for this date</h2>
-          <p>World Cup 2026 coming soon...</p>
-        </div>,
-        "GeneratePredictions"
-      );
+      clearRender("GeneratePredictions");
       return [];
-    } else {
-      render(
-        <div className="NoFixtures">
-        </div>,
-        "GeneratePredictions"
-      );
     }
+
+    clearRender("GeneratePredictions");
 
     for (let i = 0; i < orderedLeagues.length; i++) {
       leagueID = orderedLeagues[i].element.id;
@@ -1891,6 +1929,7 @@ export async function generateFixtures(
         }
 
         match.matches_completed_minimum = fixture.matches_completed_minimum;
+        match.predictionsUnavailable = fixture.matches_completed_minimum < 3;
         match.homeBadge = fixture.home_image;
         match.awayBadge = fixture.away_image;
 
@@ -2060,21 +2099,13 @@ export async function generateFixtures(
         leagueIds: allLeagueResultsArrayOfObjects.map((entry) => entry.id),
         data: allLeagueResultsArrayOfObjects,
       };
-      const deleteRes = await fetch(`${process.env.NEXT_PUBLIC_EXPRESS_SERVER}results`, {
-        method: "DELETE",
-        headers: {
-          Accept: "application/json",
-          "Content-Type": "application/json",
-        },
-      });
-      const postRes = await fetch(`${process.env.NEXT_PUBLIC_EXPRESS_SERVER}results`, {
-        method: "POST",
-        headers: {
-          Accept: "application/json",
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(payload),
-      });
+      const putRes = await persistLeagueResults(
+        process.env.NEXT_PUBLIC_EXPRESS_SERVER,
+        payload
+      );
+      if (!putRes.ok) {
+        console.error("Failed to persist league results:", putRes.status);
+      }
     }
 
     if (!isStoredLocally) {
@@ -2088,8 +2119,6 @@ export async function generateFixtures(
       });
     }
     if (resultsWereRebuilt) {
-      await updateResults(true);
-    } else if (!isStoredLocally) {
       await updateResults(true);
     }
     await saveLeaguesIfNeeded();
