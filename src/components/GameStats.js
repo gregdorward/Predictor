@@ -4272,8 +4272,8 @@ function GameStats({ game, displayBool, stats, handleToggleTip, userTips }) {
               {effectiveLeagueStats && ranksHome && ranksAway && effectiveLeagueStats?.topTeams && (
                 <TeamRankingsFlexView
                   title={`Rankings in ${game.leagueDesc} out of ${
-                    stats.topTeams.accurateCrosses?.length ??
-                    Object.values(stats.topTeams).find((v) => Array.isArray(v))
+                    effectiveLeagueStats.topTeams.accurateCrosses?.length ??
+                    Object.values(effectiveLeagueStats.topTeams).find((v) => Array.isArray(v))
                       ?.length ??
                     "?"
                   } teams`}
@@ -4282,8 +4282,8 @@ function GameStats({ game, displayBool, stats, handleToggleTip, userTips }) {
                   teamALabel={game.homeTeam}
                   teamBLabel={game.awayTeam}
                   totalTeams={
-                    stats.topTeams.accurateCrosses?.length ??
-                    Object.values(stats.topTeams).find((v) => Array.isArray(v))
+                    effectiveLeagueStats.topTeams.accurateCrosses?.length ??
+                    Object.values(effectiveLeagueStats.topTeams).find((v) => Array.isArray(v))
                       ?.length
                   }
                 />
@@ -4739,8 +4739,8 @@ function GameStats({ game, displayBool, stats, handleToggleTip, userTips }) {
                   ranksHome,
                   ranksAway,
                   totalTeams:
-                    stats.topTeams.accurateCrosses?.length ??
-                    Object.values(stats.topTeams).find((value) =>
+                    effectiveLeagueStats.topTeams.accurateCrosses?.length ??
+                    Object.values(effectiveLeagueStats.topTeams).find((value) =>
                       Array.isArray(value)
                     )?.length,
                 }
