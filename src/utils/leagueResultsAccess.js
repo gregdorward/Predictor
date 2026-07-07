@@ -58,6 +58,11 @@ export function isResultsCacheValid(cachedResults, orderedLeagues) {
   return evaluateResultsCache(cachedResults, orderedLeagues).complete;
 }
 
+/** Rebuilt results must cover every current league before replacing the S3 blob. */
+export function isRebuiltResultsCacheComplete(cachedResults, orderedLeagues) {
+  return evaluateResultsCache(cachedResults, orderedLeagues).complete;
+}
+
 /**
  * Trim each league's fixture list to the recent window (same rules as a fresh build).
  */
