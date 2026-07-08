@@ -1,0 +1,823 @@
+{
+  "footyUpdates": [
+    {
+      "name": "UEFA Nations League",
+      "oldId": 13734,
+      "newId": 16808,
+      "leagueName": "International UEFA Nations League",
+      "matchType": "exact-season-id"
+    },
+    {
+      "name": "Colombian Liga BetPlay",
+      "oldId": 14086,
+      "newId": 16614,
+      "leagueName": "Colombia Categoria Primera A",
+      "matchType": "exact-season-id"
+    },
+    {
+      "name": "Europa Conference League",
+      "oldId": 14904,
+      "newId": 17130,
+      "leagueName": "Europe UEFA Europa Conference League",
+      "matchType": "exact-season-id"
+    },
+    {
+      "name": "Austrian Bundesliga",
+      "oldId": 14923,
+      "newId": 17181,
+      "leagueName": "Austria Bundesliga",
+      "matchType": "exact-season-id"
+    },
+    {
+      "name": "Champions League",
+      "oldId": 14924,
+      "newId": 17128,
+      "leagueName": "Europe UEFA Champions League",
+      "matchType": "exact-season-id"
+    },
+    {
+      "name": "Championship",
+      "oldId": 14930,
+      "newId": 17184,
+      "leagueName": "England Championship",
+      "matchType": "exact-season-id"
+    },
+    {
+      "name": "Bundesliga 2",
+      "oldId": 14931,
+      "newId": 17212,
+      "leagueName": "Germany 2. Bundesliga",
+      "matchType": "exact-season-id"
+    },
+    {
+      "name": "Ligue 1",
+      "oldId": 14932,
+      "newId": 17102,
+      "leagueName": "France Ligue 1",
+      "matchType": "exact-season-id"
+    },
+    {
+      "name": "League One",
+      "oldId": 14934,
+      "newId": 17180,
+      "leagueName": "England EFL League One",
+      "matchType": "exact-season-id"
+    },
+    {
+      "name": "League Two",
+      "oldId": 14935,
+      "newId": 17185,
+      "leagueName": "England EFL League Two",
+      "matchType": "exact-season-id"
+    },
+    {
+      "name": "Eredivisie",
+      "oldId": 14936,
+      "newId": 17097,
+      "leagueName": "Netherlands Eredivisie",
+      "matchType": "exact-season-id"
+    },
+    {
+      "name": "Belgian Pro League",
+      "oldId": 14937,
+      "newId": 17171,
+      "leagueName": "Belgium Pro League",
+      "matchType": "exact-season-id"
+    },
+    {
+      "name": "Ligue 2",
+      "oldId": 14954,
+      "newId": 17117,
+      "leagueName": "France Ligue 2",
+      "matchType": "exact-season-id"
+    },
+    {
+      "name": "La Liga",
+      "oldId": 14956,
+      "newId": 17199,
+      "leagueName": "Spain La Liga",
+      "matchType": "exact-season-id"
+    },
+    {
+      "name": "Bundesliga",
+      "oldId": 14968,
+      "newId": 17210,
+      "leagueName": "Germany Bundesliga",
+      "matchType": "exact-season-id"
+    },
+    {
+      "name": "Czech First League",
+      "oldId": 14973,
+      "newId": 17157,
+      "leagueName": "Czech Republic First League",
+      "matchType": "exact-season-id"
+    },
+    {
+      "name": "Eerste Divisie",
+      "oldId": 14987,
+      "newId": 17110,
+      "leagueName": "Netherlands Eerste Divisie",
+      "matchType": "exact-season-id"
+    },
+    {
+      "name": "Scottish Premiership",
+      "oldId": 15000,
+      "newId": 17148,
+      "leagueName": "Scotland Premiership",
+      "matchType": "exact-season-id"
+    },
+    {
+      "name": "Europa League",
+      "oldId": 15002,
+      "newId": 17127,
+      "leagueName": "Europe UEFA Europa League",
+      "matchType": "exact-season-id"
+    },
+    {
+      "name": "Ekstraklasa",
+      "oldId": 15031,
+      "newId": 17112,
+      "leagueName": "Poland Ekstraklasa",
+      "matchType": "exact-season-id"
+    },
+    {
+      "name": "Swiss Super League",
+      "oldId": 15047,
+      "newId": 17129,
+      "leagueName": "Switzerland Super League",
+      "matchType": "exact-season-id"
+    },
+    {
+      "name": "Premier League",
+      "oldId": 15050,
+      "newId": 17146,
+      "leagueName": "England Premier League",
+      "matchType": "exact-season-id"
+    },
+    {
+      "name": "Croatian First League",
+      "oldId": 15053,
+      "newId": 17087,
+      "leagueName": "Croatia Prva HNL",
+      "matchType": "exact-season-id"
+    },
+    {
+      "name": "Danish Superliga",
+      "oldId": 15055,
+      "newId": 17091,
+      "leagueName": "Denmark Superliga",
+      "matchType": "exact-season-id"
+    },
+    {
+      "name": "Scottish Championship",
+      "oldId": 15061,
+      "newId": 17144,
+      "leagueName": "Scotland Championship",
+      "matchType": "exact-season-id"
+    },
+    {
+      "name": "Serie A",
+      "oldId": 15068,
+      "newId": 17084,
+      "leagueName": "Italy Serie A",
+      "matchType": "exact-season-id"
+    },
+    {
+      "name": "Primeira Liga",
+      "oldId": 15115,
+      "newId": 17217,
+      "leagueName": "Portugal Liga NOS",
+      "matchType": "exact-season-id"
+    },
+    {
+      "name": "Liga MX",
+      "oldId": 15234,
+      "newId": 17099,
+      "leagueName": "Mexico Liga MX",
+      "matchType": "exact-season-id"
+    },
+    {
+      "name": "J League",
+      "oldId": 16242,
+      "newId": 17115,
+      "leagueName": "Japan J1 League",
+      "matchType": "exact-season-id"
+    }
+  ],
+  "footyUnchanged": [
+    {
+      "id": 10121,
+      "name": "World Cup SA Qualifiers"
+    },
+    {
+      "id": 13964,
+      "name": "World Cup Europe Qualifiers"
+    },
+    {
+      "id": 14972,
+      "name": "Turkish Super Lig"
+    },
+    {
+      "id": 14977,
+      "name": "3. Liga"
+    },
+    {
+      "id": 15066,
+      "name": "Segunda Division"
+    },
+    {
+      "id": 15163,
+      "name": "Greek Super League"
+    },
+    {
+      "id": 15632,
+      "name": "Serie B"
+    },
+    {
+      "id": 15657,
+      "name": "National League"
+    },
+    {
+      "id": 15844,
+      "name": "National League South"
+    },
+    {
+      "id": 15845,
+      "name": "National League North"
+    },
+    {
+      "id": 16036,
+      "name": "A-League"
+    },
+    {
+      "id": 16494,
+      "name": "World Cup 2026"
+    },
+    {
+      "id": 16504,
+      "name": "MLS"
+    },
+    {
+      "id": 16537,
+      "name": "Irish Premier Division"
+    },
+    {
+      "id": 16544,
+      "name": "Brazil Serie A"
+    },
+    {
+      "id": 16556,
+      "name": "Copa Libertadores"
+    },
+    {
+      "id": 16558,
+      "name": "Eliteserien"
+    },
+    {
+      "id": 16571,
+      "name": "Argentina Primera Division"
+    },
+    {
+      "id": 16614,
+      "name": "Colombian Primera Division"
+    },
+    {
+      "id": 16627,
+      "name": "K League"
+    }
+  ],
+  "footyUnmatched": [
+    {
+      "currentId": 12772,
+      "name": "Saudi Pro League"
+    },
+    {
+      "currentId": 13878,
+      "name": "Club World Cup"
+    },
+    {
+      "currentId": 13967,
+      "name": "USL"
+    },
+    {
+      "currentId": 14089,
+      "name": "Veikkausliiga"
+    },
+    {
+      "currentId": 14116,
+      "name": "Chilean Primera Division"
+    },
+    {
+      "currentId": 14305,
+      "name": "Brazil Serie B"
+    },
+    {
+      "currentId": 14626,
+      "name": "Uruguayan Primera Division"
+    },
+    {
+      "currentId": 14933,
+      "name": "Slovak Super Liga"
+    },
+    {
+      "currentId": 14951,
+      "name": "Ukrainian Premier League"
+    },
+    {
+      "currentId": 15062,
+      "name": "Scottish League One"
+    },
+    {
+      "currentId": 15063,
+      "name": "Slovenian Prva Liga"
+    },
+    {
+      "currentId": 15064,
+      "name": "Scottish League Two"
+    },
+    {
+      "currentId": 15065,
+      "name": "Serbian SuperLiga"
+    },
+    {
+      "currentId": 16263,
+      "name": "Allsvenskan"
+    }
+  ],
+  "sofaUpdates": [
+    {
+      "name": "Saudi Pro League",
+      "footyId": 12772,
+      "tournamentId": 955,
+      "oldSeason": 63998,
+      "newSeason": 80443,
+      "seasonName": "Saudi Pro League 25/26"
+    },
+    {
+      "name": "UEFA Nations League",
+      "footyId": 13734,
+      "tournamentId": 10783,
+      "oldSeason": 58337,
+      "newSeason": 89945,
+      "seasonName": "UEFA Nations League 26/27"
+    },
+    {
+      "name": "USL",
+      "footyId": 13967,
+      "tournamentId": 13363,
+      "oldSeason": 70263,
+      "newSeason": 87611,
+      "seasonName": "USL Championship 2026"
+    },
+    {
+      "name": "Colombian Liga BetPlay",
+      "footyId": 14086,
+      "tournamentId": 11539,
+      "oldSeason": 70681,
+      "newSeason": 88503,
+      "seasonName": "Liga DIMAYOR 2026"
+    },
+    {
+      "name": "Colombian Primera Division",
+      "footyId": 16614,
+      "tournamentId": 11539,
+      "oldSeason": 87913,
+      "newSeason": 88503,
+      "seasonName": "Liga DIMAYOR 2026"
+    },
+    {
+      "name": "Veikkausliiga",
+      "footyId": 14089,
+      "tournamentId": 41,
+      "oldSeason": 70853,
+      "newSeason": 87930,
+      "seasonName": "Veikkausliiga 2026"
+    },
+    {
+      "name": "Chilean Primera Division",
+      "footyId": 14116,
+      "tournamentId": 11653,
+      "oldSeason": 76986,
+      "newSeason": 88493,
+      "seasonName": "Primera Division 2026"
+    },
+    {
+      "name": "Brazil Serie B",
+      "footyId": 14305,
+      "tournamentId": 390,
+      "oldSeason": 72603,
+      "newSeason": 89840,
+      "seasonName": "Brasileiro Serie B 2026"
+    },
+    {
+      "name": "Uruguayan Primera Division",
+      "footyId": 14626,
+      "tournamentId": 278,
+      "oldSeason": 71306,
+      "newSeason": 89288,
+      "seasonName": "Primera Division 2026"
+    },
+    {
+      "name": "Europa Conference League",
+      "footyId": 14904,
+      "tournamentId": 17015,
+      "oldSeason": 76960,
+      "newSeason": 96529,
+      "seasonName": "UEFA Conference League 26/27"
+    },
+    {
+      "name": "Austrian Bundesliga",
+      "footyId": 14923,
+      "tournamentId": 45,
+      "oldSeason": 77382,
+      "newSeason": 97043,
+      "seasonName": "Bundesliga 26/27"
+    },
+    {
+      "name": "Champions League",
+      "footyId": 14924,
+      "tournamentId": 7,
+      "oldSeason": 76953,
+      "newSeason": 96518,
+      "seasonName": "UEFA Champions League 26/27"
+    },
+    {
+      "name": "Championship",
+      "footyId": 14930,
+      "tournamentId": 18,
+      "oldSeason": 77347,
+      "newSeason": 97037,
+      "seasonName": "Championship 26/27"
+    },
+    {
+      "name": "Bundesliga 2",
+      "footyId": 14931,
+      "tournamentId": 44,
+      "oldSeason": 77354,
+      "newSeason": 97406,
+      "seasonName": "2. Bundesliga 26/27"
+    },
+    {
+      "name": "Ligue 1",
+      "footyId": 14932,
+      "tournamentId": 34,
+      "oldSeason": 77356,
+      "newSeason": 96127,
+      "seasonName": "Ligue 1 26/27"
+    },
+    {
+      "name": "Slovak Super Liga",
+      "footyId": 14933,
+      "tournamentId": 211,
+      "oldSeason": 77154,
+      "newSeason": 96151,
+      "seasonName": "Superliga 26/27"
+    },
+    {
+      "name": "League One",
+      "footyId": 14934,
+      "tournamentId": 24,
+      "oldSeason": 77352,
+      "newSeason": 97077,
+      "seasonName": "League One 26/27"
+    },
+    {
+      "name": "League Two",
+      "footyId": 14935,
+      "tournamentId": 25,
+      "oldSeason": 77351,
+      "newSeason": 97078,
+      "seasonName": "League Two 26/27"
+    },
+    {
+      "name": "Eredivisie",
+      "footyId": 14936,
+      "tournamentId": 37,
+      "oldSeason": 77012,
+      "newSeason": 96143,
+      "seasonName": "Eredivisie 26/27"
+    },
+    {
+      "name": "Belgian Pro League",
+      "footyId": 14937,
+      "tournamentId": 9,
+      "oldSeason": 77849,
+      "newSeason": 96912,
+      "seasonName": "Challenger Pro League 26/27"
+    },
+    {
+      "name": "Ukrainian Premier League",
+      "footyId": 14951,
+      "tournamentId": 218,
+      "oldSeason": 77625,
+      "newSeason": 97214,
+      "seasonName": "Premier League 26/27"
+    },
+    {
+      "name": "Ligue 2",
+      "footyId": 14954,
+      "tournamentId": 182,
+      "oldSeason": 77357,
+      "newSeason": 96109,
+      "seasonName": "Ligue 2 26/27"
+    },
+    {
+      "name": "La Liga",
+      "footyId": 14956,
+      "tournamentId": 8,
+      "oldSeason": 77559,
+      "newSeason": 97268,
+      "seasonName": "LaLiga 26/27"
+    },
+    {
+      "name": "Bundesliga",
+      "footyId": 14968,
+      "tournamentId": 35,
+      "oldSeason": 77333,
+      "newSeason": 97464,
+      "seasonName": "Bundesliga 26/27"
+    },
+    {
+      "name": "Turkish Super Lig",
+      "footyId": 14972,
+      "tournamentId": 52,
+      "oldSeason": 78175,
+      "newSeason": 77805,
+      "seasonName": "Super Lig 25/26"
+    },
+    {
+      "name": "Czech First League",
+      "footyId": 14973,
+      "tournamentId": 172,
+      "oldSeason": 77019,
+      "newSeason": 96966,
+      "seasonName": "1. Liga 26/27"
+    },
+    {
+      "name": "3. Liga",
+      "footyId": 14977,
+      "tournamentId": 491,
+      "oldSeason": 346654,
+      "newSeason": 77744,
+      "seasonName": "3. Liga 25/26"
+    },
+    {
+      "name": "Eerste Divisie",
+      "footyId": 14987,
+      "tournamentId": 131,
+      "oldSeason": 14987,
+      "newSeason": 96187,
+      "seasonName": "Eerste Divisie 26/27"
+    },
+    {
+      "name": "Scottish Premiership",
+      "footyId": 15000,
+      "tournamentId": 36,
+      "oldSeason": 77128,
+      "newSeason": 96658,
+      "seasonName": "Premiership 26/27"
+    },
+    {
+      "name": "Europa League",
+      "footyId": 15002,
+      "tournamentId": 679,
+      "oldSeason": 76984,
+      "newSeason": 96522,
+      "seasonName": "UEFA Europa League 26/27"
+    },
+    {
+      "name": "Ekstraklasa",
+      "footyId": 15031,
+      "tournamentId": 202,
+      "oldSeason": 76477,
+      "newSeason": 96144,
+      "seasonName": "Ekstraklasa 26/27"
+    },
+    {
+      "name": "Swiss Super League",
+      "footyId": 15047,
+      "tournamentId": 215,
+      "oldSeason": 77152,
+      "newSeason": 96589,
+      "seasonName": "Super League 26/27"
+    },
+    {
+      "name": "Premier League",
+      "footyId": 15050,
+      "tournamentId": 17,
+      "oldSeason": 76986,
+      "newSeason": 96668,
+      "seasonName": "Premier League 26/27"
+    },
+    {
+      "name": "Croatian First League",
+      "footyId": 15053,
+      "tournamentId": 170,
+      "oldSeason": 77152,
+      "newSeason": 95727,
+      "seasonName": "HNL 26/27"
+    },
+    {
+      "name": "Danish Superliga",
+      "footyId": 15055,
+      "tournamentId": 39,
+      "oldSeason": 76491,
+      "newSeason": 95785,
+      "seasonName": "Superliga 26/27"
+    },
+    {
+      "name": "Scottish Championship",
+      "footyId": 15061,
+      "tournamentId": 206,
+      "oldSeason": 77037,
+      "newSeason": 96614,
+      "seasonName": "Championship 26/27"
+    },
+    {
+      "name": "Scottish League One",
+      "footyId": 15062,
+      "tournamentId": 207,
+      "oldSeason": 77037,
+      "newSeason": 96638,
+      "seasonName": "League 1 26/27"
+    },
+    {
+      "name": "Slovenian Prva Liga",
+      "footyId": 15063,
+      "tournamentId": 212,
+      "oldSeason": 62660,
+      "newSeason": 96864,
+      "seasonName": "PrvaLiga 26/27"
+    },
+    {
+      "name": "Scottish League Two",
+      "footyId": 15064,
+      "tournamentId": 209,
+      "oldSeason": 77045,
+      "newSeason": 96664,
+      "seasonName": "League 2 26/27"
+    },
+    {
+      "name": "Serbian SuperLiga",
+      "footyId": 15065,
+      "tournamentId": 210,
+      "oldSeason": 77625,
+      "newSeason": 96249,
+      "seasonName": "Superliga 26/27"
+    },
+    {
+      "name": "Segunda Division",
+      "footyId": 15066,
+      "tournamentId": 54,
+      "oldSeason": 77558,
+      "newSeason": 97280,
+      "seasonName": "LaLiga 2 26/27"
+    },
+    {
+      "name": "Serie A",
+      "footyId": 15068,
+      "tournamentId": 23,
+      "oldSeason": 76457,
+      "newSeason": 95836,
+      "seasonName": "Serie A 26/27"
+    },
+    {
+      "name": "Primeira Liga",
+      "footyId": 15115,
+      "tournamentId": 238,
+      "oldSeason": 77806,
+      "newSeason": 97436,
+      "seasonName": "Liga Portugal 26/27"
+    },
+    {
+      "name": "Liga MX",
+      "footyId": 15234,
+      "tournamentId": 11621,
+      "oldSeason": 76500,
+      "newSeason": 96191,
+      "seasonName": "Liga MX, Apertura 2026"
+    },
+    {
+      "name": "J League",
+      "footyId": 16242,
+      "tournamentId": 196,
+      "oldSeason": 69871,
+      "newSeason": 96370,
+      "seasonName": "J1 League 26/27"
+    },
+    {
+      "name": "Allsvenskan",
+      "footyId": 16263,
+      "tournamentId": 40,
+      "oldSeason": 69956,
+      "newSeason": 87925,
+      "seasonName": "Allsvenskan 2026"
+    }
+  ],
+  "sofaUnchanged": [
+    {
+      "name": "World Cup SA Qualifiers",
+      "footyId": 10121,
+      "tournamentId": 295,
+      "season": 53820
+    },
+    {
+      "name": "Club World Cup",
+      "footyId": 13878,
+      "tournamentId": 357,
+      "season": 69619
+    },
+    {
+      "name": "World Cup Europe Qualifiers",
+      "footyId": 13964,
+      "tournamentId": 11,
+      "season": 69427
+    },
+    {
+      "name": "Greek Super League",
+      "footyId": 15163,
+      "tournamentId": 185,
+      "season": 78175
+    },
+    {
+      "name": "Serie B",
+      "footyId": 15632,
+      "tournamentId": 53,
+      "season": 79502
+    },
+    {
+      "name": "National League",
+      "footyId": 15657,
+      "tournamentId": 173,
+      "season": 78229
+    },
+    {
+      "name": "National League South",
+      "footyId": 15844,
+      "tournamentId": 174,
+      "season": 78227
+    },
+    {
+      "name": "National League North",
+      "footyId": 15845,
+      "tournamentId": 176,
+      "season": 78282
+    },
+    {
+      "name": "A-League",
+      "footyId": 16036,
+      "tournamentId": 136,
+      "season": 82603
+    },
+    {
+      "name": "World Cup 2026",
+      "footyId": 16494,
+      "tournamentId": 16,
+      "season": 58210
+    },
+    {
+      "name": "MLS",
+      "footyId": 16504,
+      "tournamentId": 242,
+      "season": 86668
+    },
+    {
+      "name": "Irish Premier Division",
+      "footyId": 16537,
+      "tournamentId": 192,
+      "season": 87682
+    },
+    {
+      "name": "Brazil Serie A",
+      "footyId": 16544,
+      "tournamentId": 325,
+      "season": 87678
+    },
+    {
+      "name": "Copa Libertadores",
+      "footyId": 16556,
+      "tournamentId": 384,
+      "season": 87760
+    },
+    {
+      "name": "Eliteserien",
+      "footyId": 16558,
+      "tournamentId": 20,
+      "season": 87809
+    },
+    {
+      "name": "Argentina Primera Division",
+      "footyId": 16571,
+      "tournamentId": 155,
+      "season": 87913
+    },
+    {
+      "name": "K League",
+      "footyId": 16627,
+      "tournamentId": 410,
+      "season": 88606
+    }
+  ],
+  "footyCalls": 1,
+  "sofaCalls": 62
+}
