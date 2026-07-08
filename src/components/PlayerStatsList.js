@@ -97,10 +97,10 @@ const PlayerStatsList = ({ playerStats, className, spanClass }) => {
             </button>
             <iframe
               src={`https://widgets.sofascore.com/en/embed/player/${activeIframePlayerId}?widgetTheme=dark`}
-              className="SofaScoreIframe"
+              className="StatWebsiteIframe"
               frameBorder="0"
               scrolling="no"
-              title="SofaScore Player"
+              title="Industry Stat Website Player"
             />
           </div>
         </div>

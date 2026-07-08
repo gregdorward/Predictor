@@ -30,7 +30,7 @@ ChartJS.register(
 
 function formatStatValue(label, value) {
   if (value == null || value === undefined) {
-    return "—";
+    return "-";
   }
 
   if (typeof value === "object") {
@@ -38,7 +38,7 @@ function formatStatValue(label, value) {
   }
 
   if (typeof value === "number" && Number.isNaN(value)) {
-    return "—";
+    return "-";
   }
 
   if (
@@ -249,7 +249,7 @@ function HeadToHeadSection({ headToHead, homeTeamName, awayTeamName }) {
                     {meeting.homeTeam}
                   </span>
                   <span className="FixturePage-h2hMatchScore">
-                    {meeting.homeGoals} – {meeting.awayGoals}
+                    {meeting.homeGoals} - {meeting.awayGoals}
                   </span>
                   <span
                     className="FixturePage-h2hMatchTeam FixturePage-h2hMatchTeam--away"
@@ -578,7 +578,7 @@ function TeamPage({ matchId }) {
             SoccerStatsHub Prediction
           </span>
           <span className="FixturePage-predictionScore">
-            {storedFixtureDetailsJson.homeGoals} –{" "}
+            {storedFixtureDetailsJson.homeGoals} -{" "}
             {storedFixtureDetailsJson.awayGoals}
           </span>
         </div>

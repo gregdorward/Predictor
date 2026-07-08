@@ -14,7 +14,7 @@ function canonicalTeamKey(name) {
 }
 
 describe("applyNationalTeamAlias", () => {
-  test("maps common FootyStats international labels to SofaScore names", () => {
+  test("maps common industry stat website international labels to stat website names", () => {
     expect(applyNationalTeamAlias("usa")).toBe("united states");
     expect(applyNationalTeamAlias("korearepublic")).toBe("south korea");
     expect(applyNationalTeamAlias("cotedivoire")).toBe("ivory coast");
@@ -26,7 +26,7 @@ describe("applyNationalTeamAlias", () => {
     expect(applyNationalTeamAlias("")).toBe("");
   });
 
-  test("FootyStats and SofaScore Ivory Coast labels resolve to the same key", () => {
+  test("industry stat website Ivory Coast labels resolve to the same key", () => {
     expect(canonicalTeamKey("Ivory Coast")).toBe("ivorycoast");
     expect(canonicalTeamKey("Côte d'Ivoire")).toBe("ivorycoast");
   });

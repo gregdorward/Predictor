@@ -8,14 +8,16 @@ SoccerStatsHub (https://www.soccerstatshub.com) helps football fans and bettors 
 
 - Home: https://www.soccerstatshub.com/
 - World Cup 2026 preview: https://www.soccerstatshub.com/worldcup2026/
-- Over 2.5 leagues: https://www.soccerstatshub.com/o25/
+- Over 2.5 teams: https://www.soccerstatshub.com/o25/
+- Highest scoring leagues: https://www.soccerstatshub.com/highest-scoring-leagues/
 - Under 2.5 leagues: https://www.soccerstatshub.com/u25/
 - BTTS fixtures: https://www.soccerstatshub.com/bttsfixtures/
 - BTTS teams: https://www.soccerstatshub.com/bttsteams/
-- Highest scoring teams: https://www.soccerstatshub.com/teamshigh/
+- BTTS No teams: https://www.soccerstatshub.com/btts-no-teams/
 - Highest scoring fixtures: https://www.soccerstatshub.com/fixtureshigh/
 - Season previews: https://www.soccerstatshub.com/seasonpreviews/
 - About: https://www.soccerstatshub.com/about/
+- Methodology: https://www.soccerstatshub.com/methodology/
 - FAQ: https://www.soccerstatshub.com/faq/
 - Competition stats (example): https://www.soccerstatshub.com/competition/premier-league/
 

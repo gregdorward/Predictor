@@ -201,7 +201,7 @@ export default function CompetitionPage({
                   </span>
                 )}
                 <span className="Competition__meta">
-                  {data.matchesCompleted ?? "—"} / {data.totalMatches ?? "—"}{" "}
+                  {data.matchesCompleted ?? "-"} / {data.totalMatches ?? "-"}{" "}
                   matches played
                   {data.game_week != null && data.total_game_week != null
                     ? ` · GW ${data.game_week}/${data.total_game_week}`
@@ -298,6 +298,11 @@ export default function CompetitionPage({
                     title="Highest BTTS rate"
                     teams={sortTeamsByField(teams, "seasonBTTSPercentage_overall")}
                     field="seasonBTTSPercentage_overall"
+                  />
+                  <TeamRankingTable
+                    title="Highest Under 2.5 rate"
+                    teams={sortTeamsByField(teams, "seasonUnder25Percentage_overall")}
+                    field="seasonUnder25Percentage_overall"
                   />
                   <TeamRankingTable
                     title="Most goals per game"

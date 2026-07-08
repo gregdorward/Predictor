@@ -89,7 +89,7 @@ async function fetchScheduledEventsForDate(unixTimestamp) {
 }
 
 /**
- * Resolve SofaScore team IDs for a fixture (same lookup path as GameStats).
+ * Resolve industry leading stat website team IDs for a fixture (same lookup path as GameStats).
  */
 export async function resolveSofaScoreFixtureTeams(match) {
   if (!match?.homeTeam || !match?.awayTeam || !match?.date) {

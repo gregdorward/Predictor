@@ -78,7 +78,7 @@ export default function ShareableVisual({
       }
 
       downloadDataUrl(dataUrl, filename);
-      showStatus("Copy unavailable — downloaded instead");
+      showStatus("Copy unavailable - downloaded instead");
     });
 
   const handleShare = () =>

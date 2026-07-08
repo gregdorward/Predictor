@@ -44,9 +44,14 @@ export default function AboutPage() {
             probabilities and daily multis across more than 50 competitions.
           </p>
           <p>
-            Our competition pages summarise league-wide markets — average goals, BTTS rates,
-            corner and card lines, home advantage and team rankings — while individual fixture
+            Our competition pages summarise league-wide markets including average goals, BTTS rates,
+            corner and card lines, home advantage and team rankings, while individual fixture
             pages compare head-to-head records, recent form and model outputs side by side.
+          </p>
+          <p>
+            Read our <a href="/methodology/">football prediction methodology</a> for more detail
+            on how form, xG, PPG, BTTS, Over/Under 2.5, odds and probability models are used
+            across the site.
           </p>
           <h2>Popular competitions</h2>
           <ul>
@@ -66,6 +71,7 @@ export default function AboutPage() {
           <h2>What makes us different</h2>
           <ul>
             <li>Transparent predictions with the underlying stats visible on every match page</li>
+            <li>Clear methodology notes explaining the main data inputs and model signals</li>
             <li>Coverage from the Premier League and Champions League to MLS, J League and more</li>
             <li>Tournament hubs with curated news and previews, including FIFA World Cup 2026</li>
             <li>AI-generated season previews for major European leagues (BETA)</li>

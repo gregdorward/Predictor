@@ -51,7 +51,7 @@ export const sofaScoreIds = [
   { 13964: 11 }, // WC Qual Europe 2026
   { 10121: 295 }, // WC Qual South America 2026
 
-  // Deferred — not in FootyStats chosen_leagues (may re-enable later)
+  // Deferred - not in industry leading stat website chosen_leagues (may re-enable later)
   // { 12772: 955 }, // Saudi Pro League
   // { 13878: 357 }, // Club World Cup
   // { 13967: 13363 }, // USL

@@ -36,7 +36,7 @@ describe("sofaScoreTeamStats", () => {
     });
   });
 
-  test("normalizeTeamStatistics maps SofaScore aliases", () => {
+  test("normalizeTeamStatistics maps industry stat website aliases", () => {
     expect(
       normalizeTeamStatistics({
         bigChancesCreated: 6,

@@ -87,10 +87,10 @@ const leagueOrder = [
   17210, // Bundesliga 26/27
   17084, // Serie A 26/27
   17102, // Ligue 1 26/27
-  15115, // Primeira Liga 25/26 (FootyStats id unchanged)
+  15115, // Primeira Liga 25/26 (industry leading stat website id unchanged)
   17097, // Eredivisie 26/27
   17171, // Belgian Pro League 26/27
-  16263, // Allsvenskan — deferred, no FootyStats chosen_leagues
+  16263, // Allsvenskan - deferred, no industry leading stat website chosen_leagues
   17091, // Danish Superliga 26/27
   16558, // Norway 26
   17181, // Austrian Bundesliga 26/27
@@ -100,11 +100,11 @@ const leagueOrder = [
   17129, // Swiss Super League 26/27
   17087, // Croatia 26/27
   17157, // Czech First League 26/27
-  // 14089, // Veikkausliiga — deferred
-  // 14951, // Ukrainian Premier League — deferred
-  // 15065, // Serbian SuperLiga — deferred
-  // 15063, // Slovenian Prva Liga — deferred
-  // 14933, // Slovak Super Liga — deferred
+  // 14089, // Veikkausliiga - deferred
+  // 14951, // Ukrainian Premier League - deferred
+  // 15065, // Serbian SuperLiga - deferred
+  // 15063, // Slovenian Prva Liga - deferred
+  // 14933, // Slovak Super Liga - deferred
   16537, // Irish Prem 26
   15066, // Segunda Division 26/27
   15632, // Serie B 25/26
@@ -118,8 +118,8 @@ const leagueOrder = [
   16504, // MLS 26
   16544, // Brazil Serie A 26
   16571, // Argentina Primera 26
-  // 14116, // Chile — deferred
-  // 14626, // Uruguay — deferred
+  // 14116, // Chile - deferred
+  // 14626, // Uruguay - deferred
   17099, // Liga MX 26
   16614, // Colombia 26
   16036, // A-League 25/26
@@ -321,7 +321,7 @@ export const leaguesReady = (async function fetchLeagueData() {
     }
   }
 
-  // Only ids in leagueOrder — availableLeagues also contains prior-season duplicates.
+  // Only ids in leagueOrder - availableLeagues also contains prior-season duplicates.
   orderedLeagues = leagueOrder
     .map((id) => availableLeagues.find((league) => league.element.id === id))
     .filter(Boolean);

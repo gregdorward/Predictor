@@ -441,7 +441,7 @@ export function buildBracketLinks(rounds) {
 }
 
 /**
- * Normalize SofaScore get-cuptrees response for bracket UI.
+ * Normalise industry stat website get-cuptrees response for bracket UI.
  * Resolves W74-style winner slots back to feeder fixtures in earlier rounds.
  */
 export function parseCupTreeResponse(raw) {

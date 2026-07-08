@@ -27,7 +27,7 @@ export function toIsoDate(date) {
   return `${y}-${m}-${d}`;
 }
 
-/** FootyStats form key format used by footballServer: MMDDYYYY */
+/** Industry leading stat website form key format used by footballServer: MMDDYYYY */
 export function toFormDateKey(date) {
   const month = date.getUTCMonth() + 1;
   const day = date.getUTCDate();

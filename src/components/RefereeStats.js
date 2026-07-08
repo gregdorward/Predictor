@@ -17,12 +17,12 @@ function pickRefereeRecord(records, leagueId) {
 }
 
 function formatRate(value) {
-  if (value == null || Number.isNaN(Number(value))) return "—";
+  if (value == null || Number.isNaN(Number(value))) return "-";
   return Number(value).toFixed(2);
 }
 
 function formatPercent(value) {
-  if (value == null || Number.isNaN(Number(value))) return "—";
+  if (value == null || Number.isNaN(Number(value))) return "-";
   return `${Number(value)}%`;
 }
 
@@ -58,7 +58,7 @@ const RefereeStats = ({ refereeRecords, leagueId }) => {
 
       <div className="referee-stats-grid">
         <div className="referee-stat-item referee-stat-item--neutral">
-          <span className="referee-stat-value">{matches ?? "—"}</span>
+          <span className="referee-stat-value">{matches ?? "-"}</span>
           <span className="referee-stat-label">Matches</span>
         </div>
         <div className="referee-stat-item referee-stat-item--yellow">

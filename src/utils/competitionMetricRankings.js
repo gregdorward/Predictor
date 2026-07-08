@@ -29,7 +29,7 @@ async function fetchJson(url) {
 }
 
 /**
- * Fetch SofaScore league team metric rankings (topTeams by stat).
+ * Fetch industry leading stat website league team metric rankings (topTeams by stat).
  * @param {number|string} sofaTournamentId
  * @param {number|string} sofaSeasonId
  */
@@ -40,7 +40,7 @@ export async function fetchLeagueTeamMetricRankings(sofaTournamentId, sofaSeason
 }
 
 /**
- * Fetch SofaScore player metric rankings (topPlayers by stat).
+ * Fetch industry leading stat website player metric rankings (topPlayers by stat).
  * @param {number|string} sofaTournamentId
  * @param {number|string} sofaSeasonId
  */
@@ -49,7 +49,7 @@ export async function fetchPlayerMetricRankings(sofaTournamentId, sofaSeasonId) 
 }
 
 /**
- * Fetch both team and player metric rankings for a FootyStats season id.
+ * Fetch both team and player metric rankings for an industry leading stat website season id.
  * @param {number|string} footySeasonId
  */
 export async function fetchCompetitionMetricRankings(footySeasonId) {

@@ -87,7 +87,7 @@ export const InsightsPanel = ({ statsArray, paidUser }) => {
 
                         {!paidUser && (
                             <div className="PaidFeatureNotice">
-                                Showing top 5 only — Top 10 available to paid users.
+                                Showing top 5 only - Top 10 available to paid users.
                             </div>
                         )}
                     </>
@@ -107,7 +107,7 @@ export const InsightsPanel = ({ statsArray, paidUser }) => {
                         />
                         {!paidUser && (
                             <div className="PaidFeatureNotice">
-                                Showing top 5 only — Top 10 available to paid users.
+                                Showing top 5 only - Top 10 available to paid users.
                             </div>
                         )}
                     </>
@@ -128,7 +128,7 @@ export const InsightsPanel = ({ statsArray, paidUser }) => {
                         />
                         {!paidUser && (
                             <div className="PaidFeatureNotice">
-                                Showing top 5 only — Top 10 available to paid users.
+                                Showing top 5 only - Top 10 available to paid users.
                             </div>
                         )}
                     </>
@@ -165,7 +165,7 @@ export const InsightsPanel = ({ statsArray, paidUser }) => {
                         />
                         {!paidUser && (
                             <div className="PaidFeatureNotice">
-                                Showing top 5 only — Top 10 available to paid users.
+                                Showing top 5 only - Top 10 available to paid users.
                             </div>
                         )}
                     </>
@@ -187,7 +187,7 @@ export const InsightsPanel = ({ statsArray, paidUser }) => {
                         />
                         {!paidUser && (
                             <div className="PaidFeatureNotice">
-                                Showing top 5 only — Top 10 available to paid users.
+                                Showing top 5 only - Top 10 available to paid users.
                             </div>
                         )}
                     </>
@@ -208,7 +208,7 @@ export const InsightsPanel = ({ statsArray, paidUser }) => {
                         />
                         {!paidUser && (
                             <div className="PaidFeatureNotice">
-                                Showing top 5 only — Top 10 available to paid users.
+                                Showing top 5 only - Top 10 available to paid users.
                             </div>
                         )}
                     </>
@@ -229,7 +229,7 @@ export const InsightsPanel = ({ statsArray, paidUser }) => {
                         />
                         {!paidUser && (
                             <div className="PaidFeatureNotice">
-                                Showing top 5 only — Top 10 available to paid users.
+                                Showing top 5 only - Top 10 available to paid users.
                             </div>
                         )}
                     </>

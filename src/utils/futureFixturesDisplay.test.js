@@ -20,7 +20,7 @@ describe("selectUpcomingFixtures", () => {
 });
 
 describe("mapFutureFixtureEvents", () => {
-  test("maps SofaScore event fields into display rows", () => {
+  test("maps industry stat website event fields into display rows", () => {
     const rows = mapFutureFixtureEvents([
       {
         tournament: { name: "World Cup" },

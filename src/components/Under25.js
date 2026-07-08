@@ -7,6 +7,8 @@ import {
 import { getLowestScoringLeagues } from "../logic/getStatsInsights";
 import SiteHeader from "./SiteHeader";
 import PageMeta from "./PageMeta";
+import StatPageSeoContent, { StatPageSeoFaq } from "./StatPageSeoContent";
+import { STAT_PAGE_SEO } from "../seo/statPageSeoConfig";
 
 // Consistent Modern Styling for the UI
 const useStyles = makeStyles((theme) => ({
@@ -99,11 +101,14 @@ export default function Under25() {
     "Brazil", "Argentina", "Sweden", "Netherlands", "Portugal", "Belgium"
   ];
 
-  const filteredLeagues = leagues.filter(league => 
-    allowedCountries.includes(league.leagueCountry) && 
-    league.division > 0 && 
-    league.division < 5
-  );
+  const filteredLeagues = leagues
+    .filter(league => 
+      allowedCountries.includes(league.leagueCountry) && 
+      league.division > 0 && 
+      league.division < 5
+    )
+    .sort((a, b) => Number(a.averageGoals) - Number(b.averageGoals))
+    .slice(0, 50);
 
   return (
     <Fragment>
@@ -112,8 +117,8 @@ export default function Under25() {
       <Box className={`${classes.container} SubpageContent`}>
         <a href="/" className={classes.homeLink}>← Back to Home</a>
         
-        <Typography variant="h1">Lowest Scoring Leagues</Typography>
-        <Typography variant="h2">Leagues with the lowest goals-per-match averages</Typography>
+        <Typography variant="h1">Lowest Scoring Leagues in the World</Typography>
+        <Typography variant="h2">Under 2.5 football leagues ranked by goals per match</Typography>
         
         <TableContainer component={Paper} className={`${classes.tableWrapper} SubpageTableScroll`}>
           <Table size="small" aria-label="Lowest scoring leagues table">
@@ -156,6 +161,8 @@ export default function Under25() {
             </TableBody>
           </Table>
         </TableContainer>
+        <StatPageSeoContent {...STAT_PAGE_SEO.u25} />
+        <StatPageSeoFaq faqItems={STAT_PAGE_SEO.u25.faqItems} />
       </Box>
       </SiteHeader>
     </Fragment>

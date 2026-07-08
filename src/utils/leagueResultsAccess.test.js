@@ -246,7 +246,7 @@ describe("isRebuiltResultsCacheComplete", () => {
     expect(isRebuiltResultsCacheComplete(rebuilt, orderedLeagues)).toBe(true);
   });
 
-  test("returns false for partial rebuilds (e.g. FootyStats rate limit)", () => {
+  test("returns false for partial rebuilds (e.g. industry leading stat website rate limit)", () => {
     const partial = [{ id: 17146, fixtures: [] }];
     expect(isRebuiltResultsCacheComplete(partial, orderedLeagues)).toBe(false);
   });

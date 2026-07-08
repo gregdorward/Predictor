@@ -1,11 +1,11 @@
-# SoccerStatsHub — https://www.soccerstatshub.com
+# SoccerStatsHub - https://www.soccerstatshub.com
 User-agent: *
 Disallow: /reset/
 Disallow: /success/
 Disallow: /cancel/
 Disallow: /cancelsubscription/
 
-# AI crawlers — allowed for discovery and citation; respect rate limits.
+# AI crawlers - allowed for discovery and citation; respect rate limits.
 User-agent: GPTBot
 Allow: /
 

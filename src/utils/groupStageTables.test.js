@@ -33,7 +33,7 @@ describe("resolveFixtureTableContext", () => {
 
     expect(leagueTable).toHaveLength(2);
     expect(leagueTable[0].Name).toBe("Spain");
-    expect(competitionStage).toBe("Group stage — Group H");
+    expect(competitionStage).toBe("Group stage - Group H");
   });
 
   it("returns both teams' group tables during knockouts", () => {

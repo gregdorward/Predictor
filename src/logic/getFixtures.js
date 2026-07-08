@@ -769,7 +769,7 @@ export async function generateFixtures(
         lowered.endsWith(" ii")    // match "Team II"
       );
     };
-    // Reset before each date load so GameStats SofaScore lookups cannot match stale games.
+    // Reset before each date load so GameStats stat website lookups cannot match stale games.
     arrayOfGames = [];
     await fetch(apiGetUrl(`scheduledEvents/${dateSS}`))
       .then(res => res.json())
@@ -800,7 +800,7 @@ export async function generateFixtures(
 
         // Optional: If you have a specific function that needs arrayOfGames, 
         // call it here: proceedWithGames(arrayOfGames);
-        console.log("SofaScore data processed in background.");
+        console.log("Industry leading stat website data processed in background.");
       })
       .catch(error => {
         console.error("Background fetch error:", error);
@@ -943,7 +943,7 @@ export async function generateFixtures(
         );
       } else if (cacheEval.usable && cacheEval.missingLeagues.length > 0) {
         console.log(
-          `Cache missing ${cacheEval.missingIds.length} leagues — fetching incrementally`
+          `Cache missing ${cacheEval.missingIds.length} leagues - fetching incrementally`
         );
         await league.json().then((leagues) => {
           leagueArray = Array.from(leagues.leagueArray);
@@ -966,7 +966,7 @@ export async function generateFixtures(
         );
       } else {
         console.log(
-          "Cached results stale or mismatched current seasons — rebuilding"
+          "Cached results stale or mismatched current seasons - rebuilding"
         );
         allLeagueResults = { status: 404 };
       }
@@ -1163,7 +1163,7 @@ export async function generateFixtures(
       }
       if (footyStatsRateLimited) {
         console.warn(
-          "Results rebuild hit FootyStats rate limit — keeping partial results for this session only"
+          "Results rebuild hit industry leading stat website rate limit - keeping partial results for this session only"
         );
       }
       if (allLeagueResultsArrayOfObjects.length > 0) {
@@ -1181,7 +1181,7 @@ export async function generateFixtures(
           resultsWereRebuilt = true;
         } else {
           console.warn(
-            "Skipping S3 persist — rebuilt league results cache is incomplete"
+            "Skipping S3 persist - rebuilt league results cache is incomplete"
           );
         }
       }
@@ -1190,7 +1190,7 @@ export async function generateFixtures(
       (!resultsCacheOk || allLeagueResults.status === 404)
     ) {
       console.warn(
-        "Skipping results rebuild — FootyStats unavailable:",
+        "Skipping results rebuild - industry leading stat website unavailable:",
         fixturesBody?.error
       );
     }
@@ -2110,7 +2110,7 @@ export async function generateFixtures(
         return;
       }
       if (allLeagueResultsArrayOfObjects.length === 0) {
-        console.warn("No league results to persist — skipping S3 upload");
+        console.warn("No league results to persist - skipping S3 upload");
         return;
       }
       console.log("Persisting league results to S3");

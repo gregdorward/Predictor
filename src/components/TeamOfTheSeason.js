@@ -3,7 +3,7 @@ import { useState, useEffect } from "react";
 //Use ID to call tournaments/get-seasons
 
 // Ids to be updated for the latest season
-// const footyStatsToSofaScore = [
+// const statWebsiteMapping = [
 //   {
 //     //Prem 25
 //     15050: {
@@ -312,7 +312,7 @@ export const rounds = [
 function pickLatestRoundId(roundList) {
   if (!Array.isArray(roundList) || roundList.length === 0) return null;
 
-  // Prefer the highest matchday/round number when SofaScore provides it.
+  // Prefer the highest matchday/round number when the stat website provides it.
   const withRoundNumber = roundList.filter((entry) => entry?.round != null);
   if (withRoundNumber.length > 0) {
     const latest = withRoundNumber.reduce((best, entry) =>
@@ -380,7 +380,7 @@ const TeamOfTheSeason = (props) => {
       } catch (error) {
         if (!cancelled) {
           setLoadError("Unable to load Team of the Week.");
-          console.error("Error fetching SofaScore round data:", error);
+          console.error("Error fetching industry leading stat website round data:", error);
         }
       }
     };
@@ -401,7 +401,7 @@ const TeamOfTheSeason = (props) => {
           src={`${baseUrl}/season/${derivedRoundId}/round/${roundId}/teamOfTheWeek?widgetBackground=Gray&showCompetitionLogo=true&v=2`}
           frameBorder="0"
           scrolling="no"
-          title="SofaScore Team of the Week"
+          title="Industry Stat Website Team of the Week"
         ></iframe>
       ) : loadError ? (
         <p>{loadError}</p>

@@ -1,5 +1,5 @@
 /**
- * Merge per-category SofaScore top-teams rankings into a flat statistics object.
+ * Merge per-category industry stat website top-teams rankings into a flat statistics object.
  */
 export function mergeTeamStatsFromTopTeams(topTeamsData, teamId) {
   const topTeams = topTeamsData?.topTeams;
@@ -63,7 +63,7 @@ function applyTeamStatAliases(stats) {
 }
 
 /**
- * Normalize a SofaScore team statistics payload for Key Stats display.
+ * Normalise an industry stat website team statistics payload for Key Stats display.
  */
 export function normalizeTeamStatistics(statistics) {
   if (!statistics || typeof statistics !== "object") {

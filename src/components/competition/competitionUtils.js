@@ -6,12 +6,12 @@ export function getSofaScoreIdForSeason(seasonId) {
 }
 
 export function formatPercent(value) {
-  if (value == null || value === "") return "—";
+  if (value == null || value === "") return "-";
   return `${Number(value).toFixed(1)}%`;
 }
 
 export function formatNumber(value, decimals = 2) {
-  if (value == null || value === "") return "—";
+  if (value == null || value === "") return "-";
   return Number(value).toFixed(decimals);
 }
 
@@ -35,7 +35,7 @@ export function resolveScorerTeam(scorer, teams) {
       scorer.club_team_name ||
       scorer.team_name ||
       scorer.club_name ||
-      "—"
+      "-"
     );
   }
 
@@ -54,6 +54,6 @@ export function resolveScorerTeam(scorer, teams) {
     scorer.club_team_name ||
     scorer.team_name ||
     scorer.club_name ||
-    "—"
+    "-"
   );
 }

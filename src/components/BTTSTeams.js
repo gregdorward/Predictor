@@ -7,6 +7,8 @@ import {
 import { getBTTSTeams } from "../logic/getStatsInsights";
 import SiteHeader from "./SiteHeader";
 import PageMeta from "./PageMeta";
+import StatPageSeoContent, { StatPageSeoFaq } from "./StatPageSeoContent";
+import { STAT_PAGE_SEO } from "../seo/statPageSeoConfig";
 
 // Consistent Modern Styling
 const useStyles = makeStyles((theme) => ({
@@ -161,6 +163,8 @@ export default function BTTSTeams() {
             </TableBody>
           </Table>
         </TableContainer>
+        <StatPageSeoContent {...STAT_PAGE_SEO.bttsTeams} />
+        <StatPageSeoFaq faqItems={STAT_PAGE_SEO.bttsTeams.faqItems} />
       </Box>
       </SiteHeader>
     </Fragment>

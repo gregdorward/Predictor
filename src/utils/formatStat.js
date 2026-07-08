@@ -32,7 +32,7 @@ export function formatStatOrDash(value) {
   return statOrDash(value);
 }
 
-// For UI labels in createStatsDiv — never appends "%" to a missing value.
+// For UI labels in createStatsDiv - never appends "%" to a missing value.
 export function statDisplay(value) {
   return isMissingStat(value) ? STAT_FALLBACK : value;
 }
@@ -75,7 +75,7 @@ export function fixedStatOrDash(value, decimals = 2) {
   return n.toFixed(decimals);
 }
 
-// Coerces fixture/model probabilities to a safe 0–100 number for bar widths.
+// Coerces fixture/model probabilities to a safe 0-100 number for bar widths.
 export function getProbabilityNumber(value) {
   const n = Number(value);
   return Number.isFinite(n) && n > 0 ? n : 0;

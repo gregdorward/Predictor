@@ -160,7 +160,7 @@ export async function runBacktest(cliArgs = {}) {
   let uploaded = [];
   if (params.upload) {
     if (!process.env.ID || !process.env.SECRET) {
-      console.warn("AWS credentials missing — skipping S3 upload.");
+      console.warn("AWS credentials missing - skipping S3 upload.");
     } else {
       uploaded = await uploadBacktestArtifacts({
         runId,

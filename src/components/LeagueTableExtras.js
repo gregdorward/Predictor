@@ -15,7 +15,7 @@ function resolveScorerTeam(scorer, allTeams) {
     scorer.club_team_name ||
     scorer.team_name ||
     scorer.club_name ||
-    "—"
+    "-"
   );
 }
 

@@ -12,7 +12,7 @@ const JSON_LD = {
       url: "https://www.soccerstatshub.com/",
       name: "SoccerStatsHub",
       description:
-        "Football stats, BTTS tips, Over 2.5 predictions, correct score analysis and daily multis.",
+        "Football stats, BTTS, Under 2.5, xG, form, correct score analysis and prediction tools.",
       inLanguage: "en-GB",
       potentialAction: {
         "@type": "SearchAction",
@@ -29,6 +29,9 @@ const JSON_LD = {
       name: "SoccerStatsHub",
       url: "https://www.soccerstatshub.com/",
       logo: "https://www.soccerstatshub.com/images/NewLogo.png",
+      description:
+        "SoccerStatsHub publishes football statistics, prediction tools, competition trends and transparent match research.",
+      sameAs: ["https://www.soccerstatshub.com/about/"],
     },
   ],
 };
@@ -172,7 +175,7 @@ export default class MyDocument extends Document {
           />
           <noscript>
             <p>
-              SoccerStatsHub – football stats, BTTS tips, Over 2.5 predictions,
+              SoccerStatsHub - football stats, BTTS tips, Over 2.5 predictions,
               correct score analysis and daily multis for today&apos;s matches.
             </p>
             <p>You need to enable JavaScript to use the full interactive app.</p>

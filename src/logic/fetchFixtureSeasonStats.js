@@ -64,7 +64,7 @@ async function buildFormSummaries(match) {
 }
 
 /**
- * Fetch SofaScore team stats and form summaries for the fixture detail page.
+ * Fetch industry leading stat website team stats and form summaries for the fixture detail page.
  */
 export async function fetchFixtureSeasonStats(match) {
   const leagueID = match?.leagueID ?? match?.competition_id;

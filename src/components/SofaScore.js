@@ -36,7 +36,7 @@ const SofaLineupsWidget = ({
             border: "0",
           }}
           scrolling="no"
-          title="SofaScore Lineups"
+          title="Industry Stat Website Lineups"
         ></iframe>
         <div
           style={{ fontSize: "12px", fontFamily: "Open Sans, sans-serif" }}
@@ -57,7 +57,7 @@ const SofaLineupsWidget = ({
             border: "0",
           }}
           scrolling="no"
-          title="SofaScore Lineups"
+          title="Industry Stat Website Lineups"
         ></iframe>
         <div
           style={{ fontSize: "12px", fontFamily: "Open Sans, sans-serif" }}
@@ -89,7 +89,7 @@ const SofaLineupsWidget = ({
             border: "0",
           }}
           scrolling="no"
-          title="SofaScore Lineups"
+          title="Industry Stat Website Lineups"
         ></iframe>
         <div
           style={{ fontSize: "12px", fontFamily: "Open Sans, sans-serif" }}

@@ -3,16 +3,16 @@
  * Add new entries here; use `placements` to control where each ad appears.
  *
  * Placements:
- * - fixtures   — inline cards within the main fixture list
- * - worldcup2026 — World Cup preview page
- * - footer     — site-wide footer strip
+ * - fixtures   - inline cards within the main fixture list
+ * - worldcup2026 - World Cup preview page
+ * - footer     - site-wide footer strip
  */
 const AMAZON_PRODUCTS = [
   {
     id: "numbers-game-book",
     title: "The Numbers Game: Why Everything You Know About Football is Wrong",
     description:
-      "Chris Anderson and David Sally on the stats that really matter — essential reading for data-minded football fans.",
+      "Chris Anderson and David Sally on the stats that really matter - essential reading for data-minded football fans.",
     affiliateUrl: "https://amzn.to/3SHcfWg",
     asin: "0241963621",
     imageUrl:
@@ -25,7 +25,7 @@ const AMAZON_PRODUCTS = [
     id: "football-hackers-book",
     title: "Football Hackers: The Science and Art of a Data Revolution",
     description:
-      "Christoph Biermann's inside account of football's analytics revolution — scouts, scientists and the clubs changing the game.",
+      "Christoph Biermann's inside account of football's analytics revolution - scouts, scientists and the clubs changing the game.",
     affiliateUrl: "https://amzn.to/4eUqgrd",
     asin: "1788702050",
     imageUrl:
@@ -36,9 +36,9 @@ const AMAZON_PRODUCTS = [
   },
   {
     id: "lego-messi-43015",
-    title: "LEGO Editions Lionel Messi – Football Legend",
+    title: "LEGO Editions Lionel Messi - Football Legend",
     description:
-      "958-piece display model with two pose options — a World Cup collector's set for football and LEGO fans aged 12+.",
+      "958-piece display model with two pose options - a World Cup collector's set for football and LEGO fans aged 12+.",
     affiliateUrl: "https://amzn.to/4v2KHZ3",
     asin: "B0FR9KGKYY",
     imageUrl:
@@ -49,9 +49,9 @@ const AMAZON_PRODUCTS = [
   },
   {
     id: "lego-football-43019",
-    title: "LEGO Editions Football – Miniature Stadium",
+    title: "LEGO Editions Football - Miniature Stadium",
     description:
-      "Build a size-5 football with a hidden celebration scene inside — interactive display kit for fans aged 10+.",
+      "Build a size-5 football with a hidden celebration scene inside - interactive display kit for fans aged 10+.",
     affiliateUrl: "https://amzn.to/4eFBhOd",
     asin: "B0FPXFDJ1H",
     imageUrl:
@@ -64,7 +64,7 @@ const AMAZON_PRODUCTS = [
     id: "england-1990-retro-shirt",
     title: "Score Draw England 1990 World Cup Third Shirt",
     description:
-      "Official licensed retro replica of England's iconic 1990 World Cup third shirt — polyester with embroidered badge.",
+      "Official licensed retro replica of England's iconic 1990 World Cup third shirt - polyester with embroidered badge.",
     affiliateUrl: "https://amzn.to/4gK7tRO",
     asin: "B0FX3F9STX",
     imageUrl:
@@ -77,7 +77,7 @@ const AMAZON_PRODUCTS = [
     id: "lg-oled48b56la-tv",
     title: "LG OLED48B56LA 48\" OLED 4K Smart TV (2025)",
     description:
-      "48-inch OLED 4K panel with 120Hz refresh, Dolby Atmos and α8 AI processing — built for crisp, immersive matchday viewing.",
+      "48-inch OLED 4K panel with 120Hz refresh, Dolby Atmos and α8 AI processing - built for crisp, immersive matchday viewing.",
     affiliateUrl: "https://amzn.to/4eWvOBu",
     asin: "B0F14XRCH8",
     imageUrl:

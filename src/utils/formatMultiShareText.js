@@ -17,7 +17,7 @@ function formatAccaOdds(accumulatedOdds) {
 }
 
 function buildHeader(title) {
-  return [`⚽ ${title} — ${formatShareDate()}`, ""];
+  return [`⚽ ${title} - ${formatShareDate()}`, ""];
 }
 
 function buildFooter() {
@@ -32,7 +32,7 @@ export function formatBuildMultiText(tips, accumulatedOdds) {
   const lines = [
     ...buildHeader("SoccerStatsHub Multi"),
     ...tips.flatMap((tip, index) => {
-      const kickOff = tip.time ? ` — ${tip.time}` : "";
+      const kickOff = tip.time ? ` - ${tip.time}` : "";
       const competition = tip.competition ? ` (${tip.competition})` : "";
       return [
         `${index + 1}. ${tip.game}${competition}${kickOff}`,
@@ -96,7 +96,7 @@ export function formatOver25MultiText(tips) {
     ...buildHeader("SSH Over 2.5 Goals Picks"),
     ...tips.map(
       (tip, index) =>
-        `${index + 1}. ${tip.game} — Over 2.5 @ ${tip.odds}${
+        `${index + 1}. ${tip.game} - Over 2.5 @ ${tip.odds}${
           tip.outcomeSymbol ? ` ${tip.outcomeSymbol}` : ""
         }`
     ),
@@ -115,7 +115,7 @@ export function formatBttsMultiText(tips) {
     ...buildHeader("SSH BTTS Picks"),
     ...tips.map(
       (tip, index) =>
-        `${index + 1}. ${tip.bttsGame} — BTTS @ ${tip.bttsFraction}${
+        `${index + 1}. ${tip.bttsGame} - BTTS @ ${tip.bttsFraction}${
           tip.bttsOutcomeSymbol ? ` ${tip.bttsOutcomeSymbol}` : ""
         }`
     ),

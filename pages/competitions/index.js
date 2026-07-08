@@ -40,7 +40,7 @@ export default function CompetitionsIndexPage() {
           </a>
           <h1>Football competitions</h1>
           <p>
-            League-wide betting stats for every competition we cover — average goals,
+            League-wide betting stats for every competition we cover - average goals,
             BTTS rates, corner and card lines, home advantage and team rankings.
           </p>
           <ul className="CompetitionsIndex-list">

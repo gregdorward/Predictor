@@ -5,16 +5,18 @@ import { SITE_URL } from "../src/seo/pageMetaConfig";
 const STATIC_ROUTES = [
   { path: "/", priority: "1.0", changefreq: "daily" },
   { path: "/o25/", priority: "0.8", changefreq: "daily" },
+  { path: "/highest-scoring-leagues/", priority: "0.8", changefreq: "daily" },
   { path: "/u25/", priority: "0.8", changefreq: "daily" },
-  { path: "/teamshigh/", priority: "0.8", changefreq: "daily" },
   { path: "/fixtureshigh/", priority: "0.8", changefreq: "daily" },
   { path: "/bttsfixtures/", priority: "0.8", changefreq: "daily" },
   { path: "/bttsteams/", priority: "0.8", changefreq: "daily" },
+  { path: "/btts-no-teams/", priority: "0.8", changefreq: "daily" },
   { path: "/seasonpreviews/", priority: "0.7", changefreq: "weekly" },
   { path: "/worldcup2026/", priority: "0.9", changefreq: "weekly" },
   { path: "/competitions/", priority: "0.8", changefreq: "weekly" },
   { path: "/fixtures/", priority: "0.8", changefreq: "daily" },
   { path: "/about/", priority: "0.6", changefreq: "monthly" },
+  { path: "/methodology/", priority: "0.6", changefreq: "monthly" },
   { path: "/faq/", priority: "0.6", changefreq: "monthly" },
 ];
 

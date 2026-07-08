@@ -2,7 +2,7 @@ const RECENT_H2H_MATCHES = 4;
 
 function formatH2hDate(unixTimestamp) {
   if (unixTimestamp == null) {
-    return "—";
+    return "-";
   }
   const date = new Date(unixTimestamp * 1000);
   return date.toLocaleDateString("en-GB", {

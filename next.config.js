@@ -10,6 +10,15 @@ const nextConfig = {
   // StrictMode double-invokes effects in dev; the imperative render() engine
   // manages its own roots, so keep it off to match the previous CRA behaviour.
   reactStrictMode: false,
+  async redirects() {
+    return [
+      {
+        source: "/teamshigh",
+        destination: "/o25/",
+        permanent: true,
+      },
+    ];
+  },
 };
 
 module.exports = nextConfig;

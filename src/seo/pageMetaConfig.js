@@ -2,9 +2,10 @@ export const SITE_URL = "https://www.soccerstatshub.com";
 export const OG_IMAGE = `${SITE_URL}/images/social-share-card.jpg`;
 export const SITE_NAME = "SoccerStatsHub";
 
-export const DEFAULT_TITLE = "SoccerStatsHub | Football Stats, Predictions & Tips";
+export const DEFAULT_TITLE =
+  "Soccer Stats Hub | BTTS, Under 2.5, xG & Football Predictions";
 export const DEFAULT_DESCRIPTION =
-  "Data-driven football stats, BTTS tips, Over 2.5 predictions, correct score analysis and daily multis for today's matches.";
+  "Football stats, BTTS, Under 2.5, xG, form and prediction tools. Explore low-scoring leagues, match previews and stats-driven football insights.";
 
 export const PAGE_META = {
   "/": {
@@ -12,14 +13,19 @@ export const PAGE_META = {
     description: DEFAULT_DESCRIPTION,
   },
   "/o25": {
-    title: "Over 2.5 Goals Teams | SoccerStatsHub",
+    title: "Over 2.5 Goals Teams | High Scoring Football Stats",
     description:
-      "Elite scoring teams with the highest average goals and upcoming fixtures. Find the best Over 2.5 goals betting opportunities.",
+      "Teams ranked by Over 2.5 rate, average goals and upcoming fixtures. Find high-scoring sides for goals and match research.",
+  },
+  "/highest-scoring-leagues": {
+    title: "Highest Scoring Leagues | Over 2.5 Football Stats",
+    description:
+      "Football leagues ranked by average goals and Over 2.5 rate. Find high-scoring competitions for goals, BTTS and match research.",
   },
   "/u25": {
-    title: "Under 2.5 Goals Leagues | SoccerStatsHub",
+    title: "Under 2.5 Goals Leagues | Low Scoring Football Stats",
     description:
-      "Leagues with the lowest goals-per-match averages. Identify Under 2.5 goals value across top European and international competitions.",
+      "Low-scoring football leagues ranked by average goals and Under 2.5 rate. Compare defensive competitions and under-goals trends.",
   },
   "/teamshigh": {
     title: "Highest Scoring Teams | SoccerStatsHub",
@@ -27,19 +33,24 @@ export const PAGE_META = {
       "Teams ranked by goals scored this season. Compare attacking form and find high-scoring sides across major leagues.",
   },
   "/fixtureshigh": {
-    title: "Highest Scoring Fixtures | SoccerStatsHub",
+    title: "Over 2.5 Goals Fixtures Today | High Scoring Match Stats",
     description:
-      "Today's fixtures with the highest goal potential. Data-driven insights to find matches likely to produce goals.",
+      "Today's fixtures with high goal potential, Over 2.5 odds and combined scoring averages for stats-led match research.",
   },
   "/bttsfixtures": {
-    title: "BTTS Fixtures Today | SoccerStatsHub",
+    title: "BTTS Fixtures Today | Both Teams To Score Match Stats",
     description:
-      "Both Teams To Score fixture insights for today's matches. Stats-backed BTTS picks across major leagues.",
+      "Both Teams To Score fixture insights for today's matches, with scoring averages, BTTS odds and stats-backed match research.",
   },
   "/bttsteams": {
-    title: "BTTS Teams | SoccerStatsHub",
+    title: "BTTS Teams Today | Both Teams To Score Stats & Predictions",
     description:
-      "Teams with the strongest Both Teams To Score records. Find BTTS-elite sides and their upcoming fixtures.",
+      "Teams with strong Both Teams To Score records, BTTS percentages and upcoming fixtures across major football leagues.",
+  },
+  "/btts-no-teams": {
+    title: "BTTS No Teams | Low Both Teams To Score Stats",
+    description:
+      "Teams with lower Both Teams To Score rates for BTTS No, clean sheet and low-scoring match research across major football leagues.",
   },
   "/worldcup2026": {
     title: "World Cup 2026 Preview | SoccerStatsHub",
@@ -55,6 +66,11 @@ export const PAGE_META = {
     title: "About SoccerStatsHub | Football Stats & Predictions",
     description:
       "Learn how SoccerStatsHub delivers transparent football statistics, BTTS insights, Over 2.5 analysis and data-driven match predictions across 50+ competitions.",
+  },
+  "/methodology": {
+    title: "Football Prediction Methodology | SoccerStatsHub",
+    description:
+      "How SoccerStatsHub uses form, xG, PPG, BTTS, Over/Under 2.5, odds and probability models for football stats and predictions.",
   },
   "/faq": {
     title: "FAQ | SoccerStatsHub",

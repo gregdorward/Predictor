@@ -58,12 +58,12 @@ const MARKDOWN_SHARE_STATS = [
 
 export function formatInjuryImpactLabel(value) {
   if (value == null || value === "" || value === "-") {
-    return "—";
+    return "-";
   }
 
   const numeric = Math.round(Number(value));
   if (!Number.isFinite(numeric) || numeric < 1) {
-    return "—";
+    return "-";
   }
 
   const clamped = Math.min(10, Math.max(1, numeric));
@@ -76,7 +76,7 @@ function formatStatValue(value, type) {
   }
 
   if (value == null || value === "" || value === "-") {
-    return "—";
+    return "-";
   }
   return String(value);
 }
@@ -258,7 +258,7 @@ function shouldSkipStat(homeStats, awayStats, key, type) {
 
   const homeValue = formatStatValue(homeStats[key], type);
   const awayValue = formatStatValue(awayStats[key], type);
-  return homeValue === "—" && awayValue === "—";
+  return homeValue === "-" && awayValue === "-";
 }
 
 function formatMarkdownFixtureComparison({
@@ -372,7 +372,7 @@ function formatPlainFixtureComparison({
 
     const homeValue = formatStatValue(homeStats[key], type);
     const awayValue = formatStatValue(awayStats[key], type);
-    if (homeValue === "—" && awayValue === "—") {
+    if (homeValue === "-" && awayValue === "-") {
       return;
     }
 

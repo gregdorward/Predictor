@@ -19,7 +19,7 @@ const NATIONAL_TEAM_ALIASES = {
 };
 
 /**
- * Map FootyStats national-team labels to SofaScore naming where they differ.
+ * Map industry stat website national-team labels where they differ.
  */
 export function applyNationalTeamAlias(normalizedKey) {
   if (!normalizedKey) {

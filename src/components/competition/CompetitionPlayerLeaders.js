@@ -107,7 +107,7 @@ export default function CompetitionPlayerLeaders({ data, teams }) {
                     {resolveScorerTeam(player, teams)}
                   </span>
                   <strong className="Competition__scorerGoals">
-                    {player[tab.statField] ?? "—"}
+                    {player[tab.statField] ?? "-"}
                   </strong>
                 </li>
               ))}

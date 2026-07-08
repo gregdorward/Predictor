@@ -152,7 +152,7 @@ export function resolveCompetitionStage({
   const awayGroup = findGroupForTeam(groups, awayTeam);
 
   if (homeGroup && awayGroup && homeGroup === awayGroup) {
-    return `Group stage — ${homeGroup.group}`;
+    return `Group stage - ${homeGroup.group}`;
   }
 
   if (homeGroup && awayGroup && homeGroup !== awayGroup) {
@@ -164,7 +164,7 @@ export function resolveCompetitionStage({
 
   const minimum = Number(matchesCompletedMinimum);
   if (!Number.isNaN(minimum) && minimum < 4) {
-    return `Group stage — Matchday ${minimum + 1}`;
+    return `Group stage - Matchday ${minimum + 1}`;
   }
 
   return inferWorldCupKnockoutStage(matchesCompletedMinimum, gameWeek);

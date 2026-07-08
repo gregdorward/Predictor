@@ -1,4 +1,4 @@
-/** ~275 days — limits form/history payloads to the active season window. */
+/** ~275 days - limits form/history payloads to the active season window. */
 export const RECENT_RESULTS_WINDOW_SEC = 23778463;
 
 export function getRecentResultsCutoffUnix(nowSec = Math.floor(Date.now() / 1000)) {
@@ -10,7 +10,7 @@ export function getRecentResultsCutoffUnix(nowSec = Math.floor(Date.now() / 1000
  *
  * - complete: every current league is present (use cache directly)
  * - usable: no stale season ids (safe to merge; may be missing newly added leagues)
- * - staleIds: cached ids no longer in leagueOrder (prior seasons — full rebuild)
+ * - staleIds: cached ids no longer in leagueOrder (prior seasons - full rebuild)
  * - missingLeagues: orderedLeague entries not yet in the cache
  */
 export function evaluateResultsCache(cachedResults, orderedLeagues) {
@@ -98,8 +98,8 @@ export function findLeagueEntryById(entries, leagueId) {
 }
 
 /**
- * Look up a league's cached results object by FootyStats league id.
- * Do not use orderedLeagues index — cached result array order can drift.
+ * Look up a league's cached results object by industry leading stat website league id.
+ * Do not use orderedLeagues index - cached result array order can drift.
  */
 export function getLeagueResultsByLeagueId(allLeagueResults, leagueId) {
   return findLeagueEntryById(allLeagueResults, leagueId);

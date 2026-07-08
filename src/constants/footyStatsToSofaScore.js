@@ -62,7 +62,7 @@ export const footyStatsToSofaScoreMap = {
   },
   15115: {
     id: 238,
-    season: 97436, // Primeira Liga 26/27 (FootyStats season id unchanged)
+    season: 97436, // Primeira Liga 26/27 (industry leading stat website season id unchanged)
   },
   16556: {
     id: 384,
@@ -201,7 +201,7 @@ export const footyStatsToSofaScoreMap = {
     season: 87913, // Argentina Primera Division 26
   },
 
-  // Deferred — not in FootyStats chosen_leagues; SofaScore refs commented out elsewhere
+  // Deferred - not in industry leading stat website chosen_leagues; stat website refs commented out elsewhere
   // 12772: { id: 955, season: 80443 }, // Saudi Pro League
   // 13878: { id: 357, season: 69619 }, // Club World Cup
   // 13967: { id: 13363, season: 87611 }, // USL

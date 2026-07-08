@@ -24,7 +24,7 @@ function Footer() {
           ))}
         </ul>
       </nav>
-      <p className="Footer-copy">© {year} XGTipping. All rights reserved.</p>
+      <p className="Footer-copy">© {year} SoccerStatsHub. All rights reserved.</p>
     </footer>
   );
 }

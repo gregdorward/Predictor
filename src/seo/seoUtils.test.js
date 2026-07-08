@@ -99,11 +99,20 @@ describe("canonical URLs", () => {
     expect(getCanonicalPathFromAsPath("/competition/premier-league/?theme=dark")).toBe(
       "/competition/premier-league"
     );
+    expect(getCanonicalPathFromAsPath("/fixtures/?shortlist=123,456")).toBe(
+      "/fixtures"
+    );
+    expect(getCanonicalPathFromAsPath("/btts-no-teams/?theme=light#table")).toBe(
+      "/btts-no-teams"
+    );
   });
 
   test("builds trailing-slash canonical URLs", () => {
     expect(getCanonicalUrl("/competition/premier-league")).toBe(
       "https://www.soccerstatshub.com/competition/premier-league/"
+    );
+    expect(getCanonicalUrl("/highest-scoring-leagues")).toBe(
+      "https://www.soccerstatshub.com/highest-scoring-leagues/"
     );
   });
 });

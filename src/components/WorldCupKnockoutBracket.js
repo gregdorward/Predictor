@@ -245,7 +245,7 @@ function BracketTree({ rounds, links }) {
 }
 
 /**
- * Knockout bracket for World Cup 2026, loaded from daily-cached SofaScore cuptrees.
+ * Knockout bracket for World Cup 2026, loaded from daily-cached industry stat website cuptrees.
  */
 export default function WorldCupKnockoutBracket({
   tournamentId = 16,

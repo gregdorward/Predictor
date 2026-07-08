@@ -7,6 +7,8 @@ import {
 import { getHighestScoringTeams } from "../logic/getStatsInsights";
 import SiteHeader from "./SiteHeader";
 import PageMeta from "./PageMeta";
+import StatPageSeoContent, { StatPageSeoFaq } from "./StatPageSeoContent";
+import { STAT_PAGE_SEO } from "../seo/statPageSeoConfig";
 
 // Ids to be updated for the latest season
 const ids = [
@@ -26,7 +28,7 @@ const ids = [
   15115, // Primeira Liga 25/26
   17097, // Eredivisie 26/27
   17171, // Belgian Pro League 26/27
-  // 16263, // Allsvenskan — deferred
+  // 16263, // Allsvenskan - deferred
   17091, // Danish Superliga 26/27
   16558, // Norway 26
   17181, // Austrian Bundesliga 26/27
@@ -36,7 +38,7 @@ const ids = [
   17129, // Swiss Super League 26/27
   17087, // Croatia 26/27
   17157, // Czech First League 26/27
-  // 14089, // Veikkausliiga — deferred
+  // 14089, // Veikkausliiga - deferred
   16537, // Irish Prem 26
   15066, // Segunda Division 26/27
   15632, // Serie B 25/26
@@ -47,9 +49,9 @@ const ids = [
   17147, // Scottish League One 26/27
   17140, // Scottish League Two 26/27
   16504, // MLS 26
-  // 13967, // USL — deferred
+  // 13967, // USL - deferred
   16544, // Brazil Serie A 26
-  // 14305, // Brazil Serie B — deferred
+  // 14305, // Brazil Serie B - deferred
   16571, // Argentina Primera 26
   17099, // Liga MX 26
   16614, // Colombia 26
@@ -214,6 +216,8 @@ export default function HighestScoringTeams() {
             </TableBody>
           </Table>
         </TableContainer>
+        <StatPageSeoContent {...STAT_PAGE_SEO.o25} />
+        <StatPageSeoFaq faqItems={STAT_PAGE_SEO.o25.faqItems} />
       </Box>
       </SiteHeader>
     </Fragment>

@@ -5,8 +5,8 @@ const SWIPE_THRESHOLD_PX = 48;
 const SWIPE_MAX_VERTICAL_PX = 80;
 
 // Buttons/links inside the carousel (nav arrows, Increment/Decrement, tip
-// controls) must stay clickable. Starting a swipe — especially calling
-// setPointerCapture — on these would redirect the synthesized click to the
+// controls) must stay clickable. Starting a swipe - especially calling
+// setPointerCapture - on these would redirect the synthesised click to the
 // carousel container, so the element's own onClick would never fire.
 const INTERACTIVE_SELECTOR =
   'button, a, input, select, textarea, label, [role="button"]';

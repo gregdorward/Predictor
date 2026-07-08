@@ -7,6 +7,8 @@ import {
 import { getHighestScoringFixtures } from "../logic/getStatsInsights";
 import SiteHeader from "./SiteHeader";
 import PageMeta from "./PageMeta";
+import StatPageSeoContent, { StatPageSeoFaq } from "./StatPageSeoContent";
+import { STAT_PAGE_SEO } from "../seo/statPageSeoConfig";
 
 // Unified Modern Styling
 const useStyles = makeStyles((theme) => ({
@@ -157,6 +159,8 @@ export default function HighestScoringFixtures() {
             </TableBody>
           </Table>
         </TableContainer>
+        <StatPageSeoContent {...STAT_PAGE_SEO.fixturesHigh} />
+        <StatPageSeoFaq faqItems={STAT_PAGE_SEO.fixturesHigh.faqItems} />
       </Box>
       </SiteHeader>
     </Fragment>

@@ -184,7 +184,7 @@ export async function getTeamStats(
             BTTSForecast={`${BTTSForecast}%`}
             BTTSOdds={`${match.data.odds_btts_yes}\n Fair odds: ${fairOddsBTTSYes}`}
             BTTSOddsNo={`${match.data.odds_btts_no}\n Fair odds: ${fairOddsBTTSNo}`}
-            CornersStat={"–"}
+            CornersStat={"-"}
             CornersForecast={match.data.corners_potential}
             CornersOdds={match.data.odds_corners_over_105}
           />

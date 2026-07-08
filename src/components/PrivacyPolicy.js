@@ -21,9 +21,9 @@ const PrivacyPolicy = () => {
 
           1. Information We Collect
           a. Account Information
-          Email address – collected when you register or log in.
+          Email address - collected when you register or log in.
 
-          Password – stored securely using industry-standard encryption.
+          Password - stored securely using industry-standard encryption.
 
           b. Payment Information
           We use Stripe to process all payments.

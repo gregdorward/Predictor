@@ -7,6 +7,8 @@ import {
 import { getBTTSFixtures } from "../logic/getStatsInsights";
 import SiteHeader from "./SiteHeader";
 import PageMeta from "./PageMeta";
+import StatPageSeoContent, { StatPageSeoFaq } from "./StatPageSeoContent";
+import { STAT_PAGE_SEO } from "../seo/statPageSeoConfig";
 
 // Modern Styling using Hook API for better performance
 const useStyles = makeStyles((theme) => ({
@@ -157,6 +159,8 @@ export default function BTTSFixtures() {
             </TableBody>
           </Table>
         </TableContainer>
+        <StatPageSeoContent {...STAT_PAGE_SEO.bttsFixtures} />
+        <StatPageSeoFaq faqItems={STAT_PAGE_SEO.bttsFixtures.faqItems} />
       </Box>
       </SiteHeader>
     </Fragment>

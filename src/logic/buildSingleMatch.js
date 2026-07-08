@@ -146,11 +146,11 @@ export function buildMatchFromFixture(fixture, leagueID, leagueName) {
     stadium: fixture.stadium_name,
     refereeID: fixture.refereeID,
     homeOdds:
-      fixture.odds_ft_1 != null ? Number(fixture.odds_ft_1).toFixed(2) : "—",
+      fixture.odds_ft_1 != null ? Number(fixture.odds_ft_1).toFixed(2) : "-",
     awayOdds:
-      fixture.odds_ft_2 != null ? Number(fixture.odds_ft_2).toFixed(2) : "—",
+      fixture.odds_ft_2 != null ? Number(fixture.odds_ft_2).toFixed(2) : "-",
     drawOdds:
-      fixture.odds_ft_x != null ? Number(fixture.odds_ft_x).toFixed(2) : "—",
+      fixture.odds_ft_x != null ? Number(fixture.odds_ft_x).toFixed(2) : "-",
     homeDoubleChance: fixture.odds_doublechance_1x,
     awayDoubleChance: fixture.odds_doublechance_x2,
     bttsOdds: fixture.odds_btts_yes,

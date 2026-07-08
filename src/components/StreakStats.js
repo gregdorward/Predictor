@@ -45,7 +45,7 @@ export const StreakStats = ({ stats, home, away, homeLogo, awayLogo }) => {
                       ? stat.odds === "N/A"
                         ? "N/A"
                         : `${stat.odds}`
-                      : "–"}</span>
+                      : "-"}</span>
                   </td>
                 </tr>
               ))}

@@ -224,7 +224,7 @@ function buildScoreMatrix(
         poissonProbability(home, lambdaHome) *
         poissonProbability(away, lambdaAway);
 
-      // 🔑 APPLY DIXON–COLES HERE
+      // APPLY DIXON-COLES HERE
       prob *= dixonColesAdjustment(
         home,
         away,
@@ -2134,22 +2134,13 @@ export async function generateGoals(homeForm, awayForm, match) {
   // Define a minimum weakness so the factor never hits 0 or negative
   const MIN_WEAKNESS = 0.1;
 
-  const awayDefenseWeakness = Math.max(
-    MIN_WEAKNESS,
-    1 - awayForm.defensiveStrengthScoreGenerationLast5
-  );
-
-  const homeDefenseWeakness = Math.max(
-    MIN_WEAKNESS,
-    1 - homeForm.defensiveStrengthScoreGenerationLast5
-  );
-  const awayDefenseWeaknessOverall = Math.max(MIN_WEAKNESS, 1 - awayForm.defensiveStrengthScoreGeneration);
-  const homeDefenseWeaknessOverall = Math.max(MIN_WEAKNESS, 1 - homeForm.defensiveStrengthScoreGeneration);
+  const awayDefenceWeaknessOverall = Math.max(MIN_WEAKNESS, 1 - awayForm.defensiveStrengthScoreGeneration);
+  const homeDefenceWeaknessOverall = Math.max(MIN_WEAKNESS, 1 - homeForm.defensiveStrengthScoreGeneration);
 
   // Helper to compute a dampened lambda component
-  function computeLambdaComponent(attackStrength, defenseWeakness, last5 = false, gamesPlayed = 10, location) {
+  function computeLambdaComponent(attackStrength, defenceWeakness, last5 = false, gamesPlayed = 10, location) {
     const attackFactor = attackStrength / 0.4;
-    const defenseFactor = Math.max(0.2, defenseWeakness / BASELINE);
+    const defenceFactor = Math.max(0.2, defenceWeakness / BASELINE);
     // 1. Set the raw multiplier
     let multiplier = last5 ? 0.9 : 1.0;
     // 2. Damping Logic: Scale the impact if we are looking at Overall stats (last5 === false) 
@@ -2162,7 +2153,7 @@ export async function generateGoals(homeForm, awayForm, match) {
       // If multiplier was 1.2, it becomes 1.1. If it was 0.8, it becomes 0.9.
       multiplier = 1 + (multiplier - 1) * reliability;
     }
-    const weightedMultiplier = Math.pow(attackFactor, multiplier) * Math.pow(defenseFactor, multiplier);
+    const weightedMultiplier = Math.pow(attackFactor, multiplier) * Math.pow(defenceFactor, multiplier);
     // 3. Optional: Final Lambda Damping
     // If games are low, we can also squeeze the final result closer to the league average
     let lambda;
@@ -2190,7 +2181,7 @@ export async function generateGoals(homeForm, awayForm, match) {
   // Overall form
   const homeLambda_rawOverall = computeLambdaComponent(
     homeForm.attackingStrength,
-    awayDefenseWeaknessOverall,
+    awayDefenceWeaknessOverall,
     false,
     homeForm.gamesPlayed,
     "home"
@@ -2198,7 +2189,7 @@ export async function generateGoals(homeForm, awayForm, match) {
 
   const awayLambda_rawOverall = computeLambdaComponent(
     awayForm.attackingStrength,
-    homeDefenseWeaknessOverall,
+    homeDefenceWeaknessOverall,
     false,
     awayForm.gamesPlayed,
     "away"

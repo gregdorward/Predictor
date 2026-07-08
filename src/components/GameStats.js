@@ -876,7 +876,7 @@ function GameStats({ game, displayBool, stats, handleToggleTip, userTips }) {
           const warningKey = `${targetTeamName}-${statistic}`;
           if (!warnedTeams.has(warningKey)) {
             console.warn(
-              `Ambiguous or missing match for "${targetTeamName}" in "${statistic}" — found:`,
+              `Ambiguous or missing match for "${targetTeamName}" in "${statistic}" - found:`,
               partialMatches.map((p) => p.team.name)
             );
             warnedTeams.add(warningKey);
@@ -2128,7 +2128,7 @@ function GameStats({ game, displayBool, stats, handleToggleTip, userTips }) {
 
         }
 
-        // Managers only need the SofaScore match id, not a league season round.
+        // Managers only need the industry leading stat website match id, not a league season round.
         if (matchingGameInfo?.id) {
           try {
             const getManagers = await fetch(
@@ -3821,7 +3821,7 @@ function GameStats({ game, displayBool, stats, handleToggleTip, userTips }) {
       <div className="ExpandingStats">
         {(game.predictionsUnavailable || !hasPredictionMetrics) && (
           <p className="GameStats--limited">
-            Score predictions are not available yet — fewer than three matches
+            Score predictions are not available yet - fewer than three matches
             have been played in this competition.
           </p>
         )}
@@ -3870,12 +3870,12 @@ function GameStats({ game, displayBool, stats, handleToggleTip, userTips }) {
                       bookie: impliedProbability(game.drawOdds)
                     },
                     {
-                      label: "BTTS – Yes",
+                      label: "BTTS - Yes",
                       model: yes,
                       bookie: bttsYesImplied
                     },
                     {
-                      label: "BTTS – No",
+                      label: "BTTS - No",
                       model: no,
                       bookie: bttsNoImplied
                     },

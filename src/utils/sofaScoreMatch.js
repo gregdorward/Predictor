@@ -7,7 +7,7 @@ function teamsMatch(left, right) {
 }
 
 /**
- * Prefer an exact home/away pair before falling back to single-team SofaScore lookups.
+ * Prefer an exact home/away pair before falling back to single-team industry stat website lookups.
  */
 export function findSofaScoreGameByTeams(games, homeTeam, awayTeam, normalizeTeamName) {
   if (!Array.isArray(games) || !normalizeTeamName) {

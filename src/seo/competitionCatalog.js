@@ -78,7 +78,7 @@ export const FEATURED_COMPETITION_SLUGS = [
   "world-cup-2026",
 ];
 
-/** Competitions with no FootyStats season data — excluded from sitemap and index. */
+/** Competitions with no industry leading stat website season data - excluded from sitemap and index. */
 export const UNAVAILABLE_COMPETITION_SLUGS = new Set([
   "allsvenskan",
   "brazil-serie-b",
@@ -176,6 +176,27 @@ export function buildCompetitionJsonLd(data, canonicalUrl, catalog) {
         name,
         sport: "Football",
         url: canonicalUrl,
+      },
+      {
+        "@type": "FAQPage",
+        mainEntity: [
+          {
+            "@type": "Question",
+            name: `What stats are available for ${name}?`,
+            acceptedAnswer: {
+              "@type": "Answer",
+              text: `SoccerStatsHub tracks ${name} league averages, BTTS rates, Over and Under 2.5 trends, home advantage, standings, team rankings, player leaders and related fixture predictions where data is available.`,
+            },
+          },
+          {
+            "@type": "Question",
+            name: `How should I use the ${name} stats page?`,
+            acceptedAnswer: {
+              "@type": "Answer",
+              text: "Start with the competition-wide market profile, then compare team rankings, form and individual fixtures before making a judgement.",
+            },
+          },
+        ],
       },
     ],
   };
