@@ -16,6 +16,7 @@ import {
   applyCompetitionGoalDifference,
   getRecentResultsCutoffUnix,
   evaluateResultsCache,
+  isRebuiltResultsCacheComplete,
   trimLeagueResultsToWindow,
 } from "../utils/leagueResultsAccess";
 import { resolveMultiDivisionLeagueTables } from "../utils/multiDivisionLeagueTables";
@@ -1162,16 +1163,27 @@ export async function generateFixtures(
       }
       if (footyStatsRateLimited) {
         console.warn(
-          "Results rebuild hit FootyStats rate limit — keeping partial results"
+          "Results rebuild hit FootyStats rate limit — keeping partial results for this session only"
         );
       }
       if (allLeagueResultsArrayOfObjects.length > 0) {
-        resultsWereRebuilt = true;
         generateTables(
           leagueArray,
           leagueIdArray,
           allLeagueResultsArrayOfObjects
         );
+        if (
+          isRebuiltResultsCacheComplete(
+            allLeagueResultsArrayOfObjects,
+            orderedLeagues
+          )
+        ) {
+          resultsWereRebuilt = true;
+        } else {
+          console.warn(
+            "Skipping S3 persist — rebuilt league results cache is incomplete"
+          );
+        }
       }
     } else if (
       footyStatsUnavailable &&
