@@ -1,6 +1,6 @@
 {
-  "updatedAt": "2026-07-06T21:25:00.000Z",
-  "methodology": "Rankings reflect group-stage and knockout results through 6 July 2026, weighted by results quality, goal difference, squad availability and path difficulty. Title win chances are illustrative estimates aligned with SoccerStatsHub modelling.",
+  "updatedAt": "2026-07-08T15:32:00.000Z",
+  "methodology": "Rankings reflect group-stage and knockout results through 8 July 2026, weighted by results quality, goal difference, squad availability and path difficulty. Title win chances are illustrative estimates aligned with SoccerStatsHub modelling.",
   "rankings": [
     {
       "rank": 1,
@@ -8,18 +8,26 @@
       "flag": "🇫🇷",
       "record": "QF · 1-0 vs Paraguay",
       "winChance": "17%",
-      "summary": "France remain the benchmark after Kylian Mbappe's penalty beat Paraguay in Philadelphia, giving him seven goals at this tournament. Didier Deschamps still has the clearest quarter-final path on one side of the bracket, but extreme heat, a narrow scoreline and Morocco's counter-attacking form make the Foxborough tie less straightforward than the ranking gap suggests."
+      "summary": "France remain the benchmark after Kylian Mbappe's penalty beat Paraguay in Philadelphia, giving him seven goals at this tournament. Didier Deschamps still has the clearest quarter-final path on one side of the bracket, but Aurelien Tchouameni's thigh problem and Morocco's unbeaten run make the Foxborough tie less straightforward than the ranking gap suggests."
     },
     {
       "rank": 2,
       "team": "Spain",
       "flag": "🇪🇸",
       "record": "QF · 1-0 vs Portugal",
-      "winChance": "15%",
-      "summary": "Spain moved above England after Mikel Merino's stoppage-time winner settled a grinding Iberian derby in Dallas, keeping Luis de la Fuente's side on course for a fifth straight clean sheet. They were not fluent against Portugal, but the late-game composure and extra recovery time before a Los Angeles quarter-final give Spain the strongest remaining path on the western side of the bracket."
+      "winChance": "16%",
+      "summary": "Spain moved above England after Mikel Merino's stoppage-time winner settled a grinding Iberian derby in Dallas, keeping Luis de la Fuente's side on course for a fifth straight clean sheet. Belgium arrive in Los Angeles without Amadou Onana, giving Spain the strongest remaining path on the western side of the bracket before a potential semi-final with Argentina."
     },
     {
       "rank": 3,
+      "team": "Argentina",
+      "flag": "🇦🇷",
+      "record": "QF · 3-2 vs Egypt",
+      "winChance": "14%",
+      "summary": "Argentina needed three goals in 13 minutes to survive Egypt in Atlanta, with Lionel Messi's eighth of the tournament moving him back ahead in the Golden Boot race. Lionel Scaloni's holders have now flirted with elimination twice in the knockouts, but their quarter-final with Switzerland offers a chance to prove the defence can hold without another rescue act."
+    },
+    {
+      "rank": 4,
       "team": "England",
       "flag": "🏴󠁧󠁢󠁥󠁮󠁧󠁿",
       "record": "QF · 3-2 vs Mexico",
@@ -27,7 +35,7 @@
       "summary": "England became the first team to beat Mexico at the Azteca, with Jude Bellingham's quickfire double and Harry Kane's penalty surviving a red card for Jarell Quansah. Thomas Tuchel's rearguard action in Mexico City lifts the Three Lions into the top tier, but the right-back crisis and a Miami quarter-final against Erling Haaland keep them below France and Spain for now."
     },
     {
-      "rank": 4,
+      "rank": 5,
       "team": "Norway",
       "flag": "🇳🇴",
       "record": "QF · 2-1 vs Brazil",
@@ -35,63 +43,31 @@
       "summary": "Norway are into their first World Cup quarter-final after Erling Haaland scored twice in the last 11 minutes to dump Brazil out in New Jersey. Stale Solbakken's side still give up chances, but Haaland's seven goals, Orjan Nyland's penalty save and Julian Ryerson's return make them genuine semi-final contenders before the England tie in Miami."
     },
     {
-      "rank": 5,
-      "team": "Morocco",
-      "flag": "🇲🇦",
-      "record": "QF · 3-0 vs Canada",
-      "winChance": "9%",
-      "summary": "Morocco remain the biggest threat to France after beating co-hosts Canada 3-0, with Azzedine Ounahi scoring twice and Soufiane Rahimi adding the third after Ismael Saibari's early injury. The Atlas Lions are unbeaten in 34 matches, but Saibari's hamstring doubt and a possible Chadi Riad absence weaken the attack before Foxborough."
-    },
-    {
       "rank": 6,
-      "team": "Argentina",
-      "flag": "🇦🇷",
-      "record": "R16 · 3-2 AET vs Cape Verde",
-      "winChance": "9%",
-      "summary": "Argentina survived Cape Verde rather than controlled them, needing extra time and a Diney Borges own goal to escape one of the great World Cup shocks. Lionel Scaloni's side still have the tournament craft to beat Egypt, but the defensive vulnerability in Miami drops them behind the confirmed quarter-finalists until they prove otherwise in Atlanta."
+      "team": "Belgium",
+      "flag": "🇧🇪",
+      "record": "QF · 4-1 vs USA",
+      "winChance": "8%",
+      "summary": "Belgium produced their best performance of the tournament in Seattle, with Charles De Ketelaere scoring twice in a 4-1 win that ended the United States' run as the last co-host standing. Amadou Onana's ACL rupture removes a key midfield anchor before Friday's Los Angeles quarter-final with Spain, tempering the uplift from Romelu Lukaku's record-breaking substitute goals."
     },
     {
       "rank": 7,
-      "team": "Belgium",
-      "flag": "🇧🇪",
-      "record": "R16 · 3-2 AET vs Senegal",
-      "winChance": "6%",
-      "summary": "Belgium's comeback against Senegal had the drama of a deep-run team, but the first 85 minutes showed why they remain volatile. The Seattle tie with the United States now looks finely balanced, especially with the hosts missing Folarin Balogun but carrying home support and revenge motivation from 2014."
+      "team": "Morocco",
+      "flag": "🇲🇦",
+      "record": "QF · 3-0 vs Canada",
+      "winChance": "8%",
+      "summary": "Morocco remain the biggest threat to France after beating co-hosts Canada 3-0, with Azzedine Ounahi scoring twice and Soufiane Rahimi adding the third after Ismael Saibari's early injury. The Atlas Lions are unbeaten in 34 matches, but Saibari's fitness and a possible Chadi Riad absence weaken the attack before Foxborough."
     },
     {
       "rank": 8,
-      "team": "USA",
-      "flag": "🇺🇸",
-      "record": "R16 · 2-0 vs Bosnia",
+      "team": "Switzerland",
+      "flag": "🇨🇭",
+      "record": "QF · 0-0 vs Colombia (pens 4-3)",
       "winChance": "5%",
-      "summary": "The United States are still alive and have a Seattle home tie, but Balogun's controversial suspension reprieve has overshadowed preparation before Belgium arrive. Mauricio Pochettino's side know Spain await in Los Angeles if they advance, so a quarter-final would mean a very different test to the group stage."
+      "summary": "Switzerland kept a fifth clean sheet of the tournament and beat Colombia on penalties in Vancouver despite missing Johan Manzambi, Michel Aebischer and Luca Jaquez. Gregor Kobel's save from Cucho Hernandez and Ruben Vargas's decisive spot kick send Murat Yakin's side into a Kansas City quarter-final with Argentina, their first last-eight appearance since 1954."
     },
     {
       "rank": 9,
-      "team": "Switzerland",
-      "flag": "🇨🇭",
-      "record": "R16 · 2-0 vs Algeria",
-      "winChance": "4%",
-      "summary": "Switzerland's 2-0 win over Algeria was controlled, mature and exactly the kind of result that gives them a credible path into the quarter-finals. Colombia are a harder opponent than Algeria, but Murat Yakin's defensive structure has been one of the most reliable in the second tier."
-    },
-    {
-      "rank": 10,
-      "team": "Colombia",
-      "flag": "🇨🇴",
-      "record": "R16 · 1-0 vs Ghana",
-      "winChance": "3.5%",
-      "summary": "Colombia moved past Ghana 1-0 through Jhon Arias and now meet Switzerland in Vancouver. The attack still leans heavily on Luis Diaz and Arias moments, but the clean sheet and improved control lift them above the remaining low-probability chasers."
-    },
-    {
-      "rank": 11,
-      "team": "Egypt",
-      "flag": "🇪🇬",
-      "record": "R16 · 1-1 vs Australia (pens 4-2)",
-      "winChance": "2%",
-      "summary": "Egypt are into the last 16 after holding their nerve against Australia, with Mohamed Salah converting his penalty and Abdelmaguid winning the shoot-out. Argentina are heavy favourites, but Egypt's compact shape and penalty confidence make them more dangerous than their open-play profile suggests."
-    },
-    {
-      "rank": 12,
       "team": "Brazil",
       "flag": "🇧🇷",
       "record": "Eliminated · R16 vs Norway",
@@ -99,7 +75,7 @@
       "summary": "Brazil leave after Erling Haaland's late double punished Bruno Guimaraes' missed penalty and a string of wasted chances in East Rutherford. Carlo Ancelotti's side exit before the quarter-finals for the first time since 1990 despite dominating possession, ending an eight-tournament run of last-eight appearances."
     },
     {
-      "rank": 13,
+      "rank": 10,
       "team": "Portugal",
       "flag": "🇵🇹",
       "record": "Eliminated · R16 vs Spain",
@@ -107,12 +83,36 @@
       "summary": "Portugal bowed out 1-0 to Spain in Dallas after Mikel Merino's stoppage-time winner, with Cristiano Ronaldo's World Cup career likely over at 41. Roberto Martinez's side created little after the first half and leave with an expected-goals figure of 0.60 against Spain's 1.77."
     },
     {
-      "rank": 14,
+      "rank": 11,
       "team": "Mexico",
       "flag": "🇲🇽",
       "record": "Eliminated · R16 vs England",
       "winChance": "0%",
       "summary": "Mexico's co-host run ended with a 3-2 defeat to England at the Estadio Azteca, ending a ten-match unbeaten home record at the tournament's most iconic venue. Javier Aguirre's side fought back after Jarell Quansah's red card and Raul Jimenez's late penalty, but could not find an equaliser in 11 minutes of stoppage time."
+    },
+    {
+      "rank": 12,
+      "team": "USA",
+      "flag": "🇺🇸",
+      "record": "Eliminated · R16 vs Belgium",
+      "winChance": "0%",
+      "summary": "The United States were the last co-host eliminated after a 4-1 defeat to Belgium in Seattle, with Matt Freese's error outside his box gifting Hans Vanaken a third goal. Mauricio Pochettino's side exit at the last 16 for the fourth consecutive World Cup they have played, despite Malik Tillman's deflected free-kick briefly levelling the score."
+    },
+    {
+      "rank": 13,
+      "team": "Colombia",
+      "flag": "🇨🇴",
+      "record": "Eliminated · R16 vs Switzerland",
+      "winChance": "0%",
+      "summary": "Colombia matched their best World Cup run since 2014 but fell 4-3 on penalties to Switzerland after a goalless 120 minutes in Vancouver. Davinson Sanchez sent his penalty over the bar and Gregor Kobel saved Cucho Hernandez's effort, ending a campaign that had conceded only once in four matches."
+    },
+    {
+      "rank": 14,
+      "team": "Egypt",
+      "flag": "🇪🇬",
+      "record": "Eliminated · R16 vs Argentina",
+      "winChance": "0%",
+      "summary": "Egypt led Argentina 2-0 in Atlanta and were on the cusp of their greatest World Cup result before Lionel Messi, Cristian Romero and Enzo Fernandez scored in the final 13 minutes. Hossam Hassan decried VAR decisions after the match, but the Pharaohs still leave having reached the last 16 for the first time in their history."
     },
     {
       "rank": 15,
@@ -160,7 +160,7 @@
       "flag": "🇨🇩",
       "record": "Eliminated · R32 vs England",
       "winChance": "0%",
-      "summary": "DR Congo pushed England to the brink in Atlanta before Harry Kane's late double sealed a 2-1 win for the Three Lions. Brian Cipenga's early strike and Lionel Mpasi's heroics in goal showed Sébastien Desabre's side belonged at this stage, but their first knockout campaign ended one comeback short."
+      "summary": "DR Congo pushed England to the brink in Atlanta before Harry Kane's late double sealed a 2-1 win for the Three Lions. Brian Cipenga's early strike and Lionel Mpasi's heroics in goal showed Sebastien Desabre's side belonged at this stage, but their first knockout campaign ended one comeback short."
     },
     {
       "rank": 21,

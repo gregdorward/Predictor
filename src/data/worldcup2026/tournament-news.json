@@ -1,12 +1,76 @@
 {
-  "updatedAt": "2026-07-06T21:25:00.000Z",
-  "wrapUp": "England and Norway are into a Miami quarter-final after Jude Bellingham's quickfire double and Harry Kane's penalty carried the ten-man Three Lions past Mexico at the Azteca, while Erling Haaland's late brace dumped Brazil out in New Jersey. Spain joined them by edging Portugal through Mikel Merino's stoppage-time winner in Dallas, ending Cristiano Ronaldo's World Cup career and setting up a Los Angeles quarter-final against the USA or Belgium. Jarell Quansah's red card and Morocco's ongoing doubts over Ismael Saibari are the main fitness and selection issues before the next round, with FIFA's handling of Folarin Balogun's suspension adding disciplinary uncertainty across the bracket. Each story below links to the specific report it is drawn from; squad and fitness details reflect the latest available reporting as of 6 July 2026.",
+  "updatedAt": "2026-07-08T15:32:00.000Z",
+  "wrapUp": "The last co-host is out after Belgium thrashed the United States 4-1 in Seattle, though Amadou Onana's ACL rupture leaves Rudi Garcia reshaping midfield before Friday's Los Angeles quarter-final with Spain. Argentina needed three goals in 13 minutes to survive Egypt's VAR-fuelled furore in Atlanta, while Switzerland beat Colombia on penalties in Vancouver without Johan Manzambi. France and Morocco meet in Foxborough on 9 July with Aurelien Tchouameni unlikely to return and Ismael Saibari still a game-time call, and England's Jarell Quansah suspension remains unresolved before the Miami tie with Erling Haaland's Norway. Each story below links to the specific report it is drawn from; squad and fitness details reflect the latest available reporting as of 8 July 2026.",
   "sections": [
     {
       "id": "injuries-fitness",
       "heading": "Injuries and fitness doubts",
       "description": "Players ruled out, late replacements and day-to-day concerns that could change starting line-ups and squad depth.",
       "stories": [
+        {
+          "id": "belgium-onana-acl-spain-quarterfinal",
+          "headline": "Onana ruled out for rest of tournament with ACL rupture",
+          "summary": "Amadou Onana ruptured the anterior cruciate ligament in his right knee 21 minutes into Belgium's 4-1 win over the United States and will miss the quarter-final against Spain and the remainder of the World Cup. Belgium team doctor Brahim Hacene confirmed the diagnosis after scans, and BBC Sport reported Onana was seen on crutches with a knee brace, with recovery expected to take six to nine months. Hans Vanaken replaced him in Seattle and is among the options Rudi Garcia must weigh before Friday's tie in Los Angeles.",
+          "publishedDate": "2026-07-07",
+          "sources": [
+            {
+              "name": "BBC Sport",
+              "url": "https://www.bbc.com/sport/football/articles/c862nw2xj0jo"
+            },
+            {
+              "name": "AP News",
+              "url": "https://apnews.com/article/world-cup-schedule-scores-news-3b115208163906d3e15f2477c1af8471"
+            }
+          ]
+        },
+        {
+          "id": "france-tchouameni-morocco-quarterfinal-doubt",
+          "headline": "Tchouameni unlikely to face Morocco in Foxborough",
+          "summary": "Aurelien Tchouameni missed France's 1-0 win over Paraguay with a thigh and adductor problem sustained in training and France assistant Guy Stephan said on 6 July that the Real Madrid midfielder was unlikely to be fit for the 9 July quarter-final against Morocco. Get French Football News reported he had still not returned to full team training by the start of the week, with Manu Kone expected to continue alongside Adrien Rabiot while medical staff target a potential semi-final return.",
+          "publishedDate": "2026-07-07",
+          "sources": [
+            {
+              "name": "Get French Football News",
+              "url": "https://www.getfootballnewsfrance.com/2026/aurelien-tchouameni-likely-to-miss-frances-world-cup-quarter-final-against-morocco/"
+            },
+            {
+              "name": "Metro",
+              "url": "https://metro.co.uk/2026/07/04/aurelien-tchouameni-france-vs-paraguay-due-injury-29043172/"
+            }
+          ]
+        },
+        {
+          "id": "morocco-saibari-france-quarterfinal-doubt",
+          "headline": "Saibari race continues before Morocco face France",
+          "summary": "Ismael Saibari left Morocco's 3-0 win over Canada after 22 minutes with a thigh problem and travelled with the squad to Boston for further assessment. Reports on 7 July suggested scans showed a minor muscle strain rather than a serious tear, but Yahoo Sports said he was not pictured in training as he followed a supervised recovery programme and Mohamed Ouahbi is expected to wait for medical clearance before naming his XI. Soufiane Rahimi, who scored after coming on against Canada, is the most likely replacement if Saibari is not passed fit.",
+          "publishedDate": "2026-07-07",
+          "sources": [
+            {
+              "name": "ESPN",
+              "url": "https://www.espn.com/soccer/report/_/gameId/760502"
+            },
+            {
+              "name": "Yahoo Sports",
+              "url": "https://sports.yahoo.com/articles/ismael-saibari-fit-moroccos-world-091400704.html"
+            }
+          ]
+        },
+        {
+          "id": "switzerland-manzambi-argentina-doubt",
+          "headline": "Manzambi misses Colombia tie and doubts Argentina quarter-final",
+          "summary": "Johan Manzambi sustained a knee contusion in Switzerland's final training session before the last-16 tie with Colombia and was ruled out of the goalless draw that went to penalties. AP reported the 20-year-old, who had three goals and two assists in the tournament, was one of three Swiss players to leave training early, and Murat Yakin said a full recovery before the 11 July quarter-final against Argentina was unlikely though not impossible.",
+          "publishedDate": "2026-07-07",
+          "sources": [
+            {
+              "name": "AP News",
+              "url": "https://apnews.com/article/world-cup-swizerland-johan-manzambi-53bc88db1a8396519e880ceab9169224"
+            },
+            {
+              "name": "The Straits Times",
+              "url": "https://www.straitstimes.com/sport/football/manzambi-to-miss-swiss-world-cup-clash-with-colombia"
+            }
+          ]
+        },
         {
           "id": "england-quansah-red-card-norway",
           "headline": "Quansah set to miss Norway tie after Azteca dismissal",
@@ -22,38 +86,6 @@
               "url": "https://www.bbc.co.uk/sport/football/articles/cq6115rj9ymo"
             }
           ]
-        },
-        {
-          "id": "morocco-saibari-france-quarterfinal-doubt",
-          "headline": "Saibari scan leaves Morocco waiting before France tie",
-          "summary": "Ismael Saibari left Morocco's 3-0 win over Canada after 22 minutes with a thigh problem and Mohamed Ouahbi said the extent of the injury would become clearer in the coming days. Reports on 6 July said the midfielder was travelling with the squad to Boston for an MRI scan before the 9 July quarter-final against France, with Soufiane Rahimi the most likely replacement after scoring in Houston.",
-          "publishedDate": "2026-07-06",
-          "sources": [
-            {
-              "name": "ESPN",
-              "url": "https://www.espn.com/soccer/report/_/gameId/760502"
-            },
-            {
-              "name": "The National",
-              "url": "https://www.thenationalnews.com/sport/world-cup-2026/2026/07/06/ismael-saibari-fitness-concern-for-morocco-ahead-of-france-world-cup-quarter-final-clash/"
-            }
-          ]
-        },
-        {
-          "id": "brazil-paqueta-norway-ruled-out",
-          "headline": "Paqueta missed Norway tie as Brazil's World Cup ended",
-          "summary": "Lucas Paqueta did not feature against Norway after limping off with a hamstring injury in Brazil's Round of 32 win over Japan, with Carlo Ancelotti starting Gabriel Martinelli in his place. AP and ESPN both reported Paqueta was not expected to recover in time, and Brazil's 2-1 defeat in East Rutherford confirmed their earliest World Cup exit since 1990 without their main midfield link player.",
-          "publishedDate": "2026-07-05",
-          "sources": [
-            {
-              "name": "AP News",
-              "url": "https://apnews.com/article/world-cup-schedule-scores-news-3b115208163906d3e15f2477c1af8471"
-            },
-            {
-              "name": "ESPN",
-              "url": "https://www.espn.com/soccer/match/_/gameId/760504/norway-brazil"
-            }
-          ]
         }
       ]
     },
@@ -62,6 +94,70 @@
       "heading": "Squad selection and tactical reshuffles",
       "description": "Omissions, late call-ups and manager decisions that reveal how teams plan to navigate the expanded format.",
       "stories": [
+        {
+          "id": "switzerland-colombia-penalties-quarterfinal",
+          "headline": "Kobel saves send Switzerland past Colombia",
+          "summary": "Switzerland and Colombia cancelled each other out over 120 goalless minutes in Vancouver before Gregor Kobel saved Cucho Hernandez's penalty and Ruben Vargas converted the decisive kick in a 4-3 shoot-out. Murat Yakin reshuffled without Johan Manzambi, Michel Aebischer and Luca Jaquez, starting Ardon Jashari and Fabian Rieder, and Switzerland will face Argentina in Kansas City on 11 July for a first quarter-final since hosting the tournament in 1954.",
+          "publishedDate": "2026-07-08",
+          "sources": [
+            {
+              "name": "Al Jazeera",
+              "url": "https://www.aljazeera.com/sports/2026/7/7/switzerland-face-argentina-in-world-cup-quarterfinal-after-beating-colombia"
+            },
+            {
+              "name": "Euronews",
+              "url": "https://www.euronews.com/2026/07/08/argentina-survives-major-scare-from-egypt-and-heads-into-world-cup-quarterfinals-against-s"
+            }
+          ]
+        },
+        {
+          "id": "argentina-egypt-comeback-quarterfinal",
+          "headline": "Argentina rally from two down to reach quarter-finals",
+          "summary": "Egypt led 2-0 in Atlanta through Yasser Ibrahim and Mostafa Zizo, with Mostafa Shobeir also saving a Lionel Messi penalty, before Cristian Romero, Messi and Enzo Fernandez scored in the final 13 minutes to win 3-2. FIFA's match report noted Fernandez's stoppage-time header was the 3,000th goal in World Cup history, and Messi's eighth of the tournament moved him back ahead in the Golden Boot race before Argentina face Switzerland in Kansas City on 11 July.",
+          "publishedDate": "2026-07-07",
+          "sources": [
+            {
+              "name": "FIFA",
+              "url": "https://www.fifa.com/en/tournaments/mens/worldcup/canadamexicousa2026/articles/argentina-egypt-match-report-highlights"
+            },
+            {
+              "name": "Al Jazeera",
+              "url": "https://www.aljazeera.com/sports/2026/7/7/argentina-stage-stunning-late-comeback-to-beat-egypt-in-world-cup-last-16"
+            }
+          ]
+        },
+        {
+          "id": "belgium-de-ketelaere-usa-breakthrough",
+          "headline": "De Ketelaere double drives Belgium past United States",
+          "summary": "Rudi Garcia again picked Charles De Ketelaere ahead of Romelu Lukaku in Seattle and was rewarded with two first-half goals plus the press that forced Matt Freese's error for Hans Vanaken's third. Sky Sports reported De Ketelaere headed in Leandro Trossard's cross two minutes after Malik Tillman's deflected free-kick had levelled the score, and Lukaku came off the bench to become the first substitute to score three goals at a single World Cup. Belgium advance to face Spain in Los Angeles on 10 July.",
+          "publishedDate": "2026-07-07",
+          "sources": [
+            {
+              "name": "BBC Sport",
+              "url": "https://www.bbc.co.uk/sport/football/live/c24y8ded80vt"
+            },
+            {
+              "name": "Sky Sports",
+              "url": "https://www.skysports.com/football/united-states-of-america-vs-belgium/report/549859"
+            }
+          ]
+        },
+        {
+          "id": "usa-co-hosts-exit-belgium-seattle",
+          "headline": "United States become final co-host eliminated",
+          "summary": "The United States lost 4-1 to Belgium at Lumen Field, ending Mauricio Pochettino's run at the same last-16 stage as 2014, 2022 and their previous World Cup appearance. NBC Sports reported Matt Freese's hesitation outside his box gifted Hans Vanaken a third goal and Romelu Lukaku added a stoppage-time fourth, meaning Mexico and Canada had already departed and all three co-hosts are out before the quarter-finals.",
+          "publishedDate": "2026-07-07",
+          "sources": [
+            {
+              "name": "BBC Sport",
+              "url": "https://www.bbc.co.uk/sport/football/live/c24y8ded80vt"
+            },
+            {
+              "name": "NBC Sports",
+              "url": "https://www.nbcsports.com/soccer/live/usa-vs-belgium-live-updates-score-goals-highlights-stats-2026-fifa-world-cup-july-6"
+            }
+          ]
+        },
         {
           "id": "england-right-back-rotation-crisis",
           "headline": "England's right-back options narrow before Norway",
@@ -77,54 +173,6 @@
               "url": "https://www.bbc.co.uk/sport/football/articles/cjrgg07p8dlo"
             }
           ]
-        },
-        {
-          "id": "england-ten-men-mexico-azteca-win",
-          "headline": "Bellingham and Kane carry ten-man England past Mexico",
-          "summary": "Jude Bellingham scored twice in 98 seconds and Harry Kane converted a penalty as England became the first team to beat Mexico at the Estadio Azteca, winning 3-2 despite Jarell Quansah's red card. Thomas Tuchel reshuffled with John Stones, Dan Burn and Djed Spence after the dismissal, and England held on through 11 minutes of stoppage time to set up a quarter-final with Erling Haaland's Norway in Miami.",
-          "publishedDate": "2026-07-06",
-          "sources": [
-            {
-              "name": "FIFA",
-              "url": "https://www.fifa.com/en/tournaments/mens/worldcup/canadamexicousa2026/articles/mexico-england-match-report-highlights"
-            },
-            {
-              "name": "ESPN",
-              "url": "https://www.espn.com/soccer/story/_/id/49280180/mexico-england-world-cup-2026-result-score-recap-jude-bellingham-harry-kane-jarell-quansah"
-            }
-          ]
-        },
-        {
-          "id": "spain-merino-portugal-late-winner",
-          "headline": "Merino super-sub settles Iberian derby for Spain",
-          "summary": "Luis de la Fuente kept an unchanged Spain side in Dallas but turned to Mikel Merino in the closing stages, and the substitute scored in the first minute of stoppage time after Ferran Torres slid a pass through for him to beat Diogo Costa. Spain advance to face the USA or Belgium in Los Angeles on 10 July, while Portugal bow out with Cristiano Ronaldo's international career likely over at 41.",
-          "publishedDate": "2026-07-06",
-          "sources": [
-            {
-              "name": "BBC Sport",
-              "url": "https://www.bbc.com/sport/football/live/cze9xg6480gt"
-            },
-            {
-              "name": "France 24",
-              "url": "https://www.france24.com/en/sport/20260706-world-cup-2026-spain-edge-portugal-with-late-merino-goal-to-reach-quarter-finals"
-            }
-          ]
-        },
-        {
-          "id": "norway-haaland-brazil-upset",
-          "headline": "Haaland's late double sends Norway past Brazil",
-          "summary": "Erling Haaland scored in the 79th and 90th minutes to turn a tight Round of 16 tie Norway's way after Orjan Nyland had saved a Bruno Guimaraes penalty in the first half. Julian Ryerson returned from a thigh injury at MetLife Stadium, Neymar's stoppage-time spot kick was only a consolation, and Norway will face England in Miami on 11 July with Haaland level on seven tournament goals with Lionel Messi.",
-          "publishedDate": "2026-07-05",
-          "sources": [
-            {
-              "name": "BBC Sport",
-              "url": "https://www.bbc.co.uk/sport/football/live/c3wyl9qe4xgt"
-            },
-            {
-              "name": "FIFA",
-              "url": "https://www.fifa.com/en/tournaments/mens/worldcup/canadamexicousa2026/articles/brazil-norway-match-report-highlights"
-            }
-          ]
         }
       ]
     },
@@ -133,6 +181,38 @@
       "heading": "Disruption and preparation issues",
       "description": "Travel, visa and logistical problems that could affect match readiness rather than just headlines.",
       "stories": [
+        {
+          "id": "belgium-onana-absence-spain-preparation",
+          "headline": "Belgium reshape midfield with four days to Spain tie",
+          "summary": "Onana's ACL rupture came on his second start of the tournament and forces Rudi Garcia to reconsider the double pivot that helped Belgium overturn a 2-0 deficit against Senegal and dominate the United States. Belgium said Onana would remain with the squad in Los Angeles for the quarter-final, but ESPN noted the Red Devils must now lean on Hans Vanaken, Youri Tielemans and possibly Kevin De Bruyne without one of their most important ball-winners.",
+          "publishedDate": "2026-07-07",
+          "sources": [
+            {
+              "name": "BBC Sport",
+              "url": "https://www.bbc.com/sport/football/articles/c862nw2xj0jo"
+            },
+            {
+              "name": "ESPN",
+              "url": "https://www.espn.com/soccer/match/_/gameId/760507"
+            }
+          ]
+        },
+        {
+          "id": "egypt-var-furore-argentina-exit",
+          "headline": "Egypt decry VAR decisions after Atlanta defeat",
+          "summary": "Hossam Hassan said Egypt were treated unfairly after VAR disallowed a Mostafa Zizo goal for a foul on Lisandro Martinez at the start of the move and Egypt felt further penalty appeals around Mohamed Salah went unchecked. BBC Sport reported a member of Egypt's backroom staff was sent off after Enzo Fernandez's winner and Hassan vowed to stop watching the remainder of the tournament, adding disciplinary and reputational noise around Argentina's quarter-final build-up.",
+          "publishedDate": "2026-07-07",
+          "sources": [
+            {
+              "name": "BBC Sport",
+              "url": "https://www.bbc.com/sport/football/articles/c5yzd23jll5o"
+            },
+            {
+              "name": "ESPN",
+              "url": "https://www.espn.co.uk/football/story/_/id/49298199/argentina-lionel-messi-world-cup-round-16-egypt-var-mohamed-salah"
+            }
+          ]
+        },
         {
           "id": "fifa-balogun-quansah-disciplinary-uncertainty",
           "headline": "Balogun reprieve raises questions over Quansah ban",
@@ -148,38 +228,6 @@
               "url": "https://www.bbc.co.uk/sport/football/articles/cz0jjz830g3o"
             }
           ]
-        },
-        {
-          "id": "july6-bracket-spain-awaits-usa-belgium",
-          "headline": "Spain know their quarter-final path before Seattle kicks off",
-          "summary": "Spain's 1-0 win over Portugal in Arlington was the first of two last-16 ties on 6 July, meaning Luis de la Fuente's side will face the USA or Belgium in Los Angeles on 10 July while the Seattle winner was still to be decided. The staggered schedule gives the co-hosts or Belgium a clear target, but also leaves less recovery time for whoever advances from the evening game in the Pacific north-west.",
-          "publishedDate": "2026-07-06",
-          "sources": [
-            {
-              "name": "ESPN",
-              "url": "https://www.espn.com/soccer/match/_/gameId/760506/spain-portugal"
-            },
-            {
-              "name": "France 24",
-              "url": "https://www.france24.com/en/sport/20260706-world-cup-2026-spain-edge-portugal-with-late-merino-goal-to-reach-quarter-finals"
-            }
-          ]
-        },
-        {
-          "id": "philadelphia-heat-france-paraguay",
-          "headline": "France survive heat and physical Paraguay approach",
-          "summary": "France's 1-0 win over Paraguay was played under an extreme heat warning with temperatures around 38C, and ESPN reported that Paraguay's defensive approach kept the match tight until Kylian Mbappe's 70th-minute penalty. AP detailed repeated flashpoints around Mbappe and post-match tension, making recovery and discipline part of France's short lead-in to Morocco in Foxborough on 9 July.",
-          "publishedDate": "2026-07-04",
-          "sources": [
-            {
-              "name": "ESPN",
-              "url": "https://www.espn.com/soccer/report/_/gameId/760503"
-            },
-            {
-              "name": "AP News",
-              "url": "https://apnews.com/article/world-cup-paraguay-physical-france-fouls-mbappe-f573f9c9b1c004cc11c4951b3ccbb060"
-            }
-          ]
         }
       ]
     },
@@ -189,9 +237,57 @@
       "description": "Deeper previews on favourites, group dynamics and how the 48-team format changes the path to the final.",
       "stories": [
         {
+          "id": "belgium-spain-quarterfinal-preview",
+          "headline": "Spain await Belgium side buoyed but depleted in midfield",
+          "summary": "Spain beat Portugal 1-0 in Dallas and have had extra recovery time before hosting Belgium at SoFi Stadium, while the Red Devils arrive on the back of a 4-1 Seattle win that cost them Amadou Onana. ESPN put Belgium's expected goals at 2.15 against 0.67 for the United States, but Luis de la Fuente's fifth straight clean sheet and Spain's tournament control make them favourites against a Belgium side likely to start Hans Vanaken in midfield.",
+          "publishedDate": "2026-07-08",
+          "sources": [
+            {
+              "name": "ESPN",
+              "url": "https://www.espn.com/soccer/match/_/gameId/760507"
+            },
+            {
+              "name": "BBC Sport",
+              "url": "https://www.bbc.com/sport/football/articles/c862nw2xj0jo"
+            }
+          ]
+        },
+        {
+          "id": "eight-team-quarterfinal-bracket-set",
+          "headline": "Chalky quarter-final line-up takes shape across US",
+          "summary": "All eight remaining teams are ranked inside FIFA's top 20, with France, Argentina, Spain and England joined by Morocco, Belgium, Switzerland and Norway for four ties between 9 and 11 July. USA Today noted Lionel Messi leads the Golden Boot on eight goals ahead of Kylian Mbappe and Erling Haaland on seven and Harry Kane on six, setting up a western bracket of France-Morocco and Spain-Belgium and an eastern path through England-Norway and Argentina-Switzerland.",
+          "publishedDate": "2026-07-08",
+          "sources": [
+            {
+              "name": "USA Today",
+              "url": "https://www.usatoday.com/story/sports/soccer/worldcup/2026/07/07/world-cup-quarterfinals-matchups-schedule-bracket/90842113007/"
+            },
+            {
+              "name": "SBS News",
+              "url": "https://www.sbs.com.au/news/article/fifa-world-cup-2026-results-july-08/pxhefb4y5"
+            }
+          ]
+        },
+        {
+          "id": "argentina-defensive-vulnerability-egypt",
+          "headline": "Argentina's comeback masks another defensive scare",
+          "summary": "Argentina have now needed extra time against Cape Verde and a three-goal burst against Egypt to survive the knockouts, with ESPN highlighting Messi's limited influence for an hour before his decisive late intervention. The holders' reward is a quarter-final with disciplined Switzerland, who kept a fifth clean sheet of the tournament against Colombia, so Lionel Scaloni still has to prove the back line can hold without another rescue act.",
+          "publishedDate": "2026-07-07",
+          "sources": [
+            {
+              "name": "ESPN",
+              "url": "https://www.espn.co.uk/football/story/_/id/49298199/argentina-lionel-messi-world-cup-round-16-egypt-var-mohamed-salah"
+            },
+            {
+              "name": "Al Jazeera",
+              "url": "https://www.aljazeera.com/sports/2026/7/7/argentina-stage-stunning-late-comeback-to-beat-egypt-in-world-cup-last-16"
+            }
+          ]
+        },
+        {
           "id": "england-norway-haaland-kane-quarterfinal",
           "headline": "Haaland and Kane set up heavyweight Miami quarter-final",
-          "summary": "Norway's 2-1 win over Brazil and England's 3-2 Azteca survival mean Erling Haaland and Harry Kane, both on seven tournament goals, will meet in Miami on 11 July. Sky Sports noted Haaland's brace punished Brazil's wastefulness after Nyland's penalty save, while ESPN highlighted England as the first team ever to beat Mexico at the Azteca, giving the quarter-final a clear clash of Europe's two most decisive No 9s.",
+          "summary": "Norway's 2-1 win over Brazil and England's 3-2 Azteca survival mean Erling Haaland and Harry Kane, both on seven tournament goals, will meet in Miami on 11 July. Sky Sports noted Haaland's brace punished Brazil's wastefulness after Orjan Nyland's penalty save, while ESPN highlighted England as the first team ever to beat Mexico at the Azteca, giving the quarter-final a clear clash of Europe's two most decisive No 9s.",
           "publishedDate": "2026-07-06",
           "sources": [
             {
@@ -201,54 +297,6 @@
             {
               "name": "ESPN",
               "url": "https://www.espn.com/soccer/story/_/id/49280180/mexico-england-world-cup-2026-result-score-recap-jude-bellingham-harry-kane-jarell-quansah"
-            }
-          ]
-        },
-        {
-          "id": "spain-portugal-ronaldo-exit",
-          "headline": "Spain grind past Portugal as Ronaldo's World Cup ends",
-          "summary": "Spain were not at their fluent best in Dallas, with ESPN reporting Portugal's expected goals of 0.60 against Spain's 1.77, but Merino's late intervention kept de la Fuente's side on course for a fifth straight clean sheet in the competition. Cristiano Ronaldo at 41 has likely played his last World Cup match, while Spain now carry momentum and a clearer recovery window than whoever emerges from Seattle.",
-          "publishedDate": "2026-07-06",
-          "sources": [
-            {
-              "name": "ESPN",
-              "url": "https://www.espn.com/soccer/match/_/gameId/760506/spain-portugal"
-            },
-            {
-              "name": "France 24",
-              "url": "https://www.france24.com/en/sport/20260706-world-cup-2026-spain-edge-portugal-with-late-merino-goal-to-reach-quarter-finals"
-            }
-          ]
-        },
-        {
-          "id": "brazil-earliest-exit-since-1990",
-          "headline": "Brazil's quarter-final streak ends in New Jersey",
-          "summary": "Brazil lost 2-1 to Norway despite dominating possession and generating a higher expected-goals figure, with Haaland's two late strikes punishing Bruno Guimaraes' missed penalty and several other wasted chances. FIFA's match report confirmed it was Brazil's earliest World Cup exit since 1990, ending an eight-tournament run of quarter-final appearances and opening the door for a first Scandinavian semi-final since 1998.",
-          "publishedDate": "2026-07-05",
-          "sources": [
-            {
-              "name": "FIFA",
-              "url": "https://www.fifa.com/en/tournaments/mens/worldcup/canadamexicousa2026/articles/brazil-norway-match-report-highlights"
-            },
-            {
-              "name": "BBC Sport",
-              "url": "https://www.bbc.co.uk/sport/football/live/c3wyl9qe4xgt"
-            }
-          ]
-        },
-        {
-          "id": "france-morocco-quarterfinal-preview",
-          "headline": "Mbappe's France meet Morocco with fitness clouds on both sides",
-          "summary": "France reached the quarter-finals through Mbappe's penalty against Paraguay in extreme Philadelphia heat, but Morocco arrive in Foxborough unbeaten in 34 matches and buoyed by Azzedine Ounahi's double against Canada. ESPN's Canada report and subsequent fitness updates leave Saibari as a major doubt, so Didier Deschamps may face a counter-attacking side reshaped around Ounahi and Rahimi rather than Morocco's leading tournament scorer.",
-          "publishedDate": "2026-07-04",
-          "sources": [
-            {
-              "name": "ESPN",
-              "url": "https://www.espn.com/soccer/report/_/gameId/760502"
-            },
-            {
-              "name": "BBC Sport",
-              "url": "https://www.bbc.co.uk/sport/football/articles/cy4e22gqe50o"
             }
           ]
         }
