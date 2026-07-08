@@ -70,6 +70,14 @@ function getChartColors(theme) {
   };
 }
 
+const COMPARISON_CHART_FONTS = {
+  title: { size: 13, weight: "600" },
+  subtitle: { size: 11, weight: "400" },
+  axisTick: { size: 10, weight: "500" },
+  legend: { size: 11, weight: "500" },
+  deltaLabel: "600 11px 'Open Sans', sans-serif",
+};
+
 const valueLabelPlugin = {
   id: "valueLabelPlugin",
   afterDatasetsDraw(chart, args, pluginOptions) {
@@ -932,7 +940,7 @@ function buildLinearTrendLine(values = []) {
   return xs.map((x) => Number((slope * x + intercept).toFixed(2)));
 }
 
-function ShotAreaChart({ teamName, series = [], theme }) {
+function ShotAreaChart({ teamName, series = [], theme, showSubtitle = true }) {
   const { color, gridColor, tooltipBackground } = getChartColors(theme);
 
   if (!series.length) {
@@ -980,9 +988,7 @@ function ShotAreaChart({ teamName, series = [], theme }) {
           maxRotation: 0,
           autoSkip: true,
           maxTicksLimit: 8,
-          font: {
-            size: 9,
-          },
+          font: COMPARISON_CHART_FONTS.axisTick,
           color,
         },
         border: {
@@ -997,9 +1003,7 @@ function ShotAreaChart({ teamName, series = [], theme }) {
           drawTicks: false,
         },
         ticks: {
-          font: {
-            size: 9,
-          },
+          font: COMPARISON_CHART_FONTS.axisTick,
           color,
           precision: 0,
         },
@@ -1014,9 +1018,7 @@ function ShotAreaChart({ teamName, series = [], theme }) {
         labels: {
           boxWidth: 10,
           boxHeight: 10,
-          font: {
-            size: 10,
-          },
+          font: COMPARISON_CHART_FONTS.legend,
           color,
           filter(item) {
             return !String(item.text).toLowerCase().includes("trend");
@@ -1055,24 +1057,18 @@ function ShotAreaChart({ teamName, series = [], theme }) {
         display: true,
         text: teamName,
         color,
-        font: {
-          size: 12,
-          weight: "600",
-        },
+        font: COMPARISON_CHART_FONTS.title,
         padding: {
-          bottom: 6,
+          bottom: 4,
         },
       },
       subtitle: {
-        display: true,
+        display: showSubtitle,
         text: "Goals, shots on target and shots per game",
         color,
-        font: {
-          size: 10,
-          weight: "400",
-        },
+        font: COMPARISON_CHART_FONTS.subtitle,
         padding: {
-          bottom: 8,
+          bottom: 12,
         },
       },
     },
@@ -1187,6 +1183,7 @@ export function ShotAreaChartsShare({
               teamName={team1}
               series={shotSeries.home}
               theme={theme}
+              showSubtitle={false}
             />
           ) : null}
           {hasAway ? (
@@ -1194,6 +1191,7 @@ export function ShotAreaChartsShare({
               teamName={team2}
               series={shotSeries.away}
               theme={theme}
+              showSubtitle={false}
             />
           ) : null}
         </div>
@@ -1287,7 +1285,7 @@ export function BarChart(props) {
         const label = `+${display}`;
         ctx.save();
         ctx.fillStyle = color;
-        ctx.font = "600 10px 'Open Sans', sans-serif";
+        ctx.font = COMPARISON_CHART_FONTS.deltaLabel;
         ctx.textAlign = value < 0 ? "right" : "left";
         ctx.textBaseline = "middle";
 
@@ -1347,10 +1345,7 @@ export function BarChart(props) {
           scale.width = Math.min(scale.width, 100);
         },
         ticks: {
-          font: {
-            size: 9,
-            weight: "500",
-          },
+          font: COMPARISON_CHART_FONTS.axisTick,
           color: color,
           padding: 2,
           autoSkip: false,
@@ -1387,10 +1382,7 @@ export function BarChart(props) {
         display: true,
         text: props.text,
         color: color,
-        font: {
-          size: 13,
-          weight: "600",
-        },
+        font: COMPARISON_CHART_FONTS.title,
         padding: {
           bottom: 4,
         },
@@ -1399,10 +1391,7 @@ export function BarChart(props) {
         display: true,
         text: `Bars show which team leads each metric`,
         color: color,
-        font: {
-          size: 11,
-          weight: "400",
-        },
+        font: COMPARISON_CHART_FONTS.subtitle,
         padding: {
           bottom: 12,
         },

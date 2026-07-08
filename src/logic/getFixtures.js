@@ -1081,6 +1081,7 @@ export async function generateFixtures(
             .slice(-600);
         }
 
+         
         const shortenedResults = gamesFiltered.map(
           ({
             home_name,
@@ -1112,6 +1113,9 @@ export async function generateFixtures(
             pre_match_teamA_overall_ppg,
             pre_match_teamB_overall_ppg,
             game_week,
+            homeGoals_timings,
+            awayGoals_timings,
+            goal_timings_recorded,
           }) => ({
             home_name,
             away_name,
@@ -1142,6 +1146,9 @@ export async function generateFixtures(
             pre_match_teamA_overall_ppg,
             pre_match_teamB_overall_ppg,
             game_week,
+            homeGoals_timings,
+            awayGoals_timings,
+            goal_timings_recorded,
           })
         );
 

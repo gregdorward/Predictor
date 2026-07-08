@@ -6514,7 +6514,9 @@ input:active+.design::after {
   gap: 1.25rem;
   margin-top: 0.5rem;
   padding-bottom: 0.25rem;
-  font-size: 0.85rem;
+  font-family: "Open Sans", sans-serif;
+  font-size: 11px;
+  font-weight: 500;
   color: var(--text-color);
 }
 
@@ -6563,14 +6565,17 @@ input:active+.design::after {
 
 .ShotAreaCharts-title {
   margin: 0;
-  font-size: 0.95rem;
+  font-family: "Open Sans", sans-serif;
+  font-size: 13px;
   font-weight: 600;
   color: var(--text-color);
 }
 
 .ShotAreaCharts-subtitle {
   margin: 0.25rem 0 0;
-  font-size: 0.8rem;
+  font-family: "Open Sans", sans-serif;
+  font-size: 11px;
+  font-weight: 400;
   color: var(--text-color);
   opacity: 0.75;
 }
@@ -8928,6 +8933,191 @@ h5.section-title {
 
   .RankingsHeatmap-edge {
     font-size: 0.66rem;
+  }
+}
+
+.GoalTimingHeat-wrap,
+.GoalTimingHeat-comparison,
+.GoalTimingHeat-block,
+.GoalTimingHeat-pair,
+.GoalTimingHeat-labels,
+.GoalTimingHeat-team,
+.GoalTimingHeat-row {
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
+}
+
+.GoalTimingHeat-comparison {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25em;
+}
+
+.GoalTimingHeat-block h4 {
+  padding: 0.75em 0.75em 0.35em;
+  margin: 0;
+}
+
+.GoalTimingHeat-pair,
+.GoalTimingHeat-labels {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  justify-content: flex-start;
+  align-items: flex-start;
+  gap: 2rem;
+  padding: 0 0.75em;
+}
+
+.GoalTimingHeat-labels {
+  padding-bottom: 0.35rem;
+}
+
+.GoalTimingHeat-pair .GoalTimingHeat-team + .GoalTimingHeat-team,
+.GoalTimingHeat-labels .GoalTimingHeat-team + .GoalTimingHeat-team {
+  position: relative;
+}
+
+.GoalTimingHeat-pair .GoalTimingHeat-team + .GoalTimingHeat-team::before,
+.GoalTimingHeat-labels .GoalTimingHeat-team + .GoalTimingHeat-team::before {
+  content: "";
+  position: absolute;
+  left: -1rem;
+  top: 0;
+  bottom: 0;
+  width: 1px;
+  background: var(--third-background-color);
+  opacity: 0.85;
+}
+
+.GoalTimingHeat-team {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.GoalTimingHeat-share {
+  width: 100%;
+  max-width: 640px;
+  margin: 1.5em auto;
+}
+
+.GoalTimingHeat-header {
+  margin-bottom: 0.35rem;
+}
+
+.GoalTimingHeat-title {
+  margin: 0;
+  padding: 0 0.75em;
+  font-family: "Open Sans", sans-serif;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-color);
+}
+
+.GoalTimingHeat-teamLabel {
+  margin: 0;
+  padding: 0;
+  font-size: 1.1em;
+  font-weight: 600;
+  color: var(--text-color);
+  text-align: center;
+  line-height: 1.2;
+}
+
+.GoalTimingHeat-row {
+  display: grid;
+  grid-template-columns: repeat(6, 1.35rem);
+  gap: 0.5rem;
+  width: fit-content;
+}
+
+.GoalTimingHeat-cell {
+  width: 1.35rem;
+  height: 1.35rem;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.65rem;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.GoalTimingHeat-cell--empty {
+  background: var(--alternate-background-color);
+  color: transparent;
+}
+
+.GoalTimingHeat-cell--filled {
+  background: rgba(1, 165, 1, var(--heat-opacity, 0.35));
+  border: 1px solid rgba(1, 165, 1, calc(var(--heat-opacity, 0.35) + 0.12));
+  color: var(--text-color);
+}
+
+.GoalTimingHeat-block--conceded .GoalTimingHeat-cell--filled {
+  background: rgba(215, 18, 0, var(--heat-opacity, 0.35));
+  border: 1px solid rgba(215, 18, 0, calc(var(--heat-opacity, 0.35) + 0.12));
+}
+
+.GoalTimingHeat-cell--strong {
+  color: #fff;
+}
+
+.GoalTimingHeat-axis {
+  display: grid;
+  grid-template-columns: repeat(6, 1.35rem);
+  gap: 0.5rem;
+  width: fit-content;
+  margin-top: 0.3rem;
+}
+
+.GoalTimingHeat-axis span {
+  font-size: 0.6rem;
+  color: var(--secondary-text-color);
+  text-align: center;
+  line-height: 1.1;
+}
+
+.XGSwiper .GoalTimingHeat-wrap,
+.XGSwiper .GoalTimingHeat-comparison,
+.XGSwiper .GoalTimingHeat-block,
+.XGSwiper .GoalTimingHeat-pair,
+.XGSwiper .GoalTimingHeat-labels,
+.XGSwiper .GoalTimingHeat-team {
+  width: 100%;
+  max-width: 100%;
+}
+
+@media (max-width: 640px) {
+  .GoalTimingHeat-pair,
+  .GoalTimingHeat-labels {
+    gap: 1.25rem;
+    padding: 0 0.5em;
+  }
+
+  .GoalTimingHeat-pair .GoalTimingHeat-team + .GoalTimingHeat-team::before,
+  .GoalTimingHeat-labels .GoalTimingHeat-team + .GoalTimingHeat-team::before {
+    left: -0.625rem;
+  }
+
+  .GoalTimingHeat-row,
+  .GoalTimingHeat-axis {
+    grid-template-columns: repeat(6, 1.15rem);
+    gap: 0.5rem;
+  }
+
+  .GoalTimingHeat-cell {
+    width: 1.15rem;
+    height: 1.15rem;
+    font-size: 0.58rem;
+    border-radius: 3px;
+  }
+
+  .GoalTimingHeat-axis span {
+    font-size: 0.5rem;
   }
 }
 

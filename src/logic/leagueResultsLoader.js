@@ -39,6 +39,9 @@ function mapLeagueFixtureResults(gamesFiltered) {
       pre_match_teamA_overall_ppg,
       pre_match_teamB_overall_ppg,
       game_week,
+      homeGoals_timings,
+      awayGoals_timings,
+      goal_timings_recorded,
     }) => ({
       home_name,
       away_name,
@@ -69,6 +72,9 @@ function mapLeagueFixtureResults(gamesFiltered) {
       pre_match_teamA_overall_ppg,
       pre_match_teamB_overall_ppg,
       game_week,
+      homeGoals_timings,
+      awayGoals_timings,
+      goal_timings_recorded,
     })
   );
 }

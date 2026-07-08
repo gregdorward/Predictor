@@ -44,6 +44,7 @@ import {
   getLeagueFixturesByLeagueId,
   getTeamFixturesBeforeMatch,
 } from "../utils/leagueResultsAccess";
+import { buildGoalTimingHeatmap } from "../utils/goalTimingHeatmap";
 import { selectedTipType } from "../components/PredictionTypeRadio";
 import { InsightsPanel } from "../components/Insights"
 import { X } from "lucide-react";
@@ -1128,6 +1129,10 @@ async function getPastLeagueResults(team, game, hOrA, form) {
 
     form.tacticalIdentity = tacticalIdentity;
     form.tacticalRecords = tacticalRecords;
+    form.goalTiming = buildGoalTimingHeatmap(
+      teamsHomeResults,
+      teamsAwayResults
+    );
 
 
     form.allTeamResults = allTeamResults.sort((b, a) => a.dateRaw - b.dateRaw);
@@ -3239,6 +3244,7 @@ export async function calculateScore(match, index, divider, calculate, AIPredict
       formHome.last10bttsHome = null;
       formHome.last10bttsAway = null;
       formHome.allTeamResults = [];
+      formHome.goalTiming = null;
       formHome.resultsAll = [];
       formHome.resultsHome = [];
       formHome.resultsAway = [];
@@ -3269,6 +3275,7 @@ export async function calculateScore(match, index, divider, calculate, AIPredict
       formAway.last10bttsHome = null;
       formAway.last10bttsAway = null;
       formAway.allTeamResults = [];
+      formAway.goalTiming = null;
       formAway.resultsAll = [];
       formAway.resultsHome = [];
       formAway.resultsAway = [];

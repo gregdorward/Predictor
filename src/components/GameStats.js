@@ -99,6 +99,7 @@ import BetSlipFooter from "../components/Betslip";
 import { TeamImpactSummary } from "./MissingPlayersList";
 import { predictedScoresData } from "../logic/getScorePredictions";
 import { MatchTacticalComparison } from "../components/TacticalApproach";
+import { GoalTimingHeatShare } from "../components/GoalTimingHeatStrip";
 import SeasonPpgChart from "./SeasonPpgChart";
 import ShareableVisual from "./ShareableVisual";
 import { sanitizeImageFilename } from "../utils/captureElementImage";
@@ -4402,6 +4403,14 @@ function GameStats({ game, displayBool, stats, handleToggleTip, userTips }) {
                   shotSeries={shotSeries}
                   text="All Competition Games - Shots over time"
                 />
+                {(homeForm?.goalTiming?.hasData || awayForm?.goalTiming?.hasData) && (
+                  <GoalTimingHeatShare
+                    homeTeam={game.homeTeam}
+                    awayTeam={game.awayTeam}
+                    homeData={homeForm?.goalTiming}
+                    awayData={awayForm?.goalTiming}
+                  />
+                )}
                 {showXgDiffCharts && (
                   <>
                     <MultiTypeChart
