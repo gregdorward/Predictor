@@ -1,6 +1,7 @@
 import SiteHeader from "../../src/components/SiteHeader";
 import PageMeta from "../../src/components/PageMeta";
 import JsonLd from "../../src/components/JsonLd";
+import FixturesIndexList from "../../src/components/FixturesIndexList";
 import { SITE_URL } from "../../src/seo/pageMetaConfig";
 import { fetchUpcomingFixtureLinks } from "../../src/seo/serverFetch";
 
@@ -42,16 +43,7 @@ export default function FixturesIndexPage({ fixtures = [] }) {
           {fixtures.length === 0 ? (
             <p>No upcoming fixtures are listed right now. Check back soon or browse today&apos;s games on the home page.</p>
           ) : (
-            <ul className="FixturesIndex-list">
-              {fixtures.map((fixture) => (
-                <li key={fixture.href}>
-                  <a href={fixture.href}>
-                    {fixture.label}
-                    {fixture.league ? ` · ${fixture.league}` : ""}
-                  </a>
-                </li>
-              ))}
-            </ul>
+            <FixturesIndexList fixtures={fixtures} />
           )}
         </main>
       </SiteHeader>

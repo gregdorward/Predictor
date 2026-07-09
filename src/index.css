@@ -12797,6 +12797,30 @@ body.dark-mode .CompetitionsIndex-card {
   }
 }
 
+.FixturesIndex-search {
+  width: 100%;
+  max-width: 100%;
+  padding: 0.6em 0.85em;
+  font-size: 0.9375rem;
+  font-family: inherit;
+  border: 2px solid var(--third-background-color);
+  border-radius: 8px;
+  background: var(--background-color);
+  color: var(--text-color);
+  margin-top: 1.25rem;
+}
+
+.FixturesIndex-search:focus {
+  outline: none;
+  border-color: var(--primary-color);
+}
+
+.FixturesIndex-resultCount {
+  font-size: 0.85rem;
+  color: var(--text-color);
+  margin: 0.5em 0 0;
+}
+
 .FixturesIndex-list {
   display: flex;
   flex-direction: column;

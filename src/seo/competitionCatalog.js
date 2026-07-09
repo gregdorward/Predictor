@@ -103,6 +103,14 @@ export function getCompetitionById(id) {
   return byId.get(Number(id)) ?? null;
 }
 
+/** Resolve a display/searchable league name from raw FootyStats match data. */
+export function resolveFixtureLeagueName(fixture) {
+  if (!fixture) return "";
+  const direct = fixture.competition_name || fixture.league_name;
+  if (direct) return direct;
+  return getCompetitionById(fixture.competition_id)?.name || "";
+}
+
 export function getCompetitionBySlug(slug) {
   return bySlug.get(String(slug).toLowerCase()) ?? null;
 }

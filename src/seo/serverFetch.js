@@ -1,3 +1,4 @@
+import { resolveFixtureLeagueName } from "./competitionCatalog";
 import {
   buildFixtureUrl,
   FIXTURE_SITEMAP_WINDOW_DAYS,
@@ -73,6 +74,18 @@ export async function fetchUpcomingFixtureIds(days = 3) {
   return [...ids];
 }
 
+function formatFixtureDate(match) {
+  const dateUnix = match?.date_unix ?? match?.date;
+  if (dateUnix == null) return "";
+  const date = new Date(Number(dateUnix) * 1000);
+  if (Number.isNaN(date.getTime())) return "";
+  return date.toLocaleDateString("en-GB", {
+    weekday: "short",
+    day: "numeric",
+    month: "short",
+  });
+}
+
 function matchToFixtureLink(match) {
   if (!match?.id) return null;
   const home = match.home_name || match.homeTeam || "Home";
@@ -80,7 +93,10 @@ function matchToFixtureLink(match) {
   return {
     label: `${home} vs ${away}`,
     href: buildFixtureUrl(home, away, match.id),
-    league: match.competition_name || match.league_name || "",
+    league: resolveFixtureLeagueName(match),
+    homeTeam: home,
+    awayTeam: away,
+    date: formatFixtureDate(match),
   };
 }
 

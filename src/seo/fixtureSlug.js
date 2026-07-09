@@ -1,3 +1,4 @@
+import { resolveFixtureLeagueName } from "./competitionCatalog";
 import { OG_IMAGE } from "./pageMetaConfig";
 
 const FINISHED_FIXTURE_STATUSES = new Set([
@@ -61,7 +62,7 @@ export function buildFixtureUrl(homeTeam, awayTeam, matchId) {
 export function buildFixtureMeta(fixture) {
   const home = fixture?.home_name || fixture?.homeTeam || "Home";
   const away = fixture?.away_name || fixture?.awayTeam || "Away";
-  const league = fixture?.competition_name || fixture?.league_name || "";
+  const league = resolveFixtureLeagueName(fixture);
   const title = `${home} vs ${away} Stats & Prediction | Soccer Stats Hub`;
   const description = league
     ? `${home} vs ${away} in ${league}: head-to-head, form, BTTS and Over 2.5 stats with Soccer Stats Hub predictions.`
