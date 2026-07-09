@@ -2,7 +2,7 @@
 const GUEST_LANDING_CRITICAL_CSS = `
 :root {
   --header-height: 5em;
-  --content-max-width: 1400px;
+  --content-max-width: 1200px;
   --content-padding-x: 1.5em;
   --background-color: #ffffff;
   --third-background-color: rgb(225, 225, 225);

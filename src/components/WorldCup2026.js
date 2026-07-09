@@ -5,7 +5,6 @@ import WorldCup2026MatchesTab from "./WorldCup2026MatchesTab";
 import WorldCup2026NewsTab from "./WorldCup2026NewsTab";
 import previewData from "../data/worldcup2026/tournament-preview.json";
 import powerRankingsData from "../data/worldcup2026/power-rankings.json";
-import AmazonAffiliateAds from "./AmazonAffiliateAds";
 import JsonLd from "./JsonLd";
 import { buildWorldCupNewsJsonLd } from "../seo/worldCupSeo";
 
@@ -91,11 +90,6 @@ function OverviewTab({ data }) {
         ))}
       </div>
 
-      <AmazonAffiliateAds
-        placement="worldcup2026"
-        title="World Cup fan picks"
-        className="WC26__affiliates"
-      />
     </div>
   );
 }

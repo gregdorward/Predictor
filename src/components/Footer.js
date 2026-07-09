@@ -1,5 +1,4 @@
 import { SITE_NAV_LINKS } from "../seo/siteNavLinks";
-import AmazonAffiliateAds from "./AmazonAffiliateAds";
 import FooterCompetitionLinks from "./FooterCompetitionLinks";
 
 function Footer() {
@@ -7,13 +6,6 @@ function Footer() {
 
   return (
     <footer className="Footer">
-      <AmazonAffiliateAds
-        placement="footer"
-        title="Recommended"
-        limit={1}
-        compact
-        className="Footer-affiliates"
-      />
       <FooterCompetitionLinks />
       <nav className="Footer-nav" aria-label="Site navigation">
         <ul className="Footer-navList">

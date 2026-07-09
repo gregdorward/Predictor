@@ -9,9 +9,6 @@ import { allForm } from "../logic/getFixtures";
 import LeagueName from './LeagueName';
 import ShareShortlistButton from "./ShareShortlistButton";
 import GameStats from "./GameStats";
-import { renderFixtureListItem, useAffiliateRotationOffset } from "./AmazonAffiliateAds";
-import { getAmazonAffiliateProducts } from "../data/amazonAffiliates";
-import { useAuth } from "../logic/authProvider";
 import { getStoredTheme } from "../utils/theme";
 import { buildFixtureUrl } from "../seo/fixtureSlug";
 import {
@@ -576,7 +573,6 @@ const List = ({
   userTips,
   isProbability,
 }) => {
-  const { isPaidUser, loading, user } = useAuth();
   // ⭐️ showShortlist state is now received via props, not local state ⭐️
   const [selectedFixtures, setSelectedFixtures] = useState([]);
 
@@ -721,12 +717,6 @@ const List = ({
   const shareableLink = `${baseUrl}?shortlist=${fixtureIdsString}&view=shortlist`;
   const hasShortlistInUrl = new URLSearchParams(window.location.search).has('shortlist');
   const isShortlistVisible = selectedFixtures.length > 0 || hasShortlistInUrl;
-  const hideAffiliateAds = isPaidUser || (loading && user);
-  const showFixtureAds = !showShortlist && !hideAffiliateAds;
-  const affiliateRotationOffset = useAffiliateRotationOffset(
-    getAmazonAffiliateProducts("fixtures").length
-  );
-
   const renderSingleFixture = (fixture) => (
     <SingleFixture
       shortlist={shortlist}
@@ -751,14 +741,8 @@ const List = ({
              If !showShortlist is true, you render selectedFixtures? That's unusual.
              Assuming the non-mock version is correct: (showShortlist ? selectedFixtures : fixtures) 
           */}
-          {(showShortlist ? selectedFixtures : fixtures).flatMap((fixture, index) =>
-            renderFixtureListItem(
-              fixture,
-              index,
-              () => renderSingleFixture(fixture),
-              showFixtureAds,
-              affiliateRotationOffset
-            )
+          {(showShortlist ? selectedFixtures : fixtures).map((fixture) =>
+            renderSingleFixture(fixture)
           )}
         </ul>
       </div>
@@ -780,14 +764,8 @@ const List = ({
         <div className="InstructionalDiv">Generate predictions and click on any fixture for unparalleled insight</div>
         <ul className="FixtureList" id="FixtureList">
           {/* Renders shortlist when toggle is ON, full list (which is the source list) when OFF */}
-          {(showShortlist ? selectedFixtures : fixtures).flatMap((fixture, index) =>
-            renderFixtureListItem(
-              fixture,
-              index,
-              () => renderSingleFixture(fixture),
-              showFixtureAds,
-              affiliateRotationOffset
-            )
+          {(showShortlist ? selectedFixtures : fixtures).map((fixture) =>
+            renderSingleFixture(fixture)
           )}
         </ul>
       </div>
