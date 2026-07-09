@@ -187,7 +187,7 @@ export default function AmazonAffiliateAds({
         ))}
       </div>
       <p className="AmazonAffiliate__disclosure">
-        As an Amazon Associate, SoccerStatsHub earns from qualifying purchases.
+        As an Amazon Associate, Soccer Stats Hub earns from qualifying purchases.
       </p>
     </section>
   );

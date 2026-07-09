@@ -575,7 +575,7 @@ function TeamPage({ matchId }) {
 
         <div className="FixturePage-prediction">
           <span className="FixturePage-predictionLabel">
-            SoccerStatsHub Prediction
+            Soccer Stats Hub Prediction
           </span>
           <span className="FixturePage-predictionScore">
             {storedFixtureDetailsJson.homeGoals} -{" "}

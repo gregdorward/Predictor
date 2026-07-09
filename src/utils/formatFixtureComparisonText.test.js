@@ -90,7 +90,7 @@ describe("formatFixtureComparisonText markdown", () => {
       format: "markdown",
     });
 
-    expect(markdown).toContain("## Mexico vs South Africa - *SoccerStatsHub*");
+    expect(markdown).toContain("## Mexico vs South Africa - *Soccer Stats Hub*");
     expect(markdown).not.toContain("### **International World Cup**");
     expect(markdown).toContain("**SSH Prediction:** 1-0");
     expect(markdown).toContain(

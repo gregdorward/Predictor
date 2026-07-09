@@ -1,6 +1,6 @@
 function Header() {
   return (
-      <div className="HeaderContainer">SoccerStatsHub</div>
+      <div className="HeaderContainer">Soccer Stats Hub</div>
   );
 }
 

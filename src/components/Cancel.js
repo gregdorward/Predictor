@@ -8,7 +8,7 @@ export const CancelPage = () => {
       <h1>Payment Cancelled</h1>
       <p>
         <a href="/" className="PaymentReturn">
-          Return to SoccerStatsHub
+          Return to Soccer Stats Hub
         </a>
       </p>
       <Footer />

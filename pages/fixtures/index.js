@@ -11,7 +11,7 @@ const FIXTURES_JSON_LD = {
       "@type": "CollectionPage",
       "@id": `${SITE_URL}/fixtures/#webpage`,
       url: `${SITE_URL}/fixtures/`,
-      name: "Upcoming Fixtures | SoccerStatsHub",
+      name: "Upcoming Fixtures | Soccer Stats Hub",
       description:
         "Browse upcoming football fixtures with stats, predictions, BTTS and Over 2.5 analysis.",
       isPartOf: { "@id": `${SITE_URL}/#website` },
@@ -24,8 +24,8 @@ export default function FixturesIndexPage({ fixtures = [] }) {
   return (
     <>
       <PageMeta
-        title="Upcoming Fixtures | SoccerStatsHub"
-        description="Upcoming football fixtures with head-to-head stats, form, BTTS and Over 2.5 predictions on SoccerStatsHub."
+        title="Upcoming Fixtures | Soccer Stats Hub"
+        description="Upcoming football fixtures with head-to-head stats, form, BTTS and Over 2.5 predictions on Soccer Stats Hub."
         canonicalPath="/fixtures"
       />
       <JsonLd data={FIXTURES_JSON_LD} />

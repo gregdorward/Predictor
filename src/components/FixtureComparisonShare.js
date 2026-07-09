@@ -32,7 +32,7 @@ export default function FixtureComparisonShare({
     window.setTimeout(() => setStatus(""), 2500);
   };
 
-  const shareTitle = `${game.homeTeam} vs ${game.awayTeam} - SoccerStatsHub`;
+  const shareTitle = `${game.homeTeam} vs ${game.awayTeam} - Soccer Stats Hub`;
 
   const handleShare = async () => {
     const text = getFormattedText("text");

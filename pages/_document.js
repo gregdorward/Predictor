@@ -10,7 +10,7 @@ const JSON_LD = {
       "@type": "WebSite",
       "@id": "https://www.soccerstatshub.com/#website",
       url: "https://www.soccerstatshub.com/",
-      name: "SoccerStatsHub",
+      name: "Soccer Stats Hub",
       description:
         "Football stats, BTTS, Under 2.5, xG, form, correct score analysis and prediction tools.",
       inLanguage: "en-GB",
@@ -26,11 +26,11 @@ const JSON_LD = {
     {
       "@type": "Organization",
       "@id": "https://www.soccerstatshub.com/#organization",
-      name: "SoccerStatsHub",
+      name: "Soccer Stats Hub",
       url: "https://www.soccerstatshub.com/",
       logo: "https://www.soccerstatshub.com/images/NewLogo.png",
       description:
-        "SoccerStatsHub publishes football statistics, prediction tools, competition trends and transparent match research.",
+        "Soccer Stats Hub publishes football statistics, prediction tools, competition trends and transparent match research.",
       sameAs: ["https://www.soccerstatshub.com/about/"],
     },
   ],
@@ -180,7 +180,7 @@ export default class MyDocument extends Document {
           />
           <noscript>
             <p>
-              SoccerStatsHub - football stats, BTTS tips, Over 2.5 predictions,
+              Soccer Stats Hub - football stats, BTTS tips, Over 2.5 predictions,
               correct score analysis and daily multis for today&apos;s matches.
             </p>
             <p>You need to enable JavaScript to use the full interactive app.</p>

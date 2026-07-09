@@ -82,7 +82,7 @@ export default function CompetitionSeoShell({
           <h2>{name} stats FAQ</h2>
           <h3>What stats are available for {name}?</h3>
           <p>
-            SoccerStatsHub tracks league averages, BTTS rates, Over and Under 2.5
+            Soccer Stats Hub tracks league averages, BTTS rates, Over and Under 2.5
             trends, home advantage, standings, team rankings, player leaders and
             related fixture predictions where data is available.
           </p>

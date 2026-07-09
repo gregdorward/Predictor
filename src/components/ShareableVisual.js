@@ -13,7 +13,7 @@ import { SITE_URL } from "../seo/pageMetaConfig";
 export default function ShareableVisual({
   children,
   filename,
-  shareTitle = "SoccerStatsHub stats",
+  shareTitle = "Soccer Stats Hub stats",
   shareText = SITE_URL,
   className = "",
   captureClassName = "",
@@ -138,7 +138,7 @@ export default function ShareableVisual({
       >
         {children}
         <div className="ShareableVisual__brand" aria-hidden="true">
-          SoccerStatsHub · soccerstatshub.com
+          Soccer Stats Hub · soccerstatshub.com
         </div>
       </div>
 

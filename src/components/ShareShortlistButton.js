@@ -16,7 +16,7 @@ const ShareShortlistButton = ({ selectedFixtures }) => {
     const link = createShareLink();
     const shareData = {
       title: 'My shortlist',
-      text: 'Here is my shortlist of matches from SoccerStatsHub:',
+      text: 'Here is my shortlist of matches from Soccer Stats Hub:',
       url: link,
     };
 

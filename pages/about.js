@@ -11,16 +11,16 @@ const ABOUT_JSON_LD = {
       "@type": "AboutPage",
       "@id": `${SITE_URL}/about/#webpage`,
       url: `${SITE_URL}/about/`,
-      name: "About SoccerStatsHub",
+      name: "About Soccer Stats Hub",
       description:
-        "SoccerStatsHub delivers transparent football statistics, predictions and betting insights across 50+ competitions.",
+        "Soccer Stats Hub delivers transparent football statistics, predictions and betting insights across 50+ competitions.",
       isPartOf: { "@id": `${SITE_URL}/#website` },
       inLanguage: "en-GB",
     },
     {
       "@type": "Organization",
       "@id": `${SITE_URL}/#organization`,
-      name: "SoccerStatsHub",
+      name: "Soccer Stats Hub",
       url: SITE_URL,
     },
   ],
@@ -36,9 +36,9 @@ export default function AboutPage() {
           <a href="/" className="HomeLink">
             Home
           </a>
-          <h1>About SoccerStatsHub</h1>
+          <h1>About Soccer Stats Hub</h1>
           <p>
-            SoccerStatsHub is a football statistics and predictions platform built for fans and
+            Soccer Stats Hub is a football statistics and predictions platform built for fans and
             bettors who want more than fixture lists. We combine deep historical data, current
             form and transparent modelling to surface BTTS trends, Over 2.5 value, correct score
             probabilities and daily multis across more than 50 competitions.
@@ -78,7 +78,7 @@ export default function AboutPage() {
           </ul>
           <h2>Responsible use</h2>
           <p>
-            SoccerStatsHub is for users aged 18 and over in jurisdictions where sports analysis
+            Soccer Stats Hub is for users aged 18 and over in jurisdictions where sports analysis
             services are permitted. Our predictions are statistical models, not financial advice.
             Always gamble responsibly.
           </p>

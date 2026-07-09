@@ -28,7 +28,7 @@ test.describe('Fixture detail page', () => {
     await expect(page.locator('.FixturePage')).toBeVisible();
     await expect(page.locator('.FixturePage-headingTeam--home')).toContainText(homeTeamName);
     await expect(page.locator('.FixturePage-headingTeam--away')).toContainText(awayTeamName);
-    await expect(page.getByText('SoccerStatsHub Prediction')).toBeVisible();
+    await expect(page.getByText('Soccer Stats Hub Prediction')).toBeVisible();
     await expect(page.locator('.FixturePage-chartCard.ComparisonBarChart')).toBeVisible();
     await expect(page.getByRole('heading', { name: 'Season Stats' })).toBeVisible();
     await expect(page.getByRole('button', { name: 'Key Stats' }).first()).toBeVisible();

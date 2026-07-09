@@ -88,7 +88,7 @@ function AIInsights({ game, homeForm, awayForm }) {
       <div className="AIMatchPreview">{aiMatchPreview.matchPreview}</div>
       <h2>AI Prediction</h2>
       <div className="AIMatchPreview">
-        {aiMatchPreview.prediction} <i>(may not reflect the view of SoccerStatsHub)</i>
+        {aiMatchPreview.prediction} <i>(may not reflect the view of Soccer Stats Hub)</i>
       </div>
       <div className="AIContainer">
         <div className="HomeAIInsights">

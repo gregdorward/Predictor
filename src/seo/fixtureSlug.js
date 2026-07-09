@@ -62,10 +62,10 @@ export function buildFixtureMeta(fixture) {
   const home = fixture?.home_name || fixture?.homeTeam || "Home";
   const away = fixture?.away_name || fixture?.awayTeam || "Away";
   const league = fixture?.competition_name || fixture?.league_name || "";
-  const title = `${home} vs ${away} Stats & Prediction | SoccerStatsHub`;
+  const title = `${home} vs ${away} Stats & Prediction | Soccer Stats Hub`;
   const description = league
-    ? `${home} vs ${away} in ${league}: head-to-head, form, BTTS and Over 2.5 stats with SoccerStatsHub predictions.`
-    : `${home} vs ${away}: head-to-head, form, BTTS and Over 2.5 stats with SoccerStatsHub predictions.`;
+    ? `${home} vs ${away} in ${league}: head-to-head, form, BTTS and Over 2.5 stats with Soccer Stats Hub predictions.`
+    : `${home} vs ${away}: head-to-head, form, BTTS and Over 2.5 stats with Soccer Stats Hub predictions.`;
   return { title, description, home, away, league };
 }
 

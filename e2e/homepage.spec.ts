@@ -6,7 +6,7 @@ test.describe('Homepage', () => {
   });
 
   test('loads with correct title and welcome content', async ({ page }) => {
-    await expect(page).toHaveTitle(/SoccerStatsHub/);
+    await expect(page).toHaveTitle(/Soccer Stats Hub/);
     await expect(page.getByRole('heading', { name: /Deep Stats/i, level: 1 })).toBeVisible();
     await expect(page.getByRole('button', { name: 'Just show me the games' })).toBeVisible();
     await expect(page.getByRole('heading', { name: 'Turn football data into smarter picks.', level: 2 })).toBeVisible();

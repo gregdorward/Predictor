@@ -1,4 +1,4 @@
-# SoccerStatsHub - https://www.soccerstatshub.com
+# Soccer Stats Hub - https://www.soccerstatshub.com
 User-agent: *
 Disallow: /reset/
 Disallow: /success/

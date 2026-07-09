@@ -13,11 +13,11 @@ export function buildWorldCupNewsJsonLd() {
         datePublished: story.publishedDate,
         author: {
           "@type": "Organization",
-          name: "SoccerStatsHub",
+          name: "Soccer Stats Hub",
         },
         publisher: {
           "@type": "Organization",
-          name: "SoccerStatsHub",
+          name: "Soccer Stats Hub",
           logo: {
             "@type": "ImageObject",
             url: `${SITE_URL}/images/NewLogo.png`,

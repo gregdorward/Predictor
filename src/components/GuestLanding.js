@@ -100,7 +100,7 @@ const GuestLanding = ({ id = "guest-landing", showLogin = false }) => {
   }, [motionEnabled]);
 
   return (
-    <section className="GuestLanding" id={id} aria-label="Welcome to SoccerStatsHub">
+    <section className="GuestLanding" id={id} aria-label="Welcome to Soccer Stats Hub">
       <div className="GuestLanding-cards">
         <div className="GuestLanding-card GuestLanding-visual">
           <div className="GuestLanding-laptop">
@@ -108,7 +108,7 @@ const GuestLanding = ({ id = "guest-landing", showLogin = false }) => {
               <div className="GuestLanding-laptopScreen">
                 <Image
                   src="/images/landing-fixtures-laptop.png"
-                  alt="SoccerStatsHub fixture list on laptop showing odds, win probabilities, scores and team form"
+                  alt="Soccer Stats Hub fixture list on laptop showing odds, win probabilities, scores and team form"
                   className="GuestLanding-screenshot"
                   width={1024}
                   height={576}
@@ -137,7 +137,7 @@ const GuestLanding = ({ id = "guest-landing", showLogin = false }) => {
         <div className="GuestLanding-card GuestLanding-about">
           <h2 className="GuestLanding-aboutTitle">Turn football data into smarter picks.</h2>
           <p>
-            SoccerStatsHub gives you more than fixtures. Compare today&apos;s games with odds, win
+            Soccer Stats Hub gives you more than fixtures. Compare today&apos;s games with odds, win
             probabilities, predicted scores, recent form and key match trends, all in one place. Tap into
             any fixture for deeper stats, head-to-head records and AI-powered previews before you make your
             call.

@@ -8,9 +8,9 @@ const METHODOLOGY_JSON_LD = {
   "@type": "WebPage",
   "@id": `${SITE_URL}/methodology/#webpage`,
   url: `${SITE_URL}/methodology/`,
-  name: "SoccerStatsHub Methodology",
+  name: "Soccer Stats Hub Methodology",
   description:
-    "How SoccerStatsHub uses football data, form, xG, PPG, BTTS, Over/Under 2.5 and probability models to support match research.",
+    "How Soccer Stats Hub uses football data, form, xG, PPG, BTTS, Over/Under 2.5 and probability models to support match research.",
   isPartOf: { "@id": `${SITE_URL}/#website` },
   inLanguage: "en-GB",
 };
@@ -27,7 +27,7 @@ export default function MethodologyPage() {
           </a>
           <h1>Methodology</h1>
           <p>
-            SoccerStatsHub is built to make football prediction research more
+            Soccer Stats Hub is built to make football prediction research more
             transparent. The site combines league-level trends, team form,
             match odds, xG, PPG, goal markets and modelled probabilities so users
             can see why a fixture may be interesting.
@@ -63,7 +63,7 @@ export default function MethodologyPage() {
           </p>
           <h2>Responsible Use</h2>
           <p>
-            SoccerStatsHub is an analytical tool. Predictions are statistical
+            Soccer Stats Hub is an analytical tool. Predictions are statistical
             estimates and can be wrong. Users should follow local laws and gamble
             responsibly if they use football stats for betting research.
           </p>

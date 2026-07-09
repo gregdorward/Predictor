@@ -3571,7 +3571,7 @@ function GameStats({ game, displayBool, stats, handleToggleTip, userTips }) {
               <strong>To Be Carded:</strong> {aiMatchPreview.Guide.ToBeCarded}
             </li>
           </ul>
-          <i>(may not reflect the view of SoccerStatsHub)</i>
+          <i>(may not reflect the view of Soccer Stats Hub)</i>
         </div>
 
         {(aiMatchPreview?.homeTeam?.keyPlayerRoles?.length > 0 ||
@@ -4342,7 +4342,7 @@ function GameStats({ game, displayBool, stats, handleToggleTip, userTips }) {
                 <RadarChart
                   shareCapture
                   style={{ height: "auto" }}
-                  title="SoccerStatsHub Strength Ratings - All Competition Games"
+                  title="Soccer Stats Hub Strength Ratings - All Competition Games"
                   theme={localStorage.getItem('theme')}
                   max={1}
                   labels={[
@@ -4502,7 +4502,7 @@ function GameStats({ game, displayBool, stats, handleToggleTip, userTips }) {
                 </div>
                 <div className="Chart" id={`Chart${game.id}`} style={style}>
                   <RadarChart
-                    title="SoccerStatsHub Strength Ratings - Last 5 Games Only"
+                    title="Soccer Stats Hub Strength Ratings - Last 5 Games Only"
                     max={1}
                     labels={[
                       "Attack rating",
@@ -4628,7 +4628,7 @@ function GameStats({ game, displayBool, stats, handleToggleTip, userTips }) {
                 <div className="Chart" id={`Chart${game.id}`} style={style}>
                   <RadarChart
                     theme={localStorage.getItem('theme')}
-                    title="SoccerStatsHub Strength Ratings - Home/Away Games Only"
+                    title="Soccer Stats Hub Strength Ratings - Home/Away Games Only"
                     max={1}
                     labels={[
                       "Attack rating",

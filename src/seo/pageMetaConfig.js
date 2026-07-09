@@ -1,6 +1,6 @@
 export const SITE_URL = "https://www.soccerstatshub.com";
 export const OG_IMAGE = `${SITE_URL}/images/social-share-card.jpg`;
-export const SITE_NAME = "SoccerStatsHub";
+export const SITE_NAME = "Soccer Stats Hub";
 
 export const DEFAULT_TITLE =
   "Soccer Stats Hub | BTTS, Under 2.5, xG & Football Predictions";
@@ -28,7 +28,7 @@ export const PAGE_META = {
       "Low-scoring football leagues ranked by average goals and Under 2.5 rate. Compare defensive competitions and under-goals trends.",
   },
   "/teamshigh": {
-    title: "Highest Scoring Teams | SoccerStatsHub",
+    title: "Highest Scoring Teams | Soccer Stats Hub",
     description:
       "Teams ranked by goals scored this season. Compare attacking form and find high-scoring sides across major leagues.",
   },
@@ -53,49 +53,59 @@ export const PAGE_META = {
       "Teams with lower Both Teams To Score rates for BTTS No, clean sheet and low-scoring match research across major football leagues.",
   },
   "/worldcup2026": {
-    title: "World Cup 2026 Preview | SoccerStatsHub",
+    title: "World Cup 2026 Preview | Soccer Stats Hub",
     description:
       "FIFA World Cup 2026 tournament preview and news: predicted winner, Golden Boot picks, group predictions, all 48 team guides, key match predictions and latest tournament headlines.",
   },
   "/seasonpreviews": {
-    title: "Season Previews | SoccerStatsHub",
+    title: "Season Previews | Soccer Stats Hub",
     description:
       "AI-generated season previews for the Premier League, La Liga, Serie A, Championship and more.",
   },
   "/about": {
-    title: "About SoccerStatsHub | Football Stats & Predictions",
+    title: "About Soccer Stats Hub | Football Stats & Predictions",
     description:
-      "Learn how SoccerStatsHub delivers transparent football statistics, BTTS insights, Over 2.5 analysis and data-driven match predictions across 50+ competitions.",
+      "Learn how Soccer Stats Hub delivers transparent football statistics, BTTS insights, Over 2.5 analysis and data-driven match predictions across 50+ competitions.",
   },
   "/methodology": {
-    title: "Football Prediction Methodology | SoccerStatsHub",
+    title: "Football Prediction Methodology | Soccer Stats Hub",
     description:
-      "How SoccerStatsHub uses form, xG, PPG, BTTS, Over/Under 2.5, odds and probability models for football stats and predictions.",
+      "How Soccer Stats Hub uses form, xG, PPG, BTTS, Over/Under 2.5, odds and probability models for football stats and predictions.",
   },
   "/faq": {
-    title: "FAQ | SoccerStatsHub",
+    title: "FAQ | Soccer Stats Hub",
     description:
-      "Frequently asked questions about SoccerStatsHub football stats, predictions, subscriptions and how our betting insights work.",
+      "Frequently asked questions about Soccer Stats Hub football stats, predictions, subscriptions and how our betting insights work.",
+  },
+  "/privacy": {
+    title: "Privacy Policy | Soccer Stats Hub",
+    description:
+      "How Soccer Stats Hub collects, uses and protects your personal information, including account, payment and usage data.",
+  },
+  "/terms": {
+    title: "Terms and Conditions | Soccer Stats Hub",
+    description:
+      "Soccer Stats Hub subscription terms, refunds, cancellations, promotions and legal restrictions.",
   },
   "/reset": {
-    title: "Reset Password | SoccerStatsHub",
+    title: "Reset Password | Soccer Stats Hub",
     description:
-      "Request a password reset email for your SoccerStatsHub account and regain access to football stats, predictions and premium features.",
+      "Request a password reset email for your Soccer Stats Hub account and regain access to football stats, predictions and premium features.",
     noIndex: true,
   },
   "/cancelsubscription": {
-    title: "Cancel Subscription | SoccerStatsHub",
-    description: "Manage or cancel your SoccerStatsHub subscription.",
+    title: "Cancel Subscription | Soccer Stats Hub",
+    description: "Manage or cancel your Soccer Stats Hub subscription.",
     noIndex: true,
   },
   "/success": {
-    title: "Subscription Confirmed | SoccerStatsHub",
-    description: "Your SoccerStatsHub premium subscription is active. Return to the app for full stats and predictions.",
+    title: "Subscription Confirmed | Soccer Stats Hub",
+    description: "Your Soccer Stats Hub premium subscription is active. Return to the app for full stats and predictions.",
     noIndex: true,
   },
   "/cancel": {
-    title: "Checkout Cancelled | SoccerStatsHub",
-    description: "Your SoccerStatsHub checkout was cancelled. Return to the homepage to continue browsing football stats and tips.",
+    title: "Checkout Cancelled | Soccer Stats Hub",
+    description: "Your Soccer Stats Hub checkout was cancelled. Return to the homepage to continue browsing football stats and tips.",
     noIndex: true,
   },
 };

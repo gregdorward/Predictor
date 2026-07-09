@@ -152,8 +152,8 @@ export function resolveCompetitionParam(param) {
 export function buildCompetitionMeta(data, catalog) {
   const name = data?.english_name || data?.name || catalog?.name || "Competition";
   return {
-    title: `${name} Betting Stats | SoccerStatsHub`,
-    description: `BTTS, Over 2.5, goals, corners and card stats for ${name}. Data-driven league betting insights on SoccerStatsHub.`,
+    title: `${name} Betting Stats | Soccer Stats Hub`,
+    description: `BTTS, Over 2.5, goals, corners and card stats for ${name}. Data-driven league betting insights on Soccer Stats Hub.`,
   };
 }
 
@@ -185,7 +185,7 @@ export function buildCompetitionJsonLd(data, canonicalUrl, catalog) {
             name: `What stats are available for ${name}?`,
             acceptedAnswer: {
               "@type": "Answer",
-              text: `SoccerStatsHub tracks ${name} league averages, BTTS rates, Over and Under 2.5 trends, home advantage, standings, team rankings, player leaders and related fixture predictions where data is available.`,
+              text: `Soccer Stats Hub tracks ${name} league averages, BTTS rates, Over and Under 2.5 trends, home advantage, standings, team rankings, player leaders and related fixture predictions where data is available.`,
             },
           },
           {

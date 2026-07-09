@@ -89,7 +89,7 @@ export const FilterPresets = () => {
         <option value="long-shots">Medium to high odds win picks</option>
         <option value="underdogs">Underdog picks</option>
         <option value="clear_favourites">Clear favourites</option>
-        <option value="ssh">SoccerStatsHub recommended</option>
+        <option value="ssh">Soccer Stats Hub recommended</option>
       </select>
     </div>
   );

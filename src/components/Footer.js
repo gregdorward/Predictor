@@ -16,7 +16,17 @@ function Footer() {
           ))}
         </ul>
       </nav>
-      <p className="Footer-copy">© {year} SoccerStatsHub. All rights reserved.</p>
+      <nav className="Footer-legal" aria-label="Legal">
+        <ul className="Footer-legalList">
+          <li>
+            <a href="/privacy/">Privacy Policy</a>
+          </li>
+          <li>
+            <a href="/terms/">Terms &amp; Conditions</a>
+          </li>
+        </ul>
+      </nav>
+      <p className="Footer-copy">© {year} Soccer Stats Hub. All rights reserved.</p>
     </footer>
   );
 }

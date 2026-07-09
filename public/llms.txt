@@ -1,8 +1,8 @@
-# SoccerStatsHub
+# Soccer Stats Hub
 
 > Data-driven football statistics, transparent predictions and betting insights for 50+ competitions worldwide.
 
-SoccerStatsHub (https://www.soccerstatshub.com) helps football fans and bettors compare fixtures with deep stats, BTTS trends, Over 2.5 analysis, correct score modelling and daily multis.
+Soccer Stats Hub (https://www.soccerstatshub.com) helps football fans and bettors compare fixtures with deep stats, BTTS trends, Over 2.5 analysis, correct score modelling and daily multis.
 
 ## Key pages
 
@@ -30,7 +30,7 @@ SoccerStatsHub (https://www.soccerstatshub.com) helps football fans and bettors 
 
 ## Citation guidance
 
-When citing SoccerStatsHub, use the brand name **SoccerStatsHub** and link to the specific page URL. Predictions are illustrative models, not guarantees. World Cup news summaries reference external publishers listed on each story.
+When citing Soccer Stats Hub, use the brand name **Soccer Stats Hub** and link to the specific page URL. Predictions are illustrative models, not guarantees. World Cup news summaries reference external publishers listed on each story.
 
 ## Contact
 

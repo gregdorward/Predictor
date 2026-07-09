@@ -5,9 +5,9 @@ import { SITE_URL } from "../src/seo/pageMetaConfig";
 
 const FAQ_ITEMS = [
   {
-    question: "What is SoccerStatsHub?",
+    question: "What is Soccer Stats Hub?",
     answer:
-      "SoccerStatsHub is a football statistics and predictions website covering 50+ competitions. We provide BTTS insights, Over 2.5 analysis, league betting stats, match comparisons and daily multis backed by transparent data.",
+      "Soccer Stats Hub is a football statistics and predictions website covering 50+ competitions. We provide BTTS insights, Over 2.5 analysis, league betting stats, match comparisons and daily multis backed by transparent data.",
   },
   {
     question: "How are predictions generated?",
@@ -20,7 +20,7 @@ const FAQ_ITEMS = [
       "We cover the Premier League, La Liga, Serie A, Bundesliga, Ligue 1, Champions League, Europa League, MLS, Championship and dozens more domestic and international competitions.",
   },
   {
-    question: "Is SoccerStatsHub free to use?",
+    question: "Is Soccer Stats Hub free to use?",
     answer:
       "Core stats and fixture browsing are free. Premium features such as advanced filters and additional markets are available via subscription.",
   },

@@ -1,7 +1,7 @@
 const PrivacyPolicy = () => {
   return (
     <div className="ContactText">
-      <h2 className="text-2xl font-bold mb-4">SoccerStatsHub Policies</h2>
+      <h2 className="text-2xl font-bold mb-4">Soccer Stats Hub Policies</h2>
 
       <section className="mb-6">
         <h2 className="text-xl font-semibold">Customer Support</h2>
