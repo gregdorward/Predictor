@@ -5,8 +5,19 @@
 // Node serverless response limit. The client calls /api/ss/<origin-path>
 // instead of the origin directly, letting Vercel's CDN cache global traffic.
 // Only GET requests to allowlisted, non-personalised endpoints are proxied.
+//
+// scheduledEvents responses are tagged for targeted CDN invalidation. Purge
+// edge + origin (S3) cache for a date with:
+//   curl "https://www.soccerstatshub.com/api/ss/scheduledEvents/YYYY-MM-DD/?refresh=true" \
+//     -H "x-api-key: $CACHE_REFRESH_KEY"
+
+import { invalidateByTag } from "@vercel/functions";
 
 export const config = { runtime: "edge" };
+
+const SCHEDULED_EVENTS_TAG = "scheduled-events";
+const CACHE_REFRESH_KEY =
+  process.env.CACHE_REFRESH_KEY || process.env.API_KEY || "";
 
 const ORIGIN =
   process.env.EXPRESS_SERVER || process.env.NEXT_PUBLIC_EXPRESS_SERVER;
@@ -23,7 +34,7 @@ const CACHE_RULES = {
   form: { sMaxAge: 600, swr: 86400 },
   formTeam: { sMaxAge: 2400, swr: 86400 },
   leagueFixtures: { sMaxAge: 600, swr: 86400 },
-  scheduledEvents: { sMaxAge: 1200, swr: 86400 },
+  scheduledEvents: { sMaxAge: 300, swr: 3600 },
   "league-averages": { sMaxAge: 100, swr: 86400 },
   "match-snapshot": { sMaxAge: 21600, swr: 86400 },
   referee: { sMaxAge: 86400, swr: 604800 },
@@ -41,6 +52,17 @@ function jsonError(body, status, extraHeaders) {
       ...extraHeaders,
     },
   });
+}
+
+function scheduledEventsCacheTags(date) {
+  return date
+    ? [`${SCHEDULED_EVENTS_TAG}-${date}`, SCHEDULED_EVENTS_TAG]
+    : [SCHEDULED_EVENTS_TAG];
+}
+
+function isAuthorizedCacheRefresh(req) {
+  if (!CACHE_REFRESH_KEY) return false;
+  return req.headers.get("x-api-key") === CACHE_REFRESH_KEY;
 }
 
 export default async function handler(req) {
@@ -67,6 +89,17 @@ export default async function handler(req) {
       ? ["match", "snapshot", ...segments.slice(1)].join("/")
       : segments.join("/");
   const origin = ORIGIN.endsWith("/") ? ORIGIN : `${ORIGIN}/`;
+  const refresh = url.searchParams.get("refresh") === "true";
+  const scheduledEventsDate =
+    head === "scheduledEvents" ? segments[1] || "" : "";
+
+  if (head === "scheduledEvents" && refresh) {
+    if (!isAuthorizedCacheRefresh(req)) {
+      return jsonError({ error: "Unauthorized" }, 401);
+    }
+    await invalidateByTag(scheduledEventsCacheTags(scheduledEventsDate));
+  }
+
   const target = `${origin}${targetPath}${url.search}`;
 
   try {
@@ -90,13 +123,26 @@ export default async function handler(req) {
       });
     }
 
+    const responseHeaders = {
+      "Content-Type": contentType,
+    };
+
+    if (head === "scheduledEvents" && refresh) {
+      responseHeaders["Cache-Control"] = "no-store";
+    } else {
+      responseHeaders["Cache-Control"] =
+        `public, s-maxage=${rule.sMaxAge}, stale-while-revalidate=${rule.swr}`;
+      if (head === "scheduledEvents") {
+        responseHeaders["Vercel-Cache-Tag"] = scheduledEventsCacheTags(
+          scheduledEventsDate
+        ).join(",");
+      }
+    }
+
     // Stream the body through with CDN cache headers; nothing is buffered.
     return new Response(upstream.body, {
       status: 200,
-      headers: {
-        "Cache-Control": `public, s-maxage=${rule.sMaxAge}, stale-while-revalidate=${rule.swr}`,
-        "Content-Type": contentType,
-      },
+      headers: responseHeaders,
     });
   } catch (err) {
     return jsonError(
