@@ -11,7 +11,7 @@
 //   curl "https://www.soccerstatshub.com/api/ss/scheduledEvents/YYYY-MM-DD/?refresh=true" \
 //     -H "x-api-key: $CACHE_REFRESH_KEY"
 
-import { invalidateByTag } from "@vercel/functions";
+import { dangerouslyDeleteByTag } from "@vercel/functions";
 
 export const config = { runtime: "edge" };
 
@@ -97,7 +97,9 @@ export default async function handler(req) {
     if (!isAuthorizedCacheRefresh(req)) {
       return jsonError({ error: "Unauthorized" }, 401);
     }
-    await invalidateByTag(scheduledEventsCacheTags(scheduledEventsDate));
+    await dangerouslyDeleteByTag(scheduledEventsCacheTags(scheduledEventsDate), {
+      revalidationDeadlineSeconds: 0,
+    });
   }
 
   const target = `${origin}${targetPath}${url.search}`;
