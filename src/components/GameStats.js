@@ -22,6 +22,7 @@ import {
   buildShotStackSeries,
   ShotAreaChartsShare,
 } from "./Chart";
+import AttackDefenceMetricTrendTables from "./AttackDefenceMetricTrendTables";
 import MultiTypeChart from "./MultitypeChart"; // Adjust the path if necessary
 import FixtureComparisonShare from "./FixtureComparisonShare";
 import { Slider } from "../components/CarouselXGChart";
@@ -4402,6 +4403,15 @@ function GameStats({ game, displayBool, stats, handleToggleTip, userTips }) {
                   team2={game.awayTeam}
                   shotSeries={shotSeries}
                   text="All Competition Games - Shots over time"
+                />
+                <AttackDefenceMetricTrendTables
+                  team1={game.homeTeam}
+                  team2={game.awayTeam}
+                  homeBadge={game.homeBadge}
+                  awayBadge={game.awayBadge}
+                  homeResults={allResultsHome}
+                  awayResults={allResultsAway}
+                  text="All Competition Games - Attack & Defence trends"
                 />
                 {(homeForm?.goalTiming?.hasData || awayForm?.goalTiming?.hasData) && (
                   <GoalTimingHeatShare
