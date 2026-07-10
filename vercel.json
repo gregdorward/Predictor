@@ -1,0 +1,8 @@
+{
+  "crons": [
+    {
+      "path": "/api/indexnow-ping",
+      "schedule": "0 6 * * *"
+    }
+  ]
+}
