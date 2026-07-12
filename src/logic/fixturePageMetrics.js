@@ -159,6 +159,10 @@ function buildContextRows(form, match, side) {
     ? match?.homeTeamHomePosition
     : match?.awayTeamAwayPosition;
   const lastFiveForm = isHome ? match?.lastFiveFormHome : match?.lastFiveFormAway;
+  const context = form?.contextMetrics;
+  const rest = context?.rest;
+  const sos = context?.strengthOfSchedule;
+  const variance = context?.scoringVariance;
 
   return [
     {
@@ -181,10 +185,44 @@ function buildContextRows(form, match, side) {
       label: "Goal difference",
       value: form?.goalDifference ?? null,
     },
+    {
+      label: "Days since last match",
+      value: rest?.daysSinceLastMatch ?? null,
+    },
+    {
+      label: "Rest / congestion",
+      value:
+        rest?.restLabel && rest?.congestionLabel
+          ? `${rest.restLabel} · ${rest.congestionLabel}`
+          : rest?.restLabel ?? null,
+    },
+    {
+      label: "Matches in last 7 days",
+      value: rest?.matchesInLast7Days ?? null,
+    },
+    {
+      label: "Recent schedule",
+      value: sos?.scheduleLabel ?? null,
+    },
+    {
+      label: "Opp PPG last 5 / all",
+      value:
+        sos?.avOppositionPPGLast5 != null && sos?.avOppositionPPGAll != null
+          ? `${sos.avOppositionPPGLast5} / ${sos.avOppositionPPGAll}`
+          : null,
+    },
+    {
+      label: "Scoring profile",
+      value: variance?.varianceLabel ?? null,
+    },
   ];
 }
 
 function buildTendenciesRows(form) {
+  const overUnder = form?.contextMetrics?.overUnder;
+  const gameState = form?.contextMetrics?.gameState;
+  const variance = form?.contextMetrics?.scoringVariance;
+
   return [
     {
       label: "BTTS % (last 10)",
@@ -201,6 +239,38 @@ function buildTendenciesRows(form) {
     {
       label: "BTTS % (away venue)",
       value: formatPercent(form?.bttsAwayPercentage),
+    },
+    {
+      label: "O2.5 % (last 5)",
+      value: formatPercent(overUnder?.over25Last5Percentage),
+    },
+    {
+      label: "O2.5 % (last 10)",
+      value: formatPercent(overUnder?.over25Last10Percentage),
+    },
+    {
+      label: "U2.5 % (last 5)",
+      value: formatPercent(overUnder?.under25Last5Percentage),
+    },
+    {
+      label: "Scored first %",
+      value: gameState?.hasData
+        ? formatPercent(gameState.scoredFirstPercentage)
+        : null,
+    },
+    {
+      label: "Late goals scored %",
+      value: gameState?.hasData
+        ? formatPercent(gameState.lateGoalsScoredPercentage)
+        : null,
+    },
+    {
+      label: "One-goal games %",
+      value: formatPercent(variance?.oneGoalGamePercentage),
+    },
+    {
+      label: "Draw % (season sample)",
+      value: formatPercent(variance?.drawPercentage),
     },
   ];
 }

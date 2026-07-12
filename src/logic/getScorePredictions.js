@@ -45,6 +45,7 @@ import {
   getTeamFixturesBeforeMatch,
 } from "../utils/leagueResultsAccess";
 import { buildGoalTimingHeatmap } from "../utils/goalTimingHeatmap";
+import { buildFormContextMetrics } from "../utils/formContextMetrics";
 import { selectedTipType } from "../components/PredictionTypeRadio";
 import { InsightsPanel } from "../components/Insights"
 import { X } from "lucide-react";
@@ -1134,10 +1135,17 @@ async function getPastLeagueResults(team, game, hOrA, form) {
       teamsAwayResults
     );
 
-
     form.allTeamResults = allTeamResults.sort((b, a) => a.dateRaw - b.dateRaw);
     allTeamResults.sort((b, a) => a.dateRaw - b.dateRaw);
     form.allTeamResultsLast6 = form.allTeamResults.slice(0, 6);
+
+    // Contextual only: rest, rolling O/U, timing, SOS, variance. Not used by lambdas/tips.
+    form.contextMetrics = buildFormContextMetrics({
+      allTeamResults: form.allTeamResults,
+      homeFixtures: teamsHomeResults,
+      awayFixtures: teamsAwayResults,
+      fixtureUnix: game.date,
+    });
 
     const points10 = allTeamResults.map((res) => res.points).slice(0, 10);
     const pointsSum10 = points10.reduce((a, b) => a + b, 0);
@@ -3043,6 +3051,16 @@ function hydrateFormFromApi(teamRoot, form, venue, teamName, match) {
   form.tacticalIdentity = createEmptyTacticalIdentity();
   form.tacticalRecords = createEmptyTacticalRecords();
 
+  form.contextMetrics =
+    Array.isArray(form.allTeamResults) && form.allTeamResults.length
+      ? buildFormContextMetrics({
+          allTeamResults: form.allTeamResults,
+          homeFixtures: [],
+          awayFixtures: [],
+          fixtureUnix: match?.date,
+        })
+      : null;
+
   return form;
 }
 
@@ -3236,6 +3254,7 @@ export async function calculateScore(match, index, divider, calculate, AIPredict
       formHome.last10bttsAway = null;
       formHome.allTeamResults = [];
       formHome.goalTiming = null;
+      formHome.contextMetrics = null;
       formHome.resultsAll = [];
       formHome.resultsHome = [];
       formHome.resultsAway = [];
@@ -3267,6 +3286,7 @@ export async function calculateScore(match, index, divider, calculate, AIPredict
       formAway.last10bttsAway = null;
       formAway.allTeamResults = [];
       formAway.goalTiming = null;
+      formAway.contextMetrics = null;
       formAway.resultsAll = [];
       formAway.resultsHome = [];
       formAway.resultsAway = [];

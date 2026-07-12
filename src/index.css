@@ -4891,6 +4891,101 @@ canvas.Pie {
   text-align: center;
 }
 
+.FormContextCompare {
+  width: 100%;
+  text-align: left;
+  font-family: "Open Sans", sans-serif;
+  font-size: 1em;
+  color: var(--text-color);
+}
+
+.FormContextCompare__content {
+  padding: 1em;
+}
+
+.FormContextCompare__note {
+  margin: 0 0 1em;
+  font-size: 0.9em;
+  line-height: 1.45;
+  color: var(--text-color);
+  opacity: 0.8;
+}
+
+.FormContextCompare__grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.75em;
+}
+
+@media (min-width: 700px) {
+  .FormContextCompare__grid {
+    grid-template-columns: 1fr 1fr;
+    gap: 0;
+    column-gap: 2em;
+  }
+
+  .FormContextCompare__col + .FormContextCompare__col {
+    border-left: 1px solid var(--third-background-color);
+    padding-left: 2em;
+  }
+}
+
+.FormContextCompare__col {
+  min-width: 0;
+}
+
+.FormContextCompare__team {
+  margin: 0 0 0.5em;
+  font-size: 1.1em;
+  font-weight: 700;
+  line-height: 1.3;
+}
+
+.FormContextCompare__empty {
+  margin: 0.75em 0 0;
+  font-size: 1em;
+  opacity: 0.8;
+}
+
+.FormContextCompare__list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.FormContextCompare__item {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.2em;
+  padding: 0.75em 0;
+  border-bottom: 1px solid var(--third-background-color);
+}
+
+.FormContextCompare__item:last-child {
+  border-bottom: none;
+  padding-bottom: 0;
+}
+
+.FormContextCompare__label {
+  font-size: 0.9em;
+  font-weight: 600;
+  color: var(--text-color);
+  opacity: 0.75;
+  line-height: 1.3;
+  text-transform: none;
+  letter-spacing: normal;
+}
+
+.FormContextCompare__value {
+  font-size: 1em;
+  font-weight: 700;
+  line-height: 1.35;
+  color: var(--text-color);
+  text-align: left;
+  word-break: break-word;
+}
+
 .flex-childOne {
   flex-direction: column;
   text-align: right;

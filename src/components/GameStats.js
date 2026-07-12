@@ -23,6 +23,7 @@ import {
   ShotAreaChartsShare,
 } from "./Chart";
 import AttackDefenceMetricTrendTables from "./AttackDefenceMetricTrendTables";
+import FormContextCompare from "./FormContextCompare";
 import MultiTypeChart from "./MultitypeChart"; // Adjust the path if necessary
 import FixtureComparisonShare from "./FixtureComparisonShare";
 import { Slider } from "../components/CarouselXGChart";
@@ -4009,6 +4010,14 @@ function GameStats({ game, displayBool, stats, handleToggleTip, userTips }) {
               }
             />
           )}
+
+          <FormContextCompare
+            homeTeam={game.homeTeam}
+            awayTeam={game.awayTeam}
+            homeMetrics={homeForm?.contextMetrics}
+            awayMetrics={awayForm?.contextMetrics}
+            getCollapsableProps={getCollapsableProps}
+          />
 
           {loadingStreaks ? (
             <div className="loading-spinner"></div>
