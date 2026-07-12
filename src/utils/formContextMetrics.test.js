@@ -5,6 +5,7 @@ import {
   buildRollingOverUnder,
   buildScoringVariance,
   buildStrengthOfSchedule,
+  formatMatchContextForAI,
 } from "./formContextMetrics";
 
 const DAY = 86400;
@@ -153,5 +154,22 @@ describe("formContextMetrics", () => {
     expect(metrics.strengthOfSchedule.avOppositionPPGAll).not.toBeNull();
     expect(metrics.scoringVariance.drawPercentage).toBe(20);
     expect(metrics.gameState.hasData).toBe(true);
+  });
+
+  test("formatMatchContextForAI returns interpretable payload fields", () => {
+    const metrics = buildFormContextMetrics({
+      allTeamResults: sampleResults,
+      homeFixtures: [],
+      awayFixtures: [],
+      fixtureUnix,
+    });
+    const formatted = formatMatchContextForAI(metrics);
+
+    expect(formatted).not.toBeNull();
+    expect(formatted.restAndCongestion.daysSinceLastMatch).toBe(3);
+    expect(formatted.goalMarketContext.over25PercentLast5).toBe("40%");
+    expect(formatted.strengthOfSchedule.oppositionPpgLast5).toBeTruthy();
+    expect(Array.isArray(formatted.interpretationNotes)).toBe(true);
+    expect(formatMatchContextForAI(null)).toBeNull();
   });
 });

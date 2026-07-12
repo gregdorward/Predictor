@@ -205,7 +205,7 @@ function buildContextRows(form, match, side) {
       value: sos?.scheduleLabel ?? null,
     },
     {
-      label: "Opp PPG last 5 / all",
+      label: "Last 5 Opposition PPG Avg / all",
       value:
         sos?.avOppositionPPGLast5 != null && sos?.avOppositionPPGAll != null
           ? `${sos.avOppositionPPGLast5} / ${sos.avOppositionPPGAll}`

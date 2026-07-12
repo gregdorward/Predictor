@@ -366,3 +366,133 @@ export function buildFormContextMetrics({
     scoringVariance,
   };
 }
+
+function pctLabel(value) {
+  return value == null ? null : `${value}%`;
+}
+
+/**
+ * Flatten context metrics into a clear, AI-friendly object for match previews.
+ * Interpretation notes help the model use the signal without inventing meaning.
+ */
+export function formatMatchContextForAI(metrics) {
+  if (!metrics) return null;
+
+  const rest = metrics.rest || {};
+  const overUnder = metrics.overUnder || {};
+  const sos = metrics.strengthOfSchedule || {};
+  const gameState = metrics.gameState || {};
+  const variance = metrics.scoringVariance || {};
+
+  const interpretationNotes = [];
+
+  if (rest.restLabel === "Short rest" || rest.congestionLabel === "Congested") {
+    interpretationNotes.push(
+      "Limited recovery window and/or fixture congestion may affect intensity and late-game performance."
+    );
+  } else if (rest.restLabel === "Long layoff") {
+    interpretationNotes.push(
+      "Long layoff can mean freshness but also possible rust or rotation risk."
+    );
+  }
+
+  if (
+    overUnder.over25Last5Percentage != null &&
+    overUnder.over25Last5Percentage >= 60
+  ) {
+    interpretationNotes.push(
+      "Recent matches have frequently gone over 2.5 goals."
+    );
+  } else if (
+    overUnder.over25Last5Percentage != null &&
+    overUnder.over25Last5Percentage <= 35
+  ) {
+    interpretationNotes.push(
+      "Recent matches have often stayed under 2.5 goals."
+    );
+  }
+
+  if (sos.softScheduleFlag) {
+    interpretationNotes.push(
+      "Recent form may be inflated by a softer run of opponents (lower opposition PPG than season average)."
+    );
+  } else if (sos.toughScheduleFlag) {
+    interpretationNotes.push(
+      "Recent schedule has been tougher than average, so form should be weighted carefully."
+    );
+  }
+
+  if (gameState.hasData && gameState.scoredFirstPercentage >= 65) {
+    interpretationNotes.push(
+      "Strong tendency to score first when goal timings are available."
+    );
+  }
+  if (gameState.hasData && gameState.lateGoalsScoredPercentage >= 40) {
+    interpretationNotes.push(
+      "Meaningful share of goals scored after the 75th minute."
+    );
+  }
+
+  if (variance.varianceLabel === "High variance") {
+    interpretationNotes.push(
+      "High scoring variance: outcomes can swing between tight and open games."
+    );
+  } else if (variance.varianceLabel === "Tight / low variance") {
+    interpretationNotes.push(
+      "Low scoring variance with many one-goal margins: expect tighter contest patterns."
+    );
+  }
+
+  return {
+    source: "Derived from recent competition fixtures only (not cup/other comps unless included in that league sample).",
+    restAndCongestion: {
+      daysSinceLastMatch: rest.daysSinceLastMatch,
+      restLabel: rest.restLabel,
+      matchesInLast7Days: rest.matchesInLast7Days,
+      matchesInLast14Days: rest.matchesInLast14Days,
+      congestionLabel: rest.congestionLabel,
+    },
+    goalMarketContext: {
+      over25PercentLast5: pctLabel(overUnder.over25Last5Percentage),
+      over25PercentLast10: pctLabel(overUnder.over25Last10Percentage),
+      under25PercentLast5: pctLabel(overUnder.under25Last5Percentage),
+      over35PercentLast5: pctLabel(overUnder.over35Last5Percentage),
+      avgGoalsPerGameLast5: overUnder.avgGoalsPerGameLast5,
+      avgGoalsPerGameLast10: overUnder.avgGoalsPerGameLast10,
+    },
+    strengthOfSchedule: {
+      scheduleLabel: sos.scheduleLabel,
+      oppositionPpgLast5: sos.avOppositionPPGLast5,
+      oppositionPpgAll: sos.avOppositionPPGAll,
+      last5VsAllDelta: sos.last5VsAllDelta,
+      softScheduleFlag: Boolean(sos.softScheduleFlag),
+      toughScheduleFlag: Boolean(sos.toughScheduleFlag),
+      pointsPerGameVsStrongLast5: sos.pointsVsStrongLast5,
+      pointsPerGameVsWeakLast5: sos.pointsVsWeakLast5,
+    },
+    gameStateTiming: gameState.hasData
+      ? {
+          scoredFirstPercent: pctLabel(gameState.scoredFirstPercentage),
+          concededFirstPercent: pctLabel(gameState.concededFirstPercentage),
+          lateGoalsScoredPercent: pctLabel(gameState.lateGoalsScoredPercentage),
+          lateGoalsConcededPercent: pctLabel(
+            gameState.lateGoalsConcededPercentage
+          ),
+          pointsFromLosingPositions: gameState.pointsFromLosingPositions,
+          trailedMatches: gameState.trailedMatches,
+          matchesWithTimings: gameState.matchesWithTimings,
+        }
+      : {
+          available: false,
+          note: "Insufficient goal-timing data for scored-first / late-goal rates.",
+        },
+    scoringProfile: {
+      varianceLabel: variance.varianceLabel,
+      goalsPerGameStdDev: variance.goalsPerGameStdDev,
+      gamesDecidedByOneGoalPercent: pctLabel(variance.oneGoalGamePercentage),
+      drawPercent: pctLabel(variance.drawPercentage),
+      blowoutPercent: pctLabel(variance.blowoutPercentage),
+    },
+    interpretationNotes,
+  };
+}

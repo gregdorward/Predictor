@@ -24,6 +24,7 @@ import {
 } from "./Chart";
 import AttackDefenceMetricTrendTables from "./AttackDefenceMetricTrendTables";
 import FormContextCompare from "./FormContextCompare";
+import { formatMatchContextForAI } from "../utils/formContextMetrics";
 import MultiTypeChart from "./MultitypeChart"; // Adjust the path if necessary
 import FixtureComparisonShare from "./FixtureComparisonShare";
 import { Slider } from "../components/CarouselXGChart";
@@ -3450,6 +3451,7 @@ function GameStats({ game, displayBool, stats, handleToggleTip, userTips }) {
             predictedLineup: homeLineupList,
             homeAttackingStats: homeForm?.attackingMetrics,
             homeDefensiveStats: homeForm?.defensiveMetrics,
+            matchContext: formatMatchContextForAI(homeForm?.contextMetrics),
           },
           awayTeam: {
             awayTeamName: game.awayTeam,
@@ -3463,6 +3465,7 @@ function GameStats({ game, displayBool, stats, handleToggleTip, userTips }) {
             predictedLineup: awayLineupList,
             awayAttackingStats: awayForm?.attackingMetrics,
             awayDefensiveStats: awayForm?.defensiveMetrics,
+            matchContext: formatMatchContextForAI(awayForm?.contextMetrics),
           },
         };
 

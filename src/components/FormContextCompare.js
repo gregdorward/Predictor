@@ -37,7 +37,7 @@ function ContextColumn({ teamName, metrics }) {
 
   const items = [
     {
-      label: "Rest",
+      label: "Rest days",
       value:
         rest?.daysSinceLastMatch != null
           ? `${rest.daysSinceLastMatch}d · ${rest.restLabel}`
@@ -60,7 +60,7 @@ function ContextColumn({ teamName, metrics }) {
       value: sos?.scheduleLabel || "—",
     },
     {
-      label: "Opp PPG L5 / all",
+      label: "Last 5 Opposition PPG Avg / all",
       value: `${formatNum(sos?.avOppositionPPGLast5)} / ${formatNum(
         sos?.avOppositionPPGAll
       )}`,
@@ -80,7 +80,7 @@ function ContextColumn({ teamName, metrics }) {
     {
       label: "Scoring profile",
       value: variance?.varianceLabel
-        ? `${variance.varianceLabel} · games decided by 1 goal ${formatPct(
+        ? `${variance.varianceLabel} · games decided by 1 goal - ${formatPct(
             variance.oneGoalGamePercentage
           )}`
         : "—",
@@ -122,7 +122,7 @@ export default function FormContextCompare({
         element={
           <div className="FormContextCompare__content">
             <p className="FormContextCompare__note">
-              Match context - derived from recent fixtures
+              Match context - derived from recent competition fixtures
             </p>
             <div className="FormContextCompare__grid">
               <ContextColumn teamName={homeTeam} metrics={homeMetrics} />
