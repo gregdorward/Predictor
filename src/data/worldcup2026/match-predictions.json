@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "lastUpdated": "2026-07-08T15:32:00.000Z",
+  "lastUpdated": "2026-07-12T19:30:00.000Z",
   "matches": [
     {
       "id": "round32-england-vs-dr-congo",
@@ -143,48 +143,54 @@
       "source": "static"
     },
     {
-      "id": "semi-france-vs-england",
+      "id": "semi-france-vs-spain",
       "phase": "semi",
       "roundLabel": "Semi-final",
       "date": "2026-07-14",
       "home": "France",
-      "away": "England",
+      "away": "Spain",
+      "venue": "Dallas Stadium",
       "prediction": {
         "predictedScore": "2-1",
-        "homeWin": 52,
-        "draw": 24,
-        "awayWin": 24
+        "homeWin": 48,
+        "draw": 26,
+        "awayWin": 26
       },
+      "preview": "The tournament's most anticipated fixture reunites France and Spain for a third semi-final in two years after La Roja beat Les Bleus at Euro 2024 and in the 2025 Nations League. Kylian Mbappe leads the Golden Boot race with eight goals and should have Aurelien Tchouameni back in midfield, while Lamine Yamal has warned France to fear Spain's possession game despite scoring only once so far. Luis de la Fuente's side have conceded just one goal in six matches but needed Mikel Merino late winners against Portugal and Belgium, and William Saliba and Dayot Upamecano were managed in training before Bastille Day in Arlington.",
       "source": "static"
     },
     {
-      "id": "semi-spain-vs-argentina",
+      "id": "semi-england-vs-argentina",
       "phase": "semi",
       "roundLabel": "Semi-final",
       "date": "2026-07-15",
-      "home": "Spain",
+      "home": "England",
       "away": "Argentina",
+      "venue": "Atlanta Stadium",
       "prediction": {
-        "predictedScore": "1-1",
-        "homeWin": 42,
-        "draw": 28,
-        "awayWin": 30
+        "predictedScore": "2-1",
+        "homeWin": 44,
+        "draw": 27,
+        "awayWin": 29
       },
+      "preview": "England and Argentina meet in a World Cup semi-final for the first time since 1990, with Lionel Messi set for his first competitive match against the Three Lions and Jude Bellingham arriving on six tournament goals after another extra-time rescue in Miami. Thomas Tuchel has scaled back training as Declan Rice recovers from illness, Jarell Quansah remains suspended, and both sides played 120 minutes in the quarter-finals. Julian Alvarez's extra-time screamer ended Argentina's Swiss test, but the holders have now flirted with elimination in three straight knockouts, giving England hope if Harry Kane and Bellingham can exploit spaces out wide.",
       "source": "static"
     },
     {
-      "id": "final-france-vs-spain",
+      "id": "final-france-vs-england",
       "phase": "final",
       "roundLabel": "Final",
       "date": "2026-07-19",
       "home": "France",
-      "away": "Spain",
+      "away": "England",
+      "venue": "New York New Jersey Stadium",
       "prediction": {
         "predictedScore": "2-1",
-        "homeWin": 46,
-        "draw": 27,
+        "homeWin": 47,
+        "draw": 26,
         "awayWin": 27
       },
+      "preview": "Projected final if France beat Spain and England beat Argentina in the semi-finals. Les Bleus would arrive as slight favourites after Mbappe's Golden Boot charge and a cleaner knockout path, while England would need another Jude Bellingham rescue act with Declan Rice building back fitness and Jarell Quansah still suspended.",
       "source": "static"
     }
   ]

@@ -31,9 +31,13 @@ function PredictionBar({ homeWin, draw, awayWin }) {
 export default function WorldCup2026MatchCard({ match }) {
   const prediction = match.prediction;
   const badgeLabel = match.roundLabel || (match.group ? `Group ${match.group}` : match.phase);
+  const featured = Boolean(match.preview) || match.phase === "semi";
 
   return (
-    <div className="WC26__matchCard" data-match-id={match.id}>
+    <div
+      className={`WC26__matchCard${featured ? " WC26__matchCard--featured" : ""}`}
+      data-match-id={match.id}
+    >
       <div className="WC26__matchMeta">
         <span className="WC26__badge">{badgeLabel}</span>
         {match.date && (
@@ -64,6 +68,7 @@ export default function WorldCup2026MatchCard({ match }) {
           </div>
         </>
       )}
+      {match.preview && <p className="WC26__matchPreview">{match.preview}</p>}
     </div>
   );
 }

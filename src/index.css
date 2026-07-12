@@ -6803,14 +6803,14 @@ body.dark-mode .MetricTrendTables-sectionHeader {
 .MetricTrendTables-teamName {
   display: flex;
   align-items: center;
-  justify-content: center;
+  justify-content: flex-start;
   gap: 0.5rem;
   margin: 0 0 0.5rem;
   font-family: "Open Sans", sans-serif;
   font-size: 12px;
   font-weight: 600;
   color: var(--text-color);
-  text-align: center;
+  text-align: left;
 }
 
 .MetricTrendTables-badge {
@@ -11445,6 +11445,21 @@ strong.WC26__inlineHeader {
   border: 1px solid var(--third-background-color);
 }
 
+.WC26__matchCard--featured {
+  padding: 1.15em;
+  border-width: 2px;
+  border-color: var(--primary-color);
+}
+
+.WC26__matchPreview {
+  margin: 0.85em 0 0;
+  padding-top: 0.85em;
+  border-top: 1px solid var(--third-background-color);
+  color: var(--text-color);
+  font-size: 0.875rem;
+  line-height: 1.55;
+}
+
 .WC26__matchMeta {
   display: flex;
   flex-wrap: wrap;
@@ -11606,6 +11621,14 @@ strong.WC26__inlineHeader {
 
   .WC26__matchCard {
     padding: 1.1em;
+  }
+
+  .WC26__matchCard--featured {
+    padding: 1.35em;
+  }
+
+  .WC26__matchPreview {
+    font-size: 0.9375rem;
   }
 
   .WC26__search {

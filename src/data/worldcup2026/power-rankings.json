@@ -1,70 +1,70 @@
 {
-  "updatedAt": "2026-07-08T15:32:00.000Z",
-  "methodology": "Rankings reflect group-stage and knockout results through 8 July 2026, weighted by results quality, goal difference, squad availability and path difficulty. Title win chances are illustrative estimates aligned with Soccer Stats Hub modelling.",
+  "updatedAt": "2026-07-12T19:30:00.000Z",
+  "methodology": "Rankings reflect group-stage and knockout results through 12 July 2026, weighted by results quality, goal difference, squad availability and path difficulty. Title win chances are illustrative estimates aligned with Soccer Stats Hub modelling.",
   "rankings": [
     {
       "rank": 1,
       "team": "France",
       "flag": "🇫🇷",
-      "record": "QF · 1-0 vs Paraguay",
-      "winChance": "17%",
-      "summary": "France remain the benchmark after Kylian Mbappe's penalty beat Paraguay in Philadelphia, giving him seven goals at this tournament. Didier Deschamps still has the clearest quarter-final path on one side of the bracket, but Aurelien Tchouameni's thigh problem and Morocco's unbeaten run make the Foxborough tie less straightforward than the ranking gap suggests."
+      "record": "SF · 2-0 vs Morocco",
+      "winChance": "22%",
+      "summary": "France remain the benchmark after Kylian Mbappe's eighth goal of the tournament and Ousmane Dembele's fifth settled a 2-0 quarter-final win over Morocco in Foxborough. Didier Deschamps should have Aurelien Tchouameni back for the Dallas semi-final against Spain, though William Saliba and Dayot Upamecano were managed in training, and Les Bleus are targeting a third consecutive World Cup final."
     },
     {
       "rank": 2,
       "team": "Spain",
       "flag": "🇪🇸",
-      "record": "QF · 1-0 vs Portugal",
-      "winChance": "16%",
-      "summary": "Spain moved above England after Mikel Merino's stoppage-time winner settled a grinding Iberian derby in Dallas, keeping Luis de la Fuente's side on course for a fifth straight clean sheet. Belgium arrive in Los Angeles without Amadou Onana, giving Spain the strongest remaining path on the western side of the bracket before a potential semi-final with Argentina."
+      "record": "SF · 2-1 vs Belgium",
+      "winChance": "19%",
+      "summary": "Spain reached their first World Cup semi-final since 2010 when Mikel Merino scored an 88th-minute winner against Belgium, conceding their first goal of the tournament to Charles De Ketelaere. Lamine Yamal has beaten France in their last two tournament meetings and Luis de la Fuente's side arrive in Dallas unbeaten in 37 competitive matches, but La Roja have needed late goals in both knockout ties."
     },
     {
       "rank": 3,
       "team": "Argentina",
       "flag": "🇦🇷",
-      "record": "QF · 3-2 vs Egypt",
-      "winChance": "14%",
-      "summary": "Argentina needed three goals in 13 minutes to survive Egypt in Atlanta, with Lionel Messi's eighth of the tournament moving him back ahead in the Golden Boot race. Lionel Scaloni's holders have now flirted with elimination twice in the knockouts, but their quarter-final with Switzerland offers a chance to prove the defence can hold without another rescue act."
+      "record": "SF · 3-1 vs Switzerland (AET)",
+      "winChance": "17%",
+      "summary": "Argentina needed Julian Alvarez's 112th-minute screamer and a Lautaro Martinez stoppage-time third to beat 10-man Switzerland 3-1 in Kansas City, their second extra-time knockout win of the tournament. Lionel Messi's eight goals keep him level with Mbappe in the Golden Boot race, but Lionel Scaloni's holders have now flirted with elimination in three straight knockouts before Wednesday's Atlanta semi-final with England."
     },
     {
       "rank": 4,
       "team": "England",
       "flag": "🏴󠁧󠁢󠁥󠁮󠁧󠁿",
-      "record": "QF · 3-2 vs Mexico",
-      "winChance": "13%",
-      "summary": "England became the first team to beat Mexico at the Azteca, with Jude Bellingham's quickfire double and Harry Kane's penalty surviving a red card for Jarell Quansah. Thomas Tuchel's rearguard action in Mexico City lifts the Three Lions into the top tier, but the right-back crisis and a Miami quarter-final against Erling Haaland keep them below France and Spain for now."
+      "record": "SF · 2-1 vs Norway (AET)",
+      "winChance": "16%",
+      "summary": "England reached their first World Cup semi-final since 2018 as Jude Bellingham scored twice in extra time to beat Norway 2-1 in Miami, though Thomas Tuchel said the performance was sloppy and lucky. Declan Rice is recovering from illness, Jarell Quansah remains suspended, and the Three Lions face Argentina in Atlanta with both quarter-finalists having played 120 minutes in the Florida heat."
     },
     {
       "rank": 5,
       "team": "Norway",
       "flag": "🇳🇴",
-      "record": "QF · 2-1 vs Brazil",
-      "winChance": "11%",
-      "summary": "Norway are into their first World Cup quarter-final after Erling Haaland scored twice in the last 11 minutes to dump Brazil out in New Jersey. Stale Solbakken's side still give up chances, but Haaland's seven goals, Orjan Nyland's penalty save and Julian Ryerson's return make them genuine semi-final contenders before the England tie in Miami."
+      "record": "Eliminated · QF vs England",
+      "winChance": "0%",
+      "summary": "Norway's first World Cup quarter-final since 1998 ended in Miami when Jude Bellingham equalised in first-half stoppage time and punished Orjan Nyland's spilled save in extra time. Erling Haaland was subdued and substituted in the second period of extra time, closing a run that had included a last-16 brace to eliminate Brazil."
     },
     {
       "rank": 6,
       "team": "Belgium",
       "flag": "🇧🇪",
-      "record": "QF · 4-1 vs USA",
-      "winChance": "8%",
-      "summary": "Belgium produced their best performance of the tournament in Seattle, with Charles De Ketelaere scoring twice in a 4-1 win that ended the United States' run as the last co-host standing. Amadou Onana's ACL rupture removes a key midfield anchor before Friday's Los Angeles quarter-final with Spain, tempering the uplift from Romelu Lukaku's record-breaking substitute goals."
+      "record": "Eliminated · QF vs Spain",
+      "winChance": "0%",
+      "summary": "Belgium matched Spain for long periods in Los Angeles and became the first team to score against La Roja when Charles De Ketelaere headed in, only for Mikel Merino to convert a rebound in the 88th minute. Rudi Garcia's side leave after their best tournament performance ended one late goal short of a first semi-final since 1986."
     },
     {
       "rank": 7,
       "team": "Morocco",
       "flag": "🇲🇦",
-      "record": "QF · 3-0 vs Canada",
-      "winChance": "8%",
-      "summary": "Morocco remain the biggest threat to France after beating co-hosts Canada 3-0, with Azzedine Ounahi scoring twice and Soufiane Rahimi adding the third after Ismael Saibari's early injury. The Atlas Lions are unbeaten in 34 matches, but Saibari's fitness and a possible Chadi Riad absence weaken the attack before Foxborough."
+      "record": "Eliminated · QF vs France",
+      "winChance": "0%",
+      "summary": "Morocco lost 2-0 to France in Foxborough despite Yassine Bounou saving Kylian Mbappe's first-half penalty, with Mohamed Ouahbi's striker-less lineup failing to threaten Les Bleus. The Atlas Lions exit at the same stage as 2022, when they also lost 2-0 to France in a World Cup semi-final."
     },
     {
       "rank": 8,
       "team": "Switzerland",
       "flag": "🇨🇭",
-      "record": "QF · 0-0 vs Colombia (pens 4-3)",
-      "winChance": "5%",
-      "summary": "Switzerland kept a fifth clean sheet of the tournament and beat Colombia on penalties in Vancouver despite missing Johan Manzambi, Michel Aebischer and Luca Jaquez. Gregor Kobel's save from Cucho Hernandez and Ruben Vargas's decisive spot kick send Murat Yakin's side into a Kansas City quarter-final with Argentina, their first last-eight appearance since 1954."
+      "record": "Eliminated · QF vs Argentina (AET)",
+      "winChance": "0%",
+      "summary": "Switzerland matched their best World Cup run since 1954 but fell 3-1 to Argentina in extra time after Breel Embolo's controversial second yellow for simulation. Dan Ndoye had equalised before the red card and Gregor Kobel kept Argentina at bay for nearly 50 minutes with 10 men until Julian Alvarez's long-range winner."
     },
     {
       "rank": 9,
