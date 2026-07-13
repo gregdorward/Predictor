@@ -212,6 +212,20 @@ function buildContextRows(form, match, side) {
           : null,
     },
     {
+      label: "PPG vs top half",
+      value:
+        sos?.ppgVsTopHalf != null
+          ? `${sos.ppgVsTopHalf} (${sos.matchesVsTopHalf ?? 0} games)`
+          : null,
+    },
+    {
+      label: "PPG vs bottom half",
+      value:
+        sos?.ppgVsBottomHalf != null
+          ? `${sos.ppgVsBottomHalf} (${sos.matchesVsBottomHalf ?? 0} games)`
+          : null,
+    },
+    {
       label: "Scoring profile",
       value: variance?.varianceLabel ?? null,
     },
@@ -265,8 +279,36 @@ function buildTendenciesRows(form) {
         : null,
     },
     {
+      label: "1H / 2H goals scored %",
+      value: gameState?.hasData
+        ? `${formatPercent(gameState.firstHalfGoalsScoredPercentage)} / ${formatPercent(
+            gameState.secondHalfGoalsScoredPercentage
+          )}`
+        : null,
+    },
+    {
+      label: "Points from losing positions",
+      value: gameState?.hasData
+        ? `${gameState.pointsFromLosingPositions ?? 0} pts · ${
+            gameState.ppgFromLosingPositions ?? "—"
+          } PPG (${gameState.trailedMatches ?? 0} trails)`
+        : null,
+    },
+    {
+      label: "Points from winning positions",
+      value: gameState?.hasData
+        ? `${gameState.pointsFromWinningPositions ?? 0} pts · ${
+            gameState.ppgFromWinningPositions ?? "—"
+          } PPG (${gameState.ledMatches ?? 0} leads)`
+        : null,
+    },
+    {
       label: "One-goal games %",
       value: formatPercent(variance?.oneGoalGamePercentage),
+    },
+    {
+      label: "Blowout rate % (margin 3+ either way)",
+      value: formatPercent(variance?.blowoutPercentage),
     },
     {
       label: "Draw % (season sample)",

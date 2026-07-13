@@ -72,7 +72,7 @@ describe("formContextMetrics", () => {
     expect(overUnder.avgGoalsPerGameLast5).toBe(2.2);
   });
 
-  test("builds scored-first and late-goal rates from timings", () => {
+  test("builds scored-first, late-goal and half shares from timings", () => {
     const gameState = buildGameStateTiming(
       [
         {
@@ -103,13 +103,29 @@ describe("formContextMetrics", () => {
     expect(gameState.hasData).toBe(true);
     expect(gameState.scoredFirstPercentage).toBe(67);
     expect(gameState.lateGoalsScored).toBe(2);
+    // scored minutes: 12, 80, 91, 30 → 1H: 12+30 = 2, 2H: 80+91 = 2 → 50/50
+    expect(gameState.firstHalfGoalsScoredPercentage).toBe(50);
+    expect(gameState.secondHalfGoalsScoredPercentage).toBe(50);
+    // fixture 2: trailed after 8', finished 1-1 → 1 pt from losing position
+    expect(gameState.trailedMatches).toBe(1);
+    expect(gameState.pointsFromLosingPositions).toBe(1);
+    expect(gameState.ppgFromLosingPositions).toBe(1);
+    // fixtures 1 and 3 led; fixture 1 won (3), fixture 3 won (3) → 6 pts from 2 leads
+    expect(gameState.ledMatches).toBe(2);
+    expect(gameState.pointsFromWinningPositions).toBe(6);
+    expect(gameState.ppgFromWinningPositions).toBe(3);
   });
 
-  test("flags softer recent schedules via opposition PPG", () => {
+  test("flags softer recent schedules and top/bottom-half form splits", () => {
     const sos = buildStrengthOfSchedule(sampleResults);
     expect(sos.avOppositionPPGLast5).toBeCloseTo(1.4, 1);
     expect(sos.scheduleLabel).toBeTruthy();
     expect(sos.avOppositionPPGAll).toBeCloseTo(1.4, 1);
+    // median opp PPG of [1.1,1.0,1.2,1.8,1.9] = 1.2
+    expect(sos.topHalfOppPpgThreshold).toBe(1.2);
+    expect(sos.ppgVsTopHalf).not.toBeNull();
+    expect(sos.ppgVsBottomHalf).not.toBeNull();
+    expect(sos.matchesVsTopHalf + sos.matchesVsBottomHalf).toBe(5);
   });
 
   test("labels scoring variance from totals and margins", () => {

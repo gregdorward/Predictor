@@ -148,8 +148,14 @@ export function buildGameStateTiming(homeFixtures = [], awayFixtures = []) {
   let lateGoalsConceded = 0;
   let totalGoalsScored = 0;
   let totalGoalsConceded = 0;
+  let firstHalfGoalsScored = 0;
+  let secondHalfGoalsScored = 0;
+  let firstHalfGoalsConceded = 0;
+  let secondHalfGoalsConceded = 0;
   let pointsFromLosingPositions = 0;
   let trailedMatches = 0;
+  let pointsFromWinningPositions = 0;
+  let ledMatches = 0;
 
   const processFixture = (fixture, isHome) => {
     if (!fixtureHasUsableTimings(fixture)) return;
@@ -174,6 +180,10 @@ export function buildGameStateTiming(homeFixtures = [], awayFixtures = []) {
 
     totalGoalsScored += ownMinutes.length;
     totalGoalsConceded += oppMinutes.length;
+    firstHalfGoalsScored += ownMinutes.filter((minute) => minute <= 45).length;
+    secondHalfGoalsScored += ownMinutes.filter((minute) => minute > 45).length;
+    firstHalfGoalsConceded += oppMinutes.filter((minute) => minute <= 45).length;
+    secondHalfGoalsConceded += oppMinutes.filter((minute) => minute > 45).length;
     lateGoalsScored += ownMinutes.filter((minute) => minute >= LATE_GOAL_MINUTE)
       .length;
     lateGoalsConceded += oppMinutes.filter(
@@ -191,10 +201,11 @@ export function buildGameStateTiming(homeFixtures = [], awayFixtures = []) {
       decidedFirstGoal += 1;
     }
 
-    // Approximate "trailed then took points" from ordered goal events.
+    // Approximate led/trailed state from ordered goal events, then final points.
     let ownGoals = 0;
     let oppGoals = 0;
     let trailed = false;
+    let led = false;
     const events = [
       ...ownMinutes.map((minute) => ({ minute, side: "own" })),
       ...oppMinutes.map((minute) => ({ minute, side: "opp" })),
@@ -204,14 +215,21 @@ export function buildGameStateTiming(homeFixtures = [], awayFixtures = []) {
       if (event.side === "own") ownGoals += 1;
       else oppGoals += 1;
       if (oppGoals > ownGoals) trailed = true;
+      if (ownGoals > oppGoals) led = true;
     }
+
+    const scored = isHome ? fixture.homeGoalCount : fixture.awayGoalCount;
+    const conceded = isHome ? fixture.awayGoalCount : fixture.homeGoalCount;
+    const matchPoints =
+      scored > conceded ? 3 : scored === conceded ? 1 : 0;
 
     if (trailed) {
       trailedMatches += 1;
-      const scored = isHome ? fixture.homeGoalCount : fixture.awayGoalCount;
-      const conceded = isHome ? fixture.awayGoalCount : fixture.homeGoalCount;
-      if (scored > conceded) pointsFromLosingPositions += 3;
-      else if (scored === conceded) pointsFromLosingPositions += 1;
+      pointsFromLosingPositions += matchPoints;
+    }
+    if (led) {
+      ledMatches += 1;
+      pointsFromWinningPositions += matchPoints;
     }
   };
 
@@ -225,11 +243,49 @@ export function buildGameStateTiming(homeFixtures = [], awayFixtures = []) {
     concededFirstPercentage: pct(concededFirst, decidedFirstGoal),
     lateGoalsScoredPercentage: pct(lateGoalsScored, totalGoalsScored),
     lateGoalsConcededPercentage: pct(lateGoalsConceded, totalGoalsConceded),
+    firstHalfGoalsScoredPercentage: pct(firstHalfGoalsScored, totalGoalsScored),
+    secondHalfGoalsScoredPercentage: pct(
+      secondHalfGoalsScored,
+      totalGoalsScored
+    ),
+    firstHalfGoalsConcededPercentage: pct(
+      firstHalfGoalsConceded,
+      totalGoalsConceded
+    ),
+    secondHalfGoalsConcededPercentage: pct(
+      secondHalfGoalsConceded,
+      totalGoalsConceded
+    ),
+    firstHalfGoalsScored,
+    secondHalfGoalsScored,
     pointsFromLosingPositions,
     trailedMatches,
+    ppgFromLosingPositions: trailedMatches
+      ? round(pointsFromLosingPositions / trailedMatches, 2)
+      : null,
+    pointsFromWinningPositions,
+    ledMatches,
+    ppgFromWinningPositions: ledMatches
+      ? round(pointsFromWinningPositions / ledMatches, 2)
+      : null,
     lateGoalsScored,
     lateGoalsConceded,
   };
+}
+
+function median(values = []) {
+  if (!values.length) return null;
+  const sorted = [...values].sort((a, b) => a - b);
+  const mid = Math.floor(sorted.length / 2);
+  if (sorted.length % 2 === 0) {
+    return (sorted[mid - 1] + sorted[mid]) / 2;
+  }
+  return sorted[mid];
+}
+
+function averagePoints(results = []) {
+  if (!results.length) return null;
+  return round(average(results.map((result) => Number(result.points) || 0)), 2);
 }
 
 /**
@@ -251,6 +307,11 @@ export function buildStrengthOfSchedule(allTeamResults = []) {
       pointsVsStrongLast5: null,
       pointsVsWeakLast5: null,
       strongOpponentThreshold: null,
+      ppgVsTopHalf: null,
+      ppgVsBottomHalf: null,
+      matchesVsTopHalf: null,
+      matchesVsBottomHalf: null,
+      topHalfOppPpgThreshold: null,
       scheduleLabel: null,
     };
   }
@@ -273,6 +334,15 @@ export function buildStrengthOfSchedule(allTeamResults = []) {
     (result) => Number(result.oppositionPPG) <= weakThreshold
   );
 
+  // Split the season sample at median opponent PPG ≈ top-half / bottom-half.
+  const topHalfThreshold = median(allOpp);
+  const vsTopHalf = results.filter(
+    (result) => Number(result.oppositionPPG) >= topHalfThreshold
+  );
+  const vsBottomHalf = results.filter(
+    (result) => Number(result.oppositionPPG) < topHalfThreshold
+  );
+
   const softScheduleFlag = delta != null && delta <= -SOFT_SOS_THRESHOLD;
   const toughScheduleFlag = delta != null && delta >= SOFT_SOS_THRESHOLD;
 
@@ -287,13 +357,14 @@ export function buildStrengthOfSchedule(allTeamResults = []) {
     last5VsAllDelta: round(delta, 2),
     softScheduleFlag,
     toughScheduleFlag,
-    pointsVsStrongLast5: vsStrong.length
-      ? round(average(vsStrong.map((result) => Number(result.points) || 0)), 2)
-      : null,
-    pointsVsWeakLast5: vsWeak.length
-      ? round(average(vsWeak.map((result) => Number(result.points) || 0)), 2)
-      : null,
+    pointsVsStrongLast5: averagePoints(vsStrong),
+    pointsVsWeakLast5: averagePoints(vsWeak),
     strongOpponentThreshold: round(strongThreshold, 2),
+    ppgVsTopHalf: averagePoints(vsTopHalf),
+    ppgVsBottomHalf: averagePoints(vsBottomHalf),
+    matchesVsTopHalf: vsTopHalf.length,
+    matchesVsBottomHalf: vsBottomHalf.length,
+    topHalfOppPpgThreshold: round(topHalfThreshold, 2),
     scheduleLabel,
   };
 }
@@ -422,6 +493,16 @@ export function formatMatchContextForAI(metrics) {
     );
   }
 
+  if (
+    sos.ppgVsTopHalf != null &&
+    sos.ppgVsBottomHalf != null &&
+    sos.ppgVsBottomHalf - sos.ppgVsTopHalf >= 0.6
+  ) {
+    interpretationNotes.push(
+      "Points per game are much stronger vs bottom-half opponents than vs top-half, so hot form may be schedule-driven."
+    );
+  }
+
   if (gameState.hasData && gameState.scoredFirstPercentage >= 65) {
     interpretationNotes.push(
       "Strong tendency to score first when goal timings are available."
@@ -430,6 +511,33 @@ export function formatMatchContextForAI(metrics) {
   if (gameState.hasData && gameState.lateGoalsScoredPercentage >= 40) {
     interpretationNotes.push(
       "Meaningful share of goals scored after the 75th minute."
+    );
+  }
+  if (
+    gameState.hasData &&
+    gameState.secondHalfGoalsScoredPercentage != null &&
+    gameState.secondHalfGoalsScoredPercentage >= 60
+  ) {
+    interpretationNotes.push(
+      "Goals scored skew toward the second half based on goal timings."
+    );
+  }
+  if (
+    gameState.hasData &&
+    gameState.pointsFromLosingPositions > 0 &&
+    gameState.trailedMatches >= 2
+  ) {
+    interpretationNotes.push(
+      `Has taken ${gameState.pointsFromLosingPositions} points from ${gameState.trailedMatches} matches after trailing.`
+    );
+  }
+  if (
+    gameState.hasData &&
+    gameState.ledMatches >= 2 &&
+    gameState.pointsFromWinningPositions < gameState.ledMatches * 2
+  ) {
+    interpretationNotes.push(
+      `Has taken only ${gameState.pointsFromWinningPositions} points from ${gameState.ledMatches} matches after leading, suggesting points dropped from winning positions.`
     );
   }
 
@@ -469,6 +577,11 @@ export function formatMatchContextForAI(metrics) {
       toughScheduleFlag: Boolean(sos.toughScheduleFlag),
       pointsPerGameVsStrongLast5: sos.pointsVsStrongLast5,
       pointsPerGameVsWeakLast5: sos.pointsVsWeakLast5,
+      ppgVsTopHalf: sos.ppgVsTopHalf,
+      ppgVsBottomHalf: sos.ppgVsBottomHalf,
+      matchesVsTopHalf: sos.matchesVsTopHalf,
+      matchesVsBottomHalf: sos.matchesVsBottomHalf,
+      topHalfOppPpgThreshold: sos.topHalfOppPpgThreshold,
     },
     gameStateTiming: gameState.hasData
       ? {
@@ -478,8 +591,18 @@ export function formatMatchContextForAI(metrics) {
           lateGoalsConcededPercent: pctLabel(
             gameState.lateGoalsConcededPercentage
           ),
+          firstHalfGoalsScoredPercent: pctLabel(
+            gameState.firstHalfGoalsScoredPercentage
+          ),
+          secondHalfGoalsScoredPercent: pctLabel(
+            gameState.secondHalfGoalsScoredPercentage
+          ),
           pointsFromLosingPositions: gameState.pointsFromLosingPositions,
           trailedMatches: gameState.trailedMatches,
+          ppgFromLosingPositions: gameState.ppgFromLosingPositions,
+          pointsFromWinningPositions: gameState.pointsFromWinningPositions,
+          ledMatches: gameState.ledMatches,
+          ppgFromWinningPositions: gameState.ppgFromWinningPositions,
           matchesWithTimings: gameState.matchesWithTimings,
         }
       : {
