@@ -75,7 +75,7 @@ export const PAGE_META = {
   "/faq": {
     title: "FAQ | Soccer Stats Hub",
     description:
-      "Frequently asked questions about Soccer Stats Hub football stats, predictions, subscriptions and how our betting insights work.",
+      "Frequently asked questions about Soccer Stats Hub football stats, predictions, subscriptions and how our analysis works.",
   },
   "/privacy": {
     title: "Privacy Policy | Soccer Stats Hub",

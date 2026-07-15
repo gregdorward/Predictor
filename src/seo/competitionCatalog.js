@@ -160,8 +160,8 @@ export function resolveCompetitionParam(param) {
 export function buildCompetitionMeta(data, catalog) {
   const name = data?.english_name || data?.name || catalog?.name || "Competition";
   return {
-    title: `${name} Betting Stats | Soccer Stats Hub`,
-    description: `BTTS, Over 2.5, goals, corners and card stats for ${name}. Data-driven league betting insights on Soccer Stats Hub.`,
+    title: `${name} Stats | Soccer Stats Hub`,
+    description: `BTTS, Over 2.5, goals, corners and card stats for ${name}. Data-driven league stats and market trends on Soccer Stats Hub.`,
   };
 }
 
@@ -174,8 +174,8 @@ export function buildCompetitionJsonLd(data, canonicalUrl, catalog) {
         "@type": "WebPage",
         "@id": `${canonicalUrl}#webpage`,
         url: canonicalUrl,
-        name: `${name} Betting Stats`,
-        description: `Football betting stats and market trends for ${name}.`,
+        name: `${name} Football Stats`,
+        description: `Football stats and market trends for ${name}.`,
         isPartOf: { "@id": "https://www.soccerstatshub.com/#website" },
         inLanguage: "en-GB",
       },

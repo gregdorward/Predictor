@@ -13,7 +13,7 @@ const COMPETITIONS_JSON_LD = {
       url: `${SITE_URL}/competitions/`,
       name: "Football Competitions | Soccer Stats Hub",
       description:
-        "Browse betting stats, BTTS trends and Over 2.5 data for 60+ football leagues and tournaments.",
+        "Browse BTTS, Over 2.5, goals and league stats for 60+ football leagues and tournaments.",
       isPartOf: { "@id": `${SITE_URL}/#website` },
       inLanguage: "en-GB",
     },
@@ -80,7 +80,7 @@ export default function CompetitionsIndexPage() {
             </a>
             <h1>Football competitions</h1>
             <p className="CompetitionsIndex-intro">
-              League-wide betting stats for every competition we cover — average goals,
+              League-wide football stats for every competition we cover — average goals,
               BTTS rates, corner and card lines, home advantage and team rankings.
             </p>
             <p className="CompetitionsIndex-meta">{total} competitions indexed</p>

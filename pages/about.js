@@ -13,7 +13,7 @@ const ABOUT_JSON_LD = {
       url: `${SITE_URL}/about/`,
       name: "About Soccer Stats Hub",
       description:
-        "Soccer Stats Hub delivers transparent football statistics, predictions and betting insights across 50+ competitions.",
+        "Soccer Stats Hub delivers transparent football statistics, predictions and data-driven match analysis across 50+ competitions.",
       isPartOf: { "@id": `${SITE_URL}/#website` },
       inLanguage: "en-GB",
     },
