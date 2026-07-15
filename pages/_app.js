@@ -5,7 +5,6 @@ import store from "../src/logic/store";
 import { AuthProvider } from "../src/logic/authProvider";
 import { initTheme } from "../src/utils/theme";
 import reportWebVitals from "../src/reportWebVitals";
-import GoogleAdSense from "../src/components/GoogleAdSense";
 import "../src/index.css";
 
 export default function MyApp({ Component, pageProps }) {
@@ -39,7 +38,6 @@ export default function MyApp({ Component, pageProps }) {
             content="width=device-width, initial-scale=1"
           />
         </Head>
-        <GoogleAdSense />
         <Component {...pageProps} />
       </AuthProvider>
     </Provider>

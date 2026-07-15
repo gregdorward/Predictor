@@ -164,11 +164,6 @@ export default class MyDocument extends Document {
             dangerouslySetInnerHTML={{ __html: JSON.stringify(JSON_LD) }}
           />
           <script
-            async
-            src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2835838153738108"
-            crossOrigin="anonymous"
-          />
-          <script
             // eslint-disable-next-line react/no-danger
             dangerouslySetInnerHTML={{ __html: DEFERRED_GA_SCRIPT }}
           />

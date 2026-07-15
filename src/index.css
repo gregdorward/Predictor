@@ -13377,14 +13377,3 @@ body.dark-mode .ShareableVisual__brand {
   font-size: 0.8rem;
   color: var(--faint-text);
 }
-
-/* Hide AdSense Auto ads when suppressed for paid subscribers */
-body.ads-suppressed ins.adsbygoogle,
-body.ads-suppressed iframe[id^="google_ads_iframe"],
-body.ads-suppressed .goog-reactive-ad,
-body.ads-suppressed [data-google-query-id] {
-  display: none !important;
-  visibility: hidden !important;
-  pointer-events: none !important;
-}
-
