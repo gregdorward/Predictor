@@ -38,8 +38,8 @@ export default function AboutPage() {
           </a>
           <h1>About Soccer Stats Hub</h1>
           <p>
-            Soccer Stats Hub is a football statistics and predictions platform built for fans and
-            bettors who want more than fixture lists. We combine deep historical data, current
+            Soccer Stats Hub is a football statistics and predictions platform built for fans
+            who want more than fixture lists. We combine deep historical data, current
             form and transparent modelling to surface BTTS trends, Over 2.5 value, correct score
             probabilities and daily multis across more than 50 competitions.
           </p>

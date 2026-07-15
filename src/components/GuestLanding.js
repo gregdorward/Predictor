@@ -139,7 +139,7 @@ const GuestLanding = ({ id = "guest-landing", showLogin = false }) => {
         <div className="GuestLanding-card GuestLanding-about">
           <h2 className="GuestLanding-aboutTitle">Football statistics you can actually use</h2>
           <p>
-            Soccer Stats Hub is built for fans and bettors who want more than a fixture list.
+            Soccer Stats Hub is built for fans who want more than a fixture list.
             Compare today&apos;s matches with win probabilities, predicted scorelines, recent
             form, expected goals and goal-market trends, all in one place. Every competition
             page explains what the league averages mean, and every fixture page sets out the
