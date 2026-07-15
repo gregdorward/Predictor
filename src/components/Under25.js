@@ -119,6 +119,8 @@ export default function Under25() {
         
         <Typography variant="h1">Lowest Scoring Leagues in the World</Typography>
         <Typography variant="h2">Under 2.5 football leagues ranked by goals per match</Typography>
+
+        <StatPageSeoContent {...STAT_PAGE_SEO.u25} />
         
         <TableContainer component={Paper} className={`${classes.tableWrapper} SubpageTableScroll`}>
           <Table size="small" aria-label="Lowest scoring leagues table">
@@ -161,7 +163,6 @@ export default function Under25() {
             </TableBody>
           </Table>
         </TableContainer>
-        <StatPageSeoContent {...STAT_PAGE_SEO.u25} />
         <StatPageSeoFaq faqItems={STAT_PAGE_SEO.u25.faqItems} />
       </Box>
       </SiteHeader>

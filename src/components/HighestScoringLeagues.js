@@ -148,6 +148,8 @@ export default function HighestScoringLeagues() {
             Football leagues ranked by average goals and Over 2.5 rate
           </Typography>
 
+          <StatPageSeoContent {...STAT_PAGE_SEO.highestScoringLeagues} />
+
           <TableContainer
             component={Paper}
             className={`${classes.tableWrapper} SubpageTableScroll`}
@@ -196,7 +198,6 @@ export default function HighestScoringLeagues() {
               </TableBody>
             </Table>
           </TableContainer>
-          <StatPageSeoContent {...STAT_PAGE_SEO.highestScoringLeagues} />
           <StatPageSeoFaq faqItems={STAT_PAGE_SEO.highestScoringLeagues.faqItems} />
         </Box>
       </SiteHeader>

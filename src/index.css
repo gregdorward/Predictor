@@ -1722,7 +1722,7 @@ p {
 .StatPageSeoContent {
   width: 100%;
   max-width: none;
-  margin: 2rem 0 0;
+  margin: 2rem 0;
   padding: 1.25rem;
   color: var(--text-color);
   line-height: 1.6;
@@ -6036,7 +6036,7 @@ a.kofi-button {
 
 a {
   color: var(--text-color);
-  font-size: 1.2em;
+  font-size: 1em;
   padding: 0.5em;
 }
 
@@ -11877,11 +11877,10 @@ strong.WC26__inlineHeader {
 .Competition {
   max-width: var(--content-max-width);
   margin: 0 auto;
-  padding: 1em var(--content-padding-x) 3rem;
+  padding: 1em var(--content-padding-x) 1rem;
   color: var(--text-color);
   width: 100%;
   box-sizing: border-box;
-  font-size: 11px;
   line-height: 1.45;
 }
 
@@ -12871,21 +12870,74 @@ strong.WC26__inlineHeader {
   opacity: 0.9;
 }
 
-.Competition--seoShell .Competition__seoIntro {
+.FixturePage--seoShell .FixturePage-seoIntro p {
+  margin: 0 0 0.85rem;
+}
+
+.FixturePage--seoShell .FixturePage-seoIntro p:last-child {
+  margin-bottom: 0;
+}
+
+.FixturePage--seoShell .FixturePage-seoLinks {
   margin-top: 0.75rem;
   opacity: 0.9;
 }
 
+.FixturePage--seoShell .FixturePage-seoFaq {
+  margin-top: 1.25rem;
+  padding: 1rem;
+  border: 1px solid var(--button-border-color);
+  border-radius: 12px;
+  background: var(--secondary-background-color);
+  text-align: left;
+}
+
+.FixturePage--seoShell .FixturePage-seoFaq h2 {
+  margin-top: 0;
+  font-size: 1.05rem;
+}
+
+.FixturePage--seoShell .FixturePage-seoFaq h3 {
+  margin: 1rem 0 0.35rem;
+  font-size: 0.95rem;
+}
+
+.FixturePage--seoShell .FixturePage-seoFaq p {
+  margin: 0;
+  opacity: 0.92;
+}
+
+.Competition--seoShell .Competition__seoIntro {
+  margin-top: 0.75rem;
+  opacity: 0.9;
+  text-align: left;
+}
+
+.Competition--seoShell .Competition__seoIntro p {
+  margin: 0 0 0.85rem;
+}
+
+.Competition--seoShell .Competition__seoIntro p:last-child {
+  margin-bottom: 0;
+}
+
 .Competition--seoShell .Competition__seoStats {
-  display: flex;
-  flex-wrap: wrap;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(5rem, 1fr));
   gap: 0.75rem 1.5rem;
   margin: 1rem 0 0;
   justify-content: center;
+  font-size: 1.1em;
+}
+
+.Competition--seoShell .Competition__seoStat {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
 }
 
 .Competition--seoShell .Competition__seoStats dt {
-  font-size: 0.75rem;
   opacity: 0.75;
   margin: 0;
 }

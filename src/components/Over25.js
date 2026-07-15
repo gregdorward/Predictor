@@ -168,6 +168,8 @@ export default function HighestScoringTeams() {
         
         <Typography variant="h1">Elite Scoring Teams</Typography>
         <Typography variant="h2">Teams with the highest average goals and their upcoming fixture</Typography>
+
+        <StatPageSeoContent {...STAT_PAGE_SEO.o25} />
         
         <TableContainer component={Paper} className={`${classes.tableWrapper} SubpageTableScroll`}>
           <Table size="small" aria-label="highest scoring teams table">
@@ -216,7 +218,6 @@ export default function HighestScoringTeams() {
             </TableBody>
           </Table>
         </TableContainer>
-        <StatPageSeoContent {...STAT_PAGE_SEO.o25} />
         <StatPageSeoFaq faqItems={STAT_PAGE_SEO.o25.faqItems} />
       </Box>
       </SiteHeader>

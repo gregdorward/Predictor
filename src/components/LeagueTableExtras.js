@@ -6,6 +6,7 @@ import PlayerRankingTable from "./PlayerStatTable";
 import { paid } from "../logic/getScorePredictions";
 import { sofaScoreIds } from "../constants/sofaScoreIds";
 import { fetchCompetitionMetricRankings } from "../utils/competitionMetricRankings";
+import { apiGetUrl } from "../utils/apiUrl";
 
 function resolveScorerTeam(scorer, allTeams) {
   const teams = allTeams || [];
@@ -119,7 +120,7 @@ export default function LeagueTableExtras({
 
       try {
         const response = await fetch(
-          `${process.env.NEXT_PUBLIC_EXPRESS_SERVER}getMedia/${derivedMediaId}/${Date}`
+          apiGetUrl(`getMedia/${derivedMediaId}/${Date}`)
         );
         if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`);

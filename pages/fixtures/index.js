@@ -37,8 +37,14 @@ export default function FixturesIndexPage({ fixtures = [] }) {
           </a>
           <h1>Upcoming fixtures</h1>
           <p>
-            Match stats and predictions for games in the next few days. Select a
-            fixture for head-to-head records, form and model outputs.
+            Match stats and predictions for games in the next few days. Each link opens a
+            dedicated preview with head-to-head records, form, BTTS and Over 2.5 analysis,
+            plus modelled scorelines where data is available.
+          </p>
+          <p>
+            For wider league context, open the relevant competition hub from any fixture page
+            or start from the <a href="/competitions/">competitions index</a>. Our{" "}
+            <a href="/methodology/">methodology</a> page explains how probabilities are built.
           </p>
           {fixtures.length === 0 ? (
             <p>No upcoming fixtures are listed right now. Check back soon or browse today&apos;s games on the home page.</p>

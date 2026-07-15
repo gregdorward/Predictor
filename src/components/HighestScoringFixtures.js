@@ -110,6 +110,8 @@ export default function HighestScoringFixtures() {
         
         <Typography variant="h1">Goal Potential Insights</Typography>
         <Typography variant="h2">Fixtures with the highest combined average goals per match</Typography>
+
+        <StatPageSeoContent {...STAT_PAGE_SEO.fixturesHigh} />
         
         <TableContainer component={Paper} className={`${classes.tableWrapper} SubpageTableScroll`}>
           <Table size="small" aria-label="highest scoring games table">
@@ -159,7 +161,6 @@ export default function HighestScoringFixtures() {
             </TableBody>
           </Table>
         </TableContainer>
-        <StatPageSeoContent {...STAT_PAGE_SEO.fixturesHigh} />
         <StatPageSeoFaq faqItems={STAT_PAGE_SEO.fixturesHigh.faqItems} />
       </Box>
       </SiteHeader>

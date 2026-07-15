@@ -113,6 +113,7 @@ export async function getServerSideProps({ params }) {
         kickOff: formatKickOff(snapshot.date_unix),
         competitionUrl: competition ? getCompetitionUrl(competition.slug) : null,
         competitionName: competition?.name || meta.league || null,
+        gameWeek: snapshot.game_week ?? snapshot.matches_completed_minimum ?? null,
       },
     },
   };

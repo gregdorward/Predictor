@@ -70,7 +70,7 @@ export const PAGE_META = {
   "/methodology": {
     title: "Football Prediction Methodology | Soccer Stats Hub",
     description:
-      "How Soccer Stats Hub uses form, xG, PPG, BTTS, Over/Under 2.5, odds and probability models for football stats and predictions.",
+      "How Soccer Stats Hub uses form, xG, Poisson goal models, lambda tuning, BTTS, Over/Under 2.5 and probability outputs for football stats and predictions.",
   },
   "/faq": {
     title: "FAQ | Soccer Stats Hub",

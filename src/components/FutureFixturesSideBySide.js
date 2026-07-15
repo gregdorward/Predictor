@@ -5,9 +5,12 @@ export default function FutureFixturesSideBySide({
     futureFixturesHome = [],
     futureFixturesAway = [],
 }) {
-    // if still loading or both empty, render the same empty <div></div> logic you used
-    if (loadingFutureFixtures || (futureFixturesHome.length === 0 && futureFixturesAway.length === 0)) {
-        return <div></div>;
+    if (loadingFutureFixtures) {
+        return null;
+    }
+
+    if (futureFixturesHome.length === 0 && futureFixturesAway.length === 0) {
+        return <div>No upcoming fixtures</div>;
     }
 
     return (

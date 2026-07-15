@@ -1,15 +1,11 @@
 import { getSofaScoreMapping } from "../constants/footyStatsToSofaScore";
-
-function getOrigin() {
-  return process.env.NEXT_PUBLIC_EXPRESS_SERVER;
-}
+import { apiGetUrl } from "./apiUrl";
 
 function rankingsUrl(path) {
-  const origin = getOrigin();
-  if (!origin) {
+  if (!process.env.NEXT_PUBLIC_EXPRESS_SERVER) {
     return null;
   }
-  return `${origin}${path}`;
+  return apiGetUrl(path);
 }
 
 async function fetchJson(url) {

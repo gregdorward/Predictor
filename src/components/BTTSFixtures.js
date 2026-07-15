@@ -110,6 +110,8 @@ export default function BTTSFixtures() {
         
         <Typography variant="h1">BTTS Insights</Typography>
         <Typography variant="h2">High-potential fixtures based on combined scoring averages</Typography>
+
+        <StatPageSeoContent {...STAT_PAGE_SEO.bttsFixtures} />
         
         <TableContainer component={Paper} className={`${classes.tableWrapper} SubpageTableScroll`}>
           <Table size="small" aria-label="BTTS potential table">
@@ -159,7 +161,6 @@ export default function BTTSFixtures() {
             </TableBody>
           </Table>
         </TableContainer>
-        <StatPageSeoContent {...STAT_PAGE_SEO.bttsFixtures} />
         <StatPageSeoFaq faqItems={STAT_PAGE_SEO.bttsFixtures.faqItems} />
       </Box>
       </SiteHeader>

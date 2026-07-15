@@ -73,6 +73,8 @@ const GuestLandingIntro = ({ motionEnabled, activeLine }) => (
     </h1>
     <p className="GuestLanding-subheadline">
       In-depth football statistics, analytics and transparent predictions for 50+ competitions.
+      Research leagues, compare form and open any fixture for a written preview before the
+      charts load.
     </p>
   </div>
 );
@@ -135,16 +137,25 @@ const GuestLanding = ({ id = "guest-landing", showLogin = false }) => {
         </div>
 
         <div className="GuestLanding-card GuestLanding-about">
-          <h2 className="GuestLanding-aboutTitle">Turn football data into smarter picks.</h2>
+          <h2 className="GuestLanding-aboutTitle">Football statistics you can actually use</h2>
           <p>
-            Soccer Stats Hub gives you more than fixtures. Compare today&apos;s games with odds, win
-            probabilities, predicted scores, recent form and key match trends, all in one place. Tap into
-            any fixture for deeper stats, head-to-head records and AI-powered previews before you make your
-            call.
+            Soccer Stats Hub is built for fans and bettors who want more than a fixture list.
+            Compare today&apos;s matches with win probabilities, predicted scorelines, recent
+            form, expected goals and goal-market trends, all in one place. Every competition
+            page explains what the league averages mean, and every fixture page sets out the
+            head-to-head and form case before the interactive charts load.
           </p>
           <p>
-            Start free with a sample of matches and tips. Upgrade to Premium to unlock every competition,
-            full match detail, multis, BTTS and over 2.5 picks, plus the complete prediction engine.
+            We cover more than 50 competitions, from the Premier League and Champions League
+            to MLS, the J League and international tournaments. Read how the models work on
+            our <a href="/methodology/">methodology</a> page, browse the{" "}
+            <a href="/competitions/">competition index</a>, or learn more{" "}
+            <a href="/about/">about the site</a>.
+          </p>
+          <p>
+            Start free with a sample of matches. Premium unlocks every league, full match
+            detail, multis, BTTS and Over 2.5 research views, plus the complete prediction
+            engine. Please gamble responsibly if you use the stats for betting.
           </p>
         </div>
       </div>

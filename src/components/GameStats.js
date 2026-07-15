@@ -76,6 +76,7 @@ import { findSofaScoreGameByTeams } from "../utils/sofaScoreMatch";
 import { resolveTeamStatistics } from "../utils/sofaScoreTeamStats";
 import { getLeagueFixturesByLeagueId } from "../utils/leagueResultsAccess";
 import { apiGetUrl } from "../utils/apiUrl";
+import { findPlayerStatsEntry } from "../utils/playerStatsMatch";
 import {
   fetchLeagueTeamMetricRankings,
   fetchPlayerMetricRankings,
@@ -378,7 +379,7 @@ function GameStats({ game, displayBool, stats, handleToggleTip, userTips }) {
   const [loadingManagers, setLoadingManagers] = useState(true);
   const [refereeData, setRefereeData] = useState(null);
   const [loadingReferee, setLoadingReferee] = useState(true);
-  const [loadingFutureFixtures, setLoadingFutureFixtures] = useState(true);
+  const [loadingFutureFixtures, setLoadingFutureFixtures] = useState(false);
   const [oddsData, setOddsData] = useState(null); // State to hold your odds object
   const [loadingOdds, setLoadingOdds] = useState(false);
   const [homePlayerData, setHomePlayerData] = useState([]);
@@ -399,6 +400,8 @@ function GameStats({ game, displayBool, stats, handleToggleTip, userTips }) {
 
   // const paid = true;
   const [hasCompleteData, setHasCompleteData] = useState(false);
+
+  const futureFixturesFetchedRef = useRef(false);
 
 
   let gameStats = allForm.find((match) => match.id === game.id);
@@ -1323,6 +1326,7 @@ function GameStats({ game, displayBool, stats, handleToggleTip, userTips }) {
 
       return team.missingPlayers.map((mp) => ({
         team: teamType,
+        id: mp.player?.id ?? null,
         name: mp.player?.name ?? "Unknown",
         position: getPos(mp.player?.position),
         reason: getReasonDescription(mp.reason),
@@ -1414,6 +1418,74 @@ function GameStats({ game, displayBool, stats, handleToggleTip, userTips }) {
     console.warn(`No matching ID found for ID: ${game.sofaScoreId}`);
     return null;
   }, [game.sofaScoreId, rounds]);
+
+  useEffect(() => {
+    futureFixturesFetchedRef.current = false;
+    setFutureFixturesHome([]);
+    setFutureFixturesAway([]);
+    setLoadingFutureFixtures(false);
+    setOpenSections((prev) =>
+      prev.futureFixtures ? { ...prev, futureFixtures: false } : prev
+    );
+  }, [game.id]);
+
+  const fetchFutureFixtures = useCallback(async () => {
+    if (futureFixturesFetchedRef.current) return;
+    if (!isPaidUser || !matchingGame?.homeId || !matchingGame?.awayId) return;
+
+    futureFixturesFetchedRef.current = true;
+    setLoadingFutureFixtures(true);
+
+    try {
+      const week = game.game_week ?? 0;
+      const [futureFixturesHomeResponse, futureFixturesAwayResponse] =
+        await Promise.all([
+          fetch(
+            apiGetUrl(`futureFixtures/${matchingGame.homeId}/${week}`)
+          ),
+          fetch(
+            apiGetUrl(`futureFixtures/${matchingGame.awayId}/${week}`)
+          ),
+        ]);
+      const [fixturesDataHome, fixturesDataAway] = await Promise.all([
+        futureFixturesHomeResponse.json(),
+        futureFixturesAwayResponse.json(),
+      ]);
+
+      setFutureFixturesHome(
+        selectUpcomingFixtures(
+          mapFutureFixtureEvents(fixturesDataHome.events)
+        )
+      );
+      setFutureFixturesAway(
+        selectUpcomingFixtures(
+          mapFutureFixtureEvents(fixturesDataAway.events)
+        )
+      );
+    } catch (error) {
+      console.error(
+        `Error fetching future fixtures for game ${game.sofaScoreId}:`,
+        error
+      );
+      futureFixturesFetchedRef.current = false;
+    } finally {
+      setLoadingFutureFixtures(false);
+    }
+  }, [
+    isPaidUser,
+    matchingGame?.homeId,
+    matchingGame?.awayId,
+    game.game_week,
+    game.sofaScoreId,
+  ]);
+
+  const handleFutureFixturesToggle = () => {
+    const willOpen = !openSections.futureFixtures;
+    handleToggle("futureFixtures");
+    if (willOpen) {
+      void fetchFutureFixtures();
+    }
+  };
 
   async function extractRankedPlayersByTeam(topPlayers, teamId) {
     const result = [];
@@ -1578,7 +1650,6 @@ function GameStats({ game, displayBool, stats, handleToggleTip, userTips }) {
         setLoadingPlayerData(true);
         setLoadingTeamStats(true);
         setLoadingKeyPlayers(true);
-        setLoadingFutureFixtures(true);
         setLoadingVoteData(true);
         setLoadingManagers(true);
         setLoadingReferee(true);
@@ -1906,145 +1977,184 @@ function GameStats({ game, displayBool, stats, handleToggleTip, userTips }) {
             setHomeMissingPlayersList(homeMissingPlayers);
             setAwayMissingPlayersList(awayMissingPlayers);
 
-            const enrichMissingPlayers = (missingList, teamStats, played, scored, teamDefActions, teamAttActions, team) => {
-              if (!missingList || !teamStats || !teamStats.players) return [];
-              return missingList.map(missingPlayer => {
-                // 1. Find the player in the full statistics list (matching by name or ID)
-                const statsEntry = teamStats.players.find(p =>
-                  p.name === missingPlayer.name || p.id === missingPlayer.id
-                );
+            const buildMissingPlayerImpact = (
+              missingPlayer,
+              stats,
+              played,
+              teamDefActions,
+              teamAttActions,
+              team
+            ) => {
+              const appearances = stats.appearances || 0;
+              const tackles = stats.tackles || 0;
+              const interceptions = stats.interceptions || 0;
+              const accuratePasses = stats.accuratePasses || 0;
+              const keyPasses = stats.keyPasses || 0;
+              const bigChancesCreated = stats.bigChancesCreated || 0;
+              const goals = stats.goals || 0;
+              const assists = stats.assists || 0;
+              const rating = stats.rating || 6.5;
+              const scoringFrequency = stats.scoringFrequency || 0;
+              let efficiencyBonus = 1;
 
-                const stats = statsEntry || {};
-                const appearances = stats.appearances || 0;
-                const tackles = stats.tackles || 0;
-                const interceptions = stats.interceptions || 0;
-                const accuratePasses = stats.accuratePasses || 0;
-                const keyPasses = stats.keyPasses || 0;
-                const bigChancesCreated = stats.bigChancesCreated || 0;
-                const goals = stats.goals || 0;
-                const assists = stats.assists || 0;
-                const rating = stats.rating || 6.5;
-                const scoringFrequency = stats.scoringFrequency || 0; // e.g., 105.5 minutes per goal
-                let efficiencyBonus = 1;
+              if (scoringFrequency > 0) {
+                if (stats.position === "F") {
+                  efficiencyBonus = Math.max(1, 135 / scoringFrequency);
+                } else {
+                  efficiencyBonus = Math.max(1, 270 / scoringFrequency);
+                }
+              }
 
-                if (scoringFrequency > 0) {
-                  // If a player scores every 90 mins, bonus is ~2.2
-                  // If they score every 200 mins, bonus is ~1.0
-                  if (stats.position === "F") {
-                    efficiencyBonus = Math.max(1, 135 / scoringFrequency);
-                  } else {
-                    efficiencyBonus = Math.max(1, 270 / scoringFrequency);
+              let goalWeight = 7;
+              let assistWeight = 5;
+
+              if (stats.position === "M") {
+                goalWeight = 10;
+                assistWeight = 6;
+              }
+
+              const attackingActions =
+                goals * goalWeight +
+                assists * assistWeight +
+                keyPasses * 1.5 +
+                bigChancesCreated * 4;
+
+              const attackingShare = Math.min(1, attackingActions / teamAttActions);
+              const usageImpact = Math.min(1, appearances / played) * 3;
+              const attackingContributionImpact =
+                Math.pow(attackingShare, 0.6) * 7 * efficiencyBonus;
+              const attackingQualityImpact = Math.max(0, rating - 6.5) * 2;
+
+              let positionalAdjustment = 1;
+
+              if (stats.position === "F") positionalAdjustment = 1;
+              else if (stats.position === "M") positionalAdjustment = 0.9;
+              else if (stats.position === "D") positionalAdjustment = 0.8;
+              else if (stats.position === "G") positionalAdjustment = 0.4;
+
+              const attackingImpactScore =
+                Math.min(
+                  10,
+                  usageImpact + attackingContributionImpact * 3 + attackingQualityImpact
+                ) * positionalAdjustment;
+
+              const defensiveActions =
+                tackles * 2 + interceptions * 2 + accuratePasses * 0.04;
+
+              const defensiveShare = Math.min(1, defensiveActions / teamDefActions);
+              const defensiveUsageImpact = Math.min(1, appearances / played) * 2;
+              const defensiveContributionImpact = defensiveShare * 10;
+              const defensiveQualityImpact = Math.max(0, rating - 6.5) * 3;
+
+              let defensivePositionMultiplier = 1;
+
+              if (stats.position === "F") defensivePositionMultiplier = 0.35;
+              if (stats.position === "M") defensivePositionMultiplier = 0.75;
+              if (stats.position === "D") defensivePositionMultiplier = 1.2;
+              if (stats.position === "G") defensivePositionMultiplier = 1.5;
+
+              const defensiveImpactScore = Math.min(
+                10,
+                (defensiveUsageImpact +
+                  defensiveContributionImpact +
+                  defensiveQualityImpact) *
+                  defensivePositionMultiplier
+              );
+
+              let attackLambdaImpact = 1 - attackingImpactScore * 0.02;
+              let defenceLambdaImpact = 1 + defensiveImpactScore * 0.02;
+              if (missingPlayer.type === "doubtful") {
+                attackLambdaImpact = 1 - attackingImpactScore * 0.02 * 0.5;
+                defenceLambdaImpact = 1 + defensiveImpactScore * 0.02 * 0.5;
+              }
+              if (team === "home") {
+                gameStats.home[2].attackLambdaImpact = Math.max(0.8, attackLambdaImpact);
+                gameStats.home[2].defenceLambdaImpact = Math.min(1.2, defenceLambdaImpact);
+              } else if (team === "away") {
+                gameStats.away[2].attackLambdaImpact = Math.max(0.8, attackLambdaImpact);
+                gameStats.away[2].defenceLambdaImpact = Math.min(1.2, defenceLambdaImpact);
+              }
+
+              return {
+                name: missingPlayer.name,
+                reason: missingPlayer.reason || "Unknown",
+                description: missingPlayer.description || "",
+                type: missingPlayer.type,
+                appearances,
+                goals,
+                assists,
+                rating: stats.rating > 0 ? stats.rating : null,
+                position: missingPlayer.position || stats.position || "Unknown",
+                attackingImpactScore: attackingImpactScore.toFixed(1),
+                defensiveImpactScore: defensiveImpactScore.toFixed(1),
+              };
+            };
+
+            const enrichMissingPlayers = async (
+              missingList,
+              teamStats,
+              played,
+              teamDefActions,
+              teamAttActions,
+              team,
+              tournamentId,
+              seasonId
+            ) => {
+              if (!missingList?.length || !teamStats?.players?.length) return [];
+
+              const enrichedPlayers = [];
+
+              for (const missingPlayer of missingList) {
+                let statsEntry = findPlayerStatsEntry(teamStats.players, missingPlayer);
+
+                if (
+                  missingPlayer.id &&
+                  tournamentId &&
+                  seasonId &&
+                  (!statsEntry ||
+                    !statsEntry.appearances ||
+                    !statsEntry.rating)
+                ) {
+                  try {
+                    const response = await fetch(
+                      `${process.env.NEXT_PUBLIC_EXPRESS_SERVER}players/competition-statistics/${missingPlayer.id}/${tournamentId}/${seasonId}`
+                    );
+                    if (response.ok) {
+                      const individualStats = await response.json();
+                      if (individualStats && !individualStats.error) {
+                        statsEntry = { ...(statsEntry || {}), ...individualStats };
+                      }
+                    }
+                  } catch (error) {
+                    console.error(
+                      `Error fetching competition stats for missing player ${missingPlayer.name}:`,
+                      error
+                    );
                   }
                 }
 
-                let goalWeight = 7;
-                let assistWeight = 5;
-
-                if (stats.position === "M") {
-                  goalWeight = 10;
-                  assistWeight = 6;
-                }
-
-                const attackingActions =
-                  (goals * goalWeight) +
-                  (assists * assistWeight) +
-                  (keyPasses * 1.5) +
-                  (bigChancesCreated * 4);
-
-                const attackingShare =
-                  Math.min(1, attackingActions / teamAttActions);
-
-                const usageImpact = Math.min(1, appearances / played) * 3;
-
-                const attackingContributionImpact =
-                  Math.pow(attackingShare, 0.6) * 7 * efficiencyBonus;
-
-                const attackingQualityImpact =
-                  Math.max(0, rating - 6.5) * 2;
-
-                let positionalAdjustment = 1
-
-                if (stats.position === "F") positionalAdjustment = 1;
-                else if (stats.position === "M") positionalAdjustment = 0.9;
-                else if (stats.position === "D") positionalAdjustment = 0.8;
-                else if (stats.position === "G") positionalAdjustment = 0.4;
-
-                const attackingImpactScore = Math.min(
-                  10,
-                  usageImpact +
-                  attackingContributionImpact * 3 +
-                  attackingQualityImpact
-                ) * positionalAdjustment;
-
-                const defensiveActions =
-                  tackles * 2 +
-                  interceptions * 2 +
-                  accuratePasses * 0.04;
-
-                const defensiveShare = Math.min(1, defensiveActions / teamDefActions);
-                const defensiveUsageImpact = Math.min(1, appearances / played) * 2;
-                const defensiveContributionImpact = defensiveShare * 10;
-                const defensiveQualityImpact = Math.max(0, rating - 6.5) * 3;
-
-                let defensivePositionMultiplier = 1;
-
-                if (stats.position === "F") defensivePositionMultiplier = 0.35;
-                if (stats.position === "M") defensivePositionMultiplier = 0.75;
-                if (stats.position === "D") defensivePositionMultiplier = 1.2;
-                if (stats.position === "G") defensivePositionMultiplier = 1.5;
-
-
-
-                const defensiveImpactScore = Math.min(
-                  10,
-                  (defensiveUsageImpact +
-                    defensiveContributionImpact +
-                    defensiveQualityImpact) * defensivePositionMultiplier
+                enrichedPlayers.push(
+                  buildMissingPlayerImpact(
+                    missingPlayer,
+                    statsEntry || {},
+                    played,
+                    teamDefActions,
+                    teamAttActions,
+                    team
+                  )
                 );
+              }
 
-                let attackLambdaImpact = 1 - (attackingImpactScore * 0.02);
-                let defenceLambdaImpact = 1 + (defensiveImpactScore * 0.02);
-                if (missingPlayer.type === "doubtful") {
-                  attackLambdaImpact = 1 - ((attackingImpactScore * 0.02) * 0.5);
-                  defenceLambdaImpact = 1 + ((defensiveImpactScore * 0.02) * 0.5);
-                }
-                if (team === "home") {
-                  gameStats.home[2].attackLambdaImpact = Math.max(0.8, attackLambdaImpact);
-                  gameStats.home[2].defenceLambdaImpact = Math.min(1.2, defenceLambdaImpact);
-                } else if (team === "away") {
-                  gameStats.away[2].attackLambdaImpact = Math.max(0.8, attackLambdaImpact);
-                  gameStats.away[2].defenceLambdaImpact = Math.min(1.2, defenceLambdaImpact);
-                }
-
-                return {
-                  name: missingPlayer.name,
-                  reason: missingPlayer.reason || "Unknown",
-                  description: missingPlayer.description || "",
-                  type: missingPlayer.type, // e.g., 'Missing' or 'Doubtful'
-                  appearances: stats.appearances || 0,
-                  goals: stats.goals || 0,
-                  assists: stats.assists || 0,
-                  rating: stats.rating || 0,
-                  position: missingPlayer.position || "Unknown",
-                  // Calculate an "Impact Score" (weighted importance)
-                  attackingImpactScore: attackingImpactScore.toFixed(1),
-                  defensiveImpactScore: defensiveImpactScore.toFixed(1),
-                };
-              }).sort((a, b) => {
-                // 1. Get the max impact for player A
+              return enrichedPlayers.sort((a, b) => {
                 const maxImpactA = Math.max(
                   parseFloat(a.attackingImpactScore),
                   parseFloat(a.defensiveImpactScore)
                 );
-
-                // 2. Get the max impact for player B
                 const maxImpactB = Math.max(
                   parseFloat(b.attackingImpactScore),
                   parseFloat(b.defensiveImpactScore)
                 );
 
-                // 3. Sort descending (highest impact first)
-                // If impacts are equal, fall back to appearances
                 if (maxImpactB !== maxImpactA) {
                   return maxImpactB - maxImpactA;
                 }
@@ -2052,14 +2162,14 @@ function GameStats({ game, displayBool, stats, handleToggleTip, userTips }) {
               });
             };
 
-            const teamDefensiveActionsHome = homePlayers.players.reduce((sum, player) => {
+            const teamDefensiveActionsHome = homePlayers?.players?.reduce((sum, player) => {
               const tackles = player.tackles || 0;
               const interceptions = player.interceptions || 0;
               const accuratePasses = player.accuratePasses || 0;
               return sum + (tackles * 1.2) + (interceptions * 1.5) + (accuratePasses * 0.02);
             }, 0);
 
-            const teamAttackingActionsHome = homePlayers.players.reduce((sum, player) => {
+            const teamAttackingActionsHome = homePlayers?.players?.reduce((sum, player) => {
               const goals = player.goals || 0;
               const assists = player.assists || 0;
               const keyPasses = player.keyPasses || 0;
@@ -2072,7 +2182,7 @@ function GameStats({ game, displayBool, stats, handleToggleTip, userTips }) {
                 (bigChancesCreated * 2);
             }, 0);
 
-            const teamAttackingActionsAway = awayPlayers.players.reduce((sum, player) => {
+            const teamAttackingActionsAway = awayPlayers?.players?.reduce((sum, player) => {
               const goals = player.goals || 0;
               const assists = player.assists || 0;
               const keyPasses = player.keyPasses || 0;
@@ -2085,7 +2195,7 @@ function GameStats({ game, displayBool, stats, handleToggleTip, userTips }) {
                 (bigChancesCreated * 2);
             }, 0);
 
-            const teamDefensiveActionsAway = awayPlayers.players.reduce((sum, player) => {
+            const teamDefensiveActionsAway = awayPlayers?.players?.reduce((sum, player) => {
               const tackles = player.tackles || 0;
               const interceptions = player.interceptions || 0;
               const accuratePasses = player.accuratePasses || 0;
@@ -2096,8 +2206,26 @@ function GameStats({ game, displayBool, stats, handleToggleTip, userTips }) {
             const homeCompetitionGamesPlayed = getCompetitionGamesPlayed(gameStats.home[2]);
             const awayCompetitionGamesPlayed = getCompetitionGamesPlayed(gameStats.away[2]);
 
-            const homeMissingPlayersImpactAssessment = enrichMissingPlayers(homeMissingPlayers, homePlayers, homeCompetitionGamesPlayed, gameStats.home[2].ScoredOverall, teamDefensiveActionsHome, teamAttackingActionsHome, "home");
-            const awayMissingPlayersImpactAssessment = enrichMissingPlayers(awayMissingPlayers, awayPlayers, awayCompetitionGamesPlayed, gameStats.away[2].ScoredOverall, teamDefensiveActionsAway, teamAttackingActionsAway, "away");
+            const homeMissingPlayersImpactAssessment = await enrichMissingPlayers(
+              homeMissingPlayers,
+              homePlayers,
+              homeCompetitionGamesPlayed,
+              teamDefensiveActionsHome,
+              teamAttackingActionsHome,
+              "home",
+              game.sofaScoreId,
+              derivedRoundId
+            );
+            const awayMissingPlayersImpactAssessment = await enrichMissingPlayers(
+              awayMissingPlayers,
+              awayPlayers,
+              awayCompetitionGamesPlayed,
+              teamDefensiveActionsAway,
+              teamAttackingActionsAway,
+              "away",
+              game.sofaScoreId,
+              derivedRoundId
+            );
 
             setHomeMissingPlayersImpact(homeMissingPlayersImpactAssessment);
             setAwayMissingPlayersImpact(awayMissingPlayersImpactAssessment);
@@ -2162,39 +2290,6 @@ function GameStats({ game, displayBool, stats, handleToggleTip, userTips }) {
           }
         }
 
-        if (isPaidUser && matchingGameInfo?.homeId && matchingGameInfo?.awayId) {
-          try {
-            const futureFixturesHomeResponse = await fetch(
-              `${process.env.NEXT_PUBLIC_EXPRESS_SERVER}futureFixtures/${matchingGameInfo.homeId}/${week}`
-            );
-            const fixturesDataHome = await futureFixturesHomeResponse.json();
-
-            const futureFixturesAwayResponse = await fetch(
-              `${process.env.NEXT_PUBLIC_EXPRESS_SERVER}futureFixtures/${matchingGameInfo.awayId}/${week}`
-            );
-            const fixturesDataAway = await futureFixturesAwayResponse.json();
-
-            setFutureFixturesHome(
-              selectUpcomingFixtures(
-                mapFutureFixtureEvents(fixturesDataHome.events)
-              )
-            );
-            setFutureFixturesAway(
-              selectUpcomingFixtures(
-                mapFutureFixtureEvents(fixturesDataAway.events)
-              )
-            );
-          } catch (error) {
-            console.error(
-              `Error fetching future fixtures for game ${game.sofaScoreId}:`,
-              error
-            );
-          }
-        } else if (!isPaidUser) {
-          console.log("User is not premium. Skipping future fixtures fetch.");
-          setFutureFixturesHome([]);
-          setFutureFixturesAway([]);
-        }
       } catch (error) {
         console.error("Error fetching or processing data:", error);
         // Handle errors (e.g., set error state, show error message)
@@ -2203,7 +2298,6 @@ function GameStats({ game, displayBool, stats, handleToggleTip, userTips }) {
         setLoadingOdds(false);
         setLoadingPlayerData(false);
         setLoadingStreaks(false);
-        setLoadingFutureFixtures(false);
         setLoadingKeyPlayers(false);
         setLoadingVoteData(false);
         setLoadingManagers(false);
@@ -4051,28 +4145,36 @@ function GameStats({ game, displayBool, stats, handleToggleTip, userTips }) {
           )}
 
 
-          {loadingFutureFixtures ? (
-            <div className="loading-spinner"></div> // Show actual loading state
-          ) : futureFixturesHome.length === 0 ? (
-            /* This is the "Locked" or "Empty" state */
+          {!isPaidUser ? (
+            <div className="FutureFixturesLocked">
+              <button className="FutureFixturesButton locked" disabled>
+                Upcoming Games <span className="lock-icon">🔒</span>
+              </button>
+            </div>
+          ) : !matchingGame?.homeId || !matchingGame?.awayId ? (
             <div className="FutureFixturesLocked">
               <button className="FutureFixturesButton locked" disabled>
                 Upcoming Games <span className="lock-icon">🔒</span>
               </button>
             </div>
           ) : (
-            /* This is the "Success" state for paid users with data */
             <Collapsable
               buttonText={`Upcoming Games`}
               classNameButton="FutureFixturesButton"
+              isOpen={!!openSections.futureFixtures}
+              onTriggerToggle={handleFutureFixturesToggle}
               element={
-                <Suspense fallback={<div>Loading fixtures...</div>}>
-                  <LazyFutureFixturesSideBySide
-                    loadingFutureFixtures={loadingFutureFixtures}
-                    futureFixturesHome={futureFixturesHome}
-                    futureFixturesAway={futureFixturesAway}
-                  />
-                </Suspense>
+                loadingFutureFixtures ? (
+                  <div className="loading-spinner"></div>
+                ) : (
+                  <Suspense fallback={<div>Loading fixtures...</div>}>
+                    <LazyFutureFixturesSideBySide
+                      loadingFutureFixtures={loadingFutureFixtures}
+                      futureFixturesHome={futureFixturesHome}
+                      futureFixturesAway={futureFixturesAway}
+                    />
+                  </Suspense>
+                )
               }
             />
           )}

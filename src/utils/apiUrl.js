@@ -18,6 +18,10 @@ const PROXIED_ENDPOINTS = new Set([
   "teamStats",
   "cuptrees",
   "competition",
+  "getMedia",
+  "futureFixtures",
+  "LeagueTeamStats",
+  "bestPlayers",
 ]);
 
 const ORIGIN = process.env.NEXT_PUBLIC_EXPRESS_SERVER;

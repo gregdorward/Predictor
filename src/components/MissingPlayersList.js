@@ -130,7 +130,9 @@ const MissingPlayersList = ({ players = [], className }) => {
             </div>
             <div className="StatLine">
               <span className="MissingPlayerStatLabel">Average Rating</span>
-              <span className="StatValue">{player.rating?.toFixed(2)}</span>
+              <span className="StatValue">
+                {player.rating > 0 ? player.rating.toFixed(2) : "N/A"}
+              </span>
             </div>
           </div>
         </div>

@@ -110,6 +110,8 @@ export default function BTTSTeams() {
         
         <Typography variant="h1">BTTS Elite Teams</Typography>
         <Typography variant="h2">Teams with the highest percentage of games ending in both teams to score</Typography>
+
+        <StatPageSeoContent {...STAT_PAGE_SEO.bttsTeams} />
         
         <TableContainer component={Paper} className={`${classes.tableWrapper} SubpageTableScroll`}>
           <Table size="small" aria-label="BTTS teams table">
@@ -163,7 +165,6 @@ export default function BTTSTeams() {
             </TableBody>
           </Table>
         </TableContainer>
-        <StatPageSeoContent {...STAT_PAGE_SEO.bttsTeams} />
         <StatPageSeoFaq faqItems={STAT_PAGE_SEO.bttsTeams.faqItems} />
       </Box>
       </SiteHeader>
