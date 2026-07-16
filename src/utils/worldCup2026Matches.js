@@ -7,6 +7,7 @@ export const MATCH_PHASE_ORDER = [
   "round16",
   "quarter",
   "semi",
+  "third-place",
   "final",
 ];
 
@@ -17,6 +18,7 @@ export const MATCH_PHASE_LABELS = {
   round16: "Round of 16",
   quarter: "Quarter-finals",
   semi: "Semi-finals",
+  "third-place": "Third-place play-off",
   final: "Final",
 };
 

@@ -1,38 +1,38 @@
 {
-  "updatedAt": "2026-07-12T19:30:00.000Z",
-  "methodology": "Rankings reflect group-stage and knockout results through 12 July 2026, weighted by results quality, goal difference, squad availability and path difficulty. Title win chances are illustrative estimates aligned with Soccer Stats Hub modelling.",
+  "updatedAt": "2026-07-16T10:00:00.000Z",
+  "methodology": "Rankings reflect group-stage and knockout results through 15 July 2026, weighted by results quality, goal difference, squad availability and path difficulty. Title win chances are illustrative estimates aligned with Soccer Stats Hub modelling.",
   "rankings": [
     {
       "rank": 1,
-      "team": "France",
-      "flag": "🇫🇷",
-      "record": "SF · 2-0 vs Morocco",
-      "winChance": "22%",
-      "summary": "France remain the benchmark after Kylian Mbappe's eighth goal of the tournament and Ousmane Dembele's fifth settled a 2-0 quarter-final win over Morocco in Foxborough. Didier Deschamps should have Aurelien Tchouameni back for the Dallas semi-final against Spain, though William Saliba and Dayot Upamecano were managed in training, and Les Bleus are targeting a third consecutive World Cup final."
+      "team": "Spain",
+      "flag": "🇪🇸",
+      "record": "Final · 2-0 vs France",
+      "winChance": "56%",
+      "summary": "Spain are tournament favourites after a dominant 2-0 semi-final win over France in Dallas, with Mikel Oyarzabal's penalty and Pedro Porro's finish ending Les Bleus' bid for a third consecutive final. Luis de la Fuente's side have conceded only once in seven matches, are unbeaten in 37 competitive games, and Opta's model gives them a 56 per cent chance of lifting the trophy against Argentina on Sunday."
     },
     {
       "rank": 2,
-      "team": "Spain",
-      "flag": "🇪🇸",
-      "record": "SF · 2-1 vs Belgium",
-      "winChance": "19%",
-      "summary": "Spain reached their first World Cup semi-final since 2010 when Mikel Merino scored an 88th-minute winner against Belgium, conceding their first goal of the tournament to Charles De Ketelaere. Lamine Yamal has beaten France in their last two tournament meetings and Luis de la Fuente's side arrive in Dallas unbeaten in 37 competitive matches, but La Roja have needed late goals in both knockout ties."
+      "team": "Argentina",
+      "flag": "🇦🇷",
+      "record": "Final · 2-1 vs England",
+      "winChance": "44%",
+      "summary": "Argentina reached a second consecutive World Cup final with another late comeback as Lionel Messi assisted Enzo Fernandez and Lautaro Martinez to overturn England 2-1 in Atlanta. Lionel Scaloni's holders have trailed in three separate knockouts yet always found a way through, with Messi on eight goals and four assists, though Facundo Medina remains a calf doubt for the New Jersey showpiece."
     },
     {
       "rank": 3,
-      "team": "Argentina",
-      "flag": "🇦🇷",
-      "record": "SF · 3-1 vs Switzerland (AET)",
-      "winChance": "17%",
-      "summary": "Argentina needed Julian Alvarez's 112th-minute screamer and a Lautaro Martinez stoppage-time third to beat 10-man Switzerland 3-1 in Kansas City, their second extra-time knockout win of the tournament. Lionel Messi's eight goals keep him level with Mbappe in the Golden Boot race, but Lionel Scaloni's holders have now flirted with elimination in three straight knockouts before Wednesday's Atlanta semi-final with England."
+      "team": "France",
+      "flag": "🇫🇷",
+      "record": "Bronze · 0-2 vs Spain",
+      "winChance": "0%",
+      "summary": "France's bid for a third straight World Cup final ended when Spain controlled the Dallas semi-final 2-0, with Kylian Mbappe shackled and William Saliba forced off with a recurring back injury in the 30th minute. Didier Deschamps must now rotate heavily for Saturday's third-place play-off against England in Miami, with Saliba unlikely to feature and Mbappe still chasing Golden Boot honours on eight goals."
     },
     {
       "rank": 4,
       "team": "England",
       "flag": "🏴󠁧󠁢󠁥󠁮󠁧󠁿",
-      "record": "SF · 2-1 vs Norway (AET)",
-      "winChance": "16%",
-      "summary": "England reached their first World Cup semi-final since 2018 as Jude Bellingham scored twice in extra time to beat Norway 2-1 in Miami, though Thomas Tuchel said the performance was sloppy and lucky. Declan Rice is recovering from illness, Jarell Quansah remains suspended, and the Three Lions face Argentina in Atlanta with both quarter-finalists having played 120 minutes in the Florida heat."
+      "record": "Bronze · 1-2 vs Argentina",
+      "winChance": "0%",
+      "summary": "England were five minutes from their first World Cup final since 1966 when Anthony Gordon put them ahead in Atlanta, but Thomas Tuchel's switch to a back five invited a late Argentina surge that Lionel Messi orchestrated to a 2-1 defeat. The Three Lions face France in Miami on Saturday with Reece James a hamstring doubt, while Jude Bellingham and Harry Kane remain in the Golden Boot race on six goals each."
     },
     {
       "rank": 5,

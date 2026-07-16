@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "lastUpdated": "2026-07-12T19:30:00.000Z",
+  "lastUpdated": "2026-07-16T10:00:00.000Z",
   "matches": [
     {
       "id": "round32-england-vs-dr-congo",
@@ -151,12 +151,12 @@
       "away": "Spain",
       "venue": "Dallas Stadium",
       "prediction": {
-        "predictedScore": "2-1",
-        "homeWin": 48,
-        "draw": 26,
-        "awayWin": 26
+        "predictedScore": "0-2",
+        "homeWin": 42,
+        "draw": 24,
+        "awayWin": 34
       },
-      "preview": "The tournament's most anticipated fixture reunites France and Spain for a third semi-final in two years after La Roja beat Les Bleus at Euro 2024 and in the 2025 Nations League. Kylian Mbappe leads the Golden Boot race with eight goals and should have Aurelien Tchouameni back in midfield, while Lamine Yamal has warned France to fear Spain's possession game despite scoring only once so far. Luis de la Fuente's side have conceded just one goal in six matches but needed Mikel Merino late winners against Portugal and Belgium, and William Saliba and Dayot Upamecano were managed in training before Bastille Day in Arlington.",
+      "preview": "Spain controlled the Dallas semi-final from start to finish as Lamine Yamal won a 22nd-minute penalty converted by Mikel Oyarzabal and Pedro Porro added a second after a slick move with Dani Olmo. Kylian Mbappe was shackled throughout, William Saliba was forced off with a recurring back injury in the 30th minute, and Luis de la Fuente's side extended their unbeaten run to 37 matches to reach a first World Cup final since 2010.",
       "source": "static"
     },
     {
@@ -168,29 +168,46 @@
       "away": "Argentina",
       "venue": "Atlanta Stadium",
       "prediction": {
-        "predictedScore": "2-1",
+        "predictedScore": "1-2",
         "homeWin": 44,
         "draw": 27,
         "awayWin": 29
       },
-      "preview": "England and Argentina meet in a World Cup semi-final for the first time since 1990, with Lionel Messi set for his first competitive match against the Three Lions and Jude Bellingham arriving on six tournament goals after another extra-time rescue in Miami. Thomas Tuchel has scaled back training as Declan Rice recovers from illness, Jarell Quansah remains suspended, and both sides played 120 minutes in the quarter-finals. Julian Alvarez's extra-time screamer ended Argentina's Swiss test, but the holders have now flirted with elimination in three straight knockouts, giving England hope if Harry Kane and Bellingham can exploit spaces out wide.",
+      "preview": "Argentina staged another late comeback as Lionel Messi assisted Enzo Fernandez's 85th-minute equaliser and Lautaro Martinez's stoppage-time winner to beat England 2-1 in Atlanta, overturning Anthony Gordon's 55th-minute opener. Thomas Tuchel's switch to a back five after taking the lead invited a late Argentina surge, and the holders reach a second consecutive final to face Spain in New Jersey.",
       "source": "static"
     },
     {
-      "id": "final-france-vs-england",
+      "id": "third-place-england-vs-france",
+      "phase": "third-place",
+      "roundLabel": "Third-place play-off",
+      "date": "2026-07-18",
+      "home": "England",
+      "away": "France",
+      "venue": "Hard Rock Stadium, Miami",
+      "prediction": {
+        "predictedScore": "2-2",
+        "homeWin": 38,
+        "draw": 28,
+        "awayWin": 34
+      },
+      "preview": "The losing semi-finalists meet at Hard Rock Stadium in Miami Gardens on Saturday 18 July, with neither side eager for a fixture both camps would rather skip. Kylian Mbappe and Harry Kane headline a clash between two squads carrying semi-final fatigue, while William Saliba is unlikely to feature for France after his back injury flared in Dallas and Reece James is a hamstring doubt for England.",
+      "source": "static"
+    },
+    {
+      "id": "final-spain-vs-argentina",
       "phase": "final",
       "roundLabel": "Final",
       "date": "2026-07-19",
-      "home": "France",
-      "away": "England",
+      "home": "Spain",
+      "away": "Argentina",
       "venue": "New York New Jersey Stadium",
       "prediction": {
         "predictedScore": "2-1",
-        "homeWin": 47,
+        "homeWin": 48,
         "draw": 26,
-        "awayWin": 27
+        "awayWin": 26
       },
-      "preview": "Projected final if France beat Spain and England beat Argentina in the semi-finals. Les Bleus would arrive as slight favourites after Mbappe's Golden Boot charge and a cleaner knockout path, while England would need another Jude Bellingham rescue act with Declan Rice building back fitness and Jarell Quansah still suspended.",
+      "preview": "European champions Spain meet defending world champions Argentina in the first World Cup final between reigning continental title holders, with Opta giving La Roja a 56 per cent chance of lifting the trophy. Luis de la Fuente's side have conceded only once in seven matches and beat France 2-0 in the semi-finals, while Lionel Messi has eight goals and four assists and Argentina have come from behind in three separate knockouts. Lamine Yamal and Pedro Porro were cleared after semi-final knocks, though Facundo Medina remains a calf doubt for the Albiceleste.",
       "source": "static"
     }
   ]
