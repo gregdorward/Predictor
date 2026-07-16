@@ -1,0 +1,24 @@
+{
+  "articles": [
+    {
+      "slug": "how-we-predict-a-game",
+      "title": "How we predict a game",
+      "dek": "How Soccer Stats Hub builds a match prediction from completed fixtures, attack and defence strengths, and scoreline probabilities.",
+      "publishedAt": "2026-07-16",
+      "updatedAt": "2026-07-16T12:30:00.000Z",
+      "heroLabel": "Methodology",
+      "tags": ["Methodology", "Predictions", "xG"],
+      "ogDescription": "How Soccer Stats Hub predicts a football match: every competition fixture feeding the team picture, expected goals, Poisson scorelines, BTTS and Over 2.5."
+    },
+    {
+      "slug": "world-cup-2026-awards",
+      "title": "World Cup 2026 Tournament Awards Through the Semi-Finals",
+      "dek": "Winners and contenders across goals, distance, late drama and the patterns the numbers actually show.",
+      "publishedAt": "2026-07-16",
+      "updatedAt": "2026-07-16T12:00:00.000Z",
+      "heroLabel": "Awards",
+      "tags": ["World Cup 2026", "Awards", "Analysis"],
+      "ogDescription": "Data-driven World Cup 2026 awards: Player of the Tournament, late-goal kings, distance covered and the stories behind Spain vs Argentina."
+    }
+  ]
+}

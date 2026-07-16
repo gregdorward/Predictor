@@ -116,6 +116,10 @@ export default function MethodologyPage() {
             for form, head-to-head data, venue splits, model probability and the
             current market price.
           </p>
+          <p>
+            For a longer, fan-friendly walkthrough of the same process, read{" "}
+            <a href="/articles/how-we-predict-a-game/">How we predict a game</a>.
+          </p>
           <h2>Update Cadence</h2>
           <p>
             Fixture and league data refreshes as source data updates throughout

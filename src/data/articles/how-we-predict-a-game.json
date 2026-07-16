@@ -1,0 +1,100 @@
+{
+  "slug": "how-we-predict-a-game",
+  "layout": "prose",
+  "title": "How we predict a game",
+  "subtitle": "From every fixture in the league to a scoreline in the fixture list",
+  "dek": "How Soccer Stats Hub builds a match prediction: digging through completed games, shaping attack and defence, then turning expected goals into probabilities a fan can actually use.",
+  "publishedAt": "2026-07-16",
+  "updatedAt": "2026-07-16T12:30:00.000Z",
+  "authorLabel": "Soccer Stats Hub",
+  "intro": [
+    "If you have ever expanded a game on the Soccer Stats Hub homepage and wondered where the predicted score, the BTTS percentage or the Over 2.5 number actually come from, this is that story. Not a sales pitch. Not a black box. Just the path we take from raw match data to the numbers you see.",
+    "The short version is this: we do not invent a team's season from a blended form string. For the competition in question we go through the completed fixtures, game by game, pull out the individual match stats, and build each club's picture from those matches alone. Only then do we ask what that means for the next kick-off."
+  ],
+  "sections": [
+    {
+      "id": "starting-point",
+      "heading": "Where we start",
+      "paragraphs": [
+        "Every day the site loads the fixtures we cover across our competition list. For each game we already have the basics from the match feed: the two teams, the kick-off, the bookmaker prices, and early context such as points per game where it is available.",
+        "That gives us the fixture list. It does not yet give us a prediction. The useful work starts when we look backwards at how those two sides have actually played in this competition."
+      ]
+    },
+    {
+      "id": "every-fixture",
+      "heading": "Every fixture, not just the table",
+      "paragraphs": [
+        "This is the part that matters most, and it is where Soccer Stats Hub parts company with a lot of form feeds.",
+        "Many data providers hand you a single \"all form\" summary. That can mix league matches with cup ties and even friendlies. A thrashing in a midweek cup tie, or a sleepy pre-season run-out, then sits next to proper league games and quietly skews the averages. For predicting a Premier League fixture, that is not a like-for-like comparison.",
+        "We take a different route. For a league or cup we hold a store of completed matches in that competition only. When we prepare a prediction we walk those results. For the home team we gather their previous games in the competition before this kick-off. We do the same for the away team. Each of those matches contributes its own numbers: goals scored and conceded, expected goals where we have them, shots, shots on target, possession, dangerous attacks, corners, and so on.",
+        "From that pile of individual games we build averages and recent windows. How have they scored over the longer run? What has the last handful of matches looked like? How strong were the opponents they faced? A side that has battered weak teams and a side that has scraped points against title challengers should not look identical just because both sit on similar points.",
+        "We work inside a recent season window and we cap how many completed fixtures we carry for a competition, so the model stays focused on current football rather than ancient history. If a competition is still thin on completed games early in a season, we are more cautious and lean harder on safer baselines until there is enough match-by-match evidence.",
+        "The point is simple. The larger picture of a team is assembled from specific fixtures in the same competition. League form informs league predictions. Cup form stays in the cup. That like-for-like discipline is deliberate, and it is one of the clearest differences in how we build a team picture."
+      ]
+    },
+    {
+      "id": "strengths",
+      "heading": "Turning history into attack and defence",
+      "paragraphs": [
+        "Once we have those match-level building blocks, we translate them into attacking and defensive strength for the fixture at hand.",
+        "Attack is not only goals. Goals matter, but so does the quality and volume of chances: expected goals, shots on target, dangerous attacks. Defence is the mirror image: what a team allows in those same areas. We weigh those ingredients together so a side that creates good chances but finishes poorly is not treated the same as a side that barely creates anything yet somehow keeps scoring.",
+        "Then we put the two clubs in the same room. The home team's attack is judged against the away team's defence. The away attack is judged against the home defence. Home advantage comes from the league's own scoring patterns: we use separate home and away baselines, so a typical home attack is not treated the same as a typical away attack. Leagues that skew high-scoring or defensive already show that in their averages, and those averages shape what \"normal\" looks like for this match."
+      ]
+    },
+    {
+      "id": "lambdas",
+      "heading": "Expected goals for this match (the lambdas)",
+      "paragraphs": [
+        "At the centre of the model are two numbers. We call them lambdas, which is just the modelling world's name for expected goals in this fixture: one for the home side and one for the away side.",
+        "Think of a lambda as a best estimate of how many goals that team is likely to score on the day. Not a prediction of the final score by itself. A starting point. If the home lambda is about 1.6 and the away lambda is about 1.1, we are saying the home side should edge the chance quality and volume, without pretending football is tidy.",
+        "We begin with the league's scoring rate, split so home and away environments are not treated as identical. Then we scale that baseline by the attack-versus-defence balance we built from the match history. If a team has barely played enough games, we pull their estimate back towards the league average. Early-season weirdness should not get free rein.",
+        "After that we apply a few careful nudges where we have the information. If a side has scored far more or fewer goals than their chance quality suggests, we make a light correction so finishing luck does not dominate. Recent chance creation and results can move the estimate a little, within bounds. Missing players and absences can push attack or defence up or down when we have that lineup context. A newly appointed manager can temporarily lift expectation while a squad settles. Continental and international ties lean more on the market, because rotation, travel and knockout stakes often pull results away from domestic league patterns.",
+        "Every lambda is kept inside a realistic range before it goes any further. We want a grounded expectation, not a fantasy scoreline dressed up as maths."
+      ]
+    },
+    {
+      "id": "poisson",
+      "heading": "From expected goals to every scoreline",
+      "paragraphs": [
+        "Football scores are discrete. Teams score 0, 1, 2, 3 goals. They do not score 1.57. So once we have those two lambdas we need a way to turn \"about 1.6 goals\" into chances of each actual score.",
+        "That is where the Poisson distribution comes in. In plain English, Poisson maths answers a practical question: if a team is expected to score 1.6 goals, how often should we see 0, 1, 2, 3 or more? We ask that separately for home and away, then combine the answers into a grid of scorelines: 0-0, 1-0, 2-1, 3-2, and so on, up to a sensible maximum.",
+        "A raw Poisson model treats the two teams' goals as independent. Real football is a bit messier than that. Low-scoring games and draws happen a touch more often than a naive model expects. We apply a small Dixon-Coles style adjustment to outcomes such as 0-0, 1-0, 0-1 and 1-1 so the matrix sits closer to how matches actually finish.",
+        "We then tidy the grid so all the probabilities add up to 100%, and we soften the most extreme long-shot scores so the output does not get carried away by rare scorelines. From that single matrix we can read off almost everything useful when you expand a fixture."
+      ]
+    },
+    {
+      "id": "outputs",
+      "heading": "What you see when you expand a game",
+      "paragraphs": [
+        "Most of the prediction and match data lives on the homepage fixture list. Expand a game and you get the detail without leaving that list. The predicted scoreline is not a separate hunch. It is the single most likely outcome in that matrix. If 1-1 edges out 2-1 and 1-0, 1-1 is what we show.",
+        "The same grid gives home win, draw and away win percentages. It gives Both Teams To Score yes and no. It gives Over and Under 2.5. Those markets are different views of one underlying picture of how the match might unfold.",
+        "We put those model percentages next to bookmaker implied prices where we can. That is deliberate. A good research habit is not \"the model said 2-1 so it must win\". It is \"here is what the match history suggests, here is what the market is pricing, and here is where they disagree\". Sometimes the value is in the agreement. Sometimes it is in the gap.",
+        "Around that core you will also see form, head-to-head context, venue splits and other tendencies. Some of that is there to explain the game as a football match, not only as a probability problem. The engine that produces the scoreline and the main market percentages is still the path above: competition fixtures, strengths, lambdas, then the score matrix."
+      ]
+    },
+    {
+      "id": "how-to-read",
+      "heading": "How to use it like a fan, not a magician",
+      "paragraphs": [
+        "Treat every prediction as a research aid. Teams change shape overnight. Red cards happen. A striker who has been clinical for a month can miss an open goal. The model is built to reflect tendencies, not to foresee every twist in a single match.",
+        "A sensible way through an expanded fixture is to start with the competition and the two teams' recent patterns, then look at the model probabilities, then check the market. If everything points the same way, you at least understand why. If they clash, that tension is often the interesting part.",
+        "We refresh fixture and league data as the underlying sources update through the day. Some competition pages and longer editorial pieces move more slowly when the season picture itself is what has changed.",
+        "One last honest line. These are statistical estimates. They can be wrong. If you use football stats for betting research, follow local laws and keep it responsible. The aim of Soccer Stats Hub is to make the reasoning visible, not to pretend uncertainty has been abolished."
+      ]
+    }
+  ],
+  "outro": [
+    "So when you see a predicted score on Soccer Stats Hub, you are looking at the end of a chain: completed fixtures in the competition, individual match stats gathered into a team picture, attack and defence balanced for this opponent, expected goals for each side, and a probability grid that turns those expectations into scorelines and markets.",
+    "That is how we predict a game. Match by match first. Headline number last."
+  ],
+  "relatedLinks": [
+    {
+      "label": "Methodology",
+      "href": "/methodology/"
+    },
+    {
+      "label": "Articles",
+      "href": "/articles/"
+    }
+  ]
+}

@@ -1,0 +1,412 @@
+{
+  "slug": "world-cup-2026-awards",
+  "layout": "awards",
+  "title": "World Cup 2026 Tournament Awards",
+  "subtitle": "Tournament awards through the semi-finals",
+  "dek": "One composition of winners, contenders and the patterns behind them. Stats through Spain 2-0 France and Argentina 2-1 England. The final still awaits.",
+  "publishedAt": "2026-07-16",
+  "updatedAt": "2026-07-16T12:00:00.000Z",
+  "dataAsOf": "2026-07-16",
+  "authorLabel": "Soccer Stats Hub Analysis",
+  "intro": [
+    "Sunday's final at New York New Jersey Stadium pits European champions Spain against defending holders Argentina. Before that kick-off, here are the tournament awards for this expanded 48-team World Cup: categories chosen because the data forced the conversation, not because a shortlist already existed.",
+    "Player rankings come from tournament leaderboards (goals, assists, rating, distance covered and more). Team patterns such as late goals, possession and xG efficiency are aggregated from completed World Cup fixtures. Figures are through the semi-finals unless noted.",
+    "A note on distance: kilometres covered is tracked for a subset of match minutes in the player rankings. We use it for work-rate stories and for the curious absences, not as a perfect census of every sprint in every group game."
+  ],
+  "categories": [
+    {
+      "id": "player-of-the-tournament",
+      "title": "Player of the Tournament",
+      "subtitle": "Rating, output and control of big moments",
+      "winner": {
+        "name": "Lionel Messi",
+        "team": "Argentina",
+        "flag": "🇦🇷",
+        "note": "Average rating 9.03 across seven matches, with eight goals and four assists."
+      },
+      "contenders": [
+        {
+          "name": "Kylian Mbappé",
+          "team": "France",
+          "flag": "🇫🇷",
+          "note": "Eight goals and a 8.00 average rating before the bronze-medal match."
+        },
+        {
+          "name": "Ousmane Dembélé",
+          "team": "France",
+          "flag": "🇫🇷",
+          "note": "Five goals, two assists and a 7.86 rating in a free-scoring France attack."
+        },
+        {
+          "name": "Jude Bellingham",
+          "team": "England",
+          "flag": "🏴󠁧󠁢󠁥󠁮󠁧󠁿",
+          "note": "Six goals and a 7.76 rating while England reached the last four."
+        }
+      ],
+      "analysis": "Messi's tournament average is absurd even by his standards. He leads the player ratings board, shares the Golden Boot lead, tops big chances created (eight) and key passes (26), and still found the assist for Enzo Fernández's 85th-minute equaliser against England. Mbappé matches him for goals and sits second on rating, but Messi's all-phase influence is the clearer Player of the Tournament case through the semis.",
+      "stats": [
+        { "label": "Avg rating", "value": "9.03" },
+        { "label": "Goals", "value": "8" },
+        { "label": "Assists", "value": "4" },
+        { "label": "Big chances created", "value": "8" }
+      ]
+    },
+    {
+      "id": "golden-boot",
+      "title": "Golden Boot",
+      "subtitle": "Goals scored through the semi-finals",
+      "winner": {
+        "name": "Lionel Messi & Kylian Mbappé",
+        "team": "Argentina / France",
+        "flag": "🇦🇷🇫🇷",
+        "note": "Eight goals each after seven appearances."
+      },
+      "contenders": [
+        {
+          "name": "Erling Haaland",
+          "team": "Norway",
+          "flag": "🇳🇴",
+          "note": "Seven goals in five matches before Norway exited."
+        },
+        {
+          "name": "Jude Bellingham",
+          "team": "England",
+          "flag": "🏴󠁧󠁢󠁥󠁮󠁧󠁿",
+          "note": "Six goals from midfield across seven games."
+        },
+        {
+          "name": "Harry Kane",
+          "team": "England",
+          "flag": "🏴󠁧󠁢󠁥󠁮󠁧󠁿",
+          "note": "Six goals, including two from the penalty spot."
+        }
+      ],
+      "analysis": "The race is a dead heat at the top. Messi edges the combined goals-plus-assists table (12 to Mbappé's 11), while Haaland's seven in five remains the most ruthless scoring rate among players who left before the final four. Oyarzabal (five) keeps Spain's attacking share honest without matching the volume of the shared leaders.",
+      "stats": [
+        { "label": "Messi goals", "value": "8" },
+        { "label": "Mbappé goals", "value": "8" },
+        { "label": "Haaland goals", "value": "7" },
+        { "label": "Messi G+A", "value": "12" }
+      ]
+    },
+    {
+      "id": "provider",
+      "title": "Provider of the Tournament",
+      "subtitle": "Assists and chance creation",
+      "winner": {
+        "name": "Michael Olise",
+        "team": "France",
+        "flag": "🇫🇷",
+        "note": "Five assists, second only to Messi for big chances created."
+      },
+      "contenders": [
+        {
+          "name": "Lionel Messi",
+          "team": "Argentina",
+          "flag": "🇦🇷",
+          "note": "Four assists and a tournament-high eight big chances created."
+        },
+        {
+          "name": "Bruno Guimarães",
+          "team": "Brazil",
+          "flag": "🇧🇷",
+          "note": "Four assists in five matches before Brazil's exit."
+        },
+        {
+          "name": "Martin Ødegaard",
+          "team": "Norway",
+          "flag": "🇳🇴",
+          "note": "Four assists feeding Haaland and Norway's attack."
+        }
+      ],
+      "analysis": "Olise is the pure assist leader. Messi creates the higher volume of big chances and key passes, which is why he still features heavily here, but the Provider award goes to the player who has actually unlocked the most finishes. France's bronze-medal match will not change that framing unless someone storms past five.",
+      "stats": [
+        { "label": "Olise assists", "value": "5" },
+        { "label": "Messi BCC", "value": "8" },
+        { "label": "Messi key passes", "value": "26" },
+        { "label": "Olise BCC", "value": "5" }
+      ]
+    },
+    {
+      "id": "gloves",
+      "title": "Golden Gloves",
+      "subtitle": "Clean sheets and shot-stopping",
+      "winner": {
+        "name": "Unai Simón",
+        "team": "Spain",
+        "flag": "🇪🇸",
+        "note": "Six clean sheets in seven matches."
+      },
+      "contenders": [
+        {
+          "name": "Camilo Vargas",
+          "team": "Colombia",
+          "flag": "🇨🇴",
+          "note": "Four clean sheets in five games."
+        },
+        {
+          "name": "Mike Maignan",
+          "team": "France",
+          "flag": "🇫🇷",
+          "note": "Four clean sheets across France's run to the last four."
+        },
+        {
+          "name": "Gregor Kobel",
+          "team": "Switzerland",
+          "flag": "🇨🇭",
+          "note": "Leads the goals-prevented board among high-minute keepers."
+        }
+      ],
+      "analysis": "Spain have conceded once in seven matches. Simón's six clean sheets are the headline, and they sit on top of a defensive structure that has barely been breached. Vargas and Maignan share the next tier on clean sheets; Kobel wins the quieter goalkeeping argument on goals prevented.",
+      "stats": [
+        { "label": "Simón clean sheets", "value": "6" },
+        { "label": "Spain goals against", "value": "1" },
+        { "label": "Spain matches", "value": "7" },
+        { "label": "Vargas clean sheets", "value": "4" }
+      ]
+    },
+    {
+      "id": "late-drama",
+      "title": "Late Drama Award",
+      "subtitle": "Goals scored from the 76th minute onward",
+      "winner": {
+        "name": "Argentina",
+        "team": "Argentina",
+        "flag": "🇦🇷",
+        "note": "Twelve late goals from nineteen scored (63%). Only one late goal conceded."
+      },
+      "contenders": [
+        {
+          "name": "Belgium",
+          "team": "Belgium",
+          "flag": "🇧🇪",
+          "note": "Six late goals from fourteen (43%)."
+        },
+        {
+          "name": "Morocco",
+          "team": "Morocco",
+          "flag": "🇲🇦",
+          "note": "Five late goals from ten (50%)."
+        },
+        {
+          "name": "Norway",
+          "team": "Norway",
+          "flag": "🇳🇴",
+          "note": "Five late goals from thirteen (38%)."
+        }
+      ],
+      "analysis": "This is not a coincidence dressed up as narrative. Argentina's semi-final against England (Fernández 85, Lautaro in stoppage time) fits a tournament-wide pattern: nearly two thirds of their goals have arrived after the 76th minute. They have also barely conceded late. Belgium and Morocco show similar second-wind habits, but nobody else is in Argentina's volume or percentage territory.",
+      "stats": [
+        { "label": "Argentina late goals", "value": "12" },
+        { "label": "Share of their goals", "value": "63%" },
+        { "label": "Late goals conceded", "value": "1" },
+        { "label": "Next best (Belgium)", "value": "6" }
+      ]
+    },
+    {
+      "id": "distance",
+      "title": "Work-Rate Award",
+      "subtitle": "Kilometres covered on the player distance board",
+      "winner": {
+        "name": "Mikel Merino",
+        "team": "Spain",
+        "flag": "🇪🇸",
+        "note": "Highest total kilometres among players still deep in the tournament with seven appearances."
+      },
+      "contenders": [
+        {
+          "name": "Jacob Shaffelburg",
+          "team": "Canada",
+          "flag": "🇨🇦",
+          "note": "Strong total and one of the highest per-90 rates among five-plus appearance players on the board."
+        },
+        {
+          "name": "Bernardo Silva",
+          "team": "Portugal",
+          "flag": "🇵🇹",
+          "note": "High tracked distance relative to minutes before Portugal's exit."
+        },
+        {
+          "name": "Rúben Neves",
+          "team": "Portugal",
+          "flag": "🇵🇹",
+          "note": "Tops the raw leaderboard on distance intensity in a smaller minute sample."
+        }
+      ],
+      "analysis": "Distance data is incomplete across the whole tournament, so treat totals with care. Within that caveat, Merino is the standout among players who have started deep knockout football: 23.5 km tracked across seven Spain appearances. The leftfield story sits next to him. Argentina, for all their late goals and seven straight wins, barely register on the distance leaderboard at all. Low tracked mileage and extreme late-goal output is either a tracking quirk, a stylistic choice, or both. The correlation is too loud to ignore either way.",
+      "stats": [
+        { "label": "Merino km tracked", "value": "23.5" },
+        { "label": "Merino apps", "value": "7" },
+        { "label": "Shaffelburg km", "value": "14.3" },
+        { "label": "Argentina on km board", "value": "Absent" }
+      ]
+    },
+    {
+      "id": "efficiency",
+      "title": "Clinical Finishers",
+      "subtitle": "Goals scored relative to expected goals",
+      "winner": {
+        "name": "Argentina",
+        "team": "Argentina",
+        "flag": "🇦🇷",
+        "note": "Nineteen goals from 13.0 xG (1.46 goals per xG) across seven matches."
+      },
+      "contenders": [
+        {
+          "name": "Norway",
+          "team": "Norway",
+          "flag": "🇳🇴",
+          "note": "Thirteen goals from 8.4 xG (1.56) before elimination."
+        },
+        {
+          "name": "USMNT",
+          "team": "USA",
+          "flag": "🇺🇸",
+          "note": "Eleven goals from 7.1 xG (1.54)."
+        },
+        {
+          "name": "Spain",
+          "team": "Spain",
+          "flag": "🇪🇸",
+          "note": "The opposite profile: 13 goals from 14.1 xG while barely conceding."
+        }
+      ],
+      "analysis": "Norway win the pure finishing ratio among sides with five-plus matches and meaningful volume, but Argentina's overperformance comes with a final still to play and nineteen goals already banked. Spain are the mirror image: they create more than they convert, yet their defensive record makes the waste almost irrelevant. Efficiency here is not the same as control.",
+      "stats": [
+        { "label": "Argentina GF / xG", "value": "1.46" },
+        { "label": "Norway GF / xG", "value": "1.56" },
+        { "label": "Spain GF / xG", "value": "0.92" },
+        { "label": "Argentina goals", "value": "19" }
+      ]
+    },
+    {
+      "id": "fortress",
+      "title": "Defensive Fortress",
+      "subtitle": "Fewest goals conceded among deep runs",
+      "winner": {
+        "name": "Spain",
+        "team": "Spain",
+        "flag": "🇪🇸",
+        "note": "One goal conceded in seven matches, with 64% average possession."
+      },
+      "contenders": [
+        {
+          "name": "France",
+          "team": "France",
+          "flag": "🇫🇷",
+          "note": "Four conceded in seven before the bronze match."
+        },
+        {
+          "name": "Argentina",
+          "team": "Argentina",
+          "flag": "🇦🇷",
+          "note": "Seven conceded, but only one after the 76th minute."
+        },
+        {
+          "name": "Mexico",
+          "team": "Mexico",
+          "flag": "🇲🇽",
+          "note": "Three conceded in five before exiting."
+        }
+      ],
+      "analysis": "Spain's defensive numbers are historic for a side still playing for the trophy. One goal against, six clean sheets for Simón, and the highest possession share among the final four. France are next among the last-four cohort. Argentina defend in a different register: more open, yet almost immune to late collapses.",
+      "stats": [
+        { "label": "Spain GA", "value": "1" },
+        { "label": "Spain possession", "value": "64%" },
+        { "label": "France GA", "value": "4" },
+        { "label": "Argentina GA", "value": "7" }
+      ]
+    },
+    {
+      "id": "comeback",
+      "title": "Comeback Merchants",
+      "subtitle": "Wins after conceding the opening goal",
+      "winner": {
+        "name": "Argentina",
+        "team": "Argentina",
+        "flag": "🇦🇷",
+        "note": "Two wins from behind in the knockout rounds, including the semi-final against England."
+      },
+      "contenders": [
+        {
+          "name": "England",
+          "team": "England",
+          "flag": "🏴󠁧󠁢󠁥󠁮󠁧󠁿",
+          "note": "Also two wins from behind before falling to Argentina."
+        },
+        {
+          "name": "Portugal",
+          "team": "Portugal",
+          "flag": "🇵🇹",
+          "note": "One measured recovery win in five matches."
+        },
+        {
+          "name": "Brazil",
+          "team": "Brazil",
+          "flag": "🇧🇷",
+          "note": "One comeback win before exiting."
+        }
+      ],
+      "analysis": "Argentina's tournament identity is recovery football. Trailing in multiple knockouts and still finding a way through is now a pattern, not a punchline. England share the comeback win count through the semis, which only sharpens the irony of how their semi-final ended.",
+      "stats": [
+        { "label": "Argentina CFB wins", "value": "2" },
+        { "label": "England CFB wins", "value": "2" },
+        { "label": "Argentina record", "value": "7-0-0" },
+        { "label": "Late goals share", "value": "63%" }
+      ]
+    },
+    {
+      "id": "leftfield",
+      "title": "Leftfield Award: Chance Graveyard",
+      "subtitle": "Most big chances missed",
+      "winner": {
+        "name": "Kylian Mbappé",
+        "team": "France",
+        "flag": "🇫🇷",
+        "note": "Seven big chances missed, while still scoring eight goals."
+      },
+      "contenders": [
+        {
+          "name": "Erling Haaland",
+          "team": "Norway",
+          "flag": "🇳🇴",
+          "note": "Five big chances missed beside seven goals."
+        },
+        {
+          "name": "Vinícius Júnior",
+          "team": "Brazil",
+          "flag": "🇧🇷",
+          "note": "Four big chances missed in five matches."
+        },
+        {
+          "name": "Ismaïla Sarr",
+          "team": "Senegal",
+          "flag": "🇸🇳",
+          "note": "Four big chances missed as Senegal exited."
+        }
+      ],
+      "analysis": "This shortlist needs one category that refuses to flatter. Mbappé leads big chances missed and still shares the Golden Boot. That duality is the point: volume shooters generate both the goals board and the waste board. Haaland's Norway exit looks harsher in the same light. For a cleaner leftfield medal, Nicolás Tagliafico quietly tops the tournament top-speed list at 36.18 km/h.",
+      "stats": [
+        { "label": "Mbappé BCC missed", "value": "7" },
+        { "label": "Mbappé goals", "value": "8" },
+        { "label": "Haaland BCC missed", "value": "5" },
+        { "label": "Tagliafico top speed", "value": "36.18 km/h" }
+      ]
+    }
+  ],
+  "outro": [
+    "If there is a single thread through these awards, it is that Spain and Argentina have reached the final by opposite methods. Spain control territory, concede almost nothing and convert just enough. Argentina finish above their xG, score absurdly late and barely appear on the distance board.",
+    "The trophy on Sunday will rewrite some of these plaques. Until then, these are the awards the numbers already support."
+  ],
+  "relatedLinks": [
+    {
+      "label": "World Cup 2026 hub",
+      "href": "/worldcup2026/"
+    },
+    {
+      "label": "Articles",
+      "href": "/articles/"
+    }
+  ]
+}

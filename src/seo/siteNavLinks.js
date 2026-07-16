@@ -3,6 +3,7 @@ export const SITE_NAV_LINKS = [
   { label: "Competitions", path: "/competitions/" },
   { label: "Upcoming Fixtures", path: "/fixtures/" },
   { label: "World Cup 2026", path: "/worldcup2026/" },
+  { label: "Articles", path: "/articles/" },
   { label: "Season Previews (BETA)", path: "/seasonpreviews/" },
   { label: "BTTS Teams", path: "/bttsteams/" },
   { label: "BTTS No Teams", path: "/btts-no-teams/" },

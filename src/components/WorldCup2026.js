@@ -291,6 +291,14 @@ export default function WorldCup2026() {
               <span className="WC26__playerMeta">{data.goldenBoot.predicted.team}</span>
             </div>
           </div>
+          <a href="/articles/world-cup-2026-awards/" className="ArticlesPromo">
+            <span className="ArticlesPromo__label">New article</span>
+            <span className="ArticlesPromo__title">World Cup 2026 Tournament Awards</span>
+            <span className="ArticlesPromo__copy">
+              Awards through the semi-finals: late-goal kings, distance covered and the patterns behind Spain vs Argentina.
+            </span>
+            <span className="ArticlesPromo__cta">Read the awards →</span>
+          </a>
         </header>
 
         <nav className="WC26__tabs" aria-label="Preview sections">

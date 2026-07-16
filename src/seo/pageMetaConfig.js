@@ -57,6 +57,11 @@ export const PAGE_META = {
     description:
       "FIFA World Cup 2026 tournament preview and news: predicted winner, Golden Boot picks, group predictions, all 48 team guides, key match predictions and latest tournament headlines.",
   },
+  "/articles": {
+    title: "Football Articles & Analysis | Soccer Stats Hub",
+    description:
+      "In-depth football articles from Soccer Stats Hub: World Cup awards, league deep-dives and data-led analysis built for fans and SEO readers.",
+  },
   "/seasonpreviews": {
     title: "Season Previews | Soccer Stats Hub",
     description:
