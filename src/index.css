@@ -2,7 +2,7 @@
   body>#__next {
     height: 100%;
     font-family: 'Open Sans', sans-serif;
-    font-size: 1em;
+    font-size: 1.05em;
     font-weight: 600;
     display: flex;
     flex-direction: column;
@@ -95,7 +95,7 @@
   body>#__next {
     height: 100%;
     font-family: 'Open Sans', sans-serif;
-    font-size: 0.9em;
+    font-size: 0.95em;
     display: flex;
     flex-direction: column;
     flex-basis: 100%;
@@ -152,7 +152,7 @@
   body>#__next {
     height: 100%;
     font-family: 'Open Sans', sans-serif;
-    font-size: 0.8em;
+    font-size: 0.85em;
     display: flex;
     flex-direction: column;
     flex-basis: 100%;
@@ -208,7 +208,7 @@
   body>#__next {
     height: 100%;
     font-family: 'Open Sans', sans-serif;
-    font-size: 0.8em;
+    font-size: 0.85em;
     display: flex;
     flex-direction: column;
     flex-basis: 100%;
@@ -264,7 +264,7 @@
   body>#__next {
     height: 100%;
     font-family: 'Open Sans', sans-serif;
-    font-size: 2.4vw;
+    font-size: 2.55vw;
     display: flex;
     flex-direction: column;
     width: 100%;
@@ -320,7 +320,7 @@
   body>#__next {
     height: 100%;
     font-family: 'Open Sans', sans-serif;
-    font-size: 2.4vw;
+    font-size: 2.55vw;
     display: flex;
     flex-direction: column;
     flex-basis: 100%;
@@ -432,7 +432,7 @@
   --span-text-colour: #020029;
   --member-text-color: #fe8c00;
   --faint-text: #c7c7c7;
-  --subtle-surface-color: #0a0a0a;
+  --subtle-surface-color: #141414;
   --slightly-darker-than-background: #000000;
 
 }
@@ -11898,11 +11898,11 @@ strong.WC26__inlineHeader {
 
 .Competition__section {
   width: 100%;
-  margin-bottom: 2.5rem;
+  margin-bottom: 3rem;
   display: flex;
   flex-direction: column;
   align-items: stretch;
-  gap: 1rem;
+  gap: 1.15rem;
 }
 
 .Competition__sectionHeading {
@@ -11979,6 +11979,7 @@ strong.WC26__inlineHeader {
   margin-bottom: 2rem;
   width: 100%;
   align-items: stretch;
+  padding-top: 1em;
 }
 
 @media (min-width: 900px) {
@@ -11988,8 +11989,8 @@ strong.WC26__inlineHeader {
 }
 
 .Competition__metricCard {
-  background: var(--secondary-background-color);
-  border: 1px solid var(--third-background-color);
+  background: var(--subtle-surface-color);
+  border: none;
   border-radius: 8px;
   padding: 1rem;
   display: flex;
@@ -12019,7 +12020,7 @@ strong.WC26__inlineHeader {
 .Competition__chartGrid {
   display: grid;
   grid-template-columns: 1fr;
-  gap: 1rem;
+  gap: 0.75rem;
   width: 100%;
   align-items: stretch;
 }
@@ -12028,31 +12029,52 @@ strong.WC26__inlineHeader {
   .Competition__chartGrid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
+
+  .Competition__chartGrid > :first-child {
+    grid-column: 1 / -1;
+  }
 }
 
 .Competition__chartCard {
-  background: var(--secondary-background-color);
-  border: 1px solid var(--third-background-color);
-  border-radius: 8px;
-  padding: 1rem;
+  background: var(--subtle-surface-color);
+  border: none;
+  border-radius: 12px;
+  padding: 0.85rem 1rem 0.7rem;
   display: flex;
   flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  min-height: 280px;
+  justify-content: flex-start;
+  align-items: stretch;
+  min-height: 0;
   height: 100%;
   box-sizing: border-box;
   overflow: hidden;
 }
 
-.Competition__chartCard > div {
+.Competition__chartCardTitle {
+  margin: 0 0 0.55rem;
+  font-size: 0.92em;
+  font-weight: 600;
+  color: var(--text-color);
+  text-align: left;
+  line-height: 1.3;
+  letter-spacing: 0.01em;
+}
+
+.Competition__chartCardBody {
+  position: relative;
+  width: 100%;
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.Competition__chartCardBody > div {
   position: relative;
   width: 100%;
   max-width: 100%;
   margin: 0 auto;
-  display: flex;
-  justify-content: center;
-  align-items: center;
 }
 
 .Competition canvas {
@@ -12061,6 +12083,12 @@ strong.WC26__inlineHeader {
   max-height: clamp(160px, 32vw, 260px) !important;
   margin: 0 auto !important;
   box-sizing: border-box;
+}
+
+@media (min-width: 768px) {
+  .Competition__chartGrid > :first-child canvas {
+    max-height: clamp(180px, 28vw, 300px) !important;
+  }
 }
 
 .Competition__advantageGrid {
@@ -12287,7 +12315,7 @@ strong.WC26__inlineHeader {
   gap: 0.75rem;
   align-items: center;
   background: var(--secondary-background-color);
-  border: 1px solid var(--third-background-color);
+  border: none;
   border-radius: 6px;
   padding: 0.65rem 0.85rem;
 }
@@ -12374,6 +12402,7 @@ strong.WC26__inlineHeader {
   .Competition {
     padding-left: 0.75rem;
     padding-right: 0.75rem;
+    font-size: 1.08em;
   }
 
   .Competition__section {
@@ -12427,8 +12456,12 @@ strong.WC26__inlineHeader {
   }
 
   .Competition__chartCard {
-    min-height: 220px;
-    padding: 0.75rem;
+    padding: 0.7rem 0.8rem 0.55rem;
+  }
+
+  .Competition__chartCardTitle {
+    font-size: 0.88em;
+    margin-bottom: 0.4rem;
   }
 
   .Competition canvas {
@@ -12481,26 +12514,27 @@ strong.WC26__inlineHeader {
 
   .Competition--seoShell .Competition__seoStats {
     grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 0.65rem 0.75rem;
-    font-size: 1em;
+    gap: 0.5rem;
+    max-width: none;
+    font-size: 0.92em;
   }
 
-  .Competition--seoShell .Competition__seoStat:last-child:nth-child(odd) {
-    grid-column: 1 / -1;
+  .Competition--seoShell .Competition__seoStat {
+    padding: 0.55rem 0.45rem;
   }
 
   .Competition--seoShell .Competition__seoStat dd {
     font-size: 0.95em;
-    overflow-wrap: anywhere;
+  }
+
+  .Competition--seoShell .Competition__seoStat--wide dd {
+    font-size: 0.88em;
+    letter-spacing: -0.01em;
   }
 
   .Competition--seoShell .Competition__seoHighlights {
-    gap: 0.65rem;
-    margin-top: 1rem;
-  }
-
-  .Competition--seoShell .Competition__seoHighlights section {
-    padding: 0.85rem 0.9rem;
+    gap: 1.25rem;
+    margin-top: 1.35rem;
   }
 
   .Competition--seoShell .Competition__seoHighlights h2 {
@@ -12946,7 +12980,7 @@ strong.WC26__inlineHeader {
 }
 
 .Competition--seoShell .Competition__seoIntro {
-  margin-top: 0.75rem;
+  margin-top: 1.75rem;
   opacity: 0.9;
   text-align: left;
 }
@@ -12961,35 +12995,63 @@ strong.WC26__inlineHeader {
 
 .Competition--seoShell .Competition__seoStats {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(5rem, 1fr));
-  gap: 0.75rem 1.5rem;
-  margin: 1rem 0 0;
-  justify-content: center;
-  font-size: 1.1em;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.55rem;
+  width: 100%;
+  max-width: 28rem;
+  margin: 1rem auto 0;
+  box-sizing: border-box;
+  font-size: 0.95em;
+}
+
+@media (min-width: 641px) {
+  .Competition--seoShell .Competition__seoStats {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 0.65rem 0.75rem;
+    max-width: 40rem;
+    font-size: 1.05em;
+  }
 }
 
 .Competition--seoShell .Competition__seoStat {
   display: flex;
   flex-direction: column;
   align-items: center;
+  justify-content: center;
   text-align: center;
+  min-width: 0;
+  padding: 0.65rem 0.5rem;
+  border-radius: 10px;
+  background: var(--subtle-surface-color);
+  border: none;
+  box-sizing: border-box;
+  font-size: 1.1em;
+}
+
+.Competition--seoShell .Competition__seoStat--wide {
+  grid-column: 1 / -1;
 }
 
 .Competition--seoShell .Competition__seoStats dt {
   opacity: 0.75;
   margin: 0;
+  font-size: 0.85em;
+  line-height: 1.2;
 }
 
 .Competition--seoShell .Competition__seoStats dd {
-  margin: 0.15rem 0 0;
+  margin: 0.2rem 0 0;
   font-weight: 600;
+  line-height: 1.25;
+  font-variant-numeric: tabular-nums;
+  overflow-wrap: anywhere;
 }
 
 .Competition--seoShell .Competition__seoHighlights {
   display: grid;
   grid-template-columns: minmax(0, 1fr);
-  gap: 0.75rem;
-  margin-top: 1.25rem;
+  gap: 1.5rem;
+  margin-top: 1.75rem;
   width: 100%;
   text-align: left;
 }
@@ -13009,10 +13071,10 @@ strong.WC26__inlineHeader {
 
 .Competition--seoShell .Competition__seoHighlights section,
 .Competition--seoShell .Competition__seoFaq {
-  padding: 1rem;
-  border: 1px solid var(--button-border-color);
-  border-radius: 12px;
-  background: var(--secondary-background-color);
+  padding: 0;
+  border: none;
+  border-radius: 0;
+  background: transparent;
   min-width: 0;
   box-sizing: border-box;
 }
@@ -13052,13 +13114,19 @@ strong.WC26__inlineHeader {
 }
 
 .Competition--seoShell .Competition__seoFaq {
-  margin-top: 1rem;
+  margin-top: 2rem;
+  padding-top: 1.5rem;
   text-align: left;
+  font-size: 0.9em;
+}
+
+.Competition--seoShell .Competition__seoFaq h2 {
+  font-size: 0.95rem;
 }
 
 .Competition--seoShell .Competition__seoFaq h3 {
   margin: 0.75rem 0 0.25rem;
-  font-size: 0.95rem;
+  font-size: 0.9rem;
 }
 
 .Competition--seoShell .Competition__seoFaq p {

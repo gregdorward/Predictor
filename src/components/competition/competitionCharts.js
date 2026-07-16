@@ -12,29 +12,36 @@ const CHART_COLORS = [
   "#0644B3",
 ];
 
+function ChartCard({ title, children }) {
+  return (
+    <div className="Competition__chartCard">
+      {title ? <h3 className="Competition__chartCardTitle">{title}</h3> : null}
+      <div className="Competition__chartCardBody">{children}</div>
+    </div>
+  );
+}
+
 function buildBaseOptions(
   theme,
-  title,
   indexAxis = "x",
   { valueSuffix = "%", valueDecimals = 1 } = {}
 ) {
   const { color, gridColor, tooltipBackground } = getChartColors(theme);
+  const valueAxis = indexAxis === "y" ? "x" : "y";
+  const categoryAxis = indexAxis === "y" ? "y" : "x";
+
   return {
     color,
     indexAxis,
     responsive: true,
     maintainAspectRatio: true,
-    aspectRatio: indexAxis === "y" ? 1.4 : 1.6,
+    aspectRatio: indexAxis === "y" ? 1.55 : 1.7,
     plugins: {
       legend: {
         display: false,
       },
       title: {
-        display: !!title,
-        text: title,
-        color,
-        font: { size: 11, weight: "600" },
-        padding: { bottom: 8 },
+        display: false,
       },
       tooltip: {
         backgroundColor: tooltipBackground,
@@ -51,14 +58,42 @@ function buildBaseOptions(
       },
     },
     scales: {
-      x: {
+      [categoryAxis]: {
         ticks: { color, font: { size: 9 } },
-        grid: { color: gridColor },
+        grid: { display: false },
+        border: { display: false },
       },
-      y: {
+      [valueAxis]: {
         ticks: { color, font: { size: 9 } },
-        grid: { color: gridColor },
+        grid: { color: gridColor, drawTicks: false },
+        border: { display: false },
         beginAtZero: true,
+      },
+    },
+  };
+}
+
+function buildDoughnutOptions(theme) {
+  const { color, tooltipBackground } = getChartColors(theme);
+  return {
+    responsive: true,
+    aspectRatio: 1.45,
+    cutout: "62%",
+    plugins: {
+      legend: {
+        position: "bottom",
+        labels: { color, padding: 12, font: { size: 10 }, boxWidth: 10 },
+      },
+      title: {
+        display: false,
+      },
+      tooltip: {
+        backgroundColor: tooltipBackground,
+        callbacks: {
+          label(context) {
+            return `${context.label}: ${Number(context.raw).toFixed(1)}%`;
+          },
+        },
       },
     },
   };
@@ -90,12 +125,9 @@ export function GoalsMarketChart({ data }) {
   };
 
   return (
-    <div className="Competition__chartCard">
-      <Bar
-        data={chartData}
-        options={buildBaseOptions(theme, "Goals market hit rates", "y")}
-      />
-    </div>
+    <ChartCard title="Goals market hit rates">
+      <Bar data={chartData} options={buildBaseOptions(theme, "y")} />
+    </ChartCard>
   );
 }
 
@@ -106,49 +138,21 @@ export function ResultSplitChart({ data }) {
   const away = Number(data?.awayWinPercentage);
   if (![home, draw, away].every((v) => Number.isFinite(v))) return null;
 
-  const { color, tooltipBackground } = getChartColors(theme);
   const chartData = {
     labels: ["Home win", "Draw", "Away win"],
     datasets: [
       {
         data: [home, draw, away],
         backgroundColor: ["#01a501", "#f57701", "#d71200"],
-        borderWidth: 2,
-        borderColor: theme === "dark" ? "#1f1f1f" : "#ffffff",
+        borderWidth: 0,
       },
     ],
   };
 
   return (
-    <div className="Competition__chartCard">
-      <Doughnut
-        data={chartData}
-        options={{
-          responsive: true,
-          aspectRatio: 1.4,
-          plugins: {
-            legend: {
-              position: "bottom",
-              labels: { color, padding: 10, font: { size: 10 } },
-            },
-            title: {
-              display: true,
-              text: "Match result distribution",
-              color,
-              font: { size: 11, weight: "600" },
-            },
-            tooltip: {
-              backgroundColor: tooltipBackground,
-              callbacks: {
-                label(context) {
-                  return `${context.label}: ${Number(context.raw).toFixed(1)}%`;
-                },
-              },
-            },
-          },
-        }}
-      />
-    </div>
+    <ChartCard title="Match result distribution">
+      <Doughnut data={chartData} options={buildDoughnutOptions(theme)} />
+    </ChartCard>
   );
 }
 
@@ -158,49 +162,21 @@ export function BttsMarketChart({ data }) {
   if (!Number.isFinite(btts)) return null;
 
   const bttsNo = Math.max(0, 100 - btts);
-  const { color, tooltipBackground } = getChartColors(theme);
   const chartData = {
     labels: ["BTTS", "BTTS No"],
     datasets: [
       {
         data: [btts, bttsNo],
         backgroundColor: ["#01a501", "#d71200"],
-        borderWidth: 2,
-        borderColor: theme === "dark" ? "#1f1f1f" : "#ffffff",
+        borderWidth: 0,
       },
     ],
   };
 
   return (
-    <div className="Competition__chartCard">
-      <Doughnut
-        data={chartData}
-        options={{
-          responsive: true,
-          aspectRatio: 1.4,
-          plugins: {
-            legend: {
-              position: "bottom",
-              labels: { color, padding: 10, font: { size: 10 } },
-            },
-            title: {
-              display: true,
-              text: "BTTS vs BTTS No",
-              color,
-              font: { size: 11, weight: "600" },
-            },
-            tooltip: {
-              backgroundColor: tooltipBackground,
-              callbacks: {
-                label(context) {
-                  return `${context.label}: ${Number(context.raw).toFixed(1)}%`;
-                },
-              },
-            },
-          },
-        }}
-      />
-    </div>
+    <ChartCard title="BTTS vs BTTS No">
+      <Doughnut data={chartData} options={buildDoughnutOptions(theme)} />
+    </ChartCard>
   );
 }
 
@@ -231,12 +207,9 @@ export function CornerLinesChart({ data }) {
   };
 
   return (
-    <div className="Competition__chartCard">
-      <Bar
-        data={chartData}
-        options={buildBaseOptions(theme, "Corner line hit rates")}
-      />
-    </div>
+    <ChartCard title="Corner line hit rates">
+      <Bar data={chartData} options={buildBaseOptions(theme)} />
+    </ChartCard>
   );
 }
 
@@ -264,12 +237,9 @@ export function CardLinesChart({ data }) {
   };
 
   return (
-    <div className="Competition__chartCard">
-      <Bar
-        data={chartData}
-        options={buildBaseOptions(theme, "Card line hit rates")}
-      />
-    </div>
+    <ChartCard title="Card line hit rates">
+      <Bar data={chartData} options={buildBaseOptions(theme)} />
+    </ChartCard>
   );
 }
 
@@ -308,12 +278,9 @@ export function HalfTimeGoalsChart({ data }) {
   };
 
   return (
-    <div className="Competition__chartCard">
-      <Bar
-        data={chartData}
-        options={buildBaseOptions(theme, "Half-time goals markets")}
-      />
-    </div>
+    <ChartCard title="Half-time goals markets">
+      <Bar data={chartData} options={buildBaseOptions(theme)} />
+    </ChartCard>
   );
 }
 
@@ -349,14 +316,14 @@ export function GoalTimingChart({ data }) {
   };
 
   return (
-    <div className="Competition__chartCard">
+    <ChartCard title="Goals by time period">
       <Bar
         data={chartData}
-        options={buildBaseOptions(theme, "Goals by time period", "x", {
+        options={buildBaseOptions(theme, "x", {
           valueSuffix: "",
           valueDecimals: 0,
         })}
       />
-    </div>
+    </ChartCard>
   );
 }

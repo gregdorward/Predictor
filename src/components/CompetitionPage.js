@@ -31,6 +31,7 @@ import {
   formatNumber,
   getTeamsList,
   sortTeamsByField,
+  withXgDiff,
 } from "./competition/competitionUtils";
 
 function MetricCard({ label, value, sub }) {
@@ -43,7 +44,13 @@ function MetricCard({ label, value, sub }) {
   );
 }
 
-function TeamRankingTable({ title, teams, field, format = formatPercent }) {
+function TeamRankingTable({
+  title,
+  teams,
+  field,
+  format = formatPercent,
+  valueLabel = "Rate",
+}) {
   if (!teams.length) return null;
 
   return (
@@ -55,7 +62,7 @@ function TeamRankingTable({ title, teams, field, format = formatPercent }) {
             <TableRow>
               <TableCell>#</TableCell>
               <TableCell>Team</TableCell>
-              <TableCell align="right">Rate</TableCell>
+              <TableCell align="right">{valueLabel}</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
@@ -309,6 +316,13 @@ export default function CompetitionPage({
                     teams={sortTeamsByField(teams, "seasonAVG_overall")}
                     field="seasonAVG_overall"
                     format={(v) => formatNumber(v)}
+                  />
+                  <TeamRankingTable
+                    title="Best xG difference"
+                    teams={sortTeamsByField(withXgDiff(teams), "xg_diff_overall")}
+                    field="xg_diff_overall"
+                    format={(v) => formatNumber(v)}
+                    valueLabel="xG Diff"
                   />
                   <TeamRankingTable
                     title="Highest clean sheet rate"

@@ -28,6 +28,25 @@ export function sortTeamsByField(teams, field, limit = 10) {
     .slice(0, limit);
 }
 
+/** Derive season-total xG difference (avg for − avg against) × matches played. */
+export function withXgDiff(teams) {
+  return (teams || []).map((team) => {
+    const xgFor = Number(team?.xg_for_avg_overall);
+    const xgAgainst = Number(team?.xg_against_avg_overall);
+    const played = Number(team?.seasonMatchesPlayed_overall);
+    const hasXg =
+      Number.isFinite(xgFor) &&
+      Number.isFinite(xgAgainst) &&
+      Number.isFinite(played) &&
+      played > 0;
+
+    return {
+      ...team,
+      xg_diff_overall: hasXg ? (xgFor - xgAgainst) * played : null,
+    };
+  });
+}
+
 export function resolveScorerTeam(scorer, teams) {
   const teamId = scorer?.club_team_id;
   if (teamId == null || teamId === -1 || teamId === "-1") {

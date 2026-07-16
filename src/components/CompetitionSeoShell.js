@@ -78,22 +78,22 @@ export default function CompetitionSeoShell({
               </div>
             ) : null}
             {homeWin != null && draw != null && awayWin != null ? (
-              <div className="Competition__seoStat">
+              <div className="Competition__seoStat Competition__seoStat--wide">
                 <dt>H/D/A</dt>
                 <dd>{homeWin} / {draw} / {awayWin}</dd>
               </div>
             ) : null}
           </dl>
         )}
-        <div className="Competition__seoIntro">
-          {introParagraphs.map((paragraph) => (
-            <p key={paragraph.slice(0, 48)}>{paragraph}</p>
-          ))}
-        </div>
         <div className="Competition__seoHighlights">
           <TeamList title="Top Over 2.5 teams" teams={topOver25Teams} field="seasonOver25Percentage_overall" />
           <TeamList title="Top BTTS teams" teams={topBttsTeams} field="seasonBTTSPercentage_overall" />
           <TeamList title="Top Under 2.5 teams" teams={topUnder25Teams} field="seasonUnder25Percentage_overall" />
+        </div>
+        <div className="Competition__seoIntro">
+          {introParagraphs.map((paragraph) => (
+            <p key={paragraph.slice(0, 48)}>{paragraph}</p>
+          ))}
         </div>
         <div className="Competition__seoFaq">
           <h2>{name} stats guide</h2>
