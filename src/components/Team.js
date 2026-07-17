@@ -5,6 +5,7 @@ import { predictMatchById } from "../logic/predictMatchById";
 import { mapMatchToFixturePageData } from "../logic/buildSingleMatch";
 import { buildLegacyFixtureSections } from "../logic/fixturePageMetrics";
 import FixtureSeasonStats from "./FixtureSeasonStats";
+import { FixtureSeoBody } from "./FixtureSeoShell";
 import ShareableVisual from "./ShareableVisual";
 import { sanitizeImageFilename } from "../utils/captureElementImage";
 import {
@@ -82,28 +83,51 @@ function normalizeResultMatch(match) {
   };
 }
 
-function PairedCardTitle({ side, name, subtitle }) {
+function LoadingSkeleton({ seoShell = null }) {
   return (
-    <h2 className={`FixturePage-cardTitle FixturePage-cardTitle--${side}`}>
-      <span className="FixturePage-cardTitleName">{name}</span>
-      {subtitle ? (
-        <span className="FixturePage-cardTitleSub">{subtitle}</span>
-      ) : null}
-    </h2>
+    <div className="FixturePage-loading" aria-busy="true" aria-label="Loading fixture analysis">
+      <div className="FixturePage-skeleton FixturePage-skeleton--hero" />
+      {seoShell ? <FixtureSeoBody {...seoShell} /> : null}
+      <div className="FixturePage-skeleton FixturePage-skeleton--chart" />
+      <div className="FixturePage-skeleton FixturePage-skeleton--card" />
+      <div className="FixturePage-skeleton FixturePage-skeleton--card" />
+    </div>
   );
 }
 
-function PairedStatSection({ title, homeContent, awayContent }) {
+function CompareRow({ label, homeValue, awayValue }) {
   return (
-    <section className="FixturePage-pairedSection">
+    <div className="FixturePage-compareRow">
+      <span className="FixturePage-compareValue FixturePage-compareValue--home">
+        {formatStatValue(label, homeValue)}
+      </span>
+      <span className="FixturePage-compareLabel">{label}</span>
+      <span className="FixturePage-compareValue FixturePage-compareValue--away">
+        {formatStatValue(label, awayValue)}
+      </span>
+    </div>
+  );
+}
+
+function CompareSection({ title, homeRows = [], awayRows = [] }) {
+  const rows = homeRows.map((homeStat, index) => ({
+    label: homeStat.label,
+    homeValue: homeStat.value,
+    awayValue: awayRows[index]?.value,
+  }));
+
+  return (
+    <section className="FixturePage-compareSection">
       <h3 className="FixturePage-statGroupTitle">{title}</h3>
-      <div className="FixturePage-pairedRow">
-        <div className="FixturePage-pairedCol FixturePage-pairedCol--home">
-          {homeContent}
-        </div>
-        <div className="FixturePage-pairedCol FixturePage-pairedCol--away">
-          {awayContent}
-        </div>
+      <div className="FixturePage-compareRows">
+        {rows.map((row) => (
+          <CompareRow
+            key={row.label}
+            label={row.label}
+            homeValue={row.homeValue}
+            awayValue={row.awayValue}
+          />
+        ))}
       </div>
     </section>
   );
@@ -126,12 +150,14 @@ function ModelOutputsChart({ modelOutputs, homeTeamName, awayTeamName, theme, co
   }
 
   const { homeWin, draw, awayWin } = modelOutputs;
+  const homeLabel = homeTeamName ? `${homeTeamName} win` : "Home win";
+  const awayLabel = awayTeamName ? `${awayTeamName} win` : "Away win";
 
   const chartOptions = {
     indexAxis: "y",
     plugins: {
       legend: {
-        labels: { color },
+        display: false,
       },
       title: {
         display: false,
@@ -145,18 +171,22 @@ function ModelOutputsChart({ modelOutputs, homeTeamName, awayTeamName, theme, co
         },
       },
     },
-    aspectRatio: 3.5,
-    maintainAspectRatio: true,
+    maintainAspectRatio: false,
     responsive: true,
+    layout: {
+      padding: { top: 8, right: 12, bottom: 8, left: 12 },
+    },
     scales: {
       x: {
         stacked: true,
         max: 100,
         ticks: {
           color,
+          font: { size: 11 },
           callback: (value) => `${value}%`,
         },
         grid: { color: gridColor },
+        border: { display: false },
       },
       y: {
         stacked: true,
@@ -167,33 +197,66 @@ function ModelOutputsChart({ modelOutputs, homeTeamName, awayTeamName, theme, co
   };
 
   const chartData = {
-    labels: ["Match outcome"],
+    labels: [" "],
     datasets: [
       {
-        label: homeTeamName ? `${homeTeamName} win` : "Home win",
+        label: homeLabel,
         data: [homeWin],
         backgroundColor: "#01a501",
+        borderWidth: 0,
+        borderRadius: 6,
+        barPercentage: 0.7,
+        categoryPercentage: 0.85,
       },
       {
         label: "Draw",
         data: [draw],
-        backgroundColor: "#888888",
+        backgroundColor: "#8a8a8a",
+        borderWidth: 0,
+        borderRadius: 6,
+        barPercentage: 0.7,
+        categoryPercentage: 0.85,
       },
       {
-        label: awayTeamName ? `${awayTeamName} win` : "Away win",
+        label: awayLabel,
         data: [awayWin],
         backgroundColor: "#d71200",
+        borderWidth: 0,
+        borderRadius: 6,
+        barPercentage: 0.7,
+        categoryPercentage: 0.85,
       },
     ],
   };
 
   return (
-    <Bar
-      key={`model-${theme}`}
-      options={chartOptions}
-      data={chartData}
-      className="FixturePage-modelOutputsChart"
-    />
+    <div className="FixturePage-modelOutputsBody">
+      <div className="FixturePage-modelOutputsChartWrap">
+        <Bar
+          key={`model-${theme}`}
+          options={chartOptions}
+          data={chartData}
+          className="FixturePage-modelOutputsChart"
+        />
+      </div>
+      <div className="FixturePage-chartLegend" aria-hidden="true">
+        <span className="FixturePage-chartLegendItem">
+          <span className="FixturePage-chartLegendSwatch FixturePage-chartLegendSwatch--home" />
+          {homeLabel}
+          <strong>{Number(homeWin).toFixed(1)}%</strong>
+        </span>
+        <span className="FixturePage-chartLegendItem">
+          <span className="FixturePage-chartLegendSwatch FixturePage-chartLegendSwatch--draw" />
+          Draw
+          <strong>{Number(draw).toFixed(1)}%</strong>
+        </span>
+        <span className="FixturePage-chartLegendItem">
+          <span className="FixturePage-chartLegendSwatch FixturePage-chartLegendSwatch--away" />
+          {awayLabel}
+          <strong>{Number(awayWin).toFixed(1)}%</strong>
+        </span>
+      </div>
+    </div>
   );
 }
 
@@ -269,59 +332,55 @@ function HeadToHeadSection({ headToHead, homeTeamName, awayTeamName }) {
 
 function ResultsColumn({ side, matches }) {
   return (
-    <div
-      className={`FixturePage-pairedCol FixturePage-pairedCol--${side} FixturePage-results`}
-    >
-      <div className="FixturePage-resultsList">
-        {matches.length === 0 ? (
-          <p className="FixturePage-resultsEmpty">No recent results available.</p>
-        ) : (
-          matches.map((match, index) => (
-            <div key={`${match.date}-${index}`} className="FixturePage-result">
-              <div className="FixturePage-resultMeta">
-                <span className="FixturePage-resultDate" title={match.date}>
-                  {match.date}
+    <div className={`FixturePage-resultsList FixturePage-resultsList--${side}`}>
+      {matches.length === 0 ? (
+        <p className="FixturePage-resultsEmpty">No recent results available.</p>
+      ) : (
+        matches.map((match, index) => (
+          <div key={`${match.date}-${index}`} className="FixturePage-result">
+            <div className="FixturePage-resultMeta">
+              <span className="FixturePage-resultDate" title={match.date}>
+                {match.date}
+              </span>
+              {match.venue && (
+                <span
+                  className="FixturePage-resultVenue"
+                  title={match.venue}
+                >
+                  {match.venue === "Home"
+                    ? "H"
+                    : match.venue === "Away"
+                      ? "A"
+                      : match.venue}
                 </span>
-                {match.venue && (
-                  <span
-                    className="FixturePage-resultVenue"
-                    title={match.venue}
-                  >
-                    {match.venue === "Home"
-                      ? "H"
-                      : match.venue === "Away"
-                        ? "A"
-                        : match.venue}
-                  </span>
-                )}
-                {match.result && (
-                  <span
-                    className={`FixturePage-resultBadge FixturePage-resultBadge--${match.result.toLowerCase()}`}
-                  >
-                    {match.result}
-                  </span>
-                )}
-              </div>
-              <div className="FixturePage-resultRow">
-                <span className="FixturePage-resultTeam FixturePage-resultTeam--home">
-                  {match.homeTeam}
+              )}
+              {match.result && (
+                <span
+                  className={`FixturePage-resultBadge FixturePage-resultBadge--${match.result.toLowerCase()}`}
+                >
+                  {match.result}
                 </span>
-                <span className="FixturePage-resultScore">
-                  {match.homeGoals} : {match.awayGoals}
-                </span>
-                <span className="FixturePage-resultTeam FixturePage-resultTeam--away">
-                  {match.awayTeam}
-                </span>
-              </div>
+              )}
             </div>
-          ))
-        )}
-      </div>
+            <div className="FixturePage-resultRow">
+              <span className="FixturePage-resultTeam FixturePage-resultTeam--home">
+                {match.homeTeam}
+              </span>
+              <span className="FixturePage-resultScore">
+                {match.homeGoals} : {match.awayGoals}
+              </span>
+              <span className="FixturePage-resultTeam FixturePage-resultTeam--away">
+                {match.awayTeam}
+              </span>
+            </div>
+          </div>
+        ))
+      )}
     </div>
   );
 }
 
-function TeamPage({ matchId }) {
+function TeamPage({ matchId, seoShell = null }) {
   const [pageData, setPageData] = useState(null);
   const [match, setMatch] = useState(null);
   const [loading, setLoading] = useState(Boolean(matchId));
@@ -451,8 +510,10 @@ function TeamPage({ matchId }) {
 
   if (loading) {
     return (
-      <div className="FixturePage">
-        <p className="FixturePage-loading">Loading fixture analysis…</p>
+      <div
+        className={`FixturePage${seoShell ? " FixturePage--hasSeoBody" : ""}`}
+      >
+        <LoadingSkeleton seoShell={seoShell} />
       </div>
     );
   }
@@ -476,13 +537,10 @@ function TeamPage({ matchId }) {
   const chartOptions = {
     plugins: {
       legend: {
-        labels: { color },
+        display: false,
       },
       title: {
-        display: true,
-        text: "Team Comparison",
-        color,
-        font: { size: 14, weight: "600" },
+        display: false,
       },
       tooltip: {
         backgroundColor: tooltipBackground,
@@ -490,19 +548,28 @@ function TeamPage({ matchId }) {
         bodyColor: "#ffffff",
       },
     },
-    aspectRatio: 1.4,
-    maintainAspectRatio: true,
+    maintainAspectRatio: false,
     responsive: true,
+    layout: {
+      padding: { top: 8, right: 8, bottom: 4, left: 8 },
+    },
     scales: {
       x: {
         stacked: true,
-        ticks: { color },
-        grid: { color: gridColor },
+        ticks: {
+          color,
+          font: { size: 12, weight: "500" },
+          maxRotation: 0,
+          autoSkip: true,
+        },
+        grid: { display: false },
+        border: { display: false },
       },
       y: {
         stacked: true,
         display: false,
         grid: { display: false },
+        border: { display: false },
       },
     },
   };
@@ -515,68 +582,76 @@ function TeamPage({ matchId }) {
     datasets: [
       {
         data: [chartValues.homeAttack, chartValues.awayAttack],
-        label: "Attacking Strength",
+        label: "Attacking",
         backgroundColor: "#01a501",
+        borderWidth: 0,
+        borderRadius: 6,
+        barPercentage: 0.65,
+        categoryPercentage: 0.7,
       },
       {
         data: [chartValues.homeDefence, chartValues.awayDefence],
-        label: "Defensive Strength",
+        label: "Defensive",
         backgroundColor: "#d71200",
+        borderWidth: 0,
+        borderRadius: 6,
+        barPercentage: 0.65,
+        categoryPercentage: 0.7,
       },
     ],
   };
 
   return (
-    <div className="FixturePage">
+    <div className={`FixturePage${seoShell ? " FixturePage--hasSeoBody" : ""}`}>
       <header className="FixturePage-header">
-        <div className="FixturePage-matchTitle">
-          <CreateBadge
-            image={storedFixtureDetailsJson.homeTeamBadge}
-            ClassName="FixturePage-badge FixturePage-badge--home"
-            alt="Home team badge"
-          />
-          <div className="FixturePage-teams">
-            <h1 className="FixturePage-heading">
-              <span
-                className="FixturePage-headingTeam FixturePage-headingTeam--home"
-                title={storedFixtureDetailsJson.homeTeamName}
-              >
-                {storedFixtureDetailsJson.homeTeamName}
-              </span>
-              <span className="FixturePage-vs">v</span>
-              <span
-                className="FixturePage-headingTeam FixturePage-headingTeam--away"
-                title={storedFixtureDetailsJson.awayTeamName}
-              >
-                {storedFixtureDetailsJson.awayTeamName}
-              </span>
-            </h1>
-          </div>
-          <CreateBadge
-            image={storedFixtureDetailsJson.awayTeamBadge}
-            ClassName="FixturePage-badge FixturePage-badge--away"
-            alt="Away team badge"
-          />
-        </div>
+        <h1 className="FixturePage-heading">
+          <span className="FixturePage-teamLine FixturePage-teamLine--home">
+            <CreateBadge
+              image={storedFixtureDetailsJson.homeTeamBadge}
+              ClassName="FixturePage-badge FixturePage-badge--home"
+              alt=""
+            />
+            <span
+              className="FixturePage-headingTeam FixturePage-headingTeam--home"
+              title={storedFixtureDetailsJson.homeTeamName}
+            >
+              {storedFixtureDetailsJson.homeTeamName}
+            </span>
+          </span>
+          <span className="FixturePage-vs">v</span>
+          <span className="FixturePage-teamLine FixturePage-teamLine--away">
+            <CreateBadge
+              image={storedFixtureDetailsJson.awayTeamBadge}
+              ClassName="FixturePage-badge FixturePage-badge--away"
+              alt=""
+            />
+            <span
+              className="FixturePage-headingTeam FixturePage-headingTeam--away"
+              title={storedFixtureDetailsJson.awayTeamName}
+            >
+              {storedFixtureDetailsJson.awayTeamName}
+            </span>
+          </span>
+        </h1>
 
         <div className="FixturePage-meta">
-          <span className="FixturePage-metaItem">
-            {storedFixtureDetailsJson.stadium}
-          </span>
-          <span className="FixturePage-metaItem">
-            KO: {storedFixtureDetailsJson.time}
-          </span>
           {storedFixtureDetailsJson.leagueName ? (
             <span className="FixturePage-metaItem">
               {storedFixtureDetailsJson.leagueName}
             </span>
           ) : null}
+          <span className="FixturePage-metaItem">
+            KO: {storedFixtureDetailsJson.time}
+          </span>
+          {storedFixtureDetailsJson.stadium ? (
+            <span className="FixturePage-metaItem">
+              {storedFixtureDetailsJson.stadium}
+            </span>
+          ) : null}
         </div>
 
         <div className="FixturePage-prediction">
-          <span className="FixturePage-predictionLabel">
-            Soccer Stats Hub Prediction
-          </span>
+          <span className="FixturePage-predictionLabel">Predicted score</span>
           <span className="FixturePage-predictionScore">
             {storedFixtureDetailsJson.homeGoals} -{" "}
             {storedFixtureDetailsJson.awayGoals}
@@ -584,55 +659,58 @@ function TeamPage({ matchId }) {
         </div>
       </header>
 
+      {seoShell ? <FixtureSeoBody {...seoShell} /> : null}
+
       {matchId && match ? <FixtureSeasonStats match={match} /> : null}
 
-      <ShareableVisual
-        filename={sanitizeImageFilename(
-          `${storedFixtureDetailsJson.homeTeamName}-vs-${storedFixtureDetailsJson.awayTeamName}-comparison`
-        )}
-        shareTitle={`${storedFixtureDetailsJson.homeTeamName} vs ${storedFixtureDetailsJson.awayTeamName} - stat comparison`}
-        className="FixturePage-chartCard"
-      >
-        <div data-share-capture className="ComparisonBarChart">
-          <Bar
-            key={theme}
-            options={chartOptions}
-            data={chartData}
-            className="FixturePage-chart"
-          />
-        </div>
-      </ShareableVisual>
+      <section className="FixturePage-chartCard">
+        <h3 className="FixturePage-statGroupTitle">Team comparison</h3>
+        <ShareableVisual
+          filename={sanitizeImageFilename(
+            `${storedFixtureDetailsJson.homeTeamName}-vs-${storedFixtureDetailsJson.awayTeamName}-comparison`
+          )}
+          shareTitle={`${storedFixtureDetailsJson.homeTeamName} vs ${storedFixtureDetailsJson.awayTeamName} - stat comparison`}
+          className="FixturePage-chartShare"
+        >
+          <div data-share-capture className="FixturePage-comparisonChart">
+            <div className="FixturePage-comparisonChartCanvas">
+              <Bar
+                key={theme}
+                options={chartOptions}
+                data={chartData}
+                className="FixturePage-chart"
+              />
+            </div>
+            <div className="FixturePage-chartLegend" aria-hidden="true">
+              <span className="FixturePage-chartLegendItem">
+                <span className="FixturePage-chartLegendSwatch FixturePage-chartLegendSwatch--home" />
+                Attacking
+              </span>
+              <span className="FixturePage-chartLegendItem">
+                <span className="FixturePage-chartLegendSwatch FixturePage-chartLegendSwatch--away" />
+                Defensive
+              </span>
+            </div>
+          </div>
+        </ShareableVisual>
+      </section>
 
-      <div className="FixturePage-pairedBlock">
-        <div className="FixturePage-pairedHeaders">
-          <PairedCardTitle
-            side="home"
-            name={storedFixtureDetailsJson.homeTeamName}
-          />
-          <PairedCardTitle
-            side="away"
-            name={storedFixtureDetailsJson.awayTeamName}
-          />
+      <div className="FixturePage-compareBlock">
+        <div className="FixturePage-compareTeams FixturePage-compareTeams--block">
+          <span className="FixturePage-compareTeam FixturePage-compareTeam--home">
+            {storedFixtureDetailsJson.homeTeamName}
+          </span>
+          <span className="FixturePage-compareTeam FixturePage-compareTeam--away">
+            {storedFixtureDetailsJson.awayTeamName}
+          </span>
         </div>
 
         {sections.map((section) => (
-          <PairedStatSection
+          <CompareSection
             key={section.id}
             title={section.title}
-            homeContent={section.home.map((stat) => (
-              <StatRow
-                key={`home-${section.id}-${stat.label}`}
-                label={stat.label}
-                value={stat.value}
-              />
-            ))}
-            awayContent={section.away.map((stat) => (
-              <StatRow
-                key={`away-${section.id}-${stat.label}`}
-                label={stat.label}
-                value={stat.value}
-              />
-            ))}
+            homeRows={section.home}
+            awayRows={section.away}
           />
         ))}
       </div>
@@ -660,23 +738,21 @@ function TeamPage({ matchId }) {
         />
       ) : null}
 
-      <div className="FixturePage-pairedBlock FixturePage-pairedBlock--results">
-        <div className="FixturePage-pairedHeaders">
-          <PairedCardTitle
-            side="home"
-            name={storedFixtureDetailsJson.homeTeamName}
-            subtitle="Recent Results"
-          />
-          <PairedCardTitle
-            side="away"
-            name={storedFixtureDetailsJson.awayTeamName}
-            subtitle="Recent Results"
-          />
-        </div>
-
-        <div className="FixturePage-pairedRow FixturePage-pairedRow--stretch">
-          <ResultsColumn side="home" matches={recentResults.home} />
-          <ResultsColumn side="away" matches={recentResults.away} />
+      <div className="FixturePage-resultsBlock">
+        <h3 className="FixturePage-statGroupTitle">Recent Results</h3>
+        <div className="FixturePage-resultsGrid">
+          <div className="FixturePage-resultsPanel FixturePage-resultsPanel--home">
+            <h4 className="FixturePage-resultsPanelTitle">
+              {storedFixtureDetailsJson.homeTeamName}
+            </h4>
+            <ResultsColumn side="home" matches={recentResults.home} />
+          </div>
+          <div className="FixturePage-resultsPanel FixturePage-resultsPanel--away">
+            <h4 className="FixturePage-resultsPanelTitle">
+              {storedFixtureDetailsJson.awayTeamName}
+            </h4>
+            <ResultsColumn side="away" matches={recentResults.away} />
+          </div>
         </div>
       </div>
     </div>

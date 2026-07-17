@@ -7091,14 +7091,32 @@ body.dark-mode .MetricTrendTables-table td {
   }
 }
 
-/* Fixture page (/fixture) */
+/* Fixture page (/fixture) — cohesive type + spacing system */
 .FixturePage {
+  --fp-space-1: 0.5em;
+  --fp-space-2: 0.75em;
+  --fp-space-3: 1em;
+  --fp-space-4: 1.5em;
+  --fp-space-5: 2em;
+  --fp-pad: 1.1em 1.2em;
+  --fp-radius: 10px;
+  --fp-radius-sm: 8px;
+  --fp-title: 1.3em;
+  --fp-section: 1.05em;
+  --fp-body: 1em;
+  --fp-label: 0.9em;
+  --fp-meta: 0.85em;
+  --fp-score: 1.2em;
+
   width: 100%;
-  max-width: 72rem;
+  max-width: var(--content-max-width);
   margin: 0 auto;
-  padding: 0em;
+  padding: var(--fp-space-3) var(--content-padding-x) var(--fp-space-4);
   box-sizing: border-box;
   text-align: left;
+  color: var(--text-color);
+  font-size: 1em;
+  line-height: 1.45;
 }
 
 /* Override global section { width: 50% } used elsewhere in the app */
@@ -7106,75 +7124,183 @@ body.dark-mode .MetricTrendTables-table td {
   width: 100%;
   max-width: 100%;
   min-height: auto;
-  display: block;
-  position: static;
+  display: flex;
+  flex-direction: column;
   align-items: stretch;
+  position: static;
   justify-content: flex-start;
+  text-align: left;
   box-sizing: border-box;
 }
 
+.FixturePage-loading {
+  display: flex;
+  flex-direction: column;
+  gap: var(--fp-space-3);
+}
+
+.FixturePage-skeleton {
+  background: linear-gradient(
+    90deg,
+    var(--third-background-color) 25%,
+    var(--secondary-background-color) 50%,
+    var(--third-background-color) 75%
+  );
+  background-size: 200% 100%;
+  animation: CompetitionShimmer 1.2s ease-in-out infinite;
+  border-radius: var(--fp-radius-sm);
+}
+
+.FixturePage-skeleton--hero {
+  height: 7rem;
+}
+
+.FixturePage-skeleton--card {
+  height: 5rem;
+}
+
+.FixturePage-skeleton--chart {
+  height: 16rem;
+}
+
+.FixturePage-error {
+  margin: var(--fp-space-5) 0;
+  text-align: center;
+  color: var(--faint-text);
+  font-size: var(--fp-body);
+}
+
+/* Shared surface cards */
+.FixturePage-chartCard,
+.FixturePage .FixturePage-modelOutputsCard,
+.FixturePage-h2hCard,
+.FixturePage-seasonStats,
+.FixturePage-compareBlock,
+.FixturePage-resultsBlock {
+  width: 100%;
+  max-width: 100%;
+  margin: 0 0 var(--fp-space-4);
+  padding: var(--fp-pad);
+  border-radius: var(--fp-radius);
+  border: none;
+  background: var(--subtle-surface-color);
+  box-shadow: none;
+  box-sizing: border-box;
+}
+
+.FixturePage-seasonStats,
+.FixturePage-compareBlock,
+.FixturePage-resultsBlock,
+.FixturePage-h2hCard,
+.FixturePage .FixturePage-modelOutputsCard {
+  display: flex;
+  flex-direction: column;
+  gap: var(--fp-space-3);
+}
+
+.FixturePage .ShareableVisual {
+  margin: 0 0 var(--fp-space-4);
+}
+
+.FixturePage .ShareableVisual__actions {
+  margin-bottom: var(--fp-space-2);
+}
+
+.FixturePage-resultsBlock {
+  margin-bottom: 0;
+}
+
+/* Section headings — one size everywhere */
+.FixturePage-statGroupTitle,
+.FixturePage-h2hSubheading,
+.FixturePage-resultsPanelTitle {
+  margin: 0;
+  padding: 0 0 var(--fp-space-2);
+  font-size: var(--fp-section);
+  font-weight: 600;
+  letter-spacing: 0;
+  text-transform: none;
+  color: var(--text-color);
+  background: transparent;
+  border: none;
+  border-bottom: 1px solid var(--third-background-color);
+  border-radius: 0;
+  line-height: 1.35;
+  text-align: left;
+}
+
+.FixturePage-h2hSubheading {
+  margin-top: var(--fp-space-3);
+}
+
+.FixturePage-resultsPanelTitle {
+  padding: var(--fp-space-2) var(--fp-space-3);
+  border-bottom: 1px solid var(--third-background-color);
+}
+
+/* Hero */
 .FixturePage-header {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 1rem;
-  padding: 1.35rem 1.25rem 1.5rem;
-  margin-bottom: 1.25rem;
-  border-radius: 14px;
-  background: linear-gradient(
-    165deg,
-    var(--secondary-background-color) 0%,
-    var(--background-color) 55%
-  );
-  border: 1px solid var(--third-background-color);
-  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
-}
-
-.FixturePage-matchTitle {
-  display: grid;
-  grid-template-columns: auto minmax(0, 1fr) auto;
-  align-items: center;
-  gap: 0.65rem 0.85rem;
-  width: 100%;
-}
-
-.FixturePage-badge {
-  width: 3.25rem;
-  height: 3.25rem;
-  object-fit: contain;
-  flex-shrink: 0;
-  padding: 0.35rem;
-  border-radius: 10px;
-  background-color: var(--alternate-background-color);
-  border: 1px solid var(--third-background-color);
-  box-sizing: border-box;
-}
-
-.FixturePage-badge--home {
-  box-shadow: 0 0 0 2px rgba(1, 165, 1, 0.25);
-}
-
-.FixturePage-badge--away {
-  box-shadow: 0 0 0 2px rgba(215, 18, 0, 0.25);
-}
-
-.FixturePage-teams {
-  min-width: 0;
+  gap: var(--fp-space-2);
+  padding: 0;
+  margin-bottom: var(--fp-space-5);
+  background: transparent;
+  border: none;
+  box-shadow: none;
   text-align: center;
 }
 
 .FixturePage-heading {
   display: flex;
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
   align-items: center;
   justify-content: center;
-  gap: 0.5rem;
+  gap: var(--fp-space-2) var(--fp-space-3);
   margin: 0;
-  font-size: clamp(1.25rem, 3.2vw, 2rem);
-  line-height: 1.25;
+  width: 100%;
+  font-size: var(--fp-title);
+  line-height: 1.3;
   color: var(--text-color);
-  font-weight: 700;
-  letter-spacing: -0.01em;
+  font-weight: 600;
+  letter-spacing: 0;
+}
+
+.FixturePage-teamLine {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--fp-space-2);
+  min-width: 0;
+  max-width: calc(50% - 1.5rem);
+}
+
+.FixturePage-teamLine--home {
+  justify-content: flex-end;
+}
+
+.FixturePage-teamLine--away {
+  justify-content: flex-start;
+}
+
+.FixturePage-badge {
+  width: 2.5rem;
+  height: 2.5rem;
+  object-fit: contain;
+  flex-shrink: 0;
+  padding: 0.25rem;
+  border-radius: var(--fp-radius-sm);
+  background-color: var(--subtle-surface-color);
+  border: none;
+  box-sizing: border-box;
+}
+
+.FixturePage-badge--home {
+  box-shadow: 0 0 0 2px rgba(1, 165, 1, 0.22);
+}
+
+.FixturePage-badge--away {
+  box-shadow: 0 0 0 2px rgba(215, 18, 0, 0.22);
 }
 
 .FixturePage-headingTeam {
@@ -7182,6 +7308,8 @@ body.dark-mode .MetricTrendTables-table td {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+  font-size: inherit;
+  font-weight: inherit;
 }
 
 .FixturePage-headingTeam--home {
@@ -7195,12 +7323,12 @@ body.dark-mode .MetricTrendTables-table td {
 .FixturePage-vs {
   display: inline-block;
   margin: 0;
-  padding: 0.2em 0.75em;
-  font-size: 0.72em;
+  padding: 0;
+  font-size: var(--fp-label);
   font-weight: 600;
   color: var(--faint-text);
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
+  letter-spacing: 0;
+  text-transform: lowercase;
   flex-shrink: 0;
   white-space: nowrap;
 }
@@ -7209,223 +7337,617 @@ body.dark-mode .MetricTrendTables-table td {
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
-  gap: 0.5rem 1.25rem;
+  gap: 0.25rem var(--fp-space-3);
   width: 100%;
 }
 
 .FixturePage-metaItem {
-  font-size: 0.9rem;
+  font-size: var(--fp-label);
   color: var(--faint-text);
-  font-weight: 600;
+  font-weight: 500;
 }
 
 .FixturePage-prediction {
   display: inline-flex;
   flex-direction: column;
   align-items: center;
-  gap: 0.35rem;
-  padding: 0.65rem 1.35rem;
-  border-radius: 999px;
-  background-color: var(--span-background);
-  color: var(--span-text-colour);
-  box-shadow: 0 2px 10px rgba(254, 140, 0, 0.18);
+  justify-content: center;
+  gap: 0.2rem;
+  padding: var(--fp-space-2) var(--fp-space-4);
+  border-radius: var(--fp-radius-sm);
+  background: var(--subtle-surface-color);
+  color: var(--text-color);
+  border: none;
+  min-width: 9.5rem;
 }
 
 .FixturePage-predictionLabel {
-  font-size: 0.72rem;
-  font-weight: 700;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-  opacity: 0.85;
+  font-size: var(--fp-label);
+  font-weight: 500;
+  color: var(--faint-text);
 }
 
 .FixturePage-predictionScore {
-  font-size: 1.45rem;
-  font-weight: 800;
-  line-height: 1;
-  letter-spacing: 0.04em;
+  font-size: var(--fp-score);
+  font-weight: 700;
+  line-height: 1.2;
+  letter-spacing: 0.02em;
+  color: var(--primary-color);
+  font-variant-numeric: tabular-nums;
 }
 
+/* Charts */
 .FixturePage-chartCard {
-  width: 100%;
-  max-width: 640px;
-  margin: 0 auto 1.35rem;
   display: flex;
   flex-direction: column;
-  align-items: center;
-  justify-content: center;
+  align-items: stretch;
+  gap: var(--fp-space-3);
+}
+
+.FixturePage-chartCard .FixturePage-statGroupTitle {
+  background: transparent;
+}
+
+.FixturePage-chartShare {
+  width: 100%;
+  margin: 0;
+}
+
+.FixturePage-chartCard .ShareableVisual__actions {
+  margin-bottom: var(--fp-space-1);
+}
+
+.FixturePage-chartCard .ShareableVisual__capture {
+  background: transparent;
+}
+
+.FixturePage-comparisonChart {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: var(--fp-space-3);
+  width: 100%;
+  background: transparent;
+}
+
+.FixturePage-comparisonChartCanvas {
+  position: relative;
+  width: 100%;
+  max-width: 36em;
+  height: 16em;
+  margin: 0 auto;
 }
 
 .FixturePage-chart {
   width: 100% !important;
-  max-height: 22rem;
+  height: 100% !important;
+  max-height: none;
+  display: block;
+}
+
+.FixturePage-chartLegend {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.65em 1.25em;
+  font-size: var(--fp-label);
+  color: var(--faint-text);
+}
+
+.FixturePage-chartLegendItem {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4em;
+  font-weight: 500;
+}
+
+.FixturePage-chartLegendItem strong {
+  color: var(--text-color);
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+
+.FixturePage-chartLegendSwatch {
+  width: 0.7em;
+  height: 0.7em;
+  border-radius: 3px;
+  flex-shrink: 0;
+}
+
+.FixturePage-chartLegendSwatch--home {
+  background: #01a501;
+}
+
+.FixturePage-chartLegendSwatch--away {
+  background: #d71200;
+}
+
+.FixturePage-chartLegendSwatch--draw {
+  background: #8a8a8a;
+}
+
+.FixturePage .ComparisonBarChart {
+  max-width: 100%;
+  margin: 0;
+  padding: 0;
+  border: none;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+}
+
+.FixturePage .ComparisonBarChart:hover {
+  border-color: transparent;
+  box-shadow: none;
+}
+
+.FixturePage .ComparisonBarChart-share {
+  max-width: 100%;
+  margin: 0;
 }
 
 .FixturePage .FixturePage-modelOutputsCard {
-  width: 100%;
-  max-width: 640px;
-  margin: 0 auto 1.35rem;
-  padding: 0.85rem 1rem 1rem;
-  border-radius: 12px;
-  border: 1px solid var(--third-background-color);
-  background-color: var(--background-color);
-  box-shadow: 0 1px 6px rgba(0, 0, 0, 0.05);
-  box-sizing: border-box;
   display: flex;
   flex-direction: column;
-  align-items: center;
-  justify-content: center;
+  gap: var(--fp-space-3);
+  overflow: visible;
 }
 
 .FixturePage-modelOutputsCard .FixturePage-statGroupTitle {
   width: 100%;
-  align-self: stretch;
+}
+
+.FixturePage-modelOutputsBody {
+  display: flex;
+  flex-direction: column;
+  gap: var(--fp-space-2);
+  width: 100%;
+  max-width: 40em;
+  margin: 0 auto;
+}
+
+.FixturePage-modelOutputsChartWrap {
+  position: relative;
+  width: 100%;
+  height: 5.5em;
+  min-height: 4.5em;
 }
 
 .FixturePage-modelOutputsChart {
   width: 100% !important;
-  max-width: 100%;
-  max-height: 8rem;
+  height: 100% !important;
+  max-height: none;
+  display: block;
 }
 
 .FixturePage-modelOutputsEmpty {
   margin: 0;
-  color: var(--secondary-text-color, #666);
-  font-size: 0.95rem;
+  color: var(--faint-text);
+  font-size: var(--fp-body);
 }
 
+/* H2H */
 .FixturePage-h2hCard {
-  width: 100%;
-  max-width: 100%;
-  margin: 0 auto 1.35rem;
-  padding: 0.85rem 1rem 1rem;
-  border-radius: 12px;
-  border: 1px solid var(--third-background-color);
-  background-color: var(--background-color);
-  box-shadow: 0 1px 6px rgba(0, 0, 0, 0.05);
-  box-sizing: border-box;
+  gap: var(--fp-space-2);
 }
 
 .FixturePage-h2hSummary {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 0.35rem 1rem;
-  margin-bottom: 1rem;
+  gap: var(--fp-space-2);
+  margin: 0;
 }
 
-.FixturePage-h2hSubheading {
-  margin: 0 0 0.65rem;
-  font-size: 0.95rem;
-  font-weight: 600;
-  color: var(--text-color);
+.FixturePage-h2hSummary .FixturePage-stat {
+  padding: var(--fp-space-2);
+  border: none;
+  border-radius: var(--fp-radius-sm);
+  background: var(--background-color);
+  gap: var(--fp-space-1);
 }
 
 .FixturePage-h2hMatches {
   display: flex;
   flex-direction: column;
-  gap: 0.65rem;
+  gap: 0;
 }
 
 .FixturePage-h2hMatch {
   border-top: 1px solid var(--third-background-color);
-  padding-top: 0.65rem;
+  padding: var(--fp-space-2) 0;
+}
+
+.FixturePage-h2hMatch:first-child {
+  border-top: none;
+  padding-top: 0;
 }
 
 .FixturePage-h2hMatchMeta {
-  margin-bottom: 0.35rem;
+  margin-bottom: 0.3rem;
 }
 
-.FixturePage-h2hMatchDate {
-  font-size: 0.82rem;
-  color: var(--secondary-text-color, #666);
+.FixturePage-h2hMatchDate,
+.FixturePage-resultDate {
+  font-size: var(--fp-meta);
+  font-weight: 500;
+  color: var(--faint-text);
 }
 
-.FixturePage-h2hMatchRow {
+.FixturePage-h2hMatchRow,
+.FixturePage-resultRow {
   display: grid;
   grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
-  gap: 0.75rem;
+  gap: var(--fp-space-2);
   align-items: center;
 }
 
-.FixturePage-h2hMatchTeam {
-  font-size: 0.92rem;
+.FixturePage-h2hMatchTeam,
+.FixturePage-resultTeam {
+  font-size: var(--fp-body);
+  font-weight: 600;
+  color: var(--text-color);
+  line-height: 1.3;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
 
-.FixturePage-h2hMatchTeam--home {
+.FixturePage-h2hMatchTeam--home,
+.FixturePage-resultTeam--home {
   text-align: right;
 }
 
-.FixturePage-h2hMatchTeam--away {
+.FixturePage-h2hMatchTeam--away,
+.FixturePage-resultTeam--away {
   text-align: left;
 }
 
-.FixturePage-h2hMatchScore {
+.FixturePage-h2hMatchScore,
+.FixturePage-resultScore {
+  flex-shrink: 0;
+  min-width: 3.5rem;
+  padding: 0.3rem 0.5rem;
+  border-radius: var(--fp-radius-sm);
+  font-size: var(--fp-body);
   font-weight: 700;
+  text-align: center;
   font-variant-numeric: tabular-nums;
   white-space: nowrap;
+  background: var(--background-color);
+  color: var(--text-color);
+  border: none;
 }
 
-.FixturePage-grid {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 1.15rem;
-  margin-bottom: 1.15rem;
+.FixturePage-h2hMatchScore {
+  background: transparent;
+  color: var(--primary-color);
+  padding: 0;
+  min-width: auto;
 }
 
-.FixturePage-pairedBlock {
-  margin-bottom: 1.35rem;
-  border-radius: 12px;
-  border: 1px solid var(--third-background-color);
-  background-color: var(--background-color);
-  overflow: hidden;
-  box-shadow: 0 1px 6px rgba(0, 0, 0, 0.05);
-}
-
-.FixturePage-seasonStats {
-  margin-bottom: 1.35rem;
-  border-radius: 12px;
-  border: 1px solid var(--third-background-color);
-  background-color: var(--background-color);
-  overflow: hidden;
-  box-shadow: 0 1px 6px rgba(0, 0, 0, 0.05);
-  padding: 0.65rem;
-  width: 100%;
-  max-width: 100%;
+/* Compare layout */
+.FixturePage-compareHeader {
+  display: flex;
+  flex-direction: column;
+  gap: var(--fp-space-2);
 }
 
 .FixturePage-seasonStats .FixturePage-statGroupTitle {
-  margin: 0 0 0.75rem;
-  padding: 0 0.25rem;
+  border-bottom: none;
+  padding-bottom: 0;
 }
 
-.FixturePage-seasonStats .flex-container {
+.FixturePage-compareTeams {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: var(--fp-space-2);
   width: 100%;
 }
 
-.FixturePage-seasonStats .ColumnBadge {
-  display: none;
+.FixturePage-compareTeams--block {
+  margin-bottom: var(--fp-space-2);
 }
 
-.FixturePage-seasonStats .Collapsable,
-.FixturePage-seasonStats .Collapsible,
-.FixturePage-seasonStats .StatHeader {
+.FixturePage-compareTeam {
+  font-size: var(--fp-label);
+  font-weight: 600;
+  line-height: 1.3;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.FixturePage-compareTeam--home {
+  color: #01a501;
+  text-align: left;
+}
+
+.FixturePage-compareTeam--away {
+  color: #d71200;
+  text-align: right;
+}
+
+.FixturePage-statTabs {
+  display: flex;
+  flex-wrap: nowrap;
+  gap: var(--fp-space-1);
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: thin;
+  padding-bottom: 1em;
+}
+
+.FixturePage-statTab {
+  flex: 0 0 auto;
+  appearance: none;
+  border: none;
+  border-radius: 999px;
+  padding: 0.4rem 0.8rem;
+  font: inherit;
+  font-size: var(--fp-meta);
+  font-weight: 600;
+  color: var(--faint-text);
+  background: var(--background-color);
+  cursor: pointer;
+  white-space: nowrap;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+.FixturePage-statTab--active {
+  color: var(--text-color);
+  background: var(--third-background-color);
+  box-shadow: inset 0 0 0 1px var(--primary-color);
+}
+
+.FixturePage-statTab--locked {
+  opacity: 0.88;
+}
+
+.FixturePage-statTabLock {
+  font-size: 0.7em;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  color: var(--primary-color);
+}
+
+.FixturePage-seasonStatsLocked {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--fp-space-2);
+  padding: var(--fp-space-3) 0 var(--fp-space-1);
+}
+
+.FixturePage-seasonStatsLocked p {
+  margin: 0;
+  color: var(--faint-text);
+  font-size: var(--fp-body);
+  line-height: 1.45;
+}
+
+.FixturePage-upgradeLink {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.55rem 0.95rem;
+  border-radius: var(--fp-radius-sm);
+  background: var(--primary-color);
+  color: #fff;
+  text-decoration: none;
+  font-weight: 700;
+  font-size: var(--fp-label);
+}
+
+.FixturePage-upgradeLink:hover {
+  filter: brightness(1.05);
+}
+
+.FixturePage-compareSection {
   width: 100%;
-  max-width: 100%;
-  box-sizing: border-box;
+  margin: 0;
+  padding: var(--fp-space-3) 0 0;
+  gap: var(--fp-space-2);
+}
+
+.FixturePage-compareSection + .FixturePage-compareSection {
+  border-top: 1px solid var(--third-background-color);
+  margin-top: var(--fp-space-3);
+  padding-top: var(--fp-space-3);
+}
+
+.FixturePage-compareRows {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
+.FixturePage-compareRow {
+  display: grid;
+  grid-template-columns: minmax(3.75rem, 1fr) minmax(0, 1.7fr) minmax(3.75rem, 1fr);
+  gap: var(--fp-space-1) var(--fp-space-2);
+  align-items: baseline;
+  padding: 0.7rem 0;
+  border-bottom: 1px solid var(--third-background-color);
+}
+
+.FixturePage-compareRow:last-child {
+  border-bottom: none;
+}
+
+.FixturePage-compareLabel {
+  font-size: var(--fp-label);
+  line-height: 1.35;
+  color: var(--faint-text);
+  font-weight: 500;
+  text-align: center;
+  min-width: 0;
+}
+
+.FixturePage-compareValue {
+  font-size: var(--fp-body);
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  color: var(--text-color);
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.FixturePage-compareValue--home,
+.FixturePage-compareValue--away {
+  color: var(--primary-color);
+}
+
+.FixturePage-compareValue--home {
+  text-align: left;
+}
+
+.FixturePage-compareValue--away {
+  text-align: right;
+}
+
+.FixturePage-compareValue--better {
+  color: #01a501;
+}
+
+.FixturePage-compareValue--worse {
+  color: var(--faint-text);
+  font-weight: 600;
+}
+
+/* Results */
+.FixturePage-resultsGrid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--fp-space-2);
+  margin-top: var(--fp-space-2);
+}
+
+.FixturePage-resultsPanel {
+  min-width: 0;
+  border-radius: var(--fp-radius-sm);
+  background: var(--background-color);
+  overflow: hidden;
+}
+
+.FixturePage-resultsPanel--home {
+  border-top: 2px solid #01a501;
+}
+
+.FixturePage-resultsPanel--away {
+  border-top: 2px solid #d71200;
+}
+
+.FixturePage-resultsList {
+  display: flex;
+  flex-direction: column;
+}
+
+.FixturePage-resultsEmpty {
+  margin: 0;
+  padding: var(--fp-space-3);
+  font-size: var(--fp-label);
+  color: var(--faint-text);
+  text-align: center;
+}
+
+.FixturePage-result {
+  padding: var(--fp-space-2) var(--fp-space-3);
+  border-bottom: 1px solid var(--third-background-color);
+}
+
+.FixturePage-result:last-child {
+  border-bottom: none;
+}
+
+.FixturePage-resultMeta {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto auto;
+  align-items: center;
+  gap: var(--fp-space-1);
+  margin-bottom: 0.3rem;
+  min-height: 1.25rem;
+}
+
+.FixturePage-resultVenue,
+.FixturePage-resultBadge {
+  font-size: var(--fp-meta);
+  font-weight: 700;
+  min-width: 1.25rem;
+  text-align: center;
+  padding: 0.12rem 0.35rem;
+  border-radius: 6px;
+  flex-shrink: 0;
+  white-space: nowrap;
+}
+
+.FixturePage-resultVenue {
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  color: var(--faint-text);
+  background: var(--subtle-surface-color);
+}
+
+.FixturePage-resultBadge {
+  color: #fff;
+}
+
+.FixturePage-resultBadge--w {
+  background-color: #01a501;
+}
+
+.FixturePage-resultBadge--d {
+  background-color: var(--faint-text);
+}
+
+.FixturePage-resultBadge--l {
+  background-color: #d71200;
+}
+
+.FixturePage-resultScore {
+  background: var(--subtle-surface-color);
 }
 
 .FixturePage-seasonStatsPreviewNote {
-  margin: 0 0 0.75rem;
-  padding: 0.55rem 0.75rem;
-  font-size: 0.9rem;
+  margin: var(--fp-space-2) 0 0;
+  padding: 0;
+  font-size: var(--fp-label);
   line-height: 1.4;
-  color: var(--text-color);
-  background: var(--secondary-background-color, #f5f5f5);
-  border: 1px solid var(--accent-color);
-  border-radius: 4px;
+  color: var(--faint-text);
+  background: transparent;
+  border: none;
+}
+
+/* Generic stat row (H2H summary etc.) */
+.FixturePage-stat {
+  display: grid;
+  grid-template-columns: minmax(0, 1.4fr) minmax(3.5rem, auto);
+  gap: var(--fp-space-2);
+  align-items: baseline;
+  padding: 0.65rem 0;
+  border-bottom: 1px solid var(--third-background-color);
+}
+
+.FixturePage-stat:last-child {
+  border-bottom: none;
+}
+
+.FixturePage-statLabel {
+  font-size: var(--fp-label);
+  line-height: 1.35;
+  color: var(--faint-text);
+  font-weight: 500;
+}
+
+.FixturePage-statValue {
+  font-size: var(--fp-body);
+  font-weight: 700;
+  color: var(--primary-color);
+  text-align: right;
+  font-variant-numeric: tabular-nums;
 }
 
 .StatHeader--locked {
@@ -7444,574 +7966,122 @@ body.dark-mode .MetricTrendTables-table td {
   line-height: 1;
 }
 
-.FixturePage-pairedBlock--results {
-  margin-bottom: 0;
-}
-
-.FixturePage-pairedHeaders {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 0.65rem;
-  padding: 0.65rem 0.65rem 0;
-  align-items: stretch;
-}
-
-.FixturePage-pairedHeaders .FixturePage-cardTitle {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  text-align: center;
-  height: 100%;
-  min-height: 4.25rem;
-  box-sizing: border-box;
-  gap: 0.25rem;
-}
-
-.FixturePage-cardTitleName {
-  display: -webkit-box;
-  -webkit-box-orient: vertical;
-  -webkit-line-clamp: 2;
-  line-clamp: 2;
-  overflow: hidden;
-  line-height: 1.25;
-  width: 100%;
-  min-height: calc(2 * 1.25em);
-}
-
-.FixturePage-cardTitleSub {
-  font-size: 0.68em;
-  font-weight: 600;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-  color: var(--faint-text);
-  line-height: 1.2;
-  flex-shrink: 0;
-}
-
-.FixturePage-pairedSection {
-  width: 98%;
-  max-width: 98%;
-  min-height: auto;
-  display: block;
-  position: static;
-  margin: 0;
-  padding: 0 0.65rem 0.85rem;
-}
-
-.FixturePage-pairedSection + .FixturePage-pairedSection {
-  padding-top: 0.35rem;
-  margin-top: 0.35rem;
-  border-top: 1px dashed var(--third-background-color);
-}
-
-.FixturePage-pairedRow {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 0.65rem;
-  align-items: stretch;
-}
-
-.FixturePage-pairedRow--stretch {
-  padding: 0 0.65rem 0.65rem;
-}
-
-.FixturePage-pairedCol {
-  display: flex;
-  flex-direction: column;
-  min-height: 100%;
-  border-radius: 10px;
-  border: 1px solid var(--third-background-color);
-  background-color: var(--secondary-background-color);
-  overflow: hidden;
-}
-
-.FixturePage-pairedCol--home {
-  border-top: 3px solid #01a501;
-}
-
-.FixturePage-pairedCol--away {
-  border-top: 3px solid #d71200;
-}
-
-.FixturePage-grid--results {
-  margin-bottom: 0;
-}
-
-.FixturePage-card {
-  width: 100%;
-  max-width: 100%;
-  min-height: auto;
-  display: block;
-  position: static;
-  margin: 0;
-  padding: 0;
-  overflow: hidden;
-  border-radius: 12px;
-  background-color: var(--secondary-background-color);
-  border: 1px solid var(--third-background-color);
-  box-shadow: 0 1px 6px rgba(0, 0, 0, 0.05);
-  transition: border-color 0.2s ease, box-shadow 0.2s ease;
-}
-
-.FixturePage-card:hover {
-  border-color: var(--primary-color);
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
-}
-
-.FixturePage-card--home {
-  border-top: 3px solid #01a501;
-}
-
-.FixturePage-card--away {
-  border-top: 3px solid #d71200;
-}
-
-.FixturePage-cardTitle {
-  margin: 0;
-  padding: 0.85rem 1.1rem;
-  font-size: 1.05rem;
-  font-weight: 700;
-  color: var(--text-color);
-  background: rgba(128, 128, 128, 0.06);
-  border-bottom: 1px solid var(--third-background-color);
-  border-radius: 10px 10px 0 0;
-}
-
-.FixturePage-cardTitle--home {
-  background: linear-gradient(90deg, rgba(1, 165, 1, 0.12), transparent 70%);
-  border-top: 3px solid #01a501;
-}
-
-.FixturePage-cardTitle--away {
-  background: linear-gradient(90deg, rgba(215, 18, 0, 0.12), transparent 70%);
-  border-top: 3px solid #d71200;
-}
-
-.FixturePage-card--home .FixturePage-cardTitle {
-  background: linear-gradient(90deg, rgba(1, 165, 1, 0.1), transparent 65%);
-}
-
-.FixturePage-card--away .FixturePage-cardTitle {
-  background: linear-gradient(90deg, rgba(215, 18, 0, 0.1), transparent 65%);
-}
-
-.FixturePage-statGrid {
-  display: flex;
-  flex-direction: column;
-}
-
-.FixturePage-statGroupTitle {
-  margin: 0.85rem 0 0.65rem;
-  padding: 0.55rem 0.85rem;
-  font-size: 0.72rem;
-  font-weight: 700;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  color: var(--text-color);
-  background-color: rgba(128, 128, 128, 0.1);
-  border-radius: 8px;
-  border-left: 3px solid var(--primary-color);
-}
-
-.FixturePage-pairedSection:first-of-type .FixturePage-statGroupTitle {
-  margin-top: 0.35rem;
-}
-
-.FixturePage-stat {
-  display: grid;
-  grid-template-columns: minmax(0, 1.35fr) minmax(4.5rem, auto);
-  gap: 0.75rem;
-  align-items: baseline;
-  padding: 0.55rem 0.75rem;
-  border-bottom: 1px solid var(--third-background-color);
-  transition: background-color 0.15s ease;
-}
-
-.FixturePage-stat:last-child {
-  border-bottom: none;
-}
-
-.FixturePage-stat:hover {
-  background-color: rgba(128, 128, 128, 0.05);
-}
-
-.FixturePage-statLabel {
-  font-size: 0.88rem;
-  line-height: 1.35;
-  color: var(--faint-text);
-  font-weight: 600;
-}
-
-.FixturePage-statValue {
-  font-size: 0.95rem;
-  font-weight: 700;
-  color: var(--text-color);
-  text-align: right;
-  font-variant-numeric: tabular-nums;
-}
-
-.FixturePage-resultsList {
-  display: flex;
-  flex-direction: column;
-  flex: 1;
-  min-height: 100%;
-}
-
-.FixturePage-results.FixturePage-pairedCol {
-  height: 100%;
-}
-
-.FixturePage-resultsEmpty {
-  margin: 0;
-  padding: 1.1rem;
-  font-size: 0.9rem;
-  color: var(--faint-text);
-  text-align: center;
-}
-
-.FixturePage-result {
-  padding: 0.75rem 1.1rem;
-  border-bottom: 1px solid var(--third-background-color);
-  transition: background-color 0.15s ease;
-}
-
-.FixturePage-result:last-child {
-  border-bottom: none;
-}
-
-.FixturePage-result:hover {
-  background-color: rgba(128, 128, 128, 0.05);
-}
-
-.FixturePage-resultMeta {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) auto auto;
-  align-items: center;
-  gap: 0.35rem;
-  margin-bottom: 0.35rem;
-  min-height: 1.35rem;
-}
-
-.FixturePage-resultDate {
-  font-size: 0.78rem;
-  font-weight: 600;
-  color: var(--faint-text);
-  text-transform: uppercase;
-  letter-spacing: 0.03em;
-  min-width: 0;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-.FixturePage-resultVenue {
-  font-size: 0.68rem;
-  font-weight: 700;
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
-  color: var(--text-color);
-  padding: 0.12rem 0.38rem;
-  border-radius: 999px;
-  background-color: var(--third-background-color);
-  flex-shrink: 0;
-  white-space: nowrap;
-}
-
-.FixturePage-resultBadge {
-  font-size: 0.68rem;
-  font-weight: 800;
-  min-width: 1.25rem;
-  text-align: center;
-  padding: 0.12rem 0.35rem;
-  border-radius: 999px;
-  color: #fff;
-  flex-shrink: 0;
-  white-space: nowrap;
-}
-
-.FixturePage-resultBadge--w {
-  background-color: #01a501;
-}
-
-.FixturePage-resultBadge--d {
-  background-color: var(--faint-text);
-}
-
-.FixturePage-resultBadge--l {
-  background-color: #d71200;
-}
-
-.FixturePage-resultRow {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
-  gap: 0.65rem;
-  align-items: center;
-}
-
-.FixturePage-resultTeam {
-  font-size: 0.9rem;
-  font-weight: 600;
-  color: var(--text-color);
-  line-height: 1.25;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-.FixturePage-resultTeam--home {
-  text-align: right;
-}
-
-.FixturePage-resultTeam--away {
-  text-align: left;
-}
-
-.FixturePage-resultScore {
-  flex-shrink: 0;
-  min-width: 3.75rem;
-  padding: 0.3rem 0.55rem;
-  border-radius: 8px;
-  font-size: 0.95rem;
-  font-weight: 800;
-  text-align: center;
-  font-variant-numeric: tabular-nums;
-  background-color: var(--third-background-color);
-  color: var(--text-color);
-  border: 1px solid var(--fourth-background-color);
-}
-
-.dark-mode .FixturePage-header {
-  box-shadow: 0 2px 14px rgba(0, 0, 0, 0.35);
-}
-
+.dark-mode .FixturePage-header,
 .dark-mode .FixturePage-card:hover,
 .dark-mode .ComparisonBarChart:hover {
-  box-shadow: 0 4px 18px rgba(0, 0, 0, 0.35);
+  box-shadow: none;
 }
 
 @media (max-width: 860px) {
-  .FixturePage-matchTitle {
-    gap: 0.45rem 0.55rem;
+  .FixturePage {
+    --fp-title: 1.2em;
+    --fp-section: 1em;
+    --fp-label: 0.88em;
+    --fp-meta: 0.82em;
+    --fp-score: 1.15em;
+    --fp-pad: 0.95em 1em;
   }
 
   .FixturePage-heading {
-    gap: 0.4rem;
-    font-size: clamp(1rem, 4.2vw, 1.35rem);
+    flex-direction: column;
+    flex-wrap: wrap;
+    align-items: stretch;
+    gap: var(--fp-space-2);
+  }
+
+  .FixturePage-teamLine,
+  .FixturePage-teamLine--home,
+  .FixturePage-teamLine--away {
+    justify-content: center;
+    width: 100%;
+    max-width: 100%;
+  }
+
+  .FixturePage-headingTeam--home,
+  .FixturePage-headingTeam--away {
+    text-align: center;
+    white-space: normal;
+    overflow: visible;
+    text-overflow: unset;
   }
 
   .FixturePage-badge {
-    width: 2.75rem;
-    height: 2.75rem;
+    width: 2.25em;
+    height: 2.25em;
   }
 
-  .FixturePage-pairedHeaders,
-  .FixturePage-pairedRow {
-    gap: 0.45rem;
+  .FixturePage-prediction {
+    width: 100%;
+    max-width: 14em;
+    box-sizing: border-box;
   }
 
-  .FixturePage-pairedBlock,
-  .FixturePage-pairedSection,
-  .FixturePage-pairedRow--stretch {
-    padding-left: 0.45rem;
-    padding-right: 0.45rem;
+  .FixturePage-comparisonChartCanvas {
+    height: 14em;
+    max-width: 100%;
   }
 
-  .FixturePage-h2hCard,
-  .FixturePage-modelOutputsCard {
-    padding-left: 0.55rem;
-    padding-right: 0.55rem;
+  .FixturePage-modelOutputsBody {
+    max-width: 100%;
+  }
+
+  .FixturePage-modelOutputsChartWrap {
+    height: 5em;
+  }
+
+  .FixturePage-compareRow {
+    grid-template-columns: minmax(3em, 0.95fr) minmax(0, 1.8fr) minmax(3em, 0.95fr);
   }
 
   .FixturePage-h2hSummary {
     grid-template-columns: 1fr;
   }
+}
 
-  .FixturePage-pairedHeaders {
-    padding-top: 0.45rem;
+@media (max-width: 640px) {
+  .FixturePage {
+    padding-left: 0.75em;
+    padding-right: 0.75em;
+    --fp-space-4: 1.25em;
+    --fp-space-5: 1.5em;
   }
 
-  .FixturePage-cardTitle {
-    padding: 0.65rem 0.55rem;
-    font-size: 0.82rem;
-    line-height: 1.25;
-    min-height: 3.75rem;
+  .FixturePage-resultsGrid {
+    grid-template-columns: 1fr;
   }
 
-  .FixturePage-cardTitleName {
-    min-height: calc(2 * 1.25em);
+  .FixturePage-comparisonChartCanvas {
+    height: 13em;
   }
 
-  .FixturePage-stat {
-    padding: 0.45rem 0.55rem;
-    gap: 0.35rem;
-    grid-template-columns: minmax(0, 1fr) minmax(2.75rem, auto);
+  .FixturePage-modelOutputsChartWrap {
+    height: 4.75em;
   }
 
-  .FixturePage-statLabel {
-    font-size: 0.72rem;
-    line-height: 1.25;
-  }
-
-  .FixturePage-statValue {
-    font-size: 0.78rem;
-  }
-
-  .FixturePage-statGroupTitle {
-    margin-top: 0.65rem;
-    margin-bottom: 0.45rem;
-    padding: 0.45rem 0.55rem;
-    font-size: 0.62rem;
-  }
-
-  .FixturePage-result {
-    padding: 0.6rem 0.55rem;
-  }
-
-  .FixturePage-resultRow {
-    gap: 0.35rem;
-  }
-
-  .FixturePage-resultTeam {
-    font-size: 0.72rem;
-  }
-
-  .FixturePage-resultScore {
-    min-width: 2.85rem;
-    padding: 0.22rem 0.35rem;
-    font-size: 0.78rem;
+  .FixturePage-chartLegend {
+    gap: 0.5em 0.85em;
   }
 }
 
 @media (max-width: 520px) {
   .FixturePage {
-    padding: 0em;
+    padding: var(--fp-space-3) 0.65em var(--fp-space-4);
+    --fp-title: 1.15em;
+    --fp-pad: 0.85em 0.9em;
   }
 
   .FixturePage-header {
-    padding: 0.9rem 0.65rem 1rem;
+    margin-bottom: var(--fp-space-4);
   }
 
-  .FixturePage-heading {
-    font-size: clamp(1rem, 4.2vw, 1.35rem);
+  .FixturePage-compareRow {
+    grid-template-columns: minmax(2.75em, 0.9fr) minmax(0, 2fr) minmax(2.75em, 0.9fr);
+    padding: 0.65em 0;
   }
 
-  .FixturePage-pairedHeaders,
-  .FixturePage-pairedRow {
-    gap: 0.35rem;
-  }
-
-  .FixturePage-pairedBlock,
-  .FixturePage-pairedSection,
-  .FixturePage-pairedRow--stretch {
-    padding-left: 0.35rem;
-    padding-right: 0.35rem;
-  }
-
-  .FixturePage-h2hCard,
-  .FixturePage-modelOutputsCard {
-    padding-left: 0.45rem;
-    padding-right: 0.45rem;
-  }
-
-  .FixturePage-h2hCard .FixturePage-statGroupTitle,
-  .FixturePage-h2hSubheading {
-    text-align: center;
-    border-left: none;
-    border-bottom: 2px solid var(--primary-color);
-    border-radius: 0;
-  }
-
-  .FixturePage-h2hSubheading {
-    border-bottom: none;
-    padding-bottom: 0;
-  }
-
-  .FixturePage-h2hMatchMeta {
-    text-align: center;
-  }
-
-  .FixturePage-h2hMatchRow {
-    grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
-    justify-items: center;
-    text-align: center;
-  }
-
-  .FixturePage-h2hMatchTeam--home,
-  .FixturePage-h2hMatchTeam--away {
-    text-align: center;
-    white-space: normal;
-  }
-
-  .FixturePage-cardTitle {
-    padding: 0.55rem 0.4rem;
-    font-size: 0.72rem;
-    min-height: 3.35rem;
-  }
-
-  .FixturePage-cardTitleName {
-    min-height: calc(2 * 1.2em);
-  }
-
-  .FixturePage-cardTitleSub {
-    font-size: 0.62em;
-  }
-
-  .FixturePage-stat {
-    grid-template-columns: minmax(0, 1fr) minmax(2.25rem, auto);
-    padding: 0.38rem 0.4rem;
-    gap: 0.25rem;
-  }
-
-  .FixturePage-statLabel {
-    font-size: 0.66rem;
-  }
-
-  .FixturePage-statValue {
-    font-size: 0.72rem;
-    text-align: right;
-  }
-
-  .FixturePage-statGroupTitle {
-    font-size: 0.58rem;
-    letter-spacing: 0.06em;
-    margin-top: 0.55rem;
-    margin-bottom: 0.35rem;
-  }
-
-  .FixturePage-resultMeta {
-    gap: 0.25rem;
-    min-height: 1.2rem;
-  }
-
-  .FixturePage-resultDate,
-  .FixturePage-resultVenue,
-  .FixturePage-resultBadge {
-    font-size: 0.62rem;
-  }
-
-  .FixturePage-resultRow {
-    grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
-    gap: 0.25rem;
-  }
-
+  .FixturePage-h2hMatchTeam,
   .FixturePage-resultTeam {
-    font-size: 0.66rem;
-    line-height: 1.2;
-  }
-
-  .FixturePage-resultTeam--home {
-    text-align: right;
-  }
-
-  .FixturePage-resultTeam--away {
-    text-align: left;
-  }
-
-  .FixturePage-resultScore {
-    min-width: 2.5rem;
-    font-size: 0.72rem;
-    padding: 0.18rem 0.28rem;
+    white-space: normal;
   }
 }
 
@@ -12938,45 +13008,83 @@ strong.WC26__inlineHeader {
 }
 
 .FixturePage--seoShell .FixturePage-seoIntro {
-  margin-top: 0.75rem;
+  margin-top: var(--fp-space-2, 0.75em);
   opacity: 0.9;
+  text-align: left;
+  width: 100%;
+  font-size: var(--fp-body, 1em);
 }
 
-.FixturePage--seoShell .FixturePage-seoIntro p {
-  margin: 0 0 0.85rem;
-}
-
-.FixturePage--seoShell .FixturePage-seoIntro p:last-child {
-  margin-bottom: 0;
-}
-
-.FixturePage--seoShell .FixturePage-seoLinks {
-  margin-top: 0.75rem;
-  opacity: 0.9;
-}
-
-.FixturePage--seoShell .FixturePage-seoFaq {
-  margin-top: 1.25rem;
-  padding: 1rem;
-  border: 1px solid var(--button-border-color);
-  border-radius: 12px;
-  background: var(--secondary-background-color);
+.FixturePage-seoBody {
+  width: 100%;
+  margin: 0 0 var(--fp-space-4);
   text-align: left;
 }
 
-.FixturePage--seoShell .FixturePage-seoFaq h2 {
+.FixturePage-seoBody .FixturePage-seoIntro {
   margin-top: 0;
-  font-size: 1.05rem;
+  opacity: 0.9;
+  text-align: left;
+  width: 100%;
+  font-size: var(--fp-body, 1em);
 }
 
-.FixturePage--seoShell .FixturePage-seoFaq h3 {
-  margin: 1rem 0 0.35rem;
-  font-size: 0.95rem;
+.FixturePage--seoShell .FixturePage-seoIntro p,
+.FixturePage-seoBody .FixturePage-seoIntro p {
+  margin: 0 0 0.75em;
 }
 
-.FixturePage--seoShell .FixturePage-seoFaq p {
+.FixturePage--seoShell .FixturePage-seoIntro p:last-child,
+.FixturePage-seoBody .FixturePage-seoIntro p:last-child {
+  margin-bottom: 0;
+}
+
+.FixturePage--seoShell .FixturePage-seoLinks,
+.FixturePage-seoBody .FixturePage-seoLinks {
+  margin-top: var(--fp-space-2, 0.75em);
+  opacity: 0.9;
+  font-size: var(--fp-label, 0.9em);
+}
+
+.FixturePage--seoShell .FixturePage-seoFaq,
+.FixturePage-seoBody .FixturePage-seoFaq {
+  margin-top: var(--fp-space-3, 1em);
+  padding: var(--fp-pad, 1.1em 1.2em);
+  border: none;
+  border-radius: var(--fp-radius, 10px);
+  background: var(--subtle-surface-color);
+  text-align: left;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.FixturePage--seoShell .FixturePage-seoFaq h2,
+.FixturePage-seoBody .FixturePage-seoFaq h2 {
+  margin-top: 0;
+  margin-bottom: 0.75em;
+  padding-bottom: 0.55em;
+  font-size: var(--fp-section, 1.05em);
+  font-weight: 600;
+  border-bottom: 1px solid var(--third-background-color);
+}
+
+.FixturePage--seoShell .FixturePage-seoFaq h3,
+.FixturePage-seoBody .FixturePage-seoFaq h3 {
+  margin: 1em 0 0.35em;
+  font-size: var(--fp-body, 1em);
+  font-weight: 600;
+}
+
+.FixturePage--seoShell .FixturePage-seoFaq p,
+.FixturePage-seoBody .FixturePage-seoFaq p {
   margin: 0;
   opacity: 0.92;
+  font-size: var(--fp-body, 1em);
+}
+
+/* Hide SSR shell once the client fixture page (with badges + SEO body) mounts */
+body:has(.FixturePage--hasSeoBody) .FixturePage--seoShellSsr {
+  display: none;
 }
 
 .Competition--seoShell .Competition__seoIntro {

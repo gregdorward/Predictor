@@ -69,7 +69,6 @@ import {
   calculateDefensiveStrength,
   calculateMetricStrength,
 } from "../logic/getStats";
-import { rounds } from "./TeamOfTheSeason";
 import { applyNationalTeamAlias } from "../utils/nationalTeamAliases";
 import { resolveFixtureTableContext } from "../utils/groupStageTables";
 import { findSofaScoreGameByTeams } from "../utils/sofaScoreMatch";
@@ -90,6 +89,7 @@ import {
   getOverallLeagueStats,
   getTrueFormColor,
   leaguePositionOrDash,
+  resolveRoundId,
 } from "../logic/allStatsProps";
 import {
   mapFutureFixtureEvents,
@@ -813,25 +813,38 @@ function GameStats({ game, displayBool, stats, handleToggleTip, userTips }) {
 
   const removeCommonSuffixes = (str) =>
     str.replace(
-      /\b(fc|bk|sc|afc|cf|ac|cd|sv|ss|united|city|sporting|club|team|U 20| U 19)\b/g,
+      /\b(fc|fk|bk|sc|afc|cf|ac|cd|sv|ss|united|city|sporting|club|team|U 20| U 19)\b/g,
       ""
     );
 
-  const cleanTeamName = (str) => removeCommonSuffixes(normalize(str));
+  const stripClubAffixes = (normalized) =>
+    normalized
+      .replace(/^(fk|fc|bk|afc|cf|ac|cd|sv|ss)/, "")
+      .replace(/(fk|fc|bk|afc|cf|ac|cd|sv|ss)$/, "");
 
-  // Centralized alias map
+  const cleanTeamName = (str) => stripClubAffixes(removeCommonSuffixes(normalize(str)));
+
+  // Centralized alias map — keys should be normalize()-d (no spaces/punctuation)
   const teamNameAliases = {
-    "psg": "Paris saint-germain",
-    "FK Bodo - Glimt": "Bodø/Glimt",
+    psg: "Paris saint-germain",
+    fkbodoglimt: "Bodø/Glimt",
+    bodoglimt: "Bodø/Glimt",
     "inter milan": "inter",
+    intermilan: "inter",
     "ac milan": "milan",
+    acmilan: "milan",
     "man utd": "manchester united",
+    manutd: "manchester united",
     "man united": "manchester united",
+    manunited: "manchester united",
     "man city": "manchester city",
-    "bayern": "bayern munich",
+    mancity: "manchester city",
+    bayern: "bayern munich",
     "montreal impact": "cf montreal",
-    "botafogo": "botafogo",
+    montrealimpact: "cf montreal",
+    botafogo: "botafogo",
     "fk bodo - glimt": "Bodø/Glimt",
+    "FK Bodo - Glimt": "Bodø/Glimt",
   };
 
 
@@ -1408,16 +1421,13 @@ function GameStats({ game, displayBool, stats, handleToggleTip, userTips }) {
     return mappedStreaks;
   }
 
-  // Memoize derivedRoundId so it's only recalculated when game.sofaScoreId or rounds changes
+  // Prefer FootyStats→SofaScore current season ids (rounds table alone can lag).
   const derivedRoundId = useMemo(() => {
-    for (const mapping of rounds) {
-      if (mapping.hasOwnProperty(game.sofaScoreId)) {
-        return mapping[game.sofaScoreId];
-      }
-    }
-    console.warn(`No matching ID found for ID: ${game.sofaScoreId}`);
+    const fromMap = resolveRoundId(game.sofaScoreId);
+    if (fromMap) return fromMap;
+    console.warn(`No matching season found for sofaScoreId: ${game.sofaScoreId}`);
     return null;
-  }, [game.sofaScoreId, rounds]);
+  }, [game.sofaScoreId]);
 
   useEffect(() => {
     futureFixturesFetchedRef.current = false;

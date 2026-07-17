@@ -2,6 +2,7 @@ import dynamic from "next/dynamic";
 import PageMeta from "../../src/components/PageMeta";
 import JsonLd from "../../src/components/JsonLd";
 import FixtureSeoShell from "../../src/components/FixtureSeoShell";
+import SiteHeader from "../../src/components/SiteHeader";
 import {
   buildFixtureJsonLd,
   buildFixtureMeta,
@@ -49,15 +50,17 @@ export default function FixtureByParam({
         noIndex={noIndex}
       />
       {!noIndex && <JsonLd data={jsonLd} />}
-      <FixtureSeoShell {...seoShell} />
-      {!noIndex && (
-        <SeoPageLinks
-          relatedLinks={relatedFixtureLinks}
-          relatedLabel="Upcoming fixtures"
-          ssrOnly
-        />
-      )}
-      <TeamPage matchId={matchId} />
+      <SiteHeader showThemeToggle withFooter>
+        <FixtureSeoShell {...seoShell} ssrOnly />
+        {!noIndex && (
+          <SeoPageLinks
+            relatedLinks={relatedFixtureLinks}
+            relatedLabel="Upcoming fixtures"
+            ssrOnly
+          />
+        )}
+        <TeamPage matchId={matchId} seoShell={seoShell} />
+      </SiteHeader>
     </>
   );
 }

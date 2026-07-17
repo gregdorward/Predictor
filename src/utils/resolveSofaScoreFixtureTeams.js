@@ -3,18 +3,19 @@ import { applyNationalTeamAlias } from "./nationalTeamAliases";
 import { findSofaScoreGameByTeams } from "./sofaScoreMatch";
 import { formatDateForApi } from "../logic/buildSingleMatch";
 
+/** Keys must be normalize()-d (lowercase, no spaces/punctuation). */
 const TEAM_NAME_ALIASES = {
   psg: "Paris saint-germain",
-  "FK Bodo - Glimt": "Bodø/Glimt",
-  "inter milan": "inter",
-  "ac milan": "milan",
-  "man utd": "manchester united",
-  "man united": "manchester united",
-  "man city": "manchester city",
+  fkbodoglimt: "Bodø/Glimt",
+  bodoglimt: "Bodø/Glimt",
+  intermilan: "inter",
+  acmilan: "milan",
+  manutd: "manchester united",
+  manunited: "manchester united",
+  mancity: "manchester city",
   bayern: "bayern munich",
-  "montreal impact": "cf montreal",
+  montrealimpact: "cf montreal",
   botafogo: "botafogo",
-  "fk bodo - glimt": "Bodø/Glimt",
 };
 
 function normalize(str) {
@@ -26,20 +27,30 @@ function normalize(str) {
     .replace(/[^a-z]/g, "");
 }
 
+function stripClubAffixes(normalized) {
+  return normalized
+    .replace(/^(fk|fc|bk|afc|cf|ac|cd|sv|ss)/, "")
+    .replace(/(fk|fc|bk|afc|cf|ac|cd|sv|ss)$/, "");
+}
+
 function removeCommonSuffixes(str) {
   return str.replace(
-    /\b(fc|bk|sc|afc|cf|ac|cd|sv|ss|united|city|sporting|club|team|U 20| U 19)\b/g,
+    /\b(fc|fk|bk|sc|afc|cf|ac|cd|sv|ss|united|city|sporting|club|team|U 20| U 19)\b/g,
     ""
   );
 }
 
 function cleanTeamName(str) {
-  return removeCommonSuffixes(normalize(str));
+  return stripClubAffixes(removeCommonSuffixes(normalize(str)));
 }
 
-function getMappedTeamName(name) {
+export function getMappedTeamName(name) {
   const aliasKey = normalize(name);
-  const mapped = TEAM_NAME_ALIASES[aliasKey] || applyNationalTeamAlias(aliasKey);
+  const mapped =
+    TEAM_NAME_ALIASES[aliasKey] ||
+    TEAM_NAME_ALIASES[stripClubAffixes(aliasKey)] ||
+    applyNationalTeamAlias(aliasKey) ||
+    name;
   return cleanTeamName(mapped);
 }
 
@@ -88,8 +99,28 @@ async function fetchScheduledEventsForDate(unixTimestamp) {
     }));
 }
 
+function findBySide(games, teamName, side) {
+  const normalizedSearch = getMappedTeamName(teamName);
+  const key = side === "home" ? "homeTeam" : "awayTeam";
+
+  const exactMatch = games.find(
+    (game) => getMappedTeamName(game[key]) === normalizedSearch
+  );
+  if (exactMatch) return exactMatch;
+
+  return (
+    games.find((game) => {
+      const mapped = getMappedTeamName(game[key]);
+      return (
+        mapped.includes(normalizedSearch) || normalizedSearch.includes(mapped)
+      );
+    }) || null
+  );
+}
+
 /**
  * Resolve industry leading stat website team IDs for a fixture (same lookup path as GameStats).
+ * Prefer a home+away pair match, then fall back to single-side matches.
  */
 export async function resolveSofaScoreFixtureTeams(match) {
   if (!match?.homeTeam || !match?.awayTeam || !match?.date) {
@@ -101,10 +132,25 @@ export async function resolveSofaScoreFixtureTeams(match) {
     return null;
   }
 
-  return findSofaScoreGameByTeams(
+  let matched = findSofaScoreGameByTeams(
     scheduledGames,
     match.homeTeam,
     match.awayTeam,
     getMappedTeamName
   );
+
+  if (!matched) {
+    matched = findBySide(scheduledGames, match.homeTeam, "home");
+  }
+  if (!matched) {
+    matched = findBySide(scheduledGames, match.awayTeam, "away");
+  }
+  if (!matched) {
+    matched = findBySide(scheduledGames, match.homeTeam, "away");
+  }
+  if (!matched) {
+    matched = findBySide(scheduledGames, match.awayTeam, "home");
+  }
+
+  return matched;
 }

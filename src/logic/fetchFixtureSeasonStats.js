@@ -68,8 +68,11 @@ async function buildFormSummaries(match) {
  */
 export async function fetchFixtureSeasonStats(match) {
   const leagueID = match?.leagueID ?? match?.competition_id;
+  // Prefer FootyStats→SofaScore map (current seasons). Tournament/season ids in
+  // TeamOfTheSeason.rounds often lag and cause empty teamStats on fixture pages.
   const sofaScoreId = resolveSofaScoreId(leagueID);
-  const roundId = resolveRoundId(sofaScoreId);
+  const roundId =
+    resolveRoundId(leagueID) ?? resolveRoundId(sofaScoreId);
   const sofaScoreFixture = await resolveSofaScoreFixtureTeams(match);
 
   const homeSofaTeamId = sofaScoreFixture?.homeId ?? null;

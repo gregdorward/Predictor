@@ -1,4 +1,5 @@
 import { sofaScoreIds } from "../constants/sofaScoreIds";
+import { footyStatsToSofaScoreMap } from "../constants/footyStatsToSofaScore";
 import { rounds } from "../components/TeamOfTheSeason";
 import { API_FORM_ONLY_LEAGUE_IDS } from "./getFixtures";
 import {
@@ -238,15 +239,28 @@ export function leaguePositionOrDash(position) {
 
 export function resolveSofaScoreId(leagueID) {
   if (leagueID == null) return null;
+  const mapping = footyStatsToSofaScoreMap[Number(leagueID)];
+  if (mapping?.id != null) return mapping.id;
   const found = sofaScoreIds.find((obj) => obj[leagueID] !== undefined);
   return found ? found[leagueID] : null;
 }
 
-export function resolveRoundId(sofaScoreId) {
-  if (sofaScoreId == null) return null;
+/** SofaScore season id for a tournament id (or FootyStats competition id). */
+export function resolveRoundId(sofaScoreIdOrLeagueId) {
+  if (sofaScoreIdOrLeagueId == null) return null;
+
+  const asLeague = footyStatsToSofaScoreMap[Number(sofaScoreIdOrLeagueId)];
+  if (asLeague?.season != null) return asLeague.season;
+
+  for (const meta of Object.values(footyStatsToSofaScoreMap)) {
+    if (meta?.id === sofaScoreIdOrLeagueId && meta.season != null) {
+      return meta.season;
+    }
+  }
+
   for (const mapping of rounds) {
-    if (Object.prototype.hasOwnProperty.call(mapping, sofaScoreId)) {
-      return mapping[sofaScoreId];
+    if (Object.prototype.hasOwnProperty.call(mapping, sofaScoreIdOrLeagueId)) {
+      return mapping[sofaScoreIdOrLeagueId];
     }
   }
   return null;
