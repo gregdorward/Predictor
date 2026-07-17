@@ -13773,7 +13773,50 @@ body.dark-mode .ShareableVisual__brand {
   font-size: 0.9375rem;
   font-weight: 700;
   line-height: 1.25;
+  color: var(--primary-color);
+}
+
+.ArticleProse__tableWrap {
+  margin: 0.85rem 0 1rem;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.ArticleProse__table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.8125rem;
+  text-align: left;
+}
+
+.ArticleProse__table caption {
+  caption-side: top;
+  margin: 0 0 0.45rem;
+  text-align: left;
+  font-size: 0.75rem;
+  color: var(--faint-text, var(--text-color));
+  opacity: 0.8;
+}
+
+.ArticleProse__table th,
+.ArticleProse__table td {
+  padding: 0.45rem 0.55rem;
+  border-bottom: 1px solid var(--third-background-color);
+  vertical-align: top;
+}
+
+.ArticleProse__table th {
+  font-weight: 700;
   color: var(--text-color);
+  border-bottom-color: rgba(var(--primary-rgb), 0.35);
+}
+
+.ArticleProse__table td:nth-child(2),
+.ArticleProse__table td:nth-child(3),
+.ArticleProse__table th:nth-child(2),
+.ArticleProse__table th:nth-child(3) {
+  text-align: right;
+  white-space: nowrap;
 }
 
 .ArticleProse__section p {

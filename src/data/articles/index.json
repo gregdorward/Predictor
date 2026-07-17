@@ -1,6 +1,16 @@
 {
   "articles": [
     {
+      "slug": "customise-tips-filters",
+      "title": "How Customise Tips puts the shortlist in your hands",
+      "dek": "How Soccer Stats Hub's Customise Tips filters let you shape the tip list around value, form, probabilities and odds.",
+      "publishedAt": "2026-07-17",
+      "updatedAt": "2026-07-17T20:00:00.000Z",
+      "heroLabel": "Product",
+      "tags": ["Customise Tips", "Filters", "Tips"],
+      "ogDescription": "How Customise Tips on Soccer Stats Hub lets you filter predictions by value edge, stats, probabilities, odds and presets — so the shortlist matches the games you want to research."
+    },
+    {
       "slug": "how-we-predict-a-game",
       "title": "How we predict a game",
       "dek": "How Soccer Stats Hub builds a match prediction from completed fixtures, attack and defence strengths, and scoreline probabilities.",

@@ -1,0 +1,131 @@
+{
+  "slug": "customise-tips-filters",
+  "layout": "prose",
+  "title": "How Customise Tips puts the shortlist in your hands",
+  "subtitle": "From a full fixture list to the profile of game you actually want to research",
+  "dek": "How Soccer Stats Hub's Customise Tips filters let you shape the tip list around value, form, probabilities and odds, so you are choosing a style of match, not accepting a mystery shortlist.",
+  "publishedAt": "2026-07-17",
+  "updatedAt": "2026-07-17T20:00:00.000Z",
+  "authorLabel": "Soccer Stats Hub",
+  "intro": [
+    "If you have ever opened a tip sheet and been handed a handful of games with almost no explanation, you already know the problem. A tip without a reason is just a claim. You cannot tell whether the pick fits the kind of match you like researching, or whether it landed in the list because someone else’s taste happened to agree with a model for five minutes.",
+    "Customise Tips exists for the opposite habit. Once predictions are built, you decide what kind of game stays on the page. Want only *Clear favourites*? Games where the model disagrees with the bookies? Both-teams-to-score spots with a bit of edge? Open Customise Tips, set the thresholds, hit Get Predictions & Stats again, and the list shrinks to matches that match that profile. The power sits with you, not with a silent shortlist."
+  ],
+  "sections": [
+    {
+      "id": "why-it-exists",
+      "heading": "Why filters matter more than a tip sheet",
+      "paragraphs": [
+        "A prediction on Soccer Stats Hub is already more than a scoreline. Expand a fixture and you can see model probabilities, bookmaker prices, form, expected goals and the rest of the match picture. That is the research layer.",
+        "Customise Tips is the sorting layer. The site can show every tipped game for the competitions you have loaded. That is useful when you want the full view. It is less useful when you are hunting a particular kind of opportunity: a strong home favourite, a higher-odds underdog, a goals market with model support, or a side that has been clearly better than its opponent on recent numbers.",
+        "Filters do not invent new predictions. They hide games that fail your rules. The underlying model is unchanged. What changes is which fixtures survive into the tip list you are about to work through. That is deliberate. We would rather give you the controls and the numbers than hand you a polished tip with little to back it up."
+      ]
+    },
+    {
+      "id": "where-to-find-it",
+      "heading": "Where to find it and how it works",
+      "paragraphs": [
+        "On the homepage tip list, open the Customise Tips panel above Get Predictions & Stats. Inside you will see a preset dropdown and groups of sliders: value, stats, probability, odds, and a simple *Omit draws* switch.",
+        "Move the sliders to the thresholds you want, then click Get Predictions & Stats again. The refresh matters. Filters are applied when predictions are generated, so changing a slider alone is not enough. After the run finishes, games that miss your criteria drop out of the list. You will see how many fixtures were reduced by the active filters, and a short summary of what is switched on.",
+        "Most sliders treat their lowest setting as off. Leave them alone if you do not care about that dimension. *Odds range* is the exception: it always runs, with a wide default so ordinary prices still get through until you tighten it yourself."
+      ]
+    },
+    {
+      "id": "value-filters",
+      "heading": "Value filters: where the model and the market disagree",
+      "paragraphs": [
+        "Value on Soccer Stats Hub is not a vague feeling that a price \"looks big\". It is the gap between our model probability for an outcome and the probability implied by the bookmaker odds. If the model is more bullish than the market, that difference is the edge percentage.",
+        "*Match outcome edge %* keeps tips where the tipped result - home win, draw or away win - clears your minimum edge. *Over 2.5 goals edge %* and *BTTS edge %* do the same job for those markets. Raise the slider and you are asking for a clearer disagreement with the price. Leave it at zero and value is not part of the cut.",
+        "Used carefully, this is one of the cleanest ways to avoid tip lists that only show favourites because favourites feel safe. Used bluntly, it can also chase prices that look too good to be true. A large backtest of *High value picks* above 10% perceived edge went negative, which is a useful warning: when the gap to the market looks enormous, dig deeper rather than treating the edge figure as a green light on its own."
+      ]
+    },
+    {
+      "id": "stats-filters",
+      "heading": "Stats filters: the shape of the matchup",
+      "paragraphs": [
+        "Sometimes the profile you want is not about price at all. It is about whether one team has been meaningfully stronger than the other on the numbers that feed the prediction.",
+        "*Goals for/against difference* looks at the overall goal-difference spread between the sides. *Goals for/against home or away difference* narrows that to home and away splits, so a strong home attack against a weak away defence can still stand out even if the overall table looks flatter. *XG for/against difference* uses expected goals instead of raw goals, which helps when finishing luck has been loud. *Last 6 points difference* checks recent points separation over the last handful of games.",
+        "Turn these up and you are asking for clearer mismatches: sides that have been creating and conceding at different rates, or teams whose recent results have pulled apart. Turn them down or leave them off if you are happy researching tighter contests."
+      ]
+    },
+    {
+      "id": "probability-filters",
+      "heading": "Probability filters: how strong the tip has to look",
+      "paragraphs": [
+        "Probability filters cut on the model’s own confidence. *Win probability* keeps home or away tips only when that side’s chance of winning clears your threshold. Switch it on and draw tips are removed, because a draw is not a win pick. *Over 2.5 goals probability* and *BTTS probability* do the same for those markets.",
+        "This is the difference between “the model leans this way” and “the model is fairly sure”. A *Clear favourites* style shortlist lives here. A looser research pass leaves these alone and lets lower-confidence games stay visible so you can inspect them yourself."
+      ]
+    },
+    {
+      "id": "odds-and-draws",
+      "heading": "Odds range and omitting draws",
+      "paragraphs": [
+        "*Odds range* sets the decimal price band for the tipped outcome. Want only short-priced favourites? Tighten the top end. Hunting medium-to-long shots? Lift the floor and leave more room at the top. The filter uses the odds for the tip itself, so a 1.40 home favourite and a 4.00 underdog are judged on their own prices, not on a single match-level average.",
+        "*Omit draws* is simpler. Set it to yes and every draw prediction drops out of the tip list. That is useful when you only want decisive win angles, or when you are stacking a preset built around priced win outcomes."
+      ]
+    },
+    {
+      "id": "presets",
+      "heading": "Presets: a starting profile, not a finished opinion",
+      "paragraphs": [
+        "If you do not want to build a filter stack from scratch, the preset dropdown gives you ready-made profiles. *BTTS picks* and *Over 2.5 picks* look for those markets with a modest edge. *High value picks* raise the match-outcome edge threshold. *Form-based picks* lean on expected goals, goal difference and recent points gaps. *Medium to high odds win picks* and *Underdog picks* push into longer prices and drop draws. *Clear favourites* demands a high win probability. *Soccer Stats Hub recommended* is a balanced starting point built around a sensible home/away goal-difference gap, an xG spread and a practical odds band.",
+        "A preset is a beginning, not a verdict. Apply one, see how the list shrinks, then nudge the sliders if your own research style is tighter or looser. The point is still the same: you choose the profile of game you want on the page."
+      ]
+    },
+    {
+      "id": "backtest",
+      "heading": "What a large filter backtest showed",
+      "paragraphs": [
+        "Filters are only as useful as the habits they encourage, so we put the current prediction algorithm and several preset strategies through a large weekend-game backtest: 3,507 match outcomes from the start of February through to the 15th of May. Unfiltered, the full predicted slate returned a modest +0.50% ROI - not bad when factoring in the bookmaker spread. Once filters entered the picture, the spread was wide. *Medium to high odds win picks* were the standout at +4.98% ROI from 955 outcomes, with *Underdog picks* also positive on a smaller sample. *Soccer Stats Hub recommended* edged ahead of the unfiltered baseline. *Form-based picks* and *Clear favourites* were the costly end of the spectrum, and simply removing tips shorter than 1.50 improved the global ROI from +0.50% to +1.24%.",
+        "The practical lessons matched what many researchers eventually learn the hard way. Bookmakers are efficient at pricing obvious form, so by the time a side looks unbeatable on paper the value is often gone: *Form-based picks* were the worst performer at -7.89% ROI, because even individual strong days still needed a very high hit rate to pay. Medium and higher odds worked in the opposite direction, where a lower success rate can still produce strong returns if the price is right. *Clear favourites* dragged results the other way at -6.14% ROI, which is also a warning about stuffing short-priced \"sure things\" into multis. And chasing only tips with more than 10% perceived value flipped negative: if a price looks too good to be true, the wider context the bookies are pricing may still matter more than the edge figure alone."
+      ],
+      "table": {
+        "caption": "Weekend-game backtest of the current algorithm and filters, early February to the 15th of May (3,507 unfiltered outcomes).",
+        "headers": ["Filter", "Outcomes", "ROI"],
+        "rows": [
+          ["Unfiltered (all games predicted)", "3,507", "+0.50%"],
+          ["Soccer Stats Hub recommended", "2,107", "+0.70%"],
+          ["Medium to high odds win picks", "955", "+4.98%"],
+          ["Underdog picks", "97", "+3.52%"],
+          ["Removing tips under 1.50 odds", "3,084", "+1.24%"],
+          ["High value tips (over 10% edge)", "1,174", "-1.62%"],
+          ["Clear favourites", "269", "-6.14%"],
+          ["Form-based picks", "471", "-7.89%"]
+        ]
+      },
+      "bullets": [
+        "Form can look compelling and still be a poor long-term filter once the market has already priced it.",
+        "Medium and higher odds leave more room for variance to work in your favour when the model still finds a gap.",
+        "Short-priced favourites may feel safe, but they were not profitable in this sample, and stripping sub-1.50 tips lifted the overall ROI.",
+        "Extreme perceived value is a research prompt, not an automatic green light."
+      ]
+    },
+    {
+      "id": "how-to-use",
+      "heading": "How to use it like a researcher, not a passenger",
+      "paragraphs": [
+        "A good sequence is simple. Load your competitions, open Customise Tips, decide what kind of match you want to study, then regenerate the tip list. Work through the survivors one by one. Expand a fixture. Check the model probabilities against the market. Look at the form and chance numbers that explain why the tip survived your filters.",
+        "If the filtered list is empty, that is information too. Your thresholds may be too strict for today's slate, or the profile you asked for may simply not be there. Loosen one slider at a time rather than abandoning the idea that filters should mean something.",
+        "And keep the honest frame. Filters help you find games that match a research style. They do not guarantee winners. A high edge can still lose. A clear favourite can still draw. Use the tools to make the shortlist yours, then judge each match on the evidence in front of you."
+      ]
+    }
+  ],
+  "outro": [
+    "So when you use Customise Tips on Soccer Stats Hub, you are not being handed a mystery tip sheet. You are taking the full predicted slate and keeping only the games that fit the profile you asked for: value gaps, statistical mismatches, model confidence, price bands, or a preset that gets you close.",
+    "The smart money in the backtest was not on the teams that should win. It was nearer the games where the market looked over-corrected. The model builds the picture. You decide which games deserve your attention. Explanation first. Shortlist second. Control with the user, not with an unexplained tip."
+  ],
+  "relatedLinks": [
+    {
+      "label": "How we predict a game",
+      "href": "/articles/how-we-predict-a-game/"
+    },
+    {
+      "label": "Methodology",
+      "href": "/methodology/"
+    },
+    {
+      "label": "Articles",
+      "href": "/articles/"
+    }
+  ]
+}

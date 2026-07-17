@@ -4,6 +4,7 @@ import JsonLd from "../JsonLd";
 import ArticleAwards from "./ArticleAwards";
 import ArticleProse from "./ArticleProse";
 import ArticleShareButton, { ArticleDateLine } from "./ArticleShareButton";
+import renderInlineMarkup from "./renderInlineMarkup";
 import { SITE_NAME, SITE_URL, getCanonicalUrl } from "../../seo/pageMetaConfig";
 
 function buildArticleJsonLd(article, listing) {
@@ -94,7 +95,9 @@ export default function ArticlePage({ article, listing }) {
           {article.intro?.length ? (
             <div className="Articles__prose">
               {article.intro.map((paragraph) => (
-                <p key={paragraph.slice(0, 48)}>{paragraph}</p>
+                <p key={paragraph.slice(0, 48)}>
+                  {renderInlineMarkup(paragraph)}
+                </p>
               ))}
             </div>
           ) : null}
@@ -110,7 +113,9 @@ export default function ArticlePage({ article, listing }) {
           {article.outro?.length ? (
             <div className="Articles__prose Articles__prose--outro">
               {article.outro.map((paragraph) => (
-                <p key={paragraph.slice(0, 48)}>{paragraph}</p>
+                <p key={paragraph.slice(0, 48)}>
+                  {renderInlineMarkup(paragraph)}
+                </p>
               ))}
             </div>
           ) : null}
