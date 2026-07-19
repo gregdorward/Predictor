@@ -1,6 +1,6 @@
 {
-  "updatedAt": "2026-07-16T10:00:00.000Z",
-  "wrapUp": "The 48-team World Cup has boiled down to a Sunday final between European champions Spain and defending holders Argentina at New York New Jersey Stadium, with both semi-finals producing starkly different dramas. Spain outplayed pre-tournament favourites France 2-0 in Dallas on 14 July as Lamine Yamal won a first-half penalty converted by Mikel Oyarzabal and Pedro Porro sealed the win, while William Saliba's chronic back problem forced him off before half-time and leaves him a major doubt for Saturday's bronze medal match in Miami. Argentina staged another trademark comeback in Atlanta on 15 July, with Lionel Messi assisting Enzo Fernandez's 85th-minute equaliser and Lautaro Martinez's stoppage-time header to beat England 2-1 after Anthony Gordon had put the Three Lions ahead, extending Messi's run to four assists and eight goals in the tournament. England's late defensive reshuffle under Thomas Tuchel, including a switch to a back five that ceded 88 per cent possession after the opener, is dominating the post-mortem as the Three Lions prepare to face France for third place on 18 July. Fitness is the other headline: Yamal and Porro were cleared by Luis de la Fuente after semi-final knocks, Facundo Medina remains a calf doubt for Argentina, and Reece James is struggling with a hamstring issue for England. Opta's model now makes Spain slight favourites to lift the trophy, but Argentina have trailed in three separate knockouts and still found a way through. Each story below links to the specific report it is drawn from; squad and fitness details reflect the latest available reporting as of 16 July 2026.",
+  "updatedAt": "2026-07-19T08:05:00.000Z",
+  "wrapUp": "The 48-team World Cup closes tonight with European champions Spain facing defending holders Argentina at New York New Jersey Stadium, in the first final between reigning continental title holders and a clash of generations between 39-year-old Lionel Messi and 19-year-old Lamine Yamal. Saturday's bronze medal match in Miami produced a 6-4 England win over France, the joint fifth-highest-scoring game in World Cup history, as Bukayo Saka's hat-trick secured England's best finish since 1966 and Kylian Mbappe's brace made him the competition's all-time leading scorer with 22 goals. Opta's supercomputer now gives Spain a 59.6 per cent chance of lifting the trophy against an Argentina side who have trailed in three separate knockouts yet always found a way through, while Luis de la Fuente has confirmed Yamal is fit after missing a training session and Facundo Medina remains a calf doubt at left-back. Each story below links to the specific report it is drawn from; squad and fitness details reflect the latest available reporting as of 19 July 2026.",
   "sections": [
     {
       "id": "injuries-fitness",
@@ -8,62 +8,30 @@
       "description": "Players ruled out, late replacements and day-to-day concerns that could change starting line-ups and squad depth.",
       "stories": [
         {
-          "id": "argentina-medina-final-calf-doubt",
-          "headline": "Medina races clock for Argentina final selection",
-          "summary": "Facundo Medina has not played since picking up a calf problem in the round-of-32 win over Cape Verde and remains a doubt for Sunday's final against Spain at New York New Jersey Stadium. The Independent reported the Nice centre-back is in a race against time to be fit, though Lionel Scaloni otherwise has a largely available squad after the draining semi-final comeback against England.",
-          "publishedDate": "2026-07-16",
+          "id": "yamal-fit-for-final",
+          "headline": "De la Fuente confirms Yamal fit for World Cup final",
+          "summary": "Lamine Yamal sat out Spain's training session in New Jersey on Thursday after picking up a thigh knock in the semi-final win over France, but Luis de la Fuente told reporters on Friday that the teenager is fit to face Argentina. BBC Sport reported the Spain coach said Yamal was back with the squad after precautionary rest, while Al Jazeera's final preview listed no fresh injury concerns in either camp ahead of kick-off at 8pm BST.",
+          "publishedDate": "2026-07-18",
           "sources": [
-            {
-              "name": "The Independent",
-              "url": "https://www.the-independent.com/bulletin/sport/world-cup-2026-final-injured-players-argentina-spain-b3015824.html"
-            }
-          ]
-        },
-        {
-          "id": "england-reece-james-bronze-doubt",
-          "headline": "James doubt for England bronze medal match",
-          "summary": "Reece James is struggling with a potential hamstring setback after starting England's semi-final against Argentina, adding to Thomas Tuchel's problems before Saturday's third-place play-off with France in Miami. The Independent reported Declan Rice has recovered from the illness and back pain that limited him in the quarter-finals, but James's availability remains uncertain with the squad due to fly south from their Kansas base.",
-          "publishedDate": "2026-07-16",
-          "sources": [
-            {
-              "name": "The Independent",
-              "url": "https://www.the-independent.com/bulletin/sport/world-cup-2026-final-injured-players-argentina-spain-b3015824.html"
-            },
             {
               "name": "BBC Sport",
-              "url": "https://www.bbc.co.uk/sport/football/live/c77yp11e4r6t"
+              "url": "https://www.bbc.co.uk/sport/football/articles/cj63e8l0kjjo"
+            },
+            {
+              "name": "Al Jazeera",
+              "url": "https://www.aljazeera.com/sports/2026/7/19/spain-vs-argentina-fifa-world-cup-final-messi-yamal-prediction-time-lineups-team-news"
             }
           ]
         },
         {
-          "id": "spain-yamal-porro-final-fitness",
-          "headline": "De la Fuente eases Yamal and Porro fitness fears",
-          "summary": "Lamine Yamal was seen limping after Spain's 2-0 semi-final win over France and Pedro Porro was substituted in the 85th minute with muscle discomfort, but Luis de la Fuente said both players escaped serious injury after speaking to the medical staff. beIN SPORTS reported Porro was dealing with muscle overload rather than a tear, and Spain's federation later confirmed the full 26-man squad was fit for selection ahead of the Argentina final.",
-          "publishedDate": "2026-07-15",
+          "id": "argentina-medina-final-calf-doubt",
+          "headline": "Medina races clock for Argentina final selection",
+          "summary": "Facundo Medina has not played since picking up a calf problem in the round-of-32 win over Cape Verde and remains a doubt for Sunday's final against Spain at New York New Jersey Stadium. The Independent reported the Nice centre-back is in a race against time to be fit, with Nicolas Tagliafico expected to keep the left-back berth if Medina is unavailable.",
+          "publishedDate": "2026-07-16",
           "sources": [
             {
-              "name": "beIN SPORTS",
-              "url": "https://www.beinsports.com/en-us/soccer/fifa-world-cup-2026/articles/de-la-fuente-speaks-about-yamal-2026-07-15"
-            },
-            {
-              "name": "FIFA",
-              "url": "https://www.fifa.com/en/tournaments/mens/worldcup/canadamexicousa2026/articles/spain-v-argentina-live-stream-team-news-tickets-and-more"
-            }
-          ]
-        },
-        {
-          "id": "france-saliba-semi-back-injury",
-          "headline": "Saliba forced off as back injury flares in Dallas",
-          "summary": "William Saliba collapsed without contact in the 30th minute of France's 2-0 semi-final defeat to Spain and was replaced by Maxence Lacroix, with reporters lip-reading him saying his back had gone after managing the problem throughout the tournament. The Athletic noted Saliba had missed France's Saturday training session before the tie, and he is now a major doubt for the third-place play-off against England in Miami on 18 July.",
-          "publishedDate": "2026-07-14",
-          "sources": [
-            {
-              "name": "The Athletic",
-              "url": "https://www.nytimes.com/athletic/7445680/2026/07/14/william-saliba-injury-france-spain-arsenal/"
-            },
-            {
-              "name": "NBC Sports",
-              "url": "https://www.nbcsports.com/soccer/news/william-saliba-injury-news-france-arsenal-defender-subbed-off-in-world-cup-semifinal"
+              "name": "The Independent",
+              "url": "https://www.the-independent.com/sport/football/world-cup-2026-final-injury-latest-saliba-rice-b3015786.html"
             }
           ]
         }
@@ -75,66 +43,46 @@
       "description": "Omissions, late call-ups and manager decisions that reveal how teams plan to navigate the expanded format.",
       "stories": [
         {
-          "id": "argentina-england-semi-final-booking",
-          "headline": "Messi assists late turnaround to reach final",
-          "summary": "Argentina came from behind to beat England 2-1 in Atlanta as Enzo Fernandez curled in an 85th-minute equaliser and substitute Lautaro Martinez headed a stoppage-time winner from Lionel Messi's cross, overturning Anthony Gordon's 55th-minute opener. FIFA's match report noted it was the first competitive meeting between the nations since 2002 and sets up a final against Spain, the country where Messi made his name with Barcelona.",
-          "publishedDate": "2026-07-15",
+          "id": "scaloni-de-paul-molina-final-lineup",
+          "headline": "Scaloni weighs De Paul recall for final",
+          "summary": "Lionel Scaloni is expected to restore Rodrigo De Paul to Argentina's midfield for the final after Giuliano Simeone started the semi-final win over England, with Nahuel Molina also pushing to keep his place at right-back ahead of Gonzalo Montiel. Al Jazeera's predicted XI has De Paul alongside Enzo Fernandez and Alexis Mac Allister behind Lionel Messi and Julian Alvarez in a 4-1-3-2, while Lautaro Martinez remains on the bench despite his stoppage-time semi-final winner.",
+          "publishedDate": "2026-07-19",
           "sources": [
-            {
-              "name": "FIFA",
-              "url": "https://www.fifa.com/en/tournaments/mens/worldcup/canadamexicousa2026/articles/england-argentina-match-report-highlights"
-            },
-            {
-              "name": "Sky Sports",
-              "url": "https://www.skysports.com/football/england-vs-argentina/report/549867"
-            }
-          ]
-        },
-        {
-          "id": "argentina-scaloni-final-reshuffle",
-          "headline": "Scaloni substitutes turn semi-final against England",
-          "summary": "Lionel Scaloni's second-half changes reshaped Argentina's semi-final as Nicolas Gonzalez and Rodrigo De Paul added energy before Lautaro Martinez came off the bench to score the winner. The Standard noted Martinez may now start the final ahead of Julian Alvarez, while Gonzalez and De Paul are pushing for places in a starting XI that could also feature Giuliano Simeone wide in a 4-4-2 diamond.",
-          "publishedDate": "2026-07-15",
-          "sources": [
-            {
-              "name": "The Standard",
-              "url": "https://www.standard.co.uk/sport/football/spain-vs-argentina-prediction-kick-off-time-tv-live-stream-team-news-latest-h2h-results-odds-world-cup-final-2026-preview-b1290127.html"
-            },
             {
               "name": "Al Jazeera",
-              "url": "https://www.aljazeera.com/sports/2026/7/15/argentina-stun-england-in-2-1-comeback-win-to-reach-2026-world-cup-final"
+              "url": "https://www.aljazeera.com/sports/2026/7/19/spain-vs-argentina-fifa-world-cup-final-messi-yamal-prediction-time-lineups-team-news"
             }
           ]
         },
         {
           "id": "spain-de-la-fuente-final-xi-choices",
-          "headline": "De la Fuente weighs Williams recall for final",
-          "summary": "Spain head into the final with a clean bill of health but Luis de la Fuente still has selection calls in wide areas and midfield, with Nico Williams pushing to start after coming off the bench in the last two ties and Pedri dropped for Rodri and Fabian Ruiz against France. FIFA's preview listed a likely XI of Simon, Porro, Laporte, Cubarsi, Cucurella, Rodri, Fabian, Yamal, Olmo, Baena and Oyarzabal for Sunday's showdown with Argentina.",
-          "publishedDate": "2026-07-15",
+          "headline": "De la Fuente sticks with semi-final spine for final",
+          "summary": "Spain head into the final with a largely settled XI, with Rodri and Fabian Ruiz again preferred in midfield over Pedri and Lamine Yamal, Dani Olmo and Alex Baena supporting Mikel Oyarzabal up front. Al Jazeera listed a likely 4-2-3-1 of Simon, Porro, Cubarsi, Laporte, Cucurella, Rodri, Ruiz, Yamal, Olmo, Baena and Oyarzabal, with Nico Williams again expected to begin on the bench after two substitute appearances in the knockouts.",
+          "publishedDate": "2026-07-19",
           "sources": [
             {
-              "name": "FIFA",
-              "url": "https://www.fifa.com/en/tournaments/mens/worldcup/canadamexicousa2026/articles/spain-v-argentina-live-stream-team-news-tickets-and-more"
+              "name": "Al Jazeera",
+              "url": "https://www.aljazeera.com/sports/2026/7/19/spain-vs-argentina-fifa-world-cup-final-messi-yamal-prediction-time-lineups-team-news"
             },
             {
-              "name": "The Standard",
-              "url": "https://www.standard.co.uk/sport/football/spain-vs-argentina-prediction-kick-off-time-tv-live-stream-team-news-latest-h2h-results-odds-world-cup-final-2026-preview-b1290127.html"
+              "name": "BBC Sport",
+              "url": "https://www.bbc.co.uk/sport/football/articles/c0rd8zrwvwno"
             }
           ]
         },
         {
-          "id": "spain-france-semi-final-booking",
-          "headline": "Oyarzabal and Porro send Spain to first final since 2010",
-          "summary": "Mikel Oyarzabal converted a 22nd-minute penalty after Lucas Digne fouled Lamine Yamal and Pedro Porro finished a slick move with Dani Olmo for a 2-0 win over France in Dallas, Spain's third consecutive tournament victory over Les Bleus. Sky Sports reported Kylian Mbappe was shackled throughout as Luis de la Fuente's side extended their unbeaten run to 37 matches and booked a first World Cup final appearance since lifting the trophy in South Africa.",
-          "publishedDate": "2026-07-14",
+          "id": "england-tuchel-bronze-rotation",
+          "headline": "Tuchel rotates heavily as Saka hat-trick seals bronze",
+          "summary": "Thomas Tuchel made seven changes for England's third-place play-off with France in Miami, leaving Harry Kane and Jude Bellingham on the bench but still seeing Bukayo Saka score a first-half brace and complete his hat-trick from the penalty spot in a 6-4 win. Al Jazeera reported Declan Rice and Ezri Konsa put England 4-0 up before Kylian Mbappe's double sparked a French comeback that Bellingham settled with a stoppage-time solo goal.",
+          "publishedDate": "2026-07-18",
           "sources": [
             {
-              "name": "FIFA",
-              "url": "https://www.fifa.com/en/tournaments/mens/worldcup/canadamexicousa2026/articles/france-spain-match-report-highlights"
+              "name": "Al Jazeera",
+              "url": "https://www.aljazeera.com/sports/2026/7/18/saka-hat-trick-helps-england-down-france-to-win-world-cup-2026-bronze-final"
             },
             {
-              "name": "Sky Sports",
-              "url": "https://www.skysports.com/football/france-vs-spain/report/549866"
+              "name": "FIFA",
+              "url": "https://inside.fifa.com/organisation/news/miami-stadium-world-cup-2026-messi-england-france-6-4"
             }
           ]
         }
@@ -146,46 +94,50 @@
       "description": "Travel, visa and logistical problems that could affect match readiness rather than just headlines.",
       "stories": [
         {
-          "id": "england-france-bronze-playoff-miami",
-          "headline": "England and France meet in Miami bronze match",
-          "summary": "The losing semi-finalists face each other in the Match for Third Place at Hard Rock Stadium in Miami Gardens on Saturday 18 July, kicking off at 10pm BST the day before the final in New Jersey. The Athletic noted neither England nor France wanted the fixture but FIFA retains the bronze medal match to fill the scheduling gap and provide another broadcast window, with both sides expected to rotate after draining semi-final weeks.",
-          "publishedDate": "2026-07-15",
+          "id": "final-wildfire-air-quality-new-jersey",
+          "headline": "Wildfire smoke eases ahead of New Jersey final",
+          "summary": "Smoke from Canadian wildfires had raised air quality concerns across the north-eastern United States during the build-up week, with several monitors rating New Jersey unhealthy for sensitive groups on Thursday. Al Jazeera reported AccuWeather expects mostly sunny and less humid conditions on Sunday, with the official airnow.gov index forecast to be moderate for kick-off at 3pm local time.",
+          "publishedDate": "2026-07-19",
           "sources": [
             {
-              "name": "The Athletic",
-              "url": "https://www.nytimes.com/athletic/7442598/2026/07/15/world-cup-third-place-playoff-explainer/"
+              "name": "Al Jazeera",
+              "url": "https://www.aljazeera.com/sports/2026/7/19/spain-vs-argentina-fifa-world-cup-final-messi-yamal-prediction-time-lineups-team-news"
             },
             {
-              "name": "The Independent",
-              "url": "https://www.independent.co.uk/bulletin/sport/when-is-third-place-playoff-england-france-world-cup-b3015938.html"
+              "name": "Al Jazeera",
+              "url": "https://www.aljazeera.com/sports/2026/7/18/all-to-know-about-canadian-wildfire-smoke-air-quality-and-world-cup-final"
             }
           ]
         },
         {
-          "id": "england-kansas-miami-bronze-travel",
-          "headline": "England fly to Miami after Kansas recovery base",
-          "summary": "England returned to their Kansas training camp after the Atlanta semi-final heartbreak and must travel to Miami for the bronze medal match 48 hours before the World Cup final kicks off in New Jersey. BBC Sport reported the squad had already played 120 minutes against Norway in the Florida heat and now face another cross-country flight before a fixture Thomas Tuchel admitted neither side truly wants to contest.",
-          "publishedDate": "2026-07-15",
+          "id": "england-france-bronze-thriller-miami",
+          "headline": "Miami Stadium signs off with 10-goal bronze thriller",
+          "summary": "England's 6-4 win over France was the highest-scoring game at Miami's Hard Rock Stadium and the joint fifth-highest in World Cup history, drawing a sell-out crowd of 64,478 on the eve of the final in New Jersey. FIFA noted the fixture closed the venue's seven-match World Cup programme at 99.5 per cent capacity, with Kylian Mbappe's two goals taking him past Lionel Messi as the competition's all-time leading scorer.",
+          "publishedDate": "2026-07-18",
           "sources": [
             {
-              "name": "BBC Sport",
-              "url": "https://www.bbc.co.uk/sport/football/articles/cj365n05mgdo"
+              "name": "FIFA",
+              "url": "https://inside.fifa.com/organisation/news/miami-stadium-world-cup-2026-messi-england-france-6-4"
             },
             {
-              "name": "The Athletic",
-              "url": "https://www.nytimes.com/athletic/7442598/2026/07/15/world-cup-third-place-playoff-explainer/"
+              "name": "Al Jazeera",
+              "url": "https://www.aljazeera.com/sports/2026/7/18/saka-hat-trick-helps-england-down-france-to-win-world-cup-2026-bronze-final"
             }
           ]
         },
         {
           "id": "spain-argentina-final-new-jersey-build-up",
           "headline": "Finalists converge on New York New Jersey Stadium",
-          "summary": "Spain and Argentina have four days to prepare for the 104th match of the tournament at New York New Jersey Stadium on Sunday 19 July, with kick-off at 3pm local time. FIFA's preview noted the venue hosted Norway's shock win over Brazil in the round of 16 and will stage the first World Cup final between reigning European and South American champions, with Messi facing the country where he spent most of his club career.",
-          "publishedDate": "2026-07-15",
+          "summary": "Spain and Argentina have had four days to prepare for the 104th match of the tournament at New York New Jersey Stadium on Sunday 19 July, with kick-off at 8pm BST on BBC One and ITV1. Al Jazeera noted the venue hosted Norway's shock win over Brazil in the round of 16 and will stage the first World Cup final between reigning European and South American champions, with Slovenian referee Slavko Vincic appointed.",
+          "publishedDate": "2026-07-18",
           "sources": [
             {
-              "name": "FIFA",
-              "url": "https://www.fifa.com/en/tournaments/mens/worldcup/canadamexicousa2026/articles/spain-v-argentina-live-stream-team-news-tickets-and-more"
+              "name": "Al Jazeera",
+              "url": "https://www.aljazeera.com/sports/2026/7/18/spain-argentina-fifa-world-cup-final-prediction-head-to-head-messi-yamal-prediction-venue"
+            },
+            {
+              "name": "BBC Sport",
+              "url": "https://www.bbc.co.uk/mediacentre/articles/2026/how-to-watch-the-2026-fifa-world-cup"
             }
           ]
         }
@@ -197,66 +149,62 @@
       "description": "Deeper previews on favourites, group dynamics and how the 48-team format changes the path to the final.",
       "stories": [
         {
-          "id": "england-tuchel-tactics-semi-costly",
-          "headline": "Tuchel's defensive shift questioned after England exit",
-          "summary": "Thomas Tuchel replaced goalscorer Anthony Gordon with Ezri Konsa in the 72nd minute and switched to a back five as England sat on a 1-0 lead, but Argentina had 88 per cent possession for the following 37 minutes before scoring twice. BBC Sport analysis noted England are the only team this century to lead a World Cup semi-final and fail to reach the final on two separate occasions, with Tuchel insisting he had no regrets about trying to close the gaps.",
-          "publishedDate": "2026-07-15",
+          "id": "messi-last-dance-final-stakes",
+          "headline": "Messi targets history in likely last World Cup final",
+          "summary": "Lionel Messi will become the oldest outfield player to start a World Cup final and only the second after Cafu to appear in three, with eight goals and four assists at this tournament putting him in the Golden Boot race before Mbappe's bronze brace. Al Jazeera reported Scaloni called Messi's run at 39 incredible and noted Argentina could become the first team since Brazil in 1962 to retain the trophy, facing the country where Messi spent most of his club career.",
+          "publishedDate": "2026-07-19",
           "sources": [
             {
-              "name": "BBC Sport",
-              "url": "https://www.bbc.co.uk/sport/football/articles/ce8l15903k8o"
-            },
-            {
-              "name": "Sky Sports",
-              "url": "https://www.skysports.com/football/news/11095/13563777/thomas-tuchel-how-england-unravelled-after-ezri-konsa-substitution-as-familiar-failings-rob-three-lions-of-world-cup-final-place"
-            }
-          ]
-        },
-        {
-          "id": "messi-golden-boot-final-stakes",
-          "headline": "Messi targets Golden Boot and repeat triumph",
-          "summary": "Lionel Messi assisted both goals in Argentina's semi-final comeback and is level with Kylian Mbappe on eight tournament goals, with four assists giving him the edge in the tie-breaker should they finish level. BBC Sport noted Messi has scored or assisted in 13 consecutive matches for club and country and would equal his career-best run of 14 with another goal contribution in Sunday's final, potentially becoming only the second player after Cafu to appear in three World Cup finals.",
-          "publishedDate": "2026-07-15",
-          "sources": [
-            {
-              "name": "BBC Sport",
-              "url": "https://www.bbc.co.uk/sport/football/articles/c8jnl9zdzn2o"
+              "name": "Al Jazeera",
+              "url": "https://www.aljazeera.com/sports/2026/7/19/spain-vs-argentina-fifa-world-cup-final-messi-yamal-prediction-time-lineups-team-news"
             },
             {
               "name": "Opta Analyst",
-              "url": "https://theanalyst.com/articles/argentina-powers-of-recovery-world-cup-final"
+              "url": "https://theanalyst.com/articles/spain-vs-argentina-prediction-world-cup-final-2026-match-preview"
             }
           ]
         },
         {
           "id": "opta-spain-argentina-final-favourite",
           "headline": "Opta makes Spain favourites for Sunday final",
-          "summary": "Opta Analyst reported Spain carry a 56 per cent probability of winning the World Cup after beating France, with Argentina at 44 per cent following their semi-final comeback against England. Spain arrive unbeaten in 37 competitive matches and conceded only once in seven games, while Argentina have trailed in three separate knockouts yet reached a second consecutive final, with Lionel Messi on eight goals and four assists.",
-          "publishedDate": "2026-07-15",
+          "summary": "Opta Analyst reported Spain carry a 59.6 per cent probability of winning the World Cup after 25,000 supercomputer simulations, with Argentina at 40.4 per cent. Inside 90 minutes, Spain were projected to win 45.0 per cent of simulations, with a 29.0 per cent chance of a draw and Argentina winning in regulation time 26.0 per cent of the time.",
+          "publishedDate": "2026-07-19",
           "sources": [
             {
               "name": "Opta Analyst",
-              "url": "https://theanalyst.com/articles/argentina-powers-of-recovery-world-cup-final"
+              "url": "https://theanalyst.com/articles/spain-vs-argentina-prediction-world-cup-final-2026-match-preview"
             },
             {
-              "name": "Opta Analyst",
-              "url": "https://theanalyst.com/articles/england-vs-argentina-stats-world-cup-2026"
+              "name": "Al Jazeera",
+              "url": "https://www.aljazeera.com/sports/2026/7/19/spain-vs-argentina-fifa-world-cup-final-messi-yamal-prediction-time-lineups-team-news"
             }
           ]
         },
         {
-          "id": "spain-argentina-final-styles-preview",
-          "headline": "Possession machine meets comeback kings in final",
-          "summary": "Spain suffocated France with long spells on the ball before striking through Yamal's penalty and Porro's finish, while Argentina needed late goals in three separate knockouts to reach the showpiece. Al Jazeera framed Sunday's final as near perfection against legacy, with 19-year-old Yamal representing Spain's future and 39-year-old Messi chasing a second consecutive World Cup and potential Golden Boot on eight goals, level with Kylian Mbappe.",
-          "publishedDate": "2026-07-15",
+          "id": "mbappe-world-cup-goals-record",
+          "headline": "Mbappe breaks World Cup scoring record in bronze match",
+          "summary": "Kylian Mbappe scored twice in France's 6-4 defeat to England in Miami to become the all-time leading scorer in World Cup history with 22 goals, moving one clear of Lionel Messi and also securing the 2026 Golden Boot with 10 tournament goals. FIFA confirmed Mbappe is only the third man to reach double figures at a single World Cup since Gerd Muller in 1970, though Messi could still match his eight goals with a hat-trick in the final.",
+          "publishedDate": "2026-07-18",
           "sources": [
             {
-              "name": "Al Jazeera",
-              "url": "https://www.aljazeera.com/sports/2026/7/15/argentina-stun-england-in-2-1-comeback-win-to-reach-2026-world-cup-final"
+              "name": "FIFA",
+              "url": "https://inside.fifa.com/organisation/news/miami-stadium-world-cup-2026-messi-england-france-6-4"
             },
             {
+              "name": "Al Jazeera",
+              "url": "https://www.aljazeera.com/sports/2026/7/18/saka-hat-trick-helps-england-down-france-to-win-world-cup-2026-bronze-final"
+            }
+          ]
+        },
+        {
+          "id": "spain-argentina-final-stats-comparison",
+          "headline": "Best attack meets best defence in final",
+          "summary": "BBC Sport analysis noted Argentina have scored 19 goals at the tournament, the most of any side, while Spain have conceded only one and hold the lowest defensive expected-goals figure since 1966. Lamine Yamal and Lionel Messi have attempted 90 of the finalists' combined 209 dribbles, and Spain have won possession in the final third more frequently per 90 minutes than every team except Uruguay.",
+          "publishedDate": "2026-07-18",
+          "sources": [
+            {
               "name": "BBC Sport",
-              "url": "https://www.bbc.co.uk/sport/football/articles/c8jnl9zdzn2o"
+              "url": "https://www.bbc.co.uk/sport/football/articles/c0rd8zrwvwno"
             }
           ]
         }

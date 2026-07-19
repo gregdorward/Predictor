@@ -1,38 +1,38 @@
 {
-  "updatedAt": "2026-07-16T10:00:00.000Z",
-  "methodology": "Rankings reflect group-stage and knockout results through 15 July 2026, weighted by results quality, goal difference, squad availability and path difficulty. Title win chances are illustrative estimates aligned with Soccer Stats Hub modelling.",
+  "updatedAt": "2026-07-19T08:05:00.000Z",
+  "methodology": "Rankings reflect group-stage and knockout results through 18 July 2026, weighted by results quality, goal difference, squad availability and path difficulty. Title win chances are illustrative estimates aligned with Soccer Stats Hub modelling and Opta's pre-final supercomputer.",
   "rankings": [
     {
       "rank": 1,
       "team": "Spain",
       "flag": "🇪🇸",
       "record": "Final · 2-0 vs France",
-      "winChance": "56%",
-      "summary": "Spain are tournament favourites after a dominant 2-0 semi-final win over France in Dallas, with Mikel Oyarzabal's penalty and Pedro Porro's finish ending Les Bleus' bid for a third consecutive final. Luis de la Fuente's side have conceded only once in seven matches, are unbeaten in 37 competitive games, and Opta's model gives them a 56 per cent chance of lifting the trophy against Argentina on Sunday."
+      "winChance": "59.6%",
+      "summary": "Spain are tournament favourites on the eve of the final after a dominant 2-0 semi-final win over France in Dallas and six clean sheets in seven matches. Luis de la Fuente's side have conceded only once, are unbeaten in 37 competitive games, and Opta's supercomputer gives them a 59.6 per cent chance of lifting the trophy against Argentina on Sunday, with Lamine Yamal cleared to start after a precautionary training absence."
     },
     {
       "rank": 2,
       "team": "Argentina",
       "flag": "🇦🇷",
       "record": "Final · 2-1 vs England",
-      "winChance": "44%",
-      "summary": "Argentina reached a second consecutive World Cup final with another late comeback as Lionel Messi assisted Enzo Fernandez and Lautaro Martinez to overturn England 2-1 in Atlanta. Lionel Scaloni's holders have trailed in three separate knockouts yet always found a way through, with Messi on eight goals and four assists, though Facundo Medina remains a calf doubt for the New Jersey showpiece."
+      "winChance": "40.4%",
+      "summary": "Argentina reached a second consecutive World Cup final with another late comeback as Lionel Messi assisted Enzo Fernandez and Lautaro Martinez to overturn England 2-1 in Atlanta. Lionel Scaloni's holders have trailed in three separate knockouts yet always found a way through, with Messi on eight goals and four assists, though Facundo Medina remains a calf doubt and Rodrigo De Paul is pushing for a recall in midfield."
     },
     {
       "rank": 3,
-      "team": "France",
-      "flag": "🇫🇷",
-      "record": "Bronze · 0-2 vs Spain",
+      "team": "England",
+      "flag": "🏴󠁧󠁢󠁥󠁮󠁧󠁿",
+      "record": "3rd · 6-4 vs France",
       "winChance": "0%",
-      "summary": "France's bid for a third straight World Cup final ended when Spain controlled the Dallas semi-final 2-0, with Kylian Mbappe shackled and William Saliba forced off with a recurring back injury in the 30th minute. Didier Deschamps must now rotate heavily for Saturday's third-place play-off against England in Miami, with Saliba unlikely to feature and Mbappe still chasing Golden Boot honours on eight goals."
+      "summary": "England secured their best World Cup finish since 1966 with a 6-4 win over France in Miami, the joint fifth-highest-scoring game in tournament history. Bukayo Saka's hat-trick and Jude Bellingham's stoppage-time solo goal sealed bronze after Thomas Tuchel rotated heavily, though the semi-final collapse against Argentina, when a back five invited 88 per cent possession for the final 37 minutes, will dominate the post-tournament review."
     },
     {
       "rank": 4,
-      "team": "England",
-      "flag": "🏴󠁧󠁢󠁥󠁮󠁧󠁿",
-      "record": "Bronze · 1-2 vs Argentina",
+      "team": "France",
+      "flag": "🇫🇷",
+      "record": "4th · 4-6 vs England",
       "winChance": "0%",
-      "summary": "England were five minutes from their first World Cup final since 1966 when Anthony Gordon put them ahead in Atlanta, but Thomas Tuchel's switch to a back five invited a late Argentina surge that Lionel Messi orchestrated to a 2-1 defeat. The Three Lions face France in Miami on Saturday with Reece James a hamstring doubt, while Jude Bellingham and Harry Kane remain in the Golden Boot race on six goals each."
+      "summary": "France's bid for a third straight World Cup final ended when Spain controlled the Dallas semi-final 2-0, and Didier Deschamps' side then lost 6-4 to England in Miami despite rallying from 4-0 down at half-time. Kylian Mbappe scored twice to become the all-time leading World Cup scorer with 22 goals and claim the 2026 Golden Boot with 10 tournament goals, but William Saliba's back injury and a draining semi-final week left Les Bleus short at both ends."
     },
     {
       "rank": 5,
