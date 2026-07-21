@@ -936,29 +936,29 @@ export function AppContent({ shellMounted = false }) {
             <div className="PremiumUpsell">
               <div className="UpsellHeader">
                 <h2>Unlock the Full Experience</h2>
-                <p>You're currently seeing 25% of the action. Get the edge with full access.</p>
+                <p>You&apos;re only seeing 25% of today&apos;s matches. Premium unlocks every game, tip and insight — so you never miss an edge.</p>
               </div>
 
               <div className="FeatureComparison">
                 <div className="FeatureGroup">
                   <h4>Free Tier</h4>
                   <ul>
-                    <li className="limited">Limited Multi Tips</li>
-                    <li className="limited">25% of Matches with detailed stats</li>
-                    <li className="limited">All EPL games and AI previews</li>
+                    <li className="limited">Limited multi &amp; Over 2.5 tips</li>
+                    <li className="limited">25% of today&apos;s matches</li>
+                    <li className="limited">Key stats &amp; top-5 insights only</li>
                   </ul>
                 </div>
                 <div className="FeatureDivider">VS</div>
                 <div className="FeatureGroup premium">
                   <h4>Premium</h4>
                   <ul>
-                    <li>✅ All matches - unrivalled detail</li>
-                    <li>✅ 50 competitions</li>
-                    <li>✅ Full multi tips list</li>
-                    <li>✅ Full BTTS picks</li>
-                    <li>✅ Full over 2.5 goals picks</li>
+                    <li>✅ Every match across 50+ competitions</li>
+                    <li>✅ Full multi, BTTS &amp; Over 2.5 tip lists</li>
                     <li>✅ AI-powered match previews</li>
-                    <li>✅ Best value tips</li>
+                    <li>✅ Best-value &amp; stats-based tips</li>
+                    <li>✅ Deep match intel — streaks, managers, lineups &amp; upcoming fixtures</li>
+                    <li>✅ Full season stats — attack, defence, possession &amp; form</li>
+                    <li>✅ Complete insights rankings</li>
                   </ul>
                 </div>
               </div>

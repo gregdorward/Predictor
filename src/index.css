@@ -1273,6 +1273,7 @@ h6 {
 .FeatureGroup li {
   margin-bottom: 0.5rem;
   font-size: 1em;
+  line-height: 1.5em;
 }
 
 .FeatureGroup.premium li {
