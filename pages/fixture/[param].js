@@ -96,6 +96,9 @@ export async function getServerSideProps({ params }) {
   const competition = snapshot.competition_id
     ? getCompetitionById(snapshot.competition_id)
     : null;
+  const competitionUrl = competition
+    ? getCompetitionUrl(competition.slug)
+    : null;
   const relatedFixtureLinks = noIndex
     ? []
     : await fetchUpcomingFixtureLinks({ excludeMatchId: matchId, limit: 150 });
@@ -114,7 +117,7 @@ export async function getServerSideProps({ params }) {
         league: meta.league || snapshot.competition_name || snapshot.league_name || "",
         stadium: snapshot.stadium_name || snapshot.stadium || "",
         kickOff: formatKickOff(snapshot.date_unix),
-        competitionUrl: competition ? getCompetitionUrl(competition.slug) : null,
+        competitionUrl,
         competitionName: competition?.name || meta.league || null,
         gameWeek: snapshot.game_week ?? snapshot.matches_completed_minimum ?? null,
       },

@@ -20,7 +20,6 @@ const CompetitionPage = dynamic(
 
 export default function CompetitionByParam({
   seasonId,
-  initialData,
   meta,
   jsonLd,
   canonicalPath,
@@ -38,7 +37,6 @@ export default function CompetitionByParam({
       <SeoPageLinks relatedLinks={seoShell.relatedLinks} ssrOnly />
       <CompetitionPage
         seasonId={seasonId}
-        initialData={initialData}
         skipHero
         relatedLinks={seoShell.relatedLinks}
       />
@@ -52,16 +50,16 @@ export async function getServerSideProps({ params }) {
     return { notFound: true };
   }
 
-  const { seasonId, catalog } = resolved;
-
-  if (/^\d+$/.test(String(params.param)) && catalog?.slug) {
+  if (resolved.redirectTo) {
     return {
       redirect: {
-        destination: `/competition/${catalog.slug}/`,
+        destination: resolved.redirectTo,
         permanent: true,
       },
     };
   }
+
+  const { seasonId, catalog } = resolved;
 
   const data = await fetchCompetitionData(seasonId);
   if (!data) {
@@ -75,10 +73,12 @@ export async function getServerSideProps({ params }) {
   const jsonLd = buildCompetitionJsonLd(data, canonicalUrl, catalog);
   const seoShell = buildCompetitionSeoShell(data, catalog);
 
+  // Do not serialize the full FootyStats competition payload into __NEXT_DATA__.
+  // Team objects alone can be multi‑MB and push pages over Googlebot's 2 MB limit.
+  // CompetitionPage (ssr:false) fetches the interactive payload client-side.
   return {
     props: {
       seasonId,
-      initialData: data,
       meta,
       jsonLd,
       canonicalPath,

@@ -17,6 +17,26 @@ const nextConfig = {
         destination: "/o25/",
         permanent: true,
       },
+      {
+        source: "/competition/world-cup-europe-qualifiers",
+        destination: "/competition/world-cup-2026/",
+        permanent: true,
+      },
+      {
+        source: "/competition/world-cup-europe-qualifiers/",
+        destination: "/competition/world-cup-2026/",
+        permanent: true,
+      },
+      {
+        source: "/competition/world-cup-south-america-qualifiers",
+        destination: "/competition/world-cup-2026/",
+        permanent: true,
+      },
+      {
+        source: "/competition/world-cup-south-america-qualifiers/",
+        destination: "/competition/world-cup-2026/",
+        permanent: true,
+      },
     ];
   },
 };

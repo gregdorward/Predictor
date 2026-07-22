@@ -148,6 +148,16 @@ function TeamList({ title, teams, field }) {
   );
 }
 
+function pickTeamHighlight(team, field) {
+  if (!team) return null;
+  return {
+    id: team.id ?? null,
+    name: team.name || team.english_name || null,
+    english_name: team.english_name || team.name || null,
+    [field]: team[field] ?? null,
+  };
+}
+
 export function buildCompetitionSeoShell(data, catalog) {
   const name = data?.english_name || data?.name || catalog?.name || "Competition";
   const relatedLinks = getRelatedCompetitionLinks(catalog?.slug);
@@ -163,9 +173,17 @@ export function buildCompetitionSeoShell(data, catalog) {
     homeWin: formatPercent(data?.homeWinPercentage),
     draw: formatPercent(data?.drawPercentage),
     awayWin: formatPercent(data?.awayWinPercentage),
-    topOver25Teams: sortTeamsByField(teams, "seasonOver25Percentage_overall", 5),
-    topBttsTeams: sortTeamsByField(teams, "seasonBTTSPercentage_overall", 5),
-    topUnder25Teams: sortTeamsByField(teams, "seasonUnder25Percentage_overall", 5),
+    topOver25Teams: sortTeamsByField(teams, "seasonOver25Percentage_overall", 5).map(
+      (team) => pickTeamHighlight(team, "seasonOver25Percentage_overall")
+    ),
+    topBttsTeams: sortTeamsByField(teams, "seasonBTTSPercentage_overall", 5).map(
+      (team) => pickTeamHighlight(team, "seasonBTTSPercentage_overall")
+    ),
+    topUnder25Teams: sortTeamsByField(
+      teams,
+      "seasonUnder25Percentage_overall",
+      5
+    ).map((team) => pickTeamHighlight(team, "seasonUnder25Percentage_overall")),
     relatedLinks,
   };
 }

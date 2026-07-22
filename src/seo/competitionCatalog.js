@@ -59,8 +59,6 @@ export const COMPETITION_CATALOG = [
   { id: 16627, slug: "k-league", name: "K League" },
   { id: 12772, slug: "saudi-pro-league", name: "Saudi Pro League" },
   { id: 13967, slug: "usl", name: "USL" },
-  { id: 13964, slug: "world-cup-europe-qualifiers", name: "World Cup Europe Qualifiers" },
-  { id: 10121, slug: "world-cup-south-america-qualifiers", name: "World Cup South America Qualifiers" },
   { id: 16537, slug: "irish-premier-division", name: "Irish Premier Division" },
   { id: 17326, slug: "a-league", name: "A-League" },
   { id: 17127, slug: "europa-league", name: "Europa League" },
@@ -92,15 +90,49 @@ export const UNAVAILABLE_COMPETITION_SLUGS = new Set([
   "uruguayan-primera-division",
   "usl",
   "veikkausliiga",
-  "world-cup-europe-qualifiers",
-  "world-cup-south-america-qualifiers",
 ]);
+
+/**
+ * Retired FootyStats season IDs → current catalog season ID.
+ * Keeps old numeric /competition/<id>/ links and fixture metadata resolvable.
+ */
+export const COMPETITION_ID_ALIASES = {
+  // Rolled forward 22 Jul 2026
+  15657: 17279, // National League
+  15845: 17263, // National League North
+  15115: 17217, // Primeira Liga
+  15163: 17356, // Greek Super League
+  14972: 17265, // Turkish Super Lig
+  15066: 17269, // Segunda Division
+  14977: 17267, // 3. Liga
+  16036: 17326, // A-League
+  // Removed from coverage — send traffic to World Cup 2026 hub
+  13964: 16494, // World Cup Europe Qualifiers
+  10121: 16494, // World Cup South America Qualifiers
+};
+
+/** Removed competition slugs → destination path (with trailing slash). */
+export const REMOVED_COMPETITION_REDIRECTS = {
+  "world-cup-europe-qualifiers": "/competition/world-cup-2026/",
+  "world-cup-south-america-qualifiers": "/competition/world-cup-2026/",
+};
 
 const byId = new Map(COMPETITION_CATALOG.map((entry) => [entry.id, entry]));
 const bySlug = new Map(COMPETITION_CATALOG.map((entry) => [entry.slug, entry]));
 
+export function isCompetitionIndexable(entryOrSlug) {
+  const slug =
+    typeof entryOrSlug === "string" ? entryOrSlug : entryOrSlug?.slug;
+  if (!slug) return false;
+  return !UNAVAILABLE_COMPETITION_SLUGS.has(slug);
+}
+
 export function getCompetitionById(id) {
-  return byId.get(Number(id)) ?? null;
+  const numericId = Number(id);
+  const direct = byId.get(numericId);
+  if (direct) return direct;
+  const aliasedId = COMPETITION_ID_ALIASES[numericId];
+  return aliasedId != null ? byId.get(Number(aliasedId)) ?? null : null;
 }
 
 /** Resolve a display/searchable league name from raw FootyStats match data. */
@@ -138,22 +170,46 @@ export function getFeaturedCompetitions(excludeSlug = null) {
 
 export function getCompetitionUrl(seasonIdOrSlug) {
   const byIdEntry = getCompetitionById(seasonIdOrSlug);
-  if (byIdEntry) return `/competition/${byIdEntry.slug}/`;
+  if (byIdEntry && isCompetitionIndexable(byIdEntry)) {
+    return `/competition/${byIdEntry.slug}/`;
+  }
   const bySlugEntry = getCompetitionBySlug(seasonIdOrSlug);
-  if (bySlugEntry) return `/competition/${bySlugEntry.slug}/`;
-  return `/competition/${seasonIdOrSlug}/`;
+  if (bySlugEntry && isCompetitionIndexable(bySlugEntry)) {
+    return `/competition/${bySlugEntry.slug}/`;
+  }
+  return null;
 }
 
 export function isKnownCompetitionId(id) {
-  return footyStatsToSofaScoreMap[Number(id)] != null;
+  const numericId = Number(id);
+  if (footyStatsToSofaScoreMap[numericId] != null) return true;
+  const aliasedId = COMPETITION_ID_ALIASES[numericId];
+  return aliasedId != null && footyStatsToSofaScoreMap[aliasedId] != null;
 }
 
 export function resolveCompetitionParam(param) {
-  if (/^\d+$/.test(String(param))) {
-    return { seasonId: String(param), catalog: getCompetitionById(param) };
+  const raw = String(param);
+
+  const removedDestination = REMOVED_COMPETITION_REDIRECTS[raw.toLowerCase()];
+  if (removedDestination) {
+    return { redirectTo: removedDestination };
   }
+
+  if (/^\d+$/.test(raw)) {
+    const numericId = Number(raw);
+    const catalog = getCompetitionById(numericId);
+    if (!catalog || !isCompetitionIndexable(catalog)) {
+      return null;
+    }
+    // Prefer canonical slug URLs over bare / outdated season IDs.
+    return { redirectTo: `/competition/${catalog.slug}/` };
+  }
+
   const catalog = getCompetitionBySlug(param);
   if (!catalog) return null;
+  if (!isCompetitionIndexable(catalog)) {
+    return { redirectTo: "/competitions/" };
+  }
   return { seasonId: String(catalog.id), catalog };
 }
 

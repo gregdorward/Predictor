@@ -2302,8 +2302,6 @@ export async function generateGoals(homeForm, awayForm, match) {
     "Europe UEFA Europa League",
     "Europe UEFA Europa Conference League",
     "South America Copa Libertadores",
-    "International WC Qualification Europe",
-    "International WC Qualification South America",
     "International World Cup",
   ];
 

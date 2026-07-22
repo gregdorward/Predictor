@@ -55,7 +55,9 @@ const name = showShortlist ? fixture.leagueDesc : fixture.leagueName;
   }
 
   function getCompetitionPageUrl() {
-    return `${getCompetitionUrl(id)}?theme=${getStoredTheme()}`;
+    const path = getCompetitionUrl(id);
+    if (!path) return null;
+    return `${path}?theme=${getStoredTheme()}`;
   }
 
   function handleExpandClick() {
@@ -73,6 +75,9 @@ const name = showShortlist ? fixture.leagueDesc : fixture.leagueName;
     );
   }
 
+  const competitionPageUrl = getCompetitionPageUrl();
+  const leagueLabel = showShortlist ? fixture.leagueDesc : fixture.leagueName;
+
   return (
     <div>
       <div
@@ -81,22 +86,35 @@ const name = showShortlist ? fixture.leagueDesc : fixture.leagueName;
         key={`leagueName${id}div`}
       >
         <div className="LeagueAndLogo">
-          <a
-            href={getCompetitionPageUrl()}
-            className="leagueName-link"
-            target="_blank"
-            rel="noopener noreferrer"
-            onClick={(e) => e.stopPropagation()}
-          >
-            {logoUrl && (
-              <img
-                className="LeagueLogo"
-                src={logoUrl}
-                alt={`${name} Logo`}
-              />
-            )}
-            {showShortlist ? fixture.leagueDesc : fixture.leagueName}
-          </a>
+          {competitionPageUrl ? (
+            <a
+              href={competitionPageUrl}
+              className="leagueName-link"
+              target="_blank"
+              rel="noopener noreferrer"
+              onClick={(e) => e.stopPropagation()}
+            >
+              {logoUrl && (
+                <img
+                  className="LeagueLogo"
+                  src={logoUrl}
+                  alt={`${name} Logo`}
+                />
+              )}
+              {leagueLabel}
+            </a>
+          ) : (
+            <span className="leagueName-link leagueName-link--nolink">
+              {logoUrl && (
+                <img
+                  className="LeagueLogo"
+                  src={logoUrl}
+                  alt={`${name} Logo`}
+                />
+              )}
+              {leagueLabel}
+            </span>
+          )}
         </div>
         <button
           type="button"
