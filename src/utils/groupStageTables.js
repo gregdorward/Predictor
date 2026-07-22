@@ -1,6 +1,6 @@
 import { getPointsFromLastX } from "../utils/getPointsFromLastX";
 
-export const GROUP_STAGE_LEAGUE_IDS = [13964, 16494]; // WC Qual Europe, World Cup 2026
+export const GROUP_STAGE_LEAGUE_IDS = [16494]; // World Cup 2026
 
 function getGroupStageTable(league) {
   return league?.data?.specific_tables?.find((st) => st.groups?.length > 0);

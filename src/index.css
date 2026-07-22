@@ -7042,27 +7042,28 @@ body.dark-mode .MetricTrendTables-table td {
 }
 
 .MetricTrendTables-arrow {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 1.5rem;
-  height: 1.5rem;
-  border-radius: 999px;
-  font-size: 14px;
-  font-weight: 700;
-  line-height: 1;
+  display: inline-block;
+  flex-shrink: 0;
+  width: 0.875rem;
+  height: 0.875rem;
+  border-radius: 50%;
+  box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.9);
+}
+
+body.dark-mode .MetricTrendTables-arrow {
+  box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.35);
 }
 
 .MetricTrendTables-arrow--up {
-  color: #01a501;
+  background-color: #01a501;
 }
 
 .MetricTrendTables-arrow--down {
-  color: #d71200;
+  background-color: #d71200;
 }
 
 .MetricTrendTables-arrow--flat {
-  color: #f57701;
+  background-color: #f57701;
 }
 
 .ComparisonBarChart-areaChart {
@@ -12110,7 +12111,7 @@ strong.WC26__inlineHeader {
   background: var(--subtle-surface-color);
   border: none;
   border-radius: 12px;
-  padding: 0.85rem 1rem 0.7rem;
+  padding: 0.85rem 0 0.7rem;
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
@@ -12148,7 +12149,7 @@ strong.WC26__inlineHeader {
   margin: 0 auto;
 }
 
-.Competition canvas {
+.Competition__chartGrid canvas {
   display: block !important;
   max-width: 100% !important;
   max-height: clamp(160px, 32vw, 260px) !important;
@@ -12180,6 +12181,396 @@ strong.WC26__inlineHeader {
   .Competition__advantageGrid {
     grid-template-columns: repeat(4, 1fr);
   }
+}
+
+.Competition__teamComparison {
+  width: 100%;
+}
+
+.Competition__comparisonIntro,
+.Competition__comparisonEmpty,
+.Competition__comparisonHint {
+  margin: 0 0 1rem;
+  color: var(--text-color);
+  opacity: 0.85;
+  font-size: 0.95em;
+  line-height: 1.45;
+}
+
+.Competition__shareable {
+  width: 100%;
+  min-width: 0;
+}
+
+.Competition__shareable .ShareableVisual__actions {
+  margin: 0 0.5em 0.35rem;
+}
+
+.Competition__shareCapture {
+  width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
+  background: var(--subtle-surface-color);
+}
+
+.Competition__shareCaptureTitle {
+  margin: 0;
+  padding: 0.55rem 0.75rem 0.35rem;
+  font-size: 0.95em;
+  font-weight: 600;
+  color: var(--text-color);
+  line-height: 1.3;
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+}
+
+.Competition__shareCaptureSub {
+  font-size: 0.85em;
+  font-weight: 500;
+  opacity: 0.75;
+}
+
+.Competition__comparisonHint--scatter {
+  padding: 0 0.5em 0.5em;
+  margin-bottom: 0;
+  font-size: 0.85em;
+}
+
+.Competition__comparisonGrid {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  margin-bottom: 1rem;
+  width: 100%;
+}
+
+.Competition__comparisonCard--metrics {
+  width: 100%;
+  max-width: 1100px;
+  margin-inline: auto;
+  height: auto;
+}
+
+.Competition__comparisonCard--scatter {
+  width: 100%;
+  max-width: min(100%, 788px);
+  margin-inline: auto;
+  height: auto;
+  min-width: 0;
+}
+
+.Competition__comparisonCard--radar {
+  width: 100%;
+  max-width: 1100px;
+  margin-inline: auto;
+  height: auto;
+}
+
+.Competition__comparisonCard--scatter .Competition__chartCardBody,
+.Competition__comparisonCard--metrics .Competition__chartCardBody {
+  display: block;
+  flex: none;
+  min-height: 0;
+  height: auto;
+  align-items: stretch;
+  justify-content: flex-start;
+}
+
+.Competition__comparisonCard--radar .Competition__chartCardBody {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  flex: none;
+  height: auto;
+  min-height: 0;
+}
+
+.Competition__comparisonCard--scatter .Competition__chartCardBody > div,
+.Competition__comparisonCard--metrics .Competition__chartCardBody > div {
+  flex: none;
+  height: auto;
+  max-width: none;
+  margin: 0;
+}
+
+.Competition__comparisonCard--radar .Competition__comparisonTeamPicker,
+.Competition__comparisonCard--radar .Competition__comparisonHint,
+.Competition__comparisonCard--radar .Competition__comparisonEmpty {
+  padding-inline: 1rem;
+}
+
+.Competition__comparisonScatterWrap {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  height: auto;
+  overflow: hidden;
+}
+
+.Competition__comparisonBarWrap {
+  position: relative;
+  width: 100%;
+  height: 380px;
+  overflow: hidden;
+}
+
+.Competition__comparisonRadarWrap {
+  position: relative;
+  width: 100%;
+  height: 340px;
+  overflow: hidden;
+}
+
+.Competition__comparisonScatterWrap canvas,
+.Competition__comparisonBarWrap canvas,
+.Competition__comparisonRadarWrap canvas {
+  /* Override global `canvas { display:inline; max-width/height:36em; margin:1em }` */
+  display: block !important;
+  width: 100% !important;
+  max-width: none !important;
+  max-height: none !important;
+  margin: 0 !important;
+}
+
+@media (min-width: 900px) {
+  .Competition__comparisonCard--scatter {
+    max-width: min(100%, 900px);
+  }
+
+  .Competition__comparisonBarWrap {
+    height: 440px;
+  }
+
+  .Competition__comparisonRadarWrap {
+    height: 400px;
+  }
+}
+
+@media (min-width: 1200px) {
+  .Competition__comparisonCard--metrics,
+  .Competition__comparisonCard--radar {
+    max-width: 1200px;
+  }
+
+  .Competition__comparisonCard--scatter {
+    max-width: min(100%, 1013px);
+  }
+
+  .Competition__comparisonBarWrap {
+    height: 480px;
+  }
+
+  .Competition__comparisonRadarWrap {
+    height: 440px;
+  }
+}
+
+.Competition__comparisonCardHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  margin-bottom: 0.35rem;
+  padding-inline: 1rem;
+}
+
+.Competition__comparisonCardHeader .Competition__chartCardTitle {
+  margin-bottom: 0;
+}
+
+.Competition__comparisonSelect {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.Competition__comparisonAxisPickers {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 0.55rem;
+}
+
+.Competition__comparisonAxisPickers--scatter {
+  justify-content: stretch;
+  align-items: stretch;
+  flex-direction: column;
+  padding: 0.5em;
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
+  min-width: 0;
+  gap: 0.45rem;
+}
+
+.Competition__comparisonAxisPickers--scatter .Competition__metricPicker {
+  width: 100%;
+  min-width: 0;
+  display: grid;
+  grid-template-columns: 3.25rem minmax(0, 1fr);
+  align-items: center;
+  gap: 0.35rem;
+}
+
+.Competition__metricPicker {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  min-width: 0;
+  position: relative;
+}
+
+.Competition__metricPickerControl {
+  position: relative;
+  flex: 1 1 auto;
+  min-width: 0;
+  width: 100%;
+}
+
+.Competition__metricPickerTrigger {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
+  background: var(--third-background-color);
+  color: var(--text-color);
+  border: 1px solid var(--third-background-color);
+  border-radius: 6px;
+  font-family: inherit;
+  font-size: 0.9em;
+  padding: 0.4em 0.55em;
+  cursor: pointer;
+  text-align: left;
+}
+
+.Competition__metricPickerValue {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.Competition__metricPickerCaret {
+  flex-shrink: 0;
+  opacity: 0.7;
+  font-size: 0.85em;
+  line-height: 1;
+}
+
+.Competition__metricPickerMenu {
+  position: absolute;
+  z-index: 20;
+  top: calc(100% + 0.25rem);
+  left: 0;
+  right: 0;
+  margin: 0;
+  padding: 0.25rem 0;
+  list-style: none;
+  max-height: 16rem;
+  overflow-y: auto;
+  background: var(--secondary-background-color, var(--background-color));
+  border: 1px solid var(--third-background-color);
+  border-radius: 8px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.28);
+}
+
+.Competition__metricPickerOption {
+  display: grid;
+  grid-template-columns: 1.25rem minmax(0, 1fr);
+  align-items: center;
+  gap: 0.35rem;
+  width: 100%;
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0.45em 0.65em;
+  border: 0;
+  background: transparent;
+  color: var(--text-color);
+  font-family: inherit;
+  font-size: 0.9em;
+  text-align: left;
+  cursor: pointer;
+}
+
+.Competition__metricPickerOption:hover,
+.Competition__metricPickerOption--active {
+  background: var(--third-background-color);
+}
+
+.Competition__metricPickerCheck {
+  width: 1.25rem;
+  text-align: center;
+  color: var(--primary-color);
+  font-size: 0.85em;
+  line-height: 1;
+}
+
+.Competition__metricPickerOptionLabel {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+@media (min-width: 641px) {
+  .Competition__comparisonAxisPickers--scatter {
+    flex-direction: row;
+    align-items: center;
+  }
+
+  .Competition__comparisonAxisPickers--scatter .Competition__metricPicker {
+    flex: 1 1 0;
+    width: auto;
+  }
+}
+
+.Competition__comparisonSelectLabel {
+  font-size: 0.85em;
+  color: var(--text-color);
+  opacity: 0.8;
+}
+
+.Competition__comparisonSelect select {
+  background: var(--third-background-color);
+  color: var(--text-color);
+  border: 1px solid var(--third-background-color);
+  border-radius: 6px;
+  font-family: inherit;
+  font-size: 0.9em;
+  padding: 0.35em 0.55em;
+}
+
+.Competition__comparisonTeamPicker {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  margin-bottom: 0.5rem;
+}
+
+.Competition__comparisonTeamChip {
+  background: var(--third-background-color);
+  border: 1px solid var(--third-background-color);
+  border-radius: 999px;
+  color: var(--text-color);
+  cursor: pointer;
+  font-size: 0.85em;
+  font-family: inherit;
+  padding: 0.35em 0.75em;
+  line-height: 1.2;
+}
+
+.Competition__comparisonTeamChip--active {
+  background: var(--primary-color);
+  border-color: var(--primary-color);
+  color: #ffffff;
+}
+
+.Competition__comparisonTeamChip--average:not(.Competition__comparisonTeamChip--active) {
+  border-color: #f57701;
+  color: #f57701;
 }
 
 .Competition__rankingsGrid {
@@ -12469,10 +12860,17 @@ strong.WC26__inlineHeader {
   }
 }
 
+@media (max-width: 1024px) {
+  .Competition {
+    padding-left: 0.25rem;
+    padding-right: 0.25rem;
+  }
+}
+
 @media (max-width: 640px) {
   .Competition {
-    padding-left: 0.75rem;
-    padding-right: 0.75rem;
+    padding-left: 0.25rem;
+    padding-right: 0.25rem;
     font-size: 1.08em;
   }
 
@@ -12527,7 +12925,7 @@ strong.WC26__inlineHeader {
   }
 
   .Competition__chartCard {
-    padding: 0.7rem 0.8rem 0.55rem;
+    padding: 0.7rem 0 0.55rem;
   }
 
   .Competition__chartCardTitle {
@@ -12535,7 +12933,7 @@ strong.WC26__inlineHeader {
     margin-bottom: 0.4rem;
   }
 
-  .Competition canvas {
+  .Competition__chartGrid canvas {
     max-height: clamp(140px, 45vw, 200px) !important;
   }
 

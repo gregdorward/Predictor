@@ -80,8 +80,6 @@ const REGION_GROUPS = [
       "europa-conference-league",
       "world-cup-2026",
       "uefa-nations-league",
-      "world-cup-europe-qualifiers",
-      "world-cup-south-america-qualifiers",
       "club-world-cup",
     ],
   },

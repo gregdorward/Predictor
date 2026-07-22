@@ -20,13 +20,13 @@ export const footyStatsToSofaScoreMap = {
     id: 25,
     season: 97078, // League Two 26/27
   },
-  15657: {
+  17279: {
     id: 173,
-    season: 78229, // National League 25/26
+    season: 98160, // National League 26/27
   },
-  15845: {
+  17263: {
     id: 176,
-    season: 78282, // National League North 25/26
+    season: 98275, // National League North 26/27
   },
   15844: {
     id: 174,
@@ -60,9 +60,9 @@ export const footyStatsToSofaScoreMap = {
     id: 34,
     season: 96127, // Ligue 1 26/27
   },
-  15115: {
+  17217: {
     id: 238,
-    season: 97436, // Primeira Liga 26/27 (industry leading stat website season id unchanged)
+    season: 97436, // Primeira Liga 26/27
   },
   16556: {
     id: 384,
@@ -88,19 +88,19 @@ export const footyStatsToSofaScoreMap = {
     id: 45,
     season: 97043, // Austrian Bundesliga 26/27
   },
-  15163: {
+  17356: {
     id: 185,
-    season: 78175, // Greek Super League 25/26
+    season: 98659, // Greek Super League 26/27
   },
-  14972: {
+  17265: {
     id: 52,
-    season: 77805, // Turkish Super Lig 25/26
+    season: 98080, // Turkish Super Lig 26/27
   },
   17112: {
     id: 202,
     season: 96144, // Ekstraklasa 26/27
   },
-  15066: {
+  17269: {
     id: 54,
     season: 97280, // Segunda Division 26/27
   },
@@ -108,9 +108,9 @@ export const footyStatsToSofaScoreMap = {
     id: 44,
     season: 97406, // Bundesliga 2 26/27
   },
-  14977: {
+  17267: {
     id: 491,
-    season: 77744, // 3. Liga 25/26
+    season: 98012, // 3. Liga 26/27
   },
   17117: {
     id: 182,
@@ -172,21 +172,21 @@ export const footyStatsToSofaScoreMap = {
     id: 410,
     season: 88606, // K League 26
   },
-  13964: {
-    id: 11,
-    season: 69427, // World Cup Europe Qualifiers 2026
+  12772: {
+    id: 955,
+    season: 80443, // Saudi Pro League 25/26
   },
-  10121: {
-    id: 295,
-    season: 53820, // World Cup South America Qualifiers 2026
+  16263: {
+    id: 40,
+    season: 87925, // Allsvenskan 2026
   },
   16537: {
     id: 192,
     season: 87682, // Irish Premier Division 26
   },
-  16036: {
+  17326: {
     id: 136,
-    season: 82603, // A-League 25/26
+    season: 98511, // A-League 26/27
   },
   17127: {
     id: 679,
@@ -202,7 +202,8 @@ export const footyStatsToSofaScoreMap = {
   },
 
   // Deferred - not in industry leading stat website chosen_leagues; stat website refs commented out elsewhere
-  // 12772: { id: 955, season: 80443 }, // Saudi Pro League
+  // 13964: { id: 11, season: 69427 }, // World Cup Europe Qualifiers 2026
+  // 10121: { id: 295, season: 53820 }, // World Cup South America Qualifiers 2026
   // 13878: { id: 357, season: 69619 }, // Club World Cup
   // 13967: { id: 13363, season: 87611 }, // USL
   // 14089: { id: 41, season: 87930 }, // Veikkausliiga
@@ -213,7 +214,6 @@ export const footyStatsToSofaScoreMap = {
   // 14951: { id: 218, season: 97214 }, // Ukrainian Premier League
   // 15063: { id: 212, season: 96864 }, // Slovenian Prva Liga
   // 15065: { id: 210, season: 96249 }, // Serbian SuperLiga
-  // 16263: { id: 40, season: 87925 }, // Allsvenskan
 };
 
 export function getSofaScoreMapping(seasonId) {

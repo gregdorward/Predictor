@@ -39,6 +39,8 @@ yarn-error.log*
 
 # backtest CLI artifacts
 /scripts/.backtest-bundle.mjs
+/scripts/.league-comparison-bundle.mjs
+/scripts/.league-comparison-entry.mjs
 /scripts/output/
 
 # Cursor — keep shared rules, ignore local-only state

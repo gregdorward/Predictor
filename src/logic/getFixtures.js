@@ -20,6 +20,7 @@ import {
   trimLeagueResultsToWindow,
 } from "../utils/leagueResultsAccess";
 import { resolveMultiDivisionLeagueTables } from "../utils/multiDivisionLeagueTables";
+import { resolveConferenceLeagueTeams } from "../components/competition/competitionLeagueTable";
 import { apiGetUrl } from "../utils/apiUrl";
 import { persistLeagueResults } from "../utils/persistLeagueResults";
 import {
@@ -182,10 +183,65 @@ export async function generateTables(a, leagueIdArray, allResults) {
         basicTableArray.push({ id, group, table: basicElements });
       });
     } else if (
-      // !league.data.specific_tables[0]?.groups &&
-      // currentLeagueId !== 13973 &&
+      currentLeagueId === 16504 &&
+      league.data.specific_tables?.[0]?.groups?.length
+    ) {
+      const instances = league.data.specific_tables[0].groups;
+      groups = true;
+
+      instances.forEach((group) => {
+        leagueInstance = [];
+        for (let index = 0; index < group.table.length; index++) {
+          let currentTeam = group.table[index];
+          let last5;
+          if (currentTeam.wdl_record.length < 5) {
+            last5 = currentTeam.wdl_record
+              .slice(`-${currentTeam.wdl_record.length}`)
+              .toUpperCase();
+          } else {
+            last5 = currentTeam.wdl_record.slice(-5).toUpperCase();
+          }
+          const team = {
+            LeagueID: currentLeagueId,
+            Position: index + 1,
+            Name: currentTeam.cleanName,
+            ID: currentTeam.id,
+            GroupName: group.name ? group.name : group.round,
+            Played: currentTeam.matchesPlayed,
+            Wins: currentTeam.seasonWins_overall,
+            Draws: currentTeam.seasonDraws_overall,
+            Losses: currentTeam.seasonLosses_overall,
+            For: currentTeam.seasonGoals,
+            Against:
+              currentTeam.seasonConceded_home +
+              currentTeam.seasonConceded_away,
+            GoalDifference: currentTeam.seasonGoalDifference,
+            Form: last5,
+            LastXPoints: getPointsFromLastX(last5.split("")),
+            Points: currentTeam.points,
+            wdl: currentTeam.wdl_record,
+            seasonGoals: currentTeam.seasonGoals,
+            seasonConceded: currentTeam.seasonConceded,
+          };
+          leagueInstance.push(team);
+        }
+        bespokeLeagueArray.push({
+          id: currentLeagueId,
+          group: group.name ? group.name : group.round,
+          table: leagueInstance,
+        });
+        let basicElements = leagueInstance.map((item) => ({
+          LeagueID: item.LeagueID,
+          Name: item.Name,
+          Position: item.Position,
+          GoalDifference: item.GoalDifference,
+          Played: item.Played,
+          Points: item.Points,
+        }));
+        basicTableArray.push({ id: currentLeagueId, table: basicElements });
+      });
+    } else if (
       currentLeagueId !== 12933 &&
-      // currentLeagueId !== 13734 &&
       hasSpecificTable
     ) {
       for (
@@ -240,71 +296,6 @@ export async function generateTables(a, leagueIdArray, allResults) {
         Zone: item.zone,
       }));
       basicTableArray.push({ id: currentLeagueId, table: basicElements });
-    } else if (currentLeagueId === 16504
-    ) {
-      let instances;
-
-      if (currentLeagueId === 16504) {
-        if (league.data.specific_tables[0].groups) {
-          instances = league.data.specific_tables[0].groups;
-          groups = true
-        } else {
-          instances = null;
-          groups = false
-        }
-      }
-      if (groups) {
-        instances.forEach((group) => {
-          leagueInstance = [];
-          for (let index = 0; index < group.table.length; index++) {
-            let currentTeam = group.table[index];
-            let last5;
-            if (currentTeam.wdl_record.length < 5) {
-              last5 = currentTeam.wdl_record
-                .slice(`-${currentTeam.wdl_record.length}`)
-                .toUpperCase();
-            } else {
-              last5 = currentTeam.wdl_record.slice(-5).toUpperCase();
-            }
-            const team = {
-              LeagueID: currentLeagueId,
-              Position: index + 1,
-              Name: currentTeam.cleanName,
-              ID: currentTeam.id,
-              Played: currentTeam.matchesPlayed,
-              Wins: currentTeam.seasonWins_overall,
-              Draws: currentTeam.seasonDraws_overall,
-              Losses: currentTeam.seasonLosses_overall,
-              For: currentTeam.seasonGoals,
-              Against:
-                currentTeam.seasonConceded_home +
-                currentTeam.seasonConceded_away,
-              GoalDifference: currentTeam.seasonGoalDifference,
-              Form: last5,
-              LastXPoints: getPointsFromLastX(last5.split("")),
-              Points: currentTeam.points,
-              wdl: currentTeam.wdl_record,
-              seasonGoals: currentTeam.seasonGoals,
-              seasonConceded: currentTeam.seasonConceded,
-            };
-            leagueInstance.push(team);
-          }
-          bespokeLeagueArray.push({
-            id: currentLeagueId,
-            group: group.name ? group.name : group.round,
-            table: leagueInstance,
-          });
-          let basicElements = leagueInstance.map((item) => ({
-            LeagueID: item.LeagueID,
-            Name: item.Name,
-            Position: item.Position,
-            GoalDifference: item.GoalDifference,
-            Played: item.Played,
-            Points: item.Points,
-          }));
-          basicTableArray.push({ id: currentLeagueId, table: basicElements });
-        });
-      }
     } else if (league.data.league_table === null) {
       for (
         let index = 0;
@@ -467,6 +458,44 @@ export async function renderTable(index, results, id) {
           />
         </Suspense>
       </>,
+      containerId
+    );
+  } else if (Number(id) === 16504) {
+    const leagueIndex = leagueIdArray.findIndex(
+      (leagueId) => Number(leagueId) === Number(id)
+    );
+    const leaguePayload = leagueIndex >= 0 ? leagueArray[leagueIndex] : null;
+    const teams = resolveConferenceLeagueTeams(
+      id,
+      bespokeLeagueArray,
+      leaguePayload
+    );
+
+    if (!teams.length) {
+      return;
+    }
+
+    let statistics;
+    let leagueStatistics = await fetch(
+      `${process.env.NEXT_PUBLIC_EXPRESS_SERVER}leagueStats/${id}`
+    );
+    await leagueStatistics.json().then((stats) => {
+      statistics = stats.data;
+    });
+
+    openLeagueTables.add(id);
+    render(
+      <Suspense fallback={<div>Loading game statistics...</div>}>
+        <LazyLeagueTable
+          Teams={teams}
+          Stats={statistics}
+          Id={id}
+          Key={`League${index}`}
+          GamesPlayed={statistics.game_week}
+          Results={mostRecentGames}
+          Date={todaysDateString}
+        />
+      </Suspense>,
       containerId
     );
   } else {
@@ -2141,6 +2170,22 @@ export async function generateFixtures(
       await updateResults(true);
     }
     await saveLeaguesIfNeeded();
+
+    if (allLeagueResultsArrayOfObjects.length > 0) {
+      try {
+        // Dynamic import avoids a static cycle with getStats → getFixtures
+        const { persistLeagueComparisons } = await import(
+          "./buildLeagueTeamComparison"
+        );
+        await persistLeagueComparisons({
+          allLeagueResults: allLeagueResultsArrayOfObjects,
+          dateStr: leaguesDate,
+          expressBaseUrl: process.env.NEXT_PUBLIC_EXPRESS_SERVER,
+        });
+      } catch (error) {
+        console.error("Failed to persist league comparisons:", error);
+      }
+    }
 
     // const allFixtures = await RenderAllFixtures(matches, false)
 

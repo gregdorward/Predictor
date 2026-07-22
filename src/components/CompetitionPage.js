@@ -24,6 +24,7 @@ import {
 import CompetitionPlayerLeaders from "./competition/CompetitionPlayerLeaders";
 import CompetitionStandings from "./competition/CompetitionStandings";
 import CompetitionMetricRankings from "./competition/CompetitionMetricRankings";
+import CompetitionTeamComparison from "./competition/CompetitionTeamComparison";
 import SeoPageLinks from "./SeoPageLinks";
 import {
   getSofaScoreIdForSeason,
@@ -253,6 +254,8 @@ export default function CompetitionPage({
             </section>
 
             <CompetitionStandings seasonId={seasonId} />
+
+            <CompetitionTeamComparison seasonId={seasonId} />
 
             <section className="Competition__section">
               <h2 className="Competition__sectionHeading">Markets</h2>

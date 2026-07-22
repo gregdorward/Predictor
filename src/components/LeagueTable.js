@@ -206,12 +206,11 @@ export default function LeagueTable(props) {
   }
 
   const leagueId = props.Teams[0].LeagueID;
-  const isGroupedLeague = [16504, 15002, 14924, 13964, 16494].includes(leagueId);
+  const isGroupedLeague = [16504, 15002, 14924, 16494].includes(leagueId);
   const isStandardLeague =
     leagueId !== 16504 &&
     leagueId !== 12933 &&
     leagueId !== 15002 &&
-    leagueId !== 13964 &&
     leagueId !== 16494;
 
   if (leagueId === 4340) {

@@ -56,6 +56,53 @@ function mapTableRows(source, leagueId, groupName) {
   );
 }
 
+function buildMlsConferenceViews(leagueId, data) {
+  const groups = data.specific_tables?.[0]?.groups;
+  if (leagueId !== 16504 || !groups?.length) {
+    return null;
+  }
+
+  const teams = groups.flatMap((group) =>
+    mapTableRows(group.table, leagueId, group.name || group.round)
+  );
+
+  return teams.length ? { mode: "grouped", teams } : null;
+}
+
+/**
+ * Resolve homepage/fixture table rows for leagues with conference tables (e.g. MLS).
+ * Prefers pre-built bespoke divisions; falls back to raw league payload.
+ */
+export function resolveConferenceLeagueTeams(
+  seasonId,
+  bespokeDivisions = [],
+  leaguePayload = null
+) {
+  const id = Number(seasonId);
+  const fromBespoke = bespokeDivisions.filter(
+    (entry) => Number(entry.id) === id && entry.table?.length
+  );
+
+  if (fromBespoke.length > 0) {
+    return fromBespoke.flatMap((division) =>
+      division.table.map((team) => ({
+        ...team,
+        GroupName: team.GroupName || division.group,
+      }))
+    );
+  }
+
+  const views = leaguePayload
+    ? buildCompetitionLeagueTableViews(seasonId, leaguePayload)
+    : null;
+
+  if (views?.mode === "grouped" || views?.mode === "standard") {
+    return views.teams;
+  }
+
+  return [];
+}
+
 /**
  * Build LeagueTable-compatible team rows from a single league tables API response.
  * Mirrors generateTables() in getFixtures.js for one competition.
@@ -79,6 +126,11 @@ export function buildCompetitionLeagueTableViews(seasonId, league) {
     };
   }
 
+  const mlsViews = buildMlsConferenceViews(leagueId, data);
+  if (mlsViews) {
+    return mlsViews;
+  }
+
   const specificTable = data.specific_tables?.[0]?.table;
 
   if (specificTable?.length && leagueId !== 12933) {
@@ -86,19 +138,6 @@ export function buildCompetitionLeagueTableViews(seasonId, league) {
       mode: "standard",
       teams: mapTableRows(specificTable, leagueId),
     };
-  }
-
-  if (leagueId === 16504 && data.specific_tables?.[0]?.groups?.length) {
-    const divisions = data.specific_tables[0].groups.map((group) => ({
-      name: group.name || group.round,
-      teams: mapTableRows(group.table, leagueId),
-    }));
-
-    if (!divisions.length) {
-      return null;
-    }
-
-    return { mode: "divisions", divisions };
   }
 
   if (Array.isArray(data.league_table) && data.league_table.length) {

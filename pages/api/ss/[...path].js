@@ -45,6 +45,7 @@ const CACHE_RULES = {
   futureFixtures: { sMaxAge: 10800, swr: 86400 },
   LeagueTeamStats: { sMaxAge: 3600, swr: 86400 },
   bestPlayers: { sMaxAge: 3600, swr: 86400 },
+  leagueComparison: { sMaxAge: 1200, swr: 86400 },
 };
 
 function jsonError(body, status, extraHeaders) {

@@ -5,17 +5,14 @@ import { buildAttackDefenceMetricTrends } from "../utils/metricTrendAnalysis";
 
 const TREND_META = {
   improving: {
-    symbol: "↑",
     label: "Improving",
     className: "MetricTrendTables-arrow--up",
   },
   worsening: {
-    symbol: "↓",
     label: "Worsening",
     className: "MetricTrendTables-arrow--down",
   },
   stable: {
-    symbol: "→",
     label: "Stable",
     className: "MetricTrendTables-arrow--flat",
   },
@@ -29,9 +26,8 @@ function TrendArrow({ direction }) {
       className={`MetricTrendTables-arrow ${meta.className}`}
       title={meta.label}
       aria-label={meta.label}
-    >
-      {meta.symbol}
-    </span>
+      role="img"
+    />
   );
 }
 

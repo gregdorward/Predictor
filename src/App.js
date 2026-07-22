@@ -79,23 +79,23 @@ const leagueOrder = [
   17184, // Championship 26/27
   17180, // League One 26/27
   17185, // League Two 26/27
-  15657, // National League 25/26
-  15845, // National League north 25/26
+  17279, // National League 26/27
+  17263, // National League north 26/27
   15844, // National League south 25/26
   17199, // La Liga 26/27
   17148, // Scottish Prem 26/27
   17210, // Bundesliga 26/27
   17084, // Serie A 26/27
   17102, // Ligue 1 26/27
-  15115, // Primeira Liga 25/26 (industry leading stat website id unchanged)
+  17217, // Primeira Liga 26/27
   17097, // Eredivisie 26/27
   17171, // Belgian Pro League 26/27
-  16263, // Allsvenskan - deferred, no industry leading stat website chosen_leagues
+  16263, // Allsvenskan 2026
   17091, // Danish Superliga 26/27
   16558, // Norway 26
   17181, // Austrian Bundesliga 26/27
-  15163, // Greek Super League 25/26
-  14972, // Turkish Super Lig 25/26
+  17356, // Greek Super League 26/27
+  17265, // Turkish Super Lig 26/27
   17112, // Ekstraklasa 26/27
   17129, // Swiss Super League 26/27
   17087, // Croatia 26/27
@@ -106,10 +106,10 @@ const leagueOrder = [
   // 15063, // Slovenian Prva Liga - deferred
   // 14933, // Slovak Super Liga - deferred
   16537, // Irish Prem 26
-  15066, // Segunda Division 26/27
+  17269, // Segunda Division 26/27
   15632, // Serie B 25/26
   17212, // Bundesliga 2 26/27
-  14977, // 3. Liga 25/26
+  17267, // 3. Liga 26/27
   17117, // Ligue 2 26/27
   17110, // Eerste Divisie 26/27
   17144, // Scottish Championship 26/27
@@ -122,11 +122,10 @@ const leagueOrder = [
   // 14626, // Uruguay - deferred
   17099, // Liga MX 26
   16614, // Colombia 26
-  16036, // A-League 25/26
+  17326, // A-League 26/27
   16627, // K League 26
   17115, // J League 26/27
-  13964, // WC Qual Europe 2026
-  10121, // WC Qual SA 2026
+  12772, // Saudi Pro League 25/26
   16808, // Nations League 26/27
   17128, // Champions League 26/27
   17127, // Europa League 26/27
