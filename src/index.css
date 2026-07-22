@@ -12569,8 +12569,14 @@ strong.WC26__inlineHeader {
 }
 
 .Competition__comparisonTeamChip--average:not(.Competition__comparisonTeamChip--active) {
-  border-color: #f57701;
-  color: #f57701;
+  border-color: #ffd400;
+  color: #c9a000;
+}
+
+.Competition__comparisonTeamChip--average.Competition__comparisonTeamChip--active {
+  background: #ffd400;
+  border-color: #ffd400;
+  color: #1a1a1a;
 }
 
 .Competition__rankingsGrid {

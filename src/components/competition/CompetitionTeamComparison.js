@@ -271,6 +271,8 @@ const TEAM_COLORS = [
 
 const MAX_RADAR_TEAMS = 4;
 const LEAGUE_AVERAGE_NAME = "League average";
+const LEAGUE_AVERAGE_COLOR = "#ffd400";
+const LEAGUE_AVERAGE_FILL = "rgba(255, 212, 0, 0.9)";
 
 function buildLeagueAverageProfile(teams) {
   if (!Array.isArray(teams) || teams.length === 0) return null;
@@ -578,11 +580,11 @@ export default function CompetitionTeamComparison({ seasonId }) {
           data: points,
           backgroundColor: points.map((point) =>
             point.isLeagueAverage
-              ? "rgba(245, 119, 1, 0.9)"
+              ? LEAGUE_AVERAGE_FILL
               : "rgba(1, 165, 1, 0.8)"
           ),
           borderColor: points.map((point) =>
-            point.isLeagueAverage ? "#f57701" : "#01a501"
+            point.isLeagueAverage ? LEAGUE_AVERAGE_COLOR : "#01a501"
           ),
           borderWidth: 1,
           pointRadius: plottedTeams.length <= 2 ? 5 : 4,
@@ -755,7 +757,7 @@ export default function CompetitionTeamComparison({ seasonId }) {
       labels: RADAR_AXES.map((a) => a.label),
       datasets: selected.map((team, index) => {
         const colorHex = team.isLeagueAverage
-          ? "#f57701"
+          ? LEAGUE_AVERAGE_COLOR
           : TEAM_COLORS[index % TEAM_COLORS.length];
         return {
           label: team.name,
@@ -763,9 +765,11 @@ export default function CompetitionTeamComparison({ seasonId }) {
             Math.max(0, Math.min(1, Number(team[axis.key] || 0) * axis.scale))
           ),
           borderColor: colorHex,
-          backgroundColor: `${colorHex}33`,
+          backgroundColor: team.isLeagueAverage
+            ? "rgba(255, 212, 0, 0.2)"
+            : `${colorHex}33`,
           pointBackgroundColor: colorHex,
-          borderWidth: team.isLeagueAverage ? 2.5 : 2,
+          borderWidth: team.isLeagueAverage ? 3.5 : 3,
           borderDash: team.isLeagueAverage ? [4, 3] : undefined,
         };
       }),
