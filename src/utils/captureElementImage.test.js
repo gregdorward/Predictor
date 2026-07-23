@@ -46,9 +46,10 @@ describe("captureElementImage", () => {
     expect(root.querySelector("img")).toBeNull();
   });
 
-  test("captures from an off-screen clone without mutating live canvases", async () => {
+  test("captures from a clone without mutating live canvases", async () => {
     const element = document.createElement("div");
     element.className = "ComparisonBarChart";
+    document.body.appendChild(element);
     Object.defineProperty(element, "offsetWidth", { value: 320 });
     Object.defineProperty(element, "getBoundingClientRect", {
       value: () => ({ width: 320, height: 240 }),
@@ -68,6 +69,7 @@ describe("captureElementImage", () => {
     expect(dataUrl.startsWith("data:image")).toBe(true);
     expect(element.querySelector("canvas")).toBe(canvas);
     expect(document.querySelector(".is-exporting")).toBeNull();
+    document.body.removeChild(element);
   });
 
   test("exports canvas without leaving ephemeral nodes in the document", async () => {
@@ -85,5 +87,38 @@ describe("captureElementImage", () => {
     const dataUrl = await captureCanvasAsPng(canvas);
     expect(dataUrl.startsWith("data:image")).toBe(true);
     expect(document.querySelector(".ShareableVisual__canvasExport")).toBeNull();
+  });
+
+  test("appends brand footer on the export shell outside the chart card", async () => {
+    const element = document.createElement("div");
+    element.setAttribute("data-share-capture", "");
+    element.className = "ComparisonBarChart";
+    document.body.appendChild(element);
+    Object.defineProperty(element, "offsetWidth", { value: 320 });
+    Object.defineProperty(element, "getBoundingClientRect", {
+      value: () => ({ width: 320, height: 240 }),
+    });
+
+    const brand = document.createElement("div");
+    brand.className = "ShareableVisual__brand";
+    brand.innerHTML = '<span class="ShareableVisual__brandMark"></span>';
+
+    const { domToPng } = require("modern-screenshot");
+    domToPng.mockImplementation(async (node) => {
+      expect(node.classList.contains("ShareableVisual__exportShell")).toBe(true);
+      expect(node.querySelector("[data-share-capture]")).not.toBeNull();
+      const brandNode = node.querySelector(".ShareableVisual__brand");
+      expect(brandNode).not.toBeNull();
+      expect(brandNode.parentElement).toBe(node);
+      expect(brandNode.parentElement.classList.contains("ComparisonBarChart")).toBe(
+        false
+      );
+      return "data:image/png;base64,abc";
+    });
+
+    const dataUrl = await captureElementAsPng(element, { brandElement: brand });
+    expect(dataUrl.startsWith("data:image")).toBe(true);
+    expect(element.querySelector(".ShareableVisual__brand")).toBeNull();
+    document.body.removeChild(element);
   });
 });

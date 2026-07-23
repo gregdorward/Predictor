@@ -13976,24 +13976,79 @@ body.dark-mode .CompetitionsIndex-card {
 .ShareableVisual__brand {
   display: none;
   margin-top: 0.85rem;
-  padding-top: 0.65rem;
-  border-top: 1px solid rgba(0, 0, 0, 0.08);
-  text-align: center;
-  font-size: 0.75rem;
+  padding: 0.7rem 0.75rem 0.65rem;
+  border-top: none;
+  background: var(--primary-color);
+  box-sizing: border-box;
+  text-align: left;
+  color: #020029;
+}
+
+.ShareableVisual__brandTitle {
+  margin: 0 0 0.45rem;
+  padding: 0;
+  font-size: 0.8rem;
+  font-weight: 700;
+  line-height: 1.3;
+  color: #020029;
+}
+
+.ShareableVisual__brandBar {
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+}
+
+.ShareableVisual__brandMark {
+  width: 8px;
+  height: 28px;
+  flex: 0 0 auto;
+  display: block;
+  border-radius: 2px;
+  background: #28a04c;
+}
+
+.ShareableVisual__brandMeta {
+  display: flex;
+  flex-direction: column;
+  gap: 0.05rem;
+  min-width: 0;
+}
+
+.ShareableVisual__brandName {
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.01em;
+  color: #020029;
+  line-height: 1.2;
+}
+
+.ShareableVisual__brandUrl {
+  font-size: 0.7rem;
   font-weight: 600;
   letter-spacing: 0.02em;
-  color: var(--text-color);
-  opacity: 0.72;
+  color: #020029;
+  line-height: 1.2;
 }
 
 .ShareableVisual__capture.is-exporting .ShareableVisual__brand,
 .ShareableVisual__canvasExport .ShareableVisual__brand,
+.ShareableVisual__exportShell .ShareableVisual__brand,
 .is-exporting .ShareableVisual__brand {
   display: block;
 }
 
-body.dark-mode .ShareableVisual__brand {
-  border-top-color: rgba(255, 255, 255, 0.12);
+.ShareableVisual__exportShell {
+  box-sizing: border-box;
+  overflow: visible;
+  background: var(--background-color);
+  border: 4px solid var(--primary-color);
+  padding: 0.75rem 0.75rem 0;
+}
+
+.ShareableVisual__exportShell > .ShareableVisual__brand {
+  margin: 0.75rem -0.75rem 0;
+  border-radius: 0;
 }
 
 .Chart-shareBlock {
@@ -14005,7 +14060,9 @@ body.dark-mode .ShareableVisual__brand {
 }
 
 [data-share-capture].is-exporting {
-  padding: 0.325rem 0.375rem 0.3rem;
+  padding: 0.75rem 0.85rem 0.7rem;
+  overflow: visible;
+  box-sizing: border-box;
 }
 
 [data-share-capture].is-exporting.ComparisonBarChart,
@@ -14014,6 +14071,7 @@ body.dark-mode .ShareableVisual__brand {
   border: 1px solid var(--third-background-color);
   border-radius: 12px;
   box-sizing: border-box;
+  overflow: visible;
 }
 
 [data-share-capture].is-exporting canvas,

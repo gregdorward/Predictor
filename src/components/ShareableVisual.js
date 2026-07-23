@@ -8,7 +8,9 @@ import {
   downloadDataUrl,
   shareImageDataUrl,
 } from "../utils/captureElementImage";
-import { SITE_URL } from "../seo/pageMetaConfig";
+import { SITE_NAME, SITE_URL } from "../seo/pageMetaConfig";
+
+const BRAND_HOST = "soccerstatshub.com";
 
 export default function ShareableVisual({
   children,
@@ -138,7 +140,16 @@ export default function ShareableVisual({
       >
         {children}
         <div className="ShareableVisual__brand" aria-hidden="true">
-          Soccer Stats Hub · soccerstatshub.com
+          {shareTitle ? (
+            <p className="ShareableVisual__brandTitle">{shareTitle}</p>
+          ) : null}
+          <div className="ShareableVisual__brandBar">
+            <span className="ShareableVisual__brandMark" />
+            <div className="ShareableVisual__brandMeta">
+              <span className="ShareableVisual__brandName">{SITE_NAME}</span>
+              <span className="ShareableVisual__brandUrl">{BRAND_HOST}</span>
+            </div>
+          </div>
         </div>
       </div>
 

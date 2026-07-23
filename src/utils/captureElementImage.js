@@ -116,24 +116,52 @@ export async function waitForNextPaint() {
   });
 }
 
-function mountExportClone(element) {
+function prepareBrandClone(brandElement) {
+  if (!brandElement) return null;
+  const brand = brandElement.cloneNode(true);
+  brand.style.display = "block";
+  brand.setAttribute("aria-hidden", "true");
+  return brand;
+}
+
+/**
+ * Mount an export shell in the viewport (behind page content).
+ * Brand footer is a sibling under the chart card so border-radius
+ * on ComparisonBarChart etc. cannot clip it.
+ * Live charts are never mutated — only read via toBase64Image.
+ */
+function mountExportShell(element) {
   const rect = element.getBoundingClientRect();
   const width = rect.width || element.offsetWidth;
+  const shell = document.createElement("div");
   const clone = element.cloneNode(true);
 
-  clone.classList.add("is-exporting");
-  clone.setAttribute("aria-hidden", "true");
-  clone.style.position = "fixed";
-  clone.style.left = "-9999px";
-  clone.style.top = "0";
-  clone.style.zIndex = "-1";
-  clone.style.pointerEvents = "none";
-  clone.style.margin = "0";
-  clone.style.width = width ? `${width}px` : element.style.width;
-  clone.style.maxWidth = width ? `${width}px` : element.style.maxWidth;
+  shell.className = "ShareableVisual__exportShell is-exporting";
+  shell.setAttribute("aria-hidden", "true");
+  shell.style.position = "fixed";
+  shell.style.left = "0";
+  shell.style.top = "0";
+  shell.style.zIndex = "-1";
+  shell.style.pointerEvents = "none";
+  shell.style.margin = "0";
+  shell.style.width = width ? `${width}px` : element.style.width;
+  shell.style.maxWidth = width ? `${width}px` : element.style.maxWidth;
+  shell.style.backgroundColor = getExportBackgroundColor();
+  shell.style.overflow = "visible";
 
-  document.body.appendChild(clone);
-  return clone;
+  clone.classList.add("is-exporting");
+  clone.style.position = "relative";
+  clone.style.left = "auto";
+  clone.style.top = "auto";
+  clone.style.zIndex = "auto";
+  clone.style.width = "100%";
+  clone.style.maxWidth = "100%";
+  clone.style.margin = "0";
+  clone.style.overflow = "visible";
+
+  shell.appendChild(clone);
+  document.body.appendChild(shell);
+  return { shell, clone };
 }
 
 export async function captureCanvasAsPng(
@@ -145,13 +173,15 @@ export async function captureCanvasAsPng(
   }
 
   const wrapper = document.createElement("div");
-  wrapper.className = "ShareableVisual__canvasExport";
+  wrapper.className = "ShareableVisual__canvasExport ShareableVisual__exportShell is-exporting";
   wrapper.style.background = getExportBackgroundColor();
   wrapper.style.display = "inline-block";
   wrapper.style.position = "fixed";
-  wrapper.style.left = "-9999px";
+  wrapper.style.left = "0";
   wrapper.style.top = "0";
+  wrapper.style.zIndex = "-1";
   wrapper.style.pointerEvents = "none";
+  wrapper.style.overflow = "visible";
 
   const img = document.createElement("img");
   img.src = getCanvasDataUrl(canvas);
@@ -166,10 +196,8 @@ export async function captureCanvasAsPng(
 
   wrapper.appendChild(img);
 
-  if (brandElement) {
-    const brand = brandElement.cloneNode(true);
-    brand.style.display = "block";
-    brand.setAttribute("aria-hidden", "true");
+  const brand = prepareBrandClone(brandElement);
+  if (brand) {
     wrapper.appendChild(brand);
   }
 
@@ -203,14 +231,18 @@ export async function captureElementAsPng(
     throw new Error("Nothing to capture");
   }
 
+  // Read pixels from live charts, then swap only on the clone.
   const liveCanvases = [...element.querySelectorAll("canvas")];
-  const clone = mountExportClone(element);
+  const { shell, clone } = mountExportShell(element);
 
-  if (brandElement) {
-    const brand = brandElement.cloneNode(true);
-    brand.style.display = "block";
-    brand.setAttribute("aria-hidden", "true");
-    clone.appendChild(brand);
+  clone
+    .querySelectorAll(".ShareableVisual__brand")
+    .forEach((node) => node.remove());
+
+  const brand = prepareBrandClone(brandElement);
+  if (brand) {
+    // Keep brand outside the rounded chart card so it is not clipped.
+    shell.appendChild(brand);
   }
 
   const replacements = replaceCanvasesWithImages(clone, liveCanvases);
@@ -220,7 +252,7 @@ export async function captureElementAsPng(
     await waitForNextPaint();
 
     const { domToPng } = await import("modern-screenshot");
-    const dataUrl = await domToPng(clone, {
+    const dataUrl = await domToPng(shell, {
       scale,
       backgroundColor: getExportBackgroundColor(),
       filter: (node) => node.tagName !== "CANVAS",
@@ -232,7 +264,7 @@ export async function captureElementAsPng(
 
     return dataUrl;
   } finally {
-    document.body.removeChild(clone);
+    document.body.removeChild(shell);
   }
 }
 
