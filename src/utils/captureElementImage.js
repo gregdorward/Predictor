@@ -129,10 +129,13 @@ function prepareBrandClone(brandElement) {
  * Brand footer is a sibling under the chart card so border-radius
  * on ComparisonBarChart etc. cannot clip it.
  * Live charts are never mutated — only read via toBase64Image.
+ *
+ * Uses content-box sizing so border/padding do not shrink the chart
+ * width (border-box + mobile viewport was clipping the right edge).
  */
 function mountExportShell(element) {
   const rect = element.getBoundingClientRect();
-  const width = rect.width || element.offsetWidth;
+  const width = Math.ceil(rect.width || element.offsetWidth || 0);
   const shell = document.createElement("div");
   const clone = element.cloneNode(true);
 
@@ -144,8 +147,9 @@ function mountExportShell(element) {
   shell.style.zIndex = "-1";
   shell.style.pointerEvents = "none";
   shell.style.margin = "0";
+  shell.style.boxSizing = "content-box";
   shell.style.width = width ? `${width}px` : element.style.width;
-  shell.style.maxWidth = width ? `${width}px` : element.style.maxWidth;
+  shell.style.maxWidth = "none";
   shell.style.backgroundColor = getExportBackgroundColor();
   shell.style.overflow = "visible";
 
@@ -154,6 +158,7 @@ function mountExportShell(element) {
   clone.style.left = "auto";
   clone.style.top = "auto";
   clone.style.zIndex = "auto";
+  clone.style.boxSizing = "border-box";
   clone.style.width = "100%";
   clone.style.maxWidth = "100%";
   clone.style.margin = "0";
@@ -162,6 +167,36 @@ function mountExportShell(element) {
   shell.appendChild(clone);
   document.body.appendChild(shell);
   return { shell, clone };
+}
+
+function withDocumentOverflowVisible(run) {
+  const html = document.documentElement;
+  const { body } = document;
+  const prev = {
+    htmlOverflowX: html.style.overflowX,
+    bodyOverflowX: body.style.overflowX,
+  };
+  html.style.overflowX = "visible";
+  body.style.overflowX = "visible";
+  return Promise.resolve()
+    .then(run)
+    .finally(() => {
+      html.style.overflowX = prev.htmlOverflowX;
+      body.style.overflowX = prev.bodyOverflowX;
+    });
+}
+
+function fitExportImages(replacements = []) {
+  replacements.forEach(({ img, parent }) => {
+    if (parent) {
+      parent.style.width = "100%";
+      parent.style.maxWidth = "100%";
+      parent.style.height = "auto";
+    }
+    img.style.width = "100%";
+    img.style.maxWidth = "100%";
+    img.style.height = "auto";
+  });
 }
 
 export async function captureCanvasAsPng(
@@ -182,6 +217,8 @@ export async function captureCanvasAsPng(
   wrapper.style.zIndex = "-1";
   wrapper.style.pointerEvents = "none";
   wrapper.style.overflow = "visible";
+  wrapper.style.boxSizing = "content-box";
+  wrapper.style.maxWidth = "none";
 
   const img = document.createElement("img");
   img.src = getCanvasDataUrl(canvas);
@@ -246,17 +283,20 @@ export async function captureElementAsPng(
   }
 
   const replacements = replaceCanvasesWithImages(clone, liveCanvases);
+  fitExportImages(replacements);
 
   try {
     await waitForReplacementImages(replacements);
     await waitForNextPaint();
 
     const { domToPng } = await import("modern-screenshot");
-    const dataUrl = await domToPng(shell, {
-      scale,
-      backgroundColor: getExportBackgroundColor(),
-      filter: (node) => node.tagName !== "CANVAS",
-    });
+    const dataUrl = await withDocumentOverflowVisible(() =>
+      domToPng(shell, {
+        scale,
+        backgroundColor: getExportBackgroundColor(),
+        filter: (node) => node.tagName !== "CANVAS",
+      })
+    );
 
     if (!dataUrl || !dataUrl.startsWith("data:image")) {
       throw new Error("Capture returned invalid image data");

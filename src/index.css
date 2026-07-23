@@ -14039,11 +14039,12 @@ body.dark-mode .CompetitionsIndex-card {
 }
 
 .ShareableVisual__exportShell {
-  box-sizing: border-box;
+  box-sizing: content-box;
   overflow: visible;
   background: var(--background-color);
   border: 4px solid var(--primary-color);
   padding: 0.75rem 0.75rem 0;
+  max-width: none;
 }
 
 .ShareableVisual__exportShell > .ShareableVisual__brand {
