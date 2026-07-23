@@ -309,10 +309,22 @@ function renderCard({
 }
 
 export default async function handler(req) {
+  // X/Twitterbot (and some other crawlers) probe image URLs with HEAD
+  // before GET. Rejecting HEAD with 405 can leave shares as a bare link.
+  if (req.method === "HEAD") {
+    return new Response(null, {
+      status: 200,
+      headers: {
+        "Content-Type": "image/png",
+        "Cache-Control": CACHE_CONTROL,
+      },
+    });
+  }
+
   if (req.method && req.method !== "GET") {
     return new Response("Method not allowed", {
       status: 405,
-      headers: { Allow: "GET" },
+      headers: { Allow: "GET, HEAD" },
     });
   }
 
