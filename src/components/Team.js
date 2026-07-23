@@ -669,6 +669,12 @@ function TeamPage({ matchId, seoShell = null }) {
 
       {seoShell ? <FixtureSeoBody {...seoShell} /> : null}
 
+      <p className="FixturePage-homeStatsNote">
+        Looking for more? The{" "}
+        <a href="/">homepage</a> has more extensive match stats, wider context, an AI
+        preview, and loads more fixtures to explore.
+      </p>
+
       {matchId && match ? <FixtureSeasonStats match={match} /> : null}
 
       <section className="FixturePage-chartCard">

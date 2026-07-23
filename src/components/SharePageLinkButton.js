@@ -2,9 +2,20 @@ import { useState } from "react";
 import { Share2 } from "lucide-react";
 import { copyToClipboard } from "../utils/copyToClipboard";
 
+function getShareablePageUrl() {
+  if (typeof window === "undefined") {
+    return "";
+  }
+
+  // Drop query params (e.g. ?theme=dark) and hash so shared links stay clean.
+  const { origin, pathname } = window.location;
+  const path = pathname.endsWith("/") ? pathname : `${pathname}/`;
+  return `${origin}${path}`;
+}
+
 /**
  * Share the current page URL via the OS share sheet when available,
- * otherwise copy it from the address bar to the clipboard.
+ * otherwise copy the canonical page link to the clipboard.
  */
 export default function SharePageLinkButton({
   title = "Soccer Stats Hub",
@@ -20,10 +31,7 @@ export default function SharePageLinkButton({
   };
 
   const handleShare = async () => {
-    const url =
-      typeof window !== "undefined"
-        ? window.location.href.split("#")[0]
-        : "";
+    const url = getShareablePageUrl();
     if (!url) {
       showStatus("Link unavailable");
       return;

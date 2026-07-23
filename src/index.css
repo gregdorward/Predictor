@@ -7952,6 +7952,27 @@ body.dark-mode .MetricTrendTables-arrow {
   border: none;
 }
 
+.FixturePage-homeStatsNote {
+  margin: 0 0 var(--fp-space-4);
+  padding: 0;
+  font-size: var(--fp-label);
+  line-height: 1.45;
+  color: var(--faint-text);
+  text-align: center;
+}
+
+.FixturePage-homeStatsNote a {
+  color: var(--primary-color);
+  font-weight: 600;
+  text-decoration: underline;
+  text-underline-offset: 0.12em;
+}
+
+.FixturePage-homeStatsNote a:hover,
+.FixturePage-homeStatsNote a:focus-visible {
+  color: var(--text-color);
+}
+
 /* Generic stat row (H2H summary etc.) */
 .FixturePage-stat {
   display: grid;
