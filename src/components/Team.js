@@ -7,6 +7,7 @@ import { buildLegacyFixtureSections } from "../logic/fixturePageMetrics";
 import FixtureSeasonStats from "./FixtureSeasonStats";
 import { FixtureSeoBody } from "./FixtureSeoShell";
 import ShareableVisual from "./ShareableVisual";
+import SharePageLinkButton from "./SharePageLinkButton";
 import { sanitizeImageFilename } from "../utils/captureElementImage";
 import {
   Chart as ChartJS,
@@ -657,6 +658,13 @@ function TeamPage({ matchId, seoShell = null }) {
             {storedFixtureDetailsJson.awayGoals}
           </span>
         </div>
+
+        <SharePageLinkButton
+          className="FixturePage-shareLink"
+          title={`${storedFixtureDetailsJson.homeTeamName} vs ${storedFixtureDetailsJson.awayTeamName} | Soccer Stats Hub`}
+          text={`${storedFixtureDetailsJson.homeTeamName} vs ${storedFixtureDetailsJson.awayTeamName} stats and prediction`}
+          label="Share match link"
+        />
       </header>
 
       {seoShell ? <FixtureSeoBody {...seoShell} /> : null}

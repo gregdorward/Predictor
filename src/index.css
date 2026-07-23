@@ -7378,6 +7378,35 @@ body.dark-mode .MetricTrendTables-arrow {
   font-variant-numeric: tabular-nums;
 }
 
+.FixturePage-shareLink {
+  margin-top: var(--fp-space-1);
+}
+
+.SharePageLink__btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
+  margin: 0;
+  padding: 0.45em 0.9em;
+  border: 1px solid rgba(var(--primary-rgb), 0.45);
+  border-radius: 8px;
+  background: transparent;
+  color: var(--primary-color);
+  font-family: inherit;
+  font-size: 0.8rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background-color 0.15s ease, color 0.15s ease, border-color 0.15s ease;
+}
+
+.SharePageLink__btn:hover,
+.SharePageLink__btn:focus-visible {
+  background: var(--primary-color);
+  color: #fff;
+  border-color: var(--primary-color);
+}
+
 /* Charts */
 .FixturePage-chartCard {
   display: flex;

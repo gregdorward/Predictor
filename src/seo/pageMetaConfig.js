@@ -1,6 +1,12 @@
 export const SITE_URL = "https://www.soccerstatshub.com";
 export const OG_IMAGE = `${SITE_URL}/images/social-share-card.jpg`;
+export const OG_IMAGE_WIDTH = 1200;
+export const OG_IMAGE_HEIGHT = 630;
 export const SITE_NAME = "Soccer Stats Hub";
+
+export function buildFixtureOgImageUrl(matchId) {
+  return `${SITE_URL}/api/og/fixture/${encodeURIComponent(String(matchId))}/`;
+}
 
 export const DEFAULT_TITLE =
   "Soccer Stats Hub | BTTS, Under 2.5, xG & Football Predictions";

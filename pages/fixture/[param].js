@@ -12,7 +12,10 @@ import {
   parseFixtureParam,
 } from "../../src/seo/fixtureSlug";
 import { fetchMatchSnapshot, fetchUpcomingFixtureLinks } from "../../src/seo/serverFetch";
-import { getCanonicalUrl } from "../../src/seo/pageMetaConfig";
+import {
+  buildFixtureOgImageUrl,
+  getCanonicalUrl,
+} from "../../src/seo/pageMetaConfig";
 import { getCompetitionById, getCompetitionUrl } from "../../src/seo/competitionCatalog";
 import SeoPageLinks from "../../src/components/SeoPageLinks";
 
@@ -39,6 +42,7 @@ export default function FixtureByParam({
   canonicalPath,
   seoShell,
   noIndex,
+  ogImage,
   relatedFixtureLinks = [],
 }) {
   return (
@@ -48,6 +52,8 @@ export default function FixtureByParam({
         description={meta.description}
         canonicalPath={canonicalPath}
         noIndex={noIndex}
+        ogImage={ogImage}
+        ogImageAlt={`${meta.home} vs ${meta.away} | Soccer Stats Hub`}
       />
       {!noIndex && <JsonLd data={jsonLd} />}
       <SiteHeader showThemeToggle withFooter>
@@ -110,6 +116,7 @@ export async function getServerSideProps({ params }) {
       jsonLd,
       canonicalPath,
       noIndex,
+      ogImage: buildFixtureOgImageUrl(matchId),
       relatedFixtureLinks,
       seoShell: {
         home: meta.home,

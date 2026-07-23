@@ -76,7 +76,7 @@ function fixtureStartDateIso(fixture) {
   return new Date(Number(dateUnix) * 1000).toISOString();
 }
 
-function buildTeamImageUrl(imagePath) {
+export function buildTeamImageUrl(imagePath) {
   if (!imagePath || imagePath === "-") return null;
   return `${FOOTYSTATS_IMAGE_BASE}${imagePath}`;
 }

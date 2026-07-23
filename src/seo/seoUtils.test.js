@@ -3,10 +3,16 @@ import {
   buildFixtureJsonLd,
   buildFixtureMeta,
   buildFixtureSlug,
+  buildTeamImageUrl,
   isFixtureFinished,
   parseFixtureParam,
 } from "./fixtureSlug";
-import { getCanonicalPathFromAsPath, getCanonicalUrl, OG_IMAGE } from "./pageMetaConfig";
+import {
+  buildFixtureOgImageUrl,
+  getCanonicalPathFromAsPath,
+  getCanonicalUrl,
+  OG_IMAGE,
+} from "./pageMetaConfig";
 
 describe("fixtureSlug", () => {
   test("builds a readable slug with match id suffix", () => {
@@ -29,6 +35,14 @@ describe("fixtureSlug", () => {
   test("detects finished fixtures", () => {
     expect(isFixtureFinished({ status: "complete" })).toBe(true);
     expect(isFixtureFinished({ status: "incomplete" })).toBe(false);
+  });
+
+  test("builds FootyStats team image URLs", () => {
+    expect(buildTeamImageUrl("teams/south-korea-fc-anyang.png")).toBe(
+      "https://cdn.footystats.org/img/teams/south-korea-fc-anyang.png"
+    );
+    expect(buildTeamImageUrl("-")).toBeNull();
+    expect(buildTeamImageUrl("")).toBeNull();
   });
 
   test("builds SportsEvent JSON-LD with required Google fields", () => {
@@ -90,6 +104,17 @@ describe("fixtureSlug", () => {
     expect(event.image).toEqual([OG_IMAGE]);
     expect(buildFixtureEventStatus({ status: "postponed" })).toBe(
       "https://schema.org/EventPostponed"
+    );
+  });
+});
+
+describe("fixture OG image URLs", () => {
+  test("builds absolute dynamic OG image URLs per match id", () => {
+    expect(buildFixtureOgImageUrl(8436178)).toBe(
+      "https://www.soccerstatshub.com/api/og/fixture/8436178/"
+    );
+    expect(buildFixtureOgImageUrl("12345")).toBe(
+      "https://www.soccerstatshub.com/api/og/fixture/12345/"
     );
   });
 });
