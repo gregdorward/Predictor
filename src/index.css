@@ -12670,6 +12670,276 @@ strong.WC26__inlineHeader {
   font-size: 1em;
 }
 
+.Competition__positionRaceIntro {
+  margin: 0 0 0.25rem;
+  color: var(--text-color);
+  opacity: 0.85;
+  font-size: 0.95em;
+  line-height: 1.45;
+  max-width: 42rem;
+}
+
+.Competition__positionRaceLoading {
+  color: var(--text-color);
+  opacity: 0.75;
+  font-size: 1em;
+}
+
+.Competition__positionRaceCard {
+  width: 100%;
+  max-width: none;
+  margin: 0;
+  align-self: stretch;
+  box-sizing: border-box;
+  padding: 0;
+  background: var(--subtle-surface-color, var(--secondary-background-color));
+  border: 1px solid var(--third-background-color, rgba(2, 0, 41, 0.08));
+  border-radius: 10px;
+}
+
+.Competition__positionRaceChartWrap {
+  position: relative;
+  width: 100%;
+  min-width: 0;
+  /* Height set inline from team count so Chart.js can fill the plot area. */
+}
+
+/* react-chartjs-2 wraps <canvas> in a div — it must inherit the wrap height
+   or the plot stays short and leaves empty space underneath. */
+.Competition__positionRaceChartWrap > div {
+  position: relative !important;
+  width: 100% !important;
+  height: 100% !important;
+}
+
+.Competition__positionRaceChartWrap canvas {
+  /* Override global `canvas { display:inline; max-width/height:36em; margin:1em }` —
+     that cap was leaving a tall empty gap under a short plot. */
+  display: block !important;
+  width: 100% !important;
+  max-width: none !important;
+  max-height: none !important;
+  margin: 0em !important;
+}
+
+.Competition__positionRaceControls {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.85rem 1.25rem;
+  margin-top: 0;
+  padding: 0.75rem 1rem 1rem;
+  border-top: 1px solid var(--third-background-color, rgba(2, 0, 41, 0.08));
+}
+
+.Competition__positionRacePlay {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  margin: 0;
+  padding: 0.45rem 0.85rem;
+  border: 1px solid var(--accent-color, #fe8c00);
+  border-radius: 8px;
+  background: transparent;
+  color: var(--text-color);
+  font: inherit;
+  font-size: 0.92em;
+  font-weight: 600;
+  cursor: pointer;
+  line-height: 1;
+}
+
+.Competition__positionRacePlay:hover,
+.Competition__positionRacePlay:focus-visible {
+  background: var(--accent-color, #fe8c00);
+  color: #020029;
+  outline: none;
+}
+
+.Competition__positionRaceScrub {
+  flex: 1 1 220px;
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  min-width: 0;
+  color: var(--text-color);
+  font-size: 0.9em;
+}
+
+.Competition__positionRaceWeekLabel {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 0.75rem;
+  font-weight: 600;
+}
+
+.Competition__positionRaceWeekMeta {
+  font-weight: 500;
+  opacity: 0.7;
+  font-size: 0.92em;
+}
+
+.Competition__positionRaceScrub input[type="range"] {
+  width: 100%;
+  accent-color: var(--accent-color, #fe8c00);
+  cursor: pointer;
+}
+
+.Competition__positionRaceSrOnly {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.Competition__positionRaceTableWrap {
+  width: 100%;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.Competition__positionRaceTable {
+  width: 100%;
+  border-collapse: collapse;
+  color: var(--text-color);
+  font-size: 0.92em;
+}
+
+.Competition__positionRaceTable th,
+.Competition__positionRaceTable td {
+  padding: 0.55rem 0.45rem 0.55rem 1rem;
+  text-align: left;
+  border-bottom: 1px solid var(--third-background-color, rgba(2, 0, 41, 0.08));
+  vertical-align: middle;
+}
+
+.Competition__positionRaceTable thead th {
+  font-size: 0.78em;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  opacity: 0.75;
+  padding-top: 0.75rem;
+  padding-bottom: 0.55rem;
+}
+
+.Competition__positionRaceTableTeamHead,
+.Competition__positionRaceTableTeam {
+  text-align: left;
+}
+
+.Competition__positionRaceTablePos {
+  font-weight: 700;
+  width: 2.25rem;
+}
+
+.Competition__positionRaceTableMove {
+  width: 3.25rem;
+}
+
+.Competition__positionRaceTablePts {
+  font-weight: 700;
+}
+
+.Competition__positionRaceTableTeam {
+  min-width: 10rem;
+}
+
+.Competition__positionRaceTableTeamCell {
+  display: inline-flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 0.55rem;
+  text-align: left;
+  min-width: 0;
+}
+
+.Competition__positionRaceTableBadge {
+  width: 1.5rem;
+  height: 1.5rem;
+  flex: 0 0 auto;
+  object-fit: contain;
+  display: block;
+  background: transparent;
+}
+
+.Competition__positionRaceTableName {
+  text-align: left;
+  line-height: 1.25;
+  min-width: 0;
+}
+
+.Competition__positionRaceMove {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.15rem;
+  font-size: 0.82em;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.Competition__positionRaceMove--up {
+  color: #28a04c;
+}
+
+.Competition__positionRaceMove--down {
+  color: #d71200;
+}
+
+.Competition__positionRaceMove--same {
+  color: var(--text-color);
+  opacity: 0.35;
+}
+
+@media (max-width: 1099px) {
+  .Competition__positionRaceIntro {
+    font-size: 0.88em;
+    margin-bottom: 0;
+  }
+
+  .Competition__positionRaceControls {
+    padding: 0.65rem 0.75rem 0.85rem;
+    gap: 0.65rem 0.85rem;
+  }
+
+  .Competition__positionRacePlay {
+    padding: 0.4rem 0.7rem;
+    font-size: 0.88em;
+  }
+
+  .Competition__positionRaceScrub {
+    flex: 1 1 100%;
+    font-size: 0.85em;
+  }
+
+  .Competition__positionRaceTable th,
+  .Competition__positionRaceTable td {
+    padding: 0.25rem 0.2rem 0.25rem 0.5rem;
+  }
+
+  .Competition__positionRaceTable thead th {
+    padding-top: 0.25rem;
+    padding-bottom: 0.25rem;
+  }
+}
+
+@media (max-width: 520px) {
+  .Competition__positionRaceTable {
+    font-size: 0.88em;
+  }
+
+  .Competition__positionRaceTableTeam {
+    min-width: 6.5rem;
+  }
+}
+
 .Competition__metricRankings .LeagueStatsTable {
   width: 100%;
   max-width: 1000px;

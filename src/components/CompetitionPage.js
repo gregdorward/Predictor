@@ -23,6 +23,7 @@ import {
 } from "./competition/competitionCharts";
 import CompetitionPlayerLeaders from "./competition/CompetitionPlayerLeaders";
 import CompetitionStandings from "./competition/CompetitionStandings";
+import CompetitionPositionRaceChart from "./competition/CompetitionPositionRaceChart";
 import CompetitionMetricRankings from "./competition/CompetitionMetricRankings";
 import CompetitionTeamComparison from "./competition/CompetitionTeamComparison";
 import SeoPageLinks from "./SeoPageLinks";
@@ -254,6 +255,8 @@ export default function CompetitionPage({
             </section>
 
             <CompetitionStandings seasonId={seasonId} />
+
+            <CompetitionPositionRaceChart seasonId={seasonId} />
 
             <CompetitionTeamComparison seasonId={seasonId} />
 
