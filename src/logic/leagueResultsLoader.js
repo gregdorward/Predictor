@@ -79,6 +79,42 @@ function mapLeagueFixtureResults(gamesFiltered) {
   );
 }
 
+/**
+ * Fetch every page of leagueFixtures for a competition.
+ * FootyStats paginates large seasons; callers that need the full fixture list
+ * (e.g. league position race) must merge pages, not read page 1 only.
+ */
+export async function fetchAllLeagueFixturesPages(competitionId) {
+  const firstRes = await fetch(apiGetUrl(`leagueFixtures/${competitionId}`));
+  if (!firstRes.ok) {
+    return null;
+  }
+
+  const first = await firstRes.json();
+  if (!Array.isArray(first?.data)) {
+    return null;
+  }
+
+  let data = first.data;
+  const pager = first.pager;
+  if (pager && pager.current_page < pager.max_page) {
+    for (let page = pager.current_page + 1; page <= pager.max_page; page += 1) {
+      const pageRes = await fetch(
+        apiGetUrl(`leagueFixtures/${competitionId}?page=${page}`)
+      );
+      if (!pageRes.ok) {
+        break;
+      }
+      const pageJson = await pageRes.json();
+      if (Array.isArray(pageJson?.data)) {
+        data = data.concat(pageJson.data);
+      }
+    }
+  }
+
+  return data;
+}
+
 export async function loadLeagueResultsForCompetition(competitionId, leagueName) {
   const targetDate = getRecentResultsCutoffUnix();
 
