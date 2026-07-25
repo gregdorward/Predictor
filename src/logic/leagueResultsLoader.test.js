@@ -1,5 +1,6 @@
 import {
   MIN_LEAGUE_FIXTURES_FOR_DERIVED_STATS,
+  fetchAllLeagueFixturesPages,
   resolveLeagueResultsForCompetition,
 } from "./leagueResultsLoader";
 
@@ -97,5 +98,64 @@ describe("resolveLeagueResultsForCompetition", () => {
     expect(global.fetch).toHaveBeenCalledWith(
       expect.stringContaining("/leagueFixtures/16537")
     );
+  });
+});
+
+describe("fetchAllLeagueFixturesPages", () => {
+  const originalFetch = global.fetch;
+
+  afterEach(() => {
+    global.fetch = originalFetch;
+  });
+
+  test("returns null when the first page request fails", async () => {
+    global.fetch = jest.fn(async () => ({ ok: false, status: 500 }));
+
+    await expect(fetchAllLeagueFixturesPages(8)).resolves.toBeNull();
+  });
+
+  test("concatenates every pager page into one fixture list", async () => {
+    const page1 = makeFixtures(2).map((fixture, index) => ({
+      ...fixture,
+      id: `p1-${index}`,
+    }));
+    const page2 = makeFixtures(2).map((fixture, index) => ({
+      ...fixture,
+      id: `p2-${index}`,
+    }));
+
+    global.fetch = jest.fn(async (url) => {
+      const href = String(url);
+      if (href.includes("page=2")) {
+        return {
+          ok: true,
+          json: async () => ({
+            pager: { current_page: 2, max_page: 2 },
+            data: page2,
+          }),
+        };
+      }
+      if (href.includes("/leagueFixtures/8")) {
+        return {
+          ok: true,
+          json: async () => ({
+            pager: { current_page: 1, max_page: 2 },
+            data: page1,
+          }),
+        };
+      }
+      throw new Error(`Unexpected fetch: ${url}`);
+    });
+
+    const fixtures = await fetchAllLeagueFixturesPages(8);
+
+    expect(fixtures).toHaveLength(4);
+    expect(fixtures.map((fixture) => fixture.id)).toEqual([
+      "p1-0",
+      "p1-1",
+      "p2-0",
+      "p2-1",
+    ]);
+    expect(global.fetch).toHaveBeenCalledTimes(2);
   });
 });
