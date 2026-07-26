@@ -113,28 +113,37 @@ const StyledTableRow = withStyles(() => ({
   },
 }))(TableRow);
 
-export default function HighestScoringLeagues() {
+export default function HighestScoringLeagues({ initialRows = null }) {
   const classes = useStyles();
-  const [leagues, setLeagues] = useState([]);
+  const [leagues, setLeagues] = useState(() =>
+    Array.isArray(initialRows) ? initialRows : []
+  );
 
   useEffect(() => {
+    if (Array.isArray(initialRows) && initialRows.length > 0) return undefined;
+
+    let cancelled = false;
     async function fetchLeagues() {
       const data = await getHighestScoringLeagues();
-      setLeagues(data);
+      const filtered = data
+        .filter(
+          (league) =>
+            allowedCountries.includes(league.leagueCountry) &&
+            league.division > 0 &&
+            league.division < 5
+        )
+        .sort((a, b) => Number(b.averageGoals) - Number(a.averageGoals))
+        .slice(0, 50);
+      if (!cancelled) setLeagues(filtered);
     }
 
     fetchLeagues();
-  }, []);
+    return () => {
+      cancelled = true;
+    };
+  }, [initialRows]);
 
-  const filteredLeagues = leagues
-    .filter(
-      (league) =>
-        allowedCountries.includes(league.leagueCountry) &&
-        league.division > 0 &&
-        league.division < 5
-    )
-    .sort((a, b) => Number(b.averageGoals) - Number(a.averageGoals))
-    .slice(0, 50);
+  const filteredLeagues = leagues;
 
   return (
     <Fragment>

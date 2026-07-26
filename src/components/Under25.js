@@ -83,32 +83,41 @@ const StyledTableRow = withStyles(() => ({
   },
 }))(TableRow);
 
-export default function Under25() {
+export default function Under25({ initialRows = null }) {
   const classes = useStyles();
-  const [leagues, setLeagues] = useState([]);
+  const [leagues, setLeagues] = useState(() =>
+    Array.isArray(initialRows) ? initialRows : []
+  );
 
   useEffect(() => {
+    if (Array.isArray(initialRows) && initialRows.length > 0) return undefined;
+
+    let cancelled = false;
     async function fetchLeagues() {
       const data = await getLowestScoringLeagues();
-      setLeagues(data);
+      const allowedCountries = [
+        "England", "Scotland", "Italy", "Spain", "Germany", "France", "USA", "Denmark",
+        "Greece", "Turkey", "Switzerland", "Austria", "Norway", "Mexico", "Poland",
+        "Brazil", "Argentina", "Sweden", "Netherlands", "Portugal", "Belgium"
+      ];
+      const filtered = data
+        .filter(
+          (league) =>
+            allowedCountries.includes(league.leagueCountry) &&
+            league.division > 0 &&
+            league.division < 5
+        )
+        .sort((a, b) => Number(a.averageGoals) - Number(b.averageGoals))
+        .slice(0, 50);
+      if (!cancelled) setLeagues(filtered);
     }
     fetchLeagues();
-  }, []);
+    return () => {
+      cancelled = true;
+    };
+  }, [initialRows]);
 
-  const allowedCountries = [
-    "England", "Scotland", "Italy", "Spain", "Germany", "France", "USA", "Denmark",
-    "Greece", "Turkey", "Switzerland", "Austria", "Norway", "Mexico", "Poland",
-    "Brazil", "Argentina", "Sweden", "Netherlands", "Portugal", "Belgium"
-  ];
-
-  const filteredLeagues = leagues
-    .filter(league => 
-      allowedCountries.includes(league.leagueCountry) && 
-      league.division > 0 && 
-      league.division < 5
-    )
-    .sort((a, b) => Number(a.averageGoals) - Number(b.averageGoals))
-    .slice(0, 50);
+  const filteredLeagues = leagues;
 
   return (
     <Fragment>

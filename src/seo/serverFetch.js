@@ -7,18 +7,36 @@ import {
 
 const ORIGIN = process.env.NEXT_PUBLIC_EXPRESS_SERVER || "https://api.soccerstatshub.com/";
 
+/** Default budget for sitemap / SEO server fetches (ms). */
+export const SEO_FETCH_TIMEOUT_MS = 4000;
+
 function originUrl(path) {
   const base = ORIGIN.endsWith("/") ? ORIGIN : `${ORIGIN}/`;
   return `${base}${String(path).replace(/^\//, "")}`;
 }
 
-export async function fetchCompetitionData(seasonId) {
+async function fetchJson(path, { timeoutMs = SEO_FETCH_TIMEOUT_MS } = {}) {
+  const controller = new AbortController();
+  const timer = setTimeout(() => controller.abort(), timeoutMs);
   try {
-    const response = await fetch(originUrl(`competition/${seasonId}`), {
+    const response = await fetch(originUrl(path), {
       headers: { accept: "application/json" },
+      signal: controller.signal,
     });
     if (!response.ok) return null;
-    const json = await response.json();
+    return await response.json();
+  } catch {
+    return null;
+  } finally {
+    clearTimeout(timer);
+  }
+}
+
+export async function fetchCompetitionData(seasonId) {
+  try {
+    const json = await fetchJson(`competition/${seasonId}`, {
+      timeoutMs: 8000,
+    });
     if (!json?.success || !json?.data) return null;
     return json.data;
   } catch {
@@ -28,23 +46,18 @@ export async function fetchCompetitionData(seasonId) {
 
 export async function fetchMatchSnapshot(matchId) {
   try {
-    const response = await fetch(originUrl(`match/snapshot/${matchId}`), {
-      headers: { accept: "application/json" },
+    const json = await fetchJson(`match/snapshot/${matchId}`, {
+      timeoutMs: 6000,
     });
-    if (!response.ok) return null;
-    const json = await response.json();
     return json?.data ?? null;
   } catch {
     return null;
   }
 }
 
-export async function fetchMatchesForDate(dateStr) {
-  const response = await fetch(originUrl(`matches/${dateStr}`), {
-    headers: { accept: "application/json" },
-  });
-  if (!response.ok) return [];
-  const json = await response.json();
+export async function fetchMatchesForDate(dateStr, { timeoutMs = SEO_FETCH_TIMEOUT_MS } = {}) {
+  const json = await fetchJson(`matches/${dateStr}`, { timeoutMs });
+  if (!json) return [];
   const list = Array.isArray(json?.data) ? json.data : Array.isArray(json) ? json : [];
   return list;
 }
@@ -61,11 +74,18 @@ export async function fetchUpcomingFixtureIds(days = 3) {
   const ids = new Set();
   const today = new Date();
 
+  const dateStrings = [];
   for (let offset = 0; offset < days; offset += 1) {
     const date = new Date(today);
     date.setDate(today.getDate() + offset);
-    const dateStr = formatApiDate(date);
-    const matches = await fetchMatchesForDate(dateStr);
+    dateStrings.push(formatApiDate(date));
+  }
+
+  const results = await Promise.all(
+    dateStrings.map((dateStr) => fetchMatchesForDate(dateStr))
+  );
+
+  for (const matches of results) {
     for (const match of matches) {
       if (match?.id != null) ids.add(String(match.id));
     }
@@ -100,19 +120,32 @@ function matchToFixtureLink(match) {
   };
 }
 
+/**
+ * Upcoming fixture links for sitemaps / index pages.
+ * Fetches date windows in parallel with per-request timeouts so one slow day
+ * cannot hang the whole response.
+ */
 export async function fetchUpcomingFixtureLinks({
   excludeMatchId = null,
   limit = 150,
   days = FIXTURE_SITEMAP_WINDOW_DAYS,
+  timeoutMs = SEO_FETCH_TIMEOUT_MS,
 } = {}) {
-  const links = [];
   const today = new Date();
-
+  const dateStrings = [];
   for (let offset = 0; offset < days; offset += 1) {
     const date = new Date(today);
     date.setDate(today.getDate() + offset);
-    const matches = await fetchMatchesForDate(formatApiDate(date));
+    dateStrings.push(formatApiDate(date));
+  }
 
+  const settled = await Promise.allSettled(
+    dateStrings.map((dateStr) => fetchMatchesForDate(dateStr, { timeoutMs }))
+  );
+
+  const links = [];
+  for (const result of settled) {
+    const matches = result.status === "fulfilled" ? result.value : [];
     for (const match of matches) {
       if (excludeMatchId != null && String(match.id) === String(excludeMatchId)) {
         continue;

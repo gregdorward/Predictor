@@ -113,23 +113,32 @@ const StyledTableRow = withStyles(() => ({
   },
 }))(TableRow);
 
-export default function BTTSNoTeams() {
+export default function BTTSNoTeams({ initialRows = null }) {
   const classes = useStyles();
-  const [teams, setTeams] = useState([]);
+  const [teams, setTeams] = useState(() =>
+    Array.isArray(initialRows) ? initialRows : []
+  );
 
   useEffect(() => {
+    if (Array.isArray(initialRows) && initialRows.length > 0) return undefined;
+
+    let cancelled = false;
     async function fetchTeams() {
       const data = await getBTTSTeams();
-      setTeams(data);
+      const filtered = data
+        .filter((team) => allowedCountries.includes(team.country) && team.played > 10)
+        .sort((a, b) => Number(a.bttsPercentage) - Number(b.bttsPercentage))
+        .slice(0, 30);
+      if (!cancelled) setTeams(filtered);
     }
 
     fetchTeams();
-  }, []);
+    return () => {
+      cancelled = true;
+    };
+  }, [initialRows]);
 
-  const filteredTeams = teams
-    .filter((team) => allowedCountries.includes(team.country) && team.played > 10)
-    .sort((a, b) => Number(a.bttsPercentage) - Number(b.bttsPercentage))
-    .slice(0, 30);
+  const filteredTeams = teams;
 
   return (
     <Fragment>

@@ -1688,11 +1688,16 @@ p {
   overflow-x: hidden;
   max-width: 100%;
   box-sizing: border-box;
+  /* Beat Material-UI Paper/Table theme defaults that force dark text. */
+  background-color: var(--secondary-background-color) !important;
+  color: var(--text-color);
 }
 
 .SubpageTableScroll table {
   table-layout: fixed;
   width: 100%;
+  color: var(--text-color);
+  background-color: transparent;
 }
 
 .SubpageTableScroll table,
@@ -1703,12 +1708,42 @@ p {
   padding-right: 0;
 }
 
+.SubpageTableScroll .MuiTable-root,
+.SubpageTableScroll .MuiTableBody-root,
+.SubpageTableScroll .MuiTableRow-root {
+  color: var(--text-color);
+  background-color: transparent;
+}
+
+.SubpageTableScroll .MuiTableCell-root,
+.SubpageTableScroll .MuiTableCell-body {
+  color: var(--text-color) !important;
+  border-bottom-color: var(--button-border-color);
+}
+
+.SubpageTableScroll .MuiTableCell-head {
+  color: var(--button-text-color) !important;
+  background-color: var(--accent-color) !important;
+}
+
 .SubpageTableScroll .MuiTableCell-root:first-child {
   padding-left: 1em;
 }
 
 .SubpageTableScroll .MuiTableCell-root:last-child {
   padding-right: 1em;
+}
+
+.SubpageContent .MuiTypography-root {
+  color: inherit;
+}
+
+.SubpageContent h1.MuiTypography-root {
+  color: var(--text-color);
+}
+
+.SubpageContent h2.MuiTypography-root {
+  color: var(--accent-color);
 }
 
 .SubpageCellMeta {

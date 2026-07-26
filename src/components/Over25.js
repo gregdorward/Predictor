@@ -140,23 +140,31 @@ const StyledTableRow = withStyles(() => ({
   },
 }))(TableRow);
 
-export default function HighestScoringTeams() {
+export default function HighestScoringTeams({ initialRows = null }) {
   const classes = useStyles();
-  const [teams, setTeams] = useState([]);
+  const [teams, setTeams] = useState(() =>
+    Array.isArray(initialRows) ? initialRows : []
+  );
 
   useEffect(() => {
+    if (Array.isArray(initialRows) && initialRows.length > 0) return undefined;
+
+    let cancelled = false;
     async function fetchTeams() {
       const data = await getHighestScoringTeams();
-      setTeams(data);
+      const allowedCountries = ["England", "Scotland", "Italy", "Spain", "Germany", "France", "USA", "Denmark", "Greece", "Turkey", "Switzerland", "Austria", "Norway", "Mexico", "Poland", "Brazil", "Argentina", "Sweden", "Netherlands", "Portugal", "Belgium"];
+      const filtered = data.filter((team) =>
+        allowedCountries.includes(team.teamCountry)
+      );
+      if (!cancelled) setTeams(filtered);
     }
     fetchTeams();
-  }, []);
+    return () => {
+      cancelled = true;
+    };
+  }, [initialRows]);
 
-  const allowedCountries = ["England", "Scotland", "Italy", "Spain", "Germany", "France", "USA", "Denmark", "Greece", "Turkey", "Switzerland", "Austria", "Norway", "Mexico", "Poland", "Brazil", "Argentina", "Sweden", "Netherlands", "Portugal", "Belgium"];
-
-  const filteredTeams = teams.filter((team) =>
-    allowedCountries.includes(team.teamCountry)
-  );
+  const filteredTeams = teams;
 
   return (
     <Fragment>

@@ -83,23 +83,31 @@ const StyledTableRow = withStyles(() => ({
   },
 }))(TableRow);
 
-export default function BTTSFixtures() {
+export default function BTTSFixtures({ initialRows = null }) {
   const classes = useStyles();
-  const [games, setGames] = useState([]);
+  const [games, setGames] = useState(() =>
+    Array.isArray(initialRows) ? initialRows : []
+  );
 
   useEffect(() => {
+    if (Array.isArray(initialRows) && initialRows.length > 0) return undefined;
+
+    let cancelled = false;
     async function fetchGames() {
       const data = await getBTTSFixtures();
-      setGames(data);
+      const allowedCountries = ["England", "Scotland", "Italy", "Spain", "Germany", "France", "USA", "Denmark", "Greece", "Turkey", "Switzerland", "Austria", "Norway", "Mexico", "Poland", "Brazil", "Argentina", "Sweden", "Netherlands", "Portugal", "Belgium"];
+      const filtered = data
+        .filter((game) => allowedCountries.includes(game.country) && game.progress > 30 && game.avgGoals > 3)
+        .slice(0, 30);
+      if (!cancelled) setGames(filtered);
     }
     fetchGames();
-  }, []);
+    return () => {
+      cancelled = true;
+    };
+  }, [initialRows]);
 
-  const allowedCountries = ["England", "Scotland", "Italy", "Spain", "Germany", "France", "USA", "Denmark", "Greece", "Turkey", "Switzerland", "Austria", "Norway", "Mexico", "Poland", "Brazil", "Argentina", "Sweden", "Netherlands", "Portugal", "Belgium"];
-
-  const filteredGames = games
-    .filter((game) => allowedCountries.includes(game.country) && game.progress > 30 && game.avgGoals > 3)
-    .slice(0, 30);
+  const filteredGames = games;
 
   return (
     <Fragment>

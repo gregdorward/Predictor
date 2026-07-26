@@ -2,6 +2,16 @@ function teamLabel(team) {
   return team?.name || team?.english_name || null;
 }
 
+/** True when formatted market stats are present (not an empty / unstarted season). */
+export function hasLiveCompetitionMarkets({
+  avgGoals,
+  btts,
+  over25,
+  under25,
+} = {}) {
+  return [avgGoals, btts, over25, under25].some((value) => value != null);
+}
+
 export function buildCompetitionSeoParagraphs({
   name,
   country,
@@ -15,15 +25,31 @@ export function buildCompetitionSeoParagraphs({
   awayWin,
   topOver25Teams = [],
   topBttsTeams = [],
+  seasonStarted = undefined,
 }) {
   const paragraphs = [];
   const location = [country, season].filter(Boolean).join(", ");
+  const hasMarkets =
+    seasonStarted !== false &&
+    hasLiveCompetitionMarkets({ avgGoals, btts, over25, under25 });
 
   paragraphs.push(
     `This page is a season-long research hub for ${name}${
       location ? ` (${location})` : ""
     }. Soccer Stats Hub brings together league averages, market trends and team-level signals so you can compare fixtures with context rather than relying on a single headline number.`
   );
+
+  if (!hasMarkets) {
+    paragraphs.push(
+      `The ${
+        season || "new"
+      } season is still getting underway, so league-wide averages and team market rates are not meaningful yet. Check back once enough fixtures have been played, or open individual match pages for previews based on recent form and head-to-head history.`
+    );
+    paragraphs.push(
+      `Full league tables, form charts, player rankings and fixture predictions load below once the interactive view opens.`
+    );
+    return paragraphs;
+  }
 
   const marketBits = [];
   if (avgGoals != null) {

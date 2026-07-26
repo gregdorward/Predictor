@@ -44,7 +44,12 @@ function buildRouteMeta() {
 
 async function generateSiteMap() {
   const lastmod = new Date().toISOString().slice(0, 10);
-  const urls = await collectSitemapUrls();
+  let urls = [];
+  try {
+    urls = await collectSitemapUrls();
+  } catch {
+    urls = await collectSitemapUrls({ includeFixtures: false });
+  }
   const routeMeta = buildRouteMeta();
 
   const entries = urls.map((loc) => {
@@ -70,7 +75,12 @@ ${entries.join("\n")}
 
 export async function getServerSideProps({ res }) {
   const xml = await generateSiteMap();
-  res.setHeader("Content-Type", "text/xml");
+  res.setHeader("Content-Type", "text/xml; charset=utf-8");
+  // Short CDN/browser cache so crawlers rarely hit a cold API fan-out.
+  res.setHeader(
+    "Cache-Control",
+    "public, s-maxage=900, stale-while-revalidate=3600"
+  );
   res.write(xml);
   res.end();
   return { props: {} };

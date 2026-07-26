@@ -29,8 +29,7 @@ function toAbsoluteUrl(path) {
   return `${SITE_URL}${path}`;
 }
 
-/** All indexable URLs used by sitemap.xml and IndexNow pings. */
-export async function collectSitemapUrls({ fixtureLimit = 150 } = {}) {
+function collectStaticSitemapUrls() {
   const staticUrls = STATIC_SITEMAP_ROUTES.map((route) => toAbsoluteUrl(route.path));
   const articleUrls = getArticleIndex().map((article) =>
     toAbsoluteUrl(`/articles/${article.slug}/`)
@@ -38,8 +37,31 @@ export async function collectSitemapUrls({ fixtureLimit = 150 } = {}) {
   const competitionUrls = getIndexableCompetitions().map((competition) =>
     toAbsoluteUrl(`/competition/${competition.slug}/`)
   );
-  const fixtures = await fetchUpcomingFixtureLinks({ limit: fixtureLimit });
-  const fixtureUrls = fixtures.map((fixture) => toAbsoluteUrl(fixture.href));
+  return [...staticUrls, ...articleUrls, ...competitionUrls];
+}
 
-  return [...staticUrls, ...articleUrls, ...competitionUrls, ...fixtureUrls];
+/**
+ * All indexable URLs used by sitemap.xml and IndexNow pings.
+ * Always returns static + competition + article URLs even if fixture API fails.
+ */
+export async function collectSitemapUrls({
+  fixtureLimit = 80,
+  includeFixtures = true,
+} = {}) {
+  const baseUrls = collectStaticSitemapUrls();
+
+  if (!includeFixtures) {
+    return baseUrls;
+  }
+
+  try {
+    const fixtures = await fetchUpcomingFixtureLinks({
+      limit: fixtureLimit,
+      timeoutMs: 3500,
+    });
+    const fixtureUrls = fixtures.map((fixture) => toAbsoluteUrl(fixture.href));
+    return [...baseUrls, ...fixtureUrls];
+  } catch {
+    return baseUrls;
+  }
 }

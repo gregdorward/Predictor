@@ -24,6 +24,21 @@ describe("seoShellCopy", () => {
     expect(paragraphs.join(" ")).not.toMatch(/–/);
   });
 
+  test("avoids zero-stat prose when the season has not started", () => {
+    const paragraphs = buildCompetitionSeoParagraphs({
+      name: "Premier League",
+      country: "England",
+      season: "2026/2027",
+      seasonStarted: false,
+    });
+
+    const text = paragraphs.join(" ");
+    expect(text).toContain("still getting underway");
+    expect(text).not.toContain("averaging");
+    expect(text).not.toContain("0.00");
+    expect(text).not.toContain("0.0%");
+  });
+
   test("builds fixture copy with competition context", () => {
     const paragraphs = buildFixtureSeoParagraphs({
       home: "England",

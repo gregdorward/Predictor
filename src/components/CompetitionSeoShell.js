@@ -12,6 +12,43 @@ function formatNumber(value) {
   return Number(value).toFixed(2);
 }
 
+function readMatchesPlayed(data) {
+  const candidates = [
+    data?.matches_completed,
+    data?.matchesCompleted,
+    data?.seasonMatchesPlayed_overall,
+    data?.seasonMatchesCompleted,
+    data?.games_played,
+    data?.clubStats?.seasonMatchesPlayed_overall,
+  ];
+  for (const value of candidates) {
+    const n = Number(value);
+    if (Number.isFinite(n)) return n;
+  }
+  return null;
+}
+
+/** Season has not produced usable league averages yet (new / unstarted). */
+export function isCompetitionSeasonEmpty(data) {
+  if (!data) return true;
+  const matchesPlayed = readMatchesPlayed(data);
+  if (matchesPlayed === 0) return true;
+
+  const avg = Number(data.seasonAVG_overall);
+  const btts = Number(data.seasonBTTSPercentage);
+  const over25 = Number(data.seasonOver25Percentage_overall);
+  const under25 = Number(data.seasonUnder25Percentage_overall);
+
+  // All-zero market block means the season has not produced usable averages yet
+  // (typical right after a catalog season-id rollover).
+  return (
+    (!Number.isFinite(avg) || avg === 0) &&
+    (!Number.isFinite(btts) || btts === 0) &&
+    (!Number.isFinite(over25) || over25 === 0) &&
+    (!Number.isFinite(under25) || under25 === 0)
+  );
+}
+
 export default function CompetitionSeoShell({
   name,
   country,
@@ -26,6 +63,7 @@ export default function CompetitionSeoShell({
   topOver25Teams = [],
   topBttsTeams = [],
   topUnder25Teams = [],
+  seasonStarted = true,
 }) {
   const metaParts = [country, season].filter(Boolean);
   const introParagraphs = buildCompetitionSeoParagraphs({
@@ -42,6 +80,7 @@ export default function CompetitionSeoShell({
     topOver25Teams,
     topBttsTeams,
     topUnder25Teams,
+    seasonStarted,
   });
 
   return (
@@ -162,6 +201,28 @@ export function buildCompetitionSeoShell(data, catalog) {
   const name = data?.english_name || data?.name || catalog?.name || "Competition";
   const relatedLinks = getRelatedCompetitionLinks(catalog?.slug);
   const teams = getTeamsList(data);
+  const seasonEmpty = isCompetitionSeasonEmpty(data);
+
+  if (seasonEmpty) {
+    return {
+      name,
+      country: data?.country || null,
+      season: data?.season || null,
+      avgGoals: null,
+      btts: null,
+      over25: null,
+      under25: null,
+      homeWin: null,
+      draw: null,
+      awayWin: null,
+      topOver25Teams: [],
+      topBttsTeams: [],
+      topUnder25Teams: [],
+      relatedLinks,
+      seasonStarted: false,
+    };
+  }
+
   return {
     name,
     country: data?.country || null,
@@ -185,5 +246,6 @@ export function buildCompetitionSeoShell(data, catalog) {
       5
     ).map((team) => pickTeamHighlight(team, "seasonUnder25Percentage_overall")),
     relatedLinks,
+    seasonStarted: true,
   };
 }

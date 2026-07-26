@@ -1,42 +1,52 @@
-import { buildCompetitionSeoShell } from "../components/CompetitionSeoShell";
+import {
+  buildCompetitionSeoShell,
+  isCompetitionSeasonEmpty,
+} from "./CompetitionSeoShell";
 
-describe("buildCompetitionSeoShell payload size", () => {
-  test("keeps highlight teams to a handful of fields", () => {
-    const bulkyTeam = {
-      id: 1,
-      name: "Example FC",
-      english_name: "Example FC",
-      seasonOver25Percentage_overall: 62.5,
-      seasonBTTSPercentage_overall: 55,
-      seasonUnder25Percentage_overall: 40,
-      ...Object.fromEntries(
-        Array.from({ length: 200 }, (_, i) => [`stat_${i}`, i])
-      ),
-    };
+describe("competition empty-season SSR", () => {
+  test("detects all-zero market block as empty", () => {
+    expect(
+      isCompetitionSeasonEmpty({
+        seasonAVG_overall: 0,
+        seasonBTTSPercentage: 0,
+        seasonOver25Percentage_overall: 0,
+        seasonUnder25Percentage_overall: 0,
+      })
+    ).toBe(true);
+  });
 
+  test("keeps in-season competitions with live averages", () => {
+    expect(
+      isCompetitionSeasonEmpty({
+        seasonAVG_overall: 3.24,
+        seasonBTTSPercentage: 60,
+        seasonOver25Percentage_overall: 62,
+        seasonUnder25Percentage_overall: 38,
+      })
+    ).toBe(false);
+  });
+
+  test("buildCompetitionSeoShell omits zero stats for empty seasons", () => {
     const shell = buildCompetitionSeoShell(
       {
-        english_name: "Example League",
-        country: "Testland",
-        season: "2026",
-        seasonAVG_overall: 2.7,
-        seasonBTTSPercentage: 50,
-        seasonOver25Percentage_overall: 55,
-        seasonUnder25Percentage_overall: 45,
-        homeWinPercentage: 40,
-        drawPercentage: 25,
-        awayWinPercentage: 35,
-        teams: [bulkyTeam],
+        english_name: "Premier League",
+        country: "England",
+        season: "2026/2027",
+        seasonAVG_overall: 0,
+        seasonBTTSPercentage: 0,
+        seasonOver25Percentage_overall: 0,
+        seasonUnder25Percentage_overall: 0,
+        homeWinPercentage: 0,
+        drawPercentage: 0,
+        awayWinPercentage: 0,
+        team: {},
       },
-      { slug: "example-league", name: "Example League" }
+      { slug: "premier-league", name: "Premier League" }
     );
 
-    expect(Object.keys(shell.topOver25Teams[0]).sort()).toEqual([
-      "english_name",
-      "id",
-      "name",
-      "seasonOver25Percentage_overall",
-    ]);
-    expect(JSON.stringify(shell).length).toBeLessThan(5000);
+    expect(shell.seasonStarted).toBe(false);
+    expect(shell.avgGoals).toBeNull();
+    expect(shell.btts).toBeNull();
+    expect(shell.topOver25Teams).toEqual([]);
   });
 });
