@@ -1,5 +1,6 @@
 import {
   MIN_LEAGUE_FIXTURES_FOR_DERIVED_STATS,
+  fetchAllLeagueFixturesPages,
   resolveLeagueResultsForCompetition,
 } from "./leagueResultsLoader";
 
@@ -12,6 +13,53 @@ const makeFixtures = (count) =>
     date_unix: index + 1,
     status: "complete",
   }));
+
+describe("fetchAllLeagueFixturesPages", () => {
+  const originalFetch = global.fetch;
+
+  afterEach(() => {
+    global.fetch = originalFetch;
+  });
+
+  test("concatenates every paginated leagueFixtures page", async () => {
+    const page1 = [{ id: 1, home_name: "A", away_name: "B" }];
+    const page2 = [{ id: 2, home_name: "C", away_name: "D" }];
+    const page3 = [{ id: 3, home_name: "E", away_name: "F" }];
+
+    global.fetch = jest.fn(async (url) => {
+      const href = String(url);
+      if (href.includes("page=3")) {
+        return { ok: true, json: async () => ({ data: page3 }) };
+      }
+      if (href.includes("page=2")) {
+        return { ok: true, json: async () => ({ data: page2 }) };
+      }
+      if (href.includes("leagueFixtures/16537")) {
+        return {
+          ok: true,
+          json: async () => ({
+            pager: { current_page: 1, max_page: 3 },
+            data: page1,
+          }),
+        };
+      }
+      throw new Error(`Unexpected fetch: ${url}`);
+    });
+
+    const fixtures = await fetchAllLeagueFixturesPages(16537);
+
+    expect(fixtures).toEqual([...page1, ...page2, ...page3]);
+    expect(global.fetch).toHaveBeenCalledTimes(3);
+  });
+
+  test("returns null when the first page request fails", async () => {
+    global.fetch = jest.fn(async () => ({ ok: false, status: 500 }));
+
+    const fixtures = await fetchAllLeagueFixturesPages(16537);
+
+    expect(fixtures).toBeNull();
+  });
+});
 
 describe("resolveLeagueResultsForCompetition", () => {
   const originalFetch = global.fetch;

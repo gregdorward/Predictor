@@ -11,10 +11,9 @@ import {
 } from "chart.js";
 import { Line } from "react-chartjs-2";
 import { Pause, Play } from "lucide-react";
-import { apiGetUrl } from "../../utils/apiUrl";
+import { fetchAllLeagueFixturesPages } from "../../logic/leagueResultsLoader";
 import {
   buildLeaguePositionSeries,
-  normalizeLeagueFixturesPayload,
 } from "../../utils/leaguePositionSeries";
 import { GROUP_STAGE_LEAGUE_IDS } from "../../utils/groupStageTables";
 import CompetitionPositionRaceTable from "./CompetitionPositionRaceTable";
@@ -269,13 +268,11 @@ export default function CompetitionPositionRaceChart({ seasonId }) {
       setPlaying(false);
 
       try {
-        const response = await fetch(apiGetUrl(`leagueFixtures/${seasonId}`));
-        if (!response.ok) {
+        const fixtures = await fetchAllLeagueFixturesPages(seasonId);
+        if (!fixtures?.length) {
           if (!cancelled) setSeries(null);
           return;
         }
-        const json = await response.json();
-        const fixtures = normalizeLeagueFixturesPayload(json);
         const built = buildLeaguePositionSeries(fixtures);
 
         if (
