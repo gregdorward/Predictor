@@ -10517,11 +10517,25 @@ h5.section-title {
   display: inline-block;
 }
 
-.PlayerStats {
-  display: flex;
+.PlayerStats,
+.KeyPlayersGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  align-items: stretch;
+  gap: 0.5rem;
   width: 100%;
   margin-left: auto;
   margin-right: auto;
+  box-sizing: border-box;
+  padding: 0.5rem 0.4rem 1rem;
+}
+
+@media (min-width: 768px) {
+  .PlayerStats,
+  .KeyPlayersGrid {
+    gap: 0.85rem 1.25rem;
+    padding: 0.75rem 1rem 1.25rem;
+  }
 }
 
 .PlayerStatsButton {
@@ -10559,24 +10573,189 @@ h5.section-title {
   box-shadow: none;
 }
 
-.HomePlayerStats {
-  flex: 1;
-  margin: 1em;
-}
-
-.AwayPlayerStats {
-  flex: 1;
-  margin: 1em;
-}
-
-.HomePlayerStats .StatLabel {
-  text-align: right;
-  flex: 1;
-}
-
-.AwayPlayerStats .StatLabel {
+.KeyPlayerCard {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  height: 100%;
+  min-width: 0;
+  background-color: var(--secondary-background-color);
+  border-radius: 8px;
+  padding: 0.85rem 1rem;
+  box-sizing: border-box;
   text-align: left;
+  transition: background-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.KeyPlayerCard:hover {
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.12);
+}
+
+.KeyPlayerCard--empty {
+  visibility: hidden;
+  pointer-events: none;
+}
+
+.KeyPlayerCard .OpenStatsButton {
+  margin-top: auto;
+}
+
+.KeyPlayerCardHeader {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  min-width: 0;
+}
+
+.KeyPlayerCard .player-image-thumb {
+  width: 3.25em;
+  height: 3.25em;
+  min-width: 3.25em;
+  min-height: 3.25em;
+  max-width: 3.25em;
+  max-height: 3.25em;
+  margin: 0;
+  object-fit: cover;
+  flex-shrink: 0;
+  background-color: var(--third-background-color, var(--alternate-background-color));
+}
+
+.KeyPlayerCardThumbPlaceholder {
+  display: inline-block;
+}
+
+.KeyPlayerCardIdentity {
   flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.15rem;
+  text-align: left;
+}
+
+.KeyPlayerCardName {
+  margin: 0;
+  font-size: 1.05em;
+  font-weight: 700;
+  color: var(--text-color);
+  line-height: 1.25;
+  min-height: calc(1.25em * 2);
+  overflow-wrap: anywhere;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  overflow: hidden;
+  text-align: left;
+}
+
+.KeyPlayerCardMeta {
+  margin: 0;
+  font-size: 0.85em;
+  color: var(--faint-text, var(--text-color));
+  opacity: 0.85;
+  line-height: 1.2;
+  min-height: 1.2em;
+  text-align: left;
+}
+
+.KeyPlayerRankChips {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.45rem;
+}
+
+.KeyPlayerRankChip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  background-color: var(--background-color);
+  border-radius: 999px;
+  padding: 0.2rem 0.55rem 0.2rem 0.25rem;
+  max-width: 100%;
+}
+
+.KeyPlayerRankChip .StatLabel {
+  margin: 0;
+  font-size: 0.85em;
+  line-height: 1.2;
+  text-align: left;
+  white-space: nowrap;
+}
+
+.KeyPlayerRankChip .StatBall {
+  width: 1.75em;
+  height: 1.75em;
+  font-size: 0.85em;
+  flex-shrink: 0;
+}
+
+.KeyPlayerRankChip--gold {
+  box-shadow: inset 0 0 0 1px gold;
+}
+
+@media (max-width: 767px) {
+  .KeyPlayersGrid {
+    font-size: 1.05em;
+  }
+
+  .KeyPlayerCard {
+    gap: 0.55rem;
+    padding: 0.6rem 0.55rem;
+  }
+
+  .KeyPlayerCardHeader {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.4rem;
+  }
+
+  .KeyPlayerCard .player-image-thumb {
+    width: 2.5em;
+    height: 2.5em;
+    min-width: 2.5em;
+    min-height: 2.5em;
+    max-width: 2.5em;
+    max-height: 2.5em;
+  }
+
+  .KeyPlayerCardName {
+    font-size: 1em;
+    min-height: calc(1.25em * 2);
+  }
+
+  .KeyPlayerCardMeta {
+    font-size: 0.82em;
+  }
+
+  .KeyPlayerRankChips {
+    gap: 0.3rem;
+  }
+
+  .KeyPlayerRankChip {
+    gap: 0.3rem;
+    padding: 0.15rem 0.4rem 0.15rem 0.2rem;
+  }
+
+  .KeyPlayerRankChip .StatLabel {
+    font-size: 0.8em;
+    white-space: normal;
+    overflow-wrap: anywhere;
+  }
+
+  .KeyPlayerRankChip .StatBall {
+    width: 1.55em;
+    height: 1.55em;
+    font-size: 0.82em;
+  }
+
+  .KeyPlayerCard .OpenStatsButton {
+    font-size: 0.88em;
+    padding: 0.45em 0.5em;
+  }
 }
 
 .PlayerAttributes {
@@ -10619,90 +10798,6 @@ h5.section-title {
   box-shadow: none;
 }
 
-.SpanHome {
-  margin-left: 1em;
-  display: inline-flex;
-  justify-content: center;
-  align-items: center;
-  width: 2.5em;
-  height: 2.5em;
-  border-radius: 50%;
-  color: white;
-  font-weight: bold;
-  background-color: var(--button-color);
-  color: var(--button-text-color);
-  font-size: 1.1em;
-  font-family: Arial, Helvetica, sans-serif;
-  font-weight: bolder;
-  margin-right: 3em;
-}
-
-.SpanAway {
-  margin-left: 1em;
-  display: inline-flex;
-  justify-content: center;
-  align-items: center;
-  width: 2.5em;
-  height: 2.5em;
-  border-radius: 50%;
-  color: white;
-  font-weight: bold;
-  background-color: var(--button-color);
-  color: var(--button-text-color);
-  font-size: 1.1em;
-  font-family: Arial, Helvetica, sans-serif;
-  font-weight: bolder;
-  margin-left: 3em;
-}
-
-.PlayerToggleButton {
-  width: 100%;
-  padding: 0.75em 1em;
-  margin: 0em;
-  margin-bottom: 1em;
-  font-size: 1em;
-  background-color: var(--secondary-background-color);
-  color: var(--text-color);
-  border: none;
-  cursor: pointer;
-  border-radius: 0.25rem;
-  display: inline-flex;
-  flex-direction: column;
-  align-items: center;
-}
-
-.HomePlayerStats .PlayerToggleButton {
-  text-align: right;
-  padding-right: 2em;
-}
-
-.AwayPlayerStats .PlayerToggleButton {
-  text-align: left;
-  padding-left: 2em;
-}
-
-.ExpandCollapse {
-  background-color: var(--secondary-background-color);
-  color: var(--text-color);
-  font-size: 1em;
-  width: 8em;
-  padding: 0.5em;
-  margin: 0.25em;
-  margin-bottom: 2em;
-}
-
-.PlayerStatsList li {
-  padding-bottom: 1em;
-}
-
-
-.PlayerStatItem {
-  display: flex;
-  justify-content: flex-start;
-  align-items: center;
-  margin: 0.5em 0;
-}
-
 .StatLabel {
   font-size: 1em;
   margin: 0 0.5em;
@@ -10720,20 +10815,6 @@ h5.section-title {
   font-weight: bolder;
   font-size: 1.1em;
   font-family: Arial, Helvetica, sans-serif;
-}
-
-
-
-.LeftBall {
-  margin-right: 0.75em;
-  margin-top: 0.25em;
-  margin-bottom: 0.25em;
-}
-
-.RightBall {
-  margin-left: 0.75em;
-  margin-top: 0.25em;
-  margin-bottom: 0.25em;
 }
 
 .StatBall.Gold {
@@ -10756,13 +10837,22 @@ h5.section-title {
 }
 
 .OpenStatsButton {
-  font-size: 1.1em;
-  background-color: var(--secondary-background-color);
+  font-size: 0.95em;
+  font-family: inherit;
+  background-color: var(--background-color);
   width: 100%;
-  margin-left: auto;
-  margin-right: auto;
+  margin: 0;
   color: var(--button-color);
-  padding: 0.5em;
+  padding: 0.55em 0.75em;
+  border: 1px solid var(--button-color);
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.15s ease, color 0.15s ease;
+}
+
+.OpenStatsButton:hover {
+  background-color: var(--button-color);
+  color: var(--button-text-color);
 }
 
 .StatWebsiteIframe {

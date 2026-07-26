@@ -4235,21 +4235,13 @@ function GameStats({ game, displayBool, stats, handleToggleTip, userTips }) {
           ) : (
             <>
               <Collapsable
-                buttonText={`Key Players (League Rankings by Metric) \u{2630}`}
+                buttonText={`Key Players \u{2630}`}
                 classNameButton="PlayerStatsButton"
                 element={
-                  <div className="PlayerStats">
-                    <PlayerStatsList
-                      playerStats={homePlayerDataWithImages}
-                      className="HomePlayerStats"
-                      spanClass="SpanHome"
-                    />
-                    <PlayerStatsList
-                      playerStats={awayPlayerDataWithImages}
-                      className="AwayPlayerStats"
-                      spanClass="SpanAway"
-                    />
-                  </div>
+                  <PlayerStatsList
+                    homePlayerStats={homePlayerDataWithImages}
+                    awayPlayerStats={awayPlayerDataWithImages}
+                  />
                 }
               />
               {/* { paid && dataHome.length !== 0 ||

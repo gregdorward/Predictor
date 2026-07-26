@@ -1,98 +1,121 @@
 import { useState } from "react";
-import Collapsable from "./CollapsableElement";
-
 
 const formatLabel = (key) =>
   key
-    .replace(/([A-Z])/g, " $1") // Add space before capital letters
-    .replace(/^./, (str) => str.toUpperCase()); // Capitalize first letter
+    .replace(/([A-Z])/g, " $1")
+    .replace(/^./, (str) => str.toUpperCase());
 
-const PlayerStatsList = ({ playerStats, className, spanClass }) => {
-  const [expandedPlayers, setExpandedPlayers] = useState([]);
-  const [activeIframePlayerId, setActiveIframePlayerId] = useState(null);
+const sortRankings = (rankings = []) =>
+  [...rankings].sort((a, b) => a.rank - b.rank);
 
+const KeyPlayerCard = ({ player, onViewAttributes }) => {
+  if (!player) {
+    return (
+      <div className="KeyPlayerCard KeyPlayerCard--empty" aria-hidden="true" />
+    );
+  }
 
-  const toggleAll = (expand) => {
-    setExpandedPlayers(expand ? playerStats.map((p) => p.playerName) : []);
-  };
-
-  const togglePlayer = (playerName, shouldOpen) => {
-    setExpandedPlayers((prev) => {
-      const alreadyOpen = prev.includes(playerName);
-      if (shouldOpen && !alreadyOpen) {
-        return [...prev, playerName];
-      }
-      if (!shouldOpen && alreadyOpen) {
-        return prev.filter((name) => name !== playerName);
-      }
-      return prev; // No change
-    });
-  };
+  const rankings = sortRankings(player.rankings);
+  const rankingCount = rankings.length;
 
   return (
-    <div className={className}>
-      <button className="ExpandCollapse" onClick={() => toggleAll(true)}>
-        Expand All
-      </button>
-      <button className="ExpandCollapse" onClick={() => toggleAll(false)}>
-        Collapse All
-      </button>
+    <article className="KeyPlayerCard">
+      <header className="KeyPlayerCardHeader">
+        {player.playerImage ? (
+          <img
+            src={player.playerImage}
+            alt=""
+            className="player-image-thumb"
+          />
+        ) : (
+          <span
+            className="player-image-thumb KeyPlayerCardThumbPlaceholder"
+            aria-hidden="true"
+          />
+        )}
+        <div className="KeyPlayerCardIdentity">
+          <h3 className="KeyPlayerCardName">{player.playerName}</h3>
+          <p className="KeyPlayerCardMeta">
+            {rankingCount} league ranking
+            {rankingCount === 1 ? "" : "s"}
+          </p>
+        </div>
+      </header>
 
-      {playerStats.map((player) => (
-        <Collapsable
-          key={player.playerName}
-          buttonText={player.playerName}
-          buttonImage={player.playerImage}
-          classNameButton="PlayerToggleButton"
-          isOpen={expandedPlayers.includes(player.playerName)}
-          onTriggerOpening={() => togglePlayer(player.playerName, true)}
-          onTriggerClosing={() => togglePlayer(player.playerName, false)}
-          element={
-            <ul className={className}>
-              <button
-                className="OpenStatsButton"
-                onClick={() => setActiveIframePlayerId(player.playerId)}
-              >
-                View Attributes
-              </button>
+      <ul className="KeyPlayerRankChips">
+        {rankings.map((ranking) => (
+          <li
+            key={ranking.metric}
+            className={`KeyPlayerRankChip${
+              ranking.rank === 1 ? " KeyPlayerRankChip--gold" : ""
+            }`}
+          >
+            <span
+              className={`StatBall${ranking.rank === 1 ? " Gold" : ""}`}
+            >
+              {ranking.rank}
+            </span>
+            <span className="StatLabel">{formatLabel(ranking.metric)}</span>
+          </li>
+        ))}
+      </ul>
 
-              {player.rankings.map((ranking) => (
-                <li key={ranking.metric} className="PlayerStatItem">
-                  {className === "AwayPlayerStats" ? (
-                    <>
-                      <span
-                        className={`StatBall LeftBall${ranking.rank === 1 ? " Gold" : ""
-                          }`}
-                      >
-                        {ranking.rank}
-                      </span>
-                      <span className="StatLabel">
-                        {formatLabel(ranking.metric)}
-                      </span>
-                    </>
-                  ) : (
-                    <>
-                      <span className="StatLabel">
-                        {formatLabel(ranking.metric)}
-                      </span>
-                      <span
-                        className={`StatBall RightBall${ranking.rank === 1 ? " Gold" : ""
-                          }`}
-                      >
-                        {ranking.rank}
-                      </span>
-                    </>
-                  )}
-                </li>
-              ))}
-            </ul>
+      <button
+        type="button"
+        className="OpenStatsButton"
+        onClick={() => onViewAttributes(player.playerId)}
+      >
+        View Attributes
+      </button>
+    </article>
+  );
+};
+
+const PlayerStatsList = ({
+  homePlayerStats = [],
+  awayPlayerStats = [],
+}) => {
+  const [activeIframePlayerId, setActiveIframePlayerId] = useState(null);
+  const rowCount = Math.max(homePlayerStats.length, awayPlayerStats.length);
+
+  return (
+    <>
+      <div className="PlayerStats KeyPlayersGrid">
+        {Array.from({ length: rowCount }, (_, index) => index).flatMap(
+          (index) => {
+            const home = homePlayerStats[index] || null;
+            const away = awayPlayerStats[index] || null;
+
+            return [
+              <KeyPlayerCard
+                key={home?.playerId || `home-empty-${index}`}
+                player={home}
+                onViewAttributes={setActiveIframePlayerId}
+              />,
+              <KeyPlayerCard
+                key={away?.playerId || `away-empty-${index}`}
+                player={away}
+                onViewAttributes={setActiveIframePlayerId}
+              />,
+            ];
           }
-        />
-      ))}
+        )}
+      </div>
+
       {activeIframePlayerId && (
-        <div className="IframeModalOverlay" onClick={() => setActiveIframePlayerId(null)}>
-          <div className="IframeModalContent" onClick={(e) => e.stopPropagation()}>
-            <button className="CloseModalButton" onClick={() => setActiveIframePlayerId(null)}>
+        <div
+          className="IframeModalOverlay"
+          onClick={() => setActiveIframePlayerId(null)}
+        >
+          <div
+            className="IframeModalContent"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <button
+              type="button"
+              className="CloseModalButton"
+              onClick={() => setActiveIframePlayerId(null)}
+            >
               Close
             </button>
             <iframe
@@ -105,8 +128,7 @@ const PlayerStatsList = ({ playerStats, className, spanClass }) => {
           </div>
         </div>
       )}
-    </div>
-
+    </>
   );
 };
 
