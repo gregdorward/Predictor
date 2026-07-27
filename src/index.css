@@ -14,7 +14,15 @@
     padding-left: 2em;
     padding-right: 2em;
     box-sizing: border-box;
-    align-content: center;
+    align-items: stretch;
+    align-content: stretch;
+    overflow-x: hidden;
+  }
+
+  /* Allow flex children to shrink so wide ads/tables cannot expand the page past the viewport. */
+  body>#__next > * {
+    min-width: 0;
+    max-width: 100%;
   }
 
   .LeagueTable {
@@ -107,7 +115,9 @@
     padding-left: var(--content-padding-x);
     padding-right: var(--content-padding-x);
     box-sizing: border-box;
-    align-content: center;
+    align-items: stretch;
+    align-content: stretch;
+    overflow-x: hidden;
   }
 
   .LeagueTable {
@@ -164,7 +174,9 @@
     padding-left: 1.25em;
     padding-right: 1.25em;
     box-sizing: border-box;
-    align-content: center;
+    align-items: stretch;
+    align-content: stretch;
+    overflow-x: hidden;
   }
 
   .LeagueTable {
@@ -220,7 +232,9 @@
     padding-left: 1em;
     padding-right: 1em;
     box-sizing: border-box;
-    align-content: center;
+    align-items: stretch;
+    align-content: stretch;
+    overflow-x: hidden;
   }
 
   .LeagueTable {
@@ -276,7 +290,9 @@
     box-sizing: border-box;
     flex-basis: 100%;
     font-weight: 600;
-    align-content: center;
+    align-items: stretch;
+    align-content: stretch;
+    overflow-x: hidden;
   }
 
   .LoadingLogo,
@@ -331,7 +347,9 @@
     padding-left: 0.5em;
     padding-right: 0.5em;
     box-sizing: border-box;
-    align-content: center;
+    align-items: stretch;
+    align-content: stretch;
+    overflow-x: hidden;
   }
 
   .LeagueTable {
@@ -450,6 +468,13 @@ body {
   margin-top: 0px;
   padding-top: var(--header-height);
   color: var(--text-color);
+  overflow-x: hidden;
+  max-width: 100%;
+}
+
+html {
+  overflow-x: hidden;
+  max-width: 100%;
 }
 
 .theme-switch {
@@ -1721,6 +1746,7 @@ p {
 .SubpageTableScroll .MuiTableCell-body,
 .SubpageTableScroll td.MuiTableCell-root {
   color: var(--text-color) !important;
+  background-color: transparent !important;
   border-bottom-color: var(--button-border-color) !important;
 }
 
@@ -2711,6 +2737,7 @@ table tr:nth-child(even) {
   min-height: calc(100vh - var(--header-height));
   width: 100%;
   max-width: 100%;
+  min-width: 0;
   overflow-x: hidden;
   box-sizing: border-box;
 }
@@ -2719,6 +2746,7 @@ table tr:nth-child(even) {
   flex: 1 0 auto;
   width: 100%;
   max-width: 100%;
+  min-width: 0;
   overflow-x: hidden;
   box-sizing: border-box;
 }
@@ -6418,6 +6446,8 @@ label {
   top: 0;
   left: 0;
   right: 0;
+  width: 100%;
+  max-width: none;
   display: flex;
   justify-content: flex-start;
   align-items: center;

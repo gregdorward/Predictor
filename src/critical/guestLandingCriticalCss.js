@@ -29,6 +29,12 @@ body {
   text-align: center;
   color: var(--text-color);
   background-color: var(--background-color);
+  overflow-x: hidden;
+  max-width: 100%;
+}
+html {
+  overflow-x: hidden;
+  max-width: 100%;
 }
 .DarkMode {
   position: fixed;
@@ -84,6 +90,12 @@ body > #__next {
   padding-left: 2em;
   padding-right: 2em;
   box-sizing: border-box;
+  align-items: stretch;
+  overflow-x: hidden;
+}
+body > #__next > * {
+  min-width: 0;
+  max-width: 100%;
 }
 .TitleColouring { color: var(--primary-color); }
 .MembersGetMoreUnderlined {

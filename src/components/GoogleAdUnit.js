@@ -71,7 +71,7 @@ export default function GoogleAdUnit({
       <ins
         ref={insRef}
         className="adsbygoogle"
-        style={style}
+        style={{ ...style, width: "100%", maxWidth: "100%", boxSizing: "border-box" }}
         data-ad-client={ADSENSE_CLIENT}
         data-ad-slot={slot}
         {...(format ? { "data-ad-format": format } : {})}
