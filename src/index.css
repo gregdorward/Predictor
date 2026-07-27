@@ -15164,17 +15164,10 @@ body.dark-mode .CompetitionsIndex-card {
   min-height: 250px;
 }
 
-.GoogleAdUnit--statsFooter {
-  margin: 1.5rem auto;
-  width: 100%;
-  max-width: 100%;
-  padding: 0;
-  min-height: 280px;
-}
-
 .GoogleAdUnit--article,
 .GoogleAdUnit--competitionsIndex,
-.GoogleAdUnit--competitionPage {
+.GoogleAdUnit--competitionPage,
+.GoogleAdUnit--fixturesIndex {
   min-height: 120px;
   margin: 1.5rem 0;
 }

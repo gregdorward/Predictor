@@ -7,10 +7,10 @@ export const AD_SLOTS = {
   fixtureTop: "6569554999",
   fixtureMid: "1153310858",
   statsMid: "7687883902",
-  statsFooter: "2211241657",
   articleInArticle: "9819223224",
   competitionsIndex: "3935386867",
   competitionPage: "7527147510",
+  fixturesIndexBottom: "9371546376",
 };
 
 const SCRIPT_SRC = `https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${ADSENSE_CLIENT}`;
@@ -116,16 +116,6 @@ export function StatsMidAd() {
   );
 }
 
-export function StatsFooterAd() {
-  return (
-    <GoogleAdUnit
-      slot={AD_SLOTS.statsFooter}
-      format="autorelaxed"
-      className="GoogleAdUnit--statsFooter"
-    />
-  );
-}
-
 export function ArticleInArticleAd() {
   return (
     <GoogleAdUnit
@@ -155,6 +145,17 @@ export function CompetitionPageAd() {
       format="fluid"
       layout="in-article"
       className="GoogleAdUnit--competitionPage"
+    />
+  );
+}
+
+export function FixturesIndexBottomAd() {
+  return (
+    <GoogleAdUnit
+      slot={AD_SLOTS.fixturesIndexBottom}
+      format="fluid"
+      layout="in-article"
+      className="GoogleAdUnit--fixturesIndex"
     />
   );
 }

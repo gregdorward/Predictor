@@ -11,7 +11,7 @@ import { useEffect, useState } from "react";
 import { getHighestScoringTeams } from "../logic/getStatsInsights";
 import SiteHeader from "./SiteHeader";
 import PageMeta from "./PageMeta";
-import { StatsFooterAd, StatsMidAd } from "./GoogleAdUnit";
+import { StatsMidAd } from "./GoogleAdUnit";
 
 const StyledTableCell = withStyles(() => ({
   head: {
@@ -85,7 +85,7 @@ export default function HighestScoringTeams() {
   return (
     <Fragment>
       <PageMeta />
-      <SiteHeader withFooter beforeFooter={<StatsFooterAd />}>
+      <SiteHeader withFooter>
       <div className="SubpageContent">
       <a href="/" className="HomeLink" style={{ color: "var(--accent-color)", fontWeight: 600 }}>Home</a>
       <h1>Highest Scoring Teams</h1>

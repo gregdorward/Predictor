@@ -2,6 +2,7 @@ import SiteHeader from "../../src/components/SiteHeader";
 import PageMeta from "../../src/components/PageMeta";
 import JsonLd from "../../src/components/JsonLd";
 import FixturesIndexList from "../../src/components/FixturesIndexList";
+import { FixturesIndexBottomAd } from "../../src/components/GoogleAdUnit";
 import { SITE_URL } from "../../src/seo/pageMetaConfig";
 import { fetchUpcomingFixtureLinks } from "../../src/seo/serverFetch";
 
@@ -51,6 +52,7 @@ export default function FixturesIndexPage({ fixtures = [] }) {
           ) : (
             <FixturesIndexList fixtures={fixtures} />
           )}
+          <FixturesIndexBottomAd />
         </main>
       </SiteHeader>
     </>

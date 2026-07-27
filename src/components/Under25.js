@@ -8,7 +8,7 @@ import { getLowestScoringLeagues } from "../logic/getStatsInsights";
 import SiteHeader from "./SiteHeader";
 import PageMeta from "./PageMeta";
 import StatPageSeoContent, { StatPageSeoFaq } from "./StatPageSeoContent";
-import { StatsFooterAd, StatsMidAd } from "./GoogleAdUnit";
+import { StatsMidAd } from "./GoogleAdUnit";
 import { STAT_PAGE_SEO } from "../seo/statPageSeoConfig";
 
 // Consistent Modern Styling for the UI
@@ -123,7 +123,7 @@ export default function Under25({ initialRows = null }) {
   return (
     <Fragment>
       <PageMeta />
-      <SiteHeader withFooter beforeFooter={<StatsFooterAd />}>
+      <SiteHeader withFooter>
       <Box className={`${classes.container} SubpageContent`}>
         <a href="/" className={classes.homeLink}>← Back to Home</a>
         
