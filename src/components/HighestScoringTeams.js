@@ -21,13 +21,13 @@ const StyledTableCell = withStyles(() => ({
     textAlign: "center",
     fontSize: "1em",
     fontFamily: "inherit",
-    border: "1px solid black"
+    border: "1px solid var(--button-border-color)",
   },
   body: {
     fontSize: "1em",
     fontFamily: "inherit",
     padding: 5,
-    border: "1px solid black",
+    border: "1px solid var(--button-border-color)",
     color: "var(--text-color)",
   },
 }))(TableCell);
@@ -87,7 +87,7 @@ export default function HighestScoringTeams() {
       <PageMeta />
       <SiteHeader withFooter beforeFooter={<StatsFooterAd />}>
       <div className="SubpageContent">
-      <a href="/" className="HomeLink">Home</a>
+      <a href="/" className="HomeLink" style={{ color: "var(--accent-color)", fontWeight: 600 }}>Home</a>
       <h1>Highest Scoring Teams</h1>
       <h2>Teams with the highest average goals and their upcoming fixture</h2>
       <StatsMidAd />

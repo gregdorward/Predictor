@@ -85,8 +85,8 @@ const useStyles = makeStyles(() => ({
 
 const StyledTableCell = withStyles(() => ({
   head: {
-    backgroundColor: "#030040",
-    color: "#ffffff",
+    backgroundColor: "var(--accent-color)",
+    color: "var(--button-text-color)",
     fontWeight: 600,
     textTransform: "uppercase",
     fontSize: "1em",
@@ -96,7 +96,7 @@ const StyledTableCell = withStyles(() => ({
   body: {
     fontSize: "1em",
     padding: "1em 1em",
-    borderBottom: "1px solid rgba(0,0,0,0.05)",
+    borderBottom: "1px solid var(--button-border-color)",
     color: "var(--text-color)",
   },
 }))(TableCell);
@@ -105,7 +105,7 @@ const StyledTableRow = withStyles(() => ({
   root: {
     transition: "background-color 0.2s ease",
     "&:nth-of-type(even)": {
-      backgroundColor: "rgba(255,255,255,0.02)",
+      backgroundColor: "var(--alternate-background-color)",
     },
     "&:hover": {
       backgroundColor: "rgba(var(--accent-color-rgb), 0.1)",

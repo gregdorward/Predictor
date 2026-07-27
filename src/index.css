@@ -395,6 +395,7 @@
   --button-secondary-hover-bg: rgba(254, 140, 0, 0.1);
   --secondary-color: #383737;
   --accent-color: #030040;
+  --accent-color-rgb: 3, 0, 64;
   --mid-grey: #030040;
   --disabled-div: #eeeeee;
   --span-background: #FFE500;
@@ -426,6 +427,7 @@
   --button-secondary-hover-bg: rgba(245, 119, 1, 0.15);
   --secondary-color: #860000;
   --accent-color: whitesmoke;
+  --accent-color-rgb: 245, 245, 245;
   --mid-grey: #020029;
   --disabled-div: #252525;
   --span-background: whitesmoke;
@@ -1682,22 +1684,23 @@ p {
   margin: 40px auto;
   padding: 1em;
   box-sizing: border-box;
+  overflow-x: hidden;
 }
 
 .SubpageTableScroll {
   overflow-x: hidden;
   max-width: 100%;
   box-sizing: border-box;
-  /* Beat Material-UI Paper/Table theme defaults that force dark text. */
+  /* Beat Material-UI Paper/Table theme defaults that force light paper + dark text. */
   background-color: var(--secondary-background-color) !important;
-  color: var(--text-color);
+  color: var(--text-color) !important;
 }
 
 .SubpageTableScroll table {
   table-layout: fixed;
   width: 100%;
   color: var(--text-color);
-  background-color: transparent;
+  background-color: transparent !important;
 }
 
 .SubpageTableScroll table,
@@ -1712,18 +1715,20 @@ p {
 .SubpageTableScroll .MuiTableBody-root,
 .SubpageTableScroll .MuiTableRow-root {
   color: var(--text-color);
-  background-color: transparent;
+  background-color: transparent !important;
 }
 
-.SubpageTableScroll .MuiTableCell-root,
-.SubpageTableScroll .MuiTableCell-body {
+.SubpageTableScroll .MuiTableCell-body,
+.SubpageTableScroll td.MuiTableCell-root {
   color: var(--text-color) !important;
-  border-bottom-color: var(--button-border-color);
+  border-bottom-color: var(--button-border-color) !important;
 }
 
-.SubpageTableScroll .MuiTableCell-head {
+.SubpageTableScroll .MuiTableCell-head,
+.SubpageTableScroll th.MuiTableCell-root {
   color: var(--button-text-color) !important;
   background-color: var(--accent-color) !important;
+  border-bottom-color: transparent !important;
 }
 
 .SubpageTableScroll .MuiTableCell-root:first-child {
@@ -1970,7 +1975,7 @@ p {
 }
 
 .O25Table .MuiTableHead-root th {
-  background-color: var(--button-color);
+  background-color: var(--accent-color);
   height: 5em;
   color: var(--button-text-color);
   line-height: 1em;
@@ -1984,11 +1989,16 @@ p {
 }
 
 .O25Table tr {
-  background-color: var(--background-color);
+  background-color: transparent;
   height: 5em;
   color: var(--text-color);
   line-height: 1em;
   border: none;
+}
+
+.O25Table.SubpageTableScroll,
+.SubpageTableScroll.O25Table {
+  background-color: var(--secondary-background-color) !important;
 }
 
 .FormRadio {
@@ -2699,11 +2709,18 @@ table tr:nth-child(even) {
   display: flex;
   flex-direction: column;
   min-height: calc(100vh - var(--header-height));
+  width: 100%;
+  max-width: 100%;
+  overflow-x: hidden;
+  box-sizing: border-box;
 }
 
 .SitePageLayout__content {
   flex: 1 0 auto;
   width: 100%;
+  max-width: 100%;
+  overflow-x: hidden;
+  box-sizing: border-box;
 }
 
 body.dark-mode .Footer {
@@ -4594,6 +4611,13 @@ li .Aligned {
 .MuiPaper-root {
   margin: 0px !important;
   border: 0px !important;
+}
+
+/* Stats hub tables: keep Paper theme-aware without affecting other MUI Paper usage. */
+.SubpageTableScroll.MuiPaper-root,
+.MuiPaper-root.SubpageTableScroll {
+  background-color: var(--secondary-background-color) !important;
+  color: var(--text-color) !important;
 }
 
 .MuiPaper-elevation1 {
@@ -15092,6 +15116,13 @@ body.dark-mode .CompetitionsIndex-card {
   min-height: 100px;
   overflow: hidden;
   text-align: center;
+  box-sizing: border-box;
+}
+
+/* Prevent AdSense iframes from expanding past the content column (breaks mobile layout). */
+.GoogleAdUnit ins.adsbygoogle,
+.GoogleAdUnit iframe {
+  max-width: 100% !important;
 }
 
 .GoogleAdUnit--fixtureTop {
@@ -15105,8 +15136,9 @@ body.dark-mode .CompetitionsIndex-card {
 
 .GoogleAdUnit--statsFooter {
   margin: 1.5rem auto;
-  max-width: 1100px;
-  padding: 0 1rem;
+  width: 100%;
+  max-width: 100%;
+  padding: 0;
   min-height: 280px;
 }
 

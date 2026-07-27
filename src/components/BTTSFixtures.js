@@ -66,7 +66,7 @@ const StyledTableCell = withStyles(() => ({
   body: {
     fontSize: "1em",
     padding: "1em 1em",
-    borderBottom: "1px solid rgba(0,0,0,0.05)",
+    borderBottom: "1px solid var(--button-border-color)",
     color: "var(--text-color)",
   },
 }))(TableCell);
@@ -75,7 +75,7 @@ const StyledTableRow = withStyles(() => ({
   root: {
     transition: "background-color 0.2s ease",
     "&:nth-of-type(even)": {
-      backgroundColor: "rgba(255,255,255,0.02)",
+      backgroundColor: "var(--alternate-background-color)",
     },
     "&:hover": {
       backgroundColor: "rgba(var(--accent-color-rgb), 0.1)", // Requires an RGB var

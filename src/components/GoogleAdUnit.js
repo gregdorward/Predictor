@@ -100,7 +100,6 @@ export function FixtureMidAd() {
     <GoogleAdUnit
       slot={AD_SLOTS.fixtureMid}
       format="auto"
-      fullWidthResponsive
       className="GoogleAdUnit--fixtureMid"
     />
   );
