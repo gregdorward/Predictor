@@ -8,6 +8,7 @@ import FixtureSeasonStats from "./FixtureSeasonStats";
 import { FixtureSeoBody } from "./FixtureSeoShell";
 import ShareableVisual from "./ShareableVisual";
 import SharePageLinkButton from "./SharePageLinkButton";
+import { FixtureMidAd, FixtureTopAd } from "./GoogleAdUnit";
 import { sanitizeImageFilename } from "../utils/captureElementImage";
 import {
   Chart as ChartJS,
@@ -667,6 +668,8 @@ function TeamPage({ matchId, seoShell = null }) {
         />
       </header>
 
+      <FixtureTopAd />
+
       {seoShell ? <FixtureSeoBody {...seoShell} /> : null}
 
       <p className="FixturePage-homeStatsNote">
@@ -676,6 +679,8 @@ function TeamPage({ matchId, seoShell = null }) {
       </p>
 
       {matchId && match ? <FixtureSeasonStats match={match} /> : null}
+
+      <FixtureMidAd />
 
       <section className="FixturePage-chartCard">
         <h3 className="FixturePage-statGroupTitle">Team comparison</h3>

@@ -1,6 +1,7 @@
 import SiteHeader from "../../src/components/SiteHeader";
 import PageMeta from "../../src/components/PageMeta";
 import JsonLd from "../../src/components/JsonLd";
+import { CompetitionsIndexAd } from "../../src/components/GoogleAdUnit";
 import { buildCompetitionsIndexSections } from "../../src/seo/competitionGroups";
 import { SITE_URL } from "../../src/seo/pageMetaConfig";
 
@@ -85,6 +86,8 @@ export default function CompetitionsIndexPage() {
             </p>
             <p className="CompetitionsIndex-meta">{total} competitions indexed</p>
           </header>
+
+          <CompetitionsIndexAd />
 
           <CompetitionGroup
             id="featured"

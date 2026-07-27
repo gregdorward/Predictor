@@ -1,6 +1,7 @@
 import SiteHeader from "../SiteHeader";
 import PageMeta from "../PageMeta";
 import JsonLd from "../JsonLd";
+import { ArticleInArticleAd } from "../GoogleAdUnit";
 import ArticleAwards from "./ArticleAwards";
 import ArticleProse from "./ArticleProse";
 import ArticleShareButton, { ArticleDateLine } from "./ArticleShareButton";
@@ -101,6 +102,8 @@ export default function ArticlePage({ article, listing }) {
               ))}
             </div>
           ) : null}
+
+          <ArticleInArticleAd />
 
           {article.layout === "awards" ? (
             <ArticleAwards article={article} />

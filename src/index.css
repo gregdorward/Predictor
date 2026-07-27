@@ -15084,6 +15084,39 @@ body.dark-mode .CompetitionsIndex-card {
   margin-bottom: 0.25rem;
 }
 
+.GoogleAdUnit {
+  display: block;
+  width: 100%;
+  max-width: 100%;
+  margin: 1.25rem 0;
+  min-height: 100px;
+  overflow: hidden;
+  text-align: center;
+}
+
+.GoogleAdUnit--fixtureTop {
+  min-height: 120px;
+}
+
+.GoogleAdUnit--fixtureMid,
+.GoogleAdUnit--statsMid {
+  min-height: 250px;
+}
+
+.GoogleAdUnit--statsFooter {
+  margin: 1.5rem auto;
+  max-width: 1100px;
+  padding: 0 1rem;
+  min-height: 280px;
+}
+
+.GoogleAdUnit--article,
+.GoogleAdUnit--competitionsIndex,
+.GoogleAdUnit--competitionPage {
+  min-height: 120px;
+  margin: 1.5rem 0;
+}
+
 .ArticlesPromo__copy {
   display: block;
   font-size: 0.9rem;

@@ -8,6 +8,7 @@ import { getHighestScoringTeams } from "../logic/getStatsInsights";
 import SiteHeader from "./SiteHeader";
 import PageMeta from "./PageMeta";
 import StatPageSeoContent, { StatPageSeoFaq } from "./StatPageSeoContent";
+import { StatsFooterAd, StatsMidAd } from "./GoogleAdUnit";
 import { STAT_PAGE_SEO } from "../seo/statPageSeoConfig";
 
 // Ids to be updated for the latest season
@@ -169,7 +170,7 @@ export default function HighestScoringTeams({ initialRows = null }) {
   return (
     <Fragment>
       <PageMeta />
-      <SiteHeader withFooter>
+      <SiteHeader withFooter beforeFooter={<StatsFooterAd />}>
       <Box className={`${classes.container} SubpageContent`}>
         <a href="/" className={classes.homeLink}>← Back to Home</a>
         
@@ -177,6 +178,7 @@ export default function HighestScoringTeams({ initialRows = null }) {
         <Typography variant="h2">Teams with the highest average goals and their upcoming fixture</Typography>
 
         <StatPageSeoContent {...STAT_PAGE_SEO.o25} />
+        <StatsMidAd />
         
         <TableContainer component={Paper} className={`${classes.tableWrapper} SubpageTableScroll`}>
           <Table size="small" aria-label="highest scoring teams table">
