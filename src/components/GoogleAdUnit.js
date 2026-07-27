@@ -28,17 +28,22 @@ function ensureAdSenseScript() {
 /**
  * Manual AdSense unit. Loads adsbygoogle.js once on first mount.
  * Hidden for paid subscribers and outside production.
+ *
+ * Pass `height` to use Google's approved fixed-height responsive sizing
+ * (avoids tall fluid/in-article creatives). Do not clip ads with overflow.
  */
 export default function GoogleAdUnit({
   slot,
   format,
   layout,
   fullWidthResponsive = false,
+  height,
   className = "",
 }) {
   const showAds = useShowGuestAds();
   const insRef = useRef(null);
   const pushedRef = useRef(false);
+  const useFixedHeight = typeof height === "number" && height > 0;
 
   useEffect(() => {
     if (!showAds || process.env.NODE_ENV !== "production") return undefined;
@@ -58,10 +63,28 @@ export default function GoogleAdUnit({
 
   if (!showAds || process.env.NODE_ENV !== "production") return null;
 
-  const style =
-    layout === "in-article"
-      ? { display: "block", textAlign: "center" }
-      : { display: "block" };
+  const style = useFixedHeight
+    ? {
+        display: "block",
+        width: "100%",
+        height: `${height}px`,
+        maxWidth: "100%",
+        boxSizing: "border-box",
+      }
+    : layout === "in-article"
+      ? {
+          display: "block",
+          textAlign: "center",
+          width: "100%",
+          maxWidth: "100%",
+          boxSizing: "border-box",
+        }
+      : {
+          display: "block",
+          width: "100%",
+          maxWidth: "100%",
+          boxSizing: "border-box",
+        };
 
   return (
     <aside
@@ -71,12 +94,12 @@ export default function GoogleAdUnit({
       <ins
         ref={insRef}
         className="adsbygoogle"
-        style={{ ...style, width: "100%", maxWidth: "100%", boxSizing: "border-box" }}
+        style={style}
         data-ad-client={ADSENSE_CLIENT}
         data-ad-slot={slot}
-        {...(format ? { "data-ad-format": format } : {})}
-        {...(layout ? { "data-ad-layout": layout } : {})}
-        {...(fullWidthResponsive
+        {...(!useFixedHeight && format ? { "data-ad-format": format } : {})}
+        {...(!useFixedHeight && layout ? { "data-ad-layout": layout } : {})}
+        {...(!useFixedHeight && fullWidthResponsive
           ? { "data-full-width-responsive": "true" }
           : {})}
       />
@@ -84,12 +107,15 @@ export default function GoogleAdUnit({
   );
 }
 
+/** Compact mid-page units — fixed height keeps mobile creatives from going full-bleed tall. */
+const MID_AD_HEIGHT = 250;
+const COMPACT_AD_HEIGHT = 120;
+
 export function FixtureTopAd() {
   return (
     <GoogleAdUnit
       slot={AD_SLOTS.fixtureTop}
-      format="fluid"
-      layout="in-article"
+      height={COMPACT_AD_HEIGHT}
       className="GoogleAdUnit--fixtureTop"
     />
   );
@@ -99,7 +125,7 @@ export function FixtureMidAd() {
   return (
     <GoogleAdUnit
       slot={AD_SLOTS.fixtureMid}
-      format="auto"
+      height={MID_AD_HEIGHT}
       className="GoogleAdUnit--fixtureMid"
     />
   );
@@ -109,8 +135,7 @@ export function StatsMidAd() {
   return (
     <GoogleAdUnit
       slot={AD_SLOTS.statsMid}
-      format="fluid"
-      layout="in-article"
+      height={MID_AD_HEIGHT}
       className="GoogleAdUnit--statsMid"
     />
   );
@@ -120,8 +145,7 @@ export function ArticleInArticleAd() {
   return (
     <GoogleAdUnit
       slot={AD_SLOTS.articleInArticle}
-      format="fluid"
-      layout="in-article"
+      height={MID_AD_HEIGHT}
       className="GoogleAdUnit--article"
     />
   );
@@ -131,8 +155,7 @@ export function CompetitionsIndexAd() {
   return (
     <GoogleAdUnit
       slot={AD_SLOTS.competitionsIndex}
-      format="fluid"
-      layout="in-article"
+      height={COMPACT_AD_HEIGHT}
       className="GoogleAdUnit--competitionsIndex"
     />
   );
@@ -142,8 +165,7 @@ export function CompetitionPageAd() {
   return (
     <GoogleAdUnit
       slot={AD_SLOTS.competitionPage}
-      format="fluid"
-      layout="in-article"
+      height={MID_AD_HEIGHT}
       className="GoogleAdUnit--competitionPage"
     />
   );
@@ -153,8 +175,7 @@ export function FixturesIndexBottomAd() {
   return (
     <GoogleAdUnit
       slot={AD_SLOTS.fixturesIndexBottom}
-      format="fluid"
-      layout="in-article"
+      height={MID_AD_HEIGHT}
       className="GoogleAdUnit--fixturesIndex"
     />
   );

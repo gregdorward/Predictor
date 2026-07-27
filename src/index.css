@@ -15142,9 +15142,8 @@ body.dark-mode .CompetitionsIndex-card {
   display: block;
   width: 100%;
   max-width: 100%;
-  margin: 1.25rem 0;
-  min-height: 100px;
-  overflow: hidden;
+  margin: 1rem 0;
+  overflow: visible;
   text-align: center;
   box-sizing: border-box;
 }
@@ -15155,21 +15154,18 @@ body.dark-mode .CompetitionsIndex-card {
   max-width: 100% !important;
 }
 
-.GoogleAdUnit--fixtureTop {
+.GoogleAdUnit--fixtureTop,
+.GoogleAdUnit--competitionsIndex {
   min-height: 120px;
 }
 
 .GoogleAdUnit--fixtureMid,
-.GoogleAdUnit--statsMid {
-  min-height: 250px;
-}
-
+.GoogleAdUnit--statsMid,
 .GoogleAdUnit--article,
-.GoogleAdUnit--competitionsIndex,
 .GoogleAdUnit--competitionPage,
 .GoogleAdUnit--fixturesIndex {
-  min-height: 120px;
-  margin: 1.5rem 0;
+  min-height: 250px;
+  margin: 1rem 0;
 }
 
 .ArticlesPromo__copy {
