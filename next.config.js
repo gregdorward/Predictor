@@ -13,6 +13,12 @@ const nextConfig = {
   async redirects() {
     return [
       {
+        source: "/ads.txt",
+        destination:
+          "https://adstxt.journeymv.com/sites/71e44a5d-dc3a-499d-8677-800918c94d8a/ads.txt",
+        permanent: true,
+      },
+      {
         source: "/teamshigh",
         destination: "/o25/",
         permanent: true,
