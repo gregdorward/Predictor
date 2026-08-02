@@ -27,7 +27,6 @@ import CompetitionPositionRaceChart from "./competition/CompetitionPositionRaceC
 import CompetitionMetricRankings from "./competition/CompetitionMetricRankings";
 import CompetitionTeamComparison from "./competition/CompetitionTeamComparison";
 import SeoPageLinks from "./SeoPageLinks";
-import { CompetitionPageAd } from "./GoogleAdUnit";
 import {
   getSofaScoreIdForSeason,
   formatPercent,
@@ -254,8 +253,6 @@ export default function CompetitionPage({
                 value={`${formatPercent(data.homeWinPercentage)} / ${formatPercent(data.drawPercentage)} / ${formatPercent(data.awayWinPercentage)}`}
               />
             </section>
-
-            <CompetitionPageAd />
 
             <CompetitionStandings seasonId={seasonId} />
 

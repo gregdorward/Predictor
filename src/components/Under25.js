@@ -8,7 +8,6 @@ import { getLowestScoringLeagues } from "../logic/getStatsInsights";
 import SiteHeader from "./SiteHeader";
 import PageMeta from "./PageMeta";
 import StatPageSeoContent, { StatPageSeoFaq } from "./StatPageSeoContent";
-import { StatsMidAd } from "./GoogleAdUnit";
 import { STAT_PAGE_SEO } from "../seo/statPageSeoConfig";
 
 // Consistent Modern Styling for the UI
@@ -131,8 +130,6 @@ export default function Under25({ initialRows = null }) {
         <Typography variant="h2">Under 2.5 football leagues ranked by goals per match</Typography>
 
         <StatPageSeoContent {...STAT_PAGE_SEO.u25} />
-        <StatsMidAd />
-        
         <TableContainer component={Paper} className={`${classes.tableWrapper} SubpageTableScroll`}>
           <Table size="small" aria-label="Lowest scoring leagues table">
             <TableHead>

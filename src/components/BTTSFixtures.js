@@ -8,7 +8,6 @@ import { getBTTSFixtures } from "../logic/getStatsInsights";
 import SiteHeader from "./SiteHeader";
 import PageMeta from "./PageMeta";
 import StatPageSeoContent, { StatPageSeoFaq } from "./StatPageSeoContent";
-import { StatsMidAd } from "./GoogleAdUnit";
 import { STAT_PAGE_SEO } from "../seo/statPageSeoConfig";
 
 // Modern Styling using Hook API for better performance
@@ -121,8 +120,6 @@ export default function BTTSFixtures({ initialRows = null }) {
         <Typography variant="h2">High-potential fixtures based on combined scoring averages</Typography>
 
         <StatPageSeoContent {...STAT_PAGE_SEO.bttsFixtures} />
-        <StatsMidAd />
-        
         <TableContainer component={Paper} className={`${classes.tableWrapper} SubpageTableScroll`}>
           <Table size="small" aria-label="BTTS potential table">
             <TableHead>

@@ -15,7 +15,6 @@ import { getHighestScoringLeagues } from "../logic/getStatsInsights";
 import SiteHeader from "./SiteHeader";
 import PageMeta from "./PageMeta";
 import StatPageSeoContent, { StatPageSeoFaq } from "./StatPageSeoContent";
-import { StatsMidAd } from "./GoogleAdUnit";
 import { STAT_PAGE_SEO } from "../seo/statPageSeoConfig";
 
 const allowedCountries = [
@@ -159,8 +158,6 @@ export default function HighestScoringLeagues({ initialRows = null }) {
           </Typography>
 
           <StatPageSeoContent {...STAT_PAGE_SEO.highestScoringLeagues} />
-          <StatsMidAd />
-
           <TableContainer
             component={Paper}
             className={`${classes.tableWrapper} SubpageTableScroll`}

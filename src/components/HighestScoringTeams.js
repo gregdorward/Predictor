@@ -11,8 +11,6 @@ import { useEffect, useState } from "react";
 import { getHighestScoringTeams } from "../logic/getStatsInsights";
 import SiteHeader from "./SiteHeader";
 import PageMeta from "./PageMeta";
-import { StatsMidAd } from "./GoogleAdUnit";
-
 const StyledTableCell = withStyles(() => ({
   head: {
     backgroundColor: "var(--accent-color)",
@@ -90,7 +88,6 @@ export default function HighestScoringTeams() {
       <a href="/" className="HomeLink" style={{ color: "var(--accent-color)", fontWeight: 600 }}>Home</a>
       <h1>Highest Scoring Teams</h1>
       <h2>Teams with the highest average goals and their upcoming fixture</h2>
-      <StatsMidAd />
       <TableContainer component={Paper} className="O25Table SubpageTableScroll">
         <Table size="small" aria-label="highest scoring teams">
           <TableHead>

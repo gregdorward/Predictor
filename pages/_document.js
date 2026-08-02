@@ -175,6 +175,13 @@ export default class MyDocument extends Document {
             // eslint-disable-next-line react/no-danger
             dangerouslySetInnerHTML={{ __html: DEFERRED_GA_SCRIPT }}
           />
+          <script
+            type="text/javascript"
+            async
+            data-noptimize="1"
+            data-cfasync="false"
+            src="//scripts.scriptwrapper.com/tags/71e44a5d-dc3a-499d-8677-800918c94d8a.js"
+          />
         </Head>
         <body>
           <script

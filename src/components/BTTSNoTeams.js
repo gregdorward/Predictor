@@ -15,7 +15,6 @@ import { getBTTSTeams } from "../logic/getStatsInsights";
 import SiteHeader from "./SiteHeader";
 import PageMeta from "./PageMeta";
 import StatPageSeoContent, { StatPageSeoFaq } from "./StatPageSeoContent";
-import { StatsMidAd } from "./GoogleAdUnit";
 import { STAT_PAGE_SEO } from "../seo/statPageSeoConfig";
 
 const allowedCountries = [
@@ -152,8 +151,6 @@ export default function BTTSNoTeams({ initialRows = null }) {
           <Typography variant="h2">
             Teams whose matches are less likely to see both sides score
           </Typography>
-
-          <StatsMidAd />
 
           <TableContainer
             component={Paper}

@@ -15138,36 +15138,6 @@ body.dark-mode .CompetitionsIndex-card {
   margin-bottom: 0.25rem;
 }
 
-.GoogleAdUnit {
-  display: block;
-  width: 100%;
-  max-width: 100%;
-  margin: 1rem 0;
-  overflow: visible;
-  text-align: center;
-  box-sizing: border-box;
-}
-
-/* Prevent AdSense iframes from expanding past the content column (breaks mobile layout). */
-.GoogleAdUnit ins.adsbygoogle,
-.GoogleAdUnit iframe {
-  max-width: 100% !important;
-}
-
-.GoogleAdUnit--fixtureTop,
-.GoogleAdUnit--competitionsIndex {
-  min-height: 120px;
-}
-
-.GoogleAdUnit--fixtureMid,
-.GoogleAdUnit--statsMid,
-.GoogleAdUnit--article,
-.GoogleAdUnit--competitionPage,
-.GoogleAdUnit--fixturesIndex {
-  min-height: 250px;
-  margin: 1rem 0;
-}
-
 .ArticlesPromo__copy {
   display: block;
   font-size: 0.9rem;

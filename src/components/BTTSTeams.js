@@ -8,7 +8,6 @@ import { getBTTSTeams } from "../logic/getStatsInsights";
 import SiteHeader from "./SiteHeader";
 import PageMeta from "./PageMeta";
 import StatPageSeoContent, { StatPageSeoFaq } from "./StatPageSeoContent";
-import { StatsMidAd } from "./GoogleAdUnit";
 import { STAT_PAGE_SEO } from "../seo/statPageSeoConfig";
 
 // Consistent Modern Styling
@@ -121,8 +120,6 @@ export default function BTTSTeams({ initialRows = null }) {
         <Typography variant="h2">Teams with the highest percentage of games ending in both teams to score</Typography>
 
         <StatPageSeoContent {...STAT_PAGE_SEO.bttsTeams} />
-        <StatsMidAd />
-        
         <TableContainer component={Paper} className={`${classes.tableWrapper} SubpageTableScroll`}>
           <Table size="small" aria-label="BTTS teams table">
             <TableHead>

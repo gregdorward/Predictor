@@ -8,7 +8,6 @@ import { getHighestScoringFixtures } from "../logic/getStatsInsights";
 import SiteHeader from "./SiteHeader";
 import PageMeta from "./PageMeta";
 import StatPageSeoContent, { StatPageSeoFaq } from "./StatPageSeoContent";
-import { StatsMidAd } from "./GoogleAdUnit";
 import { STAT_PAGE_SEO } from "../seo/statPageSeoConfig";
 
 // Unified Modern Styling
@@ -121,8 +120,6 @@ export default function HighestScoringFixtures({ initialRows = null }) {
         <Typography variant="h2">Fixtures with the highest combined average goals per match</Typography>
 
         <StatPageSeoContent {...STAT_PAGE_SEO.fixturesHigh} />
-        <StatsMidAd />
-        
         <TableContainer component={Paper} className={`${classes.tableWrapper} SubpageTableScroll`}>
           <Table size="small" aria-label="highest scoring games table">
             <TableHead>
