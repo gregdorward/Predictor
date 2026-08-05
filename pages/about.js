@@ -74,7 +74,7 @@ export default function AboutPage() {
             <li>Clear methodology notes explaining the main data inputs and model signals</li>
             <li>Coverage from the Premier League and Champions League to MLS, J League and more</li>
             <li>Tournament hubs with curated news and previews, including FIFA World Cup 2026</li>
-            <li>AI-generated season previews for major European leagues (BETA)</li>
+            <li>Dedicated Premier League season preview with sourced analysis and market odds</li>
           </ul>
           <h2>Responsible use</h2>
           <p>

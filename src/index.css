@@ -1192,7 +1192,7 @@ h5 {
   font-size: 2.5em;
   margin-bottom: 1em;
   margin-top: 1em;
-  color: #020029;
+  color: var(--text-color);
 }
 
 h6 {
@@ -11345,6 +11345,7 @@ strong.WC26__inlineHeader {
 
 .WC26__tab:hover:not(.WC26__tab--active) {
   background: var(--secondary-background-color);
+  color: var(--primary-color);
   box-shadow: none;
   transform: none;
 }
@@ -11636,6 +11637,7 @@ strong.WC26__inlineHeader {
   margin: 0.75em 0 0.35em;
   font-size: 0.9rem;
   text-align: center;
+  color: var(--text-color);
 }
 
 .WC26__keyPlayersList {
@@ -15149,4 +15151,104 @@ body.dark-mode .CompetitionsIndex-card {
   font-size: 0.85rem;
   font-weight: 700;
   color: var(--primary-color);
+}
+
+/* Premier League 2026/27 season preview (extends WC26 layout) */
+.PL2627 li {
+  font-size: 12.5px;
+}
+
+.PL2627__shareRow {
+  display: flex;
+  justify-content: center;
+  margin-top: 0.75em;
+}
+
+.PL2627__oddsTableWrap {
+  overflow-x: auto;
+  margin: 0.75em 0 1.25em;
+  border: 1px solid var(--third-background-color);
+  border-radius: 10px;
+  background: var(--secondary-background-color);
+}
+
+.PL2627__oddsTable {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.875rem;
+}
+
+.PL2627__oddsTable th,
+.PL2627__oddsTable td {
+  padding: 0.65em 0.85em;
+  text-align: left;
+  border-bottom: 1px solid var(--third-background-color);
+}
+
+.PL2627__oddsTable th {
+  font-weight: 600;
+  background: var(--background-color);
+}
+
+.PL2627__oddsTable tr:last-child td {
+  border-bottom: none;
+}
+
+.PL2627__oddsSource {
+  font-size: 0.75rem;
+  opacity: 0.75;
+}
+
+.PL2627__oddsNote {
+  margin-top: 0.5em;
+}
+
+.PL2627__transferList,
+.PL2627__sourceList {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.85em;
+}
+
+.PL2627__transferItem,
+.PL2627__sourceItem {
+  padding: 1em;
+  border-radius: 10px;
+  background: var(--secondary-background-color);
+  border: 1px solid var(--third-background-color);
+}
+
+.PL2627__sourceItem {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25em;
+}
+
+.PL2627__sourceItem a {
+  color: var(--primary-color);
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.PL2627__sourceItem a:hover {
+  text-decoration: underline;
+}
+
+.PL2627__tierBadge {
+  display: inline-block;
+  padding: 0.15em 0.5em;
+  border-radius: 999px;
+  font-size: 0.7rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  background: var(--third-background-color);
+  color: var(--text-color);
+}
+
+.WC26__cardGrid--single {
+  grid-template-columns: 1fr;
 }

@@ -15,7 +15,7 @@ Soccer Stats Hub (https://www.soccerstatshub.com) helps football fans and bettor
 - BTTS teams: https://www.soccerstatshub.com/bttsteams/
 - BTTS No teams: https://www.soccerstatshub.com/btts-no-teams/
 - Highest scoring fixtures: https://www.soccerstatshub.com/fixtureshigh/
-- Season previews: https://www.soccerstatshub.com/seasonpreviews/
+- Premier League 2026/27 preview: https://www.soccerstatshub.com/premier-league-2026-27/
 - About: https://www.soccerstatshub.com/about/
 - Methodology: https://www.soccerstatshub.com/methodology/
 - FAQ: https://www.soccerstatshub.com/faq/
@@ -26,7 +26,7 @@ Soccer Stats Hub (https://www.soccerstatshub.com) helps football fans and bettor
 - League-level betting stats (goals, BTTS, corners, cards, home advantage)
 - Match-level predictions with transparent methodology
 - Tournament previews and curated news wrap-ups with external source links
-- AI-generated season previews for major European leagues (BETA)
+- Dedicated Premier League season preview with sourced analysis and market odds
 
 ## Citation guidance
 

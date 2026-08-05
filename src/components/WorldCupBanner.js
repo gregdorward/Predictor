@@ -1,12 +1,15 @@
 import { useRouter } from "next/router";
 
-const BANNER_PATH = "/worldcup2026/";
+const BANNER_PATH = "/premier-league-2026-27/";
 
 export default function WorldCupBanner() {
   const router = useRouter();
   const pathname = router?.pathname || "/";
 
-  if (pathname.startsWith("/worldcup2026")) {
+  if (
+    pathname.startsWith("/premier-league-2026-27") ||
+    pathname.startsWith("/seasonpreviews")
+  ) {
     return null;
   }
 
@@ -14,17 +17,17 @@ export default function WorldCupBanner() {
     <a
       href={BANNER_PATH}
       className="WC26Banner"
-      aria-label="View FIFA World Cup 2026 tournament preview"
+      aria-label="View Premier League 2026/27 season preview"
     >
       <div className="WC26Banner__inner">
         <span className="WC26Banner__badge">New</span>
         <span className="WC26Banner__flags" aria-hidden="true">
-          🇺🇸 🇲🇽 🇨🇦
+          ⚽
         </span>
         <span className="WC26Banner__copy">
-          <strong className="WC26Banner__title">World Cup 2026</strong>
+          <strong className="WC26Banner__title">Premier League 2026/27</strong>
           <span className="WC26Banner__sub">
-            News, group predictions, winner &amp; Golden Boot picks
+            Season preview, Betfair odds, transfers &amp; all 20 club guides
           </span>
         </span>
         <span className="WC26Banner__cta" aria-hidden="true">

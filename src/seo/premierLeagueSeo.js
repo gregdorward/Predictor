@@ -1,0 +1,36 @@
+import { SITE_URL } from "./pageMetaConfig";
+
+export function buildPremierLeaguePreviewJsonLd(data) {
+  const pageUrl = `${SITE_URL}/premier-league-2026-27/`;
+
+  return {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    headline: "Premier League 2026/27 Season Preview",
+    description:
+      data?.overview?.slice(0, 160) ||
+      "Premier League 2026/27 season preview with market odds, transfers and club guides.",
+    datePublished: data?.dataAsOf,
+    dateModified: data?.generatedAt,
+    author: {
+      "@type": "Organization",
+      name: "Soccer Stats Hub",
+    },
+    publisher: {
+      "@type": "Organization",
+      name: "Soccer Stats Hub",
+      logo: {
+        "@type": "ImageObject",
+        url: `${SITE_URL}/images/NewLogo.png`,
+      },
+    },
+    mainEntityOfPage: pageUrl,
+    about: {
+      "@type": "SportsEvent",
+      name: "Premier League 2026/27",
+      startDate: data?.format?.startDate,
+      endDate: data?.format?.endDate,
+      sport: "Association football",
+    },
+  };
+}

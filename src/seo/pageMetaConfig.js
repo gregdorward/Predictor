@@ -68,10 +68,15 @@ export const PAGE_META = {
     description:
       "In-depth football articles from Soccer Stats Hub: World Cup awards, league deep-dives and data-led analysis built for fans and SEO readers.",
   },
-  "/seasonpreviews": {
-    title: "Season Previews | Soccer Stats Hub",
+  "/premier-league-2026-27": {
+    title: "Premier League 2026/27 Preview | Soccer Stats Hub",
     description:
-      "AI-generated season previews for the Premier League, La Liga, Serie A, Championship and more.",
+      "In-depth Premier League 2026/27 season preview: Betfair title odds, key transfers, managerial changes, predicted table and all 20 club guides.",
+  },
+  "/seasonpreviews": {
+    title: "Premier League 2026/27 Preview | Soccer Stats Hub",
+    description:
+      "In-depth Premier League 2026/27 season preview: Betfair title odds, key transfers, managerial changes, predicted table and all 20 club guides.",
   },
   "/about": {
     title: "About Soccer Stats Hub | Football Stats & Predictions",
