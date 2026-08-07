@@ -10,9 +10,10 @@ export default function HomePage() {
   return (
     <>
       <PageMeta />
-      <SiteHeader showThemeToggle />
-      {landingVisible ? <GuestLandingGate /> : null}
-      <DeferredApp shellMounted onAppReady={() => setLandingVisible(false)} />
+      <SiteHeader showThemeToggle withFooter>
+        {landingVisible ? <GuestLandingGate /> : null}
+        <DeferredApp shellMounted onAppReady={() => setLandingVisible(false)} />
+      </SiteHeader>
     </>
   );
 }

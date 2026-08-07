@@ -1390,7 +1390,7 @@ export function AppContent({ shellMounted = false }) {
           bc1q7j62txkvhfu0dt3l0s07saze6pjnyzs26wfgp0
         </span>
       </div>
-      <Footer />
+      {!shellMounted ? <Footer /> : null}
     </div>
   );
 }

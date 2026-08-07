@@ -2751,6 +2751,85 @@ table tr:nth-child(even) {
   box-sizing: border-box;
 }
 
+/* Journey sidebar: same #ssh-sidebar site-wide; ≥300px and visible from 1280px. */
+.SshPageShell {
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
+}
+
+.SshPageShell__balance {
+  display: none;
+}
+
+.SshPageShell__main {
+  min-width: 0;
+  max-width: 100%;
+}
+
+.SshSidebar {
+  display: none;
+  box-sizing: border-box;
+}
+
+.SshSidebar__label {
+  margin: 0 0 0.75rem;
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--faint-text);
+  text-align: left;
+}
+
+@media (min-width: 1280px) {
+  :root {
+    /* Main column ~1400 + two 300px rails + gaps */
+    --content-max-width: 2060px;
+    --ssh-sidebar-width: 300px;
+  }
+
+  /* Sticky sidebar ads break when ancestors use overflow: hidden. */
+  body>#__next {
+    overflow-x: visible;
+  }
+
+  .SitePageLayout,
+  .SitePageLayout__content {
+    overflow-x: visible;
+  }
+
+  .SshPageShell {
+    display: grid;
+    /* Left balance column mirrors the ad rail so content stays centred. */
+    grid-template-columns:
+      var(--ssh-sidebar-width)
+      minmax(0, 1fr)
+      var(--ssh-sidebar-width);
+    column-gap: 1.25rem;
+    align-items: start;
+  }
+
+  .SshPageShell__balance {
+    display: block;
+    width: var(--ssh-sidebar-width);
+    min-width: var(--ssh-sidebar-width);
+    pointer-events: none;
+  }
+
+  .SshSidebar {
+    display: block;
+    width: var(--ssh-sidebar-width);
+    min-width: var(--ssh-sidebar-width);
+    max-width: var(--ssh-sidebar-width);
+    /* Width is content-box intent for Journey (≥300px excluding padding). */
+    padding: 0;
+    min-height: 600px;
+    position: relative;
+  }
+}
+
 body.dark-mode .Footer {
   border-top-color: rgba(255, 255, 255, 0.12);
 }
