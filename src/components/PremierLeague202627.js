@@ -401,7 +401,7 @@ export default function PremierLeague202627() {
             ))}
           </nav>
 
-          <div className="WC26__tabContent">
+          <div className="WC26__tabContent" id="ssh-content">
             <div hidden={activeTab !== "overview"} aria-hidden={activeTab !== "overview"}>
               <OverviewTab data={data} />
             </div>

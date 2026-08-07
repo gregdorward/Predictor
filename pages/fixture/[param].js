@@ -57,15 +57,17 @@ export default function FixtureByParam({
       />
       {!noIndex && <JsonLd data={jsonLd} />}
       <SiteHeader showThemeToggle withFooter>
-        <FixtureSeoShell {...seoShell} ssrOnly />
-        {!noIndex && (
-          <SeoPageLinks
-            relatedLinks={relatedFixtureLinks}
-            relatedLabel="Upcoming fixtures"
-            ssrOnly
-          />
-        )}
-        <TeamPage matchId={matchId} seoShell={seoShell} />
+        <div id="ssh-content">
+          <FixtureSeoShell {...seoShell} ssrOnly />
+          {!noIndex && (
+            <SeoPageLinks
+              relatedLinks={relatedFixtureLinks}
+              relatedLabel="Upcoming fixtures"
+              ssrOnly
+            />
+          )}
+          <TeamPage matchId={matchId} seoShell={seoShell} />
+        </div>
       </SiteHeader>
     </>
   );

@@ -2171,7 +2171,9 @@ export async function generateFixtures(
     }
     await saveLeaguesIfNeeded();
 
-    if (allLeagueResultsArrayOfObjects.length > 0) {
+    // Only rebuild comparison profiles when league results were freshly
+    // rebuilt — not on every homepage reload with a warm results cache.
+    if (resultsWereRebuilt && allLeagueResultsArrayOfObjects.length > 0) {
       try {
         // Dynamic import avoids a static cycle with getStats → getFixtures
         const { persistLeagueComparisons } = await import(
@@ -2179,7 +2181,8 @@ export async function generateFixtures(
         );
         await persistLeagueComparisons({
           allLeagueResults: allLeagueResultsArrayOfObjects,
-          dateStr: leaguesDate,
+          // Use FootyStats date (2026-8-7), not compact leaguesDate (872026).
+          dateStr: footyStatsFormattedDate,
           expressBaseUrl: process.env.NEXT_PUBLIC_EXPRESS_SERVER,
         });
       } catch (error) {

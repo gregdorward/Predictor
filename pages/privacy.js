@@ -22,7 +22,7 @@ export default function PrivacyPage() {
       <PageMeta />
       <JsonLd data={PRIVACY_JSON_LD} />
       <SiteHeader showThemeToggle withFooter>
-        <main className="StaticPage">
+        <main className="StaticPage" id="ssh-content">
           <a href="/" className="HomeLink">
             Home
           </a>

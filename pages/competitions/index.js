@@ -73,7 +73,7 @@ export default function CompetitionsIndexPage() {
       />
       <JsonLd data={COMPETITIONS_JSON_LD} />
       <SiteHeader showThemeToggle withFooter>
-        <main className="StaticPage CompetitionsIndex">
+        <main className="StaticPage CompetitionsIndex" id="ssh-content">
           <header className="CompetitionsIndex-header">
             <a href="/" className="HomeLink">
               Home

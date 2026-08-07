@@ -221,6 +221,7 @@ export default function CompetitionPage({
             </section>
             )}
 
+            <div id="ssh-content">
             <section className="Competition__metricGrid">
               <MetricCard
                 label="Avg goals"
@@ -358,6 +359,7 @@ export default function CompetitionPage({
                 />
               </section>
             )}
+            </div>
           </>
         )}
       </main>

@@ -11,7 +11,9 @@ export default function Fixture() {
     <>
       <PageMeta />
       <SiteHeader showThemeToggle withFooter>
-        <TeamPage />
+        <div id="ssh-content">
+          <TeamPage />
+        </div>
       </SiteHeader>
     </>
   );

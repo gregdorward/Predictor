@@ -45,7 +45,7 @@ export default function ArticlesIndex({ articles }) {
             </p>
           </header>
 
-          <ul className="Articles__list">
+          <ul className="Articles__list" id="ssh-content">
             {(articles || []).map((article) => (
               <li key={article.slug} className="Articles__listItem">
                 <a

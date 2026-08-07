@@ -21,7 +21,7 @@ export default function MethodologyPage() {
       <PageMeta />
       <JsonLd data={METHODOLOGY_JSON_LD} />
       <SiteHeader showThemeToggle withFooter>
-        <main className="StaticPage">
+        <main className="StaticPage" id="ssh-content">
           <a href="/" className="HomeLink">
             Home
           </a>

@@ -123,7 +123,7 @@ export default function Under25({ initialRows = null }) {
     <Fragment>
       <PageMeta />
       <SiteHeader withFooter>
-      <Box className={`${classes.container} SubpageContent`}>
+      <Box className={`${classes.container} SubpageContent`} id="ssh-content">
         <a href="/" className={classes.homeLink}>← Back to Home</a>
         
         <Typography variant="h1">Lowest Scoring Leagues in the World</Typography>

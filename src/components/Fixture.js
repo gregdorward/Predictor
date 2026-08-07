@@ -19,6 +19,10 @@ import {
   getProbabilityNumber,
   statPercentDisplay,
 } from "../utils/formatStat";
+import {
+  getFixtureContentBreakTip,
+  shouldInsertFixtureContentBreak,
+} from "../utils/journeyContentBreaks";
 
 let resultValue;
 var count;
@@ -732,17 +736,46 @@ const List = ({
     />
   );
 
+  const renderFixtureListItems = (list) =>
+    list.flatMap((fixture, index) => {
+      const items = [renderSingleFixture(fixture)];
+      if (
+        !showShortlist &&
+        shouldInsertFixtureContentBreak(index)
+      ) {
+        const { label, href } = getFixtureContentBreakTip(fixture);
+        items.push(
+          <li
+            key={`ssh-content-break-${index}`}
+            className="FixtureList-contentBreak"
+          >
+            <p>
+              {href ? (
+                <a
+                  href={href}
+                  className="FixtureList-contentBreakLink"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  {label}
+                </a>
+              ) : (
+                label
+              )}
+            </p>
+          </li>
+        );
+      }
+      return items;
+    });
+
   return mock === true ? (
     <>
       <div>
         <div id="Headers"></div>
-        <ul className="FixtureList" id="FixtureList">
-          {/* Note: Check your original rendering logic here - it seems slightly off. 
-             If !showShortlist is true, you render selectedFixtures? That's unusual.
-             Assuming the non-mock version is correct: (showShortlist ? selectedFixtures : fixtures) 
-          */}
-          {(showShortlist ? selectedFixtures : fixtures).map((fixture) =>
-            renderSingleFixture(fixture)
+        <ul className="FixtureList" id="ssh-content">
+          {renderFixtureListItems(
+            showShortlist ? selectedFixtures : fixtures
           )}
         </ul>
       </div>
@@ -762,10 +795,9 @@ const List = ({
       <div>
         <div id="Headers"></div>
         <div className="InstructionalDiv">Generate predictions and click on any fixture for unparalleled insight</div>
-        <ul className="FixtureList" id="FixtureList">
-          {/* Renders shortlist when toggle is ON, full list (which is the source list) when OFF */}
-          {(showShortlist ? selectedFixtures : fixtures).map((fixture) =>
-            renderSingleFixture(fixture)
+        <ul className="FixtureList" id="ssh-content">
+          {renderFixtureListItems(
+            showShortlist ? selectedFixtures : fixtures
           )}
         </ul>
       </div>

@@ -84,7 +84,7 @@ export default function HighestScoringTeams() {
     <Fragment>
       <PageMeta />
       <SiteHeader withFooter>
-      <div className="SubpageContent">
+      <div className="SubpageContent" id="ssh-content">
       <a href="/" className="HomeLink" style={{ color: "var(--accent-color)", fontWeight: 600 }}>Home</a>
       <h1>Highest Scoring Teams</h1>
       <h2>Teams with the highest average goals and their upcoming fixture</h2>

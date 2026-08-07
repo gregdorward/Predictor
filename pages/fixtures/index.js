@@ -31,7 +31,7 @@ export default function FixturesIndexPage({ fixtures = [] }) {
       />
       <JsonLd data={FIXTURES_JSON_LD} />
       <SiteHeader showThemeToggle withFooter>
-        <main className="StaticPage FixturesIndex">
+        <main className="StaticPage FixturesIndex" id="ssh-content">
           <a href="/" className="HomeLink">
             Home
           </a>

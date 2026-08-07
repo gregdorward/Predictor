@@ -392,9 +392,13 @@ function createScatterLabelPlugin(labelColor) {
 }
 
 function isoDateOffset(daysBack = 0) {
+  // Use local calendar dates (padded) to match homepage fixture-run writes.
   const d = new Date();
-  d.setUTCDate(d.getUTCDate() - daysBack);
-  return d.toISOString().slice(0, 10);
+  d.setDate(d.getDate() - daysBack);
+  const year = d.getFullYear();
+  const month = String(d.getMonth() + 1).padStart(2, "0");
+  const day = String(d.getDate()).padStart(2, "0");
+  return `${year}-${month}-${day}`;
 }
 
 async function fetchLeagueComparison(seasonId) {

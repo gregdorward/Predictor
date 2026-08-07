@@ -65,6 +65,27 @@ export async function buildLeagueTeamComparison(
 /**
  * Build and POST league comparison payloads for every league in the results cache.
  */
+function normalizeComparisonDate(dateStr) {
+  const isoMatch = String(dateStr || "").match(/^(\d{4})-(\d{1,2})-(\d{1,2})$/);
+  if (isoMatch) {
+    const [, year, month, day] = isoMatch;
+    return `${year}-${month.padStart(2, "0")}-${day.padStart(2, "0")}`;
+  }
+
+  // Compact homepage format: M D YYYY concatenated (e.g. 872026 → 2026-08-07).
+  const compactMatch = String(dateStr || "").match(/^(\d{1,2})(\d{1,2})(20\d{2})$/);
+  if (compactMatch) {
+    const month = Number(compactMatch[1]);
+    const day = Number(compactMatch[2]);
+    const year = Number(compactMatch[3]);
+    if (month >= 1 && month <= 12 && day >= 1 && day <= 31) {
+      return `${year}-${String(month).padStart(2, "0")}-${String(day).padStart(2, "0")}`;
+    }
+  }
+
+  return null;
+}
+
 export async function persistLeagueComparisons({
   allLeagueResults,
   dateStr,
@@ -76,6 +97,14 @@ export async function persistLeagueComparisons({
   }
   if (!expressBaseUrl || !dateStr) {
     console.warn("persistLeagueComparisons: missing expressBaseUrl or dateStr");
+    return { ok: 0, skipped: 0, failed: 0 };
+  }
+
+  const normalizedDateStr = normalizeComparisonDate(dateStr);
+  if (!normalizedDateStr) {
+    console.warn(
+      `persistLeagueComparisons: unrecognized dateStr "${dateStr}"`
+    );
     return { ok: 0, skipped: 0, failed: 0 };
   }
 
@@ -103,7 +132,7 @@ export async function persistLeagueComparisons({
       }
 
       const response = await fetch(
-        `${expressBaseUrl}leagueComparison/${leagueId}/${dateStr}`,
+        `${expressBaseUrl}leagueComparison/${leagueId}/${normalizedDateStr}`,
         {
           method: "POST",
           headers: {

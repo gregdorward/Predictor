@@ -92,6 +92,7 @@ export default function ArticlePage({ article, listing }) {
             </div>
           </header>
 
+          <div id="ssh-content">
           {article.intro?.length ? (
             <div className="Articles__prose">
               {article.intro.map((paragraph) => (
@@ -132,6 +133,7 @@ export default function ArticlePage({ article, listing }) {
               </ul>
             </footer>
           ) : null}
+          </div>
         </main>
       </SiteHeader>
     </>

@@ -3221,6 +3221,32 @@ strong.LOST {
   background-color: white, transparent;
 }
 
+.FixtureList-contentBreak {
+  list-style: none;
+  margin: 0.75rem 0 1rem;
+  padding: 0.65rem 0.85rem;
+  color: var(--text-color);
+  opacity: 0.72;
+  font-size: 0.92em;
+  line-height: 1.45;
+}
+
+.FixtureList-contentBreak p {
+  margin: 0;
+}
+
+.FixtureList-contentBreakLink {
+  color: inherit;
+  text-decoration: underline;
+  text-underline-offset: 0.15em;
+}
+
+.FixtureList-contentBreakLink:hover,
+.FixtureList-contentBreakLink:focus-visible {
+  opacity: 1;
+  color: var(--accent-color, inherit);
+}
+
 .individualFixtureGap {
   display: flex;
   flex-basis: 100%;

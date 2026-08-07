@@ -113,7 +113,7 @@ export default function HighestScoringFixtures({ initialRows = null }) {
     <Fragment>
       <PageMeta />
       <SiteHeader withFooter>
-      <Box className={`${classes.container} SubpageContent`}>
+      <Box className={`${classes.container} SubpageContent`} id="ssh-content">
         <a href="/" className={classes.homeLink}>← Back to Home</a>
         
         <Typography variant="h1">Goal Potential Insights</Typography>
