@@ -741,7 +741,7 @@ const List = ({
       const items = [renderSingleFixture(fixture)];
       if (
         !showShortlist &&
-        shouldInsertFixtureContentBreak(index)
+        shouldInsertFixtureContentBreak(index, list.length)
       ) {
         const { label, href } = getFixtureContentBreakTip(fixture);
         items.push(
