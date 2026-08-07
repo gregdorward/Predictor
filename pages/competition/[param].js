@@ -11,7 +11,10 @@ import {
   resolveCompetitionParam,
 } from "../../src/seo/competitionCatalog";
 import { fetchCompetitionData } from "../../src/seo/serverFetch";
-import { getCanonicalUrl } from "../../src/seo/pageMetaConfig";
+import {
+  buildCompetitionOgImageUrl,
+  getCanonicalUrl,
+} from "../../src/seo/pageMetaConfig";
 
 const CompetitionPage = dynamic(
   () => import("../../src/components/CompetitionPage"),
@@ -23,6 +26,8 @@ export default function CompetitionByParam({
   meta,
   jsonLd,
   canonicalPath,
+  ogImage,
+  ogImageAlt,
   seoShell,
 }) {
   return (
@@ -31,6 +36,8 @@ export default function CompetitionByParam({
         title={meta.title}
         description={meta.description}
         canonicalPath={canonicalPath}
+        ogImage={ogImage}
+        ogImageAlt={ogImageAlt}
       />
       <JsonLd data={jsonLd} />
       <CompetitionSeoShell {...seoShell} />
@@ -70,7 +77,13 @@ export async function getServerSideProps({ params }) {
   const canonicalPath = `/competition/${slug}`;
   const canonicalUrl = getCanonicalUrl(canonicalPath);
   const meta = buildCompetitionMeta(data, catalog);
-  const jsonLd = buildCompetitionJsonLd(data, canonicalUrl, catalog);
+  const ogImage = buildCompetitionOgImageUrl(slug);
+  const competitionName =
+    data?.english_name || data?.name || catalog?.name || "Competition";
+  const ogImageAlt = `${competitionName} stats — BTTS, Over 2.5, standings and rankings | Soccer Stats Hub`;
+  const jsonLd = buildCompetitionJsonLd(data, canonicalUrl, catalog, {
+    ogImage,
+  });
   const seoShell = buildCompetitionSeoShell(data, catalog);
 
   // Do not serialize the full FootyStats competition payload into __NEXT_DATA__.
@@ -82,6 +95,8 @@ export async function getServerSideProps({ params }) {
       meta,
       jsonLd,
       canonicalPath,
+      ogImage,
+      ogImageAlt,
       seoShell,
     },
   };

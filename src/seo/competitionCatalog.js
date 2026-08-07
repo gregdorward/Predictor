@@ -221,7 +221,12 @@ export function buildCompetitionMeta(data, catalog) {
   };
 }
 
-export function buildCompetitionJsonLd(data, canonicalUrl, catalog) {
+export function buildCompetitionJsonLd(
+  data,
+  canonicalUrl,
+  catalog,
+  { ogImage } = {}
+) {
   const name = data?.english_name || data?.name || catalog?.name || "Competition";
   return {
     "@context": "https://schema.org",
@@ -232,6 +237,7 @@ export function buildCompetitionJsonLd(data, canonicalUrl, catalog) {
         url: canonicalUrl,
         name: `${name} Football Stats`,
         description: `Football stats and market trends for ${name}.`,
+        ...(ogImage ? { image: [ogImage] } : {}),
         isPartOf: { "@id": "https://www.soccerstatshub.com/#website" },
         inLanguage: "en-GB",
       },

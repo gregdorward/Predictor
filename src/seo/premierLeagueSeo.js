@@ -1,7 +1,11 @@
-import { SITE_URL } from "./pageMetaConfig";
+import {
+  SITE_URL,
+  buildPremierLeague202627OgImageUrl,
+} from "./pageMetaConfig";
 
 export function buildPremierLeaguePreviewJsonLd(data) {
   const pageUrl = `${SITE_URL}/premier-league-2026-27/`;
+  const shareImage = buildPremierLeague202627OgImageUrl();
 
   return {
     "@context": "https://schema.org",
@@ -10,6 +14,7 @@ export function buildPremierLeaguePreviewJsonLd(data) {
     description:
       data?.overview?.slice(0, 160) ||
       "Premier League 2026/27 season preview with market odds, transfers and club guides.",
+    image: [shareImage],
     datePublished: data?.dataAsOf,
     dateModified: data?.generatedAt,
     author: {

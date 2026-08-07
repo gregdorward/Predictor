@@ -8,6 +8,14 @@ export function buildFixtureOgImageUrl(matchId) {
   return `${SITE_URL}/api/og/fixture/${encodeURIComponent(String(matchId))}/`;
 }
 
+export function buildPremierLeague202627OgImageUrl() {
+  return `${SITE_URL}/api/og/premier-league-2026-27/`;
+}
+
+export function buildCompetitionOgImageUrl(slugOrId) {
+  return `${SITE_URL}/api/og/competition/${encodeURIComponent(String(slugOrId))}/`;
+}
+
 export const DEFAULT_TITLE =
   "Soccer Stats Hub | BTTS, Under 2.5, xG & Football Predictions";
 export const DEFAULT_DESCRIPTION =
@@ -71,12 +79,12 @@ export const PAGE_META = {
   "/premier-league-2026-27": {
     title: "Premier League 2026/27 Preview | Soccer Stats Hub",
     description:
-      "In-depth Premier League 2026/27 season preview: Betfair title odds, key transfers, managerial changes, predicted table and all 20 club guides.",
+      "Arsenal are 6/4 favourites, nine clubs have new managers, and the title race looks wide open. Full 2026/27 predicted table, Betfair odds, transfers and all 20 club guides.",
   },
   "/seasonpreviews": {
     title: "Premier League 2026/27 Preview | Soccer Stats Hub",
     description:
-      "In-depth Premier League 2026/27 season preview: Betfair title odds, key transfers, managerial changes, predicted table and all 20 club guides.",
+      "Arsenal are 6/4 favourites, nine clubs have new managers, and the title race looks wide open. Full 2026/27 predicted table, Betfair odds, transfers and all 20 club guides.",
   },
   "/about": {
     title: "About Soccer Stats Hub | Football Stats & Predictions",

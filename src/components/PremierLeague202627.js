@@ -6,6 +6,7 @@ import ArticleShareButton, {
   ArticleDateLine,
 } from "./articles/ArticleShareButton";
 import previewData from "../data/premierLeague202627/season-preview.json";
+import { buildPremierLeague202627OgImageUrl } from "../seo/pageMetaConfig";
 import { buildPremierLeaguePreviewJsonLd } from "../seo/premierLeagueSeo";
 
 const TABS = [
@@ -334,7 +335,10 @@ export default function PremierLeague202627() {
 
   return (
     <>
-      <PageMeta />
+      <PageMeta
+        ogImage={buildPremierLeague202627OgImageUrl()}
+        ogImageAlt="Premier League 2026/27 season preview — title race, odds and predicted table | Soccer Stats Hub"
+      />
       <JsonLd data={buildPremierLeaguePreviewJsonLd(data)} />
       <SiteHeader showThemeToggle withFooter>
         <main className="WC26 PL2627">
@@ -353,8 +357,8 @@ export default function PremierLeague202627() {
               />
               <div className="PL2627__shareRow">
                 <ArticleShareButton
-                  title="Premier League 2026/27 Season Preview | Soccer Stats Hub"
-                  text="In-depth Premier League 2026/27 preview with Betfair odds, transfers and club guides."
+                  title="Premier League 2026/27 Preview | Soccer Stats Hub"
+                  text="Arsenal are 6/4 favourites, nine clubs have new managers, and the title race looks wide open. Full predicted table and club guides."
                 />
               </div>
             </div>
