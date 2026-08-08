@@ -1600,7 +1600,7 @@ function GameStats({ game, displayBool, stats, handleToggleTip, userTips }) {
           173,
           //National league north 25/26
           176,
-          //National league south 25/26
+          //National league south 26/27
           174,
           // Ekstraklasa (Poland)
           202,
@@ -1610,7 +1610,7 @@ function GameStats({ game, displayBool, stats, handleToggleTip, userTips }) {
           44,
           // French Ligue 2
           182,
-          // Italian Serie B 25/26
+          // Italian Serie B 26/27
           53,
           // Dutch Eerste Divisie 25
           131,

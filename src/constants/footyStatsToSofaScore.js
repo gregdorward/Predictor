@@ -28,9 +28,9 @@ export const footyStatsToSofaScoreMap = {
     id: 176,
     season: 98275, // National League North 26/27
   },
-  15844: {
+  17403: {
     id: 174,
-    season: 78227, // National League South 25/26
+    season: 98274, // National League South 26/27
   },
   17210: {
     id: 35,
@@ -116,9 +116,9 @@ export const footyStatsToSofaScoreMap = {
     id: 182,
     season: 96109, // Ligue 2 26/27
   },
-  15632: {
+  17404: {
     id: 53,
-    season: 79502, // Serie B 25/26
+    season: 99067, // Serie B 26/27
   },
   17110: {
     id: 131,
@@ -172,9 +172,9 @@ export const footyStatsToSofaScoreMap = {
     id: 410,
     season: 88606, // K League 26
   },
-  12772: {
+  17426: {
     id: 955,
-    season: 80443, // Saudi Pro League 25/26
+    season: 99275, // Saudi Pro League 26/27
   },
   16263: {
     id: 40,

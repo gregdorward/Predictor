@@ -1,7 +1,8 @@
 #!/usr/bin/env node
 /**
- * One-off checker for FootyStats season IDs and SofaScore season IDs.
+ * Checker for FootyStats season IDs and SofaScore season IDs.
  * Loads API keys from footballServer/.env — does not print keys.
+ * CURRENT is synced from src/constants/footyStatsToSofaScore.js.
  */
 import { readFileSync, writeFileSync } from "fs";
 import { resolve, dirname } from "path";
@@ -38,75 +39,59 @@ if (!SOFA_KEY) {
   process.exit(1);
 }
 
-// Current FootyStats season IDs from footyStatsToSofaScore.js (keys)
+// Synced from src/constants/footyStatsToSofaScore.js
 const CURRENT = {
-  15050: { name: "Premier League", sofaTournament: 17, sofaSeason: 76986 },
+  17146: { name: "Premier League", sofaTournament: 17, sofaSeason: 96668 },
   16494: { name: "World Cup 2026", sofaTournament: 16, sofaSeason: 58210 },
-  14930: { name: "Championship", sofaTournament: 18, sofaSeason: 77347 },
-  14934: { name: "League One", sofaTournament: 24, sofaSeason: 77352 },
-  14935: { name: "League Two", sofaTournament: 25, sofaSeason: 77351 },
+  17184: { name: "Championship", sofaTournament: 18, sofaSeason: 97037 },
+  17180: { name: "League One", sofaTournament: 24, sofaSeason: 97077 },
+  17185: { name: "League Two", sofaTournament: 25, sofaSeason: 97078 },
   17279: { name: "National League", sofaTournament: 173, sofaSeason: 98160 },
   17263: { name: "National League North", sofaTournament: 176, sofaSeason: 98275 },
-  15844: { name: "National League South", sofaTournament: 174, sofaSeason: 78227 },
-  14968: { name: "Bundesliga", sofaTournament: 35, sofaSeason: 77333 },
-  14956: { name: "La Liga", sofaTournament: 8, sofaSeason: 77559 },
-  15000: { name: "Scottish Premiership", sofaTournament: 36, sofaSeason: 77128 },
-  14924: { name: "Champions League", sofaTournament: 7, sofaSeason: 76953 },
-  15068: { name: "Serie A", sofaTournament: 23, sofaSeason: 76457 },
+  17403: { name: "National League South", sofaTournament: 174, sofaSeason: 98274 },
+  17210: { name: "Bundesliga", sofaTournament: 35, sofaSeason: 97464 },
+  17199: { name: "La Liga", sofaTournament: 8, sofaSeason: 97268 },
+  17148: { name: "Scottish Premiership", sofaTournament: 36, sofaSeason: 96658 },
+  17128: { name: "Champions League", sofaTournament: 7, sofaSeason: 96518 },
+  17084: { name: "Serie A", sofaTournament: 23, sofaSeason: 95836 },
   16504: { name: "MLS", sofaTournament: 242, sofaSeason: 86668 },
-  14932: { name: "Ligue 1", sofaTournament: 34, sofaSeason: 77356 },
+  17102: { name: "Ligue 1", sofaTournament: 34, sofaSeason: 96127 },
   17217: { name: "Primeira Liga", sofaTournament: 238, sofaSeason: 97436 },
   16556: { name: "Copa Libertadores", sofaTournament: 384, sofaSeason: 87760 },
-  14936: { name: "Eredivisie", sofaTournament: 37, sofaSeason: 77012 },
-  14937: { name: "Belgian Pro League", sofaTournament: 9, sofaSeason: 77849 },
-  16263: { name: "Allsvenskan", sofaTournament: 40, sofaSeason: 69956 },
-  15055: { name: "Danish Superliga", sofaTournament: 39, sofaSeason: 76491 },
+  17097: { name: "Eredivisie", sofaTournament: 37, sofaSeason: 96143 },
+  17171: { name: "Belgian Pro League", sofaTournament: 38, sofaSeason: 96616 },
+  17091: { name: "Danish Superliga", sofaTournament: 39, sofaSeason: 95785 },
   16558: { name: "Eliteserien", sofaTournament: 20, sofaSeason: 87809 },
-  14923: { name: "Austrian Bundesliga", sofaTournament: 45, sofaSeason: 77382 },
+  17181: { name: "Austrian Bundesliga", sofaTournament: 45, sofaSeason: 97043 },
   17356: { name: "Greek Super League", sofaTournament: 185, sofaSeason: 98659 },
   17265: { name: "Turkish Super Lig", sofaTournament: 52, sofaSeason: 98080 },
-  15031: { name: "Ekstraklasa", sofaTournament: 202, sofaSeason: 76477 },
+  17112: { name: "Ekstraklasa", sofaTournament: 202, sofaSeason: 96144 },
   17269: { name: "Segunda Division", sofaTournament: 54, sofaSeason: 97280 },
-  14931: { name: "Bundesliga 2", sofaTournament: 44, sofaSeason: 77354 },
+  17212: { name: "Bundesliga 2", sofaTournament: 44, sofaSeason: 97406 },
   17267: { name: "3. Liga", sofaTournament: 491, sofaSeason: 98012 },
-  14954: { name: "Ligue 2", sofaTournament: 182, sofaSeason: 77357 },
-  15632: { name: "Serie B", sofaTournament: 53, sofaSeason: 79502 },
-  14987: { name: "Eerste Divisie", sofaTournament: 131, sofaSeason: 14987 },
-  15061: { name: "Scottish Championship", sofaTournament: 206, sofaSeason: 77037 },
-  15062: { name: "Scottish League One", sofaTournament: 207, sofaSeason: 77037 },
-  15064: { name: "Scottish League Two", sofaTournament: 209, sofaSeason: 77045 },
-  15047: { name: "Swiss Super League", sofaTournament: 215, sofaSeason: 77152 },
-  15053: { name: "Croatian First League", sofaTournament: 170, sofaSeason: 77152 },
-  14973: { name: "Czech First League", sofaTournament: 172, sofaSeason: 77019 },
-  14089: { name: "Veikkausliiga", sofaTournament: 41, sofaSeason: 70853 },
-  14951: { name: "Ukrainian Premier League", sofaTournament: 218, sofaSeason: 77625 },
-  15063: { name: "Slovenian Prva Liga", sofaTournament: 212, sofaSeason: 62660 },
-  14933: { name: "Slovak Super Liga", sofaTournament: 211, sofaSeason: 77154 },
-  15065: { name: "Serbian SuperLiga", sofaTournament: 210, sofaSeason: 77625 },
-  15234: { name: "Liga MX", sofaTournament: 11621, sofaSeason: 76500 },
+  17117: { name: "Ligue 2", sofaTournament: 182, sofaSeason: 96109 },
+  17404: { name: "Serie B", sofaTournament: 53, sofaSeason: 99067 },
+  17110: { name: "Eerste Divisie", sofaTournament: 131, sofaSeason: 96187 },
+  17144: { name: "Scottish Championship", sofaTournament: 206, sofaSeason: 96614 },
+  17147: { name: "Scottish League One", sofaTournament: 207, sofaSeason: 96638 },
+  17140: { name: "Scottish League Two", sofaTournament: 209, sofaSeason: 96664 },
+  17129: { name: "Swiss Super League", sofaTournament: 215, sofaSeason: 96589 },
+  17087: { name: "Croatian First League", sofaTournament: 170, sofaSeason: 95727 },
+  17157: { name: "Czech First League", sofaTournament: 172, sofaSeason: 96966 },
+  17099: { name: "Liga MX", sofaTournament: 11621, sofaSeason: 96191 },
   16544: { name: "Brazil Serie A", sofaTournament: 325, sofaSeason: 87678 },
-  14305: { name: "Brazil Serie B", sofaTournament: 390, sofaSeason: 72603 },
-  13878: { name: "Club World Cup", sofaTournament: 357, sofaSeason: 69619 },
-  13734: { name: "UEFA Nations League", sofaTournament: 10783, sofaSeason: 58337 },
-  14086: { name: "Colombian Liga BetPlay", sofaTournament: 11539, sofaSeason: 70681 },
-  14116: { name: "Chilean Primera Division", sofaTournament: 11653, sofaSeason: 76986 },
-  14626: { name: "Uruguayan Primera Division", sofaTournament: 278, sofaSeason: 71306 },
-  16571: { name: "Argentina Primera Division", sofaTournament: 155, sofaSeason: 87913 },
-  16614: { name: "Colombian Primera Division", sofaTournament: 11539, sofaSeason: 87913 },
-  16242: { name: "J League", sofaTournament: 196, sofaSeason: 69871 },
+  16808: { name: "UEFA Nations League", sofaTournament: 10783, sofaSeason: 89945 },
+  16614: { name: "Colombian Primera Division", sofaTournament: 11539, sofaSeason: 88503 },
+  17115: { name: "J League", sofaTournament: 196, sofaSeason: 96370 },
   16627: { name: "K League", sofaTournament: 410, sofaSeason: 88606 },
-  12772: { name: "Saudi Pro League", sofaTournament: 955, sofaSeason: 63998 },
-  13967: { name: "USL", sofaTournament: 13363, sofaSeason: 70263 },
-  13964: { name: "World Cup Europe Qualifiers", sofaTournament: 11, sofaSeason: 69427 },
-  10121: { name: "World Cup SA Qualifiers", sofaTournament: 295, sofaSeason: 53820 },
+  17426: { name: "Saudi Pro League", sofaTournament: 955, sofaSeason: 99275 },
+  16263: { name: "Allsvenskan", sofaTournament: 40, sofaSeason: 87925 },
   16537: { name: "Irish Premier Division", sofaTournament: 192, sofaSeason: 87682 },
   17326: { name: "A-League", sofaTournament: 136, sofaSeason: 98511 },
-  15002: { name: "Europa League", sofaTournament: 679, sofaSeason: 76984 },
-  14904: { name: "Europa Conference League", sofaTournament: 17015, sofaSeason: 76960 },
+  17127: { name: "Europa League", sofaTournament: 679, sofaSeason: 96522 },
+  17130: { name: "Europa Conference League", sofaTournament: 17015, sofaSeason: 96529 },
+  16571: { name: "Argentina Primera Division", sofaTournament: 155, sofaSeason: 87913 },
 };
-
-// Also track App.js leagueOrder extras
-const EXTRA_APP_IDS = { 16808: "Nations League (App.js only)" };
 
 let footyCalls = 0;
 let sofaCalls = 0;
@@ -128,7 +113,9 @@ async function fetchSofaSeasons(tournamentId) {
       "x-rapidapi-key": SOFA_KEY,
     },
   });
-  if (!res.ok) throw new Error(`SofaScore get-seasons HTTP ${res.status} for tournament ${tournamentId}`);
+  if (!res.ok) {
+    throw new Error(`SofaScore get-seasons HTTP ${res.status} for tournament ${tournamentId}`);
+  }
   return res.json();
 }
 
@@ -141,7 +128,6 @@ function normalize(s) {
 
 function pickLatestSeason(seasons) {
   if (!Array.isArray(seasons) || seasons.length === 0) return null;
-  // SofaScore returns seasons newest-first in the array.
   return seasons[0];
 }
 
@@ -151,12 +137,10 @@ function getSeasons(league) {
 
 function pickLatestFootySeason(seasons) {
   if (!seasons.length) return null;
-  // FootyStats seasons are typically ordered; pick highest id as newest.
   return seasons.reduce((a, b) => (Number(b.id) > Number(a?.id || 0) ? b : a), null);
 }
 
 function findLeagueMatch(leagues, currentId, meta) {
-  // 1) Exact match: current season id still exists in API
   for (const league of leagues) {
     for (const s of getSeasons(league)) {
       if (Number(s.id) === Number(currentId)) {
@@ -166,7 +150,6 @@ function findLeagueMatch(leagues, currentId, meta) {
     }
   }
 
-  // 2) Name match: find league by english/name, then take latest season
   const targetName = normalize(meta.name);
   let best = null;
   for (const league of leagues) {
@@ -180,7 +163,11 @@ function findLeagueMatch(leagues, currentId, meta) {
     const latest = pickLatestFootySeason(getSeasons(league));
     if (!latest) continue;
     const score = leagueNames.some((n) => n === targetName) ? 2 : 1;
-    if (!best || score > best.score || (score === best.score && Number(latest.id) > Number(best.latestSeason.id))) {
+    if (
+      !best ||
+      score > best.score ||
+      (score === best.score && Number(latest.id) > Number(best.latestSeason.id))
+    ) {
       best = { league, latestSeason: latest, matchType: "name-match", score };
     }
   }
@@ -210,17 +197,23 @@ for (const [currentId, meta] of Object.entries(CURRENT)) {
   }
 
   const latestId = Number(match.latestSeason?.id || match.matchedSeason?.id);
+  const latestYear = match.latestSeason?.year ?? match.matchedSeason?.year;
 
   if (latestId && latestId !== Number(currentId)) {
     footyUpdates.push({
       name: meta.name,
       oldId: Number(currentId),
       newId: latestId,
+      year: latestYear,
       leagueName: match.league?.name || match.league?.english_name,
       matchType: match.matchType,
     });
   } else {
-    footyUnchanged.push({ id: Number(currentId), name: meta.name });
+    footyUnchanged.push({
+      id: Number(currentId),
+      name: meta.name,
+      year: latestYear,
+    });
   }
 }
 
@@ -231,21 +224,29 @@ console.log("Unchanged:", footyUnchanged.length);
 console.log("Unmatched:", footyUnmatched.length);
 console.log(JSON.stringify(footyUnmatched, null, 2));
 
-// SofaScore: dedupe tournament IDs
-const tournamentIds = [...new Set(Object.values(CURRENT).map((m) => m.sofaTournament))];
-const sofaSeasonCache = new Map();
+// SofaScore: only check tournaments for Footy updates + still-stale 25/26 entries
+const sofaCheckNames = new Set([
+  ...footyUpdates.map((u) => u.name),
+  ...Object.values(CURRENT)
+    .filter((m) => m.name.includes("South") || m.name === "Serie B" || m.name === "Saudi Pro League")
+    .map((m) => m.name),
+]);
+
+const sofaTargets = Object.entries(CURRENT).filter(([, meta]) =>
+  sofaCheckNames.has(meta.name)
+);
+const tournamentIds = [...new Set(sofaTargets.map(([, meta]) => meta.sofaTournament))];
 const sofaUpdates = [];
 const sofaUnchanged = [];
+const sofaErrors = [];
 
 for (const tid of tournamentIds) {
   try {
     const data = await fetchSofaSeasons(tid);
     const seasons = data?.seasons || data?.uniqueTournamentSeasons || data?.data || [];
     const latest = pickLatestSeason(seasons);
-    sofaSeasonCache.set(tid, { seasons, latest });
 
-    // Find all footy entries using this tournament
-    for (const [footyId, meta] of Object.entries(CURRENT)) {
+    for (const [footyId, meta] of sofaTargets) {
       if (meta.sofaTournament !== tid) continue;
       const latestSeasonId = latest?.id;
       if (latestSeasonId && latestSeasonId !== meta.sofaSeason) {
@@ -267,6 +268,7 @@ for (const tid of tournamentIds) {
       }
     }
   } catch (err) {
+    sofaErrors.push({ tournamentId: tid, error: err.message });
     console.error(`SofaScore error for tournament ${tid}:`, err.message);
   }
 }
@@ -276,20 +278,33 @@ console.log("\n=== SOFASCORE SEASON COMPARISON ===");
 console.log("Updates needed:", sofaUpdates.length);
 console.log(JSON.stringify(sofaUpdates, null, 2));
 console.log("Unchanged:", sofaUnchanged.length);
+console.log("Errors:", sofaErrors.length);
 
-// Output machine-readable summary for next step
+const summary = {
+  footyUpdates,
+  footyUnchanged,
+  footyUnmatched,
+  sofaUpdates,
+  sofaUnchanged,
+  sofaErrors,
+  footyCalls,
+  sofaCalls,
+};
 console.log("\n=== SUMMARY JSON ===");
-const summary = { footyUpdates, footyUnchanged, footyUnmatched, sofaUpdates, sofaUnchanged, footyCalls, sofaCalls };
 console.log(JSON.stringify(summary, null, 2));
 
 writeFileSync(resolve(__dirname, "competition-id-check-result.json"), JSON.stringify(summary, null, 2));
 writeFileSync(
   resolve(__dirname, "footy-league-list.json"),
-  JSON.stringify(leagues.map((l) => ({
-    id: l.id,
-    name: l.name,
-    english_name: l.english_name,
-    seasons: getSeasons(l).map((s) => ({ id: s.id, year: s.year })),
-  })), null, 2)
+  JSON.stringify(
+    leagues.map((l) => ({
+      id: l.id,
+      name: l.name,
+      english_name: l.english_name,
+      seasons: getSeasons(l).map((s) => ({ id: s.id, year: s.year })),
+    })),
+    null,
+    2
+  )
 );
 console.log("\nWrote scripts/competition-id-check-result.json");

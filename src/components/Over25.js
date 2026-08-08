@@ -19,7 +19,7 @@ const ids = [
   17185, // League Two 26/27
   17279, // National League 26/27
   17263, // National League north 26/27
-  15844, // National League south 25/26
+  17403, // National League south 26/27
   17199, // La Liga 26/27
   17148, // Scottish Prem 26/27
   17210, // Bundesliga 26/27
@@ -41,7 +41,7 @@ const ids = [
   // 14089, // Veikkausliiga - deferred
   16537, // Irish Prem 26
   17269, // Segunda Division 26/27
-  15632, // Serie B 25/26
+  17404, // Serie B 26/27
   17212, // Bundesliga 2 26/27
   17117, // Ligue 2 26/27
   17110, // Eerste Divisie 26/27
@@ -58,7 +58,7 @@ const ids = [
   17326, // A-League 26/27
   16627, // K League 26
   17115, // J League 26/27
-  12772, // Saudi Pro League 25/26
+  17426, // Saudi Pro League 26/27
   16808, // Nations League 26/27
   17128, // Champions League 26/27
   17127, // Europa League 26/27

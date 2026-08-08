@@ -71,6 +71,56 @@ const getProbabilityClass = (probability) => {
   return "prob-weak";
 };
 
+function styleFormIndicator(formIndicator) {
+  if (formIndicator === "W") return "winSmall";
+  if (formIndicator === "D") return "drawSmall";
+  if (formIndicator === "L") return "lossSmall";
+  return undefined;
+}
+
+/** Newest-first W/D/L list from results arrays, LastFiveForm, or API formRun. */
+function getDisplayFormResults(form, kind = "all", max = 5) {
+  if (!form) return [];
+
+  const asWdl = (values) =>
+    (Array.isArray(values) ? values : Array.from(String(values || "").toUpperCase()))
+      .filter((result) => result === "W" || result === "D" || result === "L");
+
+  if (kind === "all") {
+    const fromResults = asWdl(form.resultsAll);
+    if (fromResults.length) return fromResults.slice(0, max);
+    const fromLastFive = asWdl(form.LastFiveForm);
+    if (fromLastFive.length) return fromLastFive.slice(0, max);
+    // API formRun is oldest→newest; reverse so index 0 is most recent.
+    return asWdl(form.formRun).slice(-max).reverse();
+  }
+
+  const venueResults =
+    kind === "home" ? form.resultsHome : form.resultsAway;
+  const fromVenue = asWdl(venueResults);
+  if (fromVenue.length) return fromVenue.slice(0, max);
+  // formRun on stored form is home-only / away-only for that side.
+  return asWdl(form.formRun).slice(-max).reverse();
+}
+
+/** Render up to 5 pills, oldest on the left, newest on the right. */
+function FormPills({ results, label }) {
+  const list = Array.isArray(results) ? results.slice(0, 5) : [];
+  if (!list.length) return null;
+  const chronological = [...list].reverse();
+  return (
+    <>
+      <span className="FormAllorHA">{label}</span>
+      {chronological.map((result, index) => (
+        <span
+          key={`${label}-${index}-${result}`}
+          className={styleFormIndicator(result)}
+        />
+      ))}
+    </>
+  );
+}
+
 const PredictionSection = ({ isProbability, goals, team, probability }) => {
   if (!isProbability) {
     return (
@@ -231,18 +281,6 @@ function SingleFixture({
     StoreData();
   }
 
-  function styleForm(formIndicator) {
-    let className;
-    if (formIndicator === "W") {
-      className = "winSmall";
-    } else if (formIndicator === "D") {
-      className = "drawSmall";
-    } else if (formIndicator === "L") {
-      className = "lossSmall";
-    }
-    return className;
-  }
-
   const handleGameStatsClick = () => {
     const { homeForm, awayForm } = resolveFixtureForms();
     if (!homeForm || !awayForm) {
@@ -260,6 +298,10 @@ function SingleFixture({
       setIsLoadingGameStats(false); // Set loading to false after "loading"
     }, 1);
   };
+
+  const resolvedForms = resolveFixtureForms();
+  const displayHomeForm = fixture.formHome ?? resolvedForms.homeForm;
+  const displayAwayForm = fixture.formAway ?? resolvedForms.awayForm;
 
   return (
     <div key={fixture.game}>
@@ -345,68 +387,16 @@ function SingleFixture({
                 </div>
                 <div className="FormContainer">
                   <div className={`Last5`}>
-                    {fixture.formHome && (
-                      <>
-                        <span className="FormAllorHA">All</span>
-                        <span
-                          className={styleForm(
-                            fixture.formHome.resultsAll[4] || ""
-                          )}
-                        ></span>
-                        <span
-                          className={styleForm(
-                            fixture.formHome.resultsAll[3] || ""
-                          )}
-                        ></span>
-                        <span
-                          className={styleForm(
-                            fixture.formHome.resultsAll[2] || ""
-                          )}
-                        ></span>
-                        <span
-                          className={styleForm(
-                            fixture.formHome.resultsAll[1] || ""
-                          )}
-                        ></span>
-                        <span
-                          className={styleForm(
-                            fixture.formHome.resultsAll[0] || ""
-                          )}
-                        ></span>
-                      </>
-                    )}
+                    <FormPills
+                      label="All"
+                      results={getDisplayFormResults(displayHomeForm, "all")}
+                    />
                   </div>
                   <div className={`Last5Home`}>
-                    {fixture.formHome && (
-                      <>
-                        <span className="FormAllorHA">Home</span>
-                        <span
-                          className={styleForm(
-                            fixture.formHome.resultsHome[4] || ""
-                          )}
-                        ></span>
-                        <span
-                          className={styleForm(
-                            fixture.formHome.resultsHome[3] || ""
-                          )}
-                        ></span>
-                        <span
-                          className={styleForm(
-                            fixture.formHome.resultsHome[2] || ""
-                          )}
-                        ></span>
-                        <span
-                          className={styleForm(
-                            fixture.formHome.resultsHome[1] || ""
-                          )}
-                        ></span>
-                        <span
-                          className={styleForm(
-                            fixture.formHome.resultsHome[0] || ""
-                          )}
-                        ></span>
-                      </>
-                    )}
+                    <FormPills
+                      label="Home"
+                      results={getDisplayFormResults(displayHomeForm, "home")}
+                    />
                   </div>
                 </div>
               </div>
@@ -459,68 +449,16 @@ function SingleFixture({
                 </div>
                 <div className="FormContainer">
                   <div className={`Last5`}>
-                    {fixture.formAway && (
-                      <>
-                        <span className="FormAllorHA">All</span>
-                        <span
-                          className={styleForm(
-                            fixture.formAway.resultsAll[4] || ""
-                          )}
-                        ></span>
-                        <span
-                          className={styleForm(
-                            fixture.formAway.resultsAll[3] || ""
-                          )}
-                        ></span>
-                        <span
-                          className={styleForm(
-                            fixture.formAway.resultsAll[2] || ""
-                          )}
-                        ></span>
-                        <span
-                          className={styleForm(
-                            fixture.formAway.resultsAll[1] || ""
-                          )}
-                        ></span>
-                        <span
-                          className={styleForm(
-                            fixture.formAway.resultsAll[0] || ""
-                          )}
-                        ></span>
-                      </>
-                    )}
+                    <FormPills
+                      label="All"
+                      results={getDisplayFormResults(displayAwayForm, "all")}
+                    />
                   </div>
                   <div className={`Last5Away`}>
-                    {fixture.formAway && (
-                      <>
-                        <span className="FormAllorHA">Away</span>
-                        <span
-                          className={styleForm(
-                            fixture.formAway.resultsAway[4] || ""
-                          )}
-                        ></span>
-                        <span
-                          className={styleForm(
-                            fixture.formAway.resultsAway[3] || ""
-                          )}
-                        ></span>
-                        <span
-                          className={styleForm(
-                            fixture.formAway.resultsAway[2] || ""
-                          )}
-                        ></span>
-                        <span
-                          className={styleForm(
-                            fixture.formAway.resultsAway[1] || ""
-                          )}
-                        ></span>
-                        <span
-                          className={styleForm(
-                            fixture.formAway.resultsAway[0] || ""
-                          )}
-                        ></span>
-                      </>
-                    )}
+                    <FormPills
+                      label="Away"
+                      results={getDisplayFormResults(displayAwayForm, "away")}
+                    />
                   </div>
                 </div>
                 {/* <button className="GameStats" onClick={handleGameStatsClick}>

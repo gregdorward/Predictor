@@ -31,7 +31,7 @@ export const sofaScoreIds = [
   { 17127: 679 }, // Europa League 26/27
   { 17130: 17015 }, // Europa Conference League 26/27
   { 17269: 54 }, // Segunda Division 26/27
-  { 15632: 53 }, // Serie B 25/26
+  { 17404: 53 }, // Serie B 26/27
   { 17212: 44 }, // Bundesliga 2 26/27
   { 17267: 491 }, // 3. Liga 26/27
   { 17117: 182 }, // Ligue 2 26/27
@@ -44,11 +44,11 @@ export const sofaScoreIds = [
   { 17099: 11621 }, // Liga MX 26
   { 17279: 173 }, // National League 26/27
   { 17263: 176 }, // National League North 26/27
-  { 15844: 174 }, // National League South 25/26
+  { 17403: 174 }, // National League South 26/27
   { 17115: 196 }, // J League 26/27
   { 16614: 11539 }, // Colombia 26
   { 16627: 410 }, // K League 26
-  { 12772: 955 }, // Saudi Pro League 25/26
+  { 17426: 955 }, // Saudi Pro League 26/27
   { 16263: 40 }, // Allsvenskan 2026
 
   // Deferred - not in industry leading stat website chosen_leagues (may re-enable later)

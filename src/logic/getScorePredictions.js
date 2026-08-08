@@ -2507,7 +2507,40 @@ function recentApiFormRun(formRun, count) {
   if (!chars.length) {
     return [];
   }
-  return chars.slice(-count).reverse();
+  return chars
+    .filter((result) => result === "W" || result === "D" || result === "L")
+    .slice(-count)
+    .reverse();
+}
+
+/** Prefer already newest-first LastFiveForm; otherwise derive from API formRun. */
+function formResultsFromStoredForm(form, count = 6) {
+  if (Array.isArray(form?.LastFiveForm)) {
+    const fromLastFive = form.LastFiveForm.filter(
+      (result) => result === "W" || result === "D" || result === "L"
+    );
+    if (fromLastFive.length) {
+      return fromLastFive.slice(0, count);
+    }
+  }
+  return recentApiFormRun(form?.formRun, count);
+}
+
+/** When league history is too thin for getPastLeagueResults, still populate W/D/L pills. */
+function applyFormResultsFallback(form, venue) {
+  if (!form) {
+    return;
+  }
+  const overall = formResultsFromStoredForm(form, 6);
+  const venueRun = recentApiFormRun(form.formRun, 6);
+  form.resultsAll = overall;
+  if (venue === "home") {
+    form.resultsHome = venueRun.length ? venueRun : overall;
+    form.resultsAway = Array.isArray(form.resultsAway) ? form.resultsAway : [];
+  } else {
+    form.resultsAway = venueRun.length ? venueRun : overall;
+    form.resultsHome = Array.isArray(form.resultsHome) ? form.resultsHome : [];
+  }
 }
 
 function apiMatchesPlayed(stats) {
@@ -3291,6 +3324,9 @@ export async function calculateScore(match, index, divider, calculate, AIPredict
       match.bttsAllPercentageAway = "";
       match.bttsPercentageAwayHome = "";
       match.bttsPercentageAwayAway = "";
+      // Keep W/D/L form pills available from API/stored form even when league history is thin.
+      applyFormResultsFallback(formHome, "home");
+      applyFormResultsFallback(formAway, "away");
     }
 
     match.directnessRatingHome = formHome.directnessRatingHome;
@@ -5148,11 +5184,27 @@ export async function getScorePrediction(day, mocked) {
             match.completeData = false;
             await calculateScore(match, index, divider, false, predictedScoresData, fetchedTips);
             break;
-          case match.matches_completed_minimum < 3:
+          case match.matches_completed_minimum < 3: {
+            // Still hydrate formHome/formAway (for FormContainer pills) without keeping tip scores.
+            const priorOmit = match.omit;
             match.goalsA = "x";
             match.goalsB = "x";
             match.completeData = false;
+            await calculateScore(
+              match,
+              index,
+              divider,
+              true,
+              predictedScoresData,
+              fetchedTips
+            );
+            match.goalsA = "x";
+            match.goalsB = "x";
+            match.completeData = false;
+            match.predictionsUnavailable = true;
+            match.omit = priorOmit;
             break;
+          }
           default:
             [
               match.goalsA,
