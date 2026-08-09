@@ -56,61 +56,93 @@ const MonthlyLeaderboard = ({ slips = [] }) => {
         fetchLeaderboard();
     }, [monthKey, slips]);
 
-    if (loading) return <div className="leaderboard-loading">Loading Leaderboard...</div>;
+    if (loading) {
+        return (
+            <div className="leaderboard-loading" aria-live="polite">
+                <span className="leaderboard-loading-dot" />
+                Loading leaderboard…
+            </div>
+        );
+    }
 
     return (
         <div className="leaderboard-container">
-            <h3>{monthName} {year} Leaderboard</h3>
-            <table className="leaderboard-table">
-                <thead>
-                    <tr>
-                        <th>Rank</th>
-                        <th>User</th>
-                        <th>Tips</th>
-                        <th>ROI</th>
-                        <th>Profit</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {data.map((row, index) => (
-                        <React.Fragment key={row.uid}>
-                            <tr
-                                onClick={() => toggleExpand(row.uid)}
-                                className={`leaderboard-row ${expandedUserId === row.uid ? 'active' : ''}`}
-                            >
-                                <td>{index + 1}</td>
-                                <td>
-                                    <strong>{row.displayName}</strong>
-                                </td>
-                                <td>{row.userSlips.length}</td>
-                                {/* Use the pre-calculated ROI from the merged object */}
-                                <td>{row.roi.toFixed(1)}%</td>
-                                <td style={{ 
-                                    color: row.monthlyProfit >= 0 ? '#4caf50' : '#f44336',
-                                    fontWeight: 'bold' 
-                                }}>
-                                    {row.monthlyProfit.toFixed(2)}
-                                </td>
-                            </tr>
+            <header className="leaderboard-header">
+                <div className="leaderboard-header-copy">
+                    <p className="leaderboard-kicker">Prediction League</p>
+                    <h3>{monthName} {year}</h3>
+                </div>
+                <p className="leaderboard-hint">Select a tipster to open their record</p>
+            </header>
 
-                            {expandedUserId === row.uid && (
-                                <tr className="expanded-tips-area">
-                                    <td colSpan="5">
+            {data.length === 0 ? (
+                <p className="leaderboard-empty">No tipsters on the board yet this month.</p>
+            ) : (
+                <div className="leaderboard-grid" role="table" aria-label={`${monthName} ${year} leaderboard`}>
+                    <div className="leaderboard-cols leaderboard-cols-header" role="row">
+                        <span role="columnheader">Rank</span>
+                        <span role="columnheader">Tipster</span>
+                        <span role="columnheader">Tips</span>
+                        <span role="columnheader">ROI</span>
+                        <span role="columnheader">Profit</span>
+                    </div>
+
+                    {data.map((row, index) => {
+                        const isExpanded = expandedUserId === row.uid;
+                        const rankClass = index < 3
+                            ? `leaderboard-rank is-top is-rank-${index + 1}`
+                            : 'leaderboard-rank';
+                        const profitClass = row.monthlyProfit >= 0
+                            ? 'leaderboard-profit is-positive'
+                            : 'leaderboard-profit is-negative';
+                        const profitPrefix = row.monthlyProfit > 0 ? '+' : '';
+
+                        return (
+                            <div key={row.uid} className="leaderboard-entry">
+                                <div
+                                    className={`leaderboard-cols leaderboard-row ${isExpanded ? 'active' : ''}`}
+                                    role="row"
+                                    tabIndex={0}
+                                    aria-expanded={isExpanded}
+                                    onClick={() => toggleExpand(row.uid)}
+                                    onKeyDown={(event) => {
+                                        if (event.key === 'Enter' || event.key === ' ') {
+                                            event.preventDefault();
+                                            toggleExpand(row.uid);
+                                        }
+                                    }}
+                                >
+                                    <span className={rankClass} role="cell">{index + 1}</span>
+                                    <span className="leaderboard-user" role="cell">
+                                        <strong>{row.displayName}</strong>
+                                        <span className="leaderboard-expand-cue" aria-hidden="true">
+                                            {isExpanded ? '−' : '+'}
+                                        </span>
+                                    </span>
+                                    <span className="leaderboard-metric" role="cell">{row.userSlips.length}</span>
+                                    <span className="leaderboard-metric" role="cell">{row.roi.toFixed(1)}%</span>
+                                    <span className={profitClass} role="cell">
+                                        {profitPrefix}{row.monthlyProfit.toFixed(2)}
+                                    </span>
+                                </div>
+
+                                {isExpanded && (
+                                    <div className="expanded-tips-area">
                                         <div className="expanded-content-wrapper">
-                                            <h4 className="expanded-header">{row.displayName} Tip Record</h4>
+                                            <h4 className="expanded-header">{row.displayName} tip record</h4>
                                             <div className="mini-slips-list">
                                                 {row.userSlips.map(slip => (
                                                     <BetSlipItem key={slip.slipId} slip={slip} />
                                                 ))}
                                             </div>
                                         </div>
-                                    </td>
-                                </tr>
-                            )}
-                        </React.Fragment>
-                    ))}
-                </tbody>
-            </table>
+                                    </div>
+                                )}
+                            </div>
+                        );
+                    })}
+                </div>
+            )}
         </div>
     );
 };
