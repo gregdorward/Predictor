@@ -8,6 +8,7 @@ import {
   calculateScore,
   setSingleMatchPredictionData,
 } from "./getScorePredictions";
+import { clearMatchPredictionFields } from "./matchPredictionFields";
 import {
   buildAllFormEntry,
   buildLeaguePositionsFromTable,
@@ -102,6 +103,7 @@ export async function predictMatchById(matchId) {
     match.goalsB = "x";
     match.completeData = false;
     await calculateScore(match, index, divider, true, predictedScores, []);
+    clearMatchPredictionFields(match);
     match.goalsA = "x";
     match.goalsB = "x";
     match.completeData = false;

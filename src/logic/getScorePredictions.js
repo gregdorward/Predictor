@@ -53,6 +53,7 @@ import { doc, getDoc, collection, getDocs, query } from 'firebase/firestore';
 import { auth, db } from "../firebase";
 import { userTips } from "../App"
 import MonthlyLeaderboard from "../components/TippingTable"
+import { clearMatchPredictionFields } from "./matchPredictionFields";
 
 var myHeaders = new Headers();
 myHeaders.append("Origin", "https://gregdorward.github.io");
@@ -5198,6 +5199,7 @@ export async function getScorePrediction(day, mocked) {
               predictedScoresData,
               fetchedTips
             );
+            clearMatchPredictionFields(match);
             match.goalsA = "x";
             match.goalsB = "x";
             match.completeData = false;
