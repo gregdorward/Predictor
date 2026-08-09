@@ -4861,7 +4861,11 @@ async function getSuccessMeasure(fixtures) {
     if (
       fixtures[i].status === "complete" &&
       fixtures[i].hasOwnProperty("prediction") &&
-      fixtures[i].omit !== true
+      fixtures[i].omit !== true &&
+      fixtures[i].predictionsUnavailable !== true &&
+      Number(fixtures[i].matches_completed_minimum) >= 3 &&
+      fixtures[i].goalsA !== "x" &&
+      fixtures[i].goalsB !== "x"
     ) {
       // 2. Normalize inputs to Numbers to avoid alphabetical comparison errors ("10" vs "2")
       const actualHome = Number(fixtures[i].homeGoals);
@@ -5184,27 +5188,18 @@ export async function getScorePrediction(day, mocked) {
             match.completeData = false;
             await calculateScore(match, index, divider, false, predictedScoresData, fetchedTips);
             break;
-          case match.matches_completed_minimum < 3: {
-            // Still hydrate formHome/formAway (for FormContainer pills) without keeping tip scores.
-            const priorOmit = match.omit;
+          case match.matches_completed_minimum < 3:
+            // Skip tip scoring this early — no tip, no win/loss settlement.
             match.goalsA = "x";
             match.goalsB = "x";
-            match.completeData = false;
-            await calculateScore(
-              match,
-              index,
-              divider,
-              true,
-              predictedScoresData,
-              fetchedTips
-            );
-            match.goalsA = "x";
-            match.goalsB = "x";
+            match.unroundedGoalsA = undefined;
+            match.unroundedGoalsB = undefined;
             match.completeData = false;
             match.predictionsUnavailable = true;
-            match.omit = priorOmit;
+            delete match.prediction;
+            match.predictionOutcome = undefined;
+            match.exactScore = false;
             break;
-          }
           default:
             [
               match.goalsA,

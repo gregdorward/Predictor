@@ -97,16 +97,16 @@ export async function predictMatchById(matchId) {
     match.completeData = false;
     await calculateScore(match, index, divider, false, predictedScores, []);
   } else if (match.matches_completed_minimum < 3) {
-    const priorOmit = match.omit;
+    // Skip tip scoring this early — no tip, no win/loss settlement.
     match.goalsA = "x";
     match.goalsB = "x";
-    match.completeData = false;
-    await calculateScore(match, index, divider, true, predictedScores, []);
-    match.goalsA = "x";
-    match.goalsB = "x";
+    match.unroundedGoalsA = undefined;
+    match.unroundedGoalsB = undefined;
     match.completeData = false;
     match.predictionsUnavailable = true;
-    match.omit = priorOmit;
+    delete match.prediction;
+    match.predictionOutcome = undefined;
+    match.exactScore = false;
   } else {
     [match.goalsA, match.goalsB, match.unroundedGoalsA, match.unroundedGoalsB] =
       await calculateScore(match, index, divider, true, predictedScores, []);

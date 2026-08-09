@@ -78,8 +78,17 @@ function styleFormIndicator(formIndicator) {
   return undefined;
 }
 
-/** Newest-first W/D/L list from results arrays, LastFiveForm, or API formRun. */
-function getDisplayFormResults(form, kind = "all", max = 5) {
+/**
+ * Newest-first W/D/L list for FormContainer.
+ * When currentSeasonOnly, only use league-history results arrays — never
+ * LastFiveForm/formRun, which often still hold previous-season games.
+ */
+function getDisplayFormResults(
+  form,
+  kind = "all",
+  max = 5,
+  { currentSeasonOnly = false } = {}
+) {
   if (!form) return [];
 
   const asWdl = (values) =>
@@ -89,6 +98,7 @@ function getDisplayFormResults(form, kind = "all", max = 5) {
   if (kind === "all") {
     const fromResults = asWdl(form.resultsAll);
     if (fromResults.length) return fromResults.slice(0, max);
+    if (currentSeasonOnly) return [];
     const fromLastFive = asWdl(form.LastFiveForm);
     if (fromLastFive.length) return fromLastFive.slice(0, max);
     // API formRun is oldest→newest; reverse so index 0 is most recent.
@@ -99,6 +109,7 @@ function getDisplayFormResults(form, kind = "all", max = 5) {
     kind === "home" ? form.resultsHome : form.resultsAway;
   const fromVenue = asWdl(venueResults);
   if (fromVenue.length) return fromVenue.slice(0, max);
+  if (currentSeasonOnly) return [];
   // formRun on stored form is home-only / away-only for that side.
   return asWdl(form.formRun).slice(-max).reverse();
 }
@@ -121,7 +132,21 @@ function FormPills({ results, label }) {
   );
 }
 
-const PredictionSection = ({ isProbability, goals, team, probability }) => {
+const PredictionSection = ({
+  isProbability,
+  goals,
+  team,
+  probability,
+  unavailable = false,
+}) => {
+  if (unavailable) {
+    return (
+      <div className="ScoreContainer">
+        <div className="score">-</div>
+      </div>
+    );
+  }
+
   if (!isProbability) {
     return (
       <div className="ScoreContainer">
@@ -302,6 +327,13 @@ function SingleFixture({
   const resolvedForms = resolveFixtureForms();
   const displayHomeForm = fixture.formHome ?? resolvedForms.homeForm;
   const displayAwayForm = fixture.formAway ?? resolvedForms.awayForm;
+  const earlySeason =
+    fixture.predictionsUnavailable === true ||
+    Number(fixture.matches_completed_minimum) < 3;
+  // No tip win/loss chrome until the model is allowed to tip the fixture.
+  const tipResultClass = earlySeason
+    ? ""
+    : `${fixture.predictionOutcome || ""}${fixture.exactScore ? "ExactScore" : ""}`;
 
   return (
     <div key={fixture.game}>
@@ -341,7 +373,7 @@ function SingleFixture({
                 {rightArrow}
               </a>
             </div>
-            <div className={`HomeAndAwayContainer${fixture.predictionOutcome}${fixture.exactScore ? "ExactScore" : ""}`}>
+            <div className={`HomeAndAwayContainer${tipResultClass}`}>
 
               <div className={`ExplainerContainer${isProbability}`}>
                 <div className="HomeOddsExplainer">Odds</div>
@@ -379,6 +411,7 @@ function SingleFixture({
                   team={""}
                   goals={fixture.goalsA}
                   probability={fixture.homeWinProbability}
+                  unavailable={earlySeason}
                 />
                 <div className="ResultContainer">
                   <div className={`result`}>
@@ -389,13 +422,17 @@ function SingleFixture({
                   <div className={`Last5`}>
                     <FormPills
                       label="All"
-                      results={getDisplayFormResults(displayHomeForm, "all")}
+                      results={getDisplayFormResults(displayHomeForm, "all", 5, {
+                        currentSeasonOnly: earlySeason,
+                      })}
                     />
                   </div>
                   <div className={`Last5Home`}>
                     <FormPills
                       label="Home"
-                      results={getDisplayFormResults(displayHomeForm, "home")}
+                      results={getDisplayFormResults(displayHomeForm, "home", 5, {
+                        currentSeasonOnly: earlySeason,
+                      })}
                     />
                   </div>
                 </div>
@@ -413,6 +450,7 @@ function SingleFixture({
                   team="Draw"
                   // goals={fixture.goalsB}
                   probability={fixture.drawProbability}
+                  unavailable={earlySeason}
                 />
                 <div className="ResultContainerExplainer">
                   {/* <div className={`result`}>
@@ -440,6 +478,7 @@ function SingleFixture({
                   team=""
                   goals={fixture.goalsB}
                   probability={fixture.awayWinProbability}
+                  unavailable={earlySeason}
                 />
                 <div className="ResultContainer">
 
@@ -451,13 +490,17 @@ function SingleFixture({
                   <div className={`Last5`}>
                     <FormPills
                       label="All"
-                      results={getDisplayFormResults(displayAwayForm, "all")}
+                      results={getDisplayFormResults(displayAwayForm, "all", 5, {
+                        currentSeasonOnly: earlySeason,
+                      })}
                     />
                   </div>
                   <div className={`Last5Away`}>
                     <FormPills
                       label="Away"
-                      results={getDisplayFormResults(displayAwayForm, "away")}
+                      results={getDisplayFormResults(displayAwayForm, "away", 5, {
+                        currentSeasonOnly: earlySeason,
+                      })}
                     />
                   </div>
                 </div>
