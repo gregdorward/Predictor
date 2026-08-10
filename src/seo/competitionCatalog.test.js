@@ -3,6 +3,7 @@ import {
   getCompetitionById,
   getCompetitionUrl,
   resolveCompetitionParam,
+  resolveFootyStatsLeagueId,
 } from "./competitionCatalog";
 
 describe("competitionCatalog removals and aliases", () => {
@@ -31,6 +32,20 @@ describe("competitionCatalog removals and aliases", () => {
     expect(resolveCompetitionParam("15115")).toEqual({
       redirectTo: "/competition/primeira-liga/",
     });
+  });
+
+  test("aliases Aug 2026 season rollovers to current competition IDs", () => {
+    expect(COMPETITION_ID_ALIASES[15844]).toBe(17403);
+    expect(getCompetitionById(15844)?.slug).toBe("national-league-south");
+    expect(resolveCompetitionParam("15844")).toEqual({
+      redirectTo: "/competition/national-league-south/",
+    });
+    expect(COMPETITION_ID_ALIASES[15632]).toBe(17404);
+    expect(getCompetitionById(15632)?.slug).toBe("serie-b");
+    expect(COMPETITION_ID_ALIASES[12772]).toBe(17426);
+    expect(getCompetitionById(12772)?.slug).toBe("saudi-pro-league");
+    expect(resolveFootyStatsLeagueId(15844)).toBe(17403);
+    expect(resolveFootyStatsLeagueId(17403)).toBe(17403);
   });
 
   test("does not link unavailable competitions", () => {
