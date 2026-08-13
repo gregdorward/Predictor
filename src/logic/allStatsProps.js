@@ -1,5 +1,6 @@
 import { sofaScoreIds } from "../constants/sofaScoreIds";
 import { footyStatsToSofaScoreMap } from "../constants/footyStatsToSofaScore";
+import { resolveFootyStatsLeagueId } from "../seo/competitionCatalog";
 import { rounds } from "../components/TeamOfTheSeason";
 import { API_FORM_ONLY_LEAGUE_IDS } from "./getFixtures";
 import {
@@ -239,17 +240,20 @@ export function leaguePositionOrDash(position) {
 
 export function resolveSofaScoreId(leagueID) {
   if (leagueID == null) return null;
-  const mapping = footyStatsToSofaScoreMap[Number(leagueID)];
+  const resolvedId = resolveFootyStatsLeagueId(leagueID);
+  if (resolvedId == null) return null;
+  const mapping = footyStatsToSofaScoreMap[resolvedId];
   if (mapping?.id != null) return mapping.id;
-  const found = sofaScoreIds.find((obj) => obj[leagueID] !== undefined);
-  return found ? found[leagueID] : null;
+  const found = sofaScoreIds.find((obj) => obj[resolvedId] !== undefined);
+  return found ? found[resolvedId] : null;
 }
 
 /** SofaScore season id for a tournament id (or FootyStats competition id). */
 export function resolveRoundId(sofaScoreIdOrLeagueId) {
   if (sofaScoreIdOrLeagueId == null) return null;
 
-  const asLeague = footyStatsToSofaScoreMap[Number(sofaScoreIdOrLeagueId)];
+  const resolvedLeagueId = resolveFootyStatsLeagueId(sofaScoreIdOrLeagueId);
+  const asLeague = footyStatsToSofaScoreMap[resolvedLeagueId];
   if (asLeague?.season != null) return asLeague.season;
 
   for (const meta of Object.values(footyStatsToSofaScoreMap)) {
