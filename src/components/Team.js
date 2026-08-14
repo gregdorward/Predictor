@@ -5,7 +5,6 @@ import { predictMatchById } from "../logic/predictMatchById";
 import { mapMatchToFixturePageData } from "../logic/buildSingleMatch";
 import { buildLegacyFixtureSections } from "../logic/fixturePageMetrics";
 import FixtureSeasonStats from "./FixtureSeasonStats";
-import { FixtureSeoBody } from "./FixtureSeoShell";
 import ShareableVisual from "./ShareableVisual";
 import SharePageLinkButton from "./SharePageLinkButton";
 import { sanitizeImageFilename } from "../utils/captureElementImage";
@@ -89,13 +88,18 @@ function normalizeResultMatch(match) {
 function LoadingSkeleton({ seoShell = null }) {
   return (
     <div className="FixturePage-loading" aria-busy="true" aria-label="Loading fixture analysis">
-      <div className="FixturePage-skeleton FixturePage-skeleton--hero" />
-      {seoShell ? <FixtureSeoBody {...seoShell} /> : null}
+      {seoShell ? null : (
+        <div className="FixturePage-skeleton FixturePage-skeleton--hero" />
+      )}
       <div className="FixturePage-skeleton FixturePage-skeleton--chart" />
       <div className="FixturePage-skeleton FixturePage-skeleton--card" />
       <div className="FixturePage-skeleton FixturePage-skeleton--card" />
     </div>
   );
+}
+
+function JourneyContentBreak({ children }) {
+  return <p className="FixturePage-contentBreak">{children}</p>;
 }
 
 function CompareRow({ label, homeValue, awayValue }) {
@@ -513,9 +517,7 @@ function TeamPage({ matchId, seoShell = null }) {
 
   if (loading) {
     return (
-      <div
-        className={`FixturePage${seoShell ? " FixturePage--hasSeoBody" : ""}`}
-      >
+      <div className="FixturePage">
         <LoadingSkeleton seoShell={seoShell} />
       </div>
     );
@@ -604,8 +606,11 @@ function TeamPage({ matchId, seoShell = null }) {
     ],
   };
 
+  const homeName = storedFixtureDetailsJson.homeTeamName;
+  const awayName = storedFixtureDetailsJson.awayTeamName;
+
   return (
-    <div className={`FixturePage${seoShell ? " FixturePage--hasSeoBody" : ""}`}>
+    <div className="FixturePage">
       <header className="FixturePage-header">
         <h1 className="FixturePage-heading">
           <span className="FixturePage-teamLine FixturePage-teamLine--home">
@@ -669,8 +674,6 @@ function TeamPage({ matchId, seoShell = null }) {
         />
       </header>
 
-      {seoShell ? <FixtureSeoBody {...seoShell} /> : null}
-
       <p className="FixturePage-homeStatsNote">
         Looking for more? The{" "}
         <a href="/">homepage</a> has more extensive match stats, wider context, an AI
@@ -678,6 +681,10 @@ function TeamPage({ matchId, seoShell = null }) {
       </p>
 
       {matchId && match ? <FixtureSeasonStats match={match} /> : null}
+
+      <JourneyContentBreak>
+        {homeName} and {awayName} compared on attacking and defensive strength.
+      </JourneyContentBreak>
 
       <section className="FixturePage-chartCard">
         <h3 className="FixturePage-statGroupTitle">Team comparison</h3>
@@ -732,6 +739,12 @@ function TeamPage({ matchId, seoShell = null }) {
       </div>
 
       {matchId && pageData?.modelOutputs ? (
+        <JourneyContentBreak>
+          Modelled win, draw and away probabilities for {homeName} vs {awayName}.
+        </JourneyContentBreak>
+      ) : null}
+
+      {matchId && pageData?.modelOutputs ? (
         <section className="FixturePage-modelOutputsCard">
           <h3 className="FixturePage-statGroupTitle">Model Outputs</h3>
           <ModelOutputsChart
@@ -747,12 +760,22 @@ function TeamPage({ matchId, seoShell = null }) {
       ) : null}
 
       {matchId && pageData?.headToHead ? (
+        <JourneyContentBreak>
+          Previous meetings between {homeName} and {awayName}.
+        </JourneyContentBreak>
+      ) : null}
+
+      {matchId && pageData?.headToHead ? (
         <HeadToHeadSection
           headToHead={pageData.headToHead}
           homeTeamName={storedFixtureDetailsJson.homeTeamName}
           awayTeamName={storedFixtureDetailsJson.awayTeamName}
         />
       ) : null}
+
+      <JourneyContentBreak>
+        Recent results for both sides, most recent first.
+      </JourneyContentBreak>
 
       <div className="FixturePage-resultsBlock">
         <h3 className="FixturePage-statGroupTitle">Recent Results</h3>

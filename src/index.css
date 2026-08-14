@@ -14379,9 +14379,18 @@ strong.WC26__inlineHeader {
   font-size: var(--fp-body, 1em);
 }
 
-/* Hide SSR shell once the client fixture page (with badges + SEO body) mounts */
-body:has(.FixturePage--hasSeoBody) .FixturePage--seoShellSsr {
+/* Hide only the duplicate SSR title once the badge header mounts.
+   Keep the SEO paragraphs visible — Journey inserts in-content ads into them. */
+body:has(.FixturePage-headingTeam) .FixturePage--seoShellSsr > .FixturePage-header {
   display: none;
+}
+
+.FixturePage-contentBreak {
+  margin: 1.25rem 0 0.85rem;
+  color: var(--text-color);
+  opacity: 0.78;
+  font-size: 0.95em;
+  line-height: 1.5;
 }
 
 .Competition--seoShell .Competition__seoIntro {
