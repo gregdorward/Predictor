@@ -1146,6 +1146,9 @@ export async function generateFixtures(
             homeGoals_timings,
             awayGoals_timings,
             goal_timings_recorded,
+            pens_recorded,
+            team_a_penalties_won,
+            team_b_penalties_won,
           }) => ({
             home_name,
             away_name,
@@ -1179,6 +1182,9 @@ export async function generateFixtures(
             homeGoals_timings,
             awayGoals_timings,
             goal_timings_recorded,
+            pens_recorded,
+            team_a_penalties_won,
+            team_b_penalties_won,
           })
         );
 

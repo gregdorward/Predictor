@@ -48,6 +48,8 @@ function formatStatValue(label, value) {
       label === "Average Shot Value" ||
       label === "Weighted XG" ||
       label === "Weighted XG Against" ||
+      label === "Average npXG" ||
+      label === "Average npXG Against" ||
       label === "Average Shots" ||
       label === "Average Shots Against") &&
     value !== "" &&

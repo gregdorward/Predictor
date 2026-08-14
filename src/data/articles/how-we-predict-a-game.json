@@ -89,6 +89,10 @@
   ],
   "relatedLinks": [
     {
+      "label": "Non-penalty xG predictions",
+      "href": "/articles/non-penalty-xg-predictions/"
+    },
+    {
       "label": "Customise Tips",
       "href": "/articles/customise-tips-filters/"
     },

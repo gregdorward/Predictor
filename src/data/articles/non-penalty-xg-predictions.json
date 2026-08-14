@@ -1,0 +1,68 @@
+{
+  "slug": "non-penalty-xg-predictions",
+  "layout": "prose",
+  "title": "Non-penalty xG is now part of how we predict games",
+  "subtitle": "Game-by-game chance quality without the skew of a single spot kick",
+  "dek": "Soccer Stats Hub now calculates non-penalty expected goals for each completed fixture and feeds that picture into attack and defence strengths, so predictions reflect open-play performance rather than a fluke penalty.",
+  "publishedAt": "2026-08-14",
+  "updatedAt": "2026-08-14T20:00:00.000Z",
+  "authorLabel": "Soccer Stats Hub",
+  "intro": [
+    "Expected goals are one of the clearest ways to judge how a team has been performing. They ask a simple question: how good were the chances, not only how many times the ball hit the net. There is a catch, though. A penalty is a high-value chance by design. One soft spot kick in stoppage time can inflate a side's xG for that match, and if you roll those matches into season averages the noise sticks around.",
+    "We have now built non-penalty xG into the prediction path on Soccer Stats Hub. For each completed competition fixture we still keep the full xG figure for display. Separately, we calculate non-penalty xG (npxG) on a game-by-game basis and feed that into the attack and defence strengths that shape the predicted score. The aim is a truer reflection of how teams create and concede chances when the game is being played, not when a referee points to the spot."
+  ],
+  "sections": [
+    {
+      "id": "why-npxg",
+      "heading": "Why penalties distort the picture",
+      "paragraphs": [
+        "A penalty is not like an open-play chance carved out through pressure, combinations and shot quality. It is a fixed, high-probability opportunity. Footystats allocate 0.76 expected goals for each penalty awarded. That is fair for describing what happened in the match. It is less fair when you are trying to judge whether a team has been consistently dangerous from open play.",
+        "Imagine two sides with similar raw xG over a stretch of games. One has built that number through repeated box entries and shots from promising positions. The other has a quieter underlying pattern but collected a couple of soft penalties. If the model treats those seasons as identical, the second side looks as threatening as the first. Non-penalty xG strips that distortion out of the strength calculation so fluke or soft penalties do not quietly rewrite a team's profile."
+      ]
+    },
+    {
+      "id": "how-we-calculate",
+      "heading": "How we calculate it, match by match",
+      "paragraphs": [
+        "For every completed fixture in a competition we already store each team's expected goals. We now also keep whether penalties were recorded for that match and how many each side was awarded. When that data is present, we deduct 0.76 xG for each penalty awarded to produce that team's non-penalty xG for the game. The same logic applies the other way for xG against: we remove the opponent's awarded penalties so a defence is not punished in the model for conceding a spot kick.",
+        "We do this per fixture, then rebuild the usual averages, recent windows and weighted figures from those non-penalty values. If penalty data is missing for a league history rebuild, or if we do not have enough competition fixtures to run the full match-by-match path, we fall back to the original xG figures. Predictions still run. They simply stay on the previous behaviour until the richer data is available.",
+        "On the fixture page you will still see average expected goals as before. Alongside it we now show average npxG and average npxG against, so you can compare the full chance picture with the open-play version."
+      ]
+    },
+    {
+      "id": "what-changes-in-predictions",
+      "heading": "What changes in the prediction engine",
+      "paragraphs": [
+        "If you have read our article on how we predict a game, you will know the core path: completed competition fixtures, attack and defence strengths, expected goals for each side in this match, then a scoreline probability grid.",
+        "Non-penalty xG sits inside that strength step. When we weigh \"Average Expected Goals\" and the related xG-against ingredients for attack and defence scoring, the engine now prefers the non-penalty versions where we have them. Display metrics and the broader team picture still show full xG. The strengths that feed the lambdas, and therefore the predicted score and market percentages, lean on the version that is less skewed by spot kicks.",
+        "That does not mean penalties never matter in football. Of course they do. It means a single soft award should not make a team look like a free-scoring machine in the model for weeks afterwards. The prediction should track how sides create and prevent chances when the ball is live."
+      ]
+    },
+    {
+      "id": "how-to-read",
+      "heading": "How to read it as a fan",
+      "paragraphs": [
+        "Use full xG when you want the complete match story, including everything that happened from the spot. Use npxG when you want a cleaner read on open-play threat and the chance quality that is more repeatable week to week.",
+        "If a side's full xG sits well above its npxG, penalties have been doing some of the heavy lifting. That can still be useful context. It is just not the whole story of whether they will carve out the same chances next Saturday without another soft call.",
+        "As always, treat every prediction as a research aid. Lineups change, finishing luck swings, and football refuses to be tidy. Non-penalty xG is another way of keeping the model honest about what kind of performance it is measuring."
+      ]
+    }
+  ],
+  "outro": [
+    "In short: we still show full expected goals, we now calculate non-penalty xG game by game, and that cleaner signal feeds the attack and defence strengths behind the prediction. Less noise from a fluke penalty. A truer reflection of how teams have actually been playing."
+  ],
+  "relatedLinks": [
+    {
+      "label": "How we predict a game",
+      "href": "/articles/how-we-predict-a-game/"
+    },
+    {
+      "label": "Methodology",
+      "href": "/methodology/"
+    },
+    {
+      "label": "Articles",
+      "href": "/articles/"
+    }
+  ]
+}

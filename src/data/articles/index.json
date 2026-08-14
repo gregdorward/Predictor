@@ -1,6 +1,16 @@
 {
   "articles": [
     {
+      "slug": "non-penalty-xg-predictions",
+      "title": "Non-penalty xG is now part of how we predict games",
+      "dek": "Soccer Stats Hub now calculates non-penalty expected goals for each completed fixture and feeds that into attack and defence strengths for a truer read of team performance.",
+      "publishedAt": "2026-08-14",
+      "updatedAt": "2026-08-14T20:00:00.000Z",
+      "heroLabel": "Product",
+      "tags": ["Predictions", "xG", "Methodology"],
+      "ogDescription": "Non-penalty xG is now calculated game by game on Soccer Stats Hub and fed into the prediction engine so chance quality is not skewed by a fluke penalty."
+    },
+    {
       "slug": "customise-tips-filters",
       "title": "How Customise Tips puts the shortlist in your hands",
       "dek": "How Soccer Stats Hub's Customise Tips filters let you shape the tip list around value, form, probabilities and odds.",

@@ -1,6 +1,7 @@
 import indexData from "./index.json";
 import awards from "./world-cup-2026-awards.json";
 import howWePredict from "./how-we-predict-a-game.json";
+import nonPenaltyXgPredictions from "./non-penalty-xg-predictions.json";
 import {
   getArticleBySlug,
   getArticleIndex,
@@ -142,6 +143,43 @@ describe("how-we-predict-a-game article", () => {
 
   test("content contains no em-dashes or en-dashes", () => {
     const text = collectArticleText(howWePredict);
+    expect(text).not.toContain(EM_DASH);
+    expect(text).not.toContain(EN_DASH);
+  });
+});
+
+describe("non-penalty-xg-predictions article", () => {
+  test("has prose layout and required sections", () => {
+    expect(nonPenaltyXgPredictions.layout).toBe("prose");
+    expect(nonPenaltyXgPredictions.slug).toBe("non-penalty-xg-predictions");
+    expect(nonPenaltyXgPredictions.title).toBeTruthy();
+    expect(nonPenaltyXgPredictions.intro.length).toBeGreaterThanOrEqual(2);
+    expect(nonPenaltyXgPredictions.sections.length).toBeGreaterThanOrEqual(3);
+    expect(
+      nonPenaltyXgPredictions.relatedLinks.some(
+        (link) => link.href === "/articles/how-we-predict-a-game/"
+      )
+    ).toBe(true);
+  });
+
+  test("explains game-by-game npxG and prediction use", () => {
+    const text = collectArticleText(nonPenaltyXgPredictions).toLowerCase();
+    expect(text).toContain("non-penalty");
+    expect(text).toContain("penalty");
+    expect(text).toContain("prediction");
+    expect(text).toContain("0.76");
+    expect(
+      nonPenaltyXgPredictions.sections.some((section) => section.id === "why-npxg")
+    ).toBe(true);
+    expect(
+      nonPenaltyXgPredictions.sections.some(
+        (section) => section.id === "what-changes-in-predictions"
+      )
+    ).toBe(true);
+  });
+
+  test("content contains no em-dashes or en-dashes", () => {
+    const text = collectArticleText(nonPenaltyXgPredictions);
     expect(text).not.toContain(EM_DASH);
     expect(text).not.toContain(EN_DASH);
   });

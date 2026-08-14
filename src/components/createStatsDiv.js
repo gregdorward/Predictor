@@ -179,11 +179,25 @@ function Stats(props) {
                     {`Avg XG: ${statDisplay(props.XG)}`}
                   </li>
                   <li
+                    key="TeamNpXG"
+                    className={`TeamNpXG ${getComparisonClass('npXG')}${props.homeOrAway}`}
+                    data-cy={props.name ? props.name + "teamNpXG" : "teamNpXG"}
+                  >
+                    {`Avg npXG: ${statDisplay(props.npXG)}`}
+                  </li>
+                  <li
                     key="TeamXGConceded"
                     className={`TeamXGConceded ${getComparisonClass('XGConceded')}${props.homeOrAway}`}
                     data-cy={props.name ? props.name + "teamXGConceded" : "teamXGConceded"}
                   >
                     {`Avg XG conceeded: ${statDisplay(props.XGConceded)}`}
+                  </li>
+                  <li
+                    key="TeamNpXGConceded"
+                    className={`TeamNpXGConceded ${getComparisonClass('npXGConceded')}${props.homeOrAway}`}
+                    data-cy={props.name ? props.name + "teamNpXGConceded" : "teamNpXGConceded"}
+                  >
+                    {`Avg npXG conceeded: ${statDisplay(props.npXGConceded)}`}
                   </li>
                   <li
                     key="goalDifference"
@@ -605,11 +619,27 @@ function Stats(props) {
             </li>
 
             <li
+              key="TeamNpXG"
+              className={`TeamNpXG ${getComparisonClass('npXG')}${props.homeOrAway}`}
+              data-cy={props.name ? props.name + "teamNpXG" : "teamNpXG"}
+            >
+              {`Avg npXG: ${props.npXG !== undefined ? props.npXG : "N/A"}`}
+            </li>
+
+            <li
               key="TeamXGConceded"
               className={`TeamXGConceded ${getComparisonClass('XGConceded')}${props.homeOrAway}`}
               data-cy={props.name ? props.name + "teamXGConceded" : "teamXGConceded"}
             >
               {`Avg XG conceeded: ${props.XGConceded !== undefined ? props.XGConceded : "N/A"}`}
+            </li>
+
+            <li
+              key="TeamNpXGConceded"
+              className={`TeamNpXGConceded ${getComparisonClass('npXGConceded')}${props.homeOrAway}`}
+              data-cy={props.name ? props.name + "teamNpXGConceded" : "teamNpXGConceded"}
+            >
+              {`Avg npXG conceeded: ${props.npXGConceded !== undefined ? props.npXGConceded : "N/A"}`}
             </li>
 
             <li
@@ -750,11 +780,27 @@ function Stats(props) {
             </li>
 
             <li
+              key="TeamNpXG"
+              className={`TeamNpXG ${getComparisonClass('npXG')}${props.homeOrAway}`}
+              data-cy={props.name ? props.name + "teamNpXG" : "teamNpXG"}
+            >
+              {`Avg npXG: ${props.npXG !== undefined ? props.npXG : "N/A"}`}
+            </li>
+
+            <li
               key="TeamXGConceded"
               className={`TeamXGConceded ${getComparisonClass('XGConceded')}${props.homeOrAway}`}
               data-cy={props.name ? props.name + "teamXGConceded" : "teamXGConceded"}
             >
               {`Avg XG conceeded: ${props.XGConceded !== undefined ? props.XGConceded : "N/A"}`}
+            </li>
+
+            <li
+              key="TeamNpXGConceded"
+              className={`TeamNpXGConceded ${getComparisonClass('npXGConceded')}${props.homeOrAway}`}
+              data-cy={props.name ? props.name + "teamNpXGConceded" : "teamNpXGConceded"}
+            >
+              {`Avg npXG conceeded: ${props.npXGConceded !== undefined ? props.npXGConceded : "N/A"}`}
             </li>
 
             <li

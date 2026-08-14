@@ -2,8 +2,10 @@ import indexData from "./index.json";
 import worldCupAwards from "./world-cup-2026-awards.json";
 import howWePredict from "./how-we-predict-a-game.json";
 import customiseTipsFilters from "./customise-tips-filters.json";
+import nonPenaltyXgPredictions from "./non-penalty-xg-predictions.json";
 
 const ARTICLE_BY_SLUG = {
+  [nonPenaltyXgPredictions.slug]: nonPenaltyXgPredictions,
   [customiseTipsFilters.slug]: customiseTipsFilters,
   [howWePredict.slug]: howWePredict,
   [worldCupAwards.slug]: worldCupAwards,

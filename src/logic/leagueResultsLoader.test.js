@@ -1,5 +1,6 @@
 import {
   MIN_LEAGUE_FIXTURES_FOR_DERIVED_STATS,
+  mapLeagueFixtureResults,
   resolveLeagueResultsForCompetition,
 } from "./leagueResultsLoader";
 
@@ -12,6 +13,54 @@ const makeFixtures = (count) =>
     date_unix: index + 1,
     status: "complete",
   }));
+
+describe("mapLeagueFixtureResults", () => {
+  test("keeps pens_recorded and team penalty counts", () => {
+    const [mapped] = mapLeagueFixtureResults([
+      {
+        home_name: "Home",
+        away_name: "Away",
+        homeGoalCount: 2,
+        awayGoalCount: 1,
+        home_ppg: 1.5,
+        away_ppg: 1.2,
+        date_unix: 1000,
+        team_a_xg: 1.5,
+        team_b_xg: 0.9,
+        odds_ft_1: 2,
+        odds_ft_2: 3.5,
+        odds_ft_x: 3.2,
+        team_a_shots: 10,
+        team_b_shots: 8,
+        team_a_corners: 5,
+        team_b_corners: 4,
+        team_a_shotsOnTarget: 4,
+        team_b_shotsOnTarget: 3,
+        team_a_fouls: 10,
+        team_b_fouls: 11,
+        team_a_red_cards: 0,
+        team_b_red_cards: 0,
+        team_a_possession: 55,
+        team_b_possession: 45,
+        team_a_dangerous_attacks: 40,
+        team_b_dangerous_attacks: 35,
+        pre_match_teamA_overall_ppg: 1.5,
+        pre_match_teamB_overall_ppg: 1.2,
+        game_week: 1,
+        homeGoals_timings: ["10"],
+        awayGoals_timings: ["70"],
+        goal_timings_recorded: 1,
+        pens_recorded: 1,
+        team_a_penalties_won: 1,
+        team_b_penalties_won: 0,
+      },
+    ]);
+
+    expect(mapped.pens_recorded).toBe(1);
+    expect(mapped.team_a_penalties_won).toBe(1);
+    expect(mapped.team_b_penalties_won).toBe(0);
+  });
+});
 
 describe("resolveLeagueResultsForCompetition", () => {
   const originalFetch = global.fetch;
@@ -84,6 +133,9 @@ describe("resolveLeagueResultsForCompetition", () => {
               pre_match_teamA_overall_ppg: 1.5,
               pre_match_teamB_overall_ppg: 1.2,
               game_week: 1,
+              pens_recorded: 1,
+              team_a_penalties_won: 1,
+              team_b_penalties_won: 0,
             })),
           }),
         };
@@ -94,6 +146,9 @@ describe("resolveLeagueResultsForCompetition", () => {
     const result = await resolveLeagueResultsForCompetition(16537, "Irish Premier");
 
     expect(result.fixtures.length).toBeGreaterThan(0);
+    expect(result.fixtures[0].pens_recorded).toBe(1);
+    expect(result.fixtures[0].team_a_penalties_won).toBe(1);
+    expect(result.fixtures[0].team_b_penalties_won).toBe(0);
     expect(global.fetch).toHaveBeenCalledWith(
       expect.stringContaining("/leagueFixtures/16537")
     );

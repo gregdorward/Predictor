@@ -1,6 +1,8 @@
 /** @typedef {{ label: string, value: * }} FixtureStatRow */
 /** @typedef {{ id: string, title: string, home: FixtureStatRow[], away: FixtureStatRow[] }} FixturePageSection */
 
+import { npxgOrXg } from "./nonPenaltyXg";
+
 function formatPercent(value) {
   if (value == null || value === "") {
     return null;
@@ -80,6 +82,7 @@ function getAttackingValue(form, key) {
   const values = {
     averageGoals: form?.avgScored,
     averageExpectedGoals: form?.XGOverall,
+    averageNpXg: roundToTwoDecimals(npxgOrXg(form?.npXGOverall, form?.XGOverall)),
     weightedXg: roundToTwoDecimals(form?.weightedXGAvgFor ?? form?.XGOverall),
     averageShots: roundToTwoDecimals(form?.avgShots),
     averageShotsOnTarget: form?.AverageShotsOnTargetOverall,
@@ -99,6 +102,9 @@ function getDefensiveValue(form, key) {
     cleanSheetPercentage: computeCleanSheetPercentage(form?.allTeamResults),
     averageGoalsAgainst: form?.avgConceeded,
     averageXgAgainst: form?.XGAgainstAvgOverall,
+    averageNpXgAgainst: roundToTwoDecimals(
+      npxgOrXg(form?.npXGAgainstAvgOverall, form?.XGAgainstAvgOverall)
+    ),
     weightedXgAgainst: roundToTwoDecimals(
       form?.weightedXGAvgAgainst ?? form?.XGAgainstAvgOverall
     ),
@@ -120,6 +126,7 @@ function getDefensiveValue(form, key) {
 const ATTACKING_ROW_DEFS = [
   { label: "Average Goals", key: "averageGoals" },
   { label: "Average Expected Goals", key: "averageExpectedGoals" },
+  { label: "Average npXG", key: "averageNpXg" },
   { label: "Weighted XG", key: "weightedXg" },
   { label: "Average Shots", key: "averageShots" },
   { label: "Average Shots On Target", key: "averageShotsOnTarget" },
@@ -133,6 +140,7 @@ const DEFENSIVE_ROW_DEFS = [
   { label: "Clean Sheet Percentage", key: "cleanSheetPercentage" },
   { label: "Average Goals Against", key: "averageGoalsAgainst" },
   { label: "Average XG Against", key: "averageXgAgainst" },
+  { label: "Average npXG Against", key: "averageNpXgAgainst" },
   { label: "Weighted XG Against", key: "weightedXgAgainst" },
   { label: "Average Shots Against", key: "averageShotsAgainst" },
   { label: "Average SOT Against", key: "averageSotAgainst" },
@@ -238,6 +246,24 @@ function buildTendenciesRows(form) {
   const variance = form?.contextMetrics?.scoringVariance;
 
   return [
+    {
+      label: "Average Expected Goals",
+      value: form?.XGOverall ?? null,
+    },
+    {
+      label: "Average npXG",
+      value: roundToTwoDecimals(npxgOrXg(form?.npXGOverall, form?.XGOverall)),
+    },
+    {
+      label: "Average XG Against",
+      value: form?.XGAgainstAvgOverall ?? null,
+    },
+    {
+      label: "Average npXG Against",
+      value: roundToTwoDecimals(
+        npxgOrXg(form?.npXGAgainstAvgOverall, form?.XGAgainstAvgOverall)
+      ),
+    },
     {
       label: "BTTS % (last 10)",
       value: formatPercent(form?.bttsAllPercentage),

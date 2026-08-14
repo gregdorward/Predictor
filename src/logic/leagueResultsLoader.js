@@ -7,7 +7,7 @@ import {
 /** Same threshold as calculateScore's leagueHasEnoughFixtures gate. */
 export const MIN_LEAGUE_FIXTURES_FOR_DERIVED_STATS = 11;
 
-function mapLeagueFixtureResults(gamesFiltered) {
+export function mapLeagueFixtureResults(gamesFiltered) {
   return gamesFiltered.map(
     ({
       home_name,
@@ -42,6 +42,9 @@ function mapLeagueFixtureResults(gamesFiltered) {
       homeGoals_timings,
       awayGoals_timings,
       goal_timings_recorded,
+      pens_recorded,
+      team_a_penalties_won,
+      team_b_penalties_won,
     }) => ({
       home_name,
       away_name,
@@ -75,6 +78,9 @@ function mapLeagueFixtureResults(gamesFiltered) {
       homeGoals_timings,
       awayGoals_timings,
       goal_timings_recorded,
+      pens_recorded,
+      team_a_penalties_won,
+      team_b_penalties_won,
     })
   );
 }

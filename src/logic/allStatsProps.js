@@ -38,7 +38,17 @@ export function getOverallLeagueStatNumbers(form) {
     goals: leagueStatNumber(form.avgScored),
     conceeded: leagueStatNumber(form.avgConceeded),
     XG: leagueStatNumber(form.XGOverall),
+    npXG: leagueStatNumber(
+      form.npXGOverall != null && form.npXGOverall !== ""
+        ? form.npXGOverall
+        : form.XGOverall
+    ),
     XGConceded: leagueStatNumber(form.XGAgainstAvgOverall),
+    npXGConceded: leagueStatNumber(
+      form.npXGAgainstAvgOverall != null && form.npXGAgainstAvgOverall !== ""
+        ? form.npXGAgainstAvgOverall
+        : form.XGAgainstAvgOverall
+    ),
     possession: leagueStatNumber(form.AveragePossessionOverall),
     shots: leagueStatNumber(form.avgShots),
     sot: leagueStatNumber(
@@ -58,7 +68,9 @@ export function getOverallLeagueStats(form) {
     goals: formatLeagueStat(stats.goals),
     conceeded: formatLeagueStat(stats.conceeded),
     XG: formatLeagueStat(stats.XG),
+    npXG: formatLeagueStat(stats.npXG),
     XGConceded: formatLeagueStat(stats.XGConceded),
+    npXGConceded: formatLeagueStat(stats.npXGConceded),
     possession: formatLeagueStat(stats.possession),
     shots: formatLeagueStat(stats.shots),
     sot: formatLeagueStat(stats.sot),
@@ -76,7 +88,17 @@ function getLast5LeagueStatNumbers(form) {
     goals: leagueStatNumber(form.last5Goals),
     conceeded: leagueStatNumber(form.last5GoalsConceeded),
     XG: leagueStatNumber(form.avXGLast5),
+    npXG: leagueStatNumber(
+      form.npXGlast5 != null && form.npXGlast5 !== ""
+        ? form.npXGlast5
+        : form.avXGLast5
+    ),
     XGConceded: leagueStatNumber(form.avXGAgainstLast5),
+    npXGConceded: leagueStatNumber(
+      form.npXGAgainstlast5 != null && form.npXGAgainstlast5 !== ""
+        ? form.npXGAgainstlast5
+        : form.avXGAgainstLast5
+    ),
     possession: leagueStatNumber(form.avPosessionLast5),
     shots: leagueStatNumber(form.avShotsLast5),
     sot: leagueStatNumber(form.avSOTLast5),
@@ -95,7 +117,9 @@ export function getLast5LeagueStats(form) {
     goals: formatLeagueStat(stats.goals),
     conceeded: formatLeagueStat(stats.conceeded),
     XG: formatLeagueStat(stats.XG),
+    npXG: formatLeagueStat(stats.npXG),
     XGConceded: formatLeagueStat(stats.XGConceded),
+    npXGConceded: formatLeagueStat(stats.npXGConceded),
     possession: formatLeagueStat(stats.possession),
     shots: formatLeagueStat(stats.shots),
     sot: formatLeagueStat(stats.sot),
@@ -117,7 +141,9 @@ export function buildTeamAllStatsFields(teamStats, leagueStats, form) {
     conceeded: statOrDash(leagueStats.conceeded),
     averageRating: formatStatOrDash(teamStats?.avgRating),
     XG: statOrDash(leagueStats.XG),
+    npXG: statOrDash(leagueStats.npXG),
     XGConceded: statOrDash(leagueStats.XGConceded),
+    npXGConceded: statOrDash(leagueStats.npXGConceded),
     XGSwing:
       form?.XGChangeRecently != null
         ? fixedStatOrDash(form.XGChangeRecently)
@@ -323,7 +349,9 @@ export const COMPARISON_RULES = [
   { key: "rawPosition", higherIsBetter: false },
   { key: "homeOrAwayLeaguePosition", higherIsBetter: false },
   { key: "XG", higherIsBetter: true },
+  { key: "npXG", higherIsBetter: true },
   { key: "XGConceded", higherIsBetter: false },
+  { key: "npXGConceded", higherIsBetter: false },
   { key: "bigChances", higherIsBetter: true },
   { key: "bigChancesMissed", higherIsBetter: false },
   { key: "bigChancesConceded", higherIsBetter: false },

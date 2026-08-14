@@ -56,6 +56,8 @@ describe("fixture page display metrics", () => {
 
     expect(attacking["Average Goals"]).toBe(1.8);
     expect(attacking["Average Goals"]).not.toBe(form.teamGoalsRollingAverage);
+    expect(attacking["Average Expected Goals"]).toBe(1.35);
+    expect(attacking["Average npXG"]).toBe(1.35);
     expect(attacking["Average Shots"]).toBe(11.4);
     expect(attacking["Average Shots On Target"]).toBe(4.2);
     expect(attacking["Weighted XG"]).toBe(1.43);
@@ -65,10 +67,28 @@ describe("fixture page display metrics", () => {
     expect(defensive["Average Goals Against"]).not.toBe(
       form.teamConceededRollingAverage
     );
+    expect(defensive["Average XG Against"]).toBe(1.1);
+    expect(defensive["Average npXG Against"]).toBe(1.1);
     expect(defensive["Weighted XG Against"]).toBe(1.05);
     expect(defensive["Average SOT Against"]).toBe(3.8);
     expect(defensive["Average Shots Against"]).toBe(10.2);
     expect(defensive["Injury impact"]).toBe(5);
+  });
+
+  test("shows npXG when present and falls back to xG when missing", () => {
+    const withNp = buildFixturePageAttackingMetrics({
+      ...form,
+      npXGOverall: 1.12,
+    });
+    const withNpDef = buildFixturePageDefensiveMetrics({
+      ...form,
+      npXGAgainstAvgOverall: 0.94,
+    });
+
+    expect(withNp["Average Expected Goals"]).toBe(1.35);
+    expect(withNp["Average npXG"]).toBe(1.12);
+    expect(withNpDef["Average XG Against"]).toBe(1.1);
+    expect(withNpDef["Average npXG Against"]).toBe(0.94);
   });
 
   test("computes clean sheet percentage from league results", () => {
@@ -119,8 +139,14 @@ describe("fixture page display metrics", () => {
     expect(sections[0].home[2].value).toBe("W-W-D-L-W");
 
     expect(sections[1].home[0].label).toBe("Average Goals");
-    expect(sections[3].home[0].label).toBe("BTTS % (last 10)");
-    expect(sections[3].home[0].value).toBe("60%");
+    expect(sections[3].home[0].label).toBe("Average Expected Goals");
+    expect(sections[3].home[1].label).toBe("Average npXG");
+    expect(sections[3].home.some((row) => row.label === "BTTS % (last 10)")).toBe(
+      true
+    );
+    expect(
+      sections[3].home.find((row) => row.label === "BTTS % (last 10)")?.value
+    ).toBe("60%");
 
     expect(buildFixtureModelOutputs(match)).toEqual({
       homeWin: 45.2,
