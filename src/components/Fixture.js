@@ -754,7 +754,7 @@ const List = ({
     <>
       <div>
         <div id="Headers"></div>
-        <ul className="FixtureList" id="ssh-content">
+        <ul className="FixtureList">
           {renderFixtureListItems(
             showShortlist ? selectedFixtures : fixtures
           )}
@@ -775,8 +775,8 @@ const List = ({
       )}
       <div>
         <div id="Headers"></div>
-        <div className="InstructionalDiv">Generate predictions and click on any fixture for unparalleled insight</div>
-        <ul className="FixtureList" id="ssh-content">
+        <p className="InstructionalDiv">Generate predictions and click on any fixture for unparalleled insight</p>
+        <ul className="FixtureList">
           {renderFixtureListItems(
             showShortlist ? selectedFixtures : fixtures
           )}

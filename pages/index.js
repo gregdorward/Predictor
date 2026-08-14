@@ -11,8 +11,10 @@ export default function HomePage() {
     <>
       <PageMeta />
       <SiteHeader showThemeToggle withFooter>
-        {landingVisible ? <GuestLandingGate /> : null}
-        <DeferredApp shellMounted onAppReady={() => setLandingVisible(false)} />
+        <div id="ssh-content">
+          {landingVisible ? <GuestLandingGate /> : null}
+          <DeferredApp shellMounted onAppReady={() => setLandingVisible(false)} />
+        </div>
       </SiteHeader>
     </>
   );
