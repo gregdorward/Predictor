@@ -7,6 +7,41 @@ import {
 /** Same threshold as calculateScore's leagueHasEnoughFixtures gate. */
 export const MIN_LEAGUE_FIXTURES_FOR_DERIVED_STATS = 11;
 
+/**
+ * Fetch every page of FootyStats leagueFixtures for a competition.
+ * Returns null when the first request fails or has no data array.
+ */
+export async function fetchAllLeagueFixturesPages(competitionId) {
+  const response = await fetch(apiGetUrl(`leagueFixtures/${competitionId}`));
+  if (!response.ok) {
+    return null;
+  }
+
+  const firstPage = await response.json();
+  if (!Array.isArray(firstPage?.data)) {
+    return null;
+  }
+
+  let allData = firstPage.data;
+  const maxPage = Number(firstPage.pager?.max_page) || 1;
+
+  for (let page = 2; page <= maxPage; page += 1) {
+    const pageResponse = await fetch(
+      apiGetUrl(`leagueFixtures/${competitionId}?page=${page}`)
+    );
+    if (!pageResponse.ok) {
+      break;
+    }
+    const pageJson = await pageResponse.json();
+    if (!Array.isArray(pageJson?.data)) {
+      break;
+    }
+    allData = allData.concat(pageJson.data);
+  }
+
+  return allData;
+}
+
 export function mapLeagueFixtureResults(gamesFiltered) {
   return gamesFiltered.map(
     ({

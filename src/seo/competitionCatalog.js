@@ -97,6 +97,10 @@ export const UNAVAILABLE_COMPETITION_SLUGS = new Set([
  * Keeps old numeric /competition/<id>/ links and fixture metadata resolvable.
  */
 export const COMPETITION_ID_ALIASES = {
+  // Rolled forward 9 Aug 2026
+  15844: 17403, // National League South
+  15632: 17404, // Serie B
+  12772: 17426, // Saudi Pro League
   // Rolled forward 22 Jul 2026
   15657: 17279, // National League
   15845: 17263, // National League North
@@ -125,6 +129,12 @@ export function isCompetitionIndexable(entryOrSlug) {
     typeof entryOrSlug === "string" ? entryOrSlug : entryOrSlug?.slug;
   if (!slug) return false;
   return !UNAVAILABLE_COMPETITION_SLUGS.has(slug);
+}
+
+export function resolveFootyStatsLeagueId(id) {
+  const numericId = Number(id);
+  if (!Number.isFinite(numericId)) return null;
+  return COMPETITION_ID_ALIASES[numericId] ?? numericId;
 }
 
 export function getCompetitionById(id) {

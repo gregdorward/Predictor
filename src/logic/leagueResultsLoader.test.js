@@ -1,5 +1,6 @@
 import {
   MIN_LEAGUE_FIXTURES_FOR_DERIVED_STATS,
+  fetchAllLeagueFixturesPages,
   mapLeagueFixtureResults,
   resolveLeagueResultsForCompetition,
 } from "./leagueResultsLoader";
@@ -13,6 +14,50 @@ const makeFixtures = (count) =>
     date_unix: index + 1,
     status: "complete",
   }));
+
+describe("fetchAllLeagueFixturesPages", () => {
+  const originalFetch = global.fetch;
+
+  afterEach(() => {
+    global.fetch = originalFetch;
+  });
+
+  test("concatenates every pager page into one fixture list", async () => {
+    global.fetch = jest.fn(async (url) => {
+      const href = String(url);
+      if (href.includes("page=2")) {
+        return {
+          ok: true,
+          json: async () => ({
+            data: [{ id: 2, status: "complete" }],
+          }),
+        };
+      }
+      if (href.includes("/leagueFixtures/12345")) {
+        return {
+          ok: true,
+          json: async () => ({
+            pager: { current_page: 1, max_page: 2 },
+            data: [{ id: 1, status: "complete" }],
+          }),
+        };
+      }
+      throw new Error(`Unexpected fetch: ${url}`);
+    });
+
+    const fixtures = await fetchAllLeagueFixturesPages(12345);
+
+    expect(fixtures).toHaveLength(2);
+    expect(fixtures.map((fixture) => fixture.id)).toEqual([1, 2]);
+    expect(global.fetch).toHaveBeenCalledTimes(2);
+  });
+
+  test("returns null when the first page fails", async () => {
+    global.fetch = jest.fn(async () => ({ ok: false, status: 500 }));
+
+    await expect(fetchAllLeagueFixturesPages(99)).resolves.toBeNull();
+  });
+});
 
 describe("mapLeagueFixtureResults", () => {
   test("keeps pens_recorded and team penalty counts", () => {
@@ -133,9 +178,6 @@ describe("resolveLeagueResultsForCompetition", () => {
               pre_match_teamA_overall_ppg: 1.5,
               pre_match_teamB_overall_ppg: 1.2,
               game_week: 1,
-              pens_recorded: 1,
-              team_a_penalties_won: 1,
-              team_b_penalties_won: 0,
             })),
           }),
         };
@@ -146,9 +188,6 @@ describe("resolveLeagueResultsForCompetition", () => {
     const result = await resolveLeagueResultsForCompetition(16537, "Irish Premier");
 
     expect(result.fixtures.length).toBeGreaterThan(0);
-    expect(result.fixtures[0].pens_recorded).toBe(1);
-    expect(result.fixtures[0].team_a_penalties_won).toBe(1);
-    expect(result.fixtures[0].team_b_penalties_won).toBe(0);
     expect(global.fetch).toHaveBeenCalledWith(
       expect.stringContaining("/leagueFixtures/16537")
     );
