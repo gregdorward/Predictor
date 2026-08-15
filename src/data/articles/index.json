@@ -1,6 +1,16 @@
 {
   "articles": [
     {
+      "slug": "what-sets-soccer-stats-hub-apart",
+      "title": "What sets Soccer Stats Hub apart",
+      "dek": "Transparent predictions, value versus the market, BTTS and Over 2.5 tools, and Premium priced well below typical paid research tiers — built for pre-match research, not live scores.",
+      "publishedAt": "2026-08-15",
+      "updatedAt": "2026-08-15T21:00:00.000Z",
+      "heroLabel": "Product",
+      "tags": ["Product", "Predictions", "Premium"],
+      "ogDescription": "What sets Soccer Stats Hub apart: a published prediction model, model probabilities next to bookmaker prices, research filters and multis, at Premium prices usually far below typical paid research subscriptions."
+    },
+    {
       "slug": "non-penalty-xg-predictions",
       "title": "Non-penalty xG is now part of how we predict games",
       "dek": "Soccer Stats Hub now calculates non-penalty expected goals for each completed fixture and feeds that into attack and defence strengths for a truer read of team performance.",

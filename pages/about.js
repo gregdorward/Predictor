@@ -13,7 +13,7 @@ const ABOUT_JSON_LD = {
       url: `${SITE_URL}/about/`,
       name: "About Soccer Stats Hub",
       description:
-        "Soccer Stats Hub delivers transparent football statistics, predictions and data-driven match analysis across 50+ competitions.",
+        "Soccer Stats Hub delivers transparent football statistics, predictions and data-driven match analysis across around 50 competitions at any given time.",
       isPartOf: { "@id": `${SITE_URL}/#website` },
       inLanguage: "en-GB",
     },
@@ -41,7 +41,7 @@ export default function AboutPage() {
             Soccer Stats Hub is a football statistics and predictions platform built for fans
             who want more than fixture lists. We combine deep historical data, current
             form and transparent modelling to surface BTTS trends, Over 2.5 value, correct score
-            probabilities and daily multis across more than 50 competitions.
+            probabilities and daily multis across around 50 competitions at any given time.
           </p>
           <p>
             Our competition pages summarise league-wide markets including average goals, BTTS rates,
@@ -51,7 +51,8 @@ export default function AboutPage() {
           <p>
             Read our <a href="/methodology/">football prediction methodology</a> for more detail
             on how form, xG, PPG, BTTS, Over/Under 2.5, odds and probability models are used
-            across the site.
+            across the site. For pricing, affiliates, live scores and other common questions, see
+            the <a href="/faq/">FAQ</a>.
           </p>
           <h2>Popular competitions</h2>
           <ul>
@@ -73,6 +74,7 @@ export default function AboutPage() {
             <li>Transparent predictions with the underlying stats visible on every match page</li>
             <li>Clear methodology notes explaining the main data inputs and model signals</li>
             <li>Coverage from the Premier League and Champions League to MLS, J League and more</li>
+            <li>No bookmaker affiliate links — odds are research context, not a signup funnel</li>
             <li>Tournament hubs with curated news and previews, including FIFA World Cup 2026</li>
             <li>Dedicated Premier League season preview with sourced analysis and market odds</li>
           </ul>
@@ -80,7 +82,8 @@ export default function AboutPage() {
           <p>
             Soccer Stats Hub is for users aged 18 and over in jurisdictions where sports analysis
             services are permitted. Our predictions are statistical models, not financial advice.
-            Always gamble responsibly.
+            Always gamble responsibly. More detail is in the{" "}
+            <a href="/faq/">frequently asked questions</a>.
           </p>
         </main>
       </SiteHeader>

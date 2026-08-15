@@ -89,7 +89,7 @@ export const PAGE_META = {
   "/about": {
     title: "About Soccer Stats Hub | Football Stats & Predictions",
     description:
-      "Learn how Soccer Stats Hub delivers transparent football statistics, BTTS insights, Over 2.5 analysis and data-driven match predictions across 50+ competitions.",
+      "Learn how Soccer Stats Hub delivers transparent football statistics, BTTS insights, Over 2.5 analysis and data-driven match predictions across around 50 competitions.",
   },
   "/methodology": {
     title: "Football Prediction Methodology | Soccer Stats Hub",
@@ -97,9 +97,9 @@ export const PAGE_META = {
       "How Soccer Stats Hub uses form, xG, Poisson goal models, lambda tuning, BTTS, Over/Under 2.5 and probability outputs for football stats and predictions.",
   },
   "/faq": {
-    title: "FAQ | Soccer Stats Hub",
+    title: "FAQ | Transparent Predictions, BTTS & Premium | Soccer Stats Hub",
     description:
-      "Frequently asked questions about Soccer Stats Hub football stats, predictions, subscriptions and how our analysis works.",
+      "FAQ on Soccer Stats Hub: transparent football predictions, BTTS and Over 2.5 research, model vs bookmaker odds, Premium pricing, competition coverage and why we avoid bookmaker affiliates.",
   },
   "/privacy": {
     title: "Privacy Policy | Soccer Stats Hub",

@@ -1,0 +1,121 @@
+{
+  "slug": "what-sets-soccer-stats-hub-apart",
+  "layout": "prose",
+  "title": "What sets Soccer Stats Hub apart",
+  "subtitle": "Transparent predictions, value versus the market, and a research workflow built for match day",
+  "dek": "Soccer Stats Hub is built for pre-match research: a published model, probabilities next to bookmaker prices, BTTS and Over 2.5 tools, and filters you control, without pretending to be a live-score app.",
+  "publishedAt": "2026-08-15",
+  "updatedAt": "2026-08-15T21:00:00.000Z",
+  "authorLabel": "Soccer Stats Hub",
+  "intro": [
+    "Football stats sites are not all trying to do the same job. Some chase live goals and push alerts. Some archive every career table you can think of. Others sell tip sheets with little you can check. Soccer Stats Hub sits in a different place: pre-match research for fans and bettors who want the numbers behind a pick, not only the pick itself.",
+    "That focus shapes everything on the site. Predictions come with a published method. Model probabilities sit next to bookmaker prices so you can see agreement and disagreement. BTTS, Over 2.5 and multi tools are built for how people actually shortlist games. Premium unlocks the full slate at a price that is usually far below typical paid research and AI-insights subscriptions. Here is what that means in practice."
+  ],
+  "sections": [
+    {
+      "id": "transparent-model",
+      "heading": "A transparent model, not a black box",
+      "paragraphs": [
+        "A tip without a reason is just a claim. On Soccer Stats Hub the path is visible. We build team pictures from completed fixtures in the competition, turn attack and defence into expected goals for the match, then use a Poisson score grid with a Dixon-Coles style adjustment for low-scoring outcomes. From that grid you get a most-likely scoreline, home-draw-away percentages, BTTS and Over/Under 2.5.",
+        "We also publish that story properly. The methodology page and our article on how we predict a game walk through lambdas, form windows, missing-player context and non-penalty xG. You do not have to reverse-engineer a mystery percentage. You can read how the number was shaped, then decide whether you trust it for that fixture."
+      ]
+    },
+    {
+      "id": "value-versus-odds",
+      "heading": "Model probability next to the market",
+      "paragraphs": [
+        "Research is not \"the model said 2-1 so it must win\". A better habit is to ask where the match history and the market agree, and where they do not. Expand a fixture and you see model probabilities beside bookmaker-implied prices for the main outcomes, with a value percentage when they diverge.",
+        "That value layer runs through the daily board as well: best-value picks, insights rankings and filters that keep only games with a minimum edge on match result, Over 2.5 or BTTS. Edge is not a green light on its own. Large gaps can be noise. But putting the disagreement on the page is one of the clearest differences between a research tool and a tipster screenshot."
+      ]
+    },
+    {
+      "id": "workflow",
+      "heading": "A workflow for shortlisting, not scrolling forever",
+      "paragraphs": [
+        "Stats dumps force you to open every match and rebuild the same checklist by hand. Soccer Stats Hub is built around a shortlist habit.",
+        "Customise Tips lets you set presets and sliders for value, form, probabilities and odds, then regenerate the tip list so only matching games survive. Dedicated BTTS and Over 2.5 research pages surface teams and fixtures by those markets. After predictions run you can build multis, including goals-focused and exotic cover structures, and copy them when you are ready.",
+        "You can also tick fixtures into a shareable shortlist URL, capture charts as images, and dig into competition pages that summarise league averages, standings, team rankings and comparison charts. The aim is fewer tabs and more decisions you can explain."
+      ]
+    },
+    {
+      "id": "match-intel",
+      "heading": "Match intel that goes past the scoreline",
+      "paragraphs": [
+        "Once a fixture is open, the useful question is rarely only \"who wins\". It is whether absences matter, how rested the sides are, what the recent pattern looks like, and whether the market already prices that in.",
+        "Premium match views add streaks across competitions, manager context, upcoming fixtures side by side, and missing-player impact framed as attack and defence contribution rather than a flat injury list. Form context covers rest days, congestion and schedule strength. AI match previews pull ratings, score ideas and key players into one readable pass when you want a narrative layer on top of the charts.",
+        "None of that replaces watching the game. It does replace hunting five apps for scraps of the same story."
+      ]
+    },
+    {
+      "id": "coverage-and-hubs",
+      "heading": "Coverage with season context, not only a feed",
+      "paragraphs": [
+        "We cover around 50 competitions at any given time, from the Premier League and Champions League through to leagues and cups that serious researchers actually use. That is narrower than global live-score apps on purpose. Depth of prediction and comparison matters more to us than a number on a coverage badge.",
+        "Around the daily board we also publish editorial hubs when the calendar needs them: a FIFA World Cup 2026 centre with news, groups, team guides and key matches, plus a Premier League season preview with sourced storylines and market odds. Those pieces sit next to the model, so big tournaments and season launches are not only a fixture list."
+      ]
+    },
+    {
+      "id": "price",
+      "heading": "Premium priced for research, not for a tipster markup",
+      "paragraphs": [
+        "Core browsing and a slice of each day's fixtures are free so you can judge the product before you pay. Free users see about a quarter of the board, key stats and a limited tip view. Premium unlocks every match across the competitions we cover, full multi and market tip lists, AI previews, complete insights rankings and the deeper match intel described above.",
+        "Paid research and AI-insights subscriptions in this space often sit somewhere between about £10 and £25 a month. Soccer Stats Hub Premium is £4.99 a month, or £39.99 for the year (other currencies are available at checkout). Against that typical band, monthly Premium is usually around half to four fifths cheaper. Taking the annual plan is typically 70% or more less than paying those higher monthly rates for a full year.",
+        "We are not comparing ourselves to free live-score apps that mainly sell ad removal. Those products solve a different problem. We are talking about paid layers that sell forecasts, filters and research depth. Secure payments run through Stripe. Cancel anytime."
+      ]
+    },
+    {
+      "id": "honest-limits",
+      "heading": "What we are not trying to be",
+      "paragraphs": [
+        "Honesty is part of the product. Soccer Stats Hub is not a live-score centre. There is no minute-by-minute feed and no push alert when a goal goes in. We are not a career-scouting archive with every historical player table, and we do not pretend to own a proprietary event feed that no one else can access. We combine industry data sources with our own modelling, presentation and research tools.",
+        "If you need live second-screen coverage, use a live-score app. If you need deep historical scouting tables, use an archive. If you want transparent pre-match probabilities, value versus the market, BTTS and Over 2.5 research, and filters you control, that is the job we built for."
+      ]
+    },
+    {
+      "id": "no-affiliates",
+      "heading": "On the side of fans, not bookmakers",
+      "paragraphs": [
+        "We deliberately steer clear of affiliate marketing with bookmakers. Some of those deals pay a flat fee when someone signs up and deposits. Many others, especially revenue-share programmes, pay an ongoing cut of the operator's net gaming revenue from the people you referred. That revenue is built from stakes minus winnings, then bonuses and fees, so the affiliate's income rises when those players lose more than they win over time. We would rather not take a cut of that.",
+        "Soccer Stats Hub shows prices so you can compare the model with the market. It does not push you toward a particular sportsbook, or dress a signup bonus as advice. Odds are research context. The product stays on the side of fans who want to understand a fixture, not on the side of the bookies."
+      ]
+    },
+    {
+      "id": "responsible-use",
+      "heading": "How to use it responsibly",
+      "paragraphs": [
+        "Predictions are models. Teams change shape overnight. Red cards happen. A clinical striker can miss an open goal. Treat every output as a research aid, not a guarantee.",
+        "If you use football stats for betting research, follow local laws, only stake what you can afford to lose, and keep it for adults. We link BeGambleAware from the site for a reason. The aim of Soccer Stats Hub is to make the reasoning visible, not to abolish uncertainty."
+      ]
+    }
+  ],
+  "outro": [
+    "What sets Soccer Stats Hub apart is not a louder tip. It is a transparent model, probabilities next to prices, tools for BTTS, Over 2.5 and multis, and match intel you can actually work through before kick-off, at a Premium price that undercuts typical paid research tiers by a wide margin.",
+    "Start free with a sample of today's board. Upgrade when you want the full slate. Either way, expand a fixture and judge the reasoning for yourself."
+  ],
+  "relatedLinks": [
+    {
+      "label": "How we predict a game",
+      "href": "/articles/how-we-predict-a-game/"
+    },
+    {
+      "label": "Customise Tips",
+      "href": "/articles/customise-tips-filters/"
+    },
+    {
+      "label": "Non-penalty xG predictions",
+      "href": "/articles/non-penalty-xg-predictions/"
+    },
+    {
+      "label": "Methodology",
+      "href": "/methodology/"
+    },
+    {
+      "label": "FAQ",
+      "href": "/faq/"
+    },
+    {
+      "label": "About Soccer Stats Hub",
+      "href": "/about/"
+    }
+  ]
+}

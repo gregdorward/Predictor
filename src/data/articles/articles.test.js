@@ -2,6 +2,7 @@ import indexData from "./index.json";
 import awards from "./world-cup-2026-awards.json";
 import howWePredict from "./how-we-predict-a-game.json";
 import nonPenaltyXgPredictions from "./non-penalty-xg-predictions.json";
+import whatSetsApart from "./what-sets-soccer-stats-hub-apart.json";
 import {
   getArticleBySlug,
   getArticleIndex,
@@ -143,6 +144,41 @@ describe("how-we-predict-a-game article", () => {
 
   test("content contains no em-dashes or en-dashes", () => {
     const text = collectArticleText(howWePredict);
+    expect(text).not.toContain(EM_DASH);
+    expect(text).not.toContain(EN_DASH);
+  });
+});
+
+describe("what-sets-soccer-stats-hub-apart article", () => {
+  test("has prose layout and required sections", () => {
+    expect(whatSetsApart.layout).toBe("prose");
+    expect(whatSetsApart.slug).toBe("what-sets-soccer-stats-hub-apart");
+    expect(whatSetsApart.title).toBe("What sets Soccer Stats Hub apart");
+    expect(whatSetsApart.intro.length).toBeGreaterThanOrEqual(2);
+    expect(whatSetsApart.sections.length).toBeGreaterThanOrEqual(5);
+    expect(
+      whatSetsApart.relatedLinks.some(
+        (link) => link.href === "/articles/how-we-predict-a-game/"
+      )
+    ).toBe(true);
+  });
+
+  test("covers transparency, value, workflow and price without naming data providers", () => {
+    const text = collectArticleText(whatSetsApart).toLowerCase();
+    expect(text).toContain("transparent");
+    expect(text).toContain("bookmaker");
+    expect(text).toContain("customise tips");
+    expect(text).toContain("£4.99");
+    expect(text).toContain("£39.99");
+    expect(text).not.toContain("footystats");
+    expect(text).not.toContain("sofascore");
+    expect(
+      whatSetsApart.sections.some((section) => section.id === "honest-limits")
+    ).toBe(true);
+  });
+
+  test("content contains no em-dashes or en-dashes", () => {
+    const text = collectArticleText(whatSetsApart);
     expect(text).not.toContain(EM_DASH);
     expect(text).not.toContain(EN_DASH);
   });

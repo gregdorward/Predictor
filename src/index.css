@@ -611,7 +611,8 @@ h1 {
 
 .HamburgerMenuDiv--open .HamburgerMenuButton {
   position: relative;
-  z-index: 1101;
+  /* Above MobileNavOverlay and typical Mediavine adhesion / sticky units. */
+  z-index: 1000001;
 }
 
 .HamburgerMenuButton {
@@ -651,13 +652,46 @@ h1 {
   left: 0;
   right: 0;
   bottom: 0;
-  z-index: 1100;
+  /* Mediavine adhesion / Scriptwrapper stickies often sit well above 1100. */
+  z-index: 1000000;
   width: 100%;
   background-color: var(--background-color);
   color: var(--text-color);
-  padding: 1em 1.5em 1.5em;
+  padding: 1em 1.5em;
+  /* Clear sticky bottom ads + iOS home indicator so FAQ / last links stay reachable. */
+  padding-bottom: max(8rem, calc(env(safe-area-inset-bottom, 0px) + 7rem));
   overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior: contain;
   box-sizing: border-box;
+}
+
+/* Lock page scroll while the menu is open; overlay handles its own scroll. */
+body.ssh-nav-open {
+  position: fixed;
+  left: 0;
+  right: 0;
+  width: 100%;
+  overflow: hidden;
+}
+
+/* Header must leave its normal z-index 1000 stack or adhesion still covers the X. */
+body.ssh-nav-open .DarkMode {
+  z-index: 1000002;
+}
+
+/*
+ * Hide sticky bottom ad units while the nav is open so they cannot cover FAQ
+ * or intercept touch. Temporary overlay cover is fine; do not leave these
+ * hidden during normal reading.
+ */
+body.ssh-nav-open [id*="adhesion" i],
+body.ssh-nav-open [class*="adhesion" i],
+body.ssh-nav-open [data-type="adhesion"],
+body.ssh-nav-open [id*="grow-me" i],
+body.ssh-nav-open [class*="grow-me" i] {
+  visibility: hidden !important;
+  pointer-events: none !important;
 }
 
 .MobileNavOverlay .NavItems {
@@ -14302,6 +14336,24 @@ strong.WC26__inlineHeader {
 .StaticPage-faqItem h2 {
   margin-top: 0;
   font-size: 1.05rem;
+}
+
+.StaticPage-lead {
+  margin: 0 0 1.5rem;
+  color: var(--faint-text, #666);
+  font-size: 0.98rem;
+}
+
+.StaticPage-moreLinks {
+  margin-top: 2rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--third-background-color, #e5e5e5);
+  font-size: 0.9rem;
+  line-height: 1.7;
+}
+
+.StaticPage-moreLinks a {
+  color: var(--primary-color);
 }
 
 .FixturePage--seoShell .FixturePage-seoIntro {
