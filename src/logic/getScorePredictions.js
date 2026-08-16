@@ -716,6 +716,14 @@ async function getPastLeagueResults(team, game, hOrA, form) {
             : resultedGame.team_b_dangerous_attacks,
         fouls: resultedGame.team_a_fouls === -1 ? 10 : resultedGame.team_a_fouls,
         foulsAgainst: resultedGame.team_b_fouls === -1 ? 10 : resultedGame.team_b_fouls,
+        penaltiesWon:
+          Number(resultedGame.team_a_penalties_won) > 0
+            ? Number(resultedGame.team_a_penalties_won)
+            : 0,
+        penaltiesAgainst:
+          Number(resultedGame.team_b_penalties_won) > 0
+            ? Number(resultedGame.team_b_penalties_won)
+            : 0,
         corners:
           resultedGame.team_a_corners === -1 ? 6 : resultedGame.team_a_corners,
         cornersAgainst: resultedGame.team_b_corners === -1
@@ -851,6 +859,14 @@ async function getPastLeagueResults(team, game, hOrA, form) {
             : resultedGame.team_a_dangerous_attacks,
         fouls: resultedGame.team_b_fouls === -1 ? 10 : resultedGame.team_b_fouls,
         foulsAgainst: resultedGame.team_a_fouls === -1 ? 10 : resultedGame.team_a_fouls,
+        penaltiesWon:
+          Number(resultedGame.team_b_penalties_won) > 0
+            ? Number(resultedGame.team_b_penalties_won)
+            : 0,
+        penaltiesAgainst:
+          Number(resultedGame.team_a_penalties_won) > 0
+            ? Number(resultedGame.team_a_penalties_won)
+            : 0,
         corners:
           resultedGame.team_b_corners === -1 ? 6 : resultedGame.team_b_corners,
         cornersAgainst: resultedGame.team_a_corners === -1

@@ -206,7 +206,8 @@ function SingleFixture({
   showShortlist,
   isProbability,
   handleToggleTip,
-  userTips
+  userTips,
+  dayFixtureIndex,
 }) {
   const dispatch = useDispatch();
   const [showGameStats, setShowGameStats] = useState(false);
@@ -523,6 +524,7 @@ function SingleFixture({
             displayBool={true}
             handleToggleTip={handleToggleTip}
             userTips={userTips}
+            dayFixtureIndex={dayFixtureIndex}
           />
         )}
       </Suspense>
@@ -551,6 +553,7 @@ function SingleFixture({
 
 const List = ({
   fixtures,
+  uncappedFixtures,
   mock,
   showShortlist,
   setShowShortlist,
@@ -702,20 +705,27 @@ const List = ({
   const shareableLink = `${baseUrl}?shortlist=${fixtureIdsString}&view=shortlist`;
   const hasShortlistInUrl = new URLSearchParams(window.location.search).has('shortlist');
   const isShortlistVisible = selectedFixtures.length > 0 || hasShortlistInUrl;
-  const renderSingleFixture = (fixture) => (
-    <SingleFixture
-      shortlist={shortlist}
-      showShortlist={showShortlist}
-      fixture={fixture}
-      key={fixture.id}
-      mock={mock}
-      checked={selectedFixtures.some((f) => f.id === fixture.id)}
-      onToggle={() => handleToggle(fixture)}
-      isProbability={isProbability}
-      handleToggleTip={handleToggleTip}
-      userTips={userTips}
-    />
-  );
+  const renderSingleFixture = (fixture) => {
+    const dayFixtureIndex = Array.isArray(uncappedFixtures)
+      ? uncappedFixtures.findIndex((f) => f.id === fixture.id)
+      : -1;
+
+    return (
+      <SingleFixture
+        shortlist={shortlist}
+        showShortlist={showShortlist}
+        fixture={fixture}
+        key={fixture.id}
+        mock={mock}
+        checked={selectedFixtures.some((f) => f.id === fixture.id)}
+        onToggle={() => handleToggle(fixture)}
+        isProbability={isProbability}
+        handleToggleTip={handleToggleTip}
+        userTips={userTips}
+        dayFixtureIndex={dayFixtureIndex}
+      />
+    );
+  };
 
   const renderFixtureListItems = (list) =>
     list.flatMap((fixture, index) => {
@@ -873,6 +883,7 @@ export function Fixture(props) {
 
       <List
         fixtures={listSource}
+        uncappedFixtures={props.uncappedFixtures}
         showShortlist={showShortlist}
         setShowShortlist={setShowShortlist}
         isProbability={props.isProbability}

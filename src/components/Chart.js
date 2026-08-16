@@ -633,7 +633,28 @@ export const DoughnutChart = ({ pointsTotal, predictedPoints, deltaPTS, theme, l
 
 
 export function RadarChart(props) {
-  const { title, labels, data, data2, team1, team2, max = 1, shareCapture = false } = props;
+  const {
+    title,
+    labels,
+    data,
+    data2,
+    team1,
+    team2,
+    max = 1,
+    shareCapture = false,
+    subtitle = "Higher values indicate stronger ratings",
+    rawTooltipLabels,
+    maintainAspectRatio = true,
+    aspectRatio = 1,
+    abbreviateLabels = true,
+    abbreviateLongLabelsOnly = false,
+    abbreviateMaxLength = 10,
+    wrapPointLabels = false,
+    wrapLabelMaxLength = 11,
+    pointLabelFontSize = 9,
+    pointLabelPadding = 4,
+    layoutPadding = 4,
+  } = props;
   const theme = useChartTheme();
   const { color, gridColor, tooltipBackground } = getChartColors(theme);
 
@@ -654,6 +675,37 @@ export function RadarChart(props) {
     "XG For": "XGF",
     "XG Against": "XGA",
     "Attacking precision": "Precision",
+    "Dangerous attacks": "D. Attacks",
+    "Shots on target": "SOT",
+    "Big chances": "B. Chances",
+    "Shooting accuracy": "Acc",
+    "Shot conversion": "Conv",
+    "Shots inside box %": "Shot prox",
+    "Shot Proximity": "Shot prox",
+    "Goals conceded": "GA",
+    "xG conceded": "xGA",
+    "SOT against": "SOTA",
+    "Clean sheet %": "CS %",
+    "Big chances conceded": "B. Chances A",
+    "Shots inside box against": "Box shots agst",
+    "Pass accuracy": "Pass %",
+    "Attacking-half pass %": "Attk pass %",
+    "Successful dribbles": "Dribbles",
+    "Long-ball %": "LB %",
+    "Ball recoveries": "Recoveries",
+    "Duels won %": "Duels %",
+    "Venue PPG": "H/A PPG",
+    "Free-kick goals": "FK goals",
+    "Fouls per game": "Fouls",
+    "Fouls faced": "Fouls won",
+    "Yellow cards / game": "Yellow C",
+    "Red cards / game": "Red C",
+    "Penalties for": "Pens F",
+    "Penalties conceded": "Pens A",
+    "Offsides per game": "Offsides",
+    "Possession rating": "Poss",
+    "XGF rating": "XGF",
+    "XGA rating": "XGA",
   };
 
   const abbreviateRadarLabel = (label) => {
@@ -661,23 +713,57 @@ export function RadarChart(props) {
       return radarLabelAbbreviations[label];
     }
 
+    if (abbreviateLongLabelsOnly && label.length <= abbreviateMaxLength) {
+      return label;
+    }
+
     const words = label.trim().split(/\s+/);
     if (words.length > 1) {
       return words.map((word) => word[0]?.toUpperCase() ?? "").join("");
     }
 
+    if (abbreviateLongLabelsOnly) {
+      return label;
+    }
+
     return label.length > 5 ? label.slice(0, 4) : label;
   };
 
-  const displayLabels = labels.map(abbreviateRadarLabel);
+  /** Split long labels onto 2 lines so Chart.js keeps the radar centered. */
+  const wrapRadarLabel = (label, maxLineLength = 11) => {
+    const text = String(label || "").trim();
+    const words = text.split(/\s+/).filter(Boolean);
+    if (words.length <= 1 || text.length <= maxLineLength) {
+      return text;
+    }
+    if (words.length === 2) {
+      return words;
+    }
+    const mid = Math.ceil(words.length / 2);
+    return [words.slice(0, mid).join(" "), words.slice(mid).join(" ")];
+  };
+
+  let displayLabels = abbreviateLabels
+    ? labels.map(abbreviateRadarLabel)
+    : labels;
+  if (wrapPointLabels) {
+    displayLabels = displayLabels.map((label) =>
+      wrapRadarLabel(label, wrapLabelMaxLength)
+    );
+  }
+
+  const resolvedLayoutPadding =
+    layoutPadding != null && typeof layoutPadding === "object"
+      ? layoutPadding
+      : layoutPadding;
 
   const options = {
     color,
     responsive: true,
-    maintainAspectRatio: true,
-    aspectRatio: 1,
+    maintainAspectRatio,
+    aspectRatio,
     layout: {
-      padding: 4,
+      padding: resolvedLayoutPadding,
     },
     animation: {
       duration: 700,
@@ -704,10 +790,10 @@ export function RadarChart(props) {
         pointLabels: {
           color,
           font: {
-            size: 9,
+            size: pointLabelFontSize,
             weight: "500",
           },
-          padding: 4,
+          padding: pointLabelPadding,
         },
       },
     },
@@ -740,6 +826,15 @@ export function RadarChart(props) {
             return labels[index] ?? items[0]?.label ?? "";
           },
           label(context) {
+            const index = context.dataIndex;
+            const rawPair = Array.isArray(rawTooltipLabels)
+              ? rawTooltipLabels[index]
+              : null;
+            if (rawPair) {
+              const raw =
+                context.datasetIndex === 0 ? rawPair.home : rawPair.away;
+              return `${context.dataset.label}: ${raw}`;
+            }
             return `${context.dataset.label}: ${Number(context.raw).toFixed(2)}`;
           },
         },
@@ -757,8 +852,8 @@ export function RadarChart(props) {
         },
       },
       subtitle: {
-        display: true,
-        text: "Higher values indicate stronger ratings",
+        display: Boolean(subtitle),
+        text: subtitle || "",
         color,
         font: {
           size: 11,
@@ -810,7 +905,11 @@ export function RadarChart(props) {
       className="ComparisonBarChart ComparisonRadarChart"
       {...(shareCapture ? { "data-share-capture": true } : {})}
     >
-      <Radar key={theme} options={options} data={chartData} />
+      <Radar
+        key={`${theme}-${abbreviateLabels}-${wrapPointLabels}-${pointLabelFontSize}-${JSON.stringify(layoutPadding)}`}
+        options={options}
+        data={chartData}
+      />
     </div>
   );
 }

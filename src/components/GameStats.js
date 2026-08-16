@@ -104,6 +104,8 @@ import BetSlipFooter from "../components/Betslip";
 import { TeamImpactSummary } from "./MissingPlayersList";
 import { predictedScoresData } from "../logic/getScorePredictions";
 import { MatchTacticalComparison } from "../components/TacticalApproach";
+import CustomRadarComparison from "./CustomRadarComparison";
+import { isCustomRadarUnlocked } from "../logic/customRadarMetrics";
 import { GoalTimingHeatShare } from "../components/GoalTimingHeatStrip";
 import SeasonPpgChart from "./SeasonPpgChart";
 import ShareableVisual from "./ShareableVisual";
@@ -344,7 +346,7 @@ function getMatchOddsProbabilities(scoreMatrix = []) {
 
 
 
-function GameStats({ game, displayBool, stats, handleToggleTip, userTips }) {
+function GameStats({ game, displayBool, stats, handleToggleTip, userTips, dayFixtureIndex }) {
   console.log(game);
 
   // const { user } = useAuth();
@@ -4463,6 +4465,15 @@ function GameStats({ game, displayBool, stats, handleToggleTip, userTips }) {
                   homeOdds={game.homeOdds} // Pass current match odds
                   awayOdds={game.awayOdds} /></>
               }
+            />
+            <CustomRadarComparison
+              unlocked={isCustomRadarUnlocked(isPaidUser, dayFixtureIndex)}
+              homeTeam={game.homeTeam}
+              awayTeam={game.awayTeam}
+              homeStats={homeAllStatsProps}
+              awayStats={awayAllStatsProps}
+              homeForm={homeForm}
+              awayForm={awayForm}
             />
           </>
           {/* <MatchTacticalComparison teamAData={teamAData} teamBData={teamBData} /> */}

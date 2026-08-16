@@ -8656,8 +8656,9 @@ body.dark-mode .MetricTrendTables-arrow {
 }
 
 .ComparisonRadarChart canvas {
-  margin-left: auto;
-  margin-right: auto;
+  display: block !important;
+  margin-left: auto !important;
+  margin-right: auto !important;
   max-height: 42em;
 }
 
@@ -11052,6 +11053,170 @@ h5.section-title {
   box-shadow: none;
 }
 
+.CustomRadarLocked {
+  width: 100%;
+}
+
+.CustomRadarLockedHint {
+  margin: 0.35rem 0 0.75rem;
+  font-size: 0.85em;
+  opacity: 0.8;
+  text-align: center;
+}
+
+.CustomRadarBuilder {
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+  padding: 0.5rem 0.25rem 1rem;
+  text-align: left;
+}
+
+.CustomRadarIntro {
+  margin: 0;
+  font-size: 0.92em;
+  line-height: 1.4;
+  opacity: 0.9;
+}
+
+.CustomRadarPresets {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.45rem;
+}
+
+.CustomRadarPresetBtn {
+  border: 1px solid var(--accent-color);
+  background: transparent;
+  color: var(--text-color);
+  border-radius: 999px;
+  padding: 0.35rem 0.75rem;
+  font-size: 0.85em;
+  cursor: pointer;
+}
+
+.CustomRadarPresetBtn:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+.CustomRadarPresetBtn--active,
+.CustomRadarPresetBtn:not(:disabled):hover {
+  background-color: var(--accent-color);
+  color: var(--button-text-color);
+}
+
+.CustomRadarCounter {
+  font-size: 0.85em;
+  font-weight: 600;
+  opacity: 0.85;
+}
+
+.CustomRadarGroups {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.CustomRadarGroupTitle {
+  margin: 0 0 1em;
+  padding: 0 0 0.6rem;
+  font-size: 1.125em;
+  font-weight: 600;
+  width: 100%;
+  border-bottom: none;
+  background-image: linear-gradient(
+    to right,
+    var(--primary-color) 0%,
+    var(--primary-color) 15%,
+    var(--background-color) 50%
+  );
+  background-repeat: no-repeat;
+  background-position: left bottom;
+  background-size: 100% 1px;
+}
+
+.CustomRadarChips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+}
+
+.CustomRadarChips .Competition__comparisonTeamChip:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.CustomRadarHint {
+  margin: 0.25rem 0;
+  font-size: 0.9em;
+  opacity: 0.8;
+  text-align: center;
+}
+
+.CustomRadarShare {
+  margin: 0.25rem auto 0;
+  width: 100%;
+  max-width: 820px;
+  box-sizing: border-box;
+}
+
+.CustomRadarCapture {
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.CustomRadarChartWrap {
+  position: relative;
+  width: 100%;
+  height: min(88vw, 560px);
+  min-height: 400px;
+  max-width: 820px;
+  margin: 0 auto;
+}
+
+.CustomRadarChartWrap .ComparisonRadarChart {
+  width: 100%;
+  max-width: none;
+  height: 100%;
+  margin: 0;
+  box-sizing: border-box;
+  overflow: visible;
+}
+
+/* Override global canvas { display:inline; max-width/height:36em; margin:1em } */
+.CustomRadarChartWrap .ComparisonRadarChart canvas {
+  display: block !important;
+  width: 100% !important;
+  height: 100% !important;
+  max-width: none !important;
+  max-height: none !important;
+  margin: 0 !important;
+}
+
+.CustomRadarChartWrap .ComparisonRadarChart > div {
+  position: relative !important;
+  width: 100% !important;
+  height: 100% !important;
+}
+
+@media (max-width: 640px) {
+  .CustomRadarShare {
+    max-width: 100%;
+  }
+
+  .CustomRadarChartWrap {
+    height: min(108vw, 440px);
+    min-height: 340px;
+    max-width: 100%;
+  }
+
+  .CustomRadarCapture .ComparisonBarChart {
+    padding-left: 0.15rem;
+    padding-right: 0.15rem;
+  }
+}
+
 .KeyPlayerCard {
   display: flex;
   flex-direction: column;
@@ -13212,7 +13377,7 @@ strong.WC26__inlineHeader {
   border-radius: 999px;
   color: var(--text-color);
   cursor: pointer;
-  font-size: 0.85em;
+  font-size: 1em;
   font-family: inherit;
   padding: 0.35em 0.75em;
   line-height: 1.2;
