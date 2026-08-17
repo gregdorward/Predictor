@@ -1,7 +1,9 @@
 import dynamic from "next/dynamic";
 import PageMeta from "../../src/components/PageMeta";
 import JsonLd from "../../src/components/JsonLd";
-import FixtureSeoShell from "../../src/components/FixtureSeoShell";
+import FixtureSeoShell, {
+  FixtureSeoExtras,
+} from "../../src/components/FixtureSeoShell";
 import SiteHeader from "../../src/components/SiteHeader";
 import {
   buildFixtureJsonLd,
@@ -59,15 +61,16 @@ export default function FixtureByParam({
       <SiteHeader showThemeToggle withFooter>
         <div id="ssh-content">
           <FixtureSeoShell {...seoShell} ssrOnly />
-          {!noIndex && (
-            <SeoPageLinks
-              relatedLinks={relatedFixtureLinks}
-              relatedLabel="Upcoming fixtures"
-              ssrOnly
-            />
-          )}
           <TeamPage matchId={matchId} seoShell={seoShell} />
         </div>
+        {!noIndex && (
+          <SeoPageLinks
+            relatedLinks={relatedFixtureLinks}
+            relatedLabel="Upcoming fixtures"
+            ssrOnly
+          />
+        )}
+        <FixtureSeoExtras {...seoShell} />
       </SiteHeader>
     </>
   );
@@ -128,7 +131,8 @@ export async function getServerSideProps({ params }) {
         kickOff: formatKickOff(snapshot.date_unix),
         competitionUrl,
         competitionName: competition?.name || meta.league || null,
-        gameWeek: snapshot.game_week ?? snapshot.matches_completed_minimum ?? null,
+        homeBadge: snapshot.home_image || snapshot.homeBadge || null,
+        awayBadge: snapshot.away_image || snapshot.awayBadge || null,
       },
     },
   };

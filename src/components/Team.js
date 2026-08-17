@@ -611,52 +611,60 @@ function TeamPage({ matchId, seoShell = null }) {
 
   return (
     <div className="FixturePage">
-      <header className="FixturePage-header">
-        <h1 className="FixturePage-heading">
-          <span className="FixturePage-teamLine FixturePage-teamLine--home">
-            <CreateBadge
-              image={storedFixtureDetailsJson.homeTeamBadge}
-              ClassName="FixturePage-badge FixturePage-badge--home"
-              alt=""
-            />
-            <span
-              className="FixturePage-headingTeam FixturePage-headingTeam--home"
-              title={storedFixtureDetailsJson.homeTeamName}
-            >
-              {storedFixtureDetailsJson.homeTeamName}
-            </span>
-          </span>
-          <span className="FixturePage-vs">v</span>
-          <span className="FixturePage-teamLine FixturePage-teamLine--away">
-            <CreateBadge
-              image={storedFixtureDetailsJson.awayTeamBadge}
-              ClassName="FixturePage-badge FixturePage-badge--away"
-              alt=""
-            />
-            <span
-              className="FixturePage-headingTeam FixturePage-headingTeam--away"
-              title={storedFixtureDetailsJson.awayTeamName}
-            >
-              {storedFixtureDetailsJson.awayTeamName}
-            </span>
-          </span>
-        </h1>
+      <header
+        className={`FixturePage-header${
+          seoShell ? " FixturePage-header--supplement" : ""
+        }`}
+      >
+        {!seoShell ? (
+          <>
+            <h1 className="FixturePage-heading">
+              <span className="FixturePage-teamLine FixturePage-teamLine--home">
+                <CreateBadge
+                  image={storedFixtureDetailsJson.homeTeamBadge}
+                  ClassName="FixturePage-badge FixturePage-badge--home"
+                  alt=""
+                />
+                <span
+                  className="FixturePage-headingTeam FixturePage-headingTeam--home"
+                  title={storedFixtureDetailsJson.homeTeamName}
+                >
+                  {storedFixtureDetailsJson.homeTeamName}
+                </span>
+              </span>
+              <span className="FixturePage-vs">v</span>
+              <span className="FixturePage-teamLine FixturePage-teamLine--away">
+                <CreateBadge
+                  image={storedFixtureDetailsJson.awayTeamBadge}
+                  ClassName="FixturePage-badge FixturePage-badge--away"
+                  alt=""
+                />
+                <span
+                  className="FixturePage-headingTeam FixturePage-headingTeam--away"
+                  title={storedFixtureDetailsJson.awayTeamName}
+                >
+                  {storedFixtureDetailsJson.awayTeamName}
+                </span>
+              </span>
+            </h1>
 
-        <div className="FixturePage-meta">
-          {storedFixtureDetailsJson.leagueName ? (
-            <span className="FixturePage-metaItem">
-              {storedFixtureDetailsJson.leagueName}
-            </span>
-          ) : null}
-          <span className="FixturePage-metaItem">
-            KO: {storedFixtureDetailsJson.time}
-          </span>
-          {storedFixtureDetailsJson.stadium ? (
-            <span className="FixturePage-metaItem">
-              {storedFixtureDetailsJson.stadium}
-            </span>
-          ) : null}
-        </div>
+            <div className="FixturePage-meta">
+              {storedFixtureDetailsJson.leagueName ? (
+                <span className="FixturePage-metaItem">
+                  {storedFixtureDetailsJson.leagueName}
+                </span>
+              ) : null}
+              <span className="FixturePage-metaItem">
+                KO: {storedFixtureDetailsJson.time}
+              </span>
+              {storedFixtureDetailsJson.stadium ? (
+                <span className="FixturePage-metaItem">
+                  {storedFixtureDetailsJson.stadium}
+                </span>
+              ) : null}
+            </div>
+          </>
+        ) : null}
 
         <div className="FixturePage-prediction">
           <span className="FixturePage-predictionLabel">Predicted score</span>

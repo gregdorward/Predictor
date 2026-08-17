@@ -1,10 +1,10 @@
 import { buildFixtureSeoParagraphs } from "../seo/seoShellCopy";
+import { CreateBadge } from "./createBadge";
 
 export function FixtureSeoBody({
   home,
   away,
   league,
-  competitionUrl,
   competitionName,
 }) {
   const introParagraphs = buildFixtureSeoParagraphs({
@@ -14,8 +14,6 @@ export function FixtureSeoBody({
     competitionName,
   });
 
-  const competition = league || competitionName;
-
   return (
     <div className="FixturePage-seoBody">
       <div className="FixturePage-seoIntro">
@@ -23,6 +21,21 @@ export function FixtureSeoBody({
           <p key={paragraph.slice(0, 48)}>{paragraph}</p>
         ))}
       </div>
+    </div>
+  );
+}
+
+/** Links + FAQ for crawlers / no-JS. Keep outside #ssh-content so Journey
+ *  does not treat the extra FAQ paragraphs as the in-content article. */
+export function FixtureSeoExtras({
+  league,
+  competitionUrl,
+  competitionName,
+}) {
+  const competition = league || competitionName;
+
+  return (
+    <div className="FixturePage FixturePage--seoExtras">
       <p className="FixturePage-seoLinks">
         <a href="/fixtures/">Browse upcoming fixtures</a>
         {competitionUrl && competitionName ? (
@@ -77,8 +90,9 @@ export default function FixtureSeoShell({
   league,
   stadium,
   kickOff,
-  competitionUrl,
   competitionName,
+  homeBadge = null,
+  awayBadge = null,
   ssrOnly = false,
 }) {
   return (
@@ -90,7 +104,27 @@ export default function FixtureSeoShell({
     >
       <header className="FixturePage-header">
         <h1 className="FixturePage-heading">
-          {home} vs {away}
+          <span className="FixturePage-teamLine FixturePage-teamLine--home">
+            <CreateBadge
+              image={homeBadge || "-"}
+              ClassName="FixturePage-badge FixturePage-badge--home"
+              alt=""
+            />
+            <span className="FixturePage-headingTeam FixturePage-headingTeam--home">
+              {home}
+            </span>
+          </span>
+          <span className="FixturePage-vs">v</span>
+          <span className="FixturePage-teamLine FixturePage-teamLine--away">
+            <CreateBadge
+              image={awayBadge || "-"}
+              ClassName="FixturePage-badge FixturePage-badge--away"
+              alt=""
+            />
+            <span className="FixturePage-headingTeam FixturePage-headingTeam--away">
+              {away}
+            </span>
+          </span>
         </h1>
         <div className="FixturePage-meta">
           {league ? <span className="FixturePage-metaItem">{league}</span> : null}
@@ -102,7 +136,6 @@ export default function FixtureSeoShell({
         home={home}
         away={away}
         league={league}
-        competitionUrl={competitionUrl}
         competitionName={competitionName}
       />
     </section>

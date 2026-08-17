@@ -1,7 +1,9 @@
 import dynamic from "next/dynamic";
 import PageMeta from "../../src/components/PageMeta";
 import JsonLd from "../../src/components/JsonLd";
+import SiteHeader from "../../src/components/SiteHeader";
 import CompetitionSeoShell, {
+  CompetitionSeoExtras,
   buildCompetitionSeoShell,
 } from "../../src/components/CompetitionSeoShell";
 import SeoPageLinks from "../../src/components/SeoPageLinks";
@@ -40,13 +42,20 @@ export default function CompetitionByParam({
         ogImageAlt={ogImageAlt}
       />
       <JsonLd data={jsonLd} />
-      <CompetitionSeoShell {...seoShell} />
-      <SeoPageLinks relatedLinks={seoShell.relatedLinks} ssrOnly />
-      <CompetitionPage
-        seasonId={seasonId}
-        skipHero
-        relatedLinks={seoShell.relatedLinks}
-      />
+      <SiteHeader
+        showThemeToggle
+        withFooter
+        beforeFooter={
+          <SeoPageLinks relatedLinks={seoShell.relatedLinks} />
+        }
+      >
+        <div id="ssh-content">
+          <CompetitionSeoShell {...seoShell} />
+          <CompetitionPage seasonId={seasonId} skipHero />
+        </div>
+        <SeoPageLinks relatedLinks={seoShell.relatedLinks} ssrOnly />
+        <CompetitionSeoExtras {...seoShell} />
+      </SiteHeader>
     </>
   );
 }

@@ -25,7 +25,7 @@ export default function WorldCupBanner() {
           ⚽
         </span>
         <span className="WC26Banner__copy">
-          <strong className="WC26Banner__title">Premier League 2026/27</strong>
+          <strong className="WC26Banner__title">Premier League 2026/27 preview</strong>
           <span className="WC26Banner__sub">
             Season preview, Betfair odds, transfers &amp; all 20 club guides
           </span>

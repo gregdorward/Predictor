@@ -8,7 +8,6 @@ import {
   TableRow,
   Paper,
 } from "@material-ui/core";
-import SiteHeader from "./SiteHeader";
 import Collapsable from "./CollapsableElement";
 import { apiGetUrl } from "../utils/apiUrl";
 import { initTheme } from "../utils/theme";
@@ -26,7 +25,6 @@ import CompetitionStandings from "./competition/CompetitionStandings";
 import CompetitionPositionRaceChart from "./competition/CompetitionPositionRaceChart";
 import CompetitionMetricRankings from "./competition/CompetitionMetricRankings";
 import CompetitionTeamComparison from "./competition/CompetitionTeamComparison";
-import SeoPageLinks from "./SeoPageLinks";
 import {
   getSofaScoreIdForSeason,
   formatPercent,
@@ -100,7 +98,6 @@ export default function CompetitionPage({
   seasonId,
   initialData = null,
   skipHero = false,
-  relatedLinks = [],
 }) {
   const [data, setData] = useState(initialData);
   const [logoUrl, setLogoUrl] = useState(null);
@@ -172,13 +169,8 @@ export default function CompetitionPage({
   const teams = getTeamsList(data);
 
   return (
-    <SiteHeader
-      showThemeToggle
-      withFooter
-      beforeFooter={<SeoPageLinks relatedLinks={relatedLinks} />}
-    >
-      <main className="Competition">
-        <a href="/" className="HomeLink">Home</a>
+    <main className="Competition">
+      <a href="/" className="HomeLink">Home</a>
 
         {loading && <LoadingSkeleton />}
 
@@ -221,7 +213,6 @@ export default function CompetitionPage({
             </section>
             )}
 
-            <div id="ssh-content">
             <section className="Competition__metricGrid">
               <MetricCard
                 label="Avg goals"
@@ -359,10 +350,8 @@ export default function CompetitionPage({
                 />
               </section>
             )}
-            </div>
           </>
         )}
       </main>
-    </SiteHeader>
   );
 }

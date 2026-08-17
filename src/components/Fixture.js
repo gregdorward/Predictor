@@ -19,10 +19,6 @@ import {
   getProbabilityNumber,
   statPercentDisplay,
 } from "../utils/formatStat";
-import {
-  getFixtureContentBreakTip,
-  shouldInsertFixtureContentBreak,
-} from "../utils/journeyContentBreaks";
 
 let resultValue;
 var count;
@@ -728,37 +724,7 @@ const List = ({
   };
 
   const renderFixtureListItems = (list) =>
-    list.flatMap((fixture, index) => {
-      const items = [renderSingleFixture(fixture)];
-      if (
-        !showShortlist &&
-        shouldInsertFixtureContentBreak(index, list.length)
-      ) {
-        const { label, href } = getFixtureContentBreakTip(fixture);
-        items.push(
-          <li
-            key={`ssh-content-break-${index}`}
-            className="FixtureList-contentBreak"
-          >
-            <p>
-              {href ? (
-                <a
-                  href={href}
-                  className="FixtureList-contentBreakLink"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  {label}
-                </a>
-              ) : (
-                label
-              )}
-            </p>
-          </li>
-        );
-      }
-      return items;
-    });
+    list.map((fixture) => renderSingleFixture(fixture));
 
   return mock === true ? (
     <>
