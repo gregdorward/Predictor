@@ -38,13 +38,13 @@ const CACHE_RULES = {
   "league-averages": { sMaxAge: 100, swr: 86400 },
   "match-snapshot": { sMaxAge: 21600, swr: 86400 },
   referee: { sMaxAge: 86400, swr: 604800 },
-  teamStats: { sMaxAge: 259200, swr: 86400 },
+  teamStats: { sMaxAge: 604800, swr: 86400 },
   cuptrees: { sMaxAge: 86400, swr: 86400 },
   competition: { sMaxAge: 600, swr: 86400 },
   getMedia: { sMaxAge: 10800, swr: 86400 },
   futureFixtures: { sMaxAge: 10800, swr: 86400 },
   LeagueTeamStats: { sMaxAge: 3600, swr: 86400 },
-  bestPlayers: { sMaxAge: 3600, swr: 86400 },
+  bestPlayers: { sMaxAge: 172800, swr: 86400 },
   leagueComparison: { sMaxAge: 1200, swr: 86400 },
 };
 

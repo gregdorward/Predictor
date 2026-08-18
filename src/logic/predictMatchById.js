@@ -7,6 +7,7 @@ import {
 import {
   calculateScore,
   setSingleMatchPredictionData,
+  isBelowMinMatchesForPrediction,
 } from "./getScorePredictions";
 import {
   buildAllFormEntry,
@@ -96,7 +97,7 @@ export async function predictMatchById(matchId) {
     match.goalsB = "P";
     match.completeData = false;
     await calculateScore(match, index, divider, false, predictedScores, []);
-  } else if (match.matches_completed_minimum < 3) {
+  } else if (isBelowMinMatchesForPrediction(match)) {
     // Skip tip scoring this early — no tip, no win/loss settlement.
     match.goalsA = "x";
     match.goalsB = "x";
@@ -107,10 +108,25 @@ export async function predictMatchById(matchId) {
     delete match.prediction;
     match.predictionOutcome = undefined;
     match.exactScore = false;
+    match.profit = 0;
+    match.omit = false;
   } else {
     [match.goalsA, match.goalsB, match.unroundedGoalsA, match.unroundedGoalsB] =
       await calculateScore(match, index, divider, true, predictedScores, []);
     match.completeData = true;
+    if (isBelowMinMatchesForPrediction(match)) {
+      match.goalsA = "x";
+      match.goalsB = "x";
+      match.unroundedGoalsA = undefined;
+      match.unroundedGoalsB = undefined;
+      match.completeData = false;
+      match.predictionsUnavailable = true;
+      delete match.prediction;
+      match.predictionOutcome = undefined;
+      match.exactScore = false;
+      match.profit = 0;
+      match.omit = false;
+    }
   }
 
   await enrichMatchForFixturePageDisplay(match);

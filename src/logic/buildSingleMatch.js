@@ -8,6 +8,10 @@ import {
 } from "./getFixtures";
 import { applyCompetitionGoalDifference } from "../utils/leagueResultsAccess";
 import {
+  buildThinLeagueFormSlices,
+  limitFormRunToSeasonPlayed,
+} from "../utils/seasonFormRun";
+import {
   calculateAttackingStrength,
   calculateDefensiveStrength,
 } from "./getStats";
@@ -241,6 +245,10 @@ function resolveFormStrings(form) {
       form[0].data[2].stats.additional_info.formRun_home.toUpperCase(),
     awayFormRun:
       form[1].data[2].stats.additional_info.formRun_away.toUpperCase(),
+    homePlayedHome: form[0].data[2].stats.seasonMatchesPlayed_home,
+    awayPlayedAway: form[1].data[2].stats.seasonMatchesPlayed_away,
+    homeSeasonPlayed: form[0].data[2].stats.seasonMatchesPlayed_overall,
+    awaySeasonPlayed: form[1].data[2].stats.seasonMatchesPlayed_overall,
   };
 }
 
@@ -334,19 +342,36 @@ function resolveLeagueFormSlices(
     awayAverageGoals = AwayAverageGoals;
     awayAverageConceded = AwayAverageConceded;
   } else {
-    lastThreeFormHome = [homeFormString5[2], homeFormString5[3], homeFormString5[4]];
-    lastFiveFormHome = Array.from(homeFormString5);
-    lastSixFormHome = Array.from(homeFormString6);
-    lastTenFormHome = Array.from(homeFormString10);
-    lastThreeFormAway = [awayFormString5[2], awayFormString5[3], awayFormString5[4]];
-    lastFiveFormAway = Array.from(awayFormString5);
-    lastSixFormAway = Array.from(awayFormString6);
-    lastTenFormAway = Array.from(awayFormString10);
-    leagueOrAll = "All";
-    homeAverageGoals = undefined;
-    homeAverageConceded = undefined;
-    awayAverageGoals = undefined;
-    awayAverageConceded = undefined;
+    // < 5 league games: use table WDL only. FootyStats formRun_* pads with
+    // previous-season results (e.g. National League North/South early weeks).
+    const thin = buildThinLeagueFormSlices(WDLinLeagueHome, WDLinLeagueAway, {
+      homeFormRunOverall: homeFormString10,
+      awayFormRunOverall: awayFormString10,
+      homeSeasonPlayed:
+        homeTeaminLeague?.played || formStrings.homeSeasonPlayed,
+      awaySeasonPlayed:
+        awayTeaminLeague?.played || formStrings.awaySeasonPlayed,
+    });
+    lastThreeFormHome = thin.lastThreeFormHome;
+    lastFiveFormHome = thin.lastFiveFormHome;
+    lastSixFormHome = thin.lastSixFormHome;
+    lastTenFormHome = thin.lastTenFormHome;
+    lastThreeFormAway = thin.lastThreeFormAway;
+    lastFiveFormAway = thin.lastFiveFormAway;
+    lastSixFormAway = thin.lastSixFormAway;
+    lastTenFormAway = thin.lastTenFormAway;
+    leagueOrAll = thin.leagueOrAll;
+    if (thin.hasLeagueForm) {
+      homeAverageGoals = HomeAverageGoals;
+      homeAverageConceded = HomeAverageConceded;
+      awayAverageGoals = AwayAverageGoals;
+      awayAverageConceded = AwayAverageConceded;
+    } else {
+      homeAverageGoals = undefined;
+      homeAverageConceded = undefined;
+      awayAverageGoals = undefined;
+      awayAverageConceded = undefined;
+    }
   }
 
   return {
@@ -363,8 +388,14 @@ function resolveLeagueFormSlices(
     homeAverageConceded,
     awayAverageGoals,
     awayAverageConceded,
-    formRunHome: Array.from(formStrings.homeFormRun),
-    formRunAway: Array.from(formStrings.awayFormRun),
+    formRunHome: limitFormRunToSeasonPlayed(
+      formStrings.homeFormRun,
+      formStrings.homePlayedHome
+    ),
+    formRunAway: limitFormRunToSeasonPlayed(
+      formStrings.awayFormRun,
+      formStrings.awayPlayedAway
+    ),
   };
 }
 
@@ -397,7 +428,9 @@ function resolveTeamLeagueContext(match, leaguePositions) {
     );
     teamPositionHome = homeTeaminLeague.position;
     teamPositionHomeTable = homeTeaminHomeLeague.position;
-    WDLinLeagueHome = Array.from(homeTeaminLeague.wdl.toUpperCase());
+    WDLinLeagueHome = Array.from(
+      String(homeTeaminLeague.wdl || "").toUpperCase()
+    );
     homeTeamWinPercentageHome =
       (homeTeaminHomeLeague.homeSeasonWinPercentage /
         homeTeaminHomeLeague.homeSeasonMatchesPlayed) *
@@ -429,7 +462,9 @@ function resolveTeamLeagueContext(match, leaguePositions) {
     );
     teamPositionAway = awayTeaminLeague.position;
     teamPositionAwayTable = awayTeaminAwayLeague.position;
-    WDLinLeagueAway = Array.from(awayTeaminLeague.wdl.toUpperCase());
+    WDLinLeagueAway = Array.from(
+      String(awayTeaminLeague.wdl || "").toUpperCase()
+    );
     awayTeamWinPercentageAway =
       (awayTeaminAwayLeague.awaySeasonWinPercentage /
         awayTeaminAwayLeague.awaySeasonMatchesPlayed) *
@@ -495,8 +530,20 @@ export async function buildAllFormEntry(match, fixture, leagueID, leaguePosition
     fixture.matches_completed_minimum
   );
 
-  const homeWindow2 = buildFormWindow2Stats(form[0], "home");
-  const awayWindow2 = buildFormWindow2Stats(form[1], "away");
+  const homeWindow2 = {
+    ...buildFormWindow2Stats(form[0], "home"),
+    leaguePlayed: Number(teamCtx.homeTeaminLeague?.played) || undefined,
+    seasonMatchesPlayedOverall: parseFloat(
+      form[0].data[2].stats.seasonMatchesPlayed_overall
+    ),
+  };
+  const awayWindow2 = {
+    ...buildFormWindow2Stats(form[1], "away"),
+    leaguePlayed: Number(teamCtx.awayTeaminLeague?.played) || undefined,
+    seasonMatchesPlayedOverall: parseFloat(
+      form[1].data[2].stats.seasonMatchesPlayed_overall
+    ),
+  };
 
   const formEntry = {
     id: match.id,

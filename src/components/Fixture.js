@@ -19,6 +19,11 @@ import {
   getProbabilityNumber,
   statPercentDisplay,
 } from "../utils/formatStat";
+import {
+  limitFormRunToSeasonPlayed,
+  capFormResultsToSeasonPlayed,
+  resolveDisplaySeasonPlayed,
+} from "../utils/seasonFormRun";
 
 let resultValue;
 var count;
@@ -76,14 +81,14 @@ function styleFormIndicator(formIndicator) {
 
 /**
  * Newest-first W/D/L list for FormContainer.
- * When currentSeasonOnly, only use league-history results arrays — never
- * LastFiveForm/formRun, which often still hold previous-season games.
+ * Always caps to this season's games played when known. Never fall back to
+ * untrimmed formRun while under 5 league games (often previous-season).
  */
 function getDisplayFormResults(
   form,
   kind = "all",
   max = 5,
-  { currentSeasonOnly = false } = {}
+  { currentSeasonOnly = false, seasonPlayed } = {}
 ) {
   if (!form) return [];
 
@@ -91,23 +96,47 @@ function getDisplayFormResults(
     (Array.isArray(values) ? values : Array.from(String(values || "").toUpperCase()))
       .filter((result) => result === "W" || result === "D" || result === "L");
 
+  const inferredPlayed =
+    seasonPlayed != null
+      ? Number(seasonPlayed)
+      : kind === "home"
+        ? Number(form.PlayedHome)
+        : kind === "away"
+          ? Number(form.PlayedAway)
+          : (Number(form.PlayedHome) || 0) + (Number(form.PlayedAway) || 0);
+
+  const playedCap = Number.isFinite(inferredPlayed) ? inferredPlayed : null;
+
+  const finish = (values) => {
+    const list = asWdl(values);
+    if (playedCap == null) {
+      return currentSeasonOnly ? [] : list.slice(0, max);
+    }
+    return capFormResultsToSeasonPlayed(list, playedCap, max);
+  };
+
   if (kind === "all") {
     const fromResults = asWdl(form.resultsAll);
-    if (fromResults.length) return fromResults.slice(0, max);
-    if (currentSeasonOnly) return [];
+    if (fromResults.length) return finish(fromResults);
     const fromLastFive = asWdl(form.LastFiveForm);
-    if (fromLastFive.length) return fromLastFive.slice(0, max);
-    // API formRun is oldest→newest; reverse so index 0 is most recent.
-    return asWdl(form.formRun).slice(-max).reverse();
+    if (fromLastFive.length) return finish(fromLastFive);
+    if (currentSeasonOnly) return [];
+    return finish(asWdl(form.formRun).slice(-max).reverse());
   }
 
   const venueResults =
     kind === "home" ? form.resultsHome : form.resultsAway;
   const fromVenue = asWdl(venueResults);
-  if (fromVenue.length) return fromVenue.slice(0, max);
-  if (currentSeasonOnly) return [];
-  // formRun on stored form is home-only / away-only for that side.
-  return asWdl(form.formRun).slice(-max).reverse();
+  if (fromVenue.length) return finish(fromVenue);
+  if (currentSeasonOnly) {
+    if (playedCap != null && playedCap > 0) {
+      return finish(
+        [...limitFormRunToSeasonPlayed(form.formRun, playedCap)].reverse()
+      );
+    }
+    return [];
+  }
+  return finish(asWdl(form.formRun).slice(-max).reverse());
 }
 
 /** Render up to 5 pills, oldest on the left, newest on the right. */
@@ -326,7 +355,13 @@ function SingleFixture({
   const displayAwayForm = fixture.formAway ?? resolvedForms.awayForm;
   const earlySeason =
     fixture.predictionsUnavailable === true ||
-    Number(fixture.matches_completed_minimum) < 3;
+    Number(fixture.matches_completed_minimum) < 3 ||
+    fixture.goalsA === "x" ||
+    fixture.goalsB === "x";
+  // Form pills: never fall back to FootyStats formRun until 5 league games —
+  // that string often includes previous-season results (NL North/South etc.).
+  const formCurrentSeasonOnly =
+    earlySeason || Number(fixture.matches_completed_minimum) < 5;
   // No tip win/loss chrome until the model is allowed to tip the fixture.
   const tipResultClass = earlySeason
     ? ""
@@ -420,7 +455,12 @@ function SingleFixture({
                     <FormPills
                       label="All"
                       results={getDisplayFormResults(displayHomeForm, "all", 5, {
-                        currentSeasonOnly: earlySeason,
+                        currentSeasonOnly: formCurrentSeasonOnly,
+                        seasonPlayed: resolveDisplaySeasonPlayed(displayHomeForm, {
+                          kind: "all",
+                          matchesCompletedMinimum: fixture.matches_completed_minimum,
+                          currentSeasonOnly: formCurrentSeasonOnly,
+                        }),
                       })}
                     />
                   </div>
@@ -428,7 +468,12 @@ function SingleFixture({
                     <FormPills
                       label="Home"
                       results={getDisplayFormResults(displayHomeForm, "home", 5, {
-                        currentSeasonOnly: earlySeason,
+                        currentSeasonOnly: formCurrentSeasonOnly,
+                        seasonPlayed: resolveDisplaySeasonPlayed(displayHomeForm, {
+                          kind: "home",
+                          matchesCompletedMinimum: fixture.matches_completed_minimum,
+                          currentSeasonOnly: formCurrentSeasonOnly,
+                        }),
                       })}
                     />
                   </div>
@@ -488,7 +533,12 @@ function SingleFixture({
                     <FormPills
                       label="All"
                       results={getDisplayFormResults(displayAwayForm, "all", 5, {
-                        currentSeasonOnly: earlySeason,
+                        currentSeasonOnly: formCurrentSeasonOnly,
+                        seasonPlayed: resolveDisplaySeasonPlayed(displayAwayForm, {
+                          kind: "all",
+                          matchesCompletedMinimum: fixture.matches_completed_minimum,
+                          currentSeasonOnly: formCurrentSeasonOnly,
+                        }),
                       })}
                     />
                   </div>
@@ -496,7 +546,12 @@ function SingleFixture({
                     <FormPills
                       label="Away"
                       results={getDisplayFormResults(displayAwayForm, "away", 5, {
-                        currentSeasonOnly: earlySeason,
+                        currentSeasonOnly: formCurrentSeasonOnly,
+                        seasonPlayed: resolveDisplaySeasonPlayed(displayAwayForm, {
+                          kind: "away",
+                          matchesCompletedMinimum: fixture.matches_completed_minimum,
+                          currentSeasonOnly: formCurrentSeasonOnly,
+                        }),
                       })}
                     />
                   </div>

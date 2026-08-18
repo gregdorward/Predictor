@@ -49,6 +49,7 @@ import {
   getLeagueFixturesByLeagueId,
   getTeamFixturesBeforeMatch,
 } from "../utils/leagueResultsAccess";
+import { limitFormRunToSeasonPlayed, sanitizeThinSeasonFormSide } from "../utils/seasonFormRun";
 import { buildGoalTimingHeatmap } from "../utils/goalTimingHeatmap";
 import { buildFormContextMetrics } from "../utils/formContextMetrics";
 import { selectedTipType } from "../components/PredictionTypeRadio";
@@ -634,7 +635,10 @@ async function getPastLeagueResults(team, game, hOrA, form) {
 
     teamsHomeResults = teamsHomeResults
       .filter(function (item) {
-        return item.date_unix < date - 86400;
+        return (
+          item.status === "complete" &&
+          item.date_unix < date - 86400
+        );
       })
       .sort((a, b) => a.date_unix - b.date_unix);
 
@@ -644,7 +648,10 @@ async function getPastLeagueResults(team, game, hOrA, form) {
 
     teamsAwayResults = teamsAwayResults
       .filter(function (item) {
-        return item.date_unix < date - 86400;
+        return (
+          item.status === "complete" &&
+          item.date_unix < date - 86400
+        );
       })
       .sort((a, b) => a.date_unix - b.date_unix);
 
@@ -2617,13 +2624,24 @@ function recentApiFormRun(formRun, count) {
 
 /** Prefer already newest-first LastFiveForm; otherwise derive from API formRun. */
 function formResultsFromStoredForm(form, count = 6) {
+  const seasonPlayed =
+    Number(form?.leaguePlayed) ||
+    (Number(form?.PlayedHome) || 0) + (Number(form?.PlayedAway) || 0);
+  const maxCount =
+    seasonPlayed > 0 ? Math.min(count, seasonPlayed) : count;
+
   if (Array.isArray(form?.LastFiveForm)) {
     const fromLastFive = form.LastFiveForm.filter(
       (result) => result === "W" || result === "D" || result === "L"
     );
     if (fromLastFive.length) {
-      return fromLastFive.slice(0, count);
+      return fromLastFive.slice(0, maxCount);
     }
+  }
+  if (seasonPlayed > 0) {
+    return limitFormRunToSeasonPlayed(form?.formRun, seasonPlayed)
+      .slice(-maxCount)
+      .reverse();
   }
   return recentApiFormRun(form?.formRun, count);
 }
@@ -2633,16 +2651,119 @@ function applyFormResultsFallback(form, venue) {
   if (!form) {
     return;
   }
-  const overall = formResultsFromStoredForm(form, 6);
-  const venueRun = recentApiFormRun(form.formRun, 6);
-  form.resultsAll = overall;
+  const seasonPlayed =
+    Number(form.leaguePlayed) ||
+    (Number(form.PlayedHome) || 0) + (Number(form.PlayedAway) || 0);
+  const venuePlayed =
+    venue === "home" ? Number(form.PlayedHome) || 0 : Number(form.PlayedAway) || 0;
+
+  const overall = formResultsFromStoredForm(form, Math.min(6, seasonPlayed || 6));
+  const venueRun = limitFormRunToSeasonPlayed(form.formRun, venuePlayed)
+    .slice()
+    .reverse();
+
+  // Only fill when empty — never overwrite league-history results with formRun.
+  if (!Array.isArray(form.resultsAll) || form.resultsAll.length === 0) {
+    form.resultsAll = overall;
+  }
   if (venue === "home") {
-    form.resultsHome = venueRun.length ? venueRun : overall;
+    if (!Array.isArray(form.resultsHome) || form.resultsHome.length === 0) {
+      form.resultsHome = venueRun.length ? venueRun : overall;
+    }
     form.resultsAway = Array.isArray(form.resultsAway) ? form.resultsAway : [];
   } else {
-    form.resultsAway = venueRun.length ? venueRun : overall;
+    if (!Array.isArray(form.resultsAway) || form.resultsAway.length === 0) {
+      form.resultsAway = venueRun.length ? venueRun : overall;
+    }
     form.resultsHome = Array.isArray(form.resultsHome) ? form.resultsHome : [];
   }
+
+  // Keep LastFiveForm in sync so display/fallback paths stay season-capped.
+  if (seasonPlayed > 0 && seasonPlayed < 5) {
+    form.LastFiveForm = overall.slice(0, Math.min(5, seasonPlayed));
+  }
+}
+
+/** Attach season-capped form for homepage pills without tipping or ROI settlement. */
+function hydrateMatchFormForDisplay(match) {
+  const fixtureForm = allForm.find(
+    (game) =>
+      game.id === match.id ||
+      (game.home?.teamName === match.homeTeam &&
+        game.away?.teamName === match.awayTeam)
+  );
+  if (!fixtureForm?.home?.[2] || !fixtureForm?.away?.[2]) {
+    return;
+  }
+  const formHome = fixtureForm.home[2];
+  const formAway = fixtureForm.away[2];
+  applyFormResultsFallback(formHome, "home");
+  applyFormResultsFallback(formAway, "away");
+  sanitizeThinSeasonFormSide(formHome);
+  sanitizeThinSeasonFormSide(formAway);
+  match.formHome = formHome;
+  match.formAway = formAway;
+}
+
+function seasonPlayedFromFormSide(form) {
+  if (!form) return NaN;
+  const league = Number(form.leaguePlayed);
+  if (Number.isFinite(league) && league >= 0) return league;
+  const overall = Number(form.seasonMatchesPlayedOverall);
+  if (Number.isFinite(overall) && overall >= 0) return overall;
+  const sum = (Number(form.PlayedHome) || 0) + (Number(form.PlayedAway) || 0);
+  return sum > 0 ? sum : NaN;
+}
+
+/**
+ * True when the model must not tip or settle ROI.
+ * Prefer FootyStats matches_completed_minimum; also treat league-table
+ * played < 3 as insufficient when form is available (API mcm can be inflated).
+ */
+export function isBelowMinMatchesForPrediction(match) {
+  const mcm = Number(match?.matches_completed_minimum);
+  if (Number.isFinite(mcm) && mcm < 3) {
+    return true;
+  }
+
+  const formEntry = allForm.find(
+    (game) =>
+      game.id === match?.id ||
+      (game.home?.teamName === match?.homeTeam &&
+        game.away?.teamName === match?.awayTeam)
+  );
+  const homePlayed = seasonPlayedFromFormSide(
+    match?.formHome ?? formEntry?.home?.[2]
+  );
+  const awayPlayed = seasonPlayedFromFormSide(
+    match?.formAway ?? formEntry?.away?.[2]
+  );
+
+  if (Number.isFinite(homePlayed) && Number.isFinite(awayPlayed)) {
+    return Math.min(homePlayed, awayPlayed) < 3;
+  }
+  if (Number.isFinite(homePlayed)) return homePlayed < 3;
+  if (Number.isFinite(awayPlayed)) return awayPlayed < 3;
+  return false;
+}
+
+/** Clear tip/ROI fields but keep the fixture visible (omit stays false). */
+function clearMatchTipSettlement(match) {
+  match.goalsA = "x";
+  match.goalsB = "x";
+  match.unroundedGoalsA = undefined;
+  match.unroundedGoalsB = undefined;
+  match.completeData = false;
+  match.predictionsUnavailable = true;
+  delete match.prediction;
+  match.predictionOutcome = undefined;
+  match.exactScore = false;
+  match.profit = 0;
+  match.outcomeSymbol = "";
+  match.over25PredictionOutcomeSymbol = "";
+  match.bttsOutcomeSymbol = "";
+  // Do not set omit=true — RenderAllFixtures only shows omit === false.
+  match.omit = false;
 }
 
 function apiMatchesPlayed(stats) {
@@ -3314,11 +3435,17 @@ export async function calculateScore(match, index, divider, calculate, AIPredict
 
 
 
+    const leagueFixturesForMatch = getLeagueFixturesByLeagueId(
+      allLeagueResultsArrayOfObjects,
+      match.leagueID
+    );
+    const completeLeagueFixtures = leagueFixturesForMatch.filter(
+      (fixture) => fixture.status === "complete"
+    );
+    // NL North/South often ship hundreds of incomplete 0-0 rows — length alone
+    // must not force getPastLeagueResults (which would skip season form fallback).
     const leagueHasEnoughFixtures =
-      getLeagueFixturesByLeagueId(
-        allLeagueResultsArrayOfObjects,
-        match.leagueID
-      ).length > 10 && match.leagueID !== 7956;
+      completeLeagueFixtures.length > 10 && match.leagueID !== 7956;
 
     if (leagueHasEnoughFixtures) {
       [
@@ -3346,6 +3473,12 @@ export async function calculateScore(match, index, divider, calculate, AIPredict
         match.bttsPercentageAwayHome,
         match.bttsPercentageAwayAway,
       ] = await getPastLeagueResults(match.awayTeam, match, "away", formAway);
+
+      // Thin history (or name mismatches) left results empty — fill from season form.
+      if (!formHome.resultsAll?.length || !formAway.resultsAll?.length) {
+        applyFormResultsFallback(formHome, "home");
+        applyFormResultsFallback(formAway, "away");
+      }
     } else if (API_FORM_ONLY_LEAGUE_IDS.includes(match.leagueID)) {
       match.apiFormOnly = true;
       hydrateFormFromApi(teams[0], formHome, "home", match.homeTeam, match);
@@ -4765,7 +4898,7 @@ export async function calculateScore(match, index, divider, calculate, AIPredict
     }
 
     if (
-      match.matches_completed_minimum < 3 &&
+      isBelowMinMatchesForPrediction(match) &&
       selectedTipType !== "AI Tips"
     ) {
       match.predictionsUnavailable = true;
@@ -4774,7 +4907,10 @@ export async function calculateScore(match, index, divider, calculate, AIPredict
     } else if (selectedTipType === "AI Tips" && (AIPredictionHome === null || AIPredictionAway === null)) {
       match.omit = true;
     }
-    if (match.status === "complete" && match.omit === false) {
+    if (match.status === "complete" && match.omit === false &&
+      match.predictionsUnavailable !== true &&
+      !isBelowMinMatchesForPrediction(match)
+    ) {
       if (match.prediction === match.outcome) {
         match.predictionOutcome = "Won";
       } else if (match.prediction !== match.outcome) {
@@ -4838,10 +4974,21 @@ export async function calculateScore(match, index, divider, calculate, AIPredict
     match.goalDifferenceComparison =
       parseFloat(formHome.goalDifference) - parseFloat(formAway.goalDifference);
 
-    if (match.matches_completed_minimum < 3) {
+    if (isBelowMinMatchesForPrediction(match)) {
       match.predictionsUnavailable = true;
     }
 
+    // Never settle tip win/loss for early-season fixtures.
+    if (
+      match.predictionsUnavailable === true ||
+      isBelowMinMatchesForPrediction(match)
+    ) {
+      delete match.prediction;
+      match.predictionOutcome = undefined;
+      match.exactScore = false;
+      match.profit = 0;
+      // Keep visible on homepage — do not set omit=true here.
+    }
 
     switch (true) {
       case finalHomeGoals > finalAwayGoals:
@@ -5115,7 +5262,7 @@ async function getSuccessMeasure(fixtures) {
       fixtures[i].hasOwnProperty("prediction") &&
       fixtures[i].omit !== true &&
       fixtures[i].predictionsUnavailable !== true &&
-      Number(fixtures[i].matches_completed_minimum) >= 3 &&
+      !isBelowMinMatchesForPrediction(fixtures[i]) &&
       fixtures[i].goalsA !== "x" &&
       fixtures[i].goalsB !== "x"
     ) {
@@ -5440,17 +5587,10 @@ export async function getScorePrediction(day, mocked) {
             match.completeData = false;
             await calculateScore(match, index, divider, false, predictedScoresData, fetchedTips);
             break;
-          case match.matches_completed_minimum < 3:
-            // Skip tip scoring this early — no tip, no win/loss settlement.
-            match.goalsA = "x";
-            match.goalsB = "x";
-            match.unroundedGoalsA = undefined;
-            match.unroundedGoalsB = undefined;
-            match.completeData = false;
-            match.predictionsUnavailable = true;
-            delete match.prediction;
-            match.predictionOutcome = undefined;
-            match.exactScore = false;
+          case isBelowMinMatchesForPrediction(match):
+            // Form only — never tip or settle ROI for early-season fixtures.
+            hydrateMatchFormForDisplay(match);
+            clearMatchTipSettlement(match);
             break;
           default:
             [
@@ -5460,6 +5600,10 @@ export async function getScorePrediction(day, mocked) {
               match.unroundedGoalsB,
               match.completeData = true,
             ] = await calculateScore(match, index, divider, true, predictedScoresData, fetchedTips);
+            // Belt-and-suspenders: if threshold failed mid-calc, strip tip state.
+            if (isBelowMinMatchesForPrediction(match)) {
+              clearMatchTipSettlement(match);
+            }
             break;
         }
       } else {
@@ -5478,6 +5622,25 @@ export async function getScorePrediction(day, mocked) {
         match.directnessRatingHome,
         match.directnessRatingAway
       );
+
+      // Final guard after BTTS / any side-effects — no tip chrome or ROI for thin seasons.
+      if (isBelowMinMatchesForPrediction(match)) {
+        clearMatchTipSettlement(match);
+      }
+
+      const tipEligible =
+        !isBelowMinMatchesForPrediction(match) &&
+        match.predictionsUnavailable !== true &&
+        match.goalsA !== "x" &&
+        match.goalsB !== "x";
+
+      if (!tipEligible) {
+        match.outcomeSymbol = "";
+        match.over25PredictionOutcomeSymbol = "";
+        match.bttsOutcomeSymbol = "";
+        predictions.push(match);
+        continue;
+      }
 
       let predictionObject;
       let Over25PredictionObject;
@@ -6026,6 +6189,14 @@ export async function getScorePrediction(day, mocked) {
   await getMultis();
   await getNewTips(allTipsSorted);
   await getSuccessMeasure(matches);
+
+  // Last pass: ensure thin-season fixtures never keep tip settlement on the
+  // objects returned to React (borders / ROI).
+  for (const match of matches) {
+    if (isBelowMinMatchesForPrediction(match)) {
+      clearMatchTipSettlement(match);
+    }
+  }
 
   return matches;
 

@@ -1999,7 +1999,7 @@ function GameStats({ game, displayBool, stats, handleToggleTip, userTips, dayFix
           ) {
             console.log(`Game is within 48 hours and not in lower tier league. Fetching lineup details for game ID: ${matchingGameInfo.id}`);
             const lineupDetail = await fetch(
-              `${process.env.NEXT_PUBLIC_EXPRESS_SERVER}lineups/${matchingGameInfo.id}`
+              `${process.env.NEXT_PUBLIC_EXPRESS_SERVER}lineups/${matchingGameInfo.id}?kickoff=${game.date}`
             );
 
             const data = await lineupDetail.json();
