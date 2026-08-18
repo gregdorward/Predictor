@@ -807,6 +807,7 @@ const List = ({
       <div>
         <div id="Headers"></div>
         <p className="InstructionalDiv">Generate predictions and click on any fixture for unparalleled insight</p>
+        <p className="InstructionalDiv">Predictions and full stats only available for fixtures where each team have played at least 3 games</p>
         <ul className="FixtureList">
           {renderFixtureListItems(
             showShortlist ? selectedFixtures : fixtures

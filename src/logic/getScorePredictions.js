@@ -259,34 +259,103 @@ function getMostLikelyScore(scoreMatrix) {
 }
 
 function clampLambda(lambda, min = 0.05, max = 5) {
-  return Math.max(min, Math.min(max, lambda));
+  const n = Number(lambda);
+  if (!Number.isFinite(n)) {
+    return min;
+  }
+  return Math.max(min, Math.min(max, n));
 }
 
 function normaliseScoreMatrix(scoreMatrix) {
   const total = scoreMatrix.reduce(
-    (sum, s) => sum + s.probability, 0
+    (sum, s) => sum + (Number(s.probability) || 0),
+    0
   );
 
-  return scoreMatrix.map(s => ({
+  if (!Number.isFinite(total) || total <= 0) {
+    const uniform = 1 / Math.max(scoreMatrix.length, 1);
+    return scoreMatrix.map((s) => ({ ...s, probability: uniform }));
+  }
+
+  return scoreMatrix.map((s) => ({
     ...s,
-    probability: s.probability / total
+    probability: s.probability / total,
   }));
 }
 
 function calibrateScoreMatrix(matrix, alpha = 1.1) {
-  const calibrated = matrix.map(score => ({
-    ...score,
-    probability: Math.pow(score.probability, alpha)
-  }));
+  const calibrated = matrix.map((score) => {
+    const base = Number(score.probability);
+    const raised =
+      Number.isFinite(base) && base > 0 ? Math.pow(base, alpha) : 0;
+    return { ...score, probability: raised };
+  });
 
   const sum = calibrated.reduce((acc, s) => acc + s.probability, 0);
+  if (!Number.isFinite(sum) || sum <= 0) {
+    const uniform = 1 / Math.max(calibrated.length, 1);
+    return calibrated.map((score) => ({ ...score, probability: uniform }));
+  }
 
-  return calibrated.map(score => ({
+  return calibrated.map((score) => ({
     ...score,
-    probability: score.probability / sum
+    probability: score.probability / sum,
   }));
 }
 
+/** Keep 1X2 probs finite; fall back to normalised bookie implied when model fails. */
+function ensureMatchWinProbabilities(match, homeWin, draw, awayWin) {
+  const candidates = [homeWin, draw, awayWin].map(Number);
+  const modelOk =
+    candidates.every((n) => Number.isFinite(n) && n >= 0) &&
+    candidates.reduce((a, b) => a + b, 0) > 0;
+
+  if (modelOk) {
+    match.homeWinProbability = candidates[0];
+    match.drawProbability = candidates[1];
+    match.awayWinProbability = candidates[2];
+    return;
+  }
+
+  const gameLabel =
+    match.game ||
+    `${match.homeTeam || "?"} v ${match.awayTeam || "?"}`;
+  const modelSnapshot = { homeWin, draw, awayWin };
+
+  const implied = [
+    impliedProbability(match.homeOdds),
+    impliedProbability(match.drawOdds),
+    impliedProbability(match.awayOdds),
+  ].map(Number);
+
+  if (implied.every((n) => Number.isFinite(n) && n > 0)) {
+    const sum = implied[0] + implied[1] + implied[2];
+    match.homeWinProbability = (implied[0] / sum) * 100;
+    match.drawProbability = (implied[1] / sum) * 100;
+    match.awayWinProbability = (implied[2] / sum) * 100;
+    console.warn(
+      `[probs] Model 1X2 invalid for ${gameLabel} (id=${match.id}); fell back to normalised bookie odds`,
+      { model: modelSnapshot, bookieImplied: implied, odds: {
+        home: match.homeOdds,
+        draw: match.drawOdds,
+        away: match.awayOdds,
+      } }
+    );
+    return;
+  }
+
+  match.homeWinProbability = 100 / 3;
+  match.drawProbability = 100 / 3;
+  match.awayWinProbability = 100 / 3;
+  console.warn(
+    `[probs] Model 1X2 invalid for ${gameLabel} (id=${match.id}); bookie odds also unusable — using equal thirds`,
+    { model: modelSnapshot, odds: {
+      home: match.homeOdds,
+      draw: match.drawOdds,
+      away: match.awayOdds,
+    } }
+  );
+}
 
 function impliedProbability(decimalOdds) {
   if (!decimalOdds) return null;
@@ -2236,12 +2305,11 @@ export async function generateGoals(homeForm, awayForm, match) {
 
   const leagueObject = findLeagueEntryById(leagueAveragesData, match.leagueID);
 
-  let averageLeagueGoals = 2.5; // Default to null if not found
+  let averageLeagueGoals = 2.5;
 
-
-  if (leagueObject) {
-    // 2. Extract the specific averageGoals value
-    averageLeagueGoals = leagueObject.averageGoals;
+  const leagueAvg = Number(leagueObject?.averageGoals);
+  if (Number.isFinite(leagueAvg) && leagueAvg > 0) {
+    averageLeagueGoals = leagueAvg;
   }
   const averageGoalsPerTeam = averageLeagueGoals / 2;
   const averageGoalsHome = averageGoalsPerTeam * 1.1
@@ -2251,21 +2319,32 @@ export async function generateGoals(homeForm, awayForm, match) {
   // Define a minimum weakness so the factor never hits 0 or negative
   const MIN_WEAKNESS = 0.1;
 
-  const awayDefenceWeaknessOverall = Math.max(MIN_WEAKNESS, 1 - awayForm.defensiveStrengthScoreGeneration);
-  const homeDefenceWeaknessOverall = Math.max(MIN_WEAKNESS, 1 - homeForm.defensiveStrengthScoreGeneration);
+  const awayDefenceWeaknessOverall = Math.max(
+    MIN_WEAKNESS,
+    1 - (Number(awayForm.defensiveStrengthScoreGeneration) || 0)
+  );
+  const homeDefenceWeaknessOverall = Math.max(
+    MIN_WEAKNESS,
+    1 - (Number(homeForm.defensiveStrengthScoreGeneration) || 0)
+  );
 
   // Helper to compute a dampened lambda component
   function computeLambdaComponent(attackStrength, defenceWeakness, last5 = false, gamesPlayed = 10, location) {
-    const attackFactor = attackStrength / 0.4;
+    const safeAttack = Number.isFinite(Number(attackStrength))
+      ? Number(attackStrength)
+      : 0.4;
+    const attackFactor = safeAttack / 0.4;
     const defenceFactor = Math.max(0.2, defenceWeakness / BASELINE);
     // 1. Set the raw multiplier
     let multiplier = last5 ? 0.9 : 1.0;
+    const played = Number(gamesPlayed);
+    const sampleSize = Number.isFinite(played) && played > 0 ? played : 10;
     // 2. Damping Logic: Scale the impact if we are looking at Overall stats (last5 === false) 
     // and the sample size is small (< 10 games).
-    if (!last5 && gamesPlayed < 10) {
+    if (!last5 && sampleSize < 10) {
       // Linear scaling: 5 games = 0.5 impact, 10 games = 1.0 impact
       // We floor it at 0.5 so we don't completely ignore the stats
-      const reliability = Math.max(0.5, gamesPlayed / 10);
+      const reliability = Math.max(0.5, sampleSize / 10);
       // This brings the multiplier closer to 1.0 (Neutral)
       // If multiplier was 1.2, it becomes 1.1. If it was 0.8, it becomes 0.9.
       multiplier = 1 + (multiplier - 1) * reliability;
@@ -2283,13 +2362,13 @@ export async function generateGoals(homeForm, awayForm, match) {
       lambda = averageGoalsPerTeam * weightedMultiplier;
     }
 
-    if (!last5 && gamesPlayed < 10) {
-      console.log(`Applying final lambda damping for small sample size (${gamesPlayed} games)`);
-      const weight = Math.max(0.5, gamesPlayed / 10);
+    if (!last5 && sampleSize < 10) {
+      console.log(`Applying final lambda damping for small sample size (${sampleSize} games)`);
+      const weight = Math.max(0.5, sampleSize / 10);
       lambda = (lambda * weight) + (averageGoalsPerTeam * (1 - weight));
     }
 
-    return lambda;
+    return Number.isFinite(lambda) ? lambda : averageGoalsPerTeam;
   }
 
   const oddsComparisonHome = await comparison(match.awayOdds, match.homeOdds);
@@ -2349,8 +2428,16 @@ export async function generateGoals(homeForm, awayForm, match) {
 
   // Define how sensitive you want the adjustment to be
   // A lower value (0.02) means a more conservative adjustment
-  const regressionMultiplierHome = 1 / homeForm.GoalEfficiency;
-  const regressionMultiplierAway = 1 / awayForm.GoalEfficiency;
+  const homeEfficiency = Number(homeForm.GoalEfficiency);
+  const awayEfficiency = Number(awayForm.GoalEfficiency);
+  const regressionMultiplierHome =
+    Number.isFinite(homeEfficiency) && homeEfficiency > 0
+      ? 1 / homeEfficiency
+      : 1;
+  const regressionMultiplierAway =
+    Number.isFinite(awayEfficiency) && awayEfficiency > 0
+      ? 1 / awayEfficiency
+      : 1;
   const finalHomeMultiplier = Math.min(Math.max(regressionMultiplierHome, 0.975), 1.025);
   const finalAwayMultiplier = Math.min(Math.max(regressionMultiplierAway, 0.975), 1.025);
 
@@ -2430,8 +2517,8 @@ export async function generateGoals(homeForm, awayForm, match) {
     awayGoals = (awayForm.XGOverall + awayGoals) / 2
   }
 
-  homeGoals = Math.max(0.05, homeGoals);
-  awayGoals = Math.max(0.05, awayGoals);
+  homeGoals = Math.max(0.05, Number.isFinite(homeGoals) ? homeGoals : averageGoalsHome);
+  awayGoals = Math.max(0.05, Number.isFinite(awayGoals) ? awayGoals : averageGoalsAway);
 
 
   return [homeGoals, awayGoals];
@@ -4569,12 +4656,18 @@ export async function calculateScore(match, index, divider, calculate, AIPredict
     formHome.actualToXGDifference = parseFloat(
       await diff(formHome.XGDiffNonAverage, formHome.goalDifference)
     );
-    formHome.GoalEfficiency = formHome.avgScored / formHome.XGOverall;
+    formHome.GoalEfficiency =
+      Number(formHome.XGOverall) > 0
+        ? formHome.avgScored / formHome.XGOverall
+        : 1;
 
     formAway.actualToXGDifference = parseFloat(
       await diff(formAway.XGDiffNonAverage, formAway.goalDifference)
     );
-    formAway.GoalEfficiency = formAway.avgScored / formAway.XGOverall;
+    formAway.GoalEfficiency =
+      Number(formAway.XGOverall) > 0
+        ? formAway.avgScored / formAway.XGOverall
+        : 1;
 
     [formHome.teamGoalsCalc, formAway.teamGoalsCalc] = await generateGoals(
       formHome,
@@ -4603,13 +4696,11 @@ export async function calculateScore(match, index, divider, calculate, AIPredict
     const { yes, no } = getBTTSProbability(calibratedMatrix);
     const { over, under } = getOverUnderProbability(calibratedMatrix, 2.5);
 
-    match.homeWinProbability = homeWin;
-    match.drawProbability = draw;
-    match.awayWinProbability = awayWin;
-    match.bttsYesProbability = yes;
-    match.bttsNoProbability = no;
-    match.over25Probability = over;
-    match.under25Probability = under;
+    ensureMatchWinProbabilities(match, homeWin, draw, awayWin);
+    match.bttsYesProbability = Number.isFinite(yes) ? yes : 50;
+    match.bttsNoProbability = Number.isFinite(no) ? no : 50;
+    match.over25Probability = Number.isFinite(over) ? over : 50;
+    match.under25Probability = Number.isFinite(under) ? under : 50;
 
     const homeWinImplied = impliedProbability(match.homeOdds);
 
