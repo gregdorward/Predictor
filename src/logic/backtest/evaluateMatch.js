@@ -78,6 +78,19 @@ export function evaluateMatch(match, dateIso, formSource) {
   return row;
 }
 
+function emptyPredictionBucket() {
+  return {
+    predicted: 0,
+    correct: 0,
+    accuracy: 0,
+    investment: 0,
+    netProfit: 0,
+    roi: 0,
+  };
+}
+
+const PREDICTION_OUTCOMES = ["homeWin", "draw", "awayWin"];
+
 export function aggregateResults(rows) {
   const scored = rows.filter(
     (row) => row.skippedReason == null && row.outcomeCorrect != null
@@ -88,6 +101,9 @@ export function aggregateResults(rows) {
   let exactScores = 0;
   let successCount = 0;
   const byLeague = {};
+  const byPrediction = Object.fromEntries(
+    PREDICTION_OUTCOMES.map((outcome) => [outcome, emptyPredictionBucket()])
+  );
 
   for (const row of scored) {
     investment += 1;
@@ -97,6 +113,14 @@ export function aggregateResults(rows) {
 
     if (row.exactScore) exactScores += 1;
     if (row.outcomeCorrect) successCount += 1;
+
+    const predictionBucket = byPrediction[row.prediction];
+    if (predictionBucket) {
+      predictionBucket.predicted += 1;
+      predictionBucket.investment += 1;
+      predictionBucket.netProfit += gameResult;
+      if (row.outcomeCorrect) predictionBucket.correct += 1;
+    }
 
     const leagueName = row.league || "Unknown League";
     if (!byLeague[leagueName]) {
@@ -125,6 +149,19 @@ export function aggregateResults(rows) {
   const roi =
     investment > 0 ? Number(((sumProfit / investment) * 100).toFixed(2)) : 0;
 
+  for (const outcome of PREDICTION_OUTCOMES) {
+    const bucket = byPrediction[outcome];
+    bucket.netProfit = Number(bucket.netProfit.toFixed(2));
+    bucket.accuracy =
+      bucket.predicted > 0
+        ? Number(((bucket.correct / bucket.predicted) * 100).toFixed(2))
+        : 0;
+    bucket.roi =
+      bucket.investment > 0
+        ? Number(((bucket.netProfit / bucket.investment) * 100).toFixed(2))
+        : 0;
+  }
+
   return {
     totalMatches: rows.length,
     predicted: scored.length,
@@ -143,5 +180,6 @@ export function aggregateResults(rows) {
     netProfit: Number(sumProfit.toFixed(2)),
     roi,
     byLeague,
+    byPrediction,
   };
 }

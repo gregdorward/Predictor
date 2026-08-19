@@ -3,6 +3,7 @@ import { resolve } from "path";
 
 import {
   calculateScore,
+  isBelowMinMatchesForPrediction,
   setSingleMatchPredictionData,
 } from "../getScorePredictions.js";
 import {
@@ -19,6 +20,22 @@ import {
 } from "./formatOutput.js";
 import { uploadBacktestArtifacts } from "./uploadToS3.js";
 import { eachDateInclusive, sleep } from "./dateUtils.js";
+
+function attachCachedForm(match) {
+  const fixtureForm = allForm.find(
+    (game) =>
+      game.id === match.id ||
+      (game.home?.teamName === match.homeTeam &&
+        game.away?.teamName === match.awayTeam)
+  );
+  if (fixtureForm?.home?.[2]) {
+    match.formHome = fixtureForm.home[2];
+  }
+  if (fixtureForm?.away?.[2]) {
+    match.formAway = fixtureForm.away[2];
+  }
+  return match;
+}
 
 export async function runBacktest(cliArgs = {}) {
   loadBacktestEnv();
@@ -41,12 +58,14 @@ export async function runBacktest(cliArgs = {}) {
   console.log(`Backtest run ${runId}`);
   console.log(`Range: ${params.from} → ${params.to}`);
 
-  const { leagueResults, leagueAverages } = await fetchGlobalBacktestData(
+  const { leagueResults, leagueAveragesFallback } = await fetchGlobalBacktestData(
     apiOrigin
   );
 
   const allRows = [];
   const skippedDays = [];
+  let daysWithDatedAverages = 0;
+  let daysWithFallbackAverages = 0;
 
   for (const date of eachDateInclusive(params.from, params.to)) {
     const day = await loadDayData(date, apiOrigin);
@@ -68,22 +87,44 @@ export async function runBacktest(cliArgs = {}) {
     allLeagueResultsArrayOfObjects.length = 0;
     allLeagueResultsArrayOfObjects.push(...leagueResults);
 
+    const leagueAverages = day.leagueAverages ?? leagueAveragesFallback;
+    if (day.leagueAverages) {
+      daysWithDatedAverages += 1;
+    } else if (leagueAveragesFallback) {
+      daysWithFallbackAverages += 1;
+      console.warn(
+        `No dated league averages for ${day.isoDate}; using latest global snapshot (home/away splits may use heuristic).`
+      );
+    }
+
     setSingleMatchPredictionData({
       leagueAverages,
       predictedScores: [],
     });
 
     let dayPredicted = 0;
+    let daySkippedEarly = 0;
 
     for (const match of day.matches) {
       if (match.status === "canceled") {
         continue;
       }
 
-      if (match.matches_completed_minimum < 3) {
+      attachCachedForm(match);
+
+      // Same gate as the live site: MCM < 3 OR either side has < 3 season games
+      // (FootyStats MCM can be inflated early season).
+      if (isBelowMinMatchesForPrediction(match)) {
+        daySkippedEarly += 1;
         allRows.push(
           evaluateMatch(
-            { ...match, goalsA: "x", goalsB: "x", completeData: false },
+            {
+              ...match,
+              goalsA: "x",
+              goalsB: "x",
+              completeData: false,
+              predictionsUnavailable: true,
+            },
             day.isoDate,
             "cached"
           )
@@ -100,6 +141,31 @@ export async function runBacktest(cliArgs = {}) {
           match.unroundedGoalsB,
         ] = result;
         match.completeData = true;
+
+        // Belt-and-suspenders: if calc still marks the fixture thin, don't score it.
+        if (
+          isBelowMinMatchesForPrediction(match) ||
+          match.predictionsUnavailable === true ||
+          match.goalsA === "x" ||
+          match.goalsB === "x"
+        ) {
+          daySkippedEarly += 1;
+          allRows.push(
+            evaluateMatch(
+              {
+                ...match,
+                goalsA: "x",
+                goalsB: "x",
+                completeData: false,
+                predictionsUnavailable: true,
+              },
+              day.isoDate,
+              "cached"
+            )
+          );
+          continue;
+        }
+
         dayPredicted += 1;
       } catch (error) {
         console.error(`Prediction failed for match ${match.id}:`, error);
@@ -114,7 +180,7 @@ export async function runBacktest(cliArgs = {}) {
     }
 
     console.log(
-      `Processed ${day.isoDate}: ${day.matches.length} completed fixtures, ${dayPredicted} predicted`
+      `Processed ${day.isoDate}: ${day.matches.length} completed fixtures, ${dayPredicted} predicted, ${daySkippedEarly} skipped (early season)`
     );
 
     await sleep(params.delayMs);
@@ -122,6 +188,10 @@ export async function runBacktest(cliArgs = {}) {
 
   const summary = aggregateResults(allRows);
   summary.skippedNoForm = skippedDays.length;
+  summary.leagueAveragesCoverage = {
+    datedDays: daysWithDatedAverages,
+    fallbackDays: daysWithFallbackAverages,
+  };
 
   const resultsJson = buildResultsJson(allRows);
   const summaryJson = buildSummaryJson({
@@ -154,7 +224,21 @@ export async function runBacktest(cliArgs = {}) {
   console.log(`  Outcome accuracy: ${summary.outcomeAccuracy}%`);
   console.log(`  Exact score rate: ${summary.exactScoreRate}%`);
   console.log(`  ROI (flat 1-unit): ${summary.roi}%`);
-  console.log(`  Days skipped (no cached form): ${skippedDays.length}`);
+  console.log("\nBy predicted outcome");
+  for (const [outcome, label] of [
+    ["homeWin", "Home win"],
+    ["draw", "Draw"],
+    ["awayWin", "Away win"],
+  ]) {
+    const bucket = summary.byPrediction[outcome];
+    console.log(
+      `  ${label}: ${bucket.predicted} predicted, ${bucket.correct} correct (${bucket.accuracy}%), ROI ${bucket.roi}%`
+    );
+  }
+  console.log(`\n  Days skipped (no cached form): ${skippedDays.length}`);
+  console.log(
+    `  League averages: ${daysWithDatedAverages} dated snapshot(s), ${daysWithFallbackAverages} global fallback day(s)`
+  );
   console.log(`  Local output: ${outputDir}`);
 
   let uploaded = [];

@@ -764,6 +764,7 @@ myHeaders.append("Origin", "https://gregdorward.github.io");
 let fixturesLoadPromise = null;
 
 export let dynamicDate;
+export let dynamicFormDateKey;
 let todaysDateString;
 
 export async function generateFixtures(
@@ -890,6 +891,7 @@ export async function generateFixtures(
     const url = apiGetUrl(`matches/${footyStatsFormattedDate}`);
     const formUrl = apiGetUrl(`form/${date}`);
     dynamicDate = unformattedDate;
+    dynamicFormDateKey = date;
 
     matches = [];
     fixtureArray = [];
@@ -2219,6 +2221,33 @@ export async function generateFixtures(
         },
         body: JSON.stringify({ allForm }),
       });
+
+      const isSelectedDateToday =
+        selectedStart.getTime() === todayStart.getTime();
+
+      if (isSelectedDateToday) {
+        try {
+          const averagesResponse = await fetch(apiGetUrl("league-averages"));
+          if (averagesResponse.ok) {
+            const leagueAverages = await averagesResponse.json();
+            if (Array.isArray(leagueAverages) && leagueAverages.length > 0) {
+              await fetch(
+                `${process.env.NEXT_PUBLIC_EXPRESS_SERVER}league-averages/${date}`,
+                {
+                  method: "POST",
+                  headers: {
+                    Accept: "application/json",
+                    "Content-Type": "application/json",
+                  },
+                  body: JSON.stringify(leagueAverages),
+                }
+              );
+            }
+          }
+        } catch (error) {
+          console.error("Failed to snapshot league averages:", error);
+        }
+      }
     }
     if (resultsWereRebuilt) {
       await updateResults(true);

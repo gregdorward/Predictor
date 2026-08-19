@@ -29,13 +29,15 @@ export async function fetchGlobalBacktestData(apiOrigin) {
   if (!resultsRes.ok) {
     throw new Error(`Failed to load results (${resultsRes.status}).`);
   }
-  if (!averagesRes.ok) {
-    throw new Error(`Failed to load league-averages (${averagesRes.status}).`);
+
+  let leagueAveragesFallback = null;
+  if (averagesRes.ok && Array.isArray(averagesRes.data)) {
+    leagueAveragesFallback = averagesRes.data;
   }
 
   return {
     leagueResults: Array.isArray(resultsRes.data) ? resultsRes.data : [],
-    leagueAverages: averagesRes.data,
+    leagueAveragesFallback,
   };
 }
 
@@ -44,9 +46,10 @@ export async function loadDayData(date, apiOrigin) {
   const isoDate = toIsoDate(date);
   const formKey = toFormDateKey(date);
 
-  const [matchesRes, formRes] = await Promise.all([
+  const [matchesRes, formRes, averagesRes] = await Promise.all([
     fetchJson(`${origin}matches/${isoDate}`),
     fetchJson(`${origin}form/${formKey}`),
+    fetchJson(`${origin}league-averages/${formKey}`),
   ]);
 
   if (!matchesRes.ok) {
@@ -109,6 +112,9 @@ export async function loadDayData(date, apiOrigin) {
     matches.push(buildMatchFromFixture(fixture, leagueName));
   }
 
+  const leagueAverages =
+    averagesRes.ok && Array.isArray(averagesRes.data) ? averagesRes.data : null;
+
   return {
     isoDate,
     formKey,
@@ -116,5 +122,7 @@ export async function loadDayData(date, apiOrigin) {
     reason: null,
     matches,
     allForm,
+    leagueAverages,
+    leagueAveragesSource: leagueAverages ? "dated" : "missing",
   };
 }

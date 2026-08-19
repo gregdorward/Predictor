@@ -1,9 +1,10 @@
 import { Fragment, useState } from "react";
 import { isReactSnap } from "../firebase";
 import { apiGetUrl } from "../utils/apiUrl";
+import { fetchLeagueAveragesForDate } from "../utils/leagueAverages";
 import { getPointsFromLastX } from "../utils/getPointsFromLastX";
 export { getPointsFromLastX };
-import { matches, diff } from "./getFixtures";
+import { matches, diff, dynamicFormDateKey } from "./getFixtures";
 import Collapsable from "../components/CollapsableElement";
 import CollapsableStats from "../components/CollapsableStats";
 import { allForm } from "../logic/getFixtures";
@@ -221,7 +222,7 @@ function buildScoreMatrix(
   lambdaHome,
   lambdaAway,
   maxGoals = 5,
-  rho = 0.04
+  rho = 0.025
 ) {
   const scores = [];
 
@@ -2313,8 +2314,17 @@ export async function generateGoals(homeForm, awayForm, match) {
     averageLeagueGoals = leagueAvg;
   }
   const averageGoalsPerTeam = averageLeagueGoals / 2;
-  const averageGoalsHome = averageGoalsPerTeam * 1.1
-  const averageGoalsAway = averageGoalsPerTeam * 0.9
+  let averageGoalsHome = averageGoalsPerTeam * 1.1;
+  let averageGoalsAway = averageGoalsPerTeam * 0.9;
+
+  const leagueAvgHome = Number(leagueObject?.averageGoalsHome);
+  const leagueAvgAway = Number(leagueObject?.averageGoalsAway);
+  if (Number.isFinite(leagueAvgHome) && leagueAvgHome > 0) {
+    averageGoalsHome = leagueAvgHome;
+  }
+  if (Number.isFinite(leagueAvgAway) && leagueAvgAway > 0) {
+    averageGoalsAway = leagueAvgAway;
+  }
   const BASELINE = 0.5;
 
   // Define a minimum weakness so the factor never hits 0 or negative
@@ -5643,21 +5653,20 @@ export async function getScorePrediction(day, mocked) {
   let divider = 10;
 
   const predictedScoresPromise = fetch(`${process.env.NEXT_PUBLIC_EXPRESS_SERVER}predictedScores2`);
-  const leagueAveragesPromise = fetch(apiGetUrl(`league-averages`));
+  const leagueAveragesPromise = fetchLeagueAveragesForDate(dynamicFormDateKey);
 
   // Await everything in parallel
   const [
     predictedScoresResponse,
-    leagueAveragesResponse
+    leagueAverages,
   ] = await Promise.all([
     predictedScoresPromise,
-    leagueAveragesPromise
+    leagueAveragesPromise,
   ]);
 
   // Await JSON parsing and assign results.
   predictedScoresData = await predictedScoresResponse.json();
-  // Assuming leagueAveragesData is an outer-scoped variable
-  leagueAveragesData = await leagueAveragesResponse.json();
+  leagueAveragesData = leagueAverages;
 
   statsArray = {
     trueFormArray: [],

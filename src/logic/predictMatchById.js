@@ -1,5 +1,6 @@
 import { orderedLeagues } from "../App";
 import { apiGetUrl } from "../utils/apiUrl";
+import { fetchLeagueAveragesForDate, toFormDateKeyFromIso } from "../utils/leagueAverages";
 import {
   allForm,
   allLeagueResultsArrayOfObjects,
@@ -39,10 +40,12 @@ export async function predictMatchById(matchId) {
 
   const dateStr = formatDateForApi(fixture.date_unix);
 
-  const [tableRes, leagueAveragesRes, predictedScoresRes, dayMatchesRes] =
+  const formDateKey = toFormDateKeyFromIso(dateStr);
+
+  const [tableRes, leagueAverages, predictedScoresRes, dayMatchesRes] =
     await Promise.all([
       fetch(apiGetUrl(`tables/${competitionId}/${dateStr}`)),
-      fetch(apiGetUrl("league-averages")),
+      fetchLeagueAveragesForDate(formDateKey),
       fetch(`${process.env.NEXT_PUBLIC_EXPRESS_SERVER}predictedScores2`),
       fetch(apiGetUrl(`matches/${dateStr}`)),
     ]);
@@ -85,7 +88,6 @@ export async function predictMatchById(matchId) {
   allLeagueResultsArrayOfObjects.length = 0;
   allLeagueResultsArrayOfObjects.push(leagueResults);
 
-  const leagueAverages = await leagueAveragesRes.json();
   const predictedScores = await predictedScoresRes.json();
   setSingleMatchPredictionData({ leagueAverages, predictedScores });
 
