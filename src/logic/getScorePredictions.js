@@ -48,6 +48,7 @@ import {
   findLeagueEntryById,
   getLeagueFixturesByLeagueId,
   getTeamFixturesBeforeMatch,
+  isCompleteLeagueHistoryFixture,
 } from "../utils/leagueResultsAccess";
 import { limitFormRunToSeasonPlayed, sanitizeThinSeasonFormSide } from "../utils/seasonFormRun";
 import { buildGoalTimingHeatmap } from "../utils/goalTimingHeatmap";
@@ -705,7 +706,7 @@ async function getPastLeagueResults(team, game, hOrA, form) {
     teamsHomeResults = teamsHomeResults
       .filter(function (item) {
         return (
-          item.status === "complete" &&
+          isCompleteLeagueHistoryFixture(item) &&
           item.date_unix < date - 86400
         );
       })
@@ -718,7 +719,7 @@ async function getPastLeagueResults(team, game, hOrA, form) {
     teamsAwayResults = teamsAwayResults
       .filter(function (item) {
         return (
-          item.status === "complete" &&
+          isCompleteLeagueHistoryFixture(item) &&
           item.date_unix < date - 86400
         );
       })
@@ -3527,7 +3528,7 @@ export async function calculateScore(match, index, divider, calculate, AIPredict
       match.leagueID
     );
     const completeLeagueFixtures = leagueFixturesForMatch.filter(
-      (fixture) => fixture.status === "complete"
+      isCompleteLeagueHistoryFixture
     );
     // NL North/South often ship hundreds of incomplete 0-0 rows — length alone
     // must not force getPastLeagueResults (which would skip season form fallback).

@@ -7,6 +7,7 @@ import {
   getLeagueFixturesByLeagueId,
   getLeagueResultsByLeagueId,
   getTeamFixturesBeforeMatch,
+  isCompleteLeagueHistoryFixture,
   isResultsCacheValid,
   trimLeagueResultsToWindow,
 } from "./leagueResultsAccess";
@@ -269,5 +270,36 @@ describe("trimLeagueResultsToWindow", () => {
     const trimmed = trimLeagueResultsToWindow(cache, cutoff);
     expect(trimmed[0].fixtures).toHaveLength(2);
     expect(trimmed[0].fixtures[0].date_unix).toBe(1500);
+  });
+});
+
+describe("isCompleteLeagueHistoryFixture", () => {
+  test("treats cached rows with no status as complete when goals are finite", () => {
+    expect(
+      isCompleteLeagueHistoryFixture({
+        homeGoalCount: 1,
+        awayGoalCount: 0,
+      })
+    ).toBe(true);
+  });
+
+  test("keeps explicit complete status", () => {
+    expect(
+      isCompleteLeagueHistoryFixture({
+        status: "complete",
+        homeGoalCount: 0,
+        awayGoalCount: 0,
+      })
+    ).toBe(true);
+  });
+
+  test("rejects incomplete rows even if they look like 0-0", () => {
+    expect(
+      isCompleteLeagueHistoryFixture({
+        status: "incomplete",
+        homeGoalCount: 0,
+        awayGoalCount: 0,
+      })
+    ).toBe(false);
   });
 });

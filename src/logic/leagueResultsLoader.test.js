@@ -98,12 +98,14 @@ describe("mapLeagueFixtureResults", () => {
         pens_recorded: 1,
         team_a_penalties_won: 1,
         team_b_penalties_won: 0,
+        status: "complete",
       },
     ]);
 
     expect(mapped.pens_recorded).toBe(1);
     expect(mapped.team_a_penalties_won).toBe(1);
     expect(mapped.team_b_penalties_won).toBe(0);
+    expect(mapped.status).toBe("complete");
   });
 });
 

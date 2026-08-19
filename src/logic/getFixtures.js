@@ -1164,6 +1164,7 @@ export async function generateFixtures(
             pens_recorded,
             team_a_penalties_won,
             team_b_penalties_won,
+            status,
           }) => ({
             home_name,
             away_name,
@@ -1200,6 +1201,7 @@ export async function generateFixtures(
             pens_recorded,
             team_a_penalties_won,
             team_b_penalties_won,
+            status,
           })
         );
 

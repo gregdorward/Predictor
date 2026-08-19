@@ -98,6 +98,23 @@ export function findLeagueEntryById(entries, leagueId) {
 }
 
 /**
+ * True for a finished league-history row.
+ * Cached shortened results drop `status` after filtering to complete games,
+ * so missing status still counts as complete when goal counts are finite.
+ */
+export function isCompleteLeagueHistoryFixture(fixture) {
+  if (!fixture) return false;
+  if (fixture.status === "complete") return true;
+  if (fixture.status != null && fixture.status !== "") return false;
+  return (
+    Number.isFinite(Number(fixture.homeGoalCount)) &&
+    Number.isFinite(Number(fixture.awayGoalCount)) &&
+    Number(fixture.homeGoalCount) >= 0 &&
+    Number(fixture.awayGoalCount) >= 0
+  );
+}
+
+/**
  * Look up a league's cached results object by industry leading stat website league id.
  * Do not use orderedLeagues index - cached result array order can drift.
  */

@@ -2,6 +2,8 @@
  * Build league-position-over-time series from completed league fixtures.
  */
 
+import { isCompleteLeagueHistoryFixture } from "./leagueResultsAccess";
+
 const EMPTY = {
   labels: [],
   teams: [],
@@ -35,19 +37,6 @@ export function normalizeLeagueFixturesPayload(payload) {
   if (Array.isArray(payload?.data)) return payload.data;
   if (Array.isArray(payload?.fixtures)) return payload.fixtures;
   return [];
-}
-
-function isCompleteFixture(fixture) {
-  if (!fixture) return false;
-  if (fixture.status === "complete") return true;
-  // Cached shortened rows may omit status; accept rows with finite goal counts.
-  if (fixture.status != null && fixture.status !== "") return false;
-  return (
-    Number.isFinite(Number(fixture.homeGoalCount)) &&
-    Number.isFinite(Number(fixture.awayGoalCount)) &&
-    Number(fixture.homeGoalCount) >= 0 &&
-    Number(fixture.awayGoalCount) >= 0
-  );
 }
 
 function hasValidGameWeek(fixture) {
@@ -164,7 +153,7 @@ function snapshotPositions(stats, allTeamNames) {
  * }}
  */
 export function buildLeaguePositionSeries(fixtures) {
-  const completed = (fixtures || []).filter(isCompleteFixture);
+  const completed = (fixtures || []).filter(isCompleteLeagueHistoryFixture);
   if (completed.length === 0) {
     return {
       ...EMPTY,
