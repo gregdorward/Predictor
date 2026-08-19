@@ -44,10 +44,13 @@ export async function fetchCompetitionData(seasonId) {
   }
 }
 
-export async function fetchMatchSnapshot(matchId) {
+export async function fetchMatchSnapshot(
+  matchId,
+  { timeoutMs = 6000 } = {}
+) {
   try {
     const json = await fetchJson(`match/snapshot/${matchId}`, {
-      timeoutMs: 6000,
+      timeoutMs,
     });
     return json?.data ?? null;
   } catch {
@@ -111,6 +114,7 @@ function matchToFixtureLink(match) {
   const home = match.home_name || match.homeTeam || "Home";
   const away = match.away_name || match.awayTeam || "Away";
   return {
+    matchId: String(match.id),
     label: `${home} vs ${away}`,
     href: buildFixtureUrl(home, away, match.id),
     league: resolveFixtureLeagueName(match),
@@ -118,6 +122,49 @@ function matchToFixtureLink(match) {
     awayTeam: away,
     date: formatFixtureDate(match),
   };
+}
+
+async function mapWithConcurrency(items, concurrency, mapper) {
+  if (items.length === 0) return [];
+  const results = new Array(items.length);
+  let nextIndex = 0;
+
+  async function worker() {
+    while (nextIndex < items.length) {
+      const index = nextIndex;
+      nextIndex += 1;
+      results[index] = await mapper(items[index], index);
+    }
+  }
+
+  const workers = Array.from(
+    { length: Math.min(concurrency, items.length) },
+    () => worker()
+  );
+  await Promise.all(workers);
+  return results;
+}
+
+/**
+ * Cross-check fixture links against match snapshots so sitemap URLs match
+ * fixture page noindex rules. The daily matches list can lag behind snapshot
+ * status (e.g. suspended still listed as incomplete).
+ */
+export async function filterIndexableFixtureLinks(
+  links,
+  { snapshotTimeoutMs = 2000, concurrency = 12 } = {}
+) {
+  const checked = await mapWithConcurrency(links, concurrency, async (link) => {
+    if (!link?.matchId) return link;
+
+    const snapshot = await fetchMatchSnapshot(link.matchId, {
+      timeoutMs: snapshotTimeoutMs,
+    });
+    if (snapshot && isFixtureFinished(snapshot)) return null;
+    return link;
+  });
+
+  return checked.filter(Boolean);
 }
 
 /**

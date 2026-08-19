@@ -1,5 +1,8 @@
 import { getIndexableCompetitions } from "./competitionCatalog";
-import { fetchUpcomingFixtureLinks } from "./serverFetch";
+import {
+  fetchUpcomingFixtureLinks,
+  filterIndexableFixtureLinks,
+} from "./serverFetch";
 import { SITE_URL } from "./pageMetaConfig";
 import { getArticleIndex } from "../data/articles/loadArticles";
 
@@ -57,10 +60,15 @@ export async function collectSitemapUrls({
 
   try {
     const fixtures = await fetchUpcomingFixtureLinks({
-      limit: fixtureLimit,
+      limit: fixtureLimit + 20,
       timeoutMs: 3500,
     });
-    const fixtureUrls = fixtures.map((fixture) => toAbsoluteUrl(fixture.href));
+    const indexable = await filterIndexableFixtureLinks(fixtures, {
+      snapshotTimeoutMs: 2000,
+    });
+    const fixtureUrls = indexable
+      .slice(0, fixtureLimit)
+      .map((fixture) => toAbsoluteUrl(fixture.href));
     return [...baseUrls, ...fixtureUrls];
   } catch {
     return baseUrls;
