@@ -119,12 +119,12 @@ export async function calculateAttackingStrength(
   options = {}
 ) {
   const weights = {
-    "Average Dangerous Attacks": 0.15,
+    "Average Dangerous Attacks": 0.1,
     "Average Shots": 0.0,
     "Average Shots On Target": 0.15,
-    "Average Expected Goals": 0.15,
-    "Weighted XG": 0.3,
-    "Average Goals": 0.25,
+    "Average Expected Goals": 0.35,
+    "Weighted XG": 0.25,
+    "Average Goals": 0.15,
     Corners: 0,
     "Average Shot Value": 0,
     Possession: 0,
@@ -170,11 +170,11 @@ export async function calculateDefensiveStrength(
   options = {}
 ) {
   const weights = {
-    "Average XG Against": 0.15,
-    "Weighted XG Against": 0.3,
-    "Average Goals Against": 0.25,
+    "Average XG Against": 0.35,
+    "Weighted XG Against": 0.25,
+    "Average Goals Against": 0.15,
     "Average SOT Against": 0.15,
-    "Average Dangerous Attacks Against": 0.15,
+    "Average Dangerous Attacks Against": 0.1,
     "Injury impact": 0,
   };
 

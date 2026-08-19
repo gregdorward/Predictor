@@ -46,3 +46,6 @@ export const BouncingDotsLoader = stub;
 export const LazyLeagueTable = stub;
 export const LazyLeagueTableExtrasPanel = stub;
 export const LazyWorldCupKnockoutBracket = stub;
+export function resolveConferenceLeagueTeams() {
+  return [];
+}
