@@ -42,7 +42,7 @@ export async function openFirstFixtureStats(page: Page): Promise<void> {
 }
 
 export async function getFixtureDateLabel(page: Page): Promise<string> {
-  return page.locator('.FixtureButtons button').nth(1).innerText();
+  return page.locator('.FixtureButtons .FixturesButtonToday').innerText();
 }
 
 export async function prepareFixtureContext(page: Page): Promise<void> {

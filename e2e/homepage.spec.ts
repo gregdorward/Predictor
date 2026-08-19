@@ -16,6 +16,7 @@ test.describe('Homepage', () => {
     await expect(page.locator('header.DarkMode')).toBeVisible({ timeout: 10_000 });
     await expect(page.getByTestId('<')).toBeVisible();
     await expect(page.getByTestId('>')).toBeVisible();
+    await expect(page.getByTestId('fixture-date-calendar')).toBeVisible();
   });
 
   test('shows collapsible sections for options and help', async ({ page }) => {

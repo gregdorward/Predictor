@@ -30,6 +30,13 @@ import WorldCup2026 from "./components/WorldCup2026";
 import TeamPage from "./components/Team";
 import { initTheme } from "./utils/theme";
 import { getInitialDateFromShareUrl } from "./utils/shareMatchUrl";
+import {
+  FIXTURE_DATE_MAX_OFFSET,
+  FIXTURE_DATE_MIN_OFFSET,
+  isOffsetInFixtureRange,
+  startOfLocalDay,
+} from "./utils/fixtureDateBounds";
+import FixtureDateCalendar from "./components/FixtureDateCalendar";
 import { SuccessPage } from "./components/Success"
 import { CancelPage } from "./components/Cancel"
 import PasswordReset from "./components/PasswordReset";
@@ -647,12 +654,12 @@ export function AppContent({ shellMounted = false }) {
   }, [user]);
 
 
-  const handleAction = async () => {
+  const handleAction = async (date = currentDate) => {
     bumpFixturesEpoch();
     setIsLoading(true);
 
-    const [raw, formatted] = await calculateDate(currentDate);
-    const sofaDate = await convertTimestampForSofaScore(currentDate);
+    const [raw, formatted] = await calculateDate(date);
+    const sofaDate = await convertTimestampForSofaScore(date);
 
     const data = await generateFixtures(
       "fixtures",
@@ -662,7 +669,7 @@ export function AppContent({ shellMounted = false }) {
       false,
       raw,
       sofaDate,
-      currentDate,
+      date,
       handleGetPredictions
     );
 
@@ -675,15 +682,19 @@ export function AppContent({ shellMounted = false }) {
   // This function replaces decrementDate and incrementDateV2
   const changeDate = (num) => {
     const newOffset = offset + num;
-    // TEMP: allow browsing 4 days ahead (revert to 3 before merge)
-    const maxForwardDays = 4;
-    if (newOffset > -120 && newOffset <= maxForwardDays) {
-      const newDate = new Date();
+    if (isOffsetInFixtureRange(newOffset)) {
+      const newDate = startOfLocalDay();
       newDate.setDate(newDate.getDate() + newOffset);
 
       setOffset(newOffset);
       setCurrentDate(newDate);
     }
+  };
+
+  const selectDateFromCalendar = (date, nextOffset) => {
+    setOffset(nextOffset);
+    setCurrentDate(date);
+    handleAction(date);
   };
 
 
@@ -1016,6 +1027,11 @@ export function AppContent({ shellMounted = false }) {
             text="<"
             className="SecondaryButton FixturesButtonAmend"
             onClickEvent={() => changeDate(-1)}
+            disabled={
+              isLoading ||
+              isPredicting ||
+              offset <= FIXTURE_DATE_MIN_OFFSET
+            }
           />
 
           <Button
@@ -1025,10 +1041,21 @@ export function AppContent({ shellMounted = false }) {
             disabled={isLoading || isPredicting}
           />
 
+          <FixtureDateCalendar
+            currentDate={currentDate}
+            onSelectDate={selectDateFromCalendar}
+            disabled={isLoading || isPredicting}
+          />
+
           <Button
             text=">"
             className="SecondaryButton FixturesButtonAmend"
             onClickEvent={() => changeDate(1)}
+            disabled={
+              isLoading ||
+              isPredicting ||
+              offset >= FIXTURE_DATE_MAX_OFFSET
+            }
           />
         </div>
       </div>
