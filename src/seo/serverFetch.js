@@ -1,4 +1,5 @@
 import { resolveFixtureLeagueName } from "./competitionCatalog";
+import { isCompetitionSeasonEmpty } from "./competitionSeason";
 import {
   buildFixtureUrl,
   FIXTURE_SITEMAP_WINDOW_DAYS,
@@ -163,6 +164,29 @@ export async function filterIndexableFixtureLinks(
     if (snapshot && isFixtureFinished(snapshot)) return null;
     return link;
   });
+
+  return checked.filter(Boolean);
+}
+
+/**
+ * Keep sitemap competition URLs aligned with page noindex rules: empty /
+ * unstarted seasons are noindex and must not appear in the sitemap.
+ * If a fetch fails, exclude the URL (safer than advertising a noindex page).
+ */
+export async function filterIndexableCompetitions(
+  competitions,
+  { concurrency = 8 } = {}
+) {
+  const checked = await mapWithConcurrency(
+    competitions,
+    concurrency,
+    async (competition) => {
+      if (!competition?.id || !competition?.slug) return null;
+      const data = await fetchCompetitionData(competition.id);
+      if (!data || isCompetitionSeasonEmpty(data)) return null;
+      return competition;
+    }
+  );
 
   return checked.filter(Boolean);
 }

@@ -48,7 +48,11 @@ async function generateSiteMap() {
   try {
     urls = await collectSitemapUrls();
   } catch {
-    urls = await collectSitemapUrls({ includeFixtures: false });
+    // Avoid advertising competition hubs we could not verify as indexable.
+    urls = await collectSitemapUrls({
+      includeFixtures: false,
+      includeCompetitions: false,
+    });
   }
   const routeMeta = buildRouteMeta();
 

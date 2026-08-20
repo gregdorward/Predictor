@@ -1,6 +1,7 @@
 import { getIndexableCompetitions } from "./competitionCatalog";
 import {
   fetchUpcomingFixtureLinks,
+  filterIndexableCompetitions,
   filterIndexableFixtureLinks,
 } from "./serverFetch";
 import { SITE_URL } from "./pageMetaConfig";
@@ -31,26 +32,40 @@ function toAbsoluteUrl(path) {
   return `${SITE_URL}${path}`;
 }
 
-function collectStaticSitemapUrls() {
+function collectCoreSitemapUrls() {
   const staticUrls = STATIC_SITEMAP_ROUTES.map((route) => toAbsoluteUrl(route.path));
   const articleUrls = getArticleIndex().map((article) =>
     toAbsoluteUrl(`/articles/${article.slug}/`)
   );
-  const competitionUrls = getIndexableCompetitions().map((competition) =>
-    toAbsoluteUrl(`/competition/${competition.slug}/`)
-  );
-  return [...staticUrls, ...articleUrls, ...competitionUrls];
+  return [...staticUrls, ...articleUrls];
+}
+
+async function collectIndexableCompetitionUrls() {
+  try {
+    const indexable = await filterIndexableCompetitions(getIndexableCompetitions());
+    return indexable.map((competition) =>
+      toAbsoluteUrl(`/competition/${competition.slug}/`)
+    );
+  } catch {
+    return [];
+  }
 }
 
 /**
  * All indexable URLs used by sitemap.xml and IndexNow pings.
  * Fixture match pages are noindex and excluded by default.
+ * Competition hubs are included only when the season has live averages
+ * (empty/unstarted seasons are noindex on the page).
  */
 export async function collectSitemapUrls({
   fixtureLimit = 80,
   includeFixtures = false,
+  includeCompetitions = true,
 } = {}) {
-  const baseUrls = collectStaticSitemapUrls();
+  const baseUrls = [
+    ...collectCoreSitemapUrls(),
+    ...(includeCompetitions ? await collectIndexableCompetitionUrls() : []),
+  ];
 
   if (!includeFixtures) {
     return baseUrls;
