@@ -1,17 +1,17 @@
 {
-  "generatedAt": "2026-08-05T19:00:00.000Z",
-  "dataAsOf": "2026-08-05",
+  "generatedAt": "2026-08-20T18:00:00.000Z",
+  "dataAsOf": "2026-08-20",
   "oddsAsOf": "2026-07-29",
   "oddsProvider": "Betfair Sportsbook",
   "oddsDisclaimer": "Odds are a static snapshot from Betfair Sportsbook (late July 2026), not live prices. Relegation prices are a market snapshot from the same period and may differ slightly by book. Prices move.",
   "season": "2026-27",
-  "overview": "The 2026/27 Premier League opens on 21 August and runs to 30 May 2027 with Arsenal as defending champions for the first time since 2004. This is not a routine title defence. Nine clubs begin under new permanent managers - a Premier League record - and five of the traditional big six start with a different coach to the one they had at the start of last season. Only Mikel Arteta remains as continuity among that group. William Saliba’s extended World Cup back injury undercuts Arsenal’s defensive spine just as City, Liverpool and Chelsea reset under Enzo Maresca, Andoni Iraola and Xabi Alonso. Tottenham and Chelsea have spent at historic levels after underwhelming campaigns; Coventry, Ipswich and Hull replace West Ham, Burnley and Wolves. For the first time since 1985-86, the top flight begins without Ferguson, Wenger, Mourinho, Klopp or Guardiola in a dugout - a genuine changing of the guard.",
+  "overview": "The 2026/27 Premier League opens on 21 August and runs to 30 May 2027 with Arsenal as defending champions for the first time since 2004. Arsenal beat Manchester City 3-0 in the Community Shield on 16 August - a statement win that underlined how prepared the champions look despite William Saliba's extended World Cup back injury. Since early August they have added Bruno Guimaraes from Newcastle for £75m and agreed a £51m deal for Ezri Konsa from Aston Villa, directly addressing the two weaknesses that threatened their title defence. Nine clubs begin under new permanent managers - a Premier League record - and five of the traditional big six start with a different coach to the one they had at the start of last season. Only Mikel Arteta remains as continuity among that group. City, Liverpool and Chelsea reset under Enzo Maresca, Andoni Iraola and Xabi Alonso; Liverpool's loan signing of Ronald Araujo from Barcelona has steadied a defence in transition, while Newcastle's summer has been a fire sale with over £240m in exits and no ready-made midfield replacement. Tottenham and Chelsea have spent at historic levels after underwhelming campaigns; Coventry, Ipswich and Hull replace West Ham, Burnley and Wolves - all three promoted sides have been busy, with Ipswich in particular assembling a Premier League-ready squad. For the first time since 1985-86, the top flight begins without Ferguson, Wenger, Mourinho, Klopp or Guardiola in a dugout - a genuine changing of the guard.",
   "format": {
     "startDate": "2026-08-21",
     "endDate": "2027-05-30",
     "matchweeks": 38,
     "notes": [
-      "Community Shield: Arsenal vs Manchester City, 16 August 2026 (Principality Stadium)",
+      "Community Shield: Arsenal 3-0 Manchester City, 16 August 2026 (Principality Stadium)",
       "Season opener: Arsenal vs Coventry City, Friday 21 August, 20:00 BST",
       "Summer transfer window closes 31 August 2026"
     ]
@@ -38,57 +38,134 @@
     }
   ],
   "relegated": [
-    { "name": "West Ham United", "topFlightSeasons": 14 },
-    { "name": "Burnley", "topFlightSeasons": 1 },
-    { "name": "Wolverhampton Wanderers", "topFlightSeasons": 8 }
+    {
+      "name": "West Ham United",
+      "topFlightSeasons": 14
+    },
+    {
+      "name": "Burnley",
+      "topFlightSeasons": 1
+    },
+    {
+      "name": "Wolverhampton Wanderers",
+      "topFlightSeasons": 8
+    }
   ],
   "europeanPlaces": {
-    "championsLeague": ["Arsenal", "Manchester City", "Manchester United", "Aston Villa", "Liverpool"],
-    "europaLeague": ["Bournemouth", "Sunderland", "Crystal Palace"],
-    "conferenceLeague": ["Brighton & Hove Albion"],
+    "championsLeague": [
+      "Arsenal",
+      "Manchester City",
+      "Manchester United",
+      "Aston Villa",
+      "Liverpool"
+    ],
+    "europaLeague": [
+      "Bournemouth",
+      "Sunderland",
+      "Crystal Palace"
+    ],
+    "conferenceLeague": [
+      "Brighton & Hove Albion"
+    ],
     "note": "Five Champions League places for England. Palace reach Europa via last season’s Conference League win despite a mid-table league finish - a two-front test for new boss Pierre Sage."
   },
   "marketOdds": {
     "winner": [
-      { "team": "Arsenal", "fractional": "6/4", "decimal": 2.5 },
-      { "team": "Manchester City", "fractional": "5/2", "decimal": 3.5 },
-      { "team": "Liverpool", "fractional": "6/1", "decimal": 7.0 },
-      { "team": "Manchester United", "fractional": "13/2", "decimal": 7.5 },
-      { "team": "Chelsea", "fractional": "11/1", "decimal": 12.0 },
-      { "team": "Aston Villa", "fractional": "28/1", "decimal": 29.0 },
-      { "team": "Newcastle United", "fractional": "40/1", "decimal": 41.0 },
-      { "team": "Tottenham Hotspur", "fractional": "50/1", "decimal": 51.0 }
+      {
+        "team": "Arsenal",
+        "fractional": "6/4",
+        "decimal": 2.5
+      },
+      {
+        "team": "Manchester City",
+        "fractional": "5/2",
+        "decimal": 3.5
+      },
+      {
+        "team": "Liverpool",
+        "fractional": "6/1",
+        "decimal": 7.0
+      },
+      {
+        "team": "Manchester United",
+        "fractional": "13/2",
+        "decimal": 7.5
+      },
+      {
+        "team": "Chelsea",
+        "fractional": "11/1",
+        "decimal": 12.0
+      },
+      {
+        "team": "Aston Villa",
+        "fractional": "28/1",
+        "decimal": 29.0
+      },
+      {
+        "team": "Newcastle United",
+        "fractional": "40/1",
+        "decimal": 41.0
+      },
+      {
+        "team": "Tottenham Hotspur",
+        "fractional": "50/1",
+        "decimal": 51.0
+      }
     ],
     "relegation": [
-      { "team": "Hull City", "fractional": "1/4", "decimal": 1.25 },
-      { "team": "Coventry City", "fractional": "8/13", "decimal": 1.62 },
-      { "team": "Ipswich Town", "fractional": "4/6", "decimal": 1.67 },
-      { "team": "Sunderland", "fractional": "11/4", "decimal": 3.75 },
-      { "team": "Fulham", "fractional": "11/2", "decimal": 6.5 },
-      { "team": "Leeds United", "fractional": "11/2", "decimal": 6.5 }
+      {
+        "team": "Hull City",
+        "fractional": "1/4",
+        "decimal": 1.25
+      },
+      {
+        "team": "Coventry City",
+        "fractional": "8/13",
+        "decimal": 1.62
+      },
+      {
+        "team": "Ipswich Town",
+        "fractional": "4/6",
+        "decimal": 1.67
+      },
+      {
+        "team": "Sunderland",
+        "fractional": "11/4",
+        "decimal": 3.75
+      },
+      {
+        "team": "Fulham",
+        "fractional": "11/2",
+        "decimal": 6.5
+      },
+      {
+        "team": "Leeds United",
+        "fractional": "11/2",
+        "decimal": 6.5
+      }
     ],
     "topFourNote": "Top-four markets in late July priced Arsenal, City and Liverpool as the safest Champions League holds, with United and Chelsea the swing clubs for England’s fifth place. Chelsea’s lack of European football is the structural advantage that keeps them live in that race despite longer title odds."
   },
   "storylines": [
     {
-      "title": "The most open title race in years?",
-      "body": "After City’s long dominance and then Liverpool and Arsenal winning the last two titles by at least seven points, the case for a multi-club scramble is unusually strong. City start without Guardiola for the first time in a decade; Liverpool have replaced Slot with Iraola; Chelsea begin the Alonso era after a chaotic 2025/26. Arteta is the only big-six manager still in post from the start of last season. Betfair make Arsenal 6/4 favourites, with City 5/2 and Liverpool 6/1 - short enough that any Saliba-shaped wobble or early Maresca/Iraola surge could reopen the market quickly. Only Ferguson, Mourinho and Guardiola have ever successfully defended a Premier League title. Arteta is trying to become the fourth."
+      "title": "Arsenal's window has turned the title race",
+      "body": "In late July the narrative was Saliba-shaped vulnerability and a surprisingly open chase pack. Three weeks later Arsenal look like a side that identified their problems and fixed them. Guimaraes (£75m from Newcastle) adds a world-class midfielder to a squad that already won the league by seven points; Konsa (£51m agreed with Villa) covers centre-back and right-back while Saliba and Jurrien Timber recover. The Community Shield hammering of Maresca's City - 3-0 in Cardiff, Calafiori scoring inside 24 seconds - was the clearest pre-season signal yet. Betfair still make Arsenal 6/4 favourites and the market has not fully repriced how much stronger they look than a fortnight ago. City and Liverpool remain live, but Arsenal are no longer defending a title with fingers crossed."
     },
     {
-      "title": "Saliba’s absence is Arsenal’s live risk",
-      "body": "The champions remain the side to beat on continuity, set-piece excellence (29 scored, eight conceded from dead balls last season) and Arteta’s established methods. The counter-argument is concrete: Saliba will miss an “extended period” after a World Cup back injury. He made 50 appearances across competitions last season and formed the league’s most reliable centre-back partnership with Gabriel. Since his 2022 debut, Arsenal’s Premier League win rate is 68.7% with him (131 games) and 47.6% without (21). Their start is unforgiving too - Coventry at home on opening night, then Villa and Chelsea inside the first three. Continuity elsewhere does not erase that defensive hole."
+      "title": "Saliba's absence is real - but no longer existential",
+      "body": "The Saliba injury remains a genuine concern: Arsenal's Premier League win rate is 68.7% with him and 47.6% without. Timber is also sidelined with a groin problem. The difference from early August is that Arteta now has Konsa incoming - England's World Cup starter, versatile across the back line, and proven in Emery's high-line system at Villa. Hincapié's permanence adds further cover. The opening run (Coventry, Villa, Chelsea) is still unforgiving, but this is a squad that has been reinforced at the exact points of weakness rather than hoping Gabriel and Calafiori hold the line for three months alone."
     },
     {
       "title": "Nine new managers - and a chaotic opening stretch",
-      "body": "Nine clubs begin under new permanent bosses, beating the 2016/17 record of eight (the summer Guardiola and Conte arrived). Matchweek one alone pairs new managers against each other three times: Fulham vs Chelsea, City vs Bournemouth, and Newcastle vs Liverpool. Iraola’s first six league fixtures are all against sides with new permanent managers - Forest, Ipswich, Fulham, Bournemouth and City follow that Newcastle opener. The traditional “new manager bounce” has never been stress-tested with this many systems changing at once. Average top-flight tenure is now around 20 months; last season alone saw 11 in-season changes. Player quality and spending still predict results better than a coaching reset - but the early table will be noisy."
+      "body": "Nine clubs begin under new permanent bosses, beating the 2016/17 record of eight (the summer Guardiola and Conte arrived). Matchweek one alone pairs new managers against each other three times: Fulham vs Chelsea, City vs Bournemouth, and Newcastle vs Liverpool. Iraola's first six league fixtures are all against sides with new permanent managers - Forest, Ipswich, Fulham, Bournemouth and City follow that Newcastle opener. The traditional new-manager bounce has never been stress-tested with this many systems changing at once. Average top-flight tenure is now around 20 months; last season alone saw 11 in-season changes. Player quality and spending still predict results better than a coaching reset - but the early table will be noisy."
     },
     {
-      "title": "Chelsea and Spurs: dark horses without Europe",
-      "body": "Both underperformed last season - Chelsea 10th after 59 games in all competitions, Spurs 17th after 52 and a final-day escape - and both have gone huge in the market. Chelsea made Morgan Rogers the most expensive British player in history at £117m and have added Premier League-ready pieces around Alonso. Tottenham’s summer outlay has been framed around a club-record package north of £230m, including Tonali (~£100m) and Mateus Fernandes (£85m), plus van Hecke, Senesi and Robertson. Neither is priced for the title (Chelsea 11/1, Spurs 50/1 on Betfair), but the absence of Europe is the strategic edge United and the Champions League sides do not have. United, by contrast, played only 40 matches last season - their fewest since 1914-15 - finished third, and now re-enter continental football under Carrick with Santos and Tielemans as the midfield answers so far."
+      "title": "Newcastle's fire sale and the midfield void",
+      "body": "No established Premier League side has had a more destabilising summer than Newcastle. Gordon (£69.3m to Barcelona), Tonali (~£100m to Tottenham) and now Guimaraes (£75m to Arsenal) have gone - over £240m in sales with Amar Dedic (£30.7m from Benfica) and a batch of young prospects the only confirmed senior arrivals. Jaissle's pursuit of Joao Palhinha has hit a wall: the Portugal midfielder has rejected St James' Park for family reasons, preferring Aston Villa or Benfica. Lucas Bergvall remains a live target but Forest are competing. Betfair still price them 40/1 for the title, but the narrative is of a squad being stripped faster than it is rebuilt - mid-table is the ceiling unless deadline-day business changes the picture."
     },
     {
-      "title": "Promoted trio vs a widening survival gap",
-      "body": "Only three times have all three promoted sides gone straight down; only four times have all three stayed up. The market is blunt: Hull ~1/4, Coventry ~8/13, Ipswich ~4/6. Coventry’s 25-year absence ends under Lampard with Championship-title momentum and early spend (Amenda, Tchaouna, Onyeka). Ipswich bounce straight back under O’Neil with Premier League-experienced attackers and Diop’s World Cup minutes for Morocco - still the bookies’ likeliest survivor among the three. Hull’s play-off route and free-agent toppers (Butland, Targett, Morita) leave them shortest priced for the drop. Among sides who stayed up, Sunderland’s Europa campaign after finishing seventh is the second-season caution story, with the quietest window of the established clubs."
+      "title": "Promoted trio spending big - survival is not pre-ordained",
+      "body": "The market still makes Hull (~1/4), Coventry (~8/13) and Ipswich (~4/6) the relegation favourites, but all three have spent more than the stereotype suggests. Ipswich have been the most aggressive: Lukic from Fulham, Florentino from Burnley, Maeda, Fatawu, Diop, Akpom and Inciso give O'Neil a squad with genuine Premier League experience. Coventry have added Awoniyi from Forest, Chérif from Fenerbahce and Yirenkyi alongside Lampard's earlier Amenda/Tchaouna business. Hull's window has moved well beyond free-agent toppers - Tzolakis, Mendy, Gourna-Douath and Gelhardt from Leeds are real fees. Only three times have all three promoted sides gone straight down; Ipswich in particular look capable of bucking that trend."
     }
   ],
   "managerialChanges": [
@@ -149,116 +226,116 @@
   ],
   "keyTransfers": [
     {
+      "player": "Bruno Guimaraes",
+      "from": "Newcastle United",
+      "to": "Arsenal",
+      "fee": "£75m",
+      "significance": "Completed 8 August; former Newcastle captain joins the champions and directly addresses the one area Arsenal lacked a world-class operator. Newcastle have now sold over £240m of talent this summer."
+    },
+    {
+      "player": "Ezri Konsa",
+      "from": "Aston Villa",
+      "to": "Arsenal",
+      "fee": "£51m",
+      "significance": "Agreed 19 August; covers centre-back and right-back while Saliba and Timber are sidelined. Arsenal pivoted from Jarell Quansah after Villa held firm on valuation - Konsa is the proven Premier League answer."
+    },
+    {
       "player": "Morgan Rogers",
       "from": "Aston Villa",
       "to": "Chelsea",
       "fee": "£117m",
-      "significance": "Most expensive British player in history; Alonso’s statement attacking signing and the clearest signal Chelsea are buying Premier League-proven match-winners again."
+      "significance": "Most expensive British player in history; Alonso's statement attacking signing and the clearest signal Chelsea are buying Premier League-proven match-winners again."
     },
     {
       "player": "Elliot Anderson",
       "from": "Nottingham Forest",
       "to": "Manchester City",
       "fee": "£116m",
-      "significance": "Maresca’s first major piece after Guardiola; World Cup-boosted England midfielder asked to help replace Bernardo Silva’s creative load."
+      "significance": "Maresca's first major piece after Guardiola; World Cup-boosted England midfielder asked to help replace Bernardo Silva's creative load."
+    },
+    {
+      "player": "Ronald Araujo",
+      "from": "Barcelona",
+      "to": "Liverpool",
+      "fee": "Loan (€55m option)",
+      "significance": "Completed 10 August; plugs the Konaté hole at centre-back and gives Iraola a proven Champions League defender while Jacquet builds fitness. Salah's exit to Trabzonspor makes this the more consequential arrival."
+    },
+    {
+      "player": "Ousmane Diomande",
+      "from": "Sporting CP",
+      "to": "Nottingham Forest",
+      "fee": "£34.3m",
+      "significance": "Glasner's marquee signing - a 22-year-old Ivory Coast centre-back with back-three experience, funded by Anderson's sale and a sign Forest are actually spending the money."
     },
     {
       "player": "Sandro Tonali",
       "from": "Newcastle United",
       "to": "Tottenham Hotspur",
-      "fee": "~£100m",
-      "significance": "Centrepiece of Spurs’ club-record summer; strips Newcastle’s midfield identity as Jaissle arrives."
+      "fee": "~£92.5m",
+      "significance": "Centrepiece of Spurs' club-record summer; strips Newcastle's midfield identity as Jaissle arrives."
     },
     {
       "player": "Mateus Fernandes",
       "from": "West Ham United",
       "to": "Tottenham Hotspur",
       "fee": "£85m",
-      "significance": "Second Spurs record-breaker in 48 hours alongside Tonali; De Zerbi’s midfield rebuild in one window."
+      "significance": "Second Spurs record-breaker alongside Tonali; De Zerbi's midfield rebuild in one window with no European distraction."
     },
     {
-      "player": "Anthony Gordon",
-      "from": "Newcastle United",
-      "to": "Barcelona",
-      "fee": "£69.3m",
-      "significance": "Continues the PL talent drain to Spain and compounds Newcastle’s summer reset alongside Tonali."
+      "player": "Shea Charles",
+      "from": "Southampton",
+      "to": "Fulham",
+      "fee": "~£30m",
+      "significance": "Arbeloa's most expensive signing; replaces Lukic and gives Fulham a Premier League-ready midfielder after losing Wilson's goals and Diop's defensive cover."
     },
     {
-      "player": "Johan Manzambi",
-      "from": "Freiburg",
-      "to": "Aston Villa",
-      "fee": "£52m",
-      "significance": "World Cup breakout signing; Villa moved decisively after Newcastle interest to offset Rogers and Tielemans exits."
+      "player": "Gonzalo Garcia",
+      "from": "Real Madrid",
+      "to": "Fulham",
+      "fee": "£34.3m",
+      "significance": "Real Madrid pathway signing completes Arbeloa's early attacking rebuild alongside Charles and Cesar Palacios."
     },
     {
-      "player": "Jan Paul van Hecke",
-      "from": "Brighton & Hove Albion",
-      "to": "Tottenham Hotspur",
-      "fee": "£52m",
-      "significance": "Defensive foundation for Spurs’ survival spend; Brighton recycle profit into Vušković and Struijk."
+      "player": "James Trafford",
+      "from": "Manchester City",
+      "to": "Leeds United",
+      "fee": "£40m",
+      "significance": "Statement goalkeeper signing for Farke; City academy graduate returns to the Premier League and signals Leeds' ambition to consolidate rather than merely survive."
     },
     {
-      "player": "Andrey Santos",
-      "from": "Chelsea",
-      "to": "Manchester United",
-      "fee": "£48m",
-      "significance": "Carrick midfield priority answered without a nine-figure gamble; pairs with Tielemans for Champions League return."
-    },
-    {
-      "player": "Youri Tielemans",
-      "from": "Aston Villa",
-      "to": "Manchester United",
-      "fee": "£35m",
-      "significance": "Proven Premier League creator for United’s first full Carrick season and heavier fixture list."
-    },
-    {
-      "player": "Piero Hincapié",
-      "from": "Bayer Leverkusen",
-      "to": "Arsenal",
-      "fee": "£34.5m",
-      "significance": "Permanent cover in a defence now missing Saliba for an extended period; depth becomes title-race insurance."
-    },
-    {
-      "player": "Lukas Horníček",
-      "from": "Braga",
-      "to": "Newcastle United",
-      "fee": "£25.7m",
-      "significance": "Confirmed early August as first-choice goalkeeper; fifth summer arrival as Jaissle takes over."
-    },
-    {
-      "player": "Mohamed Salah",
-      "from": "Liverpool",
-      "to": "Free agent",
-      "fee": "Free",
-      "significance": "End of an Anfield era; Iraola must redefine chance creation without the club’s talisman as Konaté and Robertson also depart."
+      "player": "Dayann Methalie",
+      "from": "Toulouse",
+      "to": "Sunderland",
+      "fee": "£25.6m",
+      "significance": "Completed 18 August; left-back target finally landed after weeks of negotiation. Sunderland remain in pursuit of Geny Catamo to complete a window that had been worryingly quiet."
     }
   ],
   "predictedWinner": {
     "team": "Arsenal",
-    "reasoning": "Still the clearest Betfair favourite at 6/4: champions by seven points, Arteta continuity when rivals are resetting, and the league’s best set-piece profile. The Saliba absence is the genuine threat to that status - win-rate evidence says the drop-off is real - but City and Liverpool are mid-rebuild under new managers, not fully formed challengers yet. Until those projects click, Arsenal remain the benchmark.",
+    "reasoning": "Stronger now than when Betfair installed them as 6/4 favourites in late July. Guimaraes and Konsa address the two live weaknesses - midfield depth and defensive injuries - while the Community Shield rout of Maresca's City showed a squad that is fit, integrated and confident. Saliba's absence still matters, but Arsenal have spent to mitigate it rather than hope. City and Liverpool are mid-rebuild; until those projects click, the champions look the most prepared side in the division.",
     "oddsFractional": "6/4",
-    "consensusNote": "Aligned with Betfair pricing and the broad pre-season view that Arsenal are favourites - with an unusually open chase pack behind them."
+    "consensusNote": "Still aligned with Betfair pricing, but the gap to the chasing pack should arguably be wider given how decisively Arsenal have strengthened since the odds snapshot."
   },
   "predictedTable": [
     {
       "predictedPosition": 1,
       "name": "Arsenal",
       "tier": "title",
-      "blurb": "Favourites to retain despite Saliba’s extended absence; continuity and set pieces still outweigh rivals’ resets.",
+      "blurb": "Guimaraes and Konsa have turned a fragile title defence into the most complete squad in the league; Community Shield rout of City set the tone.",
       "oddsFractional": "6/4"
     },
     {
       "predictedPosition": 2,
       "name": "Manchester City",
       "tier": "title",
-      "blurb": "Main market danger at 5/2 in the first post-Guardiola season; Anderson is the headline piece of a living rebuild.",
+      "blurb": "Community Shield exposed Maresca's side early; Anderson is the headline piece but Silva, Stones and Rodri have all gone.",
       "oddsFractional": "5/2"
     },
     {
       "predictedPosition": 3,
       "name": "Liverpool",
       "tier": "title",
-      "blurb": "Iraola project plus Champions League football; Salah-era end and a brutal new-manager fixture run keep them third.",
+      "blurb": "Araujo loan steadies the defence post-Konaté; Salah era over and brutal new-manager fixture run keep them third despite improved preparation.",
       "oddsFractional": "6/1"
     },
     {
@@ -272,28 +349,28 @@
       "predictedPosition": 5,
       "name": "Chelsea",
       "tier": "europe",
-      "blurb": "Alonso + Rogers, no Europe - the swing club for the fifth Champions League place.",
+      "blurb": "Alonso + Rogers + Henderson experience; no Europe remains the structural edge for a top-four push.",
       "oddsFractional": "11/1"
     },
     {
       "predictedPosition": 6,
-      "name": "Aston Villa",
+      "name": "Tottenham Hotspur",
       "tier": "europe",
-      "blurb": "Europa winners back in the Champions League; Manzambi and Gomes cushion Rogers/Tielemans sales under Emery.",
-      "oddsFractional": "28/1"
+      "blurb": "Record summer complete with no European distraction; Tonali and Fernandes give De Zerbi the tools Villa's CL nights deny Emery.",
+      "oddsFractional": "50/1"
     },
     {
       "predictedPosition": 7,
-      "name": "Tottenham Hotspur",
+      "name": "Aston Villa",
       "tier": "europe",
-      "blurb": "Club-record spend under De Zerbi after final-day survival; title odds long, European recovery the live target.",
-      "oddsFractional": "50/1"
+      "blurb": "Konsa sale to Arsenal hurts; Suzuki and Ruggeri in but Palhinha pursuit stuck on loan terms. CL fatigue risk rises.",
+      "oddsFractional": "28/1"
     },
     {
       "predictedPosition": 8,
       "name": "Bournemouth",
       "tier": "europe",
-      "blurb": "Europa debut under Rose; the open question is how much of last season’s rise was Iraola-specific.",
+      "blurb": "Europa debut under Rose; the open question is how much of last season's rise was Iraola-specific.",
       "oddsFractional": null
     },
     {
@@ -307,77 +384,77 @@
       "predictedPosition": 10,
       "name": "Brentford",
       "tier": "mid",
-      "blurb": "Andrews continuity and Thiago’s goals; Sangaré and Anthony deepen without forcing a reinvention.",
+      "blurb": "Andrews continuity and Thiago's goals; Sangaré and Anthony deepen without forcing a reinvention.",
       "oddsFractional": null
     },
     {
       "predictedPosition": 11,
-      "name": "Newcastle United",
+      "name": "Everton",
       "tier": "mid",
-      "blurb": "Howe/Jaissle transition with Gordon and Tonali sold; mid-table floor, not relegation panic - if recruitment steadies.",
-      "oddsFractional": "40/1"
+      "blurb": "Norgaard and Brennan Johnson are deadline-quality additions; Hill Dickinson year two looks more secure than 12th place suggests.",
+      "oddsFractional": null
     },
     {
       "predictedPosition": 12,
-      "name": "Everton",
+      "name": "Nottingham Forest",
       "tier": "mid",
-      "blurb": "Hill Dickinson year two under Moyes; Hackney and George add energy after a nervous late run last season.",
+      "blurb": "Diomande and Schlager show Anderson money being spent; Glasner expects two more before the window shuts.",
       "oddsFractional": null
     },
     {
       "predictedPosition": 13,
-      "name": "Nottingham Forest",
+      "name": "Newcastle United",
       "tier": "mid",
-      "blurb": "Glasner inherits after Anderson’s £116m exit; squad quality should survive, but the window has been too quiet.",
-      "oddsFractional": null
+      "blurb": "Over £240m sold, no midfield replacement secured; Palhinha rejected them and Bergvall is not done. Relegation not the base case, but the floor has dropped.",
+      "oddsFractional": "40/1"
     },
     {
       "predictedPosition": 14,
       "name": "Crystal Palace",
       "tier": "mid",
-      "blurb": "Europa via Conference League glory; Sage must replace Lacroix depth or Europe will stretch a thin back line.",
+      "blurb": "McNeil and Tomiyasu add experience; Sage must still replace Lacroix depth or Europa will stretch a thin back line.",
       "oddsFractional": null
     },
     {
       "predictedPosition": 15,
-      "name": "Sunderland",
+      "name": "Leeds United",
       "tier": "mid",
-      "blurb": "Seventh and Europa last season, but second-season caution and the shortest relegation price among non-promoted sides.",
+      "blurb": "Trafford from City is a statement; Wilson and Muharemović help, still a lower-third profile but better prepared than in July.",
       "oddsFractional": null
     },
     {
       "predictedPosition": 16,
-      "name": "Leeds United",
-      "tier": "relegation-mix",
-      "blurb": "Strong from December onwards last season; Wilson and Muharemović help, still a lower-third survival profile.",
+      "name": "Sunderland",
+      "tier": "mid",
+      "blurb": "Methalie finally through the door; Catamo pursuit active but Europa nights still demand more bodies.",
       "oddsFractional": null
     },
     {
       "predictedPosition": 17,
-      "name": "Fulham",
+      "name": "Ipswich Town",
       "tier": "relegation-mix",
-      "blurb": "Arbeloa rebuild after Silva; Jiménez/Wilson goals gone and Diop sold - mid-table floor no longer automatic.",
+      "blurb": "Best-prepared promoted side after a scattergun but high-quality window; Lukic, Florentino and Diop give O'Neil real tools.",
       "oddsFractional": null
     },
     {
       "predictedPosition": 18,
-      "name": "Ipswich Town",
+      "name": "Fulham",
       "tier": "relegation",
-      "blurb": "Best-priced promoted side to stay (~4/6); O’Neil and PL-ready attackers give a fighting chance.",
+      "blurb": "Charles and Garcia help but Arbeloa is new, Wilson's goals are gone and the attack is still short - survival is live.",
       "oddsFractional": null
     },
     {
       "predictedPosition": 19,
       "name": "Coventry City",
       "tier": "relegation",
-      "blurb": "Championship winners with Lampard spend after 25 years away - still odds-on (~8/13) for the drop.",
+      "blurb": "Awoniyi, Chérif and Yirenkyi add quality but 25 years away and opening at the Emirates is a brutal introduction.",
       "oddsFractional": null
     },
     {
       "predictedPosition": 20,
       "name": "Hull City",
       "tier": "relegation",
-      "blurb": "Clear market favourite for relegation (~1/4); free-agent toppers leave the competitive gap widest.",
+      "blurb": "Spending has increased (Tzolakis, Mendy, Gourna-Douath) but the gap to survival remains widest among the three promoted sides.",
       "oddsFractional": null
     }
   ],
@@ -387,77 +464,162 @@
       "manager": "Mikel Arteta",
       "predictedPosition": 1,
       "lastSeason": "1st - Premier League champions",
-      "outrightOdds": { "fractional": "6/4", "decimal": 2.5 },
+      "outrightOdds": {
+        "fractional": "6/4",
+        "decimal": 2.5
+      },
       "relegationOdds": null,
-      "keyArrivals": ["Christos Tzolis (Club Brugge)", "Piero Hincapié (Bayer Leverkusen, permanent)", "Illan Meslier (free)"],
-      "keyDepartures": ["Leandro Trossard (Beşiktaş)", "Jakub Kiwior (Porto)"],
-      "preview": "Champions for the first time since 2004 and Betfair’s 6/4 favourites to go again. Arteta is now the league’s longest-serving manager and the only big-six constant from the start of last season - a structural edge when City, Liverpool, Chelsea, United and Spurs are all in transition. Set-piece dominance underpinned the title (29 scored, eight conceded). The live threat is Saliba: extended absence after a World Cup back injury, with Arsenal’s win rate historically falling from 68.7% with him to 47.6% without. Opening night vs Coventry is followed quickly by Villa and Chelsea. Hincapié’s permanence is defensive insurance more than a luxury. Expect another high floor; retention hinges on how they cover the Saliba months."
+      "keyArrivals": [
+        "Bruno Guimaraes (Newcastle, £75m)",
+        "Ezri Konsa (Aston Villa, £51m - agreed)",
+        "Christos Tzolis (Club Brugge)",
+        "Piero Hincapié (Bayer Leverkusen, permanent)",
+        "Illan Meslier (free)"
+      ],
+      "keyDepartures": [
+        "Leandro Trossard (Beşiktaş)",
+        "Jakub Kiwior (Porto)"
+      ],
+      "preview": "Champions and Betfair's 6/4 favourites, now looking stronger than when those odds were set. Guimaraes (£75m, completed 8 August) adds a world-class midfielder; Konsa (£51m agreed 19 August) covers the Saliba and Timber absences across centre-back and right-back. The Community Shield rout of Maresca's City - 3-0, Calafiori inside 24 seconds, Tzolis assisting twice - was the clearest signal of a squad that has spent to fix its weaknesses rather than hope. Arteta remains the league's longest-serving manager and the only big-six constant. Opening night vs Coventry, then Villa and Chelsea inside three games - but this is a side that looks ready."
     },
     {
       "name": "Manchester City",
       "manager": "Enzo Maresca",
       "predictedPosition": 2,
       "lastSeason": "2nd",
-      "outrightOdds": { "fractional": "5/2", "decimal": 3.5 },
+      "outrightOdds": {
+        "fractional": "5/2",
+        "decimal": 3.5
+      },
       "relegationOdds": null,
-      "keyArrivals": ["Elliot Anderson (Nottingham Forest, ~£116m)"],
-      "keyDepartures": ["Bernardo Silva (Real Madrid)", "John Stones (Inter Milan)", "Nathan Aké (Fenerbahçe)"],
-      "preview": "Second favourites at 5/2 on Betfair in the first season without Guardiola. Maresca inherits a machine built for control but not a finished identity - Silva, Stones and Aké have gone, and Anderson alone cannot replicate Silva’s 2,800+ league minutes. Haaland remains the Golden Boot benchmark. Opening at home to Rose’s Bournemouth is a new-manager clash that will set an early tone. Resources say title challenge; the question is how quickly positional habits survive without Pep’s daily imprint."
+      "keyArrivals": [
+        "Elliot Anderson (Nottingham Forest, ~£116m)"
+      ],
+      "keyDepartures": [
+        "Bernardo Silva (Real Madrid)",
+        "John Stones (Inter Milan)",
+        "Nathan Aké (Fenerbahçe)"
+      ],
+      "preview": "Second favourites at 5/2 but the Community Shield laid bare Maresca's early problems: beaten 3-0 by Arsenal in his first competitive match. Anderson (£116m) is the headline piece of a living rebuild, but Silva, Stones, Rodri and Aké have all departed. Haaland remains the Golden Boot benchmark. Opening at home to Rose's Bournemouth is a new-manager clash that needs a response after Cardiff. Resources say title challenge; the question is how quickly positional habits survive without Pep's daily imprint."
     },
     {
       "name": "Liverpool",
       "manager": "Andoni Iraola",
       "predictedPosition": 3,
       "lastSeason": "5th - Champions League place",
-      "outrightOdds": { "fractional": "6/1", "decimal": 7.0 },
+      "outrightOdds": {
+        "fractional": "6/1",
+        "decimal": 7.0
+      },
       "relegationOdds": null,
-      "keyArrivals": ["Jérémy Jacquet (Rennes)", "Víctor Muñoz (Osasuna)"],
-      "keyDepartures": ["Mohamed Salah (free agent)", "Andy Robertson (Tottenham, free)", "Ibrahima Konaté (Real Madrid, free)"],
-      "preview": "Iraola’s pressing blueprint arrives as Salah’s era ends and Robertson/Konaté leave on frees. Jacquet and Muñoz (~£90m combined) do not fully close those holes, especially at centre-back. The fixture list is uniquely awkward: his first six league games are all against sides with new permanent managers, starting at Newcastle on 23 August before Forest, Ipswich, Fulham, Bournemouth and City. Betfair’s 6/1 title price still assumes a top-three floor if the system lands - but this is a real transition, not a cosmetic coaching tweak."
+      "keyArrivals": [
+        "Ronald Araujo (Barcelona, loan)",
+        "Jérémy Jacquet (Rennes)",
+        "Víctor Muñoz (Osasuna)"
+      ],
+      "keyDepartures": [
+        "Mohamed Salah (Trabzonspor, free)",
+        "Andy Robertson (Tottenham, free)",
+        "Ibrahima Konaté (Real Madrid, free)"
+      ],
+      "preview": "Iraola's pressing blueprint arrives as Salah's era ends - the Egyptian has joined Trabzonspor on a free. Araujo on loan from Barcelona (completed 10 August, €55m option) is the most significant addition: a proven Champions League centre-back who plugs the Konaté hole while Jacquet builds fitness. Robertson's departure to Spurs on a free thins the left side further. The fixture list remains uniquely awkward - six of Iraola's first seven league games are against sides with new permanent managers. Betfair's 6/1 title price assumes a top-three floor if the system lands; Araujo makes that more plausible than a fortnight ago."
     },
     {
       "name": "Manchester United",
       "manager": "Michael Carrick",
       "predictedPosition": 4,
       "lastSeason": "3rd - Champions League return",
-      "outrightOdds": { "fractional": "13/2", "decimal": 7.5 },
+      "outrightOdds": {
+        "fractional": "13/2",
+        "decimal": 7.5
+      },
       "relegationOdds": null,
-      "keyArrivals": ["Andrey Santos (Chelsea, ~£48m)", "Youri Tielemans (Aston Villa, ~£35m)", "Karl Darlow (Leeds)"],
-      "keyDepartures": ["Casemiro (Inter Miami, free)", "André Onana (Trabzonspor, loan)", "Rasmus Højlund (Napoli)", "Jadon Sancho (released)"],
-      "preview": "Carrick kept the job after winning 12 of 17 and finishing third - United’s seventh permanent manager since Ferguson. Last season they played only 40 matches in all competitions, their fewest since 1914-15; Champions League nights remove that rest advantage. Santos and Tielemans answer the midfield mandate without nine-figure gambles. At 13/2 on Betfair they sit in the second tier of contenders: top-four retention is the base case, a title tilt the upside if the squad absorbs the heavier load."
+      "keyArrivals": [
+        "Andrey Santos (Chelsea, ~£48m)",
+        "Youri Tielemans (Aston Villa, ~£35m)",
+        "Karl Darlow (Leeds)"
+      ],
+      "keyDepartures": [
+        "Casemiro (Inter Miami, free)",
+        "André Onana (Trabzonspor, loan)",
+        "Rasmus Højlund (Napoli)",
+        "Jadon Sancho (released)"
+      ],
+      "preview": "Carrick kept the job after winning 12 of 17 and finishing third - United's seventh permanent manager since Ferguson. Last season they played only 40 matches in all competitions, their fewest since 1914-15; Champions League nights remove that rest advantage. Santos and Tielemans answer the midfield mandate without nine-figure gambles. At 13/2 on Betfair they sit in the second tier of contenders: top-four retention is the base case, a title tilt the upside if the squad absorbs the heavier load."
     },
     {
       "name": "Chelsea",
       "manager": "Xabi Alonso",
       "predictedPosition": 5,
       "lastSeason": "10th - missed European qualification",
-      "outrightOdds": { "fractional": "11/1", "decimal": 12.0 },
+      "outrightOdds": {
+        "fractional": "11/1",
+        "decimal": 12.0
+      },
       "relegationOdds": null,
-      "keyArrivals": ["Morgan Rogers (Aston Villa, £117m)", "Geovany Quenda (Sporting)", "Maxence Lacroix (Crystal Palace)", "Danny Welbeck (Brighton)", "Marco Palestra (Atalanta)"],
-      "keyDepartures": ["Marc Cucurella (Real Madrid)", "Andrey Santos (Manchester United)", "Alejandro Garnacho (Aston Villa, loan)"],
-      "preview": "Alonso inherits a squad that burned through managers and then played 59 games en route to 10th. No Europe this season is a competitive gift. Rogers at £117m is the most expensive British signing ever and frames a shift toward proven Premier League talent; Welbeck and Lacroix add experience the recent squad lacked. Cucurella’s exit leaves left-sided questions. Title odds of 11/1 are long, but top-four markets treat them as the swing club - Champions League return is the season’s real definition of success."
-    },
-    {
-      "name": "Aston Villa",
-      "manager": "Unai Emery",
-      "predictedPosition": 6,
-      "lastSeason": "4th - Europa League winners; Champions League return",
-      "outrightOdds": { "fractional": "28/1", "decimal": 29.0 },
-      "relegationOdds": null,
-      "keyArrivals": ["Johan Manzambi (Freiburg, ~£52m)", "João Gomes (Wolves)", "Alejandro Garnacho (Chelsea, loan)"],
-      "keyDepartures": ["Morgan Rogers (Chelsea, £117m)", "Youri Tielemans (Manchester United)", "Donyell Malen (Roma)"],
-      "preview": "Emery is one of the few true constants among the European pack. Selling Rogers for a club-record fee is rational; Manzambi’s World Cup breakout and Gomes’ Premier League steel are serious replacements. Title odds of 28/1 are long, but another top-six campaign with Champions League nights is the coherent target - if continental fatigue is managed better than in previous European returns."
+      "keyArrivals": [
+        "Morgan Rogers (Aston Villa, £117m)",
+        "Maxence Lacroix (Crystal Palace, £52m)",
+        "Jordan Henderson (Brentford, free)",
+        "Geovany Quenda (Sporting)",
+        "Danny Welbeck (Brighton)",
+        "Marco Palestra (Atalanta)"
+      ],
+      "keyDepartures": [
+        "Marc Cucurella (Real Madrid)",
+        "Andrey Santos (Manchester United)",
+        "Alejandro Garnacho (Aston Villa, loan)"
+      ],
+      "preview": "Alonso inherits a squad that burned through managers and then played 59 games en route to 10th. No Europe this season is a competitive gift. Rogers at £117m is the most expensive British signing ever; Henderson adds the leadership the recent squad lacked. Lacroix (£52m) shores up defence; Cucurella's exit to Real Madrid leaves left-sided questions. Title odds of 11/1 are long, but top-four markets treat them as the swing club - Champions League return is the season's real definition of success."
     },
     {
       "name": "Tottenham Hotspur",
       "manager": "Roberto De Zerbi",
-      "predictedPosition": 7,
+      "predictedPosition": 6,
       "lastSeason": "17th - final-day survival",
-      "outrightOdds": { "fractional": "50/1", "decimal": 51.0 },
+      "outrightOdds": {
+        "fractional": "50/1",
+        "decimal": 51.0
+      },
       "relegationOdds": null,
-      "keyArrivals": ["Sandro Tonali (Newcastle, ~£100m)", "Mateus Fernandes (West Ham, £85m)", "Jan Paul van Hecke (Brighton, £52m)", "Andy Robertson (Liverpool, free)", "Marcos Senesi (Bournemouth)"],
-      "keyDepartures": ["Luka Vušković (Brighton)", "Yves Bissouma (released)"],
-      "preview": "From final-day survival and 27 different players sidelined at some point last season to a club-record summer north of £230m. Tonali and Fernandes arrived in a two-day record-breaking burst; van Hecke, Senesi and Robertson rebuild the back and left side. De Zerbi’s Brighton overperformance is the template - the open question is whether that translates when the pressure is avoiding embarrassment rather than chasing upside. 50/1 title outsiders on Betfair; European recovery is the live narrative, helped by no continental football this season."
+      "keyArrivals": [
+        "Sandro Tonali (Newcastle, ~£100m)",
+        "Mateus Fernandes (West Ham, £85m)",
+        "Jan Paul van Hecke (Brighton, £52m)",
+        "Andy Robertson (Liverpool, free)",
+        "Marcos Senesi (Bournemouth)"
+      ],
+      "keyDepartures": [
+        "Luka Vušković (Brighton)",
+        "Yves Bissouma (released)"
+      ],
+      "preview": "From final-day survival to a completed club-record summer north of £230m. Tonali (~£92.5m) and Fernandes (£85m) anchor the midfield; van Hecke, Senesi and Robertson rebuild the back and left side. De Zerbi's Brighton overperformance is the template - and unlike Villa, there is no European distraction. 50/1 title outsiders on Betfair, but the squad looks more prepared for a top-six push than at any point in the Postecoglou era. European recovery is the live narrative."
+    },
+    {
+      "name": "Aston Villa",
+      "manager": "Unai Emery",
+      "predictedPosition": 7,
+      "lastSeason": "4th - Europa League winners; Champions League return",
+      "outrightOdds": {
+        "fractional": "28/1",
+        "decimal": 29.0
+      },
+      "relegationOdds": null,
+      "keyArrivals": [
+        "Johan Manzambi (Freiburg, ~£52m)",
+        "Zion Suzuki (Parma, ~£25.6m)",
+        "Matteo Ruggeri (Atletico Madrid, £17m)",
+        "João Gomes (Wolves)",
+        "Alejandro Garnacho (Chelsea, loan)"
+      ],
+      "keyDepartures": [
+        "Ezri Konsa (Arsenal, £51m - agreed)",
+        "Morgan Rogers (Chelsea, £117m)",
+        "Youri Tielemans (Manchester United)",
+        "Lucas Digne (PSG, £8.5m)",
+        "Donyell Malen (Roma)"
+      ],
+      "preview": "Emery is one of the few true constants among the European pack, but losing Konsa to Arsenal for £51m is a significant blow - he started every England World Cup game until the semi-final. Manzambi, Suzuki, Ruggeri and Gomes are serious additions, and the Palhinha pursuit shows ambition, but Bayern want a permanent deal Villa cannot yet structure. Champions League nights plus a thinner defence than last August make another top-six finish harder than the 28/1 title odds suggest."
     },
     {
       "name": "Bournemouth",
@@ -466,9 +628,16 @@
       "lastSeason": "6th - Europa League qualification",
       "outrightOdds": null,
       "relegationOdds": null,
-      "keyArrivals": ["Álvaro Rodríguez (Elche)", "António Silva (Benfica)"],
-      "keyDepartures": ["Marcos Senesi (Tottenham)", "Hamed Traoré (Marseille)", "Álex Jiménez (Fiorentina)"],
-      "preview": "Iraola’s exit is the strategic risk: how much of the Cherries’ rise was coach-specific? Rose inherits Europa football and defensive minutes to replace after Senesi’s departure to Spurs. Early recruitment looks unfinished for a two-front season. Still a consensus upper-mid side if the press survives the coaching change - and they open the league at the Etihad against Maresca’s City."
+      "keyArrivals": [
+        "Álvaro Rodríguez (Elche)",
+        "António Silva (Benfica)"
+      ],
+      "keyDepartures": [
+        "Marcos Senesi (Tottenham)",
+        "Hamed Traoré (Marseille)",
+        "Álex Jiménez (Fiorentina)"
+      ],
+      "preview": "Iraola's exit is the strategic risk: how much of the Cherries' rise was coach-specific? Rose inherits Europa football and defensive minutes to replace after Senesi's departure to Spurs. Silva and Rodriguez add depth but recruitment looks light for a two-front season. Still a consensus upper-mid side if the press survives the coaching change - and they open the league at the Etihad against Maresca's City."
     },
     {
       "name": "Brighton & Hove Albion",
@@ -477,9 +646,18 @@
       "lastSeason": "8th; Conference League qualifying",
       "outrightOdds": null,
       "relegationOdds": null,
-      "keyArrivals": ["Luka Vušković (Tottenham)", "Pascal Struijk (Leeds)", "Costinha (Olympiacos)", "Zadok Yohanna (AIK)"],
-      "keyDepartures": ["Jan Paul van Hecke (Tottenham)", "Danny Welbeck (Chelsea)", "James Milner (retired)"],
-      "preview": "Classic Brighton recycling: van Hecke sold high, Vušković and Struijk refresh the back line. Welbeck’s exit to Chelsea creates an urgent No.9 need before Conference qualifying. Expect another competitive mid-table campaign rather than a title subplot - the model only breaks if the attacking replacement lands late or poorly."
+      "keyArrivals": [
+        "Luka Vušković (Tottenham)",
+        "Pascal Struijk (Leeds)",
+        "Costinha (Olympiacos)",
+        "Zadok Yohanna (AIK)"
+      ],
+      "keyDepartures": [
+        "Jan Paul van Hecke (Tottenham)",
+        "Danny Welbeck (Chelsea)",
+        "James Milner (retired)"
+      ],
+      "preview": "Classic Brighton recycling: van Hecke sold high, Vušković and Struijk refresh the back line. Welbeck's exit to Chelsea creates an urgent No.9 need before Conference qualifying. Expect another competitive mid-table campaign rather than a title subplot - the model only breaks if the attacking replacement lands late or poorly."
     },
     {
       "name": "Brentford",
@@ -487,43 +665,90 @@
       "predictedPosition": 10,
       "lastSeason": "9th",
       "outrightOdds": null,
-      "relegationOdds": { "fractional": "8/1", "decimal": 9.0 },
-      "keyArrivals": ["Mamadou Sangaré (Lens, club record)", "Jaidon Anthony (Burnley)", "Callum Wilson (West Ham, free)", "Jannick Schuster (RB Salzburg)"],
-      "keyDepartures": ["Frank Onyeka (Coventry)"],
-      "preview": "Andrews’ first full season builds on Igor Thiago’s 22-goal haul - five behind Haaland for the Golden Boot. Sangaré looks a high-upside midfield addition; Anthony and Wilson add Premier League finishing depth without forcing a tactical reinvention. Quiet consolidation is the point: top-half possible, relegation remote unless Thiago’s output collapses and is not replaced."
-    },
-    {
-      "name": "Newcastle United",
-      "manager": "Matthias Jaissle",
-      "predictedPosition": 11,
-      "lastSeason": "12th",
-      "outrightOdds": { "fractional": "40/1", "decimal": 41.0 },
-      "relegationOdds": null,
-      "keyArrivals": ["Lukas Horníček (Braga, £25.7m)", "Aladji Bamba (Monaco)", "Bazoumana Touré (Hoffenheim)", "Sean Steur (Ajax)", "Ewen Jaouen (Reims)"],
-      "keyDepartures": ["Anthony Gordon (Barcelona, £69.3m)", "Sandro Tonali (Tottenham, ~£100m)", "Kieran Trippier (Wolves)", "Matt Targett (Hull, free)"],
-      "preview": "Howe stepped down at the end of July; Jaissle agreed from Al-Ahli and joined the La Manga camp in early August. Gordon and Tonali - pillars of the Howe era - have been sold, while pursuits of Manzambi and Muñoz went elsewhere. Horníček (3 August) adds a first-choice keeper among a youthful intake. Opening at home to Iraola’s Liverpool is a new-manager showcase with little room for a soft landing. Betfair still price them 40/1 for the title - mid-table floor, not relegation panic - but the project needs ready-made quality, not only prospects. Guimarães’ future remained a live subplot into early August."
+      "relegationOdds": {
+        "fractional": "8/1",
+        "decimal": 9.0
+      },
+      "keyArrivals": [
+        "Mamadou Sangaré (Lens, club record)",
+        "Jaidon Anthony (Burnley)",
+        "Callum Wilson (West Ham, free)",
+        "Jannick Schuster (RB Salzburg)"
+      ],
+      "keyDepartures": [
+        "Frank Onyeka (Coventry)"
+      ],
+      "preview": "Andrews' first full season builds on Igor Thiago's 22-goal haul - five behind Haaland for the Golden Boot. Sangaré looks a high-upside midfield addition; Anthony and Wilson add Premier League finishing depth without forcing a tactical reinvention. Henderson's departure to Chelsea is a loss of experience but not a structural blow. Quiet consolidation is the point: top-half possible, relegation remote unless Thiago's output collapses."
     },
     {
       "name": "Everton",
       "manager": "David Moyes",
-      "predictedPosition": 12,
+      "predictedPosition": 11,
       "lastSeason": "13th - stayed up comfortably clear of West Ham",
       "outrightOdds": null,
-      "relegationOdds": { "fractional": "9/1", "decimal": 10.0 },
-      "keyArrivals": ["Hayden Hackney (Middlesbrough)", "Tyrique George (Chelsea)", "Merlin Röhl (Freiburg)"],
-      "keyDepartures": ["Séamus Coleman (released)", "Idrissa Gueye (released)"],
-      "preview": "Hill Dickinson continuity under Moyes after a late-season wobble (one win in nine, still 10 points clear of the drop). Hackney and George inject youth into midfield and wide areas; full-back and centre-forward depth still look like unfinished business. Mid-table with a relegation price around 9/1 - not favourites to go down, not yet secure enough to ignore January."
+      "relegationOdds": {
+        "fractional": "9/1",
+        "decimal": 10.0
+      },
+      "keyArrivals": [
+        "Brennan Johnson (Crystal Palace, swap)",
+        "Christian Norgaard (Arsenal, £7m)",
+        "Hayden Hackney (Middlesbrough)",
+        "Tyrique George (Chelsea)",
+        "Merlin Röhl (Freiburg)"
+      ],
+      "keyDepartures": [
+        "Séamus Coleman (released)",
+        "Idrissa Gueye (released)"
+      ],
+      "preview": "Hill Dickinson continuity under Moyes, now strengthened by two signings that change the ceiling. Norgaard from Arsenal and Brennan Johnson from Palace (swap deal) add Premier League-proven quality in midfield and attack. Hackney and George inject youth. Full-back and centre-forward depth still look unfinished, but this is a more prepared squad than the 13th-place finish last season suggested. Mid-table with a relegation price around 9/1 - not favourites to go down."
     },
     {
       "name": "Nottingham Forest",
       "manager": "Oliver Glasner",
-      "predictedPosition": 13,
+      "predictedPosition": 12,
       "lastSeason": "Relegation scrap; survived",
       "outrightOdds": null,
-      "relegationOdds": { "fractional": "7/1", "decimal": 8.0 },
-      "keyArrivals": ["Xaver Schlager (free)"],
-      "keyDepartures": ["Elliot Anderson (Manchester City, ~£116m)"],
-      "preview": "Another managerial reset ends with Glasner from Palace. Anderson’s sale funds the project but leaves a midfield hole that defined Forest’s better spells. Glasner’s Palace frustration with slow recruitment is an early warning given how quiet the window has been. Squad quality should be enough for survival; European ambition waits on whether the Anderson money is actually spent."
+      "relegationOdds": {
+        "fractional": "7/1",
+        "decimal": 8.0
+      },
+      "keyArrivals": [
+        "Ousmane Diomande (Sporting CP, £34.3m)",
+        "Xaver Schlager (free)",
+        "Steven Benda (Fulham, free)"
+      ],
+      "keyDepartures": [
+        "Elliot Anderson (Manchester City, ~£116m)"
+      ],
+      "preview": "Glasner's Forest look materially different from the quiet window of early August. Diomande (£34.3m, completed 11 August) is the marquee centre-back signing Glasner chased at Palace; Schlager and Benda add experience. Anderson's £116m sale is finally being reinvested rather than banked. Glasner expects one or two more high-quality additions before 1 September - a striker and right-back are the priorities. Squad quality should be enough for a comfortable mid-table finish; the Anderson money being spent is the encouraging sign."
+    },
+    {
+      "name": "Newcastle United",
+      "manager": "Matthias Jaissle",
+      "predictedPosition": 13,
+      "lastSeason": "12th",
+      "outrightOdds": {
+        "fractional": "40/1",
+        "decimal": 41.0
+      },
+      "relegationOdds": null,
+      "keyArrivals": [
+        "Amar Dedic (Benfica, £30.7m)",
+        "Lukas Horníček (Braga, £25.7m)",
+        "Aladji Bamba (Monaco)",
+        "Bazoumana Touré (Hoffenheim)",
+        "Sean Steur (Ajax)",
+        "Ewen Jaouen (Reims)"
+      ],
+      "keyDepartures": [
+        "Bruno Guimaraes (Arsenal, £75m)",
+        "Anthony Gordon (Barcelona, £69.3m)",
+        "Sandro Tonali (Tottenham, ~£92.5m)",
+        "Kieran Trippier (Wolves)",
+        "Matt Targett (Hull, free)"
+      ],
+      "preview": "The most destabilising summer of any established Premier League side. Guimaraes joined Arsenal on 8 August, completing a £240m+ fire sale that has stripped the Howe-era core. Jaissle's pursuit of Palhinha has collapsed - the Portugal midfielder rejected St James' Park for family reasons, preferring Villa or Benfica. Bergvall remains a live target but Forest are competing. Dedic adds full-back quality among a youthful intake. Opening at home to Iraola's Liverpool is a new-manager showcase with no midfield foundation. Mid-table is the ceiling unless deadline-day business changes the picture."
     },
     {
       "name": "Crystal Palace",
@@ -531,54 +756,118 @@
       "predictedPosition": 14,
       "lastSeason": "15th in league; Conference League winners → Europa League",
       "outrightOdds": null,
-      "relegationOdds": { "fractional": "6/1", "decimal": 7.0 },
-      "keyArrivals": ["Óscar Mingueza (Celta Vigo)"],
-      "keyDepartures": ["Maxence Lacroix (Chelsea)"],
-      "preview": "Europa football after Conference League triumph is the romance; defensive depth after Lacroix (and earlier Guéhi) is the problem. Sage’s French CV meets a quiet window and a back line short on senior experience. Mid-table with European distraction risk - Thursday nights will expose any recruitment lag quickly."
-    },
-    {
-      "name": "Sunderland",
-      "manager": "Régis Le Bris",
-      "predictedPosition": 15,
-      "lastSeason": "7th - Europa League",
-      "outrightOdds": null,
-      "relegationOdds": { "fractional": "11/4", "decimal": 3.75 },
-      "keyArrivals": ["Thomas Meunier (free)"],
-      "keyDepartures": ["Eliezer Mayenda (Rennes)", "Bertrand Traoré (released)"],
-      "preview": "Fairytale first season back meets second-season reality. Only Meunier arrived early while Europa nights demand depth; PSR caution after last summer’s heavy spending is the constraint. Shortest relegation price among non-promoted sides (~11/4) shows where the market sits despite seventh place. Le Bris still has credit - the squad needs bodies, not just belief."
+      "relegationOdds": {
+        "fractional": "6/1",
+        "decimal": 7.0
+      },
+      "keyArrivals": [
+        "Dwight McNeil (Everton, swap)",
+        "Takehiro Tomiyasu (free)",
+        "Óscar Mingueza (Celta Vigo)",
+        "Anan Khalaili (Union Saint-Gilloise, £21m)",
+        "Evann Guessand (Aston Villa, loan)"
+      ],
+      "keyDepartures": [
+        "Maxence Lacroix (Chelsea, £52m)",
+        "Brennan Johnson (Everton, swap)"
+      ],
+      "preview": "Europa football after Conference League triumph is the romance; defensive depth after Lacroix's £52m exit to Chelsea is the problem. McNeil and Tomiyasu add Premier League and international experience; Khalaili is a younger wildcard. Sage's French CV meets a window that has at least addressed some gaps. Mid-table with European distraction risk - Thursday nights will still expose any further recruitment lag."
     },
     {
       "name": "Leeds United",
       "manager": "Daniel Farke",
-      "predictedPosition": 16,
+      "predictedPosition": 15,
       "lastSeason": "14th - strong from December onwards",
       "outrightOdds": null,
-      "relegationOdds": { "fractional": "11/2", "decimal": 6.5 },
-      "keyArrivals": ["Harry Wilson (Fulham, free)", "Tarik Muharemović (Sassuolo, ~£34m)"],
-      "keyDepartures": ["Pascal Struijk (Brighton)", "Illan Meslier (Arsenal)", "Jack Harrison (New England Revolution)"],
-      "preview": "Farke’s late-November tactical switch sparked a survival run; only six teams took more points from 1 December. Wilson on a free and Muharemović for Struijk are pragmatic upgrades built for immediate impact. Still priced in the relegation mix (~11/2) - another year of consolidation rather than a leap into Europe, opening against Glasner’s Forest."
+      "relegationOdds": {
+        "fractional": "11/2",
+        "decimal": 6.5
+      },
+      "keyArrivals": [
+        "James Trafford (Manchester City, £40m)",
+        "Harry Wilson (Fulham, free)",
+        "Tarik Muharemović (Sassuolo, ~£34m)",
+        "Nico Elvedi (Borussia Mönchengladbach, ~£6.85m)"
+      ],
+      "keyDepartures": [
+        "Pascal Struijk (Brighton)",
+        "Illan Meslier (Arsenal)",
+        "Jack Harrison (New England Revolution)"
+      ],
+      "preview": "Farke's late-November tactical switch sparked a survival run; only six teams took more points from 1 December. Trafford from City for £40m is the statement signing - a goalkeeper who knows the Premier League and signals ambition beyond mere survival. Wilson on a free and Muharemović for Struijk are pragmatic upgrades. Still priced in the relegation mix (~11/2) but better prepared than the July snapshot suggested. Opening against Glasner's Forest."
     },
     {
-      "name": "Fulham",
-      "manager": "Álvaro Arbeloa",
-      "predictedPosition": 17,
-      "lastSeason": "11th",
+      "name": "Sunderland",
+      "manager": "Régis Le Bris",
+      "predictedPosition": 16,
+      "lastSeason": "7th - Europa League",
       "outrightOdds": null,
-      "relegationOdds": { "fractional": "11/2", "decimal": 6.5 },
-      "keyArrivals": ["Jonah Kusi-Asare (Bayern Munich)", "Gonzalo García (Real Madrid - reported close as of early August)"],
-      "keyDepartures": ["Issa Diop (Ipswich)", "Raúl Jiménez (free)", "Harry Wilson (Leeds, free)"],
-      "preview": "Silva out, Arbeloa in, opening at home to Alonso’s Chelsea in a new-manager Monday night. Jiménez and Wilson’s goals leave a clear scoring gap; Diop’s sale thins the back line. Real Madrid pathways for young attackers show intent, but ~11/2 relegation pricing puts them in the established-club danger tier below the promoted three until the attack is rebuilt."
+      "relegationOdds": {
+        "fractional": "11/4",
+        "decimal": 3.75
+      },
+      "keyArrivals": [
+        "Dayann Methalie (Toulouse, £25.6m)",
+        "Thomas Meunier (free)"
+      ],
+      "keyDepartures": [
+        "Eliezer Mayenda (Rennes)",
+        "Bertrand Traoré (released)"
+      ],
+      "preview": "Fairytale first season back meets second-season reality, but the window has finally stirred. Methalie (£25.6m, completed 18 August) ends a lengthy left-back pursuit; Meunier arrived earlier on a free. Geny Catamo (~£51m release clause) remains the top wide target with talks advanced. Europa nights still demand depth and PSR caution lingers, but this is a better-prepared squad than the Meunier-only picture of early August. Le Bris still has credit - the squad needed bodies, and they are arriving."
     },
     {
       "name": "Ipswich Town",
       "manager": "Gary O'Neil",
-      "predictedPosition": 18,
+      "predictedPosition": 17,
       "lastSeason": "Championship 2nd - promoted",
       "outrightOdds": null,
-      "relegationOdds": { "fractional": "4/6", "decimal": 1.67 },
-      "keyArrivals": ["Daizen Maeda (Celtic)", "Abdul Fatawu (Leicester)", "Emersonn (Toulouse)", "Issa Diop (Fulham)", "Chuba Akpom (Ajax)", "Cédric Kipré (Reims)"],
-      "keyDepartures": ["Arijanet Murić (Sassuolo)", "Conor Chaplin (Leicester)", "Ashley Young (retired)"],
-      "preview": "Straight back after one Championship season. O’Neil replaces McKenna; Ipswich are the likeliest promoted side to survive (~4/6), helped by Premier League-ready attackers and Diop’s World Cup starts for Morocco. The cautionary tale is their own 2024/25 return - scattergun recruitment that lost the promoted side’s heart. Plan and chemistry matter as much as volume. Opening vs Sunderland is a defining early six-pointer vibe."
+      "relegationOdds": {
+        "fractional": "4/6",
+        "decimal": 1.67
+      },
+      "keyArrivals": [
+        "Sasa Lukic (Fulham, £9m)",
+        "Florentino (Burnley, £16m)",
+        "Julio Inciso (Strasbourg, £26m)",
+        "Abdoul Ouattara (Strasbourg, £17.1m)",
+        "Daizen Maeda (Celtic, £10m)",
+        "Abdul Fatawu (Leicester, £20m)",
+        "Emersonn (Toulouse, £26.5m)",
+        "Issa Diop (Fulham, £8.5m)",
+        "Chuba Akpom (Ajax, £8m)"
+      ],
+      "keyDepartures": [
+        "Arijanet Murić (Sassuolo)",
+        "Conor Chaplin (Leicester)",
+        "Ashley Young (retired)"
+      ],
+      "preview": "The most aggressively recruited promoted side in the division. Lukic from Fulham, Florentino from Burnley, Inciso and Ouattara from Strasbourg, plus Maeda, Fatawu, Diop and Akpom give O'Neil a squad with genuine Premier League and European experience. The cautionary tale is their own 2024/25 scattergun return - but this window looks more targeted. Best placed of the three promoted sides to survive (~4/6 still implies doubt, but the preparation gap to Coventry and Hull is widening). Opening vs Sunderland is a defining early six-pointer."
+    },
+    {
+      "name": "Fulham",
+      "manager": "Álvaro Arbeloa",
+      "predictedPosition": 18,
+      "lastSeason": "11th",
+      "outrightOdds": null,
+      "relegationOdds": {
+        "fractional": "11/2",
+        "decimal": 6.5
+      },
+      "keyArrivals": [
+        "Shea Charles (Southampton, ~£30m)",
+        "Gonzalo Garcia (Real Madrid, £34.3m)",
+        "Cesar Palacios (Real Madrid, £8.6m)",
+        "Jonah Kusi-Asare (Bayern Munich)"
+      ],
+      "keyDepartures": [
+        "Sasa Lukic (Ipswich, £9m)",
+        "Issa Diop (Ipswich, £8.5m)",
+        "Raúl Jiménez (free)",
+        "Harry Wilson (Leeds, free)",
+        "Steven Benda (Nottingham Forest, free)"
+      ],
+      "preview": "Silva out, Arbeloa in, and the early window has at least shown intent. Charles (~£30m from Southampton) replaces Lukic in midfield; Garcia (£34.3m) and Palacios from Real Madrid complete an Arbeloa-flavoured attack. But Jiménez and Wilson's goals are gone, Diop sold to Ipswich, and the back line is thin. Opening at home to Alonso's Chelsea in a new-manager Monday night. ~11/2 relegation pricing puts them in the danger tier - business has helped, but survival is not secure."
     },
     {
       "name": "Coventry City",
@@ -586,10 +875,23 @@
       "predictedPosition": 19,
       "lastSeason": "Championship champions - promoted after 25 years",
       "outrightOdds": null,
-      "relegationOdds": { "fractional": "8/13", "decimal": 1.62 },
-      "keyArrivals": ["Aurèle Amenda (Eintracht Frankfurt)", "Loum Tchaouna (Burnley)", "Frank Onyeka (Brentford)"],
-      "keyDepartures": ["Jamie Allen (released)"],
-      "preview": "Longest Premier League absence among this season’s clubs ends under the lights at the Emirates on opening night. Lampard has spent more than Hull - Amenda, Tchaouna, Onyeka - and Haji Wright’s Championship scoring record (45 in three seasons) is a real threat. Still odds-on (~8/13) for the drop: Championship title momentum meets a structural quality gap that early business has not yet closed."
+      "relegationOdds": {
+        "fractional": "8/13",
+        "decimal": 1.62
+      },
+      "keyArrivals": [
+        "Taiwo Awoniyi (Nottingham Forest, £9m)",
+        "Sidiki Chérif (Fenerbahce, £21m)",
+        "Caleb Yirenkyi (Nordsjaelland, £23.1m)",
+        "Gustavo Hamer (Sheffield United, £6m)",
+        "Aurèle Amenda (Eintracht Frankfurt, £17m)",
+        "Loum Tchaouna (Burnley, £20m)",
+        "Frank Onyeka (Brentford, £6m)"
+      ],
+      "keyDepartures": [
+        "Jamie Allen (released)"
+      ],
+      "preview": "Longest Premier League absence among this season's clubs ends under the lights at the Emirates on opening night. Lampard has spent significantly more than Hull - Awoniyi, Chérif, Yirenkyi and Hamer join the earlier Amenda/Tchaouna/Onyeka business - and Haji Wright's Championship scoring record (45 in three seasons) is a real threat. Still odds-on (~8/13) for the drop: Championship title momentum meets a structural quality gap that improved business has narrowed but not closed."
     },
     {
       "name": "Hull City",
@@ -597,10 +899,24 @@
       "predictedPosition": 20,
       "lastSeason": "Championship play-off winners - promoted",
       "outrightOdds": null,
-      "relegationOdds": { "fractional": "1/4", "decimal": 1.25 },
-      "keyArrivals": ["Jack Butland (Rangers, free)", "Matt Targett (Newcastle, free)", "Hidemasa Morita (Sporting CP, free)", "Óscar Zambrano (Maribor)"],
-      "keyDepartures": ["Ivor Pandur (Rangers)", "Kyle Joseph (Middlesbrough)"],
-      "preview": "Clear relegation favourites at ~1/4. Free-agent experience (Butland, Targett, Morita) tops up rather than transforms a play-off squad, and they open at home to Carrick’s United. Jakirović was a Championship Manager of the Year finalist, but the market has already priced a short leash if results do not arrive. Survival requires a very different second half of the window."
+      "relegationOdds": {
+        "fractional": "1/4",
+        "decimal": 1.25
+      },
+      "keyArrivals": [
+        "Konstantinos Tzolakis (Olympiakos, £20m)",
+        "Nobel Mendy (Rayo Vallecano, £20m)",
+        "Lucas Gourna-Douath (Salzburg, £3m)",
+        "Joe Gelhardt (Leeds, £6.5m)",
+        "Jack Butland (Rangers, free)",
+        "Matt Targett (Newcastle, free)",
+        "Hidemasa Morita (Sporting CP, free)"
+      ],
+      "keyDepartures": [
+        "Ivor Pandur (Rangers)",
+        "Kyle Joseph (Middlesbrough)"
+      ],
+      "preview": "Still clear relegation favourites at ~1/4, but the window has moved beyond the free-agent toppers narrative. Tzolakis, Mendy and Gourna-Douath are real fees; Gelhardt adds Championship-proven attacking depth. Butland, Targett and Morita provide experience. They open at home to Carrick's United. Jakirović was a Championship Manager of the Year finalist, but the market has priced a short leash. Survival requires the new signings to hit the ground running - and a very different second half of the window."
     }
   ]
 }
