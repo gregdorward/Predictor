@@ -1,3 +1,13 @@
-export { default } from "../src/components/PremierLeague202627";
+export default function SeasonPreviewsRedirect() {
+  return null;
+}
 
-/** Legacy path; next.config redirects /seasonpreviews/ → /premier-league-2026-27/. */
+/** Legacy URL — always 301 to the canonical Premier League preview. */
+export async function getServerSideProps() {
+  return {
+    redirect: {
+      destination: "/premier-league-2026-27/",
+      permanent: true,
+    },
+  };
+}

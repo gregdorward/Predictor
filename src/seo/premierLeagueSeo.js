@@ -30,12 +30,13 @@ export function buildPremierLeaguePreviewJsonLd(data) {
       },
     },
     mainEntityOfPage: pageUrl,
+    // Season previews are not a single Event (no one venue). Using SportsEvent
+    // without location triggers GSC "Missing field location" on Event rich results.
     about: {
-      "@type": "SportsEvent",
-      name: "Premier League 2026/27",
-      startDate: data?.format?.startDate,
-      endDate: data?.format?.endDate,
+      "@type": "SportsOrganization",
+      name: "Premier League",
       sport: "Association football",
+      url: "https://www.premierleague.com/",
     },
   };
 }
