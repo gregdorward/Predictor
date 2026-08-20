@@ -16,8 +16,6 @@ export const STATIC_SITEMAP_ROUTES = [
   { path: "/bttsteams/", priority: "0.8", changefreq: "daily" },
   { path: "/btts-no-teams/", priority: "0.8", changefreq: "daily" },
   { path: "/premier-league-2026-27/", priority: "0.8", changefreq: "weekly" },
-  { path: "/seasonpreviews/", priority: "0.5", changefreq: "weekly" },
-  { path: "/worldcup2026/", priority: "0.9", changefreq: "weekly" },
   { path: "/articles/", priority: "0.8", changefreq: "weekly" },
   { path: "/competitions/", priority: "0.8", changefreq: "weekly" },
   { path: "/fixtures/", priority: "0.8", changefreq: "daily" },
@@ -46,11 +44,11 @@ function collectStaticSitemapUrls() {
 
 /**
  * All indexable URLs used by sitemap.xml and IndexNow pings.
- * Always returns static + competition + article URLs even if fixture API fails.
+ * Fixture match pages are noindex and excluded by default.
  */
 export async function collectSitemapUrls({
   fixtureLimit = 80,
-  includeFixtures = true,
+  includeFixtures = false,
 } = {}) {
   const baseUrls = collectStaticSitemapUrls();
 

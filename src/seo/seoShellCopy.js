@@ -115,25 +115,10 @@ export function buildFixtureSeoParagraphs({
   league,
   competitionName,
 }) {
-  const paragraphs = [];
-  const fixtureLabel = `${home} vs ${away}`;
   const competition = league || competitionName;
-
-  paragraphs.push(
-    `This is a pre-match research page for ${fixtureLabel}${
+  return [
+    `Pre-match stats and predictions for ${home} vs ${away}${
       competition ? ` in ${competition}` : ""
-    }. Soccer Stats Hub combines head-to-head history, recent form, expected goals trends and goal-market stats so you can judge whether the data points towards goals, a tighter scoreline or a clear home or away bias.`
-  );
-
-  paragraphs.push(
-    `Below you can compare ${home} and ${away} on BTTS, Over and Under 2.5, correct-score probabilities, league position and model outputs. We publish our data sources and modelling approach on the methodology page so you can see how each signal is built before using the stats.`
-  );
-
-  paragraphs.push(
-    `${home} and ${away} are evaluated on the same metrics: rolling form, home and away splits where relevant, and how each side compares to the rest of ${
-      competition || "the competition"
-    }. That keeps the preview grounded in season-long performance rather than a single recent result.`
-  );
-
-  return paragraphs;
+    }: form, head-to-head, xG trends, BTTS and Over/Under markets.`,
+  ];
 }

@@ -1,4 +1,12 @@
-import { MATCH_PHASE_LABELS } from "./worldCup2026Matches";
+const MATCH_PHASE_LABELS = {
+  group: "Group stage",
+  round32: "Round of 32",
+  round16: "Round of 16",
+  quarter: "Quarter-finals",
+  semi: "Semi-finals",
+  "third-place": "Third-place play-off",
+  final: "Final",
+};
 
 const ROUND_DESCRIPTION_TO_PHASE = {
   "round of 32": "round32",

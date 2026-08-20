@@ -3,9 +3,8 @@
  * Add new entries here; use `placements` to control where each ad appears.
  *
  * Placements:
- * - fixtures   - inline cards within the main fixture list
- * - worldcup2026 - World Cup preview page
- * - footer     - site-wide footer strip
+ * - fixtures - inline cards within the main fixture list
+ * - footer   - site-wide footer strip
  */
 const AMAZON_PRODUCTS = [
   {
@@ -19,7 +18,7 @@ const AMAZON_PRODUCTS = [
       "https://images-eu.ssl-images-amazon.com/images/P/0241963621.MAIN._SCMZZZZZZZ_.jpg",
     rating: 4.2,
     ratingCount: 974,
-    placements: ["fixtures", "worldcup2026", "footer"],
+    placements: ["fixtures", "footer"],
   },
   {
     id: "football-hackers-book",
@@ -45,7 +44,7 @@ const AMAZON_PRODUCTS = [
       "https://images-eu.ssl-images-amazon.com/images/P/B0FR9KGKYY.MAIN._SCMZZZZZZZ_.jpg",
     rating: 4.4,
     ratingCount: 150,
-    placements: ["worldcup2026", "fixtures", "footer"],
+    placements: ["fixtures", "footer"],
   },
   {
     id: "lego-football-43019",
@@ -58,7 +57,7 @@ const AMAZON_PRODUCTS = [
       "https://images-eu.ssl-images-amazon.com/images/P/B0FPXFDJ1H.MAIN._SCMZZZZZZZ_.jpg",
     rating: 4.8,
     ratingCount: 797,
-    placements: ["worldcup2026", "fixtures"],
+    placements: ["fixtures"],
   },
   {
     id: "england-1990-retro-shirt",
@@ -71,7 +70,7 @@ const AMAZON_PRODUCTS = [
       "https://m.media-amazon.com/images/I/41HJXYgwukL._AC_SL500_.jpg",
     rating: 4.5,
     ratingCount: 893,
-    placements: ["worldcup2026", "fixtures"],
+    placements: ["fixtures"],
   },
   {
     id: "lg-oled48b56la-tv",
@@ -84,19 +83,19 @@ const AMAZON_PRODUCTS = [
       "https://images-eu.ssl-images-amazon.com/images/P/B0F14XRCH8.MAIN._SCMZZZZZZZ_.jpg",
     rating: 4.5,
     ratingCount: 204,
-    placements: ["worldcup2026", "fixtures", "footer"],
+    placements: ["fixtures", "footer"],
   },
   {
     id: "amazon-prime-uk",
     title: "Amazon Prime - 30-day free trial",
     description:
-      "Stream World Cup coverage on Prime Video, plus unlimited One-Day Delivery and member-only deals. £8.99/month after trial.",
+      "Stream live sport on Prime Video, plus unlimited One-Day Delivery and member-only deals. £8.99/month after trial.",
     affiliateUrl: "https://amzn.to/44rfcgt",
     asin: "B00CFM6BAO",
     imageUrl: "/images/amazon-prime-logo.png",
     rating: 4.6,
     ratingCount: 128000,
-    placements: ["worldcup2026", "fixtures", "footer"],
+    placements: ["fixtures", "footer"],
   },
 ];
 

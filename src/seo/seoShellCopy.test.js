@@ -39,17 +39,16 @@ describe("seoShellCopy", () => {
     expect(text).not.toContain("0.0%");
   });
 
-  test("builds fixture copy with competition context", () => {
+  test("builds short fixture copy with competition context", () => {
     const paragraphs = buildFixtureSeoParagraphs({
       home: "England",
       away: "Argentina",
       league: "World Cup 2026",
     });
 
-    expect(paragraphs.join(" ")).toContain("England vs Argentina");
-    expect(paragraphs.join(" ")).toContain("methodology page");
-    expect(paragraphs.join(" ")).not.toContain("For planning purposes");
-    expect(paragraphs.join(" ")).not.toContain("for any betting decision");
+    expect(paragraphs).toHaveLength(1);
+    expect(paragraphs[0]).toContain("England vs Argentina");
+    expect(paragraphs[0]).toContain("World Cup 2026");
     expect(paragraphs.join(" ")).not.toMatch(/–/);
   });
 });

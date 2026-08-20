@@ -1,4 +1,4 @@
-import cupTreeSnapshot from "../data/worldcup2026/cuptrees-snapshot.json";
+import cupTreeSnapshot from "./__fixtures__/cuptrees-snapshot.json";
 import {
   buildBracketLinks,
   isWinnerSlotCode,

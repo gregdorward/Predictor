@@ -401,12 +401,12 @@
   ],
   "relatedLinks": [
     {
-      "label": "World Cup 2026 hub",
-      "href": "/worldcup2026/"
-    },
-    {
       "label": "Articles",
       "href": "/articles/"
+    },
+    {
+      "label": "Competitions",
+      "href": "/competitions/"
     }
   ]
 }

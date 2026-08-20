@@ -1,25 +1,16 @@
 import dynamic from "next/dynamic";
 import PageMeta from "../../src/components/PageMeta";
-import JsonLd from "../../src/components/JsonLd";
-import FixtureSeoShell, {
-  FixtureSeoExtras,
-} from "../../src/components/FixtureSeoShell";
+import FixtureSeoShell from "../../src/components/FixtureSeoShell";
 import SiteHeader from "../../src/components/SiteHeader";
 import {
-  buildFixtureJsonLd,
   buildFixtureMeta,
   buildFixtureSlug,
   buildFixtureUrl,
-  isFixtureFinished,
   parseFixtureParam,
 } from "../../src/seo/fixtureSlug";
-import { fetchMatchSnapshot, fetchUpcomingFixtureLinks } from "../../src/seo/serverFetch";
-import {
-  buildFixtureOgImageUrl,
-  getCanonicalUrl,
-} from "../../src/seo/pageMetaConfig";
+import { fetchMatchSnapshot } from "../../src/seo/serverFetch";
+import { buildFixtureOgImageUrl } from "../../src/seo/pageMetaConfig";
 import { getCompetitionById, getCompetitionUrl } from "../../src/seo/competitionCatalog";
-import SeoPageLinks from "../../src/components/SeoPageLinks";
 
 const TeamPage = dynamic(() => import("../../src/components/Team"), {
   ssr: false,
@@ -40,12 +31,9 @@ function formatKickOff(dateUnix) {
 export default function FixtureByParam({
   matchId,
   meta,
-  jsonLd,
   canonicalPath,
   seoShell,
-  noIndex,
   ogImage,
-  relatedFixtureLinks = [],
 }) {
   return (
     <>
@@ -53,24 +41,15 @@ export default function FixtureByParam({
         title={meta.title}
         description={meta.description}
         canonicalPath={canonicalPath}
-        noIndex={noIndex}
+        noIndex
         ogImage={ogImage}
         ogImageAlt={`${meta.home} vs ${meta.away} | Soccer Stats Hub`}
       />
-      {!noIndex && <JsonLd data={jsonLd} />}
       <SiteHeader showThemeToggle withFooter>
         <div id="ssh-content">
-          <FixtureSeoShell {...seoShell} ssrOnly />
+          <FixtureSeoShell {...seoShell} />
           <TeamPage matchId={matchId} seoShell={seoShell} />
         </div>
-        {!noIndex && (
-          <SeoPageLinks
-            relatedLinks={relatedFixtureLinks}
-            relatedLabel="Upcoming fixtures"
-            ssrOnly
-          />
-        )}
-        <FixtureSeoExtras {...seoShell} />
       </SiteHeader>
     </>
   );
@@ -101,28 +80,19 @@ export async function getServerSideProps({ params }) {
   }
 
   const canonicalPath = `/fixture/${slug}`;
-  const canonicalUrl = getCanonicalUrl(canonicalPath);
-  const noIndex = isFixtureFinished(snapshot);
-  const jsonLd = noIndex ? null : buildFixtureJsonLd(snapshot, canonicalUrl, meta);
   const competition = snapshot.competition_id
     ? getCompetitionById(snapshot.competition_id)
     : null;
   const competitionUrl = competition
     ? getCompetitionUrl(competition.slug)
     : null;
-  const relatedFixtureLinks = noIndex
-    ? []
-    : await fetchUpcomingFixtureLinks({ excludeMatchId: matchId, limit: 150 });
 
   return {
     props: {
       matchId,
       meta,
-      jsonLd,
       canonicalPath,
-      noIndex,
       ogImage: buildFixtureOgImageUrl(matchId),
-      relatedFixtureLinks,
       seoShell: {
         home: meta.home,
         away: meta.away,

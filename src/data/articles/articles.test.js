@@ -76,7 +76,7 @@ describe("world-cup-2026-awards article", () => {
     expect(awards.dataAsOf).toMatch(/^\d{4}-\d{2}-\d{2}$/);
     expect(awards.intro.length).toBeGreaterThanOrEqual(2);
     expect(awards.categories.length).toBeGreaterThanOrEqual(6);
-    expect(awards.relatedLinks.some((link) => link.href === "/worldcup2026/")).toBe(
+    expect(awards.relatedLinks.some((link) => link.href === "/articles/")).toBe(
       true
     );
   });

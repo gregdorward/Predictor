@@ -19,28 +19,58 @@ const nextConfig = {
         permanent: true,
       },
       {
+        source: "/seasonpreviews",
+        destination: "/premier-league-2026-27/",
+        permanent: true,
+      },
+      {
+        source: "/seasonpreviews/",
+        destination: "/premier-league-2026-27/",
+        permanent: true,
+      },
+      {
+        source: "/worldcup2026",
+        destination: "/articles/world-cup-2026-awards/",
+        permanent: true,
+      },
+      {
+        source: "/worldcup2026/",
+        destination: "/articles/world-cup-2026-awards/",
+        permanent: true,
+      },
+      {
         source: "/teamshigh",
         destination: "/o25/",
         permanent: true,
       },
       {
         source: "/competition/world-cup-europe-qualifiers",
-        destination: "/competition/world-cup-2026/",
+        destination: "/competitions/",
         permanent: true,
       },
       {
         source: "/competition/world-cup-europe-qualifiers/",
-        destination: "/competition/world-cup-2026/",
+        destination: "/competitions/",
         permanent: true,
       },
       {
         source: "/competition/world-cup-south-america-qualifiers",
-        destination: "/competition/world-cup-2026/",
+        destination: "/competitions/",
         permanent: true,
       },
       {
         source: "/competition/world-cup-south-america-qualifiers/",
-        destination: "/competition/world-cup-2026/",
+        destination: "/competitions/",
+        permanent: true,
+      },
+      {
+        source: "/competition/world-cup-2026",
+        destination: "/competitions/",
+        permanent: true,
+      },
+      {
+        source: "/competition/world-cup-2026/",
+        destination: "/competitions/",
         permanent: true,
       },
     ];

@@ -48,5 +48,9 @@ describe("competition empty-season SSR", () => {
     expect(shell.avgGoals).toBeNull();
     expect(shell.btts).toBeNull();
     expect(shell.topOver25Teams).toEqual([]);
+    expect(shell.relatedLinks.length).toBeLessThanOrEqual(7);
+    expect(
+      shell.relatedLinks.every((link) => link.href.startsWith("/competition/"))
+    ).toBe(true);
   });
 });

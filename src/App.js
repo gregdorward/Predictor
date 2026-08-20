@@ -26,7 +26,6 @@ import HighestScoringTeams from "./components/HighestScoringTeams"
 import HighestScoringFixtures from "./components/HighestScoringFixtures";
 import BTTSFixtures from "./components/BTTSFixtures";
 import BTTSTeams from "./components/BTTSTeams";
-import WorldCup2026 from "./components/WorldCup2026";
 import TeamPage from "./components/Team";
 import { initTheme } from "./utils/theme";
 import { getInitialDateFromShareUrl } from "./utils/shareMatchUrl";

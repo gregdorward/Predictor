@@ -66,22 +66,12 @@ export const PAGE_META = {
     description:
       "Teams with lower Both Teams To Score rates for BTTS No, clean sheet and low-scoring match research across major football leagues.",
   },
-  "/worldcup2026": {
-    title: "World Cup 2026 Preview | Soccer Stats Hub",
-    description:
-      "FIFA World Cup 2026 tournament preview and news: predicted winner, Golden Boot picks, group predictions, all 48 team guides, key match predictions and latest tournament headlines.",
-  },
   "/articles": {
     title: "Football Articles & Analysis | Soccer Stats Hub",
     description:
       "In-depth football articles from Soccer Stats Hub: World Cup awards, league deep-dives and data-led analysis built for fans and SEO readers.",
   },
   "/premier-league-2026-27": {
-    title: "Premier League 2026/27 Preview | Soccer Stats Hub",
-    description:
-      "Arsenal are 6/4 favourites, nine clubs have new managers, and the title race looks wide open. Full 2026/27 predicted table, Betfair odds, transfers and all 20 club guides.",
-  },
-  "/seasonpreviews": {
     title: "Premier League 2026/27 Preview | Soccer Stats Hub",
     description:
       "Arsenal are 6/4 favourites, nine clubs have new managers, and the title race looks wide open. Full 2026/27 predicted table, Betfair odds, transfers and all 20 club guides.",

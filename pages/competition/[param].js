@@ -5,6 +5,7 @@ import SiteHeader from "../../src/components/SiteHeader";
 import CompetitionSeoShell, {
   CompetitionSeoExtras,
   buildCompetitionSeoShell,
+  isCompetitionSeasonEmpty,
 } from "../../src/components/CompetitionSeoShell";
 import SeoPageLinks from "../../src/components/SeoPageLinks";
 import {
@@ -31,6 +32,7 @@ export default function CompetitionByParam({
   ogImage,
   ogImageAlt,
   seoShell,
+  noIndex,
 }) {
   return (
     <>
@@ -38,10 +40,11 @@ export default function CompetitionByParam({
         title={meta.title}
         description={meta.description}
         canonicalPath={canonicalPath}
+        noIndex={noIndex}
         ogImage={ogImage}
         ogImageAlt={ogImageAlt}
       />
-      <JsonLd data={jsonLd} />
+      {!noIndex && <JsonLd data={jsonLd} />}
       <SiteHeader
         showThemeToggle
         withFooter
@@ -53,7 +56,6 @@ export default function CompetitionByParam({
           <CompetitionSeoShell {...seoShell} />
           <CompetitionPage seasonId={seasonId} skipHero />
         </div>
-        <SeoPageLinks relatedLinks={seoShell.relatedLinks} ssrOnly />
         <CompetitionSeoExtras {...seoShell} />
       </SiteHeader>
     </>
@@ -90,9 +92,13 @@ export async function getServerSideProps({ params }) {
   const competitionName =
     data?.english_name || data?.name || catalog?.name || "Competition";
   const ogImageAlt = `${competitionName} stats — BTTS, Over 2.5, standings and rankings | Soccer Stats Hub`;
-  const jsonLd = buildCompetitionJsonLd(data, canonicalUrl, catalog, {
-    ogImage,
-  });
+  const seasonEmpty = isCompetitionSeasonEmpty(data);
+  const noIndex = seasonEmpty;
+  const jsonLd = noIndex
+    ? null
+    : buildCompetitionJsonLd(data, canonicalUrl, catalog, {
+        ogImage,
+      });
   const seoShell = buildCompetitionSeoShell(data, catalog);
 
   // Do not serialize the full FootyStats competition payload into __NEXT_DATA__.
@@ -107,6 +113,7 @@ export async function getServerSideProps({ params }) {
       ogImage,
       ogImageAlt,
       seoShell,
+      noIndex,
     },
   };
 }

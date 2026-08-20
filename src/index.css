@@ -14791,19 +14791,10 @@ header.Competition__hero {
   font-size: var(--fp-body, 1em);
 }
 
-/* Keep the SSR match header (teams, venue). Hide extra intro copy once
-   the interactive page has mounted so the Journey slot stays above the fold. */
-body:has(.FixturePage-header--supplement) .FixturePage--seoShellSsr .FixturePage-seoIntro p:nth-of-type(n + 3),
-body:has(.FixturePage-headingTeam) .FixturePage--seoShellSsr .FixturePage-seoIntro p:nth-of-type(n + 3) {
-  display: none;
-}
+/* Keep the SSR match header (teams, venue) visible with the interactive page. */
 
 .FixturePage--seoShell > .FixturePage-header {
   margin-bottom: 0;
-}
-
-body.js-loaded .FixturePage--seoExtras {
-  display: none;
 }
 
 .FixturePage-contentBreak {
@@ -14830,17 +14821,6 @@ body.js-loaded .FixturePage--seoExtras {
 
 .Competition--seoShell .Competition__seoIntro p:last-child {
   margin-bottom: 0;
-}
-
-/* Keep the first two intro paragraphs as the Journey insert slot once the
-   interactive metric cards replace the compact SEO tiles. */
-body:has(section.Competition__metricGrid) .Competition--seoShell .Competition__seoStats,
-body:has(section.Competition__metricGrid) .Competition--seoShell .Competition__seoIntro p:nth-of-type(n + 3) {
-  display: none;
-}
-
-body.js-loaded .Competition--seoExtras {
-  display: none;
 }
 
 .Competition--seoShell .Competition__seoStats {
@@ -15018,10 +14998,6 @@ body.dark-mode .SeoPageLinks {
   color: inherit;
   text-decoration: underline;
   text-underline-offset: 0.15em;
-}
-
-body.js-loaded .SeoPageLinks--ssrOnly {
-  display: none;
 }
 
 .Footer-competitions {

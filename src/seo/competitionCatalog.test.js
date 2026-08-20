@@ -1,27 +1,34 @@
 import {
   COMPETITION_ID_ALIASES,
+  FEATURED_COMPETITION_SLUGS,
   getCompetitionById,
   getCompetitionUrl,
+  getRelatedCompetitionLinks,
   resolveCompetitionParam,
   resolveFootyStatsLeagueId,
 } from "./competitionCatalog";
 
 describe("competitionCatalog removals and aliases", () => {
-  test("does not expose World Cup qualifier competition URLs", () => {
+  test("does not expose World Cup qualifier or finished tournament URLs", () => {
     expect(getCompetitionUrl("world-cup-europe-qualifiers")).toBeNull();
     expect(getCompetitionUrl("world-cup-south-america-qualifiers")).toBeNull();
-    expect(getCompetitionUrl(13964)).toBe("/competition/world-cup-2026/");
-    expect(getCompetitionUrl(10121)).toBe("/competition/world-cup-2026/");
+    expect(getCompetitionUrl("world-cup-2026")).toBeNull();
+    expect(getCompetitionUrl(13964)).toBeNull();
+    expect(getCompetitionUrl(10121)).toBeNull();
+    expect(getCompetitionUrl(16494)).toBeNull();
   });
 
-  test("redirects removed qualifier slugs to World Cup 2026", () => {
+  test("redirects removed World Cup slugs to competitions hub", () => {
     expect(resolveCompetitionParam("world-cup-europe-qualifiers")).toEqual({
-      redirectTo: "/competition/world-cup-2026/",
+      redirectTo: "/competitions/",
     });
     expect(
       resolveCompetitionParam("world-cup-south-america-qualifiers")
     ).toEqual({
-      redirectTo: "/competition/world-cup-2026/",
+      redirectTo: "/competitions/",
+    });
+    expect(resolveCompetitionParam("world-cup-2026")).toEqual({
+      redirectTo: "/competitions/",
     });
   });
 
@@ -53,5 +60,15 @@ describe("competitionCatalog removals and aliases", () => {
     expect(resolveCompetitionParam("usl")).toEqual({
       redirectTo: "/competitions/",
     });
+  });
+
+  test("related competition links are capped to featured leagues", () => {
+    const links = getRelatedCompetitionLinks("premier-league");
+    expect(links.length).toBeLessThanOrEqual(
+      FEATURED_COMPETITION_SLUGS.length - 1
+    );
+    expect(links.some((link) => link.href.includes("premier-league"))).toBe(
+      false
+    );
   });
 });

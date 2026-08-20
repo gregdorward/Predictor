@@ -73,7 +73,6 @@ export const FEATURED_COMPETITION_SLUGS = [
   "ligue-1",
   "championship",
   "champions-league",
-  "world-cup-2026",
 ];
 
 /** Competitions with no industry leading stat website season data - excluded from sitemap and index. */
@@ -90,6 +89,8 @@ export const UNAVAILABLE_COMPETITION_SLUGS = new Set([
   "uruguayan-primera-division",
   "usl",
   "veikkausliiga",
+  // Finished tournament — preview/hub pages retired from index.
+  "world-cup-2026",
 ]);
 
 /**
@@ -110,15 +111,16 @@ export const COMPETITION_ID_ALIASES = {
   15066: 17269, // Segunda Division
   14977: 17267, // 3. Liga
   16036: 17326, // A-League
-  // Removed from coverage — send traffic to World Cup 2026 hub
+  // Removed from coverage — keep alias so old IDs still resolve for display
   13964: 16494, // World Cup Europe Qualifiers
   10121: 16494, // World Cup South America Qualifiers
 };
 
 /** Removed competition slugs → destination path (with trailing slash). */
 export const REMOVED_COMPETITION_REDIRECTS = {
-  "world-cup-europe-qualifiers": "/competition/world-cup-2026/",
-  "world-cup-south-america-qualifiers": "/competition/world-cup-2026/",
+  "world-cup-europe-qualifiers": "/competitions/",
+  "world-cup-south-america-qualifiers": "/competitions/",
+  "world-cup-2026": "/competitions/",
 };
 
 const byId = new Map(COMPETITION_CATALOG.map((entry) => [entry.id, entry]));
@@ -164,8 +166,8 @@ export function getIndexableCompetitions() {
 }
 
 export function getRelatedCompetitionLinks(excludeSlug = null) {
-  return getIndexableCompetitions()
-    .filter((entry) => entry.slug !== excludeSlug)
+  return getFeaturedCompetitions(excludeSlug)
+    .filter((entry) => isCompetitionIndexable(entry))
     .map((entry) => ({
       label: entry.name,
       href: `/competition/${entry.slug}/`,
@@ -256,27 +258,6 @@ export function buildCompetitionJsonLd(
         name,
         sport: "Football",
         url: canonicalUrl,
-      },
-      {
-        "@type": "FAQPage",
-        mainEntity: [
-          {
-            "@type": "Question",
-            name: `What stats are available for ${name}?`,
-            acceptedAnswer: {
-              "@type": "Answer",
-              text: `Soccer Stats Hub tracks ${name} league averages, BTTS rates, Over and Under 2.5 trends, home advantage, standings, team rankings, player leaders and related fixture predictions where data is available.`,
-            },
-          },
-          {
-            "@type": "Question",
-            name: `How should I use the ${name} stats page?`,
-            acceptedAnswer: {
-              "@type": "Answer",
-              text: "Start with the competition-wide market profile, then compare team rankings, form and individual fixtures before making a judgement.",
-            },
-          },
-        ],
       },
     ],
   };

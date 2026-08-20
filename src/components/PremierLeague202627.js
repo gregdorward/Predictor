@@ -336,6 +336,7 @@ export default function PremierLeague202627() {
   return (
     <>
       <PageMeta
+        canonicalPath="/premier-league-2026-27"
         ogImage={buildPremierLeague202627OgImageUrl()}
         ogImageAlt="Premier League 2026/27 season preview — title race, odds and predicted table | Soccer Stats Hub"
       />
