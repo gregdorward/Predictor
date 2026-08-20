@@ -74,7 +74,12 @@ import { applyNationalTeamAlias } from "../utils/nationalTeamAliases";
 import { resolveFixtureTableContext } from "../utils/groupStageTables";
 import { findSofaScoreGameByTeams } from "../utils/sofaScoreMatch";
 import { resolveTeamStatistics } from "../utils/sofaScoreTeamStats";
-import { getLeagueFixturesByLeagueId } from "../utils/leagueResultsAccess";
+import {
+  getCompetitionVenueForm,
+  getLeagueFixturesByLeagueId,
+  getTeamCompetitionFixtures,
+  teamNamesMatch,
+} from "../utils/leagueResultsAccess";
 import { apiGetUrl } from "../utils/apiUrl";
 import { findPlayerStatsEntry } from "../utils/playerStatsMatch";
 import {
@@ -974,35 +979,38 @@ function GameStats({ game, displayBool, stats, handleToggleTip, userTips, dayFix
     }
   }, [effectiveLeagueStats, awayForm?.teamName, matchingGame?.awayId]);
 
-  const leagueFixtures = getLeagueFixturesByLeagueId(
-    allLeagueResultsArrayOfObjects,
-    gameStats?.leagueId
+  const competitionMatch = {
+    leagueID: game.leagueID ?? gameStats?.leagueId,
+    date: game.date,
+  };
+  const homeTeamName = gameStats?.home?.teamName || game.homeTeam;
+  const awayTeamName = gameStats?.away?.teamName || game.awayTeam;
+  const homeCompetitionForm = getCompetitionVenueForm(
+    homeTeamName,
+    competitionMatch,
+    allLeagueResultsArrayOfObjects
   );
-  const resultHome = leagueFixtures.filter(
-    (game) =>
-      game.home_name === gameStats.home.teamName ||
-      game.away_name === gameStats.home.teamName
+  const awayCompetitionForm = getCompetitionVenueForm(
+    awayTeamName,
+    competitionMatch,
+    allLeagueResultsArrayOfObjects
   );
-
-  const resultHomeOnly = leagueFixtures.filter(
-    (game) => game.home_name === gameStats.home.teamName
+  const resultHome = getTeamCompetitionFixtures(
+    homeTeamName,
+    competitionMatch,
+    allLeagueResultsArrayOfObjects
   );
-
-  resultHome.sort((a, b) => b.date_unix - a.date_unix);
-  resultHomeOnly.sort((a, b) => b.date_unix - a.date_unix);
-
-  const resultAway = leagueFixtures.filter(
-    (game) =>
-      game.away_name === gameStats.away.teamName ||
-      game.home_name === gameStats.away.teamName
+  const resultHomeOnly = resultHome.filter((fixture) =>
+    teamNamesMatch(fixture.home_name, homeTeamName)
   );
-
-  const resultAwayOnly = leagueFixtures.filter(
-    (game) => game.away_name === gameStats.away.teamName
+  const resultAway = getTeamCompetitionFixtures(
+    awayTeamName,
+    competitionMatch,
+    allLeagueResultsArrayOfObjects
   );
-
-  resultAway.sort((a, b) => b.date_unix - a.date_unix);
-  resultAwayOnly.sort((a, b) => b.date_unix - a.date_unix);
+  const resultAwayOnly = resultAway.filter((fixture) =>
+    teamNamesMatch(fixture.away_name, awayTeamName)
+  );
 
   for (let i = 0; i < resultHome.length; i++) {
     let unixTimestamp = resultHome[i].date_unix;
@@ -1016,7 +1024,7 @@ function GameStats({ game, displayBool, stats, handleToggleTip, userTips, dayFix
     let goalsConceeded;
 
     switch (true) {
-      case resultHome[i].home_name === gameStats.home.teamName:
+      case teamNamesMatch(resultHome[i].home_name, homeTeamName):
         switch (true) {
           case resultHome[i].homeGoalCount > resultHome[i].awayGoalCount:
             won = "W";
@@ -1037,7 +1045,7 @@ function GameStats({ game, displayBool, stats, handleToggleTip, userTips, dayFix
             break;
         }
         break;
-      case resultHome[i].away_name === gameStats.home.teamName:
+      case teamNamesMatch(resultHome[i].away_name, homeTeamName):
         switch (true) {
           case resultHome[i].homeGoalCount > resultHome[i].awayGoalCount:
             won = "L";
@@ -1100,7 +1108,7 @@ function GameStats({ game, displayBool, stats, handleToggleTip, userTips, dayFix
     let wonHomeOrAwayOnly;
 
     switch (true) {
-      case resultHomeOnly[i].home_name === gameStats.home.teamName:
+      case teamNamesMatch(resultHomeOnly[i].home_name, homeTeamName):
         switch (true) {
           case resultHomeOnly[i].homeGoalCount >
             resultHomeOnly[i].awayGoalCount:
@@ -1139,7 +1147,7 @@ function GameStats({ game, displayBool, stats, handleToggleTip, userTips, dayFix
     let goalsConceeded;
 
     switch (true) {
-      case resultAway[i].home_name === gameStats.away.teamName:
+      case teamNamesMatch(resultAway[i].home_name, awayTeamName):
         switch (true) {
           case resultAway[i].homeGoalCount > resultAway[i].awayGoalCount:
             won = "W";
@@ -1161,7 +1169,7 @@ function GameStats({ game, displayBool, stats, handleToggleTip, userTips, dayFix
         }
         break;
 
-      case resultAway[i].away_name === gameStats.away.teamName:
+      case teamNamesMatch(resultAway[i].away_name, awayTeamName):
         switch (true) {
           case resultAway[i].homeGoalCount > resultAway[i].awayGoalCount:
             won = "L";
@@ -1224,7 +1232,7 @@ function GameStats({ game, displayBool, stats, handleToggleTip, userTips, dayFix
     let wonAwayOrAwayOnly;
 
     switch (true) {
-      case resultAwayOnly[i].away_name === gameStats.away.teamName:
+      case teamNamesMatch(resultAwayOnly[i].away_name, awayTeamName):
         switch (true) {
           case resultAwayOnly[i].awayGoalCount >
             resultAwayOnly[i].homeGoalCount:
@@ -2465,9 +2473,6 @@ function GameStats({ game, displayBool, stats, handleToggleTip, userTips, dayFix
     ),
   };
 
-  const bttsArrayHome = Array.from(gameArrayHome, (x) => x.btts);
-  const bttsArrayAway = Array.from(gameArrayAway, (x) => x.btts);
-
   const homeLeagueStats = getOverallLeagueStats(homeForm);
   const awayLeagueStats = getOverallLeagueStats(awayForm);
   const homeLast5LeagueStats = getLast5LeagueStats(homeForm);
@@ -2511,9 +2516,9 @@ function GameStats({ game, displayBool, stats, handleToggleTip, userTips, dayFix
     CardsTotal: homeForm.CardsTotal || "-",
     CornersAverage: homeLeagueStats.corners || "-",
     FormTextStringHome: formSummaries[0],
-    BTTSArray: bttsArrayHome,
-    Results: homeForm.resultsAll,
-    ResultsHorA: homeForm.resultsHome,
+    BTTSArray: homeCompetitionForm?.bttsAll ?? [],
+    Results: homeCompetitionForm?.resultsAll ?? [],
+    ResultsHorA: homeCompetitionForm?.resultsHome ?? [],
     XGSwing: homeForm.XGChangeRecently,
     styleOfPlayOverall: homeForm.styleOfPlayOverall,
     styleOfPlayHome: homeForm.styleOfPlayHome,
@@ -2542,9 +2547,9 @@ function GameStats({ game, displayBool, stats, handleToggleTip, userTips, dayFix
     CardsTotal: awayForm.CardsTotal || "-",
     CornersAverage: awayLeagueStats.corners || "-",
     FormTextStringAway: formSummaries[1],
-    BTTSArray: bttsArrayAway,
-    Results: awayForm.resultsAll,
-    ResultsHorA: awayForm.resultsAway,
+    BTTSArray: awayCompetitionForm?.bttsAll ?? [],
+    Results: awayCompetitionForm?.resultsAll ?? [],
+    ResultsHorA: awayCompetitionForm?.resultsAway ?? [],
     XGSwing: awayForm.XGChangeRecently,
     styleOfPlayOverall: awayForm.styleOfPlayOverall,
     styleOfPlayAway: awayForm.styleOfPlayAway,
@@ -2604,7 +2609,7 @@ function GameStats({ game, displayBool, stats, handleToggleTip, userTips, dayFix
     winPercentage: statOrDash(homeForm.homePPGAv),
     lossPercentage: statOrDash(game.homeTeamLossPercentage),
     drawPercentage: statOrDash(game.homeTeamDrawPercentage),
-    formRun: homeForm.resultsAll,
+    formRun: homeCompetitionForm?.resultsAll ?? [],
     BTTSArray: formDataHome[0].BTTSArray,
     Results: formDataHome[0].Results,
     ResultsHorA: formDataHome[0].ResultsHorA,
@@ -2663,7 +2668,7 @@ function GameStats({ game, displayBool, stats, handleToggleTip, userTips, dayFix
     winPercentage: statOrDash(awayForm.awayPPGAv),
     lossPercentage: statOrDash(game.awayTeamLossPercentage),
     drawPercentage: statOrDash(game.awayTeamDrawPercentage),
-    formRun: awayForm.resultsAll,
+    formRun: awayCompetitionForm?.resultsAll ?? [],
     BTTSArray: formDataAway[0].BTTSArray,
     Results: formDataAway[0].Results,
     ResultsHorA: formDataAway[0].ResultsHorA,
@@ -2776,7 +2781,7 @@ function GameStats({ game, displayBool, stats, handleToggleTip, userTips, dayFix
               formatStatDisplay(homeSixGameAverage),
               formatStatDisplay(homeFiveGameAverage),
             ]}
-            formRun={homeForm.resultsAll}
+            formRun={homeCompetitionForm?.resultsAll ?? []}
             goalDifference={homeLast5LeagueStats.goalDifference}
             BttsPercentage={homeForm.bttsLast5Percentage}
             BTTSArray={formDataHome[0].BTTSArray}
@@ -2849,7 +2854,7 @@ function GameStats({ game, displayBool, stats, handleToggleTip, userTips, dayFix
               formatStatDisplay(awaySixGameAverage),
               formatStatDisplay(awayFiveGameAverage),
             ]}
-            formRun={awayForm.resultsAll}
+            formRun={awayCompetitionForm?.resultsAll ?? []}
             goalDifference={awayLast5LeagueStats.goalDifference}
             BttsPercentage={awayForm.bttsLast5Percentage}
             BTTSArray={formDataAway[0].BTTSArray}
@@ -2946,7 +2951,7 @@ function GameStats({ game, displayBool, stats, handleToggleTip, userTips, dayFix
               formatStatDisplay(homeSixGameAverage),
               formatStatDisplay(homeFiveGameAverage),
             ]}
-            formRun={homeForm.resultsAll}
+            formRun={homeCompetitionForm?.resultsAll ?? []}
             goalDifference={homeOnlyLeagueStats.goalDifference}
             goalDifferenceHomeOrAway={homeOnlyLeagueStats.goalDifference}
             BttsPercentage={homeForm.bttsHomePercentage}
@@ -3021,7 +3026,7 @@ function GameStats({ game, displayBool, stats, handleToggleTip, userTips, dayFix
               formatStatDisplay(awaySixGameAverage),
               formatStatDisplay(awayFiveGameAverage),
             ]}
-            formRun={awayForm.resultsAll}
+            formRun={awayCompetitionForm?.resultsAll ?? []}
             goalDifference={awayOnlyLeagueStats.goalDifference}
             goalDifferenceHomeOrAway={awayOnlyLeagueStats.goalDifference}
             BttsPercentage={awayForm.bttsHomePercentage}
@@ -4621,6 +4626,7 @@ function GameStats({ game, displayBool, stats, handleToggleTip, userTips, dayFix
                 >
                 <RadarChart
                   shareCapture
+                  maintainAspectRatio={false}
                   style={{ height: "auto" }}
                   title="Soccer Stats Hub Strength Ratings - All Competition Games"
                   theme={localStorage.getItem('theme')}
@@ -4793,6 +4799,7 @@ function GameStats({ game, displayBool, stats, handleToggleTip, userTips, dayFix
                   <RadarChart
                     title="Soccer Stats Hub Strength Ratings - Last 5 Games Only"
                     max={1}
+                    maintainAspectRatio={false}
                     labels={[
                       "Attack rating",
                       "Defence rating",
@@ -4919,6 +4926,7 @@ function GameStats({ game, displayBool, stats, handleToggleTip, userTips, dayFix
                     theme={localStorage.getItem('theme')}
                     title="Soccer Stats Hub Strength Ratings - Home/Away Games Only"
                     max={1}
+                    maintainAspectRatio={false}
                     labels={[
                       "Attack rating",
                       "Defence rating",

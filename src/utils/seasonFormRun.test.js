@@ -64,6 +64,39 @@ describe("seasonFormRun", () => {
     ).toBe(3);
   });
 
+  test("resolveDisplaySeasonPlayed does not shrink league fixture WDL to a lower mcm", () => {
+    expect(
+      resolveDisplaySeasonPlayed(
+        {
+          leaguePlayed: 4,
+          leaguePlayedHome: 2,
+          leaguePlayedAway: 2,
+          WDLRecord: "WWWD",
+        },
+        {
+          kind: "all",
+          matchesCompletedMinimum: 2,
+          currentSeasonOnly: true,
+        }
+      )
+    ).toBe(4);
+    expect(
+      resolveDisplaySeasonPlayed(
+        {
+          leaguePlayed: 4,
+          leaguePlayedHome: 2,
+          leaguePlayedAway: 2,
+          WDLRecord: "WWWD",
+        },
+        {
+          kind: "away",
+          matchesCompletedMinimum: 2,
+          currentSeasonOnly: true,
+        }
+      )
+    ).toBe(2);
+  });
+
   test("resolveDisplaySeasonPlayed never lets home exceed overall All cap", () => {
     expect(
       resolveDisplaySeasonPlayed(
@@ -90,6 +123,120 @@ describe("seasonFormRun", () => {
     ).toBe(2);
   });
 
+  test("resolveDisplaySeasonPlayed hides away pills when the only league game was at home", () => {
+    expect(
+      resolveDisplaySeasonPlayed(
+        {
+          PlayedHome: 1,
+          PlayedAway: 1,
+          leaguePlayed: 1,
+          WDLRecord: "W",
+        },
+        {
+          kind: "away",
+          matchesCompletedMinimum: 1,
+          currentSeasonOnly: true,
+        }
+      )
+    ).toBe(0);
+    expect(
+      resolveDisplaySeasonPlayed(
+        {
+          PlayedHome: 1,
+          PlayedAway: 0,
+          leaguePlayed: 1,
+          WDLRecord: "W",
+        },
+        {
+          kind: "home",
+          matchesCompletedMinimum: 1,
+          currentSeasonOnly: true,
+        }
+      )
+    ).toBe(1);
+  });
+
+  test("resolveDisplaySeasonPlayed does not borrow overall games when venue played is missing", () => {
+    expect(
+      resolveDisplaySeasonPlayed(
+        { PlayedHome: 1, leaguePlayed: 1, WDLRecord: "W" },
+        {
+          kind: "away",
+          matchesCompletedMinimum: 1,
+          currentSeasonOnly: true,
+        }
+      )
+    ).toBe(0);
+  });
+
+  test("resolveDisplaySeasonPlayed does not hide Europa venue form when FootyStats Played* includes domestic games", () => {
+    expect(
+      resolveDisplaySeasonPlayed(
+        {
+          PlayedHome: 8,
+          PlayedAway: 7,
+          leaguePlayed: 4,
+          WDLRecord: "LLLW",
+        },
+        {
+          kind: "home",
+          matchesCompletedMinimum: 4,
+          currentSeasonOnly: true,
+        }
+      )
+    ).toBe(4);
+    expect(
+      resolveDisplaySeasonPlayed(
+        {
+          PlayedHome: 8,
+          PlayedAway: 7,
+          leaguePlayed: 4,
+          WDLRecord: "WDW",
+        },
+        {
+          kind: "away",
+          matchesCompletedMinimum: 3,
+          currentSeasonOnly: true,
+        }
+      )
+    ).toBe(3);
+  });
+
+  test("resolveDisplaySeasonPlayed prefers competition home/away played over FootyStats", () => {
+    expect(
+      resolveDisplaySeasonPlayed(
+        {
+          PlayedHome: 8,
+          PlayedAway: 7,
+          leaguePlayed: 4,
+          leaguePlayedHome: 2,
+          leaguePlayedAway: 2,
+          WDLRecord: "LLLW",
+        },
+        {
+          kind: "home",
+          currentSeasonOnly: true,
+        }
+      )
+    ).toBe(2);
+    expect(
+      resolveDisplaySeasonPlayed(
+        {
+          PlayedHome: 1,
+          PlayedAway: 5,
+          leaguePlayed: 1,
+          leaguePlayedHome: 1,
+          leaguePlayedAway: 0,
+          WDLRecord: "W",
+        },
+        {
+          kind: "away",
+          currentSeasonOnly: true,
+        }
+      )
+    ).toBe(0);
+  });
+
   test("sanitizeThinSeasonFormSide trims LastFiveForm to season played", () => {
     const form = {
       PlayedHome: 2,
@@ -98,5 +245,35 @@ describe("seasonFormRun", () => {
     };
     sanitizeThinSeasonFormSide(form);
     expect(form.LastFiveForm).toEqual(["W", "L", "D"]);
+  });
+
+  test("sanitizeThinSeasonFormSide drops venue splits when home+away counts exceed league games", () => {
+    const form = {
+      PlayedHome: 1,
+      PlayedAway: 1,
+      leaguePlayed: 1,
+      WDLRecord: "W",
+      LastFiveForm: ["W"],
+      resultsAll: ["W"],
+      resultsHome: ["W"],
+      resultsAway: ["L"],
+    };
+    sanitizeThinSeasonFormSide(form);
+    expect(form.resultsAll).toEqual(["W"]);
+    expect(form.resultsHome).toEqual([]);
+    expect(form.resultsAway).toEqual([]);
+  });
+
+  test("sanitizeThinSeasonFormSide treats PlayedAway 0 as no away games, not overall played", () => {
+    const form = {
+      PlayedHome: 1,
+      PlayedAway: 0,
+      leaguePlayed: 1,
+      WDLRecord: "W",
+      resultsAll: ["W"],
+      resultsAway: ["L"],
+    };
+    sanitizeThinSeasonFormSide(form);
+    expect(form.resultsAway).toEqual([]);
   });
 });

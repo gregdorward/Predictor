@@ -14,6 +14,7 @@ import { getPointsFromLastX } from "../utils/getPointsFromLastX";
 import {
   getLeagueFixturesByLeagueId,
   applyCompetitionGoalDifference,
+  applyCompetitionVenueForm,
   getRecentResultsCutoffUnix,
   evaluateResultsCache,
   isRebuiltResultsCacheComplete,
@@ -309,7 +310,14 @@ export async function generateTables(a, leagueIdArray, allResults) {
         index++
       ) {
         let currentTeam = league.data.all_matches_table_overall[index];
+        const wdlRecord = currentTeam.wdl_record || "";
         let last5 = "N/A";
+        if (wdlRecord.length) {
+          last5 =
+            wdlRecord.length < 5
+              ? wdlRecord.slice(-wdlRecord.length).toUpperCase()
+              : wdlRecord.slice(-5).toUpperCase();
+        }
         const team = {
           LeagueID: currentLeagueId,
           Position: index + 1,
@@ -2070,6 +2078,29 @@ export async function generateFixtures(
         match.expectedGoalsHomeToDate = fixture.team_a_xg_prematch;
         match.expectedGoalsAwayToDate = fixture.team_b_xg_prematch;
         match.game_week = fixture.game_week;
+
+        const formEntry = allForm.find(
+          (game) =>
+            game.id === match.id ||
+            (game.home?.teamName === match.homeTeam &&
+              game.away?.teamName === match.awayTeam)
+        );
+        if (formEntry?.home?.[2] && formEntry?.away?.[2]) {
+          applyCompetitionVenueForm(
+            formEntry.home[2],
+            match.homeTeam,
+            match,
+            allLeagueResultsArrayOfObjects
+          );
+          applyCompetitionVenueForm(
+            formEntry.away[2],
+            match.awayTeam,
+            match,
+            allLeagueResultsArrayOfObjects
+          );
+          sanitizeThinSeasonFormSide(formEntry.home[2]);
+          sanitizeThinSeasonFormSide(formEntry.away[2]);
+        }
 
         // if (match.status !== "canceled" || match.status !== "suspended") {
         matches.push(match);

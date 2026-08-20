@@ -115,11 +115,20 @@ export function resolveDisplaySeasonPlayed(
     overallCap = Number.isFinite(mcm) && mcm > 0 ? mcm : NaN;
   }
 
+  const fromLeagueHistory =
+    (Number.isFinite(leaguePlayed) && leaguePlayed > 0) ||
+    wdlLen > 0 ||
+    Number.isFinite(Number(form?.leaguePlayedHome)) ||
+    Number.isFinite(Number(form?.leaguePlayedAway));
+
+  // mcm only caps inflated FootyStats Played* / formRun. Never shrink real
+  // league-table or competition-fixture WDL (EL qualifying vs league-phase mcm).
   if (
     currentSeasonOnly &&
     Number.isFinite(mcm) &&
     mcm > 0 &&
-    Number.isFinite(overallCap)
+    Number.isFinite(overallCap) &&
+    !fromLeagueHistory
   ) {
     overallCap = Math.min(overallCap, mcm);
   } else if (
@@ -135,21 +144,58 @@ export function resolveDisplaySeasonPlayed(
     return Number.isFinite(overallCap) ? overallCap : null;
   }
 
-  let venuePlayed =
+  const leagueVenuePlayed =
+    kind === "home" ? Number(form?.leaguePlayedHome) : Number(form?.leaguePlayedAway);
+  const footyVenuePlayed =
     kind === "home" ? Number(form?.PlayedHome) : Number(form?.PlayedAway);
+  const usingCompetitionVenue =
+    Number.isFinite(leagueVenuePlayed) && leagueVenuePlayed >= 0;
+  let venuePlayed = usingCompetitionVenue ? leagueVenuePlayed : footyVenuePlayed;
+  const otherVenuePlayed = usingCompetitionVenue
+    ? kind === "home"
+      ? Number(form?.leaguePlayedAway)
+      : Number(form?.leaguePlayedHome)
+    : kind === "home"
+      ? Number(form?.PlayedAway)
+      : Number(form?.PlayedHome);
 
   if (!Number.isFinite(venuePlayed) || venuePlayed < 0) {
-    venuePlayed = Number.isFinite(overallCap) ? overallCap : null;
+    // Early season: missing venue played means no venue pills — never borrow
+    // overall form (a home win must not appear as an away result).
+    venuePlayed = currentSeasonOnly
+      ? 0
+      : Number.isFinite(overallCap)
+        ? overallCap
+        : null;
   } else if (Number.isFinite(overallCap)) {
     // Never show more venue pills than overall season games.
     venuePlayed = Math.min(venuePlayed, overallCap);
+    // FootyStats PlayedHome/Away often include cups or last season. Only treat
+    // "the other venue already used up every league game" when the two venue
+    // counts look like the same competition (sum ≈ league Pld). Domestic
+    // last-x totals in Europe (e.g. 8+7 vs 4 EL games) must not hide real
+    // competition home/away form.
+    const footySum =
+      (Number(form?.PlayedHome) || 0) + (Number(form?.PlayedAway) || 0);
+    const sameCompetitionSplit =
+      usingCompetitionVenue || footySum <= overallCap + 1;
+    if (
+      currentSeasonOnly &&
+      sameCompetitionSplit &&
+      Number.isFinite(otherVenuePlayed) &&
+      otherVenuePlayed >= overallCap
+    ) {
+      venuePlayed = 0;
+    }
   }
 
   if (
     currentSeasonOnly &&
     Number.isFinite(mcm) &&
     mcm > 0 &&
-    Number.isFinite(venuePlayed)
+    Number.isFinite(venuePlayed) &&
+    !usingCompetitionVenue &&
+    !fromLeagueHistory
   ) {
     venuePlayed = Math.min(venuePlayed, mcm);
   }
@@ -188,14 +234,20 @@ export function sanitizeThinSeasonFormSide(form) {
   if (Array.isArray(form.resultsHome)) {
     form.resultsHome = capFormResultsToSeasonPlayed(
       form.resultsHome,
-      Math.min(Number(form.PlayedHome) || played, played),
+      resolveDisplaySeasonPlayed(form, {
+        kind: "home",
+        currentSeasonOnly: true,
+      }) ?? 0,
       6
     );
   }
   if (Array.isArray(form.resultsAway)) {
     form.resultsAway = capFormResultsToSeasonPlayed(
       form.resultsAway,
-      Math.min(Number(form.PlayedAway) || played, played),
+      resolveDisplaySeasonPlayed(form, {
+        kind: "away",
+        currentSeasonOnly: true,
+      }) ?? 0,
       6
     );
   }

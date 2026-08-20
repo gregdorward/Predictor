@@ -131,7 +131,7 @@ export default function SeasonPpgChart({
       y: {
         min: 0,
         max: 3,
-        ticks: { color, stepSize: 1, font: { size: 10 } },
+        ticks: { color, stepSize: 0.5, font: { size: 10 } },
         grid: { color: gridColor },
       },
     },

@@ -34,25 +34,16 @@ function Stats(props) {
   };
 
   function styleForm(formIndicator) {
-    let className;
-    if (formIndicator === "W") {
-      className = "win";
-    } else if (formIndicator === "D") {
-      className = "draw";
-    } else if (formIndicator === "L") {
-      className = "loss";
-    }
-    return className;
+    if (formIndicator === "W") return "win";
+    if (formIndicator === "D") return "draw";
+    if (formIndicator === "L") return "loss";
+    return "formPillSpacer";
   }
 
   function styleBTTS(BTTSBoolean) {
-    let className;
-    if (BTTSBoolean === "\u2714") {
-      className = "BTTSTrue";
-    } else if (BTTSBoolean === "\u2718") {
-      className = "BTTSFalse";
-    }
-    return className;
+    if (BTTSBoolean === "\u2714") return "BTTSTrue";
+    if (BTTSBoolean === "\u2718") return "BTTSFalse";
+    return "BTTSEmpty";
   }
 
   if (props.games === "all") {

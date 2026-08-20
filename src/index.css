@@ -5229,6 +5229,19 @@ li .Aligned {
   margin-right: 0.25em;
 }
 
+/* Invisible copy of BTTSTrue/False so an empty side keeps Key Stats aligned. */
+.BTTSEmpty {
+  display: inline-block;
+  visibility: hidden;
+  padding: 0.65em;
+  margin-top: 1em;
+  width: 1em;
+  height: 1.25em;
+  border-radius: 5px;
+  margin-left: 0.25em;
+  margin-right: 0.25em;
+}
+
 .RadioContainer {
   align-items: center;
   flex-direction: row;
@@ -5410,15 +5423,15 @@ li .Aligned {
 
 
 .last5League {
-  min-height: 3em;
+  min-height: 3.5em;
 }
 
 .FormHomeOrAway {
-  min-height: 3em;
+  min-height: 3.5em;
 }
 
 .BTTSArrayHomeOrAway {
-  min-height: 4em;
+  min-height: 6em;
 }
 
 .StyleOfPlay {
@@ -6131,6 +6144,22 @@ canvas.LeagueStatsRadar {
   margin: 0.2em;
   color: var(--secondary-button-text-color);
   font-weight: 700;
+}
+
+/* Same box as .win so missing W/D/L slots do not collapse the column. */
+.formPillSpacer {
+  display: inline-block;
+  visibility: hidden;
+  padding: 0.7em;
+  padding-left: 0.8em;
+  padding-right: 0.8em;
+  margin: 0.2em;
+  border-radius: 5px;
+  font-weight: 700;
+}
+
+.formPillSpacer::before {
+  content: "W";
 }
 
 
@@ -7422,6 +7451,10 @@ input:active+.design::after {
   border: 1px solid var(--third-background-color);
   box-sizing: border-box;
   transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.ComparisonBarChart:not(.ComparisonRadarChart) {
+  padding: 1em;
 }
 
 .ComparisonBarChart-share {
@@ -8828,7 +8861,21 @@ body.dark-mode .MetricTrendTables-arrow {
 }
 
 .ComparisonRadarChart {
+  width: 100%;
   max-width: 640px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.Chart .ComparisonRadarChart {
+  aspect-ratio: 1 / 1;
+  position: relative;
+}
+
+.Chart .ComparisonRadarChart > div {
+  position: relative !important;
+  width: 100% !important;
+  height: 100% !important;
 }
 
 .ComparisonRadarChart canvas {
@@ -8836,6 +8883,14 @@ body.dark-mode .MetricTrendTables-arrow {
   margin-left: auto !important;
   margin-right: auto !important;
   max-height: 42em;
+}
+
+.Chart .ComparisonRadarChart canvas {
+  width: 100% !important;
+  height: 100% !important;
+  max-width: none !important;
+  max-height: none !important;
+  margin: 0 !important;
 }
 
 .Chart {
@@ -9567,6 +9622,56 @@ button.AIInsights button:active {
   max-width: 640px;
   margin-left: auto;
   margin-right: auto;
+}
+
+@media (min-width: 900px) {
+  .ComparisonBarChart,
+  .ComparisonBarChart-share,
+  .ShotAreaCharts-share,
+  .GoalTimingHeat-share,
+  .SeasonPpgChart {
+    max-width: 960px;
+  }
+
+  .Chart .ComparisonRadarChart,
+  .XGSwiper .ComparisonRadarChart {
+    max-width: 768px;
+  }
+
+  .ComparisonBarChart canvas,
+  .SeasonPpgChart canvas,
+  .ShotAreaCharts canvas {
+    max-width: 100%;
+    max-height: none;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  canvas.DoughnutChart {
+    max-width: 24em;
+    max-height: 24em;
+  }
+
+  .SeasonPpgChart {
+    height: 420px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+}
+
+@media (min-width: 1200px) {
+  .ComparisonBarChart,
+  .ComparisonBarChart-share,
+  .ShotAreaCharts-share,
+  .GoalTimingHeat-share,
+  .SeasonPpgChart {
+    max-width: 1080px;
+  }
+
+  .Chart .ComparisonRadarChart,
+  .XGSwiper .ComparisonRadarChart {
+    max-width: 864px;
+  }
 }
 
 
@@ -11207,15 +11312,15 @@ h5.section-title {
 .SeasonPpgChart {
   width: 100%;
   max-width: 100%;
-  height: 200px;
-  min-height: 180px;
+  height: 320px;
+  min-height: 280px;
   box-sizing: border-box;
   overflow: hidden;
 }
 
 @media (min-width: 768px) {
   .SeasonPpgChart {
-    height: 240px;
+    height: 380px;
   }
 }
 

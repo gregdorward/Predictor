@@ -1402,8 +1402,10 @@ export function BarChart(props) {
     aspectRatio: 1.2,
     layout: {
       padding: {
-        left: 0,
-        right: 12,
+        top: 16,
+        right: 16,
+        bottom: 16,
+        left: 16,
       },
     },
     animation: {

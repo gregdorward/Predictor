@@ -5,7 +5,7 @@ import { setData } from "../logic/dataSlice";
 import { Provider } from "react-redux";
 import store from "../logic/store"; // Import your Redux store
 import { clicked } from "../logic/getScorePredictions";
-import { allForm } from "../logic/getFixtures";
+import { allForm, allLeagueResultsArrayOfObjects } from "../logic/getFixtures";
 import LeagueName from './LeagueName';
 import ShareShortlistButton from "./ShareShortlistButton";
 import GameStats from "./GameStats";
@@ -19,11 +19,7 @@ import {
   getProbabilityNumber,
   statPercentDisplay,
 } from "../utils/formatStat";
-import {
-  limitFormRunToSeasonPlayed,
-  capFormResultsToSeasonPlayed,
-  resolveDisplaySeasonPlayed,
-} from "../utils/seasonFormRun";
+import { getCompetitionFormPills } from "../utils/leagueResultsAccess";
 
 let resultValue;
 var count;
@@ -80,63 +76,20 @@ function styleFormIndicator(formIndicator) {
 }
 
 /**
- * Newest-first W/D/L list for FormContainer.
- * Always caps to this season's games played when known. Never fall back to
- * untrimmed formRun while under 5 league games (often previous-season).
+ * Homepage form pills: this-competition finished games only (same source as
+ * Match Preview). Never FootyStats formRun.
  */
-function getDisplayFormResults(
-  form,
-  kind = "all",
-  max = 5,
-  { currentSeasonOnly = false, seasonPlayed } = {}
-) {
-  if (!form) return [];
-
-  const asWdl = (values) =>
-    (Array.isArray(values) ? values : Array.from(String(values || "").toUpperCase()))
-      .filter((result) => result === "W" || result === "D" || result === "L");
-
-  const inferredPlayed =
-    seasonPlayed != null
-      ? Number(seasonPlayed)
-      : kind === "home"
-        ? Number(form.PlayedHome)
-        : kind === "away"
-          ? Number(form.PlayedAway)
-          : (Number(form.PlayedHome) || 0) + (Number(form.PlayedAway) || 0);
-
-  const playedCap = Number.isFinite(inferredPlayed) ? inferredPlayed : null;
-
-  const finish = (values) => {
-    const list = asWdl(values);
-    if (playedCap == null) {
-      return currentSeasonOnly ? [] : list.slice(0, max);
-    }
-    return capFormResultsToSeasonPlayed(list, playedCap, max);
-  };
-
-  if (kind === "all") {
-    const fromResults = asWdl(form.resultsAll);
-    if (fromResults.length) return finish(fromResults);
-    const fromLastFive = asWdl(form.LastFiveForm);
-    if (fromLastFive.length) return finish(fromLastFive);
-    if (currentSeasonOnly) return [];
-    return finish(asWdl(form.formRun).slice(-max).reverse());
-  }
-
-  const venueResults =
-    kind === "home" ? form.resultsHome : form.resultsAway;
-  const fromVenue = asWdl(venueResults);
-  if (fromVenue.length) return finish(fromVenue);
-  if (currentSeasonOnly) {
-    if (playedCap != null && playedCap > 0) {
-      return finish(
-        [...limitFormRunToSeasonPlayed(form.formRun, playedCap)].reverse()
-      );
-    }
-    return [];
-  }
-  return finish(asWdl(form.formRun).slice(-max).reverse());
+function getFixtureFormPills(fixture, teamName, kind) {
+  return getCompetitionFormPills(
+    teamName,
+    {
+      leagueID: fixture?.leagueID ?? fixture?.competition_id,
+      date: fixture?.date ?? fixture?.date_unix,
+    },
+    allLeagueResultsArrayOfObjects,
+    kind,
+    5
+  );
 }
 
 /** Render up to 5 pills, oldest on the left, newest on the right. */
@@ -350,18 +303,11 @@ function SingleFixture({
     }, 1);
   };
 
-  const resolvedForms = resolveFixtureForms();
-  const displayHomeForm = fixture.formHome ?? resolvedForms.homeForm;
-  const displayAwayForm = fixture.formAway ?? resolvedForms.awayForm;
   const earlySeason =
     fixture.predictionsUnavailable === true ||
     Number(fixture.matches_completed_minimum) < 3 ||
     fixture.goalsA === "x" ||
     fixture.goalsB === "x";
-  // Form pills: never fall back to FootyStats formRun until 5 league games —
-  // that string often includes previous-season results (NL North/South etc.).
-  const formCurrentSeasonOnly =
-    earlySeason || Number(fixture.matches_completed_minimum) < 5;
   // No tip win/loss chrome until the model is allowed to tip the fixture.
   const tipResultClass = earlySeason
     ? ""
@@ -454,27 +400,21 @@ function SingleFixture({
                   <div className={`Last5`}>
                     <FormPills
                       label="All"
-                      results={getDisplayFormResults(displayHomeForm, "all", 5, {
-                        currentSeasonOnly: formCurrentSeasonOnly,
-                        seasonPlayed: resolveDisplaySeasonPlayed(displayHomeForm, {
-                          kind: "all",
-                          matchesCompletedMinimum: fixture.matches_completed_minimum,
-                          currentSeasonOnly: formCurrentSeasonOnly,
-                        }),
-                      })}
+                      results={getFixtureFormPills(
+                        fixture,
+                        fixture.homeTeam,
+                        "all"
+                      )}
                     />
                   </div>
                   <div className={`Last5Home`}>
                     <FormPills
                       label="Home"
-                      results={getDisplayFormResults(displayHomeForm, "home", 5, {
-                        currentSeasonOnly: formCurrentSeasonOnly,
-                        seasonPlayed: resolveDisplaySeasonPlayed(displayHomeForm, {
-                          kind: "home",
-                          matchesCompletedMinimum: fixture.matches_completed_minimum,
-                          currentSeasonOnly: formCurrentSeasonOnly,
-                        }),
-                      })}
+                      results={getFixtureFormPills(
+                        fixture,
+                        fixture.homeTeam,
+                        "home"
+                      )}
                     />
                   </div>
                 </div>
@@ -532,27 +472,21 @@ function SingleFixture({
                   <div className={`Last5`}>
                     <FormPills
                       label="All"
-                      results={getDisplayFormResults(displayAwayForm, "all", 5, {
-                        currentSeasonOnly: formCurrentSeasonOnly,
-                        seasonPlayed: resolveDisplaySeasonPlayed(displayAwayForm, {
-                          kind: "all",
-                          matchesCompletedMinimum: fixture.matches_completed_minimum,
-                          currentSeasonOnly: formCurrentSeasonOnly,
-                        }),
-                      })}
+                      results={getFixtureFormPills(
+                        fixture,
+                        fixture.awayTeam,
+                        "all"
+                      )}
                     />
                   </div>
                   <div className={`Last5Away`}>
                     <FormPills
                       label="Away"
-                      results={getDisplayFormResults(displayAwayForm, "away", 5, {
-                        currentSeasonOnly: formCurrentSeasonOnly,
-                        seasonPlayed: resolveDisplaySeasonPlayed(displayAwayForm, {
-                          kind: "away",
-                          matchesCompletedMinimum: fixture.matches_completed_minimum,
-                          currentSeasonOnly: formCurrentSeasonOnly,
-                        }),
-                      })}
+                      results={getFixtureFormPills(
+                        fixture,
+                        fixture.awayTeam,
+                        "away"
+                      )}
                     />
                   </div>
                 </div>

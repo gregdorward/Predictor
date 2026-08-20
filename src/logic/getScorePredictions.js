@@ -46,12 +46,18 @@ import {
 } from "./getFixtures";
 import {
   applyCompetitionGoalDifference,
+  applyCompetitionVenueForm,
   findLeagueEntryById,
   getLeagueFixturesByLeagueId,
   getTeamFixturesBeforeMatch,
   isCompleteLeagueHistoryFixture,
+  teamNamesMatch,
 } from "../utils/leagueResultsAccess";
-import { limitFormRunToSeasonPlayed, sanitizeThinSeasonFormSide } from "../utils/seasonFormRun";
+import {
+  limitFormRunToSeasonPlayed,
+  resolveDisplaySeasonPlayed,
+  sanitizeThinSeasonFormSide,
+} from "../utils/seasonFormRun";
 import { buildGoalTimingHeatmap } from "../utils/goalTimingHeatmap";
 import { buildFormContextMetrics } from "../utils/formContextMetrics";
 import { selectedTipType } from "../components/PredictionTypeRadio";
@@ -690,6 +696,29 @@ function calculateWeightedXG(recentXG, oppositionPPG, leagueAvgPPG = 1.5) {
   return weightedXGSum / totalWeight;
 }
 
+/** Newest-first W/D/L pills from dated league home/away rows (same list as GameStats). */
+function applyFormPillsFromDatedResults(form, homeResults, awayResults) {
+  const wdl = (rows) =>
+    (Array.isArray(rows) ? rows : [])
+      .map((row) => row?.result)
+      .filter((result) => result === "W" || result === "D" || result === "L");
+  const home = wdl(homeResults);
+  const away = wdl(awayResults);
+  const all = wdl(
+    [...(homeResults || []), ...(awayResults || [])].sort(
+      (a, b) => (Number(b.dateRaw) || 0) - (Number(a.dateRaw) || 0)
+    )
+  );
+  form.resultsHome = home.slice(0, 6);
+  form.resultsAway = away.slice(0, 6);
+  form.resultsAll = all.slice(0, 6);
+  form.leaguePlayedHome = home.length;
+  form.leaguePlayedAway = away.length;
+  form.leaguePlayed = all.length;
+  form.LastFiveForm = all.slice(0, 5);
+  form.LastSixForm = all.slice(0, 6);
+}
+
 
 async function getPastLeagueResults(team, game, hOrA, form) {
   form.completeData = true;
@@ -700,8 +729,8 @@ async function getPastLeagueResults(team, game, hOrA, form) {
   );
 
   if (leagueFixtures.length > 10) {
-    let teamsHomeResults = leagueFixtures.filter(
-      (fixture) => fixture.home_name === team
+    let teamsHomeResults = leagueFixtures.filter((fixture) =>
+      teamNamesMatch(fixture.home_name, team)
     );
 
     teamsHomeResults = teamsHomeResults
@@ -713,8 +742,8 @@ async function getPastLeagueResults(team, game, hOrA, form) {
       })
       .sort((a, b) => a.date_unix - b.date_unix);
 
-    let teamsAwayResults = leagueFixtures.filter(
-      (fixture) => fixture.away_name === team
+    let teamsAwayResults = leagueFixtures.filter((fixture) =>
+      teamNamesMatch(fixture.away_name, team)
     );
 
     teamsAwayResults = teamsAwayResults
@@ -1468,6 +1497,7 @@ async function getPastLeagueResults(team, game, hOrA, form) {
     const teamNpXGAgainstAllRecentAtStart = teamNpXGAgainstAll;
     homeResults.sort((b, a) => a.dateRaw - b.dateRaw);
     awayResults.sort((b, a) => a.dateRaw - b.dateRaw);
+    applyFormPillsFromDatedResults(form, homeResults, awayResults);
 
     const teamXGForHome = homeResults.map((res) => res.XG);
     const teamXGAgainstHome = homeResults.map((res) => res.XGAgainst);
@@ -2752,26 +2782,40 @@ function applyFormResultsFallback(form, venue) {
   const seasonPlayed =
     Number(form.leaguePlayed) ||
     (Number(form.PlayedHome) || 0) + (Number(form.PlayedAway) || 0);
+  const earlySeason = seasonPlayed > 0 && seasonPlayed < 5;
   const venuePlayed =
-    venue === "home" ? Number(form.PlayedHome) || 0 : Number(form.PlayedAway) || 0;
+    resolveDisplaySeasonPlayed(form, {
+      kind: venue,
+      currentSeasonOnly: earlySeason,
+    }) ?? 0;
 
   const overall = formResultsFromStoredForm(form, Math.min(6, seasonPlayed || 6));
   const venueRun = limitFormRunToSeasonPlayed(form.formRun, venuePlayed)
     .slice()
     .reverse();
+  const useCompetitionSplit =
+    Number.isFinite(Number(form.leaguePlayedHome)) ||
+    Number.isFinite(Number(form.leaguePlayedAway));
 
   // Only fill when empty — never overwrite league-history results with formRun.
   if (!Array.isArray(form.resultsAll) || form.resultsAll.length === 0) {
     form.resultsAll = overall;
   }
   if (venue === "home") {
-    if (!Array.isArray(form.resultsHome) || form.resultsHome.length === 0) {
-      form.resultsHome = venueRun.length ? venueRun : overall;
+    if (
+      !useCompetitionSplit &&
+      (!Array.isArray(form.resultsHome) || form.resultsHome.length === 0)
+    ) {
+      // Empty venue games stay empty — do not copy overall (a home win is not an away result).
+      form.resultsHome = venueRun;
     }
     form.resultsAway = Array.isArray(form.resultsAway) ? form.resultsAway : [];
   } else {
-    if (!Array.isArray(form.resultsAway) || form.resultsAway.length === 0) {
-      form.resultsAway = venueRun.length ? venueRun : overall;
+    if (
+      !useCompetitionSplit &&
+      (!Array.isArray(form.resultsAway) || form.resultsAway.length === 0)
+    ) {
+      form.resultsAway = venueRun;
     }
     form.resultsHome = Array.isArray(form.resultsHome) ? form.resultsHome : [];
   }
@@ -2795,8 +2839,18 @@ function hydrateMatchFormForDisplay(match) {
   }
   const formHome = fixtureForm.home[2];
   const formAway = fixtureForm.away[2];
-  applyFormResultsFallback(formHome, "home");
-  applyFormResultsFallback(formAway, "away");
+  applyCompetitionVenueForm(
+    formHome,
+    match.homeTeam,
+    match,
+    allLeagueResultsArrayOfObjects
+  );
+  applyCompetitionVenueForm(
+    formAway,
+    match.awayTeam,
+    match,
+    allLeagueResultsArrayOfObjects
+  );
   sanitizeThinSeasonFormSide(formHome);
   sanitizeThinSeasonFormSide(formAway);
   match.formHome = formHome;
@@ -2901,7 +2955,7 @@ function averageApiStats(values) {
 }
 
 function mapFixtureToTeamMatchStats(fixture, team) {
-  const isHome = fixture.home_name === team;
+  const isHome = teamNamesMatch(fixture.home_name, team);
   if (isHome) {
     return {
       venue: "Home",
@@ -2975,42 +3029,13 @@ function mapFixtureToTeamMatchStats(fixture, team) {
   };
 }
 
-function mapFixtureToFormResult(fixture, team) {
-  const isHome = fixture.home_name === team;
-  const teamGoals = isHome ? fixture.homeGoalCount : fixture.awayGoalCount;
-  const oppGoals = isHome ? fixture.awayGoalCount : fixture.homeGoalCount;
-  if (teamGoals > oppGoals) {
-    return "W";
-  }
-  if (teamGoals < oppGoals) {
-    return "L";
-  }
-  return "D";
-}
-
-function hydrateFormResultsFromCompetitionFixtures(team, match, form, venue) {
-  const fixtures = getTeamFixturesBeforeMatch(
+function hydrateFormResultsFromCompetitionFixtures(team, match, form) {
+  return applyCompetitionVenueForm(
+    form,
     team,
     match,
     allLeagueResultsArrayOfObjects
   );
-  if (!fixtures.length) {
-    return false;
-  }
-
-  const toResult = (fixture) => mapFixtureToFormResult(fixture, team);
-  form.resultsAll = fixtures.slice(0, 6).map(toResult);
-  const homeFixtures = fixtures.filter((fixture) => fixture.home_name === team);
-  const awayFixtures = fixtures.filter((fixture) => fixture.away_name === team);
-
-  if (venue === "home") {
-    form.resultsHome = homeFixtures.slice(0, 6).map(toResult);
-  } else {
-    form.resultsAway = awayFixtures.slice(0, 6).map(toResult);
-  }
-
-  form.LeagueOrAll = "League";
-  return true;
 }
 
 function applyNeutralAgainstDefaults(form) {

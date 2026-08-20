@@ -132,29 +132,146 @@ export function getLeagueFixturesByLeagueId(allLeagueResults, leagueId) {
 }
 
 function fixtureGoalsForTeam(fixture, team) {
-  if (fixture.home_name === team) {
+  if (teamNamesMatch(fixture.home_name, team)) {
     return { scored: fixture.homeGoalCount, conceded: fixture.awayGoalCount };
   }
-  if (fixture.away_name === team) {
+  if (teamNamesMatch(fixture.away_name, team)) {
     return { scored: fixture.awayGoalCount, conceded: fixture.homeGoalCount };
   }
   return null;
+}
+
+export function teamNamesMatch(a, b) {
+  if (!a || !b) return false;
+  if (a === b) return true;
+  const na = normalizeTeamName(a);
+  const nb = normalizeTeamName(b);
+  if (!na || !nb) return false;
+  return na === nb || na.includes(nb) || nb.includes(na);
+}
+
+function normalizeTeamName(name) {
+  return String(name || "")
+    .toLowerCase()
+    .replace(/\b(rsc|rfc|afc|cfc|fc|cf|ac|as|sk|fk|nk|bk|ifk|if)\b/g, "")
+    .replace(/[^a-z0-9]+/g, "");
+}
+
+function mapFixtureToWdl(fixture, team) {
+  const goals = fixtureGoalsForTeam(fixture, team);
+  if (!goals) {
+    return null;
+  }
+  if (goals.scored > goals.conceded) return "W";
+  if (goals.scored < goals.conceded) return "L";
+  return "D";
+}
+
+function fixtureBttsMark(fixture) {
+  return Number(fixture.homeGoalCount) > 0 && Number(fixture.awayGoalCount) > 0
+    ? "\u2714"
+    : "\u2718";
+}
+
+/**
+ * Completed this-competition fixtures for a team before `match`, newest first.
+ */
+export function getTeamCompetitionFixtures(team, match, allLeagueResults) {
+  return getTeamFixturesBeforeMatch(team, match, allLeagueResults).filter(
+    isCompleteLeagueHistoryFixture
+  );
+}
+
+/**
+ * This-competition home/away WDL + BTTS for a team before `match`.
+ * Newest first. Shared by homepage pills and Match Preview so neither
+ * falls back to FootyStats last-x formRun.
+ */
+export function getCompetitionVenueForm(team, match, allLeagueResults) {
+  const fixtures = getTeamCompetitionFixtures(team, match, allLeagueResults);
+  if (!fixtures.length) {
+    return null;
+  }
+
+  const toResult = (fixture) => mapFixtureToWdl(fixture, team);
+  const home = fixtures.filter((fixture) =>
+    teamNamesMatch(fixture.home_name, team)
+  );
+  const away = fixtures.filter((fixture) =>
+    teamNamesMatch(fixture.away_name, team)
+  );
+  const recent = fixtures.slice(0, 6);
+
+  return {
+    resultsAll: recent.map(toResult).filter(Boolean),
+    resultsHome: home.slice(0, 6).map(toResult).filter(Boolean),
+    resultsAway: away.slice(0, 6).map(toResult).filter(Boolean),
+    bttsAll: recent.map(fixtureBttsMark),
+    leaguePlayed: fixtures.length,
+    leaguePlayedHome: home.length,
+    leaguePlayedAway: away.length,
+  };
+}
+
+/** Newest-first W/D/L for homepage / Match Preview pills. Empty if no history. */
+export function getCompetitionFormPills(
+  team,
+  match,
+  allLeagueResults,
+  kind = "all",
+  max = 5
+) {
+  const venueForm = getCompetitionVenueForm(team, match, allLeagueResults);
+  if (!venueForm) {
+    return [];
+  }
+  const results =
+    kind === "home"
+      ? venueForm.resultsHome
+      : kind === "away"
+        ? venueForm.resultsAway
+        : venueForm.resultsAll;
+  return results.slice(0, max);
+}
+
+export function applyCompetitionVenueForm(form, team, match, allLeagueResults) {
+  if (!form) {
+    return false;
+  }
+  const venueForm = getCompetitionVenueForm(team, match, allLeagueResults);
+  if (!venueForm) {
+    return false;
+  }
+  form.resultsAll = venueForm.resultsAll;
+  form.resultsHome = venueForm.resultsHome;
+  form.resultsAway = venueForm.resultsAway;
+  form.bttsAll = venueForm.bttsAll;
+  form.leaguePlayedHome = venueForm.leaguePlayedHome;
+  form.leaguePlayedAway = venueForm.leaguePlayedAway;
+  form.LeagueOrAll = "League";
+  if (!Number.isFinite(Number(form.leaguePlayed)) || Number(form.leaguePlayed) <= 0) {
+    form.leaguePlayed = venueForm.leaguePlayed;
+  }
+  return true;
 }
 
 /**
  * Completed competition fixtures for a team before a given match.
  */
 export function getTeamFixturesBeforeMatch(team, match, allLeagueResults) {
-  const fixtures = getLeagueFixturesByLeagueId(allLeagueResults, match.leagueID);
-  if (!fixtures.length) {
+  const leagueId = match?.leagueID ?? match?.leagueId ?? match?.competition_id;
+  const asOfUnix = Number(match?.date ?? match?.date_unix);
+  const fixtures = getLeagueFixturesByLeagueId(allLeagueResults, leagueId);
+  if (!fixtures.length || !Number.isFinite(asOfUnix)) {
     return [];
   }
 
   return fixtures
     .filter(
       (fixture) =>
-        (fixture.home_name === team || fixture.away_name === team) &&
-        fixture.date_unix < match.date - 86400
+        (teamNamesMatch(fixture.home_name, team) ||
+          teamNamesMatch(fixture.away_name, team)) &&
+        Number(fixture.date_unix) < asOfUnix - 86400
     )
     .sort((a, b) => b.date_unix - a.date_unix);
 }
@@ -187,10 +304,10 @@ export function computeCompetitionGoalDifference(
     goalsScored += goals.scored;
     goalsConceded += goals.conceded;
 
-    if (venue === "home" && fixture.home_name === team) {
+    if (venue === "home" && teamNamesMatch(fixture.home_name, team)) {
       venueScored += goals.scored;
       venueConceded += goals.conceded;
-    } else if (venue === "away" && fixture.away_name === team) {
+    } else if (venue === "away" && teamNamesMatch(fixture.away_name, team)) {
       venueScored += goals.scored;
       venueConceded += goals.conceded;
     }

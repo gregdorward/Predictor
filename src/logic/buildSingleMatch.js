@@ -6,10 +6,11 @@ import {
   API_FORM_ONLY_LEAGUE_IDS,
   allLeagueResultsArrayOfObjects,
 } from "./getFixtures";
-import { applyCompetitionGoalDifference } from "../utils/leagueResultsAccess";
+import { applyCompetitionGoalDifference, applyCompetitionVenueForm } from "../utils/leagueResultsAccess";
 import {
   buildThinLeagueFormSlices,
   limitFormRunToSeasonPlayed,
+  sanitizeThinSeasonFormSide,
 } from "../utils/seasonFormRun";
 import {
   calculateAttackingStrength,
@@ -620,6 +621,21 @@ export async function buildAllFormEntry(match, fixture, leagueID, leaguePosition
   match.awayTeamLossPercentage = teamCtx.awayTeamLossPercentageAway;
   match.homeTeamDrawPercentage = teamCtx.homeTeamDrawPercentageHome;
   match.awayTeamDrawPercentage = teamCtx.awayTeamDrawPercentageAway;
+
+  applyCompetitionVenueForm(
+    formEntry.home[2],
+    match.homeTeam,
+    match,
+    allLeagueResultsArrayOfObjects
+  );
+  applyCompetitionVenueForm(
+    formEntry.away[2],
+    match.awayTeam,
+    match,
+    allLeagueResultsArrayOfObjects
+  );
+  sanitizeThinSeasonFormSide(formEntry.home[2]);
+  sanitizeThinSeasonFormSide(formEntry.away[2]);
 
   if (API_FORM_ONLY_LEAGUE_IDS.includes(leagueID)) {
     applyCompetitionGoalDifference(

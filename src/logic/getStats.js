@@ -7,7 +7,7 @@ import { clicked } from "../logic/getScorePredictions";
 import { userDetail } from "../logic/authProvider";
 import { checkUserPaidStatus } from "../logic/hasUserPaid";
 import { render } from '../utils/render';
-import { getLeagueFixturesByLeagueId } from "../utils/leagueResultsAccess";
+import { getCompetitionVenueForm, getLeagueFixturesByLeagueId } from "../utils/leagueResultsAccess";
 
 export async function getPointAverage(pointTotal, games) {
   return pointTotal / games;
@@ -323,6 +323,20 @@ export async function createStatsDiv(game, displayBool) {
 
       const homeForm = gameStats.home[index];
       const awayForm = gameStats.away[index];
+      const competitionMatch = {
+        leagueID: game.leagueID ?? gameStats.leagueId,
+        date: game.date,
+      };
+      const homeCompetitionForm = getCompetitionVenueForm(
+        gameStats.home.teamName,
+        competitionMatch,
+        allLeagueResultsArrayOfObjects
+      );
+      const awayCompetitionForm = getCompetitionVenueForm(
+        gameStats.away.teamName,
+        competitionMatch,
+        allLeagueResultsArrayOfObjects
+      );
 
       if (displayBool === true) {
 
@@ -625,11 +639,6 @@ export async function createStatsDiv(game, displayBool) {
 
         // });
       }
-
-      const bttsArrayHome = Array.from(gameArrayHome, (x) => x.btts);
-
-
-      const bttsArrayAway = Array.from(gameArrayAway, (x) => x.btts);
 
       let homeTeam = gameStats.home.teamName;
       let awayTeam = gameStats.away.teamName;
@@ -972,9 +981,9 @@ export async function createStatsDiv(game, displayBool) {
         FormTextStringHome: formTextStringHome,
         FavouriteRecord:
           favouriteRecordHome + `. ${homeForm.reliabilityString}`,
-        BTTSArray: bttsArrayHome,
-        Results: homeForm.resultsAll,
-        ResultsHorA: homeForm.resultsHome.reverse(),
+        BTTSArray: homeCompetitionForm?.bttsAll ?? [],
+        Results: homeCompetitionForm?.resultsAll ?? [],
+        ResultsHorA: homeCompetitionForm?.resultsHome ?? [],
         XGSwing: homeForm.XGChangeRecently,
         styleOfPlayOverall: homeForm.styleOfPlayOverall,
         styleOfPlayHome: homeForm.styleOfPlayHome,
@@ -1005,9 +1014,9 @@ export async function createStatsDiv(game, displayBool) {
         FormTextStringAway: formTextStringAway,
         FavouriteRecord:
           favouriteRecordAway + `. ${awayForm.reliabilityString}`,
-        BTTSArray: bttsArrayAway,
-        Results: awayForm.resultsAll,
-        ResultsHorA: awayForm.resultsAway.reverse(),
+        BTTSArray: awayCompetitionForm?.bttsAll ?? [],
+        Results: awayCompetitionForm?.resultsAll ?? [],
+        ResultsHorA: awayCompetitionForm?.resultsAway ?? [],
         XGSwing: awayForm.XGChangeRecently,
         styleOfPlayOverall: awayForm.styleOfPlayOverall,
         styleOfPlayAway: awayForm.styleOfPlayAway,

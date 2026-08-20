@@ -1,9 +1,12 @@
 import {
   applyCompetitionGoalDifference,
+  applyCompetitionVenueForm,
   computeCompetitionGoalDifference,
   findLeagueEntryById,
   evaluateResultsCache,
   isRebuiltResultsCacheComplete,
+  getCompetitionFormPills,
+  getCompetitionVenueForm,
   getLeagueFixturesByLeagueId,
   getLeagueResultsByLeagueId,
   getTeamFixturesBeforeMatch,
@@ -148,6 +151,94 @@ describe("competition goal difference", () => {
     ).toBe(true);
     expect(form.goalDifference).toBe(7);
     expect(form.goalDifferenceHomeOrAway).toBe(4);
+  });
+
+  test("getCompetitionVenueForm matches RSC Anderlecht to Anderlecht results", () => {
+    const elResults = [
+      {
+        id: 17127,
+        fixtures: [
+          {
+            home_name: "Anderlecht",
+            away_name: "PAOK",
+            homeGoalCount: 3,
+            awayGoalCount: 2,
+            date_unix: 300000,
+            status: "complete",
+          },
+          {
+            home_name: "PAOK",
+            away_name: "Anderlecht",
+            homeGoalCount: 0,
+            awayGoalCount: 1,
+            date_unix: 200000,
+            status: "complete",
+          },
+          {
+            home_name: "Hammarby",
+            away_name: "Anderlecht",
+            homeGoalCount: 1,
+            awayGoalCount: 1,
+            date_unix: 100000,
+            status: "complete",
+          },
+        ],
+      },
+    ];
+    const match = {
+      competition_id: 17127,
+      date_unix: 400000,
+      awayTeam: "RSC Anderlecht",
+    };
+    expect(
+      getCompetitionVenueForm("RSC Anderlecht", match, elResults)
+    ).toEqual({
+      resultsAll: ["W", "W", "D"],
+      resultsHome: ["W"],
+      resultsAway: ["W", "D"],
+      bttsAll: ["\u2714", "\u2718", "\u2714"],
+      leaguePlayed: 3,
+      leaguePlayedHome: 1,
+      leaguePlayedAway: 2,
+    });
+    expect(
+      getCompetitionFormPills("RSC Anderlecht", match, elResults, "away")
+    ).toEqual(["W", "D"]);
+  });
+
+  test("getCompetitionVenueForm splits this-competition home and away WDL", () => {
+    expect(getCompetitionVenueForm("England", match, allLeagueResults)).toEqual({
+      resultsAll: ["D", "W", "W"],
+      resultsHome: ["D", "W"],
+      resultsAway: ["W"],
+      bttsAll: ["\u2718", "\u2718", "\u2714"],
+      leaguePlayed: 3,
+      leaguePlayedHome: 2,
+      leaguePlayedAway: 1,
+    });
+  });
+
+  test("applyCompetitionVenueForm stores league home/away played on the form", () => {
+    const form = {};
+    expect(
+      applyCompetitionVenueForm(form, "England", match, allLeagueResults)
+    ).toBe(true);
+    expect(form.leaguePlayedHome).toBe(2);
+    expect(form.leaguePlayedAway).toBe(1);
+    expect(form.resultsHome).toEqual(["D", "W"]);
+    expect(form.resultsAway).toEqual(["W"]);
+    expect(form.bttsAll).toEqual(["\u2718", "\u2718", "\u2714"]);
+  });
+
+  test("getCompetitionFormPills is empty when the competition cache has no team games", () => {
+    expect(
+      getCompetitionFormPills(
+        "RSC Anderlecht",
+        { leagueID: 17127, date: 400000 },
+        [{ id: 17127, fixtures: [] }],
+        "all"
+      )
+    ).toEqual([]);
   });
 });
 
