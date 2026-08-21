@@ -2085,6 +2085,23 @@ export async function generateFixtures(
             (game.home?.teamName === match.homeTeam &&
               game.away?.teamName === match.awayTeam)
         );
+
+        if (formEntry?.home?.[2]) {
+          formEntry.home[2].LeaguePosition = `${teamPositionHome}${homePrefix}`;
+          formEntry.home[2].homeRawPosition =
+            homeTeaminLeague.rawPosition !== undefined
+              ? homeTeaminLeague.rawPosition
+              : 0;
+          formEntry.home[2].homeTeamHomePositionRaw = teamPositionHomeTable;
+        }
+        if (formEntry?.away?.[2]) {
+          formEntry.away[2].LeaguePosition = `${teamPositionAway}${awayPrefix}`;
+          formEntry.away[2].awayRawPosition = awayTeaminLeague.rawPosition
+            ? awayTeaminLeague.rawPosition
+            : 0;
+          formEntry.away[2].awayTeamAwayPositionRaw = teamPositionAwayTable;
+        }
+
         if (formEntry?.home?.[2] && formEntry?.away?.[2]) {
           applyCompetitionVenueForm(
             formEntry.home[2],
