@@ -94,6 +94,64 @@ const THEME_BOOT_SCRIPT = `
 })();
 `;
 
+// Grow.me injects adhesion markup without accessible names; patch after it renders.
+const GROW_A11Y_PATCH_SCRIPT = `
+(function () {
+  function hasDiscernibleText(el) {
+    return (
+      (el.textContent && el.textContent.trim()) ||
+      el.getAttribute("aria-label") ||
+      el.getAttribute("title")
+    );
+  }
+
+  function patchGrowAccessibility(root) {
+    var scope = root && root.querySelector ? root : document;
+
+    scope.querySelectorAll("a.grow-housead").forEach(function (link) {
+      if (!hasDiscernibleText(link) && !link.dataset.sshA11yPatched) {
+        link.setAttribute("aria-label", "Grow - Want fewer ads");
+        link.dataset.sshA11yPatched = "1";
+      }
+    });
+
+    scope.querySelectorAll("#offeringLogo").forEach(function (img) {
+      if (img.dataset.sshA11yPatched) return;
+      if (img.getAttribute("alt") === "" && img.getAttribute("aria-label")) {
+        img.setAttribute("alt", img.getAttribute("aria-label"));
+        img.removeAttribute("aria-label");
+        img.dataset.sshA11yPatched = "1";
+      }
+    });
+  }
+
+  function start() {
+    patchGrowAccessibility(document);
+    if (!window.__sshGrowA11yObserver) {
+      window.__sshGrowA11yObserver = new MutationObserver(function () {
+        patchGrowAccessibility(document);
+      });
+      window.__sshGrowA11yObserver.observe(document.body, {
+        childList: true,
+        subtree: true,
+      });
+    }
+  }
+
+  if (document.body) {
+    start();
+  } else {
+    document.addEventListener("DOMContentLoaded", start);
+  }
+
+  if (typeof window.growMe === "function") {
+    window.growMe(function () {
+      patchGrowAccessibility(document);
+    });
+  }
+})();
+`;
+
 // Load Google Analytics after the page is idle so it doesn't compete with LCP.
 const DEFERRED_GA_SCRIPT = `
 (function () {
@@ -170,6 +228,10 @@ export default class MyDocument extends Document {
               __html:
                 '!(function(){window.growMe||((window.growMe=function(e){window.growMe._.push(e);}),(window.growMe._=[]));var e=document.createElement("script");(e.type="text/javascript"),(e.src="https://faves.grow.me/main.js"),(e.defer=!0),e.setAttribute("data-grow-faves-site-id","U2l0ZTpiZjJjMTc3NS1kOGU1LTRlMTQtOTM3Yy1jZWU4MmU3OTUwMzM=");var t=document.getElementsByTagName("script")[0];t.parentNode.insertBefore(e,t);})();',
             }}
+          />
+          <script
+            // eslint-disable-next-line react/no-danger
+            dangerouslySetInnerHTML={{ __html: GROW_A11Y_PATCH_SCRIPT }}
           />
           <script
             // eslint-disable-next-line react/no-danger
