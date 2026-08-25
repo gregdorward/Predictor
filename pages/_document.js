@@ -105,28 +105,35 @@ const GROW_A11Y_PATCH_SCRIPT = `
     );
   }
 
+  function patchOfferingLogo(img) {
+    if (img.getAttribute("alt") !== "" || !img.getAttribute("aria-label")) return;
+    // Presentational images must not also expose a name via aria-label.
+    img.removeAttribute("aria-label");
+  }
+
   function patchGrowAccessibility(root) {
     var scope = root && root.querySelector ? root : document;
 
     scope.querySelectorAll("a.grow-housead").forEach(function (link) {
-      if (!hasDiscernibleText(link) && !link.dataset.sshA11yPatched) {
+      if (!hasDiscernibleText(link)) {
         link.setAttribute("aria-label", "Grow - Want fewer ads");
-        link.dataset.sshA11yPatched = "1";
       }
     });
 
-    scope.querySelectorAll("#offeringLogo").forEach(function (img) {
-      if (img.dataset.sshA11yPatched) return;
-      if (img.getAttribute("alt") === "" && img.getAttribute("aria-label")) {
-        img.setAttribute("alt", img.getAttribute("aria-label"));
-        img.removeAttribute("aria-label");
-        img.dataset.sshA11yPatched = "1";
-      }
+    scope.querySelectorAll("#offeringLogo").forEach(patchOfferingLogo);
+  }
+
+  function schedulePatches() {
+    patchGrowAccessibility(document);
+    [0, 250, 1000, 3000, 8000].forEach(function (delay) {
+      window.setTimeout(function () {
+        patchGrowAccessibility(document);
+      }, delay);
     });
   }
 
   function start() {
-    patchGrowAccessibility(document);
+    schedulePatches();
     if (!window.__sshGrowA11yObserver) {
       window.__sshGrowA11yObserver = new MutationObserver(function () {
         patchGrowAccessibility(document);
@@ -134,6 +141,8 @@ const GROW_A11Y_PATCH_SCRIPT = `
       window.__sshGrowA11yObserver.observe(document.body, {
         childList: true,
         subtree: true,
+        attributes: true,
+        attributeFilter: ["alt", "aria-label"],
       });
     }
   }
@@ -146,7 +155,7 @@ const GROW_A11Y_PATCH_SCRIPT = `
 
   if (typeof window.growMe === "function") {
     window.growMe(function () {
-      patchGrowAccessibility(document);
+      schedulePatches();
     });
   }
 })();
