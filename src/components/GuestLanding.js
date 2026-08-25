@@ -73,8 +73,7 @@ const GuestLandingIntro = ({ motionEnabled, activeLine }) => (
     </h1>
     <p className="GuestLanding-subheadline">
       In-depth football statistics, analytics and transparent predictions for 50+ competitions.
-      Research leagues, compare form and open any fixture for a written preview before the
-      charts load.
+      Research leagues, compare form and open any fixture for a statistical overview.
     </p>
   </div>
 );
