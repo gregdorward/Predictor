@@ -12,8 +12,34 @@ import {
   getTeamFixturesBeforeMatch,
   isCompleteLeagueHistoryFixture,
   isResultsCacheValid,
+  teamNamesMatch,
   trimLeagueResultsToWindow,
 } from "./leagueResultsAccess";
+
+describe("teamNamesMatch", () => {
+  test("matches RSC Anderlecht to Anderlecht", () => {
+    expect(teamNamesMatch("RSC Anderlecht", "Anderlecht")).toBe(true);
+    expect(teamNamesMatch("Anderlecht", "RSC Anderlecht")).toBe(true);
+  });
+
+  test("matches Tottenham to Tottenham Hotspur", () => {
+    expect(teamNamesMatch("Tottenham", "Tottenham Hotspur")).toBe(true);
+  });
+
+  test("matches Sporting to Sporting CP", () => {
+    expect(teamNamesMatch("Sporting", "Sporting CP")).toBe(true);
+  });
+
+  test("does not match Sporting to Sporting Braga", () => {
+    expect(teamNamesMatch("Sporting", "Sporting Braga")).toBe(false);
+    expect(teamNamesMatch("Sporting Braga", "Sporting")).toBe(false);
+  });
+
+  test("does not match Rangers to Queens Park Rangers", () => {
+    expect(teamNamesMatch("Rangers", "Queens Park Rangers")).toBe(false);
+    expect(teamNamesMatch("Queens Park Rangers", "Rangers")).toBe(false);
+  });
+});
 
 describe("getLeagueFixturesByLeagueId", () => {
   const allLeagueResults = [
