@@ -134,7 +134,9 @@ export async function loadLeagueResultsForCompetition(competitionId, leagueName)
       apiGetUrl(`leagueFixtures/${competitionId}?page=2`)
     );
     const page2Data = await page2.json();
-    const gamesConcat = games.data.concat(page2Data.data);
+    const page1Games = Array.isArray(games?.data) ? games.data : [];
+    const page2Games = Array.isArray(page2Data?.data) ? page2Data.data : [];
+    const gamesConcat = page1Games.concat(page2Games);
     const gamesConcatFiltered = gamesConcat.filter(
       (game) => game.status === "complete"
     );
@@ -145,7 +147,8 @@ export async function loadLeagueResultsForCompetition(competitionId, leagueName)
       .sort((a, b) => a.date_unix - b.date_unix)
       .slice(-600);
   } else {
-    gamesFiltered = games.data
+    const page1Games = Array.isArray(games?.data) ? games.data : [];
+    gamesFiltered = page1Games
       .filter((game) => game.status === "complete")
       .filter((game) => game.date_unix > targetDate)
       .slice(-600);
