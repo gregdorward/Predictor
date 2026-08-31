@@ -63,7 +63,6 @@ export default function CompetitionsCompare({ overview }) {
   }, [competitions, sort]);
 
   const updated = formatUpdated(overview?.generatedAt);
-  const lowSampleCount = competitions.filter(isLowSample).length;
 
   function toggleSort(column) {
     setSort((current) =>
@@ -115,16 +114,7 @@ export default function CompetitionsCompare({ overview }) {
               </p>
               <p className="CompetitionsCompare-methodology">
                 Figures cover the current season only and come from the same source
-                as our individual competition pages, rebuilt once a day. Only the
-                top four tiers of the countries we cover are included, and leagues
-                with fewer than {overview?.minMatches ?? 10} completed matches are
-                left out entirely. The played column matters: early in a season a
-                handful of results moves a percentage a long way.
-                {lowSampleCount > 0
-                  ? ` ${lowSampleCount} of the ${competitions.length} leagues below are still under ${
-                      overview?.lowSampleMatches ?? 30
-                    } matches and are marked accordingly.`
-                  : ""}
+                as our individual competition pages, rebuilt once a day.
               </p>
               {updated ? (
                 <p className="CompetitionsCompare-updated">Data updated {updated}.</p>

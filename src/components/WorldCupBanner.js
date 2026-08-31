@@ -1,15 +1,12 @@
 import { useRouter } from "next/router";
 
-const BANNER_PATH = "/premier-league-2026-27/";
+const BANNER_PATH = "/competitions/compare/";
 
 export default function WorldCupBanner() {
   const router = useRouter();
   const pathname = router?.pathname || "/";
 
-  if (
-    pathname.startsWith("/premier-league-2026-27") ||
-    pathname.startsWith("/seasonpreviews")
-  ) {
+  if (pathname.startsWith("/competitions/compare")) {
     return null;
   }
 
@@ -17,17 +14,17 @@ export default function WorldCupBanner() {
     <a
       href={BANNER_PATH}
       className="WC26Banner"
-      aria-label="View Premier League 2026/27 season preview"
+      aria-label="Compare football leagues — goals, BTTS, cards and more"
     >
       <div className="WC26Banner__inner">
         <span className="WC26Banner__badge">New</span>
         <span className="WC26Banner__flags" aria-hidden="true">
-          ⚽
+          📊
         </span>
         <span className="WC26Banner__copy">
-          <strong className="WC26Banner__title">Premier League 2026/27 preview</strong>
+          <strong className="WC26Banner__title">Compare football leagues</strong>
           <span className="WC26Banner__sub">
-            Season preview, Betfair odds, transfers &amp; all 20 club guides
+            Goals, BTTS, cards &amp; corners — every league side by side
           </span>
         </span>
         <span className="WC26Banner__cta" aria-hidden="true">
