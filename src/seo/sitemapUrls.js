@@ -19,6 +19,7 @@ export const STATIC_SITEMAP_ROUTES = [
   { path: "/premier-league-2026-27/", priority: "0.8", changefreq: "weekly" },
   { path: "/articles/", priority: "0.8", changefreq: "weekly" },
   { path: "/competitions/", priority: "0.8", changefreq: "weekly" },
+  { path: "/competitions/compare/", priority: "0.8", changefreq: "daily" },
   { path: "/fixtures/", priority: "0.8", changefreq: "daily" },
   { path: "/about/", priority: "0.6", changefreq: "monthly" },
   { path: "/methodology/", priority: "0.6", changefreq: "monthly" },

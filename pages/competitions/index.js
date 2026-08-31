@@ -84,6 +84,9 @@ export default function CompetitionsIndexPage() {
               BTTS rates, corner and card lines, home advantage and team rankings.
             </p>
             <p className="CompetitionsIndex-meta">{total} competitions indexed</p>
+            <a href="/competitions/compare/" className="CompetitionsIndex-compareLink">
+              Compare every league side by side
+            </a>
           </header>
 
           <CompetitionGroup

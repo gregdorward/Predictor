@@ -66,6 +66,11 @@ export const PAGE_META = {
     description:
       "Teams with lower Both Teams To Score rates for BTTS No, clean sheet and low-scoring match research across major football leagues.",
   },
+  "/competitions/compare": {
+    title: "Compare Football Leagues | Goals, BTTS & Cards by League",
+    description:
+      "Compare goals per game, BTTS, Over 2.5, cards, corners and home advantage across the football leagues we cover, ranked side by side and updated daily.",
+  },
   "/articles": {
     title: "Football Articles & Analysis | Soccer Stats Hub",
     description:

@@ -1,6 +1,10 @@
 {
   "crons": [
     {
+      "path": "/api/cron/competition-overview/",
+      "schedule": "30 5 * * *"
+    },
+    {
       "path": "/api/indexnow-ping/",
       "schedule": "0 6 * * *"
     }

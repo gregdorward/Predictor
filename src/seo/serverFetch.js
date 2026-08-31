@@ -1,5 +1,6 @@
 import { resolveFixtureLeagueName } from "./competitionCatalog";
 import { isCompetitionSeasonEmpty } from "./competitionSeason";
+import { isValidOverviewPayload } from "./competitionOverviewData";
 import {
   buildFixtureUrl,
   FIXTURE_SITEMAP_WINDOW_DAYS,
@@ -33,16 +34,22 @@ async function fetchJson(path, { timeoutMs = SEO_FETCH_TIMEOUT_MS } = {}) {
   }
 }
 
-export async function fetchCompetitionData(seasonId) {
+export async function fetchCompetitionData(seasonId, { timeoutMs = 8000 } = {}) {
   try {
     const json = await fetchJson(`competition/${seasonId}`, {
-      timeoutMs: 8000,
+      timeoutMs,
     });
     if (!json?.success || !json?.data) return null;
     return json.data;
   } catch {
     return null;
   }
+}
+
+/** Pre-built cross-league comparison blob for /competitions/compare/. */
+export async function fetchCompetitionOverview({ timeoutMs = 6000 } = {}) {
+  const json = await fetchJson("competition-overview", { timeoutMs });
+  return isValidOverviewPayload(json) ? json : null;
 }
 
 export async function fetchMatchSnapshot(
@@ -125,7 +132,7 @@ function matchToFixtureLink(match) {
   };
 }
 
-async function mapWithConcurrency(items, concurrency, mapper) {
+export async function mapWithConcurrency(items, concurrency, mapper) {
   if (items.length === 0) return [];
   const results = new Array(items.length);
   let nextIndex = 0;

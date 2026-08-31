@@ -15273,6 +15273,293 @@ body.dark-mode .CompetitionsIndex-card {
   transform: translateX(0);
 }
 
+.CompetitionsIndex-compareLink {
+  display: inline-block;
+  margin-left: 0.6rem;
+  padding: 0.35rem 0.85rem;
+  border-radius: 999px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  text-decoration: none;
+  color: var(--button-text-color);
+  background: var(--accent-color);
+}
+
+.CompetitionsIndex-compareLink:hover {
+  text-decoration: underline;
+}
+
+/* --- /competitions/compare/ --- */
+
+.CompetitionsCompare {
+  max-width: 72rem;
+}
+
+.CompetitionsCompare-header {
+  margin-bottom: 1.75rem;
+}
+
+.CompetitionsCompare-breadcrumb {
+  margin-bottom: 0.75rem;
+  font-size: 0.85rem;
+  color: var(--faint-text);
+}
+
+.CompetitionsCompare-breadcrumb a {
+  color: var(--accent-color);
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.CompetitionsCompare-breadcrumb a:hover {
+  text-decoration: underline;
+}
+
+.CompetitionsCompare-intro {
+  margin: 0.5rem 0 0;
+  max-width: 64rem;
+  opacity: 0.9;
+}
+
+.CompetitionsCompare-notes {
+  max-width: 48rem;
+  margin-bottom: 2rem;
+  font-size: 0.85rem;
+  line-height: 1.6;
+}
+
+.CompetitionsCompare-methodology,
+.CompetitionsCompare-updated {
+  font-size: 0.85rem;
+  color: var(--faint-text);
+}
+
+.CompetitionsCompare-empty {
+  padding: 2rem 0;
+}
+
+.CompetitionsCompare-charts {
+  display: grid;
+  gap: 1.25rem;
+  margin-bottom: 2.5rem;
+}
+
+.CompetitionsCompare-chartCard {
+  padding: 1.1rem;
+  border: 1px solid var(--button-border-color);
+  border-radius: 0.85rem;
+  background: var(--secondary-background-color);
+}
+
+.CompetitionsCompare-chartCardHeader {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+  text-align: center;
+}
+
+.CompetitionsCompare-chartCardTitle {
+  margin: 0;
+  font-size: 1.02rem;
+}
+
+.CompetitionsCompare-chartCardSubtitle {
+  margin: 0.35rem auto 0;
+  max-width: 42rem;
+  font-size: 0.82rem;
+  line-height: 1.5;
+  color: var(--faint-text);
+}
+
+.CompetitionsCompare-metricToggle {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.35rem;
+}
+
+.CompetitionsCompare-metricToggleButton {
+  min-width: 0;
+  margin: 0;
+  padding: 0.3rem 0.7rem;
+  border: 1px solid var(--button-border-color);
+  border-radius: 999px;
+  font-size: 0.78rem;
+  font-weight: 600;
+  cursor: pointer;
+  color: var(--text-color);
+  background: var(--background-color);
+}
+
+.CompetitionsCompare-metricToggleButton.is-active {
+  color: var(--button-text-color);
+  border-color: var(--accent-color);
+  background: var(--accent-color);
+}
+
+.CompetitionsCompare-chartScroll {
+  position: relative;
+  width: 100%;
+}
+
+/* Override global `canvas { display:inline; max-width/height:36em; margin:1em }`.
+   That cap is em-based, so it shrank with the mobile font size and left the plot
+   well short of its container. Chart.js sizes the canvas itself. */
+.CompetitionsCompare-chartScroll canvas {
+  display: block !important;
+  max-width: none !important;
+  max-height: none !important;
+  margin: 0 !important;
+}
+
+.CompetitionsCompare-tableSection h2 {
+  font-size: 1.15rem;
+  margin-bottom: 0.35rem;
+}
+
+.CompetitionsCompare-tableHint {
+  margin: 0 0 0.9rem;
+  font-size: 0.82rem;
+  color: var(--faint-text);
+}
+
+.CompetitionsCompare-tableScroll {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  border: 1px solid var(--button-border-color);
+  border-radius: 0.6rem;
+}
+
+/* SubpageTableScroll sizes every column equally, which suits its handful of
+   columns but squeezes these fifteen until the league names overlap. */
+.CompetitionsCompare-tableScroll .CompetitionsCompare-table {
+  table-layout: auto;
+}
+
+.CompetitionsCompare-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.85rem;
+}
+
+.CompetitionsCompare-tableCaption {
+  padding: 0.6rem 0.75rem;
+  font-size: 0.78rem;
+  text-align: left;
+  color: var(--faint-text);
+}
+
+.CompetitionsCompare-table th,
+.CompetitionsCompare-table td {
+  padding: 0.5rem 0.6rem;
+  text-align: center;
+  white-space: nowrap;
+  border-bottom: 1px solid var(--button-border-color);
+}
+
+.CompetitionsCompare-table thead th {
+  padding: 0;
+  background: var(--accent-color);
+}
+
+.CompetitionsCompare-sortButton {
+  /* The global button rule sets min-width: 10em and a margin, which would make
+     each header button overflow its column and cover its neighbours. */
+  display: block;
+  box-sizing: border-box;
+  width: 100%;
+  min-width: 0;
+  margin: 0;
+  padding: 0.55rem 0.6rem;
+  border: 0;
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  cursor: pointer;
+  color: var(--button-text-color);
+  background: transparent;
+}
+
+.CompetitionsCompare-sortButton.is-active {
+  text-decoration: underline;
+}
+
+.CompetitionsCompare-leagueCell {
+  text-align: left !important;
+  font-weight: 600;
+}
+
+.CompetitionsCompare-leagueCell a {
+  color: var(--text-color);
+  text-decoration: none;
+}
+
+.CompetitionsCompare-leagueCell a:hover {
+  color: var(--accent-color);
+  text-decoration: underline;
+}
+
+.CompetitionsCompare-lowSample {
+  display: block;
+  font-size: 0.68rem;
+  font-weight: 500;
+  text-transform: uppercase;
+  padding: 0.25rem 0.5rem;
+  letter-spacing: 0.03em;
+  color: var(--faint-text);
+}
+
+.CompetitionsCompare-ofTotal {
+  font-size: 0.75rem;
+  color: var(--faint-text);
+}
+
+.CompetitionsCompare-table tbody tr:nth-of-type(even) {
+  background: var(--alternate-background-color);
+}
+
+.CompetitionsCompare-related {
+  margin-top: 2.5rem;
+}
+
+.CompetitionsCompare-related h2 {
+  font-size: 1.15rem;
+}
+
+.CompetitionsCompare-related ul {
+  margin: 0;
+  padding-left: 1.1rem;
+  line-height: 1.9;
+}
+
+.CompetitionsCompare-related a {
+  color: var(--accent-color);
+}
+
+@media (max-width: 700px) {
+  .CompetitionsCompare-table {
+    font-size: 0.75rem;
+  }
+
+  .CompetitionsCompare-table th,
+  .CompetitionsCompare-table td {
+    padding: 0.4rem 0.35rem;
+  }
+
+  .CompetitionsCompare-sortButton {
+    padding: 0.45rem 0.3rem;
+    font-size: 0.66rem;
+  }
+
+  .CompetitionsCompare-chartCard {
+    padding: 0.85rem;
+  }
+}
+
 .CompetitionsIndex-card--featured {
   min-height: 3.25rem;
   border-color: rgba(254, 140, 0, 0.28);

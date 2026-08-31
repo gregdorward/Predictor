@@ -20,6 +20,9 @@ export default function FooterCompetitionLinks() {
           <a href="/competitions/">All competitions</a>
         </li>
         <li>
+          <a href="/competitions/compare/">Compare leagues</a>
+        </li>
+        <li>
           <a href="/fixtures/">Upcoming fixtures</a>
         </li>
       </ul>

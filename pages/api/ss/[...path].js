@@ -41,6 +41,8 @@ const CACHE_RULES = {
   teamStats: { sMaxAge: 604800, swr: 86400 },
   cuptrees: { sMaxAge: 86400, swr: 86400 },
   competition: { sMaxAge: 600, swr: 86400 },
+  // Rebuilt once a day by the 05:30 cron, so a long edge TTL is safe.
+  "competition-overview": { sMaxAge: 3600, swr: 86400 },
   getMedia: { sMaxAge: 10800, swr: 86400 },
   futureFixtures: { sMaxAge: 10800, swr: 86400 },
   LeagueTeamStats: { sMaxAge: 3600, swr: 86400 },
