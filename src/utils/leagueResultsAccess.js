@@ -141,20 +141,71 @@ function fixtureGoalsForTeam(fixture, team) {
   return null;
 }
 
-export function teamNamesMatch(a, b) {
-  if (!a || !b) return false;
-  if (a === b) return true;
-  const na = normalizeTeamName(a);
-  const nb = normalizeTeamName(b);
-  if (!na || !nb) return false;
-  return na === nb || na.includes(nb) || nb.includes(na);
-}
+/** Generic trailing club tokens (Tottenham Hotspur, Sporting CP) — not city disambiguators. */
+const CLUB_EXTRA_NAME_TOKENS = new Set([
+  "cp",
+  "city",
+  "united",
+  "town",
+  "hotspur",
+  "albion",
+  "county",
+  "athletic",
+  "villa",
+  "rovers",
+  "wanderers",
+  "argyle",
+  "orient",
+  "forest",
+  "palace",
+  "alexandra",
+  "wednesday",
+  "borough",
+  "saints",
+  "ham",
+  "north",
+  "south",
+  "east",
+  "west",
+]);
 
-function normalizeTeamName(name) {
+function teamNameTokens(name) {
   return String(name || "")
     .toLowerCase()
     .replace(/\b(rsc|rfc|afc|cfc|fc|cf|ac|as|sk|fk|nk|bk|ifk|if)\b/g, "")
-    .replace(/[^a-z0-9]+/g, "");
+    .replace(/[^a-z0-9]+/g, " ")
+    .trim()
+    .split(/\s+/)
+    .filter(Boolean);
+}
+
+function tokensEqual(a, b) {
+  return a.length === b.length && a.every((token, index) => token === b[index]);
+}
+
+function tokensMatchWithAllowedExtraSuffix(shorter, longer) {
+  if (shorter.length >= longer.length) {
+    return false;
+  }
+  for (let index = 0; index < shorter.length; index += 1) {
+    if (shorter[index] !== longer[index]) {
+      return false;
+    }
+  }
+  const extra = longer.slice(shorter.length);
+  return extra.every((token) => CLUB_EXTRA_NAME_TOKENS.has(token));
+}
+
+export function teamNamesMatch(a, b) {
+  if (!a || !b) return false;
+  if (a === b) return true;
+  const ta = teamNameTokens(a);
+  const tb = teamNameTokens(b);
+  if (!ta.length || !tb.length) return false;
+  if (tokensEqual(ta, tb)) return true;
+  const shorter = ta.length <= tb.length ? ta : tb;
+  const longer = ta.length <= tb.length ? tb : ta;
+  return tokensMatchWithAllowedExtraSuffix(shorter, longer);
 }
 
 function mapFixtureToWdl(fixture, team) {
