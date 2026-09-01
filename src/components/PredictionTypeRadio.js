@@ -1,41 +1,27 @@
-import { Component } from "react";
-export var selectedTipType = "SSH Tips";
+import { render } from "../utils/render";
+import OptionsSlider from "./OptionsSlider";
 
-export class PredictionTypeRadio extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      selectedTipType: this.props.value,
-    };
-  }
+export const SSH_TIPS = "SSH Tips";
+export const AI_TIPS = "AI Tips";
 
-  handleOptionChange = () => {
-    this.setState({
-      selectedTipType: this.props.value,
-    });
-    selectedTipType = this.state.selectedTipType;
+export var selectedTipType = SSH_TIPS;
+
+export function renderPredictionTypeSlider() {
+  const handleChange = (isRight) => {
+    selectedTipType = isRight ? AI_TIPS : SSH_TIPS;
+    renderPredictionTypeSlider();
   };
 
-  render() {
-    return (
-      <section className="dark2">
-        <div className={this.props.className}>
-          <label>
-            <input
-              type="radio"
-              name="type"
-              checked={this.state.checked}
-              onChange={this.handleOptionChange}
-              data-cy={this.props.value}
-              className="Hidden"
-            />
-            <span className="design"></span>
-            <span className="text">{this.props.value}</span>
-          </label>
-        </div>
-      </section>
-    );
-  }
+  render(
+    <OptionsSlider
+      leftLabel="SSH Tips"
+      rightLabel="AI Tips"
+      isRight={selectedTipType === AI_TIPS}
+      onChange={handleChange}
+      ariaLabel="Prediction algorithm"
+    />,
+    "CheckboxTwo"
+  );
 }
 
-export default PredictionTypeRadio;
+export default renderPredictionTypeSlider;

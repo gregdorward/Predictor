@@ -1,5 +1,5 @@
-import { Component } from "react";
 import { render } from "../utils/render";
+import OptionsSlider from "./OptionsSlider";
 import {
   FRACTIONAL_ODDS,
   DECIMAL_ODDS,
@@ -29,7 +29,8 @@ export function applyOddsPreference(value) {
 }
 
 export function renderOddsRadios() {
-  const handleChange = (value) => {
+  const handleChange = (isRight) => {
+    const value = isRight ? DECIMAL_ODDS : FRACTIONAL_ODDS;
     selectedOdds = value;
     writeOddsPreference(value);
     notifyOddsPreferenceChange(value);
@@ -37,44 +38,15 @@ export function renderOddsRadios() {
   };
 
   render(
-    <div className="OddsRadios">
-      <OddsRadio value={FRACTIONAL_ODDS} onChange={handleChange} />
-      <OddsRadio value={DECIMAL_ODDS} onChange={handleChange} />
-    </div>,
+    <OptionsSlider
+      leftLabel="Fractional"
+      rightLabel="Decimal"
+      isRight={selectedOdds === DECIMAL_ODDS}
+      onChange={handleChange}
+      ariaLabel="Odds format"
+    />,
     "Checkbox"
   );
 }
 
-export class OddsRadio extends Component {
-  handleOptionChange = () => {
-    if (this.props.onChange) {
-      this.props.onChange(this.props.value);
-    }
-  };
-
-  render() {
-    const isChecked = selectedOdds === this.props.value;
-
-    return (
-      <section className="dark2">
-        <div className={this.props.className}>
-          <label>
-            <input
-              type="radio"
-              name="odds"
-              checked={isChecked}
-              onChange={this.handleOptionChange}
-              data-cy={this.props.value}
-              data-testid={this.props.value}
-              className="Hidden"
-            />
-            <span className="design"></span>
-            <span className="text">{this.props.value}</span>
-          </label>
-        </div>
-      </section>
-    );
-  }
-}
-
-export default OddsRadio;
+export default renderOddsRadios;

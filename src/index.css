@@ -393,6 +393,7 @@
   --header-height: 5em;
   --content-max-width: 1400px;
   --content-padding-x: 1.5em;
+  --sticky-ad-clearance: max(5.5rem, calc(env(safe-area-inset-bottom, 0px) + 5rem));
   --background-color: #ffffff;
   --secondary-background-color: rgb(248, 248, 248);
   --third-background-color: rgb(225, 225, 225);
@@ -659,7 +660,7 @@ h1 {
   color: var(--text-color);
   padding: 1em 1.5em;
   /* Clear sticky bottom ads + iOS home indicator so FAQ / last links stay reachable. */
-  padding-bottom: max(8rem, calc(env(safe-area-inset-bottom, 0px) + 7rem));
+  padding-bottom: max(8rem, calc(var(--sticky-ad-clearance) + 2.5rem));
   overflow-y: auto;
   -webkit-overflow-scrolling: touch;
   overscroll-behavior: contain;
@@ -2275,98 +2276,248 @@ p {
 .Options .Collapsible__trigger button {
   background-color: var(--background-color);
   color: var(--text-color);
-  font-size: 0.9em;
-  border: var(--primary-color) 1px solid;
+  font-size: 0.875rem;
+  font-weight: 600;
+  border: 1px solid rgba(0, 0, 0, 0.12);
+  border-radius: 999px;
+  padding: 0.45em 1.1em;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.06);
+  transition: border-color 0.2s ease, background-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.Options .Collapsible__trigger button:hover {
+  border-color: var(--primary-color);
+  background-color: var(--secondary-background-color);
 }
 
 .Options .Collapsible__contentOuter {
   width: 100%;
-  max-width: 24em;
-  margin: 0 auto;
+  max-width: 52rem;
+  margin: 0.5rem auto 0;
+  padding: 0 0.5rem;
+  box-sizing: border-box;
 }
 
 .OptionsPanel {
-  padding: 0.25em 0.5em 0.5em;
+  padding: 0;
+}
+
+.OptionsPanel-grid {
+  display: grid;
+  gap: 0.75rem;
+  margin-top: 1em;
+  padding: 0.875rem;
+  background: var(--secondary-background-color);
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  border-radius: 12px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
 }
 
 .OptionsSection {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
   width: 100%;
+  min-width: 0;
   min-height: auto;
   align-items: stretch;
-  padding: 0.85em 0;
+  padding: 0.625rem;
+  margin: 0;
+  background: var(--background-color);
+  border: 1px solid rgba(0, 0, 0, 0.06);
+  border-radius: 10px;
+  overflow: hidden;
 }
 
 .OptionsSection:not(:last-child) {
-  border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.06);
 }
 
 .OptionsSection-heading {
   margin: 0;
-  padding: 0;
-  font-size: 0.72rem;
+  padding: 0 0 1em;
+  font-size: 0.62rem;
   font-weight: 700;
   letter-spacing: 0.06em;
   text-transform: uppercase;
   color: var(--text-color);
-  opacity: 0.72;
-  text-align: center;
+  opacity: 0.65;
+  text-align: left;
+  line-height: 1.2;
 }
 
-.OptionsSection-controls .OddsRadios,
-.OptionsSection-controls .PredictionRadios {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: 0.5rem;
-  height: auto;
+.OptionsSection-controls {
+  width: 100%;
 }
 
-.OptionsPanel .dark2 {
-  flex-basis: auto;
+.OptionsSlider {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  grid-template-rows: auto auto;
+  align-items: center;
+  gap: 0.35rem 0.75rem;
+  width: 100%;
+  min-width: 0;
 }
 
-.OptionsPanel label {
+.OptionsSlider-label {
   margin: 0;
-  padding: 0.5em 0.85em;
-  border: 1px solid rgba(0, 0, 0, 0.1);
-  border-radius: 6px;
+  padding: 0;
+  min-width: 0;
+  width: auto;
+  font-family: inherit;
+  font-size: 0.72rem;
+  font-weight: 500;
+  line-height: 1.15;
+  letter-spacing: inherit;
+  color: var(--text-color);
+  opacity: 0.82;
+  background: none;
+  border: none;
+  border-radius: 0;
+  box-shadow: none;
+  cursor: pointer;
+  text-align: center;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  transform: none;
+  transition: opacity 0.2s ease, color 0.2s ease, font-weight 0.2s ease;
+}
+
+.OptionsSlider-label:hover:not(:disabled),
+.OptionsSlider-label:active:not(:disabled),
+.OptionsSlider-label:focus-visible {
+  background: none;
+  border: none;
+  box-shadow: none;
+  transform: none;
+  color: var(--text-color);
+}
+
+.OptionsSlider-label--left {
+  grid-column: 1;
+  grid-row: 1;
+  justify-self: start;
+}
+
+.OptionsSlider-label--right {
+  grid-column: 2;
+  grid-row: 1;
+  justify-self: end;
+}
+
+.OptionsSlider-label--active {
+  opacity: 1;
+  color: var(--primary-color);
+  font-weight: 700;
+}
+
+.OptionsSlider-label--active:hover:not(:disabled),
+.OptionsSlider-label--active:active:not(:disabled),
+.OptionsSlider-label--active:focus-visible {
+  color: var(--primary-color);
+}
+
+.OptionsSlider-label:hover:not(.OptionsSlider-label--active) {
+  opacity: 1;
+}
+
+.OptionsSlider-label:focus-visible {
+  outline: 2px solid var(--primary-color);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+.OptionsSlider-track {
+  grid-column: 1 / -1;
+  grid-row: 2;
+  position: relative;
+  width: min(72%, 7rem);
+  justify-self: center;
+  height: 1.4rem;
+  margin: 0;
+  padding: 0;
+  min-width: 0;
+  font-family: inherit;
+  letter-spacing: inherit;
+  color: inherit;
   background-color: var(--secondary-background-color);
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  border-radius: 999px;
+  cursor: pointer;
+  box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.06);
+  transform: none;
+  overflow: hidden;
   transition: border-color 0.2s ease, background-color 0.2s ease;
 }
 
-.OptionsPanel label:has(input:checked) {
-  border-color: var(--primary-color);
-  background-color: var(--background-color);
-}
-
-.OptionsPanel .text {
-  font-size: 0.85em;
-}
-
-.OptionsDisplayToggle {
-  display: block;
-  width: 100%;
-  max-width: 16em;
-  margin: 0 auto;
-  min-width: unset;
-  padding: 0.55em 1em;
-  font-size: 0.85em;
-  font-weight: 600;
+.OptionsSlider-track:hover:not(:disabled),
+.OptionsSlider-track:active:not(:disabled),
+.OptionsSlider-track:focus-visible {
   background-color: var(--secondary-background-color);
-  color: var(--text-color);
-  border: 1px solid rgba(0, 0, 0, 0.12);
-  box-shadow: none;
-  transition: border-color 0.2s ease, background-color 0.2s ease, transform 0.2s ease;
-}
-
-.OptionsDisplayToggle:hover {
   border-color: var(--primary-color);
-  background-color: var(--background-color);
-  transform: translateY(-1px);
+  color: inherit;
+  transform: none;
+  box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.06);
 }
 
-.OptionsDisplayToggle:active {
-  transform: translateY(0);
+.OptionsSlider-track:focus-visible {
+  outline: 2px solid var(--primary-color);
+  outline-offset: 2px;
+}
+
+.OptionsSlider-thumb {
+  position: absolute;
+  top: 0.2rem;
+  bottom: 0.2rem;
+  left: 0.2rem;
+  width: calc(50% - 0.3rem);
+  background: var(--primary-color);
+  border-radius: 999px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.18);
+  transition: left 0.25s cubic-bezier(0.4, 0, 0.2, 1),
+    right 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  pointer-events: none;
+}
+
+.OptionsSlider--right .OptionsSlider-thumb {
+  left: auto;
+  right: 0.2rem;
+}
+
+.dark-mode .Options .Collapsible__trigger button {
+  border-color: var(--button-border-color);
+  box-shadow: var(--button-shadow-rest);
+}
+
+.dark-mode .OptionsPanel-grid {
+  border-color: rgba(255, 255, 255, 0.1);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+}
+
+.dark-mode .OptionsSection {
+  border-color: rgba(255, 255, 255, 0.08);
+}
+
+.dark-mode .OptionsSlider-track {
+  border-color: rgba(255, 255, 255, 0.12);
+  box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.25);
+}
+
+.dark-mode .OptionsSlider-track:hover:not(:disabled),
+.dark-mode .OptionsSlider-track:active:not(:disabled),
+.dark-mode .OptionsSlider-track:focus-visible {
+  background-color: var(--secondary-background-color);
+}
+
+.dark-mode .OptionsSlider-thumb {
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.35);
+}
+
+.dark-mode .OptionsSlider-label:not(.OptionsSlider-label--active) {
+  color: var(--faint-text);
+  opacity: 1;
 }
 
 .OddsRadios {
@@ -2377,9 +2528,9 @@ p {
 }
 
 .CheckboxTwo {
-  padding: 1em;
-  margin-bottom: 1em;
-  border-radius: 6px;
+  padding: 0;
+  margin-bottom: 0;
+  border-radius: 0;
 }
 
 .LoginSignUp {
@@ -2399,17 +2550,94 @@ h6.PredictionTypeText {
   padding-top: 0em;
 }
 
-@media (max-width: 460px) {
-  .OptionsPanel label {
-    padding: 0.45em 0.65em;
+@media (min-width: 640px) and (max-width: 1023px) {
+  .OptionsPanel-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 0.5rem;
+    padding: 0.625rem;
   }
 
-  .OptionsPanel .text {
-    font-size: 0.8em;
+  .OptionsSection {
+    padding: 0.45rem;
+    gap: 0.3rem;
+    border-radius: 8px;
   }
 
-  .OptionsDisplayToggle {
-    max-width: 100%;
+  .OptionsSection-heading {
+    font-size: 0.56rem;
+    letter-spacing: 0.04em;
+  }
+
+  .OptionsSlider-label {
+    font-size: 0.64rem;
+  }
+
+  .OptionsSlider-track {
+    height: 1.3rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .OptionsPanel-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 0.75rem;
+    padding: 0.875rem;
+  }
+
+  .OptionsSection {
+    padding: 0.75rem;
+    gap: 0.45rem;
+  }
+
+  .OptionsSection-heading {
+    font-size: 0.66rem;
+  }
+
+  .OptionsSlider {
+    grid-template-columns: minmax(0, 1fr) minmax(3.25rem, 4rem) minmax(0, 1fr);
+    grid-template-rows: none;
+    gap: 0.5rem;
+  }
+
+  .OptionsSlider-label {
+    font-size: 0.74rem;
+    grid-row: auto;
+  }
+
+  .OptionsSlider-label--left {
+    grid-column: auto;
+    justify-self: end;
+  }
+
+  .OptionsSlider-label--right {
+    grid-column: auto;
+    justify-self: start;
+  }
+
+  .OptionsSlider-track {
+    grid-column: auto;
+    grid-row: auto;
+    width: 100%;
+    height: 1.5rem;
+  }
+}
+
+@media (max-width: 639px) {
+  .Options .Collapsible__contentOuter {
+    padding: 0 0.25rem;
+  }
+
+  .OptionsPanel-grid {
+    padding: 0.625rem;
+    gap: 0.5rem;
+  }
+
+  .OptionsSection {
+    padding: 0.5rem 0.625rem;
+  }
+
+  .OptionsSlider-label {
+    font-size: 0.7rem;
   }
 }
 
@@ -4610,18 +4838,15 @@ h6.MediaTitle {
 /* The container that stays at the bottom */
 .BetSlipFooter {
   position: fixed;
-  bottom: 0;
+  bottom: var(--sticky-ad-clearance);
   left: 0;
   width: 100%;
   background: white;
-  z-index: 99999;
-  /* Higher than any other element on your page */
   box-shadow: 0 -5px 20px rgba(0, 0, 0, 0.2);
   display: flex;
   justify-content: space-between;
   align-items: center;
   z-index: 1000;
-  /* Ensure it stays above fixtures */
   border-top: 2px solid #fe8c00;
   animation: slideUp 0.3s ease-out;
   font-size: 1.1em;

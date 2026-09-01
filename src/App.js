@@ -3,7 +3,8 @@ import ReactDOM from "react-dom";
 import { render } from './utils/render';
 import { Button } from "./components/Button";
 import { renderOddsRadios, onOddsPreferenceChange, applyOddsPreference, selectedOdds } from "./components/OddsRadio";
-import PredictionTypeRadio from "./components/PredictionTypeRadio";
+import { renderPredictionTypeSlider } from "./components/PredictionTypeRadio";
+import OptionsSlider from "./components/OptionsSlider";
 import { oddsModeToSelected, selectedToOddsMode } from "./utils/oddsPreference";
 import Collapsable from "./components/CollapsableElement";
 import MultisPanelCarousel from "./components/MultisPanelCarousel";
@@ -457,13 +458,7 @@ export async function getLeagueList() {
   //   "Buttons"
   // );
   renderOddsRadios();
-  render(
-    <div className="PredictionRadios">
-      <PredictionTypeRadio value="SSH Tips"></PredictionTypeRadio>
-      <PredictionTypeRadio value="AI Tips"></PredictionTypeRadio>
-    </div>,
-    "CheckboxTwo"
-  );
+  renderPredictionTypeSlider();
   render(
     <Fragment>
       <Collapsable
@@ -1267,7 +1262,7 @@ export function AppContent({ shellMounted = false }) {
         className={"Options"}
         classNameTwo="OptionsPanel"
         element={
-          <>
+          <div className="OptionsPanel-grid">
             <section className="OptionsSection">
               <h6 className="OptionsSection-heading">Odds format</h6>
               <div id="Checkbox" className="OptionsSection-controls" />
@@ -1278,15 +1273,19 @@ export function AppContent({ shellMounted = false }) {
             </section>
             <section className="OptionsSection">
               <h6 className="OptionsSection-heading">Fixture display</h6>
-              <button
-                type="button"
-                className="OptionsDisplayToggle"
-                onClick={togglePredictionMode}
-              >
-                {isProbability ? "Select score mode" : "Select probability mode"}
-              </button>
+              <div className="OptionsSection-controls">
+                <OptionsSlider
+                  leftLabel="Probability"
+                  rightLabel="Score"
+                  isRight={!isProbability}
+                  onChange={(isRight) => {
+                    if (isRight !== !isProbability) togglePredictionMode();
+                  }}
+                  ariaLabel="Fixture display mode"
+                />
+              </div>
             </section>
-          </>
+          </div>
         }
       />
       {/* <Collapsable buttonText={"ROI"} className={"ROI"} element={<div id="successMeasure2" />} /> */}
