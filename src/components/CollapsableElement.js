@@ -24,11 +24,11 @@ const Collapsable = ({
 }) => {
   const handleTriggerClick = (event) => {
     if (locked) {
-      event.preventDefault();
-      event.stopPropagation();
+      event?.preventDefault?.();
+      event?.stopPropagation?.();
       return;
     }
-    onTriggerToggle?.(event);
+    onTriggerToggle?.();
   };
 
   const buttonClassName = [
@@ -57,13 +57,16 @@ const Collapsable = ({
     <Collapsible
       transitionTime={300}
       open={locked ? false : isOpen ?? (defaultOpen ? true : undefined)}
+      handleTriggerClick={onTriggerToggle ? handleTriggerClick : undefined}
+      triggerDisabled={locked}
+      overflowWhenOpen="visible"
       key={collapsibleKey}
       trigger={
         <button
           type="button"
           className={buttonClassName}
           style={{ display }}
-          onClick={handleTriggerClick}
+          onClick={onTriggerToggle ? undefined : handleTriggerClick}
           disabled={locked}
           aria-expanded={locked ? false : !!isOpen}
         >

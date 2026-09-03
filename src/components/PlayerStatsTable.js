@@ -18,7 +18,7 @@ const ALL_COLUMNS = [
     { key: 'redCards', label: 'RC', isCard: true, color: '#FF0000' },
 ];
 
-const PlayerStatsTable = ({ data }) => {
+const PlayerStatsTable = ({ data, teamName: fallbackTeamName }) => {
     // State to track sort key and direction
     const [sortConfig, setSortConfig] = useState({ key: 'position', direction: 'asc' });
     const [visibleColumns, setVisibleColumns] = useState([
@@ -66,10 +66,16 @@ const PlayerStatsTable = ({ data }) => {
         setSortConfig({ key, direction });
     };
 
+    const headingName =
+        data?.teamName && data.teamName !== "Unknown Team"
+            ? data.teamName
+            : fallbackTeamName;
+
     // 3. EARLY RETURNS FOR UI (After all hooks are declared)
-    if (!data || data.error) {
+    if (!data || data.error || sortedPlayers.length === 0) {
         return (
             <div className="stats-container error-state">
+                {headingName ? <h2>{headingName} Stats</h2> : null}
                 <p>Stats currently unavailable for this team.</p>
             </div>
         );
@@ -77,7 +83,7 @@ const PlayerStatsTable = ({ data }) => {
 
     return (
         <div className="stats-container">
-            <h2>{data.teamName} Stats</h2>
+            <h2>{headingName} Stats</h2>
 
             {/* Column Picker UI */}
             <div className="column-picker">

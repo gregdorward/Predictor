@@ -22,7 +22,8 @@ export const StreakStats = ({ stats, home, away, homeLogo, awayLogo }) => {
               </tr>
             </thead>
             <tbody>
-              {streakList.map((stat, index) => (
+              {Array.isArray(streakList) &&
+                streakList.map((stat, index) => (
                 <tr key={index} className="StreakRow">
                   <td className="StreakTeamIcon">
                     {stat.team === "home" && (

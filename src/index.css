@@ -7228,6 +7228,24 @@ li .Stadium {
   }
 }
 
+.Collapsable-loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 5.5rem;
+  padding: 1.25rem 0;
+}
+
+.loading-spinner {
+  width: 2.25rem;
+  height: 2.25rem;
+  flex-shrink: 0;
+  border: 3px solid var(--alternate-background-color, #e6e8f0);
+  border-top-color: var(--primary-color, #e91515);
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
 #spinner.hide {
   visibility: hidden;
 }

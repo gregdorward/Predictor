@@ -38,6 +38,7 @@ import {
 } from "../logic/getFixtures";
 import { userDetail } from "../logic/authProvider";
 import { clicked } from "../logic/getScorePredictions";
+import { hasKickoffPassed } from "../logic/freezePredictedScoreline";
 import { getPointsFromLastX } from "../utils/getPointsFromLastX";
 import { arrayOfGames } from "../logic/getFixtures";
 import GenerateFormSummary from "../logic/compareFormTrend";
@@ -122,6 +123,33 @@ import { sanitizeImageFilename } from "../utils/captureElementImage";
 let setUserTips;
 const MemoizedSofaLineupsWidget = memo(SofaLineupsWidget);
 const LazyFutureFixturesSideBySide = lazy(() => import('./FutureFixturesSideBySide'));
+
+/** Matches footballServer: no RapidAPI lineup fetch until within 24 hours of KO. */
+const LINEUP_FETCH_MAX_HOURS = 24;
+
+const LOWER_TIER_LEAGUE_IDS = [
+  173, 176, 174, 202, 54, 44, 182, 53, 131, 206, 207, 209, 215, 170, 172, 41,
+  218, 212, 211, 210, 390, 11539, 11653, 278, 13363, 13470, 192,
+];
+
+function hoursUntilKickoffUnix(kickoffUnix) {
+  const kickoff = Number(kickoffUnix);
+  if (!Number.isFinite(kickoff)) {
+    return null;
+  }
+  return (kickoff - Date.now() / 1000) / 3600;
+}
+
+const CollapsableLoading = (
+  <div
+    className="Collapsable-loading"
+    role="status"
+    aria-live="polite"
+    aria-label="Loading"
+  >
+    <div className="loading-spinner" />
+  </div>
+);
 
 // let id, team1, team2, timestamp, homeGoals, awayGoals;
 
@@ -401,12 +429,12 @@ function GameStats({ game, displayBool, stats, handleToggleTip, userTips, dayFix
   const [futureFixturesAway, setFutureFixturesAway] = useState([]);
   const [loadingTeamStats, setLoadingTeamStats] = useState(true);
   const [loadingKeyPlayers, setLoadingKeyPlayers] = useState(true);
-  const [loadingPlayerStats, setLoadingPlayerStats] = useState(true);
+  const [loadingPlayerStats, setLoadingPlayerStats] = useState(false);
   const [loadingKeyPlayerComparison, setLoadingKeyPlayerComparison] = useState(true);
-  const [loadingStreaks, setLoadingStreaks] = useState(true);
+  const [loadingStreaks, setLoadingStreaks] = useState(false);
   const [homeManager, setHomeManager] = useState(null);
   const [awayManager, setAwayManager] = useState(null);
-  const [loadingManagers, setLoadingManagers] = useState(true);
+  const [loadingManagers, setLoadingManagers] = useState(false);
   const [refereeData, setRefereeData] = useState(null);
   const [loadingReferee, setLoadingReferee] = useState(true);
   const [loadingFutureFixtures, setLoadingFutureFixtures] = useState(false);
@@ -423,6 +451,7 @@ function GameStats({ game, displayBool, stats, handleToggleTip, userTips, dayFix
   const [loadingPlayerData, setLoadingPlayerData] = useState(true);
   const [homePlayerDataWithImages, setHomePlayerDataWithImages] = useState([]);
   const [awayPlayerDataWithImages, setAwayPlayerDataWithImages] = useState([]);
+  const [loadingLineups, setLoadingLineups] = useState(false);
 
   const [isLoading, setIsLoading] = useState(false);
   const [aiMatchPreview, setAiMatchPreview] = useState(null);
@@ -432,6 +461,19 @@ function GameStats({ game, displayBool, stats, handleToggleTip, userTips, dayFix
   const [hasCompleteData, setHasCompleteData] = useState(false);
 
   const futureFixturesFetchedRef = useRef(false);
+  const streaksFetchedRef = useRef(false);
+  const squadStatsFetchedRef = useRef(false);
+  const managersFetchedRef = useRef(false);
+  const lineupsFetchedRef = useRef(false);
+  const squadStatsRef = useRef({ home: null, away: null });
+  const streaksResultRef = useRef(null);
+  const managersResultRef = useRef({ home: null, away: null });
+  const lineupsResultRef = useRef(null);
+  const streaksInFlightRef = useRef(null);
+  const squadStatsInFlightRef = useRef(null);
+  const managersInFlightRef = useRef(null);
+  const lineupsInFlightRef = useRef(null);
+  const hasFetchedImages = useRef(false);
 
 
   let gameStats = allForm.find((match) => match.id === game.id);
@@ -1454,6 +1496,13 @@ function GameStats({ game, displayBool, stats, handleToggleTip, userTips, dayFix
     return mappedStreaks;
   }
 
+  function hasValidStreaks(stats) {
+    if (!stats || typeof stats !== "object" || Array.isArray(stats)) {
+      return false;
+    }
+    return Object.values(stats).some((value) => Array.isArray(value));
+  }
+
   // Prefer FootyStats→SofaScore current season ids (rounds table alone can lag).
   const derivedRoundId = useMemo(() => {
     const fromMap = resolveRoundId(game.sofaScoreId);
@@ -1464,11 +1513,52 @@ function GameStats({ game, displayBool, stats, handleToggleTip, userTips, dayFix
 
   useEffect(() => {
     futureFixturesFetchedRef.current = false;
+    streaksFetchedRef.current = false;
+    squadStatsFetchedRef.current = false;
+    managersFetchedRef.current = false;
+    lineupsFetchedRef.current = false;
+    squadStatsRef.current = { home: null, away: null };
+    streaksResultRef.current = null;
+    managersResultRef.current = { home: null, away: null };
+    lineupsResultRef.current = null;
+    streaksInFlightRef.current = null;
+    squadStatsInFlightRef.current = null;
+    managersInFlightRef.current = null;
+    lineupsInFlightRef.current = null;
+    hasFetchedImages.current = false;
+    setHomePlayerDataWithImages([]);
+    setAwayPlayerDataWithImages([]);
     setFutureFixturesHome([]);
     setFutureFixturesAway([]);
     setLoadingFutureFixtures(false);
+    setStreakData(null);
+    setHomeTeamPlayerStats(null);
+    setAwayTeamPlayerStats(null);
+    setHomeManager(null);
+    setAwayManager(null);
+    setHomeLineupList([]);
+    setAwayLineupList([]);
+    setHomeMissingPlayersList([]);
+    setAwayMissingPlayersList([]);
+    setHomeMissingPlayersImpact([]);
+    setAwayMissingPlayersImpact([]);
     setOpenSections((prev) =>
-      prev.futureFixtures ? { ...prev, futureFixtures: false } : prev
+      prev.futureFixtures ||
+      prev.streaks ||
+      prev.playerStats ||
+      prev.managers ||
+      prev.lineups ||
+      prev.missingPlayers
+        ? {
+            ...prev,
+            futureFixtures: false,
+            streaks: false,
+            playerStats: false,
+            managers: false,
+            lineups: false,
+            missingPlayers: false,
+          }
+        : prev
     );
   }, [game.id]);
 
@@ -1529,6 +1619,590 @@ function GameStats({ game, displayBool, stats, handleToggleTip, userTips, dayFix
       void fetchFutureFixtures();
     }
   };
+
+  const fetchStreaks = useCallback(async () => {
+    if (streaksInFlightRef.current) {
+      return streaksInFlightRef.current;
+    }
+    if (streaksFetchedRef.current) {
+      return streaksResultRef.current;
+    }
+    if (!isPaidUser || !matchingGame?.id) {
+      setStreakData(null);
+      return null;
+    }
+
+    const request = (async () => {
+      setLoadingStreaks(true);
+
+      try {
+        const streaks = await fetch(
+          `${process.env.NEXT_PUBLIC_EXPRESS_SERVER}streaks/${matchingGame.id}`
+        );
+        const streaksDataRaw = await streaks.json().catch(() => null);
+
+        if (streaks.ok && hasValidStreaks(streaksDataRaw) && oddsData) {
+          const mappedStreaks = mapOddsToStreaks(streaksDataRaw, oddsData);
+          streaksResultRef.current = mappedStreaks;
+          setStreakData(mappedStreaks);
+          return mappedStreaks;
+        }
+
+        if (streaks.ok && hasValidStreaks(streaksDataRaw)) {
+          streaksResultRef.current = streaksDataRaw;
+          setStreakData(streaksDataRaw);
+          return streaksDataRaw;
+        }
+
+        setStreakData(null);
+        return null;
+      } catch (error) {
+        console.error("Error fetching streaks:", error);
+        streaksFetchedRef.current = false;
+        setStreakData(null);
+        return null;
+      } finally {
+        setLoadingStreaks(false);
+      }
+    })();
+
+    streaksInFlightRef.current = request;
+    streaksFetchedRef.current = true;
+    try {
+      return await request;
+    } finally {
+      if (streaksInFlightRef.current === request) {
+        streaksInFlightRef.current = null;
+      }
+    }
+  }, [isPaidUser, matchingGame?.id, oddsData]);
+
+  const fetchSquadPlayerStats = useCallback(async () => {
+    if (squadStatsInFlightRef.current) {
+      return squadStatsInFlightRef.current;
+    }
+    if (squadStatsFetchedRef.current) {
+      return squadStatsRef.current;
+    }
+    if (!matchingGame?.homeId || !matchingGame?.awayId || !derivedRoundId) {
+      return squadStatsRef.current;
+    }
+
+    const request = (async () => {
+      setLoadingPlayerStats(true);
+
+      try {
+        const [homeResult, awayResult] = await Promise.allSettled([
+          fetch(
+            `${process.env.NEXT_PUBLIC_EXPRESS_SERVER}teams/get-player-statistics/${matchingGame.homeId}/${game.sofaScoreId}/${derivedRoundId}/${matchingGame.id}`
+          ),
+          fetch(
+            `${process.env.NEXT_PUBLIC_EXPRESS_SERVER}teams/get-player-statistics/${matchingGame.awayId}/${game.sofaScoreId}/${derivedRoundId}/${matchingGame.id}`
+          ),
+        ]);
+
+        let homePlayers = { error: true, players: [] };
+        let awayPlayers = { error: true, players: [] };
+
+        if (homeResult.status === "fulfilled" && homeResult.value.ok) {
+          const data = await homeResult.value.json();
+          homePlayers = data || homePlayers;
+          setHomeTeamPlayerStats(data);
+        } else {
+          console.error("Home stats fetch failed");
+          setHomeTeamPlayerStats(homePlayers);
+        }
+
+        if (awayResult.status === "fulfilled" && awayResult.value.ok) {
+          const data = await awayResult.value.json();
+          awayPlayers = data || awayPlayers;
+          setAwayTeamPlayerStats(data);
+        } else {
+          console.error("Away stats fetch failed");
+          setAwayTeamPlayerStats(awayPlayers);
+        }
+
+        squadStatsRef.current = { home: homePlayers, away: awayPlayers };
+        return squadStatsRef.current;
+      } catch (error) {
+        console.error("Critical error in stats fetch:", error);
+        squadStatsFetchedRef.current = false;
+        return squadStatsRef.current;
+      } finally {
+        setLoadingPlayerStats(false);
+      }
+    })();
+
+    squadStatsInFlightRef.current = request;
+    squadStatsFetchedRef.current = true;
+    try {
+      return await request;
+    } finally {
+      if (squadStatsInFlightRef.current === request) {
+        squadStatsInFlightRef.current = null;
+      }
+    }
+  }, [
+    matchingGame?.homeId,
+    matchingGame?.awayId,
+    matchingGame?.id,
+    derivedRoundId,
+    game.sofaScoreId,
+  ]);
+
+  const fetchManagers = useCallback(async () => {
+    if (managersInFlightRef.current) {
+      return managersInFlightRef.current;
+    }
+    if (managersFetchedRef.current) {
+      return managersResultRef.current;
+    }
+    if (!matchingGame?.id) {
+      return { home: null, away: null };
+    }
+
+    const request = (async () => {
+      setLoadingManagers(true);
+
+      try {
+        const getManagers = await fetch(
+          `${process.env.NEXT_PUBLIC_EXPRESS_SERVER}matches/get-managers/${matchingGame.id}`
+        );
+        if (!getManagers.ok) {
+          managersResultRef.current = { home: null, away: null };
+          setHomeManager(null);
+          setAwayManager(null);
+          return managersResultRef.current;
+        }
+        const managersData = await getManagers.json();
+
+        if (managersData?.homeManager?.name) {
+          setHomeManager(managersData.homeManager);
+          setAwayManager(managersData.awayManager);
+
+          if (managersData?.homeManager?.careerHistory?.total < 6) {
+            setNewManagerHome(true);
+          }
+          if (managersData?.awayManager?.careerHistory?.total < 6) {
+            setNewManagerAway(true);
+          }
+          managersResultRef.current = {
+            home: managersData.homeManager,
+            away: managersData.awayManager,
+          };
+          return managersResultRef.current;
+        }
+
+        managersResultRef.current = { home: null, away: null };
+        setHomeManager(null);
+        setAwayManager(null);
+        return managersResultRef.current;
+      } catch (error) {
+        console.error(
+          `Error fetching managers for game ${matchingGame.id}:`,
+          error
+        );
+        managersFetchedRef.current = false;
+        return { home: null, away: null };
+      } finally {
+        setLoadingManagers(false);
+      }
+    })();
+
+    managersInFlightRef.current = request;
+    managersFetchedRef.current = true;
+    try {
+      return await request;
+    } finally {
+      if (managersInFlightRef.current === request) {
+        managersInFlightRef.current = null;
+      }
+    }
+  }, [matchingGame?.id]);
+
+  const handleStreaksToggle = () => {
+    const willOpen = !openSections.streaks;
+    handleToggle("streaks");
+    if (willOpen) {
+      void fetchStreaks();
+    }
+  };
+
+  const handlePlayerStatsToggle = () => {
+    const willOpen = !openSections.playerStats;
+    handleToggle("playerStats");
+    if (willOpen) {
+      void fetchSquadPlayerStats();
+    }
+  };
+
+  const handleManagersToggle = () => {
+    const willOpen = !openSections.managers;
+    handleToggle("managers");
+    if (willOpen) {
+      void fetchManagers();
+    }
+  };
+
+  const fetchLineups = useCallback(async () => {
+    if (lineupsInFlightRef.current) {
+      return lineupsInFlightRef.current;
+    }
+    if (lineupsFetchedRef.current) {
+      return lineupsResultRef.current;
+    }
+
+    const hoursUntil = hoursUntilKickoffUnix(game.date);
+    const inWindow =
+      hoursUntil != null && hoursUntil <= LINEUP_FETCH_MAX_HOURS;
+    if (
+      !matchingGame?.id ||
+      !inWindow ||
+      LOWER_TIER_LEAGUE_IDS.includes(game.sofaScoreId)
+    ) {
+      return null;
+    }
+
+    const request = (async () => {
+    setLoadingLineups(true);
+    try {
+      const squad = await fetchSquadPlayerStats();
+      const homePlayers = squad?.home;
+      const awayPlayers = squad?.away;
+
+      const lineupDetail = await fetch(
+        `${process.env.NEXT_PUBLIC_EXPRESS_SERVER}lineups/${matchingGame.id}?kickoff=${game.date}`
+      );
+      if (!lineupDetail.ok) {
+        return null;
+      }
+
+      const data = await lineupDetail.json();
+      const { homeMissingPlayers, awayMissingPlayers } =
+        await extractMissingPlayers(data);
+      const { homeLineup, awayLineup } = await extractPlayerRatings(data);
+      setHomeLineupList(homeLineup);
+      setAwayLineupList(awayLineup);
+      setHomeMissingPlayersList(homeMissingPlayers);
+      setAwayMissingPlayersList(awayMissingPlayers);
+
+      const buildMissingPlayerImpact = (
+        missingPlayer,
+        playerStats,
+        played,
+        teamDefActions,
+        teamAttActions,
+        team
+      ) => {
+        const appearances = playerStats.appearances || 0;
+        const tackles = playerStats.tackles || 0;
+        const interceptions = playerStats.interceptions || 0;
+        const accuratePasses = playerStats.accuratePasses || 0;
+        const keyPasses = playerStats.keyPasses || 0;
+        const bigChancesCreated = playerStats.bigChancesCreated || 0;
+        const goals = playerStats.goals || 0;
+        const assists = playerStats.assists || 0;
+        const rating = playerStats.rating || 6.5;
+        const scoringFrequency = playerStats.scoringFrequency || 0;
+        let efficiencyBonus = 1;
+
+        if (scoringFrequency > 0) {
+          if (playerStats.position === "F") {
+            efficiencyBonus = Math.max(1, 135 / scoringFrequency);
+          } else {
+            efficiencyBonus = Math.max(1, 270 / scoringFrequency);
+          }
+        }
+
+        let goalWeight = 7;
+        let assistWeight = 5;
+        if (playerStats.position === "M") {
+          goalWeight = 10;
+          assistWeight = 6;
+        }
+
+        const attackingActions =
+          goals * goalWeight +
+          assists * assistWeight +
+          keyPasses * 1.5 +
+          bigChancesCreated * 4;
+        const attackingShare = Math.min(1, attackingActions / teamAttActions);
+        const usageImpact = Math.min(1, appearances / played) * 3;
+        const attackingContributionImpact =
+          Math.pow(attackingShare, 0.6) * 7 * efficiencyBonus;
+        const attackingQualityImpact = Math.max(0, rating - 6.5) * 2;
+
+        let positionalAdjustment = 1;
+        if (playerStats.position === "F") positionalAdjustment = 1;
+        else if (playerStats.position === "M") positionalAdjustment = 0.9;
+        else if (playerStats.position === "D") positionalAdjustment = 0.8;
+        else if (playerStats.position === "G") positionalAdjustment = 0.4;
+
+        const attackingImpactScore =
+          Math.min(
+            10,
+            usageImpact + attackingContributionImpact * 3 + attackingQualityImpact
+          ) * positionalAdjustment;
+
+        const defensiveActions =
+          tackles * 2 + interceptions * 2 + accuratePasses * 0.04;
+        const defensiveShare = Math.min(1, defensiveActions / teamDefActions);
+        const defensiveUsageImpact = Math.min(1, appearances / played) * 2;
+        const defensiveContributionImpact = defensiveShare * 10;
+        const defensiveQualityImpact = Math.max(0, rating - 6.5) * 3;
+
+        let defensivePositionMultiplier = 1;
+        if (playerStats.position === "F") defensivePositionMultiplier = 0.35;
+        if (playerStats.position === "M") defensivePositionMultiplier = 0.75;
+        if (playerStats.position === "D") defensivePositionMultiplier = 1.2;
+        if (playerStats.position === "G") defensivePositionMultiplier = 1.5;
+
+        const defensiveImpactScore = Math.min(
+          10,
+          (defensiveUsageImpact +
+            defensiveContributionImpact +
+            defensiveQualityImpact) *
+            defensivePositionMultiplier
+        );
+
+        let attackLambdaImpact = 1 - attackingImpactScore * 0.02;
+        let defenceLambdaImpact = 1 + defensiveImpactScore * 0.02;
+        if (missingPlayer.type === "doubtful") {
+          attackLambdaImpact = 1 - attackingImpactScore * 0.02 * 0.5;
+          defenceLambdaImpact = 1 + defensiveImpactScore * 0.02 * 0.5;
+        }
+        if (gameStats?.home?.[2] && gameStats?.away?.[2]) {
+          if (team === "home") {
+            gameStats.home[2].attackLambdaImpact = Math.max(0.8, attackLambdaImpact);
+            gameStats.home[2].defenceLambdaImpact = Math.min(1.2, defenceLambdaImpact);
+          } else if (team === "away") {
+            gameStats.away[2].attackLambdaImpact = Math.max(0.8, attackLambdaImpact);
+            gameStats.away[2].defenceLambdaImpact = Math.min(1.2, defenceLambdaImpact);
+          }
+        }
+
+        return {
+          name: missingPlayer.name,
+          reason: missingPlayer.reason || "Unknown",
+          description: missingPlayer.description || "",
+          type: missingPlayer.type,
+          appearances,
+          goals,
+          assists,
+          rating: playerStats.rating > 0 ? playerStats.rating : null,
+          position: missingPlayer.position || playerStats.position || "Unknown",
+          attackingImpactScore: attackingImpactScore.toFixed(1),
+          defensiveImpactScore: defensiveImpactScore.toFixed(1),
+        };
+      };
+
+      const enrichMissingPlayers = async (
+        missingList,
+        teamStats,
+        played,
+        teamDefActions,
+        teamAttActions,
+        team,
+        tournamentId,
+        seasonId
+      ) => {
+        if (!missingList?.length || !teamStats?.players?.length) return [];
+
+        const enrichedPlayers = [];
+
+        for (const missingPlayer of missingList) {
+          let statsEntry = findPlayerStatsEntry(teamStats.players, missingPlayer);
+
+          if (
+            missingPlayer.id &&
+            tournamentId &&
+            seasonId &&
+            (!statsEntry || !statsEntry.appearances || !statsEntry.rating)
+          ) {
+            try {
+              const response = await fetch(
+                `${process.env.NEXT_PUBLIC_EXPRESS_SERVER}players/competition-statistics/${missingPlayer.id}/${tournamentId}/${seasonId}`
+              );
+              if (response.ok) {
+                const individualStats = await response.json();
+                if (individualStats && !individualStats.error) {
+                  statsEntry = { ...(statsEntry || {}), ...individualStats };
+                }
+              }
+            } catch (error) {
+              console.error(
+                `Error fetching competition stats for missing player ${missingPlayer.name}:`,
+                error
+              );
+            }
+          }
+
+          enrichedPlayers.push(
+            buildMissingPlayerImpact(
+              missingPlayer,
+              statsEntry || {},
+              played,
+              teamDefActions,
+              teamAttActions,
+              team
+            )
+          );
+        }
+
+        return enrichedPlayers.sort((a, b) => {
+          const maxImpactA = Math.max(
+            parseFloat(a.attackingImpactScore),
+            parseFloat(a.defensiveImpactScore)
+          );
+          const maxImpactB = Math.max(
+            parseFloat(b.attackingImpactScore),
+            parseFloat(b.defensiveImpactScore)
+          );
+          if (maxImpactB !== maxImpactA) {
+            return maxImpactB - maxImpactA;
+          }
+          return b.appearances - a.appearances;
+        });
+      };
+
+      const teamDefensiveActionsHome = homePlayers?.players?.reduce((sum, player) => {
+        const tackles = player.tackles || 0;
+        const interceptions = player.interceptions || 0;
+        const accuratePasses = player.accuratePasses || 0;
+        return sum + tackles * 1.2 + interceptions * 1.5 + accuratePasses * 0.02;
+      }, 0);
+
+      const teamAttackingActionsHome = homePlayers?.players?.reduce((sum, player) => {
+        const goals = player.goals || 0;
+        const assists = player.assists || 0;
+        const keyPasses = player.keyPasses || 0;
+        const bigChancesCreated = player.bigChancesCreated || 0;
+        return sum + goals * 4 + assists * 3 + keyPasses * 1.5 + bigChancesCreated * 2;
+      }, 0);
+
+      const teamAttackingActionsAway = awayPlayers?.players?.reduce((sum, player) => {
+        const goals = player.goals || 0;
+        const assists = player.assists || 0;
+        const keyPasses = player.keyPasses || 0;
+        const bigChancesCreated = player.bigChancesCreated || 0;
+        return sum + goals * 4 + assists * 3 + keyPasses * 1.5 + bigChancesCreated * 2;
+      }, 0);
+
+      const teamDefensiveActionsAway = awayPlayers?.players?.reduce((sum, player) => {
+        const tackles = player.tackles || 0;
+        const interceptions = player.interceptions || 0;
+        const accuratePasses = player.accuratePasses || 0;
+        return sum + tackles * 1.2 + interceptions * 1.5 + accuratePasses * 0.02;
+      }, 0);
+
+      const homeCompetitionGamesPlayed = getCompetitionGamesPlayed(
+        gameStats?.home?.[2]
+      );
+      const awayCompetitionGamesPlayed = getCompetitionGamesPlayed(
+        gameStats?.away?.[2]
+      );
+
+      const homeMissingPlayersImpactAssessment = await enrichMissingPlayers(
+        homeMissingPlayers,
+        homePlayers,
+        homeCompetitionGamesPlayed,
+        teamDefensiveActionsHome,
+        teamAttackingActionsHome,
+        "home",
+        game.sofaScoreId,
+        derivedRoundId
+      );
+      const awayMissingPlayersImpactAssessment = await enrichMissingPlayers(
+        awayMissingPlayers,
+        awayPlayers,
+        awayCompetitionGamesPlayed,
+        teamDefensiveActionsAway,
+        teamAttackingActionsAway,
+        "away",
+        game.sofaScoreId,
+        derivedRoundId
+      );
+
+      setHomeMissingPlayersImpact(homeMissingPlayersImpactAssessment);
+      setAwayMissingPlayersImpact(awayMissingPlayersImpactAssessment);
+
+      const result = {
+        homeLineup,
+        awayLineup,
+        homeMissingPlayersImpact: homeMissingPlayersImpactAssessment,
+        awayMissingPlayersImpact: awayMissingPlayersImpactAssessment,
+        homeTeamPlayerStats: homePlayers,
+        awayTeamPlayerStats: awayPlayers,
+      };
+      lineupsResultRef.current = result;
+      return result;
+    } catch (error) {
+      console.error("Error fetching lineup details:", error);
+      lineupsFetchedRef.current = false;
+      return null;
+    } finally {
+      setLoadingLineups(false);
+    }
+    })();
+
+    lineupsInFlightRef.current = request;
+    lineupsFetchedRef.current = true;
+    try {
+      return await request;
+    } finally {
+      if (lineupsInFlightRef.current === request) {
+        lineupsInFlightRef.current = null;
+      }
+    }
+  }, [
+    matchingGame?.id,
+    game.date,
+    game.sofaScoreId,
+    derivedRoundId,
+    fetchSquadPlayerStats,
+    gameStats,
+  ]);
+
+  const handleLineupsToggle = () => {
+    const willOpen = !openSections.lineups;
+    handleToggle("lineups");
+    if (willOpen) {
+      void fetchLineups();
+    }
+  };
+
+  const handleMissingPlayersToggle = () => {
+    const willOpen = !openSections.missingPlayers;
+    handleToggle("missingPlayers");
+    if (willOpen) {
+      void fetchLineups();
+    }
+  };
+
+  useEffect(() => {
+    if (openSections.streaks) {
+      void fetchStreaks();
+    }
+    if (openSections.playerStats) {
+      void fetchSquadPlayerStats();
+    }
+    if (openSections.managers) {
+      void fetchManagers();
+    }
+    if (openSections.lineups || openSections.missingPlayers) {
+      void fetchLineups();
+    }
+  }, [
+    openSections.streaks,
+    openSections.playerStats,
+    openSections.managers,
+    openSections.lineups,
+    openSections.missingPlayers,
+    fetchStreaks,
+    fetchSquadPlayerStats,
+    fetchManagers,
+    fetchLineups,
+  ]);
 
   async function extractRankedPlayersByTeam(topPlayers, teamId) {
     const result = [];
@@ -1626,75 +2300,12 @@ function GameStats({ game, displayBool, stats, handleToggleTip, userTips, dayFix
           // setMatchingGame(null);
         }
 
-        const now = Math.floor(Date.now() / 1000); // current Unix timestamp in seconds
-        const isWithin48Hours = game.date > now && game.date - now <= 172800;
-        const lowerTierLeagueIds = [
-          // Conference 25/26
-          173,
-          //National league north 25/26
-          176,
-          //National league south 26/27
-          174,
-          // Ekstraklasa (Poland)
-          202,
-          // Spanish Segunda Division
-          54,
-          // Bundesliga 2
-          44,
-          // French Ligue 2
-          182,
-          // Italian Serie B 26/27
-          53,
-          // Dutch Eerste Divisie 25
-          131,
-          // Scottish Championship 25
-          206,
-          // Scottish League One 25
-          207,
-          // Scottish League Two 25
-          209,
-          // Swiss Super League
-          215,
-          // Croatian First League
-          170,
-          // Czech First League
-          172,
-          // Finnish Veikkausliiga
-          41,
-          // Ukrainian Premier League
-          218,
-          // Slovenian Prva Liga
-          212,
-          // Slovak Super Liga
-          211,
-          // Serbian SuperLiga
-          210,
-          // Brazil Serie B
-          390,
-          // Colombian Liga BetPlay 25
-          11539,
-          // Chilean Primera Division 25
-          11653,
-          // Uruguayan Primera Division 25
-          278,
-          // USL 25 (USA 2nd Div)
-          13363,
-          // Canadian Premier League 25
-          13470,
-          // Ireland 24/25
-          192,
-        ];
-
-        // console.log("isWithin48Hours:", isWithin48Hours);
-        // console.log("game.date:", game.date, "| now:", now, "| diff:", game.date - now);
         setLoading(true);
-        setLoadingStreaks(true);
         setLoadingOdds(true);
         setLoadingPlayerData(true);
         setLoadingTeamStats(true);
         setLoadingKeyPlayers(true);
         setLoadingVoteData(true);
-        setLoadingManagers(true);
         setLoadingReferee(true);
 
         let previousGames = await fetch(
@@ -1826,29 +2437,6 @@ function GameStats({ game, displayBool, stats, handleToggleTip, userTips, dayFix
           }
         }
 
-        // 1. Only proceed if the user is a premium member
-        console.log("User paid status:", isPaidUser);
-        if (isPaidUser && matchingGameInfo?.id) {
-          try {
-            const streaks = await fetch(
-              `${process.env.NEXT_PUBLIC_EXPRESS_SERVER}streaks/${matchingGameInfo.id}`
-            );
-
-            const streaksDataRaw = await streaks.json();
-
-            // 2. Ensure we have data and odds before mapping
-            if (streaksDataRaw && odds) {
-              const mappedStreaks = mapOddsToStreaks(streaksDataRaw, odds);
-              setStreakData(mappedStreaks); // Update state with the mapped data
-            }
-          } catch (error) {
-            console.error("Error fetching streaks:", error);
-          }
-        } else if (!isPaidUser) {
-          // Optional: Clear the state for free users so they don't see old data
-          setStreakData(null);
-        }
-
         if (
           derivedRoundId &&
           matchingGameInfo?.homeId &&
@@ -1931,349 +2519,30 @@ function GameStats({ game, displayBool, stats, handleToggleTip, userTips, dayFix
             setAwayPlayerData(trimmedPlayersAway);
 
             try {
-              const homeImageResponse = await fetch(`${process.env.NEXT_PUBLIC_EXPRESS_SERVER}playerImage/${playersHome[0].playerId}`);
-              const awayImageResponse = await fetch(`${process.env.NEXT_PUBLIC_EXPRESS_SERVER}playerImage/${playersAway[0].playerId}`);
-
-              if (homeImageResponse.ok) {
-                const blob = await homeImageResponse.blob();
-                setHomePlayerImage(URL.createObjectURL(blob));
-              } else {
-                console.error("Failed to fetch home image:", homeImageResponse.status);
+              if (playersHome[0]?.playerId) {
+                const homeImageResponse = await fetch(`${process.env.NEXT_PUBLIC_EXPRESS_SERVER}playerImage/${playersHome[0].playerId}`);
+                if (homeImageResponse.ok) {
+                  const blob = await homeImageResponse.blob();
+                  setHomePlayerImage(URL.createObjectURL(blob));
+                }
               }
-
-              if (awayImageResponse.ok) {
-                const blob = await awayImageResponse.blob();
-                setAwayPlayerImage(URL.createObjectURL(blob));
-              } else {
-                console.error("Failed to fetch away image:", awayImageResponse.status);
+              if (playersAway[0]?.playerId) {
+                const awayImageResponse = await fetch(`${process.env.NEXT_PUBLIC_EXPRESS_SERVER}playerImage/${playersAway[0].playerId}`);
+                if (awayImageResponse.ok) {
+                  const blob = await awayImageResponse.blob();
+                  setAwayPlayerImage(URL.createObjectURL(blob));
+                }
               }
             } catch (err) {
               console.error("Error fetching images:", err);
             }
             }
-
-            // allPlayerStats[`leagueStats${game.sofaScoreId}`] = teamStats;
-            // console.log(`Fetched stats for league ${leagueId}`);
           } catch (error) {
             console.error(
               `Error fetching player stats for league ${game.sofaScoreId}:`,
               error
             );
-            // allLeagueStats[`leagueStats${leagueId}`] = { error: error.message }; // Store error if fetch fails
           }
-
-          let homePlayers;
-          let awayPlayers;
-
-
-          try {
-            setLoadingPlayerStats(true);
-
-            console.log(matchingGameInfo)
-            // Run both fetches in parallel
-            const [homeResult, awayResult] = await Promise.allSettled([
-              fetch(`${process.env.NEXT_PUBLIC_EXPRESS_SERVER}teams/get-player-statistics/${matchingGameInfo.homeId}/${game.sofaScoreId}/${derivedRoundId}/${matchingGameInfo.id}`),
-              fetch(`${process.env.NEXT_PUBLIC_EXPRESS_SERVER}teams/get-player-statistics/${matchingGameInfo.awayId}/${game.sofaScoreId}/${derivedRoundId}/${matchingGameInfo.id}`)
-            ]);
-
-            // Handle Home Team Data
-            if (homeResult.status === 'fulfilled' && homeResult.value.ok) {
-              const data = await homeResult.value.json();
-              homePlayers = data || [];
-              setHomeTeamPlayerStats(data);
-            } else {
-              console.error("Home stats fetch failed");
-              setHomeTeamPlayerStats({ error: true, players: [] }); // Set a "safe" empty state
-            }
-
-            // Handle Away Team Data
-            if (awayResult.status === 'fulfilled' && awayResult.value.ok) {
-              const data = await awayResult.value.json();
-              awayPlayers = data || [];
-              setAwayTeamPlayerStats(data);
-            } else {
-              console.error("Away stats fetch failed");
-              setAwayTeamPlayerStats({ error: true, players: [] });
-            }
-
-          } catch (err) {
-            console.error("Critical error in stats fetch:", err);
-          } finally {
-            setLoadingPlayerStats(false);
-          }
-
-          if (
-            isWithin48Hours && !lowerTierLeagueIds.includes(game.sofaScoreId)
-          ) {
-            console.log(`Game is within 48 hours and not in lower tier league. Fetching lineup details for game ID: ${matchingGameInfo.id}`);
-            const lineupDetail = await fetch(
-              `${process.env.NEXT_PUBLIC_EXPRESS_SERVER}lineups/${matchingGameInfo.id}?kickoff=${game.date}`
-            );
-
-            const data = await lineupDetail.json();
-            console.log("Lineup details fetched:", data);
-            const { homeMissingPlayers, awayMissingPlayers } =
-              await extractMissingPlayers(data);
-            const { homeLineup, awayLineup } = await extractPlayerRatings(data);
-            setHomeLineupList(homeLineup);
-            setAwayLineupList(awayLineup);
-            setHomeMissingPlayersList(homeMissingPlayers);
-            setAwayMissingPlayersList(awayMissingPlayers);
-
-            const buildMissingPlayerImpact = (
-              missingPlayer,
-              stats,
-              played,
-              teamDefActions,
-              teamAttActions,
-              team
-            ) => {
-              const appearances = stats.appearances || 0;
-              const tackles = stats.tackles || 0;
-              const interceptions = stats.interceptions || 0;
-              const accuratePasses = stats.accuratePasses || 0;
-              const keyPasses = stats.keyPasses || 0;
-              const bigChancesCreated = stats.bigChancesCreated || 0;
-              const goals = stats.goals || 0;
-              const assists = stats.assists || 0;
-              const rating = stats.rating || 6.5;
-              const scoringFrequency = stats.scoringFrequency || 0;
-              let efficiencyBonus = 1;
-
-              if (scoringFrequency > 0) {
-                if (stats.position === "F") {
-                  efficiencyBonus = Math.max(1, 135 / scoringFrequency);
-                } else {
-                  efficiencyBonus = Math.max(1, 270 / scoringFrequency);
-                }
-              }
-
-              let goalWeight = 7;
-              let assistWeight = 5;
-
-              if (stats.position === "M") {
-                goalWeight = 10;
-                assistWeight = 6;
-              }
-
-              const attackingActions =
-                goals * goalWeight +
-                assists * assistWeight +
-                keyPasses * 1.5 +
-                bigChancesCreated * 4;
-
-              const attackingShare = Math.min(1, attackingActions / teamAttActions);
-              const usageImpact = Math.min(1, appearances / played) * 3;
-              const attackingContributionImpact =
-                Math.pow(attackingShare, 0.6) * 7 * efficiencyBonus;
-              const attackingQualityImpact = Math.max(0, rating - 6.5) * 2;
-
-              let positionalAdjustment = 1;
-
-              if (stats.position === "F") positionalAdjustment = 1;
-              else if (stats.position === "M") positionalAdjustment = 0.9;
-              else if (stats.position === "D") positionalAdjustment = 0.8;
-              else if (stats.position === "G") positionalAdjustment = 0.4;
-
-              const attackingImpactScore =
-                Math.min(
-                  10,
-                  usageImpact + attackingContributionImpact * 3 + attackingQualityImpact
-                ) * positionalAdjustment;
-
-              const defensiveActions =
-                tackles * 2 + interceptions * 2 + accuratePasses * 0.04;
-
-              const defensiveShare = Math.min(1, defensiveActions / teamDefActions);
-              const defensiveUsageImpact = Math.min(1, appearances / played) * 2;
-              const defensiveContributionImpact = defensiveShare * 10;
-              const defensiveQualityImpact = Math.max(0, rating - 6.5) * 3;
-
-              let defensivePositionMultiplier = 1;
-
-              if (stats.position === "F") defensivePositionMultiplier = 0.35;
-              if (stats.position === "M") defensivePositionMultiplier = 0.75;
-              if (stats.position === "D") defensivePositionMultiplier = 1.2;
-              if (stats.position === "G") defensivePositionMultiplier = 1.5;
-
-              const defensiveImpactScore = Math.min(
-                10,
-                (defensiveUsageImpact +
-                  defensiveContributionImpact +
-                  defensiveQualityImpact) *
-                  defensivePositionMultiplier
-              );
-
-              let attackLambdaImpact = 1 - attackingImpactScore * 0.02;
-              let defenceLambdaImpact = 1 + defensiveImpactScore * 0.02;
-              if (missingPlayer.type === "doubtful") {
-                attackLambdaImpact = 1 - attackingImpactScore * 0.02 * 0.5;
-                defenceLambdaImpact = 1 + defensiveImpactScore * 0.02 * 0.5;
-              }
-              if (team === "home") {
-                gameStats.home[2].attackLambdaImpact = Math.max(0.8, attackLambdaImpact);
-                gameStats.home[2].defenceLambdaImpact = Math.min(1.2, defenceLambdaImpact);
-              } else if (team === "away") {
-                gameStats.away[2].attackLambdaImpact = Math.max(0.8, attackLambdaImpact);
-                gameStats.away[2].defenceLambdaImpact = Math.min(1.2, defenceLambdaImpact);
-              }
-
-              return {
-                name: missingPlayer.name,
-                reason: missingPlayer.reason || "Unknown",
-                description: missingPlayer.description || "",
-                type: missingPlayer.type,
-                appearances,
-                goals,
-                assists,
-                rating: stats.rating > 0 ? stats.rating : null,
-                position: missingPlayer.position || stats.position || "Unknown",
-                attackingImpactScore: attackingImpactScore.toFixed(1),
-                defensiveImpactScore: defensiveImpactScore.toFixed(1),
-              };
-            };
-
-            const enrichMissingPlayers = async (
-              missingList,
-              teamStats,
-              played,
-              teamDefActions,
-              teamAttActions,
-              team,
-              tournamentId,
-              seasonId
-            ) => {
-              if (!missingList?.length || !teamStats?.players?.length) return [];
-
-              const enrichedPlayers = [];
-
-              for (const missingPlayer of missingList) {
-                let statsEntry = findPlayerStatsEntry(teamStats.players, missingPlayer);
-
-                if (
-                  missingPlayer.id &&
-                  tournamentId &&
-                  seasonId &&
-                  (!statsEntry ||
-                    !statsEntry.appearances ||
-                    !statsEntry.rating)
-                ) {
-                  try {
-                    const response = await fetch(
-                      `${process.env.NEXT_PUBLIC_EXPRESS_SERVER}players/competition-statistics/${missingPlayer.id}/${tournamentId}/${seasonId}`
-                    );
-                    if (response.ok) {
-                      const individualStats = await response.json();
-                      if (individualStats && !individualStats.error) {
-                        statsEntry = { ...(statsEntry || {}), ...individualStats };
-                      }
-                    }
-                  } catch (error) {
-                    console.error(
-                      `Error fetching competition stats for missing player ${missingPlayer.name}:`,
-                      error
-                    );
-                  }
-                }
-
-                enrichedPlayers.push(
-                  buildMissingPlayerImpact(
-                    missingPlayer,
-                    statsEntry || {},
-                    played,
-                    teamDefActions,
-                    teamAttActions,
-                    team
-                  )
-                );
-              }
-
-              return enrichedPlayers.sort((a, b) => {
-                const maxImpactA = Math.max(
-                  parseFloat(a.attackingImpactScore),
-                  parseFloat(a.defensiveImpactScore)
-                );
-                const maxImpactB = Math.max(
-                  parseFloat(b.attackingImpactScore),
-                  parseFloat(b.defensiveImpactScore)
-                );
-
-                if (maxImpactB !== maxImpactA) {
-                  return maxImpactB - maxImpactA;
-                }
-                return b.appearances - a.appearances;
-              });
-            };
-
-            const teamDefensiveActionsHome = homePlayers?.players?.reduce((sum, player) => {
-              const tackles = player.tackles || 0;
-              const interceptions = player.interceptions || 0;
-              const accuratePasses = player.accuratePasses || 0;
-              return sum + (tackles * 1.2) + (interceptions * 1.5) + (accuratePasses * 0.02);
-            }, 0);
-
-            const teamAttackingActionsHome = homePlayers?.players?.reduce((sum, player) => {
-              const goals = player.goals || 0;
-              const assists = player.assists || 0;
-              const keyPasses = player.keyPasses || 0;
-              const bigChancesCreated = player.bigChancesCreated || 0;
-
-              return sum +
-                (goals * 4) +
-                (assists * 3) +
-                (keyPasses * 1.5) +
-                (bigChancesCreated * 2);
-            }, 0);
-
-            const teamAttackingActionsAway = awayPlayers?.players?.reduce((sum, player) => {
-              const goals = player.goals || 0;
-              const assists = player.assists || 0;
-              const keyPasses = player.keyPasses || 0;
-              const bigChancesCreated = player.bigChancesCreated || 0;
-
-              return sum +
-                (goals * 4) +
-                (assists * 3) +
-                (keyPasses * 1.5) +
-                (bigChancesCreated * 2);
-            }, 0);
-
-            const teamDefensiveActionsAway = awayPlayers?.players?.reduce((sum, player) => {
-              const tackles = player.tackles || 0;
-              const interceptions = player.interceptions || 0;
-              const accuratePasses = player.accuratePasses || 0;
-              return sum + (tackles * 1.2) + (interceptions * 1.5) + (accuratePasses * 0.02);
-            }, 0);
-
-
-            const homeCompetitionGamesPlayed = getCompetitionGamesPlayed(gameStats.home[2]);
-            const awayCompetitionGamesPlayed = getCompetitionGamesPlayed(gameStats.away[2]);
-
-            const homeMissingPlayersImpactAssessment = await enrichMissingPlayers(
-              homeMissingPlayers,
-              homePlayers,
-              homeCompetitionGamesPlayed,
-              teamDefensiveActionsHome,
-              teamAttackingActionsHome,
-              "home",
-              game.sofaScoreId,
-              derivedRoundId
-            );
-            const awayMissingPlayersImpactAssessment = await enrichMissingPlayers(
-              awayMissingPlayers,
-              awayPlayers,
-              awayCompetitionGamesPlayed,
-              teamDefensiveActionsAway,
-              teamAttackingActionsAway,
-              "away",
-              game.sofaScoreId,
-              derivedRoundId
-            );
-
-            setHomeMissingPlayersImpact(homeMissingPlayersImpactAssessment);
-            setAwayMissingPlayersImpact(awayMissingPlayersImpactAssessment);
-          }
-
 
           // const matchPreviewResponse = await fetch(
           //   `${process.env.NEXT_PUBLIC_EXPRESS_SERVER}gemini/match-preview/${matchingGameInfo.homeId}${matchingGameInfo.awayId}/${matchingGameInfo.time}`,
@@ -2302,37 +2571,6 @@ function GameStats({ game, displayBool, stats, handleToggleTip, userTips, dayFix
 
         }
 
-        // Managers only need the industry leading stat website match id, not a league season round.
-        if (matchingGameInfo?.id) {
-          try {
-            const getManagers = await fetch(
-              `${process.env.NEXT_PUBLIC_EXPRESS_SERVER}matches/get-managers/${matchingGameInfo.id}`
-            );
-            const managersData = await getManagers.json();
-            console.log("Managers data fetched:", managersData);
-
-            if (managersData?.homeManager?.name) {
-              setHomeManager(managersData.homeManager);
-              setAwayManager(managersData.awayManager);
-
-              if (managersData?.homeManager?.careerHistory?.total < 6) {
-                console.log(
-                  "Home manager has less than 10 games of career history. Marking as new manager."
-                );
-                setNewManagerHome(true);
-              }
-              if (managersData?.awayManager?.careerHistory?.total < 6) {
-                setNewManagerAway(true);
-              }
-            }
-          } catch (error) {
-            console.error(
-              `Error fetching managers for game ${matchingGameInfo.id}:`,
-              error
-            );
-          }
-        }
-
       } catch (error) {
         console.error("Error fetching or processing data:", error);
         // Handle errors (e.g., set error state, show error message)
@@ -2340,10 +2578,8 @@ function GameStats({ game, displayBool, stats, handleToggleTip, userTips, dayFix
         setLoadingTeamStats(false);
         setLoadingOdds(false);
         setLoadingPlayerData(false);
-        setLoadingStreaks(false);
         setLoadingKeyPlayers(false);
         setLoadingVoteData(false);
-        setLoadingManagers(false);
         setLoadingReferee(false);
         setLoading(false);
         // console.log(homePlayerData);
@@ -2353,27 +2589,32 @@ function GameStats({ game, displayBool, stats, handleToggleTip, userTips, dayFix
     fetchMatchingGame();
   }, [game.id]);
 
-  const hasFetchedImages = useRef(false);
-
   useEffect(() => {
-    if (!homePlayerData.length || !awayPlayerData.length) return;
-
-    if (hasFetchedImages.current) return;
-
+    if (!homePlayerData.length && !awayPlayerData.length) {
+      return;
+    }
+    if (hasFetchedImages.current) {
+      return;
+    }
     hasFetchedImages.current = true;
 
     const fetchImagesForPlayers = async (players, setFn) => {
       const updatedPlayers = [];
 
       for (const player of players) {
+        if (!player?.playerId) {
+          updatedPlayers.push({ ...player, playerImage: null });
+          continue;
+        }
         try {
-          const res = await fetch(`${process.env.NEXT_PUBLIC_EXPRESS_SERVER}playerImage/${player.playerId}`);
+          const res = await fetch(
+            `${process.env.NEXT_PUBLIC_EXPRESS_SERVER}playerImage/${player.playerId}`
+          );
           if (res.ok) {
             const blob = await res.blob();
             const imageUrl = URL.createObjectURL(blob);
             updatedPlayers.push({ ...player, playerImage: imageUrl });
           } else {
-            console.warn(`Image fetch failed for ${player.playerName}`);
             updatedPlayers.push({ ...player, playerImage: null });
           }
         } catch (error) {
@@ -2381,7 +2622,7 @@ function GameStats({ game, displayBool, stats, handleToggleTip, userTips, dayFix
           updatedPlayers.push({ ...player, playerImage: null });
         }
 
-        await new Promise((resolve) => setTimeout(resolve, 250)); // 250ms delay
+        await new Promise((resolve) => setTimeout(resolve, 250));
       }
 
       setFn(updatedPlayers);
@@ -2390,7 +2631,6 @@ function GameStats({ game, displayBool, stats, handleToggleTip, userTips, dayFix
     fetchImagesForPlayers(homePlayerData, setHomePlayerDataWithImages);
     fetchImagesForPlayers(awayPlayerData, setAwayPlayerDataWithImages);
   }, [homePlayerData, awayPlayerData]);
-
 
   useEffect(() => {
     if (homeTeamStats) {
@@ -3754,19 +3994,22 @@ function GameStats({ game, displayBool, stats, handleToggleTip, userTips, dayFix
         console.log("AI Match Preview Data:", jsonData);
         setAiMatchPreview(jsonData);
 
-        // Store predicted score in backend array
-        await fetch(`${process.env.NEXT_PUBLIC_EXPRESS_SERVER}predictedScores2`, {
-          method: "POST",
-          headers: {
-            Accept: "application/json",
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            gameId,
-            homeGoalsPrediction: parseInt(jsonData.Guide?.HomeGoalsPrediction, 10),
-            awayGoalsPrediction: parseInt(jsonData.Guide?.AwayGoalsPrediction, 10),
-          }),
-        });
+        // Never overwrite stored score predictions after kickoff — that reshuffles
+        // Build a Multi / tips once games are in progress or finished.
+        if (!hasKickoffPassed(game)) {
+          await fetch(`${process.env.NEXT_PUBLIC_EXPRESS_SERVER}predictedScores2`, {
+            method: "POST",
+            headers: {
+              Accept: "application/json",
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              gameId,
+              homeGoalsPrediction: parseInt(jsonData.Guide?.HomeGoalsPrediction, 10),
+              awayGoalsPrediction: parseInt(jsonData.Guide?.AwayGoalsPrediction, 10),
+            }),
+          });
+        }
 
       } catch (error) {
         console.error("AI preview error:", error);
@@ -4064,6 +4307,9 @@ function GameStats({ game, displayBool, stats, handleToggleTip, userTips, dayFix
   };
 
   console.log(homeForm)
+  const hoursUntilKickoff = hoursUntilKickoffUnix(game.date);
+  const lineupsReady =
+    hoursUntilKickoff != null && hoursUntilKickoff <= LINEUP_FETCH_MAX_HOURS;
   const teamAData = {
     name: game.homeTeam,
     preferredStyle: homeForm?.tacticalIdentity,
@@ -4197,45 +4443,76 @@ function GameStats({ game, displayBool, stats, handleToggleTip, userTips, dayFix
         <div>
           {/* <h1>{homeTeamPlayerStats.homeTeamName} vs {homeTeamPlayerStats.awayTeamName}</h1> */}
 
-          {loadingPlayerStats === false && (homeTeamPlayerStats || awayTeamPlayerStats) && (
+          {matchingGame?.homeId && matchingGame?.awayId && derivedRoundId ? (
             <Collapsable
               buttonText={`Player stats \u{2630}`}
               classNameButton="MissingPlayersButton"
+              isOpen={!!openSections.playerStats}
+              onTriggerToggle={handlePlayerStatsToggle}
               element={
-                <div className="match-grids">
-                  {/* If home stats failed, the table will show its internal error guard */}
-                  <PlayerStatsTable data={homeTeamPlayerStats} />
-                  <PlayerStatsTable data={awayTeamPlayerStats} />
-                </div>
+                loadingPlayerStats ? (
+                  CollapsableLoading
+                ) : homeTeamPlayerStats || awayTeamPlayerStats ? (
+                  <div className="match-grids">
+                    <PlayerStatsTable
+                      data={homeTeamPlayerStats}
+                      teamName={game.homeTeam}
+                    />
+                    <PlayerStatsTable
+                      data={awayTeamPlayerStats}
+                      teamName={game.awayTeam}
+                    />
+                  </div>
+                ) : (
+                  <p className="GameStats--limited">Not available just now.</p>
+                )
               }
             />
-          )}
+          ) : null}
         </div>
         <div style={style}>
           <div style={style}>
             <Collapsable
               buttonText={`Lineups & match action \u{2630}`}
               classNameButton="Lineups"
+              isOpen={!!openSections.lineups}
+              onTriggerToggle={handleLineupsToggle}
               element={
                 <div className="LineupsAndMatchAction">
-                  <MemoizedSofaLineupsWidget
-                    id={id}
-                    team1={team1}
-                    team2={team2}
-                    time={timestamp}
-                  />
+                  {loadingLineups ? (
+                    CollapsableLoading
+                  ) : lineupsReady ? (
+                    <MemoizedSofaLineupsWidget
+                      id={id}
+                      team1={team1}
+                      team2={team2}
+                      time={timestamp}
+                    />
+                  ) : (
+                    <p className="GameStats--limited">
+                      Lineups aren&apos;t available yet. Please check back later.
+                    </p>
+                  )}
                 </div>
               }
             />
           </div>
 
-          {loading || (homeMissingPlayersList.length === 0 && awayMissingPlayersList.length === 0) ? (
-            <div></div>
-          ) : (
+          {matchingGame?.id ? (
             <Collapsable
               buttonText={`Missing players \u{2630}`}
               classNameButton="MissingPlayersButton"
+              isOpen={!!openSections.missingPlayers}
+              onTriggerToggle={handleMissingPlayersToggle}
               element={
+                loadingLineups ? (
+                  CollapsableLoading
+                ) : !lineupsReady ? (
+                  <p className="GameStats--limited">
+                    Lineups aren&apos;t available yet. Please check back later.
+                  </p>
+                ) : homeMissingPlayersImpact.length > 0 ||
+                  awayMissingPlayersImpact.length > 0 ? (
                 <>
                   <div className="AbsenceImpactMessage">
                     Impact of absence based on player's contribution so far in this competition alone
@@ -4273,9 +4550,12 @@ function GameStats({ game, displayBool, stats, handleToggleTip, userTips, dayFix
                     </div>
                   </div>
                 </>
+                ) : (
+                  <p className="GameStats--limited">Not available just now.</p>
+                )
               }
             />
-          )}
+          ) : null}
 
           <FormContextCompare
             homeTeam={game.homeTeam}
@@ -4285,33 +4565,37 @@ function GameStats({ game, displayBool, stats, handleToggleTip, userTips, dayFix
             getCollapsableProps={getCollapsableProps}
           />
 
-          {loadingStreaks ? (
-            <div className="loading-spinner"></div>
-          ) : streakData === null ? (
-            /* The "Locked" state for non-paid users or missing data */
+          {!isPaidUser ? (
             <div className="TeamStreaksLocked">
               <button className="TeamStreaksButton locked" disabled >
                 Team Streaks (All comps) 🔒
               </button>
             </div>
-          ) : (
-            /* The "Success" state for paid users */
+          ) : matchingGame?.id ? (
             <Collapsable
               buttonText={`Team Streaks (All comps) \u{2630}`}
               classNameButton="TeamStreaksButton"
+              isOpen={!!openSections.streaks}
+              onTriggerToggle={handleStreaksToggle}
               element={
-                <div className="TeamStreaks">
-                  <StreakStats
-                    stats={streakData}
-                    home={game.homeTeam}
-                    away={game.awayTeam}
-                    homeLogo={game.homeBadge}
-                    awayLogo={game.awayBadge}
-                  />
-                </div>
+                loadingStreaks ? (
+                  CollapsableLoading
+                ) : hasValidStreaks(streakData) ? (
+                  <div className="TeamStreaks">
+                    <StreakStats
+                      stats={streakData}
+                      home={game.homeTeam}
+                      away={game.awayTeam}
+                      homeLogo={game.homeBadge}
+                      awayLogo={game.awayBadge}
+                    />
+                  </div>
+                ) : (
+                  <p className="GameStats--limited">Not available just now.</p>
+                )
               }
             />
-          )}
+          ) : null}
 
 
           {!isPaidUser ? (
@@ -4334,7 +4618,7 @@ function GameStats({ game, displayBool, stats, handleToggleTip, userTips, dayFix
               onTriggerToggle={handleFutureFixturesToggle}
               element={
                 loadingFutureFixtures ? (
-                  <div className="loading-spinner"></div>
+                  CollapsableLoading
                 ) : (
                   <Suspense fallback={<div>Loading fixtures...</div>}>
                     <LazyFutureFixturesSideBySide
@@ -4348,33 +4632,31 @@ function GameStats({ game, displayBool, stats, handleToggleTip, userTips, dayFix
             />
           )}
 
-          {loadingManagers ? (
-            <div className="loading-spinner"></div> // Show actual loading state
-          ) : homeManager === null ? (
-            /* This is the "Locked" or "Empty" state */
-            <div className="FutureFixturesLocked">
-              <button className="FutureFixturesButton locked" disabled>
-                Managers <span className="lock-icon">🔒</span>
-              </button>
-            </div>
-          ) : (
-            /* This is the "Success" state for paid users with data */
+          {matchingGame?.id ? (
             <Collapsable
               buttonText={`Managers`}
               classNameButton="FutureFixturesButton"
+              isOpen={!!openSections.managers}
+              onTriggerToggle={handleManagersToggle}
               element={
-                <ManagerComparison
-                  homeManager={homeManager}
-                  awayManager={awayManager}
-                  homeTeam={game.homeTeam}
-                  awayTeam={game.awayTeam}
-                />
+                loadingManagers ? (
+                  CollapsableLoading
+                ) : homeManager?.name ? (
+                  <ManagerComparison
+                    homeManager={homeManager}
+                    awayManager={awayManager}
+                    homeTeam={game.homeTeam}
+                    awayTeam={game.awayTeam}
+                  />
+                ) : (
+                  <p className="GameStats--limited">Not available just now.</p>
+                )
               }
             />
-          )}
+          ) : null}
 
           {loadingReferee ? (
-            <div className="loading-spinner"></div>
+            CollapsableLoading
           ) : refereeData?.length ? (
             <Collapsable
               buttonText={`Referee \u{2630}`}
@@ -4389,7 +4671,7 @@ function GameStats({ game, displayBool, stats, handleToggleTip, userTips, dayFix
           ) : null}
 
 
-          {loadingPlayerData || homePlayerDataWithImages.length === 0 ? (
+          {loadingPlayerData || homePlayerData.length === 0 ? (
             <div></div>
           ) : (
             <>
@@ -4398,8 +4680,16 @@ function GameStats({ game, displayBool, stats, handleToggleTip, userTips, dayFix
                 classNameButton="PlayerStatsButton"
                 element={
                   <PlayerStatsList
-                    homePlayerStats={homePlayerDataWithImages}
-                    awayPlayerStats={awayPlayerDataWithImages}
+                    homePlayerStats={
+                      homePlayerDataWithImages.length
+                        ? homePlayerDataWithImages
+                        : homePlayerData
+                    }
+                    awayPlayerStats={
+                      awayPlayerDataWithImages.length
+                        ? awayPlayerDataWithImages
+                        : awayPlayerData
+                    }
                   />
                 }
               />
@@ -4489,29 +4779,58 @@ function GameStats({ game, displayBool, stats, handleToggleTip, userTips, dayFix
               /* The paywall logic is removed; everyone sees the active button now */
               <Button
                 className="AIInsights"
-                onClickEvent={() => {
+                onClickEvent={async () => {
+                  setShowAIInsights(true);
+                  setIsLoading(true);
+                  const squadResult = await Promise.allSettled([
+                    fetchSquadPlayerStats(),
+                  ]).then((results) => results[0]);
+                  const [streaksResult, managersResult, lineupsResult] =
+                    await Promise.allSettled([
+                      fetchStreaks(),
+                      fetchManagers(),
+                      fetchLineups(),
+                    ]);
+                  const streaks =
+                    streaksResult.status === "fulfilled"
+                      ? streaksResult.value
+                      : streakData;
+                  const squad =
+                    squadResult.status === "fulfilled"
+                      ? squadResult.value
+                      : null;
+                  const managers =
+                    managersResult.status === "fulfilled"
+                      ? managersResult.value
+                      : null;
+                  const lineups =
+                    lineupsResult.status === "fulfilled"
+                      ? lineupsResult.value
+                      : null;
+
                   generateAIInsights(
                     game.id,
-                    streakData,
+                    streaks,
                     oddsData,
                     homeTeamStats,
                     awayTeamStats,
                     homePlayerData,
                     awayPlayerData,
-                    homeMissingPlayersImpact,
-                    awayMissingPlayersImpact,
-                    homeLineupList,
-                    awayLineupList,
+                    lineups?.homeMissingPlayersImpact ??
+                      homeMissingPlayersImpact,
+                    lineups?.awayMissingPlayersImpact ??
+                      awayMissingPlayersImpact,
+                    lineups?.homeLineup ?? homeLineupList,
+                    lineups?.awayLineup ?? awayLineupList,
                     ranksHome,
                     ranksAway,
                     futureFixturesHome,
                     futureFixturesAway,
-                    homeManager,
-                    awayManager,
-                    homeTeamPlayerStats,
-                    awayTeamPlayerStats
+                    managers?.home ?? homeManager,
+                    managers?.away ?? awayManager,
+                    squad?.home ?? homeTeamPlayerStats,
+                    squad?.away ?? awayTeamPlayerStats
                   );
-                  setShowAIInsights(true);
                 }}
                 text={"Match Preview"}
                 /* Ensure disabled is also set to false so the button is clickable */
