@@ -1,4 +1,5 @@
 import { CreateBadge } from "./createBadge";
+import { getStreakCategories } from "../utils/streakStats";
 
 export const StreakStats = ({ stats, home, away, homeLogo, awayLogo }) => {
   const categoryTitleMap = {
@@ -6,9 +7,14 @@ export const StreakStats = ({ stats, home, away, homeLogo, awayLogo }) => {
     head2head: "Previous Meetings",
   };
 
+  const categories = getStreakCategories(stats);
+  if (!categories.length) {
+    return null;
+  }
+
   return (
     <div className="StreakStats">
-      {Object.entries(stats).map(([category, streakList]) => (
+      {categories.map(([category, streakList]) => (
         <div className="StreakCategory" key={category}>
           <h3>{categoryTitleMap[category] || category} Streaks</h3>
 
@@ -22,8 +28,7 @@ export const StreakStats = ({ stats, home, away, homeLogo, awayLogo }) => {
               </tr>
             </thead>
             <tbody>
-              {Array.isArray(streakList) &&
-                streakList.map((stat, index) => (
+              {streakList.map((stat, index) => (
                 <tr key={index} className="StreakRow">
                   <td className="StreakTeamIcon">
                     {stat.team === "home" && (

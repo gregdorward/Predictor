@@ -1523,11 +1523,15 @@ export async function generateFixtures(
             (team) => team.name === match.homeTeam
           );
 
-          // console.log(leaguePositions)
-
-          let homeTeaminHomeLeague = leaguePositions.find(
+          const homeTeaminHomeLeague = leaguePositions.find(
             (team) => team.homeFormName === match.homeTeam
           );
+
+          if (!homeTeaminLeague || !homeTeaminHomeLeague) {
+            throw new Error(
+              `Missing league position data for ${match.homeTeam}`
+            );
+          }
 
           teamPositionHome = homeTeaminLeague.position;
           teamPositionHomeTable = homeTeaminHomeLeague.position;
@@ -1576,9 +1580,15 @@ export async function generateFixtures(
             (team) => team.name === match.awayTeam
           );
 
-          let awayTeaminAwayLeague = leaguePositions.find(
+          const awayTeaminAwayLeague = leaguePositions.find(
             (team) => team.awayFormName === match.awayTeam
           );
+
+          if (!awayTeaminLeague || !awayTeaminAwayLeague) {
+            throw new Error(
+              `Missing league position data for ${match.awayTeam}`
+            );
+          }
 
           teamPositionAway = awayTeaminLeague.position;
           teamPositionAwayTable = awayTeaminAwayLeague.position;

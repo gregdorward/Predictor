@@ -29,7 +29,7 @@ const PlayerStatsTable = ({ data, teamName: fallbackTeamName }) => {
 
     const sortedPlayers = useMemo(() => {
         // Handle the null/error case inside the hook so it doesn't crash
-        if (!data || !data.players || data.error) return [];
+        if (!data || !data.players || data.error || !Array.isArray(data.players)) return [];
 
         let players = [...data.players];
         players.sort((a, b) => {

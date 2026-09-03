@@ -13,7 +13,8 @@ export function selectUpcomingFixtures(events, maxCount = 5) {
 }
 
 export function mapFutureFixtureEvents(events) {
-  return (events || []).map((event) => ({
+  const items = Array.isArray(events) ? events : [];
+  return items.map((event) => ({
     tournamentName: event.tournament?.name || "",
     homeTeam: event.homeTeam?.name || "",
     awayTeam: event.awayTeam?.name || "",

@@ -20,7 +20,11 @@ describe("selectUpcomingFixtures", () => {
 });
 
 describe("mapFutureFixtureEvents", () => {
-  test("maps industry stat website event fields into display rows", () => {
+    test("ignores non-array event payloads", () => {
+      expect(mapFutureFixtureEvents({ foo: 1 })).toEqual([]);
+    });
+
+    test("maps industry stat website event fields into display rows", () => {
     const rows = mapFutureFixtureEvents([
       {
         tournament: { name: "World Cup" },

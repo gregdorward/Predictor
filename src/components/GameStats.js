@@ -114,6 +114,7 @@ import CustomRadarComparison from "./CustomRadarComparison";
 import { isCustomRadarUnlocked } from "../logic/customRadarMetrics";
 import { GoalTimingHeatShare } from "../components/GoalTimingHeatStrip";
 import SeasonPpgChart from "./SeasonPpgChart";
+import { hasValidStreaks } from "../utils/streakStats";
 import ShareableVisual from "./ShareableVisual";
 import { sanitizeImageFilename } from "../utils/captureElementImage";
 // import FutureFixturesSideBySide from "./FutureFixturesSideBySide";
@@ -420,7 +421,7 @@ function GameStats({ game, displayBool, stats, handleToggleTip, userTips, dayFix
   const [voteData, setVoteData] = useState([]);
   const [loadingVoteData, setLoadingVoteData] = useState(true);
   const [loading, setLoading] = useState(null);
-  const [streakData, setStreakData] = useState([]);
+  const [streakData, setStreakData] = useState(null);
   const [homeTeamStats, setHomeTeamStats] = useState(null);
   const [awayTeamStats, setAwayTeamStats] = useState(null);
   const [homeTeamPlayerStats, setHomeTeamPlayerStats] = useState(null);
@@ -1494,13 +1495,6 @@ function GameStats({ game, displayBool, stats, handleToggleTip, userTips, dayFix
     }
 
     return mappedStreaks;
-  }
-
-  function hasValidStreaks(stats) {
-    if (!stats || typeof stats !== "object" || Array.isArray(stats)) {
-      return false;
-    }
-    return Object.values(stats).some((value) => Array.isArray(value));
   }
 
   // Prefer FootyStats→SofaScore current season ids (rounds table alone can lag).
