@@ -61,6 +61,11 @@ import {
 import { buildGoalTimingHeatmap } from "../utils/goalTimingHeatmap";
 import { buildFormContextMetrics } from "../utils/formContextMetrics";
 import { selectedTipType } from "../components/PredictionTypeRadio";
+import {
+  getStoredSshScoreline,
+  hasKickoffPassed,
+  resolveSshScorelineForTips,
+} from "./freezePredictedScoreline";
 import { InsightsPanel } from "../components/Insights"
 import { X } from "lucide-react";
 import { doc, getDoc, collection, getDocs, query } from 'firebase/firestore';
@@ -79,6 +84,69 @@ let rawFinalAwayGoals;
 let homeOdds;
 let awayOdds;
 export let predictedScoresData;
+let pendingSshSnapshots = [];
+const sshSnapshotOverlay = new Map();
+
+function upsertLocalSshSnapshot(gameId, home, away) {
+  if (!Array.isArray(predictedScoresData)) {
+    predictedScoresData = [];
+  }
+  const idx = predictedScoresData.findIndex(
+    (row) => String(row.gameId) === String(gameId)
+  );
+  const next = {
+    ...(idx >= 0 ? predictedScoresData[idx] : {}),
+    gameId,
+    sshHomeGoals: home,
+    sshAwayGoals: away,
+  };
+  if (idx >= 0) {
+    predictedScoresData[idx] = next;
+  } else {
+    predictedScoresData.push(next);
+  }
+  sshSnapshotOverlay.set(String(gameId), { home, away });
+}
+
+function applySshSnapshotOverlay() {
+  for (const [gameId, snap] of sshSnapshotOverlay) {
+    upsertLocalSshSnapshot(gameId, snap.home, snap.away);
+  }
+}
+
+function queueSshSnapshot(gameId, home, away) {
+  const idx = pendingSshSnapshots.findIndex(
+    (row) => String(row.gameId) === String(gameId)
+  );
+  const rec = { gameId, sshHomeGoals: home, sshAwayGoals: away };
+  if (idx >= 0) {
+    pendingSshSnapshots[idx] = rec;
+  } else {
+    pendingSshSnapshots.push(rec);
+  }
+  upsertLocalSshSnapshot(gameId, home, away);
+}
+
+async function persistSshSnapshots() {
+  if (!pendingSshSnapshots.length || !process.env.NEXT_PUBLIC_EXPRESS_SERVER) {
+    pendingSshSnapshots = [];
+    return;
+  }
+  const payload = pendingSshSnapshots.slice();
+  pendingSshSnapshots = [];
+  try {
+    await fetch(`${process.env.NEXT_PUBLIC_EXPRESS_SERVER}predictedScores2`, {
+      method: "POST",
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(payload),
+    });
+  } catch (error) {
+    console.warn("Failed to persist SSH score snapshots", error);
+  }
+}
 
 export function setSingleMatchPredictionData({ leagueAverages, predictedScores }) {
   leagueAveragesData = leagueAverages;
@@ -2561,7 +2629,6 @@ export async function generateGoals(homeForm, awayForm, match) {
   homeGoals = Math.max(0.05, Number.isFinite(homeGoals) ? homeGoals : averageGoalsHome);
   awayGoals = Math.max(0.05, Number.isFinite(awayGoals) ? awayGoals : averageGoalsAway);
 
-
   return [homeGoals, awayGoals];
 }
 
@@ -4781,8 +4848,22 @@ export async function calculateScore(match, index, divider, calculate, AIPredict
     match.GoalsInGamesAverageAway =
       formAway.avScoredLast5 + formAway.avConceededLast5;
 
-    let rawFinalHomeGoals = predictedScore.home;
-    let rawFinalAwayGoals = predictedScore.away;
+    const liveHomeGoals = predictedScore.home;
+    const liveAwayGoals = predictedScore.away;
+    const storedSsh = getStoredSshScoreline(predictedScoresData, match.id);
+    const kickoffPassed = hasKickoffPassed(match);
+    const resolvedSsh = resolveSshScorelineForTips({
+      stored: storedSsh,
+      liveHome: liveHomeGoals,
+      liveAway: liveAwayGoals,
+      kickoffPassed,
+    });
+    if (resolvedSsh.shouldPersist) {
+      queueSshSnapshot(match.id, liveHomeGoals, liveAwayGoals);
+    }
+
+    let rawFinalHomeGoals = resolvedSsh.home;
+    let rawFinalAwayGoals = resolvedSsh.away;
 
     match.rawFinalHomeGoals = rawFinalHomeGoals;
     match.rawFinalAwayGoals = rawFinalAwayGoals;
@@ -5671,6 +5752,7 @@ export async function getScorePrediction(day, mocked) {
   allTips = [];
   predictions = [];
   resultedUserTipsArray.length = 0;
+  pendingSshSnapshots = [];
 
   const fetchedTips = await fetchAllUserTips();
 
@@ -5691,6 +5773,7 @@ export async function getScorePrediction(day, mocked) {
 
   // Await JSON parsing and assign results.
   predictedScoresData = await predictedScoresResponse.json();
+  applySshSnapshotOverlay();
   leagueAveragesData = leagueAverages;
 
   statsArray = {
@@ -6290,6 +6373,8 @@ export async function getScorePrediction(day, mocked) {
       }
       predictions.push(match);
   }
+
+  await persistSshSnapshots();
 
   render(
     <div />,
