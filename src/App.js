@@ -96,7 +96,7 @@ const leagueOrder = [
   17217, // Primeira Liga 26/27
   17097, // Eredivisie 26/27
   17171, // Belgian Pro League 26/27
-  16263, // Allsvenskan 2026
+  16576, // Allsvenskan 2026
   17091, // Danish Superliga 26/27
   16558, // Norway 26
   17181, // Austrian Bundesliga 26/27

@@ -1,30 +1,6 @@
 {
   "footyUpdates": [
     {
-      "name": "Saudi Pro League",
-      "oldId": 12772,
-      "newId": 17426,
-      "year": 20262027,
-      "leagueName": "Saudi Arabia Professional League",
-      "matchType": "exact-season-id"
-    },
-    {
-      "name": "Serie B",
-      "oldId": 15632,
-      "newId": 17404,
-      "year": 20262027,
-      "leagueName": "Italy Serie B",
-      "matchType": "exact-season-id"
-    },
-    {
-      "name": "National League South",
-      "oldId": 15844,
-      "newId": 17403,
-      "year": 20262027,
-      "leagueName": "England National League South",
-      "matchType": "exact-season-id"
-    },
-    {
       "name": "Allsvenskan",
       "oldId": 16263,
       "newId": 17350,
@@ -269,35 +245,25 @@
       "id": 17356,
       "name": "Greek Super League",
       "year": 20262027
+    },
+    {
+      "id": 17403,
+      "name": "National League South",
+      "year": 20262027
+    },
+    {
+      "id": 17404,
+      "name": "Serie B",
+      "year": 20262027
+    },
+    {
+      "id": 17426,
+      "name": "Saudi Pro League",
+      "year": 20262027
     }
   ],
   "footyUnmatched": [],
-  "sofaUpdates": [
-    {
-      "name": "Saudi Pro League",
-      "footyId": 12772,
-      "tournamentId": 955,
-      "oldSeason": 80443,
-      "newSeason": 99275,
-      "seasonName": "Saudi Pro League 26/27"
-    },
-    {
-      "name": "Serie B",
-      "footyId": 15632,
-      "tournamentId": 53,
-      "oldSeason": 79502,
-      "newSeason": 99067,
-      "seasonName": "Serie B 26/27"
-    },
-    {
-      "name": "National League South",
-      "footyId": 15844,
-      "tournamentId": 174,
-      "oldSeason": 78227,
-      "newSeason": 98274,
-      "seasonName": "National League South 26/27"
-    }
-  ],
+  "sofaUpdates": [],
   "sofaUnchanged": [
     {
       "name": "Allsvenskan",
@@ -316,6 +282,24 @@
       "footyId": 16571,
       "tournamentId": 155,
       "season": 87913
+    },
+    {
+      "name": "National League South",
+      "footyId": 17403,
+      "tournamentId": 174,
+      "season": 98274
+    },
+    {
+      "name": "Serie B",
+      "footyId": 17404,
+      "tournamentId": 53,
+      "season": 99067
+    },
+    {
+      "name": "Saudi Pro League",
+      "footyId": 17426,
+      "tournamentId": 955,
+      "season": 99275
     }
   ],
   "sofaErrors": [],

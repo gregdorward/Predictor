@@ -79,7 +79,7 @@ import { useState, useEffect } from "react";
 //       id: 9,
 //       season: 77849, // Belgian Pro League
 //     },
-//     16263: {
+//     16576: {
 //       id: 40,
 //       season: 69956, // Scottish Premiership
 //     },

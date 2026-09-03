@@ -176,7 +176,7 @@ export const footyStatsToSofaScoreMap = {
     id: 955,
     season: 99275, // Saudi Pro League 26/27
   },
-  16263: {
+  16576: {
     id: 40,
     season: 87925, // Allsvenskan 2026
   },

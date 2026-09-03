@@ -85,7 +85,7 @@ const CURRENT = {
   17115: { name: "J League", sofaTournament: 196, sofaSeason: 96370 },
   16627: { name: "K League", sofaTournament: 410, sofaSeason: 88606 },
   17426: { name: "Saudi Pro League", sofaTournament: 955, sofaSeason: 99275 },
-  16263: { name: "Allsvenskan", sofaTournament: 40, sofaSeason: 87925 },
+  16576: { name: "Allsvenskan", sofaTournament: 40, sofaSeason: 87925 },
   16537: { name: "Irish Premier Division", sofaTournament: 192, sofaSeason: 87682 },
   17326: { name: "A-League", sofaTournament: 136, sofaSeason: 98511 },
   17127: { name: "Europa League", sofaTournament: 679, sofaSeason: 96522 },

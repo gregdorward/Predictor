@@ -49,7 +49,7 @@ export const sofaScoreIds = [
   { 16614: 11539 }, // Colombia 26
   { 16627: 410 }, // K League 26
   { 17426: 955 }, // Saudi Pro League 26/27
-  { 16263: 40 }, // Allsvenskan 2026
+  { 16576: 40 }, // Allsvenskan 2026
 
   // Deferred - not in industry leading stat website chosen_leagues (may re-enable later)
   // { 13964: 11 }, // WC Qual Europe 2026

@@ -22,7 +22,7 @@ export const COMPETITION_CATALOG = [
   { id: 16556, slug: "copa-libertadores", name: "Copa Libertadores" },
   { id: 17097, slug: "eredivisie", name: "Eredivisie" },
   { id: 17171, slug: "belgian-pro-league", name: "Belgian Pro League" },
-  { id: 16263, slug: "allsvenskan", name: "Allsvenskan" },
+  { id: 16576, slug: "allsvenskan", name: "Allsvenskan" },
   { id: 17091, slug: "danish-superliga", name: "Danish Superliga" },
   { id: 16558, slug: "eliteserien", name: "Eliteserien" },
   { id: 17181, slug: "austrian-bundesliga", name: "Austrian Bundesliga" },
@@ -98,6 +98,8 @@ export const UNAVAILABLE_COMPETITION_SLUGS = new Set([
  * Keeps old numeric /competition/<id>/ links and fixture metadata resolvable.
  */
 export const COMPETITION_ID_ALIASES = {
+  // Rolled forward 2 Sep 2026
+  16263: 16576, // Allsvenskan
   // Rolled forward 9 Aug 2026
   15844: 17403, // National League South
   15632: 17404, // Serie B
