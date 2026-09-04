@@ -65,6 +65,7 @@ import {
   getStoredSshScoreline,
   hasKickoffPassed,
   resolveSshScorelineForTips,
+  upsertSshScoreRow,
 } from "./freezePredictedScoreline";
 import { InsightsPanel } from "../components/Insights"
 import { X } from "lucide-react";
@@ -88,23 +89,12 @@ let pendingSshSnapshots = [];
 const sshSnapshotOverlay = new Map();
 
 function upsertLocalSshSnapshot(gameId, home, away) {
-  if (!Array.isArray(predictedScoresData)) {
-    predictedScoresData = [];
-  }
-  const idx = predictedScoresData.findIndex(
-    (row) => String(row.gameId) === String(gameId)
-  );
-  const next = {
-    ...(idx >= 0 ? predictedScoresData[idx] : {}),
+  predictedScoresData = upsertSshScoreRow(
+    predictedScoresData,
     gameId,
-    sshHomeGoals: home,
-    sshAwayGoals: away,
-  };
-  if (idx >= 0) {
-    predictedScoresData[idx] = next;
-  } else {
-    predictedScoresData.push(next);
-  }
+    home,
+    away
+  );
   sshSnapshotOverlay.set(String(gameId), { home, away });
 }
 
@@ -148,9 +138,15 @@ async function persistSshSnapshots() {
   }
 }
 
+/** Persist any SSH score snapshots queued during single-fixture prediction. */
+export async function flushPendingSshSnapshots() {
+  await persistSshSnapshots();
+}
+
 export function setSingleMatchPredictionData({ leagueAverages, predictedScores }) {
   leagueAveragesData = leagueAverages;
   predictedScoresData = predictedScores;
+  applySshSnapshotOverlay();
 }
 let totalROI = 0;
 let totalInvestment = 0;

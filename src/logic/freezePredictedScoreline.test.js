@@ -2,6 +2,7 @@ import {
   getStoredSshScoreline,
   hasKickoffPassed,
   resolveSshScorelineForTips,
+  upsertSshScoreRow,
 } from "./freezePredictedScoreline";
 
 describe("hasKickoffPassed", () => {
@@ -33,6 +34,25 @@ describe("getStoredSshScoreline", () => {
 
   test("returns null when snapshot is missing", () => {
     expect(getStoredSshScoreline([{ gameId: 1 }], 1)).toBeNull();
+  });
+});
+
+describe("upsertSshScoreRow", () => {
+  test("replaces an existing row for the same game id", () => {
+    expect(
+      upsertSshScoreRow(
+        [{ gameId: 42, sshHomeGoals: 0, sshAwayGoals: 0 }],
+        42,
+        2,
+        1
+      )
+    ).toEqual([{ gameId: 42, sshHomeGoals: 2, sshAwayGoals: 1 }]);
+  });
+
+  test("appends when the game id is new", () => {
+    expect(upsertSshScoreRow([], 7, 3, 0)).toEqual([
+      { gameId: 7, sshHomeGoals: 3, sshAwayGoals: 0 },
+    ]);
   });
 });
 

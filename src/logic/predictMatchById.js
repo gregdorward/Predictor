@@ -7,6 +7,7 @@ import {
 } from "./getFixtures";
 import {
   calculateScore,
+  flushPendingSshSnapshots,
   setSingleMatchPredictionData,
   isBelowMinMatchesForPrediction,
 } from "./getScorePredictions";
@@ -130,6 +131,8 @@ export async function predictMatchById(matchId) {
       match.omit = false;
     }
   }
+
+  await flushPendingSshSnapshots();
 
   await enrichMatchForFixturePageDisplay(match);
 
