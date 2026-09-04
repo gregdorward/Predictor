@@ -26,6 +26,24 @@ export function getStoredSshScoreline(predictedScores, matchId) {
   return { home, away };
 }
 
+/** Insert or replace sshHomeGoals/sshAwayGoals for one match in a scores array. */
+export function upsertSshScoreRow(scores, gameId, home, away) {
+  const rows = Array.isArray(scores) ? [...scores] : [];
+  const idx = rows.findIndex((row) => String(row.gameId) === String(gameId));
+  const next = {
+    ...(idx >= 0 ? rows[idx] : {}),
+    gameId,
+    sshHomeGoals: home,
+    sshAwayGoals: away,
+  };
+  if (idx >= 0) {
+    rows[idx] = next;
+  } else {
+    rows.push(next);
+  }
+  return rows;
+}
+
 /**
  * After kickoff, keep using a stored SSH scoreline so Build a Multi / tips
  * cannot reshuffle when live most-likely scores move. Before kickoff, keep
