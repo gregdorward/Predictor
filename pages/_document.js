@@ -193,6 +193,14 @@ export default class MyDocument extends Document {
     return (
       <Html lang="en">
         <Head>
+          {/* Exact Journey snippet at the top of <head> so their crawler can detect it. */}
+          <script
+            type="text/javascript"
+            async="async"
+            data-noptimize="1"
+            data-cfasync="false"
+            src="https://scripts.scriptwrapper.com/tags/71e44a5d-dc3a-499d-8677-800918c94d8a.js"
+          />
           <link rel="icon" href="/favicon.ico" />
           <link rel="apple-touch-icon" href="/logo192.png" />
           <link rel="manifest" href="/manifest.json" />
@@ -245,13 +253,6 @@ export default class MyDocument extends Document {
           <script
             // eslint-disable-next-line react/no-danger
             dangerouslySetInnerHTML={{ __html: DEFERRED_GA_SCRIPT }}
-          />
-          <script
-            type="text/javascript"
-            async
-            data-noptimize="1"
-            data-cfasync="false"
-            src="//scripts.scriptwrapper.com/tags/71e44a5d-dc3a-499d-8677-800918c94d8a.js"
           />
         </Head>
         <body>
