@@ -10,14 +10,18 @@ const nextConfig = {
   // StrictMode double-invokes effects in dev; the imperative render() engine
   // manages its own roots, so keep it off to match the previous CRA behaviour.
   reactStrictMode: false,
-  async redirects() {
+  async rewrites() {
     return [
       {
+        // 200 on this domain — some ad crawlers do not follow a 308 to Journey.
         source: "/ads.txt",
         destination:
           "https://adstxt.journeymv.com/sites/71e44a5d-dc3a-499d-8677-800918c94d8a/ads.txt",
-        permanent: true,
       },
+    ];
+  },
+  async redirects() {
+    return [
       {
         source: "/seasonpreviews",
         destination: "/premier-league-2026-27/",
