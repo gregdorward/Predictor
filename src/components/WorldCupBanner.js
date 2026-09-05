@@ -1,12 +1,12 @@
 import { useRouter } from "next/router";
 
-const BANNER_PATH = "/competitions/compare/";
+const BANNER_PATH = "/articles/";
 
 export default function WorldCupBanner() {
   const router = useRouter();
   const pathname = router?.pathname || "/";
 
-  if (pathname.startsWith("/competitions/compare")) {
+  if (pathname.startsWith("/articles")) {
     return null;
   }
 
@@ -14,17 +14,17 @@ export default function WorldCupBanner() {
     <a
       href={BANNER_PATH}
       className="WC26Banner"
-      aria-label="Compare football leagues — goals, BTTS, cards and more"
+      aria-label="Articles and analysis — read more about our story"
     >
       <div className="WC26Banner__inner">
         <span className="WC26Banner__badge">New</span>
         <span className="WC26Banner__flags" aria-hidden="true">
-          📊
+          📰
         </span>
         <span className="WC26Banner__copy">
-          <strong className="WC26Banner__title">Compare football leagues</strong>
+          <strong className="WC26Banner__title">Articles &amp; analysis</strong>
           <span className="WC26Banner__sub">
-            Goals, BTTS, cards &amp; corners — every league side by side
+            Read more about our story
           </span>
         </span>
         <span className="WC26Banner__cta" aria-hidden="true">

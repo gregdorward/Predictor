@@ -138,14 +138,12 @@ const GuestLanding = ({ id = "guest-landing", showLogin = false }) => {
         <div className="GuestLanding-card GuestLanding-about">
           <h2 className="GuestLanding-aboutTitle">Football statistics you can actually use</h2>
           <p>
-            Soccer Stats Hub is built for fans who want more than a fixture list.
+            Soccer Stats Hub is built for fans who want all the most important pre-match data at their fingertips.
             Compare today&apos;s matches with win probabilities, predicted scorelines, recent
-            form, expected goals and goal-market trends, all in one place. Every competition
-            page explains what the league averages mean, and every fixture page sets out the
-            head-to-head and form case before the interactive charts load.
+            form, expected goals and goal-market trends, all in one place.
           </p>
           <p>
-            We cover more than 50 competitions, from the Premier League and Champions League
+            We cover up to 50 competitions at one time, from the Premier League and Champions League
             to MLS, the J League and international tournaments. Read how the models work on
             our <a href="/methodology/">methodology</a> page, browse the{" "}
             <a href="/competitions/">competition index</a>, or learn more{" "}

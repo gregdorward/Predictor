@@ -102,16 +102,6 @@ export default function CompetitionsCompare({ overview }) {
         ) : (
           <>
             <section className="CompetitionsCompare-notes" aria-label="How to read this page">
-              <p>
-                League averages are not interchangeable. Goals per game, card
-                counts and home advantage all vary widely between the
-                competitions below, so a price that looks generous in one league
-                can be poor value in another. Two leagues can also share a goals
-                average while splitting those goals very differently, which is
-                why BTTS is worth reading alongside it rather than inferring one
-                from the other. Use this as a starting point, then open a league
-                for its team-level breakdown.
-              </p>
               <p className="CompetitionsCompare-methodology">
                 Figures cover the current season only and come from the same source
                 as our individual competition pages, rebuilt once a day.

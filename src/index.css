@@ -993,7 +993,7 @@ h4.Blurb {
   display: block;
   width: 100%;
   margin: 0 0 1rem;
-  padding: 0;
+  padding: 1em;
   font-size: 0.8rem;
   font-weight: 600;
   font-family: inherit;
@@ -1003,7 +1003,7 @@ h4.Blurb {
   border-radius: 0;
   box-shadow: none;
   cursor: pointer;
-  text-align: left;
+  text-align: center;
   text-decoration: underline;
   text-underline-offset: 0.2em;
 }
@@ -1087,9 +1087,10 @@ h4.Blurb {
   flex-basis: auto;
   height: auto;
   margin: 0;
-  padding: 0.35em 0 0;
+  padding: 1em;
   font-size: 0.75em;
   background: transparent;
+  text-align: center;
 }
 
 @media (max-width: 1024px) {
@@ -9591,9 +9592,10 @@ button.TogglePasswordButton {
   flex-basis: auto;
   height: auto;
   margin: 0;
-  padding: 0.35em 0 0;
+  padding: 1em;
   font-size: 0.75em;
   background: transparent;
+  text-align: center;
 }
 
 .ResetPasswordField {
@@ -15518,14 +15520,14 @@ body.dark-mode .CompetitionsIndex-card {
 
 .CompetitionsIndex-compareLink {
   display: inline-block;
-  margin-left: 0.6rem;
+  margin: 1em;
   padding: 0.35rem 0.85rem;
   border-radius: 999px;
   font-size: 0.85rem;
   font-weight: 600;
   text-decoration: none;
-  color: var(--button-text-color);
-  background: var(--accent-color);
+  color: #000000;
+  background: var(--primary-color);
 }
 
 .CompetitionsIndex-compareLink:hover {
@@ -15561,19 +15563,18 @@ body.dark-mode .CompetitionsIndex-card {
 .CompetitionsCompare-intro {
   margin: 0.5rem 0 0;
   max-width: 64rem;
+  font-size: 0.85rem;
   opacity: 0.9;
 }
 
 .CompetitionsCompare-notes {
   max-width: 48rem;
   margin-bottom: 2rem;
-  font-size: 0.85rem;
   line-height: 1.6;
 }
 
 .CompetitionsCompare-methodology,
 .CompetitionsCompare-updated {
-  font-size: 0.85rem;
   color: var(--faint-text);
 }
 
