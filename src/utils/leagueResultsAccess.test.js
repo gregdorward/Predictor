@@ -105,6 +105,13 @@ describe("getLeagueResultsByLeagueId", () => {
     expect(getLeagueResultsByLeagueId(stringIdCache, 16494)?.id).toBe("16494");
     expect(getLeagueFixturesByLeagueId(stringIdCache, 16494)).toHaveLength(1);
   });
+
+  test("resolves retired competition ids via COMPETITION_ID_ALIASES", () => {
+    const cache = [{ id: 16576, fixtures: [{ home_name: "Malmo" }] }];
+
+    expect(getLeagueResultsByLeagueId(cache, 16263)?.id).toBe(16576);
+    expect(getLeagueFixturesByLeagueId(cache, 16263)).toHaveLength(1);
+  });
 });
 
 describe("competition goal difference", () => {
