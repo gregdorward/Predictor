@@ -23,6 +23,7 @@ import {
 import { resolveMultiDivisionLeagueTables } from "../utils/multiDivisionLeagueTables";
 import { resolveConferenceLeagueTeams } from "../components/competition/competitionLeagueTable";
 import { apiGetUrl } from "../utils/apiUrl";
+import { resolveFootyStatsLeagueId } from "../seo/competitionCatalog";
 import { persistLeagueResults } from "../utils/persistLeagueResults";
 import {
   buildThinLeagueFormSlices,
@@ -1456,7 +1457,9 @@ export async function generateFixtures(
     for (let i = 0; i < orderedLeagues.length; i++) {
       leagueID = orderedLeagues[i].element.id;
       leagueGames = fixtureArray.filter(
-        (game) => game.competition_id === orderedLeagues[i].element.id
+        (game) =>
+          resolveFootyStatsLeagueId(game.competition_id) ===
+          orderedLeagues[i].element.id
       );
 
       for (const fixture of leagueGames) {

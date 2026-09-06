@@ -21,6 +21,7 @@ import {
 import { resolveLeagueResultsForCompetition } from "./leagueResultsLoader";
 import { buildFixtureHeadToHead } from "./fixturePageH2h";
 import { fetchFixtureSeasonStats } from "./fetchFixtureSeasonStats";
+import { resolveFootyStatsLeagueId } from "../seo/competitionCatalog";
 
 export async function predictMatchById(matchId) {
   const snapshotRes = await fetch(apiGetUrl(`match-snapshot/${matchId}`));
@@ -34,7 +35,7 @@ export async function predictMatchById(matchId) {
     throw new Error("Invalid match data");
   }
 
-  const competitionId = fixture.competition_id;
+  const competitionId = resolveFootyStatsLeagueId(fixture.competition_id);
   const leagueMeta = orderedLeagues.find((l) => l.element.id === competitionId);
   const leagueName =
     leagueMeta?.name || fixture.competition_name || fixture.league_name || "League";
