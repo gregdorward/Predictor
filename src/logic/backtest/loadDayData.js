@@ -1,3 +1,6 @@
+import { existsSync, mkdirSync, readFileSync, writeFileSync } from "fs";
+import { resolve } from "path";
+
 import { buildMatchFromFixture } from "./buildMatchFromFixture.js";
 import { getLeagueName } from "./leagueNames.js";
 import { toFormDateKey, toIsoDate } from "./dateUtils.js";
@@ -16,6 +19,48 @@ async function fetchJson(url) {
   }
   const data = await response.json();
   return { ok: true, status: response.status, data };
+}
+
+function matchesCacheDir() {
+  return resolve(process.cwd(), "scripts/output/backtest-cache");
+}
+
+function matchesCachePath(isoDate) {
+  return resolve(matchesCacheDir(), `matches-${isoDate}.json`);
+}
+
+function readMatchesCache(isoDate) {
+  const path = matchesCachePath(isoDate);
+  if (!existsSync(path)) return null;
+  try {
+    return JSON.parse(readFileSync(path, "utf8"));
+  } catch {
+    return null;
+  }
+}
+
+function writeMatchesCache(isoDate, data) {
+  mkdirSync(matchesCacheDir(), { recursive: true });
+  writeFileSync(matchesCachePath(isoDate), JSON.stringify(data));
+}
+
+async function loadMatchesPayload(isoDate, origin) {
+  const cached = readMatchesCache(isoDate);
+  if (cached != null) {
+    return { ok: true, status: 200, data: cached, source: "cache" };
+  }
+
+  const matchesRes = await fetchJson(`${origin}matches/${isoDate}`);
+  if (matchesRes.ok && matchesRes.data != null) {
+    writeMatchesCache(isoDate, matchesRes.data);
+  }
+  return { ...matchesRes, source: "api" };
+}
+
+function parseAllForm(formData) {
+  if (Array.isArray(formData?.allForm)) return formData.allForm;
+  if (Array.isArray(formData)) return formData;
+  return [];
 }
 
 export async function fetchGlobalBacktestData(apiOrigin) {
@@ -46,9 +91,34 @@ export async function loadDayData(date, apiOrigin) {
   const isoDate = toIsoDate(date);
   const formKey = toFormDateKey(date);
 
-  const [matchesRes, formRes, averagesRes] = await Promise.all([
-    fetchJson(`${origin}matches/${isoDate}`),
-    fetchJson(`${origin}form/${formKey}`),
+  const formRes = await fetchJson(`${origin}form/${formKey}`);
+
+  if (!formRes.ok) {
+    return {
+      isoDate,
+      formKey,
+      skipped: true,
+      reason: "no_cached_form",
+      matches: [],
+      allForm: [],
+    };
+  }
+
+  const allForm = parseAllForm(formRes.data);
+
+  if (allForm.length === 0) {
+    return {
+      isoDate,
+      formKey,
+      skipped: true,
+      reason: "empty_cached_form",
+      matches: [],
+      allForm: [],
+    };
+  }
+
+  const [matchesRes, averagesRes] = await Promise.all([
+    loadMatchesPayload(isoDate, origin),
     fetchJson(`${origin}league-averages/${formKey}`),
   ]);
 
@@ -63,39 +133,11 @@ export async function loadDayData(date, apiOrigin) {
     };
   }
 
-  if (!formRes.ok) {
-    return {
-      isoDate,
-      formKey,
-      skipped: true,
-      reason: "no_cached_form",
-      matches: [],
-      allForm: [],
-    };
-  }
-
   const fixtureList = Array.isArray(matchesRes.data?.data)
     ? matchesRes.data.data
     : Array.isArray(matchesRes.data)
       ? matchesRes.data
       : [];
-
-  const allForm = Array.isArray(formRes.data?.allForm)
-    ? formRes.data.allForm
-    : Array.isArray(formRes.data)
-      ? formRes.data
-      : [];
-
-  if (allForm.length === 0) {
-    return {
-      isoDate,
-      formKey,
-      skipped: true,
-      reason: "empty_cached_form",
-      matches: [],
-      allForm: [],
-    };
-  }
 
   const formIds = new Set(allForm.map((entry) => entry.id));
   const completeFixtures = fixtureList.filter(
@@ -124,5 +166,6 @@ export async function loadDayData(date, apiOrigin) {
     allForm,
     leagueAverages,
     leagueAveragesSource: leagueAverages ? "dated" : "missing",
+    matchesSource: matchesRes.source ?? "api",
   };
 }

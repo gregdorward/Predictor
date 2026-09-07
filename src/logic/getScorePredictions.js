@@ -258,6 +258,61 @@ let allIndividualTips = [];
 })();
 
 
+/** Override a 1-1 (or other) mode when another 1X2 is clearly more likely. */
+const CLEAR_OUTCOME_MARGIN = 12;
+
+function scorelineFromGoals(home, away) {
+  if (Number(home) > Number(away)) return "homeWin";
+  if (Number(away) > Number(home)) return "awayWin";
+  return "draw";
+}
+
+function getMostLikelyScoreForOutcome(scoreMatrix, outcome) {
+  const matching = scoreMatrix.filter(
+    (score) => scorelineFromGoals(score.home, score.away) === outcome
+  );
+  if (!matching.length) return getMostLikelyScore(scoreMatrix);
+  return getMostLikelyScore(matching);
+}
+
+function alignScorelineToOutcome(modeScore, scoreMatrix, outcome) {
+  if (scorelineFromGoals(modeScore.home, modeScore.away) === outcome) {
+    return modeScore;
+  }
+  return getMostLikelyScoreForOutcome(scoreMatrix, outcome);
+}
+
+function pickOutcomeFromProbabilities(homeWin, draw, awayWin) {
+  const home = Number(homeWin) || 0;
+  const drawP = Number(draw) || 0;
+  const away = Number(awayWin) || 0;
+  if (home >= drawP && home >= away) return "homeWin";
+  if (away >= home && away >= drawP) return "awayWin";
+  return "draw";
+}
+
+function pickOutcomeWhenClear(scoreline, homeWin, draw, awayWin, margin) {
+  const matrix = pickOutcomeFromProbabilities(homeWin, draw, awayWin);
+  if (matrix === scoreline) return scoreline;
+  const probs = {
+    homeWin: Number(homeWin) || 0,
+    draw: Number(draw) || 0,
+    awayWin: Number(awayWin) || 0,
+  };
+  const gap = (probs[matrix] ?? 0) - (probs[scoreline] ?? 0);
+  return gap >= margin ? matrix : scoreline;
+}
+
+function pickMatchOutcome(scoreline, homeWin, draw, awayWin) {
+  return pickOutcomeWhenClear(
+    scoreline,
+    homeWin,
+    draw,
+    awayWin,
+    CLEAR_OUTCOME_MARGIN
+  );
+}
+
 function factorial(n) {
   if (n === 0) return 1;
   let result = 1;
@@ -2318,20 +2373,6 @@ export async function getPointsDifferential(pointsHomeAvg, pointsAwayAvg) {
   return parseFloat(differential);
 }
 
-/**
- * Normalizes the raw XG Comparison score into a multiplier.
- * @param {number} rawComparison - The -5.11 to 5.11 value you're seeing.
- * @param {number} dampening - How much the rating affects the goals (e.g., 0.04).
- */
-function calculateXGMultiplier(rawComparison, dampening = 0.04) {
-  // rawComparison of 5.0 * 0.04 = 0.20 boost (1.20x multiplier)
-  // rawComparison of -5.0 * 0.04 = -0.20 drop (0.80x multiplier)
-  const multiplier = 1 + (rawComparison * dampening);
-
-  // Safety Clamp: Don't let a massive stat outlier swing goals by more than 25%
-  return Math.max(0.85, Math.min(1.15, multiplier));
-}
-
 export async function compareFormTrend(recentForm, distantForm) {
   // Weights: Give more importance to Goal Diff than Possession
   const weights = [0.25, 0.25, 0.2, 0.2, 0.1];
@@ -2580,6 +2621,8 @@ export async function generateGoals(homeForm, awayForm, match) {
   let last5PointsAwayMultipliedByOppPoints = awayForm.avPoints5 * awayForm.avOppositionPPGAll;
 
 
+  // XGRating stays on form for display. Do not multiply lambdas by it —
+  // early-season xG swings added noise without lifting 1X2 or ROI.
   homeForm.XGRating =
     (last5PointsHomeMultipliedByOppPoints * 0.1) +
     (homeForm.XGChangeRecently * 1);
@@ -2587,13 +2630,6 @@ export async function generateGoals(homeForm, awayForm, match) {
   awayForm.XGRating =
     (last5PointsAwayMultipliedByOppPoints * 0.1) +
     (awayForm.XGChangeRecently * 1);
-
-  const rawHomeComparison = homeForm.XGRating - awayForm.XGRating;
-  const rawAwayComparison = awayForm.XGRating - homeForm.XGRating;
-
-  // 2. Convert to multipliers (centered at 1.0)
-  const homeXGMult = calculateXGMultiplier(rawHomeComparison, 0.035); // Adjust 0.05 to taste
-  const awayXGMult = calculateXGMultiplier(rawAwayComparison, 0.035);
 
   let homeGoals;
   let awayGoals;
@@ -2610,8 +2646,8 @@ export async function generateGoals(homeForm, awayForm, match) {
     homeGoals = ((homeLambda_rawOverall * 0.75) * (1 + (oddsComparisonHome * 0.1)));
     awayGoals = ((awayLambda_rawOverall * 0.75) * (1 + (oddsComparisonAway * 0.1)));
   } else {
-    homeGoals = (homeLambda_final_v3) * homeXGMult;
-    awayGoals = (awayLambda_final_v3) * awayXGMult;
+    homeGoals = homeLambda_final_v3;
+    awayGoals = awayLambda_final_v3;
   }
 
   if (homeGoals > 5) {
@@ -4787,7 +4823,7 @@ export async function calculateScore(match, index, divider, calculate, AIPredict
 
     match.scoreMatrix = calibratedMatrix;
 
-    const predictedScore = getMostLikelyScore(calibratedMatrix);
+    const modeScore = getMostLikelyScore(calibratedMatrix);
 
     const { homeWin, draw, awayWin } =
       getMatchOddsProbabilities(calibratedMatrix);
@@ -4844,6 +4880,18 @@ export async function calculateScore(match, index, divider, calculate, AIPredict
     match.GoalsInGamesAverageAway =
       formAway.avScoredLast5 + formAway.avConceededLast5;
 
+    const liveOutcome = pickMatchOutcome(
+      scorelineFromGoals(modeScore.home, modeScore.away),
+      match.homeWinProbability,
+      match.drawProbability,
+      match.awayWinProbability
+    );
+    const predictedScore = alignScorelineToOutcome(
+      modeScore,
+      calibratedMatrix,
+      liveOutcome
+    );
+
     const liveHomeGoals = predictedScore.home;
     const liveAwayGoals = predictedScore.away;
     const storedSsh = getStoredSshScoreline(predictedScoresData, match.id);
@@ -4885,7 +4933,31 @@ export async function calculateScore(match, index, divider, calculate, AIPredict
     match.BTTSValue = (match.bttsYesProbability - match.bttsYesImplied).toFixed(2)
 
     if (match.status !== "suspended") {
-      if (finalHomeGoals > finalAwayGoals) {
+      const scorelinePrediction = scorelineFromGoals(
+        finalHomeGoals,
+        finalAwayGoals
+      );
+      const outcomePrediction = pickMatchOutcome(
+        scorelinePrediction,
+        match.homeWinProbability,
+        match.drawProbability,
+        match.awayWinProbability
+      );
+
+      if (outcomePrediction !== scorelinePrediction) {
+        const aligned = getMostLikelyScoreForOutcome(
+          calibratedMatrix,
+          outcomePrediction
+        );
+        finalHomeGoals = aligned.home;
+        finalAwayGoals = aligned.away;
+        rawFinalHomeGoals = aligned.home;
+        rawFinalAwayGoals = aligned.away;
+        match.rawFinalHomeGoals = aligned.home;
+        match.rawFinalAwayGoals = aligned.away;
+      }
+
+      if (outcomePrediction === "homeWin") {
         match.prediction = "homeWin";
         match.winValue = (match.homeWinProbability - homeWinImplied).toFixed(2)
         match.winImplied = homeWinImplied;
@@ -4901,7 +4973,7 @@ export async function calculateScore(match, index, divider, calculate, AIPredict
         } else {
           match.includeInMultis = true;
         }
-      } else if (finalAwayGoals > finalHomeGoals) {
+      } else if (outcomePrediction === "awayWin") {
         match.prediction = "awayWin";
         match.winValue = (match.awayWinProbability - awayWinImplied).toFixed(2)
         match.winImplied = awayWinImplied;
@@ -4916,7 +4988,7 @@ export async function calculateScore(match, index, divider, calculate, AIPredict
         } else {
           match.includeInMultis = true;
         }
-      } else if (finalHomeGoals === finalAwayGoals) {
+      } else if (outcomePrediction === "draw") {
         match.prediction = "draw";
         match.drawValue = (draw - drawImplied).toFixed(2)
         match.winImplied = drawImplied;
