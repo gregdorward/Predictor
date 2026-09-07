@@ -125,16 +125,29 @@ async function persistSshSnapshots() {
   const payload = pendingSshSnapshots.slice();
   pendingSshSnapshots = [];
   try {
-    await fetch(`${process.env.NEXT_PUBLIC_EXPRESS_SERVER}predictedScores2`, {
-      method: "POST",
-      headers: {
-        Accept: "application/json",
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(payload),
-    });
+    const response = await fetch(
+      `${process.env.NEXT_PUBLIC_EXPRESS_SERVER}predictedScores2`,
+      {
+        method: "POST",
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(payload),
+      }
+    );
+    if (!response.ok) {
+      throw new Error(`SSH snapshot persist failed: ${response.status}`);
+    }
   } catch (error) {
     console.warn("Failed to persist SSH score snapshots", error);
+    const byId = new Map(
+      [...payload, ...pendingSshSnapshots].map((row) => [
+        String(row.gameId),
+        row,
+      ])
+    );
+    pendingSshSnapshots = [...byId.values()];
   }
 }
 

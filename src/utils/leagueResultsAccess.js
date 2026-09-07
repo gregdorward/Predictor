@@ -1,3 +1,5 @@
+import { resolveFootyStatsLeagueId } from "../seo/competitionCatalog";
+
 /** ~275 days - limits form/history payloads to the active season window. */
 export const RECENT_RESULTS_WINDOW_SEC = 23778463;
 
@@ -93,7 +95,8 @@ export function findLeagueEntryById(entries, leagueId) {
     return null;
   }
 
-  const normalizedId = String(leagueId);
+  const resolvedId = resolveFootyStatsLeagueId(leagueId) ?? leagueId;
+  const normalizedId = String(resolvedId);
   return entries.find((entry) => String(entry.id) === normalizedId) ?? null;
 }
 

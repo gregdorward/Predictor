@@ -280,6 +280,13 @@ describe("findLeagueEntryById", () => {
     expect(findLeagueEntryById(averages, 99999)).toBeNull();
     expect(findLeagueEntryById(null, 17146)).toBeNull();
   });
+
+  test("resolves retired season ids via COMPETITION_ID_ALIASES", () => {
+    const averages = [{ id: 16576, averageGoals: 2.6 }];
+
+    expect(findLeagueEntryById(averages, 16263)?.averageGoals).toBe(2.6);
+    expect(findLeagueEntryById(averages, 16576)?.averageGoals).toBe(2.6);
+  });
 });
 
 describe("isResultsCacheValid", () => {
