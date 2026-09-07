@@ -267,19 +267,27 @@ function scorelineFromGoals(home, away) {
   return "draw";
 }
 
-function getMostLikelyScoreForOutcome(scoreMatrix, outcome) {
+function scoreDistanceToLambdas(score, lambdaHome, lambdaAway) {
+  const dh = Number(score.home) - Number(lambdaHome);
+  const da = Number(score.away) - Number(lambdaAway);
+  return dh * dh + da * da;
+}
+
+/** Integer score for a 1X2 that sits closest to the two lambdas (not the Poisson mode). */
+function scoreClosestToLambdas(scoreMatrix, lambdaHome, lambdaAway, outcome) {
   const matching = scoreMatrix.filter(
     (score) => scorelineFromGoals(score.home, score.away) === outcome
   );
-  if (!matching.length) return getMostLikelyScore(scoreMatrix);
-  return getMostLikelyScore(matching);
-}
-
-function alignScorelineToOutcome(modeScore, scoreMatrix, outcome) {
-  if (scorelineFromGoals(modeScore.home, modeScore.away) === outcome) {
-    return modeScore;
-  }
-  return getMostLikelyScoreForOutcome(scoreMatrix, outcome);
+  const pool = matching.length ? matching : scoreMatrix;
+  return pool.reduce((best, current) => {
+    const dCur = scoreDistanceToLambdas(current, lambdaHome, lambdaAway);
+    const dBest = scoreDistanceToLambdas(best, lambdaHome, lambdaAway);
+    if (dCur < dBest) return current;
+    if (dCur === dBest && current.probability > best.probability) {
+      return current;
+    }
+    return best;
+  });
 }
 
 function pickOutcomeFromProbabilities(homeWin, draw, awayWin) {
@@ -4886,9 +4894,10 @@ export async function calculateScore(match, index, divider, calculate, AIPredict
       match.drawProbability,
       match.awayWinProbability
     );
-    const predictedScore = alignScorelineToOutcome(
-      modeScore,
+    const predictedScore = scoreClosestToLambdas(
       calibratedMatrix,
+      clampLambda(lambdaHome),
+      clampLambda(lambdaAway),
       liveOutcome
     );
 
@@ -4945,8 +4954,10 @@ export async function calculateScore(match, index, divider, calculate, AIPredict
       );
 
       if (outcomePrediction !== scorelinePrediction) {
-        const aligned = getMostLikelyScoreForOutcome(
+        const aligned = scoreClosestToLambdas(
           calibratedMatrix,
+          clampLambda(lambdaHome),
+          clampLambda(lambdaAway),
           outcomePrediction
         );
         finalHomeGoals = aligned.home;
