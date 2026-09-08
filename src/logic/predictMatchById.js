@@ -21,6 +21,10 @@ import {
 import { resolveLeagueResultsForCompetition } from "./leagueResultsLoader";
 import { buildFixtureHeadToHead } from "./fixturePageH2h";
 import { fetchFixtureSeasonStats } from "./fetchFixtureSeasonStats";
+import {
+  mergeFormEntry,
+  mergeLeagueResults,
+} from "./predictMatchGlobals";
 
 export async function predictMatchById(matchId) {
   const snapshotRes = await fetch(apiGetUrl(`match-snapshot/${matchId}`));
@@ -88,11 +92,8 @@ export async function predictMatchById(matchId) {
     leaguePositions
   );
 
-  allForm.length = 0;
-  allForm.push(formEntry);
-
-  allLeagueResultsArrayOfObjects.length = 0;
-  allLeagueResultsArrayOfObjects.push(leagueResults);
+  mergeFormEntry(allForm, formEntry);
+  mergeLeagueResults(allLeagueResultsArrayOfObjects, leagueResults);
 
   const predictedScores = await predictedScoresRes.json();
   setSingleMatchPredictionData({ leagueAverages, predictedScores });

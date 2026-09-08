@@ -1489,9 +1489,18 @@ export async function generateFixtures(
         match.awayTeam = fixture.away_name;
         match.stadium = fixture.stadium_name;
         match.refereeID = fixture.refereeID;
-        match.homeOdds = fixture.odds_ft_1.toFixed(2);
-        match.awayOdds = fixture.odds_ft_2.toFixed(2);
-        match.drawOdds = fixture.odds_ft_x.toFixed(2);
+        match.homeOdds =
+          fixture.odds_ft_1 != null
+            ? Number(fixture.odds_ft_1).toFixed(2)
+            : "-";
+        match.awayOdds =
+          fixture.odds_ft_2 != null
+            ? Number(fixture.odds_ft_2).toFixed(2)
+            : "-";
+        match.drawOdds =
+          fixture.odds_ft_x != null
+            ? Number(fixture.odds_ft_x).toFixed(2)
+            : "-";
         match.homeDoubleChance = fixture.odds_doublechance_1x;
         match.awayDoubleChance = fixture.odds_doublechance_x2;
         match.bttsOdds = fixture.odds_btts_yes;
