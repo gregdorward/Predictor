@@ -1,10 +1,10 @@
 import { Fragment, useState } from "react";
 import { isReactSnap } from "../firebase";
 import { apiGetUrl } from "../utils/apiUrl";
-import { fetchLeagueAveragesForDate } from "../utils/leagueAverages";
+import { resolveLeagueAveragesForDate, toIsoDateFromLocal } from "../utils/leagueAverages";
 import { getPointsFromLastX } from "../utils/getPointsFromLastX";
 export { getPointsFromLastX };
-import { matches, diff, dynamicFormDateKey } from "./getFixtures";
+import { matches, diff, dynamicFormDateKey, dynamicDate } from "./getFixtures";
 import Collapsable from "../components/CollapsableElement";
 import CollapsableStats from "../components/CollapsableStats";
 import { allForm } from "../logic/getFixtures";
@@ -5769,12 +5769,16 @@ export async function getScorePrediction(day, mocked) {
   let divider = 10;
 
   const predictedScoresPromise = fetch(`${process.env.NEXT_PUBLIC_EXPRESS_SERVER}predictedScores2`);
-  const leagueAveragesPromise = fetchLeagueAveragesForDate(dynamicFormDateKey);
+  const leagueAveragesPromise = resolveLeagueAveragesForDate({
+    formDateKey: dynamicFormDateKey,
+    isoDate: toIsoDateFromLocal(dynamicDate),
+    leagueResults: allLeagueResultsArrayOfObjects,
+  });
 
   // Await everything in parallel
   const [
     predictedScoresResponse,
-    leagueAverages,
+    leagueAveragesResult,
   ] = await Promise.all([
     predictedScoresPromise,
     leagueAveragesPromise,
@@ -5783,7 +5787,7 @@ export async function getScorePrediction(day, mocked) {
   // Await JSON parsing and assign results.
   predictedScoresData = await predictedScoresResponse.json();
   applySshSnapshotOverlay();
-  leagueAveragesData = leagueAverages;
+  leagueAveragesData = leagueAveragesResult.averages;
 
   statsArray = {
     trueFormArray: [],

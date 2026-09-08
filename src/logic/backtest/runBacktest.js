@@ -20,6 +20,10 @@ import {
 } from "./formatOutput.js";
 import { uploadBacktestArtifacts } from "./uploadToS3.js";
 import { eachDateInclusive, sleep } from "./dateUtils.js";
+import {
+  buildLeagueAveragesAsOf,
+  persistLeagueAveragesForDate,
+} from "../../utils/leagueAverages.js";
 
 function attachCachedForm(match) {
   const fixtureForm = allForm.find(
@@ -65,6 +69,7 @@ export async function runBacktest(cliArgs = {}) {
   const allRows = [];
   const skippedDays = [];
   let daysWithDatedAverages = 0;
+  let daysWithAsOfAverages = 0;
   let daysWithFallbackAverages = 0;
 
   for (const date of eachDateInclusive(params.from, params.to)) {
@@ -87,14 +92,22 @@ export async function runBacktest(cliArgs = {}) {
     allLeagueResultsArrayOfObjects.length = 0;
     allLeagueResultsArrayOfObjects.push(...leagueResults);
 
-    const leagueAverages = day.leagueAverages ?? leagueAveragesFallback;
+    let leagueAverages = day.leagueAverages;
     if (day.leagueAverages) {
       daysWithDatedAverages += 1;
-    } else if (leagueAveragesFallback) {
-      daysWithFallbackAverages += 1;
-      console.warn(
-        `No dated league averages for ${day.isoDate}; using latest global snapshot (home/away splits may use heuristic).`
-      );
+    } else {
+      const asOf = buildLeagueAveragesAsOf(leagueResults, day.isoDate);
+      if (asOf.length > 0) {
+        leagueAverages = asOf;
+        daysWithAsOfAverages += 1;
+        await persistLeagueAveragesForDate(day.formKey, asOf, apiOrigin);
+      } else if (leagueAveragesFallback) {
+        leagueAverages = leagueAveragesFallback;
+        daysWithFallbackAverages += 1;
+        console.warn(
+          `No dated league averages for ${day.isoDate}; using latest global snapshot (home/away splits may use heuristic).`
+        );
+      }
     }
 
     setSingleMatchPredictionData({
@@ -190,6 +203,7 @@ export async function runBacktest(cliArgs = {}) {
   summary.skippedNoForm = skippedDays.length;
   summary.leagueAveragesCoverage = {
     datedDays: daysWithDatedAverages,
+    asOfDays: daysWithAsOfAverages,
     fallbackDays: daysWithFallbackAverages,
   };
 

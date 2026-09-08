@@ -1,6 +1,6 @@
 import { orderedLeagues } from "../App";
 import { apiGetUrl } from "../utils/apiUrl";
-import { fetchLeagueAveragesForDate, toFormDateKeyFromIso } from "../utils/leagueAverages";
+import { resolveLeagueAveragesForDate, toFormDateKeyFromIso } from "../utils/leagueAverages";
 import {
   allForm,
   allLeagueResultsArrayOfObjects,
@@ -22,6 +22,10 @@ import { resolveLeagueResultsForCompetition } from "./leagueResultsLoader";
 import { buildFixtureHeadToHead } from "./fixturePageH2h";
 import { fetchFixtureSeasonStats } from "./fetchFixtureSeasonStats";
 import { resolveFootyStatsLeagueId } from "../seo/competitionCatalog";
+import {
+  mergeFormEntry,
+  mergeLeagueResults,
+} from "./predictMatchGlobals";
 
 export async function predictMatchById(matchId) {
   const snapshotRes = await fetch(apiGetUrl(`match-snapshot/${matchId}`));
@@ -44,10 +48,9 @@ export async function predictMatchById(matchId) {
 
   const formDateKey = toFormDateKeyFromIso(dateStr);
 
-  const [tableRes, leagueAverages, predictedScoresRes, dayMatchesRes] =
+  const [tableRes, predictedScoresRes, dayMatchesRes] =
     await Promise.all([
       fetch(apiGetUrl(`tables/${competitionId}/${dateStr}`)),
-      fetchLeagueAveragesForDate(formDateKey),
       fetch(`${process.env.NEXT_PUBLIC_EXPRESS_SERVER}predictedScores2`),
       fetch(apiGetUrl(`matches/${dateStr}`)),
     ]);
@@ -76,6 +79,12 @@ export async function predictMatchById(matchId) {
     leagueName
   );
 
+  const { averages: leagueAverages } = await resolveLeagueAveragesForDate({
+    formDateKey,
+    isoDate: dateStr,
+    leagueResults: [leagueResults],
+  });
+
   const match = buildMatchFromFixture(fixture, competitionId, leagueName);
   const formEntry = await buildAllFormEntry(
     match,
@@ -84,11 +93,8 @@ export async function predictMatchById(matchId) {
     leaguePositions
   );
 
-  allForm.length = 0;
-  allForm.push(formEntry);
-
-  allLeagueResultsArrayOfObjects.length = 0;
-  allLeagueResultsArrayOfObjects.push(leagueResults);
+  mergeFormEntry(allForm, formEntry);
+  mergeLeagueResults(allLeagueResultsArrayOfObjects, leagueResults);
 
   const predictedScores = await predictedScoresRes.json();
   setSingleMatchPredictionData({ leagueAverages, predictedScores });

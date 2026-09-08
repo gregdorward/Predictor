@@ -26,6 +26,9 @@ import { apiGetUrl } from "../utils/apiUrl";
 import { resolveFootyStatsLeagueId } from "../seo/competitionCatalog";
 import { persistLeagueResults } from "../utils/persistLeagueResults";
 import {
+  persistLeagueAveragesForDate,
+} from "../utils/leagueAverages";
+import {
   buildThinLeagueFormSlices,
   limitFormRunToSeasonPlayed,
   sanitizeThinSeasonFormSide,
@@ -1489,9 +1492,18 @@ export async function generateFixtures(
         match.awayTeam = fixture.away_name;
         match.stadium = fixture.stadium_name;
         match.refereeID = fixture.refereeID;
-        match.homeOdds = fixture.odds_ft_1.toFixed(2);
-        match.awayOdds = fixture.odds_ft_2.toFixed(2);
-        match.drawOdds = fixture.odds_ft_x.toFixed(2);
+        match.homeOdds =
+          fixture.odds_ft_1 != null
+            ? Number(fixture.odds_ft_1).toFixed(2)
+            : "-";
+        match.awayOdds =
+          fixture.odds_ft_2 != null
+            ? Number(fixture.odds_ft_2).toFixed(2)
+            : "-";
+        match.drawOdds =
+          fixture.odds_ft_x != null
+            ? Number(fixture.odds_ft_x).toFixed(2)
+            : "-";
         match.homeDoubleChance = fixture.odds_doublechance_1x;
         match.awayDoubleChance = fixture.odds_doublechance_x2;
         match.bttsOdds = fixture.odds_btts_yes;
@@ -2282,32 +2294,22 @@ export async function generateFixtures(
         },
         body: JSON.stringify({ allForm }),
       });
+    }
 
-      const isSelectedDateToday =
-        selectedStart.getTime() === todayStart.getTime();
+    const isSelectedDateToday =
+      selectedStart.getTime() === todayStart.getTime();
 
-      if (isSelectedDateToday) {
-        try {
-          const averagesResponse = await fetch(apiGetUrl("league-averages"));
-          if (averagesResponse.ok) {
-            const leagueAverages = await averagesResponse.json();
-            if (Array.isArray(leagueAverages) && leagueAverages.length > 0) {
-              await fetch(
-                `${process.env.NEXT_PUBLIC_EXPRESS_SERVER}league-averages/${date}`,
-                {
-                  method: "POST",
-                  headers: {
-                    Accept: "application/json",
-                    "Content-Type": "application/json",
-                  },
-                  body: JSON.stringify(leagueAverages),
-                }
-              );
-            }
+    if (isSelectedDateToday) {
+      try {
+        const averagesResponse = await fetch(apiGetUrl("league-averages"));
+        if (averagesResponse.ok) {
+          const leagueAverages = await averagesResponse.json();
+          if (Array.isArray(leagueAverages) && leagueAverages.length > 0) {
+            await persistLeagueAveragesForDate(date, leagueAverages);
           }
-        } catch (error) {
-          console.error("Failed to snapshot league averages:", error);
         }
+      } catch (error) {
+        console.error("Failed to snapshot league averages:", error);
       }
     }
     if (resultsWereRebuilt) {
