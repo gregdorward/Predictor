@@ -25,6 +25,9 @@ import { resolveConferenceLeagueTeams } from "../components/competition/competit
 import { apiGetUrl } from "../utils/apiUrl";
 import { persistLeagueResults } from "../utils/persistLeagueResults";
 import {
+  persistLeagueAveragesForDate,
+} from "../utils/leagueAverages";
+import {
   buildThinLeagueFormSlices,
   limitFormRunToSeasonPlayed,
   sanitizeThinSeasonFormSide,
@@ -2279,32 +2282,22 @@ export async function generateFixtures(
         },
         body: JSON.stringify({ allForm }),
       });
+    }
 
-      const isSelectedDateToday =
-        selectedStart.getTime() === todayStart.getTime();
+    const isSelectedDateToday =
+      selectedStart.getTime() === todayStart.getTime();
 
-      if (isSelectedDateToday) {
-        try {
-          const averagesResponse = await fetch(apiGetUrl("league-averages"));
-          if (averagesResponse.ok) {
-            const leagueAverages = await averagesResponse.json();
-            if (Array.isArray(leagueAverages) && leagueAverages.length > 0) {
-              await fetch(
-                `${process.env.NEXT_PUBLIC_EXPRESS_SERVER}league-averages/${date}`,
-                {
-                  method: "POST",
-                  headers: {
-                    Accept: "application/json",
-                    "Content-Type": "application/json",
-                  },
-                  body: JSON.stringify(leagueAverages),
-                }
-              );
-            }
+    if (isSelectedDateToday) {
+      try {
+        const averagesResponse = await fetch(apiGetUrl("league-averages"));
+        if (averagesResponse.ok) {
+          const leagueAverages = await averagesResponse.json();
+          if (Array.isArray(leagueAverages) && leagueAverages.length > 0) {
+            await persistLeagueAveragesForDate(date, leagueAverages);
           }
-        } catch (error) {
-          console.error("Failed to snapshot league averages:", error);
         }
+      } catch (error) {
+        console.error("Failed to snapshot league averages:", error);
       }
     }
     if (resultsWereRebuilt) {
