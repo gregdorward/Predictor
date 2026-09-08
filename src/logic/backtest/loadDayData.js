@@ -66,9 +66,10 @@ function parseAllForm(formData) {
 export async function fetchGlobalBacktestData(apiOrigin) {
   const origin = normalizeOrigin(apiOrigin);
 
-  const [resultsRes, averagesRes] = await Promise.all([
+  const [resultsRes, averagesRes, predictedScoresRes] = await Promise.all([
     fetchJson(`${origin}results`),
     fetchJson(`${origin}league-averages`),
+    fetchJson(`${origin}predictedScores2`),
   ]);
 
   if (!resultsRes.ok) {
@@ -80,9 +81,20 @@ export async function fetchGlobalBacktestData(apiOrigin) {
     leagueAveragesFallback = averagesRes.data;
   }
 
+  const predictedScores = Array.isArray(predictedScoresRes.data)
+    ? predictedScoresRes.data
+    : [];
+
+  if (!predictedScoresRes.ok) {
+    console.warn(
+      `Failed to load predictedScores2 (${predictedScoresRes.status}); kickoff snapshots unavailable.`
+    );
+  }
+
   return {
     leagueResults: Array.isArray(resultsRes.data) ? resultsRes.data : [],
     leagueAveragesFallback,
+    predictedScores,
   };
 }
 

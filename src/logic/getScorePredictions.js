@@ -87,6 +87,17 @@ let awayOdds;
 export let predictedScoresData;
 let pendingSshSnapshots = [];
 const sshSnapshotOverlay = new Map();
+let sshSnapshotPersistEnabled = true;
+
+/** Backtest must never write kickoff snapshots back to predictedScores2. */
+export function setSshSnapshotPersistEnabled(enabled) {
+  sshSnapshotPersistEnabled = enabled !== false;
+}
+
+export function resetSshSnapshotState() {
+  pendingSshSnapshots = [];
+  sshSnapshotOverlay.clear();
+}
 
 function upsertLocalSshSnapshot(gameId, home, away) {
   predictedScoresData = upsertSshScoreRow(
@@ -118,6 +129,10 @@ function queueSshSnapshot(gameId, home, away) {
 }
 
 async function persistSshSnapshots() {
+  if (!sshSnapshotPersistEnabled) {
+    pendingSshSnapshots = [];
+    return;
+  }
   if (!pendingSshSnapshots.length || !process.env.NEXT_PUBLIC_EXPRESS_SERVER) {
     pendingSshSnapshots = [];
     return;
@@ -156,10 +171,16 @@ export async function flushPendingSshSnapshots() {
   await persistSshSnapshots();
 }
 
-export function setSingleMatchPredictionData({ leagueAverages, predictedScores }) {
+export function setSingleMatchPredictionData({
+  leagueAverages,
+  predictedScores,
+  applyOverlay = true,
+}) {
   leagueAveragesData = leagueAverages;
-  predictedScoresData = predictedScores;
-  applySshSnapshotOverlay();
+  predictedScoresData = Array.isArray(predictedScores) ? predictedScores : [];
+  if (applyOverlay) {
+    applySshSnapshotOverlay();
+  }
 }
 let totalROI = 0;
 let totalInvestment = 0;
@@ -271,8 +292,208 @@ let allIndividualTips = [];
 })();
 
 
-/** Override a 1-1 (or other) mode when another 1X2 is clearly more likely. */
-const CLEAR_OUTCOME_MARGIN = 20;
+/** Tunable score-engine knobs. Defaults match production. */
+export const SCORE_MODEL = {
+  dixonColesRho: 0.025,
+  calibrationAlpha: 0.65,
+  outcomeFrom: "clear",
+  outcomeMargin: 12,
+  outcomeBlend: 0.25,
+  formTrendWeight: 0,
+  last5StrengthBlend: 0,
+  venueStrengthBlend: 0,
+  restHaircut: 1,
+  sosTrendDamp: 0,
+  clinicalWeight: 0,
+  scoutingNudge: 0,
+  injurySensitivity: 0.01,
+  managerBoost: 0.3,
+  goalEfficiencyClamp: [0.975, 1.025],
+  leagueAlpha: 1,
+  xgDamp: 0,
+  strengthPreset: "default",
+};
+
+function parseEnvNumber(env, key, apply) {
+  if (env[key] == null || env[key] === "") return;
+  const value = Number(env[key]);
+  if (Number.isFinite(value)) apply(value);
+}
+
+function blendStrength(overall, variant, blend) {
+  const o = Number(overall);
+  const v = Number(variant);
+  if (!Number.isFinite(o)) return Number.isFinite(v) ? v : 0.4;
+  if (!Number.isFinite(v)) return o;
+  const b = Math.min(1, Math.max(0, Number(blend) || 0));
+  return o * (1 - b) + v * b;
+}
+
+function applySosTrendDamp(trend, contextMetrics, damp) {
+  const base = Number(trend);
+  if (!Number.isFinite(base) || damp <= 0) return base;
+  const delta = Number(contextMetrics?.strengthOfSchedule?.last5VsAllDelta);
+  if (!Number.isFinite(delta) || delta === 0) return base;
+  const dampFactor = 1 - Math.min(0.5, Math.abs(delta) * 0.05 * damp);
+  return 1 + (base - 1) * dampFactor;
+}
+
+function resolveAttackStrength(form, side) {
+  let attack = Number(form.attackingStrength);
+  if (SCORE_MODEL.last5StrengthBlend > 0) {
+    attack = blendStrength(
+      attack,
+      form.attackingStrengthLast5,
+      SCORE_MODEL.last5StrengthBlend
+    );
+  }
+  if (SCORE_MODEL.venueStrengthBlend > 0) {
+    const venueAttack =
+      side === "home"
+        ? form.attackingStrengthHomeOnly
+        : form.attackingStrengthAwayOnly;
+    attack = blendStrength(attack, venueAttack, SCORE_MODEL.venueStrengthBlend);
+  }
+  return attack;
+}
+
+function resolveDefenceStrength(form, side) {
+  let defence = Number(form.defensiveStrengthScoreGeneration);
+  if (SCORE_MODEL.last5StrengthBlend > 0) {
+    defence = blendStrength(
+      defence,
+      form.defensiveStrengthScoreGenerationLast5,
+      SCORE_MODEL.last5StrengthBlend
+    );
+  }
+  if (SCORE_MODEL.venueStrengthBlend > 0) {
+    const venueDefence =
+      side === "home"
+        ? form.defensiveStrengthScoreGenerationHomeOnly
+        : form.defensiveStrengthScoreGenerationAwayOnly;
+    defence = blendStrength(defence, venueDefence, SCORE_MODEL.venueStrengthBlend);
+  }
+  return defence;
+}
+
+function applyRestHaircut(form, lambda) {
+  const haircut = Number(SCORE_MODEL.restHaircut);
+  if (!Number.isFinite(haircut) || haircut >= 1) return lambda;
+  const rest = form.contextMetrics?.rest;
+  if (
+    rest?.congestionLabel === "Congested" ||
+    rest?.restLabel === "Short rest"
+  ) {
+    return lambda * haircut;
+  }
+  return lambda;
+}
+
+function applyClinicalMultiplier(form, lambda) {
+  const weight = Number(SCORE_MODEL.clinicalWeight);
+  if (!Number.isFinite(weight) || weight <= 0) return lambda;
+  const clinical = Number(form.clinicalScore);
+  if (!Number.isFinite(clinical)) return lambda;
+  const multiplier = 1 + (clinical - 1) * weight;
+  return lambda * multiplier;
+}
+
+function applyScoutingNudge(side, match, lambda) {
+  const maxNudge = Number(SCORE_MODEL.scoutingNudge);
+  if (!Number.isFinite(maxNudge) || maxNudge <= 0) return lambda;
+  const report = match.scoutingReport?.[side];
+  if (!report) return lambda;
+  const basePpg = Number(report.ppgAll);
+  const weightedPpg = Number(report.weightedPPG);
+  if (!Number.isFinite(basePpg) || basePpg <= 0 || !Number.isFinite(weightedPpg)) {
+    return lambda;
+  }
+  const relative = (weightedPpg - basePpg) / basePpg;
+  const nudge = Math.max(-maxNudge, Math.min(maxNudge, relative * maxNudge));
+  return lambda * (1 + nudge);
+}
+
+function applyFormTrendMultiplier(form, lambda) {
+  const weight = Number(SCORE_MODEL.formTrendWeight);
+  if (!Number.isFinite(weight) || weight <= 0) return lambda;
+  const trend = Number(form.formTrendScore);
+  if (!Number.isFinite(trend)) return lambda;
+  return lambda * (1 + (trend - 1) * weight);
+}
+
+export function applyScoreModelFromEnv(env = process.env) {
+  parseEnvNumber(env, "SCORE_MODEL_RHO", (v) => {
+    SCORE_MODEL.dixonColesRho = v;
+  });
+  parseEnvNumber(env, "SCORE_MODEL_ALPHA", (v) => {
+    SCORE_MODEL.calibrationAlpha = v;
+  });
+  if (
+    env.SCORE_MODEL_OUTCOME === "scoreline" ||
+    env.SCORE_MODEL_OUTCOME === "matrix" ||
+    env.SCORE_MODEL_OUTCOME === "clear" ||
+    env.SCORE_MODEL_OUTCOME === "favorite"
+  ) {
+    SCORE_MODEL.outcomeFrom = env.SCORE_MODEL_OUTCOME;
+  }
+  parseEnvNumber(env, "SCORE_MODEL_MARGIN", (v) => {
+    SCORE_MODEL.outcomeMargin = v;
+  });
+  parseEnvNumber(env, "SCORE_MODEL_BLEND", (v) => {
+    SCORE_MODEL.outcomeBlend = v;
+  });
+  parseEnvNumber(env, "SCORE_MODEL_FORM_TREND", (v) => {
+    SCORE_MODEL.formTrendWeight = v;
+  });
+  parseEnvNumber(env, "SCORE_MODEL_LAST5_BLEND", (v) => {
+    SCORE_MODEL.last5StrengthBlend = v;
+  });
+  parseEnvNumber(env, "SCORE_MODEL_VENUE_BLEND", (v) => {
+    SCORE_MODEL.venueStrengthBlend = v;
+  });
+  parseEnvNumber(env, "SCORE_MODEL_REST_HAIRCUT", (v) => {
+    SCORE_MODEL.restHaircut = v;
+  });
+  parseEnvNumber(env, "SCORE_MODEL_SOS_DAMP", (v) => {
+    SCORE_MODEL.sosTrendDamp = v;
+  });
+  parseEnvNumber(env, "SCORE_MODEL_CLINICAL", (v) => {
+    SCORE_MODEL.clinicalWeight = v;
+  });
+  parseEnvNumber(env, "SCORE_MODEL_SCOUTING", (v) => {
+    SCORE_MODEL.scoutingNudge = v;
+  });
+  parseEnvNumber(env, "SCORE_MODEL_INJURY_SENS", (v) => {
+    SCORE_MODEL.injurySensitivity = v;
+  });
+  parseEnvNumber(env, "SCORE_MODEL_MANAGER_BOOST", (v) => {
+    SCORE_MODEL.managerBoost = v;
+  });
+  if (env.SCORE_MODEL_EFF_CLAMP != null && env.SCORE_MODEL_EFF_CLAMP !== "") {
+    const parts = String(env.SCORE_MODEL_EFF_CLAMP)
+      .split(",")
+      .map((part) => Number(part.trim()))
+      .filter((part) => Number.isFinite(part));
+    if (parts.length === 2) {
+      SCORE_MODEL.goalEfficiencyClamp = [parts[0], parts[1]];
+    }
+  }
+  parseEnvNumber(env, "SCORE_MODEL_LEAGUE_ALPHA", (v) => {
+    SCORE_MODEL.leagueAlpha = v;
+  });
+  parseEnvNumber(env, "SCORE_MODEL_XG_DAMP", (v) => {
+    SCORE_MODEL.xgDamp = v;
+  });
+  if (
+    env.SCORE_MODEL_STRENGTH === "default" ||
+    env.SCORE_MODEL_STRENGTH === "xg_heavy" ||
+    env.SCORE_MODEL_STRENGTH === "sot_heavy" ||
+    env.SCORE_MODEL_STRENGTH === "goals_heavy" ||
+    env.SCORE_MODEL_STRENGTH === "clean_sheet"
+  ) {
+    SCORE_MODEL.strengthPreset = env.SCORE_MODEL_STRENGTH;
+  }
+}
 
 function scorelineFromGoals(home, away) {
   if (Number(home) > Number(away)) return "homeWin";
@@ -324,14 +545,70 @@ function pickOutcomeWhenClear(scoreline, homeWin, draw, awayWin, margin) {
   return gap >= margin ? matrix : scoreline;
 }
 
-function pickMatchOutcome(scoreline, homeWin, draw, awayWin) {
-  return pickOutcomeWhenClear(
-    scoreline,
+function pickOutcomeFromOdds(match) {
+  const candidates = [
+    { outcome: "homeWin", odds: Number(match.homeOdds) },
+    { outcome: "draw", odds: Number(match.drawOdds) },
+    { outcome: "awayWin", odds: Number(match.awayOdds) },
+  ].filter((row) => Number.isFinite(row.odds) && row.odds > 0);
+  if (!candidates.length) return "homeWin";
+  return candidates.reduce((best, row) =>
+    row.odds < best.odds ? row : best
+  ).outcome;
+}
+
+function blendOutcomeProbabilities(homeWin, draw, awayWin, match, blend) {
+  if (blend <= 0) {
+    return { homeWin, draw, awayWin };
+  }
+  const implied = [
+    impliedProbability(match.homeOdds),
+    impliedProbability(match.drawOdds),
+    impliedProbability(match.awayOdds),
+  ].map(Number);
+  if (!implied.every((value) => Number.isFinite(value) && value > 0)) {
+    return { homeWin, draw, awayWin };
+  }
+  const sum = implied[0] + implied[1] + implied[2];
+  const weight = Math.min(1, Math.max(0, blend));
+  const modelWeight = 1 - weight;
+  return {
+    homeWin: homeWin * modelWeight + (implied[0] / sum) * 100 * weight,
+    draw: draw * modelWeight + (implied[1] / sum) * 100 * weight,
+    awayWin: awayWin * modelWeight + (implied[2] / sum) * 100 * weight,
+  };
+}
+
+function pickMatchOutcome(scoreline, homeWin, draw, awayWin, match) {
+  if (SCORE_MODEL.outcomeFrom === "favorite") {
+    return pickOutcomeFromOdds(match);
+  }
+
+  const blended = blendOutcomeProbabilities(
     homeWin,
     draw,
     awayWin,
-    CLEAR_OUTCOME_MARGIN
+    match,
+    SCORE_MODEL.outcomeBlend
   );
+
+  if (SCORE_MODEL.outcomeFrom === "matrix") {
+    return pickOutcomeFromProbabilities(
+      blended.homeWin,
+      blended.draw,
+      blended.awayWin
+    );
+  }
+  if (SCORE_MODEL.outcomeFrom === "clear") {
+    return pickOutcomeWhenClear(
+      scoreline,
+      blended.homeWin,
+      blended.draw,
+      blended.awayWin,
+      SCORE_MODEL.outcomeMargin
+    );
+  }
+  return scoreline;
 }
 
 function factorial(n) {
@@ -368,7 +645,7 @@ function buildScoreMatrix(
   lambdaHome,
   lambdaAway,
   maxGoals = 5,
-  rho = 0.025
+  rho = SCORE_MODEL.dixonColesRho
 ) {
   const scores = [];
 
@@ -2491,11 +2768,11 @@ export async function generateGoals(homeForm, awayForm, match) {
 
   const awayDefenceWeaknessOverall = Math.max(
     MIN_WEAKNESS,
-    1 - (Number(awayForm.defensiveStrengthScoreGeneration) || 0)
+    1 - (resolveDefenceStrength(awayForm, "away") || 0)
   );
   const homeDefenceWeaknessOverall = Math.max(
     MIN_WEAKNESS,
-    1 - (Number(homeForm.defensiveStrengthScoreGeneration) || 0)
+    1 - (resolveDefenceStrength(homeForm, "home") || 0)
   );
 
   // Helper to compute a dampened lambda component
@@ -2546,7 +2823,7 @@ export async function generateGoals(homeForm, awayForm, match) {
 
   // Overall form
   const homeLambda_rawOverall = computeLambdaComponent(
-    homeForm.attackingStrength,
+    resolveAttackStrength(homeForm, "home"),
     awayDefenceWeaknessOverall,
     false,
     homeForm.gamesPlayed,
@@ -2554,14 +2831,14 @@ export async function generateGoals(homeForm, awayForm, match) {
   )
 
   const awayLambda_rawOverall = computeLambdaComponent(
-    awayForm.attackingStrength,
+    resolveAttackStrength(awayForm, "away"),
     homeDefenceWeaknessOverall,
     false,
     awayForm.gamesPlayed,
     "away"
   )
 
-  const ALPHA = 1;
+  const ALPHA = Math.min(1, Math.max(0, Number(SCORE_MODEL.leagueAlpha) || 1));
   const LEAGUE_WEIGHT = 1.0 - ALPHA;
 
   const homeLambda_final =
@@ -2575,7 +2852,7 @@ export async function generateGoals(homeForm, awayForm, match) {
 
   const existing = predictedScoresData.find(p => p.gameId === match.id);
 
-  const IMPACT_SENSITIVITY = 0.01;
+  const IMPACT_SENSITIVITY = Number(SCORE_MODEL.injurySensitivity) || 0.01;
 
   const hAtk = existing?.impacts?.home?.atk || 0;
   const hDef = existing?.impacts?.home?.def || 0;
@@ -2608,8 +2885,15 @@ export async function generateGoals(homeForm, awayForm, match) {
     Number.isFinite(awayEfficiency) && awayEfficiency > 0
       ? 1 / awayEfficiency
       : 1;
-  const finalHomeMultiplier = Math.min(Math.max(regressionMultiplierHome, 0.975), 1.025);
-  const finalAwayMultiplier = Math.min(Math.max(regressionMultiplierAway, 0.975), 1.025);
+  const [effClampMin, effClampMax] = SCORE_MODEL.goalEfficiencyClamp;
+  const finalHomeMultiplier = Math.min(
+    Math.max(regressionMultiplierHome, effClampMin),
+    effClampMax
+  );
+  const finalAwayMultiplier = Math.min(
+    Math.max(regressionMultiplierAway, effClampMin),
+    effClampMax
+  );
 
   // Calculate the multiplier
   // If actualToXGDifference is negative (underperforming), 
@@ -2630,16 +2914,27 @@ export async function generateGoals(homeForm, awayForm, match) {
   let additionHome = 1;
   let additionAway = 1;
 
+  const managerBoost = Number(SCORE_MODEL.managerBoost) || 0;
+
   if (newManagerHome) {
-    additionHome += 0.3;
+    additionHome += managerBoost;
   }
 
   if (newManagerAway) {
-    additionAway += 0.3;
+    additionAway += managerBoost;
   }
 
-  const homeLambda_final_v3 = (homeLambda_final_v2) * additionHome;
-  const awayLambda_final_v3 = (awayLambda_final_v2) * additionAway;
+  let homeLambda_final_v3 = (homeLambda_final_v2) * additionHome;
+  let awayLambda_final_v3 = (awayLambda_final_v2) * additionAway;
+
+  homeLambda_final_v3 = applyFormTrendMultiplier(homeForm, homeLambda_final_v3);
+  awayLambda_final_v3 = applyFormTrendMultiplier(awayForm, awayLambda_final_v3);
+  homeLambda_final_v3 = applyClinicalMultiplier(homeForm, homeLambda_final_v3);
+  awayLambda_final_v3 = applyClinicalMultiplier(awayForm, awayLambda_final_v3);
+  homeLambda_final_v3 = applyRestHaircut(homeForm, homeLambda_final_v3);
+  awayLambda_final_v3 = applyRestHaircut(awayForm, awayLambda_final_v3);
+  homeLambda_final_v3 = applyScoutingNudge("home", match, homeLambda_final_v3);
+  awayLambda_final_v3 = applyScoutingNudge("away", match, awayLambda_final_v3);
 
   let last5PointsHomeMultipliedByOppPoints = homeForm.avPoints5 * homeForm.avOppositionPPGAll;
   let last5PointsAwayMultipliedByOppPoints = awayForm.avPoints5 * awayForm.avOppositionPPGAll;
@@ -2672,6 +2967,14 @@ export async function generateGoals(homeForm, awayForm, match) {
   } else {
     homeGoals = homeLambda_final_v3;
     awayGoals = awayLambda_final_v3;
+  }
+
+  const xgDamp = Number(SCORE_MODEL.xgDamp);
+  if (Number.isFinite(xgDamp) && xgDamp > 0) {
+    const homeXgNudge = 1 + homeForm.XGRating * xgDamp;
+    const awayXgNudge = 1 + awayForm.XGRating * xgDamp;
+    homeGoals *= Math.max(0.9, Math.min(1.1, homeXgNudge));
+    awayGoals *= Math.max(0.9, Math.min(1.1, awayXgNudge));
   }
 
   if (homeGoals > 5) {
@@ -3885,9 +4188,13 @@ export async function calculateScore(match, index, divider, calculate, AIPredict
       formHome.avPossessionOverall
     ];
 
-    formHome.formTrendScore = await compareFormTrend(
-      formHome.recentFormArray,
-      formHome.distantFormArray
+    formHome.formTrendScore = applySosTrendDamp(
+      await compareFormTrend(
+        formHome.recentFormArray,
+        formHome.distantFormArray
+      ),
+      formHome.contextMetrics,
+      SCORE_MODEL.sosTrendDamp
     );
 
 
@@ -3907,9 +4214,13 @@ export async function calculateScore(match, index, divider, calculate, AIPredict
       formAway.avPossessionOverall
     ];
 
-    formAway.formTrendScore = await compareFormTrend(
-      formAway.recentFormArray,
-      formAway.distantFormArray
+    formAway.formTrendScore = applySosTrendDamp(
+      await compareFormTrend(
+        formAway.recentFormArray,
+        formAway.distantFormArray
+      ),
+      formAway.contextMetrics,
+      SCORE_MODEL.sosTrendDamp
     );
 
     match.XGdifferentialValue = Math.abs(XGdifferential);
@@ -4197,9 +4508,12 @@ export async function calculateScore(match, index, divider, calculate, AIPredict
     formAway.attackingMetricsAwayOnly = attackingMetricsAwayOnly;
     formAway.defensiveMetricsAwayOnly = defensiveMetricsAwayOnly;
 
-    const strengthOptions = API_FORM_ONLY_LEAGUE_IDS.includes(match.leagueID)
-      ? { international: true }
-      : {};
+    const strengthOptions = {
+      ...(API_FORM_ONLY_LEAGUE_IDS.includes(match.leagueID)
+        ? { international: true }
+        : {}),
+      preset: SCORE_MODEL.strengthPreset,
+    };
 
     const attackingStrengthHomeMetrics = metricsWithNpXg(attackingMetricsHome, {
       "Average Expected Goals": [formHome.npXGOverall, formHome.XGOverall],
@@ -4843,7 +5157,10 @@ export async function calculateScore(match, index, divider, calculate, AIPredict
 
     const scoreMatrix = normaliseScoreMatrix(scoreMatrixRaw);
 
-    const calibratedMatrix = calibrateScoreMatrix(scoreMatrix, 0.75);
+    const calibratedMatrix = calibrateScoreMatrix(
+      scoreMatrix,
+      SCORE_MODEL.calibrationAlpha
+    );
 
     match.scoreMatrix = calibratedMatrix;
 
@@ -4908,7 +5225,8 @@ export async function calculateScore(match, index, divider, calculate, AIPredict
       scorelineFromGoals(modeScore.home, modeScore.away),
       match.homeWinProbability,
       match.drawProbability,
-      match.awayWinProbability
+      match.awayWinProbability,
+      match
     );
     const predictedScore = scoreClosestToLambdas(
       calibratedMatrix,
@@ -4966,7 +5284,8 @@ export async function calculateScore(match, index, divider, calculate, AIPredict
         scorelinePrediction,
         match.homeWinProbability,
         match.drawProbability,
-        match.awayWinProbability
+        match.awayWinProbability,
+        match
       );
 
       if (outcomePrediction !== scorelinePrediction) {

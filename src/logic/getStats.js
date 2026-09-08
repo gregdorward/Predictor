@@ -113,23 +113,103 @@ function applyStrengthSpread(weightedSum, spreadIntensity) {
   );
 }
 
+export const STRENGTH_PRESETS = {
+  default: {},
+  xg_heavy: {
+    attack: {
+      "Average Expected Goals": 0.5,
+      "Weighted XG": 0.25,
+      "Average Shots On Target": 0.15,
+      "Average Goals": 0.1,
+    },
+    defence: {
+      "Average XG Against": 0.5,
+      "Weighted XG Against": 0.25,
+      "Average SOT Against": 0.15,
+      "Average Goals Against": 0.1,
+    },
+  },
+  sot_heavy: {
+    attack: {
+      "Average Shots On Target": 0.45,
+      "Average Expected Goals": 0.25,
+      "Average Goals": 0.2,
+      "Weighted XG": 0.1,
+    },
+    defence: {
+      "Average SOT Against": 0.45,
+      "Average XG Against": 0.25,
+      "Average Goals Against": 0.2,
+      "Weighted XG Against": 0.1,
+    },
+  },
+  goals_heavy: {
+    attack: {
+      "Average Goals": 0.4,
+      "Average Expected Goals": 0.25,
+      "Average Shots On Target": 0.2,
+      "Weighted XG": 0.15,
+    },
+    defence: {
+      "Average Goals Against": 0.4,
+      "Average XG Against": 0.25,
+      "Average SOT Against": 0.2,
+      "Weighted XG Against": 0.15,
+    },
+  },
+  clean_sheet: {
+    attack: {
+      "Average Expected Goals": 0.3,
+      "Average Shots On Target": 0.25,
+      "Average Goals": 0.2,
+      "Weighted XG": 0.15,
+    },
+    defence: {
+      "Average XG Against": 0.3,
+      "Average SOT Against": 0.25,
+      "Clean Sheet Percentage": 0.2,
+      "Average Goals Against": 0.15,
+      "Weighted XG Against": 0.1,
+    },
+  },
+};
+
+function getStrengthWeights(kind, options = {}) {
+  const defaults =
+    kind === "attack"
+      ? {
+          "Average Dangerous Attacks": 0.1,
+          "Average Shots": 0.0,
+          "Average Shots On Target": 0.25,
+          "Average Expected Goals": 0.35,
+          "Weighted XG": 0.15,
+          "Average Goals": 0.15,
+          Corners: 0,
+          "Average Shot Value": 0,
+          Possession: 0,
+          "Injury impact": 0,
+        }
+      : {
+          "Average XG Against": 0.35,
+          "Weighted XG Against": 0.15,
+          "Average Goals Against": 0.15,
+          "Average SOT Against": 0.25,
+          "Average Dangerous Attacks Against": 0.1,
+          "Clean Sheet Percentage": 0,
+          "Injury impact": 0,
+        };
+
+  const preset = STRENGTH_PRESETS[options.preset] || STRENGTH_PRESETS.default;
+  const overrides = preset[kind] || {};
+  return { ...defaults, ...overrides };
+}
+
 export async function calculateAttackingStrength(
   stats,
   last5 = false,
   options = {}
 ) {
-  const weights = {
-    "Average Dangerous Attacks": 0.1,
-    "Average Shots": 0.0,
-    "Average Shots On Target": 0.25,
-    "Average Expected Goals": 0.35,
-    "Weighted XG": 0.15,
-    "Average Goals": 0.15,
-    Corners: 0,
-    "Average Shot Value": 0,
-    Possession: 0,
-    "Injury impact": 0,
-  };
+  const weights = getStrengthWeights("attack", options);
 
   const rangeSet = options.international
     ? INTERNATIONAL_ATTACK_RANGES
@@ -169,14 +249,7 @@ export async function calculateDefensiveStrength(
   last5 = false,
   options = {}
 ) {
-  const weights = {
-    "Average XG Against": 0.35,
-    "Weighted XG Against": 0.15,
-    "Average Goals Against": 0.15,
-    "Average SOT Against": 0.25,
-    "Average Dangerous Attacks Against": 0.1,
-    "Injury impact": 0,
-  };
+  const weights = getStrengthWeights("defence", options);
 
   const rangeSet = options.international
     ? INTERNATIONAL_DEFENCE_RANGES

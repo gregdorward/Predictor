@@ -21,6 +21,38 @@ function getProfit(fixture, outcome) {
   }
 }
 
+function impliedProbability(decimalOdds) {
+  const odds = Number(decimalOdds);
+  if (!Number.isFinite(odds) || odds <= 0) return null;
+  return (1 / odds) * 100;
+}
+
+function getModelProbability(match, outcome) {
+  switch (outcome) {
+    case "homeWin":
+      return Number(match.homeWinProb ?? match.homeWinProbability);
+    case "draw":
+      return Number(match.drawProb ?? match.drawProbability);
+    case "awayWin":
+      return Number(match.awayWinProb ?? match.awayWinProbability);
+    default:
+      return null;
+  }
+}
+
+function getImpliedProbability(match, outcome) {
+  switch (outcome) {
+    case "homeWin":
+      return impliedProbability(match.homeOdds);
+    case "draw":
+      return impliedProbability(match.drawOdds);
+    case "awayWin":
+      return impliedProbability(match.awayOdds);
+    default:
+      return null;
+  }
+}
+
 function isPredictableScore(goalsA, goalsB) {
   const home = Number(goalsA);
   const away = Number(goalsB);
@@ -69,11 +101,20 @@ export function evaluateMatch(match, dateIso, formSource) {
   const actualOutcome = getOutcome(actualHome, actualAway);
   const predictedOutcome = getOutcome(predHome, predAway);
   const isCorrectOutcome = actualOutcome === predictedOutcome;
+  const modelProb = getModelProbability(match, predictedOutcome);
+  const impliedProb = getImpliedProbability(match, predictedOutcome);
+  const edgePp =
+    Number.isFinite(modelProb) && Number.isFinite(impliedProb)
+      ? Number((modelProb - impliedProb).toFixed(2))
+      : null;
 
   row.outcomeCorrect = isCorrectOutcome;
   row.exactScore = actualHome === Number(predHome) && actualAway === Number(predAway);
   row.profit = isCorrectOutcome ? getProfit(match, predictedOutcome) : 0;
   row.prediction = predictedOutcome;
+  row.modelProb = Number.isFinite(modelProb) ? modelProb : null;
+  row.impliedProb = Number.isFinite(impliedProb) ? impliedProb : null;
+  row.edgePp = edgePp;
 
   return row;
 }
@@ -182,4 +223,28 @@ export function aggregateResults(rows) {
     byLeague,
     byPrediction,
   };
+}
+
+export function aggregateSelectiveResults(rows, minEdgePp) {
+  const threshold = Number(minEdgePp);
+  if (!Number.isFinite(threshold) || threshold <= 0) {
+    return null;
+  }
+
+  const selectiveRows = rows.filter((row) => {
+    if (row.skippedReason != null || row.edgePp == null) return false;
+    return row.edgePp >= threshold;
+  });
+
+  const summary = aggregateResults(selectiveRows);
+  return {
+    minEdgePp: threshold,
+    ...summary,
+  };
+}
+
+export function aggregateEdgeCurve(rows, thresholds = [2, 5, 8, 10]) {
+  return thresholds
+    .map((threshold) => aggregateSelectiveResults(rows, threshold))
+    .filter(Boolean);
 }
