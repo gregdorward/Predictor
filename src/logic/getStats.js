@@ -172,8 +172,8 @@ export async function calculateDefensiveStrength(
   const weights = {
     "Average XG Against": 0.35,
     "Weighted XG Against": 0.15,
-    "Average Goals Against": 0.25,
-    "Average SOT Against": 0.15,
+    "Average Goals Against": 0.15,
+    "Average SOT Against": 0.25,
     "Average Dangerous Attacks Against": 0.1,
     "Injury impact": 0,
   };

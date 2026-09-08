@@ -259,12 +259,7 @@ let allIndividualTips = [];
 
 
 /** Override a 1-1 (or other) mode when another 1X2 is clearly more likely. */
-const CLEAR_OUTCOME_MARGIN = 14;
-const ATTACK_CENTRE = 0.4;
-const DEFENCE_BASELINE = 0.5;
-const MIN_DEFENCE_WEAKNESS = 0.1;
-/** Attack × opponent-defence edge needed to add a goal on that side. */
-const PROCESS_GOAL_EDGE = 1.2;
+const CLEAR_OUTCOME_MARGIN = 20;
 
 function scorelineFromGoals(home, away) {
   if (Number(home) > Number(away)) return "homeWin";
@@ -293,53 +288,6 @@ function scoreClosestToLambdas(scoreMatrix, lambdaHome, lambdaAway, outcome) {
     }
     return best;
   });
-}
-
-function sideProcessEdge(attackStrength, opponentDefenceStrength) {
-  const attack = Number(attackStrength);
-  const defence = Number(opponentDefenceStrength);
-  const safeAttack = Number.isFinite(attack) ? attack : ATTACK_CENTRE;
-  const weakness = Math.max(
-    MIN_DEFENCE_WEAKNESS,
-    1 - (Number.isFinite(defence) ? defence : DEFENCE_BASELINE)
-  );
-  return (
-    safeAttack / ATTACK_CENTRE *
-    Math.max(0.2, weakness / DEFENCE_BASELINE)
-  );
-}
-
-function shouldAddProcessGoal(attackStrength, opponentDefenceStrength) {
-  return sideProcessEdge(attackStrength, opponentDefenceStrength) >= PROCESS_GOAL_EDGE;
-}
-
-/** Add a goal per side when attack vs opponent defence is clearly strong. Keeps the 1X2. */
-function applyProcessGoalBumps(score, formHome, formAway, outcome) {
-  const startHome = Number(score.home);
-  const startAway = Number(score.away);
-  const addHome = shouldAddProcessGoal(
-    formHome?.attackingStrength,
-    formAway?.defensiveStrengthScoreGeneration
-  );
-  const addAway = shouldAddProcessGoal(
-    formAway?.attackingStrength,
-    formHome?.defensiveStrengthScoreGeneration
-  );
-
-  let home = Math.min(5, startHome + (addHome ? 1 : 0));
-  let away = Math.min(5, startAway + (addAway ? 1 : 0));
-
-  if (scorelineFromGoals(home, away) === outcome) {
-    return { home, away };
-  }
-
-  if (outcome === "homeWin" && addHome && startHome + 1 > startAway) {
-    return { home: Math.min(5, startHome + 1), away: startAway };
-  }
-  if (outcome === "awayWin" && addAway && startAway + 1 > startHome) {
-    return { home: startHome, away: Math.min(5, startAway + 1) };
-  }
-  return { home: startHome, away: startAway };
 }
 
 function pickOutcomeFromProbabilities(homeWin, draw, awayWin) {
@@ -2512,12 +2460,15 @@ export async function generateGoals(homeForm, awayForm, match) {
   let averageGoalsHome = averageGoalsPerTeam * 1.1;
   let averageGoalsAway = averageGoalsPerTeam * 0.9;
 
+  console.log("leagueObject", leagueObject);
+
   const leagueAvgHome = Number(leagueObject?.averageGoalsHome);
   const leagueAvgAway = Number(leagueObject?.averageGoalsAway);
   if (Number.isFinite(leagueAvgHome) && leagueAvgHome > 0) {
     averageGoalsHome = leagueAvgHome;
   }
   if (Number.isFinite(leagueAvgAway) && leagueAvgAway > 0) {
+    console.log("leagueAvgAway", leagueAvgAway);
     averageGoalsAway = leagueAvgAway;
   }
   const BASELINE = 0.5;
@@ -4946,15 +4897,10 @@ export async function calculateScore(match, index, divider, calculate, AIPredict
       match.drawProbability,
       match.awayWinProbability
     );
-    const predictedScore = applyProcessGoalBumps(
-      scoreClosestToLambdas(
-        calibratedMatrix,
-        clampLambda(lambdaHome),
-        clampLambda(lambdaAway),
-        liveOutcome
-      ),
-      formHome,
-      formAway,
+    const predictedScore = scoreClosestToLambdas(
+      calibratedMatrix,
+      clampLambda(lambdaHome),
+      clampLambda(lambdaAway),
       liveOutcome
     );
 
@@ -5011,15 +4957,10 @@ export async function calculateScore(match, index, divider, calculate, AIPredict
       );
 
       if (outcomePrediction !== scorelinePrediction) {
-        const aligned = applyProcessGoalBumps(
-          scoreClosestToLambdas(
-            calibratedMatrix,
-            clampLambda(lambdaHome),
-            clampLambda(lambdaAway),
-            outcomePrediction
-          ),
-          formHome,
-          formAway,
+        const aligned = scoreClosestToLambdas(
+          calibratedMatrix,
+          clampLambda(lambdaHome),
+          clampLambda(lambdaAway),
           outcomePrediction
         );
         finalHomeGoals = aligned.home;
