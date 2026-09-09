@@ -5,14 +5,17 @@ import {
   calculateScore,
   isBelowMinMatchesForPrediction,
   setSingleMatchPredictionData,
+  setSshSnapshotPersistEnabled,
+  resetSshSnapshotState,
 } from "../getScorePredictions.js";
 import {
   allForm,
   allLeagueResultsArrayOfObjects,
 } from "../getFixtures.js";
+import { getStoredSshScoreline } from "../freezePredictedScoreline.js";
 import { loadBacktestEnv } from "./loadEnv.js";
 import { fetchGlobalBacktestData, loadDayData } from "./loadDayData.js";
-import { evaluateMatch, aggregateResults } from "./evaluateMatch.js";
+import { evaluateMatch, aggregateResults, aggregateSelectiveResults, aggregateEdgeCurve } from "./evaluateMatch.js";
 import {
   buildResultsCsv,
   buildResultsJson,
@@ -50,6 +53,9 @@ export async function runBacktest(cliArgs = {}) {
     format: cliArgs.format ?? "both",
     upload: cliArgs.upload !== false,
     delayMs: Number(cliArgs.delayMs ?? 500),
+    replayModel: cliArgs.replayModel === true,
+    minEdge: cliArgs.minEdge != null ? Number(cliArgs.minEdge) : null,
+    edgeCurve: cliArgs.edgeCurve === true,
   };
 
   if (!params.from || !params.to) {
@@ -62,15 +68,38 @@ export async function runBacktest(cliArgs = {}) {
   console.log(`Backtest run ${runId}`);
   console.log(`Range: ${params.from} → ${params.to}`);
 
-  const { leagueResults, leagueAveragesFallback } = await fetchGlobalBacktestData(
-    apiOrigin
-  );
+  setSshSnapshotPersistEnabled(false);
+  resetSshSnapshotState();
+
+  const { leagueResults, leagueAveragesFallback, predictedScores: storedPredictedScores } =
+    await fetchGlobalBacktestData(apiOrigin);
+
+  const kickoffPredictedScores = params.replayModel
+    ? []
+    : storedPredictedScores || [];
+
+  if (params.replayModel) {
+    console.log(
+      "Scorelines: replay current model (ignoring kickoff snapshots)"
+    );
+  } else {
+    console.log(
+      `Scorelines: kickoff snapshots (${kickoffPredictedScores.length} stored rows)`
+    );
+    if (kickoffPredictedScores.length === 0) {
+      console.warn(
+        "No predictedScores2 snapshots loaded; falling back to live model replay."
+      );
+    }
+  }
 
   const allRows = [];
   const skippedDays = [];
   let daysWithDatedAverages = 0;
   let daysWithAsOfAverages = 0;
   let daysWithFallbackAverages = 0;
+  let usedKickoffSnapshot = 0;
+  let usedLiveReplay = 0;
 
   for (const date of eachDateInclusive(params.from, params.to)) {
     const day = await loadDayData(date, apiOrigin);
@@ -112,7 +141,8 @@ export async function runBacktest(cliArgs = {}) {
 
     setSingleMatchPredictionData({
       leagueAverages,
-      predictedScores: [],
+      predictedScores: kickoffPredictedScores,
+      applyOverlay: false,
     });
 
     let dayPredicted = 0;
@@ -180,6 +210,11 @@ export async function runBacktest(cliArgs = {}) {
         }
 
         dayPredicted += 1;
+        if (getStoredSshScoreline(kickoffPredictedScores, match.id)) {
+          usedKickoffSnapshot += 1;
+        } else {
+          usedLiveReplay += 1;
+        }
       } catch (error) {
         console.error(`Prediction failed for match ${match.id}:`, error);
         allRows.push({
@@ -200,7 +235,18 @@ export async function runBacktest(cliArgs = {}) {
   }
 
   const summary = aggregateResults(allRows);
+  if (params.minEdge != null && Number.isFinite(params.minEdge)) {
+    summary.selective = aggregateSelectiveResults(allRows, params.minEdge);
+  }
+  if (params.edgeCurve) {
+    summary.edgeCurve = aggregateEdgeCurve(allRows);
+  }
   summary.skippedNoForm = skippedDays.length;
+  summary.scorelineSource = params.replayModel
+    ? "replay_model"
+    : "kickoff_snapshot";
+  summary.usedKickoffSnapshot = usedKickoffSnapshot;
+  summary.usedLiveReplay = usedLiveReplay;
   summary.leagueAveragesCoverage = {
     datedDays: daysWithDatedAverages,
     asOfDays: daysWithAsOfAverages,
@@ -251,7 +297,10 @@ export async function runBacktest(cliArgs = {}) {
   }
   console.log(`\n  Days skipped (no cached form): ${skippedDays.length}`);
   console.log(
-    `  League averages: ${daysWithDatedAverages} dated snapshot(s), ${daysWithFallbackAverages} global fallback day(s)`
+    `  Scorelines used: ${usedKickoffSnapshot} kickoff snapshot(s), ${usedLiveReplay} live replay(s)`
+  );
+  console.log(
+    `  League averages: ${daysWithDatedAverages} dated snapshot(s), ${daysWithAsOfAverages} as-of day(s), ${daysWithFallbackAverages} global fallback day(s)`
   );
   console.log(`  Local output: ${outputDir}`);
 
