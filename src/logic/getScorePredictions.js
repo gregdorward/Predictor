@@ -29,6 +29,21 @@ import {
   calculateMetricStrength,
 } from "./getStats";
 import {
+  CLEAR_OUTCOME_MARGIN,
+  VENUE_FORM_WEIGHT,
+  getClearOutcomeMargin,
+  resetClearOutcomeMargin,
+  applyScoreModelFromEnv,
+} from "./scoreModelConfig.js";
+
+export {
+  CLEAR_OUTCOME_MARGIN,
+  VENUE_FORM_WEIGHT,
+  getClearOutcomeMargin,
+  resetClearOutcomeMargin,
+  applyScoreModelFromEnv,
+};
+import {
   npxgOrXg,
   resolveTeamXgAndNpXg,
   metricsWithNpXg,
@@ -87,6 +102,17 @@ let awayOdds;
 export let predictedScoresData;
 let pendingSshSnapshots = [];
 const sshSnapshotOverlay = new Map();
+let sshSnapshotPersistEnabled = true;
+
+/** Backtest must never write kickoff snapshots back to predictedScores2. */
+export function setSshSnapshotPersistEnabled(enabled) {
+  sshSnapshotPersistEnabled = enabled !== false;
+}
+
+export function resetSshSnapshotState() {
+  pendingSshSnapshots = [];
+  sshSnapshotOverlay.clear();
+}
 
 function upsertLocalSshSnapshot(gameId, home, away) {
   predictedScoresData = upsertSshScoreRow(
@@ -118,6 +144,10 @@ function queueSshSnapshot(gameId, home, away) {
 }
 
 async function persistSshSnapshots() {
+  if (!sshSnapshotPersistEnabled) {
+    pendingSshSnapshots = [];
+    return;
+  }
   if (!pendingSshSnapshots.length || !process.env.NEXT_PUBLIC_EXPRESS_SERVER) {
     pendingSshSnapshots = [];
     return;
@@ -156,10 +186,16 @@ export async function flushPendingSshSnapshots() {
   await persistSshSnapshots();
 }
 
-export function setSingleMatchPredictionData({ leagueAverages, predictedScores }) {
+export function setSingleMatchPredictionData({
+  leagueAverages,
+  predictedScores,
+  applyOverlay = true,
+}) {
   leagueAveragesData = leagueAverages;
-  predictedScoresData = predictedScores;
-  applySshSnapshotOverlay();
+  predictedScoresData = Array.isArray(predictedScores) ? predictedScores : [];
+  if (applyOverlay) {
+    applySshSnapshotOverlay();
+  }
 }
 let totalROI = 0;
 let totalInvestment = 0;
@@ -270,6 +306,65 @@ let allIndividualTips = [];
   }
 })();
 
+function scorelineFromGoals(home, away) {
+  if (Number(home) > Number(away)) return "homeWin";
+  if (Number(away) > Number(home)) return "awayWin";
+  return "draw";
+}
+
+function scoreDistanceToLambdas(score, lambdaHome, lambdaAway) {
+  const dh = Number(score.home) - Number(lambdaHome);
+  const da = Number(score.away) - Number(lambdaAway);
+  return dh * dh + da * da;
+}
+
+/** Integer score for a 1X2 that sits closest to the two lambdas (not the Poisson mode). */
+function scoreClosestToLambdas(scoreMatrix, lambdaHome, lambdaAway, outcome) {
+  const matching = scoreMatrix.filter(
+    (score) => scorelineFromGoals(score.home, score.away) === outcome
+  );
+  const pool = matching.length ? matching : scoreMatrix;
+  return pool.reduce((best, current) => {
+    const dCur = scoreDistanceToLambdas(current, lambdaHome, lambdaAway);
+    const dBest = scoreDistanceToLambdas(best, lambdaHome, lambdaAway);
+    if (dCur < dBest) return current;
+    if (dCur === dBest && current.probability > best.probability) {
+      return current;
+    }
+    return best;
+  });
+}
+
+function pickOutcomeFromProbabilities(homeWin, draw, awayWin) {
+  const home = Number(homeWin) || 0;
+  const drawP = Number(draw) || 0;
+  const away = Number(awayWin) || 0;
+  if (home >= drawP && home >= away) return "homeWin";
+  if (away >= home && away >= drawP) return "awayWin";
+  return "draw";
+}
+
+function pickOutcomeWhenClear(scoreline, homeWin, draw, awayWin, margin) {
+  const matrix = pickOutcomeFromProbabilities(homeWin, draw, awayWin);
+  if (matrix === scoreline) return scoreline;
+  const probs = {
+    homeWin: Number(homeWin) || 0,
+    draw: Number(draw) || 0,
+    awayWin: Number(awayWin) || 0,
+  };
+  const gap = (probs[matrix] ?? 0) - (probs[scoreline] ?? 0);
+  return gap >= margin ? matrix : scoreline;
+}
+
+function pickMatchOutcome(scoreline, homeWin, draw, awayWin) {
+  return pickOutcomeWhenClear(
+    scoreline,
+    homeWin,
+    draw,
+    awayWin,
+    getClearOutcomeMargin()
+  );
+}
 
 function factorial(n) {
   if (n === 0) return 1;
@@ -305,7 +400,7 @@ function buildScoreMatrix(
   lambdaHome,
   lambdaAway,
   maxGoals = 5,
-  rho = 0.025
+  rho = 0.075
 ) {
   const scores = [];
 
@@ -2410,6 +2505,41 @@ async function normalizeValues(value1, value2, minRange, maxRange) {
   return { normalizedValue1, normalizedValue2 };
 }
 
+function positiveNumber(value) {
+  const n = Number(value);
+  return Number.isFinite(n) && n > 0 ? n : null;
+}
+
+function venueFormReliability(gamesPlayed) {
+  const played = Number(gamesPlayed);
+  const sampleSize = Number.isFinite(played) && played > 0 ? played : 10;
+  return Math.min(1, Math.max(0.35, sampleSize / 10));
+}
+
+function blendWithVenueForm(leagueValue, formValue, gamesPlayed) {
+  const league = positiveNumber(leagueValue);
+  const form = positiveNumber(formValue);
+  if (!league) return form ?? leagueValue;
+  if (!form || VENUE_FORM_WEIGHT <= 0) return league;
+
+  const weight = VENUE_FORM_WEIGHT * venueFormReliability(gamesPlayed);
+  return league * (1 - weight) + form * weight;
+}
+
+function blendVenueMetric(overall, venue, gamesPlayed) {
+  const overallValue = Number(overall);
+  const venueValue = Number(venue);
+  if (!Number.isFinite(venueValue) || venueValue <= 0 || VENUE_FORM_WEIGHT <= 0) {
+    return overallValue;
+  }
+  if (!Number.isFinite(overallValue) || overallValue <= 0) {
+    return venueValue;
+  }
+
+  const weight = VENUE_FORM_WEIGHT * venueFormReliability(gamesPlayed);
+  return overallValue * (1 - weight) + venueValue * weight;
+}
+
 export async function generateGoals(homeForm, awayForm, match) {
 
   const leagueObject = findLeagueEntryById(leagueAveragesData, match.leagueID);
@@ -2432,26 +2562,59 @@ export async function generateGoals(homeForm, awayForm, match) {
   if (Number.isFinite(leagueAvgAway) && leagueAvgAway > 0) {
     averageGoalsAway = leagueAvgAway;
   }
+
+  averageGoalsHome = blendWithVenueForm(
+    averageGoalsHome,
+    homeForm.avgScoredHome ?? homeForm.avgScored,
+    homeForm.gamesPlayed
+  );
+  averageGoalsAway = blendWithVenueForm(
+    averageGoalsAway,
+    awayForm.avgScoredAway ?? awayForm.avgScored,
+    awayForm.gamesPlayed
+  );
+
   const BASELINE = 0.5;
 
   // Define a minimum weakness so the factor never hits 0 or negative
   const MIN_WEAKNESS = 0.1;
 
+  const homeAttackStrength = blendVenueMetric(
+    homeForm.attackingStrength,
+    homeForm.attackingStrengthHomeOnly,
+    homeForm.gamesPlayed
+  );
+  const awayAttackStrength = blendVenueMetric(
+    awayForm.attackingStrength,
+    awayForm.attackingStrengthAwayOnly,
+    awayForm.gamesPlayed
+  );
+  const awayDefenceStrength = blendVenueMetric(
+    awayForm.defensiveStrengthScoreGeneration,
+    awayForm.defensiveStrengthScoreGenerationAwayOnly,
+    awayForm.gamesPlayed
+  );
+  const homeDefenceStrength = blendVenueMetric(
+    homeForm.defensiveStrengthScoreGeneration,
+    homeForm.defensiveStrengthScoreGenerationHomeOnly,
+    homeForm.gamesPlayed
+  );
+
   const awayDefenceWeaknessOverall = Math.max(
     MIN_WEAKNESS,
-    1 - (Number(awayForm.defensiveStrengthScoreGeneration) || 0)
+    1 - (awayDefenceStrength || 0)
   );
   const homeDefenceWeaknessOverall = Math.max(
     MIN_WEAKNESS,
-    1 - (Number(homeForm.defensiveStrengthScoreGeneration) || 0)
+    1 - (homeDefenceStrength || 0)
   );
 
   // Helper to compute a dampened lambda component
   function computeLambdaComponent(attackStrength, defenceWeakness, last5 = false, gamesPlayed = 10, location) {
     const safeAttack = Number.isFinite(Number(attackStrength))
       ? Number(attackStrength)
-      : 0.4;
-    const attackFactor = safeAttack / 0.4;
+      : 0.5;
+    const attackFactor = safeAttack / 0.5;
     const defenceFactor = Math.max(0.2, defenceWeakness / BASELINE);
     // 1. Set the raw multiplier
     let multiplier = last5 ? 0.9 : 1.0;
@@ -2494,7 +2657,7 @@ export async function generateGoals(homeForm, awayForm, match) {
 
   // Overall form
   const homeLambda_rawOverall = computeLambdaComponent(
-    homeForm.attackingStrength,
+    homeAttackStrength,
     awayDefenceWeaknessOverall,
     false,
     homeForm.gamesPlayed,
@@ -2502,7 +2665,7 @@ export async function generateGoals(homeForm, awayForm, match) {
   )
 
   const awayLambda_rawOverall = computeLambdaComponent(
-    awayForm.attackingStrength,
+    awayAttackStrength,
     homeDefenceWeaknessOverall,
     false,
     awayForm.gamesPlayed,
@@ -2513,12 +2676,14 @@ export async function generateGoals(homeForm, awayForm, match) {
   const LEAGUE_WEIGHT = 1.0 - ALPHA;
 
   const homeLambda_final =
-    (homeLambda_rawOverall * ALPHA) +
-    (averageGoalsPerTeam * LEAGUE_WEIGHT);
+    (homeLambda_rawOverall * ALPHA) 
+    // +
+    // (averageGoalsPerTeam * LEAGUE_WEIGHT);
 
   const awayLambda_final =
-    (awayLambda_rawOverall * ALPHA) +
-    (averageGoalsPerTeam * LEAGUE_WEIGHT);
+    (awayLambda_rawOverall * ALPHA) 
+    // +
+    // (averageGoalsPerTeam * LEAGUE_WEIGHT);
 
 
   const existing = predictedScoresData.find(p => p.gameId === match.id);
@@ -2568,9 +2733,9 @@ export async function generateGoals(homeForm, awayForm, match) {
 
   // Apply to your existing lambda
   const adjustedLambdaHome = homeLambda_withInjuries
-    * clampedXGMultiplierHome;
+    // * clampedXGMultiplierHome;
   const adjustedLambdaAway = awayLambda_withInjuries
-    * clampedXGMultiplierAway;
+    // * clampedXGMultiplierAway;
   // 4. Ensure Lambda never drops below a realistic floor (e.g., 0.05)
   const homeLambda_final_v2 = Math.max(0.05, adjustedLambdaHome);
   const awayLambda_final_v2 = Math.max(0.05, adjustedLambdaAway);
@@ -4800,7 +4965,7 @@ export async function calculateScore(match, index, divider, calculate, AIPredict
 
     match.scoreMatrix = calibratedMatrix;
 
-    const predictedScore = getMostLikelyScore(calibratedMatrix);
+    const modeScore = getMostLikelyScore(calibratedMatrix);
 
     const { homeWin, draw, awayWin } =
       getMatchOddsProbabilities(calibratedMatrix);
@@ -4857,6 +5022,19 @@ export async function calculateScore(match, index, divider, calculate, AIPredict
     match.GoalsInGamesAverageAway =
       formAway.avScoredLast5 + formAway.avConceededLast5;
 
+    const liveOutcome = pickMatchOutcome(
+      scorelineFromGoals(modeScore.home, modeScore.away),
+      match.homeWinProbability,
+      match.drawProbability,
+      match.awayWinProbability
+    );
+    const predictedScore = scoreClosestToLambdas(
+      calibratedMatrix,
+      clampLambda(lambdaHome),
+      clampLambda(lambdaAway),
+      liveOutcome
+    );
+
     const liveHomeGoals = predictedScore.home;
     const liveAwayGoals = predictedScore.away;
     const storedSsh = getStoredSshScoreline(predictedScoresData, match.id);
@@ -4898,7 +5076,33 @@ export async function calculateScore(match, index, divider, calculate, AIPredict
     match.BTTSValue = (match.bttsYesProbability - match.bttsYesImplied).toFixed(2)
 
     if (match.status !== "suspended") {
-      if (finalHomeGoals > finalAwayGoals) {
+      const scorelinePrediction = scorelineFromGoals(
+        finalHomeGoals,
+        finalAwayGoals
+      );
+      const outcomePrediction = pickMatchOutcome(
+        scorelinePrediction,
+        match.homeWinProbability,
+        match.drawProbability,
+        match.awayWinProbability
+      );
+
+      if (outcomePrediction !== scorelinePrediction) {
+        const aligned = scoreClosestToLambdas(
+          calibratedMatrix,
+          clampLambda(lambdaHome),
+          clampLambda(lambdaAway),
+          outcomePrediction
+        );
+        finalHomeGoals = aligned.home;
+        finalAwayGoals = aligned.away;
+        rawFinalHomeGoals = aligned.home;
+        rawFinalAwayGoals = aligned.away;
+        match.rawFinalHomeGoals = aligned.home;
+        match.rawFinalAwayGoals = aligned.away;
+      }
+
+      if (outcomePrediction === "homeWin") {
         match.prediction = "homeWin";
         match.winValue = (match.homeWinProbability - homeWinImplied).toFixed(2)
         match.winImplied = homeWinImplied;
@@ -4914,7 +5118,7 @@ export async function calculateScore(match, index, divider, calculate, AIPredict
         } else {
           match.includeInMultis = true;
         }
-      } else if (finalAwayGoals > finalHomeGoals) {
+      } else if (outcomePrediction === "awayWin") {
         match.prediction = "awayWin";
         match.winValue = (match.awayWinProbability - awayWinImplied).toFixed(2)
         match.winImplied = awayWinImplied;
@@ -4929,7 +5133,7 @@ export async function calculateScore(match, index, divider, calculate, AIPredict
         } else {
           match.includeInMultis = true;
         }
-      } else if (finalHomeGoals === finalAwayGoals) {
+      } else if (outcomePrediction === "draw") {
         match.prediction = "draw";
         match.drawValue = (draw - drawImplied).toFixed(2)
         match.winImplied = drawImplied;
