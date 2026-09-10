@@ -55,8 +55,9 @@ export function resolveSshScorelineForTips({
   liveHome,
   liveAway,
   kickoffPassed,
+  useResultSnapshots = false,
 }) {
-  if (kickoffPassed && stored) {
+  if (useResultSnapshots && kickoffPassed && stored) {
     return {
       home: stored.home,
       away: stored.away,
@@ -68,7 +69,10 @@ export function resolveSshScorelineForTips({
   if (!kickoffPassed) {
     const changed =
       !stored || stored.home !== liveHome || stored.away !== liveAway;
-    return { ...live, shouldPersist: changed };
+    return { ...live, shouldPersist: useResultSnapshots && changed };
+  }
+  if (!useResultSnapshots) {
+    return { ...live, shouldPersist: false };
   }
   return { ...live, shouldPersist: !stored };
 }

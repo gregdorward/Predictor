@@ -2,79 +2,18 @@ import { useState, useEffect } from "react";
 import Slider from "@mui/material/Slider";
 import oddslib from "oddslib";
 import { selectedOdds } from "../components/OddsRadio";
+import {
+  GlobalFilters,
+  applyFilterPreset,
+  FILTER_PRESET_NAMES,
+} from "../logic/tipFilters";
 
-// 1. Group variables into a single exported object to satisfy the linter
-export const GlobalFilters = {
-  minimumXG: null,
-  minimumGD: null,
-  minimumGDHorA: null,
-  minimumLast6: null,
-  edge: null,
-  O25edge: null,
-  BTTSedge: null,
-  oddsRange: [1.01, 10],
-  over25Probability: null,
-  bttsProbability: null,
-  omitDraws: false,
-  winProbability: null,
-};
+export { GlobalFilters };
 
 export const FilterPresets = () => {
   const applyPreset = (preset) => {
-    // Reset all to defaults by modifying the object properties
-    GlobalFilters.edge = null;
-    GlobalFilters.bttsProbability = null;
-    GlobalFilters.over25Probability = null;
-    GlobalFilters.minimumXG = null;
-    GlobalFilters.minimumGD = null;
-    GlobalFilters.minimumGDHorA = null;
-    GlobalFilters.minimumLast6 = null;
-    GlobalFilters.O25edge = null;
-    GlobalFilters.BTTSedge = null;
-    GlobalFilters.oddsRange = [1.01, 10];
-    GlobalFilters.omitDraws = false;
-    GlobalFilters.winProbability = null;
-
-    // Apply specific preset values
-    switch (preset) {
-      case "high_btts":
-        GlobalFilters.bttsProbability = 65;
-        GlobalFilters.BTTSedge = 1;
-        break;
-      case "value_seekers":
-        GlobalFilters.edge = 10;
-        break;
-      case "goals_galore":
-        GlobalFilters.over25Probability = 65;
-        GlobalFilters.O25edge = 1;
-        break;
-      case "stats_picks":
-        GlobalFilters.minimumXG = 2;
-        GlobalFilters.minimumGD = 5;
-        GlobalFilters.minimumGDHorA = 10;
-        GlobalFilters.minimumLast6 = 6;
-        break;
-      case "long-shots":
-        GlobalFilters.oddsRange = [2, 10];
-        GlobalFilters.omitDraws = true;
-        break;
-      case "underdogs":
-        GlobalFilters.oddsRange = [3, 10];
-        GlobalFilters.omitDraws = true;
-        break;
-      case "clear_favourites":
-        GlobalFilters.winProbability = 80;
-        break;
-      case "ssh":
-        GlobalFilters.minimumGDHorA = 5;
-        GlobalFilters.minimumXG = 2;
-        GlobalFilters.oddsRange = [1.2, 10];
-        break;
-      default:
-        break;
-    }
-
-    // Dispatch event to update Slider UI
+    if (!preset) return;
+    applyFilterPreset(preset);
     window.dispatchEvent(new Event("filterPresetApplied"));
   };
 
@@ -82,14 +21,9 @@ export const FilterPresets = () => {
     <div className="PresetContainer">
       <select onChange={(e) => applyPreset(e.target.value)} className="PresetDropdown">
         <option value="">Select a Preset Strategy...</option>
-        <option value="high_btts">BTTS picks</option>
-        <option value="value_seekers">High value picks</option>
-        <option value="goals_galore">Over 2.5 picks</option>
-        <option value="stats_picks">Form-based picks</option>
-        <option value="long-shots">Medium to high odds win picks</option>
-        <option value="underdogs">Underdog picks</option>
-        <option value="clear_favourites">Clear favourites</option>
-        <option value="ssh">Soccer Stats Hub recommended</option>
+        {Object.entries(FILTER_PRESET_NAMES).map(([value, label]) => (
+          <option key={value} value={value}>{label}</option>
+        ))}
       </select>
     </div>
   );

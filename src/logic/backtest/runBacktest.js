@@ -3,10 +3,12 @@ import { resolve } from "path";
 
 import {
   calculateScore,
+  getUseResultSnapshots,
   isBelowMinMatchesForPrediction,
   setSingleMatchPredictionData,
   setSshSnapshotPersistEnabled,
   resetSshSnapshotState,
+  setUseResultSnapshots,
 } from "../getScorePredictions.js";
 import {
   allForm,
@@ -32,6 +34,10 @@ import {
   buildLeagueAveragesAsOf,
   persistLeagueAveragesForDate,
 } from "../../utils/leagueAverages.js";
+import {
+  formatActiveFilters,
+  parseBacktestFilters,
+} from "./parseFilters.js";
 
 function attachCachedForm(match) {
   const fixtureForm = allForm.find(
@@ -58,10 +64,20 @@ export async function runBacktest(cliArgs = {}) {
     format: cliArgs.format ?? "both",
     upload: cliArgs.upload !== false,
     delayMs: Number(cliArgs.delayMs ?? 500),
-    replayModel: cliArgs.replayModel === true,
+    useSnapshots:
+      cliArgs.useSnapshots != null
+        ? cliArgs.useSnapshots === true
+        : getUseResultSnapshots(),
     minEdge: cliArgs.minEdge != null ? Number(cliArgs.minEdge) : null,
     edgeCurve: cliArgs.edgeCurve === true,
   };
+
+  setUseResultSnapshots(params.useSnapshots);
+
+  const filterConfig = parseBacktestFilters(cliArgs);
+  params.filters = filterConfig.filters;
+  params.filterPreset = filterConfig.preset;
+  params.filtersActive = filterConfig.active;
 
   if (!params.from || !params.to) {
     throw new Error("Both --from and --to are required (YYYY-MM-DD).");
@@ -82,15 +98,11 @@ export async function runBacktest(cliArgs = {}) {
     predictedScores: storedPredictedScores,
   } = await fetchGlobalBacktestData(apiOrigin);
 
-  const kickoffPredictedScores = params.replayModel
-    ? []
-    : storedPredictedScores || [];
+  const kickoffPredictedScores = params.useSnapshots
+    ? storedPredictedScores || []
+    : [];
 
-  if (params.replayModel) {
-    console.log(
-      "Scorelines: replay current model (ignoring kickoff snapshots)"
-    );
-  } else {
+  if (params.useSnapshots) {
     console.log(
       `Scorelines: kickoff snapshots (${kickoffPredictedScores.length} stored rows)`
     );
@@ -99,6 +111,19 @@ export async function runBacktest(cliArgs = {}) {
         "No predictedScores2 snapshots loaded; falling back to live model replay."
       );
     }
+  } else {
+    console.log(
+      "Scorelines: current model (result snapshots disabled)"
+    );
+  }
+
+  if (filterConfig.active) {
+    const presetLabel = filterConfig.presetLabel
+      ? `${filterConfig.presetLabel} (${filterConfig.preset})`
+      : "active";
+    console.log(`Tip filters: ${presetLabel} — ${formatActiveFilters()}`);
+  } else {
+    console.log("Tip filters: none (full predicted slate)");
   }
 
   const allRows = [];
@@ -242,7 +267,14 @@ export async function runBacktest(cliArgs = {}) {
     await sleep(params.delayMs);
   }
 
-  const summary = aggregateResults(allRows);
+  const summaryAll = aggregateResults(allRows);
+  const summary = filterConfig.active
+    ? aggregateResults(allRows, { excludeFilteredOut: true })
+    : summaryAll;
+  if (filterConfig.active) {
+    summary.unfiltered = summaryAll;
+    summary.filtered = { ...summary };
+  }
   if (params.minEdge != null && Number.isFinite(params.minEdge)) {
     summary.selective = aggregateSelectiveResults(allRows, params.minEdge);
   }
@@ -250,9 +282,10 @@ export async function runBacktest(cliArgs = {}) {
     summary.edgeCurve = aggregateEdgeCurve(allRows);
   }
   summary.skippedNoForm = skippedDays.length;
-  summary.scorelineSource = params.replayModel
-    ? "replay_model"
-    : "kickoff_snapshot";
+  summary.scorelineSource = params.useSnapshots
+    ? "kickoff_snapshot"
+    : "replay_model";
+  summary.useResultSnapshots = params.useSnapshots;
   summary.usedKickoffSnapshot = usedKickoffSnapshot;
   summary.usedLiveReplay = usedLiveReplay;
   summary.leagueAveragesCoverage = {
@@ -287,11 +320,21 @@ export async function runBacktest(cliArgs = {}) {
   writeFileSync(resolve(outputDir, "results.csv"), resultsCsv);
 
   console.log("\nSummary");
+  if (filterConfig.active && summary.unfiltered) {
+    console.log(
+      `  Unfiltered slate: ${summary.unfiltered.predicted} predicted, ROI ${summary.unfiltered.roi}%`
+    );
+  }
   console.log(`  Matches in report: ${summary.totalMatches}`);
   console.log(`  Predicted: ${summary.predicted}`);
   console.log(`  Outcome accuracy: ${summary.outcomeAccuracy}%`);
   console.log(`  Exact score rate: ${summary.exactScoreRate}%`);
   console.log(`  ROI (flat 1-unit): ${summary.roi}%`);
+  if (filterConfig.active) {
+    console.log(
+      `  Filtered out: ${summary.unfiltered.predicted - summary.predicted} tips`
+    );
+  }
   console.log("\nBy predicted outcome");
   for (const [outcome, label] of [
     ["homeWin", "Home win"],

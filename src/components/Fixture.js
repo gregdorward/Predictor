@@ -20,6 +20,8 @@ import {
   statPercentDisplay,
 } from "../utils/formatStat";
 import { getCompetitionFormPills } from "../utils/leagueResultsAccess";
+import { Flag } from "lucide-react";
+import { getMaxOutcomeEdge } from "../logic/scoreModelConfig.js";
 
 let resultValue;
 var count;
@@ -333,23 +335,36 @@ function SingleFixture({
                 status={fixture.status}
                 fixture={fixture}
               />
-              <input
-                type="checkbox"
-                checked={checked}
-                onChange={onToggle}
-                className="star"
-                id={`shortlist-${fixture.id}`} // Unique ID for label association
-              />
-              <a
-                href={getFixturePageUrl()}
-                className="GameStatsTwo"
-                target="_blank"
-                rel="noopener noreferrer"
-                onClick={handleButtonClick}
-                aria-label="Open fixture analysis in a new tab"
-              >
-                {rightArrow}
-              </a>
+              <div className="MatchDetail-actions">
+                <input
+                  type="checkbox"
+                  checked={checked}
+                  onChange={onToggle}
+                  className="star"
+                  id={`shortlist-${fixture.id}`}
+                />
+                {fixture.highEdgeFlag && (
+                  <span
+                    className="high-edge-flag-wrap"
+                    title={`Value edge exceeds ${getMaxOutcomeEdge() ?? 20}% — excluded from ROI`}
+                  >
+                    <Flag className="high-edge-flag" aria-hidden="true" />
+                    <span className="high-edge-flag-label">
+                      High risk - large swing from bookmaker odds
+                    </span>
+                  </span>
+                )}
+                <a
+                  href={getFixturePageUrl()}
+                  className="GameStatsTwo"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  onClick={handleButtonClick}
+                  aria-label="Open fixture analysis in a new tab"
+                >
+                  {rightArrow}
+                </a>
+              </div>
             </div>
             <div className={`HomeAndAwayContainer${tipResultClass}`}>
 

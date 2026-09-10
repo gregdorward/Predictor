@@ -2103,6 +2103,10 @@ export async function generateFixtures(
         match.expectedGoalsHomeToDate = fixture.team_a_xg_prematch;
         match.expectedGoalsAwayToDate = fixture.team_b_xg_prematch;
         match.game_week = fixture.game_week;
+        match.noHomeAway =
+          fixture.no_home_away === 1 ||
+          fixture.no_home_away === "1" ||
+          fixture.no_home_away === true;
 
         const formEntry = allForm.find(
           (game) =>

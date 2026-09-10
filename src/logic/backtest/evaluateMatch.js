@@ -89,6 +89,8 @@ export function evaluateMatch(match, dateIso, formSource) {
     bttsYesProb: match.bttsYesProbability ?? null,
     completeData: match.completeData ?? false,
     formSource,
+    filteredOut: match.omit === true,
+    highEdgeFlag: match.highEdgeFlag === true,
     skippedReason: null,
   };
 
@@ -132,10 +134,14 @@ function emptyPredictionBucket() {
 
 const PREDICTION_OUTCOMES = ["homeWin", "draw", "awayWin"];
 
-export function aggregateResults(rows) {
-  const scored = rows.filter(
-    (row) => row.skippedReason == null && row.outcomeCorrect != null
-  );
+export function aggregateResults(rows, options = {}) {
+  const excludeFilteredOut = options.excludeFilteredOut === true;
+  const scored = rows.filter((row) => {
+    if (row.skippedReason != null || row.outcomeCorrect == null) return false;
+    if (row.highEdgeFlag === true) return false;
+    if (excludeFilteredOut && row.filteredOut === true) return false;
+    return true;
+  });
 
   let investment = 0;
   let sumProfit = 0;

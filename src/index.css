@@ -3716,11 +3716,56 @@ strong.LOST {
 }
 
 .MatchDetail {
-  display: inline-flex;
+  display: flex;
   align-items: center;
   justify-content: space-between;
+  width: 100%;
   font-size: 1.2em;
   margin-bottom: 1em;
+}
+
+.MatchDetail-actions {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  flex: 1;
+  min-width: 0;
+}
+
+.MatchDetail-actions .star {
+  grid-column: 1;
+}
+
+.MatchDetail-actions .GameStatsTwo {
+  grid-column: 3;
+}
+
+.high-edge-flag-wrap {
+  grid-column: 2;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  justify-self: center;
+  gap: 0.25em;
+  max-width: 100%;
+  font-size: 0.9em;
+  color: inherit;
+  text-align: center;
+}
+
+.high-edge-flag {
+  width: 1em;
+  height: 1em;
+  color: #dc2626;
+  fill: #dc2626;
+  flex-shrink: 0;
+}
+
+.high-edge-flag-label {
+  font-size: inherit;
+  line-height: 1.2;
+  color: inherit;
+  font-weight: normal;
 }
 
 .HomeAndAwayContainerundefined {
