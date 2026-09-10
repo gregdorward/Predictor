@@ -4,6 +4,7 @@ import {
   buildMarketReliabilityOverview,
   formatCorrectlyPriced,
   isValidMriOverviewPayload,
+  searchTeamReliability,
 } from "./marketReliabilityData";
 
 function pricedFixture(homeOdds, awayOdds, homeGoals, awayGoals) {
@@ -86,6 +87,64 @@ describe("buildMarketReliabilityOverview", () => {
     );
     expect(overview.leagues[0].correctlyPriced).toBe(7);
     expect(overview.leagues[0].pricedMatches).toBe(10);
+  });
+
+  test("includes a searchable teams list alongside extremes", () => {
+    const fixtures = [
+      ...Array.from({ length: 6 }, () => ({
+        ...pricedFixture(1.5, 5, 2, 0),
+        home_name: "Alpha FC",
+        away_name: "Beta United",
+      })),
+      ...Array.from({ length: 6 }, () => ({
+        ...pricedFixture(1.5, 5, 0, 1),
+        home_name: "Gamma City",
+        away_name: "Alpha FC",
+      })),
+    ];
+    const overview = buildMarketReliabilityOverview(
+      { data: [{ id: 4, fixtures }] },
+      [{ id: 4, slug: "search-league", name: "Search League" }]
+    );
+
+    expect(overview.teams.length).toBeGreaterThan(0);
+    expect(overview.teams.some((team) => team.name === "Alpha FC")).toBe(true);
+    expect(overview.mostReliableTeams.length).toBeLessThanOrEqual(15);
+  });
+});
+
+describe("searchTeamReliability", () => {
+  const teams = [
+    {
+      name: "Manchester City",
+      leagueName: "Premier League",
+      favouriteCount: 20,
+      predictabilityScore: 2.1,
+    },
+    {
+      name: "Manchester United",
+      leagueName: "Premier League",
+      favouriteCount: 18,
+      predictabilityScore: 1.4,
+    },
+    {
+      name: "Celtic",
+      leagueName: "Premiership",
+      favouriteCount: 22,
+      predictabilityScore: 2.5,
+    },
+  ];
+
+  test("returns the best single match first", () => {
+    expect(searchTeamReliability(teams, "celtic")[0].name).toBe("Celtic");
+    expect(searchTeamReliability(teams, "manchester city")[0].name).toBe(
+      "Manchester City"
+    );
+  });
+
+  test("ranks prefix matches ahead of looser substring hits", () => {
+    const names = searchTeamReliability(teams, "man").map((team) => team.name);
+    expect(names[0]).toMatch(/^Manchester/);
   });
 });
 

@@ -6,6 +6,7 @@ import {
   formatCorrectlyPriced,
   formatMriMetricValue,
   isLowSample,
+  searchTeamReliability,
 } from "../seo/marketReliabilityData";
 import { reliabilityToneForScore } from "../logic/marketReliability";
 import { sanitizeImageFilename } from "../utils/captureElementImage";
@@ -165,6 +166,103 @@ function ReliabilityTone({ label, score }) {
   );
 }
 
+function TeamLookup({ teams, minFavourites = 3 }) {
+  const [query, setQuery] = useState("");
+  const [selected, setSelected] = useState(null);
+  const [searched, setSearched] = useState(false);
+
+  const suggestions = useMemo(
+    () => searchTeamReliability(teams, query, { limit: 6 }),
+    [teams, query]
+  );
+
+  function chooseTeam(team) {
+    setSelected(team);
+    setQuery(team?.name || "");
+    setSearched(true);
+  }
+
+  function onSubmit(event) {
+    event.preventDefault();
+    const best = searchTeamReliability(teams, query, { limit: 1 })[0] || null;
+    setSelected(best);
+    setSearched(true);
+    if (best) setQuery(best.name);
+  }
+
+  if (!teams?.length) return null;
+
+  return (
+    <section className="MarketReliability-tableSection" aria-labelledby="team-lookup">
+      <h2 id="team-lookup">Look up a team</h2>
+      <p className="MarketReliability-tableHint">
+        Search any team with at least {minFavourites} favourite appearances this
+        season. One row of reliability stats is returned for the best match.
+      </p>
+      <form className="MarketReliability-lookup" onSubmit={onSubmit}>
+        <label className="MarketReliability-lookupLabel" htmlFor="mri-team-search">
+          Team name
+        </label>
+        <div className="MarketReliability-lookupRow">
+          <input
+            id="mri-team-search"
+            type="search"
+            value={query}
+            onChange={(event) => {
+              setQuery(event.target.value);
+              setSearched(false);
+              setSelected(null);
+            }}
+            placeholder="e.g. Celtic, Napoli, Benfica"
+            autoComplete="off"
+            spellCheck="false"
+          />
+          <button type="submit" className="SecondaryButton">
+            Search
+          </button>
+        </div>
+        {query.trim().length >= 2 && suggestions.length > 0 && !searched ? (
+          <ul className="MarketReliability-suggestions" role="listbox">
+            {suggestions.map((team) => (
+              <li key={`${team.leagueSlug}-${team.name}`}>
+                <button
+                  type="button"
+                  onClick={() => chooseTeam(team)}
+                  role="option"
+                >
+                  <span>{team.name}</span>
+                  <span className="MarketReliability-suggestionLeague">
+                    {team.leagueName}
+                  </span>
+                </button>
+              </li>
+            ))}
+          </ul>
+        ) : null}
+      </form>
+
+      {searched && selected ? (
+        <SortableTable
+          caption={`Reliability for ${selected.name}`}
+          columns={TEAM_COLUMNS}
+          rows={[selected]}
+          sort={{ key: "predictabilityScore", direction: "desc" }}
+          onSort={() => {}}
+          sortable={false}
+          rowKey={(row) => `${row.leagueSlug}-${row.name}-lookup`}
+          renderNameCell={(row) => row.name}
+        />
+      ) : null}
+
+      {searched && !selected ? (
+        <p className="MarketReliability-lookupEmpty" role="status">
+          No team matched &ldquo;{query.trim()}&rdquo;. Try a fuller club name.
+        </p>
+      ) : null}
+    </section>
+  );
+}
+
 function formatUpdated(generatedAt) {
   if (!generatedAt) return null;
   const date = new Date(generatedAt);
@@ -316,6 +414,14 @@ function SortableTable({
 
 export default function MarketReliabilityIndex({ overview }) {
   const leagues = overview?.leagues || [];
+  // Prefer the full searchable set; fall back to extremes until the next cron.
+  const teams =
+    overview?.teams?.length > 0
+      ? overview.teams
+      : [
+          ...(overview?.mostReliableTeams || []),
+          ...(overview?.leastReliableTeams || []),
+        ];
   const mostReliableTeams = overview?.mostReliableTeams || [];
   const leastReliableTeams = overview?.leastReliableTeams || [];
   const [leagueSort, setLeagueSort] = useState({
@@ -436,6 +542,11 @@ export default function MarketReliabilityIndex({ overview }) {
                 </div>
               </ShareableVisual>
             </section>
+
+            <TeamLookup
+              teams={teams}
+              minFavourites={overview?.teamSearchMinFavourites || 3}
+            />
 
             {mostReliableTeams.length > 0 ? (
               <section className="MarketReliability-tableSection">

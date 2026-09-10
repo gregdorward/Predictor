@@ -22,6 +22,9 @@ export const MRI_MIN_ROWS = 8;
 /** Minimum favourite appearances before a team appears in the extremes lists. */
 export const MRI_TEAM_MIN_FAVOURITES = 6;
 
+/** Softer floor for the team lookup search (early-season clubs still findable). */
+export const MRI_TEAM_SEARCH_MIN_FAVOURITES = 3;
+
 /** How many teams to keep at each end of the reliability spectrum. */
 export const MRI_TEAM_EXTREMES = 15;
 
@@ -146,14 +149,14 @@ export function buildLeagueMriRow(leagueResults, catalog) {
   };
 }
 
-function buildTeamExtremes(leagueResults, catalog) {
+function buildTeamRows(leagueResults, catalog, { minFavourites = MRI_TEAM_MIN_FAVOURITES } = {}) {
   const fixtures = Array.isArray(leagueResults?.fixtures)
     ? leagueResults.fixtures
     : [];
   return buildTeamReliabilityFromFixtures(fixtures)
     .filter(
       (team) =>
-        (team.favouriteCount || 0) >= MRI_TEAM_MIN_FAVOURITES &&
+        (team.favouriteCount || 0) >= minFavourites &&
         team.predictabilityScore !== null
     )
     .map((team) => ({
@@ -170,6 +173,51 @@ function buildTeamExtremes(leagueResults, catalog) {
       oddsReliabilityWin: team.oddsReliabilityWin,
       oddsReliabilityWinAsUnderdog: team.oddsReliabilityWinAsUnderdog,
     }));
+}
+
+function normalizeTeamQuery(value) {
+  return String(value || "")
+    .toLowerCase()
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .replace(/[^a-z0-9\s]/g, " ")
+    .replace(/\s+/g, " ")
+    .trim();
+}
+
+/**
+ * Rank team matches for the search box. Exact / prefix beats substring.
+ * Returns up to `limit` candidates; callers pick the first as the single row.
+ */
+export function searchTeamReliability(teams, query, { limit = 8 } = {}) {
+  const needle = normalizeTeamQuery(query);
+  if (!needle || !Array.isArray(teams) || teams.length === 0) return [];
+
+  const scored = [];
+  for (const team of teams) {
+    const name = normalizeTeamQuery(team?.name);
+    if (!name) continue;
+
+    let rank = 0;
+    if (name === needle) rank = 300;
+    else if (name.startsWith(needle)) rank = 200;
+    else if (name.includes(needle)) rank = 100;
+    else continue;
+
+    // Prefer stronger sample / score when names tie.
+    scored.push({
+      team,
+      rank:
+        rank +
+        Math.min(team.favouriteCount || 0, 40) +
+        (team.predictabilityScore || 0) / 100,
+    });
+  }
+
+  return scored
+    .sort((a, b) => b.rank - a.rank || a.team.name.localeCompare(b.team.name))
+    .slice(0, limit)
+    .map((entry) => entry.team);
 }
 
 /**
@@ -194,7 +242,8 @@ export function buildMarketReliabilityOverview(
   );
 
   const leagues = [];
-  const allTeams = [];
+  const searchTeams = [];
+  const extremeCandidates = [];
 
   for (const league of leaguesRaw) {
     const catalog = catalogById.get(Number(league?.id));
@@ -203,14 +252,26 @@ export function buildMarketReliabilityOverview(
     const row = buildLeagueMriRow(league, catalog);
     if (row) leagues.push(row);
 
-    allTeams.push(...buildTeamExtremes(league, catalog));
+    searchTeams.push(
+      ...buildTeamRows(league, catalog, {
+        minFavourites: MRI_TEAM_SEARCH_MIN_FAVOURITES,
+      })
+    );
+    extremeCandidates.push(
+      ...buildTeamRows(league, catalog, {
+        minFavourites: MRI_TEAM_MIN_FAVOURITES,
+      })
+    );
   }
 
   leagues.sort(
     (a, b) => (b.predictabilityScore ?? 0) - (a.predictabilityScore ?? 0)
   );
 
-  const sortedTeams = [...allTeams].sort(
+  const sortedSearchTeams = [...searchTeams].sort(
+    (a, b) => (b.predictabilityScore ?? 0) - (a.predictabilityScore ?? 0)
+  );
+  const sortedExtremes = [...extremeCandidates].sort(
     (a, b) => (b.predictabilityScore ?? 0) - (a.predictabilityScore ?? 0)
   );
 
@@ -218,9 +279,12 @@ export function buildMarketReliabilityOverview(
     generatedAt: new Date(generatedAt).toISOString(),
     minPricedMatches: MRI_MIN_PRICED_MATCHES,
     lowSampleMatches: MRI_LOW_SAMPLE_MATCHES,
+    teamSearchMinFavourites: MRI_TEAM_SEARCH_MIN_FAVOURITES,
     leagues,
-    mostReliableTeams: sortedTeams.slice(0, MRI_TEAM_EXTREMES),
-    leastReliableTeams: [...sortedTeams]
+    // Full searchable set for the team lookup section.
+    teams: sortedSearchTeams,
+    mostReliableTeams: sortedExtremes.slice(0, MRI_TEAM_EXTREMES),
+    leastReliableTeams: [...sortedExtremes]
       .reverse()
       .slice(0, MRI_TEAM_EXTREMES),
   };
