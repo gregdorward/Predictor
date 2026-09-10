@@ -11,7 +11,7 @@ import { reliabilityToneForScore } from "../logic/marketReliability";
 import { sanitizeImageFilename } from "../utils/captureElementImage";
 import { SITE_URL } from "../seo/pageMetaConfig";
 
-const MRI_SHARE_TEXT = `Market Reliability Index — which leagues follow the bookies and which throw upsets: ${SITE_URL}/market-reliability/`;
+const MRI_SHARE_TEXT = `Market Reliability Index - which leagues follow the bookies and which throw upsets: ${SITE_URL}/market-reliability/`;
 
 const LEAGUE_COLUMNS = [
   { key: "name", label: "League", type: "text", priority: "core" },
@@ -362,7 +362,7 @@ export default function MarketReliabilityIndex({ overview }) {
           <p className="MarketReliability-intro">
             Which leagues tend to follow the bookies&apos; prices and which throw
             up the most upsets? Ranked by how often favourites win, draw or get
-            beaten — you can choose the leagues and teams you trust
+            beaten - you can choose the leagues and teams you trust
           </p>
         </header>
 
@@ -482,7 +482,7 @@ export default function MarketReliabilityIndex({ overview }) {
                 <h2 id="unreliable-teams">Least price-reliable teams</h2>
                 <p className="MarketReliability-tableHint">
                   Teams that beat the price as underdogs or fail as favourites
-                  more often — higher upset / draw noise.
+                  more often - higher upset / draw noise.
                 </p>
                 <ShareableVisual
                   className="MarketReliability-shareable"
