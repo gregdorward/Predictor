@@ -59,13 +59,14 @@ describe("upsertSshScoreRow", () => {
 describe("resolveSshScorelineForTips", () => {
   const stored = { home: 2, away: 0 };
 
-  test("uses stored scoreline after kickoff", () => {
+  test("uses stored scoreline after kickoff when snapshots enabled", () => {
     expect(
       resolveSshScorelineForTips({
         stored,
         liveHome: 1,
         liveAway: 2,
         kickoffPassed: true,
+        useResultSnapshots: true,
       })
     ).toEqual({
       home: 2,
@@ -75,13 +76,14 @@ describe("resolveSshScorelineForTips", () => {
     });
   });
 
-  test("follows live scores before kickoff and persists changes", () => {
+  test("follows live scores before kickoff and persists changes when snapshots enabled", () => {
     expect(
       resolveSshScorelineForTips({
         stored,
         liveHome: 3,
         liveAway: 1,
         kickoffPassed: false,
+        useResultSnapshots: true,
       })
     ).toEqual({
       home: 3,
@@ -91,19 +93,37 @@ describe("resolveSshScorelineForTips", () => {
     });
   });
 
-  test("freezes the first live scoreline after kickoff when nothing is stored", () => {
+  test("freezes the first live scoreline after kickoff when nothing is stored and snapshots enabled", () => {
     expect(
       resolveSshScorelineForTips({
         stored: null,
         liveHome: 1,
         liveAway: 2,
         kickoffPassed: true,
+        useResultSnapshots: true,
       })
     ).toEqual({
       home: 1,
       away: 2,
       source: "live",
       shouldPersist: true,
+    });
+  });
+
+  test("ignores stored scorelines when snapshots are disabled", () => {
+    expect(
+      resolveSshScorelineForTips({
+        stored,
+        liveHome: 1,
+        liveAway: 2,
+        kickoffPassed: true,
+        useResultSnapshots: false,
+      })
+    ).toEqual({
+      home: 1,
+      away: 2,
+      source: "live",
+      shouldPersist: false,
     });
   });
 });

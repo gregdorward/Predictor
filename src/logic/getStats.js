@@ -120,10 +120,10 @@ export async function calculateAttackingStrength(
 ) {
   const weights = {
     "Average Dangerous Attacks": 0.1,
-    "Average Shots": 0.0,
+    "Average Shots": 0.1,
     "Average Shots On Target": 0.15,
-    "Average Expected Goals": 0.35,
-    "Weighted XG": 0.25,
+    "Average Expected Goals": 0.5,
+    "Weighted XG": 0,
     "Average Goals": 0.15,
     Corners: 0,
     "Average Shot Value": 0,
@@ -170,10 +170,10 @@ export async function calculateDefensiveStrength(
   options = {}
 ) {
   const weights = {
-    "Average XG Against": 0.35,
-    "Weighted XG Against": 0.25,
+    "Average XG Against": 0.5,
+    "Weighted XG Against": 0,
     "Average Goals Against": 0.15,
-    "Average SOT Against": 0.15,
+    "Average SOT Against": 0.25,
     "Average Dangerous Attacks Against": 0.1,
     "Injury impact": 0,
   };
@@ -182,7 +182,7 @@ export async function calculateDefensiveStrength(
     ? INTERNATIONAL_DEFENCE_RANGES
     : DOMESTIC_DEFENCE_RANGES;
   const ranges = last5 ? rangeSet.last5 : rangeSet.overall;
-  const spreadIntensity = options.international ? 1 : 1.05;
+  const spreadIntensity = 1;
 
   let weightedSum = 0;
   for (const metric in stats) {

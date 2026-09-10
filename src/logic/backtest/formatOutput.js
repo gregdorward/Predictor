@@ -27,6 +27,7 @@ const MATCH_CSV_COLUMNS = [
   "bttsYesProb",
   "completeData",
   "formSource",
+  "filteredOut",
   "skippedReason",
 ];
 

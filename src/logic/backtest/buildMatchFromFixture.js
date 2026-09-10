@@ -1,3 +1,5 @@
+import { parseNoHomeAwayFromFixture } from "../scoreModelConfig.js";
+
 /**
  * Backtest-only match builder (copied from generateFixtures essentials).
  * Does not modify getFixtures.js.
@@ -58,5 +60,6 @@ export function buildMatchFromFixture(fixture, leagueName) {
     over25Fraction: "N/A",
     homeRawPosition: 0,
     awayRawPosition: 0,
+    noHomeAway: parseNoHomeAwayFromFixture(fixture),
   };
 }

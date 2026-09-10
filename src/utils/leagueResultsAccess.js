@@ -358,7 +358,10 @@ export function computeCompetitionGoalDifference(
     goalsScored += goals.scored;
     goalsConceded += goals.conceded;
 
-    if (venue === "home" && teamNamesMatch(fixture.home_name, team)) {
+    if (venue === "all") {
+      venueScored += goals.scored;
+      venueConceded += goals.conceded;
+    } else if (venue === "home" && teamNamesMatch(fixture.home_name, team)) {
       venueScored += goals.scored;
       venueConceded += goals.conceded;
     } else if (venue === "away" && teamNamesMatch(fixture.away_name, team)) {

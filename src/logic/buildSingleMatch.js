@@ -16,6 +16,7 @@ import {
   calculateAttackingStrength,
   calculateDefensiveStrength,
 } from "./getStats";
+import { parseNoHomeAwayFromFixture } from "./scoreModelConfig.js";
 import {
   buildFixturePageAttackingMetrics,
   buildFixturePageDefensiveMetrics,
@@ -179,6 +180,7 @@ export function buildMatchFromFixture(fixture, leagueID, leagueName) {
     expectedGoalsHomeToDate: fixture.team_a_xg_prematch,
     expectedGoalsAwayToDate: fixture.team_b_xg_prematch,
     game_week: fixture.game_week,
+    noHomeAway: parseNoHomeAwayFromFixture(fixture),
   };
 }
 
