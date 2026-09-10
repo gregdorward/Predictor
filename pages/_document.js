@@ -3,29 +3,6 @@ import Document, { Html, Head, Main, NextScript } from "next/document";
 import { ServerStyleSheets } from "@material-ui/core/styles";
 import GUEST_LANDING_CRITICAL_CSS from "../src/critical/guestLandingCriticalCss";
 
-// Exact Journey Ad Setup snippet. React boolean-serializes async as async="",
-// so this must be injected as raw HTML at the start of <head>.
-const JOURNEY_ADS_SNIPPET =
-  '<script type="text/javascript" async="async" data-noptimize="1" data-cfasync="false" src="//scripts.scriptwrapper.com/tags/71e44a5d-dc3a-499d-8677-800918c94d8a.js"></script>';
-
-class JourneyHead extends Head {
-  render() {
-    const rendered = super.render();
-    const inject = (
-      <style
-        key="journey-ads-detect"
-        dangerouslySetInnerHTML={{
-          __html: `</style>${JOURNEY_ADS_SNIPPET}<style type="text/css">`,
-        }}
-      />
-    );
-    return React.cloneElement(rendered, {}, [
-      inject,
-      ...React.Children.toArray(rendered.props.children),
-    ]);
-  }
-}
-
 const JSON_LD = {
   "@context": "https://schema.org",
   "@graph": [
@@ -215,7 +192,14 @@ export default class MyDocument extends Document {
   render() {
     return (
       <Html lang="en">
-        <JourneyHead>
+        <Head>
+          <script
+            type="text/javascript"
+            async
+            data-noptimize="1"
+            data-cfasync="false"
+            src="//scripts.scriptwrapper.com/tags/71e44a5d-dc3a-499d-8677-800918c94d8a.js"
+          />
           <link rel="icon" href="/favicon.ico" />
           <link rel="apple-touch-icon" href="/logo192.png" />
           <link rel="manifest" href="/manifest.json" />
@@ -269,7 +253,7 @@ export default class MyDocument extends Document {
             // eslint-disable-next-line react/no-danger
             dangerouslySetInnerHTML={{ __html: DEFERRED_GA_SCRIPT }}
           />
-        </JourneyHead>
+        </Head>
         <body>
           <script
             // eslint-disable-next-line react/no-danger
