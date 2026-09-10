@@ -5,6 +5,10 @@
       "schedule": "30 5 * * *"
     },
     {
+      "path": "/api/cron/market-reliability/",
+      "schedule": "40 5 * * *"
+    },
+    {
       "path": "/api/indexnow-ping/",
       "schedule": "0 6 * * *"
     }

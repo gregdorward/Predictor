@@ -71,6 +71,11 @@ export const PAGE_META = {
     description:
       "Compare goals per game, BTTS, Over 2.5, cards, corners and home advantage across the football leagues we cover, ranked side by side and updated daily.",
   },
+  "/market-reliability": {
+    title: "Market Reliability Index | Favourite & Underdog League Stats",
+    description:
+      "See which football leagues and teams behave like the 1X2 price: favourite win rates, upsets, draws and predictability scores updated daily from cached results.",
+  },
   "/articles": {
     title: "Football Articles & Analysis | Soccer Stats Hub",
     description:

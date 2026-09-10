@@ -1,6 +1,7 @@
 export const SITE_NAV_LINKS = [
   { label: "Home", path: "/" },
   { label: "Competitions", path: "/competitions/" },
+  { label: "Market Reliability", path: "/market-reliability/" },
   { label: "Upcoming Fixtures", path: "/fixtures/" },
   { label: "Articles", path: "/articles/" },
   { label: "Premier League 2026/27 Preview", path: "/premier-league-2026-27/" },

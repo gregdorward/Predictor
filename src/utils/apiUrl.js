@@ -19,6 +19,7 @@ const PROXIED_ENDPOINTS = new Set([
   "cuptrees",
   "competition",
   "competition-overview",
+  "market-reliability-overview",
   "getMedia",
   "futureFixtures",
   "LeagueTeamStats",

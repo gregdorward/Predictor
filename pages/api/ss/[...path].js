@@ -43,6 +43,7 @@ const CACHE_RULES = {
   competition: { sMaxAge: 600, swr: 86400 },
   // Rebuilt once a day by the 05:30 cron, so a long edge TTL is safe.
   "competition-overview": { sMaxAge: 3600, swr: 86400 },
+  "market-reliability-overview": { sMaxAge: 3600, swr: 86400 },
   getMedia: { sMaxAge: 10800, swr: 86400 },
   futureFixtures: { sMaxAge: 10800, swr: 86400 },
   LeagueTeamStats: { sMaxAge: 3600, swr: 86400 },
