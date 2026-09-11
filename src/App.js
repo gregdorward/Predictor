@@ -1235,7 +1235,7 @@ export function AppContent({ shellMounted = false }) {
             {/* Optional: Add a subtle text indicator below */}
             {isPredicting && <p className="LoadingStatus">Calculating all predictions... Each fixture will be interactable once these are returned</p>}
 
-            <div className="Version">Prediction engine v2.1.5</div>
+            <div className="Version">Prediction engine v2.2.0</div>
           </div>
         )}
       </div>
