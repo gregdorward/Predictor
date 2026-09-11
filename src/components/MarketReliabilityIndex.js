@@ -5,6 +5,8 @@ import {
   MRI_METRICS,
   formatCorrectlyPriced,
   formatMriMetricValue,
+  formatMriProfitTooltip,
+  formatWdlRecord,
   isLowSample,
   searchTeamReliability,
 } from "../seo/marketReliabilityData";
@@ -13,6 +15,9 @@ import { sanitizeImageFilename } from "../utils/captureElementImage";
 import { SITE_URL } from "../seo/pageMetaConfig";
 
 const MRI_SHARE_TEXT = `Market Reliability Index - which leagues follow the bookies and which throw upsets: ${SITE_URL}/market-reliability/`;
+
+const FAV_ROI_METRIC = MRI_METRICS.find((m) => m.key === "favouriteRoi");
+const UNDERDOG_ROI_METRIC = MRI_METRICS.find((m) => m.key === "underdogRoi");
 
 const LEAGUE_COLUMNS = [
   { key: "name", label: "League", type: "text", priority: "core" },
@@ -31,6 +36,16 @@ const LEAGUE_COLUMNS = [
     title: "Predictability score",
     type: "number",
     metric: MRI_METRICS[0],
+    priority: "core",
+  },
+  {
+    key: "favouriteRoi",
+    label: "Fav ROI",
+    title: "Flat 1u P&L backing the favourite every priced match (net ROI %)",
+    type: "roi",
+    metric: FAV_ROI_METRIC,
+    profitKey: "favouriteProfit",
+    betsKey: "pricedMatches",
     priority: "core",
   },
   {
@@ -103,11 +118,32 @@ const TEAM_COLUMNS = [
     priority: "core",
   },
   {
+    key: "favouriteWdl",
+    label: "W/D/L",
+    title: "Record as favourite (wins / draws / losses)",
+    type: "wdl",
+    winKey: "winningFavouriteCount",
+    drawKey: "drawingFavouriteCount",
+    lossKey: "beatenFavouriteCount",
+    sortKey: "winningFavouriteCount",
+    priority: "core",
+  },
+  {
     key: "predictabilityScore",
     label: "Score",
     title: "Predictability score",
     type: "number",
     metric: MRI_METRICS[0],
+    priority: "core",
+  },
+  {
+    key: "favouriteRoi",
+    label: "Fav ROI",
+    title: "Flat 1u P&L when backing this team as favourite (net ROI %)",
+    type: "roi",
+    metric: FAV_ROI_METRIC,
+    profitKey: "favouriteProfit",
+    betsKey: "favouriteCount",
     priority: "core",
   },
   {
@@ -144,6 +180,67 @@ const TEAM_COLUMNS = [
     title: "Reliability band from the predictability score",
     type: "reliability",
     sortKey: "predictabilityScore",
+    priority: "detail",
+  },
+];
+
+const UNDERDOG_COLUMNS = [
+  { key: "name", label: "Team", type: "text", priority: "core" },
+  {
+    key: "winningUnderdogCount",
+    label: "Underdog record",
+    title: "Wins as underdog out of underdog appearances",
+    type: "fraction",
+    sortKey: "oddsReliabilityWinAsUnderdog",
+    totalKey: "underdogCount",
+    priority: "core",
+  },
+  {
+    key: "underdogWdl",
+    label: "W/D/L",
+    title: "Record as underdog (wins / draws / losses)",
+    type: "wdl",
+    winKey: "winningUnderdogCount",
+    drawKey: "drawingUnderdogCount",
+    lossKey: "beatenUnderdogCount",
+    sortKey: "winningUnderdogCount",
+    priority: "core",
+  },
+  {
+    key: "underdogPoints",
+    label: "Underdog pts",
+    title: "Points earned as underdog (win = 3, draw = 1)",
+    type: "number",
+    priority: "core",
+  },
+  {
+    key: "underdogCount",
+    label: "As underdog",
+    type: "number",
+    priority: "core",
+  },
+  {
+    key: "underdogRoi",
+    label: "Dog ROI",
+    title: "Flat 1u P&L backing this team as underdog (net ROI %)",
+    type: "roi",
+    metric: UNDERDOG_ROI_METRIC,
+    profitKey: "underdogProfit",
+    betsKey: "underdogCount",
+    priority: "core",
+  },
+  {
+    key: "leagueName",
+    label: "League",
+    type: "text",
+    priority: "secondary",
+  },
+  {
+    key: "oddsReliabilityWinAsUnderdog",
+    label: "Underdog win %",
+    title: "Underdog win rate",
+    type: "number",
+    metric: MRI_METRICS[1],
     priority: "detail",
   },
 ];
@@ -366,10 +463,18 @@ function SortableTable({
                   );
                 }
                 if (column.metric) {
+                  const formatted =
+                    formatMriMetricValue(row[column.key], column.metric) || "-";
+                  const tooltip =
+                    column.type === "roi"
+                      ? formatMriProfitTooltip(
+                          row[column.profitKey],
+                          row[column.betsKey]
+                        )
+                      : null;
                   return (
-                    <td key={column.key} className={className}>
-                      {formatMriMetricValue(row[column.key], column.metric) ||
-                        "-"}
+                    <td key={column.key} className={className} title={tooltip || undefined}>
+                      {formatted}
                     </td>
                   );
                 }
@@ -385,6 +490,17 @@ function SortableTable({
                   return (
                     <td key={column.key} className={className}>
                       {formatCorrectlyPriced(hits, total) || "-"}
+                    </td>
+                  );
+                }
+                if (column.type === "wdl") {
+                  return (
+                    <td key={column.key} className={className}>
+                      {formatWdlRecord(
+                        row[column.winKey],
+                        row[column.drawKey],
+                        row[column.lossKey]
+                      ) || "-"}
                     </td>
                   );
                 }
@@ -424,6 +540,7 @@ export default function MarketReliabilityIndex({ overview }) {
         ];
   const mostReliableTeams = overview?.mostReliableTeams || [];
   const leastReliableTeams = overview?.leastReliableTeams || [];
+  const mostEffectiveUnderdogs = overview?.mostEffectiveUnderdogs || [];
   const [leagueSort, setLeagueSort] = useState({
     key: "predictabilityScore",
     direction: "desc",
@@ -621,6 +738,47 @@ export default function MarketReliabilityIndex({ overview }) {
                       onSort={() => {}}
                       sortable={false}
                       rowKey={(row) => `${row.leagueSlug}-${row.name}-low`}
+                      renderNameCell={(row) => row.name}
+                    />
+                  </div>
+                </ShareableVisual>
+              </section>
+            ) : null}
+
+            {mostEffectiveUnderdogs.length > 0 ? (
+              <section className="MarketReliability-tableSection">
+                <h2 id="effective-underdogs">Most effective underdogs</h2>
+                <p className="MarketReliability-tableHint">
+                  Teams that picked up the most points when priced as the longer
+                  side. Underdog profit is calculated on a flat 1 unit being
+                  placed on them in each game they have played.
+                </p>
+                <ShareableVisual
+                  className="MarketReliability-shareable"
+                  filename={sanitizeImageFilename(
+                    "market-reliability-effective-underdogs"
+                  )}
+                  shareTitle="Most effective underdogs"
+                  shareText={MRI_SHARE_TEXT}
+                >
+                  <div
+                    data-share-capture
+                    className="MarketReliability-shareCapture"
+                  >
+                    <p className="MarketReliability-shareCaptureTitle">
+                      Most effective underdogs
+                      <span className="MarketReliability-shareCaptureSub">
+                        Points as the longer price this season
+                      </span>
+                    </p>
+                    <SortableTable
+                      caption="Teams ranked by points earned as underdog"
+                      columns={UNDERDOG_COLUMNS}
+                      rows={mostEffectiveUnderdogs}
+                      sort={{ key: "underdogPoints", direction: "desc" }}
+                      onSort={() => {}}
+                      sortable={false}
+                      rowKey={(row) => `${row.leagueSlug}-${row.name}-dog`}
                       renderNameCell={(row) => row.name}
                     />
                   </div>

@@ -16,6 +16,10 @@ export function buildCompetitionOgImageUrl(slugOrId) {
   return `${SITE_URL}/api/og/competition/${encodeURIComponent(String(slugOrId))}/`;
 }
 
+export function buildMarketReliabilityOgImageUrl() {
+  return `${SITE_URL}/api/og/market-reliability/`;
+}
+
 export const DEFAULT_TITLE =
   "Soccer Stats Hub | BTTS, Under 2.5, xG & Football Predictions";
 export const DEFAULT_DESCRIPTION =

@@ -14,6 +14,7 @@ import {
 import {
   buildCompetitionOgImageUrl,
   buildFixtureOgImageUrl,
+  buildMarketReliabilityOgImageUrl,
   buildPremierLeague202627OgImageUrl,
   getCanonicalPathFromAsPath,
   getCanonicalUrl,
@@ -129,6 +130,14 @@ describe("premier league OG image URLs", () => {
   test("builds absolute OG image URL for the 2026/27 preview", () => {
     expect(buildPremierLeague202627OgImageUrl()).toBe(
       "https://www.soccerstatshub.com/api/og/premier-league-2026-27/"
+    );
+  });
+});
+
+describe("market reliability OG image URLs", () => {
+  test("builds absolute OG image URL for the index page", () => {
+    expect(buildMarketReliabilityOgImageUrl()).toBe(
+      "https://www.soccerstatshub.com/api/og/market-reliability/"
     );
   });
 });

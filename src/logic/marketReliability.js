@@ -24,6 +24,25 @@ function round2(value) {
   return Math.round(value * 100) / 100;
 }
 
+/**
+ * Net P&L for a unit stake. A winner returns stake * odds (stake included);
+ * net change is odds - 1. Losers / draws lose the stake (-1).
+ */
+export function unitStakePnl(odds, won) {
+  const price = toNumber(odds);
+  if (price === null) return null;
+  return won ? round2(price - 1) : -1;
+}
+
+/** ROI % from cumulative net profit over unit bets. */
+export function roiFromProfit(profit, bets) {
+  const stakeCount = toNumber(bets);
+  if (stakeCount === null || stakeCount <= 0) return null;
+  const net = toNumber(profit);
+  if (net === null) return null;
+  return round1((net / stakeCount) * 100);
+}
+
 export function emptyRoleCounts() {
   return {
     favouriteCount: 0,
@@ -34,6 +53,9 @@ export function emptyRoleCounts() {
     winningUnderdogCount: 0,
     drawingUnderdogCount: 0,
     beatenUnderdogCount: 0,
+    favouriteProfit: 0,
+    underdogProfit: 0,
+    underdogPoints: 0,
   };
 }
 
@@ -79,18 +101,26 @@ export function classifyFixtureRoles(fixture) {
 }
 
 /** Apply one fixture to a team's running role counts (home or away view). */
-export function addTeamRoleResult(counts, { isFavourite, won, drew, lost }) {
+export function addTeamRoleResult(
+  counts,
+  { isFavourite, won, drew, lost, odds }
+) {
   const next = { ...counts };
+  const pnl = unitStakePnl(odds, won);
   if (isFavourite) {
     next.favouriteCount += 1;
     if (won) next.winningFavouriteCount += 1;
     if (drew) next.drawingFavouriteCount += 1;
     if (lost) next.beatenFavouriteCount += 1;
+    if (pnl !== null) next.favouriteProfit = round2(next.favouriteProfit + pnl);
   } else {
     next.underdogCount += 1;
     if (won) next.winningUnderdogCount += 1;
     if (drew) next.drawingUnderdogCount += 1;
     if (lost) next.beatenUnderdogCount += 1;
+    if (pnl !== null) next.underdogProfit = round2(next.underdogProfit + pnl);
+    if (won) next.underdogPoints += 3;
+    else if (drew) next.underdogPoints += 1;
   }
   return next;
 }
@@ -139,8 +169,16 @@ export function summariseRoleCounts(counts) {
         ? 99
         : null;
 
+  const favouriteProfit = round2(counts.favouriteProfit || 0);
+  const underdogProfit = round2(counts.underdogProfit || 0);
+
   return {
     ...counts,
+    favouriteProfit,
+    underdogProfit,
+    underdogPoints: counts.underdogPoints || 0,
+    favouriteRoi: roiFromProfit(favouriteProfit, favouriteCount),
+    underdogRoi: roiFromProfit(underdogProfit, underdogCount),
     oddsReliabilityWin,
     oddsReliabilityDraw,
     oddsReliabilityLose,
@@ -196,6 +234,7 @@ export function buildLeagueReliabilityFromFixtures(fixtures) {
   let awayFavouriteWins = 0;
   let homeFavourites = 0;
   let awayFavourites = 0;
+  let favouriteProfit = 0;
 
   for (const fixture of list) {
     if (fixture?.status && fixture.status !== "complete") continue;
@@ -207,6 +246,12 @@ export function buildLeagueReliabilityFromFixtures(fixtures) {
     if (roles.favouriteWon) favouriteWins += 1;
     if (roles.favouriteDrew) favouriteDraws += 1;
     if (roles.favouriteLost) favouriteLosses += 1;
+
+    const favouriteOdds = roles.homeIsFavourite
+      ? roles.homeOdds
+      : roles.awayOdds;
+    const favPnl = unitStakePnl(favouriteOdds, roles.favouriteWon);
+    if (favPnl !== null) favouriteProfit = round2(favouriteProfit + favPnl);
 
     if (roles.homeIsFavourite) {
       homeFavourites += 1;
@@ -250,6 +295,8 @@ export function buildLeagueReliabilityFromFixtures(fixtures) {
     favouriteLosses,
     homeFavourites,
     awayFavourites,
+    favouriteProfit: round2(favouriteProfit),
+    favouriteRoi: roiFromProfit(favouriteProfit, priced),
     predictabilityScore,
     reliabilityLabel: reliabilityLabelForScore(predictabilityScore),
   };
@@ -284,6 +331,7 @@ export function buildTeamReliabilityFromFixtures(fixtures) {
         won: roles.homeWon,
         drew: roles.drawn,
         lost: roles.awayWon,
+        odds: roles.homeOdds,
       })
     );
     byTeam.set(
@@ -293,6 +341,7 @@ export function buildTeamReliabilityFromFixtures(fixtures) {
         won: roles.awayWon,
         drew: roles.drawn,
         lost: roles.homeWon,
+        odds: roles.awayOdds,
       })
     );
   }

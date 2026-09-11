@@ -3,6 +3,10 @@ import {
   buildLeagueMriRow,
   buildMarketReliabilityOverview,
   formatCorrectlyPriced,
+  formatMriMetricValue,
+  formatMriProfitTooltip,
+  formatWdlRecord,
+  getMriMetric,
   isValidMriOverviewPayload,
   searchTeamReliability,
 } from "./marketReliabilityData";
@@ -37,6 +41,8 @@ describe("buildMarketReliabilityOverview", () => {
       slug: "test-league",
       favouriteHitRate: 100,
       predictabilityScore: 99,
+      favouriteRoi: 60, // (1.6 - 1) * 10 / 10
+      favouriteProfit: 6,
     });
     expect(isValidMriOverviewPayload(overview)).toBe(true);
   });
@@ -111,6 +117,38 @@ describe("buildMarketReliabilityOverview", () => {
     expect(overview.teams.some((team) => team.name === "Alpha FC")).toBe(true);
     expect(overview.mostReliableTeams.length).toBeLessThanOrEqual(15);
   });
+
+  test("ranks mostEffectiveUnderdogs by points as dog", () => {
+    const fixtures = [
+      ...Array.from({ length: 3 }, () => ({
+        ...pricedFixture(4, 1.5, 1, 0),
+        home_name: "Upsetters",
+        away_name: "Giants",
+      })),
+      ...Array.from({ length: 3 }, () => ({
+        ...pricedFixture(1.5, 4, 1, 1),
+        home_name: "Giants",
+        away_name: "Draw Dogs",
+      })),
+      ...Array.from({ length: 3 }, () => ({
+        ...pricedFixture(1.4, 5, 2, 0),
+        home_name: "Giants",
+        away_name: "No Points",
+      })),
+    ];
+    const overview = buildMarketReliabilityOverview(
+      { data: [{ id: 5, fixtures }] },
+      [{ id: 5, slug: "dog-league", name: "Dog League" }]
+    );
+
+    expect(overview.mostEffectiveUnderdogs[0].name).toBe("Upsetters");
+    expect(overview.mostEffectiveUnderdogs[0].underdogPoints).toBe(9);
+    expect(overview.mostEffectiveUnderdogs[0].underdogRoi).toBe(300);
+    const drawDogs = overview.mostEffectiveUnderdogs.find(
+      (team) => team.name === "Draw Dogs"
+    );
+    expect(drawDogs.underdogPoints).toBe(3);
+  });
 });
 
 describe("searchTeamReliability", () => {
@@ -152,5 +190,23 @@ describe("formatCorrectlyPriced", () => {
   test("formats hits over total", () => {
     expect(formatCorrectlyPriced(14, 20)).toBe("14/20");
     expect(formatCorrectlyPriced(null, 20)).toBeNull();
+  });
+});
+
+describe("formatWdlRecord", () => {
+  test("formats wins draws losses", () => {
+    expect(formatWdlRecord(5, 2, 3)).toBe("5/2/3");
+    expect(formatWdlRecord(0, 0, 0)).toBe("0/0/0");
+    expect(formatWdlRecord(null, 1, 2)).toBeNull();
+  });
+});
+
+describe("formatMriMetricValue roi", () => {
+  test("signs ROI percentages", () => {
+    const metric = getMriMetric("favouriteRoi");
+    expect(formatMriMetricValue(4.2, metric)).toBe("+4.2%");
+    expect(formatMriMetricValue(-11, metric)).toBe("-11.0%");
+    expect(formatMriProfitTooltip(2.1, 20)).toBe("+2.10u / 20");
+    expect(formatMriProfitTooltip(-3, 10)).toBe("-3.00u / 10");
   });
 });

@@ -28,6 +28,12 @@ export const MRI_TEAM_SEARCH_MIN_FAVOURITES = 3;
 /** How many teams to keep at each end of the reliability spectrum. */
 export const MRI_TEAM_EXTREMES = 15;
 
+/** Soft floor for underdog-points ranking (matches team search). */
+export const MRI_UNDERDOG_MIN_APPEARANCES = MRI_TEAM_SEARCH_MIN_FAVOURITES;
+
+/** Top underdogs to surface on the overview. */
+export const MRI_UNDERDOG_TOP = 15;
+
 export const MRI_METRICS = [
   {
     key: "predictabilityScore",
@@ -78,6 +84,20 @@ export const MRI_METRICS = [
     unit: "%",
     decimals: 0,
   },
+  {
+    key: "favouriteRoi",
+    label: "Favourite ROI",
+    short: "Fav ROI",
+    unit: "roi%",
+    decimals: 1,
+  },
+  {
+    key: "underdogRoi",
+    label: "Underdog ROI",
+    short: "Dog ROI",
+    unit: "roi%",
+    decimals: 1,
+  },
 ];
 
 function toNumber(value) {
@@ -94,8 +114,21 @@ export function formatMriMetricValue(value, metric) {
   const n = toNumber(value);
   if (n === null || !metric) return null;
   const fixed = n.toFixed(metric.decimals);
+  if (metric.unit === "roi%") {
+    const signed = n > 0 ? `+${fixed}` : fixed;
+    return `${signed}%`;
+  }
   if (metric.unit === "%") return `${fixed}%`;
   return fixed;
+}
+
+/** Tooltip text for flat-stake P&L, e.g. "+2.10u / 20". */
+export function formatMriProfitTooltip(profit, bets) {
+  const net = toNumber(profit);
+  const stakeCount = toNumber(bets);
+  if (net === null || stakeCount === null || stakeCount <= 0) return null;
+  const signed = net > 0 ? `+${net.toFixed(2)}` : net.toFixed(2);
+  return `${signed}u / ${stakeCount}`;
 }
 
 /** "12/20" style label for correctly priced favourites. */
@@ -104,6 +137,15 @@ export function formatCorrectlyPriced(correct, total) {
   const n = toNumber(total);
   if (hits === null || n === null || n <= 0) return null;
   return `${hits}/${n}`;
+}
+
+/** "W/D/L" record, e.g. "5/2/3". */
+export function formatWdlRecord(wins, draws, losses) {
+  const w = toNumber(wins);
+  const d = toNumber(draws);
+  const l = toNumber(losses);
+  if (w === null || d === null || l === null) return null;
+  return `${w}/${d}/${l}`;
 }
 
 export function isLowSample(row) {
@@ -144,35 +186,62 @@ export function buildLeagueMriRow(leagueResults, catalog) {
     favouriteWins: summary.favouriteWins,
     favouriteDraws: summary.favouriteDraws,
     favouriteLosses: summary.favouriteLosses,
+    favouriteProfit: summary.favouriteProfit,
+    favouriteRoi: summary.favouriteRoi,
     // Alias for the UI "X/Y correctly priced" column (favourite wins / priced).
     correctlyPriced: summary.favouriteWins,
   };
 }
 
-function buildTeamRows(leagueResults, catalog, { minFavourites = MRI_TEAM_MIN_FAVOURITES } = {}) {
+function mapTeamRow(team, catalog) {
+  return {
+    name: team.name,
+    leagueSlug: catalog.slug,
+    leagueName: catalog.name,
+    favouriteCount: team.favouriteCount,
+    underdogCount: team.underdogCount,
+    winningFavouriteCount: team.winningFavouriteCount,
+    drawingFavouriteCount: team.drawingFavouriteCount,
+    beatenFavouriteCount: team.beatenFavouriteCount,
+    winningUnderdogCount: team.winningUnderdogCount,
+    drawingUnderdogCount: team.drawingUnderdogCount,
+    beatenUnderdogCount: team.beatenUnderdogCount,
+    correctlyPriced: team.winningFavouriteCount,
+    pricedMatches: team.favouriteCount,
+    predictabilityScore: team.predictabilityScore,
+    reliabilityLabel: team.reliabilityLabel,
+    oddsReliabilityWin: team.oddsReliabilityWin,
+    oddsReliabilityWinAsUnderdog: team.oddsReliabilityWinAsUnderdog,
+    favouriteProfit: team.favouriteProfit,
+    favouriteRoi: team.favouriteRoi,
+    underdogProfit: team.underdogProfit,
+    underdogRoi: team.underdogRoi,
+    underdogPoints: team.underdogPoints,
+  };
+}
+
+function buildTeamRows(
+  leagueResults,
+  catalog,
+  {
+    minFavourites = MRI_TEAM_MIN_FAVOURITES,
+    minUnderdogs = null,
+  } = {}
+) {
   const fixtures = Array.isArray(leagueResults?.fixtures)
     ? leagueResults.fixtures
     : [];
   return buildTeamReliabilityFromFixtures(fixtures)
-    .filter(
-      (team) =>
+    .filter((team) => {
+      if (minUnderdogs != null) {
+        return (team.underdogCount || 0) >= minUnderdogs;
+      }
+      return (
         (team.favouriteCount || 0) >= minFavourites &&
         team.predictabilityScore !== null
-    )
-    .map((team) => ({
-      name: team.name,
-      leagueSlug: catalog.slug,
-      leagueName: catalog.name,
-      favouriteCount: team.favouriteCount,
-      underdogCount: team.underdogCount,
-      winningFavouriteCount: team.winningFavouriteCount,
-      correctlyPriced: team.winningFavouriteCount,
-      pricedMatches: team.favouriteCount,
-      predictabilityScore: team.predictabilityScore,
-      reliabilityLabel: team.reliabilityLabel,
-      oddsReliabilityWin: team.oddsReliabilityWin,
-      oddsReliabilityWinAsUnderdog: team.oddsReliabilityWinAsUnderdog,
-    }));
+      );
+    })
+    .map((team) => mapTeamRow(team, catalog));
 }
 
 function normalizeTeamQuery(value) {
@@ -244,6 +313,7 @@ export function buildMarketReliabilityOverview(
   const leagues = [];
   const searchTeams = [];
   const extremeCandidates = [];
+  const underdogCandidates = [];
 
   for (const league of leaguesRaw) {
     const catalog = catalogById.get(Number(league?.id));
@@ -262,6 +332,11 @@ export function buildMarketReliabilityOverview(
         minFavourites: MRI_TEAM_MIN_FAVOURITES,
       })
     );
+    underdogCandidates.push(
+      ...buildTeamRows(league, catalog, {
+        minUnderdogs: MRI_UNDERDOG_MIN_APPEARANCES,
+      })
+    );
   }
 
   leagues.sort(
@@ -275,11 +350,21 @@ export function buildMarketReliabilityOverview(
     (a, b) => (b.predictabilityScore ?? 0) - (a.predictabilityScore ?? 0)
   );
 
+  const mostEffectiveUnderdogs = [...underdogCandidates]
+    .sort(
+      (a, b) =>
+        (b.underdogPoints ?? 0) - (a.underdogPoints ?? 0) ||
+        (b.underdogRoi ?? -Infinity) - (a.underdogRoi ?? -Infinity) ||
+        a.name.localeCompare(b.name)
+    )
+    .slice(0, MRI_UNDERDOG_TOP);
+
   return {
     generatedAt: new Date(generatedAt).toISOString(),
     minPricedMatches: MRI_MIN_PRICED_MATCHES,
     lowSampleMatches: MRI_LOW_SAMPLE_MATCHES,
     teamSearchMinFavourites: MRI_TEAM_SEARCH_MIN_FAVOURITES,
+    underdogMinAppearances: MRI_UNDERDOG_MIN_APPEARANCES,
     leagues,
     // Full searchable set for the team lookup section.
     teams: sortedSearchTeams,
@@ -287,6 +372,7 @@ export function buildMarketReliabilityOverview(
     leastReliableTeams: [...sortedExtremes]
       .reverse()
       .slice(0, MRI_TEAM_EXTREMES),
+    mostEffectiveUnderdogs,
   };
 }
 

@@ -6,7 +6,9 @@ import {
   emptyRoleCounts,
   reliabilityLabelForScore,
   reliabilityToneForScore,
+  roiFromProfit,
   summariseRoleCounts,
+  unitStakePnl,
 } from "./marketReliability";
 
 function fixture({
@@ -29,6 +31,20 @@ function fixture({
     status: "complete",
   };
 }
+
+describe("unitStakePnl", () => {
+  test("returns net profit including stake settlement", () => {
+    expect(unitStakePnl(2.5, true)).toBe(1.5);
+    expect(unitStakePnl(1.5, true)).toBe(0.5);
+    expect(unitStakePnl(2.5, false)).toBe(-1);
+  });
+
+  test("roiFromProfit divides net by stakes", () => {
+    expect(roiFromProfit(1.5, 2)).toBe(75);
+    expect(roiFromProfit(-1, 2)).toBe(-50);
+    expect(roiFromProfit(0, 0)).toBeNull();
+  });
+});
 
 describe("classifyFixtureRoles", () => {
   test("marks the shorter-priced side as favourite and records a win", () => {
@@ -69,18 +85,21 @@ describe("summariseRoleCounts", () => {
       won: true,
       drew: false,
       lost: false,
+      odds: 1.5,
     });
     counts = addTeamRoleResult(counts, {
       isFavourite: true,
       won: false,
       drew: true,
       lost: false,
+      odds: 1.8,
     });
     counts = addTeamRoleResult(counts, {
       isFavourite: false,
       won: false,
       drew: false,
       lost: true,
+      odds: 4.0,
     });
 
     const summary = summariseRoleCounts(counts);
@@ -90,6 +109,12 @@ describe("summariseRoleCounts", () => {
     // unreliable = 1 fav draw = 1
     expect(summary.predictabilityScore).toBe(2);
     expect(summary.reliabilityLabel).toBe("Reliable");
+    // fav: +0.5 then -1 = -0.5 over 2 → -25%
+    expect(summary.favouriteProfit).toBe(-0.5);
+    expect(summary.favouriteRoi).toBe(-25);
+    expect(summary.underdogProfit).toBe(-1);
+    expect(summary.underdogRoi).toBe(-100);
+    expect(summary.underdogPoints).toBe(0);
   });
 
   test("labels extreme scores", () => {
@@ -115,6 +140,9 @@ describe("buildLeagueReliabilityFromFixtures", () => {
     expect(summary.favouriteHitRate).toBe(66.7);
     expect(summary.favouriteDrawRate).toBe(33.3);
     expect(summary.favouriteUpsetRate).toBe(0);
+    // wins: +0.5 + 1.4 = 1.9; draw: -1 → profit 0.9 / 3 = 30%
+    expect(summary.favouriteProfit).toBe(0.9);
+    expect(summary.favouriteRoi).toBe(30);
   });
 });
 
@@ -143,7 +171,37 @@ describe("buildTeamReliabilityFromFixtures", () => {
     const beta = teams.find((t) => t.name === "Beta");
     expect(alpha.favouriteCount).toBe(2);
     expect(alpha.winningFavouriteCount).toBe(2);
+    expect(alpha.favouriteProfit).toBe(1.2); // 0.5 + 0.7
+    expect(alpha.favouriteRoi).toBe(60);
     expect(beta.underdogCount).toBe(2);
     expect(beta.beatenUnderdogCount).toBe(2);
+    expect(beta.underdogProfit).toBe(-2);
+    expect(beta.underdogRoi).toBe(-100);
+    expect(beta.underdogPoints).toBe(0);
+  });
+
+  test("awards underdog points on wins and draws", () => {
+    const teams = buildTeamReliabilityFromFixtures([
+      fixture({
+        home: "Dog",
+        away: "Fav",
+        homeOdds: 4,
+        awayOdds: 1.5,
+        homeGoals: 1,
+        awayGoals: 0,
+      }),
+      fixture({
+        home: "Fav",
+        away: "Dog",
+        homeOdds: 1.6,
+        awayOdds: 4.5,
+        homeGoals: 1,
+        awayGoals: 1,
+      }),
+    ]);
+    const dog = teams.find((t) => t.name === "Dog");
+    expect(dog.underdogPoints).toBe(4); // 3 + 1
+    expect(dog.underdogProfit).toBe(2); // +3 then -1
+    expect(dog.underdogRoi).toBe(100);
   });
 });
