@@ -8,6 +8,8 @@ import {
   formatWdlRecord,
   getMriMetric,
   isValidMriOverviewPayload,
+  resolveReliabilityLookup,
+  searchLeagueReliability,
   searchTeamReliability,
 } from "./marketReliabilityData";
 
@@ -156,20 +158,30 @@ describe("searchTeamReliability", () => {
     {
       name: "Manchester City",
       leagueName: "Premier League",
+      leagueSlug: "premier-league",
       favouriteCount: 20,
       predictabilityScore: 2.1,
     },
     {
       name: "Manchester United",
       leagueName: "Premier League",
+      leagueSlug: "premier-league",
       favouriteCount: 18,
       predictabilityScore: 1.4,
     },
     {
       name: "Celtic",
       leagueName: "Premiership",
+      leagueSlug: "scottish-premiership",
       favouriteCount: 22,
       predictabilityScore: 2.5,
+    },
+    {
+      name: "Rangers",
+      leagueName: "Premiership",
+      leagueSlug: "scottish-premiership",
+      favouriteCount: 20,
+      predictabilityScore: 2.0,
     },
   ];
 
@@ -183,6 +195,40 @@ describe("searchTeamReliability", () => {
   test("ranks prefix matches ahead of looser substring hits", () => {
     const names = searchTeamReliability(teams, "man").map((team) => team.name);
     expect(names[0]).toMatch(/^Manchester/);
+  });
+
+  test("searchLeagueReliability returns all teams for a league query", () => {
+    const leagues = searchLeagueReliability(teams, "premier league");
+    expect(leagues).toHaveLength(1);
+    expect(leagues[0].leagueName).toBe("Premier League");
+    expect(leagues[0].teams.map((team) => team.name)).toEqual([
+      "Manchester City",
+      "Manchester United",
+    ]);
+  });
+
+  test("searchLeagueReliability lists every prefix-matching league", () => {
+    const names = searchLeagueReliability(teams, "premier").map(
+      (league) => league.leagueName
+    );
+    expect(names).toEqual(["Premier League", "Premiership"]);
+  });
+
+  test("resolveReliabilityLookup prefers exact team over league", () => {
+    const resolved = resolveReliabilityLookup(teams, "Celtic");
+    expect(resolved.kind).toBe("team");
+    expect(resolved.rows).toHaveLength(1);
+    expect(resolved.rows[0].name).toBe("Celtic");
+  });
+
+  test("resolveReliabilityLookup returns every team when searching a league", () => {
+    const resolved = resolveReliabilityLookup(teams, "Premier League");
+    expect(resolved.kind).toBe("league");
+    expect(resolved.label).toBe("Premier League");
+    expect(resolved.rows.map((team) => team.name)).toEqual([
+      "Manchester City",
+      "Manchester United",
+    ]);
   });
 });
 

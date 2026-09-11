@@ -8,6 +8,8 @@ import {
   formatMriProfitTooltip,
   formatWdlRecord,
   isLowSample,
+  resolveReliabilityLookup,
+  searchLeagueReliability,
   searchTeamReliability,
 } from "../seo/marketReliabilityData";
 import { reliabilityToneForScore } from "../logic/marketReliability";
@@ -265,40 +267,64 @@ function ReliabilityTone({ label, score }) {
 
 function TeamLookup({ teams, minFavourites = 3 }) {
   const [query, setQuery] = useState("");
-  const [selected, setSelected] = useState(null);
+  const [results, setResults] = useState([]);
+  const [resultKind, setResultKind] = useState(null);
+  const [resultLabel, setResultLabel] = useState(null);
   const [searched, setSearched] = useState(false);
 
-  const suggestions = useMemo(
+  const leagueSuggestions = useMemo(
+    () => searchLeagueReliability(teams, query, { limit: 3 }),
+    [teams, query]
+  );
+  const teamSuggestions = useMemo(
     () => searchTeamReliability(teams, query, { limit: 6 }),
     [teams, query]
   );
 
   function chooseTeam(team) {
-    setSelected(team);
+    setResults([team]);
+    setResultKind("team");
+    setResultLabel(team?.name || null);
     setQuery(team?.name || "");
+    setSearched(true);
+  }
+
+  function chooseLeague(league) {
+    setResults(league?.teams || []);
+    setResultKind("league");
+    setResultLabel(league?.leagueName || null);
+    setQuery(league?.leagueName || "");
     setSearched(true);
   }
 
   function onSubmit(event) {
     event.preventDefault();
-    const best = searchTeamReliability(teams, query, { limit: 1 })[0] || null;
-    setSelected(best);
+    const resolved = resolveReliabilityLookup(teams, query);
+    setResults(resolved.rows);
+    setResultKind(resolved.kind);
+    setResultLabel(resolved.label);
     setSearched(true);
-    if (best) setQuery(best.name);
+    if (resolved.label) setQuery(resolved.label);
   }
 
   if (!teams?.length) return null;
 
+  const hasSuggestions =
+    query.trim().length >= 2 &&
+    !searched &&
+    (leagueSuggestions.length > 0 || teamSuggestions.length > 0);
+
   return (
     <section className="MarketReliability-tableSection" aria-labelledby="team-lookup">
-      <h2 id="team-lookup">Look up a team</h2>
+      <h2 id="team-lookup">Look up a team or league</h2>
       <p className="MarketReliability-tableHint">
         Search any team with at least {minFavourites} favourite appearances this
-        season. One row of reliability stats is returned for the best match.
+        season, or search a league name to list every qualifying team in that
+        competition.
       </p>
       <form className="MarketReliability-lookup" onSubmit={onSubmit}>
         <label className="MarketReliability-lookupLabel" htmlFor="mri-team-search">
-          Team name
+          Team or league
         </label>
         <div className="MarketReliability-lookupRow">
           <input
@@ -308,9 +334,11 @@ function TeamLookup({ teams, minFavourites = 3 }) {
             onChange={(event) => {
               setQuery(event.target.value);
               setSearched(false);
-              setSelected(null);
+              setResults([]);
+              setResultKind(null);
+              setResultLabel(null);
             }}
-            placeholder="e.g. Celtic, Napoli, Benfica"
+            placeholder="e.g. Celtic, Premier League, Serie A"
             autoComplete="off"
             spellCheck="false"
           />
@@ -318,9 +346,23 @@ function TeamLookup({ teams, minFavourites = 3 }) {
             Search
           </button>
         </div>
-        {query.trim().length >= 2 && suggestions.length > 0 && !searched ? (
+        {hasSuggestions ? (
           <ul className="MarketReliability-suggestions" role="listbox">
-            {suggestions.map((team) => (
+            {leagueSuggestions.map((league) => (
+              <li key={`league-${league.leagueSlug || league.leagueName}`}>
+                <button
+                  type="button"
+                  onClick={() => chooseLeague(league)}
+                  role="option"
+                >
+                  <span>{league.leagueName}</span>
+                  <span className="MarketReliability-suggestionLeague">
+                    All teams ({league.teams.length})
+                  </span>
+                </button>
+              </li>
+            ))}
+            {teamSuggestions.map((team) => (
               <li key={`${team.leagueSlug}-${team.name}`}>
                 <button
                   type="button"
@@ -338,11 +380,15 @@ function TeamLookup({ teams, minFavourites = 3 }) {
         ) : null}
       </form>
 
-      {searched && selected ? (
+      {searched && results.length > 0 ? (
         <SortableTable
-          caption={`Reliability for ${selected.name}`}
+          caption={
+            resultKind === "league"
+              ? `Reliability for teams in ${resultLabel}`
+              : `Reliability for ${resultLabel}`
+          }
           columns={TEAM_COLUMNS}
-          rows={[selected]}
+          rows={results}
           sort={{ key: "predictabilityScore", direction: "desc" }}
           onSort={() => {}}
           sortable={false}
@@ -351,9 +397,10 @@ function TeamLookup({ teams, minFavourites = 3 }) {
         />
       ) : null}
 
-      {searched && !selected ? (
+      {searched && results.length === 0 ? (
         <p className="MarketReliability-lookupEmpty" role="status">
-          No team matched &ldquo;{query.trim()}&rdquo;. Try a fuller club name.
+          No team or league matched &ldquo;{query.trim()}&rdquo;. Try a fuller
+          club or competition name.
         </p>
       ) : null}
     </section>

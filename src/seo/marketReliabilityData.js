@@ -254,6 +254,63 @@ function normalizeTeamQuery(value) {
     .trim();
 }
 
+function scoreNameMatch(name, needle) {
+  if (!name || !needle) return 0;
+  if (name === needle) return 300;
+  if (name.startsWith(needle)) return 200;
+  if (name.includes(needle)) return 100;
+  return 0;
+}
+
+/**
+ * Distinct leagues whose names match the query, each with their teams.
+ * Ranked exact > prefix > substring.
+ */
+export function searchLeagueReliability(teams, query, { limit = 4 } = {}) {
+  const needle = normalizeTeamQuery(query);
+  if (!needle || !Array.isArray(teams) || teams.length === 0) return [];
+
+  const byKey = new Map();
+  for (const team of teams) {
+    const leagueName = team?.leagueName;
+    const leagueKey = team?.leagueSlug || leagueName;
+    if (!leagueKey || !leagueName) continue;
+
+    const rank = scoreNameMatch(normalizeTeamQuery(leagueName), needle);
+    if (!rank) continue;
+
+    if (!byKey.has(leagueKey)) {
+      byKey.set(leagueKey, {
+        kind: "league",
+        leagueName,
+        leagueSlug: team.leagueSlug || null,
+        rank,
+        teams: [],
+      });
+    }
+    const entry = byKey.get(leagueKey);
+    entry.rank = Math.max(entry.rank, rank);
+    entry.teams.push(team);
+  }
+
+  return [...byKey.values()]
+    .map((entry) => ({
+      ...entry,
+      teams: [...entry.teams].sort(
+        (a, b) =>
+          (b.predictabilityScore ?? 0) - (a.predictabilityScore ?? 0) ||
+          a.name.localeCompare(b.name)
+      ),
+    }))
+    .sort(
+      (a, b) =>
+        b.rank - a.rank ||
+        b.teams.length - a.teams.length ||
+        a.leagueName.localeCompare(b.leagueName)
+    )
+    .slice(0, limit);
+}
+
 /**
  * Rank team matches for the search box. Exact / prefix beats substring.
  * Returns up to `limit` candidates; callers pick the first as the single row.
@@ -267,11 +324,8 @@ export function searchTeamReliability(teams, query, { limit = 8 } = {}) {
     const name = normalizeTeamQuery(team?.name);
     if (!name) continue;
 
-    let rank = 0;
-    if (name === needle) rank = 300;
-    else if (name.startsWith(needle)) rank = 200;
-    else if (name.includes(needle)) rank = 100;
-    else continue;
+    const rank = scoreNameMatch(name, needle);
+    if (!rank) continue;
 
     // Prefer stronger sample / score when names tie.
     scored.push({
@@ -287,6 +341,51 @@ export function searchTeamReliability(teams, query, { limit = 8 } = {}) {
     .sort((a, b) => b.rank - a.rank || a.team.name.localeCompare(b.team.name))
     .slice(0, limit)
     .map((entry) => entry.team);
+}
+
+/**
+ * Resolve a lookup submit: league query → all teams in that league;
+ * otherwise the best single team match.
+ */
+export function resolveReliabilityLookup(teams, query) {
+  const needle = normalizeTeamQuery(query);
+  if (!needle || !Array.isArray(teams) || teams.length === 0) {
+    return { kind: null, label: null, rows: [] };
+  }
+
+  const leagueHits = searchLeagueReliability(teams, query, { limit: 1 });
+  const teamHits = searchTeamReliability(teams, query, { limit: 1 });
+  const bestLeague = leagueHits[0] || null;
+  const bestTeam = teamHits[0] || null;
+
+  const teamRank = bestTeam
+    ? scoreNameMatch(normalizeTeamQuery(bestTeam.name), needle)
+    : 0;
+  const leagueRank = bestLeague?.rank || 0;
+
+  // Exact team name always wins a single-row result.
+  if (teamRank === 300) {
+    return { kind: "team", label: bestTeam.name, rows: [bestTeam] };
+  }
+  // Exact / stronger league match returns every listed team in that league.
+  if (leagueRank > teamRank && bestLeague) {
+    return {
+      kind: "league",
+      label: bestLeague.leagueName,
+      rows: bestLeague.teams,
+    };
+  }
+  if (bestTeam) {
+    return { kind: "team", label: bestTeam.name, rows: [bestTeam] };
+  }
+  if (bestLeague) {
+    return {
+      kind: "league",
+      label: bestLeague.leagueName,
+      rows: bestLeague.teams,
+    };
+  }
+  return { kind: null, label: null, rows: [] };
 }
 
 /**
