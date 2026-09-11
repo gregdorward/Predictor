@@ -313,6 +313,138 @@ async function fetchAllUserTips() {
   }
 }
 
+function isoDateFromUnix(unixSeconds) {
+  const d = new Date(Number(unixSeconds) * 1000);
+  const year = d.getFullYear();
+  const month = String(d.getMonth() + 1).padStart(2, "0");
+  const day = String(d.getDate()).padStart(2, "0");
+  return `${year}-${month}-${day}`;
+}
+
+function tipSelectionType(tip) {
+  return tip.tip || tip.tipString;
+}
+
+function deriveMatchOutcomeForTips(match) {
+  if (match.status !== "complete") return;
+  const home = Number(match.homeGoals);
+  const away = Number(match.awayGoals);
+  if (!Number.isFinite(home) || !Number.isFinite(away)) return;
+  if (home > away) {
+    match.winner = match.homeTeam;
+    match.outcome = "homeWin";
+  } else if (home === away) {
+    match.winner = "draw";
+    match.outcome = "draw";
+  } else {
+    match.winner = match.awayTeam;
+    match.outcome = "awayWin";
+  }
+}
+
+/** Settle Prediction League legs from a finished fixture (independent of model early-season guards). */
+function settlePendingUserTipsForMatch(match, fetchedTips) {
+  deriveMatchOutcomeForTips(match);
+  const matchingTips = fetchedTips.filter(
+    (t) => String(t.gameId) === String(match.id)
+  );
+  const finishedStatuses = [
+    "complete",
+    "suspended",
+    "canceled",
+    "postponed",
+    "abandoned",
+  ];
+
+  if (matchingTips.length === 0 || !finishedStatuses.includes(match.status)) {
+    return;
+  }
+
+  matchingTips.forEach((tip) => {
+    if (tip.status !== "PENDING") return;
+
+    const voidStatuses = ["suspended", "canceled", "cancelled", "postponed"];
+    const selectionType = tipSelectionType(tip);
+
+    if (voidStatuses.includes(match.status)) {
+      tip.status = "VOID";
+    } else {
+      let isWinner = false;
+      const totalGoals = Number(match.homeGoals) + Number(match.awayGoals);
+
+      switch (selectionType) {
+        case "homeWin":
+          isWinner = match.outcome === "homeWin";
+          break;
+        case "awayWin":
+          isWinner = match.outcome === "awayWin";
+          break;
+        case "draw":
+          isWinner = match.outcome === "draw";
+          break;
+        case "BTTS":
+          isWinner = match.homeGoals > 0 && match.awayGoals > 0;
+          break;
+        case "over25":
+          isWinner = totalGoals > 2.5;
+          break;
+        default:
+          isWinner = false;
+      }
+
+      tip.status = isWinner ? "WON" : "LOST";
+    }
+
+    resultedUserTipsArray.push({
+      uid: tip.uid,
+      gameId: tip.gameId,
+      status: tip.status,
+      tip: selectionType,
+    });
+  });
+}
+
+/** Settle pending legs on other dates (or skipped early-season fixtures on the loaded day). */
+async function settleRemainingPendingUserTips(fetchedTips) {
+  const stillPending = fetchedTips.filter((t) => t.status === "PENDING");
+  const byGameId = new Map();
+  for (const tip of stillPending) {
+    const key = String(tip.gameId);
+    if (!byGameId.has(key)) byGameId.set(key, tip);
+  }
+
+  const origin = process.env.NEXT_PUBLIC_EXPRESS_SERVER?.endsWith("/")
+    ? process.env.NEXT_PUBLIC_EXPRESS_SERVER
+    : `${process.env.NEXT_PUBLIC_EXPRESS_SERVER}/`;
+
+  for (const [gameId, sampleTip] of byGameId) {
+    const isoDate = isoDateFromUnix(sampleTip.date);
+    if (!isoDate || isoDate.includes("NaN")) continue;
+
+    try {
+      const response = await fetch(`${origin}matches/${isoDate}`);
+      if (!response.ok) continue;
+      const payload = await response.json();
+      const fixture = (payload.data || payload).find(
+        (row) => String(row.id) === String(gameId)
+      );
+      if (!fixture) continue;
+
+      const match = {
+        id: fixture.id,
+        status: fixture.status,
+        homeGoals: fixture.homeGoalCount,
+        awayGoals: fixture.awayGoalCount,
+        homeTeam: fixture.home_name,
+        awayTeam: fixture.away_name,
+      };
+      settlePendingUserTipsForMatch(match, fetchedTips);
+    } catch (error) {
+      console.error(`Failed to settle tips for game ${gameId}:`, error);
+    }
+  }
+}
+
 // Populated asynchronously after module load (avoids top-level await, which
 // Next's webpack build does not enable). Guarded so it never runs during the
 // static-export/prerender pass.
@@ -5276,45 +5408,7 @@ export async function calculateScore(match, index, divider, calculate, AIPredict
         break;
     }
 
-    const matchingTips = fetchedTips.filter((t) => String(t.gameId) === String(match.id));
-    const finishedStatuses = ["complete", "suspended", "canceled", "postponed", "abandoned"];
-
-    if (matchingTips.length > 0 && finishedStatuses.includes(match.status)) {
-      matchingTips.forEach((tip) => {
-        if (tip.status === "PENDING") {
-
-          // 1. HANDLE NON-PLAYED GAMES (VOID LOGIC)
-          const voidStatuses = ["suspended", "canceled", "cancelled", "postponed"];
-
-          if (voidStatuses.includes(match.status)) {
-            tip.status = "VOID";
-          } else {
-            // 2. HANDLE COMPLETED GAMES (WIN/LOSS LOGIC)
-            let isWinner = false;
-            const totalGoals = Number(match.homeGoals) + Number(match.awayGoals);
-
-            switch (tip.tip) {
-              case "homeWin": isWinner = match.outcome === "homeWin"; break;
-              case "awayWin": isWinner = match.outcome === "awayWin"; break;
-              case "draw": isWinner = match.outcome === "draw"; break;
-              case "BTTS": isWinner = (match.homeGoals > 0 && match.awayGoals > 0); break;
-              case "over25": isWinner = totalGoals > 2.5; break;
-              default: isWinner = false;
-            }
-
-            tip.status = isWinner ? "WON" : "LOST";
-          }
-
-          // 3. PUSH TO RESULTS ARRAY
-          resultedUserTipsArray.push({
-            uid: tip.uid,
-            gameId: tip.gameId,
-            status: tip.status,
-            tip: tip.tip
-          });
-        }
-      });
-    }
+    settlePendingUserTipsForMatch(match, fetchedTips);
 
     if (
       isBelowMinMatchesForPrediction(match) &&
@@ -5495,7 +5589,7 @@ async function getSuccessMeasure(fixtures) {
   }
 
   if (hasUpdates) {
-    await submitUpdatedTips(resultedUserTipsArray)
+    await submitUpdatedTips(resultedUserTipsArray);
   } else {
     console.log("No new match results found. Skipping update.");
   }
@@ -5860,6 +5954,7 @@ export async function getScorePrediction(day, mocked) {
             break;
           case isBelowMinMatchesForPrediction(match):
             // Form only — never tip or settle ROI for early-season fixtures.
+            settlePendingUserTipsForMatch(match, fetchedTips);
             hydrateMatchFormForDisplay(match);
             clearMatchTipSettlement(match);
             break;
@@ -6461,6 +6556,7 @@ export async function getScorePrediction(day, mocked) {
 
   await getMultis();
   await getNewTips(allTipsSorted);
+  await settleRemainingPendingUserTips(fetchedTips);
   await getSuccessMeasure(matches);
 
   // Last pass: ensure thin-season fixtures never keep tip settlement on the
