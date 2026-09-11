@@ -1,5 +1,6 @@
 import { useEffect } from "react";
 import Head from "next/head";
+import Script from "next/script";
 import { Provider } from "react-redux";
 import store from "../src/logic/store";
 import { AuthProvider } from "../src/logic/authProvider";
@@ -38,6 +39,12 @@ export default function MyApp({ Component, pageProps }) {
             content="width=device-width, initial-scale=1"
           />
         </Head>
+        <Script
+          src="//scripts.scriptwrapper.com/tags/71e44a5d-dc3a-499d-8677-800918c94d8a.js"
+          strategy="afterInteractive"
+          data-noptimize="1"
+          data-cfasync="false"
+        />
         <Component {...pageProps} />
       </AuthProvider>
     </Provider>
