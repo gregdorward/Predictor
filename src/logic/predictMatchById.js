@@ -83,6 +83,8 @@ export async function predictMatchById(matchId) {
     formDateKey,
     isoDate: dateStr,
     leagueResults: [leagueResults],
+    // Fixture pages only load one league; never persist a partial dated snapshot.
+    persist: false,
   });
 
   const match = buildMatchFromFixture(fixture, competitionId, leagueName);
