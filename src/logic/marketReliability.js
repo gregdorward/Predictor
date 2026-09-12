@@ -162,13 +162,6 @@ export function summariseRoleCounts(counts) {
     (counts.winningUnderdogCount || 0) +
     (counts.drawingUnderdogCount || 0);
 
-  const predictabilityScore =
-    unreliableIndicator > 0
-      ? round2(reliableIndicator / unreliableIndicator)
-      : reliableIndicator > 0
-        ? 99
-        : null;
-
   const favouriteProfit = round2(counts.favouriteProfit || 0);
   const underdogProfit = round2(counts.underdogProfit || 0);
 
@@ -187,35 +180,43 @@ export function summariseRoleCounts(counts) {
     oddsReliabilityLoseAsUnderdog,
     reliableIndicator,
     unreliableIndicator,
-    predictabilityScore,
-    reliabilityLabel: reliabilityLabelForScore(predictabilityScore),
+    reliabilityLabel: reliabilityLabelForFavouriteWinRate(oddsReliabilityWin),
   };
 }
 
-export function reliabilityLabelForScore(score) {
-  if (score === null || score === undefined || !Number.isFinite(Number(score))) {
+/** Reliability band from favourite win rate (0–100). */
+export function reliabilityLabelForFavouriteWinRate(percent) {
+  if (
+    percent === null ||
+    percent === undefined ||
+    !Number.isFinite(Number(percent))
+  ) {
     return "Unknown";
   }
-  const n = Number(score);
-  if (n < 0.3) return "Extremely unreliable";
-  if (n < 0.8) return "Unreliable";
-  if (n < 1.2) return "Mixed";
-  if (n < 1.7) return "Fairly reliable";
-  if (n < 2.2) return "Reliable";
+  const n = Number(percent);
+  if (n < 23) return "Extremely unreliable";
+  if (n < 45) return "Unreliable";
+  if (n < 55) return "Mixed";
+  if (n < 63) return "Fairly reliable";
+  if (n < 69) return "Reliable";
   return "Excellent";
 }
 
 /** CSS tone key for traffic-light reliability dots (deeper at extremes). */
-export function reliabilityToneForScore(score) {
-  if (score === null || score === undefined || !Number.isFinite(Number(score))) {
+export function reliabilityToneForFavouriteWinRate(percent) {
+  if (
+    percent === null ||
+    percent === undefined ||
+    !Number.isFinite(Number(percent))
+  ) {
     return "unknown";
   }
-  const n = Number(score);
-  if (n < 0.3) return "extremely-unreliable";
-  if (n < 0.8) return "unreliable";
-  if (n < 1.2) return "mixed";
-  if (n < 1.7) return "fairly-reliable";
-  if (n < 2.2) return "reliable";
+  const n = Number(percent);
+  if (n < 23) return "extremely-unreliable";
+  if (n < 45) return "unreliable";
+  if (n < 55) return "mixed";
+  if (n < 63) return "fairly-reliable";
+  if (n < 69) return "reliable";
   return "excellent";
 }
 
@@ -262,21 +263,15 @@ export function buildLeagueReliabilityFromFixtures(fixtures) {
     }
   }
 
-  const unreliable = favouriteDraws + favouriteLosses;
-  const predictabilityScore =
-    unreliable > 0
-      ? round2(favouriteWins / unreliable)
-      : favouriteWins > 0
-        ? 99
-        : null;
+  const favouriteHitRate =
+    priced > 0 ? round1((favouriteWins / priced) * 100) : null;
 
   return {
     pricedMatches: priced,
     played: list.filter(
       (f) => !f?.status || f.status === "complete"
     ).length,
-    favouriteHitRate:
-      priced > 0 ? round1((favouriteWins / priced) * 100) : null,
+    favouriteHitRate,
     favouriteDrawRate:
       priced > 0 ? round1((favouriteDraws / priced) * 100) : null,
     favouriteUpsetRate:
@@ -297,8 +292,7 @@ export function buildLeagueReliabilityFromFixtures(fixtures) {
     awayFavourites,
     favouriteProfit: round2(favouriteProfit),
     favouriteRoi: roiFromProfit(favouriteProfit, priced),
-    predictabilityScore,
-    reliabilityLabel: reliabilityLabelForScore(predictabilityScore),
+    reliabilityLabel: reliabilityLabelForFavouriteWinRate(favouriteHitRate),
   };
 }
 

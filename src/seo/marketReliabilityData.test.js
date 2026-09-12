@@ -42,7 +42,6 @@ describe("buildMarketReliabilityOverview", () => {
     expect(overview.leagues[0]).toMatchObject({
       slug: "test-league",
       favouriteHitRate: 100,
-      predictabilityScore: 99,
       favouriteRoi: 60, // (1.6 - 1) * 10 / 10
       favouriteProfit: 6,
     });
@@ -120,7 +119,7 @@ describe("buildMarketReliabilityOverview", () => {
     expect(overview.mostReliableTeams.length).toBeLessThanOrEqual(15);
   });
 
-  test("ranks mostEffectiveUnderdogs by points as dog", () => {
+  test("ranks mostEffectiveUnderdogs by underdog win rate", () => {
     const fixtures = [
       ...Array.from({ length: 3 }, () => ({
         ...pricedFixture(4, 1.5, 1, 0),
@@ -144,6 +143,9 @@ describe("buildMarketReliabilityOverview", () => {
     );
 
     expect(overview.mostEffectiveUnderdogs[0].name).toBe("Upsetters");
+    expect(overview.mostEffectiveUnderdogs[0].oddsReliabilityWinAsUnderdog).toBe(
+      100
+    );
     expect(overview.mostEffectiveUnderdogs[0].underdogPoints).toBe(9);
     expect(overview.mostEffectiveUnderdogs[0].underdogRoi).toBe(300);
     const drawDogs = overview.mostEffectiveUnderdogs.find(
@@ -160,28 +162,28 @@ describe("searchTeamReliability", () => {
       leagueName: "Premier League",
       leagueSlug: "premier-league",
       favouriteCount: 20,
-      predictabilityScore: 2.1,
+      oddsReliabilityWin: 85,
     },
     {
       name: "Manchester United",
       leagueName: "Premier League",
       leagueSlug: "premier-league",
       favouriteCount: 18,
-      predictabilityScore: 1.4,
+      oddsReliabilityWin: 60,
     },
     {
       name: "Celtic",
       leagueName: "Premiership",
       leagueSlug: "scottish-premiership",
       favouriteCount: 22,
-      predictabilityScore: 2.5,
+      oddsReliabilityWin: 90,
     },
     {
       name: "Rangers",
       leagueName: "Premiership",
       leagueSlug: "scottish-premiership",
       favouriteCount: 20,
-      predictabilityScore: 2.0,
+      oddsReliabilityWin: 75,
     },
   ];
 

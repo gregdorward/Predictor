@@ -36,13 +36,6 @@ export const MRI_UNDERDOG_TOP = 15;
 
 export const MRI_METRICS = [
   {
-    key: "predictabilityScore",
-    label: "Predictability score",
-    short: "Score",
-    unit: "score",
-    decimals: 2,
-  },
-  {
     key: "favouriteHitRate",
     label: "Favourite win rate",
     short: "Fav W%",
@@ -94,7 +87,7 @@ export const MRI_METRICS = [
   {
     key: "underdogRoi",
     label: "Underdog ROI",
-    short: "Dog ROI",
+    short: "ROI",
     unit: "roi%",
     decimals: 1,
   },
@@ -167,7 +160,7 @@ export function buildLeagueMriRow(leagueResults, catalog) {
 
   const summary = buildLeagueReliabilityFromFixtures(fixtures);
   if (summary.pricedMatches < MRI_MIN_PRICED_MATCHES) return null;
-  if (summary.predictabilityScore === null) return null;
+  if (summary.favouriteHitRate === null) return null;
 
   return {
     id: toNumber(leagueResults.id) ?? catalog.id ?? null,
@@ -175,7 +168,6 @@ export function buildLeagueMriRow(leagueResults, catalog) {
     name: catalog.name || leagueResults.name || null,
     pricedMatches: summary.pricedMatches,
     played: summary.played,
-    predictabilityScore: summary.predictabilityScore,
     reliabilityLabel: summary.reliabilityLabel,
     favouriteHitRate: summary.favouriteHitRate,
     favouriteDrawRate: summary.favouriteDrawRate,
@@ -208,7 +200,6 @@ function mapTeamRow(team, catalog) {
     beatenUnderdogCount: team.beatenUnderdogCount,
     correctlyPriced: team.winningFavouriteCount,
     pricedMatches: team.favouriteCount,
-    predictabilityScore: team.predictabilityScore,
     reliabilityLabel: team.reliabilityLabel,
     oddsReliabilityWin: team.oddsReliabilityWin,
     oddsReliabilityWinAsUnderdog: team.oddsReliabilityWinAsUnderdog,
@@ -238,7 +229,7 @@ function buildTeamRows(
       }
       return (
         (team.favouriteCount || 0) >= minFavourites &&
-        team.predictabilityScore !== null
+        team.oddsReliabilityWin !== null
       );
     })
     .map((team) => mapTeamRow(team, catalog));
@@ -298,7 +289,7 @@ export function searchLeagueReliability(teams, query, { limit = 4 } = {}) {
       ...entry,
       teams: [...entry.teams].sort(
         (a, b) =>
-          (b.predictabilityScore ?? 0) - (a.predictabilityScore ?? 0) ||
+          (b.oddsReliabilityWin ?? 0) - (a.oddsReliabilityWin ?? 0) ||
           a.name.localeCompare(b.name)
       ),
     }))
@@ -333,7 +324,7 @@ export function searchTeamReliability(teams, query, { limit = 8 } = {}) {
       rank:
         rank +
         Math.min(team.favouriteCount || 0, 40) +
-        (team.predictabilityScore || 0) / 100,
+        (team.oddsReliabilityWin || 0) / 100,
     });
   }
 
@@ -439,21 +430,29 @@ export function buildMarketReliabilityOverview(
   }
 
   leagues.sort(
-    (a, b) => (b.predictabilityScore ?? 0) - (a.predictabilityScore ?? 0)
+    (a, b) => (b.favouriteHitRate ?? 0) - (a.favouriteHitRate ?? 0)
   );
 
   const sortedSearchTeams = [...searchTeams].sort(
-    (a, b) => (b.predictabilityScore ?? 0) - (a.predictabilityScore ?? 0)
+    (a, b) => (b.oddsReliabilityWin ?? 0) - (a.oddsReliabilityWin ?? 0)
   );
-  const sortedExtremes = [...extremeCandidates].sort(
-    (a, b) => (b.predictabilityScore ?? 0) - (a.predictabilityScore ?? 0)
-  );
+  const sortTeamsByFavWinRate = (list, direction) => {
+    const factor = direction === "asc" ? 1 : -1;
+    return [...list].sort(
+      (a, b) =>
+        factor *
+          ((a.oddsReliabilityWin ?? -Infinity) -
+            (b.oddsReliabilityWin ?? -Infinity)) ||
+        a.name.localeCompare(b.name)
+    );
+  };
 
   const mostEffectiveUnderdogs = [...underdogCandidates]
     .sort(
       (a, b) =>
+        (b.oddsReliabilityWinAsUnderdog ?? -Infinity) -
+          (a.oddsReliabilityWinAsUnderdog ?? -Infinity) ||
         (b.underdogPoints ?? 0) - (a.underdogPoints ?? 0) ||
-        (b.underdogRoi ?? -Infinity) - (a.underdogRoi ?? -Infinity) ||
         a.name.localeCompare(b.name)
     )
     .slice(0, MRI_UNDERDOG_TOP);
@@ -467,10 +466,14 @@ export function buildMarketReliabilityOverview(
     leagues,
     // Full searchable set for the team lookup section.
     teams: sortedSearchTeams,
-    mostReliableTeams: sortedExtremes.slice(0, MRI_TEAM_EXTREMES),
-    leastReliableTeams: [...sortedExtremes]
-      .reverse()
-      .slice(0, MRI_TEAM_EXTREMES),
+    mostReliableTeams: sortTeamsByFavWinRate(
+      extremeCandidates,
+      "desc"
+    ).slice(0, MRI_TEAM_EXTREMES),
+    leastReliableTeams: sortTeamsByFavWinRate(
+      extremeCandidates,
+      "asc"
+    ).slice(0, MRI_TEAM_EXTREMES),
     mostEffectiveUnderdogs,
   };
 }

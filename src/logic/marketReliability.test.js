@@ -4,8 +4,8 @@ import {
   buildTeamReliabilityFromFixtures,
   classifyFixtureRoles,
   emptyRoleCounts,
-  reliabilityLabelForScore,
-  reliabilityToneForScore,
+  reliabilityLabelForFavouriteWinRate,
+  reliabilityToneForFavouriteWinRate,
   roiFromProfit,
   summariseRoleCounts,
   unitStakePnl,
@@ -105,10 +105,7 @@ describe("summariseRoleCounts", () => {
     const summary = summariseRoleCounts(counts);
     expect(summary.oddsReliabilityWin).toBe(50);
     expect(summary.oddsReliabilityDraw).toBe(50);
-    // reliable = 1 fav win + 1 underdog loss = 2
-    // unreliable = 1 fav draw = 1
-    expect(summary.predictabilityScore).toBe(2);
-    expect(summary.reliabilityLabel).toBe("Reliable");
+    expect(summary.reliabilityLabel).toBe("Mixed");
     // fav: +0.5 then -1 = -0.5 over 2 → -25%
     expect(summary.favouriteProfit).toBe(-0.5);
     expect(summary.favouriteRoi).toBe(-25);
@@ -118,12 +115,12 @@ describe("summariseRoleCounts", () => {
   });
 
   test("labels extreme scores", () => {
-    expect(reliabilityLabelForScore(0.1)).toBe("Extremely unreliable");
-    expect(reliabilityLabelForScore(1.0)).toBe("Mixed");
-    expect(reliabilityLabelForScore(2.5)).toBe("Excellent");
-    expect(reliabilityToneForScore(0.1)).toBe("extremely-unreliable");
-    expect(reliabilityToneForScore(1.0)).toBe("mixed");
-    expect(reliabilityToneForScore(2.5)).toBe("excellent");
+    expect(reliabilityLabelForFavouriteWinRate(20)).toBe("Extremely unreliable");
+    expect(reliabilityLabelForFavouriteWinRate(50)).toBe("Mixed");
+    expect(reliabilityLabelForFavouriteWinRate(72)).toBe("Excellent");
+    expect(reliabilityToneForFavouriteWinRate(20)).toBe("extremely-unreliable");
+    expect(reliabilityToneForFavouriteWinRate(50)).toBe("mixed");
+    expect(reliabilityToneForFavouriteWinRate(72)).toBe("excellent");
   });
 });
 

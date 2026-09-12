@@ -186,8 +186,7 @@ function renderCard() {
                 maxWidth: 980,
               }}
             >
-              Favourite wins, underdog results and predictability scores -
-              updated daily
+              Favourite win rates, upsets, underdog results - updated daily
             </div>
           </div>
 
