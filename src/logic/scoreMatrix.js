@@ -1,11 +1,9 @@
 /**
  * Score-grid builders for alternative goal distributions.
  *
- * Default family `poisson` matches production on main: independent Poisson ×
- * Dixon–Coles ρ=0.075 on a 0–5 grid, then temperature α=0.75 at the call site.
- *
- * Other families (negbin, bivariate, zip, poisson_indep) share the same λ inputs
- * so backtests isolate the distribution, not the attack/defence model.
+ * Default family `poisson_indep`: independent Poisson on a 0–5 grid, then
+ * temperature α=0.65. Other families (poisson+DC, negbin, bivariate, zip)
+ * share the same λ inputs so backtests isolate the distribution.
  */
 
 import {
@@ -243,7 +241,7 @@ export function normaliseScoreMatrix(scoreMatrix) {
 
 /**
  * Temperature scaling: P_i^α then renormalise.
- * Default signature keeps α=1.1 for callers that omit it; production uses 0.75.
+ * Default signature keeps α=1.1 for callers that omit it; config default is 0.65.
  */
 export function calibrateScoreMatrix(matrix, alpha = 1.1) {
   const calibrated = matrix.map((score) => {

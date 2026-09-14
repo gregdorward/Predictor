@@ -37,15 +37,15 @@ describe("score matrix families", () => {
     resetScoreMatrixConfig();
   });
 
-  test("production defaults match main (poisson × DC ρ=0.075, maxGoals=5, α=0.75)", () => {
-    expect(SCORE_MODEL_FAMILY).toBe("poisson");
-    expect(getScoreModelFamily()).toBe("poisson");
+  test("defaults match poisson_indep on a 0–5 grid with α=0.65", () => {
+    expect(SCORE_MODEL_FAMILY).toBe("poisson_indep");
+    expect(getScoreModelFamily()).toBe("poisson_indep");
     expect(DIXON_COLES_RHO).toBe(0.075);
     expect(getDixonColesRho()).toBe(0.075);
     expect(SCORE_MATRIX_MAX_GOALS).toBe(5);
     expect(getScoreMatrixMaxGoals()).toBe(5);
-    expect(SCORE_MATRIX_ALPHA).toBe(0.75);
-    expect(getScoreMatrixAlpha()).toBe(0.75);
+    expect(SCORE_MATRIX_ALPHA).toBe(0.65);
+    expect(getScoreMatrixAlpha()).toBe(0.65);
   });
 
   test("each family sums to 1 after normalise", () => {
@@ -121,12 +121,12 @@ describe("score matrix families", () => {
     expect(cellProb(bv, 2, 2)).toBeGreaterThan(cellProb(indep, 2, 2));
   });
 
-  test("SCORE_MODEL_FAMILY=poisson matrix matches main ρ/α/maxGoals pipeline", () => {
+  test("default calibrated matrix is poisson_indep with α=0.65", () => {
     resetScoreMatrixConfig();
     const viaDispatcher = buildCalibratedScoreMatrixForFamily(1.4, 1.1);
     const viaLegacy = calibrateScoreMatrix(
-      normaliseScoreMatrix(buildScoreMatrix(1.4, 1.1, 5, 0.075)),
-      0.75
+      normaliseScoreMatrix(buildScoreMatrix(1.4, 1.1, 5, 0)),
+      0.65
     );
     expect(viaDispatcher).toHaveLength(viaLegacy.length);
     for (let i = 0; i < viaLegacy.length; i += 1) {

@@ -103,8 +103,8 @@ describe("SCORE_MODEL_FAMILY", () => {
     resetScoreMatrixConfig();
   });
 
-  test("defaults to poisson", () => {
-    expect(getScoreModelFamily()).toBe("poisson");
+  test("defaults to poisson_indep", () => {
+    expect(getScoreModelFamily()).toBe("poisson_indep");
   });
 
   test("applyScoreModelFromEnv reads SCORE_MODEL_FAMILY", () => {
@@ -112,8 +112,8 @@ describe("SCORE_MODEL_FAMILY", () => {
     expect(getScoreModelFamily()).toBe("zip");
   });
 
-  test("invalid family falls back to poisson", () => {
+  test("invalid family falls back to poisson_indep", () => {
     applyScoreModelFromEnv({ SCORE_MODEL_FAMILY: "not-a-model" });
-    expect(getScoreModelFamily()).toBe("poisson");
+    expect(getScoreModelFamily()).toBe("poisson_indep");
   });
 });

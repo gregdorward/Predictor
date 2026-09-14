@@ -22,12 +22,12 @@ export const USE_RESULT_SNAPSHOTS_DEFAULT = false;
 export const MAX_OUTCOME_EDGE = 20;
 
 /**
- * Score-distribution family. Production default is independent Poisson × Dixon–Coles.
- * Alternatives (negbin, bivariate, zip, poisson_indep) are for backtest sweeps.
+ * Score-distribution family.
+ * Locked to independent Poisson (no Dixon–Coles) after holdout family sweeps.
  */
-export const SCORE_MODEL_FAMILY = "poisson";
+export const SCORE_MODEL_FAMILY = "poisson_indep";
 
-/** Dixon–Coles ρ on the Poisson family (matches main production). */
+/** Dixon–Coles ρ when SCORE_MODEL_FAMILY=poisson. */
 export const DIXON_COLES_RHO = 0.075;
 
 /** Truncate the score grid here, then renormalise. Main production uses 5. */
@@ -35,9 +35,9 @@ export const SCORE_MATRIX_MAX_GOALS = 5;
 
 /**
  * Temperature scaling of the renormalised score matrix.
- * Main production call site uses 0.75.
+ * Locked at 0.65 after poisson_indep sweeps (best Brier on holdout).
  */
-export const SCORE_MATRIX_ALPHA = 0.75;
+export const SCORE_MATRIX_ALPHA = 0.65;
 
 /** Negative binomial dispersion r (higher → closer to Poisson). */
 export const SCORE_NB_R = 12;
