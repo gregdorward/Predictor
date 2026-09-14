@@ -46,4 +46,13 @@ describe("evaluateMatch filters", () => {
 
     expect(aggregateResults(rows).predicted).toBe(1);
   });
+
+  test("aggregateResults includes mean Brier and log-loss", () => {
+    const rows = [evaluateMatch(baseMatch, "2026-09-05", "cached")];
+    const summary = aggregateResults(rows);
+    expect(rows[0].brier).not.toBeNull();
+    expect(rows[0].logLoss).not.toBeNull();
+    expect(summary.meanBrier).not.toBeNull();
+    expect(summary.meanLogLoss).not.toBeNull();
+  });
 });

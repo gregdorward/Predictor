@@ -45,6 +45,14 @@ import {
   computeGoalEfficiency,
   goalEfficiencyRegressionMultiplier,
 } from "./goalEfficiency.js";
+import {
+  buildCalibratedScoreMatrixForFamily,
+  clampLambda,
+  getMostLikelyScore,
+  getMatchOddsProbabilities,
+  getBTTSProbability,
+  getOverUnderProbability,
+} from "./scoreMatrix.js";
 
 export {
   CLEAR_OUTCOME_MARGIN,
@@ -228,53 +236,6 @@ async function convertTimestamp(timestamp) {
   let converted = `${year}-${day}-${month}`;
 
   return converted;
-}
-
-function getOverUnderProbability(scoreMatrix, line = 2.5) {
-  let over = 0;
-  let under = 0;
-
-  for (const { home, away, probability } of scoreMatrix) {
-    if (home + away > line) over += probability;
-    else under += probability;
-  }
-  over = over * 100
-  under = under * 100
-
-  return { over, under };
-}
-
-function getBTTSProbability(scoreMatrix) {
-  let yes = 0;
-  let no = 0;
-
-  for (const { home, away, probability } of scoreMatrix) {
-    if (home > 0 && away > 0) yes += probability;
-    else no += probability;
-  }
-  yes = yes * 100
-  no = no * 100
-
-  return { yes, no };
-}
-
-
-function getMatchOddsProbabilities(scoreMatrix) {
-  let homeWin = 0;
-  let draw = 0;
-  let awayWin = 0;
-
-  for (const { home, away, probability } of scoreMatrix) {
-    if (home > away) homeWin += probability;
-    else if (home === away) draw += probability;
-    else awayWin += probability;
-  }
-
-  homeWin = homeWin * 100
-  draw = draw * 100
-  awayWin = awayWin * 100
-
-  return { homeWin, draw, awayWin };
 }
 
 
@@ -513,123 +474,6 @@ function pickMatchOutcome(scoreline, homeWin, draw, awayWin) {
     awayWin,
     getClearOutcomeMargin()
   );
-}
-
-function factorial(n) {
-  if (n === 0) return 1;
-  let result = 1;
-  for (let i = 1; i <= n; i++) {
-    result *= i;
-  }
-  return result;
-}
-
-function poissonProbability(k, lambda) {
-  return (Math.pow(lambda, k) * Math.exp(-lambda)) / factorial(k);
-}
-
-function dixonColesAdjustment(home, away, lambdaHome, lambdaAway, rho = 0) {
-  if (home === 0 && away === 0)
-    return 1 - (lambdaHome * lambdaAway * rho);
-
-  if (home === 0 && away === 1)
-    return 1 + (lambdaHome * rho);
-
-  if (home === 1 && away === 0)
-    return 1 + (lambdaAway * rho);
-
-  if (home === 1 && away === 1)
-    return 1 - rho;
-
-  return 1;
-}
-
-
-function buildScoreMatrix(
-  lambdaHome,
-  lambdaAway,
-  maxGoals = 5,
-  rho = 0.075
-) {
-  const scores = [];
-
-  for (let home = 0; home <= maxGoals; home++) {
-    for (let away = 0; away <= maxGoals; away++) {
-
-      let prob =
-        poissonProbability(home, lambdaHome) *
-        poissonProbability(away, lambdaAway);
-
-      // APPLY DIXON-COLES HERE
-      prob *= dixonColesAdjustment(
-        home,
-        away,
-        lambdaHome,
-        lambdaAway,
-        rho
-      );
-
-      scores.push({
-        home,
-        away,
-        probability: prob
-      });
-    }
-  }
-
-  return scores;
-}
-
-
-function getMostLikelyScore(scoreMatrix) {
-  return scoreMatrix.reduce((best, current) =>
-    current.probability > best.probability ? current : best
-  );
-}
-
-function clampLambda(lambda, min = 0.05, max = 5) {
-  const n = Number(lambda);
-  if (!Number.isFinite(n)) {
-    return min;
-  }
-  return Math.max(min, Math.min(max, n));
-}
-
-function normaliseScoreMatrix(scoreMatrix) {
-  const total = scoreMatrix.reduce(
-    (sum, s) => sum + (Number(s.probability) || 0),
-    0
-  );
-
-  if (!Number.isFinite(total) || total <= 0) {
-    const uniform = 1 / Math.max(scoreMatrix.length, 1);
-    return scoreMatrix.map((s) => ({ ...s, probability: uniform }));
-  }
-
-  return scoreMatrix.map((s) => ({
-    ...s,
-    probability: s.probability / total,
-  }));
-}
-
-function calibrateScoreMatrix(matrix, alpha = 1.1) {
-  const calibrated = matrix.map((score) => {
-    const base = Number(score.probability);
-    const raised =
-      Number.isFinite(base) && base > 0 ? Math.pow(base, alpha) : 0;
-    return { ...score, probability: raised };
-  });
-
-  const sum = calibrated.reduce((acc, s) => acc + s.probability, 0);
-  if (!Number.isFinite(sum) || sum <= 0) {
-    const uniform = 1 / Math.max(calibrated.length, 1);
-    return calibrated.map((score) => ({ ...score, probability: uniform }));
-  }
-
-  return calibrated.map((score) => ({
-    ...score,
-    probability: score.probability / sum,
-  }));
 }
 
 /** Keep 1X2 probs finite; fall back to normalised bookie implied when model fails. */
@@ -5083,14 +4927,10 @@ export async function calculateScore(match, index, divider, calculate, AIPredict
 
     const lambdaHome = formHome.teamGoalsCalc; // output from generateGoals
     const lambdaAway = formAway.teamGoalsCalc;
-    const scoreMatrixRaw = buildScoreMatrix(
+    const calibratedMatrix = buildCalibratedScoreMatrixForFamily(
       clampLambda(lambdaHome),
       clampLambda(lambdaAway)
     );
-
-    const scoreMatrix = normaliseScoreMatrix(scoreMatrixRaw);
-
-    const calibratedMatrix = calibrateScoreMatrix(scoreMatrix, 0.75);
 
     match.scoreMatrix = calibratedMatrix;
 

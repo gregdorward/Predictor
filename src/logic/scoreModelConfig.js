@@ -21,7 +21,49 @@ export const USE_RESULT_SNAPSHOTS_DEFAULT = false;
  */
 export const MAX_OUTCOME_EDGE = 20;
 
+/**
+ * Score-distribution family. Production default is independent Poisson × Dixon–Coles.
+ * Alternatives (negbin, bivariate, zip, poisson_indep) are for backtest sweeps.
+ */
+export const SCORE_MODEL_FAMILY = "poisson";
+
+/** Dixon–Coles ρ on the Poisson family (matches main production). */
+export const DIXON_COLES_RHO = 0.075;
+
+/** Truncate the score grid here, then renormalise. Main production uses 5. */
+export const SCORE_MATRIX_MAX_GOALS = 5;
+
+/**
+ * Temperature scaling of the renormalised score matrix.
+ * Main production call site uses 0.75.
+ */
+export const SCORE_MATRIX_ALPHA = 0.75;
+
+/** Negative binomial dispersion r (higher → closer to Poisson). */
+export const SCORE_NB_R = 12;
+
+/** Bivariate Poisson shared intensity λ₃. */
+export const SCORE_BIVARIATE_LAMBDA3 = 0.08;
+
+/** Zero-inflated Poisson inflation π (probability of structural zero per side). */
+export const SCORE_ZIP_PI = 0.06;
+
+const VALID_SCORE_MODEL_FAMILIES = new Set([
+  "poisson",
+  "poisson_indep",
+  "negbin",
+  "bivariate",
+  "zip",
+]);
+
 let activeMaxOutcomeEdge = MAX_OUTCOME_EDGE;
+let activeScoreModelFamily = SCORE_MODEL_FAMILY;
+let activeDixonColesRho = DIXON_COLES_RHO;
+let activeScoreMatrixMaxGoals = SCORE_MATRIX_MAX_GOALS;
+let activeScoreMatrixAlpha = SCORE_MATRIX_ALPHA;
+let activeScoreNbR = SCORE_NB_R;
+let activeScoreBivariateLambda3 = SCORE_BIVARIATE_LAMBDA3;
+let activeScoreZipPi = SCORE_ZIP_PI;
 
 export function getMaxOutcomeEdge() {
   return activeMaxOutcomeEdge;
@@ -38,6 +80,53 @@ export function setMaxOutcomeEdge(value) {
 
 export function resetMaxOutcomeEdge() {
   activeMaxOutcomeEdge = MAX_OUTCOME_EDGE;
+}
+
+export function getScoreModelFamily() {
+  return activeScoreModelFamily;
+}
+
+export function setScoreModelFamily(value) {
+  const key = String(value || "")
+    .trim()
+    .toLowerCase();
+  activeScoreModelFamily = VALID_SCORE_MODEL_FAMILIES.has(key)
+    ? key
+    : SCORE_MODEL_FAMILY;
+}
+
+export function getDixonColesRho() {
+  return activeDixonColesRho;
+}
+
+export function getScoreMatrixMaxGoals() {
+  return activeScoreMatrixMaxGoals;
+}
+
+export function getScoreMatrixAlpha() {
+  return activeScoreMatrixAlpha;
+}
+
+export function getScoreNbR() {
+  return activeScoreNbR;
+}
+
+export function getScoreBivariateLambda3() {
+  return activeScoreBivariateLambda3;
+}
+
+export function getScoreZipPi() {
+  return activeScoreZipPi;
+}
+
+export function resetScoreMatrixConfig() {
+  activeScoreModelFamily = SCORE_MODEL_FAMILY;
+  activeDixonColesRho = DIXON_COLES_RHO;
+  activeScoreMatrixMaxGoals = SCORE_MATRIX_MAX_GOALS;
+  activeScoreMatrixAlpha = SCORE_MATRIX_ALPHA;
+  activeScoreNbR = SCORE_NB_R;
+  activeScoreBivariateLambda3 = SCORE_BIVARIATE_LAMBDA3;
+  activeScoreZipPi = SCORE_ZIP_PI;
 }
 
 /** Continental/international odds-comparison multiplier in generateGoals. */
@@ -140,6 +229,29 @@ export function applyMaxOutcomeEdgeFromEnv(env = process.env) {
 export function applyScoreModelFromEnv(env = process.env) {
   parseEnvNumber(env, "SCORE_MODEL_MARGIN", (value) => {
     activeClearOutcomeMargin = value;
+  });
+
+  if (env.SCORE_MODEL_FAMILY != null && env.SCORE_MODEL_FAMILY !== "") {
+    setScoreModelFamily(env.SCORE_MODEL_FAMILY);
+  }
+
+  parseEnvNumber(env, "DIXON_COLES_RHO", (value) => {
+    activeDixonColesRho = value;
+  });
+  parseEnvNumber(env, "SCORE_MATRIX_MAX_GOALS", (value) => {
+    activeScoreMatrixMaxGoals = Math.max(3, Math.round(value));
+  });
+  parseEnvNumber(env, "SCORE_MATRIX_ALPHA", (value) => {
+    activeScoreMatrixAlpha = value;
+  });
+  parseEnvNumber(env, "SCORE_NB_R", (value) => {
+    activeScoreNbR = Math.max(0.1, value);
+  });
+  parseEnvNumber(env, "SCORE_BIVARIATE_LAMBDA3", (value) => {
+    activeScoreBivariateLambda3 = Math.max(0, value);
+  });
+  parseEnvNumber(env, "SCORE_ZIP_PI", (value) => {
+    activeScoreZipPi = Math.min(1, Math.max(0, value));
   });
 
   const snapshots =

@@ -329,6 +329,12 @@ export async function runBacktest(cliArgs = {}) {
   console.log(`  Predicted: ${summary.predicted}`);
   console.log(`  Outcome accuracy: ${summary.outcomeAccuracy}%`);
   console.log(`  Exact score rate: ${summary.exactScoreRate}%`);
+  if (summary.meanBrier != null) {
+    console.log(`  Mean Brier (1X2): ${summary.meanBrier}`);
+  }
+  if (summary.meanLogLoss != null) {
+    console.log(`  Mean log-loss (1X2): ${summary.meanLogLoss}`);
+  }
   console.log(`  ROI (flat 1-unit): ${summary.roi}%`);
   if (filterConfig.active) {
     console.log(

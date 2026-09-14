@@ -1,3 +1,5 @@
+import { brierScore1X2, logLoss1X2, meanScore } from "../probabilityScores.js";
+
 function getOutcome(home, away) {
   const h = Number(home);
   const a = Number(away);
@@ -117,6 +119,18 @@ export function evaluateMatch(match, dateIso, formSource) {
   row.modelProb = Number.isFinite(modelProb) ? modelProb : null;
   row.impliedProb = Number.isFinite(impliedProb) ? impliedProb : null;
   row.edgePp = edgePp;
+  row.brier = brierScore1X2(
+    match.homeWinProbability,
+    match.drawProbability,
+    match.awayWinProbability,
+    actualOutcome
+  );
+  row.logLoss = logLoss1X2(
+    match.homeWinProbability,
+    match.drawProbability,
+    match.awayWinProbability,
+    actualOutcome
+  );
 
   return row;
 }
@@ -147,6 +161,8 @@ export function aggregateResults(rows, options = {}) {
   let sumProfit = 0;
   let exactScores = 0;
   let successCount = 0;
+  const brierScores = [];
+  const logLossScores = [];
   const byLeague = {};
   const byPrediction = Object.fromEntries(
     PREDICTION_OUTCOMES.map((outcome) => [outcome, emptyPredictionBucket()])
@@ -160,6 +176,8 @@ export function aggregateResults(rows, options = {}) {
 
     if (row.exactScore) exactScores += 1;
     if (row.outcomeCorrect) successCount += 1;
+    if (Number.isFinite(row.brier)) brierScores.push(row.brier);
+    if (Number.isFinite(row.logLoss)) logLossScores.push(row.logLoss);
 
     const predictionBucket = byPrediction[row.prediction];
     if (predictionBucket) {
@@ -223,6 +241,14 @@ export function aggregateResults(rows, options = {}) {
       scored.length > 0
         ? Number(((exactScores / scored.length) * 100).toFixed(2))
         : 0,
+    meanBrier: (() => {
+      const mean = meanScore(brierScores);
+      return mean == null ? null : Number(mean.toFixed(6));
+    })(),
+    meanLogLoss: (() => {
+      const mean = meanScore(logLossScores);
+      return mean == null ? null : Number(mean.toFixed(6));
+    })(),
     investment,
     netProfit: Number(sumProfit.toFixed(2)),
     roi,

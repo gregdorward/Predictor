@@ -8,17 +8,20 @@ import {
   getClearOutcomeMargin,
   getMaxOutcomeEdge,
   getUseResultSnapshots,
+  getScoreModelFamily,
   isNeutralVenueMatch,
   parseNoHomeAwayFromFixture,
   resetClearOutcomeMargin,
   resetMaxOutcomeEdge,
   resetUseResultSnapshots,
+  resetScoreMatrixConfig,
   applyScoreModelFromEnv,
 } from "./scoreModelConfig";
 
 describe("CLEAR_OUTCOME_MARGIN", () => {
   afterEach(() => {
     resetClearOutcomeMargin();
+    resetScoreMatrixConfig();
   });
 
   test("defaults to configured clear outcome margin", () => {
@@ -92,5 +95,25 @@ describe("USE_RESULT_SNAPSHOTS", () => {
     resetUseResultSnapshots();
     applyScoreModelFromEnv({ USE_RESULT_SNAPSHOTS: "false" });
     expect(getUseResultSnapshots()).toBe(false);
+  });
+});
+
+describe("SCORE_MODEL_FAMILY", () => {
+  afterEach(() => {
+    resetScoreMatrixConfig();
+  });
+
+  test("defaults to poisson", () => {
+    expect(getScoreModelFamily()).toBe("poisson");
+  });
+
+  test("applyScoreModelFromEnv reads SCORE_MODEL_FAMILY", () => {
+    applyScoreModelFromEnv({ SCORE_MODEL_FAMILY: "zip" });
+    expect(getScoreModelFamily()).toBe("zip");
+  });
+
+  test("invalid family falls back to poisson", () => {
+    applyScoreModelFromEnv({ SCORE_MODEL_FAMILY: "not-a-model" });
+    expect(getScoreModelFamily()).toBe("poisson");
   });
 });

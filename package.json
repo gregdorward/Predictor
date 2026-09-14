@@ -62,7 +62,8 @@
     "test:e2e:headed": "playwright test --headed",
     "test:e2e:report": "playwright show-report",
     "backtest": "node scripts/build-backtest-bundle.mjs && node scripts/.backtest-bundle.mjs",
-    "backtest:build": "node scripts/build-backtest-bundle.mjs"
+    "backtest:build": "node scripts/build-backtest-bundle.mjs",
+    "backtest:sweep-families": "node scripts/sweep-score-families.mjs"
   },
   "eslintConfig": {
     "extends": [
