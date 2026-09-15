@@ -17,6 +17,7 @@ import {
   SCORE_XPTS_MODE,
   SCORE_LAMBDA_ENGINE,
   SCORE_MAHER_RECENT_BLEND,
+  SCORE_MAHER_RECENT_GAMES,
   SCORE_ODDS_BLEND,
   SCORE_MAHER_RATE_SOURCE,
   applyMaxOutcomeEdgeFromEnv,
@@ -41,6 +42,7 @@ import {
   getScoreXptsMode,
   getScoreLambdaEngine,
   getScoreMaherRecentBlend,
+  getScoreMaherRecentGames,
   getScoreOddsBlend,
   getScoreMaherRateSource,
   clampLambdaSignal,
@@ -119,6 +121,8 @@ describe("lambda weight knobs", () => {
     expect(getScoreLambdaEngine()).toBe("maher_recent");
     expect(SCORE_MAHER_RECENT_BLEND).toBe(0.5);
     expect(getScoreMaherRecentBlend()).toBe(0.5);
+    expect(SCORE_MAHER_RECENT_GAMES).toBe(5);
+    expect(getScoreMaherRecentGames()).toBe(5);
     expect(SCORE_MAHER_RATE_SOURCE).toBe("npxg");
     expect(getScoreMaherRateSource()).toBe("npxg");
     expect(SCORE_ODDS_BLEND).toBe(0.25);
@@ -174,6 +178,13 @@ describe("lambda weight knobs", () => {
     expect(getScoreMaherRateSource()).toBe("mix");
     applyScoreModelFromEnv({ SCORE_MAHER_RATE_SOURCE: "nope" });
     expect(getScoreMaherRateSource()).toBe("npxg");
+  });
+
+  test("applyScoreModelFromEnv reads SCORE_MAHER_RECENT_GAMES", () => {
+    applyScoreModelFromEnv({ SCORE_MAHER_RECENT_GAMES: "8" });
+    expect(getScoreMaherRecentGames()).toBe(8);
+    applyScoreModelFromEnv({ SCORE_MAHER_RECENT_GAMES: "0" });
+    expect(getScoreMaherRecentGames()).toBe(5);
   });
 
   test("SCORE_ROLLING_XI >= 1 disables decay", () => {

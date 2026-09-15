@@ -113,6 +113,12 @@ export const SCORE_LAMBDA_ENGINE = "maher_recent";
 export const SCORE_MAHER_RECENT_BLEND = 0.5;
 
 /**
+ * Games in the recent Maher window when SCORE_LAMBDA_ENGINE=maher_recent.
+ * Locked at 5 after Jul–Sep 2026 sweep (ROI +2.13% vs 8 ≈ tied, 10 worse).
+ */
+export const SCORE_MAHER_RECENT_GAMES = 5;
+
+/**
  * Match rate used when fitting Maher attack/defence.
  * - xg: Footystats xG (goals fallback)
  * - npxg: non-penalty xG
@@ -202,6 +208,7 @@ let activeScoreXptsDrawBand = SCORE_XPTS_DRAW_BAND;
 let activeScoreXptsMode = SCORE_XPTS_MODE;
 let activeScoreLambdaEngine = SCORE_LAMBDA_ENGINE;
 let activeScoreMaherRecentBlend = SCORE_MAHER_RECENT_BLEND;
+let activeScoreMaherRecentGames = SCORE_MAHER_RECENT_GAMES;
 let activeScoreMaherRateSource = SCORE_MAHER_RATE_SOURCE;
 let activeScoreOddsBlend = SCORE_ODDS_BLEND;
 
@@ -463,6 +470,19 @@ export function setScoreMaherRecentBlend(value) {
     : SCORE_MAHER_RECENT_BLEND;
 }
 
+export function getScoreMaherRecentGames() {
+  return activeScoreMaherRecentGames;
+}
+
+export function setScoreMaherRecentGames(value) {
+  const parsed = Number(value);
+  if (Number.isFinite(parsed) && parsed >= 1) {
+    activeScoreMaherRecentGames = Math.round(parsed);
+    return;
+  }
+  activeScoreMaherRecentGames = SCORE_MAHER_RECENT_GAMES;
+}
+
 export function getScoreMaherRateSource() {
   return activeScoreMaherRateSource;
 }
@@ -512,6 +532,7 @@ export function resetLambdaWeightConfig() {
   activeScoreXptsMode = SCORE_XPTS_MODE;
   activeScoreLambdaEngine = SCORE_LAMBDA_ENGINE;
   activeScoreMaherRecentBlend = SCORE_MAHER_RECENT_BLEND;
+  activeScoreMaherRecentGames = SCORE_MAHER_RECENT_GAMES;
   activeScoreMaherRateSource = SCORE_MAHER_RATE_SOURCE;
   activeScoreOddsBlend = SCORE_ODDS_BLEND;
 }
@@ -717,6 +738,9 @@ export function applyScoreModelFromEnv(env = process.env) {
   }
   parseEnvNumber(env, "SCORE_MAHER_RECENT_BLEND", (value) => {
     setScoreMaherRecentBlend(value);
+  });
+  parseEnvNumber(env, "SCORE_MAHER_RECENT_GAMES", (value) => {
+    setScoreMaherRecentGames(value);
   });
   if (env.SCORE_MAHER_RATE_SOURCE != null && env.SCORE_MAHER_RATE_SOURCE !== "") {
     setScoreMaherRateSource(env.SCORE_MAHER_RATE_SOURCE);
