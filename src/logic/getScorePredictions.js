@@ -58,6 +58,7 @@ import {
   getScoreMaherRecentBlend,
   getScoreMaherRecentGames,
   getScoreMaherRateSource,
+  getScoreMaherIters,
   getScoreOddsBlend,
 } from "./scoreModelConfig.js";
 import {
@@ -3041,6 +3042,7 @@ export async function generateGoals(homeForm, awayForm, match) {
       recentBlend: useAdditive ? 0 : maherRecentBlend,
       recentGames: useAdditive ? 5 : getScoreMaherRecentGames(),
       rateSource: getScoreMaherRateSource(),
+      iters: useAdditive ? 0 : getScoreMaherIters(),
     });
     if (fitted) {
       homeLambda_rawOverall = fitted.home;

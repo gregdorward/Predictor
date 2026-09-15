@@ -175,4 +175,84 @@ describe("maherRatings", () => {
       xgFit.byTeam.get("Alpha").att
     );
   });
+
+  test("iterative fit shifts ratings vs mean-only when SOS differs", () => {
+    const schedule = [
+      {
+        id: leagueId,
+        fixtures: [
+          // Alpha pads vs weak Gamma
+          {
+            id: 1,
+            status: "complete",
+            date_unix: 1_700_000_000,
+            home_name: "Alpha",
+            away_name: "Gamma",
+            homeGoalCount: 3,
+            awayGoalCount: 0,
+            team_a_xg: 2.5,
+            team_b_xg: 0.4,
+          },
+          {
+            id: 2,
+            status: "complete",
+            date_unix: 1_700_050_000,
+            home_name: "Alpha",
+            away_name: "Gamma",
+            homeGoalCount: 2,
+            awayGoalCount: 0,
+            team_a_xg: 2.2,
+            team_b_xg: 0.5,
+          },
+          // Beta earns similar raw xG vs strong Delta
+          {
+            id: 3,
+            status: "complete",
+            date_unix: 1_700_100_000,
+            home_name: "Beta",
+            away_name: "Delta",
+            homeGoalCount: 2,
+            awayGoalCount: 1,
+            team_a_xg: 2.3,
+            team_b_xg: 1.5,
+          },
+          {
+            id: 4,
+            status: "complete",
+            date_unix: 1_700_150_000,
+            home_name: "Delta",
+            away_name: "Beta",
+            homeGoalCount: 1,
+            awayGoalCount: 2,
+            team_a_xg: 1.4,
+            team_b_xg: 2.1,
+          },
+          // Delta strong, Gamma weak filler
+          {
+            id: 5,
+            status: "complete",
+            date_unix: 1_700_200_000,
+            home_name: "Delta",
+            away_name: "Gamma",
+            homeGoalCount: 4,
+            awayGoalCount: 0,
+            team_a_xg: 3.0,
+            team_b_xg: 0.3,
+          },
+        ],
+      },
+    ];
+    const meanOnly = fitMaherRatings(schedule, leagueId, 1_700_300_000, {
+      iters: 0,
+    });
+    const iterative = fitMaherRatings(schedule, leagueId, 1_700_300_000, {
+      iters: 5,
+    });
+    // Beta's attack should improve relative to Alpha after SOS adjustment
+    const meanGap =
+      meanOnly.byTeam.get("Alpha").att - meanOnly.byTeam.get("Beta").att;
+    const iterGap =
+      iterative.byTeam.get("Alpha").att - iterative.byTeam.get("Beta").att;
+    expect(iterGap).toBeLessThan(meanGap);
+  });
 });

@@ -20,6 +20,7 @@ import {
   SCORE_MAHER_RECENT_GAMES,
   SCORE_ODDS_BLEND,
   SCORE_MAHER_RATE_SOURCE,
+  SCORE_MAHER_ITERS,
   applyMaxOutcomeEdgeFromEnv,
   getClearOutcomeMargin,
   getMaxOutcomeEdge,
@@ -45,6 +46,7 @@ import {
   getScoreMaherRecentGames,
   getScoreOddsBlend,
   getScoreMaherRateSource,
+  getScoreMaherIters,
   clampLambdaSignal,
   restHaircutMultiplier,
   sosDampMultiplier,
@@ -125,6 +127,8 @@ describe("lambda weight knobs", () => {
     expect(getScoreMaherRecentGames()).toBe(5);
     expect(SCORE_MAHER_RATE_SOURCE).toBe("npxg");
     expect(getScoreMaherRateSource()).toBe("npxg");
+    expect(SCORE_MAHER_ITERS).toBe(0);
+    expect(getScoreMaherIters()).toBe(0);
     expect(SCORE_ODDS_BLEND).toBe(0.25);
     expect(getScoreOddsBlend()).toBe(0.25);
   });
@@ -185,6 +189,11 @@ describe("lambda weight knobs", () => {
     expect(getScoreMaherRecentGames()).toBe(8);
     applyScoreModelFromEnv({ SCORE_MAHER_RECENT_GAMES: "0" });
     expect(getScoreMaherRecentGames()).toBe(5);
+  });
+
+  test("applyScoreModelFromEnv reads SCORE_MAHER_ITERS", () => {
+    applyScoreModelFromEnv({ SCORE_MAHER_ITERS: "5" });
+    expect(getScoreMaherIters()).toBe(5);
   });
 
   test("SCORE_ROLLING_XI >= 1 disables decay", () => {
