@@ -42,6 +42,7 @@ export default function FixtureByParam({
         description={meta.description}
         canonicalPath={canonicalPath}
         noIndex
+        follow
         ogImage={ogImage}
         ogImageAlt={`${meta.home} vs ${meta.away} | Soccer Stats Hub`}
       />

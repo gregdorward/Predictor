@@ -8,11 +8,16 @@ type StatsPage = {
 };
 
 const statsPages: StatsPage[] = [
-  { path: '/o25/', heading: 'Elite Scoring Teams', tableLabel: 'highest scoring teams table', requireRows: true },
-  { path: '/u25/', heading: 'Lowest Scoring Leagues', tableLabel: 'Lowest scoring leagues table', requireRows: true },
-  { path: '/bttsteams/', heading: 'BTTS Elite Teams', tableLabel: 'BTTS teams table', requireRows: true },
   { path: '/bttsfixtures/', heading: 'BTTS Insights', tableLabel: 'BTTS potential table', requireRows: false },
   { path: '/fixtureshigh/', heading: 'Goal Potential Insights', tableLabel: 'highest scoring games table', requireRows: true },
+  { path: '/highest-scoring-leagues/', heading: 'Highest Scoring Leagues', tableLabel: 'Highest scoring leagues table', requireRows: true },
+];
+
+const retiredHubRedirects = [
+  { from: '/o25/', to: /\/fixtureshigh\/$/ },
+  { from: '/u25/', to: /\/highest-scoring-leagues\/$/ },
+  { from: '/bttsteams/', to: /\/bttsfixtures\/$/ },
+  { from: '/btts-no-teams/', to: /\/bttsfixtures\/$/ },
 ];
 
 test.describe('Stats subpages', () => {
@@ -35,6 +40,14 @@ test.describe('Stats subpages', () => {
       await page.goto(path);
       const homeLink = page.getByRole('link', { name: /back to home|^home$/i });
       await expect(homeLink.first()).toBeVisible();
+    });
+  }
+
+  for (const { from, to } of retiredHubRedirects) {
+    test(`${from} permanently redirects to the remaining hub`, async ({ page }) => {
+      const response = await page.goto(from);
+      expect(response?.ok()).toBeTruthy();
+      await expect(page).toHaveURL(to);
     });
   }
 });

@@ -8,12 +8,14 @@ import {
   getCanonicalPathFromAsPath,
   getCanonicalUrl,
   getPageMeta,
+  buildRobotsContent,
 } from "../seo/pageMetaConfig";
 
 const PageMeta = ({
   title,
   description,
   noIndex,
+  follow,
   canonicalPath,
   ogType = "website",
   ogImage,
@@ -25,6 +27,11 @@ const PageMeta = ({
   const pageTitle = title ?? defaults.title;
   const pageDescription = description ?? defaults.description;
   const shouldNoIndex = noIndex ?? defaults.noIndex ?? false;
+  const shouldFollow = follow ?? defaults.follow ?? false;
+  const robotsContent = buildRobotsContent({
+    noIndex: shouldNoIndex,
+    follow: shouldFollow,
+  });
   const resolvedPath =
     canonicalPath ??
     (router?.asPath ? getCanonicalPathFromAsPath(router.asPath) : routePath);
@@ -39,7 +46,7 @@ const PageMeta = ({
       <title>{pageTitle}</title>
       <meta name="description" content={pageDescription} />
       <link rel="canonical" href={canonicalUrl} />
-      {shouldNoIndex && <meta name="robots" content="noindex, nofollow" />}
+      {robotsContent ? <meta name="robots" content={robotsContent} /> : null}
       <meta property="og:title" content={pageTitle} />
       <meta property="og:description" content={pageDescription} />
       <meta property="og:image" content={shareImage} />

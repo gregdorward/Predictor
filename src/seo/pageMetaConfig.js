@@ -115,6 +115,13 @@ export const PAGE_META = {
     description:
       "Soccer Stats Hub subscription terms, refunds, cancellations, promotions and legal restrictions.",
   },
+  "/fixture": {
+    title: "Match preview | Soccer Stats Hub",
+    description:
+      "Pre-match stats and predictions: form, head-to-head, xG, BTTS and Over/Under markets.",
+    noIndex: true,
+    follow: true,
+  },
   "/reset": {
     title: "Reset Password | Soccer Stats Hub",
     description:
@@ -157,4 +164,10 @@ export function getCanonicalUrl(pathOrAsPath) {
 export function getPageMeta(pathname) {
   const path = normalizePathname(pathname);
   return PAGE_META[path] || { title: DEFAULT_TITLE, description: DEFAULT_DESCRIPTION };
+}
+
+/** Robots content for noindex pages. Account flows stay nofollow; fixtures use follow. */
+export function buildRobotsContent({ noIndex = false, follow = false } = {}) {
+  if (!noIndex) return null;
+  return follow ? "noindex, follow" : "noindex, nofollow";
 }

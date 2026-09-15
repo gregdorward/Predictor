@@ -1,23 +1,25 @@
 const RELATED_CORE_STATS = [
-  { label: "BTTS teams", href: "/bttsteams/" },
   { label: "BTTS fixtures", href: "/bttsfixtures/" },
-  { label: "Under 2.5 leagues", href: "/u25/" },
-  { label: "Highest scoring leagues", href: "/highest-scoring-leagues/" },
   { label: "Over 2.5 fixtures", href: "/fixtureshigh/" },
+  { label: "Highest scoring leagues", href: "/highest-scoring-leagues/" },
   { label: "Competitions", href: "/competitions/" },
 ];
+
+const HUB_LINKS = {
+  btts: { label: "BTTS fixtures", href: "/bttsfixtures/" },
+  goals: { label: "Over 2.5 fixtures", href: "/fixtureshigh/" },
+  leagues: { label: "Highest scoring leagues", href: "/highest-scoring-leagues/" },
+  competitions: { label: "Competitions", href: "/competitions/" },
+  fixtures: { label: "Upcoming fixtures", href: "/fixtures/" },
+  methodology: { label: "Methodology", href: "/methodology/" },
+};
 
 export const STAT_PAGE_SEO = {
   u25: {
     canonicalPath: "/u25/",
     intro:
       "Use this Under 2.5 goals table to compare low-scoring football leagues by average goals per match and Under 2.5 rate. It is designed for users researching defensive competitions, slower scoring environments and leagues where low-goal match profiles are common.",
-    relatedLinks: [
-      { label: "BTTS No teams", href: "/btts-no-teams/" },
-      { label: "Highest scoring leagues", href: "/highest-scoring-leagues/" },
-      { label: "Over 2.5 teams", href: "/o25/" },
-      { label: "Competitions", href: "/competitions/" },
-    ],
+    relatedLinks: [HUB_LINKS.leagues, HUB_LINKS.goals, HUB_LINKS.competitions],
     faqItems: [
       {
         question: "What makes a league low scoring?",
@@ -40,12 +42,7 @@ export const STAT_PAGE_SEO = {
     canonicalPath: "/bttsteams/",
     intro:
       "This page highlights teams with strong Both Teams To Score records, combining season BTTS percentages with recent fixture context so you can quickly find sides involved in open matches.",
-    relatedLinks: [
-      { label: "BTTS No teams", href: "/btts-no-teams/" },
-      { label: "BTTS fixtures", href: "/bttsfixtures/" },
-      { label: "Highest scoring leagues", href: "/highest-scoring-leagues/" },
-      { label: "Over 2.5 fixtures", href: "/fixtureshigh/" },
-    ],
+    relatedLinks: [HUB_LINKS.btts, HUB_LINKS.goals, HUB_LINKS.leagues],
     faqItems: [
       {
         question: "What does BTTS mean?",
@@ -69,10 +66,10 @@ export const STAT_PAGE_SEO = {
     intro:
       "BTTS fixtures combine scoring averages, match timing and market data to surface games where both teams scoring may deserve closer inspection.",
     relatedLinks: [
-      { label: "BTTS teams", href: "/bttsteams/" },
-      { label: "BTTS No teams", href: "/btts-no-teams/" },
-      { label: "Over 2.5 fixtures", href: "/fixtureshigh/" },
-      { label: "Upcoming fixtures", href: "/fixtures/" },
+      HUB_LINKS.goals,
+      HUB_LINKS.leagues,
+      HUB_LINKS.fixtures,
+      HUB_LINKS.methodology,
     ],
     faqItems: [
       {
@@ -88,7 +85,7 @@ export const STAT_PAGE_SEO = {
       {
         question: "What should I check after this table?",
         answer:
-          "Open the individual match view to compare form, head-to-head data, goal trends and prediction outputs.",
+          "Compare the shortlist with league scoring environment on the competitions and highest-scoring leagues pages, and read how the model is built on the methodology page.",
       },
     ],
   },
@@ -96,12 +93,7 @@ export const STAT_PAGE_SEO = {
     canonicalPath: "/o25/",
     intro:
       "This Over 2.5 teams table ranks high-scoring sides by average goals and Over 2.5 rate, helping you find teams that are often involved in goal-heavy matches.",
-    relatedLinks: [
-      { label: "Highest scoring leagues", href: "/highest-scoring-leagues/" },
-      { label: "Over 2.5 fixtures", href: "/fixtureshigh/" },
-      { label: "BTTS teams", href: "/bttsteams/" },
-      { label: "Under 2.5 leagues", href: "/u25/" },
-    ],
+    relatedLinks: [HUB_LINKS.leagues, HUB_LINKS.goals, HUB_LINKS.btts],
     faqItems: [
       {
         question: "What does Over 2.5 mean?",
@@ -125,10 +117,10 @@ export const STAT_PAGE_SEO = {
     intro:
       "These fixtures are filtered for goal potential using combined scoring averages and market information, giving you a shortlist of matches to research for Over 2.5 and goal-heavy outcomes.",
     relatedLinks: [
-      { label: "Over 2.5 teams", href: "/o25/" },
-      { label: "Highest scoring leagues", href: "/highest-scoring-leagues/" },
-      { label: "BTTS fixtures", href: "/bttsfixtures/" },
-      { label: "Upcoming fixtures", href: "/fixtures/" },
+      HUB_LINKS.btts,
+      HUB_LINKS.leagues,
+      HUB_LINKS.fixtures,
+      HUB_LINKS.methodology,
     ],
     faqItems: [
       {
@@ -139,7 +131,7 @@ export const STAT_PAGE_SEO = {
       {
         question: "Is this the same as an Over 2.5 prediction?",
         answer:
-          "It is a research shortlist rather than a guarantee. The individual match page gives deeper form and prediction context.",
+          "It is a research shortlist rather than a guarantee. League scoring rates and the methodology page give the wider context.",
       },
       {
         question: "Why is average goals shown?",
@@ -152,12 +144,7 @@ export const STAT_PAGE_SEO = {
     canonicalPath: "/highest-scoring-leagues/",
     intro:
       "Compare high-scoring football leagues by goals per match and the percentage of fixtures finishing over 2.5 goals. Use this table to find competitions where open, goal-heavy matches are most common.",
-    relatedLinks: [
-      { label: "Over 2.5 teams", href: "/o25/" },
-      { label: "Over 2.5 fixtures", href: "/fixtureshigh/" },
-      { label: "Under 2.5 leagues", href: "/u25/" },
-      { label: "BTTS teams", href: "/bttsteams/" },
-    ],
+    relatedLinks: [HUB_LINKS.goals, HUB_LINKS.btts, HUB_LINKS.competitions],
     faqItems: [
       {
         question: "Which leagues are highest scoring?",
@@ -180,12 +167,7 @@ export const STAT_PAGE_SEO = {
     canonicalPath: "/btts-no-teams/",
     intro:
       "Find teams with lower Both Teams To Score rates, useful for BTTS No, clean sheet and low-scoring match research. Teams are filtered for a meaningful sample of completed matches.",
-    relatedLinks: [
-      { label: "BTTS teams", href: "/bttsteams/" },
-      { label: "Under 2.5 leagues", href: "/u25/" },
-      { label: "BTTS fixtures", href: "/bttsfixtures/" },
-      { label: "Competitions", href: "/competitions/" },
-    ],
+    relatedLinks: [HUB_LINKS.btts, HUB_LINKS.leagues, HUB_LINKS.competitions],
     faqItems: [
       {
         question: "What is BTTS No?",

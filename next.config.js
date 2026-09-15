@@ -11,62 +11,28 @@ const nextConfig = {
   // manages its own roots, so keep it off to match the previous CRA behaviour.
   reactStrictMode: false,
   async redirects() {
+    const slashPairs = (source, destination) => [
+      { source, destination, permanent: true },
+      { source: `${source}/`, destination, permanent: true },
+    ];
+
     return [
-      {
-        source: "/seasonpreviews",
-        destination: "/premier-league-2026-27/",
-        permanent: true,
-      },
-      {
-        source: "/seasonpreviews/",
-        destination: "/premier-league-2026-27/",
-        permanent: true,
-      },
-      {
-        source: "/worldcup2026",
-        destination: "/articles/world-cup-2026-awards/",
-        permanent: true,
-      },
-      {
-        source: "/worldcup2026/",
-        destination: "/articles/world-cup-2026-awards/",
-        permanent: true,
-      },
-      {
-        source: "/teamshigh",
-        destination: "/o25/",
-        permanent: true,
-      },
-      {
-        source: "/competition/world-cup-europe-qualifiers",
-        destination: "/competitions/",
-        permanent: true,
-      },
-      {
-        source: "/competition/world-cup-europe-qualifiers/",
-        destination: "/competitions/",
-        permanent: true,
-      },
-      {
-        source: "/competition/world-cup-south-america-qualifiers",
-        destination: "/competitions/",
-        permanent: true,
-      },
-      {
-        source: "/competition/world-cup-south-america-qualifiers/",
-        destination: "/competitions/",
-        permanent: true,
-      },
-      {
-        source: "/competition/world-cup-2026",
-        destination: "/competitions/",
-        permanent: true,
-      },
-      {
-        source: "/competition/world-cup-2026/",
-        destination: "/competitions/",
-        permanent: true,
-      },
+      ...slashPairs("/seasonpreviews", "/premier-league-2026-27/"),
+      ...slashPairs("/worldcup2026", "/articles/world-cup-2026-awards/"),
+      ...slashPairs("/teamshigh", "/fixtureshigh/"),
+      ...slashPairs("/o25", "/fixtureshigh/"),
+      ...slashPairs("/u25", "/highest-scoring-leagues/"),
+      ...slashPairs("/bttsteams", "/bttsfixtures/"),
+      ...slashPairs("/btts-no-teams", "/bttsfixtures/"),
+      ...slashPairs(
+        "/competition/world-cup-europe-qualifiers",
+        "/competitions/"
+      ),
+      ...slashPairs(
+        "/competition/world-cup-south-america-qualifiers",
+        "/competitions/"
+      ),
+      ...slashPairs("/competition/world-cup-2026", "/competitions/"),
     ];
   },
 };

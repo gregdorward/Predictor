@@ -127,7 +127,7 @@ export default function FaqPage() {
             {" · "}
             <a href="/bttsfixtures/">BTTS fixtures</a>
             {" · "}
-            <a href="/o25/">Over 2.5 teams</a>
+            <a href="/fixtureshigh/">Over 2.5 fixtures</a>
           </p>
         </main>
       </SiteHeader>
