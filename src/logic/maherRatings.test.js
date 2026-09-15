@@ -72,4 +72,32 @@ describe("maherRatings", () => {
     expect(λ).not.toBeNull();
     expect(λ.home).toBeGreaterThan(λ.away);
   });
+
+  test("maher_gamma uses one μ with home-only γ", () => {
+    const split = maherLambdas({
+      allLeagueResults,
+      leagueId,
+      asOfUnix: 1_700_300_000,
+      homeTeam: "Alpha",
+      awayTeam: "Beta",
+      averageGoalsHome: 1.4,
+      averageGoalsAway: 1.1,
+      averageGoalsPerTeam: 1.25,
+      homeAdvMode: "split",
+    });
+    const gamma = maherLambdas({
+      allLeagueResults,
+      leagueId,
+      asOfUnix: 1_700_300_000,
+      homeTeam: "Alpha",
+      awayTeam: "Beta",
+      averageGoalsHome: 1.4,
+      averageGoalsAway: 1.1,
+      averageGoalsPerTeam: 1.25,
+      homeAdvMode: "gamma",
+    });
+    expect(gamma.gamma).toBeCloseTo(1.4 / 1.25, 5);
+    // Away baseline is shared μ (1.25), not the lower away avg (1.1)
+    expect(gamma.away).toBeGreaterThan(split.away);
+  });
 });

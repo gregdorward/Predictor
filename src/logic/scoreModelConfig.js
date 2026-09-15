@@ -97,6 +97,7 @@ export const SCORE_XPTS_MODE = "band";
  * - loglinear: log(μ) + weighted log-ratios of xG / SOT features (shrunk)
  * - xg_primary: blend of team npxG and opponent npxGA; mild finishing pull only
  * - additive: Maher ratings combined as μ·(att+def−1) instead of μ·att·def
+ * - maher_gamma: Maher with one shared μ and a single home γ (not split H/A μ)
  *
  * Locked to maher after Jul–Sep 2026 holdout (+0.97pp ROI vs legacy).
  */
@@ -408,6 +409,7 @@ export function setScoreLambdaEngine(value) {
     .toLowerCase();
   if (
     key === "maher" ||
+    key === "maher_gamma" ||
     key === "loglinear" ||
     key === "xg_primary" ||
     key === "additive" ||

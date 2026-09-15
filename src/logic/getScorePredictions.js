@@ -2909,10 +2909,12 @@ export async function generateGoals(homeForm, awayForm, match) {
   }
 
   const lambdaEngine = getScoreLambdaEngine();
-  const useMaher = lambdaEngine === "maher";
+  const useMaher = lambdaEngine === "maher" || lambdaEngine === "maher_gamma";
   const useLogLinear = lambdaEngine === "loglinear";
   const useXgPrimary = lambdaEngine === "xg_primary";
   const useAdditive = lambdaEngine === "additive";
+  const maherHomeAdvMode =
+    lambdaEngine === "maher_gamma" ? "gamma" : "split";
 
   // Rating / feature engines use league H/A μ only. Legacy still blends a
   // slice of team venue scoring form into the baseline.
@@ -3023,7 +3025,9 @@ export async function generateGoals(homeForm, awayForm, match) {
       awayTeam: match.awayTeam,
       averageGoalsHome,
       averageGoalsAway,
+      averageGoalsPerTeam,
       neutralVenue,
+      homeAdvMode: useAdditive ? "split" : maherHomeAdvMode,
     });
     if (fitted) {
       homeLambda_rawOverall = fitted.home;

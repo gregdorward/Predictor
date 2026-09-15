@@ -132,7 +132,13 @@ function lookupTeam(byTeam, teamName) {
 
 /**
  * Build home/away λ from Maher ratings.
- * @returns {{ home: number, away: number, attHome: number, defHome: number, attAway: number, defAway: number } | null}
+ *
+ * homeAdvMode:
+ * - split (default): λ = μ_venue × att × def (separate league home/away μ)
+ * - gamma: one shared μ; home only multiplied by γ = μ_home / μ
+ * - none: shared μ, no home boost
+ *
+ * @returns {{ home: number, away: number, attHome: number, defHome: number, attAway: number, defAway: number, gamma?: number } | null}
  */
 export function maherLambdas({
   allLeagueResults,
@@ -142,7 +148,9 @@ export function maherLambdas({
   awayTeam,
   averageGoalsHome,
   averageGoalsAway,
+  averageGoalsPerTeam = null,
   neutralVenue = false,
+  homeAdvMode = "split",
 }) {
   const fitted = fitMaherRatings(allLeagueResults, leagueId, asOfUnix);
   if (!fitted?.byTeam?.size) return null;
@@ -156,13 +164,49 @@ export function maherLambdas({
   const attAway = away?.att ?? 1;
   const defAway = away?.def ?? 1;
 
+  const mode = String(homeAdvMode || "split").toLowerCase();
+
+  if (neutralVenue || mode === "none") {
+    const mu = finitePositive(
+      averageGoalsPerTeam,
+      finitePositive(
+        (Number(averageGoalsHome) + Number(averageGoalsAway)) / 2,
+        fitted.mu
+      )
+    );
+    return {
+      home: Math.max(0.05, mu * attHome * defAway),
+      away: Math.max(0.05, mu * attAway * defHome),
+      attHome,
+      defHome,
+      attAway,
+      defAway,
+      gamma: 1,
+    };
+  }
+
+  if (mode === "gamma") {
+    const muHome = finitePositive(averageGoalsHome, fitted.mu * 1.1);
+    const muAway = finitePositive(averageGoalsAway, fitted.mu * 0.9);
+    const mu = finitePositive(
+      averageGoalsPerTeam,
+      (muHome + muAway) / 2
+    );
+    const gamma = mu > 0 ? muHome / mu : 1;
+    return {
+      home: Math.max(0.05, mu * attHome * defAway * gamma),
+      away: Math.max(0.05, mu * attAway * defHome),
+      attHome,
+      defHome,
+      attAway,
+      defAway,
+      gamma,
+    };
+  }
+
+  // split: separate venue baselines
   let muHome = finitePositive(averageGoalsHome, fitted.mu);
   let muAway = finitePositive(averageGoalsAway, fitted.mu);
-  if (neutralVenue) {
-    const mid = (muHome + muAway) / 2;
-    muHome = mid;
-    muAway = mid;
-  }
 
   return {
     home: Math.max(0.05, muHome * attHome * defAway),
@@ -171,5 +215,6 @@ export function maherLambdas({
     defHome,
     attAway,
     defAway,
+    gamma: muAway > 0 ? muHome / muAway : 1,
   };
 }
