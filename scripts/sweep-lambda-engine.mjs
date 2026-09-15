@@ -16,7 +16,7 @@ const projectRoot = resolve(__dirname, "..");
 
 const VARIANTS = [
   { id: "maher", label: "SCORE_LAMBDA_ENGINE=maher", env: { SCORE_LAMBDA_ENGINE: "maher" } },
-  { id: "xg_primary", label: "SCORE_LAMBDA_ENGINE=xg_primary", env: { SCORE_LAMBDA_ENGINE: "xg_primary" } },
+  { id: "additive", label: "SCORE_LAMBDA_ENGINE=additive", env: { SCORE_LAMBDA_ENGINE: "additive" } },
 ];
 
 function parseArgs(argv) {

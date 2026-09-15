@@ -77,6 +77,7 @@ import {
 import { maherLambdas } from "./maherRatings.js";
 import { logLinearLambdas } from "./logLinearLambda.js";
 import { xgPrimaryLambdas } from "./xgPrimaryLambda.js";
+import { additiveLambdas } from "./additiveLambda.js";
 
 export {
   CLEAR_OUTCOME_MARGIN,
@@ -2911,10 +2912,11 @@ export async function generateGoals(homeForm, awayForm, match) {
   const useMaher = lambdaEngine === "maher";
   const useLogLinear = lambdaEngine === "loglinear";
   const useXgPrimary = lambdaEngine === "xg_primary";
+  const useAdditive = lambdaEngine === "additive";
 
   // Rating / feature engines use league H/A μ only. Legacy still blends a
   // slice of team venue scoring form into the baseline.
-  if (!useMaher && !useLogLinear && !useXgPrimary) {
+  if (!useMaher && !useLogLinear && !useXgPrimary && !useAdditive) {
     averageGoalsHome = blendWithVenueForm(
       averageGoalsHome,
       homeForm.avgScoredHome ?? homeForm.avgScored,
@@ -3011,8 +3013,9 @@ export async function generateGoals(homeForm, awayForm, match) {
   let homeLambda_rawOverall;
   let awayLambda_rawOverall;
 
-  if (useMaher) {
-    const maher = maherLambdas({
+  if (useMaher || useAdditive) {
+    const ratingsFn = useAdditive ? additiveLambdas : maherLambdas;
+    const fitted = ratingsFn({
       allLeagueResults: allLeagueResultsArrayOfObjects,
       leagueId: match.leagueID,
       asOfUnix: match.date,
@@ -3022,13 +3025,13 @@ export async function generateGoals(homeForm, awayForm, match) {
       averageGoalsAway,
       neutralVenue,
     });
-    if (maher) {
-      homeLambda_rawOverall = maher.home;
-      awayLambda_rawOverall = maher.away;
-      homeForm.maherAtt = maher.attHome;
-      homeForm.maherDef = maher.defHome;
-      awayForm.maherAtt = maher.attAway;
-      awayForm.maherDef = maher.defAway;
+    if (fitted) {
+      homeLambda_rawOverall = fitted.home;
+      awayLambda_rawOverall = fitted.away;
+      homeForm.maherAtt = fitted.attHome;
+      homeForm.maherDef = fitted.defHome;
+      awayForm.maherAtt = fitted.attAway;
+      awayForm.maherDef = fitted.defAway;
     } else {
       homeLambda_rawOverall = computeLambdaComponent(
         homeAttackStrength,
