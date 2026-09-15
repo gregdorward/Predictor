@@ -76,6 +76,7 @@ import {
 } from "./opponentAdjustedMetrics.js";
 import { maherLambdas } from "./maherRatings.js";
 import { logLinearLambdas } from "./logLinearLambda.js";
+import { xgPrimaryLambdas } from "./xgPrimaryLambda.js";
 
 export {
   CLEAR_OUTCOME_MARGIN,
@@ -2909,10 +2910,11 @@ export async function generateGoals(homeForm, awayForm, match) {
   const lambdaEngine = getScoreLambdaEngine();
   const useMaher = lambdaEngine === "maher";
   const useLogLinear = lambdaEngine === "loglinear";
+  const useXgPrimary = lambdaEngine === "xg_primary";
 
-  // Rating / log-linear engines use league H/A μ only. Legacy still blends a
+  // Rating / feature engines use league H/A μ only. Legacy still blends a
   // slice of team venue scoring form into the baseline.
-  if (!useMaher && !useLogLinear) {
+  if (!useMaher && !useLogLinear && !useXgPrimary) {
     averageGoalsHome = blendWithVenueForm(
       averageGoalsHome,
       homeForm.avgScoredHome ?? homeForm.avgScored,
@@ -3053,6 +3055,16 @@ export async function generateGoals(homeForm, awayForm, match) {
     });
     homeLambda_rawOverall = ll.home;
     awayLambda_rawOverall = ll.away;
+  } else if (useXgPrimary) {
+    const xg = xgPrimaryLambdas({
+      homeForm,
+      awayForm,
+      averageGoalsHome,
+      averageGoalsAway,
+      averageGoalsPerTeam,
+    });
+    homeLambda_rawOverall = xg.home;
+    awayLambda_rawOverall = xg.away;
   } else {
     homeLambda_rawOverall = computeLambdaComponent(
       homeAttackStrength,

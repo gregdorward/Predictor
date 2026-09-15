@@ -138,6 +138,8 @@ describe("lambda weight knobs", () => {
   });
 
   test("applyScoreModelFromEnv reads SCORE_LAMBDA_ENGINE", () => {
+    applyScoreModelFromEnv({ SCORE_LAMBDA_ENGINE: "xg_primary" });
+    expect(getScoreLambdaEngine()).toBe("xg_primary");
     applyScoreModelFromEnv({ SCORE_LAMBDA_ENGINE: "loglinear" });
     expect(getScoreLambdaEngine()).toBe("loglinear");
     applyScoreModelFromEnv({ SCORE_LAMBDA_ENGINE: "maher" });

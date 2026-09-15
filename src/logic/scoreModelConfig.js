@@ -95,6 +95,7 @@ export const SCORE_XPTS_MODE = "band";
  * - legacy: μ × (attack/0.5)^m × (defenceWeakness/0.5)^m
  * - maher: μ × att_team × def_opponent from league-normalised xG/goals rates
  * - loglinear: log(μ) + weighted log-ratios of xG / SOT features (shrunk)
+ * - xg_primary: blend of team npxG and opponent npxGA; mild finishing pull only
  *
  * Locked to maher after Jul–Sep 2026 holdout (+0.97pp ROI vs legacy).
  */
@@ -404,7 +405,7 @@ export function setScoreLambdaEngine(value) {
   const key = String(value || "")
     .trim()
     .toLowerCase();
-  if (key === "maher" || key === "loglinear" || key === "legacy") {
+  if (key === "maher" || key === "loglinear" || key === "xg_primary" || key === "legacy") {
     activeScoreLambdaEngine = key;
     return;
   }
