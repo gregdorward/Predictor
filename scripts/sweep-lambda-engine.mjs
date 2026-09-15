@@ -15,8 +15,8 @@ const __dirname = dirname(fileURLToPath(import.meta.url));
 const projectRoot = resolve(__dirname, "..");
 
 const VARIANTS = [
-  { id: "legacy", label: "SCORE_LAMBDA_ENGINE=legacy", env: { SCORE_LAMBDA_ENGINE: "legacy" } },
   { id: "maher", label: "SCORE_LAMBDA_ENGINE=maher", env: { SCORE_LAMBDA_ENGINE: "maher" } },
+  { id: "loglinear", label: "SCORE_LAMBDA_ENGINE=loglinear", env: { SCORE_LAMBDA_ENGINE: "loglinear" } },
 ];
 
 function parseArgs(argv) {

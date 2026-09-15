@@ -94,6 +94,7 @@ export const SCORE_XPTS_MODE = "band";
  * How expected goals (λ) are built in generateGoals.
  * - legacy: μ × (attack/0.5)^m × (defenceWeakness/0.5)^m
  * - maher: μ × att_team × def_opponent from league-normalised xG/goals rates
+ * - loglinear: log(μ) + weighted log-ratios of xG / SOT features (shrunk)
  *
  * Locked to maher after Jul–Sep 2026 holdout (+0.97pp ROI vs legacy).
  */
@@ -403,7 +404,11 @@ export function setScoreLambdaEngine(value) {
   const key = String(value || "")
     .trim()
     .toLowerCase();
-  activeScoreLambdaEngine = key === "maher" ? "maher" : "legacy";
+  if (key === "maher" || key === "loglinear" || key === "legacy") {
+    activeScoreLambdaEngine = key;
+    return;
+  }
+  activeScoreLambdaEngine = SCORE_LAMBDA_ENGINE;
 }
 
 export function resetLambdaWeightConfig() {

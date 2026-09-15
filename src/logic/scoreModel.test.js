@@ -138,10 +138,12 @@ describe("lambda weight knobs", () => {
   });
 
   test("applyScoreModelFromEnv reads SCORE_LAMBDA_ENGINE", () => {
+    applyScoreModelFromEnv({ SCORE_LAMBDA_ENGINE: "loglinear" });
+    expect(getScoreLambdaEngine()).toBe("loglinear");
     applyScoreModelFromEnv({ SCORE_LAMBDA_ENGINE: "maher" });
     expect(getScoreLambdaEngine()).toBe("maher");
     applyScoreModelFromEnv({ SCORE_LAMBDA_ENGINE: "nope" });
-    expect(getScoreLambdaEngine()).toBe("legacy");
+    expect(getScoreLambdaEngine()).toBe("maher");
   });
 
   test("SCORE_ROLLING_XI >= 1 disables decay", () => {

@@ -75,6 +75,7 @@ import {
   averageFinite,
 } from "./opponentAdjustedMetrics.js";
 import { maherLambdas } from "./maherRatings.js";
+import { logLinearLambdas } from "./logLinearLambda.js";
 
 export {
   CLEAR_OUTCOME_MARGIN,
@@ -2905,11 +2906,13 @@ export async function generateGoals(homeForm, awayForm, match) {
     averageGoalsAway = leagueAvgAway;
   }
 
-  const useMaher = getScoreLambdaEngine() === "maher";
+  const lambdaEngine = getScoreLambdaEngine();
+  const useMaher = lambdaEngine === "maher";
+  const useLogLinear = lambdaEngine === "loglinear";
 
-  // Maher uses league H/A μ only (ratings carry team strength). Legacy still
-  // blends a slice of team venue scoring form into the baseline.
-  if (!useMaher) {
+  // Rating / log-linear engines use league H/A μ only. Legacy still blends a
+  // slice of team venue scoring form into the baseline.
+  if (!useMaher && !useLogLinear) {
     averageGoalsHome = blendWithVenueForm(
       averageGoalsHome,
       homeForm.avgScoredHome ?? homeForm.avgScored,
@@ -3040,6 +3043,16 @@ export async function generateGoals(homeForm, awayForm, match) {
         "away"
       );
     }
+  } else if (useLogLinear) {
+    const ll = logLinearLambdas({
+      homeForm,
+      awayForm,
+      averageGoalsHome,
+      averageGoalsAway,
+      averageGoalsPerTeam,
+    });
+    homeLambda_rawOverall = ll.home;
+    awayLambda_rawOverall = ll.away;
   } else {
     homeLambda_rawOverall = computeLambdaComponent(
       homeAttackStrength,
