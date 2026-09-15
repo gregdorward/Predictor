@@ -16,6 +16,7 @@ import {
   SCORE_XPTS_DRAW_BAND,
   SCORE_XPTS_MODE,
   SCORE_LAMBDA_ENGINE,
+  SCORE_MAHER_RECENT_BLEND,
   applyMaxOutcomeEdgeFromEnv,
   getClearOutcomeMargin,
   getMaxOutcomeEdge,
@@ -37,6 +38,7 @@ import {
   getScoreXptsDrawBand,
   getScoreXptsMode,
   getScoreLambdaEngine,
+  getScoreMaherRecentBlend,
   clampLambdaSignal,
   restHaircutMultiplier,
   sosDampMultiplier,
@@ -109,8 +111,10 @@ describe("lambda weight knobs", () => {
     expect(getScoreXptsDrawBand()).toBe(0.3);
     expect(SCORE_XPTS_MODE).toBe("band");
     expect(getScoreXptsMode()).toBe("band");
-    expect(SCORE_LAMBDA_ENGINE).toBe("maher");
-    expect(getScoreLambdaEngine()).toBe("maher");
+    expect(SCORE_LAMBDA_ENGINE).toBe("maher_recent");
+    expect(getScoreLambdaEngine()).toBe("maher_recent");
+    expect(SCORE_MAHER_RECENT_BLEND).toBe(0.5);
+    expect(getScoreMaherRecentBlend()).toBe(0.5);
   });
 
   test("applyScoreModelFromEnv reads rolling / weighted-xg overrides", () => {
@@ -138,14 +142,14 @@ describe("lambda weight knobs", () => {
   });
 
   test("applyScoreModelFromEnv reads SCORE_LAMBDA_ENGINE", () => {
-    applyScoreModelFromEnv({ SCORE_LAMBDA_ENGINE: "maher_gamma" });
-    expect(getScoreLambdaEngine()).toBe("maher_gamma");
-    applyScoreModelFromEnv({ SCORE_LAMBDA_ENGINE: "additive" });
-    expect(getScoreLambdaEngine()).toBe("additive");
+    applyScoreModelFromEnv({ SCORE_LAMBDA_ENGINE: "maher_recent" });
+    expect(getScoreLambdaEngine()).toBe("maher_recent");
+    applyScoreModelFromEnv({ SCORE_MAHER_RECENT_BLEND: "0.5" });
+    expect(getScoreMaherRecentBlend()).toBe(0.5);
     applyScoreModelFromEnv({ SCORE_LAMBDA_ENGINE: "maher" });
     expect(getScoreLambdaEngine()).toBe("maher");
     applyScoreModelFromEnv({ SCORE_LAMBDA_ENGINE: "nope" });
-    expect(getScoreLambdaEngine()).toBe("maher");
+    expect(getScoreLambdaEngine()).toBe("maher_recent");
   });
 
   test("SCORE_ROLLING_XI >= 1 disables decay", () => {

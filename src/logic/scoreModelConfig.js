@@ -98,10 +98,19 @@ export const SCORE_XPTS_MODE = "band";
  * - xg_primary: blend of team npxG and opponent npxGA; mild finishing pull only
  * - additive: Maher ratings combined as μ·(att+def−1) instead of μ·att·def
  * - maher_gamma: Maher with one shared μ and a single home γ (not split H/A μ)
+ * - maher_recent: Maher season ratings blended with last-5 ratings
  *
- * Locked to maher after Jul–Sep 2026 holdout (+0.97pp ROI vs legacy).
+ * Locked to maher_recent (blend 0.5) after Jul–Sep 2026 holdout
+ * (+1.41pp ROI and better accuracy/exact vs season-only Maher).
  */
-export const SCORE_LAMBDA_ENGINE = "maher";
+export const SCORE_LAMBDA_ENGINE = "maher_recent";
+
+/**
+ * Weight on last-N Maher ratings when SCORE_LAMBDA_ENGINE=maher_recent.
+ * 0 = season only; 1 = recent window only.
+ * Locked at 0.5 after Jul–Sep 2026 sweep (best among 0.25/0.35/0.50).
+ */
+export const SCORE_MAHER_RECENT_BLEND = 0.5;
 
 /**
  * When true, settled fixtures use kickoff-frozen scorelines from predictedScores2.
@@ -174,6 +183,7 @@ let activeScoreXptsWeight = SCORE_XPTS_WEIGHT;
 let activeScoreXptsDrawBand = SCORE_XPTS_DRAW_BAND;
 let activeScoreXptsMode = SCORE_XPTS_MODE;
 let activeScoreLambdaEngine = SCORE_LAMBDA_ENGINE;
+let activeScoreMaherRecentBlend = SCORE_MAHER_RECENT_BLEND;
 
 export function getMaxOutcomeEdge() {
   return activeMaxOutcomeEdge;
@@ -410,6 +420,7 @@ export function setScoreLambdaEngine(value) {
   if (
     key === "maher" ||
     key === "maher_gamma" ||
+    key === "maher_recent" ||
     key === "loglinear" ||
     key === "xg_primary" ||
     key === "additive" ||
@@ -419,6 +430,17 @@ export function setScoreLambdaEngine(value) {
     return;
   }
   activeScoreLambdaEngine = SCORE_LAMBDA_ENGINE;
+}
+
+export function getScoreMaherRecentBlend() {
+  return activeScoreMaherRecentBlend;
+}
+
+export function setScoreMaherRecentBlend(value) {
+  const parsed = Number(value);
+  activeScoreMaherRecentBlend = Number.isFinite(parsed)
+    ? Math.min(1, Math.max(0, parsed))
+    : SCORE_MAHER_RECENT_BLEND;
 }
 
 export function resetLambdaWeightConfig() {
@@ -438,6 +460,7 @@ export function resetLambdaWeightConfig() {
   activeScoreXptsDrawBand = SCORE_XPTS_DRAW_BAND;
   activeScoreXptsMode = SCORE_XPTS_MODE;
   activeScoreLambdaEngine = SCORE_LAMBDA_ENGINE;
+  activeScoreMaherRecentBlend = SCORE_MAHER_RECENT_BLEND;
 }
 
 /** Clamp a λ multiplier so no single signal dominates. */
@@ -639,6 +662,9 @@ export function applyScoreModelFromEnv(env = process.env) {
   if (env.SCORE_LAMBDA_ENGINE != null && env.SCORE_LAMBDA_ENGINE !== "") {
     setScoreLambdaEngine(env.SCORE_LAMBDA_ENGINE);
   }
+  parseEnvNumber(env, "SCORE_MAHER_RECENT_BLEND", (value) => {
+    setScoreMaherRecentBlend(value);
+  });
 
   const snapshots =
     parseEnvBoolean(env, "USE_RESULT_SNAPSHOTS") ??

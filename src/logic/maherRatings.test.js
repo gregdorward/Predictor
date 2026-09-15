@@ -100,4 +100,32 @@ describe("maherRatings", () => {
     // Away baseline is shared μ (1.25), not the lower away avg (1.1)
     expect(gamma.away).toBeGreaterThan(split.away);
   });
+
+  test("recent blend moves ratings toward last-5 window", () => {
+    const season = maherLambdas({
+      allLeagueResults,
+      leagueId,
+      asOfUnix: 1_700_300_000,
+      homeTeam: "Alpha",
+      awayTeam: "Gamma",
+      averageGoalsHome: 1.4,
+      averageGoalsAway: 1.1,
+      recentBlend: 0,
+    });
+    const blended = maherLambdas({
+      allLeagueResults,
+      leagueId,
+      asOfUnix: 1_700_300_000,
+      homeTeam: "Alpha",
+      awayTeam: "Gamma",
+      averageGoalsHome: 1.4,
+      averageGoalsAway: 1.1,
+      recentBlend: 1,
+      recentGames: 1,
+    });
+    expect(season).not.toBeNull();
+    expect(blended).not.toBeNull();
+    // Full recent weight on last game only should differ from full season
+    expect(blended.attHome).not.toBeCloseTo(season.attHome, 5);
+  });
 });

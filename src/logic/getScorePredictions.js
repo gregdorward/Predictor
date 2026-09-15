@@ -55,6 +55,7 @@ import {
   getScoreXptsDrawBand,
   getScoreXptsMode,
   getScoreLambdaEngine,
+  getScoreMaherRecentBlend,
 } from "./scoreModelConfig.js";
 import {
   computeGoalEfficiency,
@@ -2909,12 +2910,17 @@ export async function generateGoals(homeForm, awayForm, match) {
   }
 
   const lambdaEngine = getScoreLambdaEngine();
-  const useMaher = lambdaEngine === "maher" || lambdaEngine === "maher_gamma";
+  const useMaher =
+    lambdaEngine === "maher" ||
+    lambdaEngine === "maher_gamma" ||
+    lambdaEngine === "maher_recent";
   const useLogLinear = lambdaEngine === "loglinear";
   const useXgPrimary = lambdaEngine === "xg_primary";
   const useAdditive = lambdaEngine === "additive";
   const maherHomeAdvMode =
     lambdaEngine === "maher_gamma" ? "gamma" : "split";
+  const maherRecentBlend =
+    lambdaEngine === "maher_recent" ? getScoreMaherRecentBlend() : 0;
 
   // Rating / feature engines use league H/A μ only. Legacy still blends a
   // slice of team venue scoring form into the baseline.
@@ -3028,6 +3034,8 @@ export async function generateGoals(homeForm, awayForm, match) {
       averageGoalsPerTeam,
       neutralVenue,
       homeAdvMode: useAdditive ? "split" : maherHomeAdvMode,
+      recentBlend: useAdditive ? 0 : maherRecentBlend,
+      recentGames: 5,
     });
     if (fitted) {
       homeLambda_rawOverall = fitted.home;

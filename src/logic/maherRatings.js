@@ -49,10 +49,20 @@ function shrinkToOne(value, games, fullSample = 8) {
  * @param {object[]} allLeagueResults
  * @param {number|string} leagueId
  * @param {number} asOfUnix seconds
+ * @param {{ maxGamesPerTeam?: number|null }} [options]
  * @returns {{ byTeam: Map<string, { att: number, def: number, games: number }>, mu: number }}
  */
-export function fitMaherRatings(allLeagueResults, leagueId, asOfUnix) {
-  const cacheKey = `${leagueId}:${dayKey(asOfUnix)}`;
+export function fitMaherRatings(
+  allLeagueResults,
+  leagueId,
+  asOfUnix,
+  { maxGamesPerTeam = null } = {}
+) {
+  const cap =
+    Number.isFinite(Number(maxGamesPerTeam)) && Number(maxGamesPerTeam) > 0
+      ? Math.round(Number(maxGamesPerTeam))
+      : null;
+  const cacheKey = `${leagueId}:${dayKey(asOfUnix)}:${cap ?? "all"}`;
   if (ratingCache.has(cacheKey)) {
     return ratingCache.get(cacheKey);
   }
@@ -61,16 +71,14 @@ export function fitMaherRatings(allLeagueResults, leagueId, asOfUnix) {
   const asOf = Number(asOfUnix);
   const cutoff = Number.isFinite(asOf) && asOf > 0 ? asOf - 86400 : Infinity;
 
-  /** @type {Map<string, { gf: number, ga: number, games: number }>} */
-  const totals = new Map();
+  /** @type {Map<string, { gf: number, ga: number, date: number }[]>} */
+  const gamesByTeam = new Map();
 
-  const bump = (name, gf, ga) => {
+  const pushGame = (name, gf, ga, date) => {
     if (!name) return;
-    const cur = totals.get(name) || { gf: 0, ga: 0, games: 0 };
-    cur.gf += gf;
-    cur.ga += ga;
-    cur.games += 1;
-    totals.set(name, cur);
+    const list = gamesByTeam.get(name) || [];
+    list.push({ gf, ga, date });
+    gamesByTeam.set(name, list);
   };
 
   for (const fixture of fixtures) {
@@ -82,8 +90,22 @@ export function fitMaherRatings(allLeagueResults, leagueId, asOfUnix) {
     const awayName = fixture.away_name;
     const homeXg = resolveTeamXg(fixture.team_a_xg, fixture.homeGoalCount);
     const awayXg = resolveTeamXg(fixture.team_b_xg, fixture.awayGoalCount);
-    bump(homeName, homeXg, awayXg);
-    bump(awayName, awayXg, homeXg);
+    pushGame(homeName, homeXg, awayXg, dateUnix);
+    pushGame(awayName, awayXg, homeXg, dateUnix);
+  }
+
+  /** @type {Map<string, { gf: number, ga: number, games: number }>} */
+  const totals = new Map();
+  for (const [name, games] of gamesByTeam.entries()) {
+    const ordered = [...games].sort((a, b) => b.date - a.date);
+    const window = cap != null ? ordered.slice(0, cap) : ordered;
+    const row = { gf: 0, ga: 0, games: 0 };
+    for (const g of window) {
+      row.gf += g.gf;
+      row.ga += g.ga;
+      row.games += 1;
+    }
+    totals.set(name, row);
   }
 
   let sumAtt = 0;
@@ -99,6 +121,7 @@ export function fitMaherRatings(allLeagueResults, leagueId, asOfUnix) {
   const meanAtt = teamCount > 0 ? sumAtt / teamCount : 1.25;
   const meanDef = teamCount > 0 ? sumDef / teamCount : 1.25;
   const mu = (meanAtt + meanDef) / 2;
+  const shrinkFull = cap != null ? Math.max(3, cap) : 8;
 
   /** @type {Map<string, { att: number, def: number, games: number }>} */
   const byTeam = new Map();
@@ -106,8 +129,8 @@ export function fitMaherRatings(allLeagueResults, leagueId, asOfUnix) {
     const rawAtt = meanAtt > 0 ? row.gf / row.games / meanAtt : 1;
     const rawDef = meanDef > 0 ? row.ga / row.games / meanDef : 1;
     byTeam.set(name, {
-      att: shrinkToOne(rawAtt, row.games),
-      def: shrinkToOne(rawDef, row.games),
+      att: shrinkToOne(rawAtt, row.games, shrinkFull),
+      def: shrinkToOne(rawDef, row.games, shrinkFull),
       games: row.games,
     });
   }
@@ -130,6 +153,13 @@ function lookupTeam(byTeam, teamName) {
   return null;
 }
 
+function blendRating(seasonVal, recentVal, blend) {
+  const b = Math.min(1, Math.max(0, Number(blend) || 0));
+  const s = Number.isFinite(Number(seasonVal)) ? Number(seasonVal) : 1;
+  const r = Number.isFinite(Number(recentVal)) ? Number(recentVal) : s;
+  return (1 - b) * s + b * r;
+}
+
 /**
  * Build home/away λ from Maher ratings.
  *
@@ -137,6 +167,8 @@ function lookupTeam(byTeam, teamName) {
  * - split (default): λ = μ_venue × att × def (separate league home/away μ)
  * - gamma: one shared μ; home only multiplied by γ = μ_home / μ
  * - none: shared μ, no home boost
+ *
+ * recentBlend ∈ [0,1]: mix season ratings with last-`recentGames` ratings.
  *
  * @returns {{ home: number, away: number, attHome: number, defHome: number, attAway: number, defAway: number, gamma?: number } | null}
  */
@@ -151,18 +183,35 @@ export function maherLambdas({
   averageGoalsPerTeam = null,
   neutralVenue = false,
   homeAdvMode = "split",
+  recentBlend = 0,
+  recentGames = 5,
 }) {
   const fitted = fitMaherRatings(allLeagueResults, leagueId, asOfUnix);
   if (!fitted?.byTeam?.size) return null;
+
+  const blend = Math.min(1, Math.max(0, Number(recentBlend) || 0));
+  let recentFitted = null;
+  if (blend > 0) {
+    recentFitted = fitMaherRatings(allLeagueResults, leagueId, asOfUnix, {
+      maxGamesPerTeam: recentGames,
+    });
+  }
 
   const home = lookupTeam(fitted.byTeam, homeTeam);
   const away = lookupTeam(fitted.byTeam, awayTeam);
   if (!home && !away) return null;
 
-  const attHome = home?.att ?? 1;
-  const defHome = home?.def ?? 1;
-  const attAway = away?.att ?? 1;
-  const defAway = away?.def ?? 1;
+  const homeRecent = recentFitted
+    ? lookupTeam(recentFitted.byTeam, homeTeam)
+    : null;
+  const awayRecent = recentFitted
+    ? lookupTeam(recentFitted.byTeam, awayTeam)
+    : null;
+
+  const attHome = blendRating(home?.att ?? 1, homeRecent?.att, blend);
+  const defHome = blendRating(home?.def ?? 1, homeRecent?.def, blend);
+  const attAway = blendRating(away?.att ?? 1, awayRecent?.att, blend);
+  const defAway = blendRating(away?.def ?? 1, awayRecent?.def, blend);
 
   const mode = String(homeAdvMode || "split").toLowerCase();
 

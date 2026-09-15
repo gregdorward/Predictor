@@ -16,7 +16,21 @@ const projectRoot = resolve(__dirname, "..");
 
 const VARIANTS = [
   { id: "maher", label: "SCORE_LAMBDA_ENGINE=maher", env: { SCORE_LAMBDA_ENGINE: "maher" } },
-  { id: "maher_gamma", label: "SCORE_LAMBDA_ENGINE=maher_gamma", env: { SCORE_LAMBDA_ENGINE: "maher_gamma" } },
+  {
+    id: "recent25",
+    label: "maher_recent blend=0.25",
+    env: { SCORE_LAMBDA_ENGINE: "maher_recent", SCORE_MAHER_RECENT_BLEND: "0.25" },
+  },
+  {
+    id: "recent35",
+    label: "maher_recent blend=0.35",
+    env: { SCORE_LAMBDA_ENGINE: "maher_recent", SCORE_MAHER_RECENT_BLEND: "0.35" },
+  },
+  {
+    id: "recent50",
+    label: "maher_recent blend=0.50",
+    env: { SCORE_LAMBDA_ENGINE: "maher_recent", SCORE_MAHER_RECENT_BLEND: "0.5" },
+  },
 ];
 
 function parseArgs(argv) {
