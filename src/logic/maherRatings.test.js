@@ -129,6 +129,34 @@ describe("maherRatings", () => {
     expect(blended.attHome).not.toBeCloseTo(season.attHome, 5);
   });
 
+  test("lastGameBlend pulls further toward last-1 ratings", () => {
+    const season = maherLambdas({
+      allLeagueResults,
+      leagueId,
+      asOfUnix: 1_700_300_000,
+      homeTeam: "Alpha",
+      awayTeam: "Gamma",
+      averageGoalsHome: 1.4,
+      averageGoalsAway: 1.1,
+      recentBlend: 0,
+      lastGameBlend: 0,
+    });
+    const lastOnly = maherLambdas({
+      allLeagueResults,
+      leagueId,
+      asOfUnix: 1_700_300_000,
+      homeTeam: "Alpha",
+      awayTeam: "Gamma",
+      averageGoalsHome: 1.4,
+      averageGoalsAway: 1.1,
+      recentBlend: 0,
+      lastGameBlend: 1,
+    });
+    expect(season).not.toBeNull();
+    expect(lastOnly).not.toBeNull();
+    expect(lastOnly.attHome).not.toBeCloseTo(season.attHome, 5);
+  });
+
   test("npxg rate source deducts penalty xG from ratings input", () => {
     const withPens = [
       {

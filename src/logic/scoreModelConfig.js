@@ -137,6 +137,12 @@ export const SCORE_MAHER_RATE_SOURCE = "npxg";
 export const SCORE_MAHER_ITERS = 0;
 
 /**
+ * Extra pull toward last-1-game Maher ratings after season/recent blend.
+ * 0 = off. Locked at 0 after Jul–Sep 2026: 0.10/0.15/0.25 all lost ROI.
+ */
+export const SCORE_MAHER_LAST_GAME_BLEND = 0;
+
+/**
  * Blend weight of de-vigged bookie 1X2 into model outcome probabilities.
  * 0 = pure model; 1 = pure market. Does not change λ.
  * Locked at 0.25 after Jul–Sep 2026: Brier 0.627 vs 0.638, ROI still +1.09%.
@@ -218,6 +224,7 @@ let activeScoreMaherRecentBlend = SCORE_MAHER_RECENT_BLEND;
 let activeScoreMaherRecentGames = SCORE_MAHER_RECENT_GAMES;
 let activeScoreMaherRateSource = SCORE_MAHER_RATE_SOURCE;
 let activeScoreMaherIters = SCORE_MAHER_ITERS;
+let activeScoreMaherLastGameBlend = SCORE_MAHER_LAST_GAME_BLEND;
 let activeScoreOddsBlend = SCORE_ODDS_BLEND;
 
 export function getMaxOutcomeEdge() {
@@ -524,6 +531,17 @@ export function setScoreMaherIters(value) {
   activeScoreMaherIters = SCORE_MAHER_ITERS;
 }
 
+export function getScoreMaherLastGameBlend() {
+  return activeScoreMaherLastGameBlend;
+}
+
+export function setScoreMaherLastGameBlend(value) {
+  const parsed = Number(value);
+  activeScoreMaherLastGameBlend = Number.isFinite(parsed)
+    ? Math.min(1, Math.max(0, parsed))
+    : SCORE_MAHER_LAST_GAME_BLEND;
+}
+
 export function getScoreOddsBlend() {
   return activeScoreOddsBlend;
 }
@@ -556,6 +574,7 @@ export function resetLambdaWeightConfig() {
   activeScoreMaherRecentGames = SCORE_MAHER_RECENT_GAMES;
   activeScoreMaherRateSource = SCORE_MAHER_RATE_SOURCE;
   activeScoreMaherIters = SCORE_MAHER_ITERS;
+  activeScoreMaherLastGameBlend = SCORE_MAHER_LAST_GAME_BLEND;
   activeScoreOddsBlend = SCORE_ODDS_BLEND;
 }
 
@@ -769,6 +788,9 @@ export function applyScoreModelFromEnv(env = process.env) {
   }
   parseEnvNumber(env, "SCORE_MAHER_ITERS", (value) => {
     setScoreMaherIters(value);
+  });
+  parseEnvNumber(env, "SCORE_MAHER_LAST_GAME_BLEND", (value) => {
+    setScoreMaherLastGameBlend(value);
   });
   parseEnvNumber(env, "SCORE_ODDS_BLEND", (value) => {
     setScoreOddsBlend(value);

@@ -295,6 +295,7 @@ function blendRating(seasonVal, recentVal, blend) {
  * - none: shared μ, no home boost
  *
  * recentBlend ∈ [0,1]: mix season ratings with last-`recentGames` ratings.
+ * lastGameBlend ∈ [0,1]: after that, pull further toward last-1-game ratings.
  * rateSource: xg | npxg | goals | mix (0.7·npxG + 0.3·goals).
  * iters: opponent-adjusted Maher fixed-point iterations (0 = mean rates only).
  *
@@ -313,6 +314,7 @@ export function maherLambdas({
   homeAdvMode = "split",
   recentBlend = 0,
   recentGames = 5,
+  lastGameBlend = 0,
   rateSource = "xg",
   iters = 0,
 }) {
@@ -325,10 +327,20 @@ export function maherLambdas({
   if (!fitted?.byTeam?.size) return null;
 
   const blend = Math.min(1, Math.max(0, Number(recentBlend) || 0));
+  const lastBlend = Math.min(1, Math.max(0, Number(lastGameBlend) || 0));
   let recentFitted = null;
   if (blend > 0) {
     recentFitted = fitMaherRatings(allLeagueResults, leagueId, asOfUnix, {
       maxGamesPerTeam: recentGames,
+      rateSource: source,
+      iters: nIters,
+    });
+  }
+
+  let lastFitted = null;
+  if (lastBlend > 0) {
+    lastFitted = fitMaherRatings(allLeagueResults, leagueId, asOfUnix, {
+      maxGamesPerTeam: 1,
       rateSource: source,
       iters: nIters,
     });
@@ -344,11 +356,21 @@ export function maherLambdas({
   const awayRecent = recentFitted
     ? lookupTeam(recentFitted.byTeam, awayTeam)
     : null;
+  const homeLast = lastFitted
+    ? lookupTeam(lastFitted.byTeam, homeTeam)
+    : null;
+  const awayLast = lastFitted
+    ? lookupTeam(lastFitted.byTeam, awayTeam)
+    : null;
 
-  const attHome = blendRating(home?.att ?? 1, homeRecent?.att, blend);
-  const defHome = blendRating(home?.def ?? 1, homeRecent?.def, blend);
-  const attAway = blendRating(away?.att ?? 1, awayRecent?.att, blend);
-  const defAway = blendRating(away?.def ?? 1, awayRecent?.def, blend);
+  let attHome = blendRating(home?.att ?? 1, homeRecent?.att, blend);
+  let defHome = blendRating(home?.def ?? 1, homeRecent?.def, blend);
+  let attAway = blendRating(away?.att ?? 1, awayRecent?.att, blend);
+  let defAway = blendRating(away?.def ?? 1, awayRecent?.def, blend);
+  attHome = blendRating(attHome, homeLast?.att, lastBlend);
+  defHome = blendRating(defHome, homeLast?.def, lastBlend);
+  attAway = blendRating(attAway, awayLast?.att, lastBlend);
+  defAway = blendRating(defAway, awayLast?.def, lastBlend);
 
   const mode = String(homeAdvMode || "split").toLowerCase();
 
