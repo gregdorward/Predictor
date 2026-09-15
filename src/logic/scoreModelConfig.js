@@ -91,6 +91,15 @@ export const SCORE_XPTS_DRAW_BAND = 0.3;
 export const SCORE_XPTS_MODE = "band";
 
 /**
+ * How expected goals (λ) are built in generateGoals.
+ * - legacy: μ × (attack/0.5)^m × (defenceWeakness/0.5)^m
+ * - maher: μ × att_team × def_opponent from league-normalised xG/goals rates
+ *
+ * Locked to maher after Jul–Sep 2026 holdout (+0.97pp ROI vs legacy).
+ */
+export const SCORE_LAMBDA_ENGINE = "maher";
+
+/**
  * When true, settled fixtures use kickoff-frozen scorelines from predictedScores2.
  * When false, scorelines always follow the live model (backtest and site).
  */
@@ -160,6 +169,7 @@ let activeScoreOppAdjMetrics = SCORE_OPP_ADJ_METRICS;
 let activeScoreXptsWeight = SCORE_XPTS_WEIGHT;
 let activeScoreXptsDrawBand = SCORE_XPTS_DRAW_BAND;
 let activeScoreXptsMode = SCORE_XPTS_MODE;
+let activeScoreLambdaEngine = SCORE_LAMBDA_ENGINE;
 
 export function getMaxOutcomeEdge() {
   return activeMaxOutcomeEdge;
@@ -385,6 +395,17 @@ export function setScoreXptsMode(value) {
   activeScoreXptsMode = key === "poisson" ? "poisson" : "band";
 }
 
+export function getScoreLambdaEngine() {
+  return activeScoreLambdaEngine;
+}
+
+export function setScoreLambdaEngine(value) {
+  const key = String(value || "")
+    .trim()
+    .toLowerCase();
+  activeScoreLambdaEngine = key === "maher" ? "maher" : "legacy";
+}
+
 export function resetLambdaWeightConfig() {
   activeVenueFormWeight = VENUE_FORM_WEIGHT;
   activeScoreXgDamp = SCORE_XG_DAMP;
@@ -401,6 +422,7 @@ export function resetLambdaWeightConfig() {
   activeScoreXptsWeight = SCORE_XPTS_WEIGHT;
   activeScoreXptsDrawBand = SCORE_XPTS_DRAW_BAND;
   activeScoreXptsMode = SCORE_XPTS_MODE;
+  activeScoreLambdaEngine = SCORE_LAMBDA_ENGINE;
 }
 
 /** Clamp a λ multiplier so no single signal dominates. */
@@ -598,6 +620,9 @@ export function applyScoreModelFromEnv(env = process.env) {
   });
   if (env.SCORE_XPTS_MODE != null && env.SCORE_XPTS_MODE !== "") {
     setScoreXptsMode(env.SCORE_XPTS_MODE);
+  }
+  if (env.SCORE_LAMBDA_ENGINE != null && env.SCORE_LAMBDA_ENGINE !== "") {
+    setScoreLambdaEngine(env.SCORE_LAMBDA_ENGINE);
   }
 
   const snapshots =

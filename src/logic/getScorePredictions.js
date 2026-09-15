@@ -54,6 +54,7 @@ import {
   getScoreXptsWeight,
   getScoreXptsDrawBand,
   getScoreXptsMode,
+  getScoreLambdaEngine,
 } from "./scoreModelConfig.js";
 import {
   computeGoalEfficiency,
@@ -73,6 +74,7 @@ import {
   xPtsSeriesFromResults,
   averageFinite,
 } from "./opponentAdjustedMetrics.js";
+import { maherLambdas } from "./maherRatings.js";
 
 export {
   CLEAR_OUTCOME_MARGIN,
@@ -2903,16 +2905,22 @@ export async function generateGoals(homeForm, awayForm, match) {
     averageGoalsAway = leagueAvgAway;
   }
 
-  averageGoalsHome = blendWithVenueForm(
-    averageGoalsHome,
-    homeForm.avgScoredHome ?? homeForm.avgScored,
-    homeForm.gamesPlayed
-  );
-  averageGoalsAway = blendWithVenueForm(
-    averageGoalsAway,
-    awayForm.avgScoredAway ?? awayForm.avgScored,
-    awayForm.gamesPlayed
-  );
+  const useMaher = getScoreLambdaEngine() === "maher";
+
+  // Maher uses league H/A μ only (ratings carry team strength). Legacy still
+  // blends a slice of team venue scoring form into the baseline.
+  if (!useMaher) {
+    averageGoalsHome = blendWithVenueForm(
+      averageGoalsHome,
+      homeForm.avgScoredHome ?? homeForm.avgScored,
+      homeForm.gamesPlayed
+    );
+    averageGoalsAway = blendWithVenueForm(
+      averageGoalsAway,
+      awayForm.avgScoredAway ?? awayForm.avgScored,
+      awayForm.gamesPlayed
+    );
+  }
 
   const BASELINE = 0.5;
 
@@ -2995,22 +3003,60 @@ export async function generateGoals(homeForm, awayForm, match) {
   const oddsComparisonHome = await comparison(match.awayOdds, match.homeOdds);
   const oddsComparisonAway = await comparison(match.homeOdds, match.awayOdds);
 
-  // Overall form
-  const homeLambda_rawOverall = computeLambdaComponent(
-    homeAttackStrength,
-    awayDefenceWeaknessOverall,
-    false,
-    homeForm.gamesPlayed,
-    "home"
-  )
+  let homeLambda_rawOverall;
+  let awayLambda_rawOverall;
 
-  const awayLambda_rawOverall = computeLambdaComponent(
-    awayAttackStrength,
-    homeDefenceWeaknessOverall,
-    false,
-    awayForm.gamesPlayed,
-    "away"
-  )
+  if (useMaher) {
+    const maher = maherLambdas({
+      allLeagueResults: allLeagueResultsArrayOfObjects,
+      leagueId: match.leagueID,
+      asOfUnix: match.date,
+      homeTeam: match.homeTeam,
+      awayTeam: match.awayTeam,
+      averageGoalsHome,
+      averageGoalsAway,
+      neutralVenue,
+    });
+    if (maher) {
+      homeLambda_rawOverall = maher.home;
+      awayLambda_rawOverall = maher.away;
+      homeForm.maherAtt = maher.attHome;
+      homeForm.maherDef = maher.defHome;
+      awayForm.maherAtt = maher.attAway;
+      awayForm.maherDef = maher.defAway;
+    } else {
+      homeLambda_rawOverall = computeLambdaComponent(
+        homeAttackStrength,
+        awayDefenceWeaknessOverall,
+        false,
+        homeForm.gamesPlayed,
+        "home"
+      );
+      awayLambda_rawOverall = computeLambdaComponent(
+        awayAttackStrength,
+        homeDefenceWeaknessOverall,
+        false,
+        awayForm.gamesPlayed,
+        "away"
+      );
+    }
+  } else {
+    homeLambda_rawOverall = computeLambdaComponent(
+      homeAttackStrength,
+      awayDefenceWeaknessOverall,
+      false,
+      homeForm.gamesPlayed,
+      "home"
+    );
+
+    awayLambda_rawOverall = computeLambdaComponent(
+      awayAttackStrength,
+      homeDefenceWeaknessOverall,
+      false,
+      awayForm.gamesPlayed,
+      "away"
+    );
+  }
 
   const ALPHA = 1;
   const LEAGUE_WEIGHT = 1.0 - ALPHA;

@@ -15,6 +15,7 @@ import {
   SCORE_XPTS_WEIGHT,
   SCORE_XPTS_DRAW_BAND,
   SCORE_XPTS_MODE,
+  SCORE_LAMBDA_ENGINE,
   applyMaxOutcomeEdgeFromEnv,
   getClearOutcomeMargin,
   getMaxOutcomeEdge,
@@ -35,6 +36,7 @@ import {
   getScoreXptsWeight,
   getScoreXptsDrawBand,
   getScoreXptsMode,
+  getScoreLambdaEngine,
   clampLambdaSignal,
   restHaircutMultiplier,
   sosDampMultiplier,
@@ -107,6 +109,8 @@ describe("lambda weight knobs", () => {
     expect(getScoreXptsDrawBand()).toBe(0.3);
     expect(SCORE_XPTS_MODE).toBe("band");
     expect(getScoreXptsMode()).toBe("band");
+    expect(SCORE_LAMBDA_ENGINE).toBe("maher");
+    expect(getScoreLambdaEngine()).toBe("maher");
   });
 
   test("applyScoreModelFromEnv reads rolling / weighted-xg overrides", () => {
@@ -131,6 +135,13 @@ describe("lambda weight knobs", () => {
     expect(getScoreXptsWeight()).toBe(0.1);
     expect(getScoreXptsDrawBand()).toBe(0.4);
     expect(getScoreXptsMode()).toBe("poisson");
+  });
+
+  test("applyScoreModelFromEnv reads SCORE_LAMBDA_ENGINE", () => {
+    applyScoreModelFromEnv({ SCORE_LAMBDA_ENGINE: "maher" });
+    expect(getScoreLambdaEngine()).toBe("maher");
+    applyScoreModelFromEnv({ SCORE_LAMBDA_ENGINE: "nope" });
+    expect(getScoreLambdaEngine()).toBe("legacy");
   });
 
   test("SCORE_ROLLING_XI >= 1 disables decay", () => {
