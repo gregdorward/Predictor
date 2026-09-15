@@ -6,6 +6,7 @@ import {
 import {
   resetMaxOutcomeEdge,
   resetScoreMatrixConfig,
+  resetLambdaWeightConfig,
 } from "../src/logic/scoreModelConfig.js";
 import { resetTipFilters } from "../src/logic/tipFilters.js";
 import { runBacktest } from "../src/logic/backtest/runBacktest.js";
@@ -17,6 +18,7 @@ async function main() {
     resetUseResultSnapshots();
     resetMaxOutcomeEdge();
     resetScoreMatrixConfig();
+    resetLambdaWeightConfig();
     resetTipFilters();
     applyScoreModelFromEnv();
     const args = parseBacktestArgs();

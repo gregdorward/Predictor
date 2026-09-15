@@ -33,6 +33,14 @@ import {
   VENUE_FORM_WEIGHT,
   getClearOutcomeMargin,
   getUseResultSnapshots,
+  getVenueFormWeight,
+  getScoreXgDamp,
+  getScoreEfficiency,
+  getScoreFormTrend,
+  getScoreClinical,
+  clampLambdaSignal,
+  restHaircutMultiplier,
+  sosDampMultiplier,
   isContinentalOrInternationalMatch,
   isNeutralVenueMatch,
   CONTINENTAL_ODDS_COMPARISON_FACTOR,
@@ -40,6 +48,12 @@ import {
   resetUseResultSnapshots,
   setUseResultSnapshots,
   applyScoreModelFromEnv,
+  getScoreRollingBoost,
+  getScoreRollingXi,
+  getScoreOppAdjMetrics,
+  getScoreXptsWeight,
+  getScoreXptsDrawBand,
+  getScoreXptsMode,
 } from "./scoreModelConfig.js";
 import {
   computeGoalEfficiency,
@@ -53,12 +67,19 @@ import {
   getBTTSProbability,
   getOverUnderProbability,
 } from "./scoreMatrix.js";
+import {
+  calculateOpponentWeightedAverage,
+  blendRawAndOppAdj,
+  xPtsSeriesFromResults,
+  averageFinite,
+} from "./opponentAdjustedMetrics.js";
 
 export {
   CLEAR_OUTCOME_MARGIN,
   VENUE_FORM_WEIGHT,
   getClearOutcomeMargin,
   getUseResultSnapshots,
+  getVenueFormWeight,
   resetClearOutcomeMargin,
   resetUseResultSnapshots,
   setUseResultSnapshots,
@@ -831,34 +852,139 @@ export let statsArray = {
 }
 
 
-function calculateWeightedXG(recentXG, oppositionPPG, leagueAvgPPG = 1.5) {
-  if (recentXG.length === 0 || recentXG.length !== oppositionPPG.length) {
-    return 0;
+function calculateWeightedXG(recentXG, oppositionPPG, leagueAvgPPG = null) {
+  return calculateOpponentWeightedAverage(
+    recentXG,
+    oppositionPPG,
+    leagueAvgPPG,
+    { invert: false }
+  );
+}
+
+/** Blend raw form average with opponent-adjusted series when SCORE_OPP_ADJ_METRICS > 0. */
+function oppAdjBlend(raw, adj) {
+  return blendRawAndOppAdj(raw, adj, getScoreOppAdjMetrics());
+}
+
+function xPtsOptionsFromConfig() {
+  return {
+    mode: getScoreXptsMode(),
+    drawBand: getScoreXptsDrawBand(),
+    maxGoals: 6,
+  };
+}
+
+/**
+ * Apply opponent-adj blend + Expected Points onto a strength metrics object in place.
+ * @param {'overall'|'last5'|'home'|'away'} window
+ */
+function applyOppAdjAndXptsToAttackMetrics(metrics, form, window = "overall") {
+  if (!metrics || !form) return;
+  const pick = (overall, last5, home, away) => {
+    if (window === "last5") return last5 ?? overall;
+    if (window === "home") return home ?? overall;
+    if (window === "away") return away ?? overall;
+    return overall;
+  };
+  if ("Average Dangerous Attacks" in metrics) {
+    metrics["Average Dangerous Attacks"] = oppAdjBlend(
+      metrics["Average Dangerous Attacks"],
+      pick(
+        form.oppAdjDangerousAttacks,
+        form.oppAdjDangerousAttacksLast5,
+        form.oppAdjDangerousAttacksHome,
+        form.oppAdjDangerousAttacksAway
+      )
+    );
   }
-
-  let weightedXGSum = 0;
-  let totalWeight = 0;
-
-  for (let i = 0; i < recentXG.length; i++) {
-    const xG = recentXG[i];
-    const oppPPG = oppositionPPG[i];
-
-    // Calculate the Difficulty Multiplier (D): 
-    // D will be > 1.0 for tough opponents, and < 1.0 for easy opponents.
-    const difficultyMultiplier = oppPPG / leagueAvgPPG;
-
-    // Apply the multiplier to the xG score
-    const weightedXG = xG * difficultyMultiplier;
-
-    weightedXGSum += weightedXG;
-
-    // We sum the multipliers instead of just counting 1 for each game.
-    // This ensures the average is correctly calculated based on the total applied weight.
-    totalWeight += difficultyMultiplier;
+  if ("Average Shots" in metrics) {
+    metrics["Average Shots"] = oppAdjBlend(
+      metrics["Average Shots"],
+      pick(
+        form.oppAdjShots,
+        form.oppAdjShotsLast5,
+        form.oppAdjShotsHome,
+        form.oppAdjShotsAway
+      )
+    );
   }
+  if ("Average Shots On Target" in metrics) {
+    metrics["Average Shots On Target"] = oppAdjBlend(
+      metrics["Average Shots On Target"],
+      pick(form.oppAdjSOT, form.oppAdjSOTLast5, form.oppAdjSOTHome, form.oppAdjSOTAway)
+    );
+  }
+  if ("Average Goals" in metrics) {
+    metrics["Average Goals"] = oppAdjBlend(
+      metrics["Average Goals"],
+      pick(
+        form.oppAdjGoals,
+        form.oppAdjGoalsLast5,
+        form.oppAdjGoalsHome,
+        form.oppAdjGoalsAway
+      )
+    );
+  }
+  metrics["Expected Points"] = pick(
+    form.xPtsAvg ?? form.avPointsAll,
+    form.xPtsLast5 ?? form.xPtsAvg,
+    form.xPtsHome ?? form.xPtsAvg,
+    form.xPtsAway ?? form.xPtsAvg
+  );
+}
 
-  // The weighted average is the sum of weighted scores divided by the sum of the weights.
-  return weightedXGSum / totalWeight;
+function applyOppAdjToDefenceMetrics(metrics, form, window = "overall") {
+  if (!metrics || !form) return;
+  const pick = (overall, last5, home, away) => {
+    if (window === "last5") return last5 ?? overall;
+    if (window === "home") return home ?? overall;
+    if (window === "away") return away ?? overall;
+    return overall;
+  };
+  if ("Average Dangerous Attacks Against" in metrics) {
+    metrics["Average Dangerous Attacks Against"] = oppAdjBlend(
+      metrics["Average Dangerous Attacks Against"],
+      pick(
+        form.oppAdjDangerousAttacksAgainst,
+        form.oppAdjDangerousAttacksAgainstLast5,
+        form.oppAdjDangerousAttacksAgainstHome,
+        form.oppAdjDangerousAttacksAgainstAway
+      )
+    );
+  }
+  if ("Average Shots Against" in metrics) {
+    metrics["Average Shots Against"] = oppAdjBlend(
+      metrics["Average Shots Against"],
+      pick(
+        form.oppAdjShotsAgainst,
+        form.oppAdjShotsAgainstLast5,
+        form.oppAdjShotsAgainstHome,
+        form.oppAdjShotsAgainstAway
+      )
+    );
+  }
+  if ("Average SOT Against" in metrics) {
+    metrics["Average SOT Against"] = oppAdjBlend(
+      metrics["Average SOT Against"],
+      pick(
+        form.oppAdjSOTAgainst,
+        form.oppAdjSOTAgainstLast5,
+        form.oppAdjSOTAgainstHome,
+        form.oppAdjSOTAgainstAway
+      )
+    );
+  }
+  if ("Average Goals Against" in metrics) {
+    metrics["Average Goals Against"] = oppAdjBlend(
+      metrics["Average Goals Against"],
+      pick(
+        form.oppAdjGoalsAgainst,
+        form.oppAdjGoalsAgainstLast5,
+        form.oppAdjGoalsAgainstHome,
+        form.oppAdjGoalsAgainstAway
+      )
+    );
+  }
 }
 
 /** Newest-first W/D/L pills from dated league home/away rows (same list as GameStats). */
@@ -1895,32 +2021,192 @@ async function getPastLeagueResults(team, game, hOrA, form) {
     const opponentPPG = allTeamResults.map((res) => res.oppositionPPG); // Example opponent PPGs for last 5 matches
     const opponentPPGLast5 = allTeamResults.map((res) => res.oppositionPPG).slice(0, 5); // Example opponent PPGs for last 5 matches
 
-    form.weightedXGAvgFor = calculateWeightedXG(teamXGForAll, opponentPPG, 1.5);
-    form.weightedXGAvgAgainst = calculateWeightedXG(teamXGAgainstAll, opponentPPG, 1.5);
+    form.weightedXGAvgFor = calculateWeightedXG(teamXGForAll, opponentPPG);
+    form.weightedXGAvgAgainst = calculateWeightedXG(teamXGAgainstAll, opponentPPG);
 
-    form.weightedXGAvgForLast5 = calculateWeightedXG(last5XG, opponentPPGLast5, 1.5);
-    form.weightedXGAvgAgainstLast5 = calculateWeightedXG(last5XGAgainst, opponentPPGLast5, 1.5);
+    form.weightedXGAvgForLast5 = calculateWeightedXG(last5XG, opponentPPGLast5);
+    form.weightedXGAvgAgainstLast5 = calculateWeightedXG(last5XGAgainst, opponentPPGLast5);
 
     form.weightedNpXGAvgFor = calculateWeightedXG(
       teamNpXGForAll,
-      opponentPPG,
-      1.5
+      opponentPPG
     );
     form.weightedNpXGAvgAgainst = calculateWeightedXG(
       teamNpXGAgainstAll,
-      opponentPPG,
-      1.5
+      opponentPPG
     );
     form.weightedNpXGAvgForLast5 = calculateWeightedXG(
       last5NpXG,
-      opponentPPGLast5,
-      1.5
+      opponentPPGLast5
     );
     form.weightedNpXGAvgAgainstLast5 = calculateWeightedXG(
       last5NpXGAgainst,
-      opponentPPGLast5,
-      1.5
+      opponentPPGLast5
     );
+
+    // Opponent-adjusted volume metrics (attack: inflate vs strong; against: invert).
+    form.oppAdjDangerousAttacks = calculateOpponentWeightedAverage(
+      dangerousAttacks,
+      opponentPPG
+    );
+    form.oppAdjDangerousAttacksLast5 = calculateOpponentWeightedAverage(
+      dangerousAttacks.slice(0, 5),
+      opponentPPGLast5
+    );
+    form.oppAdjShots = calculateOpponentWeightedAverage(shots, opponentPPG);
+    form.oppAdjShotsLast5 = calculateOpponentWeightedAverage(
+      shots.slice(0, 5),
+      opponentPPGLast5
+    );
+    form.oppAdjSOT = calculateOpponentWeightedAverage(shotsOnTarget, opponentPPG);
+    form.oppAdjSOTLast5 = calculateOpponentWeightedAverage(
+      shotsOnTarget.slice(0, 5),
+      opponentPPGLast5
+    );
+    form.oppAdjGoals = calculateOpponentWeightedAverage(teamGoalsAll, opponentPPG);
+    form.oppAdjGoalsLast5 = calculateOpponentWeightedAverage(
+      teamGoalsAll.slice(0, 5),
+      opponentPPGLast5
+    );
+    form.oppAdjDangerousAttacksAgainst = calculateOpponentWeightedAverage(
+      dangerousAttacksAgainst,
+      opponentPPG,
+      null,
+      { invert: true }
+    );
+    form.oppAdjDangerousAttacksAgainstLast5 = calculateOpponentWeightedAverage(
+      dangerousAttacksAgainst.slice(0, 5),
+      opponentPPGLast5,
+      null,
+      { invert: true }
+    );
+    form.oppAdjShotsAgainst = calculateOpponentWeightedAverage(
+      shotsAgainst,
+      opponentPPG,
+      null,
+      { invert: true }
+    );
+    form.oppAdjShotsAgainstLast5 = calculateOpponentWeightedAverage(
+      shotsAgainst.slice(0, 5),
+      opponentPPGLast5,
+      null,
+      { invert: true }
+    );
+    form.oppAdjSOTAgainst = calculateOpponentWeightedAverage(
+      shotsOnTargetAgainst,
+      opponentPPG,
+      null,
+      { invert: true }
+    );
+    form.oppAdjSOTAgainstLast5 = calculateOpponentWeightedAverage(
+      shotsOnTargetAgainst.slice(0, 5),
+      opponentPPGLast5,
+      null,
+      { invert: true }
+    );
+    form.oppAdjGoalsAgainst = calculateOpponentWeightedAverage(
+      teamConceededAll,
+      opponentPPG,
+      null,
+      { invert: true }
+    );
+    form.oppAdjGoalsAgainstLast5 = calculateOpponentWeightedAverage(
+      teamConceededAll.slice(0, 5),
+      opponentPPGLast5,
+      null,
+      { invert: true }
+    );
+
+    const homeOppPpg = homeResults.map((res) => res.oppositionPPG);
+    const awayOppPpg = awayResults.map((res) => res.oppositionPPG);
+    form.oppAdjDangerousAttacksHome = calculateOpponentWeightedAverage(
+      dangerousAttacksHome,
+      homeOppPpg
+    );
+    form.oppAdjDangerousAttacksAway = calculateOpponentWeightedAverage(
+      dangerousAttacksAway,
+      awayOppPpg
+    );
+    form.oppAdjShotsHome = calculateOpponentWeightedAverage(shotsHome, homeOppPpg);
+    form.oppAdjShotsAway = calculateOpponentWeightedAverage(shotsAway, awayOppPpg);
+    form.oppAdjSOTHome = calculateOpponentWeightedAverage(
+      shotsOnTargetHome,
+      homeOppPpg
+    );
+    form.oppAdjSOTAway = calculateOpponentWeightedAverage(
+      shotsOnTargetAway,
+      awayOppPpg
+    );
+    form.oppAdjGoalsHome = calculateOpponentWeightedAverage(
+      homeResults.map((res) => res.scored),
+      homeOppPpg
+    );
+    form.oppAdjGoalsAway = calculateOpponentWeightedAverage(
+      awayResults.map((res) => res.scored),
+      awayOppPpg
+    );
+    form.oppAdjGoalsAgainstHome = calculateOpponentWeightedAverage(
+      homeResults.map((res) => res.conceeded),
+      homeOppPpg,
+      null,
+      { invert: true }
+    );
+    form.oppAdjGoalsAgainstAway = calculateOpponentWeightedAverage(
+      awayResults.map((res) => res.conceeded),
+      awayOppPpg,
+      null,
+      { invert: true }
+    );
+    form.oppAdjSOTAgainstHome = calculateOpponentWeightedAverage(
+      shotsOnTargetAgainstHome,
+      homeOppPpg,
+      null,
+      { invert: true }
+    );
+    form.oppAdjSOTAgainstAway = calculateOpponentWeightedAverage(
+      shotsOnTargetAgainstAway,
+      awayOppPpg,
+      null,
+      { invert: true }
+    );
+    form.oppAdjDangerousAttacksAgainstHome = calculateOpponentWeightedAverage(
+      dangerousAttacksAgainstHome,
+      homeOppPpg,
+      null,
+      { invert: true }
+    );
+    form.oppAdjDangerousAttacksAgainstAway = calculateOpponentWeightedAverage(
+      dangerousAttacksAgainstAway,
+      awayOppPpg,
+      null,
+      { invert: true }
+    );
+    const shotsAgainstHome = homeResults.map((res) => res.shotsAgainst);
+    const shotsAgainstAway = awayResults.map((res) => res.shotsAgainst);
+    form.oppAdjShotsAgainstHome = calculateOpponentWeightedAverage(
+      shotsAgainstHome,
+      homeOppPpg,
+      null,
+      { invert: true }
+    );
+    form.oppAdjShotsAgainstAway = calculateOpponentWeightedAverage(
+      shotsAgainstAway,
+      awayOppPpg,
+      null,
+      { invert: true }
+    );
+
+    const xPtsOpts = xPtsOptionsFromConfig();
+    const xPtsAll = xPtsSeriesFromResults(allTeamResults, xPtsOpts);
+    form.xPtsAvg = averageFinite(xPtsAll);
+    form.xPtsLast5 = averageFinite(xPtsAll.slice(0, 5));
+    form.xPtsHome = averageFinite(
+      xPtsSeriesFromResults(homeResults, xPtsOpts)
+    );
+    form.xPtsAway = averageFinite(
+      xPtsSeriesFromResults(awayResults, xPtsOpts)
+    );
+    // xPtsRolling set below once resultDates is available
 
     const last5XGAgainstHome = teamXGForHome.slice(0, 5);
     const last5XGAgainstSumHome = last5XGAgainstHome.reduce((a, b) => a + b, 0);
@@ -2051,32 +2337,43 @@ async function getPastLeagueResults(team, game, hOrA, form) {
     form.bttsHomePercentage = bttsHomePercentage;
     form.bttsAwayPercentage = bttsAwayPercentage;
 
-    form.teamGoalsRollingAverage = await calculateBalancedRollingAverage(
-      teamGoalsAll
+    const resultDates = allTeamResults.map((res) => res.dateRaw);
+
+    form.xPtsRolling = calculateBalancedRollingAverage(xPtsAll, resultDates);
+
+    form.teamGoalsRollingAverage = calculateBalancedRollingAverage(
+      teamGoalsAll,
+      resultDates
     );
 
-    form.dangerousAttacksRollingAverage = await calculateBalancedRollingAverage(
-      dangerousAttacks
+    form.dangerousAttacksRollingAverage = calculateBalancedRollingAverage(
+      dangerousAttacks,
+      resultDates
     );
 
-    form.dangerousAttacksAgainstRollingAverage = await calculateBalancedRollingAverage(
-      dangerousAttacksAgainst
+    form.dangerousAttacksAgainstRollingAverage = calculateBalancedRollingAverage(
+      dangerousAttacksAgainst,
+      resultDates
     );
 
-    form.shotsOnTargetRollingAverage = await calculateBalancedRollingAverage(
-      shotsOnTarget
+    form.shotsOnTargetRollingAverage = calculateBalancedRollingAverage(
+      shotsOnTarget,
+      resultDates
     );
 
-    form.shotsOnTargetAgainstRollingAverage = await calculateBalancedRollingAverage(
-      shotsOnTargetAgainst
+    form.shotsOnTargetAgainstRollingAverage = calculateBalancedRollingAverage(
+      shotsOnTargetAgainst,
+      resultDates
     );
 
-    form.shotsRollingAverage = await calculateBalancedRollingAverage(
-      shots
+    form.shotsRollingAverage = calculateBalancedRollingAverage(
+      shots,
+      resultDates
     );
 
-    form.shotsAgainstRollingAverage = await calculateBalancedRollingAverage(
-      shotsAgainst
+    form.shotsAgainstRollingAverage = calculateBalancedRollingAverage(
+      shotsAgainst,
+      resultDates
     );
 
     const xgAndScored = allTeamResults.map((res) => ({
@@ -2139,10 +2436,10 @@ async function getPastLeagueResults(team, game, hOrA, form) {
     RoundedXGForAwayV2.reverse();
     RoundedXGAgainstAwayV2.reverse();
 
-    form.teamConceededRollingAverage =
-      await calculateBalancedRollingAverage(
-        teamConceededAll
-      );
+    form.teamConceededRollingAverage = calculateBalancedRollingAverage(
+      teamConceededAll,
+      resultDates
+    );
 
     const sum = teamGoalsAll.reduce((a, b) => a + b, 0);
     const avgScored = sum / teamGoalsAll.length || 0;
@@ -2206,21 +2503,25 @@ async function getPastLeagueResults(team, game, hOrA, form) {
     form.last10GoalsConceeded = parseFloat(last10AvgConceeded.toFixed(2));
     form.last10GoalDiff = form.last10Goals - form.last10GoalsConceeded;
 
-    form.teamXGAllRollingAverage = await calculateBalancedRollingAverage(
-      teamXGForAll
+    form.teamXGAllRollingAverage = calculateBalancedRollingAverage(
+      teamXGForAll,
+      resultDates
     );
 
-    form.teamXGConceededAllRollingAverage =
-      await calculateBalancedRollingAverage(
-        teamXGAgainstAll
-      );
-
-    form.teamNpXGAllRollingAverage = await calculateBalancedRollingAverage(
-      teamNpXGForAll
+    form.teamXGConceededAllRollingAverage = calculateBalancedRollingAverage(
+      teamXGAgainstAll,
+      resultDates
     );
 
-    form.teamNpXGConceededAllRollingAverage =
-      await calculateBalancedRollingAverage(teamNpXGAgainstAll);
+    form.teamNpXGAllRollingAverage = calculateBalancedRollingAverage(
+      teamNpXGForAll,
+      resultDates
+    );
+
+    form.teamNpXGConceededAllRollingAverage = calculateBalancedRollingAverage(
+      teamNpXGAgainstAll,
+      resultDates
+    );
 
     const sumTwo = teamConceededAll.reduce((a, b) => a + b, 0);
     const avgConceeded = sumTwo / teamConceededAll.length || 0;
@@ -2274,24 +2575,63 @@ async function getPastLeagueResults(team, game, hOrA, form) {
     return null;
   }
 }
-function calculateBalancedRollingAverage(numbers, boost = 2.5) {
+/**
+ * Recency-weighted rolling average.
+ * - If SCORE_ROLLING_XI ∈ (0,1) and unixDates (newest-first) are provided:
+ *   weightᵢ = ξ^daysAgo (Dixon–Coles-style exponential decay).
+ * - Else linear boost: newest = 1+boost, oldest = 1 (SCORE_ROLLING_BOOST).
+ *
+ * @param {number[]} numbers newest-first series
+ * @param {number[]|null} unixDates optional parallel unix timestamps (seconds)
+ * @param {number|null} asOfUnix optional reference time (defaults to newest date)
+ */
+function calculateBalancedRollingAverage(
+  numbers,
+  unixDates = null,
+  asOfUnix = null
+) {
   const n = numbers.length;
   if (n === 0) return 0;
   if (n === 1) return numbers[0];
 
+  const xi = getScoreRollingXi();
+  const boost = getScoreRollingBoost();
+  const datesOk =
+    Array.isArray(unixDates) &&
+    unixDates.length === n &&
+    unixDates.every((d) => Number.isFinite(Number(d)) && Number(d) > 0);
+
   let totalWeight = 0;
   let weightedSum = 0;
 
-  for (let i = 0; i < n; i++) {
-    // Flipped Logic:
-    // i=0 (Newest)     -> (n-1-0)/(n-1) = 1.0 -> weight = 1 + boost
-    // i=n-1 (Oldest)   -> (n-1-(n-1))/(n-1) = 0 -> weight = 1.0
-    const weight = 1 + ((n - 1 - i) / (n - 1)) * boost;
-
-    weightedSum += numbers[i] * weight;
-    totalWeight += weight;
+  if (xi > 0 && xi < 1 && datesOk) {
+    // Careful: Number(null) === 0, which is finite — don't treat null as as-of.
+    const asOf = Number(asOfUnix);
+    const newest =
+      asOfUnix != null && Number.isFinite(asOf) && asOf > 0
+        ? asOf
+        : Math.max(...unixDates.map(Number));
+    for (let i = 0; i < n; i++) {
+      const value = Number(numbers[i]);
+      if (!Number.isFinite(value)) continue;
+      const ageDays = Math.max(0, (newest - Number(unixDates[i])) / 86400);
+      const weight = Math.pow(xi, ageDays);
+      weightedSum += value * weight;
+      totalWeight += weight;
+    }
+  } else {
+    for (let i = 0; i < n; i++) {
+      const value = Number(numbers[i]);
+      if (!Number.isFinite(value)) continue;
+      // i=0 newest -> weight = 1+boost; i=n-1 oldest -> weight = 1
+      const weight =
+        n === 1 ? 1 : 1 + ((n - 1 - i) / (n - 1)) * boost;
+      weightedSum += value * weight;
+      totalWeight += weight;
+    }
   }
 
+  if (totalWeight <= 0) return 0;
   return parseFloat((weightedSum / totalWeight).toFixed(2));
 }
 
@@ -2512,24 +2852,26 @@ function venueFormReliability(gamesPlayed) {
 function blendWithVenueForm(leagueValue, formValue, gamesPlayed) {
   const league = positiveNumber(leagueValue);
   const form = positiveNumber(formValue);
+  const venueWeight = getVenueFormWeight();
   if (!league) return form ?? leagueValue;
-  if (!form || VENUE_FORM_WEIGHT <= 0) return league;
+  if (!form || venueWeight <= 0) return league;
 
-  const weight = VENUE_FORM_WEIGHT * venueFormReliability(gamesPlayed);
+  const weight = venueWeight * venueFormReliability(gamesPlayed);
   return league * (1 - weight) + form * weight;
 }
 
 function blendVenueMetric(overall, venue, gamesPlayed) {
   const overallValue = Number(overall);
   const venueValue = Number(venue);
-  if (!Number.isFinite(venueValue) || venueValue <= 0 || VENUE_FORM_WEIGHT <= 0) {
+  const venueWeight = getVenueFormWeight();
+  if (!Number.isFinite(venueValue) || venueValue <= 0 || venueWeight <= 0) {
     return overallValue;
   }
   if (!Number.isFinite(overallValue) || overallValue <= 0) {
     return venueValue;
   }
 
-  const weight = VENUE_FORM_WEIGHT * venueFormReliability(gamesPlayed);
+  const weight = venueWeight * venueFormReliability(gamesPlayed);
   return overallValue * (1 - weight) + venueValue * weight;
 }
 
@@ -2707,19 +3049,56 @@ export async function generateGoals(homeForm, awayForm, match) {
   const awayLambda_withInjuries = awayLambda_final 
   * awayAttackInjurryAdjustment;
 
-  const clampedXGMultiplierHome = goalEfficiencyRegressionMultiplier(
-    homeForm.GoalEfficiency
-  );
-  const clampedXGMultiplierAway = goalEfficiencyRegressionMultiplier(
-    awayForm.GoalEfficiency
-  );
+  const clampedXGMultiplierHome = getScoreEfficiency()
+    ? clampLambdaSignal(
+        goalEfficiencyRegressionMultiplier(homeForm.GoalEfficiency, {
+          min: 0.9,
+          max: 1.1,
+        })
+      )
+    : 1;
+  const clampedXGMultiplierAway = getScoreEfficiency()
+    ? clampLambdaSignal(
+        goalEfficiencyRegressionMultiplier(awayForm.GoalEfficiency, {
+          min: 0.9,
+          max: 1.1,
+        })
+      )
+    : 1;
+
+  const formTrendHome = getScoreFormTrend()
+    ? clampLambdaSignal(homeForm.formTrendScore)
+    : 1;
+  const formTrendAway = getScoreFormTrend()
+    ? clampLambdaSignal(awayForm.formTrendScore)
+    : 1;
+
+  const clinicalHome = getScoreClinical()
+    ? clampLambdaSignal(homeForm.clinicalScore)
+    : 1;
+  const clinicalAway = getScoreClinical()
+    ? clampLambdaSignal(awayForm.clinicalScore)
+    : 1;
+
+  const restHome = restHaircutMultiplier(homeForm);
+  const restAway = restHaircutMultiplier(awayForm);
+  const sosHome = sosDampMultiplier(homeForm);
+  const sosAway = sosDampMultiplier(awayForm);
 
   const adjustedLambdaHome =
-    homeLambda_withInjuries 
-    // * clampedXGMultiplierHome;
+    homeLambda_withInjuries *
+    clampedXGMultiplierHome *
+    formTrendHome *
+    clinicalHome *
+    restHome *
+    sosHome;
   const adjustedLambdaAway =
-    awayLambda_withInjuries 
-    // * clampedXGMultiplierAway;
+    awayLambda_withInjuries *
+    clampedXGMultiplierAway *
+    formTrendAway *
+    clinicalAway *
+    restAway *
+    sosAway;
   // 4. Ensure Lambda never drops below a realistic floor (e.g., 0.05)
   const homeLambda_final_v2 = Math.max(0.05, adjustedLambdaHome);
   const awayLambda_final_v2 = Math.max(0.05, adjustedLambdaAway);
@@ -2753,9 +3132,11 @@ export async function generateGoals(homeForm, awayForm, match) {
   const rawHomeComparison = homeForm.XGRating - awayForm.XGRating;
   const rawAwayComparison = awayForm.XGRating - homeForm.XGRating;
 
-  // 2. Convert to multipliers (centered at 1.0)
-  const homeXGMult = calculateXGMultiplier(rawHomeComparison, 0.025); // Adjust 0.05 to taste
-  const awayXGMult = calculateXGMultiplier(rawAwayComparison, 0.025);
+  const xgDamp = getScoreXgDamp();
+  const homeXGMult =
+    xgDamp > 0 ? calculateXGMultiplier(rawHomeComparison, xgDamp) : 1;
+  const awayXGMult =
+    xgDamp > 0 ? calculateXGMultiplier(rawAwayComparison, xgDamp) : 1;
 
   let homeGoals;
   let awayGoals;
@@ -2767,8 +3148,8 @@ export async function generateGoals(homeForm, awayForm, match) {
     awayGoals =
       awayLambda_rawOverall * 0.75 * (1 + oddsComparisonAway * oddsFactor);
   } else {
-    homeGoals = (homeLambda_final_v3) * homeXGMult;
-    awayGoals = (awayLambda_final_v3) * awayXGMult;
+    homeGoals = homeLambda_final_v3 * homeXGMult;
+    awayGoals = awayLambda_final_v3 * awayXGMult;
   }
 
   if (homeGoals > 5) {
@@ -3317,19 +3698,118 @@ function hydrateAgainstMetricsFromFixtures(team, match, form) {
   const last5OpponentPPG = last5.map((result) => result.oppositionPPG);
 
   if (xgFor.length) {
-    form.teamXGAllRollingAverage = calculateBalancedRollingAverage(xgFor);
-    form.teamXGConceededAllRollingAverage =
-      calculateBalancedRollingAverage(xgAgainst);
+    const apiDates = results.map((result) => result.dateRaw);
+    form.teamXGAllRollingAverage = calculateBalancedRollingAverage(
+      xgFor,
+      apiDates
+    );
+    form.teamXGConceededAllRollingAverage = calculateBalancedRollingAverage(
+      xgAgainst,
+      apiDates
+    );
     form.weightedXGAvgFor =
-      calculateWeightedXG(xgFor, opponentPPG, 1.5) || form.XGOverall;
+      calculateWeightedXG(xgFor, opponentPPG) || form.XGOverall;
     form.weightedXGAvgAgainst =
-      calculateWeightedXG(xgAgainst, opponentPPG, 1.5) ||
+      calculateWeightedXG(xgAgainst, opponentPPG) ||
       form.XGAgainstAvgOverall;
     form.weightedXGAvgForLast5 =
-      calculateWeightedXG(last5XgFor, last5OpponentPPG, 1.5) || form.avXGLast5;
+      calculateWeightedXG(last5XgFor, last5OpponentPPG) || form.avXGLast5;
     form.weightedXGAvgAgainstLast5 =
-      calculateWeightedXG(last5XgAgainst, last5OpponentPPG, 1.5) ||
+      calculateWeightedXG(last5XgAgainst, last5OpponentPPG) ||
       form.avXGAgainstLast5;
+
+    const shotsSeries = results.map((result) => result.shots);
+    const sotSeries = results.map((result) => result.sot);
+    const daSeries = results.map((result) => result.dangerousAttacks);
+    const goalsSeries = results.map((result) => result.scored);
+    const shotsAgainstSeries = results.map((result) => result.shotsAgainst);
+    const sotAgainstSeries = results.map((result) => result.sotAgainst);
+    const daAgainstSeries = results.map((result) => result.dangerousAttacksAgainst);
+    const goalsAgainstSeries = results.map((result) => result.conceeded);
+
+    form.oppAdjShots = calculateOpponentWeightedAverage(shotsSeries, opponentPPG);
+    form.oppAdjShotsLast5 = calculateOpponentWeightedAverage(
+      shotsSeries.slice(0, 5),
+      last5OpponentPPG
+    );
+    form.oppAdjSOT = calculateOpponentWeightedAverage(sotSeries, opponentPPG);
+    form.oppAdjSOTLast5 = calculateOpponentWeightedAverage(
+      sotSeries.slice(0, 5),
+      last5OpponentPPG
+    );
+    form.oppAdjDangerousAttacks = calculateOpponentWeightedAverage(
+      daSeries,
+      opponentPPG
+    );
+    form.oppAdjDangerousAttacksLast5 = calculateOpponentWeightedAverage(
+      daSeries.slice(0, 5),
+      last5OpponentPPG
+    );
+    form.oppAdjGoals = calculateOpponentWeightedAverage(goalsSeries, opponentPPG);
+    form.oppAdjGoalsLast5 = calculateOpponentWeightedAverage(
+      goalsSeries.slice(0, 5),
+      last5OpponentPPG
+    );
+    form.oppAdjShotsAgainst = calculateOpponentWeightedAverage(
+      shotsAgainstSeries,
+      opponentPPG,
+      null,
+      { invert: true }
+    );
+    form.oppAdjShotsAgainstLast5 = calculateOpponentWeightedAverage(
+      shotsAgainstSeries.slice(0, 5),
+      last5OpponentPPG,
+      null,
+      { invert: true }
+    );
+    form.oppAdjSOTAgainst = calculateOpponentWeightedAverage(
+      sotAgainstSeries,
+      opponentPPG,
+      null,
+      { invert: true }
+    );
+    form.oppAdjSOTAgainstLast5 = calculateOpponentWeightedAverage(
+      sotAgainstSeries.slice(0, 5),
+      last5OpponentPPG,
+      null,
+      { invert: true }
+    );
+    form.oppAdjDangerousAttacksAgainst = calculateOpponentWeightedAverage(
+      daAgainstSeries,
+      opponentPPG,
+      null,
+      { invert: true }
+    );
+    form.oppAdjDangerousAttacksAgainstLast5 = calculateOpponentWeightedAverage(
+      daAgainstSeries.slice(0, 5),
+      last5OpponentPPG,
+      null,
+      { invert: true }
+    );
+    form.oppAdjGoalsAgainst = calculateOpponentWeightedAverage(
+      goalsAgainstSeries,
+      opponentPPG,
+      null,
+      { invert: true }
+    );
+    form.oppAdjGoalsAgainstLast5 = calculateOpponentWeightedAverage(
+      goalsAgainstSeries.slice(0, 5),
+      last5OpponentPPG,
+      null,
+      { invert: true }
+    );
+
+    const xPtsOpts = xPtsOptionsFromConfig();
+    const xPtsAll = xPtsSeriesFromResults(results, xPtsOpts);
+    form.xPtsAvg = averageFinite(xPtsAll);
+    form.xPtsLast5 = averageFinite(xPtsAll.slice(0, 5));
+    form.xPtsRolling = calculateBalancedRollingAverage(xPtsAll, apiDates);
+    form.xPtsHome = averageFinite(
+      xPtsSeriesFromResults(homeResults, xPtsOpts)
+    );
+    form.xPtsAway = averageFinite(
+      xPtsSeriesFromResults(awayResults, xPtsOpts)
+    );
   }
 
   const shotsAvg = averageApiStats(results.map((result) => result.shots));
@@ -4035,7 +4515,7 @@ export async function calculateScore(match, index, divider, calculate, AIPredict
       "Average Shots On Target": formHome?.shotsOnTargetRollingAverage,
       "Average Expected Goals": formHome?.XGOverall,
       "Average npXG": npxgOrXg(formHome?.npXGOverall, formHome?.XGOverall),
-      "Weighted XG": formHome?.teamXGAllRollingAverage,
+      "Weighted XG": formHome?.weightedXGAvgFor ?? formHome?.XGOverall,
       "Average Goals": formHome?.teamGoalsRollingAverage,
       "Corners": formHome?.AverageCorners,
       "Injury impact": hAtk != 0 ? 10 - hAtk : 4
@@ -4122,7 +4602,7 @@ export async function calculateScore(match, index, divider, calculate, AIPredict
       "Average Shots On Target": formAway.shotsOnTargetRollingAverage,
       "Average Expected Goals": formAway.XGOverall,
       "Average npXG": npxgOrXg(formAway.npXGOverall, formAway.XGOverall),
-      "Weighted XG": formAway.teamXGAllRollingAverage,
+      "Weighted XG": formAway.weightedXGAvgFor ?? formAway.XGOverall,
       "Average Goals": formAway.teamGoalsRollingAverage,
       "Corners": formAway.AverageCorners,
       "Injury impact": aAtk !== 0 ? 10 - aAtk : 4
@@ -4159,8 +4639,8 @@ export async function calculateScore(match, index, divider, calculate, AIPredict
         formHome.npXGAgainstAvgOverall,
         formHome.XGAgainstAvgOverall
       ),
-      "Weighted XG Against": formHome.teamXGConceededAllRollingAverage
-        ? formHome.teamXGConceededAllRollingAverage
+      "Weighted XG Against": formHome.weightedXGAvgAgainst
+        ? formHome.weightedXGAvgAgainst
         : formHome.XGAgainstAvgOverall,
       "Average Goals Against": formHome.teamConceededRollingAverage,
       "Average SOT Against": formHome.shotsOnTargetAgainstRollingAverage,
@@ -4209,8 +4689,8 @@ export async function calculateScore(match, index, divider, calculate, AIPredict
         formAway.npXGAgainstAvgOverall,
         formAway.XGAgainstAvgOverall
       ),
-      "Weighted XG Against": formAway.teamXGConceededAllRollingAverage
-        ? formAway.teamXGConceededAllRollingAverage
+      "Weighted XG Against": formAway.weightedXGAvgAgainst
+        ? formAway.weightedXGAvgAgainst
         : formAway.XGAgainstAvgOverall,
       "Average Goals Against": formAway.teamConceededRollingAverage,
       "Average SOT Against": formAway.shotsOnTargetAgainstRollingAverage,
@@ -4294,6 +4774,19 @@ export async function calculateScore(match, index, divider, calculate, AIPredict
     formAway.attackingMetricsAwayOnly = attackingMetricsAwayOnly;
     formAway.defensiveMetricsAwayOnly = defensiveMetricsAwayOnly;
 
+    applyOppAdjAndXptsToAttackMetrics(attackingMetricsHome, formHome, "overall");
+    applyOppAdjAndXptsToAttackMetrics(attackingMetricsHomeLast5, formHome, "last5");
+    applyOppAdjAndXptsToAttackMetrics(attackingMetricsHomeOnly, formHome, "home");
+    applyOppAdjAndXptsToAttackMetrics(attackingMetricsAway, formAway, "overall");
+    applyOppAdjAndXptsToAttackMetrics(attackingMetricsAwayLast5, formAway, "last5");
+    applyOppAdjAndXptsToAttackMetrics(attackingMetricsAwayOnly, formAway, "away");
+    applyOppAdjToDefenceMetrics(defensiveMetricsHome, formHome, "overall");
+    applyOppAdjToDefenceMetrics(defensiveMetricsHomeLast5, formHome, "last5");
+    applyOppAdjToDefenceMetrics(defensiveMetricsHomeOnly, formHome, "home");
+    applyOppAdjToDefenceMetrics(defensiveMetricsAway, formAway, "overall");
+    applyOppAdjToDefenceMetrics(defensiveMetricsAwayLast5, formAway, "last5");
+    applyOppAdjToDefenceMetrics(defensiveMetricsAwayOnly, formAway, "away");
+
     const strengthOptions = API_FORM_ONLY_LEAGUE_IDS.includes(match.leagueID)
       ? { international: true }
       : {};
@@ -4301,8 +4794,8 @@ export async function calculateScore(match, index, divider, calculate, AIPredict
     const attackingStrengthHomeMetrics = metricsWithNpXg(attackingMetricsHome, {
       "Average Expected Goals": [formHome.npXGOverall, formHome.XGOverall],
       "Weighted XG": [
-        formHome.teamNpXGAllRollingAverage,
-        formHome.teamXGAllRollingAverage,
+        formHome.weightedNpXGAvgFor,
+        formHome.weightedXGAvgFor ?? formHome.XGOverall,
       ],
     });
     const attackingStrengthHomeLast5Metrics = metricsWithNpXg(
@@ -4334,8 +4827,8 @@ export async function calculateScore(match, index, divider, calculate, AIPredict
     const attackingStrengthAwayMetrics = metricsWithNpXg(attackingMetricsAway, {
       "Average Expected Goals": [formAway.npXGOverall, formAway.XGOverall],
       "Weighted XG": [
-        formAway.teamNpXGAllRollingAverage,
-        formAway.teamXGAllRollingAverage,
+        formAway.weightedNpXGAvgFor,
+        formAway.weightedXGAvgFor ?? formAway.XGOverall,
       ],
     });
     const attackingStrengthAwayLast5Metrics = metricsWithNpXg(
@@ -4371,8 +4864,8 @@ export async function calculateScore(match, index, divider, calculate, AIPredict
         formHome.XGAgainstAvgOverall,
       ],
       "Weighted XG Against": [
-        formHome.teamNpXGConceededAllRollingAverage,
-        formHome.teamXGConceededAllRollingAverage ?? formHome.XGAgainstAvgOverall,
+        formHome.weightedNpXGAvgAgainst,
+        formHome.weightedXGAvgAgainst ?? formHome.XGAgainstAvgOverall,
       ],
     });
     const defensiveStrengthHomeLast5Metrics = metricsWithNpXg(
@@ -4407,8 +4900,8 @@ export async function calculateScore(match, index, divider, calculate, AIPredict
         formAway.XGAgainstAvgOverall,
       ],
       "Weighted XG Against": [
-        formAway.teamNpXGConceededAllRollingAverage,
-        formAway.teamXGConceededAllRollingAverage ?? formAway.XGAgainstAvgOverall,
+        formAway.weightedNpXGAvgAgainst,
+        formAway.weightedXGAvgAgainst ?? formAway.XGAgainstAvgOverall,
       ],
     });
     const defensiveStrengthAwayLast5Metrics = metricsWithNpXg(

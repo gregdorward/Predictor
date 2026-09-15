@@ -4,7 +4,7 @@ import {
 } from "./getStats";
 
 /** Opponent-PPG-adjusted xG average (same formula as getScorePredictions). */
-export function calculateWeightedXG(recentXG, oppositionPPG, leagueAvgPPG = 1.5) {
+export function calculateWeightedXG(recentXG, oppositionPPG, leagueAvgPPG = null) {
   if (
     !Array.isArray(recentXG) ||
     !Array.isArray(oppositionPPG) ||
@@ -14,12 +14,30 @@ export function calculateWeightedXG(recentXG, oppositionPPG, leagueAvgPPG = 1.5)
     return 0;
   }
 
+  const finiteOpp = oppositionPPG
+    .map((v) => Number(v))
+    .filter((v) => Number.isFinite(v) && v > 0);
+  const seriesMean =
+    finiteOpp.length > 0
+      ? finiteOpp.reduce((a, b) => a + b, 0) / finiteOpp.length
+      : null;
+  const baseline =
+    Number.isFinite(Number(leagueAvgPPG)) && Number(leagueAvgPPG) > 0
+      ? Number(leagueAvgPPG)
+      : seriesMean && seriesMean > 0
+        ? seriesMean
+        : 1.5;
+
   let weightedXGSum = 0;
   let totalWeight = 0;
 
   for (let i = 0; i < recentXG.length; i++) {
-    const difficultyMultiplier = oppositionPPG[i] / leagueAvgPPG;
-    weightedXGSum += recentXG[i] * difficultyMultiplier;
+    const xG = Number(recentXG[i]);
+    const oppPPG = Number(oppositionPPG[i]);
+    if (!Number.isFinite(xG)) continue;
+    const difficultyMultiplier =
+      Number.isFinite(oppPPG) && oppPPG > 0 ? oppPPG / baseline : 1;
+    weightedXGSum += xG * difficultyMultiplier;
     totalWeight += difficultyMultiplier;
   }
 

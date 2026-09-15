@@ -5,9 +5,90 @@
 export const CLEAR_OUTCOME_MARGIN = 22;
 
 /**
- * How much home/away form shapes lambda baselines and strength inputs (0 = league only, 1 = form only).
+ * How much team home/away form shapes lambda baselines and strength inputs
+ * (0 = league home/away μ only, 1 = team venue form only).
+ * Prefer 0 when league averageGoalsHome/Away already carry venue split.
  */
 export const VENUE_FORM_WEIGHT = 0.2;
+
+/**
+ * XGRating → λ dampening. 0 disables the multiplier (current branch default;
+ * the multiply was previously commented out). Typical values 0.02–0.025.
+ */
+export const SCORE_XG_DAMP = 0;
+
+/** When 1, apply goal-efficiency mean-reversion to λ (tight clamp 0.9–1.1). */
+export const SCORE_EFFICIENCY = 0;
+
+/**
+ * When 1, multiply λ by formTrendScore from compareFormTrend.
+ * Locked on after Jul–Sep 2026 holdout (+2.3pp ROI vs off).
+ */
+export const SCORE_FORM_TREND = 1;
+
+/** When 1, multiply λ by clinicalScore from getClinicalRating. */
+export const SCORE_CLINICAL = 0;
+
+/**
+ * λ multiplier when rest is Short rest or Congested (1 = off).
+ * Candidate: 0.95.
+ */
+export const SCORE_REST_HAIRCUT = 1;
+
+/**
+ * When 1, shave λ by SCORE_SOS_HAIRCUT_FACTOR if softScheduleFlag is set.
+ */
+export const SCORE_SOS_DAMP = 0;
+
+/** Soft-schedule λ factor when SCORE_SOS_DAMP is on. */
+export const SCORE_SOS_HAIRCUT_FACTOR = 0.97;
+
+/**
+ * Defence strength weight for Clean Sheet Percentage (0 = unused).
+ * Taken from Average Goals Against when enabled (e.g. 0.05 → GA becomes 0.10).
+ */
+export const SCORE_CS_WEIGHT = 0;
+
+/**
+ * Linear recency boost for calculateBalancedRollingAverage.
+ * Newest weight = 1 + boost, oldest = 1. Ignored when SCORE_ROLLING_XI > 0.
+ */
+export const SCORE_ROLLING_BOOST = 2.5;
+
+/**
+ * Exponential time decay ξ per day (Dixon–Coles style).
+ * 0 = off (use linear SCORE_ROLLING_BOOST). Typical half-lives:
+ * 0.995 ≈ 138d, 0.99 ≈ 69d, 0.98 ≈ 34d, 0.95 ≈ 14d.
+ */
+export const SCORE_ROLLING_XI = 0;
+
+/**
+ * Attack/defence weight for opponent-adjusted Weighted XG (0 = unused).
+ * Taken from Average Expected Goals / Average XG Against so weights still sum.
+ */
+export const SCORE_WEIGHTED_XG = 0;
+
+/**
+ * Blend 0–1 applied to volume strength inputs (DA / shots / SOT / goals and against).
+ * 0 = raw averages only; 1 = full opponent-PPG-weighted averages.
+ */
+export const SCORE_OPP_ADJ_METRICS = 0;
+
+/**
+ * Attack weight for Expected Points (xPts from npXG). Taken from Average Goals.
+ * 0 = unused.
+ */
+export const SCORE_XPTS_WEIGHT = 0;
+
+/**
+ * Draw-band τ for SCORE_XPTS_MODE=band: |npXG_for − npXG_against| < τ → 1 pt.
+ */
+export const SCORE_XPTS_DRAW_BAND = 0.3;
+
+/**
+ * How to turn per-match xG into expected points: band | poisson.
+ */
+export const SCORE_XPTS_MODE = "band";
 
 /**
  * When true, settled fixtures use kickoff-frozen scorelines from predictedScores2.
@@ -64,6 +145,21 @@ let activeScoreMatrixAlpha = SCORE_MATRIX_ALPHA;
 let activeScoreNbR = SCORE_NB_R;
 let activeScoreBivariateLambda3 = SCORE_BIVARIATE_LAMBDA3;
 let activeScoreZipPi = SCORE_ZIP_PI;
+let activeVenueFormWeight = VENUE_FORM_WEIGHT;
+let activeScoreXgDamp = SCORE_XG_DAMP;
+let activeScoreEfficiency = SCORE_EFFICIENCY;
+let activeScoreFormTrend = SCORE_FORM_TREND;
+let activeScoreClinical = SCORE_CLINICAL;
+let activeScoreRestHaircut = SCORE_REST_HAIRCUT;
+let activeScoreSosDamp = SCORE_SOS_DAMP;
+let activeScoreCsWeight = SCORE_CS_WEIGHT;
+let activeScoreRollingBoost = SCORE_ROLLING_BOOST;
+let activeScoreRollingXi = SCORE_ROLLING_XI;
+let activeScoreWeightedXg = SCORE_WEIGHTED_XG;
+let activeScoreOppAdjMetrics = SCORE_OPP_ADJ_METRICS;
+let activeScoreXptsWeight = SCORE_XPTS_WEIGHT;
+let activeScoreXptsDrawBand = SCORE_XPTS_DRAW_BAND;
+let activeScoreXptsMode = SCORE_XPTS_MODE;
 
 export function getMaxOutcomeEdge() {
   return activeMaxOutcomeEdge;
@@ -127,6 +223,210 @@ export function resetScoreMatrixConfig() {
   activeScoreNbR = SCORE_NB_R;
   activeScoreBivariateLambda3 = SCORE_BIVARIATE_LAMBDA3;
   activeScoreZipPi = SCORE_ZIP_PI;
+}
+
+export function getVenueFormWeight() {
+  return activeVenueFormWeight;
+}
+
+export function setVenueFormWeight(value) {
+  const parsed = Number(value);
+  activeVenueFormWeight = Number.isFinite(parsed)
+    ? Math.min(1, Math.max(0, parsed))
+    : VENUE_FORM_WEIGHT;
+}
+
+export function getScoreXgDamp() {
+  return activeScoreXgDamp;
+}
+
+export function setScoreXgDamp(value) {
+  const parsed = Number(value);
+  activeScoreXgDamp = Number.isFinite(parsed) ? Math.max(0, parsed) : SCORE_XG_DAMP;
+}
+
+export function getScoreEfficiency() {
+  return activeScoreEfficiency;
+}
+
+export function setScoreEfficiency(value) {
+  const parsed = Number(value);
+  activeScoreEfficiency = Number.isFinite(parsed) && parsed > 0 ? 1 : 0;
+}
+
+export function getScoreFormTrend() {
+  return activeScoreFormTrend;
+}
+
+export function setScoreFormTrend(value) {
+  const parsed = Number(value);
+  activeScoreFormTrend = Number.isFinite(parsed) && parsed > 0 ? 1 : 0;
+}
+
+export function getScoreClinical() {
+  return activeScoreClinical;
+}
+
+export function setScoreClinical(value) {
+  const parsed = Number(value);
+  activeScoreClinical = Number.isFinite(parsed) && parsed > 0 ? 1 : 0;
+}
+
+export function getScoreRestHaircut() {
+  return activeScoreRestHaircut;
+}
+
+export function setScoreRestHaircut(value) {
+  const parsed = Number(value);
+  if (!Number.isFinite(parsed) || parsed <= 0) {
+    activeScoreRestHaircut = SCORE_REST_HAIRCUT;
+    return;
+  }
+  activeScoreRestHaircut = Math.min(1.1, Math.max(0.85, parsed));
+}
+
+export function getScoreSosDamp() {
+  return activeScoreSosDamp;
+}
+
+export function setScoreSosDamp(value) {
+  const parsed = Number(value);
+  activeScoreSosDamp = Number.isFinite(parsed) && parsed > 0 ? 1 : 0;
+}
+
+export function getScoreCsWeight() {
+  return activeScoreCsWeight;
+}
+
+export function setScoreCsWeight(value) {
+  const parsed = Number(value);
+  activeScoreCsWeight = Number.isFinite(parsed)
+    ? Math.min(0.2, Math.max(0, parsed))
+    : SCORE_CS_WEIGHT;
+}
+
+export function getScoreRollingBoost() {
+  return activeScoreRollingBoost;
+}
+
+export function setScoreRollingBoost(value) {
+  const parsed = Number(value);
+  activeScoreRollingBoost = Number.isFinite(parsed)
+    ? Math.min(8, Math.max(0, parsed))
+    : SCORE_ROLLING_BOOST;
+}
+
+export function getScoreRollingXi() {
+  return activeScoreRollingXi;
+}
+
+export function setScoreRollingXi(value) {
+  const parsed = Number(value);
+  if (!Number.isFinite(parsed) || parsed <= 0) {
+    activeScoreRollingXi = 0;
+    return;
+  }
+  // ξ must be in (0, 1); values ≥1 disable decay.
+  activeScoreRollingXi = parsed < 1 ? parsed : 0;
+}
+
+export function getScoreWeightedXg() {
+  return activeScoreWeightedXg;
+}
+
+export function setScoreWeightedXg(value) {
+  const parsed = Number(value);
+  activeScoreWeightedXg = Number.isFinite(parsed)
+    ? Math.min(0.4, Math.max(0, parsed))
+    : SCORE_WEIGHTED_XG;
+}
+
+export function getScoreOppAdjMetrics() {
+  return activeScoreOppAdjMetrics;
+}
+
+export function setScoreOppAdjMetrics(value) {
+  const parsed = Number(value);
+  activeScoreOppAdjMetrics = Number.isFinite(parsed)
+    ? Math.min(1, Math.max(0, parsed))
+    : SCORE_OPP_ADJ_METRICS;
+}
+
+export function getScoreXptsWeight() {
+  return activeScoreXptsWeight;
+}
+
+export function setScoreXptsWeight(value) {
+  const parsed = Number(value);
+  activeScoreXptsWeight = Number.isFinite(parsed)
+    ? Math.min(0.15, Math.max(0, parsed))
+    : SCORE_XPTS_WEIGHT;
+}
+
+export function getScoreXptsDrawBand() {
+  return activeScoreXptsDrawBand;
+}
+
+export function setScoreXptsDrawBand(value) {
+  const parsed = Number(value);
+  activeScoreXptsDrawBand = Number.isFinite(parsed)
+    ? Math.min(1.5, Math.max(0.05, parsed))
+    : SCORE_XPTS_DRAW_BAND;
+}
+
+export function getScoreXptsMode() {
+  return activeScoreXptsMode;
+}
+
+export function setScoreXptsMode(value) {
+  const key = String(value || "")
+    .trim()
+    .toLowerCase();
+  activeScoreXptsMode = key === "poisson" ? "poisson" : "band";
+}
+
+export function resetLambdaWeightConfig() {
+  activeVenueFormWeight = VENUE_FORM_WEIGHT;
+  activeScoreXgDamp = SCORE_XG_DAMP;
+  activeScoreEfficiency = SCORE_EFFICIENCY;
+  activeScoreFormTrend = SCORE_FORM_TREND;
+  activeScoreClinical = SCORE_CLINICAL;
+  activeScoreRestHaircut = SCORE_REST_HAIRCUT;
+  activeScoreSosDamp = SCORE_SOS_DAMP;
+  activeScoreCsWeight = SCORE_CS_WEIGHT;
+  activeScoreRollingBoost = SCORE_ROLLING_BOOST;
+  activeScoreRollingXi = SCORE_ROLLING_XI;
+  activeScoreWeightedXg = SCORE_WEIGHTED_XG;
+  activeScoreOppAdjMetrics = SCORE_OPP_ADJ_METRICS;
+  activeScoreXptsWeight = SCORE_XPTS_WEIGHT;
+  activeScoreXptsDrawBand = SCORE_XPTS_DRAW_BAND;
+  activeScoreXptsMode = SCORE_XPTS_MODE;
+}
+
+/** Clamp a λ multiplier so no single signal dominates. */
+export function clampLambdaSignal(value, min = 0.9, max = 1.1) {
+  const n = Number(value);
+  if (!Number.isFinite(n) || n <= 0) return 1;
+  return Math.min(max, Math.max(min, n));
+}
+
+export function restHaircutMultiplier(form) {
+  const factor = getScoreRestHaircut();
+  if (factor >= 1) return 1;
+  const rest = form?.contextMetrics?.rest;
+  if (!rest) return 1;
+  if (rest.restLabel === "Short rest" || rest.congestionLabel === "Congested") {
+    return factor;
+  }
+  return 1;
+}
+
+export function sosDampMultiplier(form) {
+  if (!getScoreSosDamp()) return 1;
+  if (form?.contextMetrics?.strengthOfSchedule?.softScheduleFlag) {
+    return SCORE_SOS_HAIRCUT_FACTOR;
+  }
+  return 1;
 }
 
 /** Continental/international odds-comparison multiplier in generateGoals. */
@@ -253,6 +553,52 @@ export function applyScoreModelFromEnv(env = process.env) {
   parseEnvNumber(env, "SCORE_ZIP_PI", (value) => {
     activeScoreZipPi = Math.min(1, Math.max(0, value));
   });
+
+  parseEnvNumber(env, "VENUE_FORM_WEIGHT", (value) => {
+    setVenueFormWeight(value);
+  });
+  parseEnvNumber(env, "SCORE_XG_DAMP", (value) => {
+    setScoreXgDamp(value);
+  });
+  parseEnvNumber(env, "SCORE_EFFICIENCY", (value) => {
+    setScoreEfficiency(value);
+  });
+  parseEnvNumber(env, "SCORE_FORM_TREND", (value) => {
+    setScoreFormTrend(value);
+  });
+  parseEnvNumber(env, "SCORE_CLINICAL", (value) => {
+    setScoreClinical(value);
+  });
+  parseEnvNumber(env, "SCORE_REST_HAIRCUT", (value) => {
+    setScoreRestHaircut(value);
+  });
+  parseEnvNumber(env, "SCORE_SOS_DAMP", (value) => {
+    setScoreSosDamp(value);
+  });
+  parseEnvNumber(env, "SCORE_CS_WEIGHT", (value) => {
+    setScoreCsWeight(value);
+  });
+  parseEnvNumber(env, "SCORE_ROLLING_BOOST", (value) => {
+    setScoreRollingBoost(value);
+  });
+  parseEnvNumber(env, "SCORE_ROLLING_XI", (value) => {
+    setScoreRollingXi(value);
+  });
+  parseEnvNumber(env, "SCORE_WEIGHTED_XG", (value) => {
+    setScoreWeightedXg(value);
+  });
+  parseEnvNumber(env, "SCORE_OPP_ADJ_METRICS", (value) => {
+    setScoreOppAdjMetrics(value);
+  });
+  parseEnvNumber(env, "SCORE_XPTS_WEIGHT", (value) => {
+    setScoreXptsWeight(value);
+  });
+  parseEnvNumber(env, "SCORE_XPTS_DRAW_BAND", (value) => {
+    setScoreXptsDrawBand(value);
+  });
+  if (env.SCORE_XPTS_MODE != null && env.SCORE_XPTS_MODE !== "") {
+    setScoreXptsMode(env.SCORE_XPTS_MODE);
+  }
 
   const snapshots =
     parseEnvBoolean(env, "USE_RESULT_SNAPSHOTS") ??

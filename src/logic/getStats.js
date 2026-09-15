@@ -8,6 +8,7 @@ import { userDetail } from "../logic/authProvider";
 import { checkUserPaidStatus } from "../logic/hasUserPaid";
 import { render } from '../utils/render';
 import { getCompetitionVenueForm, getLeagueFixturesByLeagueId } from "../utils/leagueResultsAccess";
+import { getScoreCsWeight, getScoreWeightedXg, getScoreXptsWeight } from "./scoreModelConfig.js";
 
 export async function getPointAverage(pointTotal, games) {
   return pointTotal / games;
@@ -19,7 +20,9 @@ const DOMESTIC_ATTACK_RANGES = {
     "Average Shots": { min: 7.35, max: 17.66 },
     "Average Shots On Target": { min: 3.39, max: 5.71 },
     "Average Expected Goals": { min: 1.03, max: 1.92 },
+    "Weighted XG": { min: 1.03, max: 1.92 },
     "Average Goals": { min: 0.95, max: 1.91 },
+    "Expected Points": { min: 0.6, max: 2.2 },
     "Average Shot Value": { min: 5.56, max: 26.94 },
     "Injury impact": { min: 2, max: 8 },
   },
@@ -28,7 +31,9 @@ const DOMESTIC_ATTACK_RANGES = {
     "Average Shots": { min: 5.47, max: 19.54 },
     "Average Shots On Target": { min: 2.65, max: 6.55 },
     "Average Expected Goals": { min: 0.77, max: 2.13 },
+    "Weighted XG": { min: 0.77, max: 2.13 },
     "Average Goals": { min: 0.72, max: 2.13 },
+    "Expected Points": { min: 0.4, max: 2.4 },
     "Average Shot Value": { min: 5.31, max: 28.19 },
   },
 };
@@ -41,6 +46,7 @@ const INTERNATIONAL_ATTACK_RANGES = {
     "Average Expected Goals": { min: 0.55, max: 2.3 },
     "Weighted XG": { min: 0.55, max: 2.3 },
     "Average Goals": { min: 0.5, max: 2.3 },
+    "Expected Points": { min: 0.4, max: 2.3 },
     "Average Shot Value": { min: 5.56, max: 26.94 },
     "Injury impact": { min: 2, max: 8 },
   },
@@ -51,6 +57,7 @@ const INTERNATIONAL_ATTACK_RANGES = {
     "Average Expected Goals": { min: 0.45, max: 2.4 },
     "Weighted XG": { min: 0.45, max: 2.4 },
     "Average Goals": { min: 0.4, max: 2.4 },
+    "Expected Points": { min: 0.3, max: 2.5 },
     "Average Shot Value": { min: 5.31, max: 28.19 },
   },
 };
@@ -58,6 +65,7 @@ const INTERNATIONAL_ATTACK_RANGES = {
 const DOMESTIC_DEFENCE_RANGES = {
   overall: {
     "Average XG Against": { min: 1.03, max: 1.92 },
+    "Weighted XG Against": { min: 1.03, max: 1.92 },
     "Average Goals Against": { min: 0.95, max: 1.91 },
     "Average SOT Against": { min: 3.39, max: 5.71 },
     "Average Dangerous Attacks Against": { min: 31.8, max: 68.83 },
@@ -67,6 +75,7 @@ const DOMESTIC_DEFENCE_RANGES = {
   },
   last5: {
     "Average XG Against": { min: 0.77, max: 2.13 },
+    "Weighted XG Against": { min: 0.77, max: 2.13 },
     "Average Goals Against": { min: 0.72, max: 2.13 },
     "Average SOT Against": { min: 2.65, max: 6.55 },
     "Average Dangerous Attacks Against": { min: 26.96, max: 72.42 },
@@ -118,13 +127,18 @@ export async function calculateAttackingStrength(
   last5 = false,
   options = {}
 ) {
+  const wxgWeight = getScoreWeightedXg();
+  const rawXgWeight = Math.max(0, 0.5 - wxgWeight);
+  const xptsWeight = getScoreXptsWeight();
+  const goalsWeight = Math.max(0, 0.15 - xptsWeight);
   const weights = {
     "Average Dangerous Attacks": 0.1,
     "Average Shots": 0.1,
     "Average Shots On Target": 0.15,
-    "Average Expected Goals": 0.5,
-    "Weighted XG": 0,
-    "Average Goals": 0.15,
+    "Average Expected Goals": rawXgWeight,
+    "Weighted XG": wxgWeight,
+    "Average Goals": goalsWeight,
+    "Expected Points": xptsWeight,
     Corners: 0,
     "Average Shot Value": 0,
     Possession: 0,
@@ -169,12 +183,17 @@ export async function calculateDefensiveStrength(
   last5 = false,
   options = {}
 ) {
+  const csWeight = getScoreCsWeight();
+  const goalsAgainstWeight = Math.max(0, 0.15 - csWeight);
+  const wxgAgainstWeight = getScoreWeightedXg();
+  const rawXgaWeight = Math.max(0, 0.5 - wxgAgainstWeight);
   const weights = {
-    "Average XG Against": 0.5,
-    "Weighted XG Against": 0,
-    "Average Goals Against": 0.15,
+    "Average XG Against": rawXgaWeight,
+    "Weighted XG Against": wxgAgainstWeight,
+    "Average Goals Against": goalsAgainstWeight,
     "Average SOT Against": 0.25,
     "Average Dangerous Attacks Against": 0.1,
+    "Clean Sheet Percentage": csWeight,
     "Injury impact": 0,
   };
 

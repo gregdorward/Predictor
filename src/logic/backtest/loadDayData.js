@@ -29,6 +29,27 @@ function matchesCachePath(isoDate) {
   return resolve(matchesCacheDir(), `matches-${isoDate}.json`);
 }
 
+function resultsCachePath() {
+  return resolve(matchesCacheDir(), "results.json");
+}
+
+function readResultsCache() {
+  const path = resultsCachePath();
+  if (!existsSync(path)) return null;
+  try {
+    const data = JSON.parse(readFileSync(path, "utf8"));
+    return Array.isArray(data) ? data : null;
+  } catch {
+    return null;
+  }
+}
+
+function writeResultsCache(data) {
+  if (!Array.isArray(data)) return;
+  mkdirSync(matchesCacheDir(), { recursive: true });
+  writeFileSync(resultsCachePath(), JSON.stringify(data));
+}
+
 function readMatchesCache(isoDate) {
   const path = matchesCachePath(isoDate);
   if (!existsSync(path)) return null;
@@ -63,6 +84,11 @@ function parseAllForm(formData) {
   return [];
 }
 
+/**
+ * League-history blob for getPastLeagueResults.
+ * Prefers live /results; on 404/stale falls back to scripts/output/backtest-cache/results.json
+ * (warm with scripts/warm-backtest-results-cache.mjs).
+ */
 export async function fetchGlobalBacktestData(apiOrigin) {
   const origin = normalizeOrigin(apiOrigin);
 
@@ -72,8 +98,19 @@ export async function fetchGlobalBacktestData(apiOrigin) {
     fetchJson(`${origin}predictedScores2`),
   ]);
 
-  if (!resultsRes.ok) {
-    throw new Error(`Failed to load results (${resultsRes.status}).`);
+  let leagueResults = Array.isArray(resultsRes.data) ? resultsRes.data : null;
+  if (resultsRes.ok && leagueResults) {
+    writeResultsCache(leagueResults);
+  } else {
+    const cached = readResultsCache();
+    if (cached) {
+      console.warn(
+        `Using cached results.json (API /results → ${resultsRes.status}). Warm with: node scripts/warm-backtest-results-cache.mjs`
+      );
+      leagueResults = cached;
+    } else {
+      throw new Error(`Failed to load results (${resultsRes.status}).`);
+    }
   }
 
   let leagueAveragesFallback = null;
@@ -92,7 +129,7 @@ export async function fetchGlobalBacktestData(apiOrigin) {
   }
 
   return {
-    leagueResults: Array.isArray(resultsRes.data) ? resultsRes.data : [],
+    leagueResults,
     leagueAveragesFallback,
     predictedScores,
   };
