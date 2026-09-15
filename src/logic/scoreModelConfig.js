@@ -113,6 +113,13 @@ export const SCORE_LAMBDA_ENGINE = "maher_recent";
 export const SCORE_MAHER_RECENT_BLEND = 0.5;
 
 /**
+ * Blend weight of de-vigged bookie 1X2 into model outcome probabilities.
+ * 0 = pure model; 1 = pure market. Does not change λ.
+ * Locked at 0.25 after Jul–Sep 2026: Brier 0.627 vs 0.638, ROI still +1.09%.
+ */
+export const SCORE_ODDS_BLEND = 0.25;
+
+/**
  * When true, settled fixtures use kickoff-frozen scorelines from predictedScores2.
  * When false, scorelines always follow the live model (backtest and site).
  */
@@ -184,6 +191,7 @@ let activeScoreXptsDrawBand = SCORE_XPTS_DRAW_BAND;
 let activeScoreXptsMode = SCORE_XPTS_MODE;
 let activeScoreLambdaEngine = SCORE_LAMBDA_ENGINE;
 let activeScoreMaherRecentBlend = SCORE_MAHER_RECENT_BLEND;
+let activeScoreOddsBlend = SCORE_ODDS_BLEND;
 
 export function getMaxOutcomeEdge() {
   return activeMaxOutcomeEdge;
@@ -443,6 +451,17 @@ export function setScoreMaherRecentBlend(value) {
     : SCORE_MAHER_RECENT_BLEND;
 }
 
+export function getScoreOddsBlend() {
+  return activeScoreOddsBlend;
+}
+
+export function setScoreOddsBlend(value) {
+  const parsed = Number(value);
+  activeScoreOddsBlend = Number.isFinite(parsed)
+    ? Math.min(1, Math.max(0, parsed))
+    : SCORE_ODDS_BLEND;
+}
+
 export function resetLambdaWeightConfig() {
   activeVenueFormWeight = VENUE_FORM_WEIGHT;
   activeScoreXgDamp = SCORE_XG_DAMP;
@@ -461,6 +480,7 @@ export function resetLambdaWeightConfig() {
   activeScoreXptsMode = SCORE_XPTS_MODE;
   activeScoreLambdaEngine = SCORE_LAMBDA_ENGINE;
   activeScoreMaherRecentBlend = SCORE_MAHER_RECENT_BLEND;
+  activeScoreOddsBlend = SCORE_ODDS_BLEND;
 }
 
 /** Clamp a λ multiplier so no single signal dominates. */
@@ -664,6 +684,9 @@ export function applyScoreModelFromEnv(env = process.env) {
   }
   parseEnvNumber(env, "SCORE_MAHER_RECENT_BLEND", (value) => {
     setScoreMaherRecentBlend(value);
+  });
+  parseEnvNumber(env, "SCORE_ODDS_BLEND", (value) => {
+    setScoreOddsBlend(value);
   });
 
   const snapshots =

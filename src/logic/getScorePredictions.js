@@ -56,6 +56,7 @@ import {
   getScoreXptsMode,
   getScoreLambdaEngine,
   getScoreMaherRecentBlend,
+  getScoreOddsBlend,
 } from "./scoreModelConfig.js";
 import {
   computeGoalEfficiency,
@@ -79,6 +80,7 @@ import { maherLambdas } from "./maherRatings.js";
 import { logLinearLambdas } from "./logLinearLambda.js";
 import { xgPrimaryLambdas } from "./xgPrimaryLambda.js";
 import { additiveLambdas } from "./additiveLambda.js";
+import { blendModelWithMarket1x2 } from "./oddsProbabilityBlend.js";
 
 export {
   CLEAR_OUTCOME_MARGIN,
@@ -5522,6 +5524,29 @@ export async function calculateScore(match, index, divider, calculate, AIPredict
     const { over, under } = getOverUnderProbability(calibratedMatrix, 2.5);
 
     ensureMatchWinProbabilities(match, homeWin, draw, awayWin);
+
+    const oddsBlendWeight = getScoreOddsBlend();
+    if (oddsBlendWeight > 0) {
+      match.homeWinProbabilityModel = match.homeWinProbability;
+      match.drawProbabilityModel = match.drawProbability;
+      match.awayWinProbabilityModel = match.awayWinProbability;
+      const blended = blendModelWithMarket1x2(
+        match.homeWinProbability,
+        match.drawProbability,
+        match.awayWinProbability,
+        match.homeOdds,
+        match.drawOdds,
+        match.awayOdds,
+        oddsBlendWeight
+      );
+      if (blended.blended) {
+        match.homeWinProbability = blended.home;
+        match.drawProbability = blended.draw;
+        match.awayWinProbability = blended.away;
+        match.oddsBlendWeight = oddsBlendWeight;
+      }
+    }
+
     match.bttsYesProbability = Number.isFinite(yes) ? yes : 50;
     match.bttsNoProbability = Number.isFinite(no) ? no : 50;
     match.over25Probability = Number.isFinite(over) ? over : 50;
