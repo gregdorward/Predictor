@@ -38,7 +38,7 @@ export const PAGE_META = {
   "/highest-scoring-leagues": {
     title: "Highest Scoring Leagues | Over 2.5 Football Stats",
     description:
-      "Football leagues ranked by average goals and Over 2.5 rate. Find high-scoring competitions for goals, BTTS and match research.",
+      "Highest- and lowest-scoring football leagues ranked by goals per match, Over 2.5 and Under 2.5 rates for goals, BTTS and match research.",
   },
   "/u25": {
     title: "Under 2.5 Goals Leagues | Low Scoring Football Stats",
@@ -53,12 +53,12 @@ export const PAGE_META = {
   "/fixtureshigh": {
     title: "Over 2.5 Goals Fixtures Today | High Scoring Match Stats",
     description:
-      "Today's fixtures with high goal potential, Over 2.5 odds and combined scoring averages for stats-led match research.",
+      "Highest-scoring teams and today's Over 2.5 fixtures, with average goals, Over 2.5 rates and goal-market odds for stats-led match research.",
   },
   "/bttsfixtures": {
     title: "BTTS Fixtures Today | Both Teams To Score Match Stats",
     description:
-      "Both Teams To Score fixture insights for today's matches, with scoring averages, BTTS odds and stats-backed match research.",
+      "Teams with the strongest and weakest BTTS records, plus today's Both Teams To Score fixtures, scoring averages and odds.",
   },
   "/bttsteams": {
     title: "BTTS Teams Today | Both Teams To Score Stats & Predictions",

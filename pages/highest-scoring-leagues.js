@@ -1,11 +1,25 @@
 import HighestScoringLeagues from "../src/components/HighestScoringLeagues";
-import { loadHighestScoringLeagueRows } from "../src/seo/statPageData";
+import {
+  loadHighestScoringLeagueRows,
+  loadU25Rows,
+} from "../src/seo/statPageData";
 
-export default function HighestScoringLeaguesPage({ initialRows }) {
-  return <HighestScoringLeagues initialRows={initialRows} />;
+export default function HighestScoringLeaguesPage({
+  initialRows,
+  initialLowScoringRows,
+}) {
+  return (
+    <HighestScoringLeagues
+      initialRows={initialRows}
+      initialLowScoringRows={initialLowScoringRows}
+    />
+  );
 }
 
 export async function getServerSideProps() {
-  const initialRows = await loadHighestScoringLeagueRows();
-  return { props: { initialRows } };
+  const [initialRows, initialLowScoringRows] = await Promise.all([
+    loadHighestScoringLeagueRows(),
+    loadU25Rows(),
+  ]);
+  return { props: { initialRows, initialLowScoringRows } };
 }

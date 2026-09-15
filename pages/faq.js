@@ -26,7 +26,7 @@ const FAQ_ITEMS = [
   {
     question: "What is BTTS / Over 2.5 research on the site?",
     answer:
-      "BTTS means both teams to score. Over 2.5 means three or more goals in the match. Soccer Stats Hub has dedicated research pages for BTTS teams, BTTS fixtures, low-BTTS sides, Over 2.5 teams and high goal-potential fixtures, plus league pages that summarise BTTS and Over 2.5 rates. On the homepage you can also filter tips toward those markets and build BTTS or goals-focused multis after predictions run.",
+      "BTTS means both teams to score. Over 2.5 means three or more goals in the match. Soccer Stats Hub has research hubs for BTTS (strongest and weakest teams plus today’s fixtures), Over 2.5 (highest-scoring teams plus goal-potential fixtures), and highest- and lowest-scoring leagues. League pages also summarise BTTS and Over 2.5 rates. On the homepage you can also filter tips toward those markets and build BTTS or goals-focused multis after predictions run.",
   },
   {
     question: "How many competitions do you cover?",
@@ -128,6 +128,8 @@ export default function FaqPage() {
             <a href="/bttsfixtures/">BTTS fixtures</a>
             {" · "}
             <a href="/fixtureshigh/">Over 2.5 fixtures</a>
+            {" · "}
+            <a href="/highest-scoring-leagues/">Highest scoring leagues</a>
           </p>
         </main>
       </SiteHeader>

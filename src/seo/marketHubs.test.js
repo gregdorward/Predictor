@@ -1,6 +1,6 @@
 import { SITE_NAV_LINKS } from "./siteNavLinks";
 import { STATIC_SITEMAP_ROUTES } from "./sitemapUrls";
-import { getCoreStatLinks } from "./statPageSeoConfig";
+import { getCoreStatLinks, STAT_PAGE_SEO } from "./statPageSeoConfig";
 
 const RETIRED_MARKET_PATHS = [
   "/o25/",
@@ -41,5 +41,30 @@ describe("collapsed market hubs", () => {
     for (const retired of RETIRED_MARKET_PATHS) {
       expect(hrefs).not.toContain(retired);
     }
+  });
+
+  test("hub copy retains unique questions from retired pages", () => {
+    const questions = (key) =>
+      STAT_PAGE_SEO[key].faqItems.map((item) => item.question);
+
+    expect(questions("bttsFixtures")).toEqual(
+      expect.arrayContaining([
+        "What does BTTS mean?",
+        "What is BTTS No?",
+        "Why rank teams by BTTS percentage?",
+      ])
+    );
+    expect(questions("fixturesHigh")).toEqual(
+      expect.arrayContaining([
+        "What does Over 2.5 mean?",
+        "Why rank teams instead of matches?",
+      ])
+    );
+    expect(questions("highestScoringLeagues")).toEqual(
+      expect.arrayContaining([
+        "What makes a league low scoring?",
+        "How should I use Under 2.5 league stats?",
+      ])
+    );
   });
 });

@@ -1,16 +1,42 @@
 import { test, expect } from '@playwright/test';
 
-type StatsPage = {
-  path: string;
-  heading: string;
-  tableLabel: string;
+type StatsTable = {
+  label: string;
   requireRows: boolean;
 };
 
+type StatsPage = {
+  path: string;
+  heading: string;
+  tables: StatsTable[];
+};
+
 const statsPages: StatsPage[] = [
-  { path: '/bttsfixtures/', heading: 'BTTS Insights', tableLabel: 'BTTS potential table', requireRows: false },
-  { path: '/fixtureshigh/', heading: 'Goal Potential Insights', tableLabel: 'highest scoring games table', requireRows: true },
-  { path: '/highest-scoring-leagues/', heading: 'Highest Scoring Leagues', tableLabel: 'Highest scoring leagues table', requireRows: true },
+  {
+    path: '/bttsfixtures/',
+    heading: 'BTTS Insights',
+    tables: [
+      { label: 'BTTS teams table', requireRows: true },
+      { label: 'Low BTTS teams table', requireRows: true },
+      { label: 'BTTS potential table', requireRows: false },
+    ],
+  },
+  {
+    path: '/fixtureshigh/',
+    heading: 'Goal Potential Insights',
+    tables: [
+      { label: 'highest scoring teams table', requireRows: true },
+      { label: 'highest scoring games table', requireRows: true },
+    ],
+  },
+  {
+    path: '/highest-scoring-leagues/',
+    heading: 'Highest Scoring Leagues',
+    tables: [
+      { label: 'Highest scoring leagues table', requireRows: true },
+      { label: 'Lowest scoring leagues table', requireRows: true },
+    ],
+  },
 ];
 
 const retiredHubRedirects = [
@@ -21,18 +47,22 @@ const retiredHubRedirects = [
 ];
 
 test.describe('Stats subpages', () => {
-  for (const { path, heading, tableLabel, requireRows } of statsPages) {
-    test(`${path} renders heading and data table`, async ({ page }) => {
+  for (const { path, heading, tables } of statsPages) {
+    test(`${path} renders heading and amalgamated data tables`, async ({ page }) => {
       await page.goto(path);
 
       await expect(page.getByRole('heading', { name: heading })).toBeVisible();
-      await expect(page.getByRole('table', { name: tableLabel })).toBeVisible();
-      await expect(page.locator('table thead th').first()).toBeVisible();
 
-      const rows = page.locator('table tbody tr');
-      if (requireRows) {
-        await expect(rows.first()).toBeVisible({ timeout: 20_000 });
-        expect(await rows.count()).toBeGreaterThan(0);
+      for (const { label, requireRows } of tables) {
+        const table = page.getByRole('table', { name: label });
+        await expect(table).toBeVisible();
+        await expect(table.locator('thead th').first()).toBeVisible();
+
+        if (requireRows) {
+          const rows = table.locator('tbody tr');
+          await expect(rows.first()).toBeVisible({ timeout: 20_000 });
+          expect(await rows.count()).toBeGreaterThan(0);
+        }
       }
     });
 

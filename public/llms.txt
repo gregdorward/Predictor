@@ -7,9 +7,9 @@
 ## Key pages
 
 - [Home](https://www.soccerstatshub.com/): Main dashboard with fixtures and predictions.
-- [BTTS fixtures](https://www.soccerstatshub.com/bttsfixtures/): Upcoming both-teams-to-score fixtures.
-- [Highest scoring fixtures](https://www.soccerstatshub.com/fixtureshigh/): Fixtures expected to produce goals.
-- [Highest scoring leagues](https://www.soccerstatshub.com/highest-scoring-leagues/): Leagues ranked by goals per game.
+- [BTTS fixtures](https://www.soccerstatshub.com/bttsfixtures/): Strongest and weakest BTTS teams plus today’s both-teams-to-score fixtures.
+- [Highest scoring fixtures](https://www.soccerstatshub.com/fixtureshigh/): Highest-scoring teams and fixtures expected to produce goals.
+- [Highest scoring leagues](https://www.soccerstatshub.com/highest-scoring-leagues/): Highest- and lowest-scoring leagues ranked by goals per game.
 - [Premier League 2026/27 preview](https://www.soccerstatshub.com/premier-league-2026-27/): Season preview with sourced analysis.
 - [About](https://www.soccerstatshub.com/about/): Site background and mission.
 - [Methodology](https://www.soccerstatshub.com/methodology/): How predictions and stats are built.
