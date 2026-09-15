@@ -113,6 +113,17 @@ export const SCORE_LAMBDA_ENGINE = "maher_recent";
 export const SCORE_MAHER_RECENT_BLEND = 0.5;
 
 /**
+ * Match rate used when fitting Maher attack/defence.
+ * - xg: Footystats xG (goals fallback)
+ * - npxg: non-penalty xG
+ * - goals: raw goals
+ * - mix: 0.7·npxG + 0.3·goals
+ *
+ * Locked to npxg after Jul–Sep 2026 holdout (+1.04pp ROI vs xg).
+ */
+export const SCORE_MAHER_RATE_SOURCE = "npxg";
+
+/**
  * Blend weight of de-vigged bookie 1X2 into model outcome probabilities.
  * 0 = pure model; 1 = pure market. Does not change λ.
  * Locked at 0.25 after Jul–Sep 2026: Brier 0.627 vs 0.638, ROI still +1.09%.
@@ -191,6 +202,7 @@ let activeScoreXptsDrawBand = SCORE_XPTS_DRAW_BAND;
 let activeScoreXptsMode = SCORE_XPTS_MODE;
 let activeScoreLambdaEngine = SCORE_LAMBDA_ENGINE;
 let activeScoreMaherRecentBlend = SCORE_MAHER_RECENT_BLEND;
+let activeScoreMaherRateSource = SCORE_MAHER_RATE_SOURCE;
 let activeScoreOddsBlend = SCORE_ODDS_BLEND;
 
 export function getMaxOutcomeEdge() {
@@ -451,6 +463,26 @@ export function setScoreMaherRecentBlend(value) {
     : SCORE_MAHER_RECENT_BLEND;
 }
 
+export function getScoreMaherRateSource() {
+  return activeScoreMaherRateSource;
+}
+
+export function setScoreMaherRateSource(value) {
+  const key = String(value || "")
+    .trim()
+    .toLowerCase();
+  if (
+    key === "xg" ||
+    key === "npxg" ||
+    key === "goals" ||
+    key === "mix"
+  ) {
+    activeScoreMaherRateSource = key;
+    return;
+  }
+  activeScoreMaherRateSource = SCORE_MAHER_RATE_SOURCE;
+}
+
 export function getScoreOddsBlend() {
   return activeScoreOddsBlend;
 }
@@ -480,6 +512,7 @@ export function resetLambdaWeightConfig() {
   activeScoreXptsMode = SCORE_XPTS_MODE;
   activeScoreLambdaEngine = SCORE_LAMBDA_ENGINE;
   activeScoreMaherRecentBlend = SCORE_MAHER_RECENT_BLEND;
+  activeScoreMaherRateSource = SCORE_MAHER_RATE_SOURCE;
   activeScoreOddsBlend = SCORE_ODDS_BLEND;
 }
 
@@ -685,6 +718,9 @@ export function applyScoreModelFromEnv(env = process.env) {
   parseEnvNumber(env, "SCORE_MAHER_RECENT_BLEND", (value) => {
     setScoreMaherRecentBlend(value);
   });
+  if (env.SCORE_MAHER_RATE_SOURCE != null && env.SCORE_MAHER_RATE_SOURCE !== "") {
+    setScoreMaherRateSource(env.SCORE_MAHER_RATE_SOURCE);
+  }
   parseEnvNumber(env, "SCORE_ODDS_BLEND", (value) => {
     setScoreOddsBlend(value);
   });

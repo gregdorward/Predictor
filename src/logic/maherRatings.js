@@ -1,9 +1,10 @@
 /**
  * Maher-style attack/defence ratings from league history.
  *
- * For each team before asOf: attack = mean xG (else goals) for;
- * defence = mean xG (else goals) against. Ratings are league-normalised
- * to mean 1, then shrunk toward 1 when sample size is small.
+ * For each team before asOf: attack = mean rate for; defence = mean rate
+ * against. Rate source is configurable (xg | npxg | goals | mix).
+ * Ratings are league-normalised to mean 1, then shrunk toward 1 when
+ * sample size is small.
  *
  * λ_home ≈ μ_home × att_home × def_away
  * λ_away ≈ μ_away × att_away × def_home
@@ -14,8 +15,11 @@ import {
   isCompleteLeagueHistoryFixture,
   teamNamesMatch,
 } from "../utils/leagueResultsAccess.js";
+import { resolveTeamXgAndNpXg } from "./nonPenaltyXg.js";
 
 const ratingCache = new Map();
+
+const VALID_RATE_SOURCES = new Set(["xg", "npxg", "goals", "mix"]);
 
 function finitePositive(value, fallback = null) {
   const n = Number(value);
@@ -28,6 +32,52 @@ function resolveTeamXg(rawXg, goalsFallback) {
   if (Number.isFinite(xg) && xg > 0 && xg <= 7) return xg;
   const goals = Number(goalsFallback);
   return Number.isFinite(goals) && goals >= 0 ? goals : 0;
+}
+
+function normalizeRateSource(rateSource) {
+  const key = String(rateSource || "xg")
+    .trim()
+    .toLowerCase();
+  return VALID_RATE_SOURCES.has(key) ? key : "xg";
+}
+
+/**
+ * Per-match attacking rate for one side.
+ * @param {object} fixture
+ * @param {"home"|"away"} side
+ * @param {string} rateSource
+ */
+function teamRate(fixture, side, rateSource) {
+  const isHome = side === "home";
+  const rawXg = isHome ? fixture.team_a_xg : fixture.team_b_xg;
+  const goals = Number(isHome ? fixture.homeGoalCount : fixture.awayGoalCount);
+  const goalsSafe = Number.isFinite(goals) && goals >= 0 ? goals : 0;
+  const source = normalizeRateSource(rateSource);
+
+  if (source === "goals") {
+    return goalsSafe;
+  }
+
+  if (source === "xg") {
+    return resolveTeamXg(rawXg, goalsSafe);
+  }
+
+  const pensRecorded = fixture.pens_recorded;
+  const pensWon = isHome
+    ? fixture.team_a_penalties_won
+    : fixture.team_b_penalties_won;
+  const { npXG } = resolveTeamXgAndNpXg(
+    rawXg,
+    goalsSafe,
+    pensRecorded,
+    pensWon
+  );
+
+  if (source === "mix") {
+    return 0.7 * npXG + 0.3 * goalsSafe;
+  }
+
+  return npXG;
 }
 
 function dayKey(asOfUnix) {
@@ -49,20 +99,21 @@ function shrinkToOne(value, games, fullSample = 8) {
  * @param {object[]} allLeagueResults
  * @param {number|string} leagueId
  * @param {number} asOfUnix seconds
- * @param {{ maxGamesPerTeam?: number|null }} [options]
+ * @param {{ maxGamesPerTeam?: number|null, rateSource?: string }} [options]
  * @returns {{ byTeam: Map<string, { att: number, def: number, games: number }>, mu: number }}
  */
 export function fitMaherRatings(
   allLeagueResults,
   leagueId,
   asOfUnix,
-  { maxGamesPerTeam = null } = {}
+  { maxGamesPerTeam = null, rateSource = "xg" } = {}
 ) {
   const cap =
     Number.isFinite(Number(maxGamesPerTeam)) && Number(maxGamesPerTeam) > 0
       ? Math.round(Number(maxGamesPerTeam))
       : null;
-  const cacheKey = `${leagueId}:${dayKey(asOfUnix)}:${cap ?? "all"}`;
+  const source = normalizeRateSource(rateSource);
+  const cacheKey = `${leagueId}:${dayKey(asOfUnix)}:${cap ?? "all"}:${source}`;
   if (ratingCache.has(cacheKey)) {
     return ratingCache.get(cacheKey);
   }
@@ -88,10 +139,10 @@ export function fitMaherRatings(
 
     const homeName = fixture.home_name;
     const awayName = fixture.away_name;
-    const homeXg = resolveTeamXg(fixture.team_a_xg, fixture.homeGoalCount);
-    const awayXg = resolveTeamXg(fixture.team_b_xg, fixture.awayGoalCount);
-    pushGame(homeName, homeXg, awayXg, dateUnix);
-    pushGame(awayName, awayXg, homeXg, dateUnix);
+    const homeRate = teamRate(fixture, "home", source);
+    const awayRate = teamRate(fixture, "away", source);
+    pushGame(homeName, homeRate, awayRate, dateUnix);
+    pushGame(awayName, awayRate, homeRate, dateUnix);
   }
 
   /** @type {Map<string, { gf: number, ga: number, games: number }>} */
@@ -169,6 +220,7 @@ function blendRating(seasonVal, recentVal, blend) {
  * - none: shared μ, no home boost
  *
  * recentBlend ∈ [0,1]: mix season ratings with last-`recentGames` ratings.
+ * rateSource: xg | npxg | goals | mix (0.7·npxG + 0.3·goals).
  *
  * @returns {{ home: number, away: number, attHome: number, defHome: number, attAway: number, defAway: number, gamma?: number } | null}
  */
@@ -185,8 +237,12 @@ export function maherLambdas({
   homeAdvMode = "split",
   recentBlend = 0,
   recentGames = 5,
+  rateSource = "xg",
 }) {
-  const fitted = fitMaherRatings(allLeagueResults, leagueId, asOfUnix);
+  const source = normalizeRateSource(rateSource);
+  const fitted = fitMaherRatings(allLeagueResults, leagueId, asOfUnix, {
+    rateSource: source,
+  });
   if (!fitted?.byTeam?.size) return null;
 
   const blend = Math.min(1, Math.max(0, Number(recentBlend) || 0));
@@ -194,6 +250,7 @@ export function maherLambdas({
   if (blend > 0) {
     recentFitted = fitMaherRatings(allLeagueResults, leagueId, asOfUnix, {
       maxGamesPerTeam: recentGames,
+      rateSource: source,
     });
   }
 

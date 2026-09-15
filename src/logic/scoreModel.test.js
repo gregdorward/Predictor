@@ -18,6 +18,7 @@ import {
   SCORE_LAMBDA_ENGINE,
   SCORE_MAHER_RECENT_BLEND,
   SCORE_ODDS_BLEND,
+  SCORE_MAHER_RATE_SOURCE,
   applyMaxOutcomeEdgeFromEnv,
   getClearOutcomeMargin,
   getMaxOutcomeEdge,
@@ -41,6 +42,7 @@ import {
   getScoreLambdaEngine,
   getScoreMaherRecentBlend,
   getScoreOddsBlend,
+  getScoreMaherRateSource,
   clampLambdaSignal,
   restHaircutMultiplier,
   sosDampMultiplier,
@@ -117,6 +119,8 @@ describe("lambda weight knobs", () => {
     expect(getScoreLambdaEngine()).toBe("maher_recent");
     expect(SCORE_MAHER_RECENT_BLEND).toBe(0.5);
     expect(getScoreMaherRecentBlend()).toBe(0.5);
+    expect(SCORE_MAHER_RATE_SOURCE).toBe("npxg");
+    expect(getScoreMaherRateSource()).toBe("npxg");
     expect(SCORE_ODDS_BLEND).toBe(0.25);
     expect(getScoreOddsBlend()).toBe(0.25);
   });
@@ -159,6 +163,17 @@ describe("lambda weight knobs", () => {
   test("applyScoreModelFromEnv reads SCORE_ODDS_BLEND", () => {
     applyScoreModelFromEnv({ SCORE_ODDS_BLEND: "0.25" });
     expect(getScoreOddsBlend()).toBe(0.25);
+  });
+
+  test("applyScoreModelFromEnv reads SCORE_MAHER_RATE_SOURCE", () => {
+    applyScoreModelFromEnv({ SCORE_MAHER_RATE_SOURCE: "npxg" });
+    expect(getScoreMaherRateSource()).toBe("npxg");
+    applyScoreModelFromEnv({ SCORE_MAHER_RATE_SOURCE: "goals" });
+    expect(getScoreMaherRateSource()).toBe("goals");
+    applyScoreModelFromEnv({ SCORE_MAHER_RATE_SOURCE: "mix" });
+    expect(getScoreMaherRateSource()).toBe("mix");
+    applyScoreModelFromEnv({ SCORE_MAHER_RATE_SOURCE: "nope" });
+    expect(getScoreMaherRateSource()).toBe("npxg");
   });
 
   test("SCORE_ROLLING_XI >= 1 disables decay", () => {

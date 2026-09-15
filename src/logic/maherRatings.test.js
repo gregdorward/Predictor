@@ -128,4 +128,51 @@ describe("maherRatings", () => {
     // Full recent weight on last game only should differ from full season
     expect(blended.attHome).not.toBeCloseTo(season.attHome, 5);
   });
+
+  test("npxg rate source deducts penalty xG from ratings input", () => {
+    const withPens = [
+      {
+        id: leagueId,
+        fixtures: [
+          {
+            id: 10,
+            status: "complete",
+            date_unix: 1_700_000_000,
+            home_name: "Alpha",
+            away_name: "Beta",
+            homeGoalCount: 2,
+            awayGoalCount: 0,
+            team_a_xg: 2.52,
+            team_b_xg: 0.8,
+            pens_recorded: 1,
+            team_a_penalties_won: 1,
+            team_b_penalties_won: 0,
+          },
+          {
+            id: 11,
+            status: "complete",
+            date_unix: 1_700_100_000,
+            home_name: "Beta",
+            away_name: "Gamma",
+            homeGoalCount: 1,
+            awayGoalCount: 1,
+            team_a_xg: 1.0,
+            team_b_xg: 1.0,
+            pens_recorded: 1,
+            team_a_penalties_won: 0,
+            team_b_penalties_won: 0,
+          },
+        ],
+      },
+    ];
+    const xgFit = fitMaherRatings(withPens, leagueId, 1_700_200_000, {
+      rateSource: "xg",
+    });
+    const npFit = fitMaherRatings(withPens, leagueId, 1_700_200_000, {
+      rateSource: "npxg",
+    });
+    expect(npFit.byTeam.get("Alpha").att).toBeLessThan(
+      xgFit.byTeam.get("Alpha").att
+    );
+  });
 });
