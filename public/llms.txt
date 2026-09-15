@@ -7,14 +7,9 @@
 ## Key pages
 
 - [Home](https://www.soccerstatshub.com/): Main dashboard with fixtures and predictions.
-- [World Cup 2026 preview](https://www.soccerstatshub.com/worldcup2026/): Tournament preview and coverage.
-- [Over 2.5 teams](https://www.soccerstatshub.com/o25/): Teams with high Over 2.5 goal rates.
-- [Highest scoring leagues](https://www.soccerstatshub.com/highest-scoring-leagues/): Leagues ranked by goals per game.
-- [Under 2.5 leagues](https://www.soccerstatshub.com/u25/): Leagues with low-scoring trends.
-- [BTTS fixtures](https://www.soccerstatshub.com/bttsfixtures/): Upcoming both-teams-to-score fixtures.
-- [BTTS teams](https://www.soccerstatshub.com/bttsteams/): Teams with strong BTTS records.
-- [BTTS No teams](https://www.soccerstatshub.com/btts-no-teams/): Teams where BTTS rarely lands.
-- [Highest scoring fixtures](https://www.soccerstatshub.com/fixtureshigh/): Fixtures expected to produce goals.
+- [BTTS fixtures](https://www.soccerstatshub.com/bttsfixtures/): Strongest and weakest BTTS teams plus today’s both-teams-to-score fixtures.
+- [Highest scoring fixtures](https://www.soccerstatshub.com/fixtureshigh/): Highest-scoring teams and fixtures expected to produce goals.
+- [Highest scoring leagues](https://www.soccerstatshub.com/highest-scoring-leagues/): Highest- and lowest-scoring leagues ranked by goals per game.
 - [Premier League 2026/27 preview](https://www.soccerstatshub.com/premier-league-2026-27/): Season preview with sourced analysis.
 - [About](https://www.soccerstatshub.com/about/): Site background and mission.
 - [Methodology](https://www.soccerstatshub.com/methodology/): How predictions and stats are built.

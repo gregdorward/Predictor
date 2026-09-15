@@ -9,13 +9,9 @@ import { getArticleIndex } from "../data/articles/loadArticles";
 
 export const STATIC_SITEMAP_ROUTES = [
   { path: "/", priority: "1.0", changefreq: "daily" },
-  { path: "/o25/", priority: "0.8", changefreq: "daily" },
   { path: "/highest-scoring-leagues/", priority: "0.8", changefreq: "daily" },
-  { path: "/u25/", priority: "0.8", changefreq: "daily" },
   { path: "/fixtureshigh/", priority: "0.8", changefreq: "daily" },
   { path: "/bttsfixtures/", priority: "0.8", changefreq: "daily" },
-  { path: "/bttsteams/", priority: "0.8", changefreq: "daily" },
-  { path: "/btts-no-teams/", priority: "0.8", changefreq: "daily" },
   { path: "/premier-league-2026-27/", priority: "0.8", changefreq: "weekly" },
   { path: "/articles/", priority: "0.8", changefreq: "weekly" },
   { path: "/competitions/", priority: "0.8", changefreq: "weekly" },

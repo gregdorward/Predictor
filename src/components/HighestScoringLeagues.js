@@ -11,7 +11,7 @@ import {
   Box,
   Typography,
 } from "@material-ui/core";
-import { getHighestScoringLeagues } from "../logic/getStatsInsights";
+import { getHighestScoringLeagues, getLowestScoringLeagues } from "../logic/getStatsInsights";
 import SiteHeader from "./SiteHeader";
 import PageMeta from "./PageMeta";
 import StatPageSeoContent, { StatPageSeoFaq } from "./StatPageSeoContent";
@@ -55,14 +55,21 @@ const useStyles = makeStyles(() => ({
       marginBottom: 8,
       color: "var(--text-color)",
     },
-    "& h2": {
-      fontSize: "1.5em",
-      fontWeight: 400,
-      textAlign: "center",
-      marginBottom: 16,
-      color: "var(--accent-color)",
-      opacity: 0.8,
-    },
+  },
+  tagline: {
+    fontSize: "1.5em",
+    fontWeight: 400,
+    textAlign: "center",
+    marginBottom: 16,
+    color: "var(--accent-color)",
+    opacity: 0.8,
+  },
+  sectionHeading: {
+    fontSize: "1.2em",
+    fontWeight: 700,
+    textAlign: "left",
+    margin: "2rem 0 0.75rem",
+    color: "var(--text-color)",
   },
   tableWrapper: {
     borderRadius: 5,
@@ -113,10 +120,33 @@ const StyledTableRow = withStyles(() => ({
   },
 }))(TableRow);
 
-export default function HighestScoringLeagues({ initialRows = null }) {
+function StatPill({ children }) {
+  return (
+    <Box
+      style={{
+        backgroundColor: "var(--accent-color)",
+        color: "var(--button-text-color)",
+        borderRadius: 4,
+        padding: "2px 8px",
+        display: "inline-block",
+        fontWeight: 600,
+      }}
+    >
+      {children}
+    </Box>
+  );
+}
+
+export default function HighestScoringLeagues({
+  initialRows = null,
+  initialLowScoringRows = null,
+}) {
   const classes = useStyles();
   const [leagues, setLeagues] = useState(() =>
     Array.isArray(initialRows) ? initialRows : []
+  );
+  const [lowScoringLeagues, setLowScoringLeagues] = useState(() =>
+    Array.isArray(initialLowScoringRows) ? initialLowScoringRows : []
   );
 
   useEffect(() => {
@@ -143,7 +173,31 @@ export default function HighestScoringLeagues({ initialRows = null }) {
     };
   }, [initialRows]);
 
-  const filteredLeagues = leagues;
+  useEffect(() => {
+    if (Array.isArray(initialLowScoringRows) && initialLowScoringRows.length > 0) {
+      return undefined;
+    }
+
+    let cancelled = false;
+    async function fetchLowScoringLeagues() {
+      const data = await getLowestScoringLeagues();
+      const filtered = data
+        .filter(
+          (league) =>
+            allowedCountries.includes(league.leagueCountry) &&
+            league.division > 0 &&
+            league.division < 5
+        )
+        .sort((a, b) => Number(a.averageGoals) - Number(b.averageGoals))
+        .slice(0, 50);
+      if (!cancelled) setLowScoringLeagues(filtered);
+    }
+
+    fetchLowScoringLeagues();
+    return () => {
+      cancelled = true;
+    };
+  }, [initialLowScoringRows]);
 
   return (
     <Fragment>
@@ -153,11 +207,15 @@ export default function HighestScoringLeagues({ initialRows = null }) {
           <a href="/" className={classes.homeLink}>Back to Home</a>
 
           <Typography variant="h1">Highest Scoring Leagues</Typography>
-          <Typography variant="h2">
-            Football leagues ranked by average goals and Over 2.5 rate
+          <Typography variant="h2" className={classes.tagline}>
+            Highest- and lowest-scoring leagues ranked by goals per match
           </Typography>
 
           <StatPageSeoContent {...STAT_PAGE_SEO.highestScoringLeagues} />
+
+          <Typography variant="h2" className={classes.sectionHeading} id="highest-scoring">
+            Leagues with the highest goals per match
+          </Typography>
           <TableContainer
             component={Paper}
             className={`${classes.tableWrapper} SubpageTableScroll`}
@@ -174,7 +232,7 @@ export default function HighestScoringLeagues({ initialRows = null }) {
                 </TableRow>
               </TableHead>
               <TableBody>
-                {filteredLeagues.map((league, index) => (
+                {leagues.map((league, index) => (
                   <StyledTableRow key={`${league.leagueId}-${index}`}>
                     <StyledTableCell align="left" style={{ fontWeight: 600 }}>
                       {league.league}
@@ -183,23 +241,51 @@ export default function HighestScoringLeagues({ initialRows = null }) {
                       {league.leagueCountry}
                     </StyledTableCell>
                     <StyledTableCell align="center">
-                      <Box
-                        style={{
-                          backgroundColor: "var(--accent-color)",
-                          color: "var(--button-text-color)",
-                          borderRadius: 4,
-                          padding: "2px 8px",
-                          display: "inline-block",
-                          fontWeight: 600,
-                        }}
-                      >
-                        {league.averageGoals}
-                      </Box>
+                      <StatPill>{league.averageGoals}</StatPill>
                     </StyledTableCell>
                     <StyledTableCell align="center">
                       <Box fontWeight="bold" color="var(--accent-color)">
                         {league.over25Percentage}%
                       </Box>
+                    </StyledTableCell>
+                  </StyledTableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </TableContainer>
+
+          <Typography variant="h2" className={classes.sectionHeading} id="lowest-scoring">
+            Leagues with the lowest goals per match
+          </Typography>
+          <TableContainer
+            component={Paper}
+            className={`${classes.tableWrapper} SubpageTableScroll`}
+          >
+            <Table size="small" aria-label="Lowest scoring leagues table">
+              <TableHead>
+                <TableRow>
+                  <StyledTableCell align="left">League</StyledTableCell>
+                  <StyledTableCell align="center" className="SubpageCol--country">
+                    Country
+                  </StyledTableCell>
+                  <StyledTableCell align="center">Avg</StyledTableCell>
+                  <StyledTableCell align="center">U2.5%</StyledTableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {lowScoringLeagues.map((league, index) => (
+                  <StyledTableRow key={`${league.leagueId || league.league}-${index}`}>
+                    <StyledTableCell align="left" style={{ fontWeight: 600 }}>
+                      {league.league}
+                    </StyledTableCell>
+                    <StyledTableCell align="center" className="SubpageCol--country">
+                      {league.leagueCountry}
+                    </StyledTableCell>
+                    <StyledTableCell align="center" style={{ opacity: 0.8 }}>
+                      {league.averageGoals}
+                    </StyledTableCell>
+                    <StyledTableCell align="center">
+                      <StatPill>{league.under25Percentage}%</StatPill>
                     </StyledTableCell>
                   </StyledTableRow>
                 ))}
