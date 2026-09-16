@@ -181,5 +181,7 @@ Environment:
   SCORE_MATRIX_ALPHA           Temperature after normalise (default: 0.65)
   USE_RESULT_SNAPSHOTS         1/true to use kickoff snapshots (default: off)
   MAX_OUTCOME_EDGE             Max 1X2 edge before ROI exclusion (default: 20, 0=off)
+  MIN_TIP_ODDS                 Min decimal odds on tipped 1X2 (default: off, e.g. 1.5)
+  USE_BEST_MATCH_ODDS          1/true to use best bookie 1X2 from match snapshot on match day+ (default: on)
 `);
 }

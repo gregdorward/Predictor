@@ -28,6 +28,8 @@ import { persistLeagueResults } from "../utils/persistLeagueResults";
 import {
   persistLeagueAveragesForDate,
 } from "../utils/leagueAverages";
+import { applyBestFtOddsToMatch } from "./bestMatchOdds.js";
+import { decimalToFractional } from "../utils/oddsFormat.js";
 import {
   buildThinLeagueFormSlices,
   limitFormRunToSeasonPlayed,
@@ -47,8 +49,6 @@ const LazyWorldCupKnockoutBracket = lazy(() =>
 );
 
 export const WORLD_CUP_2026_LEAGUE_ID = 16494;
-
-var oddslib = require("oddslib");
 
 var fixtureResponse;
 var fixtureArray = [];
@@ -577,14 +577,9 @@ const convertToDecimalOdds = (probability) => {
 };
 
 async function createFixture(match, result, mockBool) {
-  let roundedHomeOdds;
-  let roundedAwayOdds;
-  let roundedDrawOdds;
-  let roundedBTTSOdds;
-  let roundedOver25Odds;
   let homeFraction;
   let awayFraction;
-  let drawFraction
+  let drawFraction;
   let bttsFraction;
   let over25Fraction;
 
@@ -595,32 +590,15 @@ async function createFixture(match, result, mockBool) {
       match.awayOdds = convertToDecimalOdds(match.awayOdds)
     }
     if (match.homeOdds !== 0 && match.awayOdds !== 0) {
-      roundedHomeOdds = (Math.round(match.homeOdds * 5) / 5).toFixed(1);
-      roundedAwayOdds = (Math.round(match.awayOdds * 5) / 5).toFixed(1);
-      roundedDrawOdds = (Math.round(match.drawOdds * 5) / 5).toFixed(1);
-
-      if (roundedHomeOdds < 1.1) {
-        roundedHomeOdds = 1.1;
-      }
-      if (roundedAwayOdds < 1.1) {
-        roundedAwayOdds = 1.1;
-      }
-
       if (match.homeOdds === 0.1 && match.awayOdds === 0.1) {
         match.homeOdds = 3;
-        roundedHomeOdds = 3;
         match.awayOdds = 3;
-        roundedAwayOdds = 3;
       }
 
       try {
-        homeFraction = oddslib
-          .from("decimal", roundedHomeOdds)
-          .to("fractional", { precision: 1 });
-        awayFraction = oddslib
-          .from("decimal", roundedAwayOdds)
-          .to("fractional", { precision: 1 });
-        drawFraction = oddslib.from("decimal", roundedDrawOdds).to("fractional", { precision: 1 });
+        homeFraction = decimalToFractional(match.homeOdds);
+        awayFraction = decimalToFractional(match.awayOdds);
+        drawFraction = decimalToFractional(match.drawOdds);
       } catch (error) {
         console.log(error);
       }
@@ -630,16 +608,8 @@ async function createFixture(match, result, mockBool) {
     }
 
     if (match.bttsOdds !== 0) {
-      roundedBTTSOdds = (Math.round(match.bttsOdds * 5) / 5).toFixed(1);
-
-      if (roundedBTTSOdds < 1.1) {
-        roundedBTTSOdds = 1.1;
-      }
-
       try {
-        bttsFraction = oddslib
-          .from("decimal", roundedBTTSOdds)
-          .to("fractional", { precision: 1 });
+        bttsFraction = decimalToFractional(match.bttsOdds);
       } catch (error) {
         console.log(error);
       }
@@ -648,16 +618,8 @@ async function createFixture(match, result, mockBool) {
     }
 
     if (match.over25Odds !== 0 && match.over25Odds) {
-      roundedOver25Odds = (Math.round(match.over25Odds * 5) / 5).toFixed(1);
-
-      if (roundedOver25Odds < 1.1) {
-        roundedOver25Odds = 1.1;
-      }
-
       try {
-        over25Fraction = oddslib
-          .from("decimal", roundedOver25Odds)
-          .to("fractional", { precision: 1 });
+        over25Fraction = decimalToFractional(match.over25Odds);
       } catch (error) {
         console.log(error);
       }
@@ -717,16 +679,15 @@ export function RenderAllFixtures(props) {
   let paid = userDetail?.isPaid || false;
   const fullGameListLength = rawMatches.length; // 174
 
-  const omitFilteredGames = rawMatches.filter(
-    (match) => match.omit === false
-  );
-
-  const totalVisible = omitFilteredGames.length;
+  // Keep filter-omitted matches in the list (greyed via .individualFixturetrue);
+  // they stay out of ROI via omit checks in getScorePredictions.
+  const activeTipGames = rawMatches.filter((match) => match.omit === false);
+  const totalVisible = activeTipGames.length;
 
   console.log(`Total games: ${fullGameListLength}`);
-  console.log(`Visible (Shown): ${totalVisible}`);
+  console.log(`Active tips (not greyed): ${totalVisible}`);
 
-  const displayPool = omitFilteredGames;
+  const displayPool = rawMatches;
   const originalLength = displayPool.length;
   let newLength;
 
@@ -1504,6 +1465,10 @@ export async function generateFixtures(
           fixture.odds_ft_x != null
             ? Number(fixture.odds_ft_x).toFixed(2)
             : "-";
+        match.odds_comparison = fixture.odds_comparison || null;
+        if (fixture.odds_comparison) {
+          applyBestFtOddsToMatch(match, fixture.odds_comparison);
+        }
         match.homeDoubleChance = fixture.odds_doublechance_1x;
         match.awayDoubleChance = fixture.odds_doublechance_x2;
         match.bttsOdds = fixture.odds_btts_yes;

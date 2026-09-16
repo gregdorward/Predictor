@@ -17,6 +17,7 @@ import {
   teamNamesMatch,
 } from "../utils/leagueResultsAccess.js";
 import { resolveTeamXgAndNpXg } from "./nonPenaltyXg.js";
+import { maherCsDefMultiplier } from "./scoreModelConfig.js";
 
 const ratingCache = new Map();
 
@@ -298,6 +299,7 @@ function blendRating(seasonVal, recentVal, blend) {
  * lastGameBlend ∈ [0,1]: after that, pull further toward last-1-game ratings.
  * rateSource: xg | npxg | goals | mix (0.7·npxG + 0.3·goals).
  * iters: opponent-adjusted Maher fixed-point iterations (0 = mean rates only).
+ * csHomePct / csAwayPct: season clean-sheet %; scales def via SCORE_MAHER_CS_BLEND.
  *
  * @returns {{ home: number, away: number, attHome: number, defHome: number, attAway: number, defAway: number, gamma?: number } | null}
  */
@@ -317,6 +319,10 @@ export function maherLambdas({
   lastGameBlend = 0,
   rateSource = "xg",
   iters = 0,
+  csHomePct = null,
+  csAwayPct = null,
+  gamesHome = null,
+  gamesAway = null,
 }) {
   const source = normalizeRateSource(rateSource);
   const nIters = normalizeIters(iters);
@@ -371,6 +377,17 @@ export function maherLambdas({
   defHome = blendRating(defHome, homeLast?.def, lastBlend);
   attAway = blendRating(attAway, awayLast?.att, lastBlend);
   defAway = blendRating(defAway, awayLast?.def, lastBlend);
+
+  const homeGames =
+    Number.isFinite(Number(gamesHome)) && Number(gamesHome) > 0
+      ? Number(gamesHome)
+      : home?.games ?? 8;
+  const awayGames =
+    Number.isFinite(Number(gamesAway)) && Number(gamesAway) > 0
+      ? Number(gamesAway)
+      : away?.games ?? 8;
+  defHome *= maherCsDefMultiplier(csHomePct, homeGames);
+  defAway *= maherCsDefMultiplier(csAwayPct, awayGames);
 
   const mode = String(homeAdvMode || "split").toLowerCase();
 

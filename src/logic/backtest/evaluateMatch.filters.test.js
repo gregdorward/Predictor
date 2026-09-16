@@ -34,6 +34,24 @@ describe("evaluateMatch filters", () => {
     ).toBe(1);
   });
 
+  test("primary ROI should drop omit rows when excludeFilteredOut is set (MIN_TIP_ODDS)", () => {
+    const kept = evaluateMatch(
+      { ...baseMatch, homeOdds: 2.0 },
+      "2026-09-05",
+      "cached"
+    );
+    const dropped = evaluateMatch(
+      { ...baseMatch, id: 2, homeOdds: 1.2, omit: true },
+      "2026-09-05",
+      "cached"
+    );
+    const primary = aggregateResults([kept, dropped], {
+      excludeFilteredOut: true,
+    });
+    expect(primary.predicted).toBe(1);
+    expect(dropped.filteredOut).toBe(true);
+  });
+
   test("aggregateResults excludes high-edge fixtures from ROI", () => {
     const rows = [
       evaluateMatch(baseMatch, "2026-09-05", "cached"),

@@ -1,5 +1,5 @@
 /** Visual-only stretch for 0-1 strength ratings on radar charts. Not used in predictions. */
-export const RADAR_DISPLAY_EXPAND_FACTOR = 1.4;
+export const RADAR_DISPLAY_EXPAND_FACTOR = 1.15;
 export const RADAR_DISPLAY_MIDPOINT = 0.5;
 
 export function expandRadarStrength(

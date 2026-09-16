@@ -84,7 +84,8 @@ import { maherLambdas } from "./maherRatings.js";
 import { logLinearLambdas } from "./logLinearLambda.js";
 import { xgPrimaryLambdas } from "./xgPrimaryLambda.js";
 import { additiveLambdas } from "./additiveLambda.js";
-import { blendModelWithMarket1x2 } from "./oddsProbabilityBlend.js";
+import { blendModelWithMarket1x2, devigThreeWayFromOdds } from "./oddsProbabilityBlend.js";
+import { enrichMatchWithBestOdds } from "./enrichMatchBestOdds.js";
 
 export {
   CLEAR_OUTCOME_MARGIN,
@@ -108,6 +109,7 @@ import { rangeValue } from "../components/Slider";
 import {
   GlobalFilters,
   applyHighEdgeFlag,
+  applyMinTipOddsFilter,
   applyTipFilters,
 } from "./tipFilters.js";
 import { checkUserPaidStatus } from "../logic/hasUserPaid";
@@ -2787,7 +2789,7 @@ function calculateXGMultiplier(rawComparison, dampening = 0.04) {
 
 export async function compareFormTrend(recentForm, distantForm) {
   // Weights: Give more importance to Goal Diff than Possession
-  const weights = [0.25, 0.25, 0.2, 0.2, 0.1];
+  const weights = [0.25, 0.5, 0.05, 0.2];
   let trendMultiplier = 0;
 
   for (let i = 0; i < recentForm.length; i++) {
@@ -2810,7 +2812,7 @@ export async function compareFormTrend(recentForm, distantForm) {
   }
 
   // Final Safety Clamp: Ensure the trend doesn't swing lambda by more than 20%
-  return Math.max(0.9, Math.min(1.1, trendMultiplier));
+  return Math.max(0.8, Math.min(1.2, trendMultiplier));
 }
 
 export async function getPointAverage(pointTotal, games) {
@@ -2885,6 +2887,19 @@ function blendVenueMetric(overall, venue, gamesPlayed) {
 
   const weight = venueWeight * venueFormReliability(gamesPlayed);
   return overallValue * (1 - weight) + venueValue * weight;
+}
+
+/** Season clean-sheet % from form API, or recomputed from results. */
+function resolveCleanSheetPercentage(form) {
+  const direct = Number(form?.CleanSheetPercentage);
+  if (Number.isFinite(direct)) return direct;
+  const results = form?.allTeamResults;
+  if (!Array.isArray(results) || results.length === 0) return null;
+  let cleanSheets = 0;
+  for (const result of results) {
+    if (Number(result.conceeded) === 0) cleanSheets += 1;
+  }
+  return (cleanSheets / results.length) * 100;
 }
 
 export async function generateGoals(homeForm, awayForm, match) {
@@ -3045,6 +3060,10 @@ export async function generateGoals(homeForm, awayForm, match) {
       rateSource: getScoreMaherRateSource(),
       iters: useAdditive ? 0 : getScoreMaherIters(),
       lastGameBlend: useAdditive ? 0 : getScoreMaherLastGameBlend(),
+      csHomePct: resolveCleanSheetPercentage(homeForm),
+      csAwayPct: resolveCleanSheetPercentage(awayForm),
+      gamesHome: homeForm.gamesPlayed,
+      gamesAway: awayForm.gamesPlayed,
     });
     if (fitted) {
       homeLambda_rawOverall = fitted.home;
@@ -3161,7 +3180,8 @@ export async function generateGoals(homeForm, awayForm, match) {
       )
     : 1;
 
-  const formTrendHome = getScoreFormTrend()
+  const formTrendHome = 
+  getScoreFormTrend()
     ? clampLambdaSignal(homeForm.formTrendScore)
     : 1;
   const formTrendAway = getScoreFormTrend()
@@ -3217,12 +3237,10 @@ export async function generateGoals(homeForm, awayForm, match) {
 
 
   homeForm.XGRating =
-    (last5PointsHomeMultipliedByOppPoints * 0.1) +
-    (homeForm.XGChangeRecently * 1);
+    (homeAttackStrength + homeDefenceStrength);
 
   awayForm.XGRating =
-    (last5PointsAwayMultipliedByOppPoints * 0.1) +
-    (awayForm.XGChangeRecently * 1);
+    (awayAttackStrength + awayDefenceStrength);
 
   const rawHomeComparison = homeForm.XGRating - awayForm.XGRating;
   const rawAwayComparison = awayForm.XGRating - homeForm.XGRating;
@@ -3610,7 +3628,7 @@ function clearMatchTipSettlement(match) {
   match.outcomeSymbol = "";
   match.over25PredictionOutcomeSymbol = "";
   match.bttsOutcomeSymbol = "";
-  // Do not set omit=true — RenderAllFixtures only shows omit === false.
+  // Keep omit=false so the row stays an active tip (not greyed/ROI-excluded).
   match.omit = false;
 }
 
@@ -4240,6 +4258,10 @@ export async function calculateScore(match, index, divider, calculate, AIPredict
   let teams;
   let AIPredictionHome;
   let AIPredictionAway;
+
+  // Prefer best bookmaker 1X2 prices (and labels) before edges / ROI / tips.
+  await enrichMatchWithBestOdds(match);
+
   const fixtureFormIndex = allForm.findIndex(
     (game) =>
       game.id === match.id ||
@@ -4542,19 +4564,17 @@ export async function calculateScore(match, index, divider, calculate, AIPredict
 
 
     formHome.recentFormArray = [
-      (formHome.avScoredLast5 - formHome.avConceededLast5),
-      (formHome.avXGLast5 - formHome.avXGAgainstLast5),
-      (formHome.avDALast5 - formHome.avgDangerousAttacksAgainstLast5),
+      formHome.avScoredLast5 - formHome.avConceededLast5,
+      formHome.npXGlast5 - formHome.npXGAgainstlast5,
+      formHome.avDALast5 - formHome.avgDangerousAttacksAgainstLast5,
       formHome.avSOTLast5 - formHome.avSOTAgainstLast5,
-      formHome.avPosessionLast5,
     ];
 
     formHome.distantFormArray = [
       formHome.avgScored - formHome.avgConceeded,
-      formHome.XGOverall - formHome.XGAgainstAvgOverall,
+      formHome.npXGOverall - formHome.npXGAgainstAvgOverall,
       formHome.AverageDangerousAttacksOverall - formHome.avgDangerousAttacksAgainst,
       formHome.AverageShotsOnTargetOverall - formHome.AverageShotsOnTargetAgainstOverall,
-      formHome.avPossessionOverall
     ];
 
     formHome.formTrendScore = await compareFormTrend(
@@ -4564,19 +4584,17 @@ export async function calculateScore(match, index, divider, calculate, AIPredict
 
 
     formAway.recentFormArray = [
-      (formAway.avScoredLast5 - formAway.avConceededLast5),
-      (formAway.avXGLast5 - formAway.avXGAgainstLast5),
-      (formAway.avDALast5 - formAway.avgDangerousAttacksAgainstLast5),
+      formAway.avScoredLast5 - formAway.avConceededLast5,
+      formAway.npXGlast5 - formAway.npXGAgainstlast5,
+      formAway.avDALast5 - formAway.avgDangerousAttacksAgainstLast5,
       formAway.avSOTLast5 - formAway.avSOTAgainstLast5,
-      formAway.avPosessionLast5,
     ];
 
     formAway.distantFormArray = [
       formAway.avgScored - formAway.avgConceeded,
-      formAway.XGOverall - formAway.XGAgainstAvgOverall,
+      formAway.npXGOverall - formAway.npXGAgainstAvgOverall,
       formAway.AverageDangerousAttacksOverall - formAway.avgDangerousAttacksAgainst,
       formAway.AverageShotsOnTargetOverall - formAway.AverageShotsOnTargetAgainstOverall,
-      formAway.avPossessionOverall
     ];
 
     formAway.formTrendScore = await compareFormTrend(
@@ -5559,10 +5577,25 @@ export async function calculateScore(match, index, divider, calculate, AIPredict
     match.over25Probability = Number.isFinite(over) ? over : 50;
     match.under25Probability = Number.isFinite(under) ? under : 50;
 
-    const homeWinImplied = impliedProbability(match.homeOdds);
+    const homeWinImpliedRaw = impliedProbability(match.homeOdds);
+    const drawImpliedRaw = impliedProbability(match.drawOdds);
+    const awayWinImpliedRaw = impliedProbability(match.awayOdds);
+    const fair1x2 = devigThreeWayFromOdds(
+      match.homeOdds,
+      match.drawOdds,
+      match.awayOdds
+    );
+    // Value edges vs de-vigged (fair) market; tip/scoreline/probs unchanged.
+    const homeWinImplied = fair1x2?.home ?? homeWinImpliedRaw;
+    const drawImplied = fair1x2?.draw ?? drawImpliedRaw;
+    const awayWinImplied = fair1x2?.away ?? awayWinImpliedRaw;
+    match.homeWinImpliedRaw = homeWinImpliedRaw;
+    match.drawImpliedRaw = drawImpliedRaw;
+    match.awayWinImpliedRaw = awayWinImpliedRaw;
+    match.homeWinImplied = homeWinImplied;
+    match.drawImplied = drawImplied;
+    match.awayWinImplied = awayWinImplied;
 
-    const drawImplied = impliedProbability(match.drawOdds);
-    const awayWinImplied = impliedProbability(match.awayOdds);
     const bttsYesImplied = impliedProbability(match.bttsOdds);
     match.bttsYesImplied = bttsYesImplied;
     const bttsNoImplied = 100 - bttsYesImplied;
@@ -5716,7 +5749,7 @@ export async function calculateScore(match, index, divider, calculate, AIPredict
         }
       } else if (outcomePrediction === "draw") {
         match.prediction = "draw";
-        match.drawValue = (draw - drawImplied).toFixed(2)
+        match.drawValue = (match.drawProbability - drawImplied).toFixed(2)
         match.winImplied = drawImplied;
         match.winImpliedOurs = match.drawProbability
       }
@@ -5962,6 +5995,7 @@ export async function calculateScore(match, index, divider, calculate, AIPredict
       last6PointDiffHomePerspective: last10PointDiffHomePerspective,
       last6PointDiffAwayPerspective,
     });
+    applyMinTipOddsFilter(match, { finalHomeGoals, finalAwayGoals });
     applyHighEdgeFlag(match, { finalHomeGoals, finalAwayGoals });
 
     return [

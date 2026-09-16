@@ -1,4 +1,5 @@
 import { parseNoHomeAwayFromFixture } from "../scoreModelConfig.js";
+import { applyBestFtOddsToMatch } from "../bestMatchOdds.js";
 
 /**
  * Backtest-only match builder (copied from generateFixtures essentials).
@@ -11,7 +12,7 @@ export function buildMatchFromFixture(fixture, leagueName) {
   const awayOdds = Number(fixture.odds_ft_2);
   const drawOdds = Number(fixture.odds_ft_x);
 
-  return {
+  const match = {
     id: fixture.id,
     competition_id: fixture.competition_id,
     leagueID: fixture.competition_id,
@@ -53,13 +54,20 @@ export function buildMatchFromFixture(fixture, leagueName) {
     expectedGoalsAwayToDate: fixture.team_b_xg_prematch,
     game_week: fixture.game_week,
     omit: false,
-    fractionHome: "N/A",
-    fractionAway: "N/A",
-    fractionDraw: "N/A",
+    fractionHome: homeOdds.toFixed(2),
+    fractionAway: awayOdds.toFixed(2),
+    fractionDraw: drawOdds.toFixed(2),
     bttsFraction: "N/A",
     over25Fraction: "N/A",
     homeRawPosition: 0,
     awayRawPosition: 0,
     noHomeAway: parseNoHomeAwayFromFixture(fixture),
+    odds_comparison: fixture.odds_comparison || null,
   };
+
+  if (fixture.odds_comparison) {
+    applyBestFtOddsToMatch(match, fixture.odds_comparison);
+  }
+
+  return match;
 }

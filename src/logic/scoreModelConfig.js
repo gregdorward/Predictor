@@ -138,16 +138,29 @@ export const SCORE_MAHER_ITERS = 0;
 
 /**
  * Extra pull toward last-1-game Maher ratings after season/recent blend.
- * 0 = off. Locked at 0 after Jul–Sep 2026: 0.10/0.15/0.25 all lost ROI.
+ * 0 = off. Applied as final = (1−w)·current + w·last1.
  */
 export const SCORE_MAHER_LAST_GAME_BLEND = 0;
+
+/**
+ * Post-fit Maher defence adjustment from clean-sheet %.
+ * 0 = off. Higher CS than SCORE_MAHER_CS_BASELINE lowers def (harder to
+ * score on); lower CS raises def. Scaled by sample size (full by 8 games)
+ * and clamped. Start at 0.1 — sweep before locking.
+ */
+export const SCORE_MAHER_CS_BLEND = 0;
+
+/**
+ * League-typical clean-sheet rate (%) used as the Maher CS adjustment pivot.
+ */
+export const SCORE_MAHER_CS_BASELINE = 28;
 
 /**
  * Blend weight of de-vigged bookie 1X2 into model outcome probabilities.
  * 0 = pure model; 1 = pure market. Does not change λ.
  * Locked at 0.25 after Jul–Sep 2026: Brier 0.627 vs 0.638, ROI still +1.09%.
  */
-export const SCORE_ODDS_BLEND = 0.25;
+export const SCORE_ODDS_BLEND = 0.3;
 
 /**
  * When true, settled fixtures use kickoff-frozen scorelines from predictedScores2.
@@ -160,6 +173,21 @@ export const USE_RESULT_SNAPSHOTS_DEFAULT = false;
  * and are excluded from ROI. Disable with MAX_OUTCOME_EDGE=0.
  */
 export const MAX_OUTCOME_EDGE = 20;
+
+/**
+ * Minimum decimal odds on the tipped 1X2 outcome. Tips shorter than this are
+ * omitted (site + backtest ROI). null / 0 = off. Example: 1.5 skips heavy favourites.
+ */
+export const MIN_TIP_ODDS = 0;
+
+/**
+ * When true, replace average odds_ft_* with best prices from FootyStats
+ * odds_comparison (match details / snapshot) on match day or later only.
+ * Future fixtures keep league-list averages (comparison can be stale early).
+ * Bookmaker labels are stored on the match for display. Falls back to
+ * odds_ft_* when comparison is missing.
+ */
+export const USE_BEST_MATCH_ODDS = true;
 
 /**
  * Score-distribution family.
@@ -197,6 +225,8 @@ const VALID_SCORE_MODEL_FAMILIES = new Set([
 ]);
 
 let activeMaxOutcomeEdge = MAX_OUTCOME_EDGE;
+let activeMinTipOdds = MIN_TIP_ODDS;
+let activeUseBestMatchOdds = USE_BEST_MATCH_ODDS;
 let activeScoreModelFamily = SCORE_MODEL_FAMILY;
 let activeDixonColesRho = DIXON_COLES_RHO;
 let activeScoreMatrixMaxGoals = SCORE_MATRIX_MAX_GOALS;
@@ -225,6 +255,7 @@ let activeScoreMaherRecentGames = SCORE_MAHER_RECENT_GAMES;
 let activeScoreMaherRateSource = SCORE_MAHER_RATE_SOURCE;
 let activeScoreMaherIters = SCORE_MAHER_ITERS;
 let activeScoreMaherLastGameBlend = SCORE_MAHER_LAST_GAME_BLEND;
+let activeScoreMaherCsBlend = SCORE_MAHER_CS_BLEND;
 let activeScoreOddsBlend = SCORE_ODDS_BLEND;
 
 export function getMaxOutcomeEdge() {
@@ -242,6 +273,47 @@ export function setMaxOutcomeEdge(value) {
 
 export function resetMaxOutcomeEdge() {
   activeMaxOutcomeEdge = MAX_OUTCOME_EDGE;
+}
+
+export function getMinTipOdds() {
+  return activeMinTipOdds;
+}
+
+export function setMinTipOdds(value) {
+  if (value === 0 || value === null || value === false || value === "") {
+    activeMinTipOdds = null;
+    return;
+  }
+  const parsed = Number(value);
+  if (!Number.isFinite(parsed) || parsed <= 1) {
+    activeMinTipOdds = MIN_TIP_ODDS;
+    return;
+  }
+  activeMinTipOdds = parsed;
+}
+
+export function resetMinTipOdds() {
+  activeMinTipOdds = MIN_TIP_ODDS;
+}
+
+export function getUseBestMatchOdds() {
+  return activeUseBestMatchOdds;
+}
+
+export function setUseBestMatchOdds(value) {
+  if (value === true || value === 1 || value === "1" || value === "true") {
+    activeUseBestMatchOdds = true;
+    return;
+  }
+  if (value === false || value === 0 || value === "0" || value === "false") {
+    activeUseBestMatchOdds = false;
+    return;
+  }
+  activeUseBestMatchOdds = USE_BEST_MATCH_ODDS;
+}
+
+export function resetUseBestMatchOdds() {
+  activeUseBestMatchOdds = USE_BEST_MATCH_ODDS;
 }
 
 export function getScoreModelFamily() {
@@ -542,6 +614,17 @@ export function setScoreMaherLastGameBlend(value) {
     : SCORE_MAHER_LAST_GAME_BLEND;
 }
 
+export function getScoreMaherCsBlend() {
+  return activeScoreMaherCsBlend;
+}
+
+export function setScoreMaherCsBlend(value) {
+  const parsed = Number(value);
+  activeScoreMaherCsBlend = Number.isFinite(parsed)
+    ? Math.min(1, Math.max(0, parsed))
+    : SCORE_MAHER_CS_BLEND;
+}
+
 export function getScoreOddsBlend() {
   return activeScoreOddsBlend;
 }
@@ -575,6 +658,7 @@ export function resetLambdaWeightConfig() {
   activeScoreMaherRateSource = SCORE_MAHER_RATE_SOURCE;
   activeScoreMaherIters = SCORE_MAHER_ITERS;
   activeScoreMaherLastGameBlend = SCORE_MAHER_LAST_GAME_BLEND;
+  activeScoreMaherCsBlend = SCORE_MAHER_CS_BLEND;
   activeScoreOddsBlend = SCORE_ODDS_BLEND;
 }
 
@@ -602,6 +686,26 @@ export function sosDampMultiplier(form) {
     return SCORE_SOS_HAIRCUT_FACTOR;
   }
   return 1;
+}
+
+/**
+ * Maher defence multiplier from clean-sheet % vs baseline.
+ * High CS → factor &lt; 1 (lower def rating → lower goals conceded expectancy).
+ */
+export function maherCsDefMultiplier(csPercentage, gamesPlayed = 8) {
+  const blend = getScoreMaherCsBlend();
+  if (blend <= 0) return 1;
+  const cs = Number(csPercentage);
+  if (!Number.isFinite(cs)) return 1;
+  const baseline = Number(SCORE_MAHER_CS_BASELINE);
+  if (!(baseline > 0)) return 1;
+  const games = Number(gamesPlayed);
+  const reliability =
+    Number.isFinite(games) && games > 0 ? Math.min(1, games / 8) : 0.5;
+  const csRate = Math.min(100, Math.max(0, cs));
+  const relative = csRate / baseline;
+  const raw = 1 + blend * reliability * (1 - relative);
+  return clampLambdaSignal(raw, 0.85, 1.15);
 }
 
 /** Continental/international odds-comparison multiplier in generateGoals. */
@@ -700,6 +804,30 @@ export function applyMaxOutcomeEdgeFromEnv(env = process.env) {
   setMaxOutcomeEdge(MAX_OUTCOME_EDGE);
 }
 
+export function applyMinTipOddsFromEnv(env = process.env) {
+  const raw = env.MIN_TIP_ODDS ?? env.NEXT_PUBLIC_MIN_TIP_ODDS;
+  if (raw == null || raw === "") {
+    setMinTipOdds(MIN_TIP_ODDS);
+    return;
+  }
+  if (raw === "0" || raw === "false" || raw === "no") {
+    setMinTipOdds(null);
+    return;
+  }
+  setMinTipOdds(raw);
+}
+
+export function applyUseBestMatchOddsFromEnv(env = process.env) {
+  const parsed =
+    parseEnvBoolean(env, "USE_BEST_MATCH_ODDS") ??
+    parseEnvBoolean(env, "NEXT_PUBLIC_USE_BEST_MATCH_ODDS");
+  if (parsed === undefined) {
+    setUseBestMatchOdds(USE_BEST_MATCH_ODDS);
+    return;
+  }
+  setUseBestMatchOdds(parsed);
+}
+
 /** Optional env overrides for backtest sweeps and runtime config. */
 export function applyScoreModelFromEnv(env = process.env) {
   parseEnvNumber(env, "SCORE_MODEL_MARGIN", (value) => {
@@ -792,6 +920,9 @@ export function applyScoreModelFromEnv(env = process.env) {
   parseEnvNumber(env, "SCORE_MAHER_LAST_GAME_BLEND", (value) => {
     setScoreMaherLastGameBlend(value);
   });
+  parseEnvNumber(env, "SCORE_MAHER_CS_BLEND", (value) => {
+    setScoreMaherCsBlend(value);
+  });
   parseEnvNumber(env, "SCORE_ODDS_BLEND", (value) => {
     setScoreOddsBlend(value);
   });
@@ -804,4 +935,6 @@ export function applyScoreModelFromEnv(env = process.env) {
   }
 
   applyMaxOutcomeEdgeFromEnv(env);
+  applyMinTipOddsFromEnv(env);
+  applyUseBestMatchOddsFromEnv(env);
 }

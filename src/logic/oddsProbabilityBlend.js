@@ -30,6 +30,20 @@ export function normalizeThreeWayPct(home, draw, away) {
 }
 
 /**
+ * De-vig 1X2 decimal odds to fair % that sum to 100.
+ * @returns {{ home: number, draw: number, away: number }|null}
+ */
+export function devigThreeWayFromOdds(homeOdds, drawOdds, awayOdds) {
+  const fair = normalizeThreeWayPct(
+    rawImpliedPct(homeOdds),
+    rawImpliedPct(drawOdds),
+    rawImpliedPct(awayOdds)
+  );
+  if (!fair) return null;
+  return { home: fair[0], draw: fair[1], away: fair[2] };
+}
+
+/**
  * @param {number} modelHome model %
  * @param {number} modelDraw
  * @param {number} modelAway

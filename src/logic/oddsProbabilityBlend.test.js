@@ -2,6 +2,7 @@ import {
   blendModelWithMarket1x2,
   normalizeThreeWayPct,
   rawImpliedPct,
+  devigThreeWayFromOdds,
 } from "./oddsProbabilityBlend.js";
 
 describe("oddsProbabilityBlend", () => {
@@ -13,6 +14,14 @@ describe("oddsProbabilityBlend", () => {
   test("normalizeThreeWayPct de-vigs", () => {
     const n = normalizeThreeWayPct(50, 30, 30);
     expect(n[0] + n[1] + n[2]).toBeCloseTo(100, 5);
+  });
+
+  test("devigThreeWayFromOdds removes overround", () => {
+    // Raw: 50 + 25 + 33.33 ≈ 108.33
+    const fair = devigThreeWayFromOdds(2, 4, 3);
+    expect(fair).not.toBeNull();
+    expect(fair.home + fair.draw + fair.away).toBeCloseTo(100, 5);
+    expect(fair.home).toBeLessThan(50);
   });
 
   test("weight 0 leaves model unchanged", () => {

@@ -1,17 +1,26 @@
 import {
   applyFilterPreset,
   applyHighEdgeFlag,
+  applyMinTipOddsFilter,
   applyTipFilters,
   createDefaultTipFilters,
   getTipped1X2Edge,
+  getTipped1X2Odds,
   GlobalFilters,
   hasActiveTipFilters,
   resetTipFilters,
 } from "./tipFilters";
+import {
+  applyMinTipOddsFromEnv,
+  getMinTipOdds,
+  resetMinTipOdds,
+  setMinTipOdds,
+} from "./scoreModelConfig";
 
 describe("tipFilters", () => {
   afterEach(() => {
     resetTipFilters();
+    resetMinTipOdds();
   });
 
   test("ssh preset matches site customise-tips defaults", () => {
@@ -74,6 +83,38 @@ describe("tipFilters", () => {
     expect(getTipped1X2Edge(match, 2, 1)).toBe(25.5);
     expect(match.highEdgeFlag).toBe(true);
     expect(match.omit).toBe(false);
+  });
+
+  test("applyMinTipOddsFilter omits tips shorter than the floor", () => {
+    setMinTipOdds(1.5);
+    const match = {
+      omit: false,
+      homeOdds: 1.25,
+      awayOdds: 8,
+      drawOdds: 4,
+    };
+    applyMinTipOddsFilter(match, { finalHomeGoals: 2, finalAwayGoals: 0 });
+    expect(getTipped1X2Odds(match, 2, 0)).toBe(1.25);
+    expect(match.omit).toBe(true);
+  });
+
+  test("applyMinTipOddsFilter leaves longer odds alone", () => {
+    setMinTipOdds(1.5);
+    const match = {
+      omit: false,
+      homeOdds: 1.8,
+      awayOdds: 4,
+      drawOdds: 3.5,
+    };
+    applyMinTipOddsFilter(match, { finalHomeGoals: 2, finalAwayGoals: 0 });
+    expect(match.omit).toBe(false);
+  });
+
+  test("MIN_TIP_ODDS env enables and disables the floor", () => {
+    applyMinTipOddsFromEnv({ MIN_TIP_ODDS: "1.6" });
+    expect(getMinTipOdds()).toBe(1.6);
+    applyMinTipOddsFromEnv({ MIN_TIP_ODDS: "0" });
+    expect(getMinTipOdds()).toBeNull();
   });
 
   test("inactive filters do not omit matches", () => {

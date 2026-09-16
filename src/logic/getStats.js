@@ -14,27 +14,29 @@ export async function getPointAverage(pointTotal, games) {
   return pointTotal / games;
 }
 
+/** Domestic attack normalisation bands (midpoints preserved; ±20% wider than prior).
+ *  Shots On Target widened further (overall ~0.6–8.5) so recency-weighted ~7 SOT does not floor. */
 const DOMESTIC_ATTACK_RANGES = {
   overall: {
-    "Average Dangerous Attacks": { min: 31.8, max: 68.83 },
-    "Average Shots": { min: 7.35, max: 17.66 },
-    "Average Shots On Target": { min: 3.39, max: 5.71 },
-    "Average Expected Goals": { min: 1.03, max: 1.92 },
-    "Weighted XG": { min: 1.03, max: 1.92 },
-    "Average Goals": { min: 0.95, max: 1.91 },
-    "Expected Points": { min: 0.6, max: 2.2 },
-    "Average Shot Value": { min: 5.56, max: 26.94 },
-    "Injury impact": { min: 2, max: 8 },
+    "Average Dangerous Attacks": { min: 28.1, max: 72.53 },
+    "Average Shots": { min: 6.32, max: 18.69 },
+    "Average Shots On Target": { min: 0.6, max: 8.5 },
+    "Average Expected Goals": { min: 0.8, max: 2.15 },
+    "Weighted XG": { min: 0.8, max: 2.15 },
+    "Average Goals": { min: 0.85, max: 2.01 },
+    "Expected Points": { min: 0.44, max: 2.36 },
+    "Average Shot Value": { min: 3.42, max: 29.08 },
+    "Injury impact": { min: 1.4, max: 8.6 },
   },
   last5: {
-    "Average Dangerous Attacks": { min: 26.96, max: 72.42 },
-    "Average Shots": { min: 5.47, max: 19.54 },
-    "Average Shots On Target": { min: 2.65, max: 6.55 },
-    "Average Expected Goals": { min: 0.77, max: 2.13 },
-    "Weighted XG": { min: 0.77, max: 2.13 },
-    "Average Goals": { min: 0.72, max: 2.13 },
-    "Expected Points": { min: 0.4, max: 2.4 },
-    "Average Shot Value": { min: 5.31, max: 28.19 },
+    "Average Dangerous Attacks": { min: 22.41, max: 76.97 },
+    "Average Shots": { min: 4.06, max: 20.95 },
+    "Average Shots On Target": { min: 0.2, max: 9.0 },
+    "Average Expected Goals": { min: 0.5, max: 2.4 },
+    "Weighted XG": { min: 0.5, max: 2.4 },
+    "Average Goals": { min: 0.58, max: 2.27 },
+    "Expected Points": { min: 0.2, max: 2.6 },
+    "Average Shot Value": { min: 3.02, max: 30.48 },
   },
 };
 
@@ -62,25 +64,27 @@ const INTERNATIONAL_ATTACK_RANGES = {
   },
 };
 
+/** Domestic defence normalisation bands (midpoints preserved; ±20% wider than prior).
+ *  SOT Against / xGA widened further so recency-weighted early-season extremes do not floor. */
 const DOMESTIC_DEFENCE_RANGES = {
   overall: {
-    "Average XG Against": { min: 1.03, max: 1.92 },
-    "Weighted XG Against": { min: 1.03, max: 1.92 },
-    "Average Goals Against": { min: 0.95, max: 1.91 },
-    "Average SOT Against": { min: 3.39, max: 5.71 },
-    "Average Dangerous Attacks Against": { min: 31.8, max: 68.83 },
-    "Clean Sheet Percentage": { min: 11.72, max: 44.53 },
-    "Average Shots Against": { min: 7.35, max: 17.66 },
-    "Injury impact": { min: 2, max: 8 },
+    "Average XG Against": { min: 0.8, max: 2.15 },
+    "Weighted XG Against": { min: 0.8, max: 2.15 },
+    "Average Goals Against": { min: 0.85, max: 2.01 },
+    "Average SOT Against": { min: 0.6, max: 8.5 },
+    "Average Dangerous Attacks Against": { min: 28.1, max: 72.53 },
+    "Clean Sheet Percentage": { min: 8.44, max: 47.81 },
+    "Average Shots Against": { min: 6.32, max: 18.69 },
+    "Injury impact": { min: 1.4, max: 8.6 },
   },
   last5: {
-    "Average XG Against": { min: 0.77, max: 2.13 },
-    "Weighted XG Against": { min: 0.77, max: 2.13 },
-    "Average Goals Against": { min: 0.72, max: 2.13 },
-    "Average SOT Against": { min: 2.65, max: 6.55 },
-    "Average Dangerous Attacks Against": { min: 26.96, max: 72.42 },
-    "Clean Sheet Percentage": { min: 11.72, max: 44.53 },
-    "Average Shots Against": { min: 5.47, max: 19.54 },
+    "Average XG Against": { min: 0.5, max: 2.4 },
+    "Weighted XG Against": { min: 0.5, max: 2.4 },
+    "Average Goals Against": { min: 0.58, max: 2.27 },
+    "Average SOT Against": { min: 0.2, max: 9.0 },
+    "Average Dangerous Attacks Against": { min: 22.41, max: 76.97 },
+    "Clean Sheet Percentage": { min: 8.44, max: 47.81 },
+    "Average Shots Against": { min: 4.06, max: 20.95 },
   },
 };
 

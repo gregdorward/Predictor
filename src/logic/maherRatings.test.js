@@ -3,10 +3,15 @@ import {
   maherLambdas,
   clearMaherRatingCache,
 } from "./maherRatings.js";
+import {
+  applyScoreModelFromEnv,
+  resetLambdaWeightConfig,
+} from "./scoreModelConfig.js";
 
 describe("maherRatings", () => {
   afterEach(() => {
     clearMaherRatingCache();
+    resetLambdaWeightConfig();
   });
 
   const leagueId = 1234;
@@ -71,6 +76,34 @@ describe("maherRatings", () => {
     });
     expect(λ).not.toBeNull();
     expect(λ.home).toBeGreaterThan(λ.away);
+  });
+
+  test("high away CS lowers home λ via defAway", () => {
+    applyScoreModelFromEnv({ SCORE_MAHER_CS_BLEND: "0.25" });
+    const base = maherLambdas({
+      allLeagueResults,
+      leagueId,
+      asOfUnix: 1_700_300_000,
+      homeTeam: "Alpha",
+      awayTeam: "Gamma",
+      averageGoalsHome: 1.4,
+      averageGoalsAway: 1.1,
+      csAwayPct: 28,
+      gamesAway: 8,
+    });
+    const highCs = maherLambdas({
+      allLeagueResults,
+      leagueId,
+      asOfUnix: 1_700_300_000,
+      homeTeam: "Alpha",
+      awayTeam: "Gamma",
+      averageGoalsHome: 1.4,
+      averageGoalsAway: 1.1,
+      csAwayPct: 75,
+      gamesAway: 8,
+    });
+    expect(highCs.home).toBeLessThan(base.home);
+    expect(highCs.defAway).toBeLessThan(base.defAway);
   });
 
   test("maher_gamma uses one μ with home-only γ", () => {

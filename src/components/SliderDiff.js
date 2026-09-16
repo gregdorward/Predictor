@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import Slider from "@mui/material/Slider";
-import oddslib from "oddslib";
 import { selectedOdds } from "../components/OddsRadio";
+import { decimalToFractional } from "../utils/oddsFormat";
 import {
   GlobalFilters,
   applyFilterPreset,
@@ -41,9 +41,10 @@ const SlideDiff = (props) => {
   useEffect(() => {
     if (isRange && selectedOdds === "Fractional odds") {
       try {
-        const f1 = oddslib.from("decimal", value[0]).to("fractional", { precision: 1 });
-        const f2 = oddslib.from("decimal", value[1]).to("fractional", { precision: 1 });
-        setFractionalValue([f1, f2]);
+        setFractionalValue([
+          decimalToFractional(value[0]),
+          decimalToFractional(value[1]),
+        ]);
       } catch (e) {
         console.error("Conversion error", e);
       }

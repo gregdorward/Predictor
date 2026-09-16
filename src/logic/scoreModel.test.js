@@ -22,6 +22,8 @@ import {
   SCORE_MAHER_RATE_SOURCE,
   SCORE_MAHER_ITERS,
   SCORE_MAHER_LAST_GAME_BLEND,
+  SCORE_MAHER_CS_BLEND,
+  SCORE_MAHER_CS_BASELINE,
   applyMaxOutcomeEdgeFromEnv,
   getClearOutcomeMargin,
   getMaxOutcomeEdge,
@@ -49,9 +51,11 @@ import {
   getScoreMaherRateSource,
   getScoreMaherIters,
   getScoreMaherLastGameBlend,
+  getScoreMaherCsBlend,
   clampLambdaSignal,
   restHaircutMultiplier,
   sosDampMultiplier,
+  maherCsDefMultiplier,
   isNeutralVenueMatch,
   parseNoHomeAwayFromFixture,
   resetClearOutcomeMargin,
@@ -133,8 +137,11 @@ describe("lambda weight knobs", () => {
     expect(getScoreMaherIters()).toBe(0);
     expect(SCORE_MAHER_LAST_GAME_BLEND).toBe(0);
     expect(getScoreMaherLastGameBlend()).toBe(0);
-    expect(SCORE_ODDS_BLEND).toBe(0.25);
-    expect(getScoreOddsBlend()).toBe(0.25);
+    expect(SCORE_MAHER_CS_BLEND).toBe(0);
+    expect(getScoreMaherCsBlend()).toBe(0);
+    expect(SCORE_MAHER_CS_BASELINE).toBe(28);
+    expect(SCORE_ODDS_BLEND).toBe(0.3);
+    expect(getScoreOddsBlend()).toBe(0.3);
   });
 
   test("applyScoreModelFromEnv reads rolling / weighted-xg overrides", () => {
@@ -205,6 +212,11 @@ describe("lambda weight knobs", () => {
     expect(getScoreMaherLastGameBlend()).toBe(0.15);
   });
 
+  test("applyScoreModelFromEnv reads SCORE_MAHER_CS_BLEND", () => {
+    applyScoreModelFromEnv({ SCORE_MAHER_CS_BLEND: "0.25" });
+    expect(getScoreMaherCsBlend()).toBe(0.25);
+  });
+
   test("SCORE_ROLLING_XI >= 1 disables decay", () => {
     applyScoreModelFromEnv({ SCORE_ROLLING_XI: "1" });
     expect(getScoreRollingXi()).toBe(0);
@@ -269,6 +281,15 @@ describe("lambda weight knobs", () => {
         contextMetrics: { strengthOfSchedule: { softScheduleFlag: false } },
       })
     ).toBe(1);
+  });
+
+  test("maherCsDefMultiplier lowers def factor when CS is high", () => {
+    applyScoreModelFromEnv({ SCORE_MAHER_CS_BLEND: "0.2" });
+    expect(maherCsDefMultiplier(75, 8)).toBeLessThan(1);
+    expect(maherCsDefMultiplier(10, 8)).toBeGreaterThan(1);
+    expect(maherCsDefMultiplier(28, 8)).toBe(1);
+    applyScoreModelFromEnv({ SCORE_MAHER_CS_BLEND: "0" });
+    expect(maherCsDefMultiplier(75, 8)).toBe(1);
   });
 });
 

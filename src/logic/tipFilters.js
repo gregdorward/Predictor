@@ -1,4 +1,4 @@
-import { getMaxOutcomeEdge } from "./scoreModelConfig.js";
+import { getMaxOutcomeEdge, getMinTipOdds } from "./scoreModelConfig.js";
 
 /** Default tip-filter thresholds (null = off). Shared by site UI and backtest. */
 export function createDefaultTipFilters() {
@@ -176,6 +176,32 @@ export function applyHighEdgeFlag(
   const edge = getTipped1X2Edge(match, finalHomeGoals, finalAwayGoals);
   if (Number.isFinite(edge) && edge > maxEdge) {
     match.highEdgeFlag = true;
+  }
+}
+
+/** Decimal odds for the tipped 1X2 outcome. */
+export function getTipped1X2Odds(match, finalHomeGoals, finalAwayGoals) {
+  if (finalHomeGoals === finalAwayGoals) {
+    return Number(match.drawOdds);
+  }
+  if (finalHomeGoals > finalAwayGoals) {
+    return Number(match.homeOdds);
+  }
+  return Number(match.awayOdds);
+}
+
+/**
+ * Omit tips whose tipped-outcome decimal odds are below MIN_TIP_ODDS.
+ * Independent of Customise Tips / GlobalFilters.
+ */
+export function applyMinTipOddsFilter(
+  match,
+  { finalHomeGoals, finalAwayGoals, minOdds = getMinTipOdds() }
+) {
+  if (minOdds == null) return;
+  const odds = getTipped1X2Odds(match, finalHomeGoals, finalAwayGoals);
+  if (Number.isFinite(odds) && odds < minOdds) {
+    match.omit = true;
   }
 }
 

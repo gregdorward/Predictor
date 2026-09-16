@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import Slider from "@mui/material/Slider";
 import { selectedOdds } from "../components/OddsRadio";
-import oddslib from "oddslib";
+import { decimalToFractional } from "../utils/oddsFormat";
 export let rangeValue = [1, 10];
 
 export const Slide = (props) => {
@@ -10,17 +10,11 @@ export const Slide = (props) => {
 
   useEffect(() => {
     if (selectedOdds === "Fractional odds") {
-      let roundedValueOne = (Math.round(range[0] * 5) / 5).toFixed(1);
-      let roundedValueTwo = (Math.round(range[1] * 5) / 5).toFixed(1);
-
       try {
-        const fractionalOne = oddslib
-          .from("decimal", roundedValueOne)
-          .to("fractional", { precision: 1 });
-        const fractionalTwo = oddslib
-          .from("decimal", roundedValueTwo)
-          .to("fractional", { precision: 1 });
-        setFractionalValue([fractionalOne, fractionalTwo]);
+        setFractionalValue([
+          decimalToFractional(range[0]),
+          decimalToFractional(range[1]),
+        ]);
       } catch (error) {
         console.log(error);
       }

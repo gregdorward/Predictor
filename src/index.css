@@ -3806,7 +3806,7 @@ strong.LOST {
 .HomeContainertrue {
   display: grid;
   grid-template-columns:
-    minmax(0.5rem, 0.5fr) minmax(0.5em, 0.4fr) minmax(2rem, 1.2fr) minmax(2rem, 1.3fr) minmax(0.5rem, 0.6fr) minmax(1.5rem, 1.5fr);
+    minmax(3.4rem, 0.55fr) minmax(0.5em, 0.4fr) minmax(2rem, 1.2fr) minmax(2rem, 1.3fr) minmax(0.5rem, 0.6fr) minmax(1.5rem, 1.5fr);
   font-size: 1.1em;
   align-items: center;
   column-gap: 1em;
@@ -3819,7 +3819,7 @@ strong.LOST {
 .AwayContainertrue {
   display: grid;
   grid-template-columns:
-    minmax(0.5rem, 0.5fr) minmax(0.5em, 0.4fr) minmax(2rem, 1.2fr) minmax(2rem, 1.3fr) minmax(0.5rem, 0.6fr) minmax(1.5rem, 1.5fr);
+    minmax(3.4rem, 0.55fr) minmax(0.5em, 0.4fr) minmax(2rem, 1.2fr) minmax(2rem, 1.3fr) minmax(0.5rem, 0.6fr) minmax(1.5rem, 1.5fr);
   font-size: 1.1em;
   align-items: center;
   column-gap: 1em;
@@ -3835,7 +3835,7 @@ strong.LOST {
 .HomeContainerfalse {
   display: grid;
   grid-template-columns:
-    minmax(0.5rem, 0.5fr) minmax(0.5em, 0.4fr) minmax(2.5rem, 1.3fr) minmax(0.5rem, 0.5fr) minmax(0.5rem, 0.5fr) minmax(1.8rem, 1.3fr);
+    minmax(3.4rem, 0.55fr) minmax(0.5em, 0.4fr) minmax(2.5rem, 1.3fr) minmax(0.5rem, 0.5fr) minmax(0.5rem, 0.5fr) minmax(1.8rem, 1.3fr);
   font-size: 1.1em;
   margin-left: 1em;
   margin-right: 0em;
@@ -3848,7 +3848,7 @@ strong.LOST {
 .AwayContainerfalse {
   display: grid;
   grid-template-columns:
-    minmax(0.5rem, 0.5fr) minmax(0.5em, 0.4fr) minmax(2.5rem, 1.3fr) minmax(0.5rem, 0.5fr) minmax(0.5rem, 0.5fr) minmax(1.8rem, 1.3fr);
+    minmax(3.4rem, 0.55fr) minmax(0.5em, 0.4fr) minmax(2.5rem, 1.3fr) minmax(0.5rem, 0.5fr) minmax(0.5rem, 0.5fr) minmax(1.8rem, 1.3fr);
   font-size: 1.1em;
   margin-left: 1em;
   margin-right: 0em;
@@ -3871,9 +3871,12 @@ strong.LOST {
   align-items: left;
   align-content: left;
   color: var(--text-color);
-  padding-bottom: 0.5em;
+  padding-top: 1em;
+  padding-bottom: 1em;
   cursor: pointer;
-  opacity: 0.25;
+  border-radius: 6px;
+  opacity: 0.4;
+  filter: grayscale(0.35);
 }
 
 
@@ -3994,8 +3997,13 @@ strong.LOST {
   flex-basis: 5%;
   min-width: 20px;
   border-radius: 6px;
-  font-weight: bolder;
-  font-size: 0.9em;
+  font-size: 1em;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  line-height: 1.15;
+  text-align: center;
 }
 
 .DrawOdds {
@@ -4004,8 +4012,31 @@ strong.LOST {
   color: var(--text-color);
   flex-basis: 5%;
   min-width: 20px;
-  font-size: 0.9em;
-  border-radius: 6px
+  font-size: 1em;
+  border-radius: 6px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  line-height: 1.15;
+  text-align: center;
+}
+
+.OddsValue {
+  font-size: 1em;
+  font-weight: bolder;
+}
+
+.OddsBookmaker {
+  display: block;
+  margin-top: 0.15em;
+  font-size: 0.75em;
+  font-weight: 500;
+  opacity: 0.85;
+  max-width: 5.75rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .HomeOddsExplainer {
@@ -4114,7 +4145,13 @@ strong.LOST {
   color: var(--button-text-color);
   border-radius: 6px;
   font-weight: 500;
-  font-size: 0.9em;
+  font-size: 1em;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  line-height: 1.15;
+  text-align: center;
 }
 
 .oddsAwayExplainer {
@@ -4508,7 +4545,7 @@ strong.LOST {
 .ExplainerContainertrue {
   display: grid;
   grid-template-columns:
-    minmax(0.5rem, 0.5fr) minmax(0.5em, 0.4fr) minmax(2rem, 1.2fr) minmax(2rem, 1.3fr) minmax(0.5rem, 0.6fr) minmax(1.5rem, 1.5fr);
+    minmax(3.4rem, 0.55fr) minmax(0.5em, 0.4fr) minmax(2rem, 1.2fr) minmax(2rem, 1.3fr) minmax(0.5rem, 0.6fr) minmax(1.5rem, 1.5fr);
   font-size: 1.1em;
   align-items: center;
   margin-left: 1em;
@@ -4520,7 +4557,7 @@ strong.LOST {
 .ExplainerContainerfalse {
   display: grid;
   grid-template-columns:
-    minmax(0.5rem, 0.5fr) minmax(0.5em, 0.4fr) minmax(2.5rem, 1.3fr) minmax(0.5rem, 0.5fr) minmax(0.5rem, 0.5fr) minmax(1.8rem, 1.3fr);
+    minmax(3.4rem, 0.55fr) minmax(0.5em, 0.4fr) minmax(2.5rem, 1.3fr) minmax(0.5rem, 0.5fr) minmax(0.5rem, 0.5fr) minmax(1.8rem, 1.3fr);
   font-size: 1.1em;
   align-items: center;
   column-gap: 1em;
@@ -4532,7 +4569,7 @@ strong.LOST {
 .DrawContainertrue {
   display: grid;
   grid-template-columns:
-    minmax(0.5rem, 0.5fr) minmax(0.5em, 0.4fr) minmax(2rem, 1.2fr) minmax(2rem, 1.3fr) minmax(0.5rem, 0.6fr) minmax(1.5rem, 1.5fr);
+    minmax(3.4rem, 0.55fr) minmax(0.5em, 0.4fr) minmax(2rem, 1.2fr) minmax(2rem, 1.3fr) minmax(0.5rem, 0.6fr) minmax(1.5rem, 1.5fr);
   font-size: 1.1em;
   align-items: center;
   column-gap: 1em;

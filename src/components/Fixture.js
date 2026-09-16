@@ -311,9 +311,11 @@ function SingleFixture({
     fixture.goalsA === "x" ||
     fixture.goalsB === "x";
   // No tip win/loss chrome until the model is allowed to tip the fixture.
-  const tipResultClass = earlySeason
-    ? ""
-    : `${fixture.predictionOutcome || ""}${fixture.exactScore ? "ExactScore" : ""}`;
+  // Omitted (filter) rows stay visible but greyed and out of ROI.
+  const tipResultClass =
+    earlySeason || fixture.omit === true
+      ? ""
+      : `${fixture.predictionOutcome || ""}${fixture.exactScore ? "ExactScore" : ""}`;
 
   return (
     <div key={fixture.game}>
@@ -389,7 +391,12 @@ function SingleFixture({
               </div>
 
               <div className={`HomeContainer${isProbability}`}>
-                <div className="HomeOdds">{fixture.fractionHome}</div>
+                <div className="HomeOdds">
+                  <span className="OddsValue">{fixture.fractionHome}</span>
+                  {fixture.homeOddsBookmaker ? (
+                    <span className="OddsBookmaker">{fixture.homeOddsBookmaker}</span>
+                  ) : null}
+                </div>
                 <CreateBadge
                   image={fixture.homeBadge}
                   ClassName="HomeBadge"
@@ -436,7 +443,12 @@ function SingleFixture({
               </div>
 
               <div className={`DrawContainer${isProbability}`}>
-                <div className="DrawOdds">{fixture.fractionDraw}</div>
+                <div className="DrawOdds">
+                  <span className="OddsValue">{fixture.fractionDraw}</span>
+                  {fixture.drawOddsBookmaker ? (
+                    <span className="OddsBookmaker">{fixture.drawOddsBookmaker}</span>
+                  ) : null}
+                </div>
                 <div
                   className="DrawBadgeExplainer"
                 />
@@ -461,7 +473,12 @@ function SingleFixture({
 
 
               <div className={`AwayContainer${isProbability}`}>
-                <div className="AwayOdds">{fixture.fractionAway}</div>
+                <div className="AwayOdds">
+                  <span className="OddsValue">{fixture.fractionAway}</span>
+                  {fixture.awayOddsBookmaker ? (
+                    <span className="OddsBookmaker">{fixture.awayOddsBookmaker}</span>
+                  ) : null}
+                </div>
                 <CreateBadge
                   image={fixture.awayBadge}
                   ClassName="AwayBadge"
@@ -807,7 +824,9 @@ export function Fixture(props) {
       {/* Section 1: Visibility Warning */}
       {props.totalVisible !== props.fullGameListLength && (
         <div className="CapText">
-          {props.fullGameListLength} games have been reduced to {props.totalVisible} by the applied filters. Reset the filter to view all games.
+          {props.totalVisible} of {props.fullGameListLength} games meet the
+          filters; the rest are greyed out and excluded from ROI. Reset the
+          filter to tip all games.
         </div>
       )}
 

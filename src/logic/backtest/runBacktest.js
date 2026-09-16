@@ -17,6 +17,8 @@ import {
 import { getStoredSshScoreline } from "../freezePredictedScoreline.js";
 import { loadBacktestEnv } from "./loadEnv.js";
 import { fetchGlobalBacktestData, loadDayData } from "./loadDayData.js";
+import { getMinTipOdds } from "../scoreModelConfig.js";
+import { attachCachedOddsComparison } from "../bestOddsCache.js";
 import {
   evaluateMatch,
   aggregateResults,
@@ -78,6 +80,7 @@ export async function runBacktest(cliArgs = {}) {
   params.filters = filterConfig.filters;
   params.filterPreset = filterConfig.preset;
   params.filtersActive = filterConfig.active;
+  params.minTipOdds = getMinTipOdds();
 
   if (!params.from || !params.to) {
     throw new Error("Both --from and --to are required (YYYY-MM-DD).");
@@ -88,6 +91,9 @@ export async function runBacktest(cliArgs = {}) {
 
   console.log(`Backtest run ${runId}`);
   console.log(`Range: ${params.from} → ${params.to}`);
+  if (params.minTipOdds != null) {
+    console.log(`MIN_TIP_ODDS: ${params.minTipOdds} (omit shorter tipped odds)`);
+  }
 
   setSshSnapshotPersistEnabled(false);
   resetSshSnapshotState();
@@ -209,6 +215,7 @@ export async function runBacktest(cliArgs = {}) {
       }
 
       try {
+        attachCachedOddsComparison(match);
         const result = await calculateScore(match, 2, 10, true, [], []);
         [
           match.goalsA,
@@ -268,12 +275,13 @@ export async function runBacktest(cliArgs = {}) {
   }
 
   const summaryAll = aggregateResults(allRows);
-  const summary = filterConfig.active
-    ? aggregateResults(allRows, { excludeFilteredOut: true })
-    : summaryAll;
-  if (filterConfig.active) {
+  // Always drop omitted tips from primary ROI (MIN_TIP_ODDS, customise tips, etc.).
+  const summary = aggregateResults(allRows, { excludeFilteredOut: true });
+  if (summaryAll.predicted !== summary.predicted || filterConfig.active) {
     summary.unfiltered = summaryAll;
-    summary.filtered = { ...summary };
+    if (filterConfig.active) {
+      summary.filtered = { ...summary };
+    }
   }
   if (params.minEdge != null && Number.isFinite(params.minEdge)) {
     summary.selective = aggregateSelectiveResults(allRows, params.minEdge);
@@ -320,7 +328,7 @@ export async function runBacktest(cliArgs = {}) {
   writeFileSync(resolve(outputDir, "results.csv"), resultsCsv);
 
   console.log("\nSummary");
-  if (filterConfig.active && summary.unfiltered) {
+  if (summary.unfiltered) {
     console.log(
       `  Unfiltered slate: ${summary.unfiltered.predicted} predicted, ROI ${summary.unfiltered.roi}%`
     );
@@ -336,7 +344,7 @@ export async function runBacktest(cliArgs = {}) {
     console.log(`  Mean log-loss (1X2): ${summary.meanLogLoss}`);
   }
   console.log(`  ROI (flat 1-unit): ${summary.roi}%`);
-  if (filterConfig.active) {
+  if (summary.unfiltered) {
     console.log(
       `  Filtered out: ${summary.unfiltered.predicted - summary.predicted} tips`
     );
