@@ -19,6 +19,7 @@ import {
   getCanonicalPathFromAsPath,
   getCanonicalUrl,
   OG_IMAGE,
+  buildRobotsContent,
 } from "./pageMetaConfig";
 
 describe("fixtureSlug", () => {
@@ -235,6 +236,23 @@ describe("canonical URLs", () => {
     );
     expect(getCanonicalUrl("/highest-scoring-leagues")).toBe(
       "https://www.soccerstatshub.com/highest-scoring-leagues/"
+    );
+  });
+});
+
+describe("robots meta", () => {
+  test("omits robots when the page is indexable", () => {
+    expect(buildRobotsContent({ noIndex: false })).toBeNull();
+    expect(buildRobotsContent({})).toBeNull();
+  });
+
+  test("uses noindex, nofollow by default for noindex pages", () => {
+    expect(buildRobotsContent({ noIndex: true })).toBe("noindex, nofollow");
+  });
+
+  test("uses noindex, follow when follow is requested", () => {
+    expect(buildRobotsContent({ noIndex: true, follow: true })).toBe(
+      "noindex, follow"
     );
   });
 });

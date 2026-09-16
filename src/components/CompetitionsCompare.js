@@ -210,7 +210,9 @@ export default function CompetitionsCompare({ overview }) {
                   </a>
                 </li>
                 <li>
-                  <a href="/u25/">Lowest scoring leagues and Under 2.5 rates</a>
+                  <a href="/fixtureshigh/">
+                    Today’s high-scoring fixtures and Over 2.5 shortlist
+                  </a>
                 </li>
                 <li>
                   <a href="/methodology/">How we build these numbers</a>
