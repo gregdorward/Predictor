@@ -391,7 +391,15 @@ function SingleFixture({
               </div>
 
               <div className={`HomeContainer${isProbability}`}>
-                <div className="HomeOdds">
+                <div
+                  className={`HomeOdds${
+                    fixture.homeOddsMovement === "shortening"
+                      ? " OddsShortening"
+                      : fixture.homeOddsMovement === "drifting"
+                        ? " OddsDrifting"
+                        : ""
+                  }`}
+                >
                   <span className="OddsValue">{fixture.fractionHome}</span>
                   {fixture.homeOddsBookmaker ? (
                     <span className="OddsBookmaker">{fixture.homeOddsBookmaker}</span>
@@ -443,7 +451,15 @@ function SingleFixture({
               </div>
 
               <div className={`DrawContainer${isProbability}`}>
-                <div className="DrawOdds">
+                <div
+                  className={`DrawOdds${
+                    fixture.drawOddsMovement === "shortening"
+                      ? " OddsShortening"
+                      : fixture.drawOddsMovement === "drifting"
+                        ? " OddsDrifting"
+                        : ""
+                  }`}
+                >
                   <span className="OddsValue">{fixture.fractionDraw}</span>
                   {fixture.drawOddsBookmaker ? (
                     <span className="OddsBookmaker">{fixture.drawOddsBookmaker}</span>
@@ -473,7 +489,15 @@ function SingleFixture({
 
 
               <div className={`AwayContainer${isProbability}`}>
-                <div className="AwayOdds">
+                <div
+                  className={`AwayOdds${
+                    fixture.awayOddsMovement === "shortening"
+                      ? " OddsShortening"
+                      : fixture.awayOddsMovement === "drifting"
+                        ? " OddsDrifting"
+                        : ""
+                  }`}
+                >
                   <span className="OddsValue">{fixture.fractionAway}</span>
                   {fixture.awayOddsBookmaker ? (
                     <span className="OddsBookmaker">{fixture.awayOddsBookmaker}</span>

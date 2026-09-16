@@ -4154,6 +4154,35 @@ strong.LOST {
   text-align: center;
 }
 
+/* After AwayOdds base rule so movement colours win on specificity + source order */
+.HomeOdds.OddsShortening,
+.DrawOdds.OddsShortening,
+.AwayOdds.OddsShortening,
+*[class^="AwayOdds"].OddsShortening {
+  background-color: #cfe8f6 !important;
+  color: #0f172a !important;
+}
+
+.HomeOdds.OddsDrifting,
+.DrawOdds.OddsDrifting,
+.AwayOdds.OddsDrifting,
+*[class^="AwayOdds"].OddsDrifting {
+  background-color: #f6d4d4 !important;
+  color: #0f172a !important;
+}
+
+.HomeOdds.OddsShortening .OddsBookmaker,
+.DrawOdds.OddsShortening .OddsBookmaker,
+.AwayOdds.OddsShortening .OddsBookmaker,
+*[class^="AwayOdds"].OddsShortening .OddsBookmaker,
+.HomeOdds.OddsDrifting .OddsBookmaker,
+.DrawOdds.OddsDrifting .OddsBookmaker,
+.AwayOdds.OddsDrifting .OddsBookmaker,
+*[class^="AwayOdds"].OddsDrifting .OddsBookmaker {
+  color: #0f172a;
+  opacity: 0.9;
+}
+
 .oddsAwayExplainer {
   order: 7;
   padding: 0.5em;

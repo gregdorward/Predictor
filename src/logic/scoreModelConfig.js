@@ -178,14 +178,11 @@ export const MAX_OUTCOME_EDGE = 20;
  * Minimum decimal odds on the tipped 1X2 outcome. Tips shorter than this are
  * omitted (site + backtest ROI). null / 0 = off. Example: 1.5 skips heavy favourites.
  */
-export const MIN_TIP_ODDS = 0;
+export const MIN_TIP_ODDS = 1.21;
 
 /**
- * When true, replace average odds_ft_* with best prices from FootyStats
- * odds_comparison (match details / snapshot) on match day or later only.
- * Future fixtures keep league-list averages (comparison can be stale early).
- * Bookmaker labels are stored on the match for display. Falls back to
- * odds_ft_* when comparison is missing.
+ * When true, prefer FootyStats best 1X2 via odds-timeline sync (opening / mid /
+ * locked windows). Falls back to odds_ft_* averages when no sample exists.
  */
 export const USE_BEST_MATCH_ODDS = true;
 
