@@ -26,7 +26,6 @@
   }
 
   .LeagueTable {
-    margin-bottom: 1em;
     margin-left: auto;
     margin-right: auto;
   }
@@ -3722,6 +3721,8 @@ strong.LOST {
   width: 100%;
   font-size: 1.2em;
   margin-bottom: 1em;
+  background-color: var(--alternate-background-color);
+  color: var(--button-text-color);
 }
 
 .MatchDetail-actions {
@@ -4039,6 +4040,74 @@ strong.LOST {
   white-space: nowrap;
 }
 
+/* % sits below Home/Away/Draw containers so odds-pill grid alignment is unchanged */
+.FixtureSideBlock {
+  display: flex;
+  flex-direction: column;
+}
+
+.FixtureSideBlock .HomeContainertrue,
+.FixtureSideBlock .HomeContainerfalse,
+.FixtureSideBlock .AwayContainertrue,
+.FixtureSideBlock .AwayContainerfalse,
+.FixtureSideBlock .DrawContainertrue {
+  margin-bottom: 0;
+}
+
+.OddsMovementPctRowtrue {
+  display: grid;
+  grid-template-columns:
+    minmax(3.4rem, 0.55fr) minmax(0.5em, 0.4fr) minmax(2rem, 1.2fr) minmax(2rem, 1.3fr) minmax(0.5rem, 0.6fr) minmax(1.5rem, 1.5fr);
+  column-gap: 1em;
+  margin-left: 1em;
+  margin-right: 0;
+  margin-bottom: 0.7em;
+  min-height: 1.55em;
+  align-items: start;
+  font-size: 1.1em;
+}
+
+.OddsMovementPctRowfalse {
+  display: grid;
+  grid-template-columns:
+    minmax(3.4rem, 0.55fr) minmax(0.5em, 0.4fr) minmax(2.5rem, 1.3fr) minmax(0.5rem, 0.5fr) minmax(0.5rem, 0.5fr) minmax(1.8rem, 1.3fr);
+  column-gap: 1em;
+  margin-left: 1em;
+  margin-right: 0;
+  margin-bottom: 1em;
+  min-height: 1.55em;
+  align-items: start;
+  font-size: 1.1em;
+}
+
+/* Fixed-height slot so rows with/without % keep the same vertical rhythm */
+.OddsMovementPct {
+  display: block;
+  box-sizing: border-box;
+  grid-column: 1;
+  justify-self: center;
+  height: 1.35em;
+  min-height: 1.35em;
+  line-height: 1.35em;
+  margin-top: 0.2em;
+  font-size: 0.72em;
+  font-weight: 600;
+  text-align: center;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 5.75rem;
+  color: var(--text-color);
+}
+
+.OddsMovementPctShortening {
+  color: #0c4a6e;
+}
+
+.OddsMovementPctDrifting {
+  color: #7f1d1d;
+}
+
 .HomeOddsExplainer {
   padding: 0.5em;
   font-weight: bolder;
@@ -4159,7 +4228,7 @@ strong.LOST {
 .DrawOdds.OddsShortening,
 .AwayOdds.OddsShortening,
 *[class^="AwayOdds"].OddsShortening {
-  background-color: #cfe8f6 !important;
+  background-color: #bfe7fd !important;
   color: #0f172a !important;
 }
 
@@ -4167,7 +4236,7 @@ strong.LOST {
 .DrawOdds.OddsDrifting,
 .AwayOdds.OddsDrifting,
 *[class^="AwayOdds"].OddsDrifting {
-  background-color: #f6d4d4 !important;
+  background-color: #f6c9c9 !important;
   color: #0f172a !important;
 }
 
@@ -7601,7 +7670,7 @@ input:active+.design::after {
   color: var(--text-color);
   border: none;
   margin: 0em;
-  padding: 0em;
+  padding: 0.5em;
   box-shadow: none;
   min-width: none !important;
   text-decoration: none;

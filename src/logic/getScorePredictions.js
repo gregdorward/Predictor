@@ -8,6 +8,7 @@ import { matches, diff, dynamicFormDateKey, dynamicDate } from "./getFixtures";
 import Collapsable from "../components/CollapsableElement";
 import CollapsableStats from "../components/CollapsableStats";
 import { allForm } from "../logic/getFixtures";
+import { persistPendingOddsTimelineUpdates } from "./enrichMatchBestOdds.js";
 import Increment from "../components/Increment";
 import { incrementValue } from "../components/Increment";
 import { getBTTSPotential } from "../logic/getBTTSPotential";
@@ -4264,9 +4265,11 @@ export async function calculateScore(match, index, divider, calculate, AIPredict
 
   const fixtureFormIndex = allForm.findIndex(
     (game) =>
-      game.id === match.id ||
-      (game.home.teamName === match.homeTeam &&
-        game.away.teamName === match.awayTeam)
+      game?.home &&
+      game?.away &&
+      (game.id === match.id ||
+        (game.home?.teamName === match.homeTeam &&
+          game.away?.teamName === match.awayTeam))
   );
 
   if (calculate === true && fixtureFormIndex !== -1) {
@@ -6075,6 +6078,7 @@ async function getSuccessMeasure(fixtures) {
 
   if (hasUpdates) {
     await submitUpdatedTips(resultedUserTipsArray);
+    resultedUserTipsArray.length = 0;
   } else {
     console.log("No new match results found. Skipping update.");
   }
@@ -7052,10 +7056,11 @@ export async function getScorePrediction(day, mocked) {
     }
   }
 
+  await persistPendingOddsTimelineUpdates();
+
   return matches;
 
 }
-
 
 async function getMultis() {
   allTipsSorted = allTips.sort(function (a, b) {

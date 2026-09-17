@@ -901,7 +901,9 @@ export async function generateFixtures(
       isFormStored = formArray.length > 0;
       isStoredLocally = isFormStored;
       // Cap stale LastFiveForm that still carry previous-season formRun padding.
-      allForm = formArray.map((entry) => {
+      allForm = formArray
+        .filter((entry) => entry?.home && entry?.away && entry?.id != null)
+        .map((entry) => {
         if (entry?.home?.[2]) {
           sanitizeThinSeasonFormSide(entry.home[2]);
         }
@@ -2111,6 +2113,10 @@ export async function generateFixtures(
           );
           sanitizeThinSeasonFormSide(formEntry.home[2]);
           sanitizeThinSeasonFormSide(formEntry.away[2]);
+        }
+
+        if (formEntry?.oddsTimeline) {
+          match.oddsTimeline = formEntry.oddsTimeline;
         }
 
         // if (match.status !== "canceled" || match.status !== "suspended") {

@@ -22,6 +22,7 @@ import {
 import { getCompetitionFormPills } from "../utils/leagueResultsAccess";
 import { Flag } from "lucide-react";
 import { getMaxOutcomeEdge } from "../logic/scoreModelConfig.js";
+import { formatOddsMovementPctLabel } from "../logic/oddsTimeline.js";
 
 let resultValue;
 var count;
@@ -33,6 +34,24 @@ function toggle(bool) {
 }
 
 let tipOutcome = undefined;
+
+function OddsMovementPctSlot({ pct }) {
+  const label = formatOddsMovementPctLabel(pct);
+  const directionClass =
+    pct != null && pct < 0
+      ? " OddsMovementPctShortening"
+      : pct != null && pct > 0
+        ? " OddsMovementPctDrifting"
+        : "";
+  return (
+    <span
+      className={`OddsMovementPct${directionClass}`}
+      aria-hidden={label ? undefined : true}
+    >
+      {label || "\u00a0"}
+    </span>
+  );
+}
 
 // const [displayMode, setDisplayMode] = useState("score"); 
 // // "score" | "probability"
@@ -390,165 +409,182 @@ function SingleFixture({
                 </div>
               </div>
 
-              <div className={`HomeContainer${isProbability}`}>
-                <div
-                  className={`HomeOdds${
-                    fixture.homeOddsMovement === "shortening"
-                      ? " OddsShortening"
-                      : fixture.homeOddsMovement === "drifting"
-                        ? " OddsDrifting"
-                        : ""
-                  }`}
-                >
-                  <span className="OddsValue">{fixture.fractionHome}</span>
-                  {fixture.homeOddsBookmaker ? (
-                    <span className="OddsBookmaker">{fixture.homeOddsBookmaker}</span>
-                  ) : null}
-                </div>
-                <CreateBadge
-                  image={fixture.homeBadge}
-                  ClassName="HomeBadge"
-                  alt="Home team badge"
-                  flexShrink={5}
-                />
-                <div className={`homeTeam${isProbability}`}>
-                  {fixture.homeTeam}{" "} {fixture.formHome ? `(${fixture.formHome.LeaguePosition})` : ""}
-                </div>
-                <PredictionSection
-                  isProbability={isProbability}
-                  team={""}
-                  goals={fixture.goalsA}
-                  probability={fixture.homeWinProbability}
-                  unavailable={earlySeason}
-                />
-                <div className="ResultContainer">
-                  <div className={`result`}>
-                    {fixture.status === "complete" ? `${fixture.homeGoals}` : `-`}
+              <div className={`FixtureSideBlock FixtureSideBlock${isProbability}`}>
+                <div className={`HomeContainer${isProbability}`}>
+                  <div
+                    className={`HomeOdds${
+                      fixture.homeOddsMovement === "shortening"
+                        ? " OddsShortening"
+                        : fixture.homeOddsMovement === "drifting"
+                          ? " OddsDrifting"
+                          : ""
+                    }`}
+                  >
+                    <span className="OddsValue">{fixture.fractionHome}</span>
+                    {fixture.homeOddsBookmaker ? (
+                      <span className="OddsBookmaker">{fixture.homeOddsBookmaker}</span>
+                    ) : null}
+                  </div>
+                  <CreateBadge
+                    image={fixture.homeBadge}
+                    ClassName="HomeBadge"
+                    alt="Home team badge"
+                    flexShrink={5}
+                  />
+                  <div className={`homeTeam${isProbability}`}>
+                    {fixture.homeTeam}{" "} {fixture.formHome ? `(${fixture.formHome.LeaguePosition})` : ""}
+                  </div>
+                  <PredictionSection
+                    isProbability={isProbability}
+                    team={""}
+                    goals={fixture.goalsA}
+                    probability={fixture.homeWinProbability}
+                    unavailable={earlySeason}
+                  />
+                  <div className="ResultContainer">
+                    <div className={`result`}>
+                      {fixture.status === "complete" ? `${fixture.homeGoals}` : `-`}
+                    </div>
+                  </div>
+                  <div className="FormContainer">
+                    <div className={`Last5`}>
+                      <FormPills
+                        label="All"
+                        results={getFixtureFormPills(
+                          fixture,
+                          fixture.homeTeam,
+                          "all"
+                        )}
+                      />
+                    </div>
+                    <div className={`Last5Home`}>
+                      <FormPills
+                        label="Home"
+                        results={getFixtureFormPills(
+                          fixture,
+                          fixture.homeTeam,
+                          "home"
+                        )}
+                      />
+                    </div>
                   </div>
                 </div>
-                <div className="FormContainer">
-                  <div className={`Last5`}>
-                    <FormPills
-                      label="All"
-                      results={getFixtureFormPills(
-                        fixture,
-                        fixture.homeTeam,
-                        "all"
-                      )}
-                    />
-                  </div>
-                  <div className={`Last5Home`}>
-                    <FormPills
-                      label="Home"
-                      results={getFixtureFormPills(
-                        fixture,
-                        fixture.homeTeam,
-                        "home"
-                      )}
-                    />
-                  </div>
+                <div className={`OddsMovementPctRow OddsMovementPctRow${isProbability}`}>
+                  <OddsMovementPctSlot pct={fixture.homeOddsMovementPct} />
                 </div>
               </div>
 
-              <div className={`DrawContainer${isProbability}`}>
-                <div
-                  className={`DrawOdds${
-                    fixture.drawOddsMovement === "shortening"
-                      ? " OddsShortening"
-                      : fixture.drawOddsMovement === "drifting"
-                        ? " OddsDrifting"
-                        : ""
-                  }`}
-                >
-                  <span className="OddsValue">{fixture.fractionDraw}</span>
-                  {fixture.drawOddsBookmaker ? (
-                    <span className="OddsBookmaker">{fixture.drawOddsBookmaker}</span>
-                  ) : null}
+              <div className={`FixtureSideBlock FixtureSideBlock${isProbability}`}>
+                <div className={`DrawContainer${isProbability}`}>
+                  <div
+                    className={`DrawOdds${
+                      fixture.drawOddsMovement === "shortening"
+                        ? " OddsShortening"
+                        : fixture.drawOddsMovement === "drifting"
+                          ? " OddsDrifting"
+                          : ""
+                    }`}
+                  >
+                    <span className="OddsValue">{fixture.fractionDraw}</span>
+                    {fixture.drawOddsBookmaker ? (
+                      <span className="OddsBookmaker">{fixture.drawOddsBookmaker}</span>
+                    ) : null}
+                  </div>
+                  <div
+                    className="DrawBadgeExplainer"
+                  />
+                  <div className={`homeTeam${isProbability}Explainer`}>
+                  </div>
+                  <PredictionSection
+                    isProbability={isProbability}
+                    team="Draw"
+                    // goals={fixture.goalsB}
+                    probability={fixture.drawProbability}
+                    unavailable={earlySeason}
+                  />
+                  <div className="ResultContainerExplainer">
+                    {/* <div className={`result`}>
+                    </div> */}
+                  </div>
+                  <div className="FormContainerExplainer">
+                  </div>
+                  <div className="GameStatsTwoExplainer">
+                  </div>
                 </div>
-                <div
-                  className="DrawBadgeExplainer"
-                />
-                <div className={`homeTeam${isProbability}Explainer`}>
-                </div>
-                <PredictionSection
-                  isProbability={isProbability}
-                  team="Draw"
-                  // goals={fixture.goalsB}
-                  probability={fixture.drawProbability}
-                  unavailable={earlySeason}
-                />
-                <div className="ResultContainerExplainer">
-                  {/* <div className={`result`}>
-                  </div> */}
-                </div>
-                <div className="FormContainerExplainer">
-                </div>
-                <div className="GameStatsTwoExplainer">
-                </div>
+                {isProbability ? (
+                  <div className={`OddsMovementPctRow OddsMovementPctRow${isProbability}`}>
+                    <OddsMovementPctSlot pct={fixture.drawOddsMovementPct} />
+                  </div>
+                ) : null}
               </div>
 
 
-              <div className={`AwayContainer${isProbability}`}>
-                <div
-                  className={`AwayOdds${
-                    fixture.awayOddsMovement === "shortening"
-                      ? " OddsShortening"
-                      : fixture.awayOddsMovement === "drifting"
-                        ? " OddsDrifting"
-                        : ""
-                  }`}
-                >
-                  <span className="OddsValue">{fixture.fractionAway}</span>
-                  {fixture.awayOddsBookmaker ? (
-                    <span className="OddsBookmaker">{fixture.awayOddsBookmaker}</span>
-                  ) : null}
-                </div>
-                <CreateBadge
-                  image={fixture.awayBadge}
-                  ClassName="AwayBadge"
-                  alt="Away team badge"
-                />
-                <div className={`awayTeam${isProbability}`}>
-                  {fixture.awayTeam}{" "} {fixture.formAway ? `(${fixture.formAway.LeaguePosition})` : ""}
-                </div>
-                <PredictionSection
-                  isProbability={isProbability}
-                  team=""
-                  goals={fixture.goalsB}
-                  probability={fixture.awayWinProbability}
-                  unavailable={earlySeason}
-                />
-                <div className="ResultContainer">
+              <div className={`FixtureSideBlock FixtureSideBlock${isProbability}`}>
+                <div className={`AwayContainer${isProbability}`}>
+                  <div
+                    className={`AwayOdds${
+                      fixture.awayOddsMovement === "shortening"
+                        ? " OddsShortening"
+                        : fixture.awayOddsMovement === "drifting"
+                          ? " OddsDrifting"
+                          : ""
+                    }`}
+                  >
+                    <span className="OddsValue">{fixture.fractionAway}</span>
+                    {fixture.awayOddsBookmaker ? (
+                      <span className="OddsBookmaker">{fixture.awayOddsBookmaker}</span>
+                    ) : null}
+                  </div>
+                  <CreateBadge
+                    image={fixture.awayBadge}
+                    ClassName="AwayBadge"
+                    alt="Away team badge"
+                  />
+                  <div className={`awayTeam${isProbability}`}>
+                    {fixture.awayTeam}{" "} {fixture.formAway ? `(${fixture.formAway.LeaguePosition})` : ""}
+                  </div>
+                  <PredictionSection
+                    isProbability={isProbability}
+                    team=""
+                    goals={fixture.goalsB}
+                    probability={fixture.awayWinProbability}
+                    unavailable={earlySeason}
+                  />
+                  <div className="ResultContainer">
 
-                  <div className="result">
-                    {fixture.status === "complete" ? `${fixture.awayGoals}` : `-`}
+                    <div className="result">
+                      {fixture.status === "complete" ? `${fixture.awayGoals}` : `-`}
+                    </div>
                   </div>
+                  <div className="FormContainer">
+                    <div className={`Last5`}>
+                      <FormPills
+                        label="All"
+                        results={getFixtureFormPills(
+                          fixture,
+                          fixture.awayTeam,
+                          "all"
+                        )}
+                      />
+                    </div>
+                    <div className={`Last5Away`}>
+                      <FormPills
+                        label="Away"
+                        results={getFixtureFormPills(
+                          fixture,
+                          fixture.awayTeam,
+                          "away"
+                        )}
+                      />
+                    </div>
+                  </div>
+                  {/* <button className="GameStats" onClick={handleGameStatsClick}>
+                    {downArrow}
+                  </button> */}
                 </div>
-                <div className="FormContainer">
-                  <div className={`Last5`}>
-                    <FormPills
-                      label="All"
-                      results={getFixtureFormPills(
-                        fixture,
-                        fixture.awayTeam,
-                        "all"
-                      )}
-                    />
-                  </div>
-                  <div className={`Last5Away`}>
-                    <FormPills
-                      label="Away"
-                      results={getFixtureFormPills(
-                        fixture,
-                        fixture.awayTeam,
-                        "away"
-                      )}
-                    />
-                  </div>
+                <div className={`OddsMovementPctRow OddsMovementPctRow${isProbability}`}>
+                  <OddsMovementPctSlot pct={fixture.awayOddsMovementPct} />
                 </div>
-                {/* <button className="GameStats" onClick={handleGameStatsClick}>
-                  {downArrow}
-                </button> */}
               </div>
             </div>
           </li>
