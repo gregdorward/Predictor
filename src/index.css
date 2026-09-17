@@ -4062,7 +4062,7 @@ strong.LOST {
   margin-left: 1em;
   margin-right: 0;
   margin-bottom: 0.7em;
-  min-height: 1.55em;
+  min-height: 1.6em;
   align-items: start;
   font-size: 1.1em;
 }
@@ -4075,7 +4075,7 @@ strong.LOST {
   margin-left: 1em;
   margin-right: 0;
   margin-bottom: 1em;
-  min-height: 1.55em;
+  min-height: 1.6em;
   align-items: start;
   font-size: 1.1em;
 }
@@ -4086,11 +4086,11 @@ strong.LOST {
   box-sizing: border-box;
   grid-column: 1;
   justify-self: center;
-  height: 1.35em;
-  min-height: 1.35em;
-  line-height: 1.35em;
+  height: 1.2em;
+  min-height: 1.2em;
+  line-height: 1.2em;
   margin-top: 0.2em;
-  font-size: 0.72em;
+  font-size: 1em;
   font-weight: 600;
   text-align: center;
   white-space: nowrap;
@@ -4101,11 +4101,19 @@ strong.LOST {
 }
 
 .OddsMovementPctShortening {
-  color: #0c4a6e;
+  color: #04b904;
 }
 
 .OddsMovementPctDrifting {
-  color: #7f1d1d;
+  color: #df3838;
+}
+
+.dark-mode .OddsMovementPctShortening {
+  color: #bfe7fd;
+}
+
+.dark-mode .OddsMovementPctDrifting {
+  color: #f6c9c9;
 }
 
 .HomeOddsExplainer {
