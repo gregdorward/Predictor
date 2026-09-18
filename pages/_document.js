@@ -11,24 +11,53 @@ import GUEST_LANDING_CRITICAL_CSS from "../src/critical/guestLandingCriticalCss"
 const JOURNEY_ADS_SNIPPET =
   '<script type="text/javascript" async="async" data-noptimize="1" data-cfasync="false" src="//scripts.scriptwrapper.com/tags/71e44a5d-dc3a-499d-8677-800918c94d8a.js"></script>';
 
-class JourneyHead extends Head {
-  render() {
-    const rendered = super.render();
-    const journeyAds = (
-      <script
-        key="journey-ads-snippet"
-        // eslint-disable-next-line react/no-danger
-        dangerouslySetInnerHTML={{
-          __html: `</script>${JOURNEY_ADS_SNIPPET}<script>`,
-        }}
-      />
-    );
-    return React.cloneElement(rendered, {}, [
-      journeyAds,
-      ...React.Children.toArray(rendered.props.children),
-    ]);
+// Keep the Mediavine snippet in the HTML for their verification crawler.
+// Place it in <head> after fonts/critical CSS so it can load in parallel,
+// but not first — that previously starved LCP of CSS and fonts.
+const JOURNEY_ADS_HTML = `</script>${JOURNEY_ADS_SNIPPET}<script>`;
+
+class SiteHead extends Head {
+  getCssLinks(files) {
+    const links = super.getCssLinks(files);
+    if (!links) return links;
+
+    const deferred = [];
+    React.Children.forEach(links, (link) => {
+      if (!link) return;
+      if (link.props?.rel === "stylesheet") {
+        const href = link.props.href;
+        deferred.push(
+          React.cloneElement(link, {
+            key: link.key || href,
+            media: "print",
+            "data-ssh-css": "1",
+          })
+        );
+        deferred.push(
+          <noscript key={`${link.key || href}-ns`}>
+            <link rel="stylesheet" href={href} />
+          </noscript>
+        );
+      } else {
+        deferred.push(link);
+      }
+    });
+    return deferred;
   }
 }
+
+// media="print" stylesheets are not render-blocking. Apply them after parse so
+// first paint can use the inlined critical CSS. type=module defers this.
+const APPLY_DEFERRED_CSS = `
+document.querySelectorAll('link[rel="stylesheet"][data-ssh-css]').forEach(function (link) {
+  var apply = function () { link.media = "all"; };
+  if (link.sheet) apply();
+  else {
+    link.addEventListener("load", apply);
+    link.addEventListener("error", apply);
+  }
+});
+`;
 
 const JSON_LD = {
   "@context": "https://schema.org",
@@ -118,6 +147,28 @@ const THEME_BOOT_SCRIPT = `
         window.matchMedia("(prefers-color-scheme: dark)").matches);
     if (isDark) { document.body.classList.add("dark-mode"); }
   } catch (error) {}
+})();
+`;
+
+// Load Grow after the page is idle so its ~250KB stack doesn't compete with LCP.
+const DEFERRED_GROW_SCRIPT = `
+(function () {
+  function loadGrow() {
+    if (window.__sshGrowLoaded) return;
+    window.__sshGrowLoaded = true;
+    window.growMe || ((window.growMe = function (e) { window.growMe._.push(e); }), (window.growMe._ = []));
+    var e = document.createElement("script");
+    e.type = "text/javascript";
+    e.src = "https://faves.grow.me/main.js";
+    e.defer = true;
+    e.setAttribute("data-grow-faves-site-id", "U2l0ZTpiZjJjMTc3NS1kOGU1LTRlMTQtOTM3Yy1jZWU4MmU3OTUwMzM=");
+    document.head.appendChild(e);
+  }
+  if (typeof requestIdleCallback !== "undefined") {
+    requestIdleCallback(loadGrow, { timeout: 4000 });
+  } else {
+    window.addEventListener("load", function () { setTimeout(loadGrow, 1500); });
+  }
 })();
 `;
 
@@ -219,7 +270,7 @@ export default class MyDocument extends Document {
   render() {
     return (
       <Html lang="en">
-        <JourneyHead>
+        <SiteHead>
           <link rel="icon" href="/favicon.ico" />
           <link rel="apple-touch-icon" href="/logo192.png" />
           <link rel="manifest" href="/manifest.json" />
@@ -231,27 +282,28 @@ export default class MyDocument extends Document {
           <link
             rel="preload"
             as="font"
-            href="/fonts/OpenSans-Regular.woff2"
-            type="font/woff2"
-            crossOrigin="anonymous"
-          />
-          <link
-            rel="preload"
-            as="font"
             href="/fonts/OpenSans-SemiBold.woff2"
             type="font/woff2"
             crossOrigin="anonymous"
-          />
-          <link
-            rel="preload"
-            as="image"
-            href="/images/landing-fixtures-laptop.png"
-            type="image/png"
           />
           {/* eslint-disable-next-line react/no-danger */}
           <style dangerouslySetInnerHTML={{ __html: FONT_AND_SPLASH_CSS }} />
           {/* eslint-disable-next-line react/no-danger */}
           <style dangerouslySetInnerHTML={{ __html: GUEST_LANDING_CRITICAL_CSS }} />
+          <link rel="preconnect" href="https://scripts.scriptwrapper.com" />
+          <link rel="preconnect" href="https://scripts.journeymv.com" />
+          <link rel="preconnect" href="https://eu-us-cdn.consentmanager.net" crossOrigin="anonymous" />
+          <link rel="preconnect" href="https://eu-us.consentmanager.net" crossOrigin="anonymous" />
+          <link rel="dns-prefetch" href="https://scripts.scriptwrapper.com" />
+          <script
+            // eslint-disable-next-line react/no-danger
+            dangerouslySetInnerHTML={{ __html: JOURNEY_ADS_HTML }}
+          />
+          <script
+            type="module"
+            // eslint-disable-next-line react/no-danger
+            dangerouslySetInnerHTML={{ __html: APPLY_DEFERRED_CSS }}
+          />
           <script
             type="application/ld+json"
             // eslint-disable-next-line react/no-danger
@@ -260,10 +312,7 @@ export default class MyDocument extends Document {
           <script
             data-grow-initializer=""
             // eslint-disable-next-line react/no-danger
-            dangerouslySetInnerHTML={{
-              __html:
-                '!(function(){window.growMe||((window.growMe=function(e){window.growMe._.push(e);}),(window.growMe._=[]));var e=document.createElement("script");(e.type="text/javascript"),(e.src="https://faves.grow.me/main.js"),(e.defer=!0),e.setAttribute("data-grow-faves-site-id","U2l0ZTpiZjJjMTc3NS1kOGU1LTRlMTQtOTM3Yy1jZWU4MmU3OTUwMzM=");var t=document.getElementsByTagName("script")[0];t.parentNode.insertBefore(e,t);})();',
-            }}
+            dangerouslySetInnerHTML={{ __html: DEFERRED_GROW_SCRIPT }}
           />
           <script
             // eslint-disable-next-line react/no-danger
@@ -273,7 +322,7 @@ export default class MyDocument extends Document {
             // eslint-disable-next-line react/no-danger
             dangerouslySetInnerHTML={{ __html: DEFERRED_GA_SCRIPT }}
           />
-        </JourneyHead>
+        </SiteHead>
         <body>
           <script
             // eslint-disable-next-line react/no-danger

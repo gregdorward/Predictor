@@ -250,7 +250,10 @@ export default function CompetitionPage({
 
             <CompetitionPositionRaceChart seasonId={seasonId} />
 
-            <CompetitionTeamComparison seasonId={seasonId} />
+            <CompetitionTeamComparison
+              seasonId={seasonId}
+              competitionTeams={teams}
+            />
 
             <section className="Competition__section">
               <h2 className="Competition__sectionHeading">Markets</h2>

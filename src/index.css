@@ -1092,6 +1092,40 @@ h4.Blurb {
   text-align: center;
 }
 
+@media (max-width: 700px) {
+  .GuestLanding-cards {
+    grid-template-columns: 1fr;
+    grid-template-rows: auto;
+    gap: 0.5rem;
+  }
+
+  .GuestLanding-introCard {
+    grid-column: 1;
+    grid-row: 1;
+    padding: 0.75rem 0.25rem 0.25rem;
+  }
+
+  .GuestLanding-auth {
+    grid-column: 1;
+    grid-row: 2;
+  }
+
+  .GuestLanding-visual {
+    grid-column: 1;
+    grid-row: 3;
+    padding: 0.5rem 0.85rem;
+  }
+
+  .GuestLanding-about {
+    grid-column: 1;
+    grid-row: 4;
+  }
+
+  .GuestLanding-laptop {
+    max-width: 420px;
+  }
+}
+
 @media (max-width: 1024px) {
   .GuestLanding-laptopLid {
     padding: 6px 6px 5px;
@@ -12324,6 +12358,10 @@ h5.section-title {
   }
 }
 /* World Cup 2026 site-wide promo banner */
+.WC26Banner--hidden {
+  display: none;
+}
+
 .WC26Banner {
   display: block;
   width: 100%;
@@ -13857,6 +13895,75 @@ header.Competition__hero {
   overflow: hidden;
 }
 
+.Competition__scatterBadgeLayer {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.Competition__scatterBadge {
+  position: absolute;
+  box-sizing: border-box;
+  transform: translate(-50%, -50%) scale(1.2);
+  object-fit: contain;
+  background: #ffffff;
+  border-radius: 50%;
+  padding: 1px;
+  box-shadow: 0 0 0 1px rgba(2, 0, 41, 0.12), 0 1px 2px rgba(2, 0, 41, 0.18);
+}
+
+@media (min-width: 641px) {
+  .Competition__scatterBadge {
+    transform: translate(-50%, -50%) scale(1.875);
+  }
+}
+
+.Competition__radarLegend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.55rem 0.9rem;
+  list-style: none;
+  margin: 0;
+  padding: 0.15rem 1rem 0.35rem;
+}
+
+.Competition__radarLegendItem {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  min-width: 0;
+}
+
+.Competition__radarLegendColor {
+  width: 0.7rem;
+  height: 0.7rem;
+  border-radius: 2px;
+  flex-shrink: 0;
+}
+
+.Competition__radarLegendColor--dashed {
+  outline: 1px dashed currentColor;
+  outline-offset: 1px;
+}
+
+.Competition__radarLegendBadge,
+.Competition__comparisonTeamChipBadge {
+  width: 1.15rem;
+  height: 1.15rem;
+  object-fit: contain;
+  flex-shrink: 0;
+  background: #ffffff;
+  border-radius: 50%;
+}
+
+.Competition__radarLegendName {
+  font-size: 0.8em;
+  font-weight: 600;
+  color: var(--text-color);
+  line-height: 1.2;
+}
+
 .Competition__comparisonBarWrap {
   position: relative;
   width: 100%;
@@ -14100,6 +14207,9 @@ header.Competition__hero {
 }
 
 .Competition__comparisonTeamChip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4em;
   background: var(--third-background-color);
   border: 1px solid var(--third-background-color);
   border-radius: 999px;

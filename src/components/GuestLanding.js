@@ -103,6 +103,10 @@ const GuestLanding = ({ id = "guest-landing", showLogin = false }) => {
   return (
     <section className="GuestLanding" id={id} aria-label="Welcome to Soccer Stats Hub">
       <div className="GuestLanding-cards">
+        <div className="GuestLanding-card GuestLanding-introCard">
+          <GuestLandingIntro motionEnabled={motionEnabled} activeLine={activeLine} />
+        </div>
+
         <div className="GuestLanding-card GuestLanding-visual">
           <div className="GuestLanding-laptop">
             <div className="GuestLanding-laptopLid">
@@ -113,17 +117,12 @@ const GuestLanding = ({ id = "guest-landing", showLogin = false }) => {
                   className="GuestLanding-screenshot"
                   width={1024}
                   height={576}
-                  priority
-                  sizes="(max-width: 768px) 90vw, 560px"
+                  sizes="(max-width: 700px) 92vw, 560px"
                 />
               </div>
             </div>
             <div className="GuestLanding-laptopBase" />
           </div>
-        </div>
-
-        <div className="GuestLanding-card GuestLanding-introCard">
-          <GuestLandingIntro motionEnabled={motionEnabled} activeLine={activeLine} />
         </div>
 
         <div

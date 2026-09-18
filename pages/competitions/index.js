@@ -20,7 +20,7 @@ const COMPETITIONS_JSON_LD = {
   ],
 };
 
-const { featured, regions, other, total } = buildCompetitionsIndexSections();
+const COMPETITION_SECTIONS = buildCompetitionsIndexSections();
 
 function CompetitionCard({ competition, featured: isFeatured = false }) {
   return (
@@ -39,8 +39,6 @@ function CompetitionCard({ competition, featured: isFeatured = false }) {
 }
 
 function CompetitionGroup({ id, label, competitions, featured: isFeatured = false }) {
-  if (!competitions.length) return null;
-
   return (
     <section
       className={`CompetitionsIndex-group${isFeatured ? " CompetitionsIndex-group--featured" : ""}`}
@@ -64,6 +62,8 @@ function CompetitionGroup({ id, label, competitions, featured: isFeatured = fals
 }
 
 export default function CompetitionsIndexPage() {
+  const { featured, regions, other, total } = COMPETITION_SECTIONS;
+
   return (
     <>
       <PageMeta
@@ -73,8 +73,8 @@ export default function CompetitionsIndexPage() {
       />
       <JsonLd data={COMPETITIONS_JSON_LD} />
       <SiteHeader showThemeToggle withFooter>
-        <main className="StaticPage CompetitionsIndex" id="ssh-content">
-          <header className="CompetitionsIndex-header">
+        <main className="StaticPage CompetitionsIndex">
+          <div id="ssh-content" className="CompetitionsIndex-header">
             <a href="/" className="HomeLink">
               Home
             </a>
@@ -87,27 +87,33 @@ export default function CompetitionsIndexPage() {
             <a href="/competitions/compare/" className="CompetitionsIndex-compareLink">
               Compare every league side by side
             </a>
-          </header>
+          </div>
 
-          <CompetitionGroup
-            id="featured"
-            label="Popular"
-            competitions={featured}
-            featured
-          />
-
-          {regions.map((group) => (
+          <div className="CompetitionsIndex-groups">
             <CompetitionGroup
-              key={group.id}
-              id={group.id}
-              label={group.label}
-              competitions={group.competitions}
+              id="featured"
+              label="Popular"
+              competitions={featured}
+              featured
             />
-          ))}
 
-          {other.length > 0 ? (
-            <CompetitionGroup id="more" label="More competitions" competitions={other} />
-          ) : null}
+            {regions.map((group) => (
+              <CompetitionGroup
+                key={group.id}
+                id={group.id}
+                label={group.label}
+                competitions={group.competitions}
+              />
+            ))}
+
+            {other.length > 0 ? (
+              <CompetitionGroup
+                id="more"
+                label="More competitions"
+                competitions={other}
+              />
+            ) : null}
+          </div>
         </main>
       </SiteHeader>
     </>

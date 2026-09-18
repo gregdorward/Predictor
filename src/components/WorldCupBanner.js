@@ -4,17 +4,15 @@ const BANNER_PATH = "/articles/";
 
 export default function WorldCupBanner() {
   const router = useRouter();
-  const pathname = router?.pathname || "/";
-
-  if (pathname.startsWith("/articles")) {
-    return null;
-  }
+  const hidden = String(router.pathname || "").startsWith("/articles");
 
   return (
     <a
       href={BANNER_PATH}
-      className="WC26Banner"
+      className={`WC26Banner${hidden ? " WC26Banner--hidden" : ""}`}
       aria-label="Articles and analysis — read more about our story"
+      aria-hidden={hidden || undefined}
+      tabIndex={hidden ? -1 : undefined}
     >
       <div className="WC26Banner__inner">
         <span className="WC26Banner__badge">New</span>

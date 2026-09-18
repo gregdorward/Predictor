@@ -1,4 +1,10 @@
 import { Chart as ChartJS } from "chart.js";
+import {
+  exportImageProxyPath,
+  getAllowedExportImageUrl,
+} from "./exportImageProxy";
+
+const inlinedExportImageCache = new Map();
 
 export function sanitizeImageFilename(value) {
   return String(value || "soccerstatshub-visual")
@@ -83,20 +89,95 @@ export function replaceCanvasesWithImages(root, liveCanvases = null) {
   return replacements;
 }
 
+function waitForImage(img) {
+  if (!img) return Promise.resolve();
+  if (typeof img.decode === "function") {
+    return img.decode().catch(() => {});
+  }
+  if (img.complete) return Promise.resolve();
+  return new Promise((resolve) => {
+    img.onload = () => resolve();
+    img.onerror = () => resolve();
+  });
+}
+
 export async function waitForReplacementImages(replacements = []) {
+  await Promise.all(replacements.map(({ img }) => waitForImage(img)));
+}
+
+async function waitForImages(root) {
+  if (!root?.querySelectorAll) return;
+  await Promise.all([...root.querySelectorAll("img")].map(waitForImage));
+}
+
+function blobToDataUrl(blob) {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = () => {
+      resolve(typeof reader.result === "string" ? reader.result : null);
+    };
+    reader.onerror = () => reject(reader.error);
+    reader.readAsDataURL(blob);
+  });
+}
+
+async function fetchAsDataUrl(url) {
+  if (typeof fetch !== "function") return null;
+  const response = await fetch(url, {
+    mode: "cors",
+    credentials: "omit",
+    headers: { accept: "image/*" },
+  });
+  if (!response.ok) return null;
+  const blob = await response.blob();
+  if (!blob.type.startsWith("image/") || !blob.size) return null;
+  return blobToDataUrl(blob);
+}
+
+async function imageUrlToDataUrl(url) {
+  if (!url || url.startsWith("data:") || url.startsWith("blob:")) {
+    return url || null;
+  }
+  const cached = inlinedExportImageCache.get(url);
+  if (cached) return cached;
+
+  try {
+    const direct = await fetchAsDataUrl(url);
+    if (direct) {
+      inlinedExportImageCache.set(url, direct);
+      return direct;
+    }
+  } catch {
+    // Cross-origin CDNs (FootyStats) usually block this; try the same-origin proxy.
+  }
+
+  if (getAllowedExportImageUrl(url)) {
+    try {
+      const proxied = await fetchAsDataUrl(exportImageProxyPath(url));
+      if (proxied) {
+        inlinedExportImageCache.set(url, proxied);
+        return proxied;
+      }
+    } catch {
+      return null;
+    }
+  }
+
+  return null;
+}
+
+async function inlineExternalImages(root) {
+  if (!root?.querySelectorAll) return;
+  const images = [...root.querySelectorAll("img")];
   await Promise.all(
-    replacements.map(
-      ({ img }) =>
-        img.decode?.() ??
-        new Promise((resolve, reject) => {
-          if (img.complete) {
-            resolve();
-            return;
-          }
-          img.onload = () => resolve();
-          img.onerror = reject;
-        })
-    )
+    images.map(async (img) => {
+      const src = img.currentSrc || img.getAttribute("src") || img.src;
+      if (!src || src.startsWith("data:") || src.startsWith("blob:")) return;
+      const dataUrl = await imageUrlToDataUrl(src);
+      if (dataUrl) {
+        img.src = dataUrl;
+      }
+    })
   );
 }
 
@@ -286,7 +367,9 @@ export async function captureElementAsPng(
   fitExportImages(replacements);
 
   try {
+    await inlineExternalImages(shell);
     await waitForReplacementImages(replacements);
+    await waitForImages(shell);
     await waitForNextPaint();
 
     const { domToPng } = await import("modern-screenshot");
@@ -295,6 +378,7 @@ export async function captureElementAsPng(
         scale,
         backgroundColor: getExportBackgroundColor(),
         filter: (node) => node.tagName !== "CANVAS",
+        fetchFn: imageUrlToDataUrl,
       })
     );
 

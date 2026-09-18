@@ -121,4 +121,53 @@ describe("captureElementImage", () => {
     expect(element.querySelector(".ShareableVisual__brand")).toBeNull();
     document.body.removeChild(element);
   });
+
+  test("inlines FootyStats badge images before capture", async () => {
+    const pngBytes = Uint8Array.from(
+      atob(
+        "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z8BQDwAEhQGAhKmMIQAAAABJRU5ErkJggg=="
+      ),
+      (char) => char.charCodeAt(0)
+    );
+    const pngBlob = new Blob([pngBytes], { type: "image/png" });
+    const originalFetch = global.fetch;
+    global.fetch = jest.fn(async (url) => {
+      if (String(url).includes("/api/export-image")) {
+        return { ok: true, blob: async () => pngBlob };
+      }
+      throw new TypeError("Failed to fetch");
+    });
+
+    const element = document.createElement("div");
+    element.setAttribute("data-share-capture", "");
+    document.body.appendChild(element);
+    Object.defineProperty(element, "offsetWidth", { value: 320 });
+    Object.defineProperty(element, "getBoundingClientRect", {
+      value: () => ({ width: 320, height: 240 }),
+    });
+
+    const badge = document.createElement("img");
+    badge.className = "Competition__scatterBadge";
+    badge.setAttribute(
+      "src",
+      "https://cdn.footystats.org/img/teams/england-arsenal-fc.png"
+    );
+    element.appendChild(badge);
+
+    const { domToPng } = require("modern-screenshot");
+    domToPng.mockImplementation(async (node) => {
+      const img = node.querySelector(".Competition__scatterBadge");
+      expect(img.getAttribute("src") || img.src).toMatch(/^data:image\/png/);
+      return "data:image/png;base64,abc";
+    });
+
+    const dataUrl = await captureElementAsPng(element);
+    expect(dataUrl.startsWith("data:image")).toBe(true);
+    expect(element.querySelector("img").getAttribute("src")).toContain(
+      "cdn.footystats.org"
+    );
+
+    document.body.removeChild(element);
+    global.fetch = originalFetch;
+  });
 });

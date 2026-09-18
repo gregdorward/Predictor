@@ -72,6 +72,19 @@ html {
   gap: 0.5em;
   flex-shrink: 0;
 }
+.HamburgerMenuButton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: unset;
+  width: auto;
+  margin: 0;
+  padding: 0.25em;
+  background: transparent;
+  border: none;
+  box-shadow: none;
+  color: var(--text-color);
+}
 .WC26Banner {
   display: block;
   width: 100%;
@@ -259,6 +272,62 @@ body > #__next > * {
   margin: 0.75rem 0 0;
   font-size: 1.25em;
   color: var(--primary-color);
+}
+.SshSidebar,
+.SshPageShell__balance,
+.MobileNavOverlay { display: none; }
+.SitePageLayout {
+  display: flex;
+  flex-direction: column;
+  min-height: calc(100vh - var(--header-height));
+  width: 100%;
+}
+h1 {
+  font-weight: 600;
+  color: var(--text-color);
+}
+.StaticPage {
+  max-width: 48rem;
+  margin: 0 auto;
+  padding: 1.5rem 1rem 3rem;
+  line-height: 1.6;
+}
+.StaticPage h1 { margin-bottom: 1rem; }
+.HomeLink {
+  display: inline-block;
+  margin: 0 0 1rem;
+  color: var(--text-color);
+}
+.Footer {
+  margin-top: auto;
+  padding: 1.5em 1em 2em;
+  line-height: 1.6;
+  font-size: 0.95em;
+  text-align: center;
+}
+@media (max-width: 700px) {
+  .GuestLanding-cards {
+    grid-template-columns: 1fr;
+    grid-template-rows: auto;
+  }
+  .GuestLanding-introCard {
+    grid-column: 1;
+    grid-row: 1;
+    padding: 0.75rem 0.25rem 0.25rem;
+  }
+  .GuestLanding-auth {
+    grid-column: 1;
+    grid-row: 2;
+  }
+  .GuestLanding-visual {
+    grid-column: 1;
+    grid-row: 3;
+    padding: 0.5rem 0.85rem;
+  }
+  .GuestLanding-about {
+    grid-column: 1;
+    grid-row: 4;
+  }
 }
 @media (max-width: 1024px) {
   .GuestLanding-laptopLid { padding: 6px 6px 5px; border-radius: 8px 8px 2px 2px; }

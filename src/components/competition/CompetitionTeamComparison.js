@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -14,6 +14,14 @@ import {
 } from "chart.js";
 import { Scatter, Bar, Radar } from "react-chartjs-2";
 import { apiGetUrl } from "../../utils/apiUrl";
+import {
+  addCompetitionTeamBadges,
+  addFixtureBadges,
+  lookupBadgePath,
+  mergeBadgeMaps,
+  resolveTeamBadgeUrl,
+  uniqueTeamAbbreviations,
+} from "../../utils/competitionTeamLabels";
 import { useChartTheme, getChartColors } from "../Chart";
 import ShareableVisual from "../ShareableVisual";
 import { sanitizeImageFilename } from "../../utils/captureElementImage";
@@ -294,89 +302,44 @@ function buildLeagueAverageProfile(teams) {
   return profile;
 }
 
-const NAME_SKIP_WORDS = new Set([
-  "fc",
-  "cf",
-  "afc",
-  "sc",
-  "ac",
-  "as",
-  "fk",
-  "sk",
-  "bk",
-  "if",
-  "cd",
-  "ud",
-  "sd",
-  "rcd",
-  "us",
-  "ss",
-  "calcio",
-  "club",
-  "de",
-  "da",
-  "do",
-  "del",
-  "della",
-  "la",
-  "el",
-  "the",
-  "and",
-  "of",
-  "united", // kept via first meaningful word pairing below when alone isn't enough
-]);
-
-/** Compact on-chart label; tooltip still shows the full name. */
-function abbreviateTeamName(name) {
-  if (!name) return "";
-  const words = String(name)
-    .replace(/[^a-zA-Z0-9\s'-]/g, " ")
-    .split(/[\s'-]+/)
-    .filter(Boolean);
-
-  const significant = words.filter(
-    (word) => !NAME_SKIP_WORDS.has(word.toLowerCase())
-  );
-  const pool = significant.length > 0 ? significant : words;
-
-  if (pool.length === 0) return "";
-  if (pool.length === 1) {
-    return pool[0].slice(0, 3).toUpperCase();
-  }
-  if (pool.length === 2) {
-    const a = pool[0];
-    const b = pool[1];
-    if (a.length <= 3) {
-      return `${a.slice(0, 3)}${b[0]}`.toUpperCase();
-    }
-    return `${a[0]}${b[0]}${b[1] || ""}`.toUpperCase().slice(0, 3);
-  }
-  return pool
-    .slice(0, 3)
-    .map((word) => word[0])
-    .join("")
-    .toUpperCase();
-}
-
-function createScatterLabelPlugin(labelColor) {
+function createScatterMarkerPlugin({ labelColor, onPositions }) {
   return {
-    id: "competitionScatterLabels",
+    id: "competitionScatterMarkers",
     afterDatasetsDraw(chart) {
       const { ctx } = chart;
       const meta = chart.getDatasetMeta(0);
-      if (!meta?.data?.length) return;
+      const points = chart.data.datasets[0]?.data || [];
+      if (!meta?.data?.length) {
+        if (typeof onPositions === "function") {
+          requestAnimationFrame(() => onPositions([]));
+        }
+        return;
+      }
 
+      const positions = [];
       ctx.save();
       ctx.font = "600 10px 'Open Sans', system-ui, sans-serif";
       ctx.fillStyle = labelColor;
       ctx.textBaseline = "middle";
 
       meta.data.forEach((element, index) => {
-        const raw = chart.data.datasets[0]?.data?.[index];
-        const label = raw?.abbr;
-        if (!label || !element) return;
+        const raw = points[index];
+        if (!raw || !element) return;
 
         const { x, y } = element.getProps(["x", "y"], true);
+        positions.push({
+          team: raw.team,
+          x: Math.round(x),
+          y: Math.round(y),
+          badgeUrl: raw.badgeUrl || null,
+          isLeagueAverage: Boolean(raw.isLeagueAverage),
+        });
+
+        if (raw.badgeUrl && !raw.isLeagueAverage) return;
+
+        const label = raw.abbr;
+        if (!label) return;
+
         const chartArea = chart.chartArea;
         const textWidth = ctx.measureText(label).width;
         const preferRight = x + 8 + textWidth < chartArea.right - 4;
@@ -387,8 +350,103 @@ function createScatterLabelPlugin(labelColor) {
       });
 
       ctx.restore();
+      if (typeof onPositions === "function") {
+        const snapshot = positions;
+        requestAnimationFrame(() => onPositions(snapshot));
+      }
     },
   };
+}
+
+function ScatterBadgeLayer({ markers, size = 20 }) {
+  const badges = (markers || []).filter(
+    (marker) => marker.badgeUrl && !marker.isLeagueAverage
+  );
+  if (!badges.length) return null;
+
+  return (
+    <div className="Competition__scatterBadgeLayer" aria-hidden="true">
+      {badges.map((marker) => (
+        <img
+          key={marker.team}
+          src={marker.badgeUrl}
+          alt=""
+          className="Competition__scatterBadge"
+          style={{
+            left: marker.x,
+            top: marker.y,
+            width: size,
+            height: size,
+          }}
+        />
+      ))}
+    </div>
+  );
+}
+
+function RadarLegend({ items }) {
+  if (!items?.length) return null;
+
+  return (
+    <ul className="Competition__radarLegend">
+      {items.map((item) => (
+        <li key={item.name} className="Competition__radarLegendItem">
+          <span
+            className={`Competition__radarLegendColor${
+              item.dashed ? " Competition__radarLegendColor--dashed" : ""
+            }`}
+            style={{ background: item.color }}
+            aria-hidden="true"
+          />
+          {item.badgeUrl ? (
+            <img
+              src={item.badgeUrl}
+              alt=""
+              className="Competition__radarLegendBadge"
+            />
+          ) : null}
+          <span className="Competition__radarLegendName">{item.name}</span>
+        </li>
+      ))}
+    </ul>
+  );
+}
+
+async function fetchLeagueTeamBadgeMap(seasonId, teamNames) {
+  const map = new Map();
+  const wanted = (teamNames || []).filter(Boolean);
+  const response = await fetch(apiGetUrl(`leagueFixtures/${seasonId}`));
+  if (!response.ok) return map;
+
+  const firstPage = await response.json();
+  addFixtureBadges(map, firstPage?.data);
+  if (wanted.length && wanted.every((name) => lookupBadgePath(map, name))) {
+    return map;
+  }
+
+  const maxPage = Number(firstPage.pager?.max_page) || 1;
+  for (let page = 2; page <= maxPage; page += 1) {
+    const pageResponse = await fetch(
+      apiGetUrl(`leagueFixtures/${seasonId}?page=${page}`)
+    );
+    if (!pageResponse.ok) break;
+    const pageJson = await pageResponse.json();
+    addFixtureBadges(map, pageJson?.data);
+    if (wanted.length && wanted.every((name) => lookupBadgePath(map, name))) {
+      break;
+    }
+  }
+
+  return map;
+}
+
+function markersSignature(markers) {
+  return (markers || [])
+    .map(
+      (marker) =>
+        `${marker.team}:${marker.x}:${marker.y}:${marker.badgeUrl ? "1" : "0"}`
+    )
+    .join("|");
 }
 
 function isoDateOffset(daysBack = 0) {
@@ -430,7 +488,10 @@ function ChartCard({ title, children, actions, className = "" }) {
   );
 }
 
-export default function CompetitionTeamComparison({ seasonId }) {
+export default function CompetitionTeamComparison({
+  seasonId,
+  competitionTeams = [],
+}) {
   const theme = useChartTheme();
   const { color, gridColor, tooltipBackground } = getChartColors(theme);
   const [payload, setPayload] = useState(null);
@@ -441,6 +502,9 @@ export default function CompetitionTeamComparison({ seasonId }) {
   const [scatterTeamA, setScatterTeamA] = useState("");
   const [scatterTeamB, setScatterTeamB] = useState("");
   const [selectedTeams, setSelectedTeams] = useState([]);
+  const [badgeByName, setBadgeByName] = useState(() => new Map());
+  const [scatterMarkers, setScatterMarkers] = useState([]);
+  const scatterMarkerSignatureRef = useRef("");
 
   useEffect(() => {
     if (!seasonId) return undefined;
@@ -476,6 +540,53 @@ export default function CompetitionTeamComparison({ seasonId }) {
       cancelled = true;
     };
   }, [seasonId]);
+
+  useEffect(() => {
+    scatterMarkerSignatureRef.current = "";
+    setScatterMarkers([]);
+  }, [seasonId, scatterXKey, scatterYKey, scatterTeamA, scatterTeamB]);
+
+  useEffect(() => {
+    if (!seasonId) return undefined;
+
+    let cancelled = false;
+    const fromCompetition = addCompetitionTeamBadges(
+      new Map(),
+      competitionTeams
+    );
+    const teamNames = (payload?.teams || [])
+      .map((team) => team.name)
+      .filter(Boolean);
+    const missing = teamNames.filter(
+      (name) => !lookupBadgePath(fromCompetition, name)
+    );
+
+    if (fromCompetition.size) {
+      setBadgeByName(new Map(fromCompetition));
+    }
+
+    if (!teamNames.length || missing.length === 0) {
+      return undefined;
+    }
+
+    async function loadBadges() {
+      try {
+        const fromFixtures = await fetchLeagueTeamBadgeMap(seasonId, missing);
+        if (!cancelled) {
+          setBadgeByName(mergeBadgeMaps(fromCompetition, fromFixtures));
+        }
+      } catch {
+        if (!cancelled && fromCompetition.size) {
+          setBadgeByName(fromCompetition);
+        }
+      }
+    }
+
+    loadBadges();
+    return () => {
+      cancelled = true;
+    };
+  }, [seasonId, competitionTeams, payload]);
 
   const teams = payload?.teams || [];
   const leagueAverage = useMemo(
@@ -556,10 +667,41 @@ export default function CompetitionTeamComparison({ seasonId }) {
       .filter(Boolean);
   }, [teams, scatterTeamA, scatterTeamB, plottableByName]);
 
-  const scatterLabelPlugin = useMemo(
-    () => createScatterLabelPlugin(color),
-    [color]
+  const teamAbbreviations = useMemo(
+    () => uniqueTeamAbbreviations(teams.map((team) => team.name)),
+    [teams]
   );
+
+  const badgeUrlForTeam = useCallback(
+    (team) => {
+      if (!team || team.isLeagueAverage) return null;
+      return resolveTeamBadgeUrl(
+        team.badge ||
+          team.image ||
+          lookupBadgePath(badgeByName, team.name)
+      );
+    },
+    [badgeByName]
+  );
+
+  const handleScatterPositions = useCallback((nextMarkers) => {
+    const signature = markersSignature(nextMarkers);
+    if (signature === scatterMarkerSignatureRef.current) return;
+    scatterMarkerSignatureRef.current = signature;
+    setScatterMarkers(nextMarkers);
+  }, []);
+
+  const scatterMarkerPlugin = useMemo(
+    () =>
+      createScatterMarkerPlugin({
+        labelColor: color,
+        onPositions: handleScatterPositions,
+      }),
+    [color, handleScatterPositions]
+  );
+
+  const scatterBadgeSize =
+    plottedTeams.length <= 2 ? 28 : plottedTeams.length <= 6 ? 22 : 18;
 
   const scatterData = useMemo(() => {
     const points = plottedTeams
@@ -567,11 +709,15 @@ export default function CompetitionTeamComparison({ seasonId }) {
         const x = Number(team[scatterXKey]);
         const y = Number(team[scatterYKey]);
         if (!Number.isFinite(x) || !Number.isFinite(y)) return null;
+        const badgeUrl = badgeUrlForTeam(team);
         return {
           x,
           y,
           team: team.name,
-          abbr: team.isLeagueAverage ? "AVG" : abbreviateTeamName(team.name),
+          abbr: team.isLeagueAverage
+            ? "AVG"
+            : teamAbbreviations.get(team.name) || "",
+          badgeUrl,
           isLeagueAverage: Boolean(team.isLeagueAverage),
         };
       })
@@ -591,12 +737,26 @@ export default function CompetitionTeamComparison({ seasonId }) {
             point.isLeagueAverage ? LEAGUE_AVERAGE_COLOR : "#01a501"
           ),
           borderWidth: 1,
-          pointRadius: plottedTeams.length <= 2 ? 5 : 4,
-          pointHoverRadius: plottedTeams.length <= 2 ? 7 : 6,
+          pointRadius: points.map((point) => {
+            if (point.badgeUrl) return 0;
+            return plottedTeams.length <= 2 ? 5 : 4;
+          }),
+          pointHoverRadius: points.map((point) => {
+            if (point.badgeUrl) return scatterBadgeSize * 0.9375 + 2;
+            return plottedTeams.length <= 2 ? 7 : 6;
+          }),
+          pointHitRadius: scatterBadgeSize * 0.9375 + 4,
         },
       ],
     };
-  }, [plottedTeams, scatterXKey, scatterYKey]);
+  }, [
+    plottedTeams,
+    scatterXKey,
+    scatterYKey,
+    teamAbbreviations,
+    badgeUrlForTeam,
+    scatterBadgeSize,
+  ]);
 
   const scatterAxisRanges = useMemo(() => {
     // Keep league-wide scale so focused teams stay in context
@@ -641,7 +801,7 @@ export default function CompetitionTeamComparison({ seasonId }) {
         },
       },
       layout: {
-        padding: { top: 8, right: 28, bottom: 6, left: 6 },
+        padding: { top: 14, right: 28, bottom: 12, left: 12 },
       },
       scales: {
         x: {
@@ -753,13 +913,34 @@ export default function CompetitionTeamComparison({ seasonId }) {
     [color, gridColor, tooltipBackground, metricMeta]
   );
 
-  const radarData = useMemo(() => {
-    const selected = selectedTeams
-      .map((name) => plottableByName.get(name))
-      .filter(Boolean);
-    return {
+  const radarSelected = useMemo(
+    () =>
+      selectedTeams
+        .map((name) => plottableByName.get(name))
+        .filter(Boolean),
+    [plottableByName, selectedTeams]
+  );
+
+  const radarLegendItems = useMemo(
+    () =>
+      radarSelected.map((team, index) => {
+        const colorHex = team.isLeagueAverage
+          ? LEAGUE_AVERAGE_COLOR
+          : TEAM_COLORS[index % TEAM_COLORS.length];
+        return {
+          name: team.name,
+          color: colorHex,
+          dashed: Boolean(team.isLeagueAverage),
+          badgeUrl: badgeUrlForTeam(team),
+        };
+      }),
+    [radarSelected, badgeUrlForTeam]
+  );
+
+  const radarData = useMemo(
+    () => ({
       labels: RADAR_AXES.map((a) => a.label),
-      datasets: selected.map((team, index) => {
+      datasets: radarSelected.map((team, index) => {
         const colorHex = team.isLeagueAverage
           ? LEAGUE_AVERAGE_COLOR
           : TEAM_COLORS[index % TEAM_COLORS.length];
@@ -777,18 +958,16 @@ export default function CompetitionTeamComparison({ seasonId }) {
           borderDash: team.isLeagueAverage ? [4, 3] : undefined,
         };
       }),
-    };
-  }, [plottableByName, selectedTeams]);
+    }),
+    [radarSelected]
+  );
 
   const radarOptions = useMemo(
     () => ({
       responsive: true,
       maintainAspectRatio: false,
       plugins: {
-        legend: {
-          display: true,
-          labels: { color, boxWidth: 12, font: { size: 10 } },
-        },
+        legend: { display: false },
         tooltip: {
           backgroundColor: tooltipBackground,
           titleColor: "#ffffff",
@@ -918,7 +1097,11 @@ export default function CompetitionTeamComparison({ seasonId }) {
                 <Scatter
                   data={scatterData}
                   options={scatterOptions}
-                  plugins={[scatterLabelPlugin]}
+                  plugins={[scatterMarkerPlugin]}
+                />
+                <ScatterBadgeLayer
+                  markers={scatterMarkers}
+                  size={scatterBadgeSize}
                 />
               </div>
             </div>
@@ -980,6 +1163,7 @@ export default function CompetitionTeamComparison({ seasonId }) {
           ) : null}
           {teams.map((team) => {
             const active = selectedTeams.includes(team.name);
+            const badgeUrl = badgeUrlForTeam(team);
             return (
               <button
                 key={team.name}
@@ -990,6 +1174,13 @@ export default function CompetitionTeamComparison({ seasonId }) {
                 onClick={() => toggleTeam(team.name)}
                 aria-pressed={active}
               >
+                {badgeUrl ? (
+                  <img
+                    src={badgeUrl}
+                    alt=""
+                    className="Competition__comparisonTeamChipBadge"
+                  />
+                ) : null}
                 {team.name}
               </button>
             );
@@ -1014,6 +1205,7 @@ export default function CompetitionTeamComparison({ seasonId }) {
                   {selectedTeams.join(" · ")}
                 </span>
               </p>
+              <RadarLegend items={radarLegendItems} />
               <div className="Competition__comparisonRadarWrap">
                 <Radar data={radarData} options={radarOptions} />
               </div>
