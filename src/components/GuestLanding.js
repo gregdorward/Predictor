@@ -154,7 +154,7 @@ const GuestLanding = ({
             <a href="/about/">about the site</a>.
           </p>
           <p>
-            Start free with every fixture on the board and five predicted scores or
+            Start free with every fixture on the board and ten predicted scores or
             probabilities unlocked per day. Premium unlocks unlimited predictions,
             full tip lists, AI match previews beyond that allowance, deep season
             stats, streaks and upcoming fixtures. Please gamble responsibly if

@@ -7,7 +7,7 @@ import {
 
 export const MIN_RADAR_METRICS = 3;
 export const MAX_RADAR_METRICS = 10;
-/** @deprecated Prefer FREE_DAILY_PREDICTION_LIMIT — same 5/day fixture-id allowance. */
+/** @deprecated Prefer FREE_DAILY_PREDICTION_LIMIT — same daily fixture-id allowance. */
 export const FREE_CUSTOM_RADAR_FIXTURE_LIMIT = FREE_DAILY_PREDICTION_LIMIT;
 
 export const RADAR_CATEGORIES = [

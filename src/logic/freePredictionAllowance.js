@@ -1,5 +1,5 @@
 /** Free predicted score / 1X2 unlocks per calendar day (local timezone). */
-export const FREE_DAILY_PREDICTION_LIMIT = 5;
+export const FREE_DAILY_PREDICTION_LIMIT = 10;
 
 const STORAGE_KEY_PREFIX = "ssh-free-predictions:";
 

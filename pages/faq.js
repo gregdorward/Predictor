@@ -41,7 +41,7 @@ const FAQ_ITEMS = [
   {
     question: "Is Soccer Stats Hub free to use?",
     answer:
-      "Yes for a meaningful free tier. Every fixture is free to browse with odds and form. Predicted scores and win probabilities unlock on five fixtures per day of your choosing. Tip lists show a sample. Premium unlocks unlimited predictions, full tip lists, AI match previews beyond that allowance, deep season stats, streaks and upcoming fixtures.",
+      "Yes for a meaningful free tier. Every fixture is free to browse with odds and form. Predicted scores and win probabilities unlock on ten fixtures per day of your choosing. Tip lists show a sample. Premium unlocks unlimited predictions, full tip lists, AI match previews beyond that allowance, deep season stats, streaks and upcoming fixtures.",
   },
   {
     question: "What does Premium unlock, and how much is it?",
