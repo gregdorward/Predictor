@@ -3,7 +3,7 @@ import { useAuth } from "../logic/authProvider";
 import { requestAppLoad } from "../utils/loadApp";
 import GuestLanding from "./GuestLanding";
 
-export default function GuestLandingGate() {
+export default function GuestLandingGate({ todayLinks = [] }) {
   const { user, loading } = useAuth();
 
   useEffect(() => {
@@ -16,5 +16,5 @@ export default function GuestLandingGate() {
     return null;
   }
 
-  return <GuestLanding showLogin={!loading} />;
+  return <GuestLanding showLogin={!loading} todayLinks={todayLinks} />;
 }

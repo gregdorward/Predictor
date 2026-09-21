@@ -255,12 +255,6 @@ export function buildCompetitionJsonLd(
         isPartOf: { "@id": "https://www.soccerstatshub.com/#website" },
         inLanguage: "en-GB",
       },
-      {
-        "@type": "SportsOrganization",
-        name,
-        sport: "Football",
-        url: canonicalUrl,
-      },
     ],
   };
 }

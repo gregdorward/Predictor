@@ -1,5 +1,5 @@
 import { SITE_NAV_LINKS } from "./siteNavLinks";
-import { STATIC_SITEMAP_ROUTES } from "./sitemapUrls";
+import { STATIC_SITEMAP_ROUTES, lastmodForPath } from "./sitemapUrls";
 import { getCoreStatLinks, STAT_PAGE_SEO } from "./statPageSeoConfig";
 
 const RETIRED_MARKET_PATHS = [
@@ -66,5 +66,12 @@ describe("collapsed market hubs", () => {
         "How should I use Under 2.5 league stats?",
       ])
     );
+  });
+
+  test("lastmod is limited to dated articles", () => {
+    expect(lastmodForPath("/articles/how-we-predict-a-game/")).toBe("2026-07-16");
+    expect(lastmodForPath("/privacy/")).toBeNull();
+    expect(lastmodForPath("/competition/premier-league/")).toBeNull();
+    expect(lastmodForPath("/")).toBeNull();
   });
 });

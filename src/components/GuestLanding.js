@@ -56,7 +56,8 @@ const CYCLE_MS = 2000;
 
 const GuestLandingIntro = ({ motionEnabled, activeLine }) => (
   <div className="GuestLanding-intro">
-    <h1 className="GuestLanding-headline">
+    <h1 className="GuestLanding-title">Football stats and match previews</h1>
+    <p className="GuestLanding-headline">
       <span className="GuestLanding-headlineLines" aria-live="polite">
         {HEADLINE_LINES.map((line, index) => (
           <span
@@ -70,7 +71,7 @@ const GuestLandingIntro = ({ motionEnabled, activeLine }) => (
           </span>
         ))}
       </span>
-    </h1>
+    </p>
     <p className="GuestLanding-subheadline">
       In-depth football statistics, analytics and transparent predictions for 50+ competitions.
       Research leagues, compare form and open any fixture for a statistical overview.
@@ -78,7 +79,11 @@ const GuestLandingIntro = ({ motionEnabled, activeLine }) => (
   </div>
 );
 
-const GuestLanding = ({ id = "guest-landing", showLogin = false }) => {
+const GuestLanding = ({
+  id = "guest-landing",
+  showLogin = false,
+  todayLinks = [],
+}) => {
   const [activeLine, setActiveLine] = useState(0);
   const [motionEnabled, setMotionEnabled] = useState(true);
 
@@ -155,6 +160,16 @@ const GuestLanding = ({ id = "guest-landing", showLogin = false }) => {
             stats, streaks and upcoming fixtures. Please gamble responsibly if
             you use the stats for betting.
           </p>
+          {todayLinks.length > 0 ? (
+            <nav className="GuestLanding-today" aria-label="Today's research">
+              {todayLinks.map((link) => (
+                <a key={link.href} href={link.href}>
+                  <span>{link.label}</span>
+                  {link.detail ? <strong>{link.detail}</strong> : null}
+                </a>
+              ))}
+            </nav>
+          ) : null}
         </div>
       </div>
 

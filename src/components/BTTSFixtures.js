@@ -1,13 +1,15 @@
 import { Fragment, useEffect, useState } from "react";
-import { withStyles, makeStyles } from "@material-ui/core/styles";
-import {
-  Table, TableBody, TableCell, TableContainer, TableHead,
-  TableRow, Paper, Box, Typography
-} from "@material-ui/core";
+import { makeStyles } from "@material-ui/core/styles";
 import { getBTTSFixtures, getBTTSTeams } from "../logic/getStatsInsights";
 import SiteHeader from "./SiteHeader";
 import PageMeta from "./PageMeta";
 import StatPageSeoContent, { StatPageSeoFaq } from "./StatPageSeoContent";
+import {
+  BodyCell,
+  HeadCell,
+  StatPill,
+  SubpageTable,
+} from "./SubpageDataTable";
 import { STAT_PAGE_SEO, buildBttsFixturesIntro } from "../seo/statPageSeoConfig";
 
 const ALLOWED_COUNTRIES = ["England", "Scotland", "Italy", "Spain", "Germany", "France", "USA", "Denmark", "Greece", "Turkey", "Switzerland", "Austria", "Norway", "Mexico", "Poland", "Brazil", "Argentina", "Sweden", "Netherlands", "Portugal", "Belgium"];
@@ -44,7 +46,6 @@ const useStyles = makeStyles(() => ({
   },
   tableWrapper: {
     borderRadius: 5,
-    boxShadow: "0 10px 30px rgba(0,0,0,0.15)",
     overflow: "hidden",
     maxWidth: "100%",
     border: "1px solid rgba(255,255,255,0.05)",
@@ -60,79 +61,31 @@ const useStyles = makeStyles(() => ({
   }
 }));
 
-const StyledTableCell = withStyles(() => ({
-  head: {
-    backgroundColor: "var(--accent-color)",
-    color: "var(--button-text-color)",
-    fontWeight: 600,
-    textTransform: "uppercase",
-    fontSize: "1em",
-    letterSpacing: "1px",
-    borderBottom: "none",
-  },
-  body: {
-    fontSize: "1em",
-    padding: "1em 1em",
-    borderBottom: "1px solid var(--button-border-color)",
-    color: "var(--text-color)",
-  },
-}))(TableCell);
-
-const StyledTableRow = withStyles(() => ({
-  root: {
-    transition: "background-color 0.2s ease",
-    "&:nth-of-type(even)": {
-      backgroundColor: "var(--alternate-background-color)",
-    },
-    "&:hover": {
-      backgroundColor: "rgba(var(--accent-color-rgb), 0.1)",
-      cursor: "default",
-    },
-  },
-}))(TableRow);
-
-function StatPill({ children }) {
-  return (
-    <Box
-      style={{
-        backgroundColor: "var(--accent-color)",
-        color: "var(--button-text-color)",
-        borderRadius: 4,
-        padding: "2px 8px",
-        display: "inline-block",
-        fontWeight: 600,
-      }}
-    >
-      {children}
-    </Box>
-  );
-}
-
 function TeamRows({ teams }) {
   return teams.map((team, index) => (
-    <StyledTableRow key={`${team.name}-${index}`}>
-      <StyledTableCell align="left" style={{ fontWeight: 600 }}>
+    <tr key={`${team.name}-${index}`}>
+      <BodyCell align="left" style={{ fontWeight: 600 }}>
         {team.name}
-      </StyledTableCell>
-      <StyledTableCell align="center" className="SubpageCol--country">
+      </BodyCell>
+      <BodyCell className="SubpageCol--country">
         {team.country}
-      </StyledTableCell>
-      <StyledTableCell align="center">
+      </BodyCell>
+      <BodyCell>
         <StatPill>{team.bttsPercentage}</StatPill>
-      </StyledTableCell>
-      <StyledTableCell align="center" className="SubpageCol--played" style={{ opacity: 0.8 }}>
+      </BodyCell>
+      <BodyCell className="SubpageCol--played" style={{ opacity: 0.8 }}>
         {team.played}
-      </StyledTableCell>
-      <StyledTableCell align="center">
-        <Box fontWeight="600">{team.opponent}</Box>
+      </BodyCell>
+      <BodyCell>
+        <span style={{ fontWeight: 600 }}>{team.opponent}</span>
         <span className="SubpageCellMeta">{team.date}</span>
-      </StyledTableCell>
-      <StyledTableCell align="center">
-        <Box fontWeight="bold" color="var(--accent-color)">
+      </BodyCell>
+      <BodyCell>
+        <span style={{ fontWeight: "bold", color: "var(--accent-color)" }}>
           {team.odds}
-        </Box>
-      </StyledTableCell>
-    </StyledTableRow>
+        </span>
+      </BodyCell>
+    </tr>
   ));
 }
 
@@ -208,103 +161,106 @@ export default function BTTSFixtures({
     <Fragment>
       <PageMeta />
       <SiteHeader withFooter>
-      <Box className={`${classes.container} SubpageContent`} id="ssh-content">
+      <div className={`${classes.container} SubpageContent`} id="ssh-content">
         <a href="/" className={classes.homeLink}>← Back to Home</a>
 
-        <Typography variant="h1">BTTS Insights</Typography>
-        <Typography variant="h2" className={classes.tagline}>
+        <h1>BTTS Insights</h1>
+        <h2 className={classes.tagline}>
           Teams with the strongest and weakest BTTS records, plus today’s fixtures
-        </Typography>
+        </h2>
 
         <StatPageSeoContent
           {...STAT_PAGE_SEO.bttsFixtures}
           intro={buildBttsFixturesIntro(teams)}
         />
 
-        <Typography variant="h2" className={classes.sectionHeading} id="btts-teams">
+        <h2 className={classes.sectionHeading} id="btts-teams">
           Teams with the strongest BTTS records
-        </Typography>
-        <TableContainer component={Paper} className={`${classes.tableWrapper} SubpageTableScroll`}>
-          <Table size="small" aria-label="BTTS teams table">
-            <TableHead>
-              <TableRow>
-                <StyledTableCell align="left">Name</StyledTableCell>
-                <StyledTableCell align="center" className="SubpageCol--country">Country</StyledTableCell>
-                <StyledTableCell align="center">BTTS %</StyledTableCell>
-                <StyledTableCell align="center" className="SubpageCol--played">Played</StyledTableCell>
-                <StyledTableCell align="center">Next</StyledTableCell>
-                <StyledTableCell align="center">Odds</StyledTableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              <TeamRows teams={teams} />
-            </TableBody>
-          </Table>
-        </TableContainer>
+        </h2>
+        <SubpageTable
+          className={classes.tableWrapper}
+          aria-label="BTTS teams table"
+        >
+          <thead>
+            <tr>
+              <HeadCell align="left">Name</HeadCell>
+              <HeadCell className="SubpageCol--country">Country</HeadCell>
+              <HeadCell>BTTS %</HeadCell>
+              <HeadCell className="SubpageCol--played">Played</HeadCell>
+              <HeadCell>Next</HeadCell>
+              <HeadCell>Odds</HeadCell>
+            </tr>
+          </thead>
+          <tbody>
+            <TeamRows teams={teams} />
+          </tbody>
+        </SubpageTable>
 
-        <Typography variant="h2" className={classes.sectionHeading} id="btts-no">
+        <h2 className={classes.sectionHeading} id="btts-no">
           Teams with the lowest BTTS rates
-        </Typography>
-        <TableContainer component={Paper} className={`${classes.tableWrapper} SubpageTableScroll`}>
-          <Table size="small" aria-label="Low BTTS teams table">
-            <TableHead>
-              <TableRow>
-                <StyledTableCell align="left">Name</StyledTableCell>
-                <StyledTableCell align="center" className="SubpageCol--country">Country</StyledTableCell>
-                <StyledTableCell align="center">BTTS %</StyledTableCell>
-                <StyledTableCell align="center" className="SubpageCol--played">Played</StyledTableCell>
-                <StyledTableCell align="center">Next</StyledTableCell>
-                <StyledTableCell align="center">Odds</StyledTableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              <TeamRows teams={noTeams} />
-            </TableBody>
-          </Table>
-        </TableContainer>
+        </h2>
+        <SubpageTable
+          className={classes.tableWrapper}
+          aria-label="Low BTTS teams table"
+        >
+          <thead>
+            <tr>
+              <HeadCell align="left">Name</HeadCell>
+              <HeadCell className="SubpageCol--country">Country</HeadCell>
+              <HeadCell>BTTS %</HeadCell>
+              <HeadCell className="SubpageCol--played">Played</HeadCell>
+              <HeadCell>Next</HeadCell>
+              <HeadCell>Odds</HeadCell>
+            </tr>
+          </thead>
+          <tbody>
+            <TeamRows teams={noTeams} />
+          </tbody>
+        </SubpageTable>
 
-        <Typography variant="h2" className={classes.sectionHeading} id="btts-fixtures">
+        <h2 className={classes.sectionHeading} id="btts-fixtures">
           Today’s BTTS fixtures
-        </Typography>
-        <TableContainer component={Paper} className={`${classes.tableWrapper} SubpageTableScroll`}>
-          <Table size="small" aria-label="BTTS potential table">
-            <TableHead>
-              <TableRow>
-                <StyledTableCell align="left">Fixture</StyledTableCell>
-                <StyledTableCell align="center" className="SubpageCol--date">Date</StyledTableCell>
-                <StyledTableCell align="center" className="SubpageCol--country">Country</StyledTableCell>
-                <StyledTableCell align="center">BTTS</StyledTableCell>
-                <StyledTableCell align="center">Avg</StyledTableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {games.map((team, index) => (
-                <StyledTableRow key={index}>
-                  <StyledTableCell align="left" style={{ fontWeight: 600 }}>
-                    {team.match}
-                    <span className="SubpageCellMeta">{team.date}</span>
-                  </StyledTableCell>
-                  <StyledTableCell align="center" className="SubpageCol--date" style={{ opacity: 0.7 }}>
-                    {team.date}
-                  </StyledTableCell>
-                  <StyledTableCell align="center" className="SubpageCol--country">
-                    {team.country}
-                  </StyledTableCell>
-                  <StyledTableCell align="center">
-                    <Box fontWeight="bold" color="var(--accent-color)">
-                      {team.odds}
-                    </Box>
-                  </StyledTableCell>
-                  <StyledTableCell align="center">
-                    <StatPill>{team.avgGoals}</StatPill>
-                  </StyledTableCell>
-                </StyledTableRow>
-              ))}
-            </TableBody>
-          </Table>
-        </TableContainer>
+        </h2>
+        <SubpageTable
+          className={classes.tableWrapper}
+          aria-label="BTTS potential table"
+        >
+          <thead>
+            <tr>
+              <HeadCell align="left">Fixture</HeadCell>
+              <HeadCell className="SubpageCol--date">Date</HeadCell>
+              <HeadCell className="SubpageCol--country">Country</HeadCell>
+              <HeadCell>BTTS</HeadCell>
+              <HeadCell>Avg</HeadCell>
+            </tr>
+          </thead>
+          <tbody>
+            {games.map((team, index) => (
+              <tr key={index}>
+                <BodyCell align="left" style={{ fontWeight: 600 }}>
+                  {team.match}
+                  <span className="SubpageCellMeta">{team.date}</span>
+                </BodyCell>
+                <BodyCell className="SubpageCol--date" style={{ opacity: 0.7 }}>
+                  {team.date}
+                </BodyCell>
+                <BodyCell className="SubpageCol--country">
+                  {team.country}
+                </BodyCell>
+                <BodyCell>
+                  <span style={{ fontWeight: "bold", color: "var(--accent-color)" }}>
+                    {team.odds}
+                  </span>
+                </BodyCell>
+                <BodyCell>
+                  <StatPill>{team.avgGoals}</StatPill>
+                </BodyCell>
+              </tr>
+            ))}
+          </tbody>
+        </SubpageTable>
         <StatPageSeoFaq faqItems={STAT_PAGE_SEO.bttsFixtures.faqItems} />
-      </Box>
+      </div>
       </SiteHeader>
     </Fragment>
   );

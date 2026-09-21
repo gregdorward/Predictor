@@ -2,6 +2,7 @@ import {
   buildBttsFixturesIntro,
   buildFixturesHighIntro,
   buildHighestScoringLeaguesIntro,
+  buildHomepageTodayLinks,
   STAT_PAGE_SEO,
 } from "./statPageSeoConfig";
 
@@ -42,5 +43,24 @@ describe("stat hub intros", () => {
     expect(buildHighestScoringLeaguesIntro([])).toBe(
       STAT_PAGE_SEO.highestScoringLeagues.intro
     );
+  });
+
+  test("builds homepage links from the live leaders", () => {
+    const links = buildHomepageTodayLinks({
+      bttsTeams: [{ name: "Bournemouth", bttsPercentage: 72 }],
+      o25Teams: [{ team: "Leeds United", averageGoals: 3.4 }],
+      leagues: [{ league: "Eredivisie", averageGoals: 3.21 }],
+    });
+
+    expect(links.map((link) => link.detail)).toEqual([
+      "Bournemouth 72%",
+      "Leeds United 3.4 goals",
+      "Eredivisie 3.21",
+    ]);
+    expect(links.map((link) => link.href)).toEqual([
+      "/bttsfixtures/",
+      "/fixtureshigh/",
+      "/highest-scoring-leagues/",
+    ]);
   });
 });

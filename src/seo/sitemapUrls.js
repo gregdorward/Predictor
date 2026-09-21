@@ -7,6 +7,28 @@ import {
 import { SITE_URL } from "./pageMetaConfig";
 import { getArticleIndex } from "../data/articles/loadArticles";
 
+function articleLastmod(slug) {
+  const article = getArticleIndex().find((entry) => entry.slug === slug);
+  const raw = article?.updatedAt || article?.publishedAt;
+  if (!raw) return null;
+  const date = String(raw).slice(0, 10);
+  return /^\d{4}-\d{2}-\d{2}$/.test(date) ? date : null;
+}
+
+/**
+ * lastmod only when we have a real content date. Stamping "today" on every
+ * sitemap response made /privacy/ look freshly edited.
+ */
+export function lastmodForPath(pathname) {
+  const path =
+    pathname === "/"
+      ? "/"
+      : String(pathname || "/").replace(/\/$/, "") || "/";
+  const articleMatch = path.match(/^\/articles\/([^/]+)$/);
+  if (!articleMatch) return null;
+  return articleLastmod(articleMatch[1]);
+}
+
 export const STATIC_SITEMAP_ROUTES = [
   { path: "/", priority: "1.0", changefreq: "daily" },
   { path: "/highest-scoring-leagues/", priority: "0.8", changefreq: "daily" },
@@ -84,4 +106,12 @@ export async function collectSitemapUrls({
   } catch {
     return baseUrls;
   }
+}
+
+export async function collectSitemapEntries(options) {
+  const urls = await collectSitemapUrls(options);
+  return urls.map((loc) => ({
+    loc,
+    lastmod: lastmodForPath(new URL(loc).pathname),
+  }));
 }

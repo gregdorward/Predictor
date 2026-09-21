@@ -270,3 +270,40 @@ export function buildHighestScoringLeaguesIntro(leagueRows = []) {
   const rateClause = rate ? `, with an Over 2.5 rate of ${rate}` : "";
   return `${leader.league} are the highest-scoring league in this table at ${leader.averageGoals} goals a match${rateClause}. The second table lists the lowest-scoring leagues by goals per match.`;
 }
+
+export function buildHomepageTodayLinks({
+  bttsTeams = [],
+  o25Teams = [],
+  leagues = [],
+} = {}) {
+  const btts = topRow(bttsTeams, "bttsPercentage");
+  const goals = topRow(o25Teams, "averageGoals");
+  const league = topRow(leagues, "averageGoals");
+
+  return [
+    {
+      href: "/bttsfixtures/",
+      label: "BTTS fixtures",
+      detail:
+        btts?.name && btts.bttsPercentage != null
+          ? `${btts.name} ${formatHubRate(btts.bttsPercentage)}`
+          : null,
+    },
+    {
+      href: "/fixtureshigh/",
+      label: "Over 2.5 fixtures",
+      detail:
+        goals?.team && goals.averageGoals != null
+          ? `${goals.team} ${goals.averageGoals} goals`
+          : null,
+    },
+    {
+      href: "/highest-scoring-leagues/",
+      label: "Highest scoring leagues",
+      detail:
+        league?.league && league.averageGoals != null
+          ? `${league.league} ${league.averageGoals}`
+          : null,
+    },
+  ];
+}

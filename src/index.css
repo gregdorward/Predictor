@@ -809,12 +809,20 @@ h4.Blurb {
   text-align: left;
 }
 
-.GuestLanding-headline {
+.GuestLanding-title {
   font-size: clamp(1.35rem, 3vw, 2rem);
   font-weight: 700;
   line-height: 1.25;
-  margin: 0 0 0.4rem;
+  margin: 0 0 0.35rem;
   color: var(--text-color);
+}
+
+.GuestLanding-headline {
+  font-size: 0.95rem;
+  font-weight: 600;
+  line-height: 1.35;
+  margin: 0 0 0.45rem;
+  color: var(--primary-color);
 }
 
 .GuestLanding-headlineLines {
@@ -838,6 +846,35 @@ h4.Blurb {
   line-height: 1.45;
   margin: 0;
   max-width: 36em;
+}
+
+.GuestLanding-today {
+  display: grid;
+  gap: 0.45rem;
+  margin-top: 1rem;
+  text-align: left;
+}
+
+.GuestLanding-today a {
+  display: flex;
+  justify-content: space-between;
+  gap: 0.75rem;
+  align-items: baseline;
+  color: var(--text-color);
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 0.92rem;
+}
+
+.GuestLanding-today a:hover {
+  text-decoration: underline;
+}
+
+.GuestLanding-today strong {
+  font-variant-numeric: tabular-nums;
+  color: var(--primary-color);
+  font-weight: 600;
+  text-align: right;
 }
 
 .GuestLanding-cards {
@@ -1142,7 +1179,7 @@ h4.Blurb {
     padding: 0.75rem 0.85rem 0.75rem 0;
   }
 
-  .GuestLanding-headline {
+  .GuestLanding-title {
     font-size: 1.2rem;
   }
 
@@ -1209,7 +1246,7 @@ h4.Blurb {
     height: 6px;
   }
 
-  .GuestLanding-headline {
+  .GuestLanding-title {
     font-size: 1.3rem;
   }
 
@@ -2096,12 +2133,34 @@ p {
   background-color: transparent !important;
 }
 
+.SubpageDataTable tbody tr:nth-child(even) {
+  background-color: var(--alternate-background-color);
+}
+
+.SubpageStatPill {
+  background-color: var(--accent-color);
+  color: var(--button-text-color);
+  border-radius: 4px;
+  padding: 2px 8px;
+  display: inline-block;
+  font-weight: 600;
+}
+
 .SubpageTableScroll table,
 .SubpageTableScroll th,
 .SubpageTableScroll td {
   margin-top: 0;
   padding-left: 0;
   padding-right: 0;
+}
+
+.SubpageTableScroll.SubpageDataTable {
+  box-shadow: none;
+}
+
+.SubpageTableScroll.SubpageDataTable .MuiTable-root th,
+.SubpageTableScroll.SubpageDataTable .MuiTable-root td {
+  padding: 0.9em 1em;
 }
 
 .SubpageTableScroll .MuiTable-root,
@@ -2123,6 +2182,9 @@ p {
   color: var(--button-text-color) !important;
   background-color: var(--accent-color) !important;
   border-bottom-color: transparent !important;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 1px;
 }
 
 .SubpageTableScroll .MuiTableCell-root:first-child {
@@ -2346,6 +2408,11 @@ p {
 
   .SubpageTableScroll .MuiTableCell-root:last-child {
     padding-right: 1em;
+  }
+
+  .SubpageTableScroll.SubpageDataTable .MuiTable-root th,
+  .SubpageTableScroll.SubpageDataTable .MuiTable-root td {
+    padding: 0.65em 0.5em;
   }
 
   .SubpageTableScroll .MuiChip-root {

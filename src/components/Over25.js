@@ -1,13 +1,15 @@
 import { Fragment, useEffect, useState } from "react";
-import { withStyles, makeStyles } from "@material-ui/core/styles";
-import { 
-  Table, TableBody, TableCell, TableContainer, TableHead, 
-  TableRow, Paper, Box, Typography
-} from "@material-ui/core";
+import { makeStyles } from "@material-ui/core/styles";
 import { getHighestScoringTeams } from "../logic/getStatsInsights";
 import SiteHeader from "./SiteHeader";
 import PageMeta from "./PageMeta";
 import StatPageSeoContent, { StatPageSeoFaq } from "./StatPageSeoContent";
+import {
+  BodyCell,
+  HeadCell,
+  StatPill,
+  SubpageTable,
+} from "./SubpageDataTable";
 import { STAT_PAGE_SEO } from "../seo/statPageSeoConfig";
 
 // Ids to be updated for the latest season
@@ -93,7 +95,6 @@ const useStyles = makeStyles((theme) => ({
   },
   tableWrapper: {
     borderRadius: 5,
-    boxShadow: "0 10px 30px rgba(0,0,0,0.15)",
     overflow: "hidden",
     maxWidth: "100%",
     border: "1px solid rgba(255,255,255,0.05)",
@@ -108,37 +109,6 @@ const useStyles = makeStyles((theme) => ({
     "&:hover": { textDecoration: "underline" }
   }
 }));
-
-const StyledTableCell = withStyles(() => ({
-  head: {
-    backgroundColor: "var(--accent-color)",
-    color: "var(--button-text-color)",
-    fontWeight: 600,
-    textTransform: "uppercase",
-    fontSize: "1em",
-    letterSpacing: "1px",
-    borderBottom: "none",
-  },
-  body: {
-    fontSize: "1em",
-    padding: "1em 1em",
-    borderBottom: "1px solid var(--button-border-color)",
-    color: "var(--text-color)",
-  },
-}))(TableCell);
-
-const StyledTableRow = withStyles(() => ({
-  root: {
-    transition: "background-color 0.2s ease",
-    "&:nth-of-type(even)": {
-      backgroundColor: "var(--alternate-background-color)",
-    },
-    "&:hover": {
-      backgroundColor: "rgba(var(--accent-color-rgb), 0.1)",
-      cursor: "default",
-    },
-  },
-}))(TableRow);
 
 export default function HighestScoringTeams({ initialRows = null }) {
   const classes = useStyles();
@@ -170,62 +140,52 @@ export default function HighestScoringTeams({ initialRows = null }) {
     <Fragment>
       <PageMeta />
       <SiteHeader withFooter>
-      <Box className={`${classes.container} SubpageContent`} id="ssh-content">
+      <div className={`${classes.container} SubpageContent`} id="ssh-content">
         <a href="/" className={classes.homeLink}>← Back to Home</a>
         
-        <Typography variant="h1">Elite Scoring Teams</Typography>
-        <Typography variant="h2">Teams with the highest average goals and their upcoming fixture</Typography>
+        <h1>Elite Scoring Teams</h1>
+        <h2>Teams with the highest average goals and their upcoming fixture</h2>
 
         <StatPageSeoContent {...STAT_PAGE_SEO.o25} />
-        <TableContainer component={Paper} className={`${classes.tableWrapper} SubpageTableScroll`}>
-          <Table size="small" aria-label="highest scoring teams table">
-            <TableHead>
-              <TableRow>
-                <StyledTableCell align="center" className="SubpageCol--country">Country</StyledTableCell>
-                <StyledTableCell align="left">Team</StyledTableCell>
-                <StyledTableCell align="center">Next</StyledTableCell>
-                <StyledTableCell align="center">Avg</StyledTableCell>
-                <StyledTableCell align="center">O2.5%</StyledTableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {filteredTeams.map((team, index) => (
-                <StyledTableRow key={index}>
-                  <StyledTableCell align="center" className="SubpageCol--country">
-                    {team.teamCountry}
-                  </StyledTableCell>
-                  <StyledTableCell align="left" style={{ fontWeight: 600 }}>
-                    {team.team}
-                  </StyledTableCell>
-                  <StyledTableCell align="center" style={{ opacity: 0.8 }}>
-                    {team.next_match_team}
-                  </StyledTableCell>
-                  <StyledTableCell align="center">
-                    <Box 
-                      style={{ 
-                        backgroundColor: "var(--accent-color)", 
-                        color: "var(--button-text-color)", 
-                        borderRadius: 4, 
-                        padding: "2px 8px", 
-                        display: "inline-block",
-                        fontWeight: 600 
-                      }}
-                    >
-                      {team.averageGoals}
-                    </Box>
-                  </StyledTableCell>
-                  <StyledTableCell align="center">
-                    <Box fontWeight="bold" color="var(--accent-color)">
-                      {team.over25Percentage}%
-                    </Box>
-                  </StyledTableCell>
-                </StyledTableRow>
-              ))}
-            </TableBody>
-          </Table>
-        </TableContainer>
+        <SubpageTable
+          className={classes.tableWrapper}
+          aria-label="highest scoring teams table"
+        >
+          <thead>
+            <tr>
+              <HeadCell className="SubpageCol--country">Country</HeadCell>
+              <HeadCell align="left">Team</HeadCell>
+              <HeadCell>Next</HeadCell>
+              <HeadCell>Avg</HeadCell>
+              <HeadCell>O2.5%</HeadCell>
+            </tr>
+          </thead>
+          <tbody>
+            {filteredTeams.map((team, index) => (
+              <tr key={index}>
+                <BodyCell className="SubpageCol--country">
+                  {team.teamCountry}
+                </BodyCell>
+                <BodyCell align="left" style={{ fontWeight: 600 }}>
+                  {team.team}
+                </BodyCell>
+                <BodyCell style={{ opacity: 0.8 }}>
+                  {team.next_match_team}
+                </BodyCell>
+                <BodyCell>
+                  <StatPill>{team.averageGoals}</StatPill>
+                </BodyCell>
+                <BodyCell>
+                  <span style={{ fontWeight: "bold", color: "var(--accent-color)" }}>
+                    {team.over25Percentage}%
+                  </span>
+                </BodyCell>
+              </tr>
+            ))}
+          </tbody>
+        </SubpageTable>
         <StatPageSeoFaq faqItems={STAT_PAGE_SEO.o25.faqItems} />
-      </Box>
+      </div>
       </SiteHeader>
     </Fragment>
   );

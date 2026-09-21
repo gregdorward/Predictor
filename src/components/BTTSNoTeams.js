@@ -1,20 +1,15 @@
 import { Fragment, useEffect, useState } from "react";
-import { withStyles, makeStyles } from "@material-ui/core/styles";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableHead,
-  TableRow,
-  Paper,
-  Box,
-  Typography,
-} from "@material-ui/core";
+import { makeStyles } from "@material-ui/core/styles";
 import { getBTTSTeams } from "../logic/getStatsInsights";
 import SiteHeader from "./SiteHeader";
 import PageMeta from "./PageMeta";
 import StatPageSeoContent, { StatPageSeoFaq } from "./StatPageSeoContent";
+import {
+  BodyCell,
+  HeadCell,
+  StatPill,
+  SubpageTable,
+} from "./SubpageDataTable";
 import { STAT_PAGE_SEO } from "../seo/statPageSeoConfig";
 
 const allowedCountries = [
@@ -66,7 +61,6 @@ const useStyles = makeStyles(() => ({
   },
   tableWrapper: {
     borderRadius: 5,
-    boxShadow: "0 10px 30px rgba(0,0,0,0.15)",
     overflow: "hidden",
     maxWidth: "100%",
     border: "1px solid rgba(255,255,255,0.05)",
@@ -81,37 +75,6 @@ const useStyles = makeStyles(() => ({
     "&:hover": { textDecoration: "underline" },
   },
 }));
-
-const StyledTableCell = withStyles(() => ({
-  head: {
-    backgroundColor: "var(--accent-color)",
-    color: "var(--button-text-color)",
-    fontWeight: 600,
-    textTransform: "uppercase",
-    fontSize: "1em",
-    letterSpacing: "1px",
-    borderBottom: "none",
-  },
-  body: {
-    fontSize: "1em",
-    padding: "1em 1em",
-    borderBottom: "1px solid var(--button-border-color)",
-    color: "var(--text-color)",
-  },
-}))(TableCell);
-
-const StyledTableRow = withStyles(() => ({
-  root: {
-    transition: "background-color 0.2s ease",
-    "&:nth-of-type(even)": {
-      backgroundColor: "var(--alternate-background-color)",
-    },
-    "&:hover": {
-      backgroundColor: "rgba(var(--accent-color-rgb), 0.1)",
-      cursor: "default",
-    },
-  },
-}))(TableRow);
 
 export default function BTTSNoTeams({ initialRows = null }) {
   const classes = useStyles();
@@ -144,80 +107,59 @@ export default function BTTSNoTeams({ initialRows = null }) {
     <Fragment>
       <PageMeta />
       <SiteHeader withFooter>
-        <Box className={`${classes.container} SubpageContent`} id="ssh-content">
+        <div className={`${classes.container} SubpageContent`} id="ssh-content">
           <a href="/" className={classes.homeLink}>Back to Home</a>
 
-          <Typography variant="h1">Low BTTS Teams</Typography>
-          <Typography variant="h2">
+          <h1>Low BTTS Teams</h1>
+          <h2>
             Teams whose matches are less likely to see both sides score
-          </Typography>
+          </h2>
 
-          <TableContainer
-            component={Paper}
-            className={`${classes.tableWrapper} SubpageTableScroll`}
+          <SubpageTable
+            className={classes.tableWrapper}
+            aria-label="Low BTTS teams table"
           >
-            <Table size="small" aria-label="Low BTTS teams table">
-              <TableHead>
-                <TableRow>
-                  <StyledTableCell align="left">Name</StyledTableCell>
-                  <StyledTableCell align="center" className="SubpageCol--country">
-                    Country
-                  </StyledTableCell>
-                  <StyledTableCell align="center">BTTS %</StyledTableCell>
-                  <StyledTableCell align="center" className="SubpageCol--played">
-                    Played
-                  </StyledTableCell>
-                  <StyledTableCell align="center">Next</StyledTableCell>
-                  <StyledTableCell align="center">Odds</StyledTableCell>
-                </TableRow>
-              </TableHead>
-              <TableBody>
-                {filteredTeams.map((team, index) => (
-                  <StyledTableRow key={`${team.name}-${index}`}>
-                    <StyledTableCell align="left" style={{ fontWeight: 600 }}>
-                      {team.name}
-                    </StyledTableCell>
-                    <StyledTableCell align="center" className="SubpageCol--country">
-                      {team.country}
-                    </StyledTableCell>
-                    <StyledTableCell align="center">
-                      <Box
-                        style={{
-                          backgroundColor: "var(--accent-color)",
-                          color: "var(--button-text-color)",
-                          borderRadius: 4,
-                          padding: "2px 8px",
-                          display: "inline-block",
-                          fontWeight: 600,
-                        }}
-                      >
-                        {team.bttsPercentage}%
-                      </Box>
-                    </StyledTableCell>
-                    <StyledTableCell
-                      align="center"
-                      className="SubpageCol--played"
-                      style={{ opacity: 0.8 }}
-                    >
-                      {team.played}
-                    </StyledTableCell>
-                    <StyledTableCell align="center">
-                      <Box fontWeight="600">{team.opponent}</Box>
-                      <span className="SubpageCellMeta">{team.date}</span>
-                    </StyledTableCell>
-                    <StyledTableCell align="center">
-                      <Box fontWeight="bold" color="var(--accent-color)">
-                        {team.odds}
-                      </Box>
-                    </StyledTableCell>
-                  </StyledTableRow>
-                ))}
-              </TableBody>
-            </Table>
-          </TableContainer>
+            <thead>
+              <tr>
+                <HeadCell align="left">Name</HeadCell>
+                <HeadCell className="SubpageCol--country">Country</HeadCell>
+                <HeadCell>BTTS %</HeadCell>
+                <HeadCell className="SubpageCol--played">Played</HeadCell>
+                <HeadCell>Next</HeadCell>
+                <HeadCell>Odds</HeadCell>
+              </tr>
+            </thead>
+            <tbody>
+              {filteredTeams.map((team, index) => (
+                <tr key={`${team.name}-${index}`}>
+                  <BodyCell align="left" style={{ fontWeight: 600 }}>
+                    {team.name}
+                  </BodyCell>
+                  <BodyCell className="SubpageCol--country">
+                    {team.country}
+                  </BodyCell>
+                  <BodyCell>
+                    <StatPill>{team.bttsPercentage}%</StatPill>
+                  </BodyCell>
+                  <BodyCell className="SubpageCol--played" style={{ opacity: 0.8 }}>
+                    {team.played}
+                  </BodyCell>
+                  <BodyCell>
+                    <span style={{ fontWeight: 600 }}>{team.opponent}</span>
+                    <span className="SubpageCellMeta">{team.date}</span>
+                  </BodyCell>
+                  <BodyCell>
+                    <span style={{ fontWeight: "bold", color: "var(--accent-color)" }}>
+                      {team.odds}
+                    </span>
+                  </BodyCell>
+                </tr>
+              ))}
+            </tbody>
+          </SubpageTable>
           <StatPageSeoContent {...STAT_PAGE_SEO.bttsNoTeams} />
           <StatPageSeoFaq faqItems={STAT_PAGE_SEO.bttsNoTeams.faqItems} />
-        </Box>
+        </div>
       </SiteHeader>
     </Fragment>
   );

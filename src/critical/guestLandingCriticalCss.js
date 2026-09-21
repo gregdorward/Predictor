@@ -135,12 +135,19 @@ body > #__next > * {
   margin: 0;
   text-align: left;
 }
-.GuestLanding-headline {
+.GuestLanding-title {
   font-size: clamp(1.35rem, 3vw, 2rem);
   font-weight: 700;
   line-height: 1.25;
-  margin: 0 0 0.4rem;
+  margin: 0 0 0.35rem;
   color: var(--text-color);
+}
+.GuestLanding-headline {
+  font-size: 0.95rem;
+  font-weight: 600;
+  line-height: 1.35;
+  margin: 0 0 0.45rem;
+  color: var(--primary-color);
 }
 .GuestLanding-headlineLines { display: block; }
 .GuestLanding-headlineLine {
@@ -156,6 +163,28 @@ body > #__next > * {
   line-height: 1.45;
   margin: 0;
   max-width: 36em;
+}
+.GuestLanding-today {
+  display: grid;
+  gap: 0.45rem;
+  margin-top: 1rem;
+  text-align: left;
+}
+.GuestLanding-today a {
+  display: flex;
+  justify-content: space-between;
+  gap: 0.75rem;
+  align-items: baseline;
+  color: var(--text-color);
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 0.92rem;
+}
+.GuestLanding-today strong {
+  font-variant-numeric: tabular-nums;
+  color: var(--primary-color);
+  font-weight: 600;
+  text-align: right;
 }
 .GuestLanding-cards {
   display: grid;
@@ -332,13 +361,13 @@ h1 {
 @media (max-width: 1024px) {
   .GuestLanding-laptopLid { padding: 6px 6px 5px; border-radius: 8px 8px 2px 2px; }
   .GuestLanding-laptopBase { width: 110%; height: 8px; border-radius: 0 0 8px 8px; }
-  .GuestLanding-headline { font-size: 1.2rem; }
+  .GuestLanding-title { font-size: 1.2rem; }
   .GuestLanding-subheadline { font-size: 0.8rem; }
 }
 @media (max-width: 460px) {
   .GuestLanding-laptopLid { padding: 4px 4px 3px; }
   .GuestLanding-laptopBase { height: 6px; }
-  .GuestLanding-headline { font-size: 1.3rem; }
+  .GuestLanding-title { font-size: 1.3rem; }
   .GuestLanding-card { padding: 0.65rem 0.75rem; }
   .GuestLanding-about p { font-size: 0.8rem; }
 }

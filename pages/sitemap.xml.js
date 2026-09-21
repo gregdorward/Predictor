@@ -1,7 +1,4 @@
-import {
-  STATIC_SITEMAP_ROUTES,
-  collectSitemapUrls,
-} from "../src/seo/sitemapUrls";
+import { collectSitemapEntries } from "../src/seo/sitemapUrls";
 
 function escapeXml(value) {
   return String(value)
@@ -12,68 +9,33 @@ function escapeXml(value) {
     .replace(/'/g, "&apos;");
 }
 
-function urlEntry(loc, { priority, changefreq, lastmod }) {
+function urlEntry(loc, { lastmod }) {
+  const lastmodTag = lastmod
+    ? `\n    <lastmod>${escapeXml(lastmod)}</lastmod>`
+    : "";
   return `  <url>
-    <loc>${escapeXml(loc)}</loc>
-    <lastmod>${lastmod}</lastmod>
-    <changefreq>${changefreq}</changefreq>
-    <priority>${priority}</priority>
+    <loc>${escapeXml(loc)}</loc>${lastmodTag}
   </url>`;
 }
 
-function buildRouteMeta() {
-  const routeMeta = new Map(
-    STATIC_SITEMAP_ROUTES.map((route) => [
-      route.path === "/" ? "/" : route.path.replace(/\/$/, ""),
-      route,
-    ])
-  );
-
-  return {
-    forPath(pathname) {
-      const normalized = pathname === "/" ? "/" : pathname.replace(/\/$/, "");
-      return (
-        routeMeta.get(normalized) || {
-          priority: "0.7",
-          changefreq: "daily",
-        }
-      );
-    },
-  };
-}
-
 async function generateSiteMap() {
-  const lastmod = new Date().toISOString().slice(0, 10);
-  let urls = [];
+  let entries = [];
   try {
-    urls = await collectSitemapUrls();
+    entries = await collectSitemapEntries();
   } catch {
-    // Avoid advertising competition hubs we could not verify as indexable.
-    urls = await collectSitemapUrls({
+    entries = await collectSitemapEntries({
       includeFixtures: false,
       includeCompetitions: false,
     });
   }
-  const routeMeta = buildRouteMeta();
 
-  const entries = urls.map((loc) => {
-    const pathname = new URL(loc).pathname;
-    const meta = pathname.startsWith("/competition/")
-      ? { priority: "0.8", changefreq: "daily" }
-      : pathname.startsWith("/fixture/")
-        ? { priority: "0.7", changefreq: "daily" }
-        : routeMeta.forPath(pathname);
-
-    return urlEntry(loc, {
-      priority: meta.priority,
-      changefreq: meta.changefreq,
-      lastmod,
-    });
-  });
+  const body = entries
+    .map((entry) => urlEntry(entry.loc, { lastmod: entry.lastmod }))
+    .join("\n");
 
   return `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-${entries.join("\n")}
+${body}
 </urlset>`;
 }
 

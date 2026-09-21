@@ -6,6 +6,7 @@ import {
   getRelatedCompetitionLinks,
   resolveCompetitionParam,
   resolveFootyStatsLeagueId,
+  buildCompetitionJsonLd,
 } from "./competitionCatalog";
 
 describe("competitionCatalog removals and aliases", () => {
@@ -70,5 +71,16 @@ describe("competitionCatalog removals and aliases", () => {
     expect(links.some((link) => link.href.includes("premier-league"))).toBe(
       false
     );
+  });
+
+  test("competition JSON-LD is a page, not the league organisation", () => {
+    const jsonLd = buildCompetitionJsonLd(
+      { english_name: "Premier League" },
+      "https://www.soccerstatshub.com/competition/premier-league/",
+      { slug: "premier-league", name: "Premier League" }
+    );
+    const types = jsonLd["@graph"].map((node) => node["@type"]);
+    expect(types).toEqual(["WebPage"]);
+    expect(types).not.toContain("SportsOrganization");
   });
 });

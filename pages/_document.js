@@ -11,10 +11,10 @@ import GUEST_LANDING_CRITICAL_CSS from "../src/critical/guestLandingCriticalCss"
 const JOURNEY_ADS_SNIPPET =
   '<script type="text/javascript" async="async" data-noptimize="1" data-cfasync="false" src="//scripts.scriptwrapper.com/tags/71e44a5d-dc3a-499d-8677-800918c94d8a.js"></script>';
 
-// Keep the Mediavine snippet in the HTML for their verification crawler.
-// Place it in <head> after fonts/critical CSS so it can load in parallel,
-// but not first — that previously starved LCP of CSS and fonts.
-const JOURNEY_ADS_HTML = `</script>${JOURNEY_ADS_SNIPPET}<script>`;
+// Keep the Mediavine snippet in the HTML for their verification crawler,
+// but inert until after hydration. A live head script mutates the DOM
+// (mv-ad-box rails) before React hydrates, which throws on these pages.
+const JOURNEY_ADS_HTML = `</script><template id="ssh-mediavine-snippet">${JOURNEY_ADS_SNIPPET}</template><script>`;
 
 class SiteHead extends Head {
   getCssLinks(files) {
@@ -70,14 +70,6 @@ const JSON_LD = {
       description:
         "Football stats, BTTS, Under 2.5, xG, form, correct score analysis and prediction tools.",
       inLanguage: "en-GB",
-      potentialAction: {
-        "@type": "SearchAction",
-        target: {
-          "@type": "EntryPoint",
-          urlTemplate: "https://www.soccerstatshub.com/?q={search_term_string}",
-        },
-        "query-input": "required name=search_term_string",
-      },
     },
     {
       "@type": "Organization",
@@ -87,7 +79,6 @@ const JSON_LD = {
       logo: "https://www.soccerstatshub.com/images/NewLogo.png",
       description:
         "Soccer Stats Hub publishes football statistics, prediction tools, competition trends and transparent match research.",
-      sameAs: ["https://www.soccerstatshub.com/about/"],
     },
   ],
 };
@@ -150,122 +141,6 @@ const THEME_BOOT_SCRIPT = `
 })();
 `;
 
-// Load Grow after the page is idle so its ~250KB stack doesn't compete with LCP.
-const DEFERRED_GROW_SCRIPT = `
-(function () {
-  function loadGrow() {
-    if (window.__sshGrowLoaded) return;
-    window.__sshGrowLoaded = true;
-    window.growMe || ((window.growMe = function (e) { window.growMe._.push(e); }), (window.growMe._ = []));
-    var e = document.createElement("script");
-    e.type = "text/javascript";
-    e.src = "https://faves.grow.me/main.js";
-    e.defer = true;
-    e.setAttribute("data-grow-faves-site-id", "U2l0ZTpiZjJjMTc3NS1kOGU1LTRlMTQtOTM3Yy1jZWU4MmU3OTUwMzM=");
-    document.head.appendChild(e);
-  }
-  if (typeof requestIdleCallback !== "undefined") {
-    requestIdleCallback(loadGrow, { timeout: 4000 });
-  } else {
-    window.addEventListener("load", function () { setTimeout(loadGrow, 1500); });
-  }
-})();
-`;
-
-// Grow.me injects adhesion markup without accessible names; patch after it renders.
-const GROW_A11Y_PATCH_SCRIPT = `
-(function () {
-  function hasDiscernibleText(el) {
-    return (
-      (el.textContent && el.textContent.trim()) ||
-      el.getAttribute("aria-label") ||
-      el.getAttribute("title")
-    );
-  }
-
-  function patchOfferingLogo(img) {
-    if (img.getAttribute("alt") !== "" || !img.getAttribute("aria-label")) return;
-    // Presentational images must not also expose a name via aria-label.
-    img.removeAttribute("aria-label");
-  }
-
-  function patchGrowAccessibility(root) {
-    var scope = root && root.querySelector ? root : document;
-
-    scope.querySelectorAll("a.grow-housead").forEach(function (link) {
-      if (!hasDiscernibleText(link)) {
-        link.setAttribute("aria-label", "Grow - Want fewer ads");
-      }
-    });
-
-    scope.querySelectorAll("#offeringLogo").forEach(patchOfferingLogo);
-  }
-
-  function schedulePatches() {
-    patchGrowAccessibility(document);
-    [0, 250, 1000, 3000, 8000].forEach(function (delay) {
-      window.setTimeout(function () {
-        patchGrowAccessibility(document);
-      }, delay);
-    });
-  }
-
-  function start() {
-    schedulePatches();
-    if (!window.__sshGrowA11yObserver) {
-      window.__sshGrowA11yObserver = new MutationObserver(function () {
-        patchGrowAccessibility(document);
-      });
-      window.__sshGrowA11yObserver.observe(document.body, {
-        childList: true,
-        subtree: true,
-        attributes: true,
-        attributeFilter: ["alt", "aria-label"],
-      });
-    }
-  }
-
-  if (document.body) {
-    start();
-  } else {
-    document.addEventListener("DOMContentLoaded", start);
-  }
-
-  if (typeof window.growMe === "function") {
-    window.growMe(function () {
-      schedulePatches();
-    });
-  }
-})();
-`;
-
-// Load Google Analytics after the page is idle so it doesn't compete with LCP.
-const DEFERRED_GA_SCRIPT = `
-(function () {
-  function loadGA() {
-    if (window.__sshGaLoaded) return;
-    window.__sshGaLoaded = true;
-    window.dataLayer = window.dataLayer || [];
-    function gtag() { window.dataLayer.push(arguments); }
-    window.gtag = gtag;
-    gtag("js", new Date());
-  }
-  function injectGtag() {
-    loadGA();
-    var s = document.createElement("script");
-    s.async = true;
-    s.src = "https://www.googletagmanager.com/gtag/js?id=G-9F3KSWZWEQ";
-    s.onload = function () { gtag("config", "G-9F3KSWZWEQ"); };
-    document.head.appendChild(s);
-  }
-  if (typeof requestIdleCallback !== "undefined") {
-    requestIdleCallback(injectGtag, { timeout: 5000 });
-  } else {
-    window.addEventListener("load", function () { setTimeout(injectGtag, 2000); });
-  }
-})();
-`;
-
 export default class MyDocument extends Document {
   render() {
     return (
@@ -309,19 +184,7 @@ export default class MyDocument extends Document {
             // eslint-disable-next-line react/no-danger
             dangerouslySetInnerHTML={{ __html: JSON.stringify(JSON_LD) }}
           />
-          <script
-            data-grow-initializer=""
-            // eslint-disable-next-line react/no-danger
-            dangerouslySetInnerHTML={{ __html: DEFERRED_GROW_SCRIPT }}
-          />
-          <script
-            // eslint-disable-next-line react/no-danger
-            dangerouslySetInnerHTML={{ __html: GROW_A11Y_PATCH_SCRIPT }}
-          />
-          <script
-            // eslint-disable-next-line react/no-danger
-            dangerouslySetInnerHTML={{ __html: DEFERRED_GA_SCRIPT }}
-          />
+          <script data-grow-initializer="" />
         </SiteHead>
         <body>
           <script

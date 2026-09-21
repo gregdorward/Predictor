@@ -1,43 +1,12 @@
-import { Fragment } from "react";
-import { withStyles } from "@material-ui/core/styles";
-import Table from "@material-ui/core/Table";
-import TableBody from "@material-ui/core/TableBody";
-import TableCell from "@material-ui/core/TableCell";
-import TableContainer from "@material-ui/core/TableContainer";
-import TableHead from "@material-ui/core/TableHead";
-import TableRow from "@material-ui/core/TableRow";
-import Paper from "@material-ui/core/Paper";
-import { useEffect, useState } from "react";
+import { Fragment, useEffect, useState } from "react";
 import { getHighestScoringTeams } from "../logic/getStatsInsights";
 import SiteHeader from "./SiteHeader";
 import PageMeta from "./PageMeta";
-const StyledTableCell = withStyles(() => ({
-  head: {
-    backgroundColor: "var(--accent-color)",
-    color: "var(--button-text-color)",
-    padding: 2,
-    textAlign: "center",
-    fontSize: "1em",
-    fontFamily: "inherit",
-    border: "1px solid var(--button-border-color)",
-  },
-  body: {
-    fontSize: "1em",
-    fontFamily: "inherit",
-    padding: 5,
-    border: "1px solid var(--button-border-color)",
-    color: "var(--text-color)",
-  },
-}))(TableCell);
-
-const StyledTableRow = withStyles(() => ({
-  root: {
-    "&:nth-of-type(odd)": {
-      backgroundColor: "var(--secondary-background-color)",
-      textAlign: "center",
-    },
-  },
-}))(TableRow);
+import {
+  BodyCell,
+  HeadCell,
+  SubpageTable,
+} from "./SubpageDataTable";
 
 export default function HighestScoringTeams() {
   const [teams, setTeams] = useState([]);
@@ -88,38 +57,33 @@ export default function HighestScoringTeams() {
       <a href="/" className="HomeLink" style={{ color: "var(--accent-color)", fontWeight: 600 }}>Home</a>
       <h1>Highest Scoring Teams</h1>
       <h2>Teams with the highest average goals and their upcoming fixture</h2>
-      <TableContainer component={Paper} className="O25Table SubpageTableScroll">
-        <Table size="small" aria-label="highest scoring teams">
-          <TableHead>
-            <TableRow>
-              <StyledTableCell align="center" className="SubpageCol--country">Country</StyledTableCell>
-              <StyledTableCell align="center">Team</StyledTableCell>
-              <StyledTableCell align="center">Next</StyledTableCell>
-              <StyledTableCell align="center">Avg</StyledTableCell>
-              <StyledTableCell align="center">O2.5%</StyledTableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {filteredTeams.map((team, index) => (
-              <StyledTableRow key={index}>
-                <StyledTableCell align="center" className="SubpageCol--country">
-                  {team.teamCountry}
-                </StyledTableCell>
-                <StyledTableCell align="center">{team.team}</StyledTableCell>
-                <StyledTableCell align="center">
-                  {team.next_match_team}
-                </StyledTableCell>
-                <StyledTableCell align="center">
-                  {team.averageGoals}
-                </StyledTableCell>
-                <StyledTableCell align="center">
-                  {team.over25Percentage}%
-                </StyledTableCell>
-              </StyledTableRow>
-            ))}
-          </TableBody>
-        </Table>
-      </TableContainer>
+      <SubpageTable
+        className="O25Table"
+        aria-label="highest scoring teams"
+      >
+        <thead>
+          <tr>
+            <HeadCell className="SubpageCol--country">Country</HeadCell>
+            <HeadCell>Team</HeadCell>
+            <HeadCell>Next</HeadCell>
+            <HeadCell>Avg</HeadCell>
+            <HeadCell>O2.5%</HeadCell>
+          </tr>
+        </thead>
+        <tbody>
+          {filteredTeams.map((team, index) => (
+            <tr key={index}>
+              <BodyCell className="SubpageCol--country">
+                {team.teamCountry}
+              </BodyCell>
+              <BodyCell>{team.team}</BodyCell>
+              <BodyCell>{team.next_match_team}</BodyCell>
+              <BodyCell>{team.averageGoals}</BodyCell>
+              <BodyCell>{team.over25Percentage}%</BodyCell>
+            </tr>
+          ))}
+        </tbody>
+      </SubpageTable>
       </div>
       </SiteHeader>
     </Fragment>

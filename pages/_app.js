@@ -4,6 +4,7 @@ import { Provider } from "react-redux";
 import store from "../src/logic/store";
 import { AuthProvider } from "../src/logic/authProvider";
 import { initTheme } from "../src/utils/theme";
+import { loadThirdPartyScripts } from "../src/utils/loadThirdPartyScripts";
 import reportWebVitals from "../src/reportWebVitals";
 import "../src/index.css";
 
@@ -11,6 +12,9 @@ export default function MyApp({ Component, pageProps }) {
   useEffect(() => {
     initTheme();
     document.body.classList.add("js-loaded");
+    if (process.env.NODE_ENV === "production") {
+      loadThirdPartyScripts();
+    }
   }, []);
 
   useEffect(() => {
