@@ -817,7 +817,6 @@ export function AppContent({ shellMounted = false }) {
       {isPaidUser ? (
         <div />
       ) : (
-        <>
           <button
             type="button"
             className="MembersGetMoreUnderlined"
@@ -825,25 +824,6 @@ export function AppContent({ shellMounted = false }) {
           >
             Just show me the games
           </button>
-          <p className="FreePredictionRemaining">
-            {Number.isFinite(remainingFreeUnlocks)
-              ? `${remainingFreeUnlocks} of ${FREE_DAILY_PREDICTION_LIMIT} free predictions left today`
-              : `${FREE_DAILY_PREDICTION_LIMIT} free predictions per day`}
-            {" · "}
-            <button
-              type="button"
-              className="MembersGetMoreUnderlined InlineUpgradeLink"
-              onClick={() => {
-                document.getElementById("premium-upgrade")?.scrollIntoView({
-                  behavior: "smooth",
-                  block: "start",
-                });
-              }}
-            >
-              Upgrade for unlimited
-            </button>
-          </p>
-        </>
       )}
         </>
       )}
@@ -852,6 +832,26 @@ export function AppContent({ shellMounted = false }) {
 
 
       <div id="ExplainerText" />
+      {!isPaidUser ? (
+        <p className="FreePredictionRemaining">
+          {Number.isFinite(remainingFreeUnlocks)
+            ? `${remainingFreeUnlocks} of ${FREE_DAILY_PREDICTION_LIMIT} free predictions left today`
+            : `${FREE_DAILY_PREDICTION_LIMIT} free predictions per day`}
+          {" · "}
+          <button
+            type="button"
+            className="MembersGetMoreUnderlined InlineUpgradeLink"
+            onClick={() => {
+              document.getElementById("premium-upgrade")?.scrollIntoView({
+                behavior: "smooth",
+                block: "start",
+              });
+            }}
+          >
+            Upgrade for unlimited
+          </button>
+        </p>
+      ) : null}
       <div id="Buttons" className="Buttons">
         <div className="FixtureButtons">
           <Button
