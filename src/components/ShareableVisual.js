@@ -19,6 +19,7 @@ export default function ShareableVisual({
   shareText = SITE_URL,
   className = "",
   captureClassName = "",
+  hideActions = false,
 }) {
   const captureRef = useRef(null);
   const [status, setStatus] = useState("");
@@ -101,38 +102,40 @@ export default function ShareableVisual({
 
   return (
     <div className={`ShareableVisual ${className}`.trim()}>
-      <div className="ShareableVisual__actions">
-        <button
-          type="button"
-          className="ShareableVisual__btn"
-          onClick={handleDownload}
-          disabled={busy}
-          aria-label="Download image"
-          title="Download image"
-        >
-          <Download size={18} strokeWidth={2} aria-hidden="true" />
-        </button>
-        <button
-          type="button"
-          className="ShareableVisual__btn"
-          onClick={handleCopy}
-          disabled={busy}
-          aria-label="Copy image"
-          title="Copy image"
-        >
-          <Copy size={18} strokeWidth={2} aria-hidden="true" />
-        </button>
-        <button
-          type="button"
-          className="ShareableVisual__btn"
-          onClick={handleShare}
-          disabled={busy}
-          aria-label="Share image"
-          title="Share image"
-        >
-          <Share2 size={18} strokeWidth={2} aria-hidden="true" />
-        </button>
-      </div>
+      {!hideActions ? (
+        <div className="ShareableVisual__actions">
+          <button
+            type="button"
+            className="ShareableVisual__btn"
+            onClick={handleDownload}
+            disabled={busy}
+            aria-label="Download image"
+            title="Download image"
+          >
+            <Download size={18} strokeWidth={2} aria-hidden="true" />
+          </button>
+          <button
+            type="button"
+            className="ShareableVisual__btn"
+            onClick={handleCopy}
+            disabled={busy}
+            aria-label="Copy image"
+            title="Copy image"
+          >
+            <Copy size={18} strokeWidth={2} aria-hidden="true" />
+          </button>
+          <button
+            type="button"
+            className="ShareableVisual__btn"
+            onClick={handleShare}
+            disabled={busy}
+            aria-label="Share image"
+            title="Share image"
+          >
+            <Share2 size={18} strokeWidth={2} aria-hidden="true" />
+          </button>
+        </div>
+      ) : null}
 
       <div
         ref={captureRef}

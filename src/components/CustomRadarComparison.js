@@ -3,6 +3,7 @@ import Collapsable from "./CollapsableElement";
 import { RadarChart } from "./Chart";
 import ShareableVisual from "./ShareableVisual";
 import { sanitizeImageFilename } from "../utils/captureElementImage";
+import { requestUpgrade } from "../logic/requestUpgrade";
 import {
   MAX_RADAR_METRICS,
   MIN_RADAR_METRICS,
@@ -33,6 +34,7 @@ function useMediaQuery(query) {
 
 function CustomRadarComparison({
   unlocked,
+  onLockedClick,
   homeTeam,
   awayTeam,
   homeStats,
@@ -121,14 +123,26 @@ function CustomRadarComparison({
   if (!unlocked) {
     return (
       <div className="CustomRadarLocked">
-        <Collapsable
-          locked
-          buttonText={`Build a radar \u{2630}`}
-          classNameButton="TeamStylesButton"
-          element={<div />}
-        />
+        <button
+          type="button"
+          className="TeamStylesButton StatHeader--locked"
+          onClick={() => {
+            if (typeof onLockedClick === "function") {
+              onLockedClick();
+            } else {
+              requestUpgrade();
+            }
+          }}
+        >
+          <span className="StatHeader-label">
+            <span className="StatHeader-lock" aria-hidden="true">
+              🔒
+            </span>
+            {`Build a radar \u{2630}`}
+          </span>
+        </button>
         <p className="CustomRadarLockedHint">
-          Free on the first 5 fixtures of the day
+          Premium unlocks custom radar comparisons
         </p>
       </div>
     );

@@ -1,4 +1,5 @@
 import Collapsible from "react-collapsible";
+import { requestUpgrade } from "../logic/requestUpgrade";
 
 const Collapsable = ({
   buttonText,
@@ -26,6 +27,7 @@ const Collapsable = ({
     if (locked) {
       event?.preventDefault?.();
       event?.stopPropagation?.();
+      requestUpgrade();
       return;
     }
     onTriggerToggle?.();
@@ -57,8 +59,8 @@ const Collapsable = ({
     <Collapsible
       transitionTime={300}
       open={locked ? false : isOpen ?? (defaultOpen ? true : undefined)}
-      handleTriggerClick={onTriggerToggle ? handleTriggerClick : undefined}
-      triggerDisabled={locked}
+      handleTriggerClick={onTriggerToggle || locked ? handleTriggerClick : undefined}
+      triggerDisabled={false}
       overflowWhenOpen="visible"
       key={collapsibleKey}
       trigger={
@@ -66,9 +68,10 @@ const Collapsable = ({
           type="button"
           className={buttonClassName}
           style={{ display }}
-          onClick={onTriggerToggle ? undefined : handleTriggerClick}
-          disabled={locked}
+          onClick={onTriggerToggle || locked ? undefined : handleTriggerClick}
+          disabled={false}
           aria-expanded={locked ? false : !!isOpen}
+          aria-disabled={locked ? true : undefined}
         >
           {buttonImage && (
             <img

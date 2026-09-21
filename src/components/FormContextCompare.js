@@ -150,6 +150,7 @@ export default function FormContextCompare({
   homeMetrics,
   awayMetrics,
   getCollapsableProps,
+  locked = false,
 }) {
   if (!homeMetrics && !awayMetrics) return null;
 
@@ -161,6 +162,7 @@ export default function FormContextCompare({
         buttonText={`Match Context \u{2630}`}
         classNameButton="TeamStreaksButton"
         {...collapsableProps}
+        locked={locked}
         element={
           <div className="FormContextCompare__content">
             <p className="FormContextCompare__note">

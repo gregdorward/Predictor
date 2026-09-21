@@ -19,6 +19,7 @@ import annotationPlugin from 'chartjs-plugin-annotation';
 import ShareableVisual from "./ShareableVisual";
 import { sanitizeImageFilename } from "../utils/captureElementImage";
 import { buildShotStackSeries } from "../utils/shotStackSeries";
+import PremiumBlurGate from "./PremiumBlurGate";
 
 ChartJS.register(
   CategoryScale,
@@ -642,6 +643,7 @@ export function RadarChart(props) {
     team2,
     max = 1,
     shareCapture = false,
+    locked = false,
     subtitle = "Higher values indicate stronger ratings",
     rawTooltipLabels,
     maintainAspectRatio = true,
@@ -901,16 +903,18 @@ export function RadarChart(props) {
   };
 
   return (
-    <div
-      className="ComparisonBarChart ComparisonRadarChart"
-      {...(shareCapture ? { "data-share-capture": true } : {})}
-    >
-      <Radar
-        key={`${theme}-${abbreviateLabels}-${wrapPointLabels}-${pointLabelFontSize}-${JSON.stringify(layoutPadding)}`}
-        options={options}
-        data={chartData}
-      />
-    </div>
+    <PremiumBlurGate locked={locked}>
+      <div
+        className={`ComparisonBarChart ComparisonRadarChart${locked ? " blurred" : ""}`}
+        {...(shareCapture && !locked ? { "data-share-capture": true } : {})}
+      >
+        <Radar
+          key={`${theme}-${abbreviateLabels}-${wrapPointLabels}-${pointLabelFontSize}-${JSON.stringify(layoutPadding)}`}
+          options={options}
+          data={chartData}
+        />
+      </div>
+    </PremiumBlurGate>
   );
 }
 
@@ -1306,6 +1310,7 @@ export function BarChart(props) {
     displayDeltas,
     team1 = "Home",
     team2 = "Away",
+    locked = false,
   } = props;
   const theme = useChartTheme();
   const { color, gridColor, tooltipBackground } = getChartColors(theme);
@@ -1546,25 +1551,31 @@ export function BarChart(props) {
   const shareTitle = `${team1} vs ${team2} - ${props.text || "comparison"}`;
 
   return (
-    <ShareableVisual
-      filename={shareFilename}
-      shareTitle={shareTitle}
-      className="ComparisonBarChart-share"
-    >
-      <div data-share-capture className="ComparisonBarChart">
-        <Bar key={theme} options={options} data={data} plugins={[barDeltaLabelPlugin]} />
-        <div className="ComparisonBarChart-legend">
-          <span className="ComparisonBarChart-legendItem">
-            <span className="ComparisonBarChart-legendSwatch ComparisonBarChart-legendSwatch--home" />
-            {team1}
-          </span>
-          <span className="ComparisonBarChart-legendItem">
-            <span className="ComparisonBarChart-legendSwatch ComparisonBarChart-legendSwatch--away" />
-            {team2}
-          </span>
+    <PremiumBlurGate locked={locked}>
+      <ShareableVisual
+        filename={shareFilename}
+        shareTitle={shareTitle}
+        className={`ComparisonBarChart-share${locked ? " ComparisonBarChart-share--locked" : ""}`}
+        hideActions={locked}
+      >
+        <div
+          {...(!locked ? { "data-share-capture": true } : {})}
+          className={`ComparisonBarChart${locked ? " blurred" : ""}`}
+        >
+          <Bar key={theme} options={options} data={data} plugins={[barDeltaLabelPlugin]} />
+          <div className="ComparisonBarChart-legend">
+            <span className="ComparisonBarChart-legendItem">
+              <span className="ComparisonBarChart-legendSwatch ComparisonBarChart-legendSwatch--home" />
+              {team1}
+            </span>
+            <span className="ComparisonBarChart-legendItem">
+              <span className="ComparisonBarChart-legendSwatch ComparisonBarChart-legendSwatch--away" />
+              {team2}
+            </span>
+          </div>
         </div>
-      </div>
-    </ShareableVisual>
+      </ShareableVisual>
+    </PremiumBlurGate>
   );
 }
 

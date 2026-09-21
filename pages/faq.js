@@ -41,12 +41,12 @@ const FAQ_ITEMS = [
   {
     question: "Is Soccer Stats Hub free to use?",
     answer:
-      "Yes for a meaningful free tier. Core browsing and a sample of each day's fixtures are free, including key stats and a limited tip view. Free users see about a quarter of the board. Premium unlocks the full slate and deeper research tools.",
+      "Yes for a meaningful free tier. Every fixture is free to browse with odds and form. Predicted scores and win probabilities unlock on five fixtures per day of your choosing. Tip lists show a sample. Premium unlocks unlimited predictions, full tip lists, AI match previews beyond that allowance, deep season stats, streaks and upcoming fixtures.",
   },
   {
     question: "What does Premium unlock, and how much is it?",
     answer:
-      "Premium unlocks every match across the competitions we cover, full multi, BTTS and Over 2.5 tip lists, AI match previews, complete insights rankings, and deeper match intel such as streaks, managers, upcoming fixtures and missing-player impact. Pricing is £4.99 a month or £39.99 a year in the UK, with other currencies at checkout. Secure payments run through Stripe and you can cancel anytime.",
+      "Premium unlocks unlimited predicted scores and 1X2 probabilities, full multi, BTTS and Over 2.5 tip lists, AI match previews beyond the daily free allowance, complete insights rankings, and deeper match intel such as streaks, upcoming fixtures and full season stat categories. Pricing is £4.99 a month or £39.99 a year in the UK, with other currencies at checkout. Secure payments run through Stripe and you can cancel anytime.",
   },
   {
     question: "Do you use bookmaker affiliate links?",

@@ -4,6 +4,7 @@ import {
   calculateComparisonStatusMap,
 } from "../logic/allStatsProps";
 import { useAuth } from "../logic/authProvider";
+import PremiumUpsell from "./PremiumUpsell";
 import { isMissingStat, STAT_FALLBACK } from "../utils/formatStat";
 
 const FREE_CATEGORY_ID = "key";
@@ -237,15 +238,12 @@ function FixtureSeasonStats({ match }) {
       </div>
 
       {categoryLocked ? (
-        <div className="FixturePage-seasonStatsLocked">
-          <p>
-            Unlock {activeCategory.label.toLowerCase()} and every other season category with
-            Premium.
-          </p>
-          <a className="FixturePage-upgradeLink" href="/">
-            Upgrade to Premium
-          </a>
-        </div>
+        <PremiumUpsell
+          variant="compact"
+          className="FixturePage-seasonStatsUpsell"
+          headline={`Unlock ${activeCategory.label.toLowerCase()} with Premium`}
+          description="Key Stats stays free. Premium unlocks attacking, defensive, possession, form and every other season category — plus unlimited predictions and tip lists."
+        />
       ) : (
         <div className="FixturePage-compareRows" role="tabpanel">
           {activeCategory.rows.map((row) => {
@@ -268,7 +266,7 @@ function FixtureSeasonStats({ match }) {
         </div>
       )}
 
-      {lockPremiumSections ? (
+      {lockPremiumSections && !categoryLocked ? (
         <p className="FixturePage-seasonStatsPreviewNote">
           Key Stats is free. Premium unlocks attacking, defensive, possession, form and more.
         </p>

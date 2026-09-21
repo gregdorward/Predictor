@@ -3,6 +3,7 @@ import {
   formatProbabilityPercent,
   STAT_FALLBACK,
 } from "../utils/formatStat";
+import { requestUpgrade } from "../logic/requestUpgrade";
 
 const scrollToTarget = (id) => {
     const element = document.getElementById(String(id));
@@ -90,11 +91,15 @@ const TopValueGames = ({ tips, limit = 10, paid }) => {
                             {!paid && normalisedValueTips.length > 1 && (
                                 <tr className="UnlockBannerRow">
                                     <td colSpan={5}>
-                                        <div className="UnlockBanner">
-                                            🔒 Sign-up for {" "}
+                                        <button
+                                          type="button"
+                                          className="UnlockBanner"
+                                          onClick={() => requestUpgrade()}
+                                        >
+                                            🔒 Upgrade for{" "}
                                             <strong>{Math.min(limit, normalisedValueTips.length) - 1}</strong>{" "}
                                             more value picks
-                                        </div>
+                                        </button>
                                     </td>
                                 </tr>
                             )}

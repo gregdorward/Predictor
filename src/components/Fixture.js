@@ -23,6 +23,7 @@ import { getCompetitionFormPills } from "../utils/leagueResultsAccess";
 import { Flag } from "lucide-react";
 import { getMaxOutcomeEdge } from "../logic/scoreModelConfig.js";
 import { formatOddsMovementPctLabel } from "../logic/oddsTimeline.js";
+import { useFixturePredictionUnlock } from "../logic/useFixturePredictionUnlock";
 
 let resultValue;
 var count;
@@ -137,11 +138,37 @@ const PredictionSection = ({
   team,
   probability,
   unavailable = false,
+  predictionLocked = false,
+  onUnlockClick,
 }) => {
   if (unavailable) {
     return (
       <div className="ScoreContainer">
         <div className="score">-</div>
+      </div>
+    );
+  }
+
+  if (predictionLocked) {
+    return (
+      <div
+        className={
+          isProbability ? "ProbabilityUnlockSlot" : "ScoreContainer"
+        }
+      >
+        <button
+          type="button"
+          className="PredictionUnlockBtn"
+          onClick={(e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            onUnlockClick?.();
+          }}
+          aria-label="Unlock prediction"
+          title="Tap to unlock this prediction"
+        >
+          <span aria-hidden="true">🔒</span>
+        </button>
       </div>
     );
   }
@@ -211,6 +238,8 @@ function SingleFixture({
   const dispatch = useDispatch();
   const [showGameStats, setShowGameStats] = useState(false);
   const [isLoadingGameStats, setIsLoadingGameStats] = useState(false); // New loading state
+  const { unlocked: predictionUnlocked, unlockOrUpgrade } =
+    useFixturePredictionUnlock(fixture.id);
   function resolveFixtureForms() {
     const formEntry = allForm.find((entry) => entry.id === fixture.id);
     return {
@@ -440,6 +469,8 @@ function SingleFixture({
                     goals={fixture.goalsA}
                     probability={fixture.homeWinProbability}
                     unavailable={earlySeason}
+                    predictionLocked={!predictionUnlocked}
+                    onUnlockClick={unlockOrUpgrade}
                   />
                   <div className="ResultContainer">
                     <div className={`result`}>
@@ -501,6 +532,8 @@ function SingleFixture({
                     // goals={fixture.goalsB}
                     probability={fixture.drawProbability}
                     unavailable={earlySeason}
+                    predictionLocked={!predictionUnlocked}
+                    onUnlockClick={unlockOrUpgrade}
                   />
                   <div className="ResultContainerExplainer">
                     {/* <div className={`result`}>
@@ -549,6 +582,8 @@ function SingleFixture({
                     goals={fixture.goalsB}
                     probability={fixture.awayWinProbability}
                     unavailable={earlySeason}
+                    predictionLocked={!predictionUnlocked}
+                    onUnlockClick={unlockOrUpgrade}
                   />
                   <div className="ResultContainer">
 
@@ -874,10 +909,7 @@ export function Fixture(props) {
   // Dynamically choose the list source based on the toggle state
   const listSource = showShortlist
     ? props.uncappedFixtures // Full list when toggle is ON
-    : props.fixtures;         // Capped list when toggle is OFF
-
-  // The cap text logic
-  const showCapText = !props.paid && props.capped === true && !showShortlist;
+    : props.fixtures;
 
   return (
     <Provider store={store}>
@@ -945,16 +977,6 @@ export function Fixture(props) {
         fullGameListLength={props.fullGameListLength}
         totalVisible={props.totalVisible}
       />
-
-      {!props.paid && props.capped === true && (
-        <>
-          <div className="LockIcon">🔒</div>
-          <div className="LockText">
-            {props.originalLength} games have been capped at {props.newLength} for free users
-            with full stats available for those returned - sign up for access 50 leagues and cups...
-          </div>
-        </>
-      )}
     </Provider>
   );
 }

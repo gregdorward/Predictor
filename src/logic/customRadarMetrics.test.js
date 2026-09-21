@@ -210,16 +210,27 @@ describe("availability and selection limits", () => {
 });
 
 describe("isCustomRadarUnlocked", () => {
-  test("paid users always unlocked", () => {
-    expect(isCustomRadarUnlocked(true, 99)).toBe(true);
-    expect(isCustomRadarUnlocked(true, -1)).toBe(true);
+  beforeEach(() => {
+    if (typeof window !== "undefined" && window.localStorage) {
+      window.localStorage.clear();
+    }
   });
 
-  test("free users unlocked only for first 5 fixtures", () => {
-    expect(isCustomRadarUnlocked(false, 0)).toBe(true);
-    expect(isCustomRadarUnlocked(false, 4)).toBe(true);
-    expect(isCustomRadarUnlocked(false, 5)).toBe(false);
-    expect(isCustomRadarUnlocked(false, -1)).toBe(false);
-    expect(isCustomRadarUnlocked(false, undefined)).toBe(false);
+  test("paid users always unlocked", () => {
+    expect(isCustomRadarUnlocked(true, 99, 1)).toBe(true);
+    expect(isCustomRadarUnlocked(true, -1, 2)).toBe(true);
+  });
+
+  test("free users unlocked only when fixture id was unlocked today", () => {
+    const {
+      tryUnlockFixture,
+      clearFreePredictionAllowance,
+    } = require("./freePredictionAllowance");
+    clearFreePredictionAllowance();
+    expect(isCustomRadarUnlocked(false, 0, 10)).toBe(false);
+    tryUnlockFixture(false, 10);
+    expect(isCustomRadarUnlocked(false, 0, 10)).toBe(true);
+    expect(isCustomRadarUnlocked(false, 0, 11)).toBe(false);
+    expect(isCustomRadarUnlocked(false, 0, undefined)).toBe(false);
   });
 });

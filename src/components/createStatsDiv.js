@@ -14,7 +14,10 @@ function Stats(props) {
   let shouldOpen = props.clicked;
 
   const collapsableProps = (sectionName, isKeyStats = false) => {
-    const base = getCollapsableProps(sectionName);
+    const base =
+      typeof getCollapsableProps === "function"
+        ? getCollapsableProps(sectionName)
+        : {};
     if (!lockPremiumSections) {
       return base;
     }

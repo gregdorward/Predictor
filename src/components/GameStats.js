@@ -103,7 +103,6 @@ import {
   selectUpcomingFixtures,
 } from "../utils/futureFixturesDisplay";
 import StarRating from "../components/StarRating";
-import { handleCheckout, stripePromise } from "../App"
 import PlayerStatsTable from "./PlayerStatsTable";
 import { AuthProvider, useAuth } from "../logic/authProvider";
 import BetSlipFooter from "../components/Betslip";
@@ -111,17 +110,19 @@ import { TeamImpactSummary } from "./MissingPlayersList";
 import { predictedScoresData } from "../logic/getScorePredictions";
 import { MatchTacticalComparison } from "../components/TacticalApproach";
 import CustomRadarComparison from "./CustomRadarComparison";
-import { isCustomRadarUnlocked } from "../logic/customRadarMetrics";
+import { useFixturePredictionUnlock, useRemainingFreeUnlocks } from "../logic/useFixturePredictionUnlock";
+import {
+  FREE_DAILY_PREDICTION_LIMIT,
+  isFixturePredictionUnlocked,
+} from "../logic/freePredictionAllowance";
+import { requestUpgrade } from "../logic/requestUpgrade";
 import { GoalTimingHeatShare } from "../components/GoalTimingHeatStrip";
 import SeasonPpgChart from "./SeasonPpgChart";
 import { hasValidStreaks } from "../utils/streakStats";
 import ShareableVisual from "./ShareableVisual";
+import PremiumBlurGate from "./PremiumBlurGate";
 import { sanitizeImageFilename } from "../utils/captureElementImage";
-// import FutureFixturesSideBySide from "./FutureFixturesSideBySide";
-// export let userTips;
 
-// console.log(userTips);
-let setUserTips;
 const MemoizedSofaLineupsWidget = memo(SofaLineupsWidget);
 const LazyFutureFixturesSideBySide = lazy(() => import('./FutureFixturesSideBySide'));
 
@@ -456,9 +457,10 @@ function GameStats({ game, displayBool, stats, handleToggleTip, userTips, dayFix
 
   const [isLoading, setIsLoading] = useState(false);
   const [aiMatchPreview, setAiMatchPreview] = useState(null);
-  const { user, isPaidUser } = useAuth()
-
-  // const paid = true;
+  const { user, isPaidUser } = useAuth();
+  const { unlocked: predictionUnlocked, unlockOrUpgrade } =
+    useFixturePredictionUnlock(game?.id);
+  const { remaining: remainingFreeUnlocks } = useRemainingFreeUnlocks();
   const [hasCompleteData, setHasCompleteData] = useState(false);
 
   const futureFixturesFetchedRef = useRef(false);
@@ -2915,7 +2917,7 @@ function GameStats({ game, displayBool, stats, handleToggleTip, userTips, dayFix
     injuryImpact: getTeamInjuryImpactLoss(awayImpacts, game.id, "away"),
   };
 
-  function StatsHomeComponent({ getCollapsableProps, homeAllStatsProps, comparisonStatusMap }) {
+  function StatsHomeComponent({ getCollapsableProps, homeAllStatsProps, comparisonStatusMap, lockPremiumSections }) {
     if (!homeForm) return null;
     return (
       <div className="flex-childOne">
@@ -2924,6 +2926,7 @@ function GameStats({ game, displayBool, stats, handleToggleTip, userTips, dayFix
             {...homeAllStatsProps}
             getCollapsableProps={getCollapsableProps} // Always pass functions explicitly if they aren't in the map
             comparisonStatusMap={comparisonStatusMap}
+            lockPremiumSections={lockPremiumSections}
           />
         </ul>
       </div>
@@ -2931,7 +2934,7 @@ function GameStats({ game, displayBool, stats, handleToggleTip, userTips, dayFix
   }
 
 
-  function StatsAwayComponent({ getCollapsableProps, awayAllStatsProps, comparisonStatusMap }) {
+  function StatsAwayComponent({ getCollapsableProps, awayAllStatsProps, comparisonStatusMap, lockPremiumSections }) {
     const invertedMap = getInvertedComparisonMap(comparisonStatusMap);
 
     if (!awayForm) return null;
@@ -2943,6 +2946,7 @@ function GameStats({ game, displayBool, stats, handleToggleTip, userTips, dayFix
             getCollapsableProps={getCollapsableProps}
             // 2. Pass the inverted map to the Stats component!
             comparisonStatusMap={invertedMap}
+            lockPremiumSections={lockPremiumSections}
           />
         </ul>
       </div>
@@ -3406,6 +3410,13 @@ function GameStats({ game, displayBool, stats, handleToggleTip, userTips, dayFix
   }
 
   const [showAIInsights, setShowAIInsights] = useState(false);
+
+  useEffect(() => {
+    if (predictionUnlocked) return;
+    setShowAIInsights(false);
+    setAiMatchPreview(null);
+    setIsLoading(false);
+  }, [predictionUnlocked, game?.id]);
 
   let formArrayHome;
   let formArrayAway;
@@ -4411,20 +4422,35 @@ function GameStats({ game, displayBool, stats, handleToggleTip, userTips, dayFix
                         <td>{label}</td>
 
                         <td>
-                          {formatProbabilityPercent(model) || STAT_FALLBACK}
+                          {predictionUnlocked
+                            ? formatProbabilityPercent(model) || STAT_FALLBACK
+                            : (
+                              <button
+                                type="button"
+                                className="PredictionUnlockBtn PredictionUnlockBtn--inline"
+                                onClick={unlockOrUpgrade}
+                                aria-label="Unlock model probability"
+                              >
+                                🔒
+                              </button>
+                            )}
                         </td>
                         <td>
                           {formatProbabilityPercent(bookie) || STAT_FALLBACK}
                         </td>
                         <td>
-                          {fairOddsValue != null
+                          {predictionUnlocked && fairOddsValue != null
                             ? fairOddsValue.toFixed(2)
-                            : STAT_FALLBACK}
+                            : predictionUnlocked
+                              ? STAT_FALLBACK
+                              : "—"}
                         </td>
-                        <td className={valueClass(value)}>
-                          {Number.isFinite(value)
+                        <td className={valueClass(predictionUnlocked ? value : null)}>
+                          {predictionUnlocked && Number.isFinite(value)
                             ? `${value.toFixed(1)}%`
-                            : STAT_FALLBACK}
+                            : predictionUnlocked
+                              ? STAT_FALLBACK
+                              : "—"}
                         </td>
                       </tr>
                     );
@@ -4471,6 +4497,7 @@ function GameStats({ game, displayBool, stats, handleToggleTip, userTips, dayFix
               classNameButton="Lineups"
               isOpen={!!openSections.lineups}
               onTriggerToggle={handleLineupsToggle}
+              locked={!isPaidUser}
               element={
                 <div className="LineupsAndMatchAction">
                   {loadingLineups ? (
@@ -4498,6 +4525,7 @@ function GameStats({ game, displayBool, stats, handleToggleTip, userTips, dayFix
               classNameButton="MissingPlayersButton"
               isOpen={!!openSections.missingPlayers}
               onTriggerToggle={handleMissingPlayersToggle}
+              locked={!isPaidUser}
               element={
                 loadingLineups ? (
                   CollapsableLoading
@@ -4559,18 +4587,13 @@ function GameStats({ game, displayBool, stats, handleToggleTip, userTips, dayFix
             getCollapsableProps={getCollapsableProps}
           />
 
-          {!isPaidUser ? (
-            <div className="TeamStreaksLocked">
-              <button className="TeamStreaksButton locked" disabled >
-                Team Streaks (All comps) 🔒
-              </button>
-            </div>
-          ) : matchingGame?.id ? (
+          {matchingGame?.id ? (
             <Collapsable
               buttonText={`Team Streaks (All comps) \u{2630}`}
               classNameButton="TeamStreaksButton"
               isOpen={!!openSections.streaks}
               onTriggerToggle={handleStreaksToggle}
+              locked={!isPaidUser}
               element={
                 loadingStreaks ? (
                   CollapsableLoading
@@ -4589,27 +4612,29 @@ function GameStats({ game, displayBool, stats, handleToggleTip, userTips, dayFix
                 )
               }
             />
+          ) : !isPaidUser ? (
+            <Collapsable
+              locked
+              buttonText={`Team Streaks (All comps) \u{2630}`}
+              classNameButton="TeamStreaksButton"
+              element={<div />}
+            />
           ) : null}
 
-
-          {!isPaidUser ? (
-            <div className="FutureFixturesLocked">
-              <button className="FutureFixturesButton locked" disabled>
-                Upcoming Games <span className="lock-icon">🔒</span>
-              </button>
-            </div>
-          ) : !matchingGame?.homeId || !matchingGame?.awayId ? (
-            <div className="FutureFixturesLocked">
-              <button className="FutureFixturesButton locked" disabled>
-                Upcoming Games <span className="lock-icon">🔒</span>
-              </button>
-            </div>
+          {!matchingGame?.homeId || !matchingGame?.awayId ? (
+            <Collapsable
+              locked={!isPaidUser}
+              buttonText={`Upcoming Games`}
+              classNameButton="FutureFixturesButton"
+              element={<div />}
+            />
           ) : (
             <Collapsable
               buttonText={`Upcoming Games`}
               classNameButton="FutureFixturesButton"
               isOpen={!!openSections.futureFixtures}
               onTriggerToggle={handleFutureFixturesToggle}
+              locked={!isPaidUser}
               element={
                 loadingFutureFixtures ? (
                   CollapsableLoading
@@ -4632,6 +4657,7 @@ function GameStats({ game, displayBool, stats, handleToggleTip, userTips, dayFix
               classNameButton="FutureFixturesButton"
               isOpen={!!openSections.managers}
               onTriggerToggle={handleManagersToggle}
+              locked={!isPaidUser}
               element={
                 loadingManagers ? (
                   CollapsableLoading
@@ -4646,6 +4672,13 @@ function GameStats({ game, displayBool, stats, handleToggleTip, userTips, dayFix
                   <p className="GameStats--limited">Not available just now.</p>
                 )
               }
+            />
+          ) : !isPaidUser ? (
+            <Collapsable
+              locked
+              buttonText={`Managers`}
+              classNameButton="FutureFixturesButton"
+              element={<div />}
             />
           ) : null}
 
@@ -4668,82 +4701,28 @@ function GameStats({ game, displayBool, stats, handleToggleTip, userTips, dayFix
           {loadingPlayerData || homePlayerData.length === 0 ? (
             <div></div>
           ) : (
-            <>
-              <Collapsable
-                buttonText={`Key Players \u{2630}`}
-                classNameButton="PlayerStatsButton"
-                element={
-                  <PlayerStatsList
-                    homePlayerStats={
-                      homePlayerDataWithImages.length
-                        ? homePlayerDataWithImages
-                        : homePlayerData
-                    }
-                    awayPlayerStats={
-                      awayPlayerDataWithImages.length
-                        ? awayPlayerDataWithImages
-                        : awayPlayerData
-                    }
-                  />
-                }
-              />
-              {/* { paid && dataHome.length !== 0 ||
-                dataAway.length !== 0 ? (
-                <Collapsable
-                  buttonText={`Key Player Comparison \u{2630}`}
-                  classNameButton="PlayerAttributesButton"
-                  element={
-                    <div className="PlayerAttributes">
-                      <div className="HomePlayerAttributes">
-                        {homePlayerImage && (
-                          <img
-                            src={homePlayerImage}
-                            alt={homePlayerData[0]?.playerName || "Home Player"}
-                            className="player-image"
-                          />
-                        )}
-                        <RadarChart
-                          style={{ height: "auto" }}
-                          title={homePlayerData[0]?.playerName}
-                          labels={labelsHome}
-                          data={dataHome}
-                          data2={data2Home}
-                          team1={`${homePlayerData[0]?.playerName} (${positionHome})`}
-                          team2={"Competition Average"}
-                          max={100}
-                        />
-                      </div>
-
-                      <div className="AwayPlayerAttributes">
-                        {awayPlayerImage && (
-                          <img
-                            src={awayPlayerImage}
-                            alt={awayPlayerData[0]?.playerName || "Away Player"}
-                            className="player-image"
-                          />
-                        )}
-                        <RadarChart
-                          style={{ height: "auto" }}
-                          title={awayPlayerData[0]?.playerName}
-                          labels={labelsAway}
-                          data={dataAway}
-                          data2={data2Away}
-                          team1={`${awayPlayerData[0]?.playerName} (${positionAway})`}
-                          team2={"Competition Average"}
-                          max={100}
-                        />
-                      </div>
-                    </div>
+            <Collapsable
+              buttonText={`Key Players \u{2630}`}
+              classNameButton="PlayerStatsButton"
+              element={
+                <PlayerStatsList
+                  homePlayerStats={
+                    homePlayerDataWithImages.length
+                      ? homePlayerDataWithImages
+                      : homePlayerData
+                  }
+                  awayPlayerStats={
+                    awayPlayerDataWithImages.length
+                      ? awayPlayerDataWithImages
+                      : awayPlayerData
                   }
                 />
-              ) : (
-                <div></div>
-              )} */}
-            </>
+              }
+            />
           )}
           <>
             <Collapsable
-              buttonText={`Team styles) \u{2630}`}
+              buttonText={`Team styles \u{2630}`}
               classNameButton="TeamStylesButton"
               element={
                 <><h4>Likely styles and respective records</h4><MatchTacticalComparison
@@ -4756,7 +4735,8 @@ function GameStats({ game, displayBool, stats, handleToggleTip, userTips, dayFix
               }
             />
             <CustomRadarComparison
-              unlocked={isCustomRadarUnlocked(isPaidUser, dayFixtureIndex)}
+              unlocked={!!isPaidUser}
+              onLockedClick={() => requestUpgrade()}
               homeTeam={game.homeTeam}
               awayTeam={game.awayTeam}
               homeStats={homeAllStatsProps}
@@ -4770,10 +4750,21 @@ function GameStats({ game, displayBool, stats, handleToggleTip, userTips, dayFix
             {loadingKeyPlayers ? (
               <p>Loading data for Match Preview...</p>
             ) : (
-              /* The paywall logic is removed; everyone sees the active button now */
               <Button
-                className="AIInsights"
+                className={
+                  predictionUnlocked ? "AIInsights" : "AIInsights AIInsightsLocked"
+                }
                 onClickEvent={async () => {
+                  // Soft gate: only the daily unlocked fixtures (or Premium) can run AI.
+                  if (!isFixturePredictionUnlocked(isPaidUser, game?.id)) {
+                    const ok = unlockOrUpgrade();
+                    if (
+                      !ok ||
+                      !isFixturePredictionUnlocked(isPaidUser, game?.id)
+                    ) {
+                      return;
+                    }
+                  }
                   setShowAIInsights(true);
                   setIsLoading(true);
                   const squadResult = await Promise.allSettled([
@@ -4785,6 +4776,12 @@ function GameStats({ game, displayBool, stats, handleToggleTip, userTips, dayFix
                       fetchManagers(),
                       fetchLineups(),
                     ]);
+                  // Drop the response if this fixture was locked again mid-request.
+                  if (!isFixturePredictionUnlocked(isPaidUser, game?.id)) {
+                    setShowAIInsights(false);
+                    setIsLoading(false);
+                    return;
+                  }
                   const streaks =
                     streaksResult.status === "fulfilled"
                       ? streaksResult.value
@@ -4826,18 +4823,23 @@ function GameStats({ game, displayBool, stats, handleToggleTip, userTips, dayFix
                     squad?.away ?? awayTeamPlayerStats
                   );
                 }}
-                text={"Match Preview"}
-                /* Ensure disabled is also set to false so the button is clickable */
+                text={
+                  predictionUnlocked
+                    ? "Match Preview"
+                    : remainingFreeUnlocks > 0
+                      ? `Match Preview 🔒 (${remainingFreeUnlocks}/${FREE_DAILY_PREDICTION_LIMIT} free left)`
+                      : "Match Preview 🔒 Upgrade for more"
+                }
                 disabled={false}
               />
             )}
           </div>
 
-          {showAIInsights && ( // Conditionally Render the AI Insights.
+          {showAIInsights && predictionUnlocked ? (
             <div className="AIOutputContainer">
               {isLoading ? <p>Loading AI data....</p> : AIOutput}
             </div>
-          )}
+          ) : null}
         </div>
         <Slider
           length="3"
@@ -4853,11 +4855,13 @@ function GameStats({ game, displayBool, stats, handleToggleTip, userTips, dayFix
                   getCollapsableProps={getCollapsableProps}
                   homeAllStatsProps={homeAllStatsProps} // Pass the stats object down too
                   comparisonStatusMap={comparisonStatusMap} // <--- This is the key
+                  lockPremiumSections={!isPaidUser}
                 />
                 <StatsAwayComponent
                   getCollapsableProps={getCollapsableProps}
                   awayAllStatsProps={awayAllStatsProps} // Pass the stats object down too
                   comparisonStatusMap={comparisonStatusMap} // <--- This is the key
+                  lockPremiumSections={!isPaidUser}
                 />
               </div>
               <h2>Betting value</h2>
@@ -4892,6 +4896,7 @@ function GameStats({ game, displayBool, stats, handleToggleTip, userTips, dayFix
               )}
               {effectiveLeagueStats && ranksHome && ranksAway && effectiveLeagueStats?.topTeams && (
                 <TeamRankingsFlexView
+                  locked={!isPaidUser}
                   title={`Rankings in ${game.leagueDesc} out of ${
                     effectiveLeagueStats.topTeams.accurateCrosses?.length ??
                     Object.values(effectiveLeagueStats.topTeams).find((v) => Array.isArray(v))
@@ -4912,22 +4917,28 @@ function GameStats({ game, displayBool, stats, handleToggleTip, userTips, dayFix
               {!isWorldCupCompetition &&
                 homeForm?.allTeamResults?.length > 0 &&
                 awayForm?.allTeamResults?.length > 0 && (
-                  <ShareableVisual
-                    filename={sanitizeImageFilename(
-                      `${game.homeTeam}-vs-${game.awayTeam}-season-form`
-                    )}
-                    shareTitle={`${game.homeTeam} vs ${game.awayTeam} - season form`}
-                    className="rankings-wrapper"
-                  >
-                    <div data-share-capture className="rankings-container">
-                      <SeasonPpgChart
-                        homeTeam={game.homeTeam}
-                        awayTeam={game.awayTeam}
-                        homeResults={homeForm.allTeamResults}
-                        awayResults={awayForm.allTeamResults}
-                      />
-                    </div>
-                  </ShareableVisual>
+                  <PremiumBlurGate locked={!isPaidUser}>
+                    <ShareableVisual
+                      filename={sanitizeImageFilename(
+                        `${game.homeTeam}-vs-${game.awayTeam}-season-form`
+                      )}
+                      shareTitle={`${game.homeTeam} vs ${game.awayTeam} - season form`}
+                      className={`rankings-wrapper${!isPaidUser ? " rankings-wrapper--locked" : ""}`}
+                      hideActions={!isPaidUser}
+                    >
+                      <div
+                        {...(isPaidUser ? { "data-share-capture": true } : {})}
+                        className={`rankings-container${!isPaidUser ? " blurred" : ""}`}
+                      >
+                        <SeasonPpgChart
+                          homeTeam={game.homeTeam}
+                          awayTeam={game.awayTeam}
+                          homeResults={homeForm.allTeamResults}
+                          awayResults={awayForm.allTeamResults}
+                        />
+                      </div>
+                    </ShareableVisual>
+                  </PremiumBlurGate>
                 )}
               <div className="Chart" id={`Chart${game.id}`} style={style}>
                 <ShareableVisual
@@ -4936,9 +4947,11 @@ function GameStats({ game, displayBool, stats, handleToggleTip, userTips, dayFix
                   )}
                   shareTitle={`${game.homeTeam} vs ${game.awayTeam} - strength ratings`}
                   className="Chart-shareBlock"
+                  hideActions={!isPaidUser}
                 >
                 <RadarChart
                   shareCapture
+                  locked={!isPaidUser}
                   maintainAspectRatio={false}
                   style={{ height: "auto" }}
                   title="Soccer Stats Hub Strength Ratings - All Competition Games"
@@ -4976,6 +4989,7 @@ function GameStats({ game, displayBool, stats, handleToggleTip, userTips, dayFix
                 ></RadarChart>
                 </ShareableVisual>
                 <BarChart
+                  locked={!isPaidUser}
                   text="All Competition Games - Home Team | Away Team"
                   theme={localStorage.getItem('theme')}
                   team1={game.homeTeam}
@@ -5110,6 +5124,7 @@ function GameStats({ game, displayBool, stats, handleToggleTip, userTips, dayFix
                 </div>
                 <div className="Chart" id={`Chart${game.id}`} style={style}>
                   <RadarChart
+                    locked={!isPaidUser}
                     title="Soccer Stats Hub Strength Ratings - Last 5 Games Only"
                     max={1}
                     maintainAspectRatio={false}
@@ -5145,6 +5160,7 @@ function GameStats({ game, displayBool, stats, handleToggleTip, userTips, dayFix
                     team2={game.awayTeam}
                   />
                   <BarChart
+                    locked={!isPaidUser}
                     text="Last 5 only - Home Team | Away Team"
                     theme={localStorage.getItem('theme')}
                     team1={game.homeTeam}
@@ -5236,6 +5252,7 @@ function GameStats({ game, displayBool, stats, handleToggleTip, userTips, dayFix
                 </div>
                 <div className="Chart" id={`Chart${game.id}`} style={style}>
                   <RadarChart
+                    locked={!isPaidUser}
                     theme={localStorage.getItem('theme')}
                     title="Soccer Stats Hub Strength Ratings - Home/Away Games Only"
                     max={1}
@@ -5271,6 +5288,7 @@ function GameStats({ game, displayBool, stats, handleToggleTip, userTips, dayFix
                     team2={game.awayTeam}
                   ></RadarChart>
                   <BarChart
+                    locked={!isPaidUser}
                     text="Home/Away only - Home Team | Away Team"
                     theme={localStorage.getItem('theme')}
                     team1={game.homeTeam}

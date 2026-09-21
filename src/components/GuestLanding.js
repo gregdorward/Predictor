@@ -149,9 +149,11 @@ const GuestLanding = ({ id = "guest-landing", showLogin = false }) => {
             <a href="/about/">about the site</a>.
           </p>
           <p>
-            Start free with a sample of matches. Premium unlocks every league, full match
-            detail, multis, BTTS and Over 2.5 research views, plus the complete prediction
-            engine. Please gamble responsibly if you use the stats for betting.
+            Start free with every fixture on the board and five predicted scores or
+            probabilities unlocked per day. Premium unlocks unlimited predictions,
+            full tip lists, AI match previews beyond that allowance, deep season
+            stats, streaks and upcoming fixtures. Please gamble responsibly if
+            you use the stats for betting.
           </p>
         </div>
       </div>

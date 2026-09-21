@@ -691,19 +691,11 @@ export function RenderAllFixtures(props) {
   const originalLength = displayPool.length;
   let newLength;
 
-  // 3. Paid vs Free Logic
-  if (paid === true) {
-    displayMatches = displayPool;
-    uncappedFixtures = displayPool;
-    newLength = displayMatches.length;
-  } else {
-    const slicePercent = 0.25;
-    const sliceCount = Math.ceil(displayPool.length * slicePercent);
-    displayMatches = displayPool.slice(0, sliceCount);
-    uncappedFixtures = displayPool;
-    capped = true;
-    newLength = sliceCount;
-  }
+  // Full board for everyone — predictions are metered per fixture, not the list.
+  displayMatches = displayPool;
+  uncappedFixtures = displayPool;
+  newLength = displayMatches.length;
+  capped = false;
 
   // 4. Calculate unique league IDs using the processed list
   uniqueLeagueIDs = [...new Set(displayMatches.map(match => match.leagueID))];

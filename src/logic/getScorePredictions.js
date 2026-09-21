@@ -24,6 +24,7 @@ import {
   formatBttsMultiText,
 } from "../utils/formatMultiShareText";
 import { render } from '../utils/render';
+import { requestUpgrade } from "./requestUpgrade";
 import {
   calculateAttackingStrength,
   calculateDefensiveStrength,
@@ -7308,6 +7309,50 @@ function renderBuildMultiTip(tip) {
   );
 }
 
+function renderStatsBasedTipList(tips, paid, freeLimit = 2) {
+  if (!tips || tips.length === 0) {
+    return (
+      <li key="noGames">Sorry, no games fit this criteria today</li>
+    );
+  }
+
+  const visible = paid ? tips : tips.slice(0, freeLimit);
+  const hidden = tips.length - visible.length;
+
+  return (
+    <>
+      {visible.map((tip) => (
+        <a
+          key={tip.game || tip.id}
+          href={`#${tip.id}`}
+          onClick={(e) => {
+            e.preventDefault();
+            scrollToTarget(tip.id);
+          }}
+          style={{ textDecoration: "none", color: "inherit" }}
+        >
+          <li>
+            {tip.game} | {tip.prediction} {tip.odds}{" "}
+            <span className={tip.outcome}>{tip.outcomeSymbol}</span>
+          </li>
+        </a>
+      ))}
+      {!paid && hidden > 0 ? (
+        <li key="upgrade" className="UnlockBannerListItem" style={{ listStyle: "none", marginTop: "10px" }}>
+          <button
+            type="button"
+            className="UnlockBanner"
+            style={{ cursor: "pointer", textAlign: "center", width: "100%" }}
+            onClick={() => requestUpgrade()}
+          >
+            🔒 Upgrade for <strong>{hidden}</strong> more tips
+          </button>
+        </li>
+      ) : null}
+    </>
+  );
+}
+
 async function renderTips() {
   if (userDetail) {
     paid = await checkUserPaidStatus(userDetail.uid);
@@ -7554,9 +7599,14 @@ async function renderTips() {
                 {/* 2. Show the "Unlock" banner if the user isn't paid and there are more games */}
                 {!paid && hiddenCount > 0 && (
                   <li className="UnlockBannerListItem" style={{ listStyle: 'none', marginTop: '10px' }}>
-                    <div className="UnlockBanner" style={{ cursor: 'pointer', textAlign: 'center' }}>
-                      🔒 Premium members see <strong>{hiddenCount}</strong> more Over 2.5 tips
-                    </div>
+                    <button
+                      type="button"
+                      className="UnlockBanner"
+                      style={{ cursor: 'pointer', textAlign: 'center', width: '100%' }}
+                      onClick={() => requestUpgrade()}
+                    >
+                      🔒 Upgrade for <strong>{hiddenCount}</strong> more Over 2.5 tips
+                    </button>
                   </li>
                 )}
                 <CopyMultiButton
@@ -7588,6 +7638,10 @@ async function renderTips() {
   }
 
   if (bttsArray.length > 0) {
+    const bttsDisplayLimit = 3;
+    const bttsToShow = paid ? bttsArray : bttsArray.slice(0, bttsDisplayLimit);
+    const bttsHidden = bttsArray.length - bttsToShow.length;
+
     render(
       <div className="PredictionContainer">
           <Collapsable
@@ -7595,7 +7649,7 @@ async function renderTips() {
             buttonText={"BTTS Games"}
             element={
               <ul className="BTTSGames" id="BTTSGames">
-                {bttsArray.map((game) => (
+                {bttsToShow.map((game) => (
                   <a
                     href={`#${game.id}`}
                     onClick={(e) => {
@@ -7613,8 +7667,20 @@ async function renderTips() {
                     </li>
                   </a>
                 ))}
+                {!paid && bttsHidden > 0 && (
+                  <li className="UnlockBannerListItem" style={{ listStyle: 'none', marginTop: '10px' }}>
+                    <button
+                      type="button"
+                      className="UnlockBanner"
+                      style={{ cursor: 'pointer', textAlign: 'center', width: '100%' }}
+                      onClick={() => requestUpgrade()}
+                    >
+                      🔒 Upgrade for <strong>{bttsHidden}</strong> more BTTS tips
+                    </button>
+                  </li>
+                )}
                 <CopyMultiButton
-                  getText={() => formatBttsMultiText(bttsArray)}
+                  getText={() => formatBttsMultiText(bttsToShow)}
                 />
               </ul>
             }
@@ -7650,30 +7716,7 @@ async function renderTips() {
             element={
               <ul className="XGDiffTips" id="XGDiffTips">
                 <h4 className="BestPredictionsExplainer">Games with greatest XG Differentials (last 5)</h4>
-                {paid ? (
-                  XGDiffTips.length > 0 ? (
-                    XGDiffTips.map((tip) => (
-                      <a
-                        href={`#${tip.id}`}
-                        onClick={(e) => {
-                          e.preventDefault(); // Prevent the immediate jump/reload
-                          scrollToTarget(tip.id); // Call the custom smooth scroll function
-                        }}
-                        style={{ textDecoration: 'none', color: 'inherit' }}                    >
-                        <li key={tip.game}>
-                          {tip.game} | {tip.prediction} {tip.odds}{" "}
-                          <span className={tip.outcome}>{tip.outcomeSymbol}</span>
-                        </li>
-                      </a>
-                    ))
-                  ) : (
-                    <li key="noGames">
-                      Sorry, no games fit this criteria today
-                    </li>
-                  )
-                ) : (
-                  <li key="premiumOnly">Premium members only</li>
-                )}
+                {renderStatsBasedTipList(XGDiffTips, paid)}
               </ul>
             }
             element2={
@@ -7681,32 +7724,7 @@ async function renderTips() {
                 <h4 className="BestPredictionsExplainer">
                   Games with greatest points per game differentials (last 6)
                 </h4>
-                {paid ? (
-                  pointsDiffTips.length > 0 ? (
-                    pointsDiffTips.map((game) => (
-                      <a
-                        href={`#${game.id}`}
-                        onClick={(e) => {
-                          e.preventDefault(); // Prevent the immediate jump/reload
-                          scrollToTarget(game.id); // Call the custom smooth scroll function
-                        }}
-                        style={{ textDecoration: 'none', color: 'inherit' }}                    >
-                        <li key={game.game}>
-                          {game.game} | {game.prediction} {game.odds}{" "}
-                          <span className={game.outcome}>
-                            {game.outcomeSymbol}
-                          </span>
-                        </li>
-                      </a>
-                    ))
-                  ) : (
-                    <li key="noGames">
-                      Sorry, no games fit this criteria today
-                    </li>
-                  )
-                ) : (
-                  <li key="premiumOnly">Premium members only</li>
-                )}
+                {renderStatsBasedTipList(pointsDiffTips, paid)}
               </ul>
             }
             element3={
@@ -7714,32 +7732,7 @@ async function renderTips() {
                 <h4 className="BestPredictionsExplainer">
                   Games with greatest goal differentials (last 5)
                 </h4>
-                {paid ? (
-                  rollingDiffTips.length > 0 ? (
-                    rollingDiffTips.map((game) => (
-                      <a
-                        href={`#${game.id}`}
-                        onClick={(e) => {
-                          e.preventDefault(); // Prevent the immediate jump/reload
-                          scrollToTarget(game.id); // Call the custom smooth scroll function
-                        }}
-                        style={{ textDecoration: 'none', color: 'inherit' }}                    >
-                        <li key={game.game}>
-                          {game.game} | {game.prediction} {game.odds}{" "}
-                          <span className={game.outcome}>
-                            {game.outcomeSymbol}
-                          </span>
-                        </li>
-                      </a>
-                    ))
-                  ) : (
-                    <li key="noGames">
-                      Sorry, no games fit this criteria today
-                    </li>
-                  )
-                ) : (
-                  <li key="premiumOnly">Premium members only</li>
-                )}
+                {renderStatsBasedTipList(rollingDiffTips, paid)}
               </ul>
             }
             element4={
@@ -7747,32 +7740,7 @@ async function renderTips() {
                 <h4 className="BestPredictionsExplainer">
                   Games with greatest average dangerous attacks differentials (last 5)
                 </h4>
-                {paid ? (
-                  dangerousAttacksDiffTips.length > 0 ? (
-                    dangerousAttacksDiffTips.map((game) => (
-                      <a
-                        href={`#${game.id}`}
-                        onClick={(e) => {
-                          e.preventDefault(); // Prevent the immediate jump/reload
-                          scrollToTarget(game.id); // Call the custom smooth scroll function
-                        }}
-                        style={{ textDecoration: 'none', color: 'inherit' }}                    >
-                        <li key={game.game}>
-                          {game.game} | {game.prediction} {game.odds}{" "}
-                          <span className={game.outcome}>
-                            {game.outcomeSymbol}
-                          </span>
-                        </li>
-                      </a>
-                    ))
-                  ) : (
-                    <li key="noGames">
-                      Sorry, no games fit this criteria today
-                    </li>
-                  )
-                ) : (
-                  <li key="premiumOnly">Premium members only</li>
-                )}
+                {renderStatsBasedTipList(dangerousAttacksDiffTips, paid)}
               </ul>
             }
             element5={
@@ -7780,32 +7748,7 @@ async function renderTips() {
                 <h4 className="BestPredictionsExplainer">
                   Games with greatest shots on target differentials (last 5)
                 </h4>
-                {paid ? (
-                  shotsOnTargetTips.length > 0 ? (
-                    shotsOnTargetTips.map((game) => (
-                      <a
-                        href={`#${game.id}`}
-                        onClick={(e) => {
-                          e.preventDefault(); // Prevent the immediate jump/reload
-                          scrollToTarget(game.id); // Call the custom smooth scroll function
-                        }}
-                        style={{ textDecoration: 'none', color: 'inherit' }}                    >
-                        <li key={game.game}>
-                          {game.game} | {game.prediction} {game.odds}{" "}
-                          <span className={game.outcome}>
-                            {game.outcomeSymbol}
-                          </span>
-                        </li>
-                      </a>
-                    ))
-                  ) : (
-                    <li key="noGames">
-                      Sorry, no games fit this criteria today
-                    </li>
-                  )
-                ) : (
-                  <li key="premiumOnly">Premium members only</li>
-                )}
+                {renderStatsBasedTipList(shotsOnTargetTips, paid)}
               </ul>
             }
           ></Slider>

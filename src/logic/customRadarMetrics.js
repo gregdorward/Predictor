@@ -1,8 +1,14 @@
 import { isMissingStat } from "../utils/formatStat";
 
+import {
+  FREE_DAILY_PREDICTION_LIMIT,
+  isFixturePredictionUnlocked,
+} from "./freePredictionAllowance";
+
 export const MIN_RADAR_METRICS = 3;
 export const MAX_RADAR_METRICS = 10;
-export const FREE_CUSTOM_RADAR_FIXTURE_LIMIT = 5;
+/** @deprecated Prefer FREE_DAILY_PREDICTION_LIMIT — same 5/day fixture-id allowance. */
+export const FREE_CUSTOM_RADAR_FIXTURE_LIMIT = FREE_DAILY_PREDICTION_LIMIT;
 
 export const RADAR_CATEGORIES = [
   { id: "attacking", label: "Attacking" },
@@ -709,13 +715,15 @@ export function toggleMetricSelection(selectedKeys, key, availableKeys) {
   return [...selectedKeys, key];
 }
 
-export function isCustomRadarUnlocked(isPaidUser, dayFixtureIndex) {
-  if (isPaidUser) return true;
-  return (
-    typeof dayFixtureIndex === "number" &&
-    dayFixtureIndex >= 0 &&
-    dayFixtureIndex < FREE_CUSTOM_RADAR_FIXTURE_LIMIT
-  );
+/**
+ * Radar unlocks with the same daily fixture-id allowance as predictions.
+ * Prefer passing fixtureId; dayFixtureIndex is ignored (kept for call-site compat).
+ * @param {boolean} isPaidUser
+ * @param {number} [_dayFixtureIndex] unused — kept so existing call sites still compile
+ * @param {string|number} [fixtureId]
+ */
+export function isCustomRadarUnlocked(isPaidUser, _dayFixtureIndex, fixtureId) {
+  return isFixturePredictionUnlocked(isPaidUser, fixtureId);
 }
 
 /**

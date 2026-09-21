@@ -19,6 +19,8 @@ import {
 } from "chart.js";
 import { Bar } from "react-chartjs-2";
 import { useChartTheme, getChartColors } from "./Chart";
+import { useFixturePredictionUnlock } from "../logic/useFixturePredictionUnlock";
+import { FREE_DAILY_PREDICTION_LIMIT } from "../logic/freePredictionAllowance";
 
 ChartJS.register(
   CategoryScale,
@@ -392,6 +394,8 @@ function TeamPage({ matchId, seoShell = null }) {
   const [match, setMatch] = useState(null);
   const [loading, setLoading] = useState(Boolean(matchId));
   const [error, setError] = useState(null);
+  const { unlocked: predictionUnlocked, unlockOrUpgrade, isPaidUser } =
+    useFixturePredictionUnlock(matchId);
 
   const storedFixtureDetails = useSelector(
     (state) => state.data.fixtureDetails
@@ -668,10 +672,21 @@ function TeamPage({ matchId, seoShell = null }) {
 
         <div className="FixturePage-prediction">
           <span className="FixturePage-predictionLabel">Predicted score</span>
-          <span className="FixturePage-predictionScore">
-            {storedFixtureDetailsJson.homeGoals} -{" "}
-            {storedFixtureDetailsJson.awayGoals}
-          </span>
+          {predictionUnlocked || isPaidUser ? (
+            <span className="FixturePage-predictionScore">
+              {storedFixtureDetailsJson.homeGoals} -{" "}
+              {storedFixtureDetailsJson.awayGoals}
+            </span>
+          ) : (
+            <button
+              type="button"
+              className="PredictionUnlockBtn FixturePage-predictionUnlock"
+              onClick={unlockOrUpgrade}
+              aria-label="Unlock predicted score"
+            >
+              🔒 Unlock ({FREE_DAILY_PREDICTION_LIMIT} free/day)
+            </button>
+          )}
         </div>
 
         <SharePageLinkButton
@@ -755,15 +770,31 @@ function TeamPage({ matchId, seoShell = null }) {
       {matchId && pageData?.modelOutputs ? (
         <section className="FixturePage-modelOutputsCard">
           <h3 className="FixturePage-statGroupTitle">Model Outputs</h3>
-          <ModelOutputsChart
-            modelOutputs={pageData.modelOutputs}
-            homeTeamName={storedFixtureDetailsJson.homeTeamName}
-            awayTeamName={storedFixtureDetailsJson.awayTeamName}
-            theme={theme}
-            color={color}
-            gridColor={gridColor}
-            tooltipBackground={tooltipBackground}
-          />
+          {predictionUnlocked || isPaidUser ? (
+            <ModelOutputsChart
+              modelOutputs={pageData.modelOutputs}
+              homeTeamName={storedFixtureDetailsJson.homeTeamName}
+              awayTeamName={storedFixtureDetailsJson.awayTeamName}
+              theme={theme}
+              color={color}
+              gridColor={gridColor}
+              tooltipBackground={tooltipBackground}
+            />
+          ) : (
+            <div className="FixturePage-seasonStatsLocked">
+              <p>
+                Model win/draw/away probabilities unlock with your daily free
+                predictions ({FREE_DAILY_PREDICTION_LIMIT} per day).
+              </p>
+              <button
+                type="button"
+                className="FixturePage-upgradeLink"
+                onClick={unlockOrUpgrade}
+              >
+                Unlock this match
+              </button>
+            </div>
+          )}
         </section>
       ) : null}
 

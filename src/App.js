@@ -9,7 +9,6 @@ import { oddsModeToSelected, selectedToOddsMode } from "./utils/oddsPreference";
 import Collapsable from "./components/CollapsableElement";
 import MultisPanelCarousel from "./components/MultisPanelCarousel";
 import StripePolicies from "./components/Contact";
-import { loadStripe } from "@stripe/stripe-js";
 import { useAuth } from "./logic/authProvider";
 import { bumpFixturesEpoch } from "./logic/fixturesEpoch";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
@@ -28,6 +27,10 @@ import HighestScoringFixtures from "./components/HighestScoringFixtures";
 import BTTSFixtures from "./components/BTTSFixtures";
 import BTTSTeams from "./components/BTTSTeams";
 import TeamPage from "./components/Team";
+import PremiumUpsell from "./components/PremiumUpsell";
+import { handleCheckout, stripePromise } from "./logic/stripeCheckout";
+
+export { handleCheckout, stripePromise };
 import { initTheme } from "./utils/theme";
 import { getInitialDateFromShareUrl } from "./utils/shareMatchUrl";
 import {
@@ -67,7 +70,9 @@ import BetSlipFooter from "./components/Betslip";
 import SlideDiff from "./components/SliderDiff";
 import { FilterPresets } from "./components/SliderDiff";
 import { Slide } from "./components/Slider";
-
+import { registerUpgradeHandler, watchAndScrollToPremiumUpgrade } from "./logic/requestUpgrade";
+import { FREE_DAILY_PREDICTION_LIMIT } from "./logic/freePredictionAllowance";
+import { useRemainingFreeUnlocks } from "./logic/useFixturePredictionUnlock";
 
 export const proxyurl = "https://safe-caverns-99679.herokuapp.com/";
 export var fixtureList = [];
@@ -83,6 +88,9 @@ const leagueOrder = [
   16494, // World cup 2026
   17146, // Premier League 26/27
   17184, // Championship 26/27
+  17128, // Champions League 26/27
+  17127, // Europa League 26/27
+  17130, // Europa Conference League 26/27
   17180, // League One 26/27
   17185, // League Two 26/27
   17279, // National League 26/27
@@ -133,9 +141,6 @@ const leagueOrder = [
   17115, // J League 26/27
   17426, // Saudi Pro League 26/27
   16808, // Nations League 26/27
-  17128, // Champions League 26/27
-  17127, // Europa League 26/27
-  17130, // Europa Conference League 26/27
   16556, // Copa Libertadores 26
 ];
 
@@ -413,7 +418,7 @@ export async function getLeagueList() {
   ]);
 
   const text =
-    "Getting started\nUse the < and > arrows to browse fixtures by date. Games load automatically once the data is ready.\nWhen fixtures appear, click \"Get Predictions & Stats\" to generate score predictions and statistics for each match.\n\nViewing fixtures\nEach fixture is clickable. Tap one to open detailed stats, comparative charts, form data, head-to-head history, and match previews.\nFor completed games, the actual score appears in the Result column alongside our prediction.\nUse the checkbox on a fixture to add it to your shortlist. You can view and share your shortlist once you have selections.\n\nOptions\nOpen \"Options ☰\" to choose fractional or decimal odds, select a prediction algorithm, and switch between probability mode (percentages) and score mode (predicted outcomes):\nSSH Tips - our standard model using expected goal differentials, form, home/away records, attack/defence performance, and other comparative factors.\nAI Tips - an alternative model powered by AI, useful where limited match data is available.\n\nCustomise tips\nOpen \"Customise tips\" to filter the tip list by value edge, stats thresholds, probabilities, and odds ranges. Adjust the sliders, then click \"Get Predictions & Stats\" again to refresh results.\n\nMultis and insights\nAfter generating predictions, open \"Multis\" and use the carousel arrows to browse curated selections:\nBuild a Multi - our highest-confidence picks; use the + and - buttons to change how many games are included.\nExotic of the Day - a pre-built multi from our top selections.\nOver 2.5 Goals - games where three or more goals are most likely.\nBTTS Games - games where both teams to score is most likely.\nThe insights section lists standout performers by value, xG difference, goal difference, and more.\n\nFree and premium\nFree accounts see a sample of matches and limited multi and insight lists. Premium unlocks all competitions, full fixture detail, complete multi and BTTS/O2.5 lists, and AI match previews.\n\nMore tools\nUse the menu icon to access BTTS Teams, BTTS Games, Over 2.5 Goals fixtures, highest and lowest scoring leagues and teams, and the Premier League 2026/27 preview.\n\nTap \"How to use\" again to hide this text.";
+    "Getting started\nUse the < and > arrows to browse fixtures by date. Games load automatically once the data is ready.\nWhen fixtures appear, click \"Get Predictions & Stats\" to generate score predictions and statistics for each match.\n\nViewing fixtures\nEach fixture is clickable. Tap one to open detailed stats, comparative charts, form data, head-to-head history, and match previews.\nFor completed games, the actual score appears in the Result column alongside our prediction.\nUse the checkbox on a fixture to add it to your shortlist. You can view and share your shortlist once you have selections.\n\nOptions\nOpen \"Options ☰\" to choose fractional or decimal odds, select a prediction algorithm, and switch between probability mode (percentages) and score mode (predicted outcomes):\nSSH Tips - our standard model using expected goal differentials, form, home/away records, attack/defence performance, and other comparative factors.\nAI Tips - an alternative model powered by AI, useful where limited match data is available.\n\nCustomise tips\nOpen \"Customise tips\" to filter the tip list by value edge, stats thresholds, probabilities, and odds ranges. Adjust the sliders, then click \"Get Predictions & Stats\" again to refresh results.\n\nMultis and insights\nAfter generating predictions, open \"Multis\" and use the carousel arrows to browse curated selections:\nBuild a Multi - our highest-confidence picks; use the + and - buttons to change how many games are included.\nExotic of the Day - a pre-built multi from our top selections.\nOver 2.5 Goals - games where three or more goals are most likely.\nBTTS Games - games where both teams to score is most likely.\nThe insights section lists standout performers by value, xG difference, goal difference, and more.\n\nFree and premium\nFree accounts see every fixture with odds and form. Predicted scores and 1X2 probabilities unlock on five fixtures per day (your choice). Tip lists show a sample. Premium unlocks unlimited predictions, full tip lists, AI match previews beyond the daily allowance, deep season stats, streaks and upcoming fixtures.\n\nMore tools\nUse the menu icon to access BTTS Teams, BTTS Games, Over 2.5 Goals fixtures, highest and lowest scoring leagues and teams, and the Premier League 2026/27 preview.\n\nTap \"How to use\" again to hide this text.";
 
   let newText = text.split("\n").map((line, index) => {
     if (!line) return null;
@@ -501,62 +506,8 @@ export async function getLeagueList() {
 
 
 
-let stripePromise = null;
 
-// Only initialize Stripe in the browser
-const getStripe = () => {
-  if (typeof window === "undefined" || isReactSnap) return null; // Prevent SSR / react-snap errors
-  if (!stripePromise) {
-    stripePromise = loadStripe("pk_live_51QojxLBrqiWlVPadBxhtoj499YzoC8YjFUIVQwCcTe8B7ZUG47NbYAam2wvNox2mUmzd0WgQh4PWKaIQaxKxubig00yEzjNuVQ");
-  }
-  return stripePromise;
-};
 
-// 1. Add currency as a parameter to the function
-export const handleCheckout = async (priceId, currency = 'usd') => {
-  const stripe = await getStripe();
-
-  if (!stripe) {
-    console.warn("Stripe not initialized. Are you prerendering?");
-    return;
-  }
-  let auth = null;
-  let user = null;
-
-  if (typeof window !== "undefined") {
-    auth = getAuth();
-    user = auth.currentUser;
-  }
-
-  if (!user) {
-    alert("Please sign-up or login before purchasing");
-    return;
-  }
-
-  const response = await fetch(
-    `${process.env.NEXT_PUBLIC_EXPRESS_SERVER}create-checkout-session`,
-    {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      // 2. Pass the currency in the request body
-      body: JSON.stringify({
-        priceId,
-        uid: user.uid,
-        currency: currency.toLowerCase()
-      }),
-    }
-  );
-
-  const session = await response.json();
-
-  const result = await stripe.redirectToCheckout({ sessionId: session.id });
-
-  if (result.error) {
-    console.error("Checkout error:", result.error.message);
-  }
-};
 
 const welcomeTextUnsplitOne = `The ultimate football resource. Comprehensive stats, analysis and transparent tips for 40+ leagues and cups.\n `;
 let welcomeTextOne = welcomeTextUnsplitOne.split("\n").map((i) => {
@@ -565,6 +516,7 @@ let welcomeTextOne = welcomeTextUnsplitOne.split("\n").map((i) => {
 
 export function AppContent({ shellMounted = false }) {
   const { user, isPaidUser, fixtures, setFixtures, handleGetPredictions, isPredicting } = useAuth()
+  const { remaining: remainingFreeUnlocks } = useRemainingFreeUnlocks();
 
   const [userTips, setUserTips] = useState([]); // This is the React state
   // 1. For the items the user is currently clicking on the site
@@ -590,6 +542,33 @@ export function AppContent({ shellMounted = false }) {
     });
     return () => unsubscribe();
   }, []);
+
+  useEffect(() => {
+    const scrollToPremium = () => {
+      const target = document.getElementById("premium-upgrade");
+      if (target) {
+        target.scrollIntoView({ behavior: "smooth", block: "start" });
+        return;
+      }
+      // Pricing block not in DOM yet (e.g. still loading) — fall back to auth
+      if (!user) {
+        const loginSection =
+          document.getElementById("HamburgerMenuDiv") ||
+          document.getElementById("guest-landing-auth-slot");
+        loginSection?.scrollIntoView({ behavior: "smooth", block: "start" });
+        const emailInput = document.getElementById("LoginSignUp");
+        if (emailInput) {
+          emailInput.classList.add("flash-attention");
+          setTimeout(() => {
+            emailInput.classList.remove("flash-attention");
+            emailInput.focus();
+          }, 1000);
+        }
+      }
+    };
+    registerUpgradeHandler(scrollToPremium);
+    return () => registerUpgradeHandler(null);
+  }, [user]);
 
   useEffect(() => {
     if (!currentUser) return;
@@ -767,21 +746,6 @@ export function AppContent({ shellMounted = false }) {
     });
   }
 
-  const [pricing, setPricing] = useState(null);
-  const [currentCurrency, setCurrentCurrency] = useState('usd'); // ⭐️ Store the code here
-
-  useEffect(() => {
-    if (isReactSnap) return;
-
-    const currency = detectCurrency();
-    setCurrentCurrency(currency);
-    fetch(`${process.env.NEXT_PUBLIC_EXPRESS_SERVER}pricing?currency=${currency}`)
-      .then(res => res.json())
-      .then(setPricing)
-      .catch(console.error);
-  }, []);
-
-
   useEffect(() => {
     // ⭐️ Important: useEffect callback cannot be directly 'async'.
     // Use an IIFE (Immediately Invoked Function Expression) inside.
@@ -832,86 +796,10 @@ export function AppContent({ shellMounted = false }) {
 
   }, [user, db]); // Re-ru
 
-  const [data, setData] = useState({
-    loading: true,
-  });
-
-  const handleSubscribeClick = (priceId) => {
-    if (user) {
-      // User is logged in, proceed to Stripe checkout as normal
-      handleCheckout(priceId, currentCurrency);
-    } else {
-      // User is NOT logged in.
-      // 1. You could alert them:
-      // alert("Please sign up or log in to subscribe.");
-
-      // 2. Or better, scroll them to the Login component smoothly:
-      const loginSection = document.getElementById("HamburgerMenuDiv");
-      if (loginSection) {
-        loginSection.scrollIntoView({ behavior: "smooth" });
-        // Optional: Flash the login box or focus an input to draw attention
-      }
-      const emailInput = document.getElementById('LoginSignUp');
-      if (emailInput) {
-        // Example: Add a class that quickly changes the background/border color
-        emailInput.classList.add('flash-attention');
-
-        // Remove the class after a short delay (e.g., 1 second)
-        setTimeout(() => {
-          emailInput.classList.remove('flash-attention');
-          emailInput.focus(); // Optional: Focus the input after scrolling
-        }, 1000);
-      }
-    }
-  };
-
-  function formatPrice(amount, currency) {
-    return new Intl.NumberFormat(undefined, {
-      style: "currency",
-      currency,
-      minimumFractionDigits: ["jpy", "krw"].includes(currency) ? 0 : 2,
-    }).format(amount);
-  }
-
-
-  function detectCurrency() {
-    // Get the browser language (e.g., "da-DK" or "en-AU")
-    const locale = navigator.language || "en-US";
-
-    // 1. Direct Region/Locale Mapping (High Priority)
-    const regionMap = {
-      "en-AU": "aud",
-      "en-CA": "cad",
-      "en-GB": "gbp",
-      "en-SG": "sgd",
-      "en-NZ": "nzd",
-      "da-DK": "dkk",
-      "sv-SE": "sek",
-      "de-CH": "chf", // Swiss German
-      "fr-CH": "chf", // Swiss French
-      "ar-SA": "sar",
-      "en-NG": "ngn",
-      "ko-KR": "krw",
-    };
-
-    // Check for an exact locale match first
-    if (regionMap[locale]) return regionMap[locale];
-
-    // 2. Language-based Mapping (Fallback)
-    // Useful for "fr-BE" or "de-AT" which both use Euro
-    const language = locale.split('-')[0]; // Gets "de" from "de-DE"
-
-    const languageMap = {
-      "ja": "jpy",
-      "de": "eur",
-      "fr": "eur",
-      "it": "eur",
-      "es": "eur",
-      "nl": "eur",
-    };
-
-    return languageMap[language] || "usd";
-  }
+  useEffect(() => {
+    if (isPaidUser) return undefined;
+    return watchAndScrollToPremiumUpgrade();
+  }, [isPaidUser, user, fixtures?.length]);
 
   return (
     <div className="App">
@@ -929,84 +817,33 @@ export function AppContent({ shellMounted = false }) {
       {isPaidUser ? (
         <div />
       ) : (
-        <><button
-          type="button"
-          className="MembersGetMoreUnderlined"
-          onClick={scrollToGames}
-        >
-          Just show me the games
-        </button><div className="NonFixtureInfo">
-            <div className="PremiumUpsell">
-              <div className="UpsellHeader">
-                <h2>Unlock the Full Experience</h2>
-                <p>You&apos;re only seeing 25% of today&apos;s matches. Premium unlocks every game, tip and insight — so you never miss an edge.</p>
-              </div>
-
-              <div className="FeatureComparison">
-                <div className="FeatureGroup">
-                  <h4>Free Tier</h4>
-                  <ul>
-                    <li className="limited">Limited multi &amp; Over 2.5 tips</li>
-                    <li className="limited">25% of today&apos;s matches</li>
-                    <li className="limited">Key stats &amp; top-5 insights only</li>
-                  </ul>
-                </div>
-                <div className="FeatureDivider">VS</div>
-                <div className="FeatureGroup premium">
-                  <h4>Premium</h4>
-                  <ul>
-                    <li>✅ Every match across 50+ competitions</li>
-                    <li>✅ Full multi, BTTS &amp; Over 2.5 tip lists</li>
-                    <li>✅ AI-powered match previews</li>
-                    <li>✅ Best-value &amp; stats-based tips</li>
-                    <li>✅ Deep match intel — streaks, managers, lineups &amp; upcoming fixtures</li>
-                    <li>✅ Full season stats — attack, defence, possession &amp; form</li>
-                    <li>✅ Complete insights rankings</li>
-                  </ul>
-                </div>
-              </div>
-
-              {pricing && (
-                <div className="SubscriptionOptions">
-                  <div className="OptionCard">
-                    <span className="Price">
-                      {formatPrice(pricing.weekly.amount, pricing.weekly.currency)}
-                      <span>/week</span>
-                    </span>
-                    <button onClick={() => handleSubscribeClick("price_1SxC9QBrqiWlVPadyHJj3Y91")}>
-                      Get Weekly
-                    </button>
-                  </div>
-
-                  <div className="OptionCard featured">
-                    <div className="Badge">Best Value</div>
-                    <span className="Price">
-                      {formatPrice(pricing.yearly.amount, pricing.yearly.currency)}
-                      <span>/year</span>
-                    </span>
-                    <button onClick={() => handleSubscribeClick("price_1SxCPDBrqiWlVPad3nFXzU1B")}>
-                      Go Annual
-                    </button>
-                  </div>
-
-                  <div className="OptionCard">
-                    <span className="Price">
-                      {formatPrice(pricing.monthly.amount, pricing.monthly.currency)}
-                      <span>/month</span>
-                    </span>
-                    <button onClick={() => handleSubscribeClick("price_1SxCGuBrqiWlVPadO7N4jpQJ")}>
-                      Get Monthly
-                    </button>
-                  </div>
-                </div>
-              )}
-
-
-              <p className="TrustNote">
-                Secure payments via <strong>Stripe</strong>. Cancel anytime, no contracts.
-              </p>
-            </div>
-          </div></>
+        <>
+          <button
+            type="button"
+            className="MembersGetMoreUnderlined"
+            onClick={scrollToGames}
+          >
+            Just show me the games
+          </button>
+          <p className="FreePredictionRemaining">
+            {Number.isFinite(remainingFreeUnlocks)
+              ? `${remainingFreeUnlocks} of ${FREE_DAILY_PREDICTION_LIMIT} free predictions left today`
+              : `${FREE_DAILY_PREDICTION_LIMIT} free predictions per day`}
+            {" · "}
+            <button
+              type="button"
+              className="MembersGetMoreUnderlined InlineUpgradeLink"
+              onClick={() => {
+                document.getElementById("premium-upgrade")?.scrollIntoView({
+                  behavior: "smooth",
+                  block: "start",
+                });
+              }}
+            >
+              Upgrade for unlimited
+            </button>
+          </p>
+        </>
       )}
         </>
       )}
@@ -1318,6 +1155,11 @@ export function AppContent({ shellMounted = false }) {
           </p>
         )}
       </div>
+      {!isPaidUser ? (
+        <div id="premium-upgrade" className="NonFixtureInfo PremiumUpgradeAnchor">
+          <PremiumUpsell />
+        </div>
+      ) : null}
       <div className={"StatsInsights"} id="statsInsights" />
       <BetSlipFooter
         userTips={activeSlip}  // Only show the new selections

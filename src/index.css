@@ -1321,6 +1321,98 @@ h6 {
   text-align: center;
 }
 
+.PremiumUpsell--compact {
+  padding: 1.1rem 1rem 1.25rem;
+  max-width: none;
+  margin: var(--fp-space-2) 0 var(--fp-space-1);
+  text-align: left;
+}
+
+.PremiumUpsell--compact .UpsellHeader h3 {
+  color: var(--primary-color);
+  font-size: 1.2rem;
+  margin: 0 0 0.35rem;
+}
+
+.PremiumUpsell--compact .UpsellHeader p {
+  margin: 0 0 0.85rem;
+  font-size: 0.92rem;
+  line-height: 1.45;
+  color: var(--faint-text);
+}
+
+.PremiumUpsell-compactBenefits {
+  list-style: none;
+  margin: 0 0 1rem;
+  padding: 0;
+  display: grid;
+  gap: 0.35rem;
+}
+
+.PremiumUpsell-compactBenefits li {
+  position: relative;
+  padding-left: 1.1rem;
+  font-size: 0.88rem;
+  line-height: 1.35;
+  color: var(--text-color);
+}
+
+.PremiumUpsell-compactBenefits li::before {
+  content: "✓";
+  position: absolute;
+  left: 0;
+  color: #059669;
+  font-weight: 700;
+}
+
+.PremiumUpsell--compact .SubscriptionOptions {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.65rem;
+}
+
+.PremiumUpsell--compact .OptionCard {
+  padding: 0.85rem 0.65rem 0.75rem;
+}
+
+.PremiumUpsell--compact .OptionCard.featured {
+  transform: none;
+}
+
+.PremiumUpsell--compact .Price {
+  font-size: 1.05rem;
+  margin-bottom: 0.55rem;
+}
+
+.PremiumUpsell--compact .Price span {
+  font-size: 0.75rem;
+}
+
+.PremiumUpsell--compact .OptionCard button {
+  min-width: 0;
+  width: 100%;
+  margin: 0;
+  padding: 0.55rem 0.4rem;
+  font-size: 0.82rem;
+}
+
+.PremiumUpsell--compact .Badge {
+  font-size: 0.65rem;
+  padding: 2px 8px;
+  top: -10px;
+}
+
+.PremiumUpsell--compact .TrustNote {
+  margin-top: 0.85rem;
+  font-size: 0.75rem;
+  text-align: center;
+}
+
+@media (max-width: 600px) {
+  .PremiumUpsell--compact .SubscriptionOptions {
+    grid-template-columns: 1fr;
+  }
+}
+
 .UpsellHeader h2 {
   color: var(--primary-color);
   font-size: 2em;
@@ -4419,6 +4511,74 @@ strong.LOST {
   margin-right: 0.5em;
 }
 
+.PredictionUnlockBtn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 2.5em;
+  min-height: 2em;
+  padding: 0.25em 0.5em;
+  border: 1px solid var(--primary-color, #fe8c00);
+  border-radius: 6px;
+  background: transparent;
+  color: var(--primary-color, #fe8c00);
+  cursor: pointer;
+  font-size: 0.85em;
+  line-height: 1.2;
+}
+
+.PredictionUnlockBtn:hover,
+.PredictionUnlockBtn:focus-visible {
+  background: color-mix(in srgb, var(--primary-color, #fe8c00) 15%, transparent);
+}
+
+.PredictionUnlockBtn--inline {
+  min-width: auto;
+  padding: 0.15em 0.4em;
+}
+
+.FixturePage-predictionUnlock {
+  margin-top: 0.35em;
+}
+
+.FreePredictionRemaining {
+  text-align: center;
+  margin: 0.5em auto 1em;
+  max-width: 36em;
+  font-size: 0.95em;
+}
+
+.InlineUpgradeLink {
+  display: inline;
+  padding: 0;
+  margin: 0;
+  border: none;
+  background: none;
+  font: inherit;
+}
+
+.PremiumUpgradeAnchor {
+  margin-top: 1.5em;
+}
+
+button.UnlockBanner,
+button.PaidFeatureNotice {
+  display: block;
+  width: 100%;
+  border: none;
+  font: inherit;
+  text-align: center;
+  cursor: pointer;
+}
+
+button.FixturePage-upgradeLink,
+a.FixturePage-upgradeLink {
+  display: inline-block;
+  cursor: pointer;
+  border: none;
+  font: inherit;
+}
+
 .ProbabilityToggle {
   background-color: var(--button-text-color);
   color: var(--button-color);
@@ -4446,6 +4606,16 @@ strong.LOST {
   height: 1.5em;
   border-radius: 6px;
   border: var(--faint-text) 0.1em solid;
+}
+
+.ProbabilityUnlockSlot {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  height: 1.5em;
+  min-width: 4.5em;
+  flex: 1;
 }
 
 .ProbabilityBarBackground {
@@ -4930,6 +5100,48 @@ strong.LOST {
   filter: blur(4px);
   pointer-events: none;
   user-select: none;
+}
+
+.ComparisonChartWrap {
+  position: relative;
+  width: 100%;
+}
+
+.ComparisonChartUnlock {
+  position: absolute;
+  z-index: 2;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  margin: 0;
+  min-width: 0;
+  padding: 0.55rem 0.95rem;
+  border: none;
+  border-radius: 8px;
+  background: var(--primary-color);
+  color: #fff;
+  font: inherit;
+  font-weight: 700;
+  cursor: pointer;
+  white-space: nowrap;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+}
+
+.ComparisonChartUnlock:hover:not(:disabled),
+.ComparisonChartUnlock:active:not(:disabled),
+.ComparisonChartUnlock:hover:focus-visible:not(:disabled) {
+  /* Keep centering; global button:hover uses translateY and would jump the CTA */
+  transform: translate(-50%, -50%);
+  background: var(--primary-color);
+  border-color: transparent;
+  color: #fff;
+  filter: brightness(1.05);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+}
+
+.ComparisonBarChart-share--locked,
+.rankings-wrapper--locked {
+  pointer-events: none;
 }
 
 .blurred-row {
@@ -8955,6 +9167,11 @@ body.dark-mode .MetricTrendTables-arrow {
   padding: var(--fp-space-3) 0 var(--fp-space-1);
 }
 
+.FixturePage-seasonStatsUpsell.PremiumUpsell--compact {
+  width: 100%;
+  box-sizing: border-box;
+}
+
 .FixturePage-seasonStatsLocked p {
   margin: 0;
   color: var(--faint-text);
@@ -9206,7 +9423,7 @@ body.dark-mode .MetricTrendTables-arrow {
 }
 
 .StatHeader--locked {
-  cursor: not-allowed;
+  cursor: pointer;
   opacity: 0.92;
 }
 
@@ -10009,6 +10226,7 @@ button.AIInsights {
   cursor: pointer;
 }
 
+button.AIInsights.AIInsightsLocked,
 button.AIInsightsLocked {
   background-color: #eaeaea;
   color: #030052;

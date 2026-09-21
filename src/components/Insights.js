@@ -1,6 +1,7 @@
 import React from 'react';
 import Collapsable from "./CollapsableElement"
 import { STAT_FALLBACK } from "../utils/formatStat";
+import { requestUpgrade } from "../logic/requestUpgrade";
 
 /**
  * A helper component to render a single list of stats.
@@ -18,6 +19,18 @@ const scrollToTarget = (id) => {
         }
     }, 0);
 };
+
+function PaidInsightsNotice() {
+    return (
+        <button
+            type="button"
+            className="PaidFeatureNotice UnlockBanner"
+            onClick={() => requestUpgrade()}
+        >
+            Showing top 5 only — Upgrade for top 10.
+        </button>
+    );
+}
 
 const StatList = ({ title, sub, items, operator, sortOrder = 'desc', limit = 10 }) => {
     // Sort items
@@ -85,11 +98,7 @@ export const InsightsPanel = ({ statsArray, paidUser }) => {
                             limit={paidUser ? 10 : 5}
                         />
 
-                        {!paidUser && (
-                            <div className="PaidFeatureNotice">
-                                Showing top 5 only - Top 10 available to paid users.
-                            </div>
-                        )}
+                        {!paidUser && <PaidInsightsNotice />}
                     </>
                 }
             />
@@ -105,11 +114,7 @@ export const InsightsPanel = ({ statsArray, paidUser }) => {
                             items={statsArray.trueFormArray}
                             sortOrder="asc" // Lowest score is worst
                         />
-                        {!paidUser && (
-                            <div className="PaidFeatureNotice">
-                                Showing top 5 only - Top 10 available to paid users.
-                            </div>
-                        )}
+                        {!paidUser && <PaidInsightsNotice />}
                     </>
                 }
             />
@@ -126,11 +131,7 @@ export const InsightsPanel = ({ statsArray, paidUser }) => {
                             sortOrder="desc"
                             limit={paidUser ? 10 : 5}
                         />
-                        {!paidUser && (
-                            <div className="PaidFeatureNotice">
-                                Showing top 5 only - Top 10 available to paid users.
-                            </div>
-                        )}
+                        {!paidUser && <PaidInsightsNotice />}
                     </>
                 }
             />
@@ -163,11 +164,7 @@ export const InsightsPanel = ({ statsArray, paidUser }) => {
                             limit={paidUser ? 10 : 5}
 
                         />
-                        {!paidUser && (
-                            <div className="PaidFeatureNotice">
-                                Showing top 5 only - Top 10 available to paid users.
-                            </div>
-                        )}
+                        {!paidUser && <PaidInsightsNotice />}
                     </>
                 }
             />
@@ -185,11 +182,7 @@ export const InsightsPanel = ({ statsArray, paidUser }) => {
                             limit={paidUser ? 10 : 5}
 
                         />
-                        {!paidUser && (
-                            <div className="PaidFeatureNotice">
-                                Showing top 5 only - Top 10 available to paid users.
-                            </div>
-                        )}
+                        {!paidUser && <PaidInsightsNotice />}
                     </>
                 }
             />
@@ -206,11 +199,7 @@ export const InsightsPanel = ({ statsArray, paidUser }) => {
                             sortOrder="desc"
                             limit={paidUser ? 10 : 5}
                         />
-                        {!paidUser && (
-                            <div className="PaidFeatureNotice">
-                                Showing top 5 only - Top 10 available to paid users.
-                            </div>
-                        )}
+                        {!paidUser && <PaidInsightsNotice />}
                     </>
                 }
             />
@@ -227,11 +216,7 @@ export const InsightsPanel = ({ statsArray, paidUser }) => {
                             sortOrder="desc"
                             limit={paidUser ? 10 : 5}
                         />
-                        {!paidUser && (
-                            <div className="PaidFeatureNotice">
-                                Showing top 5 only - Top 10 available to paid users.
-                            </div>
-                        )}
+                        {!paidUser && <PaidInsightsNotice />}
                     </>
 
                 }
