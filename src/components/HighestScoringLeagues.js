@@ -15,7 +15,10 @@ import { getHighestScoringLeagues, getLowestScoringLeagues } from "../logic/getS
 import SiteHeader from "./SiteHeader";
 import PageMeta from "./PageMeta";
 import StatPageSeoContent, { StatPageSeoFaq } from "./StatPageSeoContent";
-import { STAT_PAGE_SEO } from "../seo/statPageSeoConfig";
+import {
+  STAT_PAGE_SEO,
+  buildHighestScoringLeaguesIntro,
+} from "../seo/statPageSeoConfig";
 
 const allowedCountries = [
   "England",
@@ -211,7 +214,10 @@ export default function HighestScoringLeagues({
             Highest- and lowest-scoring leagues ranked by goals per match
           </Typography>
 
-          <StatPageSeoContent {...STAT_PAGE_SEO.highestScoringLeagues} />
+          <StatPageSeoContent
+            {...STAT_PAGE_SEO.highestScoringLeagues}
+            intro={buildHighestScoringLeaguesIntro(leagues)}
+          />
 
           <Typography variant="h2" className={classes.sectionHeading} id="highest-scoring">
             Leagues with the highest goals per match

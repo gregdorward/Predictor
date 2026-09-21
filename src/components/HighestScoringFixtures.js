@@ -8,7 +8,7 @@ import { getHighestScoringFixtures, getHighestScoringTeams } from "../logic/getS
 import SiteHeader from "./SiteHeader";
 import PageMeta from "./PageMeta";
 import StatPageSeoContent, { StatPageSeoFaq } from "./StatPageSeoContent";
-import { STAT_PAGE_SEO } from "../seo/statPageSeoConfig";
+import { STAT_PAGE_SEO, buildFixturesHighIntro } from "../seo/statPageSeoConfig";
 
 const ALLOWED_COUNTRIES = ["England", "Scotland", "Italy", "Spain", "Germany", "France", "USA", "Denmark", "Greece", "Turkey", "Switzerland", "Austria", "Norway", "Mexico", "Poland", "Brazil", "Argentina", "Sweden", "Netherlands", "Portugal", "Belgium"];
 
@@ -166,7 +166,10 @@ export default function HighestScoringFixtures({
           Highest-scoring teams and today’s fixtures with the strongest goal potential
         </Typography>
 
-        <StatPageSeoContent {...STAT_PAGE_SEO.fixturesHigh} />
+        <StatPageSeoContent
+          {...STAT_PAGE_SEO.fixturesHigh}
+          intro={buildFixturesHighIntro(teams)}
+        />
 
         <Typography variant="h2" className={classes.sectionHeading} id="o25-teams">
           Teams with the highest scoring averages

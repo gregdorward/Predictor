@@ -15689,6 +15689,51 @@ header.Competition__hero {
   margin-bottom: 0;
 }
 
+.Competition--seoShell .Competition__seoTableWrap {
+  margin-top: 1.25rem;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.Competition--seoShell .Competition__seoTable {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.92em;
+  text-align: left;
+}
+
+.Competition--seoShell .Competition__seoTable caption {
+  caption-side: top;
+  text-align: left;
+  font-weight: 700;
+  font-size: 1.05em;
+  margin-bottom: 0.55rem;
+  color: var(--text-color);
+}
+
+.Competition--seoShell .Competition__seoTable th,
+.Competition--seoShell .Competition__seoTable td {
+  padding: 0.45rem 0.55rem;
+  border-bottom: 1px solid var(--button-border-color);
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+}
+
+.Competition--seoShell .Competition__seoTable th[scope="row"] {
+  white-space: normal;
+  font-weight: 600;
+  text-align: left;
+}
+
+.Competition--seoShell .Competition__seoTable thead th {
+  font-size: 0.8em;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  font-weight: 600;
+  color: var(--text-color);
+  opacity: 0.75;
+}
+
 .Competition--seoShell .Competition__seoStats {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));

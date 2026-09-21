@@ -1,6 +1,10 @@
 import { getRelatedCompetitionLinks } from "../seo/competitionCatalog";
 import { isCompetitionSeasonEmpty } from "../seo/competitionSeason";
-import { buildCompetitionSeoParagraphs } from "../seo/seoShellCopy";
+import {
+  buildCompetitionSeoParagraphs,
+  buildCompetitionTableRows,
+  formatSeoUpdatedDate,
+} from "../seo/seoShellCopy";
 import { getTeamsList, sortTeamsByField } from "./competition/competitionUtils";
 
 function formatPercent(value) {
@@ -29,6 +33,9 @@ export default function CompetitionSeoShell({
   topOver25Teams = [],
   topBttsTeams = [],
   topUnder25Teams = [],
+  tableRows = [],
+  tableLeader = null,
+  updatedOn = null,
   seasonStarted = true,
 }) {
   const metaParts = [country, season].filter(Boolean);
@@ -43,9 +50,8 @@ export default function CompetitionSeoShell({
     homeWin,
     draw,
     awayWin,
-    topOver25Teams,
-    topBttsTeams,
-    topUnder25Teams,
+    tableLeader,
+    updatedOn,
     seasonStarted,
   });
 
@@ -96,7 +102,52 @@ export default function CompetitionSeoShell({
           <p key={paragraph.slice(0, 48)}>{paragraph}</p>
         ))}
       </div>
+      <CompetitionTable name={name} season={season} rows={tableRows} />
     </section>
+  );
+}
+
+function formatGoalDifference(value) {
+  if (value == null || Number.isNaN(Number(value))) return "-";
+  const number = Number(value);
+  if (number > 0) return `+${number}`;
+  return String(number);
+}
+
+function CompetitionTable({ name, season, rows }) {
+  if (!rows.length) return null;
+  const caption = season ? `${name} table, ${season}` : `${name} table`;
+
+  return (
+    <div className="Competition__seoTableWrap">
+      <table className="Competition__seoTable">
+        <caption>{caption}</caption>
+        <thead>
+          <tr>
+            <th scope="col">Pos</th>
+            <th scope="col">Team</th>
+            <th scope="col">P</th>
+            <th scope="col">GD</th>
+            <th scope="col">Pts</th>
+            <th scope="col">BTTS</th>
+            <th scope="col">Over 2.5</th>
+          </tr>
+        </thead>
+        <tbody>
+          {rows.map((row) => (
+            <tr key={row.id || row.name}>
+              <td>{row.position}</td>
+              <th scope="row">{row.name}</th>
+              <td>{row.played ?? "-"}</td>
+              <td>{formatGoalDifference(row.goalDifference)}</td>
+              <td>{row.points ?? "-"}</td>
+              <td>{formatPercent(row.btts) || "-"}</td>
+              <td>{formatPercent(row.over25) || "-"}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
   );
 }
 
@@ -173,10 +224,20 @@ export function buildCompetitionSeoShell(data, catalog) {
       topOver25Teams: [],
       topBttsTeams: [],
       topUnder25Teams: [],
+      tableRows: [],
       relatedLinks,
       seasonStarted: false,
     };
   }
+
+  const tableRows = buildCompetitionTableRows(teams);
+  const tableLeader = tableRows[0]
+    ? {
+        name: tableRows[0].name,
+        points: tableRows[0].points,
+        played: tableRows[0].played,
+      }
+    : null;
 
   return {
     name,
@@ -200,6 +261,9 @@ export function buildCompetitionSeoShell(data, catalog) {
       "seasonUnder25Percentage_overall",
       5
     ).map((team) => pickTeamHighlight(team, "seasonUnder25Percentage_overall")),
+    tableRows,
+    tableLeader,
+    updatedOn: formatSeoUpdatedDate(),
     relatedLinks,
     seasonStarted: true,
   };

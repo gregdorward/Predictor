@@ -231,3 +231,42 @@ export const STAT_PAGE_SEO = {
 export function getCoreStatLinks(excludeHref) {
   return RELATED_CORE_STATS.filter((link) => link.href !== excludeHref);
 }
+
+function formatHubRate(value) {
+  if (value == null || Number.isNaN(Number(value))) return null;
+  return `${Number(value)}%`;
+}
+
+function topRow(rows, field) {
+  return (rows || [])
+    .filter((row) => row && row[field] != null && !Number.isNaN(Number(row[field])))
+    .sort((a, b) => Number(b[field]) - Number(a[field]))[0] || null;
+}
+
+export function buildBttsFixturesIntro(teamRows = []) {
+  const fallback = STAT_PAGE_SEO.bttsFixtures.intro;
+  const leader = topRow(teamRows, "bttsPercentage");
+  const rate = formatHubRate(leader?.bttsPercentage);
+  if (!leader?.name || !rate) return fallback;
+  const played =
+    leader.played != null ? ` from ${leader.played} matches` : "";
+  return `${leader.name} lead the Both Teams To Score table at ${rate}${played}. The team tables rank the strongest and weakest BTTS records, and the fixture table lists today's shortlist with scoring averages and odds.`;
+}
+
+export function buildFixturesHighIntro(teamRows = []) {
+  const fallback = STAT_PAGE_SEO.fixturesHigh.intro;
+  const leader = topRow(teamRows, "averageGoals");
+  if (!leader?.team || leader.averageGoals == null) return fallback;
+  const rate = formatHubRate(leader.over25Percentage);
+  const rateClause = rate ? `, with an Over 2.5 rate of ${rate}` : "";
+  return `${leader.team} average ${leader.averageGoals} goals a match${rateClause}. The team table ranks season scoring rates, and the fixture table lists today's Over 2.5 shortlist.`;
+}
+
+export function buildHighestScoringLeaguesIntro(leagueRows = []) {
+  const fallback = STAT_PAGE_SEO.highestScoringLeagues.intro;
+  const leader = topRow(leagueRows, "averageGoals");
+  if (!leader?.league || leader.averageGoals == null) return fallback;
+  const rate = formatHubRate(leader.over25Percentage);
+  const rateClause = rate ? `, with an Over 2.5 rate of ${rate}` : "";
+  return `${leader.league} are the highest-scoring league in this table at ${leader.averageGoals} goals a match${rateClause}. The second table lists the lowest-scoring leagues by goals per match.`;
+}

@@ -8,7 +8,7 @@ import { getBTTSFixtures, getBTTSTeams } from "../logic/getStatsInsights";
 import SiteHeader from "./SiteHeader";
 import PageMeta from "./PageMeta";
 import StatPageSeoContent, { StatPageSeoFaq } from "./StatPageSeoContent";
-import { STAT_PAGE_SEO } from "../seo/statPageSeoConfig";
+import { STAT_PAGE_SEO, buildBttsFixturesIntro } from "../seo/statPageSeoConfig";
 
 const ALLOWED_COUNTRIES = ["England", "Scotland", "Italy", "Spain", "Germany", "France", "USA", "Denmark", "Greece", "Turkey", "Switzerland", "Austria", "Norway", "Mexico", "Poland", "Brazil", "Argentina", "Sweden", "Netherlands", "Portugal", "Belgium"];
 
@@ -216,7 +216,10 @@ export default function BTTSFixtures({
           Teams with the strongest and weakest BTTS records, plus today’s fixtures
         </Typography>
 
-        <StatPageSeoContent {...STAT_PAGE_SEO.bttsFixtures} />
+        <StatPageSeoContent
+          {...STAT_PAGE_SEO.bttsFixtures}
+          intro={buildBttsFixturesIntro(teams)}
+        />
 
         <Typography variant="h2" className={classes.sectionHeading} id="btts-teams">
           Teams with the strongest BTTS records
