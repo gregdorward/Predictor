@@ -16141,8 +16141,12 @@ body.dark-mode .SeoPageLinks {
   max-width: 56rem;
 }
 
+.CompetitionsIndex-journeyZone {
+  margin-bottom: 1.25rem;
+}
+
 .CompetitionsIndex-header {
-  margin-bottom: 2rem;
+  margin-bottom: 0;
 }
 
 .CompetitionsIndex-intro {
