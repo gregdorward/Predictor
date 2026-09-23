@@ -14,6 +14,7 @@ import {
   resolveCompetitionParam,
 } from "../../src/seo/competitionCatalog";
 import { fetchCompetitionData } from "../../src/seo/serverFetch";
+import { buildCompetitionClientPayload } from "../../src/seo/competitionClientPayload";
 import {
   buildCompetitionOgImageUrl,
   getCanonicalUrl,
@@ -33,6 +34,7 @@ export default function CompetitionByParam({
   ogImageAlt,
   seoShell,
   noIndex,
+  initialCompetitionData,
 }) {
   return (
     <>
@@ -54,7 +56,11 @@ export default function CompetitionByParam({
       >
         <div id="ssh-content">
           <CompetitionSeoShell {...seoShell} />
-          <CompetitionPage seasonId={seasonId} skipHero />
+          <CompetitionPage
+            seasonId={seasonId}
+            skipHero
+            initialData={initialCompetitionData}
+          />
         </div>
         <CompetitionSeoExtras {...seoShell} />
       </SiteHeader>
@@ -101,9 +107,8 @@ export async function getServerSideProps({ params }) {
       });
   const seoShell = buildCompetitionSeoShell(data, catalog);
 
-  // Do not serialize the full FootyStats competition payload into __NEXT_DATA__.
-  // Team objects alone can be multi‑MB and push pages over Googlebot's 2 MB limit.
-  // CompetitionPage (ssr:false) fetches the interactive payload client-side.
+  const initialCompetitionData = buildCompetitionClientPayload(data);
+
   return {
     props: {
       seasonId,
@@ -114,6 +119,7 @@ export async function getServerSideProps({ params }) {
       ogImageAlt,
       seoShell,
       noIndex,
+      initialCompetitionData,
     },
   };
 }

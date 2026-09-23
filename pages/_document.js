@@ -2,14 +2,16 @@ import React from "react";
 import Document, { Html, Head, Main, NextScript } from "next/document";
 import { ServerStyleSheets } from "@material-ui/core/styles";
 import GUEST_LANDING_CRITICAL_CSS from "../src/critical/guestLandingCriticalCss";
+import {
+  JOURNEY_ADS_SNIPPET,
+  JOURNEY_SCRIPT_SRC,
+} from "../src/constants/journeyAds";
 
 // Mediavine's verification crawler reads the served HTML and looks for their
 // Ad Setup snippet verbatim. React serialises async={true} as async="" and
 // next/script injects client-side, so neither renders a matching tag. The
 // snippet is emitted as raw HTML instead, escaping out of an empty <script>
 // so the surrounding markup stays valid.
-const JOURNEY_ADS_SNIPPET =
-  '<script type="text/javascript" async="async" data-noptimize="1" data-cfasync="false" src="//scripts.scriptwrapper.com/tags/71e44a5d-dc3a-499d-8677-800918c94d8a.js"></script>';
 
 // Keep the Mediavine snippet in the HTML for their verification crawler,
 // but inert until after hydration. A live head script mutates the DOM
@@ -166,6 +168,7 @@ export default class MyDocument extends Document {
           {/* eslint-disable-next-line react/no-danger */}
           <style dangerouslySetInnerHTML={{ __html: GUEST_LANDING_CRITICAL_CSS }} />
           <link rel="preconnect" href="https://scripts.scriptwrapper.com" />
+          <link rel="preload" href={JOURNEY_SCRIPT_SRC} as="script" />
           <link rel="preconnect" href="https://scripts.journeymv.com" />
           <link rel="preconnect" href="https://eu-us-cdn.consentmanager.net" crossOrigin="anonymous" />
           <link rel="preconnect" href="https://eu-us.consentmanager.net" crossOrigin="anonymous" />

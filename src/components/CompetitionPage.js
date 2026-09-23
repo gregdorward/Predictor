@@ -33,6 +33,7 @@ import {
   sortTeamsByField,
   withXgDiff,
 } from "./competition/competitionUtils";
+import JourneyContentBreak from "./JourneyContentBreak";
 
 function MetricCard({ label, value, sub }) {
   return (
@@ -109,10 +110,8 @@ export default function CompetitionPage({
   }, []);
 
   useEffect(() => {
-    if (!seasonId) return;
+    if (!seasonId) return undefined;
     if (initialData) {
-      setData(initialData);
-      setLoading(false);
       return undefined;
     }
 
@@ -246,14 +245,27 @@ export default function CompetitionPage({
               />
             </section>
 
+            <JourneyContentBreak>
+              Standings and form across the {data.english_name || data.name || "competition"}{" "}
+              season.
+            </JourneyContentBreak>
+
             <CompetitionStandings seasonId={seasonId} />
 
             <CompetitionPositionRaceChart seasonId={seasonId} />
+
+            <JourneyContentBreak>
+              Compare teams on attacking and defensive metrics for this league.
+            </JourneyContentBreak>
 
             <CompetitionTeamComparison
               seasonId={seasonId}
               competitionTeams={teams}
             />
+
+            <JourneyContentBreak>
+              Goal, BTTS, corner and card market hit rates for the competition.
+            </JourneyContentBreak>
 
             <section className="Competition__section">
               <h2 className="Competition__sectionHeading">Markets</h2>
@@ -294,6 +306,10 @@ export default function CompetitionPage({
             </section>
 
             {teams.length > 0 && (
+              <>
+              <JourneyContentBreak>
+                Team-by-team rankings for goals, BTTS, xG difference and clean sheets.
+              </JourneyContentBreak>
               <section className="Competition__section">
                 <h2 className="Competition__sectionHeading">Team rankings</h2>
                 <div className="Competition__rankingsGrid">
@@ -332,7 +348,12 @@ export default function CompetitionPage({
                   />
                 </div>
               </section>
+              </>
             )}
+
+            <JourneyContentBreak>
+              Leading scorers, assist makers and clean-sheet keepers in the league.
+            </JourneyContentBreak>
 
             <CompetitionPlayerLeaders data={data} teams={teams} />
 

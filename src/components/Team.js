@@ -21,6 +21,7 @@ import { Bar } from "react-chartjs-2";
 import { useChartTheme, getChartColors } from "./Chart";
 import { useFixturePredictionUnlock } from "../logic/useFixturePredictionUnlock";
 import { FREE_DAILY_PREDICTION_LIMIT } from "../logic/freePredictionAllowance";
+import JourneyContentBreak from "./JourneyContentBreak";
 
 ChartJS.register(
   CategoryScale,
@@ -98,10 +99,6 @@ function LoadingSkeleton({ seoShell = null }) {
       <div className="FixturePage-skeleton FixturePage-skeleton--card" />
     </div>
   );
-}
-
-function JourneyContentBreak({ children }) {
-  return <p className="FixturePage-contentBreak">{children}</p>;
 }
 
 function CompareRow({ label, homeValue, awayValue }) {

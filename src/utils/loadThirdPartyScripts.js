@@ -1,15 +1,22 @@
-const JOURNEY_SRC =
-  "//scripts.scriptwrapper.com/tags/71e44a5d-dc3a-499d-8677-800918c94d8a.js";
+import { JOURNEY_SCRIPT_SRC } from "../constants/journeyAds";
 
 function loadJourneyAds() {
   if (window.__sshJourneyLoaded) return;
   window.__sshJourneyLoaded = true;
+
+  const template = document.getElementById("ssh-mediavine-snippet");
+  const fromTemplate = template?.content?.firstElementChild;
+  if (fromTemplate?.tagName === "SCRIPT") {
+    document.head.appendChild(fromTemplate.cloneNode(true));
+    return;
+  }
+
   const script = document.createElement("script");
   script.type = "text/javascript";
   script.async = true;
   script.setAttribute("data-noptimize", "1");
   script.setAttribute("data-cfasync", "false");
-  script.src = JOURNEY_SRC;
+  script.src = JOURNEY_SCRIPT_SRC;
   document.head.appendChild(script);
 }
 
