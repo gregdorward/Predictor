@@ -14554,6 +14554,77 @@ header.Competition__hero {
   max-width: 1000px;
 }
 
+.Competition__standingsHeader {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem 1rem;
+  margin-bottom: 0.75rem;
+}
+
+.Competition__standingsHeader .Competition__sectionHeading {
+  margin-bottom: 0;
+}
+
+.Competition__standingsToggle {
+  display: inline-flex;
+  border-radius: 8px;
+  border: 1px solid var(--button-border-color);
+  background: var(--subtle-surface-color);
+  overflow: hidden;
+  box-shadow: var(--button-shadow-rest);
+}
+
+.Competition__standingsToggleBtn {
+  appearance: none;
+  border: none;
+  background: transparent;
+  color: var(--faint-text);
+  font: inherit;
+  font-size: 0.9rem;
+  padding: 0.45rem 0.85rem;
+  cursor: pointer;
+  font-weight: 600;
+  transition: background 0.15s ease, color 0.15s ease;
+}
+
+.Competition__standingsToggleBtn:hover:not(.Competition__standingsToggleBtn--active) {
+  background: var(--secondary-background-color);
+  color: var(--text-color);
+}
+
+.Competition__standingsToggleBtn--active,
+.Competition__standingsToggleBtn--active:hover {
+  background: var(--button-color);
+  color: var(--button-text-color);
+}
+
+.Competition__standingsToggleBtn:focus-visible {
+  outline: 2px solid var(--primary-color);
+  outline-offset: 2px;
+}
+
+.Competition__classicLeagueTableWrap {
+  width: 100%;
+  max-width: 100%;
+  overflow-x: auto;
+}
+
+.Competition__classicLeagueTableContainer {
+  margin-bottom: 1rem;
+}
+
+.Competition__classicLeagueTable .Competition__classicLeagueTableVenueHead {
+  font-weight: 700;
+  border-bottom: 1px solid var(--border-color, rgba(255, 255, 255, 0.12));
+}
+
+.Competition__classicLeagueTableTeam {
+  white-space: nowrap;
+  min-width: 8rem;
+}
+
 .Competition .GroupName {
   font-size: 1.8em;
 }

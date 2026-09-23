@@ -15,6 +15,15 @@ function getLast5(wdlRecord) {
   return wdlRecord.slice(-5).toUpperCase();
 }
 
+export function teamRowHasHomeAwaySplit(currentTeam) {
+  return (
+    currentTeam?.seasonWins_home != null &&
+    currentTeam?.seasonWins_away != null &&
+    currentTeam?.seasonGoals_home != null &&
+    currentTeam?.seasonGoals_away != null
+  );
+}
+
 function mapTeamRow(currentTeam, leagueId, index, groupName) {
   const last5 = getLast5(currentTeam.wdl_record);
   const team = {
@@ -39,11 +48,50 @@ function mapTeamRow(currentTeam, leagueId, index, groupName) {
     zone: currentTeam.zone?.name ?? "mid-table",
   };
 
+  if (teamRowHasHomeAwaySplit(currentTeam)) {
+    team.HomeWins = currentTeam.seasonWins_home;
+    team.HomeDraws = currentTeam.seasonDraws_home;
+    team.HomeLosses = currentTeam.seasonLosses_home;
+    team.HomeFor = currentTeam.seasonGoals_home;
+    team.HomeAgainst = currentTeam.seasonConceded_home;
+    team.AwayWins = currentTeam.seasonWins_away;
+    team.AwayDraws = currentTeam.seasonDraws_away;
+    team.AwayLosses = currentTeam.seasonLosses_away;
+    team.AwayFor = currentTeam.seasonGoals_away;
+    team.AwayAgainst = currentTeam.seasonConceded_away;
+  }
+
   if (groupName) {
     team.GroupName = groupName;
   }
 
   return team;
+}
+
+function viewsSupportClassicTable(teams) {
+  return Array.isArray(teams) && teams.some((team) => team.HomeWins != null);
+}
+
+function withClassicTableFlag(view) {
+  if (!view) {
+    return null;
+  }
+
+  if (view.mode === "divisions") {
+    const divisions = view.divisions.map((division) => ({
+      ...division,
+      teams: division.teams,
+    }));
+    const supportsClassicTable = divisions.some((division) =>
+      viewsSupportClassicTable(division.teams)
+    );
+    return { ...view, divisions, supportsClassicTable };
+  }
+
+  return {
+    ...view,
+    supportsClassicTable: viewsSupportClassicTable(view.teams),
+  };
 }
 
 function mapTableRows(source, leagueId, groupName) {
@@ -120,38 +168,38 @@ export function buildCompetitionLeagueTableViews(seasonId, league) {
       return null;
     }
 
-    return {
+    return withClassicTableFlag({
       mode: "grouped",
       teams: flattenGroupTables(groupTables),
-    };
+    });
   }
 
   const mlsViews = buildMlsConferenceViews(leagueId, data);
   if (mlsViews) {
-    return mlsViews;
+    return withClassicTableFlag(mlsViews);
   }
 
   const specificTable = data.specific_tables?.[0]?.table;
 
   if (specificTable?.length && leagueId !== 12933) {
-    return {
+    return withClassicTableFlag({
       mode: "standard",
       teams: mapTableRows(specificTable, leagueId),
-    };
+    });
   }
 
   if (Array.isArray(data.league_table) && data.league_table.length) {
-    return {
+    return withClassicTableFlag({
       mode: "standard",
       teams: mapTableRows(data.league_table, leagueId),
-    };
+    });
   }
 
   if (data.league_table === null && data.all_matches_table_overall?.length) {
-    return {
+    return withClassicTableFlag({
       mode: "standard",
       teams: mapTableRows(data.all_matches_table_overall, leagueId),
-    };
+    });
   }
 
   return null;
