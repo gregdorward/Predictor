@@ -227,11 +227,24 @@ export function resolveCompetitionParam(param) {
   return { seasonId: String(catalog.id), catalog };
 }
 
+/** Prefer clearer catalog labels when API names are generic or shorter. */
+export function competitionDisplayName(data, catalog) {
+  const api = String(data?.english_name || data?.name || "").trim();
+  const cat = String(catalog?.name || "").trim();
+  if (!api) return cat || "Competition";
+  if (!cat) return api;
+  if (/^professional league$/i.test(api)) return cat;
+  if (/uefa|afc|caf|concacaf|ofc/i.test(api)) return api;
+  if (api.length > cat.length) return api;
+  if (cat.length > api.length) return cat;
+  return api;
+}
+
 export function buildCompetitionMeta(data, catalog) {
-  const name = data?.english_name || data?.name || catalog?.name || "Competition";
+  const name = competitionDisplayName(data, catalog);
   return {
-    title: `${name} Stats | Soccer Stats Hub`,
-    description: `BTTS, Over 2.5, goals, corners and card stats for ${name}. Data-driven league stats and market trends on Soccer Stats Hub.`,
+    title: `${name} Stats`,
+    description: `BTTS, Over 2.5, goals and card stats for ${name}. League table, team rankings and market trends on Soccer Stats Hub.`,
   };
 }
 

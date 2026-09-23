@@ -8,7 +8,7 @@
       "updatedAt": "2026-08-15T21:00:00.000Z",
       "heroLabel": "Product",
       "tags": ["Product", "Predictions", "Premium"],
-      "ogDescription": "What sets Soccer Stats Hub apart: a published prediction model, model probabilities next to bookmaker prices, research filters and multis, at Premium prices usually far below typical paid research subscriptions."
+      "ogDescription": "Published prediction model, probabilities next to bookmaker prices, research filters and multis — Premium priced below typical paid tip subscriptions."
     },
     {
       "slug": "non-penalty-xg-predictions",
@@ -28,7 +28,7 @@
       "updatedAt": "2026-07-17T20:00:00.000Z",
       "heroLabel": "Product",
       "tags": ["Customise Tips", "Filters", "Tips"],
-      "ogDescription": "How Customise Tips on Soccer Stats Hub lets you filter predictions by value edge, stats, probabilities, odds and presets — so the shortlist matches the games you want to research."
+      "ogDescription": "Filter Soccer Stats Hub predictions by value edge, stats, probabilities, odds and presets so your shortlist matches the games you want to research."
     },
     {
       "slug": "how-we-predict-a-game",

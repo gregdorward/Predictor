@@ -10,6 +10,7 @@ import {
   getPageMeta,
   buildRobotsContent,
 } from "../seo/pageMetaConfig";
+import { clampMetaDescription, clampMetaTitle } from "../seo/metaUtils";
 
 const PageMeta = ({
   title,
@@ -24,8 +25,10 @@ const PageMeta = ({
   const router = useRouter();
   const routePath = router?.pathname || "/";
   const defaults = getPageMeta(routePath);
-  const pageTitle = title ?? defaults.title;
-  const pageDescription = description ?? defaults.description;
+  const pageTitle = clampMetaTitle(title ?? defaults.title);
+  const pageDescription = clampMetaDescription(
+    description ?? defaults.description
+  );
   const shouldNoIndex = noIndex ?? defaults.noIndex ?? false;
   const shouldFollow = follow ?? defaults.follow ?? false;
   const robotsContent = buildRobotsContent({

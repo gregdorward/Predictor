@@ -7,7 +7,10 @@ import {
   resolveCompetitionParam,
   resolveFootyStatsLeagueId,
   buildCompetitionJsonLd,
+  buildCompetitionMeta,
+  competitionDisplayName,
 } from "./competitionCatalog";
+import { META_DESCRIPTION_MAX, clampMetaDescription } from "./metaUtils";
 
 describe("competitionCatalog removals and aliases", () => {
   test("does not expose World Cup qualifier or finished tournament URLs", () => {
@@ -71,6 +74,31 @@ describe("competitionCatalog removals and aliases", () => {
     expect(links.some((link) => link.href.includes("premier-league"))).toBe(
       false
     );
+  });
+
+  test("competition meta titles align with common SERP league labels", () => {
+    expect(
+      buildCompetitionMeta({ english_name: "La Liga" }, { name: "La Liga" }).title
+    ).toBe("La Liga Stats");
+    expect(
+      buildCompetitionMeta(
+        { english_name: "UEFA Champions League" },
+        { name: "Champions League" }
+      ).title
+    ).toBe("UEFA Champions League Stats");
+    expect(
+      competitionDisplayName(
+        { english_name: "Professional League" },
+        { name: "Saudi Pro League" }
+      )
+    ).toBe("Saudi Pro League");
+    const description = clampMetaDescription(
+      buildCompetitionMeta(
+        { english_name: "Professional League" },
+        { name: "Saudi Pro League" }
+      ).description
+    );
+    expect(description.length).toBeLessThanOrEqual(META_DESCRIPTION_MAX);
   });
 
   test("competition JSON-LD is a page, not the league organisation", () => {

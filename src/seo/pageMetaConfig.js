@@ -88,12 +88,12 @@ export const PAGE_META = {
   "/premier-league-2026-27": {
     title: "Premier League 2026/27 Preview | Soccer Stats Hub",
     description:
-      "Arsenal are 6/4 favourites, nine clubs have new managers, and the title race looks wide open. Full 2026/27 predicted table, Betfair odds, transfers and all 20 club guides.",
+      "Arsenal lead the title odds, nine clubs have new managers and the race looks open. Predicted table, odds, transfers and guides for all 20 clubs.",
   },
   "/about": {
     title: "About Soccer Stats Hub | Football Stats & Predictions",
     description:
-      "Learn how Soccer Stats Hub delivers transparent football statistics, BTTS insights, Over 2.5 analysis and data-driven match predictions across around 50 competitions.",
+      "How Soccer Stats Hub delivers transparent football stats, BTTS and Over 2.5 research, and data-led match predictions across around 50 competitions.",
   },
   "/methodology": {
     title: "Football Prediction Methodology | Soccer Stats Hub",
@@ -101,9 +101,9 @@ export const PAGE_META = {
       "How Soccer Stats Hub uses form, xG, Poisson goal models, lambda tuning, BTTS, Over/Under 2.5 and probability outputs for football stats and predictions.",
   },
   "/faq": {
-    title: "FAQ | Transparent Predictions, BTTS & Premium | Soccer Stats Hub",
+    title: "FAQ | Predictions, BTTS & Premium | Soccer Stats Hub",
     description:
-      "FAQ on Soccer Stats Hub: transparent football predictions, BTTS and Over 2.5 research, model vs bookmaker odds, Premium pricing, competition coverage and why we avoid bookmaker affiliates.",
+      "Answers on transparent predictions, BTTS and Over 2.5 research, model vs bookmaker odds, Premium pricing and competition coverage on Soccer Stats Hub.",
   },
   "/privacy": {
     title: "Privacy Policy | Soccer Stats Hub",
