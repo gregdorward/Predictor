@@ -1,6 +1,8 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import dynamic from "next/dynamic";
 import SiteHeader from "./SiteHeader";
+import JourneyContentBreak from "./JourneyContentBreak";
+import { requestJourneyContentRefresh } from "../utils/journeyContentRefresh";
 import {
   COMPARISON_METRICS,
   formatMetricValue,
@@ -64,6 +66,11 @@ export default function CompetitionsCompare({ overview }) {
 
   const updated = formatUpdated(overview?.generatedAt);
 
+  useEffect(() => {
+    if (!competitions.length || process.env.NODE_ENV !== "production") return;
+    requestJourneyContentRefresh();
+  }, [competitions.length]);
+
   function toggleSort(column) {
     setSort((current) =>
       current.key === column.key
@@ -111,7 +118,17 @@ export default function CompetitionsCompare({ overview }) {
               ) : null}
             </section>
 
+            <JourneyContentBreak>
+              Rank leagues by goals, BTTS, cards and more — then explore how those
+              markets relate on the style map.
+            </JourneyContentBreak>
+
             <CompetitionCompareCharts competitions={competitions} />
+
+            <JourneyContentBreak>
+              Full season averages for every metric in the table; sort any column to
+              reorder the list.
+            </JourneyContentBreak>
 
             <section className="CompetitionsCompare-tableSection">
               <h2 id="all-leagues">All leagues compared</h2>
@@ -195,6 +212,11 @@ export default function CompetitionsCompare({ overview }) {
                 </table>
               </div>
             </section>
+
+            <JourneyContentBreak>
+              Jump to a single league page or our highest-scoring leagues and fixture
+              shortlists.
+            </JourneyContentBreak>
 
             <section className="CompetitionsCompare-related" aria-label="Related pages">
               <h2>Go deeper</h2>

@@ -105,4 +105,18 @@ describe("CompetitionsCompare", () => {
 
     expect(screen.getByText("Data updated 30 August 2026.")).toBeInTheDocument();
   });
+
+  test("renders Journey content breaks between major sections", () => {
+    render(<CompetitionsCompare overview={OVERVIEW} />);
+
+    expect(
+      screen.getByText(/Rank leagues by goals, BTTS, cards and more/i)
+    ).toBeInTheDocument();
+    expect(
+      screen.getByText(/Full season averages for every metric in the table/i)
+    ).toBeInTheDocument();
+    expect(
+      screen.getByText(/Jump to a single league page or our highest-scoring leagues/i)
+    ).toBeInTheDocument();
+  });
 });
