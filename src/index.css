@@ -14608,11 +14608,64 @@ header.Competition__hero {
 .Competition__classicLeagueTableWrap {
   width: 100%;
   max-width: 100%;
-  overflow-x: auto;
 }
 
 .Competition__classicLeagueTableContainer {
   margin-bottom: 1rem;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.Competition__classicLeagueTable {
+  --classic-league-sticky-pos-width: 2.75rem;
+  --classic-league-sticky-team-width: 9rem;
+}
+
+.Competition__classicLeagueTableStickyBlock,
+.Competition__classicLeagueTableStickyPos,
+.Competition__classicLeagueTableStickyTeam {
+  position: sticky;
+  background-clip: padding-box;
+  z-index: 2;
+}
+
+.Competition__classicLeagueTableStickyBlock {
+  left: 0;
+  z-index: 4;
+  min-width: calc(
+    var(--classic-league-sticky-pos-width) + var(--classic-league-sticky-team-width)
+  );
+  max-width: calc(
+    var(--classic-league-sticky-pos-width) + var(--classic-league-sticky-team-width)
+  );
+  background-color: var(--third-background-color) !important;
+  box-shadow: 2px 0 0 var(--button-border-color);
+}
+
+.Competition__classicLeagueTableStickyPos {
+  left: 0;
+  min-width: var(--classic-league-sticky-pos-width);
+  max-width: var(--classic-league-sticky-pos-width);
+  background-color: var(--secondary-background-color) !important;
+  box-shadow: 1px 0 0 var(--button-border-color);
+}
+
+.Competition__classicLeagueTableStickyPos--head {
+  z-index: 5;
+  background-color: var(--third-background-color) !important;
+}
+
+.Competition__classicLeagueTableStickyTeam {
+  left: var(--classic-league-sticky-pos-width);
+  min-width: var(--classic-league-sticky-team-width);
+  max-width: var(--classic-league-sticky-team-width);
+  background-color: var(--secondary-background-color) !important;
+  box-shadow: 2px 0 0 var(--button-border-color);
+}
+
+.Competition__classicLeagueTableStickyTeam--head {
+  z-index: 5;
+  background-color: var(--third-background-color) !important;
 }
 
 .Competition__classicLeagueTable .Competition__classicLeagueTableVenueHead {

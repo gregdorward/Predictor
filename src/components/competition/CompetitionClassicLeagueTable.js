@@ -19,7 +19,10 @@ function ClassicStandingsTable({ teams, groupName }) {
     <Table size="small" className="Competition__classicLeagueTable">
       <TableHead>
         <TableRow className="Competition__classicLeagueTableGroupRow">
-          <TableCell colSpan={2} />
+          <TableCell
+            colSpan={2}
+            className="Competition__classicLeagueTableStickyBlock"
+          />
           <TableCell align="center" rowSpan={2}>Pld</TableCell>
           <TableCell align="center" colSpan={5} className="Competition__classicLeagueTableVenueHead">
             Home
@@ -31,8 +34,17 @@ function ClassicStandingsTable({ teams, groupName }) {
           <TableCell align="center" rowSpan={2}>Pts</TableCell>
         </TableRow>
         <TableRow>
-          <TableCell align="center">#</TableCell>
-          <TableCell>Team</TableCell>
+          <TableCell
+            align="center"
+            className="Competition__classicLeagueTableStickyPos Competition__classicLeagueTableStickyPos--head"
+          >
+            #
+          </TableCell>
+          <TableCell
+            className="Competition__classicLeagueTableStickyTeam Competition__classicLeagueTableStickyTeam--head"
+          >
+            Team
+          </TableCell>
           <TableCell align="center">W</TableCell>
           <TableCell align="center">D</TableCell>
           <TableCell align="center">L</TableCell>
@@ -48,8 +60,17 @@ function ClassicStandingsTable({ teams, groupName }) {
       <TableBody>
         {teams.map((team, index) => (
           <TableRow key={`${groupName || "league"}-${team.ID || team.Name}-${index}`}>
-            <TableCell align="center">{team.Position ?? index + 1}</TableCell>
-            <TableCell className="Competition__classicLeagueTableTeam">{team.Name}</TableCell>
+            <TableCell
+              align="center"
+              className="Competition__classicLeagueTableStickyPos"
+            >
+              {team.Position ?? index + 1}
+            </TableCell>
+            <TableCell
+              className="Competition__classicLeagueTableStickyTeam Competition__classicLeagueTableTeam"
+            >
+              {team.Name}
+            </TableCell>
             <TableCell align="center">{team.Played}</TableCell>
             <TableCell align="center">{team.HomeWins}</TableCell>
             <TableCell align="center">{team.HomeDraws}</TableCell>
