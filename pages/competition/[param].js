@@ -1,5 +1,6 @@
 import dynamic from "next/dynamic";
 import PageMeta from "../../src/components/PageMeta";
+import JourneyContentBreak from "../../src/components/JourneyContentBreak";
 import JsonLd from "../../src/components/JsonLd";
 import SiteHeader from "../../src/components/SiteHeader";
 import CompetitionSeoShell, {
@@ -56,13 +57,19 @@ export default function CompetitionByParam({
       >
         <div id="ssh-content">
           <CompetitionSeoShell {...seoShell} />
+          <JourneyContentBreak>
+            Live standings, charts and team comparisons for this competition.
+          </JourneyContentBreak>
           <CompetitionPage
             seasonId={seasonId}
             skipHero
             initialData={initialCompetitionData}
           />
+          <JourneyContentBreak>
+            Highest Over 2.5, BTTS and Under 2.5 rates by team in this league.
+          </JourneyContentBreak>
+          <CompetitionSeoExtras {...seoShell} />
         </div>
-        <CompetitionSeoExtras {...seoShell} />
       </SiteHeader>
     </>
   );

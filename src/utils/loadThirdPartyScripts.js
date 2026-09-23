@@ -1,4 +1,5 @@
 import { JOURNEY_SCRIPT_SRC } from "../constants/journeyAds";
+import { requestJourneyContentRefresh } from "./journeyContentRefresh";
 
 function loadJourneyAds() {
   if (window.__sshJourneyLoaded) return;
@@ -6,8 +7,14 @@ function loadJourneyAds() {
 
   const template = document.getElementById("ssh-mediavine-snippet");
   const fromTemplate = template?.content?.firstElementChild;
+  const onJourneyReady = () => {
+    requestJourneyContentRefresh();
+  };
+
   if (fromTemplate?.tagName === "SCRIPT") {
-    document.head.appendChild(fromTemplate.cloneNode(true));
+    const live = fromTemplate.cloneNode(true);
+    live.addEventListener("load", onJourneyReady, { once: true });
+    document.head.appendChild(live);
     return;
   }
 
@@ -17,6 +24,7 @@ function loadJourneyAds() {
   script.setAttribute("data-noptimize", "1");
   script.setAttribute("data-cfasync", "false");
   script.src = JOURNEY_SCRIPT_SRC;
+  script.addEventListener("load", onJourneyReady, { once: true });
   document.head.appendChild(script);
 }
 

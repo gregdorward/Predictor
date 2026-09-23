@@ -163,7 +163,7 @@ const RankingTable = ({ rankingStats }) => {
                     ? statistics[selectedStat]
                     : statistics[selectedStat].toFixed(2)
                   : statistics[selectedStat] ?? "N/A"}
-              </td>{" "}
+              </td>
             </tr>
           ))}
         </tbody>

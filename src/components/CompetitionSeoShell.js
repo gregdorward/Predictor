@@ -6,6 +6,7 @@ import {
   formatSeoUpdatedDate,
 } from "../seo/seoShellCopy";
 import { getTeamsList, sortTeamsByField } from "./competition/competitionUtils";
+import JourneyContentBreak from "./JourneyContentBreak";
 
 function formatPercent(value) {
   if (value == null || Number.isNaN(Number(value))) return null;
@@ -102,6 +103,11 @@ export default function CompetitionSeoShell({
           <p key={paragraph.slice(0, 48)}>{paragraph}</p>
         ))}
       </div>
+      {tableRows.length > 0 ? (
+        <JourneyContentBreak>
+          {name} season table with points, goal difference and market rates.
+        </JourneyContentBreak>
+      ) : null}
       <CompetitionTable name={name} season={season} rows={tableRows} />
     </section>
   );
@@ -151,8 +157,7 @@ function CompetitionTable({ name, season, rows }) {
   );
 }
 
-/** Unique team market leaders below the interactive competition UI. Kept
- *  outside #ssh-content so Journey does not treat lists as the article body. */
+/** Team market leader lists at the foot of #ssh-content (after interactive UI). */
 export function CompetitionSeoExtras({
   topOver25Teams = [],
   topBttsTeams = [],

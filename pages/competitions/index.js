@@ -1,6 +1,7 @@
 import SiteHeader from "../../src/components/SiteHeader";
 import PageMeta from "../../src/components/PageMeta";
 import JsonLd from "../../src/components/JsonLd";
+import JourneyContentBreak from "../../src/components/JourneyContentBreak";
 import { buildCompetitionsIndexSections } from "../../src/seo/competitionGroups";
 import { SITE_URL } from "../../src/seo/pageMetaConfig";
 
@@ -73,8 +74,8 @@ export default function CompetitionsIndexPage() {
       />
       <JsonLd data={COMPETITIONS_JSON_LD} />
       <SiteHeader showThemeToggle withFooter>
-        <main className="StaticPage CompetitionsIndex">
-          <div id="ssh-content" className="CompetitionsIndex-header">
+        <main id="ssh-content" className="StaticPage CompetitionsIndex">
+          <header className="CompetitionsIndex-header">
             <a href="/" className="HomeLink">
               Home
             </a>
@@ -87,7 +88,12 @@ export default function CompetitionsIndexPage() {
             <a href="/competitions/compare/" className="CompetitionsIndex-compareLink">
               Compare every league side by side
             </a>
-          </div>
+          </header>
+
+          <JourneyContentBreak>
+            Pick a league for standings, BTTS and Over 2.5 stats, or open the cross-league
+            comparison tool.
+          </JourneyContentBreak>
 
           <div className="CompetitionsIndex-groups">
             <CompetitionGroup

@@ -107,7 +107,7 @@ const PlayerRankingTable = ({ rankingStats }) => {
                 <td>{player.name}</td>
                 <td>{team.name}</td>
                 <td>{statistics.appearances}</td>
-                <td>{displayValue}</td>{" "}
+                <td>{displayValue}</td>
               </tr>
             );
           })}

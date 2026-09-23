@@ -34,6 +34,7 @@ import {
   withXgDiff,
 } from "./competition/competitionUtils";
 import JourneyContentBreak from "./JourneyContentBreak";
+import { requestJourneyContentRefresh } from "../utils/journeyContentRefresh";
 
 function MetricCard({ label, value, sub }) {
   return (
@@ -108,6 +109,12 @@ export default function CompetitionPage({
   useEffect(() => {
     initTheme();
   }, []);
+
+  useEffect(() => {
+    if (!data || process.env.NODE_ENV !== "production") return undefined;
+    requestJourneyContentRefresh();
+    return undefined;
+  }, [data]);
 
   useEffect(() => {
     if (!seasonId) return undefined;
