@@ -14,7 +14,7 @@ function formatPercent(value) {
   return `${n}%`;
 }
 
-function formatLastFiveForm(formRun) {
+export function formatLastFiveForm(formRun) {
   if (formRun == null) {
     return null;
   }

@@ -3962,10 +3962,21 @@ function hydrateAgainstMetricsFromFixtures(team, match, form) {
   return true;
 }
 
-function hydrateFormFromApi(teamRoot, form, venue, teamName, match) {
+export function hydrateFormFromFootyStatsApi(
+  teamRoot,
+  form,
+  venue,
+  teamName,
+  match,
+  options = {}
+) {
   const short = teamRoot[0] || form;
   const long = teamRoot[2] || form;
   const venueKey = venue === "home" ? "Home" : "Away";
+
+  const useCompetitionFixtures =
+    options.competitionFixtures ??
+    (match && API_FORM_ONLY_LEAGUE_IDS.includes(match.leagueID));
 
   form.completeData = true;
   form.apiFormOnly = true;
@@ -3976,14 +3987,10 @@ function hydrateFormFromApi(teamRoot, form, venue, teamName, match) {
   const usedCompetitionForm =
     teamName &&
     match &&
-    API_FORM_ONLY_LEAGUE_IDS.includes(match.leagueID) &&
+    useCompetitionFixtures &&
     hydrateFormResultsFromCompetitionFixtures(teamName, match, form, venue);
 
-  if (
-    teamName &&
-    match &&
-    API_FORM_ONLY_LEAGUE_IDS.includes(match.leagueID)
-  ) {
+  if (teamName && match && useCompetitionFixtures) {
     applyCompetitionGoalDifference(
       form,
       teamName,
@@ -4254,6 +4261,10 @@ function hydrateFormFromApi(teamRoot, form, venue, teamName, match) {
       : null;
 
   return form;
+}
+
+function hydrateFormFromApi(teamRoot, form, venue, teamName, match) {
+  return hydrateFormFromFootyStatsApi(teamRoot, form, venue, teamName, match);
 }
 
 export async function calculateScore(match, index, divider, calculate, AIPredictions, fetchedTips) {

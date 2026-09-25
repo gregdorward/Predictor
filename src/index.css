@@ -9460,6 +9460,34 @@ body.dark-mode .MetricTrendTables-arrow {
   color: var(--text-color);
 }
 
+.FixturePage-footyStatsFallback {
+  display: flex;
+  flex-direction: column;
+  gap: var(--fp-space-4);
+  margin-bottom: var(--fp-space-4);
+}
+
+.FixturePage-footyStatsDisclaimer {
+  margin: 0;
+  padding: var(--fp-space-3) var(--fp-pad);
+  font-size: var(--fp-label);
+  line-height: 1.5;
+  color: var(--faint-text);
+  text-align: center;
+  background: var(--subtle-surface-color);
+  border-radius: var(--fp-radius);
+}
+
+.FixturePage-footyStatsPrematch,
+.FixturePage-footyStatsForm {
+  width: 100%;
+  max-width: 100%;
+  padding: var(--fp-pad);
+  border-radius: var(--fp-radius);
+  background: var(--subtle-surface-color);
+  box-sizing: border-box;
+}
+
 /* Generic stat row (H2H summary etc.) */
 .FixturePage-stat {
   display: grid;

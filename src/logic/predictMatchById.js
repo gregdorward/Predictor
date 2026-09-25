@@ -26,6 +26,10 @@ import {
   mergeFormEntry,
   mergeLeagueResults,
 } from "./predictMatchGlobals";
+import {
+  applyFixturePageFootyStatsFallback,
+  preserveFormEntryWindows,
+} from "./fixturePageFootyStatsFallback";
 
 export async function predictMatchById(matchId) {
   const snapshotRes = await fetch(apiGetUrl(`match-snapshot/${matchId}`));
@@ -96,6 +100,8 @@ export async function predictMatchById(matchId) {
   mergeFormEntry(allForm, formEntry);
   mergeLeagueResults(allLeagueResultsArrayOfObjects, leagueResults);
 
+  const preservedFormEntry = preserveFormEntryWindows(formEntry);
+
   const predictedScores = await predictedScoresRes.json();
   setSingleMatchPredictionData({ leagueAverages, predictedScores });
 
@@ -140,6 +146,12 @@ export async function predictMatchById(matchId) {
   }
 
   await flushPendingSshSnapshots();
+
+  applyFixturePageFootyStatsFallback({
+    match,
+    preservedFormEntry,
+    fixture,
+  });
 
   await enrichMatchForFixturePageDisplay(match);
 

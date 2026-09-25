@@ -22,6 +22,7 @@ import { useChartTheme, getChartColors } from "./Chart";
 import { useFixturePredictionUnlock } from "../logic/useFixturePredictionUnlock";
 import { FREE_DAILY_PREDICTION_LIMIT } from "../logic/freePredictionAllowance";
 import JourneyContentBreak from "./JourneyContentBreak";
+import FixtureFootyStatsFallback from "./FixtureFootyStatsFallback";
 
 ChartJS.register(
   CategoryScale,
@@ -609,6 +610,7 @@ function TeamPage({ matchId, seoShell = null }) {
 
   const homeName = storedFixtureDetailsJson.homeTeamName;
   const awayName = storedFixtureDetailsJson.awayTeamName;
+  const useFootyStatsTemplate = match?.fixtureStatsSource === "footystats-api";
 
   return (
     <div className="FixturePage">
@@ -700,63 +702,75 @@ function TeamPage({ matchId, seoShell = null }) {
         preview, and loads more fixtures to explore.
       </p>
 
-      {matchId && match ? <FixtureSeasonStats match={match} /> : null}
+      {useFootyStatsTemplate ? (
+        <FixtureFootyStatsFallback
+          match={match}
+          sections={pageData?.sections ?? []}
+          homeTeamName={homeName}
+          awayTeamName={awayName}
+          formatStatValue={formatStatValue}
+        />
+      ) : (
+        <>
+          {matchId && match ? <FixtureSeasonStats match={match} /> : null}
 
-      <JourneyContentBreak>
-        {homeName} and {awayName} compared on attacking and defensive strength.
-      </JourneyContentBreak>
+          <JourneyContentBreak>
+            {homeName} and {awayName} compared on attacking and defensive strength.
+          </JourneyContentBreak>
 
-      <section className="FixturePage-chartCard">
-        <h3 className="FixturePage-statGroupTitle">Team comparison</h3>
-        <ShareableVisual
-          filename={sanitizeImageFilename(
-            `${storedFixtureDetailsJson.homeTeamName}-vs-${storedFixtureDetailsJson.awayTeamName}-comparison`
-          )}
-          shareTitle={`${storedFixtureDetailsJson.homeTeamName} vs ${storedFixtureDetailsJson.awayTeamName} - stat comparison`}
-          className="FixturePage-chartShare"
-        >
-          <div data-share-capture className="FixturePage-comparisonChart">
-            <div className="FixturePage-comparisonChartCanvas">
-              <Bar
-                key={theme}
-                options={chartOptions}
-                data={chartData}
-                className="FixturePage-chart"
+          <section className="FixturePage-chartCard">
+            <h3 className="FixturePage-statGroupTitle">Team comparison</h3>
+            <ShareableVisual
+              filename={sanitizeImageFilename(
+                `${storedFixtureDetailsJson.homeTeamName}-vs-${storedFixtureDetailsJson.awayTeamName}-comparison`
+              )}
+              shareTitle={`${storedFixtureDetailsJson.homeTeamName} vs ${storedFixtureDetailsJson.awayTeamName} - stat comparison`}
+              className="FixturePage-chartShare"
+            >
+              <div data-share-capture className="FixturePage-comparisonChart">
+                <div className="FixturePage-comparisonChartCanvas">
+                  <Bar
+                    key={theme}
+                    options={chartOptions}
+                    data={chartData}
+                    className="FixturePage-chart"
+                  />
+                </div>
+                <div className="FixturePage-chartLegend" aria-hidden="true">
+                  <span className="FixturePage-chartLegendItem">
+                    <span className="FixturePage-chartLegendSwatch FixturePage-chartLegendSwatch--home" />
+                    Attacking
+                  </span>
+                  <span className="FixturePage-chartLegendItem">
+                    <span className="FixturePage-chartLegendSwatch FixturePage-chartLegendSwatch--away" />
+                    Defensive
+                  </span>
+                </div>
+              </div>
+            </ShareableVisual>
+          </section>
+
+          <div className="FixturePage-compareBlock">
+            <div className="FixturePage-compareTeams FixturePage-compareTeams--block">
+              <span className="FixturePage-compareTeam FixturePage-compareTeam--home">
+                {storedFixtureDetailsJson.homeTeamName}
+              </span>
+              <span className="FixturePage-compareTeam FixturePage-compareTeam--away">
+                {storedFixtureDetailsJson.awayTeamName}
+              </span>
+            </div>
+
+            {sections.map((section) => (
+              <CompareSection
+                key={section.id}
+                title={section.title}
+                homeRows={section.home}
+                awayRows={section.away}
               />
-            </div>
-            <div className="FixturePage-chartLegend" aria-hidden="true">
-              <span className="FixturePage-chartLegendItem">
-                <span className="FixturePage-chartLegendSwatch FixturePage-chartLegendSwatch--home" />
-                Attacking
-              </span>
-              <span className="FixturePage-chartLegendItem">
-                <span className="FixturePage-chartLegendSwatch FixturePage-chartLegendSwatch--away" />
-                Defensive
-              </span>
-            </div>
+            ))}
           </div>
-        </ShareableVisual>
-      </section>
-
-      <div className="FixturePage-compareBlock">
-        <div className="FixturePage-compareTeams FixturePage-compareTeams--block">
-          <span className="FixturePage-compareTeam FixturePage-compareTeam--home">
-            {storedFixtureDetailsJson.homeTeamName}
-          </span>
-          <span className="FixturePage-compareTeam FixturePage-compareTeam--away">
-            {storedFixtureDetailsJson.awayTeamName}
-          </span>
-        </div>
-
-        {sections.map((section) => (
-          <CompareSection
-            key={section.id}
-            title={section.title}
-            homeRows={section.home}
-            awayRows={section.away}
-          />
-        ))}
-      </div>
+        </>
+      )}
 
       {matchId && pageData?.modelOutputs ? (
         <JourneyContentBreak>
@@ -809,27 +823,31 @@ function TeamPage({ matchId, seoShell = null }) {
         />
       ) : null}
 
-      <JourneyContentBreak>
-        Recent results for both sides, most recent first.
-      </JourneyContentBreak>
+      {useFootyStatsTemplate ? null : (
+        <>
+          <JourneyContentBreak>
+            Recent results for both sides, most recent first.
+          </JourneyContentBreak>
 
-      <div className="FixturePage-resultsBlock">
-        <h3 className="FixturePage-statGroupTitle">Recent Results</h3>
-        <div className="FixturePage-resultsGrid">
-          <div className="FixturePage-resultsPanel FixturePage-resultsPanel--home">
-            <h4 className="FixturePage-resultsPanelTitle">
-              {storedFixtureDetailsJson.homeTeamName}
-            </h4>
-            <ResultsColumn side="home" matches={recentResults.home} />
+          <div className="FixturePage-resultsBlock">
+            <h3 className="FixturePage-statGroupTitle">Recent Results</h3>
+            <div className="FixturePage-resultsGrid">
+              <div className="FixturePage-resultsPanel FixturePage-resultsPanel--home">
+                <h4 className="FixturePage-resultsPanelTitle">
+                  {storedFixtureDetailsJson.homeTeamName}
+                </h4>
+                <ResultsColumn side="home" matches={recentResults.home} />
+              </div>
+              <div className="FixturePage-resultsPanel FixturePage-resultsPanel--away">
+                <h4 className="FixturePage-resultsPanelTitle">
+                  {storedFixtureDetailsJson.awayTeamName}
+                </h4>
+                <ResultsColumn side="away" matches={recentResults.away} />
+              </div>
+            </div>
           </div>
-          <div className="FixturePage-resultsPanel FixturePage-resultsPanel--away">
-            <h4 className="FixturePage-resultsPanelTitle">
-              {storedFixtureDetailsJson.awayTeamName}
-            </h4>
-            <ResultsColumn side="away" matches={recentResults.away} />
-          </div>
-        </div>
-      </div>
+        </>
+      )}
     </div>
   );
 }
