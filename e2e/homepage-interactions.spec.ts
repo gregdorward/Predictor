@@ -35,13 +35,26 @@ test.describe('Homepage interactions', () => {
   });
 
   test('navigates fixtures by date', async ({ page }) => {
+    const matchRequests: string[] = [];
+    await page.route('**/api/ss/matches/**', (route) => {
+      matchRequests.push(route.request().url());
+      return route.continue();
+    });
+
     const initialDate = await getFixtureDateLabel(page);
+    const requestsBeforeArrow = matchRequests.length;
 
     await page.getByTestId('>').click();
     await expect.poll(async () => getFixtureDateLabel(page)).not.toBe(initialDate);
+    await expect
+      .poll(() => matchRequests.length, { timeout: 30_000 })
+      .toBeGreaterThan(requestsBeforeArrow);
 
     await page.getByTestId('<').click();
     await expect.poll(async () => getFixtureDateLabel(page)).toBe(initialDate);
+    await expect
+      .poll(() => matchRequests.length, { timeout: 30_000 })
+      .toBeGreaterThan(requestsBeforeArrow + 1);
   });
 
   test('opens fixture date calendar and selects an in-range day', async ({ page }) => {
