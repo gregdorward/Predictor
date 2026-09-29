@@ -18,16 +18,20 @@ import { uniqueTeamAbbreviations } from "../../utils/competitionTeamLabels";
 import { getSofaScoreIdForSeason } from "./competitionUtils";
 import {
   MetricPicker,
-  buildCrossLeagueAveragePoint,
+  buildScatterTooltipOptions,
   comparisonMetricToAxisMeta,
   computeAxisRange,
   createScatterMarkerPlugin,
   formatScatterAxisValue,
   markersSignature,
   ScatterBadgeLayer,
-  SCATTER_AVERAGE_ABBR,
-  SCATTER_AVERAGE_COLOR,
-  SCATTER_AVERAGE_FILL,
+  ScatterAxisFrame,
+  StyleMapLegend,
+  StyleMapLeagueSelectionBar,
+  SCATTER_CHART_INTERACTION,
+  SCATTER_EXTERNAL_AXIS_LAYOUT_PADDING,
+  scatterBadgeHitRadius,
+  scatterPlotCountBadgeSize,
 } from "./scatterStyleMap";
 import {
   averageForMetric,
@@ -35,6 +39,7 @@ import {
   COMPARISON_METRICS,
   formatMetricValue,
   getComparisonMetric,
+  getDefaultStyleMapSlugs,
   isLowSample,
   rankByMetric,
 } from "../../seo/competitionOverviewData";
@@ -225,6 +230,8 @@ function LeagueStyleMap({ competitions }) {
   const [scatterYKey, setScatterYKey] = useState("btts");
   const [scatterMarkers, setScatterMarkers] = useState([]);
   const scatterMarkerSignatureRef = useRef("");
+  const [selectedSlugs, setSelectedSlugs] = useState(() => new Set());
+  const [highlightedSlug, setHighlightedSlug] = useState(null);
 
   const availableMetrics = useMemo(() => {
     return COMPARISON_METRICS.filter((metric) =>
@@ -276,21 +283,64 @@ function LeagueStyleMap({ competitions }) {
     [competitions, scatterXKey, scatterYKey]
   );
 
-  const crossLeagueAverage = useMemo(
-    () => buildCrossLeagueAveragePoint(competitions, scatterXKey, scatterYKey),
-    [competitions, scatterXKey, scatterYKey]
-  );
-
-  const plottedEntities = useMemo(() => {
-    const list = [...leagueRows];
-    if (crossLeagueAverage) list.push(crossLeagueAverage);
-    return list;
-  }, [leagueRows, crossLeagueAverage]);
-
-  const leagueAbbreviations = useMemo(
-    () => uniqueTeamAbbreviations(leagueRows.map((row) => row.name)),
+  const leagueSlugKey = useMemo(
+    () =>
+      leagueRows
+        .map((row) => row.slug)
+        .filter(Boolean)
+        .sort()
+        .join("|"),
     [leagueRows]
   );
+
+  useEffect(() => {
+    const defaults = getDefaultStyleMapSlugs(leagueRows, 10);
+    const initial =
+      defaults.length > 0
+        ? defaults
+        : leagueRows.map((row) => row.slug).filter(Boolean);
+    setSelectedSlugs(new Set(initial));
+  }, [leagueSlugKey]);
+
+  const plottedLeagueRows = useMemo(
+    () => leagueRows.filter((row) => selectedSlugs.has(row.slug)),
+    [leagueRows, selectedSlugs]
+  );
+
+  const leagueAbbreviations = useMemo(
+    () => uniqueTeamAbbreviations(plottedLeagueRows.map((row) => row.name)),
+    [plottedLeagueRows]
+  );
+
+  const toggleLeagueSlug = useCallback((slug) => {
+    setSelectedSlugs((prev) => {
+      const next = new Set(prev);
+      if (next.has(slug)) {
+        if (next.size <= 1) return prev;
+        next.delete(slug);
+      } else {
+        next.add(slug);
+      }
+      return next;
+    });
+  }, []);
+
+  const selectTopTenLeagues = useCallback(() => {
+    const defaults = getDefaultStyleMapSlugs(leagueRows, 10);
+    setSelectedSlugs(
+      new Set(
+        defaults.length > 0
+          ? defaults
+          : leagueRows.map((row) => row.slug).filter(Boolean)
+      )
+    );
+  }, [leagueRows]);
+
+  const selectAllLeagues = useCallback(() => {
+    setSelectedSlugs(
+      new Set(leagueRows.map((row) => row.slug).filter(Boolean))
+    );
+  }, [leagueRows]);
 
   const handleScatterPositions = useCallback((nextMarkers) => {
     const signature = markersSignature(nextMarkers);
@@ -309,31 +359,54 @@ function LeagueStyleMap({ competitions }) {
     [color, handleScatterPositions]
   );
 
-  const scatterBadgeSize = 18;
+  const scatterBadgeSize = scatterPlotCountBadgeSize(plottedLeagueRows.length);
+  const scatterHitRadius = scatterBadgeHitRadius(scatterBadgeSize);
+  const scatterDense = plottedLeagueRows.length > 12;
+
+  const styleMapLegendItems = useMemo(() => {
+    const items = leagueRows.map((row) => ({
+      slug: row.slug,
+      name: row.name,
+      badgeUrl: resolveLeagueLogoUrl(row.id),
+    }));
+    items.sort((a, b) => a.name.localeCompare(b.name));
+    return items;
+  }, [leagueRows]);
+
+  const shareLegendItems = useMemo(
+    () => styleMapLegendItems.filter((item) => selectedSlugs.has(item.slug)),
+    [styleMapLegendItems, selectedSlugs]
+  );
+
+  const scatterSelectionKey = useMemo(
+    () => [...selectedSlugs].sort().join(","),
+    [selectedSlugs]
+  );
+
+  useEffect(() => {
+    setHighlightedSlug(null);
+  }, [scatterSelectionKey, scatterXKey, scatterYKey]);
 
   const scatterData = useMemo(() => {
-    const points = plottedEntities
+    const points = plottedLeagueRows
       .map((entity) => {
         const x = Number(entity[scatterXKey]);
         const y = Number(entity[scatterYKey]);
         if (!Number.isFinite(x) || !Number.isFinite(y)) return null;
 
-        const isAverage = Boolean(entity.isLeagueAverage);
         const name = entity.name;
-        const badgeUrl = isAverage ? null : resolveLeagueLogoUrl(entity.id);
+        const badgeUrl = resolveLeagueLogoUrl(entity.id);
 
         return {
           x,
           y,
+          slug: entity.slug,
           markerId: name,
           team: name,
           name,
-          row: isAverage ? null : entity,
-          abbr: isAverage
-            ? SCATTER_AVERAGE_ABBR
-            : leagueAbbreviations.get(name) || "",
+          row: entity,
+          abbr: leagueAbbreviations.get(name) || "",
           badgeUrl,
-          isLeagueAverage: isAverage,
         };
       })
       .filter(Boolean);
@@ -343,33 +416,29 @@ function LeagueStyleMap({ competitions }) {
         {
           label: "Leagues",
           data: points,
-          backgroundColor: points.map((point) => {
-            if (point.isLeagueAverage) return SCATTER_AVERAGE_FILL;
-            return isLowSample(point.row) ? LOW_SAMPLE_COLOR : LEAGUE_POINT_FILL;
-          }),
-          borderColor: points.map((point) => {
-            if (point.isLeagueAverage) return SCATTER_AVERAGE_COLOR;
-            return isLowSample(point.row) ? LOW_SAMPLE_COLOR : LEAGUE_POINT_BORDER;
-          }),
+          backgroundColor: points.map((point) =>
+            isLowSample(point.row) ? LOW_SAMPLE_COLOR : LEAGUE_POINT_FILL
+          ),
+          borderColor: points.map((point) =>
+            isLowSample(point.row) ? LOW_SAMPLE_COLOR : LEAGUE_POINT_BORDER
+          ),
           borderWidth: 1,
           pointRadius: points.map((point) => (point.badgeUrl ? 0 : 4)),
-          pointHoverRadius: points.map((point) =>
-            point.badgeUrl ? scatterBadgeSize * 0.9375 + 2 : 6
-          ),
-          pointHitRadius: scatterBadgeSize * 0.9375 + 4,
+          pointHoverRadius: points.map((point) => (point.badgeUrl ? 0 : 6)),
+          pointHitRadius: scatterHitRadius,
         },
       ],
     };
   }, [
-    plottedEntities,
+    plottedLeagueRows,
     scatterXKey,
     scatterYKey,
     leagueAbbreviations,
-    scatterBadgeSize,
+    scatterHitRadius,
   ]);
 
   const scatterAxisRanges = useMemo(() => {
-    const leaguePoints = leagueRows.map((row) => ({
+    const leaguePoints = plottedLeagueRows.map((row) => ({
       x: Number(row[scatterXKey]),
       y: Number(row[scatterYKey]),
     }));
@@ -383,57 +452,44 @@ function LeagueStyleMap({ competitions }) {
         scatterYMeta
       ),
     };
-  }, [leagueRows, scatterXKey, scatterYKey, scatterXMeta, scatterYMeta]);
+  }, [plottedLeagueRows, scatterXKey, scatterYKey, scatterXMeta, scatterYMeta]);
 
   const scatterOptions = useMemo(
     () => ({
       responsive: true,
       maintainAspectRatio: false,
+      interaction: SCATTER_CHART_INTERACTION,
       plugins: {
         legend: { display: false },
-        tooltip: {
-          backgroundColor: tooltipBackground,
-          titleColor: "#ffffff",
-          bodyColor: "#ffffff",
-          callbacks: {
-            title(items) {
-              return items[0]?.raw?.name || "";
-            },
-            label(context) {
-              const { x, y, abbr, row, isLeagueAverage } = context.raw || {};
-              const line = `${scatterXMeta.label} ${formatScatterAxisValue(x, scatterXMeta)} · ${scatterYMeta.label} ${formatScatterAxisValue(y, scatterYMeta)}`;
-              if (isLeagueAverage) {
-                return ["Unweighted mean across leagues shown", line];
-              }
-              const lines = abbr ? [`${abbr}`, line] : [line];
-              if (row?.played != null && row?.total != null) {
-                lines.push(`${row.played} of ${row.total} matches played`);
-              }
-              if (row && isLowSample(row)) {
-                lines.push("Small sample so far this season");
-              }
-              return lines;
-            },
+        tooltip: buildScatterTooltipOptions(tooltipBackground, {
+          title(items) {
+            return items[0]?.raw?.name || "";
           },
-        },
+          label(context) {
+            const { x, y, row } = context.raw || {};
+            const line = `${scatterXMeta.label} ${formatScatterAxisValue(x, scatterXMeta)} · ${scatterYMeta.label} ${formatScatterAxisValue(y, scatterYMeta)}`;
+            const lines = [line];
+            if (row?.played != null && row?.total != null) {
+              lines.push(`${row.played} of ${row.total} matches played`);
+            }
+            if (row && isLowSample(row)) {
+              lines.push("Small sample so far this season");
+            }
+            return lines;
+          },
+        }),
       },
       layout: {
-        padding: { top: 14, right: 28, bottom: 12, left: 12 },
+        padding: SCATTER_EXTERNAL_AXIS_LAYOUT_PADDING,
       },
       scales: {
         x: {
-          title: {
-            display: true,
-            text: scatterXMeta?.label || "",
-            color,
-            font: { size: 12, weight: "600" },
-            padding: { top: 4, bottom: 2 },
-          },
+          title: { display: false },
           ticks: {
             color,
             font: { size: 10 },
             stepSize: scatterAxisRanges.x.stepSize,
-            padding: 4,
+            padding: 2,
           },
           grid: { color: gridColor, drawTicks: false },
           border: { display: false },
@@ -441,18 +497,12 @@ function LeagueStyleMap({ competitions }) {
           max: scatterAxisRanges.x.max,
         },
         y: {
-          title: {
-            display: true,
-            text: scatterYMeta?.label || "",
-            color,
-            font: { size: 12, weight: "600" },
-            padding: { top: 2, bottom: 4 },
-          },
+          title: { display: false },
           ticks: {
             color,
             font: { size: 10 },
             stepSize: scatterAxisRanges.y.stepSize,
-            padding: 4,
+            padding: 2,
           },
           grid: { color: gridColor, drawTicks: false },
           border: { display: false },
@@ -473,10 +523,12 @@ function LeagueStyleMap({ competitions }) {
 
   if (leagueRows.length < 4 || !scatterXMeta || !scatterYMeta) return null;
 
+  const plottedCount = plottedLeagueRows.length;
+
   return (
     <ChartCard
       title="Style map"
-      subtitle="Pick any two metrics to see how each league measures up. The yellow point is the unweighted mean across leagues shown; grey leagues have a small sample so far."
+      subtitle="Pick any two metrics to compare leagues. Use Choose leagues to add or remove sides on the chart (top 10 shown by default). The table below has every league and flags small samples."
     >
       <div className="Competition__comparisonAxisPickers Competition__comparisonAxisPickers--scatter">
         <MetricPicker
@@ -492,6 +544,15 @@ function LeagueStyleMap({ competitions }) {
           onChange={setScatterYKey}
         />
       </div>
+      <StyleMapLeagueSelectionBar
+        plottedCount={plottedCount}
+        totalCount={leagueRows.length}
+        leagues={styleMapLegendItems}
+        selectedSlugs={selectedSlugs}
+        onToggle={toggleLeagueSlug}
+        onSelectTopTen={selectTopTenLeagues}
+        onSelectAll={selectAllLeagues}
+      />
       <ShareableVisual
         className="Competition__shareable"
         filename={sanitizeImageFilename(
@@ -503,22 +564,38 @@ function LeagueStyleMap({ competitions }) {
           <p className="Competition__shareCaptureTitle">
             Style map
             <span className="Competition__shareCaptureSub">
-              {scatterXMeta.label} vs {scatterYMeta.label} · {leagueRows.length}{" "}
-              leagues
+              {scatterXMeta.label} vs {scatterYMeta.label} · {plottedCount} of{" "}
+              {leagueRows.length} leagues
             </span>
           </p>
-          <div className="Competition__comparisonScatterWrap CompetitionsCompare-chartScroll">
-            <Scatter
-              key={`${theme}-${scatterXKey}-${scatterYKey}`}
-              data={scatterData}
-              options={scatterOptions}
-              plugins={[scatterMarkerPlugin]}
-            />
-            <ScatterBadgeLayer
-              markers={scatterMarkers}
-              size={scatterBadgeSize}
-            />
-          </div>
+          <ScatterAxisFrame
+            xLabel={scatterXMeta.label}
+            yLabel={scatterYMeta.label}
+          >
+            <div
+              className={`Competition__comparisonScatterWrap CompetitionsCompare-chartScroll${
+                scatterDense ? " Competition__comparisonScatterWrap--dense" : ""
+              }`}
+            >
+              <Scatter
+                key={`${theme}-${scatterXKey}-${scatterYKey}-${scatterSelectionKey}`}
+                data={scatterData}
+                options={scatterOptions}
+                plugins={[scatterMarkerPlugin]}
+              />
+              <ScatterBadgeLayer
+                markers={scatterMarkers}
+                size={scatterBadgeSize}
+                highlightedSlug={highlightedSlug}
+              />
+            </div>
+          </ScatterAxisFrame>
+          <StyleMapLegend
+            items={shareLegendItems}
+            className="Competition__radarLegend--shareCompact"
+            highlightedSlug={highlightedSlug}
+            onHighlightSlug={setHighlightedSlug}
+          />
         </div>
       </ShareableVisual>
     </ChartCard>

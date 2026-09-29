@@ -75,6 +75,36 @@ export const FEATURED_COMPETITION_SLUGS = [
   "champions-league",
 ];
 
+/** Default style-map selection on /competitions/compare/ (editorial order). */
+export const STYLE_MAP_PRIORITY_SLUGS = [
+  "premier-league",
+  "la-liga",
+  "serie-a",
+  "bundesliga",
+  "ligue-1",
+  "champions-league",
+  "eredivisie",
+  "primeira-liga",
+  "championship",
+  "mls",
+  "europa-league",
+  "europa-conference-league",
+  "copa-libertadores",
+  "scottish-premiership",
+  "liga-mx",
+  "brazil-serie-a",
+  "belgian-pro-league",
+];
+
+/** Continental / cross-border competitions on /competitions/compare/ (not domestic tier rules). */
+export const COMPARISON_CONTINENTAL_SLUGS = new Set([
+  "champions-league",
+  "europa-league",
+  "europa-conference-league",
+  "copa-libertadores",
+  "uefa-nations-league",
+]);
+
 /** Competitions with no industry leading stat website season data - excluded from sitemap and index. */
 export const UNAVAILABLE_COMPETITION_SLUGS = new Set([
   "brazil-serie-b",

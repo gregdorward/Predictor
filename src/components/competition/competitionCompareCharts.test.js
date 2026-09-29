@@ -1,4 +1,4 @@
-import { render, screen } from "@testing-library/react";
+import { fireEvent, render, screen } from "@testing-library/react";
 import CompetitionCompareCharts from "./competitionCompareCharts";
 
 jest.mock("../Chart", () => ({
@@ -79,8 +79,40 @@ describe("CompetitionCompareCharts", () => {
     expect(screen.getByText("X axis")).toBeInTheDocument();
     expect(screen.getByText("Y axis")).toBeInTheDocument();
     expect(screen.getByTestId("scatter-chart")).toBeInTheDocument();
+    expect(screen.getAllByTestId("style-map-legend").length).toBeGreaterThan(0);
+    expect(screen.getAllByText("League A").length).toBeGreaterThan(0);
     expect(
       screen.getByText(/Switch axes on the style map/i)
     ).toBeInTheDocument();
+  });
+
+  it("shows compact league picker and toggles selection in popover", () => {
+    render(<CompetitionCompareCharts competitions={COMPETITIONS} />);
+
+    expect(screen.getByRole("button", { name: "Top 10" })).toBeInTheDocument();
+    expect(
+      screen.getByRole("button", { name: "All leagues (4)" })
+    ).toBeInTheDocument();
+    expect(screen.getByText(/Showing 4 of 4 leagues on chart/)).toBeInTheDocument();
+    expect(screen.getByTestId("style-map-league-bar")).toBeInTheDocument();
+
+    fireEvent.click(screen.getByRole("button", { name: /Choose leagues/i }));
+
+    const leagueB = screen.getByRole("option", { name: /League B/i });
+    expect(leagueB).toHaveAttribute("aria-selected", "true");
+    fireEvent.click(leagueB);
+    expect(leagueB).toHaveAttribute("aria-selected", "false");
+    expect(screen.getByText(/Showing 3 of 4 leagues on chart/)).toBeInTheDocument();
+  });
+
+  it("highlights a league on the chart when its legend entry is tapped", () => {
+    render(<CompetitionCompareCharts competitions={COMPETITIONS} />);
+
+    const leagueA = screen.getByRole("button", { name: /League A/i });
+    expect(leagueA).toHaveAttribute("aria-pressed", "false");
+    fireEvent.click(leagueA);
+    expect(leagueA).toHaveAttribute("aria-pressed", "true");
+    fireEvent.click(leagueA);
+    expect(leagueA).toHaveAttribute("aria-pressed", "false");
   });
 });

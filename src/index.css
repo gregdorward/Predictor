@@ -1684,9 +1684,6 @@ button:hover:not(:disabled) {
   border-color: var(--primary-color);
   color: var(--span-text-colour);
   transform: translateY(-1px);
-  box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.2),
-    var(--button-shadow-hover);
 }
 
 button:active:not(:disabled) {
@@ -14200,6 +14197,47 @@ header.Competition__hero {
   padding-inline: 1rem;
 }
 
+.Competition__scatterAxisFrame {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  grid-template-rows: minmax(0, 1fr) auto;
+  grid-template-areas:
+    "ytitle plot"
+    ". xtitle";
+  width: 100%;
+  column-gap: 0.35rem;
+  row-gap: 0.2rem;
+}
+
+.Competition__scatterAxisTitle {
+  margin: 0;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-color);
+  line-height: 1.25;
+}
+
+.Competition__scatterAxisTitle--y {
+  grid-area: ytitle;
+  writing-mode: vertical-rl;
+  transform: rotate(180deg);
+  align-self: center;
+  justify-self: end;
+  padding: 0 0.1rem;
+  text-align: center;
+}
+
+.Competition__scatterAxisTitle--x {
+  grid-area: xtitle;
+  text-align: center;
+  padding: 0.1rem 0 0;
+}
+
+.Competition__scatterAxisFrame .Competition__comparisonScatterWrap {
+  grid-area: plot;
+  min-width: 0;
+}
+
 .Competition__comparisonScatterWrap {
   position: relative;
   width: 100%;
@@ -14224,11 +14262,20 @@ header.Competition__hero {
   border-radius: 50%;
   padding: 1px;
   box-shadow: 0 0 0 1px rgba(2, 0, 41, 0.12), 0 1px 2px rgba(2, 0, 41, 0.18);
+  transition: box-shadow 0.15s ease;
+}
+
+.Competition__scatterBadge--highlighted {
+  z-index: 2;
+  box-shadow:
+    0 0 0 2px var(--primary-color),
+    0 0 0 1px rgba(2, 0, 41, 0.12),
+    0 1px 2px rgba(2, 0, 41, 0.18);
 }
 
 @media (min-width: 641px) {
   .Competition__scatterBadge {
-    transform: translate(-50%, -50%) scale(1.875);
+    transform: translate(-50%, -50%) scale(2.8125);
   }
 }
 
@@ -14246,6 +14293,46 @@ header.Competition__hero {
   align-items: center;
   gap: 0.4rem;
   min-width: 0;
+  margin: 0;
+  padding: 0.2rem 0.35rem;
+  border: 1px solid transparent;
+  border-radius: 4px;
+  background: transparent;
+  font: inherit;
+  color: inherit;
+  cursor: default;
+}
+
+button.Competition__radarLegendItem {
+  cursor: pointer;
+}
+
+button.Competition__radarLegendItem:hover {
+  border-color: var(--primary-color);
+  background: transparent;
+}
+
+button.Competition__radarLegendItem:focus-visible {
+  outline: 2px solid var(--accent-color);
+  outline-offset: 2px;
+}
+
+.Competition__radarLegendItem--inactive {
+  opacity: 0.45;
+}
+
+.Competition__radarLegendItem--inactive .Competition__radarLegendBadge {
+  filter: grayscale(0.85);
+}
+
+.Competition__comparisonScatterWrap--dense .Competition__scatterBadge {
+  transform: translate(-50%, -50%) scale(0.95);
+}
+
+@media (min-width: 641px) {
+  .Competition__comparisonScatterWrap--dense .Competition__scatterBadge {
+    transform: translate(-50%, -50%) scale(2.025);
+  }
 }
 
 .Competition__radarLegendColor {
@@ -14260,7 +14347,15 @@ header.Competition__hero {
   outline-offset: 1px;
 }
 
-.Competition__radarLegendBadge,
+.Competition__radarLegendBadge {
+  width: 1.5rem;
+  height: 1.5rem;
+  object-fit: contain;
+  flex-shrink: 0;
+  background: #ffffff;
+  border-radius: 50%;
+}
+
 .Competition__comparisonTeamChipBadge {
   width: 1.15rem;
   height: 1.15rem;
@@ -14275,6 +14370,34 @@ header.Competition__hero {
   font-weight: 600;
   color: var(--text-color);
   line-height: 1.2;
+}
+
+.Competition__shareCapture .Competition__radarLegend--shareCompact {
+  gap: 0.35rem 0.55rem;
+  padding: 0.35rem 0.75rem 0.5rem;
+}
+
+.Competition__shareCapture .Competition__radarLegend--shareCompact .Competition__radarLegendBadge {
+  width: 1.1rem;
+  height: 1.1rem;
+}
+
+.Competition__shareCapture .Competition__radarLegend--shareCompact .Competition__radarLegendName {
+  font-size: 0.72em;
+}
+
+.Competition__shareCapture .Competition__radarLegend--shareCompact .Competition__radarLegendItem {
+  gap: 0.3rem;
+  padding: 0.25rem;
+}
+
+.Competition__radarLegendItem--highlightable {
+  cursor: pointer;
+}
+
+.Competition__radarLegendItem--chartHighlight {
+  border-color: var(--primary-color);
+  background: color-mix(in srgb, var(--primary-color) 12%, transparent);
 }
 
 .Competition__comparisonBarWrap {
@@ -16431,6 +16554,129 @@ body.dark-mode .CompetitionsIndex-card {
 .CompetitionsCompare-chartScroll {
   position: relative;
   width: 100%;
+}
+
+.CompetitionsCompare-styleMapLegendBar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem 1rem;
+  padding: 0.35rem 1rem 0.15rem;
+}
+
+.CompetitionsCompare-styleMapLegendStatus {
+  margin: 0;
+  font-size: 0.85em;
+  font-weight: 500;
+  color: var(--text-color);
+  opacity: 0.85;
+}
+
+.CompetitionsCompare-styleMapLegendActions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+}
+
+.CompetitionsCompare-styleMapLegendAction {
+  margin: 0;
+  padding: 0.25rem 0.55rem;
+  font-size: 0.8em;
+  font-weight: 600;
+  border: 1px solid var(--border-color, rgba(2, 0, 41, 0.15));
+  border-radius: 4px;
+  background: var(--background-color);
+  color: var(--text-color);
+  cursor: pointer;
+}
+
+.CompetitionsCompare-styleMapLegendAction:hover {
+  border-color: var(--accent-color);
+  color: var(--accent-color);
+}
+
+.CompetitionsCompare-styleMapLegendAction:focus-visible {
+  outline: 2px solid var(--accent-color);
+  outline-offset: 2px;
+}
+
+.CompetitionsCompare-styleMapLeaguePicker {
+  flex: 1 1 auto;
+  min-width: min(100%, 11rem);
+  max-width: 100%;
+}
+
+.CompetitionsCompare-styleMapLeaguePicker .Competition__metricPickerControl {
+  position: relative;
+  width: 100%;
+}
+
+.CompetitionsCompare-styleMapLeaguePickerTrigger {
+  white-space: nowrap;
+}
+
+.Competition__styleMapLeaguePickerMenu {
+  left: 0;
+  right: auto;
+  width: min(18.5rem, calc(100vw - 2rem));
+  max-height: 15rem;
+  box-sizing: border-box;
+}
+
+.Competition__styleMapLeaguePickerOption {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  grid-template-columns: unset;
+}
+
+.Competition__styleMapLeaguePickerOption .Competition__metricPickerCheck {
+  flex-shrink: 0;
+}
+
+.Competition__styleMapLeaguePickerOption .Competition__metricPickerOptionLabel {
+  flex: 1 1 auto;
+  min-width: 0;
+  overflow-wrap: normal;
+  word-break: normal;
+  white-space: normal;
+  line-height: 1.25;
+}
+
+.Competition__styleMapLeaguePickerBadge {
+  width: 1.15rem;
+  height: 1.15rem;
+  object-fit: contain;
+  flex-shrink: 0;
+  background: #ffffff;
+  border-radius: 50%;
+}
+
+@media (max-width: 640px) {
+  .CompetitionsCompare-styleMapLegendActions {
+    width: 100%;
+    align-items: stretch;
+  }
+
+  .CompetitionsCompare-styleMapLeaguePicker {
+    flex: 1 1 100%;
+    width: 100%;
+    min-width: 0;
+  }
+
+  .Competition__styleMapLeaguePickerMenu {
+    left: 0;
+    right: 0;
+    width: auto;
+  }
+}
+
+@media (min-width: 641px) {
+  .Competition__styleMapLeaguePickerMenu {
+    left: auto;
+    right: 0;
+  }
 }
 
 /* Override global `canvas { display:inline; max-width/height:36em; margin:1em }`.

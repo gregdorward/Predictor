@@ -31,6 +31,13 @@ import {
   createScatterMarkerPlugin,
   markersSignature,
   ScatterBadgeLayer,
+  ScatterAxisFrame,
+  StyleMapLegend,
+  buildScatterTooltipOptions,
+  SCATTER_CHART_INTERACTION,
+  SCATTER_EXTERNAL_AXIS_LAYOUT_PADDING,
+  scatterBadgeHitRadius,
+  scatterPlotCountBadgeSize,
   SCATTER_AVERAGE_ABBR,
   SCATTER_AVERAGE_COLOR,
   SCATTER_AVERAGE_FILL,
@@ -162,34 +169,6 @@ function buildLeagueAverageProfile(teams) {
   }
 
   return profile;
-}
-
-function RadarLegend({ items }) {
-  if (!items?.length) return null;
-
-  return (
-    <ul className="Competition__radarLegend">
-      {items.map((item) => (
-        <li key={item.name} className="Competition__radarLegendItem">
-          <span
-            className={`Competition__radarLegendColor${
-              item.dashed ? " Competition__radarLegendColor--dashed" : ""
-            }`}
-            style={{ background: item.color }}
-            aria-hidden="true"
-          />
-          {item.badgeUrl ? (
-            <img
-              src={item.badgeUrl}
-              alt=""
-              className="Competition__radarLegendBadge"
-            />
-          ) : null}
-          <span className="Competition__radarLegendName">{item.name}</span>
-        </li>
-      ))}
-    </ul>
-  );
 }
 
 async function fetchLeagueTeamBadgeMap(seasonId, teamNames) {
@@ -472,8 +451,8 @@ export default function CompetitionTeamComparison({
     [color, handleScatterPositions]
   );
 
-  const scatterBadgeSize =
-    plottedTeams.length <= 2 ? 28 : plottedTeams.length <= 6 ? 22 : 18;
+  const scatterBadgeSize = scatterPlotCountBadgeSize(plottedTeams.length);
+  const scatterHitRadius = scatterBadgeHitRadius(scatterBadgeSize);
 
   const scatterData = useMemo(() => {
     const points = plottedTeams
@@ -514,10 +493,10 @@ export default function CompetitionTeamComparison({
             return plottedTeams.length <= 2 ? 5 : 4;
           }),
           pointHoverRadius: points.map((point) => {
-            if (point.badgeUrl) return scatterBadgeSize * 0.9375 + 2;
+            if (point.badgeUrl) return 0;
             return plottedTeams.length <= 2 ? 7 : 6;
           }),
-          pointHitRadius: scatterBadgeSize * 0.9375 + 4,
+          pointHitRadius: scatterHitRadius,
         },
       ],
     };
@@ -528,6 +507,7 @@ export default function CompetitionTeamComparison({
     teamAbbreviations,
     badgeUrlForTeam,
     scatterBadgeSize,
+    scatterHitRadius,
   ]);
 
   const scatterAxisRanges = useMemo(() => {
@@ -554,41 +534,31 @@ export default function CompetitionTeamComparison({
     () => ({
       responsive: true,
       maintainAspectRatio: false,
+      interaction: SCATTER_CHART_INTERACTION,
       plugins: {
         legend: { display: false },
-        tooltip: {
-          backgroundColor: tooltipBackground,
-          titleColor: "#ffffff",
-          bodyColor: "#ffffff",
-          callbacks: {
-            title(items) {
-              return items[0]?.raw?.team || "";
-            },
-            label(context) {
-              const { x, y, abbr } = context.raw || {};
-              const line = `${scatterXMeta.label} ${formatMetricValue(x, scatterXMeta)} · ${scatterYMeta.label} ${formatMetricValue(y, scatterYMeta)}`;
-              return abbr ? [`${abbr}`, line] : line;
-            },
+        tooltip: buildScatterTooltipOptions(tooltipBackground, {
+          title(items) {
+            return items[0]?.raw?.team || "";
           },
-        },
+          label(context) {
+            const { x, y } = context.raw || {};
+            const line = `${scatterXMeta.label} ${formatMetricValue(x, scatterXMeta)} · ${scatterYMeta.label} ${formatMetricValue(y, scatterYMeta)}`;
+            return line;
+          },
+        }),
       },
       layout: {
-        padding: { top: 14, right: 28, bottom: 12, left: 12 },
+        padding: SCATTER_EXTERNAL_AXIS_LAYOUT_PADDING,
       },
       scales: {
         x: {
-          title: {
-            display: true,
-            text: scatterXMeta.label,
-            color,
-            font: { size: 12, weight: "600" },
-            padding: { top: 4, bottom: 2 },
-          },
+          title: { display: false },
           ticks: {
             color,
             font: { size: 10 },
             stepSize: scatterAxisRanges.x.stepSize,
-            padding: 4,
+            padding: 2,
           },
           grid: { color: gridColor, drawTicks: false },
           border: { display: false },
@@ -596,18 +566,12 @@ export default function CompetitionTeamComparison({
           max: scatterAxisRanges.x.max,
         },
         y: {
-          title: {
-            display: true,
-            text: scatterYMeta.label,
-            color,
-            font: { size: 12, weight: "600" },
-            padding: { top: 2, bottom: 4 },
-          },
+          title: { display: false },
           ticks: {
             color,
             font: { size: 10 },
             stepSize: scatterAxisRanges.y.stepSize,
-            padding: 4,
+            padding: 2,
           },
           grid: { color: gridColor, drawTicks: false },
           border: { display: false },
@@ -865,17 +829,22 @@ export default function CompetitionTeamComparison({
                     : " · Full league"}
                 </span>
               </p>
-              <div className="Competition__comparisonScatterWrap">
-                <Scatter
-                  data={scatterData}
-                  options={scatterOptions}
-                  plugins={[scatterMarkerPlugin]}
-                />
-                <ScatterBadgeLayer
-                  markers={scatterMarkers}
-                  size={scatterBadgeSize}
-                />
-              </div>
+              <ScatterAxisFrame
+                xLabel={scatterXMeta.label}
+                yLabel={scatterYMeta.label}
+              >
+                <div className="Competition__comparisonScatterWrap">
+                  <Scatter
+                    data={scatterData}
+                    options={scatterOptions}
+                    plugins={[scatterMarkerPlugin]}
+                  />
+                  <ScatterBadgeLayer
+                    markers={scatterMarkers}
+                    size={scatterBadgeSize}
+                  />
+                </div>
+              </ScatterAxisFrame>
             </div>
           </ShareableVisual>
         </ChartCard>
@@ -977,7 +946,7 @@ export default function CompetitionTeamComparison({
                   {selectedTeams.join(" · ")}
                 </span>
               </p>
-              <RadarLegend items={radarLegendItems} />
+              <StyleMapLegend items={radarLegendItems} />
               <div className="Competition__comparisonRadarWrap">
                 <Radar data={radarData} options={radarOptions} />
               </div>

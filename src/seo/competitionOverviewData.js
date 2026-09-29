@@ -9,6 +9,10 @@
  */
 
 import { isCompetitionSeasonEmpty } from "./competitionSeason";
+import {
+  COMPARISON_CONTINENTAL_SLUGS,
+  STYLE_MAP_PRIORITY_SLUGS,
+} from "./competitionCatalog";
 import { STAT_HUB_ALLOWED_COUNTRIES } from "./statPageData";
 
 /**
@@ -121,16 +125,21 @@ export function buildOverviewRow(data, catalog) {
 }
 
 /**
- * Same coverage rule as the existing stat hub pages: top-four tiers in the
- * countries we cover. This also keeps cups out, since they report
- * `division: -1` and a continental `country` such as "Europe".
+ * Domestic leagues up to tier 6 in allowed countries, plus named continental
+ * competitions. Other cups stay out (`division: -1` without a continental slug).
  */
 export function isComparisonEligible(row) {
   if (!row?.slug) return false;
-  if (!STAT_HUB_ALLOWED_COUNTRIES.includes(row.country)) return false;
-  if (!(row.division > 0 && row.division < 5)) return false;
   if (!(row.played >= COMPARISON_MIN_MATCHES)) return false;
-  return row.avgGoals !== null;
+  if (row.avgGoals === null) return false;
+
+  if (COMPARISON_CONTINENTAL_SLUGS.has(row.slug)) {
+    return true;
+  }
+
+  if (!STAT_HUB_ALLOWED_COUNTRIES.includes(row.country)) return false;
+  if (!(row.division > 0 && row.division <= 6)) return false;
+  return true;
 }
 
 export function isLowSample(row) {
@@ -183,6 +192,29 @@ export function rankByMetric(competitions, metricKey) {
   return (competitions || [])
     .filter((row) => toNumber(row?.[metricKey]) !== null)
     .sort((a, b) => Number(b[metricKey]) - Number(a[metricKey]));
+}
+
+/**
+ * Slugs to show on the compare style map by default (priority order, capped).
+ * @param {Array<{ slug?: string }>} competitions
+ * @param {number} [limit=10]
+ * @returns {string[]}
+ */
+export function getDefaultStyleMapSlugs(competitions, limit = 10) {
+  const available = new Set(
+    (competitions || [])
+      .map((row) => row?.slug)
+      .filter((slug) => typeof slug === "string" && slug.length > 0)
+  );
+  if (!available.size) return [];
+
+  const picked = [];
+  for (const slug of STYLE_MAP_PRIORITY_SLUGS) {
+    if (!available.has(slug)) continue;
+    picked.push(slug);
+    if (picked.length >= limit) break;
+  }
+  return picked;
 }
 
 /** Mean of a metric across the qualifying leagues, for "vs average" context. */

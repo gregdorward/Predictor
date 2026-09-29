@@ -232,6 +232,7 @@ export function createScatterMarkerPlugin({
         positions.push({
           markerId,
           team: raw.team ?? markerId,
+          slug: raw.slug ?? raw.row?.slug ?? null,
           x: Math.round(x),
           y: Math.round(y),
           badgeUrl: raw.badgeUrl || null,
@@ -261,7 +262,286 @@ export function createScatterMarkerPlugin({
   };
 }
 
-export function ScatterBadgeLayer({ markers, size = 20 }) {
+export const SCATTER_CHART_INTERACTION = {
+  mode: "nearest",
+  intersect: false,
+  axis: "xy",
+};
+
+/** Base badge size (px) before CSS scale, by number of points on the plot. */
+export function scatterPlotCountBadgeSize(count) {
+  if (count <= 2) return 28;
+  if (count <= 6) return 22;
+  if (count <= 12) return 18;
+  return 14;
+}
+
+export function scatterBadgeHitRadius(scatterBadgeSize) {
+  return scatterBadgeSize * 0.9375 + 4;
+}
+
+/** Tooltip + interaction defaults for style-map scatter charts. */
+export function buildScatterTooltipOptions(tooltipBackground, callbacks = {}) {
+  return {
+    backgroundColor: tooltipBackground,
+    titleColor: "#ffffff",
+    bodyColor: "#ffffff",
+    mode: "nearest",
+    intersect: false,
+    displayColors: false,
+    callbacks,
+  };
+}
+
+/** Extra canvas padding when axis titles are rendered outside the chart. */
+export const SCATTER_EXTERNAL_AXIS_LAYOUT_PADDING = {
+  top: 12,
+  right: 18,
+  bottom: 6,
+  left: 2,
+};
+
+/** Axis titles in the margin so the square plot can use the full card width. */
+export function ScatterAxisFrame({ xLabel, yLabel, children, className = "" }) {
+  if (!xLabel && !yLabel) {
+    return children;
+  }
+
+  return (
+    <div
+      className={`Competition__scatterAxisFrame${
+        className ? ` ${className}` : ""
+      }`}
+    >
+      {yLabel ? (
+        <p className="Competition__scatterAxisTitle Competition__scatterAxisTitle--y">
+          {yLabel}
+        </p>
+      ) : null}
+      {children}
+      {xLabel ? (
+        <p className="Competition__scatterAxisTitle Competition__scatterAxisTitle--x">
+          {xLabel}
+        </p>
+      ) : null}
+    </div>
+  );
+}
+
+/** Compact league multi-select for the compare style map (popover checklist). */
+export function StyleMapLeagueSelectionBar({
+  plottedCount,
+  totalCount,
+  leagues,
+  selectedSlugs,
+  onToggle,
+  onSelectTopTen,
+  onSelectAll,
+}) {
+  const [open, setOpen] = useState(false);
+  const rootRef = useRef(null);
+
+  useEffect(() => {
+    if (!open) return undefined;
+
+    function handlePointerDown(event) {
+      if (rootRef.current && !rootRef.current.contains(event.target)) {
+        setOpen(false);
+      }
+    }
+
+    function handleKeyDown(event) {
+      if (event.key === "Escape") setOpen(false);
+    }
+
+    document.addEventListener("mousedown", handlePointerDown);
+    document.addEventListener("keydown", handleKeyDown);
+    return () => {
+      document.removeEventListener("mousedown", handlePointerDown);
+      document.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [open]);
+
+  return (
+    <div
+      className="CompetitionsCompare-styleMapLegendBar"
+      ref={rootRef}
+      data-testid="style-map-league-bar"
+    >
+      <p className="CompetitionsCompare-styleMapLegendStatus">
+        Showing {plottedCount} of {totalCount} leagues on chart
+      </p>
+      <div
+        className="CompetitionsCompare-styleMapLegendActions"
+        role="group"
+        aria-label="League selection"
+      >
+        <button
+          type="button"
+          className="CompetitionsCompare-styleMapLegendAction"
+          onClick={onSelectTopTen}
+        >
+          Top 10
+        </button>
+        <button
+          type="button"
+          className="CompetitionsCompare-styleMapLegendAction"
+          onClick={onSelectAll}
+        >
+          All leagues ({totalCount})
+        </button>
+        <div className="Competition__metricPicker CompetitionsCompare-styleMapLeaguePicker">
+          <div className="Competition__metricPickerControl">
+            <button
+              type="button"
+              className="Competition__metricPickerTrigger CompetitionsCompare-styleMapLeaguePickerTrigger"
+              aria-haspopup="listbox"
+              aria-expanded={open}
+              onClick={() => setOpen((prev) => !prev)}
+            >
+              <span className="Competition__metricPickerValue">Choose leagues</span>
+              <span className="Competition__metricPickerCaret" aria-hidden="true">
+                ▾
+              </span>
+            </button>
+            {open ? (
+              <ul
+                className="Competition__metricPickerMenu Competition__styleMapLeaguePickerMenu"
+                role="listbox"
+                aria-label="Leagues on style map"
+                aria-multiselectable="true"
+              >
+                {leagues.map((league) => {
+                  const selected = selectedSlugs.has(league.slug);
+                  return (
+                    <li key={league.slug} role="presentation">
+                      <button
+                        type="button"
+                        role="option"
+                        aria-selected={selected}
+                        className={`Competition__metricPickerOption Competition__styleMapLeaguePickerOption${
+                          selected
+                            ? " Competition__metricPickerOption--active"
+                            : ""
+                        }`}
+                        onClick={() => onToggle(league.slug)}
+                      >
+                        <span
+                          className="Competition__metricPickerCheck"
+                          aria-hidden="true"
+                        >
+                          {selected ? "✓" : ""}
+                        </span>
+                        {league.badgeUrl ? (
+                          <img
+                            src={league.badgeUrl}
+                            alt=""
+                            className="Competition__styleMapLeaguePickerBadge"
+                          />
+                        ) : null}
+                        <span className="Competition__metricPickerOptionLabel">
+                          {league.name}
+                        </span>
+                      </button>
+                    </li>
+                  );
+                })}
+              </ul>
+            ) : null}
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function StyleMapLegendEntry({ item }) {
+  return (
+    <>
+      {item.color ? (
+        <span
+          className={`Competition__radarLegendColor${
+            item.dashed ? " Competition__radarLegendColor--dashed" : ""
+          }`}
+          style={{ background: item.color }}
+          aria-hidden="true"
+        />
+      ) : null}
+      {item.badgeUrl ? (
+        <img
+          src={item.badgeUrl}
+          alt=""
+          className="Competition__radarLegendBadge"
+        />
+      ) : null}
+      <span className="Competition__radarLegendName">{item.name}</span>
+    </>
+  );
+}
+
+/** Badge + name key for style map / radar share captures. */
+export function StyleMapLegend({
+  items,
+  className = "",
+  highlightedSlug = null,
+  onHighlightSlug,
+}) {
+  if (!items?.length) return null;
+
+  const highlightable = typeof onHighlightSlug === "function";
+  const listLabel = highlightable
+    ? "Chart key — tap a league to highlight on the chart"
+    : "Chart key";
+
+  return (
+    <ul
+      className={`Competition__radarLegend${className ? ` ${className}` : ""}`}
+      data-testid="style-map-legend"
+      aria-label={listLabel}
+    >
+      {items.map((item) => {
+        const key = item.slug || item.name;
+        const isHighlighted =
+          highlightable && item.slug && highlightedSlug === item.slug;
+
+        if (highlightable && item.slug) {
+          return (
+            <li key={key}>
+              <button
+                type="button"
+                className={`Competition__radarLegendItem Competition__radarLegendItem--highlightable${
+                  isHighlighted
+                    ? " Competition__radarLegendItem--chartHighlight"
+                    : ""
+                }`}
+                aria-pressed={isHighlighted}
+                onClick={() =>
+                  onHighlightSlug(
+                    highlightedSlug === item.slug ? null : item.slug
+                  )
+                }
+              >
+                <StyleMapLegendEntry item={item} />
+              </button>
+            </li>
+          );
+        }
+
+        return (
+          <li key={key} className="Competition__radarLegendItem">
+            <StyleMapLegendEntry item={item} />
+          </li>
+        );
+      })}
+    </ul>
+  );
+}
+
+export function ScatterBadgeLayer({
+  markers,
+  size = 20,
+  highlightedSlug = null,
+}) {
   const badges = (markers || []).filter(
     (marker) => marker.badgeUrl && !marker.isLeagueAverage
   );
@@ -271,12 +551,16 @@ export function ScatterBadgeLayer({ markers, size = 20 }) {
     <div className="Competition__scatterBadgeLayer" aria-hidden="true">
       {badges.map((marker) => {
         const key = marker.markerId ?? marker.team;
+        const isHighlighted =
+          highlightedSlug && marker.slug && marker.slug === highlightedSlug;
         return (
           <img
             key={key}
             src={marker.badgeUrl}
             alt=""
-            className="Competition__scatterBadge"
+            className={`Competition__scatterBadge${
+              isHighlighted ? " Competition__scatterBadge--highlighted" : ""
+            }`}
             style={{
               left: marker.x,
               top: marker.y,
