@@ -112,15 +112,37 @@ export async function fetchUpcomingFixtureIds(days = 3) {
   return [...ids];
 }
 
-function formatFixtureDate(match) {
+function fixtureDateFromMatch(match) {
   const dateUnix = match?.date_unix ?? match?.date;
-  if (dateUnix == null) return "";
+  if (dateUnix == null) return null;
   const date = new Date(Number(dateUnix) * 1000);
-  if (Number.isNaN(date.getTime())) return "";
+  if (Number.isNaN(date.getTime())) return null;
+  return date;
+}
+
+function formatFixtureDate(match) {
+  const date = fixtureDateFromMatch(match);
+  if (!date) return "";
   return date.toLocaleDateString("en-GB", {
     weekday: "short",
     day: "numeric",
     month: "short",
+  });
+}
+
+function formatFixtureDateKey(match) {
+  const date = fixtureDateFromMatch(match);
+  if (!date) return "unknown";
+  return date.toISOString().slice(0, 10);
+}
+
+function formatFixtureKickOff(match) {
+  const date = fixtureDateFromMatch(match);
+  if (!date) return "";
+  return date.toLocaleTimeString("en-GB", {
+    hour: "numeric",
+    minute: "2-digit",
+    hour12: false,
   });
 }
 
@@ -136,6 +158,8 @@ function matchToFixtureLink(match) {
     homeTeam: home,
     awayTeam: away,
     date: formatFixtureDate(match),
+    dateKey: formatFixtureDateKey(match),
+    kickOff: formatFixtureKickOff(match),
   };
 }
 

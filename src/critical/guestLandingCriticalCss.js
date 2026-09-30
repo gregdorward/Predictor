@@ -135,6 +135,20 @@ body > #__next > * {
   margin: 0;
   text-align: left;
 }
+.GuestLanding-heroBrand {
+  width: 100%;
+  display: flow-root;
+}
+.GuestLanding-heroVisual {
+  float: left;
+  width: 50%;
+  max-width: 50%;
+  margin: 0 1rem 0.35rem 0;
+  box-sizing: border-box;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
 .GuestLanding-title {
   font-size: clamp(1.35rem, 3vw, 2rem);
   font-weight: 700;
@@ -143,10 +157,10 @@ body > #__next > * {
   color: var(--text-color);
 }
 .GuestLanding-headline {
-  font-size: 0.95rem;
+  font-size: clamp(1.05rem, 2.6vw, 1.35rem);
   font-weight: 600;
-  line-height: 1.35;
-  margin: 0 0 0.45rem;
+  line-height: 1.3;
+  margin: 0 0 0.55rem;
   color: var(--primary-color);
 }
 .GuestLanding-headlineLines { display: block; }
@@ -157,12 +171,58 @@ body > #__next > * {
 }
 .GuestLanding-headlineLine.is-active { opacity: 1; }
 .GuestLanding-subheadline {
-  font-size: 0.875rem;
+  font-size: 0.9375rem;
   font-weight: 400;
   color: var(--faint-text);
-  line-height: 1.45;
+  line-height: 1.55;
   margin: 0;
-  max-width: 36em;
+  max-width: 38em;
+}
+.GuestLanding-fixturesStatus {
+  margin: 0.35rem 0 0;
+  font-size: 0.8125rem;
+  font-weight: 400;
+  line-height: 1.4;
+  color: var(--faint-text);
+  min-height: 1.25em;
+}
+.GuestLanding-introToday {
+  margin: 0.65rem 0 0;
+  padding-top: 0.65rem;
+  border-top: 1px solid var(--third-background-color);
+}
+.GuestLanding-todayList {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 0.15rem;
+}
+.GuestLanding-introToday a {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 0.75rem;
+  padding: 0.2rem 0;
+  color: var(--text-color);
+  font-size: 0.875rem;
+  font-weight: 400;
+  text-decoration: none;
+}
+.GuestLanding-todayTopic {
+  font-weight: 600;
+}
+.GuestLanding-todayStat {
+  flex-shrink: 0;
+  font-variant-numeric: tabular-nums;
+  font-weight: 600;
+  font-size: 0.8125rem;
+  color: var(--primary-color);
+}
+.GuestLanding-aboutFine {
+  font-size: 0.875rem;
+  color: var(--faint-text);
+  margin-bottom: 0;
 }
 .GuestLanding-today {
   display: grid;
@@ -241,9 +301,12 @@ body > #__next > * {
 .GuestLanding-about {
   grid-column: 1 / -1;
   grid-row: 3;
-  text-align: center;
+  text-align: left;
   align-items: center;
-  justify-content: center;
+  justify-content: flex-start;
+  padding-top: 1.25rem;
+  margin-top: 0.25rem;
+  border-top: 1px solid var(--third-background-color);
 }
 .GuestLanding-laptop {
   width: 100%;
@@ -258,7 +321,7 @@ body > #__next > * {
   background: var(--third-background-color);
   border: 2px solid var(--button-border-color);
   border-radius: 10px 10px 2px 2px;
-  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.22);
+  box-shadow: none;
   box-sizing: border-box;
 }
 .GuestLanding-laptopScreen {
@@ -283,11 +346,13 @@ body > #__next > * {
   height: auto;
 }
 .GuestLanding-aboutTitle {
-  font-size: 1.2rem;
-  font-weight: 800;
+  width: 100%;
+  max-width: 42em;
+  font-size: 1.15rem;
+  font-weight: 700;
   color: var(--text-color);
   margin: 0 auto 0.75rem;
-  max-width: 42em;
+  line-height: 1.35;
 }
 .GuestLanding-about p {
   font-size: 0.9rem;
@@ -296,11 +361,6 @@ body > #__next > * {
   line-height: 1.5;
   margin: 0 auto 0.5rem;
   max-width: 42em;
-}
-.GuestLanding-skip {
-  margin: 0.75rem 0 0;
-  font-size: 1.25em;
-  color: var(--primary-color);
 }
 .SshSidebar,
 .SshPageShell__balance,
@@ -340,22 +400,22 @@ h1 {
     grid-template-rows: auto;
   }
   .GuestLanding-introCard {
+    display: contents;
+  }
+  .GuestLanding-hero {
     grid-column: 1;
     grid-row: 1;
-    padding: 0.75rem 0.25rem 0.25rem;
+    padding: 0.75rem 0.85rem 0.35rem;
+    box-sizing: border-box;
   }
   .GuestLanding-auth {
     grid-column: 1;
     grid-row: 2;
-  }
-  .GuestLanding-visual {
-    grid-column: 1;
-    grid-row: 3;
-    padding: 0.5rem 0.85rem;
+    padding: 0 0.85rem 0.65rem;
   }
   .GuestLanding-about {
     grid-column: 1;
-    grid-row: 4;
+    grid-row: 3;
   }
 }
 @media (max-width: 1024px) {

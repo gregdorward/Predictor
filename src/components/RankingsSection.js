@@ -1,11 +1,10 @@
 import {
   formatRank,
-  formatRankDetail,
   getRankEdgeState,
   getSectionSummary,
 } from "../utils/rankingsInsights";
 
-function SectionSummaryTile({
+function SectionSummaryBar({
   title,
   metrics,
   ranksHome,
@@ -21,21 +20,18 @@ function SectionSummaryTile({
     teamBLabel
   );
 
+  const metaSuffix =
+    summary.unavailable > 0
+      ? `${summary.unavailable} unavailable`
+      : `${summary.compared} compared`;
+
   return (
-    <article
-      className={`RankingsHeatmap-tile RankingsHeatmap-summaryTile RankingsHeatmap-tile--${summary.tone} RankingsHeatmap-tile--medium`}
+    <div
+      className={`RankingsDuel-summary RankingsDuel-summary--${summary.tone}`}
       aria-label={`${title} summary. ${summary.leader}. ${teamALabel} leads ${summary.home} metrics. ${teamBLabel} leads ${summary.away} metrics.`}
     >
-      <div className="RankingsHeatmap-tileHeader">
-        <span className="RankingsHeatmap-metric">{title} snapshot</span>
-        <span
-          className={`RankingsHeatmap-leader RankingsHeatmap-leader--${summary.tone}`}
-        >
-          {summary.leader}
-        </span>
-      </div>
-
-      <div className="RankingsHeatmap-summaryScores">
+      <p className="RankingsDuel-summaryLead">{summary.leader}</p>
+      <div className="RankingsDuel-summaryStats">
         <span>
           <strong>{summary.home}</strong>
           {teamALabel}
@@ -49,18 +45,14 @@ function SectionSummaryTile({
           Level
         </span>
       </div>
-
-      <div className="RankingsHeatmap-edge">
-        {summary.edgeText}
-        {summary.unavailable > 0
-          ? ` · ${summary.unavailable} unavailable`
-          : ` · ${summary.compared} compared`}
-      </div>
-    </article>
+      <p className="RankingsDuel-summaryMeta">
+        {summary.edgeText} · {metaSuffix}
+      </p>
+    </div>
   );
 }
 
-function RankingHeatmapTile({
+function RankingDuelRow({
   metric,
   homeRankData,
   awayRankData,
@@ -70,56 +62,69 @@ function RankingHeatmapTile({
 }) {
   const homeRank = homeRankData?.rank;
   const awayRank = awayRankData?.rank;
-  const state = getRankEdgeState(homeRank, awayRank, totalTeams, metric.key);
-  const tileClassName = [
-    "RankingsHeatmap-tile",
-    `RankingsHeatmap-tile--${state.tone}`,
-    `RankingsHeatmap-tile--${state.intensity}`,
-  ].join(" ");
-  const title = `${metric.label}: ${teamALabel} ${formatRankDetail(
+  const state = getRankEdgeState(
     homeRank,
-    homeRankData,
+    awayRank,
+    totalTeams,
+    metric.key,
+    teamALabel,
+    teamBLabel,
+    homeRankData?.value,
+    awayRankData?.value
+  );
+  const rowClassName = [
+    "RankingsDuel-row",
+    `RankingsDuel-row--${state.tone}`,
+    state.intensity !== "none" ? `RankingsDuel-row--${state.intensity}` : "",
+  ]
+    .filter(Boolean)
+    .join(" ");
+
+  const ariaLabel = `${metric.label}. ${state.leader}. ${teamALabel} ${formatRank(
+    homeRank,
     totalTeams
-  )}; ${teamBLabel} ${formatRankDetail(awayRank, awayRankData, totalTeams)}`;
+  )}. ${teamBLabel} ${formatRank(awayRank, totalTeams)}.`;
 
   return (
-    <article
-      className={tileClassName}
-      title={title}
-      aria-label={`${metric.label}. ${state.leader}. ${teamALabel} ${formatRank(
-        homeRank,
-        totalTeams
-      )}. ${teamBLabel} ${formatRank(awayRank, totalTeams)}.`}
-    >
-      <div className="RankingsHeatmap-tileHeader">
-        <span className="RankingsHeatmap-metric">{metric.label}</span>
-        <span
-          className={`RankingsHeatmap-leader RankingsHeatmap-leader--${state.tone}`}
+    <article className={rowClassName} aria-label={ariaLabel}>
+      <h6 className="RankingsDuel-metric">{metric.label}</h6>
+      <div className="RankingsDuel-duel">
+        <div
+          className={`RankingsDuel-team RankingsDuel-team--home${
+            state.tone === "home" ? " RankingsDuel-team--leading" : ""
+          }`}
         >
-          {state.leader}
-        </span>
-      </div>
-
-      <div className="RankingsHeatmap-ranks">
-        <span className="RankingsHeatmap-teamRank">
           <span
-            className="RankingsHeatmap-teamDot RankingsHeatmap-teamDot--home"
+            className="RankingsDuel-teamDot RankingsDuel-teamDot--home"
             aria-hidden="true"
           />
-          <span className="RankingsHeatmap-teamLabel">{teamALabel}</span>
-          <strong>{formatRank(homeRank, totalTeams)}</strong>
-        </span>
-        <span className="RankingsHeatmap-teamRank">
+          <span className="RankingsDuel-teamName">{teamALabel}</span>
+          <span className="RankingsDuel-rank">
+            {formatRank(homeRank, totalTeams)}
+            {homeRankData?.value != null ? (
+              <span className="RankingsDuel-value">({homeRankData.value})</span>
+            ) : null}
+          </span>
+        </div>
+        <div
+          className={`RankingsDuel-team RankingsDuel-team--away${
+            state.tone === "away" ? " RankingsDuel-team--leading" : ""
+          }`}
+        >
           <span
-            className="RankingsHeatmap-teamDot RankingsHeatmap-teamDot--away"
+            className="RankingsDuel-teamDot RankingsDuel-teamDot--away"
             aria-hidden="true"
           />
-          <span className="RankingsHeatmap-teamLabel">{teamBLabel}</span>
-          <strong>{formatRank(awayRank, totalTeams)}</strong>
-        </span>
+          <span className="RankingsDuel-teamName">{teamBLabel}</span>
+          <span className="RankingsDuel-rank">
+            {formatRank(awayRank, totalTeams)}
+            {awayRankData?.value != null ? (
+              <span className="RankingsDuel-value">({awayRankData.value})</span>
+            ) : null}
+          </span>
+        </div>
       </div>
-
-      <div className="RankingsHeatmap-edge">{state.edgeText}</div>
+      <p className="RankingsDuel-edge">{state.edgeText}</p>
     </article>
   );
 }
@@ -128,6 +133,38 @@ function toTitleCase(str) {
   return str
     .toLowerCase()
     .replace(/\b\w/g, (char) => char.toUpperCase());
+}
+
+function sortMetricsByEdge(metrics, ranksHome, ranksAway, totalTeams, teamALabel, teamBLabel) {
+  return [...metrics].sort((metricA, metricB) => {
+    const homeA = ranksHome[metricA.key]?.rank;
+    const awayA = ranksAway[metricA.key]?.rank;
+    const homeB = ranksHome[metricB.key]?.rank;
+    const awayB = ranksAway[metricB.key]?.rank;
+    const stateA = getRankEdgeState(
+      homeA,
+      awayA,
+      totalTeams,
+      metricA.key,
+      teamALabel,
+      teamBLabel,
+      ranksHome[metricA.key]?.value,
+      ranksAway[metricA.key]?.value
+    );
+    const stateB = getRankEdgeState(
+      homeB,
+      awayB,
+      totalTeams,
+      metricB.key,
+      teamALabel,
+      teamBLabel,
+      ranksHome[metricB.key]?.value,
+      ranksAway[metricB.key]?.value
+    );
+    const edgeA = stateA.edge ?? -1;
+    const edgeB = stateB.edge ?? -1;
+    return edgeB - edgeA;
+  });
 }
 
 export default function RankingsSection({
@@ -139,32 +176,44 @@ export default function RankingsSection({
   teamBLabel,
   totalTeams,
 }) {
+  const sectionTitle = toTitleCase(title);
+  const sortedMetrics = sortMetricsByEdge(
+    metrics,
+    ranksHome,
+    ranksAway,
+    totalTeams,
+    teamALabel,
+    teamBLabel
+  );
+
   return (
     <section className="rankings-section" aria-labelledby={`rankings-${title}`}>
       <h5 className="section-title" id={`rankings-${title}`}>
-        {toTitleCase(title)}
+        {sectionTitle}
       </h5>
 
-      <div className="RankingsHeatmap-grid">
-        <SectionSummaryTile
-          title={toTitleCase(title)}
+      <div className="RankingsDuel-body">
+        <SectionSummaryBar
+          title={sectionTitle}
           metrics={metrics}
           ranksHome={ranksHome}
           ranksAway={ranksAway}
           teamALabel={teamALabel}
           teamBLabel={teamBLabel}
         />
-        {metrics.map((metric) => (
-          <RankingHeatmapTile
-            key={metric.key}
-            metric={metric}
-            homeRankData={ranksHome[metric.key]}
-            awayRankData={ranksAway[metric.key]}
-            teamALabel={teamALabel}
-            teamBLabel={teamBLabel}
-            totalTeams={totalTeams}
-          />
-        ))}
+        <div className="RankingsDuel-list">
+          {sortedMetrics.map((metric) => (
+            <RankingDuelRow
+              key={metric.key}
+              metric={metric}
+              homeRankData={ranksHome[metric.key]}
+              awayRankData={ranksAway[metric.key]}
+              teamALabel={teamALabel}
+              teamBLabel={teamBLabel}
+              totalTeams={totalTeams}
+            />
+          ))}
+        </div>
       </div>
     </section>
   );

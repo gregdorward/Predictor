@@ -1,0 +1,146 @@
+/* Layout polish for /competitions/ — structure without replacing index.css tokens */
+
+.CompetitionsIndex {
+  max-width: 64rem;
+  text-align: left;
+}
+
+.CompetitionsIndex-breadcrumb {
+  margin: 0 0 0.75rem;
+  font-size: 0.92rem;
+  color: var(--faint-text);
+}
+
+.CompetitionsIndex-breadcrumb a {
+  color: var(--accent-color);
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.CompetitionsIndex-breadcrumb a:hover {
+  text-decoration: underline;
+}
+
+.CompetitionsIndex-toolbar {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 0.75rem;
+  margin-top: 1.25rem;
+}
+
+@media (min-width: 40rem) {
+  .CompetitionsIndex-toolbar {
+    flex-direction: row;
+    align-items: center;
+    gap: 1rem;
+  }
+}
+
+.CompetitionsIndex-search {
+  flex: 1 1 auto;
+  min-width: 0;
+  width: 100%;
+  padding: 0.6em 0.85em;
+  font-size: 0.98rem;
+  font-family: inherit;
+  border: 2px solid var(--third-background-color);
+  border-radius: 8px;
+  background: var(--background-color);
+  color: var(--text-color);
+  margin: 0;
+}
+
+.CompetitionsIndex-search:focus {
+  outline: none;
+  border-color: var(--primary-color);
+}
+
+.CompetitionsIndex-toolbar .CompetitionsIndex-compareLink {
+  flex-shrink: 0;
+  margin: 0;
+  padding: 0.55rem 1rem;
+  text-align: center;
+  white-space: nowrap;
+}
+
+@media (min-width: 40rem) {
+  .CompetitionsIndex-toolbar .CompetitionsIndex-compareLink {
+    padding: 0.6rem 1.1rem;
+  }
+}
+
+.CompetitionsIndex-status {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem 0.75rem;
+  margin-top: 0.85rem;
+}
+
+.CompetitionsIndex-resultCount {
+  margin: 0;
+  font-size: 0.92rem;
+  color: var(--faint-text);
+}
+
+.CompetitionsIndex-jump {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem 0.5rem;
+  margin-top: 1rem;
+  padding-bottom: 0.15rem;
+}
+
+.CompetitionsIndex-jump a {
+  display: inline-flex;
+  align-items: center;
+  flex-shrink: 0;
+  max-width: none;
+  padding: 0.3rem 0.65rem;
+  border-radius: 999px;
+  font-size: 0.92rem;
+  font-weight: 600;
+  line-height: 1.2;
+  white-space: nowrap;
+  text-decoration: none;
+  color: var(--text-color);
+  background: var(--third-background-color);
+  border: 1px solid transparent;
+}
+
+.CompetitionsIndex-jump a:hover,
+.CompetitionsIndex-jump a:focus-visible {
+  border-color: var(--primary-color);
+  text-decoration: none;
+}
+
+.CompetitionsIndex-empty {
+  margin: 1.5rem 0 0;
+  font-size: 0.95rem;
+  color: var(--faint-text);
+}
+
+.CompetitionsIndex-clearSearch {
+  padding: 0;
+  font: inherit;
+  font-weight: 600;
+  color: var(--accent-color);
+  background: none;
+  border: none;
+  cursor: pointer;
+  text-decoration: underline;
+}
+
+.CompetitionsIndex-clearSearch:hover {
+  text-decoration: none;
+}
+
+/* Fragment targets live on .CompetitionsIndex-group; offset clears fixed .DarkMode bar */
+html:has(.CompetitionsIndex) {
+  scroll-padding-top: calc(var(--header-height) + 0.75rem);
+}
+
+.CompetitionsIndex-group {
+  scroll-margin-top: calc(var(--header-height) + 0.75rem);
+}

@@ -3,7 +3,10 @@ import { useSelector } from "react-redux";
 import { CreateBadge } from "./createBadge";
 import { predictMatchById } from "../logic/predictMatchById";
 import { mapMatchToFixturePageData } from "../logic/buildSingleMatch";
-import { buildLegacyFixtureSections } from "../logic/fixturePageMetrics";
+import {
+  buildLegacyFixtureSections,
+  FIXTURE_MARKETS_SNAPSHOT_LABELS,
+} from "../logic/fixturePageMetrics";
 import FixtureSeasonStats from "./FixtureSeasonStats";
 import ShareableVisual from "./ShareableVisual";
 import SharePageLinkButton from "./SharePageLinkButton";
@@ -23,6 +26,7 @@ import { useFixturePredictionUnlock } from "../logic/useFixturePredictionUnlock"
 import { FREE_DAILY_PREDICTION_LIMIT } from "../logic/freePredictionAllowance";
 import JourneyContentBreak from "./JourneyContentBreak";
 import FixtureFootyStatsFallback from "./FixtureFootyStatsFallback";
+import FixtureMarketsSnapshot from "./FixtureMarketsSnapshot";
 
 ChartJS.register(
   CategoryScale,
@@ -116,16 +120,40 @@ function CompareRow({ label, homeValue, awayValue }) {
   );
 }
 
-function CompareSection({ title, homeRows = [], awayRows = [] }) {
-  const rows = homeRows.map((homeStat, index) => ({
+const marketsSnapshotLabelSet = new Set(FIXTURE_MARKETS_SNAPSHOT_LABELS);
+
+function filterCompareRows(sectionId, homeRows, awayRows) {
+  if (sectionId !== "markets") {
+    return { homeRows, awayRows };
+  }
+  const home = homeRows.filter((row) => !marketsSnapshotLabelSet.has(row.label));
+  const away = awayRows.filter((row) => !marketsSnapshotLabelSet.has(row.label));
+  return { homeRows: home, awayRows: away };
+}
+
+function CompareSection({
+  sectionId,
+  title,
+  homeRows = [],
+  awayRows = [],
+  hideTitle = false,
+}) {
+  const filtered = filterCompareRows(sectionId, homeRows, awayRows);
+  const rows = filtered.homeRows.map((homeStat, index) => ({
     label: homeStat.label,
     homeValue: homeStat.value,
-    awayValue: awayRows[index]?.value,
+    awayValue: filtered.awayRows[index]?.value,
   }));
+
+  if (!rows.length) {
+    return null;
+  }
 
   return (
     <section className="FixturePage-compareSection">
-      <h3 className="FixturePage-statGroupTitle">{title}</h3>
+      {hideTitle ? null : (
+        <h3 className="FixturePage-statGroupTitle">{title}</h3>
+      )}
       <div className="FixturePage-compareRows">
         {rows.map((row) => (
           <CompareRow
@@ -457,8 +485,8 @@ function TeamPage({ matchId, seoShell = null }) {
 
   const sections = useMemo(() => {
     if (matchId) {
-      return (pageData?.sections ?? []).filter(
-        (section) => section.id === "tendencies"
+      return (pageData?.sections ?? []).filter((section) =>
+        ["markets", "advanced-tendencies"].includes(section.id)
       );
     }
 
@@ -696,10 +724,19 @@ function TeamPage({ matchId, seoShell = null }) {
         />
       </header>
 
+      {matchId && match ? (
+        <FixtureMarketsSnapshot
+          match={match}
+          homeTeamName={storedFixtureDetailsJson.homeTeamName}
+          awayTeamName={storedFixtureDetailsJson.awayTeamName}
+        />
+      ) : null}
+
       <p className="FixturePage-homeStatsNote">
         Looking for more? The{" "}
-        <a href="/">homepage</a> has more extensive match stats, wider context, an AI
-        preview, and loads more fixtures to explore.
+        <a href="/">homepage</a> has more extensive match stats for this game,
+        comparative charts, wider context, an AI preview, and loads more fixtures to
+        explore.
       </p>
 
       {useFootyStatsTemplate ? (
@@ -760,14 +797,39 @@ function TeamPage({ matchId, seoShell = null }) {
               </span>
             </div>
 
-            {sections.map((section) => (
-              <CompareSection
-                key={section.id}
-                title={section.title}
-                homeRows={section.home}
-                awayRows={section.away}
-              />
-            ))}
+            {sections.map((section) => {
+              if (section.id === "advanced-tendencies") {
+                return (
+                  <details
+                    key={section.id}
+                    className="FixturePage-advancedTendencies"
+                  >
+                    <summary
+                      className="FixturePage-statGroupTitle FixturePage-advancedTendenciesSummary"
+                    >
+                      {section.title}
+                    </summary>
+                    <CompareSection
+                      sectionId={section.id}
+                      title={section.title}
+                      homeRows={section.home}
+                      awayRows={section.away}
+                      hideTitle
+                    />
+                  </details>
+                );
+              }
+
+              return (
+                <CompareSection
+                  key={section.id}
+                  sectionId={section.id}
+                  title={section.title}
+                  homeRows={section.home}
+                  awayRows={section.away}
+                />
+              );
+            })}
           </div>
         </>
       )}

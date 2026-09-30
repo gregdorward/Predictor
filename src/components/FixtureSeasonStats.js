@@ -225,6 +225,9 @@ function FixtureSeasonStats({ match }) {
               type="button"
               role="tab"
               aria-selected={selected}
+              aria-label={
+                locked ? `${category.label} (Premium)` : category.label
+              }
               className={`FixturePage-statTab${selected ? " FixturePage-statTab--active" : ""}${
                 locked ? " FixturePage-statTab--locked" : ""
               }`}
@@ -242,7 +245,7 @@ function FixtureSeasonStats({ match }) {
           variant="compact"
           className="FixturePage-seasonStatsUpsell"
           headline={`Unlock ${activeCategory.label.toLowerCase()} with Premium`}
-          description="Key Stats stays free. Premium unlocks attacking, defensive, possession, form and every other season category — plus unlimited predictions and tip lists."
+          description="Key Stats stays free. Premium unlocks attacking, defensive, possession, form and every other season category, plus unlimited predictions and tip lists."
         />
       ) : (
         <div className="FixturePage-compareRows" role="tabpanel">

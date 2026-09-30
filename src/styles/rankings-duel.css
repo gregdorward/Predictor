@@ -1,0 +1,298 @@
+/* League rankings duel rows (rankings-container). Loaded after index.css. */
+
+.rankings-container {
+  --rd-section: 1.05em;
+  --rd-body: 1em;
+  --rd-label: 0.9em;
+  --rd-meta: 0.85em;
+  font-size: 1em;
+  line-height: 1.45;
+}
+
+.FixturePage .rankings-container {
+  --rd-section: var(--fp-section, 1.05em);
+  --rd-body: var(--fp-body, 1em);
+  --rd-label: var(--fp-label, 0.9em);
+  --rd-meta: var(--fp-meta, 0.85em);
+}
+
+.rankings-container:hover {
+  box-shadow: none;
+}
+
+.rankings-container .rankings-title {
+  font-size: var(--rd-section);
+}
+
+.rankings-container .Rankings-legend {
+  font-size: var(--rd-meta);
+}
+
+.rankings-container .Rankings-legendNote {
+  font-size: 0.95em;
+}
+
+.rankings-container .rankings-section {
+  border-radius: 10px;
+  box-shadow: none;
+  overflow: visible;
+}
+
+.rankings-container .section-title {
+  text-align: left;
+  padding: 0.75rem 1rem 0.5rem;
+  font-size: var(--rd-section);
+  font-weight: 700;
+  line-height: 1.35;
+}
+
+.RankingsDuel-body {
+  padding: 0 0.75rem 0.85rem;
+  font-size: var(--rd-body);
+}
+
+.RankingsDuel-summary {
+  margin-bottom: 0.75rem;
+  padding: 0.75rem 0.85rem;
+  border-radius: 8px;
+  border: 1px solid var(--third-background-color);
+  background: var(--secondary-background-color);
+}
+
+.RankingsDuel-summary--home {
+  border-color: rgba(1, 165, 1, 0.35);
+}
+
+.RankingsDuel-summary--away {
+  border-color: rgba(215, 18, 0, 0.35);
+}
+
+.RankingsDuel-summary--level {
+  border-color: rgba(var(--primary-rgb), 0.35);
+}
+
+.RankingsDuel-summaryLead {
+  margin: 0 0 0.5rem;
+  font-size: var(--rd-label);
+  font-weight: 600;
+  line-height: 1.35;
+  color: var(--text-color);
+}
+
+.RankingsDuel-summaryStats {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.45rem;
+  margin-bottom: 0.45rem;
+}
+
+.RankingsDuel-summaryStats span {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+  min-width: 0;
+  font-size: var(--rd-meta);
+  line-height: 1.25;
+  color: var(--faint-text);
+}
+
+.RankingsDuel-summaryStats strong {
+  font-size: 1.1em;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  color: var(--text-color);
+  line-height: 1.1;
+}
+
+.RankingsDuel-summaryMeta {
+  margin: 0;
+  font-size: var(--rd-meta);
+  font-weight: 400;
+  line-height: 1.4;
+  color: var(--faint-text);
+}
+
+.RankingsDuel-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  border-top: 1px solid var(--third-background-color);
+}
+
+.RankingsDuel-row {
+  padding: 0.65rem 0 0.65rem 0.85rem;
+  margin-left: 0.15rem;
+  margin-bottom: 1em;
+  border-bottom: 1px solid var(--third-background-color);
+  border-left: 3px solid transparent;
+}
+
+.RankingsDuel-row--home.RankingsDuel-row--subtle {
+  border-left-color: rgba(1, 165, 1, 0.35);
+}
+
+.RankingsDuel-row--home.RankingsDuel-row--medium {
+  border-left-color: rgba(1, 165, 1, 0.55);
+}
+
+.RankingsDuel-row--home.RankingsDuel-row--strong {
+  border-left-color: #01a501;
+}
+
+.RankingsDuel-row--away.RankingsDuel-row--subtle {
+  border-left-color: rgba(215, 18, 0, 0.35);
+}
+
+.RankingsDuel-row--away.RankingsDuel-row--medium {
+  border-left-color: rgba(215, 18, 0, 0.55);
+}
+
+.RankingsDuel-row--away.RankingsDuel-row--strong {
+  border-left-color: #d71200;
+}
+
+.RankingsDuel-row--level {
+  border-left-color: rgba(var(--primary-rgb), 0.4);
+}
+
+.RankingsDuel-row--neutral {
+  border-left-color: var(--third-background-color);
+}
+
+.RankingsDuel-body h6.RankingsDuel-metric {
+  margin: 0 0 0.45rem;
+  padding: 0;
+  max-width: none;
+  margin-left: 0;
+  margin-right: 0;
+  font-size: var(--rd-label);
+  font-weight: 600;
+  line-height: 1.35;
+  color: var(--text-color);
+  text-align: left;
+}
+
+.RankingsDuel-duel {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.5rem;
+}
+
+.RankingsDuel-team {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  grid-template-rows: auto auto;
+  gap: 0.15rem 0.4rem;
+  align-items: baseline;
+  min-width: 0;
+  padding: 0.45rem 0.5rem;
+  border-radius: 8px;
+  border: 1px solid rgba(128, 128, 128, 0.12);
+  background: var(--background-color);
+}
+
+.RankingsDuel-team--leading {
+  background: var(--secondary-background-color);
+}
+
+.RankingsDuel-team--home.RankingsDuel-team--leading {
+  border-color: rgba(1, 165, 1, 0.28);
+}
+
+.RankingsDuel-team--away.RankingsDuel-team--leading {
+  border-color: rgba(215, 18, 0, 0.28);
+}
+
+.RankingsDuel-teamDot {
+  grid-row: 1 / span 2;
+  align-self: center;
+  width: 0.5rem;
+  height: 0.5rem;
+  border-radius: 50%;
+  border: 1px solid rgba(255, 255, 255, 0.9);
+  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.1);
+}
+
+.RankingsDuel-teamDot--home {
+  background: #01a501;
+}
+
+.RankingsDuel-teamDot--away {
+  background: #d71200;
+}
+
+.RankingsDuel-teamName {
+  grid-column: 2;
+  font-size: var(--rd-label);
+  font-weight: 600;
+  line-height: 1.3;
+  color: var(--text-color);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.RankingsDuel-rank {
+  grid-column: 2;
+  font-size: var(--rd-body);
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  line-height: 1.35;
+  color: var(--text-color);
+}
+
+.RankingsDuel-value {
+  padding-left: 0.35em;
+  font-size: inherit;
+  font-weight: 400;
+  font-variant-numeric: tabular-nums;
+  color: inherit;
+}
+
+.RankingsDuel-edge {
+  margin: 0.4rem 0 0;
+  font-size: var(--rd-meta);
+  font-weight: 400;
+  line-height: 1.4;
+  color: var(--faint-text);
+  text-align: left;
+}
+
+.dark-mode .RankingsDuel-team {
+  border-color: rgba(255, 255, 255, 0.09);
+}
+
+@media (max-width: 700px) {
+  .rankings-container .section-title {
+    padding: 0.65rem 0.75rem 0.45rem;
+  }
+
+  .RankingsDuel-body {
+    padding: 0 0.5rem 0.75rem;
+  }
+
+  .RankingsDuel-summaryStats {
+    grid-template-columns: 1fr;
+    gap: 0.35rem;
+  }
+
+  .RankingsDuel-summaryStats span {
+    flex-direction: row;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 0.5rem;
+  }
+
+  .RankingsDuel-teamName {
+    white-space: normal;
+    overflow: visible;
+    text-overflow: unset;
+    line-height: 1.25;
+  }
+}
+
+@media (max-width: 540px) {
+  .RankingsDuel-duel {
+    grid-template-columns: 1fr;
+  }
+}

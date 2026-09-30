@@ -69,6 +69,14 @@ describe("rankingsInsights", () => {
     expect(disparities.every((item) => item.edge >= 3)).toBe(true);
   });
 
+  test("equal metric values count as level even when ranks differ", () => {
+    const state = getRankEdgeState(4, 9, 24, "penaltyGoals", "Boreham Wood", "Kidderminster", 1, 1);
+
+    expect(state.tone).toBe("level");
+    expect(state.edge).toBe(0);
+    expect(state.edgeText).toBe("Same value");
+  });
+
   test("inverted metrics treat higher rank as better for fouls and cards", () => {
     const foulsState = getRankEdgeState(20, 8, 48, "fouls");
     const goalsState = getRankEdgeState(20, 8, 48, "goalsScored");

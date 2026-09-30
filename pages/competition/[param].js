@@ -57,17 +57,13 @@ export default function CompetitionByParam({
       >
         <div id="ssh-content">
           <CompetitionSeoShell {...seoShell} />
-          <JourneyContentBreak>
-            Live standings, charts and team comparisons for this competition.
-          </JourneyContentBreak>
+          <JourneyContentBreak />
           <CompetitionPage
             seasonId={seasonId}
             skipHero
             initialData={initialCompetitionData}
           />
-          <JourneyContentBreak>
-            Highest Over 2.5, BTTS and Under 2.5 rates by team in this league.
-          </JourneyContentBreak>
+          <JourneyContentBreak />
           <CompetitionSeoExtras {...seoShell} />
         </div>
       </SiteHeader>

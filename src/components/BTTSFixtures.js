@@ -3,7 +3,7 @@ import { makeStyles } from "@material-ui/core/styles";
 import { getBTTSFixtures, getBTTSTeams } from "../logic/getStatsInsights";
 import SiteHeader from "./SiteHeader";
 import PageMeta from "./PageMeta";
-import StatPageSeoContent, { StatPageSeoFaq } from "./StatPageSeoContent";
+import StatPageSeoContent from "./StatPageSeoContent";
 import {
   BodyCell,
   HeadCell,
@@ -259,7 +259,6 @@ export default function BTTSFixtures({
             ))}
           </tbody>
         </SubpageTable>
-        <StatPageSeoFaq faqItems={STAT_PAGE_SEO.bttsFixtures.faqItems} />
       </div>
       </SiteHeader>
     </Fragment>

@@ -1,0 +1,104 @@
+/* Fixture page polish: markets snapshot, homepage note, advanced tendencies */
+
+.FixturePage-compareTeam--home,
+.FixturePage-compareTeam--away {
+  color: var(--text-color);
+}
+
+.FixturePage-marketsSnapshot {
+  width: 100%;
+  max-width: 100%;
+  margin: 0 0 var(--fp-space-4);
+  padding: var(--fp-pad);
+  text-align: left;
+  background: var(--subtle-surface-color);
+  border: none;
+  border-radius: var(--fp-radius);
+  box-sizing: border-box;
+}
+
+.FixturePage-marketsSnapshotTitle {
+  margin-bottom: var(--fp-space-1);
+}
+
+.FixturePage-marketsSnapshotLead {
+  margin: 0 0 var(--fp-space-3);
+  font-size: var(--fp-label);
+  line-height: 1.45;
+  color: var(--faint-text);
+}
+
+.FixturePage-marketsSnapshot .FixturePage-compareTeams {
+  margin-bottom: var(--fp-space-2);
+}
+
+.FixturePage-marketsSnapshotRows .FixturePage-compareValue {
+  font-variant-numeric: tabular-nums;
+}
+
+.FixturePage-homeStatsNote {
+  text-align: left;
+  max-width: 42rem;
+  margin-left: auto;
+  margin-right: auto;
+  padding: var(--fp-space-2) var(--fp-space-3);
+  background: var(--subtle-surface-color);
+  border-radius: var(--fp-radius-sm);
+  box-sizing: border-box;
+}
+
+.FixturePage-advancedTendencies {
+  margin: 0;
+  padding: 0;
+  border: none;
+}
+
+.FixturePage-advancedTendenciesSummary {
+  cursor: pointer;
+  list-style: none;
+}
+
+.FixturePage-advancedTendenciesSummary::-webkit-details-marker {
+  display: none;
+}
+
+.FixturePage-advancedTendenciesSummary::after {
+  content: "▾";
+  float: right;
+  font-size: 0.85em;
+  color: var(--faint-text);
+}
+
+.FixturePage-advancedTendencies[open] .FixturePage-advancedTendenciesSummary::after {
+  content: "▴";
+}
+
+.FixturePage-advancedTendenciesSummary:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(var(--primary-rgb), 0.38);
+  border-radius: var(--fp-radius-sm);
+}
+
+.FixturePage-advancedTendencies .FixturePage-compareSection {
+  margin-top: var(--fp-space-2);
+}
+
+.FixturePage-statTab--locked:not(.FixturePage-statTab--active) {
+  cursor: pointer;
+}
+
+.FixturePage-statTab:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(var(--primary-rgb), 0.38);
+}
+
+@media (max-width: 520px) {
+  .FixturePage-marketsSnapshotLead {
+    font-size: var(--fp-meta);
+  }
+
+  .FixturePage-homeStatsNote {
+    padding: var(--fp-space-2);
+    font-size: var(--fp-meta);
+  }
+}

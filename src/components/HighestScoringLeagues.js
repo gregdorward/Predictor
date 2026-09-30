@@ -3,7 +3,7 @@ import { makeStyles } from "@material-ui/core/styles";
 import { getHighestScoringLeagues, getLowestScoringLeagues } from "../logic/getStatsInsights";
 import SiteHeader from "./SiteHeader";
 import PageMeta from "./PageMeta";
-import StatPageSeoContent, { StatPageSeoFaq } from "./StatPageSeoContent";
+import StatPageSeoContent from "./StatPageSeoContent";
 import {
   BodyCell,
   HeadCell,
@@ -236,7 +236,6 @@ export default function HighestScoringLeagues({
               ))}
             </tbody>
           </SubpageTable>
-          <StatPageSeoFaq faqItems={STAT_PAGE_SEO.highestScoringLeagues.faqItems} />
         </div>
       </SiteHeader>
     </Fragment>

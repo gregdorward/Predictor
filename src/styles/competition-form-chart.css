@@ -1,0 +1,140 @@
+/* Competition hub — last-5 form table (replaces duplicate standings block) */
+
+/* Table body copy on /competition/ (#ssh-content) */
+#ssh-content table tbody,
+#ssh-content table tbody th,
+#ssh-content table tbody td {
+  font-size: 1em;
+}
+
+#ssh-content .Competition__seoTable,
+#ssh-content .Competition__positionRaceTable {
+  font-size: 1em;
+}
+
+#ssh-content .Competition__table .MuiTableCell-body {
+  font-size: 1em;
+}
+
+#ssh-content .LeagueStatsTable tbody td,
+#ssh-content .LeagueStatsTable tbody th {
+  font-size: 1em;
+}
+
+.FixturePage-contentBreak--adSlot {
+  margin: 1.25rem 0 0.85rem;
+  padding: 0;
+  min-height: 0;
+  font-size: 0;
+  line-height: 0;
+}
+
+.Competition__formChartLoading {
+  font-size: 0.98rem;
+}
+
+.Competition__formChartTableWrap {
+  width: 100%;
+  max-width: 100%;
+  margin-bottom: 1rem;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  border: 1px solid var(--button-border-color);
+  border-radius: 10px;
+  background: var(--secondary-background-color);
+}
+
+.Competition__formChartTable {
+  width: 100%;
+  border-collapse: collapse;
+  line-height: 1.35;
+}
+
+.Competition__formChartTable tbody {
+  font-size: 1em;
+}
+
+.Competition__formChartCaption {
+  caption-side: top;
+  padding: 0.75rem 0.85rem 0.35rem;
+  font-weight: 700;
+  text-align: left;
+  color: var(--text-color);
+}
+
+.Competition__formChartTable th,
+.Competition__formChartTable td {
+  padding: 0.55rem 0.65rem;
+  border-bottom: 1px solid var(--button-border-color);
+  text-align: left;
+  vertical-align: middle;
+}
+
+.Competition__formChartTable thead th {
+  font-size: 0.92rem;
+  font-weight: 700;
+  color: var(--faint-text);
+  background: var(--third-background-color);
+}
+
+.Competition__formChartTable tbody tr:last-child th,
+.Competition__formChartTable tbody tr:last-child td {
+  border-bottom: none;
+}
+
+.Competition__formChartTable tbody th {
+  font-weight: 600;
+  color: var(--text-color);
+}
+
+.Competition__formChartTablePos {
+  text-align: center;
+  width: 3.25rem;
+}
+
+.Competition__formPills {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.2rem;
+  flex-wrap: nowrap;
+}
+
+.Competition__formPill {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 1.35rem;
+  height: 1.35rem;
+  padding: 0 0.15rem;
+  border-radius: 6px;
+  font-size: 0.92rem;
+  font-weight: 700;
+  line-height: 1;
+  color: var(--secondary-button-text-color);
+}
+
+.Competition__formPill.winLeague,
+.Competition__formPill.drawLeague,
+.Competition__formPill.lossLeague {
+  width: auto;
+  margin: 0;
+  padding: 0;
+}
+
+.Competition__formPill--empty {
+  background: var(--third-background-color);
+  opacity: 0.35;
+}
+
+@media (max-width: 39.99rem) {
+  .Competition__formChartTable th,
+  .Competition__formChartTable td {
+    padding: 0.45rem 0.5rem;
+  }
+
+  .Competition__formPill {
+    min-width: 1.2rem;
+    height: 1.2rem;
+    font-size: 0.92rem;
+  }
+}

@@ -21,7 +21,7 @@ import {
   GoalTimingChart,
 } from "./competition/competitionCharts";
 import CompetitionPlayerLeaders from "./competition/CompetitionPlayerLeaders";
-import CompetitionStandings from "./competition/CompetitionStandings";
+import CompetitionFormChart from "./competition/CompetitionFormChart";
 import CompetitionPositionRaceChart from "./competition/CompetitionPositionRaceChart";
 import CompetitionMetricRankings from "./competition/CompetitionMetricRankings";
 import CompetitionTeamComparison from "./competition/CompetitionTeamComparison";
@@ -86,11 +86,6 @@ function LoadingSkeleton() {
   return (
     <div className="Competition__loading">
       <div className="Competition__skeleton Competition__skeleton--hero" />
-      <div className="Competition__metricGrid">
-        {[1, 2, 3, 4, 5, 6].map((i) => (
-          <div key={i} className="Competition__skeleton Competition__skeleton--card" />
-        ))}
-      </div>
       <div className="Competition__skeleton Competition__skeleton--chart" />
     </div>
   );
@@ -176,7 +171,9 @@ export default function CompetitionPage({
 
   return (
     <main className="Competition">
-      <a href="/" className="HomeLink">Home</a>
+      {!skipHero ? (
+        <a href="/" className="HomeLink">Home</a>
+      ) : null}
 
         {loading && <LoadingSkeleton />}
 
@@ -219,60 +216,20 @@ export default function CompetitionPage({
             </section>
             )}
 
-            <section className="Competition__metricGrid">
-              <MetricCard
-                label="Avg goals"
-                value={formatNumber(data.seasonAVG_overall)}
-                sub={`H ${formatNumber(data.seasonAVG_home)} · A ${formatNumber(data.seasonAVG_away)}`}
-              />
-              <MetricCard
-                label="BTTS"
-                value={formatPercent(data.seasonBTTSPercentage)}
-                sub={
-                  data.seasonBTTSPercentage != null
-                    ? `BTTS NO ${formatPercent(100 - Number(data.seasonBTTSPercentage))}`
-                    : null
-                }
-              />
-              <MetricCard
-                label="Over 2.5"
-                value={formatPercent(data.seasonOver25Percentage_overall)}
-              />
-              <MetricCard
-                label="Corners avg"
-                value={formatNumber(data.cornersAVG_overall)}
-              />
-              <MetricCard
-                label="Cards avg"
-                value={formatNumber(data.cardsAVG_overall)}
-              />
-              <MetricCard
-                label="Home / Draw / Away"
-                value={`${formatPercent(data.homeWinPercentage)} / ${formatPercent(data.drawPercentage)} / ${formatPercent(data.awayWinPercentage)}`}
-              />
-            </section>
+            <JourneyContentBreak />
 
-            <JourneyContentBreak>
-              Standings and form across the {data.english_name || data.name || "competition"}{" "}
-              season.
-            </JourneyContentBreak>
-
-            <CompetitionStandings seasonId={seasonId} />
+            <CompetitionFormChart seasonId={seasonId} />
 
             <CompetitionPositionRaceChart seasonId={seasonId} />
 
-            <JourneyContentBreak>
-              Compare teams on attacking and defensive metrics for this league.
-            </JourneyContentBreak>
+            <JourneyContentBreak />
 
             <CompetitionTeamComparison
               seasonId={seasonId}
               competitionTeams={teams}
             />
 
-            <JourneyContentBreak>
-              Goal, BTTS, corner and card market hit rates for the competition.
-            </JourneyContentBreak>
+            <JourneyContentBreak />
 
             <section className="Competition__section">
               <h2 className="Competition__sectionHeading">Markets</h2>
@@ -314,9 +271,7 @@ export default function CompetitionPage({
 
             {teams.length > 0 && (
               <>
-              <JourneyContentBreak>
-                Team-by-team rankings for goals, BTTS, xG difference and clean sheets.
-              </JourneyContentBreak>
+              <JourneyContentBreak />
               <section className="Competition__section">
                 <h2 className="Competition__sectionHeading">Team rankings</h2>
                 <div className="Competition__rankingsGrid">
@@ -358,9 +313,7 @@ export default function CompetitionPage({
               </>
             )}
 
-            <JourneyContentBreak>
-              Leading scorers, assist makers and clean-sheet keepers in the league.
-            </JourneyContentBreak>
+            <JourneyContentBreak />
 
             <CompetitionPlayerLeaders data={data} teams={teams} />
 

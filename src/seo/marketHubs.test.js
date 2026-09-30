@@ -43,29 +43,10 @@ describe("collapsed market hubs", () => {
     }
   });
 
-  test("hub copy retains unique questions from retired pages", () => {
-    const questions = (key) =>
-      STAT_PAGE_SEO[key].faqItems.map((item) => item.question);
-
-    expect(questions("bttsFixtures")).toEqual(
-      expect.arrayContaining([
-        "What does BTTS mean?",
-        "What is BTTS No?",
-        "Why rank teams by BTTS percentage?",
-      ])
-    );
-    expect(questions("fixturesHigh")).toEqual(
-      expect.arrayContaining([
-        "What does Over 2.5 mean?",
-        "Why rank teams instead of matches?",
-      ])
-    );
-    expect(questions("highestScoringLeagues")).toEqual(
-      expect.arrayContaining([
-        "What makes a league low scoring?",
-        "How should I use Under 2.5 league stats?",
-      ])
-    );
+  test("kept hub pages do not ship FAQ blocks", () => {
+    for (const key of ["bttsFixtures", "fixturesHigh", "highestScoringLeagues"]) {
+      expect(STAT_PAGE_SEO[key].faqItems ?? []).toHaveLength(0);
+    }
   });
 
   test("lastmod is limited to dated articles", () => {

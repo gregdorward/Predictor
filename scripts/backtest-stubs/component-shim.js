@@ -22,7 +22,6 @@ export const GlobalFilters = {
   oddsRange: null,
 };
 export const FilterPresets = {};
-export const scrollToGames = () => {};
 export const getCurrentUser = async () => null;
 export const SuccessPage = stub;
 export const CancelPage = stub;

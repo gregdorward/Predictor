@@ -38,7 +38,8 @@ test.describe('Fixture detail page', () => {
     await expect(page.getByRole('heading', { name: 'Form & Context' })).toHaveCount(0);
     await expect(page.getByRole('heading', { name: 'Attacking', exact: true })).toHaveCount(0);
     await expect(page.getByRole('heading', { name: 'Defensive' })).toHaveCount(0);
-    await expect(page.getByRole('heading', { name: 'Match Tendencies' })).toBeVisible();
+    await expect(page.getByRole('heading', { name: 'Recent markets' })).toBeVisible();
+    await expect(page.getByRole('heading', { name: 'Markets' })).toBeVisible();
     await expect(page.getByRole('heading', { name: 'Model Outputs' })).toBeVisible();
     await expect(page.getByRole('heading', { name: 'Head to Head' })).toBeVisible();
   });

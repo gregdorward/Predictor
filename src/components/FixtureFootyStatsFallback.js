@@ -148,7 +148,9 @@ export default function FixtureFootyStatsFallback({
   formatStatValue,
 }) {
   const visibleSections = sections.filter((section) =>
-    ["context", "attacking", "defensive", "tendencies"].includes(section.id)
+    ["context", "attacking", "defensive", "markets", "advanced-tendencies"].includes(
+      section.id
+    )
   );
 
   return (
