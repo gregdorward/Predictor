@@ -126,7 +126,8 @@ describe("fixture page display metrics", () => {
       "context",
       "attacking",
       "defensive",
-      "tendencies",
+      "markets",
+      "advanced-tendencies",
     ]);
 
     expect(sections[0].title).toBe("Form & Context");
@@ -139,14 +140,16 @@ describe("fixture page display metrics", () => {
     expect(sections[0].home[2].value).toBe("W-W-D-L-W");
 
     expect(sections[1].home[0].label).toBe("Average Goals");
-    expect(sections[3].home[0].label).toBe("Average Expected Goals");
-    expect(sections[3].home[1].label).toBe("Average npXG");
+    expect(sections[3].title).toBe("Markets");
     expect(sections[3].home.some((row) => row.label === "BTTS % (last 10)")).toBe(
       true
     );
     expect(
       sections[3].home.find((row) => row.label === "BTTS % (last 10)")?.value
     ).toBe("60%");
+    expect(sections[4].title).toBe("Advanced tendencies");
+    expect(sections[4].home[0].label).toBe("Average Expected Goals");
+    expect(sections[4].home[1].label).toBe("Average npXG");
 
     expect(buildFixtureModelOutputs(match)).toEqual({
       homeWin: 45.2,

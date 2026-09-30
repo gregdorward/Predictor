@@ -3,7 +3,7 @@ import { makeStyles } from "@material-ui/core/styles";
 import { getHighestScoringFixtures, getHighestScoringTeams } from "../logic/getStatsInsights";
 import SiteHeader from "./SiteHeader";
 import PageMeta from "./PageMeta";
-import StatPageSeoContent, { StatPageSeoFaq } from "./StatPageSeoContent";
+import StatPageSeoContent from "./StatPageSeoContent";
 import {
   BodyCell,
   HeadCell,
@@ -206,7 +206,6 @@ export default function HighestScoringFixtures({
             ))}
           </tbody>
         </SubpageTable>
-        <StatPageSeoFaq faqItems={STAT_PAGE_SEO.fixturesHigh.faqItems} />
       </div>
       </SiteHeader>
     </Fragment>

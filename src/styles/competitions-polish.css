@@ -1,0 +1,187 @@
+/* /competitions/* polish — refinement on incumbent SSH tokens (no hover lift on cards/chips) */
+
+.CompetitionsIndex-intro {
+  max-width: 65ch;
+  font-size: 0.98rem;
+  font-weight: 400;
+  line-height: 1.6;
+  opacity: 1;
+  color: var(--faint-text);
+}
+
+.CompetitionsIndex-breadcrumb [aria-current="page"] {
+  color: var(--text-color);
+  font-weight: 600;
+}
+
+.CompetitionsIndex-search::placeholder {
+  color: var(--faint-text);
+  opacity: 0.9;
+}
+
+.CompetitionsIndex-search:focus {
+  border-color: var(--primary-color);
+}
+
+.CompetitionsIndex-search:focus-visible {
+  outline: 2px solid var(--primary-color);
+  outline-offset: 2px;
+}
+
+.CompetitionsIndex-toolbar .CompetitionsIndex-compareLink {
+  transition:
+    background-color 0.15s ease,
+    color 0.15s ease;
+}
+
+.CompetitionsIndex-toolbar .CompetitionsIndex-compareLink:hover {
+  text-decoration: none;
+  background: var(--primary-dark, #f57701);
+}
+
+.CompetitionsIndex-toolbar .CompetitionsIndex-compareLink:focus-visible {
+  outline: 2px solid var(--primary-color);
+  outline-offset: 2px;
+}
+
+.CompetitionsIndex-jump a {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 2.75rem;
+  padding: 0.45rem 0.85rem;
+}
+
+.CompetitionsIndex-jump a:active {
+  background: var(--secondary-background-color);
+}
+
+.CompetitionsIndex-jump a:focus-visible {
+  outline: 2px solid var(--primary-color);
+  outline-offset: 2px;
+}
+
+@media (max-width: 39.99rem) {
+  .CompetitionsIndex-jump {
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    overscroll-behavior-x: contain;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: thin;
+    margin-right: -0.25rem;
+    padding-right: 0.25rem;
+    padding-bottom: 0.35rem;
+  }
+
+  .CompetitionsIndex-jump a {
+    min-height: 0;
+    padding: 0.3rem 0.6rem;
+    font-size: 0.85rem;
+    line-height: 1.2;
+  }
+
+  .CompetitionsIndex-group--featured {
+    padding: 0.75rem;
+  }
+
+  .CompetitionsIndex-groupHeader {
+    margin-bottom: 0.6rem;
+  }
+
+  .CompetitionsIndex-groupHeader h2 {
+    font-size: 0.98rem;
+  }
+
+  .CompetitionsIndex-grid {
+    gap: 0.45rem;
+  }
+
+  .CompetitionsIndex .CompetitionsIndex-card {
+    min-height: 0;
+    padding: 0.5rem 0.7rem;
+  }
+
+  .CompetitionsIndex .CompetitionsIndex-card--featured {
+    min-height: 0;
+  }
+
+  .CompetitionsIndex .CompetitionsIndex-cardName {
+    font-size: 0.88rem;
+    line-height: 1.25;
+  }
+
+  .CompetitionsIndex .CompetitionsIndex-cardArrow {
+    font-size: 0.85rem;
+  }
+}
+
+.CompetitionsIndex-clearSearch:focus-visible {
+  outline: 2px solid var(--primary-color);
+  outline-offset: 3px;
+  border-radius: 6px;
+}
+
+.CompetitionsIndex-group--featured {
+  background: rgba(var(--primary-rgb), 0.05);
+}
+
+body.dark-mode .CompetitionsIndex-group--featured {
+  background: rgba(var(--primary-rgb), 0.08);
+}
+
+.CompetitionsIndex .CompetitionsIndex-card {
+  box-shadow: none;
+  transition: border-color 0.15s ease, background-color 0.15s ease;
+}
+
+.CompetitionsIndex .CompetitionsIndex-card:hover,
+.CompetitionsIndex .CompetitionsIndex-card:focus-visible {
+  transform: none;
+  box-shadow: none;
+  border-color: var(--primary-color);
+  background: var(--secondary-background-color);
+}
+
+body.dark-mode .CompetitionsIndex .CompetitionsIndex-card:hover,
+body.dark-mode .CompetitionsIndex .CompetitionsIndex-card:focus-visible {
+  background: var(--third-background-color);
+}
+
+.CompetitionsIndex-card--featured {
+  border-color: rgba(var(--primary-rgb), 0.45);
+}
+
+.CompetitionsIndex .CompetitionsIndex-cardArrow {
+  opacity: 0.65;
+  transform: translateX(0);
+}
+
+.CompetitionsIndex .CompetitionsIndex-card:hover .CompetitionsIndex-cardArrow,
+.CompetitionsIndex .CompetitionsIndex-card:focus-visible .CompetitionsIndex-cardArrow {
+  opacity: 1;
+}
+
+.CompetitionsIndex::selection,
+.CompetitionsIndex *::selection {
+  background: rgba(var(--primary-rgb), 0.28);
+  color: var(--text-color);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .CompetitionsIndex .CompetitionsIndex-card,
+  .CompetitionsIndex .CompetitionsIndex-cardArrow,
+  .CompetitionsIndex-toolbar .CompetitionsIndex-compareLink {
+    transition: none;
+  }
+}
+
+.CompetitionsCompare {
+  text-align: left;
+}
+
+/* Compare route: match breadcrumb focus affordance */
+.CompetitionsCompare-breadcrumb a:focus-visible {
+  outline: 2px solid var(--primary-color);
+  outline-offset: 2px;
+  border-radius: 6px;
+}

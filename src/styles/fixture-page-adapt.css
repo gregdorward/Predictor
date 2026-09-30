@@ -1,0 +1,99 @@
+/* Fixture page: responsive + touch adaptations (Operate / mobile research) */
+
+.FixturePage {
+  padding-bottom: max(var(--fp-space-4), env(safe-area-inset-bottom, 0px));
+}
+
+@media (max-width: 520px) {
+  .FixturePage-prediction {
+    width: 100%;
+    max-width: min(20rem, 100%);
+    box-sizing: border-box;
+  }
+
+  .FixturePage-meta {
+    gap: 0.35rem var(--fp-space-2);
+    padding-bottom: 0.75em;
+  }
+
+  .FixturePage-metaItem {
+    font-size: var(--fp-meta);
+    line-height: 1.4;
+  }
+
+  .FixturePage-compareTeam {
+    white-space: normal;
+    overflow: visible;
+    text-overflow: unset;
+    line-height: 1.25;
+    font-size: var(--fp-meta);
+  }
+
+  .FixturePage-statTabs {
+    margin: 0 calc(-1 * var(--content-padding-x, 0.75em));
+    padding-left: var(--content-padding-x, 0.75em);
+    padding-right: var(--content-padding-x, 0.75em);
+    scroll-padding-inline: var(--content-padding-x, 0.75em);
+  }
+}
+
+@media (max-width: 400px) {
+  .FixturePage-compareRow {
+    grid-template-columns: 1fr 1fr;
+    grid-template-areas:
+      "label label"
+      "home away";
+    gap: 0.35em var(--fp-space-2);
+    align-items: baseline;
+  }
+
+  .FixturePage-compareLabel {
+    grid-area: label;
+    text-align: left;
+    font-size: var(--fp-meta);
+  }
+
+  .FixturePage-compareValue--home {
+    grid-area: home;
+    text-align: left;
+  }
+
+  .FixturePage-compareValue--away {
+    grid-area: away;
+    text-align: right;
+  }
+}
+
+@media (pointer: coarse) {
+  .FixturePage-statTab {
+    min-height: 2.75rem;
+    padding: 0.5rem 0.95rem;
+  }
+
+  .FixturePage .SharePageLink__btn {
+    min-height: 2.75rem;
+    padding: 0.65em 1.1em;
+    font-size: var(--fp-label);
+  }
+
+  .FixturePage-predictionUnlock {
+    min-height: 2.75rem;
+    padding: 0.55em 1em;
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+  }
+
+  .FixturePage-advancedTendenciesSummary {
+    min-height: 2.75rem;
+    display: flex;
+    align-items: center;
+    padding-right: 0.15em;
+  }
+}
+
+@media (max-width: 520px) and (orientation: landscape) {
+  .FixturePage-comparisonChartCanvas {
+    height: 11em;
+  }
+}

@@ -240,30 +240,10 @@ function buildContextRows(form, match, side) {
   ];
 }
 
-function buildTendenciesRows(form) {
+export function buildMarketsRows(form) {
   const overUnder = form?.contextMetrics?.overUnder;
-  const gameState = form?.contextMetrics?.gameState;
-  const variance = form?.contextMetrics?.scoringVariance;
 
   return [
-    {
-      label: "Average Expected Goals",
-      value: form?.XGOverall ?? null,
-    },
-    {
-      label: "Average npXG",
-      value: roundToTwoDecimals(npxgOrXg(form?.npXGOverall, form?.XGOverall)),
-    },
-    {
-      label: "Average XG Against",
-      value: form?.XGAgainstAvgOverall ?? null,
-    },
-    {
-      label: "Average npXG Against",
-      value: roundToTwoDecimals(
-        npxgOrXg(form?.npXGAgainstAvgOverall, form?.XGAgainstAvgOverall)
-      ),
-    },
     {
       label: "BTTS % (last 10)",
       value: formatPercent(form?.bttsAllPercentage),
@@ -291,6 +271,54 @@ function buildTendenciesRows(form) {
     {
       label: "U2.5 % (last 5)",
       value: formatPercent(overUnder?.under25Last5Percentage),
+    },
+  ];
+}
+
+export const FIXTURE_MARKETS_SNAPSHOT_LABELS = [
+  "BTTS % (last 5)",
+  "O2.5 % (last 5)",
+  "U2.5 % (last 5)",
+  "BTTS % (last 10)",
+  "O2.5 % (last 10)",
+];
+
+export function buildMarketsSnapshotRows(match) {
+  const homeRows = buildMarketsRows(match?.formHome ?? {});
+  const awayRows = buildMarketsRows(match?.formAway ?? {});
+
+  return FIXTURE_MARKETS_SNAPSHOT_LABELS.map((label) => {
+    const homeValue = homeRows.find((row) => row.label === label)?.value;
+    const awayValue = awayRows.find((row) => row.label === label)?.value;
+    if (homeValue == null && awayValue == null) {
+      return null;
+    }
+    return { label, homeValue: homeValue ?? "—", awayValue: awayValue ?? "—" };
+  }).filter(Boolean);
+}
+
+function buildAdvancedTendenciesRows(form) {
+  const gameState = form?.contextMetrics?.gameState;
+  const variance = form?.contextMetrics?.scoringVariance;
+
+  return [
+    {
+      label: "Average Expected Goals",
+      value: form?.XGOverall ?? null,
+    },
+    {
+      label: "Average npXG",
+      value: roundToTwoDecimals(npxgOrXg(form?.npXGOverall, form?.XGOverall)),
+    },
+    {
+      label: "Average XG Against",
+      value: form?.XGAgainstAvgOverall ?? null,
+    },
+    {
+      label: "Average npXG Against",
+      value: roundToTwoDecimals(
+        npxgOrXg(form?.npXGAgainstAvgOverall, form?.XGAgainstAvgOverall)
+      ),
     },
     {
       label: "Scored first %",
@@ -387,10 +415,16 @@ export function buildFixturePageSections(match) {
       away: buildRows(DEFENSIVE_ROW_DEFS, (key) => getDefensiveValue(formAway, key)),
     },
     {
-      id: "tendencies",
-      title: "Match Tendencies",
-      home: buildTendenciesRows(formHome),
-      away: buildTendenciesRows(formAway),
+      id: "markets",
+      title: "Markets",
+      home: buildMarketsRows(formHome),
+      away: buildMarketsRows(formAway),
+    },
+    {
+      id: "advanced-tendencies",
+      title: "Advanced tendencies",
+      home: buildAdvancedTendenciesRows(formHome),
+      away: buildAdvancedTendenciesRows(formAway),
     },
   ];
 }

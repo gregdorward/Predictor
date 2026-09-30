@@ -1,7 +1,7 @@
 import SiteHeader from "../../src/components/SiteHeader";
 import PageMeta from "../../src/components/PageMeta";
 import JsonLd from "../../src/components/JsonLd";
-import JourneyContentBreak from "../../src/components/JourneyContentBreak";
+import CompetitionsIndexMain from "../../src/components/CompetitionsIndexMain";
 import { buildCompetitionsIndexSections } from "../../src/seo/competitionGroups";
 import { SITE_URL } from "../../src/seo/pageMetaConfig";
 
@@ -23,48 +23,7 @@ const COMPETITIONS_JSON_LD = {
 
 const COMPETITION_SECTIONS = buildCompetitionsIndexSections();
 
-function CompetitionCard({ competition, featured: isFeatured = false }) {
-  return (
-    <li>
-      <a
-        href={`/competition/${competition.slug}/`}
-        className={`CompetitionsIndex-card${isFeatured ? " CompetitionsIndex-card--featured" : ""}`}
-      >
-        <span className="CompetitionsIndex-cardName">{competition.name}</span>
-        <span className="CompetitionsIndex-cardArrow" aria-hidden="true">
-          →
-        </span>
-      </a>
-    </li>
-  );
-}
-
-function CompetitionGroup({ id, label, competitions, featured: isFeatured = false }) {
-  return (
-    <section
-      className={`CompetitionsIndex-group${isFeatured ? " CompetitionsIndex-group--featured" : ""}`}
-      aria-labelledby={`competitions-${id}`}
-    >
-      <div className="CompetitionsIndex-groupHeader">
-        <h2 id={`competitions-${id}`}>{label}</h2>
-        <span className="CompetitionsIndex-count">{competitions.length}</span>
-      </div>
-      <ul className="CompetitionsIndex-grid">
-        {competitions.map((competition) => (
-          <CompetitionCard
-            key={competition.slug}
-            competition={competition}
-            featured={isFeatured}
-          />
-        ))}
-      </ul>
-    </section>
-  );
-}
-
 export default function CompetitionsIndexPage() {
-  const { featured, regions, other, total } = COMPETITION_SECTIONS;
-
   return (
     <>
       <PageMeta
@@ -79,57 +38,7 @@ export default function CompetitionsIndexPage() {
             Journey uses #ssh-content only — keep card grids outside so the in-content
             unit lands above the list, not after every competition link.
           */}
-          <div id="ssh-content" className="CompetitionsIndex-journeyZone">
-            <header className="CompetitionsIndex-header">
-              <a href="/" className="HomeLink">
-                Home
-              </a>
-              <h1>Football competitions</h1>
-              <p className="CompetitionsIndex-intro">
-                League-wide football stats for every competition we cover — average goals,
-                BTTS rates, corner and card lines, home advantage and team rankings.
-              </p>
-              <p className="CompetitionsIndex-intro">
-                Open any league for live tables, market hit rates and team rankings. Use
-                Popular for the big European leagues, or browse by region below.
-              </p>
-              <p className="CompetitionsIndex-meta">{total} competitions indexed</p>
-              <a href="/competitions/compare/" className="CompetitionsIndex-compareLink">
-                Compare every league side by side
-              </a>
-            </header>
-
-            <JourneyContentBreak>
-              Pick a league for standings, BTTS and Over 2.5 stats, or open the cross-league
-              comparison tool.
-            </JourneyContentBreak>
-          </div>
-
-          <div className="CompetitionsIndex-groups">
-            <CompetitionGroup
-              id="featured"
-              label="Popular"
-              competitions={featured}
-              featured
-            />
-
-            {regions.map((group) => (
-              <CompetitionGroup
-                key={group.id}
-                id={group.id}
-                label={group.label}
-                competitions={group.competitions}
-              />
-            ))}
-
-            {other.length > 0 ? (
-              <CompetitionGroup
-                id="more"
-                label="More competitions"
-                competitions={other}
-              />
-            ) : null}
-          </div>
+          <CompetitionsIndexMain sections={COMPETITION_SECTIONS} />
         </main>
       </SiteHeader>
     </>

@@ -1,0 +1,298 @@
+/* Homepage guest landing polish — loaded after index.css (see pages/_app.js). */
+
+.GuestLanding-cards {
+  grid-template-columns: minmax(0, 1fr);
+}
+
+.GuestLanding-introCard {
+  grid-column: 1 / -1;
+  padding-left: 1rem;
+  padding-right: 1rem;
+}
+
+.GuestLanding-heroBrand {
+  width: 100%;
+  display: flow-root;
+}
+
+.GuestLanding-heroCopy {
+  min-width: 0;
+}
+
+.GuestLanding-heroVisual {
+  float: left;
+  width: 50%;
+  max-width: 50%;
+  margin: 0 1rem 0.35rem 0;
+  box-sizing: border-box;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.GuestLanding-heroBrand .GuestLanding-laptop {
+  width: 100%;
+  max-width: 100%;
+}
+
+.GuestLanding-laptop--hero .GuestLanding-laptopLid {
+  padding: 5px 5px 4px;
+  border-radius: 8px 8px 2px 2px;
+}
+
+.GuestLanding-laptop--hero .GuestLanding-laptopBase {
+  width: 100%;
+  max-width: 100%;
+  height: 7px;
+  margin-left: auto;
+  margin-right: auto;
+  border-radius: 0 0 8px 8px;
+  box-shadow: none;
+}
+
+.GuestLanding-heroBrand .GuestLanding-title {
+  margin: 0 0 0.45rem;
+  font-size: clamp(1.3rem, 4.2vw, 2rem);
+  line-height: 1.2;
+}
+
+.GuestLanding-heroBrand .GuestLanding-subheadline {
+  margin: 0;
+  font-size: 0.9375rem;
+  line-height: 1.55;
+  max-width: none;
+}
+
+@media (min-width: 701px) {
+  .GuestLanding-heroBrand {
+    display: grid;
+    grid-template-columns: minmax(0, 38%) minmax(0, 1fr);
+    gap: 1rem clamp(1.25rem, 3vw, 2.5rem);
+    align-items: center;
+  }
+
+  .GuestLanding-heroVisual {
+    float: none;
+    width: auto;
+    max-width: none;
+    margin: 0;
+    grid-column: 1;
+    grid-row: 1;
+    justify-self: center;
+    max-width: 22rem;
+  }
+
+  .GuestLanding-heroCopy {
+    grid-column: 2;
+    grid-row: 1;
+  }
+
+  .GuestLanding-heroBrand .GuestLanding-title {
+    font-size: clamp(1.45rem, 2.2vw, 2.05rem);
+  }
+
+  .GuestLanding-heroBrand .GuestLanding-subheadline {
+    font-size: clamp(0.9rem, 1.35vw, 1.02rem);
+    line-height: 1.5;
+  }
+}
+
+@media (min-width: 1025px) {
+  .GuestLanding-heroBrand {
+    grid-template-columns: minmax(16rem, 36%) minmax(0, 1fr);
+    gap: 1.25rem 2.75rem;
+    max-width: 52rem;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .GuestLanding-heroVisual {
+    max-width: 24rem;
+  }
+}
+
+.GuestLanding-laptopLid,
+.GuestLanding-laptopBase {
+  box-shadow: none;
+}
+
+.LoginForm--landing .LoginSignUp {
+  border-radius: 8px;
+}
+
+/* Bridge CTA after predictions: scroll to multis / league / ROI */
+.MultisDiscoveryCta {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.65rem;
+  margin: 1.25rem auto 1rem;
+  padding: 1rem 1.15rem;
+  max-width: 36rem;
+  text-align: center;
+  border: 1px solid var(--third-background-color);
+  border-radius: 10px;
+  background: var(--secondary-background-color);
+  box-sizing: border-box;
+}
+
+.MultisDiscoveryCta--compact {
+  margin: 0.65rem auto 0.3rem;
+  padding: 0.6rem 0.75rem;
+  width: 100%;
+  max-width: 26rem;
+  gap: 0.45rem;
+}
+
+.MultisDiscoveryCta__lead {
+  margin: 0;
+  font-size: 0.9375rem;
+  font-weight: 400;
+  line-height: 1.5;
+  color: var(--faint-text);
+}
+
+.MultisDiscoveryCta--compact .MultisDiscoveryCta__lead {
+  font-size: 1em;
+}
+
+.MultisDiscoveryCta__button {
+  margin: 0;
+  min-width: unset;
+  width: auto;
+  max-width: 20rem;
+  padding: 0.6em 1.2em;
+  font-size: 0.9rem;
+}
+
+.MultisDiscoveryCta.MultisDiscoveryCta--compact .MultisDiscoveryCta__button {
+  font-size: 1.1em;
+}
+
+.MultisMoreAnchor {
+  scroll-margin-top: calc(var(--header-height) + 0.75rem);
+}
+
+/* Free-tier allowance + Premium CTA above fixture controls */
+.FreePredictionRemaining {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.55rem;
+}
+
+.FreePredictionRemaining__count {
+  margin: 0;
+  color: var(--faint-text);
+  font-weight: 400;
+  line-height: 1.45;
+}
+
+.FreePredictionUpgradeButton {
+  margin: 0;
+  min-width: unset;
+  width: auto;
+  max-width: 22rem;
+  padding: 0.55em 1.15em;
+  font-size: 0.9rem;
+}
+
+@media (max-width: 700px) {
+  .GuestLanding-introCard {
+    display: contents;
+  }
+
+  .GuestLanding-heroCopy {
+    display: contents;
+  }
+
+  .GuestLanding-hero {
+    grid-column: 1;
+    grid-row: 1;
+    padding: 0.75rem 0.85rem 0.35rem;
+    box-sizing: border-box;
+  }
+
+  .GuestLanding-heroVisual {
+    margin: 0 0.5rem 0 0;
+  }
+
+  .GuestLanding-heroBrand .GuestLanding-title {
+    font-size: clamp(1.12rem, 4.6vw, 1.28rem);
+    line-height: 1.22;
+  }
+
+  .GuestLanding-heroBrand .GuestLanding-subheadline {
+    font-size: 0.875rem;
+    line-height: 1.45;
+  }
+
+  .GuestLanding-auth {
+    grid-column: 1;
+    grid-row: 2;
+    min-height: unset;
+    padding: 0 0.85rem 0.65rem;
+  }
+
+  .MultisDiscoveryCta:not(.MultisDiscoveryCta--compact) {
+    width: 100%;
+    max-width: none;
+    margin-left: 0;
+    margin-right: 0;
+    box-sizing: border-box;
+  }
+
+  .MultisDiscoveryCta:not(.MultisDiscoveryCta--compact) .MultisDiscoveryCta__button,
+  .FreePredictionUpgradeButton {
+    width: 100%;
+    max-width: none;
+  }
+
+  .MultisDiscoveryCta.MultisDiscoveryCta--compact {
+    max-width: none;
+    margin: 0.45rem 0 0.3rem;
+    padding: 0.45rem 0.55rem;
+    gap: 0.35rem;
+    border-radius: 8px;
+  }
+
+  .MultisDiscoveryCta--compact .MultisDiscoveryCta__lead {
+    font-size: 1em;
+    line-height: 1.38;
+  }
+
+  .MultisDiscoveryCta.MultisDiscoveryCta--compact .MultisDiscoveryCta__button {
+    width: auto;
+    max-width: 100%;
+    padding: 0.4em 0.85em;
+    font-size: 1.1em;
+  }
+}
+
+@media (max-width: 480px) {
+  .MultisDiscoveryCta.MultisDiscoveryCta--compact {
+    padding: 0.4rem 0.5rem;
+  }
+
+  .MultisDiscoveryCta--compact .MultisDiscoveryCta__lead {
+    font-size: 1em;
+    line-height: 1.35;
+  }
+
+  .MultisDiscoveryCta.MultisDiscoveryCta--compact .MultisDiscoveryCta__button {
+    font-size: 1.1em;
+    padding: 0.38em 0.75em;
+  }
+}
+
+@media (min-width: 701px) and (max-width: 1024px) {
+  .GuestLanding-introCard {
+    padding-left: 0.85rem;
+    padding-right: 0.85rem;
+  }
+
+  .GuestLanding-laptop--hero .GuestLanding-laptopBase {
+    width: 100%;
+    height: 7px;
+  }
+}

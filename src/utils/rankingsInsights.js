@@ -86,7 +86,26 @@ export function isInvertedRankingMetric(metricKey) {
   return INVERTED_RANKING_METRICS.has(metricKey);
 }
 
-function getLeadingSide(homeRank, awayRank, metricKey) {
+function metricValuesEqual(homeValue, awayValue) {
+  if (homeValue == null || awayValue == null) {
+    return false;
+  }
+
+  const homeNumber = Number(homeValue);
+  const awayNumber = Number(awayValue);
+
+  if (Number.isFinite(homeNumber) && Number.isFinite(awayNumber)) {
+    return Math.abs(homeNumber - awayNumber) < 1e-9;
+  }
+
+  return homeValue === awayValue;
+}
+
+function getLeadingSide(homeRank, awayRank, metricKey, homeValue, awayValue) {
+  if (metricValuesEqual(homeValue, awayValue)) {
+    return "level";
+  }
+
   if (homeRank === awayRank) {
     return "level";
   }
@@ -100,7 +119,26 @@ function getLeadingSide(homeRank, awayRank, metricKey) {
   return homeRank > awayRank ? "home" : "away";
 }
 
-export function getRankEdgeState(homeRank, awayRank, totalTeams, metricKey) {
+function formatLeaderLabel(leadingSide, teamALabel, teamBLabel) {
+  if (leadingSide === "level") {
+    return "Level";
+  }
+  if (leadingSide === "home") {
+    return teamALabel ? `${teamALabel} leads` : "Home leads";
+  }
+  return teamBLabel ? `${teamBLabel} leads` : "Away leads";
+}
+
+export function getRankEdgeState(
+  homeRank,
+  awayRank,
+  totalTeams,
+  metricKey,
+  teamALabel = "",
+  teamBLabel = "",
+  homeValue,
+  awayValue
+) {
   if (homeRank == null || awayRank == null) {
     return {
       tone: "neutral",
@@ -108,6 +146,16 @@ export function getRankEdgeState(homeRank, awayRank, totalTeams, metricKey) {
       leader: "Unavailable",
       edge: null,
       edgeText: "Ranking data missing",
+    };
+  }
+
+  if (metricValuesEqual(homeValue, awayValue)) {
+    return {
+      tone: "level",
+      intensity: "none",
+      leader: "Level",
+      edge: 0,
+      edgeText: "Same value",
     };
   }
 
@@ -130,19 +178,21 @@ export function getRankEdgeState(homeRank, awayRank, totalTeams, metricKey) {
       ? "medium"
       : "subtle";
 
-  const leadingSide = getLeadingSide(homeRank, awayRank, metricKey);
+  const leadingSide = getLeadingSide(
+    homeRank,
+    awayRank,
+    metricKey,
+    homeValue,
+    awayValue
+  );
+  const leader = formatLeaderLabel(leadingSide, teamALabel, teamBLabel);
 
   return {
     tone: leadingSide,
     intensity,
-    leader:
-      leadingSide === "level"
-        ? "Level"
-        : leadingSide === "home"
-        ? "Home edge"
-        : "Away edge",
+    leader,
     edge,
-    edgeText: `${edge} rank edge`,
+    edgeText: `${leader} · ${edge} rank gap`,
   };
 }
 
@@ -157,11 +207,19 @@ export function getSectionSummary(
     (acc, metric) => {
       const homeRank = ranksHome[metric.key]?.rank;
       const awayRank = ranksAway[metric.key]?.rank;
+      const homeValue = ranksHome[metric.key]?.value;
+      const awayValue = ranksAway[metric.key]?.value;
 
       if (homeRank == null || awayRank == null) {
         acc.unavailable += 1;
       } else {
-        const leadingSide = getLeadingSide(homeRank, awayRank, metric.key);
+        const leadingSide = getLeadingSide(
+          homeRank,
+          awayRank,
+          metric.key,
+          homeValue,
+          awayValue
+        );
 
         if (leadingSide === "level") {
           acc.level += 1;
@@ -219,7 +277,16 @@ export function getBiggestRankingDisparities(
     .map((key) => {
       const homeRank = ranksHome[key]?.rank;
       const awayRank = ranksAway[key]?.rank;
-      const state = getRankEdgeState(homeRank, awayRank, totalTeams, key);
+      const state = getRankEdgeState(
+        homeRank,
+        awayRank,
+        totalTeams,
+        key,
+        "",
+        "",
+        ranksHome[key]?.value,
+        ranksAway[key]?.value
+      );
 
       if (state.edge == null || state.edge === 0) {
         return null;

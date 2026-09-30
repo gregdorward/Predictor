@@ -58,6 +58,13 @@ export default function CompetitionSeoShell({
 
   return (
     <section className="Competition Competition--seoShell" aria-label="Competition overview">
+      <nav className="CompetitionHub-breadcrumb" aria-label="Breadcrumb">
+        <a href="/">Home</a>
+        <span aria-hidden="true"> / </span>
+        <a href="/competitions/">Competitions</a>
+        <span aria-hidden="true"> / </span>
+        <span aria-current="page">{name}</span>
+      </nav>
       <header className="Competition__hero">
         <h1 className="Competition__title">{name}</h1>
         {metaParts.length > 0 ? (
@@ -103,11 +110,7 @@ export default function CompetitionSeoShell({
           <p key={paragraph.slice(0, 48)}>{paragraph}</p>
         ))}
       </div>
-      {tableRows.length > 0 ? (
-        <JourneyContentBreak>
-          {name} season table with points, goal difference and market rates.
-        </JourneyContentBreak>
-      ) : null}
+      {tableRows.length > 0 ? <JourneyContentBreak /> : null}
       <CompetitionTable name={name} season={season} rows={tableRows} />
     </section>
   );

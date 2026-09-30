@@ -12,7 +12,6 @@ import StripePolicies from "./components/Contact";
 import { useAuth } from "./logic/authProvider";
 import { bumpFixturesEpoch } from "./logic/fixturesEpoch";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
-import { scrollToGames } from "./components/GuestLanding";
 import { getCurrentUser } from "./components/ProtectedContent";
 import { doc, getDoc, collection, getDocs, query, updateDoc } from 'firebase/firestore';
 import { userDetail } from "./logic/authProvider";
@@ -814,17 +813,6 @@ export function AppContent({ shellMounted = false }) {
         <>
       <h1 className="MembersGetMore">Welcome to <span className="TitleColouring">Soccer Stats Hub</span></h1>
       <h4 className="Blurb">The best for in-depth football statistics, analytics and predictions</h4>
-      {isPaidUser ? (
-        <div />
-      ) : (
-          <button
-            type="button"
-            className="MembersGetMoreUnderlined"
-            onClick={scrollToGames}
-          >
-            Just show me the games
-          </button>
-      )}
         </>
       )}
       <div id="Email" className="Email"></div>
@@ -833,14 +821,15 @@ export function AppContent({ shellMounted = false }) {
 
       <div id="ExplainerText" />
       {!isPaidUser ? (
-        <p className="FreePredictionRemaining">
-          {Number.isFinite(remainingFreeUnlocks)
-            ? `${remainingFreeUnlocks} of ${FREE_DAILY_PREDICTION_LIMIT} free predictions left today`
-            : `${FREE_DAILY_PREDICTION_LIMIT} free predictions per day`}
-          {" · "}
+        <div className="FreePredictionRemaining" role="status">
+          <p className="FreePredictionRemaining__count">
+            {Number.isFinite(remainingFreeUnlocks)
+              ? `${remainingFreeUnlocks} of ${FREE_DAILY_PREDICTION_LIMIT} free predictions left today`
+              : `${FREE_DAILY_PREDICTION_LIMIT} free predictions per day`}
+          </p>
           <button
             type="button"
-            className="MembersGetMoreUnderlined InlineUpgradeLink"
+            className="SecondaryButton FreePredictionUpgradeButton"
             onClick={() => {
               document.getElementById("premium-upgrade")?.scrollIntoView({
                 behavior: "smooth",
@@ -848,9 +837,9 @@ export function AppContent({ shellMounted = false }) {
               });
             }}
           >
-            Upgrade for unlimited
+            Unlock unlimited predictions
           </button>
-        </p>
+        </div>
       ) : null}
       <div id="Buttons" className="Buttons">
         <div className="FixtureButtons">
@@ -1072,14 +1061,61 @@ export function AppContent({ shellMounted = false }) {
             {/* Optional: Add a subtle text indicator below */}
             {isPredicting && <p className="LoadingStatus">Calculating all predictions... Each fixture will be interactable once these are returned</p>}
 
+            {showMultis ? (
+              <div className="MultisDiscoveryCta MultisDiscoveryCta--compact" role="region" aria-label="Multis and more">
+                <p className="MultisDiscoveryCta__lead">
+                  {isPredicting
+                    ? "Multis, value picks, ROI and Prediction League unlock when predictions finish."
+                    : "Multis, value picks, ROI and the Prediction League have moved to below the day's fixtures."}
+                </p>
+                <button
+                  type="button"
+                  className="SecondaryButton MultisDiscoveryCta__button"
+                  disabled={isPredicting}
+                  onClick={() => {
+                    document.getElementById("ssh-multis-more")?.scrollIntoView({
+                      behavior: "smooth",
+                      block: "start",
+                    });
+                  }}
+                >
+                  Explore multis &amp; more
+                </button>
+              </div>
+            ) : null}
+
             <div className="Version">Prediction engine v2.3.0</div>
           </div>
         )}
       </div>
-      {/* <div id="MultiPlaceholder" className="MultiPlaceholder" /> */}
+
+      <div id="FixtureContainerHeaders"></div>
+
+      <div id="FixtureContainer">
+        {isLoading ? (
+          <div className="LoadingSpinnerContainer" style={{ display: 'flex', justifyContent: 'center', padding: '20px' }}>
+            <ThreeDots stroke="#fe8c00" />
+          </div>
+        ) : fixtures?.length > 0 ? (
+          <RenderAllFixtures
+            matches={fixtures}
+            userTips={activeSlip}
+            handleToggleTip={handleToggleTip}
+            userDetail={user}
+            result={false}
+            isProbability={isProbability}
+            setIsProbability={setIsProbability}
+          />
+        ) : (
+          <p className="NoFixtures">
+            {getNoFixturesMessage(offset, currentDate)}
+          </p>
+        )}
+      </div>
 
       {showMultis && (
-        <><div id="MultiWrapper" className="MultiWrapper">
+        <><div id="ssh-multis-more" className="MultisMoreAnchor" tabIndex={-1} />
+        <div id="MultiWrapper" className="MultiWrapper">
           <Collapsable
             buttonText={"Multis"}
             className={"MultisCollapsable"}
@@ -1125,36 +1161,11 @@ export function AppContent({ shellMounted = false }) {
           </div>
         }
       />
-      {/* <Collapsable buttonText={"ROI"} className={"ROI"} element={<div id="successMeasure2" />} /> */}
       <div id="highLowLeagues" className="HighLowLeagues" />
       <div id="risk" />
       <div id="successMeasure" />
       <div id="tables" />
       <div id="homeBadge" />
-      <div id="FixtureContainerHeaders"></div>
-
-      <div id="FixtureContainer">
-        {/* 1. Show Spinner while loading */}
-        {isLoading ? (
-          <div className="LoadingSpinnerContainer" style={{ display: 'flex', justifyContent: 'center', padding: '20px' }}>
-            <ThreeDots stroke="#fe8c00" />
-          </div>
-        ) : fixtures?.length > 0 ? (
-          <RenderAllFixtures
-            matches={fixtures}
-            userTips={activeSlip}
-            handleToggleTip={handleToggleTip}
-            userDetail={user}
-            result={false}
-            isProbability={isProbability}
-            setIsProbability={setIsProbability}
-          />
-        ) : (
-          <p className="NoFixtures">
-            {getNoFixturesMessage(offset, currentDate)}
-          </p>
-        )}
-      </div>
       {!isPaidUser ? (
         <div id="premium-upgrade" className="NonFixtureInfo PremiumUpgradeAnchor">
           <PremiumUpsell />

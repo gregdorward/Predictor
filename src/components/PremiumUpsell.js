@@ -144,8 +144,8 @@ export default function PremiumUpsell({
         </ul>
       ) : (
         <div className="FeatureComparison">
-          <div className="FeatureGroup">
-            <h4>Free Tier</h4>
+          <div className="FeatureGroup FeatureGroup--free">
+            <h4>Free tier</h4>
             <ul>
               <li>Full fixture board with odds and form</li>
               <li className="limited">
@@ -154,8 +154,10 @@ export default function PremiumUpsell({
               <li className="limited">Sample tip lists and top-5 insights</li>
             </ul>
           </div>
-          <div className="FeatureDivider">VS</div>
-          <div className="FeatureGroup premium">
+          <div className="FeatureDivider" aria-hidden="true">
+            <span className="FeatureDivider-label">vs</span>
+          </div>
+          <div className="FeatureGroup FeatureGroup--premium premium">
             <h4>Premium</h4>
             <ul>
               <li>Unlimited predictions on every match</li>

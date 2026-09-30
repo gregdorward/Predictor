@@ -7,6 +7,16 @@ import { initTheme } from "../src/utils/theme";
 import { loadThirdPartyScripts } from "../src/utils/loadThirdPartyScripts";
 import reportWebVitals from "../src/reportWebVitals";
 import "../src/index.css";
+import "../src/styles/home-guest-landing-polish.css";
+import "../src/styles/premium-upsell-polish.css";
+import "../src/styles/rankings-duel.css";
+import "../src/styles/competitions-index-layout.css";
+import "../src/styles/fixtures-index-layout.css";
+import "../src/styles/competitions-polish.css";
+import "../src/styles/competition-form-chart.css";
+import "../src/styles/competition-hub-polish.css";
+import "../src/styles/fixture-markets-snapshot.css";
+import "../src/styles/fixture-page-adapt.css";
 
 export default function MyApp({ Component, pageProps }) {
   useEffect(() => {
@@ -39,7 +49,7 @@ export default function MyApp({ Component, pageProps }) {
           <meta charSet="utf-8" />
           <meta
             name="viewport"
-            content="width=device-width, initial-scale=1"
+            content="width=device-width, initial-scale=1, viewport-fit=cover"
           />
         </Head>
         <Component {...pageProps} />
