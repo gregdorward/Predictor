@@ -5,6 +5,7 @@ import ArticleAwards from "./ArticleAwards";
 import ArticleProse from "./ArticleProse";
 import ArticleShareButton, { ArticleDateLine } from "./ArticleShareButton";
 import renderInlineMarkup from "./renderInlineMarkup";
+import JourneyContentBreak from "../JourneyContentBreak";
 import { SITE_NAME, SITE_URL, getCanonicalUrl } from "../../seo/pageMetaConfig";
 
 function buildArticleJsonLd(article, listing) {
@@ -40,6 +41,13 @@ function articleEyebrow(article, listing) {
   if (article.layout === "awards") return "Awards";
   if (article.layout === "prose") return "Analysis";
   return null;
+}
+
+function shouldInsertIntroJourneyBreak(article) {
+  if (!article?.intro?.length) return false;
+  if (article.layout === "awards") return (article.categories?.length || 0) >= 4;
+  if (article.layout === "prose") return (article.sections?.length || 0) >= 3;
+  return false;
 }
 
 export default function ArticlePage({ article, listing }) {
@@ -93,46 +101,48 @@ export default function ArticlePage({ article, listing }) {
           </header>
 
           <div id="ssh-content">
-          {article.intro?.length ? (
-            <div className="Articles__prose">
-              {article.intro.map((paragraph) => (
-                <p key={paragraph.slice(0, 48)}>
-                  {renderInlineMarkup(paragraph)}
-                </p>
-              ))}
-            </div>
-          ) : null}
-
-          {article.layout === "awards" ? (
-            <ArticleAwards article={article} />
-          ) : null}
-
-          {article.layout === "prose" ? (
-            <ArticleProse article={article} />
-          ) : null}
-
-          {article.outro?.length ? (
-            <div className="Articles__prose Articles__prose--outro">
-              {article.outro.map((paragraph) => (
-                <p key={paragraph.slice(0, 48)}>
-                  {renderInlineMarkup(paragraph)}
-                </p>
-              ))}
-            </div>
-          ) : null}
-
-          {article.relatedLinks?.length ? (
-            <footer className="Articles__related">
-              <h2 className="Articles__relatedTitle">Related</h2>
-              <ul className="Articles__relatedList">
-                {article.relatedLinks.map((link) => (
-                  <li key={link.href}>
-                    <a href={link.href}>{link.label}</a>
-                  </li>
+            {article.intro?.length ? (
+              <div className="Articles__prose">
+                {article.intro.map((paragraph) => (
+                  <p key={paragraph.slice(0, 48)}>
+                    {renderInlineMarkup(paragraph)}
+                  </p>
                 ))}
-              </ul>
-            </footer>
-          ) : null}
+              </div>
+            ) : null}
+
+            {shouldInsertIntroJourneyBreak(article) ? <JourneyContentBreak /> : null}
+
+            {article.layout === "awards" ? (
+              <ArticleAwards article={article} />
+            ) : null}
+
+            {article.layout === "prose" ? (
+              <ArticleProse article={article} />
+            ) : null}
+
+            {article.outro?.length ? (
+              <div className="Articles__prose Articles__prose--outro">
+                {article.outro.map((paragraph) => (
+                  <p key={paragraph.slice(0, 48)}>
+                    {renderInlineMarkup(paragraph)}
+                  </p>
+                ))}
+              </div>
+            ) : null}
+
+            {article.relatedLinks?.length ? (
+              <footer className="Articles__related">
+                <h2 className="Articles__relatedTitle">Related</h2>
+                <ul className="Articles__relatedList">
+                  {article.relatedLinks.map((link) => (
+                    <li key={link.href}>
+                      <a href={link.href}>{link.label}</a>
+                    </li>
+                  ))}
+                </ul>
+              </footer>
+            ) : null}
           </div>
         </main>
       </SiteHeader>
