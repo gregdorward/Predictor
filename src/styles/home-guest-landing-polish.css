@@ -1,5 +1,58 @@
 /* Homepage guest landing polish — loaded after index.css (see pages/_app.js). */
 
+.GuestLanding-membershipNotice {
+  width: 100%;
+  max-width: 28em;
+  margin: 0 auto 0.85rem;
+  padding: 0.75rem 0.9rem;
+  text-align: center;
+  border-radius: 10px;
+  border: 1px solid var(--primary-color);
+  background: color-mix(in srgb, var(--primary-color) 12%, var(--alternate-background-color));
+  box-sizing: border-box;
+}
+
+.GuestLanding-membershipNotice__title {
+  margin: 0 0 0.35rem;
+  font-size: 0.95rem;
+  font-weight: 700;
+  line-height: 1.35;
+  color: var(--member-text-color, var(--primary-color));
+}
+
+.GuestLanding-membershipNotice__body {
+  margin: 0;
+  font-size: 0.85rem;
+  line-height: 1.45;
+  color: var(--text-color);
+}
+
+body.dark-mode .GuestLanding-membershipNotice {
+  background: color-mix(
+    in srgb,
+    var(--primary-color) 22%,
+    var(--secondary-background-color)
+  );
+  border-color: color-mix(in srgb, var(--primary-color) 55%, var(--third-background-color));
+}
+
+body.dark-mode .GuestLanding-membershipNotice__body {
+  color: var(--faint-text);
+}
+
+.GuestLanding-auth--membershipPrompt {
+  animation: guest-membership-prompt-in 0.45s ease-out;
+}
+
+@keyframes guest-membership-prompt-in {
+  from {
+    box-shadow: 0 0 0 0 color-mix(in srgb, var(--primary-color) 35%, transparent);
+  }
+  to {
+    box-shadow: 0 0 0 4px color-mix(in srgb, var(--primary-color) 22%, transparent);
+  }
+}
+
 .GuestLanding-cards {
   grid-template-columns: minmax(0, 1fr);
 }

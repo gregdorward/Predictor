@@ -48,7 +48,11 @@ const GuestLandingHero = () => (
   </div>
 );
 
-const GuestLanding = ({ id = "guest-landing", showLogin = false }) => (
+const GuestLanding = ({
+  id = "guest-landing",
+  showLogin = false,
+  showMembershipNotice = false,
+}) => (
   <section className="GuestLanding" id={id} aria-label="Welcome to Soccer Stats Hub">
     <div className="GuestLanding-cards">
       <div className="GuestLanding-card GuestLanding-introCard">
@@ -57,10 +61,27 @@ const GuestLanding = ({ id = "guest-landing", showLogin = false }) => (
 
       <div
         id="guest-landing-auth-slot"
-        className="GuestLanding-card GuestLanding-auth"
+        className={`GuestLanding-card GuestLanding-auth${
+          showMembershipNotice ? " GuestLanding-auth--membershipPrompt" : ""
+        }`}
         aria-busy={showLogin ? "false" : "true"}
         aria-label="Sign in"
       >
+        {showMembershipNotice ? (
+          <div
+            id="guest-membership-notice"
+            className="GuestLanding-membershipNotice"
+            role="status"
+          >
+            <p className="GuestLanding-membershipNotice__title">
+              An account is required for Premium membership
+            </p>
+            <p className="GuestLanding-membershipNotice__body">
+              Sign up free or log in below. After that you can pick a weekly,
+              monthly, or annual plan.
+            </p>
+          </div>
+        ) : null}
         {showLogin ? <Login variant="landing" /> : null}
       </div>
     </div>

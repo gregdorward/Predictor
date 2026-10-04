@@ -69,7 +69,7 @@ import BetSlipFooter from "./components/Betslip";
 import SlideDiff from "./components/SliderDiff";
 import { FilterPresets } from "./components/SliderDiff";
 import { Slide } from "./components/Slider";
-import { registerUpgradeHandler, watchAndScrollToPremiumUpgrade } from "./logic/requestUpgrade";
+import { watchAndScrollToPremiumUpgrade } from "./logic/requestUpgrade";
 import { FREE_DAILY_PREDICTION_LIMIT } from "./logic/freePredictionAllowance";
 import { useRemainingFreeUnlocks } from "./logic/useFixturePredictionUnlock";
 
@@ -543,33 +543,6 @@ export function AppContent({ shellMounted = false }) {
   }, []);
 
   useEffect(() => {
-    const scrollToPremium = () => {
-      const target = document.getElementById("premium-upgrade");
-      if (target) {
-        target.scrollIntoView({ behavior: "smooth", block: "start" });
-        return;
-      }
-      // Pricing block not in DOM yet (e.g. still loading) — fall back to auth
-      if (!user) {
-        const loginSection =
-          document.getElementById("HamburgerMenuDiv") ||
-          document.getElementById("guest-landing-auth-slot");
-        loginSection?.scrollIntoView({ behavior: "smooth", block: "start" });
-        const emailInput = document.getElementById("LoginSignUp");
-        if (emailInput) {
-          emailInput.classList.add("flash-attention");
-          setTimeout(() => {
-            emailInput.classList.remove("flash-attention");
-            emailInput.focus();
-          }, 1000);
-        }
-      }
-    };
-    registerUpgradeHandler(scrollToPremium);
-    return () => registerUpgradeHandler(null);
-  }, [user]);
-
-  useEffect(() => {
     if (!currentUser) return;
 
     const loadPreference = async () => {
@@ -827,18 +800,25 @@ export function AppContent({ shellMounted = false }) {
               ? `${remainingFreeUnlocks} of ${FREE_DAILY_PREDICTION_LIMIT} free predictions left today`
               : `${FREE_DAILY_PREDICTION_LIMIT} free predictions per day`}
           </p>
-          <button
-            type="button"
-            className="SecondaryButton FreePredictionUpgradeButton"
-            onClick={() => {
-              document.getElementById("premium-upgrade")?.scrollIntoView({
-                behavior: "smooth",
-                block: "start",
-              });
-            }}
-          >
-            Unlock unlimited predictions
-          </button>
+          {user ? null : (
+            <button
+              type="button"
+              className="SecondaryButton FreePredictionUpgradeButton"
+              onClick={() => {
+                document.getElementById("premium-upgrade")?.scrollIntoView({
+                  behavior: "smooth",
+                  block: "start",
+                });
+              }}
+            >
+              Unlock unlimited predictions
+            </button>
+          )}
+        </div>
+      ) : null}
+      {user && !isPaidUser ? (
+        <div className="PremiumUpsellHomeTop">
+          <PremiumUpsell variant="banner" />
         </div>
       ) : null}
       <div id="Buttons" className="Buttons">

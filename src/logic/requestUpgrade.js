@@ -1,18 +1,11 @@
 /**
- * Registerable upgrade handler so render() islands and React trees can
- * open checkout / scroll to pricing without importing App.js.
+ * Shared upgrade / pricing navigation for React trees and render() islands.
  */
 
 export const UPGRADE_HOME_HREF = "/?upgrade=1#premium-upgrade";
 
-let upgradeHandler = null;
-
-/**
- * @param {(() => void) | null} handler
- */
-export function registerUpgradeHandler(handler) {
-  upgradeHandler = typeof handler === "function" ? handler : null;
-}
+/** Fired when upgrade flow scrolls the guest to sign up / log in before checkout. */
+export const MEMBERSHIP_LOGIN_PROMPT_EVENT = "ssh:membership-login-prompt";
 
 function scrollToPremiumUpgrade() {
   if (typeof document === "undefined") return false;
@@ -22,22 +15,51 @@ function scrollToPremiumUpgrade() {
   return true;
 }
 
+function isHomePath() {
+  if (typeof window === "undefined") return false;
+  const path = window.location.pathname || "/";
+  return path === "/" || path === "";
+}
+
 /**
- * Scroll to Premium pricing, or navigate home so App can show it.
- * Safe to call from any click handler (including fixture pages).
+ * Scroll to the guest login form on the homepage (not the header hamburger).
+ * @returns {boolean} whether a login form was found and focused
  */
-export function requestUpgrade() {
-  if (typeof upgradeHandler === "function") {
-    upgradeHandler();
-    return;
+export function promptGuestLoginOnPage() {
+  if (typeof document === "undefined") return false;
+
+  const guestSlot = document.getElementById("guest-landing-auth-slot");
+  const emailInput = document.getElementById("LoginSignUp");
+  if (!guestSlot && !emailInput) return false;
+
+  const scrollTarget = guestSlot || emailInput;
+  scrollTarget?.scrollIntoView?.({ behavior: "smooth", block: "start" });
+
+  guestSlot?.classList?.add("GuestLanding-auth--membershipPrompt");
+  window.dispatchEvent(new CustomEvent(MEMBERSHIP_LOGIN_PROMPT_EVENT));
+
+  if (emailInput) {
+    emailInput.classList.add("flash-attention");
+    window.setTimeout(() => {
+      emailInput.classList.remove("flash-attention");
+      emailInput.focus();
+    }, 1000);
   }
 
+  return true;
+}
+
+/**
+ * Scroll to Premium pricing, prompt login on the homepage, or navigate home
+ * so pricing can load. Safe from any route (fixture pages, stat pages, etc.).
+ */
+export function requestUpgrade() {
   if (typeof window === "undefined") return;
 
   if (scrollToPremiumUpgrade()) return;
 
-  // Fixture page / other routes: App is not mounted — go home with a flag
-  // so App can scroll once #premium-upgrade exists.
+  if (isHomePath() && promptGuestLoginOnPage()) return;
+
   window.location.assign(UPGRADE_HOME_HREF);
 }
 

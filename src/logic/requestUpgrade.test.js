@@ -2,7 +2,8 @@
  * @jest-environment jsdom
  */
 import {
-  registerUpgradeHandler,
+  MEMBERSHIP_LOGIN_PROMPT_EVENT,
+  promptGuestLoginOnPage,
   requestUpgrade,
   UPGRADE_HOME_HREF,
   watchAndScrollToPremiumUpgrade,
@@ -10,25 +11,17 @@ import {
 
 describe("requestUpgrade", () => {
   afterEach(() => {
-    registerUpgradeHandler(null);
     delete window.location;
-    window.location = { assign: jest.fn(), search: "", hash: "" };
+    window.location = { assign: jest.fn(), search: "", hash: "", pathname: "/fixture/foo" };
     document.body.innerHTML = "";
   });
 
   beforeEach(() => {
     delete window.location;
-    window.location = { assign: jest.fn(), search: "", hash: "" };
+    window.location = { assign: jest.fn(), search: "", hash: "", pathname: "/fixture/foo" };
   });
 
-  test("calls registered handler", () => {
-    const fn = jest.fn();
-    registerUpgradeHandler(fn);
-    requestUpgrade();
-    expect(fn).toHaveBeenCalledTimes(1);
-  });
-
-  test("scrolls to premium-upgrade when no handler", () => {
+  test("scrolls to premium-upgrade when present", () => {
     const el = document.createElement("div");
     el.id = "premium-upgrade";
     el.scrollIntoView = jest.fn();
@@ -41,6 +34,39 @@ describe("requestUpgrade", () => {
   test("navigates home with upgrade flag when pricing is missing", () => {
     requestUpgrade();
     expect(window.location.assign).toHaveBeenCalledWith(UPGRADE_HOME_HREF);
+  });
+
+  test("does not treat header hamburger as login — navigates away from fixture", () => {
+    const menu = document.createElement("div");
+    menu.id = "HamburgerMenuDiv";
+    document.body.appendChild(menu);
+    requestUpgrade();
+    expect(window.location.assign).toHaveBeenCalledWith(UPGRADE_HOME_HREF);
+  });
+
+  test("promptGuestLoginOnPage focuses guest landing login", () => {
+    window.location.pathname = "/";
+    const slot = document.createElement("div");
+    slot.id = "guest-landing-auth-slot";
+    const input = document.createElement("button");
+    input.id = "LoginSignUp";
+    slot.appendChild(input);
+    document.body.appendChild(slot);
+    slot.scrollIntoView = jest.fn();
+    input.focus = jest.fn();
+
+    const onPrompt = jest.fn();
+    window.addEventListener(MEMBERSHIP_LOGIN_PROMPT_EVENT, onPrompt);
+
+    expect(promptGuestLoginOnPage()).toBe(true);
+    expect(onPrompt).toHaveBeenCalled();
+    expect(slot.classList.contains("GuestLanding-auth--membershipPrompt")).toBe(
+      true
+    );
+    requestUpgrade();
+    expect(window.location.assign).not.toHaveBeenCalled();
+
+    window.removeEventListener(MEMBERSHIP_LOGIN_PROMPT_EVENT, onPrompt);
   });
 
   test("watchAndScrollToPremiumUpgrade scrolls when upgrade query is set", () => {

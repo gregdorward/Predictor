@@ -3,7 +3,10 @@ import { handleCheckout } from "../logic/stripeCheckout";
 import { isReactSnap } from "../firebase";
 import { useAuth } from "../logic/authProvider";
 import { FREE_DAILY_PREDICTION_LIMIT } from "../logic/freePredictionAllowance";
-import { UPGRADE_HOME_HREF } from "../logic/requestUpgrade";
+import {
+  promptGuestLoginOnPage,
+  UPGRADE_HOME_HREF,
+} from "../logic/requestUpgrade";
 
 const PRICE_IDS = {
   weekly: "price_1SxC9QBrqiWlVPadyHJj3Y91",
@@ -50,23 +53,7 @@ function detectCurrency() {
 }
 
 function promptLoginOrHome() {
-  const loginSection =
-    document.getElementById("HamburgerMenuDiv") ||
-    document.getElementById("guest-landing-auth-slot");
-  const emailInput = document.getElementById("LoginSignUp");
-
-  if (loginSection || emailInput) {
-    loginSection?.scrollIntoView({ behavior: "smooth", block: "start" });
-    if (emailInput) {
-      emailInput.classList.add("flash-attention");
-      setTimeout(() => {
-        emailInput.classList.remove("flash-attention");
-        emailInput.focus();
-      }, 1000);
-    }
-    return;
-  }
-
+  if (promptGuestLoginOnPage()) return;
   window.location.assign(UPGRADE_HOME_HREF);
 }
 
@@ -75,9 +62,12 @@ const DEFAULT_FULL_DESCRIPTION = `Every fixture is free to browse. Premium unloc
 const DEFAULT_COMPACT_DESCRIPTION =
   "Unlimited predictions, full tip lists, deep season stats, streaks, and AI previews beyond the free daily allowance.";
 
+const DEFAULT_BANNER_DESCRIPTION =
+  "Unlimited predictions, full tip lists, and deep match stats — cancel anytime.";
+
 /**
  * @param {{
- *   variant?: "full" | "compact",
+ *   variant?: "full" | "compact" | "banner",
  *   headline?: string,
  *   description?: string,
  *   className?: string,
@@ -93,6 +83,7 @@ export default function PremiumUpsell({
   const [pricing, setPricing] = useState(null);
   const [currency, setCurrency] = useState("usd");
   const compact = variant === "compact";
+  const banner = variant === "banner";
 
   useEffect(() => {
     if (isReactSnap || typeof window === "undefined") return undefined;
@@ -120,17 +111,68 @@ export default function PremiumUpsell({
     promptLoginOrHome();
   };
 
-  const title = headline || (compact ? "Unlock with Premium" : "Unlock Premium");
+  const title =
+    headline ||
+    (banner || compact ? "Unlock with Premium" : "Unlock Premium");
   const body =
     description ||
-    (compact ? DEFAULT_COMPACT_DESCRIPTION : DEFAULT_FULL_DESCRIPTION);
+    (banner
+      ? DEFAULT_BANNER_DESCRIPTION
+      : compact
+        ? DEFAULT_COMPACT_DESCRIPTION
+        : DEFAULT_FULL_DESCRIPTION);
+
+  const subscriptionOptions = pricing ? (
+    <div className="SubscriptionOptions">
+      <div className="OptionCard">
+        <span className="Price">
+          {formatPrice(pricing.weekly.amount, pricing.weekly.currency)}
+          <span>/week</span>
+        </span>
+        <button type="button" onClick={() => handleSubscribeClick(PRICE_IDS.weekly)}>
+          Get Weekly
+        </button>
+      </div>
+
+      <div className="OptionCard featured">
+        <div className="Badge">Best Value</div>
+        <span className="Price">
+          {formatPrice(pricing.yearly.amount, pricing.yearly.currency)}
+          <span>/year</span>
+        </span>
+        <button type="button" onClick={() => handleSubscribeClick(PRICE_IDS.yearly)}>
+          Go Annual
+        </button>
+      </div>
+
+      <div className="OptionCard">
+        <span className="Price">
+          {formatPrice(pricing.monthly.amount, pricing.monthly.currency)}
+          <span>/month</span>
+        </span>
+        <button type="button" onClick={() => handleSubscribeClick(PRICE_IDS.monthly)}>
+          Get Monthly
+        </button>
+      </div>
+    </div>
+  ) : null;
 
   return (
     <div
       className={`PremiumUpsell${compact ? " PremiumUpsell--compact" : ""}${
-        className ? ` ${className}` : ""
-      }`}
+        banner ? " PremiumUpsell--banner" : ""
+      }${className ? ` ${className}` : ""}`}
     >
+      {banner ? (
+        <div className="PremiumUpsell-bannerLayout">
+          <div className="UpsellHeader PremiumUpsell-bannerCopy">
+            <h3>{title}</h3>
+            <p>{body}</p>
+          </div>
+          {subscriptionOptions}
+        </div>
+      ) : (
+        <>
       <div className="UpsellHeader">
         {compact ? <h3>{title}</h3> : <h2>{title}</h2>}
         <p>{body}</p>
@@ -172,44 +214,15 @@ export default function PremiumUpsell({
         </div>
       )}
 
-      {pricing ? (
-        <div className="SubscriptionOptions">
-          <div className="OptionCard">
-            <span className="Price">
-              {formatPrice(pricing.weekly.amount, pricing.weekly.currency)}
-              <span>/week</span>
-            </span>
-            <button type="button" onClick={() => handleSubscribeClick(PRICE_IDS.weekly)}>
-              Get Weekly
-            </button>
-          </div>
+      {subscriptionOptions}
+        </>
+      )}
 
-          <div className="OptionCard featured">
-            <div className="Badge">Best Value</div>
-            <span className="Price">
-              {formatPrice(pricing.yearly.amount, pricing.yearly.currency)}
-              <span>/year</span>
-            </span>
-            <button type="button" onClick={() => handleSubscribeClick(PRICE_IDS.yearly)}>
-              Go Annual
-            </button>
-          </div>
-
-          <div className="OptionCard">
-            <span className="Price">
-              {formatPrice(pricing.monthly.amount, pricing.monthly.currency)}
-              <span>/month</span>
-            </span>
-            <button type="button" onClick={() => handleSubscribeClick(PRICE_IDS.monthly)}>
-              Get Monthly
-            </button>
-          </div>
-        </div>
+      {!banner ? (
+        <p className="TrustNote">
+          Secure payments via <strong>Stripe</strong>. Cancel anytime, no contracts.
+        </p>
       ) : null}
-
-      <p className="TrustNote">
-        Secure payments via <strong>Stripe</strong>. Cancel anytime, no contracts.
-      </p>
     </div>
   );
 }

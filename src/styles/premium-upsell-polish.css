@@ -1,17 +1,17 @@
 /* Premium upsell: width + free/paid tier contrast (full variant only). */
 
-.PremiumUpsell:not(.PremiumUpsell--compact) {
+.PremiumUpsell:not(.PremiumUpsell--compact):not(.PremiumUpsell--banner) {
   max-width: min(100%, 68rem);
   width: 100%;
   box-sizing: border-box;
 }
 
-.PremiumUpsell:not(.PremiumUpsell--compact) .SubscriptionOptions {
+.PremiumUpsell:not(.PremiumUpsell--compact):not(.PremiumUpsell--banner) .SubscriptionOptions {
   grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 1.25rem;
 }
 
-.PremiumUpsell:not(.PremiumUpsell--compact) .FeatureComparison {
+.PremiumUpsell:not(.PremiumUpsell--compact):not(.PremiumUpsell--banner) .FeatureComparison {
   position: relative;
   display: grid;
   grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
@@ -109,7 +109,7 @@
 }
 
 @media (max-width: 720px) {
-  .PremiumUpsell:not(.PremiumUpsell--compact) .FeatureComparison {
+  .PremiumUpsell:not(.PremiumUpsell--compact):not(.PremiumUpsell--banner) .FeatureComparison {
     grid-template-columns: 1fr;
     row-gap: 0;
   }
@@ -134,12 +134,100 @@
 }
 
 @media (max-width: 640px) {
-  .PremiumUpsell:not(.PremiumUpsell--compact) .SubscriptionOptions {
+  .PremiumUpsell:not(.PremiumUpsell--compact):not(.PremiumUpsell--banner) .SubscriptionOptions {
     grid-template-columns: 1fr;
   }
 
-  .PremiumUpsell:not(.PremiumUpsell--compact) .OptionCard.featured {
+  .PremiumUpsell:not(.PremiumUpsell--compact):not(.PremiumUpsell--banner) .OptionCard.featured {
     transform: scale(1);
     margin: 0;
+  }
+}
+
+.PremiumUpsellHomeTop {
+  width: 100%;
+  max-width: min(100%, 68rem);
+  margin: 0 auto;
+  padding: 0 var(--content-padding-x, 1.5em);
+  box-sizing: border-box;
+}
+
+.PremiumUpsell--banner {
+  padding: 0.7rem 0.85rem 0.8rem;
+  margin: 0.35rem 0 0.75rem;
+  max-width: none;
+  text-align: left;
+}
+
+.PremiumUpsell-bannerLayout {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.65rem 1rem;
+}
+
+.PremiumUpsell--banner .PremiumUpsell-bannerCopy {
+  flex: 1 1 11rem;
+  min-width: 0;
+}
+
+.PremiumUpsell--banner .UpsellHeader h3 {
+  margin: 0 0 0.2rem;
+  font-size: 1.02rem;
+  font-weight: 700;
+  color: var(--primary-color);
+}
+
+.PremiumUpsell--banner .UpsellHeader p {
+  margin: 0;
+  font-size: 0.78rem;
+  line-height: 1.35;
+  color: var(--faint-text);
+}
+
+.PremiumUpsell--banner .SubscriptionOptions {
+  flex: 2 1 16rem;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.45rem;
+  margin: 0;
+}
+
+.PremiumUpsell--banner .OptionCard {
+  padding: 0.45rem 0.35rem 0.4rem;
+}
+
+.PremiumUpsell--banner .OptionCard.featured {
+  transform: none;
+  margin: 0;
+}
+
+.PremiumUpsell--banner .Price {
+  font-size: 0.9rem;
+  margin-bottom: 0.3rem;
+}
+
+.PremiumUpsell--banner .Price span {
+  font-size: 0.68rem;
+}
+
+.PremiumUpsell--banner .OptionCard button {
+  width: 100%;
+  min-width: 0;
+  margin: 0;
+  padding: 0.4rem 0.3rem;
+  font-size: 0.74rem;
+}
+
+.PremiumUpsell--banner .Badge {
+  font-size: 0.58rem;
+  padding: 1px 6px;
+  top: -8px;
+}
+
+@media (max-width: 720px) {
+  .PremiumUpsell--banner .SubscriptionOptions {
+    grid-template-columns: 1fr;
+    width: 100%;
   }
 }
