@@ -42,22 +42,31 @@ function countAdSlots(container) {
   return container.querySelectorAll(".FixturePage-contentBreak--adSlot").length;
 }
 
+function countDirectContentAdSlots(container) {
+  return container.querySelectorAll(
+    "#ssh-content > .FixturePage-contentBreak--adSlot"
+  ).length;
+}
+
 describe("article Journey break markers", () => {
   it("adds an early break and section-spaced breaks to long prose articles", () => {
     const { container } = render(<ArticlePage article={howWePredict} />);
 
     expect(countAdSlots(container)).toBe(4);
+    expect(countDirectContentAdSlots(container)).toBe(4);
   });
 
   it("keeps shorter prose articles less dense", () => {
     const { container } = render(<ArticlePage article={nonPenaltyXg} />);
 
     expect(countAdSlots(container)).toBe(2);
+    expect(countDirectContentAdSlots(container)).toBe(2);
   });
 
   it("adds breaks between award category groups", () => {
     const { container } = render(<ArticlePage article={worldCupAwards} />);
 
     expect(countAdSlots(container)).toBeGreaterThan(3);
+    expect(countDirectContentAdSlots(container)).toBe(countAdSlots(container));
   });
 });

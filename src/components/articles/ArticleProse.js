@@ -12,7 +12,7 @@ export default function ArticleProse({ article }) {
   const sections = article.sections;
 
   return (
-    <div className="ArticleProse">
+    <>
       {sections.map((section, index) => (
         <Fragment key={section.id}>
           <section className="ArticleProse__section">
@@ -64,6 +64,6 @@ export default function ArticleProse({ article }) {
           ) : null}
         </Fragment>
       ))}
-    </div>
+    </>
   );
 }

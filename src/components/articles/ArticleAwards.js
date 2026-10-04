@@ -11,7 +11,7 @@ export default function ArticleAwards({ article }) {
   const categories = article.categories;
 
   return (
-    <div className="ArticleAwards">
+    <>
       {categories.map((category, index) => (
         <Fragment key={category.id}>
           <section
@@ -94,6 +94,6 @@ export default function ArticleAwards({ article }) {
           ) : null}
         </Fragment>
       ))}
-    </div>
+    </>
   );
 }

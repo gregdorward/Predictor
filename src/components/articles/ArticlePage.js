@@ -100,7 +100,7 @@ export default function ArticlePage({ article, listing }) {
             </div>
           </header>
 
-          <div id="ssh-content">
+          <div id="ssh-content" className="journey-content Articles__content">
             {article.intro?.length ? (
               <div className="Articles__prose">
                 {article.intro.map((paragraph) => (
