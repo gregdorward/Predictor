@@ -35,8 +35,8 @@ export default function CompetitionsIndexPage() {
       <SiteHeader showThemeToggle withFooter>
         <main className="StaticPage CompetitionsIndex">
           {/*
-            Journey uses #ssh-content only — keep card grids outside so the in-content
-            unit lands above the list, not after every competition link.
+            Journey scans grouped sections inside #ssh-content. Breaks are inserted
+            between region groups, not after every competition link.
           */}
           <CompetitionsIndexMain sections={COMPETITION_SECTIONS} />
         </main>

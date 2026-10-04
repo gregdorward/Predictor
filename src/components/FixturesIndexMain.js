@@ -1,5 +1,6 @@
-import { useMemo, useState } from "react";
+import { Fragment, useMemo, useState } from "react";
 import { groupFixturesByDate } from "../logic/fixturesIndexGroups";
+import JourneyContentBreak from "./JourneyContentBreak";
 
 function FixtureIndexRow({ fixture }) {
   return (
@@ -50,6 +51,10 @@ function matchesFixtureQuery(fixture, query) {
     fixture.league?.toLowerCase().includes(q) ||
     fixture.label?.toLowerCase().includes(q)
   );
+}
+
+function shouldInsertJourneyBreak(index, totalGroups) {
+  return totalGroups > 1 && index < totalGroups - 1;
 }
 
 export default function FixturesIndexMain({ fixtures = [] }) {
@@ -130,23 +135,30 @@ export default function FixturesIndexMain({ fixtures = [] }) {
         ) : null}
       </header>
 
-      <div className="FixturesIndex-groups">
-        {isFiltering && filtered.length === 0 ? (
-          <p className="FixturesIndex-empty">
-            Try another team or league, or{" "}
-            <button
-              type="button"
-              className="FixturesIndex-clearSearch"
-              onClick={() => setFilter("")}
-            >
-              clear search
-            </button>
-            .
-          </p>
-        ) : (
-          groups.map((group) => <FixtureDateGroup key={group.dateKey} group={group} />)
-        )}
-      </div>
+      {groups.length > 0 ? <JourneyContentBreak /> : null}
+
+      {isFiltering && filtered.length === 0 ? (
+        <p className="FixturesIndex-empty">
+          Try another team or league, or{" "}
+          <button
+            type="button"
+            className="FixturesIndex-clearSearch"
+            onClick={() => setFilter("")}
+          >
+            clear search
+          </button>
+          .
+        </p>
+      ) : (
+        groups.map((group, index) => (
+          <Fragment key={group.dateKey}>
+            <FixtureDateGroup group={group} />
+            {shouldInsertJourneyBreak(index, groups.length) ? (
+              <JourneyContentBreak />
+            ) : null}
+          </Fragment>
+        ))
+      )}
 
       <details className="FixturesIndex-context">
         <summary className="FixturesIndex-contextSummary">About this list</summary>

@@ -47,7 +47,7 @@ export default function FixtureByParam({
         ogImageAlt={`${meta.home} vs ${meta.away} | Soccer Stats Hub`}
       />
       <SiteHeader showThemeToggle withFooter>
-        <div id="ssh-content">
+        <div id="ssh-content" className="journey-content">
           <FixtureSeoShell {...seoShell} />
           <TeamPage matchId={matchId} seoShell={seoShell} />
         </div>

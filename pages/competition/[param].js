@@ -55,7 +55,7 @@ export default function CompetitionByParam({
           <SeoPageLinks relatedLinks={seoShell.relatedLinks} />
         }
       >
-        <div id="ssh-content">
+        <div id="ssh-content" className="journey-content">
           <CompetitionSeoShell {...seoShell} />
           <JourneyContentBreak />
           <CompetitionPage

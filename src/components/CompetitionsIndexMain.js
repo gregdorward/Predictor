@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { Fragment, useMemo, useState } from "react";
 import JourneyContentBreak from "./JourneyContentBreak";
 
 function CompetitionCard({ competition, featured: isFeatured = false }) {
@@ -61,6 +61,10 @@ function filterCompetitions(list, query) {
   return list.filter((competition) => matchesQuery(competition, query));
 }
 
+function shouldInsertJourneyBreak(index, totalGroups) {
+  return totalGroups > 1 && index < totalGroups - 1 && (index + 1) % 3 === 0;
+}
+
 export default function CompetitionsIndexMain({ sections }) {
   const { featured, regions, other, total } = sections;
   const [filter, setFilter] = useState("");
@@ -101,6 +105,25 @@ export default function CompetitionsIndexMain({ sections }) {
     }
     return items;
   }, [regions, other.length]);
+
+  const visibleGroups = [
+    {
+      id: "featured",
+      label: "Popular",
+      competitions: filteredFeatured,
+      featured: true,
+    },
+    ...filteredRegions,
+    ...(filteredOther.length > 0
+      ? [
+          {
+            id: "more",
+            label: "More competitions",
+            competitions: filteredOther,
+          },
+        ]
+      : []),
+  ].filter((group) => group.competitions.length > 0);
 
   return (
     <>
@@ -161,9 +184,7 @@ export default function CompetitionsIndexMain({ sections }) {
           Pick a league for standings, BTTS and Over 2.5 stats, or open the cross-league
           comparison tool.
         </JourneyContentBreak>
-      </div>
 
-      <div className="CompetitionsIndex-groups">
         {isFiltering && visibleCount === 0 ? (
           <p className="CompetitionsIndex-empty">
             Try another name or{" "}
@@ -173,31 +194,19 @@ export default function CompetitionsIndexMain({ sections }) {
             .
           </p>
         ) : (
-          <>
-            <CompetitionGroup
-              id="featured"
-              label="Popular"
-              competitions={filteredFeatured}
-              featured
-            />
-
-            {filteredRegions.map((group) => (
+          visibleGroups.map((group, index) => (
+            <Fragment key={group.id}>
               <CompetitionGroup
-                key={group.id}
                 id={group.id}
                 label={group.label}
                 competitions={group.competitions}
+                featured={group.featured}
               />
-            ))}
-
-            {filteredOther.length > 0 ? (
-              <CompetitionGroup
-                id="more"
-                label="More competitions"
-                competitions={filteredOther}
-              />
-            ) : null}
-          </>
+              {shouldInsertJourneyBreak(index, visibleGroups.length) ? (
+                <JourneyContentBreak />
+              ) : null}
+            </Fragment>
+          ))
         )}
       </div>
     </>
