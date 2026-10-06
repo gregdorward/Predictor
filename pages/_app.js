@@ -17,6 +17,7 @@ import "../src/styles/competition-form-chart.css";
 import "../src/styles/competition-hub-polish.css";
 import "../src/styles/fixture-markets-snapshot.css";
 import "../src/styles/fixture-page-adapt.css";
+import "../src/styles/articles-desktop-type.css";
 
 export default function MyApp({ Component, pageProps }) {
   useEffect(() => {

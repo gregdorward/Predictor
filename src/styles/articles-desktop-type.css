@@ -1,0 +1,111 @@
+/* Article detail typography and alignment. Loaded after index.css (see pages/_app.js). */
+
+.Articles--detail .Articles__header {
+  text-align: left;
+}
+
+.Articles--detail .Articles__dek {
+  margin-left: 0;
+  margin-right: 0;
+}
+
+.Articles--detail .Articles__headerRow {
+  justify-content: flex-start;
+}
+
+.Articles--detail .ArticleMeta {
+  justify-content: flex-start;
+}
+
+.Articles--detail .Articles__content {
+  text-align: left;
+}
+
+@media (min-width: 768px) {
+  .Articles--detail {
+    font-size: calc(0.75rem * 1.25);
+  }
+
+  .Articles--detail .Articles__crumbs {
+    font-size: calc(0.75rem * 1.25);
+  }
+
+  .Articles--detail .Articles__eyebrow {
+    font-size: calc(0.625rem * 1.25);
+  }
+
+  .Articles--detail .Articles__title {
+    font-size: clamp(calc(1.15rem * 1.25), calc(3vw * 1.25), calc(1.5rem * 1.25));
+  }
+
+  .Articles--detail .Articles__subtitle {
+    font-size: calc(0.875rem * 1.25);
+  }
+
+  .Articles--detail .Articles__dek {
+    font-size: calc(0.8125rem * 1.25);
+  }
+
+  .Articles--detail .ArticleMeta {
+    font-size: calc(0.6875rem * 1.25);
+  }
+
+  .Articles--detail .ArticleShare {
+    font-size: calc(0.6875rem * 1.25);
+  }
+
+  .Articles--detail .Articles__prose p,
+  .Articles--detail .ArticleProse__section p,
+  .Articles--detail .ArticleProse__list {
+    font-size: calc(0.8125rem * 1.25);
+  }
+
+  .Articles--detail .ArticleProse__heading {
+    font-size: calc(0.9375rem * 1.25);
+  }
+
+  .Articles--detail .ArticleProse__table {
+    font-size: calc(0.8125rem * 1.25);
+  }
+
+  .Articles--detail .ArticleProse__table caption {
+    font-size: calc(0.75rem * 1.25);
+  }
+
+  .Articles--detail .Articles__relatedTitle {
+    font-size: calc(0.8125rem * 1.25);
+  }
+
+  .Articles--detail .Articles__relatedList {
+    font-size: calc(0.75rem * 1.25);
+  }
+
+  .Articles--detail .ArticleAwards__eyebrow,
+  .Articles--detail .ArticleAwards__winnerLabel,
+  .Articles--detail .ArticleAwards__stat dt {
+    font-size: calc(0.625rem * 1.25);
+  }
+
+  .Articles--detail .ArticleAwards__categoryTitle {
+    font-size: clamp(calc(0.95rem * 1.25), calc(2.4vw * 1.25), calc(1.15rem * 1.25));
+  }
+
+  .Articles--detail .ArticleAwards__categorySubtitle,
+  .Articles--detail .ArticleAwards__winnerTeam,
+  .Articles--detail .ArticleAwards__winnerNote,
+  .Articles--detail .ArticleAwards__contendersTitle,
+  .Articles--detail .ArticleAwards__contenderHead,
+  .Articles--detail .ArticleAwards__contenderTeam,
+  .Articles--detail .ArticleAwards__contendersList p {
+    font-size: calc(0.75rem * 1.25);
+  }
+
+  .Articles--detail .ArticleAwards__winnerName {
+    font-size: calc(0.95rem * 1.25);
+  }
+
+  .Articles--detail .ArticleAwards__stat dd,
+  .Articles--detail .ArticleAwards__analysis {
+    font-size: calc(0.8125rem * 1.25);
+  }
+}

@@ -1,0 +1,122 @@
+{
+  "slug": "soccer-stats-hub-backtest-results",
+  "layout": "prose",
+  "title": "Soccer Stats Hub - Backtest Results",
+  "subtitle": "What happened when we replayed the current model across a full summer and early autumn of fixtures",
+  "dek": "A flat-stake backtest from late July through early October 2026: 2,070 match-result tips, +6.87% ROI, and where the model found the most room against the market.",
+  "publishedAt": "2026-10-06",
+  "updatedAt": "2026-10-06T14:30:00.000Z",
+  "authorLabel": "Soccer Stats Hub",
+  "intro": [
+    "Football predictions are easy to judge one match at a time. The more useful test is what happens when the same rules are applied again and again across different leagues, prices and weeks of the calendar. That is what we did here: every completed game in our covered competitions between 20 July and 6 October 2026, with one flat unit staked on the model's 1X2 tip for each match we could predict.",
+    "The run produced 2,070 tips in the ROI set. Of those, 934 landed the correct match result, giving a 45.1% hit rate and a +6.87% return after typical bookmaker prices. It is the same model logic that powers the site today, replayed across finished fixtures rather than judged from a handful of good-looking picks."
+  ],
+  "sections": [
+    {
+      "id": "how-we-ran-it",
+      "heading": "The replay rules",
+      "paragraphs": [
+        "For each date in the range, we loaded the completed fixtures for the competitions Soccer Stats Hub covers and regenerated predictions with the current model rather than using frozen kickoff snapshots. Where there was enough season history, the model produced a scoreline, converted it into home-draw-away probabilities, and recorded the 1X2 tip implied by that scoreline.",
+        "Each qualifying tip counted as a single unit on the tipped outcome at the prices attached to the fixture. A winner returned the decimal odds minus the stake. A loser counted as minus one unit. Tips below 1.21 decimal odds were left out of the ROI set, which matches how we treat very short prices in production reporting.",
+        "There were 3,456 completed fixtures in the run. The model made 2,070 qualifying tips after the odds floor. The rest were early-season gaps, missing form, or fixtures where the model did not have enough to make a call. League scoring averages came from dated snapshots during the period."
+      ]
+    },
+    {
+      "id": "headline-numbers",
+      "heading": "The return",
+      "paragraphs": [
+        "Across those 2,070 tips the model landed the correct match result 934 times. On flat stakes that came out at +142.2 units, or +6.87% ROI. Exact scorelines matched 239 times, which is 11.6% of tipped games.",
+        "The useful part is the combination of price and hit rate. A 45.1% strike rate can be ordinary or valuable depending on the odds attached to the selections. In this window, the prices were strong enough for the ledger to finish comfortably ahead."
+      ],
+      "table": {
+        "caption": "Backtest summary, 20 July to 6 October 2026 (2,070 tipped match results after the 1.21 odds floor).",
+        "headers": ["Measure", "Result"],
+        "rows": [
+          ["Tips in ROI set", "2,070"],
+          ["Match result hit rate", "45.1%"],
+          ["Exact score hit rate", "11.6%"],
+          ["Net profit (1-unit stakes)", "+142.2 units"],
+          ["ROI", "+6.87%"]
+        ]
+      }
+    },
+    {
+      "id": "where-profit-came-from",
+      "heading": "Draws paid their way",
+      "paragraphs": [
+        "Draws did a lot of the work. The model picked 741 of them, landed 32.1%, and returned +15.3% ROI. That is a lower hit rate than the home-win column, but draw prices do not need to land every other game to pay their way.",
+        "Away wins were positive too: 435 tips, 49.0% correct, and +7.6% ROI. Home wins were the most common call and had the best hit rate at 54.0%, but finished just under flat on price. That is why the site puts the probability next to the market rather than treating the favourite as the obvious answer."
+      ],
+      "table": {
+        "caption": "ROI by predicted match result (same window and stake rules).",
+        "headers": ["Predicted outcome", "Tips", "Hit rate", "ROI"],
+        "rows": [
+          ["Home win", "894", "54.0%", "-0.5%"],
+          ["Draw", "741", "32.1%", "+15.3%"],
+          ["Away win", "435", "49.0%", "+7.6%"]
+        ]
+      }
+    },
+    {
+      "id": "competitions",
+      "heading": "Leagues that travelled well",
+      "paragraphs": [
+        "The stronger league numbers were not all tiny samples. Several competitions with 30 or more tips finished well clear of breakeven.",
+        "England's League Two (+39.4% from 66 tips) and Mexico's Liga MX (+39.5% from 63) were the standouts on volume. Germany's 3. Liga (+43.5% from 34), the Championship (+25.9% from 56) and League One (+26.0% from 49) also posted strong returns. Scottish League Two (+39.5% from 30) and Argentina's Primera (+8.1% from 161) added depth across different regions.",
+        "The Champions League also had a strong short run, returning +59.1% ROI across 15 tips. The domestic league figures above carry more weight for this article because there were more fixtures behind them."
+      ],
+      "table": {
+        "caption": "Selected competitions with at least 30 tipped match results in the backtest.",
+        "headers": ["Competition", "Tips", "ROI"],
+        "rows": [
+          ["3. Liga", "34", "+43.5%"],
+          ["Liga MX", "63", "+39.5%"],
+          ["League Two", "66", "+39.4%"],
+          ["Scottish League Two", "30", "+39.5%"],
+          ["League One", "49", "+26.0%"],
+          ["Championship", "56", "+25.9%"],
+          ["K League", "72", "+13.2%"],
+          ["Argentina Primera Division", "161", "+8.1%"]
+        ]
+      }
+    },
+    {
+      "id": "using-the-numbers",
+      "heading": "Using it on the site",
+      "paragraphs": [
+        "This is close to how Soccer Stats Hub is used in practice: one match, one model tip, one market price. The difference is that, after the fact, we can see the whole run instead of remembering only the winners that stuck in the mind.",
+        "Inside a fixture, the same comparison is there before kick-off. You can expand the match, compare the model probability with the bookmaker-implied price, then decide whether the tip deserves more attention. Customise Tips gives you a quicker way to narrow the board by odds range, value edge, form, probability or preset.",
+        "For the modelling side, the methodology article explains how fixtures become scorelines. For the filter side, the Customise Tips article shows how different shortlists have behaved in previous testing."
+      ]
+    },
+    {
+      "id": "what-we-take-from-it",
+      "heading": "Why we like this result",
+      "paragraphs": [
+        "Most betting content starts and ends with the pick. The useful part here is that the model found value without leaning only on obvious favourites. Draw and away-win angles made a real difference, and the better league results came from several competitions rather than one lucky pocket.",
+        "That is the version of football research we want on Soccer Stats Hub: probability beside price, context beside prediction, and enough information for you to disagree with the tip if the match picture does not convince you."
+      ]
+    }
+  ],
+  "outro": [
+    "Soccer Stats Hub exists so you can see the prediction next to the full context. We're different to the tipsters that give you a daily list to blindly follow only to end up saying \"We go again tomorrow\". We encourage you to do your own research and provide the tools to do so."
+  ],
+  "relatedLinks": [
+    {
+      "label": "How we predict a game",
+      "href": "/articles/how-we-predict-a-game/"
+    },
+    {
+      "label": "How Customise Tips puts the shortlist in your hands",
+      "href": "/articles/customise-tips-filters/"
+    },
+    {
+      "label": "Methodology",
+      "href": "/methodology/"
+    },
+    {
+      "label": "Articles",
+      "href": "/articles/"
+    }
+  ]
+}

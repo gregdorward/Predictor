@@ -4,8 +4,10 @@ import howWePredict from "./how-we-predict-a-game.json";
 import customiseTipsFilters from "./customise-tips-filters.json";
 import nonPenaltyXgPredictions from "./non-penalty-xg-predictions.json";
 import whatSetsSoccerStatsHubApart from "./what-sets-soccer-stats-hub-apart.json";
+import soccerStatsHubBacktestResults from "./soccer-stats-hub-backtest-results.json";
 
 const ARTICLE_BY_SLUG = {
+  [soccerStatsHubBacktestResults.slug]: soccerStatsHubBacktestResults,
   [whatSetsSoccerStatsHubApart.slug]: whatSetsSoccerStatsHubApart,
   [nonPenaltyXgPredictions.slug]: nonPenaltyXgPredictions,
   [customiseTipsFilters.slug]: customiseTipsFilters,

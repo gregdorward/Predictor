@@ -1,6 +1,16 @@
 {
   "articles": [
     {
+      "slug": "soccer-stats-hub-backtest-results",
+      "title": "Soccer Stats Hub - Backtest Results",
+      "dek": "Flat-stake backtest from July to October 2026: 2,070 match-result tips at +6.87% ROI, with draw and away-win angles and strong returns in several leagues.",
+      "publishedAt": "2026-10-06",
+      "updatedAt": "2026-10-06T14:30:00.000Z",
+      "heroLabel": "Analysis",
+      "tags": ["Backtest", "Predictions", "ROI"],
+      "ogDescription": "Soccer Stats Hub backtest on 2,070 match-result tips from July to October 2026: +6.87% ROI, competition highlights, and how we ran the replay."
+    },
+    {
       "slug": "what-sets-soccer-stats-hub-apart",
       "title": "What sets Soccer Stats Hub apart",
       "dek": "Transparent predictions, value versus the market, BTTS and Over 2.5 tools, and Premium priced well below typical paid research tiers — built for pre-match research, not live scores.",
