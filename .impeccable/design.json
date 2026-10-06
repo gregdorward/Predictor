@@ -1,0 +1,244 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-09-29T10:15:00.000Z",
+  "title": "Design System: Soccer Stats Hub",
+  "extensions": {
+    "colorMeta": {
+      "primary": {
+        "role": "primary",
+        "displayName": "Matchday Orange",
+        "canonical": "oklch(72% 0.17 55)",
+        "tonalRamp": [
+          "oklch(28% 0.08 55)",
+          "oklch(38% 0.11 55)",
+          "oklch(48% 0.13 55)",
+          "oklch(58% 0.15 55)",
+          "oklch(65% 0.16 55)",
+          "oklch(72% 0.17 55)",
+          "oklch(80% 0.14 55)",
+          "oklch(92% 0.06 55)"
+        ]
+      },
+      "midnight": {
+        "role": "neutral",
+        "displayName": "Midnight Ink",
+        "canonical": "oklch(18% 0.08 280)",
+        "tonalRamp": [
+          "oklch(12% 0.06 280)",
+          "oklch(18% 0.08 280)",
+          "oklch(24% 0.07 280)",
+          "oklch(32% 0.06 280)",
+          "oklch(42% 0.04 280)",
+          "oklch(55% 0.02 280)",
+          "oklch(72% 0.01 280)",
+          "oklch(92% 0.005 280)"
+        ]
+      },
+      "background": {
+        "role": "neutral",
+        "displayName": "Page White",
+        "canonical": "oklch(100% 0 0)",
+        "tonalRamp": [
+          "oklch(20% 0 0)",
+          "oklch(30% 0 0)",
+          "oklch(40% 0 0)",
+          "oklch(55% 0 0)",
+          "oklch(70% 0 0)",
+          "oklch(85% 0 0)",
+          "oklch(94% 0 0)",
+          "oklch(100% 0 0)"
+        ]
+      },
+      "highlight-yellow": {
+        "role": "tertiary",
+        "displayName": "Highlight Yellow",
+        "canonical": "oklch(92% 0.18 95)",
+        "tonalRamp": [
+          "oklch(35% 0.12 95)",
+          "oklch(45% 0.14 95)",
+          "oklch(55% 0.16 95)",
+          "oklch(65% 0.17 95)",
+          "oklch(75% 0.18 95)",
+          "oklch(85% 0.18 95)",
+          "oklch(92% 0.18 95)",
+          "oklch(97% 0.08 95)"
+        ]
+      }
+    },
+    "typographyMeta": {
+      "display": {
+        "displayName": "Display",
+        "purpose": "Guest landing titles and major marketing headings only."
+      },
+      "body": {
+        "displayName": "App body",
+        "purpose": "Default semibold UI text in tables, buttons, and fixture chrome."
+      },
+      "body-reading": {
+        "displayName": "Reading body",
+        "purpose": "StaticPage leads, FAQ, methodology—400 weight, ~48rem measure."
+      }
+    },
+    "shadows": [
+      {
+        "name": "button-rest",
+        "value": "0 1px 2px rgba(2, 0, 41, 0.06), 0 2px 8px rgba(2, 0, 41, 0.08)",
+        "purpose": "Incumbent default button elevation (light mode); avoid on new flat panels."
+      },
+      {
+        "name": "button-hover",
+        "value": "0 2px 4px rgba(2, 0, 41, 0.08), 0 8px 20px rgba(254, 140, 0, 0.22)",
+        "purpose": "Orange-tinted hover glow on primary buttons (legacy)."
+      },
+      {
+        "name": "focus-ring",
+        "value": "0 0 0 3px rgba(254, 140, 0, 0.38)",
+        "purpose": "Focus-visible ring using --primary-rgb."
+      }
+    ],
+    "motion": [
+      {
+        "name": "ease-standard",
+        "value": "cubic-bezier(0.4, 0, 0.2, 1)",
+        "purpose": "Default 0.2s transitions on buttons and borders."
+      },
+      {
+        "name": "headline-fade",
+        "value": "opacity 0.55s ease",
+        "purpose": "Guest landing rotating headline line emphasis."
+      }
+    ],
+    "breakpoints": [
+      { "name": "mobile-tight", "value": "600px" },
+      { "name": "tablet", "value": "1200px" },
+      { "name": "desktop", "value": "1800px" },
+      { "name": "content-max", "value": "1400px" }
+    ]
+  },
+  "components": [
+    {
+      "name": "Primary Button",
+      "kind": "button",
+      "refersTo": "button-primary",
+      "description": "Default filled action; midnight at rest, orange on hover.",
+      "html": "<button type=\"button\" class=\"ds-btn-primary\">Get Predictions</button>",
+      "css": ".ds-btn-primary { display: inline-flex; align-items: center; justify-content: center; gap: 0.35em; padding: 0.7em 1.5em; min-width: 10em; font-family: 'Open Sans', system-ui, sans-serif; font-size: 1em; font-weight: 600; letter-spacing: 0.01em; line-height: 1.2; cursor: pointer; border: 1px solid rgba(2, 0, 41, 0.14); border-radius: 8px; color: #ffffff; background-color: #020029; transition: background-color 0.2s cubic-bezier(0.4, 0, 0.2, 1), border-color 0.2s cubic-bezier(0.4, 0, 0.2, 1), color 0.2s cubic-bezier(0.4, 0, 0.2, 1); outline: none; } .ds-btn-primary:hover { background-color: #fe8c00; border-color: #fe8c00; color: #020029; } .ds-btn-primary:focus-visible { box-shadow: 0 0 0 3px rgba(254, 140, 0, 0.38); } .ds-btn-primary:active { transform: translateY(0); }"
+    },
+    {
+      "name": "CTA Button",
+      "kind": "button",
+      "refersTo": "button-cta",
+      "description": "Orange-filled primary for prediction generation.",
+      "html": "<button type=\"button\" class=\"ds-btn-cta\">Generate Predictions &amp; Stats</button>",
+      "css": ".ds-btn-cta { display: inline-flex; align-items: center; justify-content: center; padding: 0.75em 1.5em; min-width: 10em; font-family: 'Open Sans', system-ui, sans-serif; font-size: 1em; font-weight: 600; border: 1px solid #fe8c00; border-radius: 8px; color: #020029; background-color: #fe8c00; cursor: pointer; transition: filter 0.2s cubic-bezier(0.4, 0, 0.2, 1); outline: none; } .ds-btn-cta:hover { filter: brightness(1.05); } .ds-btn-cta:focus-visible { box-shadow: 0 0 0 3px rgba(254, 140, 0, 0.38); }"
+    },
+    {
+      "name": "Secondary Button",
+      "kind": "button",
+      "refersTo": "button-secondary",
+      "description": "Outlined supporting actions.",
+      "html": "<button type=\"button\" class=\"ds-btn-secondary\">Options</button>",
+      "css": ".ds-btn-secondary { display: inline-flex; align-items: center; justify-content: center; padding: 0.7em 1.5em; min-width: 10em; font-family: 'Open Sans', system-ui, sans-serif; font-size: 1em; font-weight: 600; border: 2px solid rgba(2, 0, 41, 0.35); border-radius: 8px; color: #020029; background-color: transparent; cursor: pointer; transition: background-color 0.2s cubic-bezier(0.4, 0, 0.2, 1), border-color 0.2s cubic-bezier(0.4, 0, 0.2, 1); outline: none; } .ds-btn-secondary:hover { background-color: rgba(254, 140, 0, 0.1); border-color: #fe8c00; color: #020029; } .ds-btn-secondary:focus-visible { box-shadow: 0 0 0 3px rgba(254, 140, 0, 0.38); }"
+    },
+    {
+      "name": "Ghost Button",
+      "kind": "button",
+      "refersTo": "button-ghost",
+      "description": "Low-emphasis header and inline actions.",
+      "html": "<button type=\"button\" class=\"ds-btn-ghost\">Skip intro</button>",
+      "css": ".ds-btn-ghost { display: inline-flex; align-items: center; justify-content: center; padding: 0.5em 0.85em; min-width: auto; font-family: 'Open Sans', system-ui, sans-serif; font-size: 1em; font-weight: 600; border: 1px solid transparent; border-radius: 8px; color: #020029; background-color: transparent; cursor: pointer; outline: none; } .ds-btn-ghost:hover { background-color: rgb(248, 248, 248); } .ds-btn-ghost:focus-visible { box-shadow: 0 0 0 3px rgba(254, 140, 0, 0.38); }"
+    },
+    {
+      "name": "Static Page Lead",
+      "kind": "custom",
+      "refersTo": null,
+      "description": "Editorial intro paragraph on FAQ/methodology pages.",
+      "html": "<p class=\"ds-static-lead\">Transparent football predictions, BTTS and Over 2.5 research, and how model probability compares to bookmaker odds.</p>",
+      "css": ".ds-static-lead { max-width: 48rem; margin: 0 0 1.5rem; font-family: 'Open Sans', system-ui, sans-serif; font-size: 0.98rem; font-weight: 400; line-height: 1.6; color: #454545; text-align: left; }"
+    },
+    {
+      "name": "Premium Upsell Card",
+      "kind": "card",
+      "refersTo": null,
+      "description": "Subscription panel with border and 12px radius.",
+      "html": "<section class=\"ds-premium-upsell\"><h3 class=\"ds-premium-upsell__title\">Unlock Premium</h3><p class=\"ds-premium-upsell__copy\">Unlimited predictions, full tip lists, and deeper match intel.</p><button type=\"button\" class=\"ds-btn-cta\">Upgrade</button></section>",
+      "css": ".ds-premium-upsell { max-width: 900px; margin: 1rem auto; padding: 2rem; text-align: center; font-family: 'Inter', 'Open Sans', system-ui, sans-serif; background: #f5f4f4; border: 1px solid rgb(225, 225, 225); border-radius: 12px; box-sizing: border-box; } .ds-premium-upsell__title { margin: 0 0 0.35rem; font-size: 1.2rem; font-weight: 600; color: #fe8c00; } .ds-premium-upsell__copy { margin: 0 0 1rem; font-size: 0.92rem; line-height: 1.45; color: #454545; }"
+    },
+    {
+      "name": "Guest Landing Stat Link",
+      "kind": "nav",
+      "refersTo": null,
+      "description": "Today’s links row with orange stat emphasis.",
+      "html": "<a href=\"#\" class=\"ds-landing-link\"><span>BTTS teams today</span><strong>12</strong></a>",
+      "css": ".ds-landing-link { display: flex; justify-content: space-between; gap: 0.75rem; align-items: baseline; color: #020029; text-decoration: none; font-family: 'Open Sans', system-ui, sans-serif; font-weight: 600; font-size: 0.92rem; } .ds-landing-link strong { font-variant-numeric: tabular-nums; color: #fe8c00; font-weight: 600; text-align: right; } .ds-landing-link:hover { text-decoration: underline; }"
+    },
+    {
+      "name": "Fixed Site Header",
+      "kind": "nav",
+      "refersTo": null,
+      "description": "Top bar with logo zone and action cluster.",
+      "html": "<header class=\"ds-site-header\"><div class=\"ds-site-header__logo\">Soccer Stats Hub</div><div class=\"ds-site-header__actions\"><button type=\"button\" class=\"ds-btn-ghost\" aria-label=\"Menu\">☰</button></div></header>",
+      "css": ".ds-site-header { position: fixed; top: 0; left: 0; right: 0; display: flex; justify-content: space-between; align-items: center; padding: 1em; background-color: #ffffff; color: #020029; z-index: 1000; box-sizing: border-box; border-bottom: 1px solid rgb(225, 225, 225); } .ds-site-header__logo { font-family: 'Open Sans', system-ui, sans-serif; font-weight: 700; font-size: 1rem; } .ds-site-header__actions { display: flex; align-items: center; gap: 0.5em; }"
+    }
+  ],
+  "narrative": {
+    "northStar": "The Matchday Dashboard",
+    "overview": "Soccer Stats Hub looks like a serious pre-match stats terminal: midnight navy typography, dense tables and charts, and matchday orange reserved for signals that matter—CTAs, active headlines, key numbers, and marketing moments. The product serves fans and researchers equally, so the UI prioritises scanability and proof over decoration.\n\nStatic editorial pages (FAQ, methodology, about) use a narrower reading column and lighter type weight; the fixture browser, competition views, and match detail panels stay compact and data-forward. Light mode is the default documented palette; `.dark-mode` on `body` swaps the same roles to near-black surfaces and slightly warmer orange.",
+    "keyCharacteristics": [
+      "Single workhorse family: Open Sans (600 default in the app shell; 400 for long-form leads).",
+      "Midnight navy (#020029) anchors text and default buttons; matchday orange (#fe8c00 / #f57701 dark) carries brand energy and action.",
+      "Split density: ~48rem StaticPage for reading; ~1400px app column for research UI.",
+      "Flat-forward materiality: borders and tonal surfaces; no hover lift or shadow escalation on controls.",
+      "Utilitarian controls: color and border signal state; orange on hover, not motion or glow.",
+      "Full light/dark theme via CSS variables in src/index.css, toggled in src/utils/theme.js."
+    ],
+    "rules": [
+      {
+        "name": "The Brand Splash Rule",
+        "body": "Orange may headline marketing blocks, guest landing lines, and primary actions; midnight still carries most body copy and table data so the UI does not read as a single orange block.",
+        "section": "colors"
+      },
+      {
+        "name": "The Variable-First Rule",
+        "body": "New colors must be added as :root / .dark-mode custom properties in src/index.css (or critical CSS for landing), not one-off hex in components.",
+        "section": "colors"
+      },
+      {
+        "name": "The Split Voice Rule",
+        "body": "Do not use display clamp sizes inside fixture tables; use body/label sizes there. Reserve display/headline for landing, static pages, and competition hero zones.",
+        "section": "typography"
+      },
+      {
+        "name": "The Flat-Forward Rule",
+        "body": "Surfaces stay in the plane of the layout. Convey importance with color, border weight, and surface tier—not depth illusion.",
+        "section": "elevation"
+      },
+      {
+        "name": "The No-Lift Rule",
+        "body": "Interactive elements do not move on hover or active. No translateY, scale, or shadow growth between rest and hover. Optional filter: brightness() on orange CTAs only.",
+        "section": "elevation"
+      },
+      {
+        "name": "The Hover-Color-Only Rule",
+        "body": "Button hover changes at most background, border, and text color. Do not use --button-shadow-hover or translateY on hover; legacy global button CSS in src/index.css is debt to remove on refactor.",
+        "section": "elevation"
+      }
+    ],
+    "dos": [
+      "Do use CSS variables from :root / .dark-mode for any new UI color or surface.",
+      "Do keep editorial content in .StaticPage width (~48rem) with 400-weight leads.",
+      "Do use orange for brand splash moments—landing headlines, key stats, primary CTAs, and approved marketing headers.",
+      "Do respect prefers-color-scheme and persisted theme via initTheme() / applyTheme().",
+      "Do use Open Sans for app and charts; only use Inter when extending Premium upsell patterns."
+    ],
+    "donts": [
+      "Don't introduce a third accent hue; stay within midnight, orange, and neutral greys unless PRODUCT.md adds a brand asset.",
+      "Don't add decorative gradients or glass effects to data tables—they fight scanability.",
+      "Don't use heavy box-shadow on new panels; use borders and surface tiers instead.",
+      "Don't use translateY, scale, or stronger shadows on :hover / :active for buttons, chips, or nav controls.",
+      "Don't copy legacy global button hover behavior (lift + --button-shadow-hover) into new components.",
+      "Don't center-align long statistical copy; fixture and competition analysis stays left-aligned where incumbent patterns already do.",
+      "Don't swap the public brand typeface without updating self-hosted fonts in _document.js and critical CSS."
+    ]
+  }
+}

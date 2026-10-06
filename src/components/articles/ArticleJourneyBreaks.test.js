@@ -56,11 +56,29 @@ describe("article Journey break markers", () => {
     expect(countDirectContentAdSlots(container)).toBe(4);
   });
 
+  it("renders section anchors and a table of contents on long prose articles", () => {
+    const { container, getByRole } = render(<ArticlePage article={howWePredict} />);
+
+    expect(getByRole("navigation", { name: "On this page" })).toBeTruthy();
+    expect(container.querySelector("#starting-point")).toBeTruthy();
+    expect(container.querySelector("#every-fixture")).toBeTruthy();
+  });
+
   it("keeps shorter prose articles less dense", () => {
     const { container } = render(<ArticlePage article={nonPenaltyXg} />);
 
     expect(countAdSlots(container)).toBe(2);
     expect(countDirectContentAdSlots(container)).toBe(2);
+  });
+
+  it("omits the table of contents when there are fewer than four sections", () => {
+    const shortArticle = {
+      ...nonPenaltyXg,
+      sections: nonPenaltyXg.sections.slice(0, 3),
+    };
+    const { queryByRole } = render(<ArticlePage article={shortArticle} />);
+
+    expect(queryByRole("navigation", { name: "On this page" })).toBeNull();
   });
 
   it("adds breaks between award category groups", () => {

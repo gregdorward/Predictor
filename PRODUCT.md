@@ -59,6 +59,7 @@ Differentiators a generic odds or tips site cannot truthfully copy:
 
 - **Name:** Soccer Stats Hub (not “Predictor” in user-facing copy).
 - **Voice:** Transparent, research-first, British English lean (`en-GB` on key static pages).
+- **Tone exemplar:** Long-form and trust copy should match the voice of `/articles/soccer-stats-hub-backtest-results/`: state the test or question first, put rules and numbers where they matter, name honest limits, tie to real product surfaces without hype, and leave room for the reader to disagree with a tip.
 - **Punctuation (user-facing copy):** Do not use em dashes (—) or en dashes (–). Prefer full stops, commas, colons or parentheses to break or connect ideas.
 - **Ethics:** No bookmaker affiliate links; odds shown for context; 18+ betting research framing where relevant.
 
@@ -69,6 +70,7 @@ Differentiators a generic odds or tips site cannot truthfully copy:
 | About, positioning bullets | `pages/about.js` |
 | FAQ (pricing, coverage, transparency) | `pages/faq.js` — treat Premium/model bullets as **may be stale** until reconciled |
 | Methodology (lambdas, Poisson, inputs) | `pages/methodology.js`, articles under `pages/articles/` |
+| Tone reference (backtest article) | `src/data/articles/soccer-stats-hub-backtest-results.json` |
 | In-app help / feature description | `src/App.js` (getting started copy) |
 | Prediction implementation | `src/logic/getScorePredictions.js` and related logic |
 | Premium checkout | `src/components/PremiumUpsell.js`, `src/logic/stripeCheckout.js` |

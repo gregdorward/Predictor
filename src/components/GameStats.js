@@ -24,6 +24,8 @@ import {
 } from "./Chart";
 import AttackDefenceMetricTrendTables from "./AttackDefenceMetricTrendTables";
 import FormContextCompare from "./FormContextCompare";
+import MatchPreviewOutput from "./MatchPreviewOutput";
+import { matchPreviewErrorMessage } from "../utils/matchPreviewFormat";
 import { formatMatchContextForAI } from "../utils/formContextMetrics";
 import MultiTypeChart from "./MultitypeChart"; // Adjust the path if necessary
 import FixtureComparisonShare from "./FixtureComparisonShare";
@@ -102,7 +104,6 @@ import {
   mapFutureFixtureEvents,
   selectUpcomingFixtures,
 } from "../utils/futureFixturesDisplay";
-import StarRating from "../components/StarRating";
 import PlayerStatsTable from "./PlayerStatsTable";
 import { AuthProvider, useAuth } from "../logic/authProvider";
 import BetSlipFooter from "../components/Betslip";
@@ -457,6 +458,9 @@ function GameStats({ game, displayBool, stats, handleToggleTip, userTips, dayFix
 
   const [isLoading, setIsLoading] = useState(false);
   const [aiMatchPreview, setAiMatchPreview] = useState(null);
+  const [aiPreviewError, setAiPreviewError] = useState(null);
+  const [matchPreviewLoadingStatus, setMatchPreviewLoadingStatus] =
+    useState("");
   const { user, isPaidUser } = useAuth();
   const { unlocked: predictionUnlocked, unlockOrUpgrade } =
     useFixturePredictionUnlock(game?.id);
@@ -3415,6 +3419,8 @@ function GameStats({ game, displayBool, stats, handleToggleTip, userTips, dayFix
     if (predictionUnlocked) return;
     setShowAIInsights(false);
     setAiMatchPreview(null);
+    setAiPreviewError(null);
+    setMatchPreviewLoadingStatus("");
     setIsLoading(false);
   }, [predictionUnlocked, game?.id]);
 
@@ -3901,6 +3907,7 @@ function GameStats({ game, displayBool, stats, handleToggleTip, userTips, dayFix
   const generateAIInsights = useCallback(
     async (gameId, streak, oddsData, homeTeamStats, awayTeamStats, homePlayerData, awayPlayerData, homeMissingPlayersImpact, awayMissingPlayersImpact, homeLineupList, awayLineupList, ranksHome, ranksAway, futureFixturesHome, futureFixturesAway, homeManager, awayManager, homeTeamPlayerStats, awayTeamPlayerStats) => {
       setIsLoading(true);
+      setAiPreviewError(null);
 
       try {
         const { leagueTable, competitionStage } = resolveFixtureTableContext({
@@ -3996,8 +4003,15 @@ function GameStats({ game, displayBool, stats, handleToggleTip, userTips, dayFix
         }
 
         const jsonData = await response.json();
-        console.log("AI Match Preview Data:", jsonData);
+        const hasProse =
+          Array.isArray(jsonData?.matchPreview) &&
+          jsonData.matchPreview.some((chunk) => String(chunk || "").trim());
+        const hasGuide = jsonData?.Guide && Object.keys(jsonData.Guide).length > 0;
+        if (!hasProse && !hasGuide) {
+          throw new Error("Preview response was empty.");
+        }
         setAiMatchPreview(jsonData);
+        setAiPreviewError(null);
 
         // Never overwrite stored score predictions after kickoff — that reshuffles
         // Build a Multi / tips once games are in progress or finished.
@@ -4018,6 +4032,8 @@ function GameStats({ game, displayBool, stats, handleToggleTip, userTips, dayFix
 
       } catch (error) {
         console.error("AI preview error:", error);
+        setAiMatchPreview(null);
+        setAiPreviewError(matchPreviewErrorMessage(error));
       } finally {
         setIsLoading(false);
       }
@@ -4025,150 +4041,100 @@ function GameStats({ game, displayBool, stats, handleToggleTip, userTips, dayFix
     [game, homeForm, awayForm, matchingGame]
   );
 
-  // Function to format the AI Match Preview text with newlines
-  const formatAIPreview = (text) => {
-    if (!text) return "";
-    return text.split(". ").join(".\n");
-  };
-
-  const renderAIKeyPlayersList = (roles) => (
-    <ul className="AIKeyPlayersList">
-      {roles.map((role, index) => {
-        const colonIndex = role.indexOf(":");
-        const name =
-          colonIndex === -1 ? role.trim() : role.slice(0, colonIndex).trim();
-        const description =
-          colonIndex === -1 ? "" : role.slice(colonIndex + 1).trim();
-        return (
-          <li key={index} className="AIKeyPlayerItem">
-            <strong className="AIKeyPlayerName">{name}</strong>
-            {description && (
-              <span className="AIKeyPlayerRole">{description}</span>
-            )}
-          </li>
-        );
-      })}
-    </ul>
-  );
-
-  const AIOutput = useMemo(() => {
-    if (!aiMatchPreview) return null;
-
-    return (
-      <>
-        <h2>Preview</h2>
-        {aiMatchPreview.matchPreview?.map((text, index) => (
-          <div key={index} className="AIMatchPreview">
-            {formatAIPreview(text)}
-          </div>
-        ))}
-
-        {/* // Properties: "CorrectScore", "Over2.5Goals" (yes or no), "MostCards" (team name), "MostCorners" (team name), "MostShotsOnTarget" (team name), "AnytimeGoalscorer" (player name), "ToBeCarded" (player name) */}
-
-        <div className="AIMatchPreviewCard">
-          <h2>{`${aiMatchPreview?.homeTeam?.teamName} vs ${aiMatchPreview?.awayTeam?.teamName} AI Tips`}</h2>
-          <ul>
-            <li>
-              <strong>Correct Score:</strong> {aiMatchPreview.Guide.HomeGoalsPrediction} - {aiMatchPreview.Guide.AwayGoalsPrediction}
-            </li>
-            <li>
-              <strong>Anytime Goalscorer:</strong> {aiMatchPreview.Guide.AnytimeGoalscorer}
-            </li>
-            <li>
-              <strong>Most Cards:</strong> {aiMatchPreview.Guide.MostCards}
-            </li>
-            <li>
-              <strong>Most Corners:</strong> {aiMatchPreview.Guide.MostCorners}
-            </li>
-            <li>
-              <strong>Most Shots On Target:</strong> {aiMatchPreview.Guide.MostShotsOnTarget}
-            </li>
-            <li>
-              <strong>To Be Carded:</strong> {aiMatchPreview.Guide.ToBeCarded}
-            </li>
-          </ul>
-          <i>(may not reflect the view of Soccer Stats Hub)</i>
-        </div>
-
-        {(aiMatchPreview?.homeTeam?.keyPlayerRoles?.length > 0 ||
-          aiMatchPreview?.awayTeam?.keyPlayerRoles?.length > 0) && (
-          <>
-            <h2>Key Player Overviews</h2>
-            <div className="AIContainer AIKeyPlayers">
-              {aiMatchPreview?.homeTeam?.keyPlayerRoles?.length > 0 && (
-                <div className="HomeAIInsights">
-                  <h6 className="TeamName">
-                    {aiMatchPreview.homeTeam.teamName}
-                  </h6>
-                  {renderAIKeyPlayersList(aiMatchPreview.homeTeam.keyPlayerRoles)}
-                </div>
-              )}
-              {aiMatchPreview?.awayTeam?.keyPlayerRoles?.length > 0 && (
-                <div className="AwayAIInsights">
-                  <h6 className="TeamName">
-                    {aiMatchPreview.awayTeam.teamName}
-                  </h6>
-                  {renderAIKeyPlayersList(aiMatchPreview.awayTeam.keyPlayerRoles)}
-                </div>
-              )}
-            </div>
-          </>
-        )}
-
-        <h2>Ratings and Styles</h2>
-        <div className="AIContainer">
-          <div className="HomeAIInsights">
-            <h6 className="TeamName">{aiMatchPreview?.homeTeam?.teamName}</h6>
-            <div className="StarRating"><span className="StarRatingHeader">Attack <StarRating rating={aiMatchPreview?.homeTeam?.ratings?.Attack} /></span></div>
-            <div className="StarRating"><span className="StarRatingHeader">Defence <StarRating rating={aiMatchPreview?.homeTeam?.ratings?.Defence} /></span></div>
-            <div className="StarRating"><span className="StarRatingHeader">Directness <StarRating rating={aiMatchPreview?.homeTeam?.ratings?.Directness} /></span></div>
-            <div className="StarRating"><span className="StarRatingHeader">Possession <StarRating rating={aiMatchPreview?.homeTeam?.ratings?.Possession} /></span></div>
-            <div className="StarRating"><span className="StarRatingHeader">Pressing <StarRating rating={aiMatchPreview?.homeTeam?.ratings?.Pressing} /></span></div>
-            <div className="StarRating"><span className="StarRatingHeader">Accuracy <StarRating rating={aiMatchPreview?.homeTeam?.ratings?.Accuracy} /></span></div>
-            <div className="StarRating"><span className="StarRatingHeader">Set Pieces <StarRating rating={aiMatchPreview?.homeTeam?.ratings?.SetPieces} /></span></div>
-            <div className="StarRating"><span className="StarRatingHeader">Discipline <StarRating rating={aiMatchPreview?.homeTeam?.ratings?.Discipline} /></span></div>
-            <div className="StarRating"><span className="StarRatingHeader">Last Game <StarRating rating={aiMatchPreview?.homeTeam?.ratings?.LastMatchPerformance} /></span></div>
-            <div className="StarRating"><span className="StarRatingHeader">Overall <StarRating rating={aiMatchPreview?.homeTeam?.ratings?.Overall} /></span></div>
-            <div className="TeamStyle">{aiMatchPreview?.homeTeam?.style}</div>
-            <ul className="Strengths">
-              {aiMatchPreview?.homeTeam?.strengths?.map((strength, index) => (
-                <li key={index}>{strength}</li>
-              ))}
-            </ul>
-            <ul className="Weaknesses">
-              {aiMatchPreview?.homeTeam?.weaknesses?.map((weakness, index) => (
-                <li key={index}>{weakness}</li>
-              ))}
-            </ul>
-          </div>
-          <div className="AwayAIInsights">
-            <h6 className="TeamName">{aiMatchPreview?.awayTeam?.teamName}</h6>
-            <div className="StarRating"><span className="StarRatingHeader">Attack <StarRating rating={aiMatchPreview?.awayTeam?.ratings?.Attack} /></span></div>
-            <div className="StarRating"><span className="StarRatingHeader">Defence <StarRating rating={aiMatchPreview?.awayTeam?.ratings?.Defence} /></span></div>
-            <div className="StarRating"><span className="StarRatingHeader">Directness <StarRating rating={aiMatchPreview?.awayTeam?.ratings?.Directness} /></span></div>
-            <div className="StarRating"><span className="StarRatingHeader">Possession <StarRating rating={aiMatchPreview?.awayTeam?.ratings?.Possession} /></span></div>
-            <div className="StarRating"><span className="StarRatingHeader">Pressing <StarRating rating={aiMatchPreview?.awayTeam?.ratings?.Pressing} /></span></div>
-            <div className="StarRating"><span className="StarRatingHeader">Accuracy <StarRating rating={aiMatchPreview?.awayTeam?.ratings?.Accuracy} /></span></div>
-            <div className="StarRating"><span className="StarRatingHeader">Set Pieces <StarRating rating={aiMatchPreview?.awayTeam?.ratings?.SetPieces} /></span></div>
-            <div className="StarRating"><span className="StarRatingHeader">Discipline <StarRating rating={aiMatchPreview?.awayTeam?.ratings?.Discipline} /></span></div>
-            <div className="StarRating"><span className="StarRatingHeader">Last Game <StarRating rating={aiMatchPreview?.awayTeam?.ratings?.LastMatchPerformance} /></span></div>
-            <div className="StarRating"><span className="StarRatingHeader">Overall <StarRating rating={aiMatchPreview?.awayTeam?.ratings?.Overall} /></span></div>
-            <div className="TeamStyle">{aiMatchPreview?.awayTeam?.style}</div>
-            <ul className="Strengths">
-              {aiMatchPreview?.awayTeam?.strengths?.map((strength, index) => (
-                <li key={index}>{strength}</li>
-              ))}
-            </ul>
-            <ul className="Weaknesses">
-              {aiMatchPreview?.awayTeam?.weaknesses?.map((weakness, index) => (
-                <li key={index}>{weakness}</li>
-              ))}
-            </ul>
-          </div>
-        </div>
-      </>
+  const runMatchPreviewGeneration = useCallback(async () => {
+    if (!isFixturePredictionUnlocked(isPaidUser, game?.id)) {
+      const ok = unlockOrUpgrade();
+      if (!ok || !isFixturePredictionUnlocked(isPaidUser, game?.id)) {
+        return;
+      }
+    }
+    setShowAIInsights(true);
+    setAiPreviewError(null);
+    setIsLoading(true);
+    setMatchPreviewLoadingStatus(
+      "Loading lineups, form and squad data for this fixture…"
     );
-  }, [aiMatchPreview]);
+
+    const squadResult = await Promise.allSettled([
+      fetchSquadPlayerStats(),
+    ]).then((results) => results[0]);
+    const [streaksResult, managersResult, lineupsResult] =
+      await Promise.allSettled([
+        fetchStreaks(),
+        fetchManagers(),
+        fetchLineups(),
+      ]);
+
+    if (!isFixturePredictionUnlocked(isPaidUser, game?.id)) {
+      setShowAIInsights(false);
+      setIsLoading(false);
+      setMatchPreviewLoadingStatus("");
+      setAiPreviewError(
+        "This fixture is locked again. Unlock it from the score table above, then try Match Preview."
+      );
+      return;
+    }
+
+    const streaks =
+      streaksResult.status === "fulfilled" ? streaksResult.value : streakData;
+    const squad =
+      squadResult.status === "fulfilled" ? squadResult.value : null;
+    const managers =
+      managersResult.status === "fulfilled" ? managersResult.value : null;
+    const lineups =
+      lineupsResult.status === "fulfilled" ? lineupsResult.value : null;
+
+    setMatchPreviewLoadingStatus("Generating match preview…");
+    await generateAIInsights(
+      game.id,
+      streaks,
+      oddsData,
+      homeTeamStats,
+      awayTeamStats,
+      homePlayerData,
+      awayPlayerData,
+      lineups?.homeMissingPlayersImpact ?? homeMissingPlayersImpact,
+      lineups?.awayMissingPlayersImpact ?? awayMissingPlayersImpact,
+      lineups?.homeLineup ?? homeLineupList,
+      lineups?.awayLineup ?? awayLineupList,
+      ranksHome,
+      ranksAway,
+      futureFixturesHome,
+      futureFixturesAway,
+      managers?.home ?? homeManager,
+      managers?.away ?? awayManager,
+      squad?.home ?? homeTeamPlayerStats,
+      squad?.away ?? awayTeamPlayerStats
+    );
+    setMatchPreviewLoadingStatus("");
+  }, [
+    isPaidUser,
+    game,
+    unlockOrUpgrade,
+    fetchSquadPlayerStats,
+    fetchStreaks,
+    fetchManagers,
+    fetchLineups,
+    streakData,
+    generateAIInsights,
+    oddsData,
+    homeTeamStats,
+    awayTeamStats,
+    homePlayerData,
+    awayPlayerData,
+    homeMissingPlayersImpact,
+    awayMissingPlayersImpact,
+    homeLineupList,
+    awayLineupList,
+    ranksHome,
+    ranksAway,
+    futureFixturesHome,
+    futureFixturesAway,
+    homeManager,
+    awayManager,
+    homeTeamPlayerStats,
+    awayTeamPlayerStats,
+  ]);
 
   let [formPointsHome, testArrayHome] = getPointsFromGames(
     gameStats.home[2].WDLRecord
@@ -4748,96 +4714,47 @@ function GameStats({ game, displayBool, stats, handleToggleTip, userTips, dayFix
           {/* <MatchTacticalComparison teamAData={teamAData} teamBData={teamBData} /> */}
           <div id="AIInsightsContainer" className="AIInsightsContainer">
             {loadingKeyPlayers ? (
-              <p>Loading data for Match Preview...</p>
+              <p className="MatchPreviewLoading__text" role="status">
+                Loading squad data before Match Preview…
+              </p>
             ) : (
-              <Button
-                className={
-                  predictionUnlocked ? "AIInsights" : "AIInsights AIInsightsLocked"
-                }
-                onClickEvent={async () => {
-                  // Soft gate: only the daily unlocked fixtures (or Premium) can run AI.
-                  if (!isFixturePredictionUnlocked(isPaidUser, game?.id)) {
-                    const ok = unlockOrUpgrade();
-                    if (
-                      !ok ||
-                      !isFixturePredictionUnlocked(isPaidUser, game?.id)
-                    ) {
-                      return;
-                    }
+              <>
+                <Button
+                  className={
+                    predictionUnlocked
+                      ? "AIInsights"
+                      : "AIInsights AIInsightsLocked"
                   }
-                  setShowAIInsights(true);
-                  setIsLoading(true);
-                  const squadResult = await Promise.allSettled([
-                    fetchSquadPlayerStats(),
-                  ]).then((results) => results[0]);
-                  const [streaksResult, managersResult, lineupsResult] =
-                    await Promise.allSettled([
-                      fetchStreaks(),
-                      fetchManagers(),
-                      fetchLineups(),
-                    ]);
-                  // Drop the response if this fixture was locked again mid-request.
-                  if (!isFixturePredictionUnlocked(isPaidUser, game?.id)) {
-                    setShowAIInsights(false);
-                    setIsLoading(false);
-                    return;
+                  onClickEvent={runMatchPreviewGeneration}
+                  text={
+                    predictionUnlocked
+                      ? "Match Preview"
+                      : remainingFreeUnlocks > 0
+                        ? `Match Preview 🔒 (${remainingFreeUnlocks}/${FREE_DAILY_PREDICTION_LIMIT} free left)`
+                        : "Match Preview 🔒 Upgrade for more"
                   }
-                  const streaks =
-                    streaksResult.status === "fulfilled"
-                      ? streaksResult.value
-                      : streakData;
-                  const squad =
-                    squadResult.status === "fulfilled"
-                      ? squadResult.value
-                      : null;
-                  const managers =
-                    managersResult.status === "fulfilled"
-                      ? managersResult.value
-                      : null;
-                  const lineups =
-                    lineupsResult.status === "fulfilled"
-                      ? lineupsResult.value
-                      : null;
-
-                  generateAIInsights(
-                    game.id,
-                    streaks,
-                    oddsData,
-                    homeTeamStats,
-                    awayTeamStats,
-                    homePlayerData,
-                    awayPlayerData,
-                    lineups?.homeMissingPlayersImpact ??
-                      homeMissingPlayersImpact,
-                    lineups?.awayMissingPlayersImpact ??
-                      awayMissingPlayersImpact,
-                    lineups?.homeLineup ?? homeLineupList,
-                    lineups?.awayLineup ?? awayLineupList,
-                    ranksHome,
-                    ranksAway,
-                    futureFixturesHome,
-                    futureFixturesAway,
-                    managers?.home ?? homeManager,
-                    managers?.away ?? awayManager,
-                    squad?.home ?? homeTeamPlayerStats,
-                    squad?.away ?? awayTeamPlayerStats
-                  );
-                }}
-                text={
-                  predictionUnlocked
-                    ? "Match Preview"
-                    : remainingFreeUnlocks > 0
-                      ? `Match Preview 🔒 (${remainingFreeUnlocks}/${FREE_DAILY_PREDICTION_LIMIT} free left)`
-                      : "Match Preview 🔒 Upgrade for more"
-                }
-                disabled={false}
-              />
+                  disabled={isLoading}
+                />
+                {!isPaidUser ? (
+                  <p className="MatchPreviewUnlockNote">
+                    Uses the same daily unlock as predicted scores and 1X2 for
+                    this fixture ({FREE_DAILY_PREDICTION_LIMIT} per day on the
+                    free tier).
+                  </p>
+                ) : null}
+              </>
             )}
           </div>
 
           {showAIInsights && predictionUnlocked ? (
             <div className="AIOutputContainer">
-              {isLoading ? <p>Loading AI data....</p> : AIOutput}
+              <MatchPreviewOutput
+                preview={aiMatchPreview}
+                error={aiPreviewError}
+                onRetry={runMatchPreviewGeneration}
+                isLoading={isLoading}
+                loadingStatus={matchPreviewLoadingStatus}
+              />
             </div>
           ) : null}
         </div>

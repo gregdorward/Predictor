@@ -1,111 +1,356 @@
-/* Article detail typography and alignment. Loaded after index.css (see pages/_app.js). */
+/* Article detail + methodology (shared editorial shell). Loaded after index.css. */
 
-.Articles--detail .Articles__header {
+.StaticPage--article .Articles__crumbs {
+  margin-bottom: 1rem;
+}
+
+.StaticPage--article .Articles__header {
+  margin-bottom: 1.5rem;
   text-align: left;
 }
 
-.Articles--detail .Articles__dek {
+.StaticPage--article .Articles__headerRow {
+  justify-content: flex-start;
+}
+
+.StaticPage--article .ArticleMeta {
+  justify-content: flex-start;
+}
+
+.StaticPage--article .Articles__content {
+  text-align: left;
+}
+
+.StaticPage--article .Articles__title {
+  margin-bottom: 0.75rem;
+  font-size: clamp(1.35rem, 3vw, 2rem);
+  line-height: 1.25;
+}
+
+.StaticPage--article .Articles__dek {
+  margin: 0 0 1rem;
+  max-width: none;
+  font-size: 0.98rem;
+  font-weight: 400;
+  line-height: 1.6;
+  color: var(--faint-text, #666);
+}
+
+.StaticPage--article .Articles__eyebrow {
+  font-size: 0.6875rem;
+}
+
+.StaticPage--article .Articles__prose p,
+.StaticPage--article .Articles__content > p,
+.StaticPage--article .ArticleProse__section p,
+.StaticPage--article .ArticleProse__list {
+  font-size: 0.98rem;
+  font-weight: 400;
+  line-height: 1.6;
+}
+
+.StaticPage--article .ArticleProse__heading {
+  margin-top: 1.75rem;
+  margin-bottom: 0.5rem;
+  font-size: 1.15rem;
+  line-height: 1.35;
+  font-weight: 700;
+  color: var(--primary-color);
+}
+
+.StaticPage--article .Articles__content > .ArticleProse__heading:first-of-type {
+  margin-top: 0;
+}
+
+.StaticPage--article .ArticleProse__section:first-child .ArticleProse__heading {
+  margin-top: 0;
+}
+
+.StaticPage--article .ArticleProse__subheading {
+  margin-top: 1.25rem;
+  margin-bottom: 0.4rem;
+  font-size: 1rem;
+  font-weight: 600;
+  line-height: 1.35;
+  color: var(--text-color);
+}
+
+.StaticPage--article .ArticleProse__heading + .ArticleProse__subheading {
+  margin-top: 0.85rem;
+}
+
+.StaticPage--article .ArticleProse__subheading + p,
+.StaticPage--article .ArticleProse__subheading + ul {
+  margin-top: 0;
+}
+
+.StaticPage--article .ArticleProse__table {
+  font-size: 0.9rem;
+}
+
+.StaticPage--article .ArticleProse__table caption {
+  font-size: 0.85rem;
+}
+
+.StaticPage--article .Articles__relatedTitle {
+  font-size: 1.15rem;
+}
+
+.StaticPage--article .FixturePage-contentBreak--adSlot {
+  margin: 1.5rem 0;
+}
+
+.ArticleToc {
+  margin: 0 0 1.5rem;
+  padding: 0.85rem 1rem;
+  border: 1px solid var(--third-background-color);
+  border-radius: 8px;
+  background: var(--secondary-background-color);
+}
+
+.ArticleToc__label {
+  margin: 0 0 0.5rem;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--primary-color);
+}
+
+.ArticleToc__list {
+  margin: 0;
+  padding-left: 1.15rem;
+  font-size: 0.92rem;
+  line-height: 1.5;
+}
+
+.ArticleToc__list a {
+  color: var(--text-color);
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.ArticleToc__list a:hover {
+  color: var(--primary-color);
+  text-decoration: underline;
+}
+
+/* Match Context: metric-row table (inherits ExpandingStats font size). */
+.FormContextCompare__content {
+  font-size: 1.1em;
+}
+
+.FormContextCompare__tableWrap {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.FormContextCompare__table {
+  width: 100%;
+  border-collapse: collapse;
+  table-layout: fixed;
+  font-variant-numeric: tabular-nums;
+}
+
+.FormContextCompare__th,
+.FormContextCompare__metric,
+.FormContextCompare__cell {
+  padding: 0.5rem 0.35rem;
+  border-bottom: 1px solid var(--third-background-color);
+  vertical-align: top;
+  line-height: 1.35;
+  text-align: left;
+}
+
+.FormContextCompare__th {
+  font-weight: 700;
+  border-bottom-color: rgba(var(--primary-rgb), 0.35);
+}
+
+.FormContextCompare__th--metric {
+  width: 34%;
+}
+
+.FormContextCompare__th--home,
+.FormContextCompare__th--away {
+  width: 33%;
+}
+
+.FormContextCompare__metric {
+  font-weight: 600;
+  opacity: 0.85;
+}
+
+.FormContextCompare__cell {
+  font-weight: 700;
+}
+
+@media (max-width: 639px) {
+  .FormContextCompare__table {
+    font-size: 0.88em;
+  }
+
+  .FormContextCompare__th,
+  .FormContextCompare__metric,
+  .FormContextCompare__cell {
+    padding: 0.35rem 0.15rem;
+  }
+
+  .FormContextCompare__th--metric {
+    width: 30%;
+  }
+}
+
+/* Match Preview inside expanded fixture (body defaults to text-align: center). */
+.ExpandingStats .AIInsightsContainer,
+.ExpandingStats .AIOutputContainer {
+  width: 100%;
+  max-width: 100%;
+  text-align: left;
+  box-sizing: border-box;
+}
+
+.ExpandingStats .AIInsightsContainer #Button {
+  display: block;
+  width: 100%;
+  max-width: 100%;
+  margin: 0;
+  text-align: left;
+}
+
+.ExpandingStats .AIInsightsContainer button.AIInsights,
+.ExpandingStats .AIInsightsContainer button.AIInsightsLocked {
   margin-left: 0;
   margin-right: 0;
 }
 
-.Articles--detail .Articles__headerRow {
-  justify-content: flex-start;
+.MatchPreviewOutput,
+.MatchPreviewSection {
+  text-align: left;
+  width: 100%;
+  max-width: 100%;
+  display: block;
+  box-sizing: border-box;
 }
 
-.Articles--detail .ArticleMeta {
-  justify-content: flex-start;
+.MatchPreviewSection .AIMatchPreview {
+  text-align: left;
+  width: 100%;
 }
 
-.Articles--detail .Articles__content {
+.MatchPreviewUnlockNote {
+  margin: 0.5rem 0 0;
+  font-size: 0.88em;
+  line-height: 1.45;
+  font-weight: 400;
+  opacity: 0.85;
+  max-width: 36em;
+}
+
+.MatchPreviewLoading__text {
+  margin: 0.5rem 0;
+  font-weight: 600;
+}
+
+.MatchPreviewError {
+  margin-top: 0.75rem;
+  padding: 1rem;
+  border: 1px solid var(--third-background-color);
+  border-radius: 8px;
+  background: var(--secondary-background-color);
+}
+
+.MatchPreviewError__message {
+  margin: 0 0 0.5rem;
+  font-weight: 600;
+}
+
+.MatchPreviewError__hint {
+  margin: 0 0 0.75rem;
+  font-size: 0.92em;
+  font-weight: 400;
+  line-height: 1.45;
+  opacity: 0.9;
+}
+
+.MatchPreviewError__retry {
+  margin: 0;
+}
+
+.MatchPreviewSection__title {
+  margin: 1rem 0 0.5rem;
   text-align: left;
 }
 
-@media (min-width: 768px) {
-  .Articles--detail {
-    font-size: calc(0.75rem * 1.25);
-  }
+.MatchPreviewProse {
+  margin: 0 0 0.75rem;
+  line-height: 1.55;
+  font-weight: 400;
+  text-align: left;
+  width: 100%;
+  max-width: 100%;
+}
 
-  .Articles--detail .Articles__crumbs {
-    font-size: calc(0.75rem * 1.25);
-  }
+.MatchPreviewSection .AIMatchPreview {
+  padding: 0;
+  line-height: inherit;
+}
 
-  .Articles--detail .Articles__eyebrow {
-    font-size: calc(0.625rem * 1.25);
-  }
+.MatchPreviewAnglesCard__title {
+  text-align: left;
+  font-size: 1.1em;
+  margin: 0 0 0.35rem;
+  border-bottom: 1px solid var(--primary-color);
+  padding-bottom: 0.75rem;
+}
 
-  .Articles--detail .Articles__title {
-    font-size: clamp(calc(1.15rem * 1.25), calc(3vw * 1.25), calc(1.5rem * 1.25));
-  }
+.MatchPreviewAnglesCard__dek {
+  text-align: left;
+  margin: 0 0 1rem;
+  font-size: 0.95em;
+  font-weight: 600;
+  opacity: 0.85;
+}
 
-  .Articles--detail .Articles__subtitle {
-    font-size: calc(0.875rem * 1.25);
-  }
+.MatchPreviewDisclaimer {
+  margin: 1rem 0 0;
+  font-size: 0.88em;
+  line-height: 1.5;
+  font-weight: 400;
+  text-align: left;
+  opacity: 0.9;
+}
 
-  .Articles--detail .Articles__dek {
-    font-size: calc(0.8125rem * 1.25);
-  }
+.MatchPreviewStarLegend {
+  margin: 0 0 0.5rem;
+  font-size: 0.85em;
+  font-weight: 400;
+  opacity: 0.8;
+}
 
-  .Articles--detail .ArticleMeta {
-    font-size: calc(0.6875rem * 1.25);
-  }
+.AIMatchPreviewCard.MatchPreviewAnglesCard {
+  text-align: left;
+  max-width: 100%;
+  width: 100%;
+  margin: 1.5rem 0 0;
+  box-sizing: border-box;
+}
 
-  .Articles--detail .ArticleShare {
-    font-size: calc(0.6875rem * 1.25);
-  }
+.ExpandingStats .AIMatchPreviewCard.MatchPreviewAnglesCard h2 {
+  text-align: left;
+}
 
-  .Articles--detail .Articles__prose p,
-  .Articles--detail .ArticleProse__section p,
-  .Articles--detail .ArticleProse__list {
-    font-size: calc(0.8125rem * 1.25);
-  }
+.MatchPreviewAnglesCard ul {
+  text-align: left;
+}
 
-  .Articles--detail .ArticleProse__heading {
-    font-size: calc(0.9375rem * 1.25);
-  }
+.MatchPreviewAnglesCard li {
+  justify-content: flex-start;
+  gap: 0.5rem;
+}
 
-  .Articles--detail .ArticleProse__table {
-    font-size: calc(0.8125rem * 1.25);
-  }
-
-  .Articles--detail .ArticleProse__table caption {
-    font-size: calc(0.75rem * 1.25);
-  }
-
-  .Articles--detail .Articles__relatedTitle {
-    font-size: calc(0.8125rem * 1.25);
-  }
-
-  .Articles--detail .Articles__relatedList {
-    font-size: calc(0.75rem * 1.25);
-  }
-
-  .Articles--detail .ArticleAwards__eyebrow,
-  .Articles--detail .ArticleAwards__winnerLabel,
-  .Articles--detail .ArticleAwards__stat dt {
-    font-size: calc(0.625rem * 1.25);
-  }
-
-  .Articles--detail .ArticleAwards__categoryTitle {
-    font-size: clamp(calc(0.95rem * 1.25), calc(2.4vw * 1.25), calc(1.15rem * 1.25));
-  }
-
-  .Articles--detail .ArticleAwards__categorySubtitle,
-  .Articles--detail .ArticleAwards__winnerTeam,
-  .Articles--detail .ArticleAwards__winnerNote,
-  .Articles--detail .ArticleAwards__contendersTitle,
-  .Articles--detail .ArticleAwards__contenderHead,
-  .Articles--detail .ArticleAwards__contenderTeam,
-  .Articles--detail .ArticleAwards__contendersList p {
-    font-size: calc(0.75rem * 1.25);
-  }
-
-  .Articles--detail .ArticleAwards__winnerName {
-    font-size: calc(0.95rem * 1.25);
-  }
-
-  .Articles--detail .ArticleAwards__stat dd,
-  .Articles--detail .ArticleAwards__analysis {
-    font-size: calc(0.8125rem * 1.25);
+@media (max-width: 639px) {
+  .MatchPreviewRatings.AIContainer {
+    flex-direction: column;
   }
 }

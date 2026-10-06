@@ -3,6 +3,7 @@ import PageMeta from "../PageMeta";
 import JsonLd from "../JsonLd";
 import ArticleAwards from "./ArticleAwards";
 import ArticleProse from "./ArticleProse";
+import ArticleTableOfContents from "./ArticleTableOfContents";
 import ArticleShareButton, { ArticleDateLine } from "./ArticleShareButton";
 import renderInlineMarkup from "./renderInlineMarkup";
 import JourneyContentBreak from "../JourneyContentBreak";
@@ -69,7 +70,7 @@ export default function ArticlePage({ article, listing }) {
       />
       <JsonLd data={buildArticleJsonLd(article, listing)} />
       <SiteHeader showThemeToggle withFooter>
-        <main className="Articles Articles--detail">
+        <main className="StaticPage StaticPage--article">
           <nav className="Articles__crumbs" aria-label="Breadcrumb">
             <a href="/" className="HomeLink">
               Home
@@ -101,6 +102,10 @@ export default function ArticlePage({ article, listing }) {
           </header>
 
           <div id="ssh-content" className="journey-content Articles__content">
+            {article.layout === "prose" ? (
+              <ArticleTableOfContents sections={article.sections} />
+            ) : null}
+
             {article.intro?.length ? (
               <div className="Articles__prose">
                 {article.intro.map((paragraph) => (

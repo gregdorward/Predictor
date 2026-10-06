@@ -10,33 +10,18 @@ function formatNum(value) {
   return String(value);
 }
 
-function MetricItem({ label, value }) {
-  return (
-    <li className="FormContextCompare__item">
-      <span className="FormContextCompare__label">{label}</span>
-      <strong className="FormContextCompare__value">{value}</strong>
-    </li>
-  );
-}
+function buildMetricRows(metrics) {
+  if (!metrics) return null;
 
-function ContextColumn({ teamName, metrics }) {
-  const rest = metrics?.rest;
-  const overUnder = metrics?.overUnder;
-  const gameState = metrics?.gameState;
-  const sos = metrics?.strengthOfSchedule;
-  const variance = metrics?.scoringVariance;
+  const rest = metrics.rest;
+  const overUnder = metrics.overUnder;
+  const gameState = metrics.gameState;
+  const sos = metrics.strengthOfSchedule;
+  const variance = metrics.scoringVariance;
 
-  if (!metrics) {
-    return (
-      <div className="FormContextCompare__col">
-        <h4 className="FormContextCompare__team">{teamName}</h4>
-        <p className="FormContextCompare__empty">Not enough resulted games yet.</p>
-      </div>
-    );
-  }
-
-  const items = [
+  return [
     {
+      id: "rest-days",
       label: "Rest days",
       value:
         rest?.daysSinceLastMatch != null
@@ -44,28 +29,33 @@ function ContextColumn({ teamName, metrics }) {
           : "—",
     },
     {
+      id: "congestion",
       label: "Congestion",
       value: rest
         ? `${rest.congestionLabel} (${rest.matchesInLast7Days ?? 0} in 7d · ${rest.matchesInLast14Days ?? 0} in 14d)`
         : "—",
     },
     {
+      id: "over-25",
       label: "O2.5 last 5 / 10",
       value: `${formatPct(overUnder?.over25Last5Percentage)} / ${formatPct(
         overUnder?.over25Last10Percentage
       )}`,
     },
     {
+      id: "schedule",
       label: "Schedule",
       value: sos?.scheduleLabel || "—",
     },
     {
+      id: "opposition-ppg",
       label: "Last 5 Opposition PPG Avg / all",
       value: `${formatNum(sos?.avOppositionPPGLast5)} / ${formatNum(
         sos?.avOppositionPPGAll
       )}`,
     },
     {
+      id: "ppg-top-half",
       label: "PPG vs top half",
       value:
         sos?.ppgVsTopHalf != null
@@ -73,6 +63,7 @@ function ContextColumn({ teamName, metrics }) {
           : "—",
     },
     {
+      id: "ppg-bottom-half",
       label: "PPG vs bottom half",
       value:
         sos?.ppgVsBottomHalf != null
@@ -80,18 +71,21 @@ function ContextColumn({ teamName, metrics }) {
           : "—",
     },
     {
+      id: "scored-first",
       label: "Scored first",
       value: gameState?.hasData
         ? formatPct(gameState.scoredFirstPercentage)
         : "—",
     },
     {
+      id: "late-goals",
       label: "Late goals scored",
       value: gameState?.hasData
         ? formatPct(gameState.lateGoalsScoredPercentage)
         : "—",
     },
     {
+      id: "half-goals",
       label: "1H / 2H goals scored",
       value: gameState?.hasData
         ? `${formatPct(gameState.firstHalfGoalsScoredPercentage)} / ${formatPct(
@@ -100,6 +94,7 @@ function ContextColumn({ teamName, metrics }) {
         : "—",
     },
     {
+      id: "points-losing",
       label: "Points from losing positions",
       value: gameState?.hasData
         ? `${gameState.pointsFromLosingPositions ?? 0} pts · ${formatNum(
@@ -108,6 +103,7 @@ function ContextColumn({ teamName, metrics }) {
         : "—",
     },
     {
+      id: "points-winning",
       label: "Points from winning positions",
       value: gameState?.hasData
         ? `${gameState.pointsFromWinningPositions ?? 0} pts · ${formatNum(
@@ -116,6 +112,7 @@ function ContextColumn({ teamName, metrics }) {
         : "—",
     },
     {
+      id: "scoring-profile",
       label: "Scoring profile",
       value: variance?.varianceLabel
         ? `${variance.varianceLabel} · games decided by 1 goal - ${formatPct(
@@ -124,19 +121,67 @@ function ContextColumn({ teamName, metrics }) {
         : "—",
     },
     {
+      id: "blowout",
       label: "Blowout rate (margin 3+ either way)",
       value: formatPct(variance?.blowoutPercentage),
     },
   ];
+}
+
+function ComparisonTable({ homeTeam, awayTeam, homeMetrics, awayMetrics }) {
+  const homeRows = buildMetricRows(homeMetrics);
+  const awayRows = buildMetricRows(awayMetrics);
+  const template = homeRows || awayRows;
+
+  if (!template) {
+    return (
+      <p className="FormContextCompare__empty">
+        Not enough resulted games yet.
+      </p>
+    );
+  }
 
   return (
-    <div className="FormContextCompare__col">
-      <h4 className="FormContextCompare__team">{teamName}</h4>
-      <ul className="FormContextCompare__list">
-        {items.map((item) => (
-          <MetricItem key={item.label} label={item.label} value={item.value} />
-        ))}
-      </ul>
+    <div className="FormContextCompare__tableWrap">
+      <table className="FormContextCompare__table">
+        <thead>
+          <tr>
+            <th
+              scope="col"
+              className="FormContextCompare__th FormContextCompare__th--metric"
+            >
+              Metric
+            </th>
+            <th
+              scope="col"
+              className="FormContextCompare__th FormContextCompare__th--home"
+            >
+              {homeTeam}
+            </th>
+            <th
+              scope="col"
+              className="FormContextCompare__th FormContextCompare__th--away"
+            >
+              {awayTeam}
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          {template.map((row, index) => (
+            <tr key={row.id}>
+              <th scope="row" className="FormContextCompare__metric">
+                {row.label}
+              </th>
+              <td className="FormContextCompare__cell FormContextCompare__cell--home">
+                {homeRows ? homeRows[index].value : "—"}
+              </td>
+              <td className="FormContextCompare__cell FormContextCompare__cell--away">
+                {awayRows ? awayRows[index].value : "—"}
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
     </div>
   );
 }
@@ -168,10 +213,12 @@ export default function FormContextCompare({
             <p className="FormContextCompare__note">
               Match context - derived from recent competition fixtures
             </p>
-            <div className="FormContextCompare__grid">
-              <ContextColumn teamName={homeTeam} metrics={homeMetrics} />
-              <ContextColumn teamName={awayTeam} metrics={awayMetrics} />
-            </div>
+            <ComparisonTable
+              homeTeam={homeTeam}
+              awayTeam={awayTeam}
+              homeMetrics={homeMetrics}
+              awayMetrics={awayMetrics}
+            />
           </div>
         }
       />

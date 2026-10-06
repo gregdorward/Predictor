@@ -15,7 +15,10 @@ export default function ArticleProse({ article }) {
     <>
       {sections.map((section, index) => (
         <Fragment key={section.id}>
-          <section className="ArticleProse__section">
+          <section
+            id={section.id || undefined}
+            className="ArticleProse__section"
+          >
             {section.heading ? (
               <h2 className="ArticleProse__heading">{section.heading}</h2>
             ) : null}
