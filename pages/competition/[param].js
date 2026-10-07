@@ -10,8 +10,10 @@ import CompetitionSeoShell, {
 } from "../../src/components/CompetitionSeoShell";
 import SeoPageLinks from "../../src/components/SeoPageLinks";
 import {
+  COMPETITION_CATALOG,
   buildCompetitionJsonLd,
   buildCompetitionMeta,
+  isCompetitionIndexable,
   resolveCompetitionParam,
 } from "../../src/seo/competitionCatalog";
 import { fetchCompetitionData } from "../../src/seo/serverFetch";
@@ -71,7 +73,22 @@ export default function CompetitionByParam({
   );
 }
 
-export async function getServerSideProps({ params }) {
+/** Align with /api/ss competition CDN freshness (10 min + SWR). */
+const COMPETITION_PAGE_REVALIDATE_SECONDS = 600;
+
+export async function getStaticPaths() {
+  const paths = COMPETITION_CATALOG.filter(isCompetitionIndexable).map(
+    (entry) => ({ params: { param: entry.slug } })
+  );
+
+  return {
+    paths,
+    // Numeric season IDs and new slugs still resolve on first request.
+    fallback: "blocking",
+  };
+}
+
+export async function getStaticProps({ params }) {
   const resolved = resolveCompetitionParam(params?.param);
   if (!resolved) {
     return { notFound: true };
@@ -124,5 +141,6 @@ export async function getServerSideProps({ params }) {
       noIndex,
       initialCompetitionData,
     },
+    revalidate: COMPETITION_PAGE_REVALIDATE_SECONDS,
   };
 }
