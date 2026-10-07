@@ -385,3 +385,135 @@ html:has(.FixturesIndex) {
     font-size: 0.82rem;
   }
 }
+
+/* Fixture expand: compact prediction market toggles */
+.ExpandingStats .UserTipsBlock {
+  width: 100%;
+  max-width: 20rem;
+  margin-left: auto;
+  margin-right: auto;
+  margin-bottom: 0.65rem;
+}
+
+.ExpandingStats .XGSwiper__belowWrapper {
+  width: 100%;
+  margin-top: 0.5rem;
+}
+
+.ExpandingStats .UserTipsBlock--belowSwiper {
+  max-width: 100%;
+  margin: 0 auto;
+}
+
+.ExpandingStats .UserTipsBlock--belowSwiper .UserTipsBlock__title {
+  text-align: center;
+  font-size: 0.88rem;
+  margin-bottom: 1rem;
+}
+
+.ExpandingStats .UserTipsBlock__title {
+  margin: 0 0 1rem;
+  font-size: 1.05rem;
+  font-weight: 600;
+  line-height: 1.25;
+  text-align: center;
+}
+
+.ExpandingStats .UserTips {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 0.3rem;
+  width: 100%;
+  max-width: 100%;
+  margin: 0 auto 0;
+}
+
+.ExpandingStats button.TipButton {
+  width: 100%;
+  min-width: 0 !important;
+  margin: 0;
+  padding: 0.35em 0.15em;
+  font-size: 0.75rem;
+  font-weight: 600;
+  line-height: 1.15;
+  letter-spacing: 0;
+  border-radius: 6px;
+  border: 1px solid var(--button-secondary-border);
+  background-color: var(--button-secondary-bg);
+  color: var(--text-color);
+  box-shadow: none;
+  transform: none;
+  transition:
+    background-color 0.2s cubic-bezier(0.4, 0, 0.2, 1),
+    border-color 0.2s cubic-bezier(0.4, 0, 0.2, 1),
+    color 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.ExpandingStats button.TipButton:hover:not(:disabled) {
+  background-color: var(--button-secondary-hover-bg);
+  border-color: var(--primary-color);
+  color: var(--text-color);
+  transform: none;
+  box-shadow: none;
+}
+
+.ExpandingStats button.TipButton.active,
+.ExpandingStats button.TipButton[aria-pressed="true"] {
+  background-color: var(--primary-color);
+  border-color: var(--primary-color);
+  color: var(--span-text-colour);
+}
+
+.ExpandingStats button.TipButton:hover:not(:disabled).active,
+.ExpandingStats button.TipButton:hover:not(:disabled)[aria-pressed="true"] {
+  filter: brightness(1.05);
+  color: var(--span-text-colour);
+}
+
+.ExpandingStats button.TipButton:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(var(--primary-rgb), 0.38);
+  transform: none;
+}
+
+.ExpandingStats button.TipButton:active:not(:disabled) {
+  transform: none;
+  box-shadow: none;
+  filter: brightness(0.97);
+}
+
+@media (max-width: 600px) {
+  .ExpandingStats .UserTipsBlock {
+    max-width: 100%;
+    padding-left: 0.15rem;
+    padding-right: 0.15rem;
+    box-sizing: border-box;
+  }
+
+  .ExpandingStats .UserTipsBlock__title {
+    font-size: 0.95rem;
+    margin-bottom: 1rem;
+  }
+
+  .ExpandingStats .UserTips {
+    gap: 0.2rem;
+  }
+
+  .ExpandingStats button.TipButton {
+    padding: 0.28em 0.05em;
+    font-size: 0.65rem;
+    border-radius: 5px;
+  }
+}
+
+/* Homepage fixture expand: form stats swiper (pagination above stats columns) */
+.ExpandingStats .XGSwiperShell--paginationTop {
+  margin-bottom: 0.75rem;
+}
+
+.ExpandingStats .XGSwiperShell--paginationTop .XGSwiper__paginationTop {
+  position: relative !important;
+  bottom: auto !important;
+  margin-top: 1rem;
+  margin-bottom: 0.5rem;
+}

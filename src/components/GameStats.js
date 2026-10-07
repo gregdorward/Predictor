@@ -4160,6 +4160,14 @@ function GameStats({ game, displayBool, stats, handleToggleTip, userTips, dayFix
     ];
     chartType = "Rolling average points over last 10";
   }
+  const TIP_TOGGLE_OPTIONS = [
+    { type: "homeWin", shortLabel: "Home" },
+    { type: "draw", shortLabel: "Draw" },
+    { type: "awayWin", shortLabel: "Away" },
+    { type: "BTTS", shortLabel: "BTTS" },
+    { type: "over25", shortLabel: "O2.5" },
+  ];
+
   const UserTips = ({ game, userTips, handleToggleTip, userDetail }) => {
 
     const isSelected = (type) => {
@@ -4197,21 +4205,43 @@ function GameStats({ game, displayBool, stats, handleToggleTip, userTips, dayFix
     };
 
     return (
-      <div className="UserTips">
-        {["homeWin", "draw", "awayWin", "BTTS", "over25"].map((type) => (
-          <button
-            key={type}
-            className={`TipButton ${isSelected(type) ? "active" : ""}`}
-            onClick={() => onBtnClick(type, type)}
-          >
-            {type.replace("Win", "")}
-          </button>
-        ))}
+      <div
+        className="UserTips"
+        role="group"
+        aria-label="Pick a market for your prediction"
+      >
+        {TIP_TOGGLE_OPTIONS.map(({ type, shortLabel }) => {
+          const selected = isSelected(type);
+          return (
+            <button
+              key={type}
+              type="button"
+              className={`TipButton${selected ? " active" : ""}`}
+              aria-pressed={selected}
+              onClick={() => onBtnClick(type, type)}
+            >
+              {shortLabel}
+            </button>
+          );
+        })}
       </div>
     );
   };
 
+  const userTipsBelowFormSwiper = isBeforeTimestamp(game.date) ? (
+    <div className="UserTipsBlock UserTipsBlock--belowSwiper">
+      <p className="UserTipsBlock__title">Your prediction</p>
+      <UserTips
+        game={game}
+        userTips={userTips}
+        handleToggleTip={handleToggleTip}
+        userDetail={userDetail}
+      />
+    </div>
+  ) : null;
+
   const [selectedTip, setSelectedTip] = useState(null);
+  const [formSwiper, setFormSwiper] = useState(null);
 
 
   // Home player
@@ -4310,17 +4340,66 @@ function GameStats({ game, displayBool, stats, handleToggleTip, userTips, dayFix
             have been played in this competition.
           </p>
         )}
-        {isBeforeTimestamp(game.date) && (
-          <>
-            <h2>Your Prediction</h2>
-            <UserTips
-              game={game}
-              userTips={userTips}
-              handleToggleTip={handleToggleTip}
-              userDetail={userDetail}
-            />
-          </>
-        )}
+        <Slider
+          length="3"
+          paginationPlacement="top"
+          swiperClassName="XGSwiper FormStatsSwiper"
+          onSwiperInstance={setFormSwiper}
+          belowWrapper={userTipsBelowFormSwiper}
+          element1={
+            <>
+              <h2>
+                {isWorldCupCompetition
+                  ? "All Recent Form"
+                  : `${game.leagueDesc} Form`}
+              </h2>
+              <div className="flex-container">
+                <StatsHomeComponent
+                  getCollapsableProps={getCollapsableProps}
+                  homeAllStatsProps={homeAllStatsProps}
+                  comparisonStatusMap={comparisonStatusMap}
+                  lockPremiumSections={!isPaidUser}
+                />
+                <StatsAwayComponent
+                  getCollapsableProps={getCollapsableProps}
+                  awayAllStatsProps={awayAllStatsProps}
+                  comparisonStatusMap={comparisonStatusMap}
+                  lockPremiumSections={!isPaidUser}
+                />
+              </div>
+            </>
+          }
+          element2={
+            homeForm?.twoDGoalsArray ? (
+              <>
+                <h2>Last 5 games only</h2>
+                <div className="flex-container">
+                  <StatsHomeLast5Component
+                    comparisonStatusMap={last5ComparisonMap}
+                  />
+                  <StatsAwayLast5Component
+                    comparisonStatusMap={last5ComparisonMap}
+                  />
+                </div>
+              </>
+            ) : null
+          }
+          element3={
+            homeForm?.twoDGoalsArray ? (
+              <>
+                <h2>Home/Away games only</h2>
+                <div className="flex-container">
+                  <StatsHomeOnlyComponent
+                    comparisonStatusMap={hOrAComparisonMap}
+                  />
+                  <StatsAwayOnlyComponent
+                    comparisonStatusMap={hOrAComparisonMap}
+                  />
+                </div>
+              </>
+            ) : null
+          }
+        />
         <Collapsable
           buttonText={`Market Value \u{2630}`}
           classNameButton="PredictionsButton"
@@ -4760,27 +4839,10 @@ function GameStats({ game, displayBool, stats, handleToggleTip, userTips, dayFix
         </div>
         <Slider
           length="3"
+          showPagination={false}
+          controllerSwiper={formSwiper}
           element1={
             <>
-              <h2>
-                {isWorldCupCompetition
-                  ? "All Recent Form"
-                  : `${game.leagueDesc} Form`}
-              </h2>
-              <div className="flex-container">
-                <StatsHomeComponent
-                  getCollapsableProps={getCollapsableProps}
-                  homeAllStatsProps={homeAllStatsProps} // Pass the stats object down too
-                  comparisonStatusMap={comparisonStatusMap} // <--- This is the key
-                  lockPremiumSections={!isPaidUser}
-                />
-                <StatsAwayComponent
-                  getCollapsableProps={getCollapsableProps}
-                  awayAllStatsProps={awayAllStatsProps} // Pass the stats object down too
-                  comparisonStatusMap={comparisonStatusMap} // <--- This is the key
-                  lockPremiumSections={!isPaidUser}
-                />
-              </div>
               <h2>Betting value</h2>
               <h4>Points difference from bookies predictions over last 5 games</h4>
               <h4>{game.homeTeam} | {game.awayTeam}</h4>
@@ -5030,15 +5092,6 @@ function GameStats({ game, displayBool, stats, handleToggleTip, userTips, dayFix
           element2={
             homeForm?.twoDGoalsArray ? (
               <>
-                <h2>Last 5 games only</h2>
-                <div className="flex-container">
-                  <StatsHomeLast5Component
-                    comparisonStatusMap={last5ComparisonMap}
-                  />
-                  <StatsAwayLast5Component
-                    comparisonStatusMap={last5ComparisonMap}
-                  />
-                </div>
                 <div className="Chart" id={`Chart${game.id}`} style={style}>
                   <RadarChart
                     locked={!isPaidUser}
@@ -5158,15 +5211,6 @@ function GameStats({ game, displayBool, stats, handleToggleTip, userTips, dayFix
           element3={
             homeForm?.twoDGoalsArray ? (
               <>
-                <h2>Home/Away games only</h2>
-                <div className="flex-container">
-                  <StatsHomeOnlyComponent
-                    comparisonStatusMap={hOrAComparisonMap}
-                  />
-                  <StatsAwayOnlyComponent
-                    comparisonStatusMap={hOrAComparisonMap}
-                  />
-                </div>
                 <div className="Chart" id={`Chart${game.id}`} style={style}>
                   <RadarChart
                     locked={!isPaidUser}

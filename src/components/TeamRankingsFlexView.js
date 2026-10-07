@@ -32,7 +32,7 @@ export default function TeamRankingsFlexView({
       >
         <div
           {...(!locked ? { "data-share-capture": true } : {})}
-          className={`rankings-container${locked ? " blurred" : ""}`}
+          className="rankings-container"
         >
           <h4 className="rankings-title">{title}</h4>
 
@@ -51,6 +51,10 @@ export default function TeamRankingsFlexView({
               />
               {teamBLabel}
             </span>
+            <span className="Rankings-legendNote">
+              League ordinal ranks (lower is better). Each section shows the largest
+              gaps first.
+            </span>
           </div>
 
           {sections.map((section) => (
@@ -63,6 +67,7 @@ export default function TeamRankingsFlexView({
               teamALabel={teamALabel}
               teamBLabel={teamBLabel}
               totalTeams={totalTeams}
+              locked={locked}
             />
           ))}
         </div>

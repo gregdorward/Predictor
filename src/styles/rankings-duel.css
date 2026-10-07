@@ -9,6 +9,22 @@
   line-height: 1.45;
 }
 
+.rankings-container .Rankings-legend .Rankings-legendSwatch--home {
+  background: linear-gradient(
+    90deg,
+    color-mix(in srgb, var(--accent-color) 40%, transparent),
+    var(--accent-color)
+  ) !important;
+}
+
+.rankings-container .Rankings-legend .Rankings-legendSwatch--away {
+  background: linear-gradient(
+    90deg,
+    color-mix(in srgb, var(--primary-color) 40%, transparent),
+    var(--primary-color)
+  ) !important;
+}
+
 .FixturePage .rankings-container {
   --rd-section: var(--fp-section, 1.05em);
   --rd-body: var(--fp-body, 1em);
@@ -21,15 +37,26 @@
 }
 
 .rankings-container .rankings-title {
-  font-size: var(--rd-section);
+  font-size: calc(var(--rd-section) * 1.25);
 }
 
 .rankings-container .Rankings-legend {
-  font-size: var(--rd-meta);
+  font-size: calc(var(--rd-meta) * 1.25);
+}
+
+.rankings-container .Rankings-legend .Rankings-legendSwatch {
+  width: calc(12px * 1.25);
+  height: calc(12px * 1.25);
 }
 
 .rankings-container .Rankings-legendNote {
+  display: block;
+  width: 100%;
+  margin: 0.35rem 0 0;
+  text-align: center;
   font-size: 0.95em;
+  line-height: 1.4;
+  color: var(--faint-text);
 }
 
 .rankings-container .rankings-section {
@@ -41,7 +68,7 @@
 .rankings-container .section-title {
   text-align: left;
   padding: 0.75rem 1rem 0.5rem;
-  font-size: var(--rd-section);
+  font-size: calc(var(--rd-section) * 1.25);
   font-weight: 700;
   line-height: 1.35;
 }
@@ -60,11 +87,11 @@
 }
 
 .RankingsDuel-summary--home {
-  border-color: rgba(1, 165, 1, 0.35);
+  border-color: color-mix(in srgb, var(--accent-color) 35%, var(--third-background-color));
 }
 
 .RankingsDuel-summary--away {
-  border-color: rgba(215, 18, 0, 0.35);
+  border-color: color-mix(in srgb, var(--primary-color) 40%, var(--third-background-color));
 }
 
 .RankingsDuel-summary--level {
@@ -115,61 +142,88 @@
 .RankingsDuel-list {
   display: flex;
   flex-direction: column;
-  gap: 0;
+  gap: 0.65rem;
+  padding-top: 0.5rem;
   border-top: 1px solid var(--third-background-color);
 }
 
+.RankingsDuel-list > .RankingsDuel-row,
+.RankingsDuel-list > .RankingsDuel-row--premiumLocked {
+  padding: 0.65rem 0.6rem;
+  border: 1px solid var(--third-background-color);
+  border-radius: 8px;
+  background: var(--secondary-background-color);
+}
+
 .RankingsDuel-row {
-  padding: 0.65rem 0 0.65rem 0.85rem;
-  margin-left: 0.15rem;
-  margin-bottom: 1em;
-  border-bottom: 1px solid var(--third-background-color);
-  border-left: 3px solid transparent;
+  margin-bottom: 0;
 }
 
-.RankingsDuel-row--home.RankingsDuel-row--subtle {
-  border-left-color: rgba(1, 165, 1, 0.35);
+.RankingsDuel-list > .RankingsDuel-row--premiumLocked {
+  padding: 0;
+  overflow: hidden;
 }
 
-.RankingsDuel-row--home.RankingsDuel-row--medium {
-  border-left-color: rgba(1, 165, 1, 0.55);
+.RankingsDuel-list > .RankingsDuel-row--premiumLocked > .RankingsDuel-row {
+  padding: 0.65rem 0.6rem;
+  border: none;
+  border-radius: 0;
+  background: transparent;
 }
 
-.RankingsDuel-row--home.RankingsDuel-row--strong {
-  border-left-color: #01a501;
+.RankingsDuel-row--premiumLocked {
+  filter: blur(3.5px);
+  user-select: none;
+  pointer-events: none;
 }
 
-.RankingsDuel-row--away.RankingsDuel-row--subtle {
-  border-left-color: rgba(215, 18, 0, 0.35);
+.RankingsDuel-metricHead {
+  margin-bottom: 0.5rem;
 }
 
-.RankingsDuel-row--away.RankingsDuel-row--medium {
-  border-left-color: rgba(215, 18, 0, 0.55);
-}
-
-.RankingsDuel-row--away.RankingsDuel-row--strong {
-  border-left-color: #d71200;
-}
-
-.RankingsDuel-row--level {
-  border-left-color: rgba(var(--primary-rgb), 0.4);
-}
-
-.RankingsDuel-row--neutral {
-  border-left-color: var(--third-background-color);
-}
-
-.RankingsDuel-body h6.RankingsDuel-metric {
-  margin: 0 0 0.45rem;
+.RankingsDuel-metricHead h6.RankingsDuel-metric {
+  margin: 0;
   padding: 0;
   max-width: none;
   margin-left: 0;
   margin-right: 0;
-  font-size: var(--rd-label);
+  font-size: calc(var(--rd-label) * 1.25);
   font-weight: 600;
   line-height: 1.35;
   color: var(--text-color);
   text-align: left;
+}
+
+.RankingsDuel-metricHead .RankingsDuel-outcome {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.2rem 0.45rem;
+  margin: 0.3rem 0 0;
+  font-size: calc(var(--rd-meta) * 1.25);
+  line-height: 1.35;
+}
+
+.RankingsDuel-outcomeLabel {
+  font-weight: 700;
+}
+
+.RankingsDuel-outcomeEdge {
+  font-weight: 600;
+  color: var(--faint-text);
+}
+
+.RankingsDuel-outcome--home .RankingsDuel-outcomeLabel {
+  color: var(--accent-color);
+}
+
+.RankingsDuel-outcome--away .RankingsDuel-outcomeLabel {
+  color: var(--primary-color);
+}
+
+.RankingsDuel-outcome--level .RankingsDuel-outcomeLabel,
+.RankingsDuel-outcome--neutral .RankingsDuel-outcomeLabel {
+  color: var(--text-color);
 }
 
 .RankingsDuel-duel {
@@ -187,42 +241,75 @@
   min-width: 0;
   padding: 0.45rem 0.5rem;
   border-radius: 8px;
-  border: 1px solid rgba(128, 128, 128, 0.12);
+  border: 1px solid color-mix(in srgb, var(--accent-color) 18%, var(--third-background-color));
   background: var(--background-color);
+}
+
+.RankingsDuel-team--away {
+  border-color: color-mix(in srgb, var(--primary-color) 22%, var(--third-background-color));
 }
 
 .RankingsDuel-team--leading {
   background: var(--secondary-background-color);
+  border-width: 2px;
 }
 
 .RankingsDuel-team--home.RankingsDuel-team--leading {
-  border-color: rgba(1, 165, 1, 0.28);
+  border-color: var(--accent-color);
+  background: color-mix(in srgb, var(--accent-color) 12%, var(--background-color));
 }
 
 .RankingsDuel-team--away.RankingsDuel-team--leading {
-  border-color: rgba(215, 18, 0, 0.28);
+  border-color: var(--primary-color);
+  background: color-mix(in srgb, var(--primary-color) 14%, var(--background-color));
 }
 
-.RankingsDuel-teamDot {
+.RankingsDuel-team--trailing {
+  border-style: dashed;
+  border-color: var(--third-background-color);
+  background: var(--background-color);
+}
+
+.RankingsDuel-team--trailing .RankingsDuel-teamName,
+.RankingsDuel-team--trailing .RankingsDuel-rank {
+  color: var(--faint-text);
+}
+
+.RankingsDuel-team--leading.RankingsDuel-team--edgeStrong {
+  border-color: rgba(var(--primary-rgb), 0.55);
+  box-shadow: inset 0 0 0 1px rgba(var(--primary-rgb), 0.12);
+}
+
+.rankings-container .RankingsDuel-teamDot--home {
   grid-row: 1 / span 2;
   align-self: center;
   width: 0.5rem;
   height: 0.5rem;
   border-radius: 50%;
-  border: 1px solid rgba(255, 255, 255, 0.9);
-  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.1);
+  border: 1px solid var(--accent-color);
+  background: var(--accent-color);
 }
 
-.RankingsDuel-teamDot--home {
-  background: #01a501;
+.rankings-container .RankingsDuel-teamDot--away {
+  grid-row: 1 / span 2;
+  align-self: center;
+  width: 0.5rem;
+  height: 0.5rem;
+  border-radius: 50%;
+  border: 1px solid var(--primary-color);
+  background: var(--primary-color);
 }
 
-.RankingsDuel-teamDot--away {
-  background: #d71200;
+.RankingsDuel-teamNameRow {
+  grid-column: 2;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.35rem 0.5rem;
+  min-width: 0;
 }
 
 .RankingsDuel-teamName {
-  grid-column: 2;
   font-size: var(--rd-label);
   font-weight: 600;
   line-height: 1.3;
@@ -230,6 +317,29 @@
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+  min-width: 0;
+  flex: 1 1 auto;
+}
+
+.RankingsDuel-leadBadge {
+  flex-shrink: 0;
+  padding: 0.12rem 0.45rem;
+  border-radius: 4px;
+  font-size: 0.72rem;
+  font-weight: 700;
+  line-height: 1.2;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+}
+
+.RankingsDuel-team--home.RankingsDuel-team--leading .RankingsDuel-leadBadge {
+  background: var(--accent-color);
+  color: #ffffff;
+}
+
+.RankingsDuel-team--away.RankingsDuel-team--leading .RankingsDuel-leadBadge {
+  background: var(--primary-color);
+  color: var(--span-text-colour);
 }
 
 .RankingsDuel-rank {
@@ -249,17 +359,67 @@
   color: inherit;
 }
 
-.RankingsDuel-edge {
-  margin: 0.4rem 0 0;
+.RankingsDuel-expand {
+  display: block;
+  width: 100%;
+  margin: 0.5rem 0 0;
+  padding: 0.45rem 0.75rem;
+  border: 1px solid var(--third-background-color);
+  border-radius: 8px;
+  background: var(--background-color);
+  color: var(--text-color);
+  font: inherit;
   font-size: var(--rd-meta);
-  font-weight: 400;
-  line-height: 1.4;
-  color: var(--faint-text);
-  text-align: left;
+  font-weight: 600;
+  line-height: 1.35;
+  text-align: center;
+  cursor: pointer;
 }
 
-.dark-mode .RankingsDuel-team {
-  border-color: rgba(255, 255, 255, 0.09);
+.RankingsDuel-expand:hover {
+  border-color: rgba(var(--primary-rgb), 0.45);
+  background: rgba(var(--primary-rgb), 0.06);
+}
+
+.dark-mode .RankingsDuel-team:not(.RankingsDuel-team--leading) {
+  border-color: rgba(255, 255, 255, 0.12);
+}
+
+.dark-mode .rankings-container .RankingsDuel-team--home.RankingsDuel-team--leading {
+  border-color: var(--accent-color);
+  background: color-mix(in srgb, var(--accent-color) 22%, var(--background-color));
+}
+
+.dark-mode .rankings-container .RankingsDuel-team--away.RankingsDuel-team--leading {
+  border-color: var(--primary-color);
+  background: color-mix(in srgb, var(--primary-color) 24%, var(--background-color));
+}
+
+.dark-mode .RankingsDuel-team--trailing {
+  border-color: rgba(255, 255, 255, 0.1);
+  background: rgba(0, 0, 0, 0.25);
+}
+
+.dark-mode .RankingsDuel-team--leading .RankingsDuel-teamName,
+.dark-mode .RankingsDuel-team--leading .RankingsDuel-rank {
+  color: var(--text-color);
+}
+
+.dark-mode .RankingsDuel-team--home.RankingsDuel-team--leading .RankingsDuel-leadBadge {
+  background: var(--accent-color);
+  color: #020029;
+}
+
+.dark-mode .RankingsDuel-team--away.RankingsDuel-team--leading .RankingsDuel-leadBadge {
+  color: #020029;
+}
+
+.dark-mode .RankingsDuel-outcome--home .RankingsDuel-outcomeLabel {
+  color: var(--accent-color);
+}
+
+.dark-mode .RankingsDuel-outcome--away .RankingsDuel-outcomeLabel {
+  color: var(--primary-color);
 }
 
 @media (max-width: 700px) {
@@ -284,15 +444,41 @@
   }
 
   .RankingsDuel-teamName {
-    white-space: normal;
-    overflow: visible;
-    text-overflow: unset;
     line-height: 1.25;
+  }
+
+  .RankingsDuel-leadBadge {
+    font-size: 0.62rem;
+    padding: 0.08rem 0.32rem;
+    letter-spacing: 0.01em;
   }
 }
 
 @media (max-width: 540px) {
   .RankingsDuel-duel {
     grid-template-columns: 1fr;
+  }
+
+  .RankingsDuel-duel--home .RankingsDuel-team--home {
+    order: -1;
+  }
+
+  .RankingsDuel-duel--away .RankingsDuel-team--away {
+    order: -1;
+  }
+
+  .RankingsDuel-teamName {
+    white-space: normal;
+    overflow: visible;
+    text-overflow: unset;
+  }
+
+  .RankingsDuel-metricHead .RankingsDuel-outcome {
+    font-size: calc(var(--rd-meta) * 1.125);
+  }
+
+  .RankingsDuel-leadBadge {
+    font-size: 0.56rem;
+    padding: 0.05rem 0.28rem;
   }
 }
