@@ -1,25 +1,25 @@
 import { render } from "@testing-library/react";
-import MethodologyPage from "./methodology";
+import MethodologyPage from "../../pages/methodology";
 
-jest.mock("../src/components/SiteHeader", () => {
+jest.mock("../../src/components/SiteHeader", () => {
   return function MockSiteHeader({ children }) {
     return <>{children}</>;
   };
 });
 
-jest.mock("../src/components/PageMeta", () => {
+jest.mock("../../src/components/PageMeta", () => {
   return function MockPageMeta() {
     return null;
   };
 });
 
-jest.mock("../src/components/JsonLd", () => {
+jest.mock("../../src/components/JsonLd", () => {
   return function MockJsonLd() {
     return null;
   };
 });
 
-jest.mock("../src/components/articles/ArticleShareButton", () => {
+jest.mock("../../src/components/articles/ArticleShareButton", () => {
   return function MockArticleShareButton() {
     return null;
   };
