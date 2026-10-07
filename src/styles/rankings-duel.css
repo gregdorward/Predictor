@@ -275,9 +275,16 @@
   color: var(--faint-text);
 }
 
-.RankingsDuel-team--leading.RankingsDuel-team--edgeStrong {
-  border-color: rgba(var(--primary-rgb), 0.55);
-  box-shadow: inset 0 0 0 1px rgba(var(--primary-rgb), 0.12);
+.RankingsDuel-team--home.RankingsDuel-team--leading.RankingsDuel-team--edgeStrong {
+  border-color: var(--accent-color);
+  background: color-mix(in srgb, var(--accent-color) 12%, var(--background-color));
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--accent-color) 22%, transparent);
+}
+
+.RankingsDuel-team--away.RankingsDuel-team--leading.RankingsDuel-team--edgeStrong {
+  border-color: var(--primary-color);
+  background: color-mix(in srgb, var(--primary-color) 14%, var(--background-color));
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--primary-color) 22%, transparent);
 }
 
 .rankings-container .RankingsDuel-teamDot--home {
