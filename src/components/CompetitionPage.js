@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import {
   Table,
   TableBody,
@@ -26,6 +26,17 @@ import CompetitionPositionRaceChart from "./competition/CompetitionPositionRaceC
 import CompetitionMetricRankings from "./competition/CompetitionMetricRankings";
 import CompetitionTeamComparison from "./competition/CompetitionTeamComparison";
 import {
+  buildCompetitionLeagueTableViews,
+  buildTeamConferenceLookup,
+  conferenceScopeIsAvailable,
+  conferenceScopeLabel,
+  CONFERENCE_SCOPE_EAST,
+  CONFERENCE_SCOPE_OVERALL,
+  CONFERENCE_SCOPE_WEST,
+  filterTeamsByConference,
+  isMlsSeason,
+} from "./competition/competitionLeagueTable";
+import {
   getSofaScoreIdForSeason,
   formatPercent,
   formatNumber,
@@ -35,6 +46,10 @@ import {
 } from "./competition/competitionUtils";
 import JourneyContentBreak from "./JourneyContentBreak";
 import { requestJourneyContentRefresh } from "../utils/journeyContentRefresh";
+
+function getTablesDateString() {
+  return new Date().toISOString().slice(0, 10);
+}
 
 function MetricCard({ label, value, sub }) {
   return (
@@ -91,6 +106,49 @@ function LoadingSkeleton() {
   );
 }
 
+function ConferenceScopeToggle({ value, onChange }) {
+  const options = [
+    CONFERENCE_SCOPE_OVERALL,
+    CONFERENCE_SCOPE_EAST,
+    CONFERENCE_SCOPE_WEST,
+  ];
+
+  return (
+    <section className="Competition__section Competition__conferenceScope">
+      <div className="Competition__standingsHeader">
+        <h2 className="Competition__sectionHeading">MLS view</h2>
+        <div
+          className="Competition__standingsToggle"
+          role="group"
+          aria-label="MLS conference view"
+        >
+          {options.map((option) => {
+            const active = value === option;
+            return (
+              <button
+                key={option}
+                type="button"
+                className={`Competition__standingsToggleBtn${
+                  active ? " Competition__standingsToggleBtn--active" : ""
+                }`}
+                aria-pressed={active}
+                onClick={() => onChange(option)}
+              >
+                {conferenceScopeLabel(option)}
+              </button>
+            );
+          })}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function buildInitialConferenceViews(seasonId, initialData) {
+  if (!isMlsSeason(seasonId) || !initialData) return null;
+  return buildCompetitionLeagueTableViews(seasonId, { data: initialData });
+}
+
 export default function CompetitionPage({
   seasonId,
   initialData = null,
@@ -100,6 +158,12 @@ export default function CompetitionPage({
   const [logoUrl, setLogoUrl] = useState(null);
   const [loading, setLoading] = useState(!initialData);
   const [error, setError] = useState(null);
+  const [conferenceViews, setConferenceViews] = useState(() =>
+    buildInitialConferenceViews(seasonId, initialData)
+  );
+  const [conferenceScope, setConferenceScope] = useState(
+    CONFERENCE_SCOPE_OVERALL
+  );
 
   useEffect(() => {
     initTheme();
@@ -167,7 +231,51 @@ export default function CompetitionPage({
       .catch(() => setLogoUrl(null));
   }, [seasonId]);
 
+  useEffect(() => {
+    if (!isMlsSeason(seasonId)) {
+      setConferenceViews(null);
+      setConferenceScope(CONFERENCE_SCOPE_OVERALL);
+      return undefined;
+    }
+
+    let cancelled = false;
+
+    async function fetchConferenceViews() {
+      try {
+        const dateStr = getTablesDateString();
+        const response = await fetch(apiGetUrl(`tables/${seasonId}/${dateStr}`));
+        if (!response.ok) {
+          return;
+        }
+        const json = await response.json();
+        const views = buildCompetitionLeagueTableViews(seasonId, json);
+        if (!cancelled) {
+          setConferenceViews(views);
+          setConferenceScope(CONFERENCE_SCOPE_OVERALL);
+        }
+      } catch {}
+    }
+
+    fetchConferenceViews();
+
+    return () => {
+      cancelled = true;
+    };
+  }, [seasonId]);
+
   const teams = getTeamsList(data);
+  const conferenceLookup = useMemo(
+    () => buildTeamConferenceLookup(conferenceViews),
+    [conferenceViews]
+  );
+  const hasConferenceSplit =
+    isMlsSeason(seasonId) &&
+    conferenceScopeIsAvailable(conferenceViews, CONFERENCE_SCOPE_EAST) &&
+    conferenceScopeIsAvailable(conferenceViews, CONFERENCE_SCOPE_WEST);
+  const scopedTeams = useMemo(
+    () => filterTeamsByConference(teams, conferenceScope, conferenceLookup),
+    [teams, conferenceScope, conferenceLookup]
+  );
 
   return (
     <main className="Competition">
@@ -218,7 +326,18 @@ export default function CompetitionPage({
 
             <JourneyContentBreak />
 
-            <CompetitionFormChart seasonId={seasonId} />
+            {hasConferenceSplit ? (
+              <ConferenceScopeToggle
+                value={conferenceScope}
+                onChange={setConferenceScope}
+              />
+            ) : null}
+
+            <CompetitionFormChart
+              seasonId={seasonId}
+              scope={conferenceScope}
+              tableViews={isMlsSeason(seasonId) ? conferenceViews : undefined}
+            />
 
             <CompetitionPositionRaceChart seasonId={seasonId} />
 
@@ -227,12 +346,18 @@ export default function CompetitionPage({
             <CompetitionTeamComparison
               seasonId={seasonId}
               competitionTeams={teams}
+              conferenceLookup={conferenceLookup}
+              scope={conferenceScope}
             />
 
             <JourneyContentBreak />
 
             <section className="Competition__section">
-              <h2 className="Competition__sectionHeading">Markets</h2>
+              <h2 className="Competition__sectionHeading">
+                {isMlsSeason(seasonId)
+                  ? "Markets - both conferences"
+                  : "Markets"}
+              </h2>
               <div className="Competition__chartGrid">
                 <GoalsMarketChart data={data} />
                 <ResultSplitChart data={data} />
@@ -269,43 +394,48 @@ export default function CompetitionPage({
               </div>
             </section>
 
-            {teams.length > 0 && (
+            {scopedTeams.length > 0 && (
               <>
               <JourneyContentBreak />
               <section className="Competition__section">
                 <h2 className="Competition__sectionHeading">Team rankings</h2>
+                {hasConferenceSplit && conferenceScope !== CONFERENCE_SCOPE_OVERALL ? (
+                  <p className="Competition__comparisonIntro">
+                    Showing {conferenceScopeLabel(conferenceScope)} teams only.
+                  </p>
+                ) : null}
                 <div className="Competition__rankingsGrid">
                   <TeamRankingTable
                     title="Highest Over 2.5 rate"
-                    teams={sortTeamsByField(teams, "seasonOver25Percentage_overall")}
+                    teams={sortTeamsByField(scopedTeams, "seasonOver25Percentage_overall")}
                     field="seasonOver25Percentage_overall"
                   />
                   <TeamRankingTable
                     title="Highest BTTS rate"
-                    teams={sortTeamsByField(teams, "seasonBTTSPercentage_overall")}
+                    teams={sortTeamsByField(scopedTeams, "seasonBTTSPercentage_overall")}
                     field="seasonBTTSPercentage_overall"
                   />
                   <TeamRankingTable
                     title="Highest Under 2.5 rate"
-                    teams={sortTeamsByField(teams, "seasonUnder25Percentage_overall")}
+                    teams={sortTeamsByField(scopedTeams, "seasonUnder25Percentage_overall")}
                     field="seasonUnder25Percentage_overall"
                   />
                   <TeamRankingTable
                     title="Most goals per game"
-                    teams={sortTeamsByField(teams, "seasonAVG_overall")}
+                    teams={sortTeamsByField(scopedTeams, "seasonAVG_overall")}
                     field="seasonAVG_overall"
                     format={(v) => formatNumber(v)}
                   />
                   <TeamRankingTable
                     title="Best xG difference"
-                    teams={sortTeamsByField(withXgDiff(teams), "xg_diff_overall")}
+                    teams={sortTeamsByField(withXgDiff(scopedTeams), "xg_diff_overall")}
                     field="xg_diff_overall"
                     format={(v) => formatNumber(v)}
                     valueLabel="xG Diff"
                   />
                   <TeamRankingTable
                     title="Highest clean sheet rate"
-                    teams={sortTeamsByField(teams, "seasonCSPercentage_overall")}
+                    teams={sortTeamsByField(scopedTeams, "seasonCSPercentage_overall")}
                     field="seasonCSPercentage_overall"
                   />
                 </div>

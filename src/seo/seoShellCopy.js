@@ -1,3 +1,10 @@
+import {
+  buildCompetitionLeagueTableViews,
+  CONFERENCE_SCOPE_EAST,
+  CONFERENCE_SCOPE_WEST,
+  conferenceScopeLabel,
+} from "../components/competition/competitionLeagueTable";
+
 export function formatSeoUpdatedDate(date = new Date()) {
   return new Intl.DateTimeFormat("en-GB", {
     day: "numeric",
@@ -48,6 +55,160 @@ export function buildCompetitionTableRows(teams) {
   if (positions.size !== rows.length || maxPosition !== rows.length) return [];
 
   return rows.sort((a, b) => a.position - b.position);
+}
+
+export function buildCompetitionRowsFromRawTable(teams = []) {
+  const rows = (teams || [])
+    .map((team, index) => {
+      const name = team?.cleanName || team?.name || team?.english_name || null;
+      const position = finiteNumber(team?.leaguePosition_overall) || index + 1;
+      const played =
+        finiteNumber(team?.matchesPlayed) ||
+        finiteNumber(team?.seasonMatchesPlayed_overall);
+      const goalDifference =
+        finiteNumber(team?.seasonGoalDifference) ||
+        finiteNumber(team?.seasonGoalDifference_overall);
+      const wins =
+        finiteNumber(team?.seasonWins_overall) ||
+        finiteNumber(team?.seasonWinsNum_overall);
+      const draws =
+        finiteNumber(team?.seasonDraws_overall) ||
+        finiteNumber(team?.seasonDrawsNum_overall);
+      const points =
+        finiteNumber(team?.points) ??
+        (wins != null && draws != null ? wins * 3 + draws : null);
+
+      if (!name || position == null || position < 1) return null;
+
+      return {
+        id: team.id ?? null,
+        name,
+        position,
+        played,
+        goalDifference,
+        points,
+        btts: team?.seasonBTTSPercentage_overall ?? null,
+        over25: team?.seasonOver25Percentage_overall ?? null,
+      };
+    })
+    .filter(Boolean);
+
+  if (rows.length < 4) return [];
+
+  return rows.sort((a, b) => a.position - b.position);
+}
+
+function buildCompetitionRowsFromViewTeams(teams = []) {
+  return (teams || [])
+    .map((team) => ({
+      id: team.ID ?? null,
+      name: team.Name || null,
+      position: finiteNumber(team.Position),
+      played: finiteNumber(team.Played),
+      goalDifference: finiteNumber(team.GoalDifference),
+      points: finiteNumber(team.Points),
+      btts: finiteNumber(team.seasonBTTSPercentage_overall),
+      over25: finiteNumber(team.seasonOver25Percentage_overall),
+    }))
+    .filter((row) => row.name && row.position != null)
+    .sort((a, b) => a.position - b.position);
+}
+
+function normaliseLookupValue(value) {
+  if (value == null || value === "") return null;
+  return String(value)
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, " ")
+    .trim();
+}
+
+function teamMarketLookupKeys(team) {
+  const keys = [];
+  [team?.id, team?.ID].forEach((id) => {
+    if (id != null && id !== "") keys.push(`id:${String(id)}`);
+  });
+  [team?.name, team?.Name, team?.english_name, team?.cleanName].forEach(
+    (name) => {
+      const normalized = normaliseLookupValue(name);
+      if (normalized) keys.push(`name:${normalized}`);
+    }
+  );
+  return [...new Set(keys)];
+}
+
+function buildTeamMarketLookup(teams = []) {
+  const lookup = new Map();
+  teams.forEach((team) => {
+    const rates = {
+      btts: finiteNumber(team?.seasonBTTSPercentage_overall),
+      over25: finiteNumber(team?.seasonOver25Percentage_overall),
+    };
+    if (rates.btts == null && rates.over25 == null) return;
+    teamMarketLookupKeys(team).forEach((key) => lookup.set(key, rates));
+  });
+  return lookup;
+}
+
+function enrichRowWithTeamMarkets(row, lookup) {
+  if (!lookup?.size) return row;
+  if (row.btts != null && row.over25 != null) return row;
+
+  const keys = teamMarketLookupKeys({
+    id: row.id,
+    name: row.name,
+  });
+  for (const key of keys) {
+    const rates = lookup.get(key);
+    if (!rates) continue;
+    return {
+      ...row,
+      btts: row.btts ?? rates.btts,
+      over25: row.over25 ?? rates.over25,
+    };
+  }
+  return row;
+}
+
+export function buildCompetitionConferenceTableGroups(data) {
+  const marketLookup = buildTeamMarketLookup(
+    Array.isArray(data?.teams)
+      ? data.teams
+      : Array.isArray(data?.team)
+        ? data.team
+        : []
+  );
+  const withMarkets = (rows) =>
+    rows.map((row) => enrichRowWithTeamMarkets(row, marketLookup));
+
+  const groups = data?.specific_tables?.[0]?.groups;
+  if (Array.isArray(groups) && groups.length > 0) {
+    return groups
+      .map((group) => ({
+        name: group.name || group.round || "Conference",
+        rows: withMarkets(buildCompetitionRowsFromRawTable(group.table)),
+      }))
+      .filter((group) => group.rows.length > 0);
+  }
+
+  const views = buildCompetitionLeagueTableViews(data?.id, { data });
+  if (views?.mode !== "grouped") return [];
+
+  return [
+    CONFERENCE_SCOPE_EAST,
+    CONFERENCE_SCOPE_WEST,
+  ]
+    .map((scope) => {
+      const name = conferenceScopeLabel(scope);
+      return {
+        name,
+        rows: withMarkets(
+          buildCompetitionRowsFromViewTeams(
+            views.teams.filter((team) => team.GroupName === name)
+          )
+        ),
+      };
+    })
+    .filter((group) => group.rows.length > 0);
 }
 
 /** True when formatted market stats are present (not an empty / unstarted season). */

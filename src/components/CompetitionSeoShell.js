@@ -1,6 +1,7 @@
 import { getRelatedCompetitionLinks } from "../seo/competitionCatalog";
 import { isCompetitionSeasonEmpty } from "../seo/competitionSeason";
 import {
+  buildCompetitionConferenceTableGroups,
   buildCompetitionSeoParagraphs,
   buildCompetitionTableRows,
   formatSeoUpdatedDate,
@@ -35,6 +36,7 @@ export default function CompetitionSeoShell({
   topBttsTeams = [],
   topUnder25Teams = [],
   tableRows = [],
+  conferenceTableGroups = [],
   tableLeader = null,
   updatedOn = null,
   seasonStarted = true,
@@ -112,6 +114,18 @@ export default function CompetitionSeoShell({
       </div>
       {tableRows.length > 0 ? <JourneyContentBreak /> : null}
       <CompetitionTable name={name} season={season} rows={tableRows} />
+      {conferenceTableGroups.length > 0 ? (
+        <div className="Competition__seoConferenceTables">
+          {conferenceTableGroups.map((group) => (
+            <CompetitionTable
+              key={group.name}
+              name={`${name} ${group.name}`}
+              season={season}
+              rows={group.rows}
+            />
+          ))}
+        </div>
+      ) : null}
     </section>
   );
 }
@@ -239,6 +253,7 @@ export function buildCompetitionSeoShell(data, catalog) {
   }
 
   const tableRows = buildCompetitionTableRows(teams);
+  const conferenceTableGroups = buildCompetitionConferenceTableGroups(data);
   const tableLeader = tableRows[0]
     ? {
         name: tableRows[0].name,
@@ -270,6 +285,7 @@ export function buildCompetitionSeoShell(data, catalog) {
       5
     ).map((team) => pickTeamHighlight(team, "seasonUnder25Percentage_overall")),
     tableRows,
+    conferenceTableGroups,
     tableLeader,
     updatedOn: formatSeoUpdatedDate(),
     relatedLinks,

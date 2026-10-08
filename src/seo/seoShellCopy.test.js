@@ -1,4 +1,5 @@
 import {
+  buildCompetitionConferenceTableGroups,
   buildCompetitionSeoParagraphs,
   buildCompetitionTableRows,
   buildFixtureSeoParagraphs,
@@ -98,6 +99,68 @@ describe("seoShellCopy", () => {
       standing("Club D", 0),
     ]);
     expect(cup).toEqual([]);
+  });
+
+  test("builds MLS conference tables when provider groups are null", () => {
+    const groups = buildCompetitionConferenceTableGroups({
+      id: 16504,
+      league_table: [
+        {
+          id: 677446,
+          name: "Inter Miami",
+          leaguePosition_overall: 1,
+          matchesPlayed: 5,
+          points: 12,
+        },
+        {
+          id: 10,
+          name: "LA Galaxy",
+          leaguePosition_overall: 2,
+          matchesPlayed: 5,
+          points: 10,
+        },
+      ],
+      teams: [
+        {
+          id: 677446,
+          name: "Inter Miami",
+          seasonBTTSPercentage_overall: 61,
+          seasonOver25Percentage_overall: 58,
+        },
+        {
+          id: 10,
+          name: "LA Galaxy",
+          seasonBTTSPercentage_overall: 54,
+          seasonOver25Percentage_overall: 49,
+        },
+      ],
+      specific_tables: [{ groups: null }],
+    });
+
+    expect(groups).toEqual([
+      expect.objectContaining({
+        name: "Eastern Conference",
+        rows: [
+          expect.objectContaining({
+            name: "Inter Miami",
+            points: 12,
+            btts: 61,
+            over25: 58,
+          }),
+        ],
+      }),
+      expect.objectContaining({
+        name: "Western Conference",
+        rows: [
+          expect.objectContaining({
+            name: "LA Galaxy",
+            points: 10,
+            btts: 54,
+            over25: 49,
+          }),
+        ],
+      }),
+    ]);
   });
 
   test("builds short fixture copy with competition context", () => {

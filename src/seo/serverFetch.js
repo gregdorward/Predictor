@@ -9,6 +9,7 @@ import {
 } from "./fixtureSlug";
 
 const ORIGIN = process.env.NEXT_PUBLIC_EXPRESS_SERVER || "https://api.soccerstatshub.com/";
+const MLS_SEASON_ID = 16504;
 
 /** Default budget for sitemap / SEO server fetches (ms). */
 export const SEO_FETCH_TIMEOUT_MS = 4000;
@@ -41,6 +42,19 @@ export async function fetchCompetitionData(seasonId, { timeoutMs = 8000 } = {}) 
       timeoutMs,
     });
     if (!json?.success || !json?.data) return null;
+    if (Number(seasonId) === MLS_SEASON_ID) {
+      const tableJson = await fetchJson(
+        `tables/${seasonId}/${formatApiDate(new Date())}`,
+        { timeoutMs: 4000 }
+      );
+      const tableData = tableJson?.data;
+      if (tableData?.league_table) {
+        json.data.league_table = tableData.league_table;
+      }
+      if (tableData?.specific_tables) {
+        json.data.specific_tables = tableData.specific_tables;
+      }
+    }
     return json.data;
   } catch {
     return null;
@@ -57,6 +71,12 @@ export async function fetchCompetitionOverview({ timeoutMs = 6000 } = {}) {
 export async function fetchMarketReliabilityOverview({ timeoutMs = 6000 } = {}) {
   const json = await fetchJson("market-reliability-overview", { timeoutMs });
   return isValidMriOverviewPayload(json) ? json : null;
+}
+
+/** Firestore monthly stats for /prediction-league/ SSR. */
+export async function fetchLeaderboard(monthKey, { timeoutMs = 6000 } = {}) {
+  const json = await fetchJson(`leaderboard/${monthKey}`, { timeoutMs });
+  return Array.isArray(json) ? json : [];
 }
 
 export async function fetchMatchSnapshot(

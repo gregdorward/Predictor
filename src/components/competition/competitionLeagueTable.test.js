@@ -1,5 +1,10 @@
 import {
+  buildTeamConferenceLookup,
   buildCompetitionLeagueTableViews,
+  CONFERENCE_SCOPE_EAST,
+  CONFERENCE_SCOPE_WEST,
+  filterTeamsByConference,
+  normaliseMlsConferenceName,
   resolveConferenceLeagueTeams,
   teamRowHasHomeAwaySplit,
 } from "./competitionLeagueTable";
@@ -108,6 +113,101 @@ describe("buildCompetitionLeagueTableViews", () => {
     });
   });
 
+  test("uses MLS static conference fallback when provider groups are null", () => {
+    const league = {
+      data: {
+        league_table: [
+          makeTeam("Inter Miami"),
+          makeTeam("LA Galaxy"),
+        ],
+        specific_tables: [{ table: [], groups: null }],
+      },
+    };
+
+    const views = buildCompetitionLeagueTableViews(16504, league);
+
+    expect(views).toMatchObject({
+      mode: "grouped",
+      teams: [
+        expect.objectContaining({
+          Name: "Inter Miami",
+          GroupName: "Eastern Conference",
+          Form: "W",
+          LastXPoints: 3,
+          Points: 3,
+        }),
+        expect.objectContaining({
+          Name: "LA Galaxy",
+          GroupName: "Western Conference",
+          Form: "W",
+          LastXPoints: 3,
+          Points: 3,
+        }),
+      ],
+    });
+  });
+
+  test("overlays MLS form from specific table onto league_table rows", () => {
+    const league = {
+      data: {
+        league_table: [
+          {
+            id: 677446,
+            cleanName: "Inter Miami",
+            position: 2,
+            points: 54,
+            seasonGoalDifference: 20,
+          },
+          {
+            id: 10,
+            cleanName: "LA Galaxy",
+            position: 8,
+            points: 36,
+            seasonGoalDifference: -4,
+          },
+        ],
+        specific_tables: [
+          {
+            groups: null,
+            table: [
+              {
+                id: 677446,
+                cleanName: "Inter Miami",
+                wdl_record: "wdwww",
+              },
+              {
+                id: 10,
+                cleanName: "LA Galaxy",
+                wdl_record: "llwdw",
+              },
+            ],
+          },
+        ],
+      },
+    };
+
+    const views = buildCompetitionLeagueTableViews(16504, league);
+
+    expect(views.teams).toEqual([
+      expect.objectContaining({
+        Name: "Inter Miami",
+        GroupName: "Eastern Conference",
+        Position: 2,
+        Points: 54,
+        Form: "WDWWW",
+        LastXPoints: 13,
+      }),
+      expect.objectContaining({
+        Name: "LA Galaxy",
+        GroupName: "Western Conference",
+        Position: 8,
+        Points: 36,
+        Form: "LLWDW",
+        LastXPoints: 7,
+      }),
+    ]);
+  });
+
   test("resolveConferenceLeagueTeams prefers bespoke divisions then falls back to payload", () => {
     const league = {
       data: {
@@ -144,6 +244,40 @@ describe("buildCompetitionLeagueTableViews", () => {
     expect(fromPayload).toEqual([
       expect.objectContaining({ Name: "East A", GroupName: "Eastern Conference" }),
       expect.objectContaining({ Name: "West A", GroupName: "Western Conference" }),
+    ]);
+  });
+
+  test("normalises MLS conference names", () => {
+    expect(normaliseMlsConferenceName("Eastern Conference")).toBe("east");
+    expect(normaliseMlsConferenceName("Western")).toBe("west");
+    expect(normaliseMlsConferenceName("Supporters Shield")).toBe("overall");
+  });
+
+  test("builds conference lookups and filters competition teams", () => {
+    const league = {
+      data: {
+        specific_tables: [
+          {
+            groups: [
+              { name: "Eastern Conference", table: [makeTeam("Inter Miami")] },
+              { name: "Western Conference", table: [makeTeam("LA Galaxy")] },
+            ],
+          },
+        ],
+      },
+    };
+    const views = buildCompetitionLeagueTableViews(16504, league);
+    const lookup = buildTeamConferenceLookup(views);
+    const teams = [
+      { id: "Inter Miami", name: "Club Internacional de Fútbol Miami" },
+      { id: "LA Galaxy", name: "Los Angeles Galaxy" },
+    ];
+
+    expect(filterTeamsByConference(teams, CONFERENCE_SCOPE_EAST, lookup)).toEqual([
+      expect.objectContaining({ id: "Inter Miami" }),
+    ]);
+    expect(filterTeamsByConference(teams, CONFERENCE_SCOPE_WEST, lookup)).toEqual([
+      expect.objectContaining({ id: "LA Galaxy" }),
     ]);
   });
 });

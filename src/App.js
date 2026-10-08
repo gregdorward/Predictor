@@ -1046,7 +1046,8 @@ export function AppContent({ shellMounted = false }) {
                 <p className="MultisDiscoveryCta__lead">
                   {isPredicting
                     ? "Multis, value picks, ROI and Prediction League unlock when predictions finish."
-                    : "Multis, value picks, ROI and the Prediction League have moved to below the day's fixtures."}
+                    : "Multis, value picks, ROI and the Prediction League have moved to below the day's fixtures."}{" "}
+                  <a href="/prediction-league/">See the monthly board</a>.
                 </p>
                 <button
                   type="button"

@@ -149,7 +149,13 @@ import { X } from "lucide-react";
 import { doc, getDoc, collection, getDocs, query } from 'firebase/firestore';
 import { auth, db } from "../firebase";
 import { userTips } from "../App"
-import MonthlyLeaderboard from "../components/TippingTable"
+import MonthlyLeaderboard from "../components/TippingTable";
+import PredictionLeagueTrending from "../components/PredictionLeagueTrending";
+import {
+  fetchTipsNewPayload,
+  slipsFromTipsNewPayload,
+  getMonthKey,
+} from "./predictionLeague";
 
 var myHeaders = new Headers();
 myHeaders.append("Origin", "https://gregdorward.github.io");
@@ -573,20 +579,6 @@ function impliedProbability(decimalOdds) {
 }
 
 
-async function fetchUserTips() {
-  try {
-    const response = await fetch(`${process.env.NEXT_PUBLIC_EXPRESS_SERVER}tipsNEW`);
-    const data = await response.json();
-
-    const activeSlips = data;
-
-    return activeSlips;
-
-  } catch (error) {
-    console.error("Error fetching user tips:", error);
-    return [];
-  }
-}
 
 export function BetSlipItem({ slip }) {
   const [isExpanded, setIsExpanded] = useState(false);
@@ -679,46 +671,11 @@ function UserTips() {
 
   const fetchAndSetUserTips = async () => {
     setLoading(true);
-    const data = await fetchUserTips();
+    const data = await fetchTipsNewPayload();
+    const monthKey = getMonthKey();
 
-    if (data && typeof data === 'object') {
-      // 1. Define the start of the current month (e.g., March 1st, 2026)
-      const now = new Date();
-      const startOfMonth = new Date(now.getFullYear(), now.getMonth(), 1).getTime();
-
-      const allSlips = Object.entries(data).flatMap(([uid, userSlips]) => {
-        if (!Array.isArray(userSlips)) return [];
-
-        return userSlips
-          .map(slip => {
-            const validDates = slip.selections
-              .map(leg => Number(leg.date))
-              .filter(date => !isNaN(date) && date > 0);
-
-            const earliestUnix = validDates.length > 0
-              ? Math.min(...validDates)
-              : Math.floor(Date.now() / 1000);
-
-            return {
-              ...slip,
-              tipper: slip.tipper || `User_${uid.substring(0, 5)}`,
-              uid: uid,
-              earliestGameDate: earliestUnix
-            };
-          })
-          // 2. FILTER: Only keep slips submitted in the current month
-          .filter(slip => {
-            const submissionTime = new Date(slip.submittedAt).getTime();
-            return submissionTime >= startOfMonth;
-          });
-      });
-
-      // 3. Sort: Newest submissions first
-      const sorted = [...allSlips].sort((a, b) =>
-        new Date(b.submittedAt).getTime() - new Date(a.submittedAt).getTime()
-      );
-
-      setSlips(sorted);
+    if (data && typeof data === "object") {
+      setSlips(slipsFromTipsNewPayload(data, { monthKey }));
       setIsVisible(true);
     }
     setLoading(false);
@@ -739,40 +696,6 @@ function UserTips() {
     return <div className="UserTipsContainer"><button disabled>Loading...</button></div>;
   }
 
-  const getTopPicks = (allSlips) => {
-    const counts = {};
-
-    allSlips.forEach((slip) => {
-      // Only count selections from slips that aren't settled yet
-      if (slip.status === "PENDING") {
-        slip.selections.forEach((sel) => {
-          // Unique key: Combine Game ID and the Tip
-          const key = `${sel.gameId}_${sel.tipString}`;
-
-          if (!counts[key]) {
-            counts[key] = {
-              game: sel.game,
-              tip: sel.tipString,
-              count: 0,
-              odds: sel.odds
-            };
-          }
-          counts[key].count += 1;
-        });
-      }
-    });
-
-    // Convert to array, sort by highest count, take top 5
-    return Object.values(counts)
-      .sort((a, b) => b.count - a.count)
-      .slice(0, 5);
-  };
-
-
-
-  const topPicks = getTopPicks(slips);
-  const formatTip = (tip) => tip.replace(/([A-Z])/g, ' $1').replace(/^./, str => str.toUpperCase());
-
   const showUsernameSetup = user && !displayName;
 
   return (
@@ -785,33 +708,11 @@ function UserTips() {
           onUsernameSet={setLocalDisplayName}
         />
       )}
+      <p className="prediction-league-home-link">
+        <a href="/prediction-league/">Monthly board on the site</a>
+      </p>
       <MonthlyLeaderboard slips={slips} />
-      {topPicks.length > 0 && (
-        <div className="TrendingSection">
-          <h3>
-            🔥 Trending Selections
-          </h3>
-          <div className="TopPicksGrid" style={{
-            display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fill, minmax(180px, 1fr))',
-          }}>
-            {topPicks.map((pick, i) => (
-              <div key={i} className="TrendCard" style={{
-                position: 'relative'
-              }}>
-                <span className="TrendingTipsCount" style={{
-                  position: 'absolute', top: '40%', right: '15px',
-                }}>
-                  {pick.count}x
-                </span>
-                <div className="TrendingTipGame">{pick.game}</div>
-                <div>{formatTip(pick.tip)}</div>
-                <div>@{pick.odds}</div>
-              </div>
-            ))}
-          </div>
-        </div>
-      )}
+      <PredictionLeagueTrending slips={slips} />
     </div>
   );
 }

@@ -80,6 +80,11 @@ export const PAGE_META = {
     description:
       "See which football leagues and teams behave like the 1X2 price: favourite win rates, upsets, draws and ROI updated daily from cached results.",
   },
+  "/prediction-league": {
+    title: "Prediction League | Monthly tipster profit and ROI",
+    description:
+      "Monthly Prediction League table: tipster profit and ROI for the current month, plus open slips and the selections other users are backing.",
+  },
   "/articles": {
     title: "Football Articles & Analysis | Soccer Stats Hub",
     description:

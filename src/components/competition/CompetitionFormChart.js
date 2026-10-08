@@ -1,6 +1,11 @@
 import { useEffect, useState } from "react";
 import { apiGetUrl } from "../../utils/apiUrl";
-import { buildCompetitionLeagueTableViews } from "./competitionLeagueTable";
+import {
+  buildCompetitionLeagueTableViews,
+  CONFERENCE_SCOPE_OVERALL,
+  conferenceScopeLabel,
+  normaliseMlsConferenceName,
+} from "./competitionLeagueTable";
 import { sortTeamsByLastFive } from "./competitionFormChartUtils";
 
 function getTablesDateString() {
@@ -14,7 +19,25 @@ function formIndicatorClass(indicator) {
   return "Competition__formPill--empty";
 }
 
-function teamSetsFromViews(views) {
+function groupedTeamSets(teams, scope) {
+  const grouped = new Map();
+  teams.forEach((team) => {
+    const teamScope = normaliseMlsConferenceName(team.GroupName);
+    if (scope !== CONFERENCE_SCOPE_OVERALL && teamScope !== scope) {
+      return;
+    }
+    const label = team.GroupName || conferenceScopeLabel(teamScope);
+    if (!grouped.has(label)) grouped.set(label, []);
+    grouped.get(label).push(team);
+  });
+
+  return [...grouped.entries()].map(([label, groupedTeams]) => ({
+    label,
+    teams: sortTeamsByLastFive(groupedTeams),
+  }));
+}
+
+function teamSetsFromViews(views, scope = CONFERENCE_SCOPE_OVERALL) {
   if (!views) {
     return [];
   }
@@ -24,6 +47,18 @@ function teamSetsFromViews(views) {
       label: division.name,
       teams: sortTeamsByLastFive(division.teams),
     }));
+  }
+
+  if (views.mode === "grouped") {
+    if (scope === CONFERENCE_SCOPE_OVERALL) {
+      return [
+        {
+          label: null,
+          teams: sortTeamsByLastFive(views.teams),
+        },
+      ];
+    }
+    return groupedTeamSets(views.teams, scope);
   }
 
   return [
@@ -102,11 +137,21 @@ function FormChartTable({ teams, caption }) {
   );
 }
 
-export default function CompetitionFormChart({ seasonId }) {
-  const [views, setViews] = useState(null);
-  const [loading, setLoading] = useState(true);
+export default function CompetitionFormChart({
+  seasonId,
+  scope = CONFERENCE_SCOPE_OVERALL,
+  tableViews,
+}) {
+  const [views, setViews] = useState(tableViews ?? null);
+  const [loading, setLoading] = useState(tableViews === undefined);
 
   useEffect(() => {
+    if (tableViews !== undefined) {
+      setViews(tableViews);
+      setLoading(false);
+      return undefined;
+    }
+
     if (!seasonId) {
       return undefined;
     }
@@ -126,10 +171,10 @@ export default function CompetitionFormChart({ seasonId }) {
         }
 
         const json = await response.json();
-        const tableViews = buildCompetitionLeagueTableViews(seasonId, json);
+        const nextViews = buildCompetitionLeagueTableViews(seasonId, json);
 
         if (!cancelled) {
-          setViews(tableViews);
+          setViews(nextViews);
         }
       } catch {
         if (!cancelled) {
@@ -147,7 +192,7 @@ export default function CompetitionFormChart({ seasonId }) {
     return () => {
       cancelled = true;
     };
-  }, [seasonId]);
+  }, [seasonId, tableViews]);
 
   if (loading) {
     return (
@@ -164,7 +209,7 @@ export default function CompetitionFormChart({ seasonId }) {
     return null;
   }
 
-  const sets = teamSetsFromViews(views);
+  const sets = teamSetsFromViews(views, scope);
 
   return (
     <section className="Competition__section Competition__formChart" aria-labelledby="competition-form-chart">

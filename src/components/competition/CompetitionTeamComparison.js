@@ -26,6 +26,11 @@ import { useChartTheme, getChartColors } from "../Chart";
 import ShareableVisual from "../ShareableVisual";
 import { sanitizeImageFilename } from "../../utils/captureElementImage";
 import {
+  CONFERENCE_SCOPE_OVERALL,
+  conferenceScopeLabel,
+  filterTeamsByConference,
+} from "./competitionLeagueTable";
+import {
   MetricPicker,
   computeAxisRange,
   createScatterMarkerPlugin,
@@ -241,6 +246,8 @@ function ChartCard({ title, children, actions, className = "" }) {
 export default function CompetitionTeamComparison({
   seasonId,
   competitionTeams = [],
+  conferenceLookup = new Map(),
+  scope = CONFERENCE_SCOPE_OVERALL,
 }) {
   const theme = useChartTheme();
   const { color, gridColor, tooltipBackground } = getChartColors(theme);
@@ -294,7 +301,7 @@ export default function CompetitionTeamComparison({
   useEffect(() => {
     scatterMarkerSignatureRef.current = "";
     setScatterMarkers([]);
-  }, [seasonId, scatterXKey, scatterYKey, scatterTeamA, scatterTeamB]);
+  }, [seasonId, scope, scatterXKey, scatterYKey, scatterTeamA, scatterTeamB]);
 
   useEffect(() => {
     if (!seasonId) return undefined;
@@ -339,17 +346,22 @@ export default function CompetitionTeamComparison({
   }, [seasonId, competitionTeams, payload]);
 
   const teams = payload?.teams || [];
+  const activeTeams = useMemo(
+    () => filterTeamsByConference(teams, scope, conferenceLookup),
+    [teams, scope, conferenceLookup]
+  );
+  const activeScopeLabel = conferenceScopeLabel(scope);
   const leagueAverage = useMemo(
-    () => buildLeagueAverageProfile(teams),
-    [teams]
+    () => buildLeagueAverageProfile(activeTeams),
+    [activeTeams]
   );
 
   const availableMetrics = useMemo(() => {
-    if (!teams.length) return METRIC_OPTIONS;
+    if (!activeTeams.length) return METRIC_OPTIONS;
     return METRIC_OPTIONS.filter((metric) =>
-      teams.some((team) => Number.isFinite(Number(team?.[metric.key])))
+      activeTeams.some((team) => Number.isFinite(Number(team?.[metric.key])))
     );
-  }, [teams]);
+  }, [activeTeams]);
 
   useEffect(() => {
     if (!availableMetrics.length) return;
@@ -372,11 +384,11 @@ export default function CompetitionTeamComparison({
 
   const sortedTeamNames = useMemo(
     () =>
-      teams
+      activeTeams
         .map((team) => team.name)
         .filter(Boolean)
         .sort((a, b) => a.localeCompare(b)),
-    [teams]
+    [activeTeams]
   );
 
   const scatterTeamOptionsA = useMemo(() => {
@@ -402,24 +414,24 @@ export default function CompetitionTeamComparison({
   }, [sortedTeamNames, scatterTeamA, leagueAverage]);
 
   const plottableByName = useMemo(() => {
-    const map = new Map(teams.map((team) => [team.name, team]));
+    const map = new Map(activeTeams.map((team) => [team.name, team]));
     if (leagueAverage) {
       map.set(LEAGUE_AVERAGE_NAME, leagueAverage);
     }
     return map;
-  }, [teams, leagueAverage]);
+  }, [activeTeams, leagueAverage]);
 
   const plottedTeams = useMemo(() => {
     const focus = [scatterTeamA, scatterTeamB].filter(Boolean);
-    if (focus.length === 0) return teams;
+    if (focus.length === 0) return activeTeams;
     return focus
       .map((name) => plottableByName.get(name))
       .filter(Boolean);
-  }, [teams, scatterTeamA, scatterTeamB, plottableByName]);
+  }, [activeTeams, scatterTeamA, scatterTeamB, plottableByName]);
 
   const teamAbbreviations = useMemo(
-    () => uniqueTeamAbbreviations(teams.map((team) => team.name)),
-    [teams]
+    () => uniqueTeamAbbreviations(activeTeams.map((team) => team.name)),
+    [activeTeams]
   );
 
   const badgeUrlForTeam = useCallback(
@@ -511,8 +523,8 @@ export default function CompetitionTeamComparison({
   ]);
 
   const scatterAxisRanges = useMemo(() => {
-    // Keep league-wide scale so focused teams stay in context
-    const leaguePoints = teams
+    // Keep the selected view's scale so focused teams stay in context
+    const leaguePoints = activeTeams
       .map((team) => ({
         x: Number(team[scatterXKey]),
         y: Number(team[scatterYKey]),
@@ -528,7 +540,7 @@ export default function CompetitionTeamComparison({
         scatterYMeta
       ),
     };
-  }, [teams, scatterXKey, scatterYKey, scatterXMeta, scatterYMeta]);
+  }, [activeTeams, scatterXKey, scatterYKey, scatterXMeta, scatterYMeta]);
 
   const scatterOptions = useMemo(
     () => ({
@@ -593,10 +605,38 @@ export default function CompetitionTeamComparison({
   const metricMeta = getMetricMeta(metricKey);
 
   const barSorted = useMemo(() => {
-    return [...teams]
+    return [...activeTeams]
       .filter((t) => t?.[metricKey] != null)
       .sort((a, b) => Number(b[metricKey]) - Number(a[metricKey]));
-  }, [teams, metricKey]);
+  }, [activeTeams, metricKey]);
+
+  useEffect(() => {
+    if (!activeTeams.length) {
+      setSelectedTeams([]);
+      setScatterTeamA("");
+      setScatterTeamB("");
+      return;
+    }
+
+    const validNames = new Set(activeTeams.map((team) => team.name));
+    const averageAllowed = Boolean(leagueAverage);
+
+    setSelectedTeams((prev) => {
+      const valid = prev.filter(
+        (name) =>
+          validNames.has(name) ||
+          (averageAllowed && name === LEAGUE_AVERAGE_NAME)
+      );
+      if (valid.length) return valid;
+      return [...activeTeams]
+        .sort((a, b) => Number(b.attackingStrength) - Number(a.attackingStrength))
+        .slice(0, 2)
+        .map((team) => team.name);
+    });
+
+    setScatterTeamA((prev) => (prev && validNames.has(prev) ? prev : ""));
+    setScatterTeamB((prev) => (prev && validNames.has(prev) ? prev : ""));
+  }, [activeTeams, leagueAverage]);
 
   const barData = useMemo(
     () => ({
@@ -748,7 +788,7 @@ export default function CompetitionTeamComparison({
     );
   }
 
-  if (!teams.length) {
+  if (!activeTeams.length) {
     return (
       <section className="Competition__section">
         <h2 className="Competition__sectionHeading">Team comparison</h2>
@@ -767,6 +807,9 @@ export default function CompetitionTeamComparison({
       <p className="Competition__comparisonIntro">
         Pick any two metrics to see how each team measures up. Choose to compare
         the whole competition or two individual teams.
+        {scope !== CONFERENCE_SCOPE_OVERALL
+          ? ` Currently showing ${activeScopeLabel}.`
+          : ""}
       </p>
 
       <div className="Competition__comparisonGrid">
@@ -824,9 +867,9 @@ export default function CompetitionTeamComparison({
                 Style map
                 <span className="Competition__shareCaptureSub">
                   {scatterXMeta.label} vs {scatterYMeta.label}
-                  {plottedTeams.length < teams.length
+                  {plottedTeams.length < activeTeams.length
                     ? ` · ${plottedTeams.map((t) => t.name).join(" vs ")}`
-                    : " · Full league"}
+                    : ` · ${activeScopeLabel}`}
                 </span>
               </p>
               <ScatterAxisFrame
@@ -864,7 +907,7 @@ export default function CompetitionTeamComparison({
           <ShareableVisual
             className="Competition__shareable"
             filename={sanitizeImageFilename(
-              `metric-rankings-${metricMeta.label}`
+              `metric-rankings-${activeScopeLabel}-${metricMeta.label}`
             )}
             shareTitle={`Metric rankings: ${metricMeta.label}`}
           >
@@ -872,7 +915,7 @@ export default function CompetitionTeamComparison({
               <p className="Competition__shareCaptureTitle">
                 Metric rankings
                 <span className="Competition__shareCaptureSub">
-                  {metricMeta.label}
+                  {activeScopeLabel} · {metricMeta.label}
                 </span>
               </p>
               <div className="Competition__comparisonBarWrap">
@@ -902,7 +945,7 @@ export default function CompetitionTeamComparison({
               {LEAGUE_AVERAGE_NAME}
             </button>
           ) : null}
-          {teams.map((team) => {
+          {activeTeams.map((team) => {
             const active = selectedTeams.includes(team.name);
             const badgeUrl = badgeUrlForTeam(team);
             return (

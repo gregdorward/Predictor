@@ -37,4 +37,146 @@ describe("buildCompetitionClientPayload", () => {
     const full = JSON.stringify({ teams: [bulkyTeam] });
     expect(serialized.length).toBeLessThan(full.length / 10);
   });
+
+  test("keeps slim MLS conference groups for client conference switch", () => {
+    const payload = buildCompetitionClientPayload({
+      id: 16504,
+      english_name: "MLS",
+      specific_tables: [
+        {
+          groups: [
+            {
+              name: "Eastern Conference",
+              table: [
+                {
+                  id: 1,
+                  name: "Inter Miami",
+                  matchesPlayed: 27,
+                  points: 46,
+                  wdl_record: "WWDLL",
+                  hugeNestedBlob: { matches: new Array(500).fill({ x: 1 }) },
+                },
+              ],
+            },
+            {
+              name: "Western Conference",
+              table: [{ id: 2, name: "LA Galaxy", points: 36 }],
+            },
+          ],
+        },
+      ],
+    });
+
+    expect(payload.specific_tables).toEqual([
+      {
+        groups: [
+          {
+            name: "Eastern Conference",
+            round: null,
+            table: [
+              {
+                id: 1,
+                name: "Inter Miami",
+                matchesPlayed: 27,
+                points: 46,
+                wdl_record: "WWDLL",
+              },
+            ],
+          },
+          {
+            name: "Western Conference",
+            round: null,
+            table: [{ id: 2, name: "LA Galaxy", points: 36 }],
+          },
+        ],
+      },
+    ]);
+    expect(
+      payload.specific_tables[0].groups[0].table[0].hugeNestedBlob
+    ).toBeUndefined();
+  });
+
+  test("keeps MLS table fields on trimmed teams for static conference fallback", () => {
+    const payload = buildCompetitionClientPayload({
+      id: 16504,
+      english_name: "MLS",
+      teams: [
+        {
+          id: 677446,
+          name: "Inter Miami",
+          matchesPlayed: 27,
+          seasonWins_overall: 14,
+          seasonDraws_overall: 4,
+          seasonLosses_overall: 9,
+          points: 46,
+          wdl_record: "WWDLL",
+          hugeNestedBlob: { matches: new Array(500).fill({ x: 1 }) },
+        },
+      ],
+    });
+
+    expect(payload.teams[0]).toEqual({
+      id: 677446,
+      name: "Inter Miami",
+      matchesPlayed: 27,
+      seasonWins_overall: 14,
+      seasonDraws_overall: 4,
+      seasonLosses_overall: 9,
+      points: 46,
+      wdl_record: "WWDLL",
+    });
+  });
+
+  test("keeps slim MLS league table rows for conference standings", () => {
+    const payload = buildCompetitionClientPayload({
+      id: 16504,
+      english_name: "MLS",
+      league_table: [
+        {
+          id: 677447,
+          cleanName: "Nashville SC",
+          matchesPlayed: 27,
+          seasonWins_overall: 18,
+          seasonDraws_overall: 6,
+          seasonLosses_overall: 3,
+          seasonGoals: 55,
+          seasonConceded_home: 12,
+          seasonConceded_away: 9,
+          seasonGoalDifference: 34,
+          points: 60,
+          position: 1,
+          hugeNestedBlob: { matches: new Array(500).fill({ x: 1 }) },
+        },
+      ],
+      specific_tables: [
+        {
+          groups: null,
+          table: [
+            {
+              id: 677447,
+              wdl_record: "wdwwwlwwwddwwwwwldwwwwdldww",
+            },
+          ],
+        },
+      ],
+    });
+
+    expect(payload.league_table).toEqual([
+      {
+        id: 677447,
+        cleanName: "Nashville SC",
+        matchesPlayed: 27,
+        seasonWins_overall: 18,
+        seasonDraws_overall: 6,
+        seasonLosses_overall: 3,
+        seasonGoals: 55,
+        seasonConceded_home: 12,
+        seasonConceded_away: 9,
+        seasonGoalDifference: 34,
+        points: 60,
+        position: 1,
+        wdl_record: "wdwwwlwwwddwwwwwldwwwwdldww",
+      },
+    ]);
+  });
 });

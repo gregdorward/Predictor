@@ -1,4 +1,5 @@
 import { getTeamsList } from "../components/competition/competitionUtils";
+import { MLS_SEASON_ID } from "../components/competition/competitionLeagueTable";
 
 /** League-level fields used by CompetitionPage charts and summaries (not full API blobs). */
 const COMPETITION_ROOT_KEYS = [
@@ -80,6 +81,27 @@ const TEAM_KEYS = [
   "seasonMatchesPlayed_overall",
 ];
 
+const CONFERENCE_TABLE_TEAM_KEYS = [
+  "id",
+  "ID",
+  "name",
+  "english_name",
+  "Name",
+  "cleanName",
+  "matchesPlayed",
+  "seasonWins_overall",
+  "seasonDraws_overall",
+  "seasonLosses_overall",
+  "seasonGoals",
+  "seasonConceded_home",
+  "seasonConceded_away",
+  "seasonGoalDifference",
+  "wdl_record",
+  "points",
+  "position",
+  "zone",
+];
+
 function pickKeys(source, keys) {
   if (!source || typeof source !== "object") return {};
   const out = {};
@@ -91,8 +113,53 @@ function pickKeys(source, keys) {
   return out;
 }
 
-function trimTeam(team) {
-  return pickKeys(team, TEAM_KEYS);
+function trimTeam(team, keys = TEAM_KEYS) {
+  return pickKeys(team, keys);
+}
+
+function trimConferenceTableGroups(data) {
+  if (Number(data?.id) !== MLS_SEASON_ID) return null;
+  const groups = data?.specific_tables?.[0]?.groups;
+  if (!Array.isArray(groups) || groups.length === 0) return null;
+
+  const trimmedGroups = groups
+    .map((group) => ({
+      name: group.name || null,
+      round: group.round || null,
+      table: Array.isArray(group.table)
+        ? group.table.map((team) => pickKeys(team, CONFERENCE_TABLE_TEAM_KEYS))
+        : [],
+    }))
+    .filter((group) => group.table.length > 0);
+
+  if (!trimmedGroups.length) return null;
+  return [{ groups: trimmedGroups }];
+}
+
+function trimMlsLeagueTable(data) {
+  if (Number(data?.id) !== MLS_SEASON_ID) return null;
+  const leagueTable = Array.isArray(data?.league_table) ? data.league_table : [];
+  const specificTable = Array.isArray(data?.specific_tables?.[0]?.table)
+    ? data.specific_tables[0].table
+    : [];
+  const table = leagueTable.length ? leagueTable : specificTable;
+  if (!table.length) return null;
+
+  const formById = new Map();
+  specificTable.forEach((team) => {
+    const id = Number(team?.id ?? team?.ID);
+    if (!Number.isFinite(id) || !team?.wdl_record) return;
+    formById.set(id, team.wdl_record);
+  });
+
+  return table.map((team) => {
+    const trimmed = pickKeys(team, CONFERENCE_TABLE_TEAM_KEYS);
+    const id = Number(team?.id ?? team?.ID);
+    if (!trimmed.wdl_record && formById.has(id)) {
+      trimmed.wdl_record = formById.get(id);
+    }
+    return trimmed;
+  });
 }
 
 /**
@@ -103,9 +170,23 @@ export function buildCompetitionClientPayload(data) {
   if (!data) return null;
 
   const payload = pickKeys(data, COMPETITION_ROOT_KEYS);
-  const teams = getTeamsList(data).map(trimTeam);
+  const teamKeys =
+    Number(data?.id) === MLS_SEASON_ID
+      ? [...new Set([...TEAM_KEYS, ...CONFERENCE_TABLE_TEAM_KEYS])]
+      : TEAM_KEYS;
+  const teams = getTeamsList(data).map((team) => trimTeam(team, teamKeys));
   if (teams.length) {
     payload.teams = teams;
+  }
+
+  const specificTables = trimConferenceTableGroups(data);
+  if (specificTables) {
+    payload.specific_tables = specificTables;
+  }
+
+  const leagueTable = trimMlsLeagueTable(data);
+  if (leagueTable) {
+    payload.league_table = leagueTable;
   }
 
   return payload;
