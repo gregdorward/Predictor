@@ -633,6 +633,7 @@ export function AppContent({ shellMounted = false }) {
 
       setOffset(newOffset);
       setCurrentDate(newDate);
+      handleAction(newDate);
     }
   };
 
