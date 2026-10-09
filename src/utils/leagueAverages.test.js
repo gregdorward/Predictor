@@ -158,4 +158,41 @@ describe("resolveLeagueAveragesForDate", () => {
     expect(posted).toHaveLength(1);
     expect(posted[0][0].averageGoalsHome).toBe(1);
   });
+
+  test("does not persist when persist is false", async () => {
+    process.env.NEXT_PUBLIC_EXPRESS_SERVER = "http://origin/";
+    const posted = [];
+    global.fetch = jest.fn(async (url, options) => {
+      if (options?.method === "POST") {
+        posted.push(JSON.parse(options.body));
+        return { ok: true, json: async () => ({}) };
+      }
+      if (String(url).includes("league-averages/8192026")) {
+        return { ok: false, status: 404 };
+      }
+      throw new Error(`Unexpected fetch: ${url}`);
+    });
+
+    const result = await resolveLeagueAveragesForDate({
+      formDateKey: "8192026",
+      isoDate: "2026-08-20",
+      leagueResults: [
+        {
+          id: 17146,
+          fixtures: [
+            {
+              status: "complete",
+              date_unix: isoDateToStartUnix("2026-08-16"),
+              homeGoalCount: 1,
+              awayGoalCount: 0,
+            },
+          ],
+        },
+      ],
+      persist: false,
+    });
+
+    expect(result.source).toBe("results-as-of");
+    expect(posted).toHaveLength(0);
+  });
 });
