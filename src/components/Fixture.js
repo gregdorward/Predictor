@@ -24,6 +24,9 @@ import { Flag } from "lucide-react";
 import { getMaxOutcomeEdge } from "../logic/scoreModelConfig.js";
 import { formatOddsMovementPctLabel } from "../logic/oddsTimeline.js";
 import { useFixturePredictionUnlock } from "../logic/useFixturePredictionUnlock";
+import { isFeaturedFreeFixture } from "../logic/featuredFreeFixture";
+import FeaturedFreeBadge from "./FeaturedFreeBadge";
+import { useAuth } from "../logic/authProvider";
 
 let resultValue;
 var count;
@@ -234,12 +237,15 @@ function SingleFixture({
   handleToggleTip,
   userTips,
   dayFixtureIndex,
+  featuredFixtureId,
 }) {
   const dispatch = useDispatch();
   const [showGameStats, setShowGameStats] = useState(false);
   const [isLoadingGameStats, setIsLoadingGameStats] = useState(false); // New loading state
+  const { isPaidUser } = useAuth();
+  const isFeaturedFree = isFeaturedFreeFixture(fixture.id, featuredFixtureId);
   const { unlocked: predictionUnlocked, unlockOrUpgrade } =
-    useFixturePredictionUnlock(fixture.id);
+    useFixturePredictionUnlock(fixture.id, featuredFixtureId);
   function resolveFixtureForms() {
     const formEntry = allForm.find((entry) => entry.id === fixture.id);
     return {
@@ -386,13 +392,16 @@ function SingleFixture({
                 fixture={fixture}
               />
               <div className="MatchDetail-actions">
-                <input
-                  type="checkbox"
-                  checked={checked}
-                  onChange={onToggle}
-                  className="star"
-                  id={`shortlist-${fixture.id}`}
-                />
+                <div className="MatchDetail-actionsLeading">
+                  <input
+                    type="checkbox"
+                    checked={checked}
+                    onChange={onToggle}
+                    className="star"
+                    id={`shortlist-${fixture.id}`}
+                  />
+                  <FeaturedFreeBadge show={isFeaturedFree && !isPaidUser} />
+                </div>
                 {fixture.highEdgeFlag && (
                   <span
                     className="high-edge-flag-wrap"
@@ -637,6 +646,8 @@ function SingleFixture({
             handleToggleTip={handleToggleTip}
             userTips={userTips}
             dayFixtureIndex={dayFixtureIndex}
+            isFeaturedFree={isFeaturedFree}
+            featuredFixtureId={featuredFixtureId}
           />
         )}
       </Suspense>
@@ -672,6 +683,7 @@ const List = ({
   handleToggleTip,
   userTips,
   isProbability,
+  featuredFixtureId,
 }) => {
   // ⭐️ showShortlist state is now received via props, not local state ⭐️
   const [selectedFixtures, setSelectedFixtures] = useState([]);
@@ -835,6 +847,7 @@ const List = ({
         handleToggleTip={handleToggleTip}
         userTips={userTips}
         dayFixtureIndex={dayFixtureIndex}
+        featuredFixtureId={featuredFixtureId}
       />
     );
   };
@@ -976,6 +989,7 @@ export function Fixture(props) {
         userTips={props.userTips}
         fullGameListLength={props.fullGameListLength}
         totalVisible={props.totalVisible}
+        featuredFixtureId={props.featuredFixtureId}
       />
     </Provider>
   );

@@ -24,6 +24,7 @@ import { resolveMultiDivisionLeagueTables } from "../utils/multiDivisionLeagueTa
 import { resolveConferenceLeagueTeams } from "../components/competition/competitionLeagueTable";
 import { apiGetUrl } from "../utils/apiUrl";
 import { resolveFootyStatsLeagueId } from "../seo/competitionCatalog";
+import { getFeaturedFixtureId } from "./featuredFreeFixture";
 import { persistLeagueResults } from "../utils/persistLeagueResults";
 import {
   persistLeagueAveragesForDate,
@@ -700,12 +701,18 @@ export function RenderAllFixtures(props) {
   // 4. Calculate unique league IDs using the processed list
   uniqueLeagueIDs = [...new Set(displayMatches.map(match => match.leagueID))];
 
+  const featuredFixtureId = getFeaturedFixtureId(
+    uncappedFixtures,
+    orderedLeagues
+  );
+
   return (
     <Fixture
       isProbability={isProbability}
       setIsProbability={setIsProbability}
       fixtures={displayMatches} // Pass the processed list
       uncappedFixtures={uncappedFixtures}
+      featuredFixtureId={featuredFixtureId}
       result={props.result}
       mock={false}
       className={"individualFixture"}

@@ -45,7 +45,7 @@ Differentiators a generic odds or tips site cannot truthfully copy:
 - Score predictions and 1X2 probabilities via selectable algorithms (`SSH Tips` standard model, `AI Tips` alternative).
 - BTTS / Over 2.5 / goals research pages, tip lists, multis/accumulator tooling, shareable fixture URLs and shortlists, OG image export APIs.
 - Premium subscription unlocking unlimited predictions, full tip lists, deeper match sections (streaks, season stats, previews beyond free allowance), and related blur-gated UI.
-- Free tier: browse all fixtures; **10** predicted-score / 1X2 unlocks per calendar day (local timezone), tracked per fixture id (`src/logic/freePredictionAllowance.js`).
+- Free tier: browse all fixtures; the **first fixture** in each day’s full homepage list includes all stats without using a daily unlock (`src/logic/featuredFreeFixture.js`); plus **10** additional predicted-score / 1X2 unlocks per calendar day (local timezone), tracked per fixture id (`src/logic/freePredictionAllowance.js`).
 
 **Constraints:**
 

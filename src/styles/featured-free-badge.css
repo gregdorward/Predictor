@@ -1,0 +1,35 @@
+.FeaturedFreeBadge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0.15rem 0.35rem 0 0;
+  padding: 0.12rem 0.45rem;
+  border-radius: 999px;
+  font-size: 0.75em;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  color: #000;
+  background: var(--primary-color);
+  border: 1px solid color-mix(in srgb, var(--primary-color) 70%, #000);
+  white-space: nowrap;
+}
+
+.MatchDetail-actionsLeading {
+  grid-column: 1;
+  display: inline-flex;
+  align-items: center;
+  min-width: 0;
+}
+
+.MatchDetail-actionsLeading .star {
+  flex-shrink: 0;
+}
+
+.MatchDetail-actionsLeading .FeaturedFreeBadge {
+  margin: 0 0 0 1em;
+}
+
+.FixturePage-prediction .FeaturedFreeBadge {
+  margin: 0 0 0.35rem;
+}

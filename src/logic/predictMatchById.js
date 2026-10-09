@@ -30,6 +30,10 @@ import {
   applyFixturePageFootyStatsFallback,
   preserveFormEntryWindows,
 } from "./fixturePageFootyStatsFallback";
+import {
+  getFeaturedFixtureId,
+  isFeaturedFreeFixture,
+} from "./featuredFreeFixture";
 
 export async function predictMatchById(matchId) {
   const snapshotRes = await fetch(apiGetUrl(`match-snapshot/${matchId}`));
@@ -59,9 +63,10 @@ export async function predictMatchById(matchId) {
       fetch(apiGetUrl(`matches/${dateStr}`)),
     ]);
 
+  let dayList = [];
   if (dayMatchesRes.ok) {
     const dayPayload = await dayMatchesRes.json();
-    const dayList = Array.isArray(dayPayload?.data)
+    dayList = Array.isArray(dayPayload?.data)
       ? dayPayload.data
       : Array.isArray(dayPayload)
         ? dayPayload
@@ -71,6 +76,8 @@ export async function predictMatchById(matchId) {
       Object.assign(fixture, fromDay);
     }
   }
+
+  const featuredFixtureId = getFeaturedFixtureId(dayList, orderedLeagues);
 
   if (!tableRes.ok) {
     throw new Error("Failed to load league table");
@@ -157,6 +164,8 @@ export async function predictMatchById(matchId) {
 
   match.headToHead = buildFixtureHeadToHead(fixture);
   match.seasonStats = await fetchFixtureSeasonStats(match);
+  match.featuredFixtureId = featuredFixtureId;
+  match.isFeaturedFree = isFeaturedFreeFixture(match.id, featuredFixtureId);
 
   return match;
 }

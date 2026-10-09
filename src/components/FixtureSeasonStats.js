@@ -148,9 +148,10 @@ function CompareRow({ label, homeValue, awayValue, homeStatus }) {
   );
 }
 
-function FixtureSeasonStats({ match }) {
+function FixtureSeasonStats({ match, statsFullAccess = false }) {
   const { isPaidUser, loading, user } = useAuth();
-  const lockPremiumSections = !isPaidUser && !(loading && user);
+  const premiumUnlocked = statsFullAccess || isPaidUser;
+  const lockPremiumSections = !premiumUnlocked && !(loading && user);
   const [activeCategoryId, setActiveCategoryId] = useState(FREE_CATEGORY_ID);
 
   const seasonStats = match?.seasonStats ?? {};

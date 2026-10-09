@@ -2,8 +2,8 @@ import { isMissingStat } from "../utils/formatStat";
 
 import {
   FREE_DAILY_PREDICTION_LIMIT,
-  isFixturePredictionUnlocked,
-} from "./freePredictionAllowance";
+  hasFixtureFullAccess,
+} from "./featuredFreeFixture";
 
 export const MIN_RADAR_METRICS = 3;
 export const MAX_RADAR_METRICS = 10;
@@ -722,8 +722,13 @@ export function toggleMetricSelection(selectedKeys, key, availableKeys) {
  * @param {number} [_dayFixtureIndex] unused — kept so existing call sites still compile
  * @param {string|number} [fixtureId]
  */
-export function isCustomRadarUnlocked(isPaidUser, _dayFixtureIndex, fixtureId) {
-  return isFixturePredictionUnlocked(isPaidUser, fixtureId);
+export function isCustomRadarUnlocked(
+  isPaidUser,
+  _dayFixtureIndex,
+  fixtureId,
+  featuredFixtureId = null
+) {
+  return hasFixtureFullAccess(isPaidUser, fixtureId, featuredFixtureId);
 }
 
 /**

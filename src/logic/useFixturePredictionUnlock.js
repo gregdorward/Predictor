@@ -2,9 +2,9 @@ import { useCallback, useEffect, useState } from "react";
 import { useAuth } from "./authProvider";
 import {
   getRemainingFreeUnlocks,
-  isFixturePredictionUnlocked,
   tryUnlockFixture,
 } from "./freePredictionAllowance";
+import { hasFixtureFullAccess } from "./featuredFreeFixture";
 import { requestUpgrade } from "./requestUpgrade";
 
 export const PREDICTION_UNLOCK_EVENT = "ssh-prediction-unlock";
@@ -18,19 +18,20 @@ export function notifyPredictionUnlock() {
  * Shared unlock state for predicted score / 1X2 on a fixture.
  * Score mode and probability mode share the same allowance.
  */
-export function useFixturePredictionUnlock(fixtureId) {
+export function useFixturePredictionUnlock(fixtureId, featuredFixtureId = null) {
   const { isPaidUser } = useAuth();
-  const [unlocked, setUnlocked] = useState(() =>
-    isFixturePredictionUnlocked(isPaidUser, fixtureId)
-  );
+  const resolveUnlocked = () =>
+    hasFixtureFullAccess(isPaidUser, fixtureId, featuredFixtureId);
+
+  const [unlocked, setUnlocked] = useState(() => resolveUnlocked());
 
   useEffect(() => {
-    setUnlocked(isFixturePredictionUnlocked(isPaidUser, fixtureId));
-  }, [isPaidUser, fixtureId]);
+    setUnlocked(resolveUnlocked());
+  }, [isPaidUser, fixtureId, featuredFixtureId]);
 
   useEffect(() => {
     const sync = () => {
-      setUnlocked(isFixturePredictionUnlocked(isPaidUser, fixtureId));
+      setUnlocked(resolveUnlocked());
     };
     window.addEventListener(PREDICTION_UNLOCK_EVENT, sync);
     window.addEventListener("storage", sync);
@@ -38,10 +39,10 @@ export function useFixturePredictionUnlock(fixtureId) {
       window.removeEventListener(PREDICTION_UNLOCK_EVENT, sync);
       window.removeEventListener("storage", sync);
     };
-  }, [isPaidUser, fixtureId]);
+  }, [isPaidUser, fixtureId, featuredFixtureId]);
 
   const unlockOrUpgrade = useCallback(() => {
-    if (isFixturePredictionUnlocked(isPaidUser, fixtureId)) {
+    if (hasFixtureFullAccess(isPaidUser, fixtureId, featuredFixtureId)) {
       setUnlocked(true);
       return true;
     }
@@ -53,7 +54,7 @@ export function useFixturePredictionUnlock(fixtureId) {
     }
     requestUpgrade();
     return false;
-  }, [isPaidUser, fixtureId]);
+  }, [isPaidUser, fixtureId, featuredFixtureId]);
 
   return { unlocked, unlockOrUpgrade, isPaidUser };
 }

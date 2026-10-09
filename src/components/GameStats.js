@@ -116,12 +116,14 @@ import {
   FREE_DAILY_PREDICTION_LIMIT,
   isFixturePredictionUnlocked,
 } from "../logic/freePredictionAllowance";
+import { hasFixtureFullAccess } from "../logic/featuredFreeFixture";
 import { requestUpgrade } from "../logic/requestUpgrade";
 import { GoalTimingHeatShare } from "../components/GoalTimingHeatStrip";
 import SeasonPpgChart from "./SeasonPpgChart";
 import { hasValidStreaks } from "../utils/streakStats";
 import ShareableVisual from "./ShareableVisual";
 import PremiumBlurGate from "./PremiumBlurGate";
+import FeaturedFreeBadge from "./FeaturedFreeBadge";
 import { sanitizeImageFilename } from "../utils/captureElementImage";
 
 const MemoizedSofaLineupsWidget = memo(SofaLineupsWidget);
@@ -382,7 +384,16 @@ function getMatchOddsProbabilities(scoreMatrix = []) {
 
 
 
-function GameStats({ game, displayBool, stats, handleToggleTip, userTips, dayFixtureIndex }) {
+function GameStats({
+  game,
+  displayBool,
+  stats,
+  handleToggleTip,
+  userTips,
+  dayFixtureIndex,
+  isFeaturedFree = false,
+  featuredFixtureId = null,
+}) {
   console.log(game);
 
   // const { user } = useAuth();
@@ -462,8 +473,9 @@ function GameStats({ game, displayBool, stats, handleToggleTip, userTips, dayFix
   const [matchPreviewLoadingStatus, setMatchPreviewLoadingStatus] =
     useState("");
   const { user, isPaidUser } = useAuth();
+  const fullAccess = isPaidUser || isFeaturedFree;
   const { unlocked: predictionUnlocked, unlockOrUpgrade } =
-    useFixturePredictionUnlock(game?.id);
+    useFixturePredictionUnlock(game?.id, featuredFixtureId);
   const { remaining: remainingFreeUnlocks } = useRemainingFreeUnlocks();
   const [hasCompleteData, setHasCompleteData] = useState(false);
 
@@ -1564,7 +1576,7 @@ function GameStats({ game, displayBool, stats, handleToggleTip, userTips, dayFix
 
   const fetchFutureFixtures = useCallback(async () => {
     if (futureFixturesFetchedRef.current) return;
-    if (!isPaidUser || !matchingGame?.homeId || !matchingGame?.awayId) return;
+    if (!fullAccess || !matchingGame?.homeId || !matchingGame?.awayId) return;
 
     futureFixturesFetchedRef.current = true;
     setLoadingFutureFixtures(true);
@@ -1605,7 +1617,7 @@ function GameStats({ game, displayBool, stats, handleToggleTip, userTips, dayFix
       setLoadingFutureFixtures(false);
     }
   }, [
-    isPaidUser,
+    fullAccess,
     matchingGame?.homeId,
     matchingGame?.awayId,
     game.game_week,
@@ -1627,7 +1639,7 @@ function GameStats({ game, displayBool, stats, handleToggleTip, userTips, dayFix
     if (streaksFetchedRef.current) {
       return streaksResultRef.current;
     }
-    if (!isPaidUser || !matchingGame?.id) {
+    if (!fullAccess || !matchingGame?.id) {
       setStreakData(null);
       return null;
     }
@@ -1675,7 +1687,7 @@ function GameStats({ game, displayBool, stats, handleToggleTip, userTips, dayFix
         streaksInFlightRef.current = null;
       }
     }
-  }, [isPaidUser, matchingGame?.id, oddsData]);
+  }, [fullAccess, matchingGame?.id, oddsData]);
 
   const fetchSquadPlayerStats = useCallback(async () => {
     if (squadStatsInFlightRef.current) {
@@ -4042,9 +4054,12 @@ function GameStats({ game, displayBool, stats, handleToggleTip, userTips, dayFix
   );
 
   const runMatchPreviewGeneration = useCallback(async () => {
-    if (!isFixturePredictionUnlocked(isPaidUser, game?.id)) {
+    if (!hasFixtureFullAccess(isPaidUser, game?.id, featuredFixtureId)) {
       const ok = unlockOrUpgrade();
-      if (!ok || !isFixturePredictionUnlocked(isPaidUser, game?.id)) {
+      if (
+        !ok ||
+        !hasFixtureFullAccess(isPaidUser, game?.id, featuredFixtureId)
+      ) {
         return;
       }
     }
@@ -4065,7 +4080,7 @@ function GameStats({ game, displayBool, stats, handleToggleTip, userTips, dayFix
         fetchLineups(),
       ]);
 
-    if (!isFixturePredictionUnlocked(isPaidUser, game?.id)) {
+    if (!hasFixtureFullAccess(isPaidUser, game?.id, featuredFixtureId)) {
       setShowAIInsights(false);
       setIsLoading(false);
       setMatchPreviewLoadingStatus("");
@@ -4108,7 +4123,7 @@ function GameStats({ game, displayBool, stats, handleToggleTip, userTips, dayFix
     );
     setMatchPreviewLoadingStatus("");
   }, [
-    isPaidUser,
+    fullAccess,
     game,
     unlockOrUpgrade,
     fetchSquadPlayerStats,
@@ -4334,6 +4349,7 @@ function GameStats({ game, displayBool, stats, handleToggleTip, userTips, dayFix
   return (
     <>
       <div className="ExpandingStats">
+        <FeaturedFreeBadge show={isFeaturedFree && !isPaidUser} />
         {(game.predictionsUnavailable || !hasPredictionMetrics) && (
           <p className="GameStats--limited">
             Score predictions are not available yet - fewer than three matches
@@ -4358,13 +4374,13 @@ function GameStats({ game, displayBool, stats, handleToggleTip, userTips, dayFix
                   getCollapsableProps={getCollapsableProps}
                   homeAllStatsProps={homeAllStatsProps}
                   comparisonStatusMap={comparisonStatusMap}
-                  lockPremiumSections={!isPaidUser}
+                  lockPremiumSections={!fullAccess}
                 />
                 <StatsAwayComponent
                   getCollapsableProps={getCollapsableProps}
                   awayAllStatsProps={awayAllStatsProps}
                   comparisonStatusMap={comparisonStatusMap}
-                  lockPremiumSections={!isPaidUser}
+                  lockPremiumSections={!fullAccess}
                 />
               </div>
             </>
@@ -4542,7 +4558,7 @@ function GameStats({ game, displayBool, stats, handleToggleTip, userTips, dayFix
               classNameButton="Lineups"
               isOpen={!!openSections.lineups}
               onTriggerToggle={handleLineupsToggle}
-              locked={!isPaidUser}
+              locked={!fullAccess}
               element={
                 <div className="LineupsAndMatchAction">
                   {loadingLineups ? (
@@ -4570,7 +4586,7 @@ function GameStats({ game, displayBool, stats, handleToggleTip, userTips, dayFix
               classNameButton="MissingPlayersButton"
               isOpen={!!openSections.missingPlayers}
               onTriggerToggle={handleMissingPlayersToggle}
-              locked={!isPaidUser}
+              locked={!fullAccess}
               element={
                 loadingLineups ? (
                   CollapsableLoading
@@ -4638,7 +4654,7 @@ function GameStats({ game, displayBool, stats, handleToggleTip, userTips, dayFix
               classNameButton="TeamStreaksButton"
               isOpen={!!openSections.streaks}
               onTriggerToggle={handleStreaksToggle}
-              locked={!isPaidUser}
+              locked={!fullAccess}
               element={
                 loadingStreaks ? (
                   CollapsableLoading
@@ -4657,7 +4673,7 @@ function GameStats({ game, displayBool, stats, handleToggleTip, userTips, dayFix
                 )
               }
             />
-          ) : !isPaidUser ? (
+          ) : !fullAccess ? (
             <Collapsable
               locked
               buttonText={`Team Streaks (All comps) \u{2630}`}
@@ -4668,7 +4684,7 @@ function GameStats({ game, displayBool, stats, handleToggleTip, userTips, dayFix
 
           {!matchingGame?.homeId || !matchingGame?.awayId ? (
             <Collapsable
-              locked={!isPaidUser}
+              locked={!fullAccess}
               buttonText={`Upcoming Games`}
               classNameButton="FutureFixturesButton"
               element={<div />}
@@ -4679,7 +4695,7 @@ function GameStats({ game, displayBool, stats, handleToggleTip, userTips, dayFix
               classNameButton="FutureFixturesButton"
               isOpen={!!openSections.futureFixtures}
               onTriggerToggle={handleFutureFixturesToggle}
-              locked={!isPaidUser}
+              locked={!fullAccess}
               element={
                 loadingFutureFixtures ? (
                   CollapsableLoading
@@ -4702,7 +4718,7 @@ function GameStats({ game, displayBool, stats, handleToggleTip, userTips, dayFix
               classNameButton="FutureFixturesButton"
               isOpen={!!openSections.managers}
               onTriggerToggle={handleManagersToggle}
-              locked={!isPaidUser}
+              locked={!fullAccess}
               element={
                 loadingManagers ? (
                   CollapsableLoading
@@ -4718,7 +4734,7 @@ function GameStats({ game, displayBool, stats, handleToggleTip, userTips, dayFix
                 )
               }
             />
-          ) : !isPaidUser ? (
+          ) : !fullAccess ? (
             <Collapsable
               locked
               buttonText={`Managers`}
@@ -4780,7 +4796,7 @@ function GameStats({ game, displayBool, stats, handleToggleTip, userTips, dayFix
               }
             />
             <CustomRadarComparison
-              unlocked={!!isPaidUser}
+              unlocked={!!fullAccess}
               onLockedClick={() => requestUpgrade()}
               homeTeam={game.homeTeam}
               awayTeam={game.awayTeam}
@@ -4814,7 +4830,7 @@ function GameStats({ game, displayBool, stats, handleToggleTip, userTips, dayFix
                   }
                   disabled={isLoading}
                 />
-                {!isPaidUser ? (
+                {!fullAccess ? (
                   <p className="MatchPreviewUnlockNote">
                     Uses the same daily unlock as predicted scores and 1X2 for
                     this fixture ({FREE_DAILY_PREDICTION_LIMIT} per day on the
@@ -4875,7 +4891,7 @@ function GameStats({ game, displayBool, stats, handleToggleTip, userTips, dayFix
               )}
               {effectiveLeagueStats && ranksHome && ranksAway && effectiveLeagueStats?.topTeams && (
                 <TeamRankingsFlexView
-                  locked={!isPaidUser}
+                  locked={!fullAccess}
                   title={`Rankings in ${game.leagueDesc} out of ${
                     effectiveLeagueStats.topTeams.accurateCrosses?.length ??
                     Object.values(effectiveLeagueStats.topTeams).find((v) => Array.isArray(v))
@@ -4896,18 +4912,18 @@ function GameStats({ game, displayBool, stats, handleToggleTip, userTips, dayFix
               {!isWorldCupCompetition &&
                 homeForm?.allTeamResults?.length > 0 &&
                 awayForm?.allTeamResults?.length > 0 && (
-                  <PremiumBlurGate locked={!isPaidUser}>
+                  <PremiumBlurGate locked={!fullAccess}>
                     <ShareableVisual
                       filename={sanitizeImageFilename(
                         `${game.homeTeam}-vs-${game.awayTeam}-season-form`
                       )}
                       shareTitle={`${game.homeTeam} vs ${game.awayTeam} - season form`}
-                      className={`rankings-wrapper${!isPaidUser ? " rankings-wrapper--locked" : ""}`}
-                      hideActions={!isPaidUser}
+                      className={`rankings-wrapper${!fullAccess ? " rankings-wrapper--locked" : ""}`}
+                      hideActions={!fullAccess}
                     >
                       <div
-                        {...(isPaidUser ? { "data-share-capture": true } : {})}
-                        className={`rankings-container${!isPaidUser ? " blurred" : ""}`}
+                        {...(fullAccess ? { "data-share-capture": true } : {})}
+                        className={`rankings-container${!fullAccess ? " blurred" : ""}`}
                       >
                         <SeasonPpgChart
                           homeTeam={game.homeTeam}
@@ -4926,11 +4942,11 @@ function GameStats({ game, displayBool, stats, handleToggleTip, userTips, dayFix
                   )}
                   shareTitle={`${game.homeTeam} vs ${game.awayTeam} - strength ratings`}
                   className="Chart-shareBlock"
-                  hideActions={!isPaidUser}
+                  hideActions={!fullAccess}
                 >
                 <RadarChart
                   shareCapture
-                  locked={!isPaidUser}
+                  locked={!fullAccess}
                   maintainAspectRatio={false}
                   style={{ height: "auto" }}
                   title="Soccer Stats Hub Strength Ratings - All Competition Games"
@@ -4968,7 +4984,7 @@ function GameStats({ game, displayBool, stats, handleToggleTip, userTips, dayFix
                 ></RadarChart>
                 </ShareableVisual>
                 <BarChart
-                  locked={!isPaidUser}
+                  locked={!fullAccess}
                   text="All Competition Games - Home Team | Away Team"
                   theme={localStorage.getItem('theme')}
                   team1={game.homeTeam}
@@ -5094,7 +5110,7 @@ function GameStats({ game, displayBool, stats, handleToggleTip, userTips, dayFix
               <>
                 <div className="Chart" id={`Chart${game.id}`} style={style}>
                   <RadarChart
-                    locked={!isPaidUser}
+                    locked={!fullAccess}
                     title="Soccer Stats Hub Strength Ratings - Last 5 Games Only"
                     max={1}
                     maintainAspectRatio={false}
@@ -5130,7 +5146,7 @@ function GameStats({ game, displayBool, stats, handleToggleTip, userTips, dayFix
                     team2={game.awayTeam}
                   />
                   <BarChart
-                    locked={!isPaidUser}
+                    locked={!fullAccess}
                     text="Last 5 only - Home Team | Away Team"
                     theme={localStorage.getItem('theme')}
                     team1={game.homeTeam}
@@ -5213,7 +5229,7 @@ function GameStats({ game, displayBool, stats, handleToggleTip, userTips, dayFix
               <>
                 <div className="Chart" id={`Chart${game.id}`} style={style}>
                   <RadarChart
-                    locked={!isPaidUser}
+                    locked={!fullAccess}
                     theme={localStorage.getItem('theme')}
                     title="Soccer Stats Hub Strength Ratings - Home/Away Games Only"
                     max={1}
@@ -5249,7 +5265,7 @@ function GameStats({ game, displayBool, stats, handleToggleTip, userTips, dayFix
                     team2={game.awayTeam}
                   ></RadarChart>
                   <BarChart
-                    locked={!isPaidUser}
+                    locked={!fullAccess}
                     text="Home/Away only - Home Team | Away Team"
                     theme={localStorage.getItem('theme')}
                     team1={game.homeTeam}

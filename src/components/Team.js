@@ -23,6 +23,7 @@ import {
 import { Bar } from "react-chartjs-2";
 import { useChartTheme, getChartColors } from "./Chart";
 import { useFixturePredictionUnlock } from "../logic/useFixturePredictionUnlock";
+import FeaturedFreeBadge from "./FeaturedFreeBadge";
 import { FREE_DAILY_PREDICTION_LIMIT } from "../logic/freePredictionAllowance";
 import JourneyContentBreak from "./JourneyContentBreak";
 import FixtureFootyStatsFallback from "./FixtureFootyStatsFallback";
@@ -421,7 +422,9 @@ function TeamPage({ matchId, seoShell = null }) {
   const [loading, setLoading] = useState(Boolean(matchId));
   const [error, setError] = useState(null);
   const { unlocked: predictionUnlocked, unlockOrUpgrade, isPaidUser } =
-    useFixturePredictionUnlock(matchId);
+    useFixturePredictionUnlock(matchId, match?.featuredFixtureId ?? null);
+  const isFeaturedFree = Boolean(match?.isFeaturedFree);
+  const fullAccess = isPaidUser || isFeaturedFree;
 
   const storedFixtureDetails = useSelector(
     (state) => state.data.fixtureDetails
@@ -698,8 +701,9 @@ function TeamPage({ matchId, seoShell = null }) {
         ) : null}
 
         <div className="FixturePage-prediction">
+          <FeaturedFreeBadge show={isFeaturedFree && !isPaidUser} />
           <span className="FixturePage-predictionLabel">Predicted score</span>
-          {predictionUnlocked || isPaidUser ? (
+          {predictionUnlocked || fullAccess ? (
             <span className="FixturePage-predictionScore">
               {storedFixtureDetailsJson.homeGoals} -{" "}
               {storedFixtureDetailsJson.awayGoals}
@@ -749,7 +753,9 @@ function TeamPage({ matchId, seoShell = null }) {
         />
       ) : (
         <>
-          {matchId && match ? <FixtureSeasonStats match={match} /> : null}
+          {matchId && match ? (
+            <FixtureSeasonStats match={match} statsFullAccess={fullAccess} />
+          ) : null}
 
           <JourneyContentBreak>
             {homeName} and {awayName} compared on attacking and defensive strength.
@@ -843,7 +849,7 @@ function TeamPage({ matchId, seoShell = null }) {
       {matchId && pageData?.modelOutputs ? (
         <section className="FixturePage-modelOutputsCard">
           <h3 className="FixturePage-statGroupTitle">Model Outputs</h3>
-          {predictionUnlocked || isPaidUser ? (
+          {predictionUnlocked || fullAccess ? (
             <ModelOutputsChart
               modelOutputs={pageData.modelOutputs}
               homeTeamName={storedFixtureDetailsJson.homeTeamName}
