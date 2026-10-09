@@ -3474,14 +3474,55 @@ function hydrateMatchFormForDisplay(match) {
   match.formAway = formAway;
 }
 
+function wdlRecordLength(form) {
+  const wdl = form?.WDLRecord;
+  if (Array.isArray(wdl)) {
+    return wdl.filter((r) => r === "W" || r === "D" || r === "L").length;
+  }
+  return Array.from(String(wdl || "").toUpperCase()).filter(
+    (c) => c === "W" || c === "D" || c === "L"
+  ).length;
+}
+
 function seasonPlayedFromFormSide(form) {
   if (!form) return NaN;
   const league = Number(form.leaguePlayed);
-  if (Number.isFinite(league) && league >= 0) return league;
+  const wdlLen = wdlRecordLength(form);
   const overall = Number(form.seasonMatchesPlayedOverall);
-  if (Number.isFinite(overall) && overall >= 0) return overall;
   const sum = (Number(form.PlayedHome) || 0) + (Number(form.PlayedAway) || 0);
+
+  // League-table `played` can be stale (e.g. 1) while WDL reflects the real season.
+  if (Number.isFinite(league) && league >= 3) {
+    return league;
+  }
+  if (wdlLen > 0) {
+    if (!Number.isFinite(league) || league < 3 || wdlLen >= league) {
+      return wdlLen;
+    }
+  }
+  if (Number.isFinite(league) && league >= 0) {
+    return league;
+  }
+  if (Number.isFinite(overall) && overall >= 0) {
+    return overall;
+  }
   return sum > 0 ? sum : NaN;
+}
+
+/** Avoid false early-season blocks when one side's leaguePlayed undercounts vs mcm/opponent. */
+function seasonPlayedForPredictionGate(selfPlayed, opponentPlayed, mcm) {
+  if (
+    Number.isFinite(mcm) &&
+    mcm >= 3 &&
+    Number.isFinite(selfPlayed) &&
+    selfPlayed < 3 &&
+    Number.isFinite(opponentPlayed) &&
+    opponentPlayed >= 3 &&
+    selfPlayed < mcm
+  ) {
+    return Math.max(selfPlayed, mcm);
+  }
+  return selfPlayed;
 }
 
 /**
@@ -3501,18 +3542,30 @@ export function isBelowMinMatchesForPrediction(match) {
       (game.home?.teamName === match?.homeTeam &&
         game.away?.teamName === match?.awayTeam)
   );
-  const homePlayed = seasonPlayedFromFormSide(
-    match?.formHome ?? formEntry?.home?.[2]
+  const homeFormSide = match?.formHome ?? formEntry?.home?.[2];
+  const awayFormSide = match?.formAway ?? formEntry?.away?.[2];
+  const homePlayedRaw = seasonPlayedFromFormSide(homeFormSide);
+  const awayPlayedRaw = seasonPlayedFromFormSide(awayFormSide);
+  const homePlayed = seasonPlayedForPredictionGate(
+    homePlayedRaw,
+    awayPlayedRaw,
+    mcm
   );
-  const awayPlayed = seasonPlayedFromFormSide(
-    match?.formAway ?? formEntry?.away?.[2]
+  const awayPlayed = seasonPlayedForPredictionGate(
+    awayPlayedRaw,
+    homePlayedRaw,
+    mcm
   );
 
   if (Number.isFinite(homePlayed) && Number.isFinite(awayPlayed)) {
     return Math.min(homePlayed, awayPlayed) < 3;
   }
-  if (Number.isFinite(homePlayed)) return homePlayed < 3;
-  if (Number.isFinite(awayPlayed)) return awayPlayed < 3;
+  if (Number.isFinite(homePlayed)) {
+    return homePlayed < 3;
+  }
+  if (Number.isFinite(awayPlayed)) {
+    return awayPlayed < 3;
+  }
   return false;
 }
 
