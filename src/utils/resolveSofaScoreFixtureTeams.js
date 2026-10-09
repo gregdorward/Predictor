@@ -1,7 +1,14 @@
 import { apiGetUrl } from "./apiUrl";
 import { applyNationalTeamAlias } from "./nationalTeamAliases";
 import { findSofaScoreGameByTeams } from "./sofaScoreMatch";
-import { formatDateForApi } from "../logic/buildSingleMatch";
+
+function formatDateForApi(unixTimestamp) {
+  const d = new Date(unixTimestamp * 1000);
+  const year = d.getFullYear();
+  const month = String(d.getMonth() + 1).padStart(2, "0");
+  const day = String(d.getDate()).padStart(2, "0");
+  return `${year}-${month}-${day}`;
+}
 
 /** Keys must be normalize()-d (lowercase, no spaces/punctuation). */
 const TEAM_NAME_ALIASES = {
@@ -99,6 +106,46 @@ async function fetchScheduledEventsForDate(unixTimestamp) {
     }));
 }
 
+function teamsMatch(left, right) {
+  if (!left || !right) {
+    return false;
+  }
+
+  return left === right || left.includes(right) || right.includes(left);
+}
+
+/**
+ * Map SofaScore home/away ids onto FootyStats fixture orientation.
+ * Single-side fallbacks can match a game where teams are swapped vs FootyStats.
+ */
+export function mapSofaTeamIdsToFixture(game, footyHomeTeam, footyAwayTeam) {
+  if (!game) {
+    return null;
+  }
+
+  const mappedFootyHome = getMappedTeamName(footyHomeTeam);
+  const mappedFootyAway = getMappedTeamName(footyAwayTeam);
+  const sofaHomeMapped = getMappedTeamName(game.homeTeam);
+  const sofaAwayMapped = getMappedTeamName(game.awayTeam);
+
+  let homeId = null;
+  let awayId = null;
+
+  if (teamsMatch(sofaHomeMapped, mappedFootyHome)) {
+    homeId = game.homeId ?? null;
+  } else if (teamsMatch(sofaAwayMapped, mappedFootyHome)) {
+    homeId = game.awayId ?? null;
+  }
+
+  if (teamsMatch(sofaAwayMapped, mappedFootyAway)) {
+    awayId = game.awayId ?? null;
+  } else if (teamsMatch(sofaHomeMapped, mappedFootyAway)) {
+    awayId = game.homeId ?? null;
+  }
+
+  return { ...game, homeId, awayId };
+}
+
 function findBySide(games, teamName, side) {
   const normalizedSearch = getMappedTeamName(teamName);
   const key = side === "home" ? "homeTeam" : "awayTeam";
@@ -152,5 +199,5 @@ export async function resolveSofaScoreFixtureTeams(match) {
     matched = findBySide(scheduledGames, match.awayTeam, "home");
   }
 
-  return matched;
+  return mapSofaTeamIdsToFixture(matched, match.homeTeam, match.awayTeam);
 }
