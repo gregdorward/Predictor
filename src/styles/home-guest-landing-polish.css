@@ -226,6 +226,69 @@ body.dark-mode .GuestLanding-membershipNotice__body {
   scroll-margin-top: calc(var(--header-height) + 0.75rem);
 }
 
+.Version {
+  padding: 1em;
+}
+
+/* Desktop: match hub / league / ROI pill padding in prediction controls */
+@media (min-width: 601px) {
+  .PredictionControls .MultisHub--inControls .MultisHub__trigger,
+  .PredictionControls .UserTipsContainer > .ActionBtn,
+  .PredictionControls #ROIPlaceholder .ROIButton {
+    min-width: unset;
+    margin: 0.35em auto;
+    padding: 0.45em 1.15em;
+    font-size: 0.875rem;
+    font-weight: 600;
+    line-height: 1.25;
+    border-radius: 999px;
+    box-shadow: none;
+    transform: none;
+  }
+
+  .PredictionControls .UserTipsContainer > .ActionBtn,
+  .PredictionControls #ROIPlaceholder .ROIButton {
+    background-color: var(--background-color);
+    color: var(--text-color);
+    border: 1px solid var(--primary-color);
+  }
+
+  .PredictionControls .UserTipsContainer > .ActionBtn:hover:not(:disabled),
+  .PredictionControls #ROIPlaceholder .ROIButton:hover:not(:disabled) {
+    background: var(--button-secondary-hover-bg);
+    border-color: var(--primary-color);
+    color: var(--text-color);
+    transform: none;
+    box-shadow: none;
+  }
+
+  .PredictionControls .UserTipsContainer,
+  .PredictionControls #ROIPlaceholder {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+  }
+
+  .PredictionControls #ROIPlaceholder .Collapsible__trigger {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+  }
+}
+
+@media (max-width: 600px) {
+  #GeneratePredictions .PredictionControls {
+    padding-left: max(0.65rem, env(safe-area-inset-left, 0px));
+    padding-right: max(0.65rem, env(safe-area-inset-right, 0px));
+    box-sizing: border-box;
+  }
+
+  #GeneratePredictions .MultisHub--inControls {
+    padding-left: 0;
+    padding-right: 0;
+  }
+}
+
 /* Free-tier allowance + Premium CTA above fixture controls */
 .FreePredictionRemaining {
   display: flex;

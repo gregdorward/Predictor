@@ -1,0 +1,449 @@
+.InsightsHub {
+  width: 100%;
+  max-width: var(--content-max-width, 1400px);
+  margin: 1.25rem auto 2rem;
+  padding: 0 var(--content-padding-x, 1.5em);
+  box-sizing: border-box;
+}
+
+.InsightsHub .Collapsible__trigger {
+  display: block;
+  width: 100%;
+}
+
+.InsightsHub__trigger {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  width: 100%;
+  margin: 0;
+  padding: 0.85em 1.1em;
+  font-size: 1.05rem;
+  font-weight: 600;
+  text-align: left;
+  color: var(--button-text-color);
+  background-color: var(--accent-color);
+  border: 1px solid var(--button-color);
+  border-radius: 10px;
+  box-shadow: none;
+  transform: none;
+  transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease;
+}
+
+.InsightsHub__trigger::after {
+  content: "";
+  flex-shrink: 0;
+  width: 1.15rem;
+  height: 1.15rem;
+  margin-left: auto;
+  background-color: currentColor;
+  mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+  mask-size: contain;
+  mask-repeat: no-repeat;
+  mask-position: center;
+  -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+  -webkit-mask-size: contain;
+  -webkit-mask-repeat: no-repeat;
+  -webkit-mask-position: center;
+  transition: transform 0.2s ease;
+}
+
+.InsightsHub.is-open .InsightsHub__trigger::after {
+  transform: rotate(180deg);
+}
+
+.InsightsHub__trigger:hover,
+.InsightsHub__trigger:focus-visible {
+  background-color: var(--primary-color);
+  color: var(--highlight-yellow-text, var(--span-text-colour, #020029));
+  border-color: var(--primary-color);
+  transform: none;
+  box-shadow: none;
+}
+
+.InsightsHub__content {
+  margin-top: 0.65rem;
+}
+
+.InsightsHub__panelRoot {
+  padding: 1rem 1.1rem 1.15rem;
+  background: var(--secondary-background-color);
+  border: 1px solid var(--third-background-color, rgba(2, 0, 41, 0.12));
+  border-radius: 12px;
+}
+
+.InsightsHub__lede {
+  margin: 0 0 1rem;
+  font-size: 0.92rem;
+  font-weight: 400;
+  line-height: 1.5;
+  color: color-mix(in srgb, var(--text-color) 76%, var(--background-color));
+  text-align: left;
+  max-width: 62ch;
+}
+
+.dark-mode .InsightsHub__lede {
+  color: color-mix(in srgb, var(--text-color) 86%, transparent);
+}
+
+.InsightsHub__tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.45rem;
+  margin-bottom: 1rem;
+}
+
+.InsightsHub__tab {
+  margin: 0;
+  min-width: unset;
+  padding: 0.45em 0.85em;
+  font-size: 0.82rem;
+  font-weight: 600;
+  line-height: 1.2;
+  color: var(--text-color);
+  background: var(--background-color);
+  border: 1px solid var(--third-background-color, rgba(2, 0, 41, 0.14));
+  border-radius: 999px;
+  box-shadow: none;
+  transform: none;
+  transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease;
+}
+
+.InsightsHub__tab:hover {
+  border-color: var(--primary-color);
+  background-color: var(--background-color);
+  transform: none;
+  box-shadow: none;
+}
+
+.InsightsHub__tab--active {
+  color: var(--highlight-yellow-text, var(--span-text-colour, #020029));
+  background-color: var(--primary-color);
+  border-color: var(--primary-color);
+}
+
+.InsightsHub__tab:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(var(--primary-rgb, 254, 140, 0), 0.38);
+}
+
+.InsightsHub__panelHeader {
+  margin-bottom: 0.75rem;
+  text-align: left;
+}
+
+.InsightsHub__panelTitle {
+  margin: 0 0 0.25rem;
+  font-size: 1.05rem;
+  font-weight: 600;
+  line-height: 1.35;
+  color: var(--text-color);
+}
+
+.InsightsHub__panelSubtitle {
+  margin: 0;
+  font-size: 0.88rem;
+  font-weight: 400;
+  line-height: 1.45;
+  color: color-mix(in srgb, var(--text-color) 72%, var(--background-color));
+}
+
+.dark-mode .InsightsHub__panelSubtitle {
+  color: color-mix(in srgb, var(--text-color) 84%, transparent);
+}
+
+.InsightsHub__tableWrap {
+  overflow-x: auto;
+  border: 1px solid var(--third-background-color, rgba(2, 0, 41, 0.1));
+  border-radius: 8px;
+  background: var(--background-color);
+}
+
+.InsightsHub__table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.9rem;
+  text-align: left;
+}
+
+.InsightsHub__table thead th {
+  padding: 0.55rem 0.65rem;
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: color-mix(in srgb, var(--text-color) 72%, var(--background-color));
+  background: var(--surface-tier-2, rgb(248, 248, 248));
+  border-bottom: 1px solid var(--third-background-color, rgba(2, 0, 41, 0.1));
+}
+
+.dark-mode .InsightsHub__table thead th {
+  background: var(--secondary-background-color);
+  color: color-mix(in srgb, var(--text-color) 84%, transparent);
+}
+
+.InsightsHub__table tbody td {
+  padding: 0.55rem 0.65rem;
+  vertical-align: middle;
+  border-bottom: 1px solid var(--third-background-color, rgba(2, 0, 41, 0.08));
+}
+
+.InsightsHub__table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+.InsightsHub__table tbody tr:nth-child(even) {
+  background: var(--surface-muted, #fafafa);
+}
+
+.dark-mode .InsightsHub__table tbody tr:nth-child(even) {
+  background: rgba(255, 255, 255, 0.03);
+}
+
+.InsightsHub__colRank {
+  width: 2.75rem;
+  text-align: center;
+}
+
+.InsightsHub__colMetric {
+  width: 5.5rem;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+.InsightsHub__rank {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 1.65rem;
+  height: 1.65rem;
+  padding: 0 0.25rem;
+  font-size: 0.8rem;
+  font-weight: 700;
+  font-family: inherit;
+  color: var(--button-text-color);
+  background: var(--accent-color);
+  border: 1px solid var(--button-color);
+  border-radius: 6px;
+}
+
+.InsightsHub__teamName {
+  font-weight: 600;
+  color: var(--text-color);
+}
+
+.InsightsHub__metric {
+  font-weight: 600;
+  color: var(--primary-color);
+}
+
+.InsightsHub__fixtureLink {
+  font-size: 0.86rem;
+  font-weight: 600;
+  color: var(--text-color);
+  text-decoration: none;
+  border-bottom: 1px solid transparent;
+  transition: color 0.2s ease, border-color 0.2s ease;
+}
+
+.InsightsHub__fixtureLink:hover {
+  color: var(--primary-color);
+  border-bottom-color: var(--primary-color);
+}
+
+.InsightsHub__empty,
+.InsightsHub__loading {
+  margin: 0;
+  padding: 1rem 0;
+  font-size: 0.92rem;
+  color: color-mix(in srgb, var(--text-color) 76%, var(--background-color));
+  text-align: left;
+}
+
+.dark-mode .InsightsHub__empty,
+.dark-mode .InsightsHub__loading {
+  color: color-mix(in srgb, var(--text-color) 86%, transparent);
+}
+
+/* Nested inside Multis & acca tools — full-width subsection triggers */
+.MultisHub .InsightsHub__panelRoot {
+  padding: 0;
+  background: transparent;
+  border: none;
+  border-radius: 0;
+}
+
+.MultisHub .MultisHub__nestedCollapsible .Collapsible__trigger {
+  display: block;
+  width: 100%;
+}
+
+.InsightsHub__upgrade {
+  display: block;
+  width: 100%;
+  margin-top: 0.85rem;
+  text-align: center;
+}
+
+/* Override global button chrome (min-width, margins, shadows, lift) inside this block */
+.InsightsHub button.InsightsHub__trigger,
+.InsightsHub button.InsightsHub__tab,
+.InsightsHub button.InsightsHub__upgrade {
+  min-width: 0;
+  margin: 0;
+  box-shadow: none;
+  letter-spacing: normal;
+}
+
+.InsightsHub button.InsightsHub__trigger:hover:not(:disabled),
+.InsightsHub button.InsightsHub__trigger:active:not(:disabled),
+.InsightsHub button.InsightsHub__trigger:focus-visible,
+.InsightsHub button.InsightsHub__tab:hover:not(:disabled),
+.InsightsHub button.InsightsHub__tab:active:not(:disabled),
+.InsightsHub button.InsightsHub__tab:focus-visible {
+  transform: none;
+  box-shadow: none;
+}
+
+.InsightsHub button.InsightsHub__tab:focus-visible {
+  box-shadow: 0 0 0 3px rgba(var(--primary-rgb, 254, 140, 0), 0.38);
+}
+
+.InsightsHub button.InsightsHub__upgrade {
+  font-size: 0.82rem;
+  font-weight: 600;
+  line-height: 1.35;
+  padding: 0.55em 0.75em;
+}
+
+@media (max-width: 600px) {
+  .InsightsHub {
+    margin: 0.65rem auto 1.15rem;
+    padding: 0;
+  }
+
+  .InsightsHub__trigger {
+    padding: 0.6em 0.75em;
+    font-size: 0.875rem;
+    line-height: 1.25;
+    border-radius: 8px;
+  }
+
+  .InsightsHub__trigger::after {
+    width: 1rem;
+    height: 1rem;
+  }
+
+  .InsightsHub__content {
+    margin-top: 0.45rem;
+  }
+
+  .InsightsHub__panelRoot {
+    padding: 0.65rem 0.55rem 0.75rem;
+    border-radius: 10px;
+  }
+
+  .InsightsHub__lede {
+    margin-bottom: 0.65rem;
+    font-size: 0.78rem;
+    line-height: 1.45;
+    font-weight: 400;
+  }
+
+  .InsightsHub__tabs {
+    flex-wrap: nowrap;
+    gap: 0.35rem;
+    margin-bottom: 0.65rem;
+    overflow-x: auto;
+    padding-bottom: 0.2rem;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: thin;
+  }
+
+  .InsightsHub__tab {
+    flex-shrink: 0;
+    padding: 0.35em 0.65em;
+    font-size: 0.72rem;
+    font-weight: 600;
+  }
+
+  .InsightsHub__panelHeader {
+    margin-bottom: 0.5rem;
+  }
+
+  .InsightsHub__panelTitle {
+    font-size: 0.875rem;
+    line-height: 1.3;
+    font-weight: 600;
+  }
+
+  .InsightsHub__panelSubtitle {
+    font-size: 0.72rem;
+    line-height: 1.4;
+    font-weight: 400;
+  }
+
+  .InsightsHub__table {
+    font-size: 0.75rem;
+  }
+
+  .InsightsHub__table thead th {
+    padding: 0.4rem 0.45rem;
+    font-size: 0.62rem;
+    letter-spacing: 0.03em;
+  }
+
+  .InsightsHub__table tbody td {
+    padding: 0.4rem 0.45rem;
+  }
+
+  .InsightsHub__colRank {
+    width: 2.1rem;
+  }
+
+  .InsightsHub__colMetric {
+    width: 4.25rem;
+  }
+
+  .InsightsHub__rank {
+    min-width: 1.35rem;
+    height: 1.35rem;
+    font-size: 0.68rem;
+    border-radius: 5px;
+  }
+
+  .InsightsHub__teamName {
+    font-size: 0.75rem;
+    font-weight: 600;
+    line-height: 1.25;
+  }
+
+  .InsightsHub__metric {
+    font-size: 0.75rem;
+    font-weight: 600;
+  }
+
+  .InsightsHub__fixtureLink {
+    font-size: 0.72rem;
+    font-weight: 600;
+    line-height: 1.3;
+  }
+
+  .InsightsHub__colFixture {
+    min-width: 7.5rem;
+    max-width: 9.5rem;
+  }
+
+  .InsightsHub__empty,
+  .InsightsHub__loading {
+    padding: 0.65rem 0;
+    font-size: 0.78rem;
+    font-weight: 400;
+  }
+
+  .InsightsHub button.InsightsHub__upgrade {
+    margin-top: 0.65rem;
+    font-size: 0.72rem;
+    padding: 0.5em 0.65em;
+  }
+}

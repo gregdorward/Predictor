@@ -33,16 +33,19 @@ const TopValueGames = ({ tips, limit = 10, paid }) => {
 
     return (
         <Collapsable
-            buttonText={"Best Value Picks"}
+            buttonText={"Best value picks"}
+            className="MultisHub__nestedCollapsible"
+            classNameButton="MultisHub__nestedTrigger"
+            classNameFlex="MultisHub__nestedBody"
             element={
                 <div className="TopValueGames">
                     <table className="ValueTable">
                         <thead className="ValueTableHeaders">
                             <tr>
-                                <th className="ValueTableGameHeader">Game</th>
+                                <th className="ValueTableGameHeader">Fixture</th>
                                 <th>Pick</th>
-                                <th>Our Probability</th>
-                                <th>Bookies Probability</th>
+                                <th>Our %</th>
+                                <th>Bookie %</th>
                                 <th>Value</th>
                             </tr>
                         </thead>

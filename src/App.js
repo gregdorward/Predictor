@@ -7,7 +7,7 @@ import { renderPredictionTypeSlider } from "./components/PredictionTypeRadio";
 import OptionsSlider from "./components/OptionsSlider";
 import { oddsModeToSelected, selectedToOddsMode } from "./utils/oddsPreference";
 import Collapsable from "./components/CollapsableElement";
-import MultisPanelCarousel from "./components/MultisPanelCarousel";
+import MultiWrapper from "./components/MultiWrapper";
 import StripePolicies from "./components/Contact";
 import { useAuth } from "./logic/authProvider";
 import { bumpFixturesEpoch } from "./logic/fixturesEpoch";
@@ -1041,29 +1041,7 @@ export function AppContent({ shellMounted = false }) {
             {/* Optional: Add a subtle text indicator below */}
             {isPredicting && <p className="LoadingStatus">Calculating all predictions... Each fixture will be interactable once these are returned</p>}
 
-            {showMultis ? (
-              <div className="MultisDiscoveryCta MultisDiscoveryCta--compact" role="region" aria-label="Multis and more">
-                <p className="MultisDiscoveryCta__lead">
-                  {isPredicting
-                    ? "Multis, value picks, ROI and Prediction League unlock when predictions finish."
-                    : "Multis, value picks, ROI and the Prediction League have moved to below the day's fixtures."}{" "}
-                  <a href="/prediction-league/">See the monthly board</a>.
-                </p>
-                <button
-                  type="button"
-                  className="SecondaryButton MultisDiscoveryCta__button"
-                  disabled={isPredicting}
-                  onClick={() => {
-                    document.getElementById("ssh-multis-more")?.scrollIntoView({
-                      behavior: "smooth",
-                      block: "start",
-                    });
-                  }}
-                >
-                  Explore multis &amp; more
-                </button>
-              </div>
-            ) : null}
+            {showMultis ? <MultiWrapper /> : null}
 
             <div className="Version">Prediction engine v2.3.0</div>
           </div>
@@ -1094,23 +1072,6 @@ export function AppContent({ shellMounted = false }) {
         )}
       </div>
 
-      {showMultis && (
-        <><div id="ssh-multis-more" className="MultisMoreAnchor" tabIndex={-1} />
-        <div id="MultiWrapper" className="MultiWrapper">
-          <Collapsable
-            buttonText={"Multis"}
-            className={"MultisCollapsable"}
-            openedClassName={"MultisCollapsableOpened"}
-            collapsibleKey="MultisCollapsable"
-            element={
-              <>
-                <MultisPanelCarousel />
-                <div id="valueBets" className="ValueBets" />
-                <div id="insights" />
-              </>
-            } />
-        </div><div id="UserGeneratedTips" /><div id="shortlistRender" /><div id="ROIPlaceholder" /></>
-      )}
       <Collapsable
         buttonText={"Options \u{2630}"}
         className={"Options"}
@@ -1152,7 +1113,6 @@ export function AppContent({ shellMounted = false }) {
           <PremiumUpsell />
         </div>
       ) : null}
-      <div className={"StatsInsights"} id="statsInsights" />
       <BetSlipFooter
         userTips={activeSlip}  // Only show the new selections
         setUserTips={setActiveSlip}

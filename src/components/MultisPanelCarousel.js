@@ -1,13 +1,7 @@
 import { useRef, useState } from "react";
-import { ChevronLeft, ChevronRight } from "lucide-react";
-
 const SWIPE_THRESHOLD_PX = 48;
 const SWIPE_MAX_VERTICAL_PX = 80;
 
-// Buttons/links inside the carousel (nav arrows, Increment/Decrement, tip
-// controls) must stay clickable. Starting a swipe - especially calling
-// setPointerCapture - on these would redirect the synthesised click to the
-// carousel container, so the element's own onClick would never fire.
 const INTERACTIVE_SELECTOR =
   'button, a, input, select, textarea, label, [role="button"]';
 
@@ -61,12 +55,9 @@ export default function MultisPanelCarousel({ panels = MULTIS_PANELS }) {
     }
   };
 
-  const previousPanel = activeIndex > 0 ? panels[activeIndex - 1] : null;
-  const nextPanel = activeIndex < panelCount - 1 ? panels[activeIndex + 1] : null;
-
   return (
     <div
-      className="MultisCarousel"
+      className="MultisHub__carousel MultisCarousel"
       onTouchStart={(event) => {
         if (isInteractiveTarget(event.target)) return;
         const touch = event.changedTouches[0];
@@ -78,7 +69,6 @@ export default function MultisPanelCarousel({ panels = MULTIS_PANELS }) {
       }}
       onPointerDown={(event) => {
         if (event.pointerType === "mouse" && event.button !== 0) return;
-        // Don't hijack clicks on nav arrows, Increment/Decrement, etc.
         if (isInteractiveTarget(event.target)) return;
         handleSwipeStart(event.clientX, event.clientY);
         event.currentTarget.setPointerCapture(event.pointerId);
@@ -93,36 +83,36 @@ export default function MultisPanelCarousel({ panels = MULTIS_PANELS }) {
         swipeStart.current = null;
       }}
     >
-      <div className="MultisCarousel-nav">
-        <button
-          type="button"
-          className="MultisCarousel-navControl MultisCarousel-navControl--prev"
-          onClick={() => goTo(activeIndex - 1)}
-          disabled={!previousPanel}
-          aria-label={previousPanel ? `Previous: ${previousPanel.label}` : "No previous category"}
-        >
-          <ChevronLeft className="MultisCarousel-arrowIcon" />
-        </button>
-
-        <button
-          type="button"
-          className="MultisCarousel-navControl MultisCarousel-navControl--next"
-          onClick={() => goTo(activeIndex + 1)}
-          disabled={!nextPanel}
-          aria-label={nextPanel ? `Next: ${nextPanel.label}` : "No next category"}
-        >
-          <ChevronRight className="MultisCarousel-arrowIcon" />
-        </button>
+      <div className="MultisHub__carouselTabs" role="tablist" aria-label="Multi categories">
+        {panels.map((panel, index) => {
+          const selected = index === activeIndex;
+          return (
+            <button
+              key={panel.id}
+              type="button"
+              role="tab"
+              id={`multis-tab-${panel.id}`}
+              aria-selected={selected}
+              aria-controls={`multis-panel-${panel.id}`}
+              tabIndex={selected ? 0 : -1}
+              className={`MultisHub__carouselTab${selected ? " MultisHub__carouselTab--active" : ""}`}
+              onClick={() => goTo(index)}
+            >
+              {panel.label}
+            </button>
+          );
+        })}
       </div>
 
-      <div className="MultisCarousel-viewport">
+      <div className="MultisHub__carouselViewport MultisCarousel-viewport">
         {panels.map((panel, index) => (
           <div
             key={panel.id}
             id={panel.id}
             role="tabpanel"
+            aria-labelledby={`multis-tab-${panel.id}`}
             aria-hidden={index !== activeIndex}
-            className={`MultisCarousel-panel ${panel.className || ""} ${
+            className={`MultisHub__carouselPanel MultisCarousel-panel ${panel.className || ""} ${
               index === activeIndex ? "is-active" : ""
             }`}
           />

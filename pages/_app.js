@@ -19,6 +19,8 @@ import "../src/styles/fixture-markets-snapshot.css";
 import "../src/styles/fixture-page-adapt.css";
 import "../src/styles/featured-free-badge.css";
 import "../src/styles/articles-desktop-type.css";
+import "../src/components/InsightsHub.css";
+import "../src/components/MultisHub.css";
 
 export default function MyApp({ Component, pageProps }) {
   useEffect(() => {

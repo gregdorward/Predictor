@@ -14,9 +14,16 @@ import { incrementValue } from "../components/Increment";
 import { getBTTSPotential } from "../logic/getBTTSPotential";
 import { allLeagueResultsArrayOfObjects } from "../logic/getFixtures";
 import TopValueGames from "../components/ValueGames";
-import { Slider } from "../components/Carousel";
-import MultisPanelCarousel from "../components/MultisPanelCarousel";
+import ExoticMultiCard from "../components/multis/ExoticMultiCard";
+import MarketTipLeg from "../components/multis/MarketTipLeg";
+import StatsTipsPanel from "../components/multis/StatsTipsPanel";
 import CopyMultiButton from "../components/CopyMultiButton";
+import BuildMultiLeg from "../components/multis/BuildMultiLeg";
+import {
+  MultisHubCard,
+  MultisHubCardFooter,
+  MultisHubEmpty,
+} from "../components/multis/MultisHubCard";
 import {
   formatBuildMultiText,
   formatExoticMultiText,
@@ -6214,11 +6221,16 @@ async function getSuccessMeasure(fixtures) {
   statsArray.XGDiffArray.sort((a, b) => a.score - b.score);
 
   render(
-    <Collapsable classNameButton="InsightsButton" buttonText={"Insights \u{2630}"} element={
-      <InsightsPanel statsArray={statsArray} paidUser={isPaid} classNameButton="InsightsCollapsable" />
-    }
+    <Collapsable
+      className="MultisHub__nestedCollapsible"
+      classNameButton="MultisHub__nestedTrigger"
+      classNameFlex="MultisHub__nestedBody"
+      buttonText="Form leaders & edges"
+      element={
+        <InsightsPanel statsArray={statsArray} paidUser={isPaid} />
+      }
     />,
-    "statsInsights" // This targets the div inside your Collapsable component
+    "statsInsights"
   );
 
   console.log(isPaid);
@@ -6993,22 +7005,6 @@ export async function getScorePrediction(day, mocked) {
     "Loading"
   );
 
-  render(
-    <Collapsable
-      buttonText={"Multis"}
-      className={"MultisCollapsable"}
-      element={
-        <Fragment>
-          <MultisPanelCarousel />
-          <div id="valueBets" className="ValueBets" />
-          <div id="insights" />
-          <div id="UserGeneratedTips" />
-        </Fragment>
-      }
-    />,
-    "MultiPlaceholder"
-  );
-
   await getMultis();
   await getNewTips(allTipsSorted);
   await settleRemainingPendingUserTips(fetchedTips);
@@ -7242,79 +7238,25 @@ const scrollToTarget = (id) => {
 };
 
 function renderBuildMultiTip(tip) {
-  return (
-    <li key={`${tip.game}acca`} className="tip-item">
-      <a
-        href={`#${tip.id}`}
-        onClick={(e) => {
-          e.preventDefault();
-          scrollToTarget(tip.id);
-        }}
-        style={{ textDecoration: "none", color: "inherit" }}
-      >
-        <div className="TipCompetition">
-          {tip.competition} | KO:{tip.time}
-        </div>
-        <div className="tip-content-flex">
-          <div className={`TipTeams${tip.outcome}`}>
-            <span className="TipHomeTeam">{tip.homeTeam}</span>
-            {tip.status === "complete" ? (
-              <span className="TipScore">
-                {tip.homeGoals} - {tip.awayGoals}
-              </span>
-            ) : null}
-            <span className="TipAwayTeam">{tip.awayTeam}</span>
-          </div>
-          <div className="TipDetails">
-            {tip.team} {tip.odds}{" "}
-          </div>
-        </div>
-      </a>
-    </li>
-  );
+  return <BuildMultiLeg key={`${tip.game}acca`} tip={tip} />;
 }
 
-function renderStatsBasedTipList(tips, paid, freeLimit = 2) {
-  if (!tips || tips.length === 0) {
-    return (
-      <li key="noGames">Sorry, no games fit this criteria today</li>
-    );
-  }
+function buildMultiOddsLabel() {
+  return `Accumulator odds ~ ${Math.round(accumulatedOdds) - 1}/1`;
+}
 
-  const visible = paid ? tips : tips.slice(0, freeLimit);
-  const hidden = tips.length - visible.length;
-
+function renderBuildMultiPanel(newArray) {
   return (
-    <>
-      {visible.map((tip) => (
-        <a
-          key={tip.game || tip.id}
-          href={`#${tip.id}`}
-          onClick={(e) => {
-            e.preventDefault();
-            scrollToTarget(tip.id);
-          }}
-          style={{ textDecoration: "none", color: "inherit" }}
-        >
-          <li>
-            {tip.game} | {tip.prediction} {tip.odds}{" "}
-            <span className={tip.outcome}>{tip.outcomeSymbol}</span>
-          </li>
-        </a>
-      ))}
-      {!paid && hidden > 0 ? (
-        <li key="upgrade" className="UnlockBannerListItem" style={{ listStyle: "none", marginTop: "10px" }}>
-          <button
-            type="button"
-            className="UnlockBanner"
-            style={{ cursor: "pointer", textAlign: "center", width: "100%" }}
-            onClick={() => requestUpgrade()}
-          >
-            🔒 Upgrade for <strong>{hidden}</strong> more tips
-          </button>
-        </li>
-      ) : null}
-    </>
+    <MultisHubCard>
+      <ul className="MultisHub__legList BestPredictions" id="BestPredictions">
+        {newArray.map((tip) => renderBuildMultiTip(tip))}
+      </ul>
+      <MultisHubCardFooter
+        oddsLabel={buildMultiOddsLabel()}
+        getText={() => formatBuildMultiText(newArray, accumulatedOdds)}
+        copyLabel="Copy acca to clipboard"
+      />
+    </MultisHubCard>
   );
 }
 
@@ -7327,79 +7269,31 @@ async function renderTips() {
 
   if (paid && newArray.length > 0) {
     render(
-      <div className="PredictionContainer">
-        <Fragment>
-          <Increment />
-          <Collapsable
-            titleOnly
-            buttonText={"Build a Multi"}
-            element={
-              <ul className="BestPredictions" id="BestPredictions">
-                <div className="BestPredictionsExplainer">
-                  Add or remove a selection using the buttons. Predictions
-                  are ordered by confidence in the outcome.
-                </div>
-                {newArray.map((tip) => renderBuildMultiTip(tip))}
-                <div className="AccumulatedOdds">{`Accumulator odds ~ : ${Math.round(accumulatedOdds) - 1
-                  }/1`}</div>
-                <CopyMultiButton
-                  getText={() => formatBuildMultiText(newArray, accumulatedOdds)}
-                />
-              </ul>
-            }
-          />
-        </Fragment>
+      <div className="PredictionContainer MultisHub__prediction MultisHub__prediction--build">
+        <Increment title="Build a Multi" />
+        {renderBuildMultiPanel(newArray)}
       </div>,
       "bestPredictions"
     );
   } else if (paid !== true) {
     newArray = newArray.slice(0, 6);
     render(
-      <div className="PredictionContainer">
-        <Fragment>
-          <Increment />
-          <Collapsable
-            titleOnly
-            buttonText={"Build a Multi"}
-            element={
-              <ul className="BestPredictions" id="BestPredictions">
-                <div className="BestPredictionsExplainer">
-                  Add or remove a selection using the buttons. Predictions
-                  are ordered by confidence in the outcome.
-                </div>
-                {newArray.map((tip) => renderBuildMultiTip(tip))}
-                <div className="AccumulatedOdds">{`Accumulator odds ~ : ${Math.round(accumulatedOdds) - 1
-                  }/1`}</div>
-                <CopyMultiButton
-                  getText={() => formatBuildMultiText(newArray, accumulatedOdds)}
-                />
-              </ul>
-            }
-          />
-        </Fragment>
+      <div className="PredictionContainer MultisHub__prediction MultisHub__prediction--build">
+        <Increment title="Build a Multi" />
+        {renderBuildMultiPanel(newArray)}
       </div>,
       "bestPredictions"
     );
   } else {
     render(
-      <div className="PredictionContainer">
-        <Fragment>
-          <Increment />
-          <Collapsable
-            titleOnly
-            buttonText={"Build a multi"}
-            classNameButton={"BuildAMulti"}
-            element={
-              <ul className="BestPredictions" id="BestPredictions">
-                <h4 className="BestPredictionsExplainer">
-                  No games fit the criteria - try again on a day with more fixtures
-                </h4>
-                <div className="AccumulatedOdds">{`Accumulator odds ~ : ${Math.round(accumulatedOdds) - 1
-                  }/1`}</div>
-              </ul>
-            }
+      <div className="PredictionContainer MultisHub__prediction MultisHub__prediction--build">
+        <Increment title="Build a Multi" />
+        <MultisHubCard>
+          <MultisHubEmpty
+            message="No fixtures match today. Try again on a busier day."
           />
-        </Fragment>
+          <MultisHubCardFooter oddsLabel={buildMultiOddsLabel()} />
+        </MultisHubCard>
       </div>,
       "bestPredictions"
     );
@@ -7417,110 +7311,54 @@ async function renderTips() {
     "valueBets"
   );
 
+  const exoticCopyPayload = () =>
+    formatExoticMultiText({
+      tips: exoticArray,
+      gamesInExotic,
+      exoticString,
+      exoticStake,
+      combinations,
+      price,
+    });
+
   if (paid && exoticArray.length > 4) {
     render(
-      <div className="PredictionContainer">
-        <Fragment>
-          <Collapsable
-            titleOnly
-            buttonText={"Exotic of the Day"}
-            element={
-              <ul className="BestPredictions" id="BestPredictions">
-                <h4 className="BestPredictionsExplainer">
-                  <NewlineText
-                    text={`${gamesInExotic} games: ${exoticString}\nStake per multi: ${exoticStake} units - ${combinations} combinations\nTotal stake: ${(
-                      exoticStake * combinations
-                    ).toFixed(2)} unit(s)`}
-                  />
-                  {`Potential winnings: ${price.toFixed(2)} units`}
-                </h4>
-                {exoticArray.map((tip) => (
-                  <li key={tip.team}>
-                    {tip.team}: {tip.odds}{" "}
-                    <span className={tip.outcome}>{tip.outcomeSymbol}</span>
-                    <div>{tip.game}</div>
-                  </li>
-                ))}
-                <CopyMultiButton
-                  getText={() =>
-                    formatExoticMultiText({
-                      tips: exoticArray,
-                      gamesInExotic,
-                      exoticString,
-                      exoticStake,
-                      combinations,
-                      price,
-                    })
-                  }
-                />
-              </ul>
-            }
-          />
-        </Fragment>
+      <div className="PredictionContainer MultisHub__prediction MultisHub__prediction--static">
+        <ExoticMultiCard
+          tips={exoticArray}
+          gamesInExotic={gamesInExotic}
+          exoticString={exoticString}
+          exoticStake={exoticStake}
+          combinations={combinations}
+          totalStake={(exoticStake * combinations).toFixed(2)}
+          potentialWinnings={price.toFixed(2)}
+          getCopyText={exoticCopyPayload}
+        />
       </div>,
       "exoticOfTheDay"
     );
   } else if (paid !== true && exoticArray.length > 0) {
     exoticArray = exoticArray.slice(0, 6);
     render(
-      <div className="PredictionContainer">
-        <Fragment>
-          <Collapsable
-            titleOnly
-            buttonText={"Exotic of the Day"}
-            element={
-              <ul className="BestPredictions" id="BestPredictions">
-                <h4 className="BestPredictionsExplainer">
-                  <div>Capped to a maximum of 6 selections for free users.</div>
-                  <NewlineText
-                    text={`${gamesInExotic} games: ${exoticString}\nStake per multi: ${exoticStake} units - ${combinations} combinations\nTotal stake: ${(
-                      exoticStake * combinations
-                    ).toFixed(2)} unit(s)`}
-                  />
-                  {`Potential winnings: ${price.toFixed(2)} units`}
-                </h4>
-                {exoticArray.map((tip) => (
-                  <li key={tip.team}>
-                    {tip.team}: {tip.odds}{" "}
-                    <span className={tip.outcome}>{tip.outcomeSymbol}</span>
-                    <div>{tip.game}</div>
-                  </li>
-                ))}
-                <CopyMultiButton
-                  getText={() =>
-                    formatExoticMultiText({
-                      tips: exoticArray,
-                      gamesInExotic,
-                      exoticString,
-                      exoticStake,
-                      combinations,
-                      price,
-                    })
-                  }
-                />
-              </ul>
-            }
-          />
-        </Fragment>
+      <div className="PredictionContainer MultisHub__prediction MultisHub__prediction--static">
+        <ExoticMultiCard
+          tips={exoticArray}
+          gamesInExotic={gamesInExotic}
+          exoticString={exoticString}
+          exoticStake={exoticStake}
+          combinations={combinations}
+          totalStake={(exoticStake * combinations).toFixed(2)}
+          potentialWinnings={price.toFixed(2)}
+          freeCapNote="Free accounts see up to 6 legs."
+          getCopyText={exoticCopyPayload}
+        />
       </div>,
       "exoticOfTheDay"
     );
   } else {
     render(
-      <div className="PredictionContainer">
-        <Fragment>
-          <Collapsable
-            titleOnly
-            buttonText={"Exotic of the Day"}
-            element={
-              <ul className="BestPredictions" id="BestPredictions">
-                <h4 className="BestPredictionsExplainer">
-                  Not enough games for this feature
-                </h4>
-              </ul>
-            }
-          />
-        </Fragment>
+      <div className="PredictionContainer MultisHub__prediction MultisHub__prediction--static">
+        <ExoticMultiCard emptyMessage="Not enough games for this feature today." />
       </div>,
       "exoticOfTheDay"
     );
@@ -7533,70 +7371,40 @@ async function renderTips() {
     const hiddenCount = Over25Tips.length - tipsToShow.length;
 
     render(
-      <div className="PredictionContainer">
-          <Collapsable
-            titleOnly
-            buttonText={"Over 2.5 Goals Tips"}
-            element={
-              <ul className="LongshotPredictions" id="LongshotPredictions">
-                {tipsToShow.map((tip) => (
-                  <a
-                    key={tip.id}
-                    href={`#${tip.id}`}
-                    onClick={(e) => {
-                      e.preventDefault();
-                      scrollToTarget(tip.id);
-                    }}
-                    style={{ textDecoration: 'none', color: 'inherit' }}
-                  >
-                    <li>
-                      <div>
-                        <div>{tip.game}</div>
-                        <div>{`Odds: ${tip.odds} `}<span className={`${tip.doubleChanceOutcome}`}>
-                          {tip.outcomeSymbol}
-                        </span>
-                        </div>
-                      </div>
-                    </li>
-                  </a>
-                ))}
-
-                {/* 2. Show the "Unlock" banner if the user isn't paid and there are more games */}
-                {!paid && hiddenCount > 0 && (
-                  <li className="UnlockBannerListItem" style={{ listStyle: 'none', marginTop: '10px' }}>
-                    <button
-                      type="button"
-                      className="UnlockBanner"
-                      style={{ cursor: 'pointer', textAlign: 'center', width: '100%' }}
-                      onClick={() => requestUpgrade()}
-                    >
-                      🔒 Upgrade for <strong>{hiddenCount}</strong> more Over 2.5 tips
-                    </button>
-                  </li>
-                )}
-                <CopyMultiButton
-                  getText={() => formatOver25MultiText(tipsToShow)}
-                />
-              </ul>
-            }
-          />
+      <div className="PredictionContainer MultisHub__prediction MultisHub__prediction--static">
+        <MultisHubCard>
+          <ul className="MultisHub__legList MultisHub__legList--compact" id="LongshotPredictions">
+            {tipsToShow.map((tip) => (
+              <MarketTipLeg
+                key={tip.id}
+                id={tip.id}
+                fixtureLine={tip.game}
+                marketLine={`Over 2.5 @ ${tip.odds}`}
+                outcomeClassName={tip.doubleChanceOutcome}
+                outcomeSymbol={tip.outcomeSymbol}
+              />
+            ))}
+          </ul>
+          {!paid && hiddenCount > 0 ? (
+            <button
+              type="button"
+              className="MultisHub__upgrade UnlockBanner"
+              onClick={() => requestUpgrade()}
+            >
+              Upgrade for {hiddenCount} more Over 2.5 tips
+            </button>
+          ) : null}
+          <MultisHubCardFooter getText={() => formatOver25MultiText(tipsToShow)} />
+        </MultisHubCard>
       </div>,
       "longShots"
     );
   } else {
     render(
-      <div className="PredictionContainer">
-          <Collapsable
-            titleOnly
-            buttonText={"Over 2.5 goals tips"}
-            element={
-              <ul className="LongshotPredictions" id="LongshotPredictions">
-                <h4 className="BestPredictionsExplainer">
-                  No games fit the criteria - try again on a day with more fixtures
-                </h4>
-              </ul>
-            }
-          />
+      <div className="PredictionContainer MultisHub__prediction MultisHub__prediction--static">
+        <MultisHubCard>
+          <MultisHubEmpty message="No fixtures match today. Try again on a busier day." />
+        </MultisHubCard>
       </div>,
       "longShots"
     );
@@ -7608,118 +7416,62 @@ async function renderTips() {
     const bttsHidden = bttsArray.length - bttsToShow.length;
 
     render(
-      <div className="PredictionContainer">
-          <Collapsable
-            titleOnly
-            buttonText={"BTTS Games"}
-            element={
-              <ul className="BTTSGames" id="BTTSGames">
-                {bttsToShow.map((game) => (
-                  <a
-                    href={`#${game.id}`}
-                    onClick={(e) => {
-                      e.preventDefault(); // Prevent the immediate jump/reload
-                      scrollToTarget(game.id); // Call the custom smooth scroll function
-                    }}
-                    style={{ textDecoration: 'none', color: 'inherit' }}                    >
-                    <li key={game.game}>
-                      <div>
-                        <div>{game.bttsGame}</div>
-                        <div>{`Odds: ${game.bttsFraction}`}{" "}<span className={game.bttsOutcome}>
-                          {game.bttsOutcomeSymbol}
-                        </span></div>
-                      </div>
-                    </li>
-                  </a>
-                ))}
-                {!paid && bttsHidden > 0 && (
-                  <li className="UnlockBannerListItem" style={{ listStyle: 'none', marginTop: '10px' }}>
-                    <button
-                      type="button"
-                      className="UnlockBanner"
-                      style={{ cursor: 'pointer', textAlign: 'center', width: '100%' }}
-                      onClick={() => requestUpgrade()}
-                    >
-                      🔒 Upgrade for <strong>{bttsHidden}</strong> more BTTS tips
-                    </button>
-                  </li>
-                )}
-                <CopyMultiButton
-                  getText={() => formatBttsMultiText(bttsToShow)}
-                />
-              </ul>
-            }
-          />
+      <div className="PredictionContainer MultisHub__prediction MultisHub__prediction--static">
+        <MultisHubCard>
+          <ul className="MultisHub__legList MultisHub__legList--compact" id="BTTSGames">
+            {bttsToShow.map((game) => (
+              <MarketTipLeg
+                key={game.id || game.game}
+                id={game.id}
+                fixtureLine={game.bttsGame}
+                marketLine={`BTTS @ ${game.bttsFraction}`}
+                outcomeClassName={game.bttsOutcome}
+                outcomeSymbol={game.bttsOutcomeSymbol}
+              />
+            ))}
+          </ul>
+          {!paid && bttsHidden > 0 ? (
+            <button
+              type="button"
+              className="MultisHub__upgrade UnlockBanner"
+              onClick={() => requestUpgrade()}
+            >
+              Upgrade for {bttsHidden} more BTTS tips
+            </button>
+          ) : null}
+          <MultisHubCardFooter getText={() => formatBttsMultiText(bttsToShow)} />
+        </MultisHubCard>
       </div>,
       "BTTS"
     );
   } else {
     render(
-      <div className="PredictionContainer">
-          <Collapsable
-            titleOnly
-            buttonText={"BTTS games"}
-            element={
-              <ul className="BTTSGames" id="BTTSGames">
-                <h4 className="BestPredictionsExplainer">
-                  No games fit the criteria - try again on a day with more fixtures
-                </h4>
-              </ul>
-            }
-          />
+      <div className="PredictionContainer MultisHub__prediction MultisHub__prediction--static">
+        <MultisHubCard>
+          <MultisHubEmpty message="No fixtures match today. Try again on a busier day." />
+        </MultisHubCard>
       </div>,
       "BTTS"
     );
   }
 
   render(
-    <div>
-      <Collapsable
-        buttonText={"Stats-based Tips"}
-        element={
-          <Slider
-            element={
-              <ul className="XGDiffTips" id="XGDiffTips">
-                <h4 className="BestPredictionsExplainer">Games with greatest XG Differentials (last 5)</h4>
-                {renderStatsBasedTipList(XGDiffTips, paid)}
-              </ul>
-            }
-            element2={
-              <ul className="XGDiffTips" id="XGDiffTips">
-                <h4 className="BestPredictionsExplainer">
-                  Games with greatest points per game differentials (last 6)
-                </h4>
-                {renderStatsBasedTipList(pointsDiffTips, paid)}
-              </ul>
-            }
-            element3={
-              <ul className="XGDiffTips" id="XGDiffTips">
-                <h4 className="BestPredictionsExplainer">
-                  Games with greatest goal differentials (last 5)
-                </h4>
-                {renderStatsBasedTipList(rollingDiffTips, paid)}
-              </ul>
-            }
-            element4={
-              <ul className="XGDiffTips" id="XGDiffTips">
-                <h4 className="BestPredictionsExplainer">
-                  Games with greatest average dangerous attacks differentials (last 5)
-                </h4>
-                {renderStatsBasedTipList(dangerousAttacksDiffTips, paid)}
-              </ul>
-            }
-            element5={
-              <ul className="XGDiffTips" id="XGDiffTips">
-                <h4 className="BestPredictionsExplainer">
-                  Games with greatest shots on target differentials (last 5)
-                </h4>
-                {renderStatsBasedTipList(shotsOnTargetTips, paid)}
-              </ul>
-            }
-          ></Slider>
-        }
-      />
-    </div>,
+    <Collapsable
+      className="MultisHub__nestedCollapsible"
+      classNameButton="MultisHub__nestedTrigger"
+      classNameFlex="MultisHub__nestedBody"
+      buttonText="Stats-based tips"
+      element={
+        <StatsTipsPanel
+          paid={paid}
+          xgTips={XGDiffTips}
+          pointsTips={pointsDiffTips}
+          rollingTips={rollingDiffTips}
+          attacksTips={dangerousAttacksDiffTips}
+          sotTips={shotsOnTargetTips}
+        />
+      }
+    />,
     "insights"
   );
 
