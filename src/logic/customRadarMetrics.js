@@ -1,9 +1,7 @@
 import { isMissingStat } from "../utils/formatStat";
 
-import {
-  FREE_DAILY_PREDICTION_LIMIT,
-  hasFixtureFullAccess,
-} from "./featuredFreeFixture";
+import { hasFixtureFullAccess } from "./featuredFreeFixture";
+import { FREE_DAILY_PREDICTION_LIMIT } from "./freePredictionAllowance";
 
 export const MIN_RADAR_METRICS = 3;
 export const MAX_RADAR_METRICS = 10;

@@ -70,6 +70,7 @@ import {
   getScoreMaherIters,
   getScoreMaherLastGameBlend,
   getScoreOddsBlend,
+  getUseBestMatchOdds,
 } from "./scoreModelConfig.js";
 import {
   computeGoalEfficiency,
@@ -95,6 +96,7 @@ import { xgPrimaryLambdas } from "./xgPrimaryLambda.js";
 import { additiveLambdas } from "./additiveLambda.js";
 import { blendModelWithMarket1x2, devigThreeWayFromOdds } from "./oddsProbabilityBlend.js";
 import { enrichMatchWithBestOdds } from "./enrichMatchBestOdds.js";
+import { runWithConcurrency } from "../utils/runWithConcurrency.js";
 
 export {
   CLEAR_OUTCOME_MARGIN,
@@ -109,6 +111,49 @@ export {
 };
 
 applyScoreModelFromEnv();
+
+const BEST_ODDS_PREFETCH_CONCURRENCY = 6;
+
+async function warmBestOddsForPredictionMatches(predictionMatches) {
+  if (!getUseBestMatchOdds() || !Array.isArray(predictionMatches)) {
+    return;
+  }
+
+  const candidates = predictionMatches.filter(
+    (match) =>
+      match &&
+      !match.bestOddsResolved &&
+      (match.status === "canceled" || !isBelowMinMatchesForPrediction(match))
+  );
+
+  await runWithConcurrency(
+    candidates,
+    BEST_ODDS_PREFETCH_CONCURRENCY,
+    async (match) => {
+      try {
+        await enrichMatchWithBestOdds(match);
+      } catch (error) {
+        console.warn(`Failed to prefetch best odds for match ${match.id}:`, error);
+      }
+    }
+  );
+}
+
+async function waitForPredictionPanelTargets() {
+  if (typeof document === "undefined" || typeof requestAnimationFrame === "undefined") {
+    return;
+  }
+
+  const targetIds = ["bestPredictions", "longShots", "BTTS", "valueBets"];
+  for (let attempt = 0; attempt < 10; attempt += 1) {
+    if (targetIds.every((id) => document.getElementById(id))) {
+      return;
+    }
+
+    await new Promise((resolve) => requestAnimationFrame(resolve));
+  }
+}
+
 import {
   npxgOrXg,
   resolveTeamXgAndNpXg,
@@ -6362,7 +6407,12 @@ function tippedTeamXGRating(match) {
   );
 }
 
-export async function getScorePrediction(day, mocked) {
+export async function getScorePrediction(day, options = {}) {
+  const onCorePredictions =
+    typeof options?.onCorePredictions === "function"
+      ? options.onCorePredictions
+      : null;
+
   clicked = true;
   bestBets = [];
   bttsArray = [];
@@ -6413,6 +6463,8 @@ export async function getScorePrediction(day, mocked) {
     bttsArray: [],
     sotArray: []
   };
+
+  await warmBestOddsForPredictionMatches(matches);
 
   for (const match of matches) {
       // if there are no stored predictions, calculate them based on live data
@@ -7005,25 +7057,45 @@ export async function getScorePrediction(day, mocked) {
 
   await persistSshSnapshots();
 
-  render(
-    <div />,
-    "Loading"
-  );
-
-  await getMultis();
-  await getNewTips(allTipsSorted);
-  await settleRemainingPendingUserTips(fetchedTips);
-  await getSuccessMeasure(matches);
-
-  // Last pass: ensure thin-season fixtures never keep tip settlement on the
-  // objects returned to React (borders / ROI).
-  for (const match of matches) {
-    if (isBelowMinMatchesForPrediction(match)) {
-      clearMatchTipSettlement(match);
-    }
+  if (onCorePredictions) {
+    onCorePredictions(matches);
+    await waitForPredictionPanelTargets();
   }
 
-  await persistPendingOddsTimelineUpdates();
+  const finishSecondaryPredictionWork = async () => {
+    await waitForPredictionPanelTargets();
+
+    render(
+      <div />,
+      "Loading"
+    );
+
+    await getMultis();
+    await getNewTips(allTipsSorted);
+    await settleRemainingPendingUserTips(fetchedTips);
+    await getSuccessMeasure(matches);
+
+    // Last pass: ensure thin-season fixtures never keep tip settlement on the
+    // objects returned to React (borders / ROI).
+    for (const match of matches) {
+      if (isBelowMinMatchesForPrediction(match)) {
+        clearMatchTipSettlement(match);
+      }
+    }
+
+    await persistPendingOddsTimelineUpdates();
+  };
+
+  if (onCorePredictions && typeof window !== "undefined") {
+    setTimeout(() => {
+      void finishSecondaryPredictionWork().catch((error) => {
+        console.error("Secondary prediction rendering failed:", error);
+      });
+    }, 0);
+    return matches;
+  }
+
+  await finishSecondaryPredictionWork();
 
   return matches;
 

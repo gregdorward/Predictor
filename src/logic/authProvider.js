@@ -67,11 +67,19 @@ export const AuthProvider = ({ children }) => {
   const handleGetPredictions = async (day) => {
     const epochAtStart = getFixturesEpoch();
     setIsPredicting(true);
+    let corePredictionsApplied = false;
     try {
       const { getScorePrediction } = await import("../logic/getScorePredictions");
-      const data = await getScorePrediction(day);
-      if (shouldApplyPredictionFixtures(epochAtStart)) {
-        setFixtures(data);
+      const data = await getScorePrediction(day, {
+        onCorePredictions: (coreData) => {
+          if (shouldApplyPredictionFixtures(epochAtStart)) {
+            corePredictionsApplied = true;
+            setFixtures([...coreData]);
+          }
+        },
+      });
+      if (!corePredictionsApplied && shouldApplyPredictionFixtures(epochAtStart)) {
+        setFixtures([...data]);
       }
     } catch (error) {
       console.error("Prediction failed:", error);

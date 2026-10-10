@@ -12,25 +12,25 @@ export function render(element, containerId) {
   const container = document.getElementById(containerId);
   if (!container) return;
 
-  let root = roots.get(containerId);
-  if (!root) {
+  let entry = roots.get(containerId);
+  if (!entry || entry.container !== container) {
     if (hasPrerenderedAppContent(container)) {
-      root = hydrateRoot(container, element);
+      entry = { container, root: hydrateRoot(container, element) };
     } else {
-      root = createRoot(container);
-      root.render(element);
+      entry = { container, root: createRoot(container) };
+      entry.root.render(element);
     }
-    roots.set(containerId, root);
+    roots.set(containerId, entry);
     return;
   }
 
-  root.render(element);
+  entry.root.render(element);
 }
 
 export function clearRender(containerId) {
-  const root = roots.get(containerId);
-  if (root) {
-    root.unmount();
+  const entry = roots.get(containerId);
+  if (entry) {
+    entry.root.unmount();
     roots.delete(containerId);
   }
 
