@@ -1,4 +1,4 @@
-import { orderedLeagues } from "../App";
+import { leaguesReady, orderedLeagues } from "../App";
 import { apiGetUrl } from "../utils/apiUrl";
 import { resolveLeagueAveragesForDate, toFormDateKeyFromIso } from "../utils/leagueAverages";
 import {
@@ -77,6 +77,8 @@ export async function predictMatchById(matchId) {
     }
   }
 
+  // Match homepage featured pick: league order is only set after leaguesReady.
+  await leaguesReady;
   const featuredFixtureId = getFeaturedFixtureId(dayList, orderedLeagues);
 
   if (!tableRes.ok) {
