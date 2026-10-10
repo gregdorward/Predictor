@@ -3534,11 +3534,16 @@ function seasonPlayedForPredictionGate(selfPlayed, opponentPlayed, mcm) {
 
 /**
  * True when the model must not tip or settle ROI.
- * Prefer FootyStats matches_completed_minimum; also treat league-table
- * played < 3 as insufficient when form is available (API mcm can be inflated).
+ * Prefer FootyStats matches_completed_minimum when present; when mcm is missing,
+ * fall back to league-table / WDL played counts (API mcm can be inflated early on).
  */
 export function isBelowMinMatchesForPrediction(match) {
   const mcm = Number(match?.matches_completed_minimum);
+  // FootyStats competition minimum is authoritative once the season has started;
+  // thin league-history leaguePlayed (e.g. 1H/2A) must not block when mcm >= 3.
+  if (Number.isFinite(mcm) && mcm >= 3) {
+    return false;
+  }
   if (Number.isFinite(mcm) && mcm < 3) {
     return true;
   }

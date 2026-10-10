@@ -922,7 +922,7 @@ export async function generateFixtures(
       leagueIdArray.push(leagueID);
     }
 
-    var leaguePositions = [];
+    const leaguePositionsByLeagueId = Object.create(null);
     leagueArray = [];
 
     let allLeagueResults;
@@ -1327,6 +1327,8 @@ export async function generateFixtures(
     }
 
     for (let i = 0; i < leagueArray.length; i++) {
+      const positionsForLeague = [];
+      const tableLeagueId = leagueIdArray[i];
       let leagueInstance;
       let homeLeague;
       let awayLeague;
@@ -1368,7 +1370,7 @@ export async function generateFixtures(
         let stringAway = awayLeague[x];
 
         if (string) {
-          leaguePositions.push({
+          positionsForLeague.push({
             name: string.cleanName,
             position: x + 1,
             rawPosition: x + 1,
@@ -1405,6 +1407,10 @@ export async function generateFixtures(
             seasonConceded: string.seasonConceded,
           });
         }
+      }
+
+      if (tableLeagueId != null) {
+        leaguePositionsByLeagueId[String(tableLeagueId)] = positionsForLeague;
       }
     }
 
@@ -1479,6 +1485,9 @@ export async function generateFixtures(
         match.btts = false;
 
         previousLeagueName = orderedLeagues[i].name;
+
+        const leaguePositions =
+          leaguePositionsByLeagueId[String(leagueID)] ?? [];
 
         let homeTeaminLeague;
         let awayTeaminLeague;

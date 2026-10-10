@@ -498,9 +498,9 @@ function GameStats({
   let gameStats = allForm.find((match) => match.id === game.id);
   const homeForm = game.formHome ?? gameStats?.home?.[2];
   const awayForm = game.formAway ?? gameStats?.away?.[2];
-  const hasPredictionMetrics = Boolean(
-    homeForm?.attackingMetrics && awayForm?.attackingMetrics
-  );
+  const earlySeasonPredictionsBlocked =
+    game.predictionsUnavailable === true ||
+    Number(game.matches_completed_minimum) < 3;
 
   const [matchingGame, setMatchingGame] = useState(null); // State for the game
   const [formSummaries, setFormSummary] = useState([]);
@@ -4350,7 +4350,7 @@ function GameStats({
     <>
       <div className="ExpandingStats">
         <FeaturedFreeBadge show={isFeaturedFree && !isPaidUser} />
-        {(game.predictionsUnavailable || !hasPredictionMetrics) && (
+        {earlySeasonPredictionsBlocked && (
           <p className="GameStats--limited">
             Score predictions are not available yet - fewer than three matches
             have been played in this competition.
