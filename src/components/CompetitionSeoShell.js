@@ -1,5 +1,6 @@
 import { getRelatedCompetitionLinks } from "../seo/competitionCatalog";
 import { isCompetitionSeasonEmpty } from "../seo/competitionSeason";
+import { filterTeamsByCupPhase } from "./competition/cupCompetitionPhases";
 import {
   buildCompetitionConferenceTableGroups,
   buildCompetitionSeoParagraphs,
@@ -225,10 +226,18 @@ function pickTeamHighlight(team, field) {
   };
 }
 
-export function buildCompetitionSeoShell(data, catalog) {
+export function buildCompetitionSeoShell(data, catalog, options = {}) {
   const name = data?.english_name || data?.name || catalog?.name || "Competition";
   const relatedLinks = getRelatedCompetitionLinks(catalog?.slug);
-  const teams = getTeamsList(data);
+  let teams = getTeamsList(data);
+  const phaseTeamIds = options.phaseTeamIds;
+  if (Array.isArray(options.phaseRosterTeams) && options.phaseRosterTeams.length) {
+    teams = options.phaseRosterTeams;
+  } else if (phaseTeamIds?.size) {
+    teams = filterTeamsByCupPhase(teams, phaseTeamIds);
+  } else if (Array.isArray(phaseTeamIds) && phaseTeamIds.length > 0) {
+    teams = filterTeamsByCupPhase(teams, new Set(phaseTeamIds));
+  }
   const seasonEmpty = isCompetitionSeasonEmpty(data);
 
   if (seasonEmpty) {

@@ -14,7 +14,22 @@ import {
   buildCompetitionMeta,
   resolveCompetitionParam,
 } from "../../src/seo/competitionCatalog";
-import { fetchCompetitionData } from "../../src/seo/serverFetch";
+import {
+  buildCupPhaseRosterTeams,
+  collectTeamIdsForRound,
+  isCupPhaseTablesData,
+  parseCupPhasesFromTables,
+  pickDefaultPhase,
+  trimCupCompetitionFixtures,
+  trimCupPhaseTableViewsForClient,
+} from "../../src/components/competition/cupCompetitionPhases";
+import { buildCompetitionLeagueTableViews } from "../../src/components/competition/competitionLeagueTable";
+import {
+  fetchCompetitionData,
+  fetchCompetitionTables,
+  fetchLeagueFixtures,
+  formatApiDate,
+} from "../../src/seo/serverFetch";
 import { buildCompetitionClientPayload } from "../../src/seo/competitionClientPayload";
 import {
   buildCompetitionOgImageUrl,
@@ -36,6 +51,10 @@ export default function CompetitionByParam({
   seoShell,
   noIndex,
   initialCompetitionData,
+  initialCupDefaultRoundId = null,
+  initialCupTablesData = null,
+  initialCupFixtures = null,
+  initialCupPhaseTableViews = null,
 }) {
   return (
     <>
@@ -62,6 +81,10 @@ export default function CompetitionByParam({
             seasonId={seasonId}
             skipHero
             initialData={initialCompetitionData}
+            initialCupDefaultRoundId={initialCupDefaultRoundId}
+            initialCupTablesData={initialCupTablesData}
+            initialCupFixtures={initialCupFixtures}
+            initialCupPhaseTableViews={initialCupPhaseTableViews}
           />
           <JourneyContentBreak />
           <CompetitionSeoExtras {...seoShell} />
@@ -92,8 +115,44 @@ export async function getServerSideProps({ params, res }) {
 
   const { seasonId, catalog } = resolved;
 
-  const data = await fetchCompetitionData(seasonId);
+  const [data, tablesData, leagueFixtures] = await Promise.all([
+    fetchCompetitionData(seasonId),
+    fetchCompetitionTables(seasonId, formatApiDate(new Date())),
+    fetchLeagueFixtures(seasonId),
+  ]);
   res.setHeader("Cache-Control", COMPETITION_PAGE_CACHE_CONTROL);
+
+  let initialCupDefaultRoundId = null;
+  let initialCupTablesData = null;
+  let initialCupFixtures = null;
+  let initialCupPhaseTableViews = null;
+  let phaseTeamIds = null;
+  let phaseRosterTeams = null;
+  if (tablesData && isCupPhaseTablesData(tablesData, seasonId)) {
+    initialCupTablesData = tablesData;
+    initialCupFixtures = trimCupCompetitionFixtures(leagueFixtures);
+    const phases = parseCupPhasesFromTables(tablesData);
+    const defaultPhase = pickDefaultPhase(phases, leagueFixtures || []);
+    if (defaultPhase) {
+      initialCupDefaultRoundId = defaultPhase.roundId;
+      if (leagueFixtures?.length) {
+        const built = buildCompetitionLeagueTableViews(seasonId, tablesData, {
+          roundId: defaultPhase.roundId,
+          fixtures: leagueFixtures,
+        });
+        initialCupPhaseTableViews = trimCupPhaseTableViewsForClient(built);
+      }
+      phaseTeamIds = collectTeamIdsForRound(
+        leagueFixtures || [],
+        defaultPhase.roundId
+      );
+      phaseRosterTeams = buildCupPhaseRosterTeams(
+        leagueFixtures || [],
+        defaultPhase.roundId,
+        data?.teams || data?.team || []
+      );
+    }
+  }
 
   const slug = catalog?.slug || params.param;
   const canonicalPath = `/competition/${slug}`;
@@ -111,7 +170,10 @@ export async function getServerSideProps({ params, res }) {
       : buildCompetitionJsonLd(data, canonicalUrl, catalog, {
           ogImage,
         });
-  const seoShell = buildCompetitionSeoShell(data, catalog);
+  const seoShell = buildCompetitionSeoShell(data, catalog, {
+    phaseTeamIds,
+    phaseRosterTeams,
+  });
 
   const initialCompetitionData = data
     ? buildCompetitionClientPayload(data)
@@ -128,6 +190,10 @@ export async function getServerSideProps({ params, res }) {
       seoShell,
       noIndex,
       initialCompetitionData,
+      initialCupDefaultRoundId,
+      initialCupTablesData,
+      initialCupFixtures,
+      initialCupPhaseTableViews,
     },
   };
 }

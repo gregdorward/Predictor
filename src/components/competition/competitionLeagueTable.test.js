@@ -43,6 +43,36 @@ describe("buildCompetitionLeagueTableViews", () => {
     expect(teamRowHasHomeAwaySplit({ seasonWins_home: 1 })).toBe(false);
   });
 
+  test("builds cup phase standings from fixtures when tournament rounds exist", () => {
+    const tables = {
+      specific_tables: [
+        { round: "League Stage", round_id: 125877, table: null, groups: null },
+        { round: "Play-offs", round_id: 125385, table: null, groups: null },
+      ],
+    };
+    const fixtures = [
+      {
+        roundID: 125877,
+        status: "complete",
+        homeID: 1,
+        awayID: 2,
+        home_name: "Alpha",
+        away_name: "Beta",
+        homeGoalCount: 2,
+        awayGoalCount: 1,
+        date_unix: 1,
+      },
+    ];
+
+    const views = buildCompetitionLeagueTableViews(17128, { data: tables }, {
+      roundId: 125877,
+      fixtures,
+    });
+
+    expect(views?.teams).toHaveLength(2);
+    expect(views.teams[0].Name).toBe("Alpha");
+  });
+
   test("maps home and away columns for classic league tables", () => {
     const views = buildCompetitionLeagueTableViews(17146, {
       data: { league_table: [makeTeam("City")] },

@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { apiGetUrl } from "../../utils/apiUrl";
 import {
   buildCompetitionLeagueTableViews,
@@ -50,10 +50,25 @@ function teamSetsFromViews(views, scope = CONFERENCE_SCOPE_OVERALL) {
   }
 
   if (views.mode === "grouped") {
+    const groupNames = new Set(
+      views.teams.map((team) => team.GroupName).filter(Boolean)
+    );
+    if (groupNames.size > 1 && scope === CONFERENCE_SCOPE_OVERALL) {
+      const grouped = new Map();
+      views.teams.forEach((team) => {
+        const label = team.GroupName || "Table";
+        if (!grouped.has(label)) grouped.set(label, []);
+        grouped.get(label).push(team);
+      });
+      return [...grouped.entries()].map(([label, groupedTeams]) => ({
+        label,
+        teams: sortTeamsByLastFive(groupedTeams),
+      }));
+    }
     if (scope === CONFERENCE_SCOPE_OVERALL) {
       return [
         {
-          label: null,
+          label: groupNames.size === 1 ? [...groupNames][0] : null,
           teams: sortTeamsByLastFive(views.teams),
         },
       ];
@@ -141,18 +156,35 @@ export default function CompetitionFormChart({
   seasonId,
   scope = CONFERENCE_SCOPE_OVERALL,
   tableViews,
+  skipAutoFetch = false,
+  pendingCupTableViews = false,
 }) {
   const [views, setViews] = useState(tableViews ?? null);
-  const [loading, setLoading] = useState(tableViews === undefined);
+  const [loading, setLoading] = useState(
+    () =>
+      pendingCupTableViews ||
+      (tableViews === undefined && !skipAutoFetch)
+  );
+  const skipAutoFetchRef = useRef(skipAutoFetch);
+  const tableViewsRef = useRef(tableViews);
+  skipAutoFetchRef.current = skipAutoFetch;
+  tableViewsRef.current = tableViews;
+
+  const resolvedViews =
+    skipAutoFetch && tableViews !== undefined ? tableViews : views;
+  const resolvedLoading =
+    pendingCupTableViews ||
+    (tableViews === undefined && !skipAutoFetch && loading);
 
   useEffect(() => {
     if (tableViews !== undefined) {
       setViews(tableViews);
-      setLoading(false);
+      setLoading(pendingCupTableViews && tableViews === null);
       return undefined;
     }
 
-    if (!seasonId) {
+    if (!seasonId || skipAutoFetch) {
+      setLoading(pendingCupTableViews);
       return undefined;
     }
 
@@ -173,16 +205,26 @@ export default function CompetitionFormChart({
         const json = await response.json();
         const nextViews = buildCompetitionLeagueTableViews(seasonId, json);
 
-        if (!cancelled) {
+        if (
+          !cancelled &&
+          !skipAutoFetchRef.current &&
+          tableViewsRef.current === undefined
+        ) {
           setViews(nextViews);
         }
       } catch {
-        if (!cancelled) {
+        if (
+          !cancelled &&
+          !skipAutoFetchRef.current &&
+          tableViewsRef.current === undefined
+        ) {
           setViews(null);
         }
       } finally {
         if (!cancelled) {
-          setLoading(false);
+          const parentProvidesViews =
+            skipAutoFetchRef.current || tableViewsRef.current !== undefined;
+          setLoading(parentProvidesViews ? pendingCupTableViews : false);
         }
       }
     }
@@ -192,9 +234,9 @@ export default function CompetitionFormChart({
     return () => {
       cancelled = true;
     };
-  }, [seasonId, tableViews]);
+  }, [seasonId, tableViews, skipAutoFetch, pendingCupTableViews]);
 
-  if (loading) {
+  if (resolvedLoading) {
     return (
       <section className="Competition__section Competition__formChart" aria-labelledby="competition-form-chart">
         <h2 id="competition-form-chart" className="Competition__sectionHeading">
@@ -205,11 +247,11 @@ export default function CompetitionFormChart({
     );
   }
 
-  if (!views) {
+  if (!resolvedViews) {
     return null;
   }
 
-  const sets = teamSetsFromViews(views, scope);
+  const sets = teamSetsFromViews(resolvedViews, scope);
 
   return (
     <section className="Competition__section Competition__formChart" aria-labelledby="competition-form-chart">

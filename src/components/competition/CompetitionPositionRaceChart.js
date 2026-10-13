@@ -14,6 +14,10 @@ import { Pause, Play } from "lucide-react";
 import { fetchAllLeagueFixturesPages } from "../../logic/leagueResultsLoader";
 import { buildLeaguePositionSeries } from "../../utils/leaguePositionSeries";
 import { GROUP_STAGE_LEAGUE_IDS } from "../../utils/groupStageTables";
+import {
+  filterFixturesByRound,
+  isCupPhaseCompetition,
+} from "./cupCompetitionPhases";
 import CompetitionPositionRaceTable from "./CompetitionPositionRaceTable";
 import { useChartTheme, getChartColors } from "../Chart";
 
@@ -29,6 +33,15 @@ ChartJS.register(
 
 /** MLS conference tables — not a single-table race for v1. */
 const SKIP_LEAGUE_IDS = new Set([...GROUP_STAGE_LEAGUE_IDS, 16504]);
+
+function shouldSkipPositionRace(seasonId, cupPhaseRoundId, tablesData) {
+  const id = Number(seasonId);
+  if (!Number.isFinite(id) || SKIP_LEAGUE_IDS.has(id)) return true;
+  if (cupPhaseRoundId == null && isCupPhaseCompetition(id, tablesData)) {
+    return true;
+  }
+  return false;
+}
 
 /** Duration to morph from one gameweek tip to the next while playing. */
 const WEEK_TRANSITION_MS = 700;
@@ -222,12 +235,18 @@ function layoutForTeams(teamCount, teamNames = []) {
   return { height, tipRadius, fontSize, borderWidth, tipLabelPad };
 }
 
-export function isLeaguePositionRaceEligible(seasonId) {
-  const id = Number(seasonId);
-  return Number.isFinite(id) && !SKIP_LEAGUE_IDS.has(id);
+export function isLeaguePositionRaceEligible(
+  seasonId,
+  { cupPhaseRoundId = null, tablesData = null } = {}
+) {
+  return !shouldSkipPositionRace(seasonId, cupPhaseRoundId, tablesData);
 }
 
-export default function CompetitionPositionRaceChart({ seasonId }) {
+export default function CompetitionPositionRaceChart({
+  seasonId,
+  cupPhaseRoundId = null,
+  tablesData = null,
+}) {
   const theme = useChartTheme();
   const { color, gridColor, tooltipBackground } = getChartColors(theme);
   const useTableLayout = useMediaQuery(TABLE_LAYOUT_MQ);
@@ -240,7 +259,10 @@ export default function CompetitionPositionRaceChart({ seasonId }) {
   const rafRef = useRef(null);
   const lastTsRef = useRef(null);
 
-  const eligible = isLeaguePositionRaceEligible(seasonId);
+  const eligible = isLeaguePositionRaceEligible(seasonId, {
+    cupPhaseRoundId,
+    tablesData,
+  });
   const maxWeek = series ? series.labels.length - 1 : 0;
   const scrubWeek = Math.min(maxWeek, Math.round(displayWeek));
   const teamCount = series?.teams?.length || 0;
@@ -271,7 +293,11 @@ export default function CompetitionPositionRaceChart({ seasonId }) {
           if (!cancelled) setSeries(null);
           return;
         }
-        const built = buildLeaguePositionSeries(fixtures);
+        const scopedFixtures =
+          cupPhaseRoundId != null
+            ? filterFixturesByRound(fixtures, cupPhaseRoundId)
+            : fixtures;
+        const built = buildLeaguePositionSeries(scopedFixtures);
 
         if (
           cancelled ||
@@ -297,7 +323,7 @@ export default function CompetitionPositionRaceChart({ seasonId }) {
     return () => {
       cancelled = true;
     };
-  }, [seasonId, eligible]);
+  }, [seasonId, eligible, cupPhaseRoundId]);
 
   // Table play advances whole weeks; settle fractional chart progress when switching.
   useEffect(() => {

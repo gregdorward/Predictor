@@ -22,7 +22,20 @@ import {
 } from "./competition/competitionCharts";
 import CompetitionPlayerLeaders from "./competition/CompetitionPlayerLeaders";
 import CompetitionFormChart from "./competition/CompetitionFormChart";
+import CompetitionClassicLeagueTable from "./competition/CompetitionClassicLeagueTable";
 import CompetitionPositionRaceChart from "./competition/CompetitionPositionRaceChart";
+import { fetchAllLeagueFixturesPages } from "../logic/leagueResultsLoader";
+import {
+  CUP_PHASE_SCOPE_ALL,
+  buildCupPhaseRosterTeams,
+  collectTeamIdsForRound,
+  filterTeamsByCupPhase,
+  isCupPhaseCompetition,
+  parseCupPhasesFromTables,
+  pickDefaultPhase,
+  normalizeCupPhaseScope,
+  cupPhaseScopesMatch,
+} from "./competition/cupCompetitionPhases";
 import CompetitionMetricRankings from "./competition/CompetitionMetricRankings";
 import CompetitionTeamComparison from "./competition/CompetitionTeamComparison";
 import {
@@ -106,35 +119,29 @@ function LoadingSkeleton() {
   );
 }
 
-function ConferenceScopeToggle({ value, onChange }) {
-  const options = [
-    CONFERENCE_SCOPE_OVERALL,
-    CONFERENCE_SCOPE_EAST,
-    CONFERENCE_SCOPE_WEST,
-  ];
-
+function ScopeToggle({ heading, ariaLabel, options, value, onChange }) {
   return (
     <section className="Competition__section Competition__conferenceScope">
       <div className="Competition__standingsHeader">
-        <h2 className="Competition__sectionHeading">MLS view</h2>
+        <h2 className="Competition__sectionHeading">{heading}</h2>
         <div
           className="Competition__standingsToggle"
           role="group"
-          aria-label="MLS conference view"
+          aria-label={ariaLabel}
         >
           {options.map((option) => {
-            const active = value === option;
+            const active = value === option.value;
             return (
               <button
-                key={option}
+                key={option.value}
                 type="button"
                 className={`Competition__standingsToggleBtn${
                   active ? " Competition__standingsToggleBtn--active" : ""
                 }`}
                 aria-pressed={active}
-                onClick={() => onChange(option)}
+                onClick={() => onChange(option.value)}
               >
-                {conferenceScopeLabel(option)}
+                {option.label}
               </button>
             );
           })}
@@ -153,6 +160,10 @@ export default function CompetitionPage({
   seasonId,
   initialData = null,
   skipHero = false,
+  initialCupDefaultRoundId = null,
+  initialCupTablesData = null,
+  initialCupFixtures = null,
+  initialCupPhaseTableViews = null,
 }) {
   const [data, setData] = useState(initialData);
   const [logoUrl, setLogoUrl] = useState(null);
@@ -163,6 +174,25 @@ export default function CompetitionPage({
   );
   const [conferenceScope, setConferenceScope] = useState(
     CONFERENCE_SCOPE_OVERALL
+  );
+  const [cupTablesData, setCupTablesData] = useState(initialCupTablesData);
+  const [cupFixtures, setCupFixtures] = useState(initialCupFixtures);
+  const [cupContextLoading, setCupContextLoading] = useState(
+    () => Boolean(initialCupDefaultRoundId) && !initialCupFixtures?.length
+  );
+  const [cupPhases, setCupPhases] = useState(() => {
+    if (
+      initialCupTablesData &&
+      isCupPhaseCompetition(seasonId, initialCupTablesData)
+    ) {
+      return parseCupPhasesFromTables(initialCupTablesData);
+    }
+    return [];
+  });
+  const [cupPhaseScope, setCupPhaseScope] = useState(() =>
+    initialCupDefaultRoundId != null
+      ? normalizeCupPhaseScope(initialCupDefaultRoundId)
+      : CUP_PHASE_SCOPE_ALL
   );
 
   useEffect(() => {
@@ -232,38 +262,112 @@ export default function CompetitionPage({
   }, [seasonId]);
 
   useEffect(() => {
-    if (!isMlsSeason(seasonId)) {
-      setConferenceViews(null);
-      setConferenceScope(CONFERENCE_SCOPE_OVERALL);
+    if (isMlsSeason(seasonId)) {
+      let cancelled = false;
+
+      async function fetchConferenceViews() {
+        try {
+          const dateStr = getTablesDateString();
+          const response = await fetch(apiGetUrl(`tables/${seasonId}/${dateStr}`));
+          if (!response.ok) {
+            return;
+          }
+          const json = await response.json();
+          const views = buildCompetitionLeagueTableViews(seasonId, json);
+          if (!cancelled) {
+            setConferenceViews(views);
+            setConferenceScope(CONFERENCE_SCOPE_OVERALL);
+          }
+        } catch {}
+      }
+
+      fetchConferenceViews();
+
+      return () => {
+        cancelled = true;
+      };
+    }
+
+    setConferenceViews(null);
+    setConferenceScope(CONFERENCE_SCOPE_OVERALL);
+    return undefined;
+  }, [seasonId]);
+
+  useEffect(() => {
+    if (isMlsSeason(seasonId)) {
+      setCupTablesData(null);
+      setCupFixtures(null);
+      setCupPhases([]);
       return undefined;
     }
 
     let cancelled = false;
 
-    async function fetchConferenceViews() {
+    async function fetchCupContext() {
+      setCupContextLoading(true);
+
       try {
         const dateStr = getTablesDateString();
-        const response = await fetch(apiGetUrl(`tables/${seasonId}/${dateStr}`));
-        if (!response.ok) {
+        const [tablesResponse, fixtures] = await Promise.all([
+          fetch(apiGetUrl(`tables/${seasonId}/${dateStr}`)),
+          fetchAllLeagueFixturesPages(seasonId),
+        ]);
+
+        if (!tablesResponse.ok || !fixtures?.length) {
           return;
         }
-        const json = await response.json();
-        const views = buildCompetitionLeagueTableViews(seasonId, json);
-        if (!cancelled) {
-          setConferenceViews(views);
-          setConferenceScope(CONFERENCE_SCOPE_OVERALL);
+
+        const tablesJson = await tablesResponse.json();
+        const tablesPayload = tablesJson?.data;
+        if (!tablesPayload || !isCupPhaseCompetition(seasonId, tablesPayload)) {
+          return;
         }
-      } catch {}
+
+        const phases = parseCupPhasesFromTables(tablesPayload);
+        const defaultPhase =
+          phases.find((phase) => phase.roundId === initialCupDefaultRoundId) ||
+          pickDefaultPhase(phases, fixtures);
+
+        if (!cancelled) {
+          setCupTablesData(tablesPayload);
+          setCupFixtures(fixtures);
+          setCupPhases(phases);
+          setCupPhaseScope(
+            normalizeCupPhaseScope(
+              defaultPhase?.roundId ??
+                initialCupDefaultRoundId ??
+                CUP_PHASE_SCOPE_ALL
+            )
+          );
+        }
+      } catch {
+      } finally {
+        if (!cancelled) {
+          setCupContextLoading(false);
+        }
+      }
     }
 
-    fetchConferenceViews();
+    if (
+      initialCupFixtures?.length &&
+      initialCupTablesData &&
+      isCupPhaseCompetition(seasonId, initialCupTablesData)
+    ) {
+      return undefined;
+    }
+
+    fetchCupContext();
 
     return () => {
       cancelled = true;
     };
-  }, [seasonId]);
+  }, [seasonId, initialCupDefaultRoundId, initialCupFixtures, initialCupTablesData]);
 
   const teams = getTeamsList(data);
+  const isCupPhase = Boolean(
+    cupPhases.length > 0 ||
+      (cupTablesData && isCupPhaseCompetition(seasonId, cupTablesData))
+  );
   const conferenceLookup = useMemo(
     () => buildTeamConferenceLookup(conferenceViews),
     [conferenceViews]
@@ -272,10 +376,63 @@ export default function CompetitionPage({
     isMlsSeason(seasonId) &&
     conferenceScopeIsAvailable(conferenceViews, CONFERENCE_SCOPE_EAST) &&
     conferenceScopeIsAvailable(conferenceViews, CONFERENCE_SCOPE_WEST);
-  const scopedTeams = useMemo(
-    () => filterTeamsByConference(teams, conferenceScope, conferenceLookup),
-    [teams, conferenceScope, conferenceLookup]
-  );
+  const activeCupRoundId =
+    cupPhaseScope === CUP_PHASE_SCOPE_ALL ? null : cupPhaseScope;
+  const phaseTableViews = useMemo(() => {
+    if (!isCupPhase || !cupTablesData || activeCupRoundId == null) {
+      return null;
+    }
+    if (cupFixtures?.length) {
+      const live = buildCompetitionLeagueTableViews(seasonId, cupTablesData, {
+        roundId: activeCupRoundId,
+        fixtures: cupFixtures,
+      });
+      if (live?.teams?.length) {
+        return live;
+      }
+    }
+    if (
+      initialCupPhaseTableViews?.teams?.length &&
+      cupPhaseScopesMatch(initialCupDefaultRoundId, activeCupRoundId)
+    ) {
+      return initialCupPhaseTableViews;
+    }
+    return null;
+  }, [
+    isCupPhase,
+    cupTablesData,
+    activeCupRoundId,
+    cupFixtures,
+    seasonId,
+    initialCupPhaseTableViews,
+    initialCupDefaultRoundId,
+  ]);
+  const cupScopeLabel = useMemo(() => {
+    if (cupPhaseScope === CUP_PHASE_SCOPE_ALL) return "All teams";
+    return cupPhases.find((phase) => phase.roundId === cupPhaseScope)?.label || null;
+  }, [cupPhaseScope, cupPhases]);
+  const scopedTeams = useMemo(() => {
+    if (isMlsSeason(seasonId)) {
+      return filterTeamsByConference(teams, conferenceScope, conferenceLookup);
+    }
+    if (isCupPhase && cupPhaseScope !== CUP_PHASE_SCOPE_ALL && cupFixtures) {
+      return buildCupPhaseRosterTeams(cupFixtures, cupPhaseScope, teams);
+    }
+    return teams;
+  }, [
+    teams,
+    seasonId,
+    conferenceScope,
+    conferenceLookup,
+    isCupPhase,
+    cupPhaseScope,
+    cupFixtures,
+  ]);
+  const mlsTableViews = isMlsSeason(seasonId) ? conferenceViews : undefined;
+  const cupFormTableViews = isCupPhase ? phaseTableViews : undefined;
+  const skipCupFormAutoFetch = Boolean(isCupPhase || initialCupDefaultRoundId);
+  const pendingCupFormTableViews =
+    cupContextLoading && cupPhaseScope !== CUP_PHASE_SCOPE_ALL;
 
   return (
     <main className="Competition">
@@ -327,27 +484,76 @@ export default function CompetitionPage({
             <JourneyContentBreak />
 
             {hasConferenceSplit ? (
-              <ConferenceScopeToggle
+              <ScopeToggle
+                heading="MLS view"
+                ariaLabel="MLS conference view"
                 value={conferenceScope}
                 onChange={setConferenceScope}
+                options={[
+                  CONFERENCE_SCOPE_OVERALL,
+                  CONFERENCE_SCOPE_EAST,
+                  CONFERENCE_SCOPE_WEST,
+                ].map((option) => ({
+                  value: option,
+                  label: conferenceScopeLabel(option),
+                }))}
               />
+            ) : null}
+
+            {isCupPhase && cupPhases.length > 0 ? (
+              <ScopeToggle
+                heading="Competition phase"
+                ariaLabel="Competition phase view"
+                value={cupPhaseScope}
+                onChange={(value) => setCupPhaseScope(normalizeCupPhaseScope(value))}
+                options={[
+                  ...cupPhases.map((phase) => ({
+                    value: phase.roundId,
+                    label: phase.label,
+                  })),
+                  { value: CUP_PHASE_SCOPE_ALL, label: "All teams" },
+                ]}
+              />
+            ) : null}
+
+            {phaseTableViews?.teams?.length ? (
+              <section className="Competition__section">
+                <h2 className="Competition__sectionHeading">
+                  {cupScopeLabel ? `${cupScopeLabel} standings` : "Standings"}
+                </h2>
+                <CompetitionClassicLeagueTable teams={phaseTableViews.teams} />
+              </section>
             ) : null}
 
             <CompetitionFormChart
               seasonId={seasonId}
               scope={conferenceScope}
-              tableViews={isMlsSeason(seasonId) ? conferenceViews : undefined}
+              tableViews={cupFormTableViews ?? mlsTableViews}
+              skipAutoFetch={skipCupFormAutoFetch}
+              pendingCupTableViews={pendingCupFormTableViews}
             />
 
-            <CompetitionPositionRaceChart seasonId={seasonId} />
+            <CompetitionPositionRaceChart
+              seasonId={seasonId}
+              cupPhaseRoundId={isCupPhase ? activeCupRoundId : null}
+              tablesData={cupTablesData}
+            />
 
             <JourneyContentBreak />
 
             <CompetitionTeamComparison
               seasonId={seasonId}
-              competitionTeams={teams}
+              competitionTeams={scopedTeams}
               conferenceLookup={conferenceLookup}
               scope={conferenceScope}
+              rosterScopeLabel={
+                isCupPhase && cupPhaseScope !== CUP_PHASE_SCOPE_ALL
+                  ? cupScopeLabel
+                  : hasConferenceSplit &&
+                      conferenceScope !== CONFERENCE_SCOPE_OVERALL
+                    ? conferenceScopeLabel(conferenceScope)
+                    : null
+              }
             />
 
             <JourneyContentBreak />
@@ -358,6 +564,12 @@ export default function CompetitionPage({
                   ? "Markets - both conferences"
                   : "Markets"}
               </h2>
+              {isCupPhase && cupPhaseScope !== CUP_PHASE_SCOPE_ALL ? (
+                <p className="Competition__comparisonIntro">
+                  Competition-wide market rates (all phases combined). Team
+                  rankings below reflect {cupScopeLabel || "the selected phase"}.
+                </p>
+              ) : null}
               <div className="Competition__chartGrid">
                 <GoalsMarketChart data={data} />
                 <ResultSplitChart data={data} />
@@ -404,6 +616,13 @@ export default function CompetitionPage({
                     Showing {conferenceScopeLabel(conferenceScope)} teams only.
                   </p>
                 ) : null}
+                {isCupPhase &&
+                cupPhaseScope !== CUP_PHASE_SCOPE_ALL &&
+                cupScopeLabel ? (
+                  <p className="Competition__comparisonIntro">
+                    Showing {cupScopeLabel} teams only.
+                  </p>
+                ) : null}
                 <div className="Competition__rankingsGrid">
                   <TeamRankingTable
                     title="Highest Over 2.5 rate"
@@ -445,7 +664,7 @@ export default function CompetitionPage({
 
             <JourneyContentBreak />
 
-            <CompetitionPlayerLeaders data={data} teams={teams} />
+            <CompetitionPlayerLeaders data={data} teams={scopedTeams} />
 
             {(data.foulsAVG_overall != null || data.offsidesAVG_overall != null) && (
               <section className="Competition__section">

@@ -36,6 +36,36 @@ async function fetchJson(path, { timeoutMs = SEO_FETCH_TIMEOUT_MS } = {}) {
   }
 }
 
+export async function fetchCompetitionTables(
+  seasonId,
+  dateStr = formatApiDate(new Date()),
+  { timeoutMs = 6000 } = {}
+) {
+  const json = await fetchJson(`tables/${seasonId}/${dateStr}`, { timeoutMs });
+  return json?.data ?? null;
+}
+
+export async function fetchLeagueFixtures(
+  seasonId,
+  { timeoutMs = 10000 } = {}
+) {
+  const json = await fetchJson(`leagueFixtures/${seasonId}`, { timeoutMs });
+  if (!Array.isArray(json?.data)) return null;
+
+  let allData = json.data;
+  const maxPage = Number(json.pager?.max_page) || 1;
+
+  for (let page = 2; page <= maxPage; page += 1) {
+    const pageJson = await fetchJson(`leagueFixtures/${seasonId}?page=${page}`, {
+      timeoutMs,
+    });
+    if (!Array.isArray(pageJson?.data)) break;
+    allData = allData.concat(pageJson.data);
+  }
+
+  return allData;
+}
+
 export async function fetchCompetitionData(seasonId, { timeoutMs = 8000 } = {}) {
   try {
     const json = await fetchJson(`competition/${seasonId}`, {

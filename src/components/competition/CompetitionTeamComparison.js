@@ -30,6 +30,7 @@ import {
   conferenceScopeLabel,
   filterTeamsByConference,
 } from "./competitionLeagueTable";
+import { mergeComparisonTeamsForRoster } from "./cupCompetitionPhases";
 import {
   MetricPicker,
   computeAxisRange,
@@ -248,6 +249,7 @@ export default function CompetitionTeamComparison({
   competitionTeams = [],
   conferenceLookup = new Map(),
   scope = CONFERENCE_SCOPE_OVERALL,
+  rosterScopeLabel = null,
 }) {
   const theme = useChartTheme();
   const { color, gridColor, tooltipBackground } = getChartColors(theme);
@@ -346,11 +348,12 @@ export default function CompetitionTeamComparison({
   }, [seasonId, competitionTeams, payload]);
 
   const teams = payload?.teams || [];
-  const activeTeams = useMemo(
-    () => filterTeamsByConference(teams, scope, conferenceLookup),
-    [teams, scope, conferenceLookup]
-  );
-  const activeScopeLabel = conferenceScopeLabel(scope);
+  const activeTeams = useMemo(() => {
+    const byConference = filterTeamsByConference(teams, scope, conferenceLookup);
+    return mergeComparisonTeamsForRoster(competitionTeams, byConference);
+  }, [teams, scope, conferenceLookup, competitionTeams]);
+  const activeScopeLabel = rosterScopeLabel || conferenceScopeLabel(scope);
+
   const leagueAverage = useMemo(
     () => buildLeagueAverageProfile(activeTeams),
     [activeTeams]
@@ -605,10 +608,16 @@ export default function CompetitionTeamComparison({
   const metricMeta = getMetricMeta(metricKey);
 
   const barSorted = useMemo(() => {
-    return [...activeTeams]
-      .filter((t) => t?.[metricKey] != null)
-      .sort((a, b) => Number(b[metricKey]) - Number(a[metricKey]));
+    return [...activeTeams].sort((a, b) => {
+      const aVal = Number(a?.[metricKey]);
+      const bVal = Number(b?.[metricKey]);
+      const aScore = Number.isFinite(aVal) ? aVal : -Infinity;
+      const bScore = Number.isFinite(bVal) ? bVal : -Infinity;
+      return bScore - aScore || String(a.name).localeCompare(String(b.name));
+    });
   }, [activeTeams, metricKey]);
+
+  const barChartHeight = Math.max(380, barSorted.length * 22 + 48);
 
   useEffect(() => {
     if (!activeTeams.length) {
@@ -644,7 +653,10 @@ export default function CompetitionTeamComparison({
       datasets: [
         {
           label: metricMeta.label,
-          data: barSorted.map((t) => Number(t[metricKey])),
+          data: barSorted.map((t) => {
+            const value = Number(t[metricKey]);
+            return Number.isFinite(value) ? value : 0;
+          }),
           backgroundColor: "rgba(6, 68, 179, 0.75)",
           borderRadius: 4,
         },
@@ -680,7 +692,11 @@ export default function CompetitionTeamComparison({
           beginAtZero: true,
         },
         y: {
-          ticks: { color, font: { size: 9 } },
+          ticks: {
+            color,
+            font: { size: 9 },
+            autoSkip: false,
+          },
           grid: { display: false },
           border: { display: false },
         },
@@ -807,9 +823,11 @@ export default function CompetitionTeamComparison({
       <p className="Competition__comparisonIntro">
         Pick any two metrics to see how each team measures up. Choose to compare
         the whole competition or two individual teams.
-        {scope !== CONFERENCE_SCOPE_OVERALL
-          ? ` Currently showing ${activeScopeLabel}.`
-          : ""}
+        {rosterScopeLabel
+          ? ` Showing ${rosterScopeLabel} teams only; profiles use season-wide comparison data.`
+          : scope !== CONFERENCE_SCOPE_OVERALL
+            ? ` Currently showing ${activeScopeLabel}.`
+            : ""}
       </p>
 
       <div className="Competition__comparisonGrid">
@@ -918,7 +936,13 @@ export default function CompetitionTeamComparison({
                   {activeScopeLabel} · {metricMeta.label}
                 </span>
               </p>
-              <div className="Competition__comparisonBarWrap">
+              <div
+                className="Competition__comparisonBarWrap"
+                style={{
+                  height: `${barChartHeight}px`,
+                  overflowY: "auto",
+                }}
+              >
                 <Bar data={barData} options={barOptions} />
               </div>
             </div>

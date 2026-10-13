@@ -4,6 +4,10 @@ import {
   flattenGroupTables,
   GROUP_STAGE_LEAGUE_IDS,
 } from "../../utils/groupStageTables";
+import {
+  buildCupPhaseTableViews,
+  isCupPhaseTablesData,
+} from "./cupCompetitionPhases";
 
 export const MLS_SEASON_ID = 16504;
 export const CONFERENCE_SCOPE_OVERALL = "overall";
@@ -448,10 +452,27 @@ export function resolveConferenceLeagueTeams(
  * Build LeagueTable-compatible team rows from a single league tables API response.
  * Mirrors generateTables() in getFixtures.js for one competition.
  */
-export function buildCompetitionLeagueTableViews(seasonId, league) {
+export function buildCompetitionLeagueTableViews(seasonId, league, options = {}) {
   const leagueId = Number(seasonId);
-  const data = league?.data;
+  const data = league?.data ?? league;
   if (!data) {
+    return null;
+  }
+
+  const { roundId, fixtures } = options;
+
+  if (isCupPhaseTablesData(data, leagueId)) {
+    if (roundId != null && roundId !== "") {
+      const cupViews = buildCupPhaseTableViews(
+        leagueId,
+        data,
+        fixtures,
+        roundId
+      );
+      if (cupViews) {
+        return withClassicTableFlag(cupViews);
+      }
+    }
     return null;
   }
 
