@@ -41,6 +41,15 @@ describe("featuredFreeFixture", () => {
     expect(getFeaturedFixtureId(raw, orderedLeagues)).toBe("42");
   });
 
+  test("getFeaturedFixtureId without league order uses API list order", () => {
+    const raw = [
+      { id: 99, competition_id: 200 },
+      { id: 42, competition_id: 100 },
+    ];
+    expect(getFeaturedFixtureId(raw, [])).toBe("99");
+    expect(getFeaturedFixtureId(raw, orderedLeagues)).toBe("42");
+  });
+
   test("isFeaturedFreeFixture matches normalized ids", () => {
     expect(isFeaturedFreeFixture(42, "42")).toBe(true);
     expect(isFeaturedFreeFixture("42", 42)).toBe(true);
