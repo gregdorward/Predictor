@@ -10,10 +10,8 @@ import CompetitionSeoShell, {
 } from "../../src/components/CompetitionSeoShell";
 import SeoPageLinks from "../../src/components/SeoPageLinks";
 import {
-  COMPETITION_CATALOG,
   buildCompetitionJsonLd,
   buildCompetitionMeta,
-  isCompetitionIndexable,
   resolveCompetitionParam,
 } from "../../src/seo/competitionCatalog";
 import { fetchCompetitionData } from "../../src/seo/serverFetch";
@@ -74,21 +72,10 @@ export default function CompetitionByParam({
 }
 
 /** Align with /api/ss competition CDN freshness (10 min + SWR). */
-const COMPETITION_PAGE_REVALIDATE_SECONDS = 600;
+const COMPETITION_PAGE_CACHE_CONTROL =
+  "public, s-maxage=600, stale-while-revalidate=86400";
 
-export async function getStaticPaths() {
-  const paths = COMPETITION_CATALOG.filter(isCompetitionIndexable).map(
-    (entry) => ({ params: { param: entry.slug } })
-  );
-
-  return {
-    paths,
-    // Numeric season IDs and new slugs still resolve on first request.
-    fallback: "blocking",
-  };
-}
-
-export async function getStaticProps({ params }) {
+export async function getServerSideProps({ params, res }) {
   const resolved = resolveCompetitionParam(params?.param);
   if (!resolved) {
     return { notFound: true };
@@ -106,9 +93,7 @@ export async function getStaticProps({ params }) {
   const { seasonId, catalog } = resolved;
 
   const data = await fetchCompetitionData(seasonId);
-  if (!data) {
-    return { notFound: true };
-  }
+  res.setHeader("Cache-Control", COMPETITION_PAGE_CACHE_CONTROL);
 
   const slug = catalog?.slug || params.param;
   const canonicalPath = `/competition/${slug}`;
@@ -118,16 +103,19 @@ export async function getStaticProps({ params }) {
   const competitionName =
     data?.english_name || data?.name || catalog?.name || "Competition";
   const ogImageAlt = `${competitionName} stats — BTTS, Over 2.5, standings and rankings | Soccer Stats Hub`;
-  const seasonEmpty = isCompetitionSeasonEmpty(data);
+  const seasonEmpty = !data || isCompetitionSeasonEmpty(data);
   const noIndex = seasonEmpty;
-  const jsonLd = noIndex
-    ? null
-    : buildCompetitionJsonLd(data, canonicalUrl, catalog, {
-        ogImage,
-      });
+  const jsonLd =
+    !data || noIndex
+      ? null
+      : buildCompetitionJsonLd(data, canonicalUrl, catalog, {
+          ogImage,
+        });
   const seoShell = buildCompetitionSeoShell(data, catalog);
 
-  const initialCompetitionData = buildCompetitionClientPayload(data);
+  const initialCompetitionData = data
+    ? buildCompetitionClientPayload(data)
+    : null;
 
   return {
     props: {
@@ -141,6 +129,5 @@ export async function getStaticProps({ params }) {
       noIndex,
       initialCompetitionData,
     },
-    revalidate: COMPETITION_PAGE_REVALIDATE_SECONDS,
   };
 }
