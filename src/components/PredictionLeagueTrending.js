@@ -9,37 +9,34 @@ export default function PredictionLeagueTrending({ slips = [] }) {
   if (topPicks.length === 0) return null;
 
   return (
-    <div className="TrendingSection">
-      <h3>Popular pending picks</h3>
-      <div
-        className="TopPicksGrid"
-        style={{
-          display: "grid",
-          gridTemplateColumns: "repeat(auto-fill, minmax(180px, 1fr))",
-        }}
-      >
+    <section className="TrendingSection" aria-labelledby="prediction-league-trending-title">
+      <h3 id="prediction-league-trending-title" className="TrendingSection__title">
+        Popular pending picks
+      </h3>
+      <ul className="TopPicksGrid">
         {topPicks.map((pick) => (
-          <div
+          <li
             key={`${pick.game}_${pick.tip}`}
             className="TrendCard"
-            style={{ position: "relative" }}
           >
+            <div className="TrendCard__main">
+              <p className="TrendCard__fixture">{pick.game}</p>
+              <p className="TrendCard__selection">
+                {formatTrendingTipLabel(pick.tip)}
+              </p>
+              <p className="TrendCard__odds">
+                <span className="TrendCard__oddsValue">@{pick.odds}</span>
+              </p>
+            </div>
             <span
-              className="TrendingTipsCount"
-              style={{
-                position: "absolute",
-                top: "40%",
-                right: "15px",
-              }}
+              className="TrendCard__count"
+              aria-label={`${pick.count} tipster${pick.count === 1 ? "" : "s"}`}
             >
-              {pick.count}x
+              {pick.count}×
             </span>
-            <div className="TrendingTipGame">{pick.game}</div>
-            <div>{formatTrendingTipLabel(pick.tip)}</div>
-            <div>@{pick.odds}</div>
-          </div>
+          </li>
         ))}
-      </div>
-    </div>
+      </ul>
+    </section>
   );
 }

@@ -1,0 +1,175 @@
+/* Prediction League trending picks (home + /prediction-league/) */
+
+.TrendingSection {
+  width: min(100%, 42em);
+  max-width: 100%;
+  margin: -0.5em auto 2.5em;
+  padding: 0 0.75em;
+  box-sizing: border-box;
+  text-align: left;
+}
+
+.TrendingSection__title {
+  margin: 0 0 1em;
+  font-size: 0.82em;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  line-height: 1.3;
+  color: var(--faint-text);
+}
+
+.TopPicksGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(11.25rem, 1fr));
+  gap: 0.65rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.TrendCard {
+  display: flex;
+  align-items: stretch;
+  justify-content: space-between;
+  gap: 0.65rem;
+  min-width: 0;
+  padding: 0.75rem 0.85rem;
+  background: var(--secondary-background-color);
+  border: 1px solid rgba(var(--accent-color-rgb), 0.18);
+  border-radius: 8px;
+  box-sizing: border-box;
+  box-shadow: none;
+}
+
+.TrendCard__main {
+  min-width: 0;
+  flex: 1;
+}
+
+.TrendCard__fixture {
+  margin: 0 0 0.35em;
+  font-size: 0.8rem;
+  font-weight: 600;
+  line-height: 1.35;
+  color: var(--faint-text);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+}
+
+.TrendCard__selection {
+  margin: 0 0 0.35em;
+  font-size: 0.95rem;
+  font-weight: 700;
+  line-height: 1.25;
+  color: var(--text-color);
+}
+
+.TrendCard__odds {
+  margin: 0;
+  font-size: 0.85rem;
+  font-weight: 600;
+  line-height: 1.2;
+  color: var(--text-color);
+}
+
+.TrendCard__oddsValue {
+  font-variant-numeric: tabular-nums;
+  color: var(--primary-color);
+}
+
+.TrendCard__count {
+  flex-shrink: 0;
+  align-self: center;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 2.25rem;
+  padding: 0.28rem 0.55rem;
+  font-size: 0.78rem;
+  font-weight: 800;
+  font-variant-numeric: tabular-nums;
+  line-height: 1;
+  color: var(--text-color);
+  background: rgba(var(--primary-rgb), 0.1);
+  border: 1px solid rgba(var(--primary-rgb), 0.26);
+  border-radius: 999px;
+}
+
+@media (max-width: 900px) {
+  .TrendingSection__title {
+    margin-bottom: 0.85em;
+    font-size: 0.76em;
+  }
+
+  .TopPicksGrid {
+    grid-template-columns: repeat(auto-fill, minmax(9.5rem, 1fr));
+    gap: 0.5rem;
+  }
+
+  .TrendCard {
+    gap: 0.5rem;
+    padding: 0.6rem 0.7rem;
+    border-radius: 6px;
+  }
+
+  .TrendCard__fixture {
+    margin-bottom: 0.28em;
+    font-size: 0.72rem;
+  }
+
+  .TrendCard__selection {
+    margin-bottom: 0.28em;
+    font-size: 0.84rem;
+  }
+
+  .TrendCard__odds {
+    font-size: 0.76rem;
+  }
+
+  .TrendCard__count {
+    min-width: 2rem;
+    padding: 0.22rem 0.45rem;
+    font-size: 0.7rem;
+  }
+}
+
+@media (max-width: 560px) {
+  .TrendingSection {
+    padding: 0 0.35em;
+  }
+
+  .TrendingSection__title {
+    font-size: 0.72em;
+  }
+
+  .TopPicksGrid {
+    grid-template-columns: 1fr;
+    gap: 0.45rem;
+  }
+
+  .TrendCard {
+    padding: 0.5rem 0.6rem;
+  }
+
+  .TrendCard__fixture {
+    font-size: 0.68rem;
+  }
+
+  .TrendCard__selection {
+    font-size: 0.8rem;
+  }
+
+  .TrendCard__odds {
+    font-size: 0.72rem;
+  }
+
+  .TrendCard__count {
+    min-width: 1.85rem;
+    padding: 0.2rem 0.4rem;
+    font-size: 0.66rem;
+  }
+}

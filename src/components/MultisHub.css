@@ -613,8 +613,8 @@
 }
 
 .MultisHub__cardFooter {
-  margin-top: 0.85rem;
-  padding-top: 0.75rem;
+  margin: 0;
+  padding: 0.75rem;
   border-top: 1px solid var(--third-background-color, rgba(2, 0, 41, 0.1));
   text-align: left;
 }

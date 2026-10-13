@@ -8,6 +8,7 @@ import { loadThirdPartyScripts } from "../src/utils/loadThirdPartyScripts";
 import reportWebVitals from "../src/reportWebVitals";
 import "../src/index.css";
 import "../src/styles/home-guest-landing-polish.css";
+import "../src/styles/prediction-league-trending.css";
 import "../src/styles/premium-upsell-polish.css";
 import "../src/styles/rankings-duel.css";
 import "../src/styles/competitions-index-layout.css";

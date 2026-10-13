@@ -265,7 +265,20 @@ body.dark-mode .GuestLanding-membershipNotice__body {
   .PredictionControls .UserTipsContainer,
   .PredictionControls #ROIPlaceholder {
     display: flex;
+    flex-direction: column;
+    align-items: center;
     justify-content: center;
+    width: 100%;
+  }
+
+  .PredictionControls #UserGeneratedTips {
+    width: 100%;
+  }
+
+  .PredictionControls .UserTipsContainer .leaderboard-container,
+  .PredictionControls .UserTipsContainer .TrendingSection,
+  .PredictionControls .UserTipsContainer .username-setup-banner {
+    align-self: stretch;
     width: 100%;
   }
 
