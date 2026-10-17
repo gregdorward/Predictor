@@ -717,6 +717,35 @@
   text-align: left;
 }
 
+.MultisHub__legMetric {
+  font-size: 0.72rem;
+  font-weight: 500;
+  color: var(--secondary-text-color, rgba(2, 0, 41, 0.62));
+}
+
+.dark-mode .MultisHub__legMetric {
+  color: rgba(255, 255, 255, 0.62);
+}
+
+.MultisHub__statsShare {
+  margin-top: 0.85rem;
+  padding-top: 0.85rem;
+  border-top: 1px solid var(--third-background-color, rgba(2, 0, 41, 0.1));
+}
+
+.MultisHub__statsShareActions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+.MultisHub__statsShareStatus {
+  margin: 0.45rem 0 0;
+  font-size: 0.78rem;
+  color: var(--secondary-text-color, rgba(2, 0, 41, 0.7));
+}
+
 .MultisHub__statsPanelKicker {
   margin: 0 0 0.65rem;
   font-size: 0.78rem;

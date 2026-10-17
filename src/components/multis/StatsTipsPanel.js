@@ -1,5 +1,12 @@
-import React, { useState } from "react";
+import React, { useMemo, useState } from "react";
 import { requestUpgrade } from "../../logic/requestUpgrade";
+import {
+  STATS_TIP_SECTIONS,
+  formatStatsTipMetric,
+} from "../../utils/formatStatsTipsShareText";
+import StatsTipsShare from "./StatsTipsShare";
+
+const FREE_TIP_LIMIT = 2;
 
 const scrollToFixture = (id) => {
   setTimeout(() => {
@@ -20,8 +27,11 @@ function legLinkClass(outcome) {
   return "";
 }
 
-function StatsTipLeg({ tip }) {
+function StatsTipLeg({ tip, sectionId }) {
   const stripeClass = `MultisHub__legOutcome ${outcomeStripeClass(tip.outcome)}`;
+  const section =
+    STATS_TIP_SECTIONS.find((s) => s.id === sectionId) || STATS_TIP_SECTIONS[0];
+  const metricValue = formatStatsTipMetric(tip, sectionId);
 
   return (
     <li className="MultisHub__leg MultisHub__leg--stats">
@@ -39,6 +49,9 @@ function StatsTipLeg({ tip }) {
             <span className="MultisHub__legTextStack MultisHub__legTextStack--stats">
               <span className="MultisHub__legFixtureLine">{tip.game}</span>
               <span className="MultisHub__legPickLabel">{tip.prediction}</span>
+              <span className="MultisHub__legMetric">
+                {section.metricColumn} {metricValue}
+              </span>
             </span>
           </span>
           <span className="MultisHub__legResult MultisHub__legResult--stats">
@@ -58,7 +71,7 @@ function StatsTipLeg({ tip }) {
   );
 }
 
-function TipList({ tips, paid, freeLimit = 2 }) {
+function TipList({ tips, paid, sectionId, freeLimit = FREE_TIP_LIMIT }) {
   if (!tips || tips.length === 0) {
     return (
       <p className="MultisHub__empty">No fixtures match these stats today.</p>
@@ -72,7 +85,11 @@ function TipList({ tips, paid, freeLimit = 2 }) {
     <>
       <ul className="MultisHub__legList MultisHub__legList--stats">
         {visible.map((tip) => (
-          <StatsTipLeg key={tip.id || tip.game} tip={tip} />
+          <StatsTipLeg
+            key={tip.id || tip.game}
+            tip={tip}
+            sectionId={sectionId}
+          />
         ))}
       </ul>
       {!paid && hidden > 0 ? (
@@ -88,13 +105,13 @@ function TipList({ tips, paid, freeLimit = 2 }) {
   );
 }
 
-const SECTIONS = [
-  { id: "xg", label: "xG diff", description: "Largest xG differentials (last 5)" },
-  { id: "points", label: "Points", description: "Largest points-per-game differentials (last 6)" },
-  { id: "goals", label: "Goals", description: "Largest goal differentials (last 5)" },
-  { id: "attacks", label: "Attacks", description: "Largest dangerous-attacks differentials (last 5)" },
-  { id: "sot", label: "SOT", description: "Largest shots-on-target differentials (last 5)" },
-];
+const SECTION_DESCRIPTIONS = {
+  xg: "Largest xG differentials (last 5)",
+  points: "Largest points-per-game differentials (last 6)",
+  goals: "Largest goal differentials (last 5)",
+  attacks: "Largest dangerous-attacks differentials (last 5)",
+  sot: "Largest shots-on-target differentials (last 5)",
+};
 
 export default function StatsTipsPanel({
   paid,
@@ -114,7 +131,13 @@ export default function StatsTipsPanel({
     sot: sotTips,
   };
 
-  const active = SECTIONS.find((s) => s.id === activeId) || SECTIONS[0];
+  const active =
+    STATS_TIP_SECTIONS.find((s) => s.id === activeId) || STATS_TIP_SECTIONS[0];
+  const activeTips = dataById[active.id] || [];
+  const shareableTips = useMemo(
+    () => (paid ? activeTips : activeTips.slice(0, FREE_TIP_LIMIT)),
+    [activeTips, paid]
+  );
 
   return (
     <div className="MultisHub__statsPanel">
@@ -124,7 +147,7 @@ export default function StatsTipsPanel({
           card.
         </p>
         <div className="MultisHub__carouselTabs" role="tablist" aria-label="Stats tip categories">
-          {SECTIONS.map((section) => {
+          {STATS_TIP_SECTIONS.map((section) => {
             const selected = section.id === activeId;
             return (
               <button
@@ -140,8 +163,16 @@ export default function StatsTipsPanel({
             );
           })}
         </div>
-        <p className="MultisHub__statsPanelKicker">{active.description}</p>
-        <TipList tips={dataById[active.id]} paid={paid} />
+        <p className="MultisHub__statsPanelKicker">
+          {SECTION_DESCRIPTIONS[active.id]}
+        </p>
+        <TipList
+          tips={activeTips}
+          paid={paid}
+          sectionId={active.id}
+          freeLimit={FREE_TIP_LIMIT}
+        />
+        <StatsTipsShare sectionId={active.id} tips={shareableTips} />
       </div>
     </div>
   );
