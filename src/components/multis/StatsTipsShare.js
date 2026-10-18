@@ -1,9 +1,16 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { copyToClipboard } from "../../utils/copyToClipboard";
 import { formatStatsTipsShareText } from "../../utils/formatStatsTipsShareText";
+import StatsTipsShareCard from "./StatsTipsShareCard";
 
 export default function StatsTipsShare({ sectionId, tips }) {
   const [status, setStatus] = useState("");
+  const [cardOpen, setCardOpen] = useState(false);
+  const cardRef = useRef(null);
+
+  useEffect(() => {
+    setCardOpen(false);
+  }, [sectionId]);
 
   if (!tips?.length) {
     return null;
@@ -22,6 +29,13 @@ export default function StatsTipsShare({ sectionId, tips }) {
     });
     const copied = await copyToClipboard(text);
     showStatus(copied ? "Copied plain text!" : "Copy failed");
+  };
+
+  const handleOpenShareCard = () => {
+    setCardOpen(true);
+    window.setTimeout(() => {
+      cardRef.current?.scrollIntoView({ behavior: "smooth", block: "nearest" });
+    }, 0);
   };
 
   const handleCopyMarkdown = async () => {
@@ -51,7 +65,19 @@ export default function StatsTipsShare({ sectionId, tips }) {
         >
           Markdown table
         </button>
+        <button
+          type="button"
+          className="CopyMultiButton"
+          onClick={handleOpenShareCard}
+        >
+          Share card
+        </button>
       </div>
+      {cardOpen ? (
+        <div ref={cardRef} className="MultisHub__statsShareCardWrap">
+          <StatsTipsShareCard sectionId={sectionId} tips={tips} />
+        </div>
+      ) : null}
       {status ? (
         <p className="MultisHub__statsShareStatus" role="status">
           {status}

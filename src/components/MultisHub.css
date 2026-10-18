@@ -746,6 +746,158 @@
   color: var(--secondary-text-color, rgba(2, 0, 41, 0.7));
 }
 
+.MultisHub__statsShareCardWrap {
+  margin-top: 0.85rem;
+}
+
+.MultisHub__statsShareable {
+  width: 100%;
+  min-width: 0;
+}
+
+.MultisHub__statsShareable .ShareableVisual__actions {
+  margin: 0 0 0.5rem;
+  justify-content: flex-start;
+}
+
+.MultisHub__statsShareCapture {
+  box-sizing: border-box;
+  width: 100%;
+  max-width: 440px;
+  padding: 0.85rem 0.9rem 0.75rem;
+  text-align: left;
+  background: var(--secondary-background-color);
+  border: 1px solid var(--third-background-color, rgba(2, 0, 41, 0.12));
+  border-radius: 12px;
+}
+
+.MultisHub__statsShareCaptureHeader {
+  margin-bottom: 0.65rem;
+  padding-bottom: 0.55rem;
+  border-bottom: 3px solid var(--primary-color);
+}
+
+.MultisHub__statsShareCaptureEyebrow {
+  margin: 0;
+  font-size: 0.62rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--primary-color);
+}
+
+.MultisHub__statsShareCaptureTitle {
+  margin: 0.2rem 0 0;
+  font-size: 0.95rem;
+  font-weight: 700;
+  line-height: 1.25;
+  color: var(--text-color);
+}
+
+.MultisHub__statsShareCaptureDate {
+  margin: 0.25rem 0 0;
+  font-size: 0.72rem;
+  font-weight: 500;
+  color: var(--secondary-text-color, rgba(2, 0, 41, 0.65));
+}
+
+/* Override global `table, th, td` centering from index.css */
+.MultisHub__statsShareCapture .MultisHub__statsShareTable,
+.MultisHub__statsShareCapture .MultisHub__statsShareTable th,
+.MultisHub__statsShareCapture .MultisHub__statsShareTable td {
+  margin: 0;
+  text-align: left;
+}
+
+.MultisHub__statsShareTable {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.72rem;
+  line-height: 1.35;
+  table-layout: auto;
+}
+
+.MultisHub__statsShareTable th {
+  padding: 0.35rem 0.35rem 0.4rem 0;
+  font-size: 0.62rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  text-align: left;
+  color: var(--secondary-text-color, rgba(2, 0, 41, 0.7));
+  border-bottom: 1px solid var(--third-background-color, rgba(2, 0, 41, 0.12));
+}
+
+.MultisHub__statsShareTable td {
+  padding: 0.45rem 0.35rem 0.45rem 0;
+  vertical-align: top;
+  text-align: left;
+  border-bottom: 1px solid
+    color-mix(in srgb, var(--third-background-color, rgba(2, 0, 41, 0.12)) 65%, transparent);
+  color: var(--text-color);
+}
+
+.MultisHub__statsShareTable tr:last-child td {
+  border-bottom: none;
+}
+
+.MultisHub__statsShareTableNum {
+  text-align: left;
+  white-space: nowrap;
+}
+
+.MultisHub__statsShareMatch {
+  max-width: 9.5rem;
+}
+
+.MultisHub__statsShareTeams {
+  display: block;
+  font-weight: 600;
+}
+
+.MultisHub__statsShareComp {
+  display: block;
+  margin-top: 0.1rem;
+  font-size: 0.62rem;
+  font-weight: 500;
+  color: var(--secondary-text-color, rgba(2, 0, 41, 0.62));
+}
+
+.MultisHub__statsSharePick {
+  font-weight: 600;
+}
+
+.MultisHub__statsShareMetric {
+  font-weight: 700;
+  color: var(--primary-color);
+}
+
+.MultisHub__statsShareOdds {
+  font-weight: 600;
+}
+
+.MultisHub__statsShareOverflow {
+  margin: 0.55rem 0 0;
+  font-size: 0.68rem;
+  font-weight: 600;
+  text-align: center;
+  color: var(--secondary-text-color, rgba(2, 0, 41, 0.72));
+}
+
+.MultisHub__statsShareCapture.is-exporting {
+  max-width: none;
+  padding: 1rem 1.05rem 0.9rem;
+  border-width: 2px;
+}
+
+.MultisHub__statsShareCapture.is-exporting .MultisHub__statsShareCaptureTitle {
+  font-size: 1.05rem;
+}
+
+.MultisHub__statsShareCapture.is-exporting .MultisHub__statsShareTable {
+  font-size: 0.82rem;
+}
+
 .MultisHub__statsPanelKicker {
   margin: 0 0 0.65rem;
   font-size: 0.78rem;

@@ -43,12 +43,16 @@ export const STATS_TIP_SECTIONS = [
   },
 ];
 
-function formatShareDate(date = new Date()) {
+export function formatStatsTipsShareDate(date = new Date()) {
   return date.toLocaleDateString("en-GB", {
     weekday: "short",
     day: "numeric",
     month: "short",
   });
+}
+
+function formatShareDate(date) {
+  return formatStatsTipsShareDate(date);
 }
 
 function formatDecimalMagnitude(value, decimals) {
