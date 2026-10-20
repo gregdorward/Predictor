@@ -6,7 +6,8 @@
   "dek": "How Soccer Stats Hub builds a match prediction: digging through completed games, shaping attack and defence, then turning expected goals into probabilities a fan can actually use.",
   "publishedAt": "2026-07-16",
   "updatedAt": "2026-07-16T12:30:00.000Z",
-  "authorLabel": "Soccer Stats Hub",
+  "authorLabel": "Greg, founder of Soccer Stats Hub",
+  "reviewedAt": "2026-10-20",
   "intro": [
     "If you have ever expanded a game on the Soccer Stats Hub homepage and wondered where the predicted score, the BTTS percentage or the Over 2.5 number actually come from, this is that story. Not a sales pitch. Not a black box. Just the path we take from raw match data to the numbers you see.",
     "The short version is this: we do not invent a team's season from a blended form string. For the competition in question we go through the completed fixtures, game by game, pull out the individual match stats, and build each club's picture from those matches alone. Only then do we ask what that means for the next kick-off."

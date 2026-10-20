@@ -6,7 +6,9 @@
   "dek": "A flat-stake backtest from late July through early October 2026: 2,070 match-result tips, +6.87% ROI, and where the model found the most room against the market.",
   "publishedAt": "2026-10-06",
   "updatedAt": "2026-10-06T14:30:00.000Z",
-  "authorLabel": "Soccer Stats Hub",
+  "authorLabel": "Greg, founder of Soccer Stats Hub",
+  "reviewedAt": "2026-10-20",
+  "showDataCitation": true,
   "intro": [
     "Football predictions are easy to judge one match at a time. The more useful test is what happens when the same rules are applied again and again across different leagues, prices and weeks of the calendar. That is what we did here: every completed game in our covered competitions between 20 July and 6 October 2026, with one flat unit staked on the model's 1X2 tip for each match we could predict.",
     "The run produced 2,070 tips in the ROI set. Of those, 934 landed the correct match result, giving a 45.1% hit rate and a +6.87% return after typical bookmaker prices. It is the same model logic that powers the site today, replayed across finished fixtures rather than judged from a handful of good-looking picks."

@@ -55,6 +55,44 @@
   color: var(--faint-text);
 }
 
+.Competition--seoShell .Competition__seoCrossRank {
+  max-width: 65ch;
+  margin: 0.75rem 0 0;
+  padding-left: 1.25rem;
+  color: var(--faint-text);
+  font-size: 0.95rem;
+  line-height: 1.55;
+}
+
+.Competition--seoShell .Competition__seoReviewed {
+  font-size: 0.85rem;
+  opacity: 0.85;
+}
+
+.DataCitation {
+  margin: 2rem 0 1rem;
+  padding: 1rem 1.1rem;
+  border: 1px solid rgba(var(--primary-rgb), 0.15);
+  border-radius: 8px;
+  max-width: 65ch;
+}
+
+.DataCitation__title {
+  margin: 0 0 0.5rem;
+  font-size: 1rem;
+}
+
+.DataCitation p {
+  margin: 0 0 0.5rem;
+  font-size: 0.9rem;
+  line-height: 1.55;
+  color: var(--faint-text);
+}
+
+.DataCitation p:last-child {
+  margin-bottom: 0;
+}
+
 #ssh-content table {
   font-variant-numeric: tabular-nums;
 }

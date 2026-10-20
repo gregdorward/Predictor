@@ -4,6 +4,7 @@ import PageMeta from "../../src/components/PageMeta";
 import { MRI_MIN_ROWS } from "../../src/seo/marketReliabilityData";
 import { fetchMarketReliabilityOverview } from "../../src/seo/serverFetch";
 import {
+  DATASET_LICENSE_URL,
   SITE_URL,
   buildMarketReliabilityOgImageUrl,
 } from "../../src/seo/pageMetaConfig";
@@ -24,10 +25,21 @@ function buildJsonLd(overview) {
         "@type": "Dataset",
         "@id": `${PAGE_URL}#dataset`,
         name: "Football market reliability index by league",
-        description: `Favourite win, draw and upset rates across ${count} football leagues, plus team-level price reliability from current-season results.`,
+        description: `Favourite win, draw and upset rates across ${count} football leagues, plus team-level price reliability from current-season results. Updated daily from finished matches in leagues Soccer Stats Hub covers.`,
         url: PAGE_URL,
         isAccessibleForFree: true,
-        creator: { "@id": `${SITE_URL}/#organization` },
+        license: DATASET_LICENSE_URL,
+        creator: {
+          "@type": "Organization",
+          "@id": `${SITE_URL}/#organization`,
+          name: "Soccer Stats Hub",
+          url: SITE_URL,
+        },
+        publisher: {
+          "@type": "Organization",
+          "@id": `${SITE_URL}/#organization`,
+          name: "Soccer Stats Hub",
+        },
         temporalCoverage: overview?.generatedAt
           ? String(overview.generatedAt).slice(0, 10)
           : undefined,

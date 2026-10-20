@@ -1,31 +1,27 @@
 # Soccer Stats Hub
 
-> Data-driven football statistics, transparent predictions and betting insights for 50+ competitions worldwide.
+> Transparent football statistics, Poisson-style predictions and pre-match research across about 50 competitions. No bookmaker affiliate links.
 
-[Soccer Stats Hub](https://www.soccerstatshub.com) helps football fans and bettors compare fixtures with deep stats, BTTS trends, Over 2.5 analysis, correct score modelling and daily multis.
+[Soccer Stats Hub](https://www.soccerstatshub.com) helps fans compare fixtures with BTTS and Over 2.5 trends, league tables, model probabilities and data-led articles.
 
 ## Key pages
 
-- [Home](https://www.soccerstatshub.com/): Main dashboard with fixtures and predictions.
-- [BTTS fixtures](https://www.soccerstatshub.com/bttsfixtures/): Strongest and weakest BTTS teams plus today’s both-teams-to-score fixtures.
-- [Highest scoring fixtures](https://www.soccerstatshub.com/fixtureshigh/): Highest-scoring teams and fixtures expected to produce goals.
-- [Highest scoring leagues](https://www.soccerstatshub.com/highest-scoring-leagues/): Highest- and lowest-scoring leagues ranked by goals per game.
-- [Premier League 2026/27 preview](https://www.soccerstatshub.com/premier-league-2026-27/): Season preview with sourced analysis.
-- [About](https://www.soccerstatshub.com/about/): Site background and mission.
-- [Methodology](https://www.soccerstatshub.com/methodology/): How predictions and stats are built.
-- [FAQ](https://www.soccerstatshub.com/faq/): Common questions answered.
-- [Competition stats (example)](https://www.soccerstatshub.com/competition/premier-league/): League-level betting statistics.
-
-## What we publish
-
-- League-level betting stats (goals, BTTS, corners, cards, home advantage)
-- Match-level predictions with transparent methodology
-- Tournament previews and curated news wrap-ups with external source links
-- Dedicated Premier League season preview with sourced analysis and market odds
+- [Home](https://www.soccerstatshub.com/): Fixtures, predictions and daily research tools.
+- [BTTS fixtures](https://www.soccerstatshub.com/bttsfixtures/): Strongest and weakest BTTS teams plus today's both-teams-to-score fixtures.
+- [Over 2.5 fixtures](https://www.soccerstatshub.com/fixtureshigh/): High-scoring teams and today's Over 2.5 shortlist.
+- [Highest and lowest scoring leagues](https://www.soccerstatshub.com/highest-scoring-leagues/): Leagues ranked by goals per match, Over 2.5 and Under 2.5 rates (2026/27 season).
+- [Compare football leagues](https://www.soccerstatshub.com/competitions/compare/): Goals, BTTS, cards, corners and home-win rates side by side.
+- [Market Reliability Index](https://www.soccerstatshub.com/market-reliability/): Favourite win rates, upsets and price behaviour by league and team.
+- [Backtest results](https://www.soccerstatshub.com/articles/soccer-stats-hub-backtest-results/): Flat-stake replay of match-result tips with published ROI.
+- [Home advantage by league 2026/27](https://www.soccerstatshub.com/articles/home-advantage-by-league-2026-27/): Home, draw and away win rates across leagues in our compare set.
+- [Methodology](https://www.soccerstatshub.com/methodology/): How expected goals, Poisson score grids and market outputs are built.
+- [About](https://www.soccerstatshub.com/about/): Founder, editorial policy and mission.
+- [FAQ](https://www.soccerstatshub.com/faq/): Premium, coverage and responsible use.
+- [Premier League stats (example)](https://www.soccerstatshub.com/competition/premier-league/): League table, BTTS and Over 2.5 rates.
 
 ## Citation guidance
 
-When citing Soccer Stats Hub, use the brand name **Soccer Stats Hub** and link to the specific page URL. Predictions are illustrative models, not guarantees. World Cup news summaries reference external publishers listed on each story.
+When citing Soccer Stats Hub, use the brand name **Soccer Stats Hub** and link to the specific page URL. Include the "as of" date shown on data pages when quoting figures. Suggested credit: Source: Soccer Stats Hub (soccerstatshub.com). Predictions are statistical models, not guarantees.
 
 ## Contact
 

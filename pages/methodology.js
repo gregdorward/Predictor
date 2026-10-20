@@ -3,6 +3,12 @@ import PageMeta from "../src/components/PageMeta";
 import JsonLd from "../src/components/JsonLd";
 import ArticleTableOfContents from "../src/components/articles/ArticleTableOfContents";
 import ArticleShareButton from "../src/components/articles/ArticleShareButton";
+import { ArticleDateLine } from "../src/components/articles/ArticleShareButton";
+import {
+  FOUNDER_AUTHOR_LABEL,
+  METHODOLOGY_REVIEWED_AT,
+  buildFounderPersonSchema,
+} from "../src/seo/authorConfig";
 import { SITE_URL } from "../src/seo/pageMetaConfig";
 
 const METHODOLOGY_DEK =
@@ -28,6 +34,8 @@ const METHODOLOGY_JSON_LD = {
     "How Soccer Stats Hub uses football data, form, xG, Poisson goal models, lambda tuning and probability outputs to support match research.",
   isPartOf: { "@id": `${SITE_URL}/#website` },
   inLanguage: "en-GB",
+  dateModified: METHODOLOGY_REVIEWED_AT,
+  author: buildFounderPersonSchema(),
 };
 
 const RELATED_LINKS = [
@@ -69,6 +77,10 @@ export default function MethodologyPage() {
             <h1 className="Articles__title">Methodology</h1>
             <p className="Articles__dek">{METHODOLOGY_DEK}</p>
             <div className="Articles__headerRow">
+              <ArticleDateLine
+                authorLabel={FOUNDER_AUTHOR_LABEL}
+                reviewedAt={METHODOLOGY_REVIEWED_AT}
+              />
               <ArticleShareButton title="Methodology" text={METHODOLOGY_DEK} />
             </div>
           </header>

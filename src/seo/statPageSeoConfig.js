@@ -109,7 +109,7 @@ export const STAT_PAGE_SEO = {
   highestScoringLeagues: {
     canonicalPath: "/highest-scoring-leagues/",
     intro:
-      "Compare the highest-scoring and lowest-scoring football leagues by goals per match, Over 2.5 and Under 2.5 rates. Use the first table for open, goal-heavy competitions and the second for defensive, slower scoring environments.",
+      "Compare the highest-scoring and lowest-scoring football leagues in 2026/27 by goals per match, Over 2.5 and Under 2.5 rates. Use the first table for open, goal-heavy competitions and the second for defensive, slower scoring environments.",
     relatedLinks: [HUB_LINKS.goals, HUB_LINKS.btts, HUB_LINKS.competitions],
   },
   bttsNoTeams: {

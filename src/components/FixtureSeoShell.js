@@ -6,6 +6,8 @@ export function FixtureSeoBody({
   away,
   league,
   competitionName,
+  competitionUrl = null,
+  competitionLinkName = null,
 }) {
   const introParagraphs = buildFixtureSeoParagraphs({
     home,
@@ -14,12 +16,19 @@ export function FixtureSeoBody({
     competitionName,
   });
 
+  const competitionLabel = competitionLinkName || league || competitionName;
+
   return (
     <div className="FixturePage-seoBody">
       <div className="FixturePage-seoIntro">
         {introParagraphs.map((paragraph) => (
           <p key={paragraph.slice(0, 48)}>{paragraph}</p>
         ))}
+        {competitionUrl && competitionLabel ? (
+          <p>
+            <a href={competitionUrl}>{competitionLabel} stats and table</a>
+          </p>
+        ) : null}
       </div>
     </div>
   );
@@ -32,6 +41,7 @@ export default function FixtureSeoShell({
   stadium,
   kickOff,
   competitionName,
+  competitionUrl = null,
   homeBadge = null,
   awayBadge = null,
 }) {
@@ -72,6 +82,8 @@ export default function FixtureSeoShell({
         away={away}
         league={league}
         competitionName={competitionName}
+        competitionUrl={competitionUrl}
+        competitionLinkName={competitionName || league}
       />
     </section>
   );

@@ -5,8 +5,10 @@ import customiseTipsFilters from "./customise-tips-filters.json";
 import nonPenaltyXgPredictions from "./non-penalty-xg-predictions.json";
 import whatSetsSoccerStatsHubApart from "./what-sets-soccer-stats-hub-apart.json";
 import soccerStatsHubBacktestResults from "./soccer-stats-hub-backtest-results.json";
+import homeAdvantageByLeague from "./home-advantage-by-league-2026-27.json";
 
 const ARTICLE_BY_SLUG = {
+  [homeAdvantageByLeague.slug]: homeAdvantageByLeague,
   [soccerStatsHubBacktestResults.slug]: soccerStatsHubBacktestResults,
   [whatSetsSoccerStatsHubApart.slug]: whatSetsSoccerStatsHubApart,
   [nonPenaltyXgPredictions.slug]: nonPenaltyXgPredictions,

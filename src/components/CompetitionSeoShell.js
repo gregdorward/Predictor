@@ -41,6 +41,9 @@ export default function CompetitionSeoShell({
   tableLeader = null,
   updatedOn = null,
   seasonStarted = true,
+  crossRankInsights = [],
+  seasonNoteParagraphs = [],
+  seasonNoteReviewedAt = null,
 }) {
   const metaParts = [country, season].filter(Boolean);
   const introParagraphs = buildCompetitionSeoParagraphs({
@@ -112,6 +115,30 @@ export default function CompetitionSeoShell({
         {introParagraphs.map((paragraph) => (
           <p key={paragraph.slice(0, 48)}>{paragraph}</p>
         ))}
+        {seasonNoteParagraphs.map((paragraph) => (
+          <p key={paragraph.slice(0, 48)}>{paragraph}</p>
+        ))}
+        {seasonNoteReviewedAt ? (
+          <p className="Competition__seoReviewed">
+            Season note last reviewed{" "}
+            {formatSeoUpdatedDate(
+              new Date(`${String(seasonNoteReviewedAt).slice(0, 10)}T12:00:00`)
+            )}
+          </p>
+        ) : null}
+        {crossRankInsights.length > 0 ? (
+          <ul className="Competition__seoCrossRank">
+            {crossRankInsights.map((insight) => (
+              <li key={`${insight.before}-${insight.linkLabel}`}>
+                {insight.before}
+                {insight.href ? (
+                  <a href={insight.href}>{insight.linkLabel}</a>
+                ) : null}
+                {insight.after}
+              </li>
+            ))}
+          </ul>
+        ) : null}
       </div>
       {tableRows.length > 0 ? <JourneyContentBreak /> : null}
       <CompetitionTable name={name} season={season} rows={tableRows} />

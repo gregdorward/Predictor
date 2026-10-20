@@ -20,8 +20,16 @@ jest.mock("../../src/components/JsonLd", () => {
 });
 
 jest.mock("../../src/components/articles/ArticleShareButton", () => {
-  return function MockArticleShareButton() {
+  function MockArticleShareButton() {
     return null;
+  }
+  function MockArticleDateLine() {
+    return null;
+  }
+  return {
+    __esModule: true,
+    default: MockArticleShareButton,
+    ArticleDateLine: MockArticleDateLine,
   };
 });
 

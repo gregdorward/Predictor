@@ -79,13 +79,13 @@ describe("competitionCatalog removals and aliases", () => {
   test("competition meta titles align with common SERP league labels", () => {
     expect(
       buildCompetitionMeta({ english_name: "La Liga" }, { name: "La Liga" }).title
-    ).toBe("La Liga Stats");
+    ).toBe("La Liga Stats: Table, Goals & BTTS");
     expect(
       buildCompetitionMeta(
-        { english_name: "UEFA Champions League" },
+        { english_name: "UEFA Champions League", season: "2025/2026" },
         { name: "Champions League" }
       ).title
-    ).toBe("UEFA Champions League Stats");
+    ).toBe("UEFA Champions League Stats 2025/26: Table, Goals & BTTS");
     expect(
       competitionDisplayName(
         { english_name: "Professional League" },

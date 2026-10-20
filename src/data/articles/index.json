@@ -1,6 +1,16 @@
 {
   "articles": [
     {
+      "slug": "home-advantage-by-league-2026-27",
+      "title": "Home advantage by football league in 2026/27",
+      "dek": "Home-win rates in 2026/27 run from 32% in the Eredivisie to 54% in the Eerste Divisie and Champions League, with two leagues where away results already lead.",
+      "publishedAt": "2026-10-20",
+      "updatedAt": "2026-10-20T17:15:00.000Z",
+      "heroLabel": "Analysis",
+      "tags": ["Leagues", "Home advantage", "Compare"],
+      "ogDescription": "Does home advantage still show up league by league in 2026/27? Home, draw and away win rates from the Soccer Stats Hub league comparison table."
+    },
+    {
       "slug": "soccer-stats-hub-backtest-results",
       "title": "Soccer Stats Hub - Backtest Results",
       "dek": "Flat-stake backtest from July to October 2026: 2,070 match-result tips at +6.87% ROI, with draw and away-win angles and strong returns in several leagues.",

@@ -6,7 +6,8 @@
   "dek": "Soccer Stats Hub now calculates non-penalty expected goals for each completed fixture and feeds that picture into attack and defence strengths, so predictions reflect open-play performance rather than a fluke penalty.",
   "publishedAt": "2026-08-14",
   "updatedAt": "2026-08-14T20:00:00.000Z",
-  "authorLabel": "Soccer Stats Hub",
+  "authorLabel": "Greg, founder of Soccer Stats Hub",
+  "reviewedAt": "2026-10-20",
   "intro": [
     "Expected goals are one of the clearest ways to judge how a team has been performing. They ask a simple question: how good were the chances, not only how many times the ball hit the net. There is a catch, though. A penalty is a high-value chance by design. One soft spot kick in stoppage time can inflate a side's xG for that match, and if you roll those matches into season averages the noise sticks around.",
     "We have now built non-penalty xG into the prediction path on Soccer Stats Hub. For each completed competition fixture we still keep the full xG figure for display. Separately, we calculate non-penalty xG (npxG) on a game-by-game basis and feed that into the attack and defence strengths that shape the predicted score. The aim is a truer reflection of how teams create and concede chances when the game is being played, not when a referee points to the spot."

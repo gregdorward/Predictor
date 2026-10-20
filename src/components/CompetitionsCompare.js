@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import dynamic from "next/dynamic";
+import DataCitation from "./DataCitation";
 import SiteHeader from "./SiteHeader";
 import JourneyContentBreak from "./JourneyContentBreak";
 import { requestJourneyContentRefresh } from "../utils/journeyContentRefresh";
@@ -217,6 +218,11 @@ export default function CompetitionsCompare({ overview }) {
               Jump to a single league page or our highest-scoring leagues and fixture
               shortlists.
             </JourneyContentBreak>
+
+            <DataCitation
+              asOf={overview?.generatedAt}
+              pageLabel="the league comparison table"
+            />
 
             <section className="CompetitionsCompare-related" aria-label="Related pages">
               <h2>Go deeper</h2>

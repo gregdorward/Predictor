@@ -25,30 +25,17 @@ export const DEFAULT_TITLE =
 export const DEFAULT_DESCRIPTION =
   "Football stats, BTTS, Under 2.5, xG, form and prediction tools. Explore low-scoring leagues, match previews and stats-driven football insights.";
 
+export const DATASET_LICENSE_URL = `${SITE_URL}/terms/`;
+
 export const PAGE_META = {
   "/": {
     title: DEFAULT_TITLE,
     description: DEFAULT_DESCRIPTION,
   },
-  "/o25": {
-    title: "Over 2.5 Goals Teams | High Scoring Football Stats",
-    description:
-      "Teams ranked by Over 2.5 rate, average goals and upcoming fixtures. Find high-scoring sides for goals and match research.",
-  },
   "/highest-scoring-leagues": {
-    title: "Highest Scoring Leagues | Over 2.5 Football Stats",
+    title: "Highest & Lowest Scoring Football Leagues 2026/27",
     description:
-      "Highest- and lowest-scoring football leagues ranked by goals per match, Over 2.5 and Under 2.5 rates for goals, BTTS and match research.",
-  },
-  "/u25": {
-    title: "Under 2.5 Goals Leagues | Low Scoring Football Stats",
-    description:
-      "Low-scoring football leagues ranked by average goals and Under 2.5 rate. Compare defensive competitions and under-goals trends.",
-  },
-  "/teamshigh": {
-    title: "Highest Scoring Teams | Soccer Stats Hub",
-    description:
-      "Teams ranked by goals scored this season. Compare attacking form and find high-scoring sides across major leagues.",
+      "Highest- and lowest-scoring football leagues in 2026/27 ranked by goals per match, Over 2.5 and Under 2.5 rates for goals, BTTS and match research.",
   },
   "/fixtureshigh": {
     title: "Over 2.5 Goals Fixtures Today | High Scoring Match Stats",
@@ -59,16 +46,6 @@ export const PAGE_META = {
     title: "BTTS Fixtures Today | Both Teams To Score Match Stats",
     description:
       "Teams with the strongest and weakest BTTS records, plus today's Both Teams To Score fixtures, scoring averages and odds.",
-  },
-  "/bttsteams": {
-    title: "BTTS Teams Today | Both Teams To Score Stats & Predictions",
-    description:
-      "Teams with strong Both Teams To Score records, BTTS percentages and upcoming fixtures across major football leagues.",
-  },
-  "/btts-no-teams": {
-    title: "BTTS No Teams | Low Both Teams To Score Stats",
-    description:
-      "Teams with lower Both Teams To Score rates for BTTS No, clean sheet and low-scoring match research across major football leagues.",
   },
   "/competitions/compare": {
     title: "Compare Football Leagues | Goals, BTTS & Cards by League",
@@ -88,7 +65,7 @@ export const PAGE_META = {
   "/articles": {
     title: "Football Articles & Analysis | Soccer Stats Hub",
     description:
-      "In-depth football articles from Soccer Stats Hub: World Cup awards, league deep-dives and data-led analysis built for fans and SEO readers.",
+      "In-depth football articles from Soccer Stats Hub: backtests, methodology notes, league analysis and transparent prediction research.",
   },
   "/premier-league-2026-27": {
     title: "Premier League 2026/27 Preview | Soccer Stats Hub",

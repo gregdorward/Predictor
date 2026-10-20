@@ -1,4 +1,5 @@
 import { footyStatsToSofaScoreMap } from "../constants/footyStatsToSofaScore";
+import { clampMetaTitle } from "./metaUtils";
 
 /** @type {{ id: number, slug: string, name: string }[]} */
 // Ids to be updated for the latest season
@@ -270,10 +271,26 @@ export function competitionDisplayName(data, catalog) {
   return api;
 }
 
+export function formatSeasonShortLabel(season) {
+  if (!season) return null;
+  const text = String(season).trim();
+  const match = text.match(/(\d{4})\s*\/\s*(\d{4}|\d{2})/);
+  if (!match) return text;
+  const startYear = match[1];
+  const endPart = match[2];
+  const endYear =
+    endPart.length === 2 ? `${startYear.slice(0, 2)}${endPart}` : endPart;
+  return `${startYear}/${String(endYear).slice(-2)}`;
+}
+
 export function buildCompetitionMeta(data, catalog) {
   const name = competitionDisplayName(data, catalog);
+  const seasonLabel = formatSeasonShortLabel(data?.season);
+  const titleCore = seasonLabel
+    ? `${name} Stats ${seasonLabel}: Table, Goals & BTTS`
+    : `${name} Stats: Table, Goals & BTTS`;
   return {
-    title: `${name} Stats`,
+    title: clampMetaTitle(titleCore),
     description: `BTTS, Over 2.5, goals and card stats for ${name}. League table, team rankings and market trends on Soccer Stats Hub.`,
   };
 }

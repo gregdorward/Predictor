@@ -44,17 +44,27 @@ export default function ArticleShareButton({ title, text }) {
   );
 }
 
-export function ArticleDateLine({ publishedAt, updatedAt, dataAsOf, authorLabel }) {
+export function ArticleDateLine({
+  publishedAt,
+  updatedAt,
+  reviewedAt,
+  dataAsOf,
+  authorLabel,
+}) {
   const published = formatDate(publishedAt);
   const asOf = formatDate(dataAsOf);
   const updated = formatDate(updatedAt);
+  const reviewed = formatDate(reviewedAt);
 
   return (
     <p className="ArticleMeta">
       {authorLabel ? <span>{authorLabel}</span> : null}
       {published ? <span>Published {published}</span> : null}
       {asOf ? <span>Data as of {asOf}</span> : null}
-      {updated && updated !== published ? <span>Updated {updated}</span> : null}
+      {reviewed ? <span>Last reviewed {reviewed}</span> : null}
+      {updated && updated !== published && updated !== reviewed ? (
+        <span>Updated {updated}</span>
+      ) : null}
     </p>
   );
 }

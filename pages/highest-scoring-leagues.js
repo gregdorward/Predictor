@@ -7,11 +7,13 @@ import {
 export default function HighestScoringLeaguesPage({
   initialRows,
   initialLowScoringRows,
+  dataAsOf,
 }) {
   return (
     <HighestScoringLeagues
       initialRows={initialRows}
       initialLowScoringRows={initialLowScoringRows}
+      dataAsOf={dataAsOf}
     />
   );
 }
@@ -21,5 +23,11 @@ export async function getServerSideProps() {
     loadHighestScoringLeagueRows(),
     loadU25Rows(),
   ]);
-  return { props: { initialRows, initialLowScoringRows } };
+  return {
+    props: {
+      initialRows,
+      initialLowScoringRows,
+      dataAsOf: new Date().toISOString().slice(0, 10),
+    },
+  };
 }

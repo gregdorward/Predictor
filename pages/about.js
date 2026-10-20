@@ -1,6 +1,7 @@
 import SiteHeader from "../src/components/SiteHeader";
 import PageMeta from "../src/components/PageMeta";
 import JsonLd from "../src/components/JsonLd";
+import { FOUNDER_AUTHOR_LABEL, buildFounderPersonSchema } from "../src/seo/authorConfig";
 import { FEATURED_COMPETITION_SLUGS, getCompetitionBySlug } from "../src/seo/competitionCatalog";
 import { SITE_URL } from "../src/seo/pageMetaConfig";
 
@@ -16,6 +17,7 @@ const ABOUT_JSON_LD = {
         "Soccer Stats Hub delivers transparent football statistics, predictions and data-driven match analysis across around 50 competitions at any given time.",
       isPartOf: { "@id": `${SITE_URL}/#website` },
       inLanguage: "en-GB",
+      author: buildFounderPersonSchema(),
     },
     {
       "@type": "Organization",
@@ -54,6 +56,30 @@ export default function AboutPage() {
             across the site. For pricing, affiliates, live scores and other common questions, see
             the <a href="/faq/">FAQ</a>.
           </p>
+
+          <h2>Founder</h2>
+          <p>
+            Soccer Stats Hub was built by Greg ({FOUNDER_AUTHOR_LABEL}) to make pre-match
+            research clearer: show the stats, show the model, and let readers decide. We publish
+            how the engine is tested, including a public{" "}
+            <a href="/articles/soccer-stats-hub-backtest-results/">backtest of match-result tips</a>,
+            and we do not run bookmaker affiliate links. Odds on the site are context for research,
+            not a path to sportsbook signups.
+          </p>
+          <p>
+            Data comes from licensed football statistics feeds used across the competitions we cover.
+            When we write longer analysis, drafts may be assisted by software, but every published
+            piece is reviewed and edited by Greg before it goes live.
+          </p>
+
+          <h2>Editorial policy</h2>
+          <ul>
+            <li>Predictions are statistical models, not guarantees or financial advice.</li>
+            <li>League and market tables refresh as results land; cite the page URL and date when sharing figures.</li>
+            <li>We do not target competitor brand names in copy or metadata.</li>
+            <li>Corrections: use the contact form in the site footer.</li>
+          </ul>
+
           <h2>Popular competitions</h2>
           <ul>
             {FEATURED_COMPETITION_SLUGS.map((slug) => {
@@ -75,7 +101,7 @@ export default function AboutPage() {
             <li>Clear methodology notes explaining the main data inputs and model signals</li>
             <li>Coverage from the Premier League and Champions League to MLS, J League and more</li>
             <li>No bookmaker affiliate links — odds are research context, not a signup funnel</li>
-            <li>Tournament hubs with curated news and previews, including FIFA World Cup 2026</li>
+            <li>Data-led articles and season notes on major leagues</li>
             <li>Dedicated Premier League season preview with sourced analysis and market odds</li>
           </ul>
           <h2>Responsible use</h2>

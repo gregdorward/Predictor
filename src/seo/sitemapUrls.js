@@ -1,5 +1,6 @@
 import { getIndexableCompetitions } from "./competitionCatalog";
 import {
+  fetchCompetitionOverview,
   fetchUpcomingFixtureLinks,
   filterIndexableCompetitions,
   filterIndexableFixtureLinks,
@@ -109,10 +110,36 @@ export async function collectSitemapUrls({
   }
 }
 
+function competitionLastmodFromOverview(overview) {
+  const raw = overview?.generatedAt;
+  if (!raw) return null;
+  const date = String(raw).slice(0, 10);
+  return /^\d{4}-\d{2}-\d{2}$/.test(date) ? date : null;
+}
+
 export async function collectSitemapEntries(options) {
   const urls = await collectSitemapUrls(options);
-  return urls.map((loc) => ({
-    loc,
-    lastmod: lastmodForPath(new URL(loc).pathname),
-  }));
+  const includeCompetitions = options?.includeCompetitions !== false;
+  let competitionLastmod = null;
+  if (includeCompetitions) {
+    try {
+      const overview = await fetchCompetitionOverview();
+      competitionLastmod = competitionLastmodFromOverview(overview);
+    } catch {
+      competitionLastmod = null;
+    }
+  }
+
+  return urls.map((loc) => {
+    const pathname = new URL(loc).pathname;
+    let lastmod = lastmodForPath(pathname);
+    if (
+      !lastmod &&
+      competitionLastmod &&
+      pathname.startsWith("/competition/")
+    ) {
+      lastmod = competitionLastmod;
+    }
+    return { loc, lastmod };
+  });
 }

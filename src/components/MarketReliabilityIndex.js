@@ -1,4 +1,5 @@
 import { useMemo, useState } from "react";
+import DataCitation from "./DataCitation";
 import SiteHeader from "./SiteHeader";
 import ShareableVisual from "./ShareableVisual";
 import {
@@ -832,6 +833,11 @@ export default function MarketReliabilityIndex({ overview }) {
                 </ShareableVisual>
               </section>
             ) : null}
+
+            <DataCitation
+              asOf={overview?.generatedAt}
+              pageLabel="the Market Reliability Index"
+            />
 
             <nav className="MarketReliability-related" aria-label="Related pages">
               <a href="/competitions/compare/">Compare leagues</a>

@@ -1,0 +1,79 @@
+{
+  "slug": "home-advantage-by-league-2026-27",
+  "layout": "prose",
+  "title": "Home advantage by football league in 2026/27",
+  "subtitle": "Which leagues still favour the home side, and where away wins are most common",
+  "dek": "Home-win rates in 2026/27 range from 32% in the Eredivisie to 54% in the Eerste Divisie and Champions League, with two leagues where away results already lead.",
+  "publishedAt": "2026-10-20",
+  "updatedAt": "2026-10-20T17:15:00.000Z",
+  "reviewedAt": "2026-10-20",
+  "dataAsOf": "2026-10-20",
+  "authorLabel": "Greg, founder of Soccer Stats Hub",
+  "showDataCitation": true,
+  "intro": [
+    "Does home advantage still show up league by league in 2026/27? That is the question this article answers. Not with a single global percentage, but by counting how often the home side, the away side or the draw actually wins in each competition we cover.",
+    "On the [league comparison table](/competitions/compare/) as of 17/10/26, the gap between the strongest and weakest home-win rates is 22 points. Eerste Divisie and the Champions League sit at about 54% home wins. The Eredivisie is at 32%, with away wins on top at 40%. National League South is 36% home, 38% away. Most leagues still lean home, but two already favour visitors on results alone."
+  ],
+  "sections": [
+    {
+      "id": "counting-rules",
+      "heading": "The counting rules",
+      "paragraphs": [
+        "We work from completed matches in the current season for each league on Soccer Stats Hub. Every game is tagged home win, draw or away win. Those counts become percentages of games played in that competition.",
+        "A league only appears on the comparison table once it has at least ten finished matches in the set. Early-season rows with thinner samples are flagged on the page so you can read them with care. Domestic leagues we track consistently are included, plus continental competitions when the fixture list is deep enough.",
+        "The splits below are rounded to whole numbers. They will move as more results land; the citation at the foot of the page records when this snapshot was taken."
+      ]
+    },
+    {
+      "id": "spread",
+      "heading": "What the season shows so far",
+      "paragraphs": [
+        "The extremes are worth naming because they are wide apart. At the top, Eerste Divisie and the Champions League share a 54% home-win rate on 110 and 126 games respectively. Bundesliga and the Austrian Bundesliga follow at 52% on 54 games each.",
+        "At the bottom, the Eredivisie is the clearest outlier: 32% home wins against 40% away. National League South is not far behind that pattern at 36% home and 38% away. Ligue 2 is different again: only 35% home wins, but 32% draws, so many weekends end without either side taking all three points.",
+        "Draw rate is why home-win percentage alone can mislead. A league can look hostile to home teams while still producing plenty of stalemates. Read home, draw and away together before you lean on a league habit for the next fixture."
+      ]
+    },
+    {
+      "id": "table",
+      "heading": "Highest and lowest home-win rates",
+      "paragraphs": [
+        "Six leagues with the highest home-win rates in the table, then six with the lowest. Match counts are completed games in 2026/27."
+      ],
+      "table": {
+        "caption": "Home, draw and away win rates by league, 2026/27 season (league comparison table on Soccer Stats Hub).",
+        "headers": ["League", "Home wins", "Draws", "Away wins", "Matches played"],
+        "rows": [
+          ["Eerste Divisie", "54%", "18%", "28%", "110"],
+          ["Champions League", "54%", "18%", "28%", "126"],
+          ["Bundesliga", "52%", "20%", "28%", "54"],
+          ["Austrian Bundesliga", "52%", "19%", "30%", "54"],
+          ["Europa League", "51%", "19%", "30%", "116"],
+          ["National League North", "51%", "20%", "29%", "138"],
+          ["Primeira Liga", "39%", "25%", "36%", "72"],
+          ["Serie B", "39%", "29%", "33%", "70"],
+          ["UEFA Nations League", "38%", "27%", "36%", "104"],
+          ["National League South", "36%", "26%", "38%", "135"],
+          ["Ligue 2", "35%", "32%", "33%", "81"],
+          ["Eredivisie", "32%", "28%", "40%", "81"]
+        ]
+      }
+    },
+    {
+      "id": "using-the-numbers",
+      "heading": "Using it on the site",
+      "paragraphs": [
+        "League splits are context for the next match, not a tip on their own. A strong home record in the table does not override a bad run of form, a long away trip or a side that creates little in open play. That is why fixture pages on Soccer Stats Hub still matter: form, head-to-head and model output sit beside the league picture.",
+        "These figures are results only. They do not use xG, chance quality or the Poisson grid behind our predictions. If you want every league in one sortable view, use the [league comparison table](/competitions/compare/). If you want one competition drilled down, open its page from the [competitions index](/competitions/) and read the season stats there.",
+        "You may look at the Eredivisie row and argue that it's still early in the season and an outlier. We encourage you to do your own research on such matters and always try to provide the tools to do so."
+      ]
+    }
+  ],
+  "outro": [
+    "Full table: [Compare football leagues](/competitions/compare/). How predictions are built: [Methodology](/methodology/)."
+  ],
+  "relatedLinks": [
+    { "label": "Compare football leagues", "href": "/competitions/compare/" },
+    { "label": "Methodology", "href": "/methodology/" },
+    { "label": "Premier League stats", "href": "/competition/premier-league/" }
+  ]
+}

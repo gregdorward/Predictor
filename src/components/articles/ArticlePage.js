@@ -7,10 +7,13 @@ import ArticleTableOfContents from "./ArticleTableOfContents";
 import ArticleShareButton, { ArticleDateLine } from "./ArticleShareButton";
 import renderInlineMarkup from "./renderInlineMarkup";
 import JourneyContentBreak from "../JourneyContentBreak";
+import { buildFounderPersonSchema, FOUNDER_AUTHOR_LABEL } from "../../seo/authorConfig";
 import { SITE_NAME, SITE_URL, getCanonicalUrl } from "../../seo/pageMetaConfig";
+import DataCitation from "../DataCitation";
 
 function buildArticleJsonLd(article, listing) {
   const url = getCanonicalUrl(`/articles/${article.slug}`);
+  const reviewedAt = article.reviewedAt || article.updatedAt || article.publishedAt;
   return {
     "@context": "https://schema.org",
     "@type": "Article",
@@ -18,11 +21,8 @@ function buildArticleJsonLd(article, listing) {
     headline: article.title,
     description: listing?.ogDescription || article.dek || listing?.dek,
     datePublished: article.publishedAt,
-    dateModified: article.updatedAt || article.publishedAt,
-    author: {
-      "@type": "Organization",
-      name: article.authorLabel || SITE_NAME,
-    },
+    dateModified: reviewedAt || article.updatedAt || article.publishedAt,
+    author: buildFounderPersonSchema(),
     publisher: {
       "@type": "Organization",
       name: SITE_NAME,
@@ -51,14 +51,20 @@ function shouldInsertIntroJourneyBreak(article) {
   return false;
 }
 
-export default function ArticlePage({ article, listing }) {
+export default function ArticlePage({ article, listing, draftPreview = false }) {
   if (!article) return null;
 
-  const pageTitle = `${article.title} | ${SITE_NAME}`;
+  const pageTitle = draftPreview
+    ? `[Draft] ${article.title} | ${SITE_NAME}`
+    : `${article.title} | ${SITE_NAME}`;
   const description =
     listing?.ogDescription || article.dek || listing?.dek || article.subtitle;
-  const canonicalPath = `/articles/${article.slug}`;
-  const eyebrow = articleEyebrow(article, listing);
+  const canonicalPath = draftPreview
+    ? `/articles/draft/${article.slug}`
+    : `/articles/${article.slug}`;
+  const eyebrow = draftPreview
+    ? "Draft preview"
+    : articleEyebrow(article, listing);
 
   return (
     <>
@@ -67,8 +73,10 @@ export default function ArticlePage({ article, listing }) {
         description={description}
         canonicalPath={canonicalPath}
         ogType="article"
+        noIndex={draftPreview}
+        follow={draftPreview}
       />
-      <JsonLd data={buildArticleJsonLd(article, listing)} />
+      {!draftPreview ? <JsonLd data={buildArticleJsonLd(article, listing)} /> : null}
       <SiteHeader showThemeToggle withFooter>
         <main className="StaticPage StaticPage--article">
           <nav className="Articles__crumbs" aria-label="Breadcrumb">
@@ -84,6 +92,13 @@ export default function ArticlePage({ article, listing }) {
           </nav>
 
           <header className="Articles__header">
+            {draftPreview ? (
+              <p className="Articles__draftNotice" role="status">
+                Draft preview only. This URL is not indexed. Publish by moving the
+                article into <code>loadArticles.js</code> and{" "}
+                <code>index.json</code> when ready.
+              </p>
+            ) : null}
             {eyebrow ? <p className="Articles__eyebrow">{eyebrow}</p> : null}
             <h1 className="Articles__title">{article.title}</h1>
             {article.subtitle ? (
@@ -94,8 +109,9 @@ export default function ArticlePage({ article, listing }) {
               <ArticleDateLine
                 publishedAt={article.publishedAt}
                 updatedAt={article.updatedAt}
+                reviewedAt={article.reviewedAt}
                 dataAsOf={article.dataAsOf}
-                authorLabel={article.authorLabel}
+                authorLabel={article.authorLabel || FOUNDER_AUTHOR_LABEL}
               />
               <ArticleShareButton title={article.title} text={article.dek} />
             </div>
@@ -134,6 +150,13 @@ export default function ArticlePage({ article, listing }) {
                   </p>
                 ))}
               </div>
+            ) : null}
+
+            {article.showDataCitation ? (
+              <DataCitation
+                asOf={article.dataAsOf || article.reviewedAt || article.updatedAt}
+                pageLabel="this article"
+              />
             ) : null}
 
             {article.relatedLinks?.length ? (

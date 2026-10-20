@@ -26,10 +26,13 @@ import {
 import { buildCompetitionLeagueTableViews } from "../../src/components/competition/competitionLeagueTable";
 import {
   fetchCompetitionData,
+  fetchCompetitionOverview,
   fetchCompetitionTables,
   fetchLeagueFixtures,
   formatApiDate,
 } from "../../src/seo/serverFetch";
+import { buildCompetitionCrossRankInsights } from "../../src/seo/competitionCrossRankings";
+import { getCompetitionSeasonNote } from "../../src/data/competitionNotes";
 import { buildCompetitionClientPayload } from "../../src/seo/competitionClientPayload";
 import {
   buildCompetitionOgImageUrl,
@@ -63,6 +66,7 @@ export default function CompetitionByParam({
         description={meta.description}
         canonicalPath={canonicalPath}
         noIndex={noIndex}
+        follow={noIndex}
         ogImage={ogImage}
         ogImageAlt={ogImageAlt}
       />
@@ -115,10 +119,11 @@ export async function getServerSideProps({ params, res }) {
 
   const { seasonId, catalog } = resolved;
 
-  const [data, tablesData, leagueFixtures] = await Promise.all([
+  const [data, tablesData, leagueFixtures, overview] = await Promise.all([
     fetchCompetitionData(seasonId),
     fetchCompetitionTables(seasonId, formatApiDate(new Date())),
     fetchLeagueFixtures(seasonId),
+    fetchCompetitionOverview(),
   ]);
   res.setHeader("Cache-Control", COMPETITION_PAGE_CACHE_CONTROL);
 
@@ -170,10 +175,16 @@ export async function getServerSideProps({ params, res }) {
       : buildCompetitionJsonLd(data, canonicalUrl, catalog, {
           ogImage,
         });
-  const seoShell = buildCompetitionSeoShell(data, catalog, {
-    phaseTeamIds,
-    phaseRosterTeams,
-  });
+  const seasonNote = getCompetitionSeasonNote(slug);
+  const seoShell = {
+    ...buildCompetitionSeoShell(data, catalog, {
+      phaseTeamIds,
+      phaseRosterTeams,
+    }),
+    crossRankInsights: buildCompetitionCrossRankInsights(overview, slug),
+    seasonNoteParagraphs: seasonNote?.paragraphs || [],
+    seasonNoteReviewedAt: seasonNote?.reviewedAt || null,
+  };
 
   const initialCompetitionData = data
     ? buildCompetitionClientPayload(data)

@@ -2,6 +2,7 @@ import { Fragment, useEffect, useState } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import { getHighestScoringLeagues, getLowestScoringLeagues } from "../logic/getStatsInsights";
 import SiteHeader from "./SiteHeader";
+import DataCitation from "./DataCitation";
 import PageMeta from "./PageMeta";
 import StatPageSeoContent from "./StatPageSeoContent";
 import {
@@ -89,6 +90,7 @@ const useStyles = makeStyles(() => ({
 export default function HighestScoringLeagues({
   initialRows = null,
   initialLowScoringRows = null,
+  dataAsOf = null,
 }) {
   const classes = useStyles();
   const [leagues, setLeagues] = useState(() =>
@@ -155,9 +157,9 @@ export default function HighestScoringLeagues({
         <div className={`${classes.container} SubpageContent`} id="ssh-content">
           <a href="/" className={classes.homeLink}>Back to Home</a>
 
-          <h1>Highest Scoring Leagues</h1>
+          <h1>Highest and lowest scoring football leagues 2026/27</h1>
           <h2 className={classes.tagline}>
-            Highest- and lowest-scoring leagues ranked by goals per match
+            Ranked by goals per match, with Over 2.5 and Under 2.5 rates
           </h2>
 
           <StatPageSeoContent
@@ -236,6 +238,11 @@ export default function HighestScoringLeagues({
               ))}
             </tbody>
           </SubpageTable>
+
+          <DataCitation
+            asOf={dataAsOf}
+            pageLabel="the highest- and lowest-scoring leagues tables"
+          />
         </div>
       </SiteHeader>
     </Fragment>

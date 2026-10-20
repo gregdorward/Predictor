@@ -146,7 +146,7 @@ const THEME_BOOT_SCRIPT = `
 export default class MyDocument extends Document {
   render() {
     return (
-      <Html lang="en">
+      <Html lang="en-GB">
         <SiteHead>
           <link rel="icon" href="/favicon.ico" />
           <link rel="apple-touch-icon" href="/logo192.png" />

@@ -3,7 +3,7 @@ import JsonLd from "../../../src/components/JsonLd";
 import PageMeta from "../../../src/components/PageMeta";
 import { COMPARISON_MIN_ROWS } from "../../../src/seo/competitionOverviewData";
 import { fetchCompetitionOverview } from "../../../src/seo/serverFetch";
-import { SITE_URL } from "../../../src/seo/pageMetaConfig";
+import { DATASET_LICENSE_URL, SITE_URL } from "../../../src/seo/pageMetaConfig";
 
 const CANONICAL_PATH = "/competitions/compare";
 const PAGE_URL = `${SITE_URL}/competitions/compare/`;
@@ -18,10 +18,21 @@ function buildJsonLd(overview) {
         "@type": "Dataset",
         "@id": `${PAGE_URL}#dataset`,
         name: "Football league comparison: goals, BTTS, cards and corners",
-        description: `Current-season averages for ${count} football leagues, covering goals per game, both teams to score, over and under 2.5 goals, cards, corners and home advantage.`,
+        description: `Current-season averages for ${count} football leagues, covering goals per game, both teams to score, over and under 2.5 goals, cards, corners and home advantage. Figures refresh as match results are processed.`,
         url: PAGE_URL,
         isAccessibleForFree: true,
-        creator: { "@id": `${SITE_URL}/#organization` },
+        license: DATASET_LICENSE_URL,
+        creator: {
+          "@type": "Organization",
+          "@id": `${SITE_URL}/#organization`,
+          name: "Soccer Stats Hub",
+          url: SITE_URL,
+        },
+        publisher: {
+          "@type": "Organization",
+          "@id": `${SITE_URL}/#organization`,
+          name: "Soccer Stats Hub",
+        },
         temporalCoverage: overview?.generatedAt
           ? String(overview.generatedAt).slice(0, 10)
           : undefined,
