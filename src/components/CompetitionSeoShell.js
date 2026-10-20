@@ -5,9 +5,10 @@ import {
   buildCompetitionConferenceTableGroups,
   buildCompetitionSeoParagraphs,
   buildCompetitionTableRows,
+  buildTopScorerLead,
   formatSeoUpdatedDate,
 } from "../seo/seoShellCopy";
-import { getTeamsList, sortTeamsByField } from "./competition/competitionUtils";
+import { getTeamsList, resolveScorerTeam, sortTeamsByField } from "./competition/competitionUtils";
 import JourneyContentBreak from "./JourneyContentBreak";
 
 function formatPercent(value) {
@@ -44,6 +45,8 @@ export default function CompetitionSeoShell({
   crossRankInsights = [],
   seasonNoteParagraphs = [],
   seasonNoteReviewedAt = null,
+  topScorerRows = [],
+  topScorerLead = null,
 }) {
   const metaParts = [country, season].filter(Boolean);
   const introParagraphs = buildCompetitionSeoParagraphs({
@@ -154,6 +157,47 @@ export default function CompetitionSeoShell({
           ))}
         </div>
       ) : null}
+      <CompetitionTopScorers
+        name={name}
+        season={season}
+        rows={topScorerRows}
+        lead={topScorerLead}
+      />
+    </section>
+  );
+}
+
+function CompetitionTopScorers({ name, season, rows, lead }) {
+  if (!rows.length) return null;
+  const caption = season ? `${name} top scorers, ${season}` : `${name} top scorers`;
+
+  return (
+    <section className="Competition__seoScorers" aria-label={`${name} top scorers`}>
+      <h2 className="Competition__sectionHeading">{name} top scorers</h2>
+      {lead ? <p>{lead}</p> : null}
+      <div className="Competition__seoTableWrap">
+        <table className="Competition__seoTable">
+          <caption>{caption}</caption>
+          <thead>
+            <tr>
+              <th scope="col">Rank</th>
+              <th scope="col">Player</th>
+              <th scope="col">Club</th>
+              <th scope="col">Goals</th>
+            </tr>
+          </thead>
+          <tbody>
+            {rows.map((row) => (
+              <tr key={row.id ?? row.rank}>
+                <td>{row.rank}</td>
+                <th scope="row">{row.name}</th>
+                <td>{row.club || "-"}</td>
+                <td>{row.goals}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
     </section>
   );
 }
@@ -243,6 +287,30 @@ function TeamList({ title, teams, field }) {
   );
 }
 
+const TOP_SCORER_LIMIT = 10;
+
+function buildTopScorerRows(data, teams) {
+  const scorers = Array.isArray(data?.top_scorers) ? data.top_scorers : [];
+  const rows = [];
+
+  for (const scorer of scorers) {
+    if (rows.length >= TOP_SCORER_LIMIT) break;
+    const playerName = scorer?.known_as || scorer?.full_name || scorer?.player_name;
+    const goals = Number(scorer?.goals_overall);
+    if (!playerName || !Number.isFinite(goals)) continue;
+    const club = resolveScorerTeam(scorer, teams);
+    rows.push({
+      id: scorer.id ?? rows.length,
+      rank: rows.length + 1,
+      name: String(playerName),
+      club: club && club !== "-" ? club : null,
+      goals,
+    });
+  }
+
+  return rows;
+}
+
 function pickTeamHighlight(team, field) {
   if (!team) return null;
   return {
@@ -283,12 +351,15 @@ export function buildCompetitionSeoShell(data, catalog, options = {}) {
       topBttsTeams: [],
       topUnder25Teams: [],
       tableRows: [],
+      topScorerRows: [],
+      topScorerLead: null,
       relatedLinks,
       seasonStarted: false,
     };
   }
 
   const tableRows = buildCompetitionTableRows(teams);
+  const topScorerRows = buildTopScorerRows(data, teams);
   const conferenceTableGroups = buildCompetitionConferenceTableGroups(data);
   const tableLeader = tableRows[0]
     ? {
@@ -323,6 +394,8 @@ export function buildCompetitionSeoShell(data, catalog, options = {}) {
     tableRows,
     conferenceTableGroups,
     tableLeader,
+    topScorerRows,
+    topScorerLead: buildTopScorerLead(name, topScorerRows),
     updatedOn: formatSeoUpdatedDate(),
     relatedLinks,
     seasonStarted: true,

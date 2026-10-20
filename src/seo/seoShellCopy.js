@@ -262,10 +262,10 @@ export function buildCompetitionSeoParagraphs({
     marketBits.push(`both teams have scored in ${btts} of games`);
   }
   if (over25 != null) {
-    marketBits.push(`${over25} of fixtures have gone Over 2.5 goals`);
+    marketBits.push(`${over25} of fixtures have gone over 2.5 goals`);
   }
   if (under25 != null) {
-    marketBits.push(`${under25} have stayed Under 2.5 goals`);
+    marketBits.push(`${under25} have stayed under 2.5 goals`);
   }
 
   const leaderName = tableLeader?.name;
@@ -301,6 +301,35 @@ export function buildCompetitionSeoParagraphs({
   }
 
   return paragraphs;
+}
+
+function scorerLabel(row) {
+  if (row.club) return `${row.name} (${row.club})`;
+  return row.name;
+}
+
+/** One sentence for the crawlable scorers table. Freshness stays in the page intro. */
+export function buildTopScorerLead(name, rows) {
+  if (!name || !rows?.length) return null;
+  const topGoals = Number(rows[0].goals);
+  if (!Number.isFinite(topGoals)) return null;
+  const leaders = rows.filter((row) => Number(row.goals) === topGoals);
+  if (!leaders.length || leaders.some((row) => !row.name)) return null;
+
+  const goalWord = topGoals === 1 ? "goal" : "goals";
+  const labels = leaders.map(scorerLabel);
+
+  if (labels.length === 1) {
+    return `${labels[0]} is the leading ${name} scorer with ${topGoals} ${goalWord}.`;
+  }
+
+  if (labels.length === 2) {
+    return `${labels[0]} and ${labels[1]} are the leading ${name} scorers with ${topGoals} ${goalWord} each.`;
+  }
+
+  const last = labels[labels.length - 1];
+  const rest = labels.slice(0, -1).join(", ");
+  return `${rest} and ${last} are the leading ${name} scorers with ${topGoals} ${goalWord} each.`;
 }
 
 export function buildFixtureSeoParagraphs({

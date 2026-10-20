@@ -291,7 +291,7 @@ export function buildCompetitionMeta(data, catalog) {
     : `${name} Stats: Table, Goals & BTTS`;
   return {
     title: clampMetaTitle(titleCore),
-    description: `BTTS, Over 2.5, goals and card stats for ${name}. League table, team rankings and market trends on Soccer Stats Hub.`,
+    description: `BTTS, Over 2.5, goals and card stats for ${name}. League table, top scorers and market trends on Soccer Stats Hub.`,
   };
 }
 

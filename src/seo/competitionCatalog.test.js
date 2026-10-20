@@ -1,4 +1,5 @@
 import {
+  COMPETITION_CATALOG,
   COMPETITION_ID_ALIASES,
   FEATURED_COMPETITION_SLUGS,
   getCompetitionById,
@@ -99,6 +100,17 @@ describe("competitionCatalog removals and aliases", () => {
       ).description
     );
     expect(description.length).toBeLessThanOrEqual(META_DESCRIPTION_MAX);
+    expect(description).toContain("top scorers");
+  });
+
+  test("competition descriptions stay within the snippet limit", () => {
+    for (const entry of COMPETITION_CATALOG) {
+      const description = buildCompetitionMeta(
+        { english_name: entry.name, season: "2026/2027" },
+        entry
+      ).description;
+      expect(description.length).toBeLessThanOrEqual(META_DESCRIPTION_MAX);
+    }
   });
 
   test("competition JSON-LD is a page, not the league organisation", () => {

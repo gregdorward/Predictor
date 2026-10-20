@@ -29,8 +29,14 @@ Complete these steps in Search Console and Bing Webmaster Tools. Record baseline
 2. **Performance baseline**  
    Search Performance → note total clicks/impressions and top queries for the last 28 days.
 
+3. **After the top-scorers HTML is deployed**  
+   Ping IndexNow so Bing recrawls the live competition pages. The existing sitemap ping (`/api/indexnow-ping/`) already includes indexable `/competition/` URLs. Confirm these two are in that list:  
+   `https://www.soccerstatshub.com/competition/premier-league/`  
+   `https://www.soccerstatshub.com/competition/la-liga/`
+
 ## Monthly review
 
 - Compare brand-excluded GSC impressions by page group month over month.
 - Track position for query “lowest scoring leagues” on `/highest-scoring-leagues/`.
 - Check GSC generative AI report for new mentions.
+- In Bing AI Performance, check citations for `/competition/premier-league/` and `/competition/la-liga/` on the top-scorers query family (Premier League and La Liga scorers, including “this season” and “2026” wordings). Do not track each query row separately.

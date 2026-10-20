@@ -3,6 +3,7 @@ import {
   buildCompetitionSeoParagraphs,
   buildCompetitionTableRows,
   buildFixtureSeoParagraphs,
+  buildTopScorerLead,
 } from "./seoShellCopy";
 
 function standing(name, position, extras = {}) {
@@ -29,6 +30,7 @@ describe("seoShellCopy", () => {
       avgGoals: "2.85",
       btts: "54.0%",
       over25: "58.0%",
+      under25: "42.0%",
       homeWin: "44.0%",
       draw: "24.0%",
       awayWin: "32.0%",
@@ -39,6 +41,9 @@ describe("seoShellCopy", () => {
     const text = paragraphs.join(" ");
     expect(text).toContain("Manchester City lead the Premier League on 15 points");
     expect(text).toContain("both teams have scored");
+    expect(text).toContain("gone over 2.5 goals");
+    expect(text).toContain("stayed under 2.5 goals");
+    expect(text).not.toMatch(/Over 2\.5|Under 2\.5/);
     expect(text).toContain("Figures as of 21 September 2026");
     expect(text).not.toMatch(/load below|interactive view/);
     expect(text).not.toMatch(/–/);
@@ -174,5 +179,28 @@ describe("seoShellCopy", () => {
     expect(paragraphs[0]).toContain("England vs Argentina");
     expect(paragraphs[0]).toContain("World Cup 2026");
     expect(paragraphs.join(" ")).not.toMatch(/–/);
+  });
+
+  test("names the leading scorer, club and goals without a second as-of line", () => {
+    expect(
+      buildTopScorerLead("Premier League", [
+        { name: "Erling Haaland", club: "Manchester City", goals: 12 },
+        { name: "Alexander Isak", club: "Newcastle United", goals: 9 },
+      ])
+    ).toBe(
+      "Erling Haaland (Manchester City) is the leading Premier League scorer with 12 goals."
+    );
+  });
+
+  test("names a tie at the top of the scoring list", () => {
+    expect(
+      buildTopScorerLead("La Liga", [
+        { name: "Robert Lewandowski", club: "Barcelona", goals: 8 },
+        { name: "Kylian Mbappé", club: "Real Madrid", goals: 8 },
+        { name: "Raphinha", club: "Barcelona", goals: 6 },
+      ])
+    ).toBe(
+      "Robert Lewandowski (Barcelona) and Kylian Mbappé (Real Madrid) are the leading La Liga scorers with 8 goals each."
+    );
   });
 });
