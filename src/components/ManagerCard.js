@@ -5,6 +5,7 @@ const ManagerCard = ({ manager, title, side }) => {
     // Standardize the win percentage display
     const winPct = stats.winPercentage ? `${stats.winPercentage}%` : "0%";
     const previousWinPct = stats.previousClub?.winPercentage ? `${stats.previousClub.winPercentage}%` : "0%";
+    const toBarScale = (pct) => `scaleX(${Math.min(1, Math.max(0, (parseFloat(pct) || 0) / 100))})`;
     const startTimestamp = stats?.startTimestamp || "N/A"; // Default to 0 if not available
 
     // Step 1: Convert to Milliseconds
@@ -46,7 +47,7 @@ const ManagerCard = ({ manager, title, side }) => {
                 <div className="win-pct-bar-bg">
                     <div
                         className="win-pct-bar-fill"
-                        style={{ width: winPct }}
+                        style={{ transform: toBarScale(winPct) }}
                     ></div>
                 </div>
                 <span className="win-pct-text">Win Rate: {winPct}</span>
@@ -76,7 +77,7 @@ const ManagerCard = ({ manager, title, side }) => {
                     <div className="win-pct-bar-bg-previous">
                         <div
                             className="win-pct-bar-fill-previous"
-                            style={{ width: previousWinPct }}
+                            style={{ transform: toBarScale(previousWinPct) }}
                         ></div>
                     </div>
                     <span className="win-pct-text">Win Rate: {previousWinPct}</span>

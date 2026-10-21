@@ -11,32 +11,21 @@ import FixtureSeasonStats from "./FixtureSeasonStats";
 import ShareableVisual from "./ShareableVisual";
 import SharePageLinkButton from "./SharePageLinkButton";
 import { sanitizeImageFilename } from "../utils/captureElementImage";
-import {
-  Chart as ChartJS,
-  CategoryScale,
-  LinearScale,
-  BarElement,
-  Title,
-  Tooltip,
-  Legend,
-} from "chart.js";
+import "./charts/chartSetup";
 import { Bar } from "react-chartjs-2";
-import { useChartTheme, getChartColors } from "./Chart";
+import { useChartTheme, getChartColors, tooltipStyle } from "./charts/chartTheme";
+import { barValueLabelsPlugin } from "./charts/chartPlugins";
+import { growFromZero } from "./charts/chartMotion";
+import LazyChart from "./charts/LazyChart";
+import SplitBar from "./charts/SplitBar";
 import { useFixturePredictionUnlock } from "../logic/useFixturePredictionUnlock";
 import FeaturedFreeBadge from "./FeaturedFreeBadge";
 import { FREE_DAILY_PREDICTION_LIMIT } from "../logic/freePredictionAllowance";
 import JourneyContentBreak from "./JourneyContentBreak";
 import FixtureFootyStatsFallback from "./FixtureFootyStatsFallback";
 import FixtureMarketsSnapshot from "./FixtureMarketsSnapshot";
-
-ChartJS.register(
-  CategoryScale,
-  LinearScale,
-  BarElement,
-  Title,
-  Tooltip,
-  Legend
-);
+import FixtureSocialShareCard from "./FixtureSocialShareCard";
+import { buildFixtureShareCardFromMatch } from "../logic/fixtureShareCardData";
 
 function formatStatValue(label, value) {
   if (value == null || value === undefined) {
@@ -178,122 +167,105 @@ function StatRow({ label, value }) {
   );
 }
 
-function ModelOutputsChart({ modelOutputs, homeTeamName, awayTeamName, theme, color, gridColor, tooltipBackground }) {
+function modelOutcomeCaption(homeName, awayName, homeWin, draw, awayWin) {
+  const outcomes = [
+    { winner: homeName || "The home side", value: homeWin, draw: false },
+    { winner: null, value: draw, draw: true },
+    { winner: awayName || "The away side", value: awayWin, draw: false },
+  ].sort((a, b) => b.value - a.value);
+  const [first, second] = outcomes;
+  if (first.value - second.value < 2) {
+    return "The model has this match as close.";
+  }
+  if (first.draw) {
+    return `A draw is the most likely result, at ${first.value.toFixed(1)}%.`;
+  }
+  return `${first.winner} are the most likely winners, at ${first.value.toFixed(1)}%.`;
+}
+
+function ModelOutputsChart({ modelOutputs, homeTeamName, awayTeamName }) {
   if (!modelOutputs) {
     return (
       <p className="FixturePage-modelOutputsEmpty">Model outputs unavailable.</p>
     );
   }
 
-  const { homeWin, draw, awayWin } = modelOutputs;
+  const homeWin = Number(modelOutputs.homeWin);
+  const draw = Number(modelOutputs.draw);
+  const awayWin = Number(modelOutputs.awayWin);
+  if (![homeWin, draw, awayWin].every((value) => Number.isFinite(value))) {
+    return (
+      <p className="FixturePage-modelOutputsEmpty">Model outputs unavailable.</p>
+    );
+  }
+
   const homeLabel = homeTeamName ? `${homeTeamName} win` : "Home win";
   const awayLabel = awayTeamName ? `${awayTeamName} win` : "Away win";
 
-  const chartOptions = {
-    indexAxis: "y",
-    plugins: {
-      legend: {
-        display: false,
-      },
-      title: {
-        display: false,
-      },
-      tooltip: {
-        backgroundColor: tooltipBackground,
-        titleColor: "#ffffff",
-        bodyColor: "#ffffff",
-        callbacks: {
-          label: (context) => `${context.dataset.label}: ${context.raw.toFixed(1)}%`,
-        },
-      },
-    },
-    maintainAspectRatio: false,
-    responsive: true,
-    layout: {
-      padding: { top: 8, right: 12, bottom: 8, left: 12 },
-    },
-    scales: {
-      x: {
-        stacked: true,
-        max: 100,
-        ticks: {
-          color,
-          font: { size: 11 },
-          callback: (value) => `${value}%`,
-        },
-        grid: { color: gridColor },
-        border: { display: false },
-      },
-      y: {
-        stacked: true,
-        display: false,
-        grid: { display: false },
-      },
-    },
-  };
-
-  const chartData = {
-    labels: [" "],
-    datasets: [
-      {
-        label: homeLabel,
-        data: [homeWin],
-        backgroundColor: "#01a501",
-        borderWidth: 0,
-        borderRadius: 6,
-        barPercentage: 0.7,
-        categoryPercentage: 0.85,
-      },
-      {
-        label: "Draw",
-        data: [draw],
-        backgroundColor: "#8a8a8a",
-        borderWidth: 0,
-        borderRadius: 6,
-        barPercentage: 0.7,
-        categoryPercentage: 0.85,
-      },
-      {
-        label: awayLabel,
-        data: [awayWin],
-        backgroundColor: "#d71200",
-        borderWidth: 0,
-        borderRadius: 6,
-        barPercentage: 0.7,
-        categoryPercentage: 0.85,
-      },
-    ],
-  };
-
   return (
-    <div className="FixturePage-modelOutputsBody">
-      <div className="FixturePage-modelOutputsChartWrap">
-        <Bar
-          key={`model-${theme}`}
-          options={chartOptions}
-          data={chartData}
-          className="FixturePage-modelOutputsChart"
-        />
-      </div>
-      <div className="FixturePage-chartLegend" aria-hidden="true">
-        <span className="FixturePage-chartLegendItem">
-          <span className="FixturePage-chartLegendSwatch FixturePage-chartLegendSwatch--home" />
-          {homeLabel}
-          <strong>{Number(homeWin).toFixed(1)}%</strong>
-        </span>
-        <span className="FixturePage-chartLegendItem">
-          <span className="FixturePage-chartLegendSwatch FixturePage-chartLegendSwatch--draw" />
-          Draw
-          <strong>{Number(draw).toFixed(1)}%</strong>
-        </span>
-        <span className="FixturePage-chartLegendItem">
-          <span className="FixturePage-chartLegendSwatch FixturePage-chartLegendSwatch--away" />
-          {awayLabel}
-          <strong>{Number(awayWin).toFixed(1)}%</strong>
-        </span>
-      </div>
-    </div>
+    <SplitBar
+      segments={[
+        { label: homeLabel, value: homeWin, tone: "home" },
+        { label: "Draw", value: draw, tone: "draw" },
+        { label: awayLabel, value: awayWin, tone: "away" },
+      ]}
+      caption={modelOutcomeCaption(homeTeamName, awayTeamName, homeWin, draw, awayWin)}
+    />
   );
+}
+
+function strengthLead(homeName, awayName, homeValue, awayValue, metric) {
+  const home = Number(homeValue);
+  const away = Number(awayValue);
+  if (!Number.isFinite(home) || !Number.isFinite(away)) return null;
+  if (Math.abs(home - away) < 0.005) return `${metric} is level.`;
+  const leader = home > away ? homeName : awayName;
+  return `${leader} are stronger in ${metric}.`;
+}
+
+function comparisonLead(homeName, awayName, values) {
+  const attack = strengthLead(homeName, awayName, values.homeAttack, values.awayAttack, "attack");
+  const defence = strengthLead(
+    homeName,
+    awayName,
+    values.homeDefence,
+    values.awayDefence,
+    "defence"
+  );
+  const leadsBoth = (name) =>
+    attack === `${name} are stronger in attack.` &&
+    defence === `${name} are stronger in defence.`;
+  if (leadsBoth(homeName)) {
+    return `${homeName} are stronger in attack and defence.`;
+  }
+  if (leadsBoth(awayName)) {
+    return `${awayName} are stronger in attack and defence.`;
+  }
+  return [attack, defence].filter(Boolean).join(" ");
+}
+
+function formatStrength(value) {
+  const n = Number(value);
+  if (!Number.isFinite(n)) return "";
+  return Math.abs(n) >= 10 ? n.toFixed(1) : n.toFixed(2);
+}
+
+function h2hShares(summary) {
+  const home = Number(summary?.homeTeamWins);
+  const draw = Number(summary?.draws);
+  const away = Number(summary?.awayTeamWins);
+  if (![home, draw, away].every((value) => Number.isFinite(value))) return null;
+  const total = home + draw + away;
+  if (total <= 0) return null;
+  return {
+    home: (home / total) * 100,
+    draw: (draw / total) * 100,
+    away: (away / total) * 100,
+    homeCount: home,
+    drawCount: draw,
+    awayCount: away,
+    total,
+  };
 }
 
 function HeadToHeadSection({ headToHead, homeTeamName, awayTeamName }) {
@@ -302,30 +274,30 @@ function HeadToHeadSection({ headToHead, homeTeamName, awayTeamName }) {
   }
 
   const { summary, recentMatches } = headToHead;
+  const shares = h2hShares(summary);
 
   return (
     <section className="FixturePage-h2hCard">
       <h3 className="FixturePage-statGroupTitle">Head to Head</h3>
 
       <div className="FixturePage-h2hSummary">
-        <StatRow label="Total matches" value={summary.totalMatches} />
-        <StatRow
-          label={`${homeTeamName} wins`}
-          value={
-            summary.homeWinPercent != null
-              ? `${summary.homeTeamWins} (${summary.homeWinPercent}%)`
-              : summary.homeTeamWins
-          }
-        />
-        <StatRow
-          label={`${awayTeamName} wins`}
-          value={
-            summary.awayWinPercent != null
-              ? `${summary.awayTeamWins} (${summary.awayWinPercent}%)`
-              : summary.awayTeamWins
-          }
-        />
-        <StatRow label="Draws" value={summary.draws} />
+        {shares ? (
+          <SplitBar
+            segments={[
+              { label: homeTeamName, value: shares.home, tone: "home" },
+              { label: "Draws", value: shares.draw, tone: "draw" },
+              { label: awayTeamName, value: shares.away, tone: "away" },
+            ]}
+              caption={`${homeTeamName} have won ${shares.homeCount} of ${shares.total} meetings. ${awayTeamName} have won ${shares.awayCount}, with ${shares.drawCount === 1 ? "1 draw" : `${shares.drawCount} draws`}.`}
+          />
+        ) : (
+          <>
+            <StatRow label="Total matches" value={summary.totalMatches} />
+            <StatRow label={`${homeTeamName} wins`} value={summary.homeTeamWins} />
+            <StatRow label={`${awayTeamName} wins`} value={summary.awayTeamWins} />
+            <StatRow label="Draws" value={summary.draws} />
+          </>
+        )}
       </div>
 
       {recentMatches.length > 0 ? (
@@ -471,7 +443,7 @@ function TeamPage({ matchId, seoShell = null }) {
   }, [matchId]);
 
   const theme = useChartTheme();
-  const { color, gridColor, tooltipBackground } = getChartColors(theme);
+  const colors = getChartColors(theme);
 
   const storedDataHome = useSelector((state) => state.data.dataHome);
   const storedDataHomeDef = useSelector((state) => state.data.dataHomeDef);
@@ -572,75 +544,83 @@ function TeamPage({ matchId, seoShell = null }) {
     );
   }
 
+  const strengthValues = [
+    chartValues.homeAttack,
+    chartValues.awayAttack,
+    chartValues.homeDefence,
+    chartValues.awayDefence,
+  ].map(Number);
+  const finiteStrengths = strengthValues.filter((value) => Number.isFinite(value));
+  const strengthMin = finiteStrengths.length ? Math.min(...finiteStrengths) : 0;
+
   const chartOptions = {
+    ...growFromZero(),
     plugins: {
-      legend: {
-        display: false,
-      },
-      title: {
-        display: false,
-      },
+      legend: { display: false },
+      title: { display: false },
       tooltip: {
-        backgroundColor: tooltipBackground,
-        titleColor: "#ffffff",
-        bodyColor: "#ffffff",
+        ...tooltipStyle(colors),
+        callbacks: {
+          label: (context) =>
+            `${context.dataset.label}: ${formatStrength(context.raw)}`,
+        },
+      },
+      barValueLabels: {
+        format: (value) => formatStrength(value),
+        color: colors.color,
+        fontSize: 11,
       },
     },
     maintainAspectRatio: false,
     responsive: true,
-    layout: {
-      padding: { top: 8, right: 8, bottom: 4, left: 8 },
-    },
+    layout: { padding: { top: 18, right: 8, bottom: 4, left: 8 } },
     scales: {
       x: {
-        stacked: true,
         ticks: {
-          color,
-          font: { size: 12, weight: "500" },
+          color: colors.color,
+          font: { size: 12, weight: "600" },
           maxRotation: 0,
-          autoSkip: true,
         },
         grid: { display: false },
         border: { display: false },
       },
       y: {
-        stacked: true,
-        display: false,
-        grid: { display: false },
+        beginAtZero: strengthMin >= 0,
+        grace: "18%",
+        ticks: { color: colors.faint, font: { size: 10 } },
+        grid: { color: colors.gridColor, drawTicks: false },
         border: { display: false },
       },
     },
   };
 
   const chartData = {
-    labels: [
-      storedFixtureDetailsJson?.homeTeamName,
-      storedFixtureDetailsJson?.awayTeamName,
-    ],
+    labels: ["Attack", "Defence"],
     datasets: [
       {
-        data: [chartValues.homeAttack, chartValues.awayAttack],
-        label: "Attacking",
-        backgroundColor: "#01a501",
+        data: [chartValues.homeAttack, chartValues.homeDefence],
+        label: storedFixtureDetailsJson?.homeTeamName || "Home",
+        backgroundColor: colors.home,
         borderWidth: 0,
         borderRadius: 6,
-        barPercentage: 0.65,
-        categoryPercentage: 0.7,
+        maxBarThickness: 48,
+        valueLabels: true,
       },
       {
-        data: [chartValues.homeDefence, chartValues.awayDefence],
-        label: "Defensive",
-        backgroundColor: "#d71200",
+        data: [chartValues.awayAttack, chartValues.awayDefence],
+        label: storedFixtureDetailsJson?.awayTeamName || "Away",
+        backgroundColor: colors.away,
         borderWidth: 0,
         borderRadius: 6,
-        barPercentage: 0.65,
-        categoryPercentage: 0.7,
+        maxBarThickness: 48,
+        valueLabels: true,
       },
     ],
   };
 
   const homeName = storedFixtureDetailsJson.homeTeamName;
   const awayName = storedFixtureDetailsJson.awayTeamName;
+  const strengthSummary = comparisonLead(homeName, awayName, chartValues);
   const useFootyStatsTemplate = match?.fixtureStatsSource === "footystats-api";
 
   return (
@@ -726,6 +706,25 @@ function TeamPage({ matchId, seoShell = null }) {
           text={`${storedFixtureDetailsJson.homeTeamName} vs ${storedFixtureDetailsJson.awayTeamName} stats and prediction`}
           label="Share match link"
         />
+        {matchId && match ? (
+          <ShareableVisual
+            hideBrand
+            hideCapture
+            className="FixturePage-shareCard FixturePage-shareCard--sourceOnly"
+            filename={sanitizeImageFilename(
+              `${storedFixtureDetailsJson.homeTeamName}-vs-${storedFixtureDetailsJson.awayTeamName}-summary`
+            )}
+            shareTitle={`${storedFixtureDetailsJson.homeTeamName} vs ${storedFixtureDetailsJson.awayTeamName}`}
+            shareText={`${storedFixtureDetailsJson.homeTeamName} vs ${storedFixtureDetailsJson.awayTeamName} stats and prediction`}
+          >
+            <FixtureSocialShareCard
+              data={buildFixtureShareCardFromMatch(match, {
+                kickOff: seoShell?.kickOff || storedFixtureDetailsJson.time || "",
+                league: seoShell?.league || storedFixtureDetailsJson.leagueName || "",
+              })}
+            />
+          </ShareableVisual>
+        ) : null}
       </header>
 
       {matchId && match ? (
@@ -771,22 +770,28 @@ function TeamPage({ matchId, seoShell = null }) {
               className="FixturePage-chartShare"
             >
               <div data-share-capture className="FixturePage-comparisonChart">
+                {strengthSummary ? (
+                  <p className="FixturePage-chartNote">{strengthSummary}</p>
+                ) : null}
                 <div className="FixturePage-comparisonChartCanvas">
-                  <Bar
-                    key={theme}
-                    options={chartOptions}
-                    data={chartData}
-                    className="FixturePage-chart"
-                  />
+                  <LazyChart fill>
+                    <Bar
+                      key={theme}
+                      options={chartOptions}
+                      data={chartData}
+                      plugins={[barValueLabelsPlugin]}
+                      className="FixturePage-chart"
+                    />
+                  </LazyChart>
                 </div>
                 <div className="FixturePage-chartLegend" aria-hidden="true">
                   <span className="FixturePage-chartLegendItem">
                     <span className="FixturePage-chartLegendSwatch FixturePage-chartLegendSwatch--home" />
-                    Attacking
+                    {homeName}
                   </span>
                   <span className="FixturePage-chartLegendItem">
                     <span className="FixturePage-chartLegendSwatch FixturePage-chartLegendSwatch--away" />
-                    Defensive
+                    {awayName}
                   </span>
                 </div>
               </div>
@@ -854,10 +859,6 @@ function TeamPage({ matchId, seoShell = null }) {
               modelOutputs={pageData.modelOutputs}
               homeTeamName={storedFixtureDetailsJson.homeTeamName}
               awayTeamName={storedFixtureDetailsJson.awayTeamName}
-              theme={theme}
-              color={color}
-              gridColor={gridColor}
-              tooltipBackground={tooltipBackground}
             />
           ) : (
             <div className="FixturePage-seasonStatsLocked">

@@ -1,17 +1,5 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import {
-  Chart as ChartJS,
-  CategoryScale,
-  LinearScale,
-  RadialLinearScale,
-  PointElement,
-  LineElement,
-  BarElement,
-  Filler,
-  Tooltip,
-  Legend,
-  ScatterController,
-} from "chart.js";
+import "../charts/chartSetup";
 import { Scatter, Bar, Radar } from "react-chartjs-2";
 import { apiGetUrl } from "../../utils/apiUrl";
 import {
@@ -48,19 +36,6 @@ import {
   SCATTER_AVERAGE_COLOR,
   SCATTER_AVERAGE_FILL,
 } from "./scatterStyleMap";
-
-ChartJS.register(
-  CategoryScale,
-  LinearScale,
-  RadialLinearScale,
-  PointElement,
-  LineElement,
-  BarElement,
-  Filler,
-  Tooltip,
-  Legend,
-  ScatterController
-);
 
 const METRIC_OPTIONS = [
   {

@@ -1,14 +1,4 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import {
-  Chart as ChartJS,
-  CategoryScale,
-  LinearScale,
-  PointElement,
-  LineElement,
-  Title,
-  Tooltip,
-  Legend,
-} from "chart.js";
 import { Line } from "react-chartjs-2";
 import { Pause, Play } from "lucide-react";
 import { fetchAllLeagueFixturesPages } from "../../logic/leagueResultsLoader";
@@ -19,17 +9,12 @@ import {
   isCupPhaseCompetition,
 } from "./cupCompetitionPhases";
 import CompetitionPositionRaceTable from "./CompetitionPositionRaceTable";
-import { useChartTheme, getChartColors } from "../Chart";
+import "../charts/chartSetup";
+import { useChartTheme, getChartColors, tooltipStyle } from "../charts/chartTheme";
+import { CHART_FONT_FAMILY } from "../charts/chartPlugins";
 
-ChartJS.register(
-  CategoryScale,
-  LinearScale,
-  PointElement,
-  LineElement,
-  Title,
-  Tooltip,
-  Legend
-);
+/** Opacity of the other teams' lines while one team is picked out. */
+const DIMMED_ALPHA = 0.15;
 
 /** MLS conference tables — not a single-table race for v1. */
 const SKIP_LEAGUE_IDS = new Set([...GROUP_STAGE_LEAGUE_IDS, 16504]);
@@ -83,7 +68,11 @@ function useMediaQuery(query) {
  * Build chart series for a (possibly fractional) week index.
  * Between integers the tip segment lerps vertically so position swaps read clearly.
  */
-function buildRaceChartData(series, displayWeek, { tipRadius, borderWidth }) {
+function buildRaceChartData(
+  series,
+  displayWeek,
+  { tipRadius, borderWidth, focusTeam = null }
+) {
   const maxWeek = series.labels.length - 1;
   const week = Math.max(0, Math.min(Number(displayWeek) || 0, maxWeek));
   const floor = Math.floor(week);
@@ -109,7 +98,9 @@ function buildRaceChartData(series, displayWeek, { tipRadius, borderWidth }) {
       data.push(full[floor] ?? null);
     }
 
-    const lineColor = hashTeamColor(team);
+    const focused = focusTeam === team;
+    const dimmed = focusTeam != null && !focused;
+    const lineColor = hashTeamColor(team, dimmed ? DIMMED_ALPHA : 1);
     const radii = data.map((value, index) =>
       index === data.length - 1 && value != null ? tipRadius : 0
     );
@@ -119,7 +110,10 @@ function buildRaceChartData(series, displayWeek, { tipRadius, borderWidth }) {
       data,
       borderColor: lineColor,
       backgroundColor: lineColor,
-      borderWidth,
+      borderWidth: focused ? borderWidth + 1.5 : borderWidth,
+      order: focused ? -1 : 0,
+      raceLabelColor: hashTeamColor(team),
+      raceLabelAlpha: dimmed ? 0.35 : 1,
       tension: 0.15,
       spanGaps: false,
       // Allow tip dots near the right edge; name labels are drawn by plugin outside clip.
@@ -136,21 +130,25 @@ function buildRaceChartData(series, displayWeek, { tipRadius, borderWidth }) {
   return { labels, datasets };
 }
 
-function hashTeamColor(name) {
+function hashTeamColor(name, alpha = 1) {
   let hash = 0;
   const str = String(name || "");
   for (let i = 0; i < str.length; i += 1) {
     hash = str.charCodeAt(i) + ((hash << 5) - hash);
   }
   const hue = Math.abs(hash) % 360;
-  return `hsl(${hue} 62% 42%)`;
+  return alpha < 1 ? `hsl(${hue} 62% 42% / ${alpha})` : `hsl(${hue} 62% 42%)`;
+}
+
+function pillFont(fontSize) {
+  return `600 ${fontSize}px ${CHART_FONT_FAMILY}`;
 }
 
 function measureLabelPad(teamNames, fontSize = 11) {
   if (typeof document === "undefined") return 120;
   const ctx = document.createElement("canvas").getContext("2d");
   if (!ctx) return 120;
-  ctx.font = `bold ${fontSize}px sans-serif`;
+  ctx.font = pillFont(fontSize);
   let max = 0;
   for (const name of teamNames || []) {
     max = Math.max(max, ctx.measureText(String(name)).width);
@@ -160,7 +158,8 @@ function measureLabelPad(teamNames, fontSize = 11) {
 }
 
 /**
- * Draw full team-name pills to the right of each race tip (outside chartArea clip).
+ * Draw full team-name pills to the right of each race tip (outside chartArea
+ * clip). Pill rectangles are kept on `chart.$raceTipHits` for hover and tap.
  */
 const raceTipLabelPlugin = {
   id: "raceTipLabels",
@@ -170,6 +169,7 @@ const raceTipLabelPlugin = {
     const padX = 8;
     const padY = 4;
     const gap = 8;
+    const hits = [];
 
     chart.data.datasets.forEach((dataset, datasetIndex) => {
       const meta = chart.getDatasetMeta(datasetIndex);
@@ -187,10 +187,11 @@ const raceTipLabelPlugin = {
       if (!tip) return;
 
       const label = String(dataset.label || "");
-      const color = dataset.borderColor || "#888";
+      const color = dataset.raceLabelColor || dataset.borderColor || "#888";
 
       ctx.save();
-      ctx.font = `bold ${fontSize}px sans-serif`;
+      ctx.globalAlpha = dataset.raceLabelAlpha ?? 1;
+      ctx.font = pillFont(fontSize);
       const textWidth = ctx.measureText(label).width;
       const pillW = Math.ceil(textWidth + padX * 2);
       const pillH = Math.ceil(fontSize + padY * 2 + 2);
@@ -216,9 +217,22 @@ const raceTipLabelPlugin = {
       ctx.textBaseline = "middle";
       ctx.fillText(label, pillX + pillW / 2, tip.y + 0.5);
       ctx.restore();
+      hits.push({ team: label, x: pillX, y: pillY, w: pillW, h: pillH });
     });
+
+    chart.$raceTipHits = hits;
   },
 };
+
+function teamAtPill(chart, event) {
+  const hits = chart?.$raceTipHits;
+  if (!hits || event?.x == null || event?.y == null) return null;
+  const hit = hits.find(
+    (h) =>
+      event.x >= h.x && event.x <= h.x + h.w && event.y >= h.y && event.y <= h.y + h.h
+  );
+  return hit ? hit.team : null;
+}
 
 /** Height + tip sizing so each position row has enough vertical room. */
 function layoutForTeams(teamCount, teamNames = []) {
@@ -248,8 +262,12 @@ export default function CompetitionPositionRaceChart({
   tablesData = null,
 }) {
   const theme = useChartTheme();
-  const { color, gridColor, tooltipBackground } = getChartColors(theme);
+  const colors = getChartColors(theme);
+  const { color, gridColor, tooltipBackground } = colors;
   const useTableLayout = useMediaQuery(TABLE_LAYOUT_MQ);
+  const [hoverTeam, setHoverTeam] = useState(null);
+  const [pinnedTeam, setPinnedTeam] = useState(null);
+  const focusTeam = hoverTeam ?? pinnedTeam;
 
   const [series, setSeries] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -405,8 +423,14 @@ export default function CompetitionPositionRaceChart({
     return buildRaceChartData(series, displayWeek, {
       tipRadius,
       borderWidth,
+      focusTeam,
     });
-  }, [series, displayWeek, tipRadius, borderWidth, useTableLayout]);
+  }, [series, displayWeek, tipRadius, borderWidth, useTableLayout, focusTeam]);
+
+  useEffect(() => {
+    setHoverTeam(null);
+    setPinnedTeam(null);
+  }, [series]);
 
   const options = useMemo(() => {
     if (useTableLayout) return null;
@@ -422,6 +446,15 @@ export default function CompetitionPositionRaceChart({
         resize: { animation: { duration: 0 } },
       },
       interaction: { mode: "nearest", intersect: false },
+      onHover(event, _elements, chart) {
+        const team = event?.type === "mouseout" ? null : teamAtPill(chart, event);
+        chart.canvas.style.cursor = team ? "pointer" : "";
+        setHoverTeam((prev) => (prev === team ? prev : team));
+      },
+      onClick(event, _elements, chart) {
+        const team = teamAtPill(chart, event);
+        setPinnedTeam((prev) => (team && prev !== team ? team : null));
+      },
       layout: {
         padding: {
           top: tipPad,
@@ -435,9 +468,7 @@ export default function CompetitionPositionRaceChart({
         title: { display: false },
         raceTipLabels: { fontSize },
         tooltip: {
-          backgroundColor: tooltipBackground,
-          titleColor: "#ffffff",
-          bodyColor: "#ffffff",
+          ...tooltipStyle(colors),
           callbacks: {
             title(items) {
               const idx = items[0]?.dataIndex;
@@ -447,7 +478,7 @@ export default function CompetitionPositionRaceChart({
             label(context) {
               const team = context.dataset.label;
               const pos = context.raw;
-              if (pos == null) return `${team}: —`;
+              if (pos == null) return `${team}: no data`;
               const rounded = Math.round(Number(pos));
               const weekIdx = Math.min(
                 scrubWeek,
@@ -561,7 +592,7 @@ export default function CompetitionPositionRaceChart({
       <p className="Competition__positionRaceIntro">
         {useTableLayout
           ? "Watch the table change week by week. Arrows show places gained or lost versus three gameweeks earlier (rolling)."
-          : "Track how the table unfolded week by week. Press play to animate the season, or scrub to any gameweek."}
+          : "Track how the table unfolded week by week. Press play to animate the season, or scrub to any gameweek. Hover or tap a team name to follow its line."}
       </p>
 
       <div className="Competition__positionRaceCard">

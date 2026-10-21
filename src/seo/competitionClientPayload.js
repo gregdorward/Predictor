@@ -56,7 +56,7 @@ const COMPETITION_ROOT_KEYS = [
   "goals_min_51_to_60",
   "goals_min_61_to_70",
   "goals_min_71_to_80",
-  "goals_min_76_to_90",
+  "goals_min_81_to_90",
   "top_scorers",
   "top_assists",
   "top_clean_sheets",

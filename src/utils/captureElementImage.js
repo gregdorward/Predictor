@@ -39,6 +39,9 @@ function dataUrlToBlobSync(dataUrl) {
 export function getCanvasDataUrl(canvas) {
   const chart = ChartJS.getChart(canvas);
   if (chart && typeof chart.toBase64Image === "function") {
+    // Jump any in-flight entry animation to its final frame so exports are complete.
+    chart.stop();
+    chart.update("none");
     return chart.toBase64Image("image/png", 1);
   }
 

@@ -20,7 +20,7 @@ const ImpactBar = ({ score }) => {
       <div className="ImpactBarBackground">
         <div
           className={`ImpactBarFill ${impactClass}`}
-          style={{ width: `${percentage}%` }}
+          style={{ transform: `scaleX(${Math.max(0, percentage) / 100})` }}
         />
         <span className="ImpactBarText">{numericScore.toFixed(1)}</span>
       </div>

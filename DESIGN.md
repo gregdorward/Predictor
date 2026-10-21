@@ -257,7 +257,18 @@ Utilitarian, border-forward controls with orange as the hover and CTA signal.
 ### Fixture & data surfaces
 
 - **League / result lists:** Dense rows, `ResultButton` row chrome with light shadow (candidate to flatten).
-- **Charts (Chart.js):** Open Sans axis labels; grid/tooltip colors from `getChartColors()` synced to light/dark body class.
+- **Charts (Chart.js):** Open Sans axis labels; grid/tooltip colors from `getChartColors()` synced to light/dark body class. Full rules in **Charts** below.
+
+### Charts
+
+Shared chart code lives in `src/components/charts/`. Import `chartSetup` once per chart module instead of calling `ChartJS.register` locally.
+
+- **Palette:** Every chart color comes from the `--chart-*` variables in `:root` / `.dark-mode`, read through `getChartColors()`. Home is green, away is red, draw and "no" outcomes are grey, and single-series magnitude uses the orange ramp (`rampColor()`, `--chart-ramp-low` to `--chart-ramp-high`). Never use per-team rainbow palettes. For text set in team colors, use the `--chart-*-text` variants, which pass 4.5:1.
+- **Motion:** Use the presets in `chartMotion.js`: `staggeredBars`, `growFromZero`, `progressiveLine` and `radialReveal`. Each returns `animation: false` under `prefers-reduced-motion`. Entry animations play once, when the chart scrolls into view.
+- **Lazy mounting:** Wrap canvases in `LazyChart` so off-screen charts cost nothing on load. Reserve the slot with `aspectRatio`, `height` or `fill` to avoid layout shift. Never give a chart canvas auto margins, because Chart.js subtracts computed margins and the chart then stays at 300px wide.
+- **Annotate, don't decorate:** Prefer reference lines (averages, 50%, PPG pace, zero), threshold bands and direct end-of-line labels (`directLabelsPlugin`) over legends and tooltips alone. Draw annotation labels after the datasets, on a surface-tinted pill.
+- **HTML vs canvas:** Use HTML/CSS for part-to-whole splits (`SplitBar`) and single-measure-versus-target bullets (`ExpectedPointsBullet`). Keep Chart.js for axes, time series, radar and scatter. Doughnut and pie charts are retired.
+- **Copy:** Titles and subtitles live in HTML (`ChartPanel-header`, `Competition__chartCardSubtitle`). Write subtitles as one plain sentence saying how to read the chart, with no dashes. Use "−" for negative numbers.
 
 ## Do's and Don'ts
 

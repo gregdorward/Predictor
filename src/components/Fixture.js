@@ -193,7 +193,11 @@ const PredictionSection = ({
       <div className="ProbabilityBarBackground">
         <div
           className={`ProbabilityBarFill ${probClass}`}
-          style={probabilityValue > 0 ? { width: `${probabilityValue}%` } : undefined}
+          style={
+            probabilityValue > 0
+              ? { transform: `scaleX(${Math.min(1, probabilityValue / 100)})` }
+              : undefined
+          }
         />
         <span className="ProbabilityBarText">{probabilityLabel}</span>
       </div>

@@ -1,15 +1,14 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import {
-  Chart as ChartJS,
-  LinearScale,
-  PointElement,
-  BarElement,
-  Tooltip,
-  Legend,
-  ScatterController,
-} from "chart.js";
 import { Bar, Scatter } from "react-chartjs-2";
-import { useChartTheme, getChartColors } from "../Chart";
+import "../charts/chartSetup";
+import {
+  useChartTheme,
+  getChartColors,
+  tooltipStyle,
+  withAlpha,
+} from "../charts/chartTheme";
+import { barValueLabelsPlugin } from "../charts/chartPlugins";
+import { staggeredBars } from "../charts/chartMotion";
 import ShareableVisual from "../ShareableVisual";
 import { sanitizeImageFilename } from "../../utils/captureElementImage";
 import JourneyContentBreak from "../JourneyContentBreak";
@@ -44,19 +43,54 @@ import {
   rankByMetric,
 } from "../../seo/competitionOverviewData";
 
-ChartJS.register(
-  LinearScale,
-  PointElement,
-  BarElement,
-  Tooltip,
-  Legend,
-  ScatterController
-);
-
-const ACCENT = "#f57701";
 const LOW_SAMPLE_COLOR = "#9a9a9a";
 const LEAGUE_POINT_FILL = "rgba(1, 165, 1, 0.8)";
 const LEAGUE_POINT_BORDER = "#01a501";
+const LEADERBOARD_PLUGINS = [barValueLabelsPlugin];
+
+function meanOf(values) {
+  const finite = values.filter((v) => Number.isFinite(v));
+  if (!finite.length) return null;
+  return finite.reduce((sum, v) => sum + v, 0) / finite.length;
+}
+
+function averageLine(colors, scaleID, value, label, labelOptions = {}) {
+  return {
+    type: "line",
+    scaleID,
+    value,
+    borderColor: colors.reference,
+    borderWidth: 1,
+    borderDash: [4, 4],
+    drawTime: "beforeDatasetsDraw",
+    label: label
+      ? {
+          display: true,
+          content: label,
+          position: "start",
+          backgroundColor: colors.surface,
+          color: colors.color,
+          font: { size: 10, weight: 600 },
+          padding: { x: 5, y: 2 },
+          ...labelOptions,
+        }
+      : { display: false },
+  };
+}
+
+function quadrantLabel(colors, { xValue, yValue, position, content }) {
+  return {
+    type: "label",
+    xValue,
+    yValue,
+    position,
+    content,
+    color: colors.faint,
+    font: { size: 10, weight: 600 },
+    padding: 4,
+    drawTime: "beforeDatasetsDraw",
+  };
+}
 
 function ChartCard({ title, subtitle, children, controls }) {
   return (
@@ -83,7 +117,8 @@ function resolveLeagueLogoUrl(seasonId) {
 
 function MetricLeaderboard({ competitions }) {
   const theme = useChartTheme();
-  const { color, gridColor, tooltipBackground } = getChartColors(theme);
+  const colors = getChartColors(theme);
+  const { color, gridColor } = colors;
   const [metricKey, setMetricKey] = useState("avgGoals");
 
   const metric = getComparisonMetric(metricKey);
@@ -107,9 +142,14 @@ function MetricLeaderboard({ competitions }) {
         data: values,
         borderWidth: 0,
         borderRadius: 3,
-        backgroundColor: ranked.map((row) =>
-          isLowSample(row) ? LOW_SAMPLE_COLOR : ACCENT
-        ),
+        maxBarThickness: 18,
+        valueLabels: true,
+        backgroundColor: ranked.map((row, index) => {
+          if (isLowSample(row)) return LOW_SAMPLE_COLOR;
+          return mean !== null && values[index] < mean
+            ? withAlpha(colors.accent, 0.45)
+            : colors.accent;
+        }),
       },
     ],
   };
@@ -119,14 +159,33 @@ function MetricLeaderboard({ competitions }) {
     indexAxis: "y",
     responsive: true,
     maintainAspectRatio: false,
-    animation: { duration: 400 },
+    ...staggeredBars({ step: 18, duration: 600 }),
+    layout: { padding: { right: 44, top: mean === null ? 0 : 20 } },
     plugins: {
       legend: { display: false },
       title: { display: false },
+      annotation: {
+        clip: false,
+        annotations:
+          mean === null
+            ? {}
+            : {
+                average: averageLine(
+                  colors,
+                  "x",
+                  mean,
+                  `Average ${formatMetricValue(mean, metric)}`,
+                  { yAdjust: -18 }
+                ),
+              },
+      },
+      barValueLabels: {
+        format: (value) => formatMetricValue(value, metric) || "",
+        color: colors.faint,
+        fontSize: 10,
+      },
       tooltip: {
-        backgroundColor: tooltipBackground,
-        titleColor: "#ffffff",
-        bodyColor: "#ffffff",
+        ...tooltipStyle(colors),
         displayColors: false,
         callbacks: {
           label(context) {
@@ -192,7 +251,7 @@ function MetricLeaderboard({ competitions }) {
           : `Average across the ${ranked.length} leagues shown: ${formatMetricValue(
               mean,
               metric
-            )}. Grey bars are leagues with a small sample so far.`
+            )}. Faded bars sit below the average; grey bars are leagues with a small sample so far.`
       }
       controls={controls}
     >
@@ -215,7 +274,12 @@ function MetricLeaderboard({ competitions }) {
             className="CompetitionsCompare-chartScroll"
             style={{ height: `${Math.max(260, ranked.length * 22)}px` }}
           >
-            <Bar key={`${theme}-${metricKey}`} data={data} options={options} />
+            <Bar
+              key={`${theme}-${metricKey}`}
+              data={data}
+              options={options}
+              plugins={LEADERBOARD_PLUGINS}
+            />
           </div>
         </div>
       </ShareableVisual>
@@ -225,7 +289,8 @@ function MetricLeaderboard({ competitions }) {
 
 function LeagueStyleMap({ competitions }) {
   const theme = useChartTheme();
-  const { color, gridColor, tooltipBackground } = getChartColors(theme);
+  const colors = useMemo(() => getChartColors(theme), [theme]);
+  const { color, gridColor, tooltipBackground } = colors;
   const [scatterXKey, setScatterXKey] = useState("avgGoals");
   const [scatterYKey, setScatterYKey] = useState("btts");
   const [scatterMarkers, setScatterMarkers] = useState([]);
@@ -454,6 +519,31 @@ function LeagueStyleMap({ competitions }) {
     };
   }, [plottedLeagueRows, scatterXKey, scatterYKey, scatterXMeta, scatterYMeta]);
 
+  const scatterAnnotations = useMemo(() => {
+    const meanX = meanOf(plottedLeagueRows.map((row) => Number(row[scatterXKey])));
+    const meanY = meanOf(plottedLeagueRows.map((row) => Number(row[scatterYKey])));
+    if (meanX === null || meanY === null || plottedLeagueRows.length < 3) {
+      return {};
+    }
+    const { x: xRange, y: yRange } = scatterAxisRanges;
+    return {
+      meanX: averageLine(colors, "x", meanX),
+      meanY: averageLine(colors, "y", meanY),
+      aboveBoth: quadrantLabel(colors, {
+        xValue: xRange.max,
+        yValue: yRange.max,
+        position: { x: "end", y: "start" },
+        content: "Above average on both",
+      }),
+      belowBoth: quadrantLabel(colors, {
+        xValue: xRange.min,
+        yValue: yRange.min,
+        position: { x: "start", y: "end" },
+        content: "Below average on both",
+      }),
+    };
+  }, [plottedLeagueRows, scatterXKey, scatterYKey, scatterAxisRanges, colors]);
+
   const scatterOptions = useMemo(
     () => ({
       responsive: true,
@@ -461,6 +551,7 @@ function LeagueStyleMap({ competitions }) {
       interaction: SCATTER_CHART_INTERACTION,
       plugins: {
         legend: { display: false },
+        annotation: { annotations: scatterAnnotations },
         tooltip: buildScatterTooltipOptions(tooltipBackground, {
           title(items) {
             return items[0]?.raw?.name || "";
@@ -518,6 +609,7 @@ function LeagueStyleMap({ competitions }) {
       scatterXMeta,
       scatterYMeta,
       scatterAxisRanges,
+      scatterAnnotations,
     ]
   );
 
@@ -528,7 +620,7 @@ function LeagueStyleMap({ competitions }) {
   return (
     <ChartCard
       title="Style map"
-      subtitle="Pick any two metrics to compare leagues. Use Choose leagues to add or remove sides on the chart (top 10 shown by default). The table below has every league and flags small samples."
+      subtitle="Pick any two metrics to compare leagues. Dashed lines mark the average of the leagues shown. Use Choose leagues to add or remove sides on the chart (top 10 shown by default). The table below has every league and flags small samples."
     >
       <div className="Competition__comparisonAxisPickers Competition__comparisonAxisPickers--scatter">
         <MetricPicker

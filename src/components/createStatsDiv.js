@@ -1,7 +1,6 @@
 import { Fragment } from "react";
 import { CreateBadge } from "./createBadge";
 import Collapsable from "../components/CollapsableElement";
-import BarChart, { DoughnutChart } from "../components/Chart";
 import {
   isMissingStat,
   STAT_FALLBACK,

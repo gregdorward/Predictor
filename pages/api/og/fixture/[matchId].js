@@ -10,6 +10,8 @@ import {
   SITE_NAME,
 } from "../../../../src/seo/pageMetaConfig";
 import { fetchMatchSnapshot } from "../../../../src/seo/serverFetch";
+import { buildFixtureHeadToHead } from "../../../../src/logic/fixturePageH2h";
+import { buildFixtureShareCard } from "../../../../src/logic/fixtureShareCardData";
 
 export const config = { runtime: "edge" };
 
@@ -18,7 +20,6 @@ const CACHE_CONTROL =
 
 const COLORS = {
   navy: "#020029",
-  navySoft: "#030040",
   orange: "#fe8c00",
   green: "#28a04c",
   textDark: "#020029",
@@ -90,17 +91,17 @@ async function loadBadgeDataUrl(imageUrl) {
   }
 }
 
-function Badge({ src, name }) {
+function Badge({ src, name, size = 72 }) {
   if (src) {
     return (
       <img
         src={src}
-        width={120}
-        height={120}
+        width={size}
+        height={size}
         alt=""
         style={{
-          width: 120,
-          height: 120,
+          width: size,
+          height: size,
           objectFit: "contain",
         }}
       />
@@ -110,15 +111,15 @@ function Badge({ src, name }) {
   return (
     <div
       style={{
-        width: 120,
-        height: 120,
-        borderRadius: 60,
+        width: size,
+        height: size,
+        borderRadius: size / 2,
         backgroundColor: "rgba(255,255,255,0.12)",
         display: "flex",
         alignItems: "center",
         justifyContent: "center",
         color: COLORS.textLight,
-        fontSize: 40,
+        fontSize: Math.round(size * 0.34),
         fontWeight: 700,
       }}
     >
@@ -127,7 +128,13 @@ function Badge({ src, name }) {
   );
 }
 
-function TeamBlock({ name, badgeSrc, align = "center" }) {
+const TONE = {
+  home: "#1fb83a",
+  draw: "#8a8a8a",
+  away: "#ec3a28",
+};
+
+function TeamBlock({ name, badgeSrc, align = "center", size = 72 }) {
   return (
     <div
       style={{
@@ -135,20 +142,20 @@ function TeamBlock({ name, badgeSrc, align = "center" }) {
         flexDirection: "column",
         alignItems: align === "left" ? "flex-start" : align === "right" ? "flex-end" : "center",
         justifyContent: "center",
-        width: 420,
-        gap: 20,
+        width: 340,
+        gap: 10,
       }}
     >
-      <Badge src={badgeSrc} name={name} />
+      <Badge src={badgeSrc} name={name} size={size} />
       <div
         style={{
           display: "flex",
           color: COLORS.textLight,
-          fontSize: 42,
+          fontSize: 28,
           fontWeight: 700,
           lineHeight: 1.15,
           textAlign: align,
-          maxWidth: 400,
+          maxWidth: 320,
         }}
       >
         {name}
@@ -157,14 +164,152 @@ function TeamBlock({ name, badgeSrc, align = "center" }) {
   );
 }
 
-function renderCard({
-  home,
-  away,
-  league,
-  kickOff,
-  homeBadge,
-  awayBadge,
-}) {
+function OgSplit({ segments }) {
+  const total = segments.reduce((sum, segment) => sum + Math.max(0, segment.value), 0) || 1;
+  return (
+    <div style={{ display: "flex", flexDirection: "column", gap: 8, width: "100%" }}>
+      <div
+        style={{
+          display: "flex",
+          width: "100%",
+          height: 14,
+          borderRadius: 7,
+          overflow: "hidden",
+          backgroundColor: "rgba(255,255,255,0.12)",
+        }}
+      >
+        {segments
+          .filter((segment) => segment.value > 0)
+          .map((segment) => (
+          <div
+            key={segment.label}
+            style={{
+              display: "flex",
+              width: `${(Math.max(0, segment.value) / total) * 100}%`,
+              height: 14,
+              backgroundColor: TONE[segment.tone] || TONE.draw,
+            }}
+          />
+        ))}
+      </div>
+      <div style={{ display: "flex", justifyContent: "space-between", width: "100%" }}>
+        {segments.map((segment) => (
+          <div
+            key={`${segment.label}-label`}
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              color: COLORS.textLight,
+              fontSize: 16,
+              fontWeight: 700,
+            }}
+          >
+            <div style={{ display: "flex" }}>{segment.value.toFixed(1)}%</div>
+            <div style={{ display: "flex", color: COLORS.muted, fontSize: 14, fontWeight: 600 }}>
+              {segment.label}
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+function Panel({ title, children }) {
+  return (
+    <div
+      style={{
+        display: "flex",
+        flexDirection: "column",
+        gap: 8,
+        flex: 1,
+        minWidth: 460,
+        padding: "12px 14px",
+        borderRadius: 10,
+        backgroundColor: "rgba(255,255,255,0.06)",
+      }}
+    >
+      <div
+        style={{
+          display: "flex",
+          color: COLORS.orange,
+          fontSize: 14,
+          fontWeight: 700,
+          letterSpacing: 0.4,
+          textTransform: "uppercase",
+        }}
+      >
+        {title}
+      </div>
+      {children}
+    </div>
+  );
+}
+
+function renderCard({ card, homeBadge, awayBadge }) {
+  const panels = [];
+  if (card.model) {
+    panels.push(
+      <Panel key="model" title="Model">
+        <OgSplit
+          segments={[
+            { label: card.homeName, value: card.model.homeWin, tone: "home" },
+            { label: "Draw", value: card.model.draw, tone: "draw" },
+            { label: card.awayName, value: card.model.awayWin, tone: "away" },
+          ]}
+        />
+      </Panel>
+    );
+  }
+  if (card.strengths) {
+    panels.push(
+      <Panel key="strength" title="Strength">
+        <div style={{ display: "flex", flexDirection: "column", gap: 8, width: "100%" }}>
+          {[
+            ["Attack", card.strengths.homeAttackShare, card.strengths.awayAttackShare],
+            ["Defence", card.strengths.homeDefenceShare, card.strengths.awayDefenceShare],
+          ].map(([label, homeShare, awayShare]) => (
+            <div key={label} style={{ display: "flex", alignItems: "center", gap: 8, width: "100%" }}>
+              <div style={{ display: "flex", width: 72, color: COLORS.muted, fontSize: 14 }}>{label}</div>
+              <div style={{ display: "flex", flex: 1, height: 10, borderRadius: 5, overflow: "hidden", backgroundColor: "rgba(255,255,255,0.08)" }}>
+                <div style={{ display: "flex", width: `${homeShare}%`, height: 10, backgroundColor: TONE.home }} />
+                <div style={{ display: "flex", width: `${awayShare}%`, height: 10, backgroundColor: TONE.away }} />
+              </div>
+            </div>
+          ))}
+        </div>
+      </Panel>
+    );
+  }
+  if (card.markets?.length) {
+    panels.push(
+      <Panel key="markets" title="Recent markets">
+        <div style={{ display: "flex", flexDirection: "column", gap: 6, width: "100%" }}>
+          {card.markets.map((row) => (
+            <div key={row.label} style={{ display: "flex", justifyContent: "space-between", width: "100%", color: COLORS.textLight, fontSize: 18, fontWeight: 700 }}>
+              <div style={{ display: "flex" }}>{row.homeValue}</div>
+              <div style={{ display: "flex", color: COLORS.muted, fontSize: 14 }}>{row.label}</div>
+              <div style={{ display: "flex" }}>{row.awayValue}</div>
+            </div>
+          ))}
+        </div>
+      </Panel>
+    );
+  }
+  if (card.headToHead) {
+    panels.push(
+      <Panel key="h2h" title="Head to head">
+        <OgSplit
+          segments={[
+            { label: card.homeName, value: card.headToHead.home, tone: "home" },
+            { label: "Draws", value: card.headToHead.draw, tone: "draw" },
+            { label: card.awayName, value: card.headToHead.away, tone: "away" },
+          ]}
+        />
+      </Panel>
+    );
+  }
+
   return new ImageResponse(
     (
       <div
@@ -182,39 +327,16 @@ function renderCard({
             flex: 1,
             display: "flex",
             flexDirection: "column",
-            padding: "48px 56px 28px",
-            backgroundImage: `linear-gradient(160deg, ${COLORS.navy} 0%, ${COLORS.navySoft} 55%, #0a0640 100%)`,
+            padding: "28px 40px 16px",
           }}
         >
-          <div
-            style={{
-              display: "flex",
-              flexDirection: "column",
-              gap: 8,
-              marginBottom: 36,
-            }}
-          >
-            <div
-              style={{
-                display: "flex",
-                color: COLORS.orange,
-                fontSize: 26,
-                fontWeight: 700,
-                letterSpacing: 0.5,
-              }}
-            >
-              {league || "Football match"}
+          <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 16 }}>
+            <div style={{ display: "flex", color: COLORS.orange, fontSize: 22, fontWeight: 700 }}>
+              {card.league || "Football match"}
             </div>
-            {kickOff ? (
-              <div
-                style={{
-                  display: "flex",
-                  color: COLORS.muted,
-                  fontSize: 24,
-                  fontWeight: 500,
-                }}
-              >
-                {kickOff}
+            {card.kickOff ? (
+              <div style={{ display: "flex", color: COLORS.muted, fontSize: 20, fontWeight: 600 }}>
+                {card.kickOff}
               </div>
             ) : null}
           </div>
@@ -225,73 +347,77 @@ function renderCard({
               display: "flex",
               alignItems: "center",
               justifyContent: "space-between",
-              gap: 24,
+              marginBottom: panels.length ? 16 : 0,
             }}
           >
-            <TeamBlock name={home} badgeSrc={homeBadge} align="left" />
+            <TeamBlock name={card.homeName} badgeSrc={homeBadge} align="left" size={panels.length > 1 ? 72 : 108} />
             <div
               style={{
                 display: "flex",
+                flexDirection: "column",
                 alignItems: "center",
                 justifyContent: "center",
-                width: 96,
-                height: 96,
-                borderRadius: 48,
-                backgroundColor: "rgba(254,140,0,0.16)",
-                color: COLORS.orange,
-                fontSize: 28,
-                fontWeight: 800,
-                letterSpacing: 1,
+                minWidth: 120,
               }}
             >
-              VS
+              {card.predictedScore ? (
+                <div style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
+                  <div style={{ display: "flex", color: COLORS.textLight, fontSize: 42, fontWeight: 800 }}>
+                    {`${card.predictedScore.home}-${card.predictedScore.away}`}
+                  </div>
+                  <div style={{ display: "flex", color: COLORS.muted, fontSize: 14, fontWeight: 600 }}>
+                    Predicted score
+                  </div>
+                </div>
+              ) : (
+                <div
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    width: 64,
+                    height: 64,
+                    borderRadius: 32,
+                    backgroundColor: "rgba(254,140,0,0.16)",
+                    color: COLORS.orange,
+                    fontSize: 22,
+                    fontWeight: 800,
+                  }}
+                >
+                  v
+                </div>
+              )}
             </div>
-            <TeamBlock name={away} badgeSrc={awayBadge} align="right" />
+            <TeamBlock name={card.awayName} badgeSrc={awayBadge} align="right" size={panels.length > 1 ? 72 : 108} />
           </div>
+
+          {panels.length ? (
+            <div style={{ display: "flex", flexWrap: "wrap", gap: 12, width: "100%" }}>{panels}</div>
+          ) : null}
         </div>
 
         <div
           style={{
             display: "flex",
             alignItems: "center",
-            gap: 16,
-            padding: "22px 56px",
+            gap: 14,
+            padding: "16px 40px",
             backgroundColor: COLORS.orange,
           }}
         >
           <div
             style={{
-              width: 10,
-              height: 42,
+              width: 8,
+              height: 34,
               borderRadius: 2,
               backgroundColor: COLORS.green,
             }}
           />
-          <div
-            style={{
-              display: "flex",
-              flexDirection: "column",
-              gap: 2,
-            }}
-          >
-            <div
-              style={{
-                display: "flex",
-                color: COLORS.textDark,
-                fontSize: 28,
-                fontWeight: 800,
-              }}
-            >
+          <div style={{ display: "flex", flexDirection: "column" }}>
+            <div style={{ display: "flex", color: COLORS.textDark, fontSize: 22, fontWeight: 800 }}>
               {SITE_NAME}
             </div>
-            <div
-              style={{
-                display: "flex",
-                color: COLORS.textDark,
-                fontSize: 20,
-                fontWeight: 600,
-              }}
-            >
+            <div style={{ display: "flex", color: COLORS.textDark, fontSize: 16, fontWeight: 600 }}>
               soccerstatshub.com
             </div>
           </div>
@@ -331,10 +457,11 @@ export default async function handler(req) {
   const matchId = parseMatchId(req);
   if (!matchId) {
     return renderCard({
-      home: "Home",
-      away: "Away",
-      league: SITE_NAME,
-      kickOff: null,
+      card: buildFixtureShareCard({
+        homeName: "Home",
+        awayName: "Away",
+        league: SITE_NAME,
+      }),
       homeBadge: null,
       awayBadge: null,
     });
@@ -352,6 +479,13 @@ export default async function handler(req) {
   const kickOff = snapshot
     ? formatKickOff(snapshot.date_unix ?? snapshot.date)
     : null;
+  const card = buildFixtureShareCard({
+    homeName: home,
+    awayName: away,
+    league,
+    kickOff,
+    headToHead: snapshot ? buildFixtureHeadToHead(snapshot) : null,
+  });
 
   const [homeBadge, awayBadge] = await Promise.all([
     loadBadgeDataUrl(
@@ -363,10 +497,7 @@ export default async function handler(req) {
   ]);
 
   return renderCard({
-    home,
-    away,
-    league,
-    kickOff,
+    card,
     homeBadge,
     awayBadge,
   });

@@ -12,22 +12,19 @@ import { memo } from "react";
 import SofaLineupsWidget from "./SofaScore";
 import Div from "./Div";
 import {
-  Chart,
-  MultilineChart,
   RadarChart,
   BarChart,
-  DoughnutChart,
-  BTTSPieChart,
-  VotePieChart,
   buildShotStackSeries,
   ShotAreaChartsShare,
 } from "./Chart";
+import FormLineChart from "./charts/FormLineChart";
+import ExpectedPointsBullet from "./charts/ExpectedPointsBullet";
 import AttackDefenceMetricTrendTables from "./AttackDefenceMetricTrendTables";
 import FormContextCompare from "./FormContextCompare";
 import MatchPreviewOutput from "./MatchPreviewOutput";
 import { matchPreviewErrorMessage } from "../utils/matchPreviewFormat";
 import { formatMatchContextForAI } from "../utils/formContextMetrics";
-import MultiTypeChart from "./MultitypeChart"; // Adjust the path if necessary
+import MultiTypeChart, { sharedXgDiffRange } from "./MultitypeChart";
 import FixtureComparisonShare from "./FixtureComparisonShare";
 import { Slider } from "../components/CarouselXGChart";
 import Collapsable from "../components/CollapsableElement";
@@ -4860,34 +4857,25 @@ function GameStats({
           element1={
             <>
               <h2>Betting value</h2>
-              <h4>Points difference from bookies predictions over last 5 games</h4>
-              <h4>{game.homeTeam} | {game.awayTeam}</h4>
-              <span>Based on implied probability derived from odds for each match</span>
+              <h4>Points won against what the odds expected, last 5 games</h4>
+              <span>Expected points come from the implied probability of each match&apos;s odds</span>
               {homeForm?.trueForm !== undefined && awayForm?.trueForm !== undefined && (
-                <div className="flex-container">
-                  <div className="DoughnutOne">
-                    <DoughnutChart
-                      pointsTotal={homeForm.pointsSum5}
-                      predictedPoints={homeForm.totalExpectedPoints}
-                      deltaPTS={homeForm.trueForm}
-                      chartTitle={homeForm.trueForm.toFixed(2)}
-                      color="#333333"
-                      label={homeForm.trueForm.toFixed(2)}
-                      theme={localStorage.getItem('theme')}
-                    />
-                  </div>
-                  <div className="DoughnutTwo">
-                    <DoughnutChart
-                      pointsTotal={awayForm.pointsSum5}
-                      predictedPoints={awayForm.totalExpectedPoints}
-                      deltaPTS={awayForm.trueForm}
-                      chartTitle={awayForm.trueForm.toFixed(2)}
-                      color="#333333"
-                      label={awayForm.trueForm.toFixed(2)}
-                      theme={localStorage.getItem('theme')}
-                    />
-                  </div>
-                </div>
+                <ExpectedPointsBullet
+                  rows={[
+                    {
+                      team: game.homeTeam,
+                      actual: homeForm.pointsSum5,
+                      expected: homeForm.totalExpectedPoints,
+                      delta: homeForm.trueForm,
+                    },
+                    {
+                      team: game.awayTeam,
+                      actual: awayForm.pointsSum5,
+                      expected: awayForm.totalExpectedPoints,
+                      delta: awayForm.trueForm,
+                    },
+                  ]}
+                />
               )}
               {effectiveLeagueStats && ranksHome && ranksAway && effectiveLeagueStats?.topTeams && (
                 <TeamRankingsFlexView
@@ -4949,9 +4937,7 @@ function GameStats({
                   locked={!fullAccess}
                   maintainAspectRatio={false}
                   style={{ height: "auto" }}
-                  title="Soccer Stats Hub Strength Ratings - All Competition Games"
-                  theme={localStorage.getItem('theme')}
-                  max={1}
+                  title="Soccer Stats Hub Strength Ratings - All Competition Games"                  max={1}
                   labels={[
                     "Attack",
                     "Defence",
@@ -4985,9 +4971,7 @@ function GameStats({
                 </ShareableVisual>
                 <BarChart
                   locked={!fullAccess}
-                  text="All Competition Games - Home Team | Away Team"
-                  theme={localStorage.getItem('theme')}
-                  team1={game.homeTeam}
+                  text="All Competition Games - Home Team | Away Team"                  team1={game.homeTeam}
                   team2={game.awayTeam}
                   labels={[
                     "Highest Goals",
@@ -5031,77 +5015,37 @@ function GameStats({
                 {showXgDiffCharts && (
                   <>
                     <MultiTypeChart
-                      theme={localStorage.getItem('theme')}
                       dataArray={homeForm.twoDGoalsArray || []}
                       text={homeForm.teamName + " XG Diff (All Competition Games)"}
+                      yRange={sharedXgDiffRange(homeForm.twoDGoalsArray, awayForm.twoDGoalsArray)}
                     />
                     <MultiTypeChart
-                      theme={localStorage.getItem('theme')}
                       dataArray={awayForm.twoDGoalsArray || []}
                       text={awayForm.teamName + " XG Diff (All Competition Games)"}
+                      yRange={sharedXgDiffRange(homeForm.twoDGoalsArray, awayForm.twoDGoalsArray)}
                     />
                   </>
                 )}
-                <Chart
-                  height={3}
-                  depth={0}
-                  data1={formArrayHome}
-                  data2={formArrayAway}
+                <FormLineChart
+                  variant={chartType === "Points over time" ? "points" : "rolling"}
+                  title={chartType}
+                  series1={formArrayHome}
+                  series2={formArrayAway}
                   team1={game.homeTeam}
                   team2={game.awayTeam}
-                  type={chartType}
                   tension={0}
-                  theme={localStorage.getItem('theme')}
-                ></Chart>
-                <MultilineChart
-                  height={
-                    Math.max(
-                      rollingGoalDiffTotalHome[
-                      rollingGoalDiffTotalHome.length - 1
-                      ],
-                      rollingGoalDiffTotalAway[
-                      rollingGoalDiffTotalAway.length - 1
-                      ]
-                    ) > 2
-                      ? Math.max(
-                        rollingGoalDiffTotalHome[
-                        rollingGoalDiffTotalHome.length - 1
-                        ],
-                        rollingGoalDiffTotalAway[
-                        rollingGoalDiffTotalAway.length - 1
-                        ]
-                      )
-                      : 2
-                  }
-                  depth={
-                    Math.min(
-                      rollingGoalDiffTotalHome[
-                      rollingGoalDiffTotalHome.length - 1
-                      ],
-                      rollingGoalDiffTotalAway[
-                      rollingGoalDiffTotalAway.length - 1
-                      ]
-                    ) < -2
-                      ? Math.min(
-                        rollingGoalDiffTotalHome[
-                        rollingGoalDiffTotalHome.length - 1
-                        ],
-                        rollingGoalDiffTotalAway[
-                        rollingGoalDiffTotalAway.length - 1
-                        ]
-                      )
-                      : -2
-                  }
-                  theme={localStorage.getItem('theme')}
-                  data1={rollingGoalDiffTotalHome || []}
-                  data2={rollingGoalDiffTotalAway || []}
-                  data3={rollingXGDiffTotalHome || []}
-                  data4={rollingXGDiffTotalAway || []}
+                />
+                <FormLineChart
+                  variant="difference"
+                  title="Goal and xG difference over time"
+                  series1={rollingGoalDiffTotalHome || []}
+                  series2={rollingGoalDiffTotalAway || []}
+                  xgSeries1={rollingXGDiffTotalHome || []}
+                  xgSeries2={rollingXGDiffTotalAway || []}
                   team1={game.homeTeam}
                   team2={game.awayTeam}
-                  type={"Goal/XG difference over time"}
                   tension={0}
-                ></MultilineChart>
+                />
               </div>
             </>
           }
@@ -5122,9 +5066,7 @@ function GameStats({
                       "XG Against",
                       "Directness",
                       "Attacking precision",
-                    ]}
-                    theme={localStorage.getItem('theme')}
-                    data={expandRadarStrengthSeries([
+                    ]}                    data={expandRadarStrengthSeries([
                       homeAttackStrengthLast5,
                       homeDefenceStrengthLast5,
                       homePossessionStrengthLast5,
@@ -5147,9 +5089,7 @@ function GameStats({
                   />
                   <BarChart
                     locked={!fullAccess}
-                    text="Last 5 only - Home Team | Away Team"
-                    theme={localStorage.getItem('theme')}
-                    team1={game.homeTeam}
+                    text="Last 5 only - Home Team | Away Team"                    team1={game.homeTeam}
                     team2={game.awayTeam}
                     labels={[
                       "Highest Goals",
@@ -5171,54 +5111,38 @@ function GameStats({
                   {showXgDiffCharts && (
                     <>
                       <MultiTypeChart
-                        theme={localStorage.getItem('theme')}
                         dataArray={homeForm.twoDGoalsArray?.slice(
                           Math.max(homeForm.twoDGoalsArray.length - 5, 0)
                         )}
                         text={homeForm.teamName + ' XG Diff Last 5'}
+                        yRange={sharedXgDiffRange(
+                          homeForm.twoDGoalsArray?.slice(-5),
+                          awayForm.twoDGoalsArray?.slice(-5)
+                        )}
                       />
                       <MultiTypeChart
-                        theme={localStorage.getItem('theme')}
                         dataArray={awayForm.twoDGoalsArray?.slice(
                           Math.max(awayForm.twoDGoalsArray.length - 5, 0)
                         )}
                         text={awayForm.teamName + ' XG Diff Last 5'}
+                        yRange={sharedXgDiffRange(
+                          homeForm.twoDGoalsArray?.slice(-5),
+                          awayForm.twoDGoalsArray?.slice(-5)
+                        )}
                       />
                     </>
                   )}
 
-                  <MultilineChart
-                    theme={localStorage.getItem('theme')}
-                    height={
-                      Math.max(
-                        rollingGoalDiffTotalHomeLast5.at(-1),
-                        rollingGoalDiffTotalAwayLast5.at(-1)
-                      ) > 2
-                        ? Math.max(
-                          rollingGoalDiffTotalHomeLast5.at(-1),
-                          rollingGoalDiffTotalAwayLast5.at(-1)
-                        )
-                        : 2
-                    }
-                    depth={
-                      Math.min(
-                        rollingGoalDiffTotalHomeLast5.at(-1),
-                        rollingGoalDiffTotalAwayLast5.at(-1)
-                      ) < -2
-                        ? Math.min(
-                          rollingGoalDiffTotalHomeLast5.at(-1),
-                          rollingGoalDiffTotalAwayLast5.at(-1)
-                        )
-                        : -2
-                    }
-                    data1={rollingGoalDiffTotalHomeLast5}
-                    data2={rollingGoalDiffTotalAwayLast5}
-                    data3={rollingXGDiffTotalHomeLast5}
-                    data4={rollingXGDiffTotalAwayLast5}
+                  <FormLineChart
+                    variant="difference"
+                    title="Goal and xG difference over the last 5"
+                    series1={rollingGoalDiffTotalHomeLast5}
+                    series2={rollingGoalDiffTotalAwayLast5}
+                    xgSeries1={rollingXGDiffTotalHomeLast5}
+                    xgSeries2={rollingXGDiffTotalAwayLast5}
                     team1={game.homeTeam}
                     team2={game.awayTeam}
-                    type="Goal/XG difference over last 5"
-                    tension={0.5}
+                    tension={0.35}
                   />
                 </div>
               </>
@@ -5229,9 +5153,7 @@ function GameStats({
               <>
                 <div className="Chart" id={`Chart${game.id}`} style={style}>
                   <RadarChart
-                    locked={!fullAccess}
-                    theme={localStorage.getItem('theme')}
-                    title="Soccer Stats Hub Strength Ratings - Home/Away Games Only"
+                    locked={!fullAccess}                    title="Soccer Stats Hub Strength Ratings - Home/Away Games Only"
                     max={1}
                     maintainAspectRatio={false}
                     labels={[
@@ -5266,9 +5188,7 @@ function GameStats({
                   ></RadarChart>
                   <BarChart
                     locked={!fullAccess}
-                    text="Home/Away only - Home Team | Away Team"
-                    theme={localStorage.getItem('theme')}
-                    team1={game.homeTeam}
+                    text="Home/Away only - Home Team | Away Team"                    team1={game.homeTeam}
                     team2={game.awayTeam}
                     labels={[
                       "Highest Goals",
@@ -5289,66 +5209,28 @@ function GameStats({
                   {showXgDiffCharts && (
                     <>
                       <MultiTypeChart
-                        theme={localStorage.getItem('theme')}
                         dataArray={homeForm.twoDGoalsArrayHome}
                         text={homeForm.teamName + " XG Diff (Home)"}
+                        yRange={sharedXgDiffRange(homeForm.twoDGoalsArrayHome, awayForm.twoDGoalsArrayAway)}
                       />
                       <MultiTypeChart
-                        theme={localStorage.getItem('theme')}
                         dataArray={awayForm.twoDGoalsArrayAway}
                         text={awayForm.teamName + " XG Diff (Away)"}
+                        yRange={sharedXgDiffRange(homeForm.twoDGoalsArrayHome, awayForm.twoDGoalsArrayAway)}
                       />
                     </>
                   )}
-                  <MultilineChart
-                    height={
-                      Math.max(
-                        rollingGoalDiffTotalHomeOnly[
-                        rollingGoalDiffTotalHomeOnly.length - 1
-                        ],
-                        rollingGoalDiffTotalAwayOnly[
-                        rollingGoalDiffTotalAwayOnly.length - 1
-                        ]
-                      ) > 2
-                        ? Math.max(
-                          rollingGoalDiffTotalHomeOnly[
-                          rollingGoalDiffTotalHomeOnly.length - 1
-                          ],
-                          rollingGoalDiffTotalAwayOnly[
-                          rollingGoalDiffTotalAwayOnly.length - 1
-                          ]
-                        )
-                        : 2
-                    }
-                    depth={
-                      Math.min(
-                        rollingGoalDiffTotalHomeOnly[
-                        rollingGoalDiffTotalHomeOnly.length - 1
-                        ],
-                        rollingGoalDiffTotalAwayOnly[
-                        rollingGoalDiffTotalAwayOnly.length - 1
-                        ]
-                      ) < -2
-                        ? Math.min(
-                          rollingGoalDiffTotalHomeOnly[
-                          rollingGoalDiffTotalHomeOnly.length - 1
-                          ],
-                          rollingGoalDiffTotalAwayOnly[
-                          rollingGoalDiffTotalAwayOnly.length - 1
-                          ]
-                        )
-                        : -2
-                    }
-                    theme={localStorage.getItem('theme')}
-                    data1={rollingGoalDiffTotalHomeOnly}
-                    data2={rollingGoalDiffTotalAwayOnly}
-                    data3={rollingXGDiffTotalHomeOnly}
-                    data4={rollingXGDiffTotalAwayOnly}
+                  <FormLineChart
+                    variant="difference"
+                    title="Home/Away goal and xG difference over time"
+                    series1={rollingGoalDiffTotalHomeOnly}
+                    series2={rollingGoalDiffTotalAwayOnly}
+                    xgSeries1={rollingXGDiffTotalHomeOnly}
+                    xgSeries2={rollingXGDiffTotalAwayOnly}
                     team1={game.homeTeam}
                     team2={game.awayTeam}
-                    type={"Home/Away Goal/XG difference over time"}
-                    tension={0.5}
-                  ></MultilineChart>
+                    tension={0.35}
+                  />
                 </div>
               </>
             ) : null

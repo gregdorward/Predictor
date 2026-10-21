@@ -20,6 +20,8 @@ export default function ShareableVisual({
   className = "",
   captureClassName = "",
   hideActions = false,
+  hideBrand = false,
+  hideCapture = false,
 }) {
   const captureRef = useRef(null);
   const [status, setStatus] = useState("");
@@ -40,12 +42,13 @@ export default function ShareableVisual({
     const explicitTarget = root.querySelector("[data-share-capture]");
     const canvas = root.querySelector("canvas");
 
+    const brandElement = hideBrand ? null : brand;
     if (canvas && !explicitTarget) {
-      return captureCanvasAsPng(canvas, { brandElement: brand });
+      return captureCanvasAsPng(canvas, { brandElement });
     }
 
     const target = explicitTarget || root;
-    return captureElementAsPng(target, { brandElement: brand });
+    return captureElementAsPng(target, { brandElement });
   };
 
   const runCaptureAction = async (action) => {
@@ -140,20 +143,23 @@ export default function ShareableVisual({
       <div
         ref={captureRef}
         className={`ShareableVisual__capture ${captureClassName}`.trim()}
+        aria-hidden={hideCapture || undefined}
       >
         {children}
-        <div className="ShareableVisual__brand" aria-hidden="true">
-          {shareTitle ? (
-            <p className="ShareableVisual__brandTitle">{shareTitle}</p>
-          ) : null}
-          <div className="ShareableVisual__brandBar">
-            <span className="ShareableVisual__brandMark" />
-            <div className="ShareableVisual__brandMeta">
-              <span className="ShareableVisual__brandName">{SITE_NAME}</span>
-              <span className="ShareableVisual__brandUrl">{BRAND_HOST}</span>
+        {hideBrand ? null : (
+          <div className="ShareableVisual__brand" aria-hidden="true">
+            {shareTitle ? (
+              <p className="ShareableVisual__brandTitle">{shareTitle}</p>
+            ) : null}
+            <div className="ShareableVisual__brandBar">
+              <span className="ShareableVisual__brandMark" />
+              <div className="ShareableVisual__brandMeta">
+                <span className="ShareableVisual__brandName">{SITE_NAME}</span>
+                <span className="ShareableVisual__brandUrl">{BRAND_HOST}</span>
+              </div>
             </div>
           </div>
-        </div>
+        )}
       </div>
 
       {status ? (

@@ -8,7 +8,44 @@
         "value": "open sans",
         "createdAt": "2026-09-29T13:00:10.947Z",
         "reason": "DESIGN.md: incumbent self-hosted workhorse for Soccer Stats Hub"
+      },
+      {
+        "rule": "overused-font",
+        "value": "inter",
+        "createdAt": "2026-10-20T14:32:29.278Z",
+        "reason": "Agent: DESIGN.md Typography names Inter as the Secondary Font, used only on .PremiumUpsell panels"
+      },
+      {
+        "rule": "design-system-font",
+        "value": "inter",
+        "createdAt": "2026-10-20T14:32:29.292Z",
+        "reason": "Agent: DESIGN.md Typography names Inter as the Secondary Font, used only on .PremiumUpsell panels"
+      },
+      {
+        "rule": "border-accent-on-rounded",
+        "value": "*",
+        "files": [
+          "src/index.css"
+        ],
+        "createdAt": "2026-10-20T14:32:29.304Z",
+        "reason": "Agent: only hit is #spinner, a CSS loading spinner whose single coloured border-top on a circle is the spinner itself"
+      },
+      {
+        "rule": "side-tab",
+        "value": "*",
+        "files": [
+          "src/index.css"
+        ],
+        "createdAt": "2026-10-20T14:40:00.695Z",
+        "reason": "User confirmed: better/worse stat edges, won/lost tip edges and award winner edge are intentional data cues"
       }
     ]
+  },
+  "hook": {
+    "enabled": true,
+    "limits": {
+      "maxFindings": 5,
+      "maxChars": 8000
+    }
   }
 }

@@ -422,6 +422,27 @@
   --faint-text: #454545;
   --subtle-surface-color: #fafafa;
   --slightly-darker-than-background: #ffffff;
+  --chart-text: #020029;
+  --chart-text-faint: #454545;
+  --chart-grid: rgba(2, 0, 41, 0.08);
+  --chart-tooltip-bg: #020029;
+  --chart-home: #01a501;
+  --chart-home-soft: rgba(1, 165, 1, 0.4);
+  --chart-away: #d71200;
+  --chart-away-soft: rgba(215, 18, 0, 0.4);
+  --chart-draw: #8a8a8a;
+  --chart-accent: #f57701;
+  --chart-neutral: #9a9a9a;
+  --chart-reference: rgba(2, 0, 41, 0.45);
+  --chart-band: rgba(2, 0, 41, 0.04);
+  --chart-ramp-low: #ffd29a;
+  --chart-ramp-high: #c45a00;
+  --chart-track: rgba(2, 0, 41, 0.07);
+  --chart-home-text: #017a01;
+  --chart-away-text: #b00f00;
+  --chart-accent-text: #a84f00;
+  --chart-home-tint: rgba(1, 165, 1, 0.12);
+  --chart-away-tint: rgba(215, 18, 0, 0.1);
 }
 
 .dark-mode {
@@ -454,7 +475,27 @@
   --faint-text: #c7c7c7;
   --subtle-surface-color: #141414;
   --slightly-darker-than-background: #000000;
-
+  --chart-text: #ffffff;
+  --chart-text-faint: #c7c7c7;
+  --chart-grid: rgba(255, 255, 255, 0.08);
+  --chart-tooltip-bg: #1f1f1f;
+  --chart-home: #1fb83a;
+  --chart-home-soft: rgba(31, 184, 58, 0.4);
+  --chart-away: #ec3a28;
+  --chart-away-soft: rgba(236, 58, 40, 0.4);
+  --chart-draw: #7a7a7a;
+  --chart-accent: #f57701;
+  --chart-neutral: #7a7a7a;
+  --chart-reference: rgba(255, 255, 255, 0.5);
+  --chart-band: rgba(255, 255, 255, 0.05);
+  --chart-ramp-low: #5a3204;
+  --chart-ramp-high: #ffa340;
+  --chart-track: rgba(255, 255, 255, 0.09);
+  --chart-home-text: #5ad673;
+  --chart-away-text: #ff7a6b;
+  --chart-accent-text: #ffa340;
+  --chart-home-tint: rgba(31, 184, 58, 0.16);
+  --chart-away-tint: rgba(236, 58, 40, 0.16);
 }
 
 body {
@@ -4697,9 +4738,12 @@ a.FixturePage-upgradeLink {
   position: absolute;
   top: 0;
   left: 0;
+  width: 100%;
   height: 100%;
   background-color: red;
-  transition: width 0.3s ease;
+  transform: scaleX(0);
+  transform-origin: left center;
+  transition: transform 0.3s cubic-bezier(0.22, 1, 0.36, 1);
   z-index: 1;
 }
 
@@ -4760,8 +4804,10 @@ a.FixturePage-upgradeLink {
 }
 
 .ImpactBarFill {
+  flex: 0 0 100%;
   height: 100%;
-  transition: width 0.5s ease-in-out;
+  transform-origin: left center;
+  transition: transform 0.5s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 /* Text centered over the bar */
@@ -6292,33 +6338,6 @@ a.PreviousMatchLink {
 .flex-container-similar {
   display: flex;
   justify-content: center;
-}
-
-canvas.DoughnutChart {
-  max-width: 18em;
-  max-height: 18em;
-  margin-top: 1em;
-}
-
-canvas.Pie {
-  padding: 1em;
-  margin: 0em;
-}
-
-.DoughnutOne {
-  flex-direction: column;
-  flex-basis: 50%;
-  background-color: var(--background-color);
-  color: var(--text-color);
-  text-align: center;
-}
-
-.DoughnutTwo {
-  flex-direction: column;
-  flex-basis: 50%;
-  background-color: var(--background-color);
-  color: var(--text-color);
-  text-align: center;
 }
 
 .FormContextCompare {
@@ -8207,7 +8226,6 @@ input:active+.design::after {
 
 .ComparisonBarChart:hover {
   border-color: var(--primary-color);
-  box-shadow: 0 4px 18px rgba(0, 0, 0, 0.08);
 }
 
 .ComparisonBarChart-legend {
@@ -8237,11 +8255,11 @@ input:active+.design::after {
 }
 
 .ComparisonBarChart-legendSwatch--home {
-  background: linear-gradient(90deg, #01a50166, #01a501);
+  background: linear-gradient(90deg, var(--chart-home-soft), var(--chart-home));
 }
 
 .ComparisonBarChart-legendSwatch--away {
-  background: linear-gradient(90deg, #d7120066, #d71200);
+  background: linear-gradient(90deg, var(--chart-away-soft), var(--chart-away));
 }
 
 .ComparisonBarChart-areaCharts {
@@ -8285,6 +8303,424 @@ input:active+.design::after {
   font-weight: 400;
   color: var(--text-color);
   opacity: 0.75;
+}
+
+/* Chart panels: HTML headers, toggles and legends around canvas charts */
+.ChartPanel-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 0.75rem;
+  margin-bottom: 0.75rem;
+  text-align: left;
+}
+
+.ChartPanel-title {
+  margin: 0;
+  font-size: 13px;
+  font-weight: 600;
+  line-height: 1.35;
+  color: var(--text-color);
+}
+
+.ChartPanel-subtitle {
+  margin: 0.25rem 0 0;
+  max-width: 60ch;
+  font-size: 11px;
+  font-weight: 400;
+  line-height: 1.45;
+  color: var(--faint-text);
+}
+
+.ChartPanel-toggle {
+  display: inline-flex;
+  flex-shrink: 0;
+  padding: 2px;
+  border: 1px solid var(--button-border-color);
+  border-radius: 999px;
+  background: var(--background-color);
+}
+
+.ChartPanel-toggleButton {
+  min-width: 0;
+  margin: 0;
+  padding: 0.25rem 0.8rem;
+  border: 0;
+  border-radius: 999px;
+  background: transparent;
+  color: var(--text-color);
+  font-size: 0.78rem;
+  font-weight: 600;
+  box-shadow: none;
+  cursor: pointer;
+  transition: background-color 0.2s cubic-bezier(0.4, 0, 0.2, 1),
+    color 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.ChartPanel-toggleButton:hover,
+.ChartPanel-toggleButton:active {
+  background: var(--button-secondary-hover-bg);
+  color: var(--text-color);
+  border: 0;
+  box-shadow: none;
+  transform: none;
+}
+
+.ChartPanel-toggleButton.is-active {
+  background: var(--accent-color);
+  color: var(--button-text-color);
+}
+
+.ChartPanel-toggleButton:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(var(--primary-rgb), 0.38);
+}
+
+.ChartPanel-legend {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 1.25rem;
+  margin-top: 0.5rem;
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--text-color);
+}
+
+.ChartPanel-legendItem {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+}
+
+.ChartPanel-legendLine {
+  width: 22px;
+  height: 3px;
+  border-radius: 2px;
+  background: var(--chart-home);
+}
+
+.ChartPanel-legendLine--away {
+  background: repeating-linear-gradient(
+    90deg,
+    var(--chart-away) 0 7px,
+    transparent 7px 11px
+  );
+}
+
+.ComparisonBarChart-legendSwatch--line {
+  width: 16px;
+  height: 3px;
+  border-radius: 2px;
+  background: var(--chart-text);
+}
+
+/* The global `canvas` rule is inline with a 1em margin; Chart.js subtracts that
+   margin from the slot and the inline box adds a baseline gap underneath.
+   Centre with flex rather than auto margins, which Chart.js would subtract too. */
+.LazyChart > canvas {
+  display: block !important;
+  margin: 0 !important;
+}
+
+.LazyChart:has(> canvas) {
+  display: flex;
+  justify-content: center;
+}
+
+/* Bullet chart: points won against odds-implied expectation */
+.PointsBullet {
+  width: 100%;
+  max-width: 640px;
+  margin: 1em auto 1.5em;
+  padding: 1rem;
+  box-sizing: border-box;
+  border: 1px solid var(--third-background-color);
+  border-radius: 12px;
+  background: var(--secondary-background-color);
+  text-align: left;
+  font-variant-numeric: tabular-nums;
+}
+
+.PointsBullet-rows {
+  display: flex;
+  flex-direction: column;
+  gap: 1.1rem;
+}
+
+.PointsBullet-rowHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 0.35rem 0.75rem;
+  margin-bottom: 0.5rem;
+}
+
+.PointsBullet-team {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--text-color);
+}
+
+.PointsBullet-delta {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  padding: 0.2rem 0.55rem;
+  border-radius: 999px;
+  font-size: 0.78rem;
+  font-weight: 600;
+}
+
+.PointsBullet-delta.is-over {
+  color: var(--chart-home-text);
+  background: var(--chart-home-tint);
+}
+
+.PointsBullet-delta.is-under {
+  color: var(--chart-away-text);
+  background: var(--chart-away-tint);
+}
+
+.PointsBullet-delta.is-level {
+  color: var(--faint-text);
+  background: var(--chart-track);
+}
+
+.PointsBullet-track {
+  position: relative;
+  height: 14px;
+  border-radius: 999px;
+  background: var(--chart-track);
+}
+
+.PointsBullet-bar {
+  position: absolute;
+  inset: 0;
+  background: var(--chart-text);
+  clip-path: inset(0 calc((1 - var(--bullet-scale, 0)) * 100%) 0 0 round 999px);
+  animation: PointsBulletReveal 0.9s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.PointsBullet-target {
+  position: absolute;
+  top: -5px;
+  bottom: -5px;
+  width: 3px;
+  margin-left: -1.5px;
+  border-radius: 2px;
+  background: var(--chart-accent);
+  outline: 2px solid var(--secondary-background-color);
+  animation: PointsBulletTick 0.45s 0.5s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+@keyframes PointsBulletReveal {
+  from {
+    clip-path: inset(0 100% 0 0 round 999px);
+  }
+}
+
+@keyframes PointsBulletTick {
+  from {
+    opacity: 0;
+    transform: scaleY(0.2);
+  }
+}
+
+.PointsBullet-values {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 0.45rem;
+  font-size: 0.78rem;
+  font-weight: 400;
+  color: var(--faint-text);
+}
+
+.PointsBullet-values strong {
+  font-weight: 600;
+  color: var(--text-color);
+}
+
+.PointsBullet-scale {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 0.9rem;
+  padding-top: 0.35rem;
+  border-top: 1px solid var(--third-background-color);
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: var(--faint-text);
+}
+
+.PointsBullet-key {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 1.25rem;
+  margin-top: 0.6rem;
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--text-color);
+}
+
+.PointsBullet-keyItem {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+}
+
+.PointsBullet-keyBar {
+  width: 16px;
+  height: 8px;
+  border-radius: 999px;
+  background: var(--chart-text);
+}
+
+.PointsBullet-keyTick {
+  width: 3px;
+  height: 12px;
+  border-radius: 2px;
+  background: var(--chart-accent);
+}
+
+/* 100% split bar with large inline percentages */
+.SplitBar {
+  width: 100%;
+  padding: 0.25rem 1rem 0.5rem;
+  box-sizing: border-box;
+  text-align: left;
+  font-variant-numeric: tabular-nums;
+}
+
+.SplitBar-figures {
+  display: flex;
+  justify-content: space-between;
+  gap: 0.75rem;
+  margin-bottom: 0.65rem;
+}
+
+.SplitBar-figure {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+  min-width: 0;
+}
+
+.SplitBar-figure:last-child:not(:first-child) {
+  align-items: flex-end;
+  text-align: right;
+}
+
+.SplitBar-figure:not(:first-child):not(:last-child) {
+  align-items: center;
+  text-align: center;
+}
+
+.SplitBar-value {
+  font-size: 1.6rem;
+  font-weight: 600;
+  line-height: 1.1;
+  color: var(--text-color);
+}
+
+.SplitBar-figure--home.is-leader .SplitBar-value {
+  color: var(--chart-home-text);
+}
+
+.SplitBar-figure--away.is-leader .SplitBar-value {
+  color: var(--chart-away-text);
+}
+
+.SplitBar-figure--accent.is-leader .SplitBar-value {
+  color: var(--chart-accent-text);
+}
+
+.SplitBar-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--faint-text);
+}
+
+.SplitBar-label::before {
+  content: "";
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--split-tone, var(--chart-neutral));
+  flex: none;
+}
+
+.SplitBar-labelText {
+  min-width: 0;
+}
+
+.SplitBar-track {
+  display: flex;
+  gap: 3px;
+  width: 100%;
+  height: 14px;
+}
+
+.SplitBar-segment {
+  flex-basis: 0;
+  min-width: 4px;
+  height: 100%;
+  border-radius: 4px;
+  background: var(--split-tone, var(--chart-neutral));
+  transform-origin: left center;
+  animation: SplitBarIn 0.7s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.SplitBar-figure--home,
+.SplitBar-segment--home {
+  --split-tone: var(--chart-home);
+}
+
+.SplitBar-figure--draw,
+.SplitBar-segment--draw {
+  --split-tone: var(--chart-draw);
+}
+
+.SplitBar-figure--away,
+.SplitBar-segment--away {
+  --split-tone: var(--chart-away);
+}
+
+.SplitBar-figure--accent,
+.SplitBar-segment--accent {
+  --split-tone: var(--chart-accent);
+}
+
+.SplitBar-figure--neutral,
+.SplitBar-segment--neutral {
+  --split-tone: var(--chart-neutral);
+}
+
+@keyframes SplitBarIn {
+  from {
+    opacity: 0;
+    transform: scaleX(0);
+  }
+}
+
+.SplitBar-caption {
+  margin: 0.65rem 0 0;
+  font-size: 0.75rem;
+  font-weight: 400;
+  line-height: 1.45;
+  color: var(--faint-text);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .PointsBullet-bar,
+  .PointsBullet-target,
+  .SplitBar-segment {
+    animation: none;
+  }
 }
 
 .MetricTrendTables-share,
@@ -8861,6 +9297,443 @@ body.dark-mode .MetricTrendTables-arrow {
   margin-top: var(--fp-space-1);
 }
 
+.FixturePage .FixturePage-shareCard--sourceOnly {
+  width: auto;
+  margin: 0;
+}
+
+.FixturePage-shareCard--sourceOnly .ShareableVisual__actions {
+  justify-content: center;
+  margin: 0;
+  padding: 0;
+}
+
+.FixturePage-shareCard--sourceOnly .ShareableVisual__status {
+  text-align: center;
+}
+
+.FixturePage-shareCard--sourceOnly .ShareableVisual__capture {
+  position: fixed;
+  left: 0;
+  top: 0;
+  width: 1120px;
+  height: 0;
+  margin: 0;
+  overflow: hidden;
+  pointer-events: none;
+  z-index: -1;
+}
+
+.FixtureSocialCard {
+  --text-color: #ffffff;
+  --card-muted: #d5d2ea;
+  --faint-text: var(--card-muted);
+  --chart-text: #ffffff;
+  --chart-home: #1fb83a;
+  --chart-away: #ec3a28;
+  --chart-draw: #8a8a8a;
+  --chart-home-text: #5ad673;
+  --chart-away-text: #ff7a6b;
+  --chart-track: rgba(255, 255, 255, 0.14);
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+  background: #020029;
+  color: #ffffff;
+  border-radius: 12px;
+  padding: 1rem 1rem 0;
+  overflow: hidden;
+}
+
+.FixtureSocialCard ::selection {
+  background: rgba(254, 140, 0, 0.45);
+  color: #ffffff;
+}
+
+.FixtureSocialCard-header,
+.FixtureSocialCard-matchup,
+.FixtureSocialCard-score,
+.FixtureSocialCard-team,
+.FixtureSocialCard-grid,
+.FixtureSocialCard-panel,
+.FixtureSocialCard-brand,
+.FixtureSocialCard-brandMeta,
+.FixtureSocialCard-strengthRow {
+  display: flex;
+}
+
+.FixtureSocialCard-header {
+  justify-content: space-between;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: 0.35rem 0.75rem;
+}
+
+.FixtureSocialCard-league,
+.FixtureSocialCard-kickoff,
+.FixtureSocialCard-scoreLabel,
+.FixtureSocialCard-note,
+.FixtureSocialCard-panelTitle,
+.FixtureSocialCard-brandName,
+.FixtureSocialCard-brandUrl {
+  margin: 0;
+}
+
+.FixtureSocialCard-league {
+  color: var(--primary-color);
+  font-size: 0.85rem;
+  font-weight: 700;
+}
+
+.FixtureSocialCard-kickoff {
+  color: var(--card-muted);
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+
+.FixtureSocialCard-matchup {
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+}
+
+.FixtureSocialCard-team {
+  flex: 1;
+  align-items: center;
+  gap: 0.65rem;
+  min-width: 0;
+}
+
+.FixtureSocialCard-team--away {
+  flex-direction: row-reverse;
+  text-align: right;
+}
+
+.FixtureSocialCard-badge {
+  width: 48px;
+  height: 48px;
+  object-fit: contain;
+  flex-shrink: 0;
+}
+
+.FixtureSocialCard-teamName {
+  min-width: 0;
+  font-size: 1.05rem;
+  font-weight: 700;
+  line-height: 1.2;
+  text-wrap: balance;
+}
+
+.FixtureSocialCard-score {
+  flex-direction: column;
+  align-items: center;
+  flex-shrink: 0;
+  min-width: 5.5rem;
+}
+
+.FixtureSocialCard-scoreValue,
+.FixtureSocialCard-vs {
+  font-size: 1.7rem;
+  font-weight: 800;
+  letter-spacing: 0.02em;
+  font-variant-numeric: tabular-nums;
+}
+
+.FixtureSocialCard-scoreDash {
+  margin: 0 0.2rem;
+}
+
+.FixtureSocialCard-scoreLabel {
+  color: var(--card-muted);
+  font-size: 0.66rem;
+  font-weight: 600;
+}
+
+.FixtureSocialCard-vs {
+  color: var(--primary-color);
+}
+
+.FixtureSocialCard-grid {
+  flex-wrap: wrap;
+  align-items: stretch;
+  gap: 0.65rem;
+}
+
+.FixtureSocialCard-panel {
+  flex: 1 1 14rem;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: stretch;
+  gap: 0.55rem;
+  width: auto;
+  max-width: none;
+  min-height: 0;
+  position: static;
+  padding: 0.75rem 0.8rem 0.7rem;
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.06);
+  box-sizing: border-box;
+}
+
+.FixtureSocialCard-panel--wide {
+  flex: 1 1 100%;
+  width: 100%;
+}
+
+.FixtureSocialCard-panelTitle {
+  color: var(--primary-color);
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.FixtureSocialCard-panel > :nth-child(2) {
+  margin-top: auto;
+}
+
+.FixtureSocialCard-panel > :last-child {
+  margin-bottom: auto;
+}
+
+.FixtureSocialCard .SplitBar {
+  padding: 0;
+}
+
+.FixtureSocialCard .SplitBar-figures {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  column-gap: 0.5rem;
+  align-items: start;
+  margin-bottom: 0.85rem;
+}
+
+.FixtureSocialCard .SplitBar-figure {
+  width: 100%;
+  min-width: 0;
+  overflow: visible;
+}
+
+.FixtureSocialCard .SplitBar-value {
+  font-size: 0.78rem;
+}
+
+.FixtureSocialCard .SplitBar-label,
+.FixtureSocialCard .SplitBar-caption,
+.FixtureSocialCard-note {
+  color: var(--card-muted);
+  font-size: 0.66rem;
+}
+
+.FixtureSocialCard .SplitBar-label {
+  display: flex;
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  align-items: flex-start;
+  white-space: normal;
+  line-height: 1.2;
+}
+
+.FixtureSocialCard .SplitBar-label::before {
+  position: relative;
+  top: calc((1.2em - 8px) / 2);
+}
+
+.FixtureSocialCard .SplitBar-labelText {
+  display: block;
+  line-height: 1.2;
+}
+
+.FixtureSocialCard .SplitBar-figure:nth-child(2) .SplitBar-label {
+  justify-content: center;
+}
+
+.FixtureSocialCard .SplitBar-figure:last-child .SplitBar-label {
+  justify-content: flex-end;
+}
+
+.FixtureSocialCard .SplitBar-segment {
+  animation: none;
+  min-width: 0;
+}
+
+.FixtureSocialCard-pie {
+  display: block;
+  width: 4.5rem;
+  height: 4.5rem;
+  margin: 0.2rem auto 0;
+}
+
+.FixtureSocialCard-strengthRow {
+  align-items: center;
+  gap: 0.45rem;
+}
+
+.FixtureSocialCard-strengthLabel,
+.FixtureSocialCard-marketLabel,
+.FixtureSocialCard-marketHead {
+  font-size: 0.66rem;
+}
+
+.FixtureSocialCard-strengthValue,
+.FixtureSocialCard-marketRow {
+  font-size: 0.78rem;
+}
+
+.FixtureSocialCard-strengthLabel,
+.FixtureSocialCard-strengthValue,
+.FixtureSocialCard-marketLabel {
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+
+.FixtureSocialCard-strengthLabel {
+  width: 3.6rem;
+  color: var(--card-muted);
+}
+
+.FixtureSocialCard-strengthLabel--wide {
+  width: auto;
+  min-width: 3.6rem;
+  white-space: nowrap;
+}
+
+.FixtureSocialCard-strengthValue {
+  width: 2.6rem;
+}
+
+.FixtureSocialCard-strengthRow .FixtureSocialCard-strengthValue:last-child {
+  text-align: right;
+}
+
+.FixtureSocialCard-strengthTrack {
+  display: flex;
+  flex: 1 1 4.5rem;
+  min-width: 4.5rem;
+  height: 8px;
+  border-radius: 4px;
+  overflow: hidden;
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.FixtureSocialCard-strengthFill {
+  display: block;
+  height: 100%;
+  flex: none;
+  min-width: 2px;
+}
+
+.FixtureSocialCard-strengthFill--home {
+  background: var(--chart-home);
+}
+
+.FixtureSocialCard-strengthFill--away {
+  background: var(--chart-away);
+}
+
+.FixtureSocialCard-marketHead,
+.FixtureSocialCard-marketRow {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+  align-items: baseline;
+  column-gap: 0.75rem;
+}
+
+.FixtureSocialCard-marketHead span:last-child,
+.FixtureSocialCard-marketRow span:last-child {
+  grid-column: 3;
+  text-align: right;
+}
+
+.FixtureSocialCard-marketHead {
+  color: var(--card-muted);
+  font-weight: 600;
+}
+
+.FixtureSocialCard-marketRow {
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+
+.FixtureSocialCard-marketLabel {
+  color: var(--card-muted);
+  font-weight: 600;
+  text-align: center;
+  white-space: nowrap;
+}
+
+.FixtureSocialCard-brand {
+  align-items: center;
+  gap: 0.7rem;
+  margin: 0.15rem -1rem 0;
+  padding: 0.7rem 1rem;
+  background: var(--primary-color);
+  color: #020029;
+}
+
+.FixtureSocialCard-brandMark {
+  width: 8px;
+  height: 28px;
+  border-radius: 2px;
+  background: #28a04c;
+}
+
+.FixtureSocialCard-brandMeta {
+  flex-direction: column;
+}
+
+.FixtureSocialCard-brandName,
+.FixtureSocialCard-brandUrl {
+  color: #020029;
+  font-weight: 800;
+  line-height: 1.2;
+}
+
+.FixtureSocialCard-brandName {
+  font-size: 0.95rem;
+}
+
+.FixtureSocialCard-brandUrl {
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+.ShareableVisual__exportShell:has(.FixtureSocialCard) {
+  background: #020029;
+  border: 0;
+  padding: 0;
+}
+
+@media (max-width: 640px) {
+  .FixturePage-shareCard--sourceOnly .ShareableVisual__capture {
+    width: 400px;
+  }
+
+  .FixtureSocialCard-panel,
+  .FixtureSocialCard-panel--wide {
+    flex-basis: 100%;
+  }
+
+  .FixtureSocialCard-team {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.35rem;
+  }
+
+  .FixtureSocialCard-team--away {
+    align-items: flex-end;
+  }
+
+  .FixtureSocialCard-matchup {
+    align-items: center;
+  }
+
+  .FixtureSocialCard-teamName {
+    font-size: 0.95rem;
+  }
+}
+
 .SharePageLink__btn {
   display: inline-flex;
   align-items: center;
@@ -8924,15 +9797,27 @@ body.dark-mode .MetricTrendTables-arrow {
   position: relative;
   width: 100%;
   max-width: 36em;
-  height: 16em;
+  height: 14em;
   margin: 0 auto;
+}
+
+.FixturePage-chartNote {
+  margin: 0;
+  max-width: 60ch;
+  font-size: var(--fp-label);
+  font-weight: 400;
+  line-height: 1.45;
+  color: var(--faint-text);
+  text-align: left;
 }
 
 .FixturePage-chart {
   width: 100% !important;
   height: 100% !important;
-  max-height: none;
-  display: block;
+  max-width: none !important;
+  max-height: none !important;
+  margin: 0 !important;
+  display: block !important;
 }
 
 .FixturePage-chartLegend {
@@ -8965,15 +9850,19 @@ body.dark-mode .MetricTrendTables-arrow {
 }
 
 .FixturePage-chartLegendSwatch--home {
-  background: #01a501;
+  background: var(--chart-home);
 }
 
 .FixturePage-chartLegendSwatch--away {
-  background: #d71200;
+  background: var(--chart-away);
 }
 
 .FixturePage-chartLegendSwatch--draw {
-  background: #8a8a8a;
+  background: var(--chart-draw);
+}
+
+.FixturePage .SplitBar {
+  padding-inline: 0;
 }
 
 .FixturePage .ComparisonBarChart {
@@ -8994,6 +9883,18 @@ body.dark-mode .MetricTrendTables-arrow {
 .FixturePage .ComparisonBarChart-share {
   max-width: 100%;
   margin: 0;
+}
+
+.FixturePage .PointsBullet {
+  max-width: 100%;
+  padding: 0;
+  border: none;
+  border-radius: 0;
+  background: transparent;
+}
+
+.FixturePage .PointsBullet-target {
+  outline-color: var(--background-color);
 }
 
 .FixturePage .FixturePage-modelOutputsCard {
@@ -9046,6 +9947,10 @@ body.dark-mode .MetricTrendTables-arrow {
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: var(--fp-space-2);
   margin: 0;
+}
+
+.FixturePage-h2hSummary .SplitBar {
+  grid-column: 1 / -1;
 }
 
 .FixturePage-h2hSummary .FixturePage-stat {
@@ -10424,11 +11329,6 @@ button.AIInsights button:active {
     margin-right: auto;
   }
 
-  canvas.DoughnutChart {
-    max-width: 24em;
-    max-height: 24em;
-  }
-
   .SeasonPpgChart {
     height: 420px;
     margin-left: auto;
@@ -10666,10 +11566,12 @@ button.AIInsights button:active {
 
 .win-pct-bar-fill,
 .win-pct-bar-fill-previous {
+  width: 100%;
   height: 100%;
   background: #009c00;
   /* Green for performance */
-  transition: width 0.5s ease-in-out;
+  transform-origin: left center;
+  transition: transform 0.5s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 .win-pct-text {
@@ -11865,7 +12767,8 @@ h5.section-title {
   background-color: var(--button-color);
   color: var(--button-text-color);
   font-size: 1.1em;
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: 'Open Sans', system-ui, sans-serif;
+  font-variant-numeric: tabular-nums;
   font-weight: bolder;
   border: var(--text-color) solid 1px;
 }
@@ -12516,7 +13419,8 @@ h5.section-title {
   color: var(--button-text-color);
   font-weight: bolder;
   font-size: 1.1em;
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: 'Open Sans', system-ui, sans-serif;
+  font-variant-numeric: tabular-nums;
 }
 
 .StatBall.Gold {
@@ -14058,6 +14962,42 @@ header.Competition__hero {
   .Competition__chartGrid > :first-child canvas {
     max-height: clamp(180px, 28vw, 300px) !important;
   }
+}
+
+.Competition__chartCardSubtitle {
+  margin: -0.3rem 0 0.6rem;
+  max-width: 60ch;
+  font-size: 0.78em;
+  font-weight: 400;
+  line-height: 1.45;
+  color: var(--faint-text);
+  text-align: left;
+}
+
+.Competition__chartCardBody > .Competition__chartSlot {
+  height: clamp(190px, 34vw, 250px);
+}
+
+/* Auto margins would be subtracted by Chart.js and pin the canvas at 300px. */
+.Competition__chartGrid .Competition__chartSlot canvas {
+  max-height: none !important;
+  margin: 0 !important;
+}
+
+@media (min-width: 768px) {
+  .Competition__chartGrid > :first-child .Competition__chartSlot {
+    height: clamp(210px, 24vw, 270px);
+  }
+}
+
+@media (max-width: 600px) {
+  .Competition__chartCardBody > .Competition__chartSlot {
+    height: 210px;
+  }
+}
+
+.Competition__chartCard .SplitBar {
+  padding-inline: 0;
 }
 
 .Competition__advantageGrid {
@@ -17541,6 +18481,12 @@ body.dark-mode .CompetitionsIndex-card {
   display: block;
   margin-left: auto;
   margin-right: auto;
+}
+
+.FixtureSocialCard.is-exporting {
+  padding: 1rem 1rem 0;
+  overflow: hidden;
+  border-radius: 12px;
 }
 
 .ShareableVisual__status {

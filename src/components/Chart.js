@@ -1,637 +1,71 @@
-import { useState, useEffect } from "react";
-import {
-  Chart as ChartJS,
-  CategoryScale,
-  LinearScale,
-  RadialLinearScale,
-  PointElement,
-  ArcElement,
-  LineElement,
-  Filler,
-  BarElement,
-  Title,
-  Tooltip,
-  Legend,
-  SubTitle,
-} from "chart.js";
-import { Line, Radar, Bar, Doughnut, PolarArea, Pie } from "react-chartjs-2";
-import annotationPlugin from 'chartjs-plugin-annotation';
+import "./charts/chartSetup";
+import { Line, Radar, Bar } from "react-chartjs-2";
 import ShareableVisual from "./ShareableVisual";
 import { sanitizeImageFilename } from "../utils/captureElementImage";
 import { buildShotStackSeries } from "../utils/shotStackSeries";
 import PremiumBlurGate from "./PremiumBlurGate";
-
-ChartJS.register(
-  CategoryScale,
-  LinearScale,
-  RadialLinearScale,
-  PointElement,
-  ArcElement,
-  Filler,
-  BarElement,
-  LineElement,
-  Title,
-  Tooltip,
-  Legend,
-  SubTitle,
-  annotationPlugin
-);
-
-function resolveChartTheme() {
-  if (typeof document === "undefined") return "light";
-  return document.body.classList.contains("dark-mode") ? "dark" : "light";
-}
-
-function useChartTheme() {
-  const [theme, setTheme] = useState(resolveChartTheme);
-
-  useEffect(() => {
-    const syncTheme = () => setTheme(resolveChartTheme());
-    const observer = new MutationObserver(syncTheme);
-    observer.observe(document.body, { attributes: true, attributeFilter: ["class"] });
-    return () => observer.disconnect();
-  }, []);
-
-  return theme;
-}
-
-function getChartColors(theme) {
-  if (theme === "dark") {
-    return {
-      color: "#ffffff",
-      gridColor: "rgba(255, 255, 255, 0.08)",
-      tooltipBackground: "#1f1f1f",
-    };
-  }
-
-  return {
-    color: "#020029",
-    gridColor: "rgba(2, 0, 41, 0.08)",
-    tooltipBackground: "#020029",
-  };
-}
+import {
+  useChartTheme,
+  getChartColors,
+  tooltipStyle,
+  withAlpha,
+} from "./charts/chartTheme";
+import { areaGradient, focusDatasetOnHover } from "./charts/chartPlugins";
+import { growFromZero, radialReveal, staggeredBars } from "./charts/chartMotion";
+import LazyChart from "./charts/LazyChart";
 
 const COMPARISON_CHART_FONTS = {
-  title: { size: 13, weight: "600" },
-  subtitle: { size: 11, weight: "400" },
-  axisTick: { size: 10, weight: "500" },
-  legend: { size: 11, weight: "500" },
-  deltaLabel: "600 11px 'Open Sans', sans-serif",
+  title: { size: 13, weight: 600 },
+  subtitle: { size: 11, weight: 400 },
+  axisTick: { size: 10, weight: 600 },
+  legend: { size: 11, weight: 600 },
+  deltaLabel: "600 11px 'Open Sans', system-ui, sans-serif",
 };
 
-const valueLabelPlugin = {
-  id: "valueLabelPlugin",
-  afterDatasetsDraw(chart, args, pluginOptions) {
-    const { ctx } = chart;
-
-    const dataset = chart.data.datasets[0];
-    const total = dataset.data.reduce((a, b) => a + b, 0);
-
-    chart.getDatasetMeta(0).data.forEach((arc, index) => {
-      const value = dataset.data[index];
-      const percentage = ((value / total) * 100).toFixed(1) + "%";
-
-      // Correct position inside the slice
-      const { x, y } = arc.tooltipPosition();
-
-      ctx.save();
-      // ctx.fillStyle = "white";
-      // ctx.font = "bold 18px";
-      // ctx.textAlign = "center";
-      ctx.textBaseline = "middle";
-      ctx.fillText(percentage, x, y);
-      ctx.restore();
-    });
-  }
+const RADAR_LABEL_ABBREVIATIONS = {
+  Attack: "Atk",
+  Defence: "Def",
+  Possession: "Possession",
+  Directness: "Directness",
+  Precision: "Precision",
+  "Attack rating": "Atk",
+  "Defence rating": "Def",
+  "Ball retention": "Possession",
+  "XG For": "XGF",
+  "XG Against": "XGA",
+  "Attacking precision": "Precision",
+  "Dangerous attacks": "D. Attacks",
+  "Shots on target": "SOT",
+  "Big chances": "B. Chances",
+  "Shooting accuracy": "Acc",
+  "Shot conversion": "Conv",
+  "Shots inside box %": "Shot prox",
+  "Shot Proximity": "Shot prox",
+  "Goals conceded": "GA",
+  "xG conceded": "xGA",
+  "SOT against": "SOTA",
+  "Clean sheet %": "CS %",
+  "Big chances conceded": "B. Chances A",
+  "Shots inside box against": "Box shots agst",
+  "Pass accuracy": "Pass %",
+  "Attacking-half pass %": "Attk pass %",
+  "Successful dribbles": "Dribbles",
+  "Long-ball %": "LB %",
+  "Ball recoveries": "Recoveries",
+  "Duels won %": "Duels %",
+  "Venue PPG": "H/A PPG",
+  "Free-kick goals": "FK goals",
+  "Fouls per game": "Fouls",
+  "Fouls faced": "Fouls won",
+  "Yellow cards / game": "Yellow C",
+  "Red cards / game": "Red C",
+  "Penalties for": "Pens F",
+  "Penalties conceded": "Pens A",
+  "Offsides per game": "Offsides",
+  "Possession rating": "Poss",
+  "XGF rating": "XGF",
+  "XGA rating": "XGA",
 };
-
-
-export function VotePieChart({ pollData, theme }) {
-  let color;
-  let background;
-  const home = Number(pollData.vote1);
-  const away = Number(pollData.vote2);
-  const draw = Number(pollData.voteX);
-  const total = home + away + draw;
-
-  if (theme === 'light') {
-    color = "#020029";
-    background = '#ffffff'
-  } else if (theme === 'dark') {
-    color = "#ffffff";
-    background = "#020029";
-  } else {
-    color = "#f57701";
-    background = "#020029";
-  }
-
-  // Labels with line breaks for key, percentage, and vote count
-  const labelsWithDetails = [
-    `Home\n${((home / total) * 100).toFixed(1)}%\n(${home} votes)`,
-    `Away\n${((away / total) * 100).toFixed(1)}%\n(${away} votes)`,
-    `Draw\n${((draw / total) * 100).toFixed(1)}%\n(${draw} votes)`
-  ];
-
-  const chartOptions = {
-    layout: { padding: { top: 5, bottom: 5 } },
-    plugins: {
-      legend: {
-        position: 'top',
-        labels: {
-          // padding: 15,
-          font: { size: 14 },
-          color: color,
-        },
-      },
-      tooltip: {
-        callbacks: {
-          label: (ctx) => `${ctx.label.replace(/\n/g, ' ')}: ${ctx.raw}`, // tooltip shows in one line
-        },
-      },
-      title: {
-        display: true,
-        text: "Who will win?",
-        color: color,
-        font: { size: 14 },
-      },
-    },
-    animation: { duration: 600 },
-  };
-
-  const data = {
-    labels: labelsWithDetails,
-    datasets: [
-      {
-        data: [home, away, draw],
-        backgroundColor: ['#01a501', '#ae1001', '#f57701'],
-        borderColor: background,
-        borderWidth: 2,
-      },
-    ],
-  };
-
-  return <Pie data={data} options={chartOptions} className="Pie" />;
-}
-
-
-
-export function BTTSPieChart({ pollData, theme }) {
-  let color;
-  let background
-  const yes = Number(pollData.voteYes);
-  const no = Number(pollData.voteNo);
-  const total = yes + no;
-
-  if (theme === 'light') {
-    color = "#020029";
-    background = '#ffffff'
-  } else if (theme === 'dark') {
-    color = "#ffffff";
-    background = "#020029";
-  } else {
-    color = "#f57701";
-    background = "#020029";
-  }
-
-  // Labels with line breaks for key, percentage, and vote count
-  const labelsWithDetails = [
-    `Yes\n${((yes / total) * 100).toFixed(1)}%\n(${yes} votes)`,
-    `No\n${((no / total) * 100).toFixed(1)}%\n(${no} votes)`
-  ];
-
-  const chartOptions = {
-    layout: { padding: { top: 5, bottom: 5 } },
-    plugins: {
-      legend: {
-        position: 'top',
-        labels: {
-          // padding: 15,
-          font: { size: 14 },
-          color: color,
-        },
-      },
-      tooltip: {
-        callbacks: {
-          label: (ctx) => `${ctx.label.replace(/\n/g, ' ')}: ${ctx.raw}`, // tooltip in one line
-        },
-      },
-      title: {
-        display: true,
-        text: "Will both teams score?",
-        color: color,
-        font: { size: 14 },
-      },
-    },
-    animation: { duration: 600 },
-  };
-
-  const data = {
-    labels: labelsWithDetails,
-    datasets: [
-      {
-        data: [yes, no],
-        backgroundColor: ['#01a501', '#ae1001ff'],
-        borderColor: background,
-        borderWidth: 2,
-      },
-    ],
-  };
-
-  return <Pie data={data} options={chartOptions} className="Pie" />;
-}
-
-
-
-export function Chart(props) {
-  let length;
-  let depth;
-  let color;
-
-  if (props.theme === 'light') {
-    color = "#020029"
-  } else if (props.theme === 'dark') {
-    color = "#ffffff"
-  } else {
-    color = "#f57701"
-  }
-
-  if (props.type === "Points over time") {
-    length = props.data1.length * 3;
-    depth = 0;
-  } else if (props.type === "Rolling average points over last 10") {
-    length = Math.abs(props.height);
-    depth = 0;
-  } else if (Math.abs(props.height) > Math.abs(props.depth)) {
-    length = Math.abs(props.height);
-    depth = -Math.abs(props.height);
-  } else if (Math.abs(props.height) < Math.abs(props.depth)) {
-    length = Math.abs(props.depth);
-    depth = -Math.abs(props.depth);
-  } else {
-    length = Math.abs(props.depth);
-    depth = -Math.abs(props.depth);
-  }
-
-  const options = {
-    color: color,
-    responsive: true,
-    aspectRatio: 1.2,
-    maintainAspectRatio: true,
-    layout: {
-      padding: 3,
-    },
-    elements: {
-      point: {
-        radius: 0,
-      },
-    },
-    scales: {
-      y: {
-        suggestedMin: depth,
-        suggestedMax: length,
-        // suggestedMax: Math.max(...props.data1) > 3 ? Math.max(...props.data1) : 3,
-        grid: {
-          borderWidth: 1,
-          borderColor: "black",
-        },
-        ticks: {
-          font: {
-            size: 12,
-          },
-          color: color,
-        },
-      },
-      x: {
-        title: {
-          display: false,
-          text: "Last X Games",
-          font: {
-            size: 12,
-          },
-        },
-        grid: {
-          borderWidth: 1,
-          borderColor: "black",
-        },
-        ticks: {
-          display: false,
-          font: {
-            size: 12,
-          },
-        },
-      },
-    },
-    plugins: {
-      legend: {
-        position: "top",
-
-        labels: {
-          boxHeight: 5,
-        },
-      },
-      title: {
-        display: true,
-        text: props.type,
-        color: color,
-        font: {
-          size: 12,
-        },
-      },
-    },
-  };
-
-  const labels = Array.from(props.data1.keys());
-
-  let data = {
-    labels,
-    datasets: [
-      {
-        label: props.team1,
-        font: {
-          color: color,
-        },
-        data: props.data1,
-        borderColor: "#01a501",
-        borderWidth: 3,
-        backgroundColor: "#01a501",
-        tension: props.tension,
-      },
-      {
-        label: props.team2,
-        data: props.data2,
-        borderColor: "#ae1001ff",
-        borderWidth: 3,
-        backgroundColor: "#ae1001ff",
-        tension: props.tension,
-      },
-    ],
-  };
-
-  return <Line options={options} data={data} />;
-}
-
-export function MultilineChart(props) {
-  let length;
-  let depth;
-  let color;
-
-  if (props.theme === 'light') {
-    color = "#020029"
-  } else if (props.theme === 'dark') {
-    color = "#ffffff"
-  } else {
-    color = "#f57701"
-  }
-
-  if (props.type === "Points over time") {
-    length = props.data1.length * 3;
-    depth = 0;
-  } else if (props.type === "Rolling average points over last 10") {
-    length = Math.abs(props.height);
-    depth = 0;
-  } else if (Math.abs(props.height) > Math.abs(props.depth)) {
-    length = Math.abs(props.height);
-    depth = -Math.abs(props.height);
-  } else if (Math.abs(props.height) < Math.abs(props.depth)) {
-    length = Math.abs(props.depth);
-    depth = -Math.abs(props.depth);
-  } else {
-    length = Math.abs(props.depth);
-    depth = -Math.abs(props.depth);
-  }
-
-  const options = {
-    color: color,
-    responsive: true,
-    aspectRatio: 1.2,
-    maintainAspectRatio: true,
-    layout: {
-      padding: 3,
-    },
-    elements: {
-      point: {
-        radius: 0,
-      },
-    },
-    scales: {
-      y: {
-        suggestedMin: depth,
-        suggestedMax: length,
-        // suggestedMax: Math.max(...props.data1) > 3 ? Math.max(...props.data1) : 3,
-        grid: {
-          borderWidth: 1,
-          borderColor: "black",
-        },
-        ticks: {
-          font: {
-            size: 12,
-          },
-          color: color,
-        },
-      },
-      x: {
-        title: {
-          display: false,
-          text: "Last X Games",
-          font: {
-            size: 12,
-          },
-        },
-        grid: {
-          borderWidth: 1,
-          borderColor: "black",
-        },
-        ticks: {
-          display: false,
-          font: {
-            size: 12,
-          },
-        },
-      },
-    },
-    plugins: {
-      legend: {
-        position: "top",
-
-        labels: {
-          boxHeight: 5,
-        },
-      },
-      title: {
-        display: true,
-        text: props.type,
-        color: color,
-        font: {
-          size: 12,
-        },
-      },
-    },
-  };
-
-  const labels = Array.from(props.data1.keys());
-
-  let data = {
-    labels,
-    datasets: [
-      {
-        label: props.team1,
-        font: {
-          color: color,
-        },
-        data: props.data1,
-        borderColor: "#01a501",
-        borderWidth: 3,
-        backgroundColor: "#01a501",
-        tension: props.tension,
-      },
-      {
-        label: props.team2,
-        data: props.data2,
-        borderColor: "#ae1001ff",
-        borderWidth: 3,
-        backgroundColor: "#ae1001ff",
-        tension: props.tension,
-      },
-      {
-        label: `${props.team1} XG Diff`,
-        font: {
-          color: "white",
-        },
-        data: props.data3,
-        borderColor: "#01a50182",
-        borderWidth: 3,
-        backgroundColor: "#01a50182",
-        tension: props.tension,
-        hidden: true,
-      },
-      {
-        label: `${props.team2} XG Diff`,
-        font: {
-          color: color,
-        },
-        data: props.data4,
-        borderColor: "#ae0f018d",
-        borderWidth: 3,
-        backgroundColor: "#ae0f018d",
-        tension: props.tension,
-        hidden: true,
-      },
-    ],
-  };
-
-  return <Line options={options} data={data} />;
-}
-
-function index(score) {
-  if (score < -4) return 0;       // Deep Red
-  if (score < -1) return 1;       // Orange
-  if (score < 1) return 2;       // Yellow
-  if (score < 4) return 3;       // Light Green
-  return 4;                          // Dark Green
-}
-
-export const DoughnutChart = ({ pointsTotal, predictedPoints, deltaPTS, theme, label, chartTitle }) => {
-  const MAX_CHART_SIZE = 15;
-  let color, secondaryColor;
-
-  if (theme === 'light') {
-    color = "#020029"
-    secondaryColor = "#b8b8b8ff"
-
-  } else if (theme === 'dark') {
-    color = "#ffffff"
-    secondaryColor = "#b8b8b8ff"
-  } else {
-    color = "#f57701"
-  }
-
-  const predicted = Math.min(predictedPoints, MAX_CHART_SIZE);
-  const actual = Math.min(pointsTotal, MAX_CHART_SIZE);
-
-  // Overlay colors
-  const COLORS = ['#bf1000', '#e07800ff', '#fff700d8', '#8be800e7', '#01a501'];
-  // const overlayColors = deltaValue >= 0
-  //   ? ['rgba(0,0,0,0)', COLORS[index(deltaPTS)], 'rgba(0,0,0,0)'] // forward delta
-  //   : ['rgba(0,0,0,0)', '#F44336', 'rgba(0,0,0,0)'];            // backward delta
-
-  const data = {
-    labels: [
-      `Predicted Points: ${predicted.toFixed(0)}`,
-    ],
-    datasets: [
-      {
-        label: `Predicted Points: ${predictedPoints.toFixed(1)}`,
-        data: [predicted, MAX_CHART_SIZE - predicted],
-        backgroundColor: [color, secondaryColor], // filled, remainder
-        cutout: '50%',
-        rotation: 270,
-        circumference: 180,
-        borderWidth: 0,
-      },
-      {
-        label: `Actual Points: ${pointsTotal.toFixed(0)}`,
-        data: [actual, MAX_CHART_SIZE - actual],
-        backgroundColor: [COLORS[index(deltaPTS)], 'rgba(0,0,0,0)'],
-        cutout: '50%',
-        rotation: 270,
-        circumference: 180,
-        borderWidth: 0
-      }
-    ]
-  };
-
-  // Central annotation
-  const annotation = {
-    type: 'doughnutLabel',
-    content: () => [
-      ` ${deltaPTS >= 0 ? '+' : ''}${deltaPTS.toFixed(1)} pts`,
-      ` ${deltaPTS >= 0 ? 'overachieving' : 'underachieving'}`
-    ],
-    drawTime: 'beforeDraw',
-    position: { y: '-50%' },
-    font: [{ size: 60, weight: 'bold' }, { size: 40 }],
-    color: color,
-  };
-
-  const options = {
-    rotation: 270,
-    circumference: 180,
-
-    plugins: {
-      tooltip: {
-        enabled: true
-      },
-      legend: {
-        display: true,
-        position: 'top',
-        labels: {
-          font: {
-            size: 12
-          },
-          color: '#FF0000', // fallback for when not using custom generator
-          generateLabels: (chart) =>
-            chart.data.datasets.map((ds) => ({
-              text: ds.label,
-              fillStyle: Array.isArray(ds.backgroundColor)
-                ? ds.backgroundColor[0]
-                : ds.backgroundColor,
-              strokeStyle: '#000', // border around color box
-              lineWidth: 1,
-              fontColor: color, // ✅ custom text color here
-              hidden: false,
-              datasetIndex: chart.data.datasets.indexOf(ds)
-            })),
-        },
-      },
-      annotation: { annotations: { annotation } }
-
-    }
-
-  };
-
-  return <Doughnut data={data} options={options} className="DoughnutChart" />;
-};
-
 
 export function RadarChart(props) {
   const {
@@ -658,61 +92,18 @@ export function RadarChart(props) {
     layoutPadding = 4,
   } = props;
   const theme = useChartTheme();
-  const { color, gridColor, tooltipBackground } = getChartColors(theme);
+  const colors = getChartColors(theme);
+  const { color, gridColor } = colors;
 
-  const homeColor = "#01a501";
-  const homeFill = "#01a50133";
-  const awayColor = "#d71200";
-  const awayFill = "#d7120033";
-
-  const radarLabelAbbreviations = {
-    Attack: "Atk",
-    Defence: "Def",
-    Possession: "Possession",
-    Directness: "Directness",
-    Precision: "Precision",
-    "Attack rating": "Atk",
-    "Defence rating": "Def",
-    "Ball retention": "Possession",
-    "XG For": "XGF",
-    "XG Against": "XGA",
-    "Attacking precision": "Precision",
-    "Dangerous attacks": "D. Attacks",
-    "Shots on target": "SOT",
-    "Big chances": "B. Chances",
-    "Shooting accuracy": "Acc",
-    "Shot conversion": "Conv",
-    "Shots inside box %": "Shot prox",
-    "Shot Proximity": "Shot prox",
-    "Goals conceded": "GA",
-    "xG conceded": "xGA",
-    "SOT against": "SOTA",
-    "Clean sheet %": "CS %",
-    "Big chances conceded": "B. Chances A",
-    "Shots inside box against": "Box shots agst",
-    "Pass accuracy": "Pass %",
-    "Attacking-half pass %": "Attk pass %",
-    "Successful dribbles": "Dribbles",
-    "Long-ball %": "LB %",
-    "Ball recoveries": "Recoveries",
-    "Duels won %": "Duels %",
-    "Venue PPG": "H/A PPG",
-    "Free-kick goals": "FK goals",
-    "Fouls per game": "Fouls",
-    "Fouls faced": "Fouls won",
-    "Yellow cards / game": "Yellow C",
-    "Red cards / game": "Red C",
-    "Penalties for": "Pens F",
-    "Penalties conceded": "Pens A",
-    "Offsides per game": "Offsides",
-    "Possession rating": "Poss",
-    "XGF rating": "XGF",
-    "XGA rating": "XGA",
-  };
+  const homeColor = colors.home;
+  const homeFill = withAlpha(colors.home, 0.2);
+  const awayColor = colors.away;
+  const awayFill = withAlpha(colors.away, 0.2);
+  const pointBorder = colors.surface;
 
   const abbreviateRadarLabel = (label) => {
-    if (radarLabelAbbreviations[label]) {
-      return radarLabelAbbreviations[label];
+    if (RADAR_LABEL_ABBREVIATIONS[label]) {
+      return RADAR_LABEL_ABBREVIATIONS[label];
     }
 
     if (abbreviateLongLabelsOnly && label.length <= abbreviateMaxLength) {
@@ -754,23 +145,20 @@ export function RadarChart(props) {
     );
   }
 
-  const resolvedLayoutPadding =
-    layoutPadding != null && typeof layoutPadding === "object"
-      ? layoutPadding
-      : layoutPadding;
-
   const options = {
     color,
     responsive: true,
     maintainAspectRatio,
     aspectRatio,
     layout: {
-      padding: resolvedLayoutPadding,
+      padding: layoutPadding,
     },
-    animation: {
-      duration: 700,
-      easing: "easeOutQuart",
-    },
+    ...radialReveal(),
+    onHover: focusDatasetOnHover([
+      { border: homeColor, fill: homeFill },
+      { border: awayColor, fill: awayFill },
+    ]),
+    interaction: { mode: "nearest", intersect: false },
     scales: {
       r: {
         min: 0,
@@ -793,7 +181,7 @@ export function RadarChart(props) {
           color,
           font: {
             size: pointLabelFontSize,
-            weight: "500",
+            weight: 600,
           },
           padding: pointLabelPadding,
         },
@@ -808,20 +196,13 @@ export function RadarChart(props) {
           useBorderRadius: true,
           borderRadius: 3,
           color,
-          font: {
-            size: 11,
-            weight: "500",
-          },
+          font: COMPARISON_CHART_FONTS.legend,
           padding: 12,
         },
       },
       tooltip: {
         enabled: true,
-        backgroundColor: tooltipBackground,
-        titleColor: "#ffffff",
-        bodyColor: "#ffffff",
-        padding: 10,
-        cornerRadius: 8,
+        ...tooltipStyle(colors),
         callbacks: {
           title(items) {
             const index = items[0]?.dataIndex;
@@ -845,10 +226,7 @@ export function RadarChart(props) {
         display: true,
         text: title,
         color,
-        font: {
-          size: 13,
-          weight: "600",
-        },
+        font: COMPARISON_CHART_FONTS.title,
         padding: {
           bottom: 4,
         },
@@ -857,10 +235,7 @@ export function RadarChart(props) {
         display: Boolean(subtitle),
         text: subtitle || "",
         color,
-        font: {
-          size: 11,
-          weight: "400",
-        },
+        font: COMPARISON_CHART_FONTS.subtitle,
         padding: {
           bottom: 12,
         },
@@ -868,37 +243,24 @@ export function RadarChart(props) {
     },
   };
 
+  const datasetStyle = (lineColor, fillColor) => ({
+    fill: true,
+    backgroundColor: fillColor,
+    borderColor: lineColor,
+    pointBackgroundColor: lineColor,
+    pointBorderColor: pointBorder,
+    pointHoverBackgroundColor: lineColor,
+    pointHoverBorderColor: color,
+    pointRadius: 4,
+    pointHoverRadius: 6,
+    borderWidth: 2.5,
+  });
+
   const chartData = {
     labels: displayLabels,
     datasets: [
-      {
-        label: team1,
-        data,
-        fill: true,
-        backgroundColor: homeFill,
-        borderColor: homeColor,
-        pointBackgroundColor: homeColor,
-        pointBorderColor: theme === "dark" ? "#1f1f1f" : "#ffffff",
-        pointHoverBackgroundColor: homeColor,
-        pointHoverBorderColor: theme === "dark" ? "#ffffff" : "#020029",
-        pointRadius: 4,
-        pointHoverRadius: 6,
-        borderWidth: 2.5,
-      },
-      {
-        label: team2,
-        data: data2,
-        fill: true,
-        backgroundColor: awayFill,
-        borderColor: awayColor,
-        pointBackgroundColor: awayColor,
-        pointBorderColor: theme === "dark" ? "#1f1f1f" : "#ffffff",
-        pointHoverBackgroundColor: awayColor,
-        pointHoverBorderColor: theme === "dark" ? "#ffffff" : "#020029",
-        pointRadius: 4,
-        pointHoverRadius: 6,
-        borderWidth: 2.5,
-      },
+      { label: team1, data, ...datasetStyle(homeColor, homeFill) },
+      { label: team2, data: data2, ...datasetStyle(awayColor, awayFill) },
     ],
   };
 
@@ -908,115 +270,18 @@ export function RadarChart(props) {
         className={`ComparisonBarChart ComparisonRadarChart${locked ? " blurred" : ""}`}
         {...(shareCapture && !locked ? { "data-share-capture": true } : {})}
       >
-        <Radar
-          key={`${theme}-${abbreviateLabels}-${wrapPointLabels}-${pointLabelFontSize}-${JSON.stringify(layoutPadding)}`}
-          options={options}
-          data={chartData}
-        />
+        <LazyChart
+          fill={!maintainAspectRatio}
+          aspectRatio={maintainAspectRatio ? aspectRatio : undefined}
+        >
+          <Radar
+            key={`${theme}-${abbreviateLabels}-${wrapPointLabels}-${pointLabelFontSize}-${JSON.stringify(layoutPadding)}`}
+            options={options}
+            data={chartData}
+          />
+        </LazyChart>
       </div>
     </PremiumBlurGate>
-  );
-}
-
-export function RadarChartLeagueStats({
-  title,
-  teamAData,
-  teamBData,
-  teamALabel = "Team A",
-  teamBLabel = "Team B",
-  maxRank = 30,
-}) {
-  const labels = Object.keys(teamAData).map((key) =>
-    key.replace(/([A-Z])/g, " $1").replace(/^./, (str) => str.toUpperCase())
-  );
-
-  const teamAValues = Object.values(teamAData).map(Number);
-  const teamBValues = Object.values(teamBData).map(Number);
-
-  const chartData = {
-    labels,
-    datasets: [
-      {
-        label: teamALabel,
-        data: teamAValues,
-        fill: true,
-        borderColor: "red",
-        pointBackgroundColor: "red",
-        pointBorderColor: "red",
-        pointHoverBackgroundColor: "#fff",
-        pointHoverBorderColor: "rgba(255, 99, 133, 0)",
-        borderWidth: 1,
-      },
-      // {
-      //   label: teamBLabel,
-      //   data: teamBValues,
-      //   fill: true,
-      //   borderColor: "yellow",
-      //   pointBackgroundColor: "yellow",
-      //   pointBorderColor: "yellow",
-      //   pointHoverBackgroundColor: "#fff",
-      //   pointHoverBorderColor: "yellow",
-      //   borderWidth: 2,
-      // },
-    ],
-  };
-
-  const options = {
-    responsive: true,
-    color: "#fe8c00",
-    maintainAspectRatio: true,
-    scales: {
-      r: {
-        min: 1,
-        max: maxRank,
-        reverse: true,
-        angleLines: {
-          display: true,
-        },
-        grid: {
-          circular: true,
-          // color: "transparent", // or use a solid border color if you want the lines only
-        },
-        ticks: {
-          display: true,
-          backdropColor: "transparent",
-        },
-        pointLabels: {
-          color: "#fe8c00",
-          font: {
-            size: 10,
-          },
-        },
-      },
-    },
-    plugins: {
-      legend: {
-        position: "top",
-        labels: {
-          boxHeight: 10,
-          color: "#fe8c00",
-        },
-      },
-      title: {
-        display: true,
-        text: title || "Team Comparison by League Ranking",
-        color: "#fe8c00",
-        font: {
-          size: 12,
-        },
-      },
-      tooltip: {
-        callbacks: {
-          label: function (context) {
-            return `${context.dataset.label}: Rank ${context.formattedValue}`;
-          },
-        },
-      },
-    },
-  };
-
-  return (
-    <PolarArea className="LeagueStatsRadar" data={chartData} options={options} />
   );
 }
 
@@ -1043,40 +308,61 @@ function buildLinearTrendLine(values = []) {
   return xs.map((x) => Number((slope * x + intercept).toFixed(2)));
 }
 
+const SHOT_SERIES_COLORS = {
+  goals: "#01a501",
+  sot: "#f57701",
+  shots: "#4a90d9",
+};
+
 function ShotAreaChart({ teamName, series = [], theme, showSubtitle = true }) {
-  const { color, gridColor, tooltipBackground } = getChartColors(theme);
+  const colors = getChartColors(theme);
+  const { color, gridColor } = colors;
 
   if (!series.length) {
     return null;
   }
 
   const labels = series.map((point) => point.label);
-  const goalsColor = "#01a501";
-  const sotColor = "#f57701";
-  const shotsColor = "#4a90d9";
-  const goalsTrendColor = theme === "dark" ? "#8dffb8" : "#003d14";
-  const sotTrendColor = theme === "dark" ? "#ffc266" : "#8a3f00";
-  const shotsTrendColor = theme === "dark" ? "#8ec8ff" : "#1a4f7f";
+  const goalsColor = colors.home;
+  const sotColor = SHOT_SERIES_COLORS.sot;
+  const shotsColor = SHOT_SERIES_COLORS.shots;
   const goalsTrend = buildLinearTrendLine(series.map((point) => point.goals));
   const sotTrend = buildLinearTrendLine(series.map((point) => point.sot));
   const shotsTrend = buildLinearTrendLine(series.map((point) => point.shots));
 
-  const trendLineStyle = {
+  const trendLineStyle = (lineColor) => ({
     type: "line",
     backgroundColor: "transparent",
-    borderWidth: 2.5,
-    borderDash: [7, 4],
+    borderColor: withAlpha(lineColor, 0.55),
+    borderWidth: 1.5,
+    borderDash: [5, 4],
     pointRadius: 0,
     pointHoverRadius: 0,
     fill: false,
     tension: 0,
     order: 0,
-  };
+  });
+
+  const areaStyle = (fillColor, topAlpha, bottomAlpha) => ({
+    borderColor: fillColor,
+    backgroundColor: areaGradient(fillColor, { top: topAlpha, bottom: bottomAlpha }),
+    fill: true,
+    tension: 0.3,
+    pointRadius: 0,
+    pointHoverRadius: 4,
+    pointHoverBackgroundColor: fillColor,
+    pointHoverBorderColor: colors.surface,
+    pointHoverBorderWidth: 2,
+    borderWidth: 1.75,
+    stack: "shots",
+    order: 2,
+  });
 
   const options = {
     color,
     responsive: true,
     maintainAspectRatio: false,
+    ...staggeredBars({ step: 0, duration: 700 }),
     interaction: {
       mode: "index",
       intersect: false,
@@ -1092,7 +378,7 @@ function ShotAreaChart({ teamName, series = [], theme, showSubtitle = true }) {
           autoSkip: true,
           maxTicksLimit: 8,
           font: COMPARISON_CHART_FONTS.axisTick,
-          color,
+          color: colors.faint,
         },
         border: {
           display: false,
@@ -1107,8 +393,9 @@ function ShotAreaChart({ teamName, series = [], theme, showSubtitle = true }) {
         },
         ticks: {
           font: COMPARISON_CHART_FONTS.axisTick,
-          color,
+          color: colors.faint,
           precision: 0,
+          padding: 6,
         },
         border: {
           display: false,
@@ -1121,6 +408,8 @@ function ShotAreaChart({ teamName, series = [], theme, showSubtitle = true }) {
         labels: {
           boxWidth: 10,
           boxHeight: 10,
+          useBorderRadius: true,
+          borderRadius: 2,
           font: COMPARISON_CHART_FONTS.legend,
           color,
           filter(item) {
@@ -1130,11 +419,7 @@ function ShotAreaChart({ teamName, series = [], theme, showSubtitle = true }) {
       },
       tooltip: {
         enabled: true,
-        backgroundColor: tooltipBackground,
-        titleColor: "#ffffff",
-        bodyColor: "#ffffff",
-        padding: 10,
-        cornerRadius: 8,
+        ...tooltipStyle(colors),
         filter(item) {
           return !String(item.dataset.label).toLowerCase().includes("trend");
         },
@@ -1183,61 +468,34 @@ function ShotAreaChart({ teamName, series = [], theme, showSubtitle = true }) {
       {
         label: "Goals",
         data: series.map((point) => point.stackGoals),
-        borderColor: goalsColor,
-        backgroundColor: `${goalsColor}cc`,
-        fill: true,
-        tension: 0.25,
-        pointRadius: 0,
-        pointHoverRadius: 3,
-        borderWidth: 1.5,
-        stack: "shots",
-        order: 2,
+        ...areaStyle(goalsColor, 0.9, 0.6),
       },
       {
         label: "Shots on target",
         data: series.map((point) => point.stackSot),
-        borderColor: sotColor,
-        backgroundColor: `${sotColor}bb`,
-        fill: true,
-        tension: 0.25,
-        pointRadius: 0,
-        pointHoverRadius: 3,
-        borderWidth: 1.5,
-        stack: "shots",
-        order: 2,
+        ...areaStyle(sotColor, 0.75, 0.45),
       },
       {
         label: "Shots",
         data: series.map((point) => point.stackShotsOffTarget),
-        borderColor: shotsColor,
-        backgroundColor: `${shotsColor}99`,
-        fill: true,
-        tension: 0.25,
-        pointRadius: 0,
-        pointHoverRadius: 3,
-        borderWidth: 1.5,
-        stack: "shots",
-        order: 2,
+        ...areaStyle(shotsColor, 0.55, 0.25),
       },
       {
-        ...trendLineStyle,
+        ...trendLineStyle(color),
         label: "Goals trend",
         data: goalsTrend,
-        borderColor: goalsTrendColor,
         stack: "goalsTrend",
       },
       {
-        ...trendLineStyle,
+        ...trendLineStyle(color),
         label: "Shots on target trend",
         data: sotTrend,
-        borderColor: sotTrendColor,
         stack: "sotTrend",
       },
       {
-        ...trendLineStyle,
+        ...trendLineStyle(color),
         label: "Shots trend",
         data: shotsTrend,
-        borderColor: shotsTrendColor,
         stack: "shotsTrend",
       },
     ],
@@ -1245,7 +503,9 @@ function ShotAreaChart({ teamName, series = [], theme, showSubtitle = true }) {
 
   return (
     <div className="ComparisonBarChart-areaChart">
-      <Line key={theme} options={options} data={data} />
+      <LazyChart fill>
+        <Line key={theme} options={options} data={data} />
+      </LazyChart>
     </div>
   );
 }
@@ -1277,7 +537,7 @@ export function ShotAreaChartsShare({
         <div className="ShotAreaCharts-header">
           <p className="ShotAreaCharts-title">{text}</p>
           <p className="ShotAreaCharts-subtitle">
-            Stacked per-game goals, shots on target and shots
+            Stacked per-game goals, shots on target and shots. Dashed lines show each trend.
           </p>
         </div>
         <div className="ComparisonBarChart-areaCharts">
@@ -1303,6 +563,23 @@ export function ShotAreaChartsShare({
   );
 }
 
+function leadSummary(values, team1, team2) {
+  const homeLeads = values.filter((v) => v < 0).length;
+  const awayLeads = values.filter((v) => v > 0).length;
+  const level = values.length - homeLeads - awayLeads;
+  const total = values.length;
+  if (homeLeads === awayLeads) {
+    return `Honours even: ${homeLeads} metrics each${level ? `, ${level} level` : ""}`;
+  }
+  const [leader, leaderCount, trailer, trailerCount] =
+    homeLeads > awayLeads
+      ? [team1, homeLeads, team2, awayLeads]
+      : [team2, awayLeads, team1, homeLeads];
+  return `${leader} lead ${leaderCount} of ${total} metrics. ${trailer} lead ${trailerCount}${
+    level ? `, ${level} level` : ""
+  }.`;
+}
+
 export function BarChart(props) {
   const {
     data1,
@@ -1313,12 +590,13 @@ export function BarChart(props) {
     locked = false,
   } = props;
   const theme = useChartTheme();
-  const { color, gridColor, tooltipBackground } = getChartColors(theme);
+  const colors = getChartColors(theme);
+  const { color, gridColor } = colors;
 
-  const homeColor = "#01a501";
-  const homeColorSoft = "#01a50166";
-  const awayColor = "#d71200";
-  const awayColorSoft = "#d7120066";
+  const homeColor = colors.home;
+  const homeColorSoft = withAlpha(colors.home, 0.4);
+  const awayColor = colors.away;
+  const awayColorSoft = withAlpha(colors.away, 0.4);
 
   if (!data1 || !data2 || data1.length === 0 || data2.length === 0) {
     return <div style={{ color: color, textAlign: "center" }}>No data available for this chart.</div>;
@@ -1336,13 +614,7 @@ export function BarChart(props) {
 
   const max = Math.max(...sum);
   const min = Math.min(...sum);
-
-  function findLargestNum(numOne, numTwo) {
-    const tempArr = [Math.abs(numOne), Math.abs(numTwo)];
-    return Math.max(...tempArr) + 1;
-  }
-
-  const largest = findLargestNum(max, min);
+  const largest = Math.max(Math.abs(max), Math.abs(min)) + 1;
 
   const getBarFillColor = (value) => (value < 0 ? homeColor : awayColor);
 
@@ -1352,7 +624,7 @@ export function BarChart(props) {
     const x1 = bar.x;
     const y1 = bar.y;
 
-    if (![x0, y0, x1, y1].every(Number.isFinite)) {
+    if (![x0, y0, x1, y1].every(Number.isFinite) || x0 === x1) {
       return getBarFillColor(value);
     }
 
@@ -1366,6 +638,15 @@ export function BarChart(props) {
     }
     return gradient;
   };
+
+  function formatComparisonDelta(value) {
+    const absLabel = Math.abs(Number(value));
+    if (!Number.isFinite(absLabel)) return null;
+    const fixed = absLabel.toFixed(2);
+    const display =
+      fixed.endsWith(".00") ? String(Math.round(absLabel)) : fixed;
+    return `+${display}`;
+  }
 
   const barDeltaLabelPlugin = {
     id: "barDeltaLabelPlugin",
@@ -1382,13 +663,10 @@ export function BarChart(props) {
           displayDeltas && displayDeltas[index] !== undefined
             ? displayDeltas[index]
             : value;
-        const absLabel = Math.abs(Number(labelValue));
-        const fixed = absLabel.toFixed(2);
-        const display =
-          fixed.endsWith(".00") ? String(Math.round(absLabel)) : fixed;
-        const label = `+${display}`;
+        const label = formatComparisonDelta(labelValue);
+        if (!label) return;
         ctx.save();
-        ctx.fillStyle = color;
+        ctx.fillStyle = getBarFillColor(value);
         ctx.font = COMPARISON_CHART_FONTS.deltaLabel;
         ctx.textAlign = value < 0 ? "right" : "left";
         ctx.textBaseline = "middle";
@@ -1413,10 +691,7 @@ export function BarChart(props) {
         left: 16,
       },
     },
-    animation: {
-      duration: 700,
-      easing: "easeOutQuart",
-    },
+    ...growFromZero(),
     elements: {
       bar: {
         borderWidth: 0,
@@ -1466,21 +741,22 @@ export function BarChart(props) {
       },
       tooltip: {
         enabled: true,
-        backgroundColor: tooltipBackground,
-        titleColor: "#ffffff",
-        bodyColor: "#ffffff",
-        padding: 10,
-        cornerRadius: 8,
+        ...tooltipStyle(colors),
         displayColors: false,
         callbacks: {
           title(items) {
             return items[0]?.label ?? "";
           },
           label(context) {
-            const value = context.raw;
-            const leader = value < 0 ? team1 : value > 0 ? team2 : "Even";
-            const magnitude = Math.abs(value).toFixed(1);
-            return value === 0 ? "Even" : `${leader} +${magnitude}`;
+            const index = context.dataIndex;
+            const delta =
+              displayDeltas && displayDeltas[index] !== undefined
+                ? Number(displayDeltas[index])
+                : Number(context.raw);
+            if (!Number.isFinite(delta) || delta === 0) return "Even";
+            const leader = delta < 0 ? team1 : team2;
+            const formatted = formatComparisonDelta(delta);
+            return formatted ? `${leader} ${formatted}` : "Even";
           },
         },
       },
@@ -1495,7 +771,7 @@ export function BarChart(props) {
       },
       subtitle: {
         display: true,
-        text: `Bars show which team leads each metric`,
+        text: leadSummary(sum, team1, team2),
         color: color,
         font: COMPARISON_CHART_FONTS.subtitle,
         padding: {
@@ -1508,10 +784,9 @@ export function BarChart(props) {
             type: "line",
             xMin: 0,
             xMax: 0,
-            borderColor: color,
+            borderColor: colors.reference,
             borderWidth: 1,
             borderDash: [4, 4],
-            opacity: 0.35,
           },
         },
       },
@@ -1562,7 +837,9 @@ export function BarChart(props) {
           {...(!locked ? { "data-share-capture": true } : {})}
           className={`ComparisonBarChart${locked ? " blurred" : ""}`}
         >
-          <Bar key={theme} options={options} data={data} plugins={[barDeltaLabelPlugin]} />
+          <LazyChart aspectRatio={1.2}>
+            <Bar key={theme} options={options} data={data} plugins={[barDeltaLabelPlugin]} />
+          </LazyChart>
           <div className="ComparisonBarChart-legend">
             <span className="ComparisonBarChart-legendItem">
               <span className="ComparisonBarChart-legendSwatch ComparisonBarChart-legendSwatch--home" />
@@ -1577,110 +854,6 @@ export function BarChart(props) {
       </ShareableVisual>
     </PremiumBlurGate>
   );
-}
-
-export function BarChartTwo(props) {
-  const dataset = [props.data1, props.data2];
-  let color;
-
-  if (props.theme === 'light') {
-    color = "#020029"
-  } else if (props.theme === 'dark') {
-    color = "#ffffff"
-  } else {
-    color = "#f57701"
-  }
-
-  const options = {
-    color: color,
-    indexAxis: "x",
-    // Elements options apply to all of the options unless overridden in a dataset
-    // In this case, we are setting the border of each horizontal bar to be 2px wide
-    aspectRatio: 1.2,
-    elements: {
-      bar: {
-        borderWidth: 2,
-      },
-    },
-    scales: {
-      y: {
-        min: -0.8,
-        max: 0.8,
-        ticks: {
-          display: true,
-          font: {
-            size: 10,
-          },
-          color: color,
-        },
-      },
-      // y: {
-      //   suggestedMin: -0.8,
-      //   suggestedMax: 0.8,
-      //   ticks: {
-      //     font: {
-      //       size: 10,
-      //     },
-      //   },
-      // },
-    },
-    responsive: true,
-    plugins: {
-      legend: {
-        display: false,
-      },
-      tooltip: {
-        enabled: true,
-      },
-      title: {
-        display: true,
-        text: [props.text],
-        color: color,
-        font: {
-          size: 12,
-        },
-      },
-      subtitle: {
-        display: true,
-        text: "Green - Improving | Red - Worsening",
-        color: color,
-        font: {
-          size: 12,
-        },
-        padding: {
-          bottom: 10,
-        },
-      },
-    },
-  };
-
-  const labels = [props.homeTeam, props.awayTeam];
-
-  const data = {
-    labels: labels,
-    datasets: [
-      {
-        legend: {
-          display: false,
-        },
-        // label: "XG Recent Swing",
-        data: dataset,
-        ticks: {
-          font: {
-            size: 14,
-          },
-        },
-        barThickness: 120,
-        backgroundColor(context) {
-          const index = context.dataIndex;
-          const value = context.dataset.data[index];
-          return value < 0 ? "#730a00" : "#016001";
-        },
-      },
-    ],
-  };
-
-  return <Bar options={options} data={data} />;
 }
 
 export { useChartTheme, getChartColors, buildShotStackSeries };
