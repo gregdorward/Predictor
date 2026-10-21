@@ -9599,6 +9599,71 @@ body.dark-mode .MetricTrendTables-arrow {
   white-space: nowrap;
 }
 
+.FixtureSocialCard-marketPies {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  gap: 1.15rem;
+}
+
+.FixtureSocialCard-marketPair {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.35rem;
+  min-width: 0;
+}
+
+.FixtureSocialCard-marketPairLabel {
+  color: #ffffff;
+  font-size: 0.66rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  line-height: 1;
+}
+
+.FixtureSocialCard-marketPairPies {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.FixtureSocialCard-marketPie {
+  margin: 0;
+}
+
+.FixtureSocialCard-marketPieGraphic {
+  position: relative;
+  width: 4rem;
+  height: 4rem;
+}
+
+.FixtureSocialCard-marketPieGraphic svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.FixtureSocialCard-marketPieLabel {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.72rem;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  line-height: 1;
+}
+
+.FixtureSocialCard-marketPieLabel--home {
+  color: var(--chart-home-text);
+}
+
+.FixtureSocialCard-marketPieLabel--away {
+  color: var(--chart-away-text);
+}
+
 .FixtureSocialCard-strengthValue {
   width: 2.6rem;
 }

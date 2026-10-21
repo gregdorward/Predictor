@@ -16,27 +16,95 @@ function marketNumber(value) {
   return Number.isFinite(number) ? number : null;
 }
 
-function marketShares(homeValue, awayValue) {
-  const home = marketNumber(homeValue);
-  const away = marketNumber(awayValue);
-  if (home == null || away == null) return null;
-  const homeBar = Math.max(0, home);
-  const awayBar = Math.max(0, away);
-  const total = homeBar + awayBar;
-  if (total <= 0) return [50, 50];
-  return [(homeBar / total) * 100, (awayBar / total) * 100];
+function clampShare(value) {
+  if (value == null) return 0;
+  return Math.max(0, Math.min(100, value)) / 100;
 }
 
-function StrengthRow({ label, homeShare, awayShare, homeLabel, awayLabel, wideLabel = false }) {
+function annularSector(cx, cy, inner, outer, start, sweep) {
+  const a0 = start * Math.PI * 2 - Math.PI / 2;
+  const a1 = (start + sweep) * Math.PI * 2 - Math.PI / 2;
+  const large = sweep > 0.5 ? 1 : 0;
+  const point = (radius, angle) => [
+    cx + radius * Math.cos(angle),
+    cy + radius * Math.sin(angle),
+  ];
+  const [x0, y0] = point(outer, a0);
+  const [x1, y1] = point(outer, a1);
+  const [x2, y2] = point(inner, a1);
+  const [x3, y3] = point(inner, a0);
+  return `M ${x0} ${y0} A ${outer} ${outer} 0 ${large} 1 ${x1} ${y1} L ${x2} ${y2} A ${inner} ${inner} 0 ${large} 0 ${x3} ${y3} Z`;
+}
+
+function TeamMarketPie({ market, value, tone }) {
+  const share = clampShare(marketNumber(value));
+  const size = 100;
+  const center = size / 2;
+  const inner = 32;
+  const outer = 46;
+  const mid = (inner + outer) / 2;
+  const color = tone === "home" ? "#1fb83a" : "#ec3a28";
+
+  return (
+    <figure className="FixtureSocialCard-marketPie">
+      <div className="FixtureSocialCard-marketPieGraphic">
+        <svg
+          viewBox={`0 0 ${size} ${size}`}
+          width={size}
+          height={size}
+          role="img"
+          aria-label={`${market}, ${tone} ${value}`}
+        >
+          <circle
+            cx={center}
+            cy={center}
+            r={mid}
+            fill="none"
+            stroke="rgba(255,255,255,0.14)"
+            strokeWidth={outer - inner}
+          />
+          {share >= 0.999 ? (
+            <circle
+              cx={center}
+              cy={center}
+              r={mid}
+              fill="none"
+              stroke={color}
+              strokeWidth={outer - inner}
+            />
+          ) : share > 0 ? (
+            <path
+              d={annularSector(center, center, inner, outer, 0, share)}
+              fill={color}
+            />
+          ) : null}
+        </svg>
+        <span
+          className={`FixtureSocialCard-marketPieLabel FixtureSocialCard-marketPieLabel--${tone}`}
+        >
+          {value}
+        </span>
+      </div>
+    </figure>
+  );
+}
+
+function MarketPair({ label, homeValue, awayValue }) {
+  return (
+    <div className="FixtureSocialCard-marketPair">
+      <span className="FixtureSocialCard-marketPairLabel">{label}</span>
+      <div className="FixtureSocialCard-marketPairPies">
+        <TeamMarketPie market={label} value={homeValue} tone="home" />
+        <TeamMarketPie market={label} value={awayValue} tone="away" />
+      </div>
+    </div>
+  );
+}
+
+function StrengthRow({ label, homeShare, awayShare, homeLabel, awayLabel }) {
   return (
     <div className="FixtureSocialCard-strengthRow">
-      <span
-        className={`FixtureSocialCard-strengthLabel${
-          wideLabel ? " FixtureSocialCard-strengthLabel--wide" : ""
-        }`}
-      >
-        {label}
-      </span>
+      <span className="FixtureSocialCard-strengthLabel">{label}</span>
       <span className="FixtureSocialCard-strengthValue">{homeLabel}</span>
       <span className="FixtureSocialCard-strengthTrack" aria-hidden="true">
         <span
@@ -124,20 +192,16 @@ export default function FixtureSocialShareCard({ data }) {
         {data.markets?.length ? (
           <section className="FixtureSocialCard-panel">
             <h3 className="FixtureSocialCard-panelTitle">Recent markets</h3>
-            {data.markets.map((row) => {
-              const shares = marketShares(row.homeValue, row.awayValue);
-              return (
-                <StrengthRow
+            <div className="FixtureSocialCard-marketPies">
+              {data.markets.map((row) => (
+                <MarketPair
                   key={row.label}
-                  wideLabel
-                  label={row.label}
-                  homeShare={shares ? shares[0] : 0}
-                  awayShare={shares ? shares[1] : 0}
-                  homeLabel={row.homeValue}
-                  awayLabel={row.awayValue}
+                  label={row.label === "Over 2.5" ? "O2.5" : row.label}
+                  homeValue={row.homeValue}
+                  awayValue={row.awayValue}
                 />
-              );
-            })}
+              ))}
+            </div>
           </section>
         ) : null}
 
