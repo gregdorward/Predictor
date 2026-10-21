@@ -11,6 +11,7 @@ import FixtureSeasonStats from "./FixtureSeasonStats";
 import ShareableVisual from "./ShareableVisual";
 import SharePageLinkButton from "./SharePageLinkButton";
 import { sanitizeImageFilename } from "../utils/captureElementImage";
+import { buildMatchShareUrl } from "../utils/shareMatchUrl";
 import "./charts/chartSetup";
 import { Bar } from "react-chartjs-2";
 import { useChartTheme, getChartColors, tooltipStyle } from "./charts/chartTheme";
@@ -620,6 +621,11 @@ function TeamPage({ matchId, seoShell = null }) {
 
   const homeName = storedFixtureDetailsJson.homeTeamName;
   const awayName = storedFixtureDetailsJson.awayTeamName;
+  const pageUrl =
+    buildMatchShareUrl(matchId, null, undefined, {
+      homeTeam: homeName,
+      awayTeam: awayName,
+    }) || "";
   const strengthSummary = comparisonLead(homeName, awayName, chartValues);
   const useFootyStatsTemplate = match?.fixtureStatsSource === "footystats-api";
 
@@ -716,8 +722,10 @@ function TeamPage({ matchId, seoShell = null }) {
             )}
             shareTitle={`${storedFixtureDetailsJson.homeTeamName} vs ${storedFixtureDetailsJson.awayTeamName}`}
             shareText={`${storedFixtureDetailsJson.homeTeamName} vs ${storedFixtureDetailsJson.awayTeamName} stats and prediction`}
+            shareUrl={pageUrl}
           >
             <FixtureSocialShareCard
+              pageUrl={pageUrl}
               data={buildFixtureShareCardFromMatch(match, {
                 kickOff: seoShell?.kickOff || storedFixtureDetailsJson.time || "",
                 league: seoShell?.league || storedFixtureDetailsJson.leagueName || "",

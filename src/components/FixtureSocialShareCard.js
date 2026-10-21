@@ -1,5 +1,6 @@
 import { CreateBadge } from "./createBadge";
 import SplitBar from "./charts/SplitBar";
+import { buildFixtureQr } from "../logic/fixtureQr";
 
 function TeamSide({ name, badge, align }) {
   return (
@@ -101,6 +102,29 @@ function MarketPair({ label, homeValue, awayValue }) {
   );
 }
 
+function FixtureQr({ url }) {
+  const code = buildFixtureQr(url);
+  if (!code) return null;
+  const span = code.size + code.quiet * 2;
+  return (
+    <svg
+      className="FixtureSocialCard-qr"
+      viewBox={`${-code.quiet} ${-code.quiet} ${span} ${span}`}
+      role="img"
+      aria-label="QR code for this match"
+    >
+      <rect
+        x={-code.quiet}
+        y={-code.quiet}
+        width={span}
+        height={span}
+        fill="#ffffff"
+      />
+      <path d={code.d} fill="#020029" />
+    </svg>
+  );
+}
+
 function StrengthRow({ label, homeShare, awayShare, homeLabel, awayLabel }) {
   return (
     <div className="FixtureSocialCard-strengthRow">
@@ -121,7 +145,7 @@ function StrengthRow({ label, homeShare, awayShare, homeLabel, awayLabel }) {
   );
 }
 
-export default function FixtureSocialShareCard({ data }) {
+export default function FixtureSocialShareCard({ data, pageUrl = "" }) {
   if (!data?.homeName || !data?.awayName) return null;
 
   return (
@@ -227,6 +251,7 @@ export default function FixtureSocialShareCard({ data }) {
           <span className="FixtureSocialCard-brandName">Soccer Stats Hub</span>
           <span className="FixtureSocialCard-brandUrl">soccerstatshub.com</span>
         </span>
+        <FixtureQr url={pageUrl} />
       </footer>
     </article>
   );

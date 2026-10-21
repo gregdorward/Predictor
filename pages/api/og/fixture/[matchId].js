@@ -12,6 +12,8 @@ import {
 import { fetchMatchSnapshot } from "../../../../src/seo/serverFetch";
 import { buildFixtureHeadToHead } from "../../../../src/logic/fixturePageH2h";
 import { buildFixtureShareCard } from "../../../../src/logic/fixtureShareCardData";
+import { buildFixtureQr } from "../../../../src/logic/fixtureQr";
+import { buildMatchShareUrl } from "../../../../src/utils/shareMatchUrl";
 
 export const config = { runtime: "edge" };
 
@@ -246,7 +248,31 @@ function Panel({ title, children }) {
   );
 }
 
-function renderCard({ card, homeBadge, awayBadge }) {
+function OgQr({ url }) {
+  const code = buildFixtureQr(url);
+  if (!code) return null;
+  const span = code.size + code.quiet * 2;
+  return (
+    <svg
+      width={112}
+      height={112}
+      viewBox={`${-code.quiet} ${-code.quiet} ${span} ${span}`}
+      role="img"
+      aria-label="QR code for this match"
+    >
+      <rect
+        x={-code.quiet}
+        y={-code.quiet}
+        width={span}
+        height={span}
+        fill="#ffffff"
+        rx="8"
+      />
+      <path d={code.d} fill="#020029" />
+    </svg>
+  );
+}
+function renderCard({ card, homeBadge, awayBadge, pageUrl }) {
   const panels = [];
   if (card.model) {
     panels.push(
@@ -400,27 +426,31 @@ function renderCard({ card, homeBadge, awayBadge }) {
           style={{
             display: "flex",
             alignItems: "center",
-            gap: 14,
+            justifyContent: "space-between",
+            width: "100%",
             padding: "16px 40px",
             backgroundColor: COLORS.orange,
           }}
         >
-          <div
-            style={{
-              width: 8,
-              height: 34,
-              borderRadius: 2,
-              backgroundColor: COLORS.green,
-            }}
-          />
-          <div style={{ display: "flex", flexDirection: "column" }}>
-            <div style={{ display: "flex", color: COLORS.textDark, fontSize: 22, fontWeight: 800 }}>
-              {SITE_NAME}
-            </div>
-            <div style={{ display: "flex", color: COLORS.textDark, fontSize: 16, fontWeight: 600 }}>
-              soccerstatshub.com
+          <div style={{ display: "flex", alignItems: "center", gap: 14 }}>
+            <div
+              style={{
+                width: 8,
+                height: 34,
+                borderRadius: 2,
+                backgroundColor: COLORS.green,
+              }}
+            />
+            <div style={{ display: "flex", flexDirection: "column" }}>
+              <div style={{ display: "flex", color: COLORS.textDark, fontSize: 22, fontWeight: 800 }}>
+                {SITE_NAME}
+              </div>
+              <div style={{ display: "flex", color: COLORS.textDark, fontSize: 16, fontWeight: 600 }}>
+                soccerstatshub.com
+              </div>
             </div>
           </div>
+          <OgQr url={pageUrl} />
         </div>
       </div>
     ),
@@ -479,6 +509,10 @@ export default async function handler(req) {
   const kickOff = snapshot
     ? formatKickOff(snapshot.date_unix ?? snapshot.date)
     : null;
+  const pageUrl = buildMatchShareUrl(matchId, null, undefined, {
+    homeTeam: home,
+    awayTeam: away,
+  });
   const card = buildFixtureShareCard({
     homeName: home,
     awayName: away,
@@ -500,5 +534,6 @@ export default async function handler(req) {
     card,
     homeBadge,
     awayBadge,
+    pageUrl,
   });
 }

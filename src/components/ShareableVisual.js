@@ -17,6 +17,7 @@ export default function ShareableVisual({
   filename,
   shareTitle = "Soccer Stats Hub stats",
   shareText = SITE_URL,
+  shareUrl = "",
   className = "",
   captureClassName = "",
   hideActions = false,
@@ -99,6 +100,7 @@ export default function ShareableVisual({
         filename,
         title: shareTitle,
         text: shareText,
+        url: shareUrl,
       });
       showStatus(shared ? "Shared!" : "Share not supported");
     });

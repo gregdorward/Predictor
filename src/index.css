@@ -9764,6 +9764,14 @@ body.dark-mode .MetricTrendTables-arrow {
   font-weight: 600;
 }
 
+.FixtureSocialCard-qr {
+  width: 5.5rem;
+  height: 5.5rem;
+  margin-left: auto;
+  flex: none;
+  border-radius: 8px;
+}
+
 .ShareableVisual__exportShell:has(.FixtureSocialCard) {
   background: #020029;
   border: 0;

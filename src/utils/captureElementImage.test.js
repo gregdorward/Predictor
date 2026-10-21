@@ -8,6 +8,7 @@ import {
   restoreCanvasReplacements,
   captureCanvasAsPng,
   captureElementAsPng,
+  buildImageShareText,
 } from "./captureElementImage";
 
 describe("captureElementImage", () => {
@@ -23,6 +24,18 @@ describe("captureElementImage", () => {
 
   test("falls back when filename is empty", () => {
     expect(sanitizeImageFilename("!!!")).toBe("soccerstatshub-visual");
+  });
+
+  test("puts the page URL on its own line in the image share caption", () => {
+    expect(
+      buildImageShareText({
+        title: "Arsenal vs Chelsea",
+        text: "Arsenal vs Chelsea stats and prediction",
+        url: "https://www.soccerstatshub.com/fixture/arsenal-vs-chelsea-12345/",
+      })
+    ).toBe(
+      "Arsenal vs Chelsea stats and prediction\nhttps://www.soccerstatshub.com/fixture/arsenal-vs-chelsea-12345/"
+    );
   });
 
   test("swaps canvases for images during export", () => {

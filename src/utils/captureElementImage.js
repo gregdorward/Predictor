@@ -436,22 +436,31 @@ export function canShareImageFiles() {
   );
 }
 
-export async function shareImageDataUrl(dataUrl, { filename, title, text }) {
+export function buildImageShareText({ title, text, url } = {}) {
+  const lines = [];
+  if (text && text !== title) lines.push(text);
+  if (url && !lines.some((line) => line.includes(url))) lines.push(url);
+  return lines.join("\n");
+}
+
+export async function shareImageDataUrl(dataUrl, { filename, title, text, url }) {
   const blob = await dataUrlToBlob(dataUrl);
   const file = new File([blob], `${sanitizeImageFilename(filename)}.png`, {
     type: "image/png",
   });
+  const caption = buildImageShareText({ title, text, url });
   const payload = { files: [file], title };
-  if (text && text !== title) {
-    payload.text = text;
-  }
+  if (caption) payload.text = caption;
+  if (url) payload.url = url;
 
   if (!navigator.share) {
     return false;
   }
 
   if (navigator.canShare && !navigator.canShare(payload)) {
-    return false;
+    if (!payload.url) return false;
+    delete payload.url;
+    if (!navigator.canShare(payload)) return false;
   }
 
   await navigator.share(payload);
