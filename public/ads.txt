@@ -1,4 +1,4 @@
-# Ads.txt v20260904
+# Ads.txt v20261016
 managerdomain=journeymv.com
 contact=sales@journeymv.com
 ownerdomain=soccerstatshub.com
@@ -116,7 +116,8 @@ aniview.com, 66ba73a97566d9303e011704, DIRECT, 78b21b97965ec3f8
 pubmatic.com, 160993, RESELLER, 5d62403b186f2ace
 richaudience.com, 1ru8dKmJJV, RESELLER
 appnexus.com, 8233, RESELLER, f5ab79cb980f11d1
-openx.com, 539625136, RESELLER, 6a698e2ec38604c6
+openx.com, 557739593, RESELLER, 6a698e2ec38604c6
+openx.com, 540862677, RESELLER, 6a698e2ec38604c6
 
 themediagrid.com, 72YI3C, DIRECT, 35d5010d7789b49d
 emxdgt.com, 1403, DIRECT, 1e1d41537f7cad7f
@@ -210,6 +211,5 @@ triplelift.com, 9636, DIRECT, 6c33edb13117fd86
 appnexus.com, 8420, RESELLER, f5ab79cb980f11d1
 richaudience.com, 3b6nSszVxj, RESELLER
 adipolo.com, 22889856011, RESELLER
-
 
 
