@@ -6,8 +6,10 @@ import nonPenaltyXgPredictions from "./non-penalty-xg-predictions.json";
 import whatSetsSoccerStatsHubApart from "./what-sets-soccer-stats-hub-apart.json";
 import soccerStatsHubBacktestResults from "./soccer-stats-hub-backtest-results.json";
 import homeAdvantageByLeague from "./home-advantage-by-league-2026-27.json";
+import canOneFactorPredict from "./can-one-factor-predict-a-football-match.json";
 
 const ARTICLE_BY_SLUG = {
+  [canOneFactorPredict.slug]: canOneFactorPredict,
   [homeAdvantageByLeague.slug]: homeAdvantageByLeague,
   [soccerStatsHubBacktestResults.slug]: soccerStatsHubBacktestResults,
   [whatSetsSoccerStatsHubApart.slug]: whatSetsSoccerStatsHubApart,

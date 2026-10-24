@@ -1,6 +1,16 @@
 {
   "articles": [
     {
+      "slug": "how-do-you-predict-a-football-match",
+      "title": "How do you predict a football match?",
+      "dek": "Single-metric replays on 3,849 fixtures from July to October 2026: the bookmaker favourite beat possession, xG and form on hit rate, and the full model blends signals for a reason.",
+      "publishedAt": "2026-10-24",
+      "updatedAt": "2026-10-24T20:15:00.000Z",
+      "heroLabel": "Analysis",
+      "tags": ["Predictions", "Research", "Methodology"],
+      "ogDescription": "What happens if you predict football with one stat only? Soccer Stats Hub replayed possession, xG, form and more against the market on 3,849 fixtures in 2026."
+    },
+    {
       "slug": "home-advantage-by-league-2026-27",
       "title": "Home advantage by football league in 2026/27",
       "dek": "Home-win rates in 2026/27 run from 32% in the Eredivisie to 54% in the Eerste Divisie and Champions League, with two leagues where away results already lead.",

@@ -1,0 +1,112 @@
+{
+  "slug": "how-do-you-predict-a-football-match",
+  "layout": "prose",
+  "title": "How do you predict a football match?",
+  "subtitle": "We ran an experiment where we tipped thousands of games on possession alone, xG alone, form alone, and the rest. The bookmaker still won on hit rate.",
+  "dek": "A single-metric replay across Soccer Stats Hub fixtures from July to October 2026: the favourite beat every naive stat on raw 1X2 accuracy, which is why the site blends many inputs instead of trusting one column.",
+  "publishedAt": "2026-10-24",
+  "updatedAt": "2026-10-24T20:15:00.000Z",
+  "authorLabel": "Greg, founder of Soccer Stats Hub",
+  "reviewedAt": "2026-10-24",
+  "showDataCitation": true,
+  "intro": [
+    "When I first started work on Soccer Stats Hub, I naively thought predicting a game with large datasets at my disposal would be easy. I knew football from years of obsessively watching it and thought I'd gained a good idea of what made one team better than the other. It soon became apparent that I'd over simplified things though, as my new obsession became tweaking the algorithm to find that silver bullet that meant beating the bookies. You hear opinions on football all the time; Possession wins games. Better xG means better results. The team's on a hot streak so they're bound to win. The trouble is that each of those stories is only a slice of what actually happens over ninety minutes.",
+    "To see how far a slice gets you, we ran a blunt experiment on the same completed fixtures Soccer Stats Hub already covers. For each match we let exactly one input pick home, draw or away. No blended model, no nuance: higher possession tips the home side, higher season xG tips the home side, the bookmaker's favourite tips the favourite, and so on. Then we counted how often that naive call matched the real result."
+  ],
+  "sections": [
+    {
+      "id": "replay-rules",
+      "heading": "How the replay worked",
+      "paragraphs": [
+        "The window ran from 1 July to 24 October 2026. The test was run against 3,849 completed fixtures where we had enough competition form to make a call.",
+        "Each single-factor rule then assigned a synthetic scoreline: 2-0 if the home side won the metric battle, 0-2 if the away side won, 1-1 if the numbers tied. The tipped 1X2 outcome came from that scoreline. Exact scores were not the point; match result hit rate was."
+      ]
+    },
+    {
+      "id": "overview",
+      "heading": "Every factor at a glance",
+      "paragraphs": [
+        "The bookmaker's favourite cleared every naive stat on match result hit rate. Nothing else broke 50%. Most football metrics clustered in the high thirties or low forties, only a little above or below picking the home side every time (42.6%).",
+        "Flat ROI is shown for context only. These are research stakes on attached prices, not a staking plan. The pattern that matters is simpler: one number rarely describes a match well enough to beat the market's headline view."
+      ],
+      "table": {
+        "caption": "Single-factor 1X2 hit rate, 1 July to 24 October 2026 (3,849 scored tips per row unless noted). Sorted by hit rate.",
+        "headers": ["Predictor rule", "Tips", "Hit rate", "Draw tips", "Flat ROI"],
+        "rows": [
+          ["Bookmaker favourite", "3,849", "50.6%", "0.4%", "-0.1%"],
+          ["Season xG", "3,849", "43.7%", "0.9%", "-3.9%"],
+          ["Dangerous attacks", "3,849", "43.6%", "0.7%", "-1.1%"],
+          ["Last-five xG", "3,849", "43.3%", "0.3%", "-3.1%"],
+          ["Last-five goal difference", "3,849", "42.8%", "7.4%", "-0.8%"],
+          ["Prematch xG (feed)", "3,849", "42.7%", "6.9%", "-5.7%"],
+          ["Home advantage only", "3,849", "42.6%", "0.0%", "-5.1%"],
+          ["Shots on target", "3,849", "42.2%", "1.4%", "-3.1%"],
+          ["Last-five points", "3,825", "41.7%", "12.0%", "-2.2%"],
+          ["Possession", "3,849", "40.8%", "8.8%", "-6.2%"],
+          ["Prematch points per game", "3,849", "40.7%", "17.5%", "-5.1%"],
+          ["Last-five goals scored", "3,849", "40.4%", "11.7%", "-3.2%"],
+          ["Season goals scored", "3,849", "39.8%", "17.1%", "-6.0%"],
+          ["More rest days", "3,825", "33.2%", "32.1%", "-1.6%"],
+          ["Lighter fixture schedule", "3,825", "28.7%", "74.9%", "-1.6%"]
+        ]
+      }
+    },
+    {
+      "id": "bookies",
+      "heading": "Bookmakers price the crowd view well",
+      "paragraphs": [
+        "Tipping the shorter price every time is not a clever system. It is what the market already believes. Even so, it topped the table at 50.6% correct on this sample, with draw calls almost absent because odds rarely make the draw the favourite.",
+        "That does not mean the favourite is always right. It means the opening price folds in form, injuries, motivation, home advantage and every other signal the trading desk can access. Beating that number with one column from a stats sheet is a high bar, and none of the naive rules cleared it.",
+        "Soccer Stats Hub shows model probability beside bookmaker-implied probability for exactly this reason. The interesting research question is usually where those two lines diverge, not which side of 50% a single stat can reach on its own."
+      ]
+    },
+    {
+      "id": "no-single-stat",
+      "heading": "No single stat decides a game",
+      "paragraphs": [
+        "Possession finished at 40.8% hit rate. Prematch points per game was 40.7%. Season and last-five xG sat in the 43% band. Prematch xG from the feed, shots on target and dangerous attacks were all close to simply backing the home team. Last-five goals and season goals scored dipped under 41%.",
+        "Rest and congestion looked plausible in conversation but collapsed once ties became draw tips. When both sides had similar schedules, the rule kept calling 1-1, which is rarely the result in top-flight football."
+      ]
+    },
+    {
+      "id": "why-we-blend",
+      "heading": "Why the site blends signals instead",
+      "paragraphs": [
+        "Soccer Stats Hub does not try to mimic the shortest price with a single column. The prediction engine estimates a scoreline and the probability around it from many inputs at once, including draws when the match picture supports them.",
+        "That is the same philosophy described in our article on how we predict a game: walk the competition's completed fixtures, build attack and defence from match-level stats, layer in xG, form windows, home and away splits, then turn expected goals into a scoreline and 1X2 probabilities. One factor might nudge the verdict. It does not carry the whole match.",
+        "If you only ever trust possession, you will miss the team that defends deep and scores on the break. If you only ever trust table position, you will miss the fixture where the league standing lies. The experiment is a reminder of why each fixture page on Soccer Stats Hub lays out the full picture: side-by-side stats, form charts, xG and shot trends, rest and schedule context, and the model probability sitting next to the market price rather than a single headline number.",
+        "We always recommend doing your own research on that page before you lean on a tip. Use the graphs and comparison tables to see where the two teams actually diverge, then decide whether the prediction matches the match you are watching. The model is a starting point. Your read of the numbers is what turns it into a view you can trust."
+      ]
+    },
+    {
+      "id": "limits",
+      "heading": "Keeping the test in proportion",
+      "paragraphs": [
+        "This was a deliberately naive test. Real analysts combine metrics with context, and the production model adds opponent strength, score distribution work and probability calibration that a one-line rule cannot copy.",
+        "Hit rate alone also ignores price. The favourite can be right often enough and still be a poor bet at the odds offered. That is why we publish work like the [Soccer Stats Hub backtest results](/articles/soccer-stats-hub-backtest-results/) on the blended model, why the site surfaces ROI-style comparisons alongside probability, and why we treat bookmaker prices as research context rather than as instructions.",
+        "Still, for anyone asking how to predict a football match, the honest answer from this run is boring in a useful way: start with the market, respect that no single column from the sheet replaces it, and only then ask what your model adds on top."
+      ]
+    }
+  ],
+  "outro": [
+    "Open a fixture on Soccer Stats Hub when you want the blended view: probabilities, context and prices in one place. Use Customise Tips if you prefer a shorter board. The naive rules in this article are a stress test, not a replacement for doing the full homework."
+  ],
+  "relatedLinks": [
+    {
+      "label": "How we predict a game",
+      "href": "/articles/how-we-predict-a-game/"
+    },
+    {
+      "label": "Soccer Stats Hub backtest results",
+      "href": "/articles/soccer-stats-hub-backtest-results/"
+    },
+    {
+      "label": "Methodology",
+      "href": "/methodology/"
+    },
+    {
+      "label": "Articles",
+      "href": "/articles/"
+    }
+  ]
+}
