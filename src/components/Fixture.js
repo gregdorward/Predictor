@@ -27,6 +27,10 @@ import { useFixturePredictionUnlock } from "../logic/useFixturePredictionUnlock"
 import { isFeaturedFreeFixture } from "../logic/featuredFreeFixture";
 import FeaturedFreeBadge from "./FeaturedFreeBadge";
 import { useAuth } from "../logic/authProvider";
+import AdSenseUnit from "./AdSenseUnit";
+import JourneyContentBreak from "./JourneyContentBreak";
+import { ADSENSE_SLOTS } from "../constants/adsense";
+import { getListAdSlotIndex } from "../utils/adInsertion";
 
 let resultValue;
 var count;
@@ -856,8 +860,26 @@ const List = ({
     );
   };
 
-  const renderFixtureListItems = (list) =>
-    list.map((fixture) => renderSingleFixture(fixture));
+  const renderFixtureListItems = (list) => {
+    const items = [];
+    list.forEach((fixture, index) => {
+      items.push(renderSingleFixture(fixture));
+      const adSlot = getListAdSlotIndex(index);
+      if (adSlot != null) {
+        items.push(
+          <li key={`fixture-list-ad-${adSlot}`} className="FixtureList-ad">
+            <AdSenseUnit
+              slot={ADSENSE_SLOTS.HOME_MID_CONTENT}
+              variant="inArticle"
+              placementId={`home-fixture-list-${adSlot}`}
+              lazy
+            />
+          </li>
+        );
+      }
+    });
+    return items;
+  };
 
   return mock === true ? (
     <>
@@ -886,6 +908,10 @@ const List = ({
         <div id="Headers"></div>
         <p className="InstructionalDiv">Generate predictions and click on any fixture for unparalleled insight</p>
         <p className="InstructionalDiv">Predictions and full stats only available for fixtures where each team have played at least 3 games</p>
+        <JourneyContentBreak
+          slot={ADSENSE_SLOTS.HOME_MID_CONTENT}
+          placementId="home-above-fixture-list"
+        />
         <ul className="FixtureList">
           {renderFixtureListItems(
             showShortlist ? selectedFixtures : fixtures

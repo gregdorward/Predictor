@@ -3,7 +3,6 @@ import dynamic from "next/dynamic";
 import DataCitation from "./DataCitation";
 import SiteHeader from "./SiteHeader";
 import JourneyContentBreak from "./JourneyContentBreak";
-import { requestJourneyContentRefresh } from "../utils/journeyContentRefresh";
 import {
   COMPARISON_METRICS,
   formatMetricValue,
@@ -66,11 +65,6 @@ export default function CompetitionsCompare({ overview }) {
   }, [competitions, sort]);
 
   const updated = formatUpdated(overview?.generatedAt);
-
-  useEffect(() => {
-    if (!competitions.length || process.env.NODE_ENV !== "production") return;
-    requestJourneyContentRefresh();
-  }, [competitions.length]);
 
   function toggleSort(column) {
     setSort((current) =>

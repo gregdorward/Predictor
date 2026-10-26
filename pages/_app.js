@@ -5,6 +5,7 @@ import store from "../src/logic/store";
 import { AuthProvider } from "../src/logic/authProvider";
 import { initTheme } from "../src/utils/theme";
 import { loadThirdPartyScripts } from "../src/utils/loadThirdPartyScripts";
+import GoogleAdSenseScript from "../src/components/GoogleAdSenseScript";
 import reportWebVitals from "../src/reportWebVitals";
 import "../src/index.css";
 import "../src/styles/home-guest-landing-polish.css";
@@ -57,6 +58,7 @@ export default function MyApp({ Component, pageProps }) {
             content="width=device-width, initial-scale=1, viewport-fit=cover"
           />
         </Head>
+        <GoogleAdSenseScript />
         <Component {...pageProps} />
       </AuthProvider>
     </Provider>

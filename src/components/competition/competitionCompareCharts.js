@@ -12,7 +12,6 @@ import { staggeredBars } from "../charts/chartMotion";
 import ShareableVisual from "../ShareableVisual";
 import { sanitizeImageFilename } from "../../utils/captureElementImage";
 import JourneyContentBreak from "../JourneyContentBreak";
-import { requestJourneyContentRefresh } from "../../utils/journeyContentRefresh";
 import { uniqueTeamAbbreviations } from "../../utils/competitionTeamLabels";
 import { getSofaScoreIdForSeason } from "./competitionUtils";
 import {
@@ -695,11 +694,6 @@ function LeagueStyleMap({ competitions }) {
 }
 
 export default function CompetitionCompareCharts({ competitions = [] }) {
-  useEffect(() => {
-    if (!competitions.length || process.env.NODE_ENV !== "production") return;
-    requestJourneyContentRefresh();
-  }, [competitions.length]);
-
   if (!competitions.length) return null;
 
   return (

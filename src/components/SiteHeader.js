@@ -1,14 +1,28 @@
+import { useRouter } from "next/router";
 import Logo from "./Logo";
 import HamburgerMenu from "./HamburgerMenu";
 import ThemeToggle from "./DarkModeToggle";
 import WorldCupBanner from "./WorldCupBanner";
 import Footer from "./Footer";
+import AdSenseUnit from "./AdSenseUnit";
+import { ADSENSE_SLOTS } from "../constants/adsense";
 
-/** Empty-ish rail for Mediavine Journey sticky sidebar (≥300px at ≥1280px). */
-function JourneySidebar() {
+function AdSidebar() {
+  const router = useRouter();
+  const path = router.asPath || "";
+  const showRailAd =
+    path.startsWith("/fixture") || path.startsWith("/competition");
+
   return (
     <aside id="ssh-sidebar" className="SshSidebar" aria-label="Sponsored">
       <p className="SshSidebar__label">Sponsored</p>
+      {showRailAd ? (
+        <AdSenseUnit
+          slot={ADSENSE_SLOTS.FIXTURE_PAGE_DISPLAY}
+          variant="display"
+          placementId="sidebar-rail"
+        />
+      ) : null}
     </aside>
   );
 }
@@ -20,7 +34,7 @@ function wrapWithSidebar(children) {
       {/* Matches sidebar width so main content stays optically centred. */}
       <div className="SshPageShell__balance" aria-hidden="true" />
       <div className="SshPageShell__main">{children}</div>
-      <JourneySidebar />
+      <AdSidebar />
     </div>
   );
 }

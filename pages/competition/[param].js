@@ -1,6 +1,7 @@
 import dynamic from "next/dynamic";
 import PageMeta from "../../src/components/PageMeta";
 import JourneyContentBreak from "../../src/components/JourneyContentBreak";
+import { ADSENSE_SLOTS } from "../../src/constants/adsense";
 import JsonLd from "../../src/components/JsonLd";
 import SiteHeader from "../../src/components/SiteHeader";
 import CompetitionSeoShell, {
@@ -80,7 +81,11 @@ export default function CompetitionByParam({
       >
         <div id="ssh-content" className="journey-content">
           <CompetitionSeoShell {...seoShell} />
-          <JourneyContentBreak />
+          <JourneyContentBreak
+            slot={ADSENSE_SLOTS.COMPETITION_PAGE_DISPLAY}
+            variant="display"
+            placementId="competition-above-fold"
+          />
           <CompetitionPage
             seasonId={seasonId}
             skipHero
@@ -90,7 +95,10 @@ export default function CompetitionByParam({
             initialCupFixtures={initialCupFixtures}
             initialCupPhaseTableViews={initialCupPhaseTableViews}
           />
-          <JourneyContentBreak />
+          <JourneyContentBreak
+            slot={ADSENSE_SLOTS.COMPETITION_PAGE_IN_ARTICLE}
+            placementId="competition-after-ui"
+          />
           <CompetitionSeoExtras {...seoShell} />
         </div>
       </SiteHeader>

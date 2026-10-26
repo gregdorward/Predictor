@@ -2,6 +2,13 @@ import { render } from "@testing-library/react";
 import CompetitionsIndexMain from "./CompetitionsIndexMain";
 import FixturesIndexMain from "./FixturesIndexMain";
 
+jest.mock("./AdSenseUnit", () => ({
+  __esModule: true,
+  default: function MockAdSenseUnit() {
+    return null;
+  },
+}));
+
 function countDirectContentAdSlots(container) {
   return container.querySelectorAll(
     "#ssh-content > .FixturePage-contentBreak--adSlot"
@@ -52,7 +59,7 @@ describe("index Journey break markers", () => {
       </main>
     );
 
-    expect(countDirectContentAdSlots(container)).toBe(3);
+    expect(countDirectContentAdSlots(container)).toBe(4);
   });
 
   it("adds sparse direct break markers between competition groups", () => {

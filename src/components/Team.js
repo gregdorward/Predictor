@@ -23,6 +23,7 @@ import { useFixturePredictionUnlock } from "../logic/useFixturePredictionUnlock"
 import FeaturedFreeBadge from "./FeaturedFreeBadge";
 import { FREE_DAILY_PREDICTION_LIMIT } from "../logic/freePredictionAllowance";
 import JourneyContentBreak from "./JourneyContentBreak";
+import { ADSENSE_SLOTS } from "../constants/adsense";
 import FixtureFootyStatsFallback from "./FixtureFootyStatsFallback";
 import FixtureMarketsSnapshot from "./FixtureMarketsSnapshot";
 import FixtureSocialShareCard from "./FixtureSocialShareCard";
@@ -743,6 +744,11 @@ function TeamPage({ matchId, seoShell = null }) {
         />
       ) : null}
 
+      <JourneyContentBreak
+        slot={ADSENSE_SLOTS.FIXTURE_PAGE_TOP}
+        placementId="fixture-page-top"
+      />
+
       <p className="FixturePage-homeStatsNote">
         Looking for more? The{" "}
         <a href="/">homepage</a> has more extensive match stats for this game,
@@ -763,6 +769,12 @@ function TeamPage({ matchId, seoShell = null }) {
           {matchId && match ? (
             <FixtureSeasonStats match={match} statsFullAccess={fullAccess} />
           ) : null}
+
+          <JourneyContentBreak
+            slot={ADSENSE_SLOTS.FIXTURE_PAGE_DISPLAY}
+            variant="display"
+            placementId="fixture-page-mid-display"
+          />
 
           <JourneyContentBreak>
             {homeName} and {awayName} compared on attacking and defensive strength.

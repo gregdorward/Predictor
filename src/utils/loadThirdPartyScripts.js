@@ -1,33 +1,3 @@
-import { JOURNEY_SCRIPT_SRC } from "../constants/journeyAds";
-import { requestJourneyContentRefresh } from "./journeyContentRefresh";
-
-function loadJourneyAds() {
-  if (window.__sshJourneyLoaded) return;
-  window.__sshJourneyLoaded = true;
-
-  const template = document.getElementById("ssh-mediavine-snippet");
-  const fromTemplate = template?.content?.firstElementChild;
-  const onJourneyReady = () => {
-    requestJourneyContentRefresh();
-  };
-
-  if (fromTemplate?.tagName === "SCRIPT") {
-    const live = fromTemplate.cloneNode(true);
-    live.addEventListener("load", onJourneyReady, { once: true });
-    document.head.appendChild(live);
-    return;
-  }
-
-  const script = document.createElement("script");
-  script.type = "text/javascript";
-  script.async = true;
-  script.setAttribute("data-noptimize", "1");
-  script.setAttribute("data-cfasync", "false");
-  script.src = JOURNEY_SCRIPT_SRC;
-  script.addEventListener("load", onJourneyReady, { once: true });
-  document.head.appendChild(script);
-}
-
 function loadGrow() {
   if (window.__sshGrowLoaded) return;
   window.__sshGrowLoaded = true;
@@ -124,7 +94,6 @@ function loadGA() {
 export function loadThirdPartyScripts() {
   if (typeof window === "undefined" || window.__sshThirdPartyLoaded) return;
   window.__sshThirdPartyLoaded = true;
-  loadJourneyAds();
   loadGrow();
   startGrowA11yPatch();
   loadGA();

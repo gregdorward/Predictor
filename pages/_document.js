@@ -2,21 +2,6 @@ import React from "react";
 import Document, { Html, Head, Main, NextScript } from "next/document";
 import { ServerStyleSheets } from "@material-ui/core/styles";
 import GUEST_LANDING_CRITICAL_CSS from "../src/critical/guestLandingCriticalCss";
-import {
-  JOURNEY_ADS_SNIPPET,
-  JOURNEY_SCRIPT_SRC,
-} from "../src/constants/journeyAds";
-
-// Mediavine's verification crawler reads the served HTML and looks for their
-// Ad Setup snippet verbatim. React serialises async={true} as async="" and
-// next/script injects client-side, so neither renders a matching tag. The
-// snippet is emitted as raw HTML instead, escaping out of an empty <script>
-// so the surrounding markup stays valid.
-
-// Keep the Mediavine snippet in the HTML for their verification crawler,
-// but inert until after hydration. A live head script mutates the DOM
-// (mv-ad-box rails) before React hydrates, which throws on these pages.
-const JOURNEY_ADS_HTML = `</script><template id="ssh-mediavine-snippet">${JOURNEY_ADS_SNIPPET}</template><script>`;
 
 class SiteHead extends Head {
   getCssLinks(files) {
@@ -167,16 +152,9 @@ export default class MyDocument extends Document {
           <style dangerouslySetInnerHTML={{ __html: FONT_AND_SPLASH_CSS }} />
           {/* eslint-disable-next-line react/no-danger */}
           <style dangerouslySetInnerHTML={{ __html: GUEST_LANDING_CRITICAL_CSS }} />
-          <link rel="preconnect" href="https://scripts.scriptwrapper.com" />
-          <link rel="preload" href={JOURNEY_SCRIPT_SRC} as="script" />
-          <link rel="preconnect" href="https://scripts.journeymv.com" />
+          <link rel="preconnect" href="https://pagead2.googlesyndication.com" crossOrigin="anonymous" />
           <link rel="preconnect" href="https://eu-us-cdn.consentmanager.net" crossOrigin="anonymous" />
           <link rel="preconnect" href="https://eu-us.consentmanager.net" crossOrigin="anonymous" />
-          <link rel="dns-prefetch" href="https://scripts.scriptwrapper.com" />
-          <script
-            // eslint-disable-next-line react/no-danger
-            dangerouslySetInnerHTML={{ __html: JOURNEY_ADS_HTML }}
-          />
           <script
             type="module"
             // eslint-disable-next-line react/no-danger

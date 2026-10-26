@@ -2,6 +2,8 @@ import dynamic from "next/dynamic";
 import PageMeta from "../../src/components/PageMeta";
 import FixtureSeoShell from "../../src/components/FixtureSeoShell";
 import SiteHeader from "../../src/components/SiteHeader";
+import AdSenseUnit from "../../src/components/AdSenseUnit";
+import { ADSENSE_SLOTS } from "../../src/constants/adsense";
 import {
   buildFixtureMeta,
   buildFixtureSlug,
@@ -46,7 +48,19 @@ export default function FixtureByParam({
         ogImage={ogImage}
         ogImageAlt={`${meta.home} vs ${meta.away} | Soccer Stats Hub`}
       />
-      <SiteHeader showThemeToggle withFooter>
+      <SiteHeader
+        showThemeToggle
+        withFooter
+        beforeFooter={
+          <div className="FixturePage-footerAd">
+            <AdSenseUnit
+              slot={ADSENSE_SLOTS.STATS_FOOTER_MULTIPLEX}
+              variant="multiplex"
+              placementId="fixture-footer-multiplex"
+            />
+          </div>
+        }
+      >
         <div id="ssh-content" className="journey-content">
           <FixtureSeoShell {...seoShell} />
           <TeamPage matchId={matchId} seoShell={seoShell} />

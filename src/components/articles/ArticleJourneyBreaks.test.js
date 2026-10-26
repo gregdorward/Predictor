@@ -4,6 +4,13 @@ import howWePredict from "../../data/articles/how-we-predict-a-game.json";
 import nonPenaltyXg from "../../data/articles/non-penalty-xg-predictions.json";
 import worldCupAwards from "../../data/articles/world-cup-2026-awards.json";
 
+jest.mock("../AdSenseUnit", () => ({
+  __esModule: true,
+  default: function MockAdSenseUnit() {
+    return null;
+  },
+}));
+
 jest.mock("../SiteHeader", () => {
   return function MockSiteHeader({ children }) {
     return <>{children}</>;

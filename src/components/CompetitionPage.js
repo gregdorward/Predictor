@@ -58,7 +58,12 @@ import {
   withXgDiff,
 } from "./competition/competitionUtils";
 import JourneyContentBreak from "./JourneyContentBreak";
-import { requestJourneyContentRefresh } from "../utils/journeyContentRefresh";
+import { ADSENSE_SLOTS } from "../constants/adsense";
+
+const competitionAdBreak = (placementId) => ({
+  slot: ADSENSE_SLOTS.COMPETITION_PAGE_IN_ARTICLE,
+  placementId,
+});
 
 function getTablesDateString() {
   return new Date().toISOString().slice(0, 10);
@@ -198,12 +203,6 @@ export default function CompetitionPage({
   useEffect(() => {
     initTheme();
   }, []);
-
-  useEffect(() => {
-    if (!data || process.env.NODE_ENV !== "production") return undefined;
-    requestJourneyContentRefresh();
-    return undefined;
-  }, [data]);
 
   useEffect(() => {
     if (!seasonId) return undefined;
@@ -481,7 +480,7 @@ export default function CompetitionPage({
             </section>
             )}
 
-            <JourneyContentBreak />
+            <JourneyContentBreak {...competitionAdBreak("competition-hub-after-hero")} />
 
             {hasConferenceSplit ? (
               <ScopeToggle
@@ -539,7 +538,7 @@ export default function CompetitionPage({
               tablesData={cupTablesData}
             />
 
-            <JourneyContentBreak />
+            <JourneyContentBreak {...competitionAdBreak("competition-hub-after-charts")} />
 
             <CompetitionTeamComparison
               seasonId={seasonId}
@@ -556,7 +555,7 @@ export default function CompetitionPage({
               }
             />
 
-            <JourneyContentBreak />
+            <JourneyContentBreak {...competitionAdBreak("competition-hub-after-compare")} />
 
             <section className="Competition__section">
               <h2 className="Competition__sectionHeading">
@@ -608,7 +607,7 @@ export default function CompetitionPage({
 
             {scopedTeams.length > 0 && (
               <>
-              <JourneyContentBreak />
+              <JourneyContentBreak {...competitionAdBreak("competition-hub-before-rankings")} />
               <section className="Competition__section">
                 <h2 className="Competition__sectionHeading">Team rankings</h2>
                 {hasConferenceSplit && conferenceScope !== CONFERENCE_SCOPE_OVERALL ? (
@@ -662,7 +661,7 @@ export default function CompetitionPage({
               </>
             )}
 
-            <JourneyContentBreak />
+            <JourneyContentBreak {...competitionAdBreak("competition-hub-before-leaders")} />
 
             <CompetitionPlayerLeaders data={data} teams={scopedTeams} />
 

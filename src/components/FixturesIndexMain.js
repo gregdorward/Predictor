@@ -1,6 +1,8 @@
 import { Fragment, useMemo, useState } from "react";
 import { groupFixturesByDate } from "../logic/fixturesIndexGroups";
 import JourneyContentBreak from "./JourneyContentBreak";
+import AdSenseUnit from "./AdSenseUnit";
+import { ADSENSE_SLOTS } from "../constants/adsense";
 
 function FixtureIndexRow({ fixture }) {
   return (
@@ -135,7 +137,15 @@ export default function FixturesIndexMain({ fixtures = [] }) {
         ) : null}
       </header>
 
-      {groups.length > 0 ? <JourneyContentBreak /> : null}
+      <AdSenseUnit
+        slot={ADSENSE_SLOTS.FIXTURES_ABOVE_FOLD}
+        variant="display"
+        placementId="fixtures-above-fold"
+      />
+
+      {groups.length > 0 ? (
+        <JourneyContentBreak placementId="fixtures-after-header" />
+      ) : null}
 
       {isFiltering && filtered.length === 0 ? (
         <p className="FixturesIndex-empty">
@@ -154,11 +164,21 @@ export default function FixturesIndexMain({ fixtures = [] }) {
           <Fragment key={group.dateKey}>
             <FixtureDateGroup group={group} />
             {shouldInsertJourneyBreak(index, groups.length) ? (
-              <JourneyContentBreak />
+              <JourneyContentBreak
+                slot={ADSENSE_SLOTS.ARTICLE_IN_ARTICLE}
+                placementId={`fixtures-day-${group.dateKey}`}
+              />
             ) : null}
           </Fragment>
         ))
       )}
+
+      {groups.length > 0 ? (
+        <JourneyContentBreak
+          slot={ADSENSE_SLOTS.FIXTURES_INDEX_BOTTOM}
+          placementId="fixtures-index-bottom"
+        />
+      ) : null}
 
       <details className="FixturesIndex-context">
         <summary className="FixturesIndex-contextSummary">About this list</summary>

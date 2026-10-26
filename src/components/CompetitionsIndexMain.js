@@ -1,5 +1,7 @@
 import { Fragment, useMemo, useState } from "react";
 import JourneyContentBreak from "./JourneyContentBreak";
+import AdSenseUnit from "./AdSenseUnit";
+import { ADSENSE_SLOTS } from "../constants/adsense";
 
 function CompetitionCard({ competition, featured: isFeatured = false }) {
   return (
@@ -180,6 +182,12 @@ export default function CompetitionsIndexMain({ sections }) {
           ) : null}
         </header>
 
+        <AdSenseUnit
+          slot={ADSENSE_SLOTS.COMPETITIONS_ABOVE_FOLD}
+          variant="display"
+          placementId="competitions-above-fold"
+        />
+
         <JourneyContentBreak>
           Pick a league for standings, BTTS and Over 2.5 stats, or open the cross-league
           comparison tool.
@@ -203,7 +211,10 @@ export default function CompetitionsIndexMain({ sections }) {
                 featured={group.featured}
               />
               {shouldInsertJourneyBreak(index, visibleGroups.length) ? (
-                <JourneyContentBreak />
+                <JourneyContentBreak
+                  slot={ADSENSE_SLOTS.COMPETITIONS_INDEX_IN_ARTICLE}
+                  placementId={`competitions-group-${group.id}`}
+                />
               ) : null}
             </Fragment>
           ))
