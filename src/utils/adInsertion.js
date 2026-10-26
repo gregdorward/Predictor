@@ -6,7 +6,8 @@ export const LIST_AD_CONFIG = {
   maxPerList: 2,
 };
 
-export function getListAdSlotIndex(itemIndex) {
+export function getListAdSlotIndex(itemIndex, itemCount) {
+  if (itemIndex >= itemCount - 1) return null;
   const { firstAfterIndex, interval, maxPerList } = LIST_AD_CONFIG;
   if (itemIndex < firstAfterIndex) return null;
   if ((itemIndex - firstAfterIndex) % interval !== 0) return null;

@@ -17020,12 +17020,21 @@ button.Competition__radarLegendItem:focus-visible {
 
 .AdSenseUnit {
   margin: 1rem 0;
-  min-height: 90px;
+  width: 100%;
+  min-width: 0;
+  min-height: 280px;
+  font-size: 1rem;
+  line-height: normal;
+  box-sizing: border-box;
 }
 
-.AdSenseUnit--placeholder,
 .AdSenseUnit--dev {
   min-height: 0;
+  margin: 0;
+}
+
+.FixturePage-contentBreak.FixturePage-contentBreak--adSlot {
+  opacity: 1;
 }
 
 .FixtureList-ad {
@@ -17035,6 +17044,7 @@ button.Competition__radarLegendItem:focus-visible {
 }
 
 .FixturePage-footerAd {
+  width: 100%;
   margin: 1.5rem auto;
   max-width: var(--content-max-width, 1400px);
   padding: 0 1rem;

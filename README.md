@@ -2,6 +2,9 @@
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
+AdSense migration setup, verification, and revenue experiments are documented in
+[docs/adsense.md](docs/adsense.md).
+
 ## Available Scripts
 
 In the project directory, you can run:

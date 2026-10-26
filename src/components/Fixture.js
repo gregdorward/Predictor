@@ -864,7 +864,7 @@ const List = ({
     const items = [];
     list.forEach((fixture, index) => {
       items.push(renderSingleFixture(fixture));
-      const adSlot = getListAdSlotIndex(index);
+      const adSlot = mock === true ? null : getListAdSlotIndex(index, list.length);
       if (adSlot != null) {
         items.push(
           <li key={`fixture-list-ad-${adSlot}`} className="FixtureList-ad">
@@ -908,10 +908,12 @@ const List = ({
         <div id="Headers"></div>
         <p className="InstructionalDiv">Generate predictions and click on any fixture for unparalleled insight</p>
         <p className="InstructionalDiv">Predictions and full stats only available for fixtures where each team have played at least 3 games</p>
-        <JourneyContentBreak
-          slot={ADSENSE_SLOTS.HOME_MID_CONTENT}
-          placementId="home-above-fixture-list"
-        />
+        {(showShortlist ? selectedFixtures : fixtures).length > 0 ? (
+          <JourneyContentBreak
+            slot={ADSENSE_SLOTS.HOME_MID_CONTENT}
+            placementId="home-above-fixture-list"
+          />
+        ) : null}
         <ul className="FixtureList">
           {renderFixtureListItems(
             showShortlist ? selectedFixtures : fixtures

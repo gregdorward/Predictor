@@ -143,10 +143,6 @@ export default function FixturesIndexMain({ fixtures = [] }) {
         placementId="fixtures-above-fold"
       />
 
-      {groups.length > 0 ? (
-        <JourneyContentBreak placementId="fixtures-after-header" />
-      ) : null}
-
       {isFiltering && filtered.length === 0 ? (
         <p className="FixturesIndex-empty">
           Try another team or league, or{" "}

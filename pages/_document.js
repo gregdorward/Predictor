@@ -2,6 +2,7 @@ import React from "react";
 import Document, { Html, Head, Main, NextScript } from "next/document";
 import { ServerStyleSheets } from "@material-ui/core/styles";
 import GUEST_LANDING_CRITICAL_CSS from "../src/critical/guestLandingCriticalCss";
+import { ADSENSE_CLIENT } from "../src/constants/adsense";
 
 class SiteHead extends Head {
   getCssLinks(files) {
@@ -137,6 +138,7 @@ export default class MyDocument extends Document {
           <link rel="apple-touch-icon" href="/logo192.png" />
           <link rel="manifest" href="/manifest.json" />
           <meta name="theme-color" content="#000000" />
+          <meta name="google-adsense-account" content={ADSENSE_CLIENT} />
           <meta
             name="msvalidate.01"
             content="6F676F15115DB2A7E13109B4A7C0BA02"
@@ -153,8 +155,6 @@ export default class MyDocument extends Document {
           {/* eslint-disable-next-line react/no-danger */}
           <style dangerouslySetInnerHTML={{ __html: GUEST_LANDING_CRITICAL_CSS }} />
           <link rel="preconnect" href="https://pagead2.googlesyndication.com" crossOrigin="anonymous" />
-          <link rel="preconnect" href="https://eu-us-cdn.consentmanager.net" crossOrigin="anonymous" />
-          <link rel="preconnect" href="https://eu-us.consentmanager.net" crossOrigin="anonymous" />
           <script
             type="module"
             // eslint-disable-next-line react/no-danger
@@ -165,7 +165,6 @@ export default class MyDocument extends Document {
             // eslint-disable-next-line react/no-danger
             dangerouslySetInnerHTML={{ __html: JSON.stringify(JSON_LD) }}
           />
-          <script data-grow-initializer="" />
         </SiteHead>
         <body>
           <script

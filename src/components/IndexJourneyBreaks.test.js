@@ -59,7 +59,7 @@ describe("index Journey break markers", () => {
       </main>
     );
 
-    expect(countDirectContentAdSlots(container)).toBe(4);
+    expect(countDirectContentAdSlots(container)).toBe(3);
   });
 
   it("adds sparse direct break markers between competition groups", () => {

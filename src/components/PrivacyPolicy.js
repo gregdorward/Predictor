@@ -14,7 +14,7 @@ const PrivacyPolicy = () => {
       <section className="mb-6">
         <h2 className="text-xl font-semibold">Privacy Policy</h2>
         <p>
-          Effective Date: 22/07/2025
+          Effective Date: 26/10/2026
 
           Your privacy is important to us. This Privacy Policy explains how we collect, use, and protect your personal information when you use our website.
 
@@ -106,6 +106,34 @@ const PrivacyPolicy = () => {
 
           7. Cookies & Tracking
           We may use cookies or similar technologies to improve your experience. You can manage your cookie preferences in your browser settings.
+        </p>
+        <h3>Google advertising</h3>
+        <p>
+          We use Google AdSense to display advertisements. Google and other
+          third-party advertising vendors may place and read cookies, use web
+          beacons, and collect IP addresses or other identifiers to serve and
+          measure ads. Advertising cookies allow Google and its partners to show
+          ads based on your previous visits to this website and other websites.
+          Where required, we ask for your consent before using cookies or
+          personal data for advertising.
+        </p>
+        <p>
+          You can manage personalised advertising in{" "}
+          <a href="https://www.google.com/settings/ads">Google Ads Settings</a>
+          {" "}and opt out of participating third-party vendors&apos; advertising
+          cookies at{" "}
+          <a href="https://www.aboutads.info/choices/">YourAdChoices</a>.
+          Read{" "}
+          <a href="https://policies.google.com/technologies/partner-sites">
+            how Google uses information from sites that use its services
+          </a>
+          {" "}and see Google&apos;s{" "}
+          <a href="https://support.google.com/adsense/answer/9012903">
+            advertising technology providers
+          </a>
+          {" "}for more information. If a consent message is shown, you can
+          revisit your choice using the privacy and cookie settings link
+          provided by that message on our site.
         </p>
         <p>
           8. Contact Us

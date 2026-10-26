@@ -7,7 +7,7 @@ export default function JourneyContentBreak({
   slot = ADSENSE_SLOTS.ARTICLE_IN_ARTICLE,
   variant = "inArticle",
   placementId = "content-break",
-  lazy = false,
+  lazy = true,
 }) {
   const hasCopy =
     children != null &&
@@ -18,7 +18,6 @@ export default function JourneyContentBreak({
     return (
       <div
         className="FixturePage-contentBreak FixturePage-contentBreak--adSlot"
-        aria-hidden="true"
       >
         <AdSenseUnit
           slot={slot}

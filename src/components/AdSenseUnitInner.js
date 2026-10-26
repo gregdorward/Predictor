@@ -1,5 +1,4 @@
 import { useEffect, useRef, useState } from "react";
-import { useRouter } from "next/router";
 import { ADSENSE_CLIENT } from "../constants/adsense";
 import { flushAdSenseAds } from "../utils/flushAdSenseAds";
 
@@ -32,15 +31,37 @@ export default function AdSenseUnitInner({
   slot,
   variant = "display",
   placementId,
-  lazy = false,
+  lazy = true,
   className = "",
 }) {
-  const router = useRouter();
   const wrapperRef = useRef(null);
   const insRef = useRef(null);
   const [visible, setVisible] = useState(!lazy);
+  const [hasWidth, setHasWidth] = useState(false);
   const attrs = VARIANT_ATTRS[variant] || VARIANT_ATTRS.display;
-  const routeKey = `${router.asPath}-${placementId}`;
+
+  useEffect(() => {
+    const el = wrapperRef.current;
+    if (!el) return undefined;
+    const measure = () => {
+      // In-article units require at least 250px. Never insert an ins into a
+      // hidden desktop rail: Google can otherwise consume its request at 0px.
+      if (el.getBoundingClientRect().width >= 250) {
+        // Keep an existing ad mounted through a resize; resizing must not
+        // recreate an already requested placement.
+        setHasWidth(true);
+        flushAdSenseAds();
+      }
+    };
+    measure();
+    if (typeof ResizeObserver !== "undefined") {
+      const observer = new ResizeObserver(measure);
+      observer.observe(el);
+      return () => observer.disconnect();
+    }
+    window.addEventListener("resize", measure);
+    return () => window.removeEventListener("resize", measure);
+  }, []);
 
   useEffect(() => {
     if (!lazy || visible) return undefined;
@@ -57,19 +78,19 @@ export default function AdSenseUnitInner({
           observer.disconnect();
         }
       },
-      { rootMargin: "200px" }
+      { rootMargin: "400px" }
     );
     observer.observe(el);
     return () => observer.disconnect();
   }, [lazy, visible]);
 
   useEffect(() => {
-    if (!visible || !slot) return undefined;
+    if (!visible || !hasWidth || !slot) return undefined;
     const el = insRef.current;
     if (!el || el.getAttribute("data-adsbygoogle-status")) return undefined;
     flushAdSenseAds();
     return undefined;
-  }, [visible, slot, router.asPath, placementId]);
+  }, [visible, hasWidth, slot]);
 
   if (process.env.NODE_ENV !== "production") {
     return (
@@ -97,12 +118,12 @@ export default function AdSenseUnitInner({
 
   return (
     <div
-      key={routeKey}
       ref={wrapperRef}
-      className={`AdSenseUnit ${className}`.trim()}
+      className={`AdSenseUnit AdSenseUnit--${variant} ${className}`.trim()}
       data-placement={placementId}
+      aria-label="Advertisement"
     >
-      {visible ? <ins {...insProps} /> : null}
+      {visible && hasWidth && slot ? <ins {...insProps} /> : null}
     </div>
   );
 }

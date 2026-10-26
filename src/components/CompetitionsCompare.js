@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import dynamic from "next/dynamic";
 import DataCitation from "./DataCitation";
 import SiteHeader from "./SiteHeader";

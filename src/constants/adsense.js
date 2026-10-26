@@ -15,3 +15,19 @@ export const ADSENSE_SLOTS = {
   COMPETITIONS_INDEX_IN_ARTICLE: "3935386867",
   FIXTURE_PAGE_TOP: "6569554999",
 };
+
+// Verified against the AdSense account's ad-unit list on 26 October 2026.
+// Slot types are configured in Google; a placement must use matching markup.
+export const ADSENSE_SLOT_VARIANTS = {
+  [ADSENSE_SLOTS.HOME_MID_CONTENT]: "inArticle",
+  [ADSENSE_SLOTS.COMPETITIONS_ABOVE_FOLD]: "display",
+  [ADSENSE_SLOTS.FIXTURES_ABOVE_FOLD]: "display",
+  [ADSENSE_SLOTS.COMPETITION_PAGE_DISPLAY]: "display",
+  [ADSENSE_SLOTS.FIXTURES_INDEX_BOTTOM]: "inArticle",
+  [ADSENSE_SLOTS.COMPETITION_PAGE_IN_ARTICLE]: "inArticle",
+  [ADSENSE_SLOTS.ARTICLE_IN_ARTICLE]: "inArticle",
+  [ADSENSE_SLOTS.STATS_FOOTER_MULTIPLEX]: "multiplex",
+  [ADSENSE_SLOTS.FIXTURE_PAGE_DISPLAY]: "display",
+  [ADSENSE_SLOTS.COMPETITIONS_INDEX_IN_ARTICLE]: "inArticle",
+  [ADSENSE_SLOTS.FIXTURE_PAGE_TOP]: "inArticle",
+};
