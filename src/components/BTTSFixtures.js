@@ -2,6 +2,7 @@ import { Fragment, useEffect, useState } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import { getBTTSFixtures, getBTTSTeams } from "../logic/getStatsInsights";
 import SiteHeader from "./SiteHeader";
+import StatsFooterAd from "./StatsFooterAd";
 import PageMeta from "./PageMeta";
 import StatPageSeoContent from "./StatPageSeoContent";
 import {
@@ -160,7 +161,7 @@ export default function BTTSFixtures({
   return (
     <Fragment>
       <PageMeta />
-      <SiteHeader withFooter>
+      <SiteHeader withFooter beforeFooter={<StatsFooterAd />}>
       <div className={`${classes.container} SubpageContent`} id="ssh-content">
         <a href="/" className={classes.homeLink}>← Back to Home</a>
 

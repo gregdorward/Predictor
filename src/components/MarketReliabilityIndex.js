@@ -2,6 +2,8 @@ import { useMemo, useState } from "react";
 import DataCitation from "./DataCitation";
 import SiteHeader from "./SiteHeader";
 import ShareableVisual from "./ShareableVisual";
+import AdSenseUnit from "./AdSenseUnit";
+import { ADSENSE_SLOTS } from "../constants/adsense";
 import {
   MRI_METRICS,
   formatCorrectlyPriced,
@@ -651,6 +653,11 @@ export default function MarketReliabilityIndex({ overview }) {
               </section>
             ) : null}
 
+            <AdSenseUnit
+              slot={ADSENSE_SLOTS.MARKET_RELIABILITY_DISPLAY}
+              placementId="market-reliability-top"
+            />
+
             <section className="MarketReliability-tableSection">
               <h2 id="leagues">Leagues ranked by price reliability</h2>
               <p className="MarketReliability-tableHint">
@@ -707,6 +714,11 @@ export default function MarketReliabilityIndex({ overview }) {
             <TeamLookup
               teams={teams}
               minFavourites={overview?.teamSearchMinFavourites || 3}
+            />
+
+            <AdSenseUnit
+              slot={ADSENSE_SLOTS.MARKET_RELIABILITY_DISPLAY}
+              placementId="market-reliability-middle"
             />
 
             {mostReliableTeams.length > 0 ? (
@@ -833,6 +845,11 @@ export default function MarketReliabilityIndex({ overview }) {
                 </ShareableVisual>
               </section>
             ) : null}
+
+            <AdSenseUnit
+              slot={ADSENSE_SLOTS.MARKET_RELIABILITY_DISPLAY}
+              placementId="market-reliability-bottom"
+            />
 
             <DataCitation
               asOf={overview?.generatedAt}

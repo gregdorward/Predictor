@@ -5,6 +5,15 @@ The publisher is `ca-pub-2835838153738108`. Slot IDs live in
 The account meta tag in `_document.js` supports site verification without
 running ad code before React hydrates.
 
+The Market Reliability Index uses display slot `5980166475` in three places:
+above the league rankings, after the team lookup, and below the team tables.
+These placements render only when the league dataset is available and stay
+outside the shareable table captures.
+
+The stats hubs (`/fixtureshigh/`, `/highest-scoring-leagues/`, and
+`/bttsfixtures/`) each render Multiplex slot `2211241657` below their content,
+before the site footer, through `StatsFooterAd`. It uses `autorelaxed` format.
+
 ## Before deploying the Journey migration
 
 - In AdSense → Sites, confirm `soccerstatshub.com` is ready to serve ads and its

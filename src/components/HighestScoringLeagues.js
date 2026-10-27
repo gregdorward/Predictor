@@ -2,6 +2,7 @@ import { Fragment, useEffect, useState } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import { getHighestScoringLeagues, getLowestScoringLeagues } from "../logic/getStatsInsights";
 import SiteHeader from "./SiteHeader";
+import StatsFooterAd from "./StatsFooterAd";
 import DataCitation from "./DataCitation";
 import PageMeta from "./PageMeta";
 import StatPageSeoContent from "./StatPageSeoContent";
@@ -153,7 +154,7 @@ export default function HighestScoringLeagues({
   return (
     <Fragment>
       <PageMeta />
-      <SiteHeader withFooter>
+      <SiteHeader withFooter beforeFooter={<StatsFooterAd />}>
         <div className={`${classes.container} SubpageContent`} id="ssh-content">
           <a href="/" className={classes.homeLink}>Back to Home</a>
 
