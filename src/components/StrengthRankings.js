@@ -1,6 +1,7 @@
 import { Fragment, useState } from "react";
 import SiteHeader from "./SiteHeader";
 import {
+  LOWER_LEAGUE_PULL_STEP,
   NAMED_LEAGUE_PULLS,
   OTHER_LEAGUE_PULL,
   groupDomesticLeagues,
@@ -484,7 +485,7 @@ export default function StrengthRankings({ overview, preview = false }) {
             ? "Where ClubElo does not publish a division average, that figure steps down 100 points from the division above."
             : null}
           {bigLeaguePull
-            ? ` La Liga is moved ${Math.round(NAMED_LEAGUE_PULLS["la-liga"] * 100)}% of the way from its ClubElo average toward the Premier League. Ligue 1, Serie A and the Bundesliga are moved ${Math.round(NAMED_LEAGUE_PULLS["ligue-1"] * 100)}%. Brazil Serie A is moved ${Math.round(NAMED_LEAGUE_PULLS["brazil-serie-a"] * 100)}%. Every other competition is moved ${Math.round(OTHER_LEAGUE_PULL * 100)}% of the way.`
+            ? ` La Liga, Ligue 1 and the Bundesliga are moved ${Math.round(NAMED_LEAGUE_PULLS["la-liga"] * 100)}% of the way from their ClubElo average toward the Premier League. Serie A is moved ${Math.round(NAMED_LEAGUE_PULLS["serie-a"] * 100)}%. Brazil Serie A is moved ${Math.round(NAMED_LEAGUE_PULLS["brazil-serie-a"] * 100)}%. Argentina, the Segunda Division, the Belgian Pro League and the Championship are moved ${Math.round(OTHER_LEAGUE_PULL * 100)}%. Each competition below the Championship is moved ${Math.round(LOWER_LEAGUE_PULL_STEP * 100)} percentage point${Math.round(LOWER_LEAGUE_PULL_STEP * 100) === 1 ? "" : "s"} less than the one above. National League North and South share the same figure.`
             : null}
         </p>
         <p className={styles.note}>

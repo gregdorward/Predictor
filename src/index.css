@@ -13736,6 +13736,10 @@ h5.section-title {
   white-space: nowrap;
 }
 
+.WC26Banner__label--long {
+  display: none;
+}
+
 .WC26Banner__sub {
   display: none;
   font-size: 0.65rem;
@@ -13788,6 +13792,14 @@ h5.section-title {
   .WC26Banner__sub {
     display: inline;
     font-size: 0.7rem;
+  }
+
+  .WC26Banner__label--short {
+    display: none;
+  }
+
+  .WC26Banner__label--long {
+    display: inline;
   }
 
   .WC26Banner__cta {

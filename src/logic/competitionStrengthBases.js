@@ -15,25 +15,37 @@
  * National League, National League North/South, the Scottish lower leagues,
  * and 3. Liga.
  *
- * La Liga is then drawn 85% of the way from that ClubElo average toward the
- * Premier League. Ligue 1, Serie A and the Bundesliga are drawn 80%. Brazil
- * Serie A is drawn 70%. Every other division is drawn 65%. `clubElo` keeps
- * the published figure. `base` is the number the ranking starts from.
+ * La Liga, Ligue 1 and the Bundesliga are then drawn 85% of the way from that
+ * ClubElo average toward the Premier League. Serie A is drawn 80%. Brazil
+ * Serie A is drawn 70%. The rest of the top 10, down to the Championship,
+ * are drawn 65%. Each division below that is drawn 1 percentage point less
+ * than the one above. National League North and South share one step. The
+ * pull does not go below zero. `clubElo` keeps the published figure. `base`
+ * is the number the ranking starts from.
  */
 
 /** Share of the gap to the Premier League closed for named leagues. */
 export const NAMED_LEAGUE_PULLS = {
   "la-liga": 0.85,
-  "ligue-1": 0.8,
+  "ligue-1": 0.85,
+  "bundesliga": 0.85,
   "serie-a": 0.8,
-  "bundesliga": 0.8,
   "brazil-serie-a": 0.7,
 };
 
-/** Share of the gap closed for every division without a named pull. */
+/** Share of the gap closed for the rest of the top 10, down to the Championship. */
 export const OTHER_LEAGUE_PULL = 0.65;
 
-/** @typedef {{ id: number, slug: string, name: string, base: number, clubElo?: number, source: "clubelo" | "step-down" }} StrengthLeague */
+/** How many divisions, counted by ClubElo, keep a fixed pull before the taper. */
+export const TOP_LEAGUE_COUNT = 10;
+
+/** Drop in pull, as a share of the gap, for each division below the top 10. */
+export const LOWER_LEAGUE_PULL_STEP = 0.01;
+
+/** Parallel divisions that take the same step rather than tapering between them. */
+const SHARED_PULL_SLUGS = ["national-league-north", "national-league-south"];
+
+/** @typedef {{ id: number, slug: string, name: string, base: number, pull?: number, clubElo?: number, source: "clubelo" | "step-down" }} StrengthLeague */
 
 /** @type {StrengthLeague[]} Domestic leagues in homepage leagueOrder. `base` is ClubElo until the pull below. */
 const CLUB_ELO_LEAGUES = [
@@ -88,14 +100,44 @@ const CLUB_ELO_LEAGUES = [
 
 const PREMIER_BASE = CLUB_ELO_LEAGUES.find((league) => league.slug === "premier-league").base;
 
+function pullBySlug() {
+  const ranked = [...CLUB_ELO_LEAGUES].sort(
+    (a, b) => b.base - a.base || a.name.localeCompare(b.name)
+  );
+  const pulls = new Map();
+  ranked.slice(0, TOP_LEAGUE_COUNT).forEach((league) => {
+    if (league.slug === "premier-league") return;
+    const percent = Math.round((NAMED_LEAGUE_PULLS[league.slug] ?? OTHER_LEAGUE_PULL) * 100);
+    pulls.set(league.slug, percent / 100);
+  });
+
+  let percent = Math.round(OTHER_LEAGUE_PULL * 100);
+  let previousSlug = null;
+  ranked.slice(TOP_LEAGUE_COUNT).forEach((league) => {
+    const sharesStep =
+      previousSlug &&
+      SHARED_PULL_SLUGS.includes(previousSlug) &&
+      SHARED_PULL_SLUGS.includes(league.slug);
+    if (!sharesStep) {
+      percent = Math.max(0, percent - Math.round(LOWER_LEAGUE_PULL_STEP * 100));
+    }
+    pulls.set(league.slug, percent / 100);
+    previousSlug = league.slug;
+  });
+  return pulls;
+}
+
+const LEAGUE_PULLS = pullBySlug();
+
 /** @type {StrengthLeague[]} */
 export const DOMESTIC_STRENGTH_LEAGUES = CLUB_ELO_LEAGUES.map((league) => {
   const clubElo = league.base;
   if (league.slug === "premier-league") return { ...league, clubElo };
-  const pull = NAMED_LEAGUE_PULLS[league.slug] ?? OTHER_LEAGUE_PULL;
+  const pull = LEAGUE_PULLS.get(league.slug);
   return {
     ...league,
     clubElo,
+    pull,
     base: Math.round(clubElo + pull * (PREMIER_BASE - clubElo)),
   };
 });

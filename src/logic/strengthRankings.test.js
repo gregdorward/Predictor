@@ -1,6 +1,9 @@
 import {
+  DOMESTIC_STRENGTH_LEAGUES,
+  LOWER_LEAGUE_PULL_STEP,
   NAMED_LEAGUE_PULLS,
   OTHER_LEAGUE_PULL,
+  TOP_LEAGUE_COUNT,
   countryForStrengthLeague,
   getDomesticStrengthLeague,
   groupDomesticLeagues,
@@ -70,19 +73,22 @@ describe("competition strength bases", () => {
     expect(premier.base).toBeGreaterThan(serieB.base);
   });
 
-  test("pulls named leagues toward the Premier League and leaves the rest at 65%", () => {
+  test("pulls the top 10 toward the Premier League and tapers every league below", () => {
     const premier = getDomesticStrengthLeague(17146);
     expect(NAMED_LEAGUE_PULLS["la-liga"]).toBe(0.85);
-    expect(NAMED_LEAGUE_PULLS["ligue-1"]).toBe(0.8);
+    expect(NAMED_LEAGUE_PULLS["ligue-1"]).toBe(0.85);
+    expect(NAMED_LEAGUE_PULLS["bundesliga"]).toBe(0.85);
     expect(NAMED_LEAGUE_PULLS["serie-a"]).toBe(0.8);
-    expect(NAMED_LEAGUE_PULLS["bundesliga"]).toBe(0.8);
     expect(NAMED_LEAGUE_PULLS["brazil-serie-a"]).toBe(0.7);
     expect(OTHER_LEAGUE_PULL).toBe(0.65);
+    expect(LOWER_LEAGUE_PULL_STEP).toBe(0.01);
+    expect(TOP_LEAGUE_COUNT).toBe(10);
     expect(premier.base).toBe(1838);
 
     for (const id of [17199, 17102, 17084, 17210, 16544]) {
       const league = getDomesticStrengthLeague(id);
       const pull = NAMED_LEAGUE_PULLS[league.slug];
+      expect(league.pull).toBe(pull);
       expect(league.base).toBe(
         Math.round(league.clubElo + pull * (premier.base - league.clubElo))
       );
@@ -90,12 +96,31 @@ describe("competition strength bases", () => {
       expect(league.base).toBeLessThan(premier.base);
     }
 
-    for (const id of [17184, 17404, 17279]) {
-      const league = getDomesticStrengthLeague(id);
+    const ranked = [...DOMESTIC_STRENGTH_LEAGUES].sort(
+      (a, b) => b.clubElo - a.clubElo || a.name.localeCompare(b.name)
+    );
+    expect(ranked[TOP_LEAGUE_COUNT - 1].slug).toBe("championship");
+    expect(ranked[TOP_LEAGUE_COUNT - 1].pull).toBe(OTHER_LEAGUE_PULL);
+
+    const shared = new Set(["national-league-north", "national-league-south"]);
+    let expectedPercent = Math.round(OTHER_LEAGUE_PULL * 100);
+    let previousSlug = null;
+    ranked.slice(TOP_LEAGUE_COUNT).forEach((league) => {
+      const sharesStep = previousSlug && shared.has(previousSlug) && shared.has(league.slug);
+      if (!sharesStep) {
+        expectedPercent = Math.max(0, expectedPercent - Math.round(LOWER_LEAGUE_PULL_STEP * 100));
+      }
+      expect(Math.round(league.pull * 100)).toBe(expectedPercent);
       expect(league.base).toBe(
-        Math.round(league.clubElo + OTHER_LEAGUE_PULL * (premier.base - league.clubElo))
+        Math.round(league.clubElo + league.pull * (premier.base - league.clubElo))
       );
-    }
+      previousSlug = league.slug;
+    });
+
+    const north = getDomesticStrengthLeague(17263);
+    const south = getDomesticStrengthLeague(17403);
+    expect(north.pull).toBe(south.pull);
+    expect(north.base).toBe(south.base);
   });
 
   test("steps the National League down from League Two", () => {
