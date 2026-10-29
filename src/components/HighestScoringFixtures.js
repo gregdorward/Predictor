@@ -3,6 +3,7 @@ import { makeStyles } from "@material-ui/core/styles";
 import { getHighestScoringFixtures, getHighestScoringTeams } from "../logic/getStatsInsights";
 import SiteHeader from "./SiteHeader";
 import StatsFooterAd from "./StatsFooterAd";
+import StatsInContentAd from "./StatsInContentAd";
 import PageMeta from "./PageMeta";
 import StatPageSeoContent from "./StatPageSeoContent";
 import {
@@ -113,6 +114,7 @@ export default function HighestScoringFixtures({
       <PageMeta />
       <SiteHeader withFooter beforeFooter={<StatsFooterAd />}>
       <div className={`${classes.container} SubpageContent`} id="ssh-content">
+        <StatsInContentAd />
         <a href="/" className={classes.homeLink}>← Back to Home</a>
         
         <h1>Goal Potential Insights</h1>
