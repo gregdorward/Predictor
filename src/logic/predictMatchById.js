@@ -22,6 +22,7 @@ import { resolveLeagueResultsForCompetition } from "./leagueResultsLoader";
 import { buildFixtureHeadToHead } from "./fixturePageH2h";
 import { fetchFixtureSeasonStats } from "./fetchFixtureSeasonStats";
 import { resolveFootyStatsLeagueId } from "../seo/competitionCatalog";
+import { lookupFixtureStrength } from "./strengthRankings";
 import {
   mergeFormEntry,
   mergeLeagueResults,
@@ -166,6 +167,20 @@ export async function predictMatchById(matchId) {
 
   match.headToHead = buildFixtureHeadToHead(fixture);
   match.seasonStats = await fetchFixtureSeasonStats(match);
+  try {
+    const strengthResponse = await fetch("/api/strength-rankings-lookup/");
+    if (strengthResponse.ok) {
+      const strength = lookupFixtureStrength(await strengthResponse.json(), {
+        leagueId: match.leagueID,
+        homeName: match.homeTeam,
+        awayName: match.awayTeam,
+      });
+      match.homeStrength = strength.home;
+      match.awayStrength = strength.away;
+    }
+  } catch (strengthError) {
+    console.warn("Strength lookup unavailable", strengthError);
+  }
   match.featuredFixtureId = featuredFixtureId;
   match.isFeaturedFree = isFeaturedFreeFixture(match.id, featuredFixtureId);
 

@@ -151,6 +151,17 @@ function Stats(props) {
                   {`League position: ${statDisplay(props.leaguePosition)}`}
                 </li>
                   <li
+                    key="StrengthRating"
+                    className={`StrengthRating ${getComparisonClass("strengthRating")}${props.homeOrAway}`}
+                    data-cy={props.name ? props.name + "strengthRating" : "strengthRating"}
+                  >
+                    {`Strength, last six: ${
+                      Number.isFinite(Number(props.strengthRating))
+                        ? `${props.strengthRating}${props.strengthChangeLabel ? ` (${props.strengthChangeLabel})` : ""}`
+                        : statDisplay(props.strengthRating)
+                    }`}
+                  </li>
+                  <li
                     key="TeamScored"
                     className={`TeamScored ${getComparisonClass('goals')}${props.homeOrAway}`}
                     data-cy={props.name ? props.name + "teamScored" : "teamScored"}

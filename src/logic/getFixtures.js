@@ -24,6 +24,7 @@ import { resolveMultiDivisionLeagueTables } from "../utils/multiDivisionLeagueTa
 import { resolveConferenceLeagueTeams } from "../components/competition/competitionLeagueTable";
 import { apiGetUrl } from "../utils/apiUrl";
 import { resolveFootyStatsLeagueId } from "../seo/competitionCatalog";
+import { lookupFixtureStrength } from "./strengthRankings";
 import { getFeaturedFixtureId } from "./featuredFreeFixture";
 import { persistLeagueResults } from "../utils/persistLeagueResults";
 import {
@@ -1425,6 +1426,14 @@ export async function generateFixtures(
 
     clearRender("GeneratePredictions");
 
+    let strengthLookup = null;
+    try {
+      const strengthResponse = await fetch("/api/strength-rankings-lookup/");
+      if (strengthResponse.ok) strengthLookup = await strengthResponse.json();
+    } catch (strengthError) {
+      console.warn("Strength lookup unavailable", strengthError);
+    }
+
     for (let i = 0; i < orderedLeagues.length; i++) {
       leagueID = orderedLeagues[i].element.id;
       leagueGames = fixtureArray.filter(
@@ -2126,6 +2135,14 @@ export async function generateFixtures(
         if (formEntry?.oddsTimeline) {
           match.oddsTimeline = formEntry.oddsTimeline;
         }
+
+        const strength = lookupFixtureStrength(strengthLookup, {
+          leagueId: match.leagueID,
+          homeName: match.homeTeam,
+          awayName: match.awayTeam,
+        });
+        match.homeStrength = strength.home;
+        match.awayStrength = strength.away;
 
         // if (match.status !== "canceled" || match.status !== "suspended") {
         matches.push(match);

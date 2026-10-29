@@ -40,6 +40,7 @@ import { clicked } from "../logic/getScorePredictions";
 import { hasKickoffPassed } from "../logic/freezePredictedScoreline";
 import { getPointsFromLastX } from "../utils/getPointsFromLastX";
 import { arrayOfGames } from "../logic/getFixtures";
+import { formatStrengthChange } from "../logic/strengthRankings";
 import GenerateFormSummary from "../logic/compareFormTrend";
 import { checkUserPaidStatus } from "../logic/hasUserPaid";
 import { getPointAverage } from "../logic/getStats";
@@ -2843,6 +2844,10 @@ function GameStats({
         ? formDataHome[0].leaguePosition
         : undefined
     ),
+    strengthRating: Number.isFinite(Number(game.homeStrength?.rating))
+      ? Number(game.homeStrength.rating)
+      : undefined,
+    strengthChangeLabel: formatStrengthChange(game.homeStrength?.change),
     rawPosition: leaguePositionOrDash(
       game.homeRawPosition !== undefined &&
         game.homeRawPosition !== "undefined"
@@ -2907,6 +2912,10 @@ function GameStats({
         ? formDataAway[0].leaguePosition
         : undefined
     ),
+    strengthRating: Number.isFinite(Number(game.awayStrength?.rating))
+      ? Number(game.awayStrength.rating)
+      : undefined,
+    strengthChangeLabel: formatStrengthChange(game.awayStrength?.change),
     rawPosition: leaguePositionOrDash(game.awayRawPosition),
     homeOrAwayLeaguePosition: leaguePositionOrDash(
       awayForm.awayPositionAwayOnly !== undefined &&
@@ -2991,6 +3000,12 @@ function GameStats({
             LeagueOrAll={formDataHome[0].LeagueOrAll}
             className={"KeyStatsHome"}
             name={formDataHome[0].name}
+            strengthRating={
+              Number.isFinite(Number(game.homeStrength?.rating))
+                ? Number(game.homeStrength.rating)
+                : undefined
+            }
+            strengthChangeLabel={formatStrengthChange(game.homeStrength?.change)}
             goals={homeLast5LeagueStats.goals}
             conceeded={homeLast5LeagueStats.conceeded}
             XG={homeLast5LeagueStats.XG}
@@ -3068,6 +3083,12 @@ function GameStats({
             className={"KeyStatsAway"}
             classNameTwo={"FormStatsAway"}
             name={formDataAway[0].name}
+            strengthRating={
+              Number.isFinite(Number(game.awayStrength?.rating))
+                ? Number(game.awayStrength.rating)
+                : undefined
+            }
+            strengthChangeLabel={formatStrengthChange(game.awayStrength?.change)}
             goals={awayLast5LeagueStats.goals}
             conceeded={awayLast5LeagueStats.conceeded}
             XG={awayLast5LeagueStats.XG}
@@ -3168,6 +3189,12 @@ function GameStats({
             LeagueOrAll={formDataHome[0].LeagueOrAll}
             className={"KeyStatsHome"}
             name={formDataHome[0].name}
+            strengthRating={
+              Number.isFinite(Number(game.homeStrength?.rating))
+                ? Number(game.homeStrength.rating)
+                : undefined
+            }
+            strengthChangeLabel={formatStrengthChange(game.homeStrength?.change)}
             goals={homeOnlyLeagueStats.goals}
             conceeded={homeOnlyLeagueStats.conceeded}
             XG={homeOnlyLeagueStats.XG}
@@ -3247,6 +3274,12 @@ function GameStats({
             className={"KeyStatsAway"}
             classNameTwo={"FormStatsAway"}
             name={formDataAway[0].name}
+            strengthRating={
+              Number.isFinite(Number(game.awayStrength?.rating))
+                ? Number(game.awayStrength.rating)
+                : undefined
+            }
+            strengthChangeLabel={formatStrengthChange(game.awayStrength?.change)}
             goals={awayOnlyLeagueStats.goals}
             conceeded={awayOnlyLeagueStats.conceeded}
             XG={awayOnlyLeagueStats.XG}

@@ -3,6 +3,7 @@ import { footyStatsToSofaScoreMap } from "../constants/footyStatsToSofaScore";
 import { resolveFootyStatsLeagueId } from "../seo/competitionCatalog";
 import { rounds } from "../components/TeamOfTheSeason";
 import { API_FORM_ONLY_LEAGUE_IDS } from "./getFixtures";
+import { formatStrengthChange } from "./strengthRankings";
 import {
   fixedStatOrDash,
   formatStatDisplay,
@@ -350,6 +351,7 @@ export const COMPARISON_RULES = [
   { key: "averageRating", higherIsBetter: true },
   { key: "XGSwing", higherIsBetter: true },
   { key: "leaguePosition", higherIsBetter: false },
+  { key: "strengthRating", higherIsBetter: true },
   { key: "rawPosition", higherIsBetter: false },
   { key: "homeOrAwayLeaguePosition", higherIsBetter: false },
   { key: "XG", higherIsBetter: true },
@@ -505,6 +507,7 @@ export function buildAllStatsProps({
     ? match.homeTeamDrawPercentage
     : match.awayTeamDrawPercentage;
   const resultsHorA = isHome ? form?.resultsHome : form?.resultsAway;
+  const strength = isHome ? match?.homeStrength : match?.awayStrength;
 
   return {
     getCollapsableProps,
@@ -554,5 +557,7 @@ export function buildAllStatsProps({
     ppgLast5: statOrDash(last5LeagueStats.ppg),
     ppgHomeOrAway: statOrDash(winPercentage),
     injuryImpact,
+    strengthRating: Number.isFinite(Number(strength?.rating)) ? Number(strength.rating) : undefined,
+    strengthChangeLabel: formatStrengthChange(strength?.change),
   };
 }

@@ -464,6 +464,93 @@ export function buildStrengthOverview(resultsPayload, options = {}) {
   };
 }
 
+/** Sum of the published match movements in the window, to one decimal. */
+export function strengthWindowChange(matches) {
+  if (!Array.isArray(matches) || matches.length === 0) return 0;
+  const sum = matches.reduce((total, match) => total + Number(match?.delta || 0), 0);
+  return Math.round(sum * 10) / 10;
+}
+
+export function formatStrengthChange(change) {
+  const value = Number(change);
+  if (!Number.isFinite(value)) return null;
+  const rounded = Math.round(value * 10) / 10;
+  const text = rounded.toFixed(1);
+  return rounded > 0 ? `+${text}` : text;
+}
+
+function sixGameWindow(overview) {
+  const windows = overview?.windows;
+  const keyed = windows?.[String(STRENGTH_WINDOW)] || windows?.[STRENGTH_WINDOW];
+  if (Array.isArray(keyed?.leagues) && Array.isArray(keyed?.global)) return keyed;
+  if (Array.isArray(overview?.leagues) && Array.isArray(overview?.global)) {
+    return { leagues: overview.leagues, global: overview.global };
+  }
+  return { leagues: [], global: [] };
+}
+
+function strengthFigure(team) {
+  const rating = Number(team?.rating);
+  if (!Number.isFinite(rating)) return null;
+  return { rating, change: strengthWindowChange(team.matches) };
+}
+
+/** Six-game domestic and global ratings, without the match lists. */
+export function buildStrengthLookup(overview) {
+  const six = sixGameWindow(overview);
+  const byKey = new Map();
+  const touch = (leagueId, name) => {
+    const id = Number(leagueId);
+    const key = `${id}:${name}`;
+    if (!byKey.has(key)) {
+      byKey.set(key, { leagueId: id, name, domestic: null, global: null });
+    }
+    return byKey.get(key);
+  };
+
+  for (const league of six.leagues) {
+    for (const team of league.teams || []) {
+      const row = touch(team.leagueId ?? league.id, team.name);
+      row.domestic = strengthFigure(team);
+    }
+  }
+  for (const team of six.global) {
+    const row = touch(team.leagueId, team.name);
+    row.global = strengthFigure(team);
+  }
+
+  return {
+    generatedAt: typeof overview?.generatedAt === "string" ? overview.generatedAt : null,
+    teams: [...byKey.values()],
+  };
+}
+
+function uniqueStrengthClub(teams, name, leagueId) {
+  const pool =
+    leagueId == null
+      ? teams
+      : teams.filter((team) => Number(team.leagueId) === Number(leagueId));
+  const hits = pool.filter((team) => teamNamesMatch(team.name, name));
+  return hits.length === 1 ? hits[0] : null;
+}
+
+/**
+ * Domestic rating for a league fixture. Global rating when the fixture is
+ * continental, because those clubs do not share a domestic table.
+ */
+export function lookupFixtureStrength(lookup, { leagueId, homeName, awayName }) {
+  const teams = Array.isArray(lookup?.teams) ? lookup.teams : [];
+  const continental = isContinentalStrengthLeague(leagueId);
+  const scope = continental ? "global" : "domestic";
+  const clubLeagueId = continental ? null : leagueId;
+  const home = uniqueStrengthClub(teams, homeName, clubLeagueId);
+  const away = uniqueStrengthClub(teams, awayName, clubLeagueId);
+  return {
+    home: home?.[scope] ?? null,
+    away: away?.[scope] ?? null,
+  };
+}
+
 export function isValidStrengthOverviewPayload(payload) {
   if (!payload || typeof payload.generatedAt !== "string") return false;
   if (!Array.isArray(payload.global) || !Array.isArray(payload.leagues)) return false;

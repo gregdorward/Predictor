@@ -12,9 +12,12 @@ import {
   STRENGTH_LONG_WINDOW,
   STRENGTH_RECENCY,
   STRENGTH_WINDOW,
+  buildStrengthLookup,
   buildStrengthOverview,
   isValidStrengthOverviewPayload,
+  lookupFixtureStrength,
   maxLastSixSwing,
+  strengthWindowChange,
   recencyWeights,
   strengthMarginWeight,
 } from "./strengthRankings";
@@ -291,6 +294,36 @@ describe("buildStrengthOverview", () => {
     expect(climberGlobal.matches[0].opponent).toBe("Tower");
     expect(climberGlobal.matches[0].result).toBe("W");
     expect(climberGlobal.matches[0].delta).toBeGreaterThan(flatGlobal.matches[0].delta);
+
+    const lookup = buildStrengthLookup(overview);
+    const domestic = lookupFixtureStrength(lookup, {
+      leagueId: 17184,
+      homeName: "Climber",
+      awayName: "Flat",
+    });
+    const summed = climberDomestic.matches.reduce((total, match) => total + match.delta, 0);
+    expect(domestic.home.rating).toBe(climberDomestic.rating);
+    expect(domestic.home.change).toBe(strengthWindowChange(climberDomestic.matches));
+    expect(domestic.home.change).toBe(Math.round(summed * 10) / 10);
+    expect(domestic.away.rating).toBe(flatDomestic.rating);
+
+    const continental = lookupFixtureStrength(lookup, {
+      leagueId: 17128,
+      homeName: "Climber",
+      awayName: "Tower",
+    });
+    expect(continental.home.rating).toBe(climberGlobal.rating);
+    expect(continental.home.change).toBe(strengthWindowChange(climberGlobal.matches));
+    expect(continental.away.rating).toBe(team(overview, 17146, "Tower", "global").rating);
+    expect(continental.home.rating).not.toBe(domestic.home.rating);
+
+    const missing = lookupFixtureStrength(lookup, {
+      leagueId: 17146,
+      homeName: "Nobody",
+      awayName: "Tower",
+    });
+    expect(missing.home).toBeNull();
+    expect(missing.away.rating).toBe(team(overview, 17146, "Tower").rating);
   });
 
   test("fewer than six games shrinks the move toward the base", () => {

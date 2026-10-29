@@ -16,6 +16,14 @@ const SEASON_STAT_CATEGORIES = [
     free: true,
     rows: [
       { key: "leaguePosition", label: "League position" },
+      {
+        key: "strengthRating",
+        label: "Strength, last six",
+        getValue: (stats) =>
+          Number.isFinite(Number(stats.strengthRating))
+            ? `${stats.strengthRating}${stats.strengthChangeLabel ? ` (${stats.strengthChangeLabel})` : ""}`
+            : undefined,
+      },
       { key: "goals", label: "Avg goals scored" },
       { key: "conceeded", label: "Avg goals conceded" },
       { key: "XG", label: "Avg xG" },
