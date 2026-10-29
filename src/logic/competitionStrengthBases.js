@@ -14,12 +14,29 @@
  * above, the usual gap between adjacent English tiers:
  * National League, National League North/South, the Scottish lower leagues,
  * and 3. Liga.
+ *
+ * La Liga is then drawn 85% of the way from that ClubElo average toward the
+ * Premier League. Ligue 1, Serie A and the Bundesliga are drawn 80%. Brazil
+ * Serie A is drawn 70%. Every other division is drawn 65%. `clubElo` keeps
+ * the published figure. `base` is the number the ranking starts from.
  */
 
-/** @typedef {{ id: number, slug: string, name: string, base: number, source: "clubelo" | "step-down" }} StrengthLeague */
+/** Share of the gap to the Premier League closed for named leagues. */
+export const NAMED_LEAGUE_PULLS = {
+  "la-liga": 0.85,
+  "ligue-1": 0.8,
+  "serie-a": 0.8,
+  "bundesliga": 0.8,
+  "brazil-serie-a": 0.7,
+};
 
-/** @type {StrengthLeague[]} Domestic leagues in homepage leagueOrder. */
-export const DOMESTIC_STRENGTH_LEAGUES = [
+/** Share of the gap closed for every division without a named pull. */
+export const OTHER_LEAGUE_PULL = 0.65;
+
+/** @typedef {{ id: number, slug: string, name: string, base: number, clubElo?: number, source: "clubelo" | "step-down" }} StrengthLeague */
+
+/** @type {StrengthLeague[]} Domestic leagues in homepage leagueOrder. `base` is ClubElo until the pull below. */
+const CLUB_ELO_LEAGUES = [
   { id: 17146, slug: "premier-league", name: "Premier League", base: 1838, source: "clubelo" },
   { id: 17184, slug: "championship", name: "Championship", base: 1610, source: "clubelo" },
   { id: 17180, slug: "league-one", name: "League One", base: 1493, source: "clubelo" },
@@ -68,6 +85,20 @@ export const DOMESTIC_STRENGTH_LEAGUES = [
   { id: 17115, slug: "j-league", name: "J League", base: 1589, source: "clubelo" },
   { id: 17426, slug: "saudi-pro-league", name: "Saudi Pro League", base: 1475, source: "clubelo" },
 ];
+
+const PREMIER_BASE = CLUB_ELO_LEAGUES.find((league) => league.slug === "premier-league").base;
+
+/** @type {StrengthLeague[]} */
+export const DOMESTIC_STRENGTH_LEAGUES = CLUB_ELO_LEAGUES.map((league) => {
+  const clubElo = league.base;
+  if (league.slug === "premier-league") return { ...league, clubElo };
+  const pull = NAMED_LEAGUE_PULLS[league.slug] ?? OTHER_LEAGUE_PULL;
+  return {
+    ...league,
+    clubElo,
+    base: Math.round(clubElo + pull * (PREMIER_BASE - clubElo)),
+  };
+});
 
 /** Cross-border competitions whose matches can move a global rating when both clubs resolve. */
 export const CONTINENTAL_STRENGTH_LEAGUES = [

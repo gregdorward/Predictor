@@ -92,18 +92,18 @@ describe("StrengthRankings", () => {
     );
 
     expect(screen.getByRole("button", { name: "6 games", pressed: true })).toBeInTheDocument();
-    expect(screen.getByText(/last six results/)).toBeInTheDocument();
+    expect(screen.getByText(/past six games/)).toBeInTheDocument();
     expect(screen.getByRole("button", { name: "Arsenal", expanded: true })).toBeInTheDocument();
 
     fireEvent.click(screen.getByRole("button", { name: "10 games" }));
 
     expect(screen.getByRole("button", { name: "10 games", pressed: true })).toBeInTheDocument();
-    expect(screen.getByText(/last ten results/)).toBeInTheDocument();
+    expect(screen.getByText(/past ten games/)).toBeInTheDocument();
     expect(screen.getByRole("button", { name: "Arsenal Ten", expanded: true })).toBeInTheDocument();
     expect(screen.queryByRole("button", { name: "Arsenal" })).not.toBeInTheDocument();
 
     fireEvent.click(screen.getByRole("button", { name: "6 games" }));
     expect(screen.getByRole("button", { name: "Arsenal", expanded: true })).toBeInTheDocument();
-    expect(screen.getByText(/last six results/)).toBeInTheDocument();
+    expect(screen.getByText(/past six games/)).toBeInTheDocument();
   });
 });

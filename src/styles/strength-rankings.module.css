@@ -557,7 +557,16 @@
 
 @media (min-width: 75.0625rem) {
   .page {
+    max-width: 78rem;
     font-size: 110%;
+  }
+
+  .pills {
+    flex-wrap: nowrap;
+  }
+
+  .formCol {
+    min-width: calc(10 * 1.15rem + 9 * 0.2rem + 0.5rem);
   }
 
   .crumb,

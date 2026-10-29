@@ -53,8 +53,10 @@ export const STRENGTH_HOME_ADVANTAGE = 65;
 export const STRENGTH_MARGIN_CAP = 6;
 /**
  * Walks the six games from the league base. Large enough that a win over a
- * strong side pulls away from six wins over weak ones, and small enough that
- * the whole window cannot close the Premier League to Serie B gap (~300).
+ * strong side pulls away from six wins over weak ones. The ClubElo gap from
+ * the Premier League to Serie B is about 300, and one window cannot close
+ * that. The published bases are drawn together afterwards, so a hot run in a
+ * lower division can now reach the bottom of a higher one.
  */
 export const STRENGTH_K = 24;
 /** Newest game first, for the default six-game window. */
@@ -415,6 +417,7 @@ export function buildStrengthOverview(resultsPayload, options = {}) {
         name: league.name,
         country: countryForStrengthLeague(league),
         base: league.base,
+        ...(Number.isFinite(league.clubElo) ? { clubElo: league.clubElo } : {}),
         source: league.source,
         teams,
       });

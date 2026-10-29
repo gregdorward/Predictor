@@ -1,4 +1,6 @@
 import {
+  NAMED_LEAGUE_PULLS,
+  OTHER_LEAGUE_PULL,
   countryForStrengthLeague,
   getDomesticStrengthLeague,
   groupDomesticLeagues,
@@ -58,17 +60,49 @@ describe("recency weights", () => {
 });
 
 describe("competition strength bases", () => {
-  test("keeps the Premier League well above Serie B", () => {
+  test("keeps the ClubElo Premier League well above Serie B", () => {
     const premier = getDomesticStrengthLeague(17146);
     const serieB = getDomesticStrengthLeague(17404);
-    expect(premier.base - serieB.base).toBeGreaterThanOrEqual(200);
-    expect(maxLastSixSwing()).toBeLessThan(premier.base - serieB.base);
+    expect(premier.clubElo - serieB.clubElo).toBeGreaterThanOrEqual(200);
+    expect(maxLastSixSwing()).toBeLessThan(premier.clubElo - serieB.clubElo);
+    expect(premier.base).toBe(premier.clubElo);
+    expect(serieB.base).toBeGreaterThan(serieB.clubElo);
+    expect(premier.base).toBeGreaterThan(serieB.base);
+  });
+
+  test("pulls named leagues toward the Premier League and leaves the rest at 65%", () => {
+    const premier = getDomesticStrengthLeague(17146);
+    expect(NAMED_LEAGUE_PULLS["la-liga"]).toBe(0.85);
+    expect(NAMED_LEAGUE_PULLS["ligue-1"]).toBe(0.8);
+    expect(NAMED_LEAGUE_PULLS["serie-a"]).toBe(0.8);
+    expect(NAMED_LEAGUE_PULLS["bundesliga"]).toBe(0.8);
+    expect(NAMED_LEAGUE_PULLS["brazil-serie-a"]).toBe(0.7);
+    expect(OTHER_LEAGUE_PULL).toBe(0.65);
+    expect(premier.base).toBe(1838);
+
+    for (const id of [17199, 17102, 17084, 17210, 16544]) {
+      const league = getDomesticStrengthLeague(id);
+      const pull = NAMED_LEAGUE_PULLS[league.slug];
+      expect(league.base).toBe(
+        Math.round(league.clubElo + pull * (premier.base - league.clubElo))
+      );
+      expect(league.base).toBeGreaterThan(league.clubElo);
+      expect(league.base).toBeLessThan(premier.base);
+    }
+
+    for (const id of [17184, 17404, 17279]) {
+      const league = getDomesticStrengthLeague(id);
+      expect(league.base).toBe(
+        Math.round(league.clubElo + OTHER_LEAGUE_PULL * (premier.base - league.clubElo))
+      );
+    }
   });
 
   test("steps the National League down from League Two", () => {
     const leagueTwo = getDomesticStrengthLeague(17185);
     const national = getDomesticStrengthLeague(17279);
-    expect(leagueTwo.base - national.base).toBe(100);
+    expect(leagueTwo.clubElo - national.clubElo).toBe(100);
+    expect(leagueTwo.base).toBeGreaterThan(national.base);
     expect(national.source).toBe("step-down");
   });
 });
@@ -198,6 +232,7 @@ describe("buildStrengthOverview", () => {
     const sweep = team(overview, 17404, "Sweep", "global");
     const anchor = team(overview, 17146, "Anchor", "global");
     expect(sweep.played).toBe(STRENGTH_WINDOW);
+    expect(sweep.base).toBeLessThan(anchor.base);
     expect(sweep.rating).toBeLessThan(anchor.rating);
     expect(sweep.rating - sweep.base).toBeLessThanOrEqual(Math.ceil(maxLastSixSwing()));
   });

@@ -1,6 +1,10 @@
 import { Fragment, useState } from "react";
 import SiteHeader from "./SiteHeader";
-import { groupDomesticLeagues } from "../logic/competitionStrengthBases";
+import {
+  NAMED_LEAGUE_PULLS,
+  OTHER_LEAGUE_PULL,
+  groupDomesticLeagues,
+} from "../logic/competitionStrengthBases";
 import { STRENGTH_LONG_WINDOW, STRENGTH_WINDOW } from "../logic/strengthRankings";
 import styles from "../styles/strength-rankings.module.css";
 
@@ -298,6 +302,9 @@ export default function StrengthRankings({ overview, preview = false }) {
   const updated = formatUpdated(overview?.generatedAt);
   const basesDate = formatBasesDate(overview?.basesAsOf);
   const stepDown = (overview?.leagues || []).some((league) => league.source === "step-down");
+  const bigLeaguePull = (overview?.leagues || []).some(
+    (league) => Number.isFinite(Number(league.clubElo)) && Number(league.clubElo) !== Number(league.base)
+  );
 
   const defaultKey = (() => {
     if (scope === "global") {
@@ -471,10 +478,13 @@ export default function StrengthRankings({ overview, preview = false }) {
 
         <p className={styles.note}>
           {basesDate
-            ? `League bases are ClubElo averages from ${basesDate}.`
-            : "League bases are ClubElo averages."}{" "}
+            ? `League bases are adjusted from ClubElo averages from ${basesDate}.`
+            : "League bases are adjusted from ClubElo averages."}{" "}
           {stepDown
-            ? "Where ClubElo does not publish a division average, the base steps down 100 points from the division above."
+            ? "Where ClubElo does not publish a division average, that figure steps down 100 points from the division above."
+            : null}
+          {bigLeaguePull
+            ? ` La Liga is moved ${Math.round(NAMED_LEAGUE_PULLS["la-liga"] * 100)}% of the way from its ClubElo average toward the Premier League. Ligue 1, Serie A and the Bundesliga are moved ${Math.round(NAMED_LEAGUE_PULLS["ligue-1"] * 100)}%. Brazil Serie A is moved ${Math.round(NAMED_LEAGUE_PULLS["brazil-serie-a"] * 100)}%. Every other competition is moved ${Math.round(OTHER_LEAGUE_PULL * 100)}% of the way.`
             : null}
         </p>
         <p className={styles.note}>
@@ -508,7 +518,7 @@ function PageIntro({ sample }) {
       </nav>
       <h1 className={styles.title}>Strength rankings</h1>
       <p className={styles.intro}>
-        Which teams have been the strongest in their competition and globally over the past {countWord} games? The rank takes a baseline competition ranking from ClubElo and applies weights based on the strength of the opponent, how recent the
+        Which teams have been the strongest in their competition and globally over the past {countWord} games? The rank takes a baseline competition ranking and applies weights based on the strength of the opponent, how recent the
         game was and by the margin of the result.
       </p>
     </>
