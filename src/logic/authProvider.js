@@ -3,8 +3,20 @@ import {
   getFixturesEpoch,
   shouldApplyPredictionFixtures,
 } from "./fixturesEpoch";
+import {
+  clearPremiumAdFreeCached,
+  setPremiumAdFreeCached,
+} from "../utils/premiumAdFreeStorage";
 
-const AuthContext = createContext();
+const AuthContext = createContext({
+  user: null,
+  isPaidUser: false,
+  loading: true,
+  fixtures: [],
+  setFixtures: () => {},
+  handleGetPredictions: async () => {},
+  isPredicting: false,
+});
 
 export let userDetail;
 export let triggerGlobalPredictions;
@@ -47,13 +59,21 @@ export const AuthProvider = ({ children }) => {
             const userData = userSnap.data();
             const isPaid = userData.isPaidUser;
             currentUser.isPaid = isPaid;
-            setIsPaidUser(isPaid === true);
+            const paid = isPaid === true;
+            setIsPaidUser(paid);
+            if (paid) {
+              setPremiumAdFreeCached();
+            } else {
+              clearPremiumAdFreeCached();
+            }
           } else {
             console.log("User document does not exist in Firestore.");
             setIsPaidUser(false);
+            clearPremiumAdFreeCached();
           }
         } else {
           setIsPaidUser(false);
+          clearPremiumAdFreeCached();
         }
       });
     })();

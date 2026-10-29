@@ -63,7 +63,7 @@ const DEFAULT_COMPACT_DESCRIPTION =
   "Unlimited predictions, full tip lists, deep season stats, streaks, and AI previews beyond the free daily allowance.";
 
 const DEFAULT_BANNER_DESCRIPTION =
-  "Unlimited predictions, full tip lists, and deep match stats — cancel anytime.";
+  "Unlimited predictions, full tip lists, deep match stats, and ad-free — cancel anytime.";
 
 /**
  * @param {{
@@ -209,6 +209,7 @@ export default function PremiumUpsell({
               <li>Deep match intel — streaks and upcoming fixtures</li>
               <li>Full season stats — attack, defence, possession and form</li>
               <li>Complete insights rankings</li>
+              <li>Ad-free</li>
             </ul>
           </div>
         </div>

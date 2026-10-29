@@ -1,9 +1,12 @@
 import Script from "next/script";
 import { ADSENSE_CLIENT } from "../constants/adsense";
 import { flushAdSenseAds } from "../utils/flushAdSenseAds";
+import { useShowGuestAds } from "../hooks/useShowGuestAds";
 
 export default function GoogleAdSenseScript() {
-  if (process.env.NODE_ENV !== "production") {
+  const showGuestAds = useShowGuestAds();
+
+  if (process.env.NODE_ENV !== "production" || !showGuestAds) {
     return null;
   }
 

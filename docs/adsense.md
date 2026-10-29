@@ -39,6 +39,10 @@ and [testing messages](https://support.google.com/adsense/answer/10924669).
 
 ## Rendering and verification
 
+Premium subscribers do not load the AdSense script or manual placements. A
+browser flag in `localStorage` keeps returning premium members ad-free before
+Firestore resolves on later visits.
+
 Real ad requests are enabled only in production (`npm run build` followed by
 `npm start`). Unit and browser checks should stub Google's script rather than
 requesting live ads. Development renders empty markers.
