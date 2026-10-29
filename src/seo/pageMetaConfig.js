@@ -57,6 +57,11 @@ export const PAGE_META = {
     description:
       "See which football leagues and teams behave like the 1X2 price: favourite win rates, upsets, draws and ROI updated daily from cached results.",
   },
+  "/strength-rankings": {
+    title: "Strength Rankings | Last Six, Weighted by Opponent",
+    description:
+      "Club strength from the last six results, weighted by opponent. A win over a strong side counts for more than an easy run, by country or worldwide.",
+  },
   "/prediction-league": {
     title: "Prediction League | Monthly tipster profit and ROI",
     description:

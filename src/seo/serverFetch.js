@@ -2,6 +2,7 @@ import { resolveFixtureLeagueName } from "./competitionCatalog";
 import { isCompetitionSeasonEmpty } from "./competitionSeason";
 import { isValidOverviewPayload } from "./competitionOverviewData";
 import { isValidMriOverviewPayload } from "./marketReliabilityData";
+import { isValidStrengthOverviewPayload } from "../logic/strengthRankings";
 import {
   buildFixtureUrl,
   FIXTURE_SITEMAP_WINDOW_DAYS,
@@ -101,6 +102,12 @@ export async function fetchCompetitionOverview({ timeoutMs = 6000 } = {}) {
 export async function fetchMarketReliabilityOverview({ timeoutMs = 6000 } = {}) {
   const json = await fetchJson("market-reliability-overview", { timeoutMs });
   return isValidMriOverviewPayload(json) ? json : null;
+}
+
+/** Pre-built strength rankings blob for /strength-rankings/. */
+export async function fetchStrengthOverview({ timeoutMs = 8000 } = {}) {
+  const json = await fetchJson("strength-rankings-overview", { timeoutMs });
+  return isValidStrengthOverviewPayload(json) ? json : null;
 }
 
 /** Firestore monthly stats for /prediction-league/ SSR. */

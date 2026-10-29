@@ -3511,6 +3511,16 @@ table tr:nth-child(even) {
     align-items: start;
   }
 
+  /* This route has no rail ad. The empty columns were squeezing the ranking table. */
+  .SshPageShell--wide {
+    display: block;
+  }
+
+  .SshPageShell--wide .SshPageShell__balance,
+  .SshPageShell--wide .SshSidebar {
+    display: none;
+  }
+
   .SshPageShell__balance {
     display: block;
     width: var(--ssh-sidebar-width);

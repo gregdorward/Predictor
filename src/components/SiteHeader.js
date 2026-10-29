@@ -27,10 +27,10 @@ function AdSidebar() {
   );
 }
 
-function wrapWithSidebar(children) {
+function wrapWithSidebar(children, wide) {
   if (children == null) return null;
   return (
-    <div className="SshPageShell">
+    <div className={wide ? "SshPageShell SshPageShell--wide" : "SshPageShell"}>
       {/* Matches sidebar width so main content stays optically centred. */}
       <div className="SshPageShell__balance" aria-hidden="true" />
       <div className="SshPageShell__main">{children}</div>
@@ -43,9 +43,10 @@ export default function SiteHeader({
   showThemeToggle = false,
   withFooter = false,
   beforeFooter = null,
+  wide = false,
   children,
 }) {
-  const shelled = wrapWithSidebar(children);
+  const shelled = wrapWithSidebar(children, wide);
 
   const content = withFooter ? (
     <div className="SitePageLayout">

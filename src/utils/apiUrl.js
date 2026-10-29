@@ -20,6 +20,7 @@ const PROXIED_ENDPOINTS = new Set([
   "competition",
   "competition-overview",
   "market-reliability-overview",
+  "strength-rankings-overview",
   "getMedia",
   "futureFixtures",
   "LeagueTeamStats",

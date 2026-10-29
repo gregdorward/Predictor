@@ -2,6 +2,7 @@ export const SITE_NAV_LINKS = [
   { label: "Home", path: "/" },
   { label: "Competitions", path: "/competitions/" },
   { label: "Market Reliability", path: "/market-reliability/" },
+  { label: "Strength Rankings", path: "/strength-rankings/" },
   { label: "Upcoming Fixtures", path: "/fixtures/" },
   { label: "Prediction League", path: "/prediction-league/" },
   { label: "Articles", path: "/articles/" },

@@ -9,6 +9,10 @@
       "schedule": "40 5 * * *"
     },
     {
+      "path": "/api/cron/strength-rankings/",
+      "schedule": "50 5 * * *"
+    },
+    {
       "path": "/api/indexnow-ping/",
       "schedule": "0 6 * * *"
     }
