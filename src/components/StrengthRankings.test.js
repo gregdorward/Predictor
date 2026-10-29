@@ -10,9 +10,31 @@ jest.mock("./SiteHeader", () => {
 
 const overview = buildStrengthPreviewOverview();
 
+function showDetailed() {
+  fireEvent.click(screen.getByRole("button", { name: "Detailed" }));
+}
+
 describe("StrengthRankings", () => {
-  test("opens the top club's last six and keeps a strong result above an easy win", () => {
+  test("overview is the default, with clubs collapsed and fixtures hidden", () => {
     render(<StrengthRankings overview={overview} />);
+
+    expect(screen.getByRole("button", { name: "Overview", pressed: true })).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "Detailed", pressed: false })).toBeInTheDocument();
+    expect(screen.getAllByRole("columnheader", { name: "Club" }).length).toBeGreaterThan(0);
+    expect(screen.queryAllByRole("columnheader", { name: "Opponent" })).toHaveLength(0);
+    expect(screen.getByRole("button", { name: "Arsenal", expanded: false })).toBeInTheDocument();
+    expect(screen.queryByText("+8.4")).not.toBeInTheDocument();
+
+    fireEvent.click(screen.getByRole("button", { name: "Arsenal", expanded: false }));
+
+    expect(screen.getByRole("button", { name: "Arsenal", expanded: true })).toBeInTheDocument();
+    expect(screen.getByText("+8.4")).toBeInTheDocument();
+    expect(screen.getByText("0-2")).toBeInTheDocument();
+  });
+
+  test("detailed opens the top club's last six and keeps a strong result above an easy win", () => {
+    render(<StrengthRankings overview={overview} />);
+    showDetailed();
 
     expect(screen.getByRole("heading", { name: "Strength rankings" })).toBeInTheDocument();
     expect(screen.getByRole("button", { name: "England", pressed: true })).toBeInTheDocument();
@@ -26,6 +48,8 @@ describe("StrengthRankings", () => {
     expect(city).toHaveTextContent("1-0 H");
     expect(city).toHaveTextContent("+1.1");
     expect(screen.getByRole("heading", { name: /Championship/ })).toBeInTheDocument();
+    expect(document.querySelector("[data-placement='strength-after-championship']")).toBeTruthy();
+    expect(document.querySelector("[data-placement='strength-global-top']")).toBeNull();
     expect(screen.queryByRole("heading", { name: /La Liga/ })).not.toBeInTheDocument();
     expect(screen.getByRole("button", { name: "Show the other 3" })).toBeInTheDocument();
     expect(screen.queryByRole("button", { name: "Bournemouth" })).not.toBeInTheDocument();
@@ -33,6 +57,7 @@ describe("StrengthRankings", () => {
 
   test("a country change replaces the pyramid", () => {
     render(<StrengthRankings overview={overview} />);
+    showDetailed();
     fireEvent.click(screen.getByRole("button", { name: "Spain" }));
 
     expect(screen.getByRole("heading", { name: /La Liga/ })).toBeInTheDocument();
@@ -42,9 +67,12 @@ describe("StrengthRankings", () => {
 
   test("global is one list, with each club's competition", () => {
     render(<StrengthRankings overview={overview} />);
+    showDetailed();
     fireEvent.click(screen.getByRole("button", { name: "Global" }));
 
     expect(screen.getByRole("heading", { name: /Worldwide/ })).toBeInTheDocument();
+    expect(document.querySelector("[data-placement='strength-global-top']")).toBeTruthy();
+    expect(document.querySelector("[data-placement='strength-after-championship']")).toBeNull();
     expect(screen.queryByRole("heading", { name: /Premier League/ })).not.toBeInTheDocument();
     expect(screen.getByRole("button", { name: "Leeds", expanded: true })).toBeInTheDocument();
     expect(screen.getAllByText("+9.1").length).toBeGreaterThan(0);
@@ -54,7 +82,7 @@ describe("StrengthRankings", () => {
   test("show the rest reveals the clubs below the top five", () => {
     render(<StrengthRankings overview={overview} />);
     fireEvent.click(screen.getByRole("button", { name: "Show the other 3" }));
-    expect(screen.getByRole("button", { name: "Bournemouth" })).toBeInTheDocument();
+    expect(screen.getByRole("rowheader", { name: /Bournemouth/ })).toBeInTheDocument();
     expect(screen.getByRole("button", { name: "Show the top 5" })).toBeInTheDocument();
   });
 
@@ -93,6 +121,8 @@ describe("StrengthRankings", () => {
 
     expect(screen.getByRole("button", { name: "6 games", pressed: true })).toBeInTheDocument();
     expect(screen.getByText(/past six games/)).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "Arsenal", expanded: false })).toBeInTheDocument();
+    showDetailed();
     expect(screen.getByRole("button", { name: "Arsenal", expanded: true })).toBeInTheDocument();
 
     fireEvent.click(screen.getByRole("button", { name: "10 games" }));

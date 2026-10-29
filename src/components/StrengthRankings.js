@@ -1,4 +1,6 @@
 import { Fragment, useState } from "react";
+import { ADSENSE_SLOTS } from "../constants/adsense";
+import AdSenseUnit from "./AdSenseUnit";
 import SiteHeader from "./SiteHeader";
 import {
   LOWER_LEAGUE_PULL_STEP,
@@ -75,6 +77,14 @@ function teamKey(scope, slug, name) {
   return `${scope}:${slug}:${name}`;
 }
 
+function StrengthAd({ placementId }) {
+  return (
+    <div className={styles.adBreak}>
+      <AdSenseUnit slot={ADSENSE_SLOTS.STRENGTH_RANKINGS} placementId={placementId} />
+    </div>
+  );
+}
+
 function RankingTable({
   titleId,
   teams,
@@ -84,6 +94,7 @@ function RankingTable({
   onToggleRest,
   showCompetition,
   sampleSize,
+  compact,
 }) {
   const hiddenCount = Math.max(0, teams.length - TOP_COUNT);
   const visible = restOpen || hiddenCount === 0 ? teams : teams.slice(0, TOP_COUNT);
@@ -109,14 +120,18 @@ function RankingTable({
               <th scope="col" className={styles.formCol}>
                 Form
               </th>
-              <th scope="col">Opponent</th>
-              <th scope="col" className={styles.num}>
-                Opp rank
-              </th>
-              <th scope="col">Score</th>
-              <th scope="col" className={styles.num} title="How much this result moved the rating">
-                Added
-              </th>
+              {compact ? null : (
+                <>
+                  <th scope="col">Opponent</th>
+                  <th scope="col" className={styles.num}>
+                    Opp rank
+                  </th>
+                  <th scope="col">Score</th>
+                  <th scope="col" className={styles.num} title="How much this result moved the rating">
+                    Added
+                  </th>
+                </>
+              )}
             </tr>
           </thead>
           <tbody>
@@ -128,6 +143,7 @@ function RankingTable({
                   key={key}
                   team={team}
                   open={open}
+                  compact={compact}
                   showCompetition={showCompetition}
                   sampleSize={sampleSize}
                   onToggle={() => onToggleClub(key)}
@@ -201,7 +217,59 @@ function FixtureGrid({ games }) {
   );
 }
 
-function ClubRow({ team, open, showCompetition, sampleSize, onToggle }) {
+function ClubRow({ team, open, compact, showCompetition, sampleSize, onToggle }) {
+  if (compact) {
+    return (
+      <>
+        <tr
+          className={`${styles.clubRow} ${open ? styles.open : ""}`.trim()}
+          onClick={onToggle}
+        >
+          <td className={styles.num}>{team.rank}</td>
+          <th scope="row">
+            <button
+              type="button"
+              className={styles.club}
+              aria-expanded={open}
+              onClick={(event) => {
+                event.stopPropagation();
+                onToggle();
+              }}
+            >
+              {team.name}
+            </button>
+            <span className={styles.formUnder}>
+              <FormPills form={team.form} />
+            </span>
+          </th>
+          {showCompetition ? <td className={styles.competition}>{team.leagueName}</td> : null}
+          <td className={`${styles.num} ${styles.ratingCell}`}>
+            <span className={styles.rating}>{team.rating}</span>
+            <span className={styles.playedShort}>
+              {team.played < sampleSize
+                ? `${team.played} of ${sampleSize}`
+                : `${team.played} played`}
+            </span>
+          </td>
+          <td className={styles.formCol}>
+            <FormPills form={team.form} />
+          </td>
+        </tr>
+        {open ? (
+          <tr className={styles.overviewMatch}>
+            <td className={styles.overviewPad} />
+            <td className={styles.overviewPad} />
+            {showCompetition ? <td className={styles.overviewPad} /> : null}
+            <td className={styles.overviewPad} />
+            <td>
+              <FixtureGrid games={team.matches || []} />
+            </td>
+          </tr>
+        ) : null}
+      </>
+    );
+  }
+
   const games = open ? team.matches : team.matches.slice(0, 1);
   const rows = games.length ? games : [null];
   const span = rows.length;
@@ -293,6 +361,7 @@ export default function StrengthRankings({ overview, preview = false }) {
       ? "England"
       : groups[0]?.country || ""
   );
+  const [detailed, setDetailed] = useState(false);
   const [expandedOverride, setExpandedOverride] = useState(null);
   const [restOpen, setRestOpen] = useState({});
 
@@ -316,7 +385,11 @@ export default function StrengthRankings({ overview, preview = false }) {
     const team = league?.teams?.[0];
     return league && team ? teamKey("domestic", league.slug, team.name) : "";
   })();
-  const expandedKey = expandedOverride == null ? defaultKey : expandedOverride;
+  const expandedKey = detailed
+    ? expandedOverride == null
+      ? defaultKey
+      : expandedOverride
+    : expandedOverride || "";
 
   function resetOpen() {
     setExpandedOverride(null);
@@ -376,6 +449,28 @@ export default function StrengthRankings({ overview, preview = false }) {
               Global
             </button>
           </div>
+          <div className={styles.switch} role="group" aria-label="How much to show">
+            <button
+              type="button"
+              className={styles.chip}
+              aria-pressed={!detailed}
+              onClick={() => setDetailed(false)}
+            >
+              Overview
+            </button>
+            <button
+              type="button"
+              className={styles.chip}
+              aria-pressed={detailed}
+              onClick={() => {
+                if (detailed) return;
+                setDetailed(true);
+                resetOpen();
+              }}
+            >
+              Detailed
+            </button>
+          </div>
           <div className={styles.switch} role="group" aria-label="Results counted">
             <button
               type="button"
@@ -424,7 +519,9 @@ export default function StrengthRankings({ overview, preview = false }) {
         </div>
 
         {scope === "global" ? (
-          <section className={styles.league} aria-labelledby="strength-worldwide">
+          <>
+            <StrengthAd placementId="strength-global-top" />
+            <section className={styles.league} aria-labelledby="strength-worldwide">
             <h2 className={styles.leagueTitle} id="strength-worldwide">
               Worldwide
               <span className={styles.base}>Each club starts from its own league base</span>
@@ -439,16 +536,18 @@ export default function StrengthRankings({ overview, preview = false }) {
               expandedKey={expandedKey}
               showCompetition
               sampleSize={sample}
+              compact={!detailed}
               onToggleClub={toggleClub}
               onToggleRest={() =>
                 setRestOpen((current) => ({ ...current, global: !current.global }))
               }
             />
-          </section>
+            </section>
+          </>
         ) : (
-          (countryGroup?.leagues || []).map((league) => {
+          (countryGroup?.leagues || []).flatMap((league, index) => {
             const titleId = `strength-${league.slug}`;
-            return (
+            const nodes = [
               <section key={league.slug} className={styles.league} aria-labelledby={titleId}>
                 <h2 className={styles.leagueTitle} id={titleId}>
                   {league.name}
@@ -464,6 +563,7 @@ export default function StrengthRankings({ overview, preview = false }) {
                   expandedKey={expandedKey}
                   showCompetition={false}
                   sampleSize={sample}
+                  compact={!detailed}
                   onToggleClub={toggleClub}
                   onToggleRest={() =>
                     setRestOpen((current) => ({
@@ -472,8 +572,17 @@ export default function StrengthRankings({ overview, preview = false }) {
                     }))
                   }
                 />
-              </section>
-            );
+              </section>,
+            ];
+            if ((index + 1) % 2 === 0) {
+              nodes.push(
+                <StrengthAd
+                  key={`ad-${league.slug}`}
+                  placementId={`strength-after-${league.slug}`}
+                />
+              );
+            }
+            return nodes;
           })
         )}
 

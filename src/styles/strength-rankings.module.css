@@ -141,6 +141,16 @@
   color: var(--faint-text);
 }
 
+.adBreak {
+  margin: 1.25rem 0;
+  min-height: 280px;
+}
+
+.adBreak :global(.AdSenseUnit) {
+  margin: 0;
+  min-height: 0;
+}
+
 .league {
   width: 100%;
   min-width: 0;
@@ -250,6 +260,19 @@
 
 .clubRow {
   cursor: pointer;
+}
+
+.overviewMatch .fixtureGrid {
+  display: grid;
+  box-sizing: border-box;
+  grid-template-columns: minmax(0, 1fr) 2.75rem 4.2rem 3.4rem;
+  column-gap: 0.55rem;
+  row-gap: 0.28rem;
+  align-items: center;
+  width: 100%;
+  padding: 0.15rem 0.45rem 0.55rem;
+  font-size: 0.9em;
+  font-variant-numeric: tabular-nums;
 }
 
 .page button.club {
@@ -466,6 +489,23 @@
     display: none;
   }
 
+  .overviewPad {
+    display: none;
+  }
+
+  .overviewMatch {
+    display: block;
+    margin: -0.35rem 0.15rem 0.55rem;
+  }
+
+  .overviewMatch > td {
+    display: block;
+    width: auto;
+    border: 0;
+    padding: 0;
+    background: transparent;
+  }
+
   .fixtureOnly {
     display: block;
     margin-top: 0.25em;
@@ -531,9 +571,18 @@
     font-size: 1.45rem;
   }
 
-  .switch,
+  .switch {
+    width: auto;
+  }
+
   .countries {
     width: 100%;
+  }
+
+  .page button.chip {
+    padding: 0.26rem 0.58rem;
+    border-radius: 6px;
+    font-size: 0.8rem;
   }
 
   .pill {
@@ -567,6 +616,24 @@
 
   .formCol {
     min-width: calc(10 * 1.15rem + 9 * 0.2rem + 0.5rem);
+  }
+
+  .overviewMatch > td:last-child {
+    vertical-align: top;
+  }
+
+  .overviewMatch .fixtureGrid {
+    width: max-content;
+    max-width: 100%;
+    grid-template-columns: max-content 2.4rem 3.6rem 3.2rem;
+    column-gap: 0.55rem;
+    padding: 0 0 0.45rem;
+  }
+
+  .overviewMatch .fixName {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
   }
 
   .crumb,
