@@ -62,7 +62,6 @@ import {
 import { generateFixtures } from "./logic/getFixtures";
 import PageMeta from "./components/PageMeta";
 import PrivacyPolicy from "./components/PrivacyPolicy";
-import Over18Badge from './components/images/18.webp';
 import { createRoot } from 'react-dom/client';
 import setUserTips from "./components/GameStats";
 import BetSlipFooter from "./components/Betslip";
@@ -1159,14 +1158,6 @@ export function AppContent({ shellMounted = false }) {
           <TelegramIcon size={"3em"} round={true} />
         </TelegramShareButton>
       </div>
-      <div>Soccer Stats Hub is for users over 18 years of age only</div>
-      <img
-        src={Over18Badge.src || Over18Badge} // Next static import returns an object
-        alt="18+ only"
-        className="age-badge" // Add your CSS class here
-        width="100"
-        height="100"
-      />
       <Collapsable buttonText={"Terms and Conditions"} element={<StripePolicies />} />
       <Collapsable buttonText={"Privacy Policy"} element={<PrivacyPolicy />} />
       <a

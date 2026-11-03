@@ -2,6 +2,11 @@ import { useState } from "react";
 import SiteHeader from "./SiteHeader";
 import PageMeta from "./PageMeta";
 import JsonLd from "./JsonLd";
+import JourneyContentBreak from "./JourneyContentBreak";
+import {
+  StaticPageAboveFoldAd,
+  StaticPageFooterAd,
+} from "./StaticPageAds";
 import ArticleShareButton, {
   ArticleDateLine,
 } from "./articles/ArticleShareButton";
@@ -341,7 +346,7 @@ export default function PremierLeague202627() {
         ogImageAlt="Premier League 2026/27 season preview — title race, odds and predicted table | Soccer Stats Hub"
       />
       <JsonLd data={buildPremierLeaguePreviewJsonLd(data)} />
-      <SiteHeader showThemeToggle withFooter>
+      <SiteHeader showThemeToggle withFooter beforeFooter={<StaticPageFooterAd />}>
         <main className="WC26 PL2627">
           <a href="/" className="HomeLink">
             Home
@@ -392,6 +397,9 @@ export default function PremierLeague202627() {
             </div>
           </header>
 
+          <StaticPageAboveFoldAd placementId="pl2627-above-fold" />
+          <JourneyContentBreak placementId="pl2627-after-hero" />
+
           <nav className="WC26__tabs" aria-label="Preview sections">
             {TABS.map((tab) => (
               <button
@@ -405,6 +413,8 @@ export default function PremierLeague202627() {
               </button>
             ))}
           </nav>
+
+          <JourneyContentBreak placementId="pl2627-before-tabs" />
 
           <div className="WC26__tabContent" id="ssh-content">
             <div hidden={activeTab !== "overview"} aria-hidden={activeTab !== "overview"}>

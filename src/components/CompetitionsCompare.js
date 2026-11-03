@@ -3,6 +3,9 @@ import dynamic from "next/dynamic";
 import DataCitation from "./DataCitation";
 import SiteHeader from "./SiteHeader";
 import JourneyContentBreak from "./JourneyContentBreak";
+import AdSenseUnit from "./AdSenseUnit";
+import { ADSENSE_SLOTS } from "../constants/adsense";
+import { StaticPageFooterAd } from "./StaticPageAds";
 import {
   COMPARISON_METRICS,
   formatMetricValue,
@@ -78,7 +81,7 @@ export default function CompetitionsCompare({ overview }) {
   }
 
   return (
-    <SiteHeader showThemeToggle withFooter>
+    <SiteHeader showThemeToggle withFooter beforeFooter={<StaticPageFooterAd />}>
       <main className="StaticPage CompetitionsCompare" id="ssh-content">
         <header className="CompetitionsCompare-header">
           <nav className="CompetitionsCompare-breadcrumb" aria-label="Breadcrumb">
@@ -113,12 +116,23 @@ export default function CompetitionsCompare({ overview }) {
               ) : null}
             </section>
 
+            <AdSenseUnit
+              slot={ADSENSE_SLOTS.COMPETITION_PAGE_DISPLAY}
+              variant="display"
+              placementId="compare-above-fold"
+            />
+
             <JourneyContentBreak>
               Rank leagues by goals, BTTS, cards and more — then explore how those
               markets relate on the style map.
             </JourneyContentBreak>
 
             <CompetitionCompareCharts competitions={competitions} />
+
+            <JourneyContentBreak
+              slot={ADSENSE_SLOTS.COMPETITION_PAGE_IN_ARTICLE}
+              placementId="compare-after-charts"
+            />
 
             <JourneyContentBreak>
               Full season averages for every metric in the table; sort any column to
@@ -207,6 +221,8 @@ export default function CompetitionsCompare({ overview }) {
                 </table>
               </div>
             </section>
+
+            <JourneyContentBreak placementId="compare-after-table" />
 
             <JourneyContentBreak>
               Jump to a single league page or our highest-scoring leagues and fixture

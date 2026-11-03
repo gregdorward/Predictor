@@ -3,6 +3,7 @@ import { makeStyles } from "@material-ui/core/styles";
 import { getHighestScoringLeagues, getLowestScoringLeagues } from "../logic/getStatsInsights";
 import SiteHeader from "./SiteHeader";
 import StatsFooterAd from "./StatsFooterAd";
+import StatsInContentAd from "./StatsInContentAd";
 import DataCitation from "./DataCitation";
 import PageMeta from "./PageMeta";
 import StatPageSeoContent from "./StatPageSeoContent";
@@ -167,6 +168,8 @@ export default function HighestScoringLeagues({
             {...STAT_PAGE_SEO.highestScoringLeagues}
             intro={buildHighestScoringLeaguesIntro(leagues)}
           />
+
+          <StatsInContentAd />
 
           <h2 className={classes.sectionHeading} id="highest-scoring">
             Leagues with the highest goals per match

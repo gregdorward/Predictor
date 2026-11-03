@@ -3,7 +3,7 @@
 export const LIST_AD_CONFIG = {
   firstAfterIndex: 4,
   interval: 10,
-  maxPerList: 2,
+  maxPerList: 4,
 };
 
 export function getListAdSlotIndex(itemIndex, itemCount) {

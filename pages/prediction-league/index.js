@@ -2,6 +2,11 @@ import JsonLd from "../../src/components/JsonLd";
 import PageMeta from "../../src/components/PageMeta";
 import PredictionLeagueClient from "../../src/components/PredictionLeagueClient";
 import SiteHeader from "../../src/components/SiteHeader";
+import JourneyContentBreak from "../../src/components/JourneyContentBreak";
+import {
+  StaticPageAboveFoldAd,
+  StaticPageFooterAd,
+} from "../../src/components/StaticPageAds";
 import StatPageSeoContent, {
   StatPageSeoFaq,
 } from "../../src/components/StatPageSeoContent";
@@ -82,13 +87,15 @@ export default function PredictionLeaguePage({
     <>
       <PageMeta canonicalPath={CANONICAL_PATH} />
       <JsonLd data={buildJsonLd(monthLabel)} />
-      <SiteHeader showThemeToggle withFooter>
+      <SiteHeader showThemeToggle withFooter beforeFooter={<StaticPageFooterAd />}>
         <div id="ssh-content" className="journey-content">
           <main className="StatPageMain prediction-league-page">
             <h1>Prediction League</h1>
             <p className="StatPageSubtitle">
               The {monthLabel} table ranks tipsters by profit and ROI.
             </p>
+
+            <StaticPageAboveFoldAd placementId="prediction-league-above-fold" />
 
             <StatPageSeoContent
               intro="Welcome to the Soccer Stats Hub Prediction League. Each month we track the tips submitted from the homepage fixture list and rank each user based on the profit made on their predictions. Each user begins the month with a starting balance of 50 (imaginary) units which they can choose to place on short price singles, long-shots or multis. At the end of the month, the winner gets a month's free premium subscription. All you need is an account and username to take part."
@@ -101,10 +108,14 @@ export default function PredictionLeaguePage({
               faqItems={FAQ_ITEMS}
             />
 
+            <JourneyContentBreak placementId="prediction-league-before-table" />
+
             <PredictionLeagueClient
               initialLeaderboard={initialLeaderboard}
               monthKey={monthKey}
             />
+
+            <JourneyContentBreak placementId="prediction-league-before-faq" />
 
             <StatPageSeoFaq faqItems={FAQ_ITEMS} />
           </main>

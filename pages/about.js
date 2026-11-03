@@ -1,6 +1,11 @@
 import SiteHeader from "../src/components/SiteHeader";
 import PageMeta from "../src/components/PageMeta";
 import JsonLd from "../src/components/JsonLd";
+import JourneyContentBreak from "../src/components/JourneyContentBreak";
+import {
+  StaticPageAboveFoldAd,
+  StaticPageFooterAd,
+} from "../src/components/StaticPageAds";
 import { FOUNDER_AUTHOR_LABEL, buildFounderPersonSchema } from "../src/seo/authorConfig";
 import { FEATURED_COMPETITION_SLUGS, getCompetitionBySlug } from "../src/seo/competitionCatalog";
 import { SITE_URL } from "../src/seo/pageMetaConfig";
@@ -33,12 +38,13 @@ export default function AboutPage() {
     <>
       <PageMeta />
       <JsonLd data={ABOUT_JSON_LD} />
-      <SiteHeader showThemeToggle withFooter>
+      <SiteHeader showThemeToggle withFooter beforeFooter={<StaticPageFooterAd />}>
         <main className="StaticPage" id="ssh-content">
           <a href="/" className="HomeLink">
             Home
           </a>
           <h1>About Soccer Stats Hub</h1>
+          <StaticPageAboveFoldAd placementId="about-above-fold" />
           <p>
             Soccer Stats Hub is a football statistics and predictions platform built for fans
             who want more than fixture lists. We combine deep historical data, current
@@ -95,6 +101,7 @@ export default function AboutPage() {
           <p>
             <a href="/competitions/">Browse all football competitions</a>
           </p>
+          <JourneyContentBreak placementId="about-mid-page" />
           <h2>What makes us different</h2>
           <ul>
             <li>Transparent predictions with the underlying stats visible on every match page</li>

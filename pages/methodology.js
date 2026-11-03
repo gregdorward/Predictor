@@ -4,6 +4,11 @@ import JsonLd from "../src/components/JsonLd";
 import ArticleTableOfContents from "../src/components/articles/ArticleTableOfContents";
 import ArticleShareButton from "../src/components/articles/ArticleShareButton";
 import { ArticleDateLine } from "../src/components/articles/ArticleShareButton";
+import JourneyContentBreak from "../src/components/JourneyContentBreak";
+import {
+  StaticPageAboveFoldAd,
+  StaticPageFooterAd,
+} from "../src/components/StaticPageAds";
 import {
   FOUNDER_AUTHOR_LABEL,
   METHODOLOGY_REVIEWED_AT,
@@ -61,7 +66,7 @@ export default function MethodologyPage() {
     <>
       <PageMeta />
       <JsonLd data={METHODOLOGY_JSON_LD} />
-      <SiteHeader showThemeToggle withFooter>
+      <SiteHeader showThemeToggle withFooter beforeFooter={<StaticPageFooterAd />}>
         <main className="StaticPage StaticPage--article">
           <nav className="Articles__crumbs" aria-label="Breadcrumb">
             <a href="/" className="HomeLink">
@@ -87,6 +92,9 @@ export default function MethodologyPage() {
 
           <div id="ssh-content" className="journey-content Articles__content">
             <ArticleTableOfContents sections={METHODOLOGY_SECTIONS} />
+
+            <StaticPageAboveFoldAd placementId="methodology-above-fold" />
+            <JourneyContentBreak placementId="methodology-after-intro" />
 
             <h2 id="data-inputs" className="ArticleProse__heading">
               What we load
@@ -120,6 +128,8 @@ export default function MethodologyPage() {
                 Correct score probabilities from the goal expectation step below
               </li>
             </ul>
+
+            <JourneyContentBreak placementId="methodology-after-signals" />
 
             <h2 id="goal-expectation" className="ArticleProse__heading">
               Expected goals (lambda)
@@ -177,6 +187,8 @@ export default function MethodologyPage() {
               engine.
             </p>
 
+            <JourneyContentBreak placementId="methodology-after-lambda" />
+
             <h2 id="poisson-markets" className="ArticleProse__heading">
               The score grid
             </h2>
@@ -208,6 +220,8 @@ export default function MethodologyPage() {
               highest-probability cell in the same matrix, not a separate model.
             </p>
 
+            <JourneyContentBreak placementId="methodology-after-grid" />
+
             <h2 id="using-outputs" className="ArticleProse__heading">
               Using it on the site
             </h2>
@@ -230,6 +244,8 @@ export default function MethodologyPage() {
               </a>
               .
             </p>
+
+            <JourneyContentBreak placementId="methodology-after-usage" />
 
             <h2 id="update-cadence" className="ArticleProse__heading">
               When numbers refresh

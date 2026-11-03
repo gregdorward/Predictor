@@ -1,6 +1,12 @@
+import { Fragment } from "react";
 import SiteHeader from "../src/components/SiteHeader";
 import PageMeta from "../src/components/PageMeta";
 import JsonLd from "../src/components/JsonLd";
+import JourneyContentBreak from "../src/components/JourneyContentBreak";
+import {
+  StaticPageAboveFoldAd,
+  StaticPageFooterAd,
+} from "../src/components/StaticPageAds";
 
 const FAQ_ITEMS = [
   {
@@ -93,7 +99,7 @@ export default function FaqPage() {
     <>
       <PageMeta />
       <JsonLd data={FAQ_JSON_LD} />
-      <SiteHeader showThemeToggle withFooter>
+      <SiteHeader showThemeToggle withFooter beforeFooter={<StaticPageFooterAd />}>
         <main className="StaticPage" id="ssh-content">
           <a href="/" className="HomeLink">
             Home
@@ -103,12 +109,18 @@ export default function FaqPage() {
             Transparent football predictions, BTTS and Over 2.5 research, Premium pricing,
             and how Soccer Stats Hub compares model probability with bookmaker odds.
           </p>
+          <StaticPageAboveFoldAd placementId="faq-above-fold" />
           <div className="StaticPage-faq">
-            {FAQ_ITEMS.map((item) => (
-              <section key={item.question} className="StaticPage-faqItem">
-                <h2>{item.question}</h2>
-                <p>{item.answer}</p>
-              </section>
+            {FAQ_ITEMS.map((item, index) => (
+              <Fragment key={item.question}>
+                <section className="StaticPage-faqItem">
+                  <h2>{item.question}</h2>
+                  <p>{item.answer}</p>
+                </section>
+                {(index + 1) % 4 === 0 && index < FAQ_ITEMS.length - 1 ? (
+                  <JourneyContentBreak placementId={`faq-after-${index + 1}`} />
+                ) : null}
+              </Fragment>
             ))}
           </div>
           <p className="StaticPage-moreLinks">

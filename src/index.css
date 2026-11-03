@@ -652,7 +652,7 @@ h1 {
 
 .HamburgerMenuDiv--open .HamburgerMenuButton {
   position: relative;
-  /* Above MobileNavOverlay and typical Mediavine adhesion / sticky units. */
+  /* Above MobileNavOverlay and typical AdSense anchor / sticky units. */
   z-index: 1000001;
 }
 
@@ -693,7 +693,7 @@ h1 {
   left: 0;
   right: 0;
   bottom: 0;
-  /* Mediavine adhesion / Scriptwrapper stickies often sit well above 1100. */
+  /* AdSense anchor / sticky units often sit well above 1100. */
   z-index: 1000000;
   width: 100%;
   background-color: var(--background-color);

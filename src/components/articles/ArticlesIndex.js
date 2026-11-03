@@ -1,6 +1,10 @@
 import SiteHeader from "../SiteHeader";
 import PageMeta from "../PageMeta";
 import JsonLd from "../JsonLd";
+import {
+  StaticPageAboveFoldAd,
+  StaticPageFooterAd,
+} from "../StaticPageAds";
 import { SITE_NAME, SITE_URL } from "../../seo/pageMetaConfig";
 
 function formatDate(dateStr) {
@@ -31,7 +35,7 @@ export default function ArticlesIndex({ articles }) {
     <>
       <PageMeta />
       <JsonLd data={ARTICLES_JSON_LD} />
-      <SiteHeader showThemeToggle withFooter>
+      <SiteHeader showThemeToggle withFooter beforeFooter={<StaticPageFooterAd />}>
         <main className="Articles Articles--index">
           <a href="/" className="HomeLink">
             Home
@@ -44,6 +48,8 @@ export default function ArticlesIndex({ articles }) {
               Built for readers who want the numbers and the story.
             </p>
           </header>
+
+          <StaticPageAboveFoldAd placementId="articles-index-above-fold" />
 
           <ul className="Articles__list" id="ssh-content">
             {(articles || []).map((article) => (
