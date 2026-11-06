@@ -6796,7 +6796,7 @@ export async function getScorePrediction(day, options = {}) {
         };
         pointsDiffTips.push(pointsDiffObject);
       } else if (
-        match.XGdifferential === true &&
+        match.pointsDifferential === true &&
         match.prediction === "awayWin" &&
         match.status !== "notEnoughData" &&
         match.status !== "suspended" &&
@@ -6855,7 +6855,7 @@ export async function getScorePrediction(day, options = {}) {
         };
         rollingDiffTips.push(rollingDiffObject);
       } else if (
-        match.XGdifferential === true &&
+        match.rollingGoalDiff === true &&
         match.prediction === "awayWin" &&
         match.status !== "notEnoughData" &&
         match.status !== "suspended" &&
