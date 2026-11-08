@@ -8,11 +8,18 @@ export default function CancelSubscription() {
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState("");
   const [isPaidUser, setIsPaidUser] = useState(false);
+  const [checkingStatus, setCheckingStatus] = useState(true);
 
   useEffect(() => {
+    let cancelled = false;
+
     async function fetchSubscriptionStatus() {
-      const user = auth?.currentUser;
-      if (!user || !db) return;
+      if (!auth || !db) return;
+
+      // currentUser is null on a fresh page load until the persisted session is restored.
+      await auth.authStateReady();
+      const user = auth.currentUser;
+      if (!user) return;
 
       try {
         const userRef = doc(db, "users", user.uid);
@@ -20,7 +27,7 @@ export default function CancelSubscription() {
 
         if (userSnap.exists()) {
           const data = userSnap.data();
-          setIsPaidUser(data.isPaidUser || false);
+          if (!cancelled) setIsPaidUser(data.isPaidUser || false);
         } else {
           console.error("User document not found in Firestore");
         }
@@ -29,7 +36,13 @@ export default function CancelSubscription() {
       }
     }
 
-    fetchSubscriptionStatus();
+    fetchSubscriptionStatus().finally(() => {
+      if (!cancelled) setCheckingStatus(false);
+    });
+
+    return () => {
+      cancelled = true;
+    };
   }, []);
 
   const handleCancelSubscription = async () => {
@@ -74,7 +87,9 @@ export default function CancelSubscription() {
     <div className="p-4 bg-white shadow-md rounded-lg">
       <a href="/" className="HomeLink">Home</a>
       <h1 className="text-xl font-semibold mb-2">Manage Subscription</h1>
-      {isPaidUser ? (
+      {checkingStatus ? (
+        <p className="text-gray-500">Checking your subscription...</p>
+      ) : isPaidUser ? (
         <>
           <p className="mb-2">Your subscription is active. Cancelations will come into effect after the end of your current billing cycle and are irreversible</p>
           <button
