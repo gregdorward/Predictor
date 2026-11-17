@@ -1,5 +1,10 @@
 /* Premium upsell: width + free/paid tier contrast (full variant only). */
 
+/* In-page Auto ads must not appear inside the upsell (sells ad-free Premium). */
+.ssh-auto-ads-exclude .google-auto-placed {
+  display: none !important;
+}
+
 .PremiumUpsell:not(.PremiumUpsell--compact):not(.PremiumUpsell--banner) {
   max-width: min(100%, 68rem);
   width: 100%;

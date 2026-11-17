@@ -74,6 +74,11 @@ requests alone do not establish an earnings improvement.
   the manual-placement baseline. Check mobile navigation and spacing before
   keeping additional formats; don't enable all in-page Auto ads on top of the
   existing manual units without measuring the resulting density.
+- **Premium upsell:** markup uses `ssh-auto-ads-exclude` on
+  `PremiumUpsell` so in-page Auto ads are stripped client-side and hidden in
+  CSS. In AdSense → Ads → your site → **Excluded areas**, also exclude
+  `.ssh-auto-ads-exclude` (or `.PremiumUpsell`) from **in-page** Auto ads so
+  Google does not inject there in the first place.
 - Use placement reports to decide whether lazy loading's viewability benefit
   outweighs reduced requests for lower-page inventory. Adjust the preload margin
   if fast scrolling or slower connections leave visible placements unfilled.

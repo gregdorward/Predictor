@@ -159,7 +159,7 @@ export default function PremiumUpsell({
 
   return (
     <div
-      className={`PremiumUpsell${compact ? " PremiumUpsell--compact" : ""}${
+      className={`PremiumUpsell ssh-auto-ads-exclude${compact ? " PremiumUpsell--compact" : ""}${
         banner ? " PremiumUpsell--banner" : ""
       }${className ? ` ${className}` : ""}`}
     >
