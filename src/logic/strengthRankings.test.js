@@ -9,11 +9,13 @@ import {
   groupDomesticLeagues,
 } from "./competitionStrengthBases";
 import {
+  STRENGTH_K,
   STRENGTH_LONG_WINDOW,
   STRENGTH_RECENCY,
   STRENGTH_WINDOW,
   buildStrengthLookup,
   buildStrengthOverview,
+  expectedStrengthScore,
   isValidStrengthOverviewPayload,
   lookupFixtureStrength,
   maxLastSixSwing,
@@ -54,6 +56,26 @@ function expectTwiceTheOldest(weights) {
     expect(weights[index - 1]).toBeGreaterThan(weights[index]);
   }
 }
+
+describe("venue weighting", () => {
+  test("away results sit between home wins and home losses at equal strength", () => {
+    const rating = 1600;
+    const margin = strengthMarginWeight(1, 0);
+    const homeWin =
+      STRENGTH_K * margin * (1 - expectedStrengthScore(rating, rating, true));
+    const awayWin =
+      STRENGTH_K * margin * (1 - expectedStrengthScore(rating, rating, false));
+    const homeLoss =
+      STRENGTH_K * margin * Math.abs(0 - expectedStrengthScore(rating, rating, true));
+    const awayLoss =
+      STRENGTH_K * margin * Math.abs(0 - expectedStrengthScore(rating, rating, false));
+
+    expect(homeWin).toBeLessThan(awayWin);
+    expect(awayWin).toBeLessThanOrEqual(homeLoss);
+    expect(awayLoss).toBeLessThan(homeLoss);
+    expect(awayWin / homeWin).toBeLessThan(1.4);
+  });
+});
 
 describe("recency weights", () => {
   test("the latest game weighs twice the oldest in each window", () => {

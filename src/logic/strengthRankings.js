@@ -44,11 +44,13 @@ export function recencyWeights(windowSize) {
 }
 export const STRENGTH_SCALE = 400;
 /**
- * Chosen here, not taken from ClubElo. When two clubs are level, 65 points
- * makes the home side's expected result about 0.59, where a win is 1 and a
- * draw is 0.5. World Football Elo uses 100 for the same term.
+ * Chosen here, not taken from ClubElo. When two clubs are level, 50 points
+ * makes the home side's expected result about 0.57, where a win is 1 and a
+ * draw is 0.5. Away results still move the rating more than home wins and
+ * less than home losses, without over-rewarding road form. World Football Elo
+ * uses 100 for the same term.
  */
-export const STRENGTH_HOME_ADVANTAGE = 65;
+export const STRENGTH_HOME_ADVANTAGE = 50;
 /** Goal difference at which the margin weight stops growing. */
 export const STRENGTH_MARGIN_CAP = 6;
 /**
