@@ -97,6 +97,14 @@ import { additiveLambdas } from "./additiveLambda.js";
 import { blendModelWithMarket1x2, devigThreeWayFromOdds } from "./oddsProbabilityBlend.js";
 import { enrichMatchWithBestOdds } from "./enrichMatchBestOdds.js";
 import { runWithConcurrency } from "../utils/runWithConcurrency.js";
+import {
+  bumpPredictionRunEpoch,
+  isCurrentPredictionRun,
+} from "./predictionRunEpoch.js";
+import {
+  getFixturesEpoch,
+  shouldApplyPredictionFixtures,
+} from "./fixturesEpoch.js";
 
 export {
   CLEAR_OUTCOME_MARGIN,
@@ -6412,6 +6420,12 @@ export async function getScorePrediction(day, options = {}) {
     typeof options?.onCorePredictions === "function"
       ? options.onCorePredictions
       : null;
+  const predictionRunId = bumpPredictionRunEpoch();
+  const fixturesEpochAtStart = getFixturesEpoch();
+
+  const shouldContinuePredictionRun = () =>
+    isCurrentPredictionRun(predictionRunId) &&
+    shouldApplyPredictionFixtures(fixturesEpochAtStart);
 
   clicked = true;
   bestBets = [];
@@ -7057,12 +7071,16 @@ export async function getScorePrediction(day, options = {}) {
 
   await persistSshSnapshots();
 
-  if (onCorePredictions) {
+  if (onCorePredictions && shouldContinuePredictionRun()) {
     onCorePredictions(matches);
     await waitForPredictionPanelTargets();
   }
 
   const finishSecondaryPredictionWork = async () => {
+    if (!shouldContinuePredictionRun()) {
+      return;
+    }
+
     await waitForPredictionPanelTargets();
 
     render(
