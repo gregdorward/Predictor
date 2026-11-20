@@ -75,6 +75,8 @@ export function RadarChart(props) {
     data2,
     team1,
     team2,
+    average,
+    averageLabel = "Competition average",
     max = 1,
     shareCapture = false,
     locked = false,
@@ -99,7 +101,9 @@ export function RadarChart(props) {
   const homeFill = withAlpha(colors.home, 0.2);
   const awayColor = colors.away;
   const awayFill = withAlpha(colors.away, 0.2);
+  const averageColor = colors.reference;
   const pointBorder = colors.surface;
+  const hasAverage = Array.isArray(average) && average.some((v) => v != null);
 
   const abbreviateRadarLabel = (label) => {
     if (RADAR_LABEL_ABBREVIATIONS[label]) {
@@ -157,6 +161,7 @@ export function RadarChart(props) {
     onHover: focusDatasetOnHover([
       { border: homeColor, fill: homeFill },
       { border: awayColor, fill: awayFill },
+      { border: averageColor, fill: "transparent" },
     ]),
     interaction: { mode: "nearest", intersect: false },
     scales: {
@@ -213,7 +218,7 @@ export function RadarChart(props) {
             const rawPair = Array.isArray(rawTooltipLabels)
               ? rawTooltipLabels[index]
               : null;
-            if (rawPair) {
+            if (rawPair && context.datasetIndex < 2) {
               const raw =
                 context.datasetIndex === 0 ? rawPair.home : rawPair.away;
               return `${context.dataset.label}: ${raw}`;
@@ -261,6 +266,23 @@ export function RadarChart(props) {
     datasets: [
       { label: team1, data, ...datasetStyle(homeColor, homeFill) },
       { label: team2, data: data2, ...datasetStyle(awayColor, awayFill) },
+      ...(hasAverage
+        ? [
+            {
+              label: averageLabel,
+              data: average,
+              fill: false,
+              backgroundColor: "transparent",
+              borderColor: averageColor,
+              borderDash: [5, 4],
+              borderWidth: 1.5,
+              pointRadius: 0,
+              pointHoverRadius: 4,
+              pointBackgroundColor: averageColor,
+              spanGaps: true,
+            },
+          ]
+        : []),
     ],
   };
 

@@ -1,8 +1,10 @@
 import {
   buildGoalTimingHeatmap,
+  buildGoalTimingRates,
   getGoalTimingBucketIndex,
   getGoalTimingHeatOpacity,
   parseGoalMinute,
+  scaleGoalTimingRates,
 } from "./goalTimingHeatmap";
 
 describe("goalTimingHeatmap", () => {
@@ -56,6 +58,43 @@ describe("goalTimingHeatmap", () => {
     );
 
     expect(heatmap.hasData).toBe(false);
+  });
+
+  test("counts recorded matches including goalless ones", () => {
+    const heatmap = buildGoalTimingHeatmap(
+      [
+        { goal_timings_recorded: 1, homeGoals_timings: ["12"], awayGoals_timings: [] },
+        { goal_timings_recorded: 1, homeGoals_timings: [], awayGoals_timings: [] },
+      ],
+      [{ goal_timings_recorded: 0, homeGoals_timings: [], awayGoals_timings: [] }]
+    );
+
+    expect(heatmap.matchesWithTimings).toBe(1);
+    expect(heatmap.matchesRecorded).toBe(2);
+  });
+
+  test("builds per team per game rates from recorded fixtures", () => {
+    const recorded = Array.from({ length: 9 }, () => ({
+      goal_timings_recorded: 1,
+      homeGoals_timings: [],
+      awayGoals_timings: [],
+    }));
+    const fixtures = [
+      ...recorded,
+      { goal_timings_recorded: 1, homeGoals_timings: ["5", "88"], awayGoals_timings: ["90+2", "50"] },
+      { goal_timings_recorded: 0, homeGoals_timings: ["20"], awayGoals_timings: [] },
+    ];
+
+    expect(buildGoalTimingRates(fixtures)).toEqual([0.05, 0, 0, 0.05, 0, 0.1]);
+    expect(buildGoalTimingRates(recorded)).toBeNull();
+  });
+
+  test("scales rates to a team's recorded games", () => {
+    const scaled = scaleGoalTimingRates([0.05, 0.1], 14);
+    expect(scaled[0]).toBeCloseTo(0.7);
+    expect(scaled[1]).toBeCloseTo(1.4);
+    expect(scaleGoalTimingRates(null, 14)).toBeNull();
+    expect(scaleGoalTimingRates([0.05], 0)).toBeNull();
   });
 
   test("derives smooth heat opacity from bucket counts", () => {

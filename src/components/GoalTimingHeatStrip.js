@@ -1,6 +1,7 @@
 import {
   getGoalTimingHeatOpacity,
   GOAL_TIMING_BUCKET_LABELS,
+  scaleGoalTimingRates,
 } from "../utils/goalTimingHeatmap";
 import ShareableVisual from "./ShareableVisual";
 import { sanitizeImageFilename } from "../utils/captureElementImage";
@@ -14,13 +15,22 @@ function getHeatCellState(count, maxValue) {
   return { isEmpty: false, opacity, strong: opacity >= 0.55 };
 }
 
-function GoalTimingHeatRow({ rowKey, buckets, maxValue }) {
+function formatAverageCount(value) {
+  return value >= 10 ? String(Math.round(value)) : value.toFixed(1);
+}
+
+function GoalTimingHeatRow({ rowKey, buckets, averageBuckets, maxValue }) {
   return (
     <div className="GoalTimingHeat-team">
       <div className="GoalTimingHeat-row" role="list">
         {buckets.map((count, index) => {
           const label = GOAL_TIMING_BUCKET_LABELS[index];
           const { isEmpty, opacity, strong } = getHeatCellState(count, maxValue);
+          const average = averageBuckets?.[index];
+          const averageText =
+            average == null
+              ? ""
+              : `, competition average ${formatAverageCount(average)}`;
 
           return (
             <div
@@ -36,13 +46,34 @@ function GoalTimingHeatRow({ rowKey, buckets, maxValue }) {
                 isEmpty ? undefined : { "--heat-opacity": opacity }
               }
               role="listitem"
-              title={`${label}: ${count} goal${count === 1 ? "" : "s"}`}
+              title={`${label}: ${count} goal${count === 1 ? "" : "s"}${averageText}`}
             >
               {count > 0 ? <span>{count}</span> : null}
             </div>
           );
         })}
       </div>
+      {averageBuckets ? (
+        <div
+          className="GoalTimingHeat-row GoalTimingHeat-row--average"
+          role="list"
+          aria-label="Competition average"
+        >
+          {averageBuckets.map((value, index) => {
+            const label = GOAL_TIMING_BUCKET_LABELS[index];
+            return (
+              <div
+                key={`${rowKey}-average-${label}`}
+                className="GoalTimingHeat-cell GoalTimingHeat-cell--average"
+                role="listitem"
+                title={`${label}: competition average ${formatAverageCount(value)}`}
+              >
+                <span>{formatAverageCount(value)}</span>
+              </div>
+            );
+          })}
+        </div>
+      ) : null}
       <div className="GoalTimingHeat-axis" aria-hidden="true">
         {GOAL_TIMING_BUCKET_LABELS.map((label) => (
           <span key={label}>{label}</span>
@@ -58,6 +89,8 @@ function GoalTimingPair({
   awayTeam,
   homeBuckets,
   awayBuckets,
+  homeAverage,
+  awayAverage,
   homeHasData,
   awayHasData,
   maxValue,
@@ -80,6 +113,7 @@ function GoalTimingPair({
           <GoalTimingHeatRow
             rowKey={homeTeam}
             buckets={homeBuckets}
+            averageBuckets={homeAverage}
             maxValue={maxValue}
           />
         ) : null}
@@ -87,6 +121,7 @@ function GoalTimingPair({
           <GoalTimingHeatRow
             rowKey={awayTeam}
             buckets={awayBuckets}
+            averageBuckets={awayAverage}
             maxValue={maxValue}
           />
         ) : null}
@@ -100,11 +135,19 @@ export default function GoalTimingHeatStrip({
   awayTeam,
   homeData,
   awayData,
+  averageRates = null,
 }) {
   const homeHasData = Boolean(homeData?.hasData);
   const awayHasData = Boolean(awayData?.hasData);
 
   if (!homeHasData && !awayHasData) return null;
+
+  const homeAverage = homeHasData
+    ? scaleGoalTimingRates(averageRates, homeData.matchesRecorded)
+    : null;
+  const awayAverage = awayHasData
+    ? scaleGoalTimingRates(averageRates, awayData.matchesRecorded)
+    : null;
 
   const scoredMax = Math.max(
     ...(homeData?.scored || []),
@@ -137,6 +180,8 @@ export default function GoalTimingHeatStrip({
         awayTeam={awayTeam}
         homeBuckets={homeData?.scored}
         awayBuckets={awayData?.scored}
+        homeAverage={homeAverage}
+        awayAverage={awayAverage}
         homeHasData={homeHasData}
         awayHasData={awayHasData}
         maxValue={scoredMax}
@@ -147,6 +192,8 @@ export default function GoalTimingHeatStrip({
         awayTeam={awayTeam}
         homeBuckets={homeData?.conceded}
         awayBuckets={awayData?.conceded}
+        homeAverage={homeAverage}
+        awayAverage={awayAverage}
         homeHasData={homeHasData}
         awayHasData={awayHasData}
         maxValue={concededMax}
@@ -161,6 +208,8 @@ export function GoalTimingHeatShare({
   awayTeam,
   homeData,
   awayData,
+  averageRates = null,
+  competitionName = "",
   text = "Goal timing",
 }) {
   const homeHasData = Boolean(homeData?.hasData);
@@ -174,6 +223,12 @@ export function GoalTimingHeatShare({
     `${homeTeam}-vs-${awayTeam}-goal-timing`
   );
   const shareTitle = `${homeTeam} vs ${awayTeam} - ${text}`;
+  const competition = competitionName || "the competition";
+  const showAverageNote = Boolean(
+    averageRates &&
+      ((homeHasData && homeData.matchesRecorded > 0) ||
+        (awayHasData && awayData.matchesRecorded > 0))
+  );
 
   return (
     <ShareableVisual
@@ -184,12 +239,19 @@ export function GoalTimingHeatShare({
       <div data-share-capture className="ComparisonBarChart GoalTimingHeat">
         <div className="GoalTimingHeat-header">
           <p className="GoalTimingHeat-title">{text}</p>
+          {showAverageNote ? (
+            <p className="GoalTimingHeat-note">
+              Dashed rows show a typical team in {competition} over the same
+              number of games as each team has played.
+            </p>
+          ) : null}
         </div>
         <GoalTimingHeatStrip
           homeTeam={homeTeam}
           awayTeam={awayTeam}
           homeData={homeData}
           awayData={awayData}
+          averageRates={averageRates}
         />
       </div>
     </ShareableVisual>

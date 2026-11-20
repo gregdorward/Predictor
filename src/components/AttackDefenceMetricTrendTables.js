@@ -3,6 +3,12 @@ import { CreateBadge } from "./createBadge";
 import { sanitizeImageFilename } from "../utils/captureElementImage";
 import { buildAttackDefenceMetricTrends } from "../utils/metricTrendAnalysis";
 
+const LEVEL_LABELS = {
+  above: "Above avg",
+  below: "Below avg",
+  level: "Around avg",
+};
+
 const TREND_META = {
   improving: {
     label: "Improving",
@@ -59,7 +65,17 @@ function TeamMetricTrendTable({ teamName, badge, rows = [] }) {
         <tbody>
           {rows.map((row) => (
             <tr key={row.key}>
-              <th scope="row">{row.label}</th>
+              <th scope="row">
+                <span className="MetricTrendTables-metric">{row.label}</span>
+                {row.level ? (
+                  <span
+                    className={`MetricTrendTables-level MetricTrendTables-level--${row.level}`}
+                    title={row.levelDetail}
+                  >
+                    {LEVEL_LABELS[row.level]}
+                  </span>
+                ) : null}
+              </th>
               <td className="MetricTrendTables-trendCell">
                 <TrendArrow direction={row.direction} />
               </td>
@@ -121,9 +137,10 @@ export default function AttackDefenceMetricTrendTables({
   awayBadge,
   homeResults = [],
   awayResults = [],
+  averages = null,
   text = "All Competition Games - Attack & Defence trends",
 }) {
-  const trends = buildAttackDefenceMetricTrends(homeResults, awayResults);
+  const trends = buildAttackDefenceMetricTrends(homeResults, awayResults, averages);
   const hasHome = homeResults.length > 0;
   const hasAway = awayResults.length > 0;
 
@@ -144,7 +161,9 @@ export default function AttackDefenceMetricTrendTables({
         <div className="ShotAreaCharts-header">
           <p className="ShotAreaCharts-title">{text}</p>
           <p className="ShotAreaCharts-subtitle">
-            Arrow = season-long direction. Summary shows the per-game shift and recent vs early form.
+            {averages
+              ? "Arrow = season-long direction. Above avg means a better season average than a typical team. Summary shows the per-game shift and recent vs early form."
+              : "Arrow = season-long direction. Summary shows the per-game shift and recent vs early form."}
           </p>
         </div>
 

@@ -6623,20 +6623,298 @@ a.PreviousMatchLink {
   padding-right: 1em;
 }
 
-.AllStats {
-  margin-top: 1em;
+.StatCompare {
+  width: 100%;
+  margin: 0.25rem 0 1.5rem;
+  color: var(--text-color);
+  text-align: left;
+  font-variant-numeric: tabular-nums;
 }
 
-.AllStats li {
-  line-height: 2em;
+.StatCompare-head {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  padding: 0.75rem 0 0.5rem;
 }
 
-.AllStats li:nth-child(even) {
+.StatCompare-teams {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: 0.75rem;
+}
+
+.StatCompare-team {
+  display: flex;
+  flex-direction: column;
+  gap: 0.1rem;
+  min-width: 0;
+}
+
+.StatCompare-team--home {
+  --team-tone: var(--chart-home);
+}
+
+.StatCompare-team--away {
+  --team-tone: var(--chart-away);
+  align-items: flex-end;
+  text-align: right;
+}
+
+.StatCompare-teamName {
+  display: block;
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 1rem;
+  font-weight: 600;
+  line-height: 1.3;
+}
+
+.StatCompare-team--home .StatCompare-teamName::before,
+.StatCompare-team--away .StatCompare-teamName::after {
+  content: "";
+  display: inline-block;
+  width: 0.6rem;
+  height: 0.6rem;
+  border-radius: 2px;
+  background: var(--team-tone);
+  vertical-align: 0.05em;
+}
+
+.StatCompare-team--home .StatCompare-teamName::before {
+  margin-right: 0.45rem;
+}
+
+.StatCompare-team--away .StatCompare-teamName::after {
+  margin-left: 0.45rem;
+}
+
+.StatCompare-teamContext {
+  font-size: 0.78rem;
+  font-weight: 400;
+  color: var(--faint-text);
+}
+
+.StatCompare-key {
+  margin: 0;
+  font-size: 0.78rem;
+  font-weight: 400;
+  line-height: 1.4;
+  color: var(--faint-text);
+  text-align: center;
+}
+
+.StatCompare .StatHeader {
+  text-align: center;
+}
+
+.StatCompare-rows {
+  margin: 0;
+  padding: 0.25rem 0 0.5rem;
+  list-style: none;
+}
+
+.StatCompare-row {
+  display: grid;
+  grid-template-columns: minmax(4.5rem, 1fr) minmax(0, 2fr) minmax(4.5rem, 1fr);
+  grid-template-areas:
+    "home label away"
+    "bar bar bar";
+  column-gap: 0.75rem;
+  row-gap: 0.45rem;
+  align-items: end;
+  margin: 0;
+  padding: 0.7rem 0;
+  line-height: 1.25;
+  border-bottom: 1px solid var(--third-background-color);
+}
+
+.StatCompare-row:last-child {
+  border-bottom: none;
+}
+
+.StatCompare-srOnly {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.StatCompare-value {
+  min-width: 0;
+  font-size: 0.95rem;
+  font-weight: 600;
   color: var(--text-color);
 }
 
-.AllStats li:last-child {
-  margin-bottom: 1em;
+.StatCompare-value--home {
+  grid-area: home;
+  padding-left: 1em;
+  text-align: left;
+}
+
+.StatCompare-value--away {
+  grid-area: away;
+  padding-right: 1em;
+  text-align: right;
+}
+
+.StatCompare-value.is-muted {
+  font-weight: 400;
+}
+
+.StatCompare-label {
+  grid-area: label;
+  min-width: 0;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--faint-text);
+  text-align: center;
+}
+
+.StatCompare-context {
+  display: block;
+  margin-top: 0.15rem;
+  font-size: 0.72rem;
+  font-weight: 400;
+  font-variant-numeric: tabular-nums;
+}
+
+.StatCompare-visual {
+  grid-area: bar;
+  display: block;
+}
+
+.StatCompare-bar {
+  display: flex;
+  width: 100%;
+  height: 6px;
+  gap: 4px;
+}
+
+.StatCompare-bar.is-empty {
+  border-radius: 3px;
+  background: var(--chart-track);
+}
+
+.StatCompare-fill {
+  display: block;
+  height: 100%;
+  border-radius: 3px;
+  background: var(--fill-tone);
+}
+
+.StatCompare-fill--home {
+  --fill-tone: var(--chart-home);
+}
+
+.StatCompare-fill--away {
+  --fill-tone: var(--chart-away);
+}
+
+.StatCompare-fill--home.is-muted {
+  --fill-tone: var(--chart-home-soft);
+}
+
+.StatCompare-fill--away.is-muted {
+  --fill-tone: var(--chart-away-soft);
+}
+
+.StatCompare-bar--split .StatCompare-fill {
+  flex-basis: 0;
+  min-width: 3px;
+}
+
+.StatCompare-bar--signed {
+  position: relative;
+  flex-direction: column;
+  height: auto;
+  gap: 2px;
+}
+
+.StatCompare-lane {
+  position: relative;
+  display: block;
+  height: 6px;
+  border-radius: 3px;
+  background: var(--chart-track);
+}
+
+.StatCompare-lane .StatCompare-fill {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  height: auto;
+}
+
+.StatCompare-zero {
+  position: absolute;
+  top: -3px;
+  bottom: -3px;
+  left: 50%;
+  width: 2px;
+  margin-left: -1px;
+  border-radius: 1px;
+  background: var(--chart-reference);
+}
+
+.StatCompare-gap {
+  display: block;
+  font-size: 0.78rem;
+  font-weight: 400;
+  color: var(--faint-text);
+  text-align: center;
+}
+
+@media (max-width: 860px) {
+  .StatCompare-row {
+    grid-template-columns: minmax(3rem, 1fr) minmax(0, 1.6fr) minmax(3rem, 1fr);
+    column-gap: 0.5rem;
+    row-gap: 0.35rem;
+    padding: 0.55rem 0;
+  }
+
+  .StatCompare-value {
+    font-size: 0.66rem;
+  }
+
+  .StatCompare-label {
+    font-size: 0.72rem;
+  }
+
+  .StatCompare-context {
+    font-size: 0.64rem;
+  }
+
+  .StatCompare-teamName {
+    font-size: 0.88rem;
+  }
+
+  .StatCompare-key,
+  .StatCompare-gap {
+    font-size: 0.7rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .StatCompare-value {
+    font-size: 0.62rem;
+  }
+
+  .StatCompare-label {
+    font-size: 0.7rem;
+  }
+
+  .StatCompare-context {
+    font-size: 0.62rem;
+  }
 }
 
 .StatExplanation {
@@ -6734,57 +7012,6 @@ a.PreviousMatchLink {
 
 }
 
-
-
-.stat-betterHome {
-  border-right: 4px solid #01a501;
-  border-radius: 4px;
-  margin-top: 0.4em;
-  margin-bottom: 0.4em;
-  font-size: 1em;
-}
-
-.stat-worseHome {
-  border-right: 4px solid #970d00;
-  border-radius: 4px;
-  margin-top: 0.4em;
-  margin-bottom: 0.4em;
-  font-size: 1em;
-
-}
-
-.stat-equalHome {
-  border-right: 4px solid gray;
-  border-radius: 4px;
-  margin-top: 0.4em;
-  margin-bottom: 0.4em;
-  font-size: 1em;
-}
-
-
-.stat-betterAway {
-  border-left: 4px solid #01a501;
-  border-radius: 4px;
-  margin-top: 0.4em;
-  margin-bottom: 0.4em;
-  font-size: 1em;
-}
-
-.stat-worseAway {
-  border-left: 4px solid #970d00;
-  border-radius: 4px;
-  margin-top: 0.4em;
-  margin-bottom: 0.4em;
-  font-size: 1em;
-}
-
-.stat-equalAway {
-  border-left: 4px solid gray;
-  border-radius: 4px;
-  margin-top: 0.4em;
-  margin-bottom: 0.4em;
-  font-size: 1em;
-}
 
 
 .Home li {
@@ -8871,6 +9098,30 @@ body.dark-mode .MetricTrendTables-table td {
 
 .MetricTrendTables-table tbody th {
   font-weight: 700;
+}
+
+.MetricTrendTables-metric {
+  display: block;
+}
+
+.MetricTrendTables-level {
+  display: block;
+  margin-top: 0.15rem;
+  font-size: 10px;
+  font-weight: 600;
+  line-height: 1.2;
+}
+
+.MetricTrendTables-level--above {
+  color: #01a501;
+}
+
+.MetricTrendTables-level--below {
+  color: #d71200;
+}
+
+.MetricTrendTables-level--level {
+  color: #f57701;
 }
 
 .MetricTrendTables-trendCell {
@@ -12239,6 +12490,26 @@ h5.section-title {
 
 .GoalTimingHeat-cell--strong {
   color: #fff;
+}
+
+.GoalTimingHeat-row--average {
+  margin-top: 0.3rem;
+}
+
+.GoalTimingHeat-cell--average {
+  box-sizing: border-box;
+  border: 1px dashed var(--chart-reference);
+  color: var(--secondary-text-color);
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+
+.GoalTimingHeat-note {
+  margin: 0.2rem 0 0;
+  padding: 0 0.75em;
+  font-size: 0.72rem;
+  color: var(--secondary-text-color);
+  line-height: 1.35;
 }
 
 .GoalTimingHeat-axis {

@@ -253,6 +253,11 @@ export function buildTeamAllStatsFields(teamStats, leagueStats, form) {
   };
 }
 
+export function roundedStrengthChange(change) {
+  const value = Number(change);
+  return change != null && Number.isFinite(value) ? Math.round(value) : undefined;
+}
+
 export function leaguePositionOrDash(position) {
   if (
     position === undefined ||
@@ -352,6 +357,7 @@ export const COMPARISON_RULES = [
   { key: "XGSwing", higherIsBetter: true },
   { key: "leaguePosition", higherIsBetter: false },
   { key: "strengthRating", higherIsBetter: true },
+  { key: "strengthChange", higherIsBetter: true },
   { key: "rawPosition", higherIsBetter: false },
   { key: "homeOrAwayLeaguePosition", higherIsBetter: false },
   { key: "XG", higherIsBetter: true },
@@ -559,5 +565,6 @@ export function buildAllStatsProps({
     injuryImpact,
     strengthRating: Number.isFinite(Number(strength?.rating)) ? Number(strength.rating) : undefined,
     strengthChangeLabel: formatStrengthChange(strength?.change),
+    strengthChange: roundedStrengthChange(strength?.change),
   };
 }

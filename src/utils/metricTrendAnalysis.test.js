@@ -2,6 +2,7 @@ import {
   buildAttackDefenceMetricTrends,
   buildMetricTrendRows,
   calculateLinearRegressionSlope,
+  classifyAgainstAverage,
   classifyMetricTrend,
 } from "./metricTrendAnalysis";
 import { buildMetricTimeSeries } from "./metricTimeSeries";
@@ -104,6 +105,52 @@ describe("metricTrendAnalysis", () => {
   test("calculateLinearRegressionSlope returns zero slope for flat values", () => {
     const { slope } = calculateLinearRegressionSlope([2, 2, 2, 2]);
     expect(slope).toBe(0);
+  });
+
+  test("classifies a season average against the competition average", () => {
+    expect(classifyAgainstAverage(1.8, 1.3)).toBe("above");
+    expect(classifyAgainstAverage(0.8, 1.3)).toBe("below");
+    expect(classifyAgainstAverage(1.32, 1.3)).toBe("level");
+    expect(classifyAgainstAverage(0.8, 1.3, { lowerIsBetter: true })).toBe("above");
+    expect(classifyAgainstAverage(1.8, 1.3, { lowerIsBetter: true })).toBe("below");
+    expect(classifyAgainstAverage(1.8, null)).toBeNull();
+  });
+
+  test("marks attack rows above average and defence rows by the mirrored average", () => {
+    const series = [
+      { scored: 2, shotsAgainst: 8 },
+      { scored: 2, shotsAgainst: 8 },
+      { scored: 2, shotsAgainst: 8 },
+    ];
+    const averages = { scored: 1.2, shots: 13 };
+
+    const attack = buildMetricTrendRows(
+      series,
+      [{ key: "scored", label: "Goals" }],
+      averages
+    );
+    const defence = buildMetricTrendRows(
+      series,
+      [{ key: "shotsAgainst", label: "Shots against", lowerIsBetter: true }],
+      averages
+    );
+
+    expect(attack[0].level).toBe("above");
+    expect(attack[0].levelDetail).toBe(
+      "Season average 2 per game, better than the competition average of 1.2."
+    );
+    expect(defence[0].level).toBe("above");
+    expect(defence[0].competitionAvg).toBe(13);
+  });
+
+  test("leaves the level off when no competition average is available", () => {
+    const rows = buildMetricTrendRows(
+      [{ scored: 2 }, { scored: 2 }, { scored: 2 }],
+      [{ key: "scored", label: "Goals" }]
+    );
+
+    expect(rows[0].level).toBeNull();
+    expect(rows[0].levelDetail).toBe("");
   });
 
   test("buildMetricTrendRows uses chronological series order", () => {

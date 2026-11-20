@@ -29,6 +29,11 @@ import FixtureComparisonShare from "./FixtureComparisonShare";
 import { Slider } from "../components/CarouselXGChart";
 import Collapsable from "../components/CollapsableElement";
 import Stats from "../components/createStatsDiv";
+import StatComparison from "./StatComparison";
+import {
+  ALL_STATS_SECTIONS,
+  RECENT_FORM_ROWS,
+} from "../logic/statComparisonSections";
 import TeamRankingsFlexView from "./TeamRankingsFlexView";
 import {
   allLeagueResultsArrayOfObjects,
@@ -59,7 +64,20 @@ import {
   statOrDash,
   STAT_FALLBACK,
 } from "../utils/formatStat";
-import { expandRadarStrengthSeries } from "../utils/radarDisplay";
+import {
+  expandRadarStrength,
+  expandRadarStrengthSeries,
+} from "../utils/radarDisplay";
+import { buildCompetitionAverageRadar } from "../logic/competitionAverageRadar";
+import {
+  buildCompetitionAverageTeam,
+  completedFixturesBefore,
+} from "../logic/competitionAverageTeam";
+import { buildGoalTimingRates } from "../utils/goalTimingHeatmap";
+import {
+  buildCompetitionTeamMetrics,
+  otherTeamValues,
+} from "../logic/competitionRankings";
 import MissingPlayersList from "../components/MissingPlayersList";
 import PlayerStatsList from "../components/PlayerStatsList";
 import { ManagerComparison } from "../components/ManagerCard";
@@ -90,13 +108,13 @@ import {
 import {
   buildTeamAllStatsFields,
   calculateComparisonStatusMap,
-  getInvertedComparisonMap,
   getLast5LeagueStats,
   getOverallLeagueStatNumbers,
   getOverallLeagueStats,
   getTrueFormColor,
   leaguePositionOrDash,
   resolveRoundId,
+  roundedStrengthChange,
 } from "../logic/allStatsProps";
 import {
   mapFutureFixtureEvents,
@@ -396,7 +414,7 @@ function GameStats({
 
   // const { user } = useAuth();
 
-  const [openSections, setOpenSections] = useState({});
+  const [openSections, setOpenSections] = useState({ "Key Stats": true });
 
   const handleToggle = (sectionName) => {
     setOpenSections(prev => ({
@@ -536,6 +554,11 @@ function GameStats({
   const [awayFiveGameAverage, setAwayFiveGameAverage] = useState(0);
   const [awaySixGameAverage, setAwaySixGameAverage] = useState(0);
   const [awayTenGameAverage, setAwayTenGameAverage] = useState(0);
+  const [competitionAverageTeam, setCompetitionAverageTeam] = useState(null);
+  const [competitionTeamMetrics, setCompetitionTeamMetrics] = useState(null);
+  const [competitionAverageRadar, setCompetitionAverageRadar] = useState(null);
+  const [competitionGoalTimingRates, setCompetitionGoalTimingRates] =
+    useState(null);
   const [homeAttackStrengthLast5, setHomeAttackStrengthLast5] = useState(
     homeForm?.attackingStrengthLast5 || null
   );
@@ -2723,6 +2746,53 @@ function GameStats({
     ),
   };
 
+  const competitionGamesLabel = game.leagueDesc
+    ? `${game.leagueDesc} Games`
+    : "All Competition Games";
+  const expandAverageSeries = (values) =>
+    values?.map((value) => (value == null ? null : expandRadarStrength(value)));
+  const averageRadarOverall = expandAverageSeries(competitionAverageRadar?.overall);
+  const averageRadarLast5 = expandAverageSeries(competitionAverageRadar?.last5);
+
+  const averageCompetition = game.leagueDesc || "this competition";
+  const seasonAverages = competitionAverageTeam
+    ? { home: competitionAverageTeam.overall, away: competitionAverageTeam.overall }
+    : null;
+  const venueAverages = competitionAverageTeam
+    ? { home: competitionAverageTeam.home, away: competitionAverageTeam.away }
+    : null;
+  const averageNote = `Avg is the season average for a team in ${averageCompetition}.`;
+  const venueAverageNote = `Avg is the season average for home and away sides in ${averageCompetition}.`;
+
+  // Row key to the team metric it ranks by, as [home side metric, away side metric].
+  const buildRankings = (metricsByRow) => {
+    if (!competitionTeamMetrics) return null;
+    const side = (index, teamName) =>
+      Object.fromEntries(
+        Object.entries(metricsByRow).map(([rowKey, metrics]) => [
+          rowKey,
+          otherTeamValues(competitionTeamMetrics, teamName, metrics[index]),
+        ])
+      );
+    return { home: side(0, game.homeTeam), away: side(1, game.awayTeam) };
+  };
+  const seasonRankings = buildRankings({
+    ppg: ["ppg", "ppg"],
+    "formTrend[0]": ["ppgTrend10", "ppgTrend10"],
+    "formTrend[1]": ["ppgTrend6", "ppgTrend6"],
+    "formTrend[2]": ["ppgTrend5", "ppgTrend5"],
+    winPercentage: ["ppgHomeLast6", "ppgAwayLast6"],
+    possession: ["possession", "possession"],
+  });
+  const last5Rankings = buildRankings({
+    ppg: ["ppgLast5", "ppgLast5"],
+    possession: ["possessionLast5", "possessionLast5"],
+  });
+  const venueRankings = buildRankings({
+    ppg: ["ppgHomeLast6", "ppgAwayLast6"],
+    possession: ["possessionHome", "possessionAway"],
+  });
+
   const homeLeagueStats = getOverallLeagueStats(homeForm);
   const awayLeagueStats = getOverallLeagueStats(awayForm);
   const homeLast5LeagueStats = getLast5LeagueStats(homeForm);
@@ -2848,6 +2918,7 @@ function GameStats({
       ? Number(game.homeStrength.rating)
       : undefined,
     strengthChangeLabel: formatStrengthChange(game.homeStrength?.change),
+    strengthChange: roundedStrengthChange(game.homeStrength?.change),
     rawPosition: leaguePositionOrDash(
       game.homeRawPosition !== undefined &&
         game.homeRawPosition !== "undefined"
@@ -2916,6 +2987,7 @@ function GameStats({
       ? Number(game.awayStrength.rating)
       : undefined,
     strengthChangeLabel: formatStrengthChange(game.awayStrength?.change),
+    strengthChange: roundedStrengthChange(game.awayStrength?.change),
     rawPosition: leaguePositionOrDash(game.awayRawPosition),
     homeOrAwayLeaguePosition: leaguePositionOrDash(
       awayForm.awayPositionAwayOnly !== undefined &&
@@ -2939,37 +3011,24 @@ function GameStats({
     injuryImpact: getTeamInjuryImpactLoss(awayImpacts, game.id, "away"),
   };
 
-  function StatsHomeComponent({ getCollapsableProps, homeAllStatsProps, comparisonStatusMap, lockPremiumSections }) {
+  function StatsHomeComponent({ homeAllStatsProps }) {
     if (!homeForm) return null;
     return (
       <div className="flex-childOne">
         <ul style={style}>
-          <Stats
-            {...homeAllStatsProps}
-            getCollapsableProps={getCollapsableProps} // Always pass functions explicitly if they aren't in the map
-            comparisonStatusMap={comparisonStatusMap}
-            lockPremiumSections={lockPremiumSections}
-          />
+          <Stats {...homeAllStatsProps} />
         </ul>
       </div>
     );
   }
 
 
-  function StatsAwayComponent({ getCollapsableProps, awayAllStatsProps, comparisonStatusMap, lockPremiumSections }) {
-    const invertedMap = getInvertedComparisonMap(comparisonStatusMap);
-
+  function StatsAwayComponent({ awayAllStatsProps }) {
     if (!awayForm) return null;
     return (
       <div className="flex-childTwo">
         <ul style={style}>
-          <Stats
-            {...awayAllStatsProps}
-            getCollapsableProps={getCollapsableProps}
-            // 2. Pass the inverted map to the Stats component!
-            comparisonStatusMap={invertedMap}
-            lockPremiumSections={lockPremiumSections}
-          />
+          <Stats {...awayAllStatsProps} />
         </ul>
       </div>
     );
@@ -2981,13 +3040,12 @@ function GameStats({
     awayAllStatsProps
   );
 
-  function StatsHomeLast5Component({ comparisonStatusMap }) {
+  function StatsHomeLast5Component() {
     if (!homeForm) return null;
     return (
       <div className="flex-childOne">
         <ul style={style}>
           <Stats
-            comparisonStatusMap={comparisonStatusMap}
             games={"last5"}
             isWorldCupCompetition={isWorldCupCompetition}
             style={style}
@@ -3062,14 +3120,12 @@ function GameStats({
   }
 
   // Component: StatsAway (Render Away Team Stats)
-  function StatsAwayLast5Component({ comparisonStatusMap }) {
-    const invertedMap = getInvertedComparisonMap(comparisonStatusMap);
+  function StatsAwayLast5Component() {
     if (!awayForm) return null;
     return (
       <div className="flex-childTwo">
         <ul style={style}>
           <Stats
-            comparisonStatusMap={invertedMap}
             games={"last5"}
             isWorldCupCompetition={isWorldCupCompetition}
             style={style}
@@ -3171,13 +3227,12 @@ function GameStats({
     awayLast5Data
   );
 
-  function StatsHomeOnlyComponent({ comparisonStatusMap }) {
+  function StatsHomeOnlyComponent() {
     if (!homeForm) return null;
     return (
       <div className="flex-childOne">
         <ul style={style}>
           <Stats
-            comparisonStatusMap={comparisonStatusMap}
             games={"hOrA"}
             style={style}
             homeOrAway="Home"
@@ -3253,15 +3308,12 @@ function GameStats({
   }
 
   // Component: StatsAway (Render Away Team Stats)
-  function StatsAwayOnlyComponent({ comparisonStatusMap }) {
-    const invertedMap = getInvertedComparisonMap(comparisonStatusMap);
-
+  function StatsAwayOnlyComponent() {
     if (!awayForm) return null;
     return (
       <div className="flex-childTwo">
         <ul style={style}>
           <Stats
-            comparisonStatusMap={invertedMap}
             games={"hOrA"}
             style={style}
             homeOrAway="Away"
@@ -3825,6 +3877,16 @@ function GameStats({
           awayForm.avgShotValueAwayChart
         );
 
+        const averageTeam = buildCompetitionAverageTeam(leagueFixtures, game.date);
+        const teamMetrics = buildCompetitionTeamMetrics(leagueFixtures, game.date);
+        const averageRadar = await buildCompetitionAverageRadar(
+          averageTeam,
+          strengthOptions
+        );
+        const goalTimingRates = buildGoalTimingRates(
+          completedFixturesBefore(leagueFixtures, game.date)
+        );
+
         const home5GA = await getPointAverage(homeForm.last5Points, 5);
 
         const home6GA = await getPointAverage(homeForm.last6Points, 6);
@@ -3852,6 +3914,10 @@ function GameStats({
         awayForm.fiveGameAv = away5GA;
 
         // Set calculated strengths and averages directly, as hooks cannot be used here
+        setCompetitionAverageTeam(averageTeam);
+        setCompetitionTeamMetrics(teamMetrics);
+        setCompetitionAverageRadar(averageRadar);
+        setCompetitionGoalTimingRates(goalTimingRates);
         setHomeAttackStrength(attackH);
         setHomeAttackStrengthLast5(attackHLast5);
         setHomeOnlyAttackStrength(attackHOnly);
@@ -4400,19 +4466,23 @@ function GameStats({
                   : `${game.leagueDesc} Form`}
               </h2>
               <div className="flex-container">
-                <StatsHomeComponent
-                  getCollapsableProps={getCollapsableProps}
-                  homeAllStatsProps={homeAllStatsProps}
-                  comparisonStatusMap={comparisonStatusMap}
-                  lockPremiumSections={!fullAccess}
-                />
-                <StatsAwayComponent
-                  getCollapsableProps={getCollapsableProps}
-                  awayAllStatsProps={awayAllStatsProps}
-                  comparisonStatusMap={comparisonStatusMap}
-                  lockPremiumSections={!fullAccess}
-                />
+                <StatsHomeComponent homeAllStatsProps={homeAllStatsProps} />
+                <StatsAwayComponent awayAllStatsProps={awayAllStatsProps} />
               </div>
+              <StatComparison
+                sections={ALL_STATS_SECTIONS}
+                homeStats={homeAllStatsProps}
+                awayStats={awayAllStatsProps}
+                statusMap={comparisonStatusMap}
+                homeName={game.homeTeam}
+                awayName={game.awayTeam}
+                averages={seasonAverages}
+                averageNote={averageNote}
+                rankings={seasonRankings}
+                getCollapsableProps={getCollapsableProps}
+                lockPremiumSections={!fullAccess}
+                style={style}
+              />
             </>
           }
           element2={
@@ -4420,13 +4490,23 @@ function GameStats({
               <>
                 <h2>Last 5 games only</h2>
                 <div className="flex-container">
-                  <StatsHomeLast5Component
-                    comparisonStatusMap={last5ComparisonMap}
-                  />
-                  <StatsAwayLast5Component
-                    comparisonStatusMap={last5ComparisonMap}
-                  />
+                  <StatsHomeLast5Component />
+                  <StatsAwayLast5Component />
                 </div>
+                <StatComparison
+                  rows={RECENT_FORM_ROWS}
+                  homeStats={homeLast5Data}
+                  awayStats={awayLast5Data}
+                  statusMap={last5ComparisonMap}
+                  homeName={game.homeTeam}
+                  awayName={game.awayTeam}
+                  homeContext="Last 5 games"
+                  awayContext="Last 5 games"
+                  averages={seasonAverages}
+                  averageNote={averageNote}
+                  rankings={last5Rankings}
+                  style={style}
+                />
               </>
             ) : null
           }
@@ -4435,13 +4515,23 @@ function GameStats({
               <>
                 <h2>Home/Away games only</h2>
                 <div className="flex-container">
-                  <StatsHomeOnlyComponent
-                    comparisonStatusMap={hOrAComparisonMap}
-                  />
-                  <StatsAwayOnlyComponent
-                    comparisonStatusMap={hOrAComparisonMap}
-                  />
+                  <StatsHomeOnlyComponent />
+                  <StatsAwayOnlyComponent />
                 </div>
+                <StatComparison
+                  rows={RECENT_FORM_ROWS}
+                  homeStats={homeOnlyData}
+                  awayStats={awayOnlyData}
+                  statusMap={hOrAComparisonMap}
+                  homeName={game.homeTeam}
+                  awayName={game.awayTeam}
+                  homeContext="Home games"
+                  awayContext="Away games"
+                  averages={venueAverages}
+                  averageNote={venueAverageNote}
+                  rankings={venueRankings}
+                  style={style}
+                />
               </>
             ) : null
           }
@@ -4970,7 +5060,8 @@ function GameStats({
                   locked={!fullAccess}
                   maintainAspectRatio={false}
                   style={{ height: "auto" }}
-                  title="Soccer Stats Hub Strength Ratings - All Competition Games"                  max={1}
+                  title={`Soccer Stats Hub Strength Ratings - ${competitionGamesLabel}`}
+                  max={1}
                   labels={[
                     "Attack",
                     "Defence",
@@ -5000,11 +5091,13 @@ function GameStats({
                   ])}
                   team1={game.homeTeam}
                   team2={game.awayTeam}
+                  average={averageRadarOverall}
                 ></RadarChart>
                 </ShareableVisual>
                 <BarChart
                   locked={!fullAccess}
-                  text="All Competition Games - Home Team | Away Team"                  team1={game.homeTeam}
+                  text={`${competitionGamesLabel} - Home Team | Away Team`}
+                  team1={game.homeTeam}
                   team2={game.awayTeam}
                   labels={[
                     "Highest Goals",
@@ -5026,7 +5119,7 @@ function GameStats({
                   team1={game.homeTeam}
                   team2={game.awayTeam}
                   shotSeries={shotSeries}
-                  text="All Competition Games - Shots over time"
+                  text={`${competitionGamesLabel} - Shots over time`}
                 />
                 <AttackDefenceMetricTrendTables
                   team1={game.homeTeam}
@@ -5035,7 +5128,8 @@ function GameStats({
                   awayBadge={game.awayBadge}
                   homeResults={allResultsHome}
                   awayResults={allResultsAway}
-                  text="All Competition Games - Attack & Defence trends"
+                  averages={competitionAverageTeam?.overall ?? null}
+                  text={`${competitionGamesLabel} - Attack & Defence trends`}
                 />
                 {(homeForm?.goalTiming?.hasData || awayForm?.goalTiming?.hasData) && (
                   <GoalTimingHeatShare
@@ -5043,18 +5137,20 @@ function GameStats({
                     awayTeam={game.awayTeam}
                     homeData={homeForm?.goalTiming}
                     awayData={awayForm?.goalTiming}
+                    averageRates={competitionGoalTimingRates}
+                    competitionName={game.leagueDesc}
                   />
                 )}
                 {showXgDiffCharts && (
                   <>
                     <MultiTypeChart
                       dataArray={homeForm.twoDGoalsArray || []}
-                      text={homeForm.teamName + " XG Diff (All Competition Games)"}
+                      text={`${homeForm.teamName} XG Diff (${competitionGamesLabel})`}
                       yRange={sharedXgDiffRange(homeForm.twoDGoalsArray, awayForm.twoDGoalsArray)}
                     />
                     <MultiTypeChart
                       dataArray={awayForm.twoDGoalsArray || []}
-                      text={awayForm.teamName + " XG Diff (All Competition Games)"}
+                      text={`${awayForm.teamName} XG Diff (${competitionGamesLabel})`}
                       yRange={sharedXgDiffRange(homeForm.twoDGoalsArray, awayForm.twoDGoalsArray)}
                     />
                   </>
@@ -5119,6 +5215,7 @@ function GameStats({
                     ])}
                     team1={game.homeTeam}
                     team2={game.awayTeam}
+                    average={averageRadarLast5}
                   />
                   <BarChart
                     locked={!fullAccess}
@@ -5218,6 +5315,7 @@ function GameStats({
                     ])}
                     team1={game.homeTeam}
                     team2={game.awayTeam}
+                    average={averageRadarOverall}
                   ></RadarChart>
                   <BarChart
                     locked={!fullAccess}

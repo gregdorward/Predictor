@@ -54,11 +54,15 @@ export function buildGoalTimingHeatmap(homeFixtures = [], awayFixtures = []) {
   const scored = createEmptyGoalTimingBuckets();
   const conceded = createEmptyGoalTimingBuckets();
   let matchesWithTimings = 0;
+  let matchesRecorded = 0;
   let goalsWithTimings = 0;
 
   for (const fixture of homeFixtures) {
     if (fixtureHasGoalTimings(fixture)) {
       matchesWithTimings += 1;
+    }
+    if (fixture?.goal_timings_recorded === 1) {
+      matchesRecorded += 1;
     }
     goalsWithTimings += addTimingsToBuckets(scored, fixture.homeGoals_timings);
     goalsWithTimings += addTimingsToBuckets(conceded, fixture.awayGoals_timings);
@@ -67,6 +71,9 @@ export function buildGoalTimingHeatmap(homeFixtures = [], awayFixtures = []) {
   for (const fixture of awayFixtures) {
     if (fixtureHasGoalTimings(fixture)) {
       matchesWithTimings += 1;
+    }
+    if (fixture?.goal_timings_recorded === 1) {
+      matchesRecorded += 1;
     }
     goalsWithTimings += addTimingsToBuckets(scored, fixture.awayGoals_timings);
     goalsWithTimings += addTimingsToBuckets(conceded, fixture.homeGoals_timings);
@@ -80,10 +87,37 @@ export function buildGoalTimingHeatmap(homeFixtures = [], awayFixtures = []) {
     scored,
     conceded,
     matchesWithTimings,
+    matchesRecorded,
     totalMatches,
     goalsWithTimings,
     hasData,
   };
+}
+
+/**
+ * Goals per team per game in each bucket, across fixtures with recorded goal
+ * timings (0-0 draws included). A typical team scores and concedes at the same
+ * rate, so one array serves both. Null with fewer than `minFixtures` fixtures.
+ */
+export function buildGoalTimingRates(fixtures = [], minFixtures = 10) {
+  const buckets = createEmptyGoalTimingBuckets();
+  let recorded = 0;
+
+  for (const fixture of fixtures) {
+    if (fixture?.goal_timings_recorded !== 1) continue;
+    recorded += 1;
+    addTimingsToBuckets(buckets, fixture.homeGoals_timings);
+    addTimingsToBuckets(buckets, fixture.awayGoals_timings);
+  }
+
+  if (recorded < minFixtures) return null;
+  return buckets.map((count) => count / (recorded * 2));
+}
+
+/** Rates scaled to a team's recorded games, or null when either is missing. */
+export function scaleGoalTimingRates(rates, matches) {
+  if (!Array.isArray(rates) || !(matches > 0)) return null;
+  return rates.map((rate) => rate * matches);
 }
 
 export function getGoalTimingIntensity(count, maxCount) {

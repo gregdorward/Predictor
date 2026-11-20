@@ -24,6 +24,55 @@ function average(values = []) {
   return values.reduce((sum, value) => sum + value, 0) / values.length;
 }
 
+// Against-metrics mirror the for-metric: every shot for one team is a shot against the other.
+const COMPETITION_AVERAGE_KEYS = {
+  scored: "scored",
+  XG: "xg",
+  shots: "shots",
+  sot: "sot",
+  dangerousAttacks: "dangerousAttacks",
+  corners: "corners",
+  conceeded: "conceded",
+  XGAgainst: "xgAgainst",
+  shotsAgainst: "shots",
+  sotAgainst: "sotAgainst",
+  dangerousAttacksAgainst: "dangerousAttacks",
+  cornersAgainst: "corners",
+};
+
+function competitionAverageForMetric(averages, metricKey) {
+  const averageKey = COMPETITION_AVERAGE_KEYS[metricKey];
+  if (!averageKey || !averages) return null;
+  const value = Number(averages[averageKey]);
+  return Number.isFinite(value) ? value : null;
+}
+
+/**
+ * Whether a team's season average is better than the competition average.
+ * `above` means better: a higher number for attack, a lower number for defence.
+ * Within 8% counts as level.
+ */
+export function classifyAgainstAverage(teamAverage, competitionAverage, { lowerIsBetter = false } = {}) {
+  if (!Number.isFinite(teamAverage) || !Number.isFinite(competitionAverage)) return null;
+  const tolerance = Math.max(Math.abs(competitionAverage) * 0.08, 0.05);
+  const delta = teamAverage - competitionAverage;
+  if (Math.abs(delta) <= tolerance) return "level";
+  const better = lowerIsBetter ? delta < 0 : delta > 0;
+  return better ? "above" : "below";
+}
+
+function levelDetail(level, teamAverage, competitionAverage) {
+  const team = formatMetricValue(teamAverage);
+  const typical = formatMetricValue(competitionAverage);
+  if (level === "above") {
+    return `Season average ${team} per game, better than the competition average of ${typical}.`;
+  }
+  if (level === "below") {
+    return `Season average ${team} per game, worse than the competition average of ${typical}.`;
+  }
+  return `Season average ${team} per game, close to the competition average of ${typical}.`;
+}
+
 function formatMetricValue(value) {
   if (!Number.isFinite(value)) return "—";
   const abs = Math.abs(value);
@@ -167,13 +216,17 @@ export function classifyMetricTrend(values = [], { lowerIsBetter = false, metric
   };
 }
 
-export function buildMetricTrendRows(series = [], metricDefinitions = []) {
+export function buildMetricTrendRows(series = [], metricDefinitions = [], averages = null) {
   return metricDefinitions.map((metric) => {
     const values = series.map((point) => point[metric.key]);
+    const lowerIsBetter = metric.lowerIsBetter === true;
     const trend = classifyMetricTrend(values, {
-      lowerIsBetter: metric.lowerIsBetter === true,
+      lowerIsBetter,
       metricKey: metric.key,
     });
+    const seasonAvg = values.length ? average(values) : null;
+    const competitionAvg = competitionAverageForMetric(averages, metric.key);
+    const level = classifyAgainstAverage(seasonAvg, competitionAvg, { lowerIsBetter });
 
     return {
       key: metric.key,
@@ -184,22 +237,26 @@ export function buildMetricTrendRows(series = [], metricDefinitions = []) {
       detailSecondary: trend.detailSecondary,
       slope: trend.slope,
       seasonDelta: trend.seasonDelta,
+      seasonAvg,
+      competitionAvg,
+      level,
+      levelDetail: level ? levelDetail(level, seasonAvg, competitionAvg) : "",
     };
   });
 }
 
-export function buildAttackDefenceMetricTrends(homeResults = [], awayResults = []) {
+export function buildAttackDefenceMetricTrends(homeResults = [], awayResults = [], averages = null) {
   const homeSeries = buildMetricTimeSeries(homeResults);
   const awaySeries = buildMetricTimeSeries(awayResults);
 
   return {
     attack: {
-      home: buildMetricTrendRows(homeSeries, ATTACK_METRIC_DEFINITIONS),
-      away: buildMetricTrendRows(awaySeries, ATTACK_METRIC_DEFINITIONS),
+      home: buildMetricTrendRows(homeSeries, ATTACK_METRIC_DEFINITIONS, averages),
+      away: buildMetricTrendRows(awaySeries, ATTACK_METRIC_DEFINITIONS, averages),
     },
     defence: {
-      home: buildMetricTrendRows(homeSeries, DEFENCE_METRIC_DEFINITIONS),
-      away: buildMetricTrendRows(awaySeries, DEFENCE_METRIC_DEFINITIONS),
+      home: buildMetricTrendRows(homeSeries, DEFENCE_METRIC_DEFINITIONS, averages),
+      away: buildMetricTrendRows(awaySeries, DEFENCE_METRIC_DEFINITIONS, averages),
     },
   };
 }
