@@ -6,7 +6,7 @@ import { getPointsFromLastX } from "../utils/getPointsFromLastX";
 export { getPointsFromLastX };
 import { matches, diff, dynamicFormDateKey, dynamicDate } from "./getFixtures";
 import Collapsable from "../components/CollapsableElement";
-import CollapsableStats from "../components/CollapsableStats";
+import LeagueRoiList from "../components/LeagueRoiList";
 import { allForm } from "../logic/getFixtures";
 import { persistPendingOddsTimelineUpdates } from "./enrichMatchBestOdds.js";
 import Increment from "../components/Increment";
@@ -6286,7 +6286,12 @@ async function getSuccessMeasure(fixtures) {
   console.log(isPaid);
   if (investment > 0) {
     render(
-      <Collapsable buttonText={"ROI"} classNameButton="ROIButton" element={
+      <Collapsable
+        buttonText={"ROI"}
+        classNameButton="ROIButton"
+        classNameFlex="LeagueRoiHost"
+        classNameTwo="LeagueRoiHost__body"
+        element={
         <>
           <h3 className={"SuccessMeasureHeader"}>
             ROI for all {investment} W/D/W outcomes: {ROI >= 0 ? "+" : " "}{" "}
@@ -6304,44 +6309,8 @@ async function getSuccessMeasure(fixtures) {
             {totalROI >= 0 ? "+" : ""}
             {totalROI.toFixed(2)}%
           </p>
-          <CollapsableStats buttonText="ROI by League">
-            {Object.entries(specificLeagueResults)
-              .sort(([, a], [, b]) => b.totalROI - a.totalROI) // Sort by ROI in descending order
-              .map(([leagueName, league]) => {
-                return (
-                  <div className="SuccessMeasure" key={leagueName}>
-                    <h3
-                      className={`${league.totalROI >= 0
-                        ? "ProfitableLeague"
-                        : "NonProfitableLeague"}`}
-                    >
-                      {leagueName}: ROI {league.totalROI >= 0 ? "+" : " "}
-                      {league.totalROI}%
-                    </h3>
-                    <p>
-                      Successful Predictions: {league.successCount} /{" "}
-                      {specificLeagueResults[leagueName].totalInvestment} :{" "}
-                      {(
-                        (league.successCount /
-                          specificLeagueResults[leagueName].totalInvestment) *
-                        100
-                      ).toFixed(2)}
-                      %
-                    </p>
-                    <p>
-                      Exact Scores: {league.exactScores} /{" "}
-                      {specificLeagueResults[leagueName].totalInvestment} :{" "}
-                      {(
-                        (league.exactScores /
-                          specificLeagueResults[leagueName].totalInvestment) *
-                        100
-                      ).toFixed(2)}
-                      %
-                    </p>
-                  </div>
-                );
-              })}
-          </CollapsableStats></>
+          <LeagueRoiList leagues={specificLeagueResults} />
+        </>
       } />, "ROIPlaceholder"
     );
   } else {

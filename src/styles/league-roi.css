@@ -1,0 +1,243 @@
+.PredictionControls #ROIPlaceholder {
+  align-items: stretch;
+}
+
+#ROIPlaceholder > .Collapsable {
+  width: 100%;
+  max-width: 40rem;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.LeagueRoiHost,
+.LeagueRoiHost__body {
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.LeagueRoi {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  justify-content: flex-start;
+  width: 100%;
+  max-width: 40rem;
+  min-height: 0;
+  margin: 0.35rem auto 0.15rem;
+  text-align: left;
+  color: var(--text-color);
+  scroll-margin-top: calc(var(--header-height) + 0.5rem);
+}
+
+.LeagueRoi ::selection {
+  background: var(--primary-color);
+  color: var(--span-text-colour);
+}
+
+.LeagueRoi__sr {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.LeagueRoi__trigger {
+  align-self: center;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.45rem;
+  min-width: unset;
+  min-height: 44px;
+  width: auto;
+  max-width: calc(100% - 1rem);
+  margin: 0.15rem auto 0.35rem;
+  padding: 0.45em 1.15em;
+  font-family: "Open Sans", system-ui, sans-serif;
+  font-size: 0.875rem;
+  font-weight: 600;
+  line-height: 1.25;
+  letter-spacing: 0.01em;
+  color: var(--text-color);
+  background: var(--background-color);
+  border: 1px solid var(--primary-color);
+  border-radius: 999px;
+  box-shadow: none;
+  transform: none;
+  cursor: pointer;
+}
+
+.LeagueRoi__trigger:hover:not(:disabled),
+.LeagueRoi__trigger:active:not(:disabled) {
+  background: var(--button-secondary-hover-bg);
+  border-color: var(--primary-color);
+  color: var(--text-color);
+  box-shadow: none;
+  transform: none;
+}
+
+.LeagueRoi__trigger:focus-visible {
+  outline: 3px solid var(--primary-color);
+  outline-offset: 2px;
+  box-shadow: none;
+}
+
+.LeagueRoi__count {
+  font-variant-numeric: tabular-nums;
+  font-weight: 600;
+}
+
+.LeagueRoi__chevron {
+  width: 0.9rem;
+  height: 0.9rem;
+  flex: none;
+  transition: transform 0.16s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.LeagueRoi__trigger[aria-expanded="true"] .LeagueRoi__chevron {
+  transform: rotate(180deg);
+}
+
+.LeagueRoi__panel {
+  width: 100%;
+}
+
+.LeagueRoi__panel[hidden] {
+  display: none;
+}
+
+.LeagueRoi__table {
+  width: 100%;
+  margin: 0;
+  border-collapse: collapse;
+  text-align: left;
+}
+
+.LeagueRoi__table caption {
+  caption-side: top;
+  margin: 0;
+  padding: 0.15rem 0.15rem 0.7rem;
+  text-align: left;
+  font-size: 0.82rem;
+  font-weight: 400;
+  line-height: 1.45;
+  color: var(--faint-text);
+}
+
+.LeagueRoi__table th,
+.LeagueRoi__table td {
+  margin: 0;
+  padding: 0.42rem 0.15rem;
+  border: 0;
+  text-align: left;
+  vertical-align: middle;
+  color: var(--text-color);
+  background: transparent;
+}
+
+.LeagueRoi__table thead th {
+  padding-top: 0;
+  padding-bottom: 0.35rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  line-height: 1.2;
+  color: var(--faint-text);
+  border-bottom: 1px solid var(--button-border-color);
+}
+
+.LeagueRoi__table thead th:last-child {
+  text-align: right;
+}
+
+.LeagueRoi__table tbody tr:nth-child(even),
+.LeagueRoi__table tbody tr:nth-child(odd) {
+  background: transparent;
+}
+
+.LeagueRoi__row {
+  border-bottom: 1px solid var(--button-border-color);
+}
+
+.LeagueRoi__row:hover {
+  background: var(--secondary-background-color);
+}
+
+#ROIPlaceholder .LeagueRoi__row th[scope="row"] {
+  font-size: 0.92rem;
+  font-weight: 600;
+}
+
+.LeagueRoi__name,
+.LeagueRoi__meta {
+  display: block;
+}
+
+.LeagueRoi__name {
+  font-size: 1em;
+  font-weight: 600;
+  line-height: 1.3;
+  color: var(--text-color);
+}
+
+.LeagueRoi__meta {
+  margin-top: 0.12rem;
+  font-size: 0.848em;
+  font-weight: 400;
+  line-height: 1.35;
+  color: var(--faint-text);
+  font-variant-numeric: tabular-nums;
+}
+
+@media (max-width: 1024px) {
+  #ROIPlaceholder .LeagueRoi__row th[scope="row"] {
+    font-size: calc(0.92rem * 0.8);
+  }
+}
+
+.LeagueRoi__table td.LeagueRoi__roi {
+  font-size: 0.95rem;
+  font-weight: 700;
+  line-height: 1.2;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+  text-align: right;
+  padding-left: 0.75rem;
+}
+
+.LeagueRoi__table td.LeagueRoi__roi--up {
+  color: var(--chart-home-text);
+}
+
+.LeagueRoi__table td.LeagueRoi__roi--down {
+  color: var(--chart-away-text);
+}
+
+.LeagueRoi__table td.LeagueRoi__roi--flat,
+.LeagueRoi__table td.LeagueRoi__roi--thin {
+  color: var(--faint-text);
+}
+
+.LeagueRoi__group th {
+  padding: 0.95rem 0.15rem 0.3rem;
+  font-size: 0.78rem;
+  font-weight: 600;
+  line-height: 1.3;
+  text-align: left;
+  color: var(--faint-text);
+  border-bottom: 0;
+}
+
+.LeagueRoi__group:hover {
+  background: transparent;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .LeagueRoi__chevron {
+    transition: none;
+  }
+}
