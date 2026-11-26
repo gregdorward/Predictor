@@ -9,9 +9,6 @@ import {
   formatSeoUpdatedDate,
 } from "../seo/seoShellCopy";
 import { getTeamsList, resolveScorerTeam, sortTeamsByField } from "./competition/competitionUtils";
-import JourneyContentBreak from "./JourneyContentBreak";
-import { ADSENSE_SLOTS } from "../constants/adsense";
-
 function formatPercent(value) {
   if (value == null || Number.isNaN(Number(value))) return null;
   return `${Number(value).toFixed(1)}%`;
@@ -144,12 +141,6 @@ export default function CompetitionSeoShell({
           </ul>
         ) : null}
       </div>
-      {tableRows.length > 0 ? (
-        <JourneyContentBreak
-          slot={ADSENSE_SLOTS.COMPETITION_PAGE_IN_ARTICLE}
-          placementId="competition-seo-shell"
-        />
-      ) : null}
       <CompetitionTable name={name} season={season} rows={tableRows} />
       {conferenceTableGroups.length > 0 ? (
         <div className="Competition__seoConferenceTables">

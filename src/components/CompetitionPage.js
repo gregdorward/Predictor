@@ -480,8 +480,6 @@ export default function CompetitionPage({
             </section>
             )}
 
-            <JourneyContentBreak {...competitionAdBreak("competition-hub-after-hero")} />
-
             {hasConferenceSplit ? (
               <ScopeToggle
                 heading="MLS view"
