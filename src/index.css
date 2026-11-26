@@ -722,15 +722,19 @@ body.ssh-nav-open .DarkMode {
 }
 
 /*
- * Hide sticky bottom ad units while the nav is open so they cannot cover FAQ
- * or intercept touch. Temporary overlay cover is fine; do not leave these
+ * Hide sticky / overlay Auto ad units while the nav is open so they cannot
+ * cover links or intercept touch. Temporary cover is fine; do not leave these
  * hidden during normal reading.
  */
 body.ssh-nav-open [id*="adhesion" i],
 body.ssh-nav-open [class*="adhesion" i],
 body.ssh-nav-open [data-type="adhesion"],
 body.ssh-nav-open [id*="grow-me" i],
-body.ssh-nav-open [class*="grow-me" i] {
+body.ssh-nav-open [class*="grow-me" i],
+body.ssh-nav-open .google-auto-placed,
+body.ssh-nav-open ins.adsbygoogle-noablate,
+body.ssh-nav-open ins.adsbygoogle[data-anchor-status],
+body.ssh-nav-open ins.adsbygoogle[data-side-rail-status] {
   visibility: hidden !important;
   pointer-events: none !important;
 }

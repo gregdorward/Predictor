@@ -28,7 +28,6 @@ import { isFeaturedFreeFixture } from "../logic/featuredFreeFixture";
 import FeaturedFreeBadge from "./FeaturedFreeBadge";
 import { useAuth } from "../logic/authProvider";
 import AdSenseUnit from "./AdSenseUnit";
-import JourneyContentBreak from "./JourneyContentBreak";
 import { ADSENSE_SLOTS } from "../constants/adsense";
 import { getListAdSlotIndex } from "../utils/adInsertion";
 
@@ -908,12 +907,6 @@ const List = ({
         <div id="Headers"></div>
         <p className="InstructionalDiv">Generate predictions and click on any fixture for unparalleled insight</p>
         <p className="InstructionalDiv">Predictions and full stats only available for fixtures where each team have played at least 3 games</p>
-        {(showShortlist ? selectedFixtures : fixtures).length > 0 ? (
-          <JourneyContentBreak
-            slot={ADSENSE_SLOTS.HOME_MID_CONTENT}
-            placementId="home-above-fixture-list"
-          />
-        ) : null}
         <ul className="FixtureList">
           {renderFixtureListItems(
             showShortlist ? selectedFixtures : fixtures
