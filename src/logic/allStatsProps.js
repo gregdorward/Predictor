@@ -84,7 +84,7 @@ export function getOverallLeagueStats(form) {
   };
 }
 
-function getLast5LeagueStatNumbers(form) {
+export function getLast5LeagueStatNumbers(form) {
   if (!form) return {};
   return {
     goals: leagueStatNumber(form.last5Goals),
@@ -129,6 +129,113 @@ export function getLast5LeagueStats(form) {
     ppg: formatLeagueStat(stats.ppg),
     goalDifference: formatLeagueStat(stats.goalDifference),
     corners: formatLeagueStat(stats.corners),
+  };
+}
+
+function homeAwayDangerousAttacksValue(form, isHome) {
+  const venueDa = isHome
+    ? form.avgDangerousAttacksHome
+    : form.avgDangerousAttacksAway;
+  if (venueDa !== 0 && venueDa !== undefined) return venueDa;
+  return form.AverageDangerousAttacks ?? 0;
+}
+
+export function getHomeAwayLeagueStatNumbers(form, venue) {
+  if (!form) return {};
+  const isHome = venue === "home";
+  const xg = isHome ? form.avgXGScoredHome : form.avgXGScoredAway;
+  const npXg = isHome ? form.avgNpXGScoredHome : form.avgNpXGScoredAway;
+  const xgConceded = isHome ? form.avgXGConceededHome : form.avgXGConceededAway;
+  const npXgConceded = isHome
+    ? form.avgNpXGConceededHome
+    : form.avgNpXGConceededAway;
+  return {
+    goals: leagueStatNumber(isHome ? form.avgScoredHome : form.avgScoredAway),
+    conceeded: leagueStatNumber(
+      isHome ? form.teamConceededAvgHomeOnly : form.teamConceededAvgAwayOnly
+    ),
+    XG: leagueStatNumber(xg),
+    npXG: leagueStatNumber(npXg != null && npXg !== "" ? npXg : xg),
+    XGConceded: leagueStatNumber(xgConceded),
+    npXGConceded: leagueStatNumber(
+      npXgConceded != null && npXgConceded !== "" ? npXgConceded : xgConceded
+    ),
+    possession: leagueStatNumber(
+      isHome ? form.avgPossessionHome : form.avgPossessionAway
+    ),
+    shots: leagueStatNumber(isHome ? form.avgShotsHome : form.avgShotsAway),
+    sot: leagueStatNumber(
+      isHome ? form.avgShotsOnTargetHome : form.avgShotsOnTargetAway
+    ),
+    dangerousAttacks: leagueStatNumber(
+      homeAwayDangerousAttacksValue(form, isHome)
+    ),
+    ppg: leagueStatNumber(isHome ? form.homePPGAv : form.awayPPGAv),
+    goalDifference: leagueStatNumber(form.goalDifferenceHomeOrAway),
+    corners: leagueStatNumber(isHome ? form.cornersAvHome : form.cornersAvAway),
+  };
+}
+
+export function getHomeAwayLeagueStats(form, venue) {
+  const stats = getHomeAwayLeagueStatNumbers(form, venue);
+  return {
+    goals: formatLeagueStat(stats.goals),
+    conceeded: formatLeagueStat(stats.conceeded),
+    XG: formatLeagueStat(stats.XG),
+    npXG: formatLeagueStat(stats.npXG),
+    XGConceded: formatLeagueStat(stats.XGConceded),
+    npXGConceded: formatLeagueStat(stats.npXGConceded),
+    possession: formatLeagueStat(stats.possession),
+    shots: formatLeagueStat(stats.shots),
+    sot: formatLeagueStat(stats.sot),
+    dangerousAttacks: formatLeagueStat(stats.dangerousAttacks),
+    ppg: formatLeagueStat(stats.ppg),
+    goalDifference: formatLeagueStat(stats.goalDifference),
+    corners: formatLeagueStat(stats.corners),
+  };
+}
+
+/** StatComparison payload for last-5 swiper rows (homepage + fixture page). */
+export function buildRecentFormComparisonStats(form) {
+  const stats = getLast5LeagueStats(form);
+  return {
+    goals: stats.goals,
+    conceeded: stats.conceeded,
+    XG: stats.XG,
+    npXG: stats.npXG,
+    XGConceded: stats.XGConceded,
+    npXGConceded: stats.npXGConceded,
+    possession: stats.possession,
+    shots: stats.shots,
+    sot: stats.sot,
+    dangerousAttacks: stats.dangerousAttacks,
+    ppg: stats.ppg,
+    goalDifference: stats.goalDifference,
+    BttsPercentage: form?.bttsLast5Percentage,
+    CornersAverage: stats.corners,
+  };
+}
+
+/** StatComparison payload for home/away-only swiper rows. */
+export function buildVenueFormComparisonStats(form, venue) {
+  const stats = getHomeAwayLeagueStats(form, venue);
+  const isHome = venue === "home";
+  return {
+    goals: stats.goals,
+    conceeded: stats.conceeded,
+    XG: stats.XG,
+    npXG: stats.npXG,
+    XGConceded: stats.XGConceded,
+    npXGConceded: stats.npXGConceded,
+    possession: stats.possession,
+    shots: stats.shots,
+    sot: stats.sot,
+    dangerousAttacks: stats.dangerousAttacks,
+    ppg: stats.ppg,
+    goalDifference: stats.goalDifference,
+    BttsPercentage: `${isHome ? form?.bttsHomePercentage : form?.bttsAwayPercentage}`,
+    CornersAverage: stats.corners,
+    winPercentage: stats.ppg,
   };
 }
 

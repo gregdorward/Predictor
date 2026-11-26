@@ -23,6 +23,22 @@ import {
   buildFixturePageSections,
   buildFixtureModelOutputs,
 } from "./fixturePageMetrics";
+import { getPointsFromLastX } from "../utils/getPointsFromLastX";
+
+function ensureVenuePpgAv(form, venue) {
+  const avKey = venue === "home" ? "homePPGAv" : "awayPPGAv";
+  if (form?.[avKey] != null && form[avKey] !== "") {
+    return;
+  }
+  const results = venue === "home" ? form?.resultsHome : form?.resultsAway;
+  if (!Array.isArray(results) || results.length === 0) {
+    return;
+  }
+  const total = getPointsFromLastX(results);
+  if (typeof total === "number") {
+    form[avKey] = total / results.length;
+  }
+}
 
 export function formatDateForApi(unixTimestamp) {
   const d = new Date(unixTimestamp * 1000);
@@ -691,6 +707,7 @@ export async function enrichMatchForFixturePageDisplay(match) {
       false,
       strengthOptions
     );
+    ensureVenuePpgAv(form, side === "formHome" ? "home" : "away");
   }
 }
 

@@ -28,6 +28,9 @@ import FixtureFootyStatsFallback from "./FixtureFootyStatsFallback";
 import FixtureMarketsSnapshot from "./FixtureMarketsSnapshot";
 import FixtureSocialShareCard from "./FixtureSocialShareCard";
 import { buildFixtureShareCardFromMatch } from "../logic/fixtureShareCardData";
+import FixtureHistoryPanels from "./FixtureHistoryPanels";
+import FixtureMarketValue from "./FixtureMarketValue";
+import { shouldUseFootyStatsFixtureTemplate } from "../logic/fixturePageFootyStatsFallback";
 
 function formatStatValue(label, value) {
   if (value == null || value === undefined) {
@@ -462,9 +465,16 @@ function TeamPage({ matchId, seoShell = null }) {
 
   const sections = useMemo(() => {
     if (matchId) {
-      return (pageData?.sections ?? []).filter((section) =>
-        ["markets", "advanced-tendencies"].includes(section.id)
-      );
+      const base = pageData?.sections ?? [];
+      const sectionIds = ["markets"];
+      const richMatchContext =
+        match &&
+        !shouldUseFootyStatsFixtureTemplate(match) &&
+        (match.formHome?.contextMetrics || match.formAway?.contextMetrics);
+      if (!richMatchContext) {
+        sectionIds.push("advanced-tendencies");
+      }
+      return base.filter((section) => sectionIds.includes(section.id));
     }
 
     const homeForm = JSON.parse(storedDataHome || "{}");
@@ -476,6 +486,7 @@ function TeamPage({ matchId, seoShell = null }) {
   }, [
     matchId,
     pageData?.sections,
+    match,
     storedDataHome,
     storedDataHomeDef,
     storedDataAway,
@@ -750,11 +761,18 @@ function TeamPage({ matchId, seoShell = null }) {
       />
 
       <p className="FixturePage-homeStatsNote">
-        Looking for more? The{" "}
-        <a href="/">homepage</a> has more extensive match stats for this game,
-        comparative charts, wider context, an AI preview, and loads more fixtures to
-        explore.
+        For lineups, missing players, managers, and the AI match preview, expand
+        this fixture on the{" "}
+        <a href="/">homepage</a> fixture list.
       </p>
+
+      {matchId && match && !match.predictionsUnavailable ? (
+        <FixtureMarketValue
+          match={match}
+          predictionUnlocked={predictionUnlocked || fullAccess}
+          unlockOrUpgrade={unlockOrUpgrade}
+        />
+      ) : null}
 
       {useFootyStatsTemplate ? (
         <FixtureFootyStatsFallback
@@ -768,6 +786,10 @@ function TeamPage({ matchId, seoShell = null }) {
         <>
           {matchId && match ? (
             <FixtureSeasonStats match={match} statsFullAccess={fullAccess} />
+          ) : null}
+
+          {matchId && match ? (
+            <FixtureHistoryPanels match={match} statsFullAccess={fullAccess} />
           ) : null}
 
           <JourneyContentBreak

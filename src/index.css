@@ -10499,6 +10499,53 @@ body.dark-mode .MetricTrendTables-arrow {
   filter: brightness(1.05);
 }
 
+.FixturePage-marketValue {
+  width: 100%;
+  margin: var(--fp-space-3) 0;
+  padding: var(--fp-space-3) 0;
+  border-top: 1px solid var(--third-background-color);
+}
+
+.FixturePage-marketValueNote,
+.FixturePage-expectedPointsNote {
+  margin: 0 0 var(--fp-space-2);
+  font-size: var(--fp-meta);
+  color: var(--faint-text);
+  line-height: 1.45;
+}
+
+.FixturePage-marketValueTable {
+  width: 100%;
+}
+
+.FixturePage-historyPanels {
+  width: 100%;
+  margin-top: var(--fp-space-2);
+}
+
+.FixturePage-historySection {
+  width: 100%;
+  margin: 0;
+  padding: var(--fp-space-3) 0;
+  border-top: 1px solid var(--third-background-color);
+}
+
+.FixturePage-historySection .StatCompare {
+  margin-top: var(--fp-space-2);
+}
+
+.FixturePage-xgDiffGrid {
+  display: grid;
+  gap: var(--fp-space-3);
+  margin-top: var(--fp-space-2);
+}
+
+@media (min-width: 720px) {
+  .FixturePage-xgDiffGrid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
 .FixturePage-compareSection {
   width: 100%;
   margin: 0;

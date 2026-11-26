@@ -107,7 +107,12 @@ import {
 } from "../utils/competitionMetricRankings";
 import {
   buildTeamAllStatsFields,
+  buildRecentFormComparisonStats,
+  buildVenueFormComparisonStats,
   calculateComparisonStatusMap,
+  getHomeAwayLeagueStatNumbers,
+  getHomeAwayLeagueStats,
+  getLast5LeagueStatNumbers,
   getLast5LeagueStats,
   getOverallLeagueStatNumbers,
   getOverallLeagueStats,
@@ -141,6 +146,7 @@ import ShareableVisual from "./ShareableVisual";
 import PremiumBlurGate from "./PremiumBlurGate";
 import FeaturedFreeBadge from "./FeaturedFreeBadge";
 import { sanitizeImageFilename } from "../utils/captureElementImage";
+import FixtureMarketValue from "./FixtureMarketValue";
 
 const MemoizedSofaLineupsWidget = memo(SofaLineupsWidget);
 const LazyFutureFixturesSideBySide = lazy(() => import('./FutureFixturesSideBySide'));
@@ -250,100 +256,6 @@ function leagueDangerousAttacksValue(form) {
 function leagueStatNumber(value) {
   const n = Number(value);
   return Number.isNaN(n) ? 0 : n;
-}
-
-function getLast5LeagueStatNumbers(form) {
-  if (!form) return {};
-  return {
-    goals: leagueStatNumber(form.last5Goals),
-    conceeded: leagueStatNumber(form.last5GoalsConceeded),
-    XG: leagueStatNumber(form.avXGLast5),
-    npXG: leagueStatNumber(
-      form.npXGlast5 != null && form.npXGlast5 !== ""
-        ? form.npXGlast5
-        : form.avXGLast5
-    ),
-    XGConceded: leagueStatNumber(form.avXGAgainstLast5),
-    npXGConceded: leagueStatNumber(
-      form.npXGAgainstlast5 != null && form.npXGAgainstlast5 !== ""
-        ? form.npXGAgainstlast5
-        : form.avXGAgainstLast5
-    ),
-    possession: leagueStatNumber(form.avPosessionLast5),
-    shots: leagueStatNumber(form.avShotsLast5),
-    sot: leagueStatNumber(form.avSOTLast5),
-    dangerousAttacks: leagueStatNumber(
-      form.avDALast5 !== 0 ? form.avDALast5 : form.AverageDangerousAttacks
-    ),
-    ppg: leagueStatNumber(form.avPoints5),
-    goalDifference: leagueStatNumber(form.last5GoalDiff),
-    corners: leagueStatNumber(form.last5Corners),
-  };
-}
-
-function homeAwayDangerousAttacksValue(form, isHome) {
-  const venueDa = isHome
-    ? form.avgDangerousAttacksHome
-    : form.avgDangerousAttacksAway;
-  if (venueDa !== 0 && venueDa !== undefined) return venueDa;
-  return form.AverageDangerousAttacks ?? 0;
-}
-
-function getHomeAwayLeagueStatNumbers(form, venue) {
-  if (!form) return {};
-  const isHome = venue === "home";
-  const xg = isHome ? form.avgXGScoredHome : form.avgXGScoredAway;
-  const npXg = isHome ? form.avgNpXGScoredHome : form.avgNpXGScoredAway;
-  const xgConceded = isHome ? form.avgXGConceededHome : form.avgXGConceededAway;
-  const npXgConceded = isHome
-    ? form.avgNpXGConceededHome
-    : form.avgNpXGConceededAway;
-  return {
-    goals: leagueStatNumber(isHome ? form.avgScoredHome : form.avgScoredAway),
-    conceeded: leagueStatNumber(
-      isHome ? form.teamConceededAvgHomeOnly : form.teamConceededAvgAwayOnly
-    ),
-    XG: leagueStatNumber(xg),
-    npXG: leagueStatNumber(
-      npXg != null && npXg !== "" ? npXg : xg
-    ),
-    XGConceded: leagueStatNumber(xgConceded),
-    npXGConceded: leagueStatNumber(
-      npXgConceded != null && npXgConceded !== "" ? npXgConceded : xgConceded
-    ),
-    possession: leagueStatNumber(
-      isHome ? form.avgPossessionHome : form.avgPossessionAway
-    ),
-    shots: leagueStatNumber(isHome ? form.avgShotsHome : form.avgShotsAway),
-    sot: leagueStatNumber(
-      isHome ? form.avgShotsOnTargetHome : form.avgShotsOnTargetAway
-    ),
-    dangerousAttacks: leagueStatNumber(
-      homeAwayDangerousAttacksValue(form, isHome)
-    ),
-    ppg: leagueStatNumber(isHome ? form.homePPGAv : form.awayPPGAv),
-    goalDifference: leagueStatNumber(form.goalDifferenceHomeOrAway),
-    corners: leagueStatNumber(isHome ? form.cornersAvHome : form.cornersAvAway),
-  };
-}
-
-function getHomeAwayLeagueStats(form, venue) {
-  const stats = getHomeAwayLeagueStatNumbers(form, venue);
-  return {
-    goals: formatLeagueStat(stats.goals),
-    conceeded: formatLeagueStat(stats.conceeded),
-    XG: formatLeagueStat(stats.XG),
-    npXG: formatLeagueStat(stats.npXG),
-    XGConceded: formatLeagueStat(stats.XGConceded),
-    npXGConceded: formatLeagueStat(stats.npXGConceded),
-    possession: formatLeagueStat(stats.possession),
-    shots: formatLeagueStat(stats.shots),
-    sot: formatLeagueStat(stats.sot),
-    dangerousAttacks: formatLeagueStat(stats.dangerousAttacks),
-    ppg: formatLeagueStat(stats.ppg),
-    goalDifference: formatLeagueStat(stats.goalDifference),
-    corners: formatLeagueStat(stats.corners),
-  };
 }
 
 function buildComparisonBarChartData(homeStats, awayStats, options = {}) {
@@ -3195,32 +3107,8 @@ function GameStats({
     );
   }
 
-  const getLast5ComparisonData = (form, isHome = true) => {
-    const stats = getLast5LeagueStats(form);
-    return {
-      goals: stats.goals,
-      conceeded: stats.conceeded,
-      XG: stats.XG,
-      npXG: stats.npXG,
-      XGConceded: stats.XGConceded,
-      npXGConceded: stats.npXGConceded,
-      possession: stats.possession,
-      shots: stats.shots,
-      sot: stats.sot,
-      dangerousAttacks: stats.dangerousAttacks,
-      ppg: stats.ppg,
-      goalDifference: stats.goalDifference,
-      BttsPercentage: form.bttsLast5Percentage,
-      CornersAverage: stats.corners,
-      // Add these if your COMPARISON_RULES support array comparison for formTrend
-      formTrend: isHome
-        ? [homeTenGameAverage, homeSixGameAverage, homeFiveGameAverage]
-        : [awayTenGameAverage, awaySixGameAverage, awayFiveGameAverage],
-    };
-  };
-
-  const homeLast5Data = getLast5ComparisonData(homeForm, true);
-  const awayLast5Data = getLast5ComparisonData(awayForm, false);
+  const homeLast5Data = buildRecentFormComparisonStats(homeForm);
+  const awayLast5Data = buildRecentFormComparisonStats(awayForm);
 
   const last5ComparisonMap = calculateComparisonStatusMap(
     homeLast5Data,
@@ -3386,33 +3274,8 @@ function GameStats({
   }
 
 
-  const getHorAComparisonData = (form, isHome = true) => {
-    const stats = getHomeAwayLeagueStats(form, isHome ? "home" : "away");
-    return {
-      goals: stats.goals,
-      conceeded: stats.conceeded,
-      XG: stats.XG,
-      npXG: stats.npXG,
-      XGConceded: stats.XGConceded,
-      npXGConceded: stats.npXGConceded,
-      possession: stats.possession,
-      shots: stats.shots,
-      sot: stats.sot,
-      dangerousAttacks: stats.dangerousAttacks,
-      ppg: stats.ppg,
-      goalDifference: stats.goalDifference,
-      BttsPercentage: `${isHome ? form.bttsHomePercentage : form.bttsAwayPercentage}`,
-      CornersAverage: stats.corners,
-      winPercentage: stats.ppg,
-      // Add these if your COMPARISON_RULES support array comparison for formTrend
-      formTrend: isHome
-        ? [homeTenGameAverage, homeSixGameAverage, homeFiveGameAverage]
-        : [awayTenGameAverage, awaySixGameAverage, awayFiveGameAverage],
-    };
-  };
-
-  const homeOnlyData = getHorAComparisonData(homeForm, true);
-  const awayOnlyData = getHorAComparisonData(awayForm, false);
+  const homeOnlyData = buildVenueFormComparisonStats(homeForm, "home");
+  const awayOnlyData = buildVenueFormComparisonStats(awayForm, "away");
 
   const hOrAComparisonMap = calculateComparisonStatusMap(
     homeOnlyData,
@@ -4540,105 +4403,12 @@ function GameStats({
           buttonText={`Market Value \u{2630}`}
           classNameButton="PredictionsButton"
           element={
-            <Suspense fallback={<div>Loading predictions...</div>}>
-              <table className="PredictionsTable">
-                <thead>
-                  <tr>
-                    <th>Market</th>
-                    <th>Our Probability</th>
-                    <th>Bookies Probability</th>
-                    <th>Fair Odds</th>
-                    <th>Value</th>
-                  </tr>
-                </thead>
-
-                <tbody>
-                  {[
-                    {
-                      label: "Home Win",
-                      model: homeWin,
-                      bookie: impliedProbability(game.homeOdds)
-                    },
-                    {
-                      label: "Away Win",
-                      model: awayWin,
-                      bookie: impliedProbability(game.awayOdds)
-                    },
-                    {
-                      label: "Draw",
-                      model: draw,
-                      bookie: impliedProbability(game.drawOdds)
-                    },
-                    {
-                      label: "BTTS - Yes",
-                      model: yes,
-                      bookie: bttsYesImplied
-                    },
-                    {
-                      label: "BTTS - No",
-                      model: no,
-                      bookie: bttsNoImplied
-                    },
-                    {
-                      label: "Over 2.5",
-                      model: over,
-                      bookie: over25Implied
-                    },
-                    {
-                      label: "Under 2.5",
-                      model: under,
-                      bookie: under25Implied
-                    }
-                  ].map(({ label, model, bookie }) => {
-                    const modelValue = Number(model);
-                    const bookieValue = Number(bookie);
-                    const value =
-                      Number.isFinite(modelValue) && Number.isFinite(bookieValue)
-                        ? modelValue - bookieValue
-                        : null;
-                    const fairOddsValue = fairOdds(model);
-
-                    return (
-                      <tr key={label}>
-                        <td>{label}</td>
-
-                        <td>
-                          {predictionUnlocked
-                            ? formatProbabilityPercent(model) || STAT_FALLBACK
-                            : (
-                              <button
-                                type="button"
-                                className="PredictionUnlockBtn PredictionUnlockBtn--inline"
-                                onClick={unlockOrUpgrade}
-                                aria-label="Unlock model probability"
-                              >
-                                🔒
-                              </button>
-                            )}
-                        </td>
-                        <td>
-                          {formatProbabilityPercent(bookie) || STAT_FALLBACK}
-                        </td>
-                        <td>
-                          {predictionUnlocked && fairOddsValue != null
-                            ? fairOddsValue.toFixed(2)
-                            : predictionUnlocked
-                              ? STAT_FALLBACK
-                              : "—"}
-                        </td>
-                        <td className={valueClass(predictionUnlocked ? value : null)}>
-                          {predictionUnlocked && Number.isFinite(value)
-                            ? `${value.toFixed(1)}%`
-                            : predictionUnlocked
-                              ? STAT_FALLBACK
-                              : "—"}
-                        </td>
-                      </tr>
-                    );
-                  })}
-                </tbody>
-              </table>
-            </Suspense>
+            <FixtureMarketValue
+              match={game}
+              predictionUnlocked={predictionUnlocked}
+              unlockOrUpgrade={unlockOrUpgrade}
+              hideTitle
+            />
           }
         />
         <div>
