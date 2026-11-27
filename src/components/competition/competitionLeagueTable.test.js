@@ -1,4 +1,5 @@
 import {
+  applyCompetitionLeaguePositionsToViews,
   buildTeamConferenceLookup,
   buildCompetitionLeagueTableViews,
   CONFERENCE_SCOPE_EAST,
@@ -71,6 +72,41 @@ describe("buildCompetitionLeagueTableViews", () => {
 
     expect(views?.teams).toHaveLength(2);
     expect(views.teams[0].Name).toBe("Alpha");
+  });
+
+  test("replaces stale tables API position with competition leaguePosition_overall", () => {
+    const views = buildCompetitionLeagueTableViews(17326, {
+      data: {
+        league_table: [
+          {
+            id: 1,
+            cleanName: "Wellington Phoenix",
+            position: 2,
+            points: 10,
+            seasonGoalDifference: 5,
+            wdl_record: "wwdwl",
+          },
+          {
+            id: 2,
+            cleanName: "Macarthur",
+            position: 1,
+            points: 11,
+            seasonGoalDifference: 1,
+            wdl_record: "ddlww",
+          },
+        ],
+      },
+    });
+
+    const enriched = applyCompetitionLeaguePositionsToViews(views, [
+      { id: 1, leaguePosition_overall: 1 },
+      { id: 2, leaguePosition_overall: 5 },
+    ]);
+
+    expect(enriched.teams.find((t) => t.Name === "Wellington Phoenix").Position).toBe(
+      1
+    );
+    expect(enriched.teams.find((t) => t.Name === "Macarthur").Position).toBe(5);
   });
 
   test("maps home and away columns for classic league tables", () => {

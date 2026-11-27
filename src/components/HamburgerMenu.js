@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { createPortal } from "react-dom";
 import { Menu, X } from "lucide-react";
 import { SITE_NAV_LINKS } from "../seo/siteNavLinks";
+import { startNavOpenAdSuppression } from "../utils/navOpenAdSuppression";
 
 const NAV_OPEN_CLASS = "ssh-nav-open";
 
@@ -21,8 +22,10 @@ export default function HamburgerMenu() {
     const scrollY = window.scrollY;
     body.classList.add(NAV_OPEN_CLASS);
     body.style.top = `-${scrollY}px`;
+    const stopAdSuppression = startNavOpenAdSuppression();
 
     return () => {
+      stopAdSuppression();
       body.classList.remove(NAV_OPEN_CLASS);
       body.style.top = "";
       window.scrollTo(0, scrollY);

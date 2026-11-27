@@ -693,8 +693,8 @@ h1 {
   left: 0;
   right: 0;
   bottom: 0;
-  /* AdSense anchor / sticky units often sit well above 1100. */
-  z-index: 1000000;
+  /* Above reparented AdSense side rails (often use seven-digit z-index). */
+  z-index: 2147483646;
   width: 100%;
   background-color: var(--background-color);
   color: var(--text-color);
@@ -722,11 +722,18 @@ body.ssh-nav-open .DarkMode {
 }
 
 /*
- * Hide sticky / overlay Auto ad units while the nav is open so they cannot
- * cover links or intercept touch. Temporary cover is fine; do not leave these
- * hidden during normal reading.
+ * While the nav is open, only the header and menu overlay are interactive.
+ * Hide the page shell (sidebar rail, in-content units) and any AdSense nodes
+ * Google reparents to <body> with extreme z-index.
  */
+body.ssh-nav-open .SitePageLayout,
+body.ssh-nav-open .WorldCupBanner {
+  display: none !important;
+}
+
 body.ssh-nav-open #ssh-sidebar,
+body.ssh-nav-open .AdSenseUnit,
+body.ssh-nav-open .FixturePage-contentBreak--adSlot,
 body.ssh-nav-open [id*="adhesion" i],
 body.ssh-nav-open [class*="adhesion" i],
 body.ssh-nav-open [data-type="adhesion"],
@@ -738,7 +745,13 @@ body.ssh-nav-open ins.adsbygoogle-noablate,
 body.ssh-nav-open ins.adsbygoogle[data-anchor-status],
 body.ssh-nav-open ins.adsbygoogle[data-side-rail-status],
 body.ssh-nav-open iframe[id^="google_ads_iframe"],
-body.ssh-nav-open div[id^="google_ads_iframe"] {
+body.ssh-nav-open div[id^="google_ads_iframe"],
+body.ssh-nav-open [id^="aswift_"],
+body.ssh-nav-open iframe[src*="googlesyndication"],
+body.ssh-nav-open iframe[src*="doubleclick.net"],
+body.ssh-nav-open iframe[src*="googleadservices.com"],
+body.ssh-nav-open .ssh-nav-ad-suppressed {
+  display: none !important;
   visibility: hidden !important;
   pointer-events: none !important;
 }

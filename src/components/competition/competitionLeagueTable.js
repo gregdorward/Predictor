@@ -245,13 +245,67 @@ function finitePositive(value) {
   return Number.isFinite(n) && n > 0 ? n : null;
 }
 
+export function buildLeaguePositionLookup(competitionTeams) {
+  const lookup = new Map();
+  (competitionTeams || []).forEach((team) => {
+    const id = Number(team?.id ?? team?.ID);
+    const position = finitePositive(team?.leaguePosition_overall);
+    if (Number.isFinite(id) && position) {
+      lookup.set(id, position);
+    }
+  });
+  return lookup;
+}
+
+function enrichTeamLeaguePositions(teams, positionLookup) {
+  if (!Array.isArray(teams) || !positionLookup?.size) {
+    return teams;
+  }
+
+  return teams.map((team) => {
+    const position = positionLookup.get(Number(team.ID));
+    return position ? { ...team, Position: position } : team;
+  });
+}
+
+/** Align form-table "Table" positions with competition hub standings (leaguePosition_overall). */
+export function applyCompetitionLeaguePositionsToViews(views, competitionTeams) {
+  if (!views) {
+    return views;
+  }
+
+  const positionLookup = buildLeaguePositionLookup(competitionTeams);
+  if (!positionLookup.size) {
+    return views;
+  }
+
+  if (views.mode === "divisions") {
+    return {
+      ...views,
+      divisions: views.divisions.map((division) => ({
+        ...division,
+        teams: enrichTeamLeaguePositions(division.teams, positionLookup),
+      })),
+    };
+  }
+
+  if (!Array.isArray(views.teams)) {
+    return views;
+  }
+
+  return {
+    ...views,
+    teams: enrichTeamLeaguePositions(views.teams, positionLookup),
+  };
+}
+
 function mapTeamRow(currentTeam, leagueId, index, groupName) {
   const last5 = getLast5(currentTeam.wdl_record);
   const team = {
     LeagueID: leagueId,
     Position:
-      finitePositive(currentTeam.position) ||
       finitePositive(currentTeam.leaguePosition_overall) ||
+      finitePositive(currentTeam.position) ||
       index + 1,
     Name: currentTeam.cleanName || currentTeam.name,
     ID: currentTeam.id,

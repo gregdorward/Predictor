@@ -526,6 +526,7 @@ export default function CompetitionPage({
               seasonId={seasonId}
               scope={conferenceScope}
               tableViews={cupFormTableViews ?? mlsTableViews}
+              competitionTeams={teams}
               skipAutoFetch={skipCupFormAutoFetch}
               pendingCupTableViews={pendingCupFormTableViews}
             />

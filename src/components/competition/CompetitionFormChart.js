@@ -1,6 +1,7 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { apiGetUrl } from "../../utils/apiUrl";
 import {
+  applyCompetitionLeaguePositionsToViews,
   buildCompetitionLeagueTableViews,
   CONFERENCE_SCOPE_OVERALL,
   conferenceScopeLabel,
@@ -156,6 +157,7 @@ export default function CompetitionFormChart({
   seasonId,
   scope = CONFERENCE_SCOPE_OVERALL,
   tableViews,
+  competitionTeams = null,
   skipAutoFetch = false,
   pendingCupTableViews = false,
 }) {
@@ -172,6 +174,10 @@ export default function CompetitionFormChart({
 
   const resolvedViews =
     skipAutoFetch && tableViews !== undefined ? tableViews : views;
+  const viewsWithLeaguePositions = useMemo(
+    () => applyCompetitionLeaguePositionsToViews(resolvedViews, competitionTeams),
+    [resolvedViews, competitionTeams]
+  );
   const resolvedLoading =
     pendingCupTableViews ||
     (tableViews === undefined && !skipAutoFetch && loading);
@@ -247,11 +253,11 @@ export default function CompetitionFormChart({
     );
   }
 
-  if (!resolvedViews) {
+  if (!viewsWithLeaguePositions) {
     return null;
   }
 
-  const sets = teamSetsFromViews(resolvedViews, scope);
+  const sets = teamSetsFromViews(viewsWithLeaguePositions, scope);
 
   return (
     <section className="Competition__section Competition__formChart" aria-labelledby="competition-form-chart">
