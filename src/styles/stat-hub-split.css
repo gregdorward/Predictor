@@ -142,8 +142,13 @@
 }
 
 .StatHub-table--teams .StatHub-col--odds,
-.StatHub-table--teams .StatHub-col--rate {
+.StatHub-table--teams .StatHub-col--rate,
+.StatHub-table--teams .StatHub-col--goals {
   width: 17%;
+}
+
+.StatHub-table--teams .StatHub-col--goals {
+  min-width: 3.25rem;
 }
 
 .StatHub-table--leagues .SubpageTableScroll th:first-child,
@@ -155,6 +160,17 @@
 .StatHub-col--goals,
 .StatHub-col--rate {
   text-align: right !important;
+}
+
+.StatHub-colLabel--short {
+  display: none;
+}
+
+.StatHub .SubpageTableScroll .MuiTableCell-head.StatHub-col--odds,
+.StatHub .SubpageTableScroll .MuiTableCell-head.StatHub-col--rate,
+.StatHub .SubpageTableScroll .MuiTableCell-head.StatHub-col--goals {
+  overflow: hidden;
+  box-sizing: border-box;
 }
 
 .StatHub .SubpageTableScroll .MuiTableCell-head,
@@ -183,6 +199,11 @@
 .StatHub .SubpageCol--played,
 .StatHub .SubpageCol--date {
   display: none;
+  width: 0 !important;
+  max-width: 0;
+  padding: 0 !important;
+  border: 0 !important;
+  overflow: hidden;
 }
 
 .StatHub .SubpageDataTable tbody tr:nth-child(even) {
@@ -376,6 +397,86 @@
 
   .StatHub-table--fixtures .StatHub-col--goals {
     width: 14%;
+  }
+
+  .StatHub .SubpageTableScroll .MuiTableCell-root {
+    word-break: normal;
+    overflow-wrap: anywhere;
+  }
+
+  .StatHub-colLabel--full {
+    display: none;
+  }
+
+  .StatHub-colLabel--short {
+    display: inline;
+  }
+
+  .StatHub-table--teams .SubpageTableScroll th:first-child,
+  .StatHub-table--teams .SubpageTableScroll td:first-child {
+    width: 34%;
+  }
+
+  .StatHub-table--teams .StatHub-col--next {
+    width: 26%;
+  }
+
+  .StatHub-table--teams .StatHub-col--rate {
+    width: 22%;
+    min-width: 3.25rem;
+    white-space: nowrap;
+  }
+
+  .StatHub-table--teams .StatHub-col--goals {
+    width: 18%;
+    min-width: 3.35rem;
+    white-space: nowrap;
+  }
+
+  .StatHub .SubpageTableScroll .MuiTableCell-head.StatHub-col--rate,
+  .StatHub .SubpageTableScroll .MuiTableCell-head.StatHub-col--goals,
+  .StatHub .SubpageTableScroll .MuiTableCell-head.StatHub-col--odds {
+    font-size: 0.62rem;
+    line-height: 1.15;
+    padding-left: 0.15rem;
+    padding-right: 0.25rem;
+  }
+
+  .StatHub-table--fixtures .StatHub-col--goals,
+  .StatHub-table--fixtures .StatHub-col--odds {
+    white-space: nowrap;
+  }
+
+  .StatHub-table--leagues .SubpageTableScroll th:first-child,
+  .StatHub-table--leagues .SubpageTableScroll td:first-child {
+    width: 46%;
+  }
+
+  .StatHub-table--leagues .StatHub-col--rate {
+    width: 24%;
+    min-width: 3.25rem;
+    white-space: nowrap;
+  }
+
+  .StatHub-table--leagues .StatHub-col--goals {
+    width: 18%;
+    min-width: 3.35rem;
+    white-space: nowrap;
+  }
+}
+
+@media (max-width: 600px) {
+  .StatHub .SubpageTableScroll .MuiTableCell-head.StatHub-col--goals,
+  .StatHub .SubpageTableScroll .MuiTableCell-body.StatHub-col--goals,
+  .StatHub .SubpageTableScroll .MuiTableCell-head.StatHub-col--rate,
+  .StatHub .SubpageTableScroll .MuiTableCell-body.StatHub-col--rate,
+  .StatHub .SubpageTableScroll .MuiTableCell-head.StatHub-col--odds,
+  .StatHub .SubpageTableScroll .MuiTableCell-body.StatHub-col--odds {
+    font-size: 0.84rem;
+    line-height: 1.2;
+    word-break: normal;
+    overflow-wrap: normal;
+    white-space: nowrap;
   }
 }
 

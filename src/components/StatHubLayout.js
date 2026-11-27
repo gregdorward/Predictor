@@ -83,6 +83,16 @@ export function HubFixtureLink({ href, children }) {
   );
 }
 
+/** Full label on desktop; `short` on narrow viewports to avoid header overlap. */
+export function StatHubHeadLabel({ short, children }) {
+  return (
+    <>
+      <span className="StatHub-colLabel StatHub-colLabel--full">{children}</span>
+      <span className="StatHub-colLabel StatHub-colLabel--short">{short}</span>
+    </>
+  );
+}
+
 export function EmptyHubRow({ colSpan, children }) {
   return (
     <tr>

@@ -3,7 +3,11 @@ import { getBTTSFixtures, getBTTSTeams } from "../logic/getStatsInsights";
 import SiteHeader from "./SiteHeader";
 import StatsFooterAd from "./StatsFooterAd";
 import PageMeta from "./PageMeta";
-import StatHubLayout, { EmptyHubRow, HubFixtureLink } from "./StatHubLayout";
+import StatHubLayout, {
+  EmptyHubRow,
+  HubFixtureLink,
+  StatHubHeadLabel,
+} from "./StatHubLayout";
 import { withCoveredFixtureLinks } from "../seo/statHubFixtureLinks";
 import {
   BodyCell,
@@ -136,7 +140,9 @@ export default function BTTSFixtures({
                       <HeadCell className="SubpageCol--country">Country</HeadCell>
                       <HeadCell className="SubpageCol--played">Played</HeadCell>
                       <HeadCell className="StatHub-col--next">Next</HeadCell>
-                      <HeadCell className="StatHub-col--odds">BTTS odds</HeadCell>
+                      <HeadCell className="StatHub-col--odds">
+                        <StatHubHeadLabel short="Odds">BTTS odds</StatHubHeadLabel>
+                      </HeadCell>
                       <HeadCell className="StatHub-col--rate">BTTS %</HeadCell>
                     </tr>
                   </thead>
@@ -158,7 +164,9 @@ export default function BTTSFixtures({
                       <HeadCell className="SubpageCol--country">Country</HeadCell>
                       <HeadCell className="SubpageCol--played">Played</HeadCell>
                       <HeadCell className="StatHub-col--next">Next</HeadCell>
-                      <HeadCell className="StatHub-col--odds">BTTS odds</HeadCell>
+                      <HeadCell className="StatHub-col--odds">
+                        <StatHubHeadLabel short="Odds">BTTS odds</StatHubHeadLabel>
+                      </HeadCell>
                       <HeadCell className="StatHub-col--rate">BTTS %</HeadCell>
                     </tr>
                   </thead>
@@ -183,7 +191,9 @@ export default function BTTSFixtures({
                     <HeadCell className="SubpageCol--date">Date</HeadCell>
                     <HeadCell className="SubpageCol--country">Country</HeadCell>
                     <HeadCell className="StatHub-col--odds">Odds</HeadCell>
-                    <HeadCell className="StatHub-col--goals">Avg goals</HeadCell>
+                    <HeadCell className="StatHub-col--goals">
+                      <StatHubHeadLabel short="Avg G">Avg goals</StatHubHeadLabel>
+                    </HeadCell>
                   </tr>
                 </thead>
                 <tbody>

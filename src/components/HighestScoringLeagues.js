@@ -4,7 +4,7 @@ import SiteHeader from "./SiteHeader";
 import StatsFooterAd from "./StatsFooterAd";
 import DataCitation from "./DataCitation";
 import PageMeta from "./PageMeta";
-import StatHubLayout, { EmptyHubRow } from "./StatHubLayout";
+import StatHubLayout, { EmptyHubRow, StatHubHeadLabel } from "./StatHubLayout";
 import {
   BodyCell,
   HeadCell,
@@ -125,8 +125,12 @@ export default function HighestScoringLeagues({
                   <tr>
                     <HeadCell align="left">League</HeadCell>
                     <HeadCell className="SubpageCol--country">Country</HeadCell>
-                    <HeadCell className="StatHub-col--rate">Over 2.5%</HeadCell>
-                    <HeadCell className="StatHub-col--goals">Avg goals</HeadCell>
+                    <HeadCell className="StatHub-col--rate">
+                      <StatHubHeadLabel short="O2.5%">Over 2.5%</StatHubHeadLabel>
+                    </HeadCell>
+                    <HeadCell className="StatHub-col--goals">
+                      <StatHubHeadLabel short="Avg G">Avg goals</StatHubHeadLabel>
+                    </HeadCell>
                   </tr>
                 </thead>
                 <tbody>
@@ -161,8 +165,12 @@ export default function HighestScoringLeagues({
                   <tr>
                     <HeadCell align="left">League</HeadCell>
                     <HeadCell className="SubpageCol--country">Country</HeadCell>
-                    <HeadCell className="StatHub-col--rate">Under 2.5%</HeadCell>
-                    <HeadCell className="StatHub-col--goals">Avg goals</HeadCell>
+                    <HeadCell className="StatHub-col--rate">
+                      <StatHubHeadLabel short="U2.5%">Under 2.5%</StatHubHeadLabel>
+                    </HeadCell>
+                    <HeadCell className="StatHub-col--goals">
+                      <StatHubHeadLabel short="Avg G">Avg goals</StatHubHeadLabel>
+                    </HeadCell>
                   </tr>
                 </thead>
                 <tbody>

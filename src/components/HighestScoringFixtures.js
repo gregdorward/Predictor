@@ -3,7 +3,11 @@ import { getHighestScoringFixtures, getHighestScoringTeams } from "../logic/getS
 import SiteHeader from "./SiteHeader";
 import StatsFooterAd from "./StatsFooterAd";
 import PageMeta from "./PageMeta";
-import StatHubLayout, { EmptyHubRow, HubFixtureLink } from "./StatHubLayout";
+import StatHubLayout, {
+  EmptyHubRow,
+  HubFixtureLink,
+  StatHubHeadLabel,
+} from "./StatHubLayout";
 import { withCoveredFixtureLinks } from "../seo/statHubFixtureLinks";
 import {
   BodyCell,
@@ -83,8 +87,12 @@ export default function HighestScoringFixtures({
                     <HeadCell align="left">Team</HeadCell>
                     <HeadCell className="SubpageCol--country">Country</HeadCell>
                     <HeadCell className="StatHub-col--next">Next</HeadCell>
-                    <HeadCell className="StatHub-col--rate">Over 2.5%</HeadCell>
-                    <HeadCell className="StatHub-col--goals">Avg goals</HeadCell>
+                    <HeadCell className="StatHub-col--rate">
+                      <StatHubHeadLabel short="O2.5%">Over 2.5%</StatHubHeadLabel>
+                    </HeadCell>
+                    <HeadCell className="StatHub-col--goals">
+                      <StatHubHeadLabel short="Avg G">Avg goals</StatHubHeadLabel>
+                    </HeadCell>
                   </tr>
                 </thead>
                 <tbody>
@@ -126,7 +134,9 @@ export default function HighestScoringFixtures({
                     <HeadCell className="SubpageCol--date">Date</HeadCell>
                     <HeadCell className="SubpageCol--country">Country</HeadCell>
                     <HeadCell className="StatHub-col--odds">Odds</HeadCell>
-                    <HeadCell className="StatHub-col--goals">Avg goals</HeadCell>
+                    <HeadCell className="StatHub-col--goals">
+                      <StatHubHeadLabel short="Avg G">Avg goals</StatHubHeadLabel>
+                    </HeadCell>
                   </tr>
                 </thead>
                 <tbody>
