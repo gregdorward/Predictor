@@ -159,9 +159,8 @@ export default function PremiumUpsell({
 
   return (
     <div
-      className={`PremiumUpsell ssh-auto-ads-exclude${compact ? " PremiumUpsell--compact" : ""}${
-        banner ? " PremiumUpsell--banner" : ""
-      }${className ? ` ${className}` : ""}`}
+      className={`PremiumUpsell ssh-auto-ads-exclude${compact ? " PremiumUpsell--compact" : ""}${banner ? " PremiumUpsell--banner" : ""
+        }${className ? ` ${className}` : ""}`}
     >
       {banner ? (
         <div className="PremiumUpsell-bannerLayout">
@@ -173,49 +172,51 @@ export default function PremiumUpsell({
         </div>
       ) : (
         <>
-      <div className="UpsellHeader">
-        {compact ? <h3>{title}</h3> : <h2>{title}</h2>}
-        <p>{body}</p>
-      </div>
+          <div className="UpsellHeader">
+            {compact ? <h3>{title}</h3> : <h2>{title}</h2>}
+            <p>{body}</p>
+          </div>
 
-      {compact ? (
-        <ul className="PremiumUpsell-compactBenefits">
-          <li>Unlimited predicted scores &amp; 1X2 probabilities</li>
-          <li>Full season stats — attack, defence, possession, form</li>
-          <li>Tip lists, value picks, streaks, AI previews and full chart access</li>
-        </ul>
-      ) : (
-        <div className="FeatureComparison">
-          <div className="FeatureGroup FeatureGroup--free">
-            <h4>Free tier</h4>
-            <ul>
-              <li>Full fixture board with odds and form</li>
-              <li className="limited">
-                {FREE_DAILY_PREDICTION_LIMIT} predicted scores / 1X2 unlocks per day
-              </li>
-              <li className="limited">Sample tip lists and top-5 insights</li>
+          {compact ? (
+            <ul className="PremiumUpsell-compactBenefits">
+              <li>Unlimited predicted scores &amp; 1X2 probabilities</li>
+              <li>Full season stats — attack, defence, possession, form</li>
+              <li>Tip lists, value picks, streaks, AI previews and full chart access</li>
             </ul>
-          </div>
-          <div className="FeatureDivider" aria-hidden="true">
-            <span className="FeatureDivider-label">vs</span>
-          </div>
-          <div className="FeatureGroup FeatureGroup--premium premium">
-            <h4>Premium</h4>
-            <ul>
-              <li>Unlimited predictions on every match</li>
-              <li>Full multi, BTTS and Over 2.5 tip lists</li>
-              <li>AI match previews beyond the daily allowance</li>
-              <li>Best-value and stats-based tips</li>
-              <li>Deep match intel — streaks and upcoming fixtures</li>
-              <li>Full season stats — attack, defence, possession and form</li>
-              <li>Complete insights rankings</li>
-              <li>Ad-free</li>
-            </ul>
-          </div>
-        </div>
-      )}
+          ) : (
+            <div className="FeatureComparison">
+              <div className="FeatureGroup FeatureGroup--free">
+                <h4>Free tier</h4>
+                <ul>
+                  <li>Full fixture board with odds and form</li>
+                  <li className="limited">
+                    {FREE_DAILY_PREDICTION_LIMIT} predicted scores / 1X2 unlocks per day
+                  </li>
+                  <li className="limited">Capped multi tips, BTTS and Over 2.5 lists</li>
+                  <li className="limited">BTTS, Over 2.5 stats hubs</li>
+                  <li className="limited">Competiion stats, comparisons and market reliability</li>
+                  <li className="limited">Access to the monthly prediction league - win premium for a month</li>
+                </ul>
+              </div>
+              <div className="FeatureDivider" aria-hidden="true">
+                <span className="FeatureDivider-label">vs</span>
+              </div>
+              <div className="FeatureGroup FeatureGroup--premium premium">
+                <h4>Premium - All this, plus...</h4>
+                <ul>
+                  <li>Ad-free browsing</li>
+                  <li>Predictions for every match</li>
+                  <li>Full multi tips, BTTS and Over 2.5 lists</li>
+                  <li>Match previews for every fixture</li>
+                  <li>Best-value and stats-based tips</li>
+                  <li>Unrivalled head to head comparison and insight</li>
+                  <li>And loads more...</li>
+                </ul>
+              </div>
+            </div>
+          )}
 
-      {subscriptionOptions}
+          {subscriptionOptions}
         </>
       )}
 

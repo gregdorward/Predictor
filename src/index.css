@@ -1502,7 +1502,7 @@ h6 {
 
 .PremiumUpsell--compact .TrustNote {
   margin-top: 0.85rem;
-  font-size: 0.75rem;
+  font-size: 0.8rem;
   text-align: center;
 }
 
@@ -1559,7 +1559,7 @@ h6 {
 
 .FeatureGroup li {
   margin-bottom: 0.5rem;
-  font-size: 1em;
+  font-size: 1.1em;
   line-height: 1.5em;
 }
 
@@ -1653,7 +1653,7 @@ h6 {
 
 .TrustNote {
   margin-top: 1.5rem;
-  font-size: 0.85rem;
+  font-size: 1.2em;
   color: var(--faint-text);
 }
 
