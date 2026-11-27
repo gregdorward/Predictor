@@ -1,0 +1,91 @@
+{
+  "slug": "soccer-stats-hub-backtest-autumn-2026",
+  "layout": "prose",
+  "title": "Soccer Stats Hub backtest: October to late November 2026",
+  "subtitle": "A second flat-stake replay on the current model, through the busiest part of the autumn calendar",
+  "dek": "From 7th October to 22nd November 2026, we replayed 2,319 match result tips at +5.45% ROI and a 48.0% hit rate, with away wins performing best.",
+  "publishedAt": "2026-11-27",
+  "updatedAt": "2026-11-27T21:19:00.000Z",
+  "authorLabel": "Greg, founder of Soccer Stats Hub",
+  "reviewedAt": "2026-11-27",
+  "showDataCitation": true,
+  "intro": [
+    "We did a summer/early autumn backtest in October. The sensible thing to do now that the leagues are well and truly under way and the fixture list is much heavier is to run the same exercise again. This note covers the period 7th October to 22nd November 2026: same production model, same flat stake rules and the numbers as per the replay script.",
+    "The window produced 2,319 qualifying match result tips after the normal odds floor. The hit rate on the tipped outcome was 48.0%, the exact scoreline came in 12.4% of the time and flat one unit stakes returned +5.45% ROI. It's not a promise for the next month. It's evidence that the logic we ship on the site has held up over another long stretch of finished games."
+  ],
+  "sections": [
+    {
+      "id": "rules",
+      "heading": "Same replay as before",
+      "paragraphs": [
+        "For each date we loaded the completed fixtures in the competitions that Soccer Stats Hub covers and re-generated the forecasts using the current model. The tips below 1.21 decimal odds were all excluded from the ROI set, in line with production reporting. Each tip that remains is one unit on the implied 1X2 outcome at the prices on the fixture.",
+        "This run used live replays throughout (2,392 predictions rebuilt from season state at kick off rather than from frozen snapshots). One day in the range was skipped as cached form wasn't available. 52 tips were filtered out of the ROI set post prediction."
+      ]
+    },
+    {
+      "id": "headline",
+      "heading": "The ledger",
+      "paragraphs": [
+        "Of the 2,456 completed matches in the report 2,319 had a tipped match result in the ROI set. The model got the right result 48.0% of the time and the exact scoreline 12.4% of the time on flat stakes which produced +5.45% ROI.",
+        "For context the unfiltered predicted slate over those same dates was 2,371 fixtures at +5.32% ROI prior to the odds floor kicking in and removing the shortest prices."
+      ],
+      "table": {
+        "caption": "Backtest summary, 7th October to 22nd November 2026 (2,319 tipped match results after the 1.21 odds floor).",
+        "headers": ["Measure", "Result"],
+        "rows": [
+          ["Matches in report", "2,456"],
+          ["Tips in ROI set", "2,319"],
+          ["Match result hit rate", "48.0%"],
+          ["Exact score hit rate", "12.4%"],
+          ["ROI (1-unit stakes)", "+5.45%"],
+          ["Tips filtered below odds floor", "52"]
+        ]
+      }
+    },
+    {
+      "id": "outcomes",
+      "heading": "Where the margin came from",
+      "paragraphs": [
+        "Home wins were the big hitter in terms of both number of tips and percentage of correct calls: 1,057 tips, 59.3% correct, +6.0% ROI. Draws were as ever the most difficult to call with 765 tips, 28.0% correct and +2.0% ROI. Away wins were the smallest group by any measure but delivered the best return: 497 tips, 54.9% correct, +9.6% ROI.",
+        "That's the same pattern we saw in the earlier backtest (the model doesn't need to get every draw correct to stay on top if the price and the away win angle are in its favour). It also explains why we show the probability alongside the market on each fixture rather than simply treating the favourite as the answer."
+      ],
+      "table": {
+        "caption": "ROI by predicted match result (same window and stake rules).",
+        "headers": ["Predicted outcome", "Tips", "Hit rate", "ROI"],
+        "rows": [
+          ["Home win", "1,057", "59.3%", "+6.0%"],
+          ["Draw", "765", "28.0%", "+2.0%"],
+          ["Away win", "497", "54.9%", "+9.6%"]
+        ]
+      }
+    },
+    {
+      "id": "trust",
+      "heading": "Why we publish this",
+      "paragraphs": [
+        "We don't want to be yet another tipster who publishes tips and hides their losses, drawing people in with the occasional win: we believe in transparency."
+      ]
+    }
+  ],
+  "outro": [
+    "Past performance is not a guarantee of future success. We always urge you to do your own due diligence and stake only what you can afford to lose. We'll be publishing the replays as and when we re-run the script so the research remains visible."
+  ],
+  "relatedLinks": [
+    {
+      "label": "Summer and early-autumn backtest",
+      "href": "/articles/soccer-stats-hub-backtest-results/"
+    },
+    {
+      "label": "How we predict a game",
+      "href": "/articles/how-we-predict-a-game/"
+    },
+    {
+      "label": "Methodology",
+      "href": "/methodology/"
+    },
+    {
+      "label": "Articles",
+      "href": "/articles/"
+    }
+  ]
+}

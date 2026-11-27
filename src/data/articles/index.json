@@ -1,6 +1,16 @@
 {
   "articles": [
     {
+      "slug": "soccer-stats-hub-backtest-autumn-2026",
+      "title": "Soccer Stats Hub backtest: October to late November 2026",
+      "dek": "From 7th October to 22nd November 2026: 2,319 match result tips, 48.0% hit rate and +5.45% ROI, with away wins performing best.",
+      "publishedAt": "2026-11-27",
+      "updatedAt": "2026-11-27T21:00:00.000Z",
+      "heroLabel": "Analysis",
+      "tags": ["Backtest", "Predictions", "ROI", "Transparency"],
+      "ogDescription": "Soccer Stats Hub autumn 2026 backtest: 2,319 match result tips, +5.45% ROI, and transparency on hit rates by home, draw and away predictions."
+    },
+    {
       "slug": "how-do-you-predict-a-football-match",
       "title": "How do you predict a football match?",
       "dek": "Single-metric replays on 3,849 fixtures from July to October 2026: the bookmaker favourite beat possession, xG and form on hit rate, and the full model blends signals for a reason.",
@@ -33,9 +43,9 @@
     {
       "slug": "what-sets-soccer-stats-hub-apart",
       "title": "What sets Soccer Stats Hub apart",
-      "dek": "Transparent predictions, value versus the market, BTTS and Over 2.5 tools, and Premium priced well below typical paid research tiers — built for pre-match research, not live scores.",
+      "dek": "Pre-match research with a published model, probabilities next to bookmaker prices, BTTS and Over 2.5 tools and filters you control. Not a live score app.",
       "publishedAt": "2026-08-15",
-      "updatedAt": "2026-08-15T21:00:00.000Z",
+      "updatedAt": "2026-11-27T21:30:00.000Z",
       "heroLabel": "Product",
       "tags": ["Product", "Predictions", "Premium"],
       "ogDescription": "Published prediction model, probabilities next to bookmaker prices, research filters and multis — Premium priced below typical paid tip subscriptions."
