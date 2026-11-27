@@ -1,16 +1,13 @@
 import { Fragment, useEffect, useState } from "react";
-import { makeStyles } from "@material-ui/core/styles";
 import { getHighestScoringLeagues, getLowestScoringLeagues } from "../logic/getStatsInsights";
 import SiteHeader from "./SiteHeader";
 import StatsFooterAd from "./StatsFooterAd";
-import StatsInContentAd from "./StatsInContentAd";
 import DataCitation from "./DataCitation";
 import PageMeta from "./PageMeta";
-import StatPageSeoContent from "./StatPageSeoContent";
+import StatHubLayout, { EmptyHubRow } from "./StatHubLayout";
 import {
   BodyCell,
   HeadCell,
-  StatPill,
   SubpageTable,
 } from "./SubpageDataTable";
 import {
@@ -42,59 +39,11 @@ const allowedCountries = [
   "Belgium",
 ];
 
-const useStyles = makeStyles(() => ({
-  container: {
-    maxWidth: 1000,
-    width: "100%",
-    margin: "40px auto",
-    padding: "1em 1em",
-    boxSizing: "border-box",
-    "& h1": {
-      fontSize: "2em",
-      fontWeight: 800,
-      textAlign: "center",
-      marginBottom: 8,
-      color: "var(--text-color)",
-    },
-  },
-  tagline: {
-    fontSize: "1.5em",
-    fontWeight: 400,
-    textAlign: "center",
-    marginBottom: 16,
-    color: "var(--accent-color)",
-    opacity: 0.8,
-  },
-  sectionHeading: {
-    fontSize: "1.2em",
-    fontWeight: 700,
-    textAlign: "left",
-    margin: "2rem 0 0.75rem",
-    color: "var(--text-color)",
-  },
-  tableWrapper: {
-    borderRadius: 5,
-    overflow: "hidden",
-    maxWidth: "100%",
-    border: "1px solid rgba(255,255,255,0.05)",
-    backgroundColor: "var(--secondary-background-color)",
-  },
-  homeLink: {
-    display: "inline-block",
-    marginBottom: 20,
-    textDecoration: "none",
-    color: "var(--accent-color)",
-    fontWeight: 600,
-    "&:hover": { textDecoration: "underline" },
-  },
-}));
-
 export default function HighestScoringLeagues({
   initialRows = null,
   initialLowScoringRows = null,
   dataAsOf = null,
 }) {
-  const classes = useStyles();
   const [leagues, setLeagues] = useState(() =>
     Array.isArray(initialRows) ? initialRows : []
   );
@@ -152,102 +101,95 @@ export default function HighestScoringLeagues({
     };
   }, [initialLowScoringRows]);
 
+  const proof = buildHighestScoringLeaguesIntro(leagues);
+
   return (
     <Fragment>
       <PageMeta />
-      <SiteHeader withFooter beforeFooter={<StatsFooterAd />}>
-        <div className={`${classes.container} SubpageContent`} id="ssh-content">
-          <a href="/" className={classes.homeLink}>Back to Home</a>
-
-          <h1>Highest and lowest scoring football leagues 2026/27</h1>
-          <h2 className={classes.tagline}>
-            Ranked by goals per match, with Over 2.5 and Under 2.5 rates
-          </h2>
-
-          <StatPageSeoContent
-            {...STAT_PAGE_SEO.highestScoringLeagues}
-            intro={buildHighestScoringLeaguesIntro(leagues)}
-          />
-
-          <StatsInContentAd />
-
-          <h2 className={classes.sectionHeading} id="highest-scoring">
-            Leagues with the highest goals per match
-          </h2>
-          <SubpageTable
-            className={classes.tableWrapper}
-            aria-label="Highest scoring leagues table"
-          >
-            <thead>
-              <tr>
-                <HeadCell align="left">League</HeadCell>
-                <HeadCell className="SubpageCol--country">Country</HeadCell>
-                <HeadCell>Avg</HeadCell>
-                <HeadCell>O2.5%</HeadCell>
-              </tr>
-            </thead>
-            <tbody>
-              {leagues.map((league, index) => (
-                <tr key={`${league.leagueId}-${index}`}>
-                  <BodyCell align="left" style={{ fontWeight: 600 }}>
-                    {league.league}
-                  </BodyCell>
-                  <BodyCell className="SubpageCol--country">
-                    {league.leagueCountry}
-                  </BodyCell>
-                  <BodyCell>
-                    <StatPill>{league.averageGoals}</StatPill>
-                  </BodyCell>
-                  <BodyCell>
-                    <span style={{ fontWeight: "bold", color: "var(--accent-color)" }}>
-                      {league.over25Percentage}%
-                    </span>
-                  </BodyCell>
-                </tr>
-              ))}
-            </tbody>
-          </SubpageTable>
-
-          <h2 className={classes.sectionHeading} id="lowest-scoring">
-            Leagues with the lowest goals per match
-          </h2>
-          <SubpageTable
-            className={classes.tableWrapper}
-            aria-label="Lowest scoring leagues table"
-          >
-            <thead>
-              <tr>
-                <HeadCell align="left">League</HeadCell>
-                <HeadCell className="SubpageCol--country">Country</HeadCell>
-                <HeadCell>Avg</HeadCell>
-                <HeadCell>U2.5%</HeadCell>
-              </tr>
-            </thead>
-            <tbody>
-              {lowScoringLeagues.map((league, index) => (
-                <tr key={`${league.leagueId || league.league}-${index}`}>
-                  <BodyCell align="left" style={{ fontWeight: 600 }}>
-                    {league.league}
-                  </BodyCell>
-                  <BodyCell className="SubpageCol--country">
-                    {league.leagueCountry}
-                  </BodyCell>
-                  <BodyCell style={{ opacity: 0.8 }}>
-                    {league.averageGoals}
-                  </BodyCell>
-                  <BodyCell>
-                    <StatPill>{league.under25Percentage}%</StatPill>
-                  </BodyCell>
-                </tr>
-              ))}
-            </tbody>
-          </SubpageTable>
-
-          <DataCitation
-            asOf={dataAsOf}
-            pageLabel="the highest- and lowest-scoring leagues tables"
-          />
-        </div>
+      <SiteHeader withFooter wide beforeFooter={<StatsFooterAd />}>
+        <StatHubLayout
+          title="Highest and lowest scoring football leagues 2026/27"
+          proof={proof}
+          seo={{ ...STAT_PAGE_SEO.highestScoringLeagues, intro: proof }}
+          footer={
+            <DataCitation
+              asOf={dataAsOf}
+              pageLabel="the highest- and lowest-scoring leagues tables"
+            />
+          }
+          season={
+            <section className="StatHub-section" aria-labelledby="highest-scoring">
+              <h2 id="highest-scoring">Leagues with the highest goals per match</h2>
+              <SubpageTable className="StatHub-table--leagues" aria-label="Highest scoring leagues table">
+                <thead>
+                  <tr>
+                    <HeadCell align="left">League</HeadCell>
+                    <HeadCell className="SubpageCol--country">Country</HeadCell>
+                    <HeadCell className="StatHub-col--rate">Over 2.5%</HeadCell>
+                    <HeadCell className="StatHub-col--goals">Avg goals</HeadCell>
+                  </tr>
+                </thead>
+                <tbody>
+                  {leagues.length ? (
+                    leagues.map((league, index) => (
+                      <tr key={`${league.leagueId}-${index}`}>
+                        <BodyCell align="left" className="StatHub-name">
+                          {league.league}
+                          <span className="StatHub-meta">{league.leagueCountry}</span>
+                        </BodyCell>
+                        <BodyCell className="SubpageCol--country">{league.leagueCountry}</BodyCell>
+                        <BodyCell className="StatHub-col--rate">
+                          <span className="StatHub-quietNum">{league.over25Percentage}%</span>
+                        </BodyCell>
+                        <BodyCell className="StatHub-col--goals">
+                          <span className="StatHub-fig">{league.averageGoals}</span>
+                        </BodyCell>
+                      </tr>
+                    ))
+                  ) : (
+                    <EmptyHubRow colSpan={4}>No league averages in this list yet.</EmptyHubRow>
+                  )}
+                </tbody>
+              </SubpageTable>
+            </section>
+          }
+          today={
+            <section className="StatHub-section" aria-labelledby="lowest-scoring">
+              <h2 id="lowest-scoring">Leagues with the lowest goals per match</h2>
+              <SubpageTable className="StatHub-table--leagues" aria-label="Lowest scoring leagues table">
+                <thead>
+                  <tr>
+                    <HeadCell align="left">League</HeadCell>
+                    <HeadCell className="SubpageCol--country">Country</HeadCell>
+                    <HeadCell className="StatHub-col--rate">Under 2.5%</HeadCell>
+                    <HeadCell className="StatHub-col--goals">Avg goals</HeadCell>
+                  </tr>
+                </thead>
+                <tbody>
+                  {lowScoringLeagues.length ? (
+                    lowScoringLeagues.map((league, index) => (
+                      <tr key={`${league.leagueId || league.league}-${index}`}>
+                        <BodyCell align="left" className="StatHub-name">
+                          {league.league}
+                          <span className="StatHub-meta">{league.leagueCountry}</span>
+                        </BodyCell>
+                        <BodyCell className="SubpageCol--country">{league.leagueCountry}</BodyCell>
+                        <BodyCell className="StatHub-col--rate">
+                          <span className="StatHub-quietNum">{league.under25Percentage}%</span>
+                        </BodyCell>
+                        <BodyCell className="StatHub-col--goals">
+                          <span className="StatHub-fig">{league.averageGoals}</span>
+                        </BodyCell>
+                      </tr>
+                    ))
+                  ) : (
+                    <EmptyHubRow colSpan={4}>No low-scoring leagues in this list yet.</EmptyHubRow>
+                  )}
+                </tbody>
+              </SubpageTable>
+            </section>
+          }
+        />
       </SiteHeader>
     </Fragment>
   );

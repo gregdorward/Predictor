@@ -3,6 +3,8 @@
  * Unlike getStatsInsights.js, these do NOT short-circuit when window is undefined.
  */
 
+import { withCoveredFixtureLinks } from "./statHubFixtureLinks";
+
 const ORIGIN =
   process.env.NEXT_PUBLIC_EXPRESS_SERVER || "https://api.soccerstatshub.com/";
 
@@ -120,6 +122,8 @@ export function mapHighestScoringTeams(payload) {
   return list.map((team) => ({
     team: nil(team.full_name),
     next_match_team: nil(team.next_match_team),
+    nextMatchId: nil(team.next_match_id),
+    dateUnix: nil(team.next_match_date),
     teamCountry: nil(team.country),
     averageGoals: nil(team.seasonAVG_overall),
     over25Percentage: nil(team.seasonOver25Percentage_overall),
@@ -134,10 +138,12 @@ export function mapHighestScoringFixtures(payload) {
   const fixtures = [...list].sort((a, b) => a.date_unix - b.date_unix);
   return fixtures.map((fixture) => ({
     date: fixture.date_unix ? formatTimestamp(fixture.date_unix) : "N/A",
+    dateUnix: nil(fixture.date_unix),
     country: nil(fixture.country),
     odds: nil(fixture.odds_ft_over25),
     avgGoals: nil(fixture.avg_potential),
     match: nil(fixture.name),
+    matchId: nil(fixture.id),
     progress: nil(fixture.progress),
   }));
 }
@@ -148,10 +154,12 @@ export function mapBttsFixtures(payload) {
   const fixtures = [...list].sort((a, b) => a.date_unix - b.date_unix);
   return fixtures.map((fixture) => ({
     date: fixture.date_unix ? formatTimestamp(fixture.date_unix) : "N/A",
+    dateUnix: nil(fixture.date_unix),
     country: nil(fixture.country),
     odds: nil(fixture.odds_btts_yes),
     avgGoals: nil(fixture.avg_potential),
     match: nil(fixture.name),
+    matchId: nil(fixture.id),
     progress: nil(fixture.progress),
   }));
 }
@@ -172,6 +180,8 @@ export function mapBttsTeams(payload) {
     bttsPercentage: nil(team.seasonBTTSPercentage_overall),
     name: nil(team.name),
     opponent: nil(team.next_match_team),
+    nextMatchId: nil(team.next_match_id),
+    dateUnix: nil(team.next_match_date),
     progress: nil(team.progress),
   }));
 }
@@ -204,7 +214,8 @@ export async function loadU25Rows() {
 
 export async function loadO25TeamRows() {
   const payload = await fetchOver25Payload();
-  return jsonSafe(filterTeamCountryRows(mapHighestScoringTeams(payload)));
+  const rows = filterTeamCountryRows(mapHighestScoringTeams(payload));
+  return jsonSafe(await withCoveredFixtureLinks(rows));
 }
 
 export async function loadHighestScoringLeagueRows() {
@@ -218,50 +229,46 @@ export async function loadHighestScoringLeagueRows() {
 
 export async function loadO25FixtureRows() {
   const payload = await fetchOver25Payload();
-  return jsonSafe(
-    mapHighestScoringFixtures(payload)
-      .filter(
-        (game) =>
-          STAT_HUB_ALLOWED_COUNTRIES.includes(game.country) &&
-          game.progress > 50 &&
-          game.avgGoals > 2.5
-      )
-      .slice(0, 30)
-  );
+  const rows = mapHighestScoringFixtures(payload)
+    .filter(
+      (game) =>
+        STAT_HUB_ALLOWED_COUNTRIES.includes(game.country) &&
+        game.progress > 50 &&
+        game.avgGoals > 2.5
+    )
+    .slice(0, 30);
+  return jsonSafe(await withCoveredFixtureLinks(rows));
 }
 
 export async function loadBttsFixtureRows() {
   const payload = await fetchBttsPayload();
-  return jsonSafe(
-    mapBttsFixtures(payload)
-      .filter(
-        (game) =>
-          STAT_HUB_ALLOWED_COUNTRIES.includes(game.country) &&
-          game.progress > 30 &&
-          game.avgGoals > 3
-      )
-      .slice(0, 30)
-  );
+  const rows = mapBttsFixtures(payload)
+    .filter(
+      (game) =>
+        STAT_HUB_ALLOWED_COUNTRIES.includes(game.country) &&
+        game.progress > 30 &&
+        game.avgGoals > 3
+    )
+    .slice(0, 30);
+  return jsonSafe(await withCoveredFixtureLinks(rows));
 }
 
 export async function loadBttsTeamRows() {
   const payload = await fetchBttsPayload();
-  return jsonSafe(
-    filterTeamCountryRows(mapBttsTeams(payload))
-      .filter((game) => game.played > 10)
-      .slice(0, 30)
-  );
+  const rows = filterTeamCountryRows(mapBttsTeams(payload))
+    .filter((game) => game.played > 10)
+    .slice(0, 30);
+  return jsonSafe(await withCoveredFixtureLinks(rows));
 }
 
 export async function loadBttsNoTeamRows() {
   const payload = await fetchBttsPayload();
-  return jsonSafe(
-    mapBttsTeams(payload)
-      .filter(
-        (game) =>
-          STAT_HUB_ALLOWED_COUNTRIES.includes(game.country) && game.played > 10
-      )
-      .sort((a, b) => a.bttsPercentage - b.bttsPercentage)
-      .slice(0, 30)
-  );
+  const rows = mapBttsTeams(payload)
+    .filter(
+      (game) =>
+        STAT_HUB_ALLOWED_COUNTRIES.includes(game.country) && game.played > 10
+    )
+    .sort((a, b) => a.bttsPercentage - b.bttsPercentage)
+    .slice(0, 30);
+  return jsonSafe(await withCoveredFixtureLinks(rows));
 }

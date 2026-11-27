@@ -1,73 +1,23 @@
 import { Fragment, useEffect, useState } from "react";
-import { makeStyles } from "@material-ui/core/styles";
 import { getHighestScoringFixtures, getHighestScoringTeams } from "../logic/getStatsInsights";
 import SiteHeader from "./SiteHeader";
 import StatsFooterAd from "./StatsFooterAd";
-import StatsInContentAd from "./StatsInContentAd";
 import PageMeta from "./PageMeta";
-import StatPageSeoContent from "./StatPageSeoContent";
+import StatHubLayout, { EmptyHubRow, HubFixtureLink } from "./StatHubLayout";
+import { withCoveredFixtureLinks } from "../seo/statHubFixtureLinks";
 import {
   BodyCell,
   HeadCell,
-  StatPill,
   SubpageTable,
 } from "./SubpageDataTable";
 import { STAT_PAGE_SEO, buildFixturesHighIntro } from "../seo/statPageSeoConfig";
 
 const ALLOWED_COUNTRIES = ["England", "Scotland", "Italy", "Spain", "Germany", "France", "USA", "Denmark", "Greece", "Turkey", "Switzerland", "Austria", "Norway", "Mexico", "Poland", "Brazil", "Argentina", "Sweden", "Netherlands", "Portugal", "Belgium"];
 
-const useStyles = makeStyles(() => ({
-  container: {
-    maxWidth: 1000,
-    width: "100%",
-    margin: "40px auto",
-    padding: "1em 1em",
-    boxSizing: "border-box",
-    "& h1": {
-      fontSize: "2em",
-      fontWeight: 800,
-      textAlign: "center",
-      marginBottom: 8,
-      color: "var(--text-color)",
-    },
-  },
-  tagline: {
-    fontSize: "1.5em",
-    fontWeight: 400,
-    textAlign: "center",
-    marginBottom: 32,
-    color: "var(--accent-color)",
-    opacity: 0.8,
-  },
-  sectionHeading: {
-    fontSize: "1.2em",
-    fontWeight: 700,
-    textAlign: "left",
-    margin: "2rem 0 0.75rem",
-    color: "var(--text-color)",
-  },
-  tableWrapper: {
-    borderRadius: 5,
-    overflow: "hidden",
-    maxWidth: "100%",
-    border: "1px solid rgba(255,255,255,0.05)",
-    backgroundColor: "var(--secondary-background-color)",
-  },
-  homeLink: {
-    display: "inline-block",
-    marginBottom: 20,
-    textDecoration: "none",
-    color: "var(--accent-color)",
-    fontWeight: 600,
-    "&:hover": { textDecoration: "underline" }
-  }
-}));
-
 export default function HighestScoringFixtures({
   initialRows = null,
   initialTeamRows = null,
 }) {
-  const classes = useStyles();
   const [games, setGames] = useState(() =>
     Array.isArray(initialRows) ? initialRows : []
   );
@@ -84,7 +34,8 @@ export default function HighestScoringFixtures({
       const filtered = data
         .filter((game) => ALLOWED_COUNTRIES.includes(game.country) && game.progress > 50 && game.avgGoals > 2.5)
         .slice(0, 30);
-      if (!cancelled) setGames(filtered);
+      const linked = await withCoveredFixtureLinks(filtered);
+      if (!cancelled) setGames(linked);
     }
     fetchGames();
     return () => {
@@ -101,7 +52,8 @@ export default function HighestScoringFixtures({
       const filtered = data.filter((team) =>
         ALLOWED_COUNTRIES.includes(team.teamCountry)
       );
-      if (!cancelled) setTeams(filtered);
+      const linked = await withCoveredFixtureLinks(filtered);
+      if (!cancelled) setTeams(linked);
     }
     fetchTeams();
     return () => {
@@ -109,107 +61,105 @@ export default function HighestScoringFixtures({
     };
   }, [initialTeamRows]);
 
+  const proof = buildFixturesHighIntro(teams);
+
   return (
     <Fragment>
       <PageMeta />
-      <SiteHeader withFooter beforeFooter={<StatsFooterAd />}>
-      <div className={`${classes.container} SubpageContent`} id="ssh-content">
-        <StatsInContentAd />
-        <a href="/" className={classes.homeLink}>← Back to Home</a>
-        
-        <h1>Goal Potential Insights</h1>
-        <h2 className={classes.tagline}>
-          Highest-scoring teams and today’s fixtures with the strongest goal potential
-        </h2>
-
-        <StatPageSeoContent
-          {...STAT_PAGE_SEO.fixturesHigh}
-          intro={buildFixturesHighIntro(teams)}
+      <SiteHeader withFooter wide beforeFooter={<StatsFooterAd />}>
+        <StatHubLayout
+          title="Goal Potential Insights"
+          proof={proof}
+          switchable
+          seasonLabel="Season"
+          todayLabel="Today"
+          seo={{ ...STAT_PAGE_SEO.fixturesHigh, intro: proof }}
+          season={
+            <section className="StatHub-section" aria-labelledby="o25-teams">
+              <h2 id="o25-teams">Teams with the highest scoring averages</h2>
+              <SubpageTable className="StatHub-table--teams" aria-label="highest scoring teams table">
+                <thead>
+                  <tr>
+                    <HeadCell align="left">Team</HeadCell>
+                    <HeadCell className="SubpageCol--country">Country</HeadCell>
+                    <HeadCell className="StatHub-col--next">Next</HeadCell>
+                    <HeadCell className="StatHub-col--rate">Over 2.5%</HeadCell>
+                    <HeadCell className="StatHub-col--goals">Avg goals</HeadCell>
+                  </tr>
+                </thead>
+                <tbody>
+                  {teams.length ? (
+                    teams.map((team, index) => (
+                      <tr key={`${team.team}-${index}`}>
+                        <BodyCell align="left" className="StatHub-name">
+                          {team.team}
+                          <span className="StatHub-meta">{team.teamCountry}</span>
+                        </BodyCell>
+                        <BodyCell className="SubpageCol--country">{team.teamCountry}</BodyCell>
+                        <BodyCell className="StatHub-col--next">
+                          <HubFixtureLink href={team.href}>
+                            <span className="StatHub-quietNum">{team.next_match_team}</span>
+                          </HubFixtureLink>
+                        </BodyCell>
+                        <BodyCell className="StatHub-col--rate">
+                          <span className="StatHub-quietNum">{team.over25Percentage}%</span>
+                        </BodyCell>
+                        <BodyCell className="StatHub-col--goals">
+                          <span className="StatHub-fig">{team.averageGoals}</span>
+                        </BodyCell>
+                      </tr>
+                    ))
+                  ) : (
+                    <EmptyHubRow colSpan={5}>No high-scoring teams with a strong enough sample yet.</EmptyHubRow>
+                  )}
+                </tbody>
+              </SubpageTable>
+            </section>
+          }
+          today={
+            <section className="StatHub-section" aria-labelledby="o25-fixtures">
+              <h2 id="o25-fixtures">Today’s Over 2.5 fixtures</h2>
+              <SubpageTable className="StatHub-table--fixtures" aria-label="highest scoring games table">
+                <thead>
+                  <tr>
+                    <HeadCell align="left">Fixture</HeadCell>
+                    <HeadCell className="SubpageCol--date">Date</HeadCell>
+                    <HeadCell className="SubpageCol--country">Country</HeadCell>
+                    <HeadCell className="StatHub-col--odds">Odds</HeadCell>
+                    <HeadCell className="StatHub-col--goals">Avg goals</HeadCell>
+                  </tr>
+                </thead>
+                <tbody>
+                  {games.length ? (
+                    games.map((team, index) => (
+                      <tr key={`${team.match}-${index}`}>
+                        <BodyCell align="left" className="StatHub-name">
+                          <HubFixtureLink href={team.href}>
+                            <span className="StatHub-linkMatch">{team.match}</span>
+                            <span className="StatHub-meta">
+                              {team.country}
+                              {team.date ? ` · ${team.date}` : ""}
+                            </span>
+                          </HubFixtureLink>
+                        </BodyCell>
+                        <BodyCell className="SubpageCol--date">{team.date}</BodyCell>
+                        <BodyCell className="SubpageCol--country">{team.country}</BodyCell>
+                        <BodyCell className="StatHub-col--odds">
+                          <span className="StatHub-quietNum">{team.odds}</span>
+                        </BodyCell>
+                        <BodyCell className="StatHub-col--goals">
+                          <span className="StatHub-fig">{team.avgGoals}</span>
+                        </BodyCell>
+                      </tr>
+                    ))
+                  ) : (
+                    <EmptyHubRow colSpan={5}>No Over 2.5 fixtures in this list yet.</EmptyHubRow>
+                  )}
+                </tbody>
+              </SubpageTable>
+            </section>
+          }
         />
-
-        <h2 className={classes.sectionHeading} id="o25-teams">
-          Teams with the highest scoring averages
-        </h2>
-        <SubpageTable
-          className={classes.tableWrapper}
-          aria-label="highest scoring teams table"
-        >
-          <thead>
-            <tr>
-              <HeadCell className="SubpageCol--country">Country</HeadCell>
-              <HeadCell align="left">Team</HeadCell>
-              <HeadCell>Next</HeadCell>
-              <HeadCell>Avg</HeadCell>
-              <HeadCell>O2.5%</HeadCell>
-            </tr>
-          </thead>
-          <tbody>
-            {teams.map((team, index) => (
-              <tr key={`${team.team}-${index}`}>
-                <BodyCell className="SubpageCol--country">
-                  {team.teamCountry}
-                </BodyCell>
-                <BodyCell align="left" style={{ fontWeight: 600 }}>
-                  {team.team}
-                </BodyCell>
-                <BodyCell style={{ opacity: 0.8 }}>
-                  {team.next_match_team}
-                </BodyCell>
-                <BodyCell>
-                  <StatPill>{team.averageGoals}</StatPill>
-                </BodyCell>
-                <BodyCell>
-                  <span style={{ fontWeight: "bold", color: "var(--accent-color)" }}>
-                    {team.over25Percentage}%
-                  </span>
-                </BodyCell>
-              </tr>
-            ))}
-          </tbody>
-        </SubpageTable>
-
-        <h2 className={classes.sectionHeading} id="o25-fixtures">
-          Today’s Over 2.5 fixtures
-        </h2>
-        <SubpageTable
-          className={classes.tableWrapper}
-          aria-label="highest scoring games table"
-        >
-          <thead>
-            <tr>
-              <HeadCell align="left">Fixture</HeadCell>
-              <HeadCell className="SubpageCol--date">Date</HeadCell>
-              <HeadCell className="SubpageCol--country">Country</HeadCell>
-              <HeadCell>O2.5</HeadCell>
-              <HeadCell>Avg</HeadCell>
-            </tr>
-          </thead>
-          <tbody>
-            {games.map((team, index) => (
-              <tr key={index}>
-                <BodyCell align="left" style={{ fontWeight: 600 }}>
-                  {team.match}
-                  <span className="SubpageCellMeta">{team.date}</span>
-                </BodyCell>
-                <BodyCell className="SubpageCol--date" style={{ opacity: 0.7 }}>
-                  {team.date}
-                </BodyCell>
-                <BodyCell className="SubpageCol--country">
-                  {team.country}
-                </BodyCell>
-                <BodyCell>
-                  <span style={{ fontWeight: "bold", color: "var(--accent-color)" }}>
-                    {team.odds}
-                  </span>
-                </BodyCell>
-                <BodyCell>
-                  <StatPill>{team.avgGoals}</StatPill>
-                </BodyCell>
-              </tr>
-            ))}
-          </tbody>
-        </SubpageTable>
-      </div>
       </SiteHeader>
     </Fragment>
   );

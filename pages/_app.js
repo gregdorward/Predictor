@@ -24,6 +24,7 @@ import "../src/styles/articles-desktop-type.css";
 import "../src/components/InsightsHub.css";
 import "../src/components/MultisHub.css";
 import "../src/styles/league-roi.css";
+import "../src/styles/stat-hub-split.css";
 
 export default function MyApp({ Component, pageProps }) {
   useEffect(() => {

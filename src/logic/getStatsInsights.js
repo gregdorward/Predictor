@@ -57,6 +57,8 @@ export async function getHighestScoringTeams() {
       const team = {
         team: teams.data.top_teams.data[index].full_name,
         next_match_team: teams.data.top_teams.data[index].next_match_team,
+        nextMatchId: teams.data.top_teams.data[index].next_match_id,
+        dateUnix: teams.data.top_teams.data[index].next_match_date,
         teamCountry: teams.data.top_teams.data[index].country,
         averageGoals: teams.data.top_teams.data[index].seasonAVG_overall,
         over25Percentage:
@@ -107,10 +109,12 @@ export async function getHighestScoringFixtures() {
         date: fixtures[index].date_unix
           ? await convertTimestamp(fixtures[index].date_unix)
           : "N/A",
+        dateUnix: fixtures[index].date_unix,
         country: fixtures[index].country,
         odds: fixtures[index].odds_ft_over25,
         avgGoals: fixtures[index].avg_potential,
         match: fixtures[index].name,
+        matchId: fixtures[index].id,
         progress: fixtures[index].progress
       };
       arr.push(game);
@@ -144,10 +148,12 @@ export async function getBTTSFixtures() {
         date: fixtures[index].date_unix
           ? await convertTimestamp(fixtures[index].date_unix)
           : "N/A",
+        dateUnix: fixtures[index].date_unix,
         country: fixtures[index].country,
         odds: fixtures[index].odds_btts_yes,
         avgGoals: fixtures[index].avg_potential,
         match: fixtures[index].name,
+        matchId: fixtures[index].id,
         progress: fixtures[index].progress
       };
       arr.push(game);
@@ -186,6 +192,8 @@ export async function getBTTSTeams() {
         bttsPercentage: teams[index].seasonBTTSPercentage_overall,
         name: teams[index].name,
         opponent: teams[index].next_match_team,
+        nextMatchId: teams[index].next_match_id,
+        dateUnix: teams[index].next_match_date,
         progress: teams[index].progress
       };
       arr.push(game);

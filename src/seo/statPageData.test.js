@@ -4,6 +4,7 @@ import {
   mapHighestScoringTeams,
   mapBttsTeams,
 } from "./statPageData";
+import { attachFixtureLinks, fixtureDateKey } from "./statHubFixtureLinks";
 
 describe("statPageData mappers", () => {
   test("maps under25 league payload", () => {
@@ -110,5 +111,24 @@ describe("statPageData mappers", () => {
     expect(rows[0].progress).toBeNull();
     expect(rows[0].opponent).toBeNull();
     expect(rows[0].odds).toBeNull();
+    expect(rows[0].nextMatchId).toBeNull();
+  });
+
+  test("links a row only when the match is one we publish", () => {
+    const rows = attachFixtureLinks(
+      [
+        { match: "West Ham United vs Stoke City", matchId: 8566570, dateUnix: 1795878000 },
+        { name: "Leek Town", nextMatchId: 8609208, dateUnix: 1795806000 },
+        { match: "No id" },
+      ],
+      [
+        { id: 8566570, home_name: "West Ham United", away_name: "Stoke City" },
+      ]
+    );
+
+    expect(rows[0].href).toBe("/fixture/west-ham-united-vs-stoke-city-8566570/");
+    expect(rows[1].href).toBeNull();
+    expect(rows[2].href).toBeNull();
+    expect(fixtureDateKey(1795878000)).toBe("2026-11-28");
   });
 });
