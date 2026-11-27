@@ -75,8 +75,10 @@ requests alone do not establish an earnings improvement.
   keeping additional formats; don't enable all in-page Auto ads on top of the
   existing manual units without measuring the resulting density.
   **Side rails** and anchors can sit above the hamburger menu despite high
-  overlay z-index; `body.ssh-nav-open` CSS hides Auto overlay units while the
-  menu is open. To stop them entirely on mobile, turn off **Side rails** (and
+  overlay z-index; `body.ssh-nav-open` CSS hides Auto overlay units, manual
+  `ins.adsbygoogle` placements (including the competition/fixture `#ssh-sidebar`
+  rail), and common `google_ads_iframe` containers while the menu is open. To
+  stop them entirely on mobile, turn off **Side rails** (and
   optional **Anchors**) under AdSense → Ads → Auto ads for the site.
 - **Premium upsell:** markup uses `ssh-auto-ads-exclude` on
   `PremiumUpsell` so in-page Auto ads are stripped client-side and hidden in

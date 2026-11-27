@@ -726,15 +726,19 @@ body.ssh-nav-open .DarkMode {
  * cover links or intercept touch. Temporary cover is fine; do not leave these
  * hidden during normal reading.
  */
+body.ssh-nav-open #ssh-sidebar,
 body.ssh-nav-open [id*="adhesion" i],
 body.ssh-nav-open [class*="adhesion" i],
 body.ssh-nav-open [data-type="adhesion"],
 body.ssh-nav-open [id*="grow-me" i],
 body.ssh-nav-open [class*="grow-me" i],
 body.ssh-nav-open .google-auto-placed,
+body.ssh-nav-open ins.adsbygoogle,
 body.ssh-nav-open ins.adsbygoogle-noablate,
 body.ssh-nav-open ins.adsbygoogle[data-anchor-status],
-body.ssh-nav-open ins.adsbygoogle[data-side-rail-status] {
+body.ssh-nav-open ins.adsbygoogle[data-side-rail-status],
+body.ssh-nav-open iframe[id^="google_ads_iframe"],
+body.ssh-nav-open div[id^="google_ads_iframe"] {
   visibility: hidden !important;
   pointer-events: none !important;
 }

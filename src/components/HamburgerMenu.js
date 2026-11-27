@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { createPortal } from "react-dom";
 import { Menu, X } from "lucide-react";
 import { SITE_NAV_LINKS } from "../seo/siteNavLinks";
 
@@ -42,24 +43,28 @@ export default function HamburgerMenu() {
         {isOpen ? <X /> : <Menu />}
       </button>
 
-      <div
-        className={`MobileNavOverlay${isOpen ? " MobileNavOverlay--open" : ""}`}
-        aria-hidden={!isOpen}
-      >
-        <nav className="NavItems" aria-label="Main navigation">
-          {SITE_NAV_LINKS.map((item) => (
-            <a
-              key={item.path}
-              href={item.path}
-              className="MobileNavLink"
-              onClick={() => setIsOpen(false)}
-              tabIndex={isOpen ? 0 : -1}
+      {typeof document !== "undefined" && isOpen
+        ? createPortal(
+            <div
+              className="MobileNavOverlay MobileNavOverlay--open"
+              aria-hidden={false}
             >
-              {item.label}
-            </a>
-          ))}
-        </nav>
-      </div>
+              <nav className="NavItems" aria-label="Main navigation">
+                {SITE_NAV_LINKS.map((item) => (
+                  <a
+                    key={item.path}
+                    href={item.path}
+                    className="MobileNavLink"
+                    onClick={() => setIsOpen(false)}
+                  >
+                    {item.label}
+                  </a>
+                ))}
+              </nav>
+            </div>,
+            document.body
+          )
+        : null}
     </div>
   );
 }
