@@ -25,7 +25,7 @@ function buildJsonLd(overview) {
         "@type": "Dataset",
         "@id": `${PAGE_URL}#dataset`,
         name: "Football market reliability index by league",
-        description: `Favourite win, draw and upset rates across ${count} football leagues, plus team-level price reliability from current-season results. Updated daily from finished matches in leagues Soccer Stats Hub covers.`,
+        description: `Favourite win, draw and upset rates across ${count} football leagues, plus team-level favourite and underdog results from the current season. Updated daily from finished matches in leagues Soccer Stats Hub covers.`,
         url: PAGE_URL,
         isAccessibleForFree: true,
         license: DATASET_LICENSE_URL,

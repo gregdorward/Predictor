@@ -55,7 +55,7 @@ export const PAGE_META = {
   "/market-reliability": {
     title: "Market Reliability Index | Favourite & Underdog League Stats",
     description:
-      "See which football leagues and teams behave like the 1X2 price: favourite win rates, upsets, draws and ROI updated daily from cached results.",
+      "Favourite win, upset and draw rates by league and team, with flat-stake ROI on favourites and underdogs. Updated daily from finished matches in leagues Soccer Stats Hub covers.",
   },
   "/strength-rankings": {
     title: "Strength Rankings | Last Six, Weighted by Opponent",

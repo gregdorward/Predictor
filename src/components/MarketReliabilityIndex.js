@@ -19,7 +19,7 @@ import { reliabilityToneForFavouriteWinRate } from "../logic/marketReliability";
 import { sanitizeImageFilename } from "../utils/captureElementImage";
 import { SITE_URL } from "../seo/pageMetaConfig";
 
-const MRI_SHARE_TEXT = `Market Reliability Index - which leagues follow the bookies and which throw upsets: ${SITE_URL}/market-reliability/`;
+const MRI_SHARE_TEXT = `Market Reliability Index: favourite win rates by league and team. ${SITE_URL}/market-reliability/`;
 
 const FAV_WIN_METRIC = MRI_METRICS.find((m) => m.key === "favouriteHitRate");
 const FAV_ROI_METRIC = MRI_METRICS.find((m) => m.key === "favouriteRoi");
@@ -629,30 +629,21 @@ export default function MarketReliabilityIndex({ overview }) {
           </nav>
           <h1>Market Reliability Index</h1>
           <p className="MarketReliability-intro">
-            Which leagues tend to follow the bookies&apos; prices and which throw
-            up the most upsets? Ranked by how often favourites win, draw or get
-            beaten - you can choose the leagues and teams you trust
+            The Market Reliability Index ranks leagues and teams by how often the
+            pre-match favourite wins, draws or loses. Sort the league table, search
+            a club or competition, and read favourite and underdog ROI on a flat
+            one-unit stake. Figures come from finished matches in leagues Soccer
+            Stats Hub covers.
           </p>
         </header>
 
         {leagues.length === 0 ? (
           <p className="MarketReliability-empty">
-            The reliability dataset is refreshing. Please check back shortly, or
-            browse <a href="/competitions/">all competitions</a> in the meantime.
+            Today&apos;s reliability tables are still building. Check back shortly,
+            or browse <a href="/competitions/">all competitions</a>.
           </p>
         ) : (
           <>
-            {updated ? (
-              <section
-                className="MarketReliability-notes"
-                aria-label="Data freshness"
-              >
-                <p className="MarketReliability-updated">
-                  Data updated {updated}.
-                </p>
-              </section>
-            ) : null}
-
             <AdSenseUnit
               slot={ADSENSE_SLOTS.MARKET_RELIABILITY_DISPLAY}
               placementId="market-reliability-top"
@@ -661,11 +652,12 @@ export default function MarketReliabilityIndex({ overview }) {
             <section className="MarketReliability-tableSection">
               <h2 id="leagues">Leagues ranked by price reliability</h2>
               <p className="MarketReliability-tableHint">
-                Select any column heading to re-sort. On smaller screens swipe
-                sideways to see every column; the league name stays pinned.
-                Small-sample leagues are flagged when fewer than{" "}
-                {overview?.lowSampleMatches || 30} priced matches have been
-                played. Use the share buttons to download or post the table.
+                Colour bands map favourite win rate to labels from Extremely
+                unreliable to Excellent. Tap a column heading to re-sort. On
+                smaller screens swipe sideways to see every column and keep the
+                league name pinned. Leagues with fewer than{" "}
+                {overview?.lowSampleMatches || 30} priced matches are flagged as
+                small sample. Use the share buttons to download or post the table.
               </p>
               <ShareableVisual
                 className="MarketReliability-shareable"
@@ -726,7 +718,7 @@ export default function MarketReliabilityIndex({ overview }) {
                 <h2 id="reliable-teams">Most price-reliable teams</h2>
                 <p className="MarketReliability-tableHint">
                   Teams whose results as favourites and underdogs most often
-                  matched the market hierarchy this season.
+                  matched the bookmaker order this season.
                 </p>
                 <ShareableVisual
                   className="MarketReliability-shareable"
@@ -743,7 +735,7 @@ export default function MarketReliabilityIndex({ overview }) {
                     <p className="MarketReliability-shareCaptureTitle">
                       Most price-reliable teams
                       <span className="MarketReliability-shareCaptureSub">
-                        Favourites that hold up this season
+                        Highest favourite win rates this season
                       </span>
                     </p>
                     <SortableTable
@@ -765,8 +757,8 @@ export default function MarketReliabilityIndex({ overview }) {
               <section className="MarketReliability-tableSection">
                 <h2 id="unreliable-teams">Least price-reliable teams</h2>
                 <p className="MarketReliability-tableHint">
-                  Teams that beat the price as underdogs or fail as favourites
-                  more often - higher upset / draw noise.
+                  Teams that lose more often as favourites and win more often as
+                  underdogs than the shortest price implied.
                 </p>
                 <ShareableVisual
                   className="MarketReliability-shareable"
@@ -783,7 +775,7 @@ export default function MarketReliabilityIndex({ overview }) {
                     <p className="MarketReliability-shareCaptureTitle">
                       Least price-reliable teams
                       <span className="MarketReliability-shareCaptureSub">
-                        Upset and draw noise this season
+                        Lowest favourite win rates this season
                       </span>
                     </p>
                     <SortableTable
