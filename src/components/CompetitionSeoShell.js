@@ -1,5 +1,8 @@
 import { getRelatedCompetitionLinks } from "../seo/competitionCatalog";
-import { isCompetitionSeasonEmpty } from "../seo/competitionSeason";
+import {
+  isCompetitionSeasonEmpty,
+  readCompetitionMatchesPlayed,
+} from "../seo/competitionSeason";
 import { filterTeamsByCupPhase } from "./competition/cupCompetitionPhases";
 import {
   buildCompetitionConferenceTableGroups,
@@ -45,6 +48,7 @@ export default function CompetitionSeoShell({
   seasonNoteReviewedAt = null,
   topScorerRows = [],
   topScorerLead = null,
+  matchesPlayed = null,
 }) {
   const metaParts = [country, season].filter(Boolean);
   const introParagraphs = buildCompetitionSeoParagraphs({
@@ -61,6 +65,7 @@ export default function CompetitionSeoShell({
     tableLeader,
     updatedOn,
     seasonStarted,
+    matchesPlayed,
   });
 
   return (
@@ -394,6 +399,7 @@ export function buildCompetitionSeoShell(data, catalog, options = {}) {
     topScorerRows,
     topScorerLead: buildTopScorerLead(name, topScorerRows),
     updatedOn: formatSeoUpdatedDate(),
+    matchesPlayed: readCompetitionMatchesPlayed(data),
     relatedLinks,
     seasonStarted: true,
   };

@@ -4,6 +4,44 @@ import {
   CONFERENCE_SCOPE_WEST,
   conferenceScopeLabel,
 } from "../components/competition/competitionLeagueTable";
+import { COMPARISON_LOW_SAMPLE_MATCHES } from "./competitionOverviewData";
+
+/** Prose label e.g. "2026/2027" -> "2026/27". */
+export function formatSeasonShort(season) {
+  if (!season) return null;
+  const text = String(season).trim();
+  const long = text.match(/^(\d{4})\/(\d{4})$/);
+  if (long) return `${long[1]}/${long[2].slice(-2)}`;
+  return text;
+}
+
+function gameWord(count) {
+  const n = Number(count);
+  if (n === 1) return "game";
+  return "games";
+}
+
+function buildLiveMarketParagraph({ avgGoals, btts, over25, under25 }) {
+  const sentences = [];
+  if (avgGoals != null) {
+    sentences.push(`Matches average ${avgGoals} goals so far.`);
+  }
+  if (btts != null) {
+    sentences.push(`Both teams have scored in ${btts} of games.`);
+  }
+  if (over25 != null && under25 != null) {
+    sentences.push(
+      `${over25} of games have gone over 2.5 and ${under25} have stayed under 2.5.`
+    );
+  } else if (over25 != null) {
+    sentences.push(`${over25} of games have gone over 2.5.`);
+  } else if (under25 != null) {
+    sentences.push(`${under25} of games have stayed under 2.5.`);
+  }
+
+  if (!sentences.length) return null;
+  return sentences.join(" ");
+}
 
 export function formatSeoUpdatedDate(date = new Date()) {
   return new Intl.DateTimeFormat("en-GB", {
@@ -235,6 +273,7 @@ export function buildCompetitionSeoParagraphs({
   tableLeader = null,
   updatedOn = null,
   seasonStarted = undefined,
+  matchesPlayed = null,
 }) {
   const paragraphs = [];
   const location = [country, season].filter(Boolean).join(", ");
@@ -249,24 +288,17 @@ export function buildCompetitionSeoParagraphs({
     paragraphs.push(
       `The ${
         season || "new"
-      } season is still getting underway, so league-wide averages and team market rates are not meaningful yet. Check back once enough fixtures have been played.`
+      } season has only just started. League averages and BTTS or Over 2.5 rates need more completed matches before they are worth reading.`
     );
     return paragraphs;
   }
 
-  const marketBits = [];
-  if (avgGoals != null) {
-    marketBits.push(`matches are averaging ${avgGoals} goals`);
-  }
-  if (btts != null) {
-    marketBits.push(`both teams have scored in ${btts} of games`);
-  }
-  if (over25 != null) {
-    marketBits.push(`${over25} of fixtures have gone over 2.5 goals`);
-  }
-  if (under25 != null) {
-    marketBits.push(`${under25} have stayed under 2.5 goals`);
-  }
+  const marketParagraph = buildLiveMarketParagraph({
+    avgGoals,
+    btts,
+    over25,
+    under25,
+  });
 
   const leaderName = tableLeader?.name;
   const leaderPoints = tableLeader?.points;
@@ -274,30 +306,44 @@ export function buildCompetitionSeoParagraphs({
   const hasTableLeader =
     leaderName && leaderPoints != null && leaderPlayed != null;
 
-  if (hasTableLeader && marketBits.length > 0) {
+  if (hasTableLeader && marketParagraph) {
     paragraphs.push(
-      `${leaderName} lead the ${name} on ${leaderPoints} points from ${leaderPlayed} matches. So far, ${marketBits.join(
-        ", "
-      )}.`
+      `${leaderName} are top of the ${name} on ${leaderPoints} points from ${leaderPlayed} ${gameWord(
+        leaderPlayed
+      )}. ${marketParagraph}`
     );
   } else if (hasTableLeader) {
     paragraphs.push(
-      `${leaderName} lead the ${name} on ${leaderPoints} points from ${leaderPlayed} matches.`
+      `${leaderName} are top of the ${name} on ${leaderPoints} points from ${leaderPlayed} ${gameWord(
+        leaderPlayed
+      )}.`
     );
-  } else if (marketBits.length > 0) {
-    paragraphs.push(
-      `Across the ${name} season so far, ${marketBits.join(", ")}.`
-    );
+  } else if (marketParagraph) {
+    paragraphs.push(marketParagraph);
   }
 
   if (homeWin != null && draw != null && awayWin != null) {
     paragraphs.push(
-      `Home teams have won ${homeWin} of games, with ${draw} drawn and ${awayWin} won by the away side.`
+      `Home wins are ${homeWin}, draws ${draw} and away wins ${awayWin}.`
     );
   }
 
   if (updatedOn) {
-    paragraphs.push(`Figures as of ${updatedOn}.`);
+    paragraphs.push(`Figures as at ${updatedOn}.`);
+  }
+
+  paragraphs.push(
+    `This page lists ${name} standings and season rates for home wins, BTTS and Over 2.5. Soccer Stats Hub updates the numbers daily for pre-match research.`
+  );
+
+  const seasonShort = formatSeasonShort(season);
+  const leagueMatches = finiteNumber(matchesPlayed);
+  const earlySeason =
+    leagueMatches == null || leagueMatches < COMPARISON_LOW_SAMPLE_MATCHES;
+  if (seasonShort && earlySeason) {
+    paragraphs.push(
+      `In ${seasonShort}, high-scoring rounds or a run of draws can change the table quickly. The standings below show the current order. Open a fixture on the homepage for head-to-head form and model probabilities.`
+    );
   }
 
   return paragraphs;

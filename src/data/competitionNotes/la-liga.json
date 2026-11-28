@@ -1,8 +1,8 @@
 {
   "slug": "la-liga",
-  "reviewedAt": "2026-10-20",
+  "reviewedAt": "2026-11-28",
   "paragraphs": [
-    "La Liga on Soccer Stats Hub tracks season-wide BTTS, Over 2.5 and home-win tendencies alongside the live table. Spanish top-flight weeks can cluster around a few high-scoring fixtures; the league averages smooth that noise across the full schedule.",
-    "For European weeks, check whether the upcoming round follows continental fixtures. The numbers here stay competition-specific, which keeps domestic form separate from Champions League or Europa League rotations."
+    "This La Liga page pairs the live table with season BTTS, Over 2.5 and home win rates. A single high-scoring week can lift the weekly numbers, but the season totals carry more weight.",
+    "When the round follows European fixtures, treat these figures as league-only form. Champions League and Europa League minutes are not folded into this table."
   ]
 }

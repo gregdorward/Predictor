@@ -4,6 +4,7 @@ import {
   buildCompetitionTableRows,
   buildFixtureSeoParagraphs,
   buildTopScorerLead,
+  formatSeasonShort,
 } from "./seoShellCopy";
 
 function standing(name, position, extras = {}) {
@@ -39,14 +40,39 @@ describe("seoShellCopy", () => {
     });
 
     const text = paragraphs.join(" ");
-    expect(text).toContain("Manchester City lead the Premier League on 15 points");
-    expect(text).toContain("both teams have scored");
-    expect(text).toContain("gone over 2.5 goals");
-    expect(text).toContain("stayed under 2.5 goals");
-    expect(text).not.toMatch(/Over 2\.5|Under 2\.5/);
-    expect(text).toContain("Figures as of 21 September 2026");
+    expect(text).toContain(
+      "Manchester City are top of the Premier League on 15 points from 5 games"
+    );
+    expect(text).toContain("Matches average 2.85 goals so far");
+    expect(text).toContain("Both teams have scored");
+    expect(text).toContain("gone over 2.5");
+    expect(text).toContain("stayed under 2.5");
+    expect(text).not.toMatch(/over 2\.5 goals|under 2\.5 goals/i);
+    expect(text).toContain("Figures as at 21 September 2026");
+    expect(text).toContain("pre-match research");
+    expect(text).toContain("In 2025/26, high-scoring rounds");
     expect(text).not.toMatch(/load below|interactive view/);
     expect(text).not.toMatch(/–/);
+  });
+
+  test("formatSeasonShort compacts four-digit end years", () => {
+    expect(formatSeasonShort("2026/2027")).toBe("2026/27");
+    expect(formatSeasonShort("2025/26")).toBe("2025/26");
+  });
+
+  test("drops early-season note after enough league matches", () => {
+    const paragraphs = buildCompetitionSeoParagraphs({
+      name: "Premier League",
+      season: "2026/2027",
+      avgGoals: "2.77",
+      btts: "49.0%",
+      over25: "48.0%",
+      under25: "52.0%",
+      updatedOn: "28 November 2026",
+      matchesPlayed: 120,
+    });
+    const text = paragraphs.join(" ");
+    expect(text).not.toContain("Early in");
   });
 
   test("states league rates when there is no standings table", () => {
@@ -60,8 +86,7 @@ describe("seoShellCopy", () => {
     });
 
     const text = paragraphs.join(" ");
-    expect(text).toContain("Across the Champions League season so far");
-    expect(text).toContain("2.90 goals");
+    expect(text).toContain("Matches average 2.90 goals so far");
     expect(text).not.toMatch(/load below|interactive view/);
   });
 
@@ -74,7 +99,7 @@ describe("seoShellCopy", () => {
     });
 
     const text = paragraphs.join(" ");
-    expect(text).toContain("still getting underway");
+    expect(text).toContain("only just started");
     expect(text).not.toContain("averaging");
     expect(text).not.toContain("0.00");
     expect(text).not.toContain("0.0%");

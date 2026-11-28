@@ -84,7 +84,7 @@ describe("competition empty-season SSR", () => {
     );
 
     expect(
-      screen.getByText(/Manchester City lead the Premier League on 15 points/)
+      screen.getByText(/Manchester City are top of the Premier League on 15 points/)
     ).toBeTruthy();
     expect(screen.getByText("Premier League table, 2025/2026")).toBeTruthy();
     expect(screen.getByRole("row", { name: /Manchester City/ })).toBeTruthy();

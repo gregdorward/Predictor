@@ -1,7 +1,7 @@
 /** Season has not produced usable league averages yet (new / unstarted). */
 export function isCompetitionSeasonEmpty(data) {
   if (!data) return true;
-  const matchesPlayed = readMatchesPlayed(data);
+  const matchesPlayed = readCompetitionMatchesPlayed(data);
   if (matchesPlayed === 0) return true;
 
   const avg = Number(data.seasonAVG_overall);
@@ -19,7 +19,7 @@ export function isCompetitionSeasonEmpty(data) {
   );
 }
 
-function readMatchesPlayed(data) {
+export function readCompetitionMatchesPlayed(data) {
   const candidates = [
     data?.matches_completed,
     data?.matchesCompleted,
